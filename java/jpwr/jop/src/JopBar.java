@@ -157,8 +157,6 @@ public class JopBar extends JComponent implements GeComponentIfc,
   public int getBarBorderWidth() {
     return barBorderWidth;
   }
-  int original_width = 30;
-  int original_height = 120;
   public double rotate;
   public void setRotate( double rotate) { this.rotate = rotate;}
   public double getRotate() { return rotate;}
@@ -177,6 +175,8 @@ public class JopBar extends JComponent implements GeComponentIfc,
       g.setTransform(save);
     }
   }
+  float original_width;
+  float original_height;
   public void paintComponent(Graphics g1) {
     
     Graphics2D g = (Graphics2D) g1;
@@ -189,13 +189,17 @@ public class JopBar extends JComponent implements GeComponentIfc,
 //      g.transform( AffineTransform.getRotateInstance(
 //        Math.PI * rotate/180,((double)original_width)/2, ((double)original_height)/2));
 //    g.transform( AffineTransform.getScaleInstance( scaleWidth, scaleHeight));
+    float width = getWidth();
+    float height = getHeight();
     if ( shapes[0] == null) {
-      float width = getWidth();
-      float height = getHeight();
+      original_width = width;
+      original_height = height;
       shapes[0] = new Rectangle2D.Float(0F, 0F, width, height);
       shapes[1] = new Rectangle2D.Float(0F, 0F, width, 1F);
       shapes[2] = new Line2D.Float(0F, 0F, width, 0F);
     }
+    g.transform( AffineTransform.getScaleInstance( width/original_width,
+						   height/original_height));
     if ( drawFill == 1) {
       g.setColor(GeColor.getColor(22, fillColor));
       g.fill( shapes[0]);
@@ -242,9 +246,16 @@ public class JopBar extends JComponent implements GeComponentIfc,
   public Object dynamicGetRoot() {
     return root;
   }
+  public void update() {
+    valueColorOld = -10000;
+    dynamicUpdate( false);
+  }
   public void dynamicOpen() {
+    if ( en.isInstance())
+      dd.setInstance( en.getInstance());
     if ( pwrAttribute.compareTo("") != 0) {
-      retColor = en.gdh.refObjectInfo( pwrAttribute);
+      String attrName = dd.getAttrName(pwrAttribute);
+      retColor = en.gdh.refObjectInfo( attrName);
       if ( retColor.evenSts())
         System.out.println( "refObjectInfoError retColor");
       else
@@ -256,6 +267,8 @@ public class JopBar extends JComponent implements GeComponentIfc,
       en.gdh.unrefObjectInfo( retColor.refid);
   }
   public void dynamicUpdate( boolean animationOnly) {
+    if ( maxValue == minValue)
+      return;
     if ( animationOnly)
       return;
     if ( colorAttrFound) {
@@ -288,7 +301,11 @@ public class JopBar extends JComponent implements GeComponentIfc,
 	  	x + width - bar_height, y + height);
         }
         else {
-          bar_height = valueColor / (maxValue - minValue) * height;
+          bar_height = (valueColor - minValue) / (maxValue - minValue) * height;
+	  if ( bar_height < 0)
+	    bar_height = 0;
+	  if ( bar_height > height)
+	    bar_height = height;
           ((Rectangle2D.Float )shapes[1]).setRect( x, y + height - bar_height, width,
 	  	 bar_height);
           ((Line2D.Float )shapes[2]).setLine( x, y + height - bar_height, x + width, 

@@ -23,7 +23,9 @@ public class GeDynTable extends GeDynElem {
   public String[][] oldValueS;
   boolean firstScan = true;
   StringBuffer sb = new StringBuffer();
-
+  boolean[] isHeaderRef;
+  int[][] headerRefp;
+  PwrtRefId[][] headerRefSubid;
   public GeDynTable( GeDyn dyn, String[] attribute, String[] format, String[] selAttribute,
 		     int rows, int columns) {
     super( dyn, GeDyn.mDynType_Table, GeDyn.mActionType_No);
@@ -45,8 +47,12 @@ public class GeDynTable extends GeDynElem {
     oldValueF = new float[columns][];
     oldValueI = new int[columns][];
     oldValueS = new String[columns][];
+    isHeaderRef = new boolean[columns];
+    headerRefp = new int[columns][];
+    headerRefSubid = new PwrtRefId[columns][];
   }
   public void connect() {
+    GdhrRefObjectInfo ret;
 
     for ( int i = 0; i < columns; i++) {
       String attrName = dyn.getAttrName( attribute[i]);
@@ -55,57 +61,88 @@ public class GeDynTable extends GeDynElem {
 	if ( attrName.startsWith("$header.")) {
 	  // NYI TODO !!!
           // Replace $header with the object in the header column
-          String hName = dyn.getAttrName( attribute[0]);
-          CdhrString cstr = dyn.en.gdh.getObjectInfoString( hName);
-          if (cstr.evenSts()) continue;
 
-	  attrName = cstr.str + attrName.substring(7);
+	  isHeaderRef[i] = true;
+	  headerRefp[i] = new int[rows];
+	  headerRefSubid[i] = new PwrtRefId[rows];
 
-	  continue;
-	}
+	  for ( int j = 0; j < rows; j++) {
+	    String hName = dyn.getAttrNameNoSuffix( attribute[0]);
+	    hName = hName + "[" + j + "]";
 
-	GdhrRefObjectInfo ret = dyn.en.gdh.refObjectInfo( attrName);
-	if ( ret.evenSts()) {
-	  System.out.println( "Table: " + attrName);
-	  attrFound[i] = false;
+	    CdhrString cstr = dyn.en.gdh.getObjectInfoString( hName);
+	    if (cstr.evenSts()) {
+	      headerRefp[i][j] = 0;
+	      // headerRefSubid[i][j] = null;
+	      continue;
+	    }
+	    String cellAttrName = cstr.str + attrName.substring(7);
+	    ret = dyn.en.gdh.refObjectInfo( cellAttrName);
+	    if ( ret.evenSts()) {
+	      System.out.println( "Table: " + cellAttrName);
+	    }
+	    else {
+	      attrFound[i] = true;
+	      headerRefp[i][j] = ret.id;
+	      headerRefSubid[i][j] = ret.refid;
+	      typeId[i] = ret.typeId;
+	    }
+	  }
 	}
 	else {
-	  attrFound[i] = true;
-	  p[i] = ret.id;
-	  subid[i] = ret.refid;
-	  typeId[i] = ret.typeId;
-	  elements[i] = ret.getElements();
-          size[i] = ret.getSize();
-	  if ( elements[i] > rows)
-	    elements[i] = rows;
-          if ( typeId[i] == Pwr.eType_Float32) {
-            oldValueF[i] = new float[rows];
-          }
-          else if ( typeId[i] == Pwr.eType_Boolean) {
-            oldValueB[i] = new boolean[rows];
-          }
-          else if ( typeId[i] == Pwr.eType_Int32 ||
-		    typeId[i] == Pwr.eType_UInt32 ||
-		    typeId[i] == Pwr.eType_Int16 ||
-		    typeId[i] == Pwr.eType_UInt16 ||
-		    typeId[i] == Pwr.eType_Int8 ||
-		    typeId[i] == Pwr.eType_UInt8) {
-	    oldValueI[i] = new int[rows];
-          }
-          else if ( typeId[i] == Pwr.eType_String || 
-		    typeId[i] == Pwr.eType_Objid ||
-		    typeId[i] == Pwr.eType_Time ||
-		    typeId[i] == Pwr.eType_DeltaTime) {
-	    oldValueS[i] = new String[rows];
+	  isHeaderRef[i] = false;
+
+	  ret = dyn.en.gdh.refObjectInfo( attrName);
+	  if ( ret.evenSts()) {
+	    System.out.println( "Table: " + attrName);
+	    attrFound[i] = false;
 	  }
+	  else {
+	    attrFound[i] = true;
+	    p[i] = ret.id;
+	    subid[i] = ret.refid;
+	    typeId[i] = ret.typeId;
+	    elements[i] = ret.getElements();
+	    size[i] = ret.getSize();
+	    if ( elements[i] > rows)
+	      elements[i] = rows;
+	  }
+	}
+	if ( typeId[i] == Pwr.eType_Float32) {
+          oldValueF[i] = new float[rows];
+	}
+	else if ( typeId[i] == Pwr.eType_Boolean) {
+          oldValueB[i] = new boolean[rows];
+	}
+	else if ( typeId[i] == Pwr.eType_Int32 ||
+		  typeId[i] == Pwr.eType_UInt32 ||
+		  typeId[i] == Pwr.eType_Int16 ||
+		  typeId[i] == Pwr.eType_UInt16 ||
+		  typeId[i] == Pwr.eType_Int8 ||
+		  typeId[i] == Pwr.eType_UInt8) {
+	  oldValueI[i] = new int[rows];
+	}
+	else if ( typeId[i] == Pwr.eType_String || 
+		  typeId[i] == Pwr.eType_Objid ||
+		  typeId[i] == Pwr.eType_Time ||
+		  typeId[i] == Pwr.eType_DeltaTime) {
+	  oldValueS[i] = new String[rows];
 	}
       }
     }
   }
   public void disconnect() {
     for ( int i = 0; i < columns; i++) {
-      if ( attrFound[i])
-        dyn.en.gdh.unrefObjectInfo( subid[i]);
+      if ( attrFound[i]) {
+	if ( isHeaderRef[i]) {
+	  for ( int j = 0; j < rows; j++) {
+	    if ( headerRefSubid[i][j] != null) 
+	      dyn.en.gdh.unrefObjectInfo( headerRefSubid[i][j]);
+	  }
+	}
+	else
+	  dyn.en.gdh.unrefObjectInfo( subid[i]);
+      }
     }
   }
   public void scan() {
@@ -114,72 +151,135 @@ public class GeDynTable extends GeDynElem {
       if ( !attrFound[i])
 	continue;
 
-      if ( typeId[i] == Pwr.eType_Float32) {
-        float[] value0 = dyn.en.gdh.getObjectRefInfoFloatArray( p[i], elements[i]);
-	for ( int j = 0; j < value0.length; j++) {
-	  if (j >= rows)
-	    break;
-          if ( value0[j] != oldValueF[i][j] || firstScan) {
-	    sb = cFormat[i].format( value0[j], sb);
-	    ((GeTable)dyn.comp).setValueAt(new String(sb), j, i);
-            // dyn.repaintNow = true;
-            oldValueF[i][j] = value0[j];
-	  }
+      if ( isHeaderRef[i]) {
+        if ( typeId[i] == Pwr.eType_Float32) {
+	  for ( int j = 0; j < rows; j++) {
+	    if ( headerRefp[i][j] != 0) {
+              float value0 = dyn.en.gdh.getObjectRefInfoFloat( headerRefp[i][j]);
+	      if ( value0 != oldValueF[i][j] || firstScan) {
+		sb = cFormat[i].format( value0, sb);
+		((GeTable)dyn.comp).setValueAt(new String(sb), j, i);
+		// dyn.repaintNow = true;
+		oldValueF[i][j] = value0;
+	      }
+	    }
+          }
         }
-      }
-      else if ( typeId[i] == Pwr.eType_Boolean) {
-        boolean[] value0 = dyn.en.gdh.getObjectRefInfoBooleanArray( p[i], elements[i]);
-	for ( int j = 0; j < value0.length; j++) {
-	  if (j >= rows)
-	    break;
-          if ( value0[j] != oldValueB[i][j] || firstScan) {
-	    if ( value0[j])
-	      ((GeTable)dyn.comp).setValueAt("1", j, i);
-	    else
-	      ((GeTable)dyn.comp).setValueAt("0", j, i);
-            // dyn.repaintNow = true;
-            oldValueB[i][j] = value0[j];
-	  }
+        else if ( typeId[i] == Pwr.eType_Boolean) {
+	  for ( int j = 0; j < rows; j++) {
+	    if ( headerRefp[i][j] != 0) {
+              boolean value0 = dyn.en.gdh.getObjectRefInfoBoolean( headerRefp[i][j]);
+	      if ( value0 != oldValueB[i][j] || firstScan) {
+		sb = cFormat[i].format( value0, sb);
+		((GeTable)dyn.comp).setValueAt(new String(sb), j, i);
+		// dyn.repaintNow = true;
+		oldValueB[i][j] = value0;
+	      }
+	    }
+          }
         }
-      }
-      else if ( typeId[i] == Pwr.eType_Int32 ||
-	        typeId[i] == Pwr.eType_UInt32 ||
-                typeId[i] == Pwr.eType_Int16 ||
-	        typeId[i] == Pwr.eType_UInt16 ||
-                typeId[i] == Pwr.eType_Int8 ||
-	        typeId[i] == Pwr.eType_UInt8) {
-	int value0[] = dyn.en.gdh.getObjectRefInfoIntArray( p[i], elements[i]);
-	for ( int j = 0; j < value0.length; j++) {
-	  if (j >= rows)
-	    break;
-	  if ( value0[j] != oldValueI[i][j] || firstScan) {
-	    sb = cFormat[i].format( value0[j], sb);
-	    ((GeTable)dyn.comp).setValueAt(new String(sb), j, i);
-	    // dyn.repaintNow = true;
-	    oldValueI[i][j] = value0[j];
-	  }
+        else if ( typeId[i] == Pwr.eType_Int32 ||
+	          typeId[i] == Pwr.eType_UInt32 ||
+                  typeId[i] == Pwr.eType_Int16 ||
+	          typeId[i] == Pwr.eType_UInt16 ||
+                  typeId[i] == Pwr.eType_Int8 ||
+	          typeId[i] == Pwr.eType_UInt8) {
+	  for ( int j = 0; j < rows; j++) {
+	    if ( headerRefp[i][j] != 0) {
+              int value0 = dyn.en.gdh.getObjectRefInfoInt( headerRefp[i][j]);
+	      if ( value0 != oldValueI[i][j] || firstScan) {
+		sb = cFormat[i].format( value0, sb);
+		((GeTable)dyn.comp).setValueAt(new String(sb), j, i);
+		// dyn.repaintNow = true;
+		oldValueI[i][j] = value0;
+	      }
+	    }
+          }
         }
-      }
-      else if ( typeId[i] == Pwr.eType_String || 
-	        typeId[i] == Pwr.eType_Objid ||
-		typeId[i] == Pwr.eType_Time ||
-		typeId[i] == Pwr.eType_DeltaTime) {
-	String[] value0 = dyn.en.gdh.getObjectRefInfoStringArray( p[i], typeId[i], size[i], elements[i]);
-	for ( int j = 0; j < value0.length; j++) {
-	  if (j >= rows)
-	    break;
-	  if ( firstScan || value0[j].compareTo( oldValueS[i][j]) != 0) {
-	    sb = cFormat[i].format( value0[j], sb);
-	    ((GeTable)dyn.comp).setValueAt(new String(sb), j, i);
-	    // dyn.repaintNow = true;
+        else if ( typeId[i] == Pwr.eType_String || 
+	          typeId[i] == Pwr.eType_Objid ||
+  		  typeId[i] == Pwr.eType_Time ||
+		  typeId[i] == Pwr.eType_DeltaTime) {
+	  for ( int j = 0; j < rows; j++) {
+	    String value0 = dyn.en.gdh.getObjectRefInfoString( headerRefp[i][j], typeId[i]);
+	    if ( firstScan || value0.compareTo( oldValueS[i][j]) != 0) {
+	      sb = cFormat[i].format( value0, sb);
+	      ((GeTable)dyn.comp).setValueAt(new String(sb), j, i);
+	      // dyn.repaintNow = true;
 
-	    oldValueS[i][j] = value0[j];
+	      oldValueS[i][j] = value0;
+	    }
 	  }
-	}
+        }
       }
-      if ( firstScan)
-	firstScan = false;
+      else {
+        if ( typeId[i] == Pwr.eType_Float32) {
+          float[] value0 = dyn.en.gdh.getObjectRefInfoFloatArray( p[i], elements[i]);
+	  for ( int j = 0; j < value0.length; j++) {
+	    if (j >= rows)
+	      break;
+            if ( value0[j] != oldValueF[i][j] || firstScan) {
+	      sb = cFormat[i].format( value0[j], sb);
+	      ((GeTable)dyn.comp).setValueAt(new String(sb), j, i);
+              // dyn.repaintNow = true;
+              oldValueF[i][j] = value0[j];
+	    }
+          }
+        }
+        else if ( typeId[i] == Pwr.eType_Boolean) {
+          boolean[] value0 = dyn.en.gdh.getObjectRefInfoBooleanArray( p[i], elements[i]);
+	  for ( int j = 0; j < value0.length; j++) {
+	    if (j >= rows)
+	      break;
+            if ( value0[j] != oldValueB[i][j] || firstScan) {
+	      if ( value0[j])
+	        ((GeTable)dyn.comp).setValueAt("1", j, i);
+	      else
+	        ((GeTable)dyn.comp).setValueAt("0", j, i);
+              // dyn.repaintNow = true;
+              oldValueB[i][j] = value0[j];
+	    }
+          }
+        }
+        else if ( typeId[i] == Pwr.eType_Int32 ||
+	          typeId[i] == Pwr.eType_UInt32 ||
+                  typeId[i] == Pwr.eType_Int16 ||
+	          typeId[i] == Pwr.eType_UInt16 ||
+                  typeId[i] == Pwr.eType_Int8 ||
+	          typeId[i] == Pwr.eType_UInt8) {
+	  int value0[] = dyn.en.gdh.getObjectRefInfoIntArray( p[i], elements[i]);
+	  for ( int j = 0; j < value0.length; j++) {
+	    if (j >= rows)
+	      break;
+	    if ( value0[j] != oldValueI[i][j] || firstScan) {
+	      sb = cFormat[i].format( value0[j], sb);
+	      ((GeTable)dyn.comp).setValueAt(new String(sb), j, i);
+	      // dyn.repaintNow = true;
+	      oldValueI[i][j] = value0[j];
+	    }
+          }
+        }
+        else if ( typeId[i] == Pwr.eType_String || 
+	          typeId[i] == Pwr.eType_Objid ||
+  		  typeId[i] == Pwr.eType_Time ||
+		  typeId[i] == Pwr.eType_DeltaTime) {
+	  String[] value0 = dyn.en.gdh.getObjectRefInfoStringArray( p[i], typeId[i], size[i], elements[i]);
+	  for ( int j = 0; j < value0.length; j++) {
+	    if (j >= rows)
+	      break;
+	    if ( firstScan || value0[j].compareTo( oldValueS[i][j]) != 0) {
+	      sb = cFormat[i].format( value0[j], sb);
+	      ((GeTable)dyn.comp).setValueAt(new String(sb), j, i);
+	      // dyn.repaintNow = true;
+
+	      oldValueS[i][j] = value0[j];
+	    }
+	  }
+        }
+      }
     }
+    if ( firstScan)
+      firstScan = false;
   }
 
   public void action( int eventType, MouseEvent e) {

@@ -8,6 +8,7 @@ import java.net.*;
 import java.applet.*;
 import java.util.*;
 import jpwr.rt.*;
+import jpwr.jopc.*;
 
 public class JopSpider {
   int qcom_qix;
@@ -61,7 +62,7 @@ System.out.println( "qcom put finished");
   static CliTable[] cliTable = new CliTable[] { 
     new CliTable( "OPEN", new String[] {"cli_arg1", "cli_arg2", "/NAME", 
 	"/FILE", "/SCROLLBAR", "/WIDTH", "/HEIGHT", "/MENU", "/NAVIGATOR", 
-	"/CENTER", "/OBJECT", "/INSTANCE", "/NEW", "/CLASSGRAPH"}),
+	"/CENTER", "/OBJECT", "/INSTANCE", "/NEW", "/CLASSGRAPH", "/ACCESS"}),
     new CliTable( "EXIT", null),
     new CliTable( "HELP", new String[] {"cli_arg1", "cli_arg2", "cli_arg3",
 	"cli_arg4", "/HELPFILE", "/POPNAVIGATOR", "/BOOKMARK", "/INDEX",
@@ -463,7 +464,13 @@ System.out.println( "JopSpiderCmd start");
         Object argList[] = new Object[] { session, instance, new Boolean(scrollbar)};
         Constructor constructor = clazz.getConstructor( argTypeList);
 
-        frame = constructor.newInstance( argList);
+	try {
+          frame = constructor.newInstance( argList);
+	}
+	catch ( Exception e) {
+	  System.out.println("Class instatiation error: " + className);
+	  return null;
+	}
         // frame = clazz.newInstance();
         openFrame( frame);
         return frame;

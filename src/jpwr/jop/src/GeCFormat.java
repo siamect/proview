@@ -150,6 +150,15 @@ public class GeCFormat {
       return buff;
     }
 
+    public StringBuffer format( boolean value, StringBuffer buff) {
+      buff.setLength(0);
+      if ( value)
+        buff.append('1');
+      else
+	buff.append('0');
+      return buff;
+    }
+
     public StringBuffer format( String value, StringBuffer buff) {
       switch( format_type) {
       case FRM_S: {

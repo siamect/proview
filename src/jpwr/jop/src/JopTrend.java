@@ -16,6 +16,8 @@ public class JopTrend extends JComponent implements GeComponentIfc,
   JopSession session;
   JopEngine en;
   public GeDyn dd = new GeDyn( this);
+  boolean hold = false;
+
   public JopTrend( JopSession session)
   {
    this.session = session;
@@ -75,6 +77,10 @@ public class JopTrend extends JComponent implements GeComponentIfc,
     String attrName;
 
     dd.confirmedAction( GeDyn.eEvent_MB1Click, null);
+  }
+
+  public void setHold( boolean hold) {
+    this.hold = hold;
   }
 
   // GeComponents Ifc
@@ -220,6 +226,8 @@ public class JopTrend extends JComponent implements GeComponentIfc,
       g.setTransform(save);
     }
   }
+  float original_width;
+  float original_height;
   public void paintComponent(Graphics g1) {
     int i, j;
     Graphics2D g = (Graphics2D) g1;
@@ -229,6 +237,8 @@ public class JopTrend extends JComponent implements GeComponentIfc,
     float delta;
 
     if ( shapes == null) {
+      original_width = width;
+      original_height = height;
       shapes = new Shape[1];
       shapes[0] = new Rectangle2D.Float(0F, 0F, width, height);
       if ( verticalLines > 0)
@@ -263,10 +273,7 @@ public class JopTrend extends JComponent implements GeComponentIfc,
     }
     g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
 
-    if ( drawFill == 1) {
-      g.setColor(GeColor.getColor(22, fillColor));
-      g.fill( shapes[0]);
-    }
+    /*
     if ( 45.0 <= rotate && rotate < 135.0) {
       g.translate( -height, 0.0); 
       g.rotate( - Math.PI * rotate/180, height, 0.0);
@@ -282,14 +289,44 @@ public class JopTrend extends JComponent implements GeComponentIfc,
       g.rotate( - Math.PI * rotate/180, 0.0, 0.0);
       g.transform( AffineTransform.getScaleInstance( height/width, width/height));      
     }
+    */
+
+    if ( 45.0 <= rotate && rotate < 135.0) {
+      g.translate( width, 0.0); 
+      g.rotate( Math.PI * rotate/180, 0.0, 0.0);
+      g.transform( AffineTransform.getScaleInstance( height/original_width,
+      		width/original_height));
+    }
+    else if ( 135.0 <= rotate && rotate < 225.0)
+    {
+      g.rotate( Math.PI * rotate/180, width/2, height/2);
+      g.transform( AffineTransform.getScaleInstance( width/original_width,
+      		height/original_height));
+    }
+    else if ( 225.0 <= rotate && rotate < 315.0)
+    {
+      g.translate( -height, 0.0);
+      g.rotate( Math.PI * rotate/180, height, 0.0);
+      g.transform( AffineTransform.getScaleInstance( height/original_width,
+      		width/original_height));
+    }
+    else {
+      g.transform( AffineTransform.getScaleInstance( width/original_width,
+						   height/original_height));
+    }
+
+    if ( drawFill == 1) {
+      g.setColor(GeColor.getColor(22, fillColor));
+      g.fill( shapes[0]);
+    }
     g.setStroke( new BasicStroke((float)trendBorderWidth));
     for ( j = 0; j < 2; j++) {
       if ( attrFound[j]) {
         curve[j].reset();
-        curve[j].moveTo(width,height);
+        curve[j].moveTo(original_width,original_height);
         for ( i = 0; i < noOfPoints; i++)
           curve[j].lineTo( x_values[j][i], y_values[j][i]); 
-        curve[j].lineTo( 0,height);
+        curve[j].lineTo( 0,original_height);
 
         if ( drawFill == 1) {
           g.setColor(GeColor.getColor(0, fillColorTrend[j]));
@@ -309,12 +346,12 @@ public class JopTrend extends JComponent implements GeComponentIfc,
         g.draw( curve[j]);
       }
     }
-    g.setTransform(save);
     g.setStroke( new BasicStroke((float)lineWidth));
     if ( drawBorder == 1 || drawFill == 0) {
       g.setColor(GeColor.getColor(0, borderColor));
       g.draw( shapes[0]);
     }
+    g.setTransform(save);
   }
   public Dimension getPreferredSize() { return size;}
   public Dimension getMinimumSize() { return size;}
@@ -356,10 +393,20 @@ public class JopTrend extends JComponent implements GeComponentIfc,
   public Object dynamicGetRoot() {
     return root;
   }
+  public void reset() {
+    for ( int j = 0; j < 2; j++) {
+      for ( int i = 0; i < noOfPoints; i++)
+        y_values[j][i] = original_height;
+    }
+    repaint();
+  }
   public void dynamicOpen() {
+    if ( en.isInstance())
+      dd.setInstance( en.getInstance());
     for ( int j = 0; j < 2; j++) {
       if ( pwrAttribute[j] != null && pwrAttribute[j].compareTo("") != 0) {
-        retColor[j] = en.gdh.refObjectInfo( pwrAttribute[j]);
+	String attrName = dd.getAttrName(pwrAttribute[j]);
+        retColor[j] = en.gdh.refObjectInfo( attrName);
         if ( retColor[j].evenSts())
           System.out.println( "refObjectInfoError " + pwrAttribute[j]);
         else
@@ -374,6 +421,8 @@ public class JopTrend extends JComponent implements GeComponentIfc,
     }
   }
   public void dynamicUpdate( boolean animationOnly) {
+    if ( hold)
+      return;
     if ( animationOnly)
       return;
     if ( shapes == null)
@@ -406,7 +455,11 @@ public class JopTrend extends JComponent implements GeComponentIfc,
 	for ( i = noOfPoints - 1; i > 0; i--)
           y_values[j][i] = y_values[j][i-1];
 	y_values[j][0] = (maxValue[j] - value) / (maxValue[j] -
-	  	minValue[j]) * height;
+	  	minValue[j]) * original_height;
+	if ( y_values[j][0] < 0)
+	  y_values[j][0] = 0;
+	if ( y_values[j][0] > original_height)
+	  y_values[j][0] = original_height;
         valueOld[j] = value;
       }
     }

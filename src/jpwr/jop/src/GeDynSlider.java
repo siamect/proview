@@ -4,9 +4,10 @@ import java.awt.event.*;
 import java.awt.*;
 import javax.swing.*;
 
+
 public class GeDynSlider extends GeDynElem {
   String attribute;
-  int direction;
+  public int direction;
   double minValue;
   double maxValue;
   double minPos;
@@ -21,6 +22,8 @@ public class GeDynSlider extends GeDynElem {
   boolean firstScan = true;
   boolean moveActive = false;
   Point offset = new Point();
+  float original_width = 0;
+  float original_height = 0;
 
   public GeDynSlider( GeDyn dyn, String attribute, double minValue, double maxValue,
 		      int direction, double minPos, double maxPos) {
@@ -31,6 +34,24 @@ public class GeDynSlider extends GeDynElem {
     this.direction = direction;
     this.minPos = minPos;
     this.maxPos = maxPos;
+  }
+  public void setMinValue( double minValue) {
+    this.minValue = minValue;
+  }
+  public void setMaxValue( double maxValue) {
+    this.maxValue = maxValue;
+  }
+  public void update() {
+    if ( !attrFound || moveActive)
+      return;
+
+    switch ( typeId) {
+    case Pwr.eType_Int32:
+      oldValueI = -10000;
+      break;
+    default:
+      oldValueF = -10000;
+    }
   }
   public void connect() {
     String attrName = dyn.getAttrName( attribute);
@@ -54,6 +75,13 @@ public class GeDynSlider extends GeDynElem {
     if ( !attrFound || moveActive)
       return;
 
+    float width = ((JComponent)dyn.comp).getParent().getWidth();
+    float height = ((JComponent)dyn.comp).getParent().getHeight();
+    if ( original_width == 0) {
+      original_width = width;
+      original_height = height;
+    }
+
     float value;
     switch ( typeId) {
     case Pwr.eType_Int32:
@@ -73,25 +101,51 @@ public class GeDynSlider extends GeDynElem {
     Point loc = ((JComponent)dyn.comp).getLocation();
     int pos;
 	
+    double minPos;
+    double maxPos;
     switch ( direction) {
     case Ge.DIRECTION_RIGHT:
+	minPos = this.minPos * width / original_width;
+	maxPos = this.maxPos * width / original_width;
 	pos = (int)((maxValue - value)/(maxValue - minValue) *
 		    (maxPos - minPos) + minPos);
+	if ( pos < minPos)
+	  pos = (int)minPos;
+	if ( pos > maxPos)
+	  pos = (int)maxPos;
 	loc.x = pos;
 	break;
     case Ge.DIRECTION_LEFT:
+	minPos = this.minPos * width / original_width;
+	maxPos = this.maxPos * width / original_width;
 	pos = (int)(value /(maxValue - minValue) *
 		    (maxPos - minPos) + minPos);
+	if ( pos < minPos)
+	  pos = (int)minPos;
+	if ( pos > maxPos)
+	  pos = (int)maxPos;
 	loc.x = pos;
 	break;
     case Ge.DIRECTION_UP:
+	minPos = this.minPos * height / original_height;
+	maxPos = this.maxPos * height / original_height;
 	pos = (int)((value - minValue)/(maxValue - minValue) *
 		    (maxPos - minPos) + minPos);
+	if ( pos < minPos)
+	  pos = (int)minPos;
+	if ( pos > maxPos)
+	  pos = (int)maxPos;
 	loc.y = pos;
 	break;
     default:
+	minPos = this.minPos * height / original_height;
+	maxPos = this.maxPos * height / original_height;
 	pos = (int)((maxValue - value)/(maxValue - minValue) *
 		    (maxPos - minPos) + minPos);
+	if ( pos < minPos)
+	  pos = (int)minPos;
+	if ( pos > maxPos)
+	  pos = (int)maxPos;
 	loc.y = pos;
     }
     ((JComponent)dyn.comp).setLocation( loc);
@@ -116,14 +170,22 @@ public class GeDynSlider extends GeDynElem {
       break;
     case GeDyn.eEvent_SliderMoved:
       float value;
+      double minPos;
+      double maxPos;
       PwrtStatus sts;
       Point new_loc = new Point();
+      float width = ((JComponent)dyn.comp).getParent().getWidth();
+      float height = ((JComponent)dyn.comp).getParent().getHeight();
       Point ePoint = e.getPoint();
 //	    System.out.println("Mouse dragged: " + thisPoint.x + ", " +
 //	     thisPoint.y);
       Point loc = ((GeComponent)dyn.comp).getLocation();
+      if ( original_width == 0)
+        return;
       switch ( direction) {
       case Ge.DIRECTION_RIGHT:
+	minPos = this.minPos * width / original_width;
+	maxPos = this.maxPos * width / original_width;
 	new_loc.x = loc.x + ePoint.x - offset.x;
 	new_loc.y = loc.y;
 	if ( new_loc.x > maxPos)
@@ -134,6 +196,8 @@ public class GeDynSlider extends GeDynElem {
 	        	(maxValue - minValue) + minValue); 
 	break;
       case Ge.DIRECTION_LEFT:
+	minPos = this.minPos * width / original_width;
+	maxPos = this.maxPos * width / original_width;
 	new_loc.x = loc.x + ePoint.x - offset.x;
 	new_loc.y = loc.y;
 	if ( new_loc.x > maxPos)
@@ -144,6 +208,8 @@ public class GeDynSlider extends GeDynElem {
 	        	(maxValue - minValue) + minValue);
 	break;
       case Ge.DIRECTION_UP:
+	minPos = this.minPos * height / original_height;
+	maxPos = this.maxPos * height / original_height;
 	new_loc.y = loc.y + ePoint.y - offset.y;
 	new_loc.x = loc.x;
 	if ( new_loc.y > maxPos)
@@ -155,6 +221,8 @@ public class GeDynSlider extends GeDynElem {
 	// System.out.println("old_y: " + ePoint.y + " new_y: " + new_loc.y + "v: " + value);
 	break;
       default:
+	minPos = this.minPos * height / original_height;
+	maxPos = this.maxPos * height / original_height;
 	  new_loc.y = loc.y + ePoint.y - offset.y;
 	  // System.out.println( "loc.y " + loc.y + " eP.y " + ePoint.y + " offset.y " + offset.y + " new_loc.y " + new_loc.y + " maxPos " + maxPos + " minPos " + minPos);
 	  new_loc.x = loc.x;
@@ -168,12 +236,13 @@ public class GeDynSlider extends GeDynElem {
       }
       ((JComponent)dyn.comp).setLocation(new_loc);
 	
+      String attrName = dyn.getAttrName(attribute);
       switch ( typeId) {
         case Pwr.eType_Int32:	 
-	  sts = dyn.en.gdh.setObjectInfo( attribute, (int) value);
+	  sts = dyn.en.gdh.setObjectInfo( attrName, (int) value);
 	  break;
         default:
-	  sts = dyn.en.gdh.setObjectInfo( attribute, value);
+	  sts = dyn.en.gdh.setObjectInfo( attrName, value);
       }
       if ( sts.evenSts())
 	System.out.println( "GeSlider: " + sts);        

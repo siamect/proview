@@ -29,6 +29,8 @@ public class GeDynValueInput extends GeDynElem {
 	break;
       }
     }
+    if ( !attrFound)
+      System.out.println("ValueInput: attribute not found");
   }
   public void disconnect() {
   }
@@ -57,14 +59,20 @@ public class GeDynValueInput extends GeDynElem {
 	  valueElement.oldValueF = inputValue;
 	  if ( minValue == 0 && maxValue == 0) {
 	    String attrName = dyn.getAttrNameNoSuffix( valueElement.attribute);
-	    sts = dyn.en.gdh.setObjectInfo( attrName, inputValue);
+	    if ( !valueElement.localDb)
+	      sts = dyn.en.gdh.setObjectInfo( attrName, inputValue);
+	    else
+	      sts = dyn.en.ldb.setObjectInfo( dyn.comp.dynamicGetRoot(), attrName, inputValue);
 	    if ( sts.evenSts())
 	      System.out.println( "setObjectInfoError " + sts);
 	  }
 	  else {
 	    if ( inputValue >= minValue && inputValue <= maxValue ) {
 	      String attrName = dyn.getAttrNameNoSuffix( valueElement.attribute);        
-	      sts = dyn.en.gdh.setObjectInfo( attrName, inputValue);
+	      if ( !valueElement.localDb)
+	        sts = dyn.en.gdh.setObjectInfo( attrName, inputValue);
+	      else
+	        sts = dyn.en.ldb.setObjectInfo( dyn.comp.dynamicGetRoot(), attrName, inputValue);
 	      if ( sts.evenSts())
 		System.out.println( "setObjectInfoError " + attrName + " " + sts);
 	    }
@@ -82,14 +90,20 @@ public class GeDynValueInput extends GeDynElem {
 	  valueElement.oldValueI = inputValue;
 	  if ( minValue == 0 && maxValue == 0) {
 	    String attrName = dyn.getAttrNameNoSuffix( valueElement.attribute);        
-	    sts = dyn.en.gdh.setObjectInfo( attrName, inputValue);
+	    if ( !valueElement.localDb)
+	      sts = dyn.en.gdh.setObjectInfo( attrName, inputValue);
+	    else
+	      sts = dyn.en.ldb.setObjectInfo( dyn.comp.dynamicGetRoot(), attrName, inputValue);
 	    if ( sts.evenSts())
 	      System.out.println( "setObjectInfoError " + sts);
 	  }
 	  else {
 	    if ( inputValue >= minValue && inputValue <= maxValue ) {
 	      String attrName = dyn.getAttrNameNoSuffix( valueElement.attribute);        
-	      sts = dyn.en.gdh.setObjectInfo( attrName, inputValue);
+	      if ( !valueElement.localDb)
+	        sts = dyn.en.gdh.setObjectInfo( attrName, inputValue);
+	      else
+	        sts = dyn.en.ldb.setObjectInfo( dyn.comp.dynamicGetRoot(), attrName, inputValue);
 	      if ( sts.evenSts())
 		System.out.println( "setObjectInfoError " + sts);
 	    }
@@ -97,10 +111,32 @@ public class GeDynValueInput extends GeDynElem {
 	      valueElement.oldValueI = -10000;
 	  }
 	}
+	else if ( typeId == Pwr.eType_Boolean) {
+	  int inputValueInt = Integer.parseInt( text.trim(), 10);
+	  boolean inputValue;
+	  if ( inputValueInt == 0)
+	    inputValue = false;
+	  else if ( inputValueInt == 1)
+	    inputValue = true;
+          else
+	    break;
+
+	  valueElement.oldValueB = inputValue;
+	  String attrName = dyn.getAttrNameNoSuffix( valueElement.attribute);
+	  if ( !valueElement.localDb)
+	    sts = dyn.en.gdh.setObjectInfo( attrName, inputValue);
+	  else
+	    sts = dyn.en.ldb.setObjectInfo( dyn.comp.dynamicGetRoot(), attrName, inputValue);
+	  if ( sts.evenSts())
+	    System.out.println( "setObjectInfoError " + sts);
+	}
 	else if ( typeId == Pwr.eType_String) {
 	  valueElement.oldValueS = text;
 	  String attrName = dyn.getAttrNameNoSuffix( valueElement.attribute);        
-	  sts = dyn.en.gdh.setObjectInfo( attrName, text);
+	  if ( !valueElement.localDb)
+	    sts = dyn.en.gdh.setObjectInfo( attrName, text);
+	  else
+	    sts = dyn.en.gdh.setObjectInfo( attrName, text);
 	  if ( sts.evenSts())
 	    System.out.println( "setObjectInfoError " + sts);
 	}

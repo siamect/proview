@@ -24,7 +24,11 @@ public class GeDynToggleDig extends GeDynElem {
 	break;
 
       String attrName = dyn.getAttrName( attribute);        
-      PwrtStatus sts = dyn.en.gdh.toggleObjectInfo( attrName);
+      PwrtStatus sts;
+      if ( !dyn.isLocalDb( attrName))
+        sts = dyn.en.gdh.toggleObjectInfo( attrName);
+      else
+        sts = dyn.en.ldb.toggleObjectInfo( dyn.comp.dynamicGetRoot(), attrName);
       if ( sts.evenSts())
 	System.out.println( "ToggleDig: " + attrName);
       break;

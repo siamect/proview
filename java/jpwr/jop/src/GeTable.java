@@ -26,6 +26,7 @@ public class GeTable extends JScrollPane implements GeComponentIfc,
   int hRow;
   int hColumn;
   JViewport jv;
+  int headerRowHeight = 0;
 
   public boolean focus = false;
   public boolean confirmActive = false;
@@ -52,6 +53,7 @@ public class GeTable extends JScrollPane implements GeComponentIfc,
     if ( hRow == 0) {
       table.setTableHeader( null);
     }
+
     if ( hColumn == 1) {
       // Set up the header column
       headerColumn = new JTable(rows, 1);
@@ -98,7 +100,17 @@ public class GeTable extends JScrollPane implements GeComponentIfc,
     if ( hColumn == 1)
       headerColumn.setRowHeight( height);
   }
-  public void setHeaderRowHeight( int height) {
+  public void setHeaderRowHeight( int headerRowHeight) {
+    if ( hRow == 1) {
+      Dimension d = table.getTableHeader().getPreferredSize();
+      d.height = headerRowHeight;
+      table.getTableHeader().setPreferredSize( d);
+      if ( hColumn == 1) {
+      	Dimension hd = headerColumn.getTableHeader().getPreferredSize();
+     	hd.height = headerRowHeight;
+	headerColumn.getTableHeader().setPreferredSize( hd);
+      }
+    }
   }
   public void setFont( Font font) {
     if ( table != null)
@@ -339,6 +351,7 @@ public class GeTable extends JScrollPane implements GeComponentIfc,
     paintComponent(g);
     paintChildren(g);
   }
+
 }
 
 

@@ -19,6 +19,7 @@ public class JopEngine implements ActionListener {
   Vector updateVector;
   Timer timer;
   public Gdh gdh;
+  public LocalDb ldb = null;
   boolean initDone = false;
   boolean ready = false;
   boolean gdhReady = false;
@@ -153,6 +154,9 @@ public class JopEngine implements ActionListener {
 
   public void setInstance( String instance) {
     this.instance = instance;
+    if ( ldb == null) {
+      ldb = new LocalDb();
+    }
   }
   public String getInstance() {
     return instance;
@@ -160,7 +164,13 @@ public class JopEngine implements ActionListener {
   public boolean isInstance() {
     return ( instance != null);
   }
+  public void setLocalDb( LocalDb ldb) {
+    if ( this.ldb == null)
+      this.ldb = ldb;
+  }
+
 }
+
 
 
 

@@ -11,6 +11,7 @@ public class GeDynDigLowColor extends GeDynElem {
   boolean inverted;
   boolean oldValue;
   boolean firstScan = true;
+  boolean localDb = false;
 
   public GeDynDigLowColor( GeDyn dyn, String attribute, int color) {
     super( dyn, GeDyn.mDynType_DigLowColor, GeDyn.mActionType_No);
@@ -20,7 +21,12 @@ public class GeDynDigLowColor extends GeDynElem {
   public void connect() {
     String attrName = dyn.getAttrName( attribute);
     if ( attrName.compareTo("") != 0) {
-      GdhrRefObjectInfo ret = dyn.en.gdh.refObjectInfo( attrName);
+      GdhrRefObjectInfo ret;
+      localDb = dyn.isLocalDb(attrName);
+      if ( !localDb)
+	ret = dyn.en.gdh.refObjectInfo( attrName);
+      else
+	  ret = dyn.en.ldb.refObjectInfo( dyn.comp.dynamicGetRoot(), attrName);
       if ( ret.evenSts())
 	System.out.println( "DigLowColor: " + attrName);
       else {
@@ -32,14 +38,18 @@ public class GeDynDigLowColor extends GeDynElem {
     }
   }
   public void disconnect() {
-    if ( attrFound)
+    if ( attrFound && !localDb)
       dyn.en.gdh.unrefObjectInfo( subid);
     System.out.println("Disconnecting: " + attribute);
   }
   public void scan() {
     if ( !attrFound || dyn.ignoreColor)
       return;
-    boolean value = dyn.en.gdh.getObjectRefInfoBoolean( p);
+    boolean value;
+    if ( !localDb)
+      value = dyn.en.gdh.getObjectRefInfoBoolean( p);
+    else
+      value = dyn.en.ldb.getObjectRefInfoBoolean( p);
     if ( !firstScan) {
       if ( oldValue == value && !dyn.resetColor)
 	return;

@@ -4,8 +4,8 @@ import javax.swing.*;
 import jpwr.rt.*;
 
 public class GeDynMove extends GeDynElem {
-  String moveXAttribute;
-  String moveYAttribute;
+public  String moveXAttribute;
+public  String moveYAttribute;
   String scaleXAttribute;
   String scaleYAttribute;
   double xOffset;
@@ -31,6 +31,8 @@ public class GeDynMove extends GeDynElem {
   float scaleYOldValue;
   public double         xOrig;
   public double         yOrig;
+  public double wOrig;
+  public double hOrig;
   public double         xScale = 1;
   public double         yScale = 1;
   boolean firstScan = true;
@@ -111,11 +113,15 @@ public class GeDynMove extends GeDynElem {
       Point loc = ((JComponent)dyn.comp).getLocation();
       xOrig = (double) loc.x;
       yOrig = (double) loc.y;
+      Dimension size = ((JComponent)dyn.comp).getSize();
+      wOrig= (double) size.width;
+      hOrig= (double) size.height;
     }
 
     if ( attrMoveXFound || attrMoveYFound) {
       // Move
       Point loc = ((JComponent)dyn.comp).getLocation();
+      Dimension size = ((JComponent)dyn.comp).getSize();
       float valueMoveX = 0;
       float valueMoveY = 0;
 
@@ -134,10 +140,14 @@ public class GeDynMove extends GeDynElem {
 	}
       }
       if ( repaintNow) {
-	if ( attrMoveXFound)
-	  loc.x = (int) (xOrig + (valueMoveX - xOffset) * factor);
-	if ( attrMoveYFound)
-	  loc.y = (int) (yOrig + (valueMoveY - yOffset) * factor);
+	  if ( attrMoveXFound){
+	    double xRatio=(size.width/wOrig);
+	    loc.x = (int) ((xOrig + (valueMoveX - xOffset) * factor) * xRatio);
+	  }
+	  if ( attrMoveYFound){
+	    double yRatio=(size.height/hOrig);
+	    loc.y = (int) ((yOrig + (valueMoveY - yOffset) * factor) * yRatio);
+	  }
 	((JComponent)dyn.comp).setLocation( loc);
       }
     }
@@ -184,5 +194,14 @@ public class GeDynMove extends GeDynElem {
       firstScan = false;
   }
 }
+
+
+
+
+
+
+
+
+
 
 

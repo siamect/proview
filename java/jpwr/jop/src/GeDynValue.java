@@ -15,6 +15,7 @@ public class GeDynValue extends GeDynElem {
   boolean firstScan = true;
   GeCFormat	cFormat;
   StringBuffer sb = new StringBuffer();
+  boolean localDb = false;
 
   public GeDynValue( GeDyn dyn, String attribute, String format) {
     super( dyn, GeDyn.mDynType_Value, GeDyn.mActionType_No);
@@ -24,7 +25,13 @@ public class GeDynValue extends GeDynElem {
   public void connect() {
     String attrName = dyn.getAttrName( attribute);
     if ( attrName.compareTo("") != 0) {
-      GdhrRefObjectInfo ret = dyn.en.gdh.refObjectInfo( attrName);
+      GdhrRefObjectInfo ret;
+      localDb = dyn.isLocalDb(attrName);
+      if ( !localDb)
+	ret = dyn.en.gdh.refObjectInfo( attrName);
+      else
+	  ret = dyn.en.ldb.refObjectInfo( dyn.comp.dynamicGetRoot(), attrName);
+	  
       if ( ret.evenSts())
 	System.out.println( "Value: " + attrName);
       else {
@@ -36,7 +43,7 @@ public class GeDynValue extends GeDynElem {
     }
   }
   public void disconnect() {
-    if ( attrFound)
+    if ( attrFound && !localDb)
       dyn.en.gdh.unrefObjectInfo( subid);
   }
   public void scan() {
@@ -45,7 +52,11 @@ public class GeDynValue extends GeDynElem {
     
     switch ( typeId) {
     case Pwr.eType_Float32: {
-      float value0 = dyn.en.gdh.getObjectRefInfoFloat( p);
+      float value0 = 0;
+      if ( !localDb)
+	value0 = dyn.en.gdh.getObjectRefInfoFloat( p);
+      else
+	value0 = dyn.en.ldb.getObjectRefInfoFloat( p);
       if ( value0 != oldValueF  || firstScan) {
         sb = cFormat.format( value0, sb);
         dyn.comp.setAnnot1(new String(sb));
@@ -60,7 +71,12 @@ public class GeDynValue extends GeDynElem {
     case Pwr.eType_UInt16:
     case Pwr.eType_Int8:
     case Pwr.eType_UInt8: {
-      int value0 = dyn.en.gdh.getObjectRefInfoInt( p);
+      int value0;
+      if ( !localDb)
+	value0 = dyn.en.gdh.getObjectRefInfoInt( p);
+      else
+	value0 = dyn.en.ldb.getObjectRefInfoInt( p);
+
       if ( value0 != oldValueI || firstScan) {
 	sb = cFormat.format( value0, sb);
 	dyn.comp.setAnnot1(new String(sb));
@@ -69,11 +85,31 @@ public class GeDynValue extends GeDynElem {
       }
       break;
     }
+    case Pwr.eType_Boolean: {
+      boolean value0;
+      if ( !localDb)
+	value0 = dyn.en.gdh.getObjectRefInfoBoolean( p);
+      else
+	value0 = dyn.en.ldb.getObjectRefInfoBoolean( p);
+
+      if ( value0 != oldValueB || firstScan) {
+	sb = cFormat.format( value0, sb);
+	dyn.comp.setAnnot1(new String(sb));
+        dyn.repaintNow = true;
+        oldValueB = value0;
+      }
+      break;
+    }
     case Pwr.eType_String:
     case Pwr.eType_Objid:
     case Pwr.eType_Time:
     case Pwr.eType_DeltaTime: {
-      String value0 = dyn.en.gdh.getObjectRefInfoString( p, typeId);
+      String value0;
+      if ( !localDb)
+	value0 = dyn.en.gdh.getObjectRefInfoString( p, typeId);
+      else
+	value0 = dyn.en.ldb.getObjectRefInfoString( p, typeId);
+
       if ( firstScan || value0.compareTo( oldValueS) != 0) {
         sb = cFormat.format( value0, sb);
 	dyn.comp.setAnnot1(new String(sb));

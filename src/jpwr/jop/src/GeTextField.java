@@ -10,9 +10,11 @@ import javax.swing.Timer;
 public class GeTextField extends JTextField implements GeComponentIfc, 
 			       JopDynamic, JopConfirm, ActionListener
 {
+  public boolean isFocusTraversable() { return root != null;}
+
   Dimension size;
   Object root;
-  Timer timer = new Timer(500, this);
+  public Timer timer = new Timer(500, this);
   JopSession session;
   public JopEngine en;
   public GeDyn dd = new GeDyn( this);

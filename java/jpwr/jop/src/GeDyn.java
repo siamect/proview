@@ -248,6 +248,10 @@ public class GeDyn {
 	     return Pwr.eType_AttrRef;
 	return -1;
     }
+
+    boolean isLocalDb( String attribute) {
+      return (attribute.startsWith("$local.") && en.ldb != null);
+    }
 }
 
 

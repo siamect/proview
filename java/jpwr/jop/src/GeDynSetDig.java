@@ -24,7 +24,11 @@ public class GeDynSetDig extends GeDynElem {
 	break;
 
       String attrName = dyn.getAttrName( attribute);        
-      PwrtStatus sts = dyn.en.gdh.setObjectInfo( attrName, true);
+      PwrtStatus sts;
+      if ( !dyn.isLocalDb( attrName))
+	sts = dyn.en.gdh.setObjectInfo( attrName, true);
+      else
+	  sts = dyn.en.ldb.setObjectInfo( dyn.comp.dynamicGetRoot(), attrName, true);
       if ( sts.evenSts())
 	System.out.println( "SetDig: " + attrName);
       break;
