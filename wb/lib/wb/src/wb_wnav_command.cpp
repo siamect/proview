@@ -3453,6 +3453,7 @@ static int	wnav_create_func( void		*client_data,
       wb_vrepwbl *wbl = new wb_vrepwbl(erep);
       wbl->load( filestr);
       wbl->createSnapshot( outstr);
+      delete wbl;
     }
     catch ( wb_error &e) {
       sts = e.sts();

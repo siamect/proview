@@ -1,28 +1,54 @@
 #include "wb_attribute.h"
+#include "wb_cdrep.h"
 #include "pwr.h"
 
 
-wb_attribute::wb_attribute()
+wb_attribute::wb_attribute() : wb_status(LDH__NOSUCHATTR), m_orep(0), m_adrep(0)
 {
 }
 
-wb_attribute::wb_attribute(const wb_attribute&)
+wb_attribute::wb_attribute(const wb_attribute& x) : wb_status(x.m_sts),m_orep(x.m_orep),
+						    m_adrep(x.m_adrep)
 {
+  if ( m_orep)
+    m_orep->ref();
+  if ( m_adrep)
+    m_adrep->ref();
 }
 
-wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep * const orep) :
-    m_orep(orep), m_sts(sts)
+wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep * const orep) : wb_status(sts),
+								    m_orep(orep), m_adrep(0)
 {
+  m_orep->ref();
 }
 
-wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep * const orep, const char *name) :
-    m_orep(orep), m_sts(sts)
+wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep * const orep, char *name) :
+  wb_status(sts), m_orep(orep), m_adrep(0)
 {
+  wb_cdrep *cdrep = new wb_cdrep( *orep);
+  cdrep->ref();
+
+  m_adrep = cdrep->adrep( &m_sts, name);
+  if ( oddSts())
+    m_adrep->ref();
+
+  cdrep->unref();
 }
 
-wb_attribute& wb_attribute::operator=(const wb_attribute&)
+wb_attribute& wb_attribute::operator=(const wb_attribute& x)
 {
-    return *this;
+  if ( x.m_orep)
+    x.m_orep->ref();
+  if ( x.m_adrep)
+    x.m_adrep->ref();
+  if ( m_orep)
+    m_orep->unref();
+  if ( m_adrep)
+    m_adrep->unref();
+  m_orep = x.m_orep;
+  m_adrep = x.m_adrep;
+  m_sts = x.m_sts;
+  return *this;
 }
 
 //

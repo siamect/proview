@@ -8,6 +8,7 @@ extern "C" {
 #include "co_dbs.h"
 #include "wb_orepdbs.h"
 #include "wb_bdrep.h"
+#include "wb_adrep.h"
 
 void wb_cdrep::unref()
 {
@@ -74,4 +75,27 @@ wb_bdrep *wb_cdrep::bdrep( pwr_tStatus *sts, char *bname)
     return 0;
   wb_bdrep *bdrep = new wb_bdrep( *orep);
   return bdrep;
+}
+
+wb_adrep *wb_cdrep::adrep( pwr_tStatus *sts, char *aname)
+{
+  wb_orepdbs *orep_attr;
+  wb_orepdbs *orep = (wb_orepdbs *)m_orep->first( sts);
+  while ( ODD(*sts)) {
+    if ( orep->cid() == pwr_eClass_ObjBodyDef) {
+      orep_attr = (wb_orepdbs *)orep->m_vrep->child( sts, orep, aname);
+      if ( ODD(*sts)) {
+        wb_adrep *adrep = new wb_adrep( *orep);
+	return adrep;
+      }
+    }
+    orep_attr = (wb_orepdbs *)orep_attr->next( sts);
+  }
+  return 0;
+}
+
+wb_name wb_cdrep::name()
+{
+  wb_name n = wb_name( m_orep->name());
+  return n;
 }

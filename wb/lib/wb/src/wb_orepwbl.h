@@ -33,6 +33,7 @@ public:
     virtual pwr_tOid aoid() const;
     
     virtual char * const name();
+    virtual char * const name( int type);
     virtual pwr_tTime ohTime() const;
     
     virtual bool isOffspringOf(const wb_orep *o) const;

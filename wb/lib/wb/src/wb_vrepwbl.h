@@ -172,6 +172,8 @@ public:
 
     bool isLocal(wb_orep *o) const {return false;};
 
+    void objectName(pwr_tStatus *sts, wb_orep *o, char *str) const;
+
 };
 
 #endif

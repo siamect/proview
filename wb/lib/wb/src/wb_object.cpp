@@ -93,6 +93,11 @@ char *wb_object::name()
   return m_orep->name();
 }
 
+char *wb_object::name( int type)
+{ 
+  return m_orep->name( type);
+}
+
 //
 // Get next object of same class
 //

@@ -26,19 +26,16 @@ using namespace std;
 class wb_adrep;
 class wb_orep;
 
-class wb_attribute
+class wb_attribute : public wb_status
 {
-public:
-
     wb_orep *m_orep;
     wb_adrep *m_adrep;
     
-    pwr_tStatus m_sts;
-    
+public:
     wb_attribute();
     wb_attribute(const wb_attribute&);  // x = other_object
     wb_attribute(pwr_tStatus, wb_orep* const );  // x = other orep
-    wb_attribute(pwr_tStatus, wb_orep* const, const char*);
+    wb_attribute(pwr_tStatus, wb_orep* const, char*);
     wb_attribute(pwr_tStatus, wb_orep* const, wb_adrep* const) {};
 
     wb_attribute& operator=(const wb_attribute&);
@@ -47,8 +44,6 @@ public:
     operator wb_adrep*() const;
     bool operator==(wb_attribute&);
     
-    pwr_tStatus sts() const;
-
     //wb_object& operator=(const wb_orep&);
 
     pwr_tOid aoid();  // get objects object id

@@ -38,6 +38,7 @@ public:
     virtual pwr_tOid aoid() const = 0;
     
     virtual char * const name() = 0;
+    virtual char * const name( int type) = 0;
     virtual pwr_tTime ohTime() const = 0;
     
     virtual bool isOffspringOf(const wb_orep *o) const = 0;

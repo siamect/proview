@@ -61,6 +61,7 @@ public:
     pwr_tOix aoix(); //< Object index of object after this object
     
     char *name();
+    char *name( int type);
 
     pwr_tTime ohTime();  //< time when this object was last changed
     pwr_tTime rbTime();  //< time when run time body of this object was last changed

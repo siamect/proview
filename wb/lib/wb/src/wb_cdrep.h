@@ -36,12 +36,13 @@ class wb_cdrep
     pwr_tCid cid() { return 0;} // Fix
     
 
-    wb_name name() { wb_name n; return n;} // Fix get class name
+    wb_name name(); // get class name
     wb_name name(ldh_eName type) { wb_name n; return n;} // Fix
     void name(const char *name);
     void name(wb_name *name);
     
     wb_bdrep *bdrep( pwr_tStatus *sts, char *bname);
+    wb_adrep *adrep( pwr_tStatus *sts, char *aname);
     
     pwr_tStatus sts() { return m_sts;}
 };

@@ -72,6 +72,11 @@ char *const wb_orepwbl::name()
     return m_wblnode->name;
 }
 
+char *const wb_orepwbl::name( int type)
+{
+  return m_wblnode->name; // Fix
+}
+
 
 pwr_tTime wb_orepwbl::ohTime() const
 {

@@ -913,6 +913,7 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
           else
             setFirstChild( (RefAST)c_template);
           strcpy( c_template->cname, name);
+          c_template->m_oid.oix = m_vrep->nextOix();
           c_template->m_cid = c_cid;
           c_template->node_type = wbl_eNodeType_Template;
         }
