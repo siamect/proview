@@ -2131,7 +2131,7 @@ static void ge_activate_background_color( Widget w, ge_tCtx gectx, XmAnyCallback
 
 static void ge_activate_help( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
 {
-  XHelp::dhelp( "ge editor", 0, navh_eHelpFile_Base, 0, true);
+  CoXHelp::dhelp( "ge editor", 0, navh_eHelpFile_Base, 0, true);
 }
 
 static void ge_create_cursor_position( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
