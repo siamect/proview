@@ -296,6 +296,8 @@ testClient (
         
         /* Get cached class if needed */
         if (!op->u.c.flags.b.classChecked || !op->u.c.flags.b.classEqual) {
+	  ap = vol_ArefToAttribute(&lsts, &attribute, &cp->aref, gdb_mLo_global, vol_mTrans_all);
+	  if (ap == NULL) break;
           ccp = cmvolc_GetCachedClass(&lsts, np, vp, ap, &equal, &fetched);
           if (EVEN(lsts)) {
             np = NULL;
