@@ -1825,13 +1825,13 @@ int GrowNode::get_limits_pixel( double *pix_min, double *pix_max, glow_eDirectio
   switch( *direction) {
   case glow_eDirection_Up:
   case glow_eDirection_Down:
-    *pix_max = max * ctx->zoom_factor_y - double(ctx->offset_y);
-    *pix_min = min * ctx->zoom_factor_y - double(ctx->offset_y);
+    *pix_max = max * ctx->zoom_factor_y;
+    *pix_min = min * ctx->zoom_factor_y;
     break;
   case glow_eDirection_Left:
   case glow_eDirection_Right:
-    *pix_max = max * ctx->zoom_factor_x - double(ctx->offset_x);
-    *pix_min = min * ctx->zoom_factor_x - double(ctx->offset_x);
+    *pix_max = max * ctx->zoom_factor_x;
+    *pix_min = min * ctx->zoom_factor_x;
     break;
   default: ;
   }
