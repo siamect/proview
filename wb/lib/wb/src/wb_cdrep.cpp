@@ -527,7 +527,7 @@ void wb_cdrep::convertObject( wb_merep *merep, void *rbody, void *dbody,
 	  bool found = false;
 	  wb_adrep *adrep_target = bdrep_target->adrep( &sts);
 	  while ( ODD(sts)) {
-	    if ( adrep_source->index() == adrep_target->index()) {
+	    if ( adrep_source->aix() == adrep_target->aix()) {
 	      found = true;
 	      break;
 	    }
@@ -560,7 +560,7 @@ void wb_cdrep::convertObject( wb_merep *merep, void *rbody, void *dbody,
 		if (cidx == conv_eIdx_invalid)
 		  cidx = conv_eIdx_zero; /* Zero the attribute */
 
-		int size;
+		int size = adrep_target->size() / adrep_target->nElement();
 		pwr_mAdef flags;
 		flags.m = adrep_target->flags();
 
