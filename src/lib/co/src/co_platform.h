@@ -161,18 +161,18 @@ typedef enum {
     co_eFT_ieeeS,
     co_eFT_ieeeT, /**< Not used */
     co_eFT_ieeeK, /**< Not used */
-    co_eFT_vaxF,  /**< Not set, implicit for both vaxD and vaxG */
-    co_eFT_vaxD,
-    co_eFT_vaxG,
+    co_eFT_vaxF,  /**< Both for Alpha and VAX (float) */
+    co_eFT_vaxD,  /**< Never set, there are no support for double */
+    co_eFT_vaxG,  /**< Never set, there are no support for double */
     co_eFT_vaxH,  /**< Not used */
     co_eFT_
 } co_eFT;
 
 #if (defined(OS_VMS) || defined(OS_ELN))
 #   if defined(HW_AXP)
-#       define co_dHostFloatType co_eFT_vaxG
+#       define co_dHostFloatType co_eFT_vaxF
 #   else
-#       define co_dHostFloatType co_eFT_vaxD
+#       define co_dHostFloatType co_eFT_vaxF
 #   endif
 #else
 #   define co_dHostFloatType co_eFT_ieeeS
