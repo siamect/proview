@@ -3258,6 +3258,10 @@ static Boolean wnav_sel_convert_cb(
     switch( item->type)
     {
       case wnav_eItemType_Attr:
+      case wnav_eItemType_AttrInput:
+      case wnav_eItemType_AttrInputInv:
+      case wnav_eItemType_AttrInputF:
+      case wnav_eItemType_AttrOutput:
       case wnav_eItemType_AttrArray:
       case wnav_eItemType_AttrArrayOutput:
       case wnav_eItemType_AttrArrayElem:
