@@ -510,6 +510,7 @@ procedure
 	ge_create_graph_form(integer);
 	ge_create_main_pane(integer);
 	ge_create_palette_pane(integer);
+	ge_create_widget_cb(integer);
 	ge_activate_concorner_right(integer); 
 	ge_activate_concorner_rounded(integer); 
 	ge_activate_round_amount_1(integer); 
@@ -1441,12 +1442,17 @@ object functions_entry : XmCascadeButton
           arguments
           {
   	    XmNlabelString = compound_string("Show grid");
+
             XmNmnemonic = keysym('h');
             XmNfontList	   = menu_font;
+	    XmNuserData = 7;
+            XmNaccelerator = "Ctrl<Key>D";
+            XmNacceleratorText = compound_string('Ctrl+D');
 	  };
 	  callbacks
           {
             XmNvalueChangedCallback = procedure ge_activate_show_grid(ge_ctx);
+            MrmNcreateCallback = procedure ge_create_widget_cb(ge_ctx);
           };
         };
        };
@@ -2491,10 +2497,11 @@ object palette_row : XmRowColumn
             XmNlabelString = compound_string("Grid");
 !            XmNmenuHistory = XmPushButton current_session;
 !            XmNfontList	    = menu_font;
+	    XmNuserData = 2;
 	  };  
   	  callbacks
    	  {
-!   	    MrmNcreateCallback = procedure ute_create_batchoptmenu( ute_ctx) ;
+   	    MrmNcreateCallback = procedure ge_create_widget_cb(ge_ctx);
    	  };
    	  controls
    	  {
@@ -2509,10 +2516,12 @@ object palette_row : XmRowColumn
                   {
                     XmNlabelString = compound_string("1.0");
                     XmNfontList	    = menu_font;
+		    XmNuserData = 3;
 	          };
 		  callbacks
 		  {
                     XmNactivateCallback = procedure ge_activate_gridsize_4(ge_ctx);
+        	    MrmNcreateCallback = procedure ge_create_widget_cb(ge_ctx);
 		  };
 	        };
                 XmPushButton
@@ -2521,10 +2530,12 @@ object palette_row : XmRowColumn
                   {
                     XmNlabelString = compound_string("0.5");
                     XmNfontList	    = menu_font;
+		    XmNuserData = 4;
 	          };
 		  callbacks
 		  {
                     XmNactivateCallback = procedure ge_activate_gridsize_3(ge_ctx);
+        	    MrmNcreateCallback = procedure ge_create_widget_cb(ge_ctx);
 		  };
 	        };
                 XmPushButton
@@ -2533,10 +2544,12 @@ object palette_row : XmRowColumn
                   {
                     XmNlabelString = compound_string("0.2");
                     XmNfontList	    = menu_font;
+		    XmNuserData = 5;
 	          };
 		  callbacks
 		  {
                     XmNactivateCallback = procedure ge_activate_gridsize_2(ge_ctx);
+        	    MrmNcreateCallback = procedure ge_create_widget_cb(ge_ctx);
 		  };
 	        };
                 XmPushButton
@@ -2545,10 +2558,12 @@ object palette_row : XmRowColumn
                   {
                     XmNlabelString = compound_string("0.1");
                     XmNfontList	    = menu_font;
+		    XmNuserData = 6;
 	          };
 		  callbacks
 		  {
                     XmNactivateCallback = procedure ge_activate_gridsize_1(ge_ctx);
+        	    MrmNcreateCallback = procedure ge_create_widget_cb(ge_ctx);
 		  };
 	        };
 	      };
@@ -2561,10 +2576,12 @@ object palette_row : XmRowColumn
           {
   	    XmNlabelString = compound_string("Snap");
             XmNfontList	   = menu_font;
+	    XmNuserData    = 1;
 	  };
 	  callbacks
           {
             XmNvalueChangedCallback = procedure ge_activate_grid(ge_ctx);
+   	    MrmNcreateCallback = procedure ge_create_widget_cb(ge_ctx);
           };
 	};
         XmOptionMenu      
@@ -2725,8 +2742,9 @@ object cursor_position : XmLabel
 {
    arguments
    {
-     XmNwidth 			= 50;
+     XmNwidth 			= 280;
      XmNrightAttachment 	= XmATTACH_FORM;
+     XmNrightOffset		= 30;
      XmNbottomAttachment    	= XmATTACH_FORM;
      XmNalignment		= XmALIGNMENT_BEGINNING;
      XmNlabelString		= "";
@@ -2777,7 +2795,7 @@ object cmd_prompt : XmLabel
       XmNtopWidget		= XmPanedWindow graph_form;
       XmNalignment		= XmALIGNMENT_BEGINNING;
       XmNlabelString		= "";
-      XmNwidth			= 80;
+      XmNwidth			= 150;
       XmNheight			= 30;
       XmNfontList	   	= menu_font;
    };
