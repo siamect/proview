@@ -482,7 +482,7 @@ object hist_pane : XmPanedWindow
      XmNrightAttachment 	= XmATTACH_FORM;
      XmNbottomAttachment    	= XmATTACH_FORM;
      XmNtopAttachment    	= XmATTACH_FORM;
-     XmNtraversalOn		= false;
+     !XmNtraversalOn		= false;
    };
    controls
    {
