@@ -10,6 +10,7 @@
 #include "db_cxx.h"
 #include "wb_ldh.h"
 #include "wb_merep.h"
+#include "wb_attribute.h"
 
 void wb_vrepdb::unref()
 {
@@ -931,7 +932,25 @@ wb_orep *wb_vrepdb::before(pwr_tStatus *sts, const wb_orep *orp)
 
 wb_orep *wb_vrepdb::first(pwr_tStatus *sts, const wb_orep *orp)
 {
+  if ( orp->cid() == pwr_eClass_MountObject) {
+    pwr_tStatus msts = LDH__SUCCESS;
+
+    wb_attribute a(msts, (wb_orep *)orp, "SysBody", "Object");
+    if ( !a) {
+      *sts = a.sts();
+      return 0;
+    }
+
+    pwr_tOid moid;
+    a.value( &moid);
+
+    wb_orep *morep = erep()->object( sts, moid);
+    if ( ODD(*sts) && morep->vrep()->type() == ldh_eVolRep_Dbs)
+      return morep->first( sts);
+  }
+
   *sts = LDH__SUCCESS;
+
   try {
     pwr_tOid foid = m_ohead.get(m_db->m_txn, orp->oid()).foid();
     if (cdh_ObjidIsNull(foid)) {
@@ -952,6 +971,7 @@ wb_orep *wb_vrepdb::first(pwr_tStatus *sts, const wb_orep *orp)
 wb_orep *wb_vrepdb::child(pwr_tStatus *sts, const wb_orep *orp, wb_name &name)
 {
   *sts = LDH__SUCCESS;
+
   try {
     wb_db_name n(m_db, m_db->m_txn, orp->oid(), name);
     m_ohead.get(m_db->m_txn, n.oid());
