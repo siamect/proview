@@ -1764,11 +1764,18 @@ typedef GlowTraceData glow_sTraceData;
   */
   void grow_GetObjectClassCycle( grow_tObject object, glow_eCycle *cycle);
 
+  //! Get userdata for the nodeclass of an object.
+  /*!
+    \param object	Object.
+    \param user_data	Userdata of the object's nodeclass.
+  */
+  void grow_GetObjectClassUserData( grow_tObject object, void **user_data);
+
   //! Get nodeclass dyntype and actiontype.
   /*!
     \param nodeclass	Nodeclass.
     \param dyn_type	Dyntype of the nodeclass.
-    \param dyn_action_type Actionetype of the nodeclass.
+    \param dyn_action_type Actiontype of the nodeclass.
   */
   void grow_GetNodeClassDynType( grow_tNodeClass nodeclass, int *dyn_type, int *dyn_action_type);
 
@@ -2585,9 +2592,9 @@ typedef GlowTraceData glow_sTraceData;
     \param copy		Callback function that will be called when userdata is copied.
   */
   void grow_RegisterUserDataCallbacks( grow_tCtx ctx,
-				       void (*save)( void *, grow_tObject),
-				       void (*open)( void *, grow_tObject),
-				       void (*copy)( grow_tObject, void *, void **));
+				       void (*save)( void *, void *, glow_eUserdataCbType),
+				       void (*open)( void *, void *, glow_eUserdataCbType),
+				       void (*copy)( void *, void *, void **, glow_eUserdataCbType));
 
   //! Get grow versions.
   /*!
@@ -2805,6 +2812,7 @@ typedef GlowTraceData glow_sTraceData;
   int grow_GetMenuInputFocus( grow_tObject menu);
   void grow_GetSubmenuPosition( grow_tObject menu, int item, double *x, double *y);
   int grow_GetMenuParent( grow_tObject menu, grow_tObject *parent);
+  int grow_SetFolderIndex( grow_tObject folder, int idx);
 
 /*@}*/
 #if defined __cplusplus

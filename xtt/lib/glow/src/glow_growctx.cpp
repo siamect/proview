@@ -1728,6 +1728,10 @@ void GrowCtx::save_grow( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_GrowCtx_mb3_action) << FSPACE << int(mb3_action) << endl;
   fp << int(glow_eSave_GrowCtx_translate_on) << FSPACE << translate_on << endl;
   fp << int(glow_eSave_GrowCtx_input_focus_mark) << FSPACE << int(input_focus_mark) << endl;
+  if ( user_data && userdata_save_callback) {
+    fp << int(glow_eSave_GrowCtx_userdata_cb) << endl;
+    (userdata_save_callback)(&fp, this, glow_eUserdataCbType_Ctx);
+  }
   fp << int(glow_eSave_End) << endl;
 }
 
@@ -1863,6 +1867,10 @@ void GrowCtx::open_grow( ifstream& fp)
 	fp >> tmp;
 	input_focus_mark = (glow_eInputFocusMark)tmp;
 	break;
+      case glow_eSave_GrowCtx_userdata_cb:
+	if ( userdata_open_callback)
+	  (userdata_open_callback)(&fp, this, glow_eUserdataCbType_Ctx);
+	break;
       default:
         cout << "GrowCtx:open syntax error" << endl;
         fp.getline( dummy, sizeof(dummy));
@@ -1950,6 +1958,10 @@ int GrowCtx::save_subgraph( char *filename, glow_eSaveMode mode)
   fp << int(glow_eSave_NodeClass_x0) << FSPACE << x0 << endl;  
   fp << int(glow_eSave_NodeClass_x1) << FSPACE << x1 << endl;  
   fp << int(glow_eSave_NodeClass_input_focus_mark) << FSPACE << int(input_focus_mark) << endl;  
+  if ( user_data && userdata_save_callback) {
+    fp << int(glow_eSave_NodeClass_userdata_cb) << endl;
+    (userdata_save_callback)(&fp, this, glow_eUserdataCbType_Ctx);
+  }
   fp <<	int(glow_eSave_End) << endl;
 
   // End Array

@@ -37,7 +37,7 @@ void GrowSlider::copy_from( const GrowSlider& n)
     memcpy( dynamic, n.nc->dynamic, n.dynamicsize);
   }
   if ( ctx->userdata_copy_callback)
-    (ctx->userdata_copy_callback)( this, user_data, &user_data);
+    (ctx->userdata_copy_callback)( this, user_data, &user_data, glow_eUserdataCbType_Node);
 //  nc = new GlowNodeClass( *nc);
 }
 

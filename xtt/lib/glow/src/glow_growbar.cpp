@@ -64,7 +64,7 @@ void GrowBar::save( ofstream& fp, glow_eSaveMode mode)
   GrowRect::save( fp, mode);
   if ( user_data && ctx->userdata_save_callback) {
     fp << int(glow_eSave_GrowBar_userdata_cb) << endl;
-    (ctx->userdata_save_callback)(&fp, this);
+    (ctx->userdata_save_callback)(&fp, this, glow_eUserdataCbType_Node);
   }
   fp << int(glow_eSave_End) << endl;
 }
@@ -143,7 +143,7 @@ void GrowBar::open( ifstream& fp)
         break;
       case glow_eSave_GrowBar_userdata_cb:
 	if ( ctx->userdata_open_callback)
-	  (ctx->userdata_open_callback)(&fp, this);
+	  (ctx->userdata_open_callback)(&fp, this, glow_eUserdataCbType_Node);
 	break;
       case glow_eSave_End: end_found = 1; break;
       default:

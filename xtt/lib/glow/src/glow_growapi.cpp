@@ -1217,6 +1217,11 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       attrinfo[i].type = glow_eType_Relief;
       attrinfo[i++].size = sizeof( op->relief);
       
+      strcpy( attrinfo[i].name, "invisible");
+      attrinfo[i].value_p = &op->invisible;
+      attrinfo[i].type = glow_eType_Boolean;
+      attrinfo[i++].size = sizeof( op->invisible);
+      
       strcpy( attrinfo[i].name, "disable_shadow");
       attrinfo[i].value_p = &op->disable_shadow;
       attrinfo[i].type = glow_eType_Boolean;
@@ -2381,7 +2386,7 @@ int grow_GetSubGraphAttrInfo( grow_tCtx ctx, char *transtab, grow_sAttrInfo **in
   int  dynsize;
   char *name;
 
-  attrinfo = (grow_sAttrInfo *) calloc( 20, sizeof(grow_sAttrInfo)); 
+  attrinfo = (grow_sAttrInfo *) calloc( 30, sizeof(grow_sAttrInfo)); 
 
   i = 0;
 
@@ -3526,6 +3531,12 @@ void grow_GetNodeClassDynType( grow_tNodeClass nodeclass, int *dyn_type,
   *dyn_action_type = base_nc->dyn_action_type;
 }
 
+void grow_GetObjectClassUserData( grow_tObject object, void **user_data)
+{
+  GlowNodeClass *base_nc = ((GrowNode *)object)->nc->get_base_nc();
+  base_nc->get_user_data( user_data);
+}
+
 void grow_GetSubGraphDynType( grow_tCtx ctx, int *dyn_type, int *dyn_action_type)
 {
   *dyn_type = ctx->dyn_type;
@@ -4087,9 +4098,9 @@ int grow_ImageUpdate( grow_tObject object)
 extern "C" 
 #endif
 void grow_RegisterUserDataCallbacks( grow_tCtx ctx,
-				     void (*save)( void *, grow_tObject),
-				     void (*open)( void *, grow_tObject),
-				     void (*copy)( grow_tObject, void *, void **))
+				     void (*save)( void *, void *, glow_eUserdataCbType),
+				     void (*open)( void *, void *, glow_eUserdataCbType),
+				     void (*copy)( void *, void *, void **, glow_eUserdataCbType))
 {
   ((GrowCtx *)ctx)->register_userdata_callbacks( 
 	   (glow_tUserDataSaveCb) save,
@@ -4262,6 +4273,12 @@ int grow_GetMenuParent( grow_tObject menu, grow_tObject *parent)
 {
   return ((GrowMenu *)menu)->get_parent( (GlowArrayElem **)parent);
 }
+
+int grow_SetFolderIndex( grow_tObject folder, int idx)
+{
+  return ((GrowFolder *)folder)->set_folder( idx);
+}
+
 /*@}*/
 
 

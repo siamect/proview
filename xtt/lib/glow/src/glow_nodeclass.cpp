@@ -44,6 +44,11 @@ GlowNodeClass::GlowNodeClass( const GlowNodeClass& nc)
   }
 }
 
+GlowNodeClass::~GlowNodeClass()
+{
+  ctx->object_deleted( this);
+}
+
 void GlowNodeClass::print( GlowPoint *pos, void *node)
 {
   int		i;
@@ -120,6 +125,10 @@ void GlowNodeClass::save( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_NodeClass_x0) << FSPACE << x0 << endl;
   fp << int(glow_eSave_NodeClass_x1) << FSPACE << x1 << endl;
   fp << int(glow_eSave_NodeClass_input_focus_mark) << FSPACE << int(input_focus_mark) << endl;
+  if ( user_data && ctx->userdata_save_callback) {
+    fp << int(glow_eSave_NodeClass_userdata_cb) << endl;
+    (ctx->userdata_save_callback)(&fp, this, glow_eUserdataCbType_NodeClass);
+  }
   fp <<	int(glow_eSave_End) << endl;
 }
 
@@ -225,6 +234,10 @@ void GlowNodeClass::open( ifstream& fp)
         fp >> tmp;
 	input_focus_mark = (glow_eInputFocusMark)tmp;
         break;
+      case glow_eSave_NodeClass_userdata_cb:
+	if ( ctx->userdata_open_callback)
+	  (ctx->userdata_open_callback)(&fp, this, glow_eUserdataCbType_NodeClass);
+	break;
       case glow_eSave_End: end_found = 1; break;
       default:
         cout << "GlowNodeClass:open syntax error" << endl;

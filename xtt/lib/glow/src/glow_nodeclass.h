@@ -41,6 +41,9 @@ class GlowNodeClass : public GlowArrayElem {
   */
   GlowNodeClass( const GlowNodeClass& nc);
 
+  // Destructor.
+  ~GlowNodeClass();
+
   //! Insert a new element in the nodeclass.
   /*!
     \param element	New element to insert.
@@ -359,6 +362,24 @@ class GlowNodeClass : public GlowArrayElem {
   int get_annotation_info( void *node, int num, int *t_size, glow_eDrawType *t_drawtype,
 			   glow_eDrawType *t_color);
 
+  //! Set user data.
+  /*!
+    \param data User data.
+  */
+  void set_user_data( void *data) { user_data = data;};
+
+  //! Get user data.
+  /*!
+    \param data User data.
+  */
+  void get_user_data( void **data) { *data = user_data;};
+
+  //! Get grow context.
+  /*!
+    \return The context.
+  */
+  void *get_ctx() { return this->ctx;};
+
   GlowCtx	*ctx;		//!< Glow context.
   GlowArray 	a;		//!< Array of nodeclass elements.
   char		nc_name[32];	//!< Name of nodeclass.
@@ -394,6 +415,7 @@ class GlowNodeClass : public GlowArrayElem {
   int		saved;		//!< The nodeclass doesn't have any unsaved changes.
   glow_eCycle 	cycle;		//!< Cycle, i.e. if dynamics is executed at fast or slow scantime.
   glow_eInputFocusMark input_focus_mark; //!< How input focus in marked.
+  void		*user_data;	//!< User data.
 };
 
 /*@}*/

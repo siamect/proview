@@ -21,7 +21,7 @@ GrowRect::GrowRect( GlowCtx *glow_ctx, char *name, double x, double y,
   original_fill_drawtype(fill_d_type), fill_drawtype(fill_d_type),
   border(display_border),
   dynamic(0), dynamicsize(0), shadow(display_shadow), shadow_width(5), relief(glow_eRelief_Up),
-  shadow_contrast(2), disable_shadow(0)
+  shadow_contrast(2), disable_shadow(0), invisible(0)
 { 
   strcpy( n_name, name);
   pzero.nav_zoom();
@@ -262,6 +262,7 @@ void GrowRect::save( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_GrowRect_shadow_width) << FSPACE << shadow_width << endl;
   fp << int(glow_eSave_GrowRect_shadow_contrast) << FSPACE << shadow_contrast << endl;
   fp << int(glow_eSave_GrowRect_relief) << FSPACE << int(relief) << endl;
+  fp << int(glow_eSave_GrowRect_invisible) << FSPACE << invisible << endl;
   fp << int(glow_eSave_GrowRect_disable_shadow) << FSPACE << disable_shadow << endl;
   fp << int(glow_eSave_GrowRect_dynamicsize) << FSPACE << dynamicsize << endl;
   fp << int(glow_eSave_GrowRect_dynamic) << endl;
@@ -317,6 +318,7 @@ void GrowRect::open( ifstream& fp)
       case glow_eSave_GrowRect_shadow: fp >> shadow; break;
       case glow_eSave_GrowRect_relief: fp >> tmp; relief = (glow_eRelief)tmp; break;
       case glow_eSave_GrowRect_disable_shadow: fp >> disable_shadow; break;
+      case glow_eSave_GrowRect_invisible: fp >> invisible; break;
       case glow_eSave_GrowRect_dynamicsize: fp >> dynamicsize; break;
       case glow_eSave_GrowRect_dynamic:
         fp.getline( dummy, sizeof(dummy));
@@ -692,6 +694,8 @@ void GrowRect::set_rotation( double angel,
 
 void GrowRect::draw( GlowTransform *t, int highlight, int hot, void *node, void *colornode)
 {
+  if ( invisible && !highlight)
+    return;
   if ( !(display_level & ctx->display_level))
     return;
   int idx;
@@ -860,6 +864,8 @@ void GrowRect::erase( GlowTransform *t, int hot, void *node)
 
 void GrowRect::nav_draw( GlowTransform *t, int highlight, void *node, void *colornode)
 {
+  if ( invisible && !highlight)
+    return;
   if ( !(display_level & ctx->display_level))
     return;
   glow_eDrawType drawtype;

@@ -62,7 +62,7 @@ void GrowGroup::copy_from( const GrowGroup& n)
   nc = new GlowNodeGroup( (GlowNodeGroup &)*n.nc);
 
   if ( ctx->userdata_copy_callback)
-    (ctx->userdata_copy_callback)( this, user_data, &user_data);
+    (ctx->userdata_copy_callback)( this, user_data, &user_data, glow_eUserdataCbType_Node);
 }
 
 void GrowGroup::ungroup()

@@ -83,7 +83,7 @@ void GrowNode::copy_from( const GrowNode& n)
   }
 
   if ( ctx->userdata_copy_callback)
-    (ctx->userdata_copy_callback)( this, user_data, &user_data);
+    (ctx->userdata_copy_callback)( this, user_data, &user_data, glow_eUserdataCbType_Node);
 //  nc = new GlowNodeClass( *nc);
 }
 
@@ -152,7 +152,7 @@ void GrowNode::save( ofstream& fp, glow_eSaveMode mode)
 
   if ( user_data && ctx->userdata_save_callback) {
     fp << int(glow_eSave_GrowNode_userdata_cb) << endl;
-    (ctx->userdata_save_callback)(&fp, this);
+    (ctx->userdata_save_callback)(&fp, this, glow_eUserdataCbType_Node);
   }
 
   fp << int(glow_eSave_End) << endl;
@@ -266,7 +266,7 @@ void GrowNode::open( ifstream& fp)
       case glow_eSave_GrowNode_shadow: fp >> shadow; break;
       case glow_eSave_GrowNode_userdata_cb:
 	if ( ctx->userdata_open_callback)
-	  (ctx->userdata_open_callback)(&fp, this);
+	  (ctx->userdata_open_callback)(&fp, this, glow_eUserdataCbType_Node);
 	break;
       case glow_eSave_End: end_found = 1; break;
       default:

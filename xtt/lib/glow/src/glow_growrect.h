@@ -277,6 +277,7 @@ class GrowRect : public GlowRect {
   glow_eRelief 	relief;		//!< Type of relief.
   int 		shadow_contrast; //!< Shadow contrast.
   int		disable_shadow;	//!< Disable shadow, even if parent node has shadow.
+  int		invisible;	//!< Invisible if not highlighted.
 
   //! Set user data.
   /*!

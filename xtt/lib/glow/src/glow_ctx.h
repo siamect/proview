@@ -26,9 +26,9 @@ typedef struct {
   int	offset_y;	//!< Offset from workarea border to displayed window.
 } glow_sScroll;
 
-typedef void (*glow_tUserDataSaveCb) ( ofstream *, GlowArrayElem *);
-typedef void (*glow_tUserDataOpenCb) ( ifstream *, GlowArrayElem *);
-typedef void (*glow_tUserDataCopyCb) ( GlowArrayElem *, void *, void **);
+typedef void (*glow_tUserDataSaveCb) ( ofstream *, void *, glow_eUserdataCbType);
+typedef void (*glow_tUserDataOpenCb) ( ifstream *, void *, glow_eUserdataCbType);
+typedef void (*glow_tUserDataCopyCb) ( void *, void *, void **, glow_eUserdataCbType);
 
 //! Class for a drawing window populated with drawing objects and components.
 /*! GlowCtx is the base class for the drawing area in Glow. It contains array with

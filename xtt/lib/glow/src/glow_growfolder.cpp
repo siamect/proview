@@ -640,7 +640,24 @@ void GrowFolder::set_textbold( int bold)
   draw();
 }
 
+int GrowFolder::set_folder( int idx)
+{
+  if ( idx >= folders || idx < 0)
+    return 0;
 
+  // Change file
+  strcpy( input_file_name, folder_file_names[idx]);
+  window_scale = folder_scale[idx];
+  vertical_scrollbar = folder_v_scrollbar[idx];
+  horizontal_scrollbar = folder_h_scrollbar[idx];
+  current_folder = idx;
+  // ctx->set_nodraw();
+  GrowWindow::update_attributes();
+  // ctx->reset_nodraw();
+  draw();
+
+  return 1;
+}
 
 
 

@@ -206,6 +206,11 @@ class GrowFolder : public GrowWindow {
   void set_original_text_color( glow_eDrawType drawtype) 
 	{ text_color_drawtype = drawtype; draw();};
 
+  //! Set displayed folder.
+  /*!
+    \param idx	Folder index.
+  */
+  int set_folder( int idx);
 };
 
 

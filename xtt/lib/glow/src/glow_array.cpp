@@ -44,6 +44,7 @@
 #include "glow_growfolder.h"
 #include "glow_growtable.h"
 #include "glow_msg.h"
+#include "co_cdh.h"
 
 GlowArray::GlowArray( int allocate, int incr) : allocated( allocate),
 	alloc_incr(incr), a_size(0)
@@ -294,7 +295,7 @@ void GlowArray::copy_from( const GlowArray& array)
 	// Fix, This should be done in the copy constructor !!!
 	if ( n->ctx->userdata_copy_callback)
 	  (n->ctx->userdata_copy_callback)( n, 
-	     ((GrowBar *)array.a[i])->user_data, &n->user_data);
+	     ((GrowBar *)array.a[i])->user_data, &n->user_data, glow_eUserdataCbType_Node);
         insert( n);
         break;
       }
@@ -309,7 +310,7 @@ void GlowArray::copy_from( const GlowArray& array)
         n->configure_curves();
 	if ( n->ctx->userdata_copy_callback)
 	  (n->ctx->userdata_copy_callback)( n, 
-	     ((GrowTrend *)(array.a[i]))->user_data, &n->user_data);
+	     ((GrowTrend *)(array.a[i]))->user_data, &n->user_data, glow_eUserdataCbType_Node);
         insert( n);
         break;
       }
@@ -321,7 +322,7 @@ void GlowArray::copy_from( const GlowArray& array)
 	// Fix, This should be done in the copy constructor !!!
 	if ( n->ctx->userdata_copy_callback)
 	  (n->ctx->userdata_copy_callback)( n, 
-	     ((GrowWindow *)array.a[i])->user_data, &n->user_data);
+	     ((GrowWindow *)array.a[i])->user_data, &n->user_data, glow_eUserdataCbType_Node);
 	n->window_ctx = 0;
 	n->v_scrollbar = 0;
 	n->h_scrollbar = 0;
@@ -338,7 +339,7 @@ void GlowArray::copy_from( const GlowArray& array)
 	// Fix, This should be done in the copy constructor !!!
 	if ( n->ctx->userdata_copy_callback)
 	  (n->ctx->userdata_copy_callback)( n, 
-	     ((GrowFolder *)array.a[i])->user_data, &n->user_data);
+	     ((GrowFolder *)array.a[i])->user_data, &n->user_data, glow_eUserdataCbType_Node);
 	n->window_ctx = 0;
 	n->v_scrollbar = 0;
 	n->h_scrollbar = 0;
@@ -355,7 +356,7 @@ void GlowArray::copy_from( const GlowArray& array)
 	// Fix, This should be done in the copy constructor !!!
 	if ( n->ctx->userdata_copy_callback)
 	  (n->ctx->userdata_copy_callback)( n, 
-	     ((GrowTable *)array.a[i])->user_data, &n->user_data);
+	     ((GrowTable *)array.a[i])->user_data, &n->user_data, glow_eUserdataCbType_Node);
 	n->v_scrollbar = 0;
 	n->h_scrollbar = 0;
 	n->cell_value = 0;
@@ -1159,7 +1160,7 @@ int GlowArray::find_by_name( char *name, GlowArrayElem **element)
   for ( i = 0; i < a_size; i++)
   {
     a[i]->get_object_name( object_name);
-    if ( strcmp( name, object_name) == 0)
+    if ( cdh_NoCaseStrcmp( name, object_name) == 0)
     {
       *element = a[i];
       return 1;

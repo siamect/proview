@@ -235,6 +235,13 @@ typedef enum {
 
 } glow_eCycle;
 
+//! Userdata callback type
+typedef enum {
+  glow_eUserdataCbType_Node,	//!< Userdata in a GrowNode
+  glow_eUserdataCbType_Ctx,	//!< Userdata in GrowCtx
+  glow_eUserdataCbType_NodeClass //!< Userdata in a GlowNodeClass
+} glow_eUserdataCbType;
+
 //! Pass for java export
 typedef enum {
 	glow_eExportPass_Init,
@@ -1001,6 +1008,7 @@ typedef enum {
 	glow_eSave_NodeClass_dyn_attr3	        = 326,
 	glow_eSave_NodeClass_dyn_attr4	        = 327,
 	glow_eSave_NodeClass_input_focus_mark   = 328,
+	glow_eSave_NodeClass_userdata_cb	= 329,
 	glow_eSave_ConClass_cc_name		= 400,
 	glow_eSave_ConClass_con_type		= 401,
 	glow_eSave_ConClass_corner		= 402,
@@ -1133,6 +1141,7 @@ typedef enum {
 	glow_eSave_GrowRect_shadow             	= 1915,
 	glow_eSave_GrowRect_shadow_contrast     = 1916,
 	glow_eSave_GrowRect_disable_shadow      = 1917,
+	glow_eSave_GrowRect_invisible      	= 1918,
 	glow_eSave_GrowLine_x_right		= 2000,
 	glow_eSave_GrowLine_x_left		= 2001,
 	glow_eSave_GrowLine_y_high		= 2002,
@@ -1195,6 +1204,7 @@ typedef enum {
 	glow_eSave_GrowCtx_dyn_attr3	        = 2241,
 	glow_eSave_GrowCtx_dyn_attr4	        = 2242,
 	glow_eSave_GrowCtx_input_focus_mark     = 2243,
+	glow_eSave_GrowCtx_userdata_cb	        = 2244,
 	glow_eSave_GrowSubAnnot_x_right		= 2300,
 	glow_eSave_GrowSubAnnot_x_left		= 2301,
 	glow_eSave_GrowSubAnnot_y_high		= 2302,

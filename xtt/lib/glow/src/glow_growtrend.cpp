@@ -149,7 +149,7 @@ void GrowTrend::save( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_GrowTrend_scan_time) << FSPACE << scan_time << endl;
   if ( user_data && ctx->userdata_save_callback) {
     fp << int(glow_eSave_GrowTrend_userdata_cb) << endl;
-    (ctx->userdata_save_callback)(&fp, this);
+    (ctx->userdata_save_callback)(&fp, this, glow_eUserdataCbType_Node);
   }
   fp << int(glow_eSave_End) << endl;
 }
@@ -238,7 +238,7 @@ void GrowTrend::open( ifstream& fp)
         break;
       case glow_eSave_GrowTrend_userdata_cb:
 	if ( ctx->userdata_open_callback)
-	  (ctx->userdata_open_callback)(&fp, this);
+	  (ctx->userdata_open_callback)(&fp, this, glow_eUserdataCbType_Node);
 	break;
       case glow_eSave_End: end_found = 1; break;
       default:
