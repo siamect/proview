@@ -1,5 +1,5 @@
 Package: pwrrt
-Version: 4.0.0-6
+Version: 4.0.0-7
 Section: base
 Priority: optional
 Architecture: i386
@@ -25,3 +25,15 @@ Description:
    - All users has access to start mozilla from xtt.
    - PageDown and PageUp in xtt.
    - Ctrl replacments of PF keys in rtt
+ Changes in 4.0.0-7:
+   - QCOM bugfix.
+   - Menu entries to display volumes and nodes in xtt.
+   - Possibility to choose pixmap of menu entries in xtt.
+
+
+
+
+
+
+
+

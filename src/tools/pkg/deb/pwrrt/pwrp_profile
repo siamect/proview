@@ -44,6 +44,10 @@ alias pwr_start="/etc/init.d/pwr start"
 alias pwr="/etc/init.d/pwr"
 alias boot="/usr/bin/sudo /sbin/reboot"
 
+if [ -e $pwrp_exe/profile ]; then
+  source $pwrp_exe/profile
+fi
+
 
 
 
