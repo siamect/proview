@@ -1188,7 +1188,7 @@ gdh_GetRootList (
 
 pwr_tStatus
 gdh_GetClassList (
-  pwr_tClassId		cid,        /**< The object identity. */
+  pwr_tClassId		cid,        /**< The class identity. */
   pwr_tObjid		*oid        /**< Receives the object identity. */
 )
 {
@@ -1237,6 +1237,122 @@ gdh_GetNextObject (
     if (op != NULL) {
       *new_oid = op->g.oid;
     }
+
+  } gdh_ScopeUnlock;
+
+  return sts;
+}
+
+/** 
+ * @brief Get the attribute reference of the first object
+ * in the list of objects of a specified class.
+ * The object can be a solitary object or an attribute object.
+ *
+ * The call shows only private volumes
+ * (of class $RootVolume, $SubVolume,
+ * $DynamicVolume, $ClassVolume and $SystemVolume),
+ * and shared volumes.  
+ * @return pwr_tStatus 
+*/
+
+pwr_tStatus
+gdh_GetClassListAttrRef (
+  pwr_tClassId		cid,        /**< The class identity. */
+  pwr_sAttrRef		*arp        /**< Receives the attribute reference. */
+)
+{
+  pwr_tStatus		sts = GDH__SUCCESS;
+
+  gdh_ScopeLock {
+
+    mvol_ClassListAttrRef(&sts, cid, NULL, arp, mvol_eList_first);
+
+  } gdh_ScopeUnlock;
+
+  return sts;
+}
+
+/**
+ * @brief Get the attrref of the next object
+ * in the list of objects of a certain class.
+ * The object can be a solitary object or an attribute object.
+ *
+ * The visibility of objects in the class list are
+ * restricted to objects in private volumes,
+ * (of class $RootVolume, $SubVolume,
+ * $DynamicVolume, $ClassVolume and $SystemVolume),
+ * and in shared volumes.  
+ * @return pwr_tStatus
+ */
+
+pwr_tStatus
+gdh_GetNextAttrRef (
+  pwr_tClassId		cid,          /**< The class identity. */
+  pwr_sAttrRef		*arp,         /**< The attribute reference. */
+  pwr_sAttrRef		*new_arp      /**< Receives the attribute reference */
+)
+{
+  pwr_tStatus		sts = GDH__SUCCESS;
+
+  /* Check arguments. */
+  if (new_arp == NULL) return GDH__BADARG;
+
+  gdh_ScopeLock {
+
+    mvol_ClassListAttrRef(&sts, cid, arp, new_arp, mvol_eList_next);
+
+  } gdh_ScopeUnlock;
+
+  return sts;
+}
+
+/** 
+ * @brief Get the attribute reference of the first attribute object
+ * of a specified class in the specified object.
+ * @return pwr_tStatus 
+*/
+
+pwr_tStatus
+gdh_GetObjectClassList (
+  pwr_tCid		cid,        /**< The class identity. */
+  pwr_tOid		oid,	    /**< Host object. */
+  pwr_sAttrRef		*arp        /**< Receives the attribute reference. */
+)
+{
+  pwr_tStatus		sts = GDH__SUCCESS;
+  pwr_sAttrRef		ar;
+
+  gdh_ScopeLock {
+
+    ar.Objid = oid;
+    mvol_ClassListAttrRef(&sts, cid, &ar, arp, mvol_eList_objectfirst);
+
+  } gdh_ScopeUnlock;
+
+  return sts;
+}
+
+/**
+ * @brief Get the attrref of the next attribute object
+ * of a specified class in a specified object.
+ * @return pwr_tStatus
+ */
+
+pwr_tStatus
+gdh_GetNextObjectAttrRef (
+  pwr_tClassId		cid,          /**< The class identity. */
+  pwr_sAttrRef		*arp,         /**< The attribute reference. */
+  pwr_sAttrRef		*new_arp      /**< Receives the attribute reference */
+)
+{
+  pwr_tStatus		sts = GDH__SUCCESS;
+
+  /* Check arguments. */
+  if (new_arp == NULL) return GDH__BADARG;
+
+  gdh_ScopeLock {
+
+    mvol_ClassListAttrRef(&sts, cid, arp, new_arp, mvol_eList_objectnext);
 
   } gdh_ScopeUnlock;
 

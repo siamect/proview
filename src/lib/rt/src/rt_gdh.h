@@ -383,7 +383,32 @@ gdh_GetPreviousObject (
   pwr_tObjid		*previousObject
 );
 
+pwr_tStatus
+gdh_GetClassListAttrRef (
+  pwr_tClassId		cid,
+  pwr_sAttrRef		*arp
+);
 
+pwr_tStatus
+gdh_GetNextAttrRef (
+  pwr_tClassId		cid,
+  pwr_sAttrRef		*arp,
+  pwr_sAttrRef		*new_arp
+);
+
+pwr_tStatus
+gdh_GetObjectClassList (
+  pwr_tCid		cid,        /**< The class identity. */
+  pwr_tOid		oid,	    /**< Host object. */
+  pwr_sAttrRef		*arp        /**< Receives the attribute reference. */
+);
+
+pwr_tStatus
+gdh_GetNextObjectAttrRef (
+  pwr_tClassId		cid,          /**< The class identity. */
+  pwr_sAttrRef		*arp,         /**< The attribute reference. */
+  pwr_sAttrRef		*new_arp      /**< Receives the attribute reference */
+);
 #define gdh_ClassNameToNumber gdh_ClassNameToId
 
 pwr_tStatus

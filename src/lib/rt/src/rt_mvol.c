@@ -411,7 +411,7 @@ mvol_LinkClass (
 {
   cdh_uObjid            coid;
   pwr_sObjBodyDef	*bp;  
-  pwr_sParInfo		*abp;  
+  pwr_sParam		*abp;  
   gdb_sObject		*aop;
   gdb_sObject		*cop;
   gdb_sObject		*bop;
@@ -496,16 +496,17 @@ mvol_LinkClass (
   ) {
     aop = pool_Qitem(ol, gdb_sObject, u.n.sib_ll);
     abp = pool_Address(NULL, gdbroot->rtdb, aop->u.n.body);
-    i = abp->ParamIndex;
+    i = abp->Info.ParamIndex;
 
     cp->attr[i].aor     = pool_ItemReference(NULL, gdbroot->pool, aop);
     cp->attr[i].abr     = aop->u.n.body;
-    cp->attr[i].flags.m = abp->Flags;
-    cp->attr[i].type    = abp->Type;
-    cp->attr[i].offs    = abp->Offset;
-    cp->attr[i].size    = abp->Size;
-    cp->attr[i].elem    = abp->Elements;
-    cp->attr[i].moffset = abp->Offset + abp->Size - 1;
+    cp->attr[i].flags.m = abp->Info.Flags;
+    cp->attr[i].type    = abp->Info.Type;
+    cp->attr[i].offs    = abp->Info.Offset;
+    cp->attr[i].size    = abp->Info.Size;
+    cp->attr[i].elem    = abp->Info.Elements;
+    cp->attr[i].moffset = abp->Info.Offset + abp->Info.Size - 1;
+    cp->attr[i].tid     = abp->TypeRef;
     coid.pwr = aop->g.oid;
     cp->attr[i].aix     = coid.t.aix;
 #if 0
@@ -535,7 +536,7 @@ mvol_LinkSubClassToAttribute (
 
   for (i = 0; i < cp->acount; i++) {
     if (cp->attr[i].flags.b.isclass) {
-      subcp = hash_Search(sts, gdbroot->cid_ht, &cp->attr[i].cid);
+      subcp = hash_Search(sts, gdbroot->cid_ht, &cp->attr[i].tid);
       if (subcp == NULL)
         errh_Bugcheck(0, "No sub class");
       cp->attr[i].cr = pool_Reference(sts, gdbroot->pool, subcp);
@@ -693,3 +694,343 @@ mvol_NameToClass (
     pwr_Return(NULL, sts, GDH__BADOBJTYPE);
   }
 }
+
+static void insertCattObject( pwr_tStatus *sts, pwr_tCid cid, gdb_sAttribute *ap, int offset)
+{
+  gdb_sClassAttrKey 	key;
+  gdb_sClassAttr 	*item;
+  gdb_sClass		*cp;
+  int			i, j;
+
+  cp = hash_Search(sts, gdbroot->cid_ht, &ap->tid);
+  if (cp == NULL) pwr_ReturnVoid( sts, GDH__WEIRD);
+
+  /* Find a tree node with free offsets */
+  key.subCid = ap->tid;
+  key.hostCid = cid;
+  key.idx = 0;
+  item = ptree_Find( sts, gdbroot->catt_tt, &key);
+
+  while ( ODD(*sts) && item->numOffset == gdb_cCattOffsetSize) {
+    key.idx++;
+    item = ptree_Find( sts, gdbroot->catt_tt, &key);
+  }
+  if ( !ap->flags.b.array) {
+    if ( ODD(*sts)) {
+      /* Insert in found item */
+      item->offset[item->numOffset++] = offset + ap->offs;
+    }
+    else {
+      /* Insert a new item */
+      pool_tRef itemr;
+      
+      itemr = ptree_Insert( sts, gdbroot->catt_tt, &key);
+      item = (gdb_sClassAttr *) pool_Address( sts, gdbroot->pool, itemr);
+      if ( item == NULL) return;
+      item->offset[item->numOffset++] = offset + ap->offs;
+    }
+
+    /* Look for class attributes in this class */
+    for (i=0; i < cp->acount; i++) {
+      if ( cp->attr[i].flags.b.isclass && cdh_tidIsCid( cp->attr[i].tid)) {
+	insertCattObject( sts, cid, &cp->attr[i], offset + ap->offs);
+	if ( EVEN(*sts)) return;
+      }      
+    }
+  }
+  else {
+    /* Insert all offsets in the array */
+    for ( j = 0; j < ap->elem; j++) {
+      if ( ODD(*sts) && item->numOffset < gdb_cCattOffsetSize) {
+	/* Insert in current item */
+	item->offset[item->numOffset++] = offset + ap->offs + j * ap->size / ap->elem;
+      }
+      else {
+	/* Insert a new item */
+	pool_tRef itemr;
+      
+	if ( ODD(*sts))
+	  key.idx++;
+	itemr = ptree_Insert( sts, gdbroot->catt_tt, &key);
+	item = (gdb_sClassAttr *) pool_Address( sts, gdbroot->pool, itemr);
+	if ( item == NULL) return;
+	item->offset[item->numOffset++] = offset + ap->offs;
+      }
+
+      /* Look for class attributes in this class */
+      for (i=0; i < cp->acount; i++) {
+	if ( cp->attr[i].flags.b.isclass && cdh_tidIsCid( cp->attr[i].tid)) {
+	  insertCattObject( sts, cid, &cp->attr[i], 
+			    offset + ap->offs + j * ap->size / ap->elem);
+	  if ( EVEN(*sts)) return;
+	}
+      }
+    }
+  }
+}
+
+void mvol_BuildCatt( pwr_tStatus *sts)
+{
+  gdb_sObject 		*op = NULL;
+  pwr_tCid 		cid;
+  gdb_sClass		*cp;
+  int			i;
+
+  /* Loop through all $ClassDef objects */
+  op = mvol_ClassList( sts, pwr_eClass_ClassDef, pwr_cNObjid, mvol_eList_first);
+  while ( op) {
+    cid = cdh_ClassObjidToId( op->g.oid);
+
+    cp = hash_Search(sts, gdbroot->cid_ht, &cid);
+    if (cp == NULL) return;
+
+    for (i=0; i < cp->acount; i++) {
+      if ( cp->attr[i].flags.b.isclass && cdh_tidIsCid( cp->attr[i].tid)) {
+	insertCattObject( sts, cid, &cp->attr[i], 0);
+	if ( EVEN(*sts)) return;
+      }
+    }
+
+    op = mvol_ClassList( sts, pwr_cNClassId, op->g.oid, mvol_eList_next);
+  }
+}
+
+
+
+void
+mvol_ClassListAttrRef (
+  pwr_tStatus		*sts,
+  pwr_tClassId		cid,
+  pwr_sAttrRef		*iarp,
+  pwr_sAttrRef		*oarp,
+  mvol_eList		list
+)
+{
+  gdb_sClass		*cp;
+  gdb_sClass		*cap = NULL;
+  gdb_sObject		*op = NULL;
+  gdb_sObject		*fop = NULL;
+  pool_sQlink		*ol;
+  gdb_sClassAttrKey 	key;
+  gdb_sClassAttr 	*item = 0;
+  pwr_tUInt32		first_offset;
+  int			i;
+
+  if ( iarp != NULL && cdh_ObjidIsNotNull(iarp->Objid)) {
+    op = vol_OidToObject(sts, iarp->Objid, gdb_mLo_native, vol_mTrans_none, cvol_eHint_none);
+    if (op == NULL) return;
+  }
+  else if (cid == pwr_cNClassId)
+    pwr_ReturnVoid( sts, GDH__WEIRD);
+
+  cp = (gdb_sClass *) hash_Search(sts, gdbroot->cid_ht, &cid); 
+  if (cp == NULL) pwr_ReturnVoid( sts, GDH__BADOBJTYPE);
+
+  switch (list) {
+  case mvol_eList_first:
+    /* Find object in class list */
+    ol = pool_Qsucc(NULL, gdbroot->pool, &cp->cid_lh);
+    if (ol != NULL && ol != &cp->cid_lh) {
+      fop = pool_Qitem(ol, gdb_sObject, u.n.cid_ll);
+      *oarp = pwr_cNAttrRef;
+      oarp->Objid = fop->g.oid;
+      oarp->Flags.b.Object = 1;
+      oarp->Size = cp->size;
+      pwr_ReturnVoid( sts, MVOL__SUCCESS);
+    }
+    else {
+      /* Find attribute object */
+      key.subCid = cid;
+      key.hostCid = 0;
+      key.idx = 0;
+      for ( item = ptree_FindSuccessor( sts, gdbroot->catt_tt, &key);
+	    item != NULL && item->key.subCid == cid;
+	    item = ptree_FindSuccessor( sts, gdbroot->catt_tt, &item->key)) {
+	if ( cap != NULL && item->key.hostCid == cap->cid)
+	  /* Same class with other index */
+	  continue;
+
+	cap = (gdb_sClass *) hash_Search(sts, gdbroot->cid_ht, &item->key.hostCid); 
+	if (cap == NULL) return;
+
+	ol = pool_Qsucc(NULL, gdbroot->pool, &cap->cid_lh);
+	if (ol != NULL && ol != &cap->cid_lh) {
+	  fop = pool_Qitem(ol, gdb_sObject, u.n.cid_ll);
+	  *oarp = pwr_cNAttrRef;
+	  oarp->Objid = fop->g.oid;
+	  oarp->Flags.b.ObjectAttr = 1;
+	  oarp->Offset = item->offset[0];
+	  oarp->Size = cp->size;
+	  oarp->Body = cid;
+	  pwr_ReturnVoid( sts, MVOL__SUCCESS);
+	}      
+      }
+      pwr_ReturnVoid( sts, GDH__NO_TYPE);
+    }
+    break;
+
+  case mvol_eList_next:
+    if ( op->g.cid == cid) {
+      /* Find next object in class list */
+      ol = pool_Qsucc(NULL, gdbroot->pool, &op->u.n.cid_ll);
+      if (ol != NULL && ol != &cp->cid_lh) {
+	fop = pool_Qitem(ol, gdb_sObject, u.n.cid_ll);
+	*oarp = pwr_cNAttrRef;
+	oarp->Objid = fop->g.oid;
+	oarp->Flags.b.Object = 1;
+	oarp->Size = cp->size;
+	pwr_ReturnVoid( sts, MVOL__SUCCESS);
+      } 
+      else {
+	/* Find first attribute object */
+	key.subCid = cid;
+	key.hostCid = 0;
+	key.idx = 0;
+	for ( item = ptree_FindSuccessor( sts, gdbroot->catt_tt, &key);
+	      item != NULL && item->key.subCid == cid;
+	      item = ptree_FindSuccessor( sts, gdbroot->catt_tt, &item->key)) {
+	  if ( cap != NULL && item->key.hostCid == cap->cid)
+	    /* Same class with other index */
+	    continue;
+	  
+	  cap = (gdb_sClass *) hash_Search(sts, gdbroot->cid_ht, &item->key.hostCid); 
+	  if (cap == NULL) return;
+	  
+	  ol = pool_Qsucc(NULL, gdbroot->pool, &cap->cid_lh);
+	  if (ol != NULL && ol != &cap->cid_lh) {
+	    fop = pool_Qitem(ol, gdb_sObject, u.n.cid_ll);
+	    *oarp = pwr_cNAttrRef;
+	    oarp->Objid = fop->g.oid;
+	    oarp->Flags.b.ObjectAttr = 1;
+	    oarp->Offset = item->offset[0];
+	    oarp->Size = cp->size;
+	    oarp->Body = cid;
+	    pwr_ReturnVoid( sts, MVOL__SUCCESS);
+	  }
+	}
+	pwr_ReturnVoid( sts, GDH__NO_TYPE);
+      }
+    }
+
+    /* Find next attribute object in current object */
+    key.subCid = cid;
+    key.hostCid = op->g.cid;
+    key.idx = 0;
+    for ( item = ptree_Find( sts, gdbroot->catt_tt, &key);
+	  item != NULL && item->key.subCid == cid && item->key.hostCid == op->g.cid;
+	  item = ptree_FindSuccessor( sts, gdbroot->catt_tt, &item->key)) {
+      /* Find next offset */
+      for ( i = 0; i < item->numOffset; i++) {
+	if ( i == 0 && item->key.idx == 0)
+	  first_offset = item->offset[0];
+	if ( item->offset[i] > iarp->Offset) {
+	  *oarp = pwr_cNAttrRef;
+	  oarp->Objid = op->g.oid;
+	  oarp->Flags.b.ObjectAttr = 1;
+	  oarp->Offset = item->offset[i];
+	  oarp->Size = cp->size;
+	  oarp->Body = cid;
+	  pwr_ReturnVoid( sts, MVOL__SUCCESS);
+	}
+      }
+    }
+
+    /* Find first attribute in next object */
+    if ( cap == NULL) {
+      cap = (gdb_sClass *) hash_Search(sts, gdbroot->cid_ht, &op->g.cid); 
+      if (cap == NULL) pwr_ReturnVoid( sts, GDH__WEIRD);
+    }
+    ol = pool_Qsucc(NULL, gdbroot->pool, &op->u.n.cid_ll);
+    if (ol != NULL && ol != &cap->cid_lh) {
+      fop = pool_Qitem(ol, gdb_sObject, u.n.cid_ll);
+      *oarp = pwr_cNAttrRef;
+      oarp->Objid = fop->g.oid;
+      oarp->Flags.b.ObjectAttr = 1;
+      oarp->Offset = first_offset;
+      oarp->Size = cp->size;
+      oarp->Body = cid;
+      pwr_ReturnVoid( sts, MVOL__SUCCESS);
+    }
+
+    /* Find first offset in first object of next class */
+    key.subCid = cid;
+    key.hostCid = op->g.cid;
+    key.idx = 0;
+    for ( item = ptree_Find( sts, gdbroot->catt_tt, &key);
+	  item != NULL && item->key.subCid == cid;
+	  item = ptree_FindSuccessor( sts, gdbroot->catt_tt, &item->key)) {
+      if ( item->key.hostCid == key.hostCid)
+	continue;
+
+      cap = (gdb_sClass *) hash_Search(sts, gdbroot->cid_ht, &item->key.hostCid); 
+      if (cap == NULL) pwr_ReturnVoid( sts, GDH__WEIRD);
+
+      ol = pool_Qsucc(NULL, gdbroot->pool, &cap->cid_lh);
+      if (ol != NULL && ol != &cap->cid_lh) {
+	fop = pool_Qitem(ol, gdb_sObject, u.n.cid_ll);
+	*oarp = pwr_cNAttrRef;
+	oarp->Objid = fop->g.oid;
+	oarp->Flags.b.ObjectAttr = 1;
+	oarp->Offset = item->offset[0];
+	oarp->Size = cp->size;
+	oarp->Body = cid;
+	pwr_ReturnVoid( sts, MVOL__SUCCESS);
+      }
+    }
+    pwr_ReturnVoid( sts, GDH__NO_TYPE);
+
+  case mvol_eList_objectfirst:
+    /* Find first attrref in this object */
+    key.subCid = cid;
+    key.hostCid = op->g.cid;
+    key.idx = 0;
+    item = ptree_Find( sts, gdbroot->catt_tt, &key);
+    if ( item == NULL)
+      pwr_ReturnVoid( sts, GDH__NO_TYPE);
+
+    *oarp = pwr_cNAttrRef;
+    oarp->Objid = op->g.oid;
+    oarp->Flags.b.ObjectAttr = 1;
+    oarp->Offset = item->offset[0];
+    oarp->Size = cp->size;
+    oarp->Body = cid;
+    pwr_ReturnVoid( sts, MVOL__SUCCESS);
+
+  case mvol_eList_objectnext:
+
+    /* Find next attribute object in current object */
+    key.subCid = cid;
+    key.hostCid = op->g.cid;
+    key.idx = 0;
+    for ( item = ptree_Find( sts, gdbroot->catt_tt, &key);
+	  item != NULL && item->key.subCid == cid && item->key.hostCid == op->g.cid;
+	  item = ptree_FindSuccessor( sts, gdbroot->catt_tt, &item->key)) {
+      /* Find next offset */
+      for ( i = 0; i < item->numOffset; i++) {
+	if ( i == 0 && item->key.idx == 0)
+	  first_offset = item->offset[0];
+	if ( item->offset[i] > iarp->Offset) {
+	  *oarp = pwr_cNAttrRef;
+	  oarp->Objid = op->g.oid;
+	  oarp->Flags.b.ObjectAttr = 1;
+	  oarp->Offset = item->offset[i];
+	  oarp->Size = cp->size;
+	  oarp->Body = cid;
+	  pwr_ReturnVoid( sts, MVOL__SUCCESS);
+	}
+      }
+    }
+    pwr_ReturnVoid( sts, GDH__NO_TYPE);
+
+  default:
+    pwr_ReturnVoid( sts, GDH__NYI);
+  }
+}
+
+
+
+
+
+
+
+

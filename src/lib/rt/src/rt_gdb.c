@@ -48,6 +48,36 @@
 #endif
 
 
+/** Compare two keys in class attribute binary tree 
+*/
+
+static int
+compCatt( ptree_sTable *tp, ptree_sNode *x, ptree_sNode *y)
+{
+  gdb_sClassAttrKey *xKey = (gdb_sClassAttrKey *) (tp->g->keyOffset + (char *) x);
+  gdb_sClassAttrKey *yKey = (gdb_sClassAttrKey *) (tp->g->keyOffset + (char *) y);
+
+  if ( xKey->subCid == yKey->subCid) {
+    if ( xKey->hostCid == yKey->hostCid) {
+      if ( xKey->idx == yKey->idx)
+	return 0;
+      else if ( xKey->idx < yKey->idx)
+	return -1;
+      else
+	return 1;
+    }
+    else if ( xKey->hostCid < yKey->hostCid)
+      return -1;
+    else
+      return 1;
+  }
+  else if ( xKey->subCid < yKey->subCid)
+    return -1;
+  else
+    return 1;
+}
+
+
 static void
 evaluateInit (
   gdb_sInit		*ip
@@ -216,6 +246,9 @@ mapLocalDb (
   gdbroot->sc_ht = hash_Create(sts, gdbroot->pool, &gdbroot->h.sc_ht, &gdbroot->db->h.sc_ht, NULL, NULL);
   if (gdbroot->sc_ht == NULL) errh_Bugcheck(*sts, "initiating sub class object hash table");
 
+  gdbroot->catt_tt = ptree_Create(sts, gdbroot->pool, &gdbroot->t.catt_tt, &gdbroot->db->t.catt_tt,
+				  compCatt);
+  if (gdbroot->catt_tt == NULL) errh_Bugcheck(*sts, "initiating class attribute tree table");
 
   if (offsetof(sub_sClient, sid) != offsetof(sub_sServer, sid))
     errh_Bugcheck(GDH__WEIRD, "offset id: client - server");
@@ -710,6 +743,9 @@ gdb_CreateDb (
 
     hash_Init(&gdbroot->db->h.sc_ht, ip->scObjects, sizeof(pwr_tObjid), sizeof(gdb_sScObject),
       offsetof(gdb_sScObject, sc_htl), offsetof(gdb_sCclass, cclass_htl), hash_eKey_oid);
+
+    ptree_Init(gdbroot->pool, &gdbroot->db->t.catt_tt, sizeof(gdb_sClassAttrKey),
+      offsetof(gdb_sClassAttr, key), sizeof(gdb_sClassAttr), 100);
 
     lp = mapLocalDb(sts);
     if (lp == NULL) break;

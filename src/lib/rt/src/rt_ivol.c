@@ -464,6 +464,10 @@ ivol_BuildNode (
   }
 
 
+  /* Build class attribute tree */
+  mvol_BuildCatt(sts);
+
+
   convFctn = dvms_GetFctns(formatp);
   if (convFctn != NULL)
     decodeObjects(formatp->b.bo);

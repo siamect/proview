@@ -65,6 +65,10 @@
 #include "rt_hash.h"
 #endif
 
+#ifndef rt_ptree_h
+#include "rt_ptree.h"
+#endif
+
 #ifndef rt_net_h
 #include "rt_net.h"
 #endif
@@ -560,7 +564,23 @@ typedef struct {
 } gdb_sCclass;
 
 
-  
+/** Class attributes
+ */
+
+typedef struct {
+  pwr_tCid		subCid;        	/**< Class Id for class attribute */
+  pwr_tCid              hostCid;       	/**< Class Id for owner class */
+  pwr_tUInt32  		idx;		/**< Index of offset data */
+} gdb_sClassAttrKey;
+
+#define gdb_cCattOffsetSize 20
+
+typedef struct {
+  ptree_sNode		n;
+  gdb_sClassAttrKey	key;
+  int			numOffset;
+  pwr_tUInt32		offset[gdb_cCattOffsetSize];
+} gdb_sClassAttr;  
 
 /** Object.
 
@@ -807,7 +827,7 @@ typedef struct {
   pwr_tUInt32		elem;
   pwr_tUInt32		moffset;	/**< Attribute maximum offset within body.  */
   pwr_tAix		aix;
-  pwr_tClassId          cid;            /**< If class, Class Id */
+  pwr_tTid              tid;            /**< Type id or if class, Class Id */
   pool_tRef             cr;             /**< If class, gdb_sClass reference */
 } gdb_sAttribute;
 
@@ -973,9 +993,11 @@ typedef struct {
     hash_sGtable	as_ht;		/**< mount soid -> alias server hash table.  */
     hash_sGtable	ccvol_ht;	/**< nid + vid -> cached class volume */
     hash_sGtable	cclass_ht;	/**< cid + cached voltime -> cached class */
-    hash_sGtable	sc_ht;	        /**< oid -> Sub Class object hash table*/
+    hash_sGtable	sc_ht;	        /**< oid -> Sub Class object hash table */
   } h;
-
+  struct {
+    ptree_sGtable	catt_tt;	/**< cid and offset of class attributes tree table */
+  } t;
   qcom_sQid		nethandler;	/**< local nethandler */
   qcom_sQid		neth_acp;	/**< local neth acp */
   qcom_sQid		tmon;		/**< local neth acp */
@@ -1070,6 +1092,9 @@ typedef struct {
     hash_sTable		cclass_ht;	/**< cid + cached voltime -> cached class hash table */
     hash_sTable		sc_ht;	        /**< oid -> sub class object hash table  */
   } h;
+  struct {
+    ptree_sTable	catt_tt;	/**< cid and offset of class attributes tree table*/
+  } t;
   gdb_sGlobal		*db;		/**< Database Root, (in db_lock section) */
   sect_sHead		*sect;		/**< Section header for global database.  */
   sect_sHead		*lock;		/**< Section header for .  */
@@ -1090,6 +1115,7 @@ typedef struct {
   hash_sTable		*ccvol_ht;	/**< nid + vid -> cached class volume hash table */
   hash_sTable		*cclass_ht;	/**< cid + cached voltime -> cached class hash table */
   hash_sTable		*sc_ht;	        /**< oid -> sub class object hash table  */
+  ptree_sTable		*catt_tt;	/**< cid and offset of class attributes tree table */
 
   gdb_sVolume		*my_volume;	/**< The local root volume.  */
   gdb_sVolume		*no_volume;	/**< The unknown volume with vid = 0.0.0.0.  */

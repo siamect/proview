@@ -35,6 +35,8 @@ typedef enum {
   mvol_eList_last,
   mvol_eList_next,
   mvol_eList_prev,
+  mvol_eList_objectfirst,
+  mvol_eList_objectnext,
   mvol_eList_
 } mvol_eList;
 
@@ -102,6 +104,15 @@ mvol_ClassList (
   mvol_eList		list
 );
 
+void
+mvol_ClassListAttrRef (
+  pwr_tStatus		*sts,
+  pwr_tClassId		cid,
+  pwr_sAttrRef		*iarp,
+  pwr_sAttrRef		*oarp,
+  mvol_eList		list
+);
+
 gdb_sClass *
 mvol_LinkClass (
   pwr_tStatus		*sts,
@@ -134,6 +145,11 @@ gdb_sClass *
 mvol_NameToClass (
   pwr_tStatus		*sts,
   char			*name
+);
+
+void 
+mvol_BuildCatt ( 
+pwr_tStatus *sts
 );
 
 #endif
