@@ -36,6 +36,7 @@ extern "C" {
 #include "ge_attr.h"
 #include "ge_dyn.h"
 #include "ge_msg.h"
+#include "glow_msg.h"
 
 extern "C" {
 #include "co_mrm_util.h"
@@ -2097,11 +2098,27 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
         case grow_eMode_Annot:
         {
 	  grow_tObject a1;
+	  glow_eDrawType drawtype;
+	  int textsize;
 
+          if ( graph->textbold)
+            drawtype = glow_eDrawType_TextHelveticaBold;
+          else
+            drawtype = glow_eDrawType_TextHelvetica;
+
+          switch( graph->textsize)
+          {
+            case 0: textsize = 0; break;
+            case 1: textsize = 1; break;
+            case 2: textsize = 2; break;
+            case 3: textsize = 4; break;
+            case 4: textsize = 6; break;
+            case 5: textsize = 8; break;
+          }
           grow_CreateGrowAnnot( graph->grow->ctx, "", 
 	    event->create_grow_object.x, event->create_grow_object.y, 
-	    1, glow_eDrawType_TextHelveticaBold, graph->get_text_drawtype(),
-	    3, glow_eAnnotType_OneLine,
+	    1, drawtype, graph->get_text_drawtype(),
+	    textsize, glow_eAnnotType_OneLine,
 	    0, glow_mDisplayLevel_1, NULL, &a1);
           grow_SetModified( graph->grow->ctx, 1);
 	  if ( !graph->keep_mode)
@@ -3047,7 +3064,7 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
 
       if ( event->object.object_type == glow_eObjectType_NoObject ||
 	   grow_GetObjectType( event->object.object) != glow_eObjectType_GrowMenu) {
-      // Close any open menu, if not click in menu
+	// Close any open menu, if not click in menu
 	glow_sEvent e;
 	grow_tObject 	*objectlist;
 	int 		object_cnt, cnt;
@@ -3123,22 +3140,32 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
 
       break;
     }
-    case glow_eEvent_Key_Tab:
-    case glow_eEvent_Key_ShiftTab:
-    case glow_eEvent_Key_Escape:
     case glow_eEvent_Key_Left:
     case glow_eEvent_Key_Right:
     case glow_eEvent_Key_Up:
     case glow_eEvent_Key_Down:
-    case glow_eEvent_Key_Return:
+    case glow_eEvent_Key_Return: {
+      GeDyn *dyn;
+
+      if ( !(event->object.object_type == glow_eObjectType_NoObject)) {
+
+	grow_GetUserData( event->object.object, (void **)&dyn);
+	dyn->action( event->object.object, event);
+      }
+      break;
+    }
+    case glow_eEvent_Key_Tab:
+    case glow_eEvent_Key_ShiftTab:
+    case glow_eEvent_Key_Escape:
     case glow_eEvent_InputFocusInit: {
       GeDyn *dyn;
 
       if ( event->object.object_type == glow_eObjectType_NoObject) {
 	grow_tObject 	*objectlist;
 	int 		object_cnt;
+	int		new_object_cnt;
 	int		i;
-	
+
 	grow_GetObjectList( graph->grow->ctx, &objectlist, &object_cnt);
 	for ( i = 0; i < object_cnt; i++) {
 	  if ( grow_GetObjectType( objectlist[i]) == glow_eObjectType_GrowNode ||
@@ -3146,6 +3173,12 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
 	       grow_GetObjectType( objectlist[i]) == glow_eObjectType_GrowGroup) {
 	    grow_GetUserData( objectlist[i], (void **)&dyn);
 	    dyn->action( objectlist[i], event);
+
+	    // Check if anything is deleted
+	    grow_GetObjectList( graph->grow->ctx, &objectlist, &new_object_cnt);
+	    if ( new_object_cnt != object_cnt)
+	      break;
+
 	  }
 	}
       }
@@ -3173,6 +3206,7 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
       int		new_object_cnt;
       int		i;
       GeDyn		*dyn;
+      int		sts;
 
       grow_GetObjectList( graph->grow->ctx, &objectlist, &object_cnt);
       for ( i = 0; i < object_cnt; i++) {
@@ -3181,7 +3215,9 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
 
 	  
 	  grow_GetUserData( objectlist[i], (void **)&dyn);
-	  dyn->action( objectlist[i], event);
+	  sts = dyn->action( objectlist[i], event);
+	  if ( sts == GLOW__TERMINATED)
+	    return sts;
 
 	  // Check if anything is deleted
 	  grow_GetObjectList( graph->grow->ctx, &objectlist, &new_object_cnt);
