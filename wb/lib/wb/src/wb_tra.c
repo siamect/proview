@@ -388,10 +388,21 @@ static pwr_tStatus trace_get_attr_m4( 	gre_ctx		grectx,
   pwr_eType		par_type;
   pwr_tClassId		class;
   pwr_tObjid		objdid;
+  char			parname[40];
 
   /* Get the objdid stored in the parameter Object */
+  switch ( node->ln.classid) {
+  case pwr_cClass_GetAp:
+    strcpy( parname, "ApObject");
+    break;
+  case pwr_cClass_GetDp:
+    strcpy( parname, "DpObject");
+    break;
+  default:
+    strcpy( parname, "Object");
+  }
   sts = ldh_GetObjectPar( node->hn.window_pointer->hw.ldhsession,  
-		node->ln.object_did, "DevBody", "Object",
+		node->ln.object_did, "DevBody", parname,
 		(char **)&objdidp, &size); 
   if ( EVEN(sts)) return sts;
 
@@ -402,6 +413,7 @@ static pwr_tStatus trace_get_attr_m4( 	gre_ctx		grectx,
   if( EVEN(sts)) return sts;
 
   strcpy( object_str, hier_name);
+  objdid = *objdidp;
   free((char *) objdidp);
 
   /* Get the parametername stored in the parameter */
