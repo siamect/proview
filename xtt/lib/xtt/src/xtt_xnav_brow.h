@@ -36,6 +36,7 @@ class XNavBrow {
     brow_tNodeClass 	nc_header;
     brow_tNodeClass 	nc_headerlarge;
     brow_tNodeClass 	nc_table_header;
+    brow_tNodeClass 	nc_enum;
     flow_sAnnotPixmap 	*pixmap_leaf;
     flow_sAnnotPixmap 	*pixmap_map;
     flow_sAnnotPixmap 	*pixmap_openmap;
@@ -57,6 +58,14 @@ class XNavBrow {
     flow_sAnnotPixmap 	*pixmap_morehelp;
     flow_sAnnotPixmap 	*pixmap_closehelp;
     flow_sAnnotPixmap 	*pixmap_object;
+    flow_sAnnotPixmap 	*pixmap_attrenum;
+    flow_sAnnotPixmap 	*pixmap_attrmask;
+    flow_sAnnotPixmap 	*pixmap_block2;
+    flow_sAnnotPixmap 	*pixmap_blockd;
+    flow_sAnnotPixmap 	*pixmap_blockr;
+    flow_sAnnotPixmap 	*pixmap_alarm2;
+    flow_sAnnotPixmap 	*pixmap_arrowdown;
+    flow_sAnnotPixmap 	*pixmap_arrowright;
     char                push_command[200];
 
     void free_pixmaps();

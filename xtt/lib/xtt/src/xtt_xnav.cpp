@@ -1,4 +1,4 @@
-/* rt_xtt.cpp -- Display plant and node hiererachy
+/* rt_xtt.cpp -- Display plant and node hierarchy
 
    PROVIEW/R  
    Copyright (C) 1996 by Comator Process AB.
@@ -388,7 +388,7 @@ int  xnav_attr_string_to_value( int type_id, char *value_str,
 //
 // Convert attribute value to string
 //
-void  xnav_attrvalue_to_string( int type_id, void *value_ptr, 
+void  xnav_attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr, 
 	char *str, int size, int *len, char *format)
 {
   char			hiername[120];
@@ -479,12 +479,39 @@ void  xnav_attrvalue_to_string( int type_id, void *value_ptr,
     }
     case pwr_eType_UInt32:
     case pwr_eType_Mask:
-    case pwr_eType_Enum:
     {
       if ( !format)
         *len = sprintf( str, "%d", *(unsigned int *)value_ptr);
       else
         *len = sprintf( str, format, *(unsigned int *)value_ptr);
+      break;
+    }
+    case pwr_eType_Enum:
+    {
+      gdh_sValueDef *valuedef;
+      int 		rows;
+      bool		converted = false;
+
+      sts = gdh_GetEnumValueDef( tid, &valuedef, &rows);
+      if ( ODD(sts)) {
+
+	for ( int i = 0; i < rows; i++) {
+	  if ( valuedef[i].Value->Value == *(pwr_tInt32 *)value_ptr) {
+	    strcpy( str, valuedef[i].Value->Text);
+	    *len = strlen(str);
+	    converted = true;
+	    break;
+	  }
+	}
+	free( (char *)valuedef);
+      }
+      if ( !converted) {
+	if ( !format)
+	  *len = sprintf( str, "%d", *(unsigned int *)value_ptr);
+	else
+	  *len = sprintf( str, format, *(unsigned int *)value_ptr);
+	break;
+      }
       break;
     }
     case pwr_eType_String:
@@ -638,6 +665,7 @@ int XNav::collect_insert( pwr_sAttrRef *arp)
   unsigned int 	a_size;
   unsigned int 	a_offset;
   unsigned int 	a_dim;
+  pwr_tTid	a_tid;
 
   sts = gdh_AttrrefToName ( arp, name, sizeof(name), cdh_mNName);
   if ( EVEN(sts)) return sts;
@@ -649,6 +677,9 @@ int XNav::collect_insert( pwr_sAttrRef *arp)
 
     sts = gdh_GetAttributeCharAttrref( arp, &a_type_id, &a_size, &a_offset, 
 	&a_dim);
+    if ( EVEN(sts)) return sts;
+
+    sts = gdh_GetAttrRefTid( arp, &a_tid);
     if ( EVEN(sts)) return sts;
   }
   else {
@@ -665,10 +696,13 @@ int XNav::collect_insert( pwr_sAttrRef *arp)
     sts = gdh_GetAttributeCharAttrref( &ar, &a_type_id, &a_size, &a_offset, 
 	&a_dim);
     if ( EVEN(sts)) return sts;
+
+    sts = gdh_GetAttrRefTid( arp, &a_tid);
+    if ( EVEN(sts)) return sts;
   }
 
   item = new ItemCollect( collect_brow, arp->Objid, attr, NULL, 
-		flow_eDest_IntoLast, a_type_id, a_size, 0);
+		flow_eDest_IntoLast, a_type_id, a_tid, a_size, 0);
   message( 'I', "Object inserted");
   return 1;
 }
@@ -1718,8 +1752,19 @@ static int xnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
       case xnav_eItemType_Collect:
       case xnav_eItemType_Local:
       case xnav_eItemType_ObjectStruct:
+	sts = item->open_children( xnav->brow, 0, 0);
+	if (ODD(sts)) break;
+
 	if ( xnav->gbl.advanced_user && xnav->change_value_cb)
 	  (xnav->change_value_cb)( xnav->parent_ctx);
+	break;
+      case xnav_eItemType_Enum:
+	if ( xnav->gbl.advanced_user)
+	  ((ItemEnum *)item)->set_value();
+	break;
+      case xnav_eItemType_Mask:
+	if ( xnav->gbl.advanced_user)
+	  ((ItemMask *)item)->toggle_value();
 	break;
       default:
 	sts = item->open_children( xnav->brow, 0, 0);
@@ -1910,6 +1955,29 @@ static int xnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
           brow_SelectClear( xnav->brow->ctx);
       }
       break;
+    case flow_eEvent_Radiobutton:
+    {
+      switch ( event->object.object_type)
+      {
+        case flow_eObjectType_Node:
+          brow_GetUserData( event->object.object, (void **)&item);
+          switch( item->type) {
+	  case xnav_eItemType_Enum: 
+	    if ( !event->radiobutton.value)
+	      ((ItemEnum *)item)->set_value();
+	    break;
+	  case xnav_eItemType_Mask: 
+	    ((ItemMask *)item)->set_value( !event->radiobutton.value);
+	    break;
+	  default:
+	    ;
+          }
+          break;
+        default:
+          ;
+      }
+      break;
+    }
     case flow_eEvent_MB3Press:
     {            
       // Popup menu
@@ -2039,6 +2107,8 @@ static void xnav_trace_scan( XNav *xnav)
 	XtWidgetToApplicationContext(xnav->brow_widget) , time,
 	(XtTimerCallbackProc)xnav_trace_scan, xnav);
   }
+  xnav->update_alarminfo();
+
   if ( xnav->ev)
     xnav->ev->update( xnav->gbl.scantime);
   if ( xnav->op)
@@ -2082,9 +2152,47 @@ static int xnav_trace_scan_bc( brow_tObject object, void *p)
       else
         item->first_scan = 0;
 
-      xnav_attrvalue_to_string( item->type_id, p, buf, sizeof(buf), &len, NULL);
+      xnav_attrvalue_to_string( item->type_id, item->tid, p, buf, sizeof(buf), &len, NULL);
       brow_SetAnnotation( object, 1, buf, len);
       memcpy( item->old_value, p, min(item->size, (int) sizeof(item->old_value)));
+      break;
+    }
+    case xnav_eItemType_Enum: {
+      ItemEnum	*item;
+
+      item = (ItemEnum *)base_item;
+      if ( !item->first_scan) {
+        if ( memcmp( item->old_value, p, sizeof(pwr_tEnum)) == 0)
+          // No change since last time
+          return 1;
+      }
+      else
+        item->first_scan = 0;
+
+      if ( *(pwr_tEnum *)p == item->num)
+	brow_SetRadiobutton( object, 0, 1);
+      else
+	brow_SetRadiobutton( object, 0, 0);
+      memcpy( item->old_value, p, sizeof(pwr_tEnum));
+      break;
+    }
+    case xnav_eItemType_Mask: {
+      ItemMask	*item;
+
+      item = (ItemMask *)base_item;
+      if ( !item->first_scan) {
+        if ( memcmp( item->old_value, p, sizeof(pwr_tMask)) == 0)
+          // No change since last time
+          return 1;
+      }
+      else
+        item->first_scan = 0;
+
+      if ( *(pwr_tMask *)p & item->num)
+	brow_SetRadiobutton( object, 0, 1);
+      else
+	brow_SetRadiobutton( object, 0, 0);
+      memcpy( item->old_value, p, sizeof(pwr_tMask));
       break;
     }
     case xnav_eItemType_Local:
@@ -2107,7 +2215,7 @@ static int xnav_trace_scan_bc( brow_tObject object, void *p)
       else
         item->first_scan = 0;
 
-      xnav_attrvalue_to_string( item->type_id, p, buf, sizeof(buf), &len, NULL);
+      xnav_attrvalue_to_string( item->type_id, 0, p, buf, sizeof(buf), &len, NULL);
       brow_SetAnnotation( object, 1, buf, len);
       memcpy( item->old_value, p, min(item->size, (int) sizeof(item->old_value)));
       break;
@@ -2132,7 +2240,7 @@ static int xnav_trace_scan_bc( brow_tObject object, void *p)
       else
         item->first_scan = 0;
 
-      xnav_attrvalue_to_string( item->type_id, p, buf, sizeof(buf), &len, NULL);
+      xnav_attrvalue_to_string( item->type_id, 0, p, buf, sizeof(buf), &len, NULL);
       brow_SetAnnotation( object, 1, buf, len);
       memcpy( item->old_value, p, min(item->size, (int) sizeof(item->old_value)));
       break;
@@ -2196,7 +2304,7 @@ static int xnav_trace_scan_bc( brow_tObject object, void *p)
 
           if ( !nochange)
           {
-            xnav_attrvalue_to_string( item->col.elem[i].type_id,
+            xnav_attrvalue_to_string( item->col.elem[i].type_id, 0,
 		item->col.elem[i].value_p, buf, sizeof(buf), &len,
 		item->col.elem[i].format);
             brow_SetAnnotation( object, i, buf, len);
@@ -2231,6 +2339,8 @@ static int xnav_trace_connect_bc( brow_tObject object, char *name, char *attr,
   switch( base_item->type)
   {
     case xnav_eItemType_Attr:
+    case xnav_eItemType_Enum:
+    case xnav_eItemType_Mask:
     case xnav_eItemType_AttrArrayElem:
     case xnav_eItemType_Collect:
     {
@@ -2328,6 +2438,64 @@ static int xnav_trace_disconnect_bc( brow_tObject object)
   return 1;
 }
 
+int XNav::update_alarminfo()
+{
+  flow_tObject 	*object_list;
+  int		object_cnt;
+  Item	 	*item;
+  int		i;
+  pwr_tStatus	sts;
+
+  brow_GetObjectList( brow->ctx, &object_list, &object_cnt);
+  for ( i = 0; i < object_cnt; i++) {
+    brow_GetUserData( object_list[i], (void **)&item);
+
+    switch ( item->type) {
+    case xnav_eItemType_Object: {
+      pwr_tUInt32 alarm_level, max_alarm_level;
+      pwr_tUInt32 block_level, max_block_level, visibility;
+      ItemObject *oitem = (ItemObject *)item;
+
+      sts = gdh_GetAlarmInfo( oitem->objid, &alarm_level, &max_alarm_level, 
+			      &block_level, &max_block_level, &visibility);
+      if ( EVEN(sts)) break;
+
+      // Update alarm pixmap
+      if ( alarm_level != oitem->alarm_level ||
+	   max_alarm_level != oitem->max_alarm_level) {
+	if ( alarm_level && max_alarm_level)
+	  brow_SetAnnotPixmap( object_list[i], 2, brow->pixmap_alarm2);
+	else if ( alarm_level)
+	  brow_SetAnnotPixmap( object_list[i], 2, brow->pixmap_arrowright);
+	else if ( max_alarm_level)
+	  brow_SetAnnotPixmap( object_list[i], 2, brow->pixmap_arrowdown);
+	else
+	  brow_RemoveAnnotPixmap( object_list[i], 2);
+	oitem->alarm_level = alarm_level;
+	oitem->max_alarm_level = max_alarm_level;
+      }
+
+      // Update block pixmap
+      if ( block_level != oitem->block_level ||
+	   max_block_level != oitem->max_block_level) {
+	if ( block_level && max_block_level)
+	  brow_SetAnnotPixmap( object_list[i], 3, brow->pixmap_block2);
+	else if ( block_level)
+	  brow_SetAnnotPixmap( object_list[i], 3, brow->pixmap_blockr);
+	else if ( max_block_level)
+	  brow_SetAnnotPixmap( object_list[i], 3, brow->pixmap_blockd);
+	else
+	  brow_RemoveAnnotPixmap( object_list[i], 3);
+	oitem->block_level = block_level;
+	oitem->max_block_level = max_block_level;
+      }
+      break;
+    }
+    default: ;
+    }
+  }
+  return 1;
+}
 
 int XNav::display_object( pwr_tObjid objid, int open)
 {
@@ -3175,6 +3343,8 @@ void  XNav::enable_events( XNavBrow *brow)
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_ShiftRight, flow_eEventType_CallBack, 
 	xnav_brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Resized, flow_eEventType_CallBack, 
+	xnav_brow_cb);
+  brow_EnableEvent( brow->ctx, flow_eEvent_Radiobutton, flow_eEventType_CallBack, 
 	xnav_brow_cb);
 }
 

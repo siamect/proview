@@ -54,6 +54,7 @@ extern "C" {
 #include "xtt_ge.h"
 #include "xtt_item.h"
 #include "xtt_xnav_crr.h"
+#include "xtt_xattone.h"
 #include "co_dcli_msg.h"
 #include "rt_xnav_msg.h"
 #include "co_xhelp.h"
@@ -66,6 +67,7 @@ extern "C" {
 #include "xtt_xcrr.h"
 #include "xtt_menu.h"
 #include "xtt_url.h"
+#include "xtt_block.h"
 
 #define IF_NOGDH_RETURN \
 if ( !xnav->gbl.gdh_started)\
@@ -80,6 +82,7 @@ if ( !xnav->gbl.gdh_started)\
 static char null_str[] = "";
 static char xtt_version[] = "V3.3a";
 static XNav *current_xnav;
+static pwr_tStatus command_sts = 1;
 
 static void xnav_ev_help_cb( void *xnav, char *key);
 static void xnav_ev_display_in_xnav_cb( void *xnav, pwr_sAttrRef *arp);
@@ -105,6 +108,7 @@ static int xnav_op_get_alarm_info_cb( void *xnav, evlist_sAlarmInfo *info);
 static void xnav_op_ack_last_cb( void *xnav, unsigned long type, unsigned long prio);
 static void xnav_trend_close_cb( void *ctx, XttTrend *trend);
 static void xnav_fast_close_cb( void *ctx, XttFast *fast);
+static void xnav_xao_close_cb( void *ctx, XAttOne *xao);
 static void xnav_clog_close_cb( void *ctx);
 
 static int	xnav_help_func(		void		*client_data,
@@ -147,6 +151,10 @@ static int	xnav_test_func(		void		*client_data,
 					void		*client_flag);
 static int	xnav_logging_func(	void		*client_data,
 					void		*client_flag);
+static int	xnav_call_func(		void		*client_data,
+					void		*client_flag);
+static int	xnav_check_func(       	void		*client_data,
+					void		*client_flag);
 
 dcli_tCmdTable	xnav_command_table[] = {
 		{
@@ -165,7 +173,8 @@ dcli_tCmdTable	xnav_command_table[] = {
 			"/SCROLLBAR", "/WIDTH", "/HEIGHT", "/MENU", 
 			"/NAVIGATOR", "/CENTER", "/OBJECT", "/NEW", 
 			"/INSTANCE", "/COLLECT", "/FOCUS", "/INPUTEMPTY", 
-                        "/ENTRY", "/TITLE", "/ACCESS", "/CLASSGRAPH", ""}
+                        "/ENTRY", "/TITLE", "/ACCESS", "/CLASSGRAPH", "/BYPASS", 
+			  ""}
 		},
 		{
 			"CLOSE",
@@ -261,7 +270,7 @@ dcli_tCmdTable	xnav_command_table[] = {
 		{
 			"EVENTLIST",
 			&xnav_eventlist_func,
-			{"dcli_arg1", "/PRIORITY", "",}
+			{"dcli_arg1", "/PRIORITY", "/NAME", "",}
 		},
 		{
 			"TEST",
@@ -276,6 +285,16 @@ dcli_tCmdTable	xnav_command_table[] = {
 			"/BUFFER_SIZE", "/PRIORITY", "/STOP", "/NOSTOP", 
 			"/CREATE", "/ALL", "/LINE_SIZE", "/SHORTNAME", 
 			"/NOSHORTNAME", ""}
+		},
+		{
+			"CALL",
+			&xnav_call_func,
+			{ "dcli_arg1", "/METHOD", "/OBJECT", ""}
+		},
+		{
+			"CHECK",
+			&xnav_check_func,
+			{ "dcli_arg1", "/METHOD", "/OBJECT", ""}
 		},
 		{"",}};
 
@@ -1464,13 +1483,15 @@ static int	xnav_show_func(	void		*client_data,
 
     if ( !xnav->ev)
     {
-      char alarm_title[40], event_title[40];
+      char alarm_title[40], event_title[40], block_title[40];
 
-      strcpy( alarm_title, Lng::translate( "Alarm list"));
-      strcpy( event_title, Lng::translate( "Event list"));
-      xnav->ev = new Ev( xnav, xnav->parent_wid, event_title, alarm_title,
-		xnav->gbl.UserObject, 0, 1, xnav->gbl.AlarmReturn,
-		xnav->gbl.AlarmAck, xnav->gbl.AlarmBeep, &sts);
+      strcpy( alarm_title, Lng::translate( "Alarm List"));
+      strcpy( event_title, Lng::translate( "Event List"));
+      strcpy( block_title, Lng::translate( "Blocked Alarms"));
+      xnav->ev = new Ev( xnav, xnav->parent_wid, 
+			 event_title, alarm_title, block_title, 
+			 xnav->gbl.UserObject, 0, 1, 0, xnav->gbl.AlarmReturn,
+			 xnav->gbl.AlarmAck, xnav->gbl.AlarmBeep, &sts);
       if ( EVEN(sts))
       {
         delete xnav->ev;
@@ -1528,12 +1549,14 @@ static int	xnav_show_func(	void		*client_data,
 
     if ( !xnav->ev)
     {
-      char alarm_title[40], event_title[40];
+      char alarm_title[40], event_title[40], block_title[40];
 
-      strcpy( alarm_title, Lng::translate( "Alarm list"));
-      strcpy( event_title, Lng::translate( "Event list"));
-      xnav->ev = new Ev( xnav, xnav->parent_wid, event_title, alarm_title,
-		xnav->gbl.UserObject, 1, 0, xnav->gbl.AlarmReturn,
+      strcpy( alarm_title, Lng::translate( "Alarm List"));
+      strcpy( event_title, Lng::translate( "Event List"));
+      strcpy( block_title, Lng::translate( "Blocked Alarms"));
+      xnav->ev = new Ev( xnav, xnav->parent_wid, 
+			 event_title, alarm_title, block_title,
+		xnav->gbl.UserObject, 1, 0, 0, xnav->gbl.AlarmReturn,
 		xnav->gbl.AlarmAck, xnav->gbl.AlarmBeep, &sts);
       if ( EVEN(sts))
       {
@@ -1550,6 +1573,36 @@ static int	xnav_show_func(	void		*client_data,
     }
     else
       xnav->ev->map_ala();
+  }
+  else if ( strncmp( arg1_str, "BLOCKLIST", strlen( arg1_str)) == 0)
+  {
+
+    if ( !xnav->ev)
+    {
+      char alarm_title[40], event_title[40], block_title[40];
+
+      strcpy( alarm_title, Lng::translate( "Alarm List"));
+      strcpy( event_title, Lng::translate( "Event List"));
+      strcpy( block_title, Lng::translate( "Blocked Alarms"));
+      xnav->ev = new Ev( xnav, xnav->parent_wid, 
+			 event_title, alarm_title, block_title,
+		xnav->gbl.UserObject, 0, 0, 1, xnav->gbl.AlarmReturn,
+		xnav->gbl.AlarmAck, xnav->gbl.AlarmBeep, &sts);
+      if ( EVEN(sts))
+      {
+        delete xnav->ev;
+        xnav->ev = NULL;
+        xnav->message('E', "Unable to load eventlist");
+        return XNAV__SUCCESS;
+      }
+      xnav->ev->start_trace_cb = xnav_start_trace_cb;
+      xnav->ev->help_cb = xnav_ev_help_cb;
+      xnav->ev->display_in_xnav_cb = xnav_ev_display_in_xnav_cb;
+      xnav->ev->update_info_cb = xnav_ev_update_info_cb;
+      xnav->ev->popup_menu_cb = xnav_popup_menu_cb;
+    }
+    else
+      xnav->ev->map_blk();
   }
   else if ( strncmp( arg1_str, "USER", strlen( arg1_str)) == 0)
   {
@@ -1710,13 +1763,15 @@ static int	xnav_eventlist_func(	void		*client_data,
     // Command is "EVENTLIST LOAD"
     if ( !xnav->ev)
     {
-      char alarm_title[40], event_title[40];
+      char alarm_title[40], event_title[40], block_title[40];
 
-      strcpy( alarm_title, Lng::translate( "Alarm list"));
-      strcpy( event_title, Lng::translate( "Event list"));
-      xnav->ev = new Ev( xnav, xnav->parent_wid, event_title, alarm_title,
-		xnav->gbl.UserObject, 0, 0, xnav->gbl.AlarmReturn,
-		xnav->gbl.AlarmAck, xnav->gbl.AlarmBeep, &sts);
+      strcpy( alarm_title, Lng::translate( "Alarm List"));
+      strcpy( event_title, Lng::translate( "Event List"));
+      strcpy( block_title, Lng::translate( "Blocked Alarms"));
+      xnav->ev = new Ev( xnav, xnav->parent_wid, 
+			 event_title, alarm_title, block_title,
+			 xnav->gbl.UserObject, 0, 0, 0, xnav->gbl.AlarmReturn,
+			 xnav->gbl.AlarmAck, xnav->gbl.AlarmBeep, &sts);
       if ( EVEN(sts))
       {
         delete xnav->ev;
@@ -1791,6 +1846,99 @@ static int	xnav_eventlist_func(	void		*client_data,
     }
     else
       xnav->message('I', "Eventlist is not loaded");
+  }
+  else if ( strncmp( arg1_str, "BLOCK", strlen( arg1_str)) == 0)
+  {
+    // Command is "EVENTLIST BLOCK"
+    char prio_str[80];
+    char name_str[80];
+    pwr_tObjid objid;
+    mh_eEventPrio prio;
+
+    if ( !xnav->ev) {
+      xnav->message('E', "Eventlist is not loaded");
+      return XNAV__SUCCESS;
+    }
+
+    if ( ODD( dcli_get_qualifier( "/NAME", name_str))) {
+      sts = gdh_NameToObjid( name_str, &objid);
+      if ( EVEN(sts)) {
+        xnav->message('E', "Object not found");
+        return XNAV__SUCCESS;
+      }
+    }
+    else
+    {
+      // Get the selected object
+      sts = xnav->get_current_object( &objid, 
+			name_str, sizeof( name_str), cdh_mName_volumeStrict);
+      if ( EVEN(sts)) {
+        xnav->message('E', "Enter name or select an object");
+        return XNAV__HOLDCOMMAND;
+      }
+    }
+
+    if ( ODD( dcli_get_qualifier( "/PRIORITY", prio_str))) {
+      cdh_ToUpper( prio_str, prio_str);
+      switch ( prio_str[0]) {
+      case 'A':
+	prio =  mh_eEventPrio_A;
+	break;
+      case 'B':
+	prio =  mh_eEventPrio_B;
+	break;
+      case 'C':
+	prio =  mh_eEventPrio_C;
+	break;
+      case 'D':
+	prio =  mh_eEventPrio_D;
+	break;
+      default:
+	xnav->message('E', "Unknown priority");
+	return XNAV__HOLDCOMMAND;
+      }
+
+      sts = mh_OutunitBlock( objid, prio);
+      if ( EVEN(sts))
+	xnav->message(' ', XNav::get_message(sts));
+    }
+    else {
+      pwr_sAttrRef oar = cdh_ObjidToAref( objid);
+
+      new Block( xnav, xnav->parent_wid, &oar, 
+		 Lng::translate( "Alarm Blocking"), xnav->priv, &sts);
+      xnav->message('E', "Enter priority");
+      return XNAV__HOLDCOMMAND;
+    }
+
+  }
+  else if ( strncmp( arg1_str, "UNBLOCK", strlen( arg1_str)) == 0)
+  {
+    // Command is "EVENTLIST UNBLOCK"
+    char name_str[80];
+    pwr_tObjid objid;
+
+    if ( ODD( dcli_get_qualifier( "/NAME", name_str))) {
+      sts = gdh_NameToObjid( name_str, &objid);
+      if ( EVEN(sts)) {
+        xnav->message('E', "Object not found");
+        return XNAV__SUCCESS;
+      }
+    }
+    else
+    {
+      // Get the selected object
+      sts = xnav->get_current_object( &objid, 
+			name_str, sizeof( name_str), cdh_mName_volumeStrict);
+      if ( EVEN(sts)) {
+        xnav->message('E', "Enter name or select an object");
+        return XNAV__HOLDCOMMAND;
+      }
+    }
+
+    sts = mh_OutunitBlock( objid, (mh_eEventPrio) 0);
+    if ( EVEN(sts))
+      xnav->message(' ', XNav::get_message(sts));
   }
   else
   {
@@ -2602,6 +2750,78 @@ static int	xnav_open_func(	void		*client_data,
       }
     }
   }
+  else if ( strncmp( arg1_str, "ATTRIBUTE", strlen( arg1_str)) == 0)
+  {
+    char name_str[80];
+    char *name_ptr;
+    char title_str[80];
+    pwr_sAttrRef aref;
+    int sts;
+    pwr_tClassId classid;
+    int	bypass;
+
+    // Command is "OPEN ATTRIBUTE"
+
+    bypass = ODD( dcli_get_qualifier( "/BYPASS", name_str));
+
+    /* Get the name qualifier */
+    if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str)))
+    {
+      if ( name_str[0] != '/')
+        /* Assume that this is the namestring */
+        name_ptr = name_str;
+      else
+      {
+        xnav->message('E', "Syntax error");
+        return XNAV__HOLDCOMMAND; 	
+      } 
+    }
+    else
+    {
+      if ( ODD( dcli_get_qualifier( "/NAME", name_str)))
+        name_ptr = name_str;
+      else
+      {
+        /* Get the selected object */
+        sts = xnav->get_current_aref( &aref, name_str, 
+	  sizeof( name_str), cdh_mName_path | cdh_mName_object | cdh_mName_attribute);
+        if ( EVEN(sts))
+        {
+          xnav->message('E', "Enter name or select an object");
+          return XNAV__SUCCESS;
+        }
+        name_ptr = name_str;
+      }
+    }
+
+    sts = gdh_NameToAttrref( pwr_cNObjid, name_str, &aref);
+    if (EVEN(sts)) {
+      xnav->message('E', "Attribute not found");
+      return XNAV__HOLDCOMMAND;
+    }
+    sts = gdh_GetAttrRefTid( &aref, &classid);
+    if (EVEN(sts)) return sts;
+
+    if ( EVEN( dcli_get_qualifier( "/TITLE", title_str))) {
+      strcpy( title_str, "Attribute");
+    }
+
+    XAttOne *xao;
+    if ( xnav->appl.find( applist_eType_AttrOne, &aref, (void **) &xao)) {
+      xao->pop();
+    }
+    else {
+      xao = new XAttOne( xnav->parent_wid, xnav, &aref, title_str, 
+			 bypass ? pwr_mPrv_RtWrite : xnav->priv, &sts);
+      if ( EVEN(sts))
+	xnav->message('E',"Unable to open attribute");
+      else {
+	xao->close_cb = xnav_xao_close_cb;
+	xnav->appl.insert( applist_eType_AttrOne, (void *)xao, &aref, "",
+			   NULL);
+      }
+    }
+  }
   else if ( strncmp( arg1_str, "URL", strlen( arg1_str)) == 0)
   {
     char	arg2_str[80];
@@ -2973,7 +3193,8 @@ static void xnav_ge_help_cb( ge_tCtx gectx, char *key)
 
 static int xnav_ge_command_cb( ge_tCtx gectx, char *command)
 {
-  return ((XNav *)gectx->parent_ctx)->command( command);
+  ((XNav *)gectx->parent_ctx)->command( command);
+  return ((XNav *)gectx->parent_ctx)->get_command_sts();
 }
 
 static void xnav_ge_close_cb( ge_tCtx gectx)
@@ -3003,6 +3224,14 @@ static void xnav_fast_close_cb( void *ctx, XttFast *fast)
 
   xnav->appl.remove( (void *)fast);
   delete fast;
+}
+
+static void xnav_xao_close_cb( void *ctx, XAttOne *xao)
+{
+  XNav *xnav = (XNav *) ctx;
+
+  xnav->appl.remove( (void *)xao);
+  delete xao;
 }
 
 static int	xnav_create_func( void		*client_data,
@@ -3902,6 +4131,108 @@ static int	xnav_logging_func(	void		*client_data,
 
   // return XNAV__SUCCESS;  
 }
+static int	xnav_call_func(	void		*client_data,
+				void		*client_flag)
+{
+  XNav *xnav = (XNav *)client_data;
+  char	arg1_str[80];
+  int	arg1_sts;
+	
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str);
+
+  if ( strncmp( arg1_str, "METHOD", strlen( arg1_str)) == 0)
+  {
+    // Command is "CALL METHOD"
+    char	method_str[80];
+    char	object_str[80];
+    int		sts;
+    xmenu_eItemType menu_type;
+    pwr_sAttrRef aref;
+
+    if ( EVEN( dcli_get_qualifier( "/METHOD", method_str))) {
+      xnav->message('E', "Enter method");
+      return XNAV__HOLDCOMMAND;
+    }
+    if ( EVEN( dcli_get_qualifier( "/OBJECT", object_str))) {
+      xnav->message('E', "Enter object");
+      return XNAV__HOLDCOMMAND;
+    }
+
+    sts = gdh_NameToAttrref( pwr_cNObjid, object_str, &aref);
+    if ( EVEN(sts)) {
+      xnav->message('E', "No such object");
+      return XNAV__HOLDCOMMAND;      
+    }
+
+    if ( aref.Flags.b.Object)
+      menu_type = xmenu_eItemType_Object;
+    else if ( aref.Flags.b.ObjectAttr)
+      menu_type = xmenu_eItemType_AttrObject;
+    else
+      menu_type = xmenu_eItemType_Attribute;
+
+    sts = xnav_call_object_method( xnav, aref, menu_type, xmenu_mUtility_XNav,
+				   xnav->priv, method_str);
+    if ( EVEN(sts)) {
+      xnav->message('E',"Unable to call method");	
+      return XNAV__HOLDCOMMAND;
+    }
+    else
+      return sts;
+  }
+  else
+    xnav->message('E',"Syntax error");
+  return 1;
+}
+
+static int	xnav_check_func( void		*client_data,
+				 void		*client_flag)
+{
+  XNav *xnav = (XNav *)client_data;
+  char	arg1_str[80];
+  int	arg1_sts;
+	
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str);
+
+  if ( strncmp( arg1_str, "METHOD", strlen( arg1_str)) == 0)
+  {
+    // Command is "CHECK METHOD"
+    char	method_str[80];
+    char	object_str[80];
+    int		sts;
+    xmenu_eItemType menu_type;
+    pwr_sAttrRef aref;
+
+    if ( EVEN( dcli_get_qualifier( "/METHOD", method_str))) {
+      xnav->message('E', "Enter method");
+      return XNAV__HOLDCOMMAND;
+    }
+    if ( EVEN( dcli_get_qualifier( "/OBJECT", object_str))) {
+      xnav->message('E', "Enter object");
+      return XNAV__HOLDCOMMAND;
+    }
+
+    sts = gdh_NameToAttrref( pwr_cNObjid, object_str, &aref);
+    if ( EVEN(sts)) {
+      xnav->message('E', "No such object");
+      return XNAV__HOLDCOMMAND;      
+    }
+
+    if ( aref.Flags.b.Object)
+      menu_type = xmenu_eItemType_Object;
+    else if ( aref.Flags.b.ObjectAttr)
+      menu_type = xmenu_eItemType_AttrObject;
+    else
+      menu_type = xmenu_eItemType_Attribute;
+
+    sts = xnav_check_object_methodfilter( xnav, aref, menu_type, xmenu_mUtility_XNav,
+					 xnav->priv, method_str);
+    return sts;
+  }
+  else
+    xnav->message('E',"Syntax error");
+  return 1;
+}
 
 
 int XNav::show_database()
@@ -3947,6 +4278,11 @@ int XNav::show_database()
   brow_ResetNodraw( brow->ctx);
   brow_Redraw( brow->ctx, 0);
   return 1;
+}
+
+pwr_tStatus XNav::get_command_sts()
+{
+  return command_sts;
 }
 
 int XNav::command( char* input_str)
@@ -4005,6 +4341,7 @@ int XNav::command( char* input_str)
   else if (sts == DCLI__QUAL_NODEF) message('E',"Undefined qualifier");
   else if (sts == DCLI__SYMBOL_AMBIG) message('E', "Ambiguous symbol abbrevation");
 
+  command_sts = sts;
   return DCLI__SUCCESS;
 }
 

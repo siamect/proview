@@ -76,6 +76,7 @@ void *xnav_help_insert_cb( void *ctx, navh_eItemType item_type, char *text1,
 
   switch ( item_type) {
     case navh_eItemType_Help:
+    case navh_eItemType_HelpCode:
     {      
       ItemHelp *item = new ItemHelp( xnav->brow, "help", text1, text2, text3,
 	     link, bookmark, file_name, file_type, help_index,

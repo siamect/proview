@@ -152,6 +152,7 @@ typedef enum {
 	applist_eType_Trace,
 	applist_eType_Graph,
 	applist_eType_Attr,
+	applist_eType_AttrOne,
 	applist_eType_Trend,
 	applist_eType_Crossref,
 	applist_eType_Hist,
@@ -351,10 +352,12 @@ class XNav {
     int open_object( pwr_sAttrRef *arp);
     int open_crossref( pwr_sAttrRef *arp);
     void swap( int mode);
+    int update_alarminfo();
 
 
     // Command module member functions
     int command( char *cmd);
+    pwr_tStatus get_command_sts();
     int readcmdfile( char *incommand);
     int show_database();
     int get_current_object(
@@ -428,7 +431,7 @@ int xnav_cut_segments (
 
 int  xnav_attr_string_to_value( int type_id, char *value_str, 
 	void *buffer_ptr, int buff_size, int attr_size);
-void  xnav_attrvalue_to_string( int type_id, void *value_ptr, 
+void  xnav_attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr, 
 	char *str, int size, int *len, char *format);
 
 Widget xnav_create_popup_menu( XNav *xnav, pwr_sAttrRef attrref,
@@ -440,6 +443,15 @@ int xnav_call_method( XNav *xnav, char *method, char *filter,
 		      xmenu_eItemType item_type, 
 		      xmenu_mUtility caller,
 		      unsigned int priv, char *arg);
+int xnav_call_object_method( XNav *xnav, pwr_sAttrRef attrref, 
+			     xmenu_eItemType item_type, 
+			     xmenu_mUtility caller, 
+			     unsigned int priv, char *method_name);
+int xnav_check_object_methodfilter( XNav *xnav, pwr_sAttrRef attrref, 
+				    xmenu_eItemType item_type, 
+				    xmenu_mUtility caller, 
+				    unsigned int priv, char *method_name);
+
 void xnav_popup_menu_cb( void *xnav, pwr_sAttrRef attrref, 
 			 unsigned long item_type,
 			 unsigned long utility, char *arg, Widget *popup);
