@@ -137,7 +137,7 @@ public class XttTree extends JPanel
   public XttTree(JopSession session, URL url, Object root)
   {
     Logg.text_lbl = this.labelMessage;
-    Logg.logg("ver 1.9.5", 0);
+    Logg.logg("ver 1.9.6", 0);
     
     this.session = session;
     this.root = root;
@@ -261,7 +261,10 @@ public class XttTree extends JPanel
         tNodeRoot = new DefaultMutableTreeNode(xttObj);
         xttObj.treeNode = tNodeRoot;
         xttObj.init(false);
-        xttObj.refObj.objAttr.treeModel = this.treeModel;
+        if(xttObj.refObj != null)
+	{
+	  xttObj.refObj.objAttr.treeModel = this.treeModel;
+        }
         rootNode.add(tNodeRoot);
         if(gdhr.hasChildren)
         {
@@ -1020,9 +1023,9 @@ public class XttTree extends JPanel
     this.newMethod(openObject, ADDOBJECTINFO, "ADDOBJECTINFO", true, 0, "ctrl A");
     this.newMethod(openObject, ADDOBJECTINFO, "ADDOBJECTINFO", false, -1, "shift RIGHT");
     this.newMethod("COLLAPSENODE", COLLAPSENODE, "COLLAPSENODE", false, -1, "LEFT");
-    this.newMethod(changeValue, CHANGEVALUE, "CHANGEVALUE", true, 0, "ctrl Q");
     this.newMethod(openPlc, OPENPLC, "OPENPLC", true, 0, "ctrl L");
     this.newMethod(showCross, SHOWCROSS, "SHOWCROSS", true, 0, "ctrl R");
+    this.newMethod(changeValue, CHANGEVALUE, "CHANGEVALUE", true, 0, "ctrl Q");
     this.newMethod(debug, DEBUG, "DEBUG", true, 0, "ctrl RIGHT");
     this.newMethod(find, FIND, "FIND", false, 0, "ctrl F");
     this.newMethod(swedish, LAN_SW, "LAN_SW", false, 1, null);
@@ -1277,9 +1280,9 @@ public class XttTree extends JPanel
     JMenu menuFunctions = menuBar.getMenu(0);
     JMenu menuLan = menuBar.getMenu(1);
     menuFunctions.setText(functions);
-    menuFunctions.getItem(0).setText(openPlc);
-    menuFunctions.getItem(1).setText(showCross);
-    menuFunctions.getItem(2).setText(openObject);
+    menuFunctions.getItem(0).setText(openObject);
+    menuFunctions.getItem(1).setText(openPlc);
+    menuFunctions.getItem(2).setText(showCross);
     menuFunctions.getItem(3).setText(changeValue);
     menuFunctions.getItem(4).setText(debug);
     menuFunctions.getItem(5).setText(find);
@@ -1288,9 +1291,9 @@ public class XttTree extends JPanel
     menuLan.getItem(1).setText(english);
     MenuElement[] menuElements = popup.getSubElements();
 	
-    ((JMenuItem)(menuElements[0])).setText(openPlc);
-    ((JMenuItem)(menuElements[1])).setText(showCross);
-    ((JMenuItem)(menuElements[2])).setText(openObject);
+    ((JMenuItem)(menuElements[0])).setText(openObject);
+    ((JMenuItem)(menuElements[1])).setText(openPlc);
+    ((JMenuItem)(menuElements[2])).setText(showCross);
     ((JMenuItem)(menuElements[3])).setText(changeValue);
     ((JMenuItem)(menuElements[4])).setText(debug);
   }
@@ -1657,4 +1660,21 @@ public class XttTree extends JPanel
     return root;
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
