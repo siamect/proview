@@ -276,7 +276,8 @@ dcli_tCmdTable	wnav_command_table[] = {
 		{
 			"WB",
 			&wnav_wb_func,
-			{ "dcli_arg1", "/OUTPUT", "/HIERARCHY", "/LOADFILE",
+			{ "dcli_arg1", "/OUTPUT", "/HIERARCHY", "/LOADFILE", "/NOINDEX",
+			  "/KEEPNAME",
 			""}
 		},
 		{
@@ -437,12 +438,11 @@ static int	wnav_help_func(		void		*client_data,
   }
 
   if ( ODD( dcli_get_qualifier( "/VERSION", 0))) {
-    sts = CoXHelp::dhelp( "version", "", navh_eHelpFile_Other, "$pwr_exe/xtt_version_help.dat", strict);
+    sts = CoXHelp::dhelp( "version", "", navh_eHelpFile_Other, "$pwr_exe/wtt_version_help.dat", strict);
     if ( EVEN(sts))
       wnav->message('E', "No help on this subject");
     return sts;
   }
-
   if ( EVEN( dcli_get_qualifier( "dcli_arg1", arg_str)))
   {
     sts = CoXHelp::dhelp( "help command", "", navh_eHelpFile_Base, NULL, strict);
@@ -3707,6 +3707,7 @@ static int	wnav_wb_func( 	void		*client_data,
     char	outputstr[200]; 
     char        *hierarchystr_p;
     pwr_tStatus	sts;
+    int		keepname;
 
     if ( EVEN( dcli_get_qualifier( "/OUTPUT" , outputstr)))
     {
@@ -3719,9 +3720,11 @@ static int	wnav_wb_func( 	void		*client_data,
     else
       hierarchystr_p = 0;
 
+    keepname = ODD( dcli_get_qualifier( "/KEEPNAME", 0));
+
     sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
     
-    sts = ldh_WbDump( wnav->ldhses, hierarchystr_p, outputstr);
+    sts = ldh_WbDump( wnav->ldhses, hierarchystr_p, outputstr, keepname);
     if ( EVEN(sts))
       wnav->message(' ', wnav_get_message(sts));
     return sts;
@@ -3730,16 +3733,18 @@ static int	wnav_wb_func( 	void		*client_data,
   {
     pwr_tStatus sts;
     char loadfilestr[80];
+    int noindex;
 
     if ( EVEN( dcli_get_qualifier( "/LOADFILE" , loadfilestr)))
     {
       wnav->message('E', "Qualifer required");
       return WNAV__QUAL;
     }
+    noindex = ODD( dcli_get_qualifier( "/NOINDEX", 0));
 
     sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
 
-    sts = ldh_WbLoad( wnav->ldhses, loadfilestr);
+    sts = ldh_WbLoad( wnav->ldhses, loadfilestr, noindex);
     if ( EVEN(sts))
       wnav->message(' ', wnav_get_message(sts));
     return sts;
