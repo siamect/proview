@@ -125,6 +125,7 @@ class GeCurve {
     void pop();
     void set_title( char *str);
     void set_time( pwr_tTime time);
+    void print( char *filename);
     ~GeCurve();
 };
 

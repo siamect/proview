@@ -69,6 +69,18 @@ static void gec_activate_configure( Widget w, GeCurve *curve, XmAnyCallbackStruc
   curve->configure_axes();
 }
 
+static void gec_activate_print( Widget w, GeCurve *curve, XmAnyCallbackStruct *data)
+{
+  pwr_tFileName fname;
+  pwr_tCmd cmd;
+
+  dcli_translate_filename( fname, "$pwrp_tmp/curve.ps");
+  curve->print( fname);
+
+  sprintf( cmd, "$pwr_exe/rt_print.sh %s 1", fname);
+  system(cmd);
+}
+
 static void gec_activate_zoomin( Widget w, GeCurve *curve, XmAnyCallbackStruct *data)
 {
   curve_Zoom( curve->growcurve_ctx, 2.0);
@@ -448,6 +460,9 @@ static int ge_init_growaxis_cb( GlowCtx *fctx, void *client_data)
   curve->growaxis_ctx = (GrowCtx *) fctx;
 
   mask = 0;
+  // Double buffer is used to avoid pulldown menu at print
+  mask |= grow_eAttr_double_buffer_on;
+  grow_attr.double_buffer_on = 1;
   mask |= grow_eAttr_grid_on;
   grow_attr.grid_on = 0;
   mask |= grow_eAttr_hot_mode;
@@ -478,6 +493,9 @@ static int ge_init_grownames_cb( GlowCtx *fctx, void *client_data)
   curve->grownames_ctx = (GrowCtx *) fctx;
 
   mask = 0;
+  // Double buffer is used for print
+  mask |= grow_eAttr_double_buffer_on;
+  grow_attr.double_buffer_on = 1;
   mask |= grow_eAttr_grid_on;
   grow_attr.grid_on = 0;
   mask |= grow_eAttr_hot_mode;
@@ -512,6 +530,36 @@ static int ge_init_grownames_cb( GlowCtx *fctx, void *client_data)
   return 1;
 }
 
+void GeCurve::print( char *filename)
+{
+  double x;
+  int w1, w2, h1, h2;
+  glow_eDrawType c1, c2, c3;
+
+  grow_GetBackgroundColor( growaxis_ctx, &c1);
+  grow_GetBackgroundColor( growcurve_ctx, &c2);
+  grow_GetBackgroundColor( grownames_ctx, &c3);
+  grow_SetBackgroundColor( growaxis_ctx, glow_eDrawType_Color4);
+  grow_SetBackgroundColor( growcurve_ctx, glow_eDrawType_Color4);
+  grow_SetBackgroundColor( grownames_ctx, glow_eDrawType_Color4);
+  grow_Redraw( growaxis_ctx);
+  grow_Redraw( growcurve_ctx);
+  grow_Redraw( grownames_ctx);
+  grow_GetWindowSize( growaxis_ctx, &w1, &h1);
+  grow_GetWindowSize( growcurve_ctx, &w2, &h2);
+  if ( w1 + w2 == 0)
+    return;
+  x = double(w1) / (w1 + w2);
+  grow_Print( growaxis_ctx, filename, 0.0, x, 0);
+  grow_Print( growcurve_ctx, filename, x, 1.0, 0);
+  grow_Print( grownames_ctx, filename, 0, 0, 1);
+  grow_SetBackgroundColor( growaxis_ctx, c1);
+  grow_SetBackgroundColor( growcurve_ctx, c2);
+  grow_SetBackgroundColor( grownames_ctx, c3);
+  grow_Redraw( growaxis_ctx);
+  grow_Redraw( growcurve_ctx);
+  grow_Redraw( grownames_ctx);
+}
 
 int GeCurve::configure_axes()
 {
@@ -854,6 +902,7 @@ GeCurve::GeCurve( void 	*gc_parent_ctx,
         { "gec_ctx", 0 },
 	{"gec_activate_exit",(caddr_t)gec_activate_exit },
 	{"gec_activate_configure",(caddr_t)gec_activate_configure },
+	{"gec_activate_print",(caddr_t)gec_activate_print },
 	{"gec_activate_zoomin",(caddr_t)gec_activate_zoomin },
 	{"gec_activate_zoomout",(caddr_t)gec_activate_zoomout },
 	{"gec_activate_zoomreset",(caddr_t)gec_activate_zoomreset },

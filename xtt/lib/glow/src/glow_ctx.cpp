@@ -536,6 +536,11 @@ void GlowCtx::print( double ll_x, double ll_y, double ur_x, double ur_y)
   }
 }
 
+void GlowCtx::print( char *filename, double x0, double x1, int end) 
+{ 
+  glow_print( this, filename, x0, x1, end);
+}
+
 void GlowCtx::draw( int ll_x, int ll_y, int ur_x, int ur_y)
 {
   int		i;

@@ -389,6 +389,9 @@ class GlowCtx {
   //! Print to postscript. Not implemented.
   void 	print( double  ll_x, double  ll_y, double  ur_x, double  ur_y);
 
+  //! Print to postscript.
+  void 	print( char *filename, double x0, double x1, int end);
+
   //! Redraw an area of the window.
   /*!
     \param ll_x		x coordiate for lower left corner of area to draw in pixel.

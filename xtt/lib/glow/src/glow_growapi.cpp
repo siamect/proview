@@ -527,9 +527,9 @@ void grow_MeasureNode( grow_tNode node, double *ll_x, double *ll_y,
   ((GlowNode *)node)->measure( ll_x, ll_y, ur_x, ur_y);
 }
 
-void grow_Print( grow_tCtx ctx, char *filename)
+void grow_Print( grow_tCtx ctx, char *filename, double x0, double x1, int end)
 {
-  // ctx->print( filename);
+  ctx->print( filename, x0, x1, end);
 }
 
 void grow_GetUserData( grow_tObject object, void **user_data)
@@ -4277,6 +4277,12 @@ int grow_GetMenuParent( grow_tObject menu, grow_tObject *parent)
 int grow_SetFolderIndex( grow_tObject folder, int idx)
 {
   return ((GrowFolder *)folder)->set_folder( idx);
+}
+
+void grow_GetWindowSize( grow_tCtx ctx, int *width, int *height)
+{
+  *width = ((GrowCtx *)ctx)->window_width;
+  *height = ((GrowCtx *)ctx)->window_height;
 }
 
 /*@}*/

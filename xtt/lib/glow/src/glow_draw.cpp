@@ -1,8 +1,13 @@
 #include "glow_std.h"
 
-#include <stdio.h>
-#include <stdlib.h>
+using namespace std;
 
+#include <iostream.h>
+#include <fstream.h>
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+#include <stdlib.h>
 
 #include <Xm/Xm.h>
 #include <Xm/XmP.h>
@@ -3142,6 +3147,173 @@ void glow_draw_buffer_background( GlowCtx *ctx)
   }
 }
 
+int glow_print( GlowCtx *ctx, char *filename, double x0, double x1, int end)
+{
+#if defined IMLIB
 
+#define ps_cPageHeight 820
+#define ps_cPageWidth 535
+#define ps_cLeftMargin 100
+#define ps_cTopMargin 100
+
+  draw_tCtx draw_ctx = (draw_tCtx) ctx->draw_ctx;
+  int width, height;
+  unsigned char *rgb;
+  unsigned char transp[3] = {255,0,255};
+  int i, j;
+  int grey;
+  int red, blue, green;
+  double scalex = 0.71;
+  double scaley = 0.78;
+  double x, y;
+  bool colorimage = true;
+  static DrawPs *ps = 0;
+  bool new_file = false;
+	
+  x = ps_cLeftMargin;
+  y = ps_cPageHeight - ps_cTopMargin;
+
+  // draw_ctx->imlib = Imlib_init( draw_ctx->display);
+
+  ImlibImage *image;
+
+  if ( ctx->double_buffer_on)
+    image = Imlib_create_image_from_drawable( draw_ctx->imlib, draw_ctx->buffer,
+					    0, 0, 0, draw_ctx->buffer_width,
+					    draw_ctx->buffer_height);
+  else
+    image = Imlib_create_image_from_drawable( draw_ctx->imlib, draw_ctx->window,
+					    0, 0, 0, ctx->window_width,
+					    ctx->window_height);
+  if ( !image)
+    return 0;
+
+  if ( !ps) {
+    ps = new DrawPs( filename);
+    new_file = true;
+    ps->y = y;
+  }
+  else
+    y = ps->y;
+
+  width = image->rgb_width;
+  height = image->rgb_height;
+
+  if ( x0 != 0 || x1 != 0) {
+    double total_width = width / (x1 - x0);
+
+    if ( total_width * scalex  > ps_cPageWidth - ps_cLeftMargin) {
+      x = ps_cPageWidth - total_width * scalex;
+      if ( x < 50) {
+	double scale_factor = (ps_cPageWidth - 50) / (total_width * scalex);
+	x = 50;
+	scalex = scalex * scale_factor;
+	scaley = scaley * scale_factor;
+      }
+    }
+    x += scalex * total_width * x0;
+  }
+  else if ( width * scalex  > ps_cPageWidth - ps_cLeftMargin) {
+    x = ps_cPageWidth - width * scalex;
+    if ( x < 50) {
+      double scale_factor = (ps_cPageWidth - 50) / (width * scalex);
+      x = 50;
+      scalex = scalex * scale_factor;
+      scaley = scaley * scale_factor;
+    }
+  }
+  if ( (x0 == 0 && x1 == 0) || x1 == 1.0)
+    ps->y -= scaley * height;
+
+  if ( new_file) {
+    ps->fp <<
+"%!PS-Adobe-2.0 EPSF-1.2" << endl <<
+"%%Creator: Proview Glow" << endl <<
+"%%EndComments" << endl << endl;
+  }
+  else
+    ps->fp <<
+"restore" << endl;
+
+  ps->fp <<
+"1.000000 1.000000 scale" << endl <<
+"save" << endl <<
+scalex * width << " " << scaley * height << " scale" << endl <<
+"/oneline " << width << " string def" << endl <<
+"/drawimage {" << endl <<
+" " << width << " " << height << " 8 [" << width << " 0 0 -" << height << " 0 " << height << "]" << endl <<
+" { currentfile oneline readhexstring pop }" << endl;
+  if ( colorimage) {
+    ps->fp <<
+"false 3" << endl <<
+"colorimage" << endl;
+  }
+  else
+    ps->fp <<
+"image" << endl;
+
+  ps->fp <<
+"} def" << endl <<
+x/scalex/width << " " << (y - height*scaley)/scaley/height << " translate" << endl <<
+"drawimage" << endl;
+
+  ps->fp.flags( (ps->fp.flags() & ~ios_base::dec) | ios_base::hex | ios_base::uppercase);
+  ps->fp.fill('0');
+  rgb = image->rgb_data;
+  j = 0;
+  for ( i = 0; i < image->rgb_height * image->rgb_width * 3; i+=3) {
+    if ( !colorimage) {
+      if ( *rgb == transp[0] && *(rgb+1) == transp[1] && *(rgb+2) == transp[2]) {
+	grey = 255;
+      }
+      else {
+	grey = (int) ((0.0 + *rgb + *(rgb+1) + *(rgb+2)) / 3 + 0.5);
+      }
+      rgb += 3;
+      ps->fp.width(2);
+      ps->fp << grey;
+      if ( ++j >= 40) {
+	j = 0;
+	ps->fp << endl;
+      }
+    }
+    else {
+      if ( *rgb == transp[0] && *(rgb+1) == transp[1] && *(rgb+2) == transp[2]) {
+	red = blue = green = 255;
+      }
+      else {
+	red = *rgb;
+	green = *(rgb+1);
+	blue = *(rgb+2);
+      }
+      rgb += 3;
+      ps->fp.width(2);
+      ps->fp << blue;
+      ps->fp.width(2);
+      ps->fp << green;
+      ps->fp.width(2);
+      ps->fp << red;
+      if ( ++j >= 20) {
+	j = 0;
+	ps->fp << endl;
+      }
+    }
+  }
+
+  if ( end) {
+    ps->fp << endl <<
+"restore" << endl << 
+"showpage" << endl;
+    delete ps;
+    ps = 0;
+  }
+  else {
+    ps->fp.flags( ((ps->fp.flags() & ~ios_base::hex) & ~ios_base::uppercase) | ios_base::dec);
+  }
+  Imlib_destroy_image( draw_ctx->imlib, image);
+
+#endif
+  return 1;
+}
 
 

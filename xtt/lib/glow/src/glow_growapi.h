@@ -556,8 +556,8 @@ typedef GlowTraceData glow_sTraceData;
   void grow_MeasureNode( grow_tNode node, double *ll_x, double *ll_y,
 			 double *ur_x, double *ur_y);
 
-  //! Print context to postscript file. Not implemented.
-  void grow_Print( grow_tCtx ctx, char *filename);
+  //! Print context to postscript file.
+  void grow_Print( grow_tCtx ctx, char *filename, double x0, double x1, int end);
 
   //! Get user data of an object.
   /*!
@@ -2813,6 +2813,7 @@ typedef GlowTraceData glow_sTraceData;
   void grow_GetSubmenuPosition( grow_tObject menu, int item, double *x, double *y);
   int grow_GetMenuParent( grow_tObject menu, grow_tObject *parent);
   int grow_SetFolderIndex( grow_tObject folder, int idx);
+  void grow_GetWindowSize( grow_tCtx ctx, int *width, int *height);
 
 /*@}*/
 #if defined __cplusplus

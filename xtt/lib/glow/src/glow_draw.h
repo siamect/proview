@@ -65,6 +65,15 @@ typedef struct {
         int     background_pixmap_height;
 } draw_sCtx, *draw_tCtx;
 
+class DrawPs {
+ public:
+  DrawPs( char *filename) : fp(filename), x(0), y(0) 
+    {}
+  ~DrawPs() { fp.close();}
+  ofstream fp;
+  double x;
+  double y;
+};
 
 int glow_draw_init( 
 	Widget toplevel, 
@@ -223,6 +232,7 @@ void glow_draw_set_click_sensitivity( GlowCtx *ctx, int value);
 void glow_draw_background( GlowCtx *ctx, int x, int y, int w, int h);
 int glow_draw_create_buffer( GlowCtx *ctx);
 void glow_draw_buffer_background( GlowCtx *ctx);
+int glow_print( GlowCtx *ctx, char *filename, double x0, double x1, int end);
 #endif
 
 

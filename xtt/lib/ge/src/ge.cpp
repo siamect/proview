@@ -1390,7 +1390,14 @@ static void ge_activate_exit( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data
 
 static void ge_activate_print( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
 {
-  gectx->graph->print( "pwrp_tmp:graph.ps");
+  pwr_tFileName fname;
+  pwr_tCmd cmd;
+
+  dcli_translate_filename( fname, "$pwrp_tmp/graph.ps");
+  gectx->graph->print( fname);
+
+  sprintf( cmd, "$pwr_exe/rt_print.sh %s 1", fname);
+  system(cmd);
 }
 
 static void ge_activate_new( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)

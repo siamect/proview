@@ -235,7 +235,7 @@ GraphGrow::~GraphGrow()
 //
 void Graph::print( char *filename)
 {
-  grow_Print( grow->ctx, filename);
+  grow_Print( grow->ctx, filename, 0, 0, 1);
 }
 
 int Graph::create_navigator( Widget parent)
