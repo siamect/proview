@@ -359,16 +359,36 @@ printTree(dbs_sEnv *ep, dbs_sObject *op, int indent)
 {
     pwr_tStatus sts;
     static char space[] = "                                                                               ";
-
+    cdh_uOid oid;
+    
     if (op == NULL)
         return;
 
+    oid.pwr = op->oid;
+    
     space[indent] = '\0';
-    printf("T %s %d.%d %s\n", space, op->oid.vid, op->oid.oix, op->name);
+    printf("T %3.3d.%3.3d.%3.3d.%3.3d:[%d|%5.5d|%2.2d|%d|%5.5d]: %s %s\n", oid.c.vid_0, oid.c.vid_1, oid.c.vid_2, oid.c.vid_3,
+           oid.c.must_be_two, oid.c.cix, oid.c.bix, oid.c.reserved, oid.c.aix, space, op->name);
     
     space[indent] = ' ';
     printTree(ep, dbs_First(&sts, ep, op), indent + 1);
     printTree(ep, dbs_After(&sts, ep, op), indent);
+}
+
+
+static void
+printTree1(dbs_sEnv *ep, dbs_sObject *op)
+{
+    pwr_tStatus sts;
+    char name[512];
+    
+    if (op == NULL)
+        return;
+
+    dbs_ObjectToName(&sts, ep, op, name);
+    printf("T1 %s\n", name);
+    printTree1(ep, dbs_First(&sts, ep, op));
+    printTree1(ep, dbs_After(&sts, ep, op)); 
 }
 
 
@@ -378,7 +398,7 @@ dbs_Map(pwr_tStatus *sts, dbs_sEnv *ep, const char *filename)
     struct stat sb;
     int ret;
     int fd;
-#define DBS_DEBUG 1
+//#define DBS_DEBUG 1
 #if DBS_DEBUG
     int i;
     dbs_sFile *fp;
@@ -572,6 +592,7 @@ dbs_Map(pwr_tStatus *sts, dbs_sEnv *ep, const char *filename)
 
     op = dbs_VolumeObject(sts, ep);
     printTree(ep, op, 0);
+    printTree1(ep, op);
     
 #endif
     return ep;
@@ -746,6 +767,29 @@ dbs_NameToObject(pwr_tStatus *sts, const dbs_sEnv *ep, pwr_tOid oid, char *name)
     op = dbs_Address(sts, ep, np->ref);
     
     return op;
+}
+
+static void
+objectName(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op, char *name, int level)
+{
+    if (op == NULL)
+        return;
+
+    if (op->oid.oix == pwr_cNOix) {
+        strcpy(name, op->name);
+        strcat(name, ":");
+    } else {
+        objectName(sts, ep, dbs_Address(sts, ep, op->pref), name, level+1);
+        strcat(name, op->name);
+        if (level > 0)
+            strcat(name, "-");
+    }
+}
+
+void
+dbs_ObjectToName(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op, char *name)
+{
+    objectName(sts, ep, op, name, 0);
 }
 
 dbs_sObject *
