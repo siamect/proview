@@ -142,7 +142,7 @@ pdr_float(PDR *pdrs,
     if (pdrs->x_op == PDR_DECODE) {
 
         if (pdrs->src.b.ft != pdrs->trg.b.ft) {
-            if (pdrs->src.b.ft == co_eFT_ieee)
+            if (pdrs->src.b.ft == co_eFT_ieeeS)
                 co_vaxf2ieee(pdrs->src.b.bo, pdrs->trg.b.bo, pdrs->x_private, (char *)fp);
             else
                 co_ieee2vaxf(pdrs->src.b.bo, pdrs->trg.b.bo, pdrs->x_private, (char *)fp);
@@ -159,7 +159,7 @@ pdr_float(PDR *pdrs,
     /* Encode */
     else {
         if (pdrs->src.b.ft != pdrs->trg.b.ft) {
-            if (pdrs->src.b.ft == co_eFT_ieee)
+            if (pdrs->src.b.ft == co_eFT_ieeeS)
                 co_vaxf2ieee(pdrs->src.b.bo, pdrs->trg.b.bo, (const char*)fp, pdrs->x_private);
             else
                 co_ieee2vaxf(pdrs->src.b.bo, pdrs->trg.b.bo, (const char*)fp, pdrs->x_private);
