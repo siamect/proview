@@ -85,7 +85,7 @@ typedef enum {
 //! Smallest value of volume identity for system classvolumes
 #define cdh_cSystemClassVolMin  (0 + ((pwr_tVolumeId)0 << 24) + (0 << 16) + (0 << 8) + 1)
 //! Largest value of volume identity for system classvolumes
-#define cdh_cSystemClassVolMax  (0 + ((pwr_tVolumeId)0 << 24) + (1 << 16) + (254 << 8) + 254)
+#define cdh_cSystemClassVolMax  (0 + ((pwr_tVolumeId)0 << 24) + (0 << 16) + (1 << 8) + 254)
 
 //! Internal representatin of object identity.
 typedef struct {
