@@ -74,9 +74,10 @@ static XtActionsRec HotkeyActions[] = {
     };
 
 static xnav_sStartMenu alarm_menu[] = {
-	{ "Alarm list", xnav_eItemType_Command,	menu_ePixmap_List, (void *) "show alarm"},
-	{ "Event list", xnav_eItemType_Command,	menu_ePixmap_List,	(void *) "show event"},
-	{ "Historical list", xnav_eItemType_Command, menu_ePixmap_List,	(void *) "show hist"},
+	{ "Alarm List", xnav_eItemType_Command,	menu_ePixmap_List, (void *) "show alarm"},
+	{ "Event List", xnav_eItemType_Command,	menu_ePixmap_List,	(void *) "show event"},
+	{ "Blocked Alarms", xnav_eItemType_Command,	menu_ePixmap_List,	(void *) "show block"},
+	{ "Historical List", xnav_eItemType_Command, menu_ePixmap_List,	(void *) "show hist"},
 	{ "", 0, 0, NULL}};
 static xnav_sStartMenu nethandler_menu[] = {
 	{ "Link", xnav_eItemType_Command, menu_ePixmap_Map, (void *) "show link"},

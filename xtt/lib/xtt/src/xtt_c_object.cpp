@@ -37,7 +37,7 @@ extern "C" {
 static pwr_tStatus OpenObject( xmenu_sMenuCall *ip)
 {
   pwr_sAttrRef *objar =
-    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
     objar = &ip->Pointed : 
     objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
@@ -67,7 +67,7 @@ static pwr_tStatus OpenObjectFilter( xmenu_sMenuCall *ip)
 static pwr_tStatus OpenCrossref( xmenu_sMenuCall *ip)
 {
   pwr_sAttrRef *objar =
-    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
     objar = &ip->Pointed : 
     objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
@@ -83,7 +83,7 @@ static pwr_tStatus OpenCrossrefFilter( xmenu_sMenuCall *ip)
   pwr_tClassId classid;
   pwr_tStatus sts;
   pwr_sAttrRef *objar =
-    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
     objar = &ip->Pointed : 
     objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
@@ -105,7 +105,7 @@ static pwr_tStatus HistEvent( xmenu_sMenuCall *ip)
   char name[120];
   int sts;
   pwr_sAttrRef *objar =
-    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
     objar = &ip->Pointed : 
     objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
@@ -125,7 +125,7 @@ static pwr_tStatus HistEvent( xmenu_sMenuCall *ip)
 static pwr_tStatus HistEventFilter( xmenu_sMenuCall *ip)
 {
   pwr_sAttrRef *objar =
-    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
     objar = &ip->Pointed : 
     objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
@@ -149,7 +149,7 @@ static pwr_tStatus OpenTrace( xmenu_sMenuCall *ip)
   pwr_tCid classid;
   pwr_sAttrRef plcconnect;
   pwr_sAttrRef *objar =
-    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
     objar = &ip->Pointed : 
     objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
@@ -199,7 +199,7 @@ static pwr_tStatus OpenTraceFilter( xmenu_sMenuCall *ip)
   pwr_sAttrRef plcconnect;
   char name[240];
   pwr_sAttrRef *objar =
-    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
     objar = &ip->Pointed : 
     objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
@@ -247,7 +247,7 @@ static pwr_tStatus OpenTrend( xmenu_sMenuCall *ip)
   int found;
   pwr_sAttrRef deftrend;
   pwr_sAttrRef *objar =
-    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
     objar = &ip->Pointed : 
     objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
@@ -328,7 +328,7 @@ static pwr_tStatus OpenTrendFilter( xmenu_sMenuCall *ip)
   pwr_sAttrRef deftrend;
   char name[120];
   pwr_sAttrRef *objar =
-    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
     objar = &ip->Pointed : 
     objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
@@ -384,7 +384,7 @@ static pwr_tStatus OpenFast( xmenu_sMenuCall *ip)
   int found;
   pwr_sAttrRef deffast;
   pwr_sAttrRef *objar =
-    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
     objar = &ip->Pointed : 
     objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
@@ -465,7 +465,7 @@ static pwr_tStatus OpenFastFilter( xmenu_sMenuCall *ip)
   pwr_sAttrRef deffast;
   char name[120];
   pwr_sAttrRef *objar =
-    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
     objar = &ip->Pointed : 
     objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
@@ -511,7 +511,7 @@ static pwr_tStatus OpenFastFilter( xmenu_sMenuCall *ip)
 static pwr_tStatus RtNavigator( xmenu_sMenuCall *ip)
 {
   pwr_sAttrRef *objar =
-    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
     objar = &ip->Pointed : 
     objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
@@ -540,7 +540,7 @@ static pwr_tStatus OpenClassGraph( xmenu_sMenuCall *ip)
   char		cmd[200];
   pwr_sAttrRef  aref;
   pwr_sAttrRef *objar =
-    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
     objar = &ip->Pointed : 
     objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
@@ -571,7 +571,7 @@ static pwr_tStatus OpenClassGraphFilter( xmenu_sMenuCall *ip)
   char		fname[120];
   char		found_file[120];
   pwr_sAttrRef *objar =
-    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
     objar = &ip->Pointed : 
     objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
@@ -612,7 +612,7 @@ static pwr_tStatus OpenGraph( xmenu_sMenuCall *ip)
   pwr_tClassId classid;
   char cmd[200];
   pwr_sAttrRef *objar =
-    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
     objar = &ip->Pointed : 
     objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
@@ -663,7 +663,7 @@ static pwr_tStatus OpenGraphFilter( xmenu_sMenuCall *ip)
   char action[80];
   char *s;
   pwr_sAttrRef *objar =
-    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
     objar = &ip->Pointed : 
     objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
@@ -716,7 +716,7 @@ static pwr_tStatus Collect( xmenu_sMenuCall *ip)
   int sts;
   pwr_sAttrRef aref;
   pwr_sAttrRef *objar =
-    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
     objar = &ip->Pointed : 
     objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
@@ -737,7 +737,7 @@ static pwr_tStatus CollectFilter( xmenu_sMenuCall *ip)
   int sts;
   pwr_sAttrRef aref;
   pwr_sAttrRef *objar =
-    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
     objar = &ip->Pointed : 
     objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
@@ -760,7 +760,7 @@ static pwr_tStatus Help( xmenu_sMenuCall *ip)
   pwr_tString40 helptopic;
   char cmd[200];
   pwr_sAttrRef *objar =
-    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
     objar = &ip->Pointed : 
     objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
@@ -789,7 +789,7 @@ static pwr_tStatus HelpFilter( xmenu_sMenuCall *ip)
   char name[140];
   pwr_tString40 helptopic;
   pwr_sAttrRef *objar =
-    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
     objar = &ip->Pointed : 
     objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
@@ -814,7 +814,7 @@ static pwr_tStatus DataSheet( xmenu_sMenuCall *ip)
   char name[140];
   pwr_tURL datasheet;
   pwr_sAttrRef *objar =
-    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
     objar = &ip->Pointed : 
     objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
@@ -840,7 +840,7 @@ static pwr_tStatus DataSheetFilter( xmenu_sMenuCall *ip)
   char name[140];
   pwr_tURL datasheet;
   pwr_sAttrRef *objar =
-    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
     objar = &ip->Pointed : 
     objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
@@ -865,7 +865,7 @@ static pwr_tStatus Photo( xmenu_sMenuCall *ip)
   char name[140];
   pwr_tURL photo;
   pwr_sAttrRef *objar =
-    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
     objar = &ip->Pointed : 
     objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
@@ -898,7 +898,7 @@ static pwr_tStatus PhotoFilter( xmenu_sMenuCall *ip)
   char name[140];
   pwr_tURL photo;
   pwr_sAttrRef *objar =
-    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
     objar = &ip->Pointed : 
     objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
@@ -925,7 +925,7 @@ static pwr_tStatus CircuitDiagram( xmenu_sMenuCall *ip)
   pwr_tObjid objid;
   bool is_parent = false;
   pwr_sAttrRef *objar =
-    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
     objar = &ip->Pointed : 
     objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
@@ -964,7 +964,7 @@ static pwr_tStatus CircuitDiagramFilter( xmenu_sMenuCall *ip)
   pwr_tObjid objid;
   bool is_parent = false;
   pwr_sAttrRef *objar =
-    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
     objar = &ip->Pointed : 
     objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
@@ -993,6 +993,72 @@ static pwr_tStatus CircuitDiagramFilter( xmenu_sMenuCall *ip)
   return XNAV__INVISIBLE;
 }
 
+// Note
+static pwr_tStatus Note( xmenu_sMenuCall *ip)
+{
+  int sts;
+  char name[140];
+  char cmd[200];
+  pwr_sAttrRef *objar =
+    !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    objar = &ip->Pointed : 
+    objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
+
+  sts = gdh_AttrrefToName( objar, name, sizeof(name),
+			cdh_mName_volumeStrict);
+  if ( EVEN(sts)) return sts;
+
+  sprintf( cmd, "open attr/bypass/name= %s.Note", name);
+    sts = ((XNav *)ip->EditorContext)->command( cmd);
+  // xnav_edit_attribute( name, value);
+  return XNAV__SUCCESS;
+}
+
+// Note filter
+static pwr_tStatus NoteFilter( xmenu_sMenuCall *ip)
+{
+  int sts;
+  char name[140];
+  pwr_tURL datasheet;
+  pwr_sAttrRef *objar =
+    !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    objar = &ip->Pointed : 
+    objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
+
+  sts = gdh_AttrrefToName( objar, name, sizeof(name),
+			cdh_mName_volumeStrict);
+  if ( EVEN(sts)) return sts;
+
+  strcat( name, ".Note");
+  sts = gdh_GetObjectInfo( name, (void *)datasheet, sizeof(datasheet));
+  if ( EVEN(sts)) return XNAV__INVISIBLE;
+
+  return XNAV__SUCCESS;
+}
+
+// Block Events
+static pwr_tStatus BlockEvents( xmenu_sMenuCall *ip)
+{
+  pwr_tCmd cmd;
+  pwr_tOName name;
+  pwr_tStatus sts;
+
+  sts = gdh_ObjidToName( ip->Pointed.Objid, name, sizeof(name),
+			 cdh_mName_volumeStrict);
+  if ( EVEN(sts)) return sts;
+
+  sprintf( cmd, "event block/name=%s", name);
+  sts = ((XNav *)ip->EditorContext)->command( cmd);
+
+  return XNAV__SUCCESS;
+}
+
+// Block Events Filter
+static pwr_tStatus BlockEventsFilter( xmenu_sMenuCall *ip)
+{
+  return XNAV__SUCCESS;
+}
+
 // Help Class
 static pwr_tStatus HelpClass( xmenu_sMenuCall *ip)
 {
@@ -1001,7 +1067,7 @@ static pwr_tStatus HelpClass( xmenu_sMenuCall *ip)
   char classname[80];
   char cmd[200];
   pwr_sAttrRef *objar =
-    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
     objar = &ip->Pointed : 
     objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
@@ -1028,7 +1094,7 @@ static pwr_tStatus HelpClassFilter( xmenu_sMenuCall *ip)
   int sts;
   pwr_tClassId classid;
   pwr_sAttrRef *objar =
-    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
     objar = &ip->Pointed : 
     objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
@@ -1434,6 +1500,10 @@ pwr_dExport pwr_BindXttMethods($Object) = {
   pwr_BindXttMethod(PhotoFilter),
   pwr_BindXttMethod(CircuitDiagram),
   pwr_BindXttMethod(CircuitDiagramFilter),
+  pwr_BindXttMethod(Note),
+  pwr_BindXttMethod(NoteFilter),
+  pwr_BindXttMethod(BlockEvents),
+  pwr_BindXttMethod(BlockEventsFilter),
   pwr_BindXttMethod(HelpClass),
   pwr_BindXttMethod(HelpClassFilter),
   pwr_BindXttMethod(OpenTypeGraph),

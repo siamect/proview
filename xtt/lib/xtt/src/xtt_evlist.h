@@ -72,14 +72,17 @@ typedef struct {
 typedef enum {
 	ev_eType_AlarmList,
 	ev_eType_EventList,
-	ev_eType_HistList
+	ev_eType_HistList,
+	ev_eType_BlockList
 	} ev_eType;
 
 typedef enum {
 	evlist_eEventType_Info,
 	evlist_eEventType_Return,
 	evlist_eEventType_Ack,
-	evlist_eEventType_Alarm
+	evlist_eEventType_Alarm,
+	evlist_eEventType_Block,
+	evlist_eEventType_Cancel
 	} evlist_eEventType;
 
 typedef enum {
@@ -107,6 +110,8 @@ class EvListBrow {
     flow_sAnnotPixmap 	*pixmap_eventalarm;
     flow_sAnnotPixmap 	*pixmap_eventacked;
     flow_sAnnotPixmap 	*pixmap_eventreturn;
+    flow_sAnnotPixmap 	*pixmap_blockr;
+    flow_sAnnotPixmap 	*pixmap_blockl;
 
     void free_pixmaps();
     void allocate_pixmaps();
@@ -145,12 +150,15 @@ class EvList {
 
     void event_info( mh_sMessage *msg);
     void event_alarm( mh_sMessage *msg);
+    void event_block( mh_sBlock *msg);
+    void event_cancel( mh_sReturn *msg);
     void event_ack( mh_sAck *msg);
     void event_return( mh_sReturn *msg);
     void event_clear_alarmlist( pwr_tNodeIndex nix);
     int get_last_not_acked( mh_sEventId **id);
     int get_last_not_acked_beep( mh_sEventId **id);
     int id_to_item( mh_sEventId *id, void **item);
+    int oid_to_item( pwr_tOid oid, void **item);
     void ack( mh_sEventId *id);
     void set_input_focus();
     void zoom( double zoom_factor);
@@ -168,6 +176,7 @@ class EvList {
     int get_last_not_acked_prio( mh_sEventId **id, unsigned long type, unsigned long prio);
     int get_selected_event( char *eventname);
     int get_destination( pwr_tTime time, void **dest);
+    void block_remove();
 };
 
 class ItemAlarm {
