@@ -208,9 +208,4 @@ co_mFormat*   co_SetFormat(co_mFormat *format, co_eBO bo, co_eFT ft);
 }
 #endif
 
-
-#ifdef __cplusplus
-}
-#endif
-
 #endif
