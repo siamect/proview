@@ -202,6 +202,7 @@ class CnvReadWbl {
     int template_attr( char *name, char *value);
     int template_close();
     void doc_init();
+    void doc_init_keep();
     int doc_add( char *line);
     int doc_close();
     void volume_init();
@@ -209,6 +210,7 @@ class CnvReadWbl {
     char *low( char *in);
     int copy_tmp_file( char *tmpfilename, ofstream& fp_to);
     char *flags_to_string( int value);
+    int read_lng( char *cname, char *aname);
 };
 
 #if defined __cplusplus

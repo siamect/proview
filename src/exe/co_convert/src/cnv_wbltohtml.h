@@ -57,6 +57,7 @@ class CnvWblToHtml : public CnvWblTo {
   int bit_exec();
   Cnv_eWblToType type() { return Cnv_eWblToType_Html;}
   int class_open() { return html_class_open;}
+  int index_open() { return html_index_open;}
   
 };
 

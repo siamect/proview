@@ -26,6 +26,8 @@ int CnvWblToPs::init( char *first)
 
   strcpy( fname, ctx->dir);
   strcat( fname, ctx->rw->volume_name);
+  strcat( fname, "_");
+  strcat( fname, Lng::get_language_str());
   strcat( fname, ".ps");
   cdh_ToLower( fname, fname);
 
@@ -39,8 +41,8 @@ int CnvWblToPs::init( char *first)
   tops.y -= 100;
   tops.print_image("pwr_logga.gif");
   tops.y -= 100;
-  tops.print_h2( "Object Reference Manual");
-  tops.print_h3( "Volume");
+  tops.print_h2( Lng::translate("Object Reference Manual"));
+  tops.print_h3( Lng::translate("Volume"));
   tops.print_h2( ctx->rw->volume_name);
   tops.y -= 150;
   tops.print_horizontal_line();
@@ -74,6 +76,10 @@ int CnvWblToPs::class_exec()
   char link_ref[80];
   char *s;
   char txt[256];
+  int lng_sts = 1;
+
+  if ( Lng::current() != lng_eLanguage_en_us)
+    lng_sts = ctx->rw->read_lng( ctx->rw->class_name, 0);
 
   strcpy( full_class_name, ctx->rw->volume_name);
   strcat( full_class_name, ":");
@@ -81,25 +87,30 @@ int CnvWblToPs::class_exec()
 
   tops.set_pageheader( full_class_name);
   
-  sprintf( txt, "Class %s", ctx->rw->class_name);
+  sprintf( txt, "%s %s", Lng::translate("Class"), ctx->rw->class_name);
   tops.print_h1( txt, 0, CnvCtx::low( ctx->rw->class_name));
 
+  if ( !lng_sts) {
+    sprintf( txt, "(%s)", Lng::translate( "English text not available"));
+    tops.print_text( txt, tops.style[tops.ci].link);
+  }
+
   if ( ctx->rw->doc_fresh && strcmp( ctx->rw->doc_author, "") != 0) {
-    sprintf( txt, "Author %s", ctx->rw->doc_author);
+    sprintf( txt, "%s %s", Lng::translate("Author"), ctx->rw->doc_author);
     tops.print_text( txt, tops.style[tops.ci].text);
   }
 
   if ( ctx->rw->doc_fresh && strcmp( ctx->rw->doc_version, "") != 0) {
-    sprintf( txt, "Version %s", ctx->rw->doc_version);
+    sprintf( txt, "%s %s", Lng::translate("Version"), ctx->rw->doc_version);
     tops.print_text( txt, tops.style[tops.ci].text);
   }
 
   if ( ctx->rw->doc_fresh && strcmp( ctx->rw->doc_code, "") != 0) {
-    sprintf( txt, "Code %s", ctx->rw->doc_code);
+    sprintf( txt, "%s %s", Lng::translate("Code"), ctx->rw->doc_code);
     tops.print_text( txt, tops.style[tops.ci].text);
   }
 
-  tops.print_h2( "Description");
+  tops.print_h2( Lng::translate("Description"));
   if ( ctx->rw->doc_fresh) {
     for ( i = 0; i < ctx->rw->doc_cnt; i++) {
       CnvCtx::remove_spaces( ctx->rw->doc_text[i], txt);
@@ -169,9 +180,9 @@ int CnvWblToPs::body_exec()
 
   tops.y -= 10;
   tops.print_horizontal_line();
-  sprintf( text, "Body %s", ctx->rw->body_name);
+  sprintf( text, "%s %s", Lng::translate("Body"), ctx->rw->body_name);
   tops.print_h2( text);
-  sprintf( text, "Struct %s", ctx->rw->body_structname);
+  sprintf( text, "Struct pwr_sClass_%s", ctx->rw->body_structname);
   tops.print_text( text, tops.style[tops.ci].boldtext);
   if ( strcmp( ctx->rw->body_flags, "") != 0) {
     sprintf( text, "Flags %s", ctx->rw->body_flags);
@@ -193,18 +204,23 @@ int CnvWblToPs::attribute_exec()
   char txt[200];
   char text[200];
   int page;
+  int lng_sts = 1;
+
+  if ( Lng::current() != lng_eLanguage_en_us)
+    lng_sts = ctx->rw->read_lng( ctx->rw->class_name, ctx->rw->attr_name);
 
   tops.print_h3( ctx->rw->attr_name);
   if ( ctx->rw->attr_array && ctx->rw->attr_pointer)
-    sprintf( txt, "Type Array[%s] of pointers to %s", ctx->rw->attr_elements,
-	     ctx->rw->attr_typeref);
+    sprintf( txt, "%s Array[%s] of pointers to %s", Lng::translate("Type"),
+	     ctx->rw->attr_elements, ctx->rw->attr_typeref);
   else if ( ctx->rw->attr_array)
-    sprintf( txt, "Type Array[%s] of %s", ctx->rw->attr_elements,
-	     ctx->rw->attr_typeref);
+    sprintf( txt, "%s Array[%s] of %s", Lng::translate("Type"),
+	     ctx->rw->attr_elements, ctx->rw->attr_typeref);
   else if ( ctx->rw->attr_pointer)
-    sprintf( txt, "Type Pointer to %s", ctx->rw->attr_typeref);
+    sprintf( txt, "%s Pointer to %s", Lng::translate("Type"),
+	     ctx->rw->attr_typeref);
   else
-    sprintf( txt, "Type %s", ctx->rw->attr_typeref);
+    sprintf( txt, "%s %s", Lng::translate("Type"), ctx->rw->attr_typeref);
 
   int sts = tops.content.find_link( CnvCtx::low(ctx->rw->attr_typeref), text, &page);
   if ( ODD(sts)) {
@@ -216,7 +232,7 @@ int CnvWblToPs::attribute_exec()
   else 
     tops.print_text( txt, tops.style[tops.ci].boldtext);
 
-  sprintf( txt, "Class %s", ctx->rw->attr_type);
+  sprintf( txt, "%s %s", Lng::translate("Class"), ctx->rw->attr_type);
   tops.print_text( txt, tops.style[tops.ci].boldtext);
 
   if ( strcmp( ctx->rw->attr_flags, "") != 0) {
@@ -252,6 +268,10 @@ int CnvWblToPs::typedef_exec()
   char link_ref[80];
   char *s;
   char txt[256];
+  int lng_sts = 1;
+
+  if ( Lng::current() != lng_eLanguage_en_us)
+    lng_sts = ctx->rw->read_lng( ctx->rw->typedef_name, 0);
 
   strcpy( full_class_name, ctx->rw->volume_name);
   strcat( full_class_name, ":");
@@ -259,8 +279,13 @@ int CnvWblToPs::typedef_exec()
 
   tops.set_pageheader( full_class_name);
   
-  sprintf( txt, "Type %s", ctx->rw->typedef_name);
+  sprintf( txt, "%s %s", Lng::translate("Type"), ctx->rw->typedef_name);
   tops.print_h1( txt, 0, CnvCtx::low( ctx->rw->typedef_name));
+
+  if ( !lng_sts) {
+    sprintf( txt, "(%s)", Lng::translate( "English text not available"));
+    tops.print_text( txt, tops.style[tops.ci].link);
+  }
 
   if ( ctx->rw->doc_fresh && strcmp( ctx->rw->typedef_typeref, "") != 0) {
     sprintf( txt, "TypeRef %s", ctx->rw->typedef_typeref);
@@ -278,21 +303,21 @@ int CnvWblToPs::typedef_exec()
   tops.print_text( "", tops.style[tops.ci].text);
 
   if ( ctx->rw->doc_fresh && strcmp( ctx->rw->doc_author, "") != 0) {
-    sprintf( txt, "Author %s", ctx->rw->doc_author); 
+    sprintf( txt, "%s %s", Lng::translate("Author"), ctx->rw->doc_author); 
     tops.print_text( txt, tops.style[tops.ci].text);
   }
 
   if ( ctx->rw->doc_fresh && strcmp( ctx->rw->doc_version, "") != 0) {
-    sprintf( txt, "Version %s", ctx->rw->doc_version);
+    sprintf( txt, "%s %s", Lng::translate("Version"), ctx->rw->doc_version);
     tops.print_text( txt, tops.style[tops.ci].text);
   }
 
   if ( ctx->rw->doc_fresh && strcmp( ctx->rw->doc_code, "") != 0) {
-    sprintf( txt, "Code %s", ctx->rw->doc_code);
+    sprintf( txt, "%s %s", Lng::translate("Code"), ctx->rw->doc_code);
     tops.print_text( txt, tops.style[tops.ci].text);
   }
 
-  tops.print_h2( "Description");
+  tops.print_h2( Lng::translate("Description"));
   if ( ctx->rw->doc_fresh) {
     for ( i = 0; i < ctx->rw->doc_cnt; i++) {
       CnvCtx::remove_spaces( ctx->rw->doc_text[i], txt);
@@ -361,9 +386,13 @@ int CnvWblToPs::bit_exec()
   int i;
   char *s;
   char txt[200];
+  int lng_sts = 1;
+
+  if ( Lng::current() != lng_eLanguage_en_us)
+    lng_sts = ctx->rw->read_lng( ctx->rw->typedef_name, ctx->rw->bit_name);
 
   tops.print_h3( ctx->rw->bit_name);
-  sprintf( txt, "Type %s", ctx->rw->bit_type);
+  sprintf( txt, "%s %s", Lng::translate("Type"), ctx->rw->bit_type);
   tops.print_text( txt, tops.style[tops.ci].boldtext);
 
   sprintf( txt, "Value %d", ctx->rw->bit_value);

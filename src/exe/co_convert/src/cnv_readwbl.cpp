@@ -10,6 +10,7 @@ extern "C" {
 #include "co_dcli.h"
 #include "co_cdh.h"
 }
+#include "co_lng.h"
 #include "cnv_ctx.h"
 #include "cnv_readwbl.h"
 #include "cnv_wblto.h"
@@ -969,6 +970,12 @@ void CnvReadWbl::doc_init()
   doc_group_cnt = 0;
 }
 
+void CnvReadWbl::doc_init_keep()
+{
+  doc_cnt = 0;
+  strcpy( doc_summary, "");
+}
+
 int CnvReadWbl::doc_add( char *line)
 {
   char	line_part[4][80];
@@ -1243,4 +1250,106 @@ char *CnvReadWbl::flags_to_string( int value)
   default: 			strcpy( str, "Unknown");
   }
   return str;
+}
+
+
+int CnvReadWbl::read_lng( char *cname, char *aname)
+{
+  char line[400];
+  char str[400];
+  char key[80];
+  char found_key[80];
+  int in_class;
+  int in_doc;
+  int sts;
+  int len;
+  FILE *fp;
+  pwr_tFileName filename = "pwrb_sv_se.txt";
+
+  sprintf( filename, "%s/%s_%s.txt", source_dir, CnvCtx::low(volume_name),
+	   Lng::get_language_str());
+
+  strcpy( key, cname);
+  if ( aname && strcmp(aname, "") != 0) {
+    strcat( key, "-");
+    strcat( key, aname);
+  }
+
+  dcli_translate_filename( filename, filename);
+  fp = fopen( filename, "r");
+  if ( !fp) return 0;
+
+  in_class = 0;
+  in_doc = 0;
+  while( 1) {
+    sts = CnvCtx::read_line( line, sizeof(line), fp);
+    if ( !sts) break;
+
+    CnvCtx::remove_spaces( line, str);
+    if ( cdh_NoCaseStrncmp( str, "<class>", 7) == 0)
+      len = 7;
+    else if ( cdh_NoCaseStrncmp( str, "<type>", 6) == 0)
+      len = 6;
+    else if ( cdh_NoCaseStrncmp( str, "<typedef>", 9) == 0)
+      len = 9;
+    else
+      len = 0;
+
+    if ( len) {
+      CnvCtx::remove_spaces( &str[len], found_key);
+      if ( cdh_NoCaseStrcmp( cname, found_key) == 0) {
+	if ( aname && strcmp(aname, "") != 0) {
+	  in_class = 1;
+	}
+	else {
+ 	  in_doc = 1;
+	  in_class = 1;
+	  doc_init_keep();
+	}
+      }
+      continue;
+    }
+    else if ( in_class && 
+	      (cdh_NoCaseStrncmp( str, "</class>", 8) == 0 ||
+	       cdh_NoCaseStrncmp( str, "</type>", 7) == 0 ||
+	       cdh_NoCaseStrncmp( str, "</typedef>", 10) == 0))
+      break;
+    else if ( in_class && 
+	      (cdh_NoCaseStrncmp( str, "<attr>", 6) == 0 ||
+	       cdh_NoCaseStrncmp( str, "<value>", 7) == 0)) {
+      if ( cdh_NoCaseStrncmp( str, "<attr>", 6) == 0)
+	len = 6;
+      else
+	len = 7;
+
+      if ( !in_class)
+	continue;
+      if ( in_doc)
+	break;
+
+      CnvCtx::remove_spaces( &str[len], found_key);
+      if ( cdh_NoCaseStrcmp( aname, found_key) == 0) {
+	in_doc = 1;
+	doc_init_keep();
+      }
+    }
+    else if ( in_doc && 
+	      (cdh_NoCaseStrncmp( str, "</attr>", 8) == 0 ||
+	       cdh_NoCaseStrncmp( str, "</value>", 9) == 0)) {
+      if ( !in_class)
+	continue;
+      break;
+    }
+    else if ( in_doc) {
+      strcpy( str, "! ");
+      strcat( str, line);
+      doc_add( str);
+    }
+  }
+  fclose( fp);
+  if ( in_doc) {
+    doc_close();
+    return 1;
+  }
+  return 0;
 }

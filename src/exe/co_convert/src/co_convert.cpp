@@ -102,7 +102,7 @@ int main( int argc, char *argv[])
   int   xtthelp_to_xml = 0;
   int   xtthelp_to_ps = 0;
 
-  if ( argc < 2 || argc > 8) {
+  if ( argc < 2 || argc > 9) {
     usage();
     exit(0);
   }

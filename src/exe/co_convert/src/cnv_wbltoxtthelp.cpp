@@ -12,7 +12,7 @@ extern "C" {
 #include "pwr.h"
 #include "co_cdh.h"
 }
-
+#include "co_lng.h"
 
 int CnvWblToXtthelp::init( char *first)
 {
@@ -58,6 +58,10 @@ int CnvWblToXtthelp::class_exec()
   char link_ref[80];
   char *s;
   char txt[256];
+  int lng_sts = 1;
+
+  if ( Lng::current() != lng_eLanguage_en_us)
+    lng_sts = ctx->rw->read_lng( ctx->rw->class_name, 0);
 
   strcpy( full_class_name, ctx->rw->volume_name);
   strcat( full_class_name, ":");
@@ -75,23 +79,27 @@ int CnvWblToXtthelp::class_exec()
   xtthelp_in_topic = 1;
   fp_tmp <<
 "<TOPIC> " << ctx->rw->class_name << endl <<
-"Class  " << full_class_name << endl <<
+Lng::translate("Class") << " " << full_class_name << endl <<
 "<H1>" << ctx->rw->class_name << endl << endl;
+
+  if ( !lng_sts)
+    fp_tmp <<
+"(" << Lng::translate( "English text not available") << ")" << endl << endl;
 
   if ( ctx->rw->doc_fresh && strcmp( ctx->rw->doc_author, "") != 0)
   {
     fp_tmp <<
-"<B>Author<T>" << ctx->rw->doc_author << endl;
+"<B>" << Lng::translate("Author") << "<T>" << ctx->rw->doc_author << endl;
   }
 
   if ( ctx->rw->doc_fresh && strcmp( ctx->rw->doc_version, "") != 0)
   {
     fp_tmp <<
-"<B>Version<T>" << ctx->rw->doc_version << endl;
+"<B>" << Lng::translate("Version") << "<T>" << ctx->rw->doc_version << endl;
   }
 
   fp_tmp <<
-"<H1>Description" << endl;
+    "<H1>"<< Lng::translate("Description") << endl;
 
   if ( ctx->rw->doc_fresh) {
 
@@ -160,6 +168,10 @@ int CnvWblToXtthelp::attribute_exec()
 {
   int i;
   char *s;
+  int lng_sts = 1;
+
+  if ( Lng::current() != lng_eLanguage_en_us)
+    lng_sts = ctx->rw->read_lng( ctx->rw->class_name, ctx->rw->attr_name);
 
   fp_tmp <<
 endl <<

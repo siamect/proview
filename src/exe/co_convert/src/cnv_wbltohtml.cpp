@@ -14,7 +14,7 @@ extern "C" {
 #include "co_cdh.h"
 #include "co_time.h"
 }
-
+#include "co_lng.h"
 
 int CnvWblToHtml::init( char *first)
 {
@@ -378,7 +378,7 @@ int CnvWblToHtml::close()
 #endif
 
   char cmd[200];
-  sprintf( cmd, "cat %s/*.jsf %s/../orm_menu.js > %s/menu.js", ctx->dir, 
+  sprintf( cmd, "cat %s/*.jsf %s/../../orm_menu.js > %s/menu.js", ctx->dir, 
 	   ctx->dir, ctx->dir);
   system( cmd);
 
@@ -398,6 +398,10 @@ int CnvWblToHtml::class_exec()
   char low_class_name[80];
   char txt[200];
   char timestr[80];
+  int lng_sts = 1;
+
+  if ( Lng::current() != lng_eLanguage_en_us)
+    lng_sts = ctx->rw->read_lng( ctx->rw->class_name, 0);
 
   time_AtoAscii( 0, time_eFormat_DateAndTime, timestr, sizeof(timestr));
 
@@ -525,22 +529,22 @@ endl <<
   if ( ctx->rw->doc_fresh && strcmp( ctx->rw->doc_author, "") != 0)
   {
     html_clf->f <<
-"<DT><B>Author</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" << ctx->rw->doc_author << "<DT>" << endl;
+"<DT><B>" << Lng::translate("Author") << "</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" << ctx->rw->doc_author << "<DT>" << endl;
   }
 
   if ( ctx->rw->doc_fresh && strcmp( ctx->rw->doc_version, "") != 0)
   {
     html_clf->f <<
-"<DT><B>Version</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" << ctx->rw->doc_version << "<DT>" << endl;
+"<DT><B>" << Lng::translate("Version") << "</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" << ctx->rw->doc_version << "<DT>" << endl;
   }
   if ( ctx->rw->doc_fresh && strcmp( ctx->rw->doc_code, "") != 0)
   {
     html_clf->f <<
-      "<DT><B>Code</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <A HREF=\"" << ref_name << "#" << low_class_name << "\"><FONT size=\"-1\">" << ctx->rw->doc_code << "</FONT></A><DT>" << endl;
+"<DT><B>" << Lng::translate("Code") << "</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <A HREF=\"" << ref_name << "#" << low_class_name << "\"><FONT size=\"-1\">" << ctx->rw->doc_code << "</FONT></A><DT>" << endl;
   }
 
   html_clf->f <<
-"<BR><DT><B>Description</B><DT><BR>" << endl <<
+"<BR><DT><B>" << Lng::translate("Description") << "</B><DT><BR>" << endl <<
 "</DL><DIV ID=\"description\"><XMP>" << endl;
 
   if ( ctx->rw->doc_fresh) {
@@ -733,6 +737,10 @@ int CnvWblToHtml::attribute_exec()
   char txt[200];
   char typeref_href[80];
   char attrtype_href[80];
+  int lng_sts = 1;
+
+  if ( Lng::current() != lng_eLanguage_en_us)
+    lng_sts = ctx->rw->read_lng( ctx->rw->class_name, ctx->rw->attr_name);
 
   if ( strncmp( ctx->rw->attr_typeref, "pwr_eClass_", 11)  == 0) {
     strcpy( typeref_href, &ctx->rw->attr_typeref[11]);
@@ -825,16 +833,16 @@ int CnvWblToHtml::attribute_exec()
 
   if ( ctx->rw->attr_array && ctx->rw->attr_pointer)
     fp_tmp <<
-"<CODE><B>Type</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Array of pointers to <A HREF=\"" << typeref_href << "\">" << ctx->rw->attr_typeref << "</A></CODE><DT>" << endl;
+"<CODE><B>" << Lng::translate("Type") << "</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Array of pointers to <A HREF=\"" << typeref_href << "\">" << ctx->rw->attr_typeref << "</A></CODE><DT>" << endl;
   else if ( ctx->rw->attr_array)
     fp_tmp <<
-"<CODE><B>Type</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Array of <A HREF=\"" << typeref_href << "\">" << ctx->rw->attr_typeref << "</A></CODE><DT>" << endl;
+"<CODE><B>" << Lng::translate("Type") << "</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Array of <A HREF=\"" << typeref_href << "\">" << ctx->rw->attr_typeref << "</A></CODE><DT>" << endl;
   else if ( ctx->rw->attr_pointer)
     fp_tmp <<
-"<CODE><B>Type</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pointer to <A HREF=\"" << typeref_href << "\">" << ctx->rw->attr_typeref << "</A></CODE><DT>" << endl;
+"<CODE><B>" << Lng::translate("Type") << "</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pointer to <A HREF=\"" << typeref_href << "\">" << ctx->rw->attr_typeref << "</A></CODE><DT>" << endl;
   else
     fp_tmp <<
-"<CODE><B>Type</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF=\"" << typeref_href << "\">" << ctx->rw->attr_typeref << "</A></CODE><DT>" << endl;
+"<CODE><B>" << Lng::translate("Type") << "</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF=\"" << typeref_href << "\">" << ctx->rw->attr_typeref << "</A></CODE><DT>" << endl;
 
   fp_tmp <<
     "<DT><CODE><B><A HREF=\"" << attrtype_href << "#Flags\">Flags</A></B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" << ctx->rw->attr_flags << "</CODE><DT>" << endl;
@@ -844,12 +852,13 @@ int CnvWblToHtml::attribute_exec()
 "<DT><CODE><B>Elements</B>&nbsp;&nbsp;" << ctx->rw->attr_elements << "</CODE><DT>" << endl;
 
   fp_tmp <<
-"<DT><CODE><B>Body</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" << ctx->rw->body_name << "</CODE><DT>" << endl <<
-"<DT><CODE><B>Class</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF=\"" << attrtype_href << "\">$" << ctx->rw->attr_type << "</A></CODE><DT>" << endl;
+"<DT><CODE><B>" << Lng::translate("Body") << "</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" << ctx->rw->body_name << "</CODE><DT>" << endl;
+  fp_tmp <<
+"<DT><CODE><B>" << Lng::translate("Class") << "</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF=\"" << attrtype_href << "\">$" << ctx->rw->attr_type << "</A></CODE><DT>" << endl;
 
   fp_tmp <<
 "<BR>" << endl <<
-"<CODE><B>Description</B></CODE><DT></DL>" << endl <<
+"<CODE><B>" << Lng::translate("Description") << "</B></CODE><DT></DL>" << endl <<
 "<DIV ID=\"description\"><XMP>" << endl;
 
   if ( ctx->rw->doc_fresh) {
@@ -885,6 +894,10 @@ int CnvWblToHtml::bit_exec()
 {
   int i;
   char txt[200];
+  int lng_sts = 1;
+
+  if ( Lng::current() != lng_eLanguage_en_us)
+    lng_sts = ctx->rw->read_lng( ctx->rw->typedef_name, ctx->rw->bit_name);
 
   // Summary
   char bitchar = _tolower(ctx->rw->typedef_typeref[0]);
@@ -985,6 +998,10 @@ int CnvWblToHtml::typedef_exec()
   char low_class_name[80];
   char txt[200];
   char code_aref[200];
+  int lng_sts = 1;
+
+  if ( Lng::current() != lng_eLanguage_en_us)
+    lng_sts = ctx->rw->read_lng( ctx->rw->typedef_name, 0);
 
   strcpy( ctx->rw->class_name, ctx->rw->typedef_name);
 
