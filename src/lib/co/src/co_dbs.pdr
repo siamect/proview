@@ -564,6 +564,10 @@ struct dbs_sScObject {
 %#define dbs_Qitem(a, b, c) ((b *)((char *)a - offsetof(b, c)))
 %#define dbs_Qlink(a, b, c) ((dbs_sQlink *)((char *)a + offsetof(b, c)))
 %
+%pwr_tBoolean    dbs_AlignedRead(pwr_tStatus *sts, void *buf, pwr_tUInt32 size, const dbs_sEnv *ep);
+%pwr_tBoolean    dbs_Close(pwr_tStatus *sts, dbs_sEnv *ep);
+%dbs_sEnv       *dbs_Open(pwr_tStatus *sts, dbs_sEnv *ep, const char *filename);
+%#if defined(OS_LINUX) || defined(OS_LYNX)
 %void           *dbs_Address(pwr_tStatus*, const dbs_sEnv*, dbs_tRef);
 %void           *dbs_Alloc(pwr_tStatus*, const dbs_sEnv*, pwr_tUInt32);
 %pwr_tBoolean    dbs_AllocLookasideSegment(pwr_tStatus*, const dbs_sEnv*, pwr_tUInt32, pwr_tUInt32);
@@ -592,9 +596,6 @@ struct dbs_sScObject {
 %dbs_tRef        dbs_RefAlloc(pwr_tStatus*, const dbs_sEnv*, pwr_tUInt32);
 %dbs_tRef        dbs_Reference(pwr_tStatus*, const dbs_sEnv*, void*);
 %
-%pwr_tBoolean    dbs_AlignedRead(pwr_tStatus *sts, void *buf, pwr_tUInt32 size, const dbs_sEnv *ep);
-%pwr_tBoolean    dbs_Close(pwr_tStatus *sts, dbs_sEnv *ep);
-%dbs_sEnv       *dbs_Open(pwr_tStatus *sts, dbs_sEnv *ep, const char *filename);
 %dbs_sEnv       *dbs_Map(pwr_tStatus *sts, dbs_sEnv *ep, const char *filename);
 %
 %dbs_sObject    *dbs_OidToObject(pwr_tStatus *sts, const dbs_sEnv *ep, pwr_tOid oid);
@@ -617,7 +618,7 @@ struct dbs_sScObject {
 %dbs_sObject    *dbs_NextHead(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op);
 %dbs_sBody      *dbs_NextRbody(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sBody *bp);
 %dbs_sBody      *dbs_NextDbody(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sBody *bp);
-%
+%#endif
 %
 %#ifdef __cplusplus
 %}

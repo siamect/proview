@@ -21,6 +21,79 @@
 #include "co_platform.h"
 
 
+pwr_tBoolean 
+dbs_AlignedRead(pwr_tStatus *sts, void *buf, pwr_tUInt32 size, const dbs_sEnv *ep)
+{
+    int offset;
+    *sts = DBS__SUCCESS;   
+    
+
+    if (fread(buf, size, 1, ep->f) == 0)
+      pwr_Return(NO, sts, errno_GetStatus());
+
+    if ((offset = dbs_dPadding(size)) > 0)
+        if(fseek(ep->f, offset, SEEK_CUR))
+            pwr_Return(NO, sts, errno_GetStatus());
+
+    return YES;
+}
+
+pwr_tBoolean
+dbs_Close(pwr_tStatus *sts, dbs_sEnv *ep) 
+{
+     *sts = DBS__SUCCESS;
+     fclose(ep->f);
+     ep->f = NULL;
+ 
+     return TRUE;
+}
+
+dbs_sEnv *
+dbs_Open(pwr_tStatus *sts, dbs_sEnv *ep, const char *filename)
+{
+    FILE *f;
+    co_mFormat srcFormat, ownFormat;
+    PDR pdrs;
+
+    *sts = DBS__SUCCESS;
+    memset(ep, 0, sizeof(*ep));
+    
+    f = fopen(filename, "r");
+    if (f == NULL) {
+        *sts = errno_GetStatus();
+        return NULL;
+    } 
+
+    if (fread(&ep->file, sizeof(ep->file), 1, f) == 0) {
+        *sts = errno_GetStatus();
+        fclose(f);
+        return NULL;
+    }
+    
+#if 0
+    srcFormat.m = ntohl(ep->file.format.m);    
+#else
+    srcFormat.m = ep->file.format.m;    
+#endif
+    co_GetOwnFormat(&ownFormat);
+
+    if (srcFormat.m != ownFormat.m) {
+        pdrmem_create(&pdrs, &ep->file, sizeof(ep->file), PDR_DECODE, srcFormat, ownFormat);
+        if (!pdr_dbs_sFile(&pdrs, &ep->file)) {
+            *sts = DBS__PDRFILE;
+            fclose(f);
+            return NULL;
+        }
+    }
+    
+    fseek(f, 0, SEEK_SET);
+    ep->f = f;
+
+    return ep;
+}
+
+#if defined(OS_LINUX) || defined(OS_LYNX)
+
 static pwr_tBoolean
 checkQ(const dbs_sEnv *ep, dbs_sQlink *item)
 {
@@ -299,60 +372,6 @@ dbs_Reference(pwr_tStatus *sts, const dbs_sEnv *ep, void *adrs)
 }
 
 #endif
-
-pwr_tBoolean
-dbs_Close(pwr_tStatus *sts, dbs_sEnv *ep) 
-{
-     *sts = DBS__SUCCESS;
-     fclose(ep->f);
-     ep->f = NULL;
- 
-     return TRUE;
-}
-
-dbs_sEnv *
-dbs_Open(pwr_tStatus *sts, dbs_sEnv *ep, const char *filename)
-{
-    FILE *f;
-    co_mFormat srcFormat, ownFormat;
-    PDR pdrs;
-
-    *sts = DBS__SUCCESS;
-    memset(ep, 0, sizeof(*ep));
-    
-    f = fopen(filename, "r");
-    if (f == NULL) {
-        *sts = errno_GetStatus();
-        return NULL;
-    } 
-
-    if (fread(&ep->file, sizeof(ep->file), 1, f) == 0) {
-        *sts = errno_GetStatus();
-        fclose(f);
-        return NULL;
-    }
-    
-#if 0
-    srcFormat.m = ntohl(ep->file.format.m);    
-#else
-    srcFormat.m = ep->file.format.m;    
-#endif
-    co_GetOwnFormat(&ownFormat);
-
-    if (srcFormat.m != ownFormat.m) {
-        pdrmem_create(&pdrs, &ep->file, sizeof(ep->file), PDR_DECODE, srcFormat, ownFormat);
-        if (!pdr_dbs_sFile(&pdrs, &ep->file)) {
-            *sts = DBS__PDRFILE;
-            fclose(f);
-            return NULL;
-        }
-    }
-    
-    fseek(f, 0, SEEK_SET);
-    ep->f = f;
-
-    return ep;
-}
 
 static void
 printTree(dbs_sEnv *ep, dbs_sObject *op, int indent)
@@ -878,23 +897,6 @@ dbs_Ancestor(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op)
     return op;
 }
 
-pwr_tBoolean 
-dbs_AlignedRead(pwr_tStatus *sts, void *buf, pwr_tUInt32 size, const dbs_sEnv *ep)
-{
-    int offset;
-    *sts = DBS__SUCCESS;   
-    
-
-    if (fread(buf, size, 1, ep->f) == 0)
-      pwr_Return(NO, sts, errno_GetStatus());
-
-    if ((offset = dbs_dPadding(size)) > 0)
-        if(fseek(ep->f, offset, SEEK_CUR))
-            pwr_Return(NO, sts, errno_GetStatus());
-
-    return YES;
-}
-
 void
 dbs_GetVolumeName(pwr_tStatus *sts, dbs_sEnv *ep, char *name)
 {
@@ -986,3 +988,4 @@ dbs_NextDbody(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sBody *bp)
     return bp;
 }
 
+#endif
