@@ -522,6 +522,8 @@ pwr_tStatus WVsel::load_volumelist()
 	pwr_tStatus	sts;
 	int		i;
 	bool            local_wbvolume = false;
+	ldh_sVolumeInfo info;
+	char		str[120];
 
 	XmListDeleteAllItems( widgets.volumelist);
 	volume_count = 0;
@@ -548,32 +550,52 @@ pwr_tStatus WVsel::load_volumelist()
 	    &size);
 	  if (EVEN(sts)) return sts;
 
-	  strcat( name, " ");
-	  for ( i = strlen(name); i < 20; i++)
-	    strcat( name, " ");
+	  strcpy( str, name);
+
+	  strcat( str, " ");
+	  for ( i = strlen(str); i < 20; i++)
+	    strcat( str, " ");
+
+	  sts = ldh_GetVidInfo( wbctx, volume, &info);
+	  if (EVEN(sts)) return sts;
+
+	  switch ( info.VolRep) {
+	  case ldh_eVolRep_Db: 
+	    strcat( str, "Db     ");
+	    break;
+	  case ldh_eVolRep_Dbs: 
+	    strcat( str, "Dbs    ");
+	    break;
+	  case ldh_eVolRep_Wbl: 
+	    strcat( str, "Wbl    ");
+	    break;
+	  case ldh_eVolRep_Mem: 
+	    strcat( str, "Mem    ");
+	    break;
+	  }
 
 	  switch (classid)
 	  {
 	    case pwr_eClass_RootVolume:
-	      strcat( name, "RootVolume");
+	      strcat( str, "RootVolume");
 	      break;
 	    case pwr_eClass_SubVolume:
-	      strcat( name, "SubVolume");
+	      strcat( str, "SubVolume");
 	      break;
 	    case pwr_eClass_SharedVolume:
-	      strcat( name, "SharedVolume");
+	      strcat( str, "SharedVolume");
 	      break;
 	    case pwr_eClass_ClassVolume:
-	      strcat( name, "ClassVolume");
+	      strcat( str, "ClassVolume");
 	      break;
 	    case pwr_eClass_WorkBenchVolume:
-	      strcat( name, "WorkBenchVolume");
+	      strcat( str, "WorkBenchVolume");
 	      break;
 	    case pwr_eClass_DirectoryVolume:
-	      strcat( name, "DirectoryVolume");
+	      strcat( str, "DirectoryVolume");
 	      break;
 	  }
-	  cstr = XmStringCreateSimple( name);
+	  cstr = XmStringCreateSimple( str);
 	  XmListAddItemUnselected( widgets.volumelist, cstr, 0);
 	  XmStringFree(cstr);	  
 
