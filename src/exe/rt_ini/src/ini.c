@@ -2226,6 +2226,24 @@ create_active_io ()
   sts = gdh_CreateObject("pwrNode-active-io-iv_init", pwr_cClass_IvArea,
     4000 * sizeof(((pwr_sClass_IvArea*)0)->Value[0]),
     &oid, pwr_cNObjid, 0, pwr_cNObjid);
+  sts = gdh_CreateObject("pwrNode-active-io-ai_init", pwr_cClass_IvArea,
+    4000 * sizeof(((pwr_sClass_IvArea*)0)->Value[0]),
+    &oid, pwr_cNObjid, 0, pwr_cNObjid);
+  sts = gdh_CreateObject("pwrNode-active-io-ao_init", pwr_cClass_IvArea,
+    4000 * sizeof(((pwr_sClass_IvArea*)0)->Value[0]),
+    &oid, pwr_cNObjid, 0, pwr_cNObjid);
+  sts = gdh_CreateObject("pwrNode-active-io-di_init", pwr_cClass_IvArea,
+    5000 * sizeof(((pwr_sClass_IvArea*)0)->Value[0]),
+    &oid, pwr_cNObjid, 0, pwr_cNObjid);
+  sts = gdh_CreateObject("pwrNode-active-io-do_init", pwr_cClass_IvArea,
+    4000 * sizeof(((pwr_sClass_IvArea*)0)->Value[0]),
+    &oid, pwr_cNObjid, 0, pwr_cNObjid);
+  sts = gdh_CreateObject("pwrNode-active-io-ii_init", pwr_cClass_IvArea,
+    4000 * sizeof(((pwr_sClass_IvArea*)0)->Value[0]),
+    &oid, pwr_cNObjid, 0, pwr_cNObjid);
+  sts = gdh_CreateObject("pwrNode-active-io-io_init", pwr_cClass_IvArea,
+    4000 * sizeof(((pwr_sClass_IvArea*)0)->Value[0]),
+    &oid, pwr_cNObjid, 0, pwr_cNObjid);
 }
 
 static void
@@ -2284,6 +2302,18 @@ delete_old_io ()
   sts = gdh_NameToObjid("pwrNode-old-io-av_init", &oid);
   if(ODD(sts)) gdh_DeleteObject(oid);
   sts = gdh_NameToObjid("pwrNode-old-io-iv_init", &oid);
+  if(ODD(sts)) gdh_DeleteObject(oid);
+  sts = gdh_NameToObjid("pwrNode-old-io-ai_init", &oid);
+  if(ODD(sts)) gdh_DeleteObject(oid);
+  sts = gdh_NameToObjid("pwrNode-old-io-ao_init", &oid);
+  if(ODD(sts)) gdh_DeleteObject(oid);
+  sts = gdh_NameToObjid("pwrNode-old-io-di_init", &oid);
+  if(ODD(sts)) gdh_DeleteObject(oid);
+  sts = gdh_NameToObjid("pwrNode-old-io-do_init", &oid);
+  if(ODD(sts)) gdh_DeleteObject(oid);
+  sts = gdh_NameToObjid("pwrNode-old-io-ii_init", &oid);
+  if(ODD(sts)) gdh_DeleteObject(oid);
+  sts = gdh_NameToObjid("pwrNode-old-io-io_init", &oid);
   if(ODD(sts)) gdh_DeleteObject(oid);
   sts = gdh_NameToObjid("pwrNode-old-io", &oid);
   if(ODD(sts)) gdh_DeleteObject(oid);
