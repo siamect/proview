@@ -55,7 +55,8 @@ setRcValue(
 
 pwr_tStatus
 ini_RcReadAndSet(
-  char			*nodename,
+  const char		*dir,
+  const char		*nodename,
   int			busid
 ) {
 
@@ -84,23 +85,11 @@ ini_RcReadAndSet(
   char			filename[128];
   int			interval;
 
-#ifdef OS_ELN
-  char			hostspec[32];
-#endif
   
   for (rc = def_rc; rc && rc->name; rc++)
     *rc->var = rc->val;
 
-#if defined OS_VMS
-  sprintf(filename, load_cNameRc, load_cNameDirectory, nodename, busid);
-
-#elif defined OS_ELN
-  ini_GetNodeInfo(NULL, NULL, NULL, hostspec, NULL, NULL);
-  sprintf(filename, "%s::%s%s", hostspec, load_cNameDirectory, name);
-
-#else
-  sprintf(filename, "%s/%s", getenv(load_cNameDirectory), name);
-#endif
+  sprintf(filename, load_cNameRc, dir, nodename, busid);
 
   cdh_ToLower(filename, filename);
   fp = fopen(filename, "r");

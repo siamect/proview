@@ -14,6 +14,7 @@
 #include "co_ver.h"
 #include "co_time.h"
 #include "ini.h"
+#include "ini_rc.h"
 #include "rt_ini_alias.h"
 #include "rt_ini_event.h"
 #include "rt_bck_load.h"
@@ -146,6 +147,10 @@ start (
       errh_LogInfo(&cp->log, "Setting log file to: %s", cp->np->ErrLogFile);
     }
   }
+
+  sts = ini_RcReadAndSet(cp->dir, cp->nodename, cp->busid);
+  if (EVEN(sts))
+    errh_LogError(&cp->log, "ini_RcReadAndSet, %m", sts);
 
   sts = ini_SetAttribute(cp->aliasfile.name, cp->nodename, 0);
   if (EVEN(sts))

@@ -1060,7 +1060,7 @@ ini_ReadBootFile (
       /* Do we have this volume?  */
       vp = tree_Find(sts, cp->vid_t, &vid);
       if (vp != NULL) {
-	errh_LogInfo(&cp->log, "Volume allready defined: %s", s);
+	errh_LogInfo(&cp->log, "Volume already defined: %s", s);
 	vp->isVolRef = 0;
 	/* todo !!! check versions */
       } else {

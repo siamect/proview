@@ -13,7 +13,8 @@
 
 pwr_tStatus
 ini_RcReadAndSet(
-  char			*nodename,
+  const char		*dir,
+  const char		*nodename,
   int			busid
 );
 
