@@ -302,6 +302,8 @@ public class Gdh {
   public static native String translateFilename( String filename);
   public native CdhrString crrSignal( String name);
   public native CdhrString crrObject( String name);
+  public native CdhrString getMsg( int sts);
+  public native CdhrString getMsgText( int sts);
 }
 
 

@@ -62,11 +62,12 @@ public class GdhServer
   public final static int CRR_OBJECT = 43;
   public final static int GET_PARENT = 44;
   public final static int GET_OBJECT_INFO_OBJID = 45;
-
   public final static int GET_OBJECT_REF_INFO_BOOLEAN_ARRAY = 46;
   public final static int GET_OBJECT_REF_INFO_FLOAT_ARRAY = 47;
   public final static int GET_OBJECT_REF_INFO_INT_ARRAY = 48;
   public final static int GET_OBJECT_REF_INFO_STRING_ARRAY = 49;
+  public final static int GET_MSG = 50;
+  public final static int GET_MSG_TEXT = 51;
 
   public final static int PORT = 4445;
 
@@ -680,6 +681,10 @@ public class GdhServer
                   case Pwr.eType_UInt16:
                   case Pwr.eType_Int8:
                   case Pwr.eType_UInt8:
+		  case Pwr.eType_Status:
+		  case Pwr.eType_NetStatus:
+		  case Pwr.eType_Enum:
+		  case Pwr.eType_Mask:
 		    if(elements > 1)
 		    {
 		      //its an array
@@ -1281,6 +1286,41 @@ public class GdhServer
               catch(IOException e)
               {
                 System.out.println("crrObject: IO exception");
+              }
+              break;
+            case GET_MSG:
+              try
+              {
+                int status = in.readInt();
+                CdhrString ret = gdh.getMsg(status);
+		System.out.println( "getMsg : " + status + " " + ret.str);
+                out.writeInt(ret.getSts());
+                if(ret.oddSts())
+                {
+                  out.writeUTF(ret.str);
+                }
+		out.flush();
+              }
+              catch(IOException e)
+              {
+                System.out.println("getMsg: IO exception");
+              }
+              break;
+            case GET_MSG_TEXT:
+              try
+              {
+                int status = in.readInt();
+                CdhrString ret = gdh.getMsgText(status);
+                out.writeInt(ret.getSts());
+                if(ret.oddSts())
+                {
+                  out.writeUTF(ret.str);
+                }
+		out.flush();
+              }
+              catch(IOException e)
+              {
+                System.out.println("getMsg: IO exception");
               }
               break;
             case LOG_STRING:
