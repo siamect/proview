@@ -28,10 +28,11 @@ class wb_orep;
 class wb_attribute : public wb_status
 {
   wb_orep *m_orep;
-  wb_adrep *m_adrep;
-    
+  wb_adrep *m_adrep;    
+
   size_t m_size;
   size_t m_offset;
+  int m_idx; // -1 if whole array, only valid for arrays 
   pwr_tTid m_tid;
   int m_elements;
   pwr_eType m_type;
@@ -43,16 +44,16 @@ public:
   wb_attribute();
   wb_attribute(const wb_attribute&);
   wb_attribute(pwr_tStatus, wb_orep*);
-  wb_attribute(pwr_tStatus, wb_orep*, wb_adrep*);
+  wb_attribute(pwr_tStatus, wb_orep*, wb_adrep*, int idx = -1);
   wb_attribute(pwr_tStatus, wb_orep*, const char* bname);
   wb_attribute(pwr_tStatus, wb_orep*, const char* bname, const char* aname);
-  wb_attribute(wb_attribute& pa, int idx, const char* aname);
+  wb_attribute(const wb_attribute& pa, int idx, const char* aname);
 
   ~wb_attribute();
   wb_attribute& operator=(const wb_attribute&);
   operator bool() const { return oddSts();}
   operator wb_orep*() const;
-  bool operator==(wb_attribute&);
+  bool operator==( const wb_attribute&);
     
   //wb_object& operator=(const wb_orep&);
 
@@ -60,47 +61,47 @@ public:
   bool isArray() const {return (m_flags & PWR_MASK_ARRAY);}
     
 
-  pwr_tOid aoid();  // get objects object id
-  pwr_sAttrRef aref();
-  pwr_sAttrRef *aref(pwr_sAttrRef *arp);
-  size_t size();
-  size_t offset();
-  pwr_eType type();
-  int nElement();
-  int index();
-  int flags();
-  pwr_tAix aix();
+  pwr_tOid aoid() const;  // get objects object id
+  pwr_sAttrRef aref() const;
+  pwr_sAttrRef *aref(pwr_sAttrRef *arp) const;
+  size_t size() const;
+  size_t offset() const;
+  pwr_eType type() const;
+  int nElement() const;
+  int index() const;
+  int flags() const;
+  pwr_tAix aix() const;
   // Class of attribute object
-  pwr_tCid cid();
-  pwr_eBix bix();
-  pwr_tOid boid();
-  bool checkXref();
-  pwr_sAttrXRef *xref();
-  pwr_sObjXRef *oxref();
-  pwr_tCid  subClass();
+  pwr_tCid cid() const;
+  pwr_eBix bix() const;
+  pwr_tOid boid() const;
+  bool checkXref() const;
+  pwr_sAttrXRef *xref() const;
+  pwr_sObjXRef *oxref() const;
+  pwr_tCid  subClass() const;
     
-  void *value( void *p = 0);
-  void *value(void *vp, size_t size, pwr_tStatus*);
+  void *value( void *p = 0) const;
+  void *value(void *vp, size_t size, pwr_tStatus*) const;
     
-  string toString();
-  pwr_tStatus fromString(string);
-  pwr_tStatus fromString(char *);
+  string toString() const;
+  pwr_tStatus fromString(string) const;
+  pwr_tStatus fromString(char *) const;
     
     
-  wb_attribute after();
-  wb_attribute before();
+  wb_attribute after() const;
+  wb_attribute before() const;
 
-  wb_attribute first(int idx);
-  wb_attribute child(int idx, const char* name);
+  wb_attribute first(int idx) const;
+  wb_attribute child(int idx, const char* name) const;
     
 
   const char *name() const;
-  wb_name longName();
+  wb_name longName() const;
   void name(const char *name);
   void name(wb_name *name);
     
     
-  pwr_tStatus sts() { return m_sts;}
+  pwr_tStatus sts() const { return m_sts;}
             
 private:
   void check() const;

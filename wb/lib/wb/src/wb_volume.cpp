@@ -1,5 +1,7 @@
 #include "wb_volume.h"
 #include "wb_merep.h"
+#include "wb_bdrep.h"
+#include "wb_cdrep.h"
 
 wb_volume::wb_volume() : wb_status(LDH__NOSUCHVOL), m_vrep(0)
 {
@@ -197,7 +199,7 @@ wb_attribute wb_volume::attribute(pwr_tOid oid, const char *bname, const char *a
     // Other volume
     orep = m_vrep->erep()->object(&sts, oid);
 
-  wb_attribute a = wb_attribute(sts, orep, bname, aname);
+    wb_attribute a(sts, orep, bname, aname);
     
   return a;
 }
@@ -214,12 +216,84 @@ wb_attribute wb_volume::attribute(pwr_tOid oid, const char *bname) const
     // Other volume
     orep = m_vrep->erep()->object(&sts, oid);
 
-  wb_attribute a = wb_attribute(sts, orep, bname);
+    wb_attribute a(sts, orep, bname);
     
   return a;
 }
 
 
+wb_attribute wb_volume::attribute(const pwr_sAttrRef* arp) const
+{
+  pwr_tStatus sts;
+  int idx;
+  wb_orep* orep = 0;
+  wb_cdrep* cdrep = 0;
+  wb_bdrep* bdrep = 0;
+  wb_adrep* adrep = 0;
+  wb_adrep* old;
+  
+  if (arp->Objid.vid == m_vrep->vid())
+    // This volume
+    orep = m_vrep->object( &sts, arp->Objid);
+  else
+    // Other volume
+    orep = m_vrep->erep()->object(&sts, arp->Objid);
+
+  if (EVEN(sts))
+    return wb_attribute();
+
+  cdrep = new wb_cdrep(*orep);
+  if (EVEN(cdrep->sts()))
+    goto error;
+      
+  bdrep = cdrep->bdrep(&sts, pwr_eBix_rt);
+  if (bdrep == 0)
+    goto error;
+
+  // Check if we shall reference the whole object
+  if (arp->Size == 0 || (arp->Offset == 0 && arp->Size == bdrep->size())) {
+    wb_attribute a(sts, orep);
+    delete bdrep;
+    delete cdrep;
+    return a;
+  }
+  
+      
+  // We need to find a matching attribute
+  adrep = bdrep->adrep(&sts);
+  while (ODD(sts)) {
+    if (arp->Offset < (adrep->offset() + adrep->size())){
+      break;
+    }
+    old = adrep;
+    adrep = adrep->next(&sts);
+    delete old;
+  }
+
+
+  // We have found a matching attribute
+  if (ODD(sts)) {  
+    if (arp->Size == 0 || arp->Size > (adrep->size() / adrep->nElement())) {
+      // Map whole atribute
+      idx = (adrep->nElement() > 1) ? -1 : 0;
+    } else if (adrep->nElement() > 1) {
+      idx = (arp->Offset - adrep->offset()) / (adrep->size() / adrep->nElement());
+    }
+
+    delete cdrep;
+    delete bdrep;
+
+    wb_attribute a(LDH__SUCCESS, orep, adrep, idx);
+    return a;
+  }
+  
+
+ error:
+  delete orep;
+  delete cdrep;
+  delete bdrep;
+  return wb_attribute();
+}
 
 
 

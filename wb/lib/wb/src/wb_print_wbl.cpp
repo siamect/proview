@@ -19,10 +19,13 @@ wb_print_wbl::wb_print_wbl(ostream& os, int levelIndentation) :
   m_errCnt(0),
   m_idxFlag(true),
   m_level(0),
-  m_levelIndentation(levelIndentation),
+  m_levelInd(levelIndentation),
   m_os(os)
 {
+  memset(m_indBuf, ' ', sizeof(m_indBuf));
+  m_indBuf[sizeof(m_indBuf) -1] = 0;
 }
+
 
 wb_print_wbl::~wb_print_wbl()
 {
@@ -457,9 +460,9 @@ bool wb_print_wbl::printValue (wb_volume& v,
     else {
       o = v.object(*(pwr_tOid *)val);
       if (o)
-        strcpy(sval, o.longName().c_str());
+        sprintf(sval, "\"%s\"", o.longName().c_str());
       else 
-        sprintf(sval, "%s", cdh_ObjidToString(NULL, *(pwr_tObjid *)val, 1));
+        sprintf(sval, "\"%s\"", cdh_ObjidToString(NULL, *(pwr_tObjid *)val, 1));
     }    
     break;
   case pwr_eType_ObjectIx:
@@ -480,7 +483,7 @@ bool wb_print_wbl::printValue (wb_volume& v,
     else {
       wb_cdef cdef = v.cdef(*(pwr_tCid *)val);
       if (cdef)
-        strcpy(sval, cdef.longName().c_str());
+        sprintf(sval, "\"%s\"", cdef.longName().c_str());
       else {
         sprintf(sval, "Unknown class, identity: %d", (*(pwr_tClassId *) val));
         m_errCnt++;
@@ -496,7 +499,7 @@ bool wb_print_wbl::printValue (wb_volume& v,
       oid = cdh_TypeIdToObjid(*(pwr_tTid *)val);
       o = v.object(oid);
       if (o)
-        strcpy(sval, o.longName().c_str());
+        sprintf(sval, "\"%s\"", o.longName().c_str());
       else {
         sprintf(sval, "Unknown type, identity: %d", (*(pwr_tTypeId *) val));
         m_errCnt++;
@@ -510,9 +513,9 @@ bool wb_print_wbl::printValue (wb_volume& v,
     else {
       wb_attribute a = v.attribute((pwr_sAttrRef*)val);
       if (a)
-        strcpy(sval, a.longName().c_str());
+        sprintf(sval, "\"%s\"", a.longName().c_str());
       else {
-        sprintf(sval, "%s", cdh_ArefToString(NULL, (pwr_sAttrRef*)val, 1));
+        sprintf(sval, "\"%s\"", cdh_ArefToString(NULL, (pwr_sAttrRef*)val, 1));
       }
     }
 
@@ -591,16 +594,19 @@ void wb_print_wbl::printVolume(wb_volume& v, bool recursive)
 //
 ostream& wb_print_wbl::indent(int levelIncr)
 {
+
   if (levelIncr < 0)
     m_level += levelIncr;
 
   assert(m_level >= 0);
     
+  m_indBuf[m_level * m_levelInd] = '\0';
 
-  for (int i = 0; i < m_level * m_levelIndentation; i++) 
-    m_os << " ";
+  m_os << m_indBuf;
 
-  if (levelIncr > 0)
+  m_indBuf[m_level * m_levelInd] = ' ';
+
+  if (levelIncr > 0) 
     m_level += levelIncr;
     
   return m_os;

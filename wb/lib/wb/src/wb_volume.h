@@ -56,7 +56,7 @@ public:
   wb_attribute attribute(wb_object o, wb_adef adef) { wb_attribute a; return a;}; // Fix
   wb_attribute attribute(wb_object o, wb_name aname) { wb_attribute a; return a;}; // Fix
   wb_attribute attribute(wb_name aname) { wb_attribute a; return a;}; // Fix
-  wb_attribute attribute(pwr_sAttrRef *arp) { wb_attribute a; return a;}; // Fix
+  wb_attribute attribute(const pwr_sAttrRef *arp) const;
   wb_attribute attribute() { wb_attribute a; return a;}; // Fix
 
   wb_adef adef(pwr_sAttrRef *arp) { wb_adef a; return a;}; // Fix
