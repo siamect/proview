@@ -621,8 +621,10 @@ static pwr_tBoolean (*encode[pwr_eTix_])() = {
 #endif
 
 /**
- * @note There is now support for double and it's a little tricky to fix
- *       if we want backward compatibility..  
+ * @note There is no support for double. 
+ *       if we want to implement it we have too look at the OS to decide what 
+ *       format to use. Because for backward compatibility is the float format set 
+ *       to vaxF for VAX to AXP and not vaxD and vaxG.
  */
 
 pwr_tBoolean
