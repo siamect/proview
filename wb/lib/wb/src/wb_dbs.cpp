@@ -29,7 +29,7 @@ wb_dbs::wb_dbs(wb_vrep *v) :
 {
   pwr_tStatus sts;
 
-  memset(m_name, 0, sizeof(m_name));
+  memset(m_fileName, 0, sizeof(m_fileName));
   memset(&m_volume, 0, sizeof(m_volume));
   memset(m_sect, 0, sizeof(m_sect));
     
@@ -44,8 +44,8 @@ wb_dbs::wb_dbs(wb_vrep *v) :
 
   //@todo strcpy(m_volume.className, m_ohp->chp->db.name.data);
  
-  sprintf(m_name, dbs_cNameVolume, dbs_cDirectory, m_v->name());
-  dcli_translate_filename(m_name, m_name);
+  sprintf(m_fileName, dbs_cNameVolume, dbs_cDirectory, m_v->name());
+  dcli_translate_filename(m_fileName, m_fileName);
 
   m_oid_th = tree_CreateTable(&sts, sizeof(pwr_tOid), offsetof(sOentry, o.oid),
                               sizeof(sOentry), 1000, tree_Comp_oid);
@@ -73,6 +73,11 @@ wb_dbs::~wb_dbs()
   tree_DeleteTable(&sts, m_class_th);
 }
 
+void
+wb_dbs::setFileName(const char *name)
+{
+  dcli_translate_filename(m_fileName, name);
+}
 
 static int
 comp_dbs_name(tree_sTable *tp, tree_sNode  *x, tree_sNode  *y)
@@ -221,6 +226,10 @@ wb_dbs::importHead(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid, pwr_tOid aoid, pwr
   oep->o.oid  = oid;
   oep->o.cid  = cid;
   oep->o.poid = poid;
+  oep->o.boid = boid;
+  oep->o.aoid = aoid;
+  oep->o.foid = foid;
+  oep->o.loid = loid;
   strcpy(oep->o.name, name);
   strcpy(oep->o.normname, normname);
 
@@ -264,9 +273,9 @@ wb_dbs::closeFile(pwr_tBoolean doDelete)
 
   if (m_fp != NULL)
     fclose(m_fp);
-  if (doDelete && *m_name != '\0') {
-    if (remove(m_name) == 0)
-      printf("-- Deleted file: %s\n", m_name);
+  if (doDelete && *m_fileName != '\0') {
+    if (remove(m_fileName) == 0)
+      printf("-- Deleted file: %s\n", m_fileName);
   }
 
   return LDH__SUCCESS;
@@ -385,17 +394,17 @@ wb_dbs::openFile()
 {
   char *fn;
 
-  cdh_ToLower(m_name, m_name);
+  cdh_ToLower(m_fileName, m_fileName);
     
-  m_fp = fopen(m_name, "w+b");
+  m_fp = fopen(m_fileName, "w+b");
   if (m_fp == NULL) {
-    printf("** Cannot open file: %s\n", m_name);
+    printf("** Cannot open file: %s\n", m_fileName);
     perror("   Reason");
     return LDH__FILEOPEN;
   }
-  fn = dcli_fgetname(m_fp, m_name, m_name);
+  fn = dcli_fgetname(m_fp, m_fileName, m_fileName);
   if (fn != NULL)
-    printf("-- Opened load file: %s\n", m_name);
+    printf("-- Opened load file: %s\n", m_fileName);
 
   return LDH__SUCCESS;
 }
@@ -408,8 +417,8 @@ wb_dbs::writeSectFile()
   PDR pdrs;
 
   co_GetOwnFormat(&fp->format);
-  fp->cookie = 550715339;
-  //file.size;
+  fp->cookie = dbs_cMagicCookie;
+  fp->size = 0;
   fp->offset = dbs_dAlign(sizeof(*fp));
   fp->formatVersion = dbs_cVersionFormat;
   fp->version = dbs_cVersionFile;
@@ -418,8 +427,8 @@ wb_dbs::writeSectFile()
   fp->time = m_volume.time;
   fp->fileType = dbs_eFile_volume;
 
-  //file.userName;
-  //file.comment;
+  strcpy(fp->userName, "");
+  strcpy(fp->comment, "");
   printf("format.......: %d\n", fp->format.m);
   printf("cookie.......: %d\n", fp->cookie);
   printf("size.........: %d\n", fp->size);
@@ -450,6 +459,7 @@ wb_dbs::writeSectDirectory()
   m_sect[dbs_eSect_volref].version = dbs_cVersionVolRef;
   m_sect[dbs_eSect_oid].version    = dbs_cVersionOid;
   m_sect[dbs_eSect_object].version = dbs_cVersionObject;
+  m_sect[dbs_eSect_scobject].version = dbs_cVersionScObject;
   m_sect[dbs_eSect_rbody].version  = dbs_cVersionRbody;
   m_sect[dbs_eSect_name].version   = dbs_cVersionName;
   m_sect[dbs_eSect_class].version  = dbs_cVersionClass;
@@ -460,6 +470,7 @@ wb_dbs::writeSectDirectory()
   m_sect[dbs_eSect_volref].type = dbs_eSect_volref;
   m_sect[dbs_eSect_oid].type    = dbs_eSect_oid;
   m_sect[dbs_eSect_object].type = dbs_eSect_object;
+  m_sect[dbs_eSect_scobject].type = dbs_eSect_scobject;
   m_sect[dbs_eSect_rbody].type  = dbs_eSect_rbody;
   m_sect[dbs_eSect_name].type   = dbs_eSect_name;
   m_sect[dbs_eSect_class].type  = dbs_eSect_class;
@@ -521,7 +532,8 @@ wb_dbs::writeSectVolume()
 pwr_tStatus
 wb_dbs::writeSectVolref()
 {
-  dbs_sVolRef volref;
+  char v[dbs_dAlign(sizeof(dbs_sVolRef))];
+  dbs_sVolRef *vp = (dbs_sVolRef*)v;
   cdh_uTid    cid;
   sCentry     *cep;
   pwr_tStatus sts;
@@ -529,10 +541,10 @@ wb_dbs::writeSectVolref()
   if (fseek(m_fp, m_sect[dbs_eSect_volref].offset, SEEK_SET) != 0)
     return LDH__FILEPOS;
 
-  memset(&volref, 0, sizeof(volref));
+  memset(v, 0, sizeof(v));
 
   cid.pwr = pwr_cNCid;
-  cep = (sCentry*)tree_FindSuccessor(&sts, m_class_th, &cid.pwr);        
+  cep = (sCentry*)tree_FindSuccessor(&sts, m_class_th, &cid.pwr);
   while (cep) {
     cdh_uVid vid;
 
@@ -542,17 +554,18 @@ wb_dbs::writeSectVolref()
     vid.v.vid_1 = cid.c.vid_1;
         
     if (vid.pwr != m_volume.vid) {
-      printf("volref: %d.%d.%d.%d\n", vid.v.vid_0, vid.v.vid_1, vid.v.vid_2, vid.v.vid_3);
-      volref.vid  = vid.pwr;
-      //volref.name = ?;
-      volref.cid  = pwr_eClass_ClassVolume;
-      //vp->time = ?;
-      //volref.size = ?;
-      //volref.offset = ?;        
+      printf("volref: %d.%d.%d.%d\n", vid.v.vid_3, vid.v.vid_2, vid.v.vid_1, vid.v.vid_0);
+      vp->vid  = vid.pwr;
+      strcpy(vp->name, "not_yet_known");
+      vp->cid  = 0;
+      vp->time.tv_sec = 0;
+      vp->time.tv_nsec = 0;
+      vp->size = 0;
+      vp->offset = 0;        
 
-      if (fwrite(&volref, sizeof(volref), 1, m_fp) < 1)
+      if (fwrite(v, sizeof(v), 1, m_fp) < 1)
         return LDH__FILEWRITE;
-      m_sect[dbs_eSect_volref].size += sizeof(volref);
+      m_sect[dbs_eSect_volref].size += sizeof(v);
     }
     vid.pwr++;
     cid.pwr = pwr_cNCid;

@@ -259,10 +259,11 @@ char	*dcli_fgetname( FILE *fp, char *name, char *def_name)
 *
 **************************************************************************/
 
-int dcli_translate_filename( char *out, char *in)
+int dcli_translate_filename( char *out, const char *in)
 {
   char out_name[200];
-  char *s, *t;
+  const char *s;
+  char *t;
   int i;
   int state;
 

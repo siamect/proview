@@ -936,3 +936,53 @@ dbs_Body(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op, pwr_eBix bix)
     
     return p;
 }
+
+dbs_sObject *
+dbs_NextHead(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op)
+{
+    dbs_sObject *eop = (dbs_sObject*)(ep->base + ep->sect[dbs_eSect_object].offset + ep->sect[dbs_eSect_object].size);
+
+    if (op == NULL)
+      op = (dbs_sObject*)(ep->base + ep->sect[dbs_eSect_object].offset);
+    else
+      op = (dbs_sObject*)((char *)op + dbs_dAlign(sizeof(dbs_sObject)));
+
+    if (op >= eop)
+      return NULL;
+    
+    return op;
+}
+
+dbs_sBody *
+dbs_NextRbody(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sBody *bp)
+{
+    dbs_sBody *ebp = (dbs_sBody*)(ep->base + ep->sect[dbs_eSect_rbody].offset + ep->sect[dbs_eSect_rbody].size);
+
+    if (bp == NULL)
+      bp = (dbs_sBody*)(ep->base + ep->sect[dbs_eSect_rbody].offset);
+    else
+      bp = (dbs_sBody*)((char *)bp + dbs_dAlign(sizeof(dbs_sBody)) + dbs_dAlign(bp->size));
+
+    if (bp >= ebp)
+      return NULL;
+    
+    return bp;
+}
+
+
+dbs_sBody *
+dbs_NextDbody(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sBody *bp)
+{
+    dbs_sBody *ebp = (dbs_sBody*)(ep->base + ep->sect[dbs_eSect_dbody].offset + ep->sect[dbs_eSect_dbody].size);
+
+    if (bp == NULL)
+      bp = (dbs_sBody*)(ep->base + ep->sect[dbs_eSect_dbody].offset);
+    else
+      bp = (dbs_sBody*)((char *)bp + dbs_dAlign(sizeof(dbs_sBody)) + dbs_dAlign(bp->size));
+
+    if (bp >= ebp)
+      return NULL;
+    
+    return bp;
+}
+

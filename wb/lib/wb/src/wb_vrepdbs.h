@@ -128,11 +128,11 @@ public:
   virtual bool isMeta() const { return (cid() == pwr_eClass_ClassVolume);}
 
 
-  virtual bool exportVolume(wb_import &e) { return false;}    
-  virtual bool exportHead(wb_import &e) { return false;}
-  virtual bool exportRbody(wb_import &e) { return false;}
-  virtual bool exportDbody(wb_import &e) { return false;}
-  virtual bool exportMeta(wb_import &e) { return false;}
+  virtual bool exportVolume(wb_import &e);
+  virtual bool exportHead(wb_import &e);
+  virtual bool exportRbody(wb_import &e);
+  virtual bool exportDbody(wb_import &e);
+  virtual bool exportMeta(wb_import &e);
 
 };
 

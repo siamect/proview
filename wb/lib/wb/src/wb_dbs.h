@@ -68,7 +68,7 @@ public:
   };
 
   FILE         *m_fp;                 /**< file pointer */
-  char         m_name[100];           /**< name of load file */
+  char         m_fileName[512];       /**< name of load file */
   //    wb_object    *m_o;		/* Volume object header.  */
   wb_vrep      *m_v;
   dbs_sVolume  m_volume;
@@ -102,7 +102,8 @@ public:
     
   bool operator==(wb_dbs&);
     
-//  void         buildFile();
+  void setFileName(const char *name);
+
   void         buildSectName();
   void         buildSectOid();
   void         buildSectClass();

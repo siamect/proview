@@ -2,6 +2,7 @@
 #include "wb_orepdbs.h"
 #include "wb_erep.h"
 #include "wb_merep.h"
+#include "wb_import.h"
 
 void wb_vrepdbs::unref()
 {
@@ -432,3 +433,51 @@ void wb_vrepdbs::objectName(wb_orep *o, char *str)
 
   dbs_ObjectToName(&sts, dbsenv(), ((wb_orepdbs *)o)->o(), str);
 }
+
+bool wb_vrepdbs::exportVolume(wb_import &i)
+{
+  return i.importVolume(*this);
+}
+
+bool wb_vrepdbs::exportHead(wb_import &i)
+{
+  dbs_sObject *op = 0;
+  pwr_tStatus sts;
+  
+  while ((op = dbs_NextHead(&sts, dbsenv(), op))) {
+    i.importHead(op->oid, op->cid, op->poid, op->aoid, op->boid, op->foid, op->loid, op->name, op->normname,
+                 op->time, op->rbody.time, op->dbody.time, op->rbody.size, op->dbody.size);
+  }
+
+  return true;
+}
+
+bool wb_vrepdbs::exportRbody(wb_import &i)
+{
+  dbs_sBody *bp = 0;
+  pwr_tStatus sts;
+  
+  while ((bp = dbs_NextRbody(&sts, dbsenv(), bp))) {
+    i.importRbody(bp->oid, bp->size, (void*)(bp + 1));
+  }
+
+  return true;
+}
+
+bool wb_vrepdbs::exportDbody(wb_import &i)
+{
+  dbs_sBody *bp = 0;
+  pwr_tStatus sts;
+  
+  while ((bp = dbs_NextDbody(&sts, dbsenv(), bp))) {
+    i.importDbody(bp->oid, bp->size, (void*)(bp + 1));
+  }
+
+  return true;
+}
+
+bool wb_vrepdbs::exportMeta(wb_import &i)
+{
+  return false;
+}
+

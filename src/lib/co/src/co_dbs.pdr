@@ -428,6 +428,10 @@ struct dbs_sObject {
     pwr_tObjName    normname;   /**< normalized object name. */
     pwr_tTime       time;       /**< time of last change in object header */
     pwr_tOid        soid;       /**< object identifier of server object. */
+    pwr_tOid        boid;       /**< object identifier of sibling object before this object. */
+    pwr_tOid        aoid;       /**< object identifier of sibling object after this object. */
+    pwr_tOid        foid;       /**< object identifier of first child object. */
+    pwr_tOid        loid;       /**< object identifier of last child object. */
         
     dbs_mFlags      flags;
     dbs_sBodyRef    rbody;      /**< runtime body */
@@ -608,6 +612,9 @@ struct dbs_sScObject {
 %dbs_sObject    *dbs_Object(pwr_tStatus *sts, const dbs_sEnv *ep);
 %void            dbs_ObjectToName(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op, char *name);
 %void           *dbs_Body(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op, pwr_eBix bix);
+%dbs_sObject    *dbs_NextHead(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op);
+%dbs_sBody      *dbs_NextRbody(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sBody *bp);
+%dbs_sBody      *dbs_NextDbody(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sBody *bp);
 %
 %
 %#ifdef __cplusplus

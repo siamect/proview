@@ -59,7 +59,7 @@ int	dcli_get_defaultfilename(
 int     dcli_replace_env( char *str, char *newstr);
 #endif
 char	*dcli_fgetname( FILE *fp, char *name, char *def_name);
-int	dcli_translate_filename( char *out, char *in);
+int	dcli_translate_filename( char *out, const char *in);
 
 
 /* Functions in module co_dcli_dir */
