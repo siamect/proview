@@ -35,7 +35,7 @@ fi
         arch=${line#Architecture: }
       fi
 
-      if [ "${line:0:13}" = "Description: " ]; then
+      if [ "${line:0:12}" = "Description:" ]; then
         echo ""
         echo "<image> pwr_logga.gif"
 	echo ""
@@ -44,7 +44,7 @@ fi
         echo "<b>Proview V${version:0:3}"
 	echo "Version V$version"
         echo ""
-        echo "Copyright (C) 2003-${d:0:4} SSAB Oxelösund AB"
+        echo "Copyright © 2003-${d:0:4} SSAB Oxelösund AB"
 	echo "All Rights Reserved."
         echo ""
         echo "E-mail postmaster@proview.se"
@@ -65,7 +65,15 @@ fi
       fi
     done
   } < $datfile
+  echo "</topic>"
 } > $pwr_exe/xtt_version_help.dat
+
+# Convert to html
+co_convert -t -d $pwr_doc $pwr_exe/xtt_version_help.dat
+
+if [ "$1" == "-v" ]; then
+  exit
+fi
 
 pkgroot=$pwre_broot/$pwre_target/bld/pkg/pwrrt
 pkgsrc=$pwre_sroot/tools/pkg/deb/pwrrt
