@@ -821,14 +821,12 @@ gdh_GetObjectClass (
       touchObject(op);
       *cid = op->g.cid;
 
-#if 1
       if (op->l.flags.b.isCached) {
         cp = hash_Search(&lsts, gdbroot->cid_ht, cid);
         if (cp == NULL) {
           cmvolc_GetNonExistingClass(&lsts, op);
         }
       }
-#endif
 
     }
     
