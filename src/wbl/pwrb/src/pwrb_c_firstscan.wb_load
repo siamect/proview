@@ -1,0 +1,71 @@
+!  pwrb_c_firstscan.wb_load -- Defines the class FirstScan.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!
+! Range ldh_eDId_Base
+!
+SObject pwrb:Class
+!/**
+!  @Version 1.0
+!  @Code rt_plc_macro_div.h
+!  @Group Plc,PlcLogic
+!  @Summary Indicates the first scan of the plc thread.
+!  Indicates the first scan of the plc thread.
+!  The value of the output is true the first time the plc is executed.
+!  After that it is false.
+!  After a soft restart the value is also true.
+!  @image orm_firstscan_fo.gif
+!*/
+  Object FirstScan $ClassDef 376 
+    Body SysBody
+      Attr Editor = pwr_eEditor_PlcEd
+      Attr Method = pwr_eMethod_Connections
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "FirstScan"
+      EndBody
+      Object Status $Output 1 
+        Body SysBody
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 11
+        Attr parameters[0] = 0
+        Attr parameters[1] = 0
+        Attr parameters[2] = 1
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 4
+        Attr graphindex = 40
+        Attr default_mask[0] = 0
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 0
+        Attr devbody_annotation = 0
+        Attr compmethod = 55
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+        Attr connectmethod = 0
+        Attr executeordermethod = 2
+        Attr objname = "FirstScan"
+        Attr graphname = "FirstScan"
+      EndBody
+    EndObject
+  EndObject
+EndSObject
