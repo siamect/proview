@@ -352,9 +352,16 @@ static void watt_activate_cmd_input( Widget w, WAtt *watt, XmAnyCallbackStruct *
 static void watt_activate_cmd_scrolled_ok( Widget w, WAtt *watt, XmAnyCallbackStruct *data)
 {
   char *text;
+  unsigned char *s;
   int sts;
 
+
   text = XmTextGetString( watt->cmd_scrolledinput);
+  // Replace ctrl characters with space
+  for ( s = (unsigned char *) text; *s; s++) {
+    if ( *s < ' ' && *s != 10 && *s != 13)
+      *s = ' ';
+  }
   if ( watt->input_open)
   {
     sts = ((WAttNav *)watt->wattnav)->set_attr_value( watt->input_node,
