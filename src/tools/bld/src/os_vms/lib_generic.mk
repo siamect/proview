@@ -38,6 +38,7 @@ vpath %.sc $(hw_source):$(os_source):$(co_source)
 vpath %.cld $(hw_source):$(os_source):$(co_source)
 vpath %.graph $(hw_source):$(os_source):$(co_source)
 vpath %.x $(hw_source):$(os_source):$(co_source)
+vpath %.pdr $(hw_source):$(os_source):$(co_source)
 
 c_sources := $(sort \
              $(foreach file, \
@@ -84,11 +85,24 @@ xdr_sources := $(sort \
              ) \
            )
 
+pdr_sources := $(sort \
+             $(foreach file, \
+               $(foreach dir, \
+                 $(source_dirs), \
+                 $(wildcard $(dir)/$(comp_name)*.pdr) \
+               ), $(notdir $(file)) \
+             ) \
+           )
+
+
 xdr_includes := $(addprefix $(inc_dir)/,$(patsubst %.x, %.h, $(xdr_sources)))
 xdr_objects := $(patsubst %.x, %_xdr.obj, $(xdr_sources))
 
+pdr_includes := $(addprefix $(inc_dir)/,$(patsubst %.pdr, %.h, $(pdr_sources)))
+pdr_objects := $(patsubst %.pdr, %_pdr.o, $(pdr_sources))
+
 export_includes := $(addprefix $(inc_dir)/, $(includes))
-export_includes += $(xdr_includes)
+export_includes += $(xdr_includes) $(pdr_includes)
 
 h_includes := $(filter %.h, $(includes))
 hpp_includes := $(filter %.hpp, $(includes))
@@ -100,7 +114,7 @@ export_graph := $(addprefix $(db_dir)/,$(graph_sources))
 clean_graph := $(patsubst %.graph, clean_%.graph, $(graph_sources))
 
 objects := $(addsuffix $(obj_ext), $(basename $(c_sources) $(o_sources)))
-objects += $(xdr_objects)
+objects += $(xdr_objects) $(pdr_objects)
 
 
 source_dependencies := $(notdir $(basename $(c_sources)))

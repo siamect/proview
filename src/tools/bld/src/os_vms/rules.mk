@@ -183,12 +183,27 @@ $(inc_dir)/%.hpp : %.hpp
 	@ if f$$search("$(target)") .nes. "" then $(pur) $(purflags) $(target)
 
 
+$(inc_dir)/%.h : %.pdr
+	@ $(log_x_h)
+	@ tools_pdrgen -h -o $(target) $(source)
+
+(%_pdr.obj) : %.pdr
+	@ $(log_x_lib)
+	@ tools_pdrgen -c -o $(bld_dir)/$(sname)_pdr.c $(source)
+	@ $(cc)/warn=dis=TRAILCOMMA $(cflags) $(csetos) $(cinc) $(clibobj) $(clis) $(to-vms $(bld_dir)/$(sname)_pdr.c)
+	@ $(pur) $(purflags) $(to-vms $(bld_dir)/$(sname)_pdr.c)
+	@ $(ar) $(arflags) $(to-vms $(export_lib)) $(libobj)
+	@ if f$$search("$(libobj)") .nes. "" then $(rm) $(rmflags) $(libobj);*
+
+
+
 $(inc_dir)/%.h : %.x
 	@ $(log_x_h)
 	@ saved_def = f$$environment("default")
 	@ set def $(sdir)
 	@ rpcgen /header_file /out=$(target) $(sname).x
 	@ set def 'saved_def
+
 
 (%_xdr.obj) : %.x
 	@ $(log_x_lib)
