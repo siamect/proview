@@ -39,6 +39,7 @@ public class GeDynValueInput extends GeDynElem {
 	break;
 
       valueElement.firstScan = true;
+      break;
     }
     case GeDyn.eEvent_ValueChanged: {
       if (!attrFound)
@@ -52,7 +53,7 @@ public class GeDynValueInput extends GeDynElem {
 
       try {
 	if ( typeId == Pwr.eType_Float32) {
-	  float inputValue = Float.parseFloat( text);
+	  float inputValue = Float.parseFloat( text.trim());
 	  valueElement.oldValueF = inputValue;
 	  if ( minValue == 0 && maxValue == 0) {
 	    String attrName = dyn.getAttrNameNoSuffix( valueElement.attribute);
@@ -77,7 +78,7 @@ public class GeDynValueInput extends GeDynElem {
 		  typeId == Pwr.eType_UInt16 ||
 		  typeId == Pwr.eType_Int8 ||
 		  typeId == Pwr.eType_UInt8) {
-	  int inputValue = Integer.parseInt( text, 10);
+	  int inputValue = Integer.parseInt( text.trim(), 10);
 	  valueElement.oldValueI = inputValue;
 	  if ( minValue == 0 && maxValue == 0) {
 	    String attrName = dyn.getAttrNameNoSuffix( valueElement.attribute);        
