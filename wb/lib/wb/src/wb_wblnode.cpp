@@ -3,6 +3,7 @@
 #include "co_time.h"
 #include "wb_wblnode.h"
 #include "wb_vrepwbl.h"
+#include "wb_orepwbl.h"
 #include "wb_merep.h"
 #include "wb_cdrep.h"
 #include "wb_wblvocabTokenTypes.hpp"
@@ -634,6 +635,65 @@ void wb_wblnode::postBuild()
 	*(pwr_tObjectIx *)((char *)o->rbody + offset) = m_vrep->next_oix;
     }
   }
+  else if ( o->m_cid == pwr_eClass_GraphPlcNode && m_vrep->vid() > cdh_cSystemClassVolMax) {
+    // Count number of $Input, $Output and $Intern and put in parameters
+    pwr_tStatus sts;
+    int interns = 0;
+    int inputs = 0;
+    int outputs = 0;
+
+    wb_orep *orep = m_vrep->object( &sts, o->m_oid);
+    wb_orep *oclassdef = orep->parent( &sts);
+    if ( EVEN(sts)) return;
+
+    wb_orep *obody = 0;
+    wb_name nrb = wb_name("RtBody");
+    obody = oclassdef->child( &sts, nrb);
+    if ( ODD(sts)) {
+      wb_orep *oattr = obody->first( &sts);
+      wb_orep *new_oattr;
+
+      while( ODD(sts)) {
+	if ( oattr->cid() == pwr_eClass_Intern)
+	  interns++;
+	if ( oattr->cid() == pwr_eClass_Input && !outputs)
+	  inputs++;
+	if ( oattr->cid() == pwr_eClass_Output)
+	  outputs++;
+	
+	new_oattr = oattr->next( &sts);
+	delete oattr;
+	oattr = new_oattr;
+      }
+    }
+    delete oclassdef;
+    if ( obody)
+      delete obody;
+    delete orep;
+
+    ((pwr_sGraphPlcNode *)o->rbody)->parameters[0] = inputs;
+    ((pwr_sGraphPlcNode *)o->rbody)->parameters[1] = interns;
+    ((pwr_sGraphPlcNode *)o->rbody)->parameters[2] = outputs;
+
+    if ( ((pwr_sGraphPlcNode *)o->rbody)->default_mask[0] == 0 &&
+	 ((pwr_sGraphPlcNode *)o->rbody)->default_mask[1] == 0) {
+      unsigned int mask = 0;
+      unsigned int m = 0;
+      for ( int i = 0; i < inputs; i++) {
+	m = i ? 2 * m : 1;
+	mask += m;
+      }
+      ((pwr_sGraphPlcNode *)o->rbody)->default_mask[0] = mask;
+
+      mask = 0;
+      m = 0;
+      for ( int i = 0; i < outputs; i++) {
+	m = i ? 2 * m : 1;
+	mask += m;
+      }
+      ((pwr_sGraphPlcNode *)o->rbody)->default_mask[1] = mask;
+    }
+  }
 }
 
 void wb_wblnode::buildObjBodyDef( ref_wblnode classdef)
@@ -997,6 +1057,7 @@ void wb_wblnode::buildBuff( ref_wblnode object, pwr_eBix bix, pwr_tCid buffer_ci
   int size, offset, elements;
   pwr_tStatus sts;
   pwr_tCid host_cid;
+  pwr_tCid cid;
 
   if ( buffer_cid != 0) {
     // Buffer in buffer... Fix
@@ -1005,26 +1066,36 @@ void wb_wblnode::buildBuff( ref_wblnode object, pwr_eBix bix, pwr_tCid buffer_ci
   else
     host_cid = object->o->m_cid;
 
-  wb_cdrep *cdrep = m_vrep->merep()->cdrep( &sts, host_cid);
-  if ( EVEN(sts)) {
-    m_vrep->error( "Unknown class of buffer owner", getFileName(), line_number);
-    return;
+  if ( cdh_CidToVid(host_cid) == m_vrep->vid()) {
+    pwr_tTypeId tid;
+    pwr_eType type;
+    int flags;
+    sts = m_vrep->getAttrInfo( name(), (pwr_eBix) bix, host_cid, (size_t *) &size, 
+			       (size_t *) &offset,
+			       &tid, &elements, &type, &flags);
+    cid = (pwr_tCid) tid;
   }
-  wb_attrname aname = wb_attrname( name());
-  wb_adrep *adrep = cdrep->adrep( &sts, aname.attribute());
-  if ( EVEN(sts)) {
-    m_vrep->error( "Unknown Buffer", getFileName(), line_number);
+  else {
+    wb_cdrep *cdrep = m_vrep->merep()->cdrep( &sts, host_cid);
+    if ( EVEN(sts)) {
+      m_vrep->error( "Unknown class of buffer owner", getFileName(), line_number);
+      return;
+    }
+    wb_attrname aname = wb_attrname( name());
+    wb_adrep *adrep = cdrep->adrep( &sts, aname.attribute());
+    if ( EVEN(sts)) {
+      m_vrep->error( "Unknown Buffer", getFileName(), line_number);
+      delete cdrep;
+      return;
+    }
+
+    cid = adrep->subClass();
+    size = adrep->size();
+    offset = adrep->offset();
+    elements = adrep->nElement();
     delete cdrep;
-    return;
+    delete adrep;
   }
-
-  pwr_tCid cid = adrep->subClass();
-  size = adrep->size();
-  offset = adrep->offset();
-  elements = adrep->nElement();
-  delete cdrep;
-  delete adrep;
-
   first_child = getFirstChild();
   if ( first_child && first_child->getType() == tokens.INDEX) {
     int index;
