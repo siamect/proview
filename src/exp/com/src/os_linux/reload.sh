@@ -28,6 +28,10 @@ reload_classvolumes()
   for file in $list; do
     volume=`eval grep pwr_eClass_ClassVolume $file | awk '{ print $2 }'`
     volumelow=`eval grep pwr_eClass_ClassVolume $file | awk '{ print tolower($2) }'`
+    if [ "$volume" == "" ]; then
+      volume=`eval grep ClassVolume $file | awk '{ print $2 }'`
+      volumelow=`eval grep ClassVolume $file | awk '{ print tolower($2) }'`
+    fi
     if [ "$volume" != "" ]; then
       echo "-- Creating structfile and loadfile for $volume"
       if co_convert -sv -d $pwrp_inc $file
