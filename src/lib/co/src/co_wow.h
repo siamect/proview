@@ -9,6 +9,11 @@
    <Description>.  */
 
 #include <Xm/Xm.h>
+#include <X11/Xatom.h>
+
+#if defined __cplusplus
+extern "C" {
+#endif
 
 typedef enum {
   wow_eFileSelType_All,
@@ -71,7 +76,12 @@ void wow_CreateFileSelDia( Widget parent_wid,
 
 void wow_GetLabel( Widget w, char *label);
 void wow_GetCSText( XmString ar_value, char *t_buffer);
+int wow_GetSelection( Widget w, char *str, int size, Atom atom);
+void wow_GetAtoms( Widget w, Atom *graph_atom, Atom *objid_atom, Atom *attrref_atom);
 
+#if defined __cplusplus
+}
+#endif
 #endif
 
 

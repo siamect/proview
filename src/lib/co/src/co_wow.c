@@ -21,20 +21,31 @@
 #include <Xm/MainW.h>
 #include <Xm/FileSB.h>
 #include <Xm/Form.h>
+#include <X11/Xatom.h>
+#include <X11/Xmu/Atoms.h>
+#include <X11/Xmu/StdSel.h>
 
 #include "pwr.h"
 #include "co_dcli.h"
 #include "co_wow.h"
+#include "flow_x.h"
 
 #define WOW_MAXNAMES 400
 
-typedef struct
-{
+typedef struct {
   void			*ctx;
   void			*data;
   void	         	(* questionbox_ok) ();
   void	         	(* questionbox_cancel) ();
 } wow_t_question_cb;
+
+typedef struct {
+  char		        str[200];
+  int 			len;
+  int			received;
+  pwr_tStatus		sts;
+  Atom			atom;
+} wow_sSelection;
 
 static void wow_question_ok_cb (
   Widget dialog, 
@@ -639,6 +650,60 @@ void wow_GetCSText( XmString ar_value, char *t_buffer)
 }
 #endif
 
+static void wow_get_selection_cb( Widget w, XtPointer clientdata, Atom *selection,
+				   Atom *type, XtPointer value, unsigned long *len,
+				   int *format)
+{
+  wow_sSelection *data = (wow_sSelection *)clientdata;
+
+  if ( *len != 0 && value != NULL) {
+    if ( *type == data->atom) {
+      if ( *len > sizeof(data->str) - 1) {
+	data->sts = 0;
+	return;
+      }
+      strncpy( data->str, (char *)value, *len);
+      data->str[*len] = 0;
+      data->len = *len;
+      data->sts = 1;
+    }
+    else
+      data->sts = 0;
+  }
+  else
+    data->sts = 0;
+  XtFree( (char *)value);
+  data->received = 1;
+}
+
+int wow_GetSelection( Widget w, char *str, int size, Atom atom)
+{
+  wow_sSelection data;
+
+  data.received = 0;
+  data.atom = atom;
+  XtGetSelectionValue( w, XA_PRIMARY, atom,
+		       wow_get_selection_cb, &data, CurrentTime);
+  
+  while( !data.received) {
+    XEvent e;
+    XtAppNextEvent( XtWidgetToApplicationContext(w), &e);
+    XtDispatchEvent( &e);
+  }
+  if ( data.sts && data.len < size)
+    strcpy( str, data.str);
+  return data.sts;
+}
+
+void wow_GetAtoms( Widget w, Atom *graph_atom, Atom *objid_atom, Atom *attrref_atom)
+{
+  if ( graph_atom)
+    *graph_atom = XInternAtom( flow_Display(w), "PWR_GRAPH", False); 
+  if ( objid_atom)
+    *objid_atom = XInternAtom( flow_Display(w), "PWR_OBJID", False); 
+  if ( attrref_atom)
+    *attrref_atom = XInternAtom( flow_Display(w), "PWR_ATTRREF", False); 
+}
 
 
 
