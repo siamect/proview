@@ -195,6 +195,10 @@ wb_orep* wb_vrepdb::object(pwr_tStatus *sts, pwr_tOid oid)
   
     return new (this) wb_orepdb(&m_ohead.m_o);
   }
+  catch (wb_error &e) {
+    *sts = e.sts();
+    return 0;
+  }
   catch (DbException &e) {
     *sts = LDH__NOSUCHOBJ;
     printf("vrepdb: %s\n", e.what());

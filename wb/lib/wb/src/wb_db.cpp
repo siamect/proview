@@ -8,6 +8,7 @@
 #include "co_dcli.h"
 #include "db_cxx.h"
 #include "wb_ldh.h"
+#include "wb_ldh_msg.h"
 #include "wb_destination.h"
 #include "wb_db.h"
 #include "wb_name.h"
@@ -359,6 +360,8 @@ wb_db_ohead &wb_db_ohead::get(wb_db_txn *txn, pwr_tOid oid)
   m_data.set_flags(DB_DBT_USERMEM);
 
   rc = m_db->m_t_ohead->get(txn, &m_key, &m_data, 0);
+  if ( rc == DB_NOTFOUND)
+    throw wb_error(LDH__NOSUCHOBJ);
   if (rc)
     printf("wb_db_ohead::get(txn, oid = %d.%d), get, rc %d\n", oid.vid, oid.oix, rc);
   //pwr_Assert(oid.oix == m_o.oid.oix);
