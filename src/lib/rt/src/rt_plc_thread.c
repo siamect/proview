@@ -69,8 +69,16 @@ plc_thread (
   
   tp->init(1, tp);
 
-  thread_SetPrio(&tp->tid, tp->prio);
-
+  sts = thread_SetPrio(&tp->tid, tp->prio);
+  if (EVEN(sts)) {
+    errh_Error("Failed to set priority, plc thread %d ms, prio %d",
+    			(int) (tp->PlcThread->ScanTime * 1000), tp->prio);
+  }
+  else {
+    errh_Info("Priority set, plc thread %d ms, prio %d",
+    			(int) (tp->PlcThread->ScanTime * 1000), tp->prio);
+  }
+  
   /* Once thread's has set it's priority don't run as root */
 
 #if defined(OS_LINUX)
@@ -103,7 +111,7 @@ plc_thread (
   /* Phase 3.  */
 
   rel_vec = ((tp->pp->PlcProcess->ChgCount - 1) % 2) + 1;
-  sts = io_init(io_mProcess_Plc, tp->aref.Objid, &tp->plc_io_ctx, rel_vec, tp->f_scan_time);
+  sts = io_init(tp->PlcThread->IoProcess, tp->aref.Objid, &tp->plc_io_ctx, rel_vec, tp->f_scan_time);
   if (EVEN(sts)) {
     pp->IOHandler->IOReadWriteFlag = FALSE;
     errh_Error("Failed to inititalize io, %m", sts);
