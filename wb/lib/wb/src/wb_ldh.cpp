@@ -801,6 +801,14 @@ ldh_GetAttrRefTid(ldh_tSession session, pwr_sAttrRef *arp, pwr_tTid *tid)
 {
   wb_session *sp = (wb_session *)session;
 
+  if ( arp->Flags.b.Object) {
+    wb_object o = sp->object(arp->Objid);
+    if (!o) return o.sts();
+    
+    *tid = o.cid();
+    return o.sts();
+  }
+
   wb_attribute a = sp->attribute(arp);
   if (!a) return a.sts();
   *tid = a.tid();
@@ -1346,7 +1354,7 @@ ldh_AttrRefToName(ldh_tSession session, pwr_sAttrRef *arp, int nametype, char **
     wb_name n = a.longName();
     strcpy( str, a.name());
     strcat( str, ".");
-    strcat( str, n.attribute());
+    strcat( str, n.attributesAll());
     *aname = str;
     *size = strlen(str);
     break;

@@ -145,12 +145,12 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, const char *bname, co
       if ( bname) {
         bd = cd->bdrep( &m_sts, bname);
         if ( oddSts()) {
-          m_adrep = bd->adrep( &m_sts, n.attributesAll());
+          m_adrep = bd->adrep( &m_sts, n.attributesAllTrue());
 	  m_bix = bd->bix();
 	}
       }
       else {
-        m_adrep = cd->adrep( &m_sts, n.attributesAll());
+        m_adrep = cd->adrep( &m_sts, n.attributesAllTrue());
 	m_bix = pwr_eBix_rt;
       }
       if ( oddSts()) {
@@ -237,13 +237,13 @@ wb_attribute::wb_attribute(const wb_attribute& pa, int idx, const char *aname) :
     if (evenSts()) { delete cd; return;}
   }
 
-  m_adrep = bd->adrep(&m_sts, n.attributesAll());
+  m_adrep = bd->adrep(&m_sts, n.attributesAllTrue());
   if (evenSts()) {
     // Try devbody
     bd = cd->bdrep(&m_sts, pwr_eBix_dev);
     if (evenSts()) { delete cd; return;}
 
-    m_adrep = bd->adrep(&m_sts, n.attributesAll());
+    m_adrep = bd->adrep(&m_sts, n.attributesAllTrue());
     if (evenSts()) { delete cd; delete bd; return;}
   }
   m_adrep->ref();

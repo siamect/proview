@@ -11,11 +11,14 @@
 #include "wb_ldh.h"
 #include "wb_merep.h"
 #include "wb_attribute.h"
+#include "wb_dblock.h"
 
 void wb_vrepdb::unref()
 {
-  if (--m_nRef == 0)
+  if (--m_nRef == 0) {
+    wb_dblock::dbunlock(m_fileName);
     delete this;
+  }
 }
 
 wb_vrep *wb_vrepdb::ref()
@@ -29,6 +32,7 @@ wb_vrepdb::wb_vrepdb(wb_erep *erep, const char *fileName) :
   m_erep(erep), m_nRef(0), m_ohead(), m_oid_th(0)
 {  
   strcpy(m_fileName, fileName);
+  wb_dblock::dblock( m_fileName);
 
   m_db = new wb_db();
   m_db->open(fileName);
@@ -44,6 +48,7 @@ wb_vrepdb::wb_vrepdb(wb_erep *erep, pwr_tVid vid, pwr_tCid cid, const char *volu
   m_erep(erep), m_nRef(0), m_ohead(), m_oid_th(0)
 {  
   strcpy(m_fileName, fileName);
+  wb_dblock::dblock( m_fileName);
 
   m_db = new wb_db();
   m_db->create(vid, cid, volumeName, fileName);
@@ -1277,7 +1282,7 @@ bool wb_vrepdb::exportTreeHelper(wb_treeimport &i, pwr_tOid oid, bool isRoot)
       printf("wb_vrepdbs::exportTreeObject, db.get: %d\n", rc);
   }
 
-  pwr_mClassDef flags; flags.m = 0; // Fix !!!
+  pwr_mClassDef flags = m_ohead.flags(); // flags.m = 0; // Fix !!!
   if (isRoot) {
     i.importTreeObject(m_merep, m_ohead.oid(), m_ohead.cid(), pwr_cNOid, pwr_cNOid, m_ohead.name(), flags,
                        m_ohead.rbSize(), m_ohead.dbSize(), rbody, dbody);

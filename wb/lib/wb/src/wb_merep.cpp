@@ -261,7 +261,7 @@ int wb_merep::getAttrInfoRec( wb_attrname *attr, pwr_eBix bix, pwr_tCid cid, siz
   wb_bdrep *bd = 0;
   if ( bix == 0) {
     // Search in all bodies
-    adrep = cd->adrep( &sts, attr->attributesAll(level));
+    adrep = cd->adrep( &sts, attr->attributesAllTrue(level));
     if ( EVEN(sts)) { delete cd; return 0;}
   }
   else {
@@ -269,7 +269,7 @@ int wb_merep::getAttrInfoRec( wb_attrname *attr, pwr_eBix bix, pwr_tCid cid, siz
     bd = cd->bdrep( &sts, bix);
     if ( EVEN(sts)) { delete cd; return 0;}
 
-    adrep = bd->adrep( &sts, attr->attributesAll(level));
+    adrep = bd->adrep( &sts, attr->attributesAllTrue(level));
     if ( EVEN(sts)) { delete cd; delete bd; return 0;}
   }
 
