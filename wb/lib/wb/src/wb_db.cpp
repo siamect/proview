@@ -343,7 +343,8 @@ wb_db_ohead &wb_db_ohead::get(wb_db_txn *txn)
 
   rc = m_db->m_t_ohead->get(txn, &m_key, &m_data, 0);
   if (rc)
-    printf("wb_db_ohead::get(txn), get, rc %d\n", rc);
+    // printf("wb_db_ohead::get(txn), get, rc %d\n", rc);
+    throw DbException( rc);
   return *this;
 }
 
@@ -981,18 +982,17 @@ pwr_tOid wb_db::new_oid(wb_db_txn *txn)
 
 pwr_tOid wb_db::new_oid(wb_db_txn *txn, pwr_tOid oid)
 {
-  if (oid.vid == m_vid) {
-    try {
-      wb_db_ohead o(this, txn, oid);
-    } catch (DbException &e) {
-      cout << e.what() << " old oid not found, keep\n";
-      return oid;
-    }
-    cout << " Old oid found, force new!\n";
-    
-  } else {
-    cout << "in an other volume\n";
+  pwr_tOid woid;
+  woid.vid = m_vid;
+  woid.oix = oid.oix;
+
+  try {
+    wb_db_ohead o(this, txn, woid);
+  } catch (DbException &e) {
+    // cout << e.what() << " old oid not found, keep\n";
+    return woid;
   }
+  cout << " Old oix found, force new " << woid.oix << " !\n";
   return new_oid(txn);
 }
 
