@@ -100,12 +100,12 @@ int FlowPscript::print_page( double ll_x, double ll_y, double ur_x, double ur_y)
 }
 
 int FlowPscript::rect( double x, double y, double width, double height, flow_eDrawType type, 
-	int idx)
+	double idx)
 {
   if ( type == flow_eDrawType_LineDashed)
   {
     fprintf( file, "gsave\n");
-    fprintf( file, "[%d %d] %d setdash\n", 3 + idx, 3 + idx, 0);    
+    fprintf( file, "[%f %f] %d setdash\n", 3 + idx, 3 + idx, 0);    
   }
   else if ( type == flow_eDrawType_LineGray)
   {
@@ -130,7 +130,7 @@ int FlowPscript::rect( double x, double y, double width, double height, flow_eDr
 }
 
 int FlowPscript::filled_rect( double x, double y, double width, double height, flow_eDrawType type, 
-	int idx)
+	double idx)
 {
   if ( type == flow_eDrawType_LineGray)
   {
@@ -155,7 +155,7 @@ int FlowPscript::filled_rect( double x, double y, double width, double height, f
 }
 
 int FlowPscript::arc( double x, double y, double width, double height, int angel1, int angel2,
-		flow_eDrawType type, int idx)
+		flow_eDrawType type, double idx)
 {
   double r = 0.5*width;
   double pi = 3.14159;
@@ -163,7 +163,7 @@ int FlowPscript::arc( double x, double y, double width, double height, int angel
   if ( type == flow_eDrawType_LineDashed)
   {
     fprintf( file, "gsave\n");
-    fprintf( file, "[%d %d] %d setdash\n", 3 + idx, 3 + idx, 0);    
+    fprintf( file, "[%f %f] %d setdash\n", 3 + idx, 3 + idx, 0);    
   }
   else if ( type == flow_eDrawType_LineGray)
   {
@@ -196,12 +196,12 @@ int FlowPscript::arc( double x, double y, double width, double height, int angel
 }
 
 int FlowPscript::line( double x1, double y1, double x2, double y2, flow_eDrawType type, 
-	int idx)
+	double idx)
 {
   if ( type == flow_eDrawType_LineDashed)
   {
     fprintf( file, "gsave\n");
-    fprintf( file, "[%d %d] %d setdash\n", 3 + idx, 3 + idx, 0);    
+    fprintf( file, "[%f %f] %d setdash\n", 3 + idx, 3 + idx, 0);    
   }
   else if ( type == flow_eDrawType_LineGray)
   {
@@ -312,7 +312,7 @@ int FlowPscript::pixmap( double x, double y, flow_sPixmapDataElem *data,
 }
 
 int FlowPscript::arrow( double x1, double y1, double x2, double y2, 
-	double x3, double y3, flow_eDrawType type, int idx)
+	double x3, double y3, flow_eDrawType type, double idx)
 {
 
   if ( type == flow_eDrawType_LineGray)
@@ -342,8 +342,8 @@ void FlowPscript::move( double x, double y)
 }
 
 
-void FlowPscript::setlinewidth( int idx)
+void FlowPscript::setlinewidth( double idx)
 {
-  fprintf( file,"%d setlinewidth\n", 1 + idx);
+  fprintf( file,"%f setlinewidth\n", idx);
 }
 
