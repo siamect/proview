@@ -10,14 +10,14 @@
 wb_attribute::wb_attribute() : 
   wb_status(LDH__NOSUCHATTR), m_orep(0), m_adrep(0), 
   m_size(0), m_offset(0), m_idx(0), m_tid(0), m_elements(0),
-  m_type(pwr_eType_), m_flags(0), m_bix(pwr_eBix__)
+  m_type(pwr_eType_), m_flags(0), m_bix(pwr_eBix__), m_body(0)
 {
 }
 
 wb_attribute::wb_attribute(const wb_attribute& x) : 
   wb_status(x.m_sts),m_orep(x.m_orep), m_adrep( x.m_adrep), m_size(x.m_size), 
   m_offset(x.m_offset) , m_idx(x.m_idx), m_tid(x.m_tid), m_elements(x.m_elements), m_type(x.m_type), 
-  m_flags(x.m_flags), m_bix(x.m_bix)
+  m_flags(x.m_flags), m_bix(x.m_bix), m_body(0)
 {
   if ( m_orep)
     m_orep->ref();
@@ -27,7 +27,7 @@ wb_attribute::wb_attribute(const wb_attribute& x) :
 
 wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep * orep) : 
   wb_status(sts), m_orep(orep), m_adrep(0), m_size(0), m_offset(0), m_idx(0), m_tid(0),
-  m_elements(0), m_type(pwr_eType_), m_flags(0), m_bix(pwr_eBix__)
+  m_elements(0), m_type(pwr_eType_), m_flags(0), m_bix(pwr_eBix__), m_body(0)
 {
   if ( orep == 0)
     m_sts = LDH__NOSUCHATTR;
@@ -40,7 +40,7 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep * orep) :
 
 wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, wb_adrep* adrep, int idx) : 
   wb_status(sts), m_orep(orep), m_adrep(adrep), m_size(0), m_offset(0), m_idx(0), m_tid(0),
-  m_elements(0), m_type(pwr_eType_), m_flags(0), m_bix(pwr_eBix__)
+  m_elements(0), m_type(pwr_eType_), m_flags(0), m_bix(pwr_eBix__), m_body(0)
 {
   if ( orep == 0)
     m_sts = LDH__NOSUCHATTR;
@@ -95,7 +95,7 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, wb_adrep* adrep, int 
 
 wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, const char *bname) :
   wb_status(sts), m_orep(orep), m_adrep(0), m_size(0), m_offset(0),  m_idx(0), m_tid(0),
-  m_elements(0), m_type(pwr_eType_), m_flags(0), m_bix(pwr_eBix__)
+  m_elements(0), m_type(pwr_eType_), m_flags(0), m_bix(pwr_eBix__), m_body(0)
 {
   if ( orep == 0)
     m_sts = LDH__NOSUCHATTR;
@@ -119,7 +119,7 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, const char *bname) :
 
 wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, const char *bname, const char *aname) :
   wb_status(sts), m_orep(orep), m_adrep(0), m_size(0), m_offset(0), m_idx(0), m_tid(0),
-  m_elements(0), m_type(pwr_eType_), m_flags(0), m_bix(pwr_eBix__)
+  m_elements(0), m_type(pwr_eType_), m_flags(0), m_bix(pwr_eBix__), m_body(0)
 {
   if ( orep == 0)
     m_sts = LDH__NOSUCHATTR;
@@ -164,7 +164,7 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, const char *bname, co
 
 wb_attribute::wb_attribute(const wb_attribute& pa, int idx, const char *aname) :
   wb_status(LDH__NOSUCHATTR), m_orep(0), m_adrep(0), m_size(0), m_offset(0), m_tid(0),
-  m_elements(0), m_type(pwr_eType_), m_flags(0), m_bix(pwr_eBix__)
+  m_elements(0), m_type(pwr_eType_), m_flags(0), m_bix(pwr_eBix__), m_body(0)
 {
   pwr_tCid cid;
   wb_attrname n;
@@ -246,6 +246,11 @@ wb_attribute::~wb_attribute()
     m_adrep = 0;
   }
   
+  if (m_body) {
+    //printf("a: %8.8x free\n", m_body);
+    free(m_body);
+  }
+  
 }
 
 bool wb_attribute::operator==(const wb_attribute& x) const
@@ -279,6 +284,11 @@ wb_attribute& wb_attribute::operator=(const wb_attribute& x)
   m_type = x.m_type;
   m_flags = x.m_flags;
   m_bix = x.m_bix;
+  if (m_body) {
+    //printf("a: %8.8x free ==\n", m_body);
+    free(m_body);
+  }
+  m_body = 0;
   
   return *this;
 }
@@ -432,12 +442,20 @@ pwr_sObjXRef *wb_attribute::oxref() const
   return (pwr_sObjXRef*)0; // Fix
 }
 
-void *wb_attribute::value( void *p) const
+void *wb_attribute::value( void *p)
 {
   pwr_eBix bix;
   pwr_tStatus sts;
   check();
 
+  if (!p) {
+    if (!m_body) {
+      m_body = (void *)calloc(1, m_size);
+      //printf("a: %8.8x alloc\n", m_body);
+    }
+    p = m_body;
+  }
+  
   if ( m_adrep == 0) {
     if ( m_bix == pwr_eBix_dev)
       return m_orep->vrep()->readBody( &sts, m_orep, pwr_eBix_dev, p);
@@ -453,7 +471,7 @@ void *wb_attribute::value( void *p) const
   return m_orep->vrep()->readAttribute( &sts, m_orep, bix, m_offset, m_size, p);
 }
 
-void *wb_attribute::value(void *vp, size_t size, pwr_tStatus *sts) const
+void *wb_attribute::value(void *vp, size_t size, pwr_tStatus *sts)
 {
   return 0;
 }

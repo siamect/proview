@@ -37,8 +37,9 @@ class wb_attribute : public wb_status
   int m_elements;
   pwr_eType m_type;
   int m_flags;
-    
+  
   pwr_eBix m_bix; // Used when sub class
+  void *m_body;
   
 public:
   wb_attribute();
@@ -55,7 +56,7 @@ public:
   operator wb_orep*() const { return m_orep;}
   
   bool operator==(const wb_attribute&) const;
-    
+  
   //wb_object& operator=(const wb_orep&);
 
   bool isClass() const {return (m_flags & PWR_MASK_CLASS || m_flags & PWR_MASK_BUFFER);}
@@ -81,8 +82,8 @@ public:
   pwr_sObjXRef *oxref() const;
   pwr_tCid  subClass() const;
     
-  void *value( void *p = 0) const;
-  void *value(void *vp, size_t size, pwr_tStatus*) const;
+  void *value( void *p = 0);
+  void *value(void *vp, size_t size, pwr_tStatus*);
     
   string toString() const;
   pwr_tStatus fromString(string) const;
