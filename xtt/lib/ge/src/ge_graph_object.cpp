@@ -1626,7 +1626,6 @@ static int graph_object_collect_build( Graph *graph, pwr_tObjid objid)
   char attr_name[120];
 
 
-  printf("Here in object collect\n");
   if ( ! graph->get_current_objects_cb)
     return 0;
 
@@ -1703,7 +1702,7 @@ static int graph_object_collect_build( Graph *graph, pwr_tObjid objid)
 			    x1, y1, trend_width, trend_height,
 			    glow_eDrawType_Color37,
 			    0, glow_mDisplayLevel_1, 1, 1,
-			    glow_eDrawType_Color38, NULL, 
+			    glow_eDrawType_Color40, NULL, 
 			    &od->trend_objects[od->trend_cnt]);
 	  dyn = new GeDyn( graph);
 	  dyn->dyn_type = ge_mDynType_Trend;
