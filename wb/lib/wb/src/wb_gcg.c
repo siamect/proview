@@ -4532,7 +4532,7 @@ static int  gcg_sort_threadlist(
 	  list_ptr = threadlist;
 	  for ( j = 0; j < i; j++)
 	  {
-	    if ( list_ptr->prio > (list_ptr + 1)->prio)
+	    if ( list_ptr->prio < (list_ptr + 1)->prio)
 	    {
 	      /* Change order */
 	      memcpy( &dum, list_ptr + 1, sizeof( gcg_t_threadlist));
