@@ -13,7 +13,9 @@ ANTLR_USING_NAMESPACE(antlr)
 
 class wb_wblnode;
 class wb_vrepwbl;
+class wb_vrep;
 class wb_dbs;
+class wb_import;
 
 typedef enum {
   wbl_eNodeType_No,
@@ -182,6 +184,11 @@ public:
     pwr_tCid Cid() { return c_cid;}
     int attrStringToValue( int type_id, char *value_str, 
 			   void *buffer_ptr, int buff_size, int attr_size);
+
+    bool exportHead(wb_import &i);
+    bool exportDbody(wb_import &i);
+    bool exportRbody(wb_import &i);
+
     void iterObject(wb_dbs *);
     void iterRbody(wb_dbs *);
     void iterDbody(wb_dbs *);

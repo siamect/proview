@@ -4,13 +4,13 @@
 
 wb_env::wb_env() : wb_status(LDH__SUCCESS)
 {
-    m_erep = new wb_erep();
-    m_erep->ref();
+  m_erep = new wb_erep();
+  m_erep->ref();
 }
 
 wb_env::wb_env(wb_erep *e) : wb_status(LDH__SUCCESS), m_erep(e)
 {
-    m_erep->ref();
+  m_erep->ref();
 }
 
 wb_env::wb_env(wb_env &e) : wb_status( e.sts()), m_erep(e.m_erep)
@@ -21,39 +21,39 @@ wb_env::wb_env(wb_env &e) : wb_status( e.sts()), m_erep(e.m_erep)
 
 wb_env& wb_env::operator=(const wb_env& x)
 {
-    // Note! first ref() then unref(), because if
-    // m_erep == x.m_erep, erep could be deleted.
-    if ( x.m_erep)
-      x.m_erep->ref();
-    if ( m_erep)
-      m_erep->unref();
-    m_erep = x.m_erep;
-    m_sts = x.sts();
+  // Note! first ref() then unref(), because if
+  // m_erep == x.m_erep, erep could be deleted.
+  if ( x.m_erep)
+    x.m_erep->ref();
+  if ( m_erep)
+    m_erep->unref();
+  m_erep = x.m_erep;
+  m_sts = x.sts();
     
-    return *this;
+  return *this;
 }
 
 wb_env::operator bool() const
 {
-    if (!m_erep)
-        return false;
+  if (!m_erep)
+    return false;
 
-    return true;
+  return true;
 }
 
 wb_env::operator wb_erep*() const
 {
-    return m_erep;
+  return m_erep;
 }
 
 bool wb_env::open()
 {
-    return true;
+  return true;
 }
 
 bool wb_env::close()
 {
-    return true;
+  return true;
 }
 
 wb_volume wb_env::volume()

@@ -31,14 +31,14 @@ wb_erep::~wb_erep()
 
 void wb_erep::unref()
 {
-    if (--m_nRef == 0)
-        delete this;
+  if (--m_nRef == 0)
+    delete this;
 }
 
 wb_erep *wb_erep::ref()
 {
-    m_nRef++;
-    return this;
+  m_nRef++;
+  return this;
 }
 
 
@@ -118,8 +118,8 @@ wb_vrep *wb_erep::nextVolume(pwr_tStatus *sts, pwr_tVid vid)
     if ( it != m_vrepdb.end()) {
       it = m_vrepdbs.begin();
       if ( it == m_vrepdbs.end()) {
-	*sts = LDH__NOSUCHVOL;
-	return 0;
+        *sts = LDH__NOSUCHVOL;
+        return 0;
       }
     }
   }
@@ -281,8 +281,8 @@ void wb_erep::loadCommonMeta( pwr_tStatus *status)
     ifstream fpm( fname, ios::in);
     if ( !fpm) {
       if ( i == 0) {
-	*status = LDH__NOBASE;
-	return;
+        *status = LDH__NOBASE;
+        return;
       }
       else
         continue;
@@ -295,10 +295,10 @@ void wb_erep::loadCommonMeta( pwr_tStatus *status)
         continue;
 
       nr = dcli_parse( line, " ", "", (char *)vol_array,
-		       sizeof(vol_array)/sizeof(vol_array[0]),
-		       sizeof(vol_array[0]), 0);
+                       sizeof(vol_array)/sizeof(vol_array[0]),
+                       sizeof(vol_array[0]), 0);
       if ( nr != 2)
-	cout << "Syntax error in file: " << fname << endl;
+        cout << "Syntax error in file: " << fname << endl;
 
       // Load this volume
       cdh_ToLower( vol_array[0], vol_array[0]);
@@ -314,7 +314,7 @@ void wb_erep::loadCommonMeta( pwr_tStatus *status)
         addDbs( &sts, vrep);
       }
       catch ( wb_error& e) {
-	cout << "** Unable to open volume " << vname << " " << e.what() << endl;
+        cout << "** Unable to open volume " << vname << " " << e.what() << endl;
       }
     }
     fpm.close();
@@ -355,8 +355,8 @@ void wb_erep::loadMeta( pwr_tStatus *status)
 
     cout << line << endl;
     nr = dcli_parse( line, " ", "", (char *)vol_array,
-		     sizeof(vol_array)/sizeof(vol_array[0]),
-		     sizeof(vol_array[0]), 0);
+                     sizeof(vol_array)/sizeof(vol_array[0]),
+                     sizeof(vol_array[0]), 0);
     if ( nr != 4)
       cout << "Syntax error in file: " << fname << endl;
 
@@ -368,47 +368,47 @@ void wb_erep::loadMeta( pwr_tStatus *status)
       cdh_ToLower( vol_array[0], vol_array[0]);
 
       if ( strcmp( vol_array[3], "cnf") == 0) {
-	// Configured in this project, load from pwrp_load
-	strcpy( vname, "$pwrp_load/");
+        // Configured in this project, load from pwrp_load
+        strcpy( vname, "$pwrp_load/");
         strcat( vname, vol_array[0]);
-	strcat( vname, ".dbs");
+        strcat( vname, ".dbs");
         dcli_translate_filename( vname, vname);
-	cout << "Found: " << found_file << endl;
-	// Load...
-	try {
+        cout << "Found: " << found_file << endl;
+        // Load...
+        try {
           vrep = new wb_vrepdbs( this, vname);
-	  vrep->load();
+          vrep->load();
           addDbs( &sts, vrep);
           vol_cnt++;
-	}
-	catch ( wb_error& e) {
-	  cout << "** Unable to open volume " << vname << " " << e.what() << endl;
-	}
+        }
+        catch ( wb_error& e) {
+          cout << "** Unable to open volume " << vname << " " << e.what() << endl;
+        }
       }
       else {
-	// Imported loadfile
-	for ( i = 0; i < m_dir_cnt; i++) {
-	  strcpy( vname, m_dir_list[i]);
-	  strcat( vname, vol_array[0]);
-	  strcat( vname, ".dbs");
-	  cout << "Try: " << vname << endl;
-	  sts = dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_INIT);
-	  dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_END);
-	  if ( ODD(sts)) {
-	    cout << "Found: " << found_file << endl;
-	    // Load...
-	    try {
+        // Imported loadfile
+        for ( i = 0; i < m_dir_cnt; i++) {
+          strcpy( vname, m_dir_list[i]);
+          strcat( vname, vol_array[0]);
+          strcat( vname, ".dbs");
+          cout << "Try: " << vname << endl;
+          sts = dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_INIT);
+          dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_END);
+          if ( ODD(sts)) {
+            cout << "Found: " << found_file << endl;
+            // Load...
+            try {
               vrep = new wb_vrepdbs( this, vname);
-	      vrep->load();
+              vrep->load();
               // vrep->name( vol_array[0]);
               addDbs( &sts, vrep);
-	    }
-	    catch ( wb_error& e) {
-	      cout << "** Unable to open volume " << vname << " " << e.what() << endl;
-	    }
-	    break;
-	  }
-	}
+            }
+            catch ( wb_error& e) {
+              cout << "** Unable to open volume " << vname << " " << e.what() << endl;
+            }
+            break;
+          }
+        }
       }
     }
     else {
@@ -446,7 +446,7 @@ void wb_erep::loadLocalWb( pwr_tStatus *rsts)
       if ( ODD(sts))
         addExtern( &sts, vrep);
       else {
-	*rsts = sts;
+        *rsts = sts;
         cout << "** Failiure loading local workbench volume" << endl;
         return;
       }

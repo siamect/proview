@@ -70,7 +70,7 @@ pwr_tOid wb_orepwbl::aoid() const
 
 const char * wb_orepwbl::name() const
 {
-    return m_wblnode->name();
+  return m_wblnode->name();
 }
 
 wb_name wb_orepwbl::longName()
@@ -84,59 +84,59 @@ wb_name wb_orepwbl::longName()
 
 pwr_tTime wb_orepwbl::ohTime() const
 {
-    return m_wblnode->getFileTime();
+  return m_wblnode->getFileTime();
 }
 
 
 bool wb_orepwbl::isOffspringOf(const wb_orep *o) const
 {
-    return true;
+  return true;
 }
 
 wb_orep *wb_orepwbl::ancestor(pwr_tStatus *sts) const
 {
-    return m_vrep->ancestor(sts, (wb_orep *)this);
+  return m_vrep->ancestor(sts, (wb_orep *)this);
 }
 
 wb_orep *wb_orepwbl::parent(pwr_tStatus *sts) const
 {
-    return m_vrep->parent(sts, (wb_orep *)this);
+  return m_vrep->parent(sts, (wb_orep *)this);
 }
 
 wb_orep *wb_orepwbl::after(pwr_tStatus *sts) const
 {
-    return m_vrep->after(sts, (wb_orep *)this);
+  return m_vrep->after(sts, (wb_orep *)this);
 }
 
 
 wb_orep *wb_orepwbl::before(pwr_tStatus *sts) const
 {
-    return m_vrep->before(sts, (wb_orep *)this);
+  return m_vrep->before(sts, (wb_orep *)this);
 }
 
 wb_orep *wb_orepwbl::first(pwr_tStatus *sts) const
 {
-    return m_vrep->first(sts, (wb_orep *)this);
+  return m_vrep->first(sts, (wb_orep *)this);
 }
 
 wb_orep *wb_orepwbl::child(pwr_tStatus *sts, const char *name) const
 {
-    return m_vrep->child(sts, (wb_orep *)this, name);
+  return m_vrep->child(sts, (wb_orep *)this, name);
 }
 
 wb_orep *wb_orepwbl::last(pwr_tStatus *sts) const
 {
-    return m_vrep->last(sts, (wb_orep *)this);
+  return m_vrep->last(sts, (wb_orep *)this);
 }
 
 wb_orep *wb_orepwbl::next(pwr_tStatus *sts) const
 {
-    return m_vrep->next(sts, (wb_orep *)this);
+  return m_vrep->next(sts, (wb_orep *)this);
 }
 
 wb_orep *wb_orepwbl::previous(pwr_tStatus *sts) const
 {
-    return m_vrep->previous(sts, (wb_orep *)this);
+  return m_vrep->previous(sts, (wb_orep *)this); // 
 }
 
 

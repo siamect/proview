@@ -1,4 +1,7 @@
+#include "wb_ldh_msg.h"
 #include "wb_adef.h"
+#include "wb_adrep.h"
+#include "wb_name.h"
 
 wb_adef::wb_adef() : wb_status(LDH__NOSUCHATTR), m_adrep(0)
 {

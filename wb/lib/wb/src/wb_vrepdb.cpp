@@ -1,940 +1,413 @@
+#include <sys/stat.h>
+#include <errno.h>
 #include "wb_vrepdb.h"
 #include "wb_orepdb.h"
 #include "db_cxx.h"
+#include "wb_ldh.h"
+
 
 void wb_vrepdb::unref()
 {
-    if (--m_nRef == 0)
-        delete this;
+  if (--m_nRef == 0)
+    delete this;
 }
 
 wb_vrep *wb_vrepdb::ref()
 {
-    m_nRef++;
-    return this;
-}
-
-/*
-typedef struct {
-    pwr_tOid      oid;
-    pwr_tCid      cid;
-    pwr_tObjName  name;     //
-    pwr_tObjName  normname; //
-    pwr_tOid      poid;
-    pwr_tOid      bwsoid;  // previous sibling
-    pwr_tOid      fwsoid;  // next sibling
-    pwr_tOid      fcoid;   // first child
-    pwr_tOid      lcoid;   // last child
-    pwr_tTime     time;
-    pwr_tTime     b_time[2];
-    pwr_tUInt32   b_siz[2];
-    pwr_mClassDef flags;
-} ldh_sDbOdata;
-
-typedef struct {
-    pwr_tOix     key;
-    ldh_sDbOdata data;
-} ldh_sDbObject;
-
-
-typedef struct {
-    struct {
-        pwr_tOix oix;
-        pwr_eBix bix;
-    } key;
-    void *data;
-} ldh_sDbBody;
-
-typedef struct {
-    struct {
-        pwr_tOix     poix;
-        pwr_tObjName normname;
-    } key;
-    struct {
-        pwr_tOix      oix;
-        pwr_tCid      cid;   // saved here to optimize tree traversal
-        pwr_mClassDef flags; // saved here to optimize tree traversal
-    } data;
-} ldh_sDbName;
-
-typedef struct 
-{
-    pwr_tCid cid;
-    pwr_tOix oix;
-} ldh_sDbClassList;
-
-
-*/
-
-
-wb_vrepdb::oh_k::oh_k()
-{
-    m_oix = 0;
-    set_data(&m_oix);
-    set_size(sizeof(m_oix));
-}
-
-wb_vrepdb::oh_k::oh_k(pwr_tOix oix)
-{
-    m_oix = oix;
-    set_data(&m_oix);
-    set_size(sizeof(m_oix));
-}
-
-wb_vrepdb::oh_k::oh_k(wb_orepdb *o)
-{
-    m_oix = o->oix();
-    set_data(&m_oix);
-    set_size(sizeof(m_oix));
-}
-
-wb_vrepdb::oh_d::oh_d()
-{
-    m_orep = new wb_orepdb();
-    set_data(m_orep);
-    set_size(sizeof(*m_orep));
-}
-
-wb_vrepdb::oh_d::oh_d(wb_orepdb *o)
-{
-    m_orep = o;
-    set_data(m_orep);
-    set_size(sizeof(*m_orep));
-}
-
-wb_vrepdb::ob_k::ob_k()
-{
-    m_data.oix = 0;
-    m_data.bix = pwr_eBix__;
-    
-    set_data(&m_data);
-    set_size(sizeof(m_data));
-}
-
-wb_vrepdb::ob_k::ob_k(pwr_tOix oix)
-{
-    m_data.oix = oix;
-    m_data.bix = pwr_eBix__;
-    
-    set_data(&m_data);
-    set_size(sizeof(m_data));
-}
-
-wb_vrepdb::ob_k::ob_k(wb_orepdb *o)
-{
-    m_data.oix = o->oix();
-    m_data.bix = pwr_eBix__;
-    
-    set_data(&m_data);
-    set_size(sizeof(m_data));
-}
-
-wb_vrepdb::ob_k::ob_k(wb_orepdb *o, pwr_eBix bix)
-{
-    m_data.oix = o->oix();
-    m_data.bix = bix;
-    
-    set_data(&m_data);
-    set_size(sizeof(m_data));
-}
-
-wb_vrepdb::na_k::na_k()
-{
-    memset(&m_key, 0, sizeof(m_key));
-    
-    set_data(&m_key);
-    set_size(sizeof(m_key));
-}
-
-wb_vrepdb::na_k::na_k(wb_orepdb *o)
-{
-    memset(&m_key, 0, sizeof(m_key));
-    
-    set_data(&m_key);
-    set_size(sizeof(m_key));
-}
-
-wb_vrepdb::na_k::na_k(wb_orepdb *o, const char *name)
-{
-    memset(&m_key, 0, sizeof(m_key));
-    m_key.poix = o->oix();
-    strcpy(m_key.name, name);
-    
-    set_data(&m_key);
-    set_size(sizeof(m_key));
-}
-
-wb_vrepdb::na_k::na_k(pwr_tOix poix)
-{
-    memset(&m_key, 0, sizeof(m_key));
-    m_key.poix = poix;
-    
-    set_data(&m_key);
-    set_size(sizeof(m_key));
-}
-
-wb_vrepdb::na_k::na_k(pwr_tOix poix, const char *name)
-{
-    memset(&m_key, 0, sizeof(m_key));
-    m_key.poix = poix;
-    strcpy(m_key.name, name);
-    
-    set_data(&m_key);
-    set_size(sizeof(m_key));
+  m_nRef++;
+  return this;
 }
 
 
-
-
-/* Table db.name
-   Key:  poix, name
-   Data: oix
-*/
-typedef struct {
-    struct {
-        pwr_tOix     poix;
-        pwr_tObjName normname;
-    } key;
-    struct {
-        pwr_tOix     oix;
-    } data;
-} sName;
-
-
-
-/* Table db.clist
-   Key:  cid, oix
-   Data: (null)
-*/
-
-typedef struct {
-    pwr_tCid cid;
-    pwr_tOix oix;
-} sClist;
-
-
-/* Table db.ohead
-   Key:  oix
-   Data: wb_DbObject
-*/
-
-
-/* Table db.obody
-   Key:  oix, bix
-   Data: body
-*/
-
-
-
-/* Table db.info
-   Key:  idx
-   Data: (varying)
-         1 => next free oix
-*/
-
-/*
-static add_object()
-{
-}*/
-
-/*
-void
-add_ohead(DB_ENV *dbenv, DB *db, char *fruit, char *name)
-{
-    DBT key, data;
-    DbTxn *txn = 0;
-    int ret;
-
-    // Initialization.
-    memset(&key, 0, sizeof(key));
-    memset(&data, 0, sizeof(data));
-    key.data = fruit;
-    key.size = strlen(fruit) + 1;
-    data.data = name;
-    data.size = strlen(name) + 1;
-    
-    for (;;) {
-        // Begin the transaction.
-        if ((ret = txn_begin(m_txn, &txn, 0)) != 0) {
-            err(ret, "txn_begin");
-            exit(1);
-        }
-        
-        //printf("tid: %d\n", tid->txnid);
-
-        
-        switch (ret = db->put(db, tid, &key, &data, 0)) {
-        case 0:
-            // Success: commit the change.
-            if ((ret = txn_commit(tid, 0)) != 0) {
-                dbenv->err(dbenv, ret, "txn_commit");
-                exit(1);
-            }
-            return;
-        case DB_LOCK_DEADLOCK:
-            // Deadlock: retry the operation.
-            if ((ret = txn_abort(tid)) != 0) {
-                dbenv->err(dbenv, ret, "txn_abort");
-                exit(1);
-            }
-            break;
-        default:
-            // Error: run recovery.
-            dbenv->err(dbenv, ret, "dbc->put: %s/%s", fruit, name);
-            exit(1);
-        }
-    }
-
-    oix = next_oix(txn);
-    
-    wb_DbName name;
-    name.key.poix = ?;
-    name.key.normname = ?;
-    Dbt key(&name.key, sizeof(name.key));
-    name.data.oix = oix;
-    Dbt data(&name.data, sizeof(name.data));
-    ret = m_db.name.put(tid, &key, &data, 0);
-
-    wb_DbClist clist
-    clist.cid = ?;
-    clist.oix = ?;
-    Dbt key(&clist, sizeof(clist));
-    ret = m_db.clist.put(tid, &key, 0, 0);
-    
-    for (;;) {
-        wb_DbObody body;
-        body.key.oix = ?;
-        body.key.bix = ?;
-        Dbt key(&body.key, sizeof(body.key));
-        body.data.oix = oix;
-        Dbt data(&body.data, size);
-        ret = m_db.obody.put(tid, &key, &data, 0);
-    }
-    
-}
-*/
-#if 0
-int wb_vrepdb::put_ohead(DbTxn *txn, wb_orepdb *o, u_int32_t flags)
-{
-    oh_k key(o);
-    oh_d data(o);
-    
-    return m_db_ohead->put(txn, &key, &data, flags);
-}
-
-int wb_vrepdb::get_ohead(DbTxn *txn, wb_orepdb *o)
-{
-    oh_k key(o);
-    oh_d data(o);
-    
-    return m_db_ohead->get(txn, &key, &data, 0);
-}
-
-int wb_vrepdb::get_ohead(wb_orep **orep, DbTxn *txn, pwr_tOid oid)
-{
-    wb_orepdb *o = new wb_orepdb(oid);
-    
-    oh_k key(o);
-    oh_d data(o);
-    
-    int sts = m_db_ohead->get(txn, &key, &data, 0);
-    *orep = o;
-
-    return sts;
-}
-
-int wb_vrepdb::del_ohead(DbTxn *txn, wb_orepdb *o)
-{
-    oh_k  key(o);
-    
-    return m_db_ohead->del(txn, &key, 0);
-}
-
-
-int wb_vrepdb::get_clist(DbTxn *txn, wb_orepdb *o)
-{
-    int ret;
-    pwr_tOix oix = o->oix();
-
-    Dbt key(&oix, sizeof(oix));
-    Dbt data(&oix, sizeof(oix));
-    
-    ret = m_db_clist->get(txn, &key, &data, 0);
-
-    return ret;
-}
-
-int wb_vrepdb::put_clist(DbTxn *txn, wb_orepdb *o, u_int32_t flags)
-{
-    int ret;
-    pwr_tOix oix = o->oix();
-
-    Dbt key(&oix, sizeof(oix));
-    
-    ret = m_db_clist->put(txn, &key, 0, flags);
-
-    return ret;
-}
-
-int wb_vrepdb::del_clist(DbTxn *txn, wb_orepdb *o)
-{
-    int ret;
-    pwr_tOix oix = o->oix();
-
-    Dbt key(&oix, sizeof(oix));
-    
-    ret = m_db_clist->del(txn, &key, 0);
-
-    return ret;
-}
-
-int wb_vrepdb::get_ohead(wb_orep **orep, DbTxn *txn, wb_orepdb *o, char *name)
-{
-    int ret;
-
-    na_k key(o, name);
-    na_d data(o);
-
-    ret = m_db_name->get(txn, &key, &data, 0);
-
-    return ret;
-}
-
-int wb_vrepdb::get_name(DbTxn *txn, pwr_tOix poix, char *name, pwr_tOix *oix)
-{
-    int ret;
-    
-    na_k key(poix, name);
-    na_d data();
-
-    ret = m_db_name->get(txn, &key, &data, 0);
-
-    *oix = data.oix();
-    
-    return ret;
-}
-
-int wb_vrepdb::put_name(DbTxn *txn, wb_orepdb *o, u_int32_t flags)
-{
-    na_k key(o);
-    na_d data(o);
-    
-    ret = m_db_name->put(txn, &key, &data, flags);
-
-    return ret;
-}
-
-int wb_vrepdb::del_name(DbTxn *txn, wb_orepdb *o)
-{
-    na_k key(o);
-    
-    return m_db_name->del(txn, &key, 0);
-}
-
-pwr_tOix wb_vrepdb::new_oix(DbTxn *txn)
-{
-    int index = 1;
-    int ret;
-    Dbt key(&index, sizeof(index));
-    pwr_tOix oix;
-    Dbt data(&oix, sizeof(oix));
-    
-    ret = m_info->get(txn, &key, &data, 0);
-    oix++;
-    ret = m_info->put(txn, &key, &data, 0);
-
-    return oix;
-}
-
-int wb_vrepdb::del_family(DbTxn *txn, Dbc *cp, pwr_tOix poix)
-{
-    int ret;
-    dbName name;
-    name.poix = poix;
-    name.normname = "";
-    pwr_tOix oix = 0;
-    
-    FamilyKey  nk(po, );
-    FamiltData nd(&oix, sizeof(oix));    
-    Dbc *ncp;
-    cp->dup(*ncp, 0);
-
-    while ((ret = cp->get(&nk, &nd, DB_NEXT)) != DB_NOTFOUND) {
-        del_family(txn, ncp, oix);
-        cp->del(0);
-        oh_k ok(nd);
-        oh_d od();
-        m_db_ohead->get(txn, &ok, &od, 0);
-        wb_DbClistK ck(od);
-        m_db_clist->del(txn, &ck, 0);
-        wb_DbBodyK bk(od);
-        m_db_obody->del(txn, &bk, 0);
-        m_db_ohead->del(txn, &ok, 0);
-    }
-    ncp->close();
-
-    ret = m_db_name->del(txn, &key, 0);
-
-    return ret;
-}
-
-#endif
-
-/* Save all changes done in the current transaction. */
+//
+// Save all changes done in the current transaction.
+//
 bool wb_vrepdb::commit(pwr_tStatus *sts)
 {
-    int ret;
-    
-    if ((ret = m_txn->commit(0)) != 0) {
-        err(ret, "commit");
-        exit(1);
-    }
-    txn_checkpoint(0, 0, 0);
-
-    return true;
+  return m_db->commit(m_txn);
 }
 
+//
+// Abort the current transactionm, the database is restored to
+// the state it had before the current transaction started.
+//
 bool wb_vrepdb::abort(pwr_tStatus *sts)
 {    
-    int ret;
-    
-    if ((ret = m_txn->abort()) != 0) {
-        err(ret, "abort");
-        exit(1);
-    }
-
-    return true;
+  return m_db->abort(m_txn);
 }
 
+wb_orep* wb_vrepdb::object(pwr_tStatus *sts)
+{
+//    m_ohead.get(m_txn, wb_oid(m_vid, 0));
+  m_ohead.get(m_ohead.foid());
+  
+  return new (this) wb_orepdb(&m_ohead.m_o);
+}
 
 wb_orep* wb_vrepdb::object(pwr_tStatus *sts, pwr_tOid oid)
 {
-    int ret;
-    
-    wb_orepdb *o = new wb_orepdb();
-    
-    do {        
-        oh_k ohk(oid.oix);
-        oh_d ohd(o);
-    
-        ret = m_db_ohead->get(m_txn, &ohk, &ohd, 0);
-        if (ret != 0) break;
-    
-        return o;
-    } while (0);
-
-    delete o;
-    return 0;
+  m_ohead.get(oid);    
+  
+  return new (this) wb_orepdb(&m_ohead.m_o);
 }
 
 wb_orep* wb_vrepdb::object(pwr_tStatus *sts, wb_orep *parent, wb_name name)
 {
-    int ret;
-    
-    wb_orepdb *o = new wb_orepdb();
-
-    do {        
-        na_k nak(parent->oix(), name);
-        na_d nad;
-
-        ret = m_db_name->get(m_txn, &nak, &nad, 0);
-        if (ret != 0) break;
-        
-        oh_k ok(nad.oix());
-        oh_d od(o);
-    
-        ret = m_db_ohead->get(m_txn, &ok, &od, 0);
-    
-        if (ret != 0) break;
-
-        return o;
-    } while (0);
-    
-    delete o;
-    return 0;
+  wb_db_name n(m_db, m_txn, parent->oid(), name);
+  m_ohead.get(n.oid());
+  return new (this) wb_orepdb(&m_ohead.m_o);
 }
-
 
 wb_orep* wb_vrepdb::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination d, wb_name name)
 {
-    wb_orepdb *o = new wb_orepdb();
-    DbTxn *txn = 0;
-    int ret;
-    
-    if ((ret = txn_begin(m_txn, &txn, 0)) != 0) {
-        err(ret, "txn_begin");
-        exit(1);
-    }
+  wb_db_txn *txn = m_db->begin(0);
         
-    try {        
-        //o->oix(new_oix(txn));
-        //put_ohead(txn, o);
-        //put_clist(txn, o);
-        //put_name(txn, o);
-        //put_body(txn, o);
+  try {
+    wb_db_ohead o(m_db, m_db->new_oid(txn));
 
-        if ((ret = txn->commit(0)) != 0) {
-            err(ret, "commit");
-            exit(1);
-        }
-        return o;
-    }
-    catch (DbException &e) {
-        delete o;
+    o.put(txn);
         
-        if ((ret = txn->abort()) != 0) {
-            err(ret, "abort");
-            exit(1);
-        }
-        return 0;
-    }    
-}
-
-bool wb_vrepdb::deleteObject(pwr_tStatus *sts, wb_orep *o)
-{
-    DbTxn *txn = 0;
-    int ret;
-    
-    
-    if ((ret = txn_begin(m_txn, &txn, 0)) != 0) {
-        err(ret, "txn_begin");
-        exit(1);
-    }
-        
-    try {
-        //unadopt(txn, wb_Position(o));
-        //del_ohead(txn, o);
-        //del_clist(txn, o);
-        //del_body(txn, o);
-
-        if ((ret = txn->commit(0)) != 0) {
-            err(ret, "commit");
-            exit(1);
-        }
-        //o->mark(is_deleted);
-        
-    }
-    catch (DbException &e) {
-        if ((ret = txn->abort()) != 0) {
-            err(ret, "abort");
-            exit(1);
-        }
-    }
-    
-    return true;
-}
-
-
-bool wb_vrepdb::deleteFamily(pwr_tStatus *sts, wb_orep *o)
-{
-    DbTxn *txn = 0;
-    int ret;
-    
-    
-    if ((ret = txn_begin(m_txn, &txn, 0)) != 0) {
-        err(ret, "txn_begin");
-        exit(1);
-    }
-        
-    try {
-        //unadopt(txn, wb_Position(o));
-        //del_ohead(txn, o);
-        //del_clist(txn, o);
-        //del_body(txn, o);
-
-        if ((ret = txn->commit(0)) != 0) {
-            err(ret, "commit");
-            exit(1);
-        }
-        //o->mark(is_deleted);
-        
-    }
-    catch (DbException &e) {
-        if ((ret = txn->abort()) != 0) {
-            err(ret, "abort");
-            exit(1);
-        }
-    }
-    
-    return true;
-}
-
-
-bool wb_vrepdb::deleteOset(pwr_tStatus *sts, wb_oset *o)
-{
-    DbTxn *txn = 0;
-    int ret;
-    
-    
-    if ((ret = txn_begin(m_txn, &txn, 0)) != 0) {
-        err(ret, "txn_begin");
-        exit(1);
-    }
-        
-    try {
-        //del_family(txn, o);
-        //unadopt(txn, wb_Position(o));
-        //del_ohead(txn, o);
-        //del_clist(txn, o);
-        //del_name(txn, o);
-        //del_body(txn, o);
-
-        if ((ret = txn->commit(0)) != 0) {
-            err(ret, "commit");
-            exit(1);
-        }
-    }
-    catch (DbException &e) {
-        if ((ret = txn->abort()) != 0) {
-            err(ret, "abort");
-            exit(1);
-        }
-    }
-
-    return true;
-}
-
+    m_db->adopt(txn, o, d);
 
 /*
-void wb_orepdb::move(pwr_tStatus *sts, wb_Position *p)
-{
-
-    // check that object is local
-    if (!isLocal()) {
-        return;
-    }
+  pwr_tOid        oid;
+  pwr_tCid        cid;
+  pwr_tOid        poid;
+  pwr_tObjName    name;
+  pwr_tObjName    normname;
+  pwr_tTime       time;
+  pwr_tOid        boid;
+  pwr_tOid        aoid;
+  pwr_tOid        foid;
+  pwr_tOid        loid;
     
-    // check that destination is local
-    if (!islocal(d->parent())) {
-        return;
-    }
+  pwr_mClassDef   flags;
+  struct {
+  pwr_tTime      time;
+  pwr_tUInt32    size;
+  } body[2];
 
-    if (isoffspring(d->parent())) {
-        return;
-    }
-
-    triggAnteMove();
-    triggAnteUnadopt();
-    d->parent().triggAnteAdopt(this);
-    
-    
-    o = d.parent().child(m_name);
-    if (o != this) {
-        *sts = LDH__NAMALREXI;
-        return;
-    }
-
-    m_db->move(m_orep, p)
-    unadopt();
-    d.parent().adopt(this);
-}
 */
+    wb_db_class c(m_db, o);
+    c.put(txn);
 
-bool wb_vrepdb::moveObject(pwr_tStatus *sts, wb_orep *o, wb_destination d)
-{
-    DbTxn *txn = 0;
-    int ret;
-
-#if 0
-    if (!isLocal(o))
-        return ;
-    if (!isLocal(d))
-        return ;
-    wb_location l = o.location();
-    //l.trigAnteUnadopt();
-    //d.trigAnteAdopt();
-#endif
-    
-    if ((ret = txn_begin(m_txn, &txn, 0)) != 0) {
-        err(ret, "txn_begin");
-        exit(1);
-    }
+//        db_body b(m_t_body, o);
+//        b.put(txn);
         
-    try {
-        //unadopt(txn, l);
-        //adopt(txn, d);
-        //o->location(nloc);
-        //put_ohead(txn, o, 0);
-
-        if ((ret = txn->commit(0)) != 0) {
-            err(ret, "commit");
-            exit(1);
-        }
-    }
-    catch (DbException &e) {
-        if ((ret = txn->abort()) != 0) {
-            err(ret, "abort");
-            exit(1);
-        }
-    }
-    
-    return true;
+    m_db->commit(txn);
+    return new (this) wb_orepdb(&o.m_o);
+  }
+  catch (DbException &e) {
+    m_db->abort(txn);
+    return 0;
+  }    
 }
 
-bool wb_vrepdb::renameObject(pwr_tStatus *sts, wb_orep *o, wb_name name)
-{
-    DbTxn *txn = 0;
-    int ret;
+bool wb_vrepdb::deleteObject(pwr_tStatus *sts, wb_orep *orp)
+{    
+  wb_db_ohead o(m_db, orp->oid());
     
-    
-    if ((ret = txn_begin(m_txn, &txn, 0)) != 0) {
-        err(ret, "txn_begin");
-        exit(1);
-    }
+  wb_db_txn *txn = m_db->begin(0);
         
-    try {
-        //del_name(txn, o);
-        //o->name(name);
-        //put_name(txn, o, 0);
-        //put_ohead(txn, o, 0);
+  try {
+    m_db->unadopt(txn, o);
 
-        if ((ret = txn->commit(0)) != 0) {
-            err(ret, "commit");
-            exit(1);
-        }
-    }
-    catch (DbException &e) {
-        if ((ret = txn->abort()) != 0) {
-            err(ret, "abort");
-            exit(1);
-        }
-        // ?? How do we reset the Orep ???, the name was changed
-    }
+    wb_db_class c(m_db, o);
+    c.del(txn);
+
+//        db_body b(m_t_body, o);
+//        b.del(txn);
+
+    o.del(txn);
+        
+    m_db->commit(txn);
+  }
+  catch (DbException &e) {
+    m_db->abort(txn);
+  }
+    
+  return true;
+}
+
+bool wb_vrepdb::moveObject(pwr_tStatus *sts, wb_orep *orp, wb_destination d)
+{
+#if 0
+  if (!isLocal(o))
+    return ;
+  if (!isLocal(d))
+    return ;
+  wb_location l = o.location();
+  //l.trigAnteUnadopt();
+  //d.trigAnteAdopt();
+#endif
+     
+  wb_db_txn *txn = m_db->begin(0);
+        
+  try {
+    wb_db_ohead o(m_db, txn, orp->oid());
+    unadopt(txn, o);
+    adopt(txn, o, d);
+    o.put(txn);
+        
+    m_db->commit(txn);
+  }
+  catch (DbException &e) {
+    m_db->abort(txn);
+  }
+    
+  return true;
+}
+
+bool wb_vrepdb::renameObject(pwr_tStatus *sts, wb_orep *orp, wb_name name)
+{ 
+  wb_db_txn *txn = m_db->begin(0);
+        
+  try {
+    m_ohead.get(txn, orp->oid());
+
+    wb_db_name n(m_db, m_ohead);
+    n.del(txn);
+    n.name(name);
+    n.put(txn);
+
+    m_ohead.name(name);
+    m_ohead.put(txn);
+
+    m_db->commit(txn);
+    *sts = LDH__SUCCESS;
     return true;
+  }
+  catch (DbException &e) {
+    m_db->abort(txn);
+    m_ohead.clear();
+    //*sts = LDH__?
+    return false;
+  }
 }
 
 bool wb_vrepdb::writeAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, unsigned int offset, unsigned int size, void *p)
 {
-    //body.oix = ?;
-    //body.bix = ?;
-    //key.data = &body;
-    //key.len = sizeof(body);
+  //body.oid = ?;
+  //body.bix = ?;
+  //key.data = &body;
+  //key.len = sizeof(body);
     
-    //data.data = ?;
-    //data.offset = ?;
-    //data.size = ?;
+  //data.data = ?;
+  //data.offset = ?;
+  //data.size = ?;
     
-    //update(body-tab)
+  //update(body-tab)
 
-    return true;
+  return true;
 }
 
-void *
-wb_vrepdb::readAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, unsigned int offset, unsigned int size, void *p)
+void *wb_vrepdb::readAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, unsigned int offset, unsigned int size, void *p)
 {
-    ob_k obk(o->oix(), bix);
-    //ob_d obd;
+//    ob_k obk(o->oid(), bix);
+  //ob_d obd;
     
-    //obd.set_doff(offset);
-    //obd.set_dlen(size);
-    
-    
-    DbTxn *txn = 0;
-    int ret;
+  //obd.set_doff(offset);
+  //obd.set_dlen(size);
     
     
-    if ((ret = txn_begin(m_txn, &txn, 0)) != 0) {
-        err(ret, "txn_begin");
-        exit(1);
-    }
+  wb_db_txn *txn = m_db->begin(0);
         
-    try {
-        //m_db.obody.get(txn, &bk, &bd, 0);
+  try {
+    //m_db.obody.get(txn, &bk, &bd, 0);
 
-        if ((ret = txn->commit(0)) != 0) {
-            err(ret, "commit");
-            exit(1);
-        }
-    }
-    catch (DbException &e) {
-        if ((ret = txn->abort()) != 0) {
-            err(ret, "abort");
-            exit(1);
-        }
-        // ?? How do we reset the Orep ???, the name was changed
-    }
+    m_db->commit(txn);
+  }
+  catch (DbException &e) {
+    m_db->abort(txn);
+    // ?? How do we reset the Orep ???, the name was changed
+  }
+  return 0;
+}
+
+void *wb_vrepdb::readBody(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, void *p)
+{
+  return 0;
+}
+
+bool wb_vrepdb::writeBody(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, void *p)
+{
+  return true;
+}
+
+wb_orep *wb_vrepdb::ancestor(pwr_tStatus *sts, wb_orep *o)
+{
+  return 0;
+}
+
+pwr_tCid wb_vrepdb::cid(pwr_tStatus *sts, const wb_orep * const orp)
+{
+  return m_ohead.get(orp->oid()).cid();
+}
+
+pwr_tOid wb_vrepdb::poid(pwr_tStatus *sts, const wb_orep * const orp)
+{
+  return m_ohead.get(orp->oid()).poid();
+}
+
+pwr_tOid wb_vrepdb::foid(pwr_tStatus *sts, const wb_orep * const orp)
+{
+  return m_ohead.get(orp->oid()).foid();
+}
+
+pwr_tOid wb_vrepdb::loid(pwr_tStatus *sts, const wb_orep * const orp)
+{
+  return m_ohead.get(orp->oid()).loid();
+}
+
+pwr_tOid wb_vrepdb::aoid(pwr_tStatus *sts, const wb_orep * const orp)
+{
+  return m_ohead.get(orp->oid()).aoid();
+}
+
+pwr_tOid wb_vrepdb::boid(pwr_tStatus *sts, const wb_orep * const orp)
+{
+  return m_ohead.get(orp->oid()).boid();
+}
+
+wb_orep *wb_vrepdb::parent(pwr_tStatus *sts, wb_orep *orp)
+{
+  m_ohead.get(m_ohead.get(orp->oid()).poid());
+  return new (this) wb_orepdb(&m_ohead.m_o);
+}
+
+wb_orep *wb_vrepdb::after(pwr_tStatus *sts, wb_orep *orp)
+{
+  m_ohead.get(m_ohead.get(orp->oid()).aoid());
+  return new (this) wb_orepdb(&m_ohead.m_o);
+}
+
+wb_orep *wb_vrepdb::before(pwr_tStatus *sts, wb_orep *orp)
+{
+  m_ohead.get(m_ohead.get(orp->oid()).boid());
+  return new (this) wb_orepdb(&m_ohead.m_o);
+}
+
+wb_orep *wb_vrepdb::first(pwr_tStatus *sts, wb_orep *orp)
+{
+  m_ohead.get(m_ohead.get(orp->oid()).foid());
+  return new (this) wb_orepdb(&m_ohead.m_o);
+}
+
+wb_orep *wb_vrepdb::child(pwr_tStatus *sts, wb_orep *orp, const char *name)
+{
+  wb_db_name n(m_db, orp->oid(), name);
+  m_ohead.get(n.oid());
+  return new (this) wb_orepdb(&m_ohead.m_o);
+}
+
+wb_orep *wb_vrepdb::last(pwr_tStatus *sts, wb_orep *orp)
+{
+  m_ohead.get(m_ohead.get(orp->oid()).loid());
+  return new (this) wb_orepdb(&m_ohead.m_o);
+}
+
+wb_orep *wb_vrepdb::next(pwr_tStatus *sts, wb_orep *orp)
+{
+  m_ohead.get(orp->oid());
+  wb_db_class c(m_db, m_ohead.cid());
+  if (c.succ(m_ohead.oid())) {
+    m_ohead.get(c.oid());
+    return new (this) wb_orepdb(&m_ohead.m_o);
+  } else {
+    //*sts = LDH__?;
     return 0;
+  }
 }
 
-void *
-wb_vrepdb::readBody(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, void *p)
+wb_orep *wb_vrepdb::previous(pwr_tStatus *sts, wb_orep *orp)
 {
+  m_ohead.get(orp->oid());
+  wb_db_class c(m_db, m_ohead.cid());
+  if (c.pred(m_ohead.oid())) {
+    m_ohead.get(c.oid());
+    return new (this) wb_orepdb(&m_ohead.m_o);
+  } else {
+    //*sts = LDH__?;
     return 0;
+  }
 }
 
-bool
-wb_vrepdb::writeBody(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, void *p)
+void wb_vrepdb::adopt(wb_db_txn *txn, wb_db_ohead &o, wb_destination &dest)
 {
-    return true;
+  wb_db_ohead d(m_db, txn, dest.oid());
+
+  switch (dest.code()) {
+  case ldh_eDest_IntoFirst:
+    o.poid(d.oid());
+    o.boid(pwr_cNOid);
+    o.aoid(d.foid());
+    break;
+  case ldh_eDest_IntoLast:
+    o.poid(d.oid());
+    o.aoid(pwr_cNOid);
+    o.boid(d.loid());
+    break;
+  case ldh_eDest_After:
+    o.poid(d.poid());
+    o.boid(d.oid());
+    o.aoid(d.aoid());
+    break;        
+  case ldh_eDest_Before:
+    o.poid(d.poid());
+    o.boid(d.boid());
+    o.aoid(d.oid());
+    break;
+  }
+    
+  if (o.boid().vid != pwr_cNVid) {
+    wb_db_ohead b(m_db, txn, o.boid());
+    b.aoid(o.oid());
+    b.put(txn);
+  } else {
+    d.foid(o.oid());
+  }
+    
+  if (o.aoid().vid != pwr_cNVid) {
+    wb_db_ohead a(m_db, txn, o.aoid());
+    a.aoid(o.oid());
+    a.put(txn);
+  } else {
+    d.loid(o.oid());
+  }
+    
+  d.put(txn);
+
+  wb_db_name n(m_db, o.poid(), o.name());
+  n.put(txn);
 }
 
-wb_orep *
-wb_vrepdb::ancestor(pwr_tStatus *sts, wb_orep *o) const
+void wb_vrepdb::unadopt(wb_db_txn *txn, wb_db_ohead &o)
 {
-    return 0;
-}
+  wb_db_ohead p(m_db, txn, o.poid());
+    
+  if (o.boid().vid != pwr_cNVid) {
+    wb_db_ohead b(m_db, txn, o.boid());
+    b.aoid(o.aoid());
+    b.put(txn);
+  } else {
+    p.foid(o.aoid());
+  }
 
-wb_orep *
-wb_vrepdb::parent(pwr_tStatus *sts, wb_orep *o) const
-{
-    wb_orep *orep = 0;
-    
-    //int ret = get_ohead(&orep, m_txn, o->m_ohead.poid);
-    
-    return orep;
-}
+  if (o.aoid().vid != pwr_cNVid) {
+    wb_db_ohead a(m_db, txn, o.aoid());
+    a.boid(o.boid());
+    a.put(txn);
+  } else {
+    p.loid(o.boid());
+  }
 
-wb_orep *
-wb_vrepdb::after(pwr_tStatus *sts, wb_orep *o) const
-{
-    wb_orep *orep = 0;
+  o.poid(pwr_cNOid);
+  o.aoid(pwr_cNOid);
+  o.boid(pwr_cNOid);
     
-    //int ret = get_ohead(&orep, m_txn, o->m_ohead.aoid);
+  p.put(txn);
     
-    return orep;
-}
-
-wb_orep *
-wb_vrepdb::before(pwr_tStatus *sts, wb_orep *o) const
-{
-    wb_orep *orep = 0;
-    
-    //int ret = get_ohead(&orep, m_txn, o->m_ohead.boid);
-    
-    return orep;
-}
-
-wb_orep *
-wb_vrepdb::first(pwr_tStatus *sts, wb_orep *o) const
-{
-    wb_orep *orep = 0;
-    
-    //int ret = get_ohead(&orep, m_txn, o->m_ohead.foid);
-    
-    return orep;
-}
-
-wb_orep *wb_vrepdb::child(pwr_tStatus *sts, wb_orep *o, const char *name) const
-{
-    return 0;
-}
-
-wb_orep *wb_vrepdb::last(pwr_tStatus *sts, wb_orep *o) const
-{
-    wb_orep *orep = 0;
-    
-    //int ret = get_ohead(&orep, m_txn, o->m_ohead.loid);
-    
-    return orep;
-}
-
-wb_orep *wb_vrepdb::next(pwr_tStatus *sts, wb_orep *o) const
-{
-    return 0;
-}
-
-wb_orep *wb_vrepdb::previous(pwr_tStatus *sts, wb_orep *o) const
-{
-    return 0;
+  wb_db_name n(m_db, o.poid(), o.name());
+  n.del(txn);
 }
 

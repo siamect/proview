@@ -398,7 +398,7 @@ dbs_Map(pwr_tStatus *sts, dbs_sEnv *ep, const char *filename)
     struct stat sb;
     int ret;
     int fd;
-//#define DBS_DEBUG 1
+#define DBS_DEBUG 1
 #if DBS_DEBUG
     int i;
     dbs_sFile *fp;

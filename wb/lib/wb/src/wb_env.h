@@ -12,37 +12,37 @@ class wb_erep;
 class wb_env : public wb_status
 {
 protected:
-    wb_erep *m_erep;
+  wb_erep *m_erep;
     
 public:
 
-    wb_env();
+  wb_env();
     
-    wb_env(wb_erep*);
-    wb_env(wb_env &e);
+  wb_env(wb_erep*);
+  wb_env(wb_env &e);
     
-    wb_env& operator=(const wb_env& x);
+  wb_env& operator=(const wb_env& x);
     
-    operator bool() const;
-    operator wb_erep*() const;
-    bool operator==(wb_env&);
+  operator bool() const;
+  operator wb_erep*() const;
+  bool operator==(wb_env&);
     
-    void load() { m_erep->load(&m_sts);}
-    bool open();
-    bool close();
+  void load() { m_erep->load(&m_sts);}
+  bool open();
+  bool close();
 
-    // Get first volume in list of db volumes.
-    wb_volume volume();
-    // Get db volume.
-    wb_volume volume(pwr_tVid);
+  // Get first volume in list of db volumes.
+  wb_volume volume();
+  // Get db volume.
+  wb_volume volume(pwr_tVid);
 
-    wb_volume volume(const char *name);
-    wb_volume externVolume(pwr_tVid);
+  wb_volume volume(const char *name);
+  wb_volume externVolume(pwr_tVid);
     
-    wb_volume snapshot(pwr_tVid);
+  wb_volume snapshot(pwr_tVid);
 
 
-    wb_volume createVolume(wb_cdef cdef, pwr_tVid vid, wb_name name);
+  wb_volume createVolume(wb_cdef cdef, pwr_tVid vid, wb_name name);
     
 };
 

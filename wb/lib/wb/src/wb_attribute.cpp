@@ -4,11 +4,10 @@
 #include "wb_attrname.h"
 #include "pwr.h"
 
-
-
-wb_attribute::wb_attribute() : wb_status(LDH__NOSUCHATTR), m_orep(0), m_adrep(0), 
-			       m_size(0), m_offset(0), m_tid(0), m_elements(0), 
-			       m_type(pwr_eType_), m_flags(0), m_bix(pwr_eBix__)
+wb_attribute::wb_attribute() :
+  wb_status(LDH__NOSUCHATTR), m_orep(0), m_adrep(0), 
+  m_size(0), m_offset(0), m_tid(0), m_elements(0), 
+  m_type(pwr_eType_), m_flags(0), m_bix(pwr_eBix__)
 {
 }
 
@@ -71,7 +70,7 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, const char* bname) :
     if ( oddSts()) {
       wb_bdrep *bd = cd->bdrep( &m_sts, bname);
       if ( oddSts()) {
-	m_size = bd->size();
+        m_size = bd->size();
         delete bd;
       }
       delete cd;
@@ -96,8 +95,8 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, char const* bname, co
     if ( oddSts()) {
       if ( bname) {
         bd = cd->bdrep( &m_sts, bname);
-	if ( oddSts())
-	  m_adrep = bd->adrep( &m_sts, n.attribute(0));
+        if ( oddSts())
+          m_adrep = bd->adrep( &m_sts, n.attribute(0));
       }
       else {
         m_adrep = cd->adrep( &m_sts, n.attribute(0));
@@ -106,10 +105,10 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, char const* bname, co
         m_adrep->ref();
 
         if ( !m_orep->vrep()->merep()->getAttrInfoRec( &n, m_adrep->bix(),
-						       m_orep->cid(), (int *) &m_size,
-						       &m_offset, &m_tid, &m_elements, 
-						       &m_type,
-						       &m_flags, 0)) {
+                                                       m_orep->cid(), (int *) &m_size,
+                                                       &m_offset, &m_tid, &m_elements, 
+                                                       &m_type,
+                                                       &m_flags, 0)) {
           m_adrep->unref();
           m_adrep = 0;
           m_sts = LDH__NOSUCHATTR;
@@ -249,14 +248,14 @@ void wb_attribute::check() const
 //
 pwr_sAttrRef wb_attribute::aref()
 {
-    pwr_sAttrRef aref;
+  pwr_sAttrRef aref;
     
-    return aref;
+  return aref;
 }
 
 pwr_sAttrRef *wb_attribute::aref(pwr_sAttrRef *arp)
 {
-    return arp;
+  return arp;
 }
 
 size_t wb_attribute::size()
@@ -368,7 +367,7 @@ void *wb_attribute::value( void *p)
 
 void *wb_attribute::value(void *vp, size_t size, pwr_tStatus *sts)
 {
-    return 0;
+  return 0;
 }
 
     
@@ -419,27 +418,27 @@ wb_attribute wb_attribute::after()
 
 wb_attribute wb_attribute::before()
 {
-    wb_attribute a;
-    return a;
+  wb_attribute a;
+  return a;
 }   
 
 
 wb_attribute wb_attribute::first(int idx)
 {
-    if (!isClass())
-        return wb_attribute();    
+  if (!isClass())
+    return wb_attribute();    
 
-    return wb_attribute(*this, idx, NULL);
+  return wb_attribute(*this, idx, NULL);
     
 }
 
 
 wb_attribute wb_attribute::child(int idx, const char* name)
 {
-    if (!isClass())
-        return wb_attribute();    
+  if (!isClass())
+    return wb_attribute();    
 
-    return wb_attribute(*this, idx, name);
+  return wb_attribute(*this, idx, name);
     
 }
 
@@ -454,18 +453,18 @@ const char *wb_attribute::name() const
 // Fix, no index and no subclass !!!
 wb_name wb_attribute::longName()
 {
-    check();
+  check();
 
-    if ( !m_adrep)
-      return m_orep->longName();
+  if ( !m_adrep)
+    return m_orep->longName();
 
-    char str[512];
-    strcpy( str, m_orep->longName().name());
-    strcat( str, ".");
-    strcat( str, m_adrep->name());
+  char str[512];
+  strcpy( str, m_orep->longName().name());
+  strcat( str, ".");
+  strcat( str, m_adrep->name());
 
-    wb_name n = wb_name( str);
-    return n;
+  wb_name n = wb_name( str);
+  return n;
 }
 
 void wb_attribute::name(const char *name)

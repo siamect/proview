@@ -50,15 +50,15 @@ char wb_nrep::unatname_tab[] = \
 
 #define nameDiff( s1, s2) ((long)(s1) - (long)(s2))
 
-wb_nrep::wb_nrep() : m_nRef(0), num_seg(0), num_attr(0), vol_len(0), 
-  seg(0), attr(0)
+wb_nrep::wb_nrep() :
+  m_nRef(0), num_seg(0), num_attr(0), vol_len(0), seg(0), attr(0)
 {
   strcpy( oname,"");
 }
 
-wb_nrep::wb_nrep( const char *n) throw (wb_error) : num_seg(0), num_attr(0), vol_len(0),
-				   vol_offs(0), b_size(0), b_offset(0),
-				   seg(0), attr(0)
+wb_nrep::wb_nrep( const char *n) throw (wb_error) :
+  num_seg(0), num_attr(0), vol_len(0),
+  vol_offs(0), b_size(0), b_offset(0), seg(0), attr(0)
 { 
   const char *s;
   int seg_cnt = 1;

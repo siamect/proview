@@ -7,59 +7,59 @@
 
 class wb_orepwbl : public wb_orep
 {
-    wb_vrepwbl *m_vrep;
-    unsigned int m_refCount;
-    wb_wblnode *m_wblnode;
+  wb_vrepwbl *m_vrep;
+  unsigned int m_refCount;
+  wb_wblnode *m_wblnode;
     
 public:
 
 
-    wb_orepwbl(int oix);
-    wb_orepwbl( wb_vrepwbl *v, wb_wblnode *n);
-    ~wb_orepwbl();
+  wb_orepwbl(int oix);
+  wb_orepwbl( wb_vrepwbl *v, wb_wblnode *n);
+  ~wb_orepwbl();
 
-    // void* operator new(size_t size, wb_vrepwbl *v);
-    // void operator delete(void *p, size_t size, wb_vrepwbl *v);
+  // void* operator new(size_t size, wb_vrepwbl *v);
+  // void operator delete(void *p, size_t size, wb_vrepwbl *v);
     
-    virtual pwr_tOid oid() const;
-    virtual pwr_tVid vid() const;
-    virtual pwr_tOix oix() const;
+  virtual pwr_tOid oid() const;
+  virtual pwr_tVid vid() const;
+  virtual pwr_tOix oix() const;
 
-    virtual pwr_tCid cid() const;
-    virtual pwr_tOid poid() const;
-    virtual pwr_tOid foid() const;
-    virtual pwr_tOid loid() const;
-    virtual pwr_tOid boid() const;
-    virtual pwr_tOid aoid() const;
+  virtual pwr_tCid cid() const;
+  virtual pwr_tOid poid() const;
+  virtual pwr_tOid foid() const;
+  virtual pwr_tOid loid() const;
+  virtual pwr_tOid boid() const;
+  virtual pwr_tOid aoid() const;
     
-    virtual const char * name() const;
-    virtual wb_name longName();
-    virtual pwr_tTime ohTime() const;
+  virtual const char * name() const;
+  virtual wb_name longName();
+  virtual pwr_tTime ohTime() const;
     
-    virtual bool isOffspringOf(const wb_orep *o) const;
+  virtual bool isOffspringOf(const wb_orep *o) const;
     
-    // Navigational operations
+  // Navigational operations
 
-    wb_orep *ancestor(pwr_tStatus *sts) const;  //< get object at top of hierarchy
-    wb_orep *parent(pwr_tStatus *sts) const;
-    wb_orep *after(pwr_tStatus *sts) const;     //< get next sibling
-    wb_orep *before(pwr_tStatus *sts) const;    //< get previous sibling
-    wb_orep *first(pwr_tStatus *sts) const;     //< get first child
-    wb_orep *child(pwr_tStatus *sts, const char *name) const;    //< get named child
-    wb_orep *last(pwr_tStatus *sts) const;      //< get last child
-    wb_orep *next(pwr_tStatus *sts) const;      //< get next in list of objects of same class in one volume
-    wb_orep  *previous(pwr_tStatus *sts) const;  //< get previous in list of objects of same class in one volume
+  wb_orep *ancestor(pwr_tStatus *sts) const;  //< get object at top of hierarchy
+  wb_orep *parent(pwr_tStatus *sts) const;
+  wb_orep *after(pwr_tStatus *sts) const;     //< get next sibling
+  wb_orep *before(pwr_tStatus *sts) const;    //< get previous sibling
+  wb_orep *first(pwr_tStatus *sts) const;     //< get first child
+  wb_orep *child(pwr_tStatus *sts, const char *name) const;    //< get named child
+  wb_orep *last(pwr_tStatus *sts) const;      //< get last child
+  wb_orep *next(pwr_tStatus *sts) const;      //< get next in list of objects of same class in one volume
+  wb_orep  *previous(pwr_tStatus *sts) const;  //< get previous in list of objects of same class in one volume
 
-    virtual wb_position position();
-    virtual wb_position position(ldh_eDest dest);
+  virtual wb_position position();
+  virtual wb_position position(ldh_eDest dest);
 
-    virtual wb_adrep *attribute(pwr_tStatus*, const char *aname);
-    virtual wb_adrep *attribute(pwr_tStatus*);
+  virtual wb_adrep *attribute(pwr_tStatus*, const char *aname);
+  virtual wb_adrep *attribute(pwr_tStatus*);
 
-    wb_wblnode *wblNode() { return m_wblnode;}
+  wb_wblnode *wblNode() { return m_wblnode;}
 
-    wb_erep *erep() const { return m_vrep->erep();}
-    wb_vrep *vrep() const { return m_vrep;}
+  wb_erep *erep() const { return m_vrep->erep();}
+  wb_vrep *vrep() const { return m_vrep;}
 };
 
 #endif

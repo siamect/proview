@@ -2,49 +2,50 @@
 #include "wb_object.h"
 #include "wb_location.h"
 #include "wb_error.h"
+#include "wb_bdef.h"
 
 bool wb_object::check( string str)
 {
-    if (m_orep == 0) {
-        m_sts = LDH__NOSUCHOBJ;//LDH__NOOBJECT;
-        throw wb_error_str(m_sts, str);
-    }
-    return true;
+  if (m_orep == 0) {
+    m_sts = LDH__NOSUCHOBJ;//LDH__NOOBJECT;
+    throw wb_error_str(m_sts, str);
+  }
+  return true;
 }
 
 bool wb_object::check()
 {
-    if (m_orep == 0) {
-        m_sts = LDH__NOSUCHOBJ;//LDH__NOOBJECT;
-        throw wb_error(m_sts);
-    }
-    return true;
+  if (m_orep == 0) {
+    m_sts = LDH__NOSUCHOBJ;//LDH__NOOBJECT;
+    throw wb_error(m_sts);
+  }
+  return true;
 }
 
 // Return the current position of this object
 wb_location wb_object::location()
 {
-    return wb_location(*this);
+  return wb_location(*this);
 }
 
 wb_destination wb_object::destination(ldh_eDest dest)
 {
-    return wb_destination(*this, dest);
+  return wb_destination(*this, dest);
 }
 
 
 wb_object::wb_object(wb_orep *orep) : wb_status(LDH__SUCCESS), m_orep(orep)
 {
-    if (orep == 0)
-      m_sts = LDH__NOSUCHOBJ;
-    else
-      m_orep->ref();
+  if (orep == 0)
+    m_sts = LDH__NOSUCHOBJ;
+  else
+    m_orep->ref();
 }
 
 wb_object::wb_object(pwr_tStatus sts, wb_orep *orep) : wb_status(sts), m_orep(orep)
 {
-    if (m_orep != 0)
-        m_orep = orep->ref();
+  if (m_orep != 0)
+    m_orep = orep->ref();
 }
 
 
@@ -66,16 +67,16 @@ wb_object::~wb_object()
 
 wb_object& wb_object::operator=(const wb_object& x)
 {
-    // Note! first ref() then unref(), because if
-    // m_orep == x.m_orep, orep could be deleted.
-    if ( x.m_orep)
-      x.m_orep->ref();
-    if ( m_orep)
-      m_orep->unref();
-    m_orep = x.m_orep;
-    m_sts = x.sts();
+  // Note! first ref() then unref(), because if
+  // m_orep == x.m_orep, orep could be deleted.
+  if ( x.m_orep)
+    x.m_orep->ref();
+  if ( m_orep)
+    m_orep->unref();
+  m_orep = x.m_orep;
+  m_sts = x.sts();
     
-    return *this;
+  return *this;
 }
 
 wb_object::operator bool() const
@@ -85,7 +86,7 @@ wb_object::operator bool() const
 
 wb_object::operator wb_orep*() const
 {
-    return m_orep;
+  return m_orep;
 }
 
 const char *wb_object::name()
@@ -107,12 +108,12 @@ wb_name wb_object::longName()
 //
 wb_object wb_object::next()
 {
-    check("wb_object::next()");
+  check("wb_object::next()");
     
-    pwr_tStatus sts = LDH__SUCCESS;
-    wb_orep *orep = m_orep->next(&sts);
-    wb_object o(sts, orep);
-    return o;
+  pwr_tStatus sts = LDH__SUCCESS;
+  wb_orep *orep = m_orep->next(&sts);
+  wb_object o(sts, orep);
+  return o;
 }
 
 //
@@ -120,12 +121,12 @@ wb_object wb_object::next()
 //
 wb_object wb_object::previous()
 {
-    check("wb_object::previous()");
+  check("wb_object::previous()");
     
-    pwr_tStatus sts = LDH__SUCCESS;
-    wb_orep *orep = m_orep->previous(&sts);
-    wb_object o(sts, orep);
-    return o;
+  pwr_tStatus sts = LDH__SUCCESS;
+  wb_orep *orep = m_orep->previous(&sts);
+  wb_object o(sts, orep);
+  return o;
 }
 
 //
@@ -133,12 +134,12 @@ wb_object wb_object::previous()
 //
 wb_object wb_object::after()
 {
-    check("wb_object::after()");
+  check("wb_object::after()");
     
-    pwr_tStatus sts = LDH__SUCCESS;
-    wb_orep *orep = m_orep->after(&sts);
-    wb_object o(sts, orep);
-    return o;
+  pwr_tStatus sts = LDH__SUCCESS;
+  wb_orep *orep = m_orep->after(&sts);
+  wb_object o(sts, orep);
+  return o;
 }
 
 //
@@ -146,12 +147,12 @@ wb_object wb_object::after()
 //
 wb_object wb_object::before()
 {
-    check("wb_object::before()");
+  check("wb_object::before()");
     
-    pwr_tStatus sts = LDH__SUCCESS;
-    wb_orep *orep = m_orep->before(&sts);
-    wb_object o(sts, orep);
-    return o;
+  pwr_tStatus sts = LDH__SUCCESS;
+  wb_orep *orep = m_orep->before(&sts);
+  wb_object o(sts, orep);
+  return o;
 }
 
 //
@@ -159,12 +160,12 @@ wb_object wb_object::before()
 //
 wb_object wb_object::parent()
 {
-    check("wb_object::parent()");
+  check("wb_object::parent()");
     
-    pwr_tStatus sts = LDH__SUCCESS;
-    wb_orep *orep = m_orep->parent(&sts);
-    wb_object o(sts, orep);
-    return o;
+  pwr_tStatus sts = LDH__SUCCESS;
+  wb_orep *orep = m_orep->parent(&sts);
+  wb_object o(sts, orep);
+  return o;
 }
 
 //
@@ -172,12 +173,12 @@ wb_object wb_object::parent()
 //
 wb_object wb_object::first()
 {
-    check("wb_object::first()");
+  check("wb_object::first()");
     
-    pwr_tStatus sts = LDH__SUCCESS;
-    wb_orep *orep = m_orep->first(&sts);
-    wb_object o(sts, orep);
-    return o;
+  pwr_tStatus sts = LDH__SUCCESS;
+  wb_orep *orep = m_orep->first(&sts);
+  wb_object o(sts, orep);
+  return o;
 }
 
 //
@@ -185,12 +186,12 @@ wb_object wb_object::first()
 //
 wb_object wb_object::child( const char* name)
 {
-    check("wb_object::child()");
+  check("wb_object::child()");
     
-    pwr_tStatus sts = LDH__SUCCESS;
-    wb_orep *orep = m_orep->child(&sts, name);
-    wb_object o(sts, orep);
-    return o;
+  pwr_tStatus sts = LDH__SUCCESS;
+  wb_orep *orep = m_orep->child(&sts, name);
+  wb_object o(sts, orep);
+  return o;
 }
 
 //
@@ -198,120 +199,120 @@ wb_object wb_object::child( const char* name)
 //
 wb_object wb_object::last()
 {
-    check("wb_object::last()");
+  check("wb_object::last()");
     
-    pwr_tStatus sts = LDH__SUCCESS;
-    wb_orep *orep = m_orep->last(&sts);
-    wb_object o(sts, orep);
+  pwr_tStatus sts = LDH__SUCCESS;
+  wb_orep *orep = m_orep->last(&sts);
+  wb_object o(sts, orep);
 
-    return o;
+  return o;
 }
 
 pwr_tOid wb_object::oid()
 {
-    check();
+  check();
     
-    return m_orep->oid();
+  return m_orep->oid();
 }
 
 pwr_tVid wb_object::vid()
 {
-    check();
+  check();
     
-    return m_orep->vid();
+  return m_orep->vid();
 }
 
 pwr_tCid wb_object::cid()
 {
-    check();
+  check();
     
-    return m_orep->cid();
+  return m_orep->cid();
 }
 
 pwr_tOix wb_object::oix()
 {
-    check();
+  check();
     
-    return m_orep->oix();
+  return m_orep->oix();
 }
 
 pwr_tOid wb_object::poid()
 {
-    check();
+  check();
     
-    return m_orep->poid();
+  return m_orep->poid();
 }
 
 pwr_tOid wb_object::foid()
 {
-    check();
+  check();
     
-    return m_orep->foid();
+  return m_orep->foid();
 }
 
 pwr_tOid wb_object::loid()
 {
-    check();
+  check();
     
-    return m_orep->loid();
+  return m_orep->loid();
 }
 
 pwr_tOid wb_object::boid()
 {
-    check();
+  check();
     
-    return m_orep->boid();
+  return m_orep->boid();
 }
 
 pwr_tOid wb_object::aoid()
 {
-    check();
+  check();
     
-    return m_orep->aoid();
+  return m_orep->aoid();
 }
 
 pwr_tTime wb_object::ohTime()
 {
-    check();
+  check();
     
-    return m_orep->ohTime();
+  return m_orep->ohTime();
 }
 
 bool wb_object::operator==(wb_object& x)
 {
-    check();
+  check();
     
-    return (x.m_orep == m_orep);
+  return (x.m_orep == m_orep);
 }
 
 wb_attribute wb_object::attribute()
 {
-    check();
+  check();
     
-    pwr_tStatus sts = LDH__SUCCESS;
-    wb_attribute a(sts, m_orep);
+  pwr_tStatus sts = LDH__SUCCESS;
+  wb_attribute a(sts, m_orep);
 
-    return a;
+  return a;
 }
 
 wb_attribute wb_object::attribute(const char *aname)
 {
-    check();
+  check();
 
-    pwr_tStatus sts = LDH__SUCCESS;
-    wb_attribute a(sts, m_orep, aname);
+  pwr_tStatus sts = LDH__SUCCESS;
+  wb_attribute a(sts, m_orep, aname);
 
-    return a;
+  return a;
 }
 
 wb_attribute wb_object::attribute(const char *bname, const char *aname)
 {
-    check();
+  check();
 
-    pwr_tStatus sts = LDH__SUCCESS;
-    wb_attribute a(sts, m_orep, bname, aname);
+  pwr_tStatus sts = LDH__SUCCESS;
+  wb_attribute a(sts, m_orep, bname, aname);
 
-    return a;
+  return a;
 }
 
 size_t wb_object::rbSize()
@@ -355,24 +356,24 @@ wb_bdef wb_object::bdef(pwr_eBix bix)
 
 /*      Object SigChanCon $ObjXRef 2
 
-        Body SysBody
-          Attr Identity = "Ai"
-          Attr Source = "Ai"
-          Attr Target = "ChanAi"
-          Attr SourceAttribute = "SigChanCon"
-          Attr TargetAttribute = "SigChanCon"
-        EndBody
-      EndObject
+   Body SysBody
+      Attr Identity = "Ai"
+      Attr Source = "Ai"
+      Attr Target = "ChanAi"
+      Attr SourceAttribute = "SigChanCon"
+      Attr TargetAttribute = "SigChanCon"
+   EndBody
+   EndObject
 */
 pwr_tStatus wb_object::checkXref(const char *name)
 {
-    //pwr_sObjXRef pobjXDef;
-    //wb_attribute a = attribute(name);
+  //pwr_sObjXRef pobjXDef;
+  //wb_attribute a = attribute(name);
     
-    //pwr_tOid *oidp = a.valp();
+  //pwr_tOid *oidp = a.valp();
     
-    //pwr_sObjXRef *oxrp = a.valp();
+  //pwr_sObjXRef *oxrp = a.valp();
 
-    return LDH__SUCCESS;
+  return LDH__SUCCESS;
 }
 

@@ -12,12 +12,12 @@ class wb_wbllexer;
 class wb_wblnode;
 
 class wb_wblfile {
-  public:
-    wb_wbllexer *lexer;
-    wb_wblparser *parser;
-    wb_wblnode *rootAST;
-    char file_name[200];
-    pwr_tTime time;
+public:
+  wb_wbllexer *lexer;
+  wb_wblparser *parser;
+  wb_wblnode *rootAST;
+  char file_name[200];
+  pwr_tTime time;
 };
 
 #endif

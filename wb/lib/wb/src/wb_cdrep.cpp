@@ -1,7 +1,4 @@
-
-extern "C" {
 #include "co_cdh.h"
-}
 #include "wb_cdrep.h"
 #include "wb_merep.h"
 #include "wb_ldh_msg.h"
@@ -97,7 +94,7 @@ wb_bdrep *wb_cdrep::bdrep( pwr_tStatus *sts, pwr_eBix bix)
   wb_orepdbs *old;
   while ( ODD(*sts)) {
     if ( orep->cid() == pwr_eClass_ObjBodyDef &&
-	 cdh_oixToBix( orep->oid().oix) ==  bix) {
+         cdh_oixToBix( orep->oid().oix) ==  bix) {
       wb_bdrep *bdrep = new wb_bdrep( *orep);
       return bdrep;
     }
@@ -127,8 +124,8 @@ wb_adrep *wb_cdrep::adrep( pwr_tStatus *sts, const char *aname)
       orep_attr = (wb_orepdbs *)orep->m_vrep->child( sts, orep, n);
       if ( ODD(*sts)) {
         wb_adrep *adrep = new wb_adrep( *orep_attr);
-	orep->unref();
-	return adrep;
+        orep->unref();
+        return adrep;
       }
     }
     old = orep;

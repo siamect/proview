@@ -4,45 +4,45 @@
 #include "wb_ldh_msg.h"
 
 wb_srep::wb_srep(wb_vrep *vrep) : m_access(ldh_eAccess_ReadOnly), m_utility(ldh_eUtility__),
-				  m_editorContext(0), m_sendThisSession(0), m_sendOtherSession(0),
-				  m_nUpdate(0), m_refcount(0)
+                                  m_editorContext(0), m_sendThisSession(0), m_sendOtherSession(0),
+                                  m_nUpdate(0), m_refcount(0)
 {
-    m_vrep = vrep->ref();
+  m_vrep = vrep->ref();
 }
 
 wb_srep::wb_srep(wb_srep *srep) // Fix ????? access utility ...
 {
-    m_vrep = ((wb_vrep*)srep)->ref();
+  m_vrep = ((wb_vrep*)srep)->ref();
 }
 
 wb_srep::~wb_srep()
 {
-    pwr_tStatus sts = LDH__SUCCESS;
+  pwr_tStatus sts = LDH__SUCCESS;
 
-    if (m_nUpdate != 0) {
-        m_vrep->abort(&sts);
-    }
+  if (m_nUpdate != 0) {
+    m_vrep->abort(&sts);
+  }
     
-    if (m_vrep != 0)
-        m_vrep->unref();
+  if (m_vrep != 0)
+    m_vrep->unref();
 }
 
 wb_srep::operator wb_vrep*() const
 {
-    return m_vrep;
+  return m_vrep;
 }
 
 
 void wb_srep::unref()
 {
-    if (--m_refcount == 0)
-        delete this;
+  if (--m_refcount == 0)
+    delete this;
 }
 
 wb_srep *wb_srep::ref()
 {
-    m_refcount++;
-    return this;
+  m_refcount++;
+  return this;
 }
 
 ldh_eAccess wb_srep::access(pwr_tStatus *sts) const
@@ -81,34 +81,34 @@ bool wb_srep::utility(pwr_tStatus *sts, ldh_eUtility utility) // Fix
 
 bool wb_srep::isReadonly(pwr_tStatus *sts) const
 {
-    return (m_access == ldh_eAccess_ReadOnly);
+  return (m_access == ldh_eAccess_ReadOnly);
 }
 
 bool wb_srep::isEmpty(pwr_tStatus *sts) const
 {
-    return (m_nUpdate == 0);
+  return (m_nUpdate == 0);
 }
 
 bool wb_srep::commit(pwr_tStatus *sts)
 {
-    bool ok;
+  bool ok;
     
-    ok = m_vrep->commit(sts);
-    if (ok) {
-        m_nUpdate = 0;
-    }
-    return ok;
+  ok = m_vrep->commit(sts);
+  if (ok) {
+    m_nUpdate = 0;
+  }
+  return ok;
 }
 
 bool wb_srep::abort(pwr_tStatus *sts) // Fix was inline...
 {
-    bool ok;
+  bool ok;
     
-    ok = m_vrep->abort(sts);
-    if (ok) {
-        m_nUpdate = 0;
-    }
-    return ok;
+  ok = m_vrep->abort(sts);
+  if (ok) {
+    m_nUpdate = 0;
+  }
+  return ok;
 }
 
 

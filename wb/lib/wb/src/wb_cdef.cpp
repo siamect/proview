@@ -1,5 +1,7 @@
-#include "wb_cdef.h"
 #include "wb_adef.h"
+#include "wb_bdef.h"
+#include "wb_cdef.h"
+#include "wb_cdrep.h"
 #include "wb_object.h"
 
 wb_cdef::wb_cdef() : wb_status(LDH__NOCLASS), m_cdrep(0)
@@ -77,7 +79,7 @@ wb_cdef& wb_cdef::operator=(const wb_cdef& x)
 void wb_cdef::check() const
 {
   if ( !m_cdrep) 
-      throw wb_error(m_sts);
+    throw wb_error(m_sts);
 }
 
 size_t wb_cdef::size()

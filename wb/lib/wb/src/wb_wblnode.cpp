@@ -1374,6 +1374,7 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
 
 }
 
+#if 0
 void wb_wblnode::iterObject( wb_dbs *dbs)
 {
   ref_wblnode o_lch = get_o_lch();
@@ -1415,6 +1416,55 @@ void wb_wblnode::iterRbody( wb_dbs *dbs)
 
   if ( o_fws)
     o_fws->iterRbody( dbs);
+}
+#endif
+
+bool wb_wblnode::exportHead(wb_import &i)
+{
+  ref_wblnode o_lch = get_o_lch();
+  pwr_tOid fthoid = o_fth ? o_fth->m_oid : pwr_cNOid;
+  pwr_tOid fwsoid = o_fws ? o_fws->m_oid : pwr_cNOid;
+  pwr_tOid bwsoid = o_bws ? o_bws->m_oid : pwr_cNOid;
+  pwr_tOid fchoid = o_fch ? o_fch->m_oid : pwr_cNOid;
+  pwr_tOid lchoid = o_lch ? o_lch->m_oid : pwr_cNOid;
+  wb_name n = wb_name(name);
+
+  i.importHead( m_oid, m_cid, fthoid, fwsoid, bwsoid, fchoid, lchoid, name, n.normName(cdh_mName_object),
+	getFileTime(), getFileTime(), getFileTime(), rbody_size, dbody_size);
+  
+  if ( o_fch)
+    o_fch->exportHead( i);
+
+  if ( o_fws)
+    o_fws->exportHead( i);
+
+  return true;
+}
+
+bool wb_wblnode::exportDbody( wb_import &i)
+{
+  i.importDbody( m_oid, dbody_size, dbody);
+  
+  if ( o_fch)
+    o_fch->exportDbody( i);
+
+  if ( o_fws)
+    o_fws->exportDbody( i);
+
+  return true;
+}
+
+bool wb_wblnode::exportRbody( wb_import &i)
+{
+  i.importRbody( m_oid, rbody_size, rbody);
+  
+  if ( o_fch)
+    o_fch->exportRbody( i);
+
+  if ( o_fws)
+    o_fws->exportRbody( i);
+
+  return true;
 }
 
 void wb_wblnode::setFile( wb_wblfile *f)

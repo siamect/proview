@@ -75,17 +75,17 @@ int wb_bdrep::nAttribute()
   wb_orepdbs *orep = (wb_orepdbs *)m_orep->m_vrep->first( &sts, m_orep);
   while ( ODD(sts)) {
     switch ( orep->cid()) {
-      case pwr_eClass_Param:
-      case pwr_eClass_Intern:
-      case pwr_eClass_Input:
-      case pwr_eClass_Output:
-      case pwr_eClass_ObjXRef:
-      case pwr_eClass_AttrXRef:
-      case pwr_eClass_Buffer:
-	attr_count++;
-	break;
-      default:
-        ;
+    case pwr_eClass_Param:
+    case pwr_eClass_Intern:
+    case pwr_eClass_Input:
+    case pwr_eClass_Output:
+    case pwr_eClass_ObjXRef:
+    case pwr_eClass_AttrXRef:
+    case pwr_eClass_Buffer:
+      attr_count++;
+      break;
+    default:
+      ;
     }
     old = orep;
     orep = (wb_orepdbs *)orep->after( &sts);

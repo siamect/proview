@@ -28,16 +28,16 @@ wb_volume::wb_volume( const wb_volume &v) : wb_status(v.sts()), m_vrep(v.m_vrep)
 
 wb_volume& wb_volume::operator=(const wb_volume& x)
 {
-    // Note! first ref() then unref(), because if
-    // m_vrep == x.m_vrep, vrep could be deleted.
-    if ( x.m_vrep)
-      x.m_vrep->ref();
-    if ( m_vrep)
-      m_vrep->unref();
-    m_vrep = x.m_vrep;
-    m_sts = x.sts();
+  // Note! first ref() then unref(), because if
+  // m_vrep == x.m_vrep, vrep could be deleted.
+  if ( x.m_vrep)
+    x.m_vrep->ref();
+  if ( m_vrep)
+    m_vrep->unref();
+  m_vrep = x.m_vrep;
+  m_sts = x.sts();
     
-    return *this;
+  return *this;
 }
 
 wb_volume::operator bool() const
@@ -74,8 +74,8 @@ wb_env wb_volume::env()
 
 bool wb_volume::isLocal(wb_object &o) const
 {
-    //return m_vrep == o.m_orep->m_vrep;
-    return m_vrep->isLocal(o.m_orep);
+  //return m_vrep == o.m_orep->m_vrep;
+  return m_vrep->isLocal(o.m_orep);
 }
 
 
@@ -91,50 +91,50 @@ wb_volume wb_volume::next() const
 
 wb_object wb_volume::object() const
 {
-    pwr_tStatus sts;
-    wb_orep *orep;
+  pwr_tStatus sts;
+  wb_orep *orep;
     
-    orep = m_vrep->object(&sts);
-    wb_object o(sts, orep);
+  orep = m_vrep->object(&sts);
+  wb_object o(sts, orep);
     
-    return o;
+  return o;
 }
 
 wb_object wb_volume::object(pwr_tOid oid) const
 {
-    pwr_tStatus sts;
-    wb_orep *orep;
-    wb_object o;
+  pwr_tStatus sts;
+  wb_orep *orep;
+  wb_object o;
     
-    if (oid.vid == m_vrep->vid())
-      // This volume
-      orep = m_vrep->object( &sts, oid);
-    else
-      // Other volume
-      orep = m_vrep->erep()->object(&sts, oid);
+  if (oid.vid == m_vrep->vid())
+    // This volume
+    orep = m_vrep->object( &sts, oid);
+  else
+    // Other volume
+    orep = m_vrep->erep()->object(&sts, oid);
 
-    o = wb_object(sts, orep);
+  o = wb_object(sts, orep);
     
-    return o;
+  return o;
 }
 
 wb_object wb_volume::object(const char *name) const
 {
-    pwr_tStatus sts;
-    wb_orep *orep;
-    wb_object o;
+  pwr_tStatus sts;
+  wb_orep *orep;
+  wb_object o;
     
-    wb_name n = wb_name( name);
-    if ( !n.hasVolume() || n.volumeIsEqual( m_vrep->name()))
-      // This volume
-      orep = m_vrep->object( &sts, name);
-    else
-      // Other volume
-      orep = m_vrep->erep()->object(&sts, name);
+  wb_name n = wb_name( name);
+  if ( !n.hasVolume() || n.volumeIsEqual( m_vrep->name()))
+    // This volume
+    orep = m_vrep->object( &sts, name);
+  else
+    // Other volume
+    orep = m_vrep->erep()->object(&sts, name);
 
-    o = wb_object(sts, orep);
+  o = wb_object(sts, orep);
     
-    return o;
+  return o;
 }
 
 wb_adef wb_volume::adef( pwr_tCid cid, const char *bname, const char *aname)
@@ -187,36 +187,36 @@ wb_cdef wb_volume::cdef(wb_name n)
 
 wb_attribute wb_volume::attribute(pwr_tOid oid, const char *bname, const char *aname) const
 {
-    pwr_tStatus sts;
-    wb_orep *orep;
+  pwr_tStatus sts;
+  wb_orep *orep;
     
-    if (oid.vid == m_vrep->vid())
-      // This volume
-      orep = m_vrep->object( &sts, oid);
-    else
-      // Other volume
-      orep = m_vrep->erep()->object(&sts, oid);
+  if (oid.vid == m_vrep->vid())
+    // This volume
+    orep = m_vrep->object( &sts, oid);
+  else
+    // Other volume
+    orep = m_vrep->erep()->object(&sts, oid);
 
-    wb_attribute a = wb_attribute(sts, orep, bname, aname);
+  wb_attribute a = wb_attribute(sts, orep, bname, aname);
     
-    return a;
+  return a;
 }
 
 wb_attribute wb_volume::attribute(pwr_tOid oid, const char *bname) const
 {
-    pwr_tStatus sts;
-    wb_orep *orep;
+  pwr_tStatus sts;
+  wb_orep *orep;
     
-    if (oid.vid == m_vrep->vid())
-      // This volume
-      orep = m_vrep->object( &sts, oid);
-    else
-      // Other volume
-      orep = m_vrep->erep()->object(&sts, oid);
+  if (oid.vid == m_vrep->vid())
+    // This volume
+    orep = m_vrep->object( &sts, oid);
+  else
+    // Other volume
+    orep = m_vrep->erep()->object(&sts, oid);
 
-    wb_attribute a = wb_attribute(sts, orep, bname);
+  wb_attribute a = wb_attribute(sts, orep, bname);
     
-    return a;
+  return a;
 }
 
 

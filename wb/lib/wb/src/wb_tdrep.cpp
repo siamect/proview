@@ -82,34 +82,34 @@ void wb_tdrep::init()
   pwr_tStatus sts;
 
   switch ( m_orep->cid()) {
-    case pwr_eClass_TypeDef:
-    {
-      pwr_sTypeDef body;
+  case pwr_eClass_TypeDef:
+  {
+    pwr_sTypeDef body;
 
-      m_orep->m_vrep->readBody( &sts, m_orep, pwr_eBix_sys, (void *) &body);
-      if ( EVEN(sts)) throw wb_error(sts);
+    m_orep->m_vrep->readBody( &sts, m_orep, pwr_eBix_sys, (void *) &body);
+    if ( EVEN(sts)) throw wb_error(sts);
 
-      m_size = body.Size;
-      m_type = body.Type;
-      m_elements = body.Elements;
-      m_typeref = body.TypeRef;
-      break;
-    }
-    case pwr_eClass_Type:
-    {
-      pwr_sTypeDef body;
+    m_size = body.Size;
+    m_type = body.Type;
+    m_elements = body.Elements;
+    m_typeref = body.TypeRef;
+    break;
+  }
+  case pwr_eClass_Type:
+  {
+    pwr_sTypeDef body;
 
-      m_orep->m_vrep->readBody( &sts, m_orep, pwr_eBix_sys, (void *) &body);
-      if ( EVEN(sts)) throw wb_error(sts);
+    m_orep->m_vrep->readBody( &sts, m_orep, pwr_eBix_sys, (void *) &body);
+    if ( EVEN(sts)) throw wb_error(sts);
 
-      m_size = body.Size;
-      m_type = body.Type;
-      m_elements = 1;
-      m_typeref = (pwr_tTid) body.Type;
-      break;
-    }
-    default:
-      throw wb_error(LDH__NYI);
+    m_size = body.Size;
+    m_type = body.Type;
+    m_elements = 1;
+    m_typeref = (pwr_tTid) body.Type;
+    break;
+  }
+  default:
+    throw wb_error(LDH__NYI);
   }
 }
 

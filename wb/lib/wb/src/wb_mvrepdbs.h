@@ -12,17 +12,17 @@ class wb_bdrep;
 
 class wb_mvrepdbs
 {
-    pwr_tVid m_vid;
+  pwr_tVid m_vid;
 public:
 
 
-    wb_mvrepdbs();
-    wb_mvrepdbs(pwr_tVid vid);
+  wb_mvrepdbs();
+  wb_mvrepdbs(pwr_tVid vid);
 
-    wb_adrep adrep(wb_orep *o, char *aname);
-    wb_adrep adrep(wb_cdrep *c, char *aname);
-    wb_bdrep bdrep(wb_bdrep *b, char *aname);
-    wb_adrep adrep(pwr_sAttrRef *arp);
+  wb_adrep adrep(wb_orep *o, char *aname);
+  wb_adrep adrep(wb_cdrep *c, char *aname);
+  wb_bdrep bdrep(wb_bdrep *b, char *aname);
+  wb_adrep adrep(pwr_sAttrRef *arp);
 
 };
 
