@@ -32,6 +32,7 @@ extern "C" {
 #include "flow_x.h"
 }
 #include "co_lng.h"
+#include "co_mrm_util.h"
 #include "xtt_ev.h"
 #include "rt_xnav_msg.h"
 
@@ -392,8 +393,16 @@ static void ev_eve_action_inputfocus( Widget w, XmAnyCallbackStruct *data)
   XtSetArg    (args[0], XmNuserData, &ev);
   XtGetValues (w, args, 1);
 
-  if ( ev && ev->eve_displayed)
+  if ( mrm_IsIconicState(w))
+    return;
+
+  if ( ev && ev->eve_displayed) {
+    if ( ev->eve_focustimer.disabled())
+      return;
+
     ev->eve->set_input_focus();
+    ev->eve_focustimer.disable( ev->toplevel_eve, 400);
+  }
 }
 
 static void ev_ala_action_inputfocus( Widget w, XmAnyCallbackStruct *data)
@@ -404,8 +413,16 @@ static void ev_ala_action_inputfocus( Widget w, XmAnyCallbackStruct *data)
   XtSetArg    (args[0], XmNuserData, &ev);
   XtGetValues (w, args, 1);
 
-  if ( ev && ev->ala_displayed)
+  if ( mrm_IsIconicState(w))
+    return;
+
+  if ( ev && ev->ala_displayed) {
+    if ( ev->ala_focustimer.disabled())
+      return;
+
     ev->ala->set_input_focus();
+    ev->ala_focustimer.disable( ev->toplevel_ala, 400);
+  }
 }
 
 static void ev_eve_activate_exit( Widget w, Ev *ev, XmAnyCallbackStruct *data)

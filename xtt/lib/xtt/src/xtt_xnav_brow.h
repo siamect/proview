@@ -42,6 +42,7 @@ class XNavBrow {
     flow_sAnnotPixmap 	*pixmap_crrread;
     flow_sAnnotPixmap 	*pixmap_crrwrite;
     flow_sAnnotPixmap 	*pixmap_script;
+    flow_sAnnotPixmap 	*pixmap_list;
     flow_sAnnotPixmap 	*pixmap_graph;
     flow_sAnnotPixmap 	*pixmap_curve;
     flow_sAnnotPixmap 	*pixmap_action;

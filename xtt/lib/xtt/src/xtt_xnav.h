@@ -115,9 +115,18 @@ typedef enum {
 	xnav_eSearchType_RegularExpr
 	} xnav_eSearchType;
 
+typedef enum {
+  menu_ePixmap_Map,
+  menu_ePixmap_Graph,
+  menu_ePixmap_Script,
+  menu_ePixmap_List,
+  menu_ePixmap_Leaf
+} menu_ePixmap;
+
 typedef struct {
 	char	title[80];
 	int	item_type;
+        int	pixmap;
 	void	*action;
 } xnav_sStartMenu;
 
@@ -125,6 +134,7 @@ typedef struct xnav_s_Menu {
 	char			title[80];
 	int			item_type;
 	char			command[256];
+        menu_ePixmap		pixmap;
 	struct xnav_s_Menu	*child_list;
 	struct xnav_s_Menu	*parent;
 	struct xnav_s_Menu	*next;
@@ -319,7 +329,7 @@ class XNav {
     int menu_tree_search( char *name, xnav_sMenu **menu_item);
     int menu_tree_search_children( char *name, xnav_sMenu *child_list,
 		xnav_sMenu **menu_item);
-    int menu_tree_insert( char *title, int item_type, char *command,
+    int menu_tree_insert( char *title, int item_type, char *command, menu_ePixmap pixmap,
 		char *destination, int dest_code, xnav_sMenu **menu_item);
     int menu_tree_delete( char *name);
     void pop();

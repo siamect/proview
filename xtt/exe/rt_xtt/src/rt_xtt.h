@@ -38,6 +38,10 @@ extern "C" {
 #include "xtt_xnav.h"
 #endif
 
+#ifndef xtt_focustimer_h
+#include "xtt_focustimer.h"
+#endif
+
 class Xtt {
   public:
     Xtt( int argc, char *argv[], int *sts);
@@ -65,6 +69,7 @@ class Xtt {
     void	(*india_ok_cb)( Xtt *, char *);
     qcom_sQid	queid;
     XtIntervalId  timerid;
+    FocusTimer	focustimer;
 };
 
 #endif

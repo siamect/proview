@@ -358,6 +358,8 @@ extern "C" void ge_delete( ge_tCtx gectx)
 {
   if ( gectx->close_cb)
     (gectx->close_cb)( gectx);
+  if ( gectx->set_focus_disabled)
+    XtRemoveTimeOut( gectx->focus_timerid);
   delete (Graph *)((Graph *)gectx->graph);
   XtDestroyWidget( gectx->toplevel);
   free( (char *) gectx);

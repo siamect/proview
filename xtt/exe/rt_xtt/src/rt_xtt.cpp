@@ -50,7 +50,9 @@ extern "C" {
 #include "xtt_url.h"
 #include "co_lng.h"
 #include "co_xhelp.h"
+#include "co_wow.h"
 #include "rt_xnav_msg.h"
+#include "xtt_focustimer.h"
 
 //
 //
@@ -72,47 +74,50 @@ static XtActionsRec HotkeyActions[] = {
     };
 
 static xnav_sStartMenu alarm_menu[] = {
-	{ "Alarm list", xnav_eItemType_Command,	(void *) "show alarm"},
-	{ "Event list", xnav_eItemType_Command,	(void *) "show event"},
-	{ "Historical list", xnav_eItemType_Command,	(void *) "show hist"},
-	{ "", 0, NULL}};
+	{ "Alarm list", xnav_eItemType_Command,	menu_ePixmap_List, (void *) "show alarm"},
+	{ "Event list", xnav_eItemType_Command,	menu_ePixmap_List,	(void *) "show event"},
+	{ "Historical list", xnav_eItemType_Command, menu_ePixmap_List,	(void *) "show hist"},
+	{ "", 0, 0, NULL}};
 static xnav_sStartMenu nethandler_menu[] = {
-	{ "Link", xnav_eItemType_Command, (void *) "show link"},
-	{ "Subscription Client", xnav_eItemType_Command, (void *) "show subcli"},
-	{ "Subscription Server", xnav_eItemType_Command, (void *) "show subsrv"},
-	{ "", 0, NULL}};
+	{ "Link", xnav_eItemType_Command, menu_ePixmap_Map, (void *) "show link"},
+	{ "Subscription Client", xnav_eItemType_Command, menu_ePixmap_Map, (void *) "show subcli"},
+	{ "Subscription Server", xnav_eItemType_Command, menu_ePixmap_Map, (void *) "show subsrv"},
+	{ "", 0, 0, NULL}};
 static xnav_sStartMenu communication_menu[] = {
-	{ "RemNode", xnav_eItemType_Command, (void *) "show remnode"},
-	{ "RemTrans", xnav_eItemType_Command, (void *) "show remtrans"},
-	{ "", 0, NULL}};
+	{ "RemNode", xnav_eItemType_Command,	menu_ePixmap_Map, (void *) "show remnode"},
+	{ "RemTrans", xnav_eItemType_Command,	menu_ePixmap_Map, (void *) "show remtrans"},
+	{ "", 0, 0, NULL}};
 static xnav_sStartMenu logging_menu[] = {
-	{ "Logging entry 1", xnav_eItemType_Command, (void *) "show logging/entry=1"},
-	{ "Logging entry 2", xnav_eItemType_Command, (void *) "show logging/entry=2"},
-	{ "Logging entry 3", xnav_eItemType_Command, (void *) "show logging/entry=3"},
-	{ "Logging entry 4", xnav_eItemType_Command, (void *) "show logging/entry=4"},
-	{ "Logging entry 5", xnav_eItemType_Command, (void *) "show logging/entry=5"},
-	{ "Logging entry 6", xnav_eItemType_Command, (void *) "show logging/entry=6"},
-	{ "Logging entry 7", xnav_eItemType_Command, (void *) "show logging/entry=7"},
-	{ "Logging entry 8", xnav_eItemType_Command, (void *) "show logging/entry=8"},
-	{ "Logging entry 9", xnav_eItemType_Command, (void *) "show logging/entry=9"},
-	{ "Logging entry 10", xnav_eItemType_Command, (void *) "show logging/entry=10"},
-	{ "", 0, NULL}};
+	{ "Logging entry 1", xnav_eItemType_Command,	menu_ePixmap_Map, (void *) "show logging/entry=1"},
+	{ "Logging entry 2", xnav_eItemType_Command,	menu_ePixmap_Map, (void *) "show logging/entry=2"},
+	{ "Logging entry 3", xnav_eItemType_Command,	menu_ePixmap_Map, (void *) "show logging/entry=3"},
+	{ "Logging entry 4", xnav_eItemType_Command,	menu_ePixmap_Map, (void *) "show logging/entry=4"},
+	{ "Logging entry 5", xnav_eItemType_Command,	menu_ePixmap_Map, (void *) "show logging/entry=5"},
+	{ "Logging entry 6", xnav_eItemType_Command,	menu_ePixmap_Map, (void *) "show logging/entry=6"},
+	{ "Logging entry 7", xnav_eItemType_Command,	menu_ePixmap_Map, (void *) "show logging/entry=7"},
+	{ "Logging entry 8", xnav_eItemType_Command,	menu_ePixmap_Map, (void *) "show logging/entry=8"},
+	{ "Logging entry 9", xnav_eItemType_Command,	menu_ePixmap_Map, (void *) "show logging/entry=9"},
+	{ "Logging entry 10", xnav_eItemType_Command,	menu_ePixmap_Map, (void *) "show logging/entry=10"},
+	{ "", 0, 0, NULL}};
 static xnav_sStartMenu system_menu[] = {
-	{ "Nethandler", xnav_eItemType_Menu, 	(void *)&nethandler_menu},
-	{ "Communication", xnav_eItemType_Menu, (void *)&communication_menu},
-	{ "Device", 	xnav_eItemType_Command, (void *) "show device"},
-	{ "PlcThread", 	xnav_eItemType_Command, (void *) "show plcthread"},
-	{ "PlcPgm", 	xnav_eItemType_Command,	(void *) "show plcpgm"},
-	{ "Logging", 	xnav_eItemType_Menu,	(void *)&logging_menu},
-	{ "System Messages", xnav_eItemType_Command,	(void *) "open consolelog"},
-	{ "", 0, NULL}};
+	{ "Nethandler", xnav_eItemType_Menu,	menu_ePixmap_Map, 	(void *)&nethandler_menu},
+	{ "Communication", xnav_eItemType_Menu,	menu_ePixmap_Map, 	(void *)&communication_menu},
+	{ "Device", 	xnav_eItemType_Command,	menu_ePixmap_Map, 	(void *) "show device"},
+	{ "PlcThread", 	xnav_eItemType_Command,	menu_ePixmap_Map, 	(void *) "show plcthread"},
+	{ "PlcPgm", 	xnav_eItemType_Command,	menu_ePixmap_Map,	(void *) "show plcpgm"},
+	{ "Logging", 	xnav_eItemType_Menu,	menu_ePixmap_Map,	(void *)&logging_menu},
+	{ "System Messages", xnav_eItemType_Command, menu_ePixmap_List,	(void *) "open consolelog"},
+	{ "System Status", 	xnav_eItemType_Command,	menu_ePixmap_Map,	(void *) "show nodeinfo"},
+	{ "Nodes", 	xnav_eItemType_Command,	menu_ePixmap_Map,	(void *) "show nodeobjects"},
+	{ "Volumes", 	xnav_eItemType_Command,	menu_ePixmap_Map,	(void *) "show volumes"},
+	{ "", 0, 0, NULL}};
 static xnav_sStartMenu root_menu[] = {
-	{ "Database", 	xnav_eItemType_Command, (void *) "show database"},
-	{ "Alarm", 	xnav_eItemType_Menu, 	(void *)&alarm_menu},
-	{ "Store",	xnav_eItemType_Command, (void *) "show file"},
-	{ "System",	xnav_eItemType_Menu, 	(void *)&system_menu},
-	{ "Exit", 	xnav_eItemType_Command,	(void *) "exit"},
-	{ "", 0, NULL}};
+	{ "Database", 	xnav_eItemType_Command,	menu_ePixmap_Map, 	(void *) "show database"},
+	{ "Alarm", 	xnav_eItemType_Menu,	menu_ePixmap_Map, 	(void *)&alarm_menu},
+	{ "Store",	xnav_eItemType_Command,	menu_ePixmap_Map, 	(void *) "show file"},
+	{ "System",	xnav_eItemType_Menu,	menu_ePixmap_Map, 	(void *)&system_menu},
+	{ "Close", 	xnav_eItemType_Command,	menu_ePixmap_Leaf,	(void *) "exit"},
+	{ "", 0, 0, NULL}};
   
 
 
@@ -139,6 +144,7 @@ typedef struct xtt_sCtx {
   Widget	india_label;
   Widget	india_text;
   void		(*india_ok_cb)( struct xtt_sCtx *, char *);
+  FocusTimer	focustimer;
 } *xtt_tCtx;
 
 static Xtt *hot_xtt;
@@ -366,16 +372,24 @@ static void xtt_message( void *ctx, char severity, char *message)
   XmStringFree( cstr);
 }
 
+static void xtt_close_ok( void *ctx, void *data)
+{
+  Xtt	*xtt = (Xtt *) ctx;
+
+  delete xtt->xnav;
+  exit(0);
+}
+
 static void xtt_close( void *ctx)
 {
   Xtt	*xtt = (Xtt *) ctx;
-  if ( !xtt->xnav->op)
-  {
-    delete xtt->xnav;
-    exit(0);
+  if ( !xtt->xnav->op) {
+    wow_DisplayQuestion( xtt, xtt->toplevel, "Confirm", 
+			 "Do you want to close", xtt_close_ok, 0, 0);
+    // delete xtt->xnav;
+    // exit(0);
   }
-  else
-  {
+  else {
     xtt->xnav->displayed = 0;
     flow_UnmapWidget( xtt->toplevel);
   }
@@ -555,6 +569,7 @@ static void xtt_activate_opengraph( Widget w, Xtt *xtt, XmAnyCallbackStruct *dat
   int		sts;
   pwr_tClassId	classid;
   char		name[120];
+  char		vname[120];
   char		classname[80];
   char		filename[120];
   char		fname[120];
@@ -580,12 +595,16 @@ static void xtt_activate_opengraph( Widget w, Xtt *xtt, XmAnyCallbackStruct *dat
 		  name, sizeof(name), cdh_mNName);
     if ( EVEN(sts)) return;
 
+    sts = gdh_ObjidToName( attrref.Objid,
+		  vname, sizeof(vname), cdh_mName_volumeStrict);
+    if ( EVEN(sts)) return;
+
     sts = gdh_GetObjectClass( attrref.Objid, &classid);
     if ( EVEN(sts)) return;
 
     if ( classid == pwr_cClass_DsTrend || classid == pwr_cClass_PlotGroup) {
       // Open trend
-      sprintf( cmd, "open trend /name=%s /title=\"%s\"", name, name);
+      sprintf( cmd, "open trend /name=%s /title=\"%s\"", vname, name);
       xtt->xnav->command( cmd);
 
       return;
@@ -616,7 +635,7 @@ static void xtt_activate_opengraph( Widget w, Xtt *xtt, XmAnyCallbackStruct *dat
       }
     }
     sprintf( cmd, "open graph %s/inst=%s/name=\"%s\"", 
-           filename, name, name);
+           filename, vname, name);
 
     // Add scrollbars for some classes
     switch ( classid) {
@@ -790,8 +809,21 @@ static void xtt_action_inputfocus( Widget w, XmAnyCallbackStruct *data)
   XtSetArg    (args[0], XmNuserData, &xtt);
   XtGetValues (w, args, 1);
 
+  if ( mrm_IsIconicState(w))
+    return;
+
   if ( xtt->xnav) {
+    if ( xtt->focustimer.disabled()) {
+      // printf( "Inputfocus disabled\n");
+      return;
+    }
+    else {
+      // printf( "Set Inputfocus\n");
+    }
+
     xtt->xnav->set_inputfocus();
+
+    xtt->focustimer.disable( xtt->toplevel, 400);
   }
 }
 

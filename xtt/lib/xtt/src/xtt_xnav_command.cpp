@@ -176,7 +176,7 @@ dcli_tCmdTable	xnav_command_table[] = {
 			&xnav_create_func,
 			{ "dcli_arg1", "/TEXT", "/MENU", "/DESTINATION",
 			"/COMMAND", "/AFTER", "/BEFORE", "/FIRSTCHILD", 
-			  "/LASTCHILD", "/CLASS", "/NAME", 
+			  "/LASTCHILD", "/CLASS", "/NAME", "/PIXMAP", 
 			""}
 		},
 		{
@@ -1529,6 +1529,119 @@ static int	xnav_show_func(	void		*client_data,
       xnav->message('I', msg);
     }
   }
+  else if ( strncmp( arg1_str, "VOLUMES", strlen( arg1_str)) == 0)
+  {
+    /* Command is "SHOW VOLUMES" */
+    pwr_tVid vid;
+    pwr_tOid oid;
+    pwr_tStatus nsts;
+    int volume_cnt = 0;
+    Item *item;
+
+    sts = gdh_GetVolumeList( &vid);
+    while ( ODD(sts)) {
+      oid.oix = 0;
+      oid.vid = vid;
+      
+      if ( !volume_cnt) {
+	xnav->brow_pop();
+	brow_SetNodraw( xnav->brow->ctx);
+      }
+      nsts = xnav->create_object_item( oid, NULL, flow_eDest_IntoLast, (void **)&item, 0);
+      volume_cnt++;
+
+      sts = gdh_GetNextVolume( vid, &vid);
+    }
+    brow_ResetNodraw( xnav->brow->ctx);
+    brow_Redraw( xnav->brow->ctx, 0);
+  }
+  else if ( strncmp( arg1_str, "NODEOBJECTS", strlen( arg1_str)) == 0)
+  {
+    /* Command is "SHOW NODEOBJECTS" */
+    pwr_tVid vid;
+    pwr_tOid oid;
+    pwr_tStatus nsts;
+    int node_cnt = 0;
+    Item *item;
+    gdh_sVolumeInfo info;
+
+    for ( sts = gdh_GetVolumeList( &vid);
+	  ODD(sts);
+	  sts = gdh_GetNextVolume( vid, &vid)) {
+
+      sts = gdh_GetVolumeInfo( vid, &info);
+      if ( EVEN(sts)) continue;
+
+      if ( info.cid != pwr_eClass_RootVolume || info.nid == 0)
+	continue;
+
+      sts = gdh_GetNodeObject( info.nid, &oid);
+      if ( EVEN(sts)) continue;
+
+      if ( !node_cnt) {
+	xnav->brow_pop();
+	brow_SetNodraw( xnav->brow->ctx);
+      }
+      nsts = xnav->create_object_item( oid, NULL, flow_eDest_IntoLast, (void **)&item, 0);
+      node_cnt++;
+    }
+    brow_ResetNodraw( xnav->brow->ctx);
+    brow_Redraw( xnav->brow->ctx, 0);
+  }
+  else if ( strncmp( arg1_str, "NODEINFO", strlen( arg1_str)) == 0)
+  {
+    /* Command is "SHOW NODEINFO" */
+    pwr_tVid vid;
+    pwr_tOid oid;
+    int node_cnt = 0;
+    Item *item;
+    gdh_sVolumeInfo info;
+    char name[80];
+    char vname[120];
+    char cmd[200];
+    char descr[120];
+    char *descr_p;
+
+
+    for ( sts = gdh_GetVolumeList( &vid);
+	  ODD(sts);
+	  sts = gdh_GetNextVolume( vid, &vid)) {
+
+      sts = gdh_GetVolumeInfo( vid, &info);
+      if ( EVEN(sts)) continue;
+
+      if ( info.cid != pwr_eClass_RootVolume || info.nid == 0)
+	continue;
+
+      sts = gdh_GetNodeObject( info.nid, &oid);
+      if ( EVEN(sts)) continue;
+
+      if ( !node_cnt) {
+	xnav->brow_pop();
+	brow_SetNodraw( xnav->brow->ctx);
+      }
+      sts = gdh_ObjidToName( oid, name, sizeof(name), cdh_mName_object);
+      if ( EVEN(sts)) return sts;
+      sts = gdh_ObjidToName( oid, vname, sizeof(vname), cdh_mName_volumeStrict);
+      if ( EVEN(sts)) return sts;
+      sprintf( cmd, "open graph/class/inst=%s", vname);
+
+      // Set description annotation
+      strcat( vname, ".Description");
+      sts = gdh_GetObjectInfo( vname, descr, sizeof(descr));
+      if ( ODD(sts))
+	descr_p = descr;
+      else
+	descr_p = 0;
+
+      item = (Item *) new ItemCommand( xnav->brow, name, descr, NULL, 
+					 flow_eDest_IntoLast, cmd, 0,
+					 xnav->brow->pixmap_list);
+      node_cnt++;
+    }
+    brow_ResetNodraw( xnav->brow->ctx);
+    brow_Redraw( xnav->brow->ctx, 0);
+  }
   else
   {
     /* This might be a system picture */
@@ -1808,7 +1921,7 @@ static int	xnav_add_func(	void		*client_data,
       if ( object)
 	new ItemObject( xnav->brow, objid, NULL,  flow_eDest_IntoLast, 0);
       else if ( command)
-	new ItemCommand( xnav->brow, text_str, NULL,
+	new ItemCommand( xnav->brow, text_str, 0, NULL,
 			 flow_eDest_IntoLast, command_str, 0, xnav->brow->pixmap_map);
 //    else
 //      new ItemMenu( xnav->brow, text_str, NULL, 
@@ -2808,6 +2921,8 @@ static int	xnav_create_func( void		*client_data,
     char destination_str[80];
     char command_str[80];
     char tmp_str[80];
+    char pixmap_str[80];
+    menu_ePixmap pixmap;
     int dest_code;
     int item_type;
     xnav_sMenu *menu_item;
@@ -2846,7 +2961,24 @@ static int	xnav_create_func( void		*client_data,
     else
       dest_code = xnav_eDestCode_After;
 
-    sts = xnav->menu_tree_insert( text_str, item_type, command_str,
+    if ( ODD( dcli_get_qualifier( "/PIXMAP", pixmap_str))) {
+      if ( strcmp( pixmap_str, "MAP") == 0)
+	pixmap = menu_ePixmap_Map;
+      else if ( strcmp( pixmap_str, "GRAPH") == 0)
+	pixmap = menu_ePixmap_Graph;
+      else if ( strcmp( pixmap_str, "SCRIPT") == 0)
+	pixmap = menu_ePixmap_Script;
+      else if ( strcmp( pixmap_str, "LIST") == 0)
+	pixmap = menu_ePixmap_List;
+      else if ( strcmp( pixmap_str, "LEAF") == 0)
+	pixmap = menu_ePixmap_Leaf;
+      else
+	pixmap = menu_ePixmap_Map;
+    }
+    else
+      pixmap = menu_ePixmap_Map;
+
+    sts = xnav->menu_tree_insert( text_str, item_type, command_str, pixmap,
 		destination_str, dest_code, &menu_item);
     if ( EVEN(sts))
       xnav->message('E',"Destination not found");
@@ -5008,7 +5140,7 @@ int XNav::show_symbols()
       brow_SetNodraw( brow->ctx);
       new ItemHeader( brow, "Title", "Symbols", NULL, flow_eDest_IntoLast);
     }
-    new ItemCommand( brow, text, NULL,
+    new ItemCommand( brow, text, 0, NULL,
 		flow_eDest_IntoLast, key, 0, brow->pixmap_symbol);
     i++;
   }

@@ -74,10 +74,17 @@ ItemObject::ItemObject( XNavBrow *brow, pwr_tObjid item_objid,
   if ( EVEN(sts)) throw co_error(sts);
   if ( !is_root)
   {
-    sts = gdh_ObjidToName( objid, segname, sizeof(segname), cdh_mName_object);
+    if ( objid.oix != 0) {
+      sts = gdh_ObjidToName( objid, segname, sizeof(segname), cdh_mName_object);
+      brow_CreateNode( brow->ctx, segname, brow->nc_object, 
+		       dest, dest_code, (void *) this, 1, &node);
+    }
+    else {
+      sts = gdh_VolumeIdToName( objid.vid, segname, sizeof(segname));
+      brow_CreateNode( brow->ctx, segname, brow->nc_table, 
+		       dest, dest_code, (void *) this, 1, &node);
+    }
     if ( EVEN(sts)) throw co_error(sts);
-    brow_CreateNode( brow->ctx, segname, brow->nc_object, 
-		dest, dest_code, (void *) this, 1, &node);
 
     // Set pixmap
     sts = gdh_GetChild( objid, &child);
@@ -97,14 +104,31 @@ ItemObject::ItemObject( XNavBrow *brow, pwr_tObjid item_objid,
     brow_SetAnnotation( node, 1, segname, strlen(segname));
 
     // Set description annotation
-    sts = gdh_ObjidToName( objid, segname, sizeof(segname), cdh_mNName);
+    sts = gdh_ObjidToName( objid, segname, sizeof(segname), cdh_mName_volumeStrict);
     if ( EVEN(sts)) throw co_error(sts);
 
-    strcat( segname, ".Description");
-    sts = gdh_GetObjectInfo( segname, descr, sizeof(descr));
-    if ( ODD(sts))
-      brow_SetAnnotation( node, 2, descr, strlen(descr));
+    if ( objid.oix != 0) {
+      strcat( segname, ".Description");
+      sts = gdh_GetObjectInfo( segname, descr, sizeof(descr));
+      if ( ODD(sts))
+	brow_SetAnnotation( node, 2, descr, strlen(descr));
+    }
+    else {
+      gdh_sVolumeInfo info;
 
+      sts = gdh_GetVolumeInfo( objid.vid, &info);
+      if ( ODD(sts)) {
+	time_AtoAscii( &info.time, time_eFormat_DateAndTime, descr, sizeof(descr));
+	strcat( descr, "  ");
+	if ( info.isLoaded)
+	  strcat( descr, "L");
+	if ( info.isCached)
+	  strcat( descr, "C");
+	if ( info.isMounted)
+	  strcat( descr, "M");
+	brow_SetAnnotation( node, 3, descr, strlen(descr));
+      }
+    }
   }
 }
 
@@ -830,7 +854,12 @@ int ItemHelp::open_children( XNavBrow *brow, XNav *xnav, double x, double y)
   }
   else if ( strcmp( link, "") != 0)
   {
-    if ( (strstr( link, ".htm") != 0) || (strstr( link, ".pdf") != 0)) {
+    if ( strncmp( link, "$web:", 5) == 0) {
+      // Open the url
+      xnav_open_URL( &link[5]);
+    } 
+    else if ( (strstr( link, ".htm") != 0) || 
+	      (strstr( link, ".pdf") != 0)) {
       // Open the url
       xnav_open_URL( link);
     }
@@ -882,7 +911,12 @@ int ItemHelpBold::open_children( XNavBrow *brow, XNav *xnav, double x, double y)
   }
   else if ( strcmp( link, "") != 0)
   {
-    if ( (strstr( link, ".htm") != 0) || (strstr( link, ".pdf") != 0)) {
+    if ( strncmp( link, "$web:", 5) == 0) {
+      // Open the url
+      xnav_open_URL( &link[5]);
+    } 
+    else if ( (strstr( link, ".htm") != 0) || 
+	      (strstr( link, ".pdf") != 0)) {
       // Open the url
       xnav_open_URL( link);
     }
@@ -1111,29 +1145,48 @@ int ItemMenu::open_children( XNavBrow *brow, double x, double y)
     // Display childlist
     Item 		*item;
     xnav_sMenu		*menu;
+    flow_sAnnotPixmap   *pixmap;
 
     brow_SetNodraw( brow->ctx);
     menu = *child_list;
     while ( menu)
     {
-      switch ( menu->item_type)
-      {
-        case xnav_eItemType_Menu:
-          item = (Item *) new ItemMenu( brow, menu->title, node, 
-		flow_eDest_IntoLast, &menu->child_list,
-		0);
-          break;
-        case xnav_eItemType_Command:
-          item = (Item *) new ItemCommand( brow, menu->title, node, 
-		flow_eDest_IntoLast, menu->command, 0,
-		brow->pixmap_map);
-          break;
-        default:
-          ;
+      switch ( menu->pixmap) {
+      case menu_ePixmap_Map:
+	pixmap = brow->pixmap_map;
+	break;
+      case menu_ePixmap_Graph:
+	pixmap = brow->pixmap_graph;
+	break;
+      case menu_ePixmap_Script:
+	pixmap = brow->pixmap_script;
+	break;
+      case menu_ePixmap_List:
+	pixmap = brow->pixmap_list;
+	break;
+      case menu_ePixmap_Leaf:
+	pixmap = brow->pixmap_leaf;
+	break;
+      default:
+	pixmap = brow->pixmap_map;
+      }
+
+      switch ( menu->item_type) {
+      case xnav_eItemType_Menu:
+	item = (Item *) new ItemMenu( brow, menu->title, node, 
+				      flow_eDest_IntoLast, &menu->child_list,
+				      0);
+	break;
+      case xnav_eItemType_Command:
+	item = (Item *) new ItemCommand( brow, menu->title, 0, node, 
+					 flow_eDest_IntoLast, menu->command, 0,
+					 pixmap);
+	break;
+      default:
+	;
       }
       menu = menu->next;
-      if ( !is_root)
-      {
+      if ( !is_root) {
         brow_SetOpen( node, xnav_mOpen_Children);
         brow_SetAnnotPixmap( node, 0, brow->pixmap_openmap);
       }
@@ -1167,7 +1220,7 @@ int ItemMenu::close( XNavBrow *brow, double x, double y)
   return 1;
 }
 
-ItemCommand::ItemCommand( XNavBrow *brow, char *item_name, 
+ItemCommand::ItemCommand( XNavBrow *brow, char *item_name, char *item_text,
 	brow_tNode dest, flow_eDest dest_code, char *item_command,
 	int item_is_root, flow_sAnnotPixmap *pixmap) :
 	Item( pwr_cNObjid, item_is_root)
@@ -1185,6 +1238,8 @@ ItemCommand::ItemCommand( XNavBrow *brow, char *item_name,
     brow_SetAnnotPixmap( node, 0, pixmap);
     // Set object name annotation
     brow_SetAnnotation( node, 0, name, strlen(name));
+    if ( item_text != 0)
+      brow_SetAnnotation( node, 1, item_text, strlen(item_text));
   }
 }
 

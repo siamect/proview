@@ -2658,28 +2658,28 @@ int	XNav::show_logging( int index)
 	(void *) &logg[index].active, NULL, flow_eDest_IntoLast);
 
   sprintf( command, "logging set/insert/entry=%d", entry);
-  new ItemCommand( brow, Lng::translate("Insert"), NULL,
+  new ItemCommand( brow, Lng::translate("Insert"), 0, NULL,
 		flow_eDest_IntoLast, command, 0, brow->pixmap_action);
 
   sprintf( command, "logging start/entry=%d", entry);
-  new ItemCommand( brow, Lng::translate("Start"), NULL,
+  new ItemCommand( brow, Lng::translate("Start"), 0, NULL,
 		flow_eDest_IntoLast, command, 0, brow->pixmap_action);
 
   sprintf( command, "logging stop/entry=%d", entry);
-  new ItemCommand( brow, Lng::translate("Stop"), NULL,
+  new ItemCommand( brow, Lng::translate("Stop"), 0, NULL,
 		flow_eDest_IntoLast, command, 0, brow->pixmap_action);
 
   sprintf( command, "logging store/entry=%d/file=rtt_store_logg%d.rtt_com",
          entry, entry);
-  new ItemCommand( brow, Lng::translate("Store"), NULL,
+  new ItemCommand( brow, Lng::translate("Store"), 0, NULL,
 		flow_eDest_IntoLast, command, 0, brow->pixmap_action);
 
   sprintf( command, "@rtt_store_logg%d", entry);
-  new ItemCommand( brow, Lng::translate("Restore"), NULL,
+  new ItemCommand( brow, Lng::translate("Restore"), 0, NULL,
 		flow_eDest_IntoLast, command, 0, brow->pixmap_action);
 
   sprintf( command, "open loggfile/entry=current");
-  new ItemCommand( brow, Lng::translate("ShowFile"), NULL,
+  new ItemCommand( brow, Lng::translate("ShowFile"), 0, NULL,
 		flow_eDest_IntoLast, command, 0, brow->pixmap_action);
 
   new ItemLocal( brow, Lng::translate("Time (ms)"), "logg_Time", 
@@ -2944,6 +2944,7 @@ xnav_sMenu *XNav::menu_tree_build_children( xnav_sStartMenu *first_child,
         menu_p->item_type = start_menu_p->item_type;
         strcpy( menu_p->title, Lng::translate(start_menu_p->title));
         strcpy( menu_p->command, (char *)start_menu_p->action);
+	menu_p->pixmap = (menu_ePixmap) start_menu_p->pixmap;
         if ( first)
         {
           return_menu = menu_p;
@@ -3024,7 +3025,7 @@ int XNav::menu_tree_delete( char *name)
   return 1;
 }
 
-int XNav::menu_tree_insert( char *title, int item_type, char *command,
+int XNav::menu_tree_insert( char *title, int item_type, char *command, menu_ePixmap pixmap,
 	char *destination, int dest_code, xnav_sMenu **menu_item)
 {
   xnav_sMenu 	*dest_item;
@@ -3045,12 +3046,14 @@ int XNav::menu_tree_insert( char *title, int item_type, char *command,
       menu_p->item_type = item_type;
       strcpy( menu_p->title, title);
       strcpy( menu_p->command, command);
+      menu_p->pixmap = pixmap;
       break;
     case xnav_eItemType_Menu:
     default:
       menu_p = (xnav_sMenu *) calloc( 1, sizeof(xnav_sMenu));        
       menu_p->item_type = item_type;
       strcpy( menu_p->title, title);
+      menu_p->pixmap = pixmap;
   }
 
   if ( !destination)
@@ -3267,7 +3270,7 @@ static int xnav_init_brow_base_cb( FlowCtx *fctx, void *client_data)
   xnav->enable_events( xnav->brow);
 
   // Create the root item
-  xnav->root_item = new ItemMenu( xnav->brow, "Root", 
+  xnav->root_item = new ItemMenu( xnav->brow, "Root",
 	NULL, flow_eDest_After, &xnav->menu_tree, 1);
 
   // Open the root item

@@ -24,6 +24,10 @@ extern "C" {
 # include "xtt_evlist.h"
 #endif
 
+#ifndef xtt_focustimer_h
+# include "xtt_focustimer.h"
+#endif
+
 class Ev {
   public:
     Ev(
@@ -68,6 +72,8 @@ class Ev {
     int			beep;
     int			eve_size;
     int			ala_size;
+    FocusTimer		eve_focustimer;
+    FocusTimer		ala_focustimer;
 
     int		outunit_connect( pwr_tObjid	user);
     void	update( double scantime);
@@ -84,3 +90,6 @@ class Ev {
 };
 
 #endif
+
+
+

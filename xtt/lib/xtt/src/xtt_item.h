@@ -265,18 +265,18 @@ class ItemCollect : public ItemBaseAttr {
 };
 
 class ItemMenu : public Item {
-  public:
-    ItemMenu( XNavBrow *brow, char *item_name, 
+ public:
+  ItemMenu( XNavBrow *brow, char *item_name,
 	brow_tNode dest, flow_eDest dest_code, xnav_sMenu **item_child_list,
 	int item_is_root);
-    xnav_sMenu		**child_list;
-    int			open_children( XNavBrow *brow, double x, double y);
-    int     		close( XNavBrow *brow, double x, double y);
+  xnav_sMenu		**child_list;
+  int			open_children( XNavBrow *brow, double x, double y);
+  int     		close( XNavBrow *brow, double x, double y);
 };
 
 class ItemCommand : public Item {
   public:
-    ItemCommand( XNavBrow *brow, char *item_name, 
+    ItemCommand( XNavBrow *brow, char *item_name, char *item_text,
 	brow_tNode dest, flow_eDest dest_code, char *item_command, 
 	int item_is_root, flow_sAnnotPixmap *pixmap);
     char		command[200];

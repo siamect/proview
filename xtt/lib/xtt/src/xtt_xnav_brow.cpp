@@ -115,6 +115,7 @@ extern "C" {
 #include "xnav_bitmap_crrread12.h"
 #include "xnav_bitmap_crrwrite12.h"
 #include "xnav_bitmap_script12.h"
+#include "xnav_bitmap_list12.h"
 #include "xnav_bitmap_graph12.h"
 #include "xnav_bitmap_curve12.h"
 #include "xnav_bitmap_file12.h"
@@ -151,6 +152,7 @@ void XNavBrow::free_pixmaps()
   brow_FreeAnnotPixmap( ctx, pixmap_crrread);
   brow_FreeAnnotPixmap( ctx, pixmap_crrwrite);
   brow_FreeAnnotPixmap( ctx, pixmap_script);
+  brow_FreeAnnotPixmap( ctx, pixmap_list);
   brow_FreeAnnotPixmap( ctx, pixmap_file);
   brow_FreeAnnotPixmap( ctx, pixmap_graph);
   brow_FreeAnnotPixmap( ctx, pixmap_curve);
@@ -505,6 +507,15 @@ void XNavBrow::allocate_pixmaps()
           }
 
 	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_script);
+
+          for ( i = 0; i < 9; i++)
+          {
+	    pixmap_data[i].width =xnav_bitmap_list12_width;
+	    pixmap_data[i].height =xnav_bitmap_list12_height;
+	    pixmap_data[i].bits = (char *)xnav_bitmap_list12_bits;
+          }
+
+	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_list);
 
           for ( i = 0; i < 9; i++)
           {
