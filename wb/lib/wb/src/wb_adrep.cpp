@@ -201,11 +201,7 @@ pwr_tOid wb_adrep::boid()
 //
 pwr_tCid wb_adrep::cid()
 {
-    pwr_tCid cid;
-    
-    //dbs_sCdef *c = (dbs_sCdef*)dbs_Address(sts, m_v->m_env, m_a->cdef);
-    
-    return cid;
+  return m_orep->cid();
 }
 
 wb_vrep *wb_adrep::vrep() const

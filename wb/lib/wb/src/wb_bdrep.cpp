@@ -60,7 +60,7 @@ size_t wb_bdrep::size()
   pwr_tStatus sts;
   pwr_sObjBodyDef body;
 
-  m_orep->m_vrep->readBody( &sts, m_orep, bix(), (void *) &body);
+  m_orep->m_vrep->readBody( &sts, m_orep, cdh_eBix_sys, (void *) &body);
   if ( EVEN(sts)) throw wb_error(sts);
 
   return body.Size;

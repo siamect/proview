@@ -101,7 +101,7 @@ wb_bdrep *wb_cdrep::bdrep( pwr_tStatus *sts, int bix)
       return bdrep;
     }
     old = orep;
-    orep = (wb_orepdbs *)m_orep->m_vrep->next( sts, orep);
+    orep = (wb_orepdbs *)m_orep->m_vrep->after( sts, orep);
 
     // Delete
     old->ref();
@@ -122,7 +122,7 @@ wb_adrep *wb_cdrep::adrep( pwr_tStatus *sts, const char *aname)
 	return adrep;
       }
     }
-    orep_attr = (wb_orepdbs *)orep_attr->next( sts);
+    orep_attr = (wb_orepdbs *)orep_attr->after( sts);
   }
   return 0;
 }

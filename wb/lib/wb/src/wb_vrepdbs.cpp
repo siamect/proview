@@ -197,12 +197,24 @@ wb_vrepdbs::readAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, unsigned i
     dbs_sObject *op = ((wb_orepdbs *)o)->o();
     void *bp = dbs_Body(sts, dbsenv(), op, bix);
     
-    if (bp == 0)
-        return 0;
+    if (bp == 0) {
+      *sts = LDH__NOSUCHBODY;
+      return 0;
+    }
     
     if (p) {
+      switch (bix) {
+      case cdh_eBix_rt:
         memcpy(p, (char *)bp + offset, MIN(op->rbody.size - offset, size));
-        return p;
+	break;
+      case cdh_eBix_dev:
+	memcpy(p, (char *)bp + offset, MIN(op->dbody.size - offset, size));
+	break;
+      default:
+	*sts = LDH__NOSUCHBODY;
+	break;
+      }
+      return p;
     }
         
     return (void *)((char *)bp + offset);
@@ -212,20 +224,32 @@ wb_vrepdbs::readAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, unsigned i
 void *
 wb_vrepdbs::readBody(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, void *p)
 {
-    *sts = LDH__SUCCESS;
+  *sts = LDH__SUCCESS;
     
-    dbs_sObject *op = ((wb_orepdbs *)o)->o();
-    void *bp = dbs_Body(sts, dbsenv(), op, bix);
+  dbs_sObject *op = ((wb_orepdbs *)o)->o();
+  void *bp = dbs_Body(sts, dbsenv(), op, bix);
     
-    if (bp == 0)
-        return 0;
+  if (bp == 0) {
+    *sts = LDH__NOSUCHBODY;
+    return 0;
+  }
     
-    if (p) {
-        memcpy(p, bp, op->rbody.size);
-        return p;
+  if (p) {
+    switch (bix) {
+    case cdh_eBix_rt:
+      memcpy(p, bp, op->rbody.size);
+      break;
+    case cdh_eBix_dev:
+      memcpy(p, bp, op->dbody.size);
+      break;
+    default:
+      *sts = LDH__NOSUCHBODY;
+      break;
     }
+    return p;
+  }
         
-    return bp;
+  return bp;
 }
 
 

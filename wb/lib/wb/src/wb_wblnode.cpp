@@ -447,6 +447,7 @@ void wb_wblnode::build( bool recursive)
 		  ;
 	      }
 	    }
+	    attr = attr->o_fws;
 	  }
 	}
         child = child->o_fws;
