@@ -1213,12 +1213,13 @@ int XNav::show_remnode()
   item_sTable 		t;
   item_sTableSubid	ts;
   char			object_name[120];
+  char			id[40];
+  char			description[80];
   int			sts;
   pwr_tObjid		objid;
-  pwr_sClass_RemNode	*object_ptr;
-  char			address[80];
-  char			transport_type[80];
   char			namebuf[80];
+  pwr_tCid		cid;
+  void			*object_ptr;
 
   brow_pop();
   brow_SetNodraw( brow->ctx);
@@ -1228,88 +1229,83 @@ int XNav::show_remnode()
   strcpy( th.title[th.table_cnt++], "");
   strcpy( th.title[th.table_cnt++], "Type");
   strcpy( th.title[th.table_cnt++], "Description");
-  strcpy( th.title[th.table_cnt++], "");
-  strcpy( th.title[th.table_cnt++], "");
-  strcpy( th.title[th.table_cnt++], "");
-  strcpy( th.title[th.table_cnt++], "Address");
   new ItemTableHeader( brow, this, "Title", &th,  NULL, flow_eDest_IntoLast);
 
-  sts = gdh_GetClassList ( pwr_cClass_RemNode, &objid);
-  while ( ODD(sts))
-  {
-    sts = gdh_ObjidToPointer( objid, (void **) &object_ptr);
-    if ( EVEN(sts)) return sts;
-
-    sts = gdh_ObjidToName ( objid, object_name,
-			sizeof(object_name), cdh_mName_volumeStrict);
-    if ( EVEN(sts)) return sts;
-
-    t.elem_cnt = 0;
-
-    // Object name
-    xnav_cut_segments( namebuf, object_name, 2);
-
-    strcpy( t.elem[t.elem_cnt].fix_str, namebuf);
-    t.elem[t.elem_cnt++].type_id = xnav_eType_FixStr;
-
-    t.elem[t.elem_cnt++].type_id = xnav_eType_Empty;
-
-    // Type
-    switch( object_ptr->TransportType)
-    {
-      case 1:
-        strcpy( transport_type, "ALCM");
-	sprintf( address, "%5d (Area)  %5d (Node)",
-			object_ptr->Address[0], object_ptr->Address[1]);
-        break;
-      case 2:
-        strcpy( transport_type, "PAMS/DMQ");
-	sprintf( address, "%5d (Group) %5d (Host Proc)",
-			object_ptr->Address[0], object_ptr->Address[1]);
-        break;
-      case 3:
-        strcpy( transport_type, "3964R VNET");
-	strcpy( address, "");
-        break;
-      case 5:
-        strcpy( transport_type, "RK512");
-	strcpy( address, "");
-        break;
-      case 6:
-        strcpy( transport_type, "TCP/IP Client");
-	sprintf( address, "%5d (Remote)%5d (Host Port)",
-			object_ptr->Address[0], object_ptr->Address[1]);
-        break;
-      case 7:
-        strcpy( transport_type, "TCP/IP Server");
-	sprintf( address, "%5d (Remote)%5d (Host Port)",
-			object_ptr->Address[0], object_ptr->Address[1]);
-        break;
-      default:
-        strcpy( transport_type, "Unknown");
-	strcpy( address, "");
-        break;
+  for ( int i = 0; i < 6; i++) {
+    switch ( i) {
+    case 0: cid = pwr_cClass_RemnodeUDP; break;
+    case 1: cid = pwr_cClass_RemnodeTCP; break;
+    case 2: cid = pwr_cClass_Remnode3964R; break;
+    case 3: cid = pwr_cClass_RemnodeALCM; break;
+    case 4: cid = pwr_cClass_RemnodeSerial; break;
+    case 5: cid = pwr_cClass_RemnodeModbus; break;
     }
 
-    // Transport type
-    strcpy( t.elem[t.elem_cnt].fix_str, transport_type);
-    t.elem[t.elem_cnt++].type_id = xnav_eType_FixStr;
+    sts = gdh_GetClassList( cid, &objid);
+    while ( ODD(sts)) {
+      sts = gdh_ObjidToPointer( objid, (void **) &object_ptr);
+      if ( EVEN(sts)) return sts;
 
-    // Description
-    strcpy( t.elem[t.elem_cnt].fix_str, object_ptr->Description);
-    t.elem[t.elem_cnt++].type_id = xnav_eType_FixStr;
+      sts = gdh_ObjidToName ( objid, object_name,
+			      sizeof(object_name), cdh_mName_volumeStrict);
+      if ( EVEN(sts)) return sts;
 
-    // Address
-    t.elem[t.elem_cnt++].type_id = xnav_eType_Empty;
-    t.elem[t.elem_cnt++].type_id = xnav_eType_Empty;
-    t.elem[t.elem_cnt++].type_id = xnav_eType_Empty;
-    strcpy( t.elem[t.elem_cnt].fix_str, address);
-    t.elem[t.elem_cnt++].type_id = xnav_eType_FixStr;
+      switch ( i) {
+      case 0: 
+	strncpy( id, ((pwr_sClass_RemnodeUDP *)object_ptr)->Id, sizeof(id));
+	strncpy( description, ((pwr_sClass_RemnodeUDP *)object_ptr)->Description, 
+		 sizeof(description));
+	break;
+      case 1: 
+	strncpy( id, ((pwr_sClass_RemnodeTCP *)object_ptr)->Id, sizeof(id));
+	strncpy( description, ((pwr_sClass_RemnodeTCP *)object_ptr)->Description, 
+		 sizeof(description));
+	break;
+      case 2: 
+	strncpy( id, ((pwr_sClass_Remnode3964R *)object_ptr)->Id, sizeof(id));
+	strncpy( description, ((pwr_sClass_Remnode3964R *)object_ptr)->Description, 
+		 sizeof(description));
+	break;
+      case 3: 
+	strncpy( id, ((pwr_sClass_RemnodeALCM *)object_ptr)->Id, sizeof(id));
+	strncpy( description, ((pwr_sClass_RemnodeALCM *)object_ptr)->Description, 
+		 sizeof(description));
+	break;
+      case 4: 
+	strncpy( id, ((pwr_sClass_RemnodeSerial *)object_ptr)->Id, sizeof(id));
+	strncpy( description, ((pwr_sClass_RemnodeSerial *)object_ptr)->Description, 
+		 sizeof(description));
+	break;
+      case 5: 
+	strncpy( id, ((pwr_sClass_RemnodeModbus *)object_ptr)->Id, sizeof(id));
+	strncpy( description, ((pwr_sClass_RemnodeModbus *)object_ptr)->Description, 
+		 sizeof(description));
+	break;
+      }
 
-    ts.subid_cnt = 0;
-    new ItemRemNode( brow, this, objid, &t, &ts, -1, 0, 0, 1, NULL, flow_eDest_IntoLast);
+      t.elem_cnt = 0;
 
-    sts = gdh_GetNextObject ( objid, &objid);
+      // Object name
+      xnav_cut_segments( namebuf, object_name, 2);
+
+      strcpy( t.elem[t.elem_cnt].fix_str, namebuf);
+      t.elem[t.elem_cnt++].type_id = xnav_eType_FixStr;
+
+      t.elem[t.elem_cnt++].type_id = xnav_eType_Empty;
+      
+      // Type
+      strcpy( t.elem[t.elem_cnt].fix_str, id);
+      t.elem[t.elem_cnt++].type_id = xnav_eType_FixStr;
+
+      // Description
+      strcpy( t.elem[t.elem_cnt].fix_str, description);
+      t.elem[t.elem_cnt++].type_id = xnav_eType_FixStr;
+
+      ts.subid_cnt = 0;
+      new ItemRemNode( brow, this, objid, &t, &ts, -1, 0, 0, 1, NULL, flow_eDest_IntoLast);
+
+      sts = gdh_GetNextObject ( objid, &objid);
+    }
   }
 
   brow_ResetNodraw( brow->ctx);
