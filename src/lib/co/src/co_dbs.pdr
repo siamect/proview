@@ -600,6 +600,7 @@ struct dbs_sScObject {
 %dbs_sEnv       *dbs_Open(pwr_tStatus *sts, dbs_sEnv *ep, const char *filename);
 %#if defined(OS_LINUX) || defined(OS_LYNX)
 %dbs_sVolRef    *dbs_VolRef(pwr_tStatus *sts, pwr_tUInt32 index, dbs_sVolRef *vp, const dbs_sEnv *ep);
+%dbs_sVolume 	*dbs_Volume(pwr_tStatus *sts, dbs_sVolume *vp, const dbs_sEnv *ep);
 %void           *dbs_Address(pwr_tStatus*, const dbs_sVenv*, dbs_tRef);
 %void            dbs_Dump(pwr_tStatus*, const dbs_sEnv*);
 %dbs_tRef        dbs_InDbs(pwr_tStatus*, const dbs_sEnv*, void*, pwr_tUInt32);

@@ -74,6 +74,28 @@ dbs_VolRef(pwr_tStatus *sts, pwr_tUInt32 index, dbs_sVolRef *vp, const dbs_sEnv 
   return vp;
 }
 
+dbs_sVolume *
+dbs_Volume(pwr_tStatus *sts, dbs_sVolume *vp, const dbs_sEnv *ep)
+{
+  dbs_sSect sect;
+  
+  fseek(ep->f, ep->file.offset + (dbs_eSect_volume * dbs_dAlign(sizeof(sect))), SEEK_SET);
+
+  if (fread(&sect, sizeof(sect), 1, ep->f) == 0) {
+    *sts = errno_GetStatus();
+    return NULL;
+  }
+
+  fseek(ep->f, sect.offset, SEEK_SET);
+    
+  if (fread(vp, sizeof(*vp), 1, ep->f) == 0) {
+    *sts = errno_GetStatus();
+    return NULL;
+  }
+  
+  return vp;
+}
+
 pwr_tBoolean
 dbs_Close(pwr_tStatus *sts, dbs_sEnv *ep) 
 {
@@ -477,11 +499,6 @@ dbs_nVolRef(pwr_tStatus *sts, const dbs_sMenv *mep)
   return mep->nVolRef;
 }
 
-
-static dbs_sVolRef *findVolref(dbs_sMenv *mep, pwr_tVid vid)
-{
-  return NULL;
-}
 
 void
 dbs_Split(pwr_tStatus *sts, dbs_sMenv *mep, char *dirName)
