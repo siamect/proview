@@ -40,7 +40,8 @@ wb_tdrep::wb_tdrep( wb_mvrep *mvrep, wb_name name) : m_nRef(0)
   char str[80];
   strcpy( str, "Type-");
   strcat( str, name.object());
-  m_orep = (wb_orepdbs *) mvrep->object( &m_sts, str);
+  wb_name n = wb_name( str);
+  m_orep = (wb_orepdbs *) mvrep->object( &m_sts, n);
   if ( EVEN(m_sts)) throw wb_error( m_sts);
 
   m_orep->ref();

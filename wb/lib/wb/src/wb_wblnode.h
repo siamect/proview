@@ -48,7 +48,6 @@ public:
       line_number(0), file(0), is_built(0), c_cid(0), c_cix(0), c_template(0), 
       b_bix(0), a_tid(0),  a_size(0), a_offset(0), a_elements(0), a_flags(0)
     {
-      strcpy( name, "");
       strcpy( cname, "");
     }
     wb_wblnode(antlr::RefToken t) : 
@@ -79,7 +78,7 @@ public:
       CommonAST::setText(t->getText());
     }
     void initialize( RefAST t )
-    {
+   {
       CommonAST::initialize(t);
     }
     void initialize( antlr::RefToken t )
@@ -90,7 +89,8 @@ public:
       // Test 
       static int last = 0;
       if ( (line_number % 1000) == 0 && line_number != last) {
-        printf( "Line: %d\n", line_number); 
+        printf( "-- Processing line: %d\r", line_number); 
+	fflush(stdout);
 	last = line_number;
       }
     }
@@ -169,6 +169,10 @@ public:
     void buildTemplate( ref_wblnode classdef);
     void buildBody( ref_wblnode object);
     void buildAttr( ref_wblnode object, int bix);
+    void buildBuff( ref_wblnode object, int bix, pwr_tCid buffer_cid,
+		    int buffer_offset, int buffer_size);
+    void buildBuffAttr( ref_wblnode object, int bix, pwr_tCid buffer_cid,
+			int buffer_offset, int buffer_size);
     void link( wb_vrepwbl *vol, ref_wblnode father_node);
     void info_link( int level);
     ref_wblnode find( wb_name *oname, int level);
@@ -202,8 +206,7 @@ public:
     pwr_tCid m_cid;
     pwr_tTid m_tid;
     pwr_tOid m_oid;
-    char name[200];
-    //    char *name() { return getText().c_str();}
+    const char *name() { return getText().c_str();}
     char cname[32];
     wb_vrepwbl *m_vrep;
     wb_wblnode *o_fth;

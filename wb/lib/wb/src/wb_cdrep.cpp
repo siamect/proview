@@ -41,7 +41,8 @@ wb_cdrep::wb_cdrep( wb_mvrep *mvrep, wb_name name) : m_nRef(0)
   char str[80];
   strcpy( str, "Class-");
   strcat( str, name.object());
-  m_orep = (wb_orepdbs *) mvrep->object( &m_sts, str);
+  wb_name n = wb_name( str);
+  m_orep = (wb_orepdbs *) mvrep->object( &m_sts, n);
   if ( EVEN(m_sts)) throw wb_error( m_sts);
 
   m_orep->ref();
@@ -112,18 +113,29 @@ wb_bdrep *wb_cdrep::bdrep( pwr_tStatus *sts, int bix)
 
 wb_adrep *wb_cdrep::adrep( pwr_tStatus *sts, const char *aname)
 {
+  wb_name n = wb_name( aname);
+  if ( n.evenSts()) {
+    *sts = n.sts();
+    return 0;
+  }
   wb_orepdbs *orep_attr;
+  wb_orepdbs *old;
   wb_orepdbs *orep = (wb_orepdbs *)m_orep->first( sts);
   while ( ODD(*sts)) {
+    orep->ref();
     if ( orep->cid() == pwr_eClass_ObjBodyDef) {
-      orep_attr = (wb_orepdbs *)orep->m_vrep->child( sts, orep, aname);
+      orep_attr = (wb_orepdbs *)orep->m_vrep->child( sts, orep, n);
       if ( ODD(*sts)) {
-        wb_adrep *adrep = new wb_adrep( *orep);
+        wb_adrep *adrep = new wb_adrep( *orep_attr);
+	orep->unref();
 	return adrep;
       }
     }
-    orep_attr = (wb_orepdbs *)orep_attr->after( sts);
+    old = orep;
+    orep = (wb_orepdbs *)orep->after( sts);
+    old->unref();
   }
+  *sts = LDH__NOSUCHATTR;
   return 0;
 }
 

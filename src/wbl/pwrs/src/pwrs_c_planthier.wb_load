@@ -41,6 +41,47 @@ SObject pwrs:Class
           Attr TypeRef = "pwrs:Type-$String80"
         EndBody
       EndObject
+      !/**
+      !  @Summary A XttGraph object that will open a graph for this hierarchy.
+      !  A XttGraph object that will open a graph that contains data for
+      !  this hierarchy. This graph can be opened from the popup menu for
+      !  this object.
+      !*/
+      Object DefGraph $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary A trend object that displays trends for this hierarchy.
+      !  A DsTrend or PlotGroup object that contains trend for this hierarchy.
+      !  The trend can be opened from the popup menu for this object.
+      !*/
+      Object DefTrend $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary A help topic for this hierarchy.
+      !  A help topic in the xtt help file that contains help for this hierarchy.
+      !  The help can be displayed from the popup menu for this object.
+      !*/
+      Object HelpTopic $Attribute 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary A URL to the data sheet for the equipment in this hierarchy.
+      !  A URL to the data sheet for the equipment in this hierarchy.
+      !  The data sheet can be displayed from the popup menu for this object.
+      !*/
+      Object DataSheet $Attribute 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$URL"
+        EndBody
+      EndObject
     EndObject
   EndObject
 EndSObject

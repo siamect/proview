@@ -70,7 +70,7 @@ pwr_tOid wb_orepwbl::aoid() const
 
 const char * wb_orepwbl::name() const
 {
-    return m_wblnode->name;
+    return m_wblnode->name();
 }
 
 wb_name wb_orepwbl::longName()

@@ -41,6 +41,7 @@ extern "C" {
 #include "wb_env.h"
 #include "wb_erep.h"
 #include "wb_vrepwbl.h"
+#include "wb_vrepdbs.h"
 
 
 /*  Fallback resources  */
@@ -199,8 +200,33 @@ void	pwr_wtt_open_volume( void *wttctx, char *filename, wow_eFileSelType file_ty
 	  wtt->time_to_exit_cb = pwr_time_to_exit;
         }
       }
-      else if ( file_type == wow_eFileSelType_Dbs)
+      else if ( file_type == wow_eFileSelType_Dbs) {
         printf( "Wb opening loadfile %s...\n", filename);
+
+        // Load volume as extern
+	wb_erep *erep = (wb_erep *)(*(wb_env *)wbctx);
+        wb_vrepdbs *vrep = new wb_vrepdbs( erep, filename);
+	try {
+          vrep->load();
+	  erep->addExtern( &sts, vrep);
+	}
+	catch ( wb_error& e) {
+	  cout << "** Error opening volume, " << e.what() << endl;
+	  return;
+	}
+
+        // Attach extern volume
+	wb_volume *vol = new wb_volume(vrep);
+	pwr_tVid volume = vrep->vid();
+
+        Wtt *wtt = new Wtt( 0, toplevel, filename, "Navigator", wbctx, volume, vol, 0, &sts);
+        if (ODD(sts)) {
+          appl_count++;
+          wtt->close_cb = pwr_wtt_close;
+	  wtt->open_volume_cb = pwr_wtt_open_volume;
+	  wtt->time_to_exit_cb = pwr_time_to_exit;
+        }
+      }
       else
         printf( "Unknown file type\n");
     }

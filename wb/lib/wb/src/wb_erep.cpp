@@ -443,6 +443,10 @@ wb_orep *wb_erep::object(pwr_tStatus *sts, pwr_tOid oid)
 wb_orep *wb_erep::object(pwr_tStatus *sts, const char *name)
 {
   wb_name n = wb_name(name);
+  if ( n.evenSts()) {
+    *sts = n.sts();
+    return 0;
+  }
 
   wb_vrep *vrep = volume( sts, n.volume());
   if ( EVEN(*sts)) return 0;

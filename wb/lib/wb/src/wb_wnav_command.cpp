@@ -3452,6 +3452,7 @@ static int	wnav_create_func( void		*client_data,
       wb_erep *erep = *(wb_env *)wnav->wbctx;
       wb_vrepwbl *wbl = new wb_vrepwbl(erep);
       wbl->load( filestr);
+      printf( "-- Loadfile loaded, snapshot creation started...\n");
       wbl->createSnapshot( outstr);
       delete wbl;
     }

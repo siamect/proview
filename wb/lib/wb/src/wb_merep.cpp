@@ -98,6 +98,7 @@ wb_cdrep *wb_merep::cdrep( pwr_tStatus *sts, wb_name name)
     }
     catch ( wb_error& e) {
       // Not found in this volume, try next
+      continue;
     }
   }
 

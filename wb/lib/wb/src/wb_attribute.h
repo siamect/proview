@@ -84,7 +84,7 @@ public:
     wb_attribute prev();
     
 
-    const char*  name() const; // get attribute name
+    const char *name() const;
     wb_name longName();
     void name(const char *name);
     void name(wb_name *name);
@@ -93,7 +93,7 @@ public:
     pwr_tStatus sts() { return m_sts;}
             
    private:
-    void check();
+    void check() const;
     void init();
 };
 

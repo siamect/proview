@@ -4,8 +4,6 @@
 #include "wb_attrname.h"
 #include "pwr.h"
 
-static const char* s_emptyString = "";
-
 
 
 wb_attribute::wb_attribute() : wb_status(LDH__NOSUCHATTR), m_orep(0), m_adrep(0), 
@@ -152,7 +150,7 @@ wb_attribute& wb_attribute::operator=(const wb_attribute& x)
   return *this;
 }
 
-void wb_attribute::check()
+void wb_attribute::check() const
 {
   if ( evenSts())
     throw wb_error( m_sts);
@@ -304,20 +302,28 @@ wb_attribute wb_attribute::prev()
     return a;
 }   
 
-const char* wb_attribute::name() const
+const char *wb_attribute::name() const
 {
-  if (m_adrep)
-      return m_adrep->name();
-  else
-      return s_emptyString;
+  check();
+
+  return m_orep->name();
 }
 
+// Fix, no index and no subclass !!!
 wb_name wb_attribute::longName()
 {
-  if (m_adrep)
-      return m_adrep->longName();
-  else
-      return wb_name();
+    check();
+
+    if ( !m_adrep)
+      return m_orep->longName();
+
+    char str[512];
+    strcpy( str, m_orep->longName().name());
+    strcat( str, ".");
+    strcat( str, m_adrep->name());
+
+    wb_name n = wb_name( str);
+    return n;
 }
 
 void wb_attribute::name(const char *name)

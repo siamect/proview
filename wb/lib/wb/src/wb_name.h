@@ -139,7 +139,7 @@ public:
     char *normName( int ntype) const throw (wb_error) { check(); return m_nrep->normName( ntype);}
     bool volumeIsEqual( const char *n) const throw (wb_error) { check(); return m_nrep->volumeIsEqual( n);}
     bool objectIsEqual( const char *n) const throw (wb_error) { check(); return m_nrep->objectIsEqual( n);}
-    bool segmentIsEqual( char *n, int idx = 0) const throw (wb_error) { check(); return m_nrep->segmentIsEqual( n, idx);}
+    bool segmentIsEqual( const char *n, int idx = 0) const throw (wb_error) { check(); return m_nrep->segmentIsEqual( n, idx);}
     bool attributeIsEqual( const char *n, int idx = 0) const throw (wb_error) { check(); return m_nrep->attributeIsEqual( n, idx);}
 
     // Id representation
@@ -153,7 +153,7 @@ public:
     // bool bodyName();
     
     static char *unatName( char *name) { return wb_nrep::unatName( name);} 
-    static bool checkObjectName( char *name) { return wb_nrep::checkObjectName( name);}
+    static bool checkObjectName( const char *name) { return wb_nrep::checkObjectName( name);}
   private:
     void check() const { if ( evenSts()) throw wb_error(m_sts);}
 };
