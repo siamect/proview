@@ -21,6 +21,7 @@ procedure
 	clog_activate_select_file(integer);
 	clog_activate_next_file(integer);
 	clog_activate_prev_file(integer);
+	clog_activate_update(integer);
 	clog_activate_zoom_in(integer);
 	clog_activate_zoom_out(integer);
 	clog_activate_zoom_reset(integer);
@@ -99,6 +100,18 @@ object clog_file_entry : XmCascadeButton
         {
           arguments
           {
+  	    XmNlabelString = c_Filter;
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure clog_activate_filter(clog_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
   	    XmNlabelString = c_SelectFile;
             XmNfontList	   = menu_font;
 	  };
@@ -135,6 +148,21 @@ object clog_file_entry : XmCascadeButton
 	  callbacks
           {
             XmNactivateCallback = procedure clog_activate_prev_file(clog_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Update;
+            XmNmnemonic = keysym('U');
+	    XmNaccelerator = "Ctrl<Key>U";
+	    XmNacceleratorText = compound_string('Ctrl+U');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure clog_activate_update(clog_ctx);
           };
 	};
         XmPushButton
@@ -207,18 +235,6 @@ object clog_view_entry : XmCascadeButton
 	  callbacks
           {
             XmNactivateCallback = procedure clog_activate_zoom_reset(clog_ctx);
-          };
-	};
-        XmPushButton
-        {
-          arguments
-          {
-  	    XmNlabelString = c_Filter;
-            XmNfontList	   = menu_font;
-	  };
-	  callbacks
-          {
-            XmNactivateCallback = procedure clog_activate_filter(clog_ctx);
           };
 	};
       };

@@ -62,6 +62,7 @@ c_Help_on_selected_event : compound_string("Hjälp för utvald händelse");
 
 c_NextFile         	: compound_string("Nästa Fil");
 c_PreviousFile         	: compound_string("Föregående Fil");
+c_Update         	: compound_string("Uppdatera");
 c_SelectFile         	: compound_string("Välj Fil");
 c_Filter         	: compound_string("Filter");
 c_Consolelog         	: compound_string("Konsollogg");

@@ -60,6 +60,7 @@ c_Help_on_selected_event : compound_string("Help on selected event");
 
 ! module xtt_clog.uil
 
+c_Update         	: compound_string("Update");
 c_NextFile         	: compound_string("Next File");
 c_PreviousFile         	: compound_string("Previous File");
 c_SelectFile         	: compound_string("Select File");
