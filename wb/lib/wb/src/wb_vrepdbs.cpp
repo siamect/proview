@@ -13,18 +13,41 @@ wb_vrep *wb_vrepdbs::ref()
     return this;
 }
 
-#if 1
 wb_vrepdbs::wb_vrepdbs(const char *fileName)
 {
-    pwr_tStatus sts;
     
-    dbs_sEnv *ep =dbs_Map(&sts, &m_dbsenv, fileName);
-    if (!ep)
-        ep = 0;
-    
+    strcpy(m_fileName, fileName);
+    m_isDbsenvLoaded = false;
 }
 
-wb_orep *wb_vrepdbs::object(pwr_tStatus *sts, pwr_tOid oid)
+dbs_sEnv *
+wb_vrepdbs::dbsenv()
+{
+    dbs_sEnv *ep;
+    pwr_tStatus sts;
+
+    if (!m_isDbsenvLoaded) {
+        ep = dbs_Map(&sts, &m_dbsenv, m_fileName);
+        if (!ep) {
+        }
+        m_isDbsenvLoaded = true;
+    } else {
+        ep = &m_dbsenv;
+    }
+    
+    
+    return ep;
+}
+
+bool
+wb_vrepdbs::load()
+{
+    return dbsenv() != 0;
+}
+
+
+wb_orep *
+wb_vrepdbs::object(pwr_tStatus *sts, pwr_tOid oid)
 {    
     dbs_sObject *op = dbs_OidToObject(sts, &m_dbsenv, oid);
     if (op == 0)
@@ -33,7 +56,8 @@ wb_orep *wb_vrepdbs::object(pwr_tStatus *sts, pwr_tOid oid)
     return new (this) wb_orepdbs(op);
 }
 
-wb_orep *wb_vrepdbs::object(pwr_tStatus *sts, wb_orep *parent, wb_name name)
+wb_orep *
+wb_vrepdbs::object(pwr_tStatus *sts, wb_orep *parent, wb_name name)
 {
 #if 0
     dbs_sName n;   
@@ -228,4 +252,64 @@ wb_srep *wb_vrepdbs::newSession()
 {
     return (wb_srep*)0;
 }
-#endif
+
+
+wb_orep *
+wb_vrepdbs::object(pwr_tStatus *)
+{
+    return 0;
+}
+
+bool
+wb_vrepdbs::isLocal(wb_orep *) const
+{
+    return false;
+}
+
+pwr_tCid
+wb_vrepdbs::cid() const
+{
+    return 0;
+}
+
+pwr_tVid
+wb_vrepdbs::vid() const
+{
+    return 0;
+}
+
+wb_merep *wb_vrepdbs::merep() const
+{
+    return 0;
+}
+
+bool wb_vrepdbs::createSnapshot(char *)
+{
+    return false;
+}
+
+void wb_vrepdbs::iterObject(wb_dbs *)
+{
+}
+
+void wb_vrepdbs::iterRbody(wb_dbs *)
+{
+}
+
+void wb_vrepdbs::iterDbody(wb_dbs *)
+{
+}
+
+wb_orepdbs *
+wb_vrepdbs::new_wb_orepdbs(size_t size)
+{
+    wb_orepdbs *o = (wb_orepdbs *) calloc(1, size);
+    o->m_vrep = this;
+    return o;
+}
+
+void
+wb_vrepdbs::delete_wb_orepdbs(void *p)
+{
+    free(p);
+}

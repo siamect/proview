@@ -15,6 +15,8 @@ class wb_orepdbs : public wb_orep
     friend class wb_bdrep;
     friend class wb_adrep;
     friend class wb_tdrep;
+    friend class wb_vrepdbs;
+    
 public:
 
 
@@ -23,7 +25,7 @@ public:
     ~wb_orepdbs();
 
     void* operator new(size_t size, wb_vrepdbs *v);
-    void operator delete(void *p, size_t size, wb_vrepdbs *v);
+    void operator delete(void *p, wb_vrepdbs *v);
     
     virtual pwr_tOid oid() const;
     virtual pwr_tVid vid() const;

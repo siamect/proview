@@ -6,13 +6,13 @@
 void *
 wb_orepdbs::operator new(size_t size, wb_vrepdbs *v)
 {
-    return (void *)v->new_wb_repdbs(size);
+    return (void *)v->new_wb_orepdbs(size);
 }
 
 void
-wb_orepdbs::operator delete(void *p, size_t size, wb_vrepdbs *v)
+wb_orepdbs::operator delete(void *p, wb_vrepdbs *v)
 {
-    v->delete_wb_orepdbs(size, p);
+    v->delete_wb_orepdbs(p);
 }
 
 
@@ -49,12 +49,60 @@ pwr_tOid wb_orepdbs::oid() const
     return m_o->oid;
 }
 
+pwr_tVid wb_orepdbs::vid() const
+{
+    if (m_o == 0)
+        throw wb_error_str("No current object");
+    
+    return m_o->oid.vid;
+}
+
+pwr_tOix wb_orepdbs::oix() const
+{
+    if (m_o == 0)
+        throw wb_error_str("No current object");
+    
+    return m_o->oid.oix;
+}
+
 pwr_tOid wb_orepdbs::poid() const
 {
     if (m_o == 0)
         throw wb_error_str("No current object");
     
     return m_o->poid;
+}
+
+pwr_tOid wb_orepdbs::foid() const
+{
+    if (m_o == 0)
+        throw wb_error_str("No current object");
+    
+    return pwr_cNOid;
+}
+
+pwr_tOid wb_orepdbs::loid() const
+{
+    if (m_o == 0)
+        throw wb_error_str("No current object");
+    
+    return pwr_cNOid;
+}
+
+pwr_tOid wb_orepdbs::boid() const
+{
+    if (m_o == 0)
+        throw wb_error_str("No current object");
+    
+    return pwr_cNOid;
+}
+
+pwr_tOid wb_orepdbs::aoid() const
+{
+    if (m_o == 0)
+        throw wb_error_str("No current object");
+    
+    return pwr_cNOid;
 }
 
 pwr_tCid wb_orepdbs::cid() const
@@ -72,6 +120,12 @@ char * const wb_orepdbs::name()
     
     return m_o->name;
 }
+
+bool wb_orepdbs::isOffspringOf(const wb_orep *o) const
+{
+    return false;
+}
+
 
 wb_orep *wb_orepdbs::after(pwr_tStatus *sts) const
 {

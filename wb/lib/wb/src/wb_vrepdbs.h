@@ -16,10 +16,14 @@ public:
     unsigned int m_nSession;
     unsigned int m_nRef;
 
+    char m_fileName[200];
+    bool m_isDbsenvLoaded;
+    
     dbs_sEnv m_dbsenv;
     
-    
     wb_vrepdbs(const char *fileName);
+    dbs_sEnv *dbsenv();
+    bool load();
     
     virtual void unref();
     virtual wb_vrep *ref();
@@ -75,11 +79,23 @@ public:
 
     virtual wb_srep *newSession();
 
-    virtual bool isLocal(wb_orep *o);
     virtual pwr_tVid vid() const;
 
-    wb_orepdbs *new_wb_repdbs(size_t size);
-    void delete_wb_orepdbs(size_t size, void *p);
+    wb_orepdbs *new_wb_orepdbs(size_t size);
+    void delete_wb_orepdbs(void *p);
+
+
+
+    virtual wb_vrep *next () const;
+    virtual wb_orep *object (pwr_tStatus *);
+    virtual bool isLocal (wb_orep *) const;
+    virtual pwr_tCid cid () const;
+    virtual wb_merep *merep () const;
+    virtual bool createSnapshot (char *);
+    virtual void iterObject (wb_dbs *);
+    virtual void iterRbody (wb_dbs *);
+    virtual void iterDbody (wb_dbs *);
 };
+
 
 #endif
