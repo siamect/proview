@@ -288,6 +288,7 @@ extern "C" {
     ge_eSave_DigError_attribute		= 700,
     ge_eSave_DigWarning_attribute      	= 800,
     ge_eSave_Invisible_attribute       	= 900,
+    ge_eSave_Invisible_dimmed       	= 901,
     ge_eSave_DigBorder_attribute       	= 1000,
     ge_eSave_DigBorder_color		= 1001,
     ge_eSave_DigText_attribute		= 1100,
@@ -925,7 +926,7 @@ class GeDigFlash : public GeDynElem {
     color(glow_eDrawType_Inherit), on(true)
     { strcpy( attribute, "");}
   GeDigFlash( const GeDigFlash& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), color(x.color)
+    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), color(x.color), on(x.on)
     { strcpy( attribute, x.attribute);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
@@ -944,6 +945,7 @@ class GeDigFlash : public GeDynElem {
 class GeInvisible : public GeDynElem {
  public:
   char attribute[120];		//!< Database reference for digital attribute.
+  int dimmed;			//!< Object is dimmed (not invisible)
 
   pwr_tBoolean *p;
   pwr_tSubid subid;
@@ -952,12 +954,14 @@ class GeInvisible : public GeDynElem {
   int inverted;
   bool first_scan;
   pwr_tBoolean old_value;
+  int a_typeid;
 
   GeInvisible( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, ge_mDynType_Invisible, (ge_mActionType) 0, ge_eDynPrio_Invisible)
+    GeDynElem(e_dyn, ge_mDynType_Invisible, (ge_mActionType) 0, ge_eDynPrio_Invisible), 
+    dimmed(0)
     { strcpy( attribute, "");}
   GeInvisible( const GeInvisible& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)
+    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), dimmed(x.dimmed)
     { strcpy( attribute, x.attribute);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
@@ -1990,6 +1994,7 @@ class GeTable : public GeDynElem {
     { memset( attribute,0,sizeof(attribute)); memset( format,0,sizeof(format)); 
     memset( sel_attribute,0,sizeof(sel_attribute)); memset(old_value,0,sizeof(old_value));
     memset( is_headerref, 0, sizeof(is_headerref)); memset(headerref_p,0,sizeof(headerref_p));
+    memset( sel_elements, 0, sizeof(sel_elements));
     }
   GeTable( const GeTable& x) : 
     GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)

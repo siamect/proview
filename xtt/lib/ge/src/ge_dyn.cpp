@@ -109,7 +109,7 @@ void GeDyn::replace_attribute( char *attribute, int attr_size, char *from, char 
   s = strstr( str, from);
   if ( s) {
     offs = (int)( s - str);
-    strcpy( tmp, s + strlen(from));
+    strcpy( tmp, &attribute[offs] + strlen(from));
     strncpy( &attribute[offs], to, attr_size - offs);
     attribute[attr_size-1] = 0;
     strncat( attribute, tmp, attr_size-strlen(attribute));
@@ -2224,7 +2224,7 @@ int GeDigFlash::scan( grow_tObject object)
 	grow_ResetObjectColorTone( object);
 	dyn->reset_color = true;
       }
-      on = !on;
+      on = on ? false : true;
     }
     else {
       if ( color >= (glow_eDrawType) glow_eDrawTone__)
@@ -2243,7 +2243,7 @@ int GeDigFlash::scan( grow_tObject object)
 	grow_ResetObjectFillColor( object);
 	dyn->reset_color = true;
       }
-      on = !on;
+      on = on ? false : true;
     }
     else {
       grow_ResetObjectFillColor( object);
@@ -2275,6 +2275,11 @@ void GeInvisible::get_attributes( attr_sItem *attrinfo, int *item_count)
   attrinfo[i].type = glow_eType_String;
   attrinfo[i++].size = sizeof( attribute);
 
+  strcpy( attrinfo[i].name, "Invisible.Dimmed");
+  attrinfo[i].value = &dimmed;
+  attrinfo[i].type = glow_eType_Boolean;
+  attrinfo[i++].size = sizeof( dimmed);
+
   *item_count = i;
 }
 
@@ -2299,6 +2304,7 @@ void GeInvisible::save( ofstream& fp)
 {
   fp << int(ge_eSave_Invisible) << endl;
   fp << int(ge_eSave_Invisible_attribute) << FSPACE << attribute << endl;
+  fp << int(ge_eSave_Invisible_dimmed) << FSPACE << dimmed << endl;
   fp << int(ge_eSave_End) << endl;
 }
 
@@ -2317,6 +2323,7 @@ void GeInvisible::open( ifstream& fp)
         fp.get();
         fp.getline( attribute, sizeof(attribute));
         break;
+      case ge_eSave_Invisible_dimmed: fp >> dimmed; break;
       case ge_eSave_End: end_found = 1; break;
       default:
         cout << "GeInvisible:open syntax error" << endl;
@@ -2340,9 +2347,34 @@ int GeInvisible::connect( grow_tObject object, glow_sTraceData *trace_data)
   if ( strcmp( parsed_name,"") == 0)
     return 1;
 
-  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size);
-  if ( EVEN(sts)) return sts;
+  if ( cdh_NoCaseStrncmp( parsed_name, "$cmd(", 5) == 0) {
+    char command[256];
+    char *s;
+    pwr_tStatus sts;
+    static pwr_tBoolean val_false = 0;
+    static pwr_tBoolean val_true = 1;
 
+    strcpy( command, &parsed_name[5]);
+
+    if ( (s = strrchr( command, ')')))
+      *s = 0;
+    
+    dyn->graph->get_command( command, command, dyn);
+
+    sts = (dyn->graph->command_cb)( dyn->graph->parent_ctx, command);
+    if ( ODD(sts))
+      p = &val_false;
+    else
+      p = &val_true;
+    db = graph_eDatabase_User;
+    a_typeid = pwr_eType_Boolean;
+  }
+  else {
+    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size);
+    if ( EVEN(sts)) return sts;
+
+    a_typeid = attr_type;
+  }
   if ( p)
     trace_data->p = p;
   first_scan = true;
@@ -2362,24 +2394,60 @@ int GeInvisible::scan( grow_tObject object)
   if ( !p)
     return 1;
 
-  if ( !first_scan) {
-    if ( old_value == *p) {
-      // No change since last time
-      return 1;
+  switch ( a_typeid) {
+  case pwr_eType_Boolean:
+  case pwr_eType_Int32:
+  case pwr_eType_UInt32:
+    if ( !first_scan) {
+      if ( old_value == *p) {
+	// No change since last time
+	return 1;
+      }
     }
-  }
-  else
-    first_scan = false;
+    else
+      first_scan = false;
 
-  if ( (!inverted && !*p) || (inverted && *p)) {
-    grow_SetObjectVisibility( object, 1);
-    dyn->reset_color = true;
+    if ( (!inverted && !*p) || (inverted && *p)) {
+      grow_SetObjectVisibility( object, glow_eVis_Visible);
+      dyn->reset_color = true;
+    }
+    else {
+      if ( dimmed)
+	grow_SetObjectVisibility( object, glow_eVis_Dimmed);
+      else
+	grow_SetObjectVisibility( object, glow_eVis_Invisible);
+      dyn->ignore_color = true;
+    }
+    old_value = *p;
+    break;
+  case pwr_eType_String: {
+    char *sp = (char *) p;
+    char *sp_old = (char *) &old_value;
+
+    if ( !first_scan) {
+      if ( *sp_old == *sp) {
+	// No change since last time
+	return 1;
+      }
+    }
+    else
+      first_scan = false;
+
+    if ( (!inverted && *sp) || (inverted && !*sp)) {
+      grow_SetObjectVisibility( object, glow_eVis_Visible);
+      dyn->reset_color = true;
+    }
+    else {
+      if ( dimmed)
+	grow_SetObjectVisibility( object, glow_eVis_Dimmed);
+      else
+	grow_SetObjectVisibility( object, glow_eVis_Invisible);
+      dyn->ignore_color = true;
+    }
+    *sp_old = *sp;
+    break;
   }
-  else {
-    grow_SetObjectVisibility( object, 0);
-    dyn->ignore_color = true;
   }
-  old_value = *p;
   return 1;
 }
 
@@ -5603,6 +5671,10 @@ int GeTable::connect( grow_tObject object, glow_sTraceData *trace_data)
     case pwr_eType_String:
       info.column_size[i] = size[i];
       break;
+    case pwr_eType_Status:
+    case pwr_eType_NetStatus:
+      info.column_size[i] = 80;
+      break;
     case pwr_eType_Time:
       info.column_size[i] = 25;
       break;
@@ -5705,6 +5777,23 @@ int GeTable::scan( grow_tObject object)
 	case pwr_eType_Int32:
 	case pwr_eType_UInt32:
 	  len = sprintf( buf, format[i], *(pwr_tInt32 *) headerref_p[i][j]);
+	  break;
+	case pwr_eType_Status:
+	case pwr_eType_NetStatus:
+	  if ( *(pwr_tStatus *)headerref_p[i][j] == 0) {
+	    strcpy( buf, "");
+	    len = 0;
+	    break;
+	  }
+	  switch ( (int)format[1]) {
+	  case '1':
+	    // Format %1m: Write only the text
+	    msg_GetText( *(pwr_tStatus *) headerref_p[i][j], buf, sizeof(buf));
+	    break;
+	  default:
+	    msg_GetMsg( *(pwr_tStatus *) headerref_p[i][j], buf, sizeof(buf));
+	  }
+	  len = strlen(buf);
 	  break;
 	case pwr_eType_String:
 	  len = sprintf( buf, format[i], (char *)headerref_p[i][j]);
@@ -6627,7 +6716,6 @@ int GePopupMenu::action( grow_tObject object, glow_tEvent event)
     char       		parsed_name[120];
     int			inverted;
     int			attr_type, attr_size;
-    char            	*s;
     pwr_sAttrRef    	attrref;
     char            	name[80];
     Widget          	popup;
@@ -6647,19 +6735,17 @@ int GePopupMenu::action( grow_tObject object, glow_tEvent event)
     }
     if ( reference) {
       // The ref_object is an objid-attribute that containts the object 
-      memset( &attrref, 0, sizeof(attrref));
-      sts = gdh_GetObjectInfo( parsed_name, &attrref.Objid, 
-				 sizeof(attrref.Objid));
+      pwr_tOid oid;
+
+      sts = gdh_GetObjectInfo( parsed_name, &oid, 
+				 sizeof(oid));
       if ( EVEN(sts)) break;
-      if ( cdh_ObjidIsNull( attrref.Objid))
+      if ( cdh_ObjidIsNull( oid))
 	break;
+      attrref = cdh_ObjidToAref( oid);
     }
     else {
-      if ( (s = strrchr( parsed_name, '.')))
-	*s = 0;
-
-      memset( &attrref, 0, sizeof(attrref));
-      sts = gdh_NameToObjid( parsed_name, &attrref.Objid);
+      sts = gdh_NameToAttrref( pwr_cNObjid, parsed_name, &attrref);
       if ( EVEN(sts)) break;
     }
     if ( dyn->graph->popup_menu_cb) {
@@ -7388,7 +7474,7 @@ int GeCommand::action( grow_tObject object, glow_tEvent event)
     if ( dyn->graph->command_cb) {
       char cmd[200];
 
-      dyn->graph->get_command( command, cmd);
+      dyn->graph->get_command( command, cmd, dyn);
       (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd);
     }
     break;
@@ -7481,7 +7567,7 @@ int GeCommandDoubleClick::action( grow_tObject object, glow_tEvent event)
     if ( dyn->graph->command_cb) {
       char cmd[200];
 
-      dyn->graph->get_command( command, cmd);
+      dyn->graph->get_command( command, cmd, dyn);
       (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd);
     }
     break;
@@ -7964,10 +8050,32 @@ void GeTipText::open( ifstream& fp)
 int GeTipText::action( grow_tObject object, glow_tEvent event)
 {
   switch ( event->event) {
-  case glow_eEvent_TipText:
-    grow_SetTipText( dyn->graph->grow->ctx, event->object.object, 
+  case glow_eEvent_TipText: {
+    char *s;
+    char text_low[80];
+    
+    cdh_ToLower( text_low, text);
+    if ( (s = strstr( text_low, "##string"))) {
+      char 	value[80];
+      char    	parsed_name[120];
+      int       inverted;
+      int	attr_type, attr_size;
+      int 	sts;
+
+      dyn->parse_attr_name( text, parsed_name,
+			    &inverted, &attr_type, &attr_size);
+      sts = gdh_GetObjectInfo( parsed_name, value, sizeof(value));
+      if ( EVEN(sts)) printf("ToolTip error: %s\n", text);
+
+      grow_SetTipText( dyn->graph->grow->ctx, event->object.object, 
+		     value, event->any.x_pixel, event->any.y_pixel);
+    }
+    else {
+      grow_SetTipText( dyn->graph->grow->ctx, event->object.object, 
 		     text, event->any.x_pixel, event->any.y_pixel);
+    }
     break;
+  }
   default: ;    
   }
   return 1;
@@ -8075,7 +8183,7 @@ int GeHelp::action( grow_tObject object, glow_tEvent event)
 	sprintf( command, "help %s /bookmark=%s", topic, bookmark);
       else
 	sprintf( command, "help %s", topic);
-      dyn->graph->get_command( command, cmd);
+      dyn->graph->get_command( command, cmd, dyn);
       (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd);
     }
     break;
@@ -8200,7 +8308,7 @@ int GeOpenGraph::action( grow_tObject object, glow_tEvent event)
       char cmd[200];
 
       sprintf( command, "open graph/object=%s", graph_object);
-      dyn->graph->get_command( command, cmd);
+      dyn->graph->get_command( command, cmd, dyn);
       (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd);
     }
     break;
@@ -8302,7 +8410,7 @@ int GeOpenURL::action( grow_tObject object, glow_tEvent event)
       char cmd[200];
 
       sprintf( command, "open url \"%s\"", url);
-      dyn->graph->get_command( command, cmd);
+      dyn->graph->get_command( command, cmd, dyn);
       (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd);
     }
     break;
@@ -8889,9 +8997,11 @@ int GeSlider::scan( grow_tObject object)
       if ( fabs( old_value - *p) < FLT_EPSILON)
 	// No change since last time
 	return 1;
+      break;
     case pwr_eType_Int32:
       if ( *(pwr_tInt32 *)p == (pwr_tInt32) old_value)
 	return 1;
+      break;
     default: ;
     }
   }
