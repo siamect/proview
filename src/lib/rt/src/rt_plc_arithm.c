@@ -18,7 +18,7 @@
 
 /* 		PLC RUTINER			*/
 
-/**
+/*_*
   SUM
   funktion:       Add  up to 8 analogue values.
                   Each value is multiplied with  a factor.
@@ -53,7 +53,7 @@ void sum_exec(
         object->ActVal = sum;
 }
 
-/**
+/*_*
   MAXMIN
   funktion:       Select largest and smallest value of up to
                   8 input values.
@@ -97,7 +97,7 @@ void maxmin_exec(
         object->MinVal = minval;
 }
 
-/**
+/*_*
   LIMIT
   funktion:	Upper and lower limit of analog value
 
@@ -139,7 +139,7 @@ void limit_exec(
 	}
 }
 
-/**
+/*_*
   COMPH
   funktion:	Compare Analog Value with high limit
 
@@ -161,7 +161,7 @@ void comph_exec(
 	  if (object->In > object->Lim ) object->High = TRUE;
 }
 
-/**
+/*_*
   COMPL
   funktion:	Compare Analog Value with low limit
 
@@ -183,7 +183,7 @@ void compl_exec(
 	  if (object->In < object->Lim ) object->Low = TRUE;
 }
 
-/**
+/*_*
   SELECT
   funktion:	Select between two analog values depending on
 		one logical control value
@@ -208,7 +208,7 @@ void select_exec(
   	}
 }
 
-/**
+/*_*
   RAMP
   funktion:	Limit output change.
  		If external feedback is used we limit change
@@ -326,7 +326,7 @@ void ramp_exec(
 	object->ActVal = out;	/* New output */
 }
 
-/**
+/*_*
   FILTER
   funktion:	Exponential filter.
 		If external feedback is used we filter
@@ -353,7 +353,7 @@ void filter_exec(
 	  object->ActVal = object->In;
 }
 
-/**
+/*_*
   SPEED
   Function:	Calculate difference divided to scantime
 
@@ -370,7 +370,7 @@ void speed_exec(
 	object->ActVal = (object->In - old) / *object->ScanTime * object->TimFact;
 }
 
-/**
+/*_*
   TIMINT
   Function:       Integration in time
 
@@ -391,7 +391,7 @@ void timint_exec(
         object->ActVal += *object->InP * *object->ScanTime / object->TimFact;
 }
 
-/**
+/*_*
   CURVE
   Funktion:	Interpollation in a table
 
@@ -446,7 +446,7 @@ void curve_exec(
 #define table_exec(tableobject)  /* Table. No code for execution */
 #endif
 
-/**
+/*_*
 	ADELAY
 
 	Funktion:	
@@ -529,7 +529,7 @@ void adelay_exec(
 	object->ActVal=object->TimVect[actindex];
 }	
 
-/**
+/*_*
   PISPEED
   function:       Measure flow with pulse input
 
@@ -557,7 +557,7 @@ void pispeed_exec(
                 object->TimFact / *object->ScanTime;
 }
 
-/**
+/*_*
   DtoMask
   funktion:	Assamble digital signals to integer bitmask
 
@@ -585,7 +585,7 @@ void DtoMask_exec(
   object->Mask = val;
 }
 
-/**
+/*_*
   MaskToD
   funktion:	Deassamble integer bitmask to digital signals
 
@@ -611,7 +611,7 @@ void MaskToD_exec(
   }
 }
 
-/**
+/*_*
   DtoEnum
   funktion:	Select enumeration value from digital inputs
 
@@ -639,7 +639,7 @@ void DtoEnum_exec(
   object->Enum = val;
 }
 
-/**
+/*_*
   EnumToD
   funktion: Identify enumeration value.
 

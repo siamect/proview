@@ -7,7 +7,7 @@
 
 /*		 Preprocessor routines for string operations	    */
 
-/**
+/*_*
   STOSV
   store string value			
   @aref stosv StoSv
@@ -16,7 +16,7 @@
   strncpy( obj->ActualValue, in, sizeof(obj->ActualValue)); \
   obj->ActualValue[sizeof(obj->ActualValue)-1] = 0;
 
-/**
+/*_*
   CSTOSV								
   store conditionally into string value		
   @aref cstosv CStoSv
@@ -27,7 +27,7 @@
     obj->ActualValue[sizeof(obj->ActualValue)-1] = 0; \
   }
 
-/**
+/*_*
   STRCAT
   @aref strcat Strcat
 */
@@ -37,28 +37,28 @@
     strncat(obj->ActVal, str2, sizeof(obj->ActVal)-strlen(str1)); \
   obj->ActVal[sizeof(obj->ActVal)-1] = 0;
 
-/**
+/*_*
   ATOSTR
   @aref atostr AtoStr
 */
 #define AtoStr_exec(obj,in) \
   sprintf(obj->ActVal, obj->Format, in);
 
-/**
+/*_*
   DTOSTR
   @aref dtostr DtoStr
 */
 #define DtoStr_exec(obj,in) \
   sprintf(obj->ActVal, obj->Format, in);
 
-/**
+/*_*
   ITOSTR
   @aref itostr ItoStr
 */
 #define ItoStr_exec(obj,in) \
   sprintf(obj->ActVal, obj->Format, in);
 
-/**
+/*_*
   STOSP								
   Store into string attribute			
   @aref stosp StoSp
@@ -67,7 +67,7 @@
   strncpy( ut, in, size); \
   ut[size-1] = 0;
 
-/**
+/*_*
   CSTOSP
   Store conditionally into string attribute	
   @aref cstosp CStoSp
@@ -78,7 +78,7 @@
     ut[size-1] = 0; \
   }
 
-/**
+/*_*
   SUBSTR
   @aref substr SubStr
 */

@@ -33,7 +33,7 @@
 #define cNanoSec 1.0e-9
 
 
-/**
+/*_*
   @aref plcthread PlcThread
 */
 pwr_sClass_PlcThread *

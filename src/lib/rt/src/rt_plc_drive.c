@@ -11,7 +11,7 @@
 #include "rt_plc.h"
 #include "rt_plc_timer.h"
 
-/**
+/*_*
   Drive
   Function:
     Simple Drive with interlocks and
@@ -126,7 +126,7 @@ void drive_exec (
   object->Ind = (object->Status == 4) && !object->Local;
 }
 
-/**
+/*_*
   Valve
   Function:
     Magnetic valve with time alarm
@@ -250,7 +250,7 @@ void valve_exec (
   object->ManClose = FALSE;
 }
 
-/**
+/*_*
   MValve
   Function:
     Motor-valve
@@ -504,7 +504,7 @@ void mvalve_exec (
   object->ManStop = FALSE;
 }
 
-/**
+/*_*
   Posit
   Function:
     Order a drive to a preset position.

@@ -20,7 +20,7 @@
 static pwr_sNode *np = 0;
 
 
-/**
+/*_*
   @aref node Node
 */
 

@@ -7,7 +7,7 @@
 
 /*		 PREPROCESSOR ROUTINES FOR LOGIC CONTROL	    */
 
-/**
+/*_*
   And
 
   and-gate
@@ -16,7 +16,7 @@
 #define and_exec(obj,expr)						\
   obj->Status = ( expr );
 
-/**
+/*_*
   OR
   or-gate
 
@@ -25,7 +25,7 @@
 #define or_exec(obj,expr)						\
   obj->Status = ( expr );
 
-/**
+/*_*
   XOR
   exclusive or-block
 
@@ -34,7 +34,7 @@
 #define xor_exec(obj,in1,in2)						\
   obj->Status = !(in1 == in2 );
 
-/**
+/*_*
   EDGE
   detects logic rise.
 
@@ -46,21 +46,21 @@
 
 
 
-/**
+/*_*
   AARITHM
   @aref aarithm AArithm
 */
 #define aarithm_exec(obj,expr)						\
   obj->ActVal = expr;
 
-/**
+/*_*
   DARITHM
   @aref darithm DArithm
 */
 #define darithm_exec(obj,expr)						\
   obj->Status = expr;
 
-/**
+/*_*
   CARITHM
   @aref carithm CArithm
 */
@@ -69,7 +69,7 @@
   expr\
 }
 
-/**
+/*_*
   SR_S
   @aref sr_s SR_S
 */
@@ -78,7 +78,7 @@
     obj->Status = true;							\
   else if (reset) obj->Status = false;
 
-/**
+/*_*
   SR_R
   @aref sr_r SR_R
 */
@@ -87,14 +87,14 @@
     obj->Status = false;						\
   else if (set) obj->Status = true;
 
-/**
+/*_*
   INV
   @aref inv Inv
 */
 #define inv_exec(obj,in)						\
   obj->Status = !in;
 
-/**
+/*_*
   PULSE
   @aref pulse Pulse
 */
@@ -108,7 +108,7 @@
     obj->Status = obj->TimerFlag;					\
   obj->StatusOld = in;
 
-/**
+/*_*
   WAIT
   @aref wait Wait
 */
@@ -120,7 +120,7 @@
   obj->StatusOld = in;							\
   obj->Status = in && !obj->TimerFlag;
 
-/**
+/*_*
   TIMER
   @aref timer Timer
 */
@@ -132,7 +132,7 @@
   obj->StatusOld = in;							\
   obj->Status = in || obj->TimerFlag;
 
-/**
+/*_*
   WAITH
   @aref waith Waith
 */
@@ -162,7 +162,7 @@
     obj->Status = false;						\
   }
 
-/**
+/*_*
   STRCAT
   @aref strcat Strcat
 */

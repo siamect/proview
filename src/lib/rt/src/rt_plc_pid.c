@@ -18,7 +18,7 @@
 
 /* 		PLC RUTINER			*/
 
-/**
+/*_*
   INC3P
   function:	accumulate output change from controller
 		and convert to Open or Close orders.
@@ -130,7 +130,7 @@ void inc3p_exec(
 	}
     }
 
-/**
+/*_*
   POS3P
   function:	Compare controller output to actual position
 		Open or close if outside of deadzone.
@@ -203,7 +203,7 @@ void pos3p_exec(
 	  object->TimerCount = 0;
 	}
 }
-/**
+/*_*
   OUT2P
   function:	Konvert analog controll output to binary on / off
 
@@ -252,7 +252,7 @@ void out2p_exec(
 	}
 }
 
-/**
+/*_*
    MODE
   function:	Set controller or drive in different operation mode.
 		Pass analog values depending on mode.
@@ -317,7 +317,7 @@ void mode_exec(
 	}
 }
 
-/**
+/*_*
   PID
   function:	PID or PD Controller with basic facilities
 		Possible to turn off integration and to force

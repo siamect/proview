@@ -16,7 +16,7 @@
 #include "rt_plc.h"
 #include "rt_plc_timer.h"
 
-/**
+/*_*
   PiPos
   Function:
     Handles input from pulse-interface-card
@@ -72,7 +72,7 @@ void pipos_exec (
   object->CalOrder2Old = object->CalOrder2;
 }
 
-/**
+/*_*
   Count
   Function:
     Handles all functions for flank counter
@@ -128,7 +128,7 @@ void count_exec (
   object->Equal = object->Accum == object->Preset;
 }
 
-/**
+/*_*
   BCDDO
   Function:
     Converts float to 4-digit BCD value.
@@ -169,7 +169,7 @@ void bcddo_exec	(
   object->Rest = rest;
 }
 
-/**
+/*_*
   DIBCD
   function:       Converts 4-digit BCD value to float.
 
@@ -215,7 +215,7 @@ void dibcd_exec (
   object->Error = err;
 }
 
-/**
+/*_*
   Gray
   Function:       
     Gray converts up to 16 digital Gray coded input signals

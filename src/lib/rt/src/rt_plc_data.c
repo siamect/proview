@@ -30,7 +30,7 @@ typedef struct {
 
 /* 		PLC RUTINER			*/
 
-/**
+/*_*
   @aref dpcollect DpCollect
 */
 void DpCollect_exec(
@@ -48,7 +48,7 @@ void DpCollect_exec(
 	}
 }
 
-/**
+/*_*
   @aref apcollect ApCollect
 */
 void ApCollect_exec(
@@ -66,7 +66,7 @@ void ApCollect_exec(
 	}
 }
 
-/**
+/*_*
   @aref dpdistribute DpDistribute
 */
 void DpDistribute_exec(
@@ -78,7 +78,7 @@ void DpDistribute_exec(
 		min( object->MaxIndex, 24) * sizeof(pwr_tBoolean));
 }
 
-/**
+/*_*
   @aref apdistribute ApDistribute
 */
 void ApDistribute_exec(
@@ -90,7 +90,7 @@ void ApDistribute_exec(
 		min( object->MaxIndex, 24) * sizeof(pwr_tFloat32));
 }
 
-/**
+/*_*
   @aref datacollect DataCollect
 */
 void DataCollect_exec(

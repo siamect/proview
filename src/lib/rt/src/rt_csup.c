@@ -22,7 +22,7 @@
 #include "rt_errh.h"
 
 
-/**
+/*_*
   @aref cyclesup CycleSup
   */
 lst_sEntry *

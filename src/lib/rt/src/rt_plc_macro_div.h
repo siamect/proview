@@ -9,31 +9,31 @@
 #define Backup_init(object, data)\
     strcpy( &(object->DataName), data);
 
-/**
+/*_*
   @aref windowplc WindowPlc
 */
 #define windowplc_exec(object)\
     if ( object->ScanOff) return;
 
-/**
+/*_*
   @aref windowcond WindowCond
 */
 #define windowcond_exec(object)\
     if ( object->ScanOff) return;
 
-/**
+/*_*
   @aref windoworderact WindowOrderact
 */
 #define windoworderact_exec(object)\
     if ( object->ScanOff) return;
 
-/**
+/*_*
   @aref windowsubstep WindowSubstep
 */
 #define windowsubstep_exec(object)\
     if ( object->ScanOff) return;
 
-/**
+/*_*
   @aref scantime ScanTime
 */
 #define ScanTime_exec(object)\

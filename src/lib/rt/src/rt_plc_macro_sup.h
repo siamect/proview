@@ -44,7 +44,7 @@
   o->Acked = TRUE;
 #endif
 
-/**
+/*_*
   Name:
     ASup_exec(object, In, con)				
 
@@ -107,7 +107,7 @@
   o->CheckReturn = FALSE;				\
   o->Acked = TRUE;
 #endif
-/**
+/*_*
   Name:
     DSup_exec(object, In, con)				
 
