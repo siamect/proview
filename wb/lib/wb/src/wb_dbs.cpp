@@ -248,6 +248,8 @@ bool wb_dbs::importHead(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
   m_nObjects++;
   m_volume.cardinality++;    
 
+  if ( flags.b.DevOnly)
+    oep->o.flags.b.devOnly = 1;
 #if 0
   if (fep == NULL)
     oep->flags.b.devOnly = o.isDevOnly();
