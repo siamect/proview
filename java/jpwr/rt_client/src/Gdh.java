@@ -404,7 +404,7 @@ public class Gdh
         int typeId = in.readInt();
 	int size = in.readInt();
 	int elements = in.readInt();
-        Sub sub = new Sub(attributeName, refid, id, typeId,subscriptionCount, size, elements);
+        Sub sub = new Sub(attributeName, refid, id, typeId,subscriptionCount, elements, size);
         sub.sts = 1;
         subscriptions.insertElementAt(sub, id);
         subscriptionCount++;
@@ -1279,7 +1279,7 @@ public class Gdh
       
       for(int i = 0; i < subscriptions.size();i++)
       {
-	
+	  //System.out.println("getObjectRefInfoAll:" + ((jpwr.rt.Sub)(subscriptions.get(i))).elements);
 	try
 	{
 	  if(((jpwr.rt.Sub)(subscriptions.get(i))).elements > 1)
