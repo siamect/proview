@@ -213,8 +213,10 @@ wb_vrepdbs::ancestor(pwr_tStatus *sts, wb_orep *o)
     *sts = LDH__SUCCESS;
 
     dbs_sObject *op = dbs_Ancestor(sts, dbsenv(), ((wb_orepdbs *)o)->o());
-    if (op == 0)
+    if (op == 0) {
+        *sts = LDH__NOSUCHOBJ;        
         return 0;
+    }
 
     return new (this) wb_orepdbs(op);
 }
@@ -226,8 +228,10 @@ wb_vrepdbs::parent(pwr_tStatus *sts, wb_orep *o)
     *sts = LDH__SUCCESS;
 
     dbs_sObject *op = dbs_Parent(sts, dbsenv(), ((wb_orepdbs *)o)->o());
-    if (op == 0)
+    if (op == 0) {
+        *sts = LDH__NOSUCHOBJ;        
         return 0;
+    }
 
     return new (this) wb_orepdbs(op);
 }
@@ -238,8 +242,10 @@ wb_vrepdbs::after(pwr_tStatus *sts, wb_orep *o)
     *sts = LDH__SUCCESS;
 
     dbs_sObject *op = dbs_After(sts, dbsenv(), ((wb_orepdbs *)o)->o());
-    if (op == 0)
+    if (op == 0) {
+        *sts = LDH__NOSUCHOBJ;        
         return 0;
+    }
 
     return new (this) wb_orepdbs(op);
 }
@@ -250,8 +256,10 @@ wb_vrepdbs::before(pwr_tStatus *sts, wb_orep *o)
     *sts = LDH__SUCCESS;
 
     dbs_sObject *op = dbs_Before(sts, dbsenv(), ((wb_orepdbs *)o)->o());
-    if (op == 0)
+    if (op == 0) {
+        *sts = LDH__NOSUCHOBJ;        
         return 0;
+    }
 
     return new (this) wb_orepdbs(op);
 }
@@ -263,8 +271,10 @@ wb_vrepdbs::first(pwr_tStatus *sts, wb_orep *o)
     *sts = LDH__SUCCESS;
 
     dbs_sObject *op = dbs_First(sts, dbsenv(), ((wb_orepdbs *)o)->o());
-    if (op == 0)
+    if (op == 0) {
+        *sts = LDH__NOSUCHOBJ;        
         return 0;
+    }
 
     return new (this) wb_orepdbs(op);
 }
@@ -276,8 +286,10 @@ wb_vrepdbs::child(pwr_tStatus *sts, wb_orep *o, wb_name name)
     *sts = LDH__SUCCESS;
 
     dbs_sObject *op = dbs_Child(sts, dbsenv(), ((wb_orepdbs *)o)->o(), name.normObject());
-    if (op == 0)
+    if (op == 0) {
+        *sts = LDH__NOSUCHOBJ;        
         return 0;
+    }
 
     return new (this) wb_orepdbs(op);
 }
@@ -289,8 +301,10 @@ wb_vrepdbs::last(pwr_tStatus *sts, wb_orep *o)
     *sts = LDH__SUCCESS;
 
     dbs_sObject *op = dbs_Last(sts, dbsenv(), ((wb_orepdbs *)o)->o());
-    if (op == 0)
+    if (op == 0) {
+        *sts = LDH__NOSUCHOBJ;        
         return 0;
+    }
 
     return new (this) wb_orepdbs(op);
 }
@@ -302,8 +316,10 @@ wb_vrepdbs::next(pwr_tStatus *sts, wb_orep *o)
     *sts = LDH__SUCCESS;
 
     dbs_sObject *op = dbs_Next(sts, dbsenv(), ((wb_orepdbs *)o)->o());
-    if (op == 0)
+    if (op == 0) {
+        *sts = LDH__NOSUCHOBJ;        
         return 0;
+    }
 
     return new (this) wb_orepdbs(op);
 }
@@ -314,8 +330,10 @@ wb_vrepdbs::previous(pwr_tStatus *sts, wb_orep *o)
     *sts = LDH__SUCCESS;
 
     dbs_sObject *op = dbs_Previous(sts, dbsenv(), ((wb_orepdbs *)o)->o());
-    if (op == 0)
+    if (op == 0) {
+        *sts = LDH__NOSUCHOBJ;        
         return 0;
+    }
 
     return new (this) wb_orepdbs(op);
 }
@@ -334,7 +352,14 @@ wb_orep *
 wb_vrepdbs::object(pwr_tStatus *sts)
 {
     *sts = LDH__SUCCESS;
-    return 0;
+
+    dbs_sObject *op = dbs_Object(sts, dbsenv());    
+    if (op == 0) {
+        *sts = LDH__NOSUCHOBJ;
+        return 0;
+    }
+
+    return new (this) wb_orepdbs(op);
 }
 
 bool
