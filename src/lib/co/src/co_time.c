@@ -128,14 +128,16 @@ validateTm (
   return TIME__SUCCESS;
 }
 
-/* Add two timespecs, result = t + d, where:
+//! Add an absolute time and a delta time.
+/*! Add two timespecs, result = t + d, where:
    
    -  'result' and 't' is an absolute time, and
    -  'd' is a delta time.
 
   If 'result' argument is NULL
   then 't' will be used as resultant.
-  Returns the address to the resulting time. */
+  Returns the address to the resulting time.
+*/
 
 pwr_tTime *
 time_Aadd (
@@ -159,14 +161,15 @@ time_Aadd (
   return r;
 }
 
-/* Compare two timespecs.
-   Returns
+//! Compare two timespecs.
+/*!   Returns
     1 if t1  > t2
     0 if t1 == t2
    -1 if t1  < t2
 
    If argument 't2' is NULL the comparison will
-   be done as if t2 == 0.  */
+   be done as if t2 == 0.  
+*/
 
 int 
 time_Acomp (
@@ -191,10 +194,11 @@ time_Acomp (
     return ((t1->tv_sec > t2->tv_sec) ? 1 : -1);
 }
 
-/* Subtract a time from a time,
-   r = t - s
+//! Subtract a time from a time,
+/*!   r = t - s
 
-   Result is always a delta time.  */
+   Result is always a delta time.  
+*/
 
 pwr_tDeltaTime *
 time_Adiff (
@@ -226,10 +230,11 @@ time_Adiff (
   return r;
 }
 
-/* Subtract a delta time from a time,
-   r = t - s
+//! Subtract a delta time from a time,
+/*!   r = t - s
 
-   Result is always an abstime.  */
+   Result is always an abstime.  
+*/
 
 pwr_tTime *
 time_Asub (
@@ -263,12 +268,13 @@ time_Asub (
 
 }
 
-/* Take the absolute walue of a delta time.
-   
+//! Take the absolute walue of a delta time.
+/*!   
    'result' = |'t'|
 
    A NULL address => abs value is written to 't'.
-   Returns the address to the resulting time. */
+   Returns the address to the resulting time. 
+*/
 
 pwr_tDeltaTime *
 time_Dabs (
@@ -288,8 +294,8 @@ time_Dabs (
   return r;
 }
 
-/* Add two delta times, the result is also delta.
-   If 'result' is NULL then 'a' will be added to 't'.  */
+//! Add two delta times, the result is also delta.
+/*!   If 'result' is NULL then 'a' will be added to 't'.  */
 
 pwr_tDeltaTime * 
 time_Dadd (
@@ -313,14 +319,15 @@ time_Dadd (
   return r;
 }
 
-/* Compare two delta times.
-   Returns
+//! Compare two delta times.
+/*!   Returns
     1 if t1  > t2
     0 if t1 == t2
    -1 if t1  < t2
 
    If argument 't2' is NULL the comparison will
-   be done as if t2 == 0.  */
+   be done as if t2 == 0.  
+*/
 
 int 
 time_Dcomp (
@@ -342,13 +349,14 @@ time_Dcomp (
     return ((t1->tv_sec > t2->tv_sec) ? 1 : -1);
 }
 
-/* Negate a delta time,
-
+//! Negate a delta time,
+/*!
    result = -d
 
   If 'result' argument is NULL
   then 'd' will be used as resultant.
-  Returns the address to the resulting time.  */
+  Returns the address to the resulting time.  
+*/
 
 pwr_tDeltaTime *
 time_Dneg (
@@ -368,7 +376,8 @@ time_Dneg (
   return r;
 }
 
-/* Subtract two delta times, the result is also delta.  */
+//! Subtract two delta times.
+/*! The result is also delta.  */
 
 pwr_tDeltaTime *
 time_Dsub (
@@ -402,7 +411,7 @@ time_Dsub (
   return r;
 }
 
-/* Convert a delta time to ascii string. */
+//! Convert a delta time to ascii string.
 
 pwr_tStatus
 time_DtoAscii ( 
@@ -441,8 +450,8 @@ time_DtoAscii (
 }
 
 
-/* Convert timespec to ascii
-   
+//! Convert timespec to ascii
+/*!   
    NOTE: Not thread safe.  */
 
 pwr_tStatus
@@ -481,8 +490,7 @@ time_AtoAscii (
   return TIME__SUCCESS;
 }
 
-/* Convert ascii to timespec.  */
-
+//! Convert ascii to timespec.
 pwr_tStatus 
 time_AsciiToD (
   char		  *tstr, 
@@ -545,7 +553,7 @@ time_AsciiToD (
 }
 
 
-/* Convert ascii time to timespec.  */
+//! Convert ascii time to timespec.
 
 pwr_tStatus 
 time_AsciiToA (
@@ -590,7 +598,7 @@ time_AsciiToA (
   return TIME__SUCCESS;
 }
 
-/* Convert time struct to string.  */
+//! Convert time struct to string.
 
 pwr_tStatus 
 time_TmToAscii (
@@ -620,7 +628,7 @@ time_TmToAscii (
   return TIME__SUCCESS;
 }
 
-/* Convert timestring to struct.  */
+//! Convert timestring to struct.
 
 pwr_tStatus 
 time_AsciiToTm (
@@ -814,7 +822,7 @@ time_AtoFormAscii (
   }
 }
 
-/* Convert millisec to timespec.  */
+//! Convert millisec to timespec.
 
 pwr_tDeltaTime * 
 time_MsToD (
@@ -833,8 +841,7 @@ time_MsToD (
   return t;
 }
 
-
-/* Convert float to time.  */
+//! Convert float to time.
 
 pwr_tDeltaTime * 
 time_FloatToD (
@@ -854,7 +861,7 @@ time_FloatToD (
 }
 
 
-/* Convert time to float.  */
+//! Convert time to float.
 
 pwr_tFloat32 
 time_DToFloat (

@@ -35,10 +35,19 @@ typedef unsigned int time_tClock;
 # error Not defined for this platform
 #endif
 
+/*! \file co_time.h
+    \brief Time function.
+   This include file contains definitions and function prototypes
+   needed to use time functions.
+*/
+/*! \addtogroup Time */
+/*@{*/
+
+//! Time string format
 typedef enum {
-  time_eFormat_DateAndTime = 0,
-  time_eFormat_Time  = 1,
-  time_eFormat_ComprDateAndTime = 2
+  time_eFormat_DateAndTime = 0,		//!< Display date and time, 01-JAN-1970 01:00:00.00
+  time_eFormat_Time  = 1,		//!< Display time only 01:00:00.00
+  time_eFormat_ComprDateAndTime = 2	//!< Date and time compressed format, 70-01-01 00:00:00 
 } time_eFormat;
 
 #define SWE 0
@@ -122,6 +131,8 @@ int			eln_clock_getres (clockid_t, struct timespec*);
 #define mktime eln_mktime
 #define clock_getres eln_clock_getres
 #endif
+
+/*@}*/
 
 #ifdef __cplusplus
 }
