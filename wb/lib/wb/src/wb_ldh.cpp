@@ -41,6 +41,7 @@ This module contains the API-routines to the Local Data Handler, LDH.  */
 #include "wb_vrepmem.h"
 #include "wb_vrepwbl.h"
 #include "wb_vrepdbs.h"
+#include "wb_merep.h"
 #include "wb_db.h"
 #include "wb_print_wbl.h"
 #include "pwr_baseclasses.h"
@@ -250,7 +251,8 @@ ldh_ChangeObjectName(ldh_tSession session, pwr_tOid oid, char *name)
 
   try {
     wb_name n(name);
-    
+    if ( !n) return n.sts();
+
     wb_object o = sp->object(oid);
     if (!o) return o.sts();
     if (!sp->isLocal(o)) return LDH__OTHERVOLUME;
@@ -784,8 +786,13 @@ ldh_GetReferenceInfo(ldh_tSession session, pwr_tOid oid, ldh_sRefInfo *rip)
   wb_object o = sp->object(oid);
   if (!o) return o.sts();
     
-  o.refinfo(rip);
-  return o.sts();
+  try {
+    sp->refinfo( o, rip);
+
+  } catch (wb_error& e) {
+    return e.sts();
+  }
+  return LDH__SUCCESS;
 }
 
 /* Get first object in root list.  */
@@ -1330,6 +1337,8 @@ ldh_SetObjectName(ldh_tSession session, pwr_tOid oid, char *name)
 
   try {
     wb_name n(name);
+    if ( !n) return n.sts();
+
     sp->renameObject(o, n);
   }
   catch ( wb_error& e) {
@@ -1572,6 +1581,12 @@ ldh_WbLoad( ldh_tSession session, char *loadfile)
       wb_db db( pwr_cNVid);
       db.copy( *vdbs, db_name);      
       db.close();
+      erep->merep()->copyFiles( db_name);
+
+      // Set permissions from umask
+      char cmd[200];
+      sprintf( cmd, "$pwr_exe/wb_dbchmod.sh %s", db_name);
+      system( cmd);
 
       delete vdbs;      
     }
@@ -1598,6 +1613,12 @@ ldh_WbLoad( ldh_tSession session, char *loadfile)
       wb_db db( pwr_cNVid);
       db.copy( *vwbl, db_name);
       db.close();
+      erep->merep()->copyFiles( db_name);
+
+      // Set permissions from umask
+      char cmd[200];
+      sprintf( cmd, "$pwr_exe/wb_dbchmod.sh %s", db_name);
+      system( cmd);
 
       delete vwbl;      
     }
