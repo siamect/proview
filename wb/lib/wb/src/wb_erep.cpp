@@ -804,6 +804,11 @@ wb_vrep *wb_erep::createVolume(pwr_tStatus *sts, pwr_tVid vid, pwr_tCid cid,
   addDb( sts, vrepdb);
   MsgWindow::message( 'I', "Database created", vname);
 
+  // Set permissions from umask
+  char cmd[200];
+  sprintf( cmd, "$pwr_exe/wb_dbchmod.sh %s", vname);
+  system( cmd);
+
   return vrepdb;
 }
 
