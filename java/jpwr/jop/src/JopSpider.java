@@ -61,11 +61,11 @@ System.out.println( "qcom put finished");
   static CliTable[] cliTable = new CliTable[] { 
     new CliTable( "OPEN", new String[] {"cli_arg1", "cli_arg2", "/NAME", 
 	"/FILE", "/SCROLLBAR", "/WIDTH", "/HEIGHT", "/MENU", "/NAVIGATOR", 
-	"/CENTER", "/OBJECT", "/INSTANCE", "/NEW"}),
+	"/CENTER", "/OBJECT", "/INSTANCE", "/NEW", "/CLASSGRAPH"}),
     new CliTable( "EXIT", null),
     new CliTable( "HELP", new String[] {"cli_arg1", "cli_arg2", "cli_arg3",
 	"cli_arg4", "/HELPFILE", "/POPNAVIGATOR", "/BOOKMARK", "/INDEX",
-        "/BASE", "/RETURNCOMMAND", "/WIDTH", "/HEIGHT"}),
+        "/BASE", "/RETURNCOMMAND", "/WIDTH", "/HEIGHT", "/VERSION"}),
     new CliTable( "SET", new String[] {"cli_arg1",
     	"/NAME", "/VALUE", "/BYPASS"}),
     new CliTable( "EXAMPLE", new String[] {"/NAME", "/HIERARCHY"}) 
@@ -112,7 +112,7 @@ System.out.println( "qcom put finished");
 	      frameName = frameName.substring(0,1).toUpperCase() +
 		    frameName.substring(1);
 	      System.out.println( "Open frame " + frameName);
-	      session.openGraphFrame( frameName, instance, scrollbar);
+	      session.openGraphFrame( frameName, instance, scrollbar, false);
 	    }
             else if ( session.isApplet()) {
               System.out.println( "Loading applet \"" + frameName + "\"");
@@ -136,6 +136,7 @@ System.out.println( "qcom put finished");
 	        String objectValue = cli.getQualValue("/OBJECT");
                 String objectName;
                 String appletName;
+		String instance = null;
 
                 // Replace * by node object
                 if ( objectValue.charAt(0) == '*') {
@@ -167,11 +168,17 @@ System.out.println( "qcom put finished");
 		    return;
 		  }
 		}
+
+		attrName = objectName + ".Object";
+		cdhr = gdh.getObjectInfoString( attrName);
+		if ( cdhr.oddSts() && !cdhr.str.equals(""))
+		  instance = cdhr.str;
+
                 if ( session.isOpWindowApplet()) {
 	          appletName = appletName.substring(0,1).toUpperCase() +
 		      appletName.substring(1);
 	          System.out.println( "Open frame " + appletName);
-	          session.openGraphFrame( appletName, null, false);
+	          session.openGraphFrame( appletName, instance, false, false);
 		}
 		else {
                   System.out.println( "Loading applet \"" + appletName + "\"");
@@ -180,23 +187,35 @@ System.out.println( "qcom put finished");
                 local_cmd = true;
               }
               else {
-                if ( ! cli.qualifierFound("cli_arg2")) {
-	          System.out.println("Syntax error");
-                  return;
-                }
-	        String frameName = cli.getQualValue("cli_arg2").toLowerCase();
-
 		if ( session.isOpWindowApplet()) {
+		  String frameName = null;
 		  String instanceValue = null;
-                  if ( cli.qualifierFound("/INSTANCE"))
+		  boolean classGraph = false;
+                  if ( cli.qualifierFound("/INSTANCE")) {
 	            instanceValue = cli.getQualValue("/INSTANCE");
+		    classGraph = cli.qualifierFound("/CLASSGRAPH");		      
+		  }
+		  if ( !classGraph) {
+		    if ( ! cli.qualifierFound("cli_arg2")) {
+		      System.out.println("Syntax error");
+		      return;
+		    }
+		    frameName = cli.getQualValue("cli_arg2").toLowerCase();
 
-		  frameName = frameName.substring(0,1).toUpperCase() +
+		    frameName = frameName.substring(0,1).toUpperCase() +
 			frameName.substring(1);
-		  System.out.println( "Open frame " + frameName);
-		  session.openGraphFrame( frameName, instanceValue, scrollbar);
+		    System.out.println( "Open frame " + frameName);
+		  }
+		  session.openGraphFrame( frameName, instanceValue, scrollbar, classGraph);
 		}
 		else {
+		  String frameName = null;
+		  if ( ! cli.qualifierFound("cli_arg2")) {
+		    System.out.println("Syntax error");
+		    return;
+		  }
+		  frameName = cli.getQualValue("cli_arg2").toLowerCase();
+
                   if ( cli.qualifierFound("/INSTANCE")) {
 	            String instanceValue = 
 			cli.getQualValue("/INSTANCE").toLowerCase();
@@ -229,6 +248,13 @@ System.out.println( "qcom put finished");
               if ( cli.qualifierFound("cli_arg2")) {
 		String urlValue = cli.getQualValue("cli_arg2");
     System.out.println("open url " + urlValue);
+                if ( urlValue.startsWith("pwrb_") ||
+		     urlValue.startsWith("pwrs_") ||
+		     urlValue.startsWith("nmps_") ||
+		     urlValue.startsWith("ssab_"))
+	          // Object reference manual
+		  urlValue = "$pwr_doc/orm/" + urlValue;
+
 	        openURL( session, urlValue, true, null);
 	      }
 	    } 
@@ -243,21 +269,36 @@ System.out.println( "qcom put finished");
           String fileName = "xtt_help_";
           String bookmarkValue = null;
 
-          if ( cli.qualifierFound("cli_arg1"))
-	    fileName += cli.getQualValue("cli_arg1").toLowerCase();
-          if ( cli.qualifierFound("cli_arg2"))
-	    fileName += "_" + cli.getQualValue("cli_arg2").toLowerCase();
-          if ( cli.qualifierFound("cli_arg3"))
-	    fileName += "_" + cli.getQualValue("cli_arg3").toLowerCase();
-          if ( cli.qualifierFound("cli_arg4"))
-	    fileName += "_" + cli.getQualValue("cli_arg4").toLowerCase();
+          if ( cli.qualifierFound("/VERSION")) {
+	    openURL( session, "$pwr_doc/xtt_version_help_version.html", true, null);
+	  }
+	  else {
+            if ( cli.qualifierFound("/BASE"))
+	      // Not language dependent !! TODO
+	      fileName = "$pwr_doc/help/xtt_help_";
+	    
+            if ( cli.qualifierFound("cli_arg1"))
+	      fileName += cli.getQualValue("cli_arg1").toLowerCase();
+            if ( cli.qualifierFound("cli_arg2"))
+	      fileName += "_" + cli.getQualValue("cli_arg2").toLowerCase();
+            if ( cli.qualifierFound("cli_arg3"))
+	      fileName += "_" + cli.getQualValue("cli_arg3").toLowerCase();
+            if ( cli.qualifierFound("cli_arg4"))
+	      fileName += "_" + cli.getQualValue("cli_arg4").toLowerCase();
 
-          if ( cli.qualifierFound("/BOOKMARK"))
-	    bookmarkValue = cli.getQualValue("/BOOKMARK");
+	    if ( fileName.startsWith("pwrb_") ||
+		 fileName.startsWith("pwrs_") ||
+		 fileName.startsWith("nmps_") ||
+		 fileName.startsWith("ssab_"))
+	      // Object reference manual
+	      fileName = "$pwr_doc/orm/" + fileName;
 
-          System.out.println( "Loading helpfile \"" + fileName + "\"");
-	  openURL( session, fileName, true, bookmarkValue);
+            if ( cli.qualifierFound("/BOOKMARK"))
+	      bookmarkValue = cli.getQualValue("/BOOKMARK");
 
+            System.out.println( "Loading helpfile \"" + fileName + "\"");
+	    openURL( session, fileName, true, bookmarkValue);
+	  }
           local_cmd = true;
         }
       }
@@ -431,7 +472,7 @@ System.out.println( "JopSpiderCmd start");
         System.out.println("NoSuchMethodException: Unable to get frame constructor " + className);
       }
       catch ( Exception e) {
-        System.out.println("Exception: Unable to get frame class " + className);
+        System.out.println("Exception: Unable to get frame class " + className + " " + e.getMessage());
       }
     }
     catch (ClassNotFoundException e) {
@@ -469,11 +510,29 @@ System.out.println( "JopSpiderCmd start");
     // Replace any URL symbol
     name = replaceUrlSymbol( session, name);
     try {
-      String url_str;
+      String url_str = null;
       if ( name.substring(0,5).equals("http:")) {
 	  url_str = name;
-        if ( url_str.lastIndexOf(".html") == -1)
+        if ( url_str.lastIndexOf(".html") == -1 &&
+	     url_str.lastIndexOf(".pdf") == -1)
           url_str = url_str + ".html";
+      }
+      else if ( name.startsWith("$pwr_doc/")) {
+        URL current = ((JApplet) root).getDocumentBase();
+        String current_str = current.toString();
+        int idx1 = current_str.indexOf('/');
+	if ( idx1 != -1 && current_str.length() > idx1 + 1) {
+          idx1 = current_str.indexOf('/', idx1+1);
+	  if ( idx1 != -1 && current_str.length() > idx1 + 1) {
+	    idx1 = current_str.indexOf('/', idx1+1);
+	    if ( idx1 != -1 && current_str.length() > idx1 + 1) {
+	      url_str = current_str.substring(0,idx1 + 1) + "pwr_doc/" + name.substring(9);	      
+	      if ( url_str.lastIndexOf(".html") == -1 &&
+		   url_str.lastIndexOf(".pdf") == -1)
+		url_str = url_str + ".html";
+	    }
+	  }
+	}
       }
       else {
         URL current = ((JApplet) root).getCodeBase();
@@ -484,7 +543,8 @@ System.out.println( "JopSpiderCmd start");
         if ( idx2 > idx)
           idx = idx2;
         String path = current_str.substring(0,idx + 1);
-        if ( name.lastIndexOf(".html") == -1)
+        if ( name.lastIndexOf(".html") == -1 &&
+	     name.lastIndexOf(".pdf") == -1)
           url_str = new String( path + name + ".html");
         else
           url_str = new String( path + name);
