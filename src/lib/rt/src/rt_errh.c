@@ -145,14 +145,13 @@ errh_Init (
   char *name
 )
 {
-
   get_name(programName, sizeof(programName) - 1);
   if (name != NULL && name[0] != '\0')
     set_name(name);
 
-  if (!initDone) {
-    openLog();
+  if ( !initDone) {
     initDone = 1;
+    openLog();
   }
 
   return 1;
