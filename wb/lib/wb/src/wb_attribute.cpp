@@ -137,7 +137,7 @@ wb_attribute::wb_attribute(wb_attribute& pa, int idx, const char* aname) :
   if (!(pa.m_flags & PWR_MASK_BUFFER))
     throw wb_error_str("Only $Buffer is supported as sub class");
 
-  cid = pa.bufferClass();
+  cid = pa.subClass();
   m_orep = pa.m_orep;
 
   wb_cdrep *cd = m_orep->vrep()->merep()->cdrep(&m_sts, cid);
@@ -282,6 +282,7 @@ int wb_attribute::flags()
 
 pwr_tAix wb_attribute::aix()
 {
+  throw wb_error_str("wb_attribute::aix() NYI");
   return 0; // Fix
 }
 
@@ -293,37 +294,41 @@ pwr_tCid wb_attribute::cid()
 
 pwr_eBix wb_attribute::bix()
 {
-    throw wb_error_str("wb_attribute::bix() NYI");
+  throw wb_error_str("wb_attribute::bix() NYI");
 
   return pwr_eBix__;  // Fix
 }
 
 pwr_tOid wb_attribute::boid()
 {
+  throw wb_error_str("wb_attribute::boid() NYI");
+
   pwr_tOid oid;
   return oid;  // Fix
 }
 
-pwr_eClass wb_attribute::bufferClass()
+pwr_tCid wb_attribute::subClass()
 {
-  // This is not recursive for subclasses
   if ( m_adrep)
-    return m_adrep->bufferClass();
-  return pwr_eClass__;
+    return m_adrep->subClass();
+  return 0;
 }
 
 bool wb_attribute::checkXref()
 {
+  throw wb_error_str("wb_attribute::checkXref() NYI");
   return true; // Fix
 }
 
 pwr_sAttrXRef *wb_attribute::xref()
 {
+  throw wb_error_str("wb_attribute::xref() NYI");
   return (pwr_sAttrXRef*)0; // Fix
 }
 
 pwr_sObjXRef *wb_attribute::oxref()
 {
+  throw wb_error_str("wb_attribute::oxref() NYI");
   return (pwr_sObjXRef*)0; // Fix
 }
 
@@ -353,21 +358,23 @@ void *wb_attribute::value(void *vp, size_t size, pwr_tStatus *sts)
     
 string wb_attribute::toString()
 {
-    string a;
-    return a;
+  throw wb_error_str("wb_attribute::toString() NYI");
+  string a;
+  return a;
 }
 
 pwr_tStatus wb_attribute::fromString(string)
 {
-    
-    pwr_tStatus sts;
-    return sts;
+  throw wb_error_str("wb_attribute::fromString() NYI");    
+  pwr_tStatus sts;
+  return sts;
 }
 
 pwr_tStatus wb_attribute::fromString(char *)
 {
-    pwr_tStatus sts;
-    return sts;
+  throw wb_error_str("wb_attribute::fromString() NYI");    
+  pwr_tStatus sts;
+  return sts;
 }
    
 wb_attribute wb_attribute::after()

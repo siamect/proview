@@ -16,7 +16,7 @@ wb_adrep *wb_adrep::ref()
 }
 
 wb_adrep::wb_adrep( wb_orepdbs& o): m_nRef(0), m_orep(&o), m_sts(LDH__SUCCESS),
-				    m_bufferClass(pwr_eClass__)
+				    m_subClass(pwr_eClass__)
 {
   m_orep->ref();
 
@@ -112,7 +112,7 @@ wb_adrep::wb_adrep( wb_orepdbs& o): m_nRef(0), m_orep(&o), m_sts(LDH__SUCCESS),
       m_flags = attr.Info.Flags;
       m_flags |= PWR_MASK_BUFFER;
       m_tid = 0;
-      m_bufferClass = attr.Class;
+      m_subClass = attr.Class;
 
       break;
     }

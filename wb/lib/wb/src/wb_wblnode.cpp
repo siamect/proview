@@ -864,7 +864,7 @@ void wb_wblnode::buildBuff( ref_wblnode object, int bix, pwr_tCid buffer_cid,
     return;
   }
 
-  pwr_tCid cid = adrep->bufferClass();
+  pwr_tCid cid = adrep->subClass();
   size = adrep->size();
   offset = adrep->offset();
   elements = adrep->nElement();

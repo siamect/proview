@@ -25,7 +25,7 @@ class wb_adrep
     int m_flags;
     pwr_tTid m_tid;
     pwr_tPgmName m_pgmname;
-    pwr_eClass m_bufferClass;
+    pwr_tCid m_subClass;
 
     friend class wb_bdrep;
     friend class wb_cdrep;
@@ -55,7 +55,7 @@ class wb_adrep
     pwr_eBix bix();
     int flags() {return m_flags;}
     pwr_tOid boid();
-    pwr_eClass bufferClass() { return m_bufferClass;}
+    pwr_tCid subClass() { return m_subClass;}
 
     const char *name() const;
     wb_name longName();

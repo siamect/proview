@@ -595,7 +595,7 @@ ldh_GetObjectBuffer(ldh_tSession session, pwr_tOid oid, char *bname,
     *size = a.size();
 
     a.value( *value);
-    *bufferclass = a.bufferClass();
+    *bufferclass = (pwr_eClass)a.subClass();
     return LDH__SUCCESS;
 }
 

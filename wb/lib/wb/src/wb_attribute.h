@@ -77,7 +77,7 @@ public:
     bool checkXref();
     pwr_sAttrXRef *xref();
     pwr_sObjXRef *oxref();
-    pwr_eClass bufferClass();
+    pwr_tCid  subClass();
     
     void *value( void *p = 0);
     void *value(void *vp, size_t size, pwr_tStatus*);
