@@ -28,14 +28,18 @@ palette NavigatorPalette
     class $PlantHier
     menu Signals
     {
-      class Di
-      class Do
-      class Dv
       class Ai
       class Ao
       class Av
       class Co
+      class Di
+      class Do
+      class Dv
+      class Ii
+      class Io
+      class Iv
       class Po
+      class Sv
     }
     menu DataStorage
     {
@@ -88,12 +92,14 @@ palette NavigatorPalette
       }
       menu Channels
       {
-        class ChanDi
-        class ChanDo
         class ChanAi
         class ChanAit
         class ChanAo
         class ChanCo
+        class ChanDi
+        class ChanDo
+        class ChanIi
+        class ChanIo
       }
       menu DIOC
       {
@@ -117,12 +123,14 @@ palette NavigatorPalette
       }
       menu Channels
       {
-        class ChanDi
-        class ChanDo
         class ChanAi
         class ChanAit
         class ChanAo
         class ChanCo
+        class ChanDi
+        class ChanDo
+        class ChanIi
+        class ChanIo
       }
       class IOHandler
     }
@@ -142,12 +150,14 @@ palette NavigatorPalette
         }
         menu Channels
         {
-          class ChanDi
-          class ChanDo
           class ChanAi
           class ChanAit
           class ChanAo
           class ChanCo
+          class ChanDi
+          class ChanDo
+          class ChanIi
+          class ChanIo
         }
       }
     }
@@ -280,81 +290,11 @@ palette ProjectNavigatorPalette
 #
 palette PlcEditorPalette
 {
-  menu Grafcet
-  {
-    class InitStep
-    class Order
-    class OrderAct
-    class Reset_SO
-    class SetCond
-    class SsBegin
-    class SsEnd
-    class Step
-    class SubStep
-    class Trans
-  }
-  menu IO
-  {
-    class ApCollect
-    class ApDistribute
-    class BCDDo
-    class CStoAo
-    class CStoAp
-    class CStoAv
-    class CStoIp
-    class DataCollect
-    class DiBCD
-    class DpCollect
-    class DpDistribute
-    class GetAi
-    class GetAo
-    class GetAp
-    class GetAv
-    class GetData
-    class GetDi
-    class GetDo
-    class GetDp
-    class GetDv
-    class GetIp
-    class GetPi
-    class Gray
-    class PiPos
-    class ResDo
-    class ResDp
-    class ResDv
-    class SetDo
-    class SetDp
-    class SetDv
-    class StoAo
-    class StoAp
-    class StoAv
-    class StoDo
-    class StoDp
-    class StoDv
-    class StoIp
-  }
-  menu Logic
-  {
-    class ASup
-    class And
-    class Count
-    class DSup
-    class Edge
-    class Inv
-    class Or
-    class Pulse
-    class SR_R
-    class SR_S
-    class Timer
-    class Wait
-    class Waith
-    class XOr
-    class CSub
-  }
   menu Analog
   {
-    class Adelay
     class AArithm
+    class Adelay
+    class ASup
     class CArithm
     class Comph
     class Compl
@@ -389,10 +329,6 @@ palette PlcEditorPalette
     class Posit
     class Valve
   }
-  menu Backup
-  {
-    class Backup
-  }
   menu Edit
   {
     class BodyText
@@ -406,25 +342,39 @@ palette PlcEditorPalette
     class Text
     class Title
   }
-  menu String
+  menu Grafcet
   {
-    class AtoStr
-    class CStoSv
-    class CStoSp
-    class DtoStr
-    class GetSp
-    class GetSv
-    class ItoStr
-    class StoSp
-    class StoSv
-    class Strcat
-    class SubStr
+    class InitStep
+    class Order
+    class OrderAct
+    class Reset_SO
+    class SetCond
+    class SsBegin
+    class SsEnd
+    class Step
+    class SubStep
+    class Trans
+  }
+  menu Logic
+  {
+    class And
+    class Count
+    class DSup
+    class Edge
+    class Inv
+    class Or
+    class Pulse
+    class SR_R
+    class SR_S
+    class Timer
+    class Wait
+    class Waith
+    class XOr
   }
   menu NMps NMps
   {
     class CellDisp
     class CellUpdate
-    class CLoop
     class CurrentData
     class CurrentIndex
     class DataCopy
@@ -448,9 +398,111 @@ palette PlcEditorPalette
     class NMpsTrp
     class NMpsTrpFF
     class NMpsTrpRR
+  }
+  menu Other
+  {
+    class Backup
+    class CLoop
+    class CSub
     class RemTransRcv
     class RemTransSend
     class RunningTime
+  }
+  menu Signals
+  {
+    menu Analog
+    {
+      class ApCollect
+      class ApDistribute
+      class CStoAo
+      class CStoAp
+      class CStoAtoIp
+      class CStoAv
+      class GetAi
+      class GetAo
+      class GetAp
+      class GetAv
+      class StoAo
+      class StoAp
+      class StoAtoIp
+      class StoAv
+    }
+    menu Digtal
+    {
+      class DpCollect
+      class DpDistribute
+      class GetDi
+      class GetDo
+      class GetDp
+      class GetDv
+      class ResDo
+      class ResDp
+      class ResDv
+      class SetDo
+      class SetDp
+      class SetDv
+      class StoDo
+      class StoDp
+      class StoDv
+    }
+    menu Integer
+    {
+      class CStoIo
+      class CStoIp
+      class CStoIv
+      class GetIi
+      class GetIo
+      class GetIp
+      class GetIpToA
+      class GetIv
+      class StoIo
+      class StoIp
+      class StoIv
+      class GetPi
+      class PiPos
+    }
+    menu Conversion
+    {
+      class AtoI
+      class AtoStr
+      class BCDDo
+      class DiBCD
+      class DtoMask
+      class DtoEnum
+      class DtoStr
+      class EnumToD
+      class Gray
+      class ItoA
+      class ItoStr
+      class MaskToD
+    }
+    menu Data
+    {
+      class DataCollect
+      class GetData
+    }
+    menu String
+    {
+      class CStoSv
+      class CStoSp
+      class GetSp
+      class GetSv
+      class StoSp
+      class StoSv
+      class Strcat
+      class SubStr
+    }
+    menu Simulate
+    {
+      class CStoAi
+      class CStoIi
+      class ResDi
+      class SetDi
+      class StoAi
+      class StoDi
+      class StoIi
+      class StoPi
+    }
   }
   menu TLog TLog
   {
@@ -467,15 +519,6 @@ palette PlcEditorPalette
     class TLogExecAllOff
     class TLogOpen
     class TLogModify
-  }
-  menu Simulate
-  {
-    class CStoAi
-    class ResDi
-    class SetDi
-    class StoAi
-    class StoDi
-    class StoPi
   }
 }
 palette PlcEditorConPalette
