@@ -346,7 +346,8 @@ vol_LinkObject (
 
   if (link.b.loFamilyTab && !op->l.flags.b.inFamilyTab) {
     op = hash_Insert(&lsts, gdbroot->family_ht, op);
-    if (op == NULL) errh_Bugcheck(lsts, "hash_Insert(sts, gdbroot->family_ht, op)");
+    if (op == NULL) 
+      errh_Bugcheck(lsts, "hash_Insert(sts, gdbroot->family_ht, op)");
     op->l.flags.b.inFamilyTab = 1;
   }
 
