@@ -9,3 +9,6 @@
 
 success		<successful completion>					/succ
 pdrfile		<pdr_dbs_sFile failed>					/error
+notmapped	<snapshot file is not mapped>				/error
+badsect		<section does not exist>				/error
+badoffs		<offset is out of scope>				/error
