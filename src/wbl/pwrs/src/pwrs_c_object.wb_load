@@ -867,6 +867,13 @@ SObject pwrs:Class
 	  Attr FilterName = "$Object-HistEventFilter"
 	EndBody
       EndObject
+      Object BlockEvents $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Block Events..."
+	  Attr MethodName = "$Object-BlockEvents"
+	  Attr FilterName = "$Object-BlockEventsFilter"
+	EndBody
+      EndObject
       Object Help $MenuButton
 	Body SysBody
 	  Attr ButtonName = "Help"
@@ -974,6 +981,13 @@ SObject pwrs:Class
 	  Attr ButtonName = "Hist Event..."
 	  Attr MethodName = "$Object-HistEvent"
 	  Attr FilterName = "$Object-HistEventFilter"
+	EndBody
+      EndObject
+      Object BlockEvents $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Block Alarms..."
+	  Attr MethodName = "$Object-BlockEvents"
+	  Attr FilterName = "$Object-BlockEventsFilter"
 	EndBody
       EndObject
       Object Help $MenuButton

@@ -23,7 +23,7 @@ SObject pwrb:Class
 !  way:
 !  @image orm_en1-173.gif
 ! @b Manual
-!  The MANUAL mode is thought to be handled from the object\s display. 
+!  The MANUAL mode is thought to be handled from the object's display. 
 !
 !  * A set point value is set in SetPos. 
 !  * The positioning is started by setting PosOn to TRUE. 

@@ -32,8 +32,7 @@ SObject pwrb:Class
 !  @classlink RootVolumeLoad pwrb_rootvolumeload.html
 !  @classlink ClassVolumeLoad pwrb_classvolumeload.html
 !  @classlink FriendNodeConfig pwrb_friendnodeconfig.html
-!  @classlink ApplDistribute pwrb_appldistribute.html
-!  @classlink GraphDistribute pwrb_graphdistribute.html
+!  @classlink Distribute pwrb_distribute.html
 !  
 !*/
   Object NodeConfig $ClassDef 160 

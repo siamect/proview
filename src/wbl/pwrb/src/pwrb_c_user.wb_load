@@ -67,17 +67,20 @@ SObject pwrb:Class
       !*/
       Object NoOfAlarms $Attribute 5 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$UInt16"
+          Attr TypeRef = "pwrs:Type-$UInt32"
 	  Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
       !/**
-      !  Not used.
+      !  Specifies the maximum number of contemporary alarms in
+      !  the user's alarm list.
+      !  The number should exceed the maximum number of 
+      !  concurrent alarms in the system.
+      !  If the limit is exceeded, alarms might be lost.
       !*/
       Object MaxNoOfAlarms $Attribute 6 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$UInt16"
-	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
       !/**
@@ -85,7 +88,7 @@ SObject pwrb:Class
       !*/
       Object NoOfEvents $Attribute 7 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$UInt16"
+          Attr TypeRef = "pwrs:Type-$UInt32"
 	  Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
@@ -106,7 +109,7 @@ SObject pwrb:Class
       !*/
       Object MaxNoOfEvents $Attribute 8 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$UInt16"
+          Attr TypeRef = "pwrs:Type-$UInt32"
           Attr Flags = 0
         EndBody
       EndObject

@@ -16,12 +16,12 @@ SObject pwrs:Type
 !
 ! @b See also
 !  @classlink String8 pwrs_string8.html
-!  @classlink String16 pwrs_string8.html
-!  @classlink String32 pwrs_string8.html
-!  @classlink String40 pwrs_string8.html
-!  @classlink String80 pwrs_string8.html
-!  @classlink String132 pwrs_string8.html
-!  @classlink String256 pwrs_string8.html
+!  @classlink String16 pwrs_string16.html
+!  @classlink String32 pwrs_string32.html
+!  @classlink String40 pwrs_string40.html
+!  @classlink String80 pwrs_string80.html
+!  @classlink String132 pwrs_string132.html
+!  @classlink String256 pwrs_string256.html
 !*/
   Object $String pwr_eClass_Type pwr_eTix_String
     Body SysBody

@@ -14,7 +14,7 @@ SObject pwrs:Type
 !*/
   Object $OpSysEnum $TypeDef 19
     Body SysBody
-      Attr TypeRef = "pwrs:Type-$Mask"
+      Attr TypeRef = "pwrs:Type-$Enum"
       Attr PgmName = "OpSys"
     EndBody
     !/**

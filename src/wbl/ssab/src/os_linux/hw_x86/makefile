@@ -35,7 +35,7 @@ copy : $(inc_dir)/pwr_ssabclasses.h \
 
 lib  : $(load_dir)/ssab.dbs
 
-exe : $(doc_dir)/orm/ssab_allclasses.html \
+exe : $(doc_dir)/en_us/orm/ssab_allclasses.html \
       $(exe_dir)/ssab_xtthelp.dat
 
 clean : 
@@ -55,14 +55,23 @@ $(inc_dir)/pwr_ssabclasses.hpp :
 	@ echo "Generating hpp files for ssab classes..."
 	@ co_convert -po -d $(inc_dir) "$(pwre_sroot)/wbl/ssab/src/ssab_c_*.wb_load"
 
-$(doc_dir)/orm/ssab_allclasses.html :
-	@ echo "Generating html files for ssab classes..."
-	@ co_convert -w -d $(doc_dir)/orm "$(pwre_sroot)/wbl/ssab/src/ssab_c_*.wb_load"
-	@ echo "Generating html files for ssab structs..."
-	@ co_convert -c -d $(doc_dir)/orm $(inc_dir)/pwr_ssabclasses.h
-	@ echo "Generating html files for ssab code..."
-	@ co_convert -c -d $(doc_dir)/orm "$(pwre_sroot)/lib/rs/src/rs_plc_macro_ssab.h"
-	@ co_convert -c -d $(doc_dir)/orm "$(pwre_sroot)/lib/rs/src/rs_plc_ssab*.c"
+$(doc_dir)/en_us/orm/ssab_allclasses.html :
+	@ echo "Generating html files for ssab classes en_us..."
+	@ co_convert -w -d $(doc_dir)/en_us/orm "$(pwre_sroot)/wbl/ssab/src/ssab_c_*.wb_load"
+	@ echo "Generating html files for ssab structs en_us..."
+	@ co_convert -c -d $(doc_dir)/en_us/orm $(inc_dir)/pwr_ssabclasses.h
+	@ echo "Generating html files for ssab code en_us..."
+	@ co_convert -c -d $(doc_dir)/en_us/orm "$(pwre_sroot)/lib/rs/src/rs_plc_macro_ssab.h"
+	@ co_convert -c -d $(doc_dir)/en_us/orm "$(pwre_sroot)/lib/rs/src/rs_plc_ssab*.c"
+	@ echo "Generating html files for ssab classes sv_se..."
+	@ co_convert -w -l sv_se -d $(doc_dir)/sv_se/orm "$(pwre_sroot)/wbl/ssab/src/ssab_c_*.wb_load"
+	@ echo "Generating html files for ssab structs sv_se..."
+	@ co_convert -c -d $(doc_dir)/sv_se/orm $(inc_dir)/pwr_ssabclasses.h
+	@ echo "Generating html files for ssab code sv_se..."
+	@ co_convert -c -d $(doc_dir)/sv_se/orm "$(pwre_sroot)/lib/rs/src/rs_plc_macro_ssab.h"
+	@ co_convert -c -d $(doc_dir)/sv_se/orm "$(pwre_sroot)/lib/rs/src/rs_plc_ssab*.c"
+	@ echo "Generating postscript file for ssab classes..."
+	@ co_convert -q -d $(doc_dir) "$(pwre_sroot)/wbl/ssab/src/ssab_*.wb_load"
 
 $(exe_dir)/ssab_xtthelp.dat :
 	@ echo "Generating xtt help files for ssab classes"

@@ -36,7 +36,7 @@ copy : $(inc_dir)/pwr_tlogclasses.h \
 
 lib  : $(load_dir)/tlog.dbs
 
-exe : $(doc_dir)/orm/tlog_allclasses.html \
+exe : $(doc_dir)/en_us/orm/tlog_allclasses.html \
       $(exe_dir)/tlog_xtthelp.dat
 
 clean : 
@@ -56,14 +56,23 @@ $(inc_dir)/pwr_tlogclasses.hpp :
 	@ echo "Generating hpp files for tlog classes..."
 	@ co_convert -po -d $(inc_dir) "$(pwre_sroot)/wbl/tlog/src/tlog_c_*.wb_load"
 
-$(doc_dir)/orm/tlog_allclasses.html :
-	@ echo "Generating html files for tlog classes..."
-	@ co_convert -w -d $(doc_dir)/orm "$(pwre_sroot)/wbl/tlog/src/tlog_c_*.wb_load"
-	@ echo "Generating html files for tlog structs..."
-	@ co_convert -c -d $(doc_dir)/orm $(inc_dir)/pwr_tlogclasses.h
-	@ echo "Generating html files for tlog code..."
-	@ co_convert -c -d $(doc_dir)/orm "$(pwre_sroot)/lib/rs/src/rs_plc_macro_tlog.h"
-	@ co_convert -c -d $(doc_dir)/orm "$(pwre_sroot)/lib/rs/src/rs_plc_tlog*.c"
+$(doc_dir)/en_us/orm/tlog_allclasses.html :
+	@ echo "Generating html files for tlog classes en_us..."
+	@ co_convert -w -d $(doc_dir)/en_us/orm "$(pwre_sroot)/wbl/tlog/src/tlog_c_*.wb_load"
+	@ echo "Generating html files for tlog structs en_us..."
+	@ co_convert -c -d $(doc_dir)/en_us/orm $(inc_dir)/pwr_tlogclasses.h
+	@ echo "Generating html files for tlog code en_us..."
+	@ co_convert -c -d $(doc_dir)/en_us/orm "$(pwre_sroot)/lib/rs/src/rs_plc_macro_tlog.h"
+	@ co_convert -c -d $(doc_dir)/en_us/orm "$(pwre_sroot)/lib/rs/src/rs_plc_tlog*.c"
+	@ echo "Generating html files for tlog classes sv_se..."
+	@ co_convert -w -l sv_se -d $(doc_dir)/sv_se/orm "$(pwre_sroot)/wbl/tlog/src/tlog_c_*.wb_load"
+	@ echo "Generating html files for tlog structs sv_se..."
+	@ co_convert -c -d $(doc_dir)/sv_se/orm $(inc_dir)/pwr_tlogclasses.h
+	@ echo "Generating html files for tlog code sv_se..."
+	@ co_convert -c -d $(doc_dir)/sv_se/orm "$(pwre_sroot)/lib/rs/src/rs_plc_macro_tlog.h"
+	@ co_convert -c -d $(doc_dir)/sv_se/orm "$(pwre_sroot)/lib/rs/src/rs_plc_tlog*.c"
+	@ echo "Generating postscript file for tlog classes..."
+	@ co_convert -q -d $(doc_dir) "$(pwre_sroot)/wbl/tlog/src/tlog_*.wb_load"
 
 $(exe_dir)/tlog_xtthelp.dat :
 	@ echo "Generating xtt help files for tlog classes"

@@ -35,7 +35,7 @@ copy : $(inc_dir)/pwr_systemclasses.h \
 
 lib  : $(load_dir)/pwrs.dbs
 
-exe : $(doc_dir)/orm/pwrs_allclasses.html \
+exe : $(doc_dir)/en_us/orm/pwrs_allclasses.html \
       $(exe_dir)/pwrs_xtthelp.dat
 
 clean : $(clean_wbl)
@@ -55,13 +55,22 @@ $(inc_dir)/pwr_systemclasses.hpp :
 	@ echo "Generating hpp files for pwrs classes..."
 	@ co_convert -po -d $(inc_dir) "$(pwre_sroot)/wbl/pwrs/src/pwrs_c_*.wb_load"
 
-$(doc_dir)/orm/pwrs_allclasses.html :
-	@ echo "Generating html files for pwrs classes..."
-	@ co_convert -w -d $(doc_dir)/orm -g $(pwre_sroot)/wbl/pwrs/src/cnv_setup.dat "$(pwre_sroot)/wbl/pwrs/src/pwrs_*.wb_load"
-	@ echo "Generating html files for pwrs structs..."
-	@ co_convert -c -d $(doc_dir)/orm $(inc_dir)/pwr_systemclasses.h
-	@ co_convert -c -d $(doc_dir)/orm $(inc_dir)/pwr.h
-	@ co_convert -c -d $(doc_dir)/orm $(inc_dir)/pwr_class.h
+$(doc_dir)/en_us/orm/pwrs_allclasses.html :
+	@ echo "Generating html files for pwrs classes en_us..."
+	@ co_convert -w -d $(doc_dir)/en_us/orm -g $(pwre_sroot)/wbl/pwrs/src/cnv_setup.dat "$(pwre_sroot)/wbl/pwrs/src/pwrs_*.wb_load"
+	@ echo "Generating html files for pwrs structs en_us..."
+	@ co_convert -c -d $(doc_dir)/en_us/orm $(inc_dir)/pwr_systemclasses.h
+	@ co_convert -c -d $(doc_dir)/en_us/orm $(inc_dir)/pwr.h
+	@ co_convert -c -d $(doc_dir)/en_us/orm $(inc_dir)/pwr_class.h
+	@ echo "Generating html files for pwrs classes sv_se..."
+	@ co_convert -w -l sv_se -d $(doc_dir)/sv_se/orm -g $(pwre_sroot)/wbl/pwrs/src/cnv_setup.dat "$(pwre_sroot)/wbl/pwrs/src/pwrs_*.wb_load"
+	@ echo "Generating html files for pwrs structs sv_se..."
+	@ co_convert -c -d $(doc_dir)/sv_se/orm $(inc_dir)/pwr_systemclasses.h
+	@ co_convert -c -d $(doc_dir)/sv_se/orm $(inc_dir)/pwr.h
+	@ co_convert -c -d $(doc_dir)/sv_se/orm $(inc_dir)/pwr_class.h
+	@ echo "Generating postscript file for pwrs classes..."
+	@ co_convert -q -d $(doc_dir) "$(pwre_sroot)/wbl/pwrs/src/pwrs_*.wb_load"
+	@ co_convert -q -l sv_se -d $(doc_dir) "$(pwre_sroot)/wbl/pwrs/src/pwrs_*.wb_load"
 
 $(exe_dir)/pwrs_xtthelp.dat :
 	@ echo "Generating xtt help files for pwrs classes"
@@ -83,8 +92,8 @@ clean_pwrs_xtthelp :
 	  fi
 
 clean_pwrs_html :
-	@ if [ -e $(doc_dir)/orm/pwrs_allclasses.html ]; then \
-	        $(rm) $(rmflags) $(doc_dir)/orm/pwrs_*.html; \
+	@ if [ -e $(doc_dir)/en_us/orm/pwrs_allclasses.html ]; then \
+	        $(rm) $(rmflags) $(doc_dir)/en_us/orm/pwrs_*.html; \
 	  fi
 
 clean_systemclasses :
