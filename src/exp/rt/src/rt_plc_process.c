@@ -567,6 +567,7 @@ create_thread (
   tp->aref.Objid = ptp->thread;
   tp->init = ptp->init;
   tp->exec = ptp->exec;
+  tp->first_scan = 1;
 
   tp->PlcThread = pwrb_PlcThread_Init(&sts, tp);
   tp->csup_lh = csup_Init(&sts, ptp->thread, tp->f_scan_time);
