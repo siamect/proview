@@ -31,7 +31,10 @@
 #endif
 #include "rt_plc_loop.h"
 #include "rt_c_plcthread.h"
+#include "rt_c_node.h"
 
+#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
+#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
 #define MIN_SCANTIME 1e-9
 
 /* When you use pthread_cond_timedwait is the shortest timeout always > 1 CLK_TCK
@@ -80,8 +83,9 @@ plc_thread (
   rel_vec = ((tp->pp->PlcProcess->ChgCount - 1) % 2) + 1;
   sts = io_init(io_mProcess_Plc, tp->aref.Objid, &tp->plc_io_ctx, rel_vec, tp->f_scan_time);
   if (EVEN(sts)) {
-    errh_Error("Failed to inititalize io, %m", sts);
     pp->IOHandler->IOReadWriteFlag = FALSE;
+    errh_Error("Failed to inititalize io, %m", sts);
+    errh_SetStatus( PLC__ERRINITIO);
   }
 
   tp->init(0, tp);
@@ -91,6 +95,7 @@ plc_thread (
     if (EVEN(sts)) {
       tp->pp->IOHandler->IOReadWriteFlag = FALSE;
       errh_Error("IO read, %m", sts);
+      errh_SetStatus( PLC__IOREAD);
     }
   }
 
@@ -164,6 +169,7 @@ scan (
     if (EVEN(sts)) {
       pp->IOHandler->IOReadWriteFlag = FALSE;
       errh_Error("IO read, %m", sts);
+      errh_SetStatus( PLC__IOREAD);
     }
   }
 
@@ -188,6 +194,7 @@ scan (
     if (EVEN(sts)) {
       pp->IOHandler->IOReadWriteFlag = FALSE;
       errh_Error("IO write, %m", sts);
+      errh_SetStatus( PLC__IOWRITE);
     }
   }
 
@@ -214,8 +221,10 @@ scan (
 	pwr_tTime now;
 	clock_gettime(CLOCK_REALTIME, &now);
 	delay_action = csup_Exec(&sts, tp->csup_lh, &tp->sync_time, &tp->after_scan, &now);
-	if (delay_action == 2)
+	if (delay_action == 2) {
 	  pp->IOHandler->IOReadWriteFlag = FALSE;
+	  errh_SetStatus( PLC__IOSTALLED);
+	}
       }
 
 #if defined OS_LYNX && USE_RT_TIMER
@@ -240,6 +249,8 @@ scan (
   if (++tp->loops == 2)
     tp->log = TRUE;
 
+  if ( tp->loops % max( 1, (int)(1.0 / tp->PlcThread->ScanTime)) == 0)
+    pwrs_Node_SupEmon();
 }
 
 
