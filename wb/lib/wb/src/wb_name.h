@@ -145,6 +145,7 @@ public:
   bool attributeIsEqual( const char *n, int idx = 0) const throw (wb_error) { check(); return m_nrep->attributeIsEqual( n, idx);}
   char *segmentsAll( int idx = 0) const throw (wb_error) { check(); return m_nrep->segmentsAll(idx);}
   char *attributesAll( int idx = 0) const throw (wb_error) { check(); return m_nrep->attributesAll(idx);}
+  char *attributesAllTrue( int idx = 0) const throw (wb_error) { check(); return m_nrep->attributesAll(idx, 0, true);}
 
   // Id representation
   char *vid( char *res = 0) const throw (wb_error) { check(); return m_nrep->volume( res);}

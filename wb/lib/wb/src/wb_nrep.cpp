@@ -891,7 +891,7 @@ char *wb_nrep::segmentsAll(int idx, char *res)
   }
 }
 
-char *wb_nrep::attributesAll(int idx, char *res)
+char *wb_nrep::attributesAll(int idx, char *res, bool true_db)
 {
   static char result[256];
 
@@ -906,12 +906,34 @@ char *wb_nrep::attributesAll(int idx, char *res)
     }
   }
   else {
-    if ( res) {
-      strcpy( res, oname + attr[idx].offs); 
-      return res;
+    if ( !m_hasSuper || m_shadowed || true_db) {
+      if ( res) {
+	strcpy( res, oname + attr[idx].offs); 
+	return res;
+      }
+      else {
+	strcpy( result, oname + attr[idx].offs); 
+	return result;
+      }
     }
     else {
-      strcpy( result, oname + attr[idx].offs); 
+      strcpy( result, "");
+      for ( int i = idx; i < num_attr; i++) {
+	if ( !attr[i].isSuper) {
+	  if ( result[0] != 0)
+	    strcat( result, ".");
+	  int l = strlen(result);
+	  strncat( result, oname + attr[i].offs, attr[i].len);
+	  if ( attr[i].index != -1)
+	    sprintf( &result[ l + attr[i].len], "[%d]", attr[i].index);
+	  else
+	    result[ l + attr[i].len] = 0;
+	}
+      }
+      if ( res) {
+	strcpy( res, result);
+	return res;
+      }
       return result;
     }
   }

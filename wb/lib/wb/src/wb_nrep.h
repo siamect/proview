@@ -113,7 +113,7 @@ public:
   bool attributeIsEqual( const char *n, int idx = 0);
   int bodyOffset() const { return b_offset;}
   int bodySize() const { return b_size;}
-  char *attributesAll( int idx = 0, char *res = 0);
+  char *attributesAll( int idx = 0, char *res = 0, bool true_db = false);
   char *segmentsAll( int idx = 0, char *res = 0);
   bool hasSuper() { return m_hasSuper;}
   void setShadowed( bool shadowed) { m_shadowed = shadowed;}
