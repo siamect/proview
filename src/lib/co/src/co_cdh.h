@@ -47,6 +47,9 @@ typedef enum {
   cdh_eBix_
 } cdh_eBix;
 
+#define cdh_CidToVid(cid) ((cid) >> 16)
+#define cdh_TidToVid(tid) ((tid) >> 16)
+
 typedef struct {
   unsigned int	oix		: 32;
 
