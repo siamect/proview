@@ -556,6 +556,10 @@ public class XttTree extends JPanel
       case Pwr.eType_UInt16:
       case Pwr.eType_UInt32:
       case Pwr.eType_UInt64:
+      case Pwr.eType_Status:
+      case Pwr.eType_NetStatus:
+      case Pwr.eType_Enum:
+      case Pwr.eType_Mask:
         Logg.logg("XttTree.changeValue: innan setObjectInfo(string, int);", 6);
         try
         {

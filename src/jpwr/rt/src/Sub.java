@@ -54,6 +54,10 @@
       case Pwr.eType_UInt16:
       case Pwr.eType_Int8:
       case Pwr.eType_UInt8:
+      case Pwr.eType_Status:
+      case Pwr.eType_NetStatus:
+      case Pwr.eType_Enum:
+      case Pwr.eType_Mask:
         if(elements > 1)
 	{
 	  //its an array

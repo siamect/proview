@@ -38,6 +38,8 @@ public class Pwr {
   public static final int eTix_ObjectIx 	= 26;
   public static final int eTix_RefId 		= 27;
   public static final int eTix_DeltaTime 	= 28;
+  public static final int eTix_Status	 	= 29;
+  public static final int eTix_NetStatus 	= 30;
   public static final int eType_Unknown		= 0;
   public static final int eType_Boolean		= (1 << 16) + (1 << 15) + eTix_Boolean;
   public static final int eType_Float32		= (1 << 16) + (1 << 15) + eTix_Float32;
@@ -67,6 +69,8 @@ public class Pwr {
   public static final int eType_ObjectIx	= (1 << 16) + (1 << 15) + eTix_ObjectIx;
   public static final int eType_RefId		= (1 << 16) + (1 << 15) + eTix_RefId;
   public static final int eType_DeltaTime	= (1 << 16) + (1 << 15) + eTix_DeltaTime;
+  public static final int eType_Status		= (1 << 16) + (1 << 15) + eTix_Status;
+  public static final int eType_NetStatus	= (1 << 16) + (1 << 15) + eTix_NetStatus;
 
   public static final int mPrv_RtRead		= 1 << 0;
   public static final int mPrv_RtWrite		= 1 << 1;
@@ -135,3 +139,8 @@ public class Pwr {
 
 
 }
+
+
+
+
+

@@ -45,6 +45,10 @@ public class DynamicObj extends TreeObj
       case Pwr.eType_UInt16:
       case Pwr.eType_UInt32:
       case Pwr.eType_UInt64:
+      case Pwr.eType_Status:
+      case Pwr.eType_NetStatus:
+      case Pwr.eType_Enum:
+      case Pwr.eType_Mask:
         Logg.logg("getObjectRefInfoInt(" + obj.refObj.id + ")", 6);
         obj.setValue(en.gdh.getObjectRefInfoInt(obj.refObj.id));
         break;
@@ -96,6 +100,18 @@ public class DynamicObj extends TreeObj
         break;
       case Pwr.eType_UInt8:
         suffix += "UINT8";
+        break;
+      case Pwr.eType_Status:
+        suffix += "STATUS";
+        break;
+      case Pwr.eType_NetStatus:
+        suffix += "NETSTATUS";
+        break;
+      case Pwr.eType_Enum:
+        suffix += "ENUM";
+        break;
+      case Pwr.eType_Mask:
+        suffix += "MASK";
         break;
       case Pwr.eType_Char:
         suffix += "CHAR";
