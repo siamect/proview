@@ -45,6 +45,7 @@ extern "C" {
 #include "co_mrm_util.h"
 }
 #include "co_lng.h"
+#include "co_error.h"
 #include "xtt_xnav.h"
 #include "xtt_item.h"
 #include "xtt_menu.h"
@@ -750,8 +751,8 @@ void XNav::show_crossref()
   brow_GetUserData( node_list[0], (void **)&item);
   free( node_list);
 
-  switch( item->type)
-  {
+  try {
+    switch( item->type) {
     case xnav_eItemType_Object:
     case xnav_eItemType_Table:
       ((ItemBaseObject *)item)->open_crossref( brow, this, 0, 0);
@@ -761,6 +762,12 @@ void XNav::show_crossref()
       break;
     default:
       message( 'E', "Can't show crossreferences for this object type");
+    }
+  }
+  catch ( co_error& e) {
+    brow_push_all();
+    brow_Redraw( brow->ctx, 0);
+    message('E', (char *)e.what().c_str());
   }
 }
 
@@ -783,8 +790,8 @@ void XNav::start_trace_selected()
   brow_GetUserData( node_list[0], (void **)&item);
   free( node_list);
 
-  switch( item->type)
-  {
+  try {
+    switch( item->type) {
     case xnav_eItemType_Object: 
       ((ItemObject *)item)->open_trace( brow, this, 0, 0);
       break;
@@ -796,6 +803,12 @@ void XNav::start_trace_selected()
       break;
     default:
       message( 'E', "Can't start trace for this object type");
+    }
+  }
+  catch ( co_error& e) {
+    brow_push_all();
+    brow_Redraw( brow->ctx, 0);
+    message('E', (char *)e.what().c_str());
   }
 }
 
@@ -1575,8 +1588,8 @@ static int xnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
     return 1;
 
   xnav->message( ' ', null_str);
-  switch ( event->event)
-  {
+  try {
+    switch ( event->event) {
     case flow_eEvent_Key_Up:
     {
       brow_tNode	*node_list;
@@ -2156,6 +2169,12 @@ static int xnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
       break;
     default:
       ;
+    }
+  }
+  catch ( co_error& e) {
+    xnav->brow_push_all();
+    brow_Redraw( xnav->brow->ctx, 0);
+    xnav->message('E', (char *)e.what().c_str());
   }
   return 1;
 }
@@ -2517,28 +2536,33 @@ int XNav::display_object( pwr_tObjid objid, int open)
   show_database();
   brow_SetNodraw( brow->ctx);
 
-  for ( i = parent_cnt; i > 0; i--)
-  {
-    sts = find( parent_list[i - 1], (void **) &item);
+  try {
+    for ( i = parent_cnt; i > 0; i--) {
+      sts = find( parent_list[i - 1], (void **) &item);
+      if ( EVEN(sts)) return sts;
+      item->open_children( brow, 0, 0);
+    }
+    sts = find( objid, (void **) &item);
     if ( EVEN(sts)) return sts;
-    item->open_children( brow, 0, 0);
+    brow_SetInverse( item->node, 1);
+    brow_SelectInsert( brow->ctx, item->node);
+    if ( open) {
+      ((ItemBaseObject *)item)->open_children( brow, 0, 0);
+    }
+
+    brow_ResetNodraw( brow->ctx);
+    brow_Redraw( brow->ctx, 0);
+
+    if ( open)
+      brow_CenterObject( brow->ctx, item->node, 0.00);
+    else
+      brow_CenterObject( brow->ctx, item->node, 0.80);
   }
-  sts = find( objid, (void **) &item);
-  if ( EVEN(sts)) return sts;
-  brow_SetInverse( item->node, 1);
-  brow_SelectInsert( brow->ctx, item->node);
-  if ( open) {
-    ((ItemBaseObject *)item)->open_children( brow, 0, 0);
+  catch ( co_error& e) {
+    brow_push_all();
+    brow_Redraw( brow->ctx, 0);
+    message('E', (char *)e.what().c_str());
   }
-
-  brow_ResetNodraw( brow->ctx);
-  brow_Redraw( brow->ctx, 0);
-
-  if ( open)
-    brow_CenterObject( brow->ctx, item->node, 0.00);
-  else
-    brow_CenterObject( brow->ctx, item->node, 0.80);
-
   return 1;
 }
 

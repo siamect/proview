@@ -48,6 +48,7 @@ extern "C" {
 #include "rt_trace.h"
 }
 #include "co_lng.h"
+#include "co_error.h"
 #include "xtt_xnav.h"
 #include "xtt_ge.h"
 #include "xtt_item.h"
@@ -906,18 +907,26 @@ static int	xnav_show_func(	void		*client_data,
     }
     newlist =  ODD( dcli_get_qualifier( "/NEW", NULL));
 
-    if ( !newlist)
-      xnav->display_object( objid, 1);
-    else {
-      sts = gdh_ObjidToName ( objid, name_str, sizeof(name_str),
-			cdh_mNName);
-      xnav->brow_pop();
-      ItemObject *item = new ItemObject( xnav->brow, objid, NULL,
+    try {
+      if ( !newlist)
+	xnav->display_object( objid, 1);
+      else {
+	sts = gdh_ObjidToName ( objid, name_str, sizeof(name_str),
+				cdh_mNName);
+	xnav->brow_pop();
+	ItemObject *item = new ItemObject( xnav->brow, objid, NULL,
 						flow_eDest_IntoLast, 1);
-      new ItemHeader( xnav->brow, "Title", name_str, NULL, flow_eDest_IntoLast);
-      item->open_children( xnav->brow, 0, 0);
-      delete item;
+	new ItemHeader( xnav->brow, "Title", name_str, NULL, flow_eDest_IntoLast);
+	item->open_children( xnav->brow, 0, 0);
+	delete item;
+      }
     }
+    catch ( co_error& e) {
+      xnav->brow_push_all();
+      brow_Redraw( xnav->brow->ctx, 0);
+      xnav->message('E', (char *)e.what().c_str());
+    }
+    
     return XNAV__SUCCESS;
   }
   else if ( strncmp( arg1_str, "OBJECT", strlen( arg1_str)) == 0)
@@ -1786,15 +1795,22 @@ static int	xnav_add_func(	void		*client_data,
     else
       object = 0;
 
-    if ( object)
-      new ItemObject( xnav->brow, objid, NULL,  flow_eDest_IntoLast, 0);
-    else if ( command)
-      new ItemCommand( xnav->brow, text_str, NULL,
-		flow_eDest_IntoLast, command_str, 0, xnav->brow->pixmap_map);
+    try {
+      if ( object)
+	new ItemObject( xnav->brow, objid, NULL,  flow_eDest_IntoLast, 0);
+      else if ( command)
+	new ItemCommand( xnav->brow, text_str, NULL,
+			 flow_eDest_IntoLast, command_str, 0, xnav->brow->pixmap_map);
 //    else
 //      new ItemMenu( xnav->brow, text_str, NULL, 
 //		flow_eDest_IntoLast, (xnav_sMenu *) menu->action,
 //		0);
+    }
+    catch ( co_error& e) {
+      xnav->brow_push_all();
+      brow_Redraw( xnav->brow->ctx, 0);
+      xnav->message('E', (char *)e.what().c_str());
+    }
     return XNAV__SUCCESS;	
   }
 
@@ -4815,33 +4831,40 @@ int	XNav::show_par_hier_class_name(
           brow_pop();
 	}
 
-	if ( single_object)
-        {
-          item = new ItemObject( brow, objid, NULL,  flow_eDest_IntoLast, 1);
-          item->open_attribute( brow, 0, 0, parametername, element);
-          delete item;
-//	  sts = rtt_show_parameter_add( objid, &menulist, 
+	try {
+	  if ( single_object) {
+	    item = new ItemObject( brow, objid, NULL,  flow_eDest_IntoLast, 1);
+	    item->open_attribute( brow, 0, 0, parametername, element);
+	    delete item;
+//	    sts = rtt_show_parameter_add( objid, &menulist, 
 //		parametername, &index, &element, 0);
-        }
-	else
-        {
-//	  sts = rtt_get_objects_hier_class_name( parent_ctx, hierobjid, 
+          }
+	  else
+          {
+//	    sts = rtt_get_objects_hier_class_name( parent_ctx, hierobjid, 
 //		classid, name, max_objects, global,
 //		&rtt_show_parameter_add, (void *) &menulist, 
 //		(void *) parametername, (void *) &index, 
 //		(void *) &element, 0);
-//	  if ( sts == XNAV__MAXCOUNT)
-//	    message('E',"To many object, all objects could not be shown");
-//	  else if ( EVEN (sts)) return sts;
+//	    if ( sts == XNAV__MAXCOUNT)
+//	      message('E',"To many object, all objects could not be shown");
+//	    else if ( EVEN (sts)) return sts;
 
-//	  if ( index)
-//	    sts = rtt_menu_upd_bubblesort( menulist);
-// 	  else
-//	  {
-//	    message('E', "No objects found");
-//	    return XNAV__HOLDCOMMAND;
-//	  }
+//	    if ( index)
+//	      sts = rtt_menu_upd_bubblesort( menulist);
+// 	    else
+//	    {
+//	      message('E', "No objects found");
+//	      return XNAV__HOLDCOMMAND;
+//	    }
+	  }
 	}
+	catch ( co_error& e) {
+	  brow_push_all();
+	  brow_Redraw( brow->ctx, 0);
+	  message('E', (char *)e.what().c_str());
+	}
+
 	return XNAV__SUCCESS;
 }
 

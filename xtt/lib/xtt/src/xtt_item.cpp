@@ -39,6 +39,7 @@ extern "C" {
 #include "co_nav_msg.h"
 #include "xtt_localdb.h"
 #include "xtt_url.h"
+#include "co_error.h"
 
 
 //
@@ -70,9 +71,11 @@ ItemObject::ItemObject( XNavBrow *brow, pwr_tObjid item_objid,
   type = xnav_eItemType_Object;
 
   sts = gdh_ObjidToName( objid, name, sizeof(name), cdh_mNName);
+  if ( EVEN(sts)) throw co_error(sts);
   if ( !is_root)
   {
     sts = gdh_ObjidToName( objid, segname, sizeof(segname), cdh_mName_object);
+    if ( EVEN(sts)) throw co_error(sts);
     brow_CreateNode( brow->ctx, segname, brow->nc_object, 
 		dest, dest_code, (void *) this, 1, &node);
 
@@ -87,12 +90,16 @@ ItemObject::ItemObject( XNavBrow *brow, pwr_tObjid item_objid,
 
     // Set class annotation
     sts = gdh_GetObjectClass( objid, &classid);
+    if ( EVEN(sts)) throw co_error(sts);
     sts = gdh_ObjidToName( cdh_ClassIdToObjid( classid),
 		  segname, sizeof(segname), cdh_mName_object);
+    if ( EVEN(sts)) throw co_error(sts);
     brow_SetAnnotation( node, 1, segname, strlen(segname));
 
     // Set description annotation
     sts = gdh_ObjidToName( objid, segname, sizeof(segname), cdh_mNName);
+    if ( EVEN(sts)) throw co_error(sts);
+
     strcat( segname, ".Description");
     sts = gdh_GetObjectInfo( segname, descr, sizeof(descr));
     if ( ODD(sts))
@@ -626,6 +633,8 @@ ItemAttr::ItemAttr( XNavBrow *brow, pwr_tObjid item_objid,
   {
     case item_eDisplayType_Path:
       sts = gdh_ObjidToName( objid, obj_name, sizeof(obj_name), cdh_mNName); 
+      if ( EVEN(sts)) throw co_error(sts);
+
       sprintf( annot, "%s.%s", obj_name, attr_name);
       break;
     default:
@@ -646,6 +655,8 @@ ItemAttr::ItemAttr( XNavBrow *brow, pwr_tObjid item_objid,
     }
     brow_SetAnnotation( node, 0, annot, strlen(annot));
     sts = gdh_ObjidToName( objid, obj_name, sizeof(obj_name), cdh_mName_volumeStrict); 
+    if ( EVEN(sts)) throw co_error(sts);
+
     brow_SetTraceAttr( node, obj_name, attr_name, flow_eTraceType_User);
   }
 }
@@ -692,6 +703,7 @@ ItemAttrArrayElem::ItemAttrArrayElem( XNavBrow *brow, pwr_tObjid item_objid,
   {
     case item_eDisplayType_Path:
       sts = gdh_ObjidToName( objid, obj_name, sizeof(obj_name), cdh_mNName); 
+      if ( EVEN(sts)) throw co_error(sts);
       strcpy( annot, obj_name);
       strcat( annot, ".");
       strcat( annot, name);
@@ -708,6 +720,7 @@ ItemAttrArrayElem::ItemAttrArrayElem( XNavBrow *brow, pwr_tObjid item_objid,
     brow_SetAnnotPixmap( node, 0, brow->pixmap_attrarrayelem);
     brow_SetAnnotation( node, 0, annot, strlen(annot));
     sts = gdh_ObjidToName( objid, obj_name, sizeof(obj_name), cdh_mName_volumeStrict); 
+    if ( EVEN(sts)) throw co_error(sts);
     brow_SetTraceAttr( node, obj_name, name, flow_eTraceType_User);
   }
 }
@@ -951,6 +964,7 @@ ItemCollect::ItemCollect( XNavBrow *brow, pwr_tObjid item_objid, char *attr_name
   if ( !is_root)
   {
     sts = gdh_ObjidToName( objid, obj_name, sizeof(obj_name), cdh_mNName);
+    if ( EVEN(sts)) throw co_error(sts);
     sts = gdh_NameToObjid( obj_name, &tst_objid);
     if ( EVEN(sts)) {
       // Try volume name
