@@ -192,6 +192,7 @@ int	gcg_comp_m56();
 int	gcg_comp_m57();
 int	gcg_comp_m58();
 int	gcg_comp_m59();
+int	gcg_comp_m60();
 
 int	(* gcg_comp_m[70]) () = {
 	&gcg_comp_m0,
@@ -253,7 +254,8 @@ int	(* gcg_comp_m[70]) () = {
 	&gcg_comp_m56,
 	&gcg_comp_m57,
 	&gcg_comp_m58,
-	&gcg_comp_m59
+	&gcg_comp_m59,
+	&gcg_comp_m60
 	};
 
 
@@ -507,6 +509,11 @@ static pwr_tStatus gcg_replace_ref(
     gcg_ctx gcgctx, 
     pwr_sAttrRef *attrref, 
     vldh_t_node output_node
+);
+
+static int gcg_is_window( 
+    gcg_ctx gcgctx, 
+    pwr_tOid oid
 );
 
 
@@ -5739,7 +5746,7 @@ unsigned long	spawn;
 	  if ( info.Access != ldh_eAccess_ReadWrite)
 	  {	  
 	    /* Set access read write to be able to compile */
-	    sts = ldh_SetSession( ldhses, ldh_eAccess_ReadWrite);
+	    sts = ldh_SetSession( ldhses, ldh_eAccess_SharedReadWrite);
 	    if ( EVEN(sts)) return sts;
 	  }
 	}
@@ -8636,6 +8643,11 @@ vldh_t_node	node;
 	unsigned long		output_count;
 	unsigned long		output_point;
 	ldh_sParDef 		output_bodydef;
+	pwr_sAttrRef 		*a_ptr;
+	pwr_sAttrRef 		aref;
+	pwr_tOid 		parent;
+	int 			keep = 0;
+	int			size;
 	gcg_t_nocondef		nocondef[2];
 	unsigned long		nocontype[2] = { GCG_BOOLEAN, GCG_BOOLEAN };
 
@@ -8679,28 +8691,44 @@ vldh_t_node	node;
 			&output_attrref, &output_type, &output_prefix, output_par);
 	    if ( sts == GSX__NEXTPAR ) return sts;
 	    if ( EVEN(sts)) return sts;
-#if 0	    
-	    /* Get the name of the connected object */
-	    sts = ldh_ObjidToName( 
-		gcgctx->ldhses,
-		output_objdid, ldh_eName_Hierarchy,
-		hier_name, sizeof( hier_name), &size);
-	    if( EVEN(sts)) return sts;
-
-	    sts = ldh_NameToAttrRef( gcgctx->ldhses, hier_name, &attrref);
-	    if ( EVEN(sts)) return sts;
-#endif
 	    
 	    /* Put the attribut reference in the sup object */
-	    IF_PR
-	    {
-	      sts = ldh_SetObjectPar( gcgctx->ldhses, node->ln.oid,
-		"RtBody", "Attribute", (char *)&output_attrref, sizeof( output_attrref)); 
+	    IF_PR {
+	      /* If a not plc object is assigned, keep this object */
+	      sts = ldh_GetObjectPar( gcgctx->ldhses, node->ln.oid, "RtBody",
+				      "Attribute", (char **)&a_ptr, &size); 
 	      if ( EVEN(sts)) return sts;
+
+	      aref = *a_ptr;
+	      free((char *) a_ptr);
+	      if ( !cdh_ObjidIsNull( aref.Objid)) {
+		sts = gcg_replace_ref( gcgctx, &aref, node);
+		if ( ODD(sts)) {
+		  keep = 1;
+		  /* Store replaced aref */
+		  sts = ldh_SetObjectPar( gcgctx->ldhses, node->ln.oid, "RtBody", 
+					  "Attribute", (char *)&aref, sizeof( aref)); 
+		  if ( EVEN(sts)) return sts;
+		}
+		else {
+		  sts = ldh_GetParent( gcgctx->ldhses, aref.Objid, &parent);
+		  if ( ODD(sts)) {
+		    if ( !gcg_is_window( gcgctx, parent)) {
+		      /* Keep this attribute */
+		      keep = 1;
+		    }
+		  }
+		}
+	      }
+	      if ( !keep) {
+		sts = ldh_SetObjectPar( gcgctx->ldhses, node->ln.oid, "RtBody", 
+				      "Attribute", (char *)&output_attrref, 
+				      sizeof( output_attrref)); 
+		if ( EVEN(sts)) return sts;
+	      }
 	    }
 	  }
-	  else
-	  {
+	  else {
 	    /* Point not connected, errormessage */
 	    gcg_error_msg( gcgctx, GSX__NOTCON, node);  
 	  }
@@ -12590,7 +12618,7 @@ vldh_t_node	node;
 	{
 	  if ( bodydef[i].Par->Param.Info.Type == pwr_eType_Objid)
 	  {
-	    /* Get the parameter value */
+	    /* Set the parameter value */
 	    sts = ldh_SetObjectPar( ldhses,
 			node->ln.oid, 
 			"RtBody",
@@ -13975,23 +14003,28 @@ vldh_t_node	node;
 	pwr_tTime		*template_time;
 	pwr_tObjid		template_plc;
 	pwr_tObjid		template_window;
-	pwr_tObjid		*connect_oid;
+	pwr_sAttrRef		*connect_aref;
 
 	ldhses = (node->hn.wind)->hw.ldhses; 
 
 	/* Check if there is a PlcConnected */
 	sts = ldh_GetObjectPar( gcgctx->ldhses, node->ln.oid, "RtBody", 
-				"PlcConnect", (char **)&connect_oid, &size);
+				"PlcConnect", (char **)&connect_aref, &size);
 	if ( ODD(sts)) {
-	  pwr_sAttrRef aref = pwr_cNAttrRef;
-	  aref.Objid = *connect_oid;
-	  free( (char *)connect_oid);
- 
+	  pwr_sAttrRef aref = *connect_aref;
+	  free( (char *)connect_aref);
+	  sts = gcg_replace_ref( gcgctx, &aref, node);
+	  if ( ODD(sts)) {
+	    /* Store the converted aref */
+	    sts = ldh_SetObjectPar( gcgctx->ldhses, node->ln.oid, "RtBody", 
+				"PlcConnect", (char *)&aref, sizeof(aref));
+	  }
+
 	  if ( cdh_ObjidIsNull( aref.Objid)) {
 	    gcg_error_msg( gcgctx, GSX__NOCONNECT, node);
 	    return GSX__NEXTNODE;
 	  }
-	  
+
 	  gcg_aref_insert( gcgctx, aref, GCG_PREFIX_REF);
 	}
 
@@ -14106,6 +14139,10 @@ vldh_t_node	node;
 			(char *)windbuffer);
 	  if( EVEN(sts)) return sts;
 	  free((char *) windbuffer);
+
+	  /* Save the session, otherwise no compilation is done */
+	  // sts = ldh_SaveSession( ldhses);
+	  // if ( EVEN(sts)) return sts;
 
 	  /* Compile the subwindow... */
 	  ldhwb = ldh_SessionToWB( ldhses);
@@ -14508,6 +14545,75 @@ vldh_t_node	node;
 
 /*************************************************************************
 *
+* Name:		gcg_comp_m60()
+*
+* Type		void
+*
+* Type		Parameter	IOGF	Description
+* gcg_ctx	gcgctx		I	gcg context.
+* vldh_t_node	node		I	vldh node.
+*
+* Description:
+*	Compile method for NameToStr.
+*	Prints declaration and direct link of pointer to referenced object.
+*
+**************************************************************************/
+
+int	gcg_comp_m60( gcgctx, node)
+gcg_ctx		gcgctx;
+vldh_t_node	node;
+{
+  pwr_sAttrRef 	aref, *arefp;
+  pwr_tInt32	*segmentsp;
+  int		segments;
+  int		size;
+  pwr_tAName	name;
+  char		*name_p;
+  int		sts;
+  ldh_tSesContext ldhses = (node->hn.wind)->hw.ldhses;  
+	
+  /* Get the referenced attribute stored in 'Object' */
+
+  sts = ldh_GetObjectPar( ldhses, node->ln.oid, "DevBody", "Object",
+			(char **)&arefp, &size); 
+  if ( EVEN(sts)) return sts;
+  aref = *arefp;
+  free((char *) arefp);
+
+  sts = ldh_GetObjectPar( ldhses, node->ln.oid, "DevBody", "ObjectSegments",
+			(char **)&segmentsp, &size); 
+  if ( EVEN(sts)) return sts;
+  segments = *segmentsp;
+  free((char *) segmentsp);
+
+  if ( segments == 0)
+    segments = 1;
+
+  if ( cdh_ObjidIsNotNull( arefp->Objid)) {
+    sts = gcg_replace_ref( gcgctx, &aref, node);
+    if ( EVEN(sts)) return sts;
+
+    sts = ldh_AttrRefToName( ldhses, &aref, ldh_eName_Aref, 
+			   &name_p, &size);
+    if ( ODD(sts)) {
+      utl_cut_segments( name, name_p, segments);
+    }
+  }
+
+  /* Set the parameter value */
+  name[79] = 0;
+  sts = ldh_SetObjectPar( ldhses, node->ln.oid, "RtBody",
+			"Out", name, sizeof(pwr_tString80)); 
+  if ( EVEN(sts)) return sts;
+
+  /* Insert object in ref list */
+  sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+  
+  return GSX__SUCCESS;
+}
+
+/*************************************************************************
+*
 * Name:		gcg_wind_check_modification()
 *
 * Type		int
@@ -14789,6 +14895,22 @@ static pwr_tStatus gcg_replace_ref( gcg_ctx gcgctx, pwr_sAttrRef *attrref,
   return GSX__SUCCESS;
 }
 
+static int gcg_is_window( gcg_ctx gcgctx, pwr_tOid oid)
+{
+  pwr_sPlcWindow *windbuffer;
+  pwr_tClassId windclass;
+  int size;
+  pwr_tStatus sts;
+
+  sts = ldh_GetObjectBuffer( gcgctx->ldhses, oid, "DevBody", "PlcWindow", 
+			     (pwr_eClass *) &windclass, 
+			     (char **)&windbuffer, &size);
+  if ( ODD(sts)) {
+    free((char *) windbuffer);
+    return 1;
+  }
+  return 0;
+}
 
 
 
