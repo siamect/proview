@@ -11,6 +11,8 @@
 #include "wb_orepwbl.h"
 #include "wb_ldh_msg.h"
 #include "wb_dbs.h"
+#include "wb_bdrep.h"
+#include "wb_cdrep.h"
 #include "wb_erep.h"
 #include "wb_merep.h"
 #include "wb_tdrep.h"
@@ -299,7 +301,7 @@ ref_wblnode wb_vrepwbl::findType( pwr_tTid tid)
 }
 
 
-int wb_vrepwbl::getTypeInfo( const char *name, pwr_tTid *tid, pwr_eType *type, int *size,
+int wb_vrepwbl::getTypeInfo( const char *name, pwr_tTid *tid, pwr_eType *type, size_t *size,
                              int *elements)
 {
   bool type_extern = false;
@@ -387,7 +389,7 @@ int wb_vrepwbl::getTypeInfo( const char *name, pwr_tTid *tid, pwr_eType *type, i
   return 1;
 }
 
-int wb_vrepwbl::getTypeInfo( pwr_tTid tid, pwr_eType *type, int *size,
+int wb_vrepwbl::getTypeInfo( pwr_tTid tid, pwr_eType *type, size_t *size,
                              int *elements)
 {
   switch ( tid) {
@@ -529,7 +531,7 @@ int wb_vrepwbl::getTypeInfo( pwr_tTid tid, pwr_eType *type, int *size,
   return 1;
 }
 
-int wb_vrepwbl::getClassInfo( pwr_tCid cid, int *rsize, int *dsize)
+int wb_vrepwbl::getClassInfo( pwr_tCid cid, size_t *rsize, size_t *dsize)
 {
   // Search type in this volume
   ref_wblnode n = findClass( cid);
@@ -589,11 +591,11 @@ int wb_vrepwbl::getClassInfo( pwr_tCid cid, int *rsize, int *dsize)
         *elements = elem; }
 
 
-int wb_vrepwbl::getAttrInfo( const char *attr, pwr_eBix bix, pwr_tCid cid, int *size,
-                             int *offset, pwr_tTid *tid, int *elements, pwr_eType *type)
+int wb_vrepwbl::getAttrInfo( const char *attr, pwr_eBix bix, pwr_tCid cid, size_t *size,
+                             size_t *offset, pwr_tTid *tid, int *elements, pwr_eType *type)
 {
-  int a_size;
-  int a_offset = 0;
+  size_t a_size;
+  size_t a_offset = 0;
   pwr_tTid a_tid;
   int a_elements;
   pwr_eType a_type;
@@ -614,8 +616,8 @@ int wb_vrepwbl::getAttrInfo( const char *attr, pwr_eBix bix, pwr_tCid cid, int *
   return 0;
 }
 
-int wb_vrepwbl::getAttrInfoRec( wb_attrname *attr, pwr_eBix bix, pwr_tCid cid, int *size,
-                                int *offset, pwr_tTid *tid, int *elements, pwr_eType *type,
+int wb_vrepwbl::getAttrInfoRec( wb_attrname *attr, pwr_eBix bix, pwr_tCid cid, size_t *size,
+                                size_t *offset, pwr_tTid *tid, int *elements, pwr_eType *type,
                                 int level)
 {
   if ( level > 0)
@@ -850,8 +852,8 @@ int wb_vrepwbl::nameToAttrRef( const char *name, pwr_sAttrRef *attrref)
 {
   pwr_tOid oid;
   pwr_tStatus sts;
-  int a_size;
-  int a_offset;
+  size_t a_size;
+  size_t a_offset;
   pwr_tTid a_tid;
   int a_elements;
   pwr_eType a_type;
@@ -930,7 +932,7 @@ int wb_vrepwbl::nameToAttrRef( const char *name, pwr_sAttrRef *attrref)
   return LDH__SUCCESS;
 }
 
-int wb_vrepwbl::getTemplateBody( pwr_tCid cid, pwr_eBix bix, int *size, void **body)
+int wb_vrepwbl::getTemplateBody( pwr_tCid cid, pwr_eBix bix, size_t *size, void **body)
 {
   switch ( cid) {
   case pwr_eClass_Type:

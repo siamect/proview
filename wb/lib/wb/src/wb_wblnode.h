@@ -48,7 +48,7 @@ public:
       rbody_size(0), dbody_size(0), rbody(0), dbody(0), m_cid(0),
       m_tid(0), m_oid(pwr_cNOid), m_vrep(0), o_fth(0), o_bws(0), o_fws(0), o_fch(0), 
       line_number(0), file(0), is_built(0), c_cid(0), c_cix(0), c_template(0), 
-      b_bix(0), a_tid(0),  a_size(0), a_offset(0), a_elements(0), a_flags(0)
+      b_bix(pwr_eBix__), a_tid(0),  a_size(0), a_offset(0), a_elements(0), a_flags(0)
     {
       strcpy( cname, "");
     }
@@ -57,7 +57,7 @@ public:
       rbody_size(0), dbody_size(0), rbody(0), dbody(0), m_cid(0),
       m_tid(0), m_oid(pwr_cNOid), m_vrep(0), o_fth(0), o_bws(0), o_fws(0), o_fch(0), 
       line_number(0), file(0), is_built(0), c_cid(0), c_cix(0), c_template(0), 
-      b_bix(0), a_tid(0),  a_size(0), a_offset(0), a_elements(0), a_flags(0)
+      b_bix(pwr_eBix__), a_tid(0),  a_size(0), a_offset(0), a_elements(0), a_flags(0)
     {
       CommonAST::setType(t->getType());
       CommonAST::setText(t->getText());
@@ -165,16 +165,16 @@ public:
     void build( bool recursive);
     void buildObjBodyDef( ref_wblnode classdef);
     void buildAttribute( ref_wblnode classdef, ref_wblnode objbodydef, 
-			 int *bindex, int *boffset);
+			 int *bindex, size_t *boffset);
     void buildBuffer( ref_wblnode classdef, ref_wblnode objbodydef, 
-			 int *bindex, int *boffset);
+			 int *bindex, size_t *boffset);
     void buildTemplate( ref_wblnode classdef);
     void buildBody( ref_wblnode object);
-    void buildAttr( ref_wblnode object, int bix);
-    void buildBuff( ref_wblnode object, int bix, pwr_tCid buffer_cid,
+    void buildAttr( ref_wblnode object, pwr_eBix bix);
+    void buildBuff( ref_wblnode object, pwr_eBix bix, pwr_tCid buffer_cid,
 		    int buffer_offset, int buffer_size);
-    void buildBuffAttr( ref_wblnode object, int bix, pwr_tCid buffer_cid,
-			int buffer_offset, int buffer_size);
+    void buildBuffAttr( ref_wblnode object, pwr_eBix bix, pwr_tCid buffer_cid,
+			size_t buffer_offset, size_t buffer_size);
     void link( wb_vrepwbl *vol, ref_wblnode father_node);
     void info_link( int level);
     ref_wblnode find( wb_name *oname, int level);
@@ -183,16 +183,17 @@ public:
     int stringToOix( const char *buf, pwr_tOix *oix) const;
     pwr_tCid Cid() { return c_cid;}
     int attrStringToValue( int type_id, char *value_str, 
-			   void *buffer_ptr, int buff_size, int attr_size);
+			   void *buffer_ptr, size_t buff_size, size_t attr_size);
 
     bool exportHead(wb_import &i);
     bool exportDbody(wb_import &i);
     bool exportRbody(wb_import &i);
 
+#if 0
     void iterObject(wb_dbs *);
     void iterRbody(wb_dbs *);
     void iterDbody(wb_dbs *);
-#if 0
+
     void iterObject( void *udata, 
 		     pwr_tStatus (*bc)(void *, pwr_tOid, pwr_tCid, pwr_tOid, pwr_tOid,
 				       pwr_tOid, pwr_tOid, pwr_tOid, char *,
@@ -206,8 +207,8 @@ public:
 
 
     wbl_eNodeType node_type;
-    int rbody_size;
-    int dbody_size;
+    size_t rbody_size;
+    size_t dbody_size;
     void *rbody;
     void *dbody;
     pwr_tCid m_cid;
@@ -233,16 +234,16 @@ public:
     pwr_tTid ty_tid;
     pwr_eType ty_type;
     int ty_elements;
-    int ty_size;
+    size_t ty_size;
 
     // ObjBodyDef stuff
-    int b_bix;
-    int b_size;
+    pwr_eBix b_bix;
+    size_t b_size;
 
     // Attribute stuff
     pwr_tTid a_tid;
-    int a_size;
-    int a_offset;
+    size_t a_size;
+    size_t a_offset;
     int a_elements;
     int a_flags;
     int a_index;

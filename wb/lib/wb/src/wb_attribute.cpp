@@ -106,7 +106,7 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, char const* bname, co
         m_adrep->ref();
 
         if ( !m_orep->vrep()->merep()->getAttrInfoRec( &n, m_adrep->bix(),
-                                                       m_orep->cid(), (int *) &m_size,
+                                                       m_orep->cid(), &m_size,
                                                        &m_offset, &m_tid, &m_elements, 
                                                        &m_type,
                                                        &m_flags, 0)) {
@@ -165,7 +165,7 @@ wb_attribute::wb_attribute(wb_attribute& pa, int idx, const char* aname) :
         m_adrep->ref();
 
         if (!m_orep->vrep()->merep()->getAttrInfoRec( &n, m_adrep->bix(),
-                                                      cid, (int *) &m_size,
+                                                      cid, &m_size,
                                                       &m_offset, &m_tid, &m_elements,
                                                       &m_type,
                                                       &m_flags, 0)) {
@@ -265,7 +265,7 @@ size_t wb_attribute::size()
   return m_size;
 }
 
-int wb_attribute::offset()
+size_t wb_attribute::offset()
 {
   check();
   return m_offset;

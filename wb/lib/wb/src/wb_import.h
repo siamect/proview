@@ -1,6 +1,7 @@
 #ifndef wb_import_h
 #define wb_import_h
 
+#include "pwr.h"
 #include "co_dbs.h"
 
 class wb_export;
@@ -13,7 +14,7 @@ public:
     
   virtual bool importHead(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
                           pwr_tOid boid, pwr_tOid aoid, pwr_tOid foid, pwr_tOid loid,
-                          pwr_tObjName name, pwr_tObjName normname,
+                          const char *name, const char *normname,
                           pwr_tTime ohTime, pwr_tTime rbTime, pwr_tTime dbTime,
                           size_t rbSize, size_t dbSize) = 0;
 

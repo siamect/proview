@@ -55,14 +55,6 @@ public:
 
   virtual bool createSnapshot(const char *fileName);
 
-#if 0
-  void iterObject( void *udata,
-                   pwr_tStatus (*bc)(void *,pwr_tOid, pwr_tCid, pwr_tOid, pwr_tOid,
-                                     pwr_tOid, pwr_tOid, pwr_tOid, const char *,
-                                     pwr_tTime, int, int));
-  void iterBody( void *udata,
-                 pwr_tStatus (*bc)(void *,pwr_tOid, void *, void *));
-#endif
   int load( const char *fname);
   int load_files( const char *file_spec);
   void info();
@@ -78,16 +70,16 @@ public:
   bool registerObject( pwr_tOix oix, ref_wblnode node);
   int nextOix() { return ++next_oix; }
   int classNameToCid( const char *name, pwr_tCid *cid);
-  int getTemplateBody( pwr_tCid cid, pwr_eBix bix, int *size, void **body);
-  int getTypeInfo( pwr_tTid tid, pwr_eType *type, int *size,
+  int getTemplateBody( pwr_tCid cid, pwr_eBix bix, size_t *size, void **body);
+  int getTypeInfo( pwr_tTid tid, pwr_eType *type, size_t *size,
                    int *elements);
-  int getTypeInfo( const char *type, pwr_tTid *tid, pwr_eType *type, int *size,
+  int getTypeInfo( const char *type, pwr_tTid *tid, pwr_eType *type, size_t *size,
                    int *elements);
-  int getClassInfo( pwr_tCid cid, int *rsize, int *dsize);
-  int getAttrInfo( const char *attr, pwr_eBix bix, pwr_tCid cid, int *size,
-                   int *offset, pwr_tTid *tid, int *elements, pwr_eType *type);
-  int getAttrInfoRec( wb_attrname *attr, pwr_eBix bix, pwr_tCid cid, int *size,
-                      int *offset, pwr_tTid *tid, int *elements, 
+  int getClassInfo( pwr_tCid cid, size_t *rsize, size_t *dsize);
+  int getAttrInfo( const char *attr, pwr_eBix bix, pwr_tCid cid, size_t *size,
+                   size_t *offset, pwr_tTid *tid, int *elements, pwr_eType *type);
+  int getAttrInfoRec( wb_attrname *attr, pwr_eBix bix, pwr_tCid cid, size_t *size,
+                      size_t *offset, pwr_tTid *tid, int *elements, 
                       pwr_eType *type, int level);
   ref_wblnode findObject( pwr_tOix oix);
   ref_wblnode findClass( const char *name);
@@ -158,9 +150,9 @@ public:
   bool commit(pwr_tStatus *sts) {return false;}
   bool abort(pwr_tStatus *sts) {return false;}
 
-  virtual bool writeAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, unsigned int offset, unsigned int size, void *p) {return false;}
+  virtual bool writeAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, size_t offset, size_t size, void *p) {return false;}
 
-  virtual void *readAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, unsigned int offset, unsigned int size, void *p);
+  virtual void *readAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, size_t offset, size_t size, void *p);
 
   virtual void *readBody(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, void *p);
 

@@ -112,11 +112,6 @@ public:
   // ldhi_sObjHead *getAliasServer(sLCB *lcbp, ldhi_sObjHead *o, pwr_tOid *soid);
   // pwr_tStatus    getMountServer(sLCB *lcbp, ldhi_sObjHead *o, pwr_tOid *soid);
 
-  pwr_tStatus  installObject(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid, pwr_tOid boid, pwr_tOid aoid, pwr_tOid foid,
-                             pwr_tOid loid, pwr_tObjName name, pwr_tObjName normname, pwr_tTime ohTime,
-                             pwr_tTime rbTime, pwr_tTime dbTime, size_t rbSize, size_t dbSize);
-  pwr_tStatus  installRbody(pwr_tOid oid, void *body);
-  pwr_tStatus  installDbody(pwr_tOid oid, void *body);
   void         classInsert(sOentry *oep);
   pwr_tStatus  openFile();
   pwr_tStatus  writeSectFile();
@@ -135,7 +130,7 @@ public:
     
   virtual bool importHead(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
                           pwr_tOid boid, pwr_tOid aoid, pwr_tOid foid, pwr_tOid loid,
-                          pwr_tObjName name, pwr_tObjName normname,
+                          const char *name, const char *normname,
                           pwr_tTime ohTime, pwr_tTime rbTime, pwr_tTime dbTime,
                           size_t rbSize, size_t dbSize);
 

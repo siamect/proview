@@ -171,7 +171,7 @@ wb_dbs::checkObject(sOentry *oep)
 
 bool
 wb_dbs::importHead(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid, pwr_tOid aoid, pwr_tOid boid, pwr_tOid foid,
-                   pwr_tOid loid, pwr_tObjName name, pwr_tObjName normname, pwr_tTime time,
+                   pwr_tOid loid, const char *name, const char *normname, pwr_tTime time,
                    pwr_tTime rbTime, pwr_tTime dbTime, size_t rbSize, size_t dbSize)
 {
   sNentry     *nep;

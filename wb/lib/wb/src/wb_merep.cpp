@@ -159,8 +159,8 @@ wb_tdrep *wb_merep::tdrep( pwr_tStatus *sts, wb_name name)
   return 0;
 }
 
-int wb_merep::getAttrInfoRec( wb_attrname *attr, pwr_eBix bix, pwr_tCid cid, int *size,
-		     int *offset, pwr_tTid *tid, int *elements, 
+int wb_merep::getAttrInfoRec( wb_attrname *attr, pwr_eBix bix, pwr_tCid cid, size_t *size,
+		     size_t *offset, pwr_tTid *tid, int *elements, 
 		     pwr_eType *type, int *flags, int level)
 {
   pwr_tStatus sts;

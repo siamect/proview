@@ -31,7 +31,7 @@ class wb_attribute : public wb_status
   wb_adrep *m_adrep;
     
   size_t m_size;
-  int m_offset;
+  size_t m_offset;
   pwr_tTid m_tid;
   int m_elements;
   pwr_eType m_type;
@@ -64,7 +64,7 @@ public:
   pwr_sAttrRef aref();
   pwr_sAttrRef *aref(pwr_sAttrRef *arp);
   size_t size();
-  int offset();
+  size_t offset();
   pwr_eType type();
   int nElement();
   int index();
