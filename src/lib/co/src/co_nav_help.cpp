@@ -134,8 +134,17 @@ int	NavHelp::help( char *help_key, char *help_bookmark,
     dcli_get_defaultfilename( base_file, filestr, NULL);
   else if ( file_type == navh_eHelpFile_Project)
     dcli_get_defaultfilename( project_file, filestr, NULL);
-  else
+  else {
     dcli_get_defaultfilename( file_name, filestr, NULL);
+    // Replace symbol for language
+    if ( strncmp( filestr, "$pwr_lang/", 10) == 0) {
+      char lng_filestr[200];
+
+      sprintf( lng_filestr, "$pwr_exe/%s/%s", Lng::get_language_str(),
+		 &filestr[10]);
+      strcpy( filestr, lng_filestr);
+    }
+  }
   dcli_translate_filename( filestr, filestr);
 
   file = fopen( filestr, "r");
