@@ -300,7 +300,7 @@ time_Dadd (
 )
 {
   pwr_tDeltaTime	*r = result;
-  int			tv_nsec;
+  int			tv_nsec, tv_sec;
 
   assertDelta(t);
   assertDelta(a);
@@ -308,8 +308,19 @@ time_Dadd (
   if (result == NULL) r = t;
 
   tv_nsec = t->tv_nsec + a->tv_nsec;
-  r->tv_sec = t->tv_sec + a->tv_sec + (tv_nsec / 1000000000);
-  r->tv_nsec = tv_nsec % 1000000000;
+  tv_sec = t->tv_sec + a->tv_sec + (tv_nsec / 1000000000);
+  tv_nsec = tv_nsec % 1000000000;
+  
+  if (tv_nsec < 0 && tv_sec > 0) {
+    tv_sec--;
+    tv_nsec += 1000000000;
+  } else if (tv_sec < 0 && tv_nsec > 0) {
+    tv_sec++;
+    tv_nsec -= 1000000000;
+  }
+  
+  r->tv_sec = tv_sec;
+  r->tv_nsec = tv_nsec;
 
   return r;
 }
