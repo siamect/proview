@@ -2668,9 +2668,10 @@ int WNav::menu_tree_search_children( char *name, wnav_sMenu *child_list,
   return WNAV__NOTFOUND;
 }
 
-int WNav::volume_attached( ldh_tSesContext ldhsession, int pop)
+int WNav::volume_attached( ldh_tWBContext wbcontext, ldh_tSesContext ldhsession, int pop)
 {
   ldhses = ldhsession;
+  wbctx = wbcontext;
   wccm_store_ldhses( (void *)this, ldhses);
   if ( window_type != wnav_eWindowType_No)
     show_volume( pop);

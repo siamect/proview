@@ -308,7 +308,7 @@ class WNav {
     int open_plc( pwr_tOid oid);
     int is_editmode() { return editmode;};
     void set_editmode( int value);
-    int volume_attached( ldh_tSesContext ldhsession, int pop);
+    int volume_attached( ldh_tWBContext wbcontext, ldh_tSesContext ldhsession, int pop);
     int volume_detached();
     void ldh_event( ldh_sEvent *event);
     void ldh_refresh( pwr_tObjid new_open);

@@ -778,8 +778,8 @@ static int wtt_attach_volume_cb(
     (void *)wtt,
     wtt_ldh_other_session_cb);
 
-  wtt->wnav->volume_attached( wtt->ldhses, pop);
-  wtt->wnavnode->volume_attached( wtt->ldhses, pop);
+  wtt->wnav->volume_attached( wtt->wbctx, wtt->ldhses, pop);
+  wtt->wnavnode->volume_attached( wtt->wbctx, wtt->ldhses, pop);
   wtt->palette->session_opened( wtt->ldhses, NULL);
 
   return 1;
@@ -3599,8 +3599,8 @@ Wtt::Wtt(
 
   if ( wbctx && volid)
   {
-    wnav->volume_attached( ldhses, 0);
-    wnavnode->volume_attached( ldhses, 0);
+    wnav->volume_attached( wbctx, ldhses, 0);
+    wnavnode->volume_attached( wbctx, ldhses, 0);
   }
   menu_setup();
   *status = 1;

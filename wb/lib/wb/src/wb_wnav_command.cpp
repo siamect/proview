@@ -1123,7 +1123,7 @@ static int	wnav_set_func(	void		*client_data,
       return WNAV__SYNTAX;
     }
 
-    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->wbctx);
+    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
     if ( EVEN(sts)) return sts;
 
     termflg = ODD( dcli_get_qualifier( "/TERMINAL", arg2_str));
@@ -1183,7 +1183,7 @@ static int	wnav_set_func(	void		*client_data,
     int		shodetecttext;
     pwr_tStatus	sts;
 
-    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->wbctx);
+    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
     if ( EVEN(sts)) return sts;
 
     if ( ODD( dcli_get_qualifier( "/SIGNALOBJECTSEG" , str)))
@@ -1393,7 +1393,7 @@ static int	wnav_show_func(	void		*client_data,
   else if ( strncmp( arg1_str, "VOLUMES", strlen( arg1_str)) == 0)
   {
     /* Command is "SHOW VOLUMES" */
-    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->wbctx);
+    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
     if ( EVEN(sts)) return sts;
 
     if ( wnav->window_type == wnav_eWindowType_No)
@@ -1445,7 +1445,7 @@ static int	wnav_show_func(	void		*client_data,
     if ( wnav->window_type == wnav_eWindowType_No)
       return WNAV__CMDMODE;
 
-    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->wbctx);
+    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
     if ( EVEN(sts)) return sts;
 
     if ( ODD( dcli_get_qualifier( "/NAME", name_str)))
@@ -1515,7 +1515,7 @@ static int	wnav_show_func(	void		*client_data,
 
     // Command is "SHOW OBJECTS" 
 
-    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->wbctx);
+    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
     if ( EVEN(sts)) return sts;
 
     if ( ODD( dcli_get_qualifier( "/OBJID", objid_str)))
@@ -1619,7 +1619,7 @@ static int	wnav_show_func(	void		*client_data,
     char		msg[160];
     int			size; 
 
-    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->wbctx);
+    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
     if ( EVEN(sts)) return sts;
 
     if ( ODD( dcli_get_qualifier( "/NAME", name_str)))
@@ -1691,7 +1691,7 @@ static int	wnav_show_func(	void		*client_data,
     //else
     //  volumestr_p = NULL;
 
-    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->wbctx);
+    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
     if ( EVEN(sts)) return sts;
 
     sts = utl_show_modules( wnav->ldhses, objidstr_p, namestr_p, 
@@ -1917,7 +1917,7 @@ static int	wnav_compile_func(	void		*client_data,
     int			i;
     int			size;
 
-    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->wbctx);
+    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
     if ( EVEN(sts)) return sts;
 
     sts = wnav->get_select( &sel_list, &sel_is_attr, &sel_cnt);
@@ -1990,7 +1990,7 @@ static int	wnav_compile_func(	void		*client_data,
   }
   else
   {
-    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->wbctx);
+    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
     if ( EVEN(sts)) return sts;
 
     sts = utl_compile( wnav->ldhses, ldh_SessionToWB(wnav->ldhses), 
@@ -2024,7 +2024,7 @@ static int	wnav_print_func(	void		*client_data,
   document = EVEN( dcli_get_qualifier( "/NODOCUMENT", NULL));
   overview = EVEN( dcli_get_qualifier( "/NOOVERVIEW", NULL));
 
-  sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->wbctx);
+  sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
   if ( EVEN(sts)) return sts;
 
   if ( ODD( dcli_get_qualifier( "/PLCPGM", plcpgm_str)))
@@ -2069,7 +2069,7 @@ static int	wnav_print_func(	void		*client_data,
     int			i;
     int			size;
 
-    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->wbctx);
+    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
     if ( EVEN(sts)) return sts;
 
     sts = wnav->get_select( &sel_list, &sel_is_attr, &sel_cnt);
@@ -2128,7 +2128,7 @@ static int	wnav_redraw_func(	void		*client_data,
   if ( ODD( dcli_get_qualifier( "/ALL", NULL)))
   {
    
-    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->wbctx);
+    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
     if ( EVEN(sts)) return sts;
 
     if ( ODD( dcli_get_qualifier( "/FROM_PLCPGM", from_str)))
@@ -2149,7 +2149,7 @@ static int	wnav_redraw_func(	void		*client_data,
   }
   else if ( ODD( dcli_get_qualifier( "/PLCPGM", plcpgm_str)))
   {
-    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->wbctx);
+    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
     if ( EVEN(sts)) return sts;
 
     if ( wnav->parent_wid == 0)
@@ -2166,7 +2166,7 @@ static int	wnav_redraw_func(	void		*client_data,
   else if ( ODD( dcli_get_qualifier( "/HIERARCHY", hier_str)))
   {
    
-    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->wbctx);
+    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
     if ( EVEN(sts)) return sts;
 
     if ( ODD( dcli_get_qualifier( "/FROM_PLCPGM", from_str)))
@@ -2192,7 +2192,7 @@ static int	wnav_redraw_func(	void		*client_data,
     int			i;
     int			size;
 
-    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->wbctx);
+    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
     if ( EVEN(sts)) return sts;
 
     sts = wnav->get_select( &sel_list, &sel_is_attr, &sel_cnt);
@@ -2244,7 +2244,7 @@ static int	wnav_generate_func(	void		*client_data,
   {
     int sts;
 
-    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->wbctx);
+    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
     if ( EVEN(sts)) return sts;
 
     sts = ge_generate_web( wnav->ldhses);
@@ -2326,7 +2326,7 @@ static int	wnav_list_func(	void		*client_data,
         strcat( descriptor_str, descstr);
       }
 
-      sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->wbctx);
+      sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
       if ( EVEN(sts)) return sts;
 
       sts = utl_list( wnav->ldhses, descriptor_str, hierstr_p, objectstr_p, 
@@ -2366,7 +2366,7 @@ static int	wnav_list_func(	void		*client_data,
     else
       volumestr_p = NULL;
 
-    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->wbctx);
+    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
     if ( EVEN(sts)) return sts;
 
     if ( !shortname)
@@ -2456,7 +2456,7 @@ static int	wnav_list_func(	void		*client_data,
     else
       volumestr_p = NULL;
 
-    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->wbctx);
+    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
     if ( EVEN(sts)) return sts;
 
     // Search for local signal list descriptor
@@ -2511,7 +2511,7 @@ static int	wnav_list_func(	void		*client_data,
     else
       volumestr_p = NULL;
 
-    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->wbctx);
+    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
     if ( EVEN(sts)) return sts;
 
     // Search for local signal list descriptor
@@ -2595,7 +2595,7 @@ static int	wnav_list_func(	void		*client_data,
     else
       volumestr_p = NULL;
 
-    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->wbctx);
+    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
     if ( EVEN(sts)) return sts;
 
     // Search for local signal list descriptor
@@ -2630,7 +2630,7 @@ static int	wnav_list_func(	void		*client_data,
 
     // command is "LIST RTTLISTS"
 
-    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->wbctx);
+    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
     if ( EVEN(sts)) return sts;
 
     // Get the filename
@@ -2820,7 +2820,7 @@ static int	wnav_configure_func(	void		*client_data,
     else
       tablestr_p = NULL;
 
-    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->wbctx);
+    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
     if ( EVEN(sts)) return sts;
 
     sts = utl_configure_card( wnav->ldhses, rack, cardname, cardclass, 
@@ -2864,7 +2864,7 @@ static int	wnav_sort_func(	void		*client_data,
 
   if ( ODD( dcli_get_qualifier( "/PARENT", NULL)))
   {
-    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->wbctx);
+    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
     if ( EVEN(sts)) return sts;
 
     sts = utl_sortchildren( wnav->ldhses, parentstr, sorttype);
@@ -2883,7 +2883,7 @@ static int	wnav_sort_func(	void		*client_data,
     int			i;
     int			size;
 
-    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->wbctx);
+    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
     if ( EVEN(sts)) return sts;
 
     sts = wnav->get_select( &sel_list, &sel_is_attr, &sel_cnt);
@@ -2990,7 +2990,7 @@ static int	wnav_copy_func(	void		*client_data,
       return WNAV__QUAL;
     }
 
-    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->wbctx);
+    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
     if ( EVEN(sts)) return sts;
 
     sts = utl_copy_objects( wnav->ldhses, sourcestr, destinationstr, namestr, 
@@ -3294,7 +3294,7 @@ static int	wnav_move_func(	void		*client_data,
       return WNAV__QUAL;
     }
 
-    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->wbctx);
+    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
     if ( EVEN(sts)) return sts;
 
     sts = utl_move_object( wnav->ldhses, sourcestr, destinationstr_ptr, 
@@ -3457,7 +3457,6 @@ static int	wnav_create_func( void		*client_data,
     char	*volumestr_p;
     pwr_tStatus	sts;
     int		allvolumes;
-    int		classvolumes;
 
     // Command is "CREATE LOADFILES"
 
@@ -3468,18 +3467,16 @@ static int	wnav_create_func( void		*client_data,
     }
 
     allvolumes = ODD( dcli_get_qualifier( "/ALL", NULL));
-    classvolumes = ODD( dcli_get_qualifier( "/CLASS", NULL));
 
     if ( ODD( dcli_get_qualifier( "/VOLUME" , volumestr)))
       volumestr_p = volumestr;
     else
       volumestr_p = NULL;
 
-    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->wbctx);
+    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
     if ( EVEN(sts)) return sts;
 
-    sts = utl_create_loadfiles( wnav->ldhses, volumestr_p, allvolumes,
-		classvolumes);
+    sts = utl_create_loadfiles( wnav->ldhses, volumestr_p, allvolumes);
     if ( EVEN(sts))
       wnav->message(' ', wnav_get_message(sts));
     return sts;
@@ -3542,7 +3539,7 @@ static int	wnav_create_func( void		*client_data,
       return WNAV__QUAL;
     }
 
-    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->wbctx);
+    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
     if ( EVEN(sts)) return sts;
 
     sts = utl_create_object( wnav->ldhses, namestr, classtr, destinationstr, 
@@ -3558,6 +3555,8 @@ static int	wnav_create_func( void		*client_data,
     char	classtr[80];
     char	identitystr[80];
     pwr_tStatus	sts;
+    pwr_tCid	cid;
+    pwr_tVid	vid;
 
     // Command is "CREATE VOLUME"
 
@@ -3571,16 +3570,33 @@ static int	wnav_create_func( void		*client_data,
     if ( EVEN( dcli_get_qualifier( "/IDENTITY", identitystr)))
       sts = 0;
 
-    if ( EVEN(sts))
-    {
+    if ( EVEN(sts)) {
       wnav->message('E', "Qualifer required");
       return WNAV__QUAL;
     }
 
-    sts = wnav_wccm_get_wbctx_cb( wnav, &wnav->wbctx);
+    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
     if ( EVEN(sts)) return sts;
 
-    sts = utl_create_volume ( wnav->wbctx, namestr, classtr, identitystr);
+    sts = ldh_ClassNameToId( wnav->ldhses, &cid, classtr);
+    if ( EVEN(sts)) {
+      wnav->message(' ', wnav_get_message(sts));
+      return sts;
+    }
+    
+    sts = cdh_StringToVolumeId( identitystr, &vid);
+    if ( EVEN(sts)) {
+      wnav->message(' ', wnav_get_message(sts));
+      return sts;
+    }
+
+    try {
+      wb_erep *erep = *(wb_env *)wnav->wbctx;
+      erep->createVolume( &sts, vid, cid, namestr);
+    }
+    catch ( wb_error &e) {
+      sts = e.sts();
+    }
     if ( EVEN(sts))
       wnav->message(' ', wnav_get_message(sts));
     return sts;
@@ -3765,7 +3781,7 @@ static int	wnav_delete_func( void		*client_data,
     confirm = EVEN( dcli_get_qualifier( "/NOCONFIRM", NULL));
     log = EVEN( dcli_get_qualifier( "/NOLOG", NULL));
 
-    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->wbctx);
+    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
     if ( EVEN(sts)) return sts;
 
     sts = utl_delete_objects( wnav->ldhses, hierstr_ptr, classtr_ptr, namestr_ptr, 
@@ -3795,7 +3811,7 @@ static int	wnav_delete_func( void		*client_data,
     confirm = EVEN( dcli_get_qualifier( "/NOCONFIRM", NULL));
     log = EVEN( dcli_get_qualifier( "/NOLOG", NULL));
 
-    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->wbctx);
+    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
     if ( EVEN(sts)) return sts;
 
     sts = utl_delete_tree( wnav->ldhses, namestr_ptr, confirm, log); 
@@ -3927,7 +3943,7 @@ static int	wnav_wb_func( 	void		*client_data,
     else
       hierarchystr_p = 0;
 
-    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->wbctx);
+    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
     
     sts = ldh_WbDump( wnav->ldhses, hierarchystr_p, outputstr);
     if ( EVEN(sts))
@@ -3944,6 +3960,8 @@ static int	wnav_wb_func( 	void		*client_data,
       wnav->message('E', "Qualifer required");
       return WNAV__QUAL;
     }
+
+    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
 
     sts = ldh_WbLoad( wnav->ldhses, loadfilestr);
     if ( EVEN(sts))
@@ -4951,7 +4969,8 @@ int WNav::readcmdfile( 	char		*incommand)
   strcpy( input_str, incommand);
   dcli_remove_blank( input_str, input_str);
   wnav_store_wnav( this);
-  wccm_store_ldhses( this, ldhses);
+  if ( ldhses)
+    wccm_store_ldhses( this, ldhses);
 
   // Read and execute the command file
   sts = ccm_file_exec( input_str, wnav_externcmd_func,
