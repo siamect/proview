@@ -928,7 +928,7 @@ int wb_vrepwbl::getAttrInfoRec( wb_attrname *attr, pwr_eBix bix, pwr_tCid cid, s
       // Find attribute
       wb_wblnode *n_attr = n_body->o->fch;
       while( n_attr) {
-        if ( n_attr->isAttribute() && attr->attributeIsEqual( n_attr->name(), level))
+        if ((n_attr->isAttribute() || n_attr->isBuffer()) && attr->attributeIsEqual( n_attr->name(), level))
           break;
         n_attr = n_attr->o->fws;
       }
@@ -1068,7 +1068,7 @@ int wb_vrepwbl::nameToAttrRef( const char *name, pwr_sAttrRef *attrref)
 
     if ( aname.hasAttribute()) {
       strcat( cname, "-Template.");
-      strcat( cname, aname.attributesAll());
+      strcat( cname, aname.attributesAllTrue());
       sts = nameToAttrRef( cname, &aref);
       if ( EVEN(sts)) return sts;
 
@@ -1525,7 +1525,20 @@ wb_orep *wb_vrepwbl::last(pwr_tStatus *sts, const wb_orep *o)
 
 wb_orep *wb_vrepwbl::next(pwr_tStatus *sts, const wb_orep *o)
 {
-  return 0;
+  *sts = LDH__SUCCESS;
+  wb_orepwbl *orep = 0;
+
+  ref_wblnode n = ((wb_orepwbl *)o)->wblNode();
+  if ( !n)
+    return 0;
+
+  if ( !n->o->fws) {
+    *sts = LDH__NO_SIBLING;
+    return 0;
+  }
+
+  orep = new wb_orepwbl( (wb_vrepwbl *)this, n->o->fws);
+  return orep;
 }
 
 wb_orep *wb_vrepwbl::previous(pwr_tStatus *sts, const wb_orep *o)
