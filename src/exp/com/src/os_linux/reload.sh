@@ -255,7 +255,7 @@ reload_continue()
     return
   fi
 
-  echo -n "Do you wan't to continue ? [y/n/go] "
+  echo -n "Do you want to continue ? [y/n/go] "
   read repl
   case $repl in
     go ) go=1; return ;;
