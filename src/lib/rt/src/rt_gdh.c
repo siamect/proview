@@ -1852,6 +1852,7 @@ gdh_SetObjectInfo (
     
     /* Try remote.  */
 
+    memset(&aref, 0, sizeof(aref));
     arp = mvol_AttributeToAref(&sts, ap, &aref);
     if (arp == NULL) break;
 
