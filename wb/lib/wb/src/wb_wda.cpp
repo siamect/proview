@@ -233,7 +233,7 @@ static void wda_activate_prevattr( Widget w, Wda *wda, XmAnyCallbackStruct *data
 
 static void wda_activate_help( Widget w, Wda *wda, XmAnyCallbackStruct *data)
 {
-  XHelp::dhelp( "spreadsheet editor", 0, navh_eHelpFile_Base, 0, true);
+  CoXHelp::dhelp( "spreadsheet editor", 0, navh_eHelpFile_Base, 0, true);
 }
 
 static void wda_create_msg_label( Widget w, Wda *wda, XmAnyCallbackStruct *data)

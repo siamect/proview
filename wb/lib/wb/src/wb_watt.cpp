@@ -184,7 +184,7 @@ static void watt_activate_exit( Widget w, WAtt *watt, XmAnyCallbackStruct *data)
 
 static void watt_activate_help( Widget w, WAtt *watt, XmAnyCallbackStruct *data)
 {
-  XHelp::dhelp( "object editor", 0, navh_eHelpFile_Base, 0, true);
+  CoXHelp::dhelp( "object editor", 0, navh_eHelpFile_Base, 0, true);
 }
 
 static void watt_create_msg_label( Widget w, WAtt *watt, XmAnyCallbackStruct *data)

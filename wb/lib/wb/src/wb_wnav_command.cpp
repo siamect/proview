@@ -416,23 +416,23 @@ static int	wnav_help_func(		void		*client_data,
   {
     if ( ODD( dcli_get_qualifier( "/HELPFILE", file_str)))
     {
-      sts = XHelp::dhelp_index( navh_eHelpFile_Other, file_str);
+      sts = CoXHelp::dhelp_index( navh_eHelpFile_Other, file_str);
       if ( EVEN(sts))
         wnav->message('E', "Unable to find file");
     }
     else
     {
       if ( ODD( dcli_get_qualifier( "/BASE", file_str)))
-        sts = XHelp::dhelp_index( navh_eHelpFile_Base, NULL);
+        sts = CoXHelp::dhelp_index( navh_eHelpFile_Base, NULL);
       else
-        sts = XHelp::dhelp_index( navh_eHelpFile_Project, NULL);
+        sts = CoXHelp::dhelp_index( navh_eHelpFile_Project, NULL);
     }
     return sts;
   }
 
   if ( EVEN( dcli_get_qualifier( "dcli_arg1", arg_str)))
   {
-    sts = XHelp::dhelp( "help command", "", navh_eHelpFile_Base, NULL, strict);
+    sts = CoXHelp::dhelp( "help command", "", navh_eHelpFile_Base, NULL, strict);
     return sts;
   }
   strict = ODD( dcli_get_qualifier( "/STRICT", NULL));
@@ -465,25 +465,25 @@ static int	wnav_help_func(		void		*client_data,
     }
   }
   if ( ODD( dcli_get_qualifier( "/HELPFILE", file_str))) {
-    sts = XHelp::dhelp( key, bookmark_str, navh_eHelpFile_Other, file_str, strict);
+    sts = CoXHelp::dhelp( key, bookmark_str, navh_eHelpFile_Other, file_str, strict);
     if ( EVEN(sts))
       wnav->message('E', "No help on this subject");
   }
   else if ( ODD( dcli_get_qualifier( "/BASE", file_str))) {
-    sts = XHelp::dhelp( key, bookmark_str, navh_eHelpFile_Base, NULL, strict);
+    sts = CoXHelp::dhelp( key, bookmark_str, navh_eHelpFile_Base, NULL, strict);
     if ( EVEN(sts))
       wnav->message('E', "No help on this subject");
   }
   else if ( ODD( dcli_get_qualifier( "/PROJECT", file_str))) {
-    sts = XHelp::dhelp( key, bookmark_str, navh_eHelpFile_Project, NULL, strict);
+    sts = CoXHelp::dhelp( key, bookmark_str, navh_eHelpFile_Project, NULL, strict);
     if ( EVEN(sts))
       wnav->message('E', "No help on this subject");
   }
   else {
-    sts = XHelp::dhelp( key, bookmark_str, navh_eHelpFile_Base, NULL, strict);
+    sts = CoXHelp::dhelp( key, bookmark_str, navh_eHelpFile_Base, NULL, strict);
     if ( EVEN(sts))
     {
-      sts = XHelp::dhelp( key, bookmark_str, navh_eHelpFile_Project, NULL, strict);
+      sts = CoXHelp::dhelp( key, bookmark_str, navh_eHelpFile_Project, NULL, strict);
       if ( EVEN(sts))
         wnav->message('E', "No help on this subject");
     }
