@@ -131,10 +131,38 @@ wb_object wb_session::copyObject(wb_object o, wb_destination d, wb_name name)
   m_sts = triggAnteAdopt(parent, o.cid());
   if (evenSts()) throw wb_error(sts());
 
-  orep = m_vrep->copyObject(&m_sts, (wb_orep*)o, d, name);
+  if ( m_vrep->vid() == o.vid()) {
+    orep = m_vrep->copyObject(&m_sts, (wb_orep*)o, d, name);
+    orep->ref();
+  }
+  else {
+    wb_cdef c = cdef( o.cid());
+
+    orep = m_vrep->createObject(&m_sts, c, d, name); 
+    orep->ref();
+    wb_attribute rba(o.sts(), (wb_orep*)o, "RtBody");
+    if ( rba) {
+      void *p = rba.value();
+      wb_attribute rban(m_sts, orep, "RtBody");
+      writeAttribute( rban, p);
+    }
+    wb_attribute dba(o.sts(), (wb_orep*)o, "DevBody");
+    if ( dba) {
+      void *p = dba.value();
+      wb_attribute dban(m_sts, orep, "DevBody");
+      writeAttribute( dban, p);
+    }
+    wb_attribute sba(o.sts(), (wb_orep*)o, "SysBody");
+    if ( sba) {
+      void *p = sba.value();
+      wb_attribute sban(m_sts, orep, "SysBody");
+      writeAttribute( sban, p);
+    }
+  }
   m_srep->update();
 
   wb_object onew = wb_object(m_sts, orep);
+  orep->unref();
   ldh_sEvent *ep = m_srep->eventStart(onew.oid(), ldh_eEvent_ObjectCreated);
   m_srep->eventNewFamily(ep, onew);
   triggPostCreate(onew);
