@@ -1159,8 +1159,8 @@ bool wb_db::importHead(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
     char newName[50];
     sprintf(newName, "O%u_%s", oid.oix, name);
     newName[31] = '\0';
-    // wb_name nn(newName);
-    wb_name nn(name);
+    wb_name nn(newName);
+    // wb_name nn(name);
     o.name(nn);
     o.put(m_txn);
     n.name(nn);
