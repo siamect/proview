@@ -412,7 +412,7 @@ int CnvWblToHtml::class_exec()
   CnvReadSrc::filename_to_html( struct_file, fname);
 
   ctx->hpp = 1;
-  CnvWblToH::get_filename( ctx->rw, fname, 0);
+  CnvWblToH::get_filename( ctx->rw, fname, 1);
   CnvReadSrc::filename_to_html( hpp_file, fname);
   ctx->hpp = 0;
 
