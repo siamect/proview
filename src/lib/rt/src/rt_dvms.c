@@ -274,7 +274,7 @@ dvmsFctn* dvms_GetFctns(const co_mFormat* fmp)
         fctns[pwr_eTix_Float32] = NULL;
         fctns[pwr_eTix_Float64] = NULL;
     }
-    else if (co_dHostFloatType == co_eFT_ieee) {
+    else if (co_dHostFloatType == co_eFT_ieeeS) {
         fctns[pwr_eTix_Float32] = dvms_vaxf2ieee;
         fctns[pwr_eTix_Float64] = dvms_error;
     }
