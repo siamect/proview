@@ -230,7 +230,7 @@ void wb_erep::addDbs( pwr_tStatus *sts, wb_vrep *vrep)
   vrep_iterator it = m_vrepdbs.find( vrep->vid()); 
   if ( it == m_vrepdbs.end()) {
     m_vrepdbs[vrep->vid()] = vrep;
-    vrep->ref();
+    vrep->ref(); 
     *sts = LDH__SUCCESS;
   }
   else {
@@ -238,8 +238,9 @@ void wb_erep::addDbs( pwr_tStatus *sts, wb_vrep *vrep)
     return;
   }
 
-  if ( vrep->cid() == pwr_eClass_ClassVolume)
+  if ( vrep->cid() == pwr_eClass_ClassVolume) {
     m_merep->addDbs( sts, (wb_mvrep *)vrep);
+  }  
 }
 
 void wb_erep::addExtern( pwr_tStatus *sts, wb_vrep *vrep)

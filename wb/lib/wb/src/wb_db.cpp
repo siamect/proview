@@ -976,6 +976,23 @@ pwr_tOid wb_db::new_oid(wb_db_txn *txn)
   return oid;
 }
 
+pwr_tOid wb_db::new_oid(wb_db_txn *txn, pwr_tOid oid)
+{
+  if (oid.vid == m_vid) {
+    try {
+      wb_db_ohead o(this, txn, oid);
+    } catch (DbException &e) {
+      cout << e.what() << " old oid not found, keep\n";
+      return oid;
+    }
+    cout << " Old oid found, force new!\n";
+    
+  } else {
+    cout << "in an other volume\n";
+  }
+  return new_oid(txn);
+}
+
 int wb_db::del_family(wb_db_txn *txn, Dbc *cp, pwr_tOid poid)
 {
   int ret = 0;
@@ -1133,7 +1150,19 @@ bool wb_db::importHead(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
   o.put(m_txn);
   //printf("head put: %d.%d %s\n", oid.vid, oid.oix, name);
   wb_db_name n(this, oid, poid, normname);
-  n.put(m_txn);
+  int rc = n.put(m_txn);
+  if (rc) {
+    //printf("importHead: n.put: %d, %d.%d %s\n", rc, poid.vid, poid.oix, name);
+    char newName[50];
+    sprintf(newName, "O%u_%s", oid.oix, name);
+    newName[31] = '\0';
+    wb_name nn(newName);
+    o.name(nn);
+    o.put(m_txn);
+    n.name(nn);
+    n.put(m_txn);
+  }
+  
   wb_db_class c(this, cid, oid);
   c.put(m_txn);
   if (oid.oix == pwr_cNOix) { // This is the volume object

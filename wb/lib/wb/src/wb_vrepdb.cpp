@@ -1,6 +1,7 @@
 #include <sys/stat.h>
 #include <errno.h>
 #include "co_cdh.h"
+#include "co_tree.h"
 #include "wb_db.h"
 #include "wb_vrepdb.h"
 #include "wb_orepdb.h"
@@ -24,7 +25,7 @@ wb_vrep *wb_vrepdb::ref()
 
 
 wb_vrepdb::wb_vrepdb(wb_erep *erep, const char *fileName) :
-  m_erep(erep), m_nRef(0), m_ohead()
+  m_erep(erep), m_nRef(0), m_ohead(), m_oid_th(0)
 {  
   strcpy(m_fileName, fileName);
 
@@ -39,7 +40,7 @@ wb_vrepdb::wb_vrepdb(wb_erep *erep, const char *fileName) :
 }
 
 wb_vrepdb::wb_vrepdb(wb_erep *erep, pwr_tVid vid, pwr_tCid cid, const char *volumeName, const char *fileName) :
-  m_erep(erep), m_nRef(0), m_ohead()
+  m_erep(erep), m_nRef(0), m_ohead(), m_oid_th(0)
 {  
   strcpy(m_fileName, fileName);
 
@@ -684,8 +685,41 @@ void *wb_vrepdb::readBody(pwr_tStatus *sts, const wb_orep *orp, pwr_eBix bix, vo
 
 bool wb_vrepdb::writeBody(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, void *p)
 {
-  *sts = LDH__NYI;
-  return true;
+  try {
+    int rc = 0;
+    m_ohead.get(m_db->m_txn, o->oid());
+    *sts = LDH__SUCCESS;
+  
+    switch (bix) {
+    case pwr_eBix_rt:
+    {
+    
+      wb_db_rbody rb(m_db, m_ohead.oid());
+      rc = rb.put(m_db->m_txn, 0, m_ohead.rbSize(), p);
+      if (rc)
+        printf("wb_vrepdb::writeBody rb.put rc %d\n", rc);
+      break;
+    }
+    case pwr_eBix_dev:
+    {
+    
+      wb_db_dbody db(m_db, m_ohead.oid());
+      rc = db.put(m_db->m_txn, 0, m_ohead.dbSize(), p);
+      if (rc)
+        printf("wb_vrepdb::writeBody db.put rc %d\n", rc);
+      break;
+    }
+    default:
+      break;
+    }
+
+    return true;
+  }
+  catch (DbException &e) {
+    *sts = LDH__NOSUCHOBJ;
+    printf("vrepdb: %s\n", e.what());
+    return false;
+  }
 }
 
 wb_orep *wb_vrepdb::ancestor(pwr_tStatus *sts, const wb_orep *o)
@@ -1142,4 +1176,196 @@ wb_orepdb *wb_vrepdb::new_wb_orepdb(size_t size)
 void wb_vrepdb::delete_wb_orepdb(void *p)
 {
   free(p);
+}
+
+bool wb_vrepdb::importPasteObject(pwr_tOid doid, ldh_eDest destcode, 
+				   bool keepoid, pwr_tOid oid, 
+				   pwr_tCid cid, pwr_tOid poid,
+				   pwr_tOid boid, const char *name, pwr_mClassDef flags,
+				   size_t rbSize, size_t dbSize, void *rbody, void *dbody,
+				   pwr_tOid *roid)
+{
+  pwr_tStatus sts;
+  static pwr_tTime oTime;
+
+  if (cdh_ObjidIsNull(poid) && cdh_ObjidIsNull(boid)) {
+    if (m_oid_th) {
+      tree_DeleteTable(&sts, m_oid_th);
+    }
+    importTranslationTableClear();
+    importSetSourceVid(oid.vid);
+    m_oid_th = tree_CreateTable(&sts, sizeof(pwr_tOid), offsetof(sOentry, o_oid), sizeof(sOentry), 1000, tree_Comp_oid);
+    m_poep = (sOentry *)tree_Insert(&sts, m_oid_th, &poid);
+    
+    clock_gettime(CLOCK_REALTIME, &oTime);
+
+    memset(&m_destination, 0, sizeof(m_destination));
+    
+    m_destination.oid = doid;
+    
+    if (cdh_ObjidIsNotNull(doid)) {
+      try {
+        m_ohead.get(m_db->m_txn, doid);
+        //printf("vrepdb, desination (%d.%d, %s) does exist\n", doid.vid, doid.oix, m_ohead.name());
+        //printf("   p (%d.%d), b (%d.%d), a (%d.%d), f (%d.%d), l (%d.%d)\n", m_ohead.poid().vid, m_ohead.poid().oix, m_ohead.boid().vid, m_ohead.boid().oix, m_ohead.aoid().vid, m_ohead.aoid().oix, m_ohead.foid().vid, m_ohead.foid().oix, m_ohead.loid().vid, m_ohead.loid().oix);
+        //return m_ohead.name();
+      }
+      catch (DbException &e) {
+        //*sts = LDH__NOSUCHOBJ;
+        printf("vrepdb, desination (%d.%d) does not exist: %s\n", doid.vid, doid.oix, e.what());
+        throw wb_error(LDH__PASTEINCON);
+      }
+    }
+
+    switch (destcode) {
+    case ldh_eDest_After:
+      //printf("After\n");
+      m_destination.poid = m_ohead.poid();
+      m_destination.foid = m_ohead.oid();
+      m_destination.loid = m_ohead.aoid();
+      break;
+    case ldh_eDest_IntoFirst:
+      //printf("Into first\n");
+      m_destination.poid = m_ohead.oid();
+      m_destination.loid = m_ohead.foid();
+      break;
+    default:
+      printf("Into other\n");
+      throw wb_error(LDH__NYI);
+    }
+
+    //printf("dest  o (%d.%d), p (%d.%d), f (%d.%d), l (%d.%d)\n", m_destination.oid.vid, m_destination.oid.oix, m_destination.poid.vid, m_destination.poid.oix, m_destination.foid.vid, m_destination.foid.oix, m_destination.loid.vid, m_destination.loid.oix);
+    
+    m_poep->n_oid = m_destination.poid;
+  }
+  
+  //printf("wb_vrepdb::importPasteObject: %s, poid: %d.%d boid: %d.%d\n", name, poid.vid, poid.oix, boid.vid, boid.oix);
+
+  sOentry *oep = (sOentry *)tree_Insert(&sts, m_oid_th, &oid);
+  sOentry *poep = oep->parent = (sOentry *)tree_Insert(&sts, m_oid_th, &poid);
+
+  if (cdh_ObjidIsNotNull(boid)) {
+    oep->before = (sOentry *)tree_Insert(&sts, m_oid_th, &boid);
+    poep->last = oep->before->after = oep;
+  } else {
+    poep->first = poep->last = oep;
+  }
+
+  if (keepoid) {
+    oep->n_oid = m_db->new_oid(m_db->m_txn, oid);
+  } else {
+    oep->n_oid = m_db->new_oid(m_db->m_txn);
+  }
+  
+  importTranslationTableInsert(oid.oix, oep->n_oid.oix);
+
+  wb_name n(name);
+  
+  m_db->importHead(oep->n_oid, cid, oep->parent->n_oid, pwr_cNOid, pwr_cNOid, pwr_cNOid, pwr_cNOid,
+                   name, n.normName(), flags, oTime, oTime, oTime, rbSize, dbSize);
+
+  if (rbSize > 0) {
+    m_db->importRbody(oep->n_oid, rbSize, rbody);
+  }
+  if (dbSize > 0) {
+    m_db->importDbody(oep->n_oid, dbSize, dbody);
+  }
+
+  return true;
+}
+
+bool wb_vrepdb::importPaste()
+{
+  pwr_tStatus sts;
+  pwr_tTime oTime;
+  
+  clock_gettime(CLOCK_REALTIME, &oTime);
+
+  sOentry *oep = (sOentry*)tree_Minimum(&sts, m_oid_th);
+  while (oep) {
+    if (oep != m_poep) {
+      m_ohead.get(m_db->m_txn, oep->n_oid);
+      m_ohead.poid(oep->parent->n_oid);
+
+      if (oep->before)
+        m_ohead.boid(oep->before->n_oid);
+      if (oep->after)
+        m_ohead.aoid(oep->after->n_oid);
+      if (oep->first)
+        m_ohead.foid(oep->first->n_oid);
+      if (oep->last)
+        m_ohead.loid(oep->last->n_oid);
+
+      m_ohead.ohTime(oTime);
+      m_ohead.put(m_db->m_txn);
+    }
+    
+    oep = (sOentry*)tree_Successor(&sts, m_oid_th, oep);        
+  }
+  
+  if (cdh_ObjidIsNull(m_destination.foid)) {
+    m_ohead.get(m_db->m_txn, m_destination.poid);
+    m_ohead.foid(m_poep->first->n_oid);
+    m_ohead.ohTime(oTime);
+    m_ohead.put(m_db->m_txn);
+
+    if (cdh_ObjidIsNotNull(m_destination.loid)) {
+      m_ohead.get(m_db->m_txn, m_destination.loid);
+      m_ohead.boid(m_poep->last->n_oid);
+      m_ohead.ohTime(oTime);
+      m_ohead.put(m_db->m_txn);
+
+      m_ohead.get(m_db->m_txn, m_poep->last->n_oid);
+      m_ohead.aoid(m_destination.loid);
+      m_ohead.ohTime(oTime);
+      m_ohead.put(m_db->m_txn);
+    }
+  }
+  if (cdh_ObjidIsNull(m_destination.loid)) {
+    m_ohead.get(m_db->m_txn, m_destination.poid);
+    m_ohead.loid(m_poep->last->n_oid);
+    m_ohead.ohTime(oTime);
+    m_ohead.put(m_db->m_txn);
+
+    if (cdh_ObjidIsNotNull(m_destination.foid)) {
+      m_ohead.get(m_db->m_txn, m_destination.foid);
+      m_ohead.aoid(m_poep->first->n_oid);
+      m_ohead.ohTime(oTime);
+      m_ohead.put(m_db->m_txn);
+
+      m_ohead.get(m_db->m_txn, m_poep->first->n_oid);
+      m_ohead.boid(m_destination.foid);
+      m_ohead.ohTime(oTime);
+      m_ohead.put(m_db->m_txn);
+    }
+  }
+  if (cdh_ObjidIsNotNull(m_destination.foid) && cdh_ObjidIsNotNull(m_destination.loid)) {
+    m_ohead.get(m_db->m_txn, m_destination.foid);
+    m_ohead.aoid(m_poep->first->n_oid);
+    m_ohead.ohTime(oTime);
+    m_ohead.put(m_db->m_txn);
+
+    m_ohead.get(m_db->m_txn, m_poep->first->n_oid);
+    m_ohead.boid(m_destination.foid);
+    m_ohead.ohTime(oTime);
+    m_ohead.put(m_db->m_txn);
+
+    m_ohead.get(m_db->m_txn, m_destination.loid);
+    m_ohead.boid(m_poep->last->n_oid);
+    m_ohead.ohTime(oTime);
+    m_ohead.put(m_db->m_txn);
+
+    m_ohead.get(m_db->m_txn, m_poep->last->n_oid);
+    m_ohead.aoid(m_destination.loid);
+    m_ohead.ohTime(oTime);
+    m_ohead.put(m_db->m_txn);
+  }
+    
+
+  importUpdateTree(this);
+  importTranslationTableClear();
+  tree_DeleteTable(&sts, m_oid_th);
+  m_oid_th = 0;
+  
+  return true;
 }

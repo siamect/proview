@@ -321,6 +321,7 @@ public:
   bool updateObject( wb_orep *o, bool keepref);
   bool updateSubClass( wb_adrep *subattr, char *body, bool keepref);
   virtual bool accessSupported( ldh_eAccess access) { return true;}
+  virtual const char *fileName() { return "";}
 
   virtual bool importVolume(wb_export &e);    
   virtual bool importHead(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,

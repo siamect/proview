@@ -18,12 +18,14 @@ public:
   char m_fileName[200];
   bool m_isDbsenvLoaded;
     
-  dbs_sEnv m_dbsenv;
+  dbs_sMenv *m_dbsmep;
+  dbs_sVenv *m_dbsvep;
   bool m_duplicate;
     
   wb_vrepdbs(wb_erep *erep, const char *fileName);
+  wb_vrepdbs(wb_erep *erep, wb_merep * merep, const char *fileName, dbs_sMenv *mep, dbs_sVenv *vep);
 
-  dbs_sEnv *dbsenv();
+  dbs_sVenv *dbsenv();
   bool load();
   void objectName(const wb_orep *o, char *str);
     
@@ -123,7 +125,7 @@ public:
   virtual wb_merep *merep () const;
   virtual bool createSnapshot (const char *);
 
-  virtual bool isCommonMeta() const { return true;}
+  virtual bool isCommonMeta() const { return false;}
   virtual bool isMeta() const { return (cid() == pwr_eClass_ClassVolume);}
 
 
@@ -151,6 +153,7 @@ public:
   virtual bool accessSupported( ldh_eAccess access) { return access == ldh_eAccess_ReadOnly; }
   virtual bool duplicateDb() const { return m_duplicate;}
   virtual void setDuplicateDb( bool duplicate) { m_duplicate = duplicate;}
+  virtual const char *fileName() { return m_fileName;}
 };
 
 

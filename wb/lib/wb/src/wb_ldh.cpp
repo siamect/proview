@@ -952,8 +952,10 @@ ldh_ObjidToName(ldh_tSession session, pwr_tOid oid, ldh_eName type, char *buf, i
       char name[200];
       strcpy( name, o.name());
       *size = strlen( name);
-      if ( *size > maxsize - 1)
+      if ( *size > maxsize - 1) {
         return LDH__NAMEBUF;
+      }
+      
       strcpy( buf, name);
     }
     catch ( wb_error& e) {
@@ -976,8 +978,9 @@ ldh_ObjidToName(ldh_tSession session, pwr_tOid oid, ldh_eName type, char *buf, i
       char name[200];
       strcpy( name, o.longName().name( type));
       *size = strlen( name);
-      if ( *size > maxsize - 1)
+      if ( *size > maxsize - 1) {
         return LDH__NAMEBUF;
+      }
       strcpy( buf, name);
     }
     catch ( wb_error& e) {
@@ -996,8 +999,9 @@ ldh_ObjidToName(ldh_tSession session, pwr_tOid oid, ldh_eName type, char *buf, i
     wb_name n = wb_name( cdh_ObjidToString( NULL, oid, 1));
     strcpy( str, n.name( type));
     *size = strlen(str);
-    if ( *size > maxsize - 1)
+    if ( *size > maxsize - 1) {
       return LDH__NAMEBUF;
+    }
     strcpy( buf, str);
     break;
   }

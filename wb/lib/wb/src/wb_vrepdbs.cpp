@@ -19,42 +19,66 @@ wb_vrep *wb_vrepdbs::ref()
 
 wb_vrepdbs::wb_vrepdbs(wb_erep *erep, const char *fileName) : m_erep(erep), m_nRef(0), m_duplicate(false)
 {
+  printf("wb_vrepdbs(erep, fileName):%s\n", fileName);
   strcpy(m_fileName, fileName);
   m_isDbsenvLoaded = false;
-  if ( isCommonMeta())
+  if (false && isCommonMeta())
     m_merep = m_erep->merep();
   else
     m_merep = new wb_merep(m_erep, (wb_mvrep *)this);
 }
 
-dbs_sEnv *wb_vrepdbs::dbsenv()
+wb_vrepdbs::wb_vrepdbs(wb_erep *erep, wb_merep * merep, const char *fileName, dbs_sMenv *mep, dbs_sVenv *vep) : m_erep(erep), m_merep(merep), m_nRef(0), m_dbsmep(mep), m_dbsvep(vep), m_duplicate(false)
 {
-  dbs_sEnv *ep;
+  printf("wb_vrepdbs(erep, fileName, mep, vep):%d,%s\n", vep->vp->vid, fileName);
+  strcpy(m_fileName, fileName);
+  strcpy(m_name, m_dbsvep->vp->name);
+  m_vid = m_dbsvep->vp->vid;
+  m_cid = m_dbsvep->vp->cid;
+  printf("m_name: %s, m_vid: %d, m_cid: %d\n", m_name, m_vid, m_cid);
+  m_isDbsenvLoaded = true;
+}
+
+dbs_sVenv *wb_vrepdbs::dbsenv()
+{ 
   pwr_tStatus sts;
 
   if (!m_isDbsenvLoaded) {
-    ep = dbs_Map(&sts, &m_dbsenv, m_fileName);
-    if (!ep) {
+    m_dbsmep = dbs_Map(&sts, m_fileName);
+    if (!m_dbsmep) {
       throw wb_error(sts);
     }
+
     m_isDbsenvLoaded = true;
-    strcpy(m_name, m_dbsenv.vp->name);
-    m_vid = m_dbsenv.vp->vid;
-    m_cid = m_dbsenv.vp->cid;
+
+    m_dbsvep = dbs_Vmap(&sts, 0, m_dbsmep);
+
+    strcpy(m_name, m_dbsvep->vp->name);
+    m_vid = m_dbsvep->vp->vid;
+    m_cid = m_dbsvep->vp->cid;
+    printf("m_name: %s, m_vid: %d, m_cid: %d\n", m_name, m_vid, m_cid);
+
+    for (int i = 0; i < dbs_nVolRef(&sts, m_dbsmep); i++) {
+      dbs_sVenv *vep = dbs_Vmap(&sts, i + 1, m_dbsmep);
+      wb_vrepdbs *vp = new wb_vrepdbs(m_erep, m_merep, m_fileName, m_dbsmep, vep);
+      printf("before addDbs, i:%d, name: %s, vid: %d\n", i, vep->vp->name, vep->vp->vid);
+      m_merep->addDbs(&sts, (wb_mvrep *)vp);
+    }
   } else {
-    ep = &m_dbsenv;
+    if (strstr(m_fileName, "x86")) {
+      //printf("%s::%s\n", m_dbsvep->vp->name, m_fileName);
+    }
   }
-    
-    
-  return ep;
+ 
+  return m_dbsvep;
 }
 
 bool wb_vrepdbs::load()
 {
   pwr_tStatus sts;
-  bool rsts = ( dbsenv() != 0);
+  bool rsts = (dbsenv() != 0);
 
-  if ( isMeta())
+  if (isMeta())
     m_merep->addDbs(&sts, (wb_mvrep *)this);
 
   return rsts;
@@ -387,7 +411,7 @@ bool wb_vrepdbs::isLocal(const wb_orep *)
 
 pwr_tCid wb_vrepdbs::cid() const
 {
-  return m_dbsenv.vp->cid;;
+  return m_dbsvep->vp->cid;;
 }
 
 pwr_tVid wb_vrepdbs::vid() const

@@ -169,6 +169,8 @@ printname(pwr_tOid poid, pwr_tObjName name, pwr_tOid oid)
   sOentry     *oep;
   count_name++;
     
+  printf("N [%10.10d.%10.10d] %d:%s\n", oid.vid, oid.oix, strlen(name), name);
+
   oep = (sOentry *)tree_Find(&sts, oid_th, &oid);
   if (EVEN(sts)) {
     printf("Name: object not found %d.%d, %s\n", oid.vid, oid.oix, name);
@@ -195,6 +197,8 @@ printclass(pwr_tOid oid, pwr_tCid cid)
   sOentry     *oep;
   count_class++;
 
+  printf("C [%10.10d.%10.10d] <%d>\n", oid.vid, oid.oix, cid);
+  
   oep = (sOentry *)tree_Find(&sts, oid_th, &oid);
   if (EVEN(sts)) {
     printf("Class: object not found %d.%d, %d\n", oid.vid, oid.oix, cid);
@@ -218,6 +222,9 @@ printohead(pwr_tOid oid, db_sObject *op)
   if (cdh_ObjidIsNotEqual(oid, op->oid))
     printf("Ohead: oid not equal %s oid: %d.%d != %d.%d\n", op->name, oid.vid, oid.oix, op->oid.vid, op->oid.oix);
   
+//  printf("O  [%10.10d.%10.10d]   [%10.10d.%10.10d] P [%10.10d.%10.10d] %d:%s\n B [%10.10d.%10.10d] A [%10.10d.%10.10d] F [%10.10d.%10.10d] L [%10.10d.%10.10d] \n", oid.vid, oid.oix, op->oid.vid, op->oid.oix, op->poid.vid, op->poid.oix, strlen(op->name), op->name, op->boid.vid, op->boid.oix, op->aoid.vid, op->aoid.oix, op->foid.vid, op->foid.oix, op->loid.vid, op->loid.oix);
+  printf("P [%6.6d] B [%6.6d] O [%6.6d] A [%6.6d] F [%6.6d] L [%6.6d]\n", op->poid.oix, op->boid.oix, op->oid.oix, op->aoid.oix, op->foid.oix, op->loid.oix);
+
   oep = (sOentry *)tree_Insert(&sts, oid_th, &oid);
   if (sts == TREE__INSERTED) {
     oep->flags.b.inOhead = 1;

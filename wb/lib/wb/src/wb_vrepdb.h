@@ -5,11 +5,49 @@
 #include "wb_orepdb.h"
 #include "wb_db.h"
 #include "db_cxx.h"
+#include "co_tree.h"
 
 class wb_vrepdb : public wb_vrep
 {
 private:
   bool deleteFamilyMember(pwr_tOid oid, wb_db_txn *txn);
+
+  typedef union {
+    struct {
+      pwr_tBit    temporary     : 1;
+      pwr_tBit    exist         : 1;
+    } b;
+
+    pwr_tBitMask m;
+
+#define mOentry_temporary    1
+#define mOentry_exist		     2
+  } mOentry;
+
+  typedef struct sOentry
+  {
+    tree_sNode node;
+    pwr_tOid o_oid;
+    pwr_tOid n_oid;
+    struct sOentry *parent;
+    struct sOentry *before;
+    struct sOentry *after;
+    struct sOentry *first;
+    struct sOentry *last;
+  
+  } sOentry;
+
+  sOentry *m_poep;
+  
+  typedef struct sDestination
+  {
+    pwr_tOid oid;
+    pwr_tOid poid;
+    pwr_tOid foid;
+    pwr_tOid loid;
+  } sDestination;
+  
+  sDestination m_destination;
 
 protected:
   wb_erep *m_erep;
@@ -26,6 +64,8 @@ public:
   
   wb_vrepdb(wb_erep *erep, const char *fileName);
   wb_vrepdb(wb_erep *erep, pwr_tVid, pwr_tCid, const char *volumeName, const char *fileName);
+
+  tree_sTable  *m_oid_th;
 
   virtual void unref();
   virtual wb_vrep *ref();
@@ -132,17 +172,16 @@ public:
   virtual bool exportTree(wb_treeimport &i, pwr_tOid oid) { return false;}
   virtual bool importTree(bool keepref) { return false;}
   virtual bool importTreeObject(wb_merep *merep, pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
-				pwr_tOid boid, const char *name, pwr_mClassDef flags,
-				size_t rbSize, size_t dbSize, void *rbody, void *dbody)
+                                pwr_tOid boid, const char *name, pwr_mClassDef flags,
+                                size_t rbSize, size_t dbSize, void *rbody, void *dbody)
     { return false;}
-  virtual bool importPaste() { return false;}
+  virtual bool importPaste();
   virtual bool importPasteObject(pwr_tOid destination, ldh_eDest destcode, 
-				 bool keepoid, pwr_tOid oid, 
-				 pwr_tCid cid, pwr_tOid poid,
-				 pwr_tOid boid, const char *name, pwr_mClassDef flags,
-				 size_t rbSize, size_t dbSize, void *rbody, void *dbody,
-				 pwr_tOid *roid)
-    { return false;}
+                                 bool keepoid, pwr_tOid oid, 
+                                 pwr_tCid cid, pwr_tOid poid,
+                                 pwr_tOid boid, const char *name, pwr_mClassDef flags,
+                                 size_t rbSize, size_t dbSize, void *rbody, void *dbody,
+                                 pwr_tOid *roid);
 
 #if 0
   int del_family(DbTxn *txn, Dbc *cp, pwr_tOid poid);
@@ -153,7 +192,7 @@ public:
   wb_orepdb *new_wb_orepdb(size_t size);
   void delete_wb_orepdb(void *p);
   virtual bool accessSupported( ldh_eAccess access) { return true;}
-
+  virtual const char *fileName() { return m_fileName;}
 };
 
 #endif

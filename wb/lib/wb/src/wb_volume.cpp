@@ -112,6 +112,8 @@ wb_object wb_volume::object(pwr_tOid oid) const
   if (oid.vid == m_vrep->vid())
     // This volume
     orep = m_vrep->object( &sts, oid);
+  else if (oid.vid < 65536)
+    orep = m_vrep->merep()->object(&sts, oid);
   else
     // Other volume
     orep = m_vrep->erep()->object(&sts, oid);

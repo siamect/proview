@@ -18,6 +18,114 @@
 #include "co_time.h"
 
 #if 1
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
+int main( int argc, char *argv[])
+{
+  struct stat sb;
+  int ret;
+  pwr_tStatus sts;
+  dbs_sMenv *mep;
+  
+
+  if (argc < 2)
+    exit(0);
+  
+  if ((ret = stat(argv[1], &sb)) != 0) {
+    perror("stat");
+    exit(ret);
+  }
+
+  printf("stat %s\n", argv[1]);
+  printf("st_atime...: %ld\n", sb.st_atime);
+  printf("st_mtime...: %ld\n", sb.st_mtime);
+  printf("st_ctime...: %ld\n", sb.st_ctime);
+ 
+  mep = dbs_Map(&sts, argv[1]);
+  dbs_Split(&sts, mep);
+  
+  return 0;
+}
+#elif 0
+int main( int argc, char *argv[])
+{
+  int a;
+  int b;
+  int i;
+  
+  int c;
+  
+  for (i = 0; i < 100; i++) {
+    if (i % 3 == 0) {
+      a = rand() % 101;
+      b = rand() % 101;
+      printf("[%d] vad blir     %d + %d = ", i + 1, a, b);
+      scanf("%d", &c);
+  
+      if (c == a + b) {
+        printf("\nKorrekt!\n");
+      } else {
+        printf("Fel\007! Det blir: %d\n", a + b);
+      }
+    }
+    else if (i % 3 == 1) {
+      int tmp;
+      
+      a = rand() % 101;
+      b = rand() % 101;
+      if (a < b) {
+        tmp = b;
+        b = a;
+        a = tmp;
+      }
+      
+      printf("[%d] vad blir     %d - %d = ", i + 1, a, b);
+      scanf("%d", &c);
+  
+      if (c == a - b) {
+        printf("\nKorrekt!\n");
+      } else {
+        printf("Fel\007! Det blir %d\n", a - b);
+      }
+    }
+    else if (i % 3 == 2) {
+      a = rand() % 11;
+      b = rand() % 11;
+      printf("[%d] vad blir     %d * %d = ", i + 1, a, b);
+      scanf("%d", &c);
+  
+      if (c == a * b) {
+        printf("\nKorrekt!\n");
+      } else {
+        printf("Fel\007! Det blir %d\n", a * b);
+      }
+    }
+    
+  }
+  
+}
+#elif 0
+int main( int argc, char *argv[])
+{
+  char namn[50];
+  char bnamn[50];
+  int len;
+  
+  printf("Vad heter du? ");
+  scanf("%s", namn);
+  len = strlen(namn);
+  
+  for (int i = 0; i < len; i++) {
+    bnamn[len - i -1] = namn[i];
+  }
+  bnamn[len+1] = '\0';
+  
+  printf("\nDitt namn baklänges är: %s\n", bnamn);
+  
+}
+#elif 0
 int main( int argc, char *argv[])
 {
   pwr_tStatus sts;

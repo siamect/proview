@@ -58,19 +58,31 @@ wb_mvrep *wb_merep::volume(pwr_tStatus *sts, const char *name)
   return 0;
 }
 
+wb_orep *wb_merep::object(pwr_tStatus *sts, pwr_tOid oid)
+{
+  wb_vrep *vrep = volume( sts, oid.vid);
+  if ( EVEN(*sts)) return 0;
+
+  return vrep->object( sts, oid);
+}
+
 void wb_merep::addDbs( pwr_tStatus *sts, wb_mvrep *mvrep)
 {
+  printf("wb_merep::addDbs: %d, %s\n", mvrep->vid(), mvrep->name());
   mvrep_iterator it = m_mvrepdbs.find( mvrep->vid());
   if ( it == m_mvrepdbs.end()) {
     // Look for vrep in erep list... TODO
     
     m_mvrepdbs[mvrep->vid()] = mvrep;
     mvrep->ref();
-    cout << "Metavolume " << mvrep->vid() << " inserted\n";
+    cout << "merep Metavolume " << mvrep->vid() << ": " << mvrep->name() << " inserted\n";
     *sts = LDH__SUCCESS;
   }
-  else
+  else {
+    printf("wb_merep::addDbs, existed: %d, %s\n", mvrep->vid(), mvrep->name());
     *sts = LDH__VOLIDALREXI;
+  }
+  
 }
 
 void wb_merep::removeDbs(pwr_tStatus *sts, wb_mvrep *mvrep)

@@ -31,7 +31,8 @@ public:
   struct sOentry;
   struct sNentry;
   struct sCentry;
-
+  struct sVentry;
+ 
   struct sOentry {
     tree_sNode       node;
     dbs_sObject      o;
@@ -67,6 +68,12 @@ public:
     sOentry    *o_lt;  // Tail of object list
   };
 
+  struct sVentry {
+    tree_sNode  node;
+    dbs_sVolRef v;
+    dbs_sEnv    env;
+  };
+
   FILE         *m_fp;                 /**< file pointer */
   char         m_fileName[512];       /**< name of load file */
   //    wb_object    *m_o;		/* Volume object header.  */
@@ -90,6 +97,7 @@ public:
   tree_sTable  *m_oid_th;
   tree_sTable  *m_name_th;
   tree_sTable  *m_class_th;
+  tree_sTable  *m_vol_th;
     
   wb_dbs();
   wb_dbs(wb_vrep *);
@@ -119,16 +127,18 @@ public:
 
   void         classInsert(sOentry *oep);
   pwr_tStatus  openFile();
-  pwr_tStatus  writeSectFile();
+  pwr_tStatus  writeSectFile(size_t size);
   pwr_tStatus  writeSectDirectory();
   pwr_tStatus  writeSectVolume();
-  pwr_tStatus  writeSectVolref();
+  pwr_tStatus  prepareSectVolref();
+  pwr_tStatus  writeSectVolref(size_t size);
   pwr_tStatus  writeSectOid();
   pwr_tStatus  writeSectObject();
   pwr_tStatus  writeSectRbody();
   pwr_tStatus  writeSectName();
   pwr_tStatus  writeSectClass();
   pwr_tStatus  writeSectDbody();
+  pwr_tStatus  writeReferencedVolumes();
 
 
   virtual bool importVolume(wb_export &e);

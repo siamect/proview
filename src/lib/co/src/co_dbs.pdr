@@ -166,6 +166,8 @@
 %#define dbs_dAlign(size) (((size) + dbs_cAlignInc) & ~dbs_cAlignInc)
 %#define dbs_dPadding(size) ((((size) + dbs_cAlignInc) & ~dbs_cAlignInc) - (size))
 %#define dbs_dMakeRef(sect, offset) (0 | ((sect) << dbs_cOffsBits) | (offset))
+%#define dbs_cAlignPage 511
+%#define dbs_dAlignPage(size) (((size) + dbs_cAlignPage) & ~dbs_cAlignPage)
 %
 %typedef union {
 %    struct {
@@ -526,6 +528,7 @@ struct dbs_sScObject {
 #ifdef PDR_HDR
 %#define dbs_cVersionFixup 1
 %
+%
 %typedef union {
 %  pwr_tBitMask m;
 %  pwr_32Bits (
@@ -543,7 +546,9 @@ struct dbs_sScObject {
 %#define dbs_mEnv_            (~dbs_mEnv__)
 %} dbs_mEnv;
 %
+%typedef struct dbs_sMenv dbs_sMenv;
 %typedef struct {
+%    //dbs_sFileEnv *fp;
 %    FILE         *f;
 %    dbs_sFile    file;
 %    pwr_tUInt32  nSect;
@@ -552,13 +557,39 @@ struct dbs_sScObject {
 %    /* the rest is used only if mapped */
 %    pwr_tUInt32  size;    /**< size of mapped file */
 %    char         *base;
-%    dbs_mEnv flags;
+%    //dbs_sVolume  *vp;
+%    //dbs_sBintab  *name_bt;        /**< search for object with parent and name  */
+%    //dbs_sBintab  *oid_bt;         /**< search for object with identity  */
+%    //dbs_sBintab  *class_bt;       /**< search for object with class  */
+%} dbs_sEnv;
+%
+%typedef struct {
+%    dbs_sMenv    *mp;
+%    pwr_tUInt32  index;
+%    pwr_tUInt32  nSect;
+%    dbs_sSect    *sect;
+%    
+%    /* the rest is used only if mapped */
+%    pwr_tUInt32  size;    /**< size of mapped file */
+%    char         *base;
 %    dbs_sVolume  *vp;
-%    dbs_sVolRef  *vrp;
 %    dbs_sBintab  *name_bt;        /**< search for object with parent and name  */
 %    dbs_sBintab  *oid_bt;         /**< search for object with identity  */
 %    dbs_sBintab  *class_bt;       /**< search for object with class  */
-%} dbs_sEnv;
+%} dbs_sVenv;
+%
+%struct dbs_sMenv {
+%    FILE         *f;
+%    dbs_sFile    file;
+%    dbs_mEnv     flags;
+%    pwr_tUInt32  nVolRef;
+%    
+%    /* the rest is used only if mapped */
+%    pwr_tUInt32  size;    /**< size of mapped file */
+%    char         *base;
+%    dbs_sVolRef  *vrp;
+%    dbs_sVenv     venv[1];
+%};
 %
 %
 %#define dbs_Qitem(a, b, c) ((b *)((char *)a - offsetof(b, c)))
@@ -568,56 +599,47 @@ struct dbs_sScObject {
 %pwr_tBoolean    dbs_Close(pwr_tStatus *sts, dbs_sEnv *ep);
 %dbs_sEnv       *dbs_Open(pwr_tStatus *sts, dbs_sEnv *ep, const char *filename);
 %#if defined(OS_LINUX) || defined(OS_LYNX)
-%void           *dbs_Address(pwr_tStatus*, const dbs_sEnv*, dbs_tRef);
-%void           *dbs_Alloc(pwr_tStatus*, const dbs_sEnv*, pwr_tUInt32);
-%pwr_tBoolean    dbs_AllocLookasideSegment(pwr_tStatus*, const dbs_sEnv*, pwr_tUInt32, pwr_tUInt32);
-%void           *dbs_AllocNamedSegment(pwr_tStatus*, const dbs_sEnv*, pwr_tUInt32, char*);
-%dbs_sEnv       *dbs_Create(pwr_tStatus*, dbs_sEnv*, char*, pwr_tUInt32, pwr_tUInt32);
+%dbs_sVolRef    *dbs_VolRef(pwr_tStatus *sts, pwr_tUInt32 index, dbs_sVolRef *vp, const dbs_sEnv *ep);
+%void           *dbs_Address(pwr_tStatus*, const dbs_sVenv*, dbs_tRef);
 %void            dbs_Dump(pwr_tStatus*, const dbs_sEnv*);
-%pwr_tBoolean    dbs_Free(pwr_tStatus*, const dbs_sEnv*, void*);
-%pwr_tBoolean    dbs_FreeReference(pwr_tStatus*, const dbs_sEnv*, dbs_tRef);
 %dbs_tRef        dbs_InDbs(pwr_tStatus*, const dbs_sEnv*, void*, pwr_tUInt32);
 %dbs_tRef        dbs_ItemReference(pwr_tStatus*, const dbs_sEnv*, void*);
-%dbs_sQlink     *dbs_Qalloc(pwr_tStatus*, const dbs_sEnv*);
-%pwr_tBoolean    dbs_QhasOne(pwr_tStatus*, const dbs_sEnv*, dbs_sQlink*);
+%pwr_tBoolean    dbs_QhasOne(pwr_tStatus*, const dbs_sVenv*, dbs_sQlink*);
 %dbs_tRef        dbs_Qinit(pwr_tStatus*, dbs_sQlink*, dbs_tRef);
 %dbs_sQlink     *dbs_Qinsert(pwr_tStatus*, dbs_sQlink*, dbs_sQlink*, dbs_sQlink*);
-%dbs_sQlink     *dbs_QinsertPred(pwr_tStatus*, const dbs_sEnv*, dbs_sQlink*, dbs_sQlink*);
-%dbs_sQlink     *dbs_QinsertSucc(pwr_tStatus*, const dbs_sEnv*, dbs_sQlink*, dbs_sQlink*);
-%pwr_tBoolean    dbs_QisEmpty(pwr_tStatus*, const dbs_sEnv*, dbs_sQlink*);
-%pwr_tBoolean    dbs_QisLinked(pwr_tStatus*, const dbs_sEnv*, dbs_sQlink*);
-%pwr_tBoolean    dbs_QisNull(pwr_tStatus*, const dbs_sEnv*, dbs_sQlink*);
-%dbs_sQlink     *dbs_Qmove(pwr_tStatus*, const dbs_sEnv*, dbs_sQlink*, dbs_sQlink*);
-%dbs_sQlink     *dbs_Qpred(pwr_tStatus*, const dbs_sEnv*, dbs_sQlink*);
-%dbs_sQlink     *dbs_Qremove(pwr_tStatus*, const dbs_sEnv*, dbs_sQlink*);
-%dbs_sQlink     *dbs_QremovePred(pwr_tStatus*, const dbs_sEnv*, dbs_sQlink*);
-%dbs_sQlink     *dbs_QremoveSucc(pwr_tStatus*, const dbs_sEnv*, dbs_sQlink*);
-%dbs_sQlink     *dbs_Qsucc(pwr_tStatus*, const dbs_sEnv*, dbs_sQlink*);
-%dbs_tRef        dbs_RefAlloc(pwr_tStatus*, const dbs_sEnv*, pwr_tUInt32);
-%dbs_tRef        dbs_Reference(pwr_tStatus*, const dbs_sEnv*, void*);
+%pwr_tBoolean    dbs_QisEmpty(pwr_tStatus*, const dbs_sVenv*, dbs_sQlink*);
+%pwr_tBoolean    dbs_QisLinked(pwr_tStatus*, const dbs_sVenv*, dbs_sQlink*);
+%pwr_tBoolean    dbs_QisNull(pwr_tStatus*, const dbs_sVenv*, dbs_sQlink*);
+%dbs_sQlink     *dbs_Qpred(pwr_tStatus*, const dbs_sVenv*, dbs_sQlink*);
+%dbs_sQlink     *dbs_Qsucc(pwr_tStatus*, const dbs_sVenv*, dbs_sQlink*);
+%dbs_tRef        dbs_Reference(pwr_tStatus*, const dbs_sVenv*, void*);
 %
-%dbs_sEnv       *dbs_Map(pwr_tStatus *sts, dbs_sEnv *ep, const char *filename);
+%dbs_sMenv       *dbs_Map(pwr_tStatus*, const char*);
+%dbs_sVenv       *dbs_Vmap(pwr_tStatus*, int index, dbs_sMenv *);
+%void            dbs_Split(pwr_tStatus *sts, dbs_sMenv *mep);
+%pwr_tBoolean    dbs_Unmap(pwr_tStatus *sts, dbs_sMenv *);
+%int             dbs_nVolRef(pwr_tStatus *sts, const dbs_sMenv *mep);
 %
-%dbs_sObject    *dbs_OidToObject(pwr_tStatus *sts, const dbs_sEnv *ep, pwr_tOid oid);
-%dbs_sObject    *dbs_NameToObject(pwr_tStatus *sts, const dbs_sEnv *ep, pwr_tOid oid, char *name);
-%dbs_sObject    *dbs_Parent(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op);
-%dbs_sObject    *dbs_After(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op);
-%dbs_sObject    *dbs_Before(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op);
-%dbs_sObject    *dbs_First(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op);
-%dbs_sObject    *dbs_Last(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op);
-%dbs_sObject    *dbs_ClassToObject(pwr_tStatus *sts, const dbs_sEnv *ep, pwr_tCid cid);
-%dbs_sObject    *dbs_Next(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op);
-%dbs_sObject    *dbs_Previous(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op);
-%dbs_sObject    *dbs_Child(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op, char *name);
-%dbs_sObject    *dbs_Ancestor(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op);
-%void            dbs_GetVolumeName(pwr_tStatus *sts, dbs_sEnv *ep, char *name);
-%dbs_sObject    *dbs_VolumeObject(pwr_tStatus *sts, const dbs_sEnv *ep);
-%dbs_sObject    *dbs_Object(pwr_tStatus *sts, const dbs_sEnv *ep);
-%void            dbs_ObjectToName(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op, char *name);
-%void           *dbs_Body(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op, pwr_eBix bix);
-%dbs_sObject    *dbs_NextHead(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op);
-%dbs_sBody      *dbs_NextRbody(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sBody *bp);
-%dbs_sBody      *dbs_NextDbody(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sBody *bp);
+%dbs_sObject    *dbs_OidToObject(pwr_tStatus *sts, const dbs_sVenv *vep, pwr_tOid oid);
+%dbs_sObject    *dbs_NameToObject(pwr_tStatus *sts, const dbs_sVenv *vep, pwr_tOid oid, char *name);
+%dbs_sObject    *dbs_Parent(pwr_tStatus *sts, const dbs_sVenv *vep, dbs_sObject *op);
+%dbs_sObject    *dbs_After(pwr_tStatus *sts, const dbs_sVenv *vep, dbs_sObject *op);
+%dbs_sObject    *dbs_Before(pwr_tStatus *sts, const dbs_sVenv *vep, dbs_sObject *op);
+%dbs_sObject    *dbs_First(pwr_tStatus *sts, const dbs_sVenv *vep, dbs_sObject *op);
+%dbs_sObject    *dbs_Last(pwr_tStatus *sts, const dbs_sVenv *vep, dbs_sObject *op);
+%dbs_sObject    *dbs_ClassToObject(pwr_tStatus *sts, const dbs_sVenv *vep, pwr_tCid cid);
+%dbs_sObject    *dbs_Next(pwr_tStatus *sts, const dbs_sVenv *vep, dbs_sObject *op);
+%dbs_sObject    *dbs_Previous(pwr_tStatus *sts, const dbs_sVenv *vep, dbs_sObject *op);
+%dbs_sObject    *dbs_Child(pwr_tStatus *sts, const dbs_sVenv *vep, dbs_sObject *op, char *name);
+%dbs_sObject    *dbs_Ancestor(pwr_tStatus *sts, const dbs_sVenv *vep, dbs_sObject *op);
+%void            dbs_GetVolumeName(pwr_tStatus *sts, dbs_sVenv *vep, char *name);
+%dbs_sObject    *dbs_VolumeObject(pwr_tStatus *sts, const dbs_sVenv *vep);
+%dbs_sObject    *dbs_Object(pwr_tStatus *sts, const dbs_sVenv *vep);
+%void            dbs_ObjectToName(pwr_tStatus *sts, const dbs_sVenv *vep, dbs_sObject *op, char *name);
+%void           *dbs_Body(pwr_tStatus *sts, const dbs_sVenv *vep, dbs_sObject *op, pwr_eBix bix);
+%dbs_sObject    *dbs_NextHead(pwr_tStatus *sts, const dbs_sVenv *vep, dbs_sObject *op);
+%dbs_sBody      *dbs_NextRbody(pwr_tStatus *sts, const dbs_sVenv *vep, dbs_sBody *bp);
+%dbs_sBody      *dbs_NextDbody(pwr_tStatus *sts, const dbs_sVenv *vep, dbs_sBody *bp);
 %#endif
 %
 %#ifdef __cplusplus

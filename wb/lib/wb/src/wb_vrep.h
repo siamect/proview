@@ -140,6 +140,8 @@ public:
   void removeSrep( wb_srep *srep);
   wb_srep *srep( pwr_tStatus *sts);
   wb_srep *nextSrep( pwr_tStatus *sts, wb_srep* srep);
+
+  virtual const char *fileName() = 0;
 };
 
 #endif

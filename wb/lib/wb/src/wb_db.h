@@ -60,6 +60,7 @@ public:
   char *volumeName() { return m_volumeName;}
 
   pwr_tOid new_oid(wb_db_txn *txn);
+  pwr_tOid new_oid(wb_db_txn *txn, pwr_tOid oid);
 
   void close();
   void open(const char *fileName);

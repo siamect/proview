@@ -28,6 +28,7 @@ public:
   wb_mvrep *volume(pwr_tStatus *sts, pwr_tVid vid);
   wb_mvrep *volume(pwr_tStatus *sts, const char *name);
 
+  wb_orep *object(pwr_tStatus *sts, pwr_tOid oid);
   void addDbs( pwr_tStatus *sts, wb_mvrep *mvrep);
   void removeDbs( pwr_tStatus *sts, wb_mvrep *mvrep);
 

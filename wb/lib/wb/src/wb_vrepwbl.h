@@ -202,6 +202,7 @@ public:
 				 pwr_tOid *roid)
     { return false;}
   virtual bool accessSupported( ldh_eAccess access) { return access == ldh_eAccess_ReadOnly;}
+  virtual const char *fileName() { return "";}
 };
 
 #endif

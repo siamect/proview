@@ -9,6 +9,9 @@ This module contains functions to create database snapshot files.  */
 #include <string.h>
 #include <ctype.h>
 #include <assert.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 #include "pwr.h"
 #include "pwr_class.h"
@@ -17,6 +20,7 @@ This module contains functions to create database snapshot files.  */
 #include "co_tree.h"
 #include "co_pdr.h"
 #include "co_dbs.h"
+#include "co_errno.h"
 #include "wb_dbs.h"
 #include "wb_vrep.h"
 #include "wb_mvrep.h"
@@ -57,6 +61,9 @@ wb_dbs::wb_dbs(wb_vrep *v) :
 
   m_class_th = tree_CreateTable(&sts, sizeof(pwr_tCid), offsetof(sCentry, c),
                                 sizeof(sCentry), 1000, tree_Comp_cid);
+
+  m_vol_th = tree_CreateTable(&sts, sizeof(pwr_tVid), offsetof(sVentry, v.vid),
+                                sizeof(sVentry), 10, tree_Comp_vid);
 }
 
 wb_dbs::~wb_dbs()
@@ -327,10 +334,6 @@ wb_dbs::createFile()
   sts = openFile();
   if (EVEN(sts)) goto error_handler;
 
-  printf("-- Writing file section...\n");
-  sts = writeSectFile();
-  if (EVEN(sts)) goto error_handler;
-
   size = dbs_dAlign(sizeof(dbs_sFile));
 
   m_sect[dbs_eSect_dir].size = sizeof(m_sect);
@@ -347,8 +350,8 @@ wb_dbs::createFile()
   size += m_sect[dbs_eSect_volume].size;
   m_sect[dbs_eSect_volref].offset = size;
 
-  printf("-- Writing volref section...\n");
-  sts = writeSectVolref();
+  printf("-- Preparing volref section...\n");
+  sts = prepareSectVolref();
   if (EVEN(sts)) goto error_handler;
 
   size += m_sect[dbs_eSect_volref].size;
@@ -393,10 +396,24 @@ wb_dbs::createFile()
   sts = writeSectClass();
   if (EVEN(sts)) goto error_handler;
 
+  size += m_sect[dbs_eSect_class].size;
+
   printf("-- Writing directory section...\n");
   sts = writeSectDirectory();
   if (EVEN(sts)) goto error_handler;
 
+  printf("-- Writing file section...\n");
+  sts = writeSectFile(size);
+  if (EVEN(sts)) goto error_handler;
+
+  printf("-- Writing volref section...\n");
+  sts = writeSectVolref(size);
+  if (EVEN(sts)) goto error_handler;
+
+  printf("-- Writing volref volumes...\n");
+  sts = writeReferencedVolumes();
+  if (EVEN(sts)) goto error_handler;
+  
   printf("-- Close file...\n");
   sts = closeFile(0);
   if (EVEN(sts)) goto error_handler;
@@ -418,6 +435,10 @@ pwr_tStatus
 wb_dbs::openFile()
 {
   char *fn;
+  struct stat sb;
+  pwr_tStatus sts;
+  int ret;
+  
 
   cdh_ToLower(m_fileName, m_fileName);
     
@@ -431,11 +452,21 @@ wb_dbs::openFile()
   if (fn != NULL)
     printf("-- Opened load file: %s\n", m_fileName);
 
+  if ((ret = stat(m_fileName, &sb)) != 0) {
+    sts = errno_GetStatus();
+    perror("stat");
+    return sts;
+  }
+
+  printf("st_atime...: %ld\n", sb.st_atime);
+  printf("st_mtime...: %ld\n", sb.st_mtime);
+  printf("st_ctime...: %ld\n", sb.st_ctime);
+
   return LDH__SUCCESS;
 }
 
 pwr_tStatus
-wb_dbs::writeSectFile()
+wb_dbs::writeSectFile(size_t size)
 {
   char f[dbs_dAlign(sizeof(dbs_sFile))];
   dbs_sFile *fp = (dbs_sFile*)f;
@@ -443,7 +474,7 @@ wb_dbs::writeSectFile()
 
   co_GetOwnFormat(&fp->format);
   fp->cookie = dbs_cMagicCookie;
-  fp->size = 0;
+  fp->size = size;
   fp->offset = dbs_dAlign(sizeof(*fp));
   fp->formatVersion = dbs_cVersionFormat;
   fp->version = dbs_cVersionFile;
@@ -469,6 +500,9 @@ wb_dbs::writeSectFile()
   pdrmem_create(&pdrs, (char *) fp, sizeof(*fp), PDR_DECODE, fp->format, fp->format);
   if (!pdr_dbs_sFile(&pdrs, fp))
     return LDH__XDR;
+
+  if (fseek(m_fp, 0, SEEK_SET) != 0)
+    return LDH__FILEPOS;
 
   if (fwrite(f, sizeof(f) , 1, m_fp) < 1) return LDH__FILEWRITE;
 
@@ -555,13 +589,14 @@ wb_dbs::writeSectVolume()
 
 
 pwr_tStatus
-wb_dbs::writeSectVolref()
+wb_dbs::prepareSectVolref()
 {
   char v[dbs_dAlign(sizeof(dbs_sVolRef))];
   dbs_sVolRef *vp = (dbs_sVolRef*)v;
   cdh_uTid    cid;
   sCentry     *cep;
   pwr_tStatus sts;
+  
     
   if (fseek(m_fp, m_sect[dbs_eSect_volref].offset, SEEK_SET) != 0)
     return LDH__FILEPOS;
@@ -580,21 +615,56 @@ wb_dbs::writeSectVolref()
         
     if (vid.pwr != m_volume.vid) {
       printf("volref: %d.%d.%d.%d\n", vid.v.vid_3, vid.v.vid_2, vid.v.vid_1, vid.v.vid_0);
-      vp->vid  = vid.pwr;
 
-      wb_mvrep *mvrep = m_v->merep()->volume( &sts, vp->vid);
+      wb_mvrep *mvrep = m_v->merep()->volume(&sts, vid.pwr);
       if ( EVEN(sts)) throw wb_error_str("Metavolume not found");
       
-      strcpy(vp->name, mvrep->name());
-      vp->cid  = 0;
-      vp->time.tv_sec = 0;
-      vp->time.tv_nsec = 0;
-      vp->size = 0;
-      vp->offset = 0;        
+      sVentry *vep;
 
-      if (fwrite(v, sizeof(v), 1, m_fp) < 1)
-        return LDH__FILEWRITE;
-      m_sect[dbs_eSect_volref].size += sizeof(v);
+      vep = (sVentry*)tree_Insert(&sts, m_vol_th, &vid.pwr);
+      if (sts == TREE__INSERTED) {
+        /* was inserted now */
+        dbs_Open(&sts, &vep->env, mvrep->fileName());
+        printf("  sts...: %d\n", sts);
+        printf("  cookie: %d\n", vep->env.file.cookie);
+        printf("  size..: %d\n", vep->env.file.size);
+        printf("  time..: %ld\n", vep->env.file.time.tv_sec);
+
+        printf("VolRef File: %s\n", mvrep->fileName());      
+      
+        strcpy(vep->v.name, mvrep->name());
+        vep->v.cid  = mvrep->cid();
+        vep->v.time = vep->env.file.time;
+        vep->v.size = vep->env.file.size;
+        vep->v.offset = 0;
+
+        int i = 0;
+        while ((vp = dbs_VolRef(&sts, i, (dbs_sVolRef *)v, &vep->env)) != NULL) {
+          sVentry *nvep;
+          printf("  vid.....: %d\n", vp->vid);
+          printf("    sts...: %d\n", sts);
+          printf("    name..: %s\n", vp->name);      
+          printf("    size..: %d\n", vp->size);
+          printf("    time..: %ld\n", vp->time.tv_sec);
+          i++;
+          nvep = (sVentry*)tree_Insert(&sts, m_vol_th, &vp->vid);
+          if (sts == TREE__INSERTED) {
+            printf("  Inserted, sts...: %d\n", sts);
+            strcpy(nvep->v.name, vp->name);
+            nvep->v.cid  = vp->cid;
+            nvep->v.time = vp->time;
+            nvep->v.size = vp->size;
+            nvep->v.offset = 0;
+          } else {
+            printf("  Not inserted, sts...: %d\n", sts);
+          }          
+        }
+      }
+
+
+      //if (fwrite(v, sizeof(v), 1, m_fp) < 1)
+      //return LDH__FILEWRITE;
+      // m_sect[dbs_eSect_volref].size += sizeof(v);
     }
     vid.pwr++;
     cid.pwr = pwr_cNCid;
@@ -602,44 +672,128 @@ wb_dbs::writeSectVolref()
     cid.c.vid_1 = vid.v.vid_1;
     cep = (sCentry*)tree_FindSuccessor(&sts, m_class_th, &cid.pwr);        
   }
+
+  // Search trhough all found volumes and get their volrefs
+  int nVolume = 0;
+  sVentry *vep;
+  vep = (sVentry*)tree_Minimum(&sts, m_vol_th);
+  while (vep) {
+    printf("vid: %d\n", vep->v.vid);
+    printf("  cookie: %d\n", vep->env.file.cookie);
+    printf("  name..: %s\n", vep->v.name);
+    if (vep->env.file.cookie == 0) {
+      printf("  volume not found: %d\n", vep->v.vid);
+    } else {
+      nVolume++;
+      m_sect[dbs_eSect_volref].size += sizeof(v);
+    }
+    
+    vep = (sVentry*)tree_Successor(&sts, m_vol_th, vep);        
+  }
+
+  printf("Found %d volumes.\n", nVolume);
+
+  return LDH__SUCCESS;
+}
+
+pwr_tStatus
+wb_dbs::writeSectVolref(size_t size)
+{
+  pwr_tStatus sts;  
+    
+  if (fseek(m_fp, m_sect[dbs_eSect_volref].offset, SEEK_SET) != 0)
+    return LDH__FILEPOS;
+
+  // Search trhough all found volumes and get their volrefs
+  sVentry *vep;
+  vep = (sVentry*)tree_Minimum(&sts, m_vol_th);
+  while (vep) {
+    printf("vid.......: %d\n", vep->v.vid);
+    printf("  cookie..: %d\n", vep->env.file.cookie);
+    printf("  name....: %s\n", vep->v.name);
+    printf("  size....: %d\n", vep->v.size);
+    printf("  offset..: %d\n", vep->v.offset);
+    if (vep->env.file.cookie == 0) {
+      printf("  volume not found: %d\n", vep->v.vid);
+    } else {
+      vep->v.offset = dbs_dAlign(size);
+      size += vep->v.size = dbs_dAlign(vep->v.size);
+      char v[dbs_dAlign(sizeof(dbs_sVolRef))];
+      dbs_sVolRef *vp = (dbs_sVolRef*)v;
+      printf("  size....: %d\n", vep->v.size);
+      printf("  offset..: %d\n", vep->v.offset);
+      *vp = vep->v;
+      if (fwrite(v, sizeof(v), 1, m_fp) < 1)
+        return LDH__FILEWRITE;
+    }
+    
+    vep = (sVentry*)tree_Successor(&sts, m_vol_th, vep);        
+  }
+
+
+  assert(ftell(m_fp) == (long)(m_sect[dbs_eSect_volref].offset + m_sect[dbs_eSect_volref].size));
+
+  printf("  Total file size....: %d\n", size);
+  return LDH__SUCCESS;
+}
+
+static pwr_tStatus
+copyFile(FILE *sfp, FILE *tfp, size_t size)
+{
+  char buf[512];
+  size_t bytes;
+  
+  while (size > 0) {
+    if (size > sizeof(buf)) {
+      bytes = sizeof(buf);
+    } else {
+      bytes = size;
+    }
+    size -= bytes;  
+    
+    if (fread(buf, bytes, 1, sfp) < 1)
+      return LDH__FILEWRITE;
+
+    if (fwrite(buf, bytes, 1, tfp) < 1)
+      return LDH__FILEWRITE;
+  }
+
+  return LDH__SUCCESS;
+}
+
+pwr_tStatus
+wb_dbs::writeReferencedVolumes()
+{
+  pwr_tStatus sts;  
     
 
-#if 0
-  sts = OpenSect(dbs_eSect_volref);
-  if (EVEN(sts)) return sts;
-  for (
-    vtp = (ldhi_sVidEntry *) tree_Minimum(&sts, m_sp->wb->vidtab);
-    vtp != NULL;
-    vtp = (ldhi_sVidEntry *) tree_Successor(&sts, m_sp->wb->vidtab, vtp)
-    ) {
-/* +++++++++ A workaround for Claes Sjöfors 1998-03-02 */
-    /* if this is the pwrs-volume then
-       we are not depending on any volume */
+  // Search trhough all found volumes and get their volrefs
+  sVentry *vep;
+  vep = (sVentry*)tree_Minimum(&sts, m_vol_th);
+  while (vep) {
+    printf("vid.......: %d\n", vep->v.vid);
+    printf("  cookie..: %d\n", vep->env.file.cookie);
+    printf("  name....: %s\n", vep->v.name);
+    printf("  size....: %d\n", vep->v.size);
+    printf("  offset..: %d\n", vep->v.offset);
+    if (vep->env.file.cookie == 0) {
+      printf("  volume not found: %d\n", vep->v.vid);
+    } else {
+      if (fseek(m_fp, vep->v.offset, SEEK_SET) != 0)
+        return LDH__FILEPOS;
+      if (fseek(vep->env.f, 0, SEEK_SET) != 0)
+        return LDH__FILEPOS;
 
-    if (m_ohp->db.oid.vid == 1) continue;
+      sts = copyFile(vep->env.f, m_fp, vep->env.file.size);
+      if (EVEN(sts))
+        return LDH__FILEWRITE;
 
-    /* if this is a class volume then
-       we depend only on pwrs */
-
-    if (m_ohp->db.cid == pwr_eClass_ClassVolume) {
-      if (vtp->vhp->ohp->db.oid.vid != 1) continue;
+      printf("ftell %ld, offset + size %d, offset %d, size %d\n", ftell(m_fp), vep->v.offset + vep->env.file.size, vep->v.offset, vep->env.file.size);
+      assert(ftell(m_fp) == (long)(vep->v.offset + vep->env.file.size));
     }
-/* --------- End of workaround */
 
-    if (vtp->vhp->ohp->db.cid == pwr_eClass_ClassVolume) {
-      sts = ldhi_GetObjectBody(m_sp, vtp->vhp->ohp, ldhi_eBid_SysBody, &obp);
-      if (EVEN(sts)) return sts;
-      classVolume = (pwr_sClassVolume *) obp->body;
-
-      volref.vid  = vtp->vhp->ohp->db.oid.vid;
-      volref.cid  = pwr_eClass_ClassVolume;
-      volref.time = classVolume->RtVersion;
-
-//            xdrmem_create(&xdrs, (char *) &VolRef, sizeof(VolRef), XDR_ENCODE);
-//            if(!xdr_dbs_sVolRef(&xdrs, &VolRef)) return LDH__XDR;
-    }
+    vep = (sVentry*)tree_Successor(&sts, m_vol_th, vep);        
   }
-#endif
 
   return LDH__SUCCESS;
 }
