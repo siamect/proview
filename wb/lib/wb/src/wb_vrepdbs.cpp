@@ -32,6 +32,7 @@ wb_vrepdbs::dbsenv()
             throw wb_error(sts);
         }
         m_isDbsenvLoaded = true;
+        dbs_GetVolumeName(&sts, &m_dbsenv, m_name);
     } else {
         ep = &m_dbsenv;
     }
@@ -50,7 +51,7 @@ wb_vrepdbs::load()
 wb_orep *
 wb_vrepdbs::object(pwr_tStatus *sts, pwr_tOid oid)
 {    
-    dbs_sObject *op = dbs_OidToObject(sts, &m_dbsenv, oid);
+    dbs_sObject *op = dbs_OidToObject(sts, dbsenv(), oid);
     if (op == 0)
         return 0;
 
@@ -72,11 +73,11 @@ wb_vrepdbs::object(pwr_tStatus *sts, wb_orep *parent, wb_name name)
     n.poix = parent->oix();
     strcpy(n.normname, name.normName(cdh_mName_object));
     
-    dbs_sName *nrp = dbs_Bfind(&sts, &m_dbsenv, m_dbs.name_bt, &n, dbs_CompName);
+    dbs_sName *nrp = dbs_Bfind(&sts, dbsenv(), m_dbs.name_bt, &n, dbs_CompName);
     if (!nrp)
         return 0;
 
-    dbs_Object *o = dbs_Address(&sts, &m_dbsenv, nrp->ref);
+    dbs_Object *o = dbs_Address(&sts, dbsenv(), nrp->ref);
     if (!o)
         return 0;
     
@@ -167,7 +168,7 @@ bool wb_vrepdbs::writeBody()
 
 wb_orep *wb_vrepdbs::ancestor(pwr_tStatus *sts, wb_orep *o)
 {    
-    dbs_sObject *op = dbs_Ancestor(sts, &m_dbsenv, ((wb_orepdbs *)o)->o());
+    dbs_sObject *op = dbs_Ancestor(sts, dbsenv(), ((wb_orepdbs *)o)->o());
     if (op == 0)
         return 0;
 
@@ -177,7 +178,7 @@ wb_orep *wb_vrepdbs::ancestor(pwr_tStatus *sts, wb_orep *o)
 
 wb_orep *wb_vrepdbs::parent(pwr_tStatus *sts, wb_orep *o)
 {
-    dbs_sObject *op = dbs_Parent(sts, &m_dbsenv, ((wb_orepdbs *)o)->o());
+    dbs_sObject *op = dbs_Parent(sts, dbsenv(), ((wb_orepdbs *)o)->o());
     if (op == 0)
         return 0;
 
@@ -187,7 +188,7 @@ wb_orep *wb_vrepdbs::parent(pwr_tStatus *sts, wb_orep *o)
 
 wb_orep *wb_vrepdbs::after(pwr_tStatus *sts, wb_orep *o)
 {
-    dbs_sObject *op = dbs_After(sts, &m_dbsenv, ((wb_orepdbs *)o)->o());
+    dbs_sObject *op = dbs_After(sts, dbsenv(), ((wb_orepdbs *)o)->o());
     if (op == 0)
         return 0;
 
@@ -197,7 +198,7 @@ wb_orep *wb_vrepdbs::after(pwr_tStatus *sts, wb_orep *o)
 
 wb_orep *wb_vrepdbs::before(pwr_tStatus *sts, wb_orep *o)
 {
-    dbs_sObject *op = dbs_Before(sts, &m_dbsenv, ((wb_orepdbs *)o)->o());
+    dbs_sObject *op = dbs_Before(sts, dbsenv(), ((wb_orepdbs *)o)->o());
     if (op == 0)
         return 0;
 
@@ -207,7 +208,7 @@ wb_orep *wb_vrepdbs::before(pwr_tStatus *sts, wb_orep *o)
 
 wb_orep *wb_vrepdbs::first(pwr_tStatus *sts, wb_orep *o)
 {
-    dbs_sObject *op = dbs_First(sts, &m_dbsenv, ((wb_orepdbs *)o)->o());
+    dbs_sObject *op = dbs_First(sts, dbsenv(), ((wb_orepdbs *)o)->o());
     if (op == 0)
         return 0;
 
@@ -217,7 +218,7 @@ wb_orep *wb_vrepdbs::first(pwr_tStatus *sts, wb_orep *o)
 
 wb_orep *wb_vrepdbs::child(pwr_tStatus *sts, wb_orep *o, char *name)
 {
-    dbs_sObject *op = dbs_Child(sts, &m_dbsenv, ((wb_orepdbs *)o)->o(), name);
+    dbs_sObject *op = dbs_Child(sts, dbsenv(), ((wb_orepdbs *)o)->o(), name);
     if (op == 0)
         return 0;
 
@@ -227,7 +228,7 @@ wb_orep *wb_vrepdbs::child(pwr_tStatus *sts, wb_orep *o, char *name)
 
 wb_orep *wb_vrepdbs::last(pwr_tStatus *sts, wb_orep *o)
 {
-    dbs_sObject *op = dbs_Last(sts, &m_dbsenv, ((wb_orepdbs *)o)->o());
+    dbs_sObject *op = dbs_Last(sts, dbsenv(), ((wb_orepdbs *)o)->o());
     if (op == 0)
         return 0;
 
@@ -237,7 +238,7 @@ wb_orep *wb_vrepdbs::last(pwr_tStatus *sts, wb_orep *o)
 
 wb_orep *wb_vrepdbs::next(pwr_tStatus *sts, wb_orep *o)
 {
-    dbs_sObject *op = dbs_Next(sts, &m_dbsenv, ((wb_orepdbs *)o)->o());
+    dbs_sObject *op = dbs_Next(sts, dbsenv(), ((wb_orepdbs *)o)->o());
     if (op == 0)
         return 0;
 
@@ -247,7 +248,7 @@ wb_orep *wb_vrepdbs::next(pwr_tStatus *sts, wb_orep *o)
 
 wb_orep *wb_vrepdbs::previous(pwr_tStatus *sts, wb_orep *o)
 {
-    dbs_sObject *op = dbs_Previous(sts, &m_dbsenv, ((wb_orepdbs *)o)->o());
+    dbs_sObject *op = dbs_Previous(sts, dbsenv(), ((wb_orepdbs *)o)->o());
     if (op == 0)
         return 0;
 

@@ -821,3 +821,11 @@ dbs_AlignedRead(pwr_tStatus *sts, void *buf, pwr_tUInt32 size, const dbs_sEnv *e
 
     return YES;
 }
+
+void
+dbs_GetVolumeName(pwr_tStatus *sts, dbs_sEnv *ep, char *name)
+{
+    dbs_sVolume *vp = (dbs_sVolume *)(ep->base + ep->sect[dbs_eSect_volume].offset);
+    strcpy(name, vp->name);
+}
+
