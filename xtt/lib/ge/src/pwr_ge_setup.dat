@@ -82,6 +82,24 @@ menu Pushbuttons
   subgraph	CheckBoxRelief	pwr_exe:pwr_checkboxrelief.pwsg		5
   subgraph	RadioButton	pwr_exe:pwr_radiobutton.pwsg		6
   subgraph	RadioButtonRelief pwr_exe:pwr_radiobuttonrelief.pwsg	6
+  subgraph	NoteButton      pwr_exe:pwr_notebutton.pwsg		7
+  menu          MethodButtons
+  {
+    subgraph 	MbBlockEvents 	pwr_exe:pwr_mbblockevents.pwsg		7
+    subgraph 	MbCircuitDiagram pwr_exe:pwr_mbcircuitdiagram.pwsg	7
+    subgraph 	MbCrossReferences pwr_exe:pwr_mbcrossreferences.pwsg	7
+    subgraph 	MbDataSheet 	pwr_exe:pwr_mbdatasheet.pwsg		7
+    subgraph 	MbFast	 	pwr_exe:pwr_mbfast.pwsg			7
+    subgraph 	MbHelp	 	pwr_exe:pwr_mbhelp.pwsg			7
+    subgraph 	MbHelpClass 	pwr_exe:pwr_mbhelpclass.pwsg		7
+    subgraph 	MbHistEvent 	pwr_exe:pwr_mbhistevent.pwsg		7
+    subgraph 	MbNote	 	pwr_exe:pwr_mbnote.pwsg			7
+    subgraph 	MbOpenObject 	pwr_exe:pwr_mbopenobject.pwsg		7
+    subgraph 	MbOpenPlc 	pwr_exe:pwr_mbopenplc.pwsg		7
+    subgraph 	MbPhoto	 	pwr_exe:pwr_mbphoto.pwsg		7
+    subgraph 	MbRtNavigator 	pwr_exe:pwr_mbrtnavigator.pwsg		7
+    subgraph 	MbTrend	 	pwr_exe:pwr_mbtrend.pwsg		7
+  }
 }
 menu Sliders
 {
