@@ -898,8 +898,13 @@ ldh_MoveObject(ldh_tSession session, pwr_tOid oid, pwr_tOid doid, ldh_eDest dest
   if (!o) return o.sts();
   wb_destination d = d_o.destination(dest);
 
-  sp->moveObject(o, d);
-  return sp->sts();
+  try {
+    sp->moveObject(o, d);
+    return sp->sts();
+  }
+  catch ( wb_error& e) {
+    return e.sts();
+  }
 }
 
 pwr_tStatus
