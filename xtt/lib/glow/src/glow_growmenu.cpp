@@ -160,6 +160,7 @@ void GrowMenu::draw( GlowTransform *t, int highlight, int hot, void *node, void 
     ur_x = ll_x + int(min_width * ctx->zoom_factor_x);
   ur_y = ll_y + int(tot_z_height);
   ur.posit_z( ur_x + ctx->offset_x, ur_y + ctx->offset_y);
+  get_node_borders();
 
   if ( fill) {
     glow_draw_fill_rect( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, fill_drawtype);
@@ -329,6 +330,7 @@ int GrowMenu::event_handler( glow_eEvent event, int x, int y, double fx,
 	double fy)
 {
   int sts;
+  int csts;
 
   double rx, ry;
 
@@ -393,11 +395,16 @@ int GrowMenu::event_handler( glow_eEvent event, int x, int y, double fx,
       }
       break;
     }
+    case glow_eEvent_MB1Down:
+      glow_draw_set_click_sensitivity( ctx, glow_mSensitivity_MB1Click);
+      break;
     case glow_eEvent_MB1Click: {
       sts = local_event_handler( event, rx, ry);
       if ( sts && current_item != -1) {
 	if ( info.item[current_item].type == glow_eMenuItem_Button) {
-	  ((GrowCtx *)ctx)->send_menu_callback( this, current_item, glow_eEvent_MenuActivated, fx, fy);
+	  csts = ((GrowCtx *)ctx)->send_menu_callback( this, current_item, glow_eEvent_MenuActivated, fx, fy);
+	  if ( csts == GLOW__TERMINATED)
+	    return csts;
 
 	  // Send delete callback for the root menu of this node
 	  GrowMenu *e;
