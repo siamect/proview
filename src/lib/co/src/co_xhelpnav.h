@@ -61,13 +61,13 @@ typedef enum {
 	xhelp_eUtility_Wtt
 	} xhelp_eUtility;
 
-class XHelpNavBrow {
+class CoXHelpNavBrow {
   public:
-    XHelpNavBrow( BrowCtx *brow_ctx, void *brow_userdata) : 
+    CoXHelpNavBrow( BrowCtx *brow_ctx, void *brow_userdata) : 
       ctx(brow_ctx), userdata(brow_userdata)
       {}
 #if 0
-    ~XHelpNavBrow();
+    ~CoXHelpNavBrow();
 #endif
 
     BrowCtx		*ctx;
@@ -86,16 +86,16 @@ class XHelpNavBrow {
     void brow_setup();
 };
 
-class XHelpNav {
+class CoXHelpNav {
   public:
-    XHelpNav(
+    CoXHelpNav(
 	void *xn_parent_ctx,
 	Widget	xn_parent_wid,
 	char *xn_name,
 	xhelp_eUtility xn_utility,
 	Widget *w,
 	pwr_tStatus *status);
-    ~XHelpNav();
+    ~CoXHelpNav();
 
     void 		*parent_ctx;
     Widget		parent_wid;
@@ -103,9 +103,9 @@ class XHelpNav {
     Widget		brow_widget;
     Widget		form_widget;
     Widget		toplevel;
-    XHelpNavBrow		*brow;
-    XHelpNavBrow		*collect_brow;
-    XHelpNavBrow		*brow_stack[XHELPNAV_BROW_MAX];
+    CoXHelpNavBrow		*brow;
+    CoXHelpNavBrow		*collect_brow;
+    CoXHelpNavBrow		*brow_stack[XHELPNAV_BROW_MAX];
     int			brow_cnt;
     int			closing_down;
     int			displayed;
@@ -126,7 +126,7 @@ class XHelpNav {
     int brow_push_all();
     void set_inputfocus();
     void pop();
-    void enable_events( XHelpNavBrow *brow);
+    void enable_events( CoXHelpNavBrow *brow);
     int help( char *key, char *help_bookmark, navh_eHelpFile file_type,
 	      char *file_name, int pop, bool strict);
     int	help_index( navh_eHelpFile file_type, char *file_name, int pop);
@@ -142,7 +142,7 @@ class HItem {
 	type( xhelpnav_eHItemType_Object),
 	node(NULL)
 	{};
-    virtual int	doubleclick_action( XHelpNavBrow *brow, XHelpNav *xhelpnav,
+    virtual int	doubleclick_action( CoXHelpNavBrow *brow, CoXHelpNav *xhelpnav,
 				       double x, double y) { return 1;}
     virtual bool search( char *str, bool strict) { return false;}
     xhelpnav_eHItemType	type;
@@ -151,23 +151,23 @@ class HItem {
 
 class HItemHeader : public HItem {
   public:
-    HItemHeader( XHelpNavBrow *brow, char *item_name, char *title,
+    HItemHeader( CoXHelpNavBrow *brow, char *item_name, char *title,
 	brow_tNode dest, flow_eDest dest_code);
 };
 
 class HItemHelpLine : public HItem {
   public:
-    HItemHelpLine( XHelpNavBrow *brow, char *item_name,
+    HItemHelpLine( CoXHelpNavBrow *brow, char *item_name,
 	brow_tNode dest, flow_eDest dest_code);
 };
 
 class HItemHelpImage : public HItem {
   public:
-    HItemHelpImage( XHelpNavBrow *brow, char *item_name, brow_tNodeClass nc,
+    HItemHelpImage( CoXHelpNavBrow *brow, char *item_name, brow_tNodeClass nc,
 		    char *item_link, char *item_bookmark, 
 		    char *item_file_name, navh_eHelpFile help_file_type, 
 		    brow_tNode dest, flow_eDest dest_code);
-    int	doubleclick_action( XHelpNavBrow *brow, XHelpNav *xhelpnav,
+    int	doubleclick_action( CoXHelpNavBrow *brow, CoXHelpNav *xhelpnav,
 				       double x, double y);
     char link[200];
     char bookmark[80];
@@ -177,17 +177,17 @@ class HItemHelpImage : public HItem {
 
 class HItemHeaderLarge : public HItem {
   public:
-    HItemHeaderLarge( XHelpNavBrow *brow, char *item_name, char *title,
+    HItemHeaderLarge( CoXHelpNavBrow *brow, char *item_name, char *title,
 	brow_tNode dest, flow_eDest dest_code);
     bool search( char *str, bool strict);
 };
 
 class HItemHelp : public HItem {
   public:
-    HItemHelp( XHelpNavBrow *brow, char *item_name, char *text, char *text2, 
+    HItemHelp( CoXHelpNavBrow *brow, char *item_name, char *text, char *text2, 
 	char *text3, char *item_link, char *item_bookmark, 
 	char *item_file_name, navh_eHelpFile help_file_type, int help_index, brow_tNode dest, flow_eDest dest_code);
-    int	doubleclick_action( XHelpNavBrow *brow, XHelpNav *xhelpnav,
+    int	doubleclick_action( CoXHelpNavBrow *brow, CoXHelpNav *xhelpnav,
 				       double x, double y);
     bool search( char *str, bool strict);
     char link[200];
@@ -199,11 +199,11 @@ class HItemHelp : public HItem {
 
 class HItemHelpBold : public HItem {
  public:
-  HItemHelpBold( XHelpNavBrow *brow, char *item_name, char *text, char *text2, 
+  HItemHelpBold( CoXHelpNavBrow *brow, char *item_name, char *text, char *text2, 
 		char *text3, char *item_link, char *item_bookmark, 
 		char *item_file_name, navh_eHelpFile help_file_type, int help_index, 
 		brow_tNode dest, flow_eDest dest_code);
-  int	doubleclick_action( XHelpNavBrow *brow, XHelpNav *xhelpnav, 
+  int	doubleclick_action( CoXHelpNavBrow *brow, CoXHelpNav *xhelpnav, 
 			    double x, double y);
     bool search( char *str, bool strict);
   char link[200];
@@ -215,9 +215,9 @@ class HItemHelpBold : public HItem {
 
 class HItemHelpHeader : public HItem {
  public:
-  HItemHelpHeader( XHelpNavBrow *brow, char *item_name, char *title, bool base,
+  HItemHelpHeader( CoXHelpNavBrow *brow, char *item_name, char *title, bool base,
 		  brow_tNode dest, flow_eDest dest_code);
-  int doubleclick_action( XHelpNavBrow *brow, XHelpNav *xhelpnav, double x, double y);
+  int doubleclick_action( CoXHelpNavBrow *brow, CoXHelpNav *xhelpnav, double x, double y);
     bool search( char *str, bool strict);
 };
 

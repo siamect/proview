@@ -20,9 +20,9 @@ extern "C" {
 # include "co_xhelpnav.h"
 #endif
 
-class XHelp {
+class CoXHelp {
   public:
-    XHelp( 
+    CoXHelp( 
 	Widget 		xa_parent_wid, 
 	void 		*xa_parent_ctx,
 	xhelp_eUtility  utility,
@@ -33,7 +33,7 @@ class XHelp {
     Widget	brow_widget;
     Widget	form_widget;
     Widget	toplevel;
-    XHelpNav	*xhelpnav;
+    CoXHelpNav	*xhelpnav;
     Widget	xhelpnav_form;
     void	*client_data;
     void	(*close_cb) ( void *, void *);
@@ -43,9 +43,9 @@ class XHelp {
     Widget	india_widget;
     Widget	india_label;
     Widget	india_text;
-    void	(*india_ok_cb)( XHelp *, char *);
+    void	(*india_ok_cb)( CoXHelp *, char *);
 
-    static XHelp *default_xhelp;
+    static CoXHelp *default_xhelp;
 
     void pop();
     void map();
@@ -54,11 +54,11 @@ class XHelp {
 	      char *file_name, bool strict);
     int	help_index( navh_eHelpFile file_type, char *file_name);
     void set_dimension( int width, int height);    
-    static void set_default( XHelp *xhelp) { default_xhelp = xhelp;}
+    static void set_default( CoXHelp *xhelp) { default_xhelp = xhelp;}
     static int dhelp( char *key, char *help_bookmark, navh_eHelpFile file_type,
 		      char *file_name, bool strict);
     static int	dhelp_index( navh_eHelpFile file_type, char *file_name);
-    ~XHelp();
+    ~CoXHelp();
 };
 
 

@@ -71,7 +71,7 @@ static void xhelpnav_open_URL( char *link)
 //
 //  Free pixmaps
 //
-void XHelpNavBrow::free_pixmaps()
+void CoXHelpNavBrow::free_pixmaps()
 {
   brow_FreeAnnotPixmap( ctx, pixmap_morehelp);
   brow_FreeAnnotPixmap( ctx, pixmap_closehelp);
@@ -80,7 +80,7 @@ void XHelpNavBrow::free_pixmaps()
 //
 //  Create pixmaps for leaf, closed map and open map
 //
-void XHelpNavBrow::allocate_pixmaps()
+void CoXHelpNavBrow::allocate_pixmaps()
 {
 	flow_sPixmapData pixmap_data;
 	int i;
@@ -151,7 +151,7 @@ void XHelpNavBrow::allocate_pixmaps()
 //
 // Create nodeclasses
 //
-void XHelpNavBrow::create_nodeclasses()
+void CoXHelpNavBrow::create_nodeclasses()
 {
   allocate_pixmaps();
 
@@ -224,7 +224,7 @@ void XHelpNavBrow::create_nodeclasses()
 
 }
 
-void XHelpNavBrow::brow_setup()
+void CoXHelpNavBrow::brow_setup()
 {
   brow_sAttributes brow_attr;
   unsigned long mask;
@@ -236,10 +236,11 @@ void XHelpNavBrow::brow_setup()
   brow_attr.annotation_space = 0.5;
   brow_SetAttributes( ctx, &brow_attr, mask); 
   brow_SetCtxUserData( ctx, userdata);
+  brow_SetWhiteBackground( ctx);
 }
 
 
-void XHelpNav::clear()
+void CoXHelpNav::clear()
 {
   brow_DeleteAll( brow->ctx);
 }
@@ -250,11 +251,11 @@ void XHelpNav::clear()
 //
 static Boolean set_displayed( void *xhelpnav)
 {
-  ((XHelpNav *)xhelpnav)->displayed = 1;
+  ((CoXHelpNav *)xhelpnav)->displayed = 1;
   return True;
 }
 
-void XHelpNav::pop()
+void CoXHelpNav::pop()
 {
   Widget parent, top;
 
@@ -278,7 +279,7 @@ void XHelpNav::pop()
 //
 // Create the navigator widget
 //
-XHelpNav::XHelpNav(
+CoXHelpNav::CoXHelpNav(
 	void *xn_parent_ctx,
 	Widget	xn_parent_wid,
 	char *xn_name,
@@ -304,7 +305,7 @@ XHelpNav::XHelpNav(
 //
 //  Delete a nav context
 //
-XHelpNav::~XHelpNav()
+CoXHelpNav::~CoXHelpNav()
 {
   closing_down = 1;
 
@@ -320,7 +321,7 @@ XHelpNav::~XHelpNav()
 //
 //  Print
 //
-void XHelpNav::print( char *filename)
+void CoXHelpNav::print( char *filename)
 {
   brow_Print( brow->ctx, filename);
 }
@@ -329,7 +330,7 @@ void XHelpNav::print( char *filename)
 //
 //  Zoom
 //
-void XHelpNav::zoom( double zoom_factor)
+void CoXHelpNav::zoom( double zoom_factor)
 {
   brow_Zoom( brow->ctx, zoom_factor);
 }
@@ -337,7 +338,7 @@ void XHelpNav::zoom( double zoom_factor)
 //
 //  Return to base zoom factor
 //
-void XHelpNav::unzoom()
+void CoXHelpNav::unzoom()
 {
   brow_UnZoom( brow->ctx);
 }
@@ -345,12 +346,12 @@ void XHelpNav::unzoom()
 //
 //  Get zoom
 //
-void XHelpNav::get_zoom( double *zoom_factor)
+void CoXHelpNav::get_zoom( double *zoom_factor)
 {
   brow_GetZoom( brow->ctx, zoom_factor);
 }
 
-void XHelpNav::set_inputfocus()
+void CoXHelpNav::set_inputfocus()
 {
   if ( displayed && flow_IsViewable( brow_widget)) {
     XtCallAcceptFocus( brow_widget, CurrentTime);
@@ -362,7 +363,7 @@ void XHelpNav::set_inputfocus()
 //
 static int xhelpnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
 {
-  XHelpNav		*xhelpnav;
+  CoXHelpNav		*xhelpnav;
   HItem 		*item;
 
   brow_GetCtxUserData( (BrowCtx *)ctx, (void **) &xhelpnav);
@@ -555,7 +556,7 @@ static int xhelpnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
   return 1;
 }
 
-int XHelpNav::brow_pop()
+int CoXHelpNav::brow_pop()
 {
   BrowCtx *secondary_ctx;
 
@@ -570,7 +571,7 @@ int XHelpNav::brow_pop()
   return 1;
 }
 
-int XHelpNav::brow_push()
+int CoXHelpNav::brow_push()
 {
   if ( brow_cnt == 1)
      return 0;
@@ -584,14 +585,14 @@ int XHelpNav::brow_push()
   return 1;
 }
 
-int XHelpNav::brow_push_all()
+int CoXHelpNav::brow_push_all()
 {
   while( brow_push())
     ;
   return 1;
 }
 
-void  XHelpNav::enable_events( XHelpNavBrow *brow)
+void  CoXHelpNav::enable_events( CoXHelpNavBrow *brow)
 {
   brow_EnableEvent( brow->ctx, flow_eEvent_MB1DoubleClickShift, flow_eEventType_CallBack, 
 	xhelpnav_brow_cb);
@@ -645,11 +646,11 @@ void  XHelpNav::enable_events( XHelpNavBrow *brow)
 //
 static int xhelpnav_init_brow_base_cb( FlowCtx *fctx, void *client_data)
 {
-  XHelpNav *xhelpnav = (XHelpNav *) client_data;
+  CoXHelpNav *xhelpnav = (CoXHelpNav *) client_data;
   BrowCtx *ctx = (BrowCtx *)fctx;
 
-  xhelpnav->brow = new XHelpNavBrow( ctx, (void *)xhelpnav);
-  xhelpnav->brow_stack[0] = new XHelpNavBrow( ctx, (void *)xhelpnav);
+  xhelpnav->brow = new CoXHelpNavBrow( ctx, (void *)xhelpnav);
+  xhelpnav->brow_stack[0] = new CoXHelpNavBrow( ctx, (void *)xhelpnav);
   xhelpnav->brow_cnt++;
 
   xhelpnav->brow->brow_setup();
@@ -663,9 +664,9 @@ static int xhelpnav_init_brow_base_cb( FlowCtx *fctx, void *client_data)
 
 static int xhelpnav_init_brow_cb( BrowCtx *ctx, void *client_data)
 {
-  XHelpNav *xhelpnav = (XHelpNav *) client_data;
+  CoXHelpNav *xhelpnav = (CoXHelpNav *) client_data;
 
-  xhelpnav->brow_stack[xhelpnav->brow_cnt] = new XHelpNavBrow( ctx, (void *)xhelpnav);
+  xhelpnav->brow_stack[xhelpnav->brow_cnt] = new CoXHelpNavBrow( ctx, (void *)xhelpnav);
 
   xhelpnav->brow_stack[xhelpnav->brow_cnt]->brow_setup();
   xhelpnav->brow_stack[xhelpnav->brow_cnt]->create_nodeclasses();
@@ -674,7 +675,7 @@ static int xhelpnav_init_brow_cb( BrowCtx *ctx, void *client_data)
   return 1;
 }
 
-pwr_tStatus XHelpNav::search( char *str, bool strict)
+pwr_tStatus CoXHelpNav::search( char *str, bool strict)
 {
   search_node = 0;
   search_strict = strict;
@@ -690,7 +691,7 @@ pwr_tStatus XHelpNav::search( char *str, bool strict)
 #define XHELP__SUCCESS 1;
 #define XHELP__SEARCHNOTFOUND 4;
 
-pwr_tStatus XHelpNav::search_next()
+pwr_tStatus CoXHelpNav::search_next()
 {
   if ( strcmp( search_str, "") == 0)
     return XHELP__SEARCHNOTSTARTED;
@@ -698,7 +699,7 @@ pwr_tStatus XHelpNav::search_next()
   return search_exec( false);
 }
 
-pwr_tStatus XHelpNav::search_next_reverse()
+pwr_tStatus CoXHelpNav::search_next_reverse()
 {
   if ( strcmp( search_str, "") == 0)
     return XHELP__SEARCHNOTSTARTED;
@@ -706,7 +707,7 @@ pwr_tStatus XHelpNav::search_next_reverse()
   return search_exec( true);
 }
 
-pwr_tStatus XHelpNav::search_exec( bool reverse)
+pwr_tStatus CoXHelpNav::search_exec( bool reverse)
 {
   brow_tObject 	*object_list;
   int		object_cnt;
@@ -748,7 +749,7 @@ pwr_tStatus XHelpNav::search_exec( bool reverse)
   return XHELP__SEARCHNOTFOUND;
 }
 
-HItemHeader::HItemHeader( XHelpNavBrow *brow, char *item_name, char *title,
+HItemHeader::HItemHeader( CoXHelpNavBrow *brow, char *item_name, char *title,
 	brow_tNode dest, flow_eDest dest_code)
 {
   type = xhelpnav_eHItemType_Header;
@@ -757,7 +758,7 @@ HItemHeader::HItemHeader( XHelpNavBrow *brow, char *item_name, char *title,
   brow_SetAnnotation( node, 0, title, strlen(title));
 }
 
-HItemHelpLine::HItemHelpLine( XHelpNavBrow *brow, char *item_name, 
+HItemHelpLine::HItemHelpLine( CoXHelpNavBrow *brow, char *item_name, 
 			      brow_tNode dest, flow_eDest dest_code)
 {
   type = xhelpnav_eHItemType_HelpLine;
@@ -765,7 +766,7 @@ HItemHelpLine::HItemHelpLine( XHelpNavBrow *brow, char *item_name,
 		dest, dest_code, (void *)this, 1, &node);
 }
 
-HItemHelpImage::HItemHelpImage( XHelpNavBrow *brow, char *item_name, brow_tNodeClass nc,
+HItemHelpImage::HItemHelpImage( CoXHelpNavBrow *brow, char *item_name, brow_tNodeClass nc,
 				char *item_link, char *item_bookmark, 
 				char *item_file_name, navh_eHelpFile help_file_type, 
 				brow_tNode dest, flow_eDest dest_code)
@@ -785,7 +786,7 @@ HItemHelpImage::HItemHelpImage( XHelpNavBrow *brow, char *item_name, brow_tNodeC
     brow_SetAnnotPixmap( node, 0, brow->pixmap_morehelp);
 }
 
-int HItemHelpImage::doubleclick_action( XHelpNavBrow *brow, XHelpNav *xhelpnav, double x, double y)
+int HItemHelpImage::doubleclick_action( CoXHelpNavBrow *brow, CoXHelpNav *xhelpnav, double x, double y)
 {
   int sts;
 
@@ -809,7 +810,7 @@ int HItemHelpImage::doubleclick_action( XHelpNavBrow *brow, XHelpNav *xhelpnav, 
   return 1;
 }
 
-HItemHeaderLarge::HItemHeaderLarge( XHelpNavBrow *brow, char *item_name, char *title,
+HItemHeaderLarge::HItemHeaderLarge( CoXHelpNavBrow *brow, char *item_name, char *title,
 	brow_tNode dest, flow_eDest dest_code)
 {
   type = xhelpnav_eHItemType_HeaderLarge;
@@ -832,7 +833,7 @@ bool HItemHeaderLarge::search( char *str, bool strict)
   return false;
 }
 
-HItemHelpHeader::HItemHelpHeader( XHelpNavBrow *brow, char *item_name, char *title, bool base,
+HItemHelpHeader::HItemHelpHeader( CoXHelpNavBrow *brow, char *item_name, char *title, bool base,
 	brow_tNode dest, flow_eDest dest_code)
 {
   type = xhelpnav_eHItemType_HelpHeader;
@@ -857,14 +858,14 @@ bool HItemHelpHeader::search( char *str, bool strict)
   return false;
 }
 
-int HItemHelpHeader::doubleclick_action( XHelpNavBrow *brow, XHelpNav *xhelpnav, double x, double y)
+int HItemHelpHeader::doubleclick_action( CoXHelpNavBrow *brow, CoXHelpNav *xhelpnav, double x, double y)
 {
   if ( xhelpnav)
     xhelpnav->brow_push();
   return 1;
 }
 
-HItemHelp::HItemHelp( XHelpNavBrow *brow, char *item_name, char *text, char *text2, 
+HItemHelp::HItemHelp( CoXHelpNavBrow *brow, char *item_name, char *text, char *text2, 
 	char *text3, char *item_link, char *item_bookmark, 
 	char *item_file_name, navh_eHelpFile help_file_type, int help_index, brow_tNode dest, flow_eDest dest_code) :
 	file_type(help_file_type), index(help_index)
@@ -903,7 +904,7 @@ bool HItemHelp::search( char *str, bool strict)
   return false;
 }
 
-int HItemHelp::doubleclick_action( XHelpNavBrow *brow, XHelpNav *xhelpnav, double x, double y)
+int HItemHelp::doubleclick_action( CoXHelpNavBrow *brow, CoXHelpNav *xhelpnav, double x, double y)
 {
   int sts;
 
@@ -931,7 +932,7 @@ int HItemHelp::doubleclick_action( XHelpNavBrow *brow, XHelpNav *xhelpnav, doubl
   return 1;
 }
 
-HItemHelpBold::HItemHelpBold( XHelpNavBrow *brow, char *item_name, char *text, char *text2, 
+HItemHelpBold::HItemHelpBold( CoXHelpNavBrow *brow, char *item_name, char *text, char *text2, 
 	char *text3, char *item_link, char *item_bookmark, 
 	char *item_file_name, navh_eHelpFile help_file_type, int help_index, brow_tNode dest, flow_eDest dest_code) :
         file_type(help_file_type), index(help_index)
@@ -970,7 +971,7 @@ bool HItemHelpBold::search( char *str, bool strict)
   return false;
 }
 
-int HItemHelpBold::doubleclick_action( XHelpNavBrow *brow, XHelpNav *xhelpnav, double x, double y)
+int HItemHelpBold::doubleclick_action( CoXHelpNavBrow *brow, CoXHelpNav *xhelpnav, double x, double y)
 {
   int sts;
 
@@ -1010,7 +1011,7 @@ void *xhelpnav_help_insert_cb( void *ctx, navh_eItemType item_type, char *text1,
 		      char *bookmark, char *file_name,
 		      navh_eHelpFile file_type, int help_index, char *bm)
 {
-  XHelpNav *xhelpnav = (XHelpNav *)ctx;
+  CoXHelpNav *xhelpnav = (CoXHelpNav *)ctx;
 
   if ( xhelpnav->init_help) {
     xhelpnav->brow_pop();
@@ -1074,7 +1075,7 @@ void *xhelpnav_help_insert_cb( void *ctx, navh_eItemType item_type, char *text1,
   }
 }
 
-int	XHelpNav::help( char *help_key, char *help_bookmark, 
+int	CoXHelpNav::help( char *help_key, char *help_bookmark, 
 		navh_eHelpFile file_type, char *file_name, int pop, bool strict)
 {
   int sts;
@@ -1138,7 +1139,7 @@ int	XHelpNav::help( char *help_key, char *help_bookmark,
 *
 **************************************************************************/
 
-int	XHelpNav::help_index( navh_eHelpFile file_type, char *file_name, int pop)
+int	CoXHelpNav::help_index( navh_eHelpFile file_type, char *file_name, int pop)
 {
   int sts;
   brow_tObject 	*object_list;

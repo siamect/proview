@@ -43,13 +43,13 @@ extern "C" {
 #include "co_xhelpnav.h"
 #include "co_xhelp.h"
 
-XHelp *XHelp::default_xhelp = 0;
+CoXHelp *CoXHelp::default_xhelp = 0;
 
 // Prototype declarations
 
-static void xhelp_open_input_dialog( XHelp *xhelp, char *text, char *title,
+static void xhelp_open_input_dialog( CoXHelp *xhelp, char *text, char *title,
 	char *init_text,
-	void (*ok_cb)( XHelp *, char *))
+	void (*ok_cb)( CoXHelp *, char *))
 {
   Arg		args[10];
   int 		i;
@@ -75,12 +75,12 @@ static void xhelp_open_input_dialog( XHelp *xhelp, char *text, char *title,
   xhelp->india_ok_cb = ok_cb;
 }
 
-static void xhelp_find_ok( XHelp *xhelp, char *search_str)
+static void xhelp_find_ok( CoXHelp *xhelp, char *search_str)
 {
   xhelp->xhelpnav->search( search_str, false);
 }
 
-static void xhelp_activate_exit( Widget w, XHelp *xhelp, XmAnyCallbackStruct *data)
+static void xhelp_activate_exit( Widget w, CoXHelp *xhelp, XmAnyCallbackStruct *data)
 {
   if ( xhelp->close_cb)
     (xhelp->close_cb)( xhelp->parent_ctx, (void *)xhelp);
@@ -91,7 +91,7 @@ static void xhelp_activate_exit( Widget w, XHelp *xhelp, XmAnyCallbackStruct *da
   //  delete xhelp;
 }
 
-static void xhelp_activate_zoom_in( Widget w, XHelp *xhelp, XmAnyCallbackStruct *data)
+static void xhelp_activate_zoom_in( Widget w, CoXHelp *xhelp, XmAnyCallbackStruct *data)
 {
   double zoom_factor;
 
@@ -102,7 +102,7 @@ static void xhelp_activate_zoom_in( Widget w, XHelp *xhelp, XmAnyCallbackStruct 
   xhelp->xhelpnav->zoom( 1.18);
 }
 
-static void xhelp_activate_zoom_out( Widget w, XHelp *xhelp, XmAnyCallbackStruct *data)
+static void xhelp_activate_zoom_out( Widget w, CoXHelp *xhelp, XmAnyCallbackStruct *data)
 {
   double zoom_factor;
 
@@ -113,36 +113,36 @@ static void xhelp_activate_zoom_out( Widget w, XHelp *xhelp, XmAnyCallbackStruct
   xhelp->xhelpnav->zoom( 1.0 / 1.18);
 }
 
-static void xhelp_activate_zoom_reset( Widget w, XHelp *xhelp, XmAnyCallbackStruct *data)
+static void xhelp_activate_zoom_reset( Widget w, CoXHelp *xhelp, XmAnyCallbackStruct *data)
 {
   xhelp->xhelpnav->unzoom();
 }
 
-static void xhelp_activate_search( Widget w, XHelp *xhelp, XmAnyCallbackStruct *data)
+static void xhelp_activate_search( Widget w, CoXHelp *xhelp, XmAnyCallbackStruct *data)
 {
   xhelp_open_input_dialog( xhelp, "Search string", "Search string",
 	"", &xhelp_find_ok);
 }
 
-static void xhelp_activate_searchnext( Widget w, XHelp *xhelp, XmAnyCallbackStruct *data)
+static void xhelp_activate_searchnext( Widget w, CoXHelp *xhelp, XmAnyCallbackStruct *data)
 {
   xhelp->xhelpnav->search_next();
 }
 
-static void xhelp_activate_searchprevious( Widget w, XHelp *xhelp, XmAnyCallbackStruct *data)
+static void xhelp_activate_searchprevious( Widget w, CoXHelp *xhelp, XmAnyCallbackStruct *data)
 {
   xhelp->xhelpnav->search_next_reverse();
 }
 
-static void xhelp_create_india_label( Widget w, XHelp *xhelp, XmAnyCallbackStruct *data)
+static void xhelp_create_india_label( Widget w, CoXHelp *xhelp, XmAnyCallbackStruct *data)
 {
   xhelp->india_label = w;
 }
-static void xhelp_create_india_text( Widget w, XHelp *xhelp, XmAnyCallbackStruct *data)
+static void xhelp_create_india_text( Widget w, CoXHelp *xhelp, XmAnyCallbackStruct *data)
 {
   xhelp->india_text = w;
 }
-static void xhelp_activate_india_ok( Widget w, XHelp *xhelp, XmAnyCallbackStruct *data)
+static void xhelp_activate_india_ok( Widget w, CoXHelp *xhelp, XmAnyCallbackStruct *data)
 {
   char *value;
 
@@ -151,27 +151,27 @@ static void xhelp_activate_india_ok( Widget w, XHelp *xhelp, XmAnyCallbackStruct
 
   (xhelp->india_ok_cb)( xhelp, value);
 }
-static void xhelp_activate_india_cancel( Widget w, XHelp *xhelp, XmAnyCallbackStruct *data)
+static void xhelp_activate_india_cancel( Widget w, CoXHelp *xhelp, XmAnyCallbackStruct *data)
 {
   XtUnmanageChild( xhelp->india_widget);
 }
 
-static void xhelp_activate_help( Widget w, XHelp *xhelp, XmAnyCallbackStruct *data)
+static void xhelp_activate_help( Widget w, CoXHelp *xhelp, XmAnyCallbackStruct *data)
 {
-  XHelp::dhelp( "helpwindow", 0, navh_eHelpFile_Base, 0, true);
+  CoXHelp::dhelp( "helpwindow", 0, navh_eHelpFile_Base, 0, true);
 }
 
-static void xhelp_create_xhelpnav_form( Widget w, XHelp *xhelp, XmAnyCallbackStruct *data)
+static void xhelp_create_xhelpnav_form( Widget w, CoXHelp *xhelp, XmAnyCallbackStruct *data)
 {
   xhelp->xhelpnav_form = w;
 }
 
-static void xhelp_enable_set_focus( XHelp *xhelp)
+static void xhelp_enable_set_focus( CoXHelp *xhelp)
 {
   xhelp->set_focus_disabled--;
 }
 
-static void xhelp_disable_set_focus( XHelp *xhelp, int time)
+static void xhelp_disable_set_focus( CoXHelp *xhelp, int time)
 {
   xhelp->set_focus_disabled++;
   xhelp->focus_timerid = XtAppAddTimeOut(
@@ -182,7 +182,7 @@ static void xhelp_disable_set_focus( XHelp *xhelp, int time)
 static void xhelp_action_inputfocus( Widget w, XmAnyCallbackStruct *data)
 {
   Arg args[1];
-  XHelp *xhelp;
+  CoXHelp *xhelp;
 
   XtSetArg    (args[0], XmNuserData, &xhelp);
   XtGetValues (w, args, 1);
@@ -204,19 +204,19 @@ static void xhelp_action_inputfocus( Widget w, XmAnyCallbackStruct *data)
 }
 
 
-void XHelp::pop()
+void CoXHelp::pop()
 {
-  ((XHelpNav*)xhelpnav)->pop();
+  ((CoXHelpNav*)xhelpnav)->pop();
   displayed = 1;
 }
 
-void XHelp::clear()
+void CoXHelp::clear()
 {
   xhelpnav->brow_push_all();
   xhelpnav->clear();
 }
 
-int XHelp::help( char *key, char *help_bookmark, navh_eHelpFile file_type,
+int CoXHelp::help( char *key, char *help_bookmark, navh_eHelpFile file_type,
 	      char *file_name, bool strict)
 {
   return xhelpnav->help( key, help_bookmark, file_type,
@@ -226,7 +226,7 @@ int XHelp::help( char *key, char *help_bookmark, navh_eHelpFile file_type,
 //
 //  Static function to call help for the default xhelp
 //
-int XHelp::dhelp( char *key, char *help_bookmark, navh_eHelpFile file_type,
+int CoXHelp::dhelp( char *key, char *help_bookmark, navh_eHelpFile file_type,
 	      char *file_name, bool strict)
 {
   if ( !default_xhelp)
@@ -239,12 +239,12 @@ int XHelp::dhelp( char *key, char *help_bookmark, navh_eHelpFile file_type,
 }
 
 
-int XHelp::help_index( navh_eHelpFile file_type, char *file_name)
+int CoXHelp::help_index( navh_eHelpFile file_type, char *file_name)
 {
   return xhelpnav->help_index( file_type, file_name, 0);
 }
 
-int XHelp::dhelp_index( navh_eHelpFile file_type, char *file_name)
+int CoXHelp::dhelp_index( navh_eHelpFile file_type, char *file_name)
 {
   if ( !default_xhelp)
     return 0;
@@ -254,7 +254,7 @@ int XHelp::dhelp_index( navh_eHelpFile file_type, char *file_name)
   return default_xhelp->help_index( file_type, file_name);
 }
 
-void XHelp::set_dimension( int width, int height)
+void CoXHelp::set_dimension( int width, int height)
 {
   Arg 		args[3];
 
@@ -268,7 +268,7 @@ void XHelp::set_dimension( int width, int height)
   XtSetValues( toplevel, args,i);
 }
 
-XHelp::~XHelp()
+CoXHelp::~CoXHelp()
 {
   if ( set_focus_disabled)
     XtRemoveTimeOut( focus_timerid);
@@ -277,7 +277,7 @@ XHelp::~XHelp()
   XtDestroyWidget( parent_wid);
 }
 
-XHelp::XHelp( 
+CoXHelp::CoXHelp( 
 	Widget 		xa_parent_wid,
 	void 		*xa_parent_ctx,
 	xhelp_eUtility	utility,
@@ -371,7 +371,7 @@ XHelp::XHelp(
     
   XtManageChild( toplevel);
 
-  xhelpnav = new XHelpNav( (void *)this, xhelpnav_form, title, utility, &brow_widget, 
+  xhelpnav = new CoXHelpNav( (void *)this, xhelpnav_form, title, utility, &brow_widget, 
 		       &sts);
 
   // XtPopup( parent_wid, XtGrabNone);
