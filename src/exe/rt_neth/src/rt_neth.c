@@ -192,7 +192,7 @@ addNode (
     strncpy(np->name, node->name, sizeof(np->name));
     np->os = node->os;
     np->hw = node->hw;
-    np->fm = node->fm;
+    co_SetFormat(&np->fm, node->bo, node->ft);
 
     if (np == gdbroot->my_node)
       np->flags.m |= net_eState_up;
