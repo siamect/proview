@@ -24,7 +24,12 @@ typedef enum {
 typedef enum {
 	wb_eUtility_Wtt 		= 999,
 	wb_eUtility_PlcEditor 		= 1000,
-	wb_eUtility_AttributeEditor	= 1001
+	wb_eUtility_AttributeEditor	= 1001,
+	wb_eUtility_Distributor		= 1002
 } wb_eUtility;
 
 #endif
+
+
+
+
