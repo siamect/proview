@@ -87,6 +87,7 @@ nothread	<Invalid thread object>					/error
 invthread	<Invalid thread object, plc will not be executed>	/warning
 generic		<Generic object is not connected>			/error
 templateplc	<Template plc not found>				/error
+ccerror		<Error from c compilator, see terminal window>		/fatal
 
         .facility       FOE,280 /prefix = FOE__ ! Function object editor
 
