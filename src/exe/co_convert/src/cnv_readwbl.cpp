@@ -1018,9 +1018,12 @@ int CnvReadWbl::doc_add( char *line)
       if ( i == nr - 1)
         strcpy( doc_link_ref[doc_link_cnt], line_part[i]);
       else {
-        if ( i != 2)
-          strcat( doc_link_text[doc_link_cnt], " ");
-        strcat( doc_link_text[doc_link_cnt], line_part[i]);
+        if ( i == 2)
+	  strcpy( doc_clink_text[doc_clink_cnt], line_part[i]);
+	else {
+          strcat( doc_clink_text[doc_clink_cnt], " ");
+	  strcat( doc_clink_text[doc_clink_cnt], line_part[i]);
+	}
       }
     }
     doc_link_cnt++;
@@ -1034,9 +1037,12 @@ int CnvReadWbl::doc_add( char *line)
       if ( i == nr - 1)
         strcpy( doc_clink_ref[doc_clink_cnt], line_part[i]);
       else {
-        if ( i != 2)
+        if ( i == 2)
+	  strcpy( doc_clink_text[doc_clink_cnt], line_part[i]);
+	else {
           strcat( doc_clink_text[doc_clink_cnt], " ");
-        strcat( doc_clink_text[doc_clink_cnt], line_part[i]);
+	  strcat( doc_clink_text[doc_clink_cnt], line_part[i]);
+	}
       }
     }
     doc_clink_cnt++;
