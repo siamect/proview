@@ -679,29 +679,33 @@ int wb_vrepwbl::getClassInfo( pwr_tCid cid, size_t *rsize, size_t *dsize)
         *size = sizeof( o.attribute); \
         *offset = (unsigned long) &o.attribute - (unsigned long) &o; \
         *tid = *type = etype; \
-        *elements = elem; }
+        *elements = elem; \
+	*flags = 0;}
 
 
 int wb_vrepwbl::getAttrInfo( const char *attr, pwr_eBix bix, pwr_tCid cid, size_t *size,
-                             size_t *offset, pwr_tTid *tid, int *elements, pwr_eType *type)
+                             size_t *offset, pwr_tTid *tid, int *elements, pwr_eType *type,
+			     int *flags)
 {
   size_t a_size;
   size_t a_offset = 0;
   pwr_tTid a_tid;
   int a_elements;
   pwr_eType a_type;
+  int a_flags;
 
 
   wb_attrname aname = wb_attrname(attr);
   if ( aname.evenSts()) return 0;
 
   if ( getAttrInfoRec( &aname, bix, cid, &a_size, &a_offset,
-                       &a_tid, &a_elements, &a_type, 0)) {
+                       &a_tid, &a_elements, &a_type, &a_flags, 0)) {
     *size = a_size;
     *offset = a_offset;
     *tid = a_tid;
     *elements = a_elements;
     *type = a_type;
+    *flags = a_flags;
     return 1;
   }
   return 0;
@@ -709,7 +713,7 @@ int wb_vrepwbl::getAttrInfo( const char *attr, pwr_eBix bix, pwr_tCid cid, size_
 
 int wb_vrepwbl::getAttrInfoRec( wb_attrname *attr, pwr_eBix bix, pwr_tCid cid, size_t *size,
                                 size_t *offset, pwr_tTid *tid, int *elements, pwr_eType *type,
-                                int level)
+				int *flags, int level)
 {
   if ( level > 0)
     bix = pwr_eBix_rt;
@@ -726,12 +730,14 @@ int wb_vrepwbl::getAttrInfoRec( wb_attrname *attr, pwr_eBix bix, pwr_tCid cid, s
       *offset = (unsigned long) &o.Type - (unsigned long) &o;
       *tid = *type = pwr_eType_TypeId;
       *elements = 1;
+      *flags = 0;
     }
     else if ( attr->attributeIsEqual( "Size", level)) {
       *size = sizeof( o.Size);
       *offset = (unsigned long) &o.Size - (unsigned long) &o;
       *tid = *type = pwr_eType_Int32;
       *elements = 1;
+      *flags = 0;
     }
     return 1;
   }
@@ -803,42 +809,49 @@ int wb_vrepwbl::getAttrInfoRec( wb_attrname *attr, pwr_eBix bix, pwr_tCid cid, s
       *offset = (unsigned long) &o.Info.PgmName - (unsigned long) &o;
       *tid = *type = pwr_eType_String;
       *elements = 1;
+      *flags = 0;
     }
     if ( attr->attributeIsEqual( "Type", level)) {
       *size = sizeof( o.Info.Type);
       *offset = (unsigned long) &o.Info.Type - (unsigned long) &o;
       *tid = *type = pwr_eType_UInt32;
       *elements = 1;
+      *flags = 0;
     }
     if ( attr->attributeIsEqual( "Offset", level)) {
       *size = sizeof( o.Info.Offset);
       *offset = (unsigned long) &o.Info.Offset - (unsigned long) &o;
       *tid = *type = pwr_eType_UInt32;
       *elements = 1;
+      *flags = 0;
     }
     if ( attr->attributeIsEqual( "Size", level)) {
       *size = sizeof( o.Info.Size);
       *offset = (unsigned long) &o.Info.Size - (unsigned long) &o;
       *tid = *type = pwr_eType_UInt32;
       *elements = 1;
+      *flags = 0;
     }
     if ( attr->attributeIsEqual( "Flags", level)) {
       *size = sizeof( o.Info.Flags);
       *offset = (unsigned long) &o.Info.Flags - (unsigned long) &o;
       *tid = *type = pwr_eType_UInt32;
       *elements = 1;
+      *flags = 0;
     }
     if ( attr->attributeIsEqual( "Elements", level)) {
       *size = sizeof( o.Info.Elements);
       *offset = (unsigned long) &o.Info.Elements - (unsigned long) &o;
       *tid = *type = pwr_eType_UInt32;
       *elements = 1;
+      *flags = 0;
     }
     if ( attr->attributeIsEqual( "ParamIndex", level)) {
       *size = sizeof( o.Info.ParamIndex);
       *offset = (unsigned long) &o.Info.ParamIndex - (unsigned long) &o;
       *tid = *type = pwr_eType_UInt32;
       *elements = 1;
+      *flags = 0;
     }
     else IF_ATTR( TypeRef, pwr_eType_TypeId, 1, level)
            return 1;
@@ -885,7 +898,7 @@ int wb_vrepwbl::getAttrInfoRec( wb_attrname *attr, pwr_eBix bix, pwr_tCid cid, s
       }
       if ( attr->hasAttribute( level + 1)) {
         // Fix , Subclass: get cid from type of attr
-        if ( !getAttrInfoRec( attr, bix, cid, size, offset, tid, elements, type, 
+        if ( !getAttrInfoRec( attr, bix, cid, size, offset, tid, elements, type, flags,
                               level + 1))
           // Fix , search in other volumes
           return 0;
@@ -893,13 +906,13 @@ int wb_vrepwbl::getAttrInfoRec( wb_attrname *attr, pwr_eBix bix, pwr_tCid cid, s
       *tid = n_attr->o->a.tid;
       *elements = n_attr->o->a.elements;
       *type = n_attr->o->a.type;
+      *flags = n_attr->o->a.flags;
       return 1;
     }
     else {
       // Search type in other volumes
-      int flags;
       return m_erep->merep()->getAttrInfoRec( attr, bix, cid, size, offset, tid, 
-                                              elements, type, &flags, level);
+                                              elements, type, flags, level);
     }
   }
 
@@ -950,6 +963,7 @@ int wb_vrepwbl::nameToAttrRef( const char *name, pwr_sAttrRef *attrref)
   pwr_tTid a_tid;
   int a_elements;
   pwr_eType a_type;
+  int a_flags;
   pwr_eBix bix;
   pwr_tCid cid;
 
@@ -1009,18 +1023,21 @@ int wb_vrepwbl::nameToAttrRef( const char *name, pwr_sAttrRef *attrref)
     // Try rtbody
     bix = pwr_eBix_rt;
     sts = getAttrInfo( an.name(), bix, cid, &a_size,
-                       &a_offset, &a_tid, &a_elements, &a_type);
+                       &a_offset, &a_tid, &a_elements, &a_type, &a_flags);
     if ( EVEN(sts)) {
       // Try devbody
       bix = pwr_eBix_dev;
       sts = getAttrInfo( an.name(), pwr_eBix_dev, cid, &a_size,
-                         &a_offset, &a_tid, &a_elements, &a_type);
+                         &a_offset, &a_tid, &a_elements, &a_type, &a_flags);
       if ( EVEN(sts)) return sts;
     }
     attrref->Objid = oid;
     attrref->Offset = a_offset;
     attrref->Size = a_size;
     attrref->Body = a_tid;
+    attrref->Flags.m = 0;
+    if ( a_flags & pwr_mAdef_pointer && !(a_flags & pwr_mAdef_private))
+      attrref->Flags.b.Indirect = 1;
   }
   return LDH__SUCCESS;
 }

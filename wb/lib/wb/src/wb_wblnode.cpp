@@ -586,12 +586,13 @@ void wb_wblnode::postBuild()
     int elements;
     pwr_tTypeId tid;
     pwr_eType type;
+    int flags;
     pwr_tObjectIx no;
 
     // Transfer next_oix to volumes rtbody
 
     if ( m_vrep->getAttrInfo( "NextOix", pwr_eBix_sys, o->m_cid, &size, &offset,
-                               &tid, &elements, &type)) {
+                               &tid, &elements, &type, &flags)) {
      
       no = *(pwr_tObjectIx *)((char *)o->rbody + offset);
       if ( no < (pwr_tObjectIx)m_vrep->next_oix)
@@ -800,6 +801,7 @@ void wb_wblnode::buildAttr( ref_wblnode object, pwr_eBix bix)
   int elements;
   pwr_tTypeId tid;
   pwr_eType type;
+  int flags;
   char buf[2048];
   int int_val, current_int_val;
   bool string_continue = false;
@@ -826,12 +828,12 @@ void wb_wblnode::buildAttr( ref_wblnode object, pwr_eBix bix)
 
 
     if ( !m_vrep->getAttrInfo( name(), (pwr_eBix) bix, object->o->m_cid, &size, &offset,
-                               &tid, &elements, &type)) {
+                               &tid, &elements, &type, &flags)) {
       // This might be string special syntax
       wb_attrname n = wb_attrname( name());
       if ( n.hasAttrIndex() && 
            m_vrep->getAttrInfo( n.attribute(), (pwr_eBix) bix, object->o->m_cid, &size, 
-                                &offset, &tid, &elements, &type) &&
+                                &offset, &tid, &elements, &type, &flags) &&
            elements == 1 && 
            (type == pwr_eType_String || type == pwr_eType_Text)) {
         // Index in string attribute marks a new row
