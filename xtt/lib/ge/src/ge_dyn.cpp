@@ -3577,7 +3577,7 @@ int GeMove::scan( grow_tObject object)
 
     if ( move_x_p || move_y_p) {
       if ( move_x_p) {
-	switch ( scale_x_type) {
+	switch ( move_x_type) {
 	case pwr_eType_Float32: move_x = x_orig + (*move_x_p - x_offset) * factor; break;
 	case pwr_eType_Float64: move_x = x_orig + (*(pwr_tFloat64 *) move_x_p - x_offset) * factor; break;
 	case pwr_eType_Int32:   move_x = x_orig + (*(pwr_tInt32 *) move_x_p - x_offset) * factor; break;
@@ -3589,7 +3589,7 @@ int GeMove::scan( grow_tObject object)
 	move_x = x_orig;
 
       if ( move_y_p) {
-	switch ( scale_x_type) {
+	switch ( move_y_type) {
 	case pwr_eType_Float32: move_y = y_orig + (*move_y_p - y_offset) * factor; break;
 	case pwr_eType_Float64: move_y = y_orig + (*(pwr_tFloat64 *) move_y_p - y_offset) * factor; break;
 	case pwr_eType_Int32:   move_y = y_orig + (*(pwr_tInt32 *) move_y_p - y_offset) * factor; break;
@@ -3611,7 +3611,7 @@ int GeMove::scan( grow_tObject object)
   }
   else {
     if ( move_x_p) {
-      switch ( scale_x_type) {
+      switch ( move_x_type) {
       case pwr_eType_Float32: move_x = (*move_x_p - x_offset) * factor; break;
       case pwr_eType_Float64: move_x = (*(pwr_tFloat64 *) move_x_p - x_offset) * factor; break;
       case pwr_eType_Int32:   move_x = (*(pwr_tInt32 *) move_x_p - x_offset) * factor; break;
@@ -3623,7 +3623,7 @@ int GeMove::scan( grow_tObject object)
       move_x = 0;
 
     if ( move_y_p) {
-      switch ( scale_x_type) {
+      switch ( move_y_type) {
       case pwr_eType_Float32: move_y = (*move_y_p - y_offset) * factor; break;
       case pwr_eType_Float64: move_y = (*(pwr_tFloat64 *) move_y_p - y_offset) * factor; break;
       case pwr_eType_Int32:   move_y = (*(pwr_tInt32 *) move_y_p - y_offset) * factor; break;
