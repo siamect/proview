@@ -83,7 +83,7 @@ wb_adef wb_bdef::adef()
   return a;
 }
 
-wb_adef wb_bdef::adef( char *aname)
+wb_adef wb_bdef::adef( const char *aname)
 {
   pwr_tStatus sts;
 

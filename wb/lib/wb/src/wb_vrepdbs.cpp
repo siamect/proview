@@ -432,7 +432,7 @@ wb_vrepdbs::merep() const
 }
 
 bool
-wb_vrepdbs::createSnapshot(char *)
+wb_vrepdbs::createSnapshot(const char *)
 {
     return false;
 }

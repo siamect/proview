@@ -36,7 +36,7 @@ public:
     // Get db volume.
     wb_volume volume(pwr_tVid);
 
-    wb_volume volume(char *name);
+    wb_volume volume(const char *name);
     wb_volume externVolume(pwr_tVid);
     
     wb_volume snapshot(pwr_tVid);

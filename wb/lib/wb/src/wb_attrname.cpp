@@ -2,7 +2,7 @@
 #include <string.h>
 #include "wb_attrname.h"
 
-wb_attrname::wb_attrname( char *name)
+wb_attrname::wb_attrname( const char *name)
 {
   try {
     char str[80];

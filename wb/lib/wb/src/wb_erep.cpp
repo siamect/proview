@@ -74,7 +74,7 @@ wb_vrep *wb_erep::volume(pwr_tStatus *sts, pwr_tVid vid)
   return it->second;
 }
 
-wb_vrep *wb_erep::volume(pwr_tStatus *sts, char *name) // Fix
+wb_vrep *wb_erep::volume(pwr_tStatus *sts, const char *name) // Fix
 {
   vrep_iterator it;
   for ( it = m_vrepdb.begin(); it != m_vrepdb.end(); it++) {
@@ -440,7 +440,7 @@ wb_orep *wb_erep::object(pwr_tStatus *sts, pwr_tOid oid)
   return vrep->object( sts, oid);
 }
 
-wb_orep *wb_erep::object(pwr_tStatus *sts, char *name)
+wb_orep *wb_erep::object(pwr_tStatus *sts, const char *name)
 {
   wb_name n = wb_name(name);
 

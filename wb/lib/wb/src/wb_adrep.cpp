@@ -212,7 +212,7 @@ wb_vrep *wb_adrep::vrep() const
    return m_orep->m_vrep;
 }
 
-char *wb_adrep::name()
+const char *wb_adrep::name() const
 {
   return m_orep->name();
 }

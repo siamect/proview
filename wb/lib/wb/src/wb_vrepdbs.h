@@ -97,7 +97,7 @@ public:
     virtual bool isLocal (wb_orep *) const;
     virtual pwr_tCid cid () const;
     virtual wb_merep *merep () const;
-    virtual bool createSnapshot (char *);
+    virtual bool createSnapshot (const char *);
     virtual void iterObject (wb_dbs *);
     virtual void iterRbody (wb_dbs *);
     virtual void iterDbody (wb_dbs *);

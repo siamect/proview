@@ -63,7 +63,7 @@ wb_vrep *wb_vrepwbl::next() const
   return m_erep->nextVolume( &sts, vid());
 }
 
-void wb_vrepwbl::error( char *msg, char *file, int line_number)
+void wb_vrepwbl::error( const char *msg, const char *file, int line_number)
 {
   cout << "Wbl error: " << msg << ", " << file << " line: " << line_number << endl;
   error_cnt++;
@@ -100,7 +100,7 @@ void wb_vrepwbl::info()
 }
 
 bool
-wb_vrepwbl::createSnapshot(char *fileName)
+wb_vrepwbl::createSnapshot(const char *fileName)
 {
     try {
         wb_dbs dbs(this);
@@ -131,7 +131,7 @@ void wb_vrepwbl::iterRbody( wb_dbs *dbs)
     root_object->iterRbody( dbs);
 }
 
-int wb_vrepwbl::load( char *fname)
+int wb_vrepwbl::load( const char *fname)
 {
   int i;
   char file_spec[200];
@@ -185,7 +185,7 @@ int wb_vrepwbl::load( char *fname)
   return 1;
 }
 
-int wb_vrepwbl::classNameToCid( char *name, pwr_tCid *cid)
+int wb_vrepwbl::classNameToCid( const char *name, pwr_tCid *cid)
 {
   // cout << "classNameToCid : " << name << endl;
 
@@ -205,7 +205,7 @@ ref_wblnode wb_vrepwbl::findObject( pwr_tOix oix)
   return it->second;
 }
 
-ref_wblnode wb_vrepwbl::findClass( char *name)
+ref_wblnode wb_vrepwbl::findClass( const char *name)
 {
   string sname(name);
   iterator_class_list it = m_class_list.find( sname);
@@ -214,7 +214,7 @@ ref_wblnode wb_vrepwbl::findClass( char *name)
   return it->second;
 }
 
-ref_wblnode wb_vrepwbl::findType( char *name)
+ref_wblnode wb_vrepwbl::findType( const char *name)
 {
   wb_name wname( name);
 
@@ -247,7 +247,7 @@ ref_wblnode wb_vrepwbl::findType( pwr_tTid tid)
 }
 
 
-int wb_vrepwbl::getTypeInfo( char *name, pwr_tTid *tid, pwr_eType *type, int *size,
+int wb_vrepwbl::getTypeInfo( const char *name, pwr_tTid *tid, pwr_eType *type, int *size,
 			     int *elements)
 {
   bool type_extern = false;
@@ -535,7 +535,7 @@ int wb_vrepwbl::getClassInfo( pwr_tCid cid, int *rsize, int *dsize)
         *elements = elem; }
 
 
-int wb_vrepwbl::getAttrInfo( char *attr, int bix, pwr_tCid cid, int *size,
+int wb_vrepwbl::getAttrInfo( const char *attr, int bix, pwr_tCid cid, int *size,
 		     int *offset, pwr_tTid *tid, int *elements, pwr_eType *type)
 {
   int a_size;
@@ -758,7 +758,7 @@ int wb_vrepwbl::getAttrInfoRec( wb_attrname *attr, int bix, pwr_tCid cid, int *s
   return 0;
 }
 
-int wb_vrepwbl::nameToOid( char *name, pwr_tOid *oid)
+int wb_vrepwbl::nameToOid( const char *name, pwr_tOid *oid)
 {
   if ( strncmp( name, "_O", 2) == 0) {
     cdh_StringToObjid( name, oid);
@@ -895,12 +895,12 @@ int wb_vrepwbl::getTemplateBody( pwr_tCid cid, int bix, int *size, void **body)
   return 0;
 }
 
-int wb_vrepwbl::load_files( char *file_spec)
+int wb_vrepwbl::load_files( const char *file_spec)
 {
   char found_file[200];
   int sts;
 
-  sts = dcli_search_file( file_spec, found_file, DCLI_DIR_SEARCH_INIT);
+  sts = dcli_search_file( (char *)file_spec, found_file, DCLI_DIR_SEARCH_INIT);
   while( ODD(sts)) {
     ifstream s(found_file);
 
@@ -941,9 +941,9 @@ int wb_vrepwbl::load_files( char *file_spec)
       return 0;
     }
     file_cnt++;
-    sts = dcli_search_file( file_spec, found_file, DCLI_DIR_SEARCH_NEXT);
+    sts = dcli_search_file( (char *)file_spec, found_file, DCLI_DIR_SEARCH_NEXT);
   }
-  dcli_search_file( file_spec, found_file, DCLI_DIR_SEARCH_END);
+  dcli_search_file( (char *)file_spec, found_file, DCLI_DIR_SEARCH_END);
 
   return 1;
 }
@@ -966,7 +966,7 @@ bool wb_vrepwbl::registerObject( pwr_tOix oix, ref_wblnode node)
   return result.second;
 }
 
-void wb_vrepwbl::registerClass( char *name, pwr_tCid cid, ref_wblnode node)
+void wb_vrepwbl::registerClass( const char *name, pwr_tCid cid, ref_wblnode node)
 {
   string sname(name);
 
@@ -974,7 +974,7 @@ void wb_vrepwbl::registerClass( char *name, pwr_tCid cid, ref_wblnode node)
   m_class_list[sname] = node;
 }
 
-void wb_vrepwbl::registerType( char *name, pwr_tTid tid, ref_wblnode node)
+void wb_vrepwbl::registerType( const char *name, pwr_tTid tid, ref_wblnode node)
 {
   string sname(name);
 
@@ -982,7 +982,7 @@ void wb_vrepwbl::registerType( char *name, pwr_tTid tid, ref_wblnode node)
   m_type_list[sname] = node;
 }
 
-void wb_vrepwbl::registerVolume( char *name, pwr_tCid cid, pwr_tVid vid, ref_wblnode node)
+void wb_vrepwbl::registerVolume( const char *name, pwr_tCid cid, pwr_tVid vid, ref_wblnode node)
 {
   m_vid = vid;
   strcpy( volume_name, name);
@@ -992,7 +992,7 @@ void wb_vrepwbl::registerVolume( char *name, pwr_tCid cid, pwr_tVid vid, ref_wbl
 }
 
 
-ref_wblnode wb_vrepwbl::find( char *name)
+ref_wblnode wb_vrepwbl::find( const char *name)
 {
   wb_name oname(name);
 

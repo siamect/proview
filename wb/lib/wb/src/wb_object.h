@@ -33,7 +33,7 @@ public:
     operator wb_orep*() const;
     bool operator==(wb_object&);
     
-    void uniqueName(char *) {}  // Fix
+    void uniqueName(const char *) {}  // Fix
 
     pwr_tStatus checkXref(const char *name);
 
@@ -60,7 +60,7 @@ public:
     pwr_tOix boix(); //< Object index of object before this object 
     pwr_tOix aoix(); //< Object index of object after this object
     
-    char *name();
+    const char *name();
     wb_name longName();
 
     pwr_tTime ohTime();  //< time when this object was last changed
@@ -81,7 +81,7 @@ public:
     wb_object after();     //< next sibling
     wb_object before();    //< previous sibling
     wb_object first();     //< first child
-    wb_object child(char *name);
+    wb_object child(const char *name);
     wb_object last();      //< last child
 
     wb_object next();      //< next in list of objects of same class in one volume

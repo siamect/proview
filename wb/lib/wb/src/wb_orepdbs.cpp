@@ -116,7 +116,7 @@ pwr_tCid wb_orepdbs::cid() const
     return m_o->cid;
 }
 
-char * const wb_orepdbs::name()
+const char * wb_orepdbs::name() const
 {
     if (m_o == 0)
         throw wb_error_str("No current object");
@@ -168,7 +168,7 @@ wb_orep *wb_orepdbs::first(pwr_tStatus *sts) const
     return m_vrep->first(sts, (wb_orep*)this);
 }
 
-wb_orep *wb_orepdbs::child(pwr_tStatus *sts, char *name) const
+wb_orep *wb_orepdbs::child(pwr_tStatus *sts, const char *name) const
 {
     return m_vrep->child(sts, (wb_orep*)this, name);
 }

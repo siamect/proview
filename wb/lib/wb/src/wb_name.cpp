@@ -1,7 +1,7 @@
 #include "wb_name.h"
 
 
-wb_name::wb_name( char *name)
+wb_name::wb_name( const char *name)
 {
   try {
     m_nrep = new wb_nrep( name);

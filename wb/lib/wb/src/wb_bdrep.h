@@ -36,7 +36,7 @@ public:
     wb_name name(ldh_eName type) { wb_name n; return n;} // Fix
     
     wb_adrep *adrep( pwr_tStatus *sts); // Get first attribute
-    wb_adrep *adrep( pwr_tStatus *sts, char *aname);
+    wb_adrep *adrep( pwr_tStatus *sts, const char *aname);
 
     pwr_tStatus sts() { return m_sts;}
     

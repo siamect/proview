@@ -38,7 +38,7 @@ public:
     virtual pwr_tOid boid() const = 0;
     virtual pwr_tOid aoid() const = 0;
     
-    virtual char * const name() = 0;
+    virtual const char * name() const = 0;
     virtual wb_name longName() = 0;
     virtual pwr_tTime ohTime() const = 0;
     
@@ -51,7 +51,7 @@ public:
     virtual wb_orep *after(pwr_tStatus *sts) const = 0;     //< get next sibling
     virtual wb_orep *before(pwr_tStatus *sts) const = 0;    //< get previous sibling
     virtual wb_orep *first(pwr_tStatus *sts) const = 0;     //< get first child
-    virtual wb_orep *child(pwr_tStatus *sts, char *name) const = 0;    //< get named child
+    virtual wb_orep *child(pwr_tStatus *sts, const char *name) const = 0;    //< get named child
     virtual wb_orep *last(pwr_tStatus *sts) const = 0;      //< get last child
     virtual wb_orep *next(pwr_tStatus *sts) const = 0;      //< get next in list of objects of same class in one volume
     virtual wb_orep *previous(pwr_tStatus *sts) const = 0;  //< get previous in list of objects of same class in one volume

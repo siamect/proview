@@ -36,7 +36,7 @@ public:
     wb_merep *merep() { return m_merep;}
     wb_vrep *volume(pwr_tStatus *sts);
     wb_vrep *volume(pwr_tStatus *sts, pwr_tVid vid);
-    wb_vrep *volume(pwr_tStatus *sts, char *name);
+    wb_vrep *volume(pwr_tStatus *sts, const char *name);
     wb_vrep *nextVolume(pwr_tStatus *sts, pwr_tVid vid);
     wb_vrep *externVolume(pwr_tStatus *sts, pwr_tVid vid);
     void addDb( pwr_tStatus *sts, wb_vrep *vrep);
@@ -48,7 +48,7 @@ public:
     void load( pwr_tStatus *sts);
 
     wb_orep *object( pwr_tStatus *sts, pwr_tOid oid);
-    wb_orep *object( pwr_tStatus *sts, char *name);
+    wb_orep *object( pwr_tStatus *sts, const char *name);
 
     wb_cdrep *cdrep( pwr_tStatus *sts, const wb_orep& o);
     wb_tdrep *tdrep( pwr_tStatus *sts, const wb_adrep& a);

@@ -101,7 +101,7 @@ protected:
 public:
 
     wb_name() : wb_status(LDH__NONAME), m_nrep(0) {}
-    wb_name(char*);
+    wb_name(const char*);
     wb_name(wb_nrep*);
     wb_name(const wb_name&);
     
@@ -137,10 +137,10 @@ public:
     char *normName() const throw (wb_error) { check(); return m_nrep->normName();}
     char *name( int ntype) const throw (wb_error) { check(); return m_nrep->name( ntype);}
     char *normName( int ntype) const throw (wb_error) { check(); return m_nrep->normName( ntype);}
-    bool volumeIsEqual( char *n) const throw (wb_error) { check(); return m_nrep->volumeIsEqual( n);}
-    bool objectIsEqual( char *n) const throw (wb_error) { check(); return m_nrep->objectIsEqual( n);}
+    bool volumeIsEqual( const char *n) const throw (wb_error) { check(); return m_nrep->volumeIsEqual( n);}
+    bool objectIsEqual( const char *n) const throw (wb_error) { check(); return m_nrep->objectIsEqual( n);}
     bool segmentIsEqual( char *n, int idx = 0) const throw (wb_error) { check(); return m_nrep->segmentIsEqual( n, idx);}
-    bool attributeIsEqual( char *n, int idx = 0) const throw (wb_error) { check(); return m_nrep->attributeIsEqual( n, idx);}
+    bool attributeIsEqual( const char *n, int idx = 0) const throw (wb_error) { check(); return m_nrep->attributeIsEqual( n, idx);}
 
     // Id representation
     char *vid( char *res = 0) const throw (wb_error) { check(); return m_nrep->volume( res);}

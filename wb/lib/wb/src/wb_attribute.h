@@ -42,7 +42,7 @@ public:
     wb_attribute(const wb_attribute&);
     wb_attribute(pwr_tStatus, wb_orep* const );
     wb_attribute(pwr_tStatus, wb_orep* const, wb_adrep* const);
-    wb_attribute(pwr_tStatus, wb_orep* const, char* aname, char* bname = 0);
+    wb_attribute(pwr_tStatus, wb_orep* const, const char* aname, const char* bname = 0);
 
     ~wb_attribute();
     wb_attribute& operator=(const wb_attribute&);

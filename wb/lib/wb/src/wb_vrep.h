@@ -86,11 +86,11 @@ public:
     virtual bool isLocal(wb_orep *o) const = 0;
     virtual pwr_tVid vid() const = 0;
     virtual pwr_tCid cid() const = 0;
-    virtual void name( char *n) { strcpy( m_name, n);}
-    virtual char *name() { return m_name;}
+    virtual void name( const char *n) { strcpy( m_name, n);}
+    virtual const char *name() { return m_name;}
     virtual wb_merep *merep() const = 0;
 
-    virtual bool createSnapshot(char *fileName) = 0;
+    virtual bool createSnapshot(const char *fileName) = 0;
     
     virtual void iterObject(wb_dbs *) = 0;
     virtual void iterRbody(wb_dbs *) = 0;

@@ -103,7 +103,7 @@ wb_name wb_cdef::name(ldh_eName type)
   return m_cdrep->name(type);
 }
 
-wb_bdef wb_cdef::bdef( char *bname)
+wb_bdef wb_cdef::bdef( const char *bname)
 {
   check();
   pwr_tStatus sts;

@@ -154,7 +154,7 @@ wb_vrepdb::na_k::na_k(wb_orepdb *o)
     set_size(sizeof(m_key));
 }
 
-wb_vrepdb::na_k::na_k(wb_orepdb *o, char *name)
+wb_vrepdb::na_k::na_k(wb_orepdb *o, const char *name)
 {
     memset(&m_key, 0, sizeof(m_key));
     m_key.poix = o->oix();
@@ -173,7 +173,7 @@ wb_vrepdb::na_k::na_k(pwr_tOix poix)
     set_size(sizeof(m_key));
 }
 
-wb_vrepdb::na_k::na_k(pwr_tOix poix, char *name)
+wb_vrepdb::na_k::na_k(pwr_tOix poix, const char *name)
 {
     memset(&m_key, 0, sizeof(m_key));
     m_key.poix = poix;
@@ -914,7 +914,7 @@ wb_vrepdb::first(pwr_tStatus *sts, wb_orep *o) const
     return orep;
 }
 
-wb_orep *wb_vrepdb::child(pwr_tStatus *sts, wb_orep *o, char *name) const
+wb_orep *wb_vrepdb::child(pwr_tStatus *sts, wb_orep *o, const char *name) const
 {
     return 0;
 }

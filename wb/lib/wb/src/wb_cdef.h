@@ -42,7 +42,7 @@ class wb_cdef : public wb_status
     wb_name name(ldh_eName type);
 
     wb_bdef bdef(pwr_tOix bix);
-    wb_bdef bdef(char *bname);
+    wb_bdef bdef(const char *bname);
     wb_bdef bdef(wb_name bname);
 
   private:

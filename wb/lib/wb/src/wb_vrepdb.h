@@ -78,9 +78,9 @@ protected:
 
         na_k();
         na_k(wb_orepdb *o);
-        na_k(wb_orepdb *o, char *name);
+        na_k(wb_orepdb *o, const char *name);
         na_k(pwr_tOix poix);
-        na_k(pwr_tOix poix, char *name);
+        na_k(pwr_tOix poix, const char *name);
         na_k(pwr_tOix poix, wb_name name);
     
     };
@@ -100,7 +100,7 @@ protected:
 #if 0
     int wb_vrepdb::get_ohead(DbTxn *txn, wb_orepdb *o);
     int wb_vrepdb::get_ohead(wb_orep **orep, DbTxn *txn, pwr_tOid oid);
-    int wb_vrepdb::get_ohead(wb_orep **orep, DbTxn *txn, wb_orepdb *o, char *name);
+    int wb_vrepdb::get_ohead(wb_orep **orep, DbTxn *txn, wb_orepdb *o, const char *name);
 
     int wb_vrepdb::put_ohead(DbTxn *txn, wb_orepdb *o, u_int32_t flags);
 
@@ -129,7 +129,7 @@ public:
     virtual wb_erep *erep();
 
     virtual wb_orep *object(pwr_tStatus *sts, pwr_tOid oid);
-    virtual wb_orep *object(pwr_tStatus *sts, char *name);
+    virtual wb_orep *object(pwr_tStatus *sts, const char *name);
     virtual wb_orep *object(pwr_tStatus *sts, wb_orep *parent, wb_name name);
 
     virtual wb_orep *createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination d, wb_name name);
@@ -167,7 +167,7 @@ public:
 
     virtual wb_orep *first(pwr_tStatus *sts, wb_orep *o) const;
 
-    virtual wb_orep *child(pwr_tStatus *sts, wb_orep *o, char *name) const;
+    virtual wb_orep *child(pwr_tStatus *sts, wb_orep *o, const char *name) const;
 
     virtual wb_orep *last(pwr_tStatus *sts, wb_orep *o) const;
 
@@ -179,7 +179,7 @@ public:
 
     virtual bool isLocal(wb_orep *o) const;
     virtual pwr_tVid vid() const;
-    virtual void objectName(wb_orep *o, char *str);
+    virtual void objectName(wb_orep *o, const char *str);
 };
 
 #endif

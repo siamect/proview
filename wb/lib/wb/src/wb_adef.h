@@ -47,7 +47,7 @@ public:
     wb_adef next();
     wb_adef prev();
 
-    char *name();
+    const char *name();
     wb_name longName();
     void *body( void *p = 0);
     

@@ -58,7 +58,7 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep * const orep, wb_adrep * con
   }
 }
 
-wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep * const orep, char *aname, char *bname) :
+wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep * const orep, const char *aname, const char *bname) :
   wb_status(sts), m_orep(orep)
 {
   if ( orep == 0)

@@ -42,7 +42,7 @@ public:
     
     wb_adef adef(); // Get first attribute
     wb_adef adef(pwr_tAix aix);
-    wb_adef adef(char *aname);
+    wb_adef adef(const char *aname);
     wb_adef adef(wb_name aname);
             
 };

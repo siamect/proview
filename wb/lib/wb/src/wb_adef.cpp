@@ -119,7 +119,7 @@ pwr_tOid wb_adef::boid()
   return m_adrep->boid();
 }
 
-char *wb_adef::name()
+const char *wb_adef::name()
 {
   check();
   return m_adrep->name();

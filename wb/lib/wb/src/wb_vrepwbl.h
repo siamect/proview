@@ -58,7 +58,7 @@ public:
 
     wb_vrep *next() const;
 
-    virtual bool createSnapshot(char *fileName);
+    virtual bool createSnapshot(const char *fileName);
 
     virtual void iterObject(wb_dbs *);
     virtual void iterRbody(wb_dbs *);
@@ -66,43 +66,43 @@ public:
 #if 0
     void iterObject( void *udata,
 		     pwr_tStatus (*bc)(void *,pwr_tOid, pwr_tCid, pwr_tOid, pwr_tOid,
-				       pwr_tOid, pwr_tOid, pwr_tOid, char *,
+				       pwr_tOid, pwr_tOid, pwr_tOid, const char *,
 				       pwr_tTime, int, int));
     void iterBody( void *udata,
 		   pwr_tStatus (*bc)(void *,pwr_tOid, void *, void *));
 #endif
-    int load( char *fname);
-    int load_files( char *file_spec);
+    int load( const char *fname);
+    int load_files( const char *file_spec);
     void info();
 
     wb_wblfile *file[WBL_FILEMAX];
     wb_wblnode *root_object;
 
-    void error( char *msg, char *file, int line_number);
-    ref_wblnode find( char *name);
-    void registerClass( char *name, pwr_tCid cid, ref_wblnode node);
-    void registerType( char *name, pwr_tTid tid, ref_wblnode node);
-    void registerVolume( char *name, pwr_tCid cid, pwr_tVid vid, ref_wblnode node);
+    void error( const char *msg, const char *file, int line_number);
+    ref_wblnode find( const char *name);
+    void registerClass( const char *name, pwr_tCid cid, ref_wblnode node);
+    void registerType( const char *name, pwr_tTid tid, ref_wblnode node);
+    void registerVolume( const char *name, pwr_tCid cid, pwr_tVid vid, ref_wblnode node);
     bool registerObject( pwr_tOix oix, ref_wblnode node);
     int nextOix() { return ++next_oix; }
-    int classNameToCid( char *name, pwr_tCid *cid);
+    int classNameToCid( const char *name, pwr_tCid *cid);
     int getTemplateBody( pwr_tCid cid, int bix, int *size, void **body);
     int getTypeInfo( pwr_tTid tid, pwr_eType *type, int *size,
 		     int *elements);
-    int getTypeInfo( char *type, pwr_tTid *tid, pwr_eType *type, int *size,
+    int getTypeInfo( const char *type, pwr_tTid *tid, pwr_eType *type, int *size,
 		     int *elements);
     int getClassInfo( pwr_tCid cid, int *rsize, int *dsize);
-    int getAttrInfo( char *attr, int bix, pwr_tCid cid, int *size,
+    int getAttrInfo( const char *attr, int bix, pwr_tCid cid, int *size,
 		     int *offset, pwr_tTid *tid, int *elements, pwr_eType *type);
     int getAttrInfoRec( wb_attrname *attr, int bix, pwr_tCid cid, int *size,
 			int *offset, pwr_tTid *tid, int *elements, 
 			pwr_eType *type, int level);
     ref_wblnode findObject( pwr_tOix oix);
-    ref_wblnode findClass( char *name);
-    ref_wblnode findType( char *name);
+    ref_wblnode findClass( const char *name);
+    ref_wblnode findType( const char *name);
     ref_wblnode findClass( pwr_tCid cid);
     ref_wblnode findType( pwr_tTid tid);
-    int nameToOid( char *name, pwr_tOid *oid);
+    int nameToOid( const char *name, pwr_tOid *oid);
 
     int error_cnt;
     int file_cnt;

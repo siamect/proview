@@ -42,16 +42,16 @@ public:
     
     pwr_tVid vid() const { return m_vrep->vid();}
     pwr_tCid cid() const { return m_vrep->cid();}
-    char *name() const { return m_vrep->name();}
+    const char *name() const { return m_vrep->name();}
 
     wb_volume next() const;
 
     wb_object object() const; // Get root list
     wb_object object(pwr_tOid oid) const;
     wb_object object(pwr_tCid cid) const { wb_object o; return o;} // Fix
-    wb_object object(char *name) const;
+    wb_object object(const char *name) const;
     
-    wb_attribute attribute(pwr_tOid oid, char *aname, char *bname) const;
+    wb_attribute attribute(pwr_tOid oid, const char *aname, const char *bname) const;
     wb_attribute attribute(wb_object o, wb_adef adef) { wb_attribute a; return a;}; // Fix
     wb_attribute attribute(wb_object o, wb_name aname) { wb_attribute a; return a;}; // Fix
     wb_attribute attribute(wb_name aname) { wb_attribute a; return a;}; // Fix
@@ -59,10 +59,10 @@ public:
     wb_attribute attribute() { wb_attribute a; return a;}; // Fix
 
     wb_adef adef(pwr_sAttrRef *arp) { wb_adef a; return a;}; // Fix
-    wb_adef adef(pwr_tCid cid, char *bname, char *aname);
+    wb_adef adef(pwr_tCid cid, const char *bname, const char *aname);
 
-    wb_bdef bdef(wb_cdef cdef, char *bname);
-    wb_bdef bdef(wb_object o, char *bname);
+    wb_bdef bdef(wb_cdef cdef, const char *bname);
+    wb_bdef bdef(wb_object o, const char *bname);
     
     wb_cdef cdef(wb_object o);
     wb_cdef cdef(pwr_tCid cid);
@@ -79,7 +79,7 @@ public:
     
     bool isLocal(wb_object &o) const;
     
-    bool createSnapshot(char *fileName) { return m_vrep->createSnapshot(fileName);}
+    bool createSnapshot(const char *fileName) { return m_vrep->createSnapshot(fileName);}
     
 };
 

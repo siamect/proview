@@ -48,7 +48,7 @@ pwr_tOid wb_orepdb::aoid() const
     return m_ohead.aoid;
 }
 
-char *const wb_orepdb::name()
+const char * wb_orepdb::name() const
 {
     return m_ohead.name;
 }
@@ -91,7 +91,7 @@ wb_orep *wb_orepdb::first(pwr_tStatus *sts) const
     return m_vrep->first(sts, (wb_orep*)this);
 }
 
-wb_orep *wb_orepdb::child(pwr_tStatus *sts, char *name) const
+wb_orep *wb_orepdb::child(pwr_tStatus *sts, const char *name) const
 {
     return m_vrep->child(sts, (wb_orep*)this, name);
 }

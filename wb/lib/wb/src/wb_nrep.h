@@ -54,12 +54,12 @@ private:
   pwr_tStatus status;
 
   void parse() throw (wb_error);
-  char *objectName( char *n, char *res = 0);
-  char *segmentName( char *n, int idx = 0, char *res = 0);
-  char *attributeName( char *n, int idx = 0, char *res = 0);
-  char *pathName( char *n, char *res = 0);
-  char *volumeName( char *n, char *res = 0);
-  char *nameName( char *n, int ntype, char *res);
+  char *objectName( const char *n, char *res = 0);
+  char *segmentName( const char *n, int idx = 0, char *res = 0);
+  char *attributeName( const char *n, int idx = 0, char *res = 0);
+  char *pathName( const char *n, char *res = 0);
+  char *volumeName( const char *n, char *res = 0);
+  char *nameName( const char *n, int ntype, char *res);
 
 public:
 
@@ -67,7 +67,7 @@ public:
   wb_nrep *ref();
 
   wb_nrep();
-  wb_nrep( char *n) throw (wb_error);
+  wb_nrep( const char *n) throw (wb_error);
   wb_nrep( const wb_nrep& n);
   ~wb_nrep();
   
@@ -102,15 +102,15 @@ public:
   char *normName() { return norm_name;}
   char *name( int ntype, char *res = 0);
   char *normName( int ntype, char *res = 0);
-  bool volumeIsEqual( char *n);
-  bool objectIsEqual( char *n);
-  bool segmentIsEqual( char *n, int idx = 0);
-  bool attributeIsEqual( char *n, int idx = 0);
+  bool volumeIsEqual( const char *n);
+  bool objectIsEqual( const char *n);
+  bool segmentIsEqual( const char *n, int idx = 0);
+  bool attributeIsEqual( const char *n, int idx = 0);
   int bodyOffset() const { return b_offset;}
   int bodySize() const { return b_size;}
 
-  static char *unatName( char *name);
-  static bool checkObjectName( char *name);
+  static char *unatName( const char *name);
+  static bool checkObjectName( const char *name);
 };
   
 #endif

@@ -42,8 +42,8 @@ class wb_cdrep
     void name(wb_name *name);
     
     wb_bdrep *bdrep( pwr_tStatus *sts, int bix);
-    wb_bdrep *bdrep( pwr_tStatus *sts, char *bname);
-    wb_adrep *adrep( pwr_tStatus *sts, char *aname);
+    wb_bdrep *bdrep( pwr_tStatus *sts, const char *bname);
+    wb_adrep *adrep( pwr_tStatus *sts, const char *aname);
     
     void templateBody( pwr_tStatus *sts, cdh_eBix bix, void *p);
 

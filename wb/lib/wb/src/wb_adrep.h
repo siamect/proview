@@ -52,7 +52,7 @@ class wb_adrep
     int flags() {return m_flags;}
     pwr_tOid boid();
 
-    char *name();
+    const char *name() const;
     wb_name longName();
     void *body( void *p = 0);
 

@@ -118,7 +118,7 @@ wb_object wb_volume::object(pwr_tOid oid) const
     return o;
 }
 
-wb_object wb_volume::object(char *name) const
+wb_object wb_volume::object(const char *name) const
 {
     pwr_tStatus sts;
     wb_orep *orep;
@@ -137,7 +137,7 @@ wb_object wb_volume::object(char *name) const
     return o;
 }
 
-wb_adef wb_volume::adef( pwr_tCid cid, char *bname, char *aname)
+wb_adef wb_volume::adef( pwr_tCid cid, const char *bname, const char *aname)
 {
   pwr_tStatus sts;
 
@@ -149,12 +149,12 @@ wb_adef wb_volume::adef( pwr_tCid cid, char *bname, char *aname)
   return bdef.adef( aname);
 }
 
-wb_bdef wb_volume::bdef(wb_cdef cdef, char *bname)
+wb_bdef wb_volume::bdef(wb_cdef cdef, const char *bname)
 {
   return cdef.bdef( bname);
 }
 
-wb_bdef wb_volume::bdef(wb_object o, char *bname)
+wb_bdef wb_volume::bdef(wb_object o, const char *bname)
 {
   wb_orep *orep = o;
   wb_cdef cdef = wb_cdef(*orep);
@@ -197,7 +197,7 @@ wb_cdef wb_volume::cdef(wb_name n)
   return wb_cdef(m_vrep->merep()->cdrep( &sts, n));
 }
 
-wb_attribute wb_volume::attribute(pwr_tOid oid, char *aname, char *bname) const
+wb_attribute wb_volume::attribute(pwr_tOid oid, const char *aname, const char *bname) const
 {
     pwr_tStatus sts;
     wb_orep *orep;

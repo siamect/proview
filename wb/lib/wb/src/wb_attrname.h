@@ -6,7 +6,7 @@
 class wb_attrname : public wb_name
 {
  public:
-  wb_attrname(char *);
+  wb_attrname(const char *);
 };
 
 #endif

@@ -88,7 +88,7 @@ wb_object::operator wb_orep*() const
     return m_orep;
 }
 
-char *wb_object::name()
+const char *wb_object::name()
 { 
   return m_orep->name();
 }
