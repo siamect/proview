@@ -938,9 +938,6 @@ struct pwr_s_Node
     pwr_tString80      	ProcMessage[40];
     pwr_tOid		ProcObject[40];
     pwr_tTime		ProcTimeStamp[40];
-    pwr_tStatus		ApplStatus[20];
-    pwr_tOid		ApplObject[20];
-    pwr_tTime		ApplTimeStamp[20];
     pwr_tBoolean	EmergBreakTrue;
     pwr_tUInt32		EmergBreakSelect;
     };
