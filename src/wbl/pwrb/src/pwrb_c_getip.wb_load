@@ -97,7 +97,7 @@ SObject pwrb:Class
     EndObject
     Object GraphPlcNode $GraphPlcNode
       Body SysBody
-        Attr object_type = 269
+        Attr object_type = 252
         Attr parameters[0] = 0
         Attr parameters[1] = 0
         Attr parameters[2] = 1
