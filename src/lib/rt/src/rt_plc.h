@@ -145,6 +145,7 @@ struct plc_sThread {
 
   plc_sArea		copy;
   io_tCtx		plc_io_ctx;
+  pwr_tBoolean		first_scan;
 };
 
 struct plc_sProcess {

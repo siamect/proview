@@ -228,6 +228,9 @@ scan (
     }
   }
 
+  if ( tp->first_scan)
+    tp->first_scan = 0;
+
   time_Uptime(&sts, &tp->after_scan, NULL);
   if (sts == TIME__CLKCHANGE) {
     tp->after_scan = tp->before_scan;
