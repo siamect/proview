@@ -430,11 +430,6 @@ subcCheck (
   static pwr_tBoolean   first = 1;
 
   if (first) {
-#ifdef OS_LINUX
-    cycle = 3 * sysconf(_SC_CLK_TCK);
-#else
-    cycle = 3 * CLK_TCK;
-#endif
     setInterval(&cycle, gdbroot->db->subc_chk_int);
     first = 0;
   }
