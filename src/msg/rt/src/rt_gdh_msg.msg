@@ -63,5 +63,5 @@ nosuchclass	<no such class exists>					/error
 notowned	<object is not owned by this node>			/error
 voldelete	<a volume cannot be deleted>				/error
 rtnotstarted	<Proview runtime is not started>			/error
-
+nocclasssup	<Cached Classes not supported on other node>		/error
 .end
