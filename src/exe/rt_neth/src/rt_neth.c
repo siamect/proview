@@ -153,8 +153,6 @@ main (
 
   init();
 
-  gdbroot->db->log.b.messages = 0;
-
   /* Start receive loop which never exits (hopefully).  */
 
   mainLoop();
