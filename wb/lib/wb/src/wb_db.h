@@ -110,7 +110,7 @@ public:
   Dbt m_data;
         
   wb_db_info(wb_db *db);
-  ~wb_db_info();
+  //~wb_db_info();
 
   void put(wb_db_txn *txn);
   void get(wb_db_txn *txn);
