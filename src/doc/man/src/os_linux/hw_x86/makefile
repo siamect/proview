@@ -28,6 +28,15 @@ sources := $(sort \
              ) \
            )
 
+en_us_sources := $(sort \
+             $(foreach file, \
+               $(foreach dir, \
+                 $(pwre_sroot)/doc/man/en_us, \
+                 $(wildcard $(dir)/*.pdf) \
+               ), $(notdir $(file)) \
+             ) \
+           )
+
 sv_se_sources := $(sort \
              $(foreach file, \
                $(foreach dir, \
@@ -39,9 +48,11 @@ sv_se_sources := $(sort \
 
 pdf_sources := $(filter %.pdf,$(sources))
 pdf_sv_se_sources := $(filter %.pdf,$(sv_se_sources)) 
+pdf_en_us_sources := $(filter %.pdf,$(en_us_sources)) 
 
 export_pdf := $(patsubst %.pdf,$(doc_dir)/%.pdf,$(pdf_sources))
 export_pdf_sv_se := $(patsubst %.pdf,$(doc_dir)/sv_se/%.pdf,$(pdf_sv_se_sources))
+export_pdf_en_us := $(patsubst %.pdf,$(doc_dir)/en_us/%.pdf,$(pdf_en_us_sources))
 clean_pdf := $(patsubst %.pdf,clean_%.pdf,$(pdf_sources))
 
 .SUFFIXES:
@@ -54,6 +65,10 @@ $(doc_dir)/sv_se/%.pdf : $(pwre_sroot)/doc/man/sv_se/%.pdf
 	@ $(log_h_h)
 	@ $(cp) $(cpflags) $(source) $(target)
 
+$(doc_dir)/en_us/%.pdf : $(pwre_sroot)/doc/man/en_us/%.pdf
+	@ $(log_h_h)
+	@ $(cp) $(cpflags) $(source) $(target)
+
 .PHONY : all init copy lib exe clean realclean \
          $(clean_pdf)
 
@@ -61,7 +76,7 @@ all : init copy lib exe
 
 init :
 
-copy : $(export_pdf) $(export_pdf_sv_se)
+copy : $(export_pdf) $(export_pdf_en_us) $(export_pdf_sv_se)
 
 lib :
 
