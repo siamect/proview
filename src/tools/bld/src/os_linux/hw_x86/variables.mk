@@ -113,7 +113,7 @@ ifeq ($(pwre_btype),rls)
   dolist	= /lis=$(list)
   domap		= -Xlinker -Map -Xlinker $(map)
 else
-  cflags	:= -c -g -Wall -Wno-deprecated -D_GNU_SOURCE -D_REENTRANT
+  cflags	:= -c -g -Wall -D_GNU_SOURCE -D_REENTRANT
   cxxflags	:= $(cflags) -Wno-deprecated
   mmflags	:= -Wno-deprecated
   linkflags	:= -g -L/usr/local/lib -L$(lib_dir) -lrt
