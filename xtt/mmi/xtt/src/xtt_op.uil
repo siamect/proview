@@ -108,10 +108,57 @@ object  op_window : XmMainWindow
   };
   controls
   {
+!     XmMenuBar	op_menu;
      XmForm     op_form;
   };
 };
 
+object op_menu : XmMenuBar
+{
+  arguments
+  {
+    XmNorientation 	= XmHORIZONTAL;
+    XmNspacing  	= 15;
+!    XmNmenuHelpWidget 	= XmCascadeButton eve_help_entry; 
+  };
+  controls
+  {
+    XmCascadeButton eve_file_entry;
+!    XmCascadeButton eve_functions_entry;
+!    XmCascadeButton eve_view_entry;
+!    XmCascadeButton eve_help_entry;
+  };
+};
+
+object eve_file_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString  = c_File;
+    XmNfontList	    = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Close;
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+!            XmNactivateCallback = procedure ev_eve_activate_exit(ev_ctx);
+          };
+	};
+      };
+    };
+  };
+};
 
 object op_form : XmForm
 {
