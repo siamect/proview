@@ -49,7 +49,7 @@ $(load_dir)/pwrb.dbs :
 
 $(inc_dir)/pwr_baseclasses.h :
 	@ echo "Generating struct files for pwrb classes..."
-	@ co_convert -sv -d $(inc_dir) "$(pwre_sroot)/wbl/pwrb/src/pwrb_c_*.wb_load"
+	@ co_convert -s -d $(inc_dir) "$(pwre_sroot)/wbl/pwrb/src/pwrb_c_*.wb_load"
 
 $(doc_dir)/orm/pwrb_allclasses.html :
 	@ echo "Generating html files for pwrb classes..."
