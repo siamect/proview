@@ -28,6 +28,12 @@ extern "C" {
 }
 #endif
 
+#ifndef rt_qcom_h
+extern "C" {
+#include "rt_qcom.h"
+}
+#endif
+
 #ifndef xtt_xnav_h
 #include "xtt_xnav.h"
 #endif
@@ -57,6 +63,8 @@ class Xtt {
     Widget	india_label;
     Widget	india_text;
     void	(*india_ok_cb)( Xtt *, char *);
+    qcom_sQid	queid;
+    XtIntervalId  timerid;
 };
 
 #endif

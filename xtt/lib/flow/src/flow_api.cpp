@@ -43,6 +43,11 @@ int flow_OpenTrace( flow_tCtx ctx, char *filename)
   return ctx->open( filename, flow_eSaveMode_Trace);
 }
 
+void flow_DeleteAll( flow_tCtx ctx)
+{
+  ctx->delete_all();
+}
+
 void flow_DeleteNode( flow_tNode node)
 {
   ((FlowNode *)node)->ctx->delete_object((FlowArrayElem *)node);
@@ -519,6 +524,29 @@ void flow_SetAttributes( flow_tCtx ctx, flow_sAttributes *attr,
     ctx->select_policy = attr->select_policy;
   if ( mask & flow_eAttr_display_level)
     ctx->display_level = attr->display_level;
+  if ( mask & flow_eAttr_zoom_factor)
+    ctx->zoom_factor = attr->zoom_factor;
+}
+
+void flow_GetAttributes( flow_tCtx ctx, flow_sAttributes *attr)
+{
+  attr->base_zoom_factor = ctx->base_zoom_factor;
+  attr->offset_x = ctx->offset_x;
+  attr->offset_y = ctx->offset_y;
+  attr->grid_size_x = ctx->grid_size_x;
+  attr->grid_size_y = ctx->grid_size_y;
+  attr->grid_on = ctx->grid_on;
+  attr->user_highlight = ctx->user_highlight;
+  attr->draw_delta = ctx->draw_delta;
+  attr->grafcet_con_delta = ctx->grafcet_con_delta;
+  attr->refcon_width = ctx->refcon_width;
+  attr->refcon_height = ctx->refcon_height;
+  attr->refcon_linewidth = ctx->refcon_linewidth;
+  attr->refcon_textsize = ctx->refcon_textsize;
+  attr->application_paste = ctx->application_paste;
+  attr->select_policy = ctx->select_policy;
+  attr->display_level = ctx->display_level;
+  attr->zoom_factor = ctx->zoom_factor;
 }
 
 void flow_PositionToPixel( flow_tCtx ctx, double x, double y, 

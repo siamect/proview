@@ -409,15 +409,17 @@ static void hist_display_in_xnav_cb( void *ctx, pwr_tObjid objid)
 static void hist_action_inputfocus( Widget w, XmAnyCallbackStruct *data)
 {
   Arg args[1];
-  Hist *histOP;
+  Hist *hist;
 
-  XtSetArg    (args[0], XmNuserData, &histOP);
+  XtSetArg    (args[0], XmNuserData, &hist);
   XtGetValues (w, args, 1);
   //printf("focus\n");
   //histOP->hist->set_input_focus();
 //?????????????????????
   //if ( ev && ev->hist_displayed)
-  //  ev->hist->set_input_focus();
+ //  ev->hist->set_input_focus();
+  hist->hist->set_input_focus();
+
 }
 
 

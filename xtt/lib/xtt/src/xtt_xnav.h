@@ -170,6 +170,7 @@ class ApplList {
     void remove( void *ctx);
     int find( applist_eType type, char *name, char *instance, void **ctx);
     int find( applist_eType type, pwr_tObjid objid, void **ctx);
+    void swap( int mode);
 };
 
 class XNavGbl {
@@ -333,6 +334,7 @@ class XNav {
     int open_object( pwr_tObjid objid);
     int open_crossref( pwr_tObjid objid);
     int open_help();
+    void swap( int mode);
 
 
     // Command module member functions

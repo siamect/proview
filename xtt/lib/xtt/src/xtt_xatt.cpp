@@ -479,6 +479,11 @@ void XAtt::pop()
   flow_MapWidget( parent_wid);
 }
 
+void XAtt::swap( int mode)
+{
+  ((XAttNav *)xattnav)->swap( mode);
+}
+
 XAtt::~XAtt()
 {
   if ( set_focus_disabled)

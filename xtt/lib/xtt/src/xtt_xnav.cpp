@@ -50,6 +50,7 @@ extern "C" {
 #include "xtt_menu.h"
 #include "xtt_xatt.h"
 #include "xtt_xcrr.h"
+#include "xtt_ge.h"
 
 #define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
 #define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
@@ -3423,6 +3424,26 @@ int ApplList::find( applist_eType type, char *name, char *instance, void **ctx)
   return 0;
 }
 
+void ApplList::swap( int mode)
+{
+  ApplListElem *elem;
+
+  for ( elem = root; elem; elem = elem->next) {
+    switch( elem->type) {
+    case applist_eType_Graph:
+      ge_swap( (ge_tCtx)elem->ctx, mode);
+      break;
+    case applist_eType_Trace:
+      trace_swap( (tra_tCtx)elem->ctx, mode);
+      break;
+    case applist_eType_Attr:
+      ((XAtt *)elem->ctx)->swap( mode);
+      break;
+    default: ;
+    }
+  }
+}
+
 char *XNav::get_message( int sts)
 {
   static char msg[256];
@@ -3505,10 +3526,28 @@ int XNav::show_object_as_struct(
   return XNAV__SUCCESS;
 }
 
+void XNav::swap( int mode)
+{
+  if ( !mode)
+    printf( "XNav swap start\n");
+  else
+    printf( "XNav swap done\n");
 
+  appl.swap( mode);
 
-
-
-
+  if ( mode == 0) {
+    if ( trace_started) {
+      brow_TraceClose( brow->ctx);
+      XtRemoveTimeOut( trace_timerid);
+    }
+  }
+  else if ( mode == 1) {
+    if ( trace_started) {
+      brow_TraceInit( brow->ctx, xnav_trace_connect_bc, 
+			    xnav_trace_disconnect_bc, xnav_trace_scan_bc);
+      xnav_trace_scan( this);
+    }
+  }
+}
 
 

@@ -67,6 +67,7 @@ class XAtt {
     int open_changevalue( char *name);
     void change_value_close();
     void pop();
+    void swap( int mode);
 };
 
 

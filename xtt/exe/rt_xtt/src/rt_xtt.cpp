@@ -13,6 +13,8 @@
 extern "C" {
 #include "rt_gdh.h"
 #include "rt_gdh_msg.h"
+#include "rt_ini_event.h"
+#include "rt_qcom_msg.h"
 #include "co_cdh.h"
 #include "co_time.h"
 #include "pwr_baseclasses.h"
@@ -229,14 +231,44 @@ static void xtt_hotkey_ResetDig( Widget w, XKeyEvent* ev, String* av, Cardinal* 
     printf("rt_xtt hotkey: SetDig. Can't get %s\n", name);
 }
 
-static void xtt_mainloop (XtAppContext AppCtx)
+static void xtt_qcom_events( Xtt *xtt)
+{
+  char mp[2000];
+  qcom_sQid qid = qcom_cNQid;
+  qcom_sGet get;
+  int swap = 0;
+  pwr_tStatus sts = 1;
+
+  while ( ODD(sts)) {
+    get.maxSize = sizeof(mp);
+    get.data = mp;
+    qcom_Get( &sts, &xtt->queid, &get, 0);
+    if ( !(sts == QCOM__TMO || sts == QCOM__QEMPTY)) {
+      ini_mEvent  new_event;
+      qcom_sEvent *ep = (qcom_sEvent*) get.data;
+
+      new_event.m  = ep->mask;
+      if (new_event.b.oldPlcStop && !swap) {
+	swap = 1;
+	xtt->xnav->swap(0);
+      } else if (new_event.b.swapDone && swap) {
+	swap = 0;
+	xtt->xnav->swap(1);
+      }
+    }
+  }
+  xtt->timerid = XtAppAddTimeOut(
+	XtWidgetToApplicationContext(xtt->toplevel), 1000,
+	(XtTimerCallbackProc)xtt_qcom_events, xtt);
+}
+
+static void xtt_mainloop (XtAppContext AppCtx, Xtt *xtt)
 {
   XEvent Event;
 
   for (;;)
   {
     XtAppNextEvent (AppCtx, &Event);
-
     if (Event.type != KeyPress || 
         TkSUCCESS != hotkey_Process(HotkeyHandle, &Event)) 
       XtDispatchEvent (&Event);
@@ -855,11 +887,31 @@ Xtt::Xtt( int argc, char *argv[], int *return_sts) :
   char	opplace_str[80] = "";
   int	opplace_found = 0;
   pwr_tObjid op_objid;
+  qcom_sQattr qAttr;
+  qcom_sQid qini;
 
   hot_xtt = this;
 
   sts = gdh_Init("rt_xtt");
   if (EVEN(sts)) {
+    *return_sts = sts;
+    return;
+  }
+
+  if (!qcom_Init(&sts, 0, "rt_xtt")) {
+    *return_sts = sts;
+    return;
+  } 
+
+  qAttr.type = qcom_eQtype_private;
+  qAttr.quota = 100;
+  if (!qcom_CreateQ(&sts, &queid, &qAttr, "events")) {
+    *return_sts = sts;
+    return;
+  } 
+
+  qini = qcom_cQini;
+  if (!qcom_Bind(&sts, &queid, &qini)) {
     *return_sts = sts;
     return;
   }
@@ -993,6 +1045,11 @@ Xtt::Xtt( int argc, char *argv[], int *return_sts) :
   if ( xnav->op)
     xtt_close( this);
 
-  xtt_mainloop( app_ctx);  
+  // Start timer to check for qcom events
+  timerid = XtAppAddTimeOut(
+	XtWidgetToApplicationContext(toplevel), 1000,
+	(XtTimerCallbackProc)xtt_qcom_events, this);
+
+  xtt_mainloop( app_ctx, this);  
 }
 

@@ -3641,6 +3641,28 @@ void Graph::create_axis( grow_tObject *object, double x, double y)
   grow_Redraw( grow->ctx);
 }
 
+void Graph::swap( int mode)
+{
+
+
+  if ( mode == 0) {
+    // Swap starting
+    if ( trace_started) {
+      XtRemoveTimeOut( trace_timerid);
+      grow_TraceClose( grow->ctx);
+      trace_started = 0;
+    }
+  }
+  else if ( mode == 1) {
+    // Swap done
+    if ( !trace_started) {
+      grow_TraceInit( grow->ctx, graph_trace_connect_bc, 
+			    graph_trace_disconnect_bc, graph_trace_scan_bc);
+      trace_started = 1;
+      graph_trace_scan( this);
+    }
+  }
+}
 
 void GraphApplList::insert( void *ctx)
 {

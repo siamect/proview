@@ -606,7 +606,7 @@ int draw_event_handler( FlowCtx *ctx, XEvent event)
       case ButtonPress : 
 
 //        printf( "-- Button event: (%d,%d) button: %d time:%d\n", event.xbutton.x, 
-//		event.xbutton.y, event.xbutton.button, event.xbutton.time);
+//        event.xbutton.y, event.xbutton.button, event.xbutton.time);
 
 //        XSetInputFocus( draw_ctx->display, draw_ctx->window, 
 //		RevertToNone, CurrentTime);

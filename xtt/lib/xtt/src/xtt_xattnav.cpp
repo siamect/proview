@@ -995,6 +995,23 @@ void XAttNav::start_trace()
   }
 }
 
+void XAttNav::swap( int mode)
+{
+  if ( mode == 0) {
+    if ( trace_started) {
+      brow_TraceClose( brow->ctx);
+      XtRemoveTimeOut( trace_timerid);
+    }
+  }
+  else if ( mode == 1) {
+    if ( trace_started) {
+      brow_TraceInit( brow->ctx, xattnav_trace_connect_bc, 
+		      xattnav_trace_disconnect_bc, xattnav_trace_scan_bc);
+      xattnav_trace_scan( this);
+    }
+  }
+}
+
 
 
 

@@ -369,6 +369,11 @@ void ge_pop( ge_tCtx gectx)
   flow_MapWidget( gectx->toplevel);
 }
 
+void ge_swap( ge_tCtx gectx, int mode)
+{
+  ((Graph *)gectx->graph)->swap( mode);
+}
+
 extern "C" ge_tCtx ge_new( Widget parent_wid,
   void			*parent_ctx,
   char 			*name,

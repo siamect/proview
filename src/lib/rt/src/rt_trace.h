@@ -63,6 +63,8 @@ struct tra_sCtx{
 					  unsigned long utility, 
 					  char *arg);
   trace_t_node		*trace_list;
+  char			filename[200];
+  int			version;
 };
 
 
@@ -82,5 +84,12 @@ int trace_search_object( 	tra_tCtx	tractx,
 				char		*object_str);
 void trace_pop( tra_tCtx	tractx);
 
+void trace_swap( tra_tCtx tractx, int mode);
+
 #endif
+
+
+
+
+
 

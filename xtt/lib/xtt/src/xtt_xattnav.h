@@ -86,6 +86,7 @@ class XAttNav {
     void enable_events();
     int select_by_name( char *name);
     void start_trace();
+    void swap( int mode);
 };
 
 

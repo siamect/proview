@@ -1813,6 +1813,15 @@ static int graph_object_collect_build( Graph *graph, pwr_tObjid objid)
   // Register scan function
   graph->graph_object_scan = graph_object_collect_scan;
 
+
+  // Set graph attributes
+  grow_sAttributes grow_attr;
+  unsigned long mask = 0;
+
+  mask |= grow_eAttr_double_buffer_on;
+  grow_attr.double_buffer_on = 1;
+  grow_SetAttributes( graph->grow->ctx, &grow_attr, mask);
+
   return 1;
 }
 

@@ -11,6 +11,10 @@
 #include <string.h>
 #include <stdlib.h>
 
+#if defined OS_LINUX
+#include <sys/stat.h>
+#endif
+
 #include "pwr.h"
 #include "pwr_baseclasses.h"
 #include "pwr_privilege.h"
@@ -1134,6 +1138,65 @@ void trace_pop( tra_tCtx	tractx)
 */
 }
 
+void trace_swap( tra_tCtx tractx, int mode)
+{
+  pwr_tStatus sts;
+
+  if ( mode == 0) {
+    if ( tractx->trace_started) {
+      flow_TraceClose( tractx->flow_ctx);
+      XtRemoveTimeOut( tractx->trace_timerid);
+    }
+  }
+  else {
+    if ( tractx->trace_started) {
+      int version = 0;
+#if defined OS_LINUX
+      {
+	struct stat info;
+
+	if ( stat( tractx->filename, &info) != -1)
+	  version = info.st_ctime;    
+      }
+#endif
+      if ( tractx->version != version) {
+	flow_sAttributes attr;
+	char tfile[200];
+	char *s;
+
+	// Temporary file to store trace objects
+	
+	strcpy( tfile, "/tmp/");
+	if ( (s = strrchr( tractx->filename, '/')))
+	  strcat( tfile, s+1);
+	else
+	  strcat( tfile, tractx->filename);
+
+	flow_GetAttributes( tractx->flow_ctx, &attr);
+	flow_SaveTrace( tractx->flow_ctx, tfile);
+	tractx->version = version;
+	tractx->trace_started = 0;
+	flow_SetNodraw( tractx->flow_ctx);
+	flow_DeleteAll( tractx->flow_ctx);
+	flow_Open( tractx->flow_ctx, tractx->filename);
+	flow_SetAttributes( tractx->flow_ctx, &attr, ~0);
+	flow_Zoom( tractx->flow_ctx, 1);
+	flow_ResetNodraw( tractx->flow_ctx);
+	flow_Redraw( tractx->flow_ctx);
+	trace_start( tractx);
+	flow_OpenTrace( tractx->flow_ctx, tfile);
+      }
+      else {
+	sts = flow_TraceInit( tractx->flow_ctx, trace_connect_bc, 
+			      trace_disconnect_bc, NULL);
+	if ( EVEN(sts))
+	  return;
+	trace_scan( tractx);
+      }
+    }
+  }
+}
+
 tra_tCtx trace_new( 	void 		*parent_ctx, 
 			Widget 		parent_wid, 
 			pwr_tObjid	objid,
@@ -1322,6 +1385,16 @@ tra_tCtx trace_new( 	void 		*parent_ctx,
   flow_Open( tractx->flow_ctx, filename);
   trace_trasetup( tractx);
   trace_start( tractx);
+
+  strcpy( tractx->filename, filename);
+#if defined OS_LINUX
+  {
+    struct stat info;
+
+    if ( stat( tractx->filename, &info) != -1)
+      tractx->version = info.st_ctime;    
+  }
+#endif
 
   return tractx;
 }

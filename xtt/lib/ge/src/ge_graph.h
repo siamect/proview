@@ -1221,6 +1221,10 @@ class Graph {
  //! Conversion of an object between different versions.
  /*! \param object	Object to convert. */
  int convert_object( grow_tObject object);
+
+ //! Soft restart
+ /*! \param mode  0: swap starting, 1: swap done. */
+ void swap( int mode);
  
  //! Destructor
  /*! Stop trace (if started), delete open attribute editors, free local database, delete grow and

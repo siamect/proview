@@ -824,19 +824,23 @@ int XNav::show_device()
         strcat( attr_name, ".ErrorCount");
         sts = gdh_GetAttributeCharacteristics ( attr_name,
 		&attrtype, &attrsize, &attroffs, &attrelem);
-        if ( EVEN(sts)) return sts;
+        if ( EVEN(sts)) {
+          strcpy( t.elem[t.elem_cnt].fix_str, "       -");
+	  t.elem[t.elem_cnt++].type_id = xnav_eType_FixStr;
+	}
+	else {
+	  sts = gdh_NameToAttrref( pwr_cNObjid, attr_name, &attrref);
+	  if ( EVEN(sts)) return sts;
 
-        sts = gdh_NameToAttrref( pwr_cNObjid, attr_name, &attrref);
-        if ( EVEN(sts)) return sts;
+	  sts = gdh_DLRefObjectInfoAttrref ( &attrref, &attr_ptr, &subid);
+	  if ( EVEN(sts)) return sts;
 
-        sts = gdh_DLRefObjectInfoAttrref ( &attrref, &attr_ptr, &subid);
-        if ( EVEN(sts)) return sts;
-
-        t.elem[t.elem_cnt].value_p = attr_ptr;
-        t.elem[t.elem_cnt].type_id = attrtype;
-        t.elem[t.elem_cnt].size = attrsize;
-        strcpy( t.elem[t.elem_cnt++].format, "%8d");
-        ts.subid[ts.subid_cnt++] = subid;
+	  t.elem[t.elem_cnt].value_p = attr_ptr;
+	  t.elem[t.elem_cnt].type_id = attrtype;
+	  t.elem[t.elem_cnt].size = attrsize;
+	  strcpy( t.elem[t.elem_cnt++].format, "%8d");
+	  ts.subid[ts.subid_cnt++] = subid;
+	}
 
         // Process
         strcpy( attr_name, object_name);

@@ -58,6 +58,7 @@ typedef struct ge_sCtx {
 
 void ge_pop( ge_tCtx gectx);
 int ge_set_object_focus( ge_tCtx gectx, char *name, int empty);
+void ge_swap( ge_tCtx gectx, int mode);
 
 extern "C" ge_tCtx ge_new( Widget parent_wid,
   void			*parent_ctx,
@@ -86,6 +87,8 @@ extern "C" void ge_delete( ge_tCtx gectx);
 }
 #endif
 #endif
+
+
 
 
 

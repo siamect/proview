@@ -30,6 +30,7 @@ typedef struct {
 	int	application_paste;
 	flow_eSelectPolicy select_policy;
 	int	display_level;
+        double  zoom_factor;
 } flow_sAttributes;
 
 typedef enum {
@@ -48,7 +49,8 @@ typedef enum {
 	flow_eAttr_refcon_textsize	= 1 << 12,
 	flow_eAttr_application_paste	= 1 << 13,
 	flow_eAttr_select_policy	= 1 << 14,
-	flow_eAttr_display_level	= 1 << 15
+	flow_eAttr_display_level	= 1 << 15,
+	flow_eAttr_zoom_factor		= 1 << 16
 	} flow_eAttribute;
 
 
@@ -63,6 +65,7 @@ int flow_Save( flow_tCtx ctx, char *filename);
 int flow_Open( flow_tCtx ctx, char *filename);
 int flow_SaveTrace( flow_tCtx ctx, char *filename);
 int flow_OpenTrace( flow_tCtx ctx, char *filename);
+void flow_DeleteAll( flow_tCtx ctx);
 void flow_DeleteNode( flow_tNode node);
 void flow_DeleteConnection( flow_tCon con);
 int flow_FindSelectedObject( flow_tCtx ctx, flow_tObject object);
@@ -180,6 +183,7 @@ void flow_Zoom( flow_tCtx ctx, double zoom_factor);
 void flow_ZoomAbsolute( flow_tCtx ctx, double zoom_factor);
 void flow_SetAttributes( flow_tCtx ctx, flow_sAttributes *attr,
 	unsigned long mask);
+void flow_GetAttributes( flow_tCtx ctx, flow_sAttributes *attr);
 void flow_PositionToPixel( flow_tCtx ctx, double x, double y, 
 		int *pix_x, int *pix_y);
 void flow_UnZoom( flow_tCtx ctx);
