@@ -78,6 +78,8 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, const char* bname) :
     }
     if ( oddSts())
       m_orep->ref();
+    else
+      m_orep = 0;
   }
 }
 
@@ -109,14 +111,20 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, char const* bname, co
 						       &m_type,
 						       &m_flags, 0)) {
           m_adrep->unref();
+          m_adrep = 0;
           m_sts = LDH__NOSUCHATTR;
         }
-      }
+      } else
+        m_adrep = 0;
+      
       delete cd;
-      if ( bd) delete bd;
+      if ( bd) 
+        delete bd;
     }
     if ( oddSts())
       m_orep->ref();
+    else
+      m_orep = 0;
   }
 }
 
@@ -162,11 +170,13 @@ wb_attribute::wb_attribute(wb_attribute& pa, int idx, const char* aname) :
                                                       &m_type,
                                                       &m_flags, 0)) {
           m_adrep->unref();
+          m_adrep = 0;
           m_sts = LDH__NOSUCHATTR;
         } else {
           m_offset = pa.m_offset + idx * pa.m_size/pa.m_elements;
         }
-      }
+      } else
+        m_adrep = 0;
     }
     if (bd) 
       delete bd;
@@ -192,10 +202,16 @@ wb_attribute::wb_attribute(wb_attribute& pa, int idx, const char* aname) :
 
 wb_attribute::~wb_attribute()
 {
-  if ( m_orep)
+  if ( m_orep) {
     m_orep->unref();
-  if ( m_adrep)
+    m_orep = 0;
+  }
+  
+  if ( m_adrep) {
     m_adrep->unref();
+    m_adrep = 0;
+  }
+  
 }
 
 wb_attribute& wb_attribute::operator=(const wb_attribute& x)
