@@ -976,13 +976,15 @@ pwr_tStatus
 ldh_WbDump(
   ldh_tSession session,
   char *objname,
-  char *dumpfile
+  char *dumpfile,
+  int keep_name
 );
 
 pwr_tStatus 
 ldh_WbLoad(
   ldh_tSession session,
-  char *loadfile
+  char *loadfile,
+  int ignore_oix
 );
 
 ldh_eVolRep

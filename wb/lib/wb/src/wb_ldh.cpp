@@ -350,7 +350,9 @@ ldh_CopyObject(ldh_tSession session, pwr_tObjid *oid, char *name, pwr_tObjid src
   wb_session *sp = (wb_session *)session;
 
   wb_object s_o = sp->object(srcoid);
+  if ( !s_o) return s_o.sts();
   wb_object d_o = sp->object(dstoid);
+  if ( !d_o) return d_o.sts();
   wb_destination d = d_o.destination(dest);
   wb_object o = sp->copyObject(s_o, d, name);
 
@@ -1524,7 +1526,7 @@ ldh_CreateLoadFile(ldh_tSession session)
 }
 
 pwr_tStatus 
-ldh_WbDump( ldh_tSession session, char *objname, char *dumpfile) 
+ldh_WbDump( ldh_tSession session, char *objname, char *dumpfile, int keep_name) 
 {
   wb_session *sp = (wb_session*)session;
   char fname[200];
@@ -1540,6 +1542,8 @@ ldh_WbDump( ldh_tSession session, char *objname, char *dumpfile)
 
   try {
     wb_print_wbl wprint( fp);
+    if ( keep_name)
+      wprint.keepName();
     if ( !objname)
       wprint.printVolume( *sp);
     else {
@@ -1554,7 +1558,7 @@ ldh_WbDump( ldh_tSession session, char *objname, char *dumpfile)
 }
 
 pwr_tStatus 
-ldh_WbLoad( ldh_tSession session, char *loadfile) 
+ldh_WbLoad( ldh_tSession session, char *loadfile, int ignore_oix) 
 {
   wb_session *sp = (wb_session*)session;
   wb_erep *erep = sp->env();
@@ -1594,6 +1598,8 @@ ldh_WbLoad( ldh_tSession session, char *loadfile)
     try {
       dcli_translate_filename( fname, loadfile);
       wb_vrepwbl *vwbl = new wb_vrepwbl( erep);
+      if ( ignore_oix)
+	vwbl->ignoreOix();
       vwbl->load( fname);
 
       cdh_ToLower( vname, vwbl->name());
