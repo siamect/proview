@@ -303,6 +303,14 @@ static void tra_activate_restoretrace( Widget w, tra_tCtx tractx, XmAnyCallbackS
   flow_OpenTrace( tractx->flow_ctx, filename);
 }
 
+static void tra_activate_cleartrace( Widget w, tra_tCtx tractx, XmAnyCallbackStruct *data)
+{
+  if ( !tractx->trace_started)
+    return;
+
+  flow_RemoveTraceObjects( tractx->flow_ctx);
+}
+
 static void tra_activate_display_object( Widget w, tra_tCtx tractx, XmAnyCallbackStruct *data)
 {
   flow_tObject 	node;
@@ -1313,6 +1321,7 @@ tra_tCtx trace_new( 	void 		*parent_ctx,
 	{"tra_activate_print",(caddr_t)tra_activate_print },
 	{"tra_activate_savetrace",(caddr_t)tra_activate_savetrace },
 	{"tra_activate_restoretrace",(caddr_t)tra_activate_restoretrace },
+	{"tra_activate_cleartrace",(caddr_t)tra_activate_cleartrace },
 	{"tra_activate_trace",(caddr_t)tra_activate_trace },
 	{"tra_activate_display_object",(caddr_t)tra_activate_display_object },
 	{"tra_activate_open_object",(caddr_t)tra_activate_open_object },

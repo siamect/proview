@@ -24,6 +24,7 @@ procedure
 	tra_activate_print(integer);
 	tra_activate_savetrace(integer);
 	tra_activate_restoretrace(integer);
+	tra_activate_cleartrace(integer);
 	tra_activate_display_object(integer);
 	tra_activate_open_object(integer);
 	tra_activate_show_cross(integer);
@@ -163,6 +164,18 @@ object file_entry : XmCascadeButton
           callbacks
           {
             XmNactivateCallback = procedure tra_activate_restoretrace(tra_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = c_ClearTrace;
+            XmNfontList	   = menu_font;
+          };
+          callbacks
+          {
+            XmNactivateCallback = procedure tra_activate_cleartrace(tra_ctx);
           };
         };
         XmPushButton

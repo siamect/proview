@@ -71,6 +71,7 @@ c_Help_on_selected_msg  : compound_string("Hjälp för utvalt meddelande");
 
 c_SaveTrace		: compound_string("Spara Trace");
 c_RestoreTrace		: compound_string("Återskapa Trace");
+c_ClearTrace		: compound_string("Rensa Trace");
 c_Mode			: compound_string("Mod");
 c_Trace			: compound_string("Trace");
 c_Simulate		: compound_string("Simulera");
