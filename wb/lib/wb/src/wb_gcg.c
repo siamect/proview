@@ -6553,6 +6553,22 @@ vldh_t_node	node;
 	    return GSX__NEXTNODE;
 	  }
           break;
+        case pwr_eType_Int32: 
+        case pwr_eType_UInt32: 
+        case pwr_eType_Int16: 
+        case pwr_eType_UInt16: 
+        case pwr_eType_Int8: 
+        case pwr_eType_UInt8: 
+        case pwr_eType_Enum: 
+        case pwr_eType_Mask: 
+        case pwr_eType_Status: 
+        case pwr_eType_NetStatus: 
+	  if ( node->ln.classid != pwr_cClass_GetIp)
+	  {
+	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	    return GSX__NEXTNODE;
+	  }
+          break;
         case pwr_eType_String :
 	  if ( node->ln.classid != pwr_cClass_GetSp)
 	  {
@@ -8023,6 +8039,8 @@ vldh_t_node	node;
         case pwr_eType_UInt8  : 
         case pwr_eType_Enum  : 
         case pwr_eType_Mask  : 
+        case pwr_eType_Status  : 
+        case pwr_eType_NetStatus  : 
 	  if ( !(node->ln.classid == pwr_cClass_StoAtoIp ||
 		 node->ln.classid == pwr_cClass_CStoAtoIp ||
 		 node->ln.classid == pwr_cClass_StoIp ||
@@ -10719,10 +10737,13 @@ vldh_t_node	node;
 	/* Check that the parameter exists in the referenced object */
 	sts = ldh_GetObjectBodyDef( ldhses, class, "RtBody", 1, 
 			&bodydef, &rows);
-	if ( EVEN(sts) )
-	{
-	  gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
-	  return GSX__NEXTNODE;
+	if ( EVEN(sts) ) {
+	  sts = ldh_GetObjectBodyDef( ldhses, class, "SysBody", 1, 
+			&bodydef, &rows);
+	  if ( EVEN(sts)) {
+	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
+	    return GSX__NEXTNODE;
+	  }
 	}
 
 	for ( i = 0, found = 0; i < rows; i++)
@@ -10772,14 +10793,16 @@ vldh_t_node	node;
         free((char *) bodydef );
         
 	switch ( info_type ) {
-        case pwr_eType_Int32  : 
-        case pwr_eType_UInt32  : 
-        case pwr_eType_Int16  : 
-        case pwr_eType_UInt16  : 
-        case pwr_eType_Int8  : 
-        case pwr_eType_UInt8  : 
-        case pwr_eType_Enum  : 
-        case pwr_eType_Mask  : 
+        case pwr_eType_Int32: 
+        case pwr_eType_UInt32: 
+        case pwr_eType_Int16: 
+        case pwr_eType_UInt16: 
+        case pwr_eType_Int8: 
+        case pwr_eType_UInt8: 
+        case pwr_eType_Enum: 
+        case pwr_eType_Mask: 
+        case pwr_eType_Status: 
+        case pwr_eType_NetStatus: 
 	  if ( !(node->ln.classid != pwr_cClass_GetIpToA ||
 		 node->ln.classid != pwr_cClass_GetIp)) {
 	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
@@ -13878,7 +13901,9 @@ vldh_t_node	node;
 		 info_type == pwr_eType_Int8 ||
 		 info_type == pwr_eType_UInt8 ||
 		 info_type == pwr_eType_Enum ||
-		 info_type == pwr_eType_Mask)) {
+		 info_type == pwr_eType_Mask ||
+		 info_type == pwr_eType_Status ||
+		 info_type == pwr_eType_NetStatus)) {
 	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
 	    return GSX__NEXTNODE;
 	  }
@@ -14370,7 +14395,9 @@ vldh_t_node	node;
 		 info_type == pwr_eType_Int8 ||
 		 info_type == pwr_eType_UInt8 ||
 		 info_type == pwr_eType_Enum ||
-		 info_type == pwr_eType_Mask)) {
+		 info_type == pwr_eType_Mask ||
+		 info_type == pwr_eType_Status ||
+		 info_type == pwr_eType_NetStatus)) {
 	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
 	    return GSX__NEXTNODE;
 	  }
