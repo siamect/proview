@@ -487,15 +487,29 @@ wb_orep *wb_erep::object(pwr_tStatus *sts, pwr_tOid oid)
   return vrep->object( sts, oid);
 }
 
-wb_orep *wb_erep::object(pwr_tStatus *sts, const char *name)
+wb_orep *wb_erep::object( pwr_tStatus *sts, const char *name)
 {
-  wb_name n = wb_name(name);
+  wb_name n(name);
+  
   if ( n.evenSts()) {
     *sts = n.sts();
     return 0;
   }
 
   wb_vrep *vrep = volume( sts, n.volume());
+  if ( EVEN(*sts)) return 0;
+
+  return vrep->object( sts, n);
+}
+
+wb_orep *wb_erep::object(pwr_tStatus *sts, wb_name &name)
+{
+  if ( name.evenSts()) {
+    *sts = name.sts();
+    return 0;
+  }
+
+  wb_vrep *vrep = volume( sts, name.volume());
   if ( EVEN(*sts)) return 0;
 
   return vrep->object( sts, name);

@@ -131,7 +131,8 @@ wb_dbs::checkObject(sOentry *oep)
   }
 
   m_nTreeObjects++;
-    
+
+  
   //printf("tree: %s\n", oep->o.name);
     
   oep->ref = dbs_dMakeRef(dbs_eSect_object, m_sect[dbs_eSect_object].size);
@@ -140,6 +141,30 @@ wb_dbs::checkObject(sOentry *oep)
   dbs_Qinit(&sts, &oep->o.sib_ll, oep->ref + offsetof(dbs_sObject, sib_ll));
   dbs_Qinit(&sts, &oep->o.o_ll, oep->ref + offsetof(dbs_sObject, o_ll));
 
+  switch (oep->o.cid) {
+  case pwr_eClass_LibHier:
+    if (m_volume.cid == pwr_eClass_ClassVolume)
+      break;
+    oep->o.flags.b.devOnly = 1;
+    break;
+  case pwr_eClass_Alias:
+    if (m_volume.cid == pwr_eClass_ClassVolume)
+      break;
+        
+    oep->o.flags.b.isAliasClient = 1;
+    break;
+  case pwr_eClass_MountVolume:
+  case pwr_eClass_CreateVolume:
+  case pwr_eClass_MountObject:
+    if (m_volume.cid != pwr_eClass_RootVolume) {
+      oep->o.flags.b.isMountClient = 1;
+    }
+    break;
+  default:
+    break;    
+  }
+
+  oep->o.flags.b.isMountClean = 1;
   // Check all children
 
   sib_lh = sib_ll = &oep->o.sib_lh;
@@ -755,7 +780,13 @@ wb_dbs::importRbody(pwr_tOid oid, size_t size, void *body)
   }
   //printf("install body: %u\n", (unsigned int)body);
   //printf(" 1 install Rbody %s, bsize: %d, ssize: %d\n", oep->o.name, oep->rbody.size, m_sect[dbs_eSect_rbody].size);
-    
+
+  if (oep->o.flags.b.isMountClient)
+    getMountServer(oep, body);
+  
+  if (oep->o.flags.b.isAliasClient)
+    getAliasServer(oep, body);
+  
   if (oep->rbody.size == 0) {
     if (body != 0) printf("error body size\n");
     return true;
@@ -956,4 +987,127 @@ bool
 wb_dbs::importMeta(dbs_sEnv *ep)
 {
   return true;
+}
+
+void wb_dbs::getAliasServer(sOentry *oep, void *p)
+{
+  pwr_tStatus sts;
+  pwr_sAlias *alias = (pwr_sAlias *)p;
+  sOentry    *aep;
+
+  oep->o.flags.b.isAliasClient = 0;
+  
+  if (cdh_ObjidIsNull(alias->Object)) {
+    printf("!! Alias does not refer to any object!\n");
+    printf("   Alias:  %s\n", pathName(oep));
+    printf("   Alias will not be loaded.\n");
+    m_warnings++;
+    return; 
+  }
+
+  if (alias->Object.vid != m_volume.vid) {
+    printf("!! Alias refers to object outside own volume!\n");
+    printf("   Alias:  %s\n", pathName(oep));
+    printf("   Object: %s\n", cdh_ObjidToString(NULL, alias->Object, 1));
+    printf("   Alias will not be loaded.\n");
+    m_warnings++;
+    return; 
+  }
+  
+  aep = (sOentry *)tree_Find(&sts, m_oid_th, &alias->Object);
+  if (!aep) {
+    printf("!! Alias refers to a non existing object!\n");
+    printf("   Alias:  %s\n", pathName(oep));
+    printf("   Alias will not be loaded.\n");
+    m_warnings++;
+    return; 
+  }
+  
+  if (aep->o.flags.b.devOnly) {
+    printf("!! An alias may not refer to a non runtime object!\n");
+    printf("   Alias:  %s\n", pathName(oep));
+    printf("   Object: %s\n", pathName(aep));
+    printf("   Alias will not be loaded.\n");
+    m_warnings++;
+    return;
+  }
+
+  switch (aep->o.cid) {
+  case pwr_eClass_Alias:
+    printf("!! An alias may not refer to another alias!\n");
+    printf("   Alias:  %s\n", pathName(oep));
+    printf("   Object: %s\n", pathName(aep));
+    printf("   Alias will not be loaded.\n");
+    m_warnings++;
+    return;
+    break;
+  case pwr_eClass_MountVolume:
+  case pwr_eClass_CreateVolume:
+  case pwr_eClass_MountObject:
+    printf("!! An alias may not refer to a mount object!\n");
+    printf("   Alias:  %s\n", pathName(oep));
+    printf("   Object: %s\n", pathName(aep));
+    printf("   Alias will not be loaded.\n");
+    m_warnings++;
+    return;
+    break;
+  }
+
+  oep->o.flags.b.isAliasClient = 1;
+  oep->o.soid = aep->o.oid;
+}
+
+
+char *wb_dbs::pathName(sOentry *oep)
+{
+  static char buff[512];
+  static int  level = 0;
+
+  if (level == 0)
+    buff[0] = '\0';
+
+  if (oep != m_oep) {
+    level++;
+    pathName(oep->poep);
+    level--;
+    strcat(buff, oep->o.name);  
+    if (level > 0)
+      strcat(buff, "-");
+  } else {
+    strcat(buff, oep->o.name);
+    strcat(buff, ":");
+  }
+  return buff;
+}
+
+void wb_dbs::getMountServer(sOentry *oep, void *p)
+{
+
+  switch (oep->o.cid) {
+  case pwr_eClass_MountObject:
+  {  
+    pwr_sMountObject  *mountObject;
+    mountObject = (pwr_sMountObject *) p;
+    oep->o.soid = mountObject->Object;
+    break;
+  }
+  case pwr_eClass_MountVolume:
+  {
+    pwr_sMountVolume  *mountVolume;
+    mountVolume = (pwr_sMountVolume *) p;
+    oep->o.soid = pwr_cNOid;
+    oep->o.soid.vid = mountVolume->Volume;
+    break;
+  }
+  case pwr_eClass_CreateVolume:
+  {
+    pwr_sCreateVolume *createVolume;
+    createVolume = (pwr_sCreateVolume *) p;
+    oep->o.soid = pwr_cNOid;
+    oep->o.soid.vid = createVolume->Volume;
+    break;
+  }
+  default:
+    break;
+  }
 }

@@ -47,7 +47,7 @@ wb_orep *wb_vrepwbl::object(pwr_tStatus *sts, pwr_tOid oid)
   return new wb_orepwbl( this, n);
 }
 
-wb_orep *wb_vrepwbl::object(pwr_tStatus *sts, wb_name name)
+wb_orep *wb_vrepwbl::object(pwr_tStatus *sts, wb_name &name)
 {
   ref_wblnode n = find( name.name());
   if ( !n) {
@@ -58,7 +58,7 @@ wb_orep *wb_vrepwbl::object(pwr_tStatus *sts, wb_name name)
   return new wb_orepwbl( this, n);
 }
 
-wb_vrep *wb_vrepwbl::next() const
+wb_vrep *wb_vrepwbl::next()
 {
   pwr_tStatus sts;
 
@@ -858,7 +858,9 @@ int wb_vrepwbl::nameToOid( const char *name, pwr_tOid *oid)
   // Search in other volume
   pwr_tStatus sts;
 
-  wb_orep *orep = m_erep->object( &sts, name);
+  wb_name na(name);
+  
+  wb_orep *orep = m_erep->object( &sts, na);
   if ( EVEN(sts))
     return 0;
   else {
@@ -1199,7 +1201,7 @@ wb_orep *wb_vrepwbl::object(pwr_tStatus *sts)
   return orep;
 }
 
-wb_orep *wb_vrepwbl::ancestor(pwr_tStatus *sts, wb_orep *o)
+wb_orep *wb_vrepwbl::ancestor(pwr_tStatus *sts, const wb_orep *o)
 {
   wb_orepwbl *orep = 0;
 
@@ -1213,7 +1215,7 @@ wb_orep *wb_vrepwbl::ancestor(pwr_tStatus *sts, wb_orep *o)
   return orep;
 }
 
-wb_orep *wb_vrepwbl::parent(pwr_tStatus *sts, wb_orep *o)
+wb_orep *wb_vrepwbl::parent(pwr_tStatus *sts, const wb_orep *o)
 {
   wb_orepwbl *orep = 0;
         
@@ -1227,7 +1229,7 @@ wb_orep *wb_vrepwbl::parent(pwr_tStatus *sts, wb_orep *o)
   return orep;
 }
 
-wb_orep *wb_vrepwbl::after(pwr_tStatus *sts, wb_orep *o)
+wb_orep *wb_vrepwbl::after(pwr_tStatus *sts, const wb_orep *o)
 {
   wb_orepwbl *orep = 0;
     
@@ -1240,7 +1242,7 @@ wb_orep *wb_vrepwbl::after(pwr_tStatus *sts, wb_orep *o)
   return orep;
 }
 
-wb_orep *wb_vrepwbl::before(pwr_tStatus *sts, wb_orep *o)
+wb_orep *wb_vrepwbl::before(pwr_tStatus *sts, const wb_orep *o)
 {
   wb_orepwbl *orep = 0;
     
@@ -1254,7 +1256,7 @@ wb_orep *wb_vrepwbl::before(pwr_tStatus *sts, wb_orep *o)
   return orep;
 }
 
-wb_orep *wb_vrepwbl::first(pwr_tStatus *sts, wb_orep *o)
+wb_orep *wb_vrepwbl::first(pwr_tStatus *sts, const wb_orep *o)
 {
   wb_orepwbl *orep = 0;
     
@@ -1268,12 +1270,12 @@ wb_orep *wb_vrepwbl::first(pwr_tStatus *sts, wb_orep *o)
   return orep;
 }
 
-wb_orep *wb_vrepwbl::child(pwr_tStatus *sts, wb_orep *o, wb_name name)
+wb_orep *wb_vrepwbl::child(pwr_tStatus *sts, const wb_orep *o, wb_name &name)
 {
   return 0;
 }
 
-wb_orep *wb_vrepwbl::last(pwr_tStatus *sts, wb_orep *o)
+wb_orep *wb_vrepwbl::last(pwr_tStatus *sts, const wb_orep *o)
 {
   wb_orepwbl *orep = 0;
 
@@ -1289,17 +1291,17 @@ wb_orep *wb_vrepwbl::last(pwr_tStatus *sts, wb_orep *o)
   return orep;
 }
 
-wb_orep *wb_vrepwbl::next(pwr_tStatus *sts, wb_orep *o)
+wb_orep *wb_vrepwbl::next(pwr_tStatus *sts, const wb_orep *o)
 {
   return 0;
 }
 
-wb_orep *wb_vrepwbl::previous(pwr_tStatus *sts, wb_orep *o)
+wb_orep *wb_vrepwbl::previous(pwr_tStatus *sts, const wb_orep *o)
 {
   return 0;
 }
 
-void wb_vrepwbl::objectName(wb_orep *o, char *str)
+void wb_vrepwbl::objectName(const wb_orep *o, char *str)
 {
   *str = 0;
         
@@ -1329,8 +1331,7 @@ void wb_vrepwbl::objectName(wb_orep *o, char *str)
   free( vect);
 }
 
-void *wb_vrepwbl::readAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, 
-                                unsigned int offset, unsigned int size, void *p)
+void *wb_vrepwbl::readAttribute(pwr_tStatus *sts, const wb_orep *o, pwr_eBix bix, size_t offset, size_t size, void *p)
 {
   *sts = LDH__SUCCESS;
     
@@ -1363,7 +1364,7 @@ void *wb_vrepwbl::readAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix,
   }
 }
 
-void *wb_vrepwbl::readBody(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, void *p)
+void *wb_vrepwbl::readBody(pwr_tStatus *sts, const wb_orep *o, pwr_eBix bix, void *p)
 {
   *sts = LDH__SUCCESS;
     

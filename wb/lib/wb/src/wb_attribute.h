@@ -45,9 +45,9 @@ public:
   wb_attribute(const wb_attribute&);
   wb_attribute(pwr_tStatus, wb_orep*);
   wb_attribute(pwr_tStatus, wb_orep*, wb_adrep*, int idx = -1);
-  wb_attribute(pwr_tStatus, wb_orep*, const char* bname);
-  wb_attribute(pwr_tStatus, wb_orep*, const char* bname, const char* aname);
-  wb_attribute(const wb_attribute& pa, int idx, const char* aname);
+  wb_attribute(pwr_tStatus, wb_orep*, const char *bname);
+  wb_attribute(pwr_tStatus, wb_orep*, const char *bname, const char *aname);
+  wb_attribute(const wb_attribute& pa, int idx, const char *aname);
 
   ~wb_attribute();
   wb_attribute& operator=(const wb_attribute&);
@@ -92,7 +92,7 @@ public:
   wb_attribute before() const;
 
   wb_attribute first(int idx) const;
-  wb_attribute child(int idx, const char* name) const;
+  wb_attribute child(int idx, const char *name) const;
     
 
   const char *name() const;

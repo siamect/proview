@@ -92,8 +92,8 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, wb_adrep* adrep, int 
   }
 }
 
-wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, const char* bname) :
-  wb_status(sts), m_orep(orep), m_adrep(0), m_size(0), m_offset(0), m_idx(0), m_tid(0),
+wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, const char *bname) :
+  wb_status(sts), m_orep(orep), m_adrep(0), m_size(0), m_offset(0),  m_idx(0), m_tid(0),
   m_elements(0), m_type(pwr_eType_), m_flags(0), m_bix(pwr_eBix__)
 {
   if ( orep == 0)
@@ -115,7 +115,7 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, const char* bname) :
   }
 }
 
-wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, const char* bname, const char* aname) :
+wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, const char *bname, const char *aname) :
   wb_status(sts), m_orep(orep), m_adrep(0), m_size(0), m_offset(0), m_idx(0), m_tid(0),
   m_elements(0), m_type(pwr_eType_), m_flags(0), m_bix(pwr_eBix__)
 {
@@ -160,7 +160,7 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, const char* bname, co
   }
 }
 
-wb_attribute::wb_attribute(const wb_attribute& pa, int idx, const char* aname) :
+wb_attribute::wb_attribute(const wb_attribute& pa, int idx, const char *aname) :
   wb_status(LDH__NOSUCHATTR), m_orep(0), m_adrep(0), m_size(0), m_offset(0), m_tid(0),
   m_elements(0), m_type(pwr_eType_), m_flags(0), m_bix(pwr_eBix__)
 {

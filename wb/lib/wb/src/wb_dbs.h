@@ -100,10 +100,14 @@ public:
 
   operator bool() const;
     
-  bool operator==(wb_dbs&);
+  bool operator==(const wb_dbs&) const;
     
   void setFileName(const char *name);
 
+  void         getAliasServer(sOentry *oep, void *p);
+  char        *pathName(sOentry *oep);
+  void         getMountServer(sOentry *oep, void *p);
+  
   void         buildSectName();
   void         buildSectOid();
   void         buildSectClass();

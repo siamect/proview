@@ -81,7 +81,9 @@ wb_cdrep::wb_cdrep( wb_adrep *adrep) : m_nRef(0)
 
 wb_bdrep *wb_cdrep::bdrep( pwr_tStatus *sts, const char *bname)
 {
-  wb_orepdbs *orep = (wb_orepdbs *)m_orep->m_vrep->child( sts, m_orep, bname);
+  wb_name n(bname);
+  
+  wb_orepdbs *orep = (wb_orepdbs *)m_orep->m_vrep->child( sts, m_orep, n);
   if ( EVEN(*sts))
     return 0;
   wb_bdrep *bdrep = new wb_bdrep( *orep);
@@ -138,7 +140,9 @@ wb_adrep *wb_cdrep::adrep( pwr_tStatus *sts, const char *aname)
 
 wb_orep *wb_cdrep::classBody( pwr_tStatus *sts, const char *bname)
 {
-  wb_orepdbs *orep = (wb_orepdbs *)m_orep->m_vrep->child( sts, m_orep, bname);
+  wb_name n(bname);
+  
+  wb_orepdbs *orep = (wb_orepdbs *)m_orep->m_vrep->child( sts, m_orep, n);
   if ( EVEN(*sts))
     return 0;
   return orep;

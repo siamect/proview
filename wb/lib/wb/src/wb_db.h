@@ -153,12 +153,15 @@ public:
   void del(wb_db_txn *txn);
         
   pwr_tOid oid() { return m_o.oid;}
+  pwr_tVid vid() { return m_o.oid.vid;}
+  pwr_tOix oix() { return m_o.oid.oix;}
   pwr_tCid cid() { return m_o.cid;}
   pwr_tOid poid() { return m_o.poid;}
   pwr_tOid foid() { return m_o.foid;}
   pwr_tOid loid() { return m_o.loid;}
   pwr_tOid boid() { return m_o.boid;}
   pwr_tOid aoid() { return m_o.aoid;}
+  pwr_tTime ohTime() { return m_o.time;}
 
   char *name() { return m_o.name;}
   
@@ -166,6 +169,8 @@ public:
 
   size_t rbSize() { return m_o.body[0].size;}
   size_t dbSize() { return m_o.body[1].size;}
+  pwr_tTime rbTime() { return m_o.body[0].time;}
+  pwr_tTime dbTime() { return m_o.body[1].time;}
   
   void name(wb_name &name);
         
@@ -202,7 +207,7 @@ public:
   wb_db_name(wb_db *db, pwr_tOid, char *name);
   wb_db_name(wb_db *db, pwr_tOid poid, const char *name);
   wb_db_name(wb_db *db, pwr_tOid oid, pwr_tOid poid, const char *name);
-  wb_db_name(wb_db *db, wb_db_txn *txn, pwr_tOid poid, wb_name name);
+  wb_db_name(wb_db *db, wb_db_txn *txn, pwr_tOid poid, wb_name &name);
         
   void get(wb_db_txn *txn);
   void put(wb_db_txn *txn);

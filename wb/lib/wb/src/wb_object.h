@@ -11,7 +11,6 @@
 
 class wb_bdef;
 class wb_orep;
-class wb_location;
 class wb_attribute;
 class wb_destination;
 
@@ -71,12 +70,12 @@ public:
   size_t rbSize();  //< size of run time body
   size_t dbSize();  //< size of development body
     
-  wb_bdef bdef(const char* bname);
+  wb_bdef bdef(const char *bname);
   wb_bdef bdef(pwr_eBix bix);
 
   wb_attribute attribute();
   wb_attribute attribute(const char *aname);
-  wb_attribute attribute(const char *bname, const char *aname);
+  wb_attribute attribute(const char *bname, const char*aname);
     
   /* Navigational operations */
 
@@ -85,13 +84,12 @@ public:
   wb_object after();     //< next sibling
   wb_object before();    //< previous sibling
   wb_object first();     //< first child
-  wb_object child(const char *name);
+  wb_object child(wb_name &name);
   wb_object last();      //< last child
 
   wb_object next();      //< next in list of objects of same class in one volume
   wb_object previous();  //< previous in list of objects of same class in one volume
 
-  wb_location location();
   wb_destination destination(ldh_eDest dest);
 
 private:

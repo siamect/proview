@@ -1,6 +1,5 @@
 #include "wb_ldh_msg.h"
 #include "wb_object.h"
-#include "wb_location.h"
 #include "wb_error.h"
 #include "wb_bdef.h"
 
@@ -20,12 +19,6 @@ bool wb_object::check()
     throw wb_error(m_sts);
   }
   return true;
-}
-
-// Return the current position of this object
-wb_location wb_object::location()
-{
-  return wb_location(*this);
 }
 
 wb_destination wb_object::destination(ldh_eDest dest)
@@ -184,7 +177,7 @@ wb_object wb_object::first()
 //
 // Get the child with the given name.
 //
-wb_object wb_object::child( const char* name)
+wb_object wb_object::child( wb_name &name)
 {
   check("wb_object::child()");
     

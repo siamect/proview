@@ -1236,6 +1236,7 @@ ldh_SetObjectBuffer(ldh_tSession session, pwr_tOid oid, char *bname, char *aname
 
   wb_object o = sp->object(oid);
   if (!o) return o.sts();
+  
   wb_attribute a = o.attribute(bname, aname);
   if (!a) return a.sts();
     
@@ -1255,7 +1256,8 @@ ldh_SetObjectName(ldh_tSession session, pwr_tOid oid, char *name)
   wb_object o = sp->object(oid);
   if (!o) return o.sts();
 
-  pwr_tStatus sts = sp->renameObject(o, name);
+  wb_name n(name);
+  pwr_tStatus sts = sp->renameObject(o, n);
     
   return sts;
 }

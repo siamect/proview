@@ -8,7 +8,7 @@
 #include "wb_ldh.h"
 #include "wb_destination.h"
 #include "wb_db.h"
-//#include "wb_import.h"
+#include "wb_name.h"
 #include "wb_export.h"
 
 
@@ -49,6 +49,13 @@ wb_db_class::wb_db_class(wb_db *db, pwr_tCid cid, pwr_tOid oid) :
 {
   m_k.oid = oid;
   m_k.cid = cid;
+}
+
+wb_db_class::wb_db_class(wb_db *db, wb_db_ohead &o) :
+  m_db(db), m_key(&m_k, sizeof(m_k)), m_data(0, 0), m_dbc(0)
+{
+  m_k.oid = o.oid();
+  m_k.cid = o.cid();
 }
 
 bool wb_db_class::succ(pwr_tOid oid)
@@ -104,11 +111,20 @@ wb_db_name::wb_db_name(wb_db *db, wb_db_ohead &o) :
 wb_db_name::wb_db_name(wb_db *db, pwr_tOid oid, pwr_tOid poid, const char *name) :
   m_db(db), m_key(&m_k, sizeof(m_k)), m_data(&m_d, sizeof(m_d))
 {
+  wb_name n(name);
+  
   m_k.poid = poid;
-  strcpy(m_k.normname, name);
+  strcpy(m_k.normname, n.normName(cdh_mName_object));
   m_d.oid = oid;
 }
 
+wb_db_name::wb_db_name(wb_db *db, wb_db_txn *txn, pwr_tOid poid, wb_name &name) :
+  m_db(db), m_key(&m_k, sizeof(m_k)), m_data(&m_d, sizeof(m_d))
+{
+  m_k.poid = poid;
+  strcpy(m_k.normname, name.normName(cdh_mName_object));
+  m_d.oid = pwr_cNOid;
+}
 
 //wb_db_name::wb_db_name(wb_db *db, pwr_tOid, char *name) :
 //  m_db(db), m_key(&m_k, sizeof(m_k)), m_data(&m_d, sizeof(m_d))
@@ -134,6 +150,20 @@ void wb_db_name::put(wb_db_txn *txn)
   m_db->m_t_name->put(txn, &m_key, &m_data, 0);
 }
 
+void wb_db_name::del(wb_db_txn *txn)
+{
+  m_db->m_t_name->del(txn, &m_key, 0);
+}
+
+void wb_db_name::name(wb_name &name)
+{
+  strcpy(m_k.normname, name.normName(cdh_mName_object));
+}
+
+wb_db_ohead::wb_db_ohead() :
+  m_db(0), m_key(&m_o.oid, sizeof(m_o.oid)), m_data(&m_o, sizeof(m_o))
+{
+}
 wb_db_ohead::wb_db_ohead(wb_db *db) :
   m_db(db), m_key(&m_o.oid, sizeof(m_o.oid)), m_data(&m_o, sizeof(m_o))
 {
@@ -201,6 +231,17 @@ wb_db_ohead &wb_db_ohead::get(wb_db_txn *txn, pwr_tOid oid)
 void wb_db_ohead::del(wb_db_txn *txn)
 {
   m_db->m_t_ohead->del(txn, &m_key, 0);
+}
+
+void wb_db_ohead::name(wb_name &name)
+{
+  strcpy(m_o.name, name.name(cdh_mName_object));
+  strcpy(m_o.normname, name.normName(cdh_mName_object));
+}
+
+void wb_db_ohead::clear()
+{
+  memset(&m_o, 0, sizeof(m_o));
 }
 
 wb_db_rbody::wb_db_rbody(wb_db *db, pwr_tOid oid, size_t size, void *p) :
@@ -284,8 +325,16 @@ void wb_db::create(pwr_tVid vid, pwr_tCid cid, const char *volumeName, const cha
   openDb();
 }
 
+wb_db_txn *wb_db::begin(wb_db_txn *txn)
+{
+  wb_db_txn *new_txn;
   
-void wb_db::open(const char *fileName)
+  m_env->txn_begin((DbTxn *)txn, (DbTxn **)&new_txn, 0);
+  
+  return new_txn;
+}
+
+void  wb_db::open(const char *fileName)
 {
   dcli_translate_filename(m_fileName, fileName);
   openDb();

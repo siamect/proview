@@ -11,6 +11,7 @@ class wb_cdrep;
 class wb_orep;
 class wb_tdrep;
 class wb_adrep;
+class wb_name;
 
 class wb_erep
 {
@@ -47,6 +48,7 @@ public:
   void load( pwr_tStatus *sts);
 
   wb_orep *object( pwr_tStatus *sts, pwr_tOid oid);
+  wb_orep *object( pwr_tStatus *sts, wb_name &name);
   wb_orep *object( pwr_tStatus *sts, const char *name);
 
   wb_cdrep *cdrep( pwr_tStatus *sts, const wb_orep& o);

@@ -70,7 +70,7 @@ wb_orep *wb_vrepdbs::object(pwr_tStatus *sts, pwr_tOid oid)
   return new (this) wb_orepdbs(op);
 }
 
-wb_orep *wb_vrepdbs::object(pwr_tStatus *sts, wb_name name)
+wb_orep *wb_vrepdbs::object(pwr_tStatus *sts, wb_name &name)
 {
   *sts = LDH__SUCCESS;
 
@@ -88,7 +88,7 @@ wb_orep *wb_vrepdbs::object(pwr_tStatus *sts, wb_name name)
   return new (this) wb_orepdbs(op);
 }
 
-wb_orep *wb_vrepdbs::object(pwr_tStatus *sts, wb_orep *parent, wb_name name)
+wb_orep *wb_vrepdbs::object(pwr_tStatus *sts, const wb_orep *parent, wb_name &name)
 {
   *sts = LDH__SUCCESS;
     
@@ -102,27 +102,27 @@ wb_orep *wb_vrepdbs::object(pwr_tStatus *sts, wb_orep *parent, wb_name name)
 }
 
 
-wb_orep *wb_vrepdbs::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination d, wb_name name)
+wb_orep *wb_vrepdbs::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination &d, wb_name &name)
 {
   *sts = LDH__NYI;
   return 0;
 }
 
 
-wb_orep *wb_vrepdbs::copyObject(pwr_tStatus *sts, wb_orep *orep, wb_destination d, wb_name name)
+wb_orep *wb_vrepdbs::copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_destination &d, wb_name &name)
 {
   *sts = LDH__NYI;
   return 0;
 }
 
-bool wb_vrepdbs::copyOset(pwr_tStatus *sts, wb_oset *oset, wb_destination d)
+bool wb_vrepdbs::copyOset(pwr_tStatus *sts, wb_oset *oset, wb_destination &d)
 {
   *sts = LDH__NYI;
   return false;
 }
 
 
-bool wb_vrepdbs::moveObject(pwr_tStatus *sts, wb_orep *orep, wb_destination d)
+bool wb_vrepdbs::moveObject(pwr_tStatus *sts, wb_orep *orep, wb_destination &d)
 {
   *sts = LDH__NYI;
   return false;
@@ -147,7 +147,7 @@ bool wb_vrepdbs::deleteOset(pwr_tStatus *sts, wb_oset *oset)
   return false;
 }
 
-bool wb_vrepdbs::renameObject(pwr_tStatus *sts, wb_orep *orep, wb_name name)
+bool wb_vrepdbs::renameObject(pwr_tStatus *sts, wb_orep *orep, wb_name &name)
 {
   *sts = LDH__NYI;
   return false;
@@ -165,13 +165,13 @@ bool wb_vrepdbs::abort(pwr_tStatus *sts)
   return true;
 }
 
-bool wb_vrepdbs::writeAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, unsigned int offset, unsigned int size, void *p)
+bool wb_vrepdbs::writeAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, size_t offset, size_t size, void *p)
 {
   *sts = LDH__NYI;
   return false;
 }
 
-void *wb_vrepdbs::readAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, unsigned int offset, unsigned int size, void *p)
+void *wb_vrepdbs::readAttribute(pwr_tStatus *sts, const wb_orep *o, pwr_eBix bix, size_t offset, size_t size, void *p)
 {// note! must be compensated for offset !
   *sts = LDH__SUCCESS;
 
@@ -201,7 +201,7 @@ void *wb_vrepdbs::readAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, unsi
   return (void *)((char *)bp + offset);
 }
 
-void *wb_vrepdbs::readBody(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, void *p)
+void *wb_vrepdbs::readBody(pwr_tStatus *sts, const wb_orep *o, pwr_eBix bix, void *p)
 {
   *sts = LDH__SUCCESS;
     
@@ -237,7 +237,7 @@ bool wb_vrepdbs::writeBody(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, void *p)
   return false;
 }
 
-wb_orep *wb_vrepdbs::ancestor(pwr_tStatus *sts, wb_orep *o)
+wb_orep *wb_vrepdbs::ancestor(pwr_tStatus *sts, const wb_orep *o)
 {    
   *sts = LDH__SUCCESS;
 
@@ -250,7 +250,7 @@ wb_orep *wb_vrepdbs::ancestor(pwr_tStatus *sts, wb_orep *o)
   return new (this) wb_orepdbs(op);
 }
 
-wb_orep *wb_vrepdbs::parent(pwr_tStatus *sts, wb_orep *o)
+wb_orep *wb_vrepdbs::parent(pwr_tStatus *sts, const wb_orep *o)
 {
   *sts = LDH__SUCCESS;
 
@@ -263,7 +263,7 @@ wb_orep *wb_vrepdbs::parent(pwr_tStatus *sts, wb_orep *o)
   return new (this) wb_orepdbs(op);
 }
 
-wb_orep *wb_vrepdbs::after(pwr_tStatus *sts, wb_orep *o)
+wb_orep *wb_vrepdbs::after(pwr_tStatus *sts, const wb_orep *o)
 {
   *sts = LDH__SUCCESS;
 
@@ -276,7 +276,7 @@ wb_orep *wb_vrepdbs::after(pwr_tStatus *sts, wb_orep *o)
   return new (this) wb_orepdbs(op);
 }
 
-wb_orep *wb_vrepdbs::before(pwr_tStatus *sts, wb_orep *o)
+wb_orep *wb_vrepdbs::before(pwr_tStatus *sts, const wb_orep *o)
 {
   *sts = LDH__SUCCESS;
 
@@ -289,7 +289,7 @@ wb_orep *wb_vrepdbs::before(pwr_tStatus *sts, wb_orep *o)
   return new (this) wb_orepdbs(op);
 }
 
-wb_orep *wb_vrepdbs::first(pwr_tStatus *sts, wb_orep *o)
+wb_orep *wb_vrepdbs::first(pwr_tStatus *sts, const wb_orep *o)
 {
   *sts = LDH__SUCCESS;
 
@@ -302,7 +302,7 @@ wb_orep *wb_vrepdbs::first(pwr_tStatus *sts, wb_orep *o)
   return new (this) wb_orepdbs(op);
 }
 
-wb_orep *wb_vrepdbs::child(pwr_tStatus *sts, wb_orep *o, wb_name name)
+wb_orep *wb_vrepdbs::child(pwr_tStatus *sts, const wb_orep *o, wb_name &name)
 {
   *sts = LDH__SUCCESS;
 
@@ -315,7 +315,7 @@ wb_orep *wb_vrepdbs::child(pwr_tStatus *sts, wb_orep *o, wb_name name)
   return new (this) wb_orepdbs(op);
 }
 
-wb_orep *wb_vrepdbs::last(pwr_tStatus *sts, wb_orep *o)
+wb_orep *wb_vrepdbs::last(pwr_tStatus *sts, const wb_orep *o)
 {
   *sts = LDH__SUCCESS;
 
@@ -329,7 +329,7 @@ wb_orep *wb_vrepdbs::last(pwr_tStatus *sts, wb_orep *o)
 }
 
 
-wb_orep *wb_vrepdbs::next(pwr_tStatus *sts, wb_orep *o)
+wb_orep *wb_vrepdbs::next(pwr_tStatus *sts, const wb_orep *o)
 {
   *sts = LDH__SUCCESS;
 
@@ -342,7 +342,7 @@ wb_orep *wb_vrepdbs::next(pwr_tStatus *sts, wb_orep *o)
   return new (this) wb_orepdbs(op);
 }
 
-wb_orep *wb_vrepdbs::previous(pwr_tStatus *sts, wb_orep *o)
+wb_orep *wb_vrepdbs::previous(pwr_tStatus *sts, const wb_orep *o)
 {
   *sts = LDH__SUCCESS;
 
@@ -375,7 +375,7 @@ wb_orep *wb_vrepdbs::object(pwr_tStatus *sts)
   return new (this) wb_orepdbs(op);
 }
 
-bool wb_vrepdbs::isLocal(wb_orep *) const
+bool wb_vrepdbs::isLocal(const wb_orep *)
 {
   //*sts = LDH__NYI;
   return false;
@@ -391,12 +391,12 @@ pwr_tVid wb_vrepdbs::vid() const
   return m_vid;
 }
 
-wb_erep *wb_vrepdbs::erep() const
+wb_erep *wb_vrepdbs::erep()
 {
   return m_erep;
 }
 
-wb_vrep *wb_vrepdbs::next () const
+wb_vrep *wb_vrepdbs::next ()
 {
   pwr_tStatus sts;
 
@@ -425,7 +425,7 @@ void wb_vrepdbs::delete_wb_orepdbs(void *p)
   free(p);
 }
 
-void wb_vrepdbs::objectName(wb_orep *o, char *str)
+void wb_vrepdbs::objectName(const wb_orep *o, char *str)
 {
   pwr_tStatus sts;
     

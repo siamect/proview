@@ -46,20 +46,17 @@ public:
     
   // Navigational operations
 
-  virtual wb_orep *ancestor(pwr_tStatus *sts) const = 0;  //< get object at top of hierarchy
-  virtual wb_orep *parent(pwr_tStatus *sts) const = 0;
-  virtual wb_orep *after(pwr_tStatus *sts) const = 0;     //< get next sibling
-  virtual wb_orep *before(pwr_tStatus *sts) const = 0;    //< get previous sibling
-  virtual wb_orep *first(pwr_tStatus *sts) const = 0;     //< get first child
-  virtual wb_orep *child(pwr_tStatus *sts, const char *name) const = 0;    //< get named child
-  virtual wb_orep *last(pwr_tStatus *sts) const = 0;      //< get last child
-  virtual wb_orep *next(pwr_tStatus *sts) const = 0;      //< get next in list of objects of same class in one volume
-  virtual wb_orep *previous(pwr_tStatus *sts) const = 0;  //< get previous in list of objects of same class in one volume
+  virtual wb_orep *ancestor(pwr_tStatus *sts) = 0;  //< get object at top of hierarchy
+  virtual wb_orep *parent(pwr_tStatus *sts) = 0;
+  virtual wb_orep *after(pwr_tStatus *sts) = 0;     //< get next sibling
+  virtual wb_orep *before(pwr_tStatus *sts) = 0;    //< get previous sibling
+  virtual wb_orep *first(pwr_tStatus *sts) = 0;     //< get first child
+  virtual wb_orep *child(pwr_tStatus *sts, wb_name &name) = 0;    //< get named child
+  virtual wb_orep *last(pwr_tStatus *sts) = 0;      //< get last child
+  virtual wb_orep *next(pwr_tStatus *sts) = 0;      //< get next in list of objects of same class in one volume
+  virtual wb_orep *previous(pwr_tStatus *sts) = 0;  //< get previous in list of objects of same class in one volume
 
-  virtual wb_position position() = 0;
-  virtual wb_position position(ldh_eDest dest) = 0;
-
-  virtual wb_adrep *attribute(pwr_tStatus*, const char *aname) = 0;
+  virtual wb_adrep *attribute(pwr_tStatus*, const char *name) = 0;
   virtual wb_adrep *attribute(pwr_tStatus*) = 0;
 
   virtual wb_erep *erep() const = 0;

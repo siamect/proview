@@ -143,47 +143,47 @@ bool wb_orepdbs::isOffspringOf(const wb_orep *o) const
 }
 
 
-wb_orep *wb_orepdbs::after(pwr_tStatus *sts) const
+wb_orep *wb_orepdbs::after(pwr_tStatus *sts)
 {
   return m_vrep->after(sts, (wb_orep*)this);
 }
 
-wb_orep *wb_orepdbs::before(pwr_tStatus *sts) const
+wb_orep *wb_orepdbs::before(pwr_tStatus *sts)
 {
   return m_vrep->before(sts, (wb_orep*)this);
 }
 
-wb_orep *wb_orepdbs::ancestor(pwr_tStatus *sts) const
+wb_orep *wb_orepdbs::ancestor(pwr_tStatus *sts)
 {
   return m_vrep->ancestor(sts, (wb_orep*)this);
 }
 
-wb_orep *wb_orepdbs::parent(pwr_tStatus *sts) const
+wb_orep *wb_orepdbs::parent(pwr_tStatus *sts)
 {
   return m_vrep->parent(sts, (wb_orep*)this);
 }
 
-wb_orep *wb_orepdbs::first(pwr_tStatus *sts) const
+wb_orep *wb_orepdbs::first(pwr_tStatus *sts)
 {
   return m_vrep->first(sts, (wb_orep*)this);
 }
 
-wb_orep *wb_orepdbs::child(pwr_tStatus *sts, const char *name) const
+wb_orep *wb_orepdbs::child(pwr_tStatus *sts, wb_name &name)
 {
   return m_vrep->child(sts, (wb_orep*)this, name);
 }
 
-wb_orep *wb_orepdbs::last(pwr_tStatus *sts) const
+wb_orep *wb_orepdbs::last(pwr_tStatus *sts)
 {
   return m_vrep->last(sts, (wb_orep*)this);
 }
 
-wb_orep *wb_orepdbs::next(pwr_tStatus *sts) const
+wb_orep *wb_orepdbs::next(pwr_tStatus *sts)
 {
   return m_vrep->next(sts, (wb_orep*)this);
 }
 
-wb_orep *wb_orepdbs::previous(pwr_tStatus *sts) const
+wb_orep *wb_orepdbs::previous(pwr_tStatus *sts)
 {
   return m_vrep->previous(sts, (wb_orep*)this);
 }
@@ -196,18 +196,4 @@ wb_adrep *wb_orepdbs::attribute(pwr_tStatus *sts)
 wb_adrep *wb_orepdbs::attribute(pwr_tStatus *sts, const char *name)
 {
   return 0;//m_vrep->attribute(sts, cid(), name);
-}
-
-wb_position wb_orepdbs::position()
-{
-  wb_position pos;
-
-  return pos;
-}
-
-wb_position wb_orepdbs::position(ldh_eDest dest)
-{
-  wb_position pos;
-
-  return pos;
 }

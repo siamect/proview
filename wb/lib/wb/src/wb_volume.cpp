@@ -129,10 +129,10 @@ wb_object wb_volume::object(const char *name) const
   wb_name n = wb_name( name);
   if ( !n.hasVolume() || n.volumeIsEqual( m_vrep->name()))
     // This volume
-    orep = m_vrep->object( &sts, name);
+    orep = m_vrep->object( &sts, n);
   else
     // Other volume
-    orep = m_vrep->erep()->object(&sts, name);
+    orep = m_vrep->erep()->object(&sts, n);
 
   o = wb_object(sts, orep);
     

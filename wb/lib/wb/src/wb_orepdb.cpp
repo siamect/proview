@@ -1,6 +1,22 @@
 #include "wb_orepdb.h"
 #include "wb_vrepdb.h"
 
+
+wb_orepdb::wb_orepdb() :
+  m_o(0), m_oid(pwr_cNOid)
+{
+}
+
+wb_orepdb::wb_orepdb(pwr_tOid oid) :
+  m_o(0), m_oid(oid)
+{
+}
+
+wb_orepdb::wb_orepdb(db_sObject *o) :
+  m_o(o), m_oid(o->oid)
+{
+}
+
 wb_orepdb::~wb_orepdb()
 {
 }
@@ -77,62 +93,50 @@ bool wb_orepdb::isOffspringOf(const wb_orep *o) const
   return m_vrep->isOffspringOf(&sts, (wb_orep*)this, o);
 }
 
-wb_orep *wb_orepdb::ancestor(pwr_tStatus *sts) const
+wb_orep *wb_orepdb::ancestor(pwr_tStatus *sts)
 {
   return m_vrep->ancestor(sts, (wb_orep*)this);
 }
 
-wb_orep *wb_orepdb::parent(pwr_tStatus *sts) const
+wb_orep *wb_orepdb::parent(pwr_tStatus *sts)
 {
   return m_vrep->parent(sts, (wb_orep*)this);
 }
 
-wb_orep *wb_orepdb::after(pwr_tStatus *sts) const
+wb_orep *wb_orepdb::after(pwr_tStatus *sts)
 {
   return m_vrep->after(sts, (wb_orep*)this);
 }
 
 
-wb_orep *wb_orepdb::before(pwr_tStatus *sts) const
+wb_orep *wb_orepdb::before(pwr_tStatus *sts)
 {
   return m_vrep->before(sts, (wb_orep*)this);
 }
 
-wb_orep* wb_orepdb::first(pwr_tStatus *sts) const
+wb_orep* wb_orepdb::first(pwr_tStatus *sts)
 {
   return m_vrep->first(sts, (wb_orep*)this);
 }
 
-wb_orep *wb_orepdb::child(pwr_tStatus *sts, const char *name) const
+wb_orep *wb_orepdb::child(pwr_tStatus *sts, wb_name &name)
 {
   return m_vrep->child(sts, (wb_orep*)this, name);
 }
 
-wb_orep *wb_orepdb::last(pwr_tStatus *sts) const
+wb_orep *wb_orepdb::last(pwr_tStatus *sts)
 {
   return m_vrep->last(sts, (wb_orep*)this);
 }
 
-wb_orep *wb_orepdb::next(pwr_tStatus *sts) const
+wb_orep *wb_orepdb::next(pwr_tStatus *sts)
 {
   return m_vrep->next(sts, (wb_orep*)this);
 }
 
-wb_orep *wb_orepdb::previous(pwr_tStatus *sts) const
+wb_orep *wb_orepdb::previous(pwr_tStatus *sts)
 {
   return m_vrep->previous(sts, (wb_orep*)this);
-}
-
-wb_position wb_orepdb::position()
-{
-  wb_position pos;
-  return pos;
-}
-
-wb_position wb_orepdb::position(ldh_eDest dest)
-{
-  wb_position pos;
-  return pos;
 }
 
 wb_adrep *wb_orepdb::attribute(pwr_tStatus*, const char *aname)

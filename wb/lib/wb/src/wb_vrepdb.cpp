@@ -20,7 +20,7 @@ wb_vrep *wb_vrepdb::ref()
 
 
 wb_vrepdb::wb_vrepdb(wb_erep *erep, const char *fileName) :
-  m_erep(erep)
+  m_erep(erep), m_ohead()
 {  
   strcpy(m_fileName, fileName);
 
@@ -94,7 +94,7 @@ wb_orep* wb_vrepdb::object(pwr_tStatus *sts, pwr_tOid oid)
   }
 }
 
-wb_orep* wb_vrepdb::object(pwr_tStatus *sts, wb_orep *parent, wb_name name)
+wb_orep* wb_vrepdb::object(pwr_tStatus *sts, const wb_orep *parent, wb_name &name)
 {
   try {
     wb_db_name n(m_db, m_txn, parent->oid(), name);
@@ -108,7 +108,7 @@ wb_orep* wb_vrepdb::object(pwr_tStatus *sts, wb_orep *parent, wb_name name)
   }
 }
 
-wb_orep* wb_vrepdb::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination d, wb_name name)
+wb_orep* wb_vrepdb::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination &d, wb_name &name)
 {
   wb_db_txn *txn = m_db->begin(0);
         
@@ -179,7 +179,7 @@ bool wb_vrepdb::deleteObject(pwr_tStatus *sts, wb_orep *orp)
   return true;
 }
 
-bool wb_vrepdb::moveObject(pwr_tStatus *sts, wb_orep *orp, wb_destination d)
+bool wb_vrepdb::moveObject(pwr_tStatus *sts, wb_orep *orp, wb_destination &d)
 {
 #if 0
   if (!isLocal(o))
@@ -208,7 +208,7 @@ bool wb_vrepdb::moveObject(pwr_tStatus *sts, wb_orep *orp, wb_destination d)
   return true;
 }
 
-bool wb_vrepdb::renameObject(pwr_tStatus *sts, wb_orep *orp, wb_name name)
+bool wb_vrepdb::renameObject(pwr_tStatus *sts, wb_orep *orp, wb_name &name)
 { 
   wb_db_txn *txn = m_db->begin(0);
         
@@ -251,7 +251,7 @@ bool wb_vrepdb::writeAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, size_
   return true;
 }
 
-void *wb_vrepdb::readAttribute(pwr_tStatus *sts, wb_orep *orp, pwr_eBix bix, size_t offset, size_t size, void *p)
+void *wb_vrepdb::readAttribute(pwr_tStatus *sts, const wb_orep *orp, pwr_eBix bix, size_t offset, size_t size, void *p)
 {
   try {
     m_ohead.get(m_txn, orp->oid());
@@ -285,7 +285,7 @@ void *wb_vrepdb::readAttribute(pwr_tStatus *sts, wb_orep *orp, pwr_eBix bix, siz
   }
 }
 
-void *wb_vrepdb::readBody(pwr_tStatus *sts, wb_orep *orp, pwr_eBix bix, void *p)
+void *wb_vrepdb::readBody(pwr_tStatus *sts, const wb_orep *orp, pwr_eBix bix, void *p)
 {
   try {
     m_ohead.get(m_txn, orp->oid());
@@ -322,12 +322,12 @@ bool wb_vrepdb::writeBody(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, void *p)
   return true;
 }
 
-wb_orep *wb_vrepdb::ancestor(pwr_tStatus *sts, wb_orep *o)
+wb_orep *wb_vrepdb::ancestor(pwr_tStatus *sts, const wb_orep *o)
 {
   return 0;
 }
 
-pwr_tCid wb_vrepdb::cid(pwr_tStatus *sts, const wb_orep * const orp)
+pwr_tCid wb_vrepdb::cid(pwr_tStatus *sts, const wb_orep *orp)
 {
   try {
     return m_ohead.get(m_txn, orp->oid()).cid();
@@ -339,7 +339,57 @@ pwr_tCid wb_vrepdb::cid(pwr_tStatus *sts, const wb_orep * const orp)
   }
 }
 
-pwr_tOid wb_vrepdb::poid(pwr_tStatus *sts, const wb_orep * const orp)
+pwr_tTime wb_vrepdb::ohTime(pwr_tStatus *sts, const wb_orep *orp)
+{
+  try {
+    return m_ohead.get(m_txn, orp->oid()).ohTime();
+  }
+  catch (DbException &e) {
+    *sts = LDH__NOSUCHOBJ;
+    pwr_tTime t = {0, 0};
+    
+    printf("vrepdb: %s\n", e.what());
+    return t;
+  }
+}
+
+pwr_tVid wb_vrepdb::vid(pwr_tStatus *sts, const wb_orep *orp)
+{
+  try {
+    return m_ohead.get(m_txn, orp->oid()).vid();
+  }
+  catch (DbException &e) {
+    *sts = LDH__NOSUCHOBJ;
+    printf("vrepdb: %s\n", e.what());
+    return pwr_cNVid;
+  }
+}
+
+pwr_tOid wb_vrepdb::oid(pwr_tStatus *sts, const wb_orep *orp)
+{
+  try {
+    return m_ohead.get(m_txn, orp->oid()).oid();
+  }
+  catch (DbException &e) {
+    *sts = LDH__NOSUCHOBJ;
+    printf("vrepdb: %s\n", e.what());
+    return pwr_cNOid;
+  }
+}
+
+pwr_tOix wb_vrepdb::oix(pwr_tStatus *sts, const wb_orep *orp)
+{
+  try {
+    return m_ohead.get(m_txn, orp->oid()).oix();
+  }
+  catch (DbException &e) {
+    *sts = LDH__NOSUCHOBJ;
+    printf("vrepdb: %s\n", e.what());
+    return pwr_cNOix;
+  }
+}
+
+pwr_tOid wb_vrepdb::poid(pwr_tStatus *sts, const wb_orep *orp)
 {
   try {
     return m_ohead.get(m_txn, orp->oid()).poid();
@@ -351,7 +401,7 @@ pwr_tOid wb_vrepdb::poid(pwr_tStatus *sts, const wb_orep * const orp)
   }
 }
 
-pwr_tOid wb_vrepdb::foid(pwr_tStatus *sts, const wb_orep * const orp)
+pwr_tOid wb_vrepdb::foid(pwr_tStatus *sts, const wb_orep *orp)
 {
   try {
     return m_ohead.get(m_txn, orp->oid()).foid();
@@ -363,7 +413,7 @@ pwr_tOid wb_vrepdb::foid(pwr_tStatus *sts, const wb_orep * const orp)
   }
 }
 
-pwr_tOid wb_vrepdb::loid(pwr_tStatus *sts, const wb_orep * const orp)
+pwr_tOid wb_vrepdb::loid(pwr_tStatus *sts, const wb_orep *orp)
 {
   try {
     return m_ohead.get(m_txn, orp->oid()).loid();
@@ -375,7 +425,7 @@ pwr_tOid wb_vrepdb::loid(pwr_tStatus *sts, const wb_orep * const orp)
   }
 }
 
-pwr_tOid wb_vrepdb::aoid(pwr_tStatus *sts, const wb_orep * const orp)
+pwr_tOid wb_vrepdb::aoid(pwr_tStatus *sts, const wb_orep *orp)
 {
   try {
     return m_ohead.get(m_txn, orp->oid()).aoid();
@@ -387,7 +437,7 @@ pwr_tOid wb_vrepdb::aoid(pwr_tStatus *sts, const wb_orep * const orp)
   }
 }
 
-pwr_tOid wb_vrepdb::boid(pwr_tStatus *sts, const wb_orep * const orp)
+pwr_tOid wb_vrepdb::boid(pwr_tStatus *sts, const wb_orep *orp)
 {
   try {
     return m_ohead.get(m_txn, orp->oid()).boid();
@@ -399,7 +449,7 @@ pwr_tOid wb_vrepdb::boid(pwr_tStatus *sts, const wb_orep * const orp)
   }
 }
 
-wb_orep *wb_vrepdb::parent(pwr_tStatus *sts, wb_orep *orp)
+wb_orep *wb_vrepdb::parent(pwr_tStatus *sts, const wb_orep *orp)
 {
   try {
     m_ohead.get(m_txn, m_ohead.get(m_txn, orp->oid()).poid());
@@ -412,7 +462,7 @@ wb_orep *wb_vrepdb::parent(pwr_tStatus *sts, wb_orep *orp)
   }
 }
 
-wb_orep *wb_vrepdb::after(pwr_tStatus *sts, wb_orep *orp)
+wb_orep *wb_vrepdb::after(pwr_tStatus *sts, const wb_orep *orp)
 {
   try {
     m_ohead.get(m_txn, m_ohead.get(m_txn, orp->oid()).aoid());
@@ -425,7 +475,7 @@ wb_orep *wb_vrepdb::after(pwr_tStatus *sts, wb_orep *orp)
   }
 }
 
-wb_orep *wb_vrepdb::before(pwr_tStatus *sts, wb_orep *orp)
+wb_orep *wb_vrepdb::before(pwr_tStatus *sts, const wb_orep *orp)
 {
   try {
     m_ohead.get(m_txn, m_ohead.get(m_txn, orp->oid()).boid());
@@ -438,7 +488,7 @@ wb_orep *wb_vrepdb::before(pwr_tStatus *sts, wb_orep *orp)
   }
 }
 
-wb_orep *wb_vrepdb::first(pwr_tStatus *sts, wb_orep *orp)
+wb_orep *wb_vrepdb::first(pwr_tStatus *sts, const wb_orep *orp)
 {
   try {
     m_ohead.get(m_txn, m_ohead.get(m_txn, orp->oid()).foid());
@@ -451,7 +501,7 @@ wb_orep *wb_vrepdb::first(pwr_tStatus *sts, wb_orep *orp)
   }
 }
 
-wb_orep *wb_vrepdb::child(pwr_tStatus *sts, wb_orep *orp, const char *name)
+wb_orep *wb_vrepdb::child(pwr_tStatus *sts, const wb_orep *orp, wb_name &name)
 {
   try {
     wb_db_name n(m_db, m_txn, orp->oid(), name);
@@ -465,7 +515,7 @@ wb_orep *wb_vrepdb::child(pwr_tStatus *sts, wb_orep *orp, const char *name)
   }
 }
 
-wb_orep *wb_vrepdb::last(pwr_tStatus *sts, wb_orep *orp)
+wb_orep *wb_vrepdb::last(pwr_tStatus *sts, const wb_orep *orp)
 {
   try {
     m_ohead.get(m_txn, m_ohead.get(m_txn, orp->oid()).loid());
@@ -478,11 +528,11 @@ wb_orep *wb_vrepdb::last(pwr_tStatus *sts, wb_orep *orp)
   }
 }
 
-wb_orep *wb_vrepdb::next(pwr_tStatus *sts, wb_orep *orp)
+wb_orep *wb_vrepdb::next(pwr_tStatus *sts, const wb_orep *orp)
 {
   try {
     m_ohead.get(m_txn, orp->oid());
-    wb_db_class c(m_db, m_ohead.cid());
+    wb_db_class c(m_db, m_txn, m_ohead.cid());
     if (c.succ(m_ohead.oid())) {
       m_ohead.get(m_txn, c.oid());
       return new (this) wb_orepdb(&m_ohead.m_o);
@@ -498,7 +548,7 @@ wb_orep *wb_vrepdb::next(pwr_tStatus *sts, wb_orep *orp)
   }
 }
 
-wb_orep *wb_vrepdb::previous(pwr_tStatus *sts, wb_orep *orp)
+wb_orep *wb_vrepdb::previous(pwr_tStatus *sts, const wb_orep *orp)
 {
   try {
     m_ohead.get(m_txn, orp->oid());

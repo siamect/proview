@@ -9,7 +9,6 @@
 class wb_vrepdb : public wb_vrep
 {
 protected:
-  pwr_tVid m_vid;
   map<int, wb_srep*> m_srep;
   //wb_session m_wsession;
 
@@ -26,84 +25,88 @@ public:
   wb_db_ohead m_ohead;
   
   wb_vrepdb(wb_erep *erep, const char *fileName);
-  ~wb_vrepdb();  
 
   virtual void unref();
   virtual wb_vrep *ref();
 
   virtual wb_erep *erep();
+
+  virtual wb_merep *merep() const;
  
-  pwr_tTime ohTime(pwr_tStatus *sts, const wb_orep * const o);
-  pwr_tOid oid(pwr_tStatus *sts, const wb_orep * const o);
-  pwr_tVid vid(pwr_tStatus *sts, const wb_orep * const o);
-  pwr_tOix oix(pwr_tStatus *sts, const wb_orep * const o);
+  virtual wb_vrep *next();
+
+  virtual pwr_tTime ohTime(pwr_tStatus *sts, const wb_orep *o);
+  virtual pwr_tOid oid(pwr_tStatus *sts, const wb_orep *o);
+  virtual pwr_tVid vid(pwr_tStatus *sts, const wb_orep *o);
+  virtual pwr_tOix oix(pwr_tStatus *sts, const wb_orep *o);
     
-  pwr_tCid cid(pwr_tStatus *sts, const wb_orep * const o);
-  pwr_tOid poid(pwr_tStatus *sts, const wb_orep * const o);
-  pwr_tOid foid(pwr_tStatus *sts, const wb_orep * const o);
-  pwr_tOid loid(pwr_tStatus *sts, const wb_orep * const o);
-  pwr_tOid boid(pwr_tStatus *sts, const wb_orep * const o);
-  pwr_tOid aoid(pwr_tStatus *sts, const wb_orep * const o);
+  virtual pwr_tCid cid(pwr_tStatus *sts, const wb_orep *o);
+  virtual pwr_tOid poid(pwr_tStatus *sts, const wb_orep *o);
+  virtual pwr_tOid foid(pwr_tStatus *sts, const wb_orep *o);
+  virtual pwr_tOid loid(pwr_tStatus *sts, const wb_orep *o);
+  virtual pwr_tOid boid(pwr_tStatus *sts, const wb_orep *o);
+  virtual pwr_tOid aoid(pwr_tStatus *sts, const wb_orep *o);
     
-  virtual const char * objectName(pwr_tStatus *sts, wb_orep *o) const;
-  virtual wb_name longName(pwr_tStatus *sts, wb_orep *o);
-  virtual pwr_tTime ohTime(pwr_tStatus *sts, wb_orep *o) const;
+  virtual const char * objectName(pwr_tStatus *sts, const wb_orep *o);
+  virtual wb_name longName(pwr_tStatus *sts, const wb_orep *o);
     
-  virtual bool isOffspringOf(pwr_tStatus *sts, const wb_orep *child, const wb_orep *parent) const;
+  virtual bool isOffspringOf(pwr_tStatus *sts, const wb_orep *child, const wb_orep *parent);
 
   virtual wb_orep *object(pwr_tStatus *sts);
   virtual wb_orep *object(pwr_tStatus *sts, pwr_tOid oid);
-  virtual wb_orep *object(pwr_tStatus *sts, const char *name);
-  virtual wb_orep *object(pwr_tStatus *sts, wb_orep *parent, wb_name name);
+  virtual wb_orep *object(pwr_tStatus *sts, wb_name &name);
+  virtual wb_orep *object(pwr_tStatus *sts, const wb_orep *parent, wb_name &name);
 
-  virtual wb_orep *createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination d, wb_name name);
+  virtual wb_orep *createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination &d, wb_name &name);
 
-  virtual wb_orep *copyObject(pwr_tStatus *sts, wb_orep *orep, wb_destination d, wb_name name);
-  virtual bool copyOset(pwr_tStatus *sts, wb_oset *oset, wb_destination d);
+  virtual wb_orep *copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_destination &d, wb_name &name);
+  virtual bool copyOset(pwr_tStatus *sts, wb_oset *oset, wb_destination &d);
 
-  virtual bool moveObject(pwr_tStatus *sts, wb_orep *orep, wb_destination d);
+  virtual bool moveObject(pwr_tStatus *sts, wb_orep *orep, wb_destination &d);
 
   virtual bool deleteObject(pwr_tStatus *sts, wb_orep *orep);
   virtual bool deleteFamily(pwr_tStatus *sts, wb_orep *orep);
   virtual bool deleteOset(pwr_tStatus *sts, wb_oset *oset);
 
-  virtual bool renameObject(pwr_tStatus *sts, wb_orep *orep, wb_name name);
+  virtual bool renameObject(pwr_tStatus *sts, wb_orep *orep, wb_name &name);
 
 
   virtual bool commit(pwr_tStatus *sts);
   virtual bool abort(pwr_tStatus *sts);
 
-  virtual bool writeAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, unsigned int offset, unsigned int size, void *p);
+  virtual bool writeAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, size_t offset, size_t size, void *p);
 
-  virtual void *readAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, unsigned int offset, unsigned int size, void *p);
+  virtual void *readAttribute(pwr_tStatus *sts, const wb_orep *o, pwr_eBix bix, size_t offset, size_t size, void *p);
 
-  virtual void *readBody(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, void *p);
+  virtual void *readBody(pwr_tStatus *sts, const wb_orep *o, pwr_eBix bix, void *p);
 
   virtual bool writeBody(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, void *p);
 
-  virtual wb_orep *ancestor(pwr_tStatus *sts, wb_orep *o);
+  virtual wb_orep *ancestor(pwr_tStatus *sts, const wb_orep *o);
 
-  virtual wb_orep *parent(pwr_tStatus *sts, wb_orep *o);
+  virtual wb_orep *parent(pwr_tStatus *sts, const wb_orep *o);
 
-  virtual wb_orep *after(pwr_tStatus *sts, wb_orep *o);
+  virtual wb_orep *after(pwr_tStatus *sts, const wb_orep *o);
 
-  virtual wb_orep *before(pwr_tStatus *sts, wb_orep *o);
+  virtual wb_orep *before(pwr_tStatus *sts, const wb_orep *o);
 
-  virtual wb_orep *first(pwr_tStatus *sts, wb_orep *o);
+  virtual wb_orep *first(pwr_tStatus *sts, const wb_orep *o);
 
-  virtual wb_orep *child(pwr_tStatus *sts, wb_orep *o, const char *name);
+  virtual wb_orep *child(pwr_tStatus *sts, const wb_orep *o, wb_name &name);
 
-  virtual wb_orep *last(pwr_tStatus *sts, wb_orep *o);
+  virtual wb_orep *last(pwr_tStatus *sts, const wb_orep *o);
 
-  virtual wb_orep *next(pwr_tStatus *sts, wb_orep *o);
+  virtual wb_orep *next(pwr_tStatus *sts, const wb_orep *o);
 
-  virtual wb_orep *previous(pwr_tStatus *sts, wb_orep *o);
+  virtual wb_orep *previous(pwr_tStatus *sts, const wb_orep *o);
 
   virtual wb_srep *newSession();
 
-  virtual bool isLocal(wb_orep *o) const;
-  virtual pwr_tVid vid() const;
-  virtual void objectName(wb_orep *o, const char *str);
+  virtual bool isLocal(const wb_orep *o);
+
+  virtual bool createSnapshot(const char *fileName);
+
+  virtual void objectName(const wb_orep *o, char *str);
 
   void load();
 

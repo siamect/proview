@@ -143,7 +143,9 @@ void wb_print_wbl::printClass(wb_volume& v,
     return;
   }
 
-  templ = co.child("Template");
+  wb_name t("Template");
+  
+  templ = co.child(t);
   if (!templ) {
     m_errCnt++;
     m_os << "! %WBDUMP-E-Error Template not found for class " << cdef.longName() << endl;
@@ -245,7 +247,9 @@ void wb_print_wbl::printObject(wb_volume& v, wb_object& o, bool recursive)
   m_os << endl;
 
   wb_object co = v.object(cdh_ClassIdToObjid(cdef.cid()));
-  templ = co.child("Template");
+  wb_name t("Template");
+  
+  templ = co.child(t);
   if (!templ) {
     m_errCnt++;
     m_os << "Template not found for class " << cdef.name() << endl;

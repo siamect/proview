@@ -43,7 +43,8 @@ wb_adrep *wb_bdrep::adrep( pwr_tStatus *sts)
 
 wb_adrep *wb_bdrep::adrep( pwr_tStatus *sts, const char *aname)
 {
-  wb_orepdbs *orep = (wb_orepdbs *)m_orep->m_vrep->child( sts, m_orep, aname);
+  wb_name n(aname);
+  wb_orepdbs *orep = (wb_orepdbs *)m_orep->m_vrep->child( sts, m_orep, n);
   if ( EVEN(*sts))
     return 0;
   wb_adrep *adrep = new wb_adrep( *orep);
