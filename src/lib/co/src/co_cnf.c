@@ -10,6 +10,7 @@
 
 #include "pwr.h"
 #include "co_dcli.h"
+#include "co_cdh.h"
 #include "co_cnf.h"
 
 #define cnf_cFile "/etc/proview.cnf"
@@ -17,7 +18,7 @@
 char default_values[][2][200] = {
     { "mysqlSocket",  "/tmp/mysql.sock"},
     { "defaultProjectRoot", "/usr/local/pwrp"},
-    { "appletCodebase", "http://java.sun.com/products/plugin/1.3/jinstall-13-win32.cab#Version=1,3,0,0"},
+    { "appletCodebase", "http://java.sun.com/update/1.4.2/jinstall-1_4-windows-i586.cab#Version=1,4,0,0"},
   };
 
 
@@ -44,7 +45,7 @@ char *cnf_get_value( char *name, char *value)
       if ( nr < 2)
         continue;
     
-      if ( strcmp( name, item_str[0]) == 0) {
+      if ( cdh_NoCaseStrcmp( name, item_str[0]) == 0) {
         strcpy( ret_value, item_str[1]);
         if ( value)
           strcpy( value, ret_value);
