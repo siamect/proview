@@ -64,6 +64,7 @@ local_java_sources := \
 	GeDynOptionMenu.java \
 	GeDynAnalogText.java \
 	GeDynTable.java \
+	GeDynHostObject.java \
 	Proportion.java\
 	RatioLayout.java \
 	AspectRatioListener.java \

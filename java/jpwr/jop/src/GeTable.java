@@ -206,7 +206,7 @@ public class GeTable extends JScrollPane implements GeComponentIfc,
 
     this.fillColor = fillColor;
     normalColor = GeColor.getColor( fillColor, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, false);
     table.setBackground( normalColor);
     if ( hColumn == 1)
       headerColumn.setBackground( normalColor);
@@ -214,7 +214,7 @@ public class GeTable extends JScrollPane implements GeComponentIfc,
   public void tsetColorTone( int colorTone) {
     this.colorTone = colorTone;
     normalColor = GeColor.getColor( fillColor, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, GeColor.NO_COLOR);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, GeColor.NO_COLOR, false);
     table.setBackground( normalColor);
     if ( hColumn == 1)
       headerColumn.setBackground( normalColor);
@@ -225,7 +225,7 @@ public class GeTable extends JScrollPane implements GeComponentIfc,
   public void resetFillColor() { 
     fillColor = originalFillColor;
     normalColor = GeColor.getColor( fillColor, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, false);
     table.setBackground( normalColor);
     if ( hColumn == 1)
       headerColumn.setBackground( normalColor);
@@ -233,13 +233,14 @@ public class GeTable extends JScrollPane implements GeComponentIfc,
   public void resetColorTone() { 
     colorTone = originalColorTone;
     normalColor = GeColor.getColor( fillColor, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, false);
     table.setBackground( normalColor);
     if ( hColumn == 1)
       headerColumn.setBackground( normalColor);
   }
   public void resetBorderColor() {}
   public void resetTextColor() {}
+  public void setVisibility( int visibility) {}
   public String getAnnot1() { return "";}
   public void setAnnot1( String s) {}
   public void setLastPage() {}
@@ -326,7 +327,7 @@ public class GeTable extends JScrollPane implements GeComponentIfc,
     dd.connect();
 
     normalColor = GeColor.getColor( fillColor, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, false);
     table.setBackground( normalColor);
     if ( hColumn == 1)
       headerColumn.setBackground( normalColor);

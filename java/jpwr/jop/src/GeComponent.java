@@ -52,6 +52,8 @@ public class GeComponent extends JComponent implements GeComponentIfc,
       if ( dd.actionType != 0 && en.gdh.isAuthorized( dd.access)) {
         this.addMouseListener(new MouseAdapter() {
           public void mouseReleased(MouseEvent e) {
+	    if ( dimmed)
+	      return;
 	    if ( e.isPopupTrigger())
 	      dd.action( GeDyn.eEvent_MB3Press, e);
 	    else if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0 &&
@@ -60,6 +62,8 @@ public class GeComponent extends JComponent implements GeComponentIfc,
 	  }
 
           public void mousePressed(MouseEvent e) {
+	    if ( dimmed)
+	      return;
 	    if ( e.isPopupTrigger())
 	      dd.action( GeDyn.eEvent_MB3Press, e);
 	    else if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0 &&
@@ -67,6 +71,8 @@ public class GeComponent extends JComponent implements GeComponentIfc,
 	      dd.action( GeDyn.eEvent_MB1Down, e);
 	  }
           public void mouseClicked(MouseEvent e) {
+	    if ( dimmed)
+	      return;
 	    if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0 &&
 		en.gdh.isAuthorized( dd.access))
 	      dd.action( GeDyn.eEvent_MB1Click, e);
@@ -75,7 +81,7 @@ public class GeComponent extends JComponent implements GeComponentIfc,
 	if ( (dd.actionType & GeDyn.mActionType_Slider) != 0) {
 	  this.addMouseMotionListener( new MouseMotionAdapter() {
 	    public void mouseDragged(MouseEvent e) {
-	      if ( actionDisabled)
+	      if ( actionDisabled || dimmed)
 	        return;
 	      if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0 &&
 		  en.gdh.isAuthorized( dd.access))
@@ -104,6 +110,24 @@ public class GeComponent extends JComponent implements GeComponentIfc,
   public void resetColorTone() { colorTone = originalColorTone; }
   public void resetBorderColor() { borderColor = originalBorderColor;}
   public void resetTextColor() { textColor = originalTextColor;}
+  public void setVisibility( int visibility) {
+    switch ( visibility) {
+    case Ge.VISIBILITY_VISIBLE:
+      visible = true;
+      dimmed = false;
+      break;
+    case Ge.VISIBILITY_INVISIBLE:
+      visible = false;
+      dimmed = false;
+      repaint();
+      break;
+    case Ge.VISIBILITY_DIMMED:
+      visible = true;
+      dimmed = true;
+      repaint();
+      break;
+    }
+  }
   public String getAnnot1() { return annot1;}
   public void setAnnot1( String s) { annot1 = s;}
   public Object getDd() { return dd;}
@@ -139,6 +163,8 @@ public class GeComponent extends JComponent implements GeComponentIfc,
   public int levelColorTone = 0;
   public int levelFillColor = 0;
   public int shadow = 0;
+  public boolean visible = true;
+  public boolean dimmed = false;
   public void setColorTone( int colorTone) {
     this.colorTone = colorTone;
     originalColorTone = colorTone;

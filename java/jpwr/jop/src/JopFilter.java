@@ -141,7 +141,7 @@ public class JopFilter extends JComponent implements JopDynamic, ActionListener{
         Math.PI * rotate/180,((double)original_width)/2, ((double)original_height)/2));
     g.transform( AffineTransform.getScaleInstance( scaleWidth, scaleHeight));
     g.setColor(GeColor.getColor(21, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, false));
     g.fill( shapes[0]);
     g.setStroke( new BasicStroke(1F));
     g.setColor(GeColor.getColor(0, borderColor));

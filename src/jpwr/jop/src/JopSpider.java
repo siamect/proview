@@ -140,7 +140,7 @@ System.out.println( "qcom put finished");
 
                 // Replace * by node object
                 if ( objectValue.charAt(0) == '*') {
-                  CdhrObjid cdhr_node = gdh.getNodeObject();
+                  CdhrObjid cdhr_node = gdh.getNodeObject(0);
                   if ( cdhr_node.evenSts())
                     return;
                   CdhrString cdhr_nodestr = gdh.objidToName( cdhr_node.objid, Cdh.mName_volumeStrict);

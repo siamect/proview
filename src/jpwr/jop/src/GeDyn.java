@@ -30,6 +30,7 @@ public class GeDyn {
     public static final int mDynType_AnalogText		= 1 << 23;
     public static final int mDynType_Table		= 1 << 24;
     public static final int mDynType_StatusColor       	= 1 << 25;
+    public static final int mDynType_HostObject       	= 1 << 26;
 
     public static final int mActionType_No		= 0;
     public static final int mActionType_Inherit		= 1 << 0;
@@ -75,17 +76,16 @@ public class GeDyn {
     public GeDynElemIfc[] elements;
     public GeComponentIfc comp;
     public String       instance; 
+    public String	hostObject;
     public boolean	ignoreColor;
     public boolean	resetColor;
     public boolean	repaintNow;
     public JopSession	session;
     public JopEngine	en;
 
-    public boolean	invisible;
-    public boolean	invisibleOld;
-    public double         rotate;
-    public double         x0;
-    public double         y0;
+    public double       rotate;
+    public double       x0;
+    public double       y0;
 
     public GeDyn( Object comp) {
 	this.comp = (GeComponentIfc) comp;
@@ -112,6 +112,9 @@ public class GeDyn {
     }
     public void setInstance( String instance) {
 	this.instance = instance;
+    }
+    public void setHostObject( String hostObject) {
+	this.hostObject = hostObject;
     }
     public void setElements( GeDynElemIfc[] elements) {
 	this.elements = elements;
@@ -161,11 +164,35 @@ public class GeDyn {
     }
 
     public String getAttrName( String str) {
+	if ( str.toLowerCase().startsWith("$node")) {
+	    int nix;
+	    if ( instance == null)
+	        nix = 0;
+	    else {
+	        CdhrObjid cdhr_inst = en.gdh.nameToObjid( instance);
+	        nix = cdhr_inst.objid.vid;
+	    }
+	    CdhrObjid cdhr_node = en.gdh.getNodeObject(nix);
+	    if ( cdhr_node.evenSts()) return str;
+	    CdhrString cdhr_ns = en.gdh.objidToName( cdhr_node.objid, Cdh.mName_volumeStrict);
+	    if ( cdhr_ns.evenSts()) return str;
+	    String s = RtUtilities.strReplace( str, "$node", cdhr_ns.str);
+	    return s;
+	}
 	if ( instance == null) {
-	    if ( str.startsWith("!"))
-		return str.substring(1);
-	    else
-		return str;
+	    if ( hostObject == null) {
+		if ( str.startsWith("!"))
+		    return str.substring(1);
+		else
+		    return str;
+	    }
+	    else {
+		String s = RtUtilities.strReplace( str, "$hostobject", hostObject);
+		if ( s.startsWith("!"))
+		    return s.substring(1);
+		else
+		    return s;
+	    }
 	}
 	else {
 	    String s = RtUtilities.strReplace( str, "$object", instance);
@@ -179,8 +206,12 @@ public class GeDyn {
     public String getAttrNameNoSuffix( String str) {
 	int startIdx;
 	String s;
-	if ( instance == null)
-	    s = str;
+	if ( instance == null) {
+	    if ( hostObject == null)
+		s = str;
+	    else
+		s = RtUtilities.strReplace( str, "$hostobject", hostObject);
+	}
 	else
 	    s = RtUtilities.strReplace( str, "$object", instance);
    

@@ -133,13 +133,13 @@ public class GeTextField extends JTextField implements GeComponentIfc,
 
     this.fillColor = fillColor;
     normalColor = GeColor.getColor( fillColor, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, false);
     setBackground( normalColor);
   }
   public void tsetColorTone( int colorTone) {
     this.colorTone = colorTone;
     normalColor = GeColor.getColor( fillColor, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, GeColor.NO_COLOR);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, GeColor.NO_COLOR, false);
     setBackground( normalColor);
   }
   public void setShadow( int shadow) {}
@@ -149,13 +149,13 @@ public class GeTextField extends JTextField implements GeComponentIfc,
   public void resetFillColor() { 
     fillColor = originalFillColor;
     normalColor = GeColor.getColor( fillColor, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, false);
     setBackground( normalColor);
   }
   public void resetColorTone() { 
     colorTone = originalColorTone;
     normalColor = GeColor.getColor( fillColor, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, false);
     setBackground( normalColor);
   }
   public void resetBorderColor() {}
@@ -176,6 +176,7 @@ public class GeTextField extends JTextField implements GeComponentIfc,
   public void setLevelDirection( int levelDirection) {}
   public void setLevelColorTone( int levelColorTone) {}
   public void setLevelFillColor( int levelFillColor) {}
+  public void setVisibility( int visibility) {}
 
   Font annot1Font = new Font("Helvetica", Font.BOLD, 14);
   public Font annotFont = annot1Font;
@@ -265,7 +266,7 @@ public class GeTextField extends JTextField implements GeComponentIfc,
     dd.connect();
 
     normalColor = GeColor.getColor( fillColor, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, false);
     setBackground( normalColor);
   }
   public void dynamicClose() {

@@ -15,6 +15,7 @@ public interface GeComponentIfc {
     public void setLevelDirection( int levelDirection);
     public void setLevelColorTone( int levelColorTone);
     public void setLevelFillColor( int levelFillColor);
+    public void setVisibility( int visibility);
     public String getAnnot1();
     public void setAnnot1( String annot1);
     public void setLastPage();

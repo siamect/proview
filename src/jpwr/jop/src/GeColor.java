@@ -585,7 +585,7 @@ public class GeColor {
 
   public static int getDrawtype( int local_drawtype, int color_tone, int color_shift,
 	int color_intensity,
-	int color_brightness, int color_inverse, int default_color) {
+	int color_brightness, int color_inverse, int default_color, boolean dimmed) {
     int drawtype;
     int	base_drawtype;
     int	incr;
@@ -665,6 +665,18 @@ public class GeColor {
       if ( drawtype >= 10)
         drawtype = drawtype + 10 - 2 * (drawtype % 10) - 1;
     }
+    if ( dimmed) {
+      if ( drawtype == 0)
+	drawtype = 25;
+      else if ( 26 <= drawtype && drawtype <= 29)
+	drawtype = drawtype - 4;
+      else if ( 36 <= drawtype && drawtype <= 39)
+	drawtype = drawtype - 4;
+      else if ( 46 <= drawtype && drawtype <= 49)
+	drawtype = drawtype - 4;
+      else if ( 56 <= drawtype && drawtype <= 59)
+	drawtype = drawtype - 4;
+    }
     if ( drawtype < 0 || drawtype >= 300) {
       System.out.println("** Invalid drawtype");
       drawtype = 0;
@@ -679,10 +691,10 @@ public class GeColor {
   }
 
   public static Color getColor( int local_drawtype, int color_tone, int color_shift,
-	int color_intensity,
-	int color_brightness, int color_inverse, int default_color) {
+	int color_intensity, int color_brightness, int color_inverse, 
+	int default_color, boolean dimmed) {
     int drawtype = getDrawtype( local_drawtype, color_tone, color_shift, color_intensity,
-				color_brightness, color_inverse, default_color);
+				color_brightness, color_inverse, default_color, dimmed);
     if ( colors[drawtype] == null)
       colors[drawtype] = rgbColor( drawtype);
     return colors[drawtype];
