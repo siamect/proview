@@ -128,7 +128,7 @@ reload_cnvdirvolume()
 
   reload_continue "Pass cnvdirvolume"
 
-  # Create a script that dumps each volume
+  # Create a script that removes DbConfig objects and create BusConfig objects
   tmpfile=$pwrp_tmp/cnvdirvolume.sh
   cat > $tmpfile << EOF
 main
@@ -136,6 +136,11 @@ main
   string class;
   string child;
   string sibling;
+  string nodeconfig;
+  string attr;
+  int busnumber;
+  string bus;
+  string next;
 
   set volume/volume=Directory
 
@@ -157,6 +162,25 @@ main
       object = GetNextSibling( object);
     endif
   endwhile
+
+  nodeconfig = GetRootList();
+  while ( nodeconfig != "")
+    next = GetNextSibling( nodeconfig);
+    class = GetObjectClass( nodeconfig);
+    if ( class == "NodeConfig" || class == "FriendNodeConfig")
+      attr = nodeconfig + ".BusNumber";
+      busnumber = GetAttribute( attr);
+      bus = busnumber;
+      class = GetObjectClass(bus);
+      if ( class == "")
+        create object/dest=""/name='bus'/class="BusConfig"/last
+        set attr/name='bus'/attr="BusNumber"/value='bus'/noconf/nolog
+      endif
+      move object/source='nodeconfig'/dest='bus'/last
+    endif
+    nodeconfig = next;
+  endwhile
+
   save
 endmain
 EOF

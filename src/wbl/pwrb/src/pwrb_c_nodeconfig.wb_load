@@ -40,7 +40,6 @@ SObject pwrb:Class
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
       Attr Method = pwr_eMethod_Standard
-      Attr Flags |= pwr_mClassDef_TopObject
     EndBody
     Object RtBody $ObjBodyDef 1 
       Body SysBody
@@ -89,10 +88,12 @@ SObject pwrb:Class
       EndObject
       !/**
       ! QCOM bus number.
+      ! Obsolete since V4.0
       !*/
       Object BusNumber $Attribute 5 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags = PWR_MASK_INVISIBLE
         EndBody
       EndObject
       !/**

@@ -226,6 +226,7 @@ topobjects ProjectNavigatorW2
   class $System
   class NodeConfig
   class FriendNodeConfig
+  class BusConfig
 }
 
 palette ProjectNavigatorPalette
@@ -246,6 +247,7 @@ palette ProjectNavigatorPalette
   menu Node
   {
     class ApplDistribute
+    class BusConfig
     class ClassVolumeLoad
     class Distribute
     class FriendNodeConfig

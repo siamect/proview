@@ -1,0 +1,47 @@
+!  pwrb_c_busconfig.wb_load -- Defines the class BusConfig.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+SObject pwrb:Class
+!/**
+!  @Version 1.0
+!  @Group ProjectConfiguration
+!  @Summary Configures a Qcom bus.
+!  The Bus object configures a qcom that nodes in the project will
+!  communicate on.
+!
+!  The object should be configured in the  project volume as a top object,
+!  and have the NodeConfig object of the nodes in the bus as children.
+!
+!  @classlink NodeConfig pwrb_nodeconfig.html
+!  
+!*/
+  Object BusConfig $ClassDef 362
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+      Attr Flags |= pwr_mClassDef_TopObject
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      !/**
+      ! Description of the bus
+      !*/
+      Object Description $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      ! QCOM bus number.
+      !*/
+      Object BusNumber $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject
