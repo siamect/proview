@@ -187,16 +187,17 @@ struct dbs_sQlink {
 
 
 enum dbs_eSect {
-    dbs_eSect_dir     = 0,
-    dbs_eSect_volume  = 1,
-    dbs_eSect_volref  = 2,
-    dbs_eSect_oid     = 3,
-    dbs_eSect_object  = 4,
-    dbs_eSect_rbody   = 5,
-    dbs_eSect_name    = 6,
-    dbs_eSect_dbody   = 8,
-    dbs_eSect_class   = 10,
-    dbs_eSect_fixup   = 14,
+    dbs_eSect_dir      = 0,
+    dbs_eSect_volume   = 1,
+    dbs_eSect_volref   = 2,
+    dbs_eSect_oid      = 3,
+    dbs_eSect_object   = 4,
+    dbs_eSect_rbody    = 5,
+    dbs_eSect_name     = 6,
+    dbs_eSect_dbody    = 8,
+    dbs_eSect_class    = 10,
+    dbs_eSect_scobject = 13, /**< Sub class object */ 
+    dbs_eSect_fixup    = 14,
     dbs_eSect_
 };
 
@@ -208,6 +209,7 @@ enum dbs_eSect {
 %#define dbs_mSect_rbody    pwr_Bit(dbs_eSect_rbody)
 %#define dbs_mSect_name     pwr_Bit(dbs_eSect_name)
 %#define dbs_mSect_class    pwr_Bit(dbs_eSect_class)
+%#define dbs_mSect_scobject pwr_Bit(dbs_eSect_scobject)
 %#define dbs_mSect_dbody    pwr_Bit(dbs_eSect_dbody)
 %#define dbs_mSect_fixup    pwr_Bit(dbs_eSect_fixup)
 %
@@ -234,7 +236,10 @@ enum dbs_eFile {
 %    pwr_Bits( io            , 1),
 %    pwr_Bits( fill1         , 7),,,,,,,
 %
-%    pwr_Bits( fill2         , 8),,,,,,,,
+%    pwr_Bits( isArrayElem   , 1), /**< For sc only */
+%    pwr_Bits( hasSubClass   , 1),
+%    pwr_Bits( fill2         , 6),,,,,,
+%
 %    pwr_Bits( fill3         , 8),,,,,,,
 %  ) b;
 %
@@ -245,6 +250,9 @@ enum dbs_eFile {
 %#define dbs_mFlags_devOnly       pwr_Bit(3)
 %
 %#define dbs_mFlags_io            pwr_Bit(8)
+%
+%#define dbs_mFlags_isArrayElem   pwr_Bit(16)
+%#define dbs_mFlags_hasSubClass   pwr_Bit(17)
 %
 %#define dbs_mFlags_isClient      (dbs_mFlags_isAliasClient|dbs_mFlags_isMountClient)
 %#define dbs_mFlags_              (~dbs_mFlags__)
@@ -485,6 +493,25 @@ struct dbs_sName {
     pwr_tOix        poix;        /**< object identity of parent. */
     pwr_tObjName    normname;    /**< normalized object name. */
     dbs_tRef        ref;         /**< address to object in object section. */
+};
+
+/**
+ * Sub Class Object .
+ */
+
+#ifdef PDR_HDR
+%#define dbs_cVesrionScObject 1
+#endif
+
+struct dbs_sScObject {
+    pwr_tOid        oid;
+    pwr_tCid        cid;
+    pwr_tOid        poid;        /**< gdb_sObject or gdb_sScObject */
+  /*  pwr_tTime     time; */
+    pwr_tUInt32     offset;      /**< Offset in parent body */
+    pwr_tUInt32     size;
+    dbs_mFlags      flags;
+    pwr_tUInt32     aidx;        /**< Array index if array element */
 };
 
 
