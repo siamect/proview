@@ -1702,6 +1702,7 @@ fromApplication (
   mh_uApplReply reply;
   mh_sHead	*hp = (mh_sHead*) get->data;
   qcom_sAid	*aid = &get->sender;
+  struct timespec  hold = {0, 10000};
 
   get->reply = hp->qid; 
 
@@ -1731,6 +1732,10 @@ fromApplication (
     reply.Sts = MH__PROGERR;
     break;
   }
+
+#if defined(OS_LINUX) 
+  nanosleep(&hold, NULL);
+#endif
 
   applLogState(ap);
   applReply(get, &reply, sizeof(reply));
