@@ -8,6 +8,7 @@ public class GeCFormat {
     
       try {
         if ( (f_idx = format.indexOf('f')) != -1) {
+	  format_type = FRM_F;
           p_idx = format.indexOf('.');
           if ( format.charAt(1) == '-')
 	    no_space = 1;
@@ -22,15 +23,17 @@ public class GeCFormat {
           }
         }
         else if ( (f_idx = format.indexOf('d')) != -1) {
-           if ( format.charAt(1) == '-')
-	     no_space = 1;
-	   if ( f_idx-no_space != 1) {
-             h = Integer.valueOf(format.substring( 1+no_space, f_idx)).intValue();
-           }
-           else
-             h = 4;
+	  format_type = FRM_D;
+	  if ( format.charAt(1) == '-')
+	    no_space = 1;
+	  if ( f_idx-no_space != 1) {
+            h = Integer.valueOf(format.substring( 1+no_space, f_idx)).intValue();
+	  }
+	  else
+	    h = 4;
         }
         else if ( (f_idx = format.indexOf('s')) != -1) {
+	  format_type = FRM_S;
           if ( format.charAt(1) == '-')
 	    no_space = 1;
           p_idx = format.indexOf('.');
@@ -46,6 +49,30 @@ public class GeCFormat {
 	    h = Integer.valueOf(format.substring( 1+no_space, p_idx)).intValue();
           }
         }
+        else if ( (f_idx = format.indexOf('o')) != -1) {
+	  if ( f_idx >= 1 && format.charAt(f_idx-1) == '1')
+	    format_type = FRM_1O;
+	  else if ( f_idx >= 1 && format.charAt(f_idx-1) == '2')
+	    format_type = FRM_2O;
+	  else
+	    format_type = FRM_O;
+	}
+        else if ( (f_idx = format.indexOf('t')) != -1) {
+	  if ( f_idx >= 1 && format.charAt(f_idx-1) == '1')
+	    format_type = FRM_1T;
+	  else if ( f_idx >= 1 && format.charAt(f_idx-1) == '2')
+	    format_type = FRM_2T;
+	  else if ( f_idx >= 1 && format.charAt(f_idx-1) == '3')
+	    format_type = FRM_3T;
+	  else
+	    format_type = FRM_T;
+	}
+        else if ( (f_idx = format.indexOf('m')) != -1) {
+	  if ( f_idx >= 1 && format.charAt(f_idx-1) == '1')
+	    format_type = FRM_1M;
+	  else
+	    format_type = FRM_M;
+	}
       }
       catch ( NumberFormatException e) {
         System.out.println( "NumberFormatException: " + format);
@@ -55,7 +82,25 @@ public class GeCFormat {
     int d;
     int h;
     int no_space = 0;
+    int format_type;
 
+    public static final int FRM_S  = 0;  // String
+    public static final int FRM_O  = 1;  // Objid object name
+    public static final int FRM_1O = 2;  // Objid path
+    public static final int FRM_2O = 3;  // Objid volume and path
+    public static final int FRM_T  = 4;   // Time, date and time
+    public static final int FRM_1T = 5;  // Time, only time, no hundredth
+    public static final int FRM_2T = 6;  // Time, only time with hundreth
+    public static final int FRM_3T = 7;  // Time, commpressed date and time, no hundredth
+    public static final int FRM_M  = 8;  // Message
+    public static final int FRM_1M = 9;  // Message, text only
+    public static final int FRM_D  = 10; // Integer
+    public static final int FRM_F  = 11; // Float
+
+
+    public int type() {
+      return format_type;
+    }
     public StringBuffer format( float value, StringBuffer buff) {
       int j, len;
       int t2 = (int) value;
@@ -95,28 +140,82 @@ public class GeCFormat {
       int t2 = value;
 
       if ( h == -1)
-        return buff;
+	return buff;
 
       buff.setLength(0);
       buff.append(value);
       len = buff.length();
       for ( j = 0; j < h-len; j++)
-	buff.insert(0," ");
+        buff.insert(0," ");
       return buff;
     }
 
     public StringBuffer format( String value, StringBuffer buff) {
-      int j, len;
+      switch( format_type) {
+      case FRM_S: {
+	int j, len;
 
-      if ( h == -1)
-        return buff;
+	if ( h == -1)
+	  return buff;
 
-      len = value.length();
-      if ( len > h && h != 0)
-        len = h;
+	len = value.length();
+	if ( len > h && h != 0)
+	  len = h;
+	buff.setLength(0);
+	for ( j = 0; j < len; j++)
+	  buff.append(value.charAt(j));
+	return buff;
+      }
+      case FRM_O: {
+	int idx, j, len;
+
+	len = value.length();
+	idx = value.lastIndexOf('-');
+	if ( idx == -1)
+	  idx = 0;
+	else
+	  idx++;
+
+	buff.setLength(0);
+	for ( j = idx; j < len; j++)
+	  buff.append(value.charAt(j));
+	return buff;	
+      }
+      case FRM_1O: 
+      case FRM_2O: {
+	int j, len;
+
+	len = value.length();
+	buff.setLength(0);
+	for ( j = 0; j < len; j++)
+	  buff.append(value.charAt(j));
+	return buff;	
+      }
+      case FRM_T: 
+      case FRM_1T: 
+      case FRM_2T: 
+      case FRM_3T: {
+	int j, len;
+
+	len = value.length();
+	buff.setLength(0);
+	for ( j = 0; j < len; j++)
+	  buff.append(value.charAt(j));
+	return buff;	
+      }
+      case FRM_M: 
+      case FRM_1M: {
+	int j, len;
+
+	len = value.length();
+	buff.setLength(0);
+	for ( j = 0; j < len; j++)
+	  buff.append(value.charAt(j));
+	return buff;	
+      }
+      }
       buff.setLength(0);
-      for ( j = 0; j < len; j++)
-	buff.append(value.charAt(j));
       return buff;
     }
 }
+
