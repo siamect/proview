@@ -83,6 +83,7 @@
 # define cPrio_webmon		(cPrio_base + 15)
 # define cPrio_webmonmh		(cPrio_base + 15)
 # define cPrio_elog		(cPrio_base + 15)
+# define cPrio_sysmon		(cPrio_base + 16)
 # define cPrio_plc_init		(cPrio_base + 5)
 # define cPrio_remh		(cPrio_base + 5)
 # define cPrio_remotelogg	(cPrio_base + 5)
@@ -1990,6 +1991,9 @@ ini_ProcTable (
   pp->proc.flags.b.system = 1;
 
   pp = ini_ProcInsert(sts, cp, "pwr_elog", "pwr_elog_%d", 0, 1, "rt_elog", cPrio_elog, 0, "");
+  pp->proc.flags.b.system = 1;
+
+  pp = ini_ProcInsert(sts, cp, "pwr_sysmon", "pwr_sysmon_%d", 0, 1, "rt_sysmon", cPrio_sysmon, 0, "");
   pp->proc.flags.b.system = 1;
 
   pp = ini_ProcInsert(sts, cp, "pwr_webmon", "pwr_webmon_%d", 0, 1, "rt_webmon.sh", cPrio_webmon, 0, "");
