@@ -3,6 +3,7 @@
 
 #include <iostream.h>
 #include <math.h>
+#include <stdlib.h>
 
 #include "flow_annot.h"
 #include "flow_node.h"

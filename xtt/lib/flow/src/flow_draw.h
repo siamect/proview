@@ -1,6 +1,8 @@
 #ifndef flow_draw_h
 #define flow_draw_h
 
+#include <stdlib.h>
+
 #include <Xm/Xm.h>
 #include <Mrm/MrmPublic.h>
 #ifndef _XtIntrinsic_h
@@ -8,6 +10,52 @@
 #endif
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
+
+#if defined OS_LINUX
+#define IMLIB 1
+#endif
+
+#if defined IMLIB
+# if defined OS_LYNX
+#  define __NO_INCLUDE_WARN__ 1
+# endif
+# include <X11/extensions/shape.h>
+# include <Imlib.h>
+# if defined OS_LYNX
+#  undef __NO_INCLUDE_WARN__
+# endif
+#else
+typedef void *ImlibData;
+typedef void *ImlibImage;
+#endif
+
+typedef struct {
+        Widget  toplevel;
+        Widget	nav_shell;
+	Widget	nav_toplevel;
+        XtAppContext  app_ctx;
+	Display	*display;
+	Window	window;
+	Window	nav_window;
+	Screen	*screen;
+	GC	gc;
+	GC	gc_erase;
+	GC	gc_inverse;
+	GC	gc_yellow;
+	GC	gc_green;
+	GC	gcs[flow_eDrawType__][DRAW_TYPE_SIZE];
+	XFontStruct	*font_struct[draw_eFont__][DRAW_FONT_SIZE];
+	Font 	font[draw_eFont__][DRAW_FONT_SIZE];
+        int	cursors[draw_eCursor__];
+        int	ef;
+        int	(*event_handler)(flow_eEvent event, int x, int y, int w, int h);
+        int 	(*event_handler_nav)(flow_eEvent event, int x, int y);
+	unsigned long background;
+	XtIntervalId	timer_id;
+        int     click_sensitivity;
+        ImlibData *imlib;
+} draw_sCtx, *draw_tCtx;
+
 
 int flow_draw_init( 
 	Widget toplevel, 
@@ -78,6 +126,8 @@ int flow_draw_nav_text_erase( FlowCtx *ctx, int x, int y, char *text, int len,
 	flow_eDrawType gc_type, int idx, int line);
 int flow_draw_fill_rect( FlowCtx *ctx, int x, int y, int width, int height, 
 	flow_eDrawType gc_type);
+int flow_draw_image( FlowCtx *ctx, int x, int y, int width, int height,
+	Pixmap pixmap, Pixmap clip_mask);
 int flow_draw_pixmaps_create( FlowCtx *ctx, flow_sPixmapData *pixmap_data,
 	void **pixmaps);
 void flow_draw_pixmaps_delete( FlowCtx *ctx, void *pixmaps);
@@ -122,5 +172,7 @@ int flow_draw_change_ctx(
 void flow_set_inputfocus( FlowCtx *ctx);
 void flow_set_widget_inputfocus( Widget w);
 void flow_draw_set_click_sensitivity( FlowCtx *ctx, int value);
+void flow_set_image_clip_mask( FlowCtx *ctx, Pixmap pixmap, int x, int y);
+void flow_reset_image_clip_mask( FlowCtx *ctx);
 
 #endif

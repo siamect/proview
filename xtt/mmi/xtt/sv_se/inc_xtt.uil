@@ -87,6 +87,10 @@ k_Enter_Value		: "Ange värde";
 k_Message		: "Meddelande";
 k_Value_input		: "Värde inmatning";
 
+! module xhelp
+
+c_SearchNext		: "SökNästa";
+c_SearchPrevious	: "SökFöregående";
 
 
 

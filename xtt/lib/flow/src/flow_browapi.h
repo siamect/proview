@@ -117,6 +117,7 @@ void brow_AddLine( brow_tNodeClass nc, double x1, double y1,
 void brow_AddArc( brow_tNodeClass nc, double x1, double y1, 
 	double x2, double y2, int angel1, int angel2,
 	flow_eDrawType draw_type, int line_width);
+void brow_AddImage( brow_tNodeClass nc, char *imagefile, double x, double y);
 void brow_AddText( brow_tNodeClass nc, char *text_str, double x, double y, 
 	flow_eDrawType draw_type, int text_size);
 void brow_AddAnnot( brow_tNodeClass nc, double x, double y, int number,

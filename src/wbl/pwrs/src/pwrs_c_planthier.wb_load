@@ -17,6 +17,8 @@
 !  The object is used in the Plant Configuration in a way
 !  analog to the $NodeHier object in the Node
 !  Configuration.
+!  @image orm_en1-166.gif
+!  Schematic Plant Configuration Showing Two Plants 
 !  
 !  Is created in the development environment by means of
 !  the Configuration Editor.

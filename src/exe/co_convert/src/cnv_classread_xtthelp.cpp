@@ -91,10 +91,18 @@ int ClassRead::xtthelp_class()
   fp_tmp <<
 "<H1>Description" << endl;
 
-  if ( doc_fresh)
-    for ( i = 0; i < doc_cnt; i++)
-      fp_tmp << doc_text[i] << endl;
+  if ( doc_fresh) {
+    for ( i = 0; i < doc_cnt; i++) {
+      if ( (s = strstr( low(doc_text[i]), "@image")) != 0)  {
+	char imagefile[80];
 
+	remove_spaces( s + 6, imagefile);
+	fp_tmp << "<IMAGE> " << imagefile << endl;
+      }
+      else
+	fp_tmp << doc_text[i] << endl;
+    }
+  }
   for ( i = 0; i < doc_clink_cnt; i++) {
     if ( strncmp( doc_clink_ref[i], "pwrb_", 5) == 0)
       strcpy( link_ref, &doc_clink_ref[i][5]);
@@ -133,6 +141,7 @@ int ClassRead::xtthelp_class_close()
 int ClassRead::xtthelp_attribute()
 {
   int i;
+  char *s;
 
   fp_tmp <<
 endl <<
@@ -159,10 +168,18 @@ endl <<
 
   fp_tmp << endl;
 
-  if ( doc_fresh)
-    for ( i = 0; i < doc_cnt; i++)
-      fp_tmp << doc_text[i] << endl;
+  if ( doc_fresh) {
+    for ( i = 0; i < doc_cnt; i++) {
+      if ( (s = strstr( low(doc_text[i]), "@image")) != 0)  {
+	char imagefile[80];
 
+	remove_spaces( s + 6, imagefile);
+	fp_tmp << "<IMAGE> " << imagefile << endl;
+      }
+      else
+	fp_tmp << doc_text[i] << endl;
+    }
+  }
   return 1;
 }
 

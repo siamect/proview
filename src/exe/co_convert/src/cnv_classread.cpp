@@ -989,10 +989,11 @@ int ClassRead::remove_spaces(
 
   strcpy( out, s);
         
+  s = out;
   if ( strlen(s) != 0)
   {
     for ( s += strlen(s) - 1; 
-          !((s == in) || ((*s != ' ') && (*s != 9))); s--) ;
+          !((s == out) || ((*s != ' ') && (*s != 9))); s--) ;
     s++;
     *s = 0;
   }

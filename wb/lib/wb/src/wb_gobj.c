@@ -211,17 +211,9 @@ unsigned long	index;
         }
         else
         {
-          if ( *(int *) plc->hp.hinactx == 999) {
-	    sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
+	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
 					&is_attr);
-            objdid = attrref.Objid;
-          }
-          else
-	  {
-#if defined OS_VMS
-	    sts = hina_sel_get_planthier( plc->hp.hinactx, &objdid);
-#endif
-          }
+	  objdid = attrref.Objid;
 	  if ( EVEN(sts))
 	  { 
 	    foe_message( foectx,"Select a di object in the navigator");
@@ -297,17 +289,9 @@ unsigned long	index;
         }
         else
         {
-          if ( *(int *) plc->hp.hinactx == 999) {
-	    sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
+	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
 					&is_attr);
-            objdid = attrref.Objid;
-          }
-          else
-	  {
-#if defined OS_VMS
-	    sts = hina_sel_get_planthier( plc->hp.hinactx, &objdid);
-#endif
-          }
+	  objdid = attrref.Objid;
 	  if ( EVEN(sts))
 	  { 
 	    foe_message( foectx,"Select a do object in the navigator");
@@ -383,17 +367,9 @@ unsigned long	index;
         }
         else
         {
-          if ( *(int *) plc->hp.hinactx == 999) {
-	    sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
+	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
 					&is_attr);
-            objdid = attrref.Objid;
-          }
-          else
-	  {
-#if defined OS_VMS
-	    sts = hina_sel_get_planthier( plc->hp.hinactx, &objdid);
-#endif
-          }
+	  objdid = attrref.Objid;
 	  if ( EVEN(sts))
 	  { 
 	    foe_message( foectx,"Select a dv object in the navigator");
@@ -468,17 +444,9 @@ unsigned long	index;
         }
         else
         {
-          if ( *(int *) plc->hp.hinactx == 999) {
-	    sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
+	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
 					&is_attr);
-            objdid = attrref.Objid;
-          }
-          else
-	  {
-#if defined OS_VMS
-	    sts = hina_sel_get_planthier( plc->hp.hinactx, &objdid);
-#endif
-          }
+	  objdid = attrref.Objid;
 	  if ( EVEN(sts))
 	  { 
 	    foe_message( foectx,"Select a ai object in the navigator");
@@ -553,17 +521,9 @@ unsigned long	index;
         }
         else
         {
-          if ( *(int *) plc->hp.hinactx == 999) {
-	    sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
+	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
 					&is_attr);
-            objdid = attrref.Objid;
-          }
-          else
-	  {
-#if defined OS_VMS
-	    sts = hina_sel_get_planthier( plc->hp.hinactx, &objdid);
-#endif
-          }
+	  objdid = attrref.Objid;
 	  if ( EVEN(sts))
 	  { 
 	    foe_message( foectx,"Select a ao object in the navigator");
@@ -638,17 +598,9 @@ unsigned long	index;
         }
         else
         {
-          if ( *(int *) plc->hp.hinactx == 999) {
-	    sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
+	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
 					&is_attr);
-            objdid = attrref.Objid;
-          }
-          else
-	  {
-#if defined OS_VMS
-	    sts = hina_sel_get_planthier( plc->hp.hinactx, &objdid);
-#endif
-          }
+	  objdid = attrref.Objid;
 	  if ( EVEN(sts))
 	  { 
 	    foe_message( foectx,"Select a av object in the navigator");
@@ -738,17 +690,9 @@ unsigned long	index;
         }
         else
         {
-          if ( *(int *) plc->hp.hinactx == 999) {
-	    sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
+	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
 					&is_attr);
-            objdid = attrref.Objid;
-          }
-          else
-	  {
-#if defined OS_VMS
-	    sts = hina_sel_get_planthier( plc->hp.hinactx, &objdid);
-#endif
-          }
+	  objdid = attrref.Objid;
 	  if ( EVEN(sts))
 	  { 
 	    foe_message( foectx,"Select an object in the navigator");
@@ -853,17 +797,9 @@ unsigned long	index;
         }
         else
         {
-          if ( *(int *) plc->hp.hinactx == 999) {
-	    sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
+	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
 					&is_attr);
-            objdid = attrref.Objid;
-          }
-          else
-	  {
-#if defined OS_VMS
-	    sts = hina_sel_get_planthier( plc->hp.hinactx, &objdid);
-#endif
-          }
+	  objdid = attrref.Objid;
 	  if ( EVEN(sts))
 	  { 
 	    foe_message( foectx,"Select a di, do or dv object in the navigator");
@@ -942,17 +878,9 @@ unsigned long	index;
         }
         else
         {
-          if ( *(int *) plc->hp.hinactx == 999) {
-	    sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
+	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
 					&is_attr);
-            objdid = attrref.Objid;
-          }
-          else
-	  {
-#if defined OS_VMS
-	    sts = hina_sel_get_planthier( plc->hp.hinactx, &objdid);
-#endif
-          }
+	  objdid = attrref.Objid;
 	  if ( EVEN(sts))
 	  { 
 	    foe_message( foectx,"Select a co object in the navigator");
@@ -1028,17 +956,9 @@ unsigned long	index;
         }
         else
         {
-          if ( *(int *) plc->hp.hinactx == 999) {
-	    sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
+	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
 					&is_attr);
-            objdid = attrref.Objid;
-          }
-          else
-	  {
-#if defined OS_VMS
-	    sts = hina_sel_get_planthier( plc->hp.hinactx, &objdid);
-#endif
-          }
+	  objdid = attrref.Objid;
 	  if ( EVEN(sts))
 	  { 
 	    foe_message( foectx,"Select a do object in the navigator");
@@ -1143,17 +1063,9 @@ unsigned long	index;
           }
           else
           {
-            if ( *(int *) plc->hp.hinactx == 999) {
-	      sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
+	    sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
 					&is_attr);
-              objdid = attrref.Objid;
-            }
-            else
-	    {
-#if defined OS_VMS
-	      sts = hina_sel_get_planthier( plc->hp.hinactx, &objdid);
-#endif
-            }
+	    objdid = attrref.Objid;
 	    if ( EVEN(sts))
 	    {  
 	      foe_message( foectx,"Select an order object in the navigator or in the current window");
@@ -1285,17 +1197,9 @@ unsigned long	index;
           }
           else
           {
-            if ( *(int *) plc->hp.hinactx == 999) {
-	      sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
+	    sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
 					&is_attr);
-              objdid = attrref.Objid;
-            }
-            else
-	    {
-#if defined OS_VMS
-	      sts = hina_sel_get_planthier( plc->hp.hinactx, &objdid);
-#endif
-            }
+	    objdid = attrref.Objid;
 	    if ( EVEN(sts))
 	    { 
 	      foe_message( foectx,"Select a document object in the navigator or in the current window first");
@@ -1421,19 +1325,9 @@ unsigned long	index;
         }
         else
         {
-          if ( *(int *) plc->hp.hinactx == 999) {
-	    sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
+	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
 					&is_attr);
-            objdid = attrref.Objid;
-          }
-          else
-          {
-#if defined OS_VMS
-	    sts = hina_sel_get_planthier( plc->hp.hinactx, &objdid);
-	    if ( EVEN(sts))
-	      sts = hina_sel_get_nodehier( plc->hp.hinactx, &objdid);
-#endif
-          }
+	  objdid = attrref.Objid;
 	  if ( EVEN(sts))
 	  { 
 	    foe_message( foectx,"Select an object in the navigator");
@@ -1529,30 +1423,19 @@ unsigned long	index;
         }
         else
         {
-          if ( *(int *) plc->hp.hinactx == 999) {
-	    sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
+	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
 					&is_attr);
-            objdid = attrref.Objid;
-	    if ( is_attr)
-	    {
-              sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol,
-			&name, &size);
-	      if ( EVEN(sts)) return sts;
-	      if ( (s = strrchr( name, '.')) != 0)
-              {
-                strcpy( parameter, s+1);
-                parameter_found = 1;
-              }
-            }
-          }
-          else
-	  {
-#if defined OS_VMS
-	    sts = hina_sel_get_planthier( plc->hp.hinactx, &objdid);
-#endif
-          }
-	  if ( EVEN(sts))
-	  { 
+	  objdid = attrref.Objid;
+	  if ( ODD(sts) && is_attr) {
+	    sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol,
+				     &name, &size);
+	    if ( EVEN(sts)) return sts;
+	    if ( (s = strrchr( name, '.')) != 0) {
+	      strcpy( parameter, s+1);
+	      parameter_found = 1;
+	    }
+	  }
+	  if ( EVEN(sts)) { 
 	    foe_message( foectx,"Select an digital signal in the navigator");
 	    BEEP;
 	    return sts;
@@ -1835,28 +1718,18 @@ unsigned long	index;
         }
         else
         {
-          if ( *(int *) plc->hp.hinactx == 999) {
-	    sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
+	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
 					&is_attr);
-            objdid = attrref.Objid;
-	    if ( is_attr)
-	    {
-              sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol,
-			&name, &size);
-	      if ( EVEN(sts)) return sts;
-	      if ( (s = strrchr( name, '.')) != 0)
-              {
-                strcpy( parameter, s+1);
-                parameter_found = 1;
-              }
-            }
-          }
-          else
-	  {
-#if defined OS_VMS
-	    sts = hina_sel_get_planthier( plc->hp.hinactx, &objdid);
-#endif
-          }
+	  objdid = attrref.Objid;
+	  if ( ODD(sts) && is_attr) {
+	    sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol,
+				     &name, &size);
+	    if ( EVEN(sts)) return sts;
+	    if ( (s = strrchr( name, '.')) != 0) {
+	      strcpy( parameter, s+1);
+	      parameter_found = 1;
+	    }
+	  }
 	  if ( EVEN(sts))
 	  { 
 	    foe_message( foectx,"Select an digital signal in the navigator");
@@ -2131,28 +2004,18 @@ unsigned long	index;
         }
         else
         {
-          if ( *(int *) plc->hp.hinactx == 999) {
-	    sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
+	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
 					&is_attr);
-            objdid = attrref.Objid;
-	    if ( is_attr)
-	    {
-              sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol,
-			&name, &size);
-	      if ( EVEN(sts)) return sts;
-	      if ( (s = strrchr( name, '.')) != 0)
-              {
-                strcpy( parameter, s+1);
-                parameter_found = 1;
-              }
-            }
-          }
-          else
-	  {
-#if defined OS_VMS
-	    sts = hina_sel_get_planthier( plc->hp.hinactx, &objdid);
-#endif
-          }
+	  objdid = attrref.Objid;
+	  if ( ODD(sts) && is_attr) {
+	    sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol,
+				     &name, &size);
+	    if ( EVEN(sts)) return sts;
+	    if ( (s = strrchr( name, '.')) != 0) {
+	      strcpy( parameter, s+1);
+	      parameter_found = 1;
+	    }
+	  }
 	  if ( EVEN(sts))
 	  { 
 	    foe_message( foectx,"Select an digital signal in the navigator");
@@ -2436,28 +2299,18 @@ unsigned long	index;
         }
         else
         {
-          if ( *(int *) plc->hp.hinactx == 999) {
-	    sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
+	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
 					&is_attr);
-            objdid = attrref.Objid;
-	    if ( is_attr)
-	    {
-              sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol,
-			&name, &size);
-	      if ( EVEN(sts)) return sts;
-	      if ( (s = strrchr( name, '.')) != 0)
-              {
-                strcpy( parameter, s+1);
-                parameter_found = 1;
-              }
-            }
-          }
-          else
-	  {
-#if defined OS_VMS
-	    sts = hina_sel_get_planthier( plc->hp.hinactx, &objdid);
-#endif
-          }
+	  objdid = attrref.Objid;
+	  if ( ODD(sts) && is_attr) {
+	    sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol,
+				     &name, &size);
+	    if ( EVEN(sts)) return sts;
+	    if ( (s = strrchr( name, '.')) != 0) {
+	      strcpy( parameter, s+1);
+	      parameter_found = 1;
+	    }
+	  }
 	  if ( EVEN(sts))
 	  { 
 	    foe_message( foectx,"Select an digital signal in the navigator");
@@ -2700,17 +2553,9 @@ unsigned long	index;
         }
         else
         {
-          if ( *(int *) plc->hp.hinactx == 999) {
-	    sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
+	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
 					&is_attr);
-            objdid = attrref.Objid;
-          }
-          else
-	  {
-#if defined OS_VMS
-	    sts = hina_sel_get_planthier( plc->hp.hinactx, &objdid);
-#endif
-          }
+	  objdid = attrref.Objid;
 	  if ( EVEN(sts))
 	  { 
 	    foe_message( foectx,"Select a av object in the navigator");
@@ -2816,28 +2661,18 @@ unsigned long	index;
         }
         else
         {
-          if ( *(int *) plc->hp.hinactx == 999) {
-	    sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
+	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
 					&is_attr);
-            objdid = attrref.Objid;
-	    if ( is_attr)
-	    {
-              sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol,
-			&name, &size);
-	      if ( EVEN(sts)) return sts;
-	      if ( (s = strrchr( name, '.')) != 0)
-              {
-                strcpy( parameter, s+1);
-                parameter_found = 1;
-              }
-            }
-          }
-          else
-	  {
-#if defined OS_VMS
-	    sts = hina_sel_get_planthier( plc->hp.hinactx, &objdid);
-#endif
-          }
+	  objdid = attrref.Objid;
+	  if ( ODD(sts) && is_attr) {
+	    sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol,
+				     &name, &size);
+	    if ( EVEN(sts)) return sts;
+	    if ( (s = strrchr( name, '.')) != 0) {
+	      strcpy( parameter, s+1);
+	      parameter_found = 1;
+	    }
+	  }
 	  if ( EVEN(sts))
 	  { 
 	    foe_message( foectx,"Select a string value in the navigator");
@@ -3099,28 +2934,18 @@ unsigned long	index;
         }
         else
         {
-          if ( *(int *) plc->hp.hinactx == 999) {
-	    sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
+	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
 					&is_attr);
-            objdid = attrref.Objid;
-	    if ( is_attr)
-	    {
-              sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol,
-			&name, &size);
-	      if ( EVEN(sts)) return sts;
-	      if ( (s = strrchr( name, '.')) != 0)
-              {
-                strcpy( parameter, s+1);
-                parameter_found = 1;
-              }
-            }
-          }
-          else
-	  {
-#if defined OS_VMS
-	    sts = hina_sel_get_planthier( plc->hp.hinactx, &objdid);
-#endif
-          }
+	  objdid = attrref.Objid;
+	  if ( ODD(sts) && is_attr) {
+	    sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol,
+				     &name, &size);
+	    if ( EVEN(sts)) return sts;
+	    if ( (s = strrchr( name, '.')) != 0) {
+	      strcpy( parameter, s+1);
+	      parameter_found = 1;
+	    }
+	  }
 	  if ( EVEN(sts))
 	  { 
 	    foe_message( foectx,"Select an digital signal in the navigator");

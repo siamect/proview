@@ -46,7 +46,8 @@ typedef enum {
 	flow_eObjectType_Pixmap,
 	flow_eObjectType_AnnotPixmap,
 	flow_eObjectType_Radiobutton,
-	flow_eObjectType_Frame
+	flow_eObjectType_Frame,
+	flow_eObjectType_Image
 	} flow_eObjectType;
 
 typedef enum {

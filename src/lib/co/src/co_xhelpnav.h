@@ -51,7 +51,9 @@ typedef enum {
 	xhelpnav_eHItemType_HeaderLarge,
 	xhelpnav_eHItemType_Help,
 	xhelpnav_eHItemType_HelpBold,
-	xhelpnav_eHItemType_HelpHeader
+	xhelpnav_eHItemType_HelpHeader,
+	xhelpnav_eHItemType_HelpLine,
+	xhelpnav_eHItemType_HelpImage
 	} xhelpnav_eHItemType;
 
 typedef enum {
@@ -74,6 +76,7 @@ class XHelpNavBrow {
     brow_tNodeClass 	nc_text;
     brow_tNodeClass 	nc_header;
     brow_tNodeClass 	nc_headerlarge;
+    brow_tNodeClass 	nc_line;
     flow_sAnnotPixmap 	*pixmap_morehelp;
     flow_sAnnotPixmap 	*pixmap_closehelp;
 
@@ -108,6 +111,9 @@ class XHelpNav {
     int			displayed;
     int                 init_help;
     xhelp_eUtility	utility;
+    brow_tNode		search_node;
+    char		search_str[80];
+    bool 		search_strict;
 
     void print( char *filename);
     void zoom( double zoom_factor);
@@ -124,7 +130,10 @@ class XHelpNav {
     int help( char *key, char *help_bookmark, navh_eHelpFile file_type,
 	      char *file_name, int pop, bool strict);
     int	help_index( navh_eHelpFile file_type, char *file_name, int pop);
-
+    pwr_tStatus search( char *str, bool strict);
+    pwr_tStatus search_next();
+    pwr_tStatus search_next_reverse();
+    pwr_tStatus search_exec( bool reverse);
 };
 
 class HItem {
@@ -135,6 +144,7 @@ class HItem {
 	{};
     virtual int	doubleclick_action( XHelpNavBrow *brow, XHelpNav *xhelpnav,
 				       double x, double y) { return 1;}
+    virtual bool search( char *str, bool strict) { return false;}
     xhelpnav_eHItemType	type;
     brow_tNode		node;
 };
@@ -145,10 +155,31 @@ class HItemHeader : public HItem {
 	brow_tNode dest, flow_eDest dest_code);
 };
 
+class HItemHelpLine : public HItem {
+  public:
+    HItemHelpLine( XHelpNavBrow *brow, char *item_name,
+	brow_tNode dest, flow_eDest dest_code);
+};
+
+class HItemHelpImage : public HItem {
+  public:
+    HItemHelpImage( XHelpNavBrow *brow, char *item_name, brow_tNodeClass nc,
+		    char *item_link, char *item_bookmark, 
+		    char *item_file_name, navh_eHelpFile help_file_type, 
+		    brow_tNode dest, flow_eDest dest_code);
+    int	doubleclick_action( XHelpNavBrow *brow, XHelpNav *xhelpnav,
+				       double x, double y);
+    char link[200];
+    char bookmark[80];
+    char file_name[80];
+    navh_eHelpFile	 file_type;
+};
+
 class HItemHeaderLarge : public HItem {
   public:
     HItemHeaderLarge( XHelpNavBrow *brow, char *item_name, char *title,
 	brow_tNode dest, flow_eDest dest_code);
+    bool search( char *str, bool strict);
 };
 
 class HItemHelp : public HItem {
@@ -158,6 +189,7 @@ class HItemHelp : public HItem {
 	char *item_file_name, navh_eHelpFile help_file_type, int help_index, brow_tNode dest, flow_eDest dest_code);
     int	doubleclick_action( XHelpNavBrow *brow, XHelpNav *xhelpnav,
 				       double x, double y);
+    bool search( char *str, bool strict);
     char link[200];
     char bookmark[80];
     char file_name[80];
@@ -173,6 +205,7 @@ class HItemHelpBold : public HItem {
 		brow_tNode dest, flow_eDest dest_code);
   int	doubleclick_action( XHelpNavBrow *brow, XHelpNav *xhelpnav, 
 			    double x, double y);
+    bool search( char *str, bool strict);
   char link[200];
   char bookmark[80];
   char file_name[80];
@@ -185,6 +218,7 @@ class HItemHelpHeader : public HItem {
   HItemHelpHeader( XHelpNavBrow *brow, char *item_name, char *title, bool base,
 		  brow_tNode dest, flow_eDest dest_code);
   int doubleclick_action( XHelpNavBrow *brow, XHelpNav *xhelpnav, double x, double y);
+    bool search( char *str, bool strict);
 };
 
 

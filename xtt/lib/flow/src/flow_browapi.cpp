@@ -14,6 +14,7 @@
 #include "flow_text.h"
 #include "flow_pixmap.h"
 #include "flow_annotpixmap.h"
+#include "flow_image.h"
 #include "flow_pushbutton.h"
 #include "flow_array_elem.h"
 #include "flow_array.h"
@@ -339,6 +340,13 @@ void brow_AddArc( brow_tNodeClass nc, double x1, double y1,
   FlowArc *arc = new FlowArc( ((FlowNodeClass *)nc)->ctx, 
 	x1, y1, x2, y2, angel1, angel2, draw_type, line_width);
   ((FlowNodeClass *)nc)->insert( arc);
+}
+
+void brow_AddImage( brow_tNodeClass nc, char *imagefile, double x, double y)
+{
+  FlowImage *image = new FlowImage( ((FlowNodeClass *)nc)->ctx, imagefile, x, y);
+  ((FlowNodeClass *)nc)->insert( image);
+  
 }
 
 void brow_AddText( brow_tNodeClass nc, char *text_str, double x, double y, 

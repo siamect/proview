@@ -117,6 +117,7 @@ int ClassRead::html_class()
   char struct_file[100];
   char low_volume_name[80];
   char low_class_name[80];
+  char *s;
 
   cdh_ToLower( low_volume_name, volume_name);
   cdh_ToLower( low_class_name, class_name);
@@ -227,10 +228,18 @@ endl <<
 "<BR><DT><B>Description</B><DT><BR>" << endl <<
 "</DL><XMP>" << endl;
 
-  if ( doc_fresh)
-    for ( i = 0; i < doc_cnt; i++)
-      html_clf->f << doc_text[i] << endl;
+  if ( doc_fresh) {
+    for ( i = 0; i < doc_cnt; i++) {
+      if ( (s = strstr( low(doc_text[i]), "@image")) != 0)  {
+	char imagefile[80];
 
+	remove_spaces( s + 6, imagefile);
+	html_clf->f << "</XMP><IMG SRC=\"" << imagefile << "\"><XMP>" << endl;
+      }
+      else
+	html_clf->f << doc_text[i] << endl;
+    }
+  }
   html_clf->f <<
 "</XMP>" << endl;
 
@@ -305,6 +314,7 @@ endl <<
 "<TD><CODE><B>" << doc_text[i] << "</B></CODE></TD>" << endl <<
 "<TD><CODE>" << doc_text[i+1] << "</CODE></TD>" << endl;
   }
+  html_clf->f << "</TABLE>" << endl;
 
   return 1;
 }
@@ -330,6 +340,7 @@ endl <<
 "<TD><CODE><B>" << doc_text[i] << "</B></CODE></TD>" << endl <<
 "<TD><CODE>" << doc_text[i+1] << "</CODE></TD>" << endl;
   }
+  html_clf->f << "</TABLE>" << endl;
 
   return 1;
 }
@@ -359,7 +370,7 @@ endl <<
 "<TD><CODE><B>" << doc_text[i] << "</B></CODE></TD>" << endl <<
 "<TD><CODE>" << doc_text[i+1] << "</CODE></TD>" << endl;
   }
-
+  html_clf->f << "</TABLE>" << endl;
 
   return 1;
 }
@@ -387,6 +398,7 @@ int ClassRead::html_class_close()
 int ClassRead::html_attribute()
 {
   int i;
+  char *s;
 
   // Summary
 
@@ -414,11 +426,14 @@ int ClassRead::html_attribute()
   {
     if ( strcmp( doc_summary, "") == 0) 
     {
-      for ( i = 0; i < doc_cnt; i++)
-      {
-        html_clf->f << doc_text[i];
-        if ( i < doc_cnt - 1)
-          html_clf->f << "<BR>" << endl;
+      for ( i = 0; i < doc_cnt; i++) {
+        if ( (s = strstr( low(doc_text[i]), "@image")) != 0)
+	  continue;
+	else {
+	  html_clf->f << doc_text[i];
+	  if ( i < doc_cnt - 1)
+	    html_clf->f << "<BR>" << endl;
+	}
       }
     }
     else
@@ -468,10 +483,18 @@ int ClassRead::html_attribute()
 "<CODE><B>Description</B></CODE><DT></DL>" << endl <<
 "<XMP>" << endl;
 
-  if ( doc_fresh)
-    for ( i = 0; i < doc_cnt; i++)
-      fp_tmp << doc_text[i] << endl;
+  if ( doc_fresh) {
+    for ( i = 0; i < doc_cnt; i++) {
+      if ( (s = strstr( low(doc_text[i]), "@image")) != 0)  {
+	char imagefile[80];
 
+	remove_spaces( s + 6, imagefile);
+	fp_tmp << "</XMP><IMG SRC=\"" << imagefile << "\"><XMP>" << endl;
+      }
+      else
+	fp_tmp << doc_text[i] << endl;
+    }
+  }
   fp_tmp <<
 "</XMP>" << endl;
 

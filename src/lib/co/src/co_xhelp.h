@@ -40,6 +40,10 @@ class XHelp {
     int		set_focus_disabled;
     XtIntervalId focus_timerid;
     int         displayed;
+    Widget	india_widget;
+    Widget	india_label;
+    Widget	india_text;
+    void	(*india_ok_cb)( XHelp *, char *);
 
     static XHelp *default_xhelp;
 

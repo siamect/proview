@@ -18,11 +18,18 @@ identifier
 	xhelp_ctx;
 procedure
 	xhelp_activate_exit(integer);
+	xhelp_activate_search(integer);
+	xhelp_activate_searchnext(integer);
+	xhelp_activate_searchprevious(integer);
 	xhelp_activate_zoom_in(integer);
 	xhelp_activate_zoom_out(integer);
 	xhelp_activate_zoom_reset(integer);
 	xhelp_activate_help(integer);
 	xhelp_create_xhelpnav_form(integer);
+	xhelp_create_india_label(integer); 
+	xhelp_create_india_text(integer); 
+	xhelp_activate_india_ok(integer); 
+	xhelp_activate_india_cancel(integer); 
 
 value
 	menu_font : font ('-*-Helvetica-Bold-R-Normal--12-*-*-*-P-*-ISO8859-1');
@@ -73,6 +80,7 @@ object xhelp_menu : XmMenuBar
   controls
   {
     XmCascadeButton file_entry;
+    XmCascadeButton edit_entry;
     XmCascadeButton view_entry;
     XmCascadeButton help_entry;
   };
@@ -141,6 +149,69 @@ object functions_entry : XmCascadeButton
   };
 };
 
+
+object edit_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString = c_Edit;
+    XmNfontList	   = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Search;
+            XmNmnemonic = keysym('S');
+	    XmNaccelerator = "Ctrl<Key>F";
+	    XmNacceleratorText = compound_string('Ctrl+F');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure xhelp_activate_search(xhelp_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_SearchNext;
+            XmNmnemonic = keysym('N');
+	    XmNaccelerator = "Ctrl<Key>G";
+	    XmNacceleratorText = compound_string('Ctrl+G');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure xhelp_activate_searchnext(xhelp_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_SearchPrevious;
+            XmNmnemonic = keysym('P');
+	    XmNaccelerator = "Ctrl<Key>R";
+	    XmNacceleratorText = compound_string('Ctrl+R');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure xhelp_activate_searchprevious(xhelp_ctx);
+          };
+	};
+      };
+    };
+  };
+};
 
 object view_entry : XmCascadeButton      
 {
@@ -251,6 +322,93 @@ object xhelpnav_form : XmPanedWindow
    {
      MrmNcreateCallback = procedure xhelp_create_xhelpnav_form( xhelp_ctx);
    };
+};
+
+!
+!-----------------------------------------------------------------
+! 
+! Input Dialog box
+!
+!________________________________________________________________
+object   input_dialog : XmFormDialog
+{
+  arguments
+  {
+     XmNnoResize = true;
+     XmNwidth = 400;
+     XmNheight = 150;
+     XmNdefaultPosition = true;
+     XmNautoUnmanage     = false;
+     XmNdialogTitle = "Find";
+     XmNdefaultButton = india_ok;
+     XmNbuttonFontList	   	= menu_font;
+     XmNlabelFontList	   	= menu_font;
+     XmNtextFontList	   	= menu_font;
+  };
+  controls
+  {
+     XmLabel	    india_label;
+     XmTextField    india_text;
+     XmPushButton   india_ok;
+     XmPushButton   india_cancel;
+  };
+}; 
+
+object india_label : XmLabel
+{
+  arguments
+  {
+     XmNx = 10;
+     XmNy = 10;
+     XmNlabelString = "";
+  };
+  callbacks
+  {
+     MrmNcreateCallback = procedure xhelp_create_india_label( xhelp_ctx); 
+  };
+};
+
+object india_text : XmTextField
+{
+  arguments
+  {
+     XmNx = 150;
+     XmNy = 10;
+  };
+  callbacks
+  {
+     MrmNcreateCallback = procedure xhelp_create_india_text( xhelp_ctx); 
+  };
+};
+
+object india_ok : XmPushButton
+{
+  arguments
+  {
+     XmNwidth = 80;
+     XmNx = 20;
+     XmNy = 100;
+     XmNlabelString = "OK";
+  };
+  callbacks
+  { 
+     XmNactivateCallback = procedure xhelp_activate_india_ok( xhelp_ctx); 
+  };
+};
+
+object india_cancel : XmPushButton
+{
+  arguments
+  {
+     XmNwidth = 80;
+     XmNx = 280;
+     XmNy = 100;
+     XmNlabelString = "Cancel";
+  };
+  callbacks
+  { 
+     XmNactivateCallback = procedure xhelp_activate_india_cancel( xhelp_ctx); 
+  };
 };
 
 end module;

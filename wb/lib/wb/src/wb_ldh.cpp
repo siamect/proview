@@ -922,7 +922,12 @@ pwr_tStatus
 ldh_NameToObjid(ldh_tSession session, pwr_tOid *oid, char *name)
 {
   wb_session *sp = (wb_session *)session;
+  pwr_tStatus sts;
 
+  if ( strncmp( name, "_O", 2) == 0) {
+    sts = cdh_StringToObjid( name, oid);
+    if ( ODD(sts)) return sts;
+  }
   wb_object o = sp->object(name);
   if (!o) return o.sts();
     

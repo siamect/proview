@@ -4585,7 +4585,7 @@ int vldh_node_create_spec (
 	**********************************************************/
 	else if ( node->ln.classid == vldh_class( ldhses, VLDH_CLASS_RESET_SO))
 	{
-	  unsigned long	order_objdid = 0;
+	  pwr_tOid order_objdid = pwr_cNOid;
 
 	  sts = ldh_SetObjectPar( ldhses,
 		node->ln.object_did, 

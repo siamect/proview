@@ -96,6 +96,7 @@ void FlowNodeClass::draw_inverse( FlowPoint *pos, int hot, void *node)
     switch ( a.a[i]->type())
     { 
       case flow_eObjectType_Radiobutton:
+      case flow_eObjectType_Image:
         a.a[i]->draw( pos, 0, hot, node);
         break;
       default:

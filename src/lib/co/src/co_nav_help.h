@@ -25,8 +25,10 @@ typedef enum {
 	navh_eItemType_HelpHeader,
 	navh_eItemType_Header,
 	navh_eItemType_HeaderLarge,
+	navh_eItemType_HorizontalLine,
 	navh_eItemType_Topic,
-	navh_eItemType_EndTopic
+	navh_eItemType_EndTopic,
+	navh_eItemType_Image
 	} navh_eItemType;
 
 

@@ -61,10 +61,11 @@ static int	help_remove_spaces(
 
 	strcpy( out, s);
         
+	s = out;
         if ( strlen(s) != 0)
         {
-	  for ( s += strlen(s) - 1; 
-                !((s == in) || ((*s != ' ') && (*s != 9))); s--) ;
+	  for ( s += strlen(s) - 1;
+                !((s == out) || ((*s != ' ') && (*s != 9))); s--) ;
 	  s++;
 	  *s = 0;
         }
@@ -111,6 +112,9 @@ int	NavHelp::help( char *help_key, char *help_bookmark,
   int	header1;
   int	header2;
   int	bold;
+  int	horizontal_line;
+  int   image;
+  char  imagefile[80];
   int	register_bookmark = 0;
   int	bookmark_found = 0;
   void  *bookmark_node = 0;
@@ -291,9 +295,11 @@ int	NavHelp::help( char *help_key, char *help_bookmark,
         else
           index_link = 0;
 
+	image = 0;
         header1 = 0;
         header2 = 0;
         bold = 0;
+	horizontal_line = 0;
         if ( (s = strstr( line, "<h1>")) || (s = strstr( line, "<H1>")))
         {
           header1 = 1;
@@ -309,6 +315,16 @@ int	NavHelp::help( char *help_key, char *help_bookmark,
           bold = 1;
           strcpy( text1, s + 3);
         }
+        else if ( (s = strstr( line, "<hr>")) || (s = strstr( line, "<HR>")))
+        {
+          horizontal_line = 1;
+        }
+        else if ( (s = strstr( line, "<image>")) || (s = strstr( line, "<IMAGE>")))
+	{
+          help_remove_spaces( s + 7, imagefile);
+          image = 1;
+	}
+
         else
         {
           strcpy( text1, line);
@@ -359,6 +375,22 @@ int	NavHelp::help( char *help_key, char *help_bookmark,
 		text2, text3, link, 
 		link_bookmark, link_filename_p, file_type, index_link,
 		bookmark_p);
+	  if ( register_bookmark)
+	  {
+	    bookmark_node = node;
+	    register_bookmark = 0;
+	  }
+	}
+	else if ( horizontal_line) {
+	  node = (insert_cb)( parent_ctx, navh_eItemType_HorizontalLine, NULL,
+		      NULL, NULL, NULL, NULL, NULL, navh_eHelpFile_, 0, NULL);
+	}
+        else if ( image)
+	{
+          node = (insert_cb)( parent_ctx, navh_eItemType_Image,
+			      imagefile, NULL, NULL, link, 
+			      link_bookmark, link_filename_p, file_type, index_link,
+			      bookmark_p);
 	  if ( register_bookmark)
 	  {
 	    bookmark_node = node;

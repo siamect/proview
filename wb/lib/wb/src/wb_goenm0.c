@@ -108,8 +108,8 @@ int goen_create_nodetype_m0(
   char		annot_str[3][80];
   int		annot_nr[3];
   int		annot_count;
-  double	annot_width;
-  double	annot_height;
+  double	annot_width = 0;
+  double	annot_height = 0;
   float		classname_width;
   flow_tNodeClass	nc_pid;
   char		name[80];

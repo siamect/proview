@@ -26,32 +26,6 @@
 #define DRAW_PRESS_PIX 9
 
 typedef struct {
-        Widget  toplevel;
-        Widget	nav_shell;
-	Widget	nav_toplevel;
-        XtAppContext  app_ctx;
-	Display	*display;
-	Window	window;
-	Window	nav_window;
-	Screen	*screen;
-	GC	gc;
-	GC	gc_erase;
-	GC	gc_inverse;
-	GC	gc_yellow;
-	GC	gc_green;
-	GC	gcs[flow_eDrawType__][DRAW_TYPE_SIZE];
-	XFontStruct	*font_struct[draw_eFont__][DRAW_FONT_SIZE];
-	Font 	font[draw_eFont__][DRAW_FONT_SIZE];
-        int	cursors[draw_eCursor__];
-        int	ef;
-        int	(*event_handler)(flow_eEvent event, int x, int y, int w, int h);
-        int 	(*event_handler_nav)(flow_eEvent event, int x, int y);
-	unsigned long background;
-	XtIntervalId	timer_id;
-        int     click_sensitivity;
-} draw_sCtx, *draw_tCtx;
-
-typedef struct {
 	Widget		w;
 	int		x;
 	int		y;
@@ -514,6 +488,10 @@ int flow_draw_init(
   flow_create_gc( draw_ctx, draw_ctx->window);
 
   flow_create_cursor( draw_ctx);
+
+#if defined IMLIB
+  draw_ctx->imlib = Imlib_init( draw_ctx->display);
+#endif
 
   init_proc( toplevel, ctx, client_data);
 
@@ -1509,6 +1487,30 @@ int flow_draw_fill_rect( FlowCtx *ctx, int x, int y, int w, int h,
   return 1;
 }
 
+int flow_draw_image( FlowCtx *ctx, int x, int y, int width, int height,
+		     Pixmap pixmap, Pixmap clip_mask)
+{
+  draw_tCtx draw_ctx;
+
+  if ( ctx->nodraw) return 1;
+
+  if ( width == 0 || height == 0)
+    return 1;
+  
+  draw_ctx = (draw_tCtx) ctx->draw_ctx;
+
+  if ( clip_mask)
+    flow_set_image_clip_mask( ctx, clip_mask, x, y);
+
+  XCopyArea( draw_ctx->display, pixmap, draw_ctx->window,
+	draw_ctx->gcs[flow_eDrawType_Line][0], 
+	0, 0, width, height, x, y);
+
+  if ( clip_mask)
+    flow_reset_image_clip_mask( ctx);
+  return 1;
+}
+
 void flow_draw_clear( FlowCtx *ctx)
 {
   draw_tCtx draw_ctx;
@@ -1908,4 +1910,23 @@ void flow_draw_set_click_sensitivity( FlowCtx *ctx, int value)
 
   draw_ctx->click_sensitivity = value;
 }
+
+void flow_set_image_clip_mask( FlowCtx *ctx, Pixmap pixmap, int x, int y)
+{
+  draw_tCtx draw_ctx = (draw_tCtx) ctx->draw_ctx;
+
+  XSetClipMask( draw_ctx->display, draw_ctx->gcs[flow_eDrawType_Line][0], 
+		pixmap);
+  XSetClipOrigin( draw_ctx->display, draw_ctx->gcs[flow_eDrawType_Line][0], x, y);
+}
+
+void flow_reset_image_clip_mask( FlowCtx *ctx)
+{
+  draw_tCtx draw_ctx = (draw_tCtx) ctx->draw_ctx;
+
+  XSetClipMask( draw_ctx->display, draw_ctx->gcs[flow_eDrawType_Line][0], 
+		None);
+  XSetClipOrigin( draw_ctx->display, draw_ctx->gcs[flow_eDrawType_Line][0], 0, 0);
+}
+
 

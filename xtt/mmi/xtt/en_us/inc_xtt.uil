@@ -87,3 +87,7 @@ k_Enter_Value		: "Enter Value";
 k_Message		: "Message";
 k_Value_input		: "Value input";
 
+! module xhelp
+
+c_SearchNext		: "SearchNext";
+c_SearchPrevious	: "SearchPrevious";

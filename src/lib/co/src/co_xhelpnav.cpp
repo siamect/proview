@@ -215,6 +215,13 @@ void XHelpNavBrow::create_nodeclasses()
 		flow_eDrawType_TextHelveticaBold, 4, flow_eAnnotType_OneLine, 
 		1);
 
+  // Create Horizontal line
+
+  brow_CreateNodeClass( ctx, "NavigatorLine", 
+		flow_eNodeGroup_Common, &nc_line);
+  // brow_AddFrame( nc_line, 0, 0, 20, 0.9, flow_eDrawType_Line, -1, 1);
+  brow_AddFrame( nc_line, 0, 0, 20, 0.15, flow_eDrawType_LineGray, 2, 1);
+
 }
 
 void XHelpNavBrow::brow_setup()
@@ -279,9 +286,11 @@ XHelpNav::XHelpNav(
 	Widget *w,
 	pwr_tStatus *status) :
 	parent_ctx(xn_parent_ctx), parent_wid(xn_parent_wid),
-	brow_cnt(0), closing_down(0), displayed(0), utility(xn_utility)
+	brow_cnt(0), closing_down(0), displayed(0), utility(xn_utility),
+	search_node(0), search_strict(false)
 {
   strcpy( name, xn_name);
+  strcpy( search_str, "");
 
   form_widget = ScrolledBrowCreate( parent_wid, name, NULL, 0, 
 	xhelpnav_init_brow_base_cb, this, (Widget *)&brow_widget);
@@ -665,7 +674,79 @@ static int xhelpnav_init_brow_cb( BrowCtx *ctx, void *client_data)
   return 1;
 }
 
+pwr_tStatus XHelpNav::search( char *str, bool strict)
+{
+  search_node = 0;
+  search_strict = strict;
 
+  strncpy( search_str, str, sizeof(search_str));
+  if ( !strict)
+    cdh_ToUpper( search_str, search_str);
+
+  return search_exec( false);
+}
+
+#define XHELP__SEARCHNOTSTARTED 2;
+#define XHELP__SUCCESS 1;
+#define XHELP__SEARCHNOTFOUND 4;
+
+pwr_tStatus XHelpNav::search_next()
+{
+  if ( strcmp( search_str, "") == 0)
+    return XHELP__SEARCHNOTSTARTED;
+
+  return search_exec( false);
+}
+
+pwr_tStatus XHelpNav::search_next_reverse()
+{
+  if ( strcmp( search_str, "") == 0)
+    return XHELP__SEARCHNOTSTARTED;
+
+  return search_exec( true);
+}
+
+pwr_tStatus XHelpNav::search_exec( bool reverse)
+{
+  brow_tObject 	*object_list;
+  int		object_cnt;
+  HItem		*item;
+  bool          active = false;
+  bool		hit = false;
+  int		idx;
+
+  if ( !search_node)
+    active = true;
+
+  brow_GetObjectList( brow->ctx, &object_list, &object_cnt);
+  for ( int i = 0; i < object_cnt; i++) {
+    if ( reverse)
+      idx = object_cnt - 1 - i;
+    else
+      idx = i;
+
+    if ( !active) {
+      if ( search_node == object_list[idx])
+	active = true;
+      continue;
+    }
+    brow_GetUserData( object_list[idx], (void **)&item);
+    hit = item->search( search_str, search_strict);
+    if ( hit) {
+      // Select and center node
+      brow_SelectClear( brow->ctx);
+      brow_SetInverse( object_list[idx], 1);
+      brow_SelectInsert( brow->ctx, object_list[idx]);
+      if ( !brow_IsVisible( brow->ctx, object_list[idx]))
+        brow_CenterObject( brow->ctx, object_list[idx], 0.25);
+      search_node = object_list[idx];
+      return XHELP__SUCCESS;
+    }
+  }
+  // Not found
+  search_node = 0;
+  return XHELP__SEARCHNOTFOUND;
+}
 
 HItemHeader::HItemHeader( XHelpNavBrow *brow, char *item_name, char *title,
 	brow_tNode dest, flow_eDest dest_code)
@@ -674,6 +755,58 @@ HItemHeader::HItemHeader( XHelpNavBrow *brow, char *item_name, char *title,
   brow_CreateNode( brow->ctx, "header", brow->nc_header,
 		dest, dest_code, (void *)this, 1, &node);
   brow_SetAnnotation( node, 0, title, strlen(title));
+}
+
+HItemHelpLine::HItemHelpLine( XHelpNavBrow *brow, char *item_name, 
+			      brow_tNode dest, flow_eDest dest_code)
+{
+  type = xhelpnav_eHItemType_HelpLine;
+  brow_CreateNode( brow->ctx, "header", brow->nc_line,
+		dest, dest_code, (void *)this, 1, &node);
+}
+
+HItemHelpImage::HItemHelpImage( XHelpNavBrow *brow, char *item_name, brow_tNodeClass nc,
+				char *item_link, char *item_bookmark, 
+				char *item_file_name, navh_eHelpFile help_file_type, 
+				brow_tNode dest, flow_eDest dest_code)
+  : file_type(help_file_type)
+{
+  type = xhelpnav_eHItemType_HelpImage;
+  strcpy( link, item_link);
+  strcpy( bookmark, item_bookmark);
+  if ( item_file_name)
+    strcpy( file_name, item_file_name);
+  else
+    strcpy( file_name, "");
+
+  brow_CreateNode( brow->ctx, "image", nc,
+		dest, dest_code, (void *)this, 1, &node);
+  if ( link[0] != 0)
+    brow_SetAnnotPixmap( node, 0, brow->pixmap_morehelp);
+}
+
+int HItemHelpImage::doubleclick_action( XHelpNavBrow *brow, XHelpNav *xhelpnav, double x, double y)
+{
+  int sts;
+
+  if ( strcmp( link, "") != 0)
+  {
+    if ( (strstr( link, ".htm") != 0) || (strstr( link, ".pdf") != 0)) {
+      // Open the url
+      xhelpnav_open_URL( link);
+    }
+    else {
+      if ( file_name[0] == 0)
+      {
+        sts = xhelpnav->help( link, bookmark, navh_eHelpFile_Base, NULL, 1, true);
+        if (EVEN(sts))
+          sts = xhelpnav->help( link, bookmark, navh_eHelpFile_Project, NULL, 1, true);
+      }
+      else
+        sts = xhelpnav->help( link, bookmark, navh_eHelpFile_Other, file_name, 1, true);
+    }
+  }
+  return 1;
 }
 
 HItemHeaderLarge::HItemHeaderLarge( XHelpNavBrow *brow, char *item_name, char *title,
@@ -685,6 +818,20 @@ HItemHeaderLarge::HItemHeaderLarge( XHelpNavBrow *brow, char *item_name, char *t
   brow_SetAnnotation( node, 0, title, strlen(title));
 }
 
+bool HItemHeaderLarge::search( char *str, bool strict)
+{
+  char text[256];
+
+  brow_GetAnnotation( node, 0, text, sizeof(text));
+  if ( text[0] == 0)
+    return false;
+  if ( !strict)
+    cdh_ToUpper( text, text);
+  if ( strstr( text, str) != 0)
+    return true;
+  return false;
+}
+
 HItemHelpHeader::HItemHelpHeader( XHelpNavBrow *brow, char *item_name, char *title, bool base,
 	brow_tNode dest, flow_eDest dest_code)
 {
@@ -694,6 +841,20 @@ HItemHelpHeader::HItemHelpHeader( XHelpNavBrow *brow, char *item_name, char *tit
   brow_SetAnnotation( node, 0, title, strlen(title));
   if ( !base)
     brow_SetAnnotPixmap( node, 0, brow->pixmap_closehelp);
+}
+
+bool HItemHelpHeader::search( char *str, bool strict)
+{
+  char text[256];
+
+  brow_GetAnnotation( node, 0, text, sizeof(text));
+  if ( text[0] == 0)
+    return false;
+  if ( !strict)
+    cdh_ToUpper( text, text);
+  if ( strstr( text, str) != 0)
+    return true;
+  return false;
 }
 
 int HItemHelpHeader::doubleclick_action( XHelpNavBrow *brow, XHelpNav *xhelpnav, double x, double y)
@@ -724,6 +885,22 @@ HItemHelp::HItemHelp( XHelpNavBrow *brow, char *item_name, char *text, char *tex
     brow_SetAnnotation( node, 2, text3, strlen(text3));
   if ( link[0] != 0 || index)
     brow_SetAnnotPixmap( node, 0, brow->pixmap_morehelp);
+}
+
+bool HItemHelp::search( char *str, bool strict)
+{
+  char text[256];
+
+  for ( int i = 0; i < 3; i++) {
+    brow_GetAnnotation( node, i, text, sizeof(text));
+    if ( text[0] == 0)
+      continue;
+    if ( !strict)
+      cdh_ToUpper( text, text);
+    if ( strstr( text, str) != 0)
+      return true;
+  }
+  return false;
 }
 
 int HItemHelp::doubleclick_action( XHelpNavBrow *brow, XHelpNav *xhelpnav, double x, double y)
@@ -775,6 +952,22 @@ HItemHelpBold::HItemHelpBold( XHelpNavBrow *brow, char *item_name, char *text, c
     brow_SetAnnotation( node, 2, text3, strlen(text3));
   if ( link[0] != 0 || index)
     brow_SetAnnotPixmap( node, 0, brow->pixmap_morehelp);
+}
+
+bool HItemHelpBold::search( char *str, bool strict)
+{
+  char text[256];
+
+  for ( int i = 0; i < 3; i++) {
+    brow_GetAnnotation( node, i, text, sizeof(text));
+  if ( text[0] == 0)
+    continue;
+    if ( !strict)
+      cdh_ToUpper( text, text);
+    if ( strstr( text, str) != 0)
+      return true;
+  }
+  return false;
 }
 
 int HItemHelpBold::doubleclick_action( XHelpNavBrow *brow, XHelpNav *xhelpnav, double x, double y)
@@ -856,6 +1049,24 @@ void *xhelpnav_help_insert_cb( void *ctx, navh_eItemType item_type, char *text1,
     {      
       HItemHeaderLarge *item = new HItemHeaderLarge( xhelpnav->brow, "help", text1,
 	     NULL, flow_eDest_IntoLast);
+      return item->node;
+    }
+    case navh_eItemType_HorizontalLine:
+    {
+      HItemHelpLine *item = new HItemHelpLine( xhelpnav->brow, "help",
+	     NULL, flow_eDest_IntoLast);
+      return item->node;
+    }
+    case navh_eItemType_Image:
+    {
+      brow_tNodeClass nc;
+
+      brow_CreateNodeClass( xhelpnav->brow->ctx, "Image", flow_eNodeGroup_Common, &nc);
+      brow_AddFrame( nc, 0, 0, 20, 0.8, flow_eDrawType_Line, -1, 1);
+      brow_AddAnnotPixmap( nc, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
+      brow_AddImage( nc, text1, 2, 0);
+      HItemHelpImage *item = new HItemHelpImage( xhelpnav->brow, "help", nc,
+	     link, bookmark, file_name, file_type, NULL, flow_eDest_IntoLast);
       return item->node;
     }
     default:
