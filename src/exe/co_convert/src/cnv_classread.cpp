@@ -626,6 +626,7 @@ void ClassRead::attribute_init()
   attr_array = 0;
   attr_rtvirtual = 0;
   attr_elem = 0;
+  attr_isclass = 0;
 }
 
 int ClassRead::attribute_attr( char *name, char *value)
@@ -654,10 +655,12 @@ int ClassRead::attribute_attr( char *name, char *value)
 
       if ( strcmp( value, "PWR_MASK_POINTER") == 0)
 	attr_pointer = 1;
-      else if ( strcmp( value, "PWR_MASK_ARRAY") == 0)
+      if ( strcmp( value, "PWR_MASK_ARRAY") == 0)
 	attr_array = 1;
-      else if ( strcmp( value, "PWR_MASK_RTVIRTUAL") == 0)
+      if ( strcmp( value, "PWR_MASK_RTVIRTUAL") == 0)
 	attr_rtvirtual = 1;
+      if ( strcmp( value, "PWR_MASK_ISCLASS") == 0)
+	attr_isclass = 1;
     }
     else {
       int flags_value;
@@ -676,6 +679,8 @@ int ClassRead::attribute_attr( char *name, char *value)
 	attr_array = 1;
       if ( flags_value & pwr_mAdef_rtvirtual)
 	attr_rtvirtual = 1;
+      if ( flags_value & pwr_mAdef_class)
+	attr_isclass = 1;
     }
   }
   else if ( strcmp( low( name), "elements") == 0)

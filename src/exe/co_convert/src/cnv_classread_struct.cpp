@@ -30,12 +30,22 @@ int ClassRead::struct_init()
   strcat( fname, struct_filename);
   fp_struct.open( fname);
 
-  if ( strcmp( low(volume_name), "pwrb") == 0)
-    sprintf( fname, "pwr_%sclasses_h", "base");
-  else if ( strcmp( low(volume_name), "pwrs") == 0)
-    sprintf( fname, "pwr_%sclasses_h", "system");
-  else
-    sprintf( fname, "pwr_%sclasses_h", low(volume_name));
+  if ( hpp) {
+    if ( strcmp( low(volume_name), "pwrb") == 0)
+      sprintf( fname, "pwr_%sclasses_hpp", "base");
+    else if ( strcmp( low(volume_name), "pwrs") == 0)
+      sprintf( fname, "pwr_%sclasses_hpp", "system");
+    else
+      sprintf( fname, "pwr_%sclasses_hpp", low(volume_name));
+  }
+  else {
+    if ( strcmp( low(volume_name), "pwrb") == 0)
+      sprintf( fname, "pwr_%sclasses_h", "base");
+    else if ( strcmp( low(volume_name), "pwrs") == 0)
+      sprintf( fname, "pwr_%sclasses_h", "system");
+    else
+      sprintf( fname, "pwr_%sclasses_h", low(volume_name));
+  }
 
   sts = struct_volname_to_id();
   if ( sts == 0)
@@ -80,7 +90,10 @@ int ClassRead::struct_class()
   strcpy( volume_name_low, low(volume_name));
 
   struct_get_filename( struct_filename);
-  sprintf( fname, "%s%s_c_%s.h", dir, volume_name_low, low(class_name));
+  if ( hpp)
+    sprintf( fname, "%s%s_c_%s.hpp", dir, volume_name_low, low(class_name));
+  else
+    sprintf( fname, "%s%s_c_%s.h", dir, volume_name_low, low(class_name));
   if ( !common_structfile_only) {
     cstruc = new CnvFile();
     cstruc->f.open( fname);
@@ -102,6 +115,7 @@ endl;
 
   // Add into index file
   struct_cclass_written = 0;
+  struct_cclass_endwritten = 0;
   struct_filler_cnt = 0;
 
   return 1;
@@ -117,10 +131,18 @@ int ClassRead::struct_body()
 
   attr_count = 0;
 
-  if ( strcmp( low( body_name), "devbody") == 0)
-    strcpy( struct_name, "pwr_sdClass_");
-  else
-    strcpy( struct_name, "pwr_sClass_");
+  if ( strcmp( low( body_name), "devbody") == 0) {
+    if ( hpp)
+      strcpy( struct_name, "pwr_dClass_");
+    else
+      strcpy( struct_name, "pwr_sdClass_");
+  }
+  else {
+    if ( hpp)
+      strcpy( struct_name, "pwr_Class_");
+    else
+      strcpy( struct_name, "pwr_sClass_");
+  }
   if ( strcmp( body_structname, "") == 0)
     strcat( struct_name, class_name);
   else
@@ -188,14 +210,20 @@ endl;
     cstruc->f <<
 "/*  Body:  " << body_name << "  */" << endl;
 
-  fp_struct << 
-endl <<
+  if ( hpp)
+    fp_struct << endl <<
+      "class " << struct_name << " ";
+  else
+    fp_struct << endl <<
+      "typedef struct {" << endl;
+  if ( !common_structfile_only) {
+    if ( hpp)
+      cstruc->f << endl <<
+"class " << struct_name << " ";
+    else
+      cstruc->f << endl <<
 "typedef struct {" << endl;
-  if ( !common_structfile_only)
-    cstruc->f << 
-endl <<
-"typedef struct {" << endl;
-
+  }
   return 1;
 }
 
@@ -225,12 +253,21 @@ int ClassRead::struct_body_close()
     strcat( struct_name, class_name);
   else
     strcat( struct_name, body_structname);
-
-  fp_struct <<
+  
+  if ( hpp) {
+    fp_struct <<
+"};"  << endl;
+    if ( !common_structfile_only)
+      cstruc->f <<
+"};"  << endl;
+  }
+  else {
+    fp_struct <<
 "} " << struct_name << ";"  << endl;
-  if ( !common_structfile_only)
-    cstruc->f <<
+    if ( !common_structfile_only)
+      cstruc->f <<
 "} " << struct_name << ";"  << endl;
+  }
 
   fp_struct << 
 endl;
@@ -261,15 +298,17 @@ endl;
   }
 
   // endif pwr_cClass...
-  if ( struct_class_open)
+  if ( !struct_cclass_endwritten) {
     fp_struct <<
 "#endif" << endl <<
 endl;
 
-  if ( !common_structfile_only && struct_class_open)
-    cstruc->f <<
+    if ( !common_structfile_only && struct_class_open)
+      cstruc->f <<
 "#endif" << endl <<
 endl;
+    struct_cclass_endwritten = 1;
+  }
 
   // Close class structfile
   if ( !common_structfile_only && struct_class_open)
@@ -281,6 +320,7 @@ endl;
     delete cstruc;
     struct_class_open = 0;
   }
+
   return 1;
 }
 
@@ -322,6 +362,14 @@ int ClassRead::struct_attribute()
     strcpy( type_name, "pwr_s");
     strcat( type_name, attr_typeref);
   }
+  else if ( attr_isclass)
+  {
+    if ( hpp)
+      strcpy( type_name, "pwr_Class_");
+    else
+      strcpy( type_name, "pwr_sClass_");
+    strcat( type_name, attr_typeref);
+  }
   else
   {
     strcpy( type_name, "pwr_t");
@@ -339,6 +387,29 @@ int ClassRead::struct_attribute()
     {
       printf("Error, unknown attribute type '%s'", type_name);
       return sts;
+    }
+  }
+
+  if ( hpp && attr_count == 0) {
+    if ( attr_isclass && strcmp( pgmname, "Super") == 0) {
+      fp_struct <<
+	": public " << type_name << " {" << endl <<
+	" public:" << endl;
+      if ( !common_structfile_only)
+	cstruc->f <<
+	  type_name << " {" << endl <<
+	  " public:" << endl;
+      attr_count++;
+      return 1;
+    }
+    else {
+      fp_struct <<
+	" {" << endl <<
+	" public:" << endl;
+      if ( !common_structfile_only)
+	cstruc->f <<
+	  " {" << endl <<
+	  " public:" << endl;
     }
   }
 
@@ -723,7 +794,10 @@ void ClassRead::struct_get_filename( char *struct_file)
   else
     strcat( struct_file, low(volume_name));
 
-  strcat( struct_file, "classes.h");
+  if ( hpp)
+    strcat( struct_file, "classes.hpp");
+  else
+    strcat( struct_file, "classes.h");
 }
 
 int ClassRead::struct_check_typename( char *type_name)

@@ -23,6 +23,8 @@ static void usage()
   printf( "      -c:  Create html files from c- and -h-files\n");
   printf( "      -s:  Create h files from wb_load-files\n");
   printf( "      -so: Create one common h file from wb_load-files\n");
+  printf( "      -p:  Create hpp files from wb_load-files\n");
+  printf( "      -po: Create one common hpp file from wb_load-files\n");
   printf( "      -t:  Create html from xtthelp-file\n");
   printf( "      -d:  Output directory\n");
   printf( "      -g:  Setup file\n");
@@ -130,6 +132,10 @@ int main( int argc, char *argv[])
             break;
           case 's':
             cr->generate_struct = 1;
+            break;
+          case 'p':
+            cr->generate_struct = 1;
+	    cr->hpp = 1;
             break;
           case 'o':
             cr->common_structfile_only = 1;

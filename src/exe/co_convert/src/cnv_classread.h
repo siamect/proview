@@ -98,7 +98,7 @@ class ClassRead {
       html_class_open(0), html_index_open(0), 
       generate_xtthelp(0), xtthelp_index_open(0), xtthelp_in_topic(0),
       generate_src(0), generate_struct(0), struct_class_open(0),
-      common_structfile_only(0), setup_group_cnt(0)
+      common_structfile_only(0), hpp(0), setup_group_cnt(0)
       { strcpy( setup_filename, "");};
     ~ClassRead() {};
     
@@ -117,6 +117,7 @@ class ClassRead {
     int			attr_pointer;
     int			attr_array;
     int			attr_rtvirtual;
+    int			attr_isclass;
     char		attr_elements[80];
     int			attr_elem;
     char		attr_pgmname[80];
@@ -199,12 +200,16 @@ class ClassRead {
     // ofstream 	fp_html_class;
     CnvFile     *html_clf;
     ofstream 	fp_html_index;
+    ofstream 	fp_js_all;
     ofstream 	fp_tmp;
     ofstream	fp_html_group[MAX_GROUPS];
+    ofstream	fp_js_group[MAX_GROUPS];
     char	html_first[80];
     char	html_tmp_name[80];
     int		html_class_open;
     int		html_index_open;
+    bool	js_all_first;
+    bool	js_group_first[80];
 
     int html_init( char *first);
     int html_close();
@@ -252,11 +257,13 @@ class ClassRead {
     // ofstream 	fp_cstruc;
     CnvFile     *cstruc;
     int		struct_cclass_written;
+    int		struct_cclass_endwritten;
     int		struct_filler_cnt;
     char	struct_volid[80];
     unsigned int	struct_vid_0;
     unsigned int	struct_vid_1;
     int		attr_count;
+    int		hpp;
 
     int struct_init();
     int struct_close();
