@@ -780,7 +780,7 @@ io_init_iv_signals (
   pwr_sClass_IvArea	    *area_op;
   pwr_sClass_Iv		    *o;
   pwr_tStatus		    sts;
-  pwr_tBoolean		    *p;
+  pwr_tInt32		    *p;
   pwr_tInt32		    iv_count=0;
   pwr_sClass_IvArea	    *iarea_op;
  
@@ -817,7 +817,7 @@ io_init_iv_signals (
 #if 0
       *p = o->InitialValue;
 #endif
-      gdh_StoreRtdbPointer( (pwr_tInt32 *)&iarea_op->Value[iv_count], &o->InitialValue);
+      gdh_StoreRtdbPointer( (pwr_tUInt32 *)&iarea_op->Value[iv_count], &o->InitialValue);
       iv_count++;
       p++;
     }

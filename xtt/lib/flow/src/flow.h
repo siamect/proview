@@ -22,9 +22,9 @@ extern "C" {
 #define MIN(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
 #endif
 
-#ifndef __ALPHA
+  //#ifndef __ALPHA
 #define ABS(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
-#endif
+  //#endif
 
 #define DRAW_TYPE_SIZE 9
 #define DRAW_FONT_SIZE 9

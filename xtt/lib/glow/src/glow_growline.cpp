@@ -273,7 +273,7 @@ void GrowLine::save( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_GrowLine_y_low) << FSPACE << y_low << endl;
   fp << int(glow_eSave_GrowLine_original_border_drawtype) << FSPACE 
 		<< int(original_border_drawtype) << endl;
-  fp << int(glow_eSave_GrowLine_line_type) << FSPACE << line_type << endl;
+  fp << int(glow_eSave_GrowLine_line_type) << FSPACE << int(line_type) << endl;
   fp << int(glow_eSave_GrowLine_line_part) << endl;
   GlowLine::save( fp, mode);
   fp << int(glow_eSave_GrowLine_trf) << endl;

@@ -1954,9 +1954,9 @@ void GrowNode::convert( glow_eConvert version)
 	 trace.attr_type == 1013 || trace.attr_type == 1014 || trace.attr_type == 1015 ||
 	 trace.attr_type == 1016 || trace.attr_type == 1021 || trace.attr_type == 1023) {
       if ( (glow_eDrawTone) trace.color == glow_eDrawTone_YellowGreen)
-	(glow_eDrawTone) trace.color = glow_eDrawTone_Yellow;
+	trace.color = (glow_eDrawType) glow_eDrawTone_Yellow;
       if ( (glow_eDrawTone) trace.color2 == glow_eDrawTone_YellowGreen)
-	(glow_eDrawTone) trace.color2 = glow_eDrawTone_Yellow;
+	trace.color2 = (glow_eDrawType) glow_eDrawTone_Yellow;
     }
     else {
       trace.color = GlowColor::convert( version, trace.color);

@@ -27,6 +27,7 @@ pwr_obj:xtt_menu.obj
 pwr_obj:xtt_xhelp.obj
 pwr_obj:xtt_url.obj
 pwr_obj:xtt_logging.obj
+pwr_obj:xtt_fast.obj
 pwr_obj:xtt_xnav_brow.obj
 pwr_obj:xtt_c_object.obj
 pwr_obj:xtt_c_plcpgm.obj

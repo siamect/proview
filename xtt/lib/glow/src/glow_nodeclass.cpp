@@ -119,7 +119,7 @@ void GlowNodeClass::save( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_NodeClass_y1) << FSPACE << y1 << endl;
   fp << int(glow_eSave_NodeClass_x0) << FSPACE << x0 << endl;
   fp << int(glow_eSave_NodeClass_x1) << FSPACE << x1 << endl;
-  fp << int(glow_eSave_NodeClass_input_focus_mark) << FSPACE << input_focus_mark << endl;
+  fp << int(glow_eSave_NodeClass_input_focus_mark) << FSPACE << int(input_focus_mark) << endl;
   fp <<	int(glow_eSave_End) << endl;
 }
 
@@ -847,9 +847,9 @@ void GlowNodeClass::convert( glow_eConvert version)
   a.convert( version);
   if ( dyn_type == 3 || dyn_type == 4 || dyn_type == 12) {
     if ( (glow_eDrawTone) dyn_color[0] == glow_eDrawTone_YellowGreen)
-      (glow_eDrawTone) dyn_color[0] = glow_eDrawTone_Yellow;
+      dyn_color[0] = (glow_eDrawType) glow_eDrawTone_Yellow;
     if ( (glow_eDrawTone) dyn_color[1] == glow_eDrawTone_YellowGreen)
-      (glow_eDrawTone) dyn_color[1] = glow_eDrawTone_Yellow;
+      dyn_color[1] = (glow_eDrawType) glow_eDrawTone_Yellow;
   }
   else {
     dyn_color[0] = GlowColor::convert( version, dyn_color[0]);

@@ -52,6 +52,7 @@ extern "C" {
 #endif
 }
 
+#if defined OS_LINUX
 static void get_class_dyntype( int trace_type, int *d, int *a, int *anim_sequence_p)
 {
   int dyn_type;
@@ -2025,9 +2026,13 @@ int Graph::convert_object( grow_tObject object)
   return 1;
 }
 
+#else
 
-
-
+int Graph::convert()
+{
+  return 1;
+}
+#endif
 
 
 

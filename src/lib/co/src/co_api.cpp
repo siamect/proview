@@ -130,17 +130,17 @@ void msgw_message( int severity, char *text, msgw_ePop pop)
 
 void msgw_message_sts( pwr_tStatus sts, char *text1, char *text2)
 {
-  MsgWindow::message( wb_error(sts), text1, text2);
+  MsgWindow::message( co_error(sts), text1, text2);
 }
 
 void msgw_message_object( pwr_tStatus sts, char *text1, char *text2, pwr_tOid oid)
 {
-  MsgWindow::message( wb_error(sts), text1, text2, oid);
+  MsgWindow::message( co_error(sts), text1, text2, oid);
 }
 
 void msgw_message_plcobject( pwr_tStatus sts, char *text1, char *text2, pwr_tOid oid)
 {
-  MsgWindow::message( wb_error(sts), text1, text2, oid, true);
+  MsgWindow::message( co_error(sts), text1, text2, oid, true);
 }
 
 void msgw_set_nodraw()

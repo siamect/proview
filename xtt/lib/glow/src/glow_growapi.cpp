@@ -3588,6 +3588,9 @@ int grow_ImageUpdate( grow_tObject object)
   return ((GrowImage *)object)->update();
 }
 
+#if defined OS_VMS
+extern "C" 
+#endif
 void grow_RegisterUserDataCallbacks( grow_tCtx ctx,
 				     void (*save)( void *, grow_tObject),
 				     void (*open)( void *, grow_tObject),

@@ -159,7 +159,7 @@ class GeUser {
     char		fname[256];
 
     bool 		get_system_name_child( SystemList *s, SystemList *system, char *name);
-    SystemList 		*GeUser::get_system_child( SystemList *system, UserList *user);
+    SystemList 		*get_system_child( SystemList *system, UserList *user);
     
 
   public:

@@ -203,20 +203,20 @@ glow_eDrawType GlowColor::get_drawtype( glow_eDrawType local_drawtype,
       if ( local_drawtype > 30) {
 	if ( tone >= glow_eDrawTone_GrayHighSaturation &&
 	     tone < glow_eDrawTone_GrayLowSaturation) {
-	  (int)tone -= 27;
+	  tone = glow_eDrawTone( tone - 27);
 	  intensity += 2;
 	}
 	else if ( tone >= glow_eDrawTone_GrayLowSaturation) {
-	  (int)tone -= 2 * 27;
+	  tone = glow_eDrawTone( tone - 2 * 27);
 	  intensity -= 1;
 	}
         if ( tone >= glow_eDrawTone_DarkGray &&
 	     tone < glow_eDrawTone_LightGray) {
-	  (int)tone -= 9;
+	  tone = glow_eDrawTone( tone - 9);
 	  lightness -= 2;
 	}
         else if ( tone >= glow_eDrawTone_LightGray) {
-	  (int)tone -= 18;
+	  tone = glow_eDrawTone( tone - 18);
 	  lightness += 2;
 	}
 
@@ -254,7 +254,7 @@ glow_eDrawType GlowColor::get_drawtype( glow_eDrawType local_drawtype,
       if ( drawtype >= 60) {
         base_drawtype = drawtype / 30 * 30;
         incr = drawtype - base_drawtype;
-	(int)drawtype += min( 2 - incr / 10, intensity) * 10;
+	drawtype = glow_eDrawType( drawtype + min( 2 - incr / 10, intensity) * 10);
 	if ( drawtype < base_drawtype)
 	  drawtype = (glow_eDrawType)( glow_eDrawType_Color41 + incr);
 	/*

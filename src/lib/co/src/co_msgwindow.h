@@ -26,8 +26,8 @@ extern "C" {
 # include "co_msglist.h"
 #endif
 
-#ifndef wb_error_h
-# include "wb_error.h"
+#ifndef co_error_h
+# include "co_error.h"
 #endif
 
 typedef enum {
@@ -71,7 +71,7 @@ class MsgWindow {
     static void	set_default( MsgWindow *msgw) { default_window = msgw;}
     static void message( int severity, const char *text, msgw_ePop pop = msgw_ePop_Default, 
 			 pwr_tOid oid = pwr_cNOid, bool is_plc = false);
-    static void message( const wb_error& e, const char *text1 = 0, const char *text2 = 0,
+    static void message( const co_error& e, const char *text1 = 0, const char *text2 = 0,
 			 pwr_tOid oid = pwr_cNOid, bool is_plc = false);
     static void message( int severity, const char *text1, const char *text2, const char *text3 = 0,
 			 pwr_tOid oid = pwr_cNOid, bool is_plc = false);

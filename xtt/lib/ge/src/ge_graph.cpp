@@ -810,10 +810,10 @@ void Graph::change_value( grow_tObject object, char *text)
     event.event = glow_eEvent_MB1Click;
 
     // Trigger the confirm action
-    (int)dyn->total_action_type = dyn->total_action_type & ~ge_mActionType_ValueInput;
+    dyn->total_action_type = ge_mActionType( dyn->total_action_type & ~ge_mActionType_ValueInput);
     strncpy( confirm_text, text, sizeof(confirm_text));
     dyn->action( object, &event);
-    (int)dyn->total_action_type = dyn->total_action_type | ge_mActionType_ValueInput;
+    dyn->total_action_type = ge_mActionType( dyn->total_action_type | ge_mActionType_ValueInput);
   }
   else {
     dyn->change_value( object, text);
@@ -1848,7 +1848,7 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
 	GeDyn *dyn = new GeDyn( graph);
         grow_SetUserData( n1, (void *)dyn);
         if ( grow_IsSliderClass( nc))
-	  (int)dyn->action_type |= ge_mActionType_Slider;
+	  dyn->action_type = ge_mActionType( dyn->action_type | ge_mActionType_Slider);
 
       }
       else if ( strcmp( type, ".gif") == 0 || strcmp( type, ".jpg") == 0)

@@ -73,7 +73,7 @@ void MsgWindow::message( int severity, const char *text, msgw_ePop pop, pwr_tOid
     default_window->map();
 }
 
-void MsgWindow::message( const wb_error& e, const char *text1, const char *text2, pwr_tOid oid, bool is_plc)
+void MsgWindow::message( const co_error& e, const char *text1, const char *text2, pwr_tOid oid, bool is_plc)
 {
   pwr_tStatus sts = e.sts();
   int severity;

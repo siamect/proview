@@ -39,6 +39,8 @@ extern "C" {
 #define cFrameBorderX 8
 #define cFrameBorderY 44
 
+#if defined OS_LINUX
+
 int Graph::export_javabean( char *filename, char *bean_name)
 {
   ofstream fp;
@@ -2248,4 +2250,25 @@ int Graph::export_SliderTraceAttr( ofstream& fp, grow_tObject object, int cnt)
   }
   return 1;
 }
+
+#else
+
+int Graph::export_javabean( char *filename, char *bean_name) { return 1;}
+int Graph::export_gejava_nodeclass( ofstream& fp, grow_tNodeClass nodeclass) { return 1;}
+int Graph::export_javaframe( char *filename, char *bean_name, int applet,
+  int html) { return 1;}
+int Graph::export_gejava( char *filename, char *bean_name, int applet, int html) { return 1;}
+int Graph::export_ObjectTraceAttr( ofstream& fp, grow_tObject object, int cnt) { return 1;}
+int Graph::export_GejavaObjectTraceAttr( ofstream& fp, grow_tObject object, int cnt) { return 1;}
+int Graph::export_BarTraceAttr( ofstream& fp, grow_tObject object, int cnt){ return 1;}
+int Graph::export_TrendTraceAttr( ofstream& fp, grow_tObject object, int cnt) { return 1;}
+int Graph::export_SliderTraceAttr( ofstream& fp, grow_tObject object, int cnt) { return 1;}
+
+#endif
+
+
+
+
+
+
 

@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <float.h>
+#include <math.h>
 
 extern "C" {
 #include "co_cdh.h"
@@ -124,6 +125,8 @@ GeDyn::GeDyn( const GeDyn& x) :
       e = new GeRotate((const GeRotate&) *elem); break;
     case ge_mDynType_Move:
       e = new GeMove((const GeMove&) *elem); break;
+    case ge_mDynType_DigShift:
+      e = new GeDigShift((const GeDigShift&) *elem); break;
     case ge_mDynType_AnalogShift:
       e = new GeAnalogShift((const GeAnalogShift&) *elem); break;
     case ge_mDynType_Video:
@@ -893,21 +896,21 @@ int GeDyn::connect( grow_tObject object, glow_sTraceData *trace_data)
     if ( cycle == glow_eCycle_Inherit)
       cycle = glow_eCycle_Slow;
     if ( dyn_type & ge_mDynType_Inherit)
-      (int)dyn_type = dyn_type & ~ge_mActionType_Inherit;
+      dyn_type = ge_mDynType( dyn_type & ~ge_mDynType_Inherit);
     if ( dyn_type & ge_mDynType_Inherit)
-      (int)action_type = action_type & ~ge_mActionType_Inherit;
+      action_type = ge_mActionType( action_type & ~ge_mActionType_Inherit);
   }
 
   if ( dyn_type & ge_mDynType_Inherit) {
     grow_GetObjectClassDynType( object, &inherit_dyn_type, &inherit_action_type);
-    (int)total_dyn_type = dyn_type | inherit_dyn_type;
+    total_dyn_type = ge_mDynType( dyn_type | inherit_dyn_type);
   }
   else
     total_dyn_type = dyn_type;
 
   if ( action_type & ge_mActionType_Inherit) {
     grow_GetObjectClassDynType( object, &inherit_dyn_type, &inherit_action_type);
-    (int)total_action_type = action_type | inherit_action_type;
+    total_action_type = ge_mActionType( action_type | inherit_action_type);
   }
   else
     total_action_type = action_type;
@@ -965,14 +968,14 @@ void GeDyn::export_java( grow_tObject object, ofstream& fp, char *var_name)
 
   if ( dyn_type & ge_mDynType_Inherit) {
     grow_GetObjectClassDynType( object, &inherit_dyn_type, &inherit_action_type);
-    (int)total_dyn_type = dyn_type | inherit_dyn_type;
+    total_dyn_type = ge_mDynType( dyn_type | inherit_dyn_type);
   }
   else
     total_dyn_type = dyn_type;
 
   if ( action_type & ge_mActionType_Inherit) {
     grow_GetObjectClassDynType( object, &inherit_dyn_type, &inherit_action_type);
-    (int)total_action_type = (action_type | inherit_action_type) & ~ge_mActionType_Inherit;
+    total_action_type = ge_mActionType( (action_type | inherit_action_type) & ~ge_mActionType_Inherit);
   }
   else
     total_action_type = action_type;
@@ -1079,7 +1082,7 @@ int GeDigLowColor::set_color( grow_tObject object, glow_eDrawType color)
   char msg[200];
 
   if ( dyn->total_dyn_type & ge_mDynType_Tone) {
-    (int) this->color = color / 30;
+    this->color = glow_eDrawType( color / 30);
     sprintf( msg, "DigLowTone.Tone = %s", grow_ColorToneToName( this->color));
   }
   else {
@@ -1319,7 +1322,7 @@ int GeDigColor::set_color( grow_tObject object, glow_eDrawType color)
   char msg[200];
 
   if ( dyn->total_dyn_type & ge_mDynType_Tone) {
-    (int) this->color = color / 30;
+    this->color = glow_eDrawType( color / 30);
     if ( instance == ge_mInstance_1)
       sprintf( msg, "DigTone.Tone = %s", grow_ColorToneToName( this->color));
     else
@@ -1787,7 +1790,7 @@ int GeDigFlash::set_color( grow_tObject object, glow_eDrawType color)
   char msg[200];
 
   if ( dyn->total_dyn_type & ge_mDynType_Tone) {
-    (int) this->color = color / 30;
+    this->color = glow_eDrawType( color / 30);
     sprintf( msg, "DigFlash.Tone = %s", grow_ColorToneToName( this->color));
   }
   else {
@@ -2949,7 +2952,7 @@ int GeAnalogColor::set_color( grow_tObject object, glow_eDrawType color)
   char msg[200];
 
   if ( dyn->total_dyn_type & ge_mDynType_Tone) {
-    (int) this->color = color / 30;
+    this->color = glow_eDrawType( color / 30);
     if ( instance == ge_mInstance_1)
       sprintf( msg, "AnalogTone.Tone = %s", grow_ColorToneToName( this->color));
     else

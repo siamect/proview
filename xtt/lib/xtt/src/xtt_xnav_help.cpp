@@ -129,8 +129,7 @@ int	XNav::help( char *help_key, char *help_bookmark,
     brow_SetNodraw( brow->ctx);
   }
   sts = navhelp->help( help_key, help_bookmark, file_type, 
-
-		       file_name, &bookmark_node);
+		       file_name, &bookmark_node, false);
   if ( EVEN(sts)) {
     if ( !pop || (pop && !init_help)) {
       brow_push();

@@ -1298,7 +1298,7 @@ void GlowExportJBean::annot( int x0, int y0, int number,
 	" = s;}" << endl <<
 "  Font annot" << number << "Font = new Font(\"Helvetica\", Font." << 
 	bold_str << ", " << text_size << ");" << endl <<
-"  int annot" << number << "Color = " << text_drawtype << ";" << endl <<
+"  int annot" << number << "Color = " << int(text_drawtype) << ";" << endl <<
 "  public void setAnnot" << number << "Font( Font font) { annot" << number << 
 	"Font = font;}" << endl <<
 "  public void setAnnot" << number << "Color( int color) { annot" << number << 
