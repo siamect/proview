@@ -130,6 +130,7 @@ typedef struct {
   ini_sFile	plcfile;
   int		busid;
   char		dir[256];
+  char		bdir[256]; /* Base dir (pwr_load) */
   int		warnings;
   int		errors;
   int		fatals;
