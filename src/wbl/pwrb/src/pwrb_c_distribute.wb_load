@@ -1,0 +1,42 @@
+!  pwrb_c_distribute.wb_load -- Defines the class Distribute.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!/**
+!  @Version 1.0
+!  @Group ProjectConfiguration
+!  @Summary Configures distribution of files.
+!  The Distribute object configures distribution of files to process and
+!  operator stations.
+!
+!  The object reside in the project volume beneath a NodeConfig object.
+!  The specified file will be copied to the node configured by the 
+!  NodeConfig object.
+!
+! @b See also
+!  @classlink NodeConfig pwrb_nodeconfig.html
+!  @classlink ApplDistribute pwrb_appldistribute.html
+!*/
+SObject pwrb:Class
+  Object Distribute $ClassDef 321 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_RtAndDevBodies
+    EndBody
+    Object DevBody $ObjBodyDef 2 
+      !/**
+      ! @Summary Specification of components included in the distribution.
+      ! Specification of components that are included in the distribution
+      ! package.
+      !*/
+      Object Components $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Mask"
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject

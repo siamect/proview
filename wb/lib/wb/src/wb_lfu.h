@@ -12,10 +12,29 @@
 #include "wb_ldh.h"
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum {
 	lfu_eDistrSts_Normal 		= 0,
 	lfu_eDistrSts_NoRootVolume 	= 1 << 0
 } lfu_eDistrSts;
+
+typedef enum {
+  lfu_mDistrComponents_UserDatabase      = 1 << 0,
+  lfu_mDistrComponents_LoadFiles		= 1 << 1,
+  lfu_mDistrComponents_ApplFile		= 1 << 2,
+  lfu_mDistrComponents_PwrpAliasFile    	= 1 << 3,
+  lfu_mDistrComponents_IncludeFiles     	= 1 << 4,
+  lfu_mDistrComponents_GraphFiles       	= 1 << 5,
+  lfu_mDistrComponents_XttHelpFile      	= 1 << 6,
+  lfu_mDistrComponents_XttResourceFile  	= 1 << 7,
+  lfu_mDistrComponents_XttSetupFile     	= 1 << 8,
+  lfu_mDistrComponents_FlowFiles		= 1 << 9,
+  lfu_mDistrComponents_RHostsFile       	= 1 << 10,
+  lfu_mDistrComponents_WebFiles       		= 1 << 11
+} lfu_mDistrComponents;
 
 typedef enum {
 	lfu_eAccessType_StdLgi 		= 0,
@@ -105,5 +124,9 @@ pwr_tStatus lfu_ReadSysObjectFile(
 pwr_tStatus lfu_WriteSysObjectFile(
 	ldh_tSesContext	ldhses
 );
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

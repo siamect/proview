@@ -67,6 +67,7 @@ extern "C" {
 #include "wb_erep.h"
 #include "wb_vrepwbl.h"
 #include "wb_vrepmem.h"
+#include "wb_pkg.h"
 
 #define	WNAV_MENU_CREATE	0
 #define	WNAV_MENU_ADD		1
@@ -149,6 +150,8 @@ static int	wnav_display_func(	void		*client_data,
 static int	wnav_generate_func(     void		*client_data,
 				        void		*client_flag);
 static int	wnav_crossref_func(     void		*client_data,
+				        void		*client_flag);
+static int	wnav_distribute_func(   void		*client_data,
 				        void		*client_flag);
 
 dcli_tCmdTable	wnav_command_table[] = {
@@ -377,6 +380,11 @@ dcli_tCmdTable	wnav_command_table[] = {
 			&wnav_crossref_func,
 			{ "dcli_arg1", "/NAME", "/FILE", "/STRING", "/BRIEF",
 			"/FUNCTION", "/CASE_SENSITIVE", ""}
+		},
+		{
+			"DISTRIBUTE",
+			&wnav_distribute_func,
+			{ "/NODE", ""}
 		},
 		{"",}};
 
@@ -4139,6 +4147,33 @@ static int	wnav_crossref_func(	void		*client_data,
     }
   }
   return sts;	  
+}
+
+static int	wnav_distribute_func(	void		*client_data,
+					void		*client_flag)
+{
+  WNav 		*wnav = (WNav *)client_data;
+  int		sts;
+  char		*node_ptr;
+  char		node_str[80];
+
+  if ( ODD( dcli_get_qualifier( "/NODE", node_str)))
+    node_ptr = node_str;
+  else
+    node_ptr = NULL;
+
+  sts = WNAV__SUCCESS;
+  try {
+    wb_pkg *pkg = new wb_pkg( node_ptr);
+    delete pkg;
+  }
+  catch ( wb_error &e) {
+    wnav->message(' ', (char *)e.what().c_str());
+    sts = e.sts();
+  }
+  if ( EVEN(sts))
+    return sts;
+  return 1;
 }
 
 int WNav::show_database()
