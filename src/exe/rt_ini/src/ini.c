@@ -84,6 +84,8 @@
 # define cPrio_webmonmh		(cPrio_base + 15)
 # define cPrio_elog		(cPrio_base + 15)
 # define cPrio_plc_init		(cPrio_base + 5)
+# define cPrio_remh		(cPrio_base + 5)
+# define cPrio_remotelogg	(cPrio_base + 5)
 #endif
 
 static pwr_tBoolean	checkSect (pwr_tStatus*, ini_sContext*, int, int);
@@ -1975,6 +1977,12 @@ ini_ProcTable (
   pp->proc.flags.b.system = 1;
 
 #if defined OS_LINUX
+  pp = ini_ProcInsert(sts, cp, "pwr_remh", "pwr_remh_%d", 0, 1, "rs_remotehandler", cPrio_remh, 0, "");
+  pp->proc.flags.b.system = 1;
+
+  pp = ini_ProcInsert(sts, cp, "pwr_remlog", "pwr_remlog_%d", 0, 1, "rs_remote_logg", cPrio_remotelogg, 0, "");
+  pp->proc.flags.b.system = 1;
+
   pp = ini_ProcInsert(sts, cp, "pwr_elog", "pwr_elog_%d", 0, 1, "rt_elog", cPrio_elog, 0, "");
   pp->proc.flags.b.system = 1;
 
