@@ -1027,9 +1027,8 @@ int WNav::get_select( pwr_sAttrRef **attrref, int **is_attr, int *cnt)
         break;
       default:
         sts = ldh_NameToAttrRef( ldhses, attr_str, ap);
-        if ( EVEN(sts))
-        {
-          // ldh_NameToAttrRef doesn't handler objects with no RtBody...
+        if ( EVEN(sts)) {
+          // ldh_NameToAttrRef doesn't handle objects with no RtBody...
           ap->Objid = item->objid;
         }
         *is_attr_p = 0;
