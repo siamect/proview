@@ -353,9 +353,10 @@ void GlowArray::copy_from( const GlowArray& array)
 	// Fix, This should be done in the copy constructor !!!
 	if ( n->ctx->userdata_copy_callback)
 	  (n->ctx->userdata_copy_callback)( n, 
-	     ((GrowFolder *)array.a[i])->user_data, &n->user_data);
+	     ((GrowTable *)array.a[i])->user_data, &n->user_data);
 	n->v_scrollbar = 0;
 	n->h_scrollbar = 0;
+	n->cell_value = 0;
 	n->configure();
 	n->configure_scrollbars();
         insert( n);
