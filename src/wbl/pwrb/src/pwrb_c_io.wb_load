@@ -73,6 +73,19 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  InitialValue specifies starting value of the signal at
+      !  so called 'cold start'. Which value that is used as
+      !  starting value at warm restart ( = change of PLC
+      !  program ) depends on whether the signal is new or not.
+      !  If the signal has exist in the last program its last
+      !  value will be used as starting value, otherwise InitialValue
+      !*/
+      Object InitialValue $Attribute 10
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      !/**
       !  @Summary A XttGraph object that will open a graph for this object.
       !  A XttGraph object that will open a graph that contains data for
       !  this object. This graph can be opened from the popup menu for

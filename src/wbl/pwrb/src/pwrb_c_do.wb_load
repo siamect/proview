@@ -76,6 +76,19 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  InitialValue specifies starting value of the signal at
+      !  so called 'cold start'. Which value that is used as
+      !  starting value at warm restart ( = change of PLC
+      !  program ) depends on whether the signal is new or not.
+      !  If the signal has exist in the last program its last
+      !  value will be used as starting value, otherwise InitialValue
+      !*/
+      Object InitialValue $Attribute 13
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
       !  If the signal exists in some process graphics the name
       !  of the corresponding Graph object is written here. As
       !  pure information this name is shown in the more info
