@@ -932,23 +932,6 @@ wb_orep *wb_vrepdb::before(pwr_tStatus *sts, const wb_orep *orp)
 
 wb_orep *wb_vrepdb::first(pwr_tStatus *sts, const wb_orep *orp)
 {
-  if ( orp->cid() == pwr_eClass_MountObject) {
-    pwr_tStatus msts = LDH__SUCCESS;
-
-    wb_attribute a(msts, (wb_orep *)orp, "SysBody", "Object");
-    if ( !a) {
-      *sts = a.sts();
-      return 0;
-    }
-
-    pwr_tOid moid;
-    a.value( &moid);
-
-    wb_orep *morep = erep()->object( sts, moid);
-    if ( ODD(*sts) && morep->vrep()->type() == ldh_eVolRep_Dbs)
-      return morep->first( sts);
-  }
-
   *sts = LDH__SUCCESS;
 
   try {
