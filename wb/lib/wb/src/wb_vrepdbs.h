@@ -5,6 +5,8 @@
 #include "wb_vrep.h"
 #include "wb_cdef.h"
 
+class wb_merep;
+
 class wb_vrepdbs : public wb_vrep
 {
 public:
@@ -13,6 +15,7 @@ public:
     //wb_session m_wsession;
 
     wb_erep *m_erep;
+    wb_merep *m_merep;
     unsigned int m_nSession;
     unsigned int m_nRef;
 
@@ -22,6 +25,7 @@ public:
     dbs_sEnv m_dbsenv;
     
     wb_vrepdbs(wb_erep *erep, const char *fileName);
+
     dbs_sEnv *dbsenv();
     bool load();
     void objectName(wb_orep *o, char *str) const;
