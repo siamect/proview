@@ -131,7 +131,7 @@ void wb_db_class::iter(void (*print)(pwr_tOid oid, pwr_tCid cid))
 	/* Initialize the key/data pair so the flags aren't set. */
 	memset(&m_k, 0, sizeof(m_k));
 
-  printf("sizeof(m_k): %d\n", sizeof(m_k));
+  //printf("sizeof(m_k): %d\n", sizeof(m_k));
   
   m_key.set_data(&m_k);
   m_key.set_ulen(sizeof(m_k));
@@ -240,8 +240,8 @@ void wb_db_name::iter(void (*print)(pwr_tOid poid, pwr_tObjName name, pwr_tOid o
 	memset(&m_k, 0, sizeof(m_k));
 	memset(&m_d, 0, sizeof(m_d));
 
-  printf("sizeof(m_k): %d\n", sizeof(m_k));
-  printf("sizeof(m_d): %d\n", sizeof(m_d));
+  //printf("sizeof(m_k): %d\n", sizeof(m_k));
+  //printf("sizeof(m_d): %d\n", sizeof(m_d));
   
   m_key.set_data(&m_k);
   m_key.set_ulen(sizeof(m_k));
@@ -394,9 +394,6 @@ void wb_db_ohead::iter(void (*print)(pwr_tOid oid, db_sObject *op))
 	memset(&m_oid, 0, sizeof(m_oid));
 	memset(&m_o, 0, sizeof(m_o));
 
-  printf("sizeof(m_oid): %d\n", sizeof(m_oid));
-  printf("sizeof(m_o): %d\n", sizeof(m_o));
-  
   m_key.set_data(&m_oid);
   m_key.set_ulen(sizeof(m_oid));
   m_key.set_flags(DB_DBT_USERMEM);
@@ -409,13 +406,34 @@ void wb_db_ohead::iter(void (*print)(pwr_tOid oid, db_sObject *op))
 	/* Walk through the database and print out the key/data pairs. */
   //int rc = m_dbc->get(&m_key, &m_data, DB_FIRST);
 
-  while ((rc = m_dbc->get(&m_key, &m_data, DB_NEXT)) == 0) {
-    //printf("k: %d, d: %d\n", (int)m_key.get_size(), (int)m_data.get_size());
-    //volatile int a = m_key.get_size();
-    //a = m_data.get_size();
-    
+  while ((rc = m_dbc->get(&m_key, &m_data, DB_NEXT)) == 0) {    
     print(m_oid, &m_o);
-    
+  }
+  
+  m_dbc->close();
+}
+
+void wb_db_ohead::iter(wb_import &i)
+{
+  int rc = 0;  
+  //Dbc *cp;
+  
+  rc = m_db->m_t_ohead->cursor(m_db->m_txn, &m_dbc, 0);
+
+	memset(&m_oid, 0, sizeof(m_oid));
+	memset(&m_o, 0, sizeof(m_o));
+
+  m_key.set_data(&m_oid);
+  m_key.set_ulen(sizeof(m_oid));
+  m_key.set_flags(DB_DBT_USERMEM);
+
+  m_data.set_data(&m_o);
+  m_data.set_ulen(sizeof(m_o));
+  m_data.set_flags(DB_DBT_USERMEM);  
+
+  while ((rc = m_dbc->get(&m_key, &m_data, DB_NEXT)) == 0) {
+    i.importHead(m_o.oid, m_o.cid, m_o.poid, m_o.boid, m_o.aoid, m_o.foid, m_o.loid, m_o.name, m_o.normname,
+                 m_o.flags, m_o.time, m_o.body[0].time, m_o.body[1].time, m_o.body[0].size, m_o.body[1].size);
   }
   
   m_dbc->close();
@@ -511,6 +529,38 @@ void wb_db_rbody::iter(void (*print)(pwr_tOid oid))
   m_dbc->close();
 }
 
+void wb_db_rbody::iter(wb_import &i)
+{
+  int rc = 0;
+  
+
+  m_db->m_t_rbody->cursor(m_db->m_txn, &m_dbc, 0);
+
+	/* Initialize the key/data pair so the flags aren't set. */
+	memset(&m_oid, 0, sizeof(m_oid));
+  m_key.set_data(&m_oid);
+  m_key.set_ulen(sizeof(m_oid));
+  m_key.set_flags(DB_DBT_USERMEM);
+  m_data.set_flags(DB_DBT_MALLOC);
+  
+  while (1) {
+    try {
+      rc = m_dbc->get(&m_key, &m_data, DB_NEXT);
+    }
+    catch (DbException &e) {
+      printf("Exc: %s\n", e.what());
+    }
+  
+    if (rc == DB_NOTFOUND)
+      break;
+    
+    i.importRbody(m_oid, m_data.get_size(), m_data.get_data());
+    free(m_data.get_data());
+  }
+  
+  m_dbc->close();
+}
+
 wb_db_dbody::wb_db_dbody(wb_db *db, pwr_tOid oid, size_t size, void *p) :
   m_db(db), m_oid(oid), m_size(size), m_p(p), m_key(&m_oid, sizeof(m_oid)), m_data(p, size)
 {
@@ -595,6 +645,48 @@ void wb_db_dbody::iter(void (*print)(pwr_tOid oid))
       break;
     
     print(m_oid);
+ }
+  
+  m_dbc->close();
+}
+
+void wb_db_dbody::iter(wb_import &i)
+{
+  int rc = 0;
+  //static char b[65000];
+  
+  m_db->m_t_dbody->cursor(m_db->m_txn, &m_dbc, 0);
+
+	/* Initialize the key/data pair so the flags aren't set. */
+	memset(&m_oid, 0, sizeof(m_oid));
+  m_key.set_data(&m_oid);
+  m_key.set_ulen(sizeof(m_oid));
+  m_key.set_flags(DB_DBT_USERMEM);
+  //m_data.set_data(b);
+  //m_data.set_ulen(sizeof(b));
+  //m_data.set_dlen(sizeof(b));
+  //m_data.set_size(sizeof(b));
+  m_data.set_flags(DB_DBT_MALLOC);
+
+  //m_data.set_flags(DB_DBT_USERMEM);
+  
+	/* Walk through the database and print out the key/data pairs. */
+  //int rc = m_dbc->get(&m_key, &m_data, DB_FIRST);
+
+  while (1) {
+
+    try {
+      rc = m_dbc->get(&m_key, &m_data, DB_NEXT);
+    }
+    catch (DbException &e) {
+      printf("Exc: %s\n", e.what());
+    }
+  
+    if (rc == DB_NOTFOUND)
+      break;
+    
+    i.importDbody(m_oid, m_data.get_size(), m_data.get_data());
+    free(m_data.get_data());
  }
   
   m_dbc->close();

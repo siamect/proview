@@ -2,7 +2,7 @@
 #define wb_pkg_h
 
 #include <iostream.h>
-#include <vector>
+#include <vector.h>
 #include <string>
 #include "pwr.h"
 #include "pwr_class.h"

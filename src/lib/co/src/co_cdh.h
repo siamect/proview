@@ -841,6 +841,11 @@ cdh_ParseName (
 );
 
 char *
+cdh_Low (
+  const char		*s
+);
+
+char *
 cdh_ToLower (
   char			*t,
   const char		*s

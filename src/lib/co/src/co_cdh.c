@@ -2186,6 +2186,16 @@ cdh_PackName (
 }
 
 char *
+cdh_Low (
+  const char		*s
+)
+{
+  static char buf[500];
+
+  return cdh_ToLower(buf, s);
+}
+
+char *
 cdh_ToLower (
   char			*t,
   const char		*s

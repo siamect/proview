@@ -3,6 +3,7 @@
 #include "wb_erep.h"
 #include "wb_env.h"
 #include "wb_vrepdbs.h"
+#include "wb_vrepdb.h"
 #include "wb_vrep.h"
 #include "wb_dbs.h"
 #include "wb_db.h"
@@ -19,13 +20,13 @@
 #if 1
 int main( int argc, char *argv[])
 {
-    pwr_tStatus sts;
-    //dbs_sEnv env;
-    //dbs_sEnv *ep;
-    wb_erep *erep = new wb_erep();
+  pwr_tStatus sts;
+  //dbs_sEnv env;
+  //dbs_sEnv *ep;
+  wb_erep *erep = new wb_erep();
 
   if (argc <= 2) exit(0);
-//  ep = dbs_Map(&sts, &env, argv[1]);
+  //  ep = dbs_Map(&sts, &env, argv[1]);
   wb_vrepdbs *vdbs = new wb_vrepdbs(erep, argv[1]);
   vdbs->load();
 
@@ -39,6 +40,12 @@ int main( int argc, char *argv[])
   db.create(vdbs->vid(), vdbs->cid(), vdbs->name(), argv[2]);
   db.importVolume(*vdbs);
   db.close();
+
+  wb_vrepdb vdb(erep, argv[2]);
+  
+  wb_dbs adbs(vdbs);
+  adbs.setFileName("alasse.dbs");
+  adbs.importVolume(vdb);
   
 }
 

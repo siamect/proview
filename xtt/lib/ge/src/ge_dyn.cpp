@@ -2521,7 +2521,7 @@ int GeValue::scan( grow_tObject object)
     }
   }
   grow_SetAnnotationBrief( object, 1, buf, len);
-  memcpy( &old_value, p, min(size, (int) sizeof(old_value)));
+  memcpy( &old_value, p, MIN(size, (int) sizeof(old_value)));
   return 1;
 }
 
@@ -5772,8 +5772,8 @@ int GeIncrAnalog::action( grow_tObject object, glow_tEvent event)
 
     value += increment;
     if ( !( min_value == 0 && max_value == 0)) {
-      value = max( value, min_value);
-      value = min( value, max_value);
+      value = MAX( value, min_value);
+      value = MIN( value, max_value);
     }
     sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
     if ( EVEN(sts)) printf("IncrAnalog error: %s\n", attribute);
@@ -7418,7 +7418,7 @@ int GeFastCurve::scan( grow_tObject object)
 	free(tmp);
       }
     }
-    grow_SetTrendData( object, data, min( fast_cnt + 1, 3), max_points);
+    grow_SetTrendData( object, data, MIN( fast_cnt + 1, 3), max_points);
     for ( i = 0; i < fast_cnt; i++)
       free( data[i]);
     first_scan = 0;
@@ -8577,7 +8577,7 @@ int GeOptionMenu::scan( grow_tObject object)
   if ( !found)
     grow_SetAnnotation( object, 1, "", 0);
 
-  memcpy( &old_value, p, min(size, (int) sizeof(old_value)));
+  memcpy( &old_value, p, MIN(size, (int) sizeof(old_value)));
   return 1;
 }
 

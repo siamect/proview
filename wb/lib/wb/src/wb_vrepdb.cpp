@@ -1048,27 +1048,39 @@ void wb_vrepdb::unadopt(wb_db_txn *txn, wb_db_ohead &o)
     printf("wb_vrepdb::unadopt, p.put rc %d\n", rc);
 }
 
-bool wb_vrepdb::exportVolume(wb_import &e)
+bool wb_vrepdb::exportVolume(wb_import &i)
 {
-  return false;
+  return i.importVolume(*this);
 }
 
-bool wb_vrepdb::exportHead(wb_import &e)
+bool wb_vrepdb::exportHead(wb_import &i)
 {
-  return false;
+  wb_db_ohead *op = new wb_db_ohead(m_db);
+  
+  op->iter(i);
+
+  return true;
 }
 
-bool wb_vrepdb::exportRbody(wb_import &e)
+bool wb_vrepdb::exportRbody(wb_import &i)
 {
-  return false;
+  wb_db_rbody *rp = new wb_db_rbody(m_db);
+  
+  rp->iter(i);
+
+  return true;
 }
     
-bool wb_vrepdb::exportDbody(wb_import &e)
+bool wb_vrepdb::exportDbody(wb_import &i)
 {
-  return false;
+  wb_db_dbody *dp = new wb_db_dbody(m_db);
+  
+  dp->iter(i);
+
+  return true;
 }
 
-bool wb_vrepdb::exportMeta(wb_import &e)
+bool wb_vrepdb::exportMeta(wb_import &i)
 {
   return false;
 }

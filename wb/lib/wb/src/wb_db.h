@@ -206,6 +206,7 @@ public:
   void clear();
 
   void iter(void (*print)(pwr_tOid oid, db_sObject *op));
+  void iter(wb_import &i);
 };
     
 class wb_db_name
@@ -306,6 +307,7 @@ public:
   int del(wb_db_txn *txn);
 
   void iter(void (*print)(pwr_tOid oid));
+  void iter(wb_import &i);
 };
 
 class wb_db_rbody
@@ -334,6 +336,7 @@ public:
   int del(wb_db_txn *txn);
 
   void iter(void (*print)(pwr_tOid oid));
+  void iter(wb_import &i);
 };
 
 class wb_db_txn : public DbTxn
