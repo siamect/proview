@@ -17,9 +17,12 @@ wb_vrep *wb_vrepdbs::ref()
 
 wb_vrepdbs::wb_vrepdbs(wb_erep *erep, const char *fileName) : m_erep(erep)
 {
-    m_merep = new wb_merep(m_erep, (wb_mvrep *)this);
     strcpy(m_fileName, fileName);
     m_isDbsenvLoaded = false;
+    if ( isCommonMeta())
+      m_merep = m_erep->merep();
+    else
+      m_merep = new wb_merep(m_erep, (wb_mvrep *)this);
 }
 
 dbs_sEnv *
@@ -49,7 +52,10 @@ wb_vrepdbs::load()
 {
     pwr_tStatus sts;
     bool rsts = ( dbsenv() != 0);
-    m_merep->addDbs(&sts, (wb_mvrep *)this); // only if i am a class volume
+
+    if ( isMeta())
+      m_merep->addDbs(&sts, (wb_mvrep *)this);
+
     return rsts;
 }
 
@@ -178,7 +184,7 @@ wb_vrepdbs::abort(pwr_tStatus *sts)
 bool
 wb_vrepdbs::writeAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, unsigned int offset, unsigned int size, void *p)
 {
-    //*sts = LDH__NYI;
+    *sts = LDH__NYI;
     return false;
 }
 
@@ -186,8 +192,20 @@ wb_vrepdbs::writeAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, unsigned 
 void *
 wb_vrepdbs::readAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, unsigned int offset, unsigned int size, void *p)
 {
-    //*sts = LDH__NYI;
-    return 0;
+    *sts = LDH__SUCCESS;
+
+    dbs_sObject *op = ((wb_orepdbs *)o)->o();
+    void *bp = dbs_Body(sts, dbsenv(), op, bix);
+    
+    if (bp == 0)
+        return 0;
+    
+    if (p) {
+        memcpy(p, bp, MIN(op->rbody.size, size));
+        return p;
+    }
+        
+    return bp;
 }
 
 
@@ -457,3 +475,4 @@ wb_vrepdbs::objectName(wb_orep *o, char *str)
 
     dbs_ObjectToName(&sts, dbsenv(), ((wb_orepdbs *)o)->o(), str);
 }
+

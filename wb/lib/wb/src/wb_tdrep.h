@@ -16,6 +16,11 @@ class wb_tdrep
     wb_orepdbs *m_orep;
     int m_sts;
 
+    pwr_eType m_type;
+    size_t m_size;
+    int m_elements;
+    pwr_tTid m_typeref;
+    
 public:
     wb_tdrep();
     wb_tdrep(wb_mvrep *, pwr_tTid);
@@ -26,15 +31,19 @@ public:
     void unref();
     wb_tdrep *ref();
 
-    size_t size() { return 0;} // Fix   // get objects runtime body size
+    size_t size() { return m_size;}
     pwr_tTid tid();
-    pwr_eType type() { return (pwr_eType)0;} // Fix
-    int nElement() { return 0;} // Fix
+    pwr_tTid typeRef() {return m_typeref;}
+    pwr_eType type() { return m_type;}
+    int nElement() { return m_elements;}
 
     wb_name name() { wb_name n; return n;} // Fix // get type name
     wb_name name(ldh_eName type) { wb_name n; return n;} // Fix
 
     pwr_tStatus sts() { return m_sts;}    
+
+ private:
+    void init();
 };
 
 #endif

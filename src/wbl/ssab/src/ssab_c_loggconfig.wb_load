@@ -20,31 +20,31 @@ SObject SSAB:Class
       !
       ! Parameter Description
       !
-      Object LoggFile $Param 1
+      Object LoggFile $Attribute 1
         Body SysBody
           Attr TypeRef = "pwrs:Type-$String40"
         EndBody
       EndObject
-      Object NewVersion $Param 2
+      Object NewVersion $Attribute 2
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
 	  Attr Flags |= PWR_MASK_INVISIBLE
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
-      Object Identity $Param 3
+      Object Identity $Attribute 3
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
-      Object LoggCount $Param 4
+      Object LoggCount $Attribute 4
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
 	  Attr Flags |= PWR_MASK_INVISIBLE
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
-      Object FileOpenCount $Param 5
+      Object FileOpenCount $Attribute 5
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
 	  Attr Flags |= PWR_MASK_INVISIBLE

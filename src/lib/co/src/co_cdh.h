@@ -53,8 +53,9 @@ typedef enum {
 #define cdh_tixToTid( Vid, Tyg, Tix) (0 + (Vid << 16) + (1 << 15) + (Tyg << 11) +  Tix)
 #define cdh_cixToOix( Cix, Bix, Aix) (0 + (1 << 31) + (Cix << 18) + (Bix << 15) + Aix)
 #define cdh_tixToOix( Tyg, Tix) (0 + (1 << 31) + (1 << 30) + (Tyg << 26) + (Tix << 15))
-#define cdh_oixToBix( Oix) ((Oix >> 15) & 5)
+#define cdh_oixToBix( Oix) ((Oix >> 15) & 7)
 #define cdh_oixToCix( Oix) ((Oix >> 18) & 0xfff)
+#define cdh_oixToAix( Oix) (Oix & 0xfff)
 
 typedef struct {
   unsigned int	oix		: 32;

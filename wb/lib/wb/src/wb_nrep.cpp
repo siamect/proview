@@ -100,9 +100,11 @@ wb_nrep::wb_nrep( char *n) throw (wb_error) : num_seg(0), num_attr(0), vol_len(0
   }
   if ( seg_cnt)
     seg = (wb_namesegments *) calloc( seg_cnt, sizeof( wb_namesegments));
-  if ( attr_cnt)
+  if ( attr_cnt) {
     attr = (wb_nameattributes *) calloc( attr_cnt, sizeof( wb_nameattributes));
-
+    for ( int i = 0; i < attr_cnt; i++)
+      attr[i].index = -1;
+  }
   strcpy( oname, n);
   parse();
 }
@@ -231,7 +233,7 @@ void wb_nrep::parse () throw (wb_error)
           throw wb_error(LDH__BADNAME);
 	} else {
 	  attr[num_attr].len = nameDiff( s, oname) - attr[num_attr].offs;
-	  attr[num_attr].index = 0;
+	  attr[num_attr].index = -1;
 	  state = 4;
 	}
 	break;

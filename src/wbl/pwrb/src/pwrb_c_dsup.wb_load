@@ -628,7 +628,7 @@ SObject pwrb:Class
         Attr objname = "DSup"
         Attr graphname = "DSup"
         Attr debugpar = "Action"
-      Endbody
+      EndBody
     EndObject
     Object Template DSup
       Body RtBody

@@ -234,7 +234,7 @@ SObject pwrb:Class
         Attr objname = "Wait"
         Attr graphname = "Wait"
         Attr debugpar = ""
-      Endbody
+      EndBody
     EndObject
     Object Template Wait
       Body DevBody

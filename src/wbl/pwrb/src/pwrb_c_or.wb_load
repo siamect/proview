@@ -149,7 +149,7 @@ SObject pwrb:Class
         Attr objname = "Or"
         Attr graphname = "Or"
         Attr debugpar = "Status"
-      Endbody
+      EndBody
     EndObject
   EndObject
 EndSObject

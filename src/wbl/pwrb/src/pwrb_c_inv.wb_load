@@ -81,7 +81,7 @@ SObject pwrb:Class
         Attr objname = "Inv"
         Attr graphname = "Inv"
         Attr debugpar = "Status"
-      Endbody
+      EndBody
     EndObject
   EndObject
 EndSObject

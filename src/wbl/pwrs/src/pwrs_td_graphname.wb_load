@@ -11,9 +11,9 @@ SObject pwrs:Type
   Object $GraphName $TypeDef 1
     Body SysBody
       Attr Type = pwr_eType_String
-      Attr Size = 8
+      Attr Size = 16
       Attr TypeRef = "pwrs:Type-$String"
-      Attr Elements = 8
+      Attr Elements = 16
     EndBody
   EndObject
 

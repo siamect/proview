@@ -10,7 +10,7 @@ SObject NMps:Class
       Attr Editor = pwr_eEditor_AttrEd
       Attr Method = pwr_eMethod_Standard
     EndBody
-    Object RtBody $ObjBodyDef
+    Object RtBody $ObjBodyDef 1
       Body SysBody
         Attr StructName = "NMpsTransConfig"
       EndBody

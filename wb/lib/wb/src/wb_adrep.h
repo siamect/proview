@@ -14,6 +14,15 @@ class wb_adrep
     wb_orepdbs *m_orep; 
     pwr_tStatus m_sts;
    
+    size_t m_size;
+    pwr_eType m_type;
+    int m_offset;
+    int m_elements;
+    int m_paramindex;
+    int m_flags;
+    pwr_tTid m_tid;
+    pwr_tPgmName m_pgmname;
+
     friend class wb_bdrep;
     friend class wb_cdrep;
 
@@ -24,24 +33,28 @@ class wb_adrep
     void unref();
     wb_adrep *ref();
 
+    wb_adrep *next( pwr_tStatus *sts);
+    wb_adrep *prev( pwr_tStatus *sts);
     wb_bdrep *bdrep();
     wb_cdrep *cdrep();
 
     pwr_sAttrRef aref();
-    size_t size(); // get objects runtime body size
-    int offset() {return 0;}; // Fix
-    int type() const {return 0;} // Fix
-    int nElement() {return 0;} // Fix
-    int index() {return 0;} // Fix
+    size_t size() {return m_size;}
+    int offset() {return m_offset;}
+    pwr_eType type() const {return m_type;}
+    pwr_tTid tid() {return m_tid;}
+    int nElement() {return m_elements;}
+    int index() {return m_paramindex;}
     pwr_tOid aoid();
-    int aix() {return 0;} // Fix
+    int aix();
     pwr_tCid cid();
-    int bix() {return 0;} // Fix
-    int flags() {return 0;} // Fix
+    int bix();
+    int flags() {return m_flags;}
     pwr_tOid boid();
 
-    wb_name name() { wb_name n; return n;} // Fix // get attribute name
-    wb_name name(ldh_eName type) { wb_name n; return n; } // Fix 
+    char *name();
+    wb_name longName();
+    void body( void **p);
 
     wb_vrep *vrep() const;
 };

@@ -567,16 +567,15 @@ ldh_GetObjectBodyDef(ldh_tSession session, pwr_tCid cid, char *bname,
     wb_bdef b = c.bdef(bname);
     if (!b) return b.sts();
     
-    *bdef = (ldh_sParDef *) calloc(1, sizeof(ldh_sParDef) * b.nAttribute());
+    *rows = b.nAttribute();
+    *bdef = (ldh_sParDef *) calloc(1, sizeof(ldh_sParDef) * *rows);
     if (*bdef == NULL) return LDH__INSVIRMEM;
 
     for (wb_adef a = b.adef(); a; a = a.next()) {
-        //for (wb_adef a = b.adef(); a; a++) {
-        // do something a.size(); a.name();
-        strcpy((*bdef)[a.index()].ParName, a.name().c_str());
-        (*bdef)[a.index()].ParLevel = 1;
-        (*bdef)[a.index()].ParClass = (pwr_eClass)a.cid();
-        //(*bdef)[a.index()].Par = (void *) obp->body;
+      strcpy((*bdef)[a.index()].ParName, a.name());
+      (*bdef)[a.index()].ParLevel = 1;
+      (*bdef)[a.index()].ParClass = (pwr_eClass)a.cid();
+      a.body( (void **) &(*bdef)[a.index()].Par);
     }
     
     return LDH__SUCCESS;

@@ -12,7 +12,6 @@ SObject pwrs:Class
       Attr Editor = pwr_eEditor_AttrEd
       Attr Method = pwr_eMethod_SysBody
       Attr Flags |= pwr_mClassDef_System
-      Attr Flags |= pwr_mClassDef_DevOnly
     EndBody
     Object SysBody $ObjBodyDef 1
       Body SysBody
@@ -21,6 +20,24 @@ SObject pwrs:Class
       Object ButtonName $Attribute 1
         Body SysBody
 	  Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object FilterName $Attribute 2
+        Body SysBody
+	  Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      Object FilterArguments $Attribute 3
+        Body SysBody
+	  Attr TypeRef = "pwrs:Type-$String40"
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 5
+        EndBody
+      EndObject
+      Object Filter $Attribute 4
+        Body SysBody
+	  Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
     EndObject

@@ -256,7 +256,7 @@ SObject pwrb:Class
         Attr objname = "Waith"
         Attr graphname = "Waith"
         Attr debugpar = "Status"
-      Endbody
+      EndBody
     EndObject
   EndObject
 EndSObject

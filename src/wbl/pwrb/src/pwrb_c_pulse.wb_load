@@ -242,7 +242,7 @@ SObject pwrb:Class
         Attr objname = "Pulse"
         Attr graphname = "Pulse"
         Attr debugpar = ""
-      Endbody
+      EndBody
     EndObject
     Object Template Pulse
       Body DevBody

@@ -11,6 +11,7 @@
 #include "wb_wblnode.h"
 #include "wb_wblfile.h"
 #include "wb_erep.h"
+#include "wb_attrname.h"
 
 #define WBL_FILEMAX 500
 #define wbl_eBix_SysBody 1
@@ -92,9 +93,10 @@ public:
 		     int *elements);
     int getClassInfo( pwr_tCid cid, int *rsize, int *dsize);
     int getAttrInfo( char *attr, int bix, pwr_tCid cid, int *size,
-		     int *offset, pwr_tTid *tid, int *elements);
-    int getAttrInfoRec( wb_name *attr, int bix, pwr_tCid cid, int *size,
-			int *offset, pwr_tTid *tid, int *elements, int level);
+		     int *offset, pwr_tTid *tid, int *elements, pwr_eType *type);
+    int getAttrInfoRec( wb_attrname *attr, int bix, pwr_tCid cid, int *size,
+			int *offset, pwr_tTid *tid, int *elements, 
+			pwr_eType *type, int level);
     ref_wblnode findObject( pwr_tOix oix);
     ref_wblnode findClass( char *name);
     ref_wblnode findType( char *name);

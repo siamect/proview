@@ -27,9 +27,9 @@ public:
 
     pwr_sAttrRef aref() { pwr_sAttrRef a; return a;} // Fix
     size_t size();
-    int nAttribute() { return 0;} // Fix
+    int nAttribute();
     cdh_eBix bix();
-    pwr_tOid boid() { pwr_tOid o; return o;} // Fix
+    pwr_tOid boid();
     
 
     wb_name name() { wb_name n; return n;} // Fix // get attribute name

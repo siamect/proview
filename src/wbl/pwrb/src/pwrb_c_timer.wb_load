@@ -236,7 +236,7 @@ SObject pwrb:Class
         Attr objname = "Timer"
         Attr graphname = "Timer"
         Attr debugpar = ""
-      Endbody
+      EndBody
     EndObject
     Object Template Timer
       Body DevBody

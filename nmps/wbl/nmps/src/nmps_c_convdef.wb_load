@@ -7,7 +7,7 @@
 SObject NMps:Class
   Object ConvDef $ClassDef 39
     Body SysBody
-      Attr Editor = pwr_eEditor_Standard
+      Attr Editor = pwr_eEditor_AttrEd
     EndBody
     !
     ! CONVDEF Runtime Body

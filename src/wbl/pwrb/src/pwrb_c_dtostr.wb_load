@@ -91,7 +91,7 @@ SObject pwrb:Class
 	Attr executeordermethod = 2
         Attr objname = "DtoStr"
         Attr graphname = "DtoStr"
-      Endbody
+      EndBody
     EndObject
     Object Template DtoStr
       Body RtBody

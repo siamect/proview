@@ -91,7 +91,7 @@ SObject pwrb:Class
         Attr objname = "XOr"
         Attr graphname = "XOr"
         Attr debugpar = "Status"
-      Endbody
+      EndBody
     EndObject
   EndObject
 EndSObject

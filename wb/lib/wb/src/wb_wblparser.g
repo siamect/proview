@@ -23,7 +23,7 @@ unit
 	;
 
 volume
-	: VOLUME^ cid OID (object)* ENDVOLUME
+	: VOLUME^ cid OID (body)* (object)* ENDVOLUME
 	;
 
 sobject

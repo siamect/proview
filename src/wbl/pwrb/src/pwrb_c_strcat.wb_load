@@ -103,7 +103,7 @@ SObject pwrb:Class
 	Attr executeordermethod = 2
         Attr objname = "Strcat"
         Attr graphname = "Strcat"
-      Endbody
+      EndBody
     EndObject
   EndObject
 EndSObject

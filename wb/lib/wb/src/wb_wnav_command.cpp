@@ -4225,6 +4225,8 @@ int WNav::get_rootlist()
 			menu_p->title);
       if ( ODD(sts))
         class_cnt++;
+      else
+        printf( "** Unknown window root class: %s\n", menu_p->title);
     }
     if ( !class_cnt)
       return sts;

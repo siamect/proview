@@ -102,7 +102,7 @@ SObject pwrb:Class
 	Attr executeordermethod = 2
         Attr objname = "SubStr"
         Attr graphname = "SubStr"
-      Endbody
+      EndBody
     EndObject
     Object Template SubStr
       Body RtBody

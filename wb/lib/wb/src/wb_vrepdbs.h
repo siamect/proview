@@ -101,6 +101,8 @@ public:
     virtual void iterObject (wb_dbs *);
     virtual void iterRbody (wb_dbs *);
     virtual void iterDbody (wb_dbs *);
+    virtual bool isCommonMeta() const { return true;}
+    virtual bool isMeta() const { return (cid() == pwr_eClass_ClassVolume);}
 };
 
 

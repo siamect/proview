@@ -18,11 +18,129 @@ wb_adrep *wb_adrep::ref()
 wb_adrep::wb_adrep( wb_orepdbs& o): m_nRef(0), m_orep(&o), m_sts(LDH__SUCCESS)
 {
   m_orep->ref();
+
+  pwr_tStatus sts;
+  switch ( m_orep->cid()) {
+    case pwr_eClass_Param:
+    {
+      pwr_sParam attr;
+
+      m_orep->m_vrep->readBody( &sts, m_orep, cdh_eBix_sys, (void *) &attr);
+      if ( EVEN(sts)) throw wb_error(sts);
+
+      strcpy( m_pgmname, attr.Info.PgmName);
+      m_size = attr.Info.Size;
+      m_type = attr.Info.Type;
+      m_offset = attr.Info.Offset;
+      m_elements = attr.Info.Elements;
+      m_paramindex = attr.Info.ParamIndex;
+      m_flags = attr.Info.Flags;
+      m_tid = attr.TypeRef;
+      break;
+    }
+    case pwr_eClass_Intern:
+    case pwr_eClass_Input:
+    case pwr_eClass_Output:
+    {
+      pwr_sIntern attr;
+
+      m_orep->m_vrep->readBody( &sts, m_orep, cdh_eBix_sys, (void *) &attr);
+      if ( EVEN(sts)) throw wb_error(sts);
+
+      strcpy( m_pgmname, attr.Info.PgmName);
+      m_size = attr.Info.Size;
+      m_type = attr.Info.Type;
+      m_offset = attr.Info.Offset;
+      m_elements = attr.Info.Elements;
+      m_paramindex = attr.Info.ParamIndex;
+      m_flags = attr.Info.Flags;
+      m_tid = attr.TypeRef;
+
+
+      break;
+    }
+    case pwr_eClass_ObjXRef:
+    {
+      pwr_sObjXRef attr;
+
+      m_orep->m_vrep->readBody( &sts, m_orep, cdh_eBix_sys, (void *) &attr);
+      if ( EVEN(sts)) throw wb_error(sts);
+
+      strcpy( m_pgmname, attr.Info.PgmName);
+      m_size = attr.Info.Size;
+      m_type = attr.Info.Type;
+      m_offset = attr.Info.Offset;
+      m_elements = attr.Info.Elements;
+      m_paramindex = attr.Info.ParamIndex;
+      m_flags = attr.Info.Flags;
+      m_tid = 0;
+
+      break;
+    }
+    case pwr_eClass_AttrXRef:
+    {
+      pwr_sAttrXRef attr;
+
+      m_orep->m_vrep->readBody( &sts, m_orep, cdh_eBix_sys, (void *) &attr);
+      if ( EVEN(sts)) throw wb_error(sts);
+
+      strcpy( m_pgmname, attr.Info.PgmName);
+      m_size = attr.Info.Size;
+      m_type = attr.Info.Type;
+      m_offset = attr.Info.Offset;
+      m_elements = attr.Info.Elements;
+      m_paramindex = attr.Info.ParamIndex;
+      m_flags = attr.Info.Flags;
+      m_tid = 0;
+
+      break;
+    }
+    case pwr_eClass_Buffer:
+    {
+      pwr_sBuffer attr;
+
+      m_orep->m_vrep->readBody( &sts, m_orep, cdh_eBix_sys, (void *) &attr);
+      if ( EVEN(sts)) throw wb_error(sts);
+
+      strcpy( m_pgmname, attr.Info.PgmName);
+      m_size = attr.Info.Size;
+      m_type = attr.Info.Type;
+      m_offset = attr.Info.Offset;
+      m_elements = attr.Info.Elements;
+      m_paramindex = attr.Info.ParamIndex;
+      m_flags = attr.Info.Flags;
+      m_tid = 0;
+
+      break;
+    }
+    default:
+      throw wb_error(LDH__NYI);
+  }
 }
 
 wb_adrep::~wb_adrep()
 {
   m_orep->unref();
+}
+
+wb_adrep *wb_adrep::next( pwr_tStatus *sts)
+{
+  wb_orep *orep = m_orep->after( sts);
+  if ( EVEN(*sts))
+    return 0;
+
+  wb_adrep *adrep = new wb_adrep( (wb_orepdbs& ) *orep);
+  return adrep;
+}
+
+wb_adrep *wb_adrep::prev( pwr_tStatus *sts)
+{
+  wb_orep *orep = m_orep->before( sts);
+  if ( EVEN(*sts))
+    return 0;
+
+  wb_adrep *adrep = new wb_adrep( (wb_orepdbs& ) *orep);
+  return adrep;
 }
 
 wb_cdrep *wb_adrep::cdrep()
@@ -37,15 +155,17 @@ wb_bdrep *wb_adrep::bdrep()
 
 pwr_tOid wb_adrep::aoid()
 {
-    pwr_tOid oid;
-    
-    //return m_a->oid;
-    return oid;
+  return m_orep->oid();
 }
 
-size_t wb_adrep::size()
+int wb_adrep::aix()
 {
-    return 0;
+  return cdh_oixToAix( m_orep->oid().oix);
+}
+
+int wb_adrep::bix()
+{
+  return cdh_oixToBix( m_orep->oid().oix);
 }
 
 pwr_sAttrRef wb_adrep::aref()
@@ -90,4 +210,46 @@ wb_vrep *wb_adrep::vrep() const
 {
   if (EVEN(m_sts)) throw wb_error(m_sts);
    return m_orep->m_vrep;
+}
+
+char *wb_adrep::name()
+{
+  return m_orep->name();
+}
+
+wb_name wb_adrep::longName()
+{
+  return m_orep->longName();
+}
+
+void wb_adrep::body( void **p)
+{
+  pwr_tStatus sts;
+  int size;
+
+  switch ( m_orep->cid()) {
+    case pwr_eClass_Param:
+      size = sizeof( pwr_sParam);
+      break;
+    case pwr_eClass_Intern:
+    case pwr_eClass_Input:
+    case pwr_eClass_Output:
+      size = sizeof( pwr_sIntern);
+      break;
+    case pwr_eClass_ObjXRef:
+      size = sizeof( pwr_sObjXRef);
+      break;
+    case pwr_eClass_AttrXRef:
+      size = sizeof( pwr_sAttrXRef);
+      break;
+    case pwr_eClass_Buffer:
+      size = sizeof( pwr_sBuffer);
+      break;
+    default:
+      throw wb_error(LDH__NYI);
+  }
+
+  *p = calloc( 1, size);
+  m_orep->m_vrep->readBody( &sts, m_orep, cdh_eBix_sys, *p);
+  if ( EVEN(sts)) throw wb_error(sts);
 }

@@ -68,7 +68,7 @@
 #define pwr_cSizObjName		31
 #define pwr_cSizPgmName		31
 #define pwr_cSizStructName	31
-#define pwr_cSizGraphName	7
+#define pwr_cSizGraphName	15
 #define pwr_cSizXRef		31
 #define pwr_cSizAttrName	31
 #define pwr_cSizPathName	63

@@ -86,7 +86,7 @@ SObject pwrb:Class
         Attr objname = "CSub"
         Attr graphname = "CSub"
         Attr debugpar = "in"
-      Endbody
+      EndBody
     EndObject
     Object Template CSub
       Body RtBody

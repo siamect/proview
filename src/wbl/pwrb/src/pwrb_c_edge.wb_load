@@ -99,7 +99,7 @@ SObject pwrb:Class
         Attr objname = "Edge"
         Attr graphname = "Edge"
         Attr debugpar = "Status"
-      Endbody
+      EndBody
     EndObject
   EndObject
 EndSObject

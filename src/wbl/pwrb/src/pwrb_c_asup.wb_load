@@ -663,7 +663,7 @@ SObject pwrb:Class
         Attr objname = "ASup"
         Attr graphname = "ASup"
         Attr debugpar = "Action"
-      Endbody
+      EndBody
     EndObject
     Object Template ASup
       Body RtBody

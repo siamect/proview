@@ -1,5 +1,6 @@
 #include "wb_merep.h"
 #include "wb_erep.h"
+#include "wb_attrname.h"
 #include "wb_ldh_msg.h"
 
 
@@ -127,6 +128,7 @@ wb_tdrep *wb_merep::tdrep( pwr_tStatus *sts, pwr_tTid tid)
     *sts = LDH__NOSUCHVOL;
     return 0;
   }
+  *sts = LDH__SUCCESS;
   return it->second->tdrep( tid);
 }
 
@@ -150,3 +152,51 @@ wb_tdrep *wb_merep::tdrep( pwr_tStatus *sts, wb_name name)
   return 0;
 }
 
+int wb_merep::getAttrInfoRec( wb_attrname *attr, int bix, pwr_tCid cid, int *size,
+		     int *offset, pwr_tTid *tid, int *elements, 
+		     pwr_eType *type, int level)
+{
+  pwr_tStatus sts;
+
+  wb_cdrep *cd = cdrep( &sts, cid);
+  if ( EVEN(sts)) return 0;
+
+  wb_bdrep *bd = cd->bdrep( &sts, bix);
+  if ( EVEN(sts)) {
+    delete cd;
+    return 0;
+  }
+  wb_adrep *adrep = bd->adrep( &sts, attr->attribute(level));
+  if ( EVEN(sts)) {
+    delete cd;
+    delete bd;
+    return 0;
+  }
+
+  if ( attr->hasAttrIndex( level)) {
+    int index = attr->attrIndex( level);
+    if ( index >= adrep->nElement())
+      return 0;
+
+    *offset += adrep->offset() + index * adrep->size() / adrep->nElement();
+    *size = adrep->size() / adrep->nElement();
+  }
+  else {
+    *offset += adrep->offset();
+    *size = adrep->size();
+  }
+  if ( attr->hasAttribute( level + 1)) {
+    // Fix , Subclass: get cid from type of attr
+    if ( !getAttrInfoRec( attr, bix, cid, size, offset, tid, elements, type, 
+			  level + 1))
+      return 0;
+  }
+  *tid = adrep->tid();
+  *type = adrep->type();
+  *elements = adrep->nElement();
+
+  delete cd;
+  delete bd;
+  delete adrep;
+  return 1;
+}

@@ -83,6 +83,13 @@ public:
     {
       CommonAST::initialize(t);
       line_number = t->getLine();
+
+      // Test 
+      static int last = 0;
+      if ( (line_number % 1000) == 0 && line_number != last) {
+        printf( "Line: %d\n", line_number); 
+	last = line_number;
+      }
     }
 
     void setText(const std::string& txt)
@@ -209,6 +216,7 @@ public:
 
     // Type and Typedef stuff
     pwr_tTid ty_tid;
+    pwr_eType ty_type;
     int ty_elements;
     int ty_size;
 
@@ -223,6 +231,7 @@ public:
     int a_elements;
     int a_flags;
     int a_index;
+    pwr_eType a_type;
 
     // Template object stuff
 };

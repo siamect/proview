@@ -44,11 +44,12 @@ public:
     pwr_tOix bix();
     pwr_tOid boid();
     
-    wb_adef next() { return *this;} // Fix
-    wb_adef prev() { return *this;} // Fix
+    wb_adef next();
+    wb_adef prev();
 
-    wb_name name() { wb_name n; return n;} // Fix
-    wb_name name(ldh_eName type) { wb_name n; return n;} // Fix
+    char *name();
+    wb_name longName();
+    void body( void **p);
     
   private:
     void check();

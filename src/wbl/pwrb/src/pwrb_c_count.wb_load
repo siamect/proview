@@ -215,7 +215,7 @@ SObject pwrb:Class
         Attr objname = "Count"
         Attr graphname = "Count"
         Attr debugpar = ""
-      Endbody
+      EndBody
     EndObject
   EndObject
 EndSObject

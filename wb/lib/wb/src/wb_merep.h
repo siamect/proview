@@ -2,6 +2,7 @@
 #define wb_merep_h
 
 #include "wb_mvrep.h"
+#include "wb_attrname.h"
 #include <map>
 
 using namespace std;
@@ -32,6 +33,11 @@ class wb_merep {
     wb_tdrep *tdrep( pwr_tStatus *sts, const wb_adrep& a);
     wb_tdrep *tdrep( pwr_tStatus *sts, pwr_tTid tid);
     wb_tdrep *tdrep( pwr_tStatus *sts, wb_name name);
+
+    int getAttrInfoRec( wb_attrname *attr, int bix, pwr_tCid cid, int *size,
+			int *offset, pwr_tTid *tid, int *elements, 
+			pwr_eType *type, int level);
+
 };
 
 #endif

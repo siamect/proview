@@ -41,6 +41,23 @@ void wb_adef::check()
   if ( evenSts()) throw wb_error(m_sts);
 }
 
+wb_adef wb_adef::next()
+{
+  pwr_tStatus sts;
+
+  check();
+  return wb_adef( m_adrep->next( &sts));
+}
+
+wb_adef wb_adef::prev()
+{
+  pwr_tStatus sts;
+
+  check();
+  return wb_adef( m_adrep->prev( &sts));
+}
+
+
 // get objects runtime body size
 size_t wb_adef::size() 
 { 
@@ -100,4 +117,22 @@ pwr_tOid wb_adef::boid()
 {
   check();
   return m_adrep->boid();
+}
+
+char *wb_adef::name()
+{
+  check();
+  return m_adrep->name();
+}
+
+wb_name wb_adef::longName()
+{
+  check();
+  return m_adrep->longName();
+}
+
+void wb_adef::body( void **p)
+{
+  check();
+  m_adrep->body( p);
 }

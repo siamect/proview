@@ -12,7 +12,6 @@ SObject pwrs:Class
       Attr Editor = pwr_eEditor_AttrEd
       Attr Method = pwr_eMethod_SysBody
       Attr Flags |= pwr_mClassDef_System
-      Attr Flags |= pwr_mClassDef_DevOnly
     EndBody
   EndObject
 EndSObject

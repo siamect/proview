@@ -46,10 +46,9 @@ OREQ
 WS	:	(' '
 	|	'\t'
 	|	'\n'	{newline();}
-	|	'\r')
+	|	'\r')+
 		{ _ttype = antlr::Token::SKIP; }
 	;
-
 
 COMMENT
 	: 	"!" 
@@ -104,11 +103,13 @@ options {
 		{$setType(OID);}
 	|	(DIGITS '.') => DIGITS '.' ('0'..'9')* (('e'|'E') ('+'|'-')? ('0'..'9')+)?
 		{$setType(NUM_FLOAT);}
-	|	'-' DIGITS '.' ('0'..'9')* (('e'|'E') ('+'|'-')? ('0'..'9')+)?
+	|	('-' DIGITS '.') => '-' DIGITS '.' ('0'..'9')* (('e'|'E') ('+'|'-')? ('0'..'9')+)?
 		{$setType(NUM_FLOAT);}
 	|	'.' ('0'..'9')+ (('e'|'E') ('+'|'-')? ('0'..'9')+)?
 		{$setType(NUM_FLOAT);}
 	|	DIGITS
+		{$setType(INT);}
+	|	'-' DIGITS
 		{$setType(INT);}
 	|	('a'..'z'|'A'..'Z'|'$'|'_'|SWEC) ('a'..'z'|'A'..'Z'|'0'..'9'|'$'|'_'|SWEC)*
 	;

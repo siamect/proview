@@ -96,6 +96,8 @@ public:
     virtual void iterRbody(wb_dbs *) = 0;
     virtual void iterDbody(wb_dbs *) = 0;
     virtual void objectName(wb_orep *o, char *str) = 0;
+    virtual bool isCommonMeta() const { return false;}
+    virtual bool isMeta() const { return false;}
 };
 
 #endif

@@ -78,12 +78,16 @@ wb_vrep *wb_erep::volume(pwr_tStatus *sts, char *name) // Fix
 {
   vrep_iterator it;
   for ( it = m_vrepdb.begin(); it != m_vrepdb.end(); it++) {
-    if ( cdh_NoCaseStrcmp( it->second->name(), name) == 0)
+    if ( cdh_NoCaseStrcmp( it->second->name(), name) == 0) {
+      *sts = LDH__SUCCESS;
       return it->second;
+    }
   }
   for ( it = m_vrepdbs.begin(); it != m_vrepdbs.end(); it++) {
-    if ( cdh_NoCaseStrcmp( it->second->name(), name) == 0)
+    if ( cdh_NoCaseStrcmp( it->second->name(), name) == 0) {
+      *sts = LDH__SUCCESS;
       return it->second;
+    }
   }
   *sts = LDH__NOSUCHVOL;
   return 0;
@@ -297,10 +301,9 @@ void wb_erep::loadCommonMeta( pwr_tStatus *status)
       cdh_StringToVolumeId( vol_array[1], &vid);
       cout << "Loading volume: " << vname << " " << vid << endl;
 
+      wb_vrepdbs *vrep = new wb_vrepdbs( this, vname);
       try {
-        wb_vrepdbs *vrep = new wb_vrepdbs( this, vname);
         vrep->load();
-        // vrep->name( vol_array[0]);
         addDbs( &sts, vrep);
       }
       catch ( wb_error& e) {

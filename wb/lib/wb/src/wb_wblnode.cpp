@@ -1,6 +1,7 @@
 
 #include "wb_wblnode.h"
 #include "wb_vrepwbl.h"
+#include "wb_merep.h"
 #include "wb_wblvocabTokenTypes.hpp"
 #include "wb_dbs.h"
 
@@ -259,25 +260,30 @@ static wbl_sSym attr_flags[] =
 
 int wb_wblnode::classNameToCid( char *class_name, pwr_tCid *cid)
 {
-  char buf[80];
+  pwr_tStatus sts;
 
-  // TODO
-  // sts = ldh_ClassNameToId( h->sess, cid, class_name);
-  // if EVEN(sts))
-  if ( !m_vrep->classNameToCid( class_name, cid)) 
-  {
-    if (sscanf( class_name, "%d", cid) != 1) {
-      if (class_name[0] == '$') {
-        sprintf( buf, "pwr_eClass_%s", &class_name[1]);
-        if (!lookup( (int *) cid, buf, classes)) {
-          if (!lookup( (int *) cid, buf, datatypes))
-            return 0;
+  wb_cdrep *cd = m_vrep->merep()->cdrep( &sts, class_name);
+  if ( ODD(sts)) {
+    *cid = cd->cid();
+    delete cd;
+  }
+  else {
+    char buf[80];
+
+    if ( !m_vrep->classNameToCid( class_name, cid)) {
+      if (sscanf( class_name, "%d", cid) != 1) {
+        if (class_name[0] == '$') {
+          sprintf( buf, "pwr_eClass_%s", &class_name[1]);
+          if (!lookup( (int *) cid, buf, classes)) {
+            if (!lookup( (int *) cid, buf, datatypes))
+              return 0;
+          }
         }
-      }
-      else {
-        if (!lookup( (int *) cid, class_name, classes)) {
-          if (!lookup( (int *) cid, class_name, datatypes))
-            return 0;
+        else {
+          if (!lookup( (int *) cid, class_name, classes)) {
+            if (!lookup( (int *) cid, class_name, datatypes))
+              return 0;
+          }
         }
       }
     }
@@ -411,8 +417,38 @@ void wb_wblnode::build( bool recursive)
       // Calculate offset for attributes
       wb_wblnode *child = o_fch;
       while ( child) {
-        if ( child->isObjBodyDef())
+        if ( child->isObjBodyDef()) {
           child->buildObjBodyDef( this);
+
+	  ((pwr_sClassDef *)rbody)->NumOfObjBodies++;
+	  if ( cdh_oixToBix( child->m_oid.oix) == cdh_eBix_rt)
+	    ((pwr_sClassDef *)rbody)->Flags.b.RtBody = 1;
+
+	  wb_wblnode *attr = child->o_fch;
+	  while( attr) {
+	    if ( attr->isAttribute()) {
+	      switch ( attr->m_cid) {
+	        case pwr_eClass_ObjXRef:
+	          ((pwr_sClassDef *)rbody)->Flags.b.ObjXRef = 1;
+		  break;
+	        case pwr_eClass_AttrXRef:
+		  ((pwr_sClassDef *)rbody)->Flags.b.AttrXRef = 1;
+		  break;
+	        case pwr_eClass_Input:
+	        case pwr_eClass_Output:
+	        case pwr_eClass_Intern:
+	        case pwr_eClass_Param:
+		  if ( attr->a_type == pwr_eType_AttrRef)
+		    ((pwr_sClassDef *)rbody)->Flags.b.AttrRef = 1;
+		  else if ( attr->a_type == pwr_eType_AttrRef)
+		    ((pwr_sClassDef *)rbody)->Flags.b.ObjRef = 1;
+		  break;
+	        default:
+		  ;
+	      }
+	    }
+	  }
+	}
         child = child->o_fws;
       }
       is_built = 1;
@@ -425,16 +461,18 @@ void wb_wblnode::build( bool recursive)
       if ( !m_vrep->registerObject( m_oid.oix, this))
         m_vrep->error( "Duplicate type index", getFileName(), line_number);
 
-      ty_tid = ((pwr_sType *)rbody)->Type;
+      ty_tid = ty_type = ((pwr_sType *)rbody)->Type;
       ty_size = ((pwr_sType *)rbody)->Size;
       ty_elements = 1;
+
     }
     else if ( isTypeDef()) {
       m_oid.oix = cdh_tixToOix( 1, m_oid.oix);
       if ( !m_vrep->registerObject( m_oid.oix, this))
         m_vrep->error( "Duplicate type index", getFileName(), line_number);
 
-      ty_tid = ((pwr_sTypeDef *)rbody)->Type;
+      ty_tid = ((pwr_sTypeDef *)rbody)->TypeRef;
+      ty_type = ((pwr_sTypeDef *)rbody)->Type;
       ty_size = ((pwr_sTypeDef *)rbody)->Size;
       ty_elements = ((pwr_sTypeDef *)rbody)->Elements;
     }
@@ -447,8 +485,17 @@ void wb_wblnode::build( bool recursive)
     else if ( isVolume()) {
     }
     else {
-      if( !m_vrep->registerObject( m_oid.oix, this))
-        m_vrep->error( "Duplicate object index", getFileName(), line_number);
+      if( !m_vrep->registerObject( m_oid.oix, this)) {
+	// Print error message
+	char name[120];
+	char msg[180];
+	pwr_tStatus sts;
+
+	wb_orep *o = m_vrep->object( &sts, m_oid);
+	m_vrep->objectName( o, name);
+	sprintf( msg, "Duplicate object index %d (%s)", m_oid.oix, name);
+        m_vrep->error( msg, getFileName(), line_number);
+      }
     }
     is_built = 1;
   }
@@ -473,6 +520,8 @@ void wb_wblnode::buildObjBodyDef( ref_wblnode classdef)
       child->buildBuffer( classdef, this, &index, &b_size);
     child = child->o_fws;
   }
+  ((pwr_sObjBodyDef *)rbody)->Size = b_size;
+  ((pwr_sObjBodyDef *)rbody)->NumOfParams = index;
 }
 
 void wb_wblnode::buildAttribute( ref_wblnode classdef, ref_wblnode objbodydef, 
@@ -488,10 +537,17 @@ void wb_wblnode::buildAttribute( ref_wblnode classdef, ref_wblnode objbodydef,
 
   if ( ((pwr_sParam *)rbody)->Info.Elements == 0)
     ((pwr_sParam *)rbody)->Info.Elements = 1;
-  if ( ((pwr_sParam *)rbody)->Info.Type == 0)
-    ((pwr_sParam *)rbody)->Info.Type = (pwr_eType)((pwr_sParam *)rbody)->TypeRef;
+  // if ( ((pwr_sParam *)rbody)->Info.Type == 0)
+  //  ((pwr_sParam *)rbody)->Info.Type = (pwr_eType)((pwr_sParam *)rbody)->TypeRef;
 
-  a_tid = ((pwr_sParam *)rbody)->TypeRef;
+  if ( cdh_NoCaseStrcmp( cname, "$ObjXRef") == 0 )
+    a_tid = pwr_eType_Objid;
+  else if ( cdh_NoCaseStrcmp( cname, "$AttrXRef") == 0)
+    a_tid = pwr_eType_AttrRef;
+  else
+    a_tid = ((pwr_sParam *)rbody)->TypeRef;
+
+  a_type = ((pwr_sParam *)rbody)->Info.Type;
   a_size = ((pwr_sParam *)rbody)->Info.Size;
   a_offset = ((pwr_sParam *)rbody)->Info.Offset;
   a_elements = ((pwr_sParam *)rbody)->Info.Elements;
@@ -505,6 +561,8 @@ void wb_wblnode::buildAttribute( ref_wblnode classdef, ref_wblnode objbodydef,
     m_vrep->error( "Can't find attribute type", getFileName(), line_number);
     return;
   }
+  if ( a_type == 0)
+    a_type = ((pwr_sParam *)rbody)->Info.Type = type;
 
   // Check obsoletet definitions of size and offset
   if ( a_size && a_size != a_elements * size)
@@ -512,7 +570,7 @@ void wb_wblnode::buildAttribute( ref_wblnode classdef, ref_wblnode objbodydef,
   if ( a_offset && a_offset != *boffset)
     m_vrep->error( "Mismatch in attribute offset", getFileName(), line_number);
 
-  a_size = ((pwr_sParam *)rbody)->Info.Offset = a_elements * size;
+  a_size = ((pwr_sParam *)rbody)->Info.Size = a_elements * size;
   a_offset = ((pwr_sParam *)rbody)->Info.Offset = *boffset;
   ((pwr_sParam *)rbody)->Info.ParamIndex = *bindex;
   *boffset += a_size;
@@ -534,6 +592,7 @@ void wb_wblnode::buildBuffer( ref_wblnode classdef, ref_wblnode objbodydef,
     ((pwr_sParam *)rbody)->Info.Type = (pwr_eType)((pwr_sBuffer *)rbody)->Class;
 
   a_tid = ((pwr_sBuffer *)rbody)->Class;
+  a_type = ((pwr_sParam *)rbody)->Info.Type;
   a_size = ((pwr_sBuffer *)rbody)->Info.Size;
   a_offset = ((pwr_sBuffer *)rbody)->Info.Offset;
   a_elements = ((pwr_sBuffer *)rbody)->Info.Elements;
@@ -593,16 +652,17 @@ void wb_wblnode::buildBody( ref_wblnode object)
 
   switch ( getType()) {
     case tokens.BODY:
-      if ( strcmp( name, "SysBody") == 0)
+      if ( cdh_NoCaseStrcmp( name, "SysBody") == 0)
         bix = cdh_eBix_sys;
-      else if ( strcmp( name, "RtBody") == 0)
+      else if ( cdh_NoCaseStrcmp( name, "RtBody") == 0)
         bix = cdh_eBix_rt;
-      else if ( strcmp( name, "DevBody") == 0)
-        bix = cdh_eBix_sys;
+      else if ( cdh_NoCaseStrcmp( name, "DevBody") == 0) 
+        bix = cdh_eBix_dev;
       else {
         // Body exception
         m_vrep->error( "Bad body name", getFileName(), line_number);
       }
+
       first_child = getFirstChild();
       if ( first_child)
         first_child->buildAttr( object, bix);
@@ -627,6 +687,7 @@ void wb_wblnode::buildAttr( ref_wblnode object, int bix)
   char value[200];
   int size, offset, elements;
   pwr_tTypeId tid;
+  pwr_eType type;
   char buf[2048];
   int int_val, current_int_val;
 
@@ -640,16 +701,16 @@ void wb_wblnode::buildAttr( ref_wblnode object, int bix)
             break;
 	  default:
             // Attr exception
-            m_vrep->error( "Attribute syntax", getFileName(), line_number);
+            m_vrep->error( "Attribute value required", getFileName(), line_number);
 	}
 
         second_child = first_child->getNextSibling();
         if ( second_child) {
           strcpy( value, second_child->name);
           if ( !m_vrep->getAttrInfo( name, bix, object->m_cid, &size, &offset,
-				     &tid, &elements)) {
+				     &tid, &elements, &type)) {
             // Attr exception
-            m_vrep->error( "Attribute syntax", getFileName(), line_number);
+            m_vrep->error( "Unknown attribute", getFileName(), line_number);
           }
           else { 
             if ( ((bix == cdh_eBix_rt || bix == cdh_eBix_sys) && 
@@ -692,7 +753,7 @@ void wb_wblnode::buildAttr( ref_wblnode object, int bix)
                 }
               }
             }
-            else if ( attrStringToValue( tid, value, buf, sizeof( buf), size)) {
+            else if ( attrStringToValue( type, value, buf, sizeof( buf), size)) {
               if ( bix == cdh_eBix_rt || bix == cdh_eBix_sys)
                 memcpy( (char *)((unsigned int) object->rbody + offset), 
 			buf, size/elements);
@@ -708,7 +769,7 @@ void wb_wblnode::buildAttr( ref_wblnode object, int bix)
         }
         else {
           // Attr exception
-          m_vrep->error( "Attribute syntax", getFileName(), line_number);
+          m_vrep->error( "Attribute value required", getFileName(), line_number);
         }
       }
       else {
@@ -805,7 +866,9 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
         string class_name = first_child->getText();
         strcpy( cname, class_name.c_str());
  
-        classNameToCid( cname, &m_cid);
+        if ( !classNameToCid( cname, &m_cid)) {
+          m_vrep->error( "Unknown class", getFileName(), line_number);
+	}
 
 	// If $ClassDef, register class in classlist
         if ( !isTemplate()) {
@@ -834,12 +897,19 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
 		      strcmp( cname, "$Input") == 0 ||
 		      strcmp( cname, "$Output") == 0 ||
 		      strcmp( cname, "$Intern") == 0 ||
+		      strcmp( cname, "$ObjXRef") == 0 ||
+		      strcmp( cname, "$AttrXRef") == 0 ||
 		      strcmp( cname, "pwr_eClass_Param") == 0)) {
 	    node_type = wbl_eNodeType_Attribute;
 	  }
 	  else if ( first_child->getType() == tokens.VALUE &&
 		    ( strcmp( cname, "$Buffer") == 0)) {
 	    node_type = wbl_eNodeType_Buffer;
+	  }
+	  else if ( first_child->getType() == tokens.VALUE &&
+		    ( strcmp( cname, "$Param") == 0)) {
+	    m_vrep->error( "Obsolete attribute class, use $Attribute instead",
+			   getFileName(), line_number);
 	  }
 	}
 
@@ -932,6 +1002,8 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
       }
       else if ( isObjBodyDef()) {
         b_bix = m_oid.oix;
+	if ( !(b_bix == cdh_eBix_rt || b_bix == cdh_eBix_sys || b_bix == cdh_eBix_dev))
+	  m_vrep->error( "Bad body index", getFileName(), line_number);
       }
       break;
     }
@@ -986,9 +1058,9 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
 
       break;
     }
+    case tokens.ATTRIBUTE:
     case tokens.SOBJECT:
     case tokens.BODY:
-    case tokens.ATTRIBUTE:
     case tokens.VALUE:
     case tokens.INT:
     case tokens.NUM_FLOAT:
@@ -1160,6 +1232,7 @@ int wb_wblnode::attrStringToValue( int type_id, char *value_str,
         return 0;
       break;
     }
+    case pwr_eType_Text:
     case pwr_eType_String:
     {
       if ( (int) strlen( value_str) >= attr_size)
@@ -1256,6 +1329,8 @@ int wb_wblnode::attrStringToValue( int type_id, char *value_str,
   	memcpy( buffer_ptr, (char *) &deltatime, sizeof(deltatime));
       break;
     }
+    default:
+      return 0;
   }
   return 1;
 }

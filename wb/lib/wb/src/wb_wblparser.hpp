@@ -31,8 +31,8 @@ public:
 	public: void sobject();
 	public: void object();
 	public: void cid();
-	public: void oix();
 	public: void body();
+	public: void oix();
 	public: void attribute();
 	public: void value();
 	public: void oname();
@@ -56,6 +56,8 @@ private:
 	static const ANTLR_USE_NAMESPACE(antlr)BitSet _tokenSet_4;
 	static const unsigned long _tokenSet_5_data_[];
 	static const ANTLR_USE_NAMESPACE(antlr)BitSet _tokenSet_5;
+	static const unsigned long _tokenSet_6_data_[];
+	static const ANTLR_USE_NAMESPACE(antlr)BitSet _tokenSet_6;
 };
 
 #endif /*INC_wb_wblparser_hpp_*/
