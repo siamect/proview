@@ -12,28 +12,15 @@ SObject pwrb:Class
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
 !  @Group Plc,PlcIO
-!  @Summary Get integer attribute and convert to analog value
-!  Get Integer parameter and convert to analog value.
+!  @Summary Get integer attribute and convert to 32-bit integer.
+!  Get Integer parameter and convert to 32-bit integer.
 !  @image orm_getip_fo.gif
 !
 !  Fetches the value of a 32-, 16- or 8-bits integer
-!  parameter in arbitrary object.
+!  attribute in arbitrary object.
 !  
 !  The complete name of the parameter has to be supplied.
-!  The GetIp object
-!  - is a pure address reference,
-!  - contains no relevant information (=data) in rtdb,
-!  - is without executable code.
 !
-! @b Example
-!  In the example below the value of the integer parameter, AccMod is stored: 
-!
-!  - unconditionally by StoAtoIp 
-!  - conditionally by CStoAtoIp 
-!
-!  The value is also unconditionally stored as a pwr_tFloat32 on an attribute 
-!  pwr_tFloat32 in the object named TIC2M
-!  @image orm_en1-93.gif
 !*/
   Object GetIp $ClassDef 340
     Body SysBody
@@ -122,7 +109,7 @@ SObject pwrb:Class
         Attr default_mask[1] = 1
         Attr segname_annotation = 0
         Attr devbody_annotation = 1
-        Attr compmethod = 10
+        Attr compmethod = 36
         Attr compindex = 0
         Attr tracemethod = 0
         Attr traceindex = 0
