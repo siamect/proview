@@ -1583,11 +1583,6 @@ ldh_WbLoad( ldh_tSession session, char *loadfile)
       db.close();
       erep->merep()->copyFiles( db_name);
 
-      // Set permissions from umask
-      char cmd[200];
-      sprintf( cmd, "$pwr_exe/wb_dbchmod.sh %s", db_name);
-      system( cmd);
-
       delete vdbs;      
     }
     catch ( wb_error& e) {
@@ -1614,11 +1609,6 @@ ldh_WbLoad( ldh_tSession session, char *loadfile)
       db.copy( *vwbl, db_name);
       db.close();
       erep->merep()->copyFiles( db_name);
-
-      // Set permissions from umask
-      char cmd[200];
-      sprintf( cmd, "$pwr_exe/wb_dbchmod.sh %s", db_name);
-      system( cmd);
 
       delete vwbl;      
     }
