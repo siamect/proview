@@ -254,17 +254,12 @@ static uted_t_command	commands[ UTED_MAX_COMMANDS ] = {
 { "Wb Dump", UTED_PROC_PWRPLC, 0, 1,{
   {"Output", 		0, 	0, 		1,	0, UTED_QUAL_QUAL},
   {"Hierarchy", 	1, 	UTED_INS_PLNO,	1, 	0, UTED_QUAL_QUAL},
-  {"Volume", 		0, 	0,		1, 	0, UTED_QUAL_QUAL},
-  {"Header", 		0, 	0,		0, 	1, UTED_QUAL_QUAL},
-  {"Indent", 		0, 	0, 		1,	0, UTED_QUAL_QUAL},
+  {"Keepname", 		0, 	0,		0, 	1, UTED_QUAL_QUAL},
   {"",}}},
 { "Wb Load", UTED_PROC_PWRPLC, 0, 1,{
   {"Loadfile", 		0, 	0, 		1,	0, UTED_QUAL_QUAL},
-  {"Ignore",		0, 	0,		0, 	1, UTED_QUAL_QUAL},
   {"NoIndex",		0, 	0,		0, 	1, UTED_QUAL_QUAL},
   {"Output", 		0, 	0, 		1,	0, UTED_QUAL_QUAL},
-  {"Full",		0, 	0,		0, 	1, UTED_QUAL_QUAL},
-  {"Announce",		0, 	0,		0, 	1, UTED_QUAL_QUAL},
   {"",}}},
 { "Wb Export", UTED_PROC_PWRPLC, 0, 1,{
   {"Output", 		0, 	0, 		1,	0, UTED_QUAL_QUAL},
