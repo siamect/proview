@@ -140,6 +140,9 @@ wb_object wb_volume::object(const char *name) const
   wb_object o;
     
   wb_name n = wb_name( name);
+  if ( n.evenSts()) 
+    return wb_object( n.sts(), 0);
+
   if ( !n.hasVolume() || n.volumeIsEqual( m_vrep->name()))
     // This volume
     orep = m_vrep->object( &sts, n);
@@ -222,6 +225,9 @@ wb_attribute wb_volume::attribute(pwr_tOid oid, const char *bname, const char *a
 wb_attribute wb_volume::attribute( wb_name aname)
 {
   pwr_tStatus sts;
+
+  if ( !aname)
+    return wb_attribute();
 
   wb_object o = object( aname.name());
   if ( !o)
