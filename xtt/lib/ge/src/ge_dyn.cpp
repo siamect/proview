@@ -1806,7 +1806,7 @@ int GeDigError::scan( grow_tObject object)
   }
   else {
     if ( (!inverted && *p) || (inverted && !*p)) {
-      grow_SetObjectFillColor( object, glow_eDrawType_LineRed);
+      grow_SetObjectFillColor( object, glow_eDrawType_ColorRed);
       dyn->ignore_color = true;
     }
     else {
@@ -5957,12 +5957,12 @@ int GeStatusColor::scan( grow_tObject object)
       grow_SetObjectFillColor( object, glow_eDrawType_ColorYellow);
       break;
     case ge_ePwrStatus_Error:
-      grow_SetObjectFillColor( object, glow_eDrawType_LineRed);
+      grow_SetObjectFillColor( object, glow_eDrawType_ColorRed);
       break;
     case ge_ePwrStatus_Fatal:
       on = !on;
       if ( on)
-	grow_SetObjectFillColor( object, glow_eDrawType_LineRed);
+	grow_SetObjectFillColor( object, glow_eDrawType_ColorRed);
       else
 	grow_SetObjectFillColor( object, nostatus_color);
       break;
