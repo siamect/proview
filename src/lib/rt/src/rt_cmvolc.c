@@ -67,7 +67,7 @@ trimQ(
 
 
 /** Fetches a cached class.
- *  If the class is not in the cache then is it fetched from the remote node 
+ *  If the class is not in the cache then it's fetched from the remote node 
  *
  *  @return NULL if an error or classes are equal else a pointer to the class
  */
@@ -160,6 +160,7 @@ cmvolc_GetCachedClass (
     
     tgt.nid = np->nid;
     tgt.qix = net_cProcHandler;
+    smp->ver = net_cVersion;
     smp->cid = ccKey.cid;
     smp->time = ap->cop->u.n.time;
     smp->aidx = nextIdx;
@@ -295,9 +296,6 @@ cmvolc_GetNonExistingClass (
   }    
   
 
-
-  printf("cmvolc_GetNonExistingClass\n");
-
   gdb_Unlock;
 
   do {
@@ -308,6 +306,7 @@ cmvolc_GetNonExistingClass (
     
     tgt.nid = np->nid;
     tgt.qix = net_cProcHandler;
+    smp->ver = net_cVersion;
     smp->cid = cid;
     smp->aidx = nextIdx;
     
@@ -387,9 +386,6 @@ cmvolc_GetNonExistingClass (
   } else if (sts != NULL)
     *sts = GDH__SUCCESS;
     
-  printf("cmvolc_GetNonExistingClass, success\n");
-
-
 
 cleanup:
   for (i = 0; i < msgcnt; i++)

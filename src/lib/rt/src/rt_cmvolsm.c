@@ -73,7 +73,7 @@ cmvolsm_GetCclass (
       break;
     }
     
-    
+    rmp->ver = net_cVersion;
     rmp->sts = 1;
     rmp->equal = equal;      
 
@@ -117,6 +117,7 @@ cmvolsm_GetCclass (
       errh_Error("cmvolsm_GetCclass. net_Alloc, size %d, cid %d, error %m", sizeof(*rmp), mp->cid, lsts);
       return;
     }
+    rmp->ver = net_cVersion;
   }  
 
 
@@ -185,6 +186,7 @@ cmvolsm_GetGclass (
       errh_Error("cvolsm_GetGclass. net_Alloc, size %d, cid %d, error %m", size, mp->cid, sts);
       break;
     }
+    rmp->ver = net_cVersion;
     
     strcpy(rmp->vname, vp->g.name.orig);
     rmp->gclass.time = cop->u.n.time;
@@ -243,6 +245,7 @@ cmvolsm_GetGclass (
       errh_Error("cmvolsm_GetGclass. net_Alloc, size %d, cid %d, error %m", sizeof(*rmp), mp->cid, lsts);
       return;
     }
+    rmp->ver = net_cVersion;
   }
   
 

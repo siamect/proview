@@ -33,7 +33,7 @@
 %#define net_cVersion		8
 %
 % /** @note DO NOT change this number */
-%#define net_cFirstCclassVersion 8
+%#define net_cFirstCclassVersion 8 /* first version with cached classes */
 %
 %#define net_cSendRcvTmo	20000	/* Timeout (ms) used in pams_rcv_msgw calls */
 %#define net_cProcHandler	110
@@ -158,8 +158,12 @@ enum net_eEvent {
 %}
 #endif
 
-/* Generic message header.
-   All class NETH messages MUST start with this header.  */
+/**< Generic message header.
+ * All class NETH messages MUST start with this header.  
+ * This header needs a version(s) memeber(s), but we can't add
+ * due to backward compability.
+ * If you can skip this requirement, please add the version  
+ */
 
 struct net_sMessage {
   pwr_tBoolean		xdr;
@@ -1021,6 +1025,7 @@ struct net_sGclass {
 
 struct net_sGetGclass {
   net_sMessage		hdr;
+  pwr_tUInt32		ver; /**< see net_sMeassge for comment */
   pwr_tClassId	       	cid;
   pwr_tUInt32 		aidx; /**< Starting attribute index */ 
 };
@@ -1033,6 +1038,7 @@ struct net_sGetGclass {
 %
 %typedef struct {
 %  net_sMessage 	hdr;/**< Header */
+%  pwr_tUInt32		ver;/**< see net_sMeassge for comment */
 %  pwr_tStatus          sts;/**< Status */
 %
 %  /* The data below is only valid if ODD(sts) */
@@ -1065,6 +1071,9 @@ struct net_sGetGclass {
 %	}
 %
 %	if (!xdr_net_sMessage(xdrs, &objp->hdr)) {
+%		return (FALSE);
+%	}
+%	if (!xdr_pwr_tUInt32(xdrs, &objp->ver)) {
 %		return (FALSE);
 %	}
 %	if (!xdr_pwr_tStatus(xdrs, &objp->sts)) {
@@ -1133,6 +1142,7 @@ struct  net_sCclass {
 
 struct net_sGetCclass {
   net_sMessage		hdr;
+  pwr_tUInt32		ver; /**< see net_sMeassge for comment */
   pwr_tClassId	       	cid;
   pwr_tTime		time;
   pwr_tUInt32 		aidx; /**< Starting attribute index */ 
@@ -1144,6 +1154,7 @@ struct net_sGetCclass {
 %
 %typedef struct {
 %  net_sMessage 	hdr;   /**< Header */
+%  pwr_tUInt32		ver; /**< see net_sMeassge for comment */
 %  pwr_tStatus          sts;   /**< Status */
 %  pwr_tBoolean         equal; /**< The remote class is equal to the native */
 %
@@ -1182,6 +1193,9 @@ struct net_sGetCclass {
 %	}
 %
 %	if (!xdr_net_sMessage(xdrs, &objp->hdr)) {
+%		return (FALSE);
+%	}
+%	if (!xdr_pwr_tUInt32(xdrs, &objp->ver)) {
 %		return (FALSE);
 %	}
 %	if (!xdr_pwr_tStatus(xdrs, &objp->sts)) {
