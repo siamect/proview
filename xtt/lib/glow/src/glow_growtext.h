@@ -466,6 +466,14 @@ class GrowText : public GlowText {
   */
   void flip( double x0, double y0, glow_eFlipDirection dir);
 
+  //! Moves object to alignment line or point.
+  /*!
+    \param x	x coordinate of alignment point.
+    \param y	y coordinate of alignment point.
+    \param direction Type of alignment.
+  */
+  void align( double x, double y, glow_eAlignDirection direction);
+
   //! Conversion between different versions of Glow
   /*!
     \param version	Version to convert to.

@@ -984,6 +984,52 @@ void GrowText::flip( double x0, double y0, glow_eFlipDirection dir)
   }
 }
 
+void GrowText::align( double x, double y, glow_eAlignDirection direction)
+{
+    double dx, dy;
+
+    erase();
+    nav_erase();
+    switch ( direction)
+    {
+      case glow_eAlignDirection_CenterVert:
+        dx = x - (x_right + x_left) / 2;
+        dy = 0;
+        break;        
+      case glow_eAlignDirection_CenterHoriz:
+        dx = 0;
+        dy = y - (y_high + y_low) / 2;
+        break;        
+      case glow_eAlignDirection_CenterCenter:
+        dx = x - (x_right + x_left) / 2;
+        dy = y - (y_high + y_low) / 2;
+        break;        
+      case glow_eAlignDirection_Right:
+        dx = x - x_right;
+        dy = 0;
+        break;     
+      case glow_eAlignDirection_Left:
+        dx = x - x_left;
+        dy = 0;
+        break;        
+      case glow_eAlignDirection_Up:
+        dx = 0;
+        dy = y - y_high;
+        break;        
+      case glow_eAlignDirection_Down:
+        dx = 0;
+        dy = y - y_low;
+        break;        
+    }
+    trf.move( dx, dy);
+    x_right += dx;
+    x_left += dx;
+    y_high += dy;
+    y_low += dy;
+
+    draw();
+}
+
 void GrowText::convert( glow_eConvert version) 
 {
   switch ( version) {
