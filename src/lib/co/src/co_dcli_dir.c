@@ -436,10 +436,10 @@ int	dcli_parse_filename( 	char	*filename,
 	*s = 0;
 
 	/* Type */
-	if ( (s = strchr( ltype+1, '.')) != 0)
-	  *s = 0;
-	if ( (s = strchr( ltype+1, ';')) != 0)
-	  *s = 0;
+	// if ( (s = strchr( ltype+1, '.')) != 0)
+	//  *s = 0;
+	// if ( (s = strchr( ltype+1, ';')) != 0)
+	//  *s = 0;
 
 	*version = 0;
 
