@@ -668,6 +668,10 @@ public class GdhServer
 		int typeId = subElement.typeId;
 		int elements = subElement.elements;
 		int size = subElement.size;
+		if(log)
+		{
+		    System.out.println("getObjectRefInfoAll:" + elements + " " + id);
+		}
                 switch (typeId)
                 {
                   case Pwr.eType_Int32:
