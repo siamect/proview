@@ -11,13 +11,13 @@ SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Code rt_plc_arithm.c
-!  @Group Plc,PlcInteger
-!  @Summary Check if an integer value is less than or equal another.
-!  LessEqual compares two integer values and returns true if the first
+!  @Group Plc,PlcAnalog
+!  @Summary Check if an analog value is less than or equal another.
+!  LessEqual compares two analog values and returns true if the first
 !  is less than or equal the second.
 !  @image orm_lessequal_fo.gif
 !*/
-  Object LessEqual $ClassDef 394
+  Object LessEqual $ClassDef 422
     Body SysBody
       Attr Editor = pwr_eEditor_PlcEd
       Attr Method = pwr_eMethod_Connections
@@ -28,24 +28,24 @@ SObject pwrb:Class
          Attr StructName = "LessEqual"
       EndBody
       !/**
-      !  Integer input 1.
+      !  Analog input 1.
       !*/
       Object In1 $Input 1 
         Body SysBody
 	  Attr Flags |= PWR_MASK_NOREMOVE
 	  Attr Flags |= PWR_MASK_NOINVERT
 	  Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "In1"
         EndBody
       EndObject
       !/**
-      !  Integer input 2.
+      !  Analog input 2.
       !*/
       Object In2 $Input 2
         Body SysBody
 	  Attr Flags |= PWR_MASK_NOINVERT
-          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "In2"
         EndBody
       EndObject

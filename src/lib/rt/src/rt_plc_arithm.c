@@ -12,6 +12,7 @@
 #endif
 #include <limits.h>
 #include <math.h>
+#include <float.h>
 
 #include "pwr.h"
 #include "pwr_baseclasses.h"
@@ -686,7 +687,19 @@ void Equal_exec(
 {
   o->In1 = *o->In1P;
   o->In2 = *o->In2P;
-  o->Status = (o->In1 == o->In2);
+  o->Status = (fabsf(o->In1 - o->In2) < FLT_EPSILON);
+}
+
+/*_*
+  @aref notequal NotEqual
+*/
+void NotEqual_exec(
+  plc_sThread		*tp,
+  pwr_sClass_NotEqual 	*o)
+{
+  o->In1 = *o->In1P;
+  o->In2 = *o->In2P;
+  o->Status = !(fabsf(o->In1 - o->In2) < FLT_EPSILON);
 }
 
 /*_*
@@ -698,7 +711,7 @@ void GreaterEqual_exec(
 {
   o->In1 = *o->In1P;
   o->In2 = *o->In2P;
-  o->Status = (o->In1 >= o->In2);
+  o->Status = (o->In1 >= o->In2) || (fabsf(o->In1 - o->In2) < FLT_EPSILON);
 }
 
 /*_*
@@ -722,7 +735,7 @@ void LessEqual_exec(
 {
   o->In1 = *o->In1P;
   o->In2 = *o->In2P;
-  o->Status = (o->In1 <= o->In2);
+  o->Status = (o->In1 <= o->In2) || (fabsf(o->In1 - o->In2) < FLT_EPSILON);
 }
 
 /*_*
@@ -731,6 +744,78 @@ void LessEqual_exec(
 void LessThan_exec(
   plc_sThread		*tp,
   pwr_sClass_LessThan   *o)
+{
+  o->In1 = *o->In1P;
+  o->In2 = *o->In2P;
+  o->Status = (o->In1 < o->In2);
+}
+
+/*_*
+  @aref iequal IEqual
+*/
+void IEqual_exec(
+  plc_sThread		*tp,
+  pwr_sClass_IEqual 	*o)
+{
+  o->In1 = *o->In1P;
+  o->In2 = *o->In2P;
+  o->Status = (o->In1 == o->In2);
+}
+
+/*_*
+  @aref iequal INotEqual
+*/
+void INotEqual_exec(
+  plc_sThread		*tp,
+  pwr_sClass_INotEqual 	*o)
+{
+  o->In1 = *o->In1P;
+  o->In2 = *o->In2P;
+  o->Status = (o->In1 != o->In2);
+}
+
+/*_*
+  @aref igreaterequal IGreaterEqual
+*/
+void IGreaterEqual_exec(
+  plc_sThread		*tp,
+  pwr_sClass_IGreaterEqual *o)
+{
+  o->In1 = *o->In1P;
+  o->In2 = *o->In2P;
+  o->Status = (o->In1 >= o->In2);
+}
+
+/*_*
+  @aref igreaterthan IGreaterThan
+*/
+void IGreaterThan_exec(
+  plc_sThread		*tp,
+  pwr_sClass_IGreaterThan *o)
+{
+  o->In1 = *o->In1P;
+  o->In2 = *o->In2P;
+  o->Status = (o->In1 > o->In2);
+}
+
+/*_*
+  @aref ilessequal ILessEqual
+*/
+void ILessEqual_exec(
+  plc_sThread		*tp,
+  pwr_sClass_ILessEqual  *o)
+{
+  o->In1 = *o->In1P;
+  o->In2 = *o->In2P;
+  o->Status = (o->In1 <= o->In2);
+}
+
+/*_*
+  @aref ilessthan ILessThan
+*/
+void ILessThan_exec(
+  plc_sThread		*tp,
+  pwr_sClass_ILessThan   *o)
 {
   o->In1 = *o->In1P;
   o->In2 = *o->In2P;
