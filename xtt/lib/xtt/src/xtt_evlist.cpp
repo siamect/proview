@@ -643,7 +643,7 @@ void EvList::beep( double scantime)
   if ( acc_beep_time >= beep_interval)
      acc_beep_time = 0;
 
-  sts = get_last_not_acked( &id);
+  sts = get_last_not_acked_beep( &id);
   if ( ODD(sts))
   {
     if ( acc_beep_time == 0)
@@ -1142,6 +1142,33 @@ int EvList::get_last_not_acked( mh_sEventId **id)
       case evlist_eItemType_Alarm:
         if ( object_item->status & mh_mEventStatus_NotAck) 
         {
+          *id = &object_item->eventid;
+          return 1;
+        }
+        break;
+      default:
+        ;
+    }
+  }
+  return 0;
+}
+
+int EvList::get_last_not_acked_beep( mh_sEventId **id)
+{
+  int		i;
+  brow_tObject 	*object_list;
+  int		object_cnt;
+  ItemAlarm	*object_item;
+
+  brow_GetObjectList( brow->ctx, &object_list, &object_cnt);
+  for ( i = 0; i < object_cnt; i++)
+  {
+    brow_GetUserData( object_list[i], (void **)&object_item);
+    switch( object_item->type)
+    {
+      case evlist_eItemType_Alarm:
+        if ( object_item->status & mh_mEventStatus_NotAck &&
+	     object_item->eventflags & mh_mEventFlags_Bell)  {
           *id = &object_item->eventid;
           return 1;
         }

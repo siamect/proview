@@ -149,6 +149,7 @@ class EvList {
     void event_return( mh_sReturn *msg);
     void event_clear_alarmlist( pwr_tNodeIndex nix);
     int get_last_not_acked( mh_sEventId **id);
+    int get_last_not_acked_beep( mh_sEventId **id);
     int id_to_item( mh_sEventId *id, void **item);
     void ack( mh_sEventId *id);
     void set_input_focus();
