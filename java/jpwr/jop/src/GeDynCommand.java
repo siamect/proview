@@ -23,7 +23,11 @@ public class GeDynCommand extends GeDynElem {
       if ( (dyn.actionType & GeDyn.mActionType_Confirm) != 0)
 	break;
 
-      Jop.executeCommand( dyn.session, command);
+      if ( dyn.instance == null)
+	Jop.executeCommand( dyn.session, command);
+      else
+	Jop.executeCommand( dyn.session, RtUtilities.strReplace(command, "$object", dyn.instance));
+
       break;
     }
   }
