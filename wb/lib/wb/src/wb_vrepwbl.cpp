@@ -193,11 +193,18 @@ bool wb_vrepwbl::exportTree(wb_treeimport &i, pwr_tOid oid)
   return true;
 }
 
+static int wbl_sort_files( const void *file1, const void *file2)
+{
+  return ( strcmp( (*(wb_wblfile **)file1)->file_name,
+	(*(wb_wblfile **)(file2))->file_name));
+}
+
 int wb_vrepwbl::load( const char *fname)
 {
   int i;
   char file_spec[200];
   pwr_tStatus sts, rsts;
+  int file_cnt_sort = 0;
 
   rsts = LDH__SUCCESS;
 
@@ -218,6 +225,8 @@ int wb_vrepwbl::load( const char *fname)
     sts = load_files( file_spec);
     if ( EVEN(sts)) rsts = sts;
 
+    file_cnt_sort = file_cnt;
+
     // Load types
     sprintf( file_spec, "%s/*_t_*.wb_load", fname);
     sts = load_files( file_spec);
@@ -234,6 +243,11 @@ int wb_vrepwbl::load( const char *fname)
     if ( EVEN(sts)) rsts = sts;
 
   }
+
+  if ( file_cnt > file_cnt_sort)
+    qsort( &file[file_cnt_sort], file_cnt - file_cnt_sort, sizeof(file[0]), 
+	   wbl_sort_files);
+
   for ( i = 0; i < file_cnt; i++) {
     for ( ref_wblnode n = file[i]->rootAST; n; n = n->getNextSibling())
       n->registerNode( this);
