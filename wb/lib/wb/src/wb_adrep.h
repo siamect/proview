@@ -6,21 +6,26 @@
 #include "wb_cdrep.h"
 #include "wb_bdrep.h"
 
+class wb_orepdbs;
+
 class wb_adrep 
 {
-public:
-    wb_mvrepdbs *m_vrep;
-    dbs_sObject *m_ao;    
-    
-    wb_adrep();
-    wb_adrep(wb_mvrepdbs *vrep, dbs_sObject *ao);    
-    wb_adrep(const wb_adrep&);  // x = other_object
-    wb_adrep& operator=(const wb_adrep&);
+    int m_nRef;
+    wb_orepdbs *m_orep; 
+    pwr_tStatus m_sts;
+   
+    friend class wb_bdrep;
+    friend class wb_cdrep;
 
+ public:
+    wb_adrep(wb_orepdbs& );
     ~wb_adrep();
 
-    wb_bdrep *bdef();
-    wb_cdrep *cdef();
+    void unref();
+    wb_adrep *ref();
+
+    wb_bdrep *bdrep();
+    wb_cdrep *cdrep();
 
     pwr_sAttrRef aref();
     size_t size(); // get objects runtime body size
@@ -37,7 +42,6 @@ public:
 
     wb_name name() { wb_name n; return n;} // Fix // get attribute name
     wb_name name(ldh_eName type) { wb_name n; return n; } // Fix 
-    
 };
 
 #endif

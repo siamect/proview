@@ -8,9 +8,8 @@
 
 class wb_mvrep : public wb_vrep {
  public:
-  wb_cdrep *cdrep( const wb_orep& o) { return 0;} // Fix
-  wb_bdrep *bdrep( const wb_orep& o) { return 0;} // Fix
-  wb_adrep *adrep( const wb_orep& o) { return 0;} // Fix
+  wb_cdrep *cdrep( const wb_orep& o);
+  wb_cdrep *cdrep( pwr_tCid cid);
 };
 
 #endif

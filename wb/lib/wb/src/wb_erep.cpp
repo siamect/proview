@@ -1,9 +1,12 @@
 #include <iostream.h>
 #include <fstream.h>
 
+#include "pwr.h"
 #include "wb_erep.h"
 #include "wb_merep.h"
 #include "wb_vrepwbl.h"  // Should be wb_vrepdbs.h ...
+#include "wb_cdrep.h"
+#include "wb_orep.h"
 #include "wb_ldh_msg.h"
 
 extern "C" {
@@ -384,7 +387,13 @@ void wb_erep::loadMeta( pwr_tStatus *status)
     *status = LDH__SUCCESS;
 }
 
+wb_cdrep *wb_erep::cdrep( pwr_tStatus *sts, const wb_orep& o)
+{
+  wb_vrep *vrep = volume(sts, o.vid());
+  if ( EVEN(*sts)) return 0;
 
+  return vrep->merep()->cdrep( sts, o);
+}
 
 
 

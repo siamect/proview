@@ -4,14 +4,33 @@ wb_adef::wb_adef() : wb_status(LDH__NOSUCHATTR), m_adrep(0)
 {
 }
 
-wb_adef::wb_adef(const wb_adef& x)
+wb_adef::wb_adef( wb_adrep *adrep) : wb_status(LDH__SUCCESS), m_adrep(adrep)
 {
-    //m_adrep = x.m_adrep->ref();
+  m_adrep->ref();
+}
+
+wb_adef::wb_adef(const wb_adef& x) : wb_status(x.m_sts), m_adrep(x.m_adrep)
+{
+  if ( m_adrep)
+    m_adrep->ref();
+}
+
+wb_adef& wb_adef::operator=(const wb_adef& x)
+{
+  if ( x.m_adrep)
+    x.m_adrep->ref();
+  if ( m_adrep)
+    m_adrep->unref();
+
+  m_adrep = x.m_adrep;
+  m_sts = x.m_sts;
+  return *this;
 }
 
 wb_adef::~wb_adef()
 {
-    //m_adrep->unref();
+  if ( m_adrep)
+    m_adrep->unref();
 }
 
 void wb_adef::check()

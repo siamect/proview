@@ -26,6 +26,7 @@ class wb_vrepwbl : public wb_vrep
     //wb_session m_wsession;
 
     wb_erep *m_erep;
+    wb_merep *m_merep;
     unsigned int m_nSession;
     unsigned int m_nRef;
 
@@ -43,11 +44,11 @@ class wb_vrepwbl : public wb_vrep
 
 public:
     wb_vrepwbl( wb_erep *erep) : 
-      m_erep(erep), root_object(0), error_cnt(0), file_cnt(0), next_oix(0),
-      volume_node(0) {}
+      m_erep(erep), m_merep(erep->merep()), root_object(0), error_cnt(0), 
+      file_cnt(0), next_oix(0), volume_node(0) {}
     wb_vrepwbl( wb_erep *erep, pwr_tVid vid) : 
-      m_vid(vid), m_erep(erep), root_object(0), error_cnt(0), file_cnt(0), next_oix(0),
-      volume_node(0) {}
+      m_vid(vid), m_erep(erep), m_merep(erep->merep()), root_object(0), 
+      error_cnt(0), file_cnt(0), next_oix(0), volume_node(0) {}
     ~wb_vrepwbl();
 
     pwr_tVid vid() const { return m_vid;}
@@ -112,6 +113,7 @@ public:
     virtual wb_vrep *ref();
 
     wb_erep *erep() const {return m_erep;};
+    wb_merep *merep() const { return m_merep;}
 
     wb_orep *object(pwr_tStatus *sts);
     wb_orep *object(pwr_tStatus *sts, pwr_tOid oid) {return 0;};

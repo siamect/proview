@@ -6,27 +6,32 @@
 #include "wb_orep.h"
 #include "wb_name.h"
 #include "wb_ldh.h"
+#include "wb_cdef.h"
+#include "wb_bdef.h"
 
 class wb_orep;
 class wb_adrep;
 
 class wb_adef : public wb_status
 {
-public:
     wb_adrep *m_adrep;
     
+public:
     wb_adef();
     wb_adef(const wb_adef&);  // x = other_object
-    wb_adef(const wb_adrep*);  // 
+    wb_adef(wb_adrep*);
     wb_adef(const wb_orep&);  // x = other orep
-    wb_adef& operator=(const wb_adef&) { return *this;}; // Fix
+    wb_adef& operator=(const wb_adef&);
 
     ~wb_adef();
 
     operator bool() const { return (m_adrep != 0);}
-    operator wb_adrep*() const;
+    operator wb_adrep*() const { return m_adrep;}
     bool operator==(wb_adef&);
     
+    wb_bdef bdef();
+    wb_cdef cdef();
+
     pwr_sAttrRef aref();
     size_t size();   // get objects runtime body size
     int offset();

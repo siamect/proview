@@ -1,4 +1,5 @@
 #include "wb_volume.h"
+#include "wb_merep.h"
 
 wb_volume::wb_volume() : wb_status(LDH__NOSUCHVOL), m_vrep(0), m_vid(0)
 {
@@ -122,7 +123,11 @@ wb_object wb_volume::object(pwr_tOid oid) const
     return o;
 }
 
-
+wb_cdef wb_volume::cdef(wb_object o)
+{
+  pwr_tStatus sts;
+  return wb_cdef(m_vrep->erep()->merep()->cdrep( &sts, o.cid()));
+}
 
 
 

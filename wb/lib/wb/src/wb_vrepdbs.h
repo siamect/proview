@@ -3,6 +3,7 @@
 
 #include "co_dbs.h"
 #include "wb_vrep.h"
+#include "wb_cdef.h"
 
 class wb_vrepdbs : public wb_vrep
 {

@@ -1,12 +1,38 @@
 #include "wb_adrep.h"
+#include "wb_vrep.h"
+#include "wb_cdef.h"
+#include "wb_orepdbs.h"
 
-wb_adrep::wb_adrep(const wb_adrep& x)
+void wb_adrep::unref()
 {
+  if ( --m_nRef == 0)
+    delete this;
+}
+
+wb_adrep *wb_adrep::ref()
+{
+  m_nRef++;
+  return this;
+}
+
+wb_adrep::wb_adrep( wb_orepdbs& o): m_nRef(0), m_orep(&o), m_sts(LDH__SUCCESS)
+{
+  m_orep->ref();
 }
 
 wb_adrep::~wb_adrep()
 {
-    //m_adrep->unref();
+  m_orep->unref();
+}
+
+wb_cdrep *wb_adrep::cdrep()
+{
+  return new wb_cdrep( this);
+}
+
+wb_bdrep *wb_adrep::bdrep()
+{
+  return new wb_bdrep( this);
 }
 
 pwr_tOid wb_adrep::aoid()

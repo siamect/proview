@@ -65,7 +65,7 @@ public:
     wb_bdef bdef(wb_cdef cdef, char *bname) { wb_bdef b; return b;}; // Fix
     wb_bdef bdef(wb_object o, char *bname) { wb_bdef b; return b;}; // Fix
     
-    wb_cdef cdef(wb_object o) { wb_cdef c; return c;}; // Fix
+    wb_cdef cdef(wb_object o);
     wb_cdef cdef(pwr_tCid cid) { wb_cdef c; return c;}; // Fix
     wb_cdef cdef(pwr_tOid coid) { wb_cdef c; return c;}; // Fix
     wb_cdef cdef(wb_name n) { wb_cdef c; return c;}; // Fix

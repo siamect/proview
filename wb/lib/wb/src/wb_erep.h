@@ -8,6 +8,8 @@ using namespace std;
 
 class wb_merep;
 class wb_vrep;
+class wb_cdrep;
+class wb_orep;
 
 class wb_erep
 {
@@ -42,6 +44,8 @@ public:
     void removeDbs( pwr_tStatus *sts, wb_vrep *vrep);
     void removeExtern( pwr_tStatus *sts, wb_vrep *vrep);
     void load( pwr_tStatus *sts);
+
+    wb_cdrep *cdrep( pwr_tStatus *sts, const wb_orep& o);
 
 private:
     void loadDirList( pwr_tStatus *status);

@@ -9,6 +9,7 @@
 #include "wb_adrep.h"
 
 class wb_vrep;
+class wb_erep;
 
 class wb_orep
 {
@@ -59,6 +60,8 @@ public:
     virtual wb_adrep *attribute(pwr_tStatus*, const char *aname) = 0;
     virtual wb_adrep *attribute(pwr_tStatus*) = 0;
 
+    virtual wb_erep *erep() const = 0;
+    virtual wb_vrep *vrep() const = 0;
 };
 
 #endif

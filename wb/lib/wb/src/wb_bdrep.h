@@ -3,22 +3,28 @@
 
 #include "pwr.h"
 #include "wb_orep.h"
-#include "wb_adef.h"
 #include "wb_object.h"
+#include "co_dbs.h"
 #include "wb_name.h"
 
 class wb_adef;
+class wb_adrep;
+class wb_orepdbs;
 
 class wb_bdrep
 {
-public:
-
+    int m_nRef;
+    wb_orepdbs *m_orep;
     pwr_tStatus m_sts;
     
+public:
     wb_bdrep();
-    wb_bdrep(const wb_adef&);
-    wb_bdrep(const wb_orep&);
-    wb_bdrep& operator=(const wb_bdrep&);
+    wb_bdrep(wb_orepdbs& o); // own orep
+    wb_bdrep( wb_adrep *adrep);
+    ~wb_bdrep();
+
+    void unref();
+    wb_bdrep *ref();
 
     pwr_sAttrRef aref() { pwr_sAttrRef a; return a;} // Fix
     size_t size() { return 0;} // Fix   // get objects runtime body size
@@ -30,6 +36,9 @@ public:
     wb_name name() { wb_name n; return n;} // Fix // get attribute name
     wb_name name(ldh_eName type) { wb_name n; return n;} // Fix
     
+    wb_adrep *adrep( pwr_tStatus *sts); // Get first attribute
+    wb_adrep *adrep( pwr_tStatus *sts, char *aname);
+
     pwr_tStatus sts() { return m_sts;}
     
             

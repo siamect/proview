@@ -12,6 +12,7 @@
 #include <map>
 
 class wb_erep;
+class wb_merep;
 class wb_srep;
 class wb_cdef;
 class wb_destination;
@@ -86,6 +87,7 @@ public:
     virtual pwr_tCid cid() const = 0;
     virtual void name( char *n) { strcpy( m_name, n);}
     virtual char *name() { return m_name;}
+    virtual wb_merep *merep() const = 0;
 
     virtual bool createSnapshot(char *fileName) = 0;
     

@@ -1,21 +1,31 @@
 #include "wb_bdef.h"
+#include "wb_adef.h"
 
 wb_bdef::wb_bdef()
 {
 }
 
-wb_bdef::wb_bdef(wb_bdrep *b, pwr_tStatus sts) :
-    wb_status(sts), m_bdrep(b)
+wb_bdef::wb_bdef(wb_bdrep *b) :
+    wb_status(b->sts()), m_bdrep(b)
 {
+  m_bdrep->ref();
 }
 
-wb_bdef::wb_bdef(const wb_bdef&)
+wb_bdef::wb_bdef(const wb_bdef& x) : wb_status(x.m_sts), m_bdrep(x.m_bdrep)
 {
+  if ( m_bdrep)
+    m_bdrep->ref();
 }
 
-wb_bdef& wb_bdef::operator=(const wb_bdef &b)
+wb_bdef& wb_bdef::operator=(const wb_bdef &x)
 {
-    return *this;
+  if ( x.m_bdrep)
+    x.m_bdrep->ref();
+  if ( m_bdrep)
+    m_bdrep->unref();
+  m_bdrep = x.m_bdrep;
+  m_sts = x.m_sts;
+  return *this;
 }
 
 

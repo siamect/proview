@@ -4,18 +4,20 @@
 #include "pwr.h"
 #include "wb_bdrep.h"
 #include "wb_orep.h"
-#include "wb_adef.h"
 #include "wb_object.h"
 #include "wb_name.h"
 
+class wb_bdrep;
+class wb_adef;
+
 class wb_bdef : public wb_status
 {
-public:
-
+    int m_nRef;
     wb_bdrep *m_bdrep;
 
+public:
     wb_bdef();
-    wb_bdef(wb_bdrep*, pwr_tStatus);    
+    wb_bdef(wb_bdrep* bdrep);
     wb_bdef(const wb_bdef&);
     wb_bdef& operator=(const wb_bdef&);
 

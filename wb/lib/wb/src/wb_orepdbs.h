@@ -11,6 +11,8 @@ class wb_orepdbs : public wb_orep
     wb_vrepdbs *m_vrep;
     unsigned int m_refCount;
     
+    friend class wb_cdrep;
+    friend class wb_bdrep;
 public:
 
 
@@ -55,6 +57,9 @@ public:
     virtual wb_adrep *attribute(pwr_tStatus*, const char *aname);
     virtual wb_adrep *attribute(pwr_tStatus*);
     
+    wb_erep *erep() const { return m_vrep->erep();}
+    wb_vrep *vrep() const { return m_vrep;}
+
 };
 
 #endif

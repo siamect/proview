@@ -78,6 +78,8 @@ public:
     virtual wb_adrep *attribute(pwr_tStatus*, const char *aname);
     virtual wb_adrep *attribute(pwr_tStatus*);
 
+    wb_erep *erep() const { return m_vrep->erep();}
+    wb_vrep *vrep() const { return m_vrep;}
 };
 
 #endif
