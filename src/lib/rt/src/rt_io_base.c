@@ -54,18 +54,6 @@ pwr_dImport pwr_BindIoMethods(Ao_HVAO4);
 pwr_dImport pwr_BindIoMethods(Ai_HVAI32);
 pwr_dImport pwr_BindIoMethods(Ai_AI32uP);
 pwr_dImport pwr_BindIoMethods(Co_PI24BO);
-#if defined(OS_ELN)
-pwr_dImport pwr_BindIoMethods(RTP_DIOC);
-pwr_dImport pwr_BindIoMethods(Rack_RTP);
-pwr_dImport pwr_BindIoMethods(Ai_7436);
-pwr_dImport pwr_BindIoMethods(Ao_7455_20);
-pwr_dImport pwr_BindIoMethods(Ao_7455_30);
-pwr_dImport pwr_BindIoMethods(Pd_7435_26);
-pwr_dImport pwr_BindIoMethods(Di_7437_37);
-pwr_dImport pwr_BindIoMethods(Do_7437_83);
-pwr_dImport pwr_BindIoMethods(Co_7435_33);
-pwr_dImport pwr_BindIoMethods(Co_7437_33);
-#endif
 
 #if defined(OS_LYNX)
 pwr_dImport pwr_BindIoMethods(Pb_Profiboard);
@@ -88,18 +76,6 @@ pwr_BindIoClasses(Base) = {
   pwr_BindIoClass(Ai_HVAI32),
   pwr_BindIoClass(Ai_AI32uP),
   pwr_BindIoClass(Co_PI24BO),
-#if defined(OS_ELN)
-  pwr_BindIoClass(RTP_DIOC),
-  pwr_BindIoClass(Rack_RTP),
-  pwr_BindIoClass(Ai_7436),
-  pwr_BindIoClass(Ao_7455_20),
-  pwr_BindIoClass(Ao_7455_30),
-  pwr_BindIoClass(Pd_7435_26),
-  pwr_BindIoClass(Di_7437_37),
-  pwr_BindIoClass(Do_7437_83),
-  pwr_BindIoClass(Co_7435_33),
-  pwr_BindIoClass(Co_7437_33),
-#endif
 #if defined(OS_LYNX)
   pwr_BindIoClass(Pb_Profiboard),
   pwr_BindIoClass(Pb_DP_Slave),

@@ -58,12 +58,9 @@ typedef struct pwr_s_GraphPlcConnection	pwr_sGraphPlcConnection;
 typedef struct pwr_s_Buffer		pwr_sBuffer;
 typedef struct pwr_s_Param		pwr_sParam;
 typedef struct pwr_s_PlantHier		pwr_sPlantHier;
-typedef struct pwr_s_BootVersion	pwr_sBootVersion;
 typedef struct pwr_s_Node		pwr_sNode;
-typedef struct pwr_s_NodeVersion	pwr_sNodeVersion;
 typedef struct pwr_s_Appl		pwr_sAppl;
 typedef struct pwr_s_System		pwr_sSystem;
-typedef struct pwr_s_SystemVersion	pwr_sSystemVersion;
 typedef struct pwr_s_MenuCascade	pwr_sMenuCascade;
 typedef struct pwr_s_MenuButton		pwr_sMenuButton;
 typedef struct pwr_s_Object		pwr_sObject;
@@ -215,9 +212,6 @@ typedef enum {
   pwr_eCix_System		=  33,
   pwr_eCix_LibHier		=  34,
   pwr_eCix_DocHier		=  35,
-  pwr_eCix_SystemVersion	=  36,
-  pwr_eCix_NodeVersion		=  37,
-  pwr_eCix_BootVersion		=  38,
   pwr_eCix_AttrXRef		=  39,
   pwr_eCix_Menu			=  40,
   pwr_eCix_MenuSeparator	=  41,
@@ -281,9 +275,6 @@ typedef enum {
   pwr_eClass_System		= pwr_ClassId(pwr_eCix_System),
   pwr_eClass_LibHier		= pwr_ClassId(pwr_eCix_LibHier),
   pwr_eClass_DocHier		= pwr_ClassId(pwr_eCix_DocHier),
-  pwr_eClass_SystemVersion	= pwr_ClassId(pwr_eCix_SystemVersion),
-  pwr_eClass_NodeVersion	= pwr_ClassId(pwr_eCix_NodeVersion),
-  pwr_eClass_BootVersion	= pwr_ClassId(pwr_eCix_BootVersion),
   pwr_eClass_AttrXRef		= pwr_ClassId(pwr_eCix_AttrXRef),
   pwr_eClass_Menu		= pwr_ClassId(pwr_eCix_Menu),
   pwr_eClass_MenuSeparator	= pwr_ClassId(pwr_eCix_MenuSeparator),
@@ -915,53 +906,6 @@ struct pwr_s_System
     pwr_tString80	Description;
     char		SystemName[80];
     char		SystemGroup[80];
-    };
-
-struct pwr_s_SystemVersion
-    {
-    pwr_tProjVersion	RsmoVersion;
-    pwr_tTime		RsmoCreTime;
-    pwr_tUInt32		RsmoCardinality;
-    pwr_tUInt32		RsmoBodySize;
-    pwr_tProjVersion	RpmoVersion;
-    pwr_tTime		RpmoCreTime;
-    pwr_tUInt32		RpmoCardinality;
-    pwr_tUInt32		RpmoBodySize;
-    pwr_tProjVersion	RcoVersion;
-    pwr_tTime		RcoCreTime;
-    pwr_tUInt32		RcoCardinality;
-    pwr_tUInt32		RcoBodySize;
-    };
-
-struct pwr_s_BootVersion
-    {
-    pwr_tProjVersion	BootVersion;
-    pwr_tTime		BootCreTime;
-    pwr_tObjid		Node[256];
-    pwr_tProjVersion	DnoVersion[256];
-    };
-
-struct pwr_s_NodeVersion
-    {
-    pwr_tObjid		Node;
-    pwr_tUInt32		Cardinality;
-    pwr_tUInt32		BodySize;
-    pwr_tProjVersion	DnoVersion;
-    pwr_tTime		DnoCreTime;
-    pwr_tUInt32		DnoCardinality;
-    pwr_tUInt32		DnoBodySize;
-    pwr_tProjVersion	RsmoVersion;
-    pwr_tTime		RsmoCreTime;
-    pwr_tUInt32		RsmoCardinality;
-    pwr_tUInt32		RsmoBodySize;
-    pwr_tProjVersion	RpmoVersion;
-    pwr_tTime		RpmoCreTime;
-    pwr_tUInt32		RpmoCardinality;
-    pwr_tUInt32		RpmoBodySize;
-    pwr_tProjVersion	RcoVersion;
-    pwr_tTime		RcoCreTime;
-    pwr_tUInt32		RcoCardinality;
-    pwr_tUInt32		RcoBodySize;
     };
 
 struct pwr_s_Node

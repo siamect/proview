@@ -59,7 +59,6 @@ extern "C" {
 extern "C" {
 #include "wb_wccm.h"
 #include "flow_x.h"
-#include "wb_distr.h"
 #include "co_api.h"
 }
 
@@ -163,8 +162,7 @@ dcli_tCmdTable	wnav_command_table[] = {
 			"/FILE", "/LOCAL", "/INITSTEP", 
 			"/MAXOBJECTS", "/VOLUME", "/ALL", "/TYPE", 
 			"/OPTION", "/TERMINAL", "/OUTPUT", 
-			"/FULL", "/APPEND", "/EXACTORDER", 
-			"/NODE", "/BUSNUMBER", ""}
+			"/FULL", "/APPEND", "/EXACTORDER", ""}
 		},
 		{
 			"COMPILE",
@@ -215,7 +213,7 @@ dcli_tCmdTable	wnav_command_table[] = {
 			&wnav_copy_func,
 			{ "dcli_arg1", "/FIRST", "/LAST", "/AFTER", "/BEFORE",
 			"/HIERARCHY", "/SOURCE", "/DESTINATION", "/NAME",
-			"/NODE", "/BUSNUMBER", "/NOCONFIRM", "/VERBOSE", "/KEEPREFERENCES", ""}
+			"/KEEPREFERENCES", ""}
 		},
 		{
 			"CUT",
@@ -342,7 +340,7 @@ dcli_tCmdTable	wnav_command_table[] = {
 			"/CLASS", "/HIERARCHY", "/NAME", "/ATTRIBUTE", 
 			"/SIGNALOBJECTSEG", "/SIGCHANCONSEG", 
 			"/SHOSIGCHANCON", "/SHODETECTTEXT", "/VOLUMENAME",
-			"/DBID", "/VALUE", ""}
+			"/VALUE", ""}
 		},
 		{
 			"SETUP",
@@ -1306,30 +1304,7 @@ static int	wnav_set_func(	void		*client_data,
   }
   else if ( strncmp( arg1_str, "DB", strlen( arg1_str)) == 0)
   {
-    char		dbid[80] ; 
-    pwr_tStatus		sts;
-
-    if ( EVEN( dcli_get_qualifier( "/DBID", dbid)))
-    {
-      if ( EVEN( dcli_get_qualifier( "dcli_arg2", dbid)))
-      {
-        wnav->message('E', "Qualifier required");
-        return WNAV__QUAL;
-      }
-    }
-
-    if ( wnav->wbctx != 0 )
-    {
-      wnav->message('E', "Db is already open");
-      return WNAV__DBOPEN;
-    }
-
-    sts = utl_set_database_id( dbid);
-    if ( EVEN(sts))
-    {
-      wnav->message(' ', wnav_get_message(sts));
-      return sts;
-    }
+    wnav->message('E', "command \"set db\" is obsolete");
   }
   else
   {
@@ -1748,99 +1723,6 @@ static int	wnav_show_func(	void		*client_data,
       wnav->message('E', "No files found");
       return sts;
     }
-    return sts;
-  }
-  else if ( strncmp( arg1_str, "LOADFILES", strlen( arg1_str)) == 0)
-  {
-    // Command is "SHOW LOADFILES"
-    char	nodestr[80];
-    char	busnumberstr[80];
-    char        *nodestr_p;
-    int         busnumber;
-    int         nr;
-
-    if ( ODD( dcli_get_qualifier( "dcli_arg2", nodestr)))
-      nodestr_p = nodestr;
-    else {
-      if ( ODD( dcli_get_qualifier( "/NODE", nodestr)))
-        nodestr_p = nodestr;
-      else
-        nodestr_p = NULL;
-    }
-
-    if ( ODD( dcli_get_qualifier( "/BUSNUMBER", busnumberstr))) {
-      nr = sscanf( busnumberstr, "%d", &busnumber);
-      if ( nr != 1) {
-        wnav->message('E', "Syntax error");
-        return WNAV__SYNTAX;	
-      }
-    }
-    else
-      busnumber = 0;
-
-    sts = distr_show_load( nodestr_p, NULL, busnumber, 0);
-    if ( EVEN(sts))
-      wnav->message(' ', wnav_get_message(sts));
-    return sts;
-  }
-  else if ( strncmp( arg1_str, "APPLICATIONS", strlen( arg1_str)) == 0)
-  {
-    // Command is "SHOW APPLICATIONS"
-    char	nodestr[80];
-    char        *nodestr_p;
-
-    if ( ODD( dcli_get_qualifier( "dcli_arg2", nodestr)))
-      nodestr_p = nodestr;
-    else {
-      if ( ODD( dcli_get_qualifier( "/NODE", nodestr)))
-        nodestr_p = nodestr;
-      else
-        nodestr_p = NULL;
-    }
-
-    sts = distr_show_applications( nodestr_p, 0, distr_eFile_Appl);
-    if ( EVEN(sts))
-      wnav->message(' ', wnav_get_message(sts));
-    return sts;
-  }
-  else if ( strncmp( arg1_str, "SYSTEM", strlen( arg1_str)) == 0)
-  {
-    // Command is "SHOW GRAPH"
-    char	nodestr[80];
-    char        *nodestr_p;
-
-    if ( ODD( dcli_get_qualifier( "dcli_arg2", nodestr)))
-      nodestr_p = nodestr;
-    else {
-      if ( ODD( dcli_get_qualifier( "/NODE", nodestr)))
-        nodestr_p = nodestr;
-      else
-        nodestr_p = NULL;
-    }
-
-    sts = distr_show_applications( nodestr_p, 0, distr_eFile_System);
-    if ( EVEN(sts))
-      wnav->message(' ', wnav_get_message(sts));
-    return sts;
-  }
-  else if ( strncmp( arg1_str, "GRAPH", strlen( arg1_str)) == 0)
-  {
-    // Command is "SHOW GRAPH"
-    char	nodestr[80];
-    char        *nodestr_p;
-
-    if ( ODD( dcli_get_qualifier( "dcli_arg2", nodestr)))
-      nodestr_p = nodestr;
-    else {
-      if ( ODD( dcli_get_qualifier( "/NODE", nodestr)))
-        nodestr_p = nodestr;
-      else
-        nodestr_p = NULL;
-    }
-
-    sts = distr_show_applications( nodestr_p, 0, distr_eFile_Graph);
-    if ( EVEN(sts))
-      wnav->message(' ', wnav_get_message(sts));
     return sts;
   }
   else
@@ -3000,149 +2882,6 @@ static int	wnav_copy_func(	void		*client_data,
       wnav->message(' ', wnav_get_message(sts));
       return sts;
     }
-  }
-  else if ( strncmp( arg1_str, "LOADFILES", strlen( arg1_str)) == 0)
-  {
-    // Command is "COPY LOADFILES"
-    char	nodestr[80];
-    char	busnumberstr[80];
-    char        *nodestr_p;
-    int         busnumber;
-    int         nr;
-    int         confirm;
-    int         sts;
-    int         verbose;
-
-    if ( ODD( dcli_get_qualifier( "dcli_arg2", nodestr)))
-      nodestr_p = nodestr;
-    else {
-      if ( ODD( dcli_get_qualifier( "/NODE", nodestr)))
-        nodestr_p = nodestr;
-      else
-        nodestr_p = NULL;
-    }
-
-    if ( ODD( dcli_get_qualifier( "/BUSNUMBER", busnumberstr))) {
-      nr = sscanf( busnumberstr, "%d", &busnumber);
-      if ( nr != 1) {
-        wnav->message('E', "Syntax error");
-        return WNAV__SYNTAX;	
-      }
-    }
-    else
-      busnumber = 0;
-
-    confirm = EVEN( dcli_get_qualifier( "/NOCONFIRM", NULL));
-    verbose = ODD( dcli_get_qualifier( "/VERBOSE", NULL));
-
-    sts = distr_copy_load( nodestr_p, busnumber, 0, confirm, 0, verbose);
-    if ( EVEN(sts))
-      wnav->message(' ', wnav_get_message(sts));
-    return sts;
-  }
-  else if ( strncmp( arg1_str, "GRAPH", strlen( arg1_str)) == 0)
-  {
-    // Command is "COPY GRAPH"
-    char	nodestr[80];
-    char        *nodestr_p;
-    int         confirm;
-    int         sts;
-    int         verbose;
-
-    if ( ODD( dcli_get_qualifier( "dcli_arg2", nodestr)))
-      nodestr_p = nodestr;
-    else {
-      if ( ODD( dcli_get_qualifier( "/NODE", nodestr)))
-        nodestr_p = nodestr;
-      else
-        nodestr_p = NULL;
-    }
-
-    confirm = EVEN( dcli_get_qualifier( "/NOCONFIRM", NULL));
-    verbose = ODD( dcli_get_qualifier( "/VERBOSE", NULL));
-
-    sts = distr_copy_applications( nodestr_p, confirm, 0, distr_eFile_Graph, verbose);
-    if ( EVEN(sts))
-      wnav->message(' ', wnav_get_message(sts));
-    return sts;
-  }
-  else if ( strncmp( arg1_str, "APPLICATIONS", strlen( arg1_str)) == 0)
-  {
-    // Command is "COPY APPLICATIONS"
-    char	nodestr[80];
-    char        *nodestr_p;
-    int         confirm;
-    int         sts;
-    int         verbose;
-
-    if ( ODD( dcli_get_qualifier( "dcli_arg2", nodestr)))
-      nodestr_p = nodestr;
-    else {
-      if ( ODD( dcli_get_qualifier( "/NODE", nodestr)))
-        nodestr_p = nodestr;
-      else
-        nodestr_p = NULL;
-    }
-
-    confirm = EVEN( dcli_get_qualifier( "/NOCONFIRM", NULL));
-    verbose = ODD( dcli_get_qualifier( "/VERBOSE", NULL));
-
-    sts = distr_copy_applications( nodestr_p, confirm, 0, distr_eFile_Appl, verbose);
-    if ( EVEN(sts))
-      wnav->message(' ', wnav_get_message(sts));
-    return sts;
-  }
-  else if ( strncmp( arg1_str, "SYSTEM", strlen( arg1_str)) == 0)
-  {
-    // Command is "COPY SYSTEM"
-    char	nodestr[80];
-    char        *nodestr_p;
-    int         confirm;
-    int         sts;
-    int         verbose;
-
-    if ( ODD( dcli_get_qualifier( "dcli_arg2", nodestr)))
-      nodestr_p = nodestr;
-    else {
-      if ( ODD( dcli_get_qualifier( "/NODE", nodestr)))
-        nodestr_p = nodestr;
-      else
-        nodestr_p = NULL;
-    }
-
-    confirm = EVEN( dcli_get_qualifier( "/NOCONFIRM", NULL));
-    verbose = ODD( dcli_get_qualifier( "/VERBOSE", NULL));
-
-    sts = distr_copy_applications( nodestr_p, confirm, 0, distr_eFile_System, verbose);
-    if ( EVEN(sts))
-      wnav->message(' ', wnav_get_message(sts));
-    return sts;
-  }
-  else if ( strncmp( arg1_str, "ALL", strlen( arg1_str)) == 0)
-  {
-    // Command is "COPY ALL"
-    char	nodestr[80];
-    char        *nodestr_p;
-    int         confirm;
-    int         sts;
-    int         verbose;
-
-    if ( ODD( dcli_get_qualifier( "dcli_arg2", nodestr)))
-      nodestr_p = nodestr;
-    else {
-      if ( ODD( dcli_get_qualifier( "/NODE", nodestr)))
-        nodestr_p = nodestr;
-      else
-        nodestr_p = NULL;
-    }
-
-    confirm = EVEN( dcli_get_qualifier( "/NOCONFIRM", NULL));
-    verbose = ODD( dcli_get_qualifier( "/VERBOSE", NULL));
-
-    sts = distr_copy_all( nodestr_p, confirm, 0, verbose);
-    if ( EVEN(sts))
-      wnav->message(' ', wnav_get_message(sts));
-    return sts;
   }
   else
   {

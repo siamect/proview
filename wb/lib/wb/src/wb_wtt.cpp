@@ -39,8 +39,6 @@ extern "C" {
 #include "wb_lfu.h"
 #include "wb_login.h"
 
-#include "wb_distr.h"
-#include "wb_distr_wind.h"
 #if defined OS_VMS
 #include "wb_ate.h"
 #include "wb_sped.h"

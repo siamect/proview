@@ -28,8 +28,6 @@ typedef enum {
 	goen_eGraphIndex_SSBegin 	= 12,
 	goen_eGraphIndex_SSEnd 		= 13,
 	goen_eGraphIndex_ShowPlcAttr 	= 15,
-	goen_eGraphIndex_AAnalyse 	= 19,
-	goen_eGraphIndex_DAnalyse 	= 20,
 	goen_eGraphIndex_MpsIn 		= 25,
 	goen_eGraphIndex_MpsQueue	= 26,
 	goen_eGraphIndex_MpsStack	= 27,

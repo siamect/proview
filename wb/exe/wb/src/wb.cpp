@@ -74,7 +74,6 @@ static  Widget mainwindow;
 static  ldh_tWBContext wbctx;
 static	int announce = 0;
 static 	int appl_count = 0;
-static  char wb_db_id[40] = "";
 
 /* ????? Ska vara volymsid */
 int	pwr_vsel_success(	void 	*vselctx, 
@@ -148,14 +147,6 @@ int psts(unsigned long int sts, FILE *logfile)
       printf("%s\n", msg);
   }
   return sts & 1;
-}
-
-int	wb_get_db_id( void)
-{
-  int sts;
-
-  sts = utl_get_database_id( wb_db_id);
-  return sts;
 }
 
 static void wb_find_wnav_cb( void *ctx, pwr_tOid oid)
@@ -566,9 +557,6 @@ int main( int argc, char *argv[])
     XtSetArg(args[0],XmNtitle, title);
     XtSetValues( toplevel, args, 1);
   }
-
-  sts = wb_get_db_id();
-  psts(sts, NULL);
 
   if ( sw_projectvolume) {
 

@@ -322,13 +322,6 @@ int utl_get_systemobject(
   char		*systemgroup
 );
 
-int utl_get_securityobject(
-  ldh_tWBContext wbctx,
-  ldh_tSesContext ldhses,
-  pwr_tObjid	*security_objid,
-  char		*group
-);
-
 int utl_sortchildren (
   ldh_tSesContext ldhses,
   char		*parent_name,
@@ -490,8 +483,5 @@ int utl_revert (
   ldh_tSesContext ldhses,
   int		confirm
 );
-
-int utl_get_database_id( char *id);
-int utl_set_database_id( char *dbid);
 
 #endif

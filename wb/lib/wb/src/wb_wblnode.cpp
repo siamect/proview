@@ -149,12 +149,6 @@ static wbl_sSym classes[] =
   ,{ "pwr_eCix_LibHier", pwr_eCix_LibHier }
   ,{ "pwr_eClass_DocHier", pwr_eClass_DocHier }
   ,{ "pwr_eCix_DocHier", pwr_eCix_DocHier }
-  ,{ "pwr_eClass_SystemVersion", pwr_eClass_SystemVersion }
-  ,{ "pwr_eCix_SystemVersion", pwr_eCix_SystemVersion }
-  ,{ "pwr_eClass_NodeVersion", pwr_eClass_NodeVersion }
-  ,{ "pwr_eCix_NodeVersion", pwr_eCix_NodeVersion }
-  ,{ "pwr_eClass_BootVersion", pwr_eClass_BootVersion }
-  ,{ "pwr_eCix_BootVersion", pwr_eCix_BootVersion }
   ,{ "pwr_eClass_AttrXRef", pwr_eClass_AttrXRef }
   ,{ "pwr_eCix_AttrXRef", pwr_eCix_AttrXRef }
   ,{ "pwr_eClass_Menu", pwr_eClass_Menu }
