@@ -216,7 +216,8 @@ int dcli_search_file( 		char 	*name ,
 	  found = 0;
 	  while ( (dir_entry = readdir( directory)) != NULL)
 	  {
-	    if ( dir_entry->d_name[0] == '.')
+	    if ( strcmp( dir_entry->d_name, ".") == 0 ||
+		 strcmp( dir_entry->d_name, "..") == 0)
 	      continue;
 
 	    if ( wildcard)
