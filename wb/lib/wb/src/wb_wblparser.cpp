@@ -2,9 +2,22 @@
 #include "wb_wblparser.hpp"
 #include "antlr/NoViableAltException.hpp"
 #include "antlr/SemanticException.hpp"
+#line 14 "wb_wblparser.g"
+
+#include "co_msgwindow.h"
+int wblparser_error_cnt = 0;
+
+void wb_wblparser::reportError(const RecognitionException& ex)
+{
+	MsgWindow::message( 'E', ex.toString().c_str());
+	wblparser_error_cnt++;
+	ANTLR_USE_NAMESPACE(std)cerr << ex.toString().c_str() << ANTLR_USE_NAMESPACE(std)endl;
+}
+
+#line 18 "wb_wblparser.cpp"
 #line 1 "wb_wblparser.g"
 
-#line 8 "wb_wblparser.cpp"
+#line 21 "wb_wblparser.cpp"
 wb_wblparser::wb_wblparser(ANTLR_USE_NAMESPACE(antlr)TokenBuffer& tokenBuf, int k)
 : ANTLR_USE_NAMESPACE(antlr)LLkParser(tokenBuf,k)
 {

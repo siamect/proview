@@ -801,7 +801,8 @@ void foe_gre_popupmenu (
 		foe_e_popupmenu_attribute	|
 		foe_e_popupmenu_subwindow	|
 		foe_e_popupmenu_connect		|
-		foe_e_popupmenu_delete);
+		foe_e_popupmenu_delete		|
+		foe_e_popupmenu_helpclass);
 
 	    XmMenuPosition(foectx->widgets.popupmenu, &event.xbutton );
             XtManageChild (foectx->widgets.popupmenu);
@@ -826,7 +827,8 @@ void foe_gre_popupmenu (
 	  }
 	  foe_modify_popup ( foectx,
 		foe_e_popupmenu_attribute |
-		foe_e_popupmenu_subwindow);
+		foe_e_popupmenu_subwindow |
+		foe_e_popupmenu_helpclass);
 	  XmMenuPosition(foectx->widgets.popupmenu, &event.xbutton );
 	  XtManageChild (foectx->widgets.popupmenu);
 	}

@@ -28,6 +28,7 @@
 #include "co_msg.h"
 #include "co_dcli.h"
 #include "co_dcli.h"
+#include "co_api.h"
 #include "wb_ldh.h"
 #include "wb_foe.h"
 #include "wb_foe_msg.h"
@@ -414,7 +415,7 @@ static void uted_activate_helputils (
   XmAnyCallbackStruct	*data
 )
 {
-  uted_display_help ( utedctx, "Help Utilities" ) ;
+  xhelp_help( "utilities", 0, navh_eHelpFile_Base, 0, 1);
 }
 
 static void uted_activate_helppwr_plc (
@@ -423,7 +424,7 @@ static void uted_activate_helppwr_plc (
   XmAnyCallbackStruct	*data
 )
 {
-  uted_display_help ( utedctx, "Help pwr_plc" ) ;
+  xhelp_help( "help command", 0, navh_eHelpFile_Base, 0, 1);
 }
 
 static void uted_activate_batch (

@@ -159,6 +159,8 @@ static wbl_sSym classes[] =
   ,{ "pwr_eCix_AttrXRef", pwr_eCix_AttrXRef }
   ,{ "pwr_eClass_Menu", pwr_eClass_Menu }
   ,{ "pwr_eCix_Menu", pwr_eCix_Menu }
+  ,{ "pwr_eClass_RtMenu", pwr_eClass_RtMenu }
+  ,{ "pwr_eCix_RtMenu", pwr_eCix_RtMenu }
   ,{ "pwr_eClass_MenuSeparator", pwr_eClass_MenuSeparator }
   ,{ "pwr_eCix_MenuSeparator", pwr_eCix_MenuSeparator }
   ,{ "pwr_eClass_MenuCascade", pwr_eClass_MenuCascade }

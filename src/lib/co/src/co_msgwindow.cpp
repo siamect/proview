@@ -29,6 +29,7 @@ extern "C" {
 #include "flow_x.h"
 }
 #include "co_lng.h"
+#include "co_xhelp.h"
 #include "co_msgwindow.h"
 
 
@@ -38,6 +39,8 @@ static void msg_activate_clear( Widget w, MsgWindow *msgw, XmAnyCallbackStruct *
 static void msg_activate_zoom_in( Widget w, MsgWindow *msgw, XmAnyCallbackStruct *data);
 static void msg_activate_zoom_out( Widget w, MsgWindow *msgw, XmAnyCallbackStruct *data);
 static void msg_activate_zoom_reset( Widget w, MsgWindow *msgw, XmAnyCallbackStruct *data);
+static void msg_activate_help( Widget w, MsgWindow *msgw, XmAnyCallbackStruct *data);
+static void msg_activate_help_message( Widget w, MsgWindow *msgw, XmAnyCallbackStruct *data);
 static void msg_create_form( Widget w, MsgWindow *msgw, XmAnyCallbackStruct *data);
 
 MsgWindow *MsgWindow::default_window = 0;
@@ -150,11 +153,14 @@ MsgWindow::MsgWindow(
 	{"msg_activate_zoom_in",(caddr_t)msg_activate_zoom_in },
 	{"msg_activate_zoom_out",(caddr_t)msg_activate_zoom_out },
 	{"msg_activate_zoom_reset",(caddr_t)msg_activate_zoom_reset },
+	{"msg_activate_help",(caddr_t)msg_activate_help },
+	{"msg_activate_help_message",(caddr_t)msg_activate_help_message },
 	{"msg_create_form",(caddr_t)msg_create_form }
 	};
   static int	reglist_num = (sizeof reglist / sizeof reglist[0]);
 
   *status = 1;
+  strcpy( name, msg_name);
 
   reglist[0].value = (caddr_t) this;
 
@@ -321,6 +327,16 @@ static void msg_activate_zoom_out( Widget w, MsgWindow *msgw, XmAnyCallbackStruc
 static void msg_activate_zoom_reset( Widget w, MsgWindow *msgw, XmAnyCallbackStruct *data)
 {
   msgw->msgnav->unzoom();
+}
+
+static void msg_activate_help( Widget w, MsgWindow *msgw, XmAnyCallbackStruct *data)
+{
+  XHelp::dhelp( "message window", 0, navh_eHelpFile_Base, 0, true);
+}
+
+static void msg_activate_help_message( Widget w, MsgWindow *msgw, XmAnyCallbackStruct *data)
+{
+  XHelp::dhelp( "message window", 0, navh_eHelpFile_Base, 0, true);
 }
 
 static void msg_create_form( Widget w, MsgWindow *msgw, XmAnyCallbackStruct *data)

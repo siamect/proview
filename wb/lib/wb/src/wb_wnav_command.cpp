@@ -22,7 +22,6 @@ extern "C" {
 #include "co_dcli.h"
 #include "pwr_baseclasses.h"
 #include "co_ccm_msg.h"
-#include "co_api.h"
 #include "co_regex.h"
 #include "wb_ldh.h"
 #include "wb_ldhload.h"
@@ -48,11 +47,6 @@ extern "C" {
 #include "flow_browapi.h"
 #include "flow_browwidget.h"
 
-extern "C" {
-#include "wb_wccm.h"
-#include "flow_x.h"
-#include "wb_distr.h"
-}
 #include "wb_wnav.h"
 #include "wb_wnav_item.h"
 #include "co_dcli_msg.h"
@@ -60,6 +54,14 @@ extern "C" {
 #include "wb_foe_msg.h"
 #include "ge.h"
 #include "wb_wda.h"
+#include "co_xhelp.h"
+
+extern "C" {
+#include "wb_wccm.h"
+#include "flow_x.h"
+#include "wb_distr.h"
+#include "co_api.h"
+}
 
 #include "wb_env.h"
 #include "wb_erep.h"
@@ -69,7 +71,7 @@ extern "C" {
 #define	WNAV_MENU_CREATE	0
 #define	WNAV_MENU_ADD		1
 
-static char wtt_version[] = "V3.3b";
+static char wtt_version[] = "V4.0.0";
 static WNav *current_wnav[20];
 static int wnav_cnt = 0;
 
@@ -296,7 +298,7 @@ dcli_tCmdTable	wnav_command_table[] = {
 			&wnav_help_func,
 			{ "dcli_arg1", "dcli_arg2", "dcli_arg3", "dcli_arg4",
 			"/HELPFILE", "/POPNAVIGATOR", "/BOOKMARK", 
-			"/INDEX", "/BASE", ""}
+			"/INDEX", "/BASE", "/PROJECT", "/STRICT", ""}
 		},
 		{
 			"LOGOUT",
@@ -407,32 +409,34 @@ static int	wnav_help_func(		void		*client_data,
   char	bookmark_str[80];
   char	key[80];
   int	pop;
+  int   strict;
 	
 
   if ( ODD( dcli_get_qualifier( "/INDEX", file_str)))
   {
     if ( ODD( dcli_get_qualifier( "/HELPFILE", file_str)))
     {
-      sts = wnav->help_index( navh_eHelpFile_Other, file_str);
+      sts = XHelp::dhelp_index( navh_eHelpFile_Other, file_str);
       if ( EVEN(sts))
         wnav->message('E', "Unable to find file");
     }
     else
     {
       if ( ODD( dcli_get_qualifier( "/BASE", file_str)))
-        sts = wnav->help_index( navh_eHelpFile_Base, NULL);
+        sts = XHelp::dhelp_index( navh_eHelpFile_Base, NULL);
       else
-        sts = wnav->help_index( navh_eHelpFile_Project, NULL);
+        sts = XHelp::dhelp_index( navh_eHelpFile_Project, NULL);
     }
     return sts;
   }
 
   if ( EVEN( dcli_get_qualifier( "dcli_arg1", arg_str)))
   {
-    sts = wnav->help( "help command", "", navh_eHelpFile_Base, NULL);
+    sts = XHelp::dhelp( "help command", "", navh_eHelpFile_Base, NULL, strict);
     return sts;
   }
-  pop =  ODD( dcli_get_qualifier( "/POPNAVIGATOR", file_str));
+  strict = ODD( dcli_get_qualifier( "/STRICT", NULL));
+  pop = ODD( dcli_get_qualifier( "/POPNAVIGATOR", file_str));
   if ( pop)
     wnav->brow_push_all();
 
@@ -460,18 +464,26 @@ static int	wnav_help_func(		void		*client_data,
       }
     }
   }
-  if ( ODD( dcli_get_qualifier( "/HELPFILE", file_str)))
-  {
-    sts = wnav->help( key, bookmark_str, navh_eHelpFile_Other, file_str);
+  if ( ODD( dcli_get_qualifier( "/HELPFILE", file_str))) {
+    sts = XHelp::dhelp( key, bookmark_str, navh_eHelpFile_Other, file_str, strict);
     if ( EVEN(sts))
       wnav->message('E', "No help on this subject");
   }
-  else
-  {
-    sts = wnav->help( key, bookmark_str, navh_eHelpFile_Base, NULL);
+  else if ( ODD( dcli_get_qualifier( "/BASE", file_str))) {
+    sts = XHelp::dhelp( key, bookmark_str, navh_eHelpFile_Base, NULL, strict);
+    if ( EVEN(sts))
+      wnav->message('E', "No help on this subject");
+  }
+  else if ( ODD( dcli_get_qualifier( "/PROJECT", file_str))) {
+    sts = XHelp::dhelp( key, bookmark_str, navh_eHelpFile_Project, NULL, strict);
+    if ( EVEN(sts))
+      wnav->message('E', "No help on this subject");
+  }
+  else {
+    sts = XHelp::dhelp( key, bookmark_str, navh_eHelpFile_Base, NULL, strict);
     if ( EVEN(sts))
     {
-      sts = wnav->help( key, bookmark_str, navh_eHelpFile_Project, NULL);
+      sts = XHelp::dhelp( key, bookmark_str, navh_eHelpFile_Project, NULL, strict);
       if ( EVEN(sts))
         wnav->message('E', "No help on this subject");
     }

@@ -21,6 +21,15 @@ typedef enum {
 } msgw_ePop;
 #endif
 
+#if !defined co_nav_help_h
+typedef enum {
+	navh_eHelpFile_,
+	navh_eHelpFile_Base,
+	navh_eHelpFile_Project,
+	navh_eHelpFile_Other
+	} navh_eHelpFile;
+#endif
+
 int user_CheckUser( char *systemgroup, char *user, char *password, 
 	unsigned int *priv);
 int user_CheckSystemGroup( char *systemgroup);
@@ -47,6 +56,8 @@ void msgw_message_object( pwr_tStatus sts, char *text1, char *text2, pwr_tOid oi
 void msgw_message_plcobject( pwr_tStatus sts, char *text1, char *text2, pwr_tOid oid);
 void msgw_set_nodraw();
 void msgw_reset_nodraw();
+int xhelp_help( char *key, char *help_bookmark, navh_eHelpFile file_type,
+		char *file_name, int strict);
 #if defined __cplusplus
 }
 #endif

@@ -42,6 +42,7 @@ extern "C" {
 #include "wb_wattnav.h"
 #include "wb_wtt.h"
 #include "wb_wnav.h"
+#include "co_xhelp.h"
 
 
 // Static member elements
@@ -183,7 +184,7 @@ static void watt_activate_exit( Widget w, WAtt *watt, XmAnyCallbackStruct *data)
 
 static void watt_activate_help( Widget w, WAtt *watt, XmAnyCallbackStruct *data)
 {
-  // Not yet implemented
+  XHelp::dhelp( "object editor", 0, navh_eHelpFile_Base, 0, true);
 }
 
 static void watt_create_msg_label( Widget w, WAtt *watt, XmAnyCallbackStruct *data)

@@ -142,6 +142,10 @@ int	goec_con_draw(
 	}
 	else
 	{
+	  // In V2.7 max point was 10, in flow it is 8...
+	  if ( con->lc.point_count > 8)
+	    con->lc.point_count = 8;
+
 	  for ( i = 0; i < con->lc.point_count; i++)
 	  {
 	    x[i] = con->lc.point[i].x;

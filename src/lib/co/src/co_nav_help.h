@@ -45,7 +45,7 @@ class NavHelp {
     char                project_file[120];
 
     int help( char *key, char *help_bookmark, navh_eHelpFile file_type, 
-	      char *file_name, void **bookmark);
+	      char *file_name, void **bookmark, bool strict = false);
     int	help_index( navh_eHelpFile file_type, char *file_name);
 };
 

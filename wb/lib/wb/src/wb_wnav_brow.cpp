@@ -19,7 +19,6 @@ extern "C" {
 #include "co_dcli.h"
 #include "co_msg.h"
 #include "co_time.h"
-#include "co_api.h"
 #include "pwr_baseclasses.h"
 #include "wb_wnav_msg.h"
 #include "wb_ldh.h"
@@ -39,13 +38,15 @@ extern "C" {
 #include "flow_browapi.h"
 #include "flow_browwidget.h"
 
-extern "C" {
-#include "flow_x.h"
-#include "wb_wtt_api.h"
-}
 #include "wb_wnav_brow.h"
 #include "wb_wnav.h"
 #include "wb_wnav_item.h"
+
+extern "C" {
+#include "flow_x.h"
+#include "wb_wtt_api.h"
+#include "co_api.h"
+}
 
 
 #include "xnav_bitmap_leaf8.h"

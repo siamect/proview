@@ -31,6 +31,12 @@ SObject pwrs:Class
 	    Attr MethodName = "$Object-OpenTemplate"
 	  EndBody
 	EndObject
+	Object ClassHelp $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help"
+	    Attr MethodName = "$Object-ClassHelp"
+	  EndBody
+	EndObject
       EndObject
     EndObject
     Object ConfiguratorPcscs $Menu
@@ -39,6 +45,12 @@ SObject pwrs:Class
 	  Body SysBody
 	    Attr ButtonName = "Default Values..."
 	    Attr MethodName = "$Object-OpenTemplate"
+	  EndBody
+	EndObject
+	Object ClassHelp $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help"
+	    Attr MethodName = "$Object-ClassHelp"
 	  EndBody
 	EndObject
       EndObject
@@ -51,6 +63,12 @@ SObject pwrs:Class
 	    Attr MethodName = "$Object-OpenTemplate"
 	  EndBody
 	EndObject
+	Object ClassHelp $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help"
+	    Attr MethodName = "$Object-ClassHelp"
+	  EndBody
+	EndObject
       EndObject
     EndObject
     Object ConfiguratorPcson $Menu
@@ -59,6 +77,12 @@ SObject pwrs:Class
 	  Body SysBody
 	    Attr ButtonName = "Default Values..."
 	    Attr MethodName = "$Object-OpenTemplate"
+	  EndBody
+	EndObject
+	Object ClassHelp $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help"
+	    Attr MethodName = "$Object-ClassHelp"
 	  EndBody
 	EndObject
       EndObject
@@ -71,6 +95,12 @@ SObject pwrs:Class
 	    Attr MethodName = "$Object-OpenTemplate"
 	  EndBody
 	EndObject
+	Object ClassHelp $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help"
+	    Attr MethodName = "$Object-ClassHelp"
+	  EndBody
+	EndObject
       EndObject
     EndObject
     Object ConfiguratorPcsmn $Menu
@@ -79,6 +109,12 @@ SObject pwrs:Class
 	  Body SysBody
 	    Attr ButtonName = "Default Values..."
 	    Attr MethodName = "$Object-OpenTemplate"
+	  EndBody
+	EndObject
+	Object ClassHelp $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help"
+	    Attr MethodName = "$Object-ClassHelp"
 	  EndBody
 	EndObject
       EndObject
@@ -97,6 +133,20 @@ SObject pwrs:Class
 	    Attr MethodName = "$Object-DeleteObject"
 	  EndBody
 	EndObject
+        Object Help $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help"
+	    Attr MethodName = "$Object-Help"
+	    Attr FilterName = "$Object-HelpFilter"
+	  EndBody
+        EndObject
+        Object HelpClass $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help Class"
+	    Attr MethodName = "$Object-HelpClass"
+	    Attr FilterName = "$Object-HelpClassFilter"
+	  EndBody
+        EndObject
       EndObject
     EndObject
     Object ConfiguratorPoscn $Menu
@@ -107,6 +157,20 @@ SObject pwrs:Class
 	    Attr MethodName = "$Object-OpenObject"
 	  EndBody
 	EndObject
+        Object Help $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help"
+	    Attr MethodName = "$Object-Help"
+	    Attr FilterName = "$Object-HelpFilter"
+	  EndBody
+        EndObject
+        Object HelpClass $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help Class"
+	    Attr MethodName = "$Object-HelpClass"
+	    Attr FilterName = "$Object-HelpClassFilter"
+	  EndBody
+        EndObject
       EndObject
       Object Selected $Menu
 	Object CreateObject $MenuCascade
@@ -166,6 +230,20 @@ SObject pwrs:Class
 	    Attr MethodName = "$Object-DeleteObject"
 	  EndBody
 	EndObject
+        Object Help $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help"
+	    Attr MethodName = "$Object-Help"
+	    Attr FilterName = "$Object-HelpFilter"
+	  EndBody
+        EndObject
+        Object HelpClass $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help Class"
+	    Attr MethodName = "$Object-HelpClass"
+	    Attr FilterName = "$Object-HelpClassFilter"
+	  EndBody
+        EndObject
       EndObject
       Object Selected $Menu
 	Object CopyObject $MenuCascade
@@ -224,6 +302,20 @@ SObject pwrs:Class
 	    Attr MethodName = "$Object-OpenObject"
 	  EndBody
 	EndObject
+        Object Help $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help"
+	    Attr MethodName = "$Object-Help"
+	    Attr FilterName = "$Object-HelpFilter"
+	  EndBody
+        EndObject
+        Object HelpClass $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help Class"
+	    Attr MethodName = "$Object-HelpClass"
+	    Attr FilterName = "$Object-HelpClassFilter"
+	  EndBody
+        EndObject
       EndObject
       Object Selected $Menu
 	Object Copy $MenuCascade
@@ -359,6 +451,20 @@ SObject pwrs:Class
 	    Attr MethodName = "$Object-OpenObject"
 	  EndBody
 	EndObject
+        Object Help $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help"
+	    Attr MethodName = "$Object-Help"
+	    Attr FilterName = "$Object-HelpFilter"
+	  EndBody
+        EndObject
+        Object HelpClass $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help Class"
+	    Attr MethodName = "$Object-HelpClass"
+	    Attr FilterName = "$Object-HelpClassFilter"
+	  EndBody
+        EndObject
       EndObject
       Object Selected $Menu
 	Object Copy $MenuCascade
@@ -494,6 +600,20 @@ SObject pwrs:Class
 	    Attr MethodName = "$Object-OpenObject"
 	  EndBody
 	EndObject
+        Object Help $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help"
+	    Attr MethodName = "$Object-Help"
+	    Attr FilterName = "$Object-HelpFilter"
+	  EndBody
+        EndObject
+        Object HelpClass $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help Class"
+	    Attr MethodName = "$Object-HelpClass"
+	    Attr FilterName = "$Object-HelpClassFilter"
+	  EndBody
+        EndObject
       EndObject
       Object Selected $Menu
 	Object CopyObjects $MenuCascade
@@ -558,6 +678,20 @@ SObject pwrs:Class
 	    Attr MethodName = "$Object-OpenObject"
 	  EndBody
 	EndObject
+        Object Help $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help"
+	    Attr MethodName = "$Object-Help"
+	    Attr FilterName = "$Object-HelpFilter"
+	  EndBody
+        EndObject
+        Object HelpClass $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help Class"
+	    Attr MethodName = "$Object-HelpClass"
+	    Attr FilterName = "$Object-HelpClassFilter"
+	  EndBody
+        EndObject
       EndObject
     EndObject
     Object NavigatorPosos $Menu
@@ -568,6 +702,20 @@ SObject pwrs:Class
 	    Attr MethodName = "$Object-OpenObject"
 	  EndBody
 	EndObject
+        Object Help $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help"
+	    Attr MethodName = "$Object-Help"
+	    Attr FilterName = "$Object-HelpFilter"
+	  EndBody
+        EndObject
+        Object HelpClass $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help Class"
+	    Attr MethodName = "$Object-HelpClass"
+	    Attr FilterName = "$Object-HelpClassFilter"
+	  EndBody
+        EndObject
       EndObject
     EndObject
     Object NavigatorPoson $Menu
@@ -578,6 +726,20 @@ SObject pwrs:Class
 	    Attr MethodName = "$Object-OpenObject"
 	  EndBody
 	EndObject
+        Object Help $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help"
+	    Attr MethodName = "$Object-Help"
+	    Attr FilterName = "$Object-HelpFilter"
+	  EndBody
+        EndObject
+        Object HelpClass $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help Class"
+	    Attr MethodName = "$Object-HelpClass"
+	    Attr FilterName = "$Object-HelpClassFilter"
+	  EndBody
+        EndObject
       EndObject
     EndObject
     Object NavigatorPosmn $Menu
@@ -588,6 +750,20 @@ SObject pwrs:Class
 	    Attr MethodName = "$Object-OpenObject"
 	  EndBody
 	EndObject
+        Object Help $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help"
+	    Attr MethodName = "$Object-Help"
+	    Attr FilterName = "$Object-HelpFilter"
+	  EndBody
+        EndObject
+        Object HelpClass $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help Class"
+	    Attr MethodName = "$Object-HelpClass"
+	    Attr FilterName = "$Object-HelpClassFilter"
+	  EndBody
+        EndObject
       EndObject
     EndObject
     Object NavigatorPosms $Menu
@@ -598,6 +774,154 @@ SObject pwrs:Class
 	    Attr MethodName = "$Object-OpenObject"
 	  EndBody
 	EndObject
+        Object Help $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help"
+	    Attr MethodName = "$Object-Help"
+	    Attr FilterName = "$Object-HelpFilter"
+	  EndBody
+        EndObject
+        Object HelpClass $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help Class"
+	    Attr MethodName = "$Object-HelpClass"
+	    Attr FilterName = "$Object-HelpClassFilter"
+	  EndBody
+        EndObject
+      EndObject
+    EndObject
+    Object RtXtt $RtMenu
+      Object OpenGraph $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Graph"
+	  Attr MethodName = "$Object-OpenGraph"
+	  Attr FilterName = "$Object-OpenGraphFilter"
+	EndBody
+      EndObject
+      Object OpenTrend $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Trend"
+	  Attr MethodName = "$Object-OpenTrend"
+	  Attr FilterName = "$Object-OpenTrendFilter"
+	EndBody
+      EndObject
+      Object HistEvent $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Hist Event..."
+	  Attr MethodName = "$Object-HistEvent"
+	  Attr FilterName = "$Object-HistEventFilter"
+	EndBody
+      EndObject
+      Object Help $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Help"
+	  Attr MethodName = "$Object-Help"
+	  Attr FilterName = "$Object-HelpFilter"
+	EndBody
+      EndObject
+      Object Separator1 $MenuSeparator
+      EndObject
+      Object OpenObject $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Open Object"
+	  Attr MethodName = "$Object-OpenObject"
+	  Attr FilterName = "$Object-OpenObjectFilter"
+	EndBody
+      EndObject
+      Object OpenTrace $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Open Plc"
+	  Attr MethodName = "$Object-OpenTrace"
+	  Attr FilterName = "$Object-OpenTraceFilter"
+	EndBody
+      EndObject
+      Object RtNavigator $MenuButton
+	Body SysBody
+	  Attr ButtonName = "RtNavigator"
+	  Attr MethodName = "$Object-RtNavigator"
+	  Attr FilterName = "$Object-RtNavigatorFilter"
+	EndBody
+      EndObject
+      Object OpenClassGraph $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Class Graph"
+	  Attr MethodName = "$Object-OpenClassGraph"
+	  Attr FilterName = "$Object-OpenClassGraphFilter"
+	EndBody
+      EndObject
+      Object OpenCrossref $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Crossreferences"
+	  Attr MethodName = "$Object-OpenCrossref"
+	  Attr FilterName = "$Object-OpenCrossrefFilter"
+	EndBody
+      EndObject
+      Object HelpClass $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Help Class"
+	  Attr MethodName = "$Object-HelpClass"
+	  Attr FilterName = "$Object-HelpClassFilter"
+	EndBody
+      EndObject
+      Object DataSheet $MenuButton
+	Body SysBody
+	  Attr ButtonName = "DataSheet"
+	  Attr MethodName = "$Object-DataSheet"
+	  Attr FilterName = "$Object-DataSheetFilter"
+	EndBody
+      EndObject
+      Object Collect $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Collect"
+	  Attr MethodName = "$Object-Collect"
+	  Attr FilterName = "$Object-CollectFilter"
+	EndBody
+      EndObject
+    EndObject
+    Object RtXttAttribute $RtMenu
+      Object OpenTypeGraph $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Type Graph..."
+	  Attr MethodName = "$Object-OpenTypeGraph"
+	  Attr FilterName = "$Object-OpenTypeGraphFilter"
+	EndBody
+      EndObject
+      Object RefOpenObject $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Open Object..."
+	  Attr MethodName = "$Object-RefOpenObject"
+	  Attr FilterName = "$Object-IsRefAttribute"
+	EndBody
+      EndObject
+      Object RefRtNavigator $MenuButton
+	Body SysBody
+	  Attr ButtonName = "RtNavigator"
+	  Attr MethodName = "$Object-RefRtNavigator"
+	  Attr FilterName = "$Object-IsRefAttribute"
+	EndBody
+      EndObject
+      Object OpenURL $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Open URL..."
+	  Attr MethodName = "$Object-OpenURL"
+	  Attr FilterName = "$Object-IsURLAttribute"
+	EndBody
+      EndObject
+      Object Collect $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Collect"
+	  Attr MethodName = "$Object-Collect"
+	  Attr FilterName = "$Object-CollectFilter"
+	EndBody
+      EndObject
+    EndObject
+    Object RtXttCrossref $RtMenu
+      Object CrrOpenTrace $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Open Plc..."
+	  Attr MethodName = "$Object-CrrOpenTrace"
+	  Attr FilterName = "$Object-CrrOpenTraceFilter"
+	EndBody
       EndObject
     EndObject
   EndObject

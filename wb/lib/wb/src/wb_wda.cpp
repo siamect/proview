@@ -45,6 +45,7 @@ extern "C" {
 #include "wb_wdanav.h"
 #include "wb_wtt.h"
 #include "wb_wnav.h"
+#include "co_xhelp.h"
 
 
 // Static member elements
@@ -232,7 +233,7 @@ static void wda_activate_prevattr( Widget w, Wda *wda, XmAnyCallbackStruct *data
 
 static void wda_activate_help( Widget w, Wda *wda, XmAnyCallbackStruct *data)
 {
-  // Not yet implemented
+  XHelp::dhelp( "spreadsheet editor", 0, navh_eHelpFile_Base, 0, true);
 }
 
 static void wda_create_msg_label( Widget w, Wda *wda, XmAnyCallbackStruct *data)

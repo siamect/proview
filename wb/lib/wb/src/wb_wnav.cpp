@@ -19,7 +19,6 @@ extern "C" {
 #include "co_dcli.h"
 #include "co_msg.h"
 #include "co_time.h"
-#include "co_api.h"
 #include "pwr_baseclasses.h"
 #include "wb_wnav_msg.h"
 #include "wb_ldh.h"
@@ -43,12 +42,14 @@ extern "C" {
 #include "flow_browapi.h"
 #include "flow_browwidget.h"
 
+#include "wb_wnav.h"
+#include "wb_wnav_item.h"
+
 extern "C" {
 #include "flow_x.h"
 #include "wb_wtt_api.h"
+#include "co_api.h"
 }
-#include "wb_wnav.h"
-#include "wb_wnav_item.h"
 
 #define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
 #define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
@@ -1392,12 +1393,6 @@ static int wnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
           if ( wnav->gbl.advanced_user && wnav->change_value_cb)
             (wnav->change_value_cb)( wnav->parent_ctx);
           break;
-        case wnav_eItemType_Help: 
-	  ((WItemHelp *)item)->open_children( wnav, 0, 0);
-          break;
-        case wnav_eItemType_HelpBold: 
-	  ((WItemHelpBold *)item)->open_children( wnav, 0, 0);
-          break;
         case wnav_eItemType_AttrArray: 
 	  ((WItemAttrArray *)item)->open_attributes( 0, 0);
           break;
@@ -1530,18 +1525,6 @@ static int wnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
               break;
             case wnav_eItemType_Command: 
 	      ((WItemCommand *)item)->open_children( wnav,
-			event->object.x, event->object.y);
-              break;
-            case wnav_eItemType_Help: 
-              ((WItemHelp *)item)->open_children( wnav,
-			event->object.x, event->object.y);
-              break;
-            case wnav_eItemType_HelpBold: 
-              ((WItemHelpBold *)item)->open_children( wnav,
-			event->object.x, event->object.y);
-              break;
-            case wnav_eItemType_HelpHeader: 
-              ((WItemHelpHeader *)item)->close( wnav,
 			event->object.x, event->object.y);
               break;
             case wnav_eItemType_Volume: 

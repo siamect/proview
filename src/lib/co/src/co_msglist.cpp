@@ -111,6 +111,23 @@ void MsgListBrow::create_nodeclasses()
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
 		0);
 
+  // Nodeclass for Fatal
+  brow_CreateNodeClass( ctx, "Fatal", 
+		flow_eNodeGroup_Common, &nc_fatal);
+  brow_AddFrame( nc_fatal, 0, 0, 35, 0.8, flow_eDrawType_Line, -1, 1);
+  brow_AddAnnotPixmap( nc_fatal, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
+  brow_AddFilledRect( nc_fatal, 0.8, 0.15, 0.4, 0.4, flow_eDrawType_LineRed);
+  brow_AddRect( nc_fatal, 0.8, 0.15, 0.4, 0.4, flow_eDrawType_Line, 2, 0);
+  brow_AddAnnot( nc_fatal, 1.4, 0.6, 0,
+		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		0);
+  brow_AddAnnot( nc_fatal, 2.2, 0.6, 1,
+		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		0);
+  brow_AddAnnot( nc_fatal, 9, 0.6, 2,
+		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		0);
+
   // Nodeclass for Warning
   brow_CreateNodeClass( ctx, "Warning", 
 		flow_eNodeGroup_Common, &nc_warning);
@@ -528,7 +545,7 @@ ItemMsg::ItemMsg( MsgList *item_msglist, char *item_name,
     strcpy( type_str, "W");
     break;
   case 'F':
-    brow_CreateNode( msglist->brow->ctx, "Fatal", msglist->brow->nc_error,
+    brow_CreateNode( msglist->brow->ctx, "Fatal", msglist->brow->nc_fatal,
 		dest, dest_code, (void *) this, 1, &node);
     strcpy( type_str, "F");
     break;

@@ -66,7 +66,8 @@ enum foe_e_popupmenu
 	foe_e_popupmenu_paste		= 1 << 4,
 	foe_e_popupmenu_copy		= 1 << 5,
 	foe_e_popupmenu_cut		= 1 << 6,
-	foe_e_popupmenu_printselect	= 1 << 7
+	foe_e_popupmenu_printselect	= 1 << 7,
+	foe_e_popupmenu_helpclass	= 1 << 8
 };
 
 /* Foedit info structure  */
@@ -114,6 +115,7 @@ struct s_widgets
   Widget	pop_copy;
   Widget	pop_cut;
   Widget	pop_printselect;
+  Widget	pop_helpclass;
   Widget	con_palette;
   Widget	node_palette;
   Widget	nav_palette;

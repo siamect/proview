@@ -211,6 +211,7 @@ int wb_vrepwbl::load( const char *fname)
   int file_cnt_sort = 0;
 
   rsts = LDH__SUCCESS;
+  wblparser_error_cnt = 0;
 
   MsgWindow::dset_nodraw();
 
@@ -273,9 +274,9 @@ int wb_vrepwbl::load( const char *fname)
     root_object->postBuild();
   }
   // info();
-  if ( error_cnt) {
+  if ( error_cnt || wblparser_error_cnt) {
     char str[80];
-    sprintf( str, "Errors when loading volume: %d errors found", error_cnt);
+    sprintf( str, "Errors when loading volume: %d errors found", error_cnt + wblparser_error_cnt);
     MsgWindow::message( 'F', str);
   }
   else

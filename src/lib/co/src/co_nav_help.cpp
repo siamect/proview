@@ -80,7 +80,8 @@ static int	help_remove_spaces(
 **************************************************************************/
 
 int	NavHelp::help( char *help_key, char *help_bookmark, 
-		navh_eHelpFile file_type, char *file_name, void **book_mark)
+		       navh_eHelpFile file_type, char *file_name, void **book_mark,
+		       bool strict)
 {
   char	filestr[200];
   FILE	*file;
@@ -161,7 +162,7 @@ int	NavHelp::help( char *help_key, char *help_bookmark,
       }
 
       sts = help( help_key, help_bookmark, navh_eHelpFile_Other, 
- 		  include_file, book_mark);
+ 		  include_file, book_mark, strict);
       if ( ODD(sts) && !print_all)
       {
         fclose( file);
@@ -181,8 +182,8 @@ int	NavHelp::help( char *help_key, char *help_bookmark,
       if ( !print_all) {
         if ( key_nr == subject_nr ) {
           for ( i = 0; i < key_nr; i++) {
-            if ( strncmp( subject_part[i], key_part[i], strlen(key_part[i]))
-			  == 0) {
+            if ( (!strict && strncmp( subject_part[i], key_part[i], strlen(key_part[i])) == 0) ||
+		 (strict && strcmp( subject_part[i], key_part[i]) == 0)) {
               if ( i == key_nr - 1)
                 hit = 1;
             }

@@ -33,6 +33,7 @@ int wnav_foe_new(
 	map_window,
 	access);
   if ( ODD(sts) && cdh_ObjidIsNotNull(oid))
-    foe_center_object( *return_foectx, oid);
+    sts = foe_center_object( *return_foectx, oid);
+  return sts;
 }
 

@@ -45,6 +45,7 @@ extern "C" {
 #include "co_mrm_util.h"
 #include "co_wow.h"
 }
+#include "co_xhelp.h"
 
 #include "glow_growctx.h"
 #include "glow_growapi.h"
@@ -2130,7 +2131,7 @@ static void ge_activate_background_color( Widget w, ge_tCtx gectx, XmAnyCallback
 
 static void ge_activate_help( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
 {
-  // Not yet implemented
+  XHelp::dhelp( "ge editor", 0, navh_eHelpFile_Base, 0, true);
 }
 
 static void ge_create_cursor_position( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)

@@ -3683,7 +3683,7 @@ int gcg_wind_msg(
 	else
 	  printf("%s\n", msg);
 	if ( wind == 0)
-	    msgw_message_sts( sts, 0, 0);
+	  msgw_message_sts( sts, 0, 0);
 	else {
 	  char str[80] = "";
 
@@ -3761,8 +3761,9 @@ static int gcg_plc_msg(
 	  fprintf(logfile, "%s\n", msg);
 	else
 	  printf("%s\n", msg);
-	if ( cdh_ObjidIsNotNull( plcobjdid))
-	{
+	if ( cdh_ObjidIsNull( plcobjdid))
+	  msgw_message_sts( sts, 0, 0);
+	else {
 	  /* Get the full hierarchy name for the plc */
 	  status = ldh_ObjidToName( 
 		gcgctx->ldhses,
@@ -3773,6 +3774,7 @@ static int gcg_plc_msg(
 	    fprintf(logfile, "        in plcprogram  %s\n", hier_name);
 	  else
 	    printf("        in plcprogram  %s\n", hier_name);
+	  msgw_message_object( sts, "   in plcprogram", hier_name, plcobjdid);
 	}
 	if ( (sts & 2) && !(sts & 1))
 	  gcgctx->errorcount++;

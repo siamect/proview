@@ -43,9 +43,6 @@ typedef enum {
 	wnav_eItemType_Enum,
 	wnav_eItemType_Mask,
 	wnav_eItemType_ObjectName,
-	wnav_eItemType_Help,
-	wnav_eItemType_HelpBold,
-	wnav_eItemType_HelpHeader,
 	wnav_eItemType_File,
 	wnav_eItemType_Text,
 	wnav_eItemType_Crossref
@@ -174,40 +171,6 @@ class WItemObjectName : public WItem {
 
     int update();
     int get_value( char **value);	// The value should be freed with XtFree
-};
-
-class WItemHelp : public WItem {
-  public:
-    WItemHelp( WNav *wnav, char *item_name, char *text, char *text2, 
-	char *text3, char *item_link, char *item_bookmark, 
-	char *item_file_name, navh_eHelpFile help_file_type, int help_index, brow_tNode dest, flow_eDest dest_code);
-    int			open_children( WNav *wnav, double x, double y);
-    char link[80];
-    char bookmark[80];
-    char file_name[80];
-    navh_eHelpFile	 file_type;
-    int  index;
-};
-
-class WItemHelpBold : public WItem {
-  public:
-    WItemHelpBold( WNav *wnav, char *item_name, char *text, char *text2, 
-	char *text3, char *item_link, char *item_bookmark, 
-	char *item_file_name, navh_eHelpFile help_file_type, int help_index, 
-	brow_tNode dest, flow_eDest dest_code);
-    int			open_children( WNav *wnav, double x, double y);
-    char link[80];
-    char bookmark[80];
-    char file_name[80];
-    navh_eHelpFile	 file_type;
-    int  index;
-};
-
-class WItemHelpHeader : public WItem {
-  public:
-    WItemHelpHeader( WNav *wnav, char *item_name, char *title,
-	brow_tNode dest, flow_eDest dest_code);
-    int 		close( WNav *wnav, double x, double y);
 };
 
 class WItemFile : public WItem {

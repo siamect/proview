@@ -53,6 +53,7 @@ class MsgListBrow {
     brow_tNodeClass 	nc_error;
     brow_tNodeClass 	nc_warning;
     brow_tNodeClass 	nc_success;
+    brow_tNodeClass 	nc_fatal;
     brow_tNodeClass 	nc_default;
     flow_sAnnotPixmap 	*pixmap_morehelp;
 

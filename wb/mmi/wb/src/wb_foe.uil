@@ -142,10 +142,8 @@ procedure
 	foe_activate_getobj (integer); !SG 11.04.91
 	foe_activate_expand (integer);
 	foe_activate_compress (integer);
-	foe_activate_helpoverview (integer); !SG 11.04.91
-	foe_activate_helpobject (integer); !SG 11.04.91
-	foe_activate_helpmouse (integer); !SG 11.04.91
-	foe_activate_helpmenu (integer); !SG 11.04.91
+	foe_activate_helpclass( integer);
+	foe_activate_help (integer);
 
 
         foe_create_adb(integer); !SG 24.02.91
@@ -176,6 +174,7 @@ procedure
 	foe_create_pop_moveregion(integer);
 	foe_create_pop_delete(integer);
 	foe_create_pop_printselect(integer);
+	foe_create_pop_helpclass(integer);
 	foe_popdown_pop(integer);
 
 value
@@ -1442,65 +1441,15 @@ object help_entry : XmCascadeButton
              {
                  arguments
                  {
-  	           XmNlabelString = compound_string("On Context");
-		   XmNmnemonic = keysym('C');
+  	           XmNlabelString = compound_string("Help");
+		   XmNmnemonic = keysym('H');
 		   XmNfontList	    = menu_font;
 	         };
   		 callbacks
 	         {
-	 	    XmNactivateCallback = procedure foe_activate_helpmenu  (foe_ctx);
-	 	    XmNhelpCallback = procedure foe_activate_helpmenu  (foe_ctx);
+	 	    XmNactivateCallback = procedure foe_activate_help(foe_ctx);
 	         };
 	     }; !Push_button
-
-             XmPushButton
-             {
-                 arguments
-                 {
-  	           XmNlabelString = compound_string("On Window");
-		   XmNmnemonic = keysym('W');
-		   XmNfontList	    = menu_font;
-	         };
-  		 callbacks
-	         {
-	 	    XmNactivateCallback = procedure foe_activate_helpoverview  (foe_ctx);
-	 	    XmNhelpCallback = procedure foe_activate_helpoverview  (foe_ctx);
-	         };
-	      }; !Push_button
-
-             XmPushButton
-             {
-                 arguments
-                 {
-  	           XmNlabelString = compound_string("On Objects");
-		   XmNmnemonic = keysym('O');
-		   XmNfontList	    = menu_font;
-	         };
-  		 callbacks
-	         {
-	 	    XmNactivateCallback = procedure foe_activate_helpobject (foe_ctx);
-	 	    XmNhelpCallback = procedure foe_activate_helpobject  (foe_ctx);
-	         };
-	      }; !Push_button
-
-
-             XmPushButton
-             {
-                 arguments
-                 {
-  	           XmNlabelString = compound_string("On Mouse");
-		   XmNmnemonic = keysym('M');
-		   XmNfontList	    = menu_font;
-	         };
-  		 callbacks
-	         {
-            	   XmNactivateCallback = procedure foe_activate_helpmouse (foe_ctx);
-            	   XmNhelpCallback = procedure foe_activate_helpmouse (foe_ctx);
-	         };
-	      }; !Push_button
-
-
-
           }; !Controls
 
 	}; !XmPulldownMenu
@@ -1648,6 +1597,20 @@ object   edit_popup: XmPopupMenu
                  {
 		   XmNactivateCallback = procedure foe_activate_delete(foe_ctx);
 		   MrmNcreateCallback = procedure foe_create_pop_delete(foe_ctx);
+                 };
+	      }; !Push_button
+
+	     XmPushButton
+             {
+                 arguments
+                 {
+  	           XmNlabelString = compound_string("Help Class");
+		   XmNfontList	    = menu_font;
+	         };
+	         callbacks
+                 {
+		   XmNactivateCallback = procedure foe_activate_helpclass(foe_ctx);
+		   MrmNcreateCallback = procedure foe_create_pop_helpclass(foe_ctx);
                  };
 	      }; !Push_button
 

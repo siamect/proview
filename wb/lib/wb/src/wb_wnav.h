@@ -44,6 +44,10 @@ extern "C" {
 #include "co_wow.h"
 #endif
 
+#ifndef co_xhelp_h
+#include "co_xhelp.h"
+#endif
+
 #ifndef wb_h
 #include "wb.h"
 #endif
@@ -346,13 +350,6 @@ class WNav {
     int prompt_dialog( char *title, char *text, char **value);
     int show_file( char	*filename, char *intitle, int hide_dir);
     void select_object( brow_tObject object);
-
-
-
-    // Help module member functions
-    int help( char *key, char *help_bookmark, navh_eHelpFile file_type, char *file_name);
-    int	help_index( navh_eHelpFile file_type, char *file_name);
-    int	help_index_file( navh_eHelpFile file_type, char *file_name);
 
     // Crr module member functions
     int	crr_signal( char *filename, char *signalname, brow_tNode parent_node);

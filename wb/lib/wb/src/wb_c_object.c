@@ -523,6 +523,110 @@ static pwr_tStatus SetDefaults (
   return sts;
 }
 
+//
+//  Help for class i palette
+//
+static pwr_tStatus ClassHelp( ldh_sMenuCall *ip) 
+{
+  pwr_tStatus sts;
+  int size;
+  char cname[32];
+  char cmd[200];
+  pwr_tCid cid;
+
+  cid = cdh_ClassObjidToId( ip->Pointed.Objid);
+
+  sts = ldh_ClassIdToName( ip->PointedSession, cid, cname, sizeof(cname), &size);
+  if ( EVEN(sts)) return sts;
+
+  if ( cname[0] == '$')
+    sprintf( cmd, "help %s /strict", &cname[1]);
+  else
+    sprintf( cmd, "help %s /strict", cname);
+
+  wtt_command( ip->EditorContext, cmd);
+  return 1;
+}
+
+//
+// Help for class of an object in wnav
+//
+static pwr_tStatus HelpClass( ldh_sMenuCall *ip) 
+{
+  pwr_tStatus sts;
+  int size;
+  char cname[32];
+  char cmd[200];
+  pwr_tCid cid;
+
+  sts = ldh_GetObjectClass( ip->PointedSession, ip->Pointed.Objid, &cid);
+  if ( EVEN(sts)) return sts;
+
+  sts = ldh_ClassIdToName( ip->PointedSession, cid, cname, sizeof(cname), &size);
+  if ( EVEN(sts)) return sts;
+
+  if ( cname[0] == '$')
+    sprintf( cmd, "help %s /strict", &cname[1]);
+  else
+    sprintf( cmd, "help %s /strict", cname);
+
+  wtt_command( ip->EditorContext, cmd);
+  return 1;
+}
+
+static pwr_tStatus HelpClassFilter( ldh_sMenuCall *ip) 
+{
+  return 1;
+}
+
+static pwr_tStatus Help( ldh_sMenuCall *ip) 
+{
+  pwr_tStatus sts;
+  int size;
+  char cmd[200];
+  char *topic;
+
+  sts = ldh_GetObjectPar( ip->PointedSession, ip->Pointed.Objid, "RtBody",
+			  "HelpTopic", &topic, &size);
+  if ( EVEN(sts))
+    sts = ldh_GetObjectPar( ip->PointedSession, ip->Pointed.Objid, "SysBody",
+			    "HelpTopic", &topic, &size);
+  if ( EVEN(sts)) return LDH__SUCCESS;
+
+  if ( strcmp( topic, "") == 0) {
+    free( topic);
+    return LDH__SUCCESS;
+  }
+
+  sprintf( cmd, "help %s /strict", topic);
+  free( topic);
+
+  wtt_command( ip->EditorContext, cmd);
+  return 1;
+}
+
+static pwr_tStatus HelpFilter( ldh_sMenuCall *ip) 
+{
+  pwr_tStatus sts;
+  int size;
+  char *topic;
+
+  sts = ldh_GetObjectPar( ip->PointedSession, ip->Pointed.Objid, "RtBody",
+			  "HelpTopic", &topic, &size);
+  if ( EVEN(sts))
+    sts = ldh_GetObjectPar( ip->PointedSession, ip->Pointed.Objid, "SysBody",
+			    "HelpTopic", &topic, &size);
+  if ( EVEN(sts)) return 0;
+
+  if ( strcmp( topic, "") == 0) {
+    free( topic);
+    return 0;
+  }
+
+  return 1;
+}
+
+
 pwr_dExport pwr_BindMethods($Object) = {
   pwr_BindMethod(CreateObject),
   pwr_BindMethod(CopyObject),
@@ -537,5 +641,14 @@ pwr_dExport pwr_BindMethods($Object) = {
   pwr_BindMethod(OpenObject),
   pwr_BindMethod(OpenTemplate),
   pwr_BindMethod(SetDefaults),
+  pwr_BindMethod(ClassHelp),
+  pwr_BindMethod(HelpClass),
+  pwr_BindMethod(HelpClassFilter),
+  pwr_BindMethod(Help),
+  pwr_BindMethod(HelpFilter),
   pwr_NullMethod
 };
+
+
+
+

@@ -14,7 +14,6 @@ extern "C" {
 #include "co_dcli.h"
 #include "pwr_baseclasses.h"
 #include "co_ccm_msg.h"
-#include "co_api.h"
 #include "wb_ldh.h"
 #include "flow_x.h"
 }
@@ -46,6 +45,9 @@ extern "C" {
 #include "co_dcli_msg.h"
 #include "wb_wnav_msg.h"
 
+extern "C" {
+#include "co_api.h"
+}
 
 #define MENU_BAR      1
 #define MENU_PULLDOWN 2
@@ -177,7 +179,7 @@ static Widget wnav_build_menu(
 }
 
 
-Widget wtt_create_popup_menu( Wtt *wtt, pwr_tObjid objid)
+Widget wtt_create_popup_menu( Wtt *wtt, pwr_tObjid objid, pwr_tCid cid)
 {
   pwr_tStatus 	sts;
   int 		i;
@@ -192,63 +194,80 @@ Widget wtt_create_popup_menu( Wtt *wtt, pwr_tObjid objid)
   if (mcp == NULL)
     mcp = (ldh_sMenuCall *)XtCalloc(1, sizeof(ldh_sMenuCall));
 
-  mcp->EditorContext = (void *)wtt;
-  mcp->WindowContext = (void *)wtt->wnav_form;
-  mcp->PointedSet = ldh_eMenuSet_Object;
+  if ( cid != pwr_cNCid) {
+    // Popup in palette
+    mcp->EditorContext = (void *)wtt;
+    mcp->WindowContext = (void *)wtt->palette_form;
+    mcp->PointedSet = ldh_eMenuSet_Class;
 
-  mcp->Pointed.Objid = objid;
+    mcp->Pointed.Objid = cdh_ClassIdToObjid( cid);
 
-  mcp->PointedSession = wtt->ldhses;
-  mcp->Pointed.Size = 0;
-  mcp->Pointed.Offset = 0;
-  mcp->Pointed.Flags.m = 0;
-  mcp->SelectedSet = ldh_eMenuSet_None;
-  mcp->SelectedSession = wtt->ldhses;
-
-
-  // Fetch selections
-  if ( wtt->wnav_mapped)
-    wtt->wnav->get_select( &sel1_list, &sel1_is_attr, &sel1_cnt);
-  else
-    sel1_cnt = 0;
-  if ( wtt->wnavnode_mapped)
-    wtt->wnavnode->get_select( &sel2_list, &sel2_is_attr, &sel2_cnt);
-  else
-    sel2_cnt = 0;
-
-  if (sel1_cnt + sel2_cnt != 0)
-  {
-    mcp->SelectedSet = sel1_cnt + sel2_cnt > 1 ? ldh_eMenuSet_Many : ldh_eMenuSet_Object;
-  }  
-
-  mcp->Selected = (pwr_sAttrRef *) XtCalloc( sel1_cnt + sel2_cnt + 1, sizeof (pwr_sAttrRef));
-  if ( sel1_cnt)
-    memcpy( mcp->Selected, sel1_list, sel1_cnt * sizeof(pwr_sAttrRef));
-  if ( sel2_cnt)
-    memcpy( &mcp->Selected[sel1_cnt], sel2_list, sel2_cnt * sizeof(pwr_sAttrRef));
-  if ( sel1_cnt) {
-    free( sel1_list);
-    free( sel1_is_attr);
+    mcp->PointedSession = wtt->ldhses;
+    mcp->Pointed.Size = 0;
+    mcp->Pointed.Offset = 0;
+    mcp->Pointed.Flags.m = 0;
+    mcp->SelectedSet = ldh_eMenuSet_None;
+    mcp->SelectedSession = wtt->ldhses;
   }
-  if ( sel2_cnt) {
-    free( sel2_list);
-    free( sel2_is_attr);
-  }
+  else {
+    // Popup in wnav
+    mcp->EditorContext = (void *)wtt;
+    mcp->WindowContext = (void *)wtt->wnav_form;
+    mcp->PointedSet = ldh_eMenuSet_Object;
 
-  mcp->Selected[sel1_cnt + sel2_cnt].Objid = pwr_cNObjid;
-  mcp->SelectCount = sel1_cnt + sel2_cnt;
+    mcp->Pointed.Objid = objid;
 
-  if ( sel1_cnt + sel2_cnt == 0) {
-    pwr_tCid cid;
+    mcp->PointedSession = wtt->ldhses;
+    mcp->Pointed.Size = 0;
+    mcp->Pointed.Offset = 0;
+    mcp->Pointed.Flags.m = 0;
+    mcp->SelectedSet = ldh_eMenuSet_None;
+    mcp->SelectedSession = wtt->ldhses;
 
-    sts = wtt->palette->get_select( &cid);
-    if ( ODD(sts)) {
-      XtFree( (char *) mcp->Selected);
-      mcp->Selected = (pwr_sAttrRef *) XtCalloc( 2, sizeof (pwr_sAttrRef));
-      mcp->SelectedSet = ldh_eMenuSet_Class;
-      mcp->Selected[0].Objid = cdh_ClassIdToObjid( cid);
-      mcp->Selected[1].Objid = pwr_cNObjid;
-      mcp->SelectCount = 1;
+
+    // Fetch selections
+    if ( wtt->wnav_mapped)
+      wtt->wnav->get_select( &sel1_list, &sel1_is_attr, &sel1_cnt);
+    else
+      sel1_cnt = 0;
+    if ( wtt->wnavnode_mapped)
+      wtt->wnavnode->get_select( &sel2_list, &sel2_is_attr, &sel2_cnt);
+    else
+      sel2_cnt = 0;
+
+    if (sel1_cnt + sel2_cnt != 0) {
+      mcp->SelectedSet = sel1_cnt + sel2_cnt > 1 ? ldh_eMenuSet_Many : ldh_eMenuSet_Object;
+    }  
+
+    mcp->Selected = (pwr_sAttrRef *) XtCalloc( sel1_cnt + sel2_cnt + 1, sizeof (pwr_sAttrRef));
+    if ( sel1_cnt)
+      memcpy( mcp->Selected, sel1_list, sel1_cnt * sizeof(pwr_sAttrRef));
+    if ( sel2_cnt)
+      memcpy( &mcp->Selected[sel1_cnt], sel2_list, sel2_cnt * sizeof(pwr_sAttrRef));
+    if ( sel1_cnt) {
+      free( sel1_list);
+      free( sel1_is_attr);
+    }
+    if ( sel2_cnt) {
+      free( sel2_list);
+      free( sel2_is_attr);
+    }
+
+    mcp->Selected[sel1_cnt + sel2_cnt].Objid = pwr_cNObjid;
+    mcp->SelectCount = sel1_cnt + sel2_cnt;
+
+    if ( sel1_cnt + sel2_cnt == 0) {
+      pwr_tCid cid;
+
+      sts = wtt->palette->get_select( &cid);
+      if ( ODD(sts)) {
+	XtFree( (char *) mcp->Selected);
+	mcp->Selected = (pwr_sAttrRef *) XtCalloc( 2, sizeof (pwr_sAttrRef));
+	mcp->SelectedSet = ldh_eMenuSet_Class;
+	mcp->Selected[0].Objid = cdh_ClassIdToObjid( cid);
+	mcp->Selected[1].Objid = pwr_cNObjid;
+	mcp->SelectCount = 1;
+      }
     }
   }
 

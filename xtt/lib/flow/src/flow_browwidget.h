@@ -12,6 +12,7 @@
 #pragma member_alignment
 #endif
 
+#include <X11/IntrinsicP.h>
 #include <X11/CoreP.h>
 #include <X11/CompositeP.h>
 

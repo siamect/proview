@@ -556,7 +556,44 @@ static void wtt_create_popup_menu_cb( void *ctx, pwr_tObjid objid,
   XtSetArg( args[1], XmNy, &y3);
   XtGetValues( wtt->toplevel, args, 2);
 
-  popup = wtt_create_popup_menu( wtt, objid);
+  popup = wtt_create_popup_menu( wtt, objid, pwr_cNCid);
+  if ( !popup)
+    return;
+
+  i = 0;
+  XtSetArg(args[i], XmNx, x + x1 + x2 + x3 + 8);i++;
+  XtSetArg(args[i], XmNy, y + y1 + y2 + y3);i++;
+  XtSetValues( popup ,args,i);
+
+//    XmMenuPosition(popup, (XButtonPressedEvent *)data->event);
+  XtManageChild(popup);
+}
+
+static void wtt_create_pal_popup_menu_cb( void *ctx, pwr_tCid cid,
+		int x, int y)
+{
+  Wtt *wtt = (Wtt *) ctx;
+  Widget popup;
+  Arg args[5]; 
+  int i;
+  short x1, y1, x2, y2, x3, y3;
+
+  if ( !wtt->ldhses)
+    return;
+
+  XtSetArg( args[0], XmNx, &x1);
+  XtSetArg( args[1], XmNy, &y1);
+  XtGetValues( wtt->palette_form, args, 2);
+
+  XtSetArg( args[0], XmNx, &x2);
+  XtSetArg( args[1], XmNy, &y2);
+  XtGetValues( XtParent(wtt->palette_form), args, 2);
+
+  XtSetArg( args[0], XmNx, &x3);
+  XtSetArg( args[1], XmNy, &y3);
+  XtGetValues( wtt->toplevel, args, 2);
+
+  popup = wtt_create_popup_menu( wtt, pwr_cNObjid, cid);
   if ( !popup)
     return;
 
@@ -2181,6 +2218,7 @@ static void wtt_activate_scriptproj( Widget w, Wtt *wtt, XmAnyCallbackStruct *da
 static void wtt_activate_scriptbase( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
 {
   char cmd[80] = "show script /option=base";
+
   if ( !wtt->focused_wnav)
     wtt->set_focus_default();
   wtt->focused_wnav->command( cmd);
@@ -2188,16 +2226,20 @@ static void wtt_activate_scriptbase( Widget w, Wtt *wtt, XmAnyCallbackStruct *da
 
 static void wtt_activate_help( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
 {
+  char cmd[80] = "help overview /base";
+
   if ( !wtt->focused_wnav)
     wtt->set_focus_default();
-  wtt->focused_wnav->help("overview", "", navh_eHelpFile_Base, NULL);
+  wtt->focused_wnav->command( cmd);
 }
 
 static void wtt_activate_help_project( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
 {
+  char cmd[80] = "help index /project";
+
   if ( !wtt->focused_wnav)
     wtt->set_focus_default();
-  wtt->focused_wnav->help("index", "", navh_eHelpFile_Project, NULL);
+  wtt->focused_wnav->command( cmd);
 }
 
 void wtt_create_menubutton( Widget w, Wtt *wtt) 
@@ -3532,6 +3574,7 @@ Wtt::Wtt(
 		&palette_widget, &sts);
   palette->set_focus_cb = &wtt_set_focus_cb;
   palette->traverse_focus_cb = &wtt_traverse_focus;
+  palette->create_popup_menu_cb = &wtt_create_pal_popup_menu_cb;
 
   i = 0;
   XtSetArg(args[i],XmNwidth, WTT_PALETTE_WIDTH);i++;

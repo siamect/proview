@@ -2854,6 +2854,13 @@ int foe_modify_popup (
 		     (popupmenu_mask & foe_e_popupmenu_printselect ) )
 	  XtManageChild(foectx->widgets.pop_printselect );
 
+	if ( (foectx->popupmenu_mask & foe_e_popupmenu_helpclass ) &&
+		     !(popupmenu_mask & foe_e_popupmenu_helpclass ) )
+	  XtUnmanageChild(foectx->widgets.pop_helpclass );
+	else if ( !(foectx->popupmenu_mask & foe_e_popupmenu_helpclass ) &&
+		     (popupmenu_mask & foe_e_popupmenu_helpclass ) )
+	  XtManageChild(foectx->widgets.pop_helpclass );
+
 	foectx->popupmenu_mask = popupmenu_mask;
 	
 	return FOE__SUCCESS ;

@@ -33,6 +33,7 @@
 #include "wb_tra.h"
 #include "wb_foe_callbacks.h"
 #include "wb_foe_api.h"
+#include "co_api.h"
 #include "pwr_baseclasses.h"
 
 #define	BEEP	    putchar( '\7' );
@@ -2149,7 +2150,7 @@ static void foe_activate_compress (
 
 /*************************************************************************
 *
-* Name:		void	foe_activate_helpoverview()
+* Name:		void	foe_activate_help()
 *
 * Type		void
 *
@@ -2160,25 +2161,22 @@ static void foe_activate_compress (
 *
 *
 * Description:
-*	Send to the routine that will display the help widget the title of 
-*	the first topic.
-*	This title is given by the widget from where the callback is isued.
-* SG 14.04.91 
+*	Display help window for topic plc editor
+*
 **************************************************************************/
 
-static void foe_activate_helpoverview (w, foectx, data)
+static void foe_activate_help(w, foectx, data)
 Widget	w;
 foe_ctx	foectx;
 XmAnyCallbackStruct	*data;
 {
-
-  foe_display_help ( foectx, "Help" ) ;
-
+  xhelp_help( "plc editor", 0, navh_eHelpFile_Base, 0, 1);
 }
+
 
 /*************************************************************************
 *
-* Name:		void	foe_activate_helpobject()
+* Name:		void	foe_activate_helpclass()
 *
 * Type		void
 *
@@ -2189,79 +2187,38 @@ XmAnyCallbackStruct	*data;
 *
 *
 * Description:
-*	Send to the routine that will display the help widget the title of 
-*	the first topic.
-*	This title is given by the widget from where the callback is isued.
-* SG 14.04.91 
+*	Display class help for selected object
+*
 **************************************************************************/
 
-static void foe_activate_helpobject (w, foectx, data)
+static void foe_activate_helpclass(w, foectx, data)
 Widget	w;
 foe_ctx	foectx;
 XmAnyCallbackStruct	*data;
 {
+	unsigned long		node_count;
+	vldh_t_node		*nodelist;
+	vldh_t_wind		wind;
+	char			cname[32];
+	int			size;
+	int			sts;
 
-  foe_display_help ( foectx, "Help Objekt" ) ;
+	wind = foectx->grectx->window_object;
 
+	gre_get_selnodes( foectx->grectx, &node_count, &nodelist);
+	if ( node_count != 1 )
+	{
+	  foe_message( foectx, "Select one object");
+	  BEEP;
+	}
+
+	sts = ldh_ClassIdToName( wind->hw.ldhsession, nodelist[0]->ln.classid, cname,
+				 sizeof(cname), &size);
+	if ( EVEN(sts)) return;
+
+	xhelp_help( cname, 0, navh_eHelpFile_Base, 0, 1);
 }
-
-/*************************************************************************
-*
-* Name:		void	foe_activate_helpmouse()
-*
-* Type		void
-*
-* Type		Parameter	IOGF	Description
-* foe_ctx *	foectx		I	Context adress
-* Widget	w		I	neted widget
-* XmAnyCallbackStruct * data	I	callbackdata
-*
-*
-* Description:
-*	Send to the routine that will display the help widget the title of 
-*	the first topic.
-*	This title is given by the widget from where the callback is isued.
-* SG 14.04.91 
-**************************************************************************/
 
-static void foe_activate_helpmouse (w, foectx, data)
-Widget	w;
-foe_ctx	foectx;
-XmAnyCallbackStruct	*data;
-{
-
-  foe_display_help ( foectx, "Help MusFunktioner" ) ;
-
-}
-
-/*************************************************************************
-*
-* Name:		void	foe_activate_helpmenu()
-*
-* Type		void
-*
-* Type		Parameter	IOGF	Description
-* foe_ctx *	foectx		I	Context adress
-* Widget	w		I	neted widget
-* XmAnyCallbackStruct * data	I	callbackdata
-*
-*
-* Description:
-*	Send to the routine that will display the help widget the title of 
-*	the first topic.
-*	This title is given by the widget from where the callback is isued.
-* SG 14.04.91 
-**************************************************************************/
-
-static void foe_activate_helpmenu (w, foectx, data)
-Widget	w;
-foe_ctx	foectx;
-XmAnyCallbackStruct	*data;
-{
-
-  foe_display_help ( foectx, "Help Menu" ) ;
-
-}
 
 /*************************************************************************
 *
@@ -2718,6 +2675,14 @@ XmAnyCallbackStruct	*data;
 	foectx->widgets.pop_printselect = w ;
 }
 
+static void foe_create_pop_helpclass ( w , foectx, data)
+Widget	w;
+foe_ctx	foectx;
+XmAnyCallbackStruct	*data;
+{
+	foectx->widgets.pop_helpclass = w ;
+}
+
 static void foe_create_palette_object ( w , foectx, data)
 Widget	w;
 foe_ctx	foectx;
@@ -2990,10 +2955,8 @@ int foe_register_callbacks (
 	{"foe_activate_getobj",(XtPointer)foe_activate_getobj}, /* sg 11.04.91 */
 	{"foe_activate_expand",(XtPointer)foe_activate_expand},
 	{"foe_activate_compress",(XtPointer)foe_activate_compress},
-	{"foe_activate_helpoverview",(XtPointer)foe_activate_helpoverview},
-	{"foe_activate_helpobject",(XtPointer)foe_activate_helpobject},
-	{"foe_activate_helpmouse",(XtPointer)foe_activate_helpmouse},
-	{"foe_activate_helpmenu",(XtPointer)foe_activate_helpmenu},
+	{"foe_activate_helpclass",(XtPointer)foe_activate_helpclass},
+	{"foe_activate_help",(XtPointer)foe_activate_help},
 	{"foe_activate_trace_togg",(XtPointer)foe_activate_trace_togg},  
 	{"foe_activate_simulate_togg",(XtPointer)foe_activate_simulate_togg},  
 	{"foe_activate_view_togg",(XtPointer)foe_activate_view_togg},  
@@ -3038,6 +3001,7 @@ int foe_register_callbacks (
 	{"foe_create_pop_cut",(XtPointer)foe_create_pop_cut},
 	{"foe_create_pop_delete",(XtPointer)foe_create_pop_delete},
 	{"foe_create_pop_printselect",(XtPointer)foe_create_pop_printselect},
+	{"foe_create_pop_helpclass",(XtPointer)foe_create_pop_helpclass},
 	{"foe_popdown_pop",(XtPointer)foe_popdown_pop}
 	};
 

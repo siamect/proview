@@ -13,7 +13,7 @@ cflags		:= -c -g -Wall -DGNU_SOURCE -D_REENTRANT
 cxxflags 	:= $(cflags) 
 linkflags	:= -g -L/usr/local/lib -L$(pwr_lib) -L$(pwrp_lib) -lrt
 csetos		:= -DOS_LINUX=1 -DOS=linux -DHW_X86=1 -DHW=x86
-cinc		:= -I$(pwr_inc) -I$(pwrp_inc) -I/usr/local/include -I/usr/X11R6/include -I$(jdk)/include -I$(jdk)/include/linux
+cinc		:= -I$(pwr_inc) -I$(pwrp_inc) -I$(pwrp_cmn)/common/inc -I/usr/local/include -I/usr/X11R6/include -I$(jdk)/include -I$(jdk)/include/linux
 
 
 .SUFFIXES:
@@ -53,6 +53,10 @@ $(pwrp_obj)/%.cmsg: %.msg
 $(pwrp_root)/vax_eln/exe/%.exe : %.c
 	@ echo "cc eln $< $@"
 	@ rsh $(pwr_build_host_vax_eln) @pwr_cc '"'$(pwrp_root)'"' $(pwrp_projectname) "1" "1" $(tname)
+
+$(pwrp_root)/vax_eln/obj/%.obj : %.c
+	echo "cc eln $< $@"
+	rsh $(pwr_build_host_vax_eln) @pwr_cc '"'$(pwrp_root)'"' $(pwrp_projectname) "1" "2" $(tname)
 
 $(pwrp_root)/vax_eln/exe/%.sys : $(pwrp_load)/%.dat
 	@ echo "ebuild $(tname)"

@@ -8,15 +8,22 @@
 #include "wb_wblparserTokenTypes.hpp"
 #include "antlr/LLkParser.hpp"
 
+#line 8 "wb_wblparser.g"
+
+extern int wblparser_error_cnt;
+
+
+#line 19 "wb_wblparser.hpp"
 #line 4 "wb_wblparser.g"
 
 #include "wb_wblnode.h"
 
-#line 16 "wb_wblparser.hpp"
+#line 24 "wb_wblparser.hpp"
 class wb_wblparser : public ANTLR_USE_NAMESPACE(antlr)LLkParser, public wb_wblparserTokenTypes
  {
+void reportError(const RecognitionException& ex);
 #line 1 "wb_wblparser.g"
-#line 20 "wb_wblparser.hpp"
+#line 28 "wb_wblparser.hpp"
 protected:
 	wb_wblparser(ANTLR_USE_NAMESPACE(antlr)TokenBuffer& tokenBuf, int k);
 public:

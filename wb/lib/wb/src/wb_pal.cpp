@@ -133,6 +133,7 @@ static Boolean pal_sel_convert_cb(
     XtPointer	*value_return,
     unsigned long   *length_return,
     int	    *format_return);
+static void  pal_set_avoid_deadlock( Pal *pal, int time);
 
 //
 // Definition of item classes
@@ -1346,6 +1347,61 @@ static int pal_brow_cb( FlowCtx *ctx, flow_tEvent event)
       pal->displayed = 1;
       break;
     }
+    case flow_eEvent_MB3Press:
+    {
+      // Popup menu
+      pwr_tCid cid = pwr_cNCid;
+      Arg arg[4];
+      short x, y;
+
+      if ( !pal->create_popup_menu_cb)
+	break;
+
+      switch ( event->object.object_type)
+      {
+        case flow_eObjectType_Node:
+          brow_GetUserData( event->object.object, (void **)&item);
+	  switch ( item->type) {
+	  case pal_ePalItemType_Object:
+	    char name[32];
+	    int size;
+
+	    sts = ldh_ObjidToName( pal->ldhses, item->objid, ldh_eName_Object,
+			name, sizeof(name), &size);
+	    if ( EVEN(sts)) return sts;
+
+	    sts =  ldh_ClassNameToId( pal->ldhses, &cid, name);
+	    if ( EVEN(sts)) return sts;
+
+	    break;
+	  case pal_ePalItemType_Class:
+	    sts = ldh_ClassNameToId( pal->ldhses, &cid, ((PalItemClass *)item)->name);
+	    if ( EVEN(sts)) return sts;
+
+	    break;
+	  default:
+	    ;
+	  }
+      default:
+	;
+      }
+
+      if ( cid == pwr_cNCid)
+	break;
+      if ( pal->avoid_deadlock)
+        break;
+
+
+      XtSetArg( arg[0], XmNx, &x);
+      XtSetArg( arg[1], XmNy, &y);
+      XtGetValues( XtParent(pal->brow_widget), arg, 2);
+
+      (pal->create_popup_menu_cb)( pal->parent_ctx, cid,
+		event->any.x_pixel + x, event->any.y_pixel + y);
+      pal_set_avoid_deadlock( pal, 2000);
+
+      break;
+    }
     default:
       ;
   }
@@ -1398,6 +1454,8 @@ static int pal_init_brow_cb( FlowCtx *fctx, void *client_data)
   brow_EnableEvent( ctx, flow_eEvent_MB1DoubleClick, flow_eEventType_CallBack, 
 	pal_brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_MB1Click, flow_eEventType_CallBack, 
+	pal_brow_cb);
+  brow_EnableEvent( ctx, flow_eEvent_MB3Press, flow_eEventType_CallBack, 
 	pal_brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_SelectClear, flow_eEventType_CallBack, 
 	pal_brow_cb);
@@ -1498,7 +1556,8 @@ Pal::Pal(
 	parent_ctx(pal_parent_ctx), parent_wid(pal_parent_wid), 
 	wbctx(0), ldhses(pal_ldhses), root_objid(pwr_cNObjid), root_item(0),
 	last_selected(0), selection_owner(0), set_focus_cb(0),
-	traverse_focus_cb(0), displayed(0), menu(0)
+	traverse_focus_cb(0), create_popup_menu_cb(0), displayed(0), menu(0), 
+	avoid_deadlock(0)
 {
   int i;
   Arg 		args[5];
@@ -1524,6 +1583,9 @@ Pal::Pal(
 //
 Pal::~Pal()
 {
+  if ( avoid_deadlock)
+    XtRemoveTimeOut( deadlock_timerid);
+
   config_tree_free( menu);
   free_pixmaps();
   XtDestroyWidget( form_widget);
@@ -1987,148 +2049,24 @@ void Pal::config_tree_free_children( pal_sMenu *first_child)
   }
 }
 
-
-#if 0
-//
-//  Test program
-//
-//
-
-typedef struct {
-  void 		*parent_ctx;
-  Widget	parent_wid;
-  char 		name[80];
-  Widget	brow_widget;
-  Widget	form_widget;
-  Widget	toplevel;
-  Pal	pal;
-  ldh_tWBContext wbctx;
-  pwr_tVolumeId	volid;
-  ldh_tVolContext volctx;
-  ldh_tSesContext ldhses;
-  void		*root_item;
-} *foe_tCtx;
-
-
-static void foe_activate_exit( Widget w, int tag, XmAnyCallbackStruct *data)
+static void  pal_reset_avoid_deadlock( Pal *pal)
 {
-  exit(0);
+  pal->avoid_deadlock = 0;
 }
 
-static void foe_activate_zoom_in( Widget w, foe_tCtx foectx, XmAnyCallbackStruct *data)
+static void  pal_set_avoid_deadlock( Pal *pal, int time)
 {
-  pal_zoom( foectx->pal, 1.2);
-}
-static void foe_activate_zoom_out( Widget w, foe_tCtx foectx, XmAnyCallbackStruct *data)
-{
-  pal_zoom( foectx->pal, 5.0/6);
-}
-static void foe_activate_zoom_reset( Widget w, foe_tCtx foectx, XmAnyCallbackStruct *data)
-{
-  pal_unzoom( foectx->pal);
+  pal->avoid_deadlock = 1;
+  pal->deadlock_timerid = XtAppAddTimeOut(
+	XtWidgetToApplicationContext( pal->brow_widget), time,
+	(XtTimerCallbackProc)pal_reset_avoid_deadlock, pal);
 }
 
 
-main(  int argc, char *argv[])
-{
-  static char	*db_filename_vec[] = {"brow_test_api.uid"};
-  static int	db_filename_num = (sizeof db_filename_vec/sizeof db_filename_vec[0]);
-  Arg 		args[20];
-  pwr_tStatus	sts;
-  foe_tCtx	foectx;
-  BrowCtx	*brow_ctx;
-  char 		title[80];
-  int		i;
-  XtAppContext  app_ctx;
-  MrmHierarchy s_DRMh;
-  MrmType dclass;
-  Widget	foe_widget;
-  char		name[] = "Proview/R Navigator";
-  static MrmRegisterArg	reglist[] = {
-        { "foe_ctx", 0 },
-	{"foe_activate_exit",(caddr_t)foe_activate_exit },
-	{"foe_activate_zoom_in",(caddr_t)foe_activate_zoom_in },
-	{"foe_activate_zoom_out",(caddr_t)foe_activate_zoom_out },
-	{"foe_activate_zoom_reset",(caddr_t)foe_activate_zoom_reset }
-	};
-
-  static int	reglist_num = (sizeof reglist / sizeof reglist[0]);
-  Widget pal_shell;
-  pwr_tObjid objid;
-
-  
-  // Create object context
-  foectx = (foe_tCtx) calloc( 1, sizeof(*foectx));
-
-  sts = ldh_OpenWB(&foectx->wbctx);
-  if (EVEN(sts)) exit(sts);
-
-  sts = ldh_VolumeNameToId( foectx->wbctx, "ClaesVolume", &foectx->volid);
-  if (EVEN(sts)) exit(sts);
-
-  sts = ldh_AttachVolume( foectx->wbctx, foectx->volid, &foectx->volctx);
-  if (EVEN(sts)) return sts;
-
-  sts = ldh_OpenSession (
-    &foectx->ldhses,
-    foectx->volctx,
-    ldh_eAccess_ReadOnly,
-    ldh_eUtility_Navigator,
-    (void *) foectx,
-    NULL, NULL);
-//    hina_ldh_other_session_cb);
-  if (EVEN(sts)) return sts;
 
 
-  // Motif
-  MrmInitialize();
-  DXmInitialize();
-
-  strcpy( title, "PROVIEW/R Function object editor");
-
-  foectx->toplevel = XtVaAppInitialize (
-		      &app_ctx, 
-		      "mainwindow",
-		      NULL, 0, 
-		      &argc, argv, 
-		      fbr, 
-		      XtNallowShellResize,  True,
-		      XtNtitle, title,
-		      XmNmappedWhenManaged, True,
-		      NULL);
-
-  reglist[0].value = (caddr_t) foectx;
-
- 
-  // Save the context structure in the widget
-  XtSetArg (args[0], XmNuserData, (unsigned int) foectx);
-
-  sts = MrmOpenHierarchy(db_filename_num, db_filename_vec, NULL, &s_DRMh);
-  if (sts != MrmSUCCESS) printf("can't open %s\n", db_filename_vec[0]);
-
-  MrmRegisterNames(reglist, reglist_num);
-
-  sts = MrmFetchWidgetOverride( s_DRMh, "foe_window", foectx->toplevel,
-			name, args, argc, &foe_widget, &dclass);
-  if (sts != MrmSUCCESS)  printf("can't fetch %s\n", name);
-
-  MrmCloseHierarchy(s_DRMh);
 
 
-  i = 0;
-  XtSetArg(args[i],XmNwidth,800);i++;
-  XtSetArg(args[i],XmNheight,600);i++;
-  XtSetValues( foectx->toplevel ,args,i);
-    
-  XtManageChild( foe_widget);
 
-  foectx->pal = pal_new( foectx, foe_widget, "Palette", foectx->ldhses,
-		"wb:Layout-Configurator-w1", &foectx->brow_widget, &sts);
 
-  XtRealizeWidget( foectx->toplevel);
 
-  XtAppMainLoop( app_ctx);  
-
-  return (0);
-}
-#endif

@@ -20,6 +20,7 @@
 #undef pwr_cClass_Point
 #include "pwr_systemclasses.h"
 #include "wb_foe_macros.h"
+#include "co_api.h"
 #include "co_cdh.h"
 #include "co_msg.h"
 #include "wb_ldh.h"
@@ -95,8 +96,9 @@ pwr_tStatus wsx_error_msg(
 	    fprintf(logfile, "%s\n", msg);
 	  else
 	    printf("%s\n", msg);
-	  if ( cdh_ObjidIsNotNull( objid))
-	  {
+	  if ( cdh_ObjidIsNull( objid))
+	    msgw_message_sts( sts, 0, 0);
+	  else {
 	    /* Get the full hierarchy name for the node */
 	    status = ldh_ObjidToName( sesctx, objid,
 		ldh_eName_Default, name, sizeof( name), &size);
@@ -105,6 +107,7 @@ pwr_tStatus wsx_error_msg(
 	      fprintf(logfile, "        in object  %s\n", name);
 	    else
 	      printf("        in object  %s\n", name);
+	    msgw_message_object( sts, "   in object", name, objid);
 	  }
 	  if ( (sts & 2) && !(sts & 1))
 	    (*errorcount)++;

@@ -89,9 +89,9 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Control the execution
-      !  order of different PlcPgms in the same thread.
-      !  Lower values of ExecuteOrder will be executed befor
+      !  Control the execution order of different PlcPgms 
+      !  in the same thread.
+      !  Lower values of ExecuteOrder will be executed before
       !  higher. 
       !*/
       Object ExecuteOrder $Intern 3 

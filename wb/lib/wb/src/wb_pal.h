@@ -77,8 +77,11 @@ class Pal {
     int			selection_owner;
     int 		(*set_focus_cb)( void *, void *);
     int 		(*traverse_focus_cb)( void *, void *);
+    void 		(*create_popup_menu_cb)( void *, pwr_tCid, int, int);
     int		displayed;
     pal_sMenu   *menu;
+    int		        avoid_deadlock;
+    XtIntervalId        deadlock_timerid;
 
     brow_tNodeClass nc;
     flow_sAnnotPixmap *pixmap_leaf;

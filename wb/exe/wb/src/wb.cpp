@@ -10,7 +10,12 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <map>
+
 #include <Xm/Xm.h>
+#include <Mrm/MrmPublic.h>
+#include <X11/Intrinsic.h>
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
 
 #include "flow.h"
 #include "flow_ctx.h"
@@ -38,6 +43,7 @@ extern "C" {
 
 #include "wb_vsel.h"
 #include "co_msgwindow.h"
+#include "co_xhelp.h"
 #include "wb_wtt.h"
 
 #include "wb_env.h"
@@ -496,6 +502,10 @@ int main( int argc, char *argv[])
   msg_window->find_plc_cb = wb_find_plc_cb;
   MsgWindow::set_default( msg_window);
   MsgWindow::message( 'I', "Development environment started");
+
+  // Create help window
+  XHelp *xhelp = new XHelp( mainwindow, 0, xhelp_eUtility_Wtt, &sts);
+  XHelp::set_default( xhelp);
 
   sts = ldh_OpenWB(&wbctx);
   psts(sts, NULL);

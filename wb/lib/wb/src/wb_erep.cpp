@@ -428,12 +428,12 @@ void wb_erep::loadCommonMeta( pwr_tStatus *status)
       strcat( vname, vol_array[0]);
       strcat( vname, ".dbs");
       cdh_StringToVolumeId( vol_array[1], &vid);
-      MsgWindow::message( 'I', "Loading volume:", vname);
 
       wb_vrepdbs *vrep = new wb_vrepdbs( this, vname);
       try {
         vrep->load();
         addDbs( &sts, vrep);
+        MsgWindow::message( 'I', "Volume loaded", vname);
       }
       catch ( wb_error& e) {
         MsgWindow::message( 'E', "Unable to open volume", vname, e.what().c_str());
@@ -501,10 +501,11 @@ void wb_erep::loadMeta( pwr_tStatus *status)
           vrep = new wb_vrepdbs( this, vname);
           vrep->load();
           addDbs( &sts, vrep);
+	  MsgWindow::message( 'I', "Volume loaded", vname);
           vol_cnt++;
         }
         catch ( wb_error& e) {
-          cout << "** Unable to open volume " << vname << " " << e.what() << endl;
+	  MsgWindow::message( 'E', "Unable to open volume", vname, e.what().c_str());
         }
       }
       else {
@@ -524,9 +525,10 @@ void wb_erep::loadMeta( pwr_tStatus *status)
               vrep->load();
               // vrep->name( vol_array[0]);
               addDbs( &sts, vrep);
+	      MsgWindow::message( 'I', "Volume loaded", vname);
             }
             catch ( wb_error& e) {
-              cout << "** Unable to open volume " << vname << " " << e.what() << endl;
+	      MsgWindow::message( 'E', "Unable to open volume", vname, e.what().c_str());
             }
             break;
           }
@@ -544,6 +546,7 @@ void wb_erep::loadMeta( pwr_tStatus *status)
       wb_vrepdb *vrepdb = new wb_vrepdb( this, vname);
       vrepdb->name(vol_array[0]);
       addDb( &sts, vrepdb);
+      MsgWindow::message( 'I', "Database opened", vname);
       vol_cnt++;
     }
   }
@@ -560,6 +563,7 @@ void wb_erep::loadMeta( pwr_tStatus *status)
     wb_vrepdb *vrepdb = new wb_vrepdb( this, vname);
     vrepdb->name("directory");
     addDb( &sts, vrepdb);
+    MsgWindow::message( 'I', "Database opened", vname);
   }
   if ( EVEN(sts))
     *status = LDH__PROJCONFIG;

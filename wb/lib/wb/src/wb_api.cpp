@@ -56,6 +56,7 @@ extern "C" {
 #include "wb_nav.h"
 #include "wb_wtt.h"
 #include "wb_watt.h"
+#include "wb_wnav.h"
 #include "wb_api.h"
 
 //
@@ -146,6 +147,8 @@ int nav_get_select( nav_tCtx navctx, pwr_sAttrRef *attrref, int *is_attr)
   return ((Nav *)navctx)->get_select( attrref, is_attr);
 }
 
+
+
 //
 //  Interface to Wtt
 //
@@ -219,6 +222,5 @@ extern "C" void watt_pop( watt_tCtx watt)
 {
   ((WAtt *)watt)->pop();
 }
-
 
 

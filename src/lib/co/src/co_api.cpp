@@ -29,6 +29,7 @@ extern "C" {
 #include "flow_browwidget.h"
 
 #include "co_msgwindow.h"
+#include "co_xhelp.h"
 
 extern "C" {
 #include "co_api.h"
@@ -150,4 +151,17 @@ void msgw_reset_nodraw()
 {
   MsgWindow::dreset_nodraw();
 }
+
+//
+// c api to co_xhelp
+//
+
+int xhelp_help( char *key, char *help_bookmark, navh_eHelpFile file_type,
+		char *file_name, int strict)
+{
+  return XHelp::dhelp( key, help_bookmark, file_type, file_name, strict != 0);
+}
+
+
+
 
