@@ -101,6 +101,11 @@ pwr_tOid wb_bdrep::boid()
   return m_orep->oid();
 }
 
+pwr_tCid wb_bdrep::bcid() 
+{ 
+  return m_orep->cid();
+}
+
 
 const char* wb_bdrep::name() const
 {

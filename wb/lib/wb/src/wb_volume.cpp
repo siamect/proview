@@ -157,10 +157,12 @@ wb_adef wb_volume::adef( pwr_tCid cid, const char *bname, const char *aname)
   pwr_tStatus sts;
 
   wb_cdrep *cdrep = m_vrep->merep()->cdrep( &sts, cid);
-  if ( EVEN(sts)) return 0;
+  if ( EVEN(sts)) return wb_adef();
 
   wb_cdef cdef = wb_cdef(cdrep);
   wb_bdef bdef = cdef.bdef( bname);
+  if ( !bdef)
+    return wb_adef();
   return bdef.adef( aname);
 }
 
@@ -215,6 +217,44 @@ wb_attribute wb_volume::attribute(pwr_tOid oid, const char *bname, const char *a
     wb_attribute a(sts, orep, bname, aname);
     
   return a;
+}
+
+wb_attribute wb_volume::attribute( wb_name aname)
+{
+  pwr_tStatus sts;
+
+  wb_object o = object( aname.name());
+  if ( !o)
+    return wb_attribute();
+
+  if ( !aname.hasAttribute())
+    return wb_attribute( LDH__SUCCESS, (wb_orep *)o);
+
+  wb_cdef cd = cdef(o);
+  if ( !cd)
+    return wb_attribute();
+
+  wb_adrep *adrep = ((wb_cdrep *)cd)->adrep( &sts, aname.wholeAttr());
+  if ( ODD(sts))
+    return wb_attribute( sts, (wb_orep *)o, adrep);
+  return wb_attribute();
+}
+
+wb_attribute wb_volume::attribute( wb_object o, wb_attrname aname)
+{
+  pwr_tStatus sts;
+
+  if ( !o)
+    return wb_attribute();
+
+  wb_cdef cd = cdef(o);
+  if ( !cd)
+    return wb_attribute();
+
+  wb_adrep *adrep = ((wb_cdrep *)cd)->adrep( &sts, aname.wholeAttr());
+  if ( ODD(sts))
+    return wb_attribute( sts, (wb_orep *)o, adrep);
+  return wb_attribute();
 }
 
 wb_attribute wb_volume::attribute(pwr_tOid oid, const char *bname) const

@@ -244,7 +244,7 @@ mem_object *wb_vrepmem::find( const char *name)
 {
   wb_name oname = wb_name(name);
 
-  if ( oname.evenSts() || (oname.hasVolume() && !oname.volumeIsEqual(volume_name)))
+  if ( oname.evenSts() || (oname.hasVolume() && !oname.volumeIsEqual(this->name())))
     return 0;
 
   if ( root_object)

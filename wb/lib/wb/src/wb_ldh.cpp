@@ -439,23 +439,11 @@ ldh_GetAttrDef(ldh_tSession session, pwr_tCid cid, char *bname, char *aname, ldh
   wb_adef a = sp->adef(cid, bname, aname);
   if (!a) return a.sts();
     
-#if NOT_YET_IMPLEMENTED
-  a.size();
-  a.offset();
-  a.name();
   strcpy(adef->ParName, a.name());
   adef->ParLevel = 1;
-  adef->ParClass = a.cid();
-    
-  adef->Par.PgmName;
-  adef->Par.Type = a.type();
-  adef->Par.Offset = a.offset();
-  adef->Par.Size = a.size();
-  adef->Par.Flags = a.flags();
-  adef->Par.Elements = a.nElement();
-  adef->Par.ParamIndex = a.index();
-#endif
-  return LDH__NYI;
+  adef->ParClass = (pwr_eClass) a.cid();
+  adef->Par = (pwr_uParDef *) a.body();
+  return LDH__SUCCESS;
 }
 
 pwr_tStatus
@@ -463,13 +451,13 @@ ldh_GetAttrRef(ldh_tSession session, pwr_tOid oid, char *aname, pwr_sAttrRef *ar
 {
   wb_session *sp = (wb_session *)session;
   wb_object o = sp->object(oid);
-  wb_name n(aname);
+  wb_attrname n(aname);
   wb_attribute a = sp->attribute(o, n);
   if (!a) return a.sts();
     
   *aref = a.aref();
 
-  return LDH__NYI;
+  return LDH__SUCCESS;
 }
 
 pwr_tStatus
@@ -479,8 +467,9 @@ ldh_GetAttrXRefDef(ldh_tSession session, pwr_sAttrRef *aref, pwr_sAttrXRef *xref
   wb_attribute a = sp->attribute(aref);
   if (!a) return a.sts();
     
-//    *xref = a.xref();
-  return LDH__NYI;
+  a.adrep()->body( xref);
+
+  return a.sts();
 }
 
 /*  Get first child of an object.  */
@@ -690,7 +679,7 @@ ldh_GetObjXRefDef(ldh_tSession session, pwr_sAttrRef *aref, pwr_sObjXRef *ObjXRe
   wb_attribute a = sp->attribute(aref);
   if (!a) return a.sts();
     
-  //pwr_sObjXref *x = a.oxref();
+  a.adrep()->body( ObjXRef);
    
   return a.sts();
 }
@@ -1069,7 +1058,10 @@ ldh_AttrRefToName(ldh_tSession session, pwr_sAttrRef *arp, ldh_eName nametype, c
     wb_attribute a = sp->attribute(arp);
     if (!a) return a.sts();
     
-    //wb_name n = a.name(nametype);
+    wb_name n = a.longName();
+    strcpy( str, n.name( nametype));
+    *aname = str;
+    *size = strlen(str);
     break;
   }
   case ldh_eName_ArefExport:
@@ -1178,15 +1170,10 @@ ldh_ReadAttribute(ldh_tSession session, pwr_sAttrRef *arp, void *value, int size
 
   wb_attribute a = sp->attribute(arp);
   if (!a) return a.sts();
-#if NOT_YET_IMPLEMENTED
-  wb_value v(value, size);    
-  if (!v) return v.sts();
     
-  v = a.value();
-  return v.sts();
-#else
-  return LDH__NYI;
-#endif
+  a.value( value);
+
+  return LDH__SUCCESS;
 }
 
 /* Reads a named body of an object into a buffer supplied in the call.  */
@@ -1355,11 +1342,15 @@ ldh_WriteAttribute(ldh_tSession session, pwr_sAttrRef *arp, void *value, int siz
   wb_session *sp = (wb_session*)session;
   wb_attribute a = sp->attribute(arp);
   if (!a) return a.sts();
-  //wb_value v(value, size);    
-  //if (!v) return v.sts();
-    
-  //return a.value(v);
-  return LDH__NYI;
+
+  try {
+    sp->writeAttribute(a, value);
+    return sp->sts();
+  }
+  catch (wb_error& e) {
+    return e.sts();
+  }  
+  return LDH__SUCCESS;
 }
 
 /*  Returns 1 if object is owned by the volume attached to

@@ -154,7 +154,7 @@ wb_adrep *wb_cdrep::adrep( pwr_tStatus *sts, const char *aname)
     orep->ref();
     if ( orep->cid() == pwr_eClass_ObjBodyDef) {
       orep_attr = orep->vrep()->child( sts, orep, n);
-      if ( ODD(*sts)) {
+      if ( ODD(*sts) /* && aname.attributeIsEqual( orep_attr->name()) */ ) {
         wb_adrep *adrep = new wb_adrep( *orep_attr);
         orep->unref();
         return adrep;

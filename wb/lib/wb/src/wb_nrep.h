@@ -108,6 +108,7 @@ public:
   bool attributeIsEqual( const char *n, int idx = 0);
   int bodyOffset() const { return b_offset;}
   int bodySize() const { return b_size;}
+  char *wholeAttr( char *res = 0);
 
   static char *unatName( const char *name);
   static bool checkObjectName( const char *name);

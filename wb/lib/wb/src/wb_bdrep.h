@@ -28,7 +28,7 @@ public:
   int nAttribute();
   pwr_eBix bix();
   pwr_tOid boid();
-    
+  pwr_tCid bcid();    
 
   const char* name() const;   // get body  name
   wb_name longName() const;
@@ -43,3 +43,4 @@ public:
 };
 
 #endif
+

@@ -832,6 +832,32 @@ char *wb_nrep::unatName(const char *name)
   return result;
 }
 
+char *wb_nrep::wholeAttr(char *res)
+{
+  static char result[256];
+
+  if ( num_attr == 0) {
+    if ( res) {
+      strcpy( res, "");
+      return res;
+    }
+    else {
+      strcpy( result, "");
+      return result;
+    }
+  }
+  else {
+    if ( res) {
+      strcpy( res, oname + attr[0].offs); 
+      return res;
+    }
+    else {
+      strcpy( result, oname + attr[0].offs); 
+      return result;
+    }
+  }
+}
+
 bool wb_nrep::checkObjectName( const char *name)
 {
   const char *s;
@@ -842,6 +868,8 @@ bool wb_nrep::checkObjectName( const char *name)
   }
   return true;
 }
+
+
 
 
 

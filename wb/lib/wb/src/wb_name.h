@@ -141,6 +141,7 @@ public:
   bool objectIsEqual( const char *n) const throw (wb_error) { check(); return m_nrep->objectIsEqual( n);}
   bool segmentIsEqual( const char *n, int idx = 0) const throw (wb_error) { check(); return m_nrep->segmentIsEqual( n, idx);}
   bool attributeIsEqual( const char *n, int idx = 0) const throw (wb_error) { check(); return m_nrep->attributeIsEqual( n, idx);}
+  char *wholeAttr() const throw (wb_error) { check(); return m_nrep->wholeAttr();}
 
   // Id representation
   char *vid( char *res = 0) const throw (wb_error) { check(); return m_nrep->volume( res);}

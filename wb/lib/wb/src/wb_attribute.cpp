@@ -284,13 +284,41 @@ void wb_attribute::check() const
 //
 pwr_sAttrRef wb_attribute::aref() const
 {
+  check();
+
   pwr_sAttrRef aref;
+  memset( &aref, 0, sizeof(aref));
     
+
+  aref.Objid = m_orep->oid();
+  aref.Offset = m_offset;
+  aref.Size = m_size;
+
+  if ( m_adrep) {
+    wb_bdrep *bd = m_adrep->bdrep();
+
+    aref.Body = bd->bcid();
+    delete bd;
+  } 
   return aref;
 }
 
 pwr_sAttrRef *wb_attribute::aref(pwr_sAttrRef *arp) const
 {
+  check();
+
+  memset( arp, 0, sizeof(*arp));
+    
+  arp->Objid = m_orep->oid();
+  arp->Offset = m_offset;
+  arp->Size = m_size;
+
+  if ( m_adrep) {
+    wb_bdrep *bd = m_adrep->bdrep();
+
+    arp->Body = bd->bcid();
+    delete bd;
+  } 
   return arp;
 }
 

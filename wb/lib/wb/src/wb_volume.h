@@ -11,6 +11,7 @@
 #include "wb_cdef.h"
 #include "wb_tdef.h"
 #include "wb_name.h"
+#include "wb_attrname.h"
 
 class wb_env;
 class wb_vrep;
@@ -55,8 +56,8 @@ public:
   wb_attribute attribute(pwr_tOid oid, const char *bname, const char *aname) const;
   wb_attribute attribute(pwr_tOid oid, const char *bname) const;
   wb_attribute attribute(wb_object o, wb_adef adef) { wb_attribute a; return a;}; // Fix
-  wb_attribute attribute(wb_object o, wb_name aname) { wb_attribute a; return a;}; // Fix
-  wb_attribute attribute(wb_name aname) { wb_attribute a; return a;}; // Fix
+  wb_attribute attribute(wb_object o, wb_attrname aname);
+  wb_attribute attribute(wb_name aname);
   wb_attribute attribute(const pwr_sAttrRef *arp) const;
   wb_attribute attribute() { wb_attribute a; return a;}; // Fix
 
