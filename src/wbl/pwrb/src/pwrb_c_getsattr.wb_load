@@ -74,13 +74,13 @@ SObject pwrb:Class
         Attr devbody_annotation = 1
         Attr compmethod = 59
         Attr compindex = 0
-        Attr tracemethod = 1
-        Attr traceindex = 1
+        Attr tracemethod = 0
+        Attr traceindex = 0
         Attr connectmethod = 0
         Attr executeordermethod = 0
         Attr objname = "GetSattr"
         Attr graphname = "GetSattr"
-        Attr debugpar = "Status"
+        Attr debugpar = ""
       EndBody
     EndObject
   EndObject
