@@ -63,6 +63,7 @@ public:
   void eventSendAllSessions( ldh_eEvent event);
   void eventSendSession( ldh_eEvent event);
   ldh_sEvent *eventStart( pwr_tOid Object, ldh_eEvent event);
+  void update() { m_nUpdate++;}
 };
 #endif
 

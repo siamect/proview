@@ -91,6 +91,7 @@ wb_object wb_session::createObject(wb_cdef cdef, wb_destination d, wb_name name)
   if (evenSts()) throw wb_error(sts());
 
   orep = m_vrep->createObject(&m_sts, cdef, d, name);
+  m_srep->update();
 
   wb_object o = wb_object(m_sts, orep);
   ldh_sEvent *ep = m_srep->eventStart(o.oid(), ldh_eEvent_ObjectCreated);
@@ -131,6 +132,7 @@ wb_object wb_session::copyObject(wb_object o, wb_destination d, wb_name name)
   if (evenSts()) throw wb_error(sts());
 
   orep = m_vrep->copyObject(&m_sts, (wb_orep*)o, d, name);
+  m_srep->update();
 
   wb_object onew = wb_object(m_sts, orep);
   ldh_sEvent *ep = m_srep->eventStart(onew.oid(), ldh_eEvent_ObjectCreated);
@@ -149,6 +151,14 @@ bool wb_session::moveObject(wb_object o, wb_destination d)
 
   validateDestination(d, o.cid());
   if (evenSts()) return false;
+
+  // Check that object is not ancestor to destination
+  wb_object dest = object(d.oid());
+  while ( dest) {
+    if ( cdh_ObjidIsEqual( dest.oid(), o.oid()))
+      throw wb_error(LDH__BADDEST);
+    dest = dest.parent();
+  }
 
   wb_object parent;
   switch (d.code()) {
@@ -176,6 +186,7 @@ bool wb_session::moveObject(wb_object o, wb_destination d)
   m_srep->eventOldFamily(ep, o);
 
   bool rsts = m_vrep->moveObject(&m_sts, (wb_orep*)o, d);
+  m_srep->update();
 
   triggPostMove(o);
   triggPostUnadopt(old_parent, o);
@@ -197,6 +208,8 @@ bool wb_session::renameObject(wb_object o, wb_name name)
 
   bool ok = m_vrep->renameObject(&m_sts, (wb_orep*)o, name);
   if (!ok) return ok;
+
+  m_srep->update();
   ldh_sEvent *ep = m_srep->eventStart(o.oid(), ldh_eEvent_ObjectRenamed);
   m_srep->eventSend(ep);
   return ok;
@@ -226,6 +239,7 @@ bool wb_session::deleteObject(wb_object o)
   sts = triggPostUnadopt( parent, o);
 
   bool rsts = m_vrep->deleteObject(&m_sts, (wb_orep*)o);
+  m_srep->update();
   m_srep->eventSend( ep);
   return rsts;
 }
@@ -250,6 +264,7 @@ bool wb_session::deleteFamily(wb_object o)
   sts = triggPostUnadopt( parent, o);
 
   bool rsts = m_vrep->deleteFamily(&m_sts, (wb_orep*)o);
+  m_srep->update();
   m_srep->eventSend( ep);
   return rsts;
 }
@@ -260,6 +275,7 @@ bool wb_session::writeAttribute(wb_attribute &a, void *p, size_t size)
     throw wb_error_str("ReadOnlySession");
 
   bool sts =  m_vrep->writeAttribute(&m_sts, (wb_orep*)a, a.bix(), a.offset(), a.size(), p);
+  m_srep->update();
   ldh_sEvent *ep = m_srep->eventStart( a.aoid(), ldh_eEvent_AttributeModified);
   m_srep->eventSend( ep);
   return sts;
@@ -271,6 +287,7 @@ bool wb_session::writeAttribute(wb_attribute &a, void *p)
     throw wb_error_str("ReadOnlySession");
 
   bool sts =  m_vrep->writeAttribute(&m_sts, (wb_orep*)a, a.bix(), a.offset(), a.size(), p);
+  m_srep->update();
 
   ldh_sEvent *ep = m_srep->eventStart( a.aoid(), ldh_eEvent_AttributeModified);
   m_srep->eventSend( ep);
@@ -374,6 +391,7 @@ bool wb_session::cutOset( pwr_sAttrRef *arp, bool keepref)
 
     ap++;
   }
+  m_srep->update();
   m_srep->eventSend( ep);
 
   return true;
@@ -453,6 +471,7 @@ bool wb_session::pasteOset( pwr_tOid doid, ldh_eDest dest,
 
   pwr_tOid *olist;
   mem->exportPaste( *m_vrep, doid, dest, keepoid, &olist);
+  m_srep->update();
 
   if ( parent) {
     for ( pwr_tOid *oidp = olist; cdh_ObjidIsNotNull(*oidp); oidp++) {
