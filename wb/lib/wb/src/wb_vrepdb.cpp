@@ -495,15 +495,18 @@ bool wb_vrepdb::deleteFamily(pwr_tStatus *sts, wb_orep *orp)
         
   try {
     o.get(txn);
+    printf("wb_vrepdb::deleteFamily %s\n", o.name());
 
     unadopt(txn, o);
 
     deleteFamilyMember(o.oid(), txn);
     
     txn->commit(0);
+    printf("wb_vrepdb::deleteFamily success\n");
     return true;
   }
   catch (DbException &e) {
+    printf("wb_vrepdb::deleteFamily failure, %s\n", e.what());
     txn->abort();
     *sts = 2;// LDH__DB_ERROR
     return false;

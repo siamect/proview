@@ -375,7 +375,7 @@ bool wb_session::cutOset( pwr_sAttrRef *arp, bool keepref)
   copyOset( arp, keepref);
   if ( EVEN(m_sts)) return false;
 
-  ldh_sEvent *ep = m_srep->eventStart( pwr_cNOid, ldh_eEvent_ObjectTreeDeleted);
+  //ldh_sEvent *ep = m_srep->eventStart( pwr_cNOid, ldh_eEvent_ObjectTreeDeleted);
 
   pwr_sAttrRef *ap = arp;
   while ( cdh_ObjidIsNotNull( ap->Objid)) {
@@ -385,14 +385,15 @@ bool wb_session::cutOset( pwr_sAttrRef *arp, bool keepref)
       continue;
     }
 
-    deleteFamily( o);
-    ldh_sEvent *e = m_srep->eventStart( pwr_cNOid, ldh_eEvent_ObjectDeleted);
-    m_srep->eventOldFamily( e, o);
+    ldh_sEvent *ep = m_srep->eventStart(o.oid(), ldh_eEvent_ObjectDeleted);
+    m_srep->eventOldFamily(ep, o);
+    deleteFamily(o);
+    m_srep->eventSend(ep);
 
     ap++;
   }
   m_srep->update();
-  m_srep->eventSend( ep);
+  //m_srep->eventSend( ep);
 
   return true;
 }
