@@ -2952,6 +2952,8 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
 	else
 	  return 0;
       }
+      else
+	return 0;
       break;
     }
     case glow_eEvent_TipText:
@@ -3440,7 +3442,13 @@ graph_eDatabase Graph::parse_attr_name( char *name, char *parsed_name,
     pwr_tOid oid;
     pwr_tStatus sts;
 
-    sts = gdh_GetNodeObject( 0, &oid);
+    if ( strcmp( object_name, "") != 0) {
+      sts = gdh_NameToObjid( object_name, &oid);
+      if ( ODD(sts))
+	sts = gdh_GetNodeObject( oid.vid, &oid);
+    }
+    else 
+      sts = gdh_GetNodeObject( 0, &oid);
     if ( ODD(sts)) {
       sts = gdh_ObjidToName( oid, nodename, sizeof(nodename), cdh_mName_pathStrict);
       if ( ODD(sts)) {
