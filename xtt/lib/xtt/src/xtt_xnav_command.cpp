@@ -1999,7 +1999,8 @@ static int	xnav_open_func(	void		*client_data,
       int  inputempty;
 
       IF_NOGDH_RETURN;
-      if ( strncmp( object_str, "*-", 2) == 0 || strncmp( object_str, "$node-", 6) == 0)
+      if ( strncmp( object_str, "*-", 2) == 0 || 
+	   strncmp( object_str, "$node-", 6) == 0 || strncmp( object_str, "$NODE-", 6) == 0)
       {
         // Replace * by the node object
         sts = gdh_GetNodeObject( 0, &node_objid);
