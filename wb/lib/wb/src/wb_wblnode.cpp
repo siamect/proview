@@ -802,7 +802,7 @@ void wb_wblnode::buildAttr( ref_wblnode object, pwr_eBix bix)
   pwr_eType type;
   char buf[2048];
   int int_val, current_int_val;
-  bool add_newline = false;
+  bool string_continue = false;
 
   switch ( getType()) {
   case tokens.ATTRIBUTE:
@@ -836,10 +836,8 @@ void wb_wblnode::buildAttr( ref_wblnode object, pwr_eBix bix)
            (type == pwr_eType_String || type == pwr_eType_Text)) {
         // Index in string attribute marks a new row
         int index = n.attrIndex();
-        if ( index > 0) {
-          add_newline = true;
-          index--;
-        }
+        if ( index > 0)
+          string_continue = true;
         offset += index;
         size = size - index;
       }
@@ -872,17 +870,12 @@ void wb_wblnode::buildAttr( ref_wblnode object, pwr_eBix bix)
       return;
     }
 
-    if ( !add_newline)
-      strncpy( value, second_child->name(), sizeof(value));
-    else {
-      strncpy( &value[1], second_child->name(), sizeof(value)-1);
-      value[0] = '\n';
-    }
+    strncpy( value, second_child->name(), sizeof(value));
 
     // printf( "Attr %s %s %d %d %s\n", object->name, name, size, offset, value);
     if ( size == sizeof(int_val) && convconst( &int_val, value)) {
       if ( oper == tokens.EQ) {
-        if ( bix == pwr_eBix_rt || bix == pwr_eBix_sys) 
+        if ( bix == pwr_eBix_rt || bix == pwr_eBix_sys)
           memcpy( (char *)((unsigned int) object->o->rbody + offset), 
                   &int_val, size);
         else if ( bix == pwr_eBix_dev)
@@ -905,12 +898,20 @@ void wb_wblnode::buildAttr( ref_wblnode object, pwr_eBix bix)
       }
     }
     else if ( attrStringToValue( type, value, buf, sizeof( buf), size)) {
-      if ( bix == pwr_eBix_rt || bix == pwr_eBix_sys)
+      if ( bix == pwr_eBix_rt || bix == pwr_eBix_sys) {
+	if ( string_continue && ! *(char *)((unsigned int) object->o->rbody + offset - 1))
+	  // If previous char is null, this was originally linefeed
+	  *(char *)((unsigned int) object->o->rbody + offset - 1) = '\n';
         memcpy( (char *)((unsigned int) object->o->rbody + offset), 
                 buf, size);
-      else if ( bix == pwr_eBix_dev)
+      }
+      else if ( bix == pwr_eBix_dev) {
+	if ( string_continue && ! *(char *)((unsigned int) object->o->dbody + offset - 1))
+	  // If previous char is null, this was originally linefeed
+	  *(char *)((unsigned int) object->o->dbody + offset - 1) = '\n';
         memcpy( (char *)((unsigned int) object->o->dbody + offset), 
                 buf, size);
+      }
     }
     else {
       // Attr conversion exception
