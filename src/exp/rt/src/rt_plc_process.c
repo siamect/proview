@@ -14,6 +14,7 @@
 #elif defined(OS_LYNX)
 #endif
 
+#include <pwd.h>
 #include "pwr.h"
 #include "pwr_class.h"
 #include "pwr_baseclasses.h"
@@ -121,7 +122,9 @@ int main (
 {
   pwr_tStatus	sts;
   plc_sProcess	*pp;
-
+  uid_t         ruid;
+  struct passwd *pwd;
+  
   pp = init_process();
 
   qcom_WaitAnd(&sts, &pp->eventQ, &qcom_cQini, ini_mEvent_newPlcInit, qcom_cTmoEternal);
@@ -129,6 +132,19 @@ int main (
   init_plc(pp);
   create_threads(pp);
   init_threads(pp);
+
+  /* Once threads has set their priority don't run as root */
+  
+  ruid = getuid();
+  
+  if (ruid == 0) {
+    pwd = getpwnam("pwrp");
+    if (pwd != NULL) {
+      setreuid(pwd->pw_uid, pwd->pw_uid);
+    }
+  }
+  else 
+    setreuid(ruid, ruid);
 
   qcom_SignalOr(&sts, &qcom_cQini, ini_mEvent_newPlcInitDone);
   qcom_WaitAnd(&sts, &pp->eventQ, &qcom_cQini, ini_mEvent_newPlcStart, qcom_cTmoEternal);
