@@ -501,7 +501,7 @@ int wb_vrepwbl::getClassInfo( pwr_tCid cid, int *rsize, int *dsize)
     wb_cdrep *cdrep = m_merep->cdrep( &sts, cid);
     if ( EVEN(sts)) return 0;
     
-    wb_bdrep *bdrep = cdrep->bdrep( &sts, cdh_eBix_RtBody);
+    wb_bdrep *bdrep = cdrep->bdrep( &sts, cdh_eBix_rt);
     if ( ODD(sts)) {
       *rsize = bdrep->size();
       delete bdrep;
@@ -509,7 +509,7 @@ int wb_vrepwbl::getClassInfo( pwr_tCid cid, int *rsize, int *dsize)
     else
       *rsize = 0;
 
-    bdrep = cdrep->bdrep( &sts, cdh_eBix_DevBody);
+    bdrep = cdrep->bdrep( &sts, cdh_eBix_dev);
     if ( ODD(sts)) {
       *dsize = bdrep->size();
       delete bdrep;
@@ -566,7 +566,7 @@ int wb_vrepwbl::getAttrInfoRec( wb_name *attr, int bix, pwr_tCid cid, int *size,
     {
       pwr_sType o;
 
-      if ( bix != cdh_eBix_SysBody)
+      if ( bix != cdh_eBix_sys)
         return 0;
       if ( attr->attributeIsEqual("Type", level)) {
         *size = sizeof( o.Type);
@@ -586,7 +586,7 @@ int wb_vrepwbl::getAttrInfoRec( wb_name *attr, int bix, pwr_tCid cid, int *size,
     {
       pwr_sTypeDef o;
 
-      if ( bix != cdh_eBix_SysBody)
+      if ( bix != cdh_eBix_sys)
         return 0;
       IF_ATTR( Type, pwr_eType_UInt32, 1, level)
       else IF_ATTR( Size, pwr_eType_Int32, 1, level)
@@ -598,7 +598,7 @@ int wb_vrepwbl::getAttrInfoRec( wb_name *attr, int bix, pwr_tCid cid, int *size,
     {
       pwr_sClassDef o;
 
-      if ( bix != cdh_eBix_SysBody)
+      if ( bix != cdh_eBix_sys)
         return 0;
       IF_ATTR( Editor, pwr_eType_UInt32, 1, level)
       else IF_ATTR( Method, pwr_eType_UInt32, 1, level)
@@ -611,7 +611,7 @@ int wb_vrepwbl::getAttrInfoRec( wb_name *attr, int bix, pwr_tCid cid, int *size,
     {
       pwr_sClassVolume o;
 
-      if ( bix != cdh_eBix_SysBody)
+      if ( bix != cdh_eBix_sys)
         return 0;
       IF_ATTR( Description, pwr_eType_String, 1, level)
       else IF_ATTR( NextOix, pwr_eType_ObjectIx, 1, level)
@@ -630,7 +630,7 @@ int wb_vrepwbl::getAttrInfoRec( wb_name *attr, int bix, pwr_tCid cid, int *size,
     {
       pwr_sObjBodyDef o;
 
-      if ( bix != cdh_eBix_SysBody)
+      if ( bix != cdh_eBix_sys)
         return 0;
       IF_ATTR( StructName, pwr_eType_String, 1, level)
       else IF_ATTR( NumOfParams, pwr_eType_UInt32, 1, level)
@@ -643,7 +643,7 @@ int wb_vrepwbl::getAttrInfoRec( wb_name *attr, int bix, pwr_tCid cid, int *size,
     {
       pwr_sParam o;
 
-      if ( bix != cdh_eBix_SysBody)
+      if ( bix != cdh_eBix_sys)
         return 0;
       if ( attr->attributeIsEqual( "PgmName", level)) {
         *size = sizeof( o.Info.PgmName);
@@ -762,49 +762,49 @@ int wb_vrepwbl::getTemplateBody( pwr_tCid cid, int bix, int *size, void **body)
 {
   switch ( cid) {
     case pwr_eClass_Type:
-      if ( bix != cdh_eBix_SysBody)
+      if ( bix != cdh_eBix_sys)
         return 0;
       *size = sizeof( pwr_sType);
       *body = calloc( 1, *size);
       return 1;
     case pwr_eClass_TypeDef:
-      if ( bix != cdh_eBix_SysBody)
+      if ( bix != cdh_eBix_sys)
         return 0;
       *size = sizeof( pwr_sTypeDef);
       *body = calloc( 1, *size);
       return 1;
     case pwr_eClass_ClassDef:
-      if ( bix != cdh_eBix_SysBody)
+      if ( bix != cdh_eBix_sys)
         return 0;
       *size = sizeof( pwr_sClassDef);
       *body = calloc( 1, *size);
       return 1;
     case pwr_eClass_ClassVolume:
-      if ( bix != cdh_eBix_SysBody)
+      if ( bix != cdh_eBix_sys)
         return 0;
       *size = sizeof( pwr_sClassVolume);
       *body = calloc( 1, *size);
       return 1;
     case pwr_eClass_ClassHier:
-      if ( bix != cdh_eBix_SysBody)
+      if ( bix != cdh_eBix_sys)
         return 0;
       *size = 0;
       *body = 0;
       return 1;
     case pwr_eClass_TypeHier:
-      if ( bix != cdh_eBix_SysBody)
+      if ( bix != cdh_eBix_sys)
         return 0;
       *size = 0;
       *body = 0;
       return 1;
     case pwr_eClass_ObjBodyDef:
-      if ( bix != cdh_eBix_SysBody)
+      if ( bix != cdh_eBix_sys)
         return 0;
       *size = sizeof( pwr_sObjBodyDef);
       *body = calloc( 1, *size);
       return 1;
     case pwr_eClass_Param:
-      if ( bix != cdh_eBix_SysBody)
+      if ( bix != cdh_eBix_sys)
         return 0;
       *size = sizeof( pwr_sParam);
       *body = calloc( 1, *size);
@@ -820,14 +820,14 @@ int wb_vrepwbl::getTemplateBody( pwr_tCid cid, int bix, int *size, void **body)
         if ( !n->c_template)
           return 0;
 
-        if ( bix == cdh_eBix_SysBody || bix == cdh_eBix_RtBody) {
+        if ( bix == cdh_eBix_sys || bix == cdh_eBix_rt) {
           *size = n->c_template->rbody_size;
           if ( *size) {
             *body = calloc( 1, *size);
             memcpy( *body, n->c_template->rbody, *size);
           }
         }
-        else if ( bix == cdh_eBix_DevBody) {
+        else if ( bix == cdh_eBix_dev) {
           *size = n->c_template->dbody_size;
           if ( *size) {
             *body = calloc( 1, *size);
@@ -838,7 +838,26 @@ int wb_vrepwbl::getTemplateBody( pwr_tCid cid, int bix, int *size, void **body)
       }
       else {
         // Search type in other volumes TODO...     
-        return 0;
+        pwr_tStatus sts;
+
+        wb_cdrep *cdrep = m_merep->cdrep( &sts, cid);
+        if ( EVEN(sts)) return 0;
+    
+        wb_bdrep *bdrep = cdrep->bdrep( &sts, bix);
+        if ( EVEN(sts)) return 0;
+
+        *size = bdrep->size();
+        delete bdrep;
+
+         
+        *body = calloc( 1, *size);
+        cdrep->templateBody( &sts, (cdh_eBix) bix, body);
+        delete cdrep;
+        if ( EVEN(sts)) {
+	  free( body);
+	  return 0;
+	}
+        return 1;
       }
     }
   }

@@ -137,3 +137,21 @@ pwr_tCid wb_cdrep::cid()
 {
   return cdh_ClassObjidToId( m_orep->oid());
 }
+
+void wb_cdrep::templateBody( pwr_tStatus *sts, cdh_eBix bix, void *p)
+{
+  // Get objid for template object
+  pwr_tOid oid;
+  int cix = cdh_oixToCix( m_orep->oid().oix);  
+  oid.vid = m_orep->oid().vid;
+  oid.oix = cdh_cixToOix( cix, cdh_eBix_template, 0);
+
+  wb_orepdbs *orep = (wb_orepdbs *)m_orep->m_vrep->object( sts, oid);
+  if ( EVEN(*sts)) return;
+
+  m_orep->m_vrep->readBody( sts, orep, bix, p);
+  // Delete
+  orep->ref();
+  orep->unref();
+}
+

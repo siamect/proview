@@ -45,6 +45,8 @@ class wb_cdrep
     wb_bdrep *bdrep( pwr_tStatus *sts, char *bname);
     wb_adrep *adrep( pwr_tStatus *sts, char *aname);
     
+    void templateBody( pwr_tStatus *sts, cdh_eBix bix, void *p);
+
     pwr_tStatus sts() { return m_sts;}
 };
 

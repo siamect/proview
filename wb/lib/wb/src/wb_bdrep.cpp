@@ -50,3 +50,18 @@ wb_adrep *wb_bdrep::adrep( pwr_tStatus *sts, char *aname)
   return adrep;
 }
 
+cdh_eBix wb_bdrep::bix()
+{
+  return (cdh_eBix) cdh_oixToBix( m_orep->oid().oix);
+}
+
+size_t wb_bdrep::size()
+{
+  pwr_tStatus sts;
+  pwr_sObjBodyDef body;
+
+  m_orep->m_vrep->readBody( &sts, m_orep, bix(), (void *) &body);
+  if ( EVEN(sts)) throw wb_error(sts);
+
+  return body.Size;
+}

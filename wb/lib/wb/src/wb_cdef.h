@@ -17,9 +17,10 @@ class wb_mvrep;
 class wb_cdef : public wb_status
 {
 
-    wb_cdrep *m_cdrep;
 
   public:
+    wb_cdrep *m_cdrep;
+
     wb_cdef();
     wb_cdef( wb_cdrep *cdrep);
     wb_cdef( wb_adef&);  // x = other_object

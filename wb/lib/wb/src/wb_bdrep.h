@@ -26,9 +26,9 @@ public:
     wb_bdrep *ref();
 
     pwr_sAttrRef aref() { pwr_sAttrRef a; return a;} // Fix
-    size_t size() { return 0;} // Fix   // get objects runtime body size
+    size_t size();
     int nAttribute() { return 0;} // Fix
-    int bix() { return 0;} // Fix
+    cdh_eBix bix();
     pwr_tOid boid() { pwr_tOid o; return o;} // Fix
     
 
