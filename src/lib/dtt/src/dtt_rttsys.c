@@ -6525,7 +6525,8 @@ static int rttsys_dichanlist_add( pwr_tObjid		chan_objid,
 {
 	rttsys_t_chan_list	*chanlist_ptr;
 	rttsys_t_chan_list	*new_objectlist;
-	char			namebuf[120];
+	pwr_tOName	       	namebuf;
+	pwr_tAName	       	aname;
 	int			sts;
 	pwr_sAttrRef		attrref;
 	int			signame_characters;
@@ -6594,20 +6595,17 @@ static int rttsys_dichanlist_add( pwr_tObjid		chan_objid,
 
 
         /* Get signal */
-        sts = gdh_ObjidToName( 
-		((pwr_sClass_ChanDi *)(chanlist_ptr->chan_ptr))->SigChanCon, 
+        sts = gdh_AttrrefToName( 
+		&((pwr_sClass_ChanDi *)(chanlist_ptr->chan_ptr))->SigChanCon, 
 		namebuf, sizeof( namebuf), cdh_mNName);
-        if ( EVEN(sts))
-        {
+        if ( EVEN(sts)) {
 	  chanlist_ptr->connected = 0;
           strcpy( chanlist_ptr->signame, "-");
         }
-        else
-        {
+        else {
 	  chanlist_ptr->connected = 1;
 	  signame_characters = 53; /* Should be fetched from menu entry... */
-          if ( (int)strlen( namebuf) > signame_characters)
-          {
+          if ( (int)strlen( namebuf) > signame_characters) {
 	    /* Show the last part of the name */
 	    strcpy( chanlist_ptr->signame, ".");
 	    strcat( chanlist_ptr->signame,
@@ -6617,21 +6615,18 @@ static int rttsys_dichanlist_add( pwr_tObjid		chan_objid,
 	    strcpy( chanlist_ptr->signame, namebuf);
 
 	  /* Get a pointer to the value */
-	  memset( &attrref, 0, sizeof(attrref));
-          sts = gdh_ClassAttrToAttrref( pwr_cClass_Di, ".ActualValue", &attrref);
-          if ( EVEN(sts)) return sts;
-	  attrref.Objid = 
-		((pwr_sClass_ChanDi *)(chanlist_ptr->chan_ptr))->SigChanCon;
-          if ( local)
-          {
+	  strcpy( aname, namebuf);
+	  strcat( aname, ".ActualValue");
+	  sts =  gdh_NameToAttrref( pwr_cNObjid, aname, &attrref);
+	  if ( EVEN(sts)) return sts;
+          if ( local) {
 	    /* Get a direct link to the original object */
 	    sts = gdh_DLRefObjectInfoAttrref ( &attrref, 
 		(pwr_tAddress *) &chanlist_ptr->value_ptr,
 		&chanlist_ptr->value_subid);
 	    if (EVEN(sts)) return sts;
           }
-          else
-          {
+          else {
 	    /* Get a subscription to the original object */
 	    sts = gdh_SubRefObjectInfoAttrref( &attrref,
 		&chanlist_ptr->value_subid);
@@ -7115,7 +7110,8 @@ static int rttsys_dochanlist_add( pwr_tObjid		chan_objid,
 {
 	rttsys_t_chan_list	*chanlist_ptr;
 	rttsys_t_chan_list	*new_objectlist;
-	char			namebuf[120];
+	pwr_tOName     		namebuf;
+	pwr_tAName	       	aname;
 	int			sts;
 	pwr_sAttrRef		attrref;
 	int			signame_characters;
@@ -7187,8 +7183,8 @@ static int rttsys_dochanlist_add( pwr_tObjid		chan_objid,
 	  ((pwr_sClass_ChanDi *)(chanlist_ptr->chan_ptr))->Identity);
 
         /* Get signal */
-        sts = gdh_ObjidToName( 
-		((pwr_sClass_ChanDo *)(chanlist_ptr->chan_ptr))->SigChanCon, 
+        sts = gdh_AttrrefToName( 
+		&((pwr_sClass_ChanDo *)(chanlist_ptr->chan_ptr))->SigChanCon, 
 		namebuf, sizeof( namebuf), cdh_mNName);
         if ( EVEN(sts))
         {
@@ -7210,11 +7206,10 @@ static int rttsys_dochanlist_add( pwr_tObjid		chan_objid,
 	    strcpy( chanlist_ptr->signame, namebuf);
 
 	  /* Get a pointer to the value */
-	  memset( &attrref, 0, sizeof(attrref));
-          sts = gdh_ClassAttrToAttrref( pwr_cClass_Di, ".ActualValue", &attrref);
-          if ( EVEN(sts)) return sts;
-	  attrref.Objid = 
-		((pwr_sClass_ChanDo *)(chanlist_ptr->chan_ptr))->SigChanCon;
+	  strcpy( aname, namebuf);
+	  strcat( aname, ".ActualValue");
+	  sts =  gdh_NameToAttrref( pwr_cNObjid, aname, &attrref);
+	  if ( EVEN(sts)) return sts;
           if ( local)
           {
 	    /* Get a direct link to the original object */
@@ -7687,7 +7682,8 @@ static int rttsys_aichanlist_add( pwr_tObjid		chan_objid,
 {
 	rttsys_t_chan_list	*chanlist_ptr;
 	rttsys_t_chan_list	*new_objectlist;
-	char			namebuf[120];
+	pwr_tOName	       	namebuf;
+	pwr_tAName	       	aname;
 	int			sts;
 	pwr_sAttrRef		attrref;
 	int			signame_characters;
@@ -7755,8 +7751,8 @@ static int rttsys_aichanlist_add( pwr_tObjid		chan_objid,
 	  ((pwr_sClass_ChanAi *)(chanlist_ptr->chan_ptr))->Identity);
 
         /* Get signal */
-        sts = gdh_ObjidToName( 
-		((pwr_sClass_ChanAi *)(chanlist_ptr->chan_ptr))->SigChanCon, 
+        sts = gdh_AttrrefToName( 
+		&((pwr_sClass_ChanAi *)(chanlist_ptr->chan_ptr))->SigChanCon, 
 		namebuf, sizeof( namebuf), cdh_mNName);
         if ( EVEN(sts))
         {
@@ -7778,11 +7774,10 @@ static int rttsys_aichanlist_add( pwr_tObjid		chan_objid,
 	    strcpy( chanlist_ptr->signame, namebuf);
 
 	  /* Get a pointer to the value */
-	  memset( &attrref, 0, sizeof(attrref));
-          sts = gdh_ClassAttrToAttrref( pwr_cClass_Ai, ".RawValue", &attrref);
-          if ( EVEN(sts)) return sts;
-	  attrref.Objid = 
-		((pwr_sClass_ChanAi *)(chanlist_ptr->chan_ptr))->SigChanCon;
+	  strcpy( aname, namebuf);
+	  strcat( aname, ".RawValue");
+	  sts =  gdh_NameToAttrref( pwr_cNObjid, aname, &attrref);
+	  if ( EVEN(sts)) return sts;
           if ( local)
           {
 	    /* Get a direct link to the original object */
@@ -8244,7 +8239,8 @@ static int rttsys_aochanlist_add( pwr_tObjid		chan_objid,
 {
 	rttsys_t_chan_list	*chanlist_ptr;
 	rttsys_t_chan_list	*new_objectlist;
-	char			namebuf[120];
+	pwr_tOName	       	namebuf;
+	pwr_tAName	       	aname;
 	int			sts;
 	pwr_sAttrRef		attrref;
 	int			signame_characters;
@@ -8312,8 +8308,8 @@ static int rttsys_aochanlist_add( pwr_tObjid		chan_objid,
 	  ((pwr_sClass_ChanAo *)(chanlist_ptr->chan_ptr))->Identity);
 
         /* Get signal */
-        sts = gdh_ObjidToName( 
-		((pwr_sClass_ChanAo *)(chanlist_ptr->chan_ptr))->SigChanCon, 
+        sts = gdh_AttrrefToName( 
+		&((pwr_sClass_ChanAo *)(chanlist_ptr->chan_ptr))->SigChanCon, 
 		namebuf, sizeof( namebuf), cdh_mNName);
         if ( EVEN(sts))
         {
@@ -8337,11 +8333,10 @@ static int rttsys_aochanlist_add( pwr_tObjid		chan_objid,
 	  if ( !signal_test_mode)
 	  {
 	    /* Get a pointer to the value */
-	    memset( &attrref, 0, sizeof(attrref));
-            sts = gdh_ClassAttrToAttrref( pwr_cClass_Ao, ".ActualValue", &attrref);
-            if ( EVEN(sts)) return sts;
-	    attrref.Objid = 
-		((pwr_sClass_ChanAo *)(chanlist_ptr->chan_ptr))->SigChanCon;
+	    strcpy( aname, namebuf);
+	    strcat( aname, ".ActualValue");
+	    sts =  gdh_NameToAttrref( pwr_cNObjid, aname, &attrref);
+	    if ( EVEN(sts)) return sts;
             if ( local)
             {
 	      /* Get a direct link to the original object */
@@ -8843,7 +8838,8 @@ static int rttsys_cochanlist_add( pwr_tObjid		chan_objid,
 {
 	rttsys_t_chan_list	*chanlist_ptr;
 	rttsys_t_chan_list	*new_objectlist;
-	char			namebuf[120];
+	pwr_tOName	       	namebuf;
+	pwr_tAName	       	aname;
 	int			sts;
 	pwr_sAttrRef		attrref;
 	int			signame_characters;
@@ -8911,8 +8907,8 @@ static int rttsys_cochanlist_add( pwr_tObjid		chan_objid,
 	  ((pwr_sClass_ChanCo *)(chanlist_ptr->chan_ptr))->Identity);
 
         /* Get signal */
-        sts = gdh_ObjidToName( 
-		((pwr_sClass_ChanCo *)(chanlist_ptr->chan_ptr))->SigChanCon, 
+        sts = gdh_AttrrefToName( 
+		&((pwr_sClass_ChanCo *)(chanlist_ptr->chan_ptr))->SigChanCon, 
 		namebuf, sizeof( namebuf), cdh_mNName);
         if ( EVEN(sts))
         {
@@ -8934,11 +8930,10 @@ static int rttsys_cochanlist_add( pwr_tObjid		chan_objid,
 	    strcpy( chanlist_ptr->signame, namebuf);
 
 	  /* Get a pointer to the value */
-	  memset( &attrref, 0, sizeof(attrref));
-          sts = gdh_ClassAttrToAttrref( pwr_cClass_Co, ".RawValue", &attrref);
-          if ( EVEN(sts)) return sts;
-	  attrref.Objid = 
-		((pwr_sClass_ChanCo *)(chanlist_ptr->chan_ptr))->SigChanCon;
+	  strcpy( aname, namebuf);
+	  strcat( aname, ".RawValue");
+	  sts =  gdh_NameToAttrref( pwr_cNObjid, aname, &attrref);
+	  if ( EVEN(sts)) return sts;
           if ( local)
           {
 	    /* Get a direct link to the original object */
