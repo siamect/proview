@@ -19,9 +19,33 @@ wb_vrep *wb_vrepdb::ref()
 }
 
 
+wb_vrepdb::wb_vrepdb(wb_erep *erep, const char *fileName) :
+  m_erep(erep)
+{  
+  strcpy(m_fileName, fileName);
+
+  m_db = new wb_db();
+  m_db->open(fileName);
+  
+  
+#if 0
+  m_isDbsenvLoaded = false;
+  if ( isCommonMeta())
+    m_merep = m_erep->merep();
+  else
+    m_merep = new wb_merep(m_erep, (wb_mvrep *)this);
+#endif
+}
+
+void wb_vrepdb::load()
+{
+}
+
+
 //
 // Save all changes done in the current transaction.
 //
+
 bool wb_vrepdb::commit(pwr_tStatus *sts)
 {
   return m_db->commit(m_txn);
@@ -38,24 +62,50 @@ bool wb_vrepdb::abort(pwr_tStatus *sts)
 
 wb_orep* wb_vrepdb::object(pwr_tStatus *sts)
 {
-//    m_ohead.get(m_txn, wb_oid(m_vid, 0));
-  m_ohead.get(m_txn, m_ohead.foid());
+  try {
+    pwr_tOid oid;
+
+    oid.vid = m_vid;
+    oid.oix = pwr_cNOix;
+
+    m_ohead.get(m_txn, oid);
+    m_ohead.get(m_txn, m_ohead.foid());
   
-  return new (this) wb_orepdb(&m_ohead.m_o);
+    return new (this) wb_orepdb(&m_ohead.m_o);
+  }
+  catch (DbException &e) {
+    *sts = LDH__NOSUCHOBJ;
+    printf("vrepdb: %s\n", e.what());
+    return 0;
+  }
 }
 
 wb_orep* wb_vrepdb::object(pwr_tStatus *sts, pwr_tOid oid)
 {
-  m_ohead.get(m_txn, oid);
+  try {
+    m_ohead.get(m_txn, oid);
   
-  return new (this) wb_orepdb(&m_ohead.m_o);
+    return new (this) wb_orepdb(&m_ohead.m_o);
+  }
+  catch (DbException &e) {
+    *sts = LDH__NOSUCHOBJ;
+    printf("vrepdb: %s\n", e.what());
+    return 0;
+  }
 }
 
 wb_orep* wb_vrepdb::object(pwr_tStatus *sts, wb_orep *parent, wb_name name)
 {
-  wb_db_name n(m_db, m_txn, parent->oid(), name);
-  m_ohead.get(m_txn, n.oid());
-  return new (this) wb_orepdb(&m_ohead.m_o);
+  try {
+    wb_db_name n(m_db, m_txn, parent->oid(), name);
+    m_ohead.get(m_txn, n.oid());
+    return new (this) wb_orepdb(&m_ohead.m_o);
+  }
+  catch (DbException &e) {
+    *sts = LDH__NOSUCHOBJ;
+    printf("vrepdb: %s\n", e.what());
+    return 0;
+  }
 }
 
 wb_orep* wb_vrepdb::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination d, wb_name name)
@@ -185,7 +235,7 @@ bool wb_vrepdb::renameObject(pwr_tStatus *sts, wb_orep *orp, wb_name name)
   }
 }
 
-bool wb_vrepdb::writeAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, unsigned int offset, unsigned int size, void *p)
+bool wb_vrepdb::writeAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, size_t offset, size_t size, void *p)
 {
   //body.oid = ?;
   //body.bix = ?;
@@ -201,32 +251,70 @@ bool wb_vrepdb::writeAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, unsig
   return true;
 }
 
-void *wb_vrepdb::readAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, unsigned int offset, unsigned int size, void *p)
+void *wb_vrepdb::readAttribute(pwr_tStatus *sts, wb_orep *orp, pwr_eBix bix, size_t offset, size_t size, void *p)
 {
-//    ob_k obk(o->oid(), bix);
-  //ob_d obd;
-    
-  //obd.set_doff(offset);
-  //obd.set_dlen(size);
-    
-    
-  wb_db_txn *txn = m_db->begin(0);
-        
   try {
-    //m_db.obody.get(txn, &bk, &bd, 0);
+    m_ohead.get(m_txn, orp->oid());
+    *sts = LDH__SUCCESS;
+  
+    switch (bix) {
+    case pwr_eBix_rt:
+    {
+    
+      wb_db_rbody rb(m_db, m_ohead.oid());
+      rb.get(m_txn, offset, size, p);
+      break;
+    }
+    case pwr_eBix_dev:
+    {
+    
+      wb_db_rbody db(m_db, m_ohead.oid());
+      db.get(m_txn, offset, size, p);
+      break;
+    }
+    default:
+      p = 0;
+    }
 
-    m_db->commit(txn);
+    return p;
   }
   catch (DbException &e) {
-    m_db->abort(txn);
-    // ?? How do we reset the Orep ???, the name was changed
+    *sts = LDH__NOSUCHOBJ;
+    printf("vrepdb: %s\n", e.what());
+    return 0;
   }
-  return 0;
 }
 
-void *wb_vrepdb::readBody(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, void *p)
+void *wb_vrepdb::readBody(pwr_tStatus *sts, wb_orep *orp, pwr_eBix bix, void *p)
 {
-  return 0;
+  try {
+    m_ohead.get(m_txn, orp->oid());
+    *sts = LDH__SUCCESS;
+  
+    switch (bix) {
+    case pwr_eBix_rt:
+    {
+      wb_db_rbody rb(m_db, m_ohead.oid());
+      rb.get(m_txn, 0, m_ohead.rbSize(), p);
+      break;
+    }
+    case pwr_eBix_dev:
+    {
+      wb_db_rbody db(m_db, m_ohead.oid());
+      db.get(m_txn, 0, m_ohead.dbSize(), p);
+      break;
+    }
+    default:
+      p = 0;
+    }
+
+    return p;
+  }
+  catch (DbException &e) {
+    *sts = LDH__NOSUCHOBJ;
+    printf("vrepdb: %s\n", e.what());
+    return 0;
+  }
 }
 
 bool wb_vrepdb::writeBody(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, void *p)
@@ -241,93 +329,191 @@ wb_orep *wb_vrepdb::ancestor(pwr_tStatus *sts, wb_orep *o)
 
 pwr_tCid wb_vrepdb::cid(pwr_tStatus *sts, const wb_orep * const orp)
 {
-  return m_ohead.get(m_txn, orp->oid()).cid();
+  try {
+    return m_ohead.get(m_txn, orp->oid()).cid();
+  }
+  catch (DbException &e) {
+    *sts = LDH__NOSUCHOBJ;
+    printf("vrepdb: %s\n", e.what());
+    return 0;
+  }
 }
 
 pwr_tOid wb_vrepdb::poid(pwr_tStatus *sts, const wb_orep * const orp)
 {
-  return m_ohead.get(m_txn, orp->oid()).poid();
+  try {
+    return m_ohead.get(m_txn, orp->oid()).poid();
+  }
+  catch (DbException &e) {
+    *sts = LDH__NOSUCHOBJ;
+    printf("vrepdb: %s\n", e.what());
+    return pwr_cNOid;
+  }
 }
 
 pwr_tOid wb_vrepdb::foid(pwr_tStatus *sts, const wb_orep * const orp)
 {
-  return m_ohead.get(m_txn, orp->oid()).foid();
+  try {
+    return m_ohead.get(m_txn, orp->oid()).foid();
+  }
+  catch (DbException &e) {
+    *sts = LDH__NOSUCHOBJ;
+    printf("vrepdb: %s\n", e.what());
+    return pwr_cNOid;
+  }
 }
 
 pwr_tOid wb_vrepdb::loid(pwr_tStatus *sts, const wb_orep * const orp)
 {
-  return m_ohead.get(m_txn, orp->oid()).loid();
+  try {
+    return m_ohead.get(m_txn, orp->oid()).loid();
+  }
+  catch (DbException &e) {
+    *sts = LDH__NOSUCHOBJ;
+    printf("vrepdb: %s\n", e.what());
+    return pwr_cNOid;
+  }
 }
 
 pwr_tOid wb_vrepdb::aoid(pwr_tStatus *sts, const wb_orep * const orp)
 {
-  return m_ohead.get(m_txn, orp->oid()).aoid();
+  try {
+    return m_ohead.get(m_txn, orp->oid()).aoid();
+  }
+  catch (DbException &e) {
+    *sts = LDH__NOSUCHOBJ;
+    printf("vrepdb: %s\n", e.what());
+    return pwr_cNOid;
+  }
 }
 
 pwr_tOid wb_vrepdb::boid(pwr_tStatus *sts, const wb_orep * const orp)
 {
-  return m_ohead.get(m_txn, orp->oid()).boid();
+  try {
+    return m_ohead.get(m_txn, orp->oid()).boid();
+  }
+  catch (DbException &e) {
+    *sts = LDH__NOSUCHOBJ;
+    printf("vrepdb: %s\n", e.what());
+    return pwr_cNOid;
+  }
 }
 
 wb_orep *wb_vrepdb::parent(pwr_tStatus *sts, wb_orep *orp)
 {
-  m_ohead.get(m_txn, m_ohead.get(m_txn, orp->oid()).poid());
-  return new (this) wb_orepdb(&m_ohead.m_o);
+  try {
+    m_ohead.get(m_txn, m_ohead.get(m_txn, orp->oid()).poid());
+    return new (this) wb_orepdb(&m_ohead.m_o);
+  }
+  catch (DbException &e) {
+    *sts = LDH__NOSUCHOBJ;
+    printf("vrepdb: %s\n", e.what());
+    return 0;
+  }
 }
 
 wb_orep *wb_vrepdb::after(pwr_tStatus *sts, wb_orep *orp)
 {
-  m_ohead.get(m_txn, m_ohead.get(m_txn, orp->oid()).aoid());
-  return new (this) wb_orepdb(&m_ohead.m_o);
+  try {
+    m_ohead.get(m_txn, m_ohead.get(m_txn, orp->oid()).aoid());
+    return new (this) wb_orepdb(&m_ohead.m_o);
+  }
+  catch (DbException &e) {
+    *sts = LDH__NOSUCHOBJ;
+    printf("vrepdb: %s\n", e.what());
+    return 0;
+  }
 }
 
 wb_orep *wb_vrepdb::before(pwr_tStatus *sts, wb_orep *orp)
 {
-  m_ohead.get(m_txn, m_ohead.get(m_txn, orp->oid()).boid());
-  return new (this) wb_orepdb(&m_ohead.m_o);
+  try {
+    m_ohead.get(m_txn, m_ohead.get(m_txn, orp->oid()).boid());
+    return new (this) wb_orepdb(&m_ohead.m_o);
+  }
+  catch (DbException &e) {
+    *sts = LDH__NOSUCHOBJ;
+    printf("vrepdb: %s\n", e.what());
+    return 0;
+  }
 }
 
 wb_orep *wb_vrepdb::first(pwr_tStatus *sts, wb_orep *orp)
 {
-  m_ohead.get(m_txn, m_ohead.get(m_txn, orp->oid()).foid());
-  return new (this) wb_orepdb(&m_ohead.m_o);
+  try {
+    m_ohead.get(m_txn, m_ohead.get(m_txn, orp->oid()).foid());
+    return new (this) wb_orepdb(&m_ohead.m_o);
+  }
+  catch (DbException &e) {
+    *sts = LDH__NOSUCHOBJ;
+    printf("vrepdb: %s\n", e.what());
+    return 0;
+  }
 }
 
 wb_orep *wb_vrepdb::child(pwr_tStatus *sts, wb_orep *orp, const char *name)
 {
-  wb_db_name n(m_db, m_txn, orp->oid(), name);
-  m_ohead.get(m_txn, n.oid());
-  return new (this) wb_orepdb(&m_ohead.m_o);
+  try {
+    wb_db_name n(m_db, m_txn, orp->oid(), name);
+    m_ohead.get(m_txn, n.oid());
+    return new (this) wb_orepdb(&m_ohead.m_o);
+  }
+  catch (DbException &e) {
+    *sts = LDH__NOSUCHOBJ;
+    printf("vrepdb: %s\n", e.what());
+    return 0;
+  }
 }
 
 wb_orep *wb_vrepdb::last(pwr_tStatus *sts, wb_orep *orp)
 {
-  m_ohead.get(m_txn, m_ohead.get(m_txn, orp->oid()).loid());
-  return new (this) wb_orepdb(&m_ohead.m_o);
+  try {
+    m_ohead.get(m_txn, m_ohead.get(m_txn, orp->oid()).loid());
+    return new (this) wb_orepdb(&m_ohead.m_o);
+  }
+  catch (DbException &e) {
+    *sts = LDH__NOSUCHOBJ;
+    printf("vrepdb: %s\n", e.what());
+    return 0;
+  }
 }
 
 wb_orep *wb_vrepdb::next(pwr_tStatus *sts, wb_orep *orp)
 {
-  m_ohead.get(m_txn, orp->oid());
-  wb_db_class c(m_db, m_ohead.cid());
-  if (c.succ(m_ohead.oid())) {
-    m_ohead.get(m_txn, c.oid());
-    return new (this) wb_orepdb(&m_ohead.m_o);
-  } else {
-    //*sts = LDH__?;
+  try {
+    m_ohead.get(m_txn, orp->oid());
+    wb_db_class c(m_db, m_ohead.cid());
+    if (c.succ(m_ohead.oid())) {
+      m_ohead.get(m_txn, c.oid());
+      return new (this) wb_orepdb(&m_ohead.m_o);
+    } else {
+      //*sts = LDH__?;
+      return 0;
+    }
+  }
+  catch (DbException &e) {
+    *sts = LDH__NOSUCHOBJ;
+    printf("vrepdb: %s\n", e.what());
     return 0;
   }
 }
 
 wb_orep *wb_vrepdb::previous(pwr_tStatus *sts, wb_orep *orp)
 {
-  m_ohead.get(m_txn, orp->oid());
-  wb_db_class c(m_db, m_ohead.cid());
-  if (c.pred(m_ohead.oid())) {
-    m_ohead.get(m_txn, c.oid());
-    return new (this) wb_orepdb(&m_ohead.m_o);
-  } else {
-    //*sts = LDH__?;
+  try {
+    m_ohead.get(m_txn, orp->oid());
+    wb_db_class c(m_db, m_ohead.cid());
+    if (c.pred(m_ohead.oid())) {
+      m_ohead.get(m_txn, c.oid());
+      return new (this) wb_orepdb(&m_ohead.m_o);
+    } else {
+      //*sts = LDH__?;
+      return 0;
+    }
+  }
+  catch (DbException &e) {
+    *sts = LDH__NOSUCHOBJ;
+    printf("vrepdb: %s\n", e.what());
     return 0;
   }
 }

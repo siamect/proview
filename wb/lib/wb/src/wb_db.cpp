@@ -12,6 +12,29 @@
 #include "wb_export.h"
 
 
+wb_db_info::wb_db_info(wb_db *db) :
+  m_db(db), m_data(&m_volume, sizeof(m_volume))
+{
+}
+
+void wb_db_info::get(wb_db_txn *txn)
+{
+  int index = 0;
+  m_key.set_data(&index);
+  m_key.set_size(sizeof(index));
+  
+  m_db->m_t_info->get(txn, &m_key, &m_data, 0);
+}
+
+void wb_db_info::put(wb_db_txn *txn)
+{
+  int index = 0;
+  m_key.set_data(&index);
+  m_key.set_size(sizeof(index));
+  
+  m_db->m_t_info->put(txn, &m_key, &m_data, 0);
+}
+
 wb_db_class::wb_db_class(wb_db *db, wb_db_txn *txn, pwr_tCid cid) :
   m_db(db), m_key(&m_k, sizeof(m_k)), m_data(0, 0), m_dbc(0)
 {
@@ -185,9 +208,24 @@ wb_db_rbody::wb_db_rbody(wb_db *db, pwr_tOid oid, size_t size, void *p) :
 {
 }
 
+wb_db_rbody::wb_db_rbody(wb_db *db, pwr_tOid oid) :
+  m_db(db), m_oid(oid), m_size(0), m_p(0), m_key(&m_oid, sizeof(m_oid)), m_data(0, 0)
+{
+}
+
 void wb_db_rbody::put(wb_db_txn *txn)
 {
   m_db->m_t_rbody->put(txn, &m_key, &m_data, 0);
+}
+
+
+void wb_db_rbody::get(wb_db_txn *txn, size_t offset, size_t size, void *p)
+{
+  m_data.set_doff(offset);
+  m_data.set_dlen(size);
+  m_data.set_data(p);
+  
+  m_db->m_t_rbody->get(txn, &m_key, &m_data, DB_DBT_PARTIAL);
 }
 
 wb_db_dbody::wb_db_dbody(wb_db *db, pwr_tOid oid, size_t size, void *p) :
@@ -195,9 +233,23 @@ wb_db_dbody::wb_db_dbody(wb_db *db, pwr_tOid oid, size_t size, void *p) :
 {
 }
 
+wb_db_dbody::wb_db_dbody(wb_db *db, pwr_tOid oid) :
+  m_db(db), m_oid(oid), m_size(0), m_p(0), m_key(&m_oid, sizeof(m_oid)), m_data(0, 0)
+{
+}
+
 void wb_db_dbody::put(wb_db_txn *txn)
 {
   m_db->m_t_dbody->put(txn, &m_key, &m_data, 0);
+}
+
+void wb_db_dbody::get(wb_db_txn *txn, size_t offset, size_t size, void *p)
+{
+  m_data.set_doff(offset);
+  m_data.set_dlen(size);
+  m_data.set_data(p);
+  
+  m_db->m_t_dbody->get(txn, &m_key, &m_data, DB_DBT_PARTIAL);
 }
 
 
@@ -229,18 +281,32 @@ void wb_db::create(pwr_tVid vid, pwr_tCid cid, const char *volumeName, const cha
   strcpy(m_volumeName, volumeName);
   dcli_translate_filename(m_fileName, fileName);
   
-  open(m_fileName);
+  openDb();
 }
 
   
-void wb_db::open(char *name)
+void wb_db::open(const char *fileName)
+{
+  dcli_translate_filename(m_fileName, fileName);
+  openDb();
+  
+  m_env->txn_begin(0, (DbTxn **)&m_txn, 0);
+
+  wb_db_info i(this);
+  i.get(m_txn);
+  m_vid = i.vid();
+  m_cid = i.cid();
+  strcpy(m_volumeName, i.name());
+}
+
+void wb_db::openDb()
 {
   struct stat sb;
 
   /* Create the directory, read/write/access owner only. */
-  if (stat(name, &sb) != 0) {
-    if (mkdir(name, S_IRWXU) != 0) {
-      fprintf(stderr, "txnapp: mkdir: %s, %s\n", name, strerror(errno));
+  if (stat(m_fileName, &sb) != 0) {
+    if (mkdir(m_fileName, S_IRWXU) != 0) {
+      fprintf(stderr, "txnapp: mkdir: %s, %s\n", m_fileName, strerror(errno));
       //exit(1);
     }
         
@@ -249,7 +315,7 @@ void wb_db::open(char *name)
   m_env = new DbEnv(0/*DB_CXX_NO_EXCEPTIONS*/);
   m_env->set_errpfx("PWR db");
     
-  m_env->open(name,
+  m_env->open(m_fileName,
               DB_CREATE | DB_INIT_LOCK | DB_INIT_LOG | DB_INIT_MPOOL | DB_INIT_TXN | DB_RECOVER,
               S_IRUSR | S_IWUSR);
 

@@ -17,125 +17,7 @@ protected:
   unsigned int m_nSession;
   unsigned int m_nRef;
 
-#if 0
-  DbEnv *m_dbenv;
-  Db *m_t_ohead;
-  Db *m_t_obody;
-  Db *m_t_class;
-  Db *m_t_name;
-  Db *m_t_info;
-
-  DbTxn *m_txn;    
-    
-  class db_ohead
-  {
-  public:
-    db_sObject m_o;
-    Dbt m_key;
-    Dbt m_data;
-    Db *m_t_ohead;
-
-    db_ohead(Db *t_ohead);
-    db_ohead(Db *t_ohead, pwr_tOid oid);
-    db_ohead(Db *t_ohead, DbTxn *txn, pwr_tOid oid);
-    db_ohead(Db *t_ohead, DbTxn *txn, wb_orep *orp);
-
-    db_ohead &get(DbTxn *txn);
-    db_ohead &get(DbTxn *txn, wb_orep *o);
-    db_ohead &get(DbTxn *txn, pwr_tOid oid);
-
-    void put(DbTxn *txn);
-    void del(DbTxn *txn);
-        
-    pwr_tOid oid() { return m_o.oid;}
-    pwr_tCid cid() { return m_o.cid;}
-    pwr_tOid poid() { return m_o.poid;}
-    pwr_tOid foid() { return m_o.foid;}
-    pwr_tOid loid() { return m_o.loid;}
-    pwr_tOid boid() { return m_o.boid;}
-    pwr_tOid aoid() { return m_o.aoid;}
-
-    char *name();
-    void name(wb_name &name);
-        
-    void poid(pwr_tOid oid) { m_o.poid = oid;}
-    void foid(pwr_tOid oid) { m_o.foid = oid;}
-    void loid(pwr_tOid oid) { m_o.loid = oid;}
-    void boid(pwr_tOid oid) { m_o.boid = oid;}
-    void aoid(pwr_tOid oid) { m_o.aoid = oid;}
-
-    void clear();
-  };
-    
-  class db_name
-  {
-  public:
-    struct
-    {
-      pwr_tOid     poid;
-      pwr_tObjName normname;
-    } m_k;
-    struct
-    {
-      pwr_tOid      oid;
-      //pwr_tCid      cid;   // saved here to optimize tree traversal
-      //pwr_mClassDef flags; // saved here to optimize tree traversal
-    } m_d;
-        
-    Dbt m_key;
-    Dbt m_data;
-
-    Db *m_t_name;
-        
-        
-    db_name(Db *t_name, DbTxn *txn);
-    db_name(Db *t_name, db_ohead &o);
-    db_name(Db *t_name, pwr_tOid, char *name);
-    db_name(Db *t_name, DbTxn *txn, pwr_tOid poid, const char *name);
-    db_name(Db *t_name, DbTxn *txn, pwr_tOid poid, wb_name name);
-        
-    void get(DbTxn *txn);
-    void put(DbTxn *txn);
-    void del(DbTxn *txn);
-        
-    void name(wb_name &name);
-        
-    pwr_tOid oid() { return m_d.oid;}
-  };
-
-  class db_class
-  {
-  public:
-    struct 
-    {
-      pwr_tCid cid;
-      pwr_tOid oid;
-    } m_k;
-
-    Dbt m_key;
-    Db *m_t_class;
-    Dbc *m_dbc;
-        
-    db_class(Db *t_class, pwr_tCid cid);
-    db_class(Db *t_class, db_ohead &o);
-    db_class(Db *t_class, DbTxn *txn, pwr_tCid cid);
-    ~db_class();
-
-    bool succ(DbTxn *txn, pwr_tOid oid);
-    bool pred(DbTxn *txn, pwr_tOid oid);
-    void put(DbTxn *txn);
-    void del(DbTxn *txn);
-        
-    pwr_tCid cid() { return m_k.cid;}
-    pwr_tOid oid() { return m_k.oid;}        
-                
-  };    
-    
-  wb_db::db_ohead m_ohead;
-    
-  pwr_tOix wb_vrepdb::new_oix(DbTxn *txn);
-  int wb_vrepdb::del_family(DbTxn *txn, Dbc *cp, pwr_tOix poix);
-#endif
+  char m_fileName[512];
 
 public:
 
@@ -143,15 +25,13 @@ public:
   wb_db_txn *m_txn;    
   wb_db_ohead m_ohead;
   
-  wb_vrepdb();
+  wb_vrepdb(wb_erep *erep, const char *fileName);
   ~wb_vrepdb();  
 
   virtual void unref();
   virtual wb_vrep *ref();
 
   virtual wb_erep *erep();
-
-
  
   pwr_tTime ohTime(pwr_tStatus *sts, const wb_orep * const o);
   pwr_tOid oid(pwr_tStatus *sts, const wb_orep * const o);
@@ -225,7 +105,7 @@ public:
   virtual pwr_tVid vid() const;
   virtual void objectName(wb_orep *o, const char *str);
 
-  void load(char *name);
+  void load();
 
   virtual bool exportVolume(wb_import &e);
     
@@ -237,7 +117,6 @@ public:
     
   virtual bool exportMeta(wb_import &e);
 
-  //pwr_tOid new_oid(DbTxn *txn);
 #if 0
   int del_family(DbTxn *txn, Dbc *cp, pwr_tOid poid);
 #endif

@@ -47,11 +47,6 @@ public:
   Db *m_t_info;
 
   wb_db_txn *m_txn;    
-    
-    
-    
-  //wb_db_ohead m_ohead;
-    
 
 public:
     
@@ -62,7 +57,9 @@ public:
   pwr_tOid new_oid(wb_db_txn *txn);
 
   void close();
-  void open(char *fileName);
+  void open(const char *fileName);
+  void openDb();
+  
   void create(pwr_tVid vid, pwr_tCid cid, const char *volumeName, const char *fileName);
   
   int del_family(wb_db_txn *txn, Dbc *cp, pwr_tOid poid);
@@ -94,6 +91,40 @@ public:
   bool importMeta(dbs_sEnv *ep);
   
 
+};
+
+class wb_db_info
+{
+public:
+  struct 
+  {
+    pwr_tVid vid;
+    pwr_tCid cid;
+    pwr_tTime time;
+    pwr_tObjName name;
+  } m_volume;
+
+  wb_db *m_db;
+  
+  Dbt m_key;
+  Dbt m_data;
+        
+  wb_db_info(wb_db *db);
+  ~wb_db_info();
+
+  void put(wb_db_txn *txn);
+  void get(wb_db_txn *txn);
+        
+  pwr_tCid cid() { return m_volume.cid;}
+  pwr_tVid vid() { return m_volume.vid;}
+  pwr_tTime time() { return m_volume.time;}
+  char *name() { return m_volume.name;}
+  
+  void cid(pwr_tCid cid) { m_volume.cid = cid;}
+  void vid(pwr_tVid vid) { m_volume.vid = vid;}
+  void time(pwr_tTime time) { m_volume.time = time;}
+  void name(char const *name) { strcpy(m_volume.name, name);}
+  
 };
 
 class wb_db_ohead
@@ -132,6 +163,9 @@ public:
   char *name() { return m_o.name;}
   
   char *normname() {return m_o.normname;}
+
+  size_t rbSize() { return m_o.body[0].size;}
+  size_t dbSize() { return m_o.body[1].size;}
   
   void name(wb_name &name);
         
@@ -240,9 +274,11 @@ public:
   Dbt m_key;
   Dbt m_data;
 
+  wb_db_rbody(wb_db *db, pwr_tOid oid);
   wb_db_rbody(wb_db *db, pwr_tOid oid, size_t size, void *p);
   
   void put(wb_db_txn *txn);
+  void get(wb_db_txn *txn, size_t offset, size_t size, void *p);
 };
 
 class wb_db_dbody
@@ -257,9 +293,11 @@ public:
   Dbt m_key;
   Dbt m_data;
 
+  wb_db_dbody(wb_db *db, pwr_tOid oid);
   wb_db_dbody(wb_db *db, pwr_tOid oid, size_t size, void *p);
   
   void put(wb_db_txn *txn);
+  void get(wb_db_txn *txn, size_t offset, size_t size, void *p);
 };
 
 class wb_db_txn : public DbTxn
