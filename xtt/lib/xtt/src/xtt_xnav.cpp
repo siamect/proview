@@ -95,12 +95,17 @@ int xnav_get_trace_attr( pwr_tObjid objid, char *attr)
     case pwr_cClass_Av:
     case pwr_cClass_Ai:
     case pwr_cClass_Ao:
+    case pwr_cClass_Ii:
+    case pwr_cClass_Io:
+    case pwr_cClass_Iv:
       strcpy( attr, "ActualValue");	
       break;   
     case pwr_cClass_ChanDi:
     case pwr_cClass_ChanDo:
     case pwr_cClass_ChanAi:
     case pwr_cClass_ChanAo:
+    case pwr_cClass_ChanIi:
+    case pwr_cClass_ChanIo:
       sts = gdh_ObjidToName ( objid, objname, sizeof(objname), cdh_mName_volumeStrict);
       if ( EVEN(sts)) return sts;
       strcat( objname, ".SigChanCon");

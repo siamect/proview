@@ -3227,6 +3227,46 @@ static int	gcg_get_outputstring_spec(
 	  free((char *) parameter);
 	  return GSX__SPECFOUND;
 	}
+	if ( output_node->ln.classid == pwr_cClass_GetIp)
+	{
+	  /* Get the objdid stored in the parameter */
+	  sts = ldh_GetObjectPar( 
+			(output_node->hn.window_pointer)->hw.ldhsession,  
+			output_node->ln.object_did, 
+			"DevBody",
+			"IpObject",
+			(char **)&objdid, &size); 
+	  if ( EVEN(sts)) return sts;
+
+	  /* Check that this is objdid of an existing object */
+	  sts = ldh_GetObjectClass(
+			(output_node->hn.window_pointer)->hw.ldhsession, 
+			*objdid,
+			&class);
+	  if ( EVEN(sts)) 
+	  {
+	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
+	    free((char *) objdid);
+	    return GSX__NEXTPAR;
+	  }
+	  /* Get the parametername stored in the parameter */
+	  sts = ldh_GetObjectPar( 
+			(output_node->hn.window_pointer)->hw.ldhsession,  
+			output_node->ln.object_did, 
+			"DevBody",
+			"Parameter",
+			(char **)&parameter, &size); 
+	  if ( EVEN(sts)) return sts;
+
+	  sts = gcg_parname_to_pgmname(ldhses, class, parameter, parstring);
+	  if ( EVEN(sts)) return sts;
+
+	  *parobjdid = *objdid;
+	  *parprefix = GCG_PREFIX_REF;
+	  free((char *) objdid);
+	  free((char *) parameter);
+	  return GSX__SPECFOUND;
+	}
 	/**********************************************************
 	*  GETPI
 	***********************************************************/	
@@ -6024,7 +6064,8 @@ vldh_t_node	node;
 * vldh_t_node	node		I	vldh node.
 *
 * Description:
-*	Compile method for GETDI, GETDO, GETDV, GETAI, GETAO, GETAV node.
+*	Compile method for GETDI, GETDO, GETDV, GETAI, GETAO, GETAV,
+*       GETII, GETIO and GETIV node.
 *	Checks that the class of the referenced object is correct.
 *	Prints declaration and directlink for a read rtdb pointer
 *	for the refereced io-object. The pointer will point at
@@ -6121,6 +6162,30 @@ vldh_t_node	node;
 	else if ( node->ln.classid == vldh_class( ldhses, VLDH_CLASS_GETAV ))
 	{
 	  if ( class != vldh_class( ldhses, VLDH_CLASS_AV))
+	  {
+	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
+	    return GSX__NEXTNODE;
+	  }
+	}
+	else if ( node->ln.classid == pwr_cClass_GetIi)
+	{
+	  if ( class != pwr_cClass_Ii)
+	  {
+	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
+	    return GSX__NEXTNODE;
+	  }
+	}    
+	else if ( node->ln.classid == pwr_cClass_GetIo)
+	{
+	  if ( class != pwr_cClass_Io)
+	  {
+	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
+	    return GSX__NEXTNODE;
+	  }
+	}
+	else if ( node->ln.classid == pwr_cClass_GetIv)
+	{
+	  if ( class != pwr_cClass_Iv)
 	  {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
@@ -7566,11 +7631,11 @@ vldh_t_node	node;
 	}
 
 	/* Check that the class of the referenced object is correct */
-	if ( ( node->ln.classid == vldh_class( ldhses, VLDH_CLASS_SETDO )) ||	
-	     ( node->ln.classid == vldh_class( ldhses, VLDH_CLASS_RESDO )) )
+	if ( ( node->ln.classid == pwr_cClass_setdo) ||	
+	     ( node->ln.classid == pwr_cClass_resdo) )
 	{
-	  if ( !(class == vldh_class( ldhses, VLDH_CLASS_DO) ||
-	         class == vldh_class( ldhses, VLDH_CLASS_PO)))
+	  if ( !(class == pwr_cClass_Do ||
+	         class == pwr_cClass_Po))
 	  {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
@@ -7578,10 +7643,10 @@ vldh_t_node	node;
 	  nocondef[0].bo = TRUE;
 	  nocontype[0] = GCG_BOOLEAN;
 	}    
-	else if ( node->ln.classid == vldh_class( ldhses, VLDH_CLASS_STODO ))
+	else if ( node->ln.classid == pwr_cClass_stodo)
 	{
-	  if ( !(class == vldh_class( ldhses, VLDH_CLASS_DO) ||
-	         class == vldh_class( ldhses, VLDH_CLASS_PO)))
+	  if ( !(class == pwr_cClass_Do ||
+	         class == pwr_cClass_Po))
 	  {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
@@ -7589,10 +7654,10 @@ vldh_t_node	node;
 	  nocondef[0].bo = (int) *nocondef_ptr;
 	  nocontype[0] = GCG_BOOLEAN;
 	}    
-	else if (( node->ln.classid == vldh_class( ldhses, VLDH_CLASS_SETDV )) ||	
-	     ( node->ln.classid == vldh_class( ldhses, VLDH_CLASS_RESDV )) )
+	else if (( node->ln.classid == pwr_cClass_setdv) ||	
+		 ( node->ln.classid == pwr_cClass_resdv) )
 	{
-	  if ( class != vldh_class( ldhses, VLDH_CLASS_DV))
+	  if ( class != pwr_cClass_Dv)
 	  {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
@@ -7600,9 +7665,9 @@ vldh_t_node	node;
 	  nocondef[0].bo = TRUE;
 	  nocontype[0] = GCG_BOOLEAN;
 	}    
-	else if ( node->ln.classid == vldh_class( ldhses, VLDH_CLASS_STODV ))
+	else if ( node->ln.classid == pwr_cClass_stodv)
 	{
-	  if ( class != vldh_class( ldhses, VLDH_CLASS_DV))
+	  if ( class != pwr_cClass_Dv)
 	  {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
@@ -7610,10 +7675,10 @@ vldh_t_node	node;
 	  nocondef[0].bo = (int) *nocondef_ptr;
 	  nocontype[0] = GCG_BOOLEAN;
 	}    
-	else if ( (node->ln.classid == vldh_class( ldhses, VLDH_CLASS_STOAO )) ||
-		  (node->ln.classid == vldh_class( ldhses, VLDH_CLASS_CSTOAO ))) 
+	else if ( (node->ln.classid == pwr_cClass_stoao) ||
+		  (node->ln.classid == pwr_cClass_cstoao)) 
 	{
-	  if ( class != vldh_class( ldhses, VLDH_CLASS_AO))
+	  if ( class != pwr_cClass_Ao)
 	  {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
@@ -7621,16 +7686,38 @@ vldh_t_node	node;
 	  nocondef[0].fl = *(float *) nocondef_ptr;
 	  nocontype[0] = GCG_FLOAT;
 	}    
-	else if ( ( node->ln.classid == vldh_class( ldhses, VLDH_CLASS_STOAV )) ||
-		  (node->ln.classid == vldh_class( ldhses, VLDH_CLASS_CSTOAV ))) 
+	else if ( ( node->ln.classid == pwr_cClass_stoav) ||
+		  (node->ln.classid == pwr_cClass_cstoav)) 
 	{
-	  if ( class != vldh_class( ldhses, VLDH_CLASS_AV))
+	  if ( class != pwr_cClass_Av)
 	  {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
 	  nocondef[0].fl = *(float *) nocondef_ptr;
 	  nocontype[0] = GCG_FLOAT;
+	}    
+	else if ( (node->ln.classid == pwr_cClass_stoio) ||
+		  (node->ln.classid == pwr_cClass_cstoio)) 
+	{
+	  if ( class != pwr_cClass_Io)
+	  {
+	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
+	    return GSX__NEXTNODE;
+	  }
+	  nocondef[0].bo = *(int *) nocondef_ptr;
+	  nocontype[0] = GCG_INT32;
+	}    
+	else if ( ( node->ln.classid == pwr_cClass_stoiv) ||
+		  (node->ln.classid == pwr_cClass_cstoiv)) 
+	{
+	  if ( class != pwr_cClass_Iv)
+	  {
+	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
+	    return GSX__NEXTNODE;
+	  }
+	  nocondef[0].bo = *(int *) nocondef_ptr;
+	  nocontype[0] = GCG_INT32;
 	}    
 	else if ( node->ln.classid == pwr_cClass_stosv || 
 	          node->ln.classid == pwr_cClass_cstosv) 
@@ -7733,8 +7820,10 @@ vldh_t_node	node;
 
 	ldhses = (node->hn.window_pointer)->hw.ldhsession;
 	
-	if ( !(  (node->ln.classid == vldh_class( ldhses, VLDH_CLASS_STOIP  )) ||
-	         (node->ln.classid == vldh_class( ldhses, VLDH_CLASS_CSTOIP )) ||
+	if ( !(  (node->ln.classid == pwr_cClass_StoAtoIp) ||
+	         (node->ln.classid == pwr_cClass_CStoAtoIp) ||
+	         (node->ln.classid == pwr_cClass_StoIp) ||
+	         (node->ln.classid == pwr_cClass_CStoIp) ||
 	         (node->ln.classid == vldh_class( ldhses, VLDH_CLASS_STOAP  )) ||
 	         (node->ln.classid == vldh_class( ldhses, VLDH_CLASS_CSTOAP )) ))
 	{
@@ -7890,9 +7979,10 @@ vldh_t_node	node;
         case pwr_eType_UInt16  : 
         case pwr_eType_Int8  : 
         case pwr_eType_UInt8  : 
-        case pwr_eType_Objid  : 
-	  if ( !(( node->ln.classid == vldh_class( ldhses, VLDH_CLASS_STOIP)) ||
-	       ( node->ln.classid == vldh_class( ldhses, VLDH_CLASS_CSTOIP )))) 
+	  if ( !(node->ln.classid == pwr_cClass_StoAtoIp ||
+		 node->ln.classid == pwr_cClass_CStoAtoIp ||
+		 node->ln.classid == pwr_cClass_StoIp ||
+		 node->ln.classid == pwr_cClass_CStoIp)) 
 	  {
 	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
 	    free((char *) parameter);
@@ -7952,8 +8042,10 @@ vldh_t_node	node;
 	  nocondef[0].fl = *(float *) nocondef_ptr;
 	  nocontype[0] = GCG_FLOAT;
 	}    
-	else if ( ( node->ln.classid == vldh_class( ldhses, VLDH_CLASS_STOIP)) ||
-	       ( node->ln.classid == vldh_class( ldhses, VLDH_CLASS_CSTOIP ))) 
+	else if ( node->ln.classid == pwr_cClass_StoAtoIp ||
+		  node->ln.classid == pwr_cClass_CStoAtoIp ||
+		  node->ln.classid == pwr_cClass_StoIp ||
+		  node->ln.classid == pwr_cClass_CStoIp) 
 	{
 	  nocondef[0].bo = *(float *) nocondef_ptr;
 	  nocontype[0] = GCG_INT32;
@@ -10507,11 +10599,11 @@ vldh_t_node	node;
 * vldh_t_node	node		I	vldh node.
 *
 * Description:
-*	Compile method for GETIP
+*	Compile method for GetIpToA and GetIp
 *	Prints code for declaration and direkt link of a rtdbpointer.
 *	Prints an exec call :
 *	'structname'_exec( 'objpointer');
-*	ex: getip_exec( Z80000811);
+*	ex: GetIpToA_exec( Z80000811);
 *
 *	Checks that the referenced object exists and that the referenced
 *	parameter exists in that objekt, and that the type of the parameter
@@ -10642,9 +10734,8 @@ vldh_t_node	node;
         case pwr_eType_UInt16  : 
         case pwr_eType_Int8  : 
         case pwr_eType_UInt8  : 
-        case pwr_eType_Objid  : 
-	  if ( node->ln.classid != vldh_class( ldhses, VLDH_CLASS_GETIP))
-	  {
+	  if ( !(node->ln.classid != pwr_cClass_GetIpToA ||
+		 node->ln.classid != pwr_cClass_GetIp)) {
 	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
 	    return GSX__NEXTNODE;
 	  }
@@ -10895,10 +10986,10 @@ vldh_t_node	node;
 	}
 
 	/* Check that the class of the referenced object is correct */
-	if ( ( node->ln.classid == vldh_uclass( ldhses, "SetDi" )) ||	
-	     ( node->ln.classid == vldh_uclass( ldhses, "ResDi" )) )
+	if ( ( node->ln.classid == pwr_cClass_setdi) ||	
+	     ( node->ln.classid == pwr_cClass_resdi) )
 	{
-	  if ( class != vldh_class( ldhses, VLDH_CLASS_DI))
+	  if ( class != pwr_cClass_Di)
 	  {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
@@ -10906,26 +10997,37 @@ vldh_t_node	node;
 	  nocondef[0].bo = TRUE;
 	  nocontype[0] = GCG_BOOLEAN;
 	}    
-	else if ( node->ln.classid == vldh_uclass( ldhses, "StoDi" ))
+	else if ( node->ln.classid == pwr_cClass_stodi)
 	{
-	  if ( class != vldh_class( ldhses, VLDH_CLASS_DI))
+	  if ( class != pwr_cClass_Di)
 	  {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
 	  nocondef[0].bo = (int)*nocondef_ptr;
 	  nocontype[0] = GCG_BOOLEAN;
-	}    
-	else if ( (node->ln.classid == vldh_uclass( ldhses, "StoAi")) ||
-		  (node->ln.classid == vldh_uclass( ldhses, "CStoAi"))) 
+	}
+	else if ( (node->ln.classid == pwr_cClass_stoai) ||
+		  (node->ln.classid == pwr_cClass_cstoai)) 
 	{
-	  if ( class != vldh_class( ldhses, VLDH_CLASS_AI))
+	  if ( class != pwr_cClass_Ai)
 	  {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
 	  nocondef[0].fl = *(float *) nocondef_ptr;
 	  nocontype[0] = GCG_FLOAT;
+	}    
+	else if ( (node->ln.classid == pwr_cClass_stoii) ||
+		  (node->ln.classid == pwr_cClass_cstoii)) 
+	{
+	  if ( class != pwr_cClass_Ii)
+	  {
+	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
+	    return GSX__NEXTNODE;
+	  }
+	  nocondef[0].bo = *(int *) nocondef_ptr;
+	  nocontype[0] = GCG_INT32;
 	}    
 	free(nocondef_ptr);
 

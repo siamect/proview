@@ -676,6 +676,46 @@ static pwr_tStatus dataa_A8( dataa_ctx dataactx, char *line, char *pos,
 	sprintf( out, "(*(%s->AIn8P))", var); 
 	*incr = strlen(out);
 	return GSX__SUCCESS; }
+static pwr_tStatus dataa_I1( dataa_ctx dataactx, char *line, char *pos, 
+	char *out, int *incr, char *var) {
+	sprintf( out, "(*(%s->IIn1P))", var); 
+	*incr = strlen(out);
+	return GSX__SUCCESS; }
+static pwr_tStatus dataa_I2( dataa_ctx dataactx, char *line, char *pos, 
+	char *out, int *incr, char *var) {
+	sprintf( out, "(*(%s->IIn2P))", var); 
+	*incr = strlen(out);
+	return GSX__SUCCESS; }
+static pwr_tStatus dataa_I3( dataa_ctx dataactx, char *line, char *pos, 
+	char *out, int *incr, char *var) {
+	sprintf( out, "(*(%s->IIn3P))", var); 
+	*incr = strlen(out);
+	return GSX__SUCCESS; }
+static pwr_tStatus dataa_I4( dataa_ctx dataactx, char *line, char *pos, 
+	char *out, int *incr, char *var) {
+	sprintf( out, "(*(%s->IIn4P))", var); 
+	*incr = strlen(out);
+	return GSX__SUCCESS; }
+static pwr_tStatus dataa_I5( dataa_ctx dataactx, char *line, char *pos, 
+	char *out, int *incr, char *var) {
+	sprintf( out, "(*(%s->IIn5P))", var); 
+	*incr = strlen(out);
+	return GSX__SUCCESS; }
+static pwr_tStatus dataa_I6( dataa_ctx dataactx, char *line, char *pos, 
+	char *out, int *incr, char *var) {
+	sprintf( out, "(*(%s->IIn6P))", var); 
+	*incr = strlen(out);
+	return GSX__SUCCESS; }
+static pwr_tStatus dataa_I7( dataa_ctx dataactx, char *line, char *pos, 
+	char *out, int *incr, char *var) {
+	sprintf( out, "(*(%s->IIn7P))", var); 
+	*incr = strlen(out);
+	return GSX__SUCCESS; }
+static pwr_tStatus dataa_I8( dataa_ctx dataactx, char *line, char *pos, 
+	char *out, int *incr, char *var) {
+	sprintf( out, "(*(%s->IIn8P))", var); 
+	*incr = strlen(out);
+	return GSX__SUCCESS; }
 static pwr_tStatus dataa_od1( dataa_ctx dataactx, char *line, char *pos, 
 	char *out, int *incr, char *var) {
 	sprintf( out, "(%s->OutD1)", var); 
@@ -754,6 +794,46 @@ static pwr_tStatus dataa_OA7( dataa_ctx dataactx, char *line, char *pos,
 static pwr_tStatus dataa_OA8( dataa_ctx dataactx, char *line, char *pos, 
 	char *out, int *incr, char *var) {
 	sprintf( out, "(%s->OutA8)", var); 
+	*incr = strlen(out);
+	return GSX__SUCCESS; }
+static pwr_tStatus dataa_OI1( dataa_ctx dataactx, char *line, char *pos, 
+	char *out, int *incr, char *var) {
+	sprintf( out, "(%s->OutI1)", var); 
+	*incr = strlen(out);
+	return GSX__SUCCESS; }
+static pwr_tStatus dataa_OI2( dataa_ctx dataactx, char *line, char *pos, 
+	char *out, int *incr, char *var) {
+	sprintf( out, "(%s->OutI2)", var); 
+	*incr = strlen(out);
+	return GSX__SUCCESS; }
+static pwr_tStatus dataa_OI3( dataa_ctx dataactx, char *line, char *pos, 
+	char *out, int *incr, char *var) {
+	sprintf( out, "(%s->OutI3)", var); 
+	*incr = strlen(out);
+	return GSX__SUCCESS; }
+static pwr_tStatus dataa_OI4( dataa_ctx dataactx, char *line, char *pos, 
+	char *out, int *incr, char *var) {
+	sprintf( out, "(%s->OutI4)", var); 
+	*incr = strlen(out);
+	return GSX__SUCCESS; }
+static pwr_tStatus dataa_OI5( dataa_ctx dataactx, char *line, char *pos, 
+	char *out, int *incr, char *var) {
+	sprintf( out, "(%s->OutI5)", var); 
+	*incr = strlen(out);
+	return GSX__SUCCESS; }
+static pwr_tStatus dataa_OI6( dataa_ctx dataactx, char *line, char *pos, 
+	char *out, int *incr, char *var) {
+	sprintf( out, "(%s->OutI6)", var); 
+	*incr = strlen(out);
+	return GSX__SUCCESS; }
+static pwr_tStatus dataa_OI7( dataa_ctx dataactx, char *line, char *pos, 
+	char *out, int *incr, char *var) {
+	sprintf( out, "(%s->OutI7)", var); 
+	*incr = strlen(out);
+	return GSX__SUCCESS; }
+static pwr_tStatus dataa_OI8( dataa_ctx dataactx, char *line, char *pos, 
+	char *out, int *incr, char *var) {
+	sprintf( out, "(%s->OutI8)", var); 
 	*incr = strlen(out);
 	return GSX__SUCCESS; }
 
@@ -949,6 +1029,22 @@ static int	dataa_aliasdef( dataa_ctx dataactx, char *line)
 	    dataa_add_item( dataactx,  out_str[1], "A", "A", &dataa_A7);
 	  else if ( !strcmp( out_str[0], "A8"))
 	    dataa_add_item( dataactx,  out_str[1], "A", "A", &dataa_A8);
+	  else if ( !strcmp( out_str[0], "I1"))
+	    dataa_add_item( dataactx,  out_str[1], "A", "A", &dataa_I1);
+	  else if ( !strcmp( out_str[0], "I2"))
+	    dataa_add_item( dataactx,  out_str[1], "A", "A", &dataa_I2);
+	  else if ( !strcmp( out_str[0], "I3"))
+	    dataa_add_item( dataactx,  out_str[1], "A", "A", &dataa_I3);
+	  else if ( !strcmp( out_str[0], "I4"))
+	    dataa_add_item( dataactx,  out_str[1], "A", "A", &dataa_I4);
+	  else if ( !strcmp( out_str[0], "I5"))
+	    dataa_add_item( dataactx,  out_str[1], "A", "A", &dataa_I5);
+	  else if ( !strcmp( out_str[0], "I6"))
+	    dataa_add_item( dataactx,  out_str[1], "A", "A", &dataa_I6);
+	  else if ( !strcmp( out_str[0], "I7"))
+	    dataa_add_item( dataactx,  out_str[1], "A", "A", &dataa_I7);
+	  else if ( !strcmp( out_str[0], "I8"))
+	    dataa_add_item( dataactx,  out_str[1], "A", "A", &dataa_I8);
 	  else if ( !strcmp( out_str[0], "od1"))
 	    dataa_add_item( dataactx,  out_str[1], "A", "A", &dataa_od1);
 	  else if ( !strcmp( out_str[0], "od2"))
@@ -981,6 +1077,22 @@ static int	dataa_aliasdef( dataa_ctx dataactx, char *line)
 	    dataa_add_item( dataactx,  out_str[1], "A", "A", &dataa_OA7);
 	  else if ( !strcmp( out_str[0], "OA8"))
 	    dataa_add_item( dataactx,  out_str[1], "A", "A", &dataa_OA8);
+	  else if ( !strcmp( out_str[0], "OI1"))
+	    dataa_add_item( dataactx,  out_str[1], "A", "A", &dataa_OI1);
+	  else if ( !strcmp( out_str[0], "OI2"))
+	    dataa_add_item( dataactx,  out_str[1], "A", "A", &dataa_OI2);
+	  else if ( !strcmp( out_str[0], "OI3"))
+	    dataa_add_item( dataactx,  out_str[1], "A", "A", &dataa_OI3);
+	  else if ( !strcmp( out_str[0], "OI4"))
+	    dataa_add_item( dataactx,  out_str[1], "A", "A", &dataa_OI4);
+	  else if ( !strcmp( out_str[0], "OI5"))
+	    dataa_add_item( dataactx,  out_str[1], "A", "A", &dataa_OI5);
+	  else if ( !strcmp( out_str[0], "OI6"))
+	    dataa_add_item( dataactx,  out_str[1], "A", "A", &dataa_OI6);
+	  else if ( !strcmp( out_str[0], "OI7"))
+	    dataa_add_item( dataactx,  out_str[1], "A", "A", &dataa_OI7);
+	  else if ( !strcmp( out_str[0], "OI8"))
+	    dataa_add_item( dataactx,  out_str[1], "A", "A", &dataa_OI8);
 	  else if ( !strcmp( out_str[0], "ODa1"))
 	    dataa_add_item( dataactx,  out_str[1], "A", "A", &dataa_ODa1);
 	  else if ( !strcmp( out_str[0], "ODa2"))
@@ -1032,6 +1144,14 @@ dataa_t_item	template_items[100] = {
 	{"A6", "A","A", &dataa_A6, 0, 0},
 	{"A7", "A","A", &dataa_A7, 0, 0},
 	{"A8", "A","A", &dataa_A8, 0, 0},
+	{"I1", "A","A", &dataa_I1, 0, 0},
+	{"I2", "A","A", &dataa_I2, 0, 0},
+	{"I3", "A","A", &dataa_I3, 0, 0},
+	{"I4", "A","A", &dataa_I4, 0, 0},
+	{"I5", "A","A", &dataa_I5, 0, 0},
+	{"I6", "A","A", &dataa_I6, 0, 0},
+	{"I7", "A","A", &dataa_I7, 0, 0},
+	{"I8", "A","A", &dataa_I8, 0, 0},
 	{"ODa1", "A","A", &dataa_ODa1, 0, 0},
 	{"ODa2", "A","A", &dataa_ODa2, 0, 0},
 	{"ODa3", "A","A", &dataa_ODa3, 0, 0},
@@ -1052,6 +1172,14 @@ dataa_t_item	template_items[100] = {
 	{"OA6", "A","A", &dataa_OA6, 0, 0},
 	{"OA7", "A","A", &dataa_OA7, 0, 0},
 	{"OA8", "A","A", &dataa_OA8, 0, 0},
+	{"OI1", "A","A", &dataa_OI1, 0, 0},
+	{"OI2", "A","A", &dataa_OI2, 0, 0},
+	{"OI3", "A","A", &dataa_OI3, 0, 0},
+	{"OI4", "A","A", &dataa_OI4, 0, 0},
+	{"OI5", "A","A", &dataa_OI5, 0, 0},
+	{"OI6", "A","A", &dataa_OI6, 0, 0},
+	{"OI7", "A","A", &dataa_OI7, 0, 0},
+	{"OI8", "A","A", &dataa_OI8, 0, 0},
 	{""}};
 
 /*************************************************************************

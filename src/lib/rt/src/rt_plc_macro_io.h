@@ -128,27 +128,43 @@
   if ( in ) ut = false;
 
 /**
-  STOIP                                                           
-  Store into integer parameter                    
+  StoIp                                                           
+  Store integer parameter                    
   @aref stoip StoIp
 */
-#define stoip_exec(ut,in)                                               \
+#define StoIp_exec(ut,in)                                               \
   ut = in;
 
 /**
-  CSTOIP                                                          
-  Store conditionally into integer parameter      
+  CStoIp                                                          
+  Store conditionally integer parameter      
   @aref cstoip CStoIp
 */
-#define cstoip_exec(ut,in,cond)                                         \
+#define CStoIp_exec(ut,in,cond)                                         \
   if ( cond ) ut = in;
 
 /**
-  GETIP                                                           
-  Get Integer parameter as real value             
-  @aref getip GetIp
+  StoAtoIp                                                           
+  Store analog value into integer parameter                    
+  @aref stoatoip StoAtoIp
 */
-#define getip_exec(object,in)                                           \
+#define StoAtoIp_exec(ut,in)                                               \
+  ut = in > 0 ? in + 0.5 : in - 0.5;
+
+/**
+  CStoAtoIp                                                          
+  Store conditionally analog value into integer parameter      
+  @aref cstoatoip CStoAtoIp
+*/
+#define CStoAtoIp_exec(ut,in,cond)                                         \
+  if ( cond ) ut = in > 0 ? in + 0.5 : in - 0.5;
+
+/**
+  GetIpToA                                                           
+  Get Integer parameter as an analog value             
+  @aref getiptoa GetIpToA
+*/
+#define GetIpToA_exec(object,in)                                           \
   object->ActVal = in;
 
 /**
@@ -200,6 +216,67 @@
   rawvalue->RawValue = in;						\
   absvalue->RawValue = in;
 
+/**
+  StoIo					
+  Store integer output	
+  @aref stoio StoIo
+*/
+#define stoio_exec(obj,in)						\
+  obj->ActualValue = in;
+
+/**
+  CStoIo							
+  store conditionally into integer output 
+  @aref cstoio CStoIo
+*/
+#define cstoio_exec(obj,in,cond)					\
+  if ( cond ) obj->ActualValue = in;
+
+/**
+  StoIv
+  Store integer value	
+  @aref stoiv StoIv
+*/
+#define stoiv_exec(obj,in)						\
+  obj->ActualValue = in;
+
+/**
+  CStoIv
+  store conditionally into integer value 
+  @aref cstoiv CStoIv
+*/
+#define cstoiv_exec(obj,in,cond)					\
+  if ( cond ) obj->ActualValue = in;
+
+/**
+  StoIi								
+  store integer input (Simulate)			
+  @aref stoii StoIi
+*/
+#define stoii_exec(obj,in)						\
+  obj->ActualValue = in;
+
+/**
+  CStoIi								
+  store conditionally into integer input (Simulate) 
+  @aref cstoii CStoIi
+*/
+#define cstoii_exec(obj,in,cond)					\
+  if ( cond ) obj->ActualValue = in;
+
+/**
+  AtoI
+  @aref atoi AtoI
+*/
+#define AtoI_exec(obj,in) \
+  obj->ActVal = in > 0 ? in + 0.5 : in - 0.5;
+
+/**
+  ItoA
+  @aref itoa ItoA
+*/
+#define ItoA_exec(obj,in) \
+  obj->ActVal = in;
 
 
 

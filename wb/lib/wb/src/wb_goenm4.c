@@ -42,7 +42,9 @@ typedef enum {
 	goen_eGraphIndex_StoAgeneric	= 34,
 	goen_eGraphIndex_StoDgeneric	= 35,
 	goen_eGraphIndex_GetSgeneric	= 36,
-	goen_eGraphIndex_StoSgeneric	= 37
+	goen_eGraphIndex_StoSgeneric	= 37,
+	goen_eGraphIndex_GetIgeneric	= 38,
+	goen_eGraphIndex_StoIgeneric	= 39
 	} goen_eGraphIndex;
 
 static	float	f_pinlength  = GOEN_F_PINLENGTH;
@@ -392,6 +394,7 @@ int goen_create_nodetype_m4(
     case goen_eGraphIndex_GetAgeneric:
     case goen_eGraphIndex_GetDgeneric:
     case goen_eGraphIndex_GetSgeneric:
+    case goen_eGraphIndex_GetIgeneric:
     {
       f_width = GOEN_F_GRID * 4;
       f_height = GOEN_F_GRID; 
@@ -407,6 +410,9 @@ int goen_create_nodetype_m4(
       else if ( graph_index == goen_eGraphIndex_GetSgeneric)
         flow_AddText( nc, "GetS", f_strlength, 0.5 * f_strheight,
 		flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE);
+      else if ( graph_index == goen_eGraphIndex_GetIgeneric)
+        flow_AddText( nc, "GetI", f_strlength, 0.5 * f_strheight,
+		flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE);
       else
         flow_AddText( nc, "GetD", f_strlength, 0.5 * f_strheight,
 		flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE);
@@ -415,6 +421,7 @@ int goen_create_nodetype_m4(
     case goen_eGraphIndex_StoAgeneric:
     case goen_eGraphIndex_StoDgeneric:
     case goen_eGraphIndex_StoSgeneric:
+    case goen_eGraphIndex_StoIgeneric:
     {
       f_width = GOEN_F_GRID * 4;
       f_height = GOEN_F_GRID; 
@@ -429,6 +436,9 @@ int goen_create_nodetype_m4(
 		flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE);
       else if ( graph_index == goen_eGraphIndex_StoSgeneric)
         flow_AddText( nc, "StoS", f_strlength, 0.5 * f_strheight,
+		flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE);
+      else if ( graph_index == goen_eGraphIndex_StoIgeneric)
+        flow_AddText( nc, "StoI", f_strlength, 0.5 * f_strheight,
 		flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE);
       else
         flow_AddText( nc, "StoD", f_strlength, 0.5 * f_strheight,

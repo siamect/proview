@@ -1159,6 +1159,12 @@ int wb_vrepwbl::load_files( const char *file_spec)
   while( ODD(sts)) {
     ifstream s(found_file);
 
+    if ( strchr( found_file, '#')) {
+      // Ignore files with '#'
+      sts = dcli_search_file( (char *)file_spec, found_file, DCLI_DIR_SEARCH_NEXT);
+      continue;
+    }
+
     if ( file_cnt >= WBL_FILEMAX)
       return 0;
 
@@ -1206,6 +1212,7 @@ int wb_vrepwbl::load_files( const char *file_spec)
 
 bool wb_vrepwbl::registerObject( pwr_tOix oix, ref_wblnode node)
 {
+
 #if 0
   cout << "RegObj: " << oix << "  " << node->name() << endl;
 

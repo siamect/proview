@@ -61,3 +61,15 @@ typedef struct 	{
 	pwr_tFloat32	ActualValue;
 	}	plc_sClass_Av;
 
+typedef struct 	{
+	pwr_tInt32	ActualValue;
+	}	plc_sClass_Ii;
+
+typedef struct 	{
+	pwr_tInt32	ActualValue;
+	}	plc_sClass_Io;
+
+typedef struct 	{
+	pwr_tInt32	ActualValue;
+	}	plc_sClass_Iv;
+

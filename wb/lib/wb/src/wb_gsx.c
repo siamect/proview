@@ -727,6 +727,12 @@ int gsx_auto_create(
               if ( EVEN(sts)) return sts;
 	      *destpoint = 0;
               break;
+            case pwr_eType_Int32:
+              sts = gre_create_node( foectx->grectx, pwr_cClass_GetIgeneric, 
+			x, y, dest);
+              if ( EVEN(sts)) return sts;
+	      *destpoint = 0;
+              break;
             case pwr_eType_String:
               sts = gre_create_node( foectx->grectx, pwr_cClass_GetSgeneric, 
 			x, y, dest);
@@ -750,6 +756,12 @@ int gsx_auto_create(
               break;
             case pwr_eType_Boolean:
               sts = gre_create_node( foectx->grectx, pwr_cClass_StoDgeneric, 
+			x, y, dest);
+              if ( EVEN(sts)) return sts;
+	      *destpoint = 0;
+              break;
+            case pwr_eType_Int32:
+              sts = gre_create_node( foectx->grectx, pwr_cClass_StoIgeneric, 
 			x, y, dest);
               if ( EVEN(sts)) return sts;
 	      *destpoint = 0;

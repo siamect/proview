@@ -45,6 +45,7 @@ typedef struct {
 
 static int graph_attr_float32( Graph *graph, pwr_sAttrRef *attrref);
 static int graph_attr_boolean( Graph *graph, pwr_sAttrRef *attrref);
+static int graph_object_ix( Graph *graph, pwr_tObjid objid);
 static int graph_object_ax( Graph *graph, pwr_tObjid objid);
 static int graph_object_dx( Graph *graph, pwr_tObjid objid);
 static int graph_object_chanxx( Graph *graph, pwr_tObjid objid);
@@ -57,11 +58,16 @@ static graph_sObjectFunction graph_object_functions[] = {
 	{ pwr_cClass_Av, &graph_object_ax},
 	{ pwr_cClass_Ai, &graph_object_ax},
 	{ pwr_cClass_Ao, &graph_object_ax},
+	{ pwr_cClass_Iv, &graph_object_ix},
+	{ pwr_cClass_Ii, &graph_object_ix},
+	{ pwr_cClass_Io, &graph_object_ix},
 	{ pwr_cClass_Dv, &graph_object_dx},
 	{ pwr_cClass_Di, &graph_object_dx},
 	{ pwr_cClass_Do, &graph_object_dx},
 	{ pwr_cClass_ChanAi, &graph_object_chanxx},
 	{ pwr_cClass_ChanAo, &graph_object_chanxx},
+	{ pwr_cClass_ChanIi, &graph_object_chanxx},
+	{ pwr_cClass_ChanIo, &graph_object_chanxx},
 	{ pwr_cClass_ChanDi, &graph_object_chanxx},
 	{ pwr_cClass_ChanDo, &graph_object_chanxx},
 	{ pwr_cClass_pid, &graph_object_PID},
@@ -355,6 +361,96 @@ static int graph_object_ax( Graph *graph, pwr_tObjid objid)
 
   // Register scan function
   graph->graph_object_scan = graph_object_ax_scan;
+
+  // Add command to open channel graph
+
+  sts = gdh_ClassAttrToAttrref( classid, ".SigChanCon", &attrref);
+  if ( ODD(sts))
+  {
+    attrref.Objid = objid;
+    sts = gdh_GetObjectInfoAttrref( &attrref, (void *)&sigchancon, sizeof(sigchancon));
+    if ( EVEN(sts)) return sts;
+
+    sts = gdh_ObjidToName( sigchancon, chan_name, sizeof(chan_name), 
+		cdh_mNName);
+    if ( ODD(sts))
+    {
+      sts = gdh_GetObjectClass( sigchancon, &chan_classid);
+      if ( EVEN(sts)) return sts;
+      sts = gdh_ObjidToName( cdh_ClassIdToObjid( chan_classid),
+		  classname, sizeof(classname), cdh_mName_object);
+      if ( EVEN(sts)) return sts;
+      cdh_ToLower( classname, classname);
+
+      sprintf( cmd, "ope gr pwr_c_%s/ins=%s/nam=\"%s\"", 
+		classname, chan_name, chan_name);
+
+      sts = graph->set_button_command( "OpenChannel", cmd);
+    }
+  }
+
+  return 1;
+}
+
+//
+// Object graph for Ii, Io and Iv
+// 
+
+typedef struct {
+	char			object_name[120];
+	graph_sObjectTrend 	td;
+	} graph_sObjectIx;
+
+static void graph_object_ix_scan( Graph *graph)
+{
+  graph_sObjectIx *od = (graph_sObjectIx *)graph->graph_object_data;
+
+  graph->trend_scan( &od->td);
+}
+
+static void graph_object_ix_close( Graph *graph)
+{
+  free( graph->graph_object_data);
+}
+
+static int graph_object_ix( Graph *graph, pwr_tObjid objid)
+{
+  pwr_sAttrRef attrref;
+  int sts;
+  grow_tObject object;
+  graph_sObjectIx *od;
+  pwr_tClassId	classid;
+  pwr_tObjid	sigchancon;
+  pwr_tClassId	chan_classid;
+  char		classname[40];
+  char		chan_name[120];
+  char		cmd[200];
+
+  od = (graph_sObjectIx *) calloc( 1, sizeof(graph_sObjectIx));
+  graph->graph_object_data = (void *) od;
+  graph->graph_object_close = graph_object_ix_close;
+
+  sts = gdh_GetObjectClass( objid, &classid);
+  if ( EVEN(sts)) return sts;
+
+  // Display object name in item "ObjectName"
+  sts = gdh_ObjidToName( objid, od->object_name, 
+		sizeof(od->object_name), cdh_mNName);
+  if ( EVEN(sts)) return sts;
+
+  // Find field for object name
+  sts = grow_FindObjectByName( graph->grow->ctx, "ObjectName", &object);
+  if ( ODD(sts))
+  {
+    GeDyn *dyn;
+    grow_GetUserData( object, (void **)&dyn);
+    dyn->set_p( (void *) od->object_name);
+  }
+
+  sts = graph->trend_init( &od->td, objid);
+
+  // Register scan function
+  graph->graph_object_scan = graph_object_ix_scan;
 
   // Add command to open channel graph
 

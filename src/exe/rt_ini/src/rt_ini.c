@@ -658,8 +658,10 @@ load_backup ()
   pwr_tObjid			oid;
   pwr_sClass_AvArea		*avp;
   pwr_sClass_DvArea		*dvp;
+  pwr_sClass_IvArea		*ivp;
   pwr_sClass_IvArea		*iavp;
   pwr_sClass_IvArea		*idvp;
+  pwr_sClass_IvArea		*iivp;
   pwr_tStatus			sts;
   int				i;
   pwr_sClass_IOHandler		*iop;
@@ -718,6 +720,30 @@ load_backup ()
     return;
   }
 
+  sts = gdh_NameToObjid("pwrNode-active-io-iv", &oid);
+  if (EVEN(sts)) {
+    errh_Error("gdh_NameToObjid(pwrNode-active-io-iv, &oid), %m", sts);
+    return;
+  }
+
+  sts = gdh_ObjidToPointer(oid, (void *) &ivp);
+  if (EVEN(sts)) {
+    errh_Error("gdh_ObjidToPointer(oid, (void *) &ivp), %m", sts);
+    return;
+  }
+
+  sts = gdh_NameToObjid("pwrNode-active-io-iv_init", &oid);
+  if (EVEN(sts)) {
+    errh_Error("gdh_NameToObjid(pwrNode-active-io-iv_init, &oid), %m", sts);
+    return;
+  }
+
+  sts = gdh_ObjidToPointer(oid, (void *) &iivp);
+  if (EVEN(sts)) {
+    errh_Error("gdh_ObjidToPointer(oid, (void *) &iivp), %m", sts);
+    return;
+  }
+
   for (i = 0; i < iop->AvCount; i++) {
     pwr_tFloat32 *ifp = gdh_TranslateRtdbPointer(iavp->Value[i]);
     avp->Value[i]= *ifp;
@@ -726,6 +752,11 @@ load_backup ()
   for (i = 0; i < iop->DvCount; i++) {
     pwr_tBoolean *ibp = gdh_TranslateRtdbPointer(idvp->Value[i]);
     dvp->Value[i] = *ibp;
+  }
+
+  for (i = 0; i < iop->IvCount; i++) {
+    pwr_tInt32 *iip = gdh_TranslateRtdbPointer(iivp->Value[i]);
+    ivp->Value[i] = *iip;
   }
 
   sts = bck_LoadBackup();
@@ -742,5 +773,10 @@ load_backup ()
   for (i = 0; i < iop->DvCount; i++) {
     pwr_tBoolean *ibp = gdh_TranslateRtdbPointer(idvp->Value[i]);
     *ibp = dvp->Value[i];
+  }
+
+  for (i = 0; i < iop->IvCount; i++) {
+    pwr_tInt32 *iip = gdh_TranslateRtdbPointer(iivp->Value[i]);
+    *iip = ivp->Value[i];
   }
 }

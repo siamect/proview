@@ -556,3 +556,115 @@ void pispeed_exec(
         object->ActVal = (object->PulsIn - piold) * object->Gain *
                 object->TimFact / *object->ScanTime;
 }
+
+/**
+  DtoMask
+  funktion:	Assamble digital signals to integer bitmask
+
+  @aref dtomask DtoMask
+*/
+void DtoMask_exec(
+  plc_sThread		*tp,
+  pwr_sClass_DtoMask 	*object)
+{
+  int i;
+  pwr_tBoolean *d, **dp;
+  pwr_tInt32 val = 0;
+  pwr_tInt32 m = 1;
+
+  d = &object->d1;
+  dp = &object->d1P;
+  for ( i = 0; i < 32; i++) {
+    *d = **dp;
+    if ( *d)
+      val |= m;
+    d += 2;
+    dp += 2;
+    m = m << 1;
+  }
+  object->Mask = val;
+}
+
+/**
+  MaskToD
+  funktion:	Deassamble integer bitmask to digital signals
+
+  @aref masktod MaskToD
+*/
+void MaskToD_exec(
+  plc_sThread		*tp,
+  pwr_sClass_MaskToD 	*object)
+{
+  int i;
+  pwr_tInt32 m = 1;
+  pwr_tBoolean *d;
+
+  d = &object->od1;
+  object->Mask = *object->MaskP;
+  for ( i = 0; i < 32; i++) {
+    if ( object->Mask & m)
+      *d = TRUE;
+    else
+      *d = FALSE;
+    d++;
+    m = m << 1;
+  }
+}
+
+/**
+  DtoEnum
+  funktion:	Select enumeration value from digital inputs
+
+  @aref dtoenum DtoEnum
+*/
+void DtoEnum_exec(
+  plc_sThread		*tp,
+  pwr_sClass_DtoEnum 	*object)
+{
+  int i;
+  pwr_tBoolean *d, **dp;
+  pwr_tInt32 val = object->DefaultValue;
+
+  d = &object->d0;
+  dp = &object->d0P;
+  for ( i = 0; i < 32; i++) {
+    *d = **dp;
+    if ( *d) {
+      val = object->EnumValues[i];
+      break;
+    }
+    d += 2;
+    dp += 2;
+  }
+  object->Enum = val;
+}
+
+/**
+  EnumToD
+  funktion: Identify enumeration value.
+
+  @aref enumtod EnumToD
+*/
+void EnumToD_exec(
+  plc_sThread		*tp,
+  pwr_sClass_EnumToD 	*object)
+{
+  int i;
+  pwr_tBoolean *d;
+
+  d = &object->od0;
+  object->Enum = *object->EnumP;
+  for ( i = 0; i < 32; i++) {
+    if ( object->Enum == object->EnumValues[i])
+      *d = TRUE;
+    else
+      *d = FALSE;
+    d++;
+  }
+}
+
+
+
+
+
+

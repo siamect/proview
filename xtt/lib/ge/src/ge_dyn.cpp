@@ -2625,6 +2625,9 @@ int GeValueInput::action( grow_tObject object, glow_tEvent event)
     return 1;
 
   switch ( event->event) {
+  case glow_eEvent_MB1Down:
+    grow_SetClickSensitivity( dyn->graph->grow->ctx, glow_mSensitivity_MB1Click);
+    break;
   case glow_eEvent_MB1Click:
     if ( !(dyn->total_action_type & ge_mActionType_InputFocus)) {
 	grow_SetObjectInputFocus( object, 1);
@@ -6887,7 +6890,6 @@ void GeSlider::open( ifstream& fp)
 
 int GeSlider::connect( grow_tObject object, glow_sTraceData *trace_data)
 {
-  int		attr_type, attr_size;
   int		inverted;
   char		parsed_name[120];
   int		sts;
@@ -6895,10 +6897,17 @@ int GeSlider::connect( grow_tObject object, glow_sTraceData *trace_data)
   size = 4;
   p = 0;
   db = dyn->graph->parse_attr_name( attribute, parsed_name,
-				    &inverted, &attr_type, &attr_size);
+				    &inverted, &attr_type, &size);
   if ( strcmp( parsed_name,"") == 0)
     return 1;
 
+  switch ( attr_type) {
+  case pwr_eType_Float32:
+  case pwr_eType_Int32:
+    break;
+  default:
+    return 1;
+  }
   sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size);
   if ( EVEN(sts)) return sts;
 
@@ -6973,9 +6982,16 @@ int GeSlider::scan( grow_tObject object)
   glow_eDirection direction;
 
   if ( !first_scan) {
-    if ( fabs( old_value - *p) < FLT_EPSILON)
-      // No change since last time
-      return 1;
+    switch ( attr_type) {
+    case pwr_eType_Float32:
+      if ( fabs( old_value - *p) < FLT_EPSILON)
+	// No change since last time
+	return 1;
+    case pwr_eType_Int32:
+      if ( *(pwr_tInt32 *)p == (pwr_tInt32) old_value)
+	return 1;
+    default: ;
+    }
   }
   else
     first_scan = 0;
@@ -6985,8 +7001,17 @@ int GeSlider::scan( grow_tObject object)
   if ( min_pos != max_pos) {
     if ( dyn->graph->current_slider != object &&
 	 max_value != min_value) {
-      float value = *p;
+      float value;
       double pos_x, pos_y;
+
+      switch ( attr_type) {
+      case pwr_eType_Float32:
+	value = *p;
+	break;
+      default:
+	value = (float) (*(pwr_tInt32 *)p);
+	break;
+      }
           
       switch ( direction) {
       case glow_eDirection_Down:
@@ -7101,7 +7126,15 @@ int GeSlider::action( grow_tObject object, glow_tEvent event)
 	value = min_value;
       
       dyn->graph->parse_attr_name( attribute, parsed_name, &inverted, &attr_type, &attr_size);
-      sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
+      switch ( attr_type) {
+      case pwr_eType_Float32:
+	sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
+	break;
+      default: {
+	pwr_tInt32 ivalue = (pwr_tInt32) (value > 0 ? value + 0.5 : value - 0.5);
+	sts = gdh_SetObjectInfo( parsed_name, &ivalue, sizeof(ivalue));
+	}
+      }
       if ( EVEN(sts)) printf("Slider error: %s\n", attribute);
     }
     break;

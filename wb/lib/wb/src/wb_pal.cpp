@@ -374,11 +374,17 @@ PalItemClass::PalItemClass( Pal *pal, char *item_name,
         case pwr_cClass_GetAv:
         case pwr_cClass_GetAi:
         case pwr_cClass_GetAo:
+        case pwr_cClass_GetSv:
+        case pwr_cClass_GetIi:
+        case pwr_cClass_GetIo:
+        case pwr_cClass_GetIv:
 	  pixmap = pal->pixmap_get; 
 	  break;
         case pwr_cClass_GetAp:
         case pwr_cClass_GetDp:
-        case pwr_cClass_getip:
+        case pwr_cClass_GetIpToA:
+        case pwr_cClass_GetIp:
+        case pwr_cClass_GetSp:
         case pwr_cClass_GetData:
 	  pixmap = pal->pixmap_getp; 
 	  break;
@@ -386,12 +392,20 @@ PalItemClass::PalItemClass( Pal *pal, char *item_name,
         case pwr_cClass_stodp:
         case pwr_cClass_setdp:
         case pwr_cClass_resdp:
-        case pwr_cClass_stoip:
+        case pwr_cClass_StoAtoIp:
+        case pwr_cClass_StoIp:
         case pwr_cClass_cstoao:
         case pwr_cClass_cstoav:
         case pwr_cClass_cstoai:
-        case pwr_cClass_cstoip:
+        case pwr_cClass_CStoAtoIp:
+        case pwr_cClass_CStoIp:
+        case pwr_cClass_cstoio:
+        case pwr_cClass_cstoii:
+        case pwr_cClass_cstoiv:
         case pwr_cClass_cstoap:
+        case pwr_cClass_cstosv:
+        case pwr_cClass_cstosp:
+        case pwr_cClass_stosp:
           pixmap = pal->pixmap_stop; 
 	  break;
         case pwr_cClass_Text:	 	pixmap = pal->pixmap_text; break;

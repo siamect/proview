@@ -1654,6 +1654,7 @@ class GeSlider : public GeDynElem {
   int inverted;
   bool first_scan;
   pwr_tFloat32 old_value;
+  int attr_type;
 
   GeSlider( GeDyn *e_dyn) : 
     GeDynElem(e_dyn, (ge_mDynType)0, ge_mActionType_Slider, 

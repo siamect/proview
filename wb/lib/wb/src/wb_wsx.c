@@ -459,6 +459,14 @@ pwr_tStatus wsx_CheckSigChanCon(
 	    if ( con_class != pwr_cClass_ChanCo)
 	      class_error = 1;
 	    break;
+	  case pwr_cClass_Io:
+	    if ( con_class != pwr_cClass_ChanIo)
+	      class_error = 1;
+	    break;
+	  case pwr_cClass_Ii:
+	    if ( con_class != pwr_cClass_ChanIi)
+	      class_error = 1;
+	    break;
 	}
 
 	if ( class_error)

@@ -29,7 +29,7 @@
 
 #define	BEEP	    putchar( '\7' );
 
-#define	GOBJ_MAX_METHOD 20
+#define	GOBJ_MAX_METHOD 25
 
 int	gobj_get_object_m0();
 int	gobj_get_object_m1();
@@ -52,8 +52,13 @@ int	gobj_get_object_m17();
 int	gobj_get_object_m18();
 int	gobj_get_object_m19();
 int	gobj_get_object_m20();
+int	gobj_get_object_m21();
+int	gobj_get_object_m22();
+int	gobj_get_object_m23();
+int	gobj_get_object_m24();
+int	gobj_get_object_m25();
 
-int	(* gobj_get_object_m[25]) () = {
+int	(* gobj_get_object_m[30]) () = {
 	&gobj_get_object_m0,
 	&gobj_get_object_m1,
 	&gobj_get_object_m2,
@@ -75,6 +80,11 @@ int	(* gobj_get_object_m[25]) () = {
  	&gobj_get_object_m18,
  	&gobj_get_object_m19,
  	&gobj_get_object_m20,
+ 	&gobj_get_object_m21,
+ 	&gobj_get_object_m22,
+ 	&gobj_get_object_m23,
+ 	&gobj_get_object_m24,
+ 	&gobj_get_object_m25,
 	};
 
 static int	gobj_expand_m0(	foe_ctx		foectx,
@@ -449,7 +459,7 @@ unsigned long	index;
 	  objdid = attrref.Objid;
 	  if ( EVEN(sts))
 	  { 
-	    foe_message( foectx,"Select a ai object in the navigator");
+	    foe_message( foectx,"Select an ai object in the navigator");
 	    BEEP;
 	    return sts;
 	  }
@@ -526,7 +536,7 @@ unsigned long	index;
 	  objdid = attrref.Objid;
 	  if ( EVEN(sts))
 	  { 
-	    foe_message( foectx,"Select a ao object in the navigator");
+	    foe_message( foectx,"Select an ao object in the navigator");
 	    BEEP;
 	    return sts;
 	  }
@@ -603,7 +613,7 @@ unsigned long	index;
 	  objdid = attrref.Objid;
 	  if ( EVEN(sts))
 	  { 
-	    foe_message( foectx,"Select a av object in the navigator");
+	    foe_message( foectx,"Select an av object in the navigator");
 	    BEEP;
 	    return sts;
 	  }
@@ -1509,8 +1519,8 @@ unsigned long	index;
 	          case pwr_eType_UInt16:
 	          case pwr_eType_Int32:
 	          case pwr_eType_UInt32:
-	            /* Create a StoIp */
-	            create_classid = pwr_cClass_getip;
+	            /* Create a GetIpToA */
+	            create_classid = pwr_cClass_GetIpToA;
 	            strcpy( parname, "IpObject");
 	            break;
 	          default:
@@ -2090,8 +2100,8 @@ unsigned long	index;
 	          case pwr_eType_UInt16:
 	          case pwr_eType_Int32:
 	          case pwr_eType_UInt32:
-	            /* Create a StoIp */
-	            create_classid = pwr_cClass_stoip;
+	            /* Create a StoAtoIp */
+	            create_classid = pwr_cClass_StoAtoIp;
 	            break;
 	          default:
 		    foe_message( foectx, "Attribute type is not correct");
@@ -2514,7 +2524,7 @@ unsigned long	index;
 
 /*************************************************************************
 *
-* Name:		gobj_get_object_m6()
+* Name:		gobj_get_object_m18()
 *
 * Type		void
 *
@@ -2558,7 +2568,7 @@ unsigned long	index;
 	  objdid = attrref.Objid;
 	  if ( EVEN(sts))
 	  { 
-	    foe_message( foectx,"Select a av object in the navigator");
+	    foe_message( foectx,"Select a sv object in the navigator");
 	    BEEP;
 	    return sts;
 	  }
@@ -3133,6 +3143,803 @@ unsigned long	index;
 
 	return FOE__SUCCESS;
 }
+
+/*************************************************************************
+*
+* Name:		gobj_get_object_m21()
+*
+* Type		void
+*
+* Type		Parameter	IOGF	Description
+* foe_ctx	foectx		I	foe context.
+* vldh_t_node	node		I	vldh node.
+* unsigned long	index		I	index indicating if the click has hit
+*					the upper or the lower part of the node.
+*
+* Description:	
+*	Method for getiv, stoiv, cstoiv. Inserts the selected iv-object in the
+*	navigator in the parameter IvObject in a GetIv object.
+*
+**************************************************************************/
+
+int	gobj_get_object_m21( foectx, node, index)
+foe_ctx		foectx;
+vldh_t_node	node;
+unsigned long	index;
+{
+	pwr_tObjid	objdid;
+	pwr_tClassId	class;
+	ldh_tSesContext	ldhses;
+	int		sts;
+	vldh_t_plc	plc;
+        pwr_sAttrRef	attrref;
+	int		is_attr;
+
+	/* Get the selected object in the navigator */
+	plc = (node->hn.window_pointer)->hw.plcobject_pointer;
+
+        sts = nav_get_select( foectx->navctx, &attrref, &is_attr);
+        if ( foectx->nav_palette_managed && ODD(sts)) {
+          objdid = attrref.Objid;
+        }
+        else {
+	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
+					&is_attr);
+	  objdid = attrref.Objid;
+	  if ( EVEN(sts)) {
+	    foe_message( foectx,"Select an iv object in the navigator");
+	    BEEP;
+	    return sts;
+	  }
+	}
+	ldhses =(node->hn.window_pointer)->hw.ldhsession;
+	/* Check that the objdid is an iv object */
+	sts = ldh_GetObjectClass( ldhses, objdid, &class);
+	if (EVEN(sts)) return sts;
+
+	if ( class != pwr_cClass_Iv) {
+	  foe_message( foectx, "Selected object is not a Iv object");
+	  BEEP;
+	  return 0;
+	}
+	
+	/* Set the parameter value */
+	sts = ldh_SetObjectPar( ldhses,
+		node->ln.object_did, 
+		"DevBody",
+		"IvObject",
+		(char *)&objdid, sizeof(objdid)); 
+	if ( EVEN(sts)) return sts;
+
+	gre_node_update( foectx->grectx, node);
+
+	return FOE__SUCCESS;
+}
+
+
+/*************************************************************************
+*
+* Name:		gobj_get_object_m22()
+*
+* Type		void
+*
+* Type		Parameter	IOGF	Description
+* foe_ctx	foectx		I	foe context.
+* vldh_t_node	node		I	vldh node.
+* unsigned long	index		I	index indicating if the click has hit
+*					the upper or the lower part of the node.
+*
+* Description:	
+*	Method for getii, stoii, cstoii. Inserts the selected ii-object in the
+*	navigator in the parameter IiObject in a GetIi object.
+*
+**************************************************************************/
+
+int	gobj_get_object_m22( foectx, node, index)
+foe_ctx		foectx;
+vldh_t_node	node;
+unsigned long	index;
+{
+	pwr_tObjid	objdid;
+	pwr_tClassId	class;
+	ldh_tSesContext	ldhses;
+	int		sts;
+	vldh_t_plc	plc;
+        pwr_sAttrRef	attrref;
+	int		is_attr;
+
+	/* Get the selected object in the navigator */
+	plc = (node->hn.window_pointer)->hw.plcobject_pointer;
+
+        sts = nav_get_select( foectx->navctx, &attrref, &is_attr);
+        if ( foectx->nav_palette_managed && ODD(sts)) {
+          objdid = attrref.Objid;
+        }
+        else {
+	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
+					&is_attr);
+	  objdid = attrref.Objid;
+	  if ( EVEN(sts)) {
+	    foe_message( foectx,"Select an Ii object in the navigator");
+	    BEEP;
+	    return sts;
+	  }
+	}
+	ldhses =(node->hn.window_pointer)->hw.ldhsession;
+	/* Check that the objdid is an ii object */
+	sts = ldh_GetObjectClass( ldhses, objdid, &class);
+	if (EVEN(sts)) return sts;
+
+	if ( class != pwr_cClass_Ii) {
+	  foe_message( foectx, "Selected object is not a Ii object");
+	  BEEP;
+	  return 0;
+	}
+	
+	/* Set the parameter value */
+	sts = ldh_SetObjectPar( ldhses,
+		node->ln.object_did, 
+		"DevBody",
+		"IiObject",
+		(char *)&objdid, sizeof(objdid)); 
+	if ( EVEN(sts)) return sts;
+
+	gre_node_update( foectx->grectx, node);
+
+	return FOE__SUCCESS;
+}
+
+
+/*************************************************************************
+*
+* Name:		gobj_get_object_m23()
+*
+* Type		void
+*
+* Type		Parameter	IOGF	Description
+* foe_ctx	foectx		I	foe context.
+* vldh_t_node	node		I	vldh node.
+* unsigned long	index		I	index indicating if the click has hit
+*					the upper or the lower part of the node.
+*
+* Description:	
+*	Method for getio, stoio, cstoio. Inserts the selected io-object in the
+*	navigator in the parameter IoObject in a GetIo object.
+*
+**************************************************************************/
+
+int	gobj_get_object_m23( foectx, node, index)
+foe_ctx		foectx;
+vldh_t_node	node;
+unsigned long	index;
+{
+	pwr_tObjid	objdid;
+	pwr_tClassId	class;
+	ldh_tSesContext	ldhses;
+	int		sts;
+	vldh_t_plc	plc;
+        pwr_sAttrRef	attrref;
+	int		is_attr;
+
+	/* Get the selected object in the navigator */
+	plc = (node->hn.window_pointer)->hw.plcobject_pointer;
+
+        sts = nav_get_select( foectx->navctx, &attrref, &is_attr);
+        if ( foectx->nav_palette_managed && ODD(sts)) {
+          objdid = attrref.Objid;
+        }
+        else {
+	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
+					&is_attr);
+	  objdid = attrref.Objid;
+	  if ( EVEN(sts)) {
+	    foe_message( foectx,"Select an Io object in the navigator");
+	    BEEP;
+	    return sts;
+	  }
+	}
+	ldhses =(node->hn.window_pointer)->hw.ldhsession;
+	/* Check that the objdid is an io object */
+	sts = ldh_GetObjectClass( ldhses, objdid, &class);
+	if (EVEN(sts)) return sts;
+
+	if ( class != pwr_cClass_Io) {
+	  foe_message( foectx, "Selected object is not a Io object");
+	  BEEP;
+	  return 0;
+	}
+	
+	/* Set the parameter value */
+	sts = ldh_SetObjectPar( ldhses,
+		node->ln.object_did, 
+		"DevBody",
+		"IoObject",
+		(char *)&objdid, sizeof(objdid)); 
+	if ( EVEN(sts)) return sts;
+
+	gre_node_update( foectx->grectx, node);
+
+	return FOE__SUCCESS;
+}
+
+/*************************************************************************
+*
+* Name:		gobj_get_object_m24()
+*
+* Type		void
+*
+* Type		Parameter	IOGF	Description
+* foe_ctx	foectx		I	foe context.
+* vldh_t_node	node		I	vldh node.
+* unsigned long	index		I	index indicating if the click has hit
+*					the upper or the lower part of the node.
+*
+* Description:	
+*	Method for GetIgeneric. The selected object in the navigator is 
+*	inserted.
+*	
+*
+**************************************************************************/
+
+int	gobj_get_object_m24( foectx, node, index)
+foe_ctx		foectx;
+vldh_t_node	node;
+unsigned long	index;
+{
+	pwr_tObjid	objdid;
+	pwr_tClassId	class;
+	ldh_tSesContext	ldhses;
+	int		sts;
+	vldh_t_plc	plc;
+	vldh_t_con  	*con_list;
+	vldh_t_con  	*con_ptr;
+	vldh_t_node	new_node, source, dest;
+	unsigned long	source_point, dest_point;
+	unsigned long	con_count;
+	int		i, j;
+        pwr_sAttrRef	attrref;
+	int		parameter_found;
+	char		*name, *s;
+	char		parameter[40];
+	char		par[40];
+	ldh_sParDef 	*bodydef;
+    	int 		rows;
+    	pwr_tClassId 	classid, create_classid;
+    	char		body[20];
+	int		found;
+	int		size;
+	char		parname[40];
+	int		is_attr;
+
+	/* Get the selected object in the navigator */
+	plc = (node->hn.window_pointer)->hw.plcobject_pointer;
+	ldhses =(node->hn.window_pointer)->hw.ldhsession;
+
+	parameter_found = 0;
+        sts = nav_get_select( foectx->navctx, &attrref, &is_attr);
+        if ( foectx->nav_palette_managed && ODD(sts))
+        {
+          objdid = attrref.Objid;
+	  if ( is_attr)
+	  {
+            sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol,
+			&name, &size);
+	    if ( EVEN(sts)) return sts;
+	    if ( (s = strrchr( name, '.')) != 0)
+            {
+              strcpy( parameter, s+1);
+              parameter_found = 1;
+            }
+          }
+        }
+        else
+        {
+	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
+					&is_attr);
+	  objdid = attrref.Objid;
+	  if ( ODD(sts) && is_attr) {
+	    sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol,
+				     &name, &size);
+	    if ( EVEN(sts)) return sts;
+	    if ( (s = strrchr( name, '.')) != 0) {
+	      strcpy( parameter, s+1);
+	      parameter_found = 1;
+	    }
+	  }
+	  if ( EVEN(sts))
+	  { 
+	    foe_message( foectx,"Select an integer signal in the navigator");
+	    BEEP;
+	    return sts;
+	  }
+	}
+
+	/* Change the object to a matching get-type */
+	sts = ldh_GetObjectClass( ldhses, objdid, &class);
+	if (EVEN(sts)) return sts;
+
+	if ( !parameter_found && 
+	     !(class == pwr_cClass_Ii ||
+	       class == pwr_cClass_Io ||
+	       class == pwr_cClass_Iv))
+	{
+	  foe_message( foectx, "Selected object is not an integer signal");
+	  BEEP;
+	  return 0;
+	}
+
+	if ( parameter_found && 
+	     (class == pwr_cClass_Ii ||
+	      class == pwr_cClass_Io ||
+	      class == pwr_cClass_Iv) &&
+	      strcmp( parameter, "ActualValue") == 0)
+	{
+	  /* This should not be a dp or ap object */
+          parameter_found = 0;
+	}
+	
+	sts = vldh_get_cons_node( node, &con_count, &con_list);
+	if ( EVEN(sts)) return sts;
+
+        if ( parameter_found)
+ 	{
+	  /* Get the type of the parameter */
+	  sts = ldh_GetObjectClass( ldhses, objdid, &classid);
+    	  if ( EVEN(sts)) return sts;
+	  
+	  found = 0;
+	  strcpy( par, parameter);
+	  if ( (s = strrchr( par, '[')))
+	    *s = 0;
+	  for ( j = 0; j < 3; j++)
+	  {
+	    if ( j == 0)
+	      strcpy( body, "DevBody");
+	    else if ( j == 1)
+	      strcpy( body, "RtBody");
+	    else
+	      strcpy( body, "SysBody");
+
+	    sts = ldh_GetObjectBodyDef( ldhses, classid, body, 1, 
+			&bodydef, &rows);
+	    if ( EVEN(sts) ) continue;
+
+	    for ( i = 0; i < rows; i++)
+	    {
+	      if ( strcmp( par, bodydef[i].ParName) == 0)
+	      {
+                switch (bodydef[i].Par->Param.Info.Type) 
+	        {
+	          case pwr_eType_Int32:
+	          case pwr_eType_UInt32:
+	          case pwr_eType_Int16:
+	          case pwr_eType_UInt16:
+	          case pwr_eType_Int8:
+	          case pwr_eType_UInt8:
+	            /* Create a GetIp */
+	            create_classid = pwr_cClass_GetIp;
+	            strcpy( parname, "IpObject");
+	            break;
+	          default:
+		    foe_message( foectx, "Attribute type is not correct");
+	  	    BEEP;
+ 	            return 0;
+	        }
+		sts = gre_create_node( foectx->grectx, create_classid, 
+			node->ln.x, node->ln.y, &new_node);
+		if ( EVEN(sts)) return sts;
+
+		/* Create new connections */
+		con_ptr = con_list;
+		for ( j = 0; j < con_count; j++)
+		{
+		  if ( (*con_ptr)->hc.source_node_pointer == node)
+		  {
+	            source = new_node;
+		    source_point = 0;
+		    dest = (*con_ptr)->hc.dest_node_pointer;
+		    dest_point = (*con_ptr)->lc.dest_point;
+		  }
+		  else
+		  {
+	            dest = new_node;
+		    dest_point = 0;
+		    source = (*con_ptr)->hc.source_node_pointer;
+		    source_point = (*con_ptr)->lc.source_point;
+		  }
+		  sts = gre_create_con( foectx->grectx, (*con_ptr)->lc.classid, 
+			source, source_point,
+			dest, dest_point, (*con_ptr)->lc.drawtype);
+		  if (EVEN(sts)) return sts;
+		  con_ptr++;
+		}
+	    
+		/* Remove old node and connections */
+		gre_delete_node( foectx->grectx, node);
+	        foectx->popupmenu_node = 0;
+
+		/* Set the parameter value */
+		sts = ldh_SetObjectPar( ldhses,
+			new_node->ln.object_did, 
+			"DevBody",
+			parname,
+			(char *)&objdid, sizeof(objdid)); 
+		if ( EVEN(sts)) return sts;
+		sts = ldh_SetObjectPar( ldhses,
+			new_node->ln.object_did, 
+			"DevBody",
+			"Parameter",
+			parameter, sizeof(parameter)); 
+		if ( EVEN(sts)) return sts;
+
+		gre_node_update( foectx->grectx, new_node);
+	        found = 1;
+	      }
+	    } 
+	    free( (char *)bodydef);
+	  }
+	  if ( !found)
+	  {
+	    foe_message( foectx, "Attribute not found");
+	    BEEP;
+            return 0;
+	  }
+	}
+	else
+ 	{
+	  switch( class)
+	  {
+	    case pwr_cClass_Ii:
+	      strcpy( parname, "IiObject");
+              create_classid = pwr_cClass_GetIi;
+	      break;
+	    case pwr_cClass_Io:
+	      strcpy( parname, "IoObject");
+              create_classid = pwr_cClass_GetIo;
+	      break;
+	    case pwr_cClass_Iv:
+	      strcpy( parname, "IvObject");
+              create_classid = pwr_cClass_GetIv;
+	      break;
+            default:
+              return 0;
+	  }
+	  sts = gre_create_node( foectx->grectx, create_classid, 
+		node->ln.x, node->ln.y, &new_node);
+	  if ( EVEN(sts)) return sts;
+
+	  /* Create new connections */
+	  con_ptr = con_list;
+	  for ( j = 0; j < con_count; j++)
+	  {
+	    if ( (*con_ptr)->hc.source_node_pointer == node)
+	    {
+              source = new_node;
+	      source_point = 0;
+	      dest = (*con_ptr)->hc.dest_node_pointer;
+	      dest_point = (*con_ptr)->lc.dest_point;
+	    }
+	    else
+	    {
+              dest = new_node;
+	      dest_point = 0;
+	      source = (*con_ptr)->hc.source_node_pointer;
+	      source_point = (*con_ptr)->lc.source_point;
+	    }
+	    sts = gre_create_con( foectx->grectx, (*con_ptr)->lc.classid, 
+			source, source_point,
+			dest, dest_point, (*con_ptr)->lc.drawtype);
+	    if (EVEN(sts)) return sts;
+	    con_ptr++;
+	  }
+	    
+	  /* Remove old node and connections */
+	  gre_delete_node( foectx->grectx, node);
+	  foectx->popupmenu_node = 0;
+
+	  /* Set the parameter value */
+	  sts = ldh_SetObjectPar( ldhses,
+		new_node->ln.object_did, 
+		"DevBody",
+		parname,
+		(char *)&objdid, sizeof(objdid)); 
+	  if ( EVEN(sts)) return sts;
+
+	  gre_node_update( foectx->grectx, new_node);
+	}
+	if ( con_count > 0) XtFree((char *) con_list);
+
+	return FOE__SUCCESS;
+}
+
+/*************************************************************************
+*
+* Name:		gobj_get_object_m25()
+*
+* Type		void
+*
+* Type		Parameter	IOGF	Description
+* foe_ctx	foectx		I	foe context.
+* vldh_t_node	node		I	vldh node.
+* unsigned long	index		I	index indicating if the click has hit
+*					the upper or the lower part of the node.
+*
+* Description:	
+*	Method for StoIgeneric. The selected object in the navigator is 
+*	inserted.
+*	
+*
+**************************************************************************/
+
+int	gobj_get_object_m25( foectx, node, index)
+foe_ctx		foectx;
+vldh_t_node	node;
+unsigned long	index;
+{
+	pwr_tObjid	objdid;
+	pwr_tClassId	class;
+	ldh_tSesContext	ldhses;
+	int		sts;
+	vldh_t_plc	plc;
+	vldh_t_con  	*con_list;
+	vldh_t_con  	*con_ptr;
+	vldh_t_node	new_node, source, dest;
+	unsigned long	source_point, dest_point;
+	unsigned long	con_count;
+	int		i, j;
+        pwr_sAttrRef	attrref;
+	int		parameter_found;
+	char		*name, *s;
+	char		parameter[40];
+	char		par[40];
+	ldh_sParDef 	*bodydef;
+    	int 		rows;
+    	pwr_tClassId 	classid, create_classid;
+    	char		body[20];
+	int		found;
+	int		size;
+	char		parname[40];
+	int		is_attr;
+
+	/* Get the selected object in the navigator */
+	plc = (node->hn.window_pointer)->hw.plcobject_pointer;
+	ldhses =(node->hn.window_pointer)->hw.ldhsession;
+
+	parameter_found = 0;
+        sts = nav_get_select( foectx->navctx, &attrref, &is_attr);
+        if ( foectx->nav_palette_managed && ODD(sts))
+        {
+          objdid = attrref.Objid;
+	  if ( is_attr)
+	  {
+            sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol,
+			&name, &size);
+	    if ( EVEN(sts)) return sts;
+	    if ( (s = strrchr( name, '.')) != 0)
+            {
+              strcpy( parameter, s+1);
+              parameter_found = 1;
+            }
+          }
+        }
+        else
+        {
+	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
+					&is_attr);
+	  objdid = attrref.Objid;
+	  if ( ODD(sts) && is_attr) {
+	    sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol,
+				     &name, &size);
+	    if ( EVEN(sts)) return sts;
+	    if ( (s = strrchr( name, '.')) != 0) {
+	      strcpy( parameter, s+1);
+	      parameter_found = 1;
+	    }
+	  }
+	  if ( EVEN(sts))
+	  { 
+	    foe_message( foectx,"Select an digital signal in the navigator");
+	    BEEP;
+	    return sts;
+	  }
+	}
+
+	/* Change the object to a matching get-type */
+	sts = ldh_GetObjectClass( ldhses, objdid, &class);
+	if (EVEN(sts)) return sts;
+
+	if ( !parameter_found && 
+	     !(class == pwr_cClass_Ii ||
+	       class == pwr_cClass_Io ||
+	       class == pwr_cClass_Iv))
+	{
+	  foe_message( foectx, "Selected object is not an digital signal");
+	  BEEP;
+	  return 0;
+	}
+	
+	if ( parameter_found && 
+	     (class == pwr_cClass_Ii ||
+	      class == pwr_cClass_Io ||
+	      class == pwr_cClass_Iv) &&
+	      strcmp( parameter, "ActualValue") == 0)
+	{
+	  /* This should not be a dp or ap object */
+          parameter_found = 0;
+	}
+
+	sts = vldh_get_cons_node( node, &con_count, &con_list);
+	if ( EVEN(sts)) return sts;
+
+        if ( parameter_found)
+ 	{
+	  /* Get the type of the parameter */
+	  sts = ldh_GetObjectClass( ldhses, objdid, &classid);
+    	  if ( EVEN(sts)) return sts;
+	  
+	  found = 0;
+	  strcpy( par, parameter);
+	  if ( (s = strrchr( par, '[')))
+	    *s = 0;
+	  for ( j = 0; j < 3; j++)
+	  {
+	    if ( j == 0)
+	      strcpy( body, "DevBody");
+	    else if ( j == 1)
+	      strcpy( body, "RtBody");
+	    else
+	      strcpy( body, "SysBody");
+
+	    sts = ldh_GetObjectBodyDef( ldhses, classid, body, 1, 
+			&bodydef, &rows);
+	    if ( EVEN(sts) ) continue;
+
+	    for ( i = 0; i < rows; i++)
+	    {
+	      if ( strcmp( par, bodydef[i].ParName) == 0)
+	      {
+                switch (bodydef[i].Par->Param.Info.Type) 
+	        {
+	          case pwr_eType_Int32:
+	          case pwr_eType_UInt32:
+	          case pwr_eType_Int16:
+	          case pwr_eType_UInt16:
+	          case pwr_eType_Int8:
+	          case pwr_eType_UInt8:
+	            /* Create a StoIp */
+	            create_classid = pwr_cClass_StoIp;
+	            break;
+	          default:
+		    foe_message( foectx, "Attribute type is not correct");
+	  	    BEEP;
+ 	            return 0;
+	        }
+		sts = gre_create_node( foectx->grectx, create_classid, 
+			node->ln.x, node->ln.y, &new_node);
+		if ( EVEN(sts)) return sts;
+
+		/* Create new connections */
+		con_ptr = con_list;
+		for ( j = 0; j < con_count; j++)
+		{
+		  if ( (*con_ptr)->hc.source_node_pointer == node)
+		  {
+	            source = new_node;
+		    source_point = 0;
+		    dest = (*con_ptr)->hc.dest_node_pointer;
+		    dest_point = (*con_ptr)->lc.dest_point;
+		  }
+		  else
+		  {
+	            dest = new_node;
+		    dest_point = 0;
+		    source = (*con_ptr)->hc.source_node_pointer;
+		    source_point = (*con_ptr)->lc.source_point;
+		  }
+		  sts = gre_create_con( foectx->grectx, (*con_ptr)->lc.classid, 
+			source, source_point,
+			dest, dest_point, (*con_ptr)->lc.drawtype);
+		  if (EVEN(sts)) return sts;
+		  con_ptr++;
+		}
+	    
+		/* Remove old node and connections */
+		gre_delete_node( foectx->grectx, node);
+	        foectx->popupmenu_node = 0;
+
+		/* Set the parameter value */
+		sts = ldh_SetObjectPar( ldhses,
+			new_node->ln.object_did, 
+			"DevBody",
+			"Object",
+			(char *)&objdid, sizeof(objdid)); 
+		if ( EVEN(sts)) return sts;
+		sts = ldh_SetObjectPar( ldhses,
+			new_node->ln.object_did, 
+			"DevBody",
+			"Parameter",
+			parameter, sizeof(parameter)); 
+		if ( EVEN(sts)) return sts;
+
+		gre_node_update( foectx->grectx, new_node);
+	        found = 1;
+	      }
+	    } 
+	    free( (char *)bodydef);
+	  }
+	  if ( !found)
+	  {
+	    foe_message( foectx, "Attribute not found");
+	    BEEP;
+            return 0;
+	  }
+	}
+	else
+ 	{
+	  switch( class)
+	  {
+	    case pwr_cClass_Ii:
+	      strcpy( parname, "IiObject");
+              create_classid = pwr_cClass_stoii;
+	      break;
+	    case pwr_cClass_Io:
+	      strcpy( parname, "IoObject");
+              create_classid = pwr_cClass_stoio;
+	      break;
+	    case pwr_cClass_Iv:
+	      strcpy( parname, "IvObject");
+              create_classid = pwr_cClass_stoiv;
+	      break;
+            default:
+              return 0;
+	  }
+	  sts = gre_create_node( foectx->grectx, create_classid, 
+		node->ln.x, node->ln.y, &new_node);
+	  if ( EVEN(sts)) return sts;
+
+	  /* Create new connections */
+	  con_ptr = con_list;
+	  for ( j = 0; j < con_count; j++)
+	  {
+	    if ( (*con_ptr)->hc.source_node_pointer == node)
+	    {
+              source = new_node;
+	      source_point = 0;
+	      dest = (*con_ptr)->hc.dest_node_pointer;
+	      dest_point = (*con_ptr)->lc.dest_point;
+	    }
+	    else
+	    {
+              dest = new_node;
+	      dest_point = 0;
+	      source = (*con_ptr)->hc.source_node_pointer;
+	      source_point = (*con_ptr)->lc.source_point;
+	    }
+	    sts = gre_create_con( foectx->grectx, (*con_ptr)->lc.classid, 
+			source, source_point,
+			dest, dest_point, (*con_ptr)->lc.drawtype);
+	    if (EVEN(sts)) return sts;
+	    con_ptr++;
+	  }
+	    
+	  /* Remove old node and connections */
+	  gre_delete_node( foectx->grectx, node);
+	  foectx->popupmenu_node = 0;
+
+	  /* Set the parameter value */
+	  sts = ldh_SetObjectPar( ldhses,
+		new_node->ln.object_did, 
+		"DevBody",
+		parname,
+		(char *)&objdid, sizeof(objdid)); 
+	  if ( EVEN(sts)) return sts;
+
+	  gre_node_update( foectx->grectx, new_node);
+	}
+	if ( con_count > 0) XtFree((char *) con_list);
+
+	return FOE__SUCCESS;
+}
 
 
 /*************************************************************************
@@ -3159,7 +3966,8 @@ int	gobj_expand(	foe_ctx		foectx,
           case pwr_cClass_GetAo:
           case pwr_cClass_GetAp:
           case pwr_cClass_GetDp:
-          case pwr_cClass_getip:
+          case pwr_cClass_GetIp:
+          case pwr_cClass_GetIpToA:
           case pwr_cClass_GetPi:
 	  case pwr_cClass_stodv:
 	  case pwr_cClass_stoav:
@@ -3178,11 +3986,13 @@ int	gobj_expand(	foe_ctx		foectx,
           case pwr_cClass_stodp:
           case pwr_cClass_setdp:
           case pwr_cClass_resdp:
-          case pwr_cClass_stoip:
+          case pwr_cClass_StoIp:
+          case pwr_cClass_StoAtoIp:
           case pwr_cClass_cstoao:
           case pwr_cClass_cstoav:
           case pwr_cClass_cstoai:
-          case pwr_cClass_cstoip:
+          case pwr_cClass_CStoIp:
+          case pwr_cClass_CStoAtoIp:
           case pwr_cClass_cstoap:
           case pwr_cClass_GetData:
           case pwr_cClass_stosv:

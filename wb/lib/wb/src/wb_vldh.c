@@ -88,9 +88,9 @@ static 	char		class_name[90][80] = {
 				{"Pos3p"},
 				{"Inc3p"},
 				{"WindowSubstep"},
-				{"StoIp"},
-				{"CStoIp"},
-				{"GetIp"},
+				{"StoAtoIp"},
+				{"CStoAtoIp"},
+				{"GetIpToA"},
 				{"ExternRef"},
 				{"Text"},
 				{"$LibHier"},
@@ -4990,7 +4990,7 @@ static void cnv_from_neted( vldh_t_node n)
     case pwr_cClass_cstoao:
     case pwr_cClass_cstoap:
     case pwr_cClass_cstoav:
-    case pwr_cClass_cstoip:
+    case pwr_cClass_CStoAtoIp:
     case pwr_cClass_GetAi:
     case pwr_cClass_GetAo:
     case pwr_cClass_GetAp:
@@ -5000,7 +5000,7 @@ static void cnv_from_neted( vldh_t_node n)
     case pwr_cClass_GetDo:
     case pwr_cClass_GetDp:
     case pwr_cClass_GetDv:
-    case pwr_cClass_getip:
+    case pwr_cClass_GetIpToA:
     case pwr_cClass_GetPi:
     case pwr_cClass_resdo:
     case pwr_cClass_resdp:
@@ -5014,7 +5014,7 @@ static void cnv_from_neted( vldh_t_node n)
     case pwr_cClass_stodo:
     case pwr_cClass_stodp:
     case pwr_cClass_stodv:
-    case pwr_cClass_stoip:
+    case pwr_cClass_StoAtoIp:
     case pwr_cClass_ASup:
     case pwr_cClass_and:
     case pwr_cClass_DSup:
@@ -5076,7 +5076,7 @@ static void cnv_from_neted( vldh_t_node n)
     case pwr_cClass_GetDo:
     case pwr_cClass_GetDp:
     case pwr_cClass_GetDv:
-    case pwr_cClass_getip:
+    case pwr_cClass_GetIpToA:
     case pwr_cClass_GetPi:
     case pwr_cClass_BodyText:
     case pwr_cClass_Document:
@@ -5109,7 +5109,7 @@ static void cnv_to_neted( vldh_t_node n)
     case pwr_cClass_cstoao:
     case pwr_cClass_cstoap:
     case pwr_cClass_cstoav:
-    case pwr_cClass_cstoip:
+    case pwr_cClass_CStoAtoIp:
     case pwr_cClass_GetAi:
     case pwr_cClass_GetAo:
     case pwr_cClass_GetAp:
@@ -5119,7 +5119,7 @@ static void cnv_to_neted( vldh_t_node n)
     case pwr_cClass_GetDo:
     case pwr_cClass_GetDp:
     case pwr_cClass_GetDv:
-    case pwr_cClass_getip:
+    case pwr_cClass_GetIpToA:
     case pwr_cClass_GetPi:
     case pwr_cClass_resdo:
     case pwr_cClass_resdp:
@@ -5133,7 +5133,7 @@ static void cnv_to_neted( vldh_t_node n)
     case pwr_cClass_stodo:
     case pwr_cClass_stodp:
     case pwr_cClass_stodv:
-    case pwr_cClass_stoip:
+    case pwr_cClass_StoAtoIp:
     case pwr_cClass_ASup:
     case pwr_cClass_and:
     case pwr_cClass_DSup:
@@ -5194,7 +5194,7 @@ static void cnv_to_neted( vldh_t_node n)
     case pwr_cClass_GetDo:
     case pwr_cClass_GetDp:
     case pwr_cClass_GetDv:
-    case pwr_cClass_getip:
+    case pwr_cClass_GetIpToA:
     case pwr_cClass_GetPi:
     case pwr_cClass_BodyText:
     case pwr_cClass_Document:
