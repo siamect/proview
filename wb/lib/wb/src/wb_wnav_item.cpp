@@ -1257,7 +1257,7 @@ int WItemAttr::update()
       if ( ODD(sts)) {
 	for ( int i = 0; i < rows; i++) {
 	  if ( vd[i].Value->Value == *(pwr_tInt32 *)value) {
-	    strcpy( buff, vd[i].Value->Text);
+	    strcpy( buf, vd[i].Value->Text);
 	    buff = buf;        
 	    len = strlen(buf);
 	    found = true;
