@@ -169,6 +169,7 @@ addMyNode (void)
 {
   pwr_tStatus	sts;
   qcom_sNode	node;
+  gdb_sNode     *np;
 
   qcom_MyNode(&sts, &node);
   if (EVEN(sts)) errh_Bugcheck(sts, "qcom_MyNode");
@@ -176,7 +177,14 @@ addMyNode (void)
   if (node.nid != gdbroot->db->nid)
     errh_Bugcheck(GDH__WEIRD, "Qcom and Gdb dont agree on node identity");
 
-  addNode(&node);
+  np = addNode(&node);
+  if (np == NULL) errh_Bugcheck(0, "addNode(myNode)");
+
+  gdb_ScopeLock {
+    np->netver = net_cVersion;
+    np->cclassSupport = TRUE;
+  } gdb_ScopeUnlock;
+
 }
 
 /* Add my own node.  */
@@ -477,8 +485,6 @@ id (
     nid_np = hash_Search(&sts, gdbroot->nid_ht, &mp->hdr.nid);
     if (nid_np == NULL) {
       np->nid = mp->hdr.nid;
-      np->netver = mp->node.netver;
-      np->cclassSupport = cclassSupport;
       hash_Insert(&sts, gdbroot->nid_ht, np);
     } else if (nid_np != np ) {
       errh_Warning("New node (%s), attempts to appear as node (%s), '%s' ignored...",
@@ -490,6 +496,8 @@ id (
     }
 
     np->nod_oid = mp->node.nod_oid;
+    np->netver = mp->node.netver;
+    np->cclassSupport = cclassSupport;
 
   } gdb_ScopeUnlock;
 
