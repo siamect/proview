@@ -5488,6 +5488,7 @@ int	rtt_debug_object_add(
 	  case pwr_cClass_Ii:
 	  case pwr_cClass_Io:
 	  case pwr_cClass_Iv:
+	  case pwr_cClass_Sv:
 	    strcpy( parname, "ActualValue");	
 	    break;   
 	  case pwr_cClass_ChanDi:
@@ -5744,6 +5745,8 @@ int	rtt_debug_child_add(
 	{
 	  case pwr_cClass_Dv:
 	  case pwr_cClass_Av:
+	  case pwr_cClass_Iv:
+	  case pwr_cClass_Sv:
 	    strcpy( parname, "ActualValue");	
 	    strcat( full_parname, parname);	
 	    break;
@@ -5753,6 +5756,8 @@ int	rtt_debug_child_add(
 	  case pwr_cClass_Ai:
 	  case pwr_cClass_Ao:
 	  case pwr_cClass_Co:
+	  case pwr_cClass_Io:
+	  case pwr_cClass_Ii:
 	    if ( class == pwr_cClass_Co)
 	      strcpy( parname, "AbsValue");	
 	    else
