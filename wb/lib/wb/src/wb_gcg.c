@@ -8063,7 +8063,9 @@ vldh_t_node	node;
           break;
         case pwr_eType_String :
 	  if ( !( node->ln.classid == pwr_cClass_stosp ||
-	          node->ln.classid == pwr_cClass_cstosp ))
+	          node->ln.classid == pwr_cClass_cstosp ||
+	          node->ln.classid == pwr_cClass_stonumsp ||
+	          node->ln.classid == pwr_cClass_cstonumsp ))
 	  {
 	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
 	    free((char *) parameter);
@@ -8113,7 +8115,9 @@ vldh_t_node	node;
 	  nocontype[0] = GCG_INT32;
 	}    
 	else if ( node->ln.classid == pwr_cClass_stosp ||
-	          node->ln.classid == pwr_cClass_cstosp) 
+	          node->ln.classid == pwr_cClass_cstosp ||
+	          node->ln.classid == pwr_cClass_stonumsp || 
+	          node->ln.classid == pwr_cClass_cstonumsp) 
 	{
 	  strcpy( nocondef[0].str, (char *) nocondef_ptr);
 	  nocontype[0] = GCG_STRING;
@@ -8149,6 +8153,19 @@ vldh_t_node	node;
           // Add size of connected attribute
 	  IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
 		",%ld", info_size);
+        }
+	else if ( node->ln.classid == pwr_cClass_stonumsp ||
+		  node->ln.classid == pwr_cClass_cstonumsp ) {
+          // Add size of connected attribute and number of characters
+	  pwr_tInt32 *numberofchar_ptr;
+
+	  sts = ldh_GetObjectPar( ldhses, node->ln.object_did, "DevBody",
+			"NumberOfChar", (char **)&numberofchar_ptr, &size); 
+	  if ( EVEN(sts)) return sts;
+
+	  IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
+		",%ld,%d", info_size, *numberofchar_ptr);
+	  free( (char *)numberofchar_ptr);
         }
 
 	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
@@ -14185,15 +14202,29 @@ vldh_t_node	node;
 			vldh_IdToStr(1, output_objdid),
 			output_par);
 
-	      IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE],
-			"%c%s->%s = *%c%s->%sP;\n",
-			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
-			bodydef[i].Par->Param.Info.PgmName,
-			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
-			     bodydef[i].Par->Param.Info.PgmName);
-	    }
+	      switch ( bodydef[i].Par->Param.Info.Type) {
+	      case pwr_eType_String:
+		IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE],
+			       "strncpy( %c%s->%s, %c%s->%sP, %d);\n",
+			       GCG_PREFIX_REF,
+			       vldh_IdToStr(0, node->ln.object_did),
+			       bodydef[i].Par->Param.Info.PgmName,
+			       GCG_PREFIX_REF,
+			       vldh_IdToStr(0, node->ln.object_did),
+			       bodydef[i].Par->Param.Info.PgmName,
+			       bodydef[i].Par->Param.Info.Size);
+		break;
+	      default:
+		IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE],
+			       "%c%s->%s = *%c%s->%sP;\n",
+			       GCG_PREFIX_REF,
+			       vldh_IdToStr(0, node->ln.object_did),
+			       bodydef[i].Par->Param.Info.PgmName,
+			       GCG_PREFIX_REF,
+			       vldh_IdToStr(0, node->ln.object_did),
+			       bodydef[i].Par->Param.Info.PgmName);
+	      }
+	      }
 	    else
 	    {
 	      /* Point visible but not connected, errormessage */
