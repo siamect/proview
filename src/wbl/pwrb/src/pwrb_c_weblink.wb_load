@@ -58,7 +58,7 @@ SObject pwrb:Class
       !*/
       Object WebTarget $Attribute 3
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Enum"
+          Attr TypeRef = "pwrb:Type-WebTargetEnum"
         EndBody
       EndObject
     EndObject

@@ -1,0 +1,173 @@
+!  pwrb_td_distrcomponentmask.wb_load -- Defines the mask type DistrComponentMask
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+SObject pwrb:Type
+!/**
+!  @Version 1.0
+!  @Group Types
+!  Defines mask for distribution components.
+!*/
+  Object DistrComponentMask $TypeDef 13
+    Body SysBody
+      Attr TypeRef = "pwrs:Type-$Mask"
+      Attr PgmName = "DistrComponent"
+    EndBody
+    !/**
+    !  The Proview user database $pwra_db/pwr_user.dat is included.
+    !  The source is fetched from
+    !      1. $pwrp_src/'nodename'/pwr_user.dat
+    !      2. $pwra_db/pwr_user.dat
+    !*/
+    Object UserDatabase $Bit
+     Body SysBody
+       Attr PgmName = "UserDatabase"
+       Attr Text = "UserDatabase"
+       Attr Value = 1
+     EndBody
+    EndObject
+    !/**
+    !  Loadfiles are included, i.e. 
+    !    - loadfiles for volumes configured with RootVolumeLoad, SubVolumeLoad 
+    !      and ClassVolumeLoad objects, and volumes referenced by these volumes, 
+    !    - plc file.
+    !    - rtt crossreference files.
+    !*/
+    Object LoadFiles $Bit
+     Body SysBody
+       Attr PgmName = "LoadFiles"
+       Attr Text = "LoadFiles"
+       Attr Value = 2
+     EndBody
+    EndObject
+    !/**
+    !  The startup file $pwrp_load/ld_appl_'nodename'_'busnumber'.dat is included.
+    !*/
+    Object ApplFile $Bit
+     Body SysBody
+       Attr PgmName = "ApplFile"
+       Attr Text = "ApplFile"
+       Attr Value = 4
+     EndBody
+    EndObject
+    !/**
+    !  $pwrp_load/pwrp_alias.dat is included.
+    !*/
+    Object PwrpAliasFile $Bit
+     Body SysBody
+       Attr PgmName = "PwrpAliasFile"
+       Attr Text = "PwrpAliasFile"
+       Attr Value = 8
+     EndBody
+    EndObject
+    !/**
+    !  All includefiles in $pwrp_inc is included.
+    !*/
+    Object IncludeFiles $Bit
+     Body SysBody
+       Attr PgmName = "IncludeFiles"
+       Attr Text = "IncludeFiles"
+       Attr Value = 16
+     EndBody
+    EndObject
+    !/**
+    !  All Ge graph files $pwrp_pop/*.pwg are included.
+    !*/
+    Object GraphFiles $Bit
+     Body SysBody
+       Attr PgmName = "GraphFiles"
+       Attr Text = "GraphFiles"
+       Attr Value = 32
+     EndBody
+    EndObject
+    !/**
+    !  The xtt help file is included. The source file is fetched from
+    !     1. $pwrp_src/'nodename'/xtt_help.dat
+    !     2. $pwrp_exe/xtt_help.dat
+    !*/
+    Object XttHelpFile $Bit
+     Body SysBody
+       Attr PgmName = "XttHelpFile"
+       Attr Text = "XttHelpFile"
+       Attr Value = 64
+     EndBody
+    EndObject
+    !/**
+    !  The xtt resource file with function key definitions is included. The source
+    !  file is fetched from
+    !     1. $pwrp_src/'nodename'/Rt_xtt
+    !     2. $pwrp_pop/Rt_xtt
+    !  and distributed to /home/b55
+    !*/
+    Object XttResourceFile $Bit
+     Body SysBody
+       Attr PgmName = "XttResourceFile"
+       Attr Text = "XttResourceFile"
+       Attr Value = 128
+     EndBody
+    EndObject
+    !/**
+    !  The xtt setup file with menu configuration and symbol definitions is included.
+    !  The source is fetched from
+    !     1. $pwrp_src/'nodename'/xtt_setup.rtt_com
+    !     2. $pwrp_pop/xtt_setup.rtt_com
+    !  and distributed to /home/b55
+    !*/
+    Object XttSetupFile $Bit
+     Body SysBody
+       Attr PgmName = "XttSetupFile"
+       Attr Text = "XttSetupFile"
+       Attr Value = 256
+     EndBody
+    EndObject
+    !/**
+    !  The plc trace files $pwrp_load/*.flw are included.
+    !*/
+    Object FlowFiles $Bit
+     Body SysBody
+       Attr PgmName = "FlowFiles"
+       Attr Text = "FlowFiles"
+       Attr Value = 512
+     EndBody
+    EndObject
+    !/**
+    !  The .rhost file used by rsh is included. The source is fetched from
+    !     1. $pwrp_src/'nodename'/.rhosts
+    !     2. $pwra_db/.rhosts
+    !*/
+    Object RHostFile $Bit
+     Body SysBody
+       Attr PgmName = "RHostFile"
+       Attr Text = "RHostFile"
+       Attr Value = 1024
+     EndBody
+    EndObject
+    !/**
+    !  All web-files in $pwrp_web are included.
+    !*/
+    Object WebFiles $Bit
+     Body SysBody
+       Attr PgmName = "WebFiles"
+       Attr Text = "WebFiles"
+       Attr Value = 2048
+     EndBody
+    EndObject
+    !/**
+    !  Script pwrp_stop.sh is distributed.
+    !*/
+    Object PwrpStop $Bit
+     Body SysBody
+       Attr PgmName = "PwrpStop"
+       Attr Text = "PwrpStop"
+       Attr Value = 4096
+     EndBody
+    EndObject
+  EndObject
+EndSObject
+
+
+
+

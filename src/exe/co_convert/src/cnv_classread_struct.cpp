@@ -21,8 +21,8 @@ typedef struct {
 
 int ClassRead::struct_init()
 {
-  char struct_filename[200];
-  char fname[200];
+  pwr_tFileName struct_filename;
+  pwr_tFileName fname;
   int sts;
 
   struct_get_filename( struct_filename);
@@ -83,8 +83,8 @@ int ClassRead::struct_class()
 {
 
   // Open class struct file
-  char struct_filename[200];
-  char fname[200];
+  pwr_tFileName struct_filename;
+  pwr_tFileName fname;
   char volume_name_low[40];
 
   strcpy( volume_name_low, low(volume_name));
@@ -348,6 +348,8 @@ int ClassRead::struct_attribute()
 
   if ( strncmp( low(attr_typeref), "pwr_etype_", strlen("pwr_etype_")) == 0)
     strcpy( attr_typeref, &attr_typeref[strlen("pwr_etype_")]);
+  else if ( strncmp( low(attr_typeref), "pwr_etypedef_", strlen("pwr_etypedef_")) == 0)
+    strcpy( attr_typeref, &attr_typeref[strlen("pwr_etypedef_")]);
 
   if ( strcmp( low(attr_type), "buffer") == 0)
   {
@@ -382,7 +384,7 @@ int ClassRead::struct_attribute()
   // Check type for baseclasses
   if ( strcmp( low(volume_name), "pwrb") == 0)
   {
-    sts = struct_check_typename( type_name); 
+    sts = struct_check_typename( attr_typeref_volume, type_name); 
     if ( EVEN(sts))
     {
       printf("Error, unknown attribute type '%s'", type_name);
@@ -613,21 +615,89 @@ int ClassRead::struct_attribute()
 
 int ClassRead::struct_typedef()
 {
-  if ( strcmp( typedef_typeref, "String") == 0)
+  if ( strcmp( typedef_typeref, "Mask") == 0 ||
+       strcmp( typedef_typeref, "Enum") == 0) {
+    if ( strcmp(typedef_pgmname, "") == 0)
+      strcpy( typedef_pgmname, typedef_name);
+
     fp_struct << 
+"/*_* " << typedef_typeref << ": " << typedef_name << endl <<
+"    @Aref " << typedef_name << " " << typedef_name << endl <<
+"*/" << endl << endl <<
+"typedef pwr_t" << typedef_typeref << " pwr_t" << typedef_name << ";" << endl << endl <<
+"typedef enum {" << endl;
+  }
+  else if ( strcmp( typedef_typeref, "String") == 0) {
+    if ( typedef_elements > 1)
+      fp_struct << 
 "typedef char pwr_t" << typedef_name << "[" << typedef_elements << "];" << endl << endl;
-  else
-    fp_struct <<
+    else
+      fp_struct << 
+"typedef char pwr_t" << typedef_name << ";" << endl << endl;
+  }
+  else {
+    if ( typedef_elements > 1)
+      fp_struct <<
 "typedef pwr_t" << typedef_typeref << " pwr_t" << typedef_name << "[" << typedef_elements << "];" << endl << endl;
+    else
+      fp_struct <<
+"typedef pwr_t" << typedef_typeref << " pwr_t" << typedef_name << ";" << endl << endl;
+  }
 
+  struct_class_open = 1;
+  return 1;
+}
 
+int ClassRead::struct_typedef_close()
+{
+  if ( strcmp(typedef_pgmname, "") == 0)
+    strcpy( typedef_pgmname, typedef_name);
+
+  if ( strcmp( typedef_typeref, "Mask") == 0)
+    fp_struct << 
+"} pwr_m" << typedef_pgmname << ";" << endl << endl;
+  else if ( strcmp( typedef_typeref, "Enum") == 0)
+    fp_struct <<
+"} pwr_e" << typedef_pgmname << ";" << endl << endl;
+
+  struct_class_open = 0;
+  return 1;
+}
+
+int ClassRead::struct_bit()
+{
+  char pgmname[80];
+  int i;
+
+  if ( strcmp(typedef_pgmname, "") == 0)
+    strcpy( typedef_pgmname, typedef_name);
+
+  if ( strcmp( bit_pgmname, "") == 0)
+    strcpy( pgmname, bit_name);
+  else
+    strcpy( pgmname, bit_pgmname);
+
+  if ( strcmp( bit_type, "Bit") == 0) {
+    fp_struct <<
+"  pwr_m" << typedef_pgmname << "_" << pgmname;
+    for ( i = 0; i < int(30 - strlen(typedef_pgmname) - strlen(pgmname)); i++)
+      fp_struct << ' ';
+    fp_struct << " = " << bit_value << "," << endl;
+  }
+  else if ( strcmp( bit_type, "Value") == 0) {
+    fp_struct <<
+"  pwr_e" << typedef_pgmname << "_" << pgmname;
+    for ( i = 0; i < int(30 - strlen(typedef_pgmname) - strlen(pgmname)); i++)
+      fp_struct << ' ';
+    fp_struct << " = " << bit_value << "," << endl;
+  }
   return 1;
 }
 
 int ClassRead::struct_volname_to_id()
 {
   FILE *fp;
-  char fname[200];
+  pwr_tFileName fname;
   char line[400];
   char	line_part[4][80];
   int nr;
@@ -763,7 +833,10 @@ int ClassRead::struct_cixstr_to_classid( char *cix_str, pwr_tClassId *cid)
 	{ "pwr_eCix_MountVolume",	pwr_eCix_MountVolume},
 	{ "pwr_eCix_MountObject",	pwr_eCix_MountObject},
 	{ "pwr_eCix_RtMenu",		pwr_eCix_RtMenu},
-	{ "pwr_eCix_VolatileVolume",		pwr_eCix_VolatileVolume},
+	{ "pwr_eCix_VolatileVolume",	pwr_eCix_VolatileVolume},
+	{ "pwr_eCix_MenuRef",		pwr_eCix_MenuRef},
+	{ "pwr_eCix_Bit",		pwr_eCix_Bit},
+	{ "pwr_eCix_Value",		pwr_eCix_Value},
 	{ "", 0}};
 
   found = 0;
@@ -800,10 +873,12 @@ void ClassRead::struct_get_filename( char *struct_file)
     strcat( struct_file, "classes.h");
 }
 
-int ClassRead::struct_check_typename( char *type_name)
+int ClassRead::struct_check_typename( char *type_volume, char *type_name)
 {
-  char		*name;
-  char		valid_names[][40] = {
+  // Only types in pwrs can be typechecked
+  if ( strcmp( type_volume, "pwrs") == 0 || strcmp( type_volume, "") == 0) {
+    char		*name;
+    char		valid_names[][40] = {
 	"pwr_tAddress",
 	"pwr_tBit",
 	"pwr_tBitMask",
@@ -860,11 +935,13 @@ int ClassRead::struct_check_typename( char *type_name)
 	"pwr_tURL",
 	""};
 
-  for ( name = valid_names[0]; strcmp(name,"") != 0; 
-		name += sizeof(valid_names[0]))
-  {
-    if ( strcmp( name, type_name) == 0)
-      return 1;
+    for ( name = valid_names[0]; strcmp(name,"") != 0; 
+	  name += sizeof(valid_names[0])) {
+      if ( strcmp( name, type_name) == 0)
+	return 1;
+    }
+    return 0;
   }
-  return 0;
+  else
+    return 1;
 }

@@ -70,7 +70,7 @@ SObject pwrb:Class
       !*/
       Object Parity $Attribute 5
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Enum"
+          Attr TypeRef = "pwrb:Type-ParityEnum"
 	EndBody
       EndObject
       !/**
@@ -79,7 +79,7 @@ SObject pwrb:Class
       !*/
       Object StopBits $Attribute 6
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Enum"
+          Attr TypeRef = "pwrb:Type-StopBitsEnum"
 	EndBody
       EndObject
       !/**
@@ -88,7 +88,7 @@ SObject pwrb:Class
       !*/
       Object DataBits $Attribute 7
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Enum"
+          Attr TypeRef = "pwrb:Type-DataBitsEnum"
 	EndBody
       EndObject
       !/**

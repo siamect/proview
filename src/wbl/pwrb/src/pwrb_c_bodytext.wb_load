@@ -34,7 +34,7 @@ SObject pwrb:Class
       !*/
       Object TextAttribute $Intern 1 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Enum"
+          Attr TypeRef = "pwrb:Type-TextAttrEnum"
         EndBody
       EndObject
       !/**
@@ -44,7 +44,7 @@ SObject pwrb:Class
       !*/
       Object FrameAttribute $Intern 2 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Enum"
+          Attr TypeRef = "pwrb:Type-FrameAttrEnum"
         EndBody
       EndObject
       !/**

@@ -353,35 +353,45 @@ SObject         pwrb:Class
         EndBody
       EndObject
       !/**
+      !  @Summary The PID control algorithm
       !  There are several variations of the PID control
       !  algorithm. PidAlg specifies the current choice. The
       !  possible values are as follows:
       !  
       !  1   -- I     Integral controller. Gain is not used.
+      !
       !  3   -- I+P   Integral controller with proportional
       !               control action. The P-term is based on the
-      !  
+      !               the process value.
+      !
       !  6   -- P     Proportional Controller.
+      !
       !  7   -- PI    Proportional Integral Controller. The
-      !               P-term is based on the control error
+      !               P-term is based on the control error.
       !  
       !  11  -- I+PD Integral controller with proportional
       !              derivative control action. Both the P- and
-      !              D-term are based on the process value
+      !              D-term are based on the process value.
+      !
       !  14  -- P+D  Proportional Controller with derivative
-      !              control action. P is based on the control
+      !              control action. P is based on the control error,
+      !              D on the process value.
       !  
       !  15  -- PI+D Proportional Integral Controller with
       !              derivative control action. P is based on
+      !              the control error, D on the process value.
+      !
       !  30  -- PD   Proportional Derivative Controller. Both
       !              the P- and D-term are based on the control
+      !              error.
       !  
       !  31  -- PID  Proportional Integral Derivative
       !              Controller. Both the P- and D-term are
+      !              based on the control error.
       !*/
       Object PidAlg $Intern 12 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Enum"
+          Attr TypeRef = "pwrb:Type-PidAlgEnum"
           Attr GraphName = "PidAlg"
         EndBody
       EndObject

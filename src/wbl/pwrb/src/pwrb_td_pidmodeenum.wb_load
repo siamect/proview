@@ -1,0 +1,96 @@
+!  pwrb_pidmodeenum.wb_load -- Defines the mask type PidModeEnum
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+SObject pwrb:Type
+!/**
+!  @Version 1.0
+!  @Group Types
+!  Enumeration for Manual/Auto/Cascade mode in a PID.
+!
+! @b See also
+!  @classlink Mode pwrb_mode.html
+!*/
+  Object PidModeEnum $TypeDef 3
+    Body SysBody
+      Attr TypeRef = "pwrs:Type-$Enum"
+    EndBody
+    !/**
+    !  Manual mode.
+    !*/
+    Object Manual $Value
+     Body SysBody
+       Attr PgmName = "Manual"
+       Attr Text = "Manual"
+       Attr Value = 1
+     EndBody
+    EndObject
+    !/**
+    !  Auto mode.
+    !*/
+    Object Auto $Value
+     Body SysBody
+       Attr PgmName = "Auto"
+       Attr Text = "Auto"
+       Attr Value = 2
+     EndBody
+    EndObject
+    !/**
+    !  Manual and Auto mode.
+    !*/
+    Object ManAuto $Value
+     Body SysBody
+       Attr PgmName = "ManAuto"
+       Attr Text = "Manual / Auto"
+       Attr Value = 3
+     EndBody
+    EndObject
+    !/**
+    !  Cascade.
+    !*/
+    Object Cascade $Value
+     Body SysBody
+       Attr PgmName = "Cascade"
+       Attr Text = "Cascade"
+       Attr Value = 4
+     EndBody
+    EndObject
+    !/**
+    !  Cascade and Manual.
+    !*/
+    Object CascMan $Value
+     Body SysBody
+       Attr PgmName = "CascMan"
+       Attr Text = "Cascade / Manual"
+       Attr Value = 5
+     EndBody
+    EndObject
+    !/**
+    !  Cascade and Auto.
+    !*/
+    Object CascAuto $Value
+     Body SysBody
+       Attr PgmName = "CascAuto"
+       Attr Text = "Cascade / Auto"
+       Attr Value = 6
+     EndBody
+    EndObject
+    !/**
+    !  Cascade, Manual and Auto.
+    !*/
+    Object CascAutoMan $Value
+     Body SysBody
+       Attr PgmName = "CascAutoMan"
+       Attr Text = "Cascade / Auto / Manual"
+       Attr Value = 7
+     EndBody
+    EndObject
+  EndObject
+EndSObject
+
+
+
+

@@ -110,7 +110,7 @@ SObject pwrb:Class
       !*/
       Object NoOfBits $Attribute 10
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Enum"
+          Attr TypeRef = "pwrb:Type-SsabCoNoOfBitsEnum"
           Attr Flags |= PWR_MASK_ARRAY
           Attr Elements = 4
         EndBody
@@ -132,7 +132,7 @@ SObject pwrb:Class
       !*/
       Object MulCount $Attribute 12
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Enum"
+          Attr TypeRef = "pwrb:Type-SsabCoMulCountEnum"
           Attr Flags |= PWR_MASK_ARRAY
           Attr Elements = 4
         EndBody
@@ -144,7 +144,7 @@ SObject pwrb:Class
       !*/
       Object DivCount $Attribute 13
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Enum"
+          Attr TypeRef = "pwrb:Type-SsabCoDivCountEnum"
           Attr Flags |= PWR_MASK_ARRAY
           Attr Elements = 4
         EndBody

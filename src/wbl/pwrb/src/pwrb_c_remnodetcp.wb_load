@@ -98,7 +98,7 @@ SObject pwrb:Class
       !*/
       Object ConnectionMode $Attribute 8
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Enum"
+          Attr TypeRef = "pwrb:Type-ClientServerEnum"
 	EndBody
       EndObject      
       !/**

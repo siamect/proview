@@ -59,14 +59,14 @@ SObject         pwrb:Class
 !
       Object 	ByteOrdering	$Attribute 7
         Body	SysBody
-          Attr	TypeRef  = "pwrs:Type-$Enum"
+          Attr	TypeRef  = "pwrb:Type-ByteOrderingEnum"
         EndBody
       EndObject
       !
 !
       Object 	StallAction	$Attribute 8
         Body	SysBody
-          Attr	TypeRef  = "pwrs:Type-$Enum"
+          Attr	TypeRef  = "pwrb:Type-PbStallActionEnum"
         EndBody
       EndObject
 !

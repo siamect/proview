@@ -191,6 +191,14 @@ int ClassRead::read( char *filename)
 		nr > 2 &&
                 strcmp( low( line_part[2]), "$buffer") == 0)
         linetype = cread_eLine_Buffer;
+      else if ( strcmp( low( line_part[0]), "object") == 0 &&
+		nr > 2 &&
+                strcmp( low( line_part[2]), "$bit") == 0)
+        linetype = cread_eLine_Bit;
+      else if ( strcmp( low( line_part[0]), "object") == 0 &&
+		nr > 2 &&
+                strcmp( low( line_part[2]), "$value") == 0)
+        linetype = cread_eLine_Value;
       else if ( strcmp( low( line_part[0]), "object") == 0)
         linetype = cread_eLine_Object;
       else if ( strcmp( low( line_part[0]), "object") == 0)
@@ -250,6 +258,7 @@ int ClassRead::read( char *filename)
         case cread_eLine_TypeDef:
           state |= cread_mState_TypeDef;
           object_state = cread_mState_TypeDef;
+	  classdef_level = object_level;
           typedef_init();
           if ( line_part[1][0] == '$')
             strcpy( typedef_name, &line_part[1][1]);
@@ -264,6 +273,22 @@ int ClassRead::read( char *filename)
             strcpy( typedef_name, &line_part[1][1]);
           else
             strcpy( typedef_name, line_part[1]);
+          break;
+        case cread_eLine_Bit:
+          state |= cread_mState_Bit;
+          object_state = cread_mState_Bit;
+          strcpy( bit_name, line_part[1]);
+          strcpy( bit_type, "Bit");
+	  bit_init();
+          object_level++;
+          break;
+        case cread_eLine_Value:
+          state |= cread_mState_Value;
+          object_state = cread_mState_Value;
+          strcpy( bit_name, line_part[1]);
+          strcpy( bit_type, "Value");
+	  bit_init();
+          object_level++;
           break;
         case cread_eLine_SysBody:
           state |= cread_mState_SysBody;
@@ -394,14 +419,22 @@ int ClassRead::read( char *filename)
 	    if ( generate_struct && struct_class_open && classdef_level == object_level)
               struct_class_close();
           }
-          else if ( state & cread_mState_TypeDef) {
+          else if ( state & cread_mState_Bit) {
+            state &= ~cread_mState_Bit;
+	    // object_state = cread_mState_TypeDef;
+	    object_level--;
+          }
+          else if ( state & cread_mState_Value) {
+            state &= ~cread_mState_Value;
+	    // object_state = cread_mState_TypeDef;
+	    object_level--;
+          }
+          else if ( state & cread_mState_TypeDef && classdef_level == object_level) {
             state &= ~cread_mState_TypeDef;
-#if 0
             if ( generate_html && html_class_open)
-              html_class_close();
+              html_typedef_close();
 	    if ( generate_struct && struct_class_open)
-              struct_class_close();
-#endif
+              struct_typedef_close();
           }
           else if ( state & cread_mState_Type) {
             state &= ~cread_mState_Type;
@@ -459,6 +492,10 @@ int ClassRead::read( char *filename)
             case cread_mState_TypeDef:
             case cread_mState_Type:
               typedef_attr( attr_name, attr_value);
+              break;
+            case cread_mState_Bit:
+            case cread_mState_Value:
+              bit_attr( attr_name, attr_value);
               break;
             case cread_mState_ObjBodyDef:
               body_attr( attr_name, attr_value);
@@ -608,7 +645,7 @@ int ClassRead::read( char *filename)
     html_class_close();
   if ( generate_xtthelp && xtthelp_index_open)
     xtthelp_class_close();
-  if ( generate_struct)
+  if ( generate_struct && html_class_open)
     struct_class_close();
 
   fclose(fp);
@@ -620,6 +657,7 @@ void ClassRead::attribute_init()
 {
   strcpy( attr_flags, "");
   strcpy( attr_typeref, "");
+  strcpy( attr_typeref_volume, "");
   strcpy( attr_pgmname, "");
   strcpy( attr_elements, "");
   attr_pointer = 0;
@@ -642,6 +680,11 @@ int ClassRead::attribute_attr( char *name, char *value)
       if ( *s == '$')
         s++;
       strcpy( attr_typeref, s);
+      strcpy( attr_typeref_volume, value);
+      if ( (s = strchr( attr_typeref_volume, ':')))
+	*s = 0;
+      else
+	strcpy( attr_typeref_volume, "");
     }
     else
       strcpy( attr_typeref, value);
@@ -711,6 +754,21 @@ int ClassRead::attribute_close()
     sts = xtthelp_attribute();
   if ( generate_struct)
     sts = struct_attribute();
+
+  doc_fresh = 0;
+  return sts;
+}
+
+int ClassRead::bit_close()
+{
+  int sts;
+
+  if ( generate_html)
+    sts = html_bit();
+  if ( generate_xtthelp)
+    sts = xtthelp_bit();
+  if ( generate_struct)
+    sts = struct_bit();
 
   doc_fresh = 0;
   return sts;
@@ -1091,6 +1149,10 @@ int ClassRead::object_close()
     case cread_mState_Type:
       typedef_close();
       break;
+    case cread_mState_Bit:
+    case cread_mState_Value:
+      bit_close();
+      break;
     case cread_mState_Object:
       break;
     default:
@@ -1104,7 +1166,15 @@ void ClassRead::typedef_init()
 {
   strcpy( typedef_name, "");
   strcpy( typedef_typeref, "");
+  strcpy( typedef_pgmname, "");
   typedef_elements = 0;
+}
+
+void ClassRead::bit_init()
+{
+  strcpy( bit_text, "");
+  strcpy( bit_pgmname, "");
+  bit_value = 0;
 }
 
 int ClassRead::typedef_attr( char *name, char *value)
@@ -1117,9 +1187,27 @@ int ClassRead::typedef_attr( char *name, char *value)
       strcpy( typedef_typeref, value);
 
   }
+  if ( strcmp( low( name), "pgmname") == 0)
+  {
+    strcpy( typedef_pgmname, value);
+  }
   else if ( strcmp( low( name), "elements") == 0)
   {
     sscanf( value, "%d", &typedef_elements);
+  }
+  return 1;
+}
+
+int ClassRead::bit_attr( char *name, char *value)
+{
+  if ( strcmp( low( name), "text") == 0) {
+    strcpy( bit_text, value);
+  }
+  else if ( strcmp( low( name), "pgmname") == 0) {
+    strcpy( bit_pgmname, value);
+  }
+  else if ( strcmp( low( name), "value") == 0) {
+    sscanf( value, "%u", &bit_value);
   }
   return 1;
 }
@@ -1130,9 +1218,10 @@ int ClassRead::typedef_close()
   if ( first_class) {
     if ( generate_html)
       html_init( typedef_name);
-    if ( generate_struct &&
-	 object_state == cread_mState_TypeDef)
+    if ( generate_struct)
       struct_init();
+    if ( generate_xtthelp)
+      xtthelp_init();
     
     first_class = 0;
   }
@@ -1244,7 +1333,7 @@ char *ClassRead::flags_to_string( int value)
   case pwr_mAdef_rtdbref: 	strcpy( str, "Rtdbref"); break;
   case pwr_mAdef_private: 	strcpy( str, "Private"); break;
   case pwr_mAdef_class: 	strcpy( str, "Class"); break;
-  case pwr_mAdef_subclass: 	strcpy( str, "Subclass"); break;
+  case pwr_mAdef_superclass: 	strcpy( str, "Superclass"); break;
   case pwr_mAdef_buffer: 	strcpy( str, "Buffer"); break;
   case pwr_mAdef_nowbl: 	strcpy( str, "Nowbl"); break;
   case pwr_mAdef_alwayswbl: 	strcpy( str, "Alwayswbl"); break;

@@ -85,5 +85,13 @@ SObject pwrb:Class
         Attr ConversionOn = 1
       EndBody
     EndObject
+    Object RtXtt $RtMenu
+      Object Signal $MenuRef
+	Body SysBody
+	  Attr ButtonName = "Signal"
+	  Attr RefAttribute = "SigChanCon"
+	EndBody
+      EndObject
+    EndObject
   EndObject
 EndSObject

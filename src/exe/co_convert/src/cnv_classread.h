@@ -55,6 +55,8 @@ typedef enum {
 	cread_eLine_Range,
 	cread_eLine_TypeDef,
 	cread_eLine_Type,
+	cread_eLine_Bit,
+	cread_eLine_Value,
 	cread_eLine_Unknown
 	} cread_eLine;
 
@@ -80,7 +82,9 @@ typedef enum {
 	cread_mState_DParam	= 1 << 18,
 	cread_mState_TypeDef	= 1 << 19,
 	cread_mState_Type	= 1 << 20,
-	cread_mState_StringAttr	= 1 << 21
+	cread_mState_StringAttr	= 1 << 21,
+	cread_mState_Bit	= 1 << 22,
+	cread_mState_Value	= 1 << 23
 	} cread_mState;
 
 #define cread_cTmpFile1 "classread1.tmp"
@@ -114,6 +118,7 @@ class ClassRead {
     char		attr_flags[200];
     char		attr_type[80];
     char		attr_typeref[80];
+    char		attr_typeref_volume[80];
     int			attr_pointer;
     int			attr_array;
     int			attr_rtvirtual;
@@ -138,6 +143,12 @@ class ClassRead {
     char		typedef_name[80];
     char		typedef_typeref[80];
     int			typedef_elements;
+    char		typedef_pgmname[32];
+    char		bit_name[80];
+    char		bit_type[80];
+    int			bit_value;
+    char		bit_text[80];
+    char		bit_pgmname[80];
     char		doc_author[200];
     char		doc_version[80];
     char		doc_groups[10][40];
@@ -174,6 +185,9 @@ class ClassRead {
     void typedef_init();
     int typedef_attr( char *name, char *value);
     int typedef_close();
+    void bit_init();
+    int bit_attr( char *name, char *value);
+    int bit_close();
     void body_init();
     int body_attr( char *name, char *value);
     int body_close();
@@ -222,6 +236,8 @@ class ClassRead {
     int html_graphplccon();
     int html_template();
     int html_typedef();
+    int html_typedef_close();
+    int html_bit();
 
     // xtthelp
     int		generate_xtthelp;
@@ -235,6 +251,7 @@ class ClassRead {
     int xtthelp_class_close();
     int xtthelp_body();
     int xtthelp_attribute();
+    int xtthelp_bit();
 
     // src
     int		generate_src;
@@ -273,11 +290,13 @@ class ClassRead {
     int struct_body_close();
     int struct_attribute();
     int struct_typedef();
+    int struct_typedef_close();
+    int struct_bit();
     int struct_volname_to_id();
     void struct_cix_to_classid( unsigned int cix, pwr_tClassId *cid);
     int struct_cixstr_to_classid( char *cix_str, pwr_tClassId *cid);
     void struct_get_filename( char *struct_file);
-    int struct_check_typename( char *name);
+    int struct_check_typename( char *type_volume, char *type_name);
 
     // Setup
     char setup_filename[120];

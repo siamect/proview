@@ -199,6 +199,12 @@ SObject pwrb:Class
 	  Attr MethodName = "PlcPgm-OpenTrace"
 	EndBody
       EndObject
+      Object Thread $MenuRef
+	Body SysBody
+	  Attr ButtonName = "Thread"
+	  Attr RefAttribute = "ThreadObject"
+	EndBody
+      EndObject
       Object Scan $MenuCascade
 	Body SysBody
 	  Attr ButtonName = "Scan"

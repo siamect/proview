@@ -16,8 +16,8 @@ extern "C" {
 
 int ClassRead::html_init( char *first)
 {
-  char fname[200];
-  char gname[200];
+  pwr_tFileName fname;
+  pwr_tFileName gname;
   char allclasses_name[80];
   char timestr[80];
 
@@ -384,13 +384,13 @@ int ClassRead::html_close()
 
 int ClassRead::html_class()
 {
-  char fname[200];
+  pwr_tFileName fname;
   int i;
-  char html_file_name[80];
+  pwr_tFileName html_file_name;
   char full_class_name[80];
   char ref_name[200];
-  char struct_file[100];
-  char hpp_file[100];
+  pwr_tFileName struct_file;
+  pwr_tFileName hpp_file;
   char low_volume_name[80];
   char low_class_name[80];
   char txt[200];
@@ -581,8 +581,8 @@ endl <<
 int ClassRead::html_body()
 {
   char struct_name[80];
-  char fname[200];
-  char struct_file[80];
+  pwr_tFileName fname;
+  pwr_tFileName struct_file;
 
   struct_get_filename( fname);
   src_filename_to_html( struct_file, fname);
@@ -737,9 +737,20 @@ int ClassRead::html_attribute()
   }
   else if ( strncmp( attr_typeref, "pwr_eType_", 10)  == 0) {
     strcpy( typeref_href, &attr_typeref[10]);
-    strcpy( attr_typeref, typeref_href);    
+    strcpy( attr_typeref, typeref_href);
   }
-  sprintf( typeref_href, "pwrs_%s.html", low(attr_typeref));
+  else if ( strncmp( attr_typeref, "pwr_eTypeDef_", 13)  == 0) {
+    strcpy( typeref_href, &attr_typeref[13]);
+    strcpy( attr_typeref, typeref_href);
+  }
+  if ( strcmp( attr_typeref_volume, "") != 0) {
+    char low_volname[80];
+    strcpy( low_volname, low(attr_typeref_volume)); 
+    sprintf( typeref_href, "%s_%s.html", low_volname,
+	     low(attr_typeref));
+  }
+  else
+    sprintf( typeref_href, "pwrs_%s.html", low(attr_typeref));
 
   sprintf( attrtype_href, "pwrs_%s.html", low(attr_type));
 
@@ -831,7 +842,99 @@ int ClassRead::html_attribute()
 
   fp_tmp <<
 "<DT><CODE><B>Body</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" << body_name << "</CODE><DT>" << endl <<
-    "<DT><CODE><B>Class</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF=\"" << attrtype_href << "\">$" << attr_type << "</A></CODE><DT>" << endl;
+"<DT><CODE><B>Class</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF=\"" << attrtype_href << "\">$" << attr_type << "</A></CODE><DT>" << endl;
+
+  fp_tmp <<
+"<BR>" << endl <<
+"<CODE><B>Description</B></CODE><DT></DL>" << endl <<
+"<DIV ID=\"description\"><XMP>" << endl;
+
+  if ( doc_fresh) {
+    for ( i = 0; i < doc_cnt; i++) {
+      remove_spaces( doc_text[i], txt);
+      if ( strncmp( low(txt), "@image", 6) == 0)  {
+	char imagefile[80];
+
+	remove_spaces( txt + 6, imagefile);
+	fp_tmp << "</XMP><IMG SRC=\"" << imagefile << "\"><XMP>" << endl;
+      }
+      else if ( strncmp( low(txt), "@b", 2) == 0)  {
+	fp_tmp << "</XMP><B><FONT SIZE=\"3\">" << txt + 2 << "</FONT></B><XMP>" << endl;
+      }
+      else if ( strncmp( low(txt), "@h1", 3) == 0)  {
+	fp_tmp << "</XMP><H3>" << txt + 3 << "</H3><XMP>" << endl;
+      }
+      else if ( strncmp( low(txt), "@h2", 3) == 0)  {
+	fp_tmp << "</XMP><H4>" << txt + 3 << "</H4><XMP>" << endl;
+      }
+      else
+	fp_tmp << doc_text[i] << endl;
+    }
+  }
+  fp_tmp <<
+"</XMP></DIV>" << endl;
+
+  return 1;
+}
+
+
+int ClassRead::html_bit()
+{
+  int i;
+  char txt[200];
+
+  // Summary
+  char bitchar = _tolower(typedef_typeref[0]);
+
+  html_clf->f <<
+"<TR BGCOLOR=\"white\" CLASS=\"TableRowColor\">" << endl <<
+"<TD>" << endl <<
+"<CODE><FONT SIZE=\"-1\">pwr_" << bitchar << typedef_name << "_" << bit_pgmname << "</FONT></CODE></TD>" << endl <<
+"<TD ALIGN =\"right\" VALIGN=\"top\" WIDTH=\"1%\"><A HREF=\"#" << bit_name << "\"><CODE><B>" << bit_text << "</B></CODE></A></TD>" << endl <<
+"<TD>";
+  if ( doc_fresh)
+  {
+    if ( strcmp( doc_summary, "") == 0) 
+    {
+      for ( i = 0; i < doc_cnt; i++) {
+	remove_spaces( doc_text[i], txt);
+	if ( strncmp( low(txt), "@image", 6) == 0) {
+	  continue;
+	}
+	else if ( strncmp( low(txt), "@b", 2) == 0)  {
+	  html_clf->f << "</XMP><B><FONT SIZE=\"3\">" << txt + 2 << "</FONT></B><XMP>" << endl;
+	}
+	else if ( strncmp( low(txt), "@h1", 3) == 0)  {
+	  html_clf->f << "<H3>" << txt + 3 << "</H3>" << endl;
+	}
+	else if ( strncmp( low(txt), "@h2", 3) == 0)  {
+	  html_clf->f << "<H4>" << txt + 3 << "</H4>" << endl;
+	}
+	else {
+	  html_clf->f << doc_text[i];
+	  if ( i < doc_cnt - 1)
+	    html_clf->f << "<BR>" << endl;
+	}
+      }
+    }
+    else
+      html_clf->f << doc_summary << endl;
+  }
+  else
+    html_clf->f << "<BR>" << endl;
+
+  html_clf->f <<
+"</TD>" << endl;
+
+
+  // Detail
+
+  fp_tmp <<
+"<HR>" << endl <<
+"<A NAME=\"" << bit_name << "\"> <H3>" <<
+    "<FONT SIZE=\"-1\">pwr_" << bitchar << typedef_name << "_" << bit_pgmname << "</FONT>&nbsp;&nbsp" << bit_text << "</H3></A>" << endl <<
+"<DL><DT>" << endl <<
+"<CODE><B>Value</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" << bit_value << "</CODE><DT>" << endl;
 
   fp_tmp <<
 "<BR>" << endl <<
@@ -869,15 +972,16 @@ int ClassRead::html_attribute()
 
 int ClassRead::html_typedef()
 {
-  char fname[200];
+  pwr_tFileName fname;
   int i;
-  char html_file_name[80];
+  pwr_tFileName html_file_name;
   char full_class_name[80];
   char ref_name[200];
-  char struct_file[100];
+  pwr_tFileName struct_file;
   char low_volume_name[80];
   char low_class_name[80];
   char txt[200];
+  char code_aref[200];
 
   strcpy( class_name, typedef_name);
 
@@ -965,11 +1069,20 @@ int ClassRead::html_typedef()
 endl <<
 "<TR>" << endl <<
 "<TD BGCOLOR=\"white\" CLASS=\"NavBarCell2\"><FONT SIZE=\"-2\">" << endl;
-  if ( doc_fresh && strcmp( doc_code, "") != 0)
+
+  if ( (strcmp( typedef_typeref, "Mask") == 0 ||
+	strcmp( typedef_typeref, "Enum") == 0) &&
+       strcmp( low_volume_name, "pwrs") != 0) {
+    sprintf( code_aref, "%s#%s", struct_file, typedef_name);
+    html_clf->f <<
+" C Binding: &nbsp;<A HREF=\"" << code_aref << "\">Typedef</A>" << endl;
+  }
+  else if ( doc_fresh && strcmp( doc_code, "") != 0)
   {
     src_filename_to_html( ref_name, doc_code);
+    sprintf( code_aref, "%s#%s", ref_name, low_class_name);
     html_clf->f <<
-" C Binding: &nbsp;<A HREF=\"" << ref_name << "#" << low_class_name << "\">Typedef</A>" << endl;
+" C Binding: &nbsp;<A HREF=\"" << code_aref << "\">Typedef</A>" << endl;
   }
   for ( i = 0; i < 50; i++)
     html_clf->f << "&nbsp;";
@@ -1044,6 +1157,32 @@ endl <<
   }
   html_clf->f <<
 "</FONT>" << endl;
+
+
+  if ( strcmp( typedef_typeref, "Mask") == 0 ||
+       strcmp( typedef_typeref, "Enum") == 0) {
+    char bitchar = _tolower(typedef_typeref[0]);
+
+    html_clf->f <<
+"<HR><BR>" << endl <<
+"<A NAME=\"" << typedef_name << "\"><!-- --></A>" << endl <<
+"<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\" WIDTH=\"100%\">" << endl <<
+"<TR BGCOLOR=\"#CCCCFF\" CLASS=\"TableHeadingColor\">" << endl <<
+"<TD COLSPAN=3><FONT SIZE=\"+2\">" << endl <<
+"<B>" << typedef_name << " elements</B></FONT>" <<
+"<FONT SIZE=\"+1\"<B>&nbsp;&nbsp;&nbsp;&nbsp; <A HREF=\"" << code_aref << "\">pwr_" << bitchar << typedef_name << "</A></B></FONT></TD>" << endl <<
+"</TR>" << endl;
+  }
+  return 1;
+}
+
+int ClassRead::html_typedef_close()
+{
+  if ( strcmp( typedef_typeref, "Mask") == 0 ||
+       strcmp( typedef_typeref, "Enum") == 0) {
+  html_clf->f <<
+"</TABLE>" << endl;
+  }
 
   fp_tmp.close();
 

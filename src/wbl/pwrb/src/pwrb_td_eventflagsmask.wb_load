@@ -1,0 +1,103 @@
+!  pwrb_eventflagsmask.wb_load -- Defines the mask type EventFlagsMask
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+SObject pwrb:Type
+!/**
+!  @Version 1.0
+!  @Group Types
+!  Defines the EventFlags mask for messages.
+!
+! @b See also
+!  @classlink ASup pwrb_ASup.html
+!*/
+  Object EventFlagsMask $TypeDef 1
+    Body SysBody
+      Attr TypeRef = "pwrs:Type-$Mask"
+      Attr PgmName = "EventFlags"
+    EndBody
+    !/**
+    !  If this flag exists the return message ReturnText
+    !  will be sent to the event lists at the out units.
+    !*/
+    Object Return $Bit
+     Body SysBody
+       Attr PgmName = "Return"
+       Attr Text = "Return"
+       Attr Value = 1
+     EndBody
+    EndObject
+    !/**
+    !  If this flag exists the acknowledgement message
+    !  will be sent to the event lists at the out-units.
+    !*/
+    Object Ack $Bit
+     Body SysBody
+       Attr PgmName = "Ack"
+       Attr Text = "Ack"
+       Attr Value = 2
+     EndBody
+    EndObject
+    !/**
+    !  If the single out unit has a peep-function this
+    !  will be activated when the message is received.
+    !*/
+    Object Bell $Bit
+     Body SysBody
+       Attr PgmName = "Bell"
+       Attr Text = "Bell"
+       Attr Value = 4
+     EndBody
+    EndObject
+    !/**
+    !  The message is sent to every out unit regardless.
+    !*/
+    Object Force $Bit
+     Body SysBody
+       Attr PgmName = "Force"
+       Attr Text = "Force"
+       Attr Value = 8
+     EndBody
+    EndObject
+    !/**
+    !  If the message is of the type INFO it will be
+    !  placed in the event list. If this flag exists the
+    !  message is also placed in the INFO square of the
+    !  alarm window where acknowledgement is to be done.
+    !*/
+    Object InfoWindow $Bit
+     Body SysBody
+       Attr PgmName = "InfoWindow"
+       Attr Text = "InfoWindow"
+       Attr Value = 16
+     EndBody
+    EndObject
+    !/**
+    !  Undocumented...
+    !*/
+    Object Returned $Bit
+     Body SysBody
+       Attr PgmName = "Returned"
+       Attr Text = "Returned"
+       Attr Value = 32
+     EndBody
+    EndObject
+    !/**
+    !  Undocumented...
+    !*/
+    Object NoObject $Bit
+     Body SysBody
+       Attr PgmName = "NoObject"
+       Attr Text = "NoObject"
+       Attr Value = 64
+     EndBody
+    EndObject
+  EndObject
+EndSObject
+
+
+
+

@@ -181,5 +181,13 @@ SObject pwrb:Class
 	EndObject
       EndObject
     EndObject
+    Object RtXtt $RtMenu
+      Object Channel $MenuRef
+	Body SysBody
+	  Attr ButtonName = "Channel"
+	  Attr RefAttribute = "SigChanCon"
+	EndBody
+      EndObject
+    EndObject
   EndObject
 EndSObject

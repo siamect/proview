@@ -33,7 +33,7 @@ SObject         pwrb:Class
 !
       Object 	NumberRepresentation $Attribute 4
         Body	SysBody
-          Attr	TypeRef  = "pwrs:Type-$Enum"
+          Attr	TypeRef  = "pwrb:Type-PbNumberRepEnum"
         EndBody
       EndObject
 !

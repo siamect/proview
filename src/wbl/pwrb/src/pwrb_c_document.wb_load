@@ -69,12 +69,12 @@ SObject pwrb:Class
       EndObject
       Object DocumentOrientation $Intern 4 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Enum"
+          Attr TypeRef = "pwrb:Type-DocumentOrientEnum"
         EndBody
       EndObject
       Object DocumentSize $Intern 5 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Enum"
+          Attr TypeRef = "pwrb:Type-DocumentSizeEnum"
         EndBody
       EndObject
     EndObject

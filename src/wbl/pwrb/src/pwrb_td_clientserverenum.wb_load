@@ -1,0 +1,44 @@
+!  pwrb_td_clientserverenum.wb_load -- Defines the mask type ClientServerEnum
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+SObject pwrb:Type
+!/**
+!  @Version 1.0
+!  @Group Types
+!  Enumeration for Client/Server.
+!*/
+  Object ClientServerEnum $TypeDef 21
+    Body SysBody
+      Attr TypeRef = "pwrs:Type-$Enum"
+      Attr PgmName = "ClientServer"
+    EndBody
+    !/**
+    !  Client.
+    !*/
+    Object Client $Value
+     Body SysBody
+       Attr PgmName = "Client"
+       Attr Text = "Client"
+       Attr Value = 0
+     EndBody
+    EndObject
+    !/**
+    !  Server.
+    !*/
+    Object Server $Value
+     Body SysBody
+       Attr PgmName = "Server"
+       Attr Text = "Server"
+       Attr Value = 1
+     EndBody
+    EndObject
+  EndObject
+EndSObject
+
+
+
+

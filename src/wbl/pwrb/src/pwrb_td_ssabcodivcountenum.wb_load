@@ -1,0 +1,44 @@
+!  pwrb_td_ssabcodivcountenum.wb_load -- Defines the mask type SsabCoDivCountEnum
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+SObject pwrb:Type
+!/**
+!  @Version 1.0
+!  @Group Types
+!  Enumeration for DivCount in ssab Co objects.
+!*/
+  Object SsabCoDivCountEnum $TypeDef 20
+    Body SysBody
+      Attr TypeRef = "pwrs:Type-$Enum"
+      Attr PgmName = "SsabCoDivCount"
+    EndBody
+    !/**
+    !  No.
+    !*/
+    Object No $Value
+     Body SysBody
+       Attr PgmName = "No"
+       Attr Text = "No"
+       Attr Value = 0
+     EndBody
+    EndObject
+    !/**
+    !  16 times.
+    !*/
+    Object 16 $Value
+     Body SysBody
+       Attr PgmName = "16"
+       Attr Text = "16"
+       Attr Value = 16
+     EndBody
+    EndObject
+  EndObject
+EndSObject
+
+
+
+

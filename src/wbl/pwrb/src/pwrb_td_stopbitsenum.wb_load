@@ -1,0 +1,54 @@
+!  pwrb_td_stopbitsenum.wb_load -- Defines the enum type StopBitsEnum
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+SObject pwrb:Type
+!/**
+!  @Version 1.0
+!  @Group Types
+!  Enumeration for stop bits.
+!*/
+  Object StopBitsEnum $TypeDef 23
+    Body SysBody
+      Attr TypeRef = "pwrs:Type-$Enum"
+      Attr PgmName = "StopBits"
+    EndBody
+    !/**
+    !  0 stop bits.
+    !*/
+    Object 0 $Value
+     Body SysBody
+       Attr PgmName = "0"
+       Attr Text = "0"
+       Attr Value = 0
+     EndBody
+    EndObject
+    !/**
+    !  1 stop bit.
+    !*/
+    Object 1 $Value
+     Body SysBody
+       Attr PgmName = "1"
+       Attr Text = "1"
+       Attr Value = 1
+     EndBody
+    EndObject
+    !/**
+    !  2 stop bits.
+    !*/
+    Object 2 $Value
+     Body SysBody
+       Attr PgmName = "2"
+       Attr Text = "2"
+       Attr Value = 2
+     EndBody
+    EndObject
+  EndObject
+EndSObject
+
+
+
+

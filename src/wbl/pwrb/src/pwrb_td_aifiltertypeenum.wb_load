@@ -1,0 +1,68 @@
+!  pwrb_aifiltertypeenum.wb_load -- Defines the enum type AiFilterTypeEnum
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+SObject pwrb:Type
+!/**
+!  @Version 1.0
+!  @Group Types
+!  Enumeration for filtertypes in ai objects.
+!
+!*/
+  Object AiFilterTypeEnum $TypeDef 8
+    Body SysBody
+      Attr TypeRef = "pwrs:Type-$Enum"
+      Attr PgmName = "AiFilterType"
+    EndBody
+    !/**
+    !  No filter.
+    !*/
+    Object No $Value
+     Body SysBody
+       Attr PgmName = "No"
+       Attr Text = "No"
+       Attr Value = 0
+     EndBody
+    EndObject
+    !/**
+    !  Exponential filter.
+    !     The filtering is done on the engineering value,
+    !     ActualValue, before storage in rtdb according:
+    !  
+    !     ActulaValue(t) = ActulaValue(t-1) + a * (InValue - ActulaValue(t-1)) 
+    !
+    !     where 
+    !     - ActualValue(t-1) is the engineering value stored at the 
+    !       former sample
+    !     - nValue(t) the current engineering value before filtering.
+    !     - a = ScanInterval * ScanTime / FilterAttribute[0] 
+    !       and 0 < a < 1.0 
+    !
+    !     If a >= 0 no filtering is done. The less a the harder
+    !     filtering.
+    !
+    !     The product ScanInterval * ScanTime specifies the updating
+    !     period of the signal
+    !*/
+    Object Exponential $Value
+     Body SysBody
+       Attr PgmName = "Exponential"
+       Attr Text = "Exponential"
+       Attr Value = 1
+     EndBody
+    EndObject
+  EndObject
+EndSObject
+
+
+
+
+
+
+
+
+
+

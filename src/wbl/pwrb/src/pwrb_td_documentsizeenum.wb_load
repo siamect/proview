@@ -1,0 +1,89 @@
+!  pwrb_documentsizeenum.wb_load -- Defines the enum type DocumentSizeEnum
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+SObject pwrb:Type
+!/**
+!  @Version 1.0
+!  @Group Types
+!  Enumeration for document size.
+!
+!*/
+  Object DocumentSizeEnum $TypeDef 9
+    Body SysBody
+      Attr TypeRef = "pwrs:Type-$Enum"
+      Attr PgmName = "DocumentSize"
+    EndBody
+    !/**
+    !  Size A0.
+    !*/
+    Object A0 $Value
+     Body SysBody
+       Attr PgmName = "A0"
+       Attr Text = "A0"
+       Attr Value = 0
+     EndBody
+    EndObject
+    !/**
+    !  Size A1.
+    !*/
+    Object A1 $Value
+     Body SysBody
+       Attr PgmName = "A1"
+       Attr Text = "A1"
+       Attr Value = 1
+     EndBody
+    EndObject
+    !/**
+    !  Size A2.
+    !*/
+    Object A2 $Value
+     Body SysBody
+       Attr PgmName = "A2"
+       Attr Text = "A2"
+       Attr Value = 2
+     EndBody
+    EndObject
+    !/**
+    !  Size A3.
+    !*/
+    Object A3 $Value
+     Body SysBody
+       Attr PgmName = "A3"
+       Attr Text = "A3"
+       Attr Value = 3
+     EndBody
+    EndObject
+    !/**
+    !  Size A4.
+    !*/
+    Object A4 $Value
+     Body SysBody
+       Attr PgmName = "A4"
+       Attr Text = "A4"
+       Attr Value = 4
+     EndBody
+    EndObject
+    !/**
+    !  Size A5.
+    !*/
+    Object A5 $Value
+     Body SysBody
+       Attr PgmName = "A5"
+       Attr Text = "A5"
+       Attr Value = 5
+     EndBody
+    EndObject
+  EndObject
+EndSObject
+
+
+
+
+
+
+
+

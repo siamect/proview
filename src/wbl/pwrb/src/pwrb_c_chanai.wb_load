@@ -177,24 +177,26 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Specifies in which way SigValue will be converted to
-      !  ActualValue. The possible types of conversions are:
-      !  
-      !     -- 0  No conversion:   p ( s(SigValue) ) = s(SigValue)
-      !     -- 1   The normal case:  p ( s(SigValue) ) =
-      !  
-      !          SensorPolyCoef0 + SensorPolyCoef1 * s(igValue) + SensorPolyCoef2 * s(igValue) ** 2
-      !  SigValue belong to the Ai object. SensorTypeCode specifies the
-      !  sensor function.
+      !  Obsolete.
       !*/
       Object SensorTypeCode $Attribute 15
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt16"
         EndBody
       EndObject
+      !/**
+      !  Specifies in which way SigValue will be converted to
+      !  ActualValue. The possible types of conversions are:
+      !  
+      !    0   No conversion
+      !    1   Linerar converson.
+      !    2   Parabolic conversion.
+      !    3   Squareroot conversion.
+      !    4   Signed squareroot conversion.
+      !*/
       Object SensorPolyType $Attribute 16
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Enum"
+          Attr TypeRef = "pwrb:Type-AiSensorTypeEnum"
         EndBody
       EndObject
       !/**
@@ -305,6 +307,14 @@ SObject pwrb:Class
 	    Attr MethodName = "$Object-SetDefaults"
 	  EndBody
 	EndObject
+      EndObject
+    EndObject
+    Object RtXtt $RtMenu
+      Object Signal $MenuRef
+	Body SysBody
+	  Attr ButtonName = "Signal"
+	  Attr RefAttribute = "SigChanCon"
+	EndBody
       EndObject
     EndObject
   EndObject

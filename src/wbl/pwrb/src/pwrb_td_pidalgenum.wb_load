@@ -1,0 +1,128 @@
+!  pwrb_pidalgenum.wb_load -- Defines the mask type PidAlgEnum
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+SObject pwrb:Type
+!/**
+!  @Version 1.0
+!  @Group Types
+!  Enumeration for PID algorithm.
+!
+! @b See also
+!  @classlink PID pwrb_pid.html
+!*/
+  Object PidAlgEnum $TypeDef 16
+    Body SysBody
+      Attr TypeRef = "pwrs:Type-$Enum"
+      Attr PgmName = "PidAlg"
+    EndBody
+    !/**
+    !  Integral controller. Gain is not used.
+    !*/
+    Object I $Value
+     Body SysBody
+       Attr PgmName = "I"
+       Attr Text = "I"
+       Attr Value = 1
+     EndBody
+    EndObject
+    !/**
+    !  Integral controller with proportional
+    !*/
+    Object I_P $Value
+     Body SysBody
+       Attr PgmName = "I_P"
+       Attr Text = "I+P"
+       Attr Value = 3
+     EndBody
+    EndObject
+    !/**
+    !  Proportional Controller.
+    !*/
+    Object P $Value
+     Body SysBody
+       Attr PgmName = "P"
+       Attr Text = "P"
+       Attr Value = 6
+     EndBody
+    EndObject
+    !/**
+    !  Proportional Integral Controller. The
+    !  P-term is based on the control error.
+    !*/
+    Object PI $Value
+     Body SysBody
+       Attr PgmName = "PI"
+       Attr Text = "PI"
+       Attr Value = 7
+     EndBody
+    EndObject
+    !/**
+    !  Integral controller with proportional
+    !  derivative control action. Both the P- and
+    !  D-term are based on the process value.
+    !*/
+    Object I_PD $Value
+     Body SysBody
+       Attr PgmName = "I_PD"
+       Attr Text = "I+PD"
+       Attr Value = 11
+     EndBody
+    EndObject
+    !/**
+    !  Proportional Controller with derivative
+    !  control action. P is based on the control error,
+    !  D on the process value.
+    !*/
+    Object P_D $Value
+     Body SysBody
+       Attr PgmName = "P_D"
+       Attr Text = "P+D"
+       Attr Value = 14
+     EndBody
+    EndObject
+    !/**
+    !  Proportional Integral Controller with
+    !  derivative control action. P is based on
+    !  control error, D on the process value.
+    !*/
+    Object PI_D $Value
+     Body SysBody
+       Attr PgmName = "PI_D"
+       Attr Text = "PI+D"
+       Attr Value = 15
+     EndBody
+    EndObject
+    !/**
+    !  Proportional Derivative Controller. Both
+    !  the P- and D-term are based on the control
+    !  error.
+    !*/
+    Object PD $Value
+     Body SysBody
+       Attr PgmName = "PD"
+       Attr Text = "PD"
+       Attr Value = 30
+     EndBody
+    EndObject
+    !/**
+    !  Proportional Integral Derivative
+    !  Controller. Both the P- and D-term are
+    !  based on the control error.
+    !*/
+    Object PID $Value
+     Body SysBody
+       Attr PgmName = "PID"
+       Attr Text = "PID"
+       Attr Value = 31
+     EndBody
+    EndObject
+  EndObject
+EndSObject
+
+
+
+

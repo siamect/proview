@@ -249,7 +249,7 @@ SObject pwrb:Class
       !*/
       Object OpMod $Intern 12 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Enum"
+          Attr TypeRef = "pwrb:Type-PidModeMask"
           Attr GraphName = "OpMod"
         EndBody
       EndObject
@@ -267,7 +267,7 @@ SObject pwrb:Class
       !*/
       Object AccMod $Intern 13 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Enum"
+          Attr TypeRef = "pwrb:Type-PidModeEnum"
           Attr GraphName = "AccMod"
         EndBody
       EndObject

@@ -61,6 +61,11 @@ static void help()
 
 static int convert_sort_files( const void *file1, const void *file2)
 {
+  // Types before classes
+  if ( strstr( (char *)file1, "_td_") && !strstr( (char *)file2, "_td_"))
+    return -1;
+  else if (!strstr( (char *)file1, "_td_") && strstr( (char *)file2, "_td_"))
+    return 1;
   return ( strcmp( (char *)file1, (char *)file2));
 }
 

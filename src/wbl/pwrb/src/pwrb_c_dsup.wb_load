@@ -248,7 +248,7 @@ SObject pwrb:Class
       Object EventType $Attribute 10 
         Body SysBody
           Attr PgmName = "EventType"
-          Attr TypeRef = "pwrs:Type-$Enum"
+          Attr TypeRef = "pwrb:Type-EventTypeEnum"
         EndBody
       EndObject
       !/**
@@ -262,7 +262,7 @@ SObject pwrb:Class
       Object EventPriority $Attribute 11 
         Body SysBody
           Attr PgmName = "EventPriority"
-          Attr TypeRef = "pwrs:Type-$Enum"
+          Attr TypeRef = "pwrb:Type-EventPrioEnum"
         EndBody
       EndObject
       !/**
@@ -288,7 +288,7 @@ SObject pwrb:Class
       Object EventFlags $Attribute 12 
         Body SysBody
           Attr PgmName = "EventFlags"
-          Attr TypeRef = "pwrs:Type-$Mask"
+          Attr TypeRef = "pwrb:Type-EventFlagsMask"
         EndBody
       EndObject
       !/**

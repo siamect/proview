@@ -1,0 +1,57 @@
+!  pwrb_td_pborientationenum.wb_load -- Defines the enum type PbOrientationEnum
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+SObject pwrb:Type
+!/**
+!  @Version 1.0
+!  @Group Types
+!  Enumeration for orientation.
+!*/
+  Object PbOrientationEnum $TypeDef 26
+    Body SysBody
+      Attr TypeRef = "pwrs:Type-$Enum"
+      Attr PgmName = "PbOrientation"
+    EndBody
+    !/**
+    !  Byte.
+    !*/
+    Object Byte $Value
+     Body SysBody
+       Attr PgmName = "Byte"
+       Attr Text = "Byte"
+       Attr Value = 16
+     EndBody
+    EndObject
+    !/**
+    !  Word.
+    !*/
+    Object Word $Value
+     Body SysBody
+       Attr PgmName = "Word"
+       Attr Text = "Word"
+       Attr Value = 16
+     EndBody
+    EndObject
+    !/**
+    !  DoubleWord.
+    !*/
+    Object DoubleWord $Value
+     Body SysBody
+       Attr PgmName = "DoubleWord"
+       Attr Text = "DoubleWord"
+       Attr Value = 32
+     EndBody
+    EndObject
+  EndObject
+EndSObject
+
+
+
+
+
+
+

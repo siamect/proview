@@ -1,0 +1,54 @@
+!  pwrb_td_pbstallactionenum.wb_load -- Defines the enum type PbStallActionEnum
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+SObject pwrb:Type
+!/**
+!  @Version 1.0
+!  @Group Types
+!  Enumeration for profibus stall action.
+!*/
+  Object PbStallActionEnum $TypeDef 24
+    Body SysBody
+      Attr TypeRef = "pwrs:Type-$Enum"
+      Attr PgmName = "PbStallAction"
+    EndBody
+    !/**
+    !  No action.
+    !*/
+    Object No $Value
+     Body SysBody
+       Attr PgmName = "No"
+       Attr Text = "No action"
+       Attr Value = 0
+     EndBody
+    EndObject
+    !/**
+    !  Reset inputs.
+    !*/
+    Object ResetInputs $Value
+     Body SysBody
+       Attr PgmName = "ResetInputs"
+       Attr Text = "Reset inputs"
+       Attr Value = 1
+     EndBody
+    EndObject
+    !/**
+    !  Set emergency break.
+    !*/
+    Object EmergencyBreak $Value
+     Body SysBody
+       Attr PgmName = "EmergencyBreak"
+       Attr Text = "Set emergency break"
+       Attr Value = 2
+     EndBody
+    EndObject
+  EndObject
+EndSObject
+
+
+
+

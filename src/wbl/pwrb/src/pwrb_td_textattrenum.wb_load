@@ -1,0 +1,72 @@
+!  pwrb_textattrenum.wb_load -- Defines the enum type TextAttrEnum
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+SObject pwrb:Type
+!/**
+!  @Version 1.0
+!  @Group Types
+!  Enumeration for text size of text objects 
+!  in the plc editor.
+!
+! @b See also
+!  @classlink Mode pwrb_text.html
+!*/
+  Object TextAttrEnum $TypeDef 6
+    Body SysBody
+      Attr TypeRef = "pwrs:Type-$Enum"
+      Attr PgmName = "TextAttr"
+    EndBody
+    !/**
+    !  Small bold text.
+    !*/
+    Object SmallBold $Value
+     Body SysBody
+       Attr PgmName = "SmallBold"
+       Attr Text = "SmallBold"
+       Attr Value = 0
+     EndBody
+    EndObject
+    !/**
+    !  Small text.
+    !*/
+    Object Small $Value
+     Body SysBody
+       Attr PgmName = "Small"
+       Attr Text = "Small"
+       Attr Value = 1
+     EndBody
+    EndObject
+    !/**
+    !  Medium size text.
+    !*/
+    Object Medium $Value
+     Body SysBody
+       Attr PgmName = "Medium"
+       Attr Text = "Medium"
+       Attr Value = 2
+     EndBody
+    EndObject
+    !/**
+    !  Large text.
+    !*/
+    Object Large $Value
+     Body SysBody
+       Attr PgmName = "Large"
+       Attr Text = "Large"
+       Attr Value = 3
+     EndBody
+    EndObject
+  EndObject
+EndSObject
+
+
+
+
+
+
+
+

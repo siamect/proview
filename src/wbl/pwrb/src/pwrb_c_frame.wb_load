@@ -40,7 +40,7 @@ SObject pwrb:Class
       !*/
       Object FrameAttribute $Intern 1 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Enum"
+          Attr TypeRef = "pwrb:Type-FrameAttrEnum"
         EndBody
       EndObject
       !/**

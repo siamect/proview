@@ -84,7 +84,7 @@ SObject pwrb:Class
       !*/
       Object Components $Attribute 1 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Mask"
+          Attr TypeRef = "pwrb:Type-DistrComponentMask"
         EndBody
       EndObject
     EndObject

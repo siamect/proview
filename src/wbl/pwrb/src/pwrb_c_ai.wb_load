@@ -207,22 +207,24 @@ SObject pwrb:Class
       !     The filtering is done on the engineering value,
       !     ActualValue, before storage in rtdb according:
       !  
-      !     ActulaValue(t) = ActulaValue(t-1) + a * (InValue - ActulaValue(t-1)), 
-      !     where ActulaValue(t-1) is the
-      !     engineering value stored at the former sampel
-      !     and InValue(t) the current engineering value
-      !     before filtering.
-      !     a = ScanInterval * CycleTimeBus /
-      !     FilterAttribute[0] and 0 < a < 1.0 
+      !     ActulaValue(t) = ActulaValue(t-1) + a * (InValue - ActulaValue(t-1)) 
+      !
+      !     where 
+      !     - ActualValue(t-1) is the engineering value stored at the 
+      !       former sample
+      !     - nValue(t) the current engineering value before filtering.
+      !     - a = ScanInterval * ScanTime / FilterAttribute[0] 
+      !       and 0 < a < 1.0 
+      !
       !     If a >= 0 no filtering is done. The less a the harder
       !     filtering.
       !
-      !     The product ScanInterval * CycleTimeBus specifies the updating
+      !     The product ScanInterval * ScanTime specifies the updating
       !     period of the signal
       !*/
       Object FilterType $Attribute 13 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Enum"
+          Attr TypeRef = "pwrb:Type-AiFilterTypeEnum"
         EndBody
       EndObject
       !/**
@@ -277,6 +279,14 @@ SObject pwrb:Class
 	    Attr FilterArguments[1] = "DsTrend,PlotGroup"
 	  EndBody
 	EndObject
+      EndObject
+    EndObject
+    Object RtXtt $RtMenu
+      Object Channel $MenuRef
+	Body SysBody
+	  Attr ButtonName = "Channel"
+	  Attr RefAttribute = "SigChanCon"
+	EndBody
       EndObject
     EndObject
   EndObject

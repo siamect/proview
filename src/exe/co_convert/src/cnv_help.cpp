@@ -103,7 +103,7 @@ void *wnav_help_insert_cb( void *ctx, navh_eItemType item_type, char *text1,
   switch ( item_type) {
     case navh_eItemType_Topic:
     {
-      char fname[200];
+      pwr_tFileName fname;
 
       xh->subject_to_fname( fname, text1, 1);
       xh->fp.open( fname);
@@ -131,10 +131,13 @@ void *wnav_help_insert_cb( void *ctx, navh_eItemType item_type, char *text1,
     {      
 
       if ( strcmp( link, "") != 0) {
-        char fname[200];
+        pwr_tFileName fname;
 
 	if ( strncmp( link, "$web:", 5) == 0) {
-          strcpy( fname, &link[5]);
+	  if ( strncmp( &link[5], "$pwrp_web/", 10) == 0)
+	    strcpy( fname, &link[15]);
+	  else
+	    strcpy( fname, &link[5]);
 	} 
         else if ( (strstr( link, ".htm") != 0) || 
 		  (strstr( link, ".pdf") != 0)) {
@@ -183,10 +186,13 @@ void *wnav_help_insert_cb( void *ctx, navh_eItemType item_type, char *text1,
     }
     case navh_eItemType_HelpBold:
     {
-      char fname[200];
+      pwr_tFileName fname;
       if ( strcmp( link, "") != 0) {
 	if ( strncmp( link, "$web:", 5) == 0) {
-          strcpy( fname, &link[5]);
+	  if ( strncmp( &link[5], "$pwrp_web/", 10) == 0)
+	    strcpy( fname, &link[15]);
+	  else
+	    strcpy( fname, &link[5]);
 	} 
         else if ( (strstr( link, ".htm") != 0) || 
 		  (strstr( link, ".pdf") != 0)) {

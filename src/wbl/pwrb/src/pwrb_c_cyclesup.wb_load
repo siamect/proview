@@ -52,7 +52,7 @@ SObject pwrb:Class
       !*/
       Object DelayAction $Attribute 3
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Enum"
+          Attr TypeRef = "pwrb:Type-SupDelayActionEnum"
         EndBody
       EndObject
       !/**
@@ -284,7 +284,7 @@ SObject pwrb:Class
       !*/
       Object EventType $Attribute 22
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr TypeRef = "pwrb:Type-EventTypeEnum"
         EndBody
       EndObject
       !/**
@@ -297,7 +297,7 @@ SObject pwrb:Class
       !*/
       Object EventPriority $Attribute 23
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr TypeRef = "pwrb:Type-EventPrioEnum"
         EndBody
       EndObject
       !/**
@@ -322,7 +322,7 @@ SObject pwrb:Class
       !*/
       Object EventFlags $Attribute 24
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr TypeRef = "pwrb:Type-EventFlagsMask"
         EndBody
       EndObject
       !/**

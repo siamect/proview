@@ -1,0 +1,69 @@
+!  pwrb_eventprioenum.wb_load -- Defines the enum type EventPrioEnum
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+SObject pwrb:Type
+!/**
+!  @Version 1.0
+!  @Group Types
+!  Enumeration for event priority.
+!
+!*/
+  Object EventPrioEnum $TypeDef 11
+    Body SysBody
+      Attr TypeRef = "pwrs:Type-$Enum"
+      Attr PgmName = "EventPrio"
+    EndBody
+    !/**
+    !  Priority A, highest priority.
+    !*/
+    Object A $Value
+     Body SysBody
+       Attr PgmName = "A"
+       Attr Text = "A"
+       Attr Value = 67
+     EndBody
+    EndObject
+    !/**
+    !  Priority B.
+    !*/
+    Object B $Value
+     Body SysBody
+       Attr PgmName = "B"
+       Attr Text = "B"
+       Attr Value = 66
+     EndBody
+    EndObject
+    !/**
+    !  Priority C.
+    !*/
+    Object C $Value
+     Body SysBody
+       Attr PgmName = "C"
+       Attr Text = "C"
+       Attr Value = 65
+     EndBody
+    EndObject
+    !/**
+    !  Priority D, lowest priority.
+    !*/
+    Object D $Value
+     Body SysBody
+       Attr PgmName = "D"
+       Attr Text = "D"
+       Attr Value = 64
+     EndBody
+    EndObject
+  EndObject
+EndSObject
+
+
+
+
+
+
+
+

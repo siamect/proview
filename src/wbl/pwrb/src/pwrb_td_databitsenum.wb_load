@@ -1,0 +1,114 @@
+!  pwrb_td_databitsenum.wb_load -- Defines the enum type DataBitsEnum
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+SObject pwrb:Type
+!/**
+!  @Version 1.0
+!  @Group Types
+!  Enumeration for data bits.
+!*/
+  Object DataBitsEnum $TypeDef 25
+    Body SysBody
+      Attr TypeRef = "pwrs:Type-$Enum"
+      Attr PgmName = "DataBits"
+    EndBody
+    !/**
+    !  0 data bits.
+    !*/
+    Object 0 $Value
+     Body SysBody
+       Attr PgmName = "0"
+       Attr Text = "0"
+       Attr Value = 0
+     EndBody
+    EndObject
+    !/**
+    !  1 data bit.
+    !*/
+    Object 1 $Value
+     Body SysBody
+       Attr PgmName = "1"
+       Attr Text = "1"
+       Attr Value = 1
+     EndBody
+    EndObject
+    !/**
+    !  2 data bits.
+    !*/
+    Object 2 $Value
+     Body SysBody
+       Attr PgmName = "2"
+       Attr Text = "2"
+       Attr Value = 2
+     EndBody
+    EndObject
+    !/**
+    !  3 data bits.
+    !*/
+    Object 3 $Value
+     Body SysBody
+       Attr PgmName = "3"
+       Attr Text = "3"
+       Attr Value = 3
+     EndBody
+    EndObject
+    !/**
+    !  4 data bits.
+    !*/
+    Object 4 $Value
+     Body SysBody
+       Attr PgmName = "4"
+       Attr Text = "4"
+       Attr Value = 4
+     EndBody
+    EndObject
+    !/**
+    !  5 data bits.
+    !*/
+    Object 5 $Value
+     Body SysBody
+       Attr PgmName = "5"
+       Attr Text = "5"
+       Attr Value = 5
+     EndBody
+    EndObject
+    !/**
+    !  6 data bits.
+    !*/
+    Object 6 $Value
+     Body SysBody
+       Attr PgmName = "6"
+       Attr Text = "6"
+       Attr Value = 6
+     EndBody
+    EndObject
+    !/**
+    !  7 data bits.
+    !*/
+    Object 7 $Value
+     Body SysBody
+       Attr PgmName = "7"
+       Attr Text = "7"
+       Attr Value = 7
+     EndBody
+    EndObject
+    !/**
+    !  8 data bits.
+    !*/
+    Object 8 $Value
+     Body SysBody
+       Attr PgmName = "8"
+       Attr Text = "8"
+       Attr Value = 8
+     EndBody
+    EndObject
+  EndObject
+EndSObject
+
+
+
+

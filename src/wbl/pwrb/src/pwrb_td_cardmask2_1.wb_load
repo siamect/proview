@@ -1,0 +1,187 @@
+!  pwrb_td_cardmask2_1.wb_load -- Defines the mask type CardMask1_1
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+SObject pwrb:Type
+!/**
+!  @Version 1.0
+!  @Group Types
+!  Defines mask for channel 17 - 32, with channel index starting
+!  from 1.
+!
+!  Compare CardMask2_0 with index staring from 0.
+!*/
+  Object CardMask2_1 $TypeDef 15
+    Body SysBody
+      Attr TypeRef = "pwrs:Type-$Mask"
+      Attr PgmName = "CardMask2_1"
+    EndBody
+    !/**
+    !  Channel 17.
+    !*/
+    Object Channel17 $Bit
+     Body SysBody
+       Attr PgmName = "Channel17"
+       Attr Text = "Channel 17"
+       Attr Value = 1
+     EndBody
+    EndObject
+    !/**
+    !  Channel 18.
+    !*/
+    Object Channel18 $Bit
+     Body SysBody
+       Attr PgmName = "Channel18"
+       Attr Text = "Channel 18"
+       Attr Value = 2
+     EndBody
+    EndObject
+    !/**
+    !  Channel 19.
+    !*/
+    Object Channel19 $Bit
+     Body SysBody
+       Attr PgmName = "Channel19"
+       Attr Text = "Channel 19"
+       Attr Value = 4
+     EndBody
+    EndObject
+    !/**
+    !  Channel 20.
+    !*/
+    Object Channel20 $Bit
+     Body SysBody
+       Attr PgmName = "Channel20"
+       Attr Text = "Channel 20"
+       Attr Value = 8
+     EndBody
+    EndObject
+    !/**
+    !  Channel 1.
+    !*/
+    Object Channel21 $Bit
+     Body SysBody
+       Attr PgmName = "Channel21"
+       Attr Text = "Channel 21"
+       Attr Value = 16
+     EndBody
+    EndObject
+    !/**
+    !  Channel 22.
+    !*/
+    Object Channel22 $Bit
+     Body SysBody
+       Attr PgmName = "Channel22"
+       Attr Text = "Channel 22"
+       Attr Value = 32
+     EndBody
+    EndObject
+    !/**
+    !  Channel 7.
+    !*/
+    Object Channel23 $Bit
+     Body SysBody
+       Attr PgmName = "Channel23"
+       Attr Text = "Channel 23"
+       Attr Value = 64
+     EndBody
+    EndObject
+    !/**
+    !  Channel 24.
+    !*/
+    Object Channel24 $Bit
+     Body SysBody
+       Attr PgmName = "Channel24"
+       Attr Text = "Channel 24"
+       Attr Value = 128
+     EndBody
+    EndObject
+    !/**
+    !  Channel 25.
+    !*/
+    Object Channel25 $Bit
+     Body SysBody
+       Attr PgmName = "Channel25"
+       Attr Text = "Channel 25"
+       Attr Value = 256
+     EndBody
+    EndObject
+    !/**
+    !  Channel 26.
+    !*/
+    Object Channel26 $Bit
+     Body SysBody
+       Attr PgmName = "Channel26"
+       Attr Text = "Channel 26"
+       Attr Value = 512
+     EndBody
+    EndObject
+    !/**
+    !  Channel 27.
+    !*/
+    Object Channel27 $Bit
+     Body SysBody
+       Attr PgmName = "Channel27"
+       Attr Text = "Channel 27"
+       Attr Value = 1024
+     EndBody
+    EndObject
+    !/**
+    !  Channel 1.
+    !*/
+    Object Channel28 $Bit
+     Body SysBody
+       Attr PgmName = "Channel28"
+       Attr Text = "Channel 28"
+       Attr Value = 2048
+     EndBody
+    EndObject
+    !/**
+    !  Channel 29.
+    !*/
+    Object Channel29 $Bit
+     Body SysBody
+       Attr PgmName = "Channel29"
+       Attr Text = "Channel 29"
+       Attr Value = 4096
+     EndBody
+    EndObject
+    !/**
+    !  Channel 30.
+    !*/
+    Object Channel30 $Bit
+     Body SysBody
+       Attr PgmName = "Channel30"
+       Attr Text = "Channel 30"
+       Attr Value = 8192
+     EndBody
+    EndObject
+    !/**
+    !  Channel 31.
+    !*/
+    Object Channel31 $Bit
+     Body SysBody
+       Attr PgmName = "Channel31"
+       Attr Text = "Channel 31"
+       Attr Value = 16384
+     EndBody
+    EndObject
+    !/**
+    !  Channel 32.
+    !*/
+    Object Channel32 $Bit
+     Body SysBody
+       Attr PgmName = "Channel32"
+       Attr Text = "Channel 32"
+       Attr Value = 32768
+     EndBody
+    EndObject
+  EndObject
+EndSObject
+
+
+
+

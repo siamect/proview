@@ -1,0 +1,59 @@
+!  pwrb_pidmodemask.wb_load -- Defines the mask type PidModeMask
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+SObject pwrb:Type
+!/**
+!  @Version 1.0
+!  @Group Types
+!  Bitmask for Manual/Auto/Cascade mode in a PID.
+!
+! @b See also
+!  @classlink Mode pwrb_mode.html
+!*/
+  Object PidModeMask $TypeDef 2
+    Body SysBody
+      Attr Type = pwr_eType_Mask
+      Attr Size = 4
+      Attr TypeRef = "pwrs:Type-$Mask"
+      Attr Elements = 1
+    EndBody
+    !/**
+    !  Manual mode.
+    !*/
+    Object Manual $Bit
+     Body SysBody
+       Attr PgmName = "Manual"
+       Attr Text = "Manual"
+       Attr Value = 1
+     EndBody
+    EndObject
+    !/**
+    !  Auto mode.
+    !*/
+    Object Auto $Bit
+     Body SysBody
+       Attr PgmName = "Auto"
+       Attr Text = "Auto"
+       Attr Value = 2
+     EndBody
+    EndObject
+    !/**
+    !  Cascade mode.
+    !*/
+    Object Cascade $Bit
+     Body SysBody
+       Attr PgmName = "Cascade"
+       Attr Text = "Cascade"
+       Attr Value = 4
+     EndBody
+    EndObject
+  EndObject
+EndSObject
+
+
+
+

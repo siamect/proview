@@ -1,0 +1,55 @@
+!  pwrb_eventtypeenum.wb_load -- Defines the enum type EventTypeEnum
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+SObject pwrb:Type
+!/**
+!  @Version 1.0
+!  @Group Types
+!  Enumeration for event type.
+!
+!*/
+  Object EventTypeEnum $TypeDef 12
+    Body SysBody
+      Attr TypeRef = "pwrs:Type-$Enum"
+      Attr PgmName = "Event"
+    EndBody
+    !/**
+    !  Type Info.
+    !  If the message requires acknowledgement is
+    !  it sent to the info part of the alarm
+    !  window and the event list, otherwise only
+    !  to the event list.
+    !*/
+    Object Info $Value
+     Body SysBody
+       Attr PgmName = "Info"
+       Attr Text = "Info"
+       Attr Value = 32
+     EndBody
+    EndObject
+    !/**
+    !  Type Alarm.
+    !  The message always requires an
+    !  acknowledgement and sent to the alarm
+    !*/
+    Object Alarm $Value
+     Body SysBody
+       Attr PgmName = "Alarm"
+       Attr Text = "Alarm"
+       Attr Value = 64
+     EndBody
+    EndObject
+  EndObject
+EndSObject
+
+
+
+
+
+
+
+

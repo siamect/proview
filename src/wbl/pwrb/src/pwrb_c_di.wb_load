@@ -185,7 +185,7 @@ SObject pwrb:Class
       !*/
       Object FilterType $Attribute 10 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Enum"
+          Attr TypeRef = "pwrb:Type-DiFilterTypeEnum"
         EndBody
       EndObject
       !/**
@@ -240,6 +240,14 @@ SObject pwrb:Class
 	    Attr FilterArguments[1] = "DsTrend,PlotGroup"
 	  EndBody
 	EndObject
+      EndObject
+    EndObject
+    Object RtXtt $RtMenu
+      Object Channel $MenuRef
+	Body SysBody
+	  Attr ButtonName = "Channel"
+	  Attr RefAttribute = "SigChanCon"
+	EndBody
       EndObject
     EndObject
   EndObject

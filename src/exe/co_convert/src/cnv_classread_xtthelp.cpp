@@ -15,7 +15,7 @@ extern "C" {
 
 int ClassRead::xtthelp_init()
 {
-  char fname[200];
+  pwr_tFileName fname;
 
   strcpy( fname, dir);
   strcat( fname, volume_name);
@@ -147,6 +147,11 @@ int ClassRead::xtthelp_class_close()
   fp_tmp <<
 "</TOPIC>" << endl << endl;
 
+  return 1;
+}
+
+int ClassRead::xtthelp_bit()
+{
   return 1;
 }
 
