@@ -11,6 +11,9 @@ SObject pwrb:Class
 ! @Group Supervision,NodeConfiguration
 ! @Summary System monitor configuration
 ! Configuration object for the system monitor.
+!
+! @b Object graph
+!  @image orm_sysmonconfig_og.gif
 !*/
   Object SysMonConfig $ClassDef 418
     Body SysBody
