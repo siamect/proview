@@ -19,6 +19,8 @@ This module contains functions to create database snapshot files.  */
 #include "co_dbs.h"
 #include "wb_dbs.h"
 #include "wb_vrep.h"
+#include "wb_mvrep.h"
+#include "wb_merep.h"
 
 static int comp_dbs_name(tree_sTable *tp, tree_sNode  *x, tree_sNode  *y);
 
@@ -579,7 +581,11 @@ wb_dbs::writeSectVolref()
     if (vid.pwr != m_volume.vid) {
       printf("volref: %d.%d.%d.%d\n", vid.v.vid_3, vid.v.vid_2, vid.v.vid_1, vid.v.vid_0);
       vp->vid  = vid.pwr;
-      strcpy(vp->name, "not_yet_known");
+
+      wb_mvrep *mvrep = m_v->merep()->volume( &sts, vp->vid);
+      if ( EVEN(sts)) throw wb_error_str("Metavolume not found");
+      
+      strcpy(vp->name, mvrep->name());
       vp->cid  = 0;
       vp->time.tv_sec = 0;
       vp->time.tv_nsec = 0;
@@ -726,7 +732,7 @@ wb_dbs::importDbody(pwr_tOid oid, size_t size, void *body)
   }
 
   if (oep->dbody.size == 0) {
-    if (body != 0) printf("error body size\n");
+    if (size != 0) printf("error dbody size %d %s\n", size, cdh_ObjidToString(0,oid,0));
     return true;
   }
 
@@ -786,7 +792,7 @@ wb_dbs::importRbody(pwr_tOid oid, size_t size, void *body)
     getAliasServer(oep, body);
   
   if (oep->rbody.size == 0) {
-    if (body != 0) printf("error body size\n");
+    if (size != 0) printf("error rbody size %d %s\n", size, cdh_ObjidToString(0,oid,0));
     return true;
   }
     
