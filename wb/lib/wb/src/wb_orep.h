@@ -17,11 +17,13 @@ class wb_orep
 
 protected:
   wb_vrep *m_vrep;
+public:
   int m_nRef;
 
 public:
 
   //virtual wb_orep(int oid) = 0;
+  wb_orep();
   virtual ~wb_orep() {}
     
   void unref();
