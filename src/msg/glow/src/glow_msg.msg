@@ -15,3 +15,4 @@ fileopen        <Unable to open file>                           /error
 conselected     <Connection is selected>                        /error
 noselect        <Nothing is selected>                           /error
 groupclass      <Unable to group this kind of object>           /error
+terminated      <Ctx is terminated>				/info
