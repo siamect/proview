@@ -189,14 +189,24 @@ Count (
 {
   pwr_tStatus		sts;
   gdb_sNode		*np = hash_Search(&sts, gdbroot->nid_ht, &nid);
+  int                   msgtype = type->s;
 
-  if (type->b != net_cMsgClass) return;
-  if (np == NULL || type->s >= net_eMsg_ || type->s <= net_eMsg__) return;
+
+  if (type->b != net_cMsgClass) 
+    return;
+  if (np == NULL) 
+    return;
+
+  if ((msgtype >= net_eMsg_) || (msgtype <= net_eMsg__)) {
+    if (msgtype != net_eMsg_volumes7)
+      return;
+    msgtype = net_eMsg_volumes;
+  }
 
   if (receive)
-    np->rxmsg[type->s]++;
+    np->rxmsg[msgtype]++;
   else 
-    np->txmsg[type->s]++;
+    np->txmsg[msgtype]++;
 }
 
 static pwr_tBoolean
