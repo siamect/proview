@@ -77,6 +77,7 @@ struct xmenu_s_MenuItem {
   xmenu_eMenuItem	Item;
   xmenu_mMenuFlags	Flags;
   pwr_tString80		Method;
+  pwr_tString80		Filter;
   pwr_sAttrRef		CurrentObject;
   pwr_tObjid		MenuObject;
   pwr_tString40         MethodArguments[5];

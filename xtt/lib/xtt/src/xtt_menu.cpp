@@ -97,6 +97,7 @@ static int xnav_GetObjectMenu(
   int			*nItems,
   int			AddSeparator,
   pwr_sAttrRef		*CurrentObject);
+static int xnav_CheckMenuMethodFilter( xmenu_sMenuCall *ip, int idx);
 
 static Widget xnav_build_menu(
 	Widget Parent,
@@ -270,6 +271,7 @@ static int getAllMenuItems (
 
         strcpy((*Item)->Name, mbp->ButtonName);
         strcpy( (*Item)->Method, mbp->MethodName);
+        strcpy( (*Item)->Filter, mbp->FilterName);
         for ( i = 0; i < 5; i++) {
           strcpy( (*Item)->MethodArguments[i], mbp->MethodArguments[i]);
         }
@@ -606,6 +608,18 @@ static int xnav_CallMenuMethod( xmenu_sMenuCall *ip, int idx)
   return sts;
 }
 
+static int xnav_CheckMenuMethodFilter( xmenu_sMenuCall *ip, int idx)
+{
+  pwr_tStatus sts;
+  pwr_tStatus (*filter)( xmenu_sMenuCall *);
+
+  sts = xnav_GetMethod( ip->ItemList[idx].Filter, &filter);
+  if ( ODD(sts))
+    sts = (filter) ( ip);
+
+  return sts;
+}
+
 
 Widget xnav_create_popup_menu( XNav *xnav, pwr_sAttrRef attrref, 
 			       xmenu_eItemType item_type, 
@@ -739,6 +753,113 @@ static void xnav_popup_button_cb (Widget w, XNav *xnav)
 
 }
 
+int xnav_call_object_method( XNav *xnav, pwr_sAttrRef attrref, 
+			       xmenu_eItemType item_type, 
+			       xmenu_mUtility caller, 
+			       unsigned int priv, char *method_name)
+{
+  pwr_tStatus 	sts;
+  int 		i;
+  int		sel_cnt;
+  int		idx;
+
+  if (mcp == NULL)
+    mcp = (xmenu_sMenuCall *)XtCalloc(1, sizeof(xmenu_sMenuCall));
+
+  mcp->ItemList = xmenu_lMenuItem;
+  mcp->EditorContext = (void *)xnav;
+  mcp->WindowContext = (void *)xnav->parent_wid;
+  mcp->PointedSet = xmenu_eMenuSet_Object;
+
+  mcp->Pointed = attrref;
+  mcp->Caller = caller;
+  mcp->ItemType = item_type;
+  mcp->Priv = priv;
+  mcp->SelectedSet = xmenu_eMenuSet_None;
+  mcp->SelectedSet = xmenu_eMenuSet_Object;
+
+  sel_cnt = 1;
+  mcp->Selected = (pwr_sAttrRef *) XtCalloc( sel_cnt + 1, sizeof (pwr_sAttrRef));
+  mcp->Selected[0] = attrref;
+  mcp->Selected[sel_cnt].Objid = pwr_cNObjid;
+  mcp->SelectCount = sel_cnt;
+
+  sts = xnav_GetMenu( mcp);  
+  if (EVEN(sts) || mcp->ItemList[0].Level == 0) {
+    return 0;
+  }
+
+  // Find index of method
+  idx = -1;
+  for ( i = 0; i <= (int) mcp->ItemCount; i++) {
+    if ( cdh_ObjidIsNull( mcp->ItemList[i].CurrentObject.Objid) &&
+	 mcp->ItemList[i].Flags.f.Sensitive &&
+	 cdh_NoCaseStrcmp( mcp->ItemList[i].Name, method_name) == 0) {
+      idx = i;
+      break;
+    }
+  }
+  if ( idx == -1)
+    return 0;
+
+  mcp->ChosenItem = idx;
+  sts = xnav_CallMenuMethod( mcp, mcp->ChosenItem);
+  return sts;
+}
+
+int xnav_check_object_methodfilter( XNav *xnav, pwr_sAttrRef attrref, 
+			       xmenu_eItemType item_type, 
+			       xmenu_mUtility caller, 
+			       unsigned int priv, char *method_name)
+{
+  pwr_tStatus 	sts;
+  int 		i;
+  int		sel_cnt;
+  int		idx;
+
+  if (mcp == NULL)
+    mcp = (xmenu_sMenuCall *)XtCalloc(1, sizeof(xmenu_sMenuCall));
+
+  mcp->ItemList = xmenu_lMenuItem;
+  mcp->EditorContext = (void *)xnav;
+  mcp->WindowContext = (void *)xnav->parent_wid;
+  mcp->PointedSet = xmenu_eMenuSet_Object;
+
+  mcp->Pointed = attrref;
+  mcp->Caller = caller;
+  mcp->ItemType = item_type;
+  mcp->Priv = priv;
+  mcp->SelectedSet = xmenu_eMenuSet_None;
+  mcp->SelectedSet = xmenu_eMenuSet_Object;
+
+  sel_cnt = 1;
+  mcp->Selected = (pwr_sAttrRef *) XtCalloc( sel_cnt + 1, sizeof (pwr_sAttrRef));
+  mcp->Selected[0] = attrref;
+  mcp->Selected[sel_cnt].Objid = pwr_cNObjid;
+  mcp->SelectCount = sel_cnt;
+
+  sts = xnav_GetMenu( mcp);  
+  if (EVEN(sts) || mcp->ItemList[0].Level == 0) {
+    return 0;
+  }
+
+  // Find index of method
+  idx = -1;
+  for ( i = 0; i <= (int) mcp->ItemCount; i++) {
+    if ( cdh_ObjidIsNull( mcp->ItemList[i].CurrentObject.Objid) &&
+	 mcp->ItemList[i].Flags.f.Sensitive &&
+	 cdh_NoCaseStrcmp( mcp->ItemList[i].Name, method_name) == 0) {
+      idx = i;
+      break;
+    }
+  }
+  if ( idx == -1)
+    return 0;
+
+  mcp->ChosenItem = idx;
+  sts = xnav_CheckMenuMethodFilter( mcp, mcp->ChosenItem);
+  return sts;
+}
 
 
 
