@@ -2260,6 +2260,9 @@ int gre_flow_cb( FlowCtx *ctx, flow_tEvent event)
 	  BEEP;
       }
       break;
+    case flow_eEvent_MB3Down:
+      flow_SetClickSensitivity( grectx->flow_ctx, flow_mSensitivity_MB3Press);
+      break;
     case flow_eEvent_MB3Press:
     {
       /* Popup menu */
@@ -2591,6 +2594,8 @@ int gre_edit_setup( gre_ctx grectx)
 	gre_flow_cb);
   flow_EnableEvent( ctx, flow_eEvent_MB3Press, flow_eEventType_CallBack, 
 	gre_flow_cb);
+  flow_EnableEvent( ctx, flow_eEvent_MB3Down, flow_eEventType_CallBack, 
+	gre_flow_cb);
   flow_EnableEvent( ctx, flow_eEvent_MB1Click, flow_eEventType_CallBack, 
 	gre_flow_cb);
   flow_EnableEvent( ctx, flow_eEvent_MB1DoubleClickShiftCtrl, flow_eEventType_CallBack, 
@@ -2628,6 +2633,8 @@ int gre_view_setup( gre_ctx grectx)
   flow_EnableEvent( ctx, flow_eEvent_MB1DoubleClickShift, flow_eEventType_CallBack, 
 	gre_flow_cb);
   flow_EnableEvent( ctx, flow_eEvent_MB3Press, flow_eEventType_CallBack, 
+	gre_flow_cb);
+  flow_EnableEvent( ctx, flow_eEvent_MB3Down, flow_eEventType_CallBack, 
 	gre_flow_cb);
   flow_EnableEvent( ctx, flow_eEvent_MB1Click, flow_eEventType_CallBack, 
 	gre_flow_cb);
