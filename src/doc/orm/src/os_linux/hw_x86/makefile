@@ -47,7 +47,8 @@ all : init copy lib exe
 
 init :
 
-copy : $(export_gif)
+copy : $(export_gif) \
+       $(doc_dir)/orm/orm.css
 
 lib :
 
@@ -61,4 +62,7 @@ realclean : clean $(clean_gif) $(clean_c)
 $(clean_gif) : clean_%.gif : %.gif
 	@ $(rm) $(rmflags) $(doc_dir)/orm/$*.gif
 
+$(doc_dir)/orm/orm.css : ../../orm.css
+	@ echo "copy $(source) $(target)"
+	@ cp $(source) $(target)
 
