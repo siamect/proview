@@ -233,8 +233,8 @@ object volumeList : XmScrolledList {
         XmNleftAttachment = XmATTACH_FORM;
 	XmNleftOffset = 5;
 	XmNselectionPolicy = XmEXTENDED_SELECT;
-	XmNfontList	    = menu_font;
-!	XmNfontList= font('*courier-bold-r-normal--*-140-75-75-m-*-*-*');
+!	XmNfontList	    = menu_font;
+ 	XmNfontList= font('*courier-bold-r-normal--*-140-75-75-m-*-*-*');
     };
     controls {
     };
