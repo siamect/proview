@@ -36,6 +36,9 @@ static void usage()
   printf( "      -p:  Create hpp files from wb_load-files\n");
   printf( "      -po: Create one common hpp file from wb_load-files\n");
   printf( "      -t:  Create html from xtthelp-file\n");
+  printf( "      -m:  Create xml from xtthelp-file\n");
+  printf( "      -n:  Create postscript from xtthelp-file\n");
+  printf( "      -q:  Create postscript from wb_load-files\n");
   printf( "      -d:  Output directory\n");
   printf( "      -g:  Setup file\n");
   printf( "      -h:  Help\n\n");
