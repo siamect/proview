@@ -133,7 +133,11 @@ void *wnav_help_insert_cb( void *ctx, navh_eItemType item_type, char *text1,
       if ( strcmp( link, "") != 0) {
         char fname[200];
 
-        if ( (strstr( link, ".htm") != 0) || (strstr( link, ".pdf") != 0)) {
+	if ( strncmp( link, "$web:", 5) == 0) {
+          strcpy( fname, &link[5]);
+	} 
+        else if ( (strstr( link, ".htm") != 0) || 
+		  (strstr( link, ".pdf") != 0)) {
           strcpy( fname, link);
         }
         else {
@@ -181,7 +185,11 @@ void *wnav_help_insert_cb( void *ctx, navh_eItemType item_type, char *text1,
     {
       char fname[200];
       if ( strcmp( link, "") != 0) {
-        if ( (strstr( link, ".htm") != 0) || (strstr( link, ".pdf") != 0)) {
+	if ( strncmp( link, "$web:", 5) == 0) {
+          strcpy( fname, &link[5]);
+	} 
+        else if ( (strstr( link, ".htm") != 0) || 
+		  (strstr( link, ".pdf") != 0)) {
           strcpy( fname, link);
         }
         else {
