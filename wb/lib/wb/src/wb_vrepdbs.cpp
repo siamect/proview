@@ -55,7 +55,10 @@ wb_vrepdbs::load()
 
 wb_orep *
 wb_vrepdbs::object(pwr_tStatus *sts, pwr_tOid oid)
-{    
+{
+
+    *sts = LDH__SUCCESS;
+
     dbs_sObject *op = dbs_OidToObject(sts, dbsenv(), oid);
     if (op == 0)
         return 0;
