@@ -927,7 +927,7 @@ wb_orep *wb_vrepwbl::object(pwr_tStatus *sts)
   return orep;
 }
 
-wb_orep *wb_vrepwbl::ancestor(pwr_tStatus *sts, wb_orep *o) const
+wb_orep *wb_vrepwbl::ancestor(pwr_tStatus *sts, wb_orep *o)
 {
   wb_orepwbl *orep = 0;
 
@@ -941,7 +941,7 @@ wb_orep *wb_vrepwbl::ancestor(pwr_tStatus *sts, wb_orep *o) const
   return orep;
 }
 
-wb_orep *wb_vrepwbl::parent(pwr_tStatus *sts, wb_orep *o) const
+wb_orep *wb_vrepwbl::parent(pwr_tStatus *sts, wb_orep *o)
 {
     wb_orepwbl *orep = 0;
         
@@ -955,7 +955,7 @@ wb_orep *wb_vrepwbl::parent(pwr_tStatus *sts, wb_orep *o) const
     return orep;
 }
 
-wb_orep *wb_vrepwbl::after(pwr_tStatus *sts, wb_orep *o) const
+wb_orep *wb_vrepwbl::after(pwr_tStatus *sts, wb_orep *o)
 {
     wb_orepwbl *orep = 0;
     
@@ -968,7 +968,7 @@ wb_orep *wb_vrepwbl::after(pwr_tStatus *sts, wb_orep *o) const
     return orep;
 }
 
-wb_orep *wb_vrepwbl::before(pwr_tStatus *sts, wb_orep *o) const
+wb_orep *wb_vrepwbl::before(pwr_tStatus *sts, wb_orep *o)
 {
     wb_orepwbl *orep = 0;
     
@@ -982,7 +982,7 @@ wb_orep *wb_vrepwbl::before(pwr_tStatus *sts, wb_orep *o) const
     return orep;
 }
 
-wb_orep *wb_vrepwbl::first(pwr_tStatus *sts, wb_orep *o) const
+wb_orep *wb_vrepwbl::first(pwr_tStatus *sts, wb_orep *o)
 {
     wb_orepwbl *orep = 0;
     
@@ -996,12 +996,12 @@ wb_orep *wb_vrepwbl::first(pwr_tStatus *sts, wb_orep *o) const
     return orep;
 }
 
-wb_orep *wb_vrepwbl::child(pwr_tStatus *sts, wb_orep *o, char *name) const
+wb_orep *wb_vrepwbl::child(pwr_tStatus *sts, wb_orep *o, char *name)
 {
     return 0;
 }
 
-wb_orep *wb_vrepwbl::last(pwr_tStatus *sts, wb_orep *o) const
+wb_orep *wb_vrepwbl::last(pwr_tStatus *sts, wb_orep *o)
 {
     wb_orepwbl *orep = 0;
 
@@ -1017,12 +1017,12 @@ wb_orep *wb_vrepwbl::last(pwr_tStatus *sts, wb_orep *o) const
     return orep;
 }
 
-wb_orep *wb_vrepwbl::next(pwr_tStatus *sts, wb_orep *o) const
+wb_orep *wb_vrepwbl::next(pwr_tStatus *sts, wb_orep *o)
 {
     return 0;
 }
 
-wb_orep *wb_vrepwbl::previous(pwr_tStatus *sts, wb_orep *o) const
+wb_orep *wb_vrepwbl::previous(pwr_tStatus *sts, wb_orep *o)
 {
     return 0;
 }

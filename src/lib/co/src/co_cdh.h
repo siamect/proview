@@ -68,8 +68,9 @@ typedef struct {
   unsigned int	vid_3		: 8;
 
 #endif
-} cdh_mObjid;
-
+} cdh_mOid;
+typedef cdh_mOid cdh_mObjid;
+    
 typedef struct {
   unsigned int	rix		: 32;
 
@@ -88,7 +89,8 @@ typedef struct {
   unsigned int	vid_3		: 8;
 
 #endif
-} cdh_mRefId;
+} cdh_mRid;
+typedef cdh_mRid cdh_mRefId;
 
 typedef struct {
 #if (pwr_dHost_byteOrder == pwr_dBigEndian)
@@ -106,7 +108,8 @@ typedef struct {
   unsigned int	vid_3		: 8;
 
 #endif
-} cdh_mVolumeId;
+} cdh_mVid;
+typedef cdh_mVid cdh_mVolumeId;
 
 typedef struct {
 #if (pwr_dHost_byteOrder == pwr_dBigEndian)
@@ -124,29 +127,30 @@ typedef struct {
   unsigned int	nid_3		: 8;
 
 #endif
-} cdh_mNodeId;
+} cdh_mNid;
+typedef cdh_mNid cdh_mNodeId;
 
 typedef struct {
 #if (pwr_dHost_byteOrder == pwr_dBigEndian)
 
-  unsigned int  must_be_two	: 2;
-  unsigned int	cix		: 12;
-  unsigned int	bix		: 3;
-  unsigned int	reserved	: 3;
-  unsigned int	aix		: 12;
+  unsigned int  must_be_two : 2;
+  unsigned int	cix         : 12;
+  unsigned int	bix         : 3;
+  unsigned int	reserved    : 3;
+  unsigned int	aix         : 12;
 
-  unsigned int	vid_3		: 8;
-  unsigned int	vid_2		: 8;
-  unsigned int	vid_1		: 8;
-  unsigned int	vid_0		: 8;
+  unsigned int	vid_3       : 8;
+  unsigned int	vid_2       : 8;
+  unsigned int	vid_1       : 8;
+  unsigned int	vid_0       : 8;
 
 #elif (pwr_dHost_byteOrder == pwr_dLittleEndian)
 
-  unsigned int	aix		: 12;
-  unsigned int	reserved	: 3;
-  unsigned int	bix		: 3;
-  unsigned int	cix		: 12;
-  unsigned int  must_be_two	: 2;
+  unsigned int	aix         : 12;
+  unsigned int	reserved    : 3;
+  unsigned int	bix         : 3;
+  unsigned int	cix         : 12;
+  unsigned int  must_be_two : 2;
 
   unsigned int	vid_0		: 8;
   unsigned int	vid_1		: 8;
@@ -176,7 +180,8 @@ typedef struct {
   unsigned int	vid_1		: 8;
 
 #endif
-} cdh_mClassId;
+} cdh_mCid;
+typedef cdh_mCid cdh_mClassId;
 
 typedef struct {
 #if (pwr_dHost_byteOrder == pwr_dBigEndian)
@@ -228,35 +233,41 @@ typedef struct {
   unsigned int	vid_1		: 8;
 
 #endif
-} cdh_mTypeId;
+} cdh_mTid;
+typedef cdh_mTid cdh_mTypeId;
 
 typedef union {
-  pwr_tObjid		pwr;
+  pwr_tOid		pwr;
   cdh_mObjid		o;
   cdh_mClassObjid	c;
   cdh_mTypeObjid	t;
-} cdh_uObjid;
+} cdh_uOid;
+typedef cdh_uOid cdh_uObjid;
 
 typedef union {
-  pwr_tRefId		pwr;
-  cdh_mRefId		r;
-} cdh_uRefId;
+  pwr_tRid pwr;
+  cdh_mRid r;
+} cdh_uRid;
+typedef cdh_uRid cdh_uRefId;
 
 typedef union {
-  pwr_tClassId		pwr;
-  cdh_mClassId		c;
-  cdh_mTypeId		t;
-} cdh_uTypeId;
+  pwr_tCid pwr;
+  cdh_mCid c;
+  cdh_mTid t;
+} cdh_uTid;
+typedef cdh_uTid cdh_uTypeId;
 
 typedef union {
-  pwr_tVolumeId		pwr;
-  cdh_mVolumeId	v;
-} cdh_uVolumeId;
+  pwr_tVid pwr;
+  cdh_mVid v;
+} cdh_uVid;
+typedef cdh_uVid cdh_uVolumeId;
 
 typedef union {
-  pwr_tNodeId		pwr;
-  cdh_mNodeId	n;
-} cdh_uNodeId;
+  pwr_tNid pwr;
+  cdh_mNid n;
+} cdh_uNid;
+typedef cdh_uNid cdh_uNodeId;
 
 typedef enum {
   cdh_eId__ = 0,
@@ -272,14 +283,14 @@ typedef enum {
 } cdh_eId;
 
 typedef union {
-  pwr_tObjectIx		oix;
-  pwr_tObjid		oid;
-  pwr_tClassId		cid;
-  pwr_tVolumeId		vid;
-  pwr_tTypeId		tid;
-  pwr_tSubid		sid;
-  pwr_tDlid		did;
-  pwr_sAttrRef		aref;
+  pwr_tOix     oix;
+  pwr_tOid     oid;
+  pwr_tCid     cid;
+  pwr_tVid     vid;
+  pwr_tTid     tid;
+  pwr_tSubid   sid;
+  pwr_tDlid    did;
+  pwr_sAttrRef aref;
 } cdh_uId;
 
 typedef union {
@@ -311,7 +322,7 @@ typedef struct {
 
 typedef struct {
   cdh_sObjName		name;
-  pwr_tObjid		poid;
+  pwr_tOid		poid;
 } cdh_sFamily;
 
 typedef union {
@@ -527,170 +538,170 @@ typedef union {
 } cdh_mName;
 
 typedef struct {
-  pwr_tObjid		poid;		/* Parent objid, or NOBJID */
-  cdh_mParseName	parseFlags;
+  pwr_tOid		 poid;		/* Parent objid, or NOBJID */
+  cdh_mParseName parseFlags;
 
-  cdh_mName		flags;
-  void			*ohp;
-  cdh_eId		eId;
-  cdh_uId		uId;
-  pwr_tTypeId		bid;
-  pwr_tUInt32		index;
-  pwr_tUInt32		offset;
-  pwr_tUInt32		size;
-  pwr_tUInt32		nObject;
-  pwr_tUInt32		nBody;
-  cdh_sFamily		volume;
-  cdh_sFamily		object[20];
-  cdh_sFamily		body[10];
-  cdh_sFamily		attribute;
+  cdh_mName		 flags;
+  void			 *ohp;
+  cdh_eId		 eId;
+  cdh_uId		 uId;
+  pwr_tTid		 bid;
+  pwr_tUInt32    index;
+  pwr_tUInt32    offset;
+  pwr_tUInt32    size;
+  pwr_tUInt32    nObject;
+  pwr_tUInt32    nBody;
+  cdh_sFamily    volume;
+  cdh_sFamily    object[20];
+  cdh_sFamily    body[10];
+  cdh_sFamily    attribute;
 } cdh_sParseName;
 
 /*  Function prototypes to exported functions.  */
 
 int
 cdh_ObjidCompare (
-  pwr_tObjid		Object_1,
-  pwr_tObjid		Object_2
+  pwr_tOid Object_1,
+  pwr_tOid Object_2
 );
 
 int
 cdh_ObjidIsEqual (
-  pwr_tObjid		Object_1,
-  pwr_tObjid		Object_2
+  pwr_tOid Object_1,
+  pwr_tOid Object_2
 );
 
 int
 cdh_ObjidIsNotEqual (
-  pwr_tObjid		Object_1,
-  pwr_tObjid		Object_2
+  pwr_tOid Object_1,
+  pwr_tOid Object_2
 );
 
 int
 cdh_ObjidIsNull (
-  pwr_tObjid		Object
+  pwr_tOid Object
 );
 
 int
 cdh_ObjidIsNotNull (
-  pwr_tObjid		Object
+  pwr_tOid Object
 );
 
 int
 cdh_SubidCompare (
-  pwr_tSubid		Subscription_1,
-  pwr_tSubid		Subscription_2
+  pwr_tSubid Subscription_1,
+  pwr_tSubid Subscription_2
 );
 
 int
 cdh_SubidIsEqual (
-  pwr_tSubid		Subscription_1,
-  pwr_tSubid		Subscription_2
+  pwr_tSubid Subscription_1,
+  pwr_tSubid Subscription_2
 );
 
 int
 cdh_SubidIsNotEqual (
-  pwr_tSubid		Subscription_1,
-  pwr_tSubid		Subscription_2
+  pwr_tSubid Subscription_1,
+  pwr_tSubid Subscription_2
 );
 
 int
 cdh_SubidIsNull (
-  pwr_tSubid		Subscription
+  pwr_tSubid Subscription
 );
 
 int
 cdh_SubidIsNotNull (
-  pwr_tSubid		Subscription
+  pwr_tSubid Subscription
 );
 
 int
 cdh_RefIdCompare (
-  pwr_tRefId		Reference_1,
-  pwr_tRefId		Reference_2
+  pwr_tRefId Reference_1,
+  pwr_tRefId Reference_2
 );
 
 int
 cdh_RefIdIsEqual (
-  pwr_tRefId		Reference_1,
-  pwr_tRefId		Reference_2
+  pwr_tRefId Reference_1,
+  pwr_tRefId Reference_2
 );
 
 int
 cdh_RefIdIsNotEqual (
-  pwr_tRefId		Reference_1,
-  pwr_tRefId		Reference_2
+  pwr_tRefId Reference_1,
+  pwr_tRefId Reference_2
 );
 
 int
 cdh_RefIdIsNull (
-  pwr_tRefId		Reference
+  pwr_tRefId Reference
 );
 
 int
 cdh_RefIdIsNotNull (
-  pwr_tRefId		Reference
+  pwr_tRefId Reference
 );
 
 int
 cdh_DlidCompare (
-  pwr_tDlid		DirectLink_1,
-  pwr_tDlid		DirectLink_2
+  pwr_tDlid DirectLink_1,
+  pwr_tDlid DirectLink_2
 );
 
 int
 cdh_DlidIsEqual (
-  pwr_tDlid		DirectLink_1,
-  pwr_tDlid		DirectLink_2
+  pwr_tDlid DirectLink_1,
+  pwr_tDlid DirectLink_2
 );
 
 int
 cdh_DlidIsNotEqual (
-  pwr_tDlid		DirectLink_1,
-  pwr_tDlid		DirectLink_2
+  pwr_tDlid DirectLink_1,
+  pwr_tDlid DirectLink_2
 );
 
 int
 cdh_DlidIsNull (
-  pwr_tDlid		DirectLink
+  pwr_tDlid DirectLink
 );
 
 int
 cdh_DlidIsNotNull (
-  pwr_tDlid		DirectLink
+  pwr_tDlid DirectLink
 );
 
-pwr_tClassId
+pwr_tCid
 cdh_ClassObjidToId (
-  pwr_tObjid		Object
+  pwr_tOid Object
 );
 
-pwr_tObjid
+pwr_tOid
 cdh_ClassIdToObjid (
-  pwr_tClassId		Class
+  pwr_tCid Class
 );
 
-pwr_tTypeId
+pwr_tTid
 cdh_TypeObjidToId (
-  pwr_tObjid		Object
+  pwr_tOid Object
 );
 
 int
 cdh_TypeIdToIndex (
-  pwr_tTypeId		Type
+  pwr_tTid Type
 );
 
-pwr_tObjid
+pwr_tOid
 cdh_TypeIdToObjid (
-  pwr_tTypeId		Type
+  pwr_tTid Type
 );
 
 pwr_tStatus
 cdh_AttrValueToString (
-  pwr_eType		Type,
-  void			*Value,
-  char			*String,
-  int			MaxSize
+  pwr_eType Type,
+  void      *Value,
+  char      *String,
+  int       MaxSize
 );
 
 pwr_tStatus
@@ -703,31 +714,31 @@ cdh_StringToAttrValue (
 pwr_tStatus
 cdh_StringToClassId (
   const char		*s,
-  pwr_tClassId		*cid
+  pwr_tCid		*cid
 );
 
 pwr_tStatus
 cdh_StringToTypeId (
   const char		*s,
-  pwr_tTypeId		*tid
+  pwr_tTid		*tid
 );
 
 pwr_tStatus
 cdh_StringToVolumeId (
   const char		*s,
-  pwr_tVolumeId		*tid
+  pwr_tVid		*tid
 );
 
 pwr_tStatus
 cdh_StringToObjectIx (
   const char		*s,
-  pwr_tObjectIx		*oix
+  pwr_tOix		*oix
 );
 
 pwr_tStatus
 cdh_StringToObjid (
-  const char		*s,
-  pwr_tObjid		*oix
+  const char    *s,
+  pwr_tOid		*oid
 );
 
 pwr_tStatus
@@ -738,65 +749,61 @@ cdh_StringToSubid (
 
 pwr_tStatus
 cdh_StringToDlid (
-  const char		*s,
+  const char    *s,
   pwr_tDlid		*did
 );
 
 char *
 cdh_ClassIdToString (
   char			*s,
-  pwr_tClassId		cid,
+  pwr_tCid  cid,
   int			prefix
 );
 
 char *
 cdh_ObjectIxToString (
   char			*s,
-  pwr_tObjectIx		oix,
+  pwr_tOix		oix,
   int			prefix
 );
 
 char *
 cdh_ObjidToString (
   char			*s,
-  pwr_tObjid		oid,
+  pwr_tOid		oid,
   int			prefix
 );
 
 char *
 cdh_ArefToString (
   char			*s,
-  pwr_sAttrRef		*aref,
+  pwr_sAttrRef  *aref,
   int			prefix
 );
 
 char *
 cdh_NodeIdToString (
-  char                  *s,
-  pwr_tNodeId		nid,
-  int                   prefix,
-  int                   suffix
+  char     *s,
+  pwr_tNid nid,
+  int      prefix,
+  int      suffix
 );
 
 char *
-cdh_TypeIdToString (
-  char                  *s,
-  pwr_tTypeId           tid,
-  int                   prefix
-);
+cdh_TypeIdToString(char *s, pwr_tTid tid, int prefix);
 
 char *
 cdh_VolumeIdToString (
-  char                  *s,
-  pwr_tVolumeId         vid,
-  int                   prefix,
-  int                   suffix
-);
+    char     *s,
+    pwr_tVid vid,
+    int      prefix,
+    int      suffix
+    );
 
 char *
 cdh_SubidToString (
   char			*s,
-  pwr_tSubid		sid,
+  pwr_tSubid    sid,
   int			prefix
 );
 
@@ -811,7 +818,7 @@ cdh_sFamily *
 cdh_Family (
   cdh_sFamily		*f,
   const char		*name,
-  pwr_tObjid		poid
+  pwr_tOid		    poid
 );
 
 cdh_sObjName *
@@ -829,7 +836,7 @@ cdh_sParseName *
 cdh_ParseName (
   pwr_tStatus		*sts,
   cdh_sParseName	*pn,
-  pwr_tObjid		poid,
+  pwr_tOid		    poid,
   const char		*name,
   pwr_tUInt32		flags
 );

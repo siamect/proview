@@ -31,6 +31,7 @@ struct sOentry {
     dbs_sBody        dbody;    
     mOentry          flags;
     dbs_tRef         ref;
+    dbs_tRef         oidref;
 
     sOentry         *poep;
     sOentry         *boep;
@@ -46,12 +47,14 @@ struct sOentry {
 struct sNentry {
     tree_sNode   node;
     dbs_sName    n;
+    dbs_tRef     ref;
     sOentry      *oep;
 };
 
 struct sCentry {
     tree_sNode node;
     dbs_sClass c;
+    dbs_tRef   ref;
     sOentry    *o_lh;  // Header of object list
     sOentry    *o_lt;  // Tail of object list
 };
@@ -73,9 +76,16 @@ public:
     unsigned int m_warnings;
     unsigned int m_errors;
     
+    unsigned int m_nObjects;
+    unsigned int m_nTreeObjects;
+    unsigned int m_nClassObjects;
+    unsigned int m_nNameObjects;
+    unsigned int m_nRbodyObjects;
+    unsigned int m_nDbodyObjects;
+    
     sOentry      *m_oep;   /* object entry of volume object */
 
-    tree_sTable  *m_oix_th;
+    tree_sTable  *m_oid_th;
     tree_sTable  *m_name_th;
     tree_sTable  *m_class_th;
     
@@ -92,6 +102,7 @@ public:
     
     void         buildFile();
     void         buildSectName();
+    void         buildSectOid();
     void         buildSectClass();
     void         checkObject(sOentry *oep);
     pwr_tStatus  closeFile(pwr_tBoolean doDelete);
@@ -110,7 +121,7 @@ public:
     pwr_tStatus  writeSectDirectory();
     pwr_tStatus  writeSectVolume();
     pwr_tStatus  writeSectVolref();
-    pwr_tStatus  writeSectOix();
+    pwr_tStatus  writeSectOid();
     pwr_tStatus  writeSectObject();
     pwr_tStatus  writeSectRbody();
     pwr_tStatus  writeSectName();

@@ -228,7 +228,7 @@ typedef union {
 
 typedef struct {
   pwr_tOid		    Objid;
-  pwr_tClassId      Body;
+  pwr_tCid          Body;
   pwr_tUInt32       Offset;
   pwr_tUInt32       Size;
   pwr_mAttrRef      Flags;
@@ -250,6 +250,10 @@ static const pwr_tClassId   pwr_cNClassId   = 0;
 static const pwr_tTypeId    pwr_cNTypeId    = 0;
 static const pwr_tVolumeId  pwr_cNVolumeId  = 0;
 static const pwr_tNodeId    pwr_cNNodeId    = 0;
+static const pwr_tCid       pwr_cNCid       = 0;
+static const pwr_tTid       pwr_cNTid       = 0;
+static const pwr_tVid       pwr_cNVid       = 0;
+static const pwr_tNid       pwr_cNNid       = 0;
 
 /* Gereral macro definitions  */
 

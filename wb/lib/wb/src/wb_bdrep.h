@@ -4,7 +4,6 @@
 #include "pwr.h"
 #include "wb_orep.h"
 #include "wb_object.h"
-#include "co_dbs.h"
 #include "wb_name.h"
 
 class wb_adef;

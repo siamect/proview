@@ -49,7 +49,7 @@
 %    | Information about volumes mounted in this volume.  |
 %    |                                                    |
 %    +====================================================+
-%    | Oix (Object index) Section                         |
+%    | Oid (Object identity) Section                      |
 %    +----------------------------------------------------+
 %    |                                                    |
 %    |                                                    |
@@ -162,7 +162,7 @@
 %#define dbs_cAlignInc 7
 %#define dbs_dAlign(size) (((size) + dbs_cAlignInc) & ~dbs_cAlignInc)
 %#define dbs_dPadding(size) ((((size) + dbs_cAlignInc) & ~dbs_cAlignInc) - (size))
-%#define dbs_dMakeRef(sect, offset) (0 & ((sect) << dbs_cOffsBits) & (offset))
+%#define dbs_dMakeRef(sect, offset) (0 | ((sect) << dbs_cOffsBits) | (offset))
 %
 %typedef union {
 %    struct {
@@ -174,6 +174,7 @@
 %
 %pwr_tBoolean
 %pdr_dbs_uRefBits(PDR *pdrs, dbs_uRefBits *objp);
+%
 %
 #endif
 
@@ -189,9 +190,9 @@ enum dbs_eSect {
     dbs_eSect_dir     = 0,
     dbs_eSect_volume  = 1,
     dbs_eSect_volref  = 2,
+    dbs_eSect_oid     = 3,
     dbs_eSect_object  = 4,
     dbs_eSect_rbody   = 5,
-    dbs_eSect_oix     = 3,
     dbs_eSect_name    = 6,
     dbs_eSect_dbody   = 8,
     dbs_eSect_class   = 10,
@@ -202,7 +203,7 @@ enum dbs_eSect {
 #ifdef PDR_HDR
 %#define dbs_mSect_volume   pwr_Bit(dbs_eSect_volume)
 %#define dbs_mSect_volref   pwr_Bit(dbs_eSect_volref)
-%#define dbs_mSect_oix      pwr_Bit(dbs_eSect_oix)
+%#define dbs_mSect_oid      pwr_Bit(dbs_eSect_oid)
 %#define dbs_mSect_object   pwr_Bit(dbs_eSect_object)
 %#define dbs_mSect_rbody    pwr_Bit(dbs_eSect_rbody)
 %#define dbs_mSect_name     pwr_Bit(dbs_eSect_name)
@@ -285,6 +286,12 @@ enum dbs_eFile {
 %
 #endif
 
+struct dbs_sBintab {
+    dbs_tRef        start;
+    dbs_tRef        end;
+    pwr_tUInt32     rsize;
+};
+
 #ifdef PDR_HDR
 %/**
 % * @note You can't use pdr_dbs_sFile directly due to the format member.
@@ -342,6 +349,10 @@ struct dbs_sVolume {
     pwr_tTime    time;           /**< time at which this load file was created */
     pwr_tUInt32  cardinality;    /**< number objects in this volume */
     pwr_tUInt32  rbodySize;
+
+    dbs_sBintab  name_bt;        /**< search for object with parent and name  */
+    dbs_sBintab  oid_bt;         /**< search for object with identity  */
+    dbs_sBintab  class_bt;       /**< search for object with class  */
 };
 
 /**
@@ -364,19 +375,19 @@ struct dbs_sVolRef {
 
 
 /**
- * Object Index (oix) Section.
+ * Object Identity (oid) Section.
  *
- * Layout of an object index table entry.
- * Oix entries are stored in oix-sect.
- * Used to find an object with object index as key.
+ * Layout of an object identity table entry.
+ * Oid entries are stored in oid-sect.
+ * Used to find an object with object identity as key.
  * Table lookup mechanism is binary lookup.
  */
 #ifdef PDR_HDR
-%#define dbs_cVersionOix 1
+%#define dbs_cVersionOid 1
 #endif
 
-struct dbs_sOix {
-    pwr_tOix    oix;    /**< Object index */
+struct dbs_sOid {
+    pwr_tOid    oid;    /**< Object identity */
     dbs_tRef    ref;    /**< Address, section relative, to object in object section */
 };
 
@@ -398,12 +409,6 @@ struct dbs_sBodyRef {
 struct dbs_sOlink {
     pwr_tOix        pred;
     pwr_tOix        succ;
-};
-
-struct dbs_sBintab {
-    dbs_tRef        start;
-    dbs_tRef        end;
-    pwr_tUInt32     rsize;
 };
 
 struct dbs_sObject {
@@ -442,6 +447,7 @@ struct dbs_sObject {
 
 struct dbs_sClass {
     pwr_tCid        cid;       /**< class identifier */
+    pwr_tUInt32     nObjects;
     dbs_sQlink      o_lh;      /**< root of list of all object
                                     of this class within this volume  */
 };
@@ -506,7 +512,7 @@ struct dbs_sName {
 %    FILE         *f;
 %    dbs_sFile    file;
 %    pwr_tUInt32  nSect;
-%    dbs_sSect    sect[dbs_eSect_];
+%    dbs_sSect    *sect;
 %    
 %    /* the rest is used only if mapped */
 %    pwr_tUInt32  size;    /**< size of mapped file */
@@ -518,37 +524,51 @@ struct dbs_sName {
 %#define dbs_Qitem(a, b, c) ((b *)((char *)a - offsetof(b, c)))
 %#define dbs_Qlink(a, b, c) ((dbs_sQlink *)((char *)a + offsetof(b, c)))
 %
-%void           *dbs_Address(pwr_tStatus*, dbs_sEnv*, dbs_tRef);
-%void           *dbs_Alloc(pwr_tStatus*, dbs_sEnv*, pwr_tUInt32);
-%pwr_tBoolean    dbs_AllocLookasideSegment(pwr_tStatus*, dbs_sEnv*, pwr_tUInt32, pwr_tUInt32);
-%void           *dbs_AllocNamedSegment(pwr_tStatus*, dbs_sEnv*, pwr_tUInt32, char*);
+%void           *dbs_Address(pwr_tStatus*, const dbs_sEnv*, dbs_tRef);
+%void           *dbs_Alloc(pwr_tStatus*, const dbs_sEnv*, pwr_tUInt32);
+%pwr_tBoolean    dbs_AllocLookasideSegment(pwr_tStatus*, const dbs_sEnv*, pwr_tUInt32, pwr_tUInt32);
+%void           *dbs_AllocNamedSegment(pwr_tStatus*, const dbs_sEnv*, pwr_tUInt32, char*);
 %dbs_sEnv       *dbs_Create(pwr_tStatus*, dbs_sEnv*, char*, pwr_tUInt32, pwr_tUInt32);
-%void            dbs_Dump(pwr_tStatus*, dbs_sEnv*);
-%pwr_tBoolean    dbs_Free(pwr_tStatus*, dbs_sEnv*, void*);
-%pwr_tBoolean    dbs_FreeReference(pwr_tStatus*, dbs_sEnv*, dbs_tRef);
-%dbs_tRef        dbs_InDbs(pwr_tStatus*, dbs_sEnv*, void*, pwr_tUInt32);
-%dbs_tRef        dbs_ItemReference(pwr_tStatus*, dbs_sEnv*, void*);
-%dbs_sQlink     *dbs_Qalloc(pwr_tStatus*, dbs_sEnv*);
-%pwr_tBoolean    dbs_QhasOne(pwr_tStatus*, dbs_sEnv*, dbs_sQlink*);
+%void            dbs_Dump(pwr_tStatus*, const dbs_sEnv*);
+%pwr_tBoolean    dbs_Free(pwr_tStatus*, const dbs_sEnv*, void*);
+%pwr_tBoolean    dbs_FreeReference(pwr_tStatus*, const dbs_sEnv*, dbs_tRef);
+%dbs_tRef        dbs_InDbs(pwr_tStatus*, const dbs_sEnv*, void*, pwr_tUInt32);
+%dbs_tRef        dbs_ItemReference(pwr_tStatus*, const dbs_sEnv*, void*);
+%dbs_sQlink     *dbs_Qalloc(pwr_tStatus*, const dbs_sEnv*);
+%pwr_tBoolean    dbs_QhasOne(pwr_tStatus*, const dbs_sEnv*, dbs_sQlink*);
 %dbs_tRef        dbs_Qinit(pwr_tStatus*, dbs_sQlink*, dbs_tRef);
 %dbs_sQlink     *dbs_Qinsert(pwr_tStatus*, dbs_sQlink*, dbs_sQlink*, dbs_sQlink*);
-%dbs_sQlink     *dbs_QinsertPred(pwr_tStatus*, dbs_sEnv*, dbs_sQlink*, dbs_sQlink*);
-%dbs_sQlink     *dbs_QinsertSucc(pwr_tStatus*, dbs_sEnv*, dbs_sQlink*, dbs_sQlink*);
-%pwr_tBoolean    dbs_QisEmpty(pwr_tStatus*, dbs_sEnv*, dbs_sQlink*);
-%pwr_tBoolean    dbs_QisLinked(pwr_tStatus*, dbs_sEnv*, dbs_sQlink*);
-%pwr_tBoolean    dbs_QisNull(pwr_tStatus*, dbs_sEnv*, dbs_sQlink*);
-%dbs_sQlink     *dbs_Qmove(pwr_tStatus*, dbs_sEnv*, dbs_sQlink*, dbs_sQlink*);
-%dbs_sQlink     *dbs_Qpred(pwr_tStatus*, dbs_sEnv*, dbs_sQlink*);
-%dbs_sQlink     *dbs_Qremove(pwr_tStatus*, dbs_sEnv*, dbs_sQlink*);
-%dbs_sQlink     *dbs_QremovePred(pwr_tStatus*, dbs_sEnv*, dbs_sQlink*);
-%dbs_sQlink     *dbs_QremoveSucc(pwr_tStatus*, dbs_sEnv*, dbs_sQlink*);
-%dbs_sQlink     *dbs_Qsucc(pwr_tStatus*, dbs_sEnv*, dbs_sQlink*);
-%dbs_tRef        dbs_RefAlloc(pwr_tStatus*, dbs_sEnv*, pwr_tUInt32);
-%dbs_tRef        dbs_Reference(pwr_tStatus*, dbs_sEnv*, void*);
+%dbs_sQlink     *dbs_QinsertPred(pwr_tStatus*, const dbs_sEnv*, dbs_sQlink*, dbs_sQlink*);
+%dbs_sQlink     *dbs_QinsertSucc(pwr_tStatus*, const dbs_sEnv*, dbs_sQlink*, dbs_sQlink*);
+%pwr_tBoolean    dbs_QisEmpty(pwr_tStatus*, const dbs_sEnv*, dbs_sQlink*);
+%pwr_tBoolean    dbs_QisLinked(pwr_tStatus*, const dbs_sEnv*, dbs_sQlink*);
+%pwr_tBoolean    dbs_QisNull(pwr_tStatus*, const dbs_sEnv*, dbs_sQlink*);
+%dbs_sQlink     *dbs_Qmove(pwr_tStatus*, const dbs_sEnv*, dbs_sQlink*, dbs_sQlink*);
+%dbs_sQlink     *dbs_Qpred(pwr_tStatus*, const dbs_sEnv*, dbs_sQlink*);
+%dbs_sQlink     *dbs_Qremove(pwr_tStatus*, const dbs_sEnv*, dbs_sQlink*);
+%dbs_sQlink     *dbs_QremovePred(pwr_tStatus*, const dbs_sEnv*, dbs_sQlink*);
+%dbs_sQlink     *dbs_QremoveSucc(pwr_tStatus*, const dbs_sEnv*, dbs_sQlink*);
+%dbs_sQlink     *dbs_Qsucc(pwr_tStatus*, const dbs_sEnv*, dbs_sQlink*);
+%dbs_tRef        dbs_RefAlloc(pwr_tStatus*, const dbs_sEnv*, pwr_tUInt32);
+%dbs_tRef        dbs_Reference(pwr_tStatus*, const dbs_sEnv*, void*);
 %
-%pwr_tBoolean    dbs_AlignedRead(pwr_tStatus *sts, void *buf, pwr_tUInt32 size, dbs_sEnv *ep);
+%pwr_tBoolean    dbs_AlignedRead(pwr_tStatus *sts, void *buf, pwr_tUInt32 size, const dbs_sEnv *ep);
 %pwr_tBoolean    dbs_Close(pwr_tStatus *sts, dbs_sEnv *ep);
 %dbs_sEnv       *dbs_Open(pwr_tStatus *sts, dbs_sEnv *ep, const char *filename);
+%dbs_sEnv       *dbs_Map(pwr_tStatus *sts, dbs_sEnv *ep, const char *filename);
+%
+%dbs_sObject    *dbs_OidToObject(pwr_tStatus *sts, const dbs_sEnv *ep, pwr_tOid oid);
+%dbs_sObject    *dbs_NameToObject(pwr_tStatus *sts, const dbs_sEnv *ep, pwr_tOid oid, char *name);
+%dbs_sObject    *dbs_Parent(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op);
+%dbs_sObject    *dbs_After(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op);
+%dbs_sObject    *dbs_Before(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op);
+%dbs_sObject    *dbs_First(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op);
+%dbs_sObject    *dbs_Last(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op);
+%dbs_sObject    *dbs_ClassToObject(pwr_tStatus *sts, const dbs_sEnv *ep, pwr_tCid cid);
+%dbs_sObject    *dbs_Next(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op);
+%dbs_sObject    *dbs_Previous(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op);
+%dbs_sObject    *dbs_Child(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op, char *name);
+%dbs_sObject    *dbs_Ancestor(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op);
 %
 %
 %#ifdef __cplusplus

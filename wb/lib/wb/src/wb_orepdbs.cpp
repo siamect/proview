@@ -3,17 +3,18 @@
 #include "wb_ldh_msg.h"
 #include "wb_error.h"
 
-/*
-void * wb_orepdbs::operator new(size_t size, wb_vrepdbs *v)
+void *
+wb_orepdbs::operator new(size_t size, wb_vrepdbs *v)
 {
-  return v->newOrepDbs(size);
+    return (void *)v->new_wb_repdbs(size);
 }
 
-void wb_orepdbs::operator delete(size_t size, void *p, wb_vrepdbs *v)
+void
+wb_orepdbs::operator delete(void *p, size_t size, wb_vrepdbs *v)
 {
-  v->deleteOrepDbs(size, p);
+    v->delete_wb_orepdbs(size, p);
 }
-*/
+
 
 wb_orepdbs::wb_orepdbs(dbs_sObject *o)
 {
@@ -74,44 +75,50 @@ char * const wb_orepdbs::name()
 
 wb_orep *wb_orepdbs::after(pwr_tStatus *sts) const
 {
-    dbs_sQlink *succ = dbs_Qsucc(sts, m_vrep->m_dbsenv, &m_o->sib_ll);
-    if (succ == 0)
-        return 0;
-
-    return new (m_vrep) wb_orepdbs(dbs_Qitem(succ, dbs_sObject, sib_ll));
+    return m_vrep->after(sts, (wb_orep*)this);
 }
 
 wb_orep *wb_orepdbs::before(pwr_tStatus *sts) const
 {
-    dbs_sQlink *pred = dbs_Qpred(sts, m_vrep->m_dbsenv, &m_o->sib_ll);
-    if (pred == 0)
-        return 0;
-
-    return new (m_vrep) wb_orepdbs(dbs_Qitem(pred, dbs_sObject, sib_ll));
+    return m_vrep->before(sts, (wb_orep*)this);
 }
 
 wb_orep *wb_orepdbs::parent(pwr_tStatus *sts) const
 {
-    if (m_o->pref == dbs_cNref) {
-        *sts = LDH__NO_PARENT;
-        return 0;
-    }
-    
-    dbs_sObject *dbs_o = (dbs_sObject*)dbs_Address(sts, m_vrep->m_dbsenv, m_o->pref);
-    if (dbs_o == 0) {
-        return 0;
-    }
-    
-
-    return new (m_vrep) wb_orepdbs(dbs_o);
+    return m_vrep->parent(sts, (wb_orep*)this);
 }
 
-wb_adrep *attribute(pwr_tStatus *sts)
+wb_orep *wb_orepdbs::first(pwr_tStatus *sts) const
+{
+    return m_vrep->first(sts, (wb_orep*)this);
+}
+
+wb_orep *wb_orepdbs::child(pwr_tStatus *sts, char *name) const
+{
+    return m_vrep->child(sts, (wb_orep*)this, name);
+}
+
+wb_orep *wb_orepdbs::last(pwr_tStatus *sts) const
+{
+    return m_vrep->last(sts, (wb_orep*)this);
+}
+
+wb_orep *wb_orepdbs::next(pwr_tStatus *sts) const
+{
+    return m_vrep->next(sts, (wb_orep*)this);
+}
+
+wb_orep *wb_orepdbs::previous(pwr_tStatus *sts) const
+{
+    return m_vrep->previous(sts, (wb_orep*)this);
+}
+
+wb_adrep *wb_orepdbs::attribute(pwr_tStatus *sts)
 {
     return 0;;
 }
 
-wb_adrep *attribute(pwr_tStatus *sts, const char *name)
+wb_adrep *wb_orepdbs::attribute(pwr_tStatus *sts, const char *name)
 {
     return 0;//m_vrep->attribute(sts, cid(), name);
 }

@@ -62,23 +62,23 @@ public:
 
     virtual bool writeBody() = 0;
 
-    virtual wb_orep *ancestor(pwr_tStatus *sts, wb_orep *o) const = 0;
+    virtual wb_orep *ancestor(pwr_tStatus *sts, wb_orep *o) = 0;
 
-    virtual wb_orep *parent(pwr_tStatus *sts, wb_orep *o) const = 0;
+    virtual wb_orep *parent(pwr_tStatus *sts, wb_orep *o) = 0;
 
-    virtual wb_orep *after(pwr_tStatus *sts, wb_orep *o) const = 0;
+    virtual wb_orep *after(pwr_tStatus *sts, wb_orep *o) = 0;
 
-    virtual wb_orep *before(pwr_tStatus *sts, wb_orep *o) const = 0;
+    virtual wb_orep *before(pwr_tStatus *sts, wb_orep *o) = 0;
 
-    virtual wb_orep *first(pwr_tStatus *sts, wb_orep *o) const = 0;
+    virtual wb_orep *first(pwr_tStatus *sts, wb_orep *o) = 0;
 
-    virtual wb_orep *child(pwr_tStatus *sts, wb_orep *o, char *name) const = 0;
+    virtual wb_orep *child(pwr_tStatus *sts, wb_orep *o, char *name) = 0;
 
-    virtual wb_orep *last(pwr_tStatus *sts, wb_orep *o) const = 0;
+    virtual wb_orep *last(pwr_tStatus *sts, wb_orep *o) = 0;
 
-    virtual wb_orep *next(pwr_tStatus *sts, wb_orep *o) const = 0;
+    virtual wb_orep *next(pwr_tStatus *sts, wb_orep *o) = 0;
 
-    virtual wb_orep *previous(pwr_tStatus *sts, wb_orep *o) const = 0;
+    virtual wb_orep *previous(pwr_tStatus *sts, wb_orep *o) = 0;
 
     virtual wb_srep *newSession() = 0;
 

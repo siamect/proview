@@ -16,10 +16,10 @@ public:
     unsigned int m_nSession;
     unsigned int m_nRef;
 
-    dbs_sEnv *m_dbsenv;
+    dbs_sEnv m_dbsenv;
     
     
-    wb_vrepdbs();
+    wb_vrepdbs(const char *fileName);
     
     virtual void unref();
     virtual wb_vrep *ref();
@@ -54,28 +54,31 @@ public:
 
     virtual bool writeBody();
 
-    virtual wb_orep *ancestor(pwr_tStatus *sts, wb_orep *o) const;
+    virtual wb_orep *ancestor(pwr_tStatus *sts, wb_orep *o);
 
-    virtual wb_orep *parent(pwr_tStatus *sts, wb_orep *o) const;
+    virtual wb_orep *parent(pwr_tStatus *sts, wb_orep *o);
 
-    virtual wb_orep *after(pwr_tStatus *sts, wb_orep *o) const;
+    virtual wb_orep *after(pwr_tStatus *sts, wb_orep *o);
 
-    virtual wb_orep *before(pwr_tStatus *sts, wb_orep *o) const;
+    virtual wb_orep *before(pwr_tStatus *sts, wb_orep *o);
 
-    virtual wb_orep *first(pwr_tStatus *sts, wb_orep *o) const;
+    virtual wb_orep *first(pwr_tStatus *sts, wb_orep *o);
 
-    virtual wb_orep *child(pwr_tStatus *sts, wb_orep *o, char *name) const;
+    virtual wb_orep *child(pwr_tStatus *sts, wb_orep *o, char *name);
 
-    virtual wb_orep *last(pwr_tStatus *sts, wb_orep *o) const;
+    virtual wb_orep *last(pwr_tStatus *sts, wb_orep *o);
 
-    virtual wb_orep *next(pwr_tStatus *sts, wb_orep *o) const;
+    virtual wb_orep *next(pwr_tStatus *sts, wb_orep *o);
 
-    virtual wb_orep *previous(pwr_tStatus *sts, wb_orep *o) const;
+    virtual wb_orep *previous(pwr_tStatus *sts, wb_orep *o);
 
     virtual wb_srep *newSession();
 
-    virtual bool isLocal(wb_orep *o) const;
+    virtual bool isLocal(wb_orep *o);
     virtual pwr_tVid vid() const;
+
+    wb_orepdbs *new_wb_repdbs(size_t size);
+    void delete_wb_orepdbs(size_t size, void *p);
 };
 
 #endif

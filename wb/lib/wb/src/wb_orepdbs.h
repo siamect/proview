@@ -22,8 +22,8 @@ public:
     wb_orepdbs(dbs_sObject *o);
     ~wb_orepdbs();
 
-    // void* operator new(size_t size, wb_vrepdbs *v);
-    // void operator delete(void *p, size_t size, wb_vrepdbs *v);
+    void* operator new(size_t size, wb_vrepdbs *v);
+    void operator delete(void *p, size_t size, wb_vrepdbs *v);
     
     virtual pwr_tOid oid() const;
     virtual pwr_tVid vid() const;
@@ -63,6 +63,8 @@ public:
     wb_erep *erep() const { return m_vrep->erep();}
     wb_vrep *vrep() const { return m_vrep;}
 
+    dbs_sObject *o() const { return m_o;}
+    
 };
 
 #endif

@@ -14,6 +14,7 @@
 #endif
 
 #include <X11/Intrinsic.h>
+#include <assert.h>
 
 #include "pwr.h"
 #include "co_cdh.h"
@@ -35,9 +36,17 @@
 
 static int comp_dbs_name(tree_sTable *tp, tree_sNode  *x, tree_sNode  *y);
 
-wb_dbs::wb_dbs(wb_vrep *v)
+wb_dbs::wb_dbs(wb_vrep *v) :
+    m_oid(pwr_cNOid), m_warnings(0), m_errors(0),
+    m_nObjects(0), m_nTreeObjects(0), m_nClassObjects(0),
+    m_nNameObjects(0), m_nRbodyObjects(0), m_nDbodyObjects(0), m_oep(0)
 {
     pwr_tStatus sts;
+
+    memset(m_name, 0, sizeof(m_name));
+    memset(&m_volume, 0, sizeof(m_volume));
+    memset(m_sect, 0, sizeof(m_sect));
+    
 
     clock_gettime(CLOCK_REALTIME, &m_volume.time);
 
@@ -52,10 +61,10 @@ wb_dbs::wb_dbs(wb_vrep *v)
     sprintf(m_name, dbs_cNameVolume, dbs_cDirectory, m_v->name());
     dcli_translate_filename(m_name, m_name);
 
-    m_oix_th = tree_CreateTable(&sts, sizeof(pwr_tOid), offsetof(sOentry, o.oid),
+    m_oid_th = tree_CreateTable(&sts, sizeof(pwr_tOid), offsetof(sOentry, o.oid),
                                 sizeof(sOentry), 1000, tree_Comp_oid);
 
-    m_name_th = tree_CreateTable(&sts, sizeof(dbs_sName), offsetof(sNentry, n.poix),
+    m_name_th = tree_CreateTable(&sts, sizeof(dbs_sName), offsetof(sNentry, n),
                                  sizeof(sNentry), 1000, comp_dbs_name);
 
     m_class_th = tree_CreateTable(&sts, sizeof(pwr_tCid), offsetof(sCentry, c),
@@ -66,7 +75,15 @@ wb_dbs::~wb_dbs()
 {
     pwr_tStatus sts;
     
-    tree_DeleteTable(&sts, m_oix_th);
+    
+    printf("m_nObjects: %d\n", m_nObjects);
+    printf("m_nTreeObjects: %d\n", m_nTreeObjects);
+    printf("m_nClassObjects: %d\n", m_nClassObjects);
+    printf("m_nNameObjects: %d\n", m_nNameObjects);
+    printf("m_nRbodyObjects: %d\n", m_nRbodyObjects);
+    printf("m_nDbodyObjects: %d\n", m_nDbodyObjects);
+
+    tree_DeleteTable(&sts, m_oid_th);
     tree_DeleteTable(&sts, m_name_th);
     tree_DeleteTable(&sts, m_class_th);
 }
@@ -75,19 +92,19 @@ wb_dbs::~wb_dbs()
 static int
 comp_dbs_name(tree_sTable *tp, tree_sNode  *x, tree_sNode  *y)
 {
-    sNentry *xKey = (sNentry *) (tp->keyOffset + (char *) x);
-    sNentry *yKey = (sNentry *) (tp->keyOffset + (char *) y);
+    dbs_sName *xKey = (dbs_sName *) (tp->keyOffset + (char *) x);
+    dbs_sName *yKey = (dbs_sName *) (tp->keyOffset + (char *) y);
     int comp;
     
 
-    if (xKey->n.poix < yKey->n.poix)
+    if (xKey->poix < yKey->poix)
         comp = -1;
-    else if (xKey->n.poix == yKey->n.poix)
-        comp = strcmp(xKey->n.normname, yKey->n.normname);
+    else if (xKey->poix == yKey->poix)
+        comp = strcmp(xKey->normname, yKey->normname);
     else
         comp = 1;
 
-//    printf("%d:%s %c %d:%s\n", xKey->poix, xKey->normname, (comp == 1 ? '>' : (comp == -1 ? '<' : '=')), yKey->poix, yKey->normname);
+    //printf("%d:%s %c %d:%s\n", xKey->poix, xKey->normname, (comp == 1 ? '>' : (comp == -1 ? '<' : '=')), yKey->poix, yKey->normname);
 
     return comp;
 }
@@ -98,6 +115,7 @@ wb_dbs::buildFile()
     m_v->iterObject(this);
     buildSectName();
     checkObject(m_oep);
+    buildSectOid();
     buildSectClass();
     createFile();
 }
@@ -110,17 +128,19 @@ wb_dbs::checkObject(sOentry *oep)
     dbs_sQlink *sib_lh;
     dbs_sQlink *sib_ll;
     sOentry *sep;
-    sNentry ne;
+    dbs_sName n;
     sNentry *nep;
     
 
     // Check object
     if (!oep->flags.b.exist) {
         printf("Object does not exist!\n");
-    } else {
-        m_volume.cardinality++;
     }
 
+    m_nTreeObjects++;
+    
+    //printf("tree: %s\n", oep->o.name);
+    
     oep->ref = dbs_dMakeRef(dbs_eSect_object, m_sect[dbs_eSect_object].size);
     m_sect[dbs_eSect_object].size += dbs_dAlign(sizeof(dbs_sObject));
     dbs_Qinit(&sts, &oep->o.sib_lh, oep->ref + offsetof(dbs_sObject, sib_lh));
@@ -145,26 +165,27 @@ wb_dbs::checkObject(sOentry *oep)
     }
 
     /* Check name table, get reference to first and last child in name order.  */
-    memset(&ne, 0, sizeof(ne));
-    ne.n.poix = oep->o.oid.oix;
-    nep = (sNentry*)tree_FindSuccessor(&sts, m_name_th, &ne);
+    memset(&n, 0, sizeof(n));
+    n.poix = oep->o.oid.oix;
+    nep = (sNentry*)tree_FindSuccessor(&sts, m_name_th, &n);
     if (nep != NULL && nep->n.poix == oep->o.oid.oix) {
-        oep->o.name_bt.start = nep->n.ref;
+        oep->o.name_bt.start = nep->ref;
     }
 
-    ne.n.poix += 1;
-    nep = (sNentry*)tree_FindPredecessor(&sts, m_name_th, &ne);
+    n.poix += 1;
+    nep = (sNentry*)tree_FindPredecessor(&sts, m_name_th, &n);
     if (nep != NULL && nep->n.poix == oep->o.oid.oix) {
-        oep->o.name_bt.end = nep->n.ref;
+        oep->o.name_bt.end = nep->ref;
     }
+
+    oep->o.name_bt.rsize = dbs_dAlign(sizeof(dbs_sName));
 }
 
 pwr_tStatus
-wb_dbs::installObject(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid, pwr_tOid boid, pwr_tOid aoid, pwr_tOid foid,
+wb_dbs::installObject(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid, pwr_tOid aoid, pwr_tOid boid, pwr_tOid foid,
                       pwr_tOid loid, pwr_tObjName name, pwr_tObjName normname, pwr_tTime time,
                       pwr_tTime rbTime, pwr_tTime dbTime, size_t rbSize, size_t dbSize)
 {
-    sNentry      ne;
     sNentry     *nep;
     sOentry     *oep;
     pwr_tStatus  sts;
@@ -172,10 +193,12 @@ wb_dbs::installObject(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid, pwr_tOid boid, 
     if (cdh_ObjidIsNull(oid))
         printf("Error: object is null!\n");
 
-    oep = (sOentry *)tree_Insert(&sts, m_oix_th, &oid);
+    //printf("install: %s o:%d.%d p:%d.%d b:%d.%d a:%d.%d f:%d.%d l:%d.%d \n", name, oid.vid, oid.oix, poid.vid, poid.oix, boid.vid, boid.oix, aoid.vid, aoid.oix, foid.vid, foid.oix, loid.vid, loid.oix);
+    
+    oep = (sOentry *)tree_Insert(&sts, m_oid_th, &oid);
     if (sts == TREE__INSERTED) {
-    } else {
-        printf("Error: object is already inserted!\n");
+    } else if (oep->flags.b.exist) {
+        printf("*** Error: object is already inserted!\n");
     }
     
     if (oid.oix == pwr_cNOix) {
@@ -187,16 +210,17 @@ wb_dbs::installObject(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid, pwr_tOid boid, 
 
     // Link objects to its relatives
     if (cdh_ObjidIsNotNull(poid))
-        oep->poep = (sOentry *)tree_Insert(&sts, m_oix_th, &poid);
+        oep->poep = (sOentry *)tree_Insert(&sts, m_oid_th, &poid);
     if (cdh_ObjidIsNotNull(boid))
-        oep->boep = (sOentry *)tree_Insert(&sts, m_oix_th, &boid);
+        oep->boep = (sOentry *)tree_Insert(&sts, m_oid_th, &boid);
     if (cdh_ObjidIsNotNull(aoid))
-        oep->aoep = (sOentry *)tree_Insert(&sts, m_oix_th, &aoid);
+        oep->aoep = (sOentry *)tree_Insert(&sts, m_oid_th, &aoid);
     if (cdh_ObjidIsNotNull(foid))
-        oep->foep = (sOentry *)tree_Insert(&sts, m_oix_th, &foid);
+        oep->foep = (sOentry *)tree_Insert(&sts, m_oid_th, &foid);
     if (cdh_ObjidIsNotNull(loid))
-        oep->loep = (sOentry *)tree_Insert(&sts, m_oix_th, &loid);
+        oep->loep = (sOentry *)tree_Insert(&sts, m_oid_th, &loid);
 
+    m_nObjects++;
     m_volume.cardinality++;    
 
 #if 0
@@ -214,12 +238,16 @@ wb_dbs::installObject(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid, pwr_tOid boid, 
 
     oep->o.time = time;
     
-    /* insert into name table */
-    memset(&ne, 0, sizeof(ne));
-    ne.n.poix = poid.oix;
-    strcpy(ne.n.normname, normname);
-    nep = (sNentry*)tree_Insert(&sts, m_name_th, &ne);
-    nep->oep = oep;
+    if (cdh_ObjidIsNotNull(poid)) {
+        dbs_sName n;
+        
+        /* insert into name table */
+        memset(&n, 0, sizeof(n));
+        n.poix = poid.oix;
+        strcpy(n.normname, normname);
+        nep = (sNentry*)tree_Insert(&sts, m_name_th, &n);
+        nep->oep = oep;
+    }
     
     classInsert(oep);
 
@@ -264,6 +292,15 @@ wb_dbs::createFile()
     
     printf("\n-- Working with load file volume '%s'...\n", m_v->name());
 
+    /*{
+        unsigned int i;
+        
+        for (i = 0; i < (sizeof(m_sect)/sizeof(m_sect[0])); i++) {
+            printf("sect[%d]: version: %d, type: %d, size: %d, offset: %d\n", i, m_sect[i].version,
+                   m_sect[i].type, m_sect[i].size, m_sect[i].offset);
+        }
+        }*/
+
     printf("-- Open file...\n");
     sts = openFile();
     if (EVEN(sts)) goto error_handler;
@@ -293,13 +330,13 @@ wb_dbs::createFile()
     if (EVEN(sts)) goto error_handler;
 
     size += m_sect[dbs_eSect_volref].size;
-    m_sect[dbs_eSect_oix].offset = size;
+    m_sect[dbs_eSect_oid].offset = size;
 
-    printf("-- Writing oix section...\n");
-    sts = writeSectOix();
+    printf("-- Writing oid section...\n");
+    sts = writeSectOid();
     if (EVEN(sts)) goto error_handler;
 
-    size += m_sect[dbs_eSect_oix].size;
+    size += m_sect[dbs_eSect_oid].size;
     m_sect[dbs_eSect_rbody].offset = size;
 
     printf("-- Writing rbody section...\n");
@@ -423,7 +460,7 @@ wb_dbs::writeSectDirectory()
     m_sect[dbs_eSect_dir].version    = dbs_cVersionDirectory;
     m_sect[dbs_eSect_volume].version = dbs_cVersionVolume;
     m_sect[dbs_eSect_volref].version = dbs_cVersionVolRef;
-    m_sect[dbs_eSect_oix].version    = dbs_cVersionOix;
+    m_sect[dbs_eSect_oid].version    = dbs_cVersionOid;
     m_sect[dbs_eSect_object].version = dbs_cVersionObject;
     m_sect[dbs_eSect_rbody].version  = dbs_cVersionRbody;
     m_sect[dbs_eSect_name].version   = dbs_cVersionName;
@@ -433,7 +470,7 @@ wb_dbs::writeSectDirectory()
     m_sect[dbs_eSect_dir].type    = dbs_eSect_dir;
     m_sect[dbs_eSect_volume].type = dbs_eSect_volume;
     m_sect[dbs_eSect_volref].type = dbs_eSect_volref;
-    m_sect[dbs_eSect_oix].type    = dbs_eSect_oix;
+    m_sect[dbs_eSect_oid].type    = dbs_eSect_oid;
     m_sect[dbs_eSect_object].type = dbs_eSect_object;
     m_sect[dbs_eSect_rbody].type  = dbs_eSect_rbody;
     m_sect[dbs_eSect_name].type   = dbs_eSect_name;
@@ -445,10 +482,21 @@ wb_dbs::writeSectDirectory()
     
     if (fseek(m_fp, m_sect[dbs_eSect_dir].offset, SEEK_SET) != 0)
         return LDH__FILEPOS;
-
+    
+    /*{
+        unsigned int i;
+        
+        for (i = 0; i < (sizeof(m_sect)/sizeof(m_sect[0])); i++) {
+            printf("sect[%d]: version: %d, type: %d, size: %d, offset: %d\n", i, m_sect[i].version,
+                   m_sect[i].type, m_sect[i].size, m_sect[i].offset);
+        }
+        }*/
+    
     if (fwrite(&m_sect, sizeof(m_sect), 1, m_fp) < 1)
         return LDH__FILEWRITE;
 
+    assert(ftell(m_fp) == (long)(m_sect[dbs_eSect_dir].offset + m_sect[dbs_eSect_dir].size));
+    
     return LDH__SUCCESS;
 }
 
@@ -458,9 +506,6 @@ wb_dbs::writeSectVolume()
     char v[dbs_dAlign(sizeof(dbs_sVolume))];
     dbs_sVolume *vp = (dbs_sVolume *)v;
 
-
-    if (m_sect[dbs_eSect_volume].size == 0)
-        return LDH__SUCCESS;
 
     if (fseek(m_fp, m_sect[dbs_eSect_volume].offset, SEEK_SET) != 0)
         return LDH__FILEPOS;
@@ -479,6 +524,8 @@ wb_dbs::writeSectVolume()
     if (fwrite(v, sizeof(v), 1, m_fp) < 1)
         return LDH__FILEWRITE;
 
+    assert(ftell(m_fp) == (long)(m_sect[dbs_eSect_volume].offset + m_sect[dbs_eSect_volume].size));
+
     return LDH__SUCCESS;
 }    
 
@@ -486,48 +533,47 @@ wb_dbs::writeSectVolume()
 pwr_tStatus
 wb_dbs::writeSectVolref()
 {
-    //dbs_sVolRef		    volref;
-    
-    if (m_sect[dbs_eSect_volref].size == 0)
-        return LDH__SUCCESS;
+    dbs_sVolRef volref;
+    cdh_uTid    cid;
+    sCentry     *cep;
+    pwr_tStatus sts;
     
     if (fseek(m_fp, m_sect[dbs_eSect_volref].offset, SEEK_SET) != 0)
         return LDH__FILEPOS;
 
-#if 0
     memset(&volref, 0, sizeof(volref));
 
-
-
-    memset(&ce, 0, sizeof(ce));
-    ce.c.cid = 0;
-    cep = (sCentry*)tree_FindSuccessor(&sts, m_class_th, &ce.c.cid);
+    cid.pwr = pwr_cNCid;
+    cep = (sCentry*)tree_FindSuccessor(&sts, m_class_th, &cid.pwr);        
     while (cep) {
-        cdh_uTypeId cid;
-        cdh_uVolumeId vid;
-        
+        cdh_uVid vid;
+
+        vid.pwr = pwr_cNVid;
         cid.pwr = cep->c.cid;
-        vid.pwr = pwr_cNvid;
         vid.v.vid_0 = cid.c.vid_0;
         vid.v.vid_1 = cid.c.vid_1;
         
-        vp->vid  = vid.pwr;
-        vp->cid  = pwr_eClass_ClassVolume;
-        //vp->time = ?;
+        if (vid.pwr != m_volume.vid) {
+            printf("volref: %d.%d.%d.%d\n", vid.v.vid_0, vid.v.vid_1, vid.v.vid_2, vid.v.vid_3);
+            volref.vid  = vid.pwr;
+            //volref.name = ?;
+            volref.cid  = pwr_eClass_ClassVolume;
+            //vp->time = ?;
+            //volref.size = ?;
+            //volref.offset = ?;        
 
-        
+            if (fwrite(&volref, sizeof(volref), 1, m_fp) < 1)
+                return LDH__FILEWRITE;
+            m_sect[dbs_eSect_volref].size += sizeof(volref);
+        }
+        vid.pwr++;
+        cid.pwr = pwr_cNCid;
+        cid.c.vid_0 = vid.v.vid_0;
+        cid.c.vid_1 = vid.v.vid_1;
+        cep = (sCentry*)tree_FindSuccessor(&sts, m_class_th, &cid.pwr);        
     }
     
-    if (nep != NULL && nep->n.poix == oep->o.oid.oix) {
-        oep->o.name_bt.start = nep->n.ref;
-    }
 
-    ce.c.cid = 0;
-    nep = (sNentry*)tree_FindPredecessor(&sts, m_name_th, &ne);
-    if (nep != NULL && nep->n.poix == oep->o.oid.oix) {
-        oep->o.name_bt.end = nep->n.ref;
-    }
-#endif
 #if 0
     sts = OpenSect(dbs_eSect_volref);
     if (EVEN(sts)) return sts;
@@ -561,8 +607,6 @@ wb_dbs::writeSectVolref()
 
 //            xdrmem_create(&xdrs, (char *) &VolRef, sizeof(VolRef), XDR_ENCODE);
 //            if(!xdr_dbs_sVolRef(&xdrs, &VolRef)) return LDH__XDR;
-            if (fwrite(&VolRef, sizeof(volRef), 1, m_fp) < 1) return LDH__FILEWRITE;
-//            m_head.SectSize += sizeof(volRef);
         }
     }
 #endif
@@ -571,38 +615,62 @@ wb_dbs::writeSectVolref()
 }
 
 pwr_tStatus
-wb_dbs::writeSectOix()
+wb_dbs::writeSectOid()
 {
     sOentry  *oep;
-    char     o[dbs_dAlign(sizeof(dbs_sOix))];
-    dbs_sOix *op = (dbs_sOix*)o;
+    char     o[dbs_dAlign(sizeof(dbs_sOid))];
+    dbs_sOid *op = (dbs_sOid*)o;
     
-    if (m_sect[dbs_eSect_oix].size == 0)
+    if (m_sect[dbs_eSect_oid].size == 0)
         return LDH__SUCCESS;
     
-    if (fseek(m_fp, m_sect[dbs_eSect_oix].offset, SEEK_SET) != 0)
+    if (fseek(m_fp, m_sect[dbs_eSect_oid].offset, SEEK_SET) != 0)
         return LDH__FILEPOS;
 
     memset(o, 0, sizeof(o));
     
-    oep = (sOentry*)tree_Minimum(NULL, m_oix_th);
+    oep = (sOentry*)tree_Minimum(NULL, m_oid_th);
     while (oep != NULL) {
-        op->oix = oep->o.oid.oix;
+        op->oid = oep->o.oid;
         op->ref = oep->ref;
         
         if (fwrite(o, sizeof(o), 1, m_fp) < 1)
             return LDH__FILEWRITE;
 
-        oep = (sOentry*)tree_Successor(NULL, m_oix_th, (tree_sNode*)oep);
+        oep = (sOentry*)tree_Successor(NULL, m_oid_th, (tree_sNode*)oep);
     }
     
+    assert(ftell(m_fp) == (long)(m_sect[dbs_eSect_oid].offset + m_sect[dbs_eSect_oid].size));
+
     return LDH__SUCCESS;
+}
+
+static pwr_tStatus
+writeTree(sOentry *oep, FILE *fp)
+{
+    pwr_tStatus sts;
+    
+    if (!oep)
+        return 1;
+    
+    if (fwrite(&oep->o, dbs_dAlign(sizeof(oep->o)), 1, fp) < 1)
+        return LDH__FILEWRITE;
+
+    sts = writeTree(oep->foep, fp);
+    if (EVEN(sts))
+        return sts;
+    
+    sts = writeTree(oep->aoep, fp);
+    if (EVEN(sts))
+        return sts;
+
+    return 1;
 }
 
 pwr_tStatus
 wb_dbs::writeSectObject()
 {
-    sOentry *oep;
+    //sOentry *oep;
     
     if (m_sect[dbs_eSect_object].size == 0)
         return LDH__SUCCESS;
@@ -610,15 +678,9 @@ wb_dbs::writeSectObject()
     if (fseek(m_fp, m_sect[dbs_eSect_object].offset, SEEK_SET) != 0)
         return LDH__FILEPOS;
 
-    // @todo change to tree-order
-    oep = (sOentry*)tree_Minimum(NULL, m_oix_th);
-    while (oep != NULL) {
-        //printf("o.rsize[%s]: %d\n", oep->o.name, oep->rbody.size);
-        if (fwrite(&oep->o, dbs_dAlign(sizeof(oep->o)), 1, m_fp) < 1)
-            return LDH__FILEWRITE;
+    writeTree(m_oep, m_fp);
 
-        oep = (sOentry*)tree_Successor(NULL, m_oix_th, (tree_sNode*)oep);
-    }
+    assert(ftell(m_fp) == (long)(m_sect[dbs_eSect_object].offset + m_sect[dbs_eSect_object].size));
 
     return LDH__SUCCESS;
 }
@@ -631,10 +693,17 @@ wb_dbs::installDbody(pwr_tOid oid, void *body)
     sOentry *oep;
     char b[dbs_dAlign(sizeof(dbs_sBody))];
     
+    m_nDbodyObjects++;
+    
     memset(b, 0, sizeof(b));
     
-    oep = (sOentry *)tree_Find(&sts, m_oix_th, &oid);
+    oep = (sOentry *)tree_Find(&sts, m_oid_th, &oid);
     if (EVEN(sts)) {
+    }
+
+    if (oep->dbody.size == 0) {
+        if (body != 0) printf("error body size\n");
+        return 1;
     }
 
     oep->o.dbody.ref = dbs_dMakeRef(dbs_eSect_dbody, m_sect[dbs_eSect_dbody].size + dbs_dAlign(sizeof(dbs_sBody)));
@@ -658,14 +727,13 @@ pwr_tStatus
 wb_dbs::writeSectDbody()
 {
 
-    if (m_sect[dbs_eSect_dbody].size == 0)
-        return LDH__SUCCESS;    
-
     if (fseek(m_fp, m_sect[dbs_eSect_dbody].offset, SEEK_SET) != 0)
         return LDH__FILEPOS;
 
     m_v->iterDbody(this);
     
+    assert(ftell(m_fp) == (long)(m_sect[dbs_eSect_dbody].offset + m_sect[dbs_eSect_dbody].size));
+
     return LDH__SUCCESS;
 }
 
@@ -677,13 +745,22 @@ wb_dbs::installRbody(pwr_tOid oid, void *body)
     sOentry *oep;
     char b[dbs_dAlign(sizeof(dbs_sBody))];
     
+    m_nRbodyObjects++;
+    
     memset(b, 0, sizeof(b));
     
-    oep = (sOentry *)tree_Find(&sts, m_oix_th, &oid);
+    oep = (sOentry *)tree_Find(&sts, m_oid_th, &oid);
     if (EVEN(sts)) {
     }
-
-    oep->o.rbody.ref = dbs_dMakeRef(dbs_eSect_rbody, m_sect[dbs_eSect_rbody].size + dbs_dAlign(sizeof(dbs_sBody)));
+    //printf("install body: %u\n", (unsigned int)body);
+    //printf(" 1 install Rbody %s, bsize: %d, ssize: %d\n", oep->o.name, oep->rbody.size, m_sect[dbs_eSect_rbody].size);
+    
+    if (oep->rbody.size == 0) {
+        if (body != 0) printf("error body size\n");
+        return 1;
+    }
+    
+    oep->o.rbody.ref = dbs_dMakeRef(dbs_eSect_rbody, m_sect[dbs_eSect_rbody].size + sizeof(b));
     m_sect[dbs_eSect_rbody].size += oep->rbody.size + sizeof(b);
 
     memcpy(b, &oep->rbody, sizeof(oep->rbody));
@@ -691,11 +768,13 @@ wb_dbs::installRbody(pwr_tOid oid, void *body)
     if (fwrite(b, sizeof(b), 1, m_fp) < 1)
         return LDH__FILEWRITE;
 
+    //printf("  2 install Rbody %s, bsize: %d, ssize: %d\n", oep->o.name, oep->rbody.size, m_sect[dbs_eSect_rbody].size);
     /* @todo!!! objdid_self */
 
     if (fwrite(body, oep->rbody.size, 1, m_fp) < 1)
         return LDH__FILEWRITE;
 
+    //printf("   3 install Rbody %s, bsize: %d, ssize: %d\n", oep->o.name, oep->rbody.size, m_sect[dbs_eSect_rbody].size);
     return sts;
 }
 
@@ -704,14 +783,13 @@ pwr_tStatus
 wb_dbs::writeSectRbody()
 {
 
-    if (m_sect[dbs_eSect_rbody].size == 0)
-        return LDH__SUCCESS;    
-
     if (fseek(m_fp, m_sect[dbs_eSect_rbody].offset, SEEK_SET) != 0)
         return LDH__FILEPOS;
 
     m_v->iterRbody(this);
     
+    assert(ftell(m_fp) == (long)(m_sect[dbs_eSect_rbody].offset + m_sect[dbs_eSect_rbody].size));
+
     return LDH__SUCCESS;
 }
 
@@ -728,11 +806,16 @@ wb_dbs::writeSectName()
 
     nep = (sNentry*)tree_Minimum(NULL, m_name_th);
     while (nep != NULL) {
+        //printf("name: %s, poix: %d\n", nep->n.normname, nep->n.poix);
+        nep->n.ref = nep->oep->ref;
+        
         if (fwrite(&nep->n,  dbs_dAlign(sizeof(nep->n)), 1, m_fp) < 1)
             return LDH__FILEWRITE;
         
         nep = (sNentry*)tree_Successor(NULL, m_name_th, (tree_sNode*)nep);
     }
+
+    assert(ftell(m_fp) == (long)(m_sect[dbs_eSect_name].offset + m_sect[dbs_eSect_name].size));
 
     return LDH__SUCCESS;
 }
@@ -751,13 +834,38 @@ wb_dbs::writeSectClass()
 
     cep = (sCentry*)tree_Minimum(NULL, m_class_th);
     while (cep != NULL) {
+        //printf("class: %d, nObjects: %d\n", cep->c.cid, cep->c.nObjects);
         if (fwrite(&cep->c,  dbs_dAlign(sizeof(cep->c)), 1, m_fp) < 1)
             return LDH__FILEWRITE;
         
         cep = (sCentry*)tree_Successor(NULL, m_class_th, (tree_sNode*)cep);
     }
 
+    assert(ftell(m_fp) == (long)(m_sect[dbs_eSect_class].offset + m_sect[dbs_eSect_class].size));
+
     return LDH__SUCCESS;
+}
+
+void
+wb_dbs::buildSectOid()
+{
+    sOentry *oep;
+
+    oep = (sOentry*)tree_Minimum(NULL, m_oid_th);
+    while (oep != NULL) {
+        oep->oidref = dbs_dMakeRef(dbs_eSect_oid, m_sect[dbs_eSect_oid].size);
+        m_sect[dbs_eSect_oid].size += dbs_dAlign(sizeof(dbs_sOid));
+        
+        oep = (sOentry*)tree_Successor(NULL, m_oid_th, (tree_sNode*)oep);
+    }
+
+    oep = (sOentry*)tree_Minimum(NULL, m_oid_th);
+    if (oep != NULL) {
+        m_volume.oid_bt.start = oep->oidref;
+        oep = (sOentry*)tree_Maximum(NULL, m_oid_th);
+        m_volume.oid_bt.end = oep->oidref;
+        m_volume.oid_bt.rsize = dbs_dAlign(sizeof(dbs_sOid));
+    }
 }
 
 void
@@ -769,11 +877,21 @@ wb_dbs::buildSectName()
 
     nep = (sNentry*)tree_Minimum(NULL, m_name_th);
     while (nep != NULL) {
-        nep->n.ref = dbs_dMakeRef(dbs_eSect_name, m_sect[dbs_eSect_name].size);
+        nep->ref = dbs_dMakeRef(dbs_eSect_name, m_sect[dbs_eSect_name].size);
         m_sect[dbs_eSect_name].size += dbs_dAlign(sizeof(dbs_sName));
-
+        m_nNameObjects++;
+        
         nep = (sNentry*)tree_Successor(NULL, m_name_th, (tree_sNode*)nep);
     }
+
+    nep = (sNentry*)tree_Minimum(NULL, m_name_th);
+    if (nep != NULL) {
+        m_volume.name_bt.start = nep->ref;
+        nep = (sNentry*)tree_Maximum(NULL, m_name_th);
+        m_volume.name_bt.end = nep->ref;
+        m_volume.name_bt.rsize = dbs_dAlign(sizeof(dbs_sName));
+    }
+    
 }
 
 void
@@ -790,18 +908,29 @@ wb_dbs::buildSectClass()
 
     cep = (sCentry*)tree_Minimum(NULL, m_class_th);
     while (cep != NULL) {
-        ref = dbs_dMakeRef(dbs_eSect_class, m_sect[dbs_eSect_class].size);
+        
+        ref = cep->ref = dbs_dMakeRef(dbs_eSect_class, m_sect[dbs_eSect_class].size);
         m_sect[dbs_eSect_class].size += dbs_dAlign(sizeof(dbs_sClass));
         dbs_Qinit(&sts, &cep->c.o_lh, ref + offsetof(dbs_sClass, o_lh));
 
         // Link all object instances to this class
         o_lh = o_ll = &cep->c.o_lh;
         for (oep = cep->o_lh; oep != 0; oep = oep->o_ll) {
+            cep->c.nObjects++;
+            m_nClassObjects++;
             dbs_Qinsert(&sts, o_ll, &oep->o.o_ll, o_lh);
             o_ll = &oep->o.o_ll;
         }
 
         cep = (sCentry*)tree_Successor(NULL, m_class_th, (tree_sNode*)cep);        
+    }
+
+    cep = (sCentry*)tree_Minimum(NULL, m_class_th);
+    if (cep != NULL) {
+        m_volume.class_bt.start = cep->ref;
+        cep = (sCentry*)tree_Maximum(NULL, m_class_th);
+        m_volume.class_bt.end = cep->ref;
+        m_volume.class_bt.rsize = dbs_dAlign(sizeof(dbs_sClass));
     }
 }
 
