@@ -144,6 +144,16 @@ start (
       errh_LogInfo(&cp->log, "Setting log terminal to: %s", cp->np->ErrLogTerm);
       errl_SetTerm(cp->np->ErrLogTerm);
     }
+
+/* Logfile is always $pwrp_log/pwr.log from V4.0.0 and handled by Linux log rotation */ 
+
+    char fname[256];
+    sprintf(fname, "$pwrp_log/pwr_%s.log", cp->nodename);
+    dcli_translate_filename(fname, fname);
+    errl_SetFile(fname);
+    errh_LogInfo(&cp->log, "Setting log file to: %s", fname);
+
+/*
     if (cp->np->ErrLogFile[0] != '\0') {
       struct tm *tp;
       char fname[256];
@@ -156,6 +166,7 @@ start (
       errl_SetFile(fname);
       errh_LogInfo(&cp->log, "Setting log file to: %s", cp->np->ErrLogFile);
     }
+*/
   }
 
   ini_SetSystemStatus( cp, PWR__STARTUP);
