@@ -168,6 +168,7 @@ receive (
     if (get->type.b == qcom_eBtype_event) {
         event(get);
         qcom_Free(&sts, mp);
+	continue;
     }
 
     else if (get->type.b != net_cMsgClass) {
