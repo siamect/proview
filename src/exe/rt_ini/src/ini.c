@@ -235,6 +235,7 @@ oidToObject (
   return op;
 }
 
+
 static pwr_tBoolean
 readSectFile (
   pwr_tStatus		*status,
@@ -245,19 +246,27 @@ readSectFile (
  
   pwr_dStatus(sts, status, INI__SUCCESS);
 
-  /* Read the section */
-
+  if (cp->dbs.file.version != dbs_cVersionFile) {
+    *sts = INI__SECTVERSION;
+    errh_LogError(&cp->log, "dbs_cVersionFile differ: %d != %d", 
+                  cp->dbs.file.version, dbs_cVersionFile);
+    cp->errors++;
+  }
 
   time_AtoAscii(&cp->dbs.file.time, time_eFormat_DateAndTime, timbuf, sizeof(timbuf));
 
   errh_LogInfo(&cp->log, "Created %s", timbuf);
 
+#if 1
+  printf("Comment in file is not OK. fix when dbs_File is OK\n");
+#else
   if (strlen (cp->dbs.file.comment) > 0) {
     errh_LogInfo(&cp->log, "%s", cp->dbs.file.comment);
   }
-
+#endif
   return ODD(*sts);
 }
+
 
 static pwr_tBoolean
 readSectVolRef (
@@ -272,8 +281,9 @@ readSectVolRef (
 
   pwr_dStatus(sts, status, INI__SUCCESS);
 
+#if 0
 
-  if (fseek(cp->dbs.f, cp->sect.offset, SEEK_SET) != 0)
+  if (fseek(cp->dbs.f, 0, SEEK_SET) != 0)
     pwr_Return(NO, sts, errno_GetStatus());
 
 
@@ -334,7 +344,7 @@ readSectVolRef (
       }
     }
   }
-
+#endif
   return ODD(*sts);
 }
 
@@ -821,6 +831,7 @@ ini_LoadDirectory (
       cp->busid = qcom_MyBus(sts);
     }
     sprintf(cp->dir, "%s::%s", cp->hostspec, load_cNameDirectory);
+    sprintf(cp->bdir, "%s::%s", cp->hostspec, load_cBaseNameDirectory);
   }
 
 #elif defined(OS_VMS)
@@ -832,11 +843,17 @@ ini_LoadDirectory (
       if (s != NULL)
 	cp->busid = atoi(s);
     }
+    sprintf(cp->dir, "%s", load_cNameBaseDirectory);
     sprintf(cp->dir, "%s", load_cNameDirectory);
   }
 #elif defined(OS_LYNX) || defined(OS_LINUX)
   {
     char *s;
+
+    if ((s = getenv(dbs_cNameBaseDirectory)) != NULL)
+      sprintf(cp->bdir, "%s/", s);
+    else
+      errh_LogError(&cp->log, "Environment variable '%s' is not defined", dbs_cNameBaseDirectory);
 
     if ((s = getenv(dbs_cNameDirectory)) != NULL)
       sprintf(cp->dir, "%s/", s);
@@ -1092,27 +1109,25 @@ ini_IterVolumes (
 )
 {
   ivol_sVolume		*vp;
-//  cdh_uVolumeId		uvid
   lst_sEntry		*vl;
-
+  
   for (vp = lst_Succ(NULL, &cp->vol_lh, &vl); vp != NULL; vp = lst_Succ(NULL, vl, &vl)) {
-#if 1
-    sprintf(vp->filename, dbs_cNameVolume, cp->dir,
-      vp->name);
-#else
-    uvid.pwr = vp->vid;
-    sprintf(vp->filename, dbs_cNameVolume, cp->dir,
-      uvid.v.vid_3, uvid.v.vid_2, uvid.v.vid_1, uvid.v.vid_0);
-#endif
+    sprintf(vp->filename, dbs_cNameVolume, cp->bdir, vp->name);
     cdh_ToLower(vp->filename, vp->filename);
 
     dbs_Open(sts, &cp->dbs, vp->filename);
+    if (*sts == ERRNO__NOENT) { /* Give pwrp a chance */
+        sprintf(vp->filename, dbs_cNameVolume, cp->dir, vp->name);
+        cdh_ToLower(vp->filename, vp->filename);
+        dbs_Open(sts, &cp->dbs, vp->filename);
+    }
+
     if (EVEN(*sts)) {
       errh_LogError(&cp->log, "Open file %s, %m", vp->filename, *sts);
       cp->errors++;
       continue;
     }
-
+    
     errh_LogInfo(&cp->log, "Reading volume file %s", vp->filename);
     
     func(sts, cp, vp);
