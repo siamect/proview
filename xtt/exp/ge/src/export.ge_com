@@ -1,0 +1,48 @@
+#
+#  Script to export all classgraphs to java
+#
+#
+#
+
+function int process( string graph)
+  open 'graph'
+  printf( "Exporting %s...\n", graph);
+  export java
+endfunction
+
+main()
+
+  process( "pwr_c_ai");
+  process( "pwr_c_ao");
+  process( "pwr_c_av");
+  process( "pwr_c_backup_conf");
+  process( "pwr_c_chanai");
+  process( "pwr_c_chanao");
+  process( "pwr_c_chandi");
+  process( "pwr_c_chando");
+  process( "pwr_c_chanii");
+  process( "pwr_c_chanio");
+  process( "pwr_c_di");
+  process( "pwr_c_do");
+  process( "pwr_c_dsfastconf");
+  process( "pwr_c_dstrendconf");
+  process( "pwr_c_dv");
+  process( "pwr_c_ii");
+  process( "pwr_c_io");
+  process( "pwr_c_iohandler");
+  process( "pwr_c_iv");
+  process( "pwr_c_messagehandler");
+  process( "pwr_c_mode");
+  process( "pwr_c_node");
+  process( "pwr_c_pid");
+  process( "pwr_c_plcprocess");
+  process( "pwr_c_plcthread");
+  process( "pwr_c_remnodeudp");
+  process( "pwr_c_remoteconfig");
+  process( "pwr_c_remtrans");
+
+endmain
+
+
+
+
