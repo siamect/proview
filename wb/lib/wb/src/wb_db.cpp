@@ -703,12 +703,12 @@ void wb_db_dbody::iter(wb_import &i)
 }
 
 wb_db::wb_db() :
-  m_vid(pwr_cNVid)
+  m_vid(pwr_cNVid), m_txn(0)
 {
 }
 
 wb_db::wb_db(pwr_tVid vid) :
-  m_vid(vid)
+  m_vid(vid), m_txn(0)
 {
 }
 
@@ -913,7 +913,7 @@ void wb_db::openDb(bool useTxn)
 	m_env->set_cachesize(0, 256 * 1024 * 1024, 0);
   rc = m_env->set_lg_bsize(1024*1024*2);
   rc = m_env->set_lg_max(1024*1024*8*2);
-  rc = m_env->set_lk_max_locks(500000);
+  rc = m_env->set_lk_max_locks(50000); // Decreased from 500000
   rc = m_env->set_lk_max_objects(20000);
 
 #if 0
@@ -921,19 +921,22 @@ void wb_db::openDb(bool useTxn)
     rc = m_env->txn_begin(0, &txn, 0);
   } catch (DbException &e) {
     printf("m_env->txn_begin, %s\n", e.what());
-  }
+ }
 #endif
 
-  if (useTxn) {
-    m_env->open(m_fileName,
-                DB_CREATE | DB_INIT_LOCK | DB_INIT_LOG | DB_INIT_MPOOL | DB_INIT_TXN | DB_RECOVER,
-                S_IRUSR | S_IWUSR);
-  } else {
-    m_env->open(m_fileName,
+  try {
+    if (useTxn) {
+      m_env->open(m_fileName,
+		  DB_CREATE | DB_INIT_LOCK | DB_INIT_LOG | DB_INIT_MPOOL | DB_INIT_TXN | DB_RECOVER,
+		  S_IRUSR | S_IWUSR);
+    } else {
+      m_env->open(m_fileName,
                 DB_CREATE | DB_INIT_MPOOL | DB_PRIVATE,
-                S_IRUSR | S_IWUSR);
-  }  
-
+		  S_IRUSR | S_IWUSR);
+    }  
+  } catch (DbException &e) {
+    printf("m_env->open, %s\n", e.what());
+  }
   printstat(m_env, "after open env");
   
   m_t_ohead = new Db(m_env, 0);
