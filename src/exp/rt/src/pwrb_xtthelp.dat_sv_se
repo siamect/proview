@@ -760,7 +760,7 @@ Engelsk text<link> ASup, "", $pwr_exe/pwrb_xtthelp.dat
 Larmövervakning av analog storhet ( Analog Supervisory ). 
 
 <h1>Beskrivning
-
+<image>orm_asup_fo.gif
 Övervakar analog storhet i godtyckligt objekt med avseende på över eller 
 underskridande av övervakningsgräns. High anger om det är över eller 
 underskridande som utgör storhetens larmläge. 

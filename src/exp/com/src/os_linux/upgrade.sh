@@ -12,152 +12,12 @@ let reload__loaddb=4
 
 let pass__continue=1
 let pass__execute=2
-
-reload_createproject()
-{
-  reload_checkpass "createproject" $start_pass
-  if [ $pass_status -ne $pass__execute ]; then
-    reload_status=$reload__success
-    return
-  fi
-
-  cat <<  EOF
-    
-    You should now create the project in wb_adm.
-    Login in wb_adm and activate 'Create project' from
-    the menu.
-
-EOF
-
-  reload_continue "Pass create project"
-  wb_adm
-  source pwrp_env.sh set project $project
-}
-
-reload_copyfile()
-{
-
-  reload_checkpass "copyfile" $start_pass
-  if [ $pass_status -ne $pass__execute ]; then
-    reload_status=$reload__success
-    return
-  fi
-
-  echo "*********************************************************************"
-  echo ""
-  echo "Before this pass upgrade.com on VMS should be executed !"
-  echo ""
-  echo "**********************************************************************"
-
-  reload_continue "Pass copy files"
-
-  if [ -e $pwrp_tmp/upgrade_files.sh ]; then
-    source $pwrp_tmp/upgrade_files.sh
-  else
-    echo ""
-    echo "Files copied from VMS host is missing on \$pwrp_tmp"
-    echo ""
-  fi
-
-}
-
-reload_createdbs()
-{
-  reload_checkpass "createdbs" $start_pass
-  if [ $pass_status -ne $pass__execute ]; then
-    reload_status=$reload__success
-    return
-  fi
-
-  cat > $pwrp_tmp/rename_dbid.pwr_com <<  EOF
-! Script to change dbid in dbconfig objects to lowercase
-!
-main()
-  string name;
-  string value;
-  string attr;
-  string class;
-  int sts;
-  string volume;
-
-  verify(0);
-
-  volume = GetVolumeList();
-  while ( volume != "")
-    class = GetVolumeClass( volume);
-    if ( class == "\$DirectoryVolume")
-      break;
-    endif
-    volume = GetNextVolume( volume);
-  endwhile
-
-  if ( volume == "")
-    exit(0);
-  endif
-
-  set volume/volume='volume'
-
-  name = GetRootList();
-  while ( name != "")
-    class  = GetObjectClass( name);
-    if ( class == "DbConfig")
-      attr = name + ".Id";
-      value = GetAttribute( attr, sts);
-      if ( sts)
-        value = tolower( value);
-        set attr/name='name'/attr=Id/value="'value'"/noconfirm
-      endif
-    endif
-    if ( class == "NodeConfig")
-      attr = name + ".NodeName";
-      value = GetAttribute( attr, sts);
-      if ( sts)
-        value = tolower( value);
-        set attr/name='name'/attr=NodeName/value="'value'"/noconfirm
-      endif
-      attr = name + ".BootNode";
-      value = GetAttribute( attr, sts);
-      if ( sts)
-        value = tolower( value);
-        set attr/name='name'/attr=BootNode/value="'value'"/noconfirm
-      endif
-    endif
-    if ( class == "\$System")
-      attr = name + ".SystemName";
-      value = GetAttribute( attr, sts);
-      if ( sts)
-        value = tolower( value);
-        set attr/name='name'/attr=SystemName/value="'value'"/noconfirm
-      endif
-    endif
-    name = GetNextSibling(name);
-  endwhile
-  save
-
-endmain
-EOF
-
-  wb_cmd @$pwrp_tmp/rename_dbid.pwr_com
-
-  cat <<  EOF
-    
-    You should now enter the project volume, and check that the
-    volume is loaded correctly.
-
-    You should then set edit mode, and save.
-    This operation will create the databases that are configured in
-    the project volume.
-
-EOF
-
-  reload_continue "Pass create databases"
-
-  source pwrp_env.sh setdb
-  wb sysansv sysansv
-}
+v34_root="/data1/pwr/x3-4b/rls_dbg"
 
 reload_dumpdb()
 {
+  # Dump V3.4b databases, one wbload file per volume
+
   reload_checkpass "dumpdb" $start_pass
   if [ $pass_status -ne $pass__execute ]; then
     reload_status=$reload__success
@@ -166,36 +26,38 @@ reload_dumpdb()
 
   reload_continue "Pass dump database"
 
+  rm $pwrp_db/*.wb_dmp
+
   for cdb in $databases; do
     echo "Dumping database $cdb"
      
-    source pwrp_env.sh setdb $cdb
+    export pwr_inc=$v34_root/os_linux/hw_x86/exp/inc
+    source $v34_root/os_linux/hw_x86/exp/exe/pwrp_env.sh setdb $cdb
+    export pwr_inc=$pwrb_root/os_linux/hw_x86/exp/inc
 
-    if [ $cdb != "dbdirectory" ]; then
-      #Store versions of classvolumes
-      wb_cmd @$pwr_exe/reload_vol_versions $cdb
-    fi
+    # Create a script that dumps each volume
+    tmpfile=$pwrp_tmp/dump.sh
+    cat > $tmpfile <<-EOF
+	main()
+	  string v;
+	  string class;
+	  string outfile;
 
-    dump_file=$pwrp_db/$cdb.wb_dmp
-    reload_save_file $dump_file
-    wb_cmd wb dump/out=\"$dump_file\"
-  done
-}
-
-reload_templatedb()
-{
-  reload_checkpass "templatedb" $start_pass
-  if [ $pass_status -ne $pass__execute ]; then
-    reload_status=$reload__success
-    return
-  fi
-
-  reload_continue "Pass copy template database"
-
-  for cdb in $databases; do
-    echo "-- Copy template database to $cdb"
-     
-    source pwrp_env.sh copy template $cdb noconfirm
+	  v = GetVolumeList();
+	  while( v != "")
+	    class = GetVolumeClass( v);
+	    if ( class != "\$ClassVolume")
+	      outfile = "$pwrp_db/" + v + ".wb_dmp";
+	      outfile = tolower( outfile);
+	      printf( "-- Dump volume %s to %s\n", v, outfile);
+	      wb dump/v40/volume='v'/out="'outfile'"
+	    endif
+	    v = GetNextVolume( v);
+	  endwhile
+  	endmain
+EOF
+    chmod a+x $tmpfile
+    $v34_root/os_linux/hw_x86/exp/exe/wb_cmd @$tmpfile
   done
 }
 
@@ -209,120 +71,145 @@ reload_userclasses()
 
   reload_continue "Pass load userclasses"
 
-  databases=`eval source pwrp_env.sh show db -a`
+ # Load userclasses
+  fname="$pwrp_db/userclasses.wb_load"
+  if [ -e $fname ]; then
+    echo "-- Loading userclasses $fname"
 
-  for cdb in $databases; do
-    if [ $cdb != "dbdirectory" ]; then
-      source pwrp_env.sh setdb $cdb
-
-      # Load usertypes
-      fname="$pwrp_db/$cdb/usertypes.wb_load"
-      list_file="$pwrp_db/"$cdb"_usertypes.lis"
-      if [ -e $fname ]; then
-        echo "-- Loading usertypes in $cdb $fname"
-        if wb_cmd wb load/load=\"$fname\"/out=\"$list_file\"
-        then
-          reload_status=$reload__success
-        else
-          reload_status=$reload__usertypes
-          cat $list_file
-          return
-        fi
-      else
-        fname="$pwrp_db/usertypes.wb_load"
-        list_file="$pwrp_db/"$cdb"_usertypes.lis"
-        if [ -e $fname ]; then
-          echo "-- Loading usertypes in $cdb $fname"
-          if wb_cmd wb load/load=\"$fname\"/out=\"$list_file\"
-          then
-            reload_status=$reload__success
-          else
-            reload_status=$reload__usertypes
-            cat $list_file
-            return
-          fi
-        fi
-      fi
-
-      # Load userclasses
-      fname="$pwrp_db/$cdb/userclasses.wb_load"
-      list_file="$pwrp_db/"$cdb"_userclasses.lis"
-      if [ -e $fname ]; then
-        echo "-- Loading userclasses in $cdb $fname"
-        if wb_cmd wb load/load=\"$fname\"/out=\"$list_file\"
-        then
-          reload_status=$reload__success
-        else
-          reload_status=$reload__userclasses
-          cat $list_file
-          return
-        fi
-      else
-        fname="$pwrp_db/userclasses.wb_load"
-        list_file="$pwrp_db/"$cdb"_userclasses.lis"
-        if [ -e $fname ]; then
-          echo "-- Loading userclasses in $cdb $fname"
-          if wb_cmd wb load/load=\"$fname\"/out=\"$list_file\"
-          then
-            reload_status=$reload__success
-          else
-            reload_status=$reload__userclasses
-            cat $list_file
-            return
-          fi
-        fi
-      fi
+    volume=`eval grep pwr_eClass_ClassVolume $fname | awk '{ print tolower($2) }'`
+    if wb_cmd create snapshot/file=\"$fname\"/out=\"$pwrp_load/$volume.dbs\"
+    then
+      reload_status=$reload__success
+    else
+      reload_status=$reload__userclasses
+      return
     fi
-         
-  done
+  fi
 }
 
-reload_settemplate()
+reload_dirvolume()
 {
-  reload_checkpass "settemplate" $start_pass
+  reload_checkpass "dirvolume" $start_pass
   if [ $pass_status -ne $pass__execute ]; then
     reload_status=$reload__success
     return
   fi
 
-  cat << EOF
-   
-    The set_template file should be converted from a VMS-command file
-    to a pwrc script.
+  reload_continue "Pass dirvolume"
 
-    Remove all VMS rows, beginning with $, and save the file.
+  dmpfiles=`eval ls $pwrp_db/*.wb_dmp`
+  echo $dmpfiles
 
-    nedit will be started so you can do this.
+  for dmpfile in $dmpfiles; do
+    volume=`eval grep DirectoryVolume $dmpfile | awk '{ print $2 }'`
+    if [ ! -z "$volume" ]; then
+      echo "Volume: $volume"
+      #mv $dmpfile $pwrp_db/directory.wb_dmp
+      l1="Volume $volume \$DirectoryVolume"
+      l2="Volume Directory \$DirectoryVolume"
+      sed 's/ '$volume' / Directory /' $dmpfile > $pwrp_db/directory.wb_dmp
+      wb_cmd wb load /load=\"$pwrp_db/directory.wb_dmp\"
+      mv $dmpfile $dmpfile"_old"
+      mv $pwrp_db/directory.wb_dmp $pwrp_db/directory.wb_dmp_old
+      break
+    else
+      db=""
+    fi
+  done
+}
 
-    Then the file will be executed.
+reload_cnvdirvolume()
+{
+  reload_checkpass "cnvdirvolume" $start_pass
+  if [ $pass_status -ne $pass__execute ]; then
+    reload_status=$reload__success
+    return
+  fi
+
+  reload_continue "Pass cnvdirvolume"
+
+  # Create a script that dumps each volume
+  tmpfile=$pwrp_tmp/cnvdirvolume.sh
+  cat > $tmpfile << EOF
+main
+  string object;
+  string class;
+  string child;
+  string sibling;
+
+  set volume/volume=Directory
+
+!  verify(1);
+  object = GetRootList();
+  while ( object != "")
+    class = GetObjectClass( object);
+    if ( class == "DbConfig")
+      child = GetChild( object);
+      while ( child != "")
+        sibling = GetNextSibling( child);
+        move object/source='child'/dest='object'/after
+	child = sibling;
+      endwhile
+      sibling = GetNextSibling( object);
+      delete object/noconf/nolog/name='object'
+      object = sibling;
+    else
+      object = GetNextSibling( object);
+    endif
+  endwhile
+  save
+endmain
+EOF
+  chmod a+x $tmpfile
+  wb_cmd @$tmpfile
+}
+
+
+reload_createvolumes()
+{
+  reload_checkpass "createvolumes" $start_pass
+  if [ $pass_status -ne $pass__execute ]; then
+    reload_status=$reload__success
+    return
+  fi
+
+  reload_continue "Pass create volumes"
+
+  dmpfiles=`eval ls $pwrp_db/*.wb_dmp`
+  echo $dmpfiles
+
+  for dmpfile in $dmpfiles; do
+    file=${dmpfile##/*/}
+    db="${file%.*}.db"
+    if [ $db = "wb.db" ]; then
+      db=""
+    else
+      wb_cmd wb load /load=\"$dmpfile\"
+    fi
+  done
+}
+
+reload_localwb()
+{
+  reload_checkpass "localwb" $start_pass
+  if [ $pass_status -ne $pass__execute ]; then
+    reload_status=$reload__success
+    return
+  fi
+
+  reload_continue "Pass create localWb volume"
+
+  cat << EOF >> $pwrp_db/wb.wb_load
+!
+! localWB volume
+! This volume contains template objects and local listdescriptors.
+!
+Volume localWb pwr_eClass_WorkBenchVolume 254.254.254.252
+EndVolume
+
 EOF
 
-  reload_continue "Pass set template values"
-
-  nedit $pwrp_db/set_template.pwr_com
-
-  databases=`eval source pwrp_env.sh show db -a`
-
-  fname="$pwrp_db/set_template.pwr_com"
-  if [ -e $fname ]; then
-    for cdb in $databases; do
-      if [ $cdb != "dbdirectory" ]; then
-        source pwrp_env.sh setdb $cdb
-
-        echo "-- Setting template values in $cdb $fname"
-        if wb_cmd @$fname
-        then
-          reload_status=$reload__success
-        else
-          reload_status=$reload__settemplate
-          return
-        fi
-      fi
-    done
-  else
-    echo "-- No set_template file found"
-    reload_status=$reload__success
-  fi
+  sed 's/SObject wb:/SObject localWb:/' $pwrp_db/wb.wb_dmp >> $pwrp_db/wb.wb_load
 }
 
 reload_loaddb()
@@ -361,63 +248,6 @@ reload_loaddb()
   done
 }
 
-reload_convertdb()
-{
-  reload_checkpass "convertdb" $start_pass
-  if [ $pass_status -ne $pass__execute ]; then
-    reload_status=$reload__success
-    return
-  fi
-
-  reload_continue "Pass convert database"
-
-  databases=`eval source pwrp_env.sh show db -a`
-
-  for cdb in $databases; do
-    echo "-- Loading database $cdb"
-     
-    source pwrp_env.sh setdb $cdb
-
-    wb_drive_convert
- done
-}
-
-reload_loaddirectorydb()
-{
-  reload_checkpass "loaddirectorydb" $start_pass
-  if [ $pass_status -ne $pass__execute ]; then
-    reload_status=$reload__success
-    return
-  fi
-
-  reload_continue "Pass load database"
-
-  databases="dbdirectory"
-
-  for cdb in $databases; do
-    echo "-- Loading database $cdb"
-     
-    source pwrp_env.sh setdb $cdb
-    wb_cmd delete volume/name=ProjectVolume/noconf
-
-    if [ $cdb != "dbdirectory" ]; then
-      #Restore versions of classvolumes
-      if [ -e $pwrp_db/reload_vol_versions_$cdb.pwr_com ]; then
-        wb_cmd @$pwrp_db/reload_vol_versions_$cdb
-      fi
-    fi
-
-    dump_file=$pwrp_db/$cdb.wb_dmp
-    list_file=$pwrp_db/$cdb.lis
-    if wb_cmd wb load/load=\"$dump_file\"/out=\"$list_file\"/ignore
-    then
-      reload_status=$reload__success
-    else
-      reload_status=$reload__success
-    fi
-  done
-}
-
 reload_compile()
 {
   reload_checkpass "compile" $start_pass
@@ -428,16 +258,7 @@ reload_compile()
 
   reload_continue "Pass compile plcprograms"
 
-  databases=`eval source pwrp_env.sh show db -a`
-
-  for cdb in $databases; do
-    if [ $cdb != "dbdirectory" ]; then
-      source pwrp_env.sh setdb $cdb
-
-      echo "-- Compiling database $cdb"
-      wb_cmd compile/allvolumes
-    fi
-  done
+  wb_cmd compile /all
   reload_status=$reload__success
 }
 
@@ -471,16 +292,7 @@ reload_createload()
   echo "-- Removing old loadfiles"
   rm $pwrp_load/ld_vol*.dat
 
-  databases=`eval source pwrp_env.sh show db -a`
-
-  for cdb in $databases; do
-    if [ $cdb != "dbdirectory" ]; then
-      source pwrp_env.sh setdb $cdb
-
-      echo "-- Creating loadfiles for database $cdb"
-      wb_cmd create load/class/all
-    fi
-  done
+  wb_cmd create load/all
   reload_status=$reload__success
 }
 
@@ -496,6 +308,44 @@ reload_createboot()
 
   echo "-- Creating bootfiles for all nodes"
   wb_cmd create boot/all
+  reload_status=$reload__success
+}
+
+reload_convertge()
+{
+  reload_checkpass "convertge" $start_pass
+  if [ $pass_status -ne $pass__execute ]; then
+    reload_status=$reload__success
+    return
+  fi
+
+  reload_continue "Pass convert ge graphs"
+
+  # Create a script that dumps each volume
+  tmpfile=$pwrp_tmp/convertv40.ge_com
+  cat > $tmpfile << EOF
+function int process( string graph)
+  open 'graph'
+  printf( "Converting %s...\n", graph);
+  convert v40
+  save
+endfunction
+
+main()
+EOF
+  list=`eval ls -1 $pwrp_pop/*.pwg`
+  for file in $list; do
+    file=${file##/*/}
+    file=${file%%.*}
+    echo "process( \"$file\");" >> $tmpfile
+
+  done
+
+  echo "exit" >> $tmpfile
+  echo "endmain" >> $tmpfile
+  chmod a+x $tmpfile
+  wb_ge @$tmpfile
+
   reload_status=$reload__success
 }
 
@@ -578,27 +428,22 @@ usage()
 
   - Create project on linux (Pass 1)
   - Execute upgrade.com on V3.3
-  - Contiue with pass copyfile
+  - Continue with pass copyfile
 
   Arguments   Project name.
 
   Pass
 
-    createproject  Create project on linux
-    copyfile     Distribute files copied from V3.3
-    loaddirectorydb Load the project volume into the directory db.
-    createdbs    Create configured databases.
-    userclasses  Load userclasses.wb_load (and usertypes.wb_load)
-                 reload will first the load_files in  \$pwrp_db/'dbid'/
-                 and then in \$pwrp_db/
-    settemplate  Set template values. \$pwrp_db/set_template.pwr_com is
-                 executed
-    loaddb       Load the dump into the new database
-    convertdb    Convert some classes (Document classes)
+    dumpdb	 Dump database to textfile \$pwrp_db/'volume'.wb_dmp
+    userclasses  Load userclasses.wb_load
+    dirvolume    Create directory volume.
+    cnvdirvolume Convert the directory volume.
+    createvolumes Create configured databases.
+    localwb      Create LocalWb volume for lists and template objects.
     compile      Compile all plcprograms in the database
     createload   Create new loadfiles.
     createboot   Create bootfiles for all nodes in the project.
-
+    convertge    Convert ge graphs.
 EOF
 }
 
@@ -625,14 +470,20 @@ echo ""
 echo "-- Upgrade $project"
 echo ""
 
-passes="createproject copyfile loaddirectorydb createdbs userclasses settemplate loaddb convertdb compile createload createboot"
+export pwr_inc=$v34_root/os_linux/hw_x86/exp/inc
+echo $pwr_inc
+databases=`eval source $v34_root/os_linux/hw_x86/exp/exe/pwrp_env.sh show db -a`
+databases=$databases" dbdirectory"
+export pwr_inc=$pwrb_root/os_linux/hw_x86/exp/inc
+
+passes="dumpdb userclasses dirvolume cnvdirvolume createvolumes localwb compile createload createboot convertge"
 echo "Pass: $passes"
 echo ""
-echo -n "Enter start pass [createproject] > "
+echo -n "Enter start pass [dumpdb] > "
 read start_pass
 
 if [ -z $start_pass ]; then
-  start_pass="createproject"
+  start_pass="dumpdb"
 fi
 
 for cpass in $passes; do

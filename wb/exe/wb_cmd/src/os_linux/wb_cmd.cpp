@@ -117,9 +117,16 @@ static int cmd_attach_volume_cb(
     cmd->volctx,
     ldh_eAccess_ReadWrite,
     ldh_eUtility_Pwr);
-  if ( EVEN(sts)) return sts;
+  if ( EVEN(sts)) {
+    // Try read access
+    sts = ldh_OpenSession( &cmd->ldhses,
+			   cmd->volctx,
+			   ldh_eAccess_ReadOnly,
+			   ldh_eUtility_Pwr);
+    if ( EVEN(sts)) return sts;
+  }
 
-  cmd->wnav->volume_attached( cmd->ldhses, pop);
+  cmd->wnav->volume_attached( cmd->wbctx, cmd->ldhses, pop);
 
   return 1;
 }
@@ -164,23 +171,25 @@ static void cmd_save_cb( void *ctx)
   Cmd *cmd = (Cmd *) ctx;
   int sts;
 
-  if ( !cmd->ldhses)
-  {
+  if ( !cmd->ldhses) {
     cmd->wnav->message( 'E', "Cmd is not attached to a volume");
     return;
   }
   sts = ldh_SaveSession( cmd->ldhses);
-  if ( EVEN(sts))
-  {
+  if ( EVEN(sts)) {
     cmd->wnav->message( 'E', wnav_get_message( sts));
     return;
   }
 
-  if ( cmd->wb_type == wb_eType_Directory)
-  {
+  ldh_sVolumeInfo info;
+  pwr_tCid volcid;
+
+  ldh_GetVolumeInfo( ldh_SessionToVol( cmd->ldhses), &info);
+  ldh_GetVolumeClass( cmd->wbctx, info.Volume, &volcid);
+  
+  if ( volcid == pwr_eClass_DirectoryVolume) {
     sts = lfu_SaveDirectoryVolume( cmd->ldhses, 0);
-    if ( EVEN(sts))
-    {
+    if ( EVEN(sts)) {
       cmd->wnav->message( 'E', "Syntax error");
       return;
     }

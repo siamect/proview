@@ -214,6 +214,7 @@ sub build_all ()
   _build("lib", "dtt", "all");
   _build("exp", "rt", "all");
   _build("exe", "rt*", "all");
+  _build("exe", "jpwr*", "all");
   _build("exp", "ge", "all");
   _build("mmi", "*", "copy");
   _build("jpwr", "rt", "all");
@@ -349,6 +350,7 @@ sub create()
   create_dir($newdir . "/doc/sv_se");
   create_dir($newdir . "/doc/prm");
   create_dir($newdir . "/doc/orm");
+  create_dir($newdir . "/doc/help");
 
   $newdir = $root . "/tmp";
   create_dir($newdir);

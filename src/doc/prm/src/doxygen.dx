@@ -27,6 +27,16 @@
   This module contains routines for the Queue Communication.
 */
 
+/*! \defgroup Time Time functions
+  \ingroup PRM
+  This module contains utilites for time management.
+*/
+
+
+
+
+
+
 
 
 

@@ -51,12 +51,12 @@ wb_adm_create_func ()
       return $pwrc_status
     fi
 
-    source pwrp_env.sh set project $pname
-    if [ $pwrc_status -ne 0 ]; then
-      return $pwrc_status
-    fi
+    #source pwrp_env.sh set project $pname
+    #if [ $pwrc_status -ne 0 ]; then
+    #  return $pwrc_status
+    #fi
 
-    wb_cmd create volume/name=\"ProjectVolume\"/ident=254.254.254.253/class=\$DirectoryVolume
+    #wb_cmd create volume/name=\"directory\"/ident=254.254.254.253/class=\$DirectoryVolume
   fi
 }
 

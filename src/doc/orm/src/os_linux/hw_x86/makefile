@@ -38,6 +38,7 @@ clean_gif := $(patsubst %.gif,clean_%.gif,$(gif_sources))
 $(doc_dir)/orm/%.gif : %.gif
 	@ $(log_h_h)
 	@ $(cp) $(cpflags) $(source) $(target)
+	@ $(cp) $(cpflags) $(source) $(doc_dir)/help
 
 .PHONY : all init copy lib exe clean realclean \
          $(clean_gif)

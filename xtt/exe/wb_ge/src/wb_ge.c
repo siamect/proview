@@ -90,10 +90,24 @@ int main( int argc, char *argv[])
 
   XtManageChild(mainwindow);
 
-  if ( argc > 1)
-  {
-    strcpy( graph_name, argv[1]);
-    ge_new( NULL, mainwindow, 0, 1, graph_name);
+  printf( "Argc: %d\n", argc);
+  if ( argc > 1) {
+    printf( "Arg: %s\n", argv[1]);
+    if ( argv[1][0] == '@') {
+      // Execute script
+      void *gectx;
+      pwr_tStatus sts;
+
+      gectx = ge_new( NULL, mainwindow, 0, 1, NULL);
+      sts = ge_command( gectx, argv[1]);
+      if ( EVEN(sts))
+	ge_message( gectx, sts);
+    }
+    else {
+      // Open graph
+      strcpy( graph_name, argv[1]);
+      ge_new( NULL, mainwindow, 0, 1, graph_name);
+    }
   }
   else
     ge_new( NULL, mainwindow, 0, 1, NULL);

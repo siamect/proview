@@ -276,6 +276,7 @@ static types_sEnumElement mask_Distribute_Components[] = {
 	{ 512	, "FlowFiles"},
 	{ 1024	, "RHostsFile"},
 	{ 2048	, "WebFiles"},
+	{ 4096	, "PwrpStop"},
 	{ 0, ""}};
 
 static types_sEnum enum_types[] = {

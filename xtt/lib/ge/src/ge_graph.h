@@ -471,6 +471,12 @@ class Graph {
   */
   void message( char sev, char *text);
 
+  //! Print a status message
+  /*!
+    \param sts Status code.
+  */
+  void message( pwr_tStatus sts);
+
   int grow_pop();
   int grow_push();
   int grow_push_all();

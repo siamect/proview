@@ -282,7 +282,7 @@ readSectVolRef (
 
   pwr_dStatus(sts, status, INI__SUCCESS);
 
-#if 0
+#if 1
 
   if (fseek(cp->dbs.f, cp->sect.offset, SEEK_SET) != 0)
     pwr_Return(NO, sts, errno_GetStatus());
@@ -1028,20 +1028,26 @@ ini_ReadBootFile (
       cp->group[0] = '\0';
       n = sscanf(s, "%s", cp->group);
       break;
-    case 3:	/* Find PLC version.  */
+    case 3: {	/* Find PLC version.  */
+      char *t;
+
       i++;
 
-#if 1
-      n = sscanf(s, "%s %s %d", vname, vids, &cp->node.plcVersion);
-#else
-      n = sscanf(s, "%s %d", vids, &cp->node.plcVersion);
-#endif
-
-      if (n < 3) {
-	errh_LogError(&cp->log, "Found no PLC version");
+      n = sscanf(s, "%s %s", vname, vids);
+      if (n < 2) {
+	errh_LogError(&cp->log, "Bootfile corrupt, error in plc data");
 	cp->errors++;
 	continue;
       }
+
+      t = strrchr( vname, '_');
+      n = sscanf(t+1, "%d", &cp->node.plcVersion);
+      if (n < 1) {
+	errh_LogError(&cp->log, "Bootfile corrupt, error in plc data");
+	cp->errors++;
+	continue;
+      }
+
       if (!cp->flags.b.plcfile) {
 #if defined OS_LYNX || defined OS_LINUX
 	sprintf(cp->plcfile.name, dbs_cNamePlc, "", cp->nodename, cp->busid, cp->node.plcVersion);
@@ -1066,6 +1072,7 @@ ini_ReadBootFile (
       cdh_ToLower(cp->plcfile.name, cp->plcfile.name);
       errh_LogInfo(&cp->log, "This node vill run PLC file: %s", cp->plcfile.name);
       break;
+    }
     case 4:	/* Find root volume.  */
       i++;
       n = sscanf(s, "%s %s", vname, vids);

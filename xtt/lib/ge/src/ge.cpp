@@ -2542,6 +2542,18 @@ int ge_generate_web( ldh_tSesContext ldhses)
   return Graph::generate_web( ldhses);
 }
 
+int ge_command( void *ge_ctx, char *cmd)
+{
+  ge_tCtx gectx = (ge_tCtx) ge_ctx;
+  return gectx->graph->command( cmd);
+}
+
+void ge_message( void *ge_ctx, pwr_tStatus sts)
+{
+  ge_tCtx gectx = (ge_tCtx) ge_ctx;
+  gectx->graph->message( sts);
+}
+
 void ge_del( void *ge_ctx)
 {
   ge_tCtx gectx = (ge_tCtx) ge_ctx;
@@ -2905,5 +2917,11 @@ void *ge_new( 	void 	*parent_ctx,
 
   return (void *)gectx;
 }
+
+
+
+
+
+
 
 

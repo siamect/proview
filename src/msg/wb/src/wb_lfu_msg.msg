@@ -9,3 +9,4 @@ plcversion	<plc version file corrupt>			/error
 syntax		<syntax error> 					/error
 nodename	<node does not exist>				/error
 filecrp		<file is corrupt>				/error
+noloadfile	<file is no load file>				/error

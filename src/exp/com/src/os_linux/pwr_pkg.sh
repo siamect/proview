@@ -7,9 +7,10 @@ pkg_install_func ()
     exit 1
   fi
 
-  pkg=`eval locate $1`
-
   pkg_remove_func "force"
+
+  pkg=/home/pwrp/$1
+
   echo "-- Installing package $1"
   cd /tmp
   if ! tar -xzf $pkg pkg_unpack.sh; then

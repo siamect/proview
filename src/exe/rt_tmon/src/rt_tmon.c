@@ -245,7 +245,11 @@ sancAdd (
   pool_sQlink		*nl;
   
   if (first) {
+#ifdef OS_LINUX
+    cycle = 1 * sysconf(_SC_CLK_TCK);
+#else
     cycle = 1 * CLK_TCK;
+#endif
     setInterval(&cycle, gdbroot->db->sanc_add_int);
     first = 0;
   }
@@ -286,7 +290,11 @@ sancExpired (
   pool_sQlink		*nl;
   
   if (first) {
+#ifdef OS_LINUX
+    cycle = 60 * sysconf(_SC_CLK_TCK);
+#else
     cycle = 60 * CLK_TCK;
+#endif
     setInterval(&cycle, gdbroot->db->sanc_exp_int);
     first = 0;
   }
@@ -328,7 +336,11 @@ sansCheck (
   pool_sQlink		*nl;
   
   if (first) {
+#ifdef OS_LINUX
+    cycle = 2 * sysconf(_SC_CLK_TCK);
+#else
     cycle = 2 * CLK_TCK;
+#endif
     setInterval(&cycle, gdbroot->db->sans_chk_int);
     first = 0;
   }
@@ -370,7 +382,11 @@ subcCheck (
   static pwr_tBoolean   first = 1;
 
   if (first) {
+#ifdef OS_LINUX
+    cycle = 3 * sysconf(_SC_CLK_TCK);
+#else
     cycle = 3 * CLK_TCK;
+#endif
     setInterval(&cycle, gdbroot->db->subc_chk_int);
     first = 0;
   }
@@ -426,7 +442,11 @@ cacheTrim (
   static pwr_tBoolean   first = 1;
 
   if (first) {
+#ifdef OS_LINUX
+    cycle = 1 * sysconf(_SC_CLK_TCK);
+#else
     cycle = 1 * CLK_TCK;
+#endif
     setInterval(&cycle, gdbroot->db->cache_trim_int);
     first = 0;
   }
@@ -554,7 +574,12 @@ msToClock (
 {
   time_tClock		c;
 
+#ifdef OS_LINUX
+  c  = ms * sysconf(_SC_CLK_TCK) / 1000;
+#else
   c  = ms * CLK_TCK / 1000;
+#endif
+
 
   if (ic != NULL) *ic = c;
 
@@ -610,7 +635,12 @@ setInterval (
   if (i == 0)
     return;
 
+#ifdef OS_LINUX
+  *c = i * sysconf(_SC_CLK_TCK) / 1000;
+#else
   *c = i * CLK_TCK / 1000;
+#endif
+
 }
 
 

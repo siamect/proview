@@ -2478,13 +2478,15 @@ int Graph::command( char* input_str)
   int		sts, sym_sts;
   char		symbol_value[80];
 
-  dcli_toupper( input_str, input_str);
-  sts = dcli_replace_symbol( input_str, command, sizeof(command));
-  if ( EVEN(sts)) return sts;
-
   if ( input_str[0] == '@')
   {
     /* Read command file */
+    char *s;
+    if ( (s = strchr( input_str, ' ')))
+      dcli_toupper( s, s);
+    sts = dcli_replace_symbol( input_str, command, sizeof(command));
+    if ( EVEN(sts)) return sts;
+
     sts = readcmdfile( &command[1]);
     if ( sts == DCLI__NOFILE)
     {
@@ -2494,6 +2496,10 @@ int Graph::command( char* input_str)
     else if ( EVEN(sts)) return sts;
     return DCLI__SUCCESS;
   }
+
+  dcli_toupper( input_str, input_str);
+  sts = dcli_replace_symbol( input_str, command, sizeof(command));
+  if ( EVEN(sts)) return sts;
 
   sts = dcli_cli( (dcli_tCmdTable *)&graph_command_table, command, (void *) this, 0);
   if ( sts == DCLI__COM_NODEF)

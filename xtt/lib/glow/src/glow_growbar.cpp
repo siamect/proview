@@ -759,8 +759,6 @@ void GrowBar::convert( glow_eConvert version)
     GrowRect::convert( version);
     bar_drawtype = GlowColor::convert( version, bar_drawtype);
     bar_bordercolor = GlowColor::convert( version, bar_bordercolor);
-    original_fill_drawtype = GlowColor::convert( version, original_fill_drawtype);
-    fill_drawtype = GlowColor::convert( version, fill_drawtype);
 
     break;
   }

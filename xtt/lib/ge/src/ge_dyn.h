@@ -998,7 +998,7 @@ class GeValueInput : public GeDynElem {
     {}
   GeValueInput( const GeValueInput& x) : 
     GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), min_value(x.min_value),
-    max_value(x.max_value)
+    max_value(x.max_value), clear(x.clear), popup(x.popup)
     {}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);

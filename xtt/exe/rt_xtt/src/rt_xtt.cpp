@@ -851,6 +851,7 @@ Xtt::Xtt( int argc, char *argv[], int *return_sts) :
   static int	reglist_num = (sizeof reglist / sizeof reglist[0]);
   char	opplace_str[80] = "";
   int	opplace_found = 0;
+  pwr_tObjid op_objid;
 
   hot_xtt = this;
 
@@ -864,11 +865,29 @@ Xtt::Xtt( int argc, char *argv[], int *return_sts) :
   for ( i = 1; i < argc; i++) {
     if ( strcmp( argv[i], "-l") == 0 && i + 1 < argc)
       Lng::set( argv[i+1]);
+    else if ( strcmp( argv[i], "-u") == 0 && i + 1 < argc) {
+      char oname[80];
+
+      strcpy( opplace_str, argv[i+1]);
+
+      sts = gdh_GetClassList( pwr_cClass_OpPlace, &op_objid);
+      while (ODD(sts)) {
+	sts = gdh_ObjidToName( op_objid, oname, sizeof(oname), cdh_mName_object);
+	if (ODD(sts) && cdh_NoCaseStrcmp( oname, opplace_str) == 0) {
+	  sts = gdh_ObjidToName( op_objid, opplace_str, sizeof(opplace_str), cdh_mNName);
+	  opplace_found = 1;
+	  break;
+	}
+      }
+      if ( !opplace_found) {
+	printf("** Unable to find opplace\n");
+	exit(sts);
+      }
+    }
   }
 
-  if ( argc >= 2 && strncmp( argv[1], "-", 1) != 0)
+  if ( !opplace_found && argc >= 2 && strncmp( argv[1], "-", 1) != 0)
   {
-    pwr_tObjid op_objid;
     pwr_tClassId op_class;
 
     // First argument is opplace object
@@ -884,8 +903,7 @@ Xtt::Xtt( int argc, char *argv[], int *return_sts) :
     sts = gdh_GetObjectClass( op_objid, &op_class);
     if ( EVEN(sts)) exit( sts);
 
-    if ( op_class != pwr_cClass_OpPlace)    
-    {
+    if ( op_class != pwr_cClass_OpPlace) {
       printf("** Error in opplace object class\n");
       exit(sts);
     }

@@ -39,6 +39,7 @@ extern "C" {
 
 extern "C" {
 #include "co_mrm_util.h"
+#include "co_msg.h"
 #include "flow_x.h"
 }
 #include "co_lng.h"
@@ -105,6 +106,14 @@ static int graph_get_current_colors_cb( void *g, glow_eDrawType *fill_color,
 					glow_eDrawType *border_color, glow_eDrawType *text_color);
 static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event);
 
+
+void Graph::message( pwr_tStatus sts)
+{
+  char msg[80];
+
+  msg_GetMsg( sts, msg, sizeof(msg));
+  message('I', msg);
+}
 
 void Graph::message( char sev, char *text)
 {

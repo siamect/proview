@@ -124,6 +124,9 @@ SObject NMps:Class
       !
       ! 8   When the cell is reseted by the ResetObject, the dataobject is also
       !     removed from the database rtdb.
+      !  
+      ! 16  Backup. The cell and data objects in the cell, is backed up by 
+      !     the nmps backup process.
       !*/
       Object Function $Intern 4
         Body SysBody

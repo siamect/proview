@@ -24,6 +24,8 @@ void ge_open( void *ge_ctx, char *name);
 void ge_save( void *ge_ctx, char *name);
 void ge_clear( void *ge_ctx);
 int ge_generate_web( ldh_tSesContext ldhses);
+int ge_command( void *ge_ctx, char *cmd);
+void ge_message( void *ge_ctx, pwr_tStatus sts);
 
 #if defined __cplusplus
 }

@@ -1949,7 +1949,10 @@ void GrowNode::convert( glow_eConvert version)
     original_border_drawtype = GlowColor::convert( version, original_border_drawtype);
     original_fill_drawtype = GlowColor::convert( version, original_fill_drawtype);
     fill_drawtype = GlowColor::convert( version, fill_drawtype);
-    if ( trace.attr_type == 3 || trace.attr_type == 4 || trace.attr_type == 12) {
+    if ( trace.attr_type == 3 || trace.attr_type == 4 || trace.attr_type == 12 ||
+	 trace.attr_type == 1010 || trace.attr_type == 1011 || trace.attr_type == 1012 ||
+	 trace.attr_type == 1013 || trace.attr_type == 1014 || trace.attr_type == 1015 ||
+	 trace.attr_type == 1016 || trace.attr_type == 1021 || trace.attr_type == 1023) {
       if ( (glow_eDrawTone) trace.color == glow_eDrawTone_YellowGreen)
 	(glow_eDrawTone) trace.color = glow_eDrawTone_Yellow;
       if ( (glow_eDrawTone) trace.color2 == glow_eDrawTone_YellowGreen)

@@ -30,9 +30,9 @@ int main( int argc, char *argv[])
   wb_vrepdbs *vdbs = new wb_vrepdbs(erep, argv[1]);
   vdbs->load();
 
-  wb_dbs dbs(vdbs);
-  dbs.setFileName("lasse.dbs");
-  dbs.importVolume(*vdbs);
+  // wb_dbs dbs(vdbs);
+  // dbs.setFileName("lasse.dbs");
+  // dbs.importVolume(*vdbs);
   
   //wb_orepdbs *op = (wb_orepdbs *)vdbs->object(&sts);
 

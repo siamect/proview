@@ -2029,6 +2029,9 @@ int GeInvisible::disconnect( grow_tObject object)
 
 int GeInvisible::scan( grow_tObject object)
 {
+  if ( !p)
+    return 1;
+
   if ( !first_scan) {
     if ( old_value == *p) {
       // No change since last time
@@ -5885,6 +5888,9 @@ int GeRadioButton::disconnect( grow_tObject object)
 
 int GeRadioButton::scan( grow_tObject object)
 {
+  if ( !p)
+    return 1;
+
   if ( !first_scan) {
     if ( old_value == *p) {
       // No change since last time

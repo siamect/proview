@@ -7,6 +7,6 @@ link = $(ldxx) $(linkflags) $(domap) -o $(export_exe) \
 	-lpwr_ge -lpwr_rt -lpwr_co -lpwr_flow -lpwr_glow \
 	-lpwr_msg_dummy -lImlib -lMrm -lXm -lXpm -lXt -lX11 -lXext -lXp\
         -lSM -lICE\
-	-ldb -lrpcsvc -lpthread -lm -lrt
+	-ldb-4.0 -lrpcsvc -lpthread -lm -lrt
 
 endif

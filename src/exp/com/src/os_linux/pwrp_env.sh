@@ -550,12 +550,6 @@ pwrc_create_func()
 # Printer command for plc documents
 #export pwr_foe_gre_print="lpr -P lp1"
 
-# Mysql server node
-#node=`uname -n`
-#if [ $node != "newton" ]; then
-#  export pwrp_mysql_server="newton"
-#fi
-
 if [ -e "$pwrp_login/sysinfo.txt" ]; then
   echo "-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_"
   echo "Welcome to"
@@ -591,9 +585,14 @@ EOF
       return
     fi
 
+    pwrc_set_func "project" $pname
+    if [ $pwrc_status -ne $pwrc__success ]; then
+      return
+    fi
+
     # Create an empty directory database
     echo "Creating directory database"
-    pwrc_copy_func template -p $pname dbdirectory noconfirm
+    wb_cmd create volume/name=\"directory\"/class=\$DirectoryVolume/ident=254.254.254.253
     return
   fi
   
@@ -685,14 +684,7 @@ pwrc_delete_func()
     if [ -z $confirm ] || [ $confirm != "noconfirm" ]; then
       echo "Delete project will"
       echo "	remove '$2' from the project list"
-      echo "	delete all databases in project '$2':"
-
-      i=0
-      while [ "${db_array[$i]}" != "" ]; do
-        echo "		database: '${db_array[$i]}'"
-        i=$i+1
-      done
-      
+      echo "	delete all databases in project '$2'"
       echo "	delete all files in $proot"
       echo "Do you want do continue ? [y/n] "
       read REPLY
@@ -721,19 +713,6 @@ pwrc_delete_func()
 	pwrc_status=$pwrc__rootdelete
         return
       fi
-
-      # Delete the databases
-      i=0
-      while [ "${db_array[$i]}" != "" ]; do
-        if mysqladmin -f $mysql_socket drop ${db_array[$i]}
-        then
-          echo "Database '${db_array[$i]}' deleted"
-        else
-          echo "Error: Error from mysqladmin $mysql_socket drop ${db_array[$i]}"
-	fi
-
-        i=$i+1
-      done
 
     fi
 
@@ -858,9 +837,9 @@ pwrc_set_func()
     return
   fi
 
-  cmd="base"
+  cmd="baseroot"
   if [ $1 = $cmd ] || [ ${cmd#$1} != $cmd ]; then
-    # Command is "set base"
+    # Command is "set baseroot"
     baseroot=$2
     baseroot=${baseroot%/}
     if [ ! -e "$baseroot" ]; then
@@ -1275,83 +1254,6 @@ pwrc_copy_func()
     pwrc_status=$pwrc__syntax
     return
   fi
-
-  if [ $1 = "template" ]; then
-    # Command is "copy template"
-    if [ $2 == "-p" ]; then
-      projectname=$3
-      shift 2
-    else
-      pwrc_get_projectname
-    fi
-    
-    db=$2
-    confirm=$3
-
-    # This can only be done on mysql server
-    if [ ! -z "$pwrp_mysql_server" ]; then
-      node="`eval uname -n`"
-
-      if [ $node != $pwrp_mysql_server ]; then
-        echo "Error: current host is not mysql server ($pwrp_mysql_server)"
-        pwrc_status=$pwrc__notmysqlsrv
-        return
-      fi
-    fi
-
-    if [ -z $db ]; then
-      echo "Syntax error: enter database, or 'dbdirectory' for directory database"
-      pwrc_status=$pwrc__syntax
-      return
-    fi
-
-    # Get location for mysql database    
-    datadir=`eval mysqladmin $mysql_socket variables| grep datadir | awk '{ print $4 }'`
-    datadir=${datadir%/}
-
-    if [ -z $datadir ]; then
-      echo "Error: Can't get database directory from mysql"
-      pwrc_status=$pwrc__datadir
-      return
-    fi
-
-    if [ "$db" = "dbdirectory" ]; then
-      dbname=$projectname"_"$pwr_dbversion
-    else
-      dbname=$projectname"_"$db"_"$pwr_dbversion
-    fi
-
-    if [ -z $confirm ] || [ $confirm != "noconfirm" ]; then
-      echo "Do you want to copy a template database to $dbname ? [y/n] "
-      read REPLY
-      if [ -z $REPLY ] || [ $REPLY != "y" ]; then
-        return
-      fi
-    fi
-
-    # Create database directory
-    if [ ! -e $datadir/$dbname ]; then
-      echo "Creating new database '$dbname'"
-      mysqladmin $mysql_socket create $dbname
-    fi
-    
-#    if [ ! -e $datadir/wb_template_$pwr_dbversion ]; then
-#      echo "Can't find template database"
-#      pwrc_status=$pwrc__notemplatedb
-#      return
-#    fi
-
-    # Copy template database
-    if wb_cp $datadir/wb_template_$pwr_dbversion/ $datadir/$dbname/
-    then
-      echo "Template database copied to '"${dbname%"_"$pwr_dbversion}"'"
-      pwrc_status=$pwrc__success
-    else
-      pwrc_status=$pwrc__mysqldbcopy
-      return
-    fi
-    return
-  fi
     
   cmd="project"
   if [ $1 = $cmd ] || [ ${cmd#$1} != $cmd ]; then
@@ -1379,35 +1281,6 @@ pwrc_copy_func()
 
     if [ -z "$to_phier" ]; then
       to_phier="-"
-    fi
-
-    # Check that mysqladmin is alive
-    ver=`eval mysqladmin $mysql_socket --version`
-    if [ -z "$ver" ]; then
-      echo "Unable to find mysqladmin"
-      pwrc_status=$pwrc_mysql
-      return
-    fi
-
-    # This can only be done on mysql server
-    if [ ! -z "$pwrp_mysql_server" ]; then
-      node="`eval uname -n`"
-
-      if [ $node != $pwrp_mysql_server ]; then
-        echo "Error: current host is not mysql server ($pwrp_mysql_server)"
-        pwrc_status=$pwrc__notmysqlsrv
-        return
-      fi
-    fi
-
-    # Get location for mysql database    
-    datadir=`eval mysqladmin $mysql_socket variables| grep datadir | awk '{ print $4 }'`
-    datadir=${datadir%/}
-
-    if [ -z $datadir ]; then
-      echo "Error: Can't get database directory from mysql"
-      pwrc_status=$pwrc__datadir
-      return
     fi
 
     # Load project list
@@ -1459,41 +1332,13 @@ pwrc_copy_func()
     
     from_proot=${root_array[$pwrc_current_index]}
 
-    # Get databases in from-project
-    pwrc_dblist_read $from_pname $from_proot
-    
-    # Check that the databases can be found and that the new doesn't exist
-    i=0
-    while [ "${db_array[$i]}" != "" ]; do      
-      if [ ! -e $datadir/${db_array[$i]} ]; then
-        echo "Error: Can't find database ${db_array[$i]}"
-        pwrc_status=$pwrc__nodb
-        return
-      fi
-      dbname=$to_pname${db_array[$i]#$from_pname}
-      if [ -e $datadir/$dbname ]; then
-        echo "Error: Database '$dbname' already exist"
-        pwrc_status=pwrc__dbalrexist
-        return
-      fi
-
-      i=$i+1
-    done
-
 
     # Confirmation
     if [ -z $confirm ] || [ $confirm != "noconfirm" ]; then
       echo "Copy project will"
       echo "	add '$to_pname' to the project list"
       echo "	copy directory tree '$from_proot' to '$to_proot'"
-      echo "	copy all databases in project '$from_pname':"
 
-      i=0
-      while [ "${db_array[$i]}" != "" ]; do
-        echo "		database: '${db_array[$i]}'"
-        i=$i+1
-      done
-      
       echo "Do you want do continue ? [y/n] "
       read REPLY
       if [ -z $REPLY ] || [ $REPLY != "y" ]; then
@@ -1511,29 +1356,6 @@ pwrc_copy_func()
       return
     fi
     
-    #Copy databases
-    i=0
-    while [ "${db_array[$i]}" != "" ]; do      
-      dbname=$to_pname${db_array[$i]#$from_pname}
-      if mysqladmin $mysql_socket create $dbname
-      then
-        echo "Database '$dbname' created"
-      else
-        echo "Error: mysqladmin error"
-        pwrc_status=$pwrc__dbcreate
-	return
-      fi
-
-      if wb_cp $datadir/${db_array[$i]}/ $datadir/$dbname/
-      then
-        echo "Database $datadir/${db_array[$i]} copied"
-      else
-        pwrc_status=pwrc__mysqldbcopy
-        return
-      fi
-      i=$i+1
-    done
-
     # Add new project into project list
     pwrc_prlist_add dummy $to_pname ${base_array[pwrc_current_index]} $to_proot $to_phier ${desc_array[pwrc_current_index]} "(Copy of $from_pname)"
     pwrc_prlist_write
@@ -1549,57 +1371,8 @@ pwrc_copy_func()
 
 pwrc_setdb_func()
 {
-  if [ "$1" == "dbdirectory" ]; then
-    db=""
-  else
-    db=$1
-  fi
-  
-  # Command is "setdb"
-
-
-  pwrc_get_projectname
-
-  if [ -z "$pwrp_root" ]; then
-    echo "No project is set"
-    pwrc_status=$pwrc__projnotset
-    return
-  fi
-  
-  if [ -z $db ]; then
-    # Set directory db
-    if [ ! -z "$pwrp_mysql_server" ]; then
-      node="`eval uname -n`"
-
-      if [ $node = $pwrp_mysql_server ]; then
-        export PWRP_DB=:$projectname"_"$pwr_dbversion
-      else
-        export PWRP_DB=$pwrp_mysql_server:$projectname"_"$pwr_dbversion
-      fi
-    else
-      export PWRP_DB=:$projectname"_"$pwr_dbversion
-    fi
-  else
-    # Database is supplied
-    if [ ! -z "$pwrp_mysql_server" ]; then
-      node="`eval uname -n`"
-
-      if [ $node = $pwrp_mysql_server ]; then
-        export PWRP_DB=:$projectname"_"$db"_"$pwr_dbversion
-      else
-        export PWRP_DB=$pwrp_mysql_server:$projectname"_"$db"_"$pwr_dbversion
-      fi
-    else
-      export PWRP_DB=:$projectname"_"$db"_"$pwr_dbversion
-    fi
-  fi
-  echo "Database set to $db ($PWRP_DB)"
+  echo "setdb is obsolete"
   pwrc_status=$pwrc__success
-}
-
-pwrc_mysql_func()
-{
-  mysql $mysql_socket $1
 }
 
 pwrc_help_func()
@@ -1611,14 +1384,11 @@ pwrp_env.sh  		- Utilities for pwr project environment
 help			- Display help
 create project 'name'	- Create at new project
 set project 'name'	- Setup environment to a project
-set base 'root'		- Setup environment to proview base distribution
+set baseroot 'root'	- Setup environment to proview base distribution
 set db ['db']		- Set database. If db ommitted, directory db is set.
 show project		- Show current project
 show projects		- Show all projects
 show base		- Show current base root
-show db			- Show current database
-show db 'database'	- Check that database exist
-copy template 'db'	- Copy a template database to database 'db'
 
 EOF
 }
@@ -1633,7 +1403,6 @@ pwrc_parse ()
   platform="x86_linux"
   os="os_linux"
   hw="hw_x86"
-  #mysql_socket="--socket /var/lib/mysql/mysql.sock"
 
   local cmd
 
@@ -1692,11 +1461,6 @@ pwrc_parse ()
     shift
     pwrc_setdb_func $@
     return $pwrc_status
-  fi
-  if [ $1 = "mysql" ]; then
-    shift
-    pwrc_mysql_func $@
-    return
   else
     echo "Unknown command"
   fi

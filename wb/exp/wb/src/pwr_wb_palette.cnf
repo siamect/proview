@@ -235,6 +235,7 @@ topobjects ProjectNavigatorW1
   class ClassVolumeConfig
   class SubVolumeConfig
   class WbEnvironment
+  class DbConfig
 }
 
 topobjects ProjectNavigatorW2
@@ -263,15 +264,14 @@ palette ProjectNavigatorPalette
   {
     class ApplDistribute
     class ClassVolumeLoad
+    class Distribute
     class FriendNodeConfig
-    class GraphDistribute
     class NodeConfig
     class $NodeHier
     class RootVolumeLoad
     class SharedVolumeLoad
     class SubVolumeLoad
     class $System
-    class SystemDistribute
   }
 }
 

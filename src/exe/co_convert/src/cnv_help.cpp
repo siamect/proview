@@ -92,7 +92,7 @@ void *wnav_help_insert_cb( void *ctx, navh_eItemType item_type, char *text1,
   else {
     if ( in_table) {
       // Close table (keep if empty line) 
-      if ( !( strcmp( text1, "") == 0 && 
+      if ( !( text1 && strcmp( text1, "") == 0 && 
 	      (item_type == navh_eItemType_Help || 
 	       item_type == navh_eItemType_HelpBold))) {
         xh->fp << "</TABLE>" << endl;
