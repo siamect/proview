@@ -2701,7 +2701,7 @@ int Graph::init_trace()
 
     // Set subscription defaults
     int dt = int( scan_time * 1000);
-    int tmo = int( MAX(2 * dt, 10000));
+    int tmo = int( MAX(2 * dt/100, 25));
     sts = gdh_SetSubscriptionDefaults( dt, tmo);
 
     grow->grow_trace_setup();
@@ -3523,7 +3523,7 @@ int Graph::ref_object_info( glow_eCycle cycle, char *name, void **data,
     dt = int( fast_scan_time * 1000);
   else
     dt = int( scan_time * 1000);
-  int tmo = int( MAX(2 * dt, 10000));
+  int tmo = int( MAX(2 * dt / 100, 25));
   gdh_SetSubscriptionDefaults( dt, tmo);
 
   return gdh_RefObjectInfo( name, data, subid, size);
