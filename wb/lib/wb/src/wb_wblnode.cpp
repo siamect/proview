@@ -1462,7 +1462,7 @@ bool wb_wblnode::exportHead(wb_import &i)
   pwr_tOid lchoid = o_lch ? o_lch->m_oid : pwr_cNOid;
   wb_name n = wb_name(name());
 
-  i.importHead( m_oid, m_cid, fthoid, fwsoid, bwsoid, fchoid, lchoid, name(), n.normName(cdh_mName_object),
+  i.importHead( m_oid, m_cid, fthoid, bwsoid, fwsoid, fchoid, lchoid, name(), n.normName(cdh_mName_object),
                 getFileTime(), getFileTime(), getFileTime(), rbody_size, dbody_size);
   
   if ( o_fch)

@@ -98,7 +98,9 @@ pwr_tOid wb_orepdb::aoid() const
 
 wb_name wb_orepdb::longName()
 {
-  return wb_name();
+  pwr_tStatus sts;
+  
+  return m_vrep->longName(&sts, (wb_orep*)this);
 }
 
 const char * wb_orepdb::name() const

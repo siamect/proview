@@ -110,6 +110,8 @@ public:
 
   virtual void objectName(const wb_orep *o, char *str);
 
+  void objectName(pwr_tOid oid, char *name, int level);
+
   void load();
 
   virtual bool exportVolume(wb_import &e);

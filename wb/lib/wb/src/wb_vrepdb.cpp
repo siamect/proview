@@ -55,10 +55,38 @@ wb_srep *wb_vrepdb::newSession()
   return 0;
 }
 
+void wb_vrepdb::objectName(pwr_tOid oid, char *name, int level)
+{
+    if (cdh_ObjidIsNull(oid))
+        return;
+
+    wb_db_ohead o(m_db, m_txn, oid);
+    
+    if (o.oix() == pwr_cNOix) {
+        strcpy(name, o.name());
+        strcat(name, ":");
+    } else {
+        objectName(o.poid(), name, level+1);
+        strcat(name, o.name());
+        if (level > 0)
+            strcat(name, "-");
+    }
+}
+
 wb_name wb_vrepdb::longName(pwr_tStatus *sts, const wb_orep *o)
 {
   *sts = LDH__SUCCESS;
-  return wb_name();
+  char name[512];
+  
+  try {
+    objectName(o->oid(), name, 0);
+  }
+  catch (DbException &e) {
+    *sts = LDH__NOSUCHOBJ;
+    printf("vrepdb: %s\n", e.what());
+    name[0] = '\0';
+  }
+  return wb_name(name);
 }
 
 bool wb_vrepdb::isOffspringOf(pwr_tStatus *sts, const wb_orep *child, const wb_orep *parent)
@@ -581,7 +609,13 @@ wb_orep *wb_vrepdb::after(pwr_tStatus *sts, const wb_orep *orp)
 {
   *sts = LDH__SUCCESS;
   try {
-    m_ohead.get(m_txn, m_ohead.get(m_txn, orp->oid()).aoid());
+    pwr_tOid aoid = m_ohead.get(m_txn, orp->oid()).aoid();
+    if (cdh_ObjidIsNull(aoid)) {
+      *sts = LDH__NO_SIBLING;
+      return 0;
+    }
+    
+    m_ohead.get(m_txn, aoid);
     return new (this) wb_orepdb(&m_ohead.m_o);
   }
   catch (DbException &e) {
@@ -595,7 +629,13 @@ wb_orep *wb_vrepdb::before(pwr_tStatus *sts, const wb_orep *orp)
 {
   *sts = LDH__SUCCESS;
   try {
-    m_ohead.get(m_txn, m_ohead.get(m_txn, orp->oid()).boid());
+    pwr_tOid boid = m_ohead.get(m_txn, orp->oid()).boid();
+    if (cdh_ObjidIsNull(boid)) {
+      *sts = LDH__NO_SIBLING;
+      return 0;
+    }
+    
+    m_ohead.get(m_txn, boid);
     return new (this) wb_orepdb(&m_ohead.m_o);
   }
   catch (DbException &e) {
@@ -609,7 +649,13 @@ wb_orep *wb_vrepdb::first(pwr_tStatus *sts, const wb_orep *orp)
 {
   *sts = LDH__SUCCESS;
   try {
-    m_ohead.get(m_txn, m_ohead.get(m_txn, orp->oid()).foid());
+    pwr_tOid foid = m_ohead.get(m_txn, orp->oid()).foid();
+    if (cdh_ObjidIsNull(foid)) {
+      *sts = LDH__NO_CHILD;
+      return 0;
+    }
+    
+    m_ohead.get(m_txn, foid);
     return new (this) wb_orepdb(&m_ohead.m_o);
   }
   catch (DbException &e) {
@@ -638,7 +684,13 @@ wb_orep *wb_vrepdb::last(pwr_tStatus *sts, const wb_orep *orp)
 {
   *sts = LDH__SUCCESS;
   try {
-    m_ohead.get(m_txn, m_ohead.get(m_txn, orp->oid()).loid());
+    pwr_tOid loid = m_ohead.get(m_txn, orp->oid()).loid();
+    if (cdh_ObjidIsNull(loid)) {
+      *sts = LDH__NO_CHILD;
+      return 0;
+    }
+    
+    m_ohead.get(m_txn, loid);
     return new (this) wb_orepdb(&m_ohead.m_o);
   }
   catch (DbException &e) {

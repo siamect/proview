@@ -285,8 +285,10 @@ void wb_db_rbody::get(wb_db_txn *txn, size_t offset, size_t size, void *p)
   m_data.set_doff(offset);
   m_data.set_dlen(size);
   m_data.set_data(p);
+  m_data.set_ulen(size);
+  m_data.set_flags(DB_DBT_USERMEM|DB_DBT_PARTIAL);
   
-  m_db->m_t_rbody->get(txn, &m_key, &m_data, DB_DBT_PARTIAL);
+  m_db->m_t_rbody->get(txn, &m_key, &m_data, 0);
 }
 
 wb_db_dbody::wb_db_dbody(wb_db *db, pwr_tOid oid, size_t size, void *p) :
@@ -309,6 +311,8 @@ void wb_db_dbody::get(wb_db_txn *txn, size_t offset, size_t size, void *p)
   m_data.set_doff(offset);
   m_data.set_dlen(size);
   m_data.set_data(p);
+  m_data.set_ulen(size);
+  m_data.set_flags(DB_DBT_USERMEM);
   
   m_db->m_t_dbody->get(txn, &m_key, &m_data, DB_DBT_PARTIAL);
 }
@@ -383,11 +387,17 @@ void wb_db::openDb()
 
   m_env = new DbEnv(0/*DB_CXX_NO_EXCEPTIONS*/);
   m_env->set_errpfx("PWR db");
-    
+	//m_env->set_cachesize(0, 256 * 1024 * 1024, 0);
+
+#if 1
   m_env->open(m_fileName,
               DB_CREATE | DB_INIT_LOCK | DB_INIT_LOG | DB_INIT_MPOOL | DB_INIT_TXN | DB_RECOVER,
               S_IRUSR | S_IWUSR);
-
+#else
+  m_env->open(m_fileName,
+              DB_CREATE | DB_INIT_MPOOL,
+              S_IRUSR | S_IWUSR);
+#endif
   m_t_ohead = new Db(m_env, 0);
   m_t_rbody = new Db(m_env, 0);
   m_t_dbody = new Db(m_env, 0);
@@ -526,19 +536,20 @@ bool wb_db::deleteOset(pwr_tStatus *sts, wb_oset *o)
 bool wb_db::importVolume(wb_export &e)
 {
   try {
-    m_env->txn_begin(0, (DbTxn **)&m_txn, 0);
-
+//    m_env->txn_begin(0, (DbTxn **)&m_txn, 0);
+    m_txn = 0;
+    
     e.exportHead(*this);
     e.exportRbody(*this);
     e.exportDbody(*this);
     e.exportMeta(*this);
     
-    m_txn->commit(0);
-    m_env->txn_checkpoint(0, 0, 0);
+    //m_txn->commit(0);
+    //m_env->txn_checkpoint(0, 0, 0);
     return true;
   }
   catch (DbException &e) {
-    m_txn->abort();
+    //m_txn->abort();
     printf("exeption: %s\n", e.what());
     return false;
   }
@@ -553,6 +564,7 @@ bool wb_db::importHead(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
 {
   wb_db_ohead o(this, oid, cid, poid, boid, aoid, foid, loid, name, normname, ohTime, rbTime, dbTime, rbSize, dbSize);
   o.put(m_txn);
+  printf("head put: %d.%d %s\n", oid.vid, oid.oix, name);
   wb_db_name n(this, oid, poid, normname);
   n.put(m_txn);
   wb_db_class c(this, cid, oid);
@@ -572,6 +584,7 @@ bool wb_db::importHead(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
 bool wb_db::importRbody(pwr_tOid oid, size_t size, void *body)
 {
   wb_db_rbody rb(this, oid, size, body);
+  printf("rbody size: %d.%d %d\n", oid.vid, oid.oix, size);
   rb.put(m_txn);
   return true;
 }
@@ -579,6 +592,7 @@ bool wb_db::importRbody(pwr_tOid oid, size_t size, void *body)
 bool wb_db::importDbody(pwr_tOid oid, size_t size, void *body)
 {
   wb_db_dbody db(this, oid, size, body);
+  printf("dbody size: %d.%d %d\n", oid.vid, oid.oix, size);
   db.put(m_txn);
   return true;
 }

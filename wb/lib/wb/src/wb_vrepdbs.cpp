@@ -446,7 +446,7 @@ bool wb_vrepdbs::exportHead(wb_import &i)
   pwr_tStatus sts;
   
   while ((op = dbs_NextHead(&sts, dbsenv(), op))) {
-    i.importHead(op->oid, op->cid, op->poid, op->aoid, op->boid, op->foid, op->loid, op->name, op->normname,
+    i.importHead(op->oid, op->cid, op->poid, op->boid, op->aoid, op->foid, op->loid, op->name, op->normname,
                  op->time, op->rbody.time, op->dbody.time, op->rbody.size, op->dbody.size);
   }
 
