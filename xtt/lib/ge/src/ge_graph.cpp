@@ -3892,7 +3892,7 @@ void GraphRecallBuff::insert( GeDyn *data, char *data_key, grow_tObject object)
 
   if ( cnt == size)
     delete buff[size-1];
-  for ( i = cnt; i > 0; i--) {
+  for ( i = cnt - 1; i > 0; i--) {
     buff[i] = buff[i-1];
     strcpy( key[i], key[i-1]);
   }
