@@ -292,7 +292,7 @@ void Wtt::menu_setup()
         XtSetValues( menu_utilities_w, sensitive, 1);
         XtSetValues( menu_openplc_w, sensitive, 1);
         XtSetValues( menu_compile_w, sensitive, 1);
-	if ( ldh_VolRepType( ldhses) == ldh_eVolRep_Dbs)
+	if ( ldhses && ldh_VolRepType( ldhses) == ldh_eVolRep_Dbs)
           XtSetValues( menu_createload_w, nosensitive, 1);
 	else
           XtSetValues( menu_createload_w, sensitive, 1);
