@@ -119,7 +119,7 @@ $(export_lib) : $(objects)
 		$(rm) $(export_lib); \
 	  fi
 	@ cd $(pwre_broot)/$(pwre_target)/bld; \
-	 jar cf $(export_lib) jpwr/rt/*.class jpwr/rt/*.gif; \
+	 jar cf $(export_lib) jpwr/rt/*.class; \
 	 rm jpwr/rt/Gdh.class;
 
 #-include $(source_dependencies)
