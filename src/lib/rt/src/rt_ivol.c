@@ -549,6 +549,8 @@ ivol_GetBody (
   if (lb == NULL) lb = &body;
 
   lb->op = hash_Search(sts, gdbroot->oid_ht, &oid);
+  if ( !lb->op)
+    return 0;
   lb->size = lb->op->g.size;
   lb->body = pool_Address(NULL, gdbroot->rtdb, lb->op->u.n.body);
 
