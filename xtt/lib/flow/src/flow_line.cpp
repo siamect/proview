@@ -32,8 +32,8 @@ void FlowLine::print( void *pos, void *node)
 {
   if ( p1.print_z_x == p2.print_z_x && p1.print_z_y == p2.print_z_y)
     return;
-  int idx = int( ctx->print_zoom_factor / ctx->base_zoom_factor * 
-	line_width - 1);
+  double idx = ctx->print_zoom_factor / ctx->base_zoom_factor * 
+	line_width;
   idx = MAX( 0, idx);
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
   ctx->print_ps->line( p1.print_z_x + ((FlowPoint *)pos)->print_z_x, 

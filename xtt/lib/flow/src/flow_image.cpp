@@ -23,12 +23,12 @@ int FlowImage::insert_image( char *imagefile)
 
   strcpy( image_filename, imagefile);
 
-  // Look for file in $pwrp_exe, $pwr_doc and $pwr_exe
+  // Look for file in $pwrp_exe, $pwr_doc/orm and $pwr_exe
   for ( int i = 0; i < 3; i++) {
     switch( i) {
-    case 1: strcpy( filename, "$pwrp_exe/");  break;
-    case 2: strcpy( filename, "$pwr_doc/");  break;
-    case 3: strcpy( filename, "$pwr_exe/");  break;
+    case 0: strcpy( filename, "$pwrp_exe/");  break;
+    case 1: strcpy( filename, "$pwr_doc/orm/");  break;
+    case 2: strcpy( filename, "$pwr_exe/");  break;
     }
     strcat( filename, imagefile);
     dcli_translate_filename( filename, filename);

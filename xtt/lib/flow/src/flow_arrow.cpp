@@ -92,9 +92,9 @@ void FlowArrow::traverse( int x, int y)
 
 void FlowArrow::print( void *pos, void *node)
 {
-  int idx = int( ctx->print_zoom_factor / ctx->base_zoom_factor * 
-		line_width - 1);
-  idx = MAX( 0, idx);
+  double idx = ctx->print_zoom_factor / ctx->base_zoom_factor * 
+		line_width;
+  idx = MAX( 0.5, idx);
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
   ctx->print_ps->arrow( 
 	p_dest.print_z_x + ((FlowPoint *)pos)->print_z_x, 
