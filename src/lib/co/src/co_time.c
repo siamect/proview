@@ -47,11 +47,6 @@
   pwr_Assert((p->tv_sec < 0) ? (p->tv_nsec <= 0 && p->tv_nsec > -1000000000) : TRUE);\
 } while (0)
 
-typedef struct {
-  int	  tv_sec;
-  int	  tv_nsec;
-} tTime;
-
 /* String representations of months.  */
 
 static const char *monStr[] =

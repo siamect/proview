@@ -27,6 +27,7 @@
 #include "rt_mh_util.h"
 #include "rt_errh.h"
 
+//! Application context.
 typedef struct {
   mh_sHead	head;
   qcom_sQid	handler;

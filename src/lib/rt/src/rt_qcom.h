@@ -129,9 +129,7 @@ static const qcom_sQid qcom_cQhdClient		= {qcom_cIhdClient, 0};
 static const qcom_sQid qcom_cQnacp		= {qcom_cInacp, 0};
 static const qcom_sQid qcom_cQini		= {qcom_cIini, 0};
 
-/**
- * ZZZ
- */
+//! Application identity
 typedef struct {
   qcom_tAix	aix;		/**< Application index */
   pwr_tNodeId	nid;		/**< Node identity */
@@ -139,27 +137,32 @@ typedef struct {
 
 static const qcom_sAid qcom_cNAid = {0, 0};
 
+//! Qcom application
 typedef struct {
   qcom_sAid	aid;
   pid_t		pid;
 } qcom_sAppl;
 
+//! Qcom event
 typedef struct {
   qcom_sAid	aid;
   pid_t		pid;
   int		mask;
 } qcom_sEvent;
 
+//! Queue attributes
 typedef struct {
   qcom_eQtype	type;
   unsigned int	quota;
 } qcom_sQattr;
 
+//! Qcom type
 typedef struct {
   qcom_eBtype	b;
   qcom_eStype	s;
 } qcom_sType;
 
+//! Put data structure.
 typedef struct {
   qcom_sQid	reply;
   qcom_sType	type;
@@ -167,6 +170,7 @@ typedef struct {
   void		*data;
 } qcom_sPut;
 
+//! Get data structure
 typedef struct {
   qcom_sAid	sender;
   pid_t		pid;
@@ -179,8 +183,10 @@ typedef struct {
   void		*data;
 } qcom_sGet;
 
+//! Node status
 typedef union {
   pwr_tBitMask m;
+  //! Bitmask representation
   pwr_32Bits (
     pwr_Bits( initiated	, 1),
     pwr_Bits( connected	, 1),
@@ -203,17 +209,16 @@ typedef union {
 
 } qcom_mNode;
 
-/**
- * Strucure describing a node ???
- */
+
+//! Data for a Qcom node.
 typedef struct {
-  pwr_tNodeId	nid;		/**< node index */
-  qcom_mNode	flags;		/**< node flags */
-  char		name[80];       /**< node name */
-  co_eOS	os;		/**< operating system */
-  co_eHW	hw;		/**< hardware */ 
-  co_eBO	bo;		/**< big/little endian */
-  co_eFT	ft;		/**< float type */
+  pwr_tNodeId	nid;		//!< node index
+  qcom_mNode	flags;		//!< node flags
+  char		name[80];       //!< node name
+  co_eOS	os;		//!< operating system
+  co_eHW	hw;		//!< hardware
+  co_eBO	bo;		//!< big/little endian
+  co_eFT	ft;		//!< float type
 } qcom_sNode;
 
 

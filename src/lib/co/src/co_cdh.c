@@ -37,6 +37,13 @@
 #include "co_cdh.h"
 #include "co_time.h"
 
+/*! \file co_cdh.c
+    \brief Class definition handler.
+   Functions for class definitions.
+*/
+/*! \addtogroup Cdh */
+/*@{*/
+
 #ifdef OS_ELN
 struct  p1_ctx {
   int             p1$errno;                       /* UNIX-style error code */
@@ -46,14 +53,14 @@ struct  p1_ctx {
 };
 #endif
 
-
-/* Compare two object identities;
+//! Compare two object identities.
+/*!
+-   return <0 if Object_1 < Object_2.
+-   return  0 if Object_1 == Object_2.
+-   return >0 if Object_1 > Object_2.
+*/
 
-   return <0 if Object_1 < Object_2
-   return  0 if Object_1 == Object_2
-   return >0 if Object_1 > Object_2.  */
-
-int
+int 
 cdh_ObjidCompare (
   pwr_tObjid  Objid_1,
   pwr_tObjid  Objid_2
@@ -75,10 +82,11 @@ cdh_ObjidCompare (
 }
 
 
-/* Test if two object identities are equal.
-
-   return  1 if Object_1 == Object_2
-   return  0 if Object_1 != Object_2.  */
+//! Test if two object identities are equal.
+/*!
+-   return  1 if Object_1 == Object_2
+-   return  0 if Object_1 != Object_2.  
+*/
 
 int
 cdh_ObjidIsEqual (
@@ -90,10 +98,11 @@ cdh_ObjidIsEqual (
   return (Objid_1.vid == Objid_2.vid) && (Objid_1.oix == Objid_2.oix);
 }
 
-/* Test if two object identities are different.
-
-   return  1 if Object_1 != Object_2
-   return  0 if Object_1 == Object_2.  */
+//! Test if two object identities are different.
+/*!
+-   return  1 if Object_1 != Object_2
+-   return  0 if Object_1 == Object_2.  
+*/
 
 int
 cdh_ObjidIsNotEqual (
@@ -106,10 +115,11 @@ cdh_ObjidIsNotEqual (
 }
 
 
-/* Test if object identity is null.
-
-   return  1 if Object_1 == pwr_cNObjid
-   return  0 if Object_1 != pwr_cNObjid.  */
+//! Test if object identity is null.
+/*!
+-   return  1 if Object_1 == pwr_cNObjid
+-   return  0 if Object_1 != pwr_cNObjid.  
+*/
 
 int
 cdh_ObjidIsNull (
@@ -120,10 +130,11 @@ cdh_ObjidIsNull (
 }
 
 
-/* Test if object identity is not null.
-
-   return  1 if Object_1 != pwr_cNObjid
-   return  0 if Object_1 == pwr_cNObjid.  */
+//! Test if object identity is not null.
+/*!
+-   return  1 if Object_1 != pwr_cNObjid
+-   return  0 if Object_1 == pwr_cNObjid.  
+*/
 
 int
 cdh_ObjidIsNotNull (
@@ -278,7 +289,11 @@ cdh_DlidIsNotNull (
 }
 
 
-/* Convert Objid to ClassId.  */
+//! Convert Objid to ClassId.
+/*!
+  \param Objid 	Objid of $ClassDef object for class.
+  \return 	ClassId.
+*/
 
 pwr_tClassId
 cdh_ClassObjidToId (
@@ -300,7 +315,11 @@ cdh_ClassObjidToId (
 }
 
 
-/* Convert ClassId to Objid.  */
+//! Convert ClassId to Objid.
+/*!
+  \param Class	ClassId
+  \return 	Objid for $ClassDef object of class.
+*/
 
 pwr_tObjid
 cdh_ClassIdToObjid (
@@ -325,7 +344,11 @@ cdh_ClassIdToObjid (
   return oid.pwr;
 }
 
-/* Convert Objid to TypeId.  */
+//! Convert Objid to TypeId.  
+/*!
+  \param Objid	Objid for $TypeDef object of type.
+  \return	TypeId.
+*/
 
 pwr_tTypeId
 cdh_TypeObjidToId (
@@ -364,7 +387,7 @@ cdh_TypeObjidToId (
 }
 
 
-/* Convert TypeId to index.  */
+//! Convert TypeId to index.
 
 int
 cdh_TypeIdToIndex (
@@ -378,7 +401,7 @@ cdh_TypeIdToIndex (
   return tid.t.tix;
 }
 
-/* Convert TypeId to Objid.  */
+//! Convert TypeId to Objid.
 
 pwr_tObjid
 cdh_TypeIdToObjid (
@@ -415,9 +438,7 @@ cdh_TypeIdToObjid (
   return oid.pwr;
 }
 
-/* Converts an attribute given in internal binary format
-   to a text string.
-   */
+//! Converts an attribute given in internal binary format to a text string.
 
 pwr_tStatus
 cdh_AttrValueToString (
@@ -498,8 +519,7 @@ cdh_AttrValueToString (
   return sts;
 }
 
-/* Converts an attribute value given as a text string,
-   to internal binary format.  */
+//! Converts an attribute value given as a text string, to internal binary format.
 
 pwr_tStatus
 cdh_StringToAttrValue (
@@ -748,7 +768,17 @@ cdh_StringToAttrValue (
   
   return sts;
 }
+
 
+//! Convert ClassId string to id.
+/*! 
+  Convert a string of format "_C1.2:34" to id ('_C' is optional),
+  where 1.2 is the volume identity and 34 the class index.
+
+  \param s	String.
+  \param cid	ClassId.
+  \return	Status of the operation. CDH__SUCCESS or CDH__INVCID.
+*/
 pwr_tStatus
 cdh_StringToClassId (
   const char		*s,
@@ -782,6 +812,16 @@ cdh_StringToClassId (
   return CDH__SUCCESS;
 }
 
+//! Convert Objid string to id.
+/*!
+  Convert a string of format "_O1.2.3.4:34" ('_O' is optional), where
+  1.2.3.4 is the volume id and 34 is the object index.
+  Strings beginning with "_A" are also accepted.
+
+  \param s	String.
+  \param oid	Objid.
+  \return	Status of the operation. CDH__SUCCESS or CDH__INVCID.
+*/
 pwr_tStatus
 cdh_StringToObjid (
   const char		*s,
@@ -824,6 +864,14 @@ cdh_StringToObjid (
   return CDH__SUCCESS;
 }
 
+//! Convert TypeId string to id.
+/*! 
+  Convert a string of format "_T1.2:bit.tyg.tix" to id ("_T" is optional).
+
+  \param s	String.
+  \param tid	TypeId.
+  \return	Status of the operation. CDH__SUCCESS or CDH__INVTID.
+*/
 pwr_tStatus
 cdh_StringToTypeId (
   const char		*s,
@@ -876,6 +924,15 @@ cdh_StringToTypeId (
   return CDH__SUCCESS;
 }
 
+//! Convert VolumeId string to id.
+/*! 
+  Convert a string of format "_V1.2.3.4" to id ("_V" is optional).
+  Strings beginning with "_O" and "_A" are also accepted.
+
+  \param s	String.
+  \param vid	Volume id.
+  \return	Status of the operation. CDH__SUCCESS or CDH__INVTID.
+*/
 pwr_tStatus
 cdh_StringToVolumeId (
   const char		*s,
@@ -914,6 +971,15 @@ cdh_StringToVolumeId (
   return CDH__SUCCESS;
 }
 
+//! Converts ObjectIx string to index.
+/*!
+  Converts string of format "_Xoix" to index ("_X" is optional)
+  where oix is object index.
+
+  \param s	String.
+  \param oix	ObjectIx.
+  \return	Status of the operation. CDH__SUCCESS or CDH__INVOIX.
+*/
 pwr_tStatus
 cdh_StringToObjectIx (
   const char		*s,
@@ -1018,7 +1084,8 @@ cdh_StringToDlid (
   return CDH__SUCCESS;
 }
 
-/*  Converts a class identifier, 'cid' to a string.
+//!  Converts a class identifier, 'cid' to a string.
+/*!  
     The output string will be in the format:
 
     0.1:34  where 0.1 is the volume identifier and
@@ -1028,7 +1095,8 @@ cdh_StringToDlid (
     to 's', otherwise the resultant string will be returned.
 
     If 'prefix' is not zero, a '_C' prefix will be included in
-    the resultant string.  */
+    the resultant string.
+*/
 
 char *
 cdh_ClassIdToString (
@@ -1060,7 +1128,8 @@ cdh_ClassIdToString (
   
 }
 
-/*  Converts a type identifier, 'tid' to a string.
+//!  Converts a type identifier, 'tid' to a string.
+/*!
     The output string will be in the format:
 
     0.1:0.34.1	where 0.1 is the volume identifier and
@@ -1077,7 +1146,8 @@ cdh_ClassIdToString (
     to 's', otherwise the resultant string will be returned.
 
     If 'prefix' is not zero, a '_T' prefix will be included in
-    the resultant string.  */
+    the resultant string.  
+*/
 
 char *
 cdh_TypeIdToString (
@@ -1110,7 +1180,8 @@ cdh_TypeIdToString (
   
 }
 
-/*  Converts a object index, 'oix' to a string.
+//!  Converts a object index, 'oix' to a string.
+/*!
     The output string will be in the format:
 
     1234
@@ -1119,7 +1190,8 @@ cdh_TypeIdToString (
     to 's', otherwise the resultant string will be returned.
 
     If 'prefix' is not zero, a '_X' prefix will be included in
-    the resultant string.  */
+    the resultant string.  
+*/
 
 char *
 cdh_ObjectIxToString (
@@ -1138,7 +1210,8 @@ cdh_ObjectIxToString (
     return ls;
 }
 
-/*  Converts an attribute reference , 'aref' to a string.
+//!  Converts an attribute reference , 'aref' to a string.
+/*!
     The output string will be in the format:
 
     0.1.2.3:1234(_T0.34.1)[34.60]
@@ -1147,7 +1220,8 @@ cdh_ObjectIxToString (
     to 's', otherwise the resultant string will be returned.
 
     If 'prefix' is not zero, a '_A' prefix will be included in
-    the resultant string.  */
+    the resultant string.  
+*/
 
 char *
 cdh_ArefToString (
@@ -1179,7 +1253,8 @@ cdh_ArefToString (
     return ls;
 }
 
-/*  Converts a volume identifier, 'vid' to a string.
+//! Converts a volume identifier, 'vid' to a string.
+/*!
     The output string will be in the format:
 
     0.1.2.3
@@ -1191,7 +1266,8 @@ cdh_ArefToString (
     the resultant string.
 
     If 'suffix' is not zero, a  ':' suffix will be included in
-    the resultant string.  */
+    the resultant string.  
+*/
 
 char *
 cdh_NodeIdToString (
@@ -1216,7 +1292,8 @@ cdh_NodeIdToString (
   
 }
 
-/*  Converts a object identifier, 'oid' to a string.
+//!  Converts a object identifier, 'oid' to a string.
+/*!
     The output string will be in the format:
 
     0.1.2.3:1234
@@ -1225,7 +1302,8 @@ cdh_NodeIdToString (
     to 's', otherwise the resultant string will be returned.
 
     If 'prefix' is not zero, a '_O' prefix will be included in
-    the resultant string.  */
+    the resultant string.  
+*/
 
 char *
 cdh_ObjidToString (
@@ -1249,7 +1327,8 @@ cdh_ObjidToString (
   
 }
 
-/*  Converts a volume identifier, 'vid' to a string.
+//!  Converts a volume identifier, 'vid' to a string.
+/*!
     The output string will be in the format:
 
     0.1.2.3
@@ -1261,7 +1340,8 @@ cdh_ObjidToString (
     the resultant string.
 
     If 'suffix' is not zero, a  ':' suffix will be included in
-    the resultant string.  */
+    the resultant string.  
+*/
 
 char *
 cdh_VolumeIdToString (
@@ -1286,7 +1366,8 @@ cdh_VolumeIdToString (
   
 }
 
-/*  Converts a subscription identifier, 'sid' to a string.
+//! Converts a subscription identifier, 'sid' to a string.
+/*!
     The output string will be in the format:
 
     0.1.2.3:1234
@@ -1295,7 +1376,8 @@ cdh_VolumeIdToString (
     to 's', otherwise the resultant string will be returned.
 
     If 'prefix' is not zero, a '_S' prefix will be included in
-    the resultant string.  */
+    the resultant string.  
+*/
 
 char *
 cdh_SubidToString (
@@ -1319,7 +1401,8 @@ cdh_SubidToString (
   
 }
 
-/*  Converts a direct link identifier, 'did' to a string.
+//! Converts a direct link identifier, 'did' to a string.
+/*!
     The output string will be in the format:
 
     0.1.2.3:1234
@@ -1328,7 +1411,8 @@ cdh_SubidToString (
     to 's', otherwise the resultant string will be returned.
 
     If 'prefix' is not zero, a '_D' prefix will be included in
-    the resultant string.  */
+    the resultant string.  
+*/
 
 char *
 cdh_DlidToString (
@@ -2185,6 +2269,12 @@ cdh_PackName (
   return pack.key;  
 }
 
+//! Convert string to lower case.
+/*!
+  Returns a pointer to a static string.
+
+  NOTE! The function should only be called once in one expression.
+*/
 char *
 cdh_Low (
   const char		*s
@@ -2195,6 +2285,14 @@ cdh_Low (
   return cdh_ToLower(buf, s);
 }
 
+//! Convert string to lower case.
+/*!
+  If s is NULL, t is used also as input string.
+
+  \param t	Output string.
+  \param s	Input string.
+  \return 	Returns t.
+*/
 char *
 cdh_ToLower (
   char			*t,
@@ -2226,6 +2324,14 @@ cdh_ToLower (
   return rs;
 }
 
+//! Convert string to upper case.
+/*!
+  If s is NULL, t is used also as input string.
+
+  \param t	Output string.
+  \param s	Input string.
+  \return 	Returns t.
+*/
 char *
 cdh_ToUpper (
   char			*t,
@@ -2258,8 +2364,8 @@ cdh_ToUpper (
 }
 
 
-/* Compare two strings not regarding their casing.
-
+//! Compare two strings not regarding their casing.
+/*!
    This routine works only on alphabetic characters.
    It works on the standard ascii a-z and on the 
    DEC multinational extensions.  
@@ -2268,7 +2374,8 @@ cdh_ToUpper (
    when you change the case of a character.
 
    The function returns the uppercase offset between
-   the two first differing characters.  */
+   the two first differing characters.  
+*/
 
 int
 cdh_NoCaseStrcmp (
@@ -2308,3 +2415,12 @@ char *cdh_OpSysToStr( pwr_mOpSys opsys)
   }
   return str;
 }
+
+/*@}*/
+
+
+
+
+
+
+

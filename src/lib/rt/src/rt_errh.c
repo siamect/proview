@@ -120,8 +120,10 @@ static void errh_send (char*);
 static void log_message (errh_sLog*, char, char*, va_list);
 static int msg_vsprintf (char *, const char *, aa_list, va_list);
 
-#if defined(OS_LYNX)  || defined(OS_LINUX) || defined(OS_ELN)
- static size_t strnlen (const char*, size_t);
+#if defined(OS_LYNX) || defined(OS_LINUX) || defined(OS_ELN)
+ static size_t errh_strnlen (const char*, size_t);
+#else
+#define errh_strnlen strnlen
 #endif
 
 static unsigned int do_div (int*, unsigned int);
@@ -818,7 +820,7 @@ repeat:
       if (!s)
         s = "<NULL>";
 
-      len = strnlen(s, precision);
+      len = errh_strnlen(s, precision);
 
       if (!(flags & LEFT))
         while (len < field_width--)
@@ -907,7 +909,7 @@ repeat:
    whatever comes true first.  */
 
 static size_t
-strnlen (
+errh_strnlen (
   const char  *s,
   size_t      count
 )

@@ -24,6 +24,19 @@
 extern "C" {
 #endif
 
+/*! \file co_cdh.h
+    \brief Class definition handler.
+   This include file contains definitions and function prototypes
+   needed to use CDH.
+*/
+
+/*! \defgroup Cdh_DS Data Structures
+    \ingroup Cdh
+*/
+
+/*! \addtogroup Cdh_DS */
+/*@{*/
+
 #define cdh_cMaxVidGroup	 255
 #define cdh_cMaxCix		4095
 #define cdh_cMaxBix		   7
@@ -39,18 +52,28 @@ typedef enum {
 } cdh_eVId3;
 
 
+//! Get volme identity for class identity.
 #define cdh_CidToVid(cid) ((cid) >> 16)
+//! Get volume identity for type identity.
 #define cdh_TidToVid(tid) ((tid) >> 16)
+//! Get class identity for class index
 #define cdh_cixToCid( Vid, Cix) (0 + (Vid << 16) +  (Cix << 3))
+//! Get type identity for type index.
 #define cdh_tixToTid( Vid, Tyg, Tix) (0 + (Vid << 16) + (1 << 15) + (Tyg << 11) +  Tix)
+//! Get object index for class index.
 #define cdh_cixToOix( Cix, Bix, Aix) (0 + (1 << 31) + (Cix << 18) + (Bix << 15) + Aix)
+//! Get object index for type index.
 #define cdh_tixToOix( Tyg, Tix) (0 + (1 << 31) + (1 << 30) + (Tyg << 26) + (Tix << 15))
+//! Get object index for body index.
 #define cdh_oixToBix( Oix) ((pwr_eBix)((Oix >> 15) & 7))
+//! Get class index for object index.
 #define cdh_oixToCix( Oix) ((Oix >> 18) & 0xfff)
+//! Get attribute index for object index.
 #define cdh_oixToAix( Oix) (Oix & 0xfff)
 
+//! Internal representatin of object identity.
 typedef struct {
-  unsigned int	oix		: 32;
+  unsigned int	oix		: 32;	//! Object index.
 
 #if (pwr_dHost_byteOrder == pwr_dBigEndian)
 
@@ -68,8 +91,9 @@ typedef struct {
 
 #endif
 } cdh_mOid;
-typedef cdh_mOid cdh_mObjid;
+typedef cdh_mOid cdh_mObjid;	//!< Internal representation of object identity.
     
+//! Internal representation of reference identity.
 typedef struct {
   unsigned int	rix		: 32;
 
@@ -89,8 +113,9 @@ typedef struct {
 
 #endif
 } cdh_mRid;
-typedef cdh_mRid cdh_mRefId;
+typedef cdh_mRid cdh_mRefId;	//!< Internal representation of reference identity.
 
+//! Internal representations of volume identity.
 typedef struct {
 #if (pwr_dHost_byteOrder == pwr_dBigEndian)
 
@@ -108,8 +133,9 @@ typedef struct {
 
 #endif
 } cdh_mVid;
-typedef cdh_mVid cdh_mVolumeId;
+typedef cdh_mVid cdh_mVolumeId;  //!< Internal representation of volume identity.
 
+//! Internal representation of node identity.
 typedef struct {
 #if (pwr_dHost_byteOrder == pwr_dBigEndian)
 
@@ -127,8 +153,9 @@ typedef struct {
 
 #endif
 } cdh_mNid;
-typedef cdh_mNid cdh_mNodeId;
+typedef cdh_mNid cdh_mNodeId;  //!< Internal representation of node identity.
 
+//! Internal representation of $ClassDef object identity.
 typedef struct {
 #if (pwr_dHost_byteOrder == pwr_dBigEndian)
 
@@ -159,6 +186,7 @@ typedef struct {
 #endif
 } cdh_mClassObjid;
 
+//! Internal represention of class identity.
 typedef struct {
 #if (pwr_dHost_byteOrder == pwr_dBigEndian)
 
@@ -180,8 +208,9 @@ typedef struct {
 
 #endif
 } cdh_mCid;
-typedef cdh_mCid cdh_mClassId;
+typedef cdh_mCid cdh_mClassId;  //!< Internal representation of class identity.
 
+//! Internal representation of $TypeDef object identity.
 typedef struct {
 #if (pwr_dHost_byteOrder == pwr_dBigEndian)
 
@@ -212,6 +241,7 @@ typedef struct {
 #endif
 } cdh_mTypeObjid;
 
+//! Internal representation of type identity.
 typedef struct {
 #if (pwr_dHost_byteOrder == pwr_dBigEndian)
 
@@ -233,54 +263,61 @@ typedef struct {
 
 #endif
 } cdh_mTid;
-typedef cdh_mTid cdh_mTypeId;
+typedef cdh_mTid cdh_mTypeId;  //!< Internal representation of type identity.
 
+//! Type for representions of object identity.
 typedef union {
-  pwr_tOid		pwr;
-  cdh_mObjid		o;
-  cdh_mClassObjid	c;
-  cdh_mTypeObjid	t;
+  pwr_tOid		pwr;	//!< Extern representation.
+  cdh_mObjid		o;	//!< Common object representation.
+  cdh_mClassObjid	c;	//!< ClassDef object representation.
+  cdh_mTypeObjid	t;	//!< TypeDef object representation.
 } cdh_uOid;
-typedef cdh_uOid cdh_uObjid;
+typedef cdh_uOid cdh_uObjid; //!< Type for representations of object identity. 
 
+//! Type for representations of reference identity.
 typedef union {
-  pwr_tRid pwr;
-  cdh_mRid r;
+  pwr_tRid pwr;	//!< Extern representation.
+  cdh_mRid r;	//!< Intern representation
 } cdh_uRid;
-typedef cdh_uRid cdh_uRefId;
+typedef cdh_uRid cdh_uRefId;  //!< Type for representation of reference identity.
 
+//! Type for representation of type identity.
 typedef union {
-  pwr_tCid pwr;
-  cdh_mCid c;
-  cdh_mTid t;
+  pwr_tCid pwr;		//!< Extern representation.
+  cdh_mCid c;		//!< Class identity representation.
+  cdh_mTid t;		//!< Type identity representation.
 } cdh_uTid;
-typedef cdh_uTid cdh_uTypeId;
+typedef cdh_uTid cdh_uTypeId;  //!< Type for representation of type identity.
 
+//! Type for representation of volume identity.
 typedef union {
-  pwr_tVid pwr;
-  cdh_mVid v;
+  pwr_tVid pwr;		//!< Extern representation.
+  cdh_mVid v;		//!< Intern representation.
 } cdh_uVid;
-typedef cdh_uVid cdh_uVolumeId;
+typedef cdh_uVid cdh_uVolumeId;  //!< Type for represenation of volume identity.
 
+//! Type for representation of node identity.
 typedef union {
-  pwr_tNid pwr;
-  cdh_mNid n;
+  pwr_tNid pwr;		//!< Extern representation.
+  cdh_mNid n;		//!< Intern representation.
 } cdh_uNid;
-typedef cdh_uNid cdh_uNodeId;
+typedef cdh_uNid cdh_uNodeId;	//!< Type for representation of node idenity.
 
+//! Enumeration for identities.
 typedef enum {
   cdh_eId__ = 0,
-  cdh_eId_objectIx,
-  cdh_eId_objid,
-  cdh_eId_classId,
-  cdh_eId_volumeId,
-  cdh_eId_typeId,
-  cdh_eId_subid,
-  cdh_eId_dlid,
-  cdh_eId_aref,
+  cdh_eId_objectIx,	//!< Object index.
+  cdh_eId_objid,	//!< Object identity.
+  cdh_eId_classId,	//!< Class identity.
+  cdh_eId_volumeId,	//!< Volume identity.
+  cdh_eId_typeId,	//!< Type identity.
+  cdh_eId_subid,	//!< Subscription identity.
+  cdh_eId_dlid,		//!< Direct link identity.
+  cdh_eId_aref,		//!< Attribute reference.
   cdh_eId_
 } cdh_eId;
 
+//! Union for identities.
 typedef union {
   pwr_tOix     oix;
   pwr_tOid     oid;
@@ -292,8 +329,10 @@ typedef union {
   pwr_sAttrRef aref;
 } cdh_uId;
 
+//! Pack name
 typedef union {
   pwr_tUInt32		key;
+  //! Name structure
   struct {
 #if (pwr_dHost_byteOrder == pwr_dBigEndian)
 
@@ -313,18 +352,22 @@ typedef union {
   } c;
 } cdh_uPackName;
 
+//! Object name struct
 typedef struct {
   pwr_tObjName		orig;
   pwr_tObjName		norm;
   cdh_uPackName		pack;
 } cdh_sObjName;
 
+//! Family struct.
 typedef struct {
   cdh_sObjName		name;
   pwr_tOid		poid;
 } cdh_sFamily;
 
+//! Parse name mask
 typedef union {
+  //! Bitmask representation.
   struct {
 #if (pwr_dHost_byteOrder == pwr_dBigEndian)
 
@@ -347,93 +390,94 @@ typedef union {
 #define cdh_mParseName_			(~cdh_mParseName__)
 } cdh_mParseName;
 
-/* Describe the format of a namestring.
-
+//! Name string format description.
+/*!
    Let us assume we have an object of class Ai.
    The object has an attribute called FilterAttribute.
 
-   Object name:	Eobj
-   Object id  : 1234567890
-   Class name :	pwrb:Class-Ai
-   Class id   : 0.2:34
-   Volume name:	Avol
-   Volume id  : 0.123.34.63
-   Parents    : Bobj, Cobj, Dobj
-   Attribute  : FilterAttribute
-   Index      : 2
-   Offset     : 60
-   Size	      : 4
-   Body name  :	pwrb:Class-Ai-RtBody
-   Body id    : 0.2:0.34.1
+-   Object name:	Eobj
+-   Object id  : 1234567890
+-   Class name :	pwrb:Class-Ai
+-   Class id   : 0.2:34
+-   Volume name:	Avol
+-   Volume id  : 0.123.34.63
+-   Parents    : Bobj, Cobj, Dobj
+-   Attribute  : FilterAttribute
+-   Index      : 2
+-   Offset     : 60
+-   Size	      : 4
+-   Body name  :	pwrb:Class-Ai-RtBody
+-   Body id    : 0.2:0.34.1
 
    The name of this object can be written in different ways.
    The type cdh_mName is used to define the way an object is named.
 
-   V P O B B A I E S  I   Form  Fallback        String
-   o a b o o t n s e  d   
-   l t j d d t d c p  T 
-   u h e y y r e a a  y 
-   m   c I N i x p r  p 
-   e   t d a b   e a  e 
-           m u   G t    
-           e t   M o    
-             e   S r    
+-   V P O B B A I E S  I   Form  Fallback        String
+-   o a b o o t n s e  d   
+-   l t j d d t d c p  T 
+-   u h e y y r e a a  y 
+-   m   c I N i x p r  p 
+-   e   t d a b   e a  e 
+-           m u   G t    
+-           e t   M o    
+-             e   S r    
 
-   1 * * * * * * * 0  1   Id    *               _V0.123.34.63
-   1 * * * * * * * 1  1   Id    *               _V0.123.34.63:
-   1 * * * * * * * 0  0   Id    *                 0.123.34.63
-   1 * * * * * * * 1  0   Id    *                 0.123.34.63:
+-   1 * * * * * * * 0  1   Id    *               _V0.123.34.63
+-   1 * * * * * * * 1  1   Id    *               _V0.123.34.63:
+-   1 * * * * * * * 0  0   Id    *                 0.123.34.63
+-   1 * * * * * * * 1  0   Id    *                 0.123.34.63:
 
-   0 * 1 * * * * * *  1   Id    *               _O0.123.34.63:1234567890
-   0 * 1 * * * * * *  0   Id    *                 0.123.34.63:1234567890
+-   0 * 1 * * * * * *  1   Id    *               _O0.123.34.63:1234567890
+-   0 * 1 * * * * * *  0   Id    *                 0.123.34.63:1234567890
 
-   0 * 0 1 * 1 0 * *  *   Id    *               _A0.123.34.63:1234567890(_T0.2:0.34.1)
-   0 * 0 1 * 1 1 * *  *   Id    *               _A0.123.34.63:1234567890(_T0.2:0.34.1)[60.4]
+-   0 * 0 1 * 1 0 * *  *   Id    *               _A0.123.34.63:1234567890(_T0.2:0.34.1)
+-   0 * 0 1 * 1 1 * *  *   Id    *               _A0.123.34.63:1234567890(_T0.2:0.34.1)[60.4]
 
-   1 * * * * * * * *  *   Std   Export          _V0.123.34.63:
-   0 0 0 * * 1 * * *  *   Std   Export          _O0.123.34.63:1234567890
-   0 0 0 0 1 1 * * *  *   Std   Export          _A0.123.34.63:1234567890(pwrb:Class-Ai-RtBody)FilterAttribute[2]
+-   1 * * * * * * * *  *   Std   Export          _V0.123.34.63:
+-   0 0 0 * * 1 * * *  *   Std   Export          _O0.123.34.63:1234567890
+-   0 0 0 0 1 1 * * *  *   Std   Export          _A0.123.34.63:1234567890(pwrb:Class-Ai-RtBody)FilterAttribute[2]
 
-   1 1 1 0 0 1 1 0 *  *   Std   Strict          Avol:Bobj-Cobj-Dobj-Eobj.FilterAttribute[2]
-   0 1 1 0 0 1 1 0 *  *   Std   Strict               Bobj-Cobj-Dobj-Eobj.FilterAttribute[2]
-   0 0 1 0 0 1 1 0 *  *   Std   Strict                              Eobj.FilterAttribute[2]
-   0 0 0 0 0 1 1 0 0  *   Std   Strict                                   FilterAttribute[2]
-   0 0 0 0 0 1 1 0 1  *   Std   Strict                                  .FilterAttribute[2]
-   0 0 0 0 0 1 0 0 0  *   Std   Strict                                   FilterAttribute
-   0 0 0 0 0 1 0 0 1  *   Std   Strict                                  .FilterAttribute
-   1 1 1 0 0 1 0 0 *  *   Std   Strict          Avol:Bobj-Cobj-Dobj-Eobj.FilterAttribute
-   1 1 1 0 0 0 0 0 0  *   Std   Strict          Avol:Bobj-Cobj-Dobj-Eobj
-   1 1 1 0 0 0 0 0 1  *   Std   Strict          Avol:Bobj-Cobj-Dobj-Eobj-
-   1 1 0 0 0 0 0 0 0  *   Std   Strict          Avol:Bobj-Cobj-Dobj
-   1 1 0 0 0 0 0 0 1  *   Std   Strict          Avol:Bobj-Cobj-Dobj-
-   1 0 0 0 0 0 0 0 0  *   Std   Strict          Avol
-   1 0 0 0 0 0 0 0 1  *   Std   Strict          Avol:
+-   1 1 1 0 0 1 1 0 *  *   Std   Strict          Avol:Bobj-Cobj-Dobj-Eobj.FilterAttribute[2]
+-   0 1 1 0 0 1 1 0 *  *   Std   Strict               Bobj-Cobj-Dobj-Eobj.FilterAttribute[2]
+-   0 0 1 0 0 1 1 0 *  *   Std   Strict                              Eobj.FilterAttribute[2]
+-   0 0 0 0 0 1 1 0 0  *   Std   Strict                                   FilterAttribute[2]
+-   0 0 0 0 0 1 1 0 1  *   Std   Strict                                  .FilterAttribute[2]
+-   0 0 0 0 0 1 0 0 0  *   Std   Strict                                   FilterAttribute
+-   0 0 0 0 0 1 0 0 1  *   Std   Strict                                  .FilterAttribute
+-   1 1 1 0 0 1 0 0 *  *   Std   Strict          Avol:Bobj-Cobj-Dobj-Eobj.FilterAttribute
+-   1 1 1 0 0 0 0 0 0  *   Std   Strict          Avol:Bobj-Cobj-Dobj-Eobj
+-   1 1 1 0 0 0 0 0 1  *   Std   Strict          Avol:Bobj-Cobj-Dobj-Eobj-
+-   1 1 0 0 0 0 0 0 0  *   Std   Strict          Avol:Bobj-Cobj-Dobj
+-   1 1 0 0 0 0 0 0 1  *   Std   Strict          Avol:Bobj-Cobj-Dobj-
+-   1 0 0 0 0 0 0 0 0  *   Std   Strict          Avol
+-   1 0 0 0 0 0 0 0 1  *   Std   Strict          Avol:
    
-   1 1 1 0 0 1 1 1 0  *   Std   Strict          Avol\:Bobj\-Cobj\-Dobj\-Eobj\.FilterAttribute[2]
-   0 1 1 0 0 1 1 1 0  *   Std   Strict                Bobj\-Cobj\-Dobj\-Eobj\.FilterAttribute[2]
-   0 0 1 0 0 1 1 1 0  *   Std   Strict                                  Eobj\.FilterAttribute[2]
-   0 0 0 0 0 1 1 1 0  *   Std   Strict                                        FilterAttribute[2]
-   1 1 1 0 0 1 0 1 0  *   Std   Strict          Avol\:Bobj\-Cobj\-Dobj\-Eobj\.FilterAttribute
-   1 1 1 0 0 0 0 1 0  *   Std   Strict          Avol\:Bobj\-Cobj\-Dobj\-Eobj
-   1 1 0 0 0 0 0 1 0  *   Std   Strict          Avol\:Bobj\-Cobj\-Dobj
-   1 0 0 0 0 0 0 1 0  *   Std   Strict          Avol
+-   1 1 1 0 0 1 1 1 0  *   Std   Strict          Avol\:Bobj\-Cobj\-Dobj\-Eobj\.FilterAttribute[2]
+-   0 1 1 0 0 1 1 1 0  *   Std   Strict                Bobj\-Cobj\-Dobj\-Eobj\.FilterAttribute[2]
+-   0 0 1 0 0 1 1 1 0  *   Std   Strict                                  Eobj\.FilterAttribute[2]
+-   0 0 0 0 0 1 1 1 0  *   Std   Strict                                        FilterAttribute[2]
+-   1 1 1 0 0 1 0 1 0  *   Std   Strict          Avol\:Bobj\-Cobj\-Dobj\-Eobj\.FilterAttribute
+-   1 1 1 0 0 0 0 1 0  *   Std   Strict          Avol\:Bobj\-Cobj\-Dobj\-Eobj
+-   1 1 0 0 0 0 0 1 0  *   Std   Strict          Avol\:Bobj\-Cobj\-Dobj
+-   1 0 0 0 0 0 0 1 0  *   Std   Strict          Avol
    
-   1 1 1 0 0 1 1 0 *  *   Root  Strict          //Avol/Bobj/Cobj/Dobj/Eobj.FilterAttribute[2]
-   0 1 1 0 0 1 1 0 *  *   Root  Strict                /Bobj/Cobj/Dobj/Eobj.FilterAttribute[2]
-   0 0 1 0 0 1 1 0 *  *   Root  Strict                                Eobj.FilterAttribute[2]
-   0 0 0 0 0 1 1 0 0  *   Root  Strict                                     FilterAttribute[2]
-   1 1 1 0 0 1 0 0 0  *   Root  Strict          //Avol/Bobj/Cobj/Dobj/Eobj.FilterAttribute
-   1 1 1 0 0 0 0 0 0  *   Root  Strict          //Avol/Bobj/Cobj/Dobj/Eobj
-   1 1 1 0 0 0 0 0 1  *   Root  Strict          //Avol/Bobj/Cobj/Dobj/Eobj/
-   1 1 0 0 0 0 0 0 0  *   Root  Strict          //Avol/Bobj/Cobj/Dobj
-   1 1 0 0 0 0 0 0 1  *   Root  Strict          //Avol/Bobj/Cobj/Dobj/
-   1 0 0 0 0 0 0 0 0  *   Root  Strict          //Avol
-   1 0 0 0 0 0 0 0 1  *   Root  Strict          //Avol/
+-   1 1 1 0 0 1 1 0 *  *   Root  Strict          //Avol/Bobj/Cobj/Dobj/Eobj.FilterAttribute[2]
+-   0 1 1 0 0 1 1 0 *  *   Root  Strict                /Bobj/Cobj/Dobj/Eobj.FilterAttribute[2]
+-   0 0 1 0 0 1 1 0 *  *   Root  Strict                                Eobj.FilterAttribute[2]
+-   0 0 0 0 0 1 1 0 0  *   Root  Strict                                     FilterAttribute[2]
+-   1 1 1 0 0 1 0 0 0  *   Root  Strict          //Avol/Bobj/Cobj/Dobj/Eobj.FilterAttribute
+-   1 1 1 0 0 0 0 0 0  *   Root  Strict          //Avol/Bobj/Cobj/Dobj/Eobj
+-   1 1 1 0 0 0 0 0 1  *   Root  Strict          //Avol/Bobj/Cobj/Dobj/Eobj/
+-   1 1 0 0 0 0 0 0 0  *   Root  Strict          //Avol/Bobj/Cobj/Dobj
+-   1 1 0 0 0 0 0 0 1  *   Root  Strict          //Avol/Bobj/Cobj/Dobj/
+-   1 0 0 0 0 0 0 0 0  *   Root  Strict          //Avol
+-   1 0 0 0 0 0 0 0 1  *   Root  Strict          //Avol/
    
-   */
+*/
 
 typedef union {
   pwr_tBitMask		m;
+  //! Bit mask representation.
   struct {
 #if (pwr_dHost_byteOrder == pwr_dBigEndian)
 
@@ -477,6 +521,7 @@ typedef union {
 
 #endif
   } b;
+  //! Word representation.
   struct {
 #if (pwr_dHost_byteOrder == pwr_dBigEndian)
 
@@ -536,6 +581,7 @@ typedef union {
                                          cdh_mName_index | cdh_mName_form_std | cdh_mName_fallback_strict)
 } cdh_mName;
 
+//! Parse name struct.
 typedef struct {
   pwr_tOid		 poid;		/* Parent objid, or NOBJID */
   cdh_mParseName parseFlags;
@@ -555,6 +601,10 @@ typedef struct {
   cdh_sFamily    body[10];
   cdh_sFamily    attribute;
 } cdh_sParseName;
+
+/*@}*/
+/*! \addtogroup Cdh */
+/*@{*/
 
 /*  Function prototypes to exported functions.  */
 
@@ -865,8 +915,11 @@ cdh_NoCaseStrcmp (
 
 char *cdh_OpSysToStr( pwr_mOpSys opsys);
 
+/*@}*/
+
 #ifdef __cplusplus
 }
 #endif
 
 #endif
+

@@ -24,6 +24,13 @@
 # include <time.h>
 #endif
 
+/*! \file pwr.h
+    \brief Basic type definitions.
+   This include file contains the Proview basic type definitions.
+*/
+/*! \addtogroup Pwr */
+/*@{*/
+
 #ifdef VAXC
 # define pwr_dExport globaldef  
 # define pwr_dImport globalref
@@ -76,43 +83,46 @@
 #define pwr_cSizPathName	63
 #define pwr_cSizFullName	79
 
-typedef void            *pwr_tAddress;
-typedef unsigned int    pwr_tBit;
-typedef unsigned int    pwr_tBitMask;
-typedef unsigned int    pwr_tBoolean;
-typedef float           pwr_tFloat32;
-typedef double          pwr_tFloat64;
+typedef void            *pwr_tAddress;		//!< Generic pointer type.
+typedef unsigned int    pwr_tBit;		//!< Bit type.
+typedef unsigned int    pwr_tBitMask;		//!< Bitmask type.
+typedef unsigned int    pwr_tBoolean;		//!< Boolean type.
+typedef float           pwr_tFloat32;		//!< 32-bit float.
+typedef double          pwr_tFloat64;		//!< 64-big float.
 typedef unsigned int    pwr_tGeneration;
-typedef char            pwr_tChar;
-typedef char            pwr_tString[];
-typedef char            pwr_tText[];
-typedef char            pwr_tInt8;
-typedef short           pwr_tInt16;
-typedef int             pwr_tInt32;
-typedef int             pwr_tStatus;
+typedef char            pwr_tChar;		//!< Character type.
+typedef char            pwr_tString[];		//!< String type.
+typedef char            pwr_tText[];		//!< Text type.
+typedef char            pwr_tInt8;		//!< 8-bit integer type.
+typedef short           pwr_tInt16;		//!< 16-bit integer type.
+typedef int             pwr_tInt32;		//!< 32-bit integer type.
+typedef int             pwr_tStatus;		//!< Status type.
 
 
+//! 64-bit integer type.
 typedef struct {
   unsigned int low;
   int          high;
 } pwr_tInt64;
 
+//! 64-bit unsigned integer type.
 typedef struct {
   unsigned int low;
   unsigned int high;
 } pwr_tUInt64;
 
-typedef unsigned char   pwr_tUInt8;
-typedef unsigned short  pwr_tUInt16;
-typedef unsigned int    pwr_tUInt32;
-typedef unsigned int    pwr_tVid;
-typedef pwr_tVid        pwr_tVolumeId;
-typedef unsigned int    pwr_tAix;
-typedef unsigned int    pwr_tOix;
-typedef pwr_tOix        pwr_tObjectIx;
-typedef unsigned int	pwr_tMask;
-typedef unsigned int	pwr_tEnum;
+typedef unsigned char   pwr_tUInt8;		//!< 8-bit unsigned integer type.
+typedef unsigned short  pwr_tUInt16;		//!< 16-bit unsigned integer type.
+typedef unsigned int    pwr_tUInt32;		//!< 32-bit unsigned integer type.
+typedef unsigned int    pwr_tVid;		//!< Volume identity type.
+typedef pwr_tVid        pwr_tVolumeId;		//!< Volume identity type.
+typedef unsigned int    pwr_tAix;		//!< Attribute index type.
+typedef unsigned int    pwr_tOix;		//!< Object index type.
+typedef pwr_tOix        pwr_tObjectIx;		//!< Object index type.
+typedef unsigned int	pwr_tMask;		//!< Mask type.
+typedef unsigned int	pwr_tEnum;		//!< Enumeration type.
 
+//! Body index enumeration.
 typedef enum {
   pwr_eBix__	    = 0,
   pwr_eBix_sys	    = 1,
@@ -122,37 +132,40 @@ typedef enum {
   pwr_eBix_
 } pwr_eBix;
 
+//! Object identity type.
 typedef struct {
   pwr_tOix    oix;
   pwr_tVid    vid;
 } pwr_tOid;
 
-typedef pwr_tOid        pwr_tObjid;
+typedef pwr_tOid        pwr_tObjid;	//!< Object identity type.
 typedef pwr_tOid        pwr_tObjDId;
-typedef unsigned int    pwr_tCid;
-typedef pwr_tCid        pwr_tClassId;
-typedef unsigned int    pwr_tTid;
-typedef pwr_tTid        pwr_tTypeId;
+typedef unsigned int    pwr_tCid;	//!< Class identity type.
+typedef pwr_tCid        pwr_tClassId;	//!< Class identity type.
+typedef unsigned int    pwr_tTid;	//!< Type identity type.
+typedef pwr_tTid        pwr_tTypeId;	//!< Type identity type.
 typedef unsigned int    pwr_tBid;
 typedef unsigned int    pwr_tVersion;
 typedef unsigned int    pwr_tPwrVersion;
 typedef unsigned int    pwr_tProjVersion;
 typedef unsigned int    pwr_tUserId;
 typedef unsigned int    pwr_tDbId;
-typedef pwr_tVolumeId	pwr_tNid;
-typedef pwr_tNid        pwr_tNodeId;
-typedef pwr_tNid        pwr_tNodeIndex;
+typedef pwr_tVolumeId	pwr_tNid;	//!< Node identity type.
+typedef pwr_tNid        pwr_tNodeId;	//!< Node identity type.
+typedef pwr_tNid        pwr_tNodeIndex;	//!< Node index type.
 
+//! Reference identity type.
 typedef struct {
   pwr_tUInt32    rix;
   pwr_tNid       nid;
 } pwr_tRid;
 
-typedef pwr_tRid        pwr_tRefId;
-typedef pwr_tRid        pwr_tDlid;
-typedef pwr_tRid        pwr_tSubid;
+typedef pwr_tRid        pwr_tRefId;	//!< Reference identity type.
+typedef pwr_tRid        pwr_tDlid;	//!< Direct link identity type.
+typedef pwr_tRid        pwr_tSubid;	//!< Subscription identity type.
 
 
+//! Vax time.
 typedef struct {
   int low;
   int high;
@@ -166,17 +179,20 @@ typedef struct {
   } timespec_t;
 #endif
 
-typedef struct timespec pwr_tTime;
+typedef struct timespec pwr_tTime;	//!< Abolute time type.
 
 
+//! Delta time type.
 typedef struct {
-  int tv_sec;
-  int tv_nsec;
+  int tv_sec;		//!< Seconds.
+  int tv_nsec;		//!< Nano seconds.
 } pwr_tDeltaTime;
 
 
+//! Proview version type
 typedef union {
   pwr_tPwrVersion i;
+  //! Word representation
   struct {
 #if (pwr_dHost_byteOrder == pwr_dLittleEndian)
 
@@ -196,27 +212,30 @@ typedef union {
   } s;
 } pwr_uPwrVersion;
 
-typedef char		pwr_tObjName	[pwr_cSizObjName + 1];
-typedef char		pwr_tPgmName	[pwr_cSizPgmName + 1];
-typedef char		pwr_tXRef	[pwr_cSizXRef + 1];
-typedef char		pwr_tGraphName	[pwr_cSizGraphName + 1];
-typedef char		pwr_tStructName	[pwr_cSizStructName + 1];
-typedef char		pwr_tAttrName	[pwr_cSizAttrName + 1];
-typedef char		pwr_tPathName	[pwr_cSizPathName + 1];
-typedef char		pwr_tFullName	[pwr_cSizFullName + 1];
-typedef char		pwr_tString256	[256];
-typedef char		pwr_tString132	[132];
-typedef char		pwr_tString80	[80];
-typedef char		pwr_tString40	[40];
-typedef char		pwr_tString32	[32];
-typedef char		pwr_tString16	[16];
-typedef char		pwr_tString8	[8];
-typedef char		pwr_tString1	[1];
-typedef char		pwr_tText1024	[1024];
-typedef char		pwr_tURL	[160];
+typedef char		pwr_tObjName	[pwr_cSizObjName + 1];	//!< Object name type.
+typedef char		pwr_tPgmName	[pwr_cSizPgmName + 1];	//!< PgmName type.
+typedef char		pwr_tXRef	[pwr_cSizXRef + 1];	//!< XRef type.
+typedef char		pwr_tGraphName	[pwr_cSizGraphName + 1]; //!< GraphName type.
+typedef char		pwr_tStructName	[pwr_cSizStructName + 1]; //!< StructName type.
+typedef char		pwr_tAttrName	[pwr_cSizAttrName + 1];	//!< AttrName type.
+typedef char		pwr_tPathName	[pwr_cSizPathName + 1];	//!< PathName type.
+typedef char		pwr_tFullName	[pwr_cSizFullName + 1];	//!< FullName type.
+typedef char		pwr_tString256	[256];			//!< 256 byte string type.
+typedef char		pwr_tString132	[132];			//!< 132 byte string type.
+typedef char		pwr_tString80	[80];			//!< 80 byte string type.
+typedef char		pwr_tString40	[40];			//!< 40 byte string type.
+typedef char		pwr_tString32	[32];			//!< 32 byte string type.
+typedef char		pwr_tString16	[16];			//!< 16 byte string type.
+typedef char		pwr_tString8	[8];			//!< 8 byte string type.
+typedef char		pwr_tString1	[1];			//!< 1 byte string type.
+typedef char		pwr_tText1024	[1024];			//!< 1024 byte text type.
+typedef char		pwr_tURL	[160];			//!< URL type.
 
+
+//! Attribute reference flags type.
 typedef union {
   pwr_tBitMask m;
+  //! Bitmask representation.
   struct {
 #if (pwr_dHost_byteOrder == pwr_dLittleEndian)
 
@@ -237,50 +256,56 @@ typedef union {
 
 } pwr_mAttrRef;
 
+//! Attribute reference.
 typedef struct {
-  pwr_tOid		    Objid;
-  pwr_tCid          Body;
-  pwr_tUInt32       Offset;
-  pwr_tUInt32       Size;
-  pwr_mAttrRef      Flags;
+  pwr_tOid	    Objid;	//!< Object identity.
+  pwr_tCid          Body;	//!< Class identity of body.
+  pwr_tUInt32       Offset;	//!< Offset in body.
+  pwr_tUInt32       Size;	//!< Attribute size.
+  pwr_mAttrRef      Flags;	//!< Attribute flags.
 } pwr_sAttrRef;
 
+//! Zero attribute reference constant.
 #ifdef OS_ELN
 static const pwr_sAttrRef   pwr_cNAttrRef   = {0, 0, 0, 0, 0};
 #else
 static const pwr_sAttrRef   pwr_cNAttrRef   = {{0, 0}, 0, 0, 0, {0}};
 #endif
-static const pwr_tOid       pwr_cNOid       = {0, 0};
-static const pwr_tObjid	    pwr_cNObjid	    = {0, 0};
-static const pwr_tDlid	    pwr_cNRefId	    = {0, 0};
-#define			    pwr_cNSubid	    pwr_cNRefId
-#define			    pwr_cNDlid	    pwr_cNRefId
-static const pwr_tOix       pwr_cNOix       = 0;
-static const pwr_tObjectIx  pwr_cNObjectIx  = 0;
-static const pwr_tClassId   pwr_cNClassId   = 0;
-static const pwr_tTypeId    pwr_cNTypeId    = 0;
-static const pwr_tVolumeId  pwr_cNVolumeId  = 0;
-static const pwr_tNodeId    pwr_cNNodeId    = 0;
-static const pwr_tCid       pwr_cNCid       = 0;
-static const pwr_tTid       pwr_cNTid       = 0;
-static const pwr_tVid       pwr_cNVid       = 0;
-static const pwr_tNid       pwr_cNNid       = 0;
+static const pwr_tOid       pwr_cNOid       = {0, 0};	//!< Zero object identity constant.
+static const pwr_tObjid	    pwr_cNObjid	    = {0, 0};	//!< Zero object identity constant.
+static const pwr_tDlid	    pwr_cNRefId	    = {0, 0};	//!< Zero reference identity constant.
+#define			    pwr_cNSubid	    pwr_cNRefId //!< Zero subscription identity constant.
+#define			    pwr_cNDlid	    pwr_cNRefId	//!< Zero direct link identity constant.
+static const pwr_tOix       pwr_cNOix       = 0;	//!< Zero object index constant.
+static const pwr_tObjectIx  pwr_cNObjectIx  = 0;	//!< Zero object index constant.
+static const pwr_tClassId   pwr_cNClassId   = 0;	//!< Zero class identity constant.
+static const pwr_tTypeId    pwr_cNTypeId    = 0;	//!< Zero type identity constant.
+static const pwr_tVolumeId  pwr_cNVolumeId  = 0;	//!< Zero volume identity constant.
+static const pwr_tNodeId    pwr_cNNodeId    = 0;	//!< Zero node identity constant.
+static const pwr_tCid       pwr_cNCid       = 0;	//!< Zero class identity constant.
+static const pwr_tTid       pwr_cNTid       = 0;	//!< Zero type identity constant.
+static const pwr_tVid       pwr_cNVid       = 0;	//!< Zero volume identity constant.
+static const pwr_tNid       pwr_cNNid       = 0;	//!< Zero node identity constant.
 
 /* Gereral macro definitions  */
 
 #ifndef MIN
+//! Return the smallest of two values
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #endif
 
 #ifndef MAX
+//! Return the largest of two values
 #define MAX(a,b) (((a)>(b))?(a):(b))
 #endif
 
 #ifndef ODD
+//! Check if value is odd
 #define ODD(a)	(((int)(a) & 1) != 0)
 #endif
 
 #ifndef EVEN
+//! Check if value is even
 #define EVEN(a)	(((int)(a) & 1) == 0)
 #endif
 
@@ -433,5 +458,8 @@ static const pwr_tNid       pwr_cNNid       = 0;
 			#a,__FILE__,__LINE__),exit(EXIT_FAILURE)))
 #endif
 
+/*@}*/
 
 #endif
+
+
