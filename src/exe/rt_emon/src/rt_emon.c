@@ -31,7 +31,7 @@
 # include math
 #endif
 
-#include "pwrb_c_cyclesup.h"
+#include "pwr_baseclasses.h"
 #include "co_cdh.h"
 #include "co_time.h"
 #include "co_tree.h"
