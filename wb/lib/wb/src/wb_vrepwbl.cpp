@@ -274,6 +274,16 @@ int wb_vrepwbl::load( const char *fname)
     root_object->postBuild();
   }
   // info();
+
+  if ( !file_cnt) {
+    MsgWindow::message( 'F', "No file found, ", fname);
+    return LDH__NOSUCHFILE;
+  }
+  if ( strcmp( volume_name, "") == 0) {
+    MsgWindow::message( 'F', "No volume found, ", fname);
+    error_cnt++;
+  }
+
   if ( error_cnt || wblparser_error_cnt) {
     char str[80];
     sprintf( str, "Errors when loading volume: %d errors found", error_cnt + wblparser_error_cnt);

@@ -28,7 +28,7 @@ nosubgraph	<Subgraph not found>				/error
 javac		<Java compilation errors>			/error
 nofile 		<File not found>				/error
 nosize		<Size not found>				/error
-
+no_propagate    <Don't propagate event handling>		/info
 
 
 

@@ -9,7 +9,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "wb_foe_macros.h"
 
 #include <Xm/Xm.h>
 #include <Xm/Text.h>
@@ -18,16 +17,18 @@
 #include <X11/Intrinsic.h>
 #include <Xm/MessageB.h>
 
+#include "rt_load.h"
+
 #include "flow.h"
 #include "flow_ctx.h"
 #include "flow_api.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
+#include "wb_foe_macros.h"
 
 extern "C" {
 #include "pwr.h"
 #include "pwr_systemclasses.h"
-#include "rt_load.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "wb.h"
@@ -703,19 +704,19 @@ pwr_tStatus WVsel::check_volumelist(
 	        switch( classid)
 	        {
 		  case pwr_eClass_RootVolume :
-	            if ( strcmp( volumelist_ptr->p2, "RootVolume"))
+	            if ( strcmp( volumelist_ptr->p1, "RootVolume"))
 		      class_error = 1;
 	            break;
 		  case pwr_eClass_SubVolume :
-	            if ( strcmp( volumelist_ptr->p2, "SubVolume"))
+	            if ( strcmp( volumelist_ptr->p1, "SubVolume"))
 		      class_error = 1;
 	            break;
 		  case pwr_eClass_ClassVolume :
-	            if ( strcmp( volumelist_ptr->p2, "ClassVolume"))
+	            if ( strcmp( volumelist_ptr->p1, "ClassVolume"))
 		      class_error = 1;
 	            break;
 		  case pwr_eClass_SharedVolume :
-	            if ( strcmp( volumelist_ptr->p2, "SharedVolume"))
+	            if ( strcmp( volumelist_ptr->p1, "SharedVolume"))
 		      class_error = 1;
 	            break;
 	        }
@@ -725,7 +726,7 @@ pwr_tStatus WVsel::check_volumelist(
 	          {
 	            errlen += sprintf( &errstr[errlen], 
 	                "** Error, Volume %s is configured with another class '%s'\n", 
-		        name, volumelist_ptr->p2);
+		        name, volumelist_ptr->p1);
 		    MsgWindow::message( 'E', &errstr[errlen_old], msgw_ePop_No);
 		    errlen_old = errlen;
                     BEEP;

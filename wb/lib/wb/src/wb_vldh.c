@@ -4131,6 +4131,7 @@ int vldh_node_update_spec (
 	else if ( node->ln.classid == vldh_class( ldhses, VLDH_CLASS_SHOWPLCATTR))
 	{
 	  pwr_tObjid volume_objid;
+	  pwr_tObjid *thread_objid;
 
 	  volume_objid.oix = 0;
 	  volume_objid.vid = node->ln.object_did.vid;
@@ -4144,16 +4145,27 @@ int vldh_node_update_spec (
 
 	  sts = ldh_GetObjectPar( ldhses,
 			plc->lp.objdid, 
-			"DevBody",
-			"ScanTime",
-			(char **)&time_ptr, &size); 
-	  sts = ldh_SetObjectPar( ldhses,
-		node->ln.object_did, 
-		"DevBody",
-		"ScanTime",
-		(char *)time_ptr, size); 
+			"RtBody",
+			"ThreadObject",
+			(char **)&thread_objid, &size); 
 	  if ( EVEN(sts)) return sts;
-	  free((char *) time_ptr);
+	  if ( cdh_ObjidIsNotNull( *thread_objid)) {
+	    sts = ldh_GetObjectPar( ldhses,
+				    *thread_objid, 
+				    "RtBody",
+				    "ScanTime",
+				    (char **)&time_ptr, &size); 
+	  }
+	  free((char *) thread_objid);
+	  if ( ODD(sts)) {
+	    sts = ldh_SetObjectPar( ldhses,
+				    node->ln.object_did, 
+				    "DevBody",
+				    "ScanTime",
+				    (char *)time_ptr, size); 
+	    if ( EVEN(sts)) return sts;
+	    free((char *) time_ptr);
+	  }
 
 	  sts = ldh_GetObjectPar( ldhses,
 			plc->lp.objdid, 
@@ -4539,6 +4551,7 @@ int vldh_node_create_spec (
 	else if ( node->ln.classid == vldh_class( ldhses, VLDH_CLASS_SHOWPLCATTR))
 	{
 	  pwr_tObjid volume_objid;
+	  pwr_tObjid *thread_objid;
 
 	  volume_objid.oix = 0;
 	  volume_objid.vid = node->ln.object_did.vid;
@@ -4552,16 +4565,27 @@ int vldh_node_create_spec (
 
 	  sts = ldh_GetObjectPar( ldhses,
 			plc->lp.objdid, 
-			"DevBody",
-			"ScanTime",
-			(char **)&time_ptr, &size); 
-	  sts = ldh_SetObjectPar( ldhses,
-		node->ln.object_did, 
-		"DevBody",
-		"ScanTime",
-		(char *)time_ptr, size); 
+			"RtBody",
+			"ThreadObject",
+			(char **)&thread_objid, &size); 
 	  if ( EVEN(sts)) return sts;
-	  free((char *) time_ptr);
+	  if ( cdh_ObjidIsNotNull( *thread_objid)) {
+	    sts = ldh_GetObjectPar( ldhses,
+				    *thread_objid, 
+				    "RtBody",
+				    "ScanTime",
+				    (char **)&time_ptr, &size); 
+	  }
+	  free((char *) thread_objid);
+	  if ( ODD(sts)) {
+	    sts = ldh_SetObjectPar( ldhses,
+				    node->ln.object_did, 
+				    "DevBody",
+				    "ScanTime",
+				    (char *)time_ptr, size); 
+	    if ( EVEN(sts)) return sts;
+	    free((char *) time_ptr);
+	  }
 
 	  sts = ldh_GetObjectPar( ldhses,
 			plc->lp.objdid, 

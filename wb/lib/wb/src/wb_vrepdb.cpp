@@ -4,6 +4,7 @@
 #include "wb_vrepdb.h"
 #include "wb_orepdb.h"
 #include "wb_erep.h"
+#include "wb_dbs.h"
 #include "db_cxx.h"
 #include "wb_ldh.h"
 
@@ -107,7 +108,18 @@ bool wb_vrepdb::isLocal(const wb_orep *o)
 
 bool wb_vrepdb::createSnapshot(const char *fileName)
 {
-  return false;
+  try {
+    wb_dbs dbs(this);
+        
+    if ( fileName)
+      dbs.setFileName( fileName);
+
+    dbs.importVolume(*this);
+
+    return true;
+  } catch (wb_error& e) {
+    return false;
+  }
 }
 
 void wb_vrepdb::objectName(const wb_orep *o, char *str)

@@ -783,7 +783,7 @@ int Admin::user_properties( admin_eDiaUserFunction function, int username_edit, 
       char system_name[80];
 
       ((AdminNav *)adminnav)->gu->get_system_name( item->group, system_name);
-      adminuser_setup( "User properties", username_edit, password_edit,
+      adminuser_setup( "New User", username_edit, password_edit,
 	system_edit, priv_edit, "", system_name, 0);
 
       diauser_function = admin_eDiaUserFunction_New;
@@ -853,7 +853,7 @@ int Admin::system_properties( admin_eDiaSysFunction function, int systemname_edi
     else
       strcpy( system_name, "");
 
-    adminsys_setup( "System group properties", systemname_edit, attr_edit, system_name, 0);
+    adminsys_setup( "New System Group", systemname_edit, attr_edit, system_name, 0);
     diasys_function = admin_eDiaSysFunction_New;
     
     XtManageChild( adminsys_dia);

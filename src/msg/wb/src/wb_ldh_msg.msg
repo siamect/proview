@@ -101,6 +101,7 @@ pasteincon	<paste inconsistency>					/error
 memincon	<buffer inconsistency>					/error
 access		<no such access for this configuration>			/error
 attrconv	<attribute conversion error>				/error
+nosuchfile	<no such file>						/error
 
 
 

@@ -14,3 +14,4 @@ type		<invalid type>						/error
 ivtime		<invalid time>						/error
 ivdtime		<invalid delta time>					/error
 negtime		<negative time>						/info
+clkchange	<clock has changed>					/info
