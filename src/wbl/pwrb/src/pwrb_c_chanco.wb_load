@@ -42,14 +42,11 @@ SObject pwrb:Class
       !  Name of a signal object, i.e. Co object, connected with
       !  the channel object.
       !*/
-      Object SigChanCon $ObjXRef 2
-
+      Object SigChanCon $Attribute 2
         Body SysBody
-          Attr Identity = "Co"
-          Attr Source = "ChanCo"
-          Attr Target = "Co"
-          Attr SourceAttribute = "SigChanCon"
-          Attr TargetAttribute = "SigChanCon"
+          Attr TypeRef = "pwrs:Type-$Objid"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
       !/**
@@ -191,58 +188,6 @@ SObject pwrb:Class
       Body SysBody
         Attr Name = "%02.2d"
       EndBody
-    EndObject
-    Object ConfiguratorPosnn $Menu
-      Object Pointed $Menu
-	Object Disconnect $MenuButton
-	  Body SysBody
-	    Attr ButtonName = "Disconnect Signal"
-	    Attr MethodName = "$ObjXRef-DisconnectSingle"
-	    Attr MethodArguments[0] = "SigChanCon"
-	    Attr FilterName = "$ObjXRef-IsOkDisconnectSingle"
-	    Attr FilterArguments[0] = "SigChanCon"
-	  EndBody
-	EndObject
-      EndObject
-    EndObject
-    Object ConfiguratorPoson $Menu
-      Object Pointed $Menu
-	Object Connect $MenuButton
-	  Body SysBody
-	    Attr ButtonName = "Connect Signal"
-	    Attr MethodName = "$ObjXRef-Connect"
-	    Attr MethodArguments[0] = "SigChanCon"
-	    Attr MethodArguments[1] = "SigChanCon"
-	    Attr FilterName = "$ObjXRef-IsOkConnect"
-	    Attr FilterArguments[0] = "SigChanCon"
-	    Attr FilterArguments[1] = "SigChanCon"
-	  EndBody
-	EndObject
-	Object Disconnect $MenuButton
-	  Body SysBody
-	    Attr ButtonName = "Disconnect Signal"
-	    Attr MethodName = "$ObjXRef-Disconnect"
-	    Attr MethodArguments[0] = "SigChanCon"
-	    Attr MethodArguments[1] = "SigChanCon"
-	    Attr FilterName = "$ObjXRef-IsOkDisconnect"
-	    Attr FilterArguments[0] = "SigChanCon"
-	    Attr FilterArguments[1] = "SigChanCon"
-	  EndBody
-	EndObject
-      EndObject
-    EndObject
-    Object ConfiguratorPosos $Menu
-      Object Pointed $Menu
-	Object Disconnect $MenuButton
-	  Body SysBody
-	    Attr ButtonName = "Disconnect Signal"
-	    Attr MethodName = "$ObjXRef-DisconnectSingle"
-	    Attr MethodArguments[0] = "SigChanCon"
-	    Attr FilterName = "$ObjXRef-IsOkDisconnectSingle"
-	    Attr FilterArguments[0] = "SigChanCon"
-	  EndBody
-	EndObject
-      EndObject
     EndObject
     Object ConfiguratorPcsnn $Menu
       Object Pointed $Menu

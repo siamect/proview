@@ -1,0 +1,89 @@
+!  pwrb_c_chanii.wb_load -- Defines the class ChanIi.
+!
+!  PROVIEW/R
+!  Copyright (C) 2004 SSAB Oxelosund AB.
+!
+!  Channel Integer Input.
+!
+!/**
+!  @Version 1.0
+!  @Group IO,Channels,NodeConfiguration
+!  @Summary Configures a integer input channel
+!   Configures a integer input channel. 
+!   Integer values are normally recieved from bus io-systems.
+!   The integer value is stored as a 32-bit signed integer.
+!  
+! @b Hints  
+!  ChanIi objects are configured below a suitable Io-card or module 
+!  object.
+!*/
+SObject pwrb:Class
+  Object ChanIi $ClassDef 322
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+      Attr Flags |= pwr_mClassDef_IO
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "ChanIi"
+      EndBody
+      !/**
+      !   Optional text, for example to describe the channel or
+      !   its employment.
+      !*/
+      Object Description $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !   Name of a signal object, i.e. Iv object, connected with
+      !   the channel object. This is filled in at runtime.
+      !*/
+      Object SigChanCon $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !   The identity of the channel. Optional, for example Di0
+      !   to denote the first channel, physical cable marking,
+      !   etc.
+      !*/
+      Object Identity $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      !/**
+      !  The Number attribute can be used by the io methods of the module
+      !  to identify the channel. See documentation for the module if, and
+      !  how, this attribute is used.
+      !*/
+      Object Number $Attribute 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies if the ActualValue should be updated or not.
+      !  FALSE means no updating; TRUE means ActualValue will be
+      !  updated at the period T0, where T0 is equal to
+      !  ScanTime of the process and thread handling the module.
+      !*/
+      Object ConversionOn $Attribute 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+    EndObject
+    Object Template ChanIi
+      Body RtBody
+        Attr ConversionOn = 1
+      EndBody
+    EndObject
+  EndObject
+EndSObject

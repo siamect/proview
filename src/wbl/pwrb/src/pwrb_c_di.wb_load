@@ -30,7 +30,8 @@
 !  sampled signal latest become FALSE until it is
 !  allowed to be TRUE again.
 !  
-! @b Hints
+!         Hints
+!  
 !  Put the object below a $PlantHier object in the
 !  development environment in such a way that it belongs
 !  to the same target node as its associated channel
@@ -60,14 +61,9 @@ SObject pwrb:Class
       !/**
       !  Name of the associated channel object.
       !*/
-      Object SigChanCon $ObjXRef 2
-
+      Object SigChanCon $Attribute 2
         Body SysBody
-          Attr Identity = "Di"
-          Attr Source = "Di"
-          Attr Target = "ChanDi"
-          Attr SourceAttribute = "SigChanCon"
-          Attr TargetAttribute = "SigChanCon"
+          Attr TypeRef = "pwrs:Type-$Objid"
         EndBody
       EndObject
       !/**
@@ -168,7 +164,6 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  @Summary Specifies the selected filter.
       !  The internal filter function concerns only local
       !  Di-signals.
       !  
@@ -177,20 +172,6 @@ SObject pwrb:Class
       !  
       !  0 -- No filtering.
       !  1 -- Set and reset delay.
-      !
-      !  Set operation is only possible when the 'output' of the filter is
-      !  FALSE. The set delay is counted from the latest edge on the
-      !  'input'. When the time FilterAttribute[0] has elapsed becomes
-      !  'output' = 'input'.
-      !  @image orm_en1-54.gif
-      !  Reset operation is only possible when the 'output' of the filter
-      !  is TRUE. The set delay is counted from the latest trailing edget on
-      !  the 'input'. When the time FilerAttribute[1] has elapsed becomes
-      !  'output' = 'input'.
-      !
-      !  'input' denotes the quantity when the sampled signal has passed
-      !   the inverter step, and output denotes the value after the filter
-      !   step (see ChanDi figure Attributes Used in Di-signal Conversion).
       !*/
       Object FilterType $Attribute 10 
         Body SysBody
@@ -219,9 +200,9 @@ SObject pwrb:Class
 	Object Disconnect $MenuButton
 	  Body SysBody
 	    Attr ButtonName = "Disconnect Channel"
-	    Attr MethodName = "$ObjXRef-DisconnectSingle"
+	    Attr MethodName = "$Objid-Disconnect"
 	    Attr MethodArguments[0] = "SigChanCon"
-	    Attr FilterName = "$ObjXRef-IsOkDisconnectSingle"
+	    Attr FilterName = "$Objid-IsOkDisconnect"
 	    Attr FilterArguments[0] = "SigChanCon"
 	  EndBody
 	EndObject
@@ -232,23 +213,21 @@ SObject pwrb:Class
 	Object Connect $MenuButton
 	  Body SysBody
 	    Attr ButtonName = "Connect Channel"
-	    Attr MethodName = "$ObjXRef-Connect"
+	    Attr MethodName = "$Objid-Connect"
 	    Attr MethodArguments[0] = "SigChanCon"
-	    Attr MethodArguments[1] = "SigChanCon"
-	    Attr FilterName = "$ObjXRef-IsOkConnect"
+	    Attr FilterArguments[1] = "ChanIi"
+	    Attr FilterName = "$Objid-IsOkConnect"
 	    Attr FilterArguments[0] = "SigChanCon"
-	    Attr FilterArguments[1] = "SigChanCon"
+	    Attr FilterArguments[1] = "ChanIi"
 	  EndBody
 	EndObject
 	Object Disconnect $MenuButton
 	  Body SysBody
 	    Attr ButtonName = "Disconnect Channel"
-	    Attr MethodName = "$ObjXRef-Disconnect"
+	    Attr MethodName = "$Objid-Disconnect"
 	    Attr MethodArguments[0] = "SigChanCon"
-	    Attr MethodArguments[1] = "SigChanCon"
-	    Attr FilterName = "$ObjXRef-IsOkDisconnect"
+	    Attr FilterName = "$Objid-IsOkDisconnect"
 	    Attr FilterArguments[0] = "SigChanCon"
-	    Attr FilterArguments[1] = "SigChanCon"
 	  EndBody
 	EndObject
       EndObject
@@ -258,9 +237,9 @@ SObject pwrb:Class
 	Object Disconnect $MenuButton
 	  Body SysBody
 	    Attr ButtonName = "Disconnect Channel"
-	    Attr MethodName = "$ObjXRef-DisconnectSingle"
+	    Attr MethodName = "$Objid-Disconnect"
 	    Attr MethodArguments[0] = "SigChanCon"
-	    Attr FilterName = "$ObjXRef-IsOkDisconnectSingle"
+	    Attr FilterName = "$Objid-IsOkDisconnect"
 	    Attr FilterArguments[0] = "SigChanCon"
 	  EndBody
 	EndObject
@@ -268,3 +247,6 @@ SObject pwrb:Class
     EndObject
   EndObject
 EndSObject
+
+
+

@@ -68,14 +68,9 @@ SObject pwrb:Class
       !/**
       !  Name of the associated channel object.
       !*/
-      Object SigChanCon $ObjXRef 2
-
+      Object SigChanCon $Objid 2
         Body SysBody
-          Attr Identity = "Do"
-          Attr Source = "Do"
-          Attr Target = "ChanDo"
-          Attr SourceAttribute = "SigChanCon"
-          Attr TargetAttribute = "SigChanCon"
+          Attr TypeRef = "pwrs:Type-$Objid"
         EndBody
       EndObject
       !/**
@@ -237,9 +232,9 @@ SObject pwrb:Class
 	Object Disconnect $MenuButton
 	  Body SysBody
 	    Attr ButtonName = "Disconnect Channel"
-	    Attr MethodName = "$ObjXRef-DisconnectSingle"
+	    Attr MethodName = "$Objid-Disconnect"
 	    Attr MethodArguments[0] = "SigChanCon"
-	    Attr FilterName = "$ObjXRef-IsOkDisconnectSingle"
+	    Attr FilterName = "$Objid-IsOkDisconnect"
 	    Attr FilterArguments[0] = "SigChanCon"
 	  EndBody
 	EndObject
@@ -250,23 +245,21 @@ SObject pwrb:Class
 	Object Connect $MenuButton
 	  Body SysBody
 	    Attr ButtonName = "Connect Channel"
-	    Attr MethodName = "$ObjXRef-Connect"
+	    Attr MethodName = "$Objid-Connect"
 	    Attr MethodArguments[0] = "SigChanCon"
-	    Attr MethodArguments[1] = "SigChanCon"
-	    Attr FilterName = "$ObjXRef-IsOkConnect"
+	    Attr FilterArguments[1] = "ChanIi"
+	    Attr FilterName = "$Objid-IsOkConnect"
 	    Attr FilterArguments[0] = "SigChanCon"
-	    Attr FilterArguments[1] = "SigChanCon"
+	    Attr FilterArguments[1] = "ChanIi"
 	  EndBody
 	EndObject
 	Object Disconnect $MenuButton
 	  Body SysBody
 	    Attr ButtonName = "Disconnect Channel"
-	    Attr MethodName = "$ObjXRef-Disconnect"
+	    Attr MethodName = "$Objid-Disconnect"
 	    Attr MethodArguments[0] = "SigChanCon"
-	    Attr MethodArguments[1] = "SigChanCon"
-	    Attr FilterName = "$ObjXRef-IsOkDisconnect"
+	    Attr FilterName = "$Objid-IsOkDisconnect"
 	    Attr FilterArguments[0] = "SigChanCon"
-	    Attr FilterArguments[1] = "SigChanCon"
 	  EndBody
 	EndObject
       EndObject
@@ -276,9 +269,9 @@ SObject pwrb:Class
 	Object Disconnect $MenuButton
 	  Body SysBody
 	    Attr ButtonName = "Disconnect Channel"
-	    Attr MethodName = "$ObjXRef-DisconnectSingle"
+	    Attr MethodName = "$Objid-Disconnect"
 	    Attr MethodArguments[0] = "SigChanCon"
-	    Attr FilterName = "$ObjXRef-IsOkDisconnectSingle"
+	    Attr FilterName = "$Objid-IsOkDisconnect"
 	    Attr FilterArguments[0] = "SigChanCon"
 	  EndBody
 	EndObject
@@ -286,3 +279,11 @@ SObject pwrb:Class
     EndObject
   EndObject
 EndSObject
+
+
+
+
+
+
+
+

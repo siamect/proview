@@ -1,0 +1,125 @@
+!  pwrb_c_chanio.wb_load -- Defines the class ChanIo.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  Channel Integer Output.
+!
+!/**
+!  @Version 1.0
+!  @Group IO,Channels,NodeConfiguration
+!  @Summary Configures a integer output channel
+!  Configures a integer output channel.
+!
+!  If EmergBreakTrue = TRUE and EmergBreakSelect = 2 then
+!  the output is based on FixedOutValue. Otherwise TestOn
+!  will settles which attribute the output is based on.
+!  
+! @b Hints
+!  ChanIo objects are configured below a suitable Io-card or module
+!  object.
+!  Rack and card objects to different I/O systems are
+!  documented separately.
+!*/
+SObject pwrb:Class
+  Object ChanIo $ClassDef 323
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+      Attr Flags |= pwr_mClassDef_IO
+    EndBody
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "ChanIo"
+      EndBody
+      !/**
+      !  Optional text, for example to describe the channel or
+      !  its employment.
+      !*/
+      Object Description $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Name of a signal object, i.e. Io object, connected with
+      !  the channel object.
+      !*/
+      Object SigChanCon $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  The identity of the channel. Optional, for example Do0
+      !  to denote the first channel, physical cable marking,
+      !*/
+      Object Identity $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      !/**
+      !  The Number attribute can be used by the io methods of the module
+      !  to identify the channel. See documentation for the module if, and
+      !  how, this attribute is used.
+      !*/
+      Object Number $Attribute 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies if the output will be based on ActualValue or
+      !  TestValue. FALSE means that the output should be based
+      !  on ActualValue; TRUE means that TestValue should be
+      !  used.
+      !  There is today no sense in assigning a value to the
+      !  attribute in the development environment, as no
+      !  attention is paid to it in the target environment.
+      !  Instead, this is done by means of the attribute
+      !  TestMask1 in the card object.
+      !  
+      !  However, the value of TestOn can be changed via the
+      !  more info form of the object in the target environment.
+      !*/
+      Object TestOn $Attribute 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  The output signal is based on the TestValue instead of
+      !  ActualValue when TestOn is TRUE.
+      !*/
+      Object TestValue $Attribute 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  Action value. The output signal is equal to
+      !  FixedOutValue when EmergBreakTrue is TRUE and
+      !  EmergBreakSelect = 2 . The EmergBreak-attributes belong
+      !  to the $Node object.
+      !*/
+      Object FixedOutValue $Attribute 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject
+
+
+
+
+
+
