@@ -2392,6 +2392,15 @@ static void wtt_activate_help_project( Widget w, Wtt *wtt, XmAnyCallbackStruct *
   wtt->focused_wnav->command( cmd);
 }
 
+static void wtt_activate_help_proview( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
+{
+  char cmd[80] = "help /version";
+
+  if ( !wtt->focused_wnav)
+    wtt->set_focus_default();
+  wtt->focused_wnav->command( cmd);
+}
+
 void wtt_create_menubutton( Widget w, Wtt *wtt) 
 {
   int key;
@@ -3189,7 +3198,7 @@ static pwr_tBoolean wtt_format_selection(
     break;
   case wnav_eSelectionFormat_Graph:
     select_syntax = wtt_eSelectionMode_Normal;
-    select_volume = 1;
+    select_volume = 0;
     select_attr = 1;
     select_type = 1;
     break;
@@ -3207,8 +3216,7 @@ static pwr_tBoolean wtt_format_selection(
     break;
   }
 
-  if ( select_syntax == wtt_eSelectionMode_Extern && !select_attr)
-  {
+  if ( select_syntax == wtt_eSelectionMode_Extern && !select_attr) {
     sts = ldh_ObjidToName( wtt->ldhses, object, ldh_eName_Objid, 
 					   name, sizeof(name), &ret_len); 
     if (EVEN(sts)) return FALSE;
@@ -3216,66 +3224,55 @@ static pwr_tBoolean wtt_format_selection(
     *length_return = strlen(name) + 1;
     return TRUE;
   }
-  else if ( select_syntax == wtt_eSelectionMode_Extern && select_attr)
-  {
+  else if ( select_syntax == wtt_eSelectionMode_Extern && select_attr) {
     sts = ldh_ObjidToName( wtt->ldhses, object, ldh_eName_Default,
 					   name, sizeof(name), &ret_len); 
     if (EVEN(sts)) return FALSE;
   }
-  else if ( select_volume)
-  {
+  else if ( select_volume) {
     sts = ldh_ObjidToName(wtt->ldhses, object, ldh_eName_VolPath, 
 					   name, sizeof(name), &ret_len); 
     if (EVEN(sts)) return FALSE;
   }
-  else
-  {
+  else {
     sts = ldh_ObjidToName(wtt->ldhses, object, ldh_eName_Hierarchy, 
 					   name, sizeof(name), &ret_len); 
     if (EVEN(sts)) return FALSE;
   }
 
-  if (select_syntax == wtt_eSelectionMode_GMS)
-  {
+  if (select_syntax == wtt_eSelectionMode_GMS) {
     strcpy(hyphen, "\\-");
     strcpy(dot, "\\.");
     strcpy(colon, "\\:");
   }
-  else 
-  {
+  else {
     strcpy(hyphen, "-");
     strcpy(dot, ".");
     strcpy(colon, ":");
   }
 
-  for (i = 0, j = 0; i < ret_len + 1; i++)
-  {
-    if (name[i] == '-')
-    {
+  for (i = 0, j = 0; i < ret_len + 1; i++) {
+    if (name[i] == '-') {
       strcpy( &buff[j], hyphen);
       j += strlen(hyphen);
     }
-    else if (name[i] == ':')
-    {
+    else if (name[i] == ':') {
       strcpy( &buff[j], colon);
       j += strlen(colon);
     }
-    else 
-    {
+    else {
       buff[j] = name[i];
       j++;
     }
   }
 
 
-  // Fetch and add attribute name if nessecary
-  if (select_attr && !is_class)
-  {
+  // Fetch and add attribute name if necessary
+  if (select_attr && !is_class) {
     sts = ldh_GetObjectClass(wtt->ldhses, object, &classid);
     if ( EVEN(sts)) return FALSE;
 
-    if ( ! is_attr)
-    {
+    if ( ! is_attr) {
       // Get the debugparameter if there is one, else add ActualValue  
 
       sts = ldh_GetClassBody(wtt->ldhses, classid, 
@@ -3290,10 +3287,8 @@ static pwr_tBoolean wtt_format_selection(
 
       // Check if attribute exists
       sts = ldh_NameToAttrRef(wtt->ldhses, name, &attr_ref);
-      if (ODD(sts))
-      {
-        if (select_syntax == wtt_eSelectionMode_Extern && select_attr)
-        {
+      if (ODD(sts)) {
+        if (select_syntax == wtt_eSelectionMode_Extern && select_attr) {
            sts = ldh_AttrRefToName(wtt->ldhses, &attr_ref, 
 				ldh_eName_ArefExport,
 				&name_ptr, &ret_len); 
@@ -3304,8 +3299,7 @@ static pwr_tBoolean wtt_format_selection(
         }
       }
     }
-    else
-    {
+    else {
       sts = ldh_AttrRefToName(wtt->ldhses, &attrref, 
 				ldh_eName_Aref,
         			&name_ptr, &ret_len); 
@@ -3318,8 +3312,7 @@ static pwr_tBoolean wtt_format_selection(
     strcat(buff, dot);
     strcat(buff, attr_name);
 
-    if (select_type)
-    {
+    if (select_type) {
       // If attribute is an array element 
       // Get attribute definition for the array.
 
@@ -3332,15 +3325,13 @@ static pwr_tBoolean wtt_format_selection(
         sts = ldh_GetAttrDef(wtt->ldhses, classid, "SysBody", 
 						     attr_name, &attr_def);
       if ( ODD(sts) && 
-             wtt_type_to_string( attr_def.Par->Input.Info.Type, type_buff, NULL))
-      {
+             wtt_type_to_string( attr_def.Par->Input.Info.Type, type_buff, NULL)) {
         char num[8];
 
         if ( (p2 = strstr(buff, "[")))	
           *p2 = '\0';
 
-        if (attr_def.Par->Input.Info.Type == pwr_eType_String)
-        {
+        if (attr_def.Par->Input.Info.Type == pwr_eType_String) {
           sprintf(num, "%d", attr_def.Par->Input.Info.Size/attr_def.Par->Input.Info.Elements);  
           strcat(type_buff, num);
         }
@@ -3348,18 +3339,20 @@ static pwr_tBoolean wtt_format_selection(
         strcat(buff, type_buff);
 
         // Check if array
-        if (p1)
-        {
+        if (p1) {
           sprintf(&buff[strlen(buff)], "#%d", 
 		       attr_def.Par->Input.Info.Elements); 
           *p1 = '[';
           strcat(buff, p1);
         }
+	else if ( attr_def.Par->Input.Info.Elements > 1) {
+          sprintf(&buff[strlen(buff)], "#%d", 
+		       attr_def.Par->Input.Info.Elements); 
+	}
       }
     }
   }
-  if ( select_syntax == wtt_eSelectionMode_Extern && select_attr)
-  {
+  if ( select_syntax == wtt_eSelectionMode_Extern && select_attr) {
     sts = ldh_NameToAttrRef(wtt->ldhses, buff, &attr_ref);
     if (EVEN(sts)) return False;
     sts = ldh_AttrRefToName( wtt->ldhses, &attr_ref, 
@@ -3519,6 +3512,7 @@ Wtt::Wtt(
 	{"wtt_activate_scriptbase",(caddr_t)wtt_activate_scriptbase },
 	{"wtt_activate_help",(caddr_t)wtt_activate_help },
 	{"wtt_activate_help_project",(caddr_t)wtt_activate_help_project },
+	{"wtt_activate_help_proview",(caddr_t)wtt_activate_help_proview },
 	{"wtt_create_menubutton",(caddr_t)wtt_create_menubutton },
 	{"wtt_create_msg_label",(caddr_t)wtt_create_msg_label },
 	{"wtt_create_cmd_prompt",(caddr_t)wtt_create_cmd_prompt },
