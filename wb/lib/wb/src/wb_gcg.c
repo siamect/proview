@@ -4237,7 +4237,7 @@ static int	gcg_get_child_plcthread(
 	    timebase = (*scantime_ptr) * 1000 + 0.5;
 	    if ( (timebase <= 0)
 	        || (IS_LYNX(os) && (((timebase / 10) * 10) != timebase))
-	        || (IS_LINUX(os) && (((timebase / 10) * 10) != timebase))
+		 || (IS_LINUX(os) && 0 /* (((timebase / 10) * 10) != timebase) */)
 	    	|| (IS_VMS_OR_ELN(os) && (((timebase / 10) * 10) != timebase))
 	    )
 	    {
