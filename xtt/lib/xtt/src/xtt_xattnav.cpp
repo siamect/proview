@@ -415,53 +415,38 @@ static int xattnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
     {
       brow_tNode	*node_list;
       int		node_count;
+      pwr_tStatus	sts;
 
       brow_GetSelectedNodes( xattnav->brow->ctx, &node_list, &node_count);
       if ( !node_count)
         return 1;
 
       brow_GetUserData( node_list[0], (void **)&item);
-      switch( item->type)
-      {
-        case xnav_eItemType_Attr:
-          if ( xattnav->advanced_user && xattnav->change_value_cb)
-            (xattnav->change_value_cb)( xattnav->parent_ctx);
-          break;
-        case xnav_eItemType_AttrArrayElem:
-          if ( xattnav->advanced_user && xattnav->change_value_cb)
-            (xattnav->change_value_cb)( xattnav->parent_ctx);
-          break;
-        case xnav_eItemType_AttrArray: 
-	  ((ItemAttrArray *)item)->open_attributes( xattnav->brow, 0, 0);
-          break;
-        case xnav_eItemType_AttrObject: 
-	  ((ItemAttrObject *)item)->open_attributes( xattnav->brow, 0, 0);
-          break;
-#if 0
-        case xnav_eItemType_Enum: 
-        {
-          int value;
+      switch( item->type) {
+      case xnav_eItemType_Attr:
+      case xnav_eItemType_AttrArrayElem:
+	sts = item->open_children( xattnav->brow, 0, 0);
+	if (ODD(sts)) break;
 
-          if ( !xattnav->advanced_user)
-            break;
-          brow_GetRadiobutton( node_list[0], 0, &value);
-          if ( !value)
-	    ((ItemEnum *)item)->set();
-          break;
-        }
-        case xnav_eItemType_Mask: 
-        {
-          int value;
-
-          if ( !xattnav->advanced_user)
-            break;
-          brow_GetRadiobutton( node_list[0], 0, &value);
-	  ((ItemMask *)item)->set( !value);
-          break;
-        }
-#endif
-        default:
-          ;
+	if ( xattnav->advanced_user && xattnav->change_value_cb)
+	  (xattnav->change_value_cb)( xattnav->parent_ctx);
+	break;
+      case xnav_eItemType_AttrArray: 
+	((ItemAttrArray *)item)->open_attributes( xattnav->brow, 0, 0);
+	break;
+      case xnav_eItemType_AttrObject: 
+	((ItemAttrObject *)item)->open_attributes( xattnav->brow, 0, 0);
+	break;
+      case xnav_eItemType_Enum:
+	if ( xattnav->advanced_user)
+	  ((ItemEnum *)item)->set_value();
+	break;
+      case xnav_eItemType_Mask:
+	if ( xattnav->advanced_user)
+	  ((ItemMask *)item)->toggle_value();
+	break;
+      default:
+	;
       }
       free( node_list);
       break;
@@ -513,26 +498,21 @@ static int xattnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
       {
         case flow_eObjectType_Node:
           brow_GetUserData( event->object.object, (void **)&item);
-          switch( item->type)
-          {
-#if 0
-            case xnav_eItemType_Enum: 
-              if ( !event->radiobutton.value)
-	        ((ItemEnum *)item)->set();
-              break;
-            case xnav_eItemType_Mask: 
-	      ((ItemMask *)item)->set( !event->radiobutton.value);
-              break;
-#endif
-            default:
-              ;
+          switch( item->type) {
+	  case xnav_eItemType_Enum: 
+	    if ( !event->radiobutton.value)
+	      ((ItemEnum *)item)->set_value();
+	    break;
+	  case xnav_eItemType_Mask: 
+	    ((ItemMask *)item)->set_value( !event->radiobutton.value);
+	    break;
+	  default:
+	    ;
           }
           break;
         default:
           ;
       }
-
-
       break;
     }
     case flow_eEvent_Map:
@@ -563,6 +543,8 @@ static int xattnav_trace_connect_bc( brow_tObject object, char *name,
   switch( base_item->type)
   {
     case xnav_eItemType_Attr:
+    case xnav_eItemType_Enum:
+    case xnav_eItemType_Mask:
     case xnav_eItemType_AttrArrayElem:
     {
       ItemAttr	*item;
@@ -632,9 +614,47 @@ static int xattnav_trace_scan_bc( brow_tObject object, void *p)
       else
         item->first_scan = 0;
 
-      xnav_attrvalue_to_string( item->type_id, p, buf, sizeof(buf), &len, NULL);
+      xnav_attrvalue_to_string( item->type_id, item->tid, p, buf, sizeof(buf), &len, NULL);
       brow_SetAnnotation( object, 1, buf, len);
       memcpy( item->old_value, p, min(item->size, (int) sizeof(item->old_value)));
+      break;
+    }
+    case xnav_eItemType_Enum: {
+      ItemEnum	*item;
+
+      item = (ItemEnum *)base_item;
+      if ( !item->first_scan) {
+        if ( memcmp( item->old_value, p, sizeof(pwr_tEnum)) == 0)
+          // No change since last time
+          return 1;
+      }
+      else
+        item->first_scan = 0;
+
+      if ( *(pwr_tEnum *)p == item->num)
+	brow_SetRadiobutton( object, 0, 1);
+      else
+	brow_SetRadiobutton( object, 0, 0);
+      memcpy( item->old_value, p, sizeof(pwr_tEnum));
+      break;
+    }
+    case xnav_eItemType_Mask: {
+      ItemMask	*item;
+
+      item = (ItemMask *)base_item;
+      if ( !item->first_scan) {
+        if ( memcmp( item->old_value, p, sizeof(pwr_tMask)) == 0)
+          // No change since last time
+          return 1;
+      }
+      else
+        item->first_scan = 0;
+
+      if ( *(pwr_tMask *)p & item->num)
+	brow_SetRadiobutton( object, 0, 1);
+      else
+	brow_SetRadiobutton( object, 0, 0);
+      memcpy( item->old_value, p, sizeof(pwr_tMask));
       break;
     }
     default:
@@ -746,6 +766,7 @@ int	XAttNav::object_attr()
 					 name,
 					 bd[i].attr->Param.Info.Elements, 
 					 bd[i].attr->Param.Info.Type, 
+					 bd[i].attr->Param.TypeRef, 
 					 bd[i].attr->Param.Info.Size,
 					 bd[i].attr->Param.Info.Flags, 0);
     }
@@ -764,6 +785,7 @@ int	XAttNav::object_attr()
 				    flow_eDest_IntoLast, 
 				    name,
 				    bd[i].attr->Param.Info.Type, 
+				    bd[i].attr->Param.TypeRef, 
 				    bd[i].attr->Param.Info.Size,
 				    bd[i].attr->Param.Info.Flags, 0, 
 				    item_eDisplayType_Attr);

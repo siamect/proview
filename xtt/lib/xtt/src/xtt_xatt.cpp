@@ -487,7 +487,7 @@ XAtt::XAtt(
 	objar(*xa_objar), 
 	input_open(0), input_multiline(0), 
 	close_cb(0), redraw_cb(0), client_data(0),
-	set_focus_disabled(0)
+	set_focus_disabled(0), value_current_recall(0)
 {
   char		uid_filename[120] = {"xtt_xatt.uid"};
   char		*uid_filename_p = uid_filename;

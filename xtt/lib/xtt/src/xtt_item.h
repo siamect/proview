@@ -54,7 +54,9 @@ typedef enum {
 	xnav_eItemType_HelpBold,
 	xnav_eItemType_HelpHeader,
 	xnav_eItemType_ObjectStruct,
-	xnav_eItemType_AttrObject
+	xnav_eItemType_AttrObject,
+	xnav_eItemType_Enum,
+	xnav_eItemType_Mask
 	} xnav_eItemType;
 
 typedef enum {
@@ -115,14 +117,19 @@ class Item {
 class ItemBaseAttr : public Item {
   public:
     ItemBaseAttr( pwr_tObjid item_objid,
-	char *attr_name, int attr_type_id, int attr_size, int attr_flags,
+	char *attr_name, int attr_type_id, pwr_tTid attr_tid,
+        int attr_size, int attr_flags,
 	int item_is_root, item_eDisplayType item_display_type) :
 	Item( item_objid, item_is_root),
-        type_id(attr_type_id), size(attr_size), flags(attr_flags),
+        type_id(attr_type_id), tid(attr_tid), size(attr_size), flags(attr_flags),
 	subid(pwr_cNSubid), first_scan(1), display_type(item_display_type)
 		{ strcpy( attr, attr_name);
 		  memset( old_value, 0, sizeof(old_value));};
+    virtual int open_children( XNavBrow *brow, double x, double y);
+    virtual void close( XNavBrow *brow, double x, double y);
+
     int type_id;
+    pwr_tTid tid;
     int size;
     int flags;
     pwr_tSubid subid;
@@ -224,6 +231,10 @@ class ItemObject : public ItemBaseObject {
   public:
     ItemObject( XNavBrow *brow, pwr_tObjid item_objid, 
 	brow_tNode dest, flow_eDest dest_code, int item_is_root);
+    pwr_tUInt32 alarm_level;
+    pwr_tUInt32 max_alarm_level;
+    pwr_tUInt32 block_level;
+    pwr_tUInt32 max_block_level;
 };
 
 
@@ -231,7 +242,8 @@ class ItemAttr : public ItemBaseAttr {
   public:
     ItemAttr( XNavBrow *brow, pwr_tObjid item_objid,
 	brow_tNode dest, flow_eDest dest_code,
-        char *attr_name, int attr_type_id, int attr_size, int attr_flags,
+        char *attr_name, int attr_type_id, pwr_tTid attr_tid,
+	int attr_size, int attr_flags,
 	int item_is_root, item_eDisplayType item_display_type);
 };
 
@@ -239,11 +251,12 @@ class ItemAttrArray : public Item {
   public:
     int elements;
     int type_id;
+    pwr_tTid tid;
     int size;
     int flags;
     ItemAttrArray( XNavBrow *brow, pwr_tObjid item_objid,
 	brow_tNode dest, flow_eDest dest_code,
-	char *attr_name, int attr_elements, int attr_type_id, 
+     	char *attr_name, int attr_elements, int attr_type_id, pwr_tTid attr_tid,
 	int attr_size, int attr_flags, int item_is_root);
     int     open_children( XNavBrow *brow, double x, double y) {return 1;};
     int     open_attributes( XNavBrow *brow, double x, double y);
@@ -255,7 +268,7 @@ class ItemAttrArrayElem : public ItemBaseAttr {
     int element;
     ItemAttrArrayElem( XNavBrow *brow, pwr_tObjid item_objid,
 	brow_tNode dest, flow_eDest dest_code,
-	char *attr_name, int attr_element, int attr_type_id,
+	char *attr_name, int attr_element, int attr_type_id, pwr_tTid attr_tid,
 	int attr_size, int attr_flags, int item_is_root, item_eDisplayType item_display_type);
 };
 
@@ -277,7 +290,7 @@ class ItemAttrObject : public Item {
 class ItemCollect : public ItemBaseAttr {
   public:
     ItemCollect( XNavBrow *brow, pwr_tObjid item_objid, char *attr_name,
-	brow_tNode dest, flow_eDest dest_code, int attr_type_id, 
+	brow_tNode dest, flow_eDest dest_code, int attr_type_id, pwr_tTid attr_tid,
 	int attr_size, int item_is_root);
 };
 
@@ -440,6 +453,44 @@ class ItemPlc : public ItemTable {
 	dest, dest_code)
 	{ type = xnav_eItemType_Plc;};
     int     		open_children( XNavBrow *brow, double x, double y);
+};
+
+
+class ItemEnum : public ItemBaseAttr {
+ public:
+  ItemEnum::ItemEnum( 
+	XNavBrow *brow,
+	pwr_tObjid item_objid, 
+	brow_tNode dest, flow_eDest dest_code,
+	char *attr_enum_name, char *attr_name, 
+	int attr_type_id, pwr_tTid attr_tid, 
+	int attr_size, int attr_flags,
+	unsigned int item_num, int item_is_element, int item_element);
+  int set_value();
+
+  int num;
+  char enum_name[32];
+  int is_element;
+  int element;
+};
+
+class ItemMask : public ItemBaseAttr {
+ public:
+  ItemMask::ItemMask( 
+	XNavBrow *brow,
+	pwr_tObjid item_objid, 
+	brow_tNode dest, flow_eDest dest_code,
+	char *attr_enum_name, char *attr_name, 
+	int attr_type_id, pwr_tTid attr_tid, 
+	int attr_size, int attr_flags,
+	unsigned int item_num, int item_is_element, int item_element);
+  int set_value( int bittrue);
+  int toggle_value();
+
+  int num;
+  char mask_name[32];
+  int is_element;
+  int element;
 };
 
 #if defined __cplusplus

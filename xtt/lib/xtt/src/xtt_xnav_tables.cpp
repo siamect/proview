@@ -1086,21 +1086,13 @@ int XNav::show_object( pwr_tObjid objid, brow_tNode node)
   else 
   {
     int			sts;
-    pwr_tObjid		parameter;
-    char		classname[80];
-    char		hiername[80];
-    char		parname[80];
-    char		fullname[80];
-    char		*s;
     pwr_tClassId	classid;
     unsigned long	elements;
-    pwr_sParInfo	parinfo;
-    pwr_tObjid		body;
-    pwr_tClassId	parameter_class;
-
+    gdh_sAttrDef *bd;
+    int 	rows;
     Item 	*item;
     int		attr_exist;
-    int		i, j;
+    int		i;
 
     if ( brow_IsOpen( node) & xnav_mOpen_Children ||
 	 brow_IsOpen( node) & xnav_mOpen_Crossref)
@@ -1118,85 +1110,46 @@ int XNav::show_object( pwr_tObjid objid, brow_tNode node)
     // Create some attributes
     brow_SetNodraw( brow->ctx);
 
-
-    // Get objid for rtbody or sysbody
-
     sts = gdh_GetObjectClass ( objid, &classid);
     if ( EVEN(sts)) return sts;
 
-    sts = gdh_ObjidToName ( cdh_ClassIdToObjid(classid), classname,
-		sizeof(classname), cdh_mName_volumeStrict);
+    // Get attributes for this class
+    sts = gdh_GetObjectBodyDef( classid, &bd, &rows);
     if ( EVEN(sts)) return sts;
 
-    attr_exist = 0;
-    for ( j = 0; j < 2; j++)
-    {
-      strcpy( hiername, classname);
-      if ( j == 0)
-        strcat( hiername, "-RtBody");
-      else
-        strcat( hiername, "-SysBody");
+    for ( i = 0; i < rows; i++) {
 
-      sts = gdh_NameToObjid( hiername, &body);
-      if ( EVEN(sts)) 
-        continue;
+      if ( bd[i].attr->Param.Info.Flags & PWR_MASK_RTVIRTUAL || 
+	   bd[i].attr->Param.Info.Flags & PWR_MASK_PRIVATE)
+	continue;
 
-      // Get first attribute of the body
-      i = 0;
-      sts = gdh_GetChild( body, &parameter);
-      while ( ODD(sts))
-      {
-        sts = gdh_ObjidToName ( parameter, hiername, sizeof(hiername),
-			cdh_mName_volumeStrict);
-        if ( EVEN(sts)) return sts;
-
-        /* Skip hierarchy */
-        s = strrchr( hiername, '-');
-        if ( s == 0)
-          strcpy( parname, hiername);
-        else
-          strcpy( parname, s + 1);
-
-        /* Get parameter info for this parameter */
-        strcpy( fullname, hiername);
-        sts = gdh_GetObjectInfo( fullname, &parinfo, sizeof(parinfo));
-        if (EVEN(sts)) return sts;
-        sts = gdh_GetObjectClass( parameter, &parameter_class);
-        if ( EVEN(sts)) return sts;
-
-        if ( parinfo.Flags & PWR_MASK_RTVIRTUAL || 
-             parinfo.Flags & PWR_MASK_PRIVATE)
-        {
-          /* This parameter does not contain any useful information, take the
-		next one */
-          sts = gdh_GetNextSibling ( parameter, &parameter);
-	  i++;
-          continue;
-        }
-
-        elements = 1;
-        if ( parinfo.Flags & PWR_MASK_ARRAY )
-        {
+      elements = 1;
+      if ( bd[i].attr->Param.Info.Flags & PWR_MASK_ARRAY ) {
           attr_exist = 1;
           item = (Item *) new ItemAttrArray( brow, objid, node, 
-		flow_eDest_IntoLast,
-		parname,
-		parinfo.Elements, 
-		parinfo.Type, parinfo.Size, parinfo.Flags, 0);
-        }
-        else
-        {
-          attr_exist = 1;
-          item = (Item *) new ItemAttr( brow, objid, node, 
-		flow_eDest_IntoLast, parname,
-		parinfo.Type, parinfo.Size, parinfo.Flags, 0, item_eDisplayType_Attr);
-        } 
-        sts = gdh_GetNextSibling ( parameter, &parameter);
-	i++;
+					     flow_eDest_IntoLast,
+					     bd[i].attrName,
+					     bd[i].attr->Param.Info.Elements, 
+					     bd[i].attr->Param.Info.Type, 
+					     bd[i].attr->Param.TypeRef, 
+					     bd[i].attr->Param.Info.Size,
+					     bd[i].attr->Param.Info.Flags, 0);
       }
+      else {
+	attr_exist = 1;
+	item = (Item *) new ItemAttr( brow, objid, node, 
+				      flow_eDest_IntoLast,
+				      bd[i].attrName,
+				      bd[i].attr->Param.Info.Type, 
+				      bd[i].attr->Param.TypeRef, 
+				      bd[i].attr->Param.Info.Size,
+				      bd[i].attr->Param.Info.Flags, 0, 
+				      item_eDisplayType_Attr);
+      } 
     }
-    if ( attr_exist)
-    {
+    free( (char *)bd);
+
+    if ( attr_exist) {
       brow_SetOpen( node, xnav_mOpen_Attributes);
       brow_SetAnnotPixmap( node, 1, brow->pixmap_openattr);
     }

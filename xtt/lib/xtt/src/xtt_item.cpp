@@ -60,7 +60,8 @@ extern "C" {
 //
 ItemObject::ItemObject( XNavBrow *brow, pwr_tObjid item_objid, 
 	brow_tNode dest, flow_eDest dest_code, int item_is_root) :
-	ItemBaseObject( item_objid, item_is_root)
+  ItemBaseObject( item_objid, item_is_root), 
+  alarm_level(0), max_alarm_level(0), block_level(0), max_block_level(0)
 {
   int sts;
   char	segname[120];
@@ -314,6 +315,7 @@ int ItemBaseObject::open_attributes( XNavBrow *brow, double x, double y)
 					   bd[i].attrName,
 					   bd[i].attr->Param.Info.Elements, 
 					   bd[i].attr->Param.Info.Type, 
+					   bd[i].attr->Param.TypeRef, 
 					   bd[i].attr->Param.Info.Size,
 					   bd[i].attr->Param.Info.Flags, 0);
       }
@@ -332,6 +334,7 @@ int ItemBaseObject::open_attributes( XNavBrow *brow, double x, double y)
 				      flow_eDest_IntoLast, 
 				      bd[i].attrName,
 				      bd[i].attr->Param.Info.Type, 
+				      bd[i].attr->Param.TypeRef, 
 				      bd[i].attr->Param.Info.Size,
 				      bd[i].attr->Param.Info.Flags, 0, 
 				      item_eDisplayType_Attr);
@@ -395,6 +398,7 @@ int ItemBaseObject::open_attribute( XNavBrow *brow, double x, double y,
 	        flow_eDest_IntoLast, 
 		bd[i].attrName, element, 
 		bd[i].attr->Param.Info.Type,
+		bd[i].attr->Param.TypeRef,
 		bd[i].attr->Param.Info.Size / bd[i].attr->Param.Info.Elements, 
 		bd[i].attr->Param.Info.Flags, 
 	        0, item_eDisplayType_Path);
@@ -404,6 +408,7 @@ int ItemBaseObject::open_attribute( XNavBrow *brow, double x, double y,
 	item = (Item *) new ItemAttr( brow, objid, node,
 		flow_eDest_IntoLast, bd[i].attrName,
 		bd[i].attr->Param.Info.Type, 
+		bd[i].attr->Param.TypeRef, 
 	        bd[i].attr->Param.Info.Size, 
 	        bd[i].attr->Param.Info.Flags, 
 		0, item_eDisplayType_Path);
@@ -544,7 +549,7 @@ int ItemAttrArray::open_attributes( XNavBrow *brow, double x, double y)
 					    size / elements, flags, i, 0);
       else
 	item = (Item *) new ItemAttrArrayElem( brow, objid, node, 
-		flow_eDest_IntoLast, name, i, type_id, 
+		flow_eDest_IntoLast, name, i, type_id, tid, 
 		size / elements, flags, is_root, item_eDisplayType_Attr);
     }
 
@@ -574,12 +579,95 @@ void ItemAttrArray::close( XNavBrow *brow, double x, double y)
   }
 }
 
+int ItemBaseAttr::open_children( XNavBrow *brow, double x, double y)
+{
+  double	node_x, node_y;
+
+  if ( cdh_ObjidIsNull( objid))
+    return 1;
+
+  brow_GetNodePosition( node, &node_x, &node_y);
+
+  if ( brow_IsOpen( node) & xnav_mOpen_Children)
+  {
+    // Attributes is open, close
+    brow_SetNodraw( brow->ctx);
+    brow_CloseNode( brow->ctx, node);
+    brow_ResetOpen( node, xnav_mOpen_Children);
+    brow_RemoveAnnotPixmap( node, 1);
+    brow_ResetNodraw( brow->ctx);
+    brow_Redraw( brow->ctx, node_y);
+  }
+  else {
+    int sts;
+
+    if ( type_id == pwr_eType_Enum) {
+      gdh_sValueDef *vd;
+      int rows;
+
+      sts = gdh_GetEnumValueDef( tid, &vd, &rows);
+      if ( EVEN(sts)) return XNAV__NOCHILDREN;
+
+      // Create some children
+      brow_SetNodraw( brow->ctx);
+
+      for ( int i = 0; i < rows; i++) {
+        new ItemEnum( brow, objid, node, flow_eDest_IntoLast,
+		      vd[i].Value->Text, attr, 
+		      type_id, tid,
+		      size, flags, vd[i].Value->Value, 0, 1);
+      }
+      free( (char *)vd);
+    }
+    else {
+      gdh_sBitDef *bd;
+      int rows;
+
+      sts = gdh_GetMaskBitDef( tid, &bd, &rows);
+      if ( EVEN(sts)) return XNAV__NOCHILDREN;
+
+      // Create some children
+      brow_SetNodraw( brow->ctx);
+
+      for ( int i = 0; i < rows; i++) {
+        new ItemMask( brow, objid, node, flow_eDest_IntoLast,
+		      bd[i].Bit->Text, attr, type_id,
+		      tid, size, flags, (unsigned int) bd[i].Bit->Value, 0, 
+		      1);
+      }
+      free( (char *)bd);
+    }
+
+    brow_SetOpen( node, xnav_mOpen_Children);
+    brow_SetAnnotPixmap( node, 1, brow->pixmap_openmap);
+    brow_ResetNodraw( brow->ctx);
+    brow_Redraw( brow->ctx, node_y);
+  }
+  return 1;
+}
+
+void ItemBaseAttr::close( XNavBrow *brow, double x, double y)
+{
+  double	node_x, node_y;
+
+  if ( brow_IsOpen( node) & xnav_mOpen_Children) {
+    // Children is open, close
+    brow_GetNodePosition( node, &node_x, &node_y);
+    brow_SetNodraw( brow->ctx);
+    brow_CloseNode( brow->ctx, node);
+    brow_ResetOpen( node, xnav_mOpen_All);
+    brow_ResetNodraw( brow->ctx);
+    brow_Redraw( brow->ctx, node_y);
+  }
+}
+
 ItemAttr::ItemAttr( XNavBrow *brow, pwr_tObjid item_objid,
 	brow_tNode dest, flow_eDest dest_code,
-        char *attr_name, int attr_type_id, int attr_size, int attr_flags,
+        char *attr_name, int attr_type_id, pwr_tTid attr_tid, 
+	int attr_size, int attr_flags,
 	int item_is_root, item_eDisplayType item_display_type) :
 	ItemBaseAttr( item_objid, attr_name,
-	attr_type_id, attr_size, attr_flags, item_is_root, item_display_type)
+	attr_type_id, attr_tid, attr_size, attr_flags, item_is_root, item_display_type)
 {
   char	obj_name[120];
   char	annot[120];
@@ -615,6 +703,12 @@ ItemAttr::ItemAttr( XNavBrow *brow, pwr_tObjid item_objid,
       case pwr_eType_Objid:
         brow_SetAnnotPixmap( node, 0, brow->pixmap_ref);
         break;
+      case pwr_eType_Enum:
+        brow_SetAnnotPixmap( node, 0, brow->pixmap_attrenum);
+        break;
+      case pwr_eType_Mask:
+        brow_SetAnnotPixmap( node, 0, brow->pixmap_attrmask);
+        break;
       default:
         brow_SetAnnotPixmap( node, 0, brow->pixmap_attr);
     }
@@ -628,10 +722,10 @@ ItemAttr::ItemAttr( XNavBrow *brow, pwr_tObjid item_objid,
 
 ItemAttrArray::ItemAttrArray( XNavBrow *brow, pwr_tObjid item_objid,
 	brow_tNode dest, flow_eDest dest_code,
-	char *attr_name, int attr_elements, int attr_type_id,
+	char *attr_name, int attr_elements, int attr_type_id, pwr_tTid attr_tid,
 	int attr_size, int attr_flags, int item_is_root) :
 	Item( item_objid, item_is_root),
-	elements(attr_elements), type_id(attr_type_id),
+	elements(attr_elements), type_id(attr_type_id), tid(attr_tid),
 	size(attr_size), flags(attr_flags)
 {
   char *annot;
@@ -653,10 +747,10 @@ ItemAttrArray::ItemAttrArray( XNavBrow *brow, pwr_tObjid item_objid,
 
 ItemAttrArrayElem::ItemAttrArrayElem( XNavBrow *brow, pwr_tObjid item_objid,
 	brow_tNode dest, flow_eDest dest_code,
-	char *attr_name, int attr_element, int attr_type_id,
+	char *attr_name, int attr_element, int attr_type_id, pwr_tTid attr_tid,
 	int attr_size, int attr_flags, int item_is_root, item_eDisplayType item_display_type) :
 	ItemBaseAttr( item_objid, attr_name,
-	attr_type_id, attr_size, attr_flags, item_is_root, item_display_type),
+	attr_type_id, attr_tid, attr_size, attr_flags, item_is_root, item_display_type),
 	element(attr_element)
 {
   char	obj_name[120];
@@ -848,6 +942,7 @@ int ItemAttrObject::open_attributes( XNavBrow *brow, double x, double y)
 					   attr_name,
 					   bd[i].attr->Param.Info.Elements, 
 					   bd[i].attr->Param.Info.Type, 
+					   bd[i].attr->Param.TypeRef, 
 					   bd[i].attr->Param.Info.Size,
 					   bd[i].attr->Param.Info.Flags, 0);
       }
@@ -865,7 +960,8 @@ int ItemAttrObject::open_attributes( XNavBrow *brow, double x, double y)
 	item = (Item *) new ItemAttr( brow, objid, node, 
 				      flow_eDest_IntoLast, 
 				      attr_name,
-				      bd[i].attr->Param.Info.Type, 
+				      bd[i].attr->Param.Info.Type,
+				      bd[i].attr->Param.TypeRef,
 				      bd[i].attr->Param.Info.Size, 
 				      bd[i].attr->Param.Info.Flags, 0, 
 				      item_eDisplayType_Attr);
@@ -1215,10 +1311,10 @@ int ItemFile::open_children( XNavBrow *brow, double x, double y)
 
 
 ItemCollect::ItemCollect( XNavBrow *brow, pwr_tObjid item_objid, char *attr_name,
-	brow_tNode dest, flow_eDest dest_code, int attr_type_id,
+	brow_tNode dest, flow_eDest dest_code, int attr_type_id, pwr_tTid attr_tid,
 	int attr_size, int item_is_root) :
 	ItemBaseAttr( item_objid, attr_name,
-	attr_type_id, attr_size, 0, item_is_root, item_eDisplayType_Path)
+	attr_type_id, attr_tid, attr_size, 0, item_is_root, item_eDisplayType_Path)
 {
   int sts;
   char obj_name[120];
@@ -1759,6 +1855,133 @@ int ItemRemTrans::open_children( XNavBrow *brow, double x, double y)
   // Not successfull, show childobjects
   return ItemTable::open_children( brow, x, y);
 }
+
+ItemEnum::ItemEnum( 
+	XNavBrow *brow,
+	pwr_tObjid item_objid, 
+	brow_tNode dest, flow_eDest dest_code,
+	char *attr_enum_name, char *attr_name, 
+	int attr_type_id, pwr_tTid attr_tid, 
+	int attr_size, int attr_flags,
+	unsigned int item_num, int item_is_element, int item_element) :
+	ItemBaseAttr( item_objid, attr_name,
+	attr_type_id, attr_tid, attr_size, attr_flags, 0, item_eDisplayType_Attr),
+	num(item_num), is_element(item_is_element), element(item_element)
+{
+  pwr_tOName obj_name;
+  pwr_tStatus sts;
+
+  type = xnav_eItemType_Enum;
+  sprintf( name, "%s%u", attr_name, num);
+  strcpy( enum_name, attr_enum_name);
+
+  brow_CreateNode( brow->ctx, enum_name, brow->nc_enum, 
+		dest, dest_code, (void *) this, 1, &node);
+
+  brow_SetAnnotPixmap( node, 0, brow->pixmap_attr);
+  brow_SetAnnotation( node, 0, enum_name, strlen(enum_name));
+
+  sts = gdh_ObjidToName( objid, obj_name, sizeof(obj_name), cdh_mNName); 
+  if ( EVEN(sts)) throw co_error(sts);
+ 
+  brow_SetTraceAttr( node, obj_name, attr_name, flow_eTraceType_User);
+}
+
+int ItemEnum::set_value()
+{
+  pwr_tStatus sts;
+  pwr_tAName name;
+
+  sts = gdh_ObjidToName( objid, name, sizeof(name), cdh_mNName); 
+  if ( EVEN(sts)) return sts;
+
+  strcat( name, ".");
+  strcat( name, attr);
+
+  sts = gdh_SetObjectInfo( name, &num, sizeof(pwr_tEnum));
+  return sts;
+}
+
+ItemMask::ItemMask( 
+	XNavBrow *brow,
+	pwr_tObjid item_objid, 
+	brow_tNode dest, flow_eDest dest_code,
+	char *attr_mask_name, char *attr_name, 
+	int attr_type_id, pwr_tTid attr_tid, 
+	int attr_size, int attr_flags,
+	unsigned int item_num, int item_is_element, int item_element) :
+	ItemBaseAttr( item_objid, attr_name,
+	attr_type_id, attr_tid, attr_size, attr_flags, 0, item_eDisplayType_Attr),
+	num(item_num), is_element(item_is_element), element(item_element)
+{
+  pwr_tOName obj_name;
+  pwr_tStatus sts;
+
+  type = xnav_eItemType_Mask;
+  sprintf( name, "%s%u", attr_name, num);
+  strcpy( mask_name, attr_mask_name);
+
+  brow_CreateNode( brow->ctx, mask_name, brow->nc_enum, 
+		dest, dest_code, (void *) this, 1, &node);
+
+  brow_SetAnnotPixmap( node, 0, brow->pixmap_attr);
+  brow_SetAnnotation( node, 0, mask_name, strlen(mask_name));
+
+  sts = gdh_ObjidToName( objid, obj_name, sizeof(obj_name), cdh_mNName); 
+  if ( EVEN(sts)) throw co_error(sts);
+ 
+  brow_SetTraceAttr( node, obj_name, attr_name, flow_eTraceType_User);
+}
+
+int ItemMask::set_value( int bittrue)
+{
+  pwr_tStatus sts;
+  pwr_tAName name;
+  pwr_tMask value;
+
+  sts = gdh_ObjidToName( objid, name, sizeof(name), cdh_mNName); 
+  if ( EVEN(sts)) return sts;
+
+  strcat( name, ".");
+  strcat( name, attr);
+
+  sts = gdh_GetObjectInfo( name, &value, sizeof(pwr_tMask));
+  if ( EVEN(sts)) return sts;
+
+  if ( bittrue)
+    value = value | num;
+  else
+    value = value & ~num;
+  sts = gdh_SetObjectInfo( name, &value, sizeof(pwr_tMask));
+  return sts;
+}
+
+int ItemMask::toggle_value()
+{
+  pwr_tStatus sts;
+  pwr_tAName name;
+  pwr_tMask value;
+
+  sts = gdh_ObjidToName( objid, name, sizeof(name), cdh_mNName); 
+  if ( EVEN(sts)) return sts;
+
+  strcat( name, ".");
+  strcat( name, attr);
+
+  sts = gdh_GetObjectInfo( name, &value, sizeof(pwr_tMask));
+  if ( EVEN(sts)) return sts;
+
+  if ( value & num)
+    value = value & ~num;
+  else
+    value = value | num;
+  sts = gdh_SetObjectInfo( name, &value, sizeof(pwr_tMask));
+  return sts;
+}
+
+
+
+
 
 
 
