@@ -27,6 +27,7 @@ protected:
   int  m_level;
   int  m_levelInd;
   char m_indBuf[256];
+  bool m_keepName;
   ostream& m_os;
     
 
@@ -71,6 +72,7 @@ public:
 
   int getErrCnt() const { return m_errCnt;}
   void resetErrCnt() {m_errCnt = 0; }
+  void keepName() { m_keepName = true;}
 
   void printHierarchy(wb_volume& v, wb_object& o); //< Prints a hierarchy
   void printObject(wb_volume& v, wb_object& o, bool recursive = true); //< Prints an object

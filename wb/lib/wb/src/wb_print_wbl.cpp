@@ -21,6 +21,7 @@ wb_print_wbl::wb_print_wbl(ostream& os, int levelIndentation) :
   m_idxFlag(true),
   m_level(0),
   m_levelInd(levelIndentation),
+  m_keepName(false),
   m_os(os)
 {
   memset(m_indBuf, ' ', sizeof(m_indBuf));
@@ -493,8 +494,13 @@ bool wb_print_wbl::printValue (wb_volume& v,
       sprintf(sval, "0");
     else {
       o = v.object(*(pwr_tOid *)val);
-      if (o)
-        sprintf(sval, "\"%s\"", o.longName().c_str());
+      if (o) {
+	if ( o.oid().vid >= cdh_cUserVolMin && o.oid().vid != v.vid() && !m_keepName)
+	  // Other user volume. Loadfile might not be created yet at load time.
+	  sprintf(sval, "\"%s\"", cdh_ObjidToString(NULL, *(pwr_tObjid *)val, 1));
+	else
+	  sprintf(sval, "\"%s\"", o.longName().c_str());	  
+      }
       else 
         sprintf(sval, "\"%s\"", cdh_ObjidToString(NULL, *(pwr_tObjid *)val, 1));
     }    
