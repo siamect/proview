@@ -28,6 +28,7 @@ public class GeDyn {
     public static final int mDynType_FillLevel		= 1 << 21;
     public static final int mDynType_FastCurve		= 1 << 22;
     public static final int mDynType_AnalogText		= 1 << 23;
+    public static final int mDynType_Table		= 1 << 24;
 
     public static final int mActionType_No		= 0;
     public static final int mActionType_Inherit		= 1 << 0;

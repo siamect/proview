@@ -27,6 +27,7 @@ local_java_sources := \
 	JopBar.java \
 	JopTrend.java \
 	JopAxis.java \
+	GeTable.java \
 	GeDynElem.java \
 	GeDynDigLowColor.java \
 	GeDynDigColor.java \
@@ -60,6 +61,7 @@ local_java_sources := \
 	GeDynPulldownMenu.java \
 	GeDynOptionMenu.java \
 	GeDynAnalogText.java \
+	GeDynTable.java \
 	JopSpiderFrame.java \
 	JopLoginFrame.java \
 	JopLoginApplet.java \
