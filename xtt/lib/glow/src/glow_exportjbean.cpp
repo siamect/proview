@@ -739,7 +739,7 @@ void GlowExportJBean::rect( double x0, double y0, double width, double height,
 "    g.draw( shapes[" << base_shape << "]);" << endl;
         else
           fp <<
-"    g.draw( shapes_p" << page << "[" << *shape_cnt << "]);" << endl;
+"    g.draw( shapes_p" << page << "[" << base_shape << "]);" << endl;
       }
       fp <<
 "    }" << endl;
