@@ -407,9 +407,10 @@ int CnvToPs::print_image( char *filename)
   if ( width * scalex  > ps_cPageWidth - ps_cLeftMargin) {
     x = ps_cPageWidth - width * scalex;
     if ( x < 50) {
+      double scale_factor = (ps_cPageWidth - 50) / (width * scalex);
       x = 50;
-      scalex = scalex * (ps_cPageWidth - 50) / (width * scalex);
-      scaley = scaley * (ps_cPageWidth - 50) / (width * scalex);
+      scalex = scalex * scale_factor;
+      scaley = scaley * scale_factor;
     }
   }
 
