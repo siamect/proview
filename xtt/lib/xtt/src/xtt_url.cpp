@@ -39,12 +39,13 @@ int xnav_open_URL( pwr_tURL url)
 
     replace_symbol( url, url, config_p);
   }
-  if ( strcmp( browser, "mozilla") == 0) {
+  if ( strcmp( browser, "mozilla") == 0 ||
+       strcmp( browser, "rt_mozilla") == 0) {
     // Try remote display first
     sprintf( cmd, "%s -remote \"openurl(%s,new-window)\"", browser, url);
     sts = system(cmd);
     if ( sts) {
-      // Not started yet
+      // Not started yet 
       sprintf( cmd, "%s %s &", browser, url);
       system( cmd);
     }

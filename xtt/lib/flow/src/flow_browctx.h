@@ -39,6 +39,8 @@ class BrowCtx : public FlowCtx {
     		{ return a.brow_get_previous_sibling( element, sibling);};
     int is_visible( FlowArrayElem *element);
     void center_object( FlowArrayElem *object, double factor);
+    int page( double factor);
+
     ~BrowCtx() {};
     double indentation;
     double frame_x_right;

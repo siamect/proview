@@ -679,6 +679,11 @@ int brow_IsVisible( brow_tCtx ctx, brow_tObject object)
   return ctx->is_visible( (FlowArrayElem *)object);
 }
 
+int brow_Page( brow_tCtx ctx, double factor)
+{
+  return ctx->page( factor);
+}
+
 extern "C" int brow_CreateSecondaryCtx( brow_tCtx ctx, brow_tCtx *secondary_ctx,
         int (*init_proc)(brow_tCtx ctx, void *client_data),
 	void  *client_data, 

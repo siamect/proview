@@ -575,9 +575,11 @@ int draw_event_handler( FlowCtx *ctx, XEvent event)
               sts = ctx->event_handler( flow_eEvent_Key_Left, 0, 0, 0, 0);
 	    break;
           case XK_Page_Up:
+          case 0xFF41:
             sts = ctx->event_handler( flow_eEvent_Key_PageUp, 0, 0, 0, 0);
 	    break;
           case XK_Page_Down:
+          case 0xFF42:
             sts = ctx->event_handler( flow_eEvent_Key_PageDown, 0, 0, 0, 0);
 	    break;
           case XK_BackSpace:

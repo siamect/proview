@@ -264,6 +264,10 @@ void CLogNavBrow::brow_setup()
 	clognav_brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_Down, flow_eEventType_CallBack, 
 	clognav_brow_cb);
+  brow_EnableEvent( ctx, flow_eEvent_Key_PageUp, flow_eEventType_CallBack, 
+	clognav_brow_cb);
+  brow_EnableEvent( ctx, flow_eEvent_Key_PageDown, flow_eEventType_CallBack, 
+	clognav_brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_Right, flow_eEventType_CallBack, 
 	clognav_brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_Left, flow_eEventType_CallBack, 
@@ -702,6 +706,14 @@ static int clognav_brow_cb( FlowCtx *ctx, flow_tEvent event)
         brow_CenterObject( clognav->brow->ctx, object, 0.75);
       if ( node_count)
         free( node_list);
+      break;
+    }
+    case flow_eEvent_Key_PageDown: {
+      brow_Page( clognav->brow->ctx, 0.9);
+      break;
+    }
+    case flow_eEvent_Key_PageUp: {
+      brow_Page( clognav->brow->ctx, -0.9);
       break;
     }
     case flow_eEvent_SelectClear:

@@ -215,6 +215,36 @@ void BrowCtx::center_object( FlowArrayElem *object, double factor)
   change_scrollbar();
 }
 
+int BrowCtx::page( double factor)
+{
+  double ll_x, ll_y, ur_x, ur_y;
+  int new_offset_y;
+
+  new_offset_y = offset_y + int( factor * window_height);
+
+  if ( factor < 0) {
+    if ( offset_y <= 0)
+      return 0;
+
+    if ( new_offset_y < 0)
+      new_offset_y = 0;
+  }
+  if ( factor > 0) {
+    FlowArrayElem *e;
+    int sts;
+
+    sts = a.get_last( &e);
+    if ( EVEN(sts)) return 0;
+
+    ((FlowNode *)e)->measure( &ll_x, &ll_y, &ur_x, &ur_y);
+    if ( new_offset_y > ur_y * zoom_factor)
+      return 0;
+  }
+  scroll( 0, offset_y - new_offset_y);
+  change_scrollbar();
+  return 1;
+}
+
 void brow_scroll_horizontal( BrowCtx *ctx, int value, int bottom)
 {
   int x_pix;

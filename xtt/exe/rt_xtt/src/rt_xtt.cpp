@@ -47,6 +47,7 @@ extern "C" {
 #include "rt_trace.h"
 #include "xtt_xnav.h"
 #include "xtt_item.h"
+#include "xtt_url.h"
 #include "co_lng.h"
 #include "co_xhelp.h"
 #include "rt_xnav_msg.h"
@@ -231,6 +232,11 @@ static void xtt_hotkey_ResetDig( Widget w, XKeyEvent* ev, String* av, Cardinal* 
   sts = gdh_SetObjectInfo( name, &value, sizeof(value));
   if (EVEN(sts))
     printf("rt_xtt hotkey: SetDig. Can't get %s\n", name);
+}
+
+static void xtt_open_URL_cb( void *ctx, char *url)
+{
+  xnav_open_URL( url);
 }
 
 static void xtt_qcom_events( Xtt *xtt)
@@ -1045,7 +1051,8 @@ Xtt::Xtt( int argc, char *argv[], int *return_sts) :
   xnav->set_dimension_cb = &xtt_set_dimension;
 
   // Create help window
-  CoXHelp *xhelp = new CoXHelp( toplevel, 0, xhelp_eUtility_Xtt, &sts);
+  CoXHelp *xhelp = new CoXHelp( toplevel, this, xhelp_eUtility_Xtt, &sts);
+  xhelp->open_URL_cb = xtt_open_URL_cb;
   CoXHelp::set_default( xhelp);
 
   XtRealizeWidget( toplevel);

@@ -1662,6 +1662,14 @@ static int xnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
         free( node_list);
       break;
     }
+    case flow_eEvent_Key_PageDown: {
+      brow_Page( xnav->brow->ctx, 0.8);
+      break;
+    }
+    case flow_eEvent_Key_PageUp: {
+      brow_Page( xnav->brow->ctx, -0.8);
+      break;
+    }
     case flow_eEvent_Key_PF1:
     case flow_eEvent_Key_ShiftRight:
     {
