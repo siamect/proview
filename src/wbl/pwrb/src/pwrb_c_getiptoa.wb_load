@@ -19,11 +19,7 @@ SObject pwrb:Class
 !  Fetches the value of a 32-, 16- or 8-bits integer
 !  parameter in arbitrary object.
 !  
-!  The complete name of the parameter has to be supplied.
-!  The GetIp object
-!  - is a pure address reference,
-!  - contains no relevant information (=data) in rtdb,
-!  - is without executable code.
+!  The complete name of the attribute has to be supplied.
 !
 ! @b Example
 !  In the example below the value of the integer parameter, AccMod is stored: 

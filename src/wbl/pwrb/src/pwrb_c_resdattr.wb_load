@@ -19,6 +19,12 @@ SObject pwrb:Class
 !  The object is used in a class template plc, to reset
 !  the value of a digital quantity on the specified
 !  attribute in the parent object of the plc.
+!
+!  Note! Attributes, compared to signals, does not have separate 
+!  areas for read and write. The reset and set of an attribute is 
+!  detected immediately by a GetDAttr, i.e. in the same plc scan. 
+!  The exectute order might be of great importance for the behaviour 
+!  of the program.
 !*/
   Object ResDattr $ClassDef 351
     Body SysBody
