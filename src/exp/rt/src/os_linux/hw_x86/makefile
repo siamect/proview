@@ -41,7 +41,7 @@ all : init copy lib
 
 init :
 
-copy : $(exe_dir)/xtt_help.dat $(exe_dir)/sv_se/pwrb_xtthelp.dat
+copy : $(exe_dir)/xtt_help.dat $(exe_dir)/sv_se/pwrb_xtthelp.dat $(exe_dir)/pwr_logga.gif
 
 lib : $(export_obj)
 
@@ -60,6 +60,10 @@ $(exe_dir)/sv_se/pwrb_xtthelp.dat : ../../pwrb_xtthelp.dat_sv_se
 	@ echo "Copying pwrb_xtthelp.dat sv_se"
 	@ $(cp) $(cpflags) $(source) $(target)
 	@ co_convert -t -d $(pwr_doc)/sv_se $(source)
+
+$(exe_dir)/pwr_logga.gif : ../../pwr_logga.gif
+	@ echo "Copying pwr_logga.gif"
+	@ $(cp) $(cpflags) $(source) $(target)
 
 
 $(clean_obj) : clean_%.o : %.c
