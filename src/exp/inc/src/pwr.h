@@ -86,46 +86,46 @@
 typedef void            *pwr_tAddress;		//!< Generic pointer type.
 typedef unsigned int    pwr_tBit;		//!< Bit type.
 typedef unsigned int    pwr_tBitMask;		//!< Bitmask type.
-/**
+/*_*
   @aref boolean Boolean
 */
 typedef unsigned int    pwr_tBoolean;		//!< Boolean type.
-/**
+/*_*
   @aref float32 Float32
 */
 typedef float           pwr_tFloat32;		//!< 32-bit float.
-/**
+/*_*
   @aref float64 Float64
 */
 typedef double          pwr_tFloat64;		//!< 64-big float.
-/**
+/*_*
   @aref char Char
 */
 typedef char            pwr_tChar;		//!< Character type.
-/**
+/*_*
   @aref string String
 */
 typedef char            pwr_tString[];		//!< String type.
-/**
+/*_*
   @aref text Text
 */
 typedef char            pwr_tText[];		//!< Text type.
-/**
+/*_*
   @aref int8 Int8
 */
 typedef char            pwr_tInt8;		//!< 8-bit integer type.
-/**
+/*_*
   @aref int16 Int16
 */
 typedef short           pwr_tInt16;		//!< 16-bit integer type.
-/**
+/*_*
   @aref int32 Int32
 */
 typedef int             pwr_tInt32;		//!< 32-bit integer type.
 
 
 //! 64-bit integer type.
-/**
+/*_*
   @aref float64 Float64
 */
 typedef struct {
@@ -134,7 +134,7 @@ typedef struct {
 } pwr_tInt64;
 
 //! 64-bit unsigned integer type.
-/**
+/*_*
   @aref int64 Int64
 */
 typedef struct {
@@ -142,40 +142,40 @@ typedef struct {
   unsigned int high;
 } pwr_tUInt64;
 
-/**
+/*_*
   @aref uint8 UInt8
 */
 typedef unsigned char   pwr_tUInt8;		//!< 8-bit unsigned integer type.
-/**
+/*_*
   @aref uint16 UInt16
 */
 typedef unsigned short  pwr_tUInt16;		//!< 16-bit unsigned integer type.
-/**
+/*_*
   @aref uint32 UInt32
 */
 typedef unsigned int    pwr_tUInt32;		//!< 32-bit unsigned integer type.
-/**
+/*_*
   @aref volumeid VolumeId
 */
 typedef unsigned int    pwr_tVid;		//!< Volume identity type.
 typedef pwr_tVid        pwr_tVolumeId;		//!< Volume identity type.
 typedef unsigned int    pwr_tAix;		//!< Attribute index type.
-/**
+/*_*
   @aref objectix ObjectIx
 */
 typedef unsigned int    pwr_tOix;		//!< Object index type.
 typedef pwr_tOix        pwr_tObjectIx;		//!< Object index type.
-/**
+/*_*
   @aref mask Mask
 */
 typedef unsigned int	pwr_tMask;		//!< Mask type.
-/**
+/*_*
   @aref enum Enum
 */
 typedef unsigned int	pwr_tEnum;		//!< Enumeration type.
 
 //! Object identity type.
-/**
+/*_*
   @aref objid Objid
 */
 typedef struct {
@@ -185,22 +185,22 @@ typedef struct {
 
 typedef pwr_tOid        pwr_tObjid;	//!< Object identity type.
 typedef pwr_tOid        pwr_tObjDId;
-/**
+/*_*
   @aref classid ClassId
 */
 typedef unsigned int    pwr_tCid;	//!< Class identity type.
 typedef pwr_tCid        pwr_tClassId;	//!< Class identity type.
-/**
+/*_*
   @aref typeid TypeId
 */
 typedef unsigned int    pwr_tTid;	//!< Type identity type.
 typedef pwr_tTid        pwr_tTypeId;	//!< Type identity type.
 
-/**
+/*_*
   @aref status Status
 */
 typedef int             pwr_tStatus;		//!< Status type.
-/**
+/*_*
   @aref netstatus NetStatus
 */
 typedef int             pwr_tNetStatus;		//!< Network status type.
@@ -216,7 +216,7 @@ typedef pwr_tVolumeId	pwr_tNid;	//!< Node identity type.
 typedef pwr_tNid        pwr_tNodeId;	//!< Node identity type.
 typedef pwr_tNid        pwr_tNodeIndex;	//!< Node index type.
 
-/**
+/*_*
   @aref refid RefId
 */
 typedef struct {
@@ -229,7 +229,7 @@ typedef pwr_tRid        pwr_tDlid;	//!< Direct link identity type.
 typedef pwr_tRid        pwr_tSubid;	//!< Subscription identity type.
 
 
-/**
+/*_*
   @aref bix Bix
 */
 //! Body index enumeration.
@@ -279,14 +279,14 @@ typedef union {
   } timespec_t;
 #endif
 
-/**
+/*_*
   @aref time Time
 */
 typedef struct timespec pwr_tTime;	//!< Abolute time type.
 
 
 //! Delta time type.
-/**
+/*_*
   @aref deltatime DeltaTime
 */
 typedef struct {
@@ -294,21 +294,21 @@ typedef struct {
   int tv_nsec;		//!< Nano seconds.
 } pwr_tDeltaTime;
 
-/**
+/*_*
   @aref objname ObjName
 */
 typedef char		pwr_tObjName	[pwr_cSizObjName + 1];	//!< Object name type.
-/**
+/*_*
   @aref pgmname PgmName
 */
 typedef char		pwr_tPgmName	[pwr_cSizPgmName + 1];	//!< PgmName type.
 
-/**
+/*_*
   @aref xref XRef
 */
 typedef char		pwr_tXRef	[pwr_cSizXRef + 1];	//!< XRef type.
 
-/**
+/*_*
   @aref graphname GraphName
 */
 typedef char		pwr_tGraphName	[pwr_cSizGraphName + 1]; //!< GraphName type.
@@ -316,49 +316,49 @@ typedef char		pwr_tStructName	[pwr_cSizStructName + 1]; //!< StructName type.
 typedef char		pwr_tAttrName	[pwr_cSizAttrName + 1];	//!< AttrName type.
 typedef char		pwr_tPathName	[pwr_cSizPathName + 1];	//!< PathName type.
 typedef char		pwr_tFullName	[pwr_cSizFullName + 1];	//!< FullName type.
-/**
+/*_*
   @aref string256 String256
 */
 typedef char		pwr_tString256	[256];			//!< 256 byte string type.
-/**
+/*_*
   @aref string132 String132
 */
 typedef char		pwr_tString132	[132];			//!< 132 byte string type.
-/**
+/*_*
   @aref string80 String80
 */
 typedef char		pwr_tString80	[80];			//!< 80 byte string type.
-/**
+/*_*
   @aref string40 String40
 */
 typedef char		pwr_tString40	[40];			//!< 40 byte string type.
-/**
+/*_*
   @aref string32 String32
 */
 typedef char		pwr_tString32	[32];			//!< 32 byte string type.
-/**
+/*_*
   @aref string16 String16
 */
 typedef char		pwr_tString16	[16];			//!< 16 byte string type.
-/**
+/*_*
   @aref string8 String8
 */
 typedef char		pwr_tString8	[8];			//!< 8 byte string type.
-/**
+/*_*
   @aref string1 String1
 */
 typedef char		pwr_tString1	[1];			//!< 1 byte string type.
-/**
+/*_*
   @aref text1024 Text1024
 */
 typedef char		pwr_tText1024	[1024];			//!< 1024 byte text type.
-/**
+/*_*
   @aref url URL
 */
 typedef char		pwr_tURL	[160];			//!< URL type.
 
 
-/**
+/*_*
   @aref attrrefflag AttrRefFlag
 */
 //! Attribute reference flags type.
@@ -386,7 +386,7 @@ typedef union {
 } pwr_mAttrRef;
 
 //! Attribute reference.
-/**
+/*_*
   @aref attrref AttrRef
 */
 typedef struct {
@@ -397,7 +397,7 @@ typedef struct {
   pwr_mAttrRef      Flags;	//!< Attribute flags.
 } pwr_sAttrRef;
 
-/**
+/*_*
   @aref constants Constants
 */
 //! Zero attribute reference constant.
