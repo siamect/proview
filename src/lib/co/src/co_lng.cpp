@@ -45,6 +45,8 @@ char Lng::items[][2][40] = {
       {"Logging entry 8", "Loggning entry 8"},
       {"Logging entry 9", "Loggning entry 9"},
       {"Logging entry 10", "Loggning entry 10"},
+      {"System Messages", "System Meddelanden"},
+      {"Volumes",      "Volymer"},
       {"Database",     "Databas"},
       {"Alarm",        "Larm"},
       {"Store",        "Lagra"},
