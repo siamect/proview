@@ -12,11 +12,11 @@ let reload__loaddb=4
 
 let pass__continue=1
 let pass__execute=2
-v34_root="/data1/pwr/x3-4b/rls_dbg"
+v40_root="/data1/pwr/x4-0-0/rls_dbg"
 
 reload_dumpdb()
 {
-  # Dump V3.4b databases, one wbload file per volume
+  # Dump V3.4b databases
 
   reload_checkpass "dumpdb" $start_pass
   if [ $pass_status -ne $pass__execute ]; then
@@ -26,131 +26,97 @@ reload_dumpdb()
 
   reload_continue "Pass dump database"
 
-  rm $pwrp_db/*.wb_dmp
+  dmpfiles=`eval ls $pwrp_db/*.wb_dmp`
+  if [ ! -z "$dmpfiles" ]; then
+    rm $pwrp_db/*.wb_dmp
+  fi
 
   for cdb in $databases; do
-    echo "Dumping database $cdb"
      
-    export pwr_inc=$v34_root/os_linux/hw_x86/exp/inc
-    source $v34_root/os_linux/hw_x86/exp/exe/pwrp_env.sh setdb $cdb
-    export pwr_inc=$pwrb_root/os_linux/hw_x86/exp/inc
+    dump_file=$pwrp_db/$cdb.wb_dmp
 
-    # Create a script that removes NoderVersion and $Orphanage objects
-    tmpfile=$pwrp_tmp/del.sh
-    cat > $tmpfile <<-EOF
-	main()
-	  string v;
-	  string class;
-	  string node;
-	  string name;
-
-	  verify(0);
-
-	  v = GetVolumeList();
-	  while( v != "")
-	    class = GetVolumeClass( v);
-	    if ( class != "\$ClassVolume")
-	      set volume/volume='v'
-	      node = GetNodeObject();
-	      if ( node == "")
-	        v = GetNextVolume( v);
-	        continue;
-              endif
-
-	      name = node + "-NodeVersion";
-	      class = GetObjectClass( name);
-	      if ( class != "")
-	        delete object/name='name'/noconfirm
-	      endif
-
-	      name = node + "-\$Orphanage";
-	      class = GetObjectClass( name);
-	      if ( class != "")
-	        delete object/name='name'/noconfirm
-	      endif
-
-	      name = "System-SystemVersion";
-	      class = GetObjectClass( name);
-	      if ( class != "")
-	        delete object/name='name'/noconfirm
-	      endif
-
-	      name = "System-BootVersion";
-	      class = GetObjectClass( name);
-	      if ( class != "")
-	        delete object/name='name'/noconfirm
-	      endif
-	      save
-
-	    endif
-	    v = GetNextVolume( v);
-	  endwhile
-  	endmain
-EOF
-    chmod a+x $tmpfile
-    $v34_root/os_linux/hw_x86/exp/exe/wb_cmd @$tmpfile
-
-    # Create a script that dumps each volume
-    tmpfile=$pwrp_tmp/dump.sh
-    cat > $tmpfile <<-EOF
-	main()
-	  string v;
-	  string class;
-	  string outfile;
-
-	  v = GetVolumeList();
-	  while( v != "")
-	    class = GetVolumeClass( v);
-	    if ( class != "\$ClassVolume")
-	      outfile = "$pwrp_db/" + v + ".wb_dmp";
-	      outfile = tolower( outfile);
-	      printf( "-- Dump volume %s to %s\n", v, outfile);
-	      wb dump/v40/volume='v'/out="'outfile'"
-	    endif
-	    v = GetNextVolume( v);
-	  endwhile
-  	endmain
-EOF
-    chmod a+x $tmpfile
-    $v34_root/os_linux/hw_x86/exp/exe/wb_cmd @$tmpfile
+    echo "Dumping volume $cdb in $dump_file"
+    export pwr_load=$v40_root/os_linux/hw_x86/exp/load
+    $v40_root/os_linux/hw_x86/exp/exe/wb_cmd -v $cdb wb dump/out=\"$dump_file\"
+    export pwr_load=$pwrb_root/os_linux/hw_x86/exp/load
   done
 }
 
-reload_userclasses()
+reload_classvolumes()
 {
-  reload_checkpass "userclasses" $start_pass
+  reload_checkpass "classvolumes" $start_pass
+
   if [ $pass_status -ne $pass__execute ]; then
     reload_status=$reload__success
     return
   fi
 
+  list=`eval ls -1d $pwrp_db/*.wb_load`
   echo ""
-  echo "The classvolume should be defined in one file only: userclasses.wb_load !"
-  echo ""
-
-  reload_continue "Pass create loadfiles for userclasses"
-
-
- # Load userclasses
-  fname="$pwrp_db/userclasses.wb_load"
-  if [ -e $fname ]; then
-    echo "-- Loading userclasses $fname"
-
-    volume=`eval grep pwr_eClass_ClassVolume $fname | awk '{ print tolower($2) }'`
-    if wb_cmd create snapshot/file=\"$fname\"/out=\"$pwrp_load/$volume.dbs\"
-    then
-      reload_status=$reload__success
-      echo "-- Renaming userclasses.wb_load to $volume.wb_load"
-      mv $fname $pwrp_db/$volume.wb_load
-    else
-      reload_status=$reload__userclasses
-      return
+  for file in $list; do
+    volume=`eval grep pwr_eClass_ClassVolume $file | awk '{ print $2 }'`
+    if [ "$volume" == "" ]; then
+      volume=`eval grep ClassVolume $file | awk '{ print $2 }'`
+      volumelow=`eval grep ClassVolume $file | awk '{ print tolower($2) }'`
     fi
+    if [ "$volume" != "" ]; then
+      echo $file
+    fi
+  done
+  echo ""
+
+  reload_continue "Pass create structfiles and loadfiles for classvolumes"
+
+  list=`eval ls -1d $pwrp_db/*.wb_load`
+  for file in $list; do
+    volume=`eval grep pwr_eClass_ClassVolume $file | awk '{ print $2 }'`
+    volumelow=`eval grep pwr_eClass_ClassVolume $file | awk '{ print tolower($2) }'`
+    if [ "$volume" == "" ]; then
+      volume=`eval grep ClassVolume $file | awk '{ print $2 }'`
+      volumelow=`eval grep ClassVolume $file | awk '{ print tolower($2) }'`
+    fi
+    if [ "$volume" != "" ]; then
+      echo "-- Creating structfile and loadfile for $volume"
+      if co_convert -sv -d $pwrp_inc $file
+      then
+        reload_status=$reload__success
+      else
+        reload_status=$reload__userclasses
+        return
+      fi
+
+      if wb_cmd create snapshot/file=\"$file\"/out=\"$pwrp_load/$volumelow.dbs\"
+      then
+        reload_status=$reload__success
+      else
+        reload_status=$reload__userclasses
+        return
+      fi
+    fi
+  done
+}
+
+reload_renamedb()
+{
+  reload_checkpass "renamedb" $start_pass
+  if [ $pass_status -ne $pass__execute ]; then
+    reload_status=$reload__success
+    return
   fi
+
+  reload_continue "Pass rename old databases"
+
+  for cdb in $databases; do
+    reload_save_file $pwrp_db/$cdb.db
+  done
 }
 
 reload_dirvolume()
 {
+  if [ -e "$pwrp_db/directory.db" ]; then
+    return
+  fi
+
   reload_checkpass "dirvolume" $start_pass
   if [ $pass_status -ne $pass__execute ]; then
     reload_status=$reload__success
@@ -159,96 +125,29 @@ reload_dirvolume()
 
   reload_continue "Pass dirvolume"
 
-  dmpfiles=`eval ls $pwrp_db/*.wb_dmp`
-  echo $dmpfiles
-
-  for dmpfile in $dmpfiles; do
-    volume=`eval grep DirectoryVolume $dmpfile | awk '{ print $2 }'`
-    if [ ! -z "$volume" ]; then
-      echo "Volume: $volume"
-      #mv $dmpfile $pwrp_db/directory.wb_dmp
-      l1="Volume $volume \$DirectoryVolume"
-      l2="Volume Directory \$DirectoryVolume"
-      sed 's/ '$volume' / Directory /' $dmpfile > $pwrp_db/directory.wb_dmp
-      wb_cmd create volume/directory
-      wb_cmd wb load /load=\"$pwrp_db/directory.wb_dmp\"
-      mv $dmpfile $dmpfile"_old"
-      mv $pwrp_db/directory.wb_dmp $pwrp_db/directory.wb_dmp_old
-      break
-    else
-      db=""
-    fi
-  done
+  wb_cmd create volume/directory
+  wb_cmd wb load /load=\"$pwrp_db/directory.wb_dmp\"
 }
 
-reload_cnvdirvolume()
+reload_cnvclassvolume()
 {
-  reload_checkpass "cnvdirvolume" $start_pass
+  reload_checkpass "cnvclassvolume" $start_pass
   if [ $pass_status -ne $pass__execute ]; then
     reload_status=$reload__success
     return
   fi
 
-  reload_continue "Pass cnvdirvolume"
+  reload_continue "Pass convert classvolume wb_load files"
 
-  # Create a script that removes DbConfig objects and create BusConfig objects
-  tmpfile=$pwrp_tmp/cnvdirvolume.sh
-  cat > $tmpfile << EOF
-main
-  string object;
-  string class;
-  string child;
-  string sibling;
-  string nodeconfig;
-  string attr;
-  int busnumber;
-  string bus;
-  string next;
+  dmpfiles=`eval ls $pwrp_db/*.wb_load`
+  echo $dmpfiles
 
-  set volume/volume=Directory
+  for dmpfile in $dmpfiles; do
 
-!  verify(1);
-  object = GetRootList();
-  while ( object != "")
-    class = GetObjectClass( object);
-    if ( class == "DbConfig")
-      child = GetChild( object);
-      while ( child != "")
-        sibling = GetNextSibling( child);
-        move object/source='child'/dest='object'/after
-	child = sibling;
-      endwhile
-      sibling = GetNextSibling( object);
-      delete object/noconf/nolog/name='object'
-      object = sibling;
-    else
-      object = GetNextSibling( object);
-    endif
-  endwhile
-
-  nodeconfig = GetRootList();
-  while ( nodeconfig != "")
-    next = GetNextSibling( nodeconfig);
-    class = GetObjectClass( nodeconfig);
-    if ( class == "NodeConfig" || class == "FriendNodeConfig")
-      attr = nodeconfig + ".BusNumber";
-      busnumber = GetAttribute( attr);
-      bus = busnumber;
-      class = GetObjectClass(bus);
-      if ( class == "")
-        create object/dest=""/name='bus'/class="BusConfig"/last
-        set attr/name='bus'/attr="BusNumber"/value='bus'/noconf/nolog
-      endif
-      move object/source='nodeconfig'/dest='bus'/last
-    endif
-    nodeconfig = next;
-  endwhile
-
-  save
-endmain
-EOF
-  chmod a+x $tmpfile
-  wb_cmd @$tmpfile
+    source $pwr_exe/upgrade_cnvdmp.sh $dmpfile $pwrp_tmp/t.wb_dmp
+    reload_save_file $dmpfile
+    mv $pwrp_tmp/t.wb_dmp $dmpfile
+  done
 }
 
 reload_cnvdump()
@@ -270,59 +169,10 @@ reload_cnvdump()
     if [ $db = "wb.db" ]; then
       db=""
     else
-      sed 's/ GetIp / GetIpToA /; s/ StoIp / StoAtoIp /; s/ CStoIp / CStoAtoIp /; s/Class-GetIp/Class-GetIpToA/; s/Class-StoIp/Class-StoAtoIp/; s/Class-CStoIp/Class-CStoAtoIp/' $dmpfile > $pwrp_tmp/t.wb_dmp
+      source $pwr_exe/upgrade_cnvdmp.sh $dmpfile $pwrp_tmp/t.wb_dmp
       mv $pwrp_tmp/t.wb_dmp $dmpfile
     fi
   done
-}
-
-
-reload_createvolumes()
-{
-  reload_checkpass "createvolumes" $start_pass
-  if [ $pass_status -ne $pass__execute ]; then
-    reload_status=$reload__success
-    return
-  fi
-
-  reload_continue "Pass create volumes"
-
-  dmpfiles=`eval ls $pwrp_db/*.wb_dmp`
-  echo $dmpfiles
-
-  for dmpfile in $dmpfiles; do
-    file=${dmpfile##/*/}
-    db="${file%.*}.db"
-    if [ $db = "wb.db" ]; then
-      db=""
-    else
-      wb_cmd wb load /load=\"$dmpfile\"
-    fi
-  done
-}
-
-
-reload_localwb()
-{
-  reload_checkpass "localwb" $start_pass
-  if [ $pass_status -ne $pass__execute ]; then
-    reload_status=$reload__success
-    return
-  fi
-
-  reload_continue "Pass create localWb volume"
-
-  cat << EOF >> $pwrp_db/wb.wb_load
-!
-! localWB volume
-! This volume contains template objects and local listdescriptors.
-!
-Volume localWb pwr_eClass_WorkBenchVolume 254.254.254.252
-EndVolume
-
-EOF
-
-  sed 's/SObject wb:/SObject localWb:/' $pwrp_db/wb.wb_dmp >> $pwrp_db/wb.wb_load
 }
 
 reload_loaddb()
@@ -335,28 +185,33 @@ reload_loaddb()
 
   reload_continue "Pass load database"
 
-  databases=`eval source pwrp_env.sh show db -a`
+  if [ -z "$1" ]; then
+    tmp=`eval ls -1 $pwrp_db/*.wb_dmp`
+    databases=""
+    for db in $tmp; do
+      db=${db##/*/}
+      db="${db%.*}"
+      if [ "$db" != "directory" ]; then
+        databases="$databases $db"
+      fi
+    done
+  else
+    databases=$@
+  fi
 
   for cdb in $databases; do
-    echo "-- Loading database $cdb"
+    if [ $cdb != "directory" ]; then
+      echo "-- Loading volume $cdb"
      
-    source pwrp_env.sh setdb $cdb
-
-    if [ $cdb != "dbdirectory" ]; then
-      #Restore versions of classvolumes
-      if [ -e $pwrp_db/reload_vol_versions_$cdb.pwr_com ]; then
-        wb_cmd @$pwrp_db/reload_vol_versions_$cdb
+      dump_file=$pwrp_db/$cdb.wb_dmp
+      list_file=$pwrp_db/$cdb.lis
+      if wb_cmd wb load/load=\"$dump_file\"/out=\"$list_file\"
+      then
+        reload_status=$reload__success
+      else
+        cat $list_file
+        reload_status=$reload__loaddb
       fi
-    fi
-
-    dump_file=$pwrp_db/$cdb.wb_dmp
-    list_file=$pwrp_db/$cdb.lis
-    if wb_cmd wb load/load=\"$dump_file\"/out=\"$list_file\"/ignore
-    then
-      reload_status=$reload__success
-    else
-      cat $list_file
-      reload_status=$reload__loaddb
     fi
   done
 }
@@ -596,21 +451,17 @@ usage()
   Pass
 
     dumpdb	   Dump database to textfile \$pwrp_db/'volume'.wb_dmp
-    userclasses    Create loadfiles and rename userclasses.wb_load
-    dirvolume      Create directory volume.
-    cnvdirvolume   Convert the directory volume.
+    cnvclassvolume Convert wb_load-files for classvolumes. 
+    classvolumes   Create loadfiles for classvolumes.
     cnvdump        Convert dumpfiles.
-    createvolumes  Create configured databases.
-    localwb        Create LocalWb volume for lists and template objects.
-    cnvobjects     Convert certain objects in new db.
+    renamedb       Rename old databases.
+    dirvolume      Load the directory volume.
+    loaddb         Load dumpfiles.
     compile        Compile all plcprograms in the database
     createload     Create new loadfiles.
     createboot     Create bootfiles for all nodes in the project.
-    convertge      Convert ge graphs.
 
   Note!
-  The first pass (dumpdb) must be executed on NEWTON and then you must move to
-  PWR40 and run the following passes beginning with userclasses.
 EOF
 }
 
@@ -637,13 +488,17 @@ echo ""
 echo "-- Upgrade $project"
 echo ""
 
-export pwr_inc=$v34_root/os_linux/hw_x86/exp/inc
-#echo $pwr_inc
-databases=`eval source $v34_root/os_linux/hw_x86/exp/exe/pwrp_env.sh show db -a`
-databases=$databases" dbdirectory"
-export pwr_inc=$pwrb_root/os_linux/hw_x86/exp/inc
+tmp=`eval ls -1d $pwrp_db/*.db`
+databases=""
+for db in $tmp; do
+  db=${db##/*/}
+  db="${db%.*}"
+  if [ "$db" != "rt_eventlog" ]; then
+    databases="$databases $db"
+  fi
+done
 
-passes="dumpdb userclasses dirvolume cnvdirvolume cnvdump createvolumes localwb cnvobjects compile createload createboot convertge"
+passes="dumpdb cnvclassvolume classvolumes cnvdump renamedb dirvolume loaddb compile createload createboot"
 echo "Pass: $passes"
 echo ""
 echo -n "Enter start pass [dumpdb] > "
