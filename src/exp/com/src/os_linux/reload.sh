@@ -176,17 +176,12 @@ reload_compile()
 
   reload_continue "Pass compile plcprograms"
 
-  list=`eval ls -1d $pwrp_db/*.db`
-  for file in $list; do
-    file=${file##/*/}
-    file=${file%%.*}
-
-    if [ $file != "directory" ] && [ $file != "rt_eventlog" ]; then
-      wb_cmd -v $file compile /all
+  for cdb in $databases; do
+    if [ $cdb != "directory" ]; then
+      wb_cmd -v $cdb compile /all
     fi
   done
 
-#  wb_cmd compile /all
   reload_status=$reload__success
 }
 
