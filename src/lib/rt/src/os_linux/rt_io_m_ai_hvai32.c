@@ -252,9 +252,9 @@ static pwr_tStatus IoCardRead (
 	}
 
 	/* Check max/min */
-        if (actvalue > cop->ActValRangeHigh) 
+        if (actvalue > cop->ActValRangeHigh && cop->ActValRangeHigh > cop->ActValRangeLow) 
 		actvalue = cop->ActValRangeHigh;
-        if (actvalue < cop->ActValRangeLow) 
+        if (actvalue < cop->ActValRangeLow && cop->ActValRangeHigh > cop->ActValRangeLow) 
 		actvalue = cop->ActValRangeLow;
 
         /* Filter */

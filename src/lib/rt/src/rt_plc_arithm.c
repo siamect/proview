@@ -508,7 +508,7 @@ void adelay_exec(
 	  object->StoInd++;
 	  if ((object->StoInd >=  maxindex) || (object->StoInd < 0))
 	 	object->StoInd = 0;
-	  if (object->StoredNumbers <= maxindex) 
+	  if (object->StoredNumbers < maxindex) 
 		object->StoredNumbers++;
 	  object->Count = 0;
 	  object->TimVect[object->StoInd] = object->In;
@@ -519,7 +519,7 @@ void adelay_exec(
 
 /*		Calculate position for output
 */
-	actoff = (object->Tim / *object->ScanTime - object->Count)
+	actoff = (object->Tim / tp->f_scan_time - object->Count)
 		/ object->MaxCount;
 	if (actoff >= object->StoredNumbers)
 		actoff = object->StoredNumbers - 1;

@@ -22,6 +22,9 @@
 #include "rt_errh.h"
 
 
+/**
+  @aref cyclesup CycleSup
+  */
 lst_sEntry *
 csup_Init (
   pwr_tStatus	*status,

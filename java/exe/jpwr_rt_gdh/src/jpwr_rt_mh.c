@@ -37,8 +37,7 @@ JNIEXPORT void JNICALL Java_jpwr_rt_Mh_initIDs
   }
   //hämta pekare till staticmetoden messReceived
   Mh_messReceived_id = (*env)->GetStaticMethodID( env, Mh_id, "messReceived",                              
-  "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IIIILjava/lang/String;IILjpwr/rt/PwrtObjid;)V");
-
+  "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IIIILjava/lang/String;IILjava/lang/String;IILjpwr/rt/PwrtObjid;)V");
   sts = (*env)->GetJavaVM(env, &jvm);
   if(sts)
   {
@@ -285,11 +284,19 @@ pwr_tStatus ev_mh_ack_bc( mh_sAck *MsgP)
   jstring jevName;
   jstring jevTime;
   jstring jevBirthTime;
+
+
   jint jevFlags;
   jint jevPrio;
   jint jevStatus;
   jint jevNix;
   jint jevIdx;
+
+  jstring jevTargetBirthTime;
+  jint jevTargetNix;
+  jint jevTargetIdx;
+  char targetBirthTime_str[40];
+  
   jint jevType;
   jint oix, vid;
   char time_str[40];
@@ -298,6 +305,7 @@ pwr_tStatus ev_mh_ack_bc( mh_sAck *MsgP)
   
   pwr_tTime time = MsgP->Info.EventTime;
   pwr_tTime birthTime = MsgP->Info.Id.BirthTime;
+  pwr_tTime targetBirthTime = MsgP->TargetId.BirthTime;
   
   //hämta enviormentpekaren
   (*jvm)->AttachCurrentThread(jvm,(void **)&env,NULL);
@@ -318,23 +326,31 @@ pwr_tStatus ev_mh_ack_bc( mh_sAck *MsgP)
   
   time_AtoAscii( &time, time_eFormat_ComprDateAndTime, time_str, sizeof(time_str));
   time_AtoAscii( &birthTime, time_eFormat_ComprDateAndTime, birthTime_str, sizeof(birthTime_str));
+  time_AtoAscii( &targetBirthTime, time_eFormat_ComprDateAndTime, targetBirthTime_str, sizeof(targetBirthTime_str));
   
   //gör om till Java-strängar
   jevText = (*env)->NewStringUTF( env, " "); //eventText används inte vid ack
   jevName = (*env)->NewStringUTF( env, MsgP->Info.EventName);
   jevTime = (*env)->NewStringUTF( env, time_str);
   jevBirthTime = (*env)->NewStringUTF( env, birthTime_str);
-  
+  jevTargetBirthTime = (*env)->NewStringUTF( env, targetBirthTime_str);
+    
   //gör om till Java-int
   jevFlags = (jint)MsgP->Info.EventFlags;
   jevPrio = (jint)MsgP->Info.EventPrio;
   jevStatus = (jint)1; //finns ej i mh_sAck och används ej heller  
   jevNix = (jint)MsgP->Info.Id.Nix;
   jevIdx = (jint)MsgP->Info.Id.Idx;
+
+  jevTargetNix = (jint)MsgP->TargetId.Nix;
+  jevTargetIdx = (jint)MsgP->TargetId.Idx;
+
   jevType = (jint)MsgP->Info.EventType;
   //anropa callback metoden i Mh-klassen
   (*env)->CallStaticVoidMethod( env, Mh_id, Mh_messReceived_id, jevText, jevName,
-                                jevTime, jevFlags, jevPrio, jevStatus, jevNix, jevBirthTime, jevIdx, jevType, objid_obj);
+                                jevTime, jevFlags, jevPrio, jevStatus, jevNix, jevBirthTime, jevIdx,
+				jevTargetNix, jevTargetBirthTime, jevTargetIdx,
+				jevType, objid_obj);
   //important:check if an exception was raised 
   if ((*env)->ExceptionCheck(env))
   {
@@ -362,6 +378,13 @@ pwr_tStatus ev_mh_return_bc( mh_sReturn *MsgP)
   jint jevIdx;
   jint jevType;
   jint oix, vid;
+
+  jstring jevTargetBirthTime;
+  jint jevTargetNix;
+  jint jevTargetIdx;
+
+  char targetBirthTime_str[40];
+
   char time_str[40];
   
   char birthTime_str[40];
@@ -369,6 +392,7 @@ pwr_tStatus ev_mh_return_bc( mh_sReturn *MsgP)
   pwr_tObjid objid = MsgP->Info.Object;
   pwr_tTime time = MsgP->Info.EventTime;
   pwr_tTime birthTime = MsgP->Info.Id.BirthTime;
+  pwr_tTime targetBirthTime = MsgP->TargetId.BirthTime;
   
   //hämta enviormentpekaren
   (*jvm)->AttachCurrentThread(jvm,(void **)&env,NULL);
@@ -386,12 +410,15 @@ pwr_tStatus ev_mh_return_bc( mh_sReturn *MsgP)
   
   time_AtoAscii( &time, time_eFormat_ComprDateAndTime, time_str, sizeof(time_str));
   time_AtoAscii( &birthTime, time_eFormat_ComprDateAndTime, birthTime_str, sizeof(birthTime_str));
+  time_AtoAscii( &targetBirthTime, time_eFormat_ComprDateAndTime, targetBirthTime_str, sizeof(targetBirthTime_str));
   
   //gör om till Java-strängar
   jevText = (*env)->NewStringUTF( env, MsgP->EventText);
   jevName = (*env)->NewStringUTF( env, MsgP->Info.EventName);
   jevTime = (*env)->NewStringUTF( env, time_str);
   jevBirthTime = (*env)->NewStringUTF( env, birthTime_str);
+  jevTargetBirthTime = (*env)->NewStringUTF( env, targetBirthTime_str);
+
   
   //gör om till Java-int
   jevFlags = (jint)MsgP->Info.EventFlags;
@@ -399,10 +426,17 @@ pwr_tStatus ev_mh_return_bc( mh_sReturn *MsgP)
   jevStatus = (jint)1;//mh_sReturn har ingen status
   jevNix = (jint)MsgP->Info.Id.Nix;
   jevIdx = (jint)MsgP->Info.Id.Idx;
+
+  jevTargetNix = (jint)MsgP->TargetId.Nix;
+  jevTargetIdx = (jint)MsgP->TargetId.Idx;
+
+
   jevType = (jint)MsgP->Info.EventType;
   //anropa callback metoden i Mh-klassen
   (*env)->CallStaticVoidMethod( env, Mh_id, Mh_messReceived_id, jevText, jevName,
-                                jevTime, jevFlags, jevPrio, jevStatus, jevNix, jevBirthTime, jevIdx, jevType, objid_obj);
+                                jevTime, jevFlags, jevPrio, jevStatus, jevNix, jevBirthTime, jevIdx,
+				jevTargetNix, jevTargetBirthTime, jevTargetIdx,
+				jevType, objid_obj);
   //important:check if an exception was raised 
   if ((*env)->ExceptionCheck(env))
   {
@@ -430,6 +464,12 @@ pwr_tStatus ev_mh_alarm_bc( mh_sMessage *MsgP)
   jint jevIdx;
   jint jevType;
   jint oix, vid;
+
+  jstring jevTargetBirthTime;
+  jint jevTargetNix = (jint) 0;
+  jint jevTargetIdx = (jint) 0;
+
+
   char time_str[40];
   
   char birthTime_str[40];
@@ -460,6 +500,9 @@ pwr_tStatus ev_mh_alarm_bc( mh_sMessage *MsgP)
   jevName = (*env)->NewStringUTF( env, MsgP->Info.EventName);
   jevTime = (*env)->NewStringUTF( env, time_str);
   jevBirthTime = (*env)->NewStringUTF( env, birthTime_str);
+
+  jevTargetBirthTime = (*env)->NewStringUTF( env, " ");
+
   
   //gör om till Java-int
   jevFlags = (jint)MsgP->Info.EventFlags;
@@ -470,7 +513,9 @@ pwr_tStatus ev_mh_alarm_bc( mh_sMessage *MsgP)
   jevType = (jint)MsgP->Info.EventType;
   //anropa callback metoden i Mh-klassen
   (*env)->CallStaticVoidMethod( env, Mh_id, Mh_messReceived_id, jevText, jevName,
-                                jevTime, jevFlags, jevPrio, jevStatus, jevNix, jevBirthTime, jevIdx, jevType, objid_obj);
+                                jevTime, jevFlags, jevPrio, jevStatus, jevNix, jevBirthTime, jevIdx,
+				jevTargetNix, jevTargetBirthTime, jevTargetIdx,
+				jevType, objid_obj);
   //important:check if an exception was raised 
   if ((*env)->ExceptionCheck(env))
   {
@@ -498,6 +543,11 @@ pwr_tStatus ev_mh_info_bc( mh_sMessage *MsgP)
   jint jevIdx;
   jint jevType;
   jint oix, vid;
+
+  jstring jevTargetBirthTime;
+  jint jevTargetNix = (jint) 0;
+  jint jevTargetIdx = (jint) 0;
+
   char time_str[40];
   
   char birthTime_str[40];
@@ -528,6 +578,8 @@ pwr_tStatus ev_mh_info_bc( mh_sMessage *MsgP)
   jevName = (*env)->NewStringUTF( env, MsgP->Info.EventName);
   jevTime = (*env)->NewStringUTF( env, time_str);
   jevBirthTime = (*env)->NewStringUTF( env, birthTime_str);
+
+  jevTargetBirthTime = (*env)->NewStringUTF( env, " ");
   
   //gör om till Java-int
   jevFlags = (jint)MsgP->Info.EventFlags;
@@ -538,7 +590,9 @@ pwr_tStatus ev_mh_info_bc( mh_sMessage *MsgP)
   jevType = (jint)MsgP->Info.EventType;
   //anropa callback metoden i Mh-klassen
   (*env)->CallStaticVoidMethod( env, Mh_id, Mh_messReceived_id, jevText, jevName,
-                                jevTime, jevFlags, jevPrio, jevStatus, jevNix, jevBirthTime, jevIdx, jevType, objid_obj);
+                                jevTime, jevFlags, jevPrio, jevStatus, jevNix, jevBirthTime, jevIdx,
+				jevTargetNix, jevTargetBirthTime, jevTargetIdx,
+				jevType, objid_obj);
   //important:check if an exception was raised 
   if ((*env)->ExceptionCheck(env))
   {
@@ -564,7 +618,8 @@ pwr_tStatus ev_mh_clear_alarmlist_bc( pwr_tNodeIndex nix)
   jevType = (jint)66;
   //anropa callback metoden i Mh-klassen
   (*env)->CallStaticVoidMethod( env, Mh_id, Mh_messReceived_id, NULL, NULL,
-                                NULL, NULL, NULL, NULL, NULL, NULL, NULL, jevType, NULL);
+                                NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+				NULL, NULL, jevType, NULL);
   //printf("C-kod: efter callback\n");
   //important:check if an exception was raised 
   if ((*env)->ExceptionCheck(env))

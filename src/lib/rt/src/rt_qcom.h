@@ -9,10 +9,8 @@
    This include file contains the internal datastructures and
    data entities in GDH.  */
 
-/** @defgroup QCOM Queue communication  
- * This module ...    
- * @{
- */
+/** @addtogroup QCOM */
+/*@{*/
 
 #include <rpc/rpc.h>
 

@@ -34,7 +34,7 @@ copy : $(inc_dir)/pwr_ssabclasses.h
 
 lib  : $(load_dir)/ssab.dbs
 
-exe : $(doc_dir)/ssab_allclasses.html \
+exe : $(doc_dir)/orm/ssab_allclasses.html \
       $(exe_dir)/ssab_xtthelp.dat
 
 clean : 
@@ -50,14 +50,14 @@ $(inc_dir)/pwr_ssabclasses.h :
 	@ echo "Generating struct files for ssab classes..."
 	@ co_convert -sv -d $(inc_dir) "$(pwre_sroot)/wbl/ssab/src/ssab_c_*.wb_load"
 
-$(doc_dir)/ssab_allclasses.html :
+$(doc_dir)/orm/ssab_allclasses.html :
 	@ echo "Generating html files for ssab classes..."
-	@ co_convert -w -d $(doc_dir) "$(pwre_sroot)/wbl/ssab/src/ssab_c_*.wb_load"
+	@ co_convert -w -d $(doc_dir)/orm "$(pwre_sroot)/wbl/ssab/src/ssab_c_*.wb_load"
 	@ echo "Generating html files for ssab structs..."
-	@ co_convert -c -d $(doc_dir) $(inc_dir)/pwr_ssabclasses.h
+	@ co_convert -c -d $(doc_dir)/orm $(inc_dir)/pwr_ssabclasses.h
 	@ echo "Generating html files for ssab code..."
-	@ co_convert -c -d $(doc_dir) "$(pwre_sroot)/lib/rs/src/rs_plc_macro_ssab.h"
-	@ co_convert -c -d $(doc_dir) "$(pwre_sroot)/lib/rs/src/rs_plc_ssab*.c"
+	@ co_convert -c -d $(doc_dir)/orm "$(pwre_sroot)/lib/rs/src/rs_plc_macro_ssab.h"
+	@ co_convert -c -d $(doc_dir)/orm "$(pwre_sroot)/lib/rs/src/rs_plc_ssab*.c"
 
 $(exe_dir)/ssab_xtthelp.dat :
 	@ echo "Generating xtt help files for ssab classes"

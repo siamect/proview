@@ -1,0 +1,43 @@
+!  ssab_c_BuffStr80.wb_load -- Defines the class BuffStr80.
+!
+!  PROVIEW/R
+!
+!  <Description>.
+!
+SObject SSAB:Class
+  !
+  ! BuffStr80	Transbuffer
+  !
+  Object BuffStr80 $ClassDef 24
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    !
+    ! BuffStr80 Runtime Body
+    !
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "BuffStr80"
+      EndBody
+      !
+      ! Parameter Data
+      !
+      Object Data $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+    EndObject
+    !
+    ! Template för BuffStr80
+    !
+    Object Template BuffStr80
+      Body RtBody
+      EndBody
+    EndObject
+  !
+  ! End BuffStr80
+  !
+  EndObject
+EndSObject

@@ -42,10 +42,11 @@ int GeUser::load( char *filename)
   int		end_found = 0;
   char		dummy[40];
 
+  strcpy( fname, filename);
+
   if ( !check_file( filename))
     return USER__FILEOPEN;
 
-  strcpy( fname, filename);
 
   fp.open( filename);
 #ifndef OS_VMS

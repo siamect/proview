@@ -17,6 +17,7 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 
+#include "wb_env.h"
 #include "flow.h"
 #include "flow_ctx.h"
 #include "flow_api.h"
@@ -46,7 +47,6 @@ extern "C" {
 #include "co_xhelp.h"
 #include "wb_wtt.h"
 
-#include "wb_env.h"
 #include "wb_erep.h"
 #include "wb_vrepwbl.h"
 #include "wb_vrepdbs.h"
@@ -239,12 +239,12 @@ void	pwr_login_success()
   if ( login_prv.priv & pwr_mPrv_DevRead )
   {
     utl_get_systemname( systemname, systemgroup);
-    strcpy( title, "PROVIEW/R Navigator: ");
+    strcpy( title, "PwR Navigator: ");
     strcat( title, login_prv.username);
     strcat( title, " on ");
     strcat( title, systemname);
     appl_count++;
-    new WVsel( &sts, NULL, mainwindow, "PROVIEW/R Volumes",
+    new WVsel( &sts, NULL, mainwindow, "PwR Volumes",
 	       wbctx, NULL, 
 		&pwr_vsel_success, &pwr_vsel_cancel, &pwr_time_to_exit, 0, wb_eType_Volume);
   }
@@ -284,12 +284,12 @@ void	pwr_wtt_open_volume( void *wttctx, wb_eType type, char *filename, wow_eFile
   {
     if ( !filename) {
       utl_get_systemname( systemname, systemgroup);
-      strcpy( title, "PROVIEW/R Navigator: ");
+      strcpy( title, "PwR Navigator: ");
       strcat( title, login_prv.username);
       strcat( title, " on ");
       strcat( title, systemname);
       appl_count++;
-      new WVsel( &sts, NULL, mainwindow, "PROVIEW/R Volumes", wbctx, NULL, 
+      new WVsel( &sts, NULL, mainwindow, "PwR Volumes", wbctx, NULL, 
 		&pwr_vsel_success, &pwr_vsel_cancel, &pwr_time_to_exit, 1,
 		type);
     }
@@ -555,7 +555,7 @@ int main( int argc, char *argv[])
     sprintf( msg, "User %s logged in", login_prv.username);
     MsgWindow::message( 'I', msg);
 
-    strcpy( title, "PROVIEW/R Development ");
+    strcpy( title, "PwR Development ");
     strcat( title, login_prv.username);
     strcat( title, " on ");
     strcat( title, systemname);
@@ -590,23 +590,23 @@ int main( int argc, char *argv[])
   {
     if ( login_prv.priv & pwr_mPrv_DevRead )
     {
-      strcpy( title, "PROVIEW/R Navigator: ");
+      strcpy( title, "PwR Navigator: ");
       strcat( title, login_prv.username);
       strcat( title, " on ");
       strcat( title, systemname);
       appl_count++;
-      new WVsel( &sts, NULL, mainwindow, "PROVIEW/R Volumes", wbctx, volumename,
+      new WVsel( &sts, NULL, mainwindow, "PwR Volumes", wbctx, volumename,
 		&pwr_vsel_success, &pwr_vsel_cancel, &pwr_time_to_exit, 0, wb_eType_Volume);
     }
     else
       exit(LOGIN__NOPRIV);
   }
   else if ( login_display)
-    login_new(NULL, mainwindow, "PROVIEW/R Login", systemgroup,
+    login_new(NULL, mainwindow, "PwR Login", systemgroup,
 		&pwr_login_success, &pwr_login_cancel);
 
 
-   strcpy( title, "PROVIEW/R Development ");
+   strcpy( title, "PwR Development ");
    strcat( title, login_prv.username);
    strcat( title, " on ");
    strcat( title, systemname);

@@ -119,10 +119,13 @@ scan (
   plc_sProcess	*pp = tp->pp;
   int		delay_action = 0;
 
-  time_Uptime(&sts, &tp->before_scan, NULL);
+  time_Uptime(&sts, &tp->before_scan, NULL);  
   clock_gettime(CLOCK_REALTIME, &tp->before_scan_abs);
 
   if (tp->loops > 0) {
+    if (sts == TIME__CLKCHANGE) {
+      time_Dadd(&tp->before_scan, &tp->one_before_scan, &tp->scan_time);
+    }
     time_Dsub(&tp->delta_scan, &tp->before_scan, &tp->one_before_scan);
     time_DToFloat(&tp->ActualScanTime, &tp->delta_scan);
     if (tp->ActualScanTime < MIN_SCANTIME)
@@ -162,6 +165,9 @@ scan (
   }
 
   time_Uptime(&sts, &tp->after_scan, NULL);
+  if (sts == TIME__CLKCHANGE) {
+    tp->after_scan = tp->before_scan;
+  }
   clock_gettime(CLOCK_REALTIME, &tp->after_scan_abs);
   if (tp->log)
     pwrb_PlcThread_Exec(tp);

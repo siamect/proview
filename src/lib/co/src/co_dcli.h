@@ -1,6 +1,8 @@
 #ifndef co_dcli_h
 #define co_dcli_h
 
+#include <stdio.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif

@@ -35,7 +35,7 @@ copy : $(inc_dir)/pwr_tlogclasses.h
 
 lib  : $(load_dir)/tlog.dbs
 
-exe : $(doc_dir)/tlog_allclasses.html \
+exe : $(doc_dir)/orm/tlog_allclasses.html \
       $(exe_dir)/tlog_xtthelp.dat
 
 clean : 
@@ -51,14 +51,14 @@ $(inc_dir)/pwr_tlogclasses.h :
 	@ echo "Generating struct files for tlog classes..."
 	@ co_convert -sv -d $(inc_dir) "$(pwre_sroot)/wbl/tlog/src/tlog_c_*.wb_load"
 
-$(doc_dir)/tlog_allclasses.html :
+$(doc_dir)/orm/tlog_allclasses.html :
 	@ echo "Generating html files for tlog classes..."
-	@ co_convert -w -d $(doc_dir) "$(pwre_sroot)/wbl/tlog/src/tlog_c_*.wb_load"
+	@ co_convert -w -d $(doc_dir)/orm "$(pwre_sroot)/wbl/tlog/src/tlog_c_*.wb_load"
 	@ echo "Generating html files for tlog structs..."
-	@ co_convert -c -d $(doc_dir) $(inc_dir)/pwr_tlogclasses.h
+	@ co_convert -c -d $(doc_dir)/orm $(inc_dir)/pwr_tlogclasses.h
 	@ echo "Generating html files for tlog code..."
-	@ co_convert -c -d $(doc_dir) "$(pwre_sroot)/lib/rs/src/rs_plc_macro_tlog.h"
-	@ co_convert -c -d $(doc_dir) "$(pwre_sroot)/lib/rs/src/rs_plc_tlog*.c"
+	@ co_convert -c -d $(doc_dir)/orm "$(pwre_sroot)/lib/rs/src/rs_plc_macro_tlog.h"
+	@ co_convert -c -d $(doc_dir)/orm "$(pwre_sroot)/lib/rs/src/rs_plc_tlog*.c"
 
 $(exe_dir)/tlog_xtthelp.dat :
 	@ echo "Generating xtt help files for tlog classes"

@@ -33,6 +33,9 @@
 #define cNanoSec 1.0e-9
 
 
+/**
+  @aref plcthread PlcThread
+*/
 pwr_sClass_PlcThread *
 pwrb_PlcThread_Init (
   pwr_tStatus	*sts,
@@ -52,49 +55,6 @@ pwrb_PlcThread_Init (
   o->Dlid = tp->dlid;
 
   return o;
-}
-
-void
-pwrb_PlcThread_Zero (
-  plc_sThread	*tp
-)
-{
-  pwr_sClass_PlcThread  *o;
-
-  o = tp->PlcThread;
-
-  o->Limit_1_8 = o->ScanTime / 8.0;
-  o->Limit_1_4 = o->ScanTime / 4.0;
-  o->Limit_1_2 = o->ScanTime / 2.0;
-  o->Limit_1_1 = o->ScanTime;
-  o->Limit_2_1 = o->ScanTime * 2.0;
-  o->Limit_4_1 = o->ScanTime * 4.0;
-  o->Limit_8_1 = o->ScanTime * 8.0;
-
-  o->ScanTimeMin    = 1.0e30;
-  o->ScanTimeMean   = 0.0;
-  o->ScanTimeMax    = 0.0;
-  /* Update ScanTimeMean after 100 loops or after 10 seconds */
-  o->ScanTimeMeanCount = MIN(100., MAX(10./o->ScanTime, 1)) +.5; 
-  o->ScanTimeStart.tv_sec = 0;
-  o->ScanTimeStart.tv_nsec = 0;
-
-  o->Count    = 0;
-  o->Sum      = 0.0;
-  o->Min      = 1.0e30;
-  o->Mean     = 0.0;
-  o->Coverage = 0.0;
-  o->Max      = 0.0;
-
-  o->Count_1_8 = 0;
-  o->Count_1_4 = 0;
-  o->Count_1_2 = 0;
-  o->Count_1_1 = 0;
-  o->Count_2_1 = 0;
-  o->Count_4_1 = 0;
-  o->Count_8_1 = 0;
-  o->CountHigh = 0;
-  o->SlipCount = 0;
 }
 
 void
@@ -168,3 +128,48 @@ pwrb_PlcThread_Exec (
 
 
 }
+
+void
+pwrb_PlcThread_Zero (
+  plc_sThread	*tp
+)
+{
+  pwr_sClass_PlcThread  *o;
+
+  o = tp->PlcThread;
+
+  o->Limit_1_8 = o->ScanTime / 8.0;
+  o->Limit_1_4 = o->ScanTime / 4.0;
+  o->Limit_1_2 = o->ScanTime / 2.0;
+  o->Limit_1_1 = o->ScanTime;
+  o->Limit_2_1 = o->ScanTime * 2.0;
+  o->Limit_4_1 = o->ScanTime * 4.0;
+  o->Limit_8_1 = o->ScanTime * 8.0;
+
+  o->ScanTimeMin    = 1.0e30;
+  o->ScanTimeMean   = 0.0;
+  o->ScanTimeMax    = 0.0;
+  /* Update ScanTimeMean after 100 loops or after 10 seconds */
+  o->ScanTimeMeanCount = MIN(100., MAX(10./o->ScanTime, 1)) +.5; 
+  o->ScanTimeStart.tv_sec = 0;
+  o->ScanTimeStart.tv_nsec = 0;
+
+  o->Count    = 0;
+  o->Sum      = 0.0;
+  o->Min      = 1.0e30;
+  o->Mean     = 0.0;
+  o->Coverage = 0.0;
+  o->Max      = 0.0;
+
+  o->Count_1_8 = 0;
+  o->Count_1_4 = 0;
+  o->Count_1_2 = 0;
+  o->Count_1_1 = 0;
+  o->Count_2_1 = 0;
+  o->Count_4_1 = 0;
+  o->Count_8_1 = 0;
+  o->CountHigh = 0;
+  o->SlipCount = 0;
+}
+
+

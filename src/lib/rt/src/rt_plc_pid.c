@@ -367,11 +367,11 @@ ddiff = ((object->PidAlg & DAVV) != 0) ?
   (object->ControlDiff - eold) / *object->ScanTime:
   (object->ProcVal - xold) / *object->ScanTime;
 if ((object->DerGain < 1.0) ||
-  (object->DerGain * *object->ScanTime >= object->DerTime))
-    object->FiltDer = ddiff;		/* No Filter */
+    (object->DerGain * *object->ScanTime >= object->DerTime))
+    object->FiltDer = ddiff * object->DerTime;		/* No Filter */
 else
     object->FiltDer += (ddiff - derold) *
-      object->DerGain * *object->ScanTime / object->DerTime; /* Filter */
+      object->DerGain * *object->ScanTime; /* Filter */
 
 if ( object->Force )
 /* Force */
@@ -399,7 +399,7 @@ else
     {
       /* Derivative-part */
       if ((object->PidAlg & DALG) != 0)
-        dut += (object->FiltDer-derold) * object->DerTime;
+        dut += (object->FiltDer-derold);
       /* P-part */
       dut += ((object->PidAlg & PAVV) != 0) ?
         object->ControlDiff - eold :
@@ -442,7 +442,7 @@ else
     ut = object->ControlDiff;
     /* Derivative-part */
     if ((object->PidAlg & DALG) != 0)
-      ut += object->FiltDer * object->DerTime;
+      ut += object->FiltDer;
     /* Gain */
     ut *= object->Gain;
     if (object->Inverse != 0) ut = - ut;

@@ -133,7 +133,7 @@ Init ()
     exit(1);
   }
   /*open the database*/
-  if((ret = dataBaseP->open(dataBaseP, fname, NULL, DATABASETYPE, DB_CREATE, 0664)) != 0)
+  if((ret = dataBaseP->open(dataBaseP, 0, fname, NULL, DATABASETYPE, DB_CREATE, 0664)) != 0)
   {
     /*error opening/creating db send the mess to errh, then exit*/
     sprintf(msg, "db_open: %s, no eventlogger will run", db_strerror(ret));

@@ -13,11 +13,8 @@
  */
 
 
-/** @defgroup GDH Global Data Handler  
- * This module contains the access routines to the Global Data
- * Handler. Those routines are callable from application level.   
- * @{
- */
+/** @addtogroup GDH */
+/*@{*/
 
 #ifndef pwr_h
 #include "pwr.h" 

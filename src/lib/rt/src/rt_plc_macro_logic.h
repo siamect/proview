@@ -164,7 +164,7 @@
 
 /**
   STRCAT
-  @aref strcat STRCAT
+  @aref strcat Strcat
 */
 #define Strcat_exec(obj,str1,str2)				       	\
   strcpy(obj->ActVal, str1);   						\

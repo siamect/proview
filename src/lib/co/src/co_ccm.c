@@ -710,14 +710,18 @@ void ccm_float_to_string( char *string, float f)
   int		i;
 
   /* If value is close to integer, round it */
-  if ( fabs( f - floor( f)) <= FLT_EPSILON)
-  {
-    i = f + FLT_EPSILON;
+  if ( fabs( f - floor( f)) <= FLT_EPSILON) {
+    if ( f >= 0)
+      i = f + FLT_EPSILON;
+    else
+      i = f - FLT_EPSILON;
     sprintf( string, "%d", i);
   }
-  else if ( fabs( f - floor( f) + 1) <= FLT_EPSILON)
-  {
-    i = f + FLT_EPSILON;
+  else if ( fabs( f - floor( f) + 1) <= FLT_EPSILON) {
+    if ( f >= 0)
+      i = f + FLT_EPSILON;
+    else
+      i = f - FLT_EPSILON;
     sprintf( string, "%d", i);
   }
   else

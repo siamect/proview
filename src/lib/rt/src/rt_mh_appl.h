@@ -8,9 +8,8 @@
 
    <Description>.  */
 
-/** @defgroup MSGH Message Handler  
- * @{
- */
+/** @addtogroup MSGH */
+/*@{*/
 
 #define RS_MH_APPL_VERSION "X2.3.1"
 
