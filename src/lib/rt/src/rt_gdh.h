@@ -118,6 +118,27 @@ typedef struct {
 
 } gdh_sAttrDef;
 
+/**
+ * Enum value info
+ */
+typedef struct {
+
+  pwr_tObjName  Name;		/**< Value name */
+  pwr_sValue	*Value;		/**< Pointer to value object */
+
+} gdh_sValueDef;
+
+/**
+ * Mask bit info
+ */
+typedef struct {
+
+  pwr_tObjName  Name;		/**< Value name */
+  pwr_sBit	*Bit;		/**< Pointer to bit object */
+
+} gdh_sBitDef;
+
+
 /* GDH entrypoints (as function prototypes).  */
 
 /** @} */
@@ -721,6 +742,20 @@ pwr_tStatus
 gdh_GetSuperClass( 
   pwr_tCid cid,
   pwr_tCid *supercid
+);
+
+pwr_tStatus
+gdh_GetEnumValueDef(
+  pwr_tTid tid,
+  gdh_sValueDef **vd,
+  int *rows
+);
+
+pwr_tStatus
+gdh_GetMaskBitDef(
+  pwr_tTid tid,
+  gdh_sBitDef **bd,
+  int *rows
 );
 
 /* Undocumented routines. For internal use only.  */

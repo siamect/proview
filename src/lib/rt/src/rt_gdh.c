@@ -866,7 +866,7 @@ gdh_GetAttrRefTid (
   } gdh_ScopeUnlock;
 
   if (ap != NULL)
-    *tid  = ap->tid;
+    *tid  = ap->adef->TypeRef;
 
   return sts;
 }
@@ -3309,6 +3309,150 @@ gdh_GetSuperClass(
 	sts = GDH__NOSUCHCLASS;
       else
 	*supercid = cp->attr[0].tid;
+    }
+  } gdh_ScopeUnlock;
+
+  return sts;
+}
+
+pwr_tStatus
+gdh_GetEnumValueDef( pwr_tTid tid, gdh_sValueDef **vd, int *rows)
+{
+  gdb_sObject *top;
+  gdb_sObject *vop;
+  pwr_tOid valoid;
+  int vcnt;
+  pwr_tStatus sts = GDH__SUCCESS;
+  pwr_sValue *valp;
+  
+  gdh_ScopeLock {
+
+    top = vol_OidToObject(&sts, cdh_TypeIdToObjid( tid), gdb_mLo_local, vol_mTrans_none, 
+			 cvol_eHint_none);
+    if ( top == NULL) goto error_sts;
+    if ( !top->g.flags.b.isParent) {
+      sts = GDH__NOSUCHOBJ;
+      goto error_sts;
+    }
+
+    vcnt = 0;
+    valoid = top->g.soid;    
+    vop = vol_OidToObject(&sts, valoid, gdb_mLo_local, vol_mTrans_none, cvol_eHint_none);
+    if (vop == NULL) goto error_sts;
+
+    while (1) {
+      valoid.oix = vop->g.sib.blink;
+
+      if ( valoid.oix == top->g.soid.oix)
+	break;
+
+      vop = vol_OidToObject(&sts, valoid, gdb_mLo_local, vol_mTrans_none, cvol_eHint_none);
+      if (vop == NULL) goto error_sts;
+
+      if ( vop->g.cid == pwr_eClass_Value)
+	vcnt++;
+    }
+	
+    /* Allocate buffer */
+    *vd = (gdh_sValueDef *)calloc( vcnt, sizeof(gdh_sValueDef));
+    *rows = vcnt;
+
+    vcnt = 0;
+    valoid = top->g.soid;    
+    vop = vol_OidToObject(&sts, valoid, gdb_mLo_local, vol_mTrans_none, cvol_eHint_none);
+    if (vop == NULL) goto error_sts;
+
+    while (1) {
+      valoid.oix = vop->g.sib.blink;
+
+      if ( valoid.oix == top->g.soid.oix)
+	break;
+
+      vop = vol_OidToObject(&sts, valoid, gdb_mLo_local, vol_mTrans_none, cvol_eHint_none);
+      if (vop == NULL) goto error_sts;
+
+      if ( vop->g.cid == pwr_eClass_Value) {
+	valp = (pwr_sValue *) vol_ObjectToAddress(&sts, vop);
+	if (valp == NULL) goto error_sts;
+
+	strcpy( (*vd)[vcnt].Name, vop->g.f.name.orig);
+	(*vd)[vcnt].Value = valp;
+	vcnt++;
+      }
+    }
+  error_sts: {
+    }
+  } gdh_ScopeUnlock;
+
+  return sts;
+}
+
+pwr_tStatus
+gdh_GetMaskBitDef( pwr_tTid tid, gdh_sBitDef **bd, int *rows)
+{
+  gdb_sObject *top;
+  gdb_sObject *bop;
+  pwr_tOid boid;
+  int bcnt;
+  pwr_tStatus sts = GDH__SUCCESS;
+  pwr_sBit *bp;
+  
+  gdh_ScopeLock {
+
+    top = vol_OidToObject(&sts, cdh_TypeIdToObjid( tid), gdb_mLo_local, vol_mTrans_none, 
+			 cvol_eHint_none);
+    if ( top == NULL) goto error_sts;
+    if ( !top->g.flags.b.isParent) {
+      sts = GDH__NOSUCHOBJ;
+      goto error_sts;
+    }
+
+    bcnt = 0;
+    boid = top->g.soid;    
+    bop = vol_OidToObject(&sts, boid, gdb_mLo_local, vol_mTrans_none, cvol_eHint_none);
+    if (bop == NULL) goto error_sts;
+
+    while (1) {
+      boid.oix = bop->g.sib.blink;
+
+      if ( boid.oix == top->g.soid.oix)
+	break;
+
+      bop = vol_OidToObject(&sts, boid, gdb_mLo_local, vol_mTrans_none, cvol_eHint_none);
+      if (bop == NULL) goto error_sts;
+
+      if ( bop->g.cid == pwr_eClass_Bit)
+	bcnt++;
+    }
+	
+    /* Allocate buffer */
+    *bd = (gdh_sBitDef *)calloc( bcnt, sizeof(gdh_sBitDef));
+    *rows = bcnt;
+
+    bcnt = 0;
+    boid = top->g.soid;    
+    bop = vol_OidToObject(&sts, boid, gdb_mLo_local, vol_mTrans_none, cvol_eHint_none);
+    if (bop == NULL) goto error_sts;
+
+    while (1) {
+      boid.oix = bop->g.sib.blink;
+
+      if ( boid.oix == top->g.soid.oix)
+	break;
+
+      bop = vol_OidToObject(&sts, boid, gdb_mLo_local, vol_mTrans_none, cvol_eHint_none);
+      if (bop == NULL) goto error_sts;
+
+      if ( bop->g.cid == pwr_eClass_Bit) {
+	bp = (pwr_sBit *) vol_ObjectToAddress(&sts, bop);
+	if (bp == NULL) goto error_sts;
+
+	strcpy( (*bd)[bcnt].Name, bop->g.f.name.orig);
+	(*bd)[bcnt].Bit = bp;
+	bcnt++;
+      }
+    }
+  error_sts: {
     }
   } gdh_ScopeUnlock;
 
