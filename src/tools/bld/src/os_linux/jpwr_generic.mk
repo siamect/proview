@@ -125,7 +125,8 @@ $(export_lib) : $(objects)
 		$(rm) $(export_lib); \
 	  fi
 	@ cd $(pwre_broot)/$(pwre_target)/bld; \
-	if [ $(comp_name) = "rt" ] || [ $(comp_name) = "rt_client" ]; then \
+	gifs=`eval ls jpwr/$(comp_name)/*.gif 2>/dev/null`; \
+	if [ "$(gifs)" = "" ]; then \
 	  jar cf $(export_lib) jpwr/$(comp_name)/*.class; \
 	else \
 	  jar cf $(export_lib) jpwr/$(comp_name)/*.class jpwr/$(comp_name)/*.gif; \
@@ -135,4 +136,14 @@ $(export_lib) : $(objects)
 #-include $(source_dependencies)
 
 endif
+
+
+
+
+
+
+
+
+
+
 
