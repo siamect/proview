@@ -160,6 +160,7 @@ mh_ApplConnect (
     switch (cid) {
     case pwr_eClass_Appl:
     case pwr_cClass_OpAppl:
+    case pwr_cClass_Application:
       break;
     default:
       return MH__NOAPPL;
