@@ -24,6 +24,9 @@ SObject pwrb:Class
 !  The object has to be configured direct below a $Node
 !  object representing a process node.
 !
+! @b Object graph
+!  @image orm_backup_conf_og.gif
+!
 ! @b See Also
 !  @classlink Backup pwrb_backup.html
 !*/

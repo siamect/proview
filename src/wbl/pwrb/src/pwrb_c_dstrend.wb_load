@@ -63,6 +63,9 @@ SObject pwrb:Class
 !  object.
 !  @image orm_en1-70.gif
 !  Configuration of a DsTrend Object
+!
+! @b Object graph
+!  @image orm_dstrend_og.gif
 !*/
   Object DsTrend $ClassDef 108 
     Body SysBody

@@ -20,6 +20,9 @@ SObject pwrs:Class
 !  The $Node object is implicitly associated with the node
 !  it is defining. All descendants are implicitly
 !  associated with the same node.
+!
+! @b Object graph
+!  @image orm_node_og.gif
 !*/
   Object $Node $ClassDef pwr_eCix_Node
     Body SysBody

@@ -35,6 +35,9 @@ SObject pwrb:Class
 !  To create card object with channel objects belonging to
 !  it the function 'Configure Card' in "Utility Window" is
 !  recommended.
+!
+! @b Object graph
+!  @image orm_chando_og.gif
 !*/
   Object ChanDo $ClassDef 34 
     Body SysBody

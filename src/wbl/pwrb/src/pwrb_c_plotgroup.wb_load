@@ -43,6 +43,9 @@ SObject pwrb:Class
 !  indicate which 'graphs' concern 'Host' respectively 'Process'
 !  @image orm_en1-170.gif
 !  Configuration of PlotGroup Objects 
+!
+! @b Object graph
+!  @image orm_plotgroup_og.gif
 !*/
   Object PlotGroup $ClassDef 178 
     Body SysBody

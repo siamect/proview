@@ -22,6 +22,9 @@ SObject pwrb:Class
 !  development environment.
 !  The object is assigned an initial value (!= 0 ) in the
 !  target environment, for example by means of StoAv.
+!
+! @b Object graph
+!  @image orm_av_og.gif
 !*/
   Object Av $ClassDef 19 
     Body SysBody

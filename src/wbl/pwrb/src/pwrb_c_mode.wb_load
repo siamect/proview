@@ -32,6 +32,9 @@ SObject pwrb:Class
 !  the XForcVal-attribute in the Mode object. See control
 !  examples at the Pid object.
 !
+! @b Object graph
+!  @image orm_mode_og.gif
+!
 ! @b See also
 !  @classlink PID pwrb_pid.html
 !*/

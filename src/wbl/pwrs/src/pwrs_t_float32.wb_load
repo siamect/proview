@@ -13,6 +13,9 @@ SObject pwrs:Type
 !  Basic type 32-bit float.
 !
 !  This type is used for analog signals and attributes.
+!
+! @b Type graph
+!  @image orm_float32_tg.gif
 !*/
   Object $Float32 pwr_eClass_Type pwr_eTix_Float32
     Body SysBody

@@ -193,6 +193,9 @@ SObject         pwrb:Class
 !  @image orm_en1-161.gif
 !  Ratio Control 
 !
+! @b Object graph
+!  @image orm_pid_og.gif
+!
 ! @b See also
 !  @classlink Mode pwrb_mode.html
 !*/

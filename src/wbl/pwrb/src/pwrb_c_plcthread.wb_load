@@ -11,6 +11,9 @@ SObject pwrb:Class
 ! Keeps data of a plc thread. Prio and ScanTime are input to the plc process
 ! which starts all threads. The rest of the parameters are output from the
 ! plc thread and updated periodically.
+!
+! @b Object graph
+!  @image orm_plcthread_og.gif
 !*/
   Object PlcThread $ClassDef 261 
     Body SysBody

@@ -13,7 +13,7 @@ SObject pwrs:Type
 !  URL. 160 characters null-terminated string. Derived type from String.
 !
 !  An URL indentifies the location of a resource on the Internet, e.g.
-!  /http://proview.se
+!  http://www.proview.se
 !
 !  The maximum length of the URL without the null termination is
 !  159 characters.

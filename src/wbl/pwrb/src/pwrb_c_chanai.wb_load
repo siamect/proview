@@ -42,6 +42,9 @@ SObject pwrb:Class
 !  it the function 'Configure Card' in "Utility Window" is
 !  recommended.
 !
+! @b Object graph
+!  @image orm_chanai_og.gif
+!
 ! @b See also  
 !  @classlink ChanAit pwrb_chanait.html
 !*/

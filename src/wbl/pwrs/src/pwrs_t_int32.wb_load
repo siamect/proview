@@ -14,6 +14,9 @@ SObject pwrs:Type
 !  32-bit integer. Basic type.
 !
 !  This type is used for integer signals.
+!
+! @b Type graph
+!  @image orm_int32_tg.gif
 !*/
   Object $Int32 pwr_eClass_Type pwr_eTix_Int32
     Body SysBody

@@ -22,6 +22,9 @@ SObject pwrb:Class
 !  development environment in such a way that it belongs
 !  to the same target node as its associated channel
 !  object.
+!
+! @b Object graph
+!  @image orm_ai_og.gif
 !*/
   Object Ai $ClassDef 4 
     Body SysBody

@@ -32,6 +32,9 @@ SObject pwrb:Class
 !  EBUILD-file.
 !  @image orm_en1-68.gif
 !  
+! @b Object graph
+!  @image orm_dsfastconf_og.gif
+!
 ! @b See Also
 !  @classlink DsFast pwrb_dsfast.html
 !*/

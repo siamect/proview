@@ -28,6 +28,9 @@ SObject pwrb:Class
 !  
 !  If a Ds_Trend job is loaded to a node that has no
 !  DsTrendConf object, it will execute with 1 Hz.
+!
+! @b Object graph
+!  @image orm_dstrendconf_og.gif
 !  
 ! @b See Also
 !  @classlink DsTrend pwrb_dstrend.html

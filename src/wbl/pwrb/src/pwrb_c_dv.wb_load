@@ -24,6 +24,9 @@ SObject pwrb:Class
 !  
 !  The object is assigned an initial value (!= FALSE ) in
 !  the target environment, for example by means of StoDv.
+!
+! @b Object graph
+!  @image orm_dv_og.gif
 !*/
   Object Dv $ClassDef 111 
     Body SysBody

@@ -31,6 +31,9 @@ SObject pwrb:Class
 !  In connection with configuring of a $Node object the
 !  development environment normally configure a
 !  MessageHandler object as well.
+!
+! @b Object graph
+!  @image orm_messagehandler_og.gif
 !*/
   Object MessageHandler $ClassDef 146 
     Body SysBody

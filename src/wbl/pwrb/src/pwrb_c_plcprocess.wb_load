@@ -12,6 +12,9 @@ SObject pwrb:Class
 !  @Group Servers,NodeConfiguration
 !  @Summary Configures the plc process
 !  Configures the plc process.
+!
+! @b Object graph
+!  @image orm_plcprocess_og.gif
 !*/
   Object PlcProcess $ClassDef 279
     Body SysBody

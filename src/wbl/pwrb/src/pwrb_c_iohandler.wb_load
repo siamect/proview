@@ -27,6 +27,9 @@ SObject pwrb:Class
 !  If no IOHandler object is configured PROVIEW will
 !  create one at initiating of the node's rtdb. The
 !  attributes will then be assigned the default values.
+!
+! @b Object graph
+!  @image orm_iohandler_og.gif
 !*/
   Object IOHandler $ClassDef 138 
     Body SysBody
