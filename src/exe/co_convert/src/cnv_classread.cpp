@@ -117,6 +117,10 @@ int ClassRead::read( char *filename)
         linetype = cread_eLine_Attribute;
       else if ( strcmp( low( line_part[0]), "object") == 0 &&
 		nr > 2 &&
+                strcmp( low( line_part[2]), "$typedef") == 0)
+        linetype = cread_eLine_TypeDef;
+      else if ( strcmp( low( line_part[0]), "object") == 0 &&
+		nr > 2 &&
                 strcmp( low( line_part[2]), "$objbodydef") == 0)
         linetype = cread_eLine_ObjBodyDef;
       else if ( strcmp( low( line_part[0]), "object") == 0 &&
@@ -161,6 +165,8 @@ int ClassRead::read( char *filename)
         linetype = cread_eLine_Buffer;
       else if ( strcmp( low( line_part[0]), "object") == 0)
         linetype = cread_eLine_Object;
+      else if ( strcmp( low( line_part[0]), "object") == 0)
+        linetype = cread_eLine_Object;
       else if ( strcmp( low( line_part[0]), "!/**") == 0)
         linetype = cread_eLine_Doc;
       else if ( strcmp( low( line_part[0]), "!*/") == 0)
@@ -173,6 +179,10 @@ int ClassRead::read( char *filename)
         linetype = cread_eLine_EndVolume;
       else if ( strcmp( low( line_part[0]), "range") == 0)
         linetype = cread_eLine_Range;
+      else if ( strcmp( low( line_part[0]), "buffer") == 0)
+        linetype = cread_eLine_Buff;
+      else if ( strcmp( low( line_part[0]), "endbuffer") == 0)
+        linetype = cread_eLine_EndBuff;
       else      
         linetype = cread_eLine_Unknown;
 
@@ -206,6 +216,15 @@ int ClassRead::read( char *filename)
             strcpy( class_name, line_part[1]);
           if ( nr > 3)
             strcpy( class_id, line_part[3]);
+          break;
+        case cread_eLine_TypeDef:
+          state |= cread_mState_TypeDef;
+          object_state = cread_mState_TypeDef;
+          typedef_init();
+          if ( line_part[1][0] == '$')
+            strcpy( typedef_name, &line_part[1][1]);
+          else
+            strcpy( typedef_name, line_part[1]);
           break;
         case cread_eLine_SysBody:
           state |= cread_mState_SysBody;
@@ -335,6 +354,15 @@ int ClassRead::read( char *filename)
 	    if ( generate_struct && struct_class_open)
               struct_class_close();
           }
+          else if ( state & cread_mState_TypeDef) {
+            state &= ~cread_mState_TypeDef;
+#if 0
+            if ( generate_html && html_class_open)
+              html_class_close();
+	    if ( generate_struct && struct_class_open)
+              struct_class_close();
+#endif
+          }
           else if ( state & cread_mState_Object)
           {
             object_level--;
@@ -377,6 +405,9 @@ int ClassRead::read( char *filename)
               break;
             case cread_mState_ClassDef:
               class_attr( attr_name, attr_value);
+              break;
+            case cread_mState_TypeDef:
+              typedef_attr( attr_name, attr_value);
               break;
             case cread_mState_ObjBodyDef:
               body_attr( attr_name, attr_value);
@@ -422,6 +453,9 @@ int ClassRead::read( char *filename)
               break;
             case cread_mState_ClassDef:
               class_attr( attr_name, attr_value);
+              break;
+            case cread_mState_TypeDef:
+              typedef_attr( attr_name, attr_value);
               break;
             case cread_mState_ObjBodyDef:
               body_attr( attr_name, attr_value);
@@ -473,6 +507,7 @@ int ClassRead::read( char *filename)
         case cread_eLine_Volume:
         {
           state |= cread_mState_Volume;
+	  strcpy( volume_name, line_part[1]);
           break;
         }
         case cread_eLine_EndVolume:
@@ -482,6 +517,9 @@ int ClassRead::read( char *filename)
           break;
         }
         case cread_eLine_Range:
+          break;
+        case cread_eLine_Buff:
+        case cread_eLine_EndBuff:
           break;
         case cread_eLine_EOF:
           break;
@@ -962,6 +1000,9 @@ int ClassRead::object_close()
     case cread_mState_ClassDef:
       class_close();
       break;
+    case cread_mState_TypeDef:
+      typedef_close();
+      break;
     case cread_mState_Object:
       break;
     default:
@@ -970,6 +1011,47 @@ int ClassRead::object_close()
   object_state = 0;
   return 1;
 }
+
+void ClassRead::typedef_init()
+{
+  strcpy( typedef_name, "");
+  strcpy( typedef_typeref, "");
+  typedef_elements = 0;
+}
+
+int ClassRead::typedef_attr( char *name, char *value)
+{
+  if ( strcmp( low( name), "typeref") == 0)
+  {
+    if ( strncmp( value, "pwrs:Type-$", 11) == 0)
+      strcpy( typedef_typeref, &value[11]);
+    else
+      strcpy( typedef_typeref, value);
+
+  }
+  else if ( strcmp( low( name), "elements") == 0)
+  {
+    sscanf( value, "%d", &typedef_elements);
+  }
+  return 1;
+}
+
+int ClassRead::typedef_close()
+{
+  if ( first_class) {
+    if ( generate_struct)
+      struct_init();
+
+    first_class = 0;
+  }
+
+  if ( generate_struct)
+    struct_typedef();
+
+  doc_fresh = 0;
+  return 1;
+}
+
 
 char *ClassRead::low( char *in)
 {

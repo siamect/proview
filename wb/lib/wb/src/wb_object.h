@@ -94,6 +94,9 @@ public:
 
   wb_destination destination(ldh_eDest dest);
 
+  bool docBlock( char **block, int *size);
+  bool docBlock( char *block);
+
 private:
   bool check();
   bool check(string str);

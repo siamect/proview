@@ -278,6 +278,71 @@
 #define ItoA_exec(obj,in) \
   obj->ActVal = in;
 
+/**
+  StoDattr
+  @aref stodattr StoDattr
+*/
+#define StoDattr_exec(attr,in) \
+  attr = in;
 
+/**
+  SetDattr
+  @aref setdattr SetDattr
+*/
+#define SetDattr_exec(attr,in) \
+  if ( in) attr = true;
+
+/**
+  ResDattr
+  @aref resdattr ResDattr
+*/
+#define ResDattr_exec(attr,in) \
+  if ( in) attr = false;
+
+/**
+  StoIattr
+  @aref stoiattr StoIattr
+*/
+#define StoIattr_exec(attr,in) \
+  attr = in;
+
+/**
+  CStoIattr
+  @aref cstoiattr CStoIattr
+*/
+#define CStoIattr_exec(attr,in,cond) \
+  if ( cond) attr = in;
+
+/**
+  StoAattr
+  @aref stoaattr StoAattr
+*/
+#define StoAattr_exec(attr,in) \
+  attr = in;
+
+/**
+  CStoAattr
+  @aref cstoaattr CStoAattr
+*/
+#define CStoAattr_exec(attr,in,cond) \
+  if ( cond) attr = in;
+
+/**
+  StoSattr
+  @aref stosattr StoSattr
+*/
+#define StoSattr_exec(attr,in,size) \
+  strncpy( attr, in, size); \
+  attr[size-1] = 0;
+
+/**
+  CStoSattr
+  @aref cstosattr CStoSattr
+*/
+#define CStoSattr_exec(attr,in,cond,size) \
+  if ( cond) { \
+    strncpy( attr, in, size); \
+    attr[size-1] = 0; \
+  }
 
 

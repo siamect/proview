@@ -41,6 +41,8 @@ procedure
 	wtt_activate_openfile_wbl(integer);
 	wtt_activate_spreadsheet(integer);
 	wtt_activate_openge(integer);
+	wtt_activate_openclasseditor(integer);
+	wtt_activate_createstruct(integer);
 	wtt_activate_createload(integer);
 	wtt_activate_createboot(integer);
 	wtt_activate_distribute(integer);
@@ -718,6 +720,21 @@ object functions_entry : XmCascadeButton
         {
           arguments
           {
+  	    XmNlabelString = compound_string("Open ClassEditor...");
+            XmNmnemonic = keysym('C');
+            XmNfontList	   = menu_font;
+	    XmNuserData = 16;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_openclasseditor(wtt_ctx);
+	    MrmNcreateCallback = procedure wtt_create_menubutton(wtt_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
   	    XmNlabelString = compound_string("Compile");
             XmNmnemonic = keysym('m');
             XmNfontList	   = menu_font;
@@ -741,6 +758,21 @@ object functions_entry : XmCascadeButton
 	  callbacks
           {
             XmNactivateCallback = procedure wtt_activate_createload(wtt_ctx);
+	    MrmNcreateCallback = procedure wtt_create_menubutton(wtt_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Create Structfile");
+            XmNmnemonic = keysym('S');
+            XmNfontList	   = menu_font;
+	    XmNuserData = 17;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_createstruct(wtt_ctx);
 	    MrmNcreateCallback = procedure wtt_create_menubutton(wtt_ctx);
           };
 	};

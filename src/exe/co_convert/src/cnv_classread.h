@@ -50,7 +50,10 @@ typedef enum {
 	cread_eLine_EndVolume,
 	cread_eLine_DParam,
 	cread_eLine_DAttr,
+	cread_eLine_Buff,
+	cread_eLine_EndBuff,
 	cread_eLine_Range,
+	cread_eLine_TypeDef,
 	cread_eLine_Unknown
 	} cread_eLine;
 
@@ -73,7 +76,8 @@ typedef enum {
 	cread_mState_Doc	= 1 << 15,
 	cread_mState_Template	= 1 << 16,
 	cread_mState_Volume	= 1 << 17,
-	cread_mState_DParam	= 1 << 18
+	cread_mState_DParam	= 1 << 18,
+	cread_mState_TypeDef	= 1 << 19
 	} cread_mState;
 
 #define cread_cTmpFile1 "classread1.tmp"
@@ -126,6 +130,9 @@ class ClassRead {
     int			body_rtvirtual;
     char		graphplcnode_name[80];
     char		graphplccon_name[20];
+    char		typedef_name[80];
+    char		typedef_typeref[80];
+    int			typedef_elements;
     char		doc_author[200];
     char		doc_version[80];
     char		doc_groups[10][40];
@@ -159,6 +166,9 @@ class ClassRead {
     void class_init();
     int class_attr( char *name, char *value);
     int class_close();
+    void typedef_init();
+    int typedef_attr( char *name, char *value);
+    int typedef_close();
     void body_init();
     int body_attr( char *name, char *value);
     int body_close();
@@ -249,6 +259,7 @@ class ClassRead {
     int struct_body();
     int struct_body_close();
     int struct_attribute();
+    int struct_typedef();
     int struct_volname_to_id();
     void struct_cix_to_classid( unsigned int cix, pwr_tClassId *cid);
     int struct_cixstr_to_classid( char *cix_str, pwr_tClassId *cid);

@@ -45,7 +45,8 @@ void wb_print_wbl::printAttribute(wb_volume& v,
                                   wb_attribute& tattr, ///< template 
                                   wb_adef& adef)
 {
-  if (adef.flags() & PWR_MASK_POINTER)
+  if (adef.flags() & PWR_MASK_POINTER || 
+      adef.flags() & PWR_MASK_NOWBL)
     return;
 
   if (attr.isClass())
@@ -128,6 +129,10 @@ void wb_print_wbl::printClass(wb_volume& v,
   wb_attribute attr2;
   wb_adef adef2;
   const char* bname;
+
+  if ( strcmp( attr.name(), "Template") == 0 && v.cid() == pwr_eClass_ClassVolume)
+    // The parser can't handle subclasses in template objects yet...
+    return;
 
   wb_object co = v.object(cdh_ClassIdToObjid(subClass));
   if (!co) {
@@ -213,6 +218,23 @@ void wb_print_wbl::printObject(wb_volume& v, wb_object& o, bool recursive)
   unsigned int idx;
   wb_cdef cdef = v.cdef(o);
   const char* cname = cdef.name();
+  char *block;
+  int size;
+
+  if ( o.docBlock( &block, &size) && strcmp( block, "") != 0) {
+    indent(0) << "!/**" << endl;
+    indent(0) << "! ";
+    for ( char *s = block; *s; s++) {
+      if ( *s == '\n') {
+	m_os << *s;
+	indent(0) << "! ";
+	continue;
+      }
+      m_os << *s;
+    }
+    m_os << endl;
+    indent(0) << "!*/" << endl;
+  }
 
   indent(1) << "Object " << o.name() << " " << cname;
 
@@ -299,6 +321,9 @@ void wb_print_wbl::printParameter(wb_volume& v,
     return;
   }
 
+  if ( attr == tattr)
+    // This is the template object itself, print all nonzero
+    tvalueb = (char *)calloc( 1, tattr.size());
 
   for (int i = 0; i < nElement; i++) {
     switch (adef.type()) {
@@ -328,7 +353,7 @@ void wb_print_wbl::printParameter(wb_volume& v,
       val = valueb + varOffset;
       tval = tvalueb + varOffset;
             
-      if (memcmp(val, tval, varSize) == 0)
+      if (memcmp(val, tval, varSize) == 0 && !(adef.flags() & PWR_MASK_ALWAYSWBL))
         continue;
 
       parValOk = printValue(v, adef, val, varSize, &svalp);
@@ -362,6 +387,8 @@ void wb_print_wbl::printParameter(wb_volume& v,
       break;
     }
   }
+  if ( attr == tattr)
+    free( tvalueb);
 }
 
 //

@@ -1493,6 +1493,7 @@ int foe_new_local(
 	pwr_tClassId	plcclass;
 	int		plc_loaded;
 	int		function;
+	pwr_tClassId	classid;
 
 	if ( cdh_ObjidIsNotNull( plcprogram))
 	{
@@ -1791,6 +1792,17 @@ int foe_new_local(
 	  trace_simsetup( foectx);
 	}
 
+	// Check if class editor
+	sts = ldh_GetVolumeClass( ldh_SessionToWB(windowobject->hw.ldhsession),
+				  windowobject->lw.objdid.vid, &classid);
+	if ( EVEN(sts)) return sts;
+  
+	if ( ldh_VolRepType( windowobject->hw.ldhsession) == ldh_eVolRep_Mem &&
+	     classid == pwr_eClass_ClassVolume)
+	  foectx->classeditor = 1;
+	if ( foectx->access == foe_eFuncAccess_Edit)
+	  foe_edit_set_entries ( foectx);
+	     
 
 	return FOE__SUCCESS;
 }
@@ -2715,22 +2727,36 @@ static int foe_edit_set_entries (
 )
 {
   
-  Arg	args[20];
-  int i;
+  Arg	sensitive[1];
+  Arg	insensitive[1];
 
-  i=0;
-  XtSetArg(args[i],XmNsensitive,1 ); i++;
+  XtSetArg(sensitive[0],XmNsensitive, 1);
+  XtSetArg(insensitive[0],XmNsensitive, 0);
 
-  XtSetValues( foectx->widgets.save,args,i);
-  XtSetValues( foectx->widgets.exit,args,i);
-  XtSetValues( foectx->widgets.syntax,args,i);
-  XtSetValues( foectx->widgets.compile,args,i);
-  XtSetValues( foectx->widgets.savetrace,args,i);
-  XtSetValues( foectx->widgets.restoretrace,args,i);
-  XtSetValues( foectx->widgets.redraw,args,i);
-  XtSetValues( foectx->widgets.plcattribute,args,i);
-  XtSetValues( foectx->widgets.winddelete,args,i);
-  XtSetValues( foectx->widgets.edit_entry,args,i);
+  if ( !foectx->classeditor) {
+    XtSetValues( foectx->widgets.save,sensitive,1);
+    XtSetValues( foectx->widgets.exit,sensitive,1);
+    XtSetValues( foectx->widgets.syntax,sensitive,1);
+    XtSetValues( foectx->widgets.compile,sensitive,1);
+    XtSetValues( foectx->widgets.savetrace,sensitive,1);
+    XtSetValues( foectx->widgets.restoretrace,sensitive,1);
+    XtSetValues( foectx->widgets.redraw,sensitive,1);
+    XtSetValues( foectx->widgets.plcattribute,sensitive,1);
+    XtSetValues( foectx->widgets.winddelete,sensitive,1);
+    XtSetValues( foectx->widgets.edit_entry,sensitive,1);
+  }
+  else {
+    XtSetValues( foectx->widgets.save,sensitive,1);
+    XtSetValues( foectx->widgets.exit,sensitive,1);
+    XtSetValues( foectx->widgets.syntax,insensitive,1);
+    XtSetValues( foectx->widgets.compile,insensitive,1);
+    XtSetValues( foectx->widgets.savetrace,insensitive,1);
+    XtSetValues( foectx->widgets.restoretrace,insensitive,1);
+    XtSetValues( foectx->widgets.redraw,sensitive,1);
+    XtSetValues( foectx->widgets.plcattribute,sensitive,1);
+    XtSetValues( foectx->widgets.winddelete,sensitive,1);
+    XtSetValues( foectx->widgets.edit_entry,sensitive,1);
+  }
 
   return FOE__SUCCESS ;
 

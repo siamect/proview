@@ -445,7 +445,7 @@ void  wnav_attrvalue_to_string( ldh_tSesContext ldhses, int type_id, void *value
     case pwr_eType_ClassId:
     {
       objid = cdh_ClassIdToObjid( *(pwr_tClassId *) value_ptr);
-      sts = ldh_ObjidToName( ldhses, objid, ldh_eName_Object,
+      sts = ldh_ObjidToName( ldhses, objid, ldh_eName_VolPath,
 		str, sizeof(str), len);
       if (EVEN(sts))
       {
@@ -458,7 +458,7 @@ void  wnav_attrvalue_to_string( ldh_tSesContext ldhses, int type_id, void *value
     case pwr_eType_TypeId:
     {
       objid = cdh_TypeIdToObjid( *(pwr_tTypeId *) value_ptr);
-      sts = ldh_ObjidToName( ldhses, objid, ldh_eName_Object,
+      sts = ldh_ObjidToName( ldhses, objid, ldh_eName_VolPath,
 		str, sizeof(str), len);
       if (EVEN(sts))
       {

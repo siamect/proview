@@ -165,7 +165,7 @@ bool wb_session::moveObject(wb_object o, wb_destination d)
   }
 
   wb_object old_parent = o.parent();
-  m_sts = triggAnteMove(o, parent);
+  m_sts = triggAnteMove(o, parent, old_parent);
   if (evenSts()) return false;
   m_sts = triggAnteUnadopt(old_parent, o);
   if (evenSts()) return false;
@@ -336,7 +336,13 @@ bool wb_session::copyOset( pwr_sAttrRef *arp, bool keepref)
       continue;
     }
 
-    m_vrep->exportTree( *mem, ap->Objid);  
+    if ( m_vrep->vid() == ap->Objid.vid)
+      m_vrep->exportTree( *mem, ap->Objid);
+    else {
+      // Other volume
+      wb_vrep *vrep = m_vrep->erep()->volume( &sts, ap->Objid.vid);
+      vrep->exportTree( *mem, ap->Objid);
+    }
     ap++;
   }
   return mem->importTree( keepref);  
@@ -521,7 +527,11 @@ pwr_tStatus wb_session::getMenu( ldh_sMenuCall *ip)
     Class = cdh_ClassObjidToId(ip->Pointed.Objid);
   }
   else {
-    o = m_vrep->erep()->object( &sts, ip->Pointed.Objid);
+    if ( m_vrep->vid() == ip->Pointed.Objid.vid)
+      o = m_vrep->object( &sts, ip->Pointed.Objid);
+    else
+      // Other volume
+      o = m_vrep->erep()->object( &sts, ip->Pointed.Objid);
     if ( EVEN(sts)) return sts;
     o->ref();
     Class = o->cid();
@@ -585,7 +595,11 @@ pwr_tStatus wb_session::getMenu( ldh_sMenuCall *ip)
       Class = cdh_ClassObjidToId(ip->Pointed.Objid);
     }
     else {
-      o = m_vrep->erep()->object( &sts, ip->Pointed.Objid);
+      if ( m_vrep->vid() == ip->Pointed.Objid.vid)
+	o = m_vrep->object( &sts, ip->Pointed.Objid);
+      else
+	// Other volume
+	o = m_vrep->erep()->object( &sts, ip->Pointed.Objid);
       if ( EVEN(sts)) return sts;
       o->ref();
       Class = o->cid();

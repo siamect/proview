@@ -71,12 +71,6 @@ ANTLR_USE_NAMESPACE(antlr)RefToken wb_wbllexer::nextToken()
 					theRetToken=_returnToken;
 					break;
 				}
-				case static_cast<unsigned char>('!'):
-				{
-					mCOMMENT(true);
-					theRetToken=_returnToken;
-					break;
-				}
 				case static_cast<unsigned char>('['):
 				{
 					mINDEX(true);
@@ -173,7 +167,15 @@ ANTLR_USE_NAMESPACE(antlr)RefToken wb_wbllexer::nextToken()
 					break;
 				}
 				default:
-				{
+					if ((LA(1)==static_cast<unsigned char>('!')) && (LA(2)==static_cast<unsigned char>('\t')||LA(2)==static_cast<unsigned char>('\n')||LA(2)==static_cast<unsigned char>(' '))) {
+						mCOMMENT(true);
+						theRetToken=_returnToken;
+					}
+					else if ((LA(1)==static_cast<unsigned char>('!')) && (LA(2)==static_cast<unsigned char>('/'))) {
+						mDOCBLOCK(true);
+						theRetToken=_returnToken;
+					}
+				else {
 					if (LA(1)==EOF_CHAR) {uponEOF(); _returnToken = makeToken(ANTLR_USE_NAMESPACE(antlr)Token::EOF_TYPE);}
 				else {throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());}
 				}
@@ -249,9 +251,9 @@ void wb_wbllexer::mWS(bool _createToken) {
 		{
 			match(static_cast<unsigned char>('\n'));
 			if ( inputState->guessing==0 ) {
-#line 48 "wb_wbllexer.g"
+#line 49 "wb_wbllexer.g"
 				newline();
-#line 255 "wb_wbllexer.cpp"
+#line 257 "wb_wbllexer.cpp"
 			}
 			break;
 		}
@@ -270,9 +272,9 @@ void wb_wbllexer::mWS(bool _createToken) {
 	_loop5:;
 	}
 	if ( inputState->guessing==0 ) {
-#line 50 "wb_wbllexer.g"
+#line 51 "wb_wbllexer.g"
 		_ttype = antlr::Token::SKIP;
-#line 276 "wb_wbllexer.cpp"
+#line 278 "wb_wbllexer.cpp"
 	}
 	if ( _createToken && _token==ANTLR_USE_NAMESPACE(antlr)nullToken && _ttype!=ANTLR_USE_NAMESPACE(antlr)Token::SKIP ) {
 	   _token = makeToken(_ttype);
@@ -287,25 +289,112 @@ void wb_wbllexer::mCOMMENT(bool _createToken) {
 	_ttype = COMMENT;
 	int _saveIndex;
 	
-	match("!");
+	{
+	if ((LA(1)==static_cast<unsigned char>('!')) && (LA(2)==static_cast<unsigned char>('\t')||LA(2)==static_cast<unsigned char>(' '))) {
+		match("!");
+		{
+		switch ( LA(1)) {
+		case static_cast<unsigned char>(' '):
+		{
+			match(static_cast<unsigned char>(' '));
+			break;
+		}
+		case static_cast<unsigned char>('\t'):
+		{
+			match(static_cast<unsigned char>('\t'));
+			break;
+		}
+		default:
+		{
+			throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());
+		}
+		}
+		}
+		{
+		for (;;) {
+			if ((_tokenSet_0.member(LA(1)))) {
+				matchNot(static_cast<unsigned char>('\n'));
+			}
+			else {
+				goto _loop10;
+			}
+			
+		}
+		_loop10:;
+		}
+		match(static_cast<unsigned char>('\n'));
+	}
+	else if ((LA(1)==static_cast<unsigned char>('!')) && (LA(2)==static_cast<unsigned char>('\n'))) {
+		match("!");
+		match(static_cast<unsigned char>('\n'));
+	}
+	else {
+		throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());
+	}
+	
+	}
+	if ( inputState->guessing==0 ) {
+#line 57 "wb_wbllexer.g"
+		_ttype = antlr::Token::SKIP; newline();
+#line 340 "wb_wbllexer.cpp"
+	}
+	if ( _createToken && _token==ANTLR_USE_NAMESPACE(antlr)nullToken && _ttype!=ANTLR_USE_NAMESPACE(antlr)Token::SKIP ) {
+	   _token = makeToken(_ttype);
+	   _token->setText(text.substr(_begin, text.length()-_begin));
+	}
+	_returnToken = _token;
+	_saveIndex=0;
+}
+
+void wb_wbllexer::mDOCBLOCK(bool _createToken) {
+	int _ttype; ANTLR_USE_NAMESPACE(antlr)RefToken _token; int _begin=text.length();
+	_ttype = DOCBLOCK;
+	int _saveIndex;
+	
+	match("!/**");
 	{
 	for (;;) {
-		if ((_tokenSet_0.member(LA(1)))) {
-			matchNot(static_cast<unsigned char>('\n'));
+		if (((LA(1)==static_cast<unsigned char>('!')) && ((LA(2) >= static_cast<unsigned char>('\3') && LA(2) <= static_cast<unsigned char>('\377'))))&&( LA(2)!='*' )) {
+			match(static_cast<unsigned char>('!'));
+		}
+		else if ((LA(1)==static_cast<unsigned char>('\r')) && (LA(2)==static_cast<unsigned char>('\n'))) {
+			match(static_cast<unsigned char>('\r'));
+			match(static_cast<unsigned char>('\n'));
+			if ( inputState->guessing==0 ) {
+#line 74 "wb_wbllexer.g"
+				newline();
+#line 367 "wb_wbllexer.cpp"
+			}
+		}
+		else if ((LA(1)==static_cast<unsigned char>('\r')) && ((LA(2) >= static_cast<unsigned char>('\3') && LA(2) <= static_cast<unsigned char>('\377')))) {
+			match(static_cast<unsigned char>('\r'));
+			if ( inputState->guessing==0 ) {
+#line 75 "wb_wbllexer.g"
+				newline();
+#line 375 "wb_wbllexer.cpp"
+			}
+		}
+		else if ((LA(1)==static_cast<unsigned char>('\n'))) {
+			match(static_cast<unsigned char>('\n'));
+			if ( inputState->guessing==0 ) {
+#line 76 "wb_wbllexer.g"
+				newline();
+#line 383 "wb_wbllexer.cpp"
+			}
+		}
+		else if ((_tokenSet_1.member(LA(1)))) {
+			{
+			match(_tokenSet_1);
+			}
 		}
 		else {
-			goto _loop8;
+			goto _loop14;
 		}
 		
 	}
-	_loop8:;
+	_loop14:;
 	}
-	match(static_cast<unsigned char>('\n'));
-	if ( inputState->guessing==0 ) {
-#line 56 "wb_wbllexer.g"
-		_ttype = antlr::Token::SKIP; newline();
-#line 308 "wb_wbllexer.cpp"
-	}
+	match("!*/");
 	if ( _createToken && _token==ANTLR_USE_NAMESPACE(antlr)nullToken && _ttype!=ANTLR_USE_NAMESPACE(antlr)Token::SKIP ) {
 	   _token = makeToken(_ttype);
 	   _token->setText(text.substr(_begin, text.length()-_begin));
@@ -323,18 +412,18 @@ void wb_wbllexer::mINDEX(bool _createToken) {
 	match(static_cast<unsigned char>('['));
 	text.erase(_saveIndex);
 	{
-	int _cnt11=0;
+	int _cnt17=0;
 	for (;;) {
 		if (((LA(1) >= static_cast<unsigned char>('0') && LA(1) <= static_cast<unsigned char>('9')))) {
 			matchRange(static_cast<unsigned char>('0'),static_cast<unsigned char>('9'));
 		}
 		else {
-			if ( _cnt11>=1 ) { goto _loop11; } else {throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());}
+			if ( _cnt17>=1 ) { goto _loop17; } else {throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());}
 		}
 		
-		_cnt11++;
+		_cnt17++;
 	}
-	_loop11:;
+	_loop17:;
 	}
 	_saveIndex=text.length();
 	match(static_cast<unsigned char>(']'));
@@ -359,10 +448,10 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 	ANTLR_USE_NAMESPACE(antlr)RefToken boname;
 	ANTLR_USE_NAMESPACE(antlr)RefToken aname;
 	
-	bool synPredMatched14 = false;
+	bool synPredMatched20 = false;
 	if (((LA(1)==static_cast<unsigned char>('O')) && (LA(2)==static_cast<unsigned char>('b')))) {
-		int _m14 = mark();
-		synPredMatched14 = true;
+		int _m20 = mark();
+		synPredMatched20 = true;
 		inputState->guessing++;
 		try {
 			{
@@ -371,12 +460,12 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 			}
 		}
 		catch (ANTLR_USE_NAMESPACE(antlr)RecognitionException& pe) {
-			synPredMatched14 = false;
+			synPredMatched20 = false;
 		}
-		rewind(_m14);
+		rewind(_m20);
 		inputState->guessing--;
 	}
-	if ( synPredMatched14 ) {
+	if ( synPredMatched20 ) {
 		_saveIndex=text.length();
 		match("Object");
 		text.erase(_saveIndex);
@@ -491,16 +580,16 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 		oname:;
 		}
 		if ( inputState->guessing==0 ) {
-#line 77 "wb_wbllexer.g"
+#line 100 "wb_wbllexer.g"
 			_ttype = OBJECT;
-#line 497 "wb_wbllexer.cpp"
+#line 586 "wb_wbllexer.cpp"
 		}
 	}
 	else {
-		bool synPredMatched18 = false;
+		bool synPredMatched24 = false;
 		if (((LA(1)==static_cast<unsigned char>('E')) && (LA(2)==static_cast<unsigned char>('n')))) {
-			int _m18 = mark();
-			synPredMatched18 = true;
+			int _m24 = mark();
+			synPredMatched24 = true;
 			inputState->guessing++;
 			try {
 				{
@@ -509,27 +598,27 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 				}
 			}
 			catch (ANTLR_USE_NAMESPACE(antlr)RecognitionException& pe) {
-				synPredMatched18 = false;
+				synPredMatched24 = false;
 			}
-			rewind(_m18);
+			rewind(_m24);
 			inputState->guessing--;
 		}
-		if ( synPredMatched18 ) {
+		if ( synPredMatched24 ) {
 			match("EndObject");
 			_saveIndex = text.length();
 			mWS(false);
 			text.erase(_saveIndex);
 			if ( inputState->guessing==0 ) {
-#line 79 "wb_wbllexer.g"
+#line 102 "wb_wbllexer.g"
 				_ttype = ENDOBJECT;
-#line 526 "wb_wbllexer.cpp"
+#line 615 "wb_wbllexer.cpp"
 			}
 		}
 		else {
-			bool synPredMatched20 = false;
+			bool synPredMatched26 = false;
 			if (((LA(1)==static_cast<unsigned char>('S')) && (LA(2)==static_cast<unsigned char>('O')))) {
-				int _m20 = mark();
-				synPredMatched20 = true;
+				int _m26 = mark();
+				synPredMatched26 = true;
 				inputState->guessing++;
 				try {
 					{
@@ -538,12 +627,12 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 					}
 				}
 				catch (ANTLR_USE_NAMESPACE(antlr)RecognitionException& pe) {
-					synPredMatched20 = false;
+					synPredMatched26 = false;
 				}
-				rewind(_m20);
+				rewind(_m26);
 				inputState->guessing--;
 			}
-			if ( synPredMatched20 ) {
+			if ( synPredMatched26 ) {
 				_saveIndex=text.length();
 				match("SObject");
 				text.erase(_saveIndex);
@@ -663,16 +752,16 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 				soname:;
 				}
 				if ( inputState->guessing==0 ) {
-#line 81 "wb_wbllexer.g"
+#line 104 "wb_wbllexer.g"
 					_ttype = SOBJECT;
-#line 669 "wb_wbllexer.cpp"
+#line 758 "wb_wbllexer.cpp"
 				}
 			}
 			else {
-				bool synPredMatched24 = false;
+				bool synPredMatched30 = false;
 				if (((LA(1)==static_cast<unsigned char>('E')) && (LA(2)==static_cast<unsigned char>('n')))) {
-					int _m24 = mark();
-					synPredMatched24 = true;
+					int _m30 = mark();
+					synPredMatched30 = true;
 					inputState->guessing++;
 					try {
 						{
@@ -681,27 +770,27 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 						}
 					}
 					catch (ANTLR_USE_NAMESPACE(antlr)RecognitionException& pe) {
-						synPredMatched24 = false;
+						synPredMatched30 = false;
 					}
-					rewind(_m24);
+					rewind(_m30);
 					inputState->guessing--;
 				}
-				if ( synPredMatched24 ) {
+				if ( synPredMatched30 ) {
 					match("EndSObject");
 					_saveIndex = text.length();
 					mWS(false);
 					text.erase(_saveIndex);
 					if ( inputState->guessing==0 ) {
-#line 83 "wb_wbllexer.g"
+#line 106 "wb_wbllexer.g"
 						_ttype = ENDSOBJECT;
-#line 698 "wb_wbllexer.cpp"
+#line 787 "wb_wbllexer.cpp"
 					}
 				}
 				else {
-					bool synPredMatched26 = false;
+					bool synPredMatched32 = false;
 					if (((LA(1)==static_cast<unsigned char>('D')) && (LA(2)==static_cast<unsigned char>('O')))) {
-						int _m26 = mark();
-						synPredMatched26 = true;
+						int _m32 = mark();
+						synPredMatched32 = true;
 						inputState->guessing++;
 						try {
 							{
@@ -710,12 +799,12 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 							}
 						}
 						catch (ANTLR_USE_NAMESPACE(antlr)RecognitionException& pe) {
-							synPredMatched26 = false;
+							synPredMatched32 = false;
 						}
-						rewind(_m26);
+						rewind(_m32);
 						inputState->guessing--;
 					}
-					if ( synPredMatched26 ) {
+					if ( synPredMatched32 ) {
 						_saveIndex=text.length();
 						match("DObject");
 						text.erase(_saveIndex);
@@ -830,16 +919,16 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 						doname:;
 						}
 						if ( inputState->guessing==0 ) {
-#line 85 "wb_wbllexer.g"
+#line 108 "wb_wbllexer.g"
 							_ttype = DOBJECT;
-#line 836 "wb_wbllexer.cpp"
+#line 925 "wb_wbllexer.cpp"
 						}
 					}
 					else {
-						bool synPredMatched30 = false;
+						bool synPredMatched36 = false;
 						if (((LA(1)==static_cast<unsigned char>('E')) && (LA(2)==static_cast<unsigned char>('n')))) {
-							int _m30 = mark();
-							synPredMatched30 = true;
+							int _m36 = mark();
+							synPredMatched36 = true;
 							inputState->guessing++;
 							try {
 								{
@@ -848,27 +937,27 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 								}
 							}
 							catch (ANTLR_USE_NAMESPACE(antlr)RecognitionException& pe) {
-								synPredMatched30 = false;
+								synPredMatched36 = false;
 							}
-							rewind(_m30);
+							rewind(_m36);
 							inputState->guessing--;
 						}
-						if ( synPredMatched30 ) {
+						if ( synPredMatched36 ) {
 							match("EndDObject");
 							_saveIndex = text.length();
 							mWS(false);
 							text.erase(_saveIndex);
 							if ( inputState->guessing==0 ) {
-#line 87 "wb_wbllexer.g"
+#line 110 "wb_wbllexer.g"
 								_ttype = ENDDOBJECT;
-#line 865 "wb_wbllexer.cpp"
+#line 954 "wb_wbllexer.cpp"
 							}
 						}
 						else {
-							bool synPredMatched32 = false;
+							bool synPredMatched38 = false;
 							if (((LA(1)==static_cast<unsigned char>('V')) && (LA(2)==static_cast<unsigned char>('o')))) {
-								int _m32 = mark();
-								synPredMatched32 = true;
+								int _m38 = mark();
+								synPredMatched38 = true;
 								inputState->guessing++;
 								try {
 									{
@@ -877,12 +966,12 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 									}
 								}
 								catch (ANTLR_USE_NAMESPACE(antlr)RecognitionException& pe) {
-									synPredMatched32 = false;
+									synPredMatched38 = false;
 								}
-								rewind(_m32);
+								rewind(_m38);
 								inputState->guessing--;
 							}
-							if ( synPredMatched32 ) {
+							if ( synPredMatched38 ) {
 								_saveIndex=text.length();
 								match("Volume");
 								text.erase(_saveIndex);
@@ -1005,16 +1094,16 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 								
 								}
 								if ( inputState->guessing==0 ) {
-#line 89 "wb_wbllexer.g"
+#line 112 "wb_wbllexer.g"
 									_ttype = VOLUME;
-#line 1011 "wb_wbllexer.cpp"
+#line 1100 "wb_wbllexer.cpp"
 								}
 							}
 							else {
-								bool synPredMatched37 = false;
+								bool synPredMatched43 = false;
 								if (((LA(1)==static_cast<unsigned char>('E')) && (LA(2)==static_cast<unsigned char>('n')))) {
-									int _m37 = mark();
-									synPredMatched37 = true;
+									int _m43 = mark();
+									synPredMatched43 = true;
 									inputState->guessing++;
 									try {
 										{
@@ -1023,27 +1112,27 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 										}
 									}
 									catch (ANTLR_USE_NAMESPACE(antlr)RecognitionException& pe) {
-										synPredMatched37 = false;
+										synPredMatched43 = false;
 									}
-									rewind(_m37);
+									rewind(_m43);
 									inputState->guessing--;
 								}
-								if ( synPredMatched37 ) {
+								if ( synPredMatched43 ) {
 									match("EndVolume");
 									_saveIndex = text.length();
 									mWS(false);
 									text.erase(_saveIndex);
 									if ( inputState->guessing==0 ) {
-#line 91 "wb_wbllexer.g"
+#line 114 "wb_wbllexer.g"
 										_ttype = ENDVOLUME;
-#line 1040 "wb_wbllexer.cpp"
+#line 1129 "wb_wbllexer.cpp"
 									}
 								}
 								else {
-									bool synPredMatched39 = false;
+									bool synPredMatched45 = false;
 									if (((LA(1)==static_cast<unsigned char>('B')) && (LA(2)==static_cast<unsigned char>('u')))) {
-										int _m39 = mark();
-										synPredMatched39 = true;
+										int _m45 = mark();
+										synPredMatched45 = true;
 										inputState->guessing++;
 										try {
 											{
@@ -1052,12 +1141,12 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 											}
 										}
 										catch (ANTLR_USE_NAMESPACE(antlr)RecognitionException& pe) {
-											synPredMatched39 = false;
+											synPredMatched45 = false;
 										}
-										rewind(_m39);
+										rewind(_m45);
 										inputState->guessing--;
 									}
-									if ( synPredMatched39 ) {
+									if ( synPredMatched45 ) {
 										_saveIndex=text.length();
 										match("Buffer");
 										text.erase(_saveIndex);
@@ -1172,16 +1261,16 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 										buname:;
 										}
 										if ( inputState->guessing==0 ) {
-#line 93 "wb_wbllexer.g"
+#line 116 "wb_wbllexer.g"
 											_ttype = BUFFER;
-#line 1178 "wb_wbllexer.cpp"
+#line 1267 "wb_wbllexer.cpp"
 										}
 									}
 									else {
-										bool synPredMatched43 = false;
+										bool synPredMatched49 = false;
 										if (((LA(1)==static_cast<unsigned char>('E')) && (LA(2)==static_cast<unsigned char>('n')))) {
-											int _m43 = mark();
-											synPredMatched43 = true;
+											int _m49 = mark();
+											synPredMatched49 = true;
 											inputState->guessing++;
 											try {
 												{
@@ -1190,27 +1279,27 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 												}
 											}
 											catch (ANTLR_USE_NAMESPACE(antlr)RecognitionException& pe) {
-												synPredMatched43 = false;
+												synPredMatched49 = false;
 											}
-											rewind(_m43);
+											rewind(_m49);
 											inputState->guessing--;
 										}
-										if ( synPredMatched43 ) {
+										if ( synPredMatched49 ) {
 											match("EndBuffer");
 											_saveIndex = text.length();
 											mWS(false);
 											text.erase(_saveIndex);
 											if ( inputState->guessing==0 ) {
-#line 95 "wb_wbllexer.g"
+#line 118 "wb_wbllexer.g"
 												_ttype = ENDBUFFER;
-#line 1207 "wb_wbllexer.cpp"
+#line 1296 "wb_wbllexer.cpp"
 											}
 										}
 										else {
-											bool synPredMatched45 = false;
+											bool synPredMatched51 = false;
 											if (((LA(1)==static_cast<unsigned char>('B')) && (LA(2)==static_cast<unsigned char>('o')))) {
-												int _m45 = mark();
-												synPredMatched45 = true;
+												int _m51 = mark();
+												synPredMatched51 = true;
 												inputState->guessing++;
 												try {
 													{
@@ -1219,12 +1308,12 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 													}
 												}
 												catch (ANTLR_USE_NAMESPACE(antlr)RecognitionException& pe) {
-													synPredMatched45 = false;
+													synPredMatched51 = false;
 												}
-												rewind(_m45);
+												rewind(_m51);
 												inputState->guessing--;
 											}
-											if ( synPredMatched45 ) {
+											if ( synPredMatched51 ) {
 												_saveIndex=text.length();
 												match("Body");
 												text.erase(_saveIndex);
@@ -1339,16 +1428,16 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 												boname:;
 												}
 												if ( inputState->guessing==0 ) {
-#line 97 "wb_wbllexer.g"
+#line 120 "wb_wbllexer.g"
 													_ttype = BODY;
-#line 1345 "wb_wbllexer.cpp"
+#line 1434 "wb_wbllexer.cpp"
 												}
 											}
 											else {
-												bool synPredMatched49 = false;
+												bool synPredMatched55 = false;
 												if (((LA(1)==static_cast<unsigned char>('E')) && (LA(2)==static_cast<unsigned char>('n')))) {
-													int _m49 = mark();
-													synPredMatched49 = true;
+													int _m55 = mark();
+													synPredMatched55 = true;
 													inputState->guessing++;
 													try {
 														{
@@ -1357,27 +1446,27 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 														}
 													}
 													catch (ANTLR_USE_NAMESPACE(antlr)RecognitionException& pe) {
-														synPredMatched49 = false;
+														synPredMatched55 = false;
 													}
-													rewind(_m49);
+													rewind(_m55);
 													inputState->guessing--;
 												}
-												if ( synPredMatched49 ) {
+												if ( synPredMatched55 ) {
 													match("EndBody");
 													_saveIndex = text.length();
 													mWS(false);
 													text.erase(_saveIndex);
 													if ( inputState->guessing==0 ) {
-#line 99 "wb_wbllexer.g"
+#line 122 "wb_wbllexer.g"
 														_ttype = ENDBODY;
-#line 1374 "wb_wbllexer.cpp"
+#line 1463 "wb_wbllexer.cpp"
 													}
 												}
 												else {
-													bool synPredMatched51 = false;
+													bool synPredMatched57 = false;
 													if (((LA(1)==static_cast<unsigned char>('A')) && (LA(2)==static_cast<unsigned char>('t')))) {
-														int _m51 = mark();
-														synPredMatched51 = true;
+														int _m57 = mark();
+														synPredMatched57 = true;
 														inputState->guessing++;
 														try {
 															{
@@ -1386,12 +1475,12 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 															}
 														}
 														catch (ANTLR_USE_NAMESPACE(antlr)RecognitionException& pe) {
-															synPredMatched51 = false;
+															synPredMatched57 = false;
 														}
-														rewind(_m51);
+														rewind(_m57);
 														inputState->guessing--;
 													}
-													if ( synPredMatched51 ) {
+													if ( synPredMatched57 ) {
 														_saveIndex=text.length();
 														match("Attr");
 														text.erase(_saveIndex);
@@ -1516,16 +1605,16 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 														aname:;
 														}
 														if ( inputState->guessing==0 ) {
-#line 101 "wb_wbllexer.g"
+#line 124 "wb_wbllexer.g"
 															_ttype = ATTRIBUTE;
-#line 1522 "wb_wbllexer.cpp"
+#line 1611 "wb_wbllexer.cpp"
 														}
 													}
 													else {
-														bool synPredMatched55 = false;
-														if ((((LA(1) >= static_cast<unsigned char>('0') && LA(1) <= static_cast<unsigned char>('9'))) && (_tokenSet_1.member(LA(2))))) {
-															int _m55 = mark();
-															synPredMatched55 = true;
+														bool synPredMatched61 = false;
+														if ((((LA(1) >= static_cast<unsigned char>('0') && LA(1) <= static_cast<unsigned char>('9'))) && (_tokenSet_2.member(LA(2))))) {
+															int _m61 = mark();
+															synPredMatched61 = true;
 															inputState->guessing++;
 															try {
 																{
@@ -1536,12 +1625,12 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 																}
 															}
 															catch (ANTLR_USE_NAMESPACE(antlr)RecognitionException& pe) {
-																synPredMatched55 = false;
+																synPredMatched61 = false;
 															}
-															rewind(_m55);
+															rewind(_m61);
 															inputState->guessing--;
 														}
-														if ( synPredMatched55 ) {
+														if ( synPredMatched61 ) {
 															mDIGITS(false);
 															match(static_cast<unsigned char>('.'));
 															mDIGITS(false);
@@ -1559,16 +1648,16 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 															
 															}
 															if ( inputState->guessing==0 ) {
-#line 103 "wb_wbllexer.g"
+#line 126 "wb_wbllexer.g"
 																_ttype = OID;
-#line 1565 "wb_wbllexer.cpp"
+#line 1654 "wb_wbllexer.cpp"
 															}
 														}
 														else {
-															bool synPredMatched58 = false;
-															if ((((LA(1) >= static_cast<unsigned char>('0') && LA(1) <= static_cast<unsigned char>('9'))) && (_tokenSet_1.member(LA(2))))) {
-																int _m58 = mark();
-																synPredMatched58 = true;
+															bool synPredMatched64 = false;
+															if ((((LA(1) >= static_cast<unsigned char>('0') && LA(1) <= static_cast<unsigned char>('9'))) && (_tokenSet_2.member(LA(2))))) {
+																int _m64 = mark();
+																synPredMatched64 = true;
 																inputState->guessing++;
 																try {
 																	{
@@ -1577,12 +1666,12 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 																	}
 																}
 																catch (ANTLR_USE_NAMESPACE(antlr)RecognitionException& pe) {
-																	synPredMatched58 = false;
+																	synPredMatched64 = false;
 																}
-																rewind(_m58);
+																rewind(_m64);
 																inputState->guessing--;
 															}
-															if ( synPredMatched58 ) {
+															if ( synPredMatched64 ) {
 																mDIGITS(false);
 																match(static_cast<unsigned char>('.'));
 																{
@@ -1591,11 +1680,11 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 																		matchRange(static_cast<unsigned char>('0'),static_cast<unsigned char>('9'));
 																	}
 																	else {
-																		goto _loop60;
+																		goto _loop66;
 																	}
 																	
 																}
-																_loop60:;
+																_loop66:;
 																}
 																{
 																if ((LA(1)==static_cast<unsigned char>('E')||LA(1)==static_cast<unsigned char>('e'))) {
@@ -1649,18 +1738,18 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 																	}
 																	}
 																	{
-																	int _cnt65=0;
+																	int _cnt71=0;
 																	for (;;) {
 																		if (((LA(1) >= static_cast<unsigned char>('0') && LA(1) <= static_cast<unsigned char>('9')))) {
 																			matchRange(static_cast<unsigned char>('0'),static_cast<unsigned char>('9'));
 																		}
 																		else {
-																			if ( _cnt65>=1 ) { goto _loop65; } else {throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());}
+																			if ( _cnt71>=1 ) { goto _loop71; } else {throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());}
 																		}
 																		
-																		_cnt65++;
+																		_cnt71++;
 																	}
-																	_loop65:;
+																	_loop71:;
 																	}
 																}
 																else {
@@ -1668,16 +1757,16 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 																
 																}
 																if ( inputState->guessing==0 ) {
-#line 105 "wb_wbllexer.g"
+#line 128 "wb_wbllexer.g"
 																	_ttype = NUM_FLOAT;
-#line 1674 "wb_wbllexer.cpp"
+#line 1763 "wb_wbllexer.cpp"
 																}
 															}
 															else {
-																bool synPredMatched67 = false;
+																bool synPredMatched73 = false;
 																if (((LA(1)==static_cast<unsigned char>('-')) && ((LA(2) >= static_cast<unsigned char>('0') && LA(2) <= static_cast<unsigned char>('9'))))) {
-																	int _m67 = mark();
-																	synPredMatched67 = true;
+																	int _m73 = mark();
+																	synPredMatched73 = true;
 																	inputState->guessing++;
 																	try {
 																		{
@@ -1687,12 +1776,12 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 																		}
 																	}
 																	catch (ANTLR_USE_NAMESPACE(antlr)RecognitionException& pe) {
-																		synPredMatched67 = false;
+																		synPredMatched73 = false;
 																	}
-																	rewind(_m67);
+																	rewind(_m73);
 																	inputState->guessing--;
 																}
-																if ( synPredMatched67 ) {
+																if ( synPredMatched73 ) {
 																	match(static_cast<unsigned char>('-'));
 																	mDIGITS(false);
 																	match(static_cast<unsigned char>('.'));
@@ -1702,11 +1791,11 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 																			matchRange(static_cast<unsigned char>('0'),static_cast<unsigned char>('9'));
 																		}
 																		else {
-																			goto _loop69;
+																			goto _loop75;
 																		}
 																		
 																	}
-																	_loop69:;
+																	_loop75:;
 																	}
 																	{
 																	if ((LA(1)==static_cast<unsigned char>('E')||LA(1)==static_cast<unsigned char>('e'))) {
@@ -1760,18 +1849,18 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 																		}
 																		}
 																		{
-																		int _cnt74=0;
+																		int _cnt80=0;
 																		for (;;) {
 																			if (((LA(1) >= static_cast<unsigned char>('0') && LA(1) <= static_cast<unsigned char>('9')))) {
 																				matchRange(static_cast<unsigned char>('0'),static_cast<unsigned char>('9'));
 																			}
 																			else {
-																				if ( _cnt74>=1 ) { goto _loop74; } else {throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());}
+																				if ( _cnt80>=1 ) { goto _loop80; } else {throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());}
 																			}
 																			
-																			_cnt74++;
+																			_cnt80++;
 																		}
-																		_loop74:;
+																		_loop80:;
 																		}
 																	}
 																	else {
@@ -1779,35 +1868,35 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 																	
 																	}
 																	if ( inputState->guessing==0 ) {
-#line 107 "wb_wbllexer.g"
+#line 130 "wb_wbllexer.g"
 																		_ttype = NUM_FLOAT;
-#line 1785 "wb_wbllexer.cpp"
+#line 1874 "wb_wbllexer.cpp"
 																	}
 																}
 																else if ((LA(1)==static_cast<unsigned char>('-')) && ((LA(2) >= static_cast<unsigned char>('0') && LA(2) <= static_cast<unsigned char>('9')))) {
 																	match(static_cast<unsigned char>('-'));
 																	mDIGITS(false);
 																	if ( inputState->guessing==0 ) {
-#line 113 "wb_wbllexer.g"
+#line 136 "wb_wbllexer.g"
 																		_ttype = INT;
-#line 1794 "wb_wbllexer.cpp"
+#line 1883 "wb_wbllexer.cpp"
 																	}
 																}
 																else if ((LA(1)==static_cast<unsigned char>('.'))) {
 																	match(static_cast<unsigned char>('.'));
 																	{
-																	int _cnt76=0;
+																	int _cnt82=0;
 																	for (;;) {
 																		if (((LA(1) >= static_cast<unsigned char>('0') && LA(1) <= static_cast<unsigned char>('9')))) {
 																			matchRange(static_cast<unsigned char>('0'),static_cast<unsigned char>('9'));
 																		}
 																		else {
-																			if ( _cnt76>=1 ) { goto _loop76; } else {throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());}
+																			if ( _cnt82>=1 ) { goto _loop82; } else {throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());}
 																		}
 																		
-																		_cnt76++;
+																		_cnt82++;
 																	}
-																	_loop76:;
+																	_loop82:;
 																	}
 																	{
 																	if ((LA(1)==static_cast<unsigned char>('E')||LA(1)==static_cast<unsigned char>('e'))) {
@@ -1861,18 +1950,18 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 																		}
 																		}
 																		{
-																		int _cnt81=0;
+																		int _cnt87=0;
 																		for (;;) {
 																			if (((LA(1) >= static_cast<unsigned char>('0') && LA(1) <= static_cast<unsigned char>('9')))) {
 																				matchRange(static_cast<unsigned char>('0'),static_cast<unsigned char>('9'));
 																			}
 																			else {
-																				if ( _cnt81>=1 ) { goto _loop81; } else {throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());}
+																				if ( _cnt87>=1 ) { goto _loop87; } else {throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());}
 																			}
 																			
-																			_cnt81++;
+																			_cnt87++;
 																		}
-																		_loop81:;
+																		_loop87:;
 																		}
 																	}
 																	else {
@@ -1880,20 +1969,20 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 																	
 																	}
 																	if ( inputState->guessing==0 ) {
-#line 109 "wb_wbllexer.g"
+#line 132 "wb_wbllexer.g"
 																		_ttype = NUM_FLOAT;
-#line 1886 "wb_wbllexer.cpp"
+#line 1975 "wb_wbllexer.cpp"
 																	}
 																}
 																else if (((LA(1) >= static_cast<unsigned char>('0') && LA(1) <= static_cast<unsigned char>('9'))) && (true)) {
 																	mDIGITS(false);
 																	if ( inputState->guessing==0 ) {
-#line 111 "wb_wbllexer.g"
+#line 134 "wb_wbllexer.g"
 																		_ttype = INT;
-#line 1894 "wb_wbllexer.cpp"
+#line 1983 "wb_wbllexer.cpp"
 																	}
 																}
-																else if ((_tokenSet_2.member(LA(1))) && (true)) {
+																else if ((_tokenSet_3.member(LA(1))) && (true)) {
 																	{
 																	switch ( LA(1)) {
 																	case static_cast<unsigned char>('a'):
@@ -2081,11 +2170,11 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 																		}
 																		default:
 																		{
-																			goto _loop84;
+																			goto _loop90;
 																		}
 																		}
 																	}
-																	_loop84:;
+																	_loop90:;
 																	}
 																}
 	else {
@@ -2155,18 +2244,18 @@ void wb_wbllexer::mDIGITS(bool _createToken) {
 	int _saveIndex;
 	
 	{
-	int _cnt92=0;
+	int _cnt98=0;
 	for (;;) {
 		if (((LA(1) >= static_cast<unsigned char>('0') && LA(1) <= static_cast<unsigned char>('9')))) {
 			matchRange(static_cast<unsigned char>('0'),static_cast<unsigned char>('9'));
 		}
 		else {
-			if ( _cnt92>=1 ) { goto _loop92; } else {throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());}
+			if ( _cnt98>=1 ) { goto _loop98; } else {throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());}
 		}
 		
-		_cnt92++;
+		_cnt98++;
 	}
-	_loop92:;
+	_loop98:;
 	}
 	if ( _createToken && _token==ANTLR_USE_NAMESPACE(antlr)nullToken && _ttype!=ANTLR_USE_NAMESPACE(antlr)Token::SKIP ) {
 	   _token = makeToken(_ttype);
@@ -2186,7 +2275,7 @@ void wb_wbllexer::mCHAR_LITERAL(bool _createToken) {
 	if ((LA(1)==static_cast<unsigned char>('\\'))) {
 		mESC(false);
 	}
-	else if ((_tokenSet_3.member(LA(1)))) {
+	else if ((_tokenSet_4.member(LA(1)))) {
 		matchNot(static_cast<unsigned char>('\''));
 	}
 	else {
@@ -2288,22 +2377,22 @@ void wb_wbllexer::mSTRING_LITERAL(bool _createToken) {
 		{
 			match(static_cast<unsigned char>('\n'));
 			if ( inputState->guessing==0 ) {
-#line 122 "wb_wbllexer.g"
+#line 145 "wb_wbllexer.g"
 				newline();
-#line 2294 "wb_wbllexer.cpp"
+#line 2383 "wb_wbllexer.cpp"
 			}
 			break;
 		}
 		default:
-			if ((_tokenSet_4.member(LA(1)))) {
+			if ((_tokenSet_5.member(LA(1)))) {
 				matchNot(static_cast<unsigned char>('"'));
 			}
 		else {
-			goto _loop89;
+			goto _loop95;
 		}
 		}
 	}
-	_loop89:;
+	_loop95:;
 	}
 	match(static_cast<unsigned char>('"'));
 	if ( _createToken && _token==ANTLR_USE_NAMESPACE(antlr)nullToken && _ttype!=ANTLR_USE_NAMESPACE(antlr)Token::SKIP ) {
@@ -2317,12 +2406,14 @@ void wb_wbllexer::mSTRING_LITERAL(bool _createToken) {
 
 const unsigned long wb_wbllexer::_tokenSet_0_data_[] = { 4294966264UL, 4294967295UL, 4294967295UL, 4294967295UL, 4294967295UL, 4294967295UL, 4294967295UL, 4294967295UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL };
 const ANTLR_USE_NAMESPACE(antlr)BitSet wb_wbllexer::_tokenSet_0(_tokenSet_0_data_,16);
-const unsigned long wb_wbllexer::_tokenSet_1_data_[] = { 0UL, 67059712UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL };
-const ANTLR_USE_NAMESPACE(antlr)BitSet wb_wbllexer::_tokenSet_1(_tokenSet_1_data_,10);
-const unsigned long wb_wbllexer::_tokenSet_2_data_[] = { 0UL, 16UL, 2281701374UL, 134217726UL, 0UL, 0UL, 4194352UL, 4194352UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL };
-const ANTLR_USE_NAMESPACE(antlr)BitSet wb_wbllexer::_tokenSet_2(_tokenSet_2_data_,16);
-const unsigned long wb_wbllexer::_tokenSet_3_data_[] = { 4294967288UL, 4294967167UL, 4026531839UL, 4294967295UL, 4294967295UL, 4294967295UL, 4294967295UL, 4294967295UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL };
+const unsigned long wb_wbllexer::_tokenSet_1_data_[] = { 4294958072UL, 4294967293UL, 4294967295UL, 4294967295UL, 4294967295UL, 4294967295UL, 4294967295UL, 4294967295UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL };
+const ANTLR_USE_NAMESPACE(antlr)BitSet wb_wbllexer::_tokenSet_1(_tokenSet_1_data_,16);
+const unsigned long wb_wbllexer::_tokenSet_2_data_[] = { 0UL, 67059712UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL };
+const ANTLR_USE_NAMESPACE(antlr)BitSet wb_wbllexer::_tokenSet_2(_tokenSet_2_data_,10);
+const unsigned long wb_wbllexer::_tokenSet_3_data_[] = { 0UL, 16UL, 2281701374UL, 134217726UL, 0UL, 0UL, 4194352UL, 4194352UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL };
 const ANTLR_USE_NAMESPACE(antlr)BitSet wb_wbllexer::_tokenSet_3(_tokenSet_3_data_,16);
-const unsigned long wb_wbllexer::_tokenSet_4_data_[] = { 4294966264UL, 4294967291UL, 4026531839UL, 4294967295UL, 4294967295UL, 4294967295UL, 4294967295UL, 4294967295UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL };
+const unsigned long wb_wbllexer::_tokenSet_4_data_[] = { 4294967288UL, 4294967167UL, 4026531839UL, 4294967295UL, 4294967295UL, 4294967295UL, 4294967295UL, 4294967295UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL };
 const ANTLR_USE_NAMESPACE(antlr)BitSet wb_wbllexer::_tokenSet_4(_tokenSet_4_data_,16);
+const unsigned long wb_wbllexer::_tokenSet_5_data_[] = { 4294966264UL, 4294967291UL, 4026531839UL, 4294967295UL, 4294967295UL, 4294967295UL, 4294967295UL, 4294967295UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL };
+const ANTLR_USE_NAMESPACE(antlr)BitSet wb_wbllexer::_tokenSet_5(_tokenSet_5_data_,16);
 

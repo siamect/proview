@@ -59,6 +59,8 @@ public:
 
   wb_erep *erep() const { return m_vrep->erep();}
   wb_vrep *vrep() const { return m_vrep;}
+
+  bool docBlock( char **block, int *size) const;
 };
 
 #endif

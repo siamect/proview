@@ -24,3 +24,13 @@ swerrconn	<selected object was incorrectly connected with object pointed at>	/wa
 xreffull	<all connections are used>				/error
 idxref		<inconnectable cross reference identities>		/error
 stxref		<inconnectable source, target pair>			/error
+posclassdef	<a ClassDef should be child to a ClassHier object>	/error
+posclasshier	<a ClassHier should be a root object>			/error
+posattribute	<an attribute or buffer object should be child to a ObjBodyDef object> /error
+posobjbodydef	<a body object should be child to a ClassDef object> /error
+moveattribute	<an attribute object can only be moved within the same childhood> /error
+movebody	<a body object can only be moved within the same childhood> /error
+
+
+
+

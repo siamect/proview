@@ -34,6 +34,7 @@ tokens {
 	NUM_FLOAT;
 	INT;
 	OID;
+	DOCBLOCK;
 }
 
 EQ	:	'='
@@ -51,9 +52,31 @@ WS	:	(' '
 	;
 
 COMMENT
-	: 	"!" 
-		(~'\n')* '\n'
+	: 	("!" ( ' ' | '\t') (~'\n')* '\n'
+	|	"!" '\n')
 		{ _ttype = antlr::Token::SKIP; newline(); }
+	;
+
+DOCBLOCK
+	:	"!/**"
+		(	/*	'\r' '\n' can be matched in one alternative or by matching
+				'\r' in one iteration and '\n' in another.  I am trying to
+				handle any flavor of newline that comes in, but the language
+				that allows both "\r\n" and "\r" and "\n" to all be valid
+				newline is ambiguous.  Consequently, the resulting grammar
+				must be ambiguous.  I'm shutting this warning off.
+			 */
+			options {
+				generateAmbigWarnings=false;
+			}
+		:
+			{ LA(2)!='*' }? '!'
+		|	'\r' '\n'		{newline();}
+		|	'\r'			{newline();}
+		|	'\n'			{newline();}
+		|	~('!'|'\n'|'\r')
+		)*
+		"!*/"
 	;
 
 INDEX
@@ -144,3 +167,14 @@ ESC	:	'\\'
 
 protected
 SWEC	:	'\345' | '\344' | '\366' | '\305' | '\304' | '\326';
+
+
+
+
+
+
+
+
+
+
+

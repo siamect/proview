@@ -45,7 +45,8 @@ typedef enum {
 	wnav_eItemType_ObjectName,
 	wnav_eItemType_File,
 	wnav_eItemType_Text,
-	wnav_eItemType_Crossref
+	wnav_eItemType_Crossref,
+	wnav_eItemType_DocBlock
 	} wnav_eItemType;
 
 typedef enum {
@@ -170,7 +171,20 @@ class WItemObjectName : public WItem {
     ldh_tSesContext ldhses;
 
     int update();
-    int get_value( char **value);	// The value should be freed with XtFree
+    int get_value( char **value);	// The value should be freed with free
+};
+
+class WItemDocBlock : public WItem {
+  public:
+    WItemDocBlock(
+	WNavBrow *item_brow, ldh_tSesContext item_ldhses, 
+	pwr_tObjid item_objid, char *block, int item_size,
+	brow_tNode dest, flow_eDest dest_code);
+    WNavBrow *brow;
+    ldh_tSesContext ldhses;
+
+    int update();
+    int get_value( char **value);	// The value should be freed with free
 };
 
 class WItemFile : public WItem {

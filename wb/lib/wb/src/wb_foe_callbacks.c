@@ -140,9 +140,11 @@ XmAnyCallbackStruct	*data;
 	  }
 	}
 	CLOCK_CURSOR;
-	sts = gre_set_trace_attributes( foectx->grectx);
-        sts = gre_save( foectx->grectx);
-	sts = gre_undelete_reset( foectx->grectx);
+	if ( !foectx->classeditor) {
+	  sts = gre_set_trace_attributes( foectx->grectx);
+	  sts = gre_save( foectx->grectx);
+	  sts = gre_undelete_reset( foectx->grectx);
+	}
 	foe_disable_ldh_cb(foectx);
 	sts = vldh_wind_save( foectx->grectx->window_object);
 	foe_enable_ldh_cb(foectx);

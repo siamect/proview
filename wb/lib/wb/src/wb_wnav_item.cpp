@@ -301,6 +301,8 @@ int WItemBaseObject::open_attributes( WNav *wnav, double x, double y)
     int			attr_exist = 0;
     int			input_cnt = 0;
     int			output_cnt = 0;
+    char		*block;
+    int			size;
 
     if ( brow_IsOpen( node) & wnav_mOpen_Children ||
 	 brow_IsOpen( node) & wnav_mOpen_Crossref)
@@ -467,6 +469,13 @@ int WItemBaseObject::open_attributes( WNav *wnav, double x, double y)
         }
       }
       free((char *) bodydef);	
+
+      sts = ldh_GetDocBlock( wnav->ldhses, objid, &block, &size);
+      if ( ODD(sts)) {
+	new WItemDocBlock( wnav->brow, wnav->ldhses, objid, block, size,
+			   node, flow_eDest_IntoLast);
+	attr_exist = 1;
+      }
     }
 
     if ( attr_exist && !is_root)
@@ -2463,3 +2472,57 @@ WItemCrossref::WItemCrossref( WNav *wnav, char *item_ref_name,
   // Set ref_class annotation
   brow_SetAnnotation( node, 1, ref_class, strlen(ref_class));
 }
+
+WItemDocBlock::WItemDocBlock(
+	WNavBrow *item_brow, ldh_tSesContext item_ldhses, 
+	pwr_tObjid item_objid, char *item_block, int item_size,
+	brow_tNode dest, flow_eDest dest_code) :
+        WItem( item_objid, 0), brow(item_brow), ldhses(item_ldhses)
+{
+  int	size = item_size;
+  ldh_sSessInfo info;
+
+  type = wnav_eItemType_DocBlock;
+
+  brow_CreateNode( brow->ctx, "Documentation",
+		brow->nc_attr_multiline, 
+		dest, dest_code, (void *) this, 1, &node);
+  brow_SetAnnotPixmap( node, 0, brow->pixmap_docblock);
+
+  // Set name
+  brow_SetAnnotation( node, 0, "Documentation", strlen("Documentation"));
+  if ( item_block) {
+    brow_SetAnnotation( node, 1, item_block, size);
+    free( item_block);
+  }
+  
+  // Examine access
+  ldh_GetSessionInfo( ldhses, &info);
+  if ( info.Access == ldh_eAccess_ReadWrite)
+    brow_SetAnnotPixmap( node, 1, brow->pixmap_morehelp);
+}
+
+int WItemDocBlock::update()
+{
+  char  *block;
+  int   sts;
+  int	size;
+
+  sts = ldh_GetDocBlock( ldhses, objid, &block, &size);
+  if ( EVEN(sts)) return sts;
+
+  if ( block) {
+    brow_SetAnnotation( node, 1, block, size);
+    free( block);
+  }
+
+  return WNAV__SUCCESS;
+}
+
+int WItemDocBlock::get_value( char **value)
+{
+  int size;
+
+  return ldh_GetDocBlock( ldhses, objid, value, &size);
+}
+

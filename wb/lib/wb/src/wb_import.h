@@ -22,6 +22,8 @@ public:
     
   virtual bool importDbody(pwr_tOid oid, size_t size, void *body) = 0;
     
+  virtual bool importDocBlock(pwr_tOid oid, size_t size, char *block) = 0;
+    
   virtual bool importMeta(dbs_sEnv *ep) = 0;
     
 };

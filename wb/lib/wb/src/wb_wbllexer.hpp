@@ -25,6 +25,7 @@ public:
 	public: void mOREQ(bool _createToken);
 	public: void mWS(bool _createToken);
 	public: void mCOMMENT(bool _createToken);
+	public: void mDOCBLOCK(bool _createToken);
 	public: void mINDEX(bool _createToken);
 	public: void mVALUE(bool _createToken);
 	protected: void mSWEC(bool _createToken);
@@ -44,6 +45,8 @@ private:
 	static const ANTLR_USE_NAMESPACE(antlr)BitSet _tokenSet_3;
 	static const unsigned long _tokenSet_4_data_[];
 	static const ANTLR_USE_NAMESPACE(antlr)BitSet _tokenSet_4;
+	static const unsigned long _tokenSet_5_data_[];
+	static const ANTLR_USE_NAMESPACE(antlr)BitSet _tokenSet_5;
 };
 
 #endif /*INC_wb_wbllexer_hpp_*/

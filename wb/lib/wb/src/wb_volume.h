@@ -87,7 +87,7 @@ public:
   pwr_tStatus triggSyntaxCheck( wb_object& o, int *errorcount, int *warningcount);
   pwr_tStatus triggAnteAdopt( wb_object& o, pwr_tCid cid);
   pwr_tStatus triggAnteCreate( wb_object& father, pwr_tCid cid);
-  pwr_tStatus triggAnteMove( wb_object& o, wb_object& father);
+  pwr_tStatus triggAnteMove( wb_object& o, wb_object& father, wb_object& old_father);
   pwr_tStatus triggAnteUnadopt( wb_object& father, wb_object& o);
   pwr_tStatus triggPostAdopt( wb_object& father, wb_object& o);
   pwr_tStatus triggPostCreate( wb_object& o);

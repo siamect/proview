@@ -131,6 +131,7 @@ extern "C" {
 #include "xnav_bitmap_crossref_err12.h"
 #include "xnav_bitmap_attrref_err12.h"
 #include "xnav_bitmap_attrxref_err12.h"
+#include "xnav_bitmap_docblock12.h"
 #include "xnav_bitmap_project8.h"
 #include "xnav_bitmap_project10.h"
 #include "xnav_bitmap_project12.h"
@@ -215,6 +216,7 @@ void WNavBrow::free_pixmaps()
   brow_FreeAnnotPixmap( ctx, pixmap_project);
   brow_FreeAnnotPixmap( ctx, pixmap_database);
   brow_FreeAnnotPixmap( ctx, pixmap_volume);
+  brow_FreeAnnotPixmap( ctx, pixmap_docblock);
 }
 
 //
@@ -656,6 +658,15 @@ void WNavBrow::allocate_pixmaps()
           }
 
 	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_attrxref_err);
+
+          for ( i = 0; i < 9; i++)
+          {
+	    pixmap_data[i].width =xnav_bitmap_docblock12_width;
+	    pixmap_data[i].height =xnav_bitmap_docblock12_height;
+	    pixmap_data[i].bits = (char *)xnav_bitmap_docblock12_bits;
+          }
+
+	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_docblock);
 
           i = 0;
 	  pixmap_data[i].width =xnav_bitmap_project8_width;

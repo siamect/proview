@@ -59,6 +59,8 @@ public:
 
   virtual wb_adrep *attribute(pwr_tStatus*, const char *name) = 0;
   virtual wb_adrep *attribute(pwr_tStatus*) = 0;
+  virtual bool docBlock( char **block, int *size) const { return false;}
+  virtual bool docBlock( char *block) { return false;}
 
   virtual wb_erep *erep() const = 0;
   virtual wb_vrep *vrep() const = 0;

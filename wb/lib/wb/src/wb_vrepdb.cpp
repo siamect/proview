@@ -1121,6 +1121,11 @@ bool wb_vrepdb::exportDbody(wb_import &i)
   return true;
 }
 
+bool wb_vrepdb::exportDocBlock(wb_import &i)
+{
+  return false;
+}
+
 bool wb_vrepdb::exportMeta(wb_import &i)
 {
   return false;

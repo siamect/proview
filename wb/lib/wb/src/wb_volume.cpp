@@ -423,6 +423,7 @@ pwr_tStatus wb_volume::triggAnteAdopt( wb_object& father, pwr_tCid cid)
   pwr_tStatus sts;
   char *methodName;
   wb_tMethod method;
+  pwr_tOid foid;
   
   if ( !father)
     return LDH__SUCCESS;
@@ -437,7 +438,12 @@ pwr_tStatus wb_volume::triggAnteAdopt( wb_object& father, pwr_tCid cid)
   m_vrep->erep()->method( &sts, methodName, &method);
   if ( EVEN(sts)) return LDH__SUCCESS;
 
-  sts = ((wb_tMethodAnteAdopt) (method))( (ldh_tSesContext)this, father.oid(), cid);
+  if ( !father)
+    foid = pwr_cNObjid;
+  else
+    foid = father.oid();
+
+  sts = ((wb_tMethodAnteAdopt) (method))( (ldh_tSesContext)this, foid, cid);
   return sts;
 }
 
@@ -446,6 +452,7 @@ pwr_tStatus wb_volume::triggAnteCreate( wb_object& father, pwr_tCid cid)
   pwr_tStatus sts;
   char *methodName;
   wb_tMethod method;
+  pwr_tOid foid;
   
 
   wb_cdrep *cdrep = m_vrep->merep()->cdrep( &sts, cid);
@@ -460,20 +467,27 @@ pwr_tStatus wb_volume::triggAnteCreate( wb_object& father, pwr_tCid cid)
   m_vrep->erep()->method( &sts, methodName, &method);
   if ( EVEN(sts)) return LDH__SUCCESS;
 
-  sts = ((wb_tMethodAnteCreate) (method))( (ldh_tSesContext)this, father.oid(), cid);
+  if ( !father)
+    foid = pwr_cNObjid;
+  else
+    foid = father.oid();
+
+  sts = ((wb_tMethodAnteCreate) (method))( (ldh_tSesContext)this, foid, cid);
   return sts;
 }
 
-pwr_tStatus wb_volume::triggAnteMove( wb_object& o, wb_object& father)
+pwr_tStatus wb_volume::triggAnteMove( wb_object& o, wb_object& father, wb_object& old_father)
 {
   pwr_tStatus sts;
   char *methodName;
   wb_tMethod method;
+  pwr_tOid foid;
+  pwr_tOid old_foid;
   
   wb_cdrep *cdrep = m_vrep->merep()->cdrep( &sts, o.cid());
   if ( EVEN(sts)) return sts;
 
-  cdrep->dbCallBack( &sts, ldh_eDbCallBack_AnteCreate, &methodName, 0);
+  cdrep->dbCallBack( &sts, ldh_eDbCallBack_AnteMove, &methodName, 0);
   delete cdrep;
   if ( EVEN(sts)) return LDH__SUCCESS;
 
@@ -481,11 +495,17 @@ pwr_tStatus wb_volume::triggAnteMove( wb_object& o, wb_object& father)
   if ( EVEN(sts)) return LDH__SUCCESS;
 
   if ( father)
-    sts = ((wb_tMethodAnteMove) (method))( (ldh_tSesContext)this, o.oid(), father.oid(),
-					   father.cid());
+    foid = father.oid();
   else
-    sts = ((wb_tMethodAnteMove) (method))( (ldh_tSesContext)this, o.oid(), pwr_cNObjid,
-					   pwr_cNClassId);
+    foid = pwr_cNObjid;
+
+  if ( old_father)
+    old_foid = old_father.oid();
+  else
+    old_foid = pwr_cNObjid;
+
+  sts = ((wb_tMethodAnteMove) (method))( (ldh_tSesContext)this, o.oid(), foid,
+					 old_foid);
   return sts;
 }
 
@@ -501,7 +521,7 @@ pwr_tStatus wb_volume::triggAnteUnadopt( wb_object& father, wb_object& o)
   wb_cdrep *cdrep = m_vrep->merep()->cdrep( &sts, father.cid());
   if ( EVEN(sts)) return sts;
 
-  cdrep->dbCallBack( &sts, ldh_eDbCallBack_AnteCreate, &methodName, 0);
+  cdrep->dbCallBack( &sts, ldh_eDbCallBack_AnteAdopt, &methodName, 0);
   delete cdrep;
   if ( EVEN(sts)) return LDH__SUCCESS;
 

@@ -66,8 +66,10 @@ wb_orep *wb_vrepdbs::object(pwr_tStatus *sts, pwr_tOid oid)
   *sts = LDH__SUCCESS;
 
   dbs_sObject *op = dbs_OidToObject(sts, dbsenv(), oid);
-  if (op == 0)
+  if (op == 0) {
+    *sts = LDH__NOSUCHOBJ;
     return 0;
+  }
 
   return new (this) wb_orepdbs(op);
 }
@@ -477,6 +479,11 @@ bool wb_vrepdbs::exportDbody(wb_import &i)
   }
 
   return true;
+}
+
+bool wb_vrepdbs::exportDocBlock(wb_import &i)
+{
+  return false;
 }
 
 bool wb_vrepdbs::exportMeta(wb_import &i)

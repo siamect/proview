@@ -79,7 +79,7 @@ class wbl_attribute {
 class wbl_object {
  public:
   wbl_object() : rbody_size(0), dbody_size(0), rbody(0), dbody(0),
-    m_cid(0), m_tid(0), fth(0), bws(0), fws(0), fch(0),
+    m_cid(0), m_tid(0), fth(0), bws(0), fws(0), fch(0), docblock(0),
     is_built(0) 
     { 
       strcpy( cname, ""); 
@@ -104,6 +104,7 @@ class wbl_object {
   wb_wblnode *bws;
   wb_wblnode *fws;
   wb_wblnode *fch;
+  wb_wblnode *docblock;
   int is_built;
 
   wbl_class c;
@@ -232,7 +233,7 @@ public:
 		    int buffer_offset, int buffer_size);
     void buildBuffAttr( ref_wblnode object, pwr_eBix bix, pwr_tCid buffer_cid,
 			size_t buffer_offset, size_t buffer_size);
-    void link( wb_vrepwbl *vol, ref_wblnode father_node);
+    void link( wb_vrepwbl *vol, ref_wblnode father_node, ref_wblnode parent_ast = 0);
     void info_link( int level);
     ref_wblnode find( wb_name *oname, int level);
     ref_wblnode get_o_lch();
@@ -245,25 +246,13 @@ public:
     bool exportHead(wb_import &i);
     bool exportDbody(wb_import &i);
     bool exportRbody(wb_import &i);
+    bool exportDocBlock(wb_import &i);
     bool exportTree(wb_treeimport &i, bool isRoot);
-
-#if 0
-    void iterObject(wb_dbs *);
-    void iterRbody(wb_dbs *);
-    void iterDbody(wb_dbs *);
-
-    void iterObject( void *udata, 
-		     pwr_tStatus (*bc)(void *, pwr_tOid, pwr_tCid, pwr_tOid, pwr_tOid,
-				       pwr_tOid, pwr_tOid, pwr_tOid, char *,
-				       pwr_tTime, int, int));
-    void iterBody( void *udata, 
-		   pwr_tStatus (*bc)(void *, pwr_tOid, void *, void *));
-#endif
 
     static int lookup( int *type, const char *keyword, wbl_sSym *table);
     static int convconst( int *val, char *str);
     const char *name() { return getText().c_str();}
-
+    bool docBlock( char **block, int *size) const;
 
     wbl_eNodeType node_type;
     wb_vrepwbl *m_vrep;

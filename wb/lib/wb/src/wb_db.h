@@ -96,6 +96,8 @@ public:
   
   bool importDbody(pwr_tOid oid, size_t size, void *body);
   
+  bool importDocBlock(pwr_tOid oid, size_t size, char *block) { return true;}
+  
   bool importMeta(dbs_sEnv *ep);
   
 

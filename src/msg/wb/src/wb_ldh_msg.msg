@@ -102,7 +102,7 @@ memincon	<buffer inconsistency>					/error
 access		<no such access for this configuration>			/error
 attrconv	<attribute conversion error>				/error
 nosuchfile	<no such file>						/error
-
+classmisplaced	<Misplaced object in class volume>			/error
 
 
 

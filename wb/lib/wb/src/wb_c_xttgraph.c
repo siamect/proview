@@ -37,10 +37,10 @@ static pwr_tStatus OpenGraph (
   free( (char *)action);
   if ( strstr( graph_name, ".pwg"))
   {
- //   ge_new( NULL, ip->WindowContext, ip->PointedSession, 0, graph_name);
+    ge_new( NULL, ip->WindowContext, ip->PointedSession, 0, graph_name);
     return 1;
   }
-  return 0;
+  return PWRB__GRAPHACTION;
 }
 
 
@@ -52,3 +52,8 @@ pwr_dExport pwr_BindMethods(XttGraph) = {
   pwr_BindMethod(OpenGraph),
   pwr_NullMethod
 };
+
+
+
+
+

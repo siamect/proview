@@ -3069,6 +3069,25 @@ static int	wnav_open_func(	void		*client_data,
     if ( wnav->open_vsel_cb)
       (wnav->open_vsel_cb)( wnav->parent_ctx, wb_eType_Buffer, NULL, wow_eFileSelType_All);
   }
+  else if ( strncmp( arg1_str, "CLASSEDITOR", strlen( arg1_str)) == 0)
+  {
+    char	filenamestr[160];
+
+    // Command is "OPEN CLASSEDITOR" 
+
+    if ( ODD( dcli_get_qualifier( "/FILE", filenamestr)))
+      cdh_ToLower( filenamestr, filenamestr);
+    else {
+      wnav->message('E', "File is missing");
+      return WNAV__SYNTAX;
+    }
+
+    if ( wnav->window_type == wnav_eWindowType_No)
+      return WNAV__CMDMODE;
+
+    if ( wnav->open_vsel_cb)
+      (wnav->open_vsel_cb)( wnav->parent_ctx, wb_eType_ClassEditor, filenamestr, wow_eFileSelType_WblClass);
+  }
   else
   {
     wnav->message('E', "Syntax error");

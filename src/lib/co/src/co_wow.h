@@ -18,7 +18,8 @@ extern "C" {
 typedef enum {
   wow_eFileSelType_All,
   wow_eFileSelType_Dbs,
-  wow_eFileSelType_Wbl
+  wow_eFileSelType_Wbl,
+  wow_eFileSelType_WblClass
 } wow_eFileSelType;
 
 typedef struct {

@@ -987,6 +987,21 @@ ldh_VolRepType(
   ldh_tSession session
 );
 
+pwr_tStatus
+ldh_GetDocBlock(
+  ldh_tSession session, 
+  pwr_tOid oid, 
+  char **block,
+  int *size
+);
+
+pwr_tStatus
+ldh_SetDocBlock(
+  ldh_tSession session, 
+  pwr_tOid oid, 
+  char *block
+);
+
 #ifdef __cplusplus
 }
 #endif

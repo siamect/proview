@@ -155,3 +155,20 @@ wb_adrep *wb_orepmem::attribute(pwr_tStatus*)
   return 0;
 }
 
+bool wb_orepmem::docBlock( char **block, int *size) const
+{
+  return m_memobject->docBlock( block, size);
+}
+
+bool wb_orepmem::docBlock( char *block)
+{
+  return m_memobject->docBlock( block);
+}
+
+
+
+
+
+
+
+

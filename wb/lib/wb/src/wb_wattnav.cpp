@@ -186,6 +186,28 @@ int WAttNav::check_attr( int *multiline, brow_tObject *node,
       *node = ((WItemObjectName *)base_item)->node;
       break;
     }
+    case wnav_eItemType_DocBlock:
+    {
+      static char block[10000];
+      char *p;
+
+      if ( !editmode)
+        return WATT__NOEDIT;
+
+      sts = ((WItemDocBlock *)base_item)->get_value( &p);
+      if ( ODD(sts)) {
+        strcpy( block, p);
+        free( p);
+      }
+      else
+        strcpy( name, "");
+      *init_value = block;
+      *multiline = 1;
+      *size = sizeof( block);
+
+      *node = ((WItemDocBlock *)base_item)->node;
+      break;
+    }
     default:
       *multiline = 0;
       return WATT__ATTRNOEDIT;
@@ -415,6 +437,7 @@ static int wattnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
             (wattnav->change_value_cb)( wattnav->parent_ctx);
           break;
         case wnav_eItemType_ObjectName:
+        case wnav_eItemType_DocBlock:
           if ( wattnav->advanced_user && wattnav->change_value_cb)
             (wattnav->change_value_cb)( wattnav->parent_ctx);
           break;
@@ -690,6 +713,8 @@ int	WAttNav::object_attr()
   int input_cnt = 0;
   int output_cnt = 0;
   int elements;
+  char *block;
+  int size;
 
   brow_SetNodraw( brow->ctx);
 
@@ -852,6 +877,13 @@ int	WAttNav::object_attr()
       }
     }
     free((char *) bodydef);	
+
+    sts = ldh_GetDocBlock( ldhses, objid, &block, &size);
+    if ( ODD(sts)) {
+      new WItemDocBlock( brow, ldhses, objid, block, size,
+			 NULL, flow_eDest_IntoLast);
+      attr_exist = 1;
+    }
   }
   brow_ResetNodraw( brow->ctx);
   brow_Redraw( brow->ctx, 0);
@@ -1025,6 +1057,19 @@ int WAttNav::set_attr_value( brow_tObject node, char *name, char *value_str)
         return WATT__DISAPPEARD;
 
       sts = ldh_ChangeObjectName( ldhses, item->objid, value_str);
+      if ( EVEN(sts)) return sts;
+      item->update();
+      return sts;
+    }
+    case wnav_eItemType_DocBlock:
+    {
+      WItemDocBlock *item = (WItemDocBlock *)base_item;
+
+      // Check that objid is still the same
+      if ( ! cdh_ObjidIsEqual( objid, base_item->objid))
+        return WATT__DISAPPEARD;
+
+      sts = ldh_SetDocBlock( ldhses, item->objid, value_str);
       if ( EVEN(sts)) return sts;
       item->update();
       return sts;

@@ -68,7 +68,5 @@ pwr_dExport pwr_BindMethods(SharedVolumeConfig) = {
   pwr_BindMethod(OpenDb),
   pwr_NullMethod
 };
-pwr_dExport pwr_BindMethods(ClassVolumeConfig) = {
-  pwr_BindMethod(OpenDb),
-  pwr_NullMethod
-};
+
+

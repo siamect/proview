@@ -131,6 +131,7 @@ public:
   virtual bool exportHead(wb_import &e);
   virtual bool exportRbody(wb_import &e);
   virtual bool exportDbody(wb_import &e);
+  virtual bool exportDocBlock(wb_import &e);
   virtual bool exportMeta(wb_import &e);
   virtual bool exportTree(wb_treeimport &i, pwr_tOid oid);
   bool wb_vrepdbs::exportTreeObject(wb_treeimport &i, dbs_sObject *op, bool isRoot);

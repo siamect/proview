@@ -377,3 +377,17 @@ pwr_tStatus wb_object::checkXref(const char *name)
   return LDH__SUCCESS;
 }
 
+bool wb_object::docBlock( char **block, int *size)
+{
+  check();
+    
+  return m_orep->docBlock( block, size);
+}
+
+bool wb_object::docBlock( char *block)
+{
+  check();
+    
+  return m_orep->docBlock( block);
+}
+

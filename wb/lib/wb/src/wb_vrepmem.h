@@ -7,6 +7,8 @@
 #include "wb_erep.h"
 #include "wb_attrname.h"
 #include "wb_treeimport.h"
+#include "co_dbs.h"
+#include "wb_import.h"
 
 class wb_vrepmem;
 
@@ -15,8 +17,8 @@ class mem_object
   friend class wb_vrepmem;
 
  public:
-  mem_object() : rbody_size(0), dbody_size(0), rbody(0), dbody(0),
-    m_cid(0), m_tid(0), fth(0), bws(0), fws(0), fch(0),
+  mem_object() : rbody_size(0), dbody_size(0), docblock_size(0), rbody(0), dbody(0),
+    docblock(0), m_cid(0), m_tid(0), fth(0), bws(0), fws(0), fch(0),
     is_built(0) 
     { 
       strcpy( m_name, "");
@@ -28,6 +30,7 @@ class mem_object
   ~mem_object() {
     if ( rbody_size) free( rbody);
     if ( dbody_size) free( dbody);
+    if ( docblock_size) free( docblock);
   }    
   char *name() { return m_name; }
   mem_object *get_lch() { 
@@ -41,6 +44,7 @@ class mem_object
   bool exportHead(wb_import &i) { return false;}
   bool exportDbody(wb_import &i) { return false;}
   bool exportRbody(wb_import &i) { return false;}
+  bool exportDocBlock(wb_import &i) { return false;}
   bool exportTree( wb_treeimport &i, bool isRoot) {
     pwr_tOid fthoid = (fth && !isRoot) ? fth->m_oid : pwr_cNOid;
     pwr_tOid bwsoid = (bws && !isRoot) ? bws->m_oid : pwr_cNOid;
@@ -103,11 +107,45 @@ class mem_object
   }
 
   mem_object *find( wb_name *oname, int level);
+  bool docBlock( char **block, int *size) const {
+    switch ( m_cid) {
+    case pwr_eClass_ClassDef:
+    case pwr_eClass_Param:
+    case pwr_eClass_Intern:
+    case pwr_eClass_Input:
+    case pwr_eClass_Output:
+    case pwr_eClass_ObjXRef:
+    case pwr_eClass_AttrXRef:
+      break;
+    default:
+      return false;
+    }
+    if ( docblock) {
+      *block = (char *) malloc( docblock_size);
+      memcpy( *block, docblock, docblock_size);
+      *size = docblock_size;
+    }
+    else {
+      // Return nullstring
+      *block = (char *) calloc( 1, 1);
+      *size = 1;
+    }
+    return true;
+  }
+  bool docBlock( char *block) {
+    docblock_size = strlen(block) + 1;
+    docblock = (char *) malloc( docblock_size);
+    memcpy( docblock, block, docblock_size);
+    return true;
+  }
+
   
   size_t rbody_size;
   size_t dbody_size;
+  size_t docblock_size;
   void *rbody;
   void *dbody;
+  char *docblock;
   pwr_tCid m_cid;
   pwr_tTid m_tid;
   pwr_tOid m_oid;
@@ -118,19 +156,27 @@ class mem_object
   mem_object *bws;
   mem_object *fws;
   mem_object *fch;
+  pwr_tOid fthoid;
+  pwr_tOid bwsoid;
+  pwr_tOid fwsoid;
+  pwr_tOid fchoid;
   int is_built;
+  pwr_tTime time;
 };
 
 class wb_orepmem;
 
-class wb_vrepmem : public wb_vrep
+class wb_vrepmem : public wb_vrep, public wb_import
 {
   wb_erep *m_erep;
   wb_merep *m_merep;
   unsigned int m_nRef;
   mem_object *root_object;
+  mem_object *volume_object;
   int m_nextOix;
   pwr_tVid m_source_vid;
+  char m_filename[200];
+  bool m_classeditor;
 
   map<pwr_tOix, mem_object *> m_oix_list;
 
@@ -138,7 +184,8 @@ class wb_vrepmem : public wb_vrep
 
 public:
   wb_vrepmem( wb_erep *erep) : 
-    m_erep(erep), m_merep(erep->merep()), m_nRef(0), root_object(0), m_nextOix(0) {}
+    m_erep(erep), m_merep(erep->merep()), m_nRef(0), root_object(0), 
+    volume_object(0), m_nextOix(0) {}
 
   wb_vrepmem( wb_erep *erep, pwr_tVid vid);
   ~wb_vrepmem();
@@ -215,8 +262,8 @@ public:
   bool renameObject(pwr_tStatus *sts, wb_orep *orep, wb_name &name);
 
 
-  bool commit(pwr_tStatus *sts) {return true;}
-  bool abort(pwr_tStatus *sts) {return true;}
+  bool commit(pwr_tStatus *sts);
+  bool abort(pwr_tStatus *sts);
 
   virtual bool writeAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, size_t offset, size_t size, void *p);
 
@@ -255,6 +302,7 @@ public:
   virtual bool exportHead(wb_import &i);
   virtual bool exportRbody(wb_import &i);
   virtual bool exportDbody(wb_import &i);
+  virtual bool exportDocBlock(wb_import &i);
   virtual bool exportMeta(wb_import &i);
   virtual bool exportTree(wb_treeimport &i, pwr_tOid oid);
   bool exportPaste(wb_treeimport &i, pwr_tOid destination, ldh_eDest destcode, bool keepoid,
@@ -273,6 +321,25 @@ public:
   bool updateObject( wb_orep *o, bool keepref);
   bool updateSubClass( wb_adrep *subattr, char *body, bool keepref);
   virtual bool accessSupported( ldh_eAccess access) { return true;}
+
+  virtual bool importVolume(wb_export &e);    
+  virtual bool importHead(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
+                          pwr_tOid boid, pwr_tOid aoid, pwr_tOid foid, pwr_tOid loid,
+                          const char *name, const char *normname, pwr_mClassDef flags,
+                          pwr_tTime ohTime, pwr_tTime rbTime, pwr_tTime dbTime,
+                          size_t rbSize, size_t dbSize);
+  virtual bool importRbody(pwr_tOid oid, size_t size, void *body);    
+  virtual bool importDbody(pwr_tOid oid, size_t size, void *body);
+  virtual bool importDocBlock(pwr_tOid oid, size_t size, char *block);
+  virtual bool importMeta(dbs_sEnv *ep) { return true;}
+  bool importBuildObject( mem_object *memo);
+  void loadWbl( char *filename, pwr_tStatus *sts);
+  void freeObject( mem_object *mem);
+  void clear();
+  bool classeditorCheck( ldh_eDest dest_code, mem_object *dest, pwr_tCid cid,
+			 pwr_tOix *oix, char *name, pwr_tStatus *sts, bool import_paste);
+  bool classeditorCheckMove( mem_object *memo, ldh_eDest dest_code, 
+			     mem_object *dest, pwr_tStatus *sts);
 
  private:
   bool nameCheck( mem_object *memo);

@@ -154,3 +154,8 @@ wb_adrep *wb_orepwbl::attribute(pwr_tStatus*)
   return 0;
 }
 
+bool wb_orepwbl::docBlock( char **block, int *size) const
+{
+  return m_wblnode->docBlock( block, size);
+}
+

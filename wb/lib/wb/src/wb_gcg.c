@@ -196,8 +196,11 @@ int	gcg_comp_m53();
 int	gcg_comp_m54();
 int	gcg_comp_m55();
 int	gcg_comp_m56();
+int	gcg_comp_m57();
+int	gcg_comp_m58();
+int	gcg_comp_m59();
 
-int	(* gcg_comp_m[60]) () = {
+int	(* gcg_comp_m[70]) () = {
 	&gcg_comp_m0,
 	&gcg_comp_m1,
 	&gcg_comp_m2,
@@ -255,6 +258,9 @@ int	(* gcg_comp_m[60]) () = {
 	&gcg_comp_m54,
 	&gcg_comp_m55,
 	&gcg_comp_m56,
+	&gcg_comp_m57,
+	&gcg_comp_m58,
+	&gcg_comp_m59
 	};
 
 
@@ -3348,6 +3354,47 @@ static int	gcg_get_outputstring_spec(
 	  return GSX__SPECFOUND;
 	}
 
+	/**********************************************************
+	*  GetDattr
+	***********************************************************/	
+	if ( output_node->ln.classid == pwr_cClass_GetDattr ||
+	     output_node->ln.classid == pwr_cClass_GetAattr ||
+	     output_node->ln.classid == pwr_cClass_GetIattr ||
+	     output_node->ln.classid == pwr_cClass_GetSattr)
+	{
+	  pwr_tObjid host_objid;
+
+	  /* Get host object */
+	  host_objid = (output_node->hn.window_pointer)->lw.parent_node_did;
+
+	  sts = ldh_GetObjectClass(
+			(output_node->hn.window_pointer)->hw.ldhsession, 
+			host_objid, &class);
+
+	  if ( cdh_ObjidIsNull(host_objid)) {	
+	    /* Parent is a plcprogram */
+	    gcg_error_msg( gcgctx, GSX__BADWIND, output_node);  
+	    return GSX__NEXTPAR;
+	  }
+
+	  /* Get the referenced attribute stored in Attribute */
+	  sts = ldh_GetObjectPar( 
+			(output_node->hn.window_pointer)->hw.ldhsession,  
+			output_node->ln.object_did, 
+			"DevBody",
+			"Attribute",
+			(char **)&parameter, &size); 
+	  if ( EVEN(sts)) return sts;
+
+	  sts = gcg_parname_to_pgmname(ldhses, class, parameter, parstring);
+	  if ( EVEN(sts)) return sts;
+
+	  *parobjdid = host_objid;
+	  *parprefix = GCG_PREFIX_REF;
+	  free((char *) parameter);
+	  return GSX__SPECFOUND;
+	}
+
 	return GSX__SUCCESS;
 }
 
@@ -6299,7 +6346,7 @@ vldh_t_node	node;
 * Description:
 *	Compile method for GETDP, GETAP, GETSP
 *	Checks that the referenced object exists and that the referenced
-*	parameter exists in that objekt, and that the type of the parameter
+*	parameter exists in that object, and that the type of the parameter
 *	is correct.
 *	Prints declaration and direct link of pointer to referenced object.
 *
@@ -13595,7 +13642,804 @@ vldh_t_node	node;
 
 /*************************************************************************
 *
-* Name:		gcg_wind_check_modifiation()
+* Name:		gcg_comp_m57()
+*
+* Type		void
+*
+* Type		Parameter	IOGF	Description
+* gcg_ctx	gcgctx		I	gcg context.
+* vldh_t_node	node		I	vldh node.
+*
+* Description:
+*	Compile method for StoDattr, SetDattr, ResDattr, StoAattr,
+*	StoIattr.
+*	If the object is connected to an order it will be called
+*	from the order method.
+*	
+*	Syntax control:
+*	Checks that the referenced attribute is correct.
+*
+*	Code generation:
+*	Declares and links a pointer to the host object.
+*	Prints an exec call.
+*	StoDattr_exec( W800005f6->SomeAttribute, Z800005f5->ActualValue);
+*
+*	If the input is not connected the value of the inputparameter
+*	will be printed instead of a input object for sto object. For set 
+*	and reset object TRUE will printed.
+*	StoAattr_exec( W800005f6->SomeAttribute, 3.2500);
+*
+**************************************************************************/
+
+
+int	gcg_comp_m57( gcgctx, node)
+gcg_ctx		gcgctx;
+vldh_t_node	node;
+{
+	ldh_sParDef 		*bodydef;
+	int 			rows, sts;
+	int			size;
+	char			refattr[32];
+	char			*refattr_ptr;
+	ldh_tSesContext 	ldhses;
+	pwr_tObjid		host_objid;
+	pwr_tClassId		class;
+	vldh_t_node		output_node;
+	unsigned long		output_count;
+	unsigned long		output_point;
+	ldh_sParDef 		output_bodydef;
+	char			*nocondef_ptr;
+	gcg_t_nocondef		nocondef[2];
+	unsigned long		nocontype[2];
+	unsigned long		info_type, info_size;
+	int 			i, found;
+	char			pgmname[32];
+	char			*name;
+
+	nocondef[1].bo = 1;
+	nocontype[1] = GCG_BOOLEAN;
+
+	ldhses = (node->hn.window_pointer)->hw.ldhsession;  
+	
+	if ( !gcgctx->order_comp) {
+	  if ( (node->ln.classid == pwr_cClass_StoDattr)) {
+	    /* Check first if the object is connected to an order object,
+	      if it is, it will be compiled when by the ordermethod, when 
+	      gcgctx->order_comp is true */
+	    sts = gcg_get_output( node, 0, &output_count, &output_node,
+			&output_point, &output_bodydef, 
+			GOEN_CON_SIGNAL | GOEN_CON_OUTPUTTOINPUT);
+	    if ( EVEN(sts)) return sts;
+	    if ( output_count == 1)
+	      if ( output_node->ln.classid == pwr_cClass_order)
+	        return GSX__SUCCESS;
+	  }
+	}
+
+	/* Get the referenced attribute io object stored in the
+	  first parameter in devbody */
+
+	/* Get the devbody parameters for this class */
+	sts = ldh_GetObjectBodyDef( ldhses,
+			node->ln.classid, "DevBody", 1, 
+			&bodydef, &rows);
+	if ( EVEN(sts) ) return sts;
+
+	sts = ldh_GetObjectPar( ldhses,
+			node->ln.object_did, 
+			"DevBody",
+			bodydef[0].ParName,
+			(char **)&refattr_ptr, &size); 
+	if ( EVEN(sts)) return sts;
+        strncpy( refattr, refattr_ptr, sizeof(refattr));
+	free((char *) refattr_ptr);
+	free((char *) bodydef);	
+
+	/* If the object is not connected the value in the
+	   parameter should be written in the macro call */
+	sts = ldh_GetObjectPar( ldhses,
+			node->ln.object_did, 
+			"RtBody",
+			"In",
+			&nocondef_ptr, &size); 
+	if ( EVEN(sts)) return sts;
+
+	/* Get the parent node to this window */
+	host_objid = (node->hn.window_pointer)->lw.parent_node_did;
+
+	if ( cdh_ObjidIsNull(host_objid)) {	
+	  /* Parent is a plcprogram */
+	  gcg_error_msg( gcgctx, GSX__BADWIND, node);  
+	  return GSX__NEXTNODE;
+	}
+
+	/* Check class of this objdid */
+	sts = ldh_GetObjectClass( ldhses, host_objid, &class);
+	if ( EVEN(sts))  {
+	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);
+	  return GSX__NEXTNODE;
+	}
+
+	if ( class == pwr_cClass_order ||
+	     class == pwr_cClass_csub ||
+	     class == pwr_cClass_substep) {
+	  gcg_error_msg( gcgctx, GSX__BADWIND, node);
+	  return GSX__NEXTNODE;
+	}
+
+	/* Check that the attribute exist in this class */
+	sts = ldh_GetObjectClass( ldhses, host_objid, &class);
+	if ( EVEN(sts)) {
+	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
+	  return GSX__NEXTNODE;
+	}
+
+	/* Check that the parameter exists in the referenced object */
+	sts = ldh_GetObjectBodyDef( ldhses, class, "RtBody", 1, 
+			&bodydef, &rows);
+	if ( EVEN(sts) ) {
+	  gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
+	  return GSX__NEXTNODE;
+	}
+
+	for ( i = 0, found = 0; i < rows; i++) {
+	  /* ML 961009. Use ParName instead of PgmName */
+	  if ( strcmp( bodydef[i].ParName, refattr) == 0) {
+	    found = 1;
+	    break;
+	  }
+	}
+	if ( !found ) {
+	  gcg_error_msg( gcgctx, GSX__REFPAR, node);  
+	  free((char *) bodydef);	
+	  return GSX__NEXTNODE;
+	}
+	
+	/* Check type of parameter */
+	switch (bodydef[i].ParClass )  {
+        case pwr_eClass_Input:
+          info_type = bodydef[i].Par->Input.Info.Type;
+          if ( bodydef[i].Par->Input.Info.Flags & PWR_MASK_ARRAY)
+            info_size = bodydef[i].Par->Input.Info.Size /
+	      bodydef[i].Par->Input.Info.Elements;
+          else
+            info_size = bodydef[i].Par->Input.Info.Size;
+	  if ( bodydef[i].Par->Input.Info.Flags & PWR_MASK_RTVIRTUAL) {
+	    /* Parameter is not defined in runtime */
+	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	    free((char *) bodydef);	
+	    return GSX__NEXTNODE;
+ 	  } 
+	  break;
+        case pwr_eClass_Output:
+          info_type = bodydef[i].Par->Output.Info.Type;
+          if ( bodydef[i].Par->Output.Info.Flags & PWR_MASK_ARRAY)
+            info_size = bodydef[i].Par->Output.Info.Size /
+	      bodydef[i].Par->Output.Info.Elements;
+          else
+            info_size = bodydef[i].Par->Output.Info.Size;
+	  break;
+        case pwr_eClass_Intern:
+          info_type = bodydef[i].Par->Intern.Info.Type ;
+          if ( bodydef[i].Par->Intern.Info.Flags & PWR_MASK_ARRAY)
+            info_size = bodydef[i].Par->Intern.Info.Size /
+	      bodydef[i].Par->Intern.Info.Elements;
+          else
+            info_size = bodydef[i].Par->Intern.Info.Size;
+	  break;
+        case pwr_eClass_Param:
+          info_type = bodydef[i].Par->Param.Info.Type ;
+          if ( bodydef[i].Par->Param.Info.Flags & PWR_MASK_ARRAY)
+            info_size = bodydef[i].Par->Param.Info.Size /
+	      bodydef[i].Par->Param.Info.Elements;
+          else
+            info_size = bodydef[i].Par->Param.Info.Size;
+	  break;
+	default:
+	  /* Not allowed parameter type */		  
+	  gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	  free((char *) bodydef);	
+	  return GSX__NEXTNODE;
+	}
+        free((char *) bodydef );
+	
+	/* Check that the type of the referenced attribute is correct */
+	if ( node->ln.classid == pwr_cClass_SetDattr ||
+	     node->ln.classid == pwr_cClass_ResDattr) {
+	  if ( info_type != pwr_eType_Boolean) {
+	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	    return GSX__NEXTNODE;
+	  }
+	  nocondef[0].bo = TRUE;
+	  nocontype[0] = GCG_BOOLEAN;
+	}    
+	else if ( node->ln.classid == pwr_cClass_StoDattr) {
+	  if ( info_type != pwr_eType_Boolean) {
+	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	    return GSX__NEXTNODE;
+	  }
+	  nocondef[0].bo = (int)*nocondef_ptr;
+	  nocontype[0] = GCG_BOOLEAN;
+	}
+	else if ( node->ln.classid == pwr_cClass_StoAattr ||
+		  node->ln.classid == pwr_cClass_CStoAattr) {
+	  if ( info_type != pwr_eType_Float32) {
+	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	    return GSX__NEXTNODE;
+	  }
+	  nocondef[0].fl = *(float *) nocondef_ptr;
+	  nocontype[0] = GCG_FLOAT;
+	}    
+	else if ( node->ln.classid == pwr_cClass_StoIattr ||
+		  node->ln.classid == pwr_cClass_CStoIattr) {
+	  if ( !(info_type == pwr_eType_Int32 ||
+		 info_type == pwr_eType_UInt32 ||
+		 info_type == pwr_eType_Int16 ||
+		 info_type == pwr_eType_UInt16 ||
+		 info_type == pwr_eType_Int8 ||
+		 info_type == pwr_eType_UInt8)) {
+	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	    return GSX__NEXTNODE;
+	  }
+	  nocondef[0].bo = *(int *) nocondef_ptr;
+	  nocontype[0] = GCG_FLOAT;
+	}    
+	else if ( node->ln.classid == pwr_cClass_StoSattr ||
+		  node->ln.classid == pwr_cClass_CStoSattr) {
+	  if ( info_type != pwr_eType_String) {
+	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	    return GSX__NEXTNODE;
+	  }
+	  strcpy( nocondef[0].str, (char *) nocondef_ptr);
+	  nocontype[0] = GCG_STRING;
+	}    
+	free(nocondef_ptr);
+
+	/* Insert host object in ref list */
+	gcg_ref_insert( gcgctx, host_objid, GCG_PREFIX_REF);
+
+	/* Print the execute command */
+
+	/* Get name for this class */
+	sts = gcg_get_structname( gcgctx, node->ln.object_did, &name);
+	if( EVEN(sts)) return sts;
+
+	sts = gcg_parname_to_pgmname(ldhses, class, refattr, pgmname);
+	if( EVEN(sts)) return sts;
+
+	/* Print the execute command */
+	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
+		"%s_exec( %c%s->%s, ",
+		name,
+		GCG_PREFIX_REF,
+		vldh_IdToStr(0, host_objid),
+		pgmname);
+
+	sts = gcg_print_inputs( gcgctx, node, ", ", GCG_PRINT_ALLPAR, 
+		nocondef, nocontype);
+	if ( EVEN(sts) ) return sts;
+
+	if ( node->ln.classid == pwr_cClass_StoSattr ||
+	     node->ln.classid == pwr_cClass_CStoSattr ) {
+          // Add size of connected attribute
+	  IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
+		",%ld", info_size);
+        }
+
+	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
+		");\n");
+
+	return GSX__SUCCESS;
+}
+
+/*************************************************************************
+*
+* Name:		gcg_comp_m58()
+*
+* Type		void
+*
+* Type		Parameter	IOGF	Description
+* gcg_ctx	gcgctx		I	gcg context.
+* vldh_t_node	node		I	vldh node.
+*
+* Description:
+*	Compile method for an object with template plc code in class.
+*
+**************************************************************************/
+
+int	gcg_comp_m58( gcgctx, node)
+gcg_ctx		gcgctx;
+vldh_t_node	node;
+{
+	int 			sts, found, size;
+	pwr_tClassId		windclass;
+	ldh_tSesContext ldhses;
+	pwr_tObjid		window_objid;
+	pwr_tObjid		plcpgm_objid;
+	pwr_sAttrRef		attrref[2];
+	ldh_tWBContext		ldhwb;
+	pwr_sPlcWindow		*windbuffer;
+	unsigned long		point;
+	unsigned long		par_inverted;
+	vldh_t_node		output_node;
+	unsigned long		output_count;
+	unsigned long		output_point;
+	ldh_sParDef 		*bodydef;
+	ldh_sParDef 		output_bodydef;
+	int 			rows;
+	int			i, output_found, first_par;
+	pwr_tObjid		output_objdid;
+	char			output_prefix;
+	char			output_par[32];
+	char			*name;
+        char			oname[120];
+	pwr_tClassId		class;
+	pwr_tTime		instance_time;
+	pwr_tTime		template_time;
+	pwr_tObjid		template_plc;
+	pwr_tObjid		template_window;
+
+	ldhses = (node->hn.window_pointer)->hw.ldhsession; 
+
+	/* Check first if there is a subwindow */
+	sts = ldh_GetChild( ldhses, node->ln.object_did, &window_objid);
+	found = 0;
+	while ( ODD(sts) ) {
+	  /* Check if window */
+	  sts = ldh_GetObjectClass( ldhses, window_objid, &class);
+	  if ( EVEN(sts)) return sts;
+	  if ( class == pwr_cClass_windowplc) {
+	    found = 1;	
+	    break;
+	  }
+	  sts = ldh_GetNextSibling( ldhses, window_objid, &window_objid);
+	}
+
+	if ( found ) {
+	  // Get modification time
+	  sts = ldh_GetObjectPar( ldhses, node->ln.object_did, 
+			"DevBody", "Modified", (char **)&instance_time, &size); 
+	  if ( EVEN(sts)) return sts;
+	}
+
+	// Find the template plc
+	sts = ldh_ObjidToName( ldhses, cdh_ClassIdToObjid( node->ln.classid), 
+		ldh_eName_VolPath, oname, sizeof( oname), &size);
+	if( EVEN(sts)) return sts;
+
+	strcat( oname, "-Code");
+	sts = ldh_NameToObjid( ldhses, &template_plc, oname);
+	if ( EVEN(sts)) {
+	  gcg_error_msg( gcgctx, GSX__TEMPLATEPLC, node);
+	  return GSX__NEXTNODE;
+	}
+	sts = ldh_GetChild( ldhses, template_plc, &template_window);
+	if ( EVEN(sts)) {
+	  gcg_error_msg( gcgctx, GSX__TEMPLATEPLC, node);
+	  return GSX__NEXTNODE;
+	}
+
+	sts = ldh_GetObjectClass( ldhses, template_window, &class);
+	if ( EVEN(sts)) return sts;
+	if ( class != pwr_cClass_windowplc) {
+	  gcg_error_msg( gcgctx, GSX__TEMPLATEPLC, node);
+	  return GSX__NEXTNODE;
+	}
+
+	// Get modification time
+	sts = ldh_GetObjectPar( ldhses, template_window, 
+			"DevBody", "Modified",
+			(char **)&template_time, &size); 
+	if ( EVEN(sts)) return sts;
+
+	if ( !found || template_time.tv_sec != instance_time.tv_sec) {
+	  // Replace the code
+	  if ( found) {
+	    /* Delete the window */
+	    sts = ldh_DeleteObjectTree( ldhses, window_objid);
+	    if ( EVEN(sts)) return sts;
+	  }
+
+	  attrref[0].Objid = template_plc;
+	  attrref[1].Objid = pwr_cNObjid;
+
+	  sts = ldh_CopyObjectTrees( ldhses, attrref, node->ln.object_did,
+		ldh_eDest_IntoFirst,  0);
+	  if ( EVEN(sts)) {
+	    /* Function not found */
+	    gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
+	    return GSX__NEXTNODE;
+	  }
+
+	  /* Remove the plcpgm object */
+	  sts = ldh_GetChild( ldhses, node->ln.object_did, &plcpgm_objid);
+	  if ( EVEN(sts)) return sts;
+
+	  sts = ldh_GetChild( ldhses, plcpgm_objid, &window_objid);
+	  if ( EVEN(sts)) return sts;
+
+	  sts  = ldh_MoveObject( ldhses, window_objid, node->ln.object_did,
+			ldh_eDest_IntoFirst);
+	  if ( EVEN(sts)) return sts;
+
+	  sts = ldh_DeleteObject( ldhses, plcpgm_objid);
+	  if ( EVEN(sts)) return sts;
+
+	  node->ln.subwindow = 1;
+ 	  node->ln.subwind_objdid[0] = window_objid;
+	  sts = ldh_SetObjectBuffer(
+			ldhses,
+			node->ln.object_did,
+			"DevBody",
+			"PlcNode",
+			(char *)&node->ln);
+	  if( EVEN(sts)) return sts;
+
+	  sts = ldh_GetObjectBuffer( ldhses,
+			window_objid, "DevBody", "PlcWindow", 
+			(pwr_eClass *) &windclass, (char **)&windbuffer, &size);
+	  if ( EVEN(sts)) return sts;
+
+	  windbuffer->parent_node_did = node->ln.object_did;
+	  sts = ldh_SetObjectBuffer( 
+			ldhses,
+			window_objid,
+			"DevBody",
+			"PlcWindow",
+			(char *)windbuffer);
+	  if( EVEN(sts)) return sts;
+	  free((char *) windbuffer);
+
+	  /* Compile the subwindow... */
+	  ldhwb = ldh_SessionToWB( ldhses);
+	  sts = gcg_wind_comp_all( ldhwb, ldhses, window_objid,
+		gcgctx->print, 0, gcg_debug);
+	  node->hn.subwindowobject[0] = 0;
+	}
+
+	/* Print the code */
+	sts = gcg_ref_insert( gcgctx, node->ln.object_did, GCG_PREFIX_REF);
+
+	/* Get name for this class */
+	sts = gcg_get_structname( gcgctx, node->ln.object_did, &name);
+	if( EVEN(sts)) return sts;
+
+	/* Get the runtime parameters for this class */
+	sts = ldh_GetObjectBodyDef((node->hn.window_pointer)->hw.ldhsession, 
+			node->ln.classid, "RtBody", 1, 
+			&bodydef, &rows);
+	if ( EVEN(sts) ) return sts;
+
+	i = 0;
+	first_par = 1;
+	while( 	(i < rows) &&
+		(bodydef[i].ParClass == pwr_eClass_Input))
+	{
+	  /* Get the point for this parameter if there is one */
+	  output_found = 0;
+	  sts = gcg_get_inputpoint( node, i, &point, &par_inverted);
+	  if ( ODD( sts))
+	  {
+	    /* Look for an output connected to this point */
+	    sts = gcg_get_output( node, point, &output_count, &output_node,
+			&output_point, &output_bodydef, 
+			GOEN_CON_SIGNAL | GOEN_CON_OUTPUTTOINPUT);
+	    if ( EVEN(sts)) return sts;
+
+	    if ( output_count > 0 )
+	    {
+	      output_found = 1;
+	      if ( output_count > 1) 
+	        gcg_error_msg( gcgctx, GSX__CONOUTPUT, output_node);
+
+	      sts = gcg_get_outputstring( gcgctx, output_node, &output_bodydef, 
+			&output_objdid, &output_prefix, output_par);
+	      if ( sts == GSX__NEXTPAR )
+	      {
+	        i++;
+	        continue;
+	      }
+	      if ( EVEN(sts)) return sts;
+
+	      if ( par_inverted )
+	        gcg_error_msg( gcgctx, GSX__INV, node);
+
+	      IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE],
+			"%c%s->%sP = &%c%s->%s;\n",
+			GCG_PREFIX_REF,
+			vldh_IdToStr(0, node->ln.object_did),
+			bodydef[i].Par->Param.Info.PgmName,
+			output_prefix,
+			vldh_IdToStr(1, output_objdid),
+			output_par);
+
+	      IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE],
+			"%c%s->%s = *%c%s->%sP;\n",
+			GCG_PREFIX_REF,
+			vldh_IdToStr(0, node->ln.object_did),
+			bodydef[i].Par->Param.Info.PgmName,
+			GCG_PREFIX_REF,
+			vldh_IdToStr(0, node->ln.object_did),
+			     bodydef[i].Par->Param.Info.PgmName);
+	    }
+	    else
+	    {
+	      /* Point visible but not connected, errormessage */
+	      gcg_error_msg( gcgctx, GSX__NOTCON, node);
+	    }
+	    first_par = 0;
+	  }
+	  if ( !output_found )
+	  {
+	    /* The point is not connected and the pointer will be zero */
+
+	    IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE],
+			"%c%s->%sP = 0;\n",
+			GCG_PREFIX_REF,
+			vldh_IdToStr(0, node->ln.object_did),
+			bodydef[i].Par->Param.Info.PgmName);
+	  }
+	  i++;
+	}
+	free((char *) bodydef);
+
+	/* Print the window execute command */
+	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE],
+		       "%c%s_exec( tp);",
+		       GCG_PREFIX_MOD,
+		       vldh_IdToStr(0, window_objid));
+
+	return GSX__SUCCESS;
+}
+
+/*************************************************************************
+*
+* Name:		gcg_comp_m59()
+*
+* Type		void
+*
+* Type		Parameter	IOGF	Description
+* gcg_ctx	gcgctx		I	gcg context.
+* vldh_t_node	node		I	vldh node.
+*
+* Description:
+*	Compile method for GetDattr, GetAattr, GetIattr and GetSattr.
+*	Checks that the referenced attribute exists, and that the type 
+*       of the attribute is correct.
+*	Prints declaration and direct link of pointer to referenced object.
+*
+**************************************************************************/
+
+int	gcg_comp_m59( gcgctx, node)
+gcg_ctx		gcgctx;
+vldh_t_node	node;
+{
+	ldh_sParDef 		*bodydef;
+	int 			rows, sts;
+	int			size;
+	char			refattr[32];
+	char			*refattr_ptr;
+	unsigned long		info_type;
+	unsigned long		info_size;
+	int			found, i;
+	ldh_tSesContext ldhses;
+	pwr_tClassId		class;
+	int			element;
+	char			*s, *t;
+	char			elementstr[20];
+	int			nr;
+	int			len;
+	pwr_tObjid		host_objid;
+
+	ldhses = (node->hn.window_pointer)->hw.ldhsession;  
+	
+	/* Get the referenced attribute stored in 'Attribute' */
+
+	sts = ldh_GetObjectPar( ldhses,
+			node->ln.object_did, 
+			"DevBody",
+			"Attribute",
+			(char **)&refattr_ptr, &size); 
+	if ( EVEN(sts)) return sts;
+        strncpy( refattr, refattr_ptr, sizeof(refattr));
+	free((char *) refattr_ptr);
+
+	/* Get the parent node to this window */
+	host_objid = (node->hn.window_pointer)->lw.parent_node_did;
+
+	if ( cdh_ObjidIsNull(host_objid)) {	
+	  /* Parent is a plcprogram */
+	  gcg_error_msg( gcgctx, GSX__BADWIND, node);  
+	  return GSX__NEXTNODE;
+	}
+
+	/* Check class of this objdid */
+	sts = ldh_GetObjectClass( ldhses, host_objid, &class);
+	if ( EVEN(sts))  {
+	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);
+	  return GSX__NEXTNODE;
+	}
+
+	if ( class == pwr_cClass_order ||
+	     class == pwr_cClass_csub ||
+	     class == pwr_cClass_substep) {
+	  gcg_error_msg( gcgctx, GSX__BADWIND, node);
+	  return GSX__NEXTNODE;
+	}
+
+	/* Check that the attribute exist in this class */
+	sts = ldh_GetObjectClass( ldhses, host_objid, &class);
+	if ( EVEN(sts)) {
+	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
+	  return GSX__NEXTNODE;
+	}
+
+	/* Check that the parameter exists in the referenced object */
+	sts = ldh_GetObjectBodyDef( ldhses, class, "RtBody", 1, 
+			&bodydef, &rows);
+	if ( EVEN(sts) ) {
+	  gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
+	  return GSX__NEXTNODE;
+	}
+
+	for ( i = 0, found = 0; i < rows; i++) {
+	  /* ML 961009. Use ParName instead of PgmName */
+	  if ( strcmp( bodydef[i].ParName, refattr) == 0) {
+	    found = 1;
+	    break;
+	  }
+	}
+	if ( !found ) {
+	  gcg_error_msg( gcgctx, GSX__REFPAR, node);  
+	  free((char *) bodydef);	
+	  return GSX__NEXTNODE;
+	}
+	
+	/* Check type of parameter */
+	switch (bodydef[i].ParClass )  {
+        case pwr_eClass_Input:
+          info_type = bodydef[i].Par->Input.Info.Type;
+          if ( bodydef[i].Par->Input.Info.Flags & PWR_MASK_ARRAY)
+            info_size = bodydef[i].Par->Input.Info.Size /
+	      bodydef[i].Par->Input.Info.Elements;
+          else
+            info_size = bodydef[i].Par->Input.Info.Size;
+	  if ( bodydef[i].Par->Input.Info.Flags & PWR_MASK_RTVIRTUAL) {
+	    /* Parameter is not defined in runtime */
+	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	    free((char *) bodydef);	
+	    return GSX__NEXTNODE;
+ 	  } 
+	  break;
+        case pwr_eClass_Output:
+          info_type = bodydef[i].Par->Output.Info.Type;
+          if ( bodydef[i].Par->Output.Info.Flags & PWR_MASK_ARRAY)
+            info_size = bodydef[i].Par->Output.Info.Size /
+	      bodydef[i].Par->Output.Info.Elements;
+          else
+            info_size = bodydef[i].Par->Output.Info.Size;
+	  break;
+        case pwr_eClass_Intern:
+          info_type = bodydef[i].Par->Intern.Info.Type ;
+          if ( bodydef[i].Par->Intern.Info.Flags & PWR_MASK_ARRAY)
+            info_size = bodydef[i].Par->Intern.Info.Size /
+	      bodydef[i].Par->Intern.Info.Elements;
+          else
+            info_size = bodydef[i].Par->Intern.Info.Size;
+	  break;
+        case pwr_eClass_Param:
+          info_type = bodydef[i].Par->Param.Info.Type ;
+          if ( bodydef[i].Par->Param.Info.Flags & PWR_MASK_ARRAY)
+            info_size = bodydef[i].Par->Param.Info.Size /
+	      bodydef[i].Par->Param.Info.Elements;
+          else
+            info_size = bodydef[i].Par->Param.Info.Size;
+	  break;
+	default:
+	  /* Not allowed parameter type */		  
+	  gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	  free((char *) bodydef);	
+	  return GSX__NEXTNODE;
+	}
+	
+	/* Check that the type of the referenced attribute is correct */
+	if ( node->ln.classid == pwr_cClass_GetDattr) {
+	  if ( info_type != pwr_eType_Boolean) {
+	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	    return GSX__NEXTNODE;
+	  }
+	}    
+	else if ( node->ln.classid == pwr_cClass_GetAattr) {
+	  if ( info_type != pwr_eType_Float32) {
+	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	    return GSX__NEXTNODE;
+	  }
+	}    
+	else if ( node->ln.classid == pwr_cClass_GetIattr) {
+	  if ( !(info_type == pwr_eType_Int32 ||
+		 info_type == pwr_eType_UInt32 ||
+		 info_type == pwr_eType_Int16 ||
+		 info_type == pwr_eType_UInt16 ||
+		 info_type == pwr_eType_Int8 ||
+		 info_type == pwr_eType_UInt8)) {
+	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	    return GSX__NEXTNODE;
+	  }
+	}    
+	else if ( node->ln.classid == pwr_cClass_GetSattr) {
+	  if ( info_type != pwr_eType_String) {
+	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	    return GSX__NEXTNODE;
+	  }
+	}    
+
+	/* Check if parameter is an array */
+	s = strchr( refattr, '[');
+	if ( s == 0)
+	  element = -1;
+	else
+	{
+	  t = strchr( refattr, ']');
+	  if ( t == 0)
+	  {
+	    gcg_error_msg( gcgctx, GSX__REFPAR, node);
+	    return GSX__NEXTNODE;
+	  }
+	  else
+	  {
+	    len = t - s - 1;
+            if ( len > sizeof(elementstr) - 1)
+            {
+              gcg_error_msg( gcgctx, GSX__REFPAR, node);
+              return GSX__NEXTNODE;
+            }
+	    strncpy( elementstr, s + 1, len);
+	    elementstr[len] = 0;
+	    nr = sscanf( elementstr, "%d", &element);
+  	    if ( nr != 1 )
+	    {
+	      gcg_error_msg( gcgctx, GSX__REFPAR, node);
+	      return GSX__NEXTNODE;
+	    }
+	    *s = '\0';
+	  }
+	}
+
+	/* Check elements */
+	if ( bodydef[i].Par->Param.Info.Flags & PWR_MASK_ARRAY ) {
+	  if ( element == -1) {
+	    /* No elementstring found in parameter */
+	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	    free((char *) bodydef);	
+	    return GSX__NEXTNODE;
+	  }
+	  if ( element > (bodydef[i].Par->Param.Info.Elements - 1)) {
+	    /* Element index to large */
+	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	    free((char *) bodydef);	
+	    return GSX__NEXTNODE;
+	  }
+	}
+	else {
+	  if ( element != -1) {
+	    /* Elementstring found in parameter */
+	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	    free((char *) bodydef);	
+	    return GSX__NEXTNODE;
+	  }
+	}
+
+        free((char *) bodydef );        
+
+	/* Insert object in ref list */
+	gcg_ref_insert( gcgctx, host_objid, GCG_PREFIX_REF);
+
+	return GSX__SUCCESS;
+}
+
+/*************************************************************************
+*
+* Name:		gcg_wind_check_modification()
 *
 * Type		int
 *

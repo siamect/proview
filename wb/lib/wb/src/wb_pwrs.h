@@ -62,7 +62,7 @@ typedef pwr_tStatus (* wb_tMethodMenu)( ldh_sMenuCall *);
 typedef pwr_tStatus (* wb_tMethodMenuFilter)( ldh_sMenuCall *, pwr_sMenuButton *);
 typedef pwr_tStatus (* wb_tMethodAnteCreate) (ldh_tSesContext, pwr_tOid, pwr_tCid);
 typedef pwr_tStatus (* wb_tMethodPostCreate) (ldh_tSesContext, pwr_tOid, pwr_tOid, pwr_tCid);
-typedef pwr_tStatus (* wb_tMethodAnteMove)   (ldh_tSesContext, pwr_tOid, pwr_tOid, pwr_tCid);
+typedef pwr_tStatus (* wb_tMethodAnteMove)   (ldh_tSesContext, pwr_tOid, pwr_tOid, pwr_tOid);
 typedef pwr_tStatus (* wb_tMethodPostMove)   (ldh_tSesContext, pwr_tOid, pwr_tOid, pwr_tCid);
 typedef pwr_tStatus (* wb_tMethodAnteAdopt)  (ldh_tSesContext, pwr_tOid, pwr_tCid);
 typedef pwr_tStatus (* wb_tMethodPostAdopt)  (ldh_tSesContext, pwr_tOid, pwr_tOid, pwr_tCid);
@@ -86,7 +86,7 @@ static pwr_tStatus AnteMove (
   ldh_tSesContext   Session,
   pwr_tObjid	    Object,   /* object about to be moved */
   pwr_tObjid	    Father,   /* new father */
-  pwr_tClassId	    Class     /* class of father */
+  pwr_tObjid	    OldFather /* old father */
 );
 static pwr_tStatus AnteUnadopt (
   ldh_tSesContext   Session,
@@ -126,3 +126,15 @@ static pwr_tStatus SyntaxCheck (
 );
 #endif
 #endif
+
+
+
+
+
+
+
+
+
+
+
+

@@ -221,11 +221,10 @@ void Wtt::menu_setup()
   XtSetArg( sensitive[0],XmNsensitive, 1);
   XtSetArg( nosensitive[0],XmNsensitive, 0);
 
-  switch( wb_type)
-  {
+  switch( wb_type) {
     case wb_eType_Directory:
-      if ( editmode)
-      {
+      XtUnmanageChild( menu_createstruct_w);
+      if ( editmode) {
         XtSetValues( menu_save_w, sensitive, 1);
         XtSetValues( menu_revert_w, sensitive, 1);
         XtSetValues( menu_cut_w, sensitive, 1);
@@ -241,9 +240,9 @@ void Wtt::menu_setup()
         XtSetValues( menu_distribute_w, nosensitive, 1);
         XtSetValues( menu_change_value_w, sensitive, 1);
         XtSetValues( menu_edit_w, sensitive, 1);
+        XtSetValues( menu_classeditor_w, nosensitive, 1);
       }
-      else
-      {
+      else {
         XtSetValues( menu_save_w, nosensitive, 1);
         XtSetValues( menu_revert_w, nosensitive, 1);
         XtSetValues( menu_cut_w, nosensitive, 1);
@@ -259,11 +258,12 @@ void Wtt::menu_setup()
         XtSetValues( menu_distribute_w, sensitive, 1);
         XtSetValues( menu_change_value_w, nosensitive, 1);
         XtSetValues( menu_edit_w, sensitive, 1);
+        XtSetValues( menu_classeditor_w, sensitive, 1);
       }
       break;
     case wb_eType_Volume:
-      if ( editmode)
-      {
+      XtUnmanageChild( menu_createstruct_w);
+      if ( editmode) {
         XtSetValues( menu_save_w, sensitive, 1);
         XtSetValues( menu_revert_w, sensitive, 1);
         XtSetValues( menu_cut_w, sensitive, 1);
@@ -279,9 +279,9 @@ void Wtt::menu_setup()
         XtSetValues( menu_distribute_w, nosensitive, 1);
         XtSetValues( menu_change_value_w, sensitive, 1);
         XtSetValues( menu_edit_w, sensitive, 1);
+        XtSetValues( menu_classeditor_w, nosensitive, 1);
       }
-      else
-      {
+      else {
         XtSetValues( menu_save_w, nosensitive, 1);
         XtSetValues( menu_revert_w, nosensitive, 1);
         XtSetValues( menu_cut_w, nosensitive, 1);
@@ -300,11 +300,12 @@ void Wtt::menu_setup()
         XtSetValues( menu_distribute_w, sensitive, 1);
         XtSetValues( menu_change_value_w, nosensitive, 1);
         XtSetValues( menu_edit_w, sensitive, 1);
+        XtSetValues( menu_classeditor_w, nosensitive, 1);
       }
       break; 
    case wb_eType_Class:
-     if ( editmode)
-      {
+     XtUnmanageChild( menu_createstruct_w);
+     if ( editmode) {
         XtSetValues( menu_save_w, sensitive, 1);
         XtSetValues( menu_revert_w, sensitive, 1);
         XtSetValues( menu_cut_w, sensitive, 1);
@@ -319,10 +320,10 @@ void Wtt::menu_setup()
         XtSetValues( menu_createboot_w, nosensitive, 1);
         XtSetValues( menu_distribute_w, nosensitive, 1);
         XtSetValues( menu_change_value_w, sensitive, 1);
-        XtSetValues( menu_edit_w, nosensitive, 1);
+        XtSetValues( menu_edit_w, sensitive, 1);
+        XtSetValues( menu_classeditor_w, nosensitive, 1);
       }
-      else
-      {
+      else {
         XtSetValues( menu_save_w, nosensitive, 1);
         XtSetValues( menu_revert_w, nosensitive, 1);
         XtSetValues( menu_cut_w, nosensitive, 1);
@@ -333,19 +334,59 @@ void Wtt::menu_setup()
         XtSetValues( menu_utilities_w, sensitive, 1);
         XtSetValues( menu_openplc_w, nosensitive, 1);
         XtSetValues( menu_compile_w, nosensitive, 1);
-	if ( ldh_VolRepType( ldhses) == ldh_eVolRep_Dbs)
-          XtSetValues( menu_createload_w, nosensitive, 1);
-	else
-          XtSetValues( menu_createload_w, sensitive, 1);
+	XtSetValues( menu_createload_w, sensitive, 1);
         XtSetValues( menu_createboot_w, sensitive, 1);
         XtSetValues( menu_distribute_w, sensitive, 1);
         XtSetValues( menu_change_value_w, nosensitive, 1);
-        XtSetValues( menu_edit_w, nosensitive, 1);
+	XtSetValues( menu_edit_w, nosensitive, 1);
+        XtSetValues( menu_classeditor_w, nosensitive, 1);
+      }
+      break;
+   case wb_eType_ClassEditor:
+     XtUnmanageChild( menu_compile_w);
+     XtUnmanageChild( menu_utilities_w);
+     XtUnmanageChild( menu_createboot_w);
+     XtUnmanageChild( menu_classeditor_w);
+     if ( editmode) {
+        XtSetValues( menu_save_w, sensitive, 1);
+        XtSetValues( menu_revert_w, sensitive, 1);
+        XtSetValues( menu_cut_w, sensitive, 1);
+        XtSetValues( menu_copy_w, sensitive, 1);
+        XtSetValues( menu_paste_w, sensitive, 1);
+        XtSetValues( menu_pasteinto_w, sensitive, 1);
+        XtSetValues( menu_rename_w, sensitive, 1);
+        XtSetValues( menu_utilities_w, sensitive, 1);
+        XtSetValues( menu_openplc_w, nosensitive, 1);
+        XtSetValues( menu_compile_w, nosensitive, 1);
+        XtSetValues( menu_createload_w, nosensitive, 1);
+        XtSetValues( menu_createboot_w, nosensitive, 1);
+        XtSetValues( menu_distribute_w, nosensitive, 1);
+        XtSetValues( menu_change_value_w, sensitive, 1);
+        XtSetValues( menu_edit_w, sensitive, 1);
+        XtSetValues( menu_classeditor_w, nosensitive, 1);
+      }
+      else {
+        XtSetValues( menu_save_w, nosensitive, 1);
+        XtSetValues( menu_revert_w, nosensitive, 1);
+        XtSetValues( menu_cut_w, nosensitive, 1);
+        XtSetValues( menu_copy_w, sensitive, 1);
+        XtSetValues( menu_paste_w, nosensitive, 1);
+        XtSetValues( menu_pasteinto_w, nosensitive, 1);
+        XtSetValues( menu_rename_w, nosensitive, 1);
+        XtSetValues( menu_utilities_w, sensitive, 1);
+        XtSetValues( menu_openplc_w, sensitive, 1);
+        XtSetValues( menu_compile_w, nosensitive, 1);
+	XtSetValues( menu_createload_w, sensitive, 1);
+        XtSetValues( menu_createboot_w, nosensitive, 1);
+        XtSetValues( menu_distribute_w, nosensitive, 1);
+        XtSetValues( menu_change_value_w, nosensitive, 1);
+	XtSetValues( menu_edit_w, sensitive, 1);
+        XtSetValues( menu_classeditor_w, nosensitive, 1);
       }
       break;
     case wb_eType_Buffer:
-      if ( editmode)
-      {
+      XtUnmanageChild( menu_createstruct_w);
+      if ( editmode) {
         XtSetValues( menu_save_w, nosensitive, 1);
         XtSetValues( menu_revert_w, nosensitive, 1);
         XtSetValues( menu_cut_w, sensitive, 1);
@@ -361,9 +402,9 @@ void Wtt::menu_setup()
         XtSetValues( menu_distribute_w, nosensitive, 1);
         XtSetValues( menu_change_value_w, sensitive, 1);
         XtSetValues( menu_edit_w, sensitive, 1);
+        XtSetValues( menu_classeditor_w, nosensitive, 1);
       }
-      else
-      {
+      else {
         XtSetValues( menu_save_w, nosensitive, 1);
         XtSetValues( menu_revert_w, nosensitive, 1);
         XtSetValues( menu_cut_w, nosensitive, 1);
@@ -379,6 +420,7 @@ void Wtt::menu_setup()
         XtSetValues( menu_distribute_w, nosensitive, 1);
         XtSetValues( menu_change_value_w, nosensitive, 1);
         XtSetValues( menu_edit_w, sensitive, 1);
+        XtSetValues( menu_classeditor_w, nosensitive, 1);
       }
       break; 
     default:
@@ -2115,21 +2157,108 @@ static void wtt_activate_openge( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
   wtt->reset_cursor();
 }
 
+static void wtt_activate_openclasseditor( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
+{
+  int 		sts;
+  pwr_sAttrRef 	attrref;
+  int           is_attr;
+  pwr_tClassId 	classid;
+  char		name[80];
+  char		fname[200];
+  int		size;
+
+  if ( !wtt->ldhses) 
+    MESSAGE_RETURN( "No volume is attached");
+  wtt->message( ' ', "");
+
+  sts = wtt->get_select_first( &attrref, &is_attr);
+  if ( EVEN(sts)) {
+    wtt->message('E', "Select a ClassVolumeConfig object");
+    return;
+  }
+
+  sts = ldh_GetObjectClass( wtt->ldhses, attrref.Objid, &classid);
+  if ( EVEN(sts)) return;
+  
+  if ( classid == pwr_cClass_ClassVolumeConfig ||
+       classid == pwr_cClass_ClassVolumeLoad) {
+    sts = ldh_ObjidToName( wtt->ldhses, attrref.Objid, ldh_eName_Object, 
+					   name, sizeof(name), &size); 
+    if ( EVEN(sts)) return;
+
+    cdh_ToLower( name, name);
+    sprintf( fname, "$pwrp_db/%s.wb_load", name);
+    dcli_translate_filename( fname, fname);
+  }
+  else {
+    wtt->message('E', "Select a ClassVolumeConfig object");
+    return;
+  }
+
+  wtt->set_clock_cursor();
+  if ( wtt->open_volume_cb)
+    (wtt->open_volume_cb) ( wtt, wb_eType_ClassEditor, fname, wow_eFileSelType_WblClass);
+  wtt->reset_cursor();
+}
+
 static void wtt_activate_createload( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
 {
   int sts;
 
   wtt->message( ' ', "");
 
-  wtt->set_clock_cursor();
-  sts = lfu_create_loadfile( wtt->ldhses);
-  wtt->reset_cursor();
-  if ( EVEN(sts)) MESSAGE_RETURN_STS(sts);
+  if ( wtt->wb_type != wb_eType_ClassEditor) {
+    wtt->set_clock_cursor();
+    sts = lfu_create_loadfile( wtt->ldhses);
+    wtt->reset_cursor();
+    if ( EVEN(sts)) MESSAGE_RETURN_STS(sts);
+    
+    wtt->set_clock_cursor();
+    sts = ldh_CreateLoadFile( wtt->ldhses);
+    wtt->reset_cursor();
+    if ( EVEN(sts)) MESSAGE_RETURN_STS(sts);
+  }
+  else {
+    // Class editor
+    char name[32];
+    int size;
+    char cmd[200];
 
-  wtt->set_clock_cursor();
-  sts = ldh_CreateLoadFile( wtt->ldhses);
-  wtt->reset_cursor();
-  if ( EVEN(sts)) MESSAGE_RETURN_STS(sts);
+    // Create loadfile from wb_load file
+    sts = ldh_VolumeIdToName( wtt->wbctx, wtt->volid, name, sizeof(name), &size);
+    if ( EVEN(sts)) return;
+
+    cdh_ToLower( name, name);
+
+    sprintf( cmd, "create snapshot/file=\"$pwrp_db/%s.wb_load\"", name);
+    if ( !wtt->focused_wnav)
+      wtt->set_focus_default();
+    sts = wtt->focused_wnav->command( cmd);
+  }
+}
+
+static void wtt_activate_createstruct( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
+{
+  int sts;
+
+  wtt->message( ' ', "");
+
+  if ( wtt->wb_type == wb_eType_ClassEditor) {
+    char name[32];
+    int size;
+    char cmd[200];
+
+    // Create structfiles from wb_load file
+    sts = ldh_VolumeIdToName( wtt->wbctx, wtt->volid, name, sizeof(name), &size);
+    if ( EVEN(sts)) return;
+
+    cdh_ToLower( name, name);
+
+    sprintf( cmd, "create struct/file=\"$pwrp_db/%s.wb_load\"", name);
+    if ( !wtt->focused_wnav)
+      wtt->set_focus_default();
+    sts = wtt->focused_wnav->command( cmd);
+  }
 }
 
 static void wtt_activate_createboot( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
@@ -2285,6 +2414,8 @@ void wtt_create_menubutton( Widget w, Wtt *wtt)
     case 13: wtt->menu_compile_w = w; break;
     case 14: wtt->menu_pasteinto_w = w; break;
     case 15: wtt->menu_edit_w = w; break;
+    case 16: wtt->menu_classeditor_w = w; break;
+    case 17: wtt->menu_createstruct_w = w; break;
     default:
       ;
   }
@@ -3368,6 +3499,8 @@ Wtt::Wtt(
 	{"wtt_activate_openfile_wbl",(caddr_t)wtt_activate_openfile_wbl },
 	{"wtt_activate_spreadsheet",(caddr_t)wtt_activate_spreadsheet },
 	{"wtt_activate_openge",(caddr_t)wtt_activate_openge },
+	{"wtt_activate_openclasseditor",(caddr_t)wtt_activate_openclasseditor },
+	{"wtt_activate_createstruct",(caddr_t)wtt_activate_createstruct },
 	{"wtt_activate_createload",(caddr_t)wtt_activate_createload },
 	{"wtt_activate_createboot",(caddr_t)wtt_activate_createboot },
 	{"wtt_activate_distribute",(caddr_t)wtt_activate_distribute },
@@ -3416,18 +3549,15 @@ Wtt::Wtt(
     value_recall[i][0] = 0;
 
   sts = dcli_translate_filename( uid_filename, uid_filename);
-  if ( EVEN(sts))
-  {
+  if ( EVEN(sts)) {
     printf( "** pwr_exe is not defined\n");
     exit(0);
   }
 
-  if ( wbctx && volid)
-  {
+  if ( wbctx && volid) {
     // Get the volume class and decide what type of navigator */
     sts = ldh_GetVolumeClass( wbctx, volid, &volclass);
-    if (EVEN(sts)) 
-    {
+    if (EVEN(sts)) {
       *status = sts;
       return;
     }
@@ -3435,48 +3565,9 @@ Wtt::Wtt(
 
     sts = ldh_VolumeIdToName( wbctx, volid, volname,
 		sizeof(volname), &size);
-    if (EVEN(sts)) 
-    {
+    if (EVEN(sts)) {
       *status = sts;
       return;
-    }
-    switch( volclass)
-    {
-      case pwr_eClass_DirectoryVolume:
-        wb_type = wb_eType_Directory;
-        sprintf( title, "PwR Navigator Directory %s", name);
-        strcpy( layout_w1, "ProjectNavigatorW1");
-        strcpy( layout_w2, "ProjectNavigatorW2");
-        strcpy( layout_palette, "ProjectNavigatorPalette");
-        strcpy( title_w1, "Volume Configuration");
-        strcpy( title_w2, "Node Configuration");
-        break;
-      case pwr_eClass_ClassVolume:
-        wb_type = wb_eType_Class;
-        sprintf( title, "PwR Navigator Volume %s, %s", volname, name);
-        strcpy( layout_w1, "ClassNavigatorW1");
-        strcpy( layout_w2, "ClassNavigatorW2");
-        strcpy( layout_palette, "ClassNavigatorPalette");
-        strcpy( title_w1, "Class Configuration");
-        strcpy( title_w2, "Node Configuration");
-        break;
-      case pwr_eClass_VolatileVolume:
-        wb_type = wb_eType_Buffer;
-        strcpy( layout_w1, "");
-        strcpy( layout_w2, "");
-        strcpy( layout_palette, "NavigatorPalette");
-        strcpy( title_w1, "Plant Configuration");
-        strcpy( title_w2, "Node Configuration");
-        sprintf( title, "PwR Navigator Buffer %s, %s", volname, name);
-	break;
-      default:
-        wb_type = wb_eType_Volume;
-        strcpy( layout_w1, "NavigatorW1");
-        strcpy( layout_w2, "NavigatorW2");
-        strcpy( layout_palette, "NavigatorPalette");
-        strcpy( title_w1, "Plant Configuration");
-        strcpy( title_w2, "Node Configuration");
-        sprintf( title, "PwR Navigator Volume %s, %s", volname, name);
     }
     if ( !volctx) {
       sts = ldh_AttachVolume( wbctx, volid, &volctx);
@@ -3490,17 +3581,59 @@ Wtt::Wtt(
 
     sts = ldh_OpenSession( &ldhses, volctx, ldh_eAccess_ReadOnly,
     	ldh_eUtility_Navigator);
-    if (EVEN(sts)) 
-    {
+    if (EVEN(sts)) {
       printf("Navigator: Can't open session\n");
       *status = sts;
       return;
     }
     ldh_AddOtherSessionCallback( ldhses,  (void *)this, 
 		wtt_ldh_other_session_cb);
+
+    switch( volclass) {
+    case pwr_eClass_DirectoryVolume:
+      wb_type = wb_eType_Directory;
+      sprintf( title, "PwR Navigator Directory %s", name);
+      strcpy( layout_w1, "ProjectNavigatorW1");
+      strcpy( layout_w2, "ProjectNavigatorW2");
+      strcpy( layout_palette, "ProjectNavigatorPalette");
+      strcpy( title_w1, "Volume Configuration");
+      strcpy( title_w2, "Node Configuration");
+      break;
+    case pwr_eClass_ClassVolume:
+      if ( ldh_VolRepType( ldhses) == ldh_eVolRep_Mem) {
+	wb_type = wb_eType_ClassEditor;
+	sprintf( title, "PwR ClassEditor Volume %s, %s", volname, name);
+      }
+      else {
+	wb_type = wb_eType_Class;
+	sprintf( title, "PwR Navigator Volume %s, %s", volname, name);
+      }
+      strcpy( layout_w1, "ClassNavigatorW1");
+      strcpy( layout_w2, "ClassNavigatorW2");
+      strcpy( layout_palette, "ClassNavigatorPalette");
+      strcpy( title_w1, "Class Configuration");
+      strcpy( title_w2, "Node Configuration");
+      break;
+    case pwr_eClass_VolatileVolume:
+      wb_type = wb_eType_Buffer;
+      strcpy( layout_w1, "");
+      strcpy( layout_w2, "");
+      strcpy( layout_palette, "NavigatorPalette");
+      strcpy( title_w1, "Plant Configuration");
+      strcpy( title_w2, "Node Configuration");
+      sprintf( title, "PwR Navigator Buffer %s, %s", volname, name);
+      break;
+    default:
+      wb_type = wb_eType_Volume;
+      strcpy( layout_w1, "NavigatorW1");
+      strcpy( layout_w2, "NavigatorW2");
+      strcpy( layout_palette, "NavigatorPalette");
+      strcpy( title_w1, "Plant Configuration");
+      strcpy( title_w2, "Node Configuration");
+      sprintf( title, "PwR Navigator Volume %s, %s", volname, name);
+    }
   }
-  else
-  {
+  else {
     strcpy( layout_w1, "NavigatorW1");
     strcpy( layout_w2, "NavigatorW2");
     strcpy( title_w1, "Plant Configuration");

@@ -185,6 +185,7 @@ public:
   virtual bool exportHead(wb_import &i);
   virtual bool exportRbody(wb_import &i);
   virtual bool exportDbody(wb_import &i);
+  virtual bool exportDocBlock(wb_import &i);
   virtual bool exportMeta(wb_import &i);
   virtual bool exportTree(wb_treeimport &i, pwr_tOid oid);
   virtual bool importTree(bool keepref) { return false;}

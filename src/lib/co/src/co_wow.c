@@ -582,6 +582,7 @@ void wow_CreateFileSelDia( Widget parent_wid,
       XtSetArg( args[i], XmNpattern, cpattern); i++;
       break;
     case wow_eFileSelType_Wbl:
+    case wow_eFileSelType_WblClass:
       dcli_translate_filename( directory, "$pwrp_db/");
       cdirectory = XmStringCreateLtoR( directory, XmSTRING_DEFAULT_CHARSET);
       cpattern = XmStringCreateLtoR( "*.wb_load", XmSTRING_DEFAULT_CHARSET);

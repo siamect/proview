@@ -248,6 +248,16 @@ wb_attribute::~wb_attribute()
   
 }
 
+bool wb_attribute::operator==(const wb_attribute& x) const
+{
+  if ( m_orep->oid().vid == x.m_orep->oid().vid &&
+       m_orep->oid().oix == x.m_orep->oid().oix &&
+       m_size == x.m_size &&
+       m_offset == x.m_offset)
+    return true;
+  return false;
+}
+
 wb_attribute& wb_attribute::operator=(const wb_attribute& x)
 {
   if ( x.m_orep)

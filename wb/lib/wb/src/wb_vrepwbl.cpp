@@ -182,6 +182,14 @@ bool wb_vrepwbl::exportRbody(wb_import &i)
     return false;
 }
 
+bool wb_vrepwbl::exportDocBlock(wb_import &i)
+{
+  if ( root_object)
+    return root_object->exportDocBlock(i);
+  else
+    return false;
+}
+
 bool wb_vrepwbl::exportMeta(wb_import &i)
 {
   return false;
@@ -586,13 +594,24 @@ int wb_vrepwbl::getTypeInfo( pwr_tTid tid, pwr_eType *type, size_t *size,
       // Search type in other volumes
       pwr_tStatus sts;
 
-      wb_tdrep *tdrep = m_merep->tdrep( &sts, tid);
-      if ( EVEN(sts)) return 0;
+      try {
+	wb_tdrep *tdrep = m_merep->tdrep( &sts, tid);
+	if ( EVEN(sts)) return 0;
 
-      *type = tdrep->type();
-      *size = tdrep->size();
-      *elements = tdrep->nElement();
-      delete tdrep;
+	*type = tdrep->type();
+	*size = tdrep->size();
+	*elements = tdrep->nElement();
+	delete tdrep;
+      } catch (wb_error& e) {
+	// Try cdrep
+	wb_cdrep *cdrep = m_merep->cdrep( &sts, tid);
+	if ( EVEN(sts)) return 0;
+
+	*type = (pwr_eType) cdrep->cid();
+	*size = cdrep->size( pwr_eBix_rt);
+	*elements = 1;
+	delete cdrep;
+      }
     }
   }
   }
@@ -748,10 +767,10 @@ int wb_vrepwbl::getAttrInfoRec( wb_attrname *attr, pwr_eBix bix, pwr_tCid cid, s
     if ( bix != pwr_eBix_sys)
       return 0;
     IF_ATTR( Type, pwr_eType_UInt32, 1, level)
-      else IF_ATTR( Size, pwr_eType_Int32, 1, level)
-             else IF_ATTR( TypeRef, pwr_eType_TypeId, 1, level)
-                    else IF_ATTR( Elements, pwr_eType_Int32, 1, level)
-                           return 1;
+    else IF_ATTR( Size, pwr_eType_Int32, 1, level)
+    else IF_ATTR( TypeRef, pwr_eType_TypeId, 1, level)
+    else IF_ATTR( Elements, pwr_eType_Int32, 1, level)
+    return 1;
   }
   case pwr_eClass_ClassDef:
   {
@@ -760,11 +779,11 @@ int wb_vrepwbl::getAttrInfoRec( wb_attrname *attr, pwr_eBix bix, pwr_tCid cid, s
     if ( bix != pwr_eBix_sys)
       return 0;
     IF_ATTR( Editor, pwr_eType_UInt32, 1, level)
-      else IF_ATTR( Method, pwr_eType_UInt32, 1, level)
-             else IF_ATTR( Flags, pwr_eType_UInt32, 1, level)
-                    else IF_ATTR( NumOfObjBodies, pwr_eType_UInt32, 1, level)
-                           else IF_ATTR( PopEditor, pwr_eType_UInt32, 1, level)
-                                  return 1;
+    else IF_ATTR( Method, pwr_eType_UInt32, 1, level)
+    else IF_ATTR( Flags, pwr_eType_UInt32, 1, level)
+    else IF_ATTR( NumOfObjBodies, pwr_eType_UInt32, 1, level)
+    else IF_ATTR( PopEditor, pwr_eType_UInt32, 1, level)
+    return 1;
   }
   case pwr_eClass_ClassVolume:
   {
@@ -773,14 +792,31 @@ int wb_vrepwbl::getAttrInfoRec( wb_attrname *attr, pwr_eBix bix, pwr_tCid cid, s
     if ( bix != pwr_eBix_sys)
       return 0;
     IF_ATTR( Description, pwr_eType_String, 1, level)
-      else IF_ATTR( NextOix, pwr_eType_ObjectIx, 1, level)
-             else IF_ATTR( RtVersion, pwr_eType_UInt32, 1, level)
-                    else IF_ATTR( RtCreTime, pwr_eType_Time, 1, level)
-                           else IF_ATTR( RtCreator, pwr_eType_String, 1, level)
-                                  else IF_ATTR( RtCardinality, pwr_eType_UInt32, 1, level)
-                                         else IF_ATTR( RtBodySize, pwr_eType_UInt32, 1, level)
-                                                else IF_ATTR( NextCix, pwr_eType_ObjectIx, 1, level)
-                                                       return 1;
+    else IF_ATTR( NextOix, pwr_eType_ObjectIx, 1, level)
+    else IF_ATTR( RtVersion, pwr_eType_UInt32, 1, level)
+    else IF_ATTR( RtCreTime, pwr_eType_Time, 1, level)
+    else IF_ATTR( RtCreator, pwr_eType_String, 1, level)
+    else IF_ATTR( RtCardinality, pwr_eType_UInt32, 1, level)
+    else IF_ATTR( RtBodySize, pwr_eType_UInt32, 1, level)
+    else IF_ATTR( NextCix, pwr_eType_ObjectIx, 1, level)
+    else if ( attr->attributeIsEqual( "NextTix", level)) {
+      if ( attr->hasAttrIndex()) {
+	*size = sizeof( o.NextTix[0]);
+	*offset = (unsigned long) &o.NextTix - (unsigned long) &o + 
+	  attr->attrIndex() * *size;
+	*tid = *type = pwr_eType_ObjectIx;
+	*elements = 1;
+	*flags = 0;
+      }
+      else {
+	*size = sizeof( o.NextTix);
+	*offset = (unsigned long) &o.NextTix - (unsigned long) &o;
+	*tid = *type = pwr_eType_ObjectIx;
+	*elements = sizeof(o.NextTix)/sizeof(o.NextTix[0]);
+	*flags = 0;
+      }
+    }
+    return 1;
   }
   case pwr_eClass_ClassHier:
   case pwr_eClass_TypeHier:
@@ -792,11 +828,11 @@ int wb_vrepwbl::getAttrInfoRec( wb_attrname *attr, pwr_eBix bix, pwr_tCid cid, s
     if ( bix != pwr_eBix_sys)
       return 0;
     IF_ATTR( StructName, pwr_eType_String, 1, level)
-      else IF_ATTR( NumOfParams, pwr_eType_UInt32, 1, level)
-             else IF_ATTR( Size, pwr_eType_UInt32, 1, level)
-                    else IF_ATTR( NextAix, pwr_eType_ObjectIx, 1, level)
-                           else IF_ATTR( Flags, pwr_eType_Mask, 1, level)
-                                  return 1;
+    else IF_ATTR( NumOfParams, pwr_eType_UInt32, 1, level)
+    else IF_ATTR( Size, pwr_eType_UInt32, 1, level)
+    else IF_ATTR( NextAix, pwr_eType_ObjectIx, 1, level)
+    else IF_ATTR( Flags, pwr_eType_Mask, 1, level)
+    return 1;
   }
   case pwr_eClass_Param:
   {

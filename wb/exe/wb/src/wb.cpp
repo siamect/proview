@@ -50,6 +50,7 @@ extern "C" {
 #include "wb_erep.h"
 #include "wb_vrepwbl.h"
 #include "wb_vrepdbs.h"
+#include "wb_vrepmem.h"
 
 using namespace std;
 
@@ -285,7 +286,7 @@ void	pwr_wtt_open_volume( void *wttctx, wb_eType type, char *filename, wow_eFile
 		type);
     }
     else {
-      // Open the file... TODO
+      // Open the file
       if ( file_type == wow_eFileSelType_Wbl) {
         printf( "Wb opening wb_load-file %s...\n", filename);
 
@@ -338,13 +339,64 @@ void	pwr_wtt_open_volume( void *wttctx, wb_eType type, char *filename, wow_eFile
 	  wtt->time_to_exit_cb = pwr_time_to_exit;
         }
       }
+      else if ( file_type == wow_eFileSelType_WblClass) {
+        printf( "Wb opening wb_load-file %s...\n", filename);
+
+        // Load volume and import to vrepmem
+	wb_erep *erep = (wb_erep *)(*(wb_env *)wbctx);
+#if 0
+        wb_vrepwbl *vrep = new wb_vrepwbl( erep);
+        sts = vrep->load( filename);
+	if ( vrep->vid() == 0) {
+	  delete vrep;
+	  return;
+	}
+	vrep->ref();
+
+	wb_vrepmem *mem = new wb_vrepmem(erep, vrep->vid());
+	mem->name( vrep->name());
+	erep->addExtern( &sts, mem);
+
+	mem->importVolume( *vrep);
+
+	vrep->unref();
+#endif
+	wb_vrepmem *mem = new wb_vrepmem(erep, 0);
+	mem->loadWbl( filename, &sts);
+	if ( EVEN(sts)) {
+	  delete mem;
+	  return;
+	}
+	erep->addExtern( &sts, mem);
+
+        // Display buffer
+	wb_volume *vol = new wb_volume(mem);
+
+	// Display filename i title, without path
+        char *name_p;
+	if ( (name_p = strrchr( filename, '/')))
+	  name_p++;
+	else
+	  name_p = filename;
+
+        Wtt *wtt = new Wtt( 0, toplevel, name_p, 
+			    "Navigator", wbctx, mem->vid(), vol, 0, &sts);
+        if (ODD(sts)) {
+          appl_count++;
+          wtt->close_cb = pwr_wtt_close;
+	  wtt->open_volume_cb = pwr_wtt_open_volume;
+	  wtt->time_to_exit_cb = pwr_time_to_exit;
+        }
+      }
       else
         printf( "Unknown file type\n");
     }
 
   }
-  else
+  else {
+    printf( "No privileges to enter development environment");
     exit(LOGIN__NOPRIV);
+  }
 }
 
 int	pwr_vsel_success(	void 	*vselctx, 

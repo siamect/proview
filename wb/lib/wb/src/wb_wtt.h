@@ -206,6 +206,8 @@ class Wtt {
     Widget	menu_distribute_w;
     Widget	menu_change_value_w;
     Widget	menu_edit_w;
+    Widget	menu_classeditor_w;
+    Widget	menu_createstruct_w;
     uted_ctx	utedctx;
     WPkg	*wpkg;
     WNav	*input_wnav;

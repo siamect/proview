@@ -11,3 +11,4 @@
 success		<successful completion>					/succ
 chanclass	<channel class not allowed on this card>		/error
 alochan		<could not allocate a new channel>			/error
+graphaction     <no action defined in graph object>                      /error

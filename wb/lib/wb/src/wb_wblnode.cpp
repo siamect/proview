@@ -241,6 +241,11 @@ static wbl_sSym attr_flags[] =
   ,{ "PWR_MASK_NOREMOVE",	PWR_MASK_NOREMOVE }
   ,{ "PWR_MASK_RTDBREF",	PWR_MASK_RTDBREF }
   ,{ "PWR_MASK_PRIVATE",	PWR_MASK_PRIVATE }
+  ,{ "PWR_MASK_CLASS",		PWR_MASK_CLASS }
+  ,{ "PWR_MASK_SUBCLASS",	PWR_MASK_SUBCLASS }
+  ,{ "PWR_MASK_BUFFER",		PWR_MASK_BUFFER }
+  ,{ "PWR_MASK_NOWBL",		PWR_MASK_NOWBL }
+  ,{ "PWR_MASK_ALWAYSWBL",     	PWR_MASK_ALWAYSWBL }
 
   ,{ "pwr_mClassDef_DevOnly",	pwr_mClassDef_DevOnly }
   ,{ "pwr_mClassDef_System",	pwr_mClassDef_System }
@@ -520,6 +525,18 @@ void wb_wblnode::build( bool recursive)
       o->ty.type = ((pwr_sTypeDef *)o->rbody)->Type;
       o->ty.size = ((pwr_sTypeDef *)o->rbody)->Size;
       o->ty.elements = ((pwr_sTypeDef *)o->rbody)->Elements;
+      if ( o->ty.type == 0) {
+	pwr_eType type;
+	size_t size;
+	int elements;
+
+	if ( !m_vrep->getTypeInfo( o->ty.tid, &type, &size, &elements)) {
+	  m_vrep->error( "Can't find TypeDef type", getFileName(), line_number);
+	  return;
+	}
+	o->ty.type = ((pwr_sTypeDef *)o->rbody)->Type = type;
+	o->ty.size = ((pwr_sTypeDef *)o->rbody)->Size = o->ty.elements * size;
+      }
     }
     else if ( isObjBodyDef()) {
     }
@@ -1145,7 +1162,7 @@ void wb_wblnode::buildBuffAttr( ref_wblnode object, pwr_eBix bix, pwr_tCid buffe
     next_sibling->buildBuffAttr( object, bix, buffer_cid, buffer_offset, buffer_size);
 }
 
-void wb_wblnode::link( wb_vrepwbl *vol, ref_wblnode father)
+void wb_wblnode::link( wb_vrepwbl *vol, ref_wblnode father, ref_wblnode parent_ast)
 {
   ref_wblnode first_child;
   ref_wblnode next_sibling;
@@ -1171,8 +1188,22 @@ void wb_wblnode::link( wb_vrepwbl *vol, ref_wblnode father)
 
     next_sibling = getNextSibling();
     if ( next_sibling)
-      next_sibling->link( vol, father);
+      next_sibling->link( vol, father, parent_ast);
 
+
+    // Link docblock, previous child to parent ast
+    if ( !parent_ast)
+      parent_ast = father;
+    if ( parent_ast) {
+      ref_wblnode prev = 0;
+      ref_wblnode child = parent_ast->getFirstChild();
+      while ( child && child != this) {
+	prev = child;
+	child = child->getNextSibling();
+      }
+      if ( prev && prev->getType() == tokens.DOCBLOCK)
+	o->docblock = prev;
+    }
     // cout << "Linking " << name << endl;
     break;
   case tokens.SOBJECT:
@@ -1185,7 +1216,7 @@ void wb_wblnode::link( wb_vrepwbl *vol, ref_wblnode father)
 
     first_child = getFirstChild();
     if ( first_child)
-      first_child->link( vol, snode);
+      first_child->link( vol, snode, this);
 
     next_sibling = getNextSibling();
     if ( next_sibling)
@@ -1199,7 +1230,7 @@ void wb_wblnode::link( wb_vrepwbl *vol, ref_wblnode father)
 
     next_sibling = getNextSibling();
     if ( next_sibling)
-      next_sibling->link( vol, father);
+      next_sibling->link( vol, father, parent_ast);
   }
 }
 
@@ -1209,6 +1240,10 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
   m_vrep = vol;
 
   switch ( getType()) {
+  case tokens.DOCBLOCK: {
+    string txt = getText();
+    break;
+  }  
   case tokens.OBJECT:
   {
 
@@ -1572,6 +1607,25 @@ bool wb_wblnode::exportRbody( wb_import &i)
   return true;
 }
 
+bool wb_wblnode::exportDocBlock( wb_import &i)
+{
+  char *block;
+  int size;
+
+  if ( o->docblock && docBlock( &block, &size)) {
+    i.importDocBlock( o->m_oid, size, block);
+    free( block); 
+  }
+  
+  if ( o->fch)
+    o->fch->exportDocBlock( i);
+
+  if ( o->fws)
+    o->fws->exportDocBlock( i);
+
+  return true;
+}
+
 bool wb_wblnode::exportTree( wb_treeimport &i, bool isRoot)
 {
   pwr_tOid fthoid = (o->fth && !isRoot) ? o->fth->o->m_oid : pwr_cNOid;
@@ -1726,8 +1780,16 @@ int wb_wblnode::attrStringToValue( int type_id, char *value_str,
       if ( m_vrep->getTypeInfo( value_str, &val_typeid, &type,
                                 &size, &elements))
         memcpy( buffer_ptr, (char *) &val_typeid, sizeof(val_typeid));
-      else
-        return 0;
+      else {
+	pwr_tClassId	classid;
+	pwr_tObjid	objid;
+
+	// Try classid
+	sts = m_vrep->nameToOid( value_str, &objid);
+	if (EVEN(sts)) return 0;
+	classid = cdh_ClassObjidToId( objid);
+	memcpy( buffer_ptr, (char *) &classid, sizeof(classid));
+      }
       break;
     }
     case pwr_eType_ObjectIx:
@@ -1790,3 +1852,69 @@ int wb_wblnode::attrStringToValue( int type_id, char *value_str,
     }
   return 1;
 }
+
+bool wb_wblnode::docBlock( char **block, int *size) const
+{
+  switch ( o->m_cid) {
+  case pwr_eClass_ClassDef:
+  case pwr_eClass_Param:
+  case pwr_eClass_Intern:
+  case pwr_eClass_Input:
+  case pwr_eClass_Output:
+  case pwr_eClass_ObjXRef:
+  case pwr_eClass_AttrXRef:
+    break;
+  default:
+    return false;
+  }
+  if ( !o->docblock) {
+    // Return nullstring
+    *block = (char *) calloc( 1, 1);
+    *size = 1;
+    return true;
+  }
+
+  *size = strlen( o->docblock->getText().c_str()) + 1;
+  *block = (char *) calloc( 1, *size);
+  // strncpy( *block, o->docblock->getText().c_str(), *size);
+
+  // Remove first and last row, and the beginning ! on each row
+  
+  char *s = (char *)o->docblock->getText().c_str();
+  char *t = *block;
+  char *start_t = t;
+  // Skip first line
+  while ( *s && *s != '\n')
+    s++;
+  s++;
+  // Skip leading '!'
+  bool skip = true;
+  while( *s) {
+    if ( t - start_t >= *size - 1)
+      break;
+    if ( *s == '!') {
+      skip = false;
+      s++;
+      // Skip first space also
+      if ( *s == ' ')
+	s++;
+    }
+    if ( !skip)
+      *t++ = *s;
+    if ( *s == '\n')
+      skip = true;
+    s++;
+  }
+  // Skip last line
+  while ( *t != '\n') {
+    if ( t <= start_t)
+      break;
+    t--;
+  }
+  *t = 0;
+  *size = t - start_t + 1;
+
+  return true;
+}
+
+

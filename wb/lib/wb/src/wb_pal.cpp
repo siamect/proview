@@ -378,6 +378,10 @@ PalItemClass::PalItemClass( Pal *pal, char *item_name,
         case pwr_cClass_GetIi:
         case pwr_cClass_GetIo:
         case pwr_cClass_GetIv:
+        case pwr_cClass_GetDattr:
+        case pwr_cClass_GetAattr:
+        case pwr_cClass_GetIattr:
+        case pwr_cClass_GetSattr:
 	  pixmap = pal->pixmap_get; 
 	  break;
         case pwr_cClass_GetAp:
@@ -406,6 +410,9 @@ PalItemClass::PalItemClass( Pal *pal, char *item_name,
         case pwr_cClass_cstosv:
         case pwr_cClass_cstosp:
         case pwr_cClass_stosp:
+        case pwr_cClass_CStoAattr:
+        case pwr_cClass_CStoIattr:
+        case pwr_cClass_CStoSattr:
           pixmap = pal->pixmap_stop; 
 	  break;
         case pwr_cClass_Text:	 	pixmap = pal->pixmap_text; break;

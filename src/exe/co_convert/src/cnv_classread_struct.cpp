@@ -312,7 +312,10 @@ int ClassRead::struct_attribute()
   if ( strcmp( low(attr_type), "buffer") == 0)
   {
     strcpy( type_name, "pwr_s");
-    strcat( type_name, &attr_typeref[11]);
+    if ( attr_typeref[11] == '$')
+      strcat( type_name, &attr_typeref[12]);
+    else
+      strcat( type_name, &attr_typeref[11]);
   }
   else if ( strcmp( low(attr_typeref), "attrref") == 0)
   {
@@ -534,6 +537,19 @@ int ClassRead::struct_attribute()
     struct_filler_cnt++;
   }
   attr_count++;
+  return 1;
+}
+
+int ClassRead::struct_typedef()
+{
+  if ( strcmp( typedef_typeref, "String") == 0)
+    fp_struct << 
+"typedef char pwr_t" << typedef_name << "[" << typedef_elements << "];" << endl << endl;
+  else
+    fp_struct <<
+"typedef pwr_t" << typedef_typeref << " pwr_t" << typedef_name << "[" << typedef_elements << "];" << endl << endl;
+
+
   return 1;
 }
 

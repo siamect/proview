@@ -1300,9 +1300,14 @@ ldh_SetObjectPar(ldh_tSession session, pwr_tOid oid, char *bname,
   wb_attribute a = o.attribute(bname, aname);
   if (!a) return a.sts();
 
-  sp->writeAttribute(a, value, size);
 
-  return sp->sts();
+  try {
+    sp->writeAttribute(a, value, size);
+    return sp->sts();
+  }
+  catch (wb_error& e) {
+    return e.sts();
+  }  
 }
 
 pwr_tStatus
@@ -1465,8 +1470,9 @@ ldh_WbDump( ldh_tSession session, char *objname, char *dumpfile)
   wb_session *sp = (wb_session*)session;
   char fname[200];
 
-  if ( sp->type() == ldh_eVolRep_Wbl ||
-       sp->cid() == pwr_eClass_ClassVolume)
+  if ( sp->type() == ldh_eVolRep_Wbl 
+       // || sp->cid() == pwr_eClass_ClassVolume
+       )
     return LDH__NYI;
 
   dcli_translate_filename( fname, dumpfile);
@@ -1560,6 +1566,33 @@ ldh_VolRepType( ldh_tSession session)
   return ((wb_session*)session)->type();
 }
 	      
+pwr_tStatus
+ldh_GetDocBlock(ldh_tSession session, pwr_tOid oid, char **block, int *size)
+{
+  wb_session *sp = (wb_session*)session;
+
+  wb_object o = sp->object(oid);
+  if (!o) return o.sts();
+  
+  if ( o.docBlock( block, size))
+    return LDH__SUCCESS;
+
+  return LDH__NOSUCHBUFFER;
+}
+
+pwr_tStatus
+ldh_SetDocBlock(ldh_tSession session, pwr_tOid oid, char *block)
+{
+  wb_session *sp = (wb_session*)session;
+
+  wb_object o = sp->object(oid);
+  if (!o) return o.sts();
+ 
+  if ( o.docBlock( block))
+    return LDH__SUCCESS;
+
+  return LDH__NOSUCHBUFFER;
+}
 
 #endif
 

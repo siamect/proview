@@ -18,7 +18,8 @@ typedef enum {
 	wb_eType_Volume,
 	wb_eType_Directory,
 	wb_eType_Class,
-	wb_eType_Buffer
+	wb_eType_Buffer,
+	wb_eType_ClassEditor
 } wb_eType;
 
 typedef enum {
