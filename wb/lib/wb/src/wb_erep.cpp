@@ -548,7 +548,17 @@ void wb_erep::loadMeta( pwr_tStatus *status)
   }
   fpm.close();
 
-  if ( !vol_cnt)
+  // Load directory volume
+
+  strcpy( vname, "$pwrp_db/directory.db");
+  dcli_translate_filename( vname, vname);
+
+  wb_vrepdb *vrepdb = new wb_vrepdb( this, vname);
+  vrepdb->name("directory");
+  addDb( &sts, vrepdb);
+  if ( EVEN(sts))
+    *status = LDH__PROJCONFIG;
+  else if ( !vol_cnt)
     *status = LDH__PROJCONFIG;
   else
     *status = LDH__SUCCESS;

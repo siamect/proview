@@ -226,7 +226,7 @@ void Wtt::menu_setup()
 
   switch( wb_type)
   {
-    case wb_eType_Project:
+    case wb_eType_Directory:
       if ( editmode)
       {
         XtSetValues( menu_save_w, sensitive, 1);
@@ -647,7 +647,7 @@ static void wtt_save_cb( void *ctx)
     return;
   }
 
-  if ( wtt->wb_type == wb_eType_Project)
+  if ( wtt->wb_type == wb_eType_Directory)
   {
     sts = lfu_SaveDirectoryVolume( wtt->ldhses, wtt->toplevel);
     if ( EVEN(sts))
@@ -919,7 +919,7 @@ int Wtt::set_noedit( wtt_eNoEditMode save, wtt_eNoEditVolMode detach)
     if ( save == wtt_eNoEdit_Save)
     {
       sts = ldh_SaveSession( ldhses);
-      if ( ODD(sts) && wb_type == wb_eType_Project)
+      if ( ODD(sts) && wb_type == wb_eType_Directory)
         sts = lfu_SaveDirectoryVolume( ldhses, toplevel);
     }
     else
@@ -3331,7 +3331,7 @@ Wtt::Wtt(
       *status = sts;
       return;
     }
-    if ( volid == ldh_cProjectVolume) volclass = pwr_eClass_DirectoryVolume; // Fix
+    if ( volid == ldh_cDirectoryVolume) volclass = pwr_eClass_DirectoryVolume; // Fix
 
     sts = ldh_VolumeIdToName( wbctx, volid, volname,
 		sizeof(volname), &size);
@@ -3343,8 +3343,8 @@ Wtt::Wtt(
     switch( volclass)
     {
       case pwr_eClass_DirectoryVolume:
-        wb_type = wb_eType_Project;
-        sprintf( title, "PwR Navigator Project %s, %s", volname, name);
+        wb_type = wb_eType_Directory;
+        sprintf( title, "PwR Navigator Directory %s, %s", volname, name);
         strcpy( layout_w1, "ProjectNavigatorW1");
         strcpy( layout_w2, "ProjectNavigatorW2");
         strcpy( layout_palette, "ProjectNavigatorPalette");
