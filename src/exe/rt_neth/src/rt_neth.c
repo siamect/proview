@@ -1034,6 +1034,7 @@ volumes (
   gdb_sNode		*np;
   pwr_tUInt32		nid = get->sender.nid;
 
+
   gdb_ScopeLock {
 
     np = hash_Search(&sts, gdbroot->nid_ht, &nid);
@@ -1060,10 +1061,13 @@ volumes (
           errh_Error("Volume %s (%s) is connected", vp->g.name.orig, cdh_VolumeIdToString(NULL, vp->g.vid, 1, 0));
         }
 
+        
         if (vp->l.flags.b.isMounted) {
+          errh_Info("!!cvolcm_ConnectVolume %s", &vmp->g[i].name);
           cvolcm_ConnectVolume(&sts, vp, &vmp->g[i], np);
           nConnect++;
         } else {
+          errh_Info("!!Volume %s is not mounted", &vmp->g[i].name);
           vmp->g[i].vid = pwr_cNVolumeId;
         }
       }
