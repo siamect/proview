@@ -56,6 +56,7 @@ extern "C" {
 #include "ge_subgraphs.h"
 #include "ge_util.h"
 #include "ge_msg.h"
+#include "wb_wnav_selformat.h"
 extern "C" {
 #include "ge_plant.h"
 }
@@ -835,18 +836,9 @@ static int ge_get_plant_select_cb( void *ge_ctx, char *select_name)
   ge_tCtx	gectx = (ge_tCtx)ge_ctx;
   pwr_sAttrRef	attrref;
   int		is_attrref;
-  int		sts, size;
-  char		*str_p;
+  int		sts;
   char		str[120];
-  char name[256];
-  char buff[256], attr_name[128], type_buff[80];
-  pwr_tClassId	classid, body_class;    
-  pwr_sGraphPlcNode *graph_body;
-  pwr_sAttrRef    attr_ref;
-  ldh_sParDef	    attr_def;
-  char    *p1, *p2;
-  char *s;
-
+  char buff[256];
 
   if ( !gectx->ldhses) {
     sts = wow_GetSelection( gectx->toplevel, str, sizeof(str), gectx->graph_atom);
@@ -862,81 +854,10 @@ static int ge_get_plant_select_cb( void *ge_ctx, char *select_name)
 
   sts = plant_get_select( gectx->plantctx, &attrref, &is_attrref);
   if ( ODD( sts)) {
+    if ( !wnav_format_selection( gectx->ldhses, attrref, 0, is_attrref, wnav_eSelectionMode_Normal,
+				 0, 1, 1, buff))
+      return 0;
 
-    if ( is_attrref) {
-
-      sts = ldh_AttrRefToName( gectx->ldhses, &attrref, ldh_eName_Aref, 
-			       &str_p, &size);
-      if ( EVEN(sts)) return sts;
-      strcpy( name, str_p);
-      if ( (s = strrchr( name, '.')))
-	strcpy( attr_name, s + 1);
-      else
-	strcpy( attr_name, "");
-      
-      sts = ldh_GetObjectClass( gectx->ldhses, attrref.Objid, &classid);
-      if ( EVEN(sts)) return 0;
-    }
-    else {
-      sts = ldh_ObjidToName( gectx->ldhses, attrref.Objid, ldh_eName_Hierarchy,
-			     str, sizeof(str), &size);
-      if ( EVEN(sts)) return sts;
-    
-
-      // Get the debugparameter if there is one else add ActualValue  
-      sts = ldh_GetObjectClass( gectx->ldhses, attrref.Objid, &classid);
-      if ( EVEN(sts)) return 0;
-
-      sts = ldh_GetClassBody( gectx->ldhses, classid, 
-			      "GraphPlcNode", &body_class, (char **)&graph_body, &size);
-      if ( ODD(sts)) {
-	strcpy( attr_name, graph_body->debugpar);
-      }
-      else
-	strcpy( attr_name, "ActualValue");
-
-      strcpy( name, str);
-      strcat( name, ".");
-      strcat( name, attr_name);
-    }
-
-    strcpy( buff, name);
-
-    // Check that attribute exists
-    sts = ldh_NameToAttrRef( gectx->ldhses, name, &attr_ref);
-    if (ODD(sts)) {
-      // If attribute is an array element get attribute definition for 
-      // the array.
-      if ( (p1 = strstr(attr_name, "[")))
-	*p1 = '\0';
-		
-      sts = ldh_GetAttrDef( gectx->ldhses, classid, "RtBody", attr_name, &attr_def);
-      if (EVEN(sts))
-	sts = ldh_GetAttrDef( gectx->ldhses, classid, "SysBody", 
-			      attr_name, &attr_def);
-      if ( ODD(sts) && gectx->graph->type_to_string( attr_def.Par->Input.Info.Type,
-						     type_buff, NULL)) {
-	char num[8];
-
-	if ( (p2 = strstr(buff, "[")))	
-	  *p2 = '\0';
-
-	if (attr_def.Par->Input.Info.Type == pwr_eType_String) {
-	  sprintf(num, "%d", attr_def.Par->Input.Info.Size/attr_def.Par->Input.Info.Elements);  
-	  strcat(type_buff, num);
-	}
-	strcat(buff, "##");
-	strcat(buff, type_buff);
-
-	// Check if array
-	if (p1) {
-	  sprintf(&buff[strlen(buff)], "#%d", 
-		  attr_def.Par->Input.Info.Elements); 
-	  *p1 = '[';
-	  strcat(buff, p1);
-	}
-      }
-    }
     strcpy( select_name, buff);
     return 1;
   }
