@@ -4393,6 +4393,15 @@ int	gre_set_trace_attributes( gre_ctx grectx)
         case pwr_cClass_cstoai:
         case pwr_cClass_cstoao:
         case pwr_cClass_cstoav:
+        case pwr_cClass_GetIi:
+        case pwr_cClass_GetIo:
+        case pwr_cClass_GetIv:
+        case pwr_cClass_stoii:
+        case pwr_cClass_stoio:
+        case pwr_cClass_stoiv:
+        case pwr_cClass_cstoii:
+        case pwr_cClass_cstoio:
+        case pwr_cClass_cstoiv:
           sts = ldh_GetObjectBodyDef( wind->hw.ldhsession, 
 			(*node_ptr)->ln.classid, "DevBody", 1, 
 			&bodydef, &rows);

@@ -612,6 +612,9 @@ static void xtt_activate_opengraph( Widget w, Xtt *xtt, XmAnyCallbackStruct *dat
       case pwr_eType_Float32:
         sprintf( filename, "pwr_exe:pwr_t_float32.pwg");
         break;
+      case pwr_eType_Int32:
+        sprintf( filename, "pwr_exe:pwr_t_int32.pwg");
+        break;
       case pwr_eType_Boolean:
         sprintf( filename, "pwr_exe:pwr_t_boolean.pwg");
         break;

@@ -236,6 +236,10 @@ int goen_create_nodetype_m7(
       flow_SetTraceAttr( cp, NULL,
 		bodydef[inputs+interns].Par->Output.Info.PgmName, 
 		flow_eTraceType_Float32);
+    else if (bodydef[inputs+interns].Par->Output.Info.Type == pwr_eType_Int32)
+      flow_SetTraceAttr( cp, NULL,
+		bodydef[inputs+interns].Par->Output.Info.PgmName, 
+		flow_eTraceType_Int32);
     else if (bodydef[inputs+interns].Par->Output.Info.Type == pwr_eType_Boolean)
       flow_SetTraceAttr( cp, NULL, 
 		bodydef[inputs+interns].Par->Output.Info.PgmName, 

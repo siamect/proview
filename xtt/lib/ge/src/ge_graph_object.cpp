@@ -44,6 +44,7 @@ typedef struct {
 	} graph_sObjectFunction;
 
 static int graph_attr_float32( Graph *graph, pwr_sAttrRef *attrref);
+static int graph_attr_int32( Graph *graph, pwr_sAttrRef *attrref);
 static int graph_attr_boolean( Graph *graph, pwr_sAttrRef *attrref);
 static int graph_object_ix( Graph *graph, pwr_tObjid objid);
 static int graph_object_ax( Graph *graph, pwr_tObjid objid);
@@ -199,13 +200,15 @@ int Graph::init_object_graph( int mode)
     sts = gdh_NameToAttrref( pwr_cNObjid, object_name, &attrref);
     if ( EVEN(sts)) return sts;
 
-    if ( strcmp( classname, "float32") == 0)
-    {
+    if ( strcmp( classname, "float32") == 0) {
       sts = graph_attr_float32( this, &attrref);
       return sts;
     }
-    else if ( strcmp( classname, "boolean") == 0)
-    {
+    if ( strcmp( classname, "int32") == 0) {
+      sts = graph_attr_int32( this, &attrref);
+      return sts;
+    }
+    else if ( strcmp( classname, "boolean") == 0) {
       sts = graph_attr_boolean( this, &attrref);
       return sts;
     }
@@ -269,7 +272,42 @@ static int graph_attr_float32( Graph *graph, pwr_sAttrRef *attrref)
 }
 
 //
-// Attribute graph for Float32
+// Attribute graph for Int32
+// 
+
+typedef struct {
+	graph_sObjectTrend 	td;
+	} graph_sAttrInt32;
+
+static void graph_attr_int32_scan( Graph *graph)
+{
+  graph_sAttrInt32 *od = (graph_sAttrInt32 *)graph->graph_object_data;
+
+  graph->trend_scan( &od->td);
+}
+
+static void graph_attr_int32_close( Graph *graph)
+{
+  free( graph->graph_object_data);
+}
+
+static int graph_attr_int32( Graph *graph, pwr_sAttrRef *attrref)
+{
+  int sts;
+  graph_sAttrInt32 *od;
+
+  od = (graph_sAttrInt32 *) calloc( 1, sizeof(graph_sAttrInt32));
+  graph->graph_object_data = (void *) od;
+  graph->graph_object_close = graph_attr_int32_close;
+  graph->graph_object_scan = graph_attr_int32_scan;
+
+  sts = graph->trend_init( &od->td, pwr_cNObjid);
+
+  return 1;
+}
+
+//
+// Attribute graph for Boolean
 // 
 
 typedef struct {
