@@ -203,6 +203,11 @@ int	foe_search_object (
 	char	*searchstr
 );
 
+int	foe_center_object ( 
+	foe_ctx foectx,
+	pwr_tOid oid
+);
+
 int foe_attr_create (
 	foe_ctx	foectx,
 	vldh_t_node	node

@@ -665,9 +665,11 @@ void WNav::set_inputfocus( int focus)
   }
   else
   {
-    XtCallAcceptFocus( brow_widget, CurrentTime);
-    XtSetArg(args[0], XmNborderColor, fg);
-    XtSetValues( form_widget, args, 1);
+    if ( flow_IsViewable( brow_widget)) {
+      XtCallAcceptFocus( brow_widget, CurrentTime);
+      XtSetArg(args[0], XmNborderColor, fg);
+      XtSetValues( form_widget, args, 1);
+    }
   }
 }
 
@@ -1057,11 +1059,42 @@ int WNav::open_plc()
       if ( classid == pwr_cClass_plc)
         sts = wnav_foe_new( (void *)parent_ctx, parent_wid, "PlcProgram1",
 		item->objid, wbctx, ldhses,
-		&foectx, 1, ldh_eAccess_ReadOnly);
+		&foectx, 1, ldh_eAccess_ReadOnly, pwr_cNOid);
       break;
     default:
      sts = 0;
   }
+  return sts;
+}
+
+//
+//  Open plc for specified object
+//
+int WNav::open_plc( pwr_tOid oid)
+{
+  pwr_tCid	cid;
+  int		sts = WNAV__SUCCESS;
+  void		*foectx;
+  pwr_tOid      plc;
+  bool		found;
+  
+  plc = oid;
+  while ( ODD(sts)) {
+    sts = ldh_GetObjectClass( ldhses, plc, &cid);
+    if ( EVEN(sts)) return sts;
+
+    if ( cid == pwr_cClass_plc) {
+      found = true;
+      break;
+    }
+    sts = ldh_GetParent( ldhses, plc, &plc);
+  }
+  if ( !found)
+    return WNAV__NOPLC;
+
+  sts = wnav_foe_new( (void *)parent_ctx, parent_wid, "PlcProgram1",
+		      plc, wbctx, ldhses,
+		      &foectx, 1, ldh_eAccess_ReadOnly, oid);
   return sts;
 }
 

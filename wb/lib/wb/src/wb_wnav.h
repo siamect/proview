@@ -301,6 +301,7 @@ class WNav {
     int menu_tree_delete( char *name);
     void pop();
     int open_plc();
+    int open_plc( pwr_tOid oid);
     int is_editmode() { return editmode;};
     void set_editmode( int value);
     int volume_attached( ldh_tSesContext ldhsession, int pop);

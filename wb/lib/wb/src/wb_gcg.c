@@ -28,6 +28,7 @@
 #include "co_dcli.h"
 #include "co_utl_batch.h"
 #include "co_msg.h"
+#include "co_api.h"
 #include "wb_foe_msg.h"
 #include "wb_vldh_msg.h"
 #include "wb_ldh_msg.h"
@@ -3620,7 +3621,9 @@ static int gcg_error_msg(
 	    fprintf(logfile, "%s\n", msg);
 	  else
 	    printf("%s\n", msg);
-	  if ( node != 0)
+	  if ( node == 0)
+	    msgw_message_sts( sts, 0, 0);
+	  else
 	  {
 	    /* Get the full hierarchy name for the node */
 	    status = ldh_ObjidToName( 
@@ -3632,6 +3635,7 @@ static int gcg_error_msg(
 	      fprintf(logfile, "        in object  %s\n", hier_name);
 	    else
 	      printf("        in object  %s\n", hier_name);
+	    msgw_message_plcobject( sts, "   in object", hier_name, node->ln.object_did);
 	  }
 	  if ( (sts & 2) && !(sts & 1))
 	    gcgctx->errorcount++;
@@ -3678,8 +3682,11 @@ int gcg_wind_msg(
 	  fprintf(logfile, "%s\n", msg);
 	else
 	  printf("%s\n", msg);
-	if ( wind != 0)
-	{
+	if ( wind == 0)
+	    msgw_message_sts( sts, 0, 0);
+	else {
+	  char str[80] = "";
+
 	  /* Get the full hierarchy name for the wind */
 	  status = ldh_ObjidToName( 
 		wind->hw.ldhsession, 
@@ -3696,6 +3703,7 @@ int gcg_wind_msg(
 	      fprintf(logfile, "%ld errors ", gcgctx->errorcount);
 	    else
 	      printf("%ld errors ", gcgctx->errorcount);
+	    sprintf( &str[strlen(str)], "%ld errors ", gcgctx->errorcount);
 	  }
 	  if ( gcgctx->warningcount > 0 )
 	  {
@@ -3703,11 +3711,15 @@ int gcg_wind_msg(
 	      fprintf(logfile, "%ld warnings ", gcgctx->warningcount);
 	    else
 	      printf("%ld warnings ", gcgctx->warningcount);
+	    sprintf( &str[strlen(str)], "%ld warnings ", gcgctx->warningcount);
 	  }
 	  if (logfile != NULL)
 	    fprintf(logfile, "in window  %s\n", hier_name);
 	  else
 	    printf("in window  %s\n", hier_name);
+	  sprintf( &str[strlen(str)], " in window");
+
+	  msgw_message_plcobject( sts, str, hier_name, wind->lw.objdid);
 	}
 	return GSX__SUCCESS;
 }
@@ -5411,6 +5423,8 @@ unsigned long	spawn;
 	  }
 	}
 
+	msgw_set_nodraw();
+
 	/* Create a context for the window */
 	gcg_ctx_new( &gcgctx, wind);
 	gcgctx->ldhses = wind->hw.ldhsession;
@@ -5569,6 +5583,8 @@ unsigned long	spawn;
 	    gcg_wind_msg( gcgctx, GSX__SWINDSUCC, wind);
 	}
 
+	msgw_reset_nodraw();
+
 	/* Close the files */
 	for( i = 0; i < GCGM1_MAXFILES; i++ )
 	  IF_PR fclose( gcgctx->files[i]);
@@ -5666,6 +5682,7 @@ unsigned long	spawn;
 classerror:
 	/* If error status from ldh */
 	gcg_wind_msg( gcgctx, GSX__CLASSERR, 0);
+	msgw_reset_nodraw();
 
   	/* Revert the session */
 	ldh_RevertSession( wind->hw.ldhsession);

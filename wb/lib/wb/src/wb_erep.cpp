@@ -4,7 +4,7 @@
 #include "pwr.h"
 #include "wb_erep.h"
 #include "wb_merep.h"
-#include "wb_vrepwbl.h"  // Should be wb_vrepdbs.h ...
+#include "wb_vrepwbl.h"
 #include "wb_vrepdbs.h"
 #include "wb_vrepdb.h"
 #include "wb_cdrep.h"
@@ -13,6 +13,7 @@
 #include "wb_adrep.h"
 #include "wb_name.h"
 #include "wb_ldh_msg.h"
+#include "co_msgwindow.h"
 
 extern "C" {
 #include "co_dcli.h"
@@ -419,7 +420,7 @@ void wb_erep::loadCommonMeta( pwr_tStatus *status)
                        sizeof(vol_array)/sizeof(vol_array[0]),
                        sizeof(vol_array[0]), 0);
       if ( nr != 2)
-        cout << "Syntax error in file: " << fname << endl;
+        MsgWindow::message( 'E', "Syntax error in file:", fname);
 
       // Load this volume
       cdh_ToLower( vol_array[0], vol_array[0]);
@@ -427,7 +428,7 @@ void wb_erep::loadCommonMeta( pwr_tStatus *status)
       strcat( vname, vol_array[0]);
       strcat( vname, ".dbs");
       cdh_StringToVolumeId( vol_array[1], &vid);
-      cout << "Loading volume: " << vname << " " << vid << endl;
+      MsgWindow::message( 'I', "Loading volume:", vname);
 
       wb_vrepdbs *vrep = new wb_vrepdbs( this, vname);
       try {
@@ -435,7 +436,7 @@ void wb_erep::loadCommonMeta( pwr_tStatus *status)
         addDbs( &sts, vrep);
       }
       catch ( wb_error& e) {
-        cout << "** Unable to open volume " << vname << " " << e.what() << endl;
+        MsgWindow::message( 'E', "Unable to open volume", vname, e.what().c_str());
       }
     }
     fpm.close();
@@ -583,16 +584,15 @@ void wb_erep::loadLocalWb( pwr_tStatus *rsts)
         addExtern( &sts, vrep);
       else {
         *rsts = sts;
-        cout << "** Failiure loading local workbench volume" << endl;
+        MsgWindow::message('E', "Failiure loading local workbench volume");
         return;
       }
     }
     catch ( wb_error& e) {
       *rsts = e.sts();
-      cout << "** Failiure loading local workbench volume" << endl;
-      return ;
+      MsgWindow::message('E', "Failiure loading local workbench volume");
+      return;
     }
-    cout << "-- Local workbench volume loaded" << endl;
   }
   *rsts = LDH__SUCCESS;
 }

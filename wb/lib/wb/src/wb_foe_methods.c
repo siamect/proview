@@ -1537,6 +1537,7 @@ int foe_new_local(
 	      on top of the stack ( ie to make is visible ) in any case */
 	      XtUnmapWidget( foectx->cp.parent_wid );
 	      XtMapWidget( foectx->cp.parent_wid );
+	      *return_foectx = foectx;
 	      return FOE__WINDEXIST;
 	    }
 	    else
@@ -2651,6 +2652,42 @@ int	foe_search_object (
 	if ( sts == GRE__CENTER)
 	  foe_message( foectx, "Unable to center object");
 #endif
+	gre_search_rectangle_create( foectx->grectx, node);
+
+	return FOE__SUCCESS;
+}
+
+
+/*************************************************************************
+*
+* Name:		int	foe_center_object()
+*
+* Type		int
+*
+* Type		Parameter	IOGF	Description
+* foe_ctx	*foectx		I	foe context.
+* pwr_tOid	oid		I	object to center.
+*
+* Description: 
+*
+**************************************************************************/
+
+int	foe_center_object ( 
+	foe_ctx foectx,
+	pwr_tOid oid
+)
+{
+	int		sts;
+	vldh_t_wind	wind;
+	vldh_t_node	node;
+
+	wind = foectx->grectx->window_object;
+	sts = vldh_get_node_objdid( oid, wind, &node);
+	if ( EVEN(sts)) return sts;
+
+	gre_unselect( foectx->grectx);
+	foe_message( foectx, "");
+	sts = gre_center_node( foectx->grectx, node);
 	gre_search_rectangle_create( foectx->grectx, node);
 
 	return FOE__SUCCESS;

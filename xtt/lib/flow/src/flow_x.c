@@ -79,3 +79,11 @@ Window flow_Window( Widget w)
   return XtWindow(w);
 }
 
+int flow_IsViewable( Widget w)
+{
+  XWindowAttributes xwa;
+  if ( XGetWindowAttributes( XtDisplay(w), XtWindow(w), &xwa) &&
+       xwa.map_state == IsViewable)
+    return 1;
+  return 0;
+}

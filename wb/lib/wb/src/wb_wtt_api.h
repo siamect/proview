@@ -9,4 +9,5 @@ int wnav_foe_new(
 	ldh_tSesContext	ldhsesctx,
 	void		**return_foectx,
 	int		map_window,
-	ldh_eAccess	access);
+	ldh_eAccess	access,
+	pwr_tOid	oid);

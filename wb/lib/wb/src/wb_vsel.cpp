@@ -42,7 +42,7 @@ extern "C" {
 #include "wb_foe_msg.h"
 #include "wb_ldh_msg.h"
 }
-
+#include "co_msgwindow.h"
 
 #define	BEEP	    putchar( '\7' );
 
@@ -630,6 +630,7 @@ pwr_tStatus WVsel::check_volumelist(
 	int		volume_found;
 	int		error_count;
 	int		errlen=0;
+	int		errlen_old = 0;
 	char		errstr[800];
 
 	error_count = 0;
@@ -692,6 +693,8 @@ pwr_tStatus WVsel::check_volumelist(
 	            errlen += sprintf( &errstr[errlen], 
 		      "** Error, Volume %s is configured with another name '%s'\n", 
 		      name, volumelist_ptr->volume_name);
+		    MsgWindow::message( 'E', &errstr[errlen_old], msgw_ePop_No);
+		    errlen_old = errlen;
                     BEEP;
 	          }
 	          error_count++;
@@ -723,6 +726,8 @@ pwr_tStatus WVsel::check_volumelist(
 	            errlen += sprintf( &errstr[errlen], 
 	                "** Error, Volume %s is configured with another class '%s'\n", 
 		        name, volumelist_ptr->p2);
+		    MsgWindow::message( 'E', &errstr[errlen_old], msgw_ePop_No);
+		    errlen_old = errlen;
                     BEEP;
 	          }
 	          error_count++;
@@ -738,6 +743,8 @@ pwr_tStatus WVsel::check_volumelist(
 	        errlen += sprintf( &errstr[errlen], 
 	        	"** Error, Volume %s is not configured in the ProjectVolume\n", 
 		        name);
+		MsgWindow::message( 'E', &errstr[errlen_old], msgw_ePop_No);
+		errlen_old = errlen;
                 BEEP;
 	      }	
 	      error_count++;
@@ -754,6 +761,8 @@ pwr_tStatus WVsel::check_volumelist(
 	    errlen += sprintf( &errstr[errlen],
 	    	"\n   %d syntax error%s found\n", 
 		error_count, (error_count == 1) ? "" : "s");
+	    MsgWindow::message( 'E', &errstr[errlen_old], msgw_ePop_No);
+	    errlen_old = errlen;
 	    wow_DisplayError( widgets.vsel_window, "Syntax control",
 		errstr);
 	  }

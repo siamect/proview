@@ -6,9 +6,10 @@
    <Description>.  */
 
 #include <stdio.h>
-# include <string.h>
+#include <string.h>
 #include <stdlib.h>
-# include <unistd.h>
+#include <unistd.h>
+#include <map>
 #include <Xm/Xm.h>
 
 #include "flow.h"
@@ -36,6 +37,7 @@ extern "C" {
 }
 
 #include "wb_vsel.h"
+#include "co_msgwindow.h"
 #include "wb_wtt.h"
 
 #include "wb_env.h"
@@ -43,6 +45,7 @@ extern "C" {
 #include "wb_vrepwbl.h"
 #include "wb_vrepdbs.h"
 
+using namespace std;
 
 /*  Fallback resources  */
 
@@ -56,6 +59,9 @@ static String	fbr[] = {
     "*XmLabelGadget.fontList: -*-helvetica-bold-r-*--12-*",
     NULL  
     };
+
+typedef map<pwr_tVid, Wtt*>::iterator wttlist_iterator;
+static map<pwr_tVid, Wtt*> wttlist;
 
 static  Widget toplevel;
 static  Widget mainwindow;
@@ -74,6 +80,40 @@ void	pwr_login_cancel();
 void	pwr_wtt_close( void *wttctx);
 void	pwr_wtt_open_volume( void *wttctx, wb_eType type, char *filename, wow_eFileSelType file_type);
 int	pwr_time_to_exit( void *wttctx);
+
+void wttlist_add( pwr_tStatus *sts, Wtt *wtt, pwr_tVid vid)
+{
+  wttlist_iterator it = wttlist.find( vid); 
+  if ( it == wttlist.end()) {
+    wttlist[vid] = wtt;
+    *sts = LDH__SUCCESS;
+  }
+  else
+    *sts = LDH__VOLIDALREXI;
+}
+
+void wttlist_remove( pwr_tStatus *sts, Wtt* wtt)
+{
+  for ( wttlist_iterator it = wttlist.begin(); it != wttlist.end(); it++) {
+    if ( it->second == wtt) {
+      wttlist.erase( it);
+      *sts = LDH__SUCCESS;
+      return;
+    }
+  }
+  *sts = LDH__NOSUCHVOL;
+}
+
+void wttlist_find( pwr_tStatus *sts, pwr_tVid vid, Wtt **wtt)
+{
+  wttlist_iterator it = wttlist.find( vid);
+  if ( it == wttlist.end()) {
+    *sts = LDH__NOSUCHVOL;
+    return;
+  }
+  *sts = LDH__SUCCESS;
+  *wtt = it->second;
+}
 
 void
 help_error()
@@ -112,14 +152,81 @@ int	wb_get_db_id( void)
   return sts;
 }
 
+static void wb_find_wnav_cb( void *ctx, pwr_tOid oid)
+{
+  char title[80];
+  char projectname[80];
+  pwr_tStatus sts;
+  Wtt *wtt;
+  printf( "Here in find wnav...\n");
+
+  wttlist_find( &sts, oid.vid, &wtt);
+  if ( ODD(sts)) {
+    printf( "Wtt Found\n");
+    sts = wtt->find( oid);
+    wtt->pop();
+  }
+  else {
+    utl_get_projectname( projectname);
+    strcpy( title, login_prv.username);
+    strcat( title, " on ");
+    strcat( title, projectname);
+
+    wtt = new Wtt( 0, toplevel, title, "Navigator", wbctx, oid.vid, 0, 0, &sts);
+    if (ODD(sts)) {
+      appl_count++;
+      wtt->close_cb = pwr_wtt_close;
+      wtt->open_volume_cb = pwr_wtt_open_volume;
+      wtt->time_to_exit_cb = pwr_time_to_exit;
+      wttlist_add( &sts, wtt, oid.vid);
+      sts = wtt->find( oid);
+    }
+  }
+}
+
+static void wb_find_plc_cb( void *ctx, pwr_tOid oid)
+{
+  printf( "Here in find plc...\n");
+  char title[80];
+  char projectname[80];
+  pwr_tStatus sts;
+  Wtt *wtt;
+  printf( "Here in find wnav...\n");
+
+  wttlist_find( &sts, oid.vid, &wtt);
+  if ( ODD(sts)) {
+    printf( "Wtt Found\n");
+    sts = wtt->find_plc( oid);
+  }
+  else {
+    utl_get_projectname( projectname);
+    strcpy( title, login_prv.username);
+    strcat( title, " on ");
+    strcat( title, projectname);
+
+    wtt = new Wtt( 0, toplevel, title, "Navigator", wbctx, oid.vid, 0, 0, &sts);
+    if (ODD(sts)) {
+      appl_count++;
+      wtt->close_cb = pwr_wtt_close;
+      wtt->open_volume_cb = pwr_wtt_open_volume;
+      wtt->time_to_exit_cb = pwr_time_to_exit;
+      wttlist_add( &sts, wtt, oid.vid);
+      sts = wtt->find_plc( oid);
+    }
+  }
+}
+
 void	pwr_login_success()
 {
   char title[80];
   char systemname[80];
   char systemgroup[80];
   pwr_tStatus sts;
+  char msg[80];
 
   printf( "-- Successfull login\n");
+  sprintf( msg, "User %s logged in", login_prv.username);
+  MsgWindow::message( 'I', msg);
 
   /* Successfull login, start the volume selection */ 
 
@@ -144,6 +251,8 @@ void	pwr_login_success()
 
 void	pwr_wtt_close( void *wttctx)
 {
+  pwr_tStatus sts;
+  wttlist_remove( &sts, (Wtt *)wttctx);
   appl_count--;
   if (appl_count == 0)
   {
@@ -186,7 +295,11 @@ void	pwr_wtt_open_volume( void *wttctx, wb_eType type, char *filename, wow_eFile
         // Load volume as extern
 	wb_erep *erep = (wb_erep *)(*(wb_env *)wbctx);
         wb_vrepwbl *vrep = new wb_vrepwbl( erep);
-        vrep->load( filename);
+        sts = vrep->load( filename);
+	if ( vrep->vid() == 0) {
+	  delete vrep;
+	  return;
+	}
 	erep->addExtern( &sts, vrep);
 
         // Attach extern volume
@@ -265,6 +378,7 @@ int	pwr_vsel_success(	void 	*vselctx,
         wtt->close_cb = pwr_wtt_close;
 	wtt->open_volume_cb = pwr_wtt_open_volume;
 	wtt->time_to_exit_cb = pwr_time_to_exit;
+	wttlist_add( &sts, wtt, volume);
       }
       else
         sts = status;
@@ -356,6 +470,33 @@ int main( int argc, char *argv[])
     }
   }
 
+  /* REGISTER WITH MRM HERE. */
+  MrmInitialize();
+
+  toplevel = XtVaAppInitialize (
+		      &app_ctx, 
+		      WB_CLASS_NAME,
+		      NULL, 0, 
+		      &argc, argv, 
+		      fbr, 
+		      XtNallowShellResize,  True,
+		      XmNmappedWhenManaged, False,
+		      NULL);
+    
+
+  uilutil_fetch( &uid_filename_p, 1, 0, 0,
+		toplevel, "mainwindow", "svn_svn", 0, 0,
+		&mainwindow, NULL );
+
+  XtManageChild(mainwindow);
+
+  // Create message window
+  MsgWindow *msg_window = new MsgWindow( 0, mainwindow, "Workbench messages", &sts);
+  msg_window->find_wnav_cb = wb_find_wnav_cb;
+  msg_window->find_plc_cb = wb_find_plc_cb;
+  MsgWindow::set_default( msg_window);
+  MsgWindow::message( 'I', "Development environment started");
+
   sts = ldh_OpenWB(&wbctx);
   psts(sts, NULL);
   if (EVEN(sts)) exit(sts);
@@ -398,45 +539,28 @@ int main( int argc, char *argv[])
       login_display = 1;
     }
   }
+  if ( !login_display) {
+    char msg[80];
 
-  /* REGISTER WITH MRM HERE. */
-  MrmInitialize();
+    sprintf( msg, "User %s logged in", login_prv.username);
+    MsgWindow::message( 'I', msg);
 
-  strcpy( title, "PROVIEW/R Development ");
-  strcat( title, login_prv.username);
-  strcat( title, " on ");
-  strcat( title, systemname);
-
-
-  toplevel = XtVaAppInitialize (
-		      &app_ctx, 
-		      WB_CLASS_NAME,
-		      NULL, 0, 
-		      &argc, argv, 
-		      fbr, 
-		      XtNallowShellResize,  True,
-		      XtNtitle, title,
-		      XmNmappedWhenManaged, False,
-		      NULL);
-    
-
-  uilutil_fetch( &uid_filename_p, 1, 0, 0,
-		toplevel, "mainwindow", "svn_svn", 0, 0,
-		&mainwindow, NULL );
-
-  XtManageChild(mainwindow);
+    strcpy( title, "PROVIEW/R Development ");
+    strcat( title, login_prv.username);
+    strcat( title, " on ");
+    strcat( title, systemname);
+    XtSetArg(args[0],XmNtitle, title);
+    XtSetValues( toplevel, args, 1);
+  }
 
   sts = wb_get_db_id();
   psts(sts, NULL);
 
   if ( sw_projectvolume) {
 
-#define ldh_cProjectVolume  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 253)
-
-
     Wtt *wtt;
     char		projectname[80];
-    pwr_tVolumeId volume = ldh_cProjectVolume;
+    pwr_tVolumeId volume = ldh_cDirectoryVolume;
     utl_get_projectname( projectname);
     strcpy( title, login_prv.username);
     strcat( title, " on ");
@@ -447,6 +571,7 @@ int main( int argc, char *argv[])
       wtt->close_cb = pwr_wtt_close;
       wtt->open_volume_cb = pwr_wtt_open_volume;
       wtt->time_to_exit_cb = pwr_time_to_exit;
+      wttlist_add( &sts, wtt, volume);
     }
     else
       psts(sts, NULL);

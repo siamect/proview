@@ -18,9 +18,11 @@ int wnav_foe_new(
 	ldh_tSesContext	ldhsesctx,
 	void		**return_foectx,
 	int		map_window,
-	ldh_eAccess	access)
+	ldh_eAccess	access,
+	pwr_tOid	oid)
 {
-  return foe_new( 
+  int sts;
+  sts =  foe_new( 
 	parent_ctx,
 	parent_wid,
 	name,
@@ -30,5 +32,7 @@ int wnav_foe_new(
 	(foe_ctx *)return_foectx,
 	map_window,
 	access);
+  if ( ODD(sts) && cdh_ObjidIsNotNull(oid))
+    foe_center_object( *return_foectx, oid);
 }
 

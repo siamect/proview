@@ -254,7 +254,7 @@ void EvListBrow::create_nodeclasses()
   brow_CreateNodeClass( ctx, "Info", 
 		flow_eNodeGroup_Common, &nc_info);
   brow_AddFrame( nc_info, 0, 0, 35, 0.8, flow_eDrawType_Line, -1, 1);
-  brow_AddFilledRect( nc_info, 0.15, 0.1, 0.4, 0.4, flow_eDrawType_Green);
+  brow_AddFilledRect( nc_info, 0.2, 0.15, 0.4, 0.4, flow_eDrawType_Green);
   brow_AddRect( nc_info, 0.2, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
   brow_AddAnnot( nc_info, 0.8, 0.6, 0,
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 

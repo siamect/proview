@@ -1,6 +1,36 @@
+#if defined OS_VMS && defined __ALPHA
+# pragma message disable (NOSIMPINT,EXTROUENCUNNOBJ)
+#endif
+
+#if defined OS_VMS && !defined __ALPHA
+# pragma message disable (LONGEXTERN)
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
 
 extern "C" {
 #include "pwr.h"
+}
+
+#include <Xm/Xm.h>
+#include <Mrm/MrmPublic.h>
+#ifndef _XtIntrinsic_h
+#include <X11/Intrinsic.h>
+#endif
+#include <X11/IntrinsicP.h>
+
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
+
+#include "flow.h"
+#include "flow_browctx.h"
+#include "flow_browapi.h"
+#include "flow_browwidget.h"
+
+#include "co_msgwindow.h"
+
+extern "C" {
 #include "co_api.h"
 #include "co_dcli.h"
 }
@@ -86,5 +116,38 @@ void lng_get_uid( char *in, char *out)
 char *lng_translate( char *str)
 {
   return Lng::translate( str);
+}
+
+//
+// c api to co_msgwindow
+//
+void msgw_message( int severity, char *text, msgw_ePop pop)
+{
+  MsgWindow::message( severity, text, pop);
+}
+
+void msgw_message_sts( pwr_tStatus sts, char *text1, char *text2)
+{
+  MsgWindow::message( wb_error(sts), text1, text2);
+}
+
+void msgw_message_object( pwr_tStatus sts, char *text1, char *text2, pwr_tOid oid)
+{
+  MsgWindow::message( wb_error(sts), text1, text2, oid);
+}
+
+void msgw_message_plcobject( pwr_tStatus sts, char *text1, char *text2, pwr_tOid oid)
+{
+  MsgWindow::message( wb_error(sts), text1, text2, oid, true);
+}
+
+void msgw_set_nodraw()
+{
+  MsgWindow::dset_nodraw();
+}
+
+void msgw_reset_nodraw()
+{
+  MsgWindow::dreset_nodraw();
 }
 

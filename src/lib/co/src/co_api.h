@@ -13,6 +13,14 @@ typedef enum {
 	} navc_eItemType;
 #endif
 
+#if !defined co_msgwindow_h
+typedef enum {
+  msgw_ePop_No,
+  msgw_ePop_Yes,
+  msgw_ePop_Default
+} msgw_ePop;
+#endif
+
 int user_CheckUser( char *systemgroup, char *user, char *password, 
 	unsigned int *priv);
 int user_CheckSystemGroup( char *systemgroup);
@@ -33,7 +41,21 @@ int crr_object( void *parent_ctx, char *objectname,
 		int (*name_to_objid_cb)( void *, char *, pwr_tObjid *),
 		int (*get_volume_cb)( void *, pwr_tVolumeId *));
 
+void msgw_message( int severity, char *text, msgw_ePop pop);
+void msgw_message_sts( pwr_tStatus sts, char *text1, char *text2);
+void msgw_message_object( pwr_tStatus sts, char *text1, char *text2, pwr_tOid oid);
+void msgw_message_plcobject( pwr_tStatus sts, char *text1, char *text2, pwr_tOid oid);
+void msgw_set_nodraw();
+void msgw_reset_nodraw();
 #if defined __cplusplus
 }
 #endif
 #endif
+
+
+
+
+
+
+
+

@@ -25,6 +25,7 @@ void flow_MapWidget( Widget w);
 Screen *flow_Screen( Widget w);
 Display *flow_Display( Widget w);
 Window flow_Window( Widget w);
+int flow_IsViewable( Widget w);
 
 #if defined __cplusplus
 }

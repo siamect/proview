@@ -246,6 +246,9 @@ class Wtt {
     int get_select_first( pwr_sAttrRef *attrref, int *is_attr);
     void register_utility( void *ctx, wb_eUtility utility);
     void set_focus_default();
+    void pop();
+    int find( pwr_tOid oid);
+    int find_plc( pwr_tOid oid);
 
     ~Wtt();
 };

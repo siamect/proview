@@ -45,6 +45,7 @@ procedure
 	wtt_activate_createboot(integer);
 	wtt_activate_distribute(integer);
 	wtt_activate_twowindows(integer);
+	wtt_activate_messages(integer);
 	wtt_activate_openplc(integer);
 	wtt_activate_compile(integer);
 	wtt_activate_showcrossref(integer);
@@ -879,6 +880,21 @@ object view_entry : XmCascadeButton
 	  callbacks
           {
             XmNactivateCallback = procedure wtt_activate_twowindows(wtt_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Messages");
+            XmNmnemonic = keysym('M');
+	    !XmNaccelerator = "Ctrl<Key>W";
+	    !XmNacceleratorText = compound_string('Ctrl+W');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_messages(wtt_ctx);
           };
 	};
       };

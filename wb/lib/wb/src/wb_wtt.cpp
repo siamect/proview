@@ -65,6 +65,7 @@ extern "C" {
 #include "wb_wnav_msg.h"
 #include "wb_volume.h"
 #include "wb_env.h"
+#include "co_msgwindow.h"
 
 
 #define MESSAGE_RETURN_STS(sts)\
@@ -2148,6 +2149,11 @@ static void wtt_activate_twowindows( Widget w, Wtt *wtt, XmAnyCallbackStruct *da
   wtt->set_twowindows( !wtt->twowindows, 0, 0);
 }
 
+static void wtt_activate_messages( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
+{
+  MsgWindow::map_default();
+}
+
 static void wtt_activate_view( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
 {
   wtt->update_options_form();
@@ -3275,6 +3281,7 @@ Wtt::Wtt(
 	{"wtt_activate_zoom_out",(caddr_t)wtt_activate_zoom_out },
 	{"wtt_activate_zoom_reset",(caddr_t)wtt_activate_zoom_reset },
 	{"wtt_activate_twowindows",(caddr_t)wtt_activate_twowindows },
+	{"wtt_activate_messages",(caddr_t)wtt_activate_messages },
 	{"wtt_activate_view",(caddr_t)wtt_activate_view },
 	{"wtt_activate_savesettings",(caddr_t)wtt_activate_savesettings },
 	{"wtt_activate_restoresettings",(caddr_t)wtt_activate_restoresettings },
@@ -3575,6 +3582,41 @@ Wtt::~Wtt()
   delete palette;
 
   XtDestroyWidget( toplevel);
+}
+
+void Wtt::pop()
+{
+  flow_UnmapWidget( toplevel);
+  flow_MapWidget( toplevel);
+}
+
+int Wtt::find( pwr_tOid oid)
+{
+  pwr_tStatus sts;
+
+  sts = wnav->display_object( oid);
+  if ( ODD(sts)) {
+    if ( !wnav_mapped)
+      set_twowindows( 1, 0, 0);
+    return WNAV__SUCCESS;
+  }
+  else {
+    sts = wnavnode->display_object( oid);
+    if ( ODD(sts)) {
+      if ( !wnavnode_mapped)
+	set_twowindows( 1, 0, 0);
+      return WNAV__SUCCESS;
+    }
+  }
+  return sts;
+}
+
+int Wtt::find_plc( pwr_tOid oid)
+{
+  if ( !focused_wnav)
+    set_focus_default();
+  pwr_tStatus sts = focused_wnav->open_plc( oid);
+  return sts;
 }
 
 WttApplListElem::WttApplListElem( wb_eUtility al_type, void *al_ctx, 

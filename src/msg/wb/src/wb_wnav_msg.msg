@@ -38,3 +38,8 @@ cmdmode		<Session is in command mode>			/error
 dbopen		<Database is already open>			/error
 co_convert      <Error from co_convert>                         /error
 seltomany	<Too many objects is selected>			/error
+noplc		<Object is not a plc object>			/error
+
+
+
+

@@ -194,6 +194,7 @@ wb_orep* wb_vrepdb::object(pwr_tStatus *sts, pwr_tOid oid)
 
 wb_orep* wb_vrepdb::object(pwr_tStatus *sts, wb_name &name)
 {
+  *sts = LDH__NYI;
   return 0;
 }
 
@@ -621,6 +622,10 @@ wb_orep *wb_vrepdb::parent(pwr_tStatus *sts, const wb_orep *orp)
   *sts = LDH__SUCCESS;
   try {
     m_ohead.get(m_txn, m_ohead.get(m_txn, orp->oid()).poid());
+    if ( m_ohead.oid().oix == 0) {
+      *sts = LDH__NO_PARENT;
+      return 0;
+    }
     return new (this) wb_orepdb(&m_ohead.m_o);
   }
   catch (DbException &e) {

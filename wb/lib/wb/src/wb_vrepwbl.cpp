@@ -18,6 +18,7 @@
 #include "wb_merep.h"
 #include "wb_tdrep.h"
 #include "wb_ldh_msg.h"
+#include "co_msgwindow.h"
 
 extern "C" {
 #include "co_dcli.h"
@@ -71,7 +72,10 @@ wb_vrep *wb_vrepwbl::next()
 
 void wb_vrepwbl::error( const char *msg, const char *file, int line_number)
 {
-  cout << "Wbl error: " << msg << ", " << file << " line: " << line_number << endl;
+  char str[400];
+  sprintf( str, "Wbl error: %s, %s line: %d", msg, file, line_number);
+  MsgWindow::message( 'E', str);
+  // cout << "Wbl error: " << msg << ", " << file << " line: " << line_number << endl;
   error_cnt++;
 }
 
@@ -208,9 +212,14 @@ int wb_vrepwbl::load( const char *fname)
 
   rsts = LDH__SUCCESS;
 
+  MsgWindow::dset_nodraw();
+
   if ( strstr( fname, ".wb_load") != 0) {
     sts = load_files( fname);
-    if ( EVEN(sts)) return sts;
+    if ( EVEN(sts)) {
+      MsgWindow::dreset_nodraw();
+      return sts;
+    }
   }
   else {
     // Load all wb_load files in directory
@@ -264,10 +273,15 @@ int wb_vrepwbl::load( const char *fname)
     root_object->postBuild();
   }
   // info();
-  if ( error_cnt)
-    cout << "** Errors when loading volume: " << error_cnt << " errors found" << endl;
+  if ( error_cnt) {
+    char str[80];
+    sprintf( str, "Errors when loading volume: %d errors found", error_cnt);
+    MsgWindow::message( 'F', str);
+  }
   else
-    cout << "-- Volume " << volume_name << " loaded" << endl;
+    MsgWindow::message( 'I', "Volume", volume_name, "loaded");
+
+  MsgWindow::dreset_nodraw();
 
   // If classvolume, insert itself into its merep
   if ( cid() == pwr_eClass_ClassVolume ) {
