@@ -38,11 +38,14 @@ public:
 
   wb_volume volume(const char *name);
   wb_volume externVolume(pwr_tVid);
+  wb_volume bufferVolume();
     
   wb_volume snapshot(pwr_tVid);
 
 
   wb_volume createVolume(wb_cdef cdef, pwr_tVid vid, wb_name name);
+
+  int nextVolatileVid( char *name) { return m_erep->nextVolatileVid( &m_sts, name); }
     
 };
 

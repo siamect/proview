@@ -76,6 +76,13 @@ wb_volume wb_env::externVolume(pwr_tVid vid)
   return v;
 }
 
+wb_volume wb_env::bufferVolume()
+{
+  wb_vrep *vrep = m_erep->bufferVolume( &m_sts);
+  wb_volume v( vrep);
+  return v;
+}
+
 wb_volume wb_env::volume(const char *name)
 {
   wb_volume v( m_erep->volume( &m_sts, name));

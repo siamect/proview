@@ -78,6 +78,7 @@ public:
   bool isLocal(wb_object &o) const;
     
   bool createSnapshot(const char *fileName) { return m_vrep->createSnapshot(fileName);}
+  bool exportTree( wb_volume &import, pwr_tOid oid);
     
   pwr_tStatus syntaxCheck( int *errorcount, int *warningcount);
   pwr_tStatus syntaxCheckObject( wb_orep *orep, int *errorcount, int *warningcount);
@@ -94,3 +95,13 @@ public:
 };
 
 #endif
+
+
+
+
+
+
+
+
+
+

@@ -55,6 +55,7 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, wb_adrep* adrep, int 
       m_elements = m_adrep->nElement();
       m_type = m_adrep->type();
       m_flags = m_adrep->flags();
+      m_bix = m_adrep->bix();
 
       if (m_flags & PWR_MASK_ARRAY) {
         if (idx >= m_elements)
@@ -87,7 +88,7 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, wb_adrep* adrep, int 
       }
 
       m_size = bdef.size();
-      
+      m_bix = bdef.bix();
     }
   }
 }
@@ -104,6 +105,7 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, const char *bname) :
       wb_bdrep *bd = cd->bdrep( &m_sts, bname);
       if ( oddSts()) {
         m_size = bd->size();
+	m_bix = bd->bix();
         delete bd;
       }
       delete cd;
@@ -343,9 +345,12 @@ pwr_tCid wb_attribute::cid() const
 
 pwr_eBix wb_attribute::bix() const
 {
-  throw wb_error_str("wb_attribute::bix() NYI");
+  check();
 
-  return pwr_eBix__;  // Fix
+  if (m_flags & PWR_MASK_SUBCLASS)
+    return m_bix;
+
+  return m_adrep->bix();
 }
 
 pwr_tOid wb_attribute::boid() const
@@ -388,7 +393,10 @@ void *wb_attribute::value( void *p) const
   check();
 
   if ( m_adrep == 0) {
-    return m_orep->vrep()->readBody( &sts, m_orep, pwr_eBix_rt, p);
+    if ( m_bix == pwr_eBix_dev)
+      return m_orep->vrep()->readBody( &sts, m_orep, pwr_eBix_dev, p);
+    else
+      return m_orep->vrep()->readBody( &sts, m_orep, pwr_eBix_rt, p);
   }
   
   if (m_flags & PWR_MASK_SUBCLASS)
@@ -435,7 +443,7 @@ wb_attribute wb_attribute::after() const
     return wb_attribute();
 
   wb_adrep* adrep = m_adrep->next(&sts);
-  if (evenSts())
+  if (EVEN(sts))
     return wb_attribute();
   
   wb_attribute a(LDH__SUCCESS, m_orep, adrep);
@@ -462,7 +470,7 @@ wb_attribute wb_attribute::before() const
     return wb_attribute();
 
   wb_adrep* adrep = m_adrep->prev(&sts);
-  if (evenSts())
+  if (EVEN(sts))
     return wb_attribute();
   
   wb_attribute a(LDH__SUCCESS, m_orep, adrep);

@@ -3,6 +3,7 @@
 #include "wb_erep.h"
 #include "wb_merep.h"
 #include "wb_import.h"
+#include "wb_treeimport.h"
 
 void wb_vrepdbs::unref()
 {
@@ -481,4 +482,54 @@ bool wb_vrepdbs::exportMeta(wb_import &i)
 {
   return false;
 }
+
+bool wb_vrepdbs::exportTree(wb_treeimport &i, pwr_tOid oid)
+{
+  pwr_tStatus sts;
+
+  dbs_sObject *op = dbs_OidToObject( &sts, dbsenv(), oid);
+  if (op == 0)
+    return false;
+
+  exportTreeObject( i, op, true);
+  return true;
+}
+
+bool wb_vrepdbs::exportTreeObject(wb_treeimport &i, dbs_sObject *op, bool isRoot)
+{
+  pwr_tStatus sts;
+  dbs_sObject *before = dbs_Before(&sts, dbsenv(), op);
+  dbs_sObject *parent = dbs_Parent(&sts, dbsenv(), op);
+  dbs_sObject *first = dbs_First(&sts, dbsenv(), op);
+  dbs_sObject *after = dbs_After(&sts, dbsenv(), op);
+  pwr_tOid parentoid = pwr_cNOid;
+  pwr_tOid beforeoid = pwr_cNOid;
+  void *rbody = 0;
+  void *dbody = 0;
+
+  if ( parent && !isRoot)
+    parentoid = parent->oid;
+  if ( before && !isRoot)
+    beforeoid = before->oid;
+  if ( op->rbody.size)
+    rbody = dbs_Body(&sts, dbsenv(), op, pwr_eBix_rt);
+  if ( op->dbody.size)
+    dbody = dbs_Body(&sts, dbsenv(), op, pwr_eBix_dev);
+
+  i.importTreeObject( op->oid, op->cid, parentoid, beforeoid, op->name, 
+		      op->rbody.size, op->dbody.size, rbody, dbody);
+
+  if ( first)
+    exportTreeObject( i, first, false);
+
+  if ( !isRoot && after)
+    exportTreeObject( i, after, false);
+
+  return true;
+}
+
+
+
+
+
 

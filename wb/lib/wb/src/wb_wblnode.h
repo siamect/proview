@@ -16,6 +16,7 @@ class wb_vrepwbl;
 class wb_vrep;
 class wb_dbs;
 class wb_import;
+class wb_treeimport;
 
 typedef enum {
   wbl_eNodeType_No,
@@ -243,6 +244,7 @@ public:
     bool exportHead(wb_import &i);
     bool exportDbody(wb_import &i);
     bool exportRbody(wb_import &i);
+    bool exportTree(wb_treeimport &i, bool isRoot);
 
 #if 0
     void iterObject(wb_dbs *);

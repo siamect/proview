@@ -159,6 +159,15 @@ extern "C" void wtt_distrw_quit_cb( void *ctx)
   ((Wtt *)ctx)->distrwctx = NULL;
 }
 
+static void wtt_open_vsel_cb( void *ctx, wb_eType type, char *filename, wow_eFileSelType file_type)
+{
+  Wtt *wtt = (Wtt *)ctx;
+
+  if ( wtt->open_volume_cb)
+    (wtt->open_volume_cb) ( wtt, type, filename, file_type);
+
+}
+
 static void wtt_set_window_char_cb( void *ctx, short width, short height)
 {
   Wtt *wtt = (Wtt *)ctx;
@@ -317,6 +326,40 @@ void Wtt::menu_setup()
         XtSetValues( menu_change_value_w, nosensitive, 1);
       }
       break;
+    case wb_eType_Buffer:
+      if ( editmode)
+      {
+        XtSetValues( menu_save_w, sensitive, 1);
+        XtSetValues( menu_revert_w, nosensitive, 1);
+        XtSetValues( menu_cut_w, sensitive, 1);
+        XtSetValues( menu_copy_w, sensitive, 1);
+        XtSetValues( menu_paste_w, sensitive, 1);
+        XtSetValues( menu_rename_w, sensitive, 1);
+        XtSetValues( menu_utilities_w, sensitive, 1);
+        XtSetValues( menu_openplc_w, nosensitive, 1);
+        XtSetValues( menu_compile_w, nosensitive, 1);
+        XtSetValues( menu_createload_w, nosensitive, 1);
+        XtSetValues( menu_createboot_w, nosensitive, 1);
+        XtSetValues( menu_distribute_w, nosensitive, 1);
+        XtSetValues( menu_change_value_w, sensitive, 1);
+      }
+      else
+      {
+        XtSetValues( menu_save_w, nosensitive, 1);
+        XtSetValues( menu_revert_w, nosensitive, 1);
+        XtSetValues( menu_cut_w, nosensitive, 1);
+        XtSetValues( menu_copy_w, nosensitive, 1);
+        XtSetValues( menu_paste_w, nosensitive, 1);
+        XtSetValues( menu_rename_w, nosensitive, 1);
+        XtSetValues( menu_utilities_w, sensitive, 1);
+        XtSetValues( menu_openplc_w, sensitive, 1);
+        XtSetValues( menu_compile_w, nosensitive, 1);
+        XtSetValues( menu_createload_w, nosensitive, 1);
+        XtSetValues( menu_createboot_w, nosensitive, 1);
+        XtSetValues( menu_distribute_w, nosensitive, 1);
+        XtSetValues( menu_change_value_w, nosensitive, 1);
+      }
+      break; 
     default:
       ;
   }
@@ -560,7 +603,7 @@ static void wtt_file_selected_cb( void *ctx, char *filename, wow_eFileSelType fi
   Wtt *wtt = (Wtt *)ctx;
 
   if ( wtt->open_volume_cb)
-    (wtt->open_volume_cb) ( wtt, filename, file_type);
+    (wtt->open_volume_cb) ( wtt, wb_eType_Volume, filename, file_type);
 }
 
 static void wtt_save_cb( void *ctx)
@@ -1794,7 +1837,7 @@ static void wtt_activate_openvolume( Widget w, Wtt *wtt, XmAnyCallbackStruct *da
 {
   wtt->set_clock_cursor();
   if ( wtt->open_volume_cb)
-    (wtt->open_volume_cb) ( wtt, NULL, wow_eFileSelType_All);
+    (wtt->open_volume_cb) ( wtt, wb_eType_Volume, NULL, wow_eFileSelType_All);
   wtt->reset_cursor();
 }
  
@@ -3223,6 +3266,15 @@ Wtt::Wtt(
         strcpy( title_w1, "Class Configuration");
         strcpy( title_w2, "Node Configuration");
         break;
+      case pwr_eClass_VolatileVolume:
+        wb_type = wb_eType_Buffer;
+        strcpy( layout_w1, "");
+        strcpy( layout_w2, "");
+        strcpy( layout_palette, "NavigatorPalette");
+        strcpy( title_w1, "Plant Configuration");
+        strcpy( title_w2, "Node Configuration");
+        sprintf( title, "PwR Navigator Buffer %s, %s", volname, name);
+	break;
       default:
         wb_type = wb_eType_Volume;
         strcpy( layout_w1, "NavigatorW1");
@@ -3338,6 +3390,7 @@ Wtt::Wtt(
   wnav->get_global_select_cb = wtt_get_global_select_cb;
   wnav->global_unselect_objid_cb = wtt_global_unselect_objid_cb;
   wnav->set_window_char_cb = wtt_set_window_char_cb;
+  wnav->open_vsel_cb = wtt_open_vsel_cb;
   focused_wnav = wnav;
   wnav_mapped = 1;
 
@@ -3368,6 +3421,7 @@ Wtt::Wtt(
   wnavnode->get_global_select_cb = wtt_get_global_select_cb;
   wnavnode->global_unselect_objid_cb = wtt_global_unselect_objid_cb;
   wnavnode->set_window_char_cb = wtt_set_window_char_cb;
+  wnavnode->open_vsel_cb = wtt_open_vsel_cb;
 
   i = 0;
   XtSetArg(args[i], XmNheight, 300);i++;

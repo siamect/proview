@@ -16,6 +16,10 @@
 #include "wb_nav_macros.h"
 #endif
 
+#ifndef wb_h
+#include "wb.h"
+#endif
+
 #define VSEL_MAX_VOLUMES 200
 
 struct vsel_widgets 
@@ -45,7 +49,8 @@ class WVsel {
 	 int		(*bc_success)( void *, pwr_tVolumeId *, int),
 	 void		(*bc_cancel)(),
 	 int		(*bc_time_to_exit)( void *),
-	 int		show_volumes);
+	 int		show_volumes,
+	 wb_eType       wv_wb_type);
   void message( char *new_label);
   pwr_tStatus load_volumelist();
   pwr_tStatus check_volumelist( int quiet, int *display_window);
@@ -62,6 +67,7 @@ class WVsel {
   int			volume_count;
   int			all;
   int			write_priv;
+  wb_eType              wb_type;
 
   // Backcall functions from uil
   static void vsel_activate_showall( Widget w, WVsel *vsel, XmToggleButtonCallbackStruct *data);

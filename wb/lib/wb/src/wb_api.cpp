@@ -158,7 +158,7 @@ extern "C" wtt_tCtx wtt_new(
 	void *wbctx,
 	pwr_tVolumeId volid,
 	void (*wtt_close_cb)(void *),
-	void (*wtt_open_volume_cb)(void *, char *, wow_eFileSelType),
+	void (*wtt_open_volume_cb)(void *, wb_eType, char *, wow_eFileSelType),
 	int (*wtt_time_to_exit_cb)(void *),
 	pwr_tStatus *sts
 	)

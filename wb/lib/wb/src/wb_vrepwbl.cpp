@@ -180,6 +180,16 @@ bool wb_vrepwbl::exportMeta(wb_import &i)
   return false;
 }
 
+bool wb_vrepwbl::exportTree(wb_treeimport &i, pwr_tOid oid)
+{
+  ref_wblnode n = findObject( oid.oix);
+  if ( !n)
+    return false;
+
+  n->exportTree( i, true);
+  return true;
+}
+
 int wb_vrepwbl::load( const char *fname)
 {
   int i;
@@ -1224,7 +1234,8 @@ wb_orep *wb_vrepwbl::parent(pwr_tStatus *sts, const wb_orep *o)
 {
   wb_orepwbl *orep = 0;
         
-  if ( ((wb_orepwbl *)o)->wblNode()->o->fth) {
+  if ( ((wb_orepwbl *)o)->wblNode()->o->fth && 
+       ((wb_orepwbl *)o)->wblNode()->o->fth != root_object) {
     orep = new wb_orepwbl( (wb_vrepwbl *)this, ((wb_orepwbl *)o)->wblNode()->o->fth);
     *sts = LDH__SUCCESS;
   }

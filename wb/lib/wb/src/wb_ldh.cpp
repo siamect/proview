@@ -19,7 +19,6 @@ This module contains the API-routines to the Local Data Handler, LDH.  */
 #include <lib$routines.h>
 #endif
 #include <stdarg.h>
-#include <X11/Intrinsic.h>
 #include "pwr.h"
 #include "wb_ldhi.h"
 #include "pwr_class.h"
@@ -37,6 +36,9 @@ This module contains the API-routines to the Local Data Handler, LDH.  */
 #include "wb_object.h"
 #include "wb_volume.h"
 #include "wb_error.h"
+#include "wb_vrepmem.h"
+#include "pwr_baseclasses.h"
+#include <X11/Intrinsic.h>
 
 pwr_dImport pwr_BindClasses(System);
 pwr_dImport pwr_BindClasses(Base);
@@ -111,6 +113,18 @@ ldh_GetVolumeList(ldh_tWorkbench workbench, pwr_tVid *vid)
 {
   wb_env *wb = (wb_env *)workbench;
   wb_volume v = wb->volume();
+  if (!v) return v.sts();
+    
+  *vid = v.vid();
+
+  return LDH__SUCCESS;
+}
+
+pwr_tStatus
+ldh_GetBufferList(ldh_tWorkbench workbench, pwr_tVid *vid)
+{
+  wb_env *wb = (wb_env *)workbench;
+  wb_volume v = wb->bufferVolume();
   if (!v) return v.sts();
     
   *vid = v.vid();
@@ -1217,16 +1231,17 @@ ldh_SessionToWB(ldh_tSession session)
 pwr_tStatus
 ldh_SetObjectBody(ldh_tSession session, pwr_tOid oid, char *bname, char *value, int size)
 {
-  wb_session *sp = (wb_session*)session;
+  wb_session *sp = (wb_session *)session;
   wb_object o = sp->object(oid);
-  if (!o) return o.sts();
-#if NOT_YET_IMPLEMENTED
-  wb_body b = o.body(bname);
-  if (!b) return b.sts();
-    
-  return b.value(value, size);
-#endif
-  return LDH__NYI;
+  wb_attribute a = sp->attribute(o, bname);
+
+  try {
+    sp->writeAttribute(a, value);
+    return sp->sts();
+  }
+  catch (wb_error& e) {
+    return e.sts();
+  }  
 }
 
 pwr_tStatus
@@ -1240,9 +1255,13 @@ ldh_SetObjectBuffer(ldh_tSession session, pwr_tOid oid, char *bname, char *aname
   wb_attribute a = o.attribute(bname, aname);
   if (!a) return a.sts();
     
-  sp->writeAttribute(a, value);
-
-  return sp->sts();
+  try {
+    sp->writeAttribute(a, value);
+    return sp->sts();
+  }
+  catch (wb_error& e) {
+    return e.sts();
+  }  
 }
 
 
@@ -1366,12 +1385,74 @@ ldh_CopyObjectTrees(ldh_tSession session, pwr_sAttrRef *arp, pwr_tOid doid, ldh_
 pwr_tStatus
 ldh_Copy(ldh_tSession session, pwr_sAttrRef *arp)
 {
-  //wb_session *sp = (wb_session*)session;
+  wb_session *sp = (wb_session*)session;
+  pwr_tStatus sts;
 
   //wb_oset s = sp->objectset(arp);
   //wb->copySet(s);
 
-  return LDH__NYI;
+  wb_env env = sp->env();
+  char name[32];
+
+  // Avoid copying objects in plcprograms
+  pwr_sAttrRef *ap = arp;
+  while ( cdh_ObjidIsNotNull( ap->Objid)) {
+    wb_object o = sp->object( ap->Objid);
+    if ( !o) return o.sts();
+    o = o.parent();
+    while ( o) {
+      pwr_sAttrRef *ap2 = arp;
+      while ( cdh_ObjidIsNotNull( ap2->Objid)) {
+	if ( o.cid() == pwr_cClass_plc)
+	  return LDH__COPYPLCOBJECT;
+	ap2++;
+      }
+      o = o.parent();
+    }
+    ap++;
+  }
+
+  pwr_tVid vid = env.nextVolatileVid( name);
+  if ( !env) return env.sts();
+
+  wb_vrepmem *mem = new wb_vrepmem( (wb_erep *)env, vid);
+  mem->name( name);
+  ((wb_erep *)env)->addBuffer( &sts, mem);
+
+  ap = arp;
+  wb_vrep *vrep = (wb_vrep *) *sp;
+
+  while ( cdh_ObjidIsNotNull( ap->Objid)) {
+
+    // Check selected object is not child to another selected object
+    bool found = false;
+    wb_object o = sp->object( ap->Objid);
+    if ( !o) return o.sts();
+    o = o.parent();
+    while ( o) {
+      pwr_sAttrRef *ap2 = arp;
+      while ( cdh_ObjidIsNotNull( ap2->Objid)) {
+	if ( cdh_ObjidIsEqual( ap2->Objid, o.oid())) {
+	  found = true;
+	  break;
+	}
+	ap2++;
+      }
+      if ( found)
+	break;
+      o = o.parent();
+    }
+    if ( found) {
+      ap++;
+      continue;
+    }
+
+    vrep->exportTree( *mem, ap->Objid);
+    ap++;
+  }
+  mem->importTree();
+
+  return LDH__SUCCESS;
 }
 
 /* Make a copy of object trees pointed at by AREF and
@@ -1395,9 +1476,26 @@ ldh_Cut(ldh_tSession session, pwr_sAttrRef *arp)
 pwr_tStatus
 ldh_Paste(ldh_tSession session, pwr_tOid doid, ldh_eDest dest)
 {
-  //wb_session *sp = (wb_session*)session;
+  wb_session *sp = (wb_session*)session;
+  pwr_tStatus sts;
 
-  return LDH__NYI;
+  wb_env env = sp->env();
+
+  // Get last buffer
+  wb_vrepmem *mem = (wb_vrepmem *)((wb_erep *)env)->bufferVolume( &sts);
+  if ( EVEN(sts)) return sts;
+
+  wb_vrepmem *prev;
+  while ( mem) {
+    prev = mem;
+    mem = (wb_vrepmem *)mem->next();
+  }
+  mem = prev;
+
+  wb_vrep *vrep = (wb_vrep *) *sp;
+  mem->exportPaste( *vrep, doid);
+
+  return LDH__SUCCESS;
 }
 
 pwr_tStatus

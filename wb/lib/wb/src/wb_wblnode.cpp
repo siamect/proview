@@ -8,6 +8,7 @@
 #include "wb_wblvocabTokenTypes.hpp"
 #include "wb_dbs.h"
 #include "wb_name.h"
+#include "wb_treeimport.h"
 
 #define wblAlign(size) ((size + 3) & ~3)
 
@@ -186,6 +187,8 @@ static wbl_sSym classes[] =
   ,{ "pwr_eCix_WorkBenchVolume", pwr_eCix_WorkBenchVolume }
   ,{ "pwr_eClass_DirectoryVolume", pwr_eClass_DirectoryVolume }
   ,{ "pwr_eCix_DirectoryVolume", pwr_eCix_DirectoryVolume }
+  ,{ "pwr_eClass_VolatileVolume", pwr_eClass_VolatileVolume }
+  ,{ "pwr_eCix_VolatileVolume", pwr_eCix_VolatileVolume }
   ,{ "pwr_eClass_CreateVolume", pwr_eClass_CreateVolume }
   ,{ "pwr_eCix_CreateVolume", pwr_eCix_CreateVolume }
   ,{ "pwr_eClass_MountVolume", pwr_eClass_MountVolume }
@@ -476,7 +479,7 @@ void wb_wblnode::build( bool recursive)
               case pwr_eClass_Param:
                 if ( attr->o->a.type == pwr_eType_AttrRef)
                   ((pwr_sClassDef *)o->rbody)->Flags.b.AttrRef = 1;
-                else if ( attr->o->a.type == pwr_eType_AttrRef)
+                else if ( attr->o->a.type == pwr_eType_Objid)
                   ((pwr_sClassDef *)o->rbody)->Flags.b.ObjRef = 1;
                 break;
               default:
@@ -1536,6 +1539,23 @@ bool wb_wblnode::exportRbody( wb_import &i)
 
   if ( o->fws)
     o->fws->exportRbody( i);
+
+  return true;
+}
+
+bool wb_wblnode::exportTree( wb_treeimport &i, bool isRoot)
+{
+  pwr_tOid fthoid = (o->fth && !isRoot) ? o->fth->o->m_oid : pwr_cNOid;
+  pwr_tOid bwsoid = (o->bws && !isRoot)  ? o->bws->o->m_oid : pwr_cNOid;
+
+  i.importTreeObject( o->m_oid, o->m_cid, fthoid, bwsoid, name(), 
+		      o->rbody_size, o->dbody_size, o->rbody, o->dbody);
+  
+  if ( o->fch)
+    o->fch->exportTree( i, false);
+
+  if ( !isRoot && o->fws)
+    o->fws->exportTree( i, false);
 
   return true;
 }

@@ -40,6 +40,14 @@ extern "C" {
 #include "wb_pal.h"
 #endif
 
+#ifndef co_wow_h
+#include "co_wow.h"
+#endif
+
+#ifndef wb_h
+#include "wb.h"
+#endif
+
 #define wnav_cVersion	"X3.3a"
 #define wnav_cScriptDescKey	"!** Description"
 #define wnav_cScriptInvisKey	"!** Invisible"
@@ -219,6 +227,7 @@ class WNav {
 						 int **, int *);
     int 		(*global_unselect_objid_cb)( void *, pwr_tObjid objid);
     void 		(*set_window_char_cb)( void *, short, short);
+    void                (*open_vsel_cb)( void *, wb_eType, char *, wow_eFileSelType);
     int			ccm_func_registred;
     wnav_sMenu 		*menu_tree;
     int			closing_down;

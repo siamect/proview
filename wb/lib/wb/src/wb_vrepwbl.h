@@ -150,13 +150,13 @@ public:
   bool commit(pwr_tStatus *sts) {return false;}
   bool abort(pwr_tStatus *sts) {return false;}
 
-  virtual bool writeAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, size_t offset, size_t size, void *p) {return false;}
+  virtual bool writeAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, size_t offset, size_t size, void *p) { return false;}
 
   virtual void *readAttribute(pwr_tStatus *sts, const wb_orep *o, pwr_eBix bix, size_t offset, size_t size, void *p);
 
   virtual void *readBody(pwr_tStatus *sts, const wb_orep *o, pwr_eBix bix, void *p);
 
-  virtual bool writeBody(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, void *p) {return false;};
+  virtual bool writeBody(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, void *p) { return false;}
 
 
   wb_orep *ancestor(pwr_tStatus *sts, const wb_orep *o);
@@ -179,7 +179,7 @@ public:
 
   wb_srep *newSession() {return 0;}
 
-  bool isLocal(const wb_orep *o) {return false;}
+  bool isLocal(const wb_orep *o) {return o->oid().vid == vid();}
 
   void objectName(const wb_orep *o, char *str);
 
@@ -188,6 +188,18 @@ public:
   virtual bool exportRbody(wb_import &i);
   virtual bool exportDbody(wb_import &i);
   virtual bool exportMeta(wb_import &i);
+  virtual bool exportTree(wb_treeimport &i, pwr_tOid oid);
+  virtual bool importTree() { return false;}
+  virtual bool importTreeObject(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
+                          pwr_tOid boid, const char *name,
+                          size_t rbSize, size_t dbSize, void *rbody, void *dbody)
+    { return false;}
+  virtual bool importPaste() { return false;}
+  virtual bool importPasteObject(pwr_tOid destination, pwr_tOid oid, 
+			  pwr_tCid cid, pwr_tOid poid,
+                          pwr_tOid boid, const char *name,
+			  size_t rbSize, size_t dbSize, void *rbody, void *dbody)
+    { return false;}
 };
 
 #endif

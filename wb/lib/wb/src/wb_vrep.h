@@ -10,6 +10,8 @@
 #include "wb_cdef.h"
 #include "wb_destination.h"
 #include "wb_export.h"
+#include "wb_treeexport.h"
+#include "wb_treeimport.h"
 #include <map>
 
 class wb_erep;
@@ -19,7 +21,7 @@ class wb_cdef;
 class wb_destination;
 class wb_dbs;
 
-class wb_vrep : public wb_export
+class wb_vrep : public wb_export, public wb_treeexport, public wb_treeimport
 {
 protected:
   char m_name[80];

@@ -3171,12 +3171,23 @@ static int	wnav_move_func(	void		*client_data,
 static int	wnav_open_func(	void		*client_data,
 				void		*client_flag)
 {
+  WNav *wnav = (WNav *)client_data;
   char	arg1_str[80];
   int	arg1_sts;
 
   arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str);
 
-  return WNAV__SUCCESS;	
+  if ( strncmp( arg1_str, "BUFFERS", strlen( arg1_str)) == 0)
+  {
+    if ( wnav->open_vsel_cb)
+      (wnav->open_vsel_cb)( wnav->parent_ctx, wb_eType_Buffer, NULL, wow_eFileSelType_All);
+  }
+  else
+  {
+    wnav->message('E', "Syntax error");
+    return WNAV__SYNTAX;
+  }
+  return WNAV__SUCCESS;
 }
 
 static int	wnav_create_func( void		*client_data,
@@ -3497,6 +3508,7 @@ static int	wnav_new_func( void		*client_data,
   if ( strncmp( arg1_str, "VOLUME", strlen( arg1_str)) == 0)
   {
     char name_str[80];
+    char *name_ptr = 0;
 
     sts = wnav_wccm_get_wbctx_cb( wnav, &wnav->wbctx);
     if ( EVEN(sts)) return sts;
@@ -3512,12 +3524,12 @@ static int	wnav_new_func( void		*client_data,
     }
     else if ( EVEN( dcli_get_qualifier( "/NAME", name_str)))
     {
-      wnav->message('E',"Enter name");
-      return WNAV__QUAL;
+      // Use defaultname from erep
+      name_ptr = name_str;
     }
 
     wb_erep *erep = *(wb_env *)wnav->wbctx;
-    pwr_tVid vid = erep->nextVolatileVid( &sts);
+    pwr_tVid vid = erep->nextVolatileVid( &sts, name_ptr);
     if ( EVEN(sts)) {
       wnav->message(' ', wnav_get_message(sts));
       return sts;

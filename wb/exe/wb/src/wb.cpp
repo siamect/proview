@@ -72,7 +72,7 @@ void	pwr_vsel_cancel();
 void	pwr_login_success();
 void	pwr_login_cancel();
 void	pwr_wtt_close( void *wttctx);
-void	pwr_wtt_open_volume( void *wttctx, char *filename, wow_eFileSelType file_type);
+void	pwr_wtt_open_volume( void *wttctx, wb_eType type, char *filename, wow_eFileSelType file_type);
 int	pwr_time_to_exit( void *wttctx);
 
 void
@@ -133,7 +133,7 @@ void	pwr_login_success()
     appl_count++;
     new WVsel( &sts, NULL, mainwindow, "PROVIEW/R Volumes",
 	       wbctx, NULL, 
-		&pwr_vsel_success, &pwr_vsel_cancel, &pwr_time_to_exit, 0);
+		&pwr_vsel_success, &pwr_vsel_cancel, &pwr_time_to_exit, 0, wb_eType_Volume);
   }
   else
   {
@@ -158,7 +158,7 @@ int	pwr_time_to_exit( void *wttctx)
   return 0;
 }
 
-void	pwr_wtt_open_volume( void *wttctx, char *filename, wow_eFileSelType file_type)
+void	pwr_wtt_open_volume( void *wttctx, wb_eType type, char *filename, wow_eFileSelType file_type)
 {
   char title[80];
   char systemname[80];
@@ -175,7 +175,8 @@ void	pwr_wtt_open_volume( void *wttctx, char *filename, wow_eFileSelType file_ty
       strcat( title, systemname);
       appl_count++;
       new WVsel( &sts, NULL, mainwindow, "PROVIEW/R Volumes", wbctx, NULL, 
-		&pwr_vsel_success, &pwr_vsel_cancel, &pwr_time_to_exit, 1);
+		&pwr_vsel_success, &pwr_vsel_cancel, &pwr_time_to_exit, 1,
+		type);
     }
     else {
       // Open the file... TODO
@@ -460,7 +461,7 @@ int main( int argc, char *argv[])
       strcat( title, systemname);
       appl_count++;
       new WVsel( &sts, NULL, mainwindow, "PROVIEW/R Volumes", wbctx, volumename,
-		&pwr_vsel_success, &pwr_vsel_cancel, &pwr_time_to_exit, 0);
+		&pwr_vsel_success, &pwr_vsel_cancel, &pwr_time_to_exit, 0, wb_eType_Volume);
     }
     else
       exit(LOGIN__NOPRIV);

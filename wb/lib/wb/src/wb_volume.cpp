@@ -2,6 +2,7 @@
 #include "wb_merep.h"
 #include "wb_bdrep.h"
 #include "wb_cdrep.h"
+#include "wb_vrepmem.h"
 
 wb_volume::wb_volume() : wb_status(LDH__NOSUCHVOL), m_vrep(0)
 {
@@ -293,6 +294,12 @@ wb_attribute wb_volume::attribute(const pwr_sAttrRef* arp) const
   delete cdrep;
   delete bdrep;
   return wb_attribute();
+}
+
+bool wb_volume::exportTree( wb_volume &import, pwr_tOid oid)
+{
+  wb_vrepmem *vrepmem = (wb_vrepmem *)(wb_vrep *)import;
+  return m_vrep->exportTree( *vrepmem, oid);
 }
 
 pwr_tStatus wb_volume::syntaxCheck( int *errorcount, int *warningcount)

@@ -95,7 +95,7 @@ projconfig	<project is not configured>				/info
 wblparse	<error when parsing wb_load file>			/error
 nomethod	<no such method>					/error
 volvolatilemax	<max number of volatile volumes exceeded>		/error
-
+copyplcobject	<plcobjects cannot be copied in navigator>		/error
 
 
 

@@ -10,6 +10,7 @@
 #include "wb_dbs.h"
 #include "wb_bdrep.h"
 #include "wb_cdrep.h"
+#include "wb_attribute.h"
 #include "wb_erep.h"
 #include "wb_merep.h"
 #include "wb_tdrep.h"
@@ -20,22 +21,38 @@ extern "C" {
 }
 
 wb_vrepmem::wb_vrepmem( wb_erep *erep, pwr_tVid vid) :
-    wb_vrep(vid), m_erep(erep), m_merep(erep->merep()), root_object(0), m_nextOix(0)
+  wb_vrep(vid), m_erep(erep), m_merep(erep->merep()), root_object(0), m_nextOix(0),
+  m_source_vid(0)
 {
+#if 0
   pwr_tStatus sts;
 
-  // Create the volume object // Fix class should be pwr_eClass_VolatileVolume...
-  wb_cdrep *cdrep = m_merep->cdrep( &sts, pwr_eClass_RootVolume);
+  // Create the volume object
+  wb_cdrep *cdrep = m_merep->cdrep( &sts, pwr_eClass_VolatileVolume);
   wb_cdef cdef = wb_cdef( cdrep);
   wb_destination d = wb_destination( pwr_cNObjid, ldh_eDest_IntoFirst);
   wb_name n = wb_name("Tmp");
   
   wb_orep *o = createObject( &sts, cdef, d, n);
   delete o;
+#endif
+  m_vid = vid;
+  m_cid = pwr_eClass_VolatileVolume;
 }
 
 wb_vrepmem::~wb_vrepmem()
 {
+}
+
+int wb_vrepmem::nextOix()
+{
+  m_nextOix++;
+
+  // This oix might be occupied
+  while ( findObject( m_nextOix))
+    m_nextOix++;
+
+  return m_nextOix;
 }
 
 wb_orep *wb_vrepmem::object(pwr_tStatus *sts, pwr_tOid oid)
@@ -223,8 +240,8 @@ wb_orep *wb_vrepmem::object(pwr_tStatus *sts)
 {
   wb_orepmem *orep = 0;
 
-  if ( root_object && root_object->fch) {
-    orep = new wb_orepmem( (wb_vrepmem *)this, root_object->fch);
+  if ( root_object) {
+    orep = new wb_orepmem( (wb_vrepmem *)this, root_object);
     *sts = LDH__SUCCESS;
   }
   else
@@ -353,14 +370,41 @@ void wb_vrepmem::objectName(const wb_orep *o, char *str)
     n = n->fth;
   }
 
+  strcat( str, name());
+  strcat( str, ":");
   for ( int i = cnt - 1; i >= 0; i--) {
     strcat( str, vect[i]->name());
-    if ( i == cnt - 1)
-      strcat( str, ":");
-    else if ( i != 0)
+    if ( i != 0)
       strcat( str, "-");
   }
   free( vect);
+}
+
+bool wb_vrepmem::writeAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, size_t offset, size_t size, void *p)
+{
+  *sts = LDH__SUCCESS;
+    
+  mem_object *n = ((wb_orepmem *) o)->memobject();
+
+  switch ( bix) {
+  case pwr_eBix_rt:
+    if ( n->rbody_size == 0) {
+      *sts = LDH__NOSUCHBODY;
+      return false;
+    }
+    memcpy( (char *)n->rbody + offset, p, MIN(n->rbody_size - offset, size));
+    return true;
+  case pwr_eBix_dev:
+    if ( n->dbody_size == 0) {
+      *sts = LDH__NOSUCHBODY;
+      return false;
+    }
+    memcpy( (char *)n->dbody + offset, p, MIN(n->dbody_size - offset, size));
+    return true;
+  default:
+    *sts = LDH__NOSUCHBODY;
+    return false;
+  }
 }
 
 void *wb_vrepmem::readAttribute(pwr_tStatus *sts, const wb_orep *o, pwr_eBix bix, size_t offset, size_t size, void *p)
@@ -393,6 +437,34 @@ void *wb_vrepmem::readAttribute(pwr_tStatus *sts, const wb_orep *o, pwr_eBix bix
   default:
     *sts = LDH__NOSUCHBODY;
     return 0;
+  }
+}
+
+bool wb_vrepmem::writeBody(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, void *p)
+{
+  *sts = LDH__SUCCESS;
+    
+  mem_object *n = ((wb_orepmem *) o)->memobject();
+
+  switch ( bix) {
+  case pwr_eBix_rt:
+    if ( n->rbody_size == 0) {
+      *sts = LDH__NOSUCHBODY;
+      return false;
+    }
+
+    memcpy( n->rbody, p, n->rbody_size);
+    return true;
+  case pwr_eBix_dev:
+    if ( n->dbody_size == 0) {
+      *sts = LDH__NOSUCHBODY;
+      return false;
+    }
+    memcpy( n->dbody, p, n->dbody_size);
+    return true;
+  default:
+    *sts = LDH__NOSUCHBODY;
+    return false;
   }
 }
 
@@ -543,6 +615,377 @@ wb_orep *wb_vrepmem::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination
   return o;
 }
 
+bool wb_vrepmem::deleteObject(pwr_tStatus *sts, wb_orep *orep)
+{
+  mem_object *memo = ((wb_orepmem *)orep)->memobject();
+
+  if ( memo->fch) {
+    *sts = LDH__HAS_CHILD;
+    return false;
+  }
+     
+  if ( !memo->bws && memo->fth)
+    memo->fth->fch = memo->fws;
+  if ( memo->bws)
+    memo->bws->fws = memo->fws;
+  if ( memo->fws)
+    memo->fws->bws = memo->bws;
+
+  delete memo;
+
+  return true;
+}
+
+bool wb_vrepmem::deleteFamily(pwr_tStatus *sts, wb_orep *orep)
+{
+  mem_object *memo = ((wb_orepmem *)orep)->memobject();
+
+  if ( !memo->bws && memo->fth)
+    memo->fth->fch = memo->fws;
+  if ( memo->bws)
+    memo->bws->fws = memo->fws;
+  if ( memo->fws)
+    memo->fws->bws = memo->bws;
+
+  memo->deleteChildren();
+
+  delete memo;
+
+  return true;
+}
+
+//
+// Update oid and attrref attributes, reset extern references
+//
+bool wb_vrepmem::importTree()
+{
+  if ( !root_object)
+    return true;
+
+  pwr_tStatus sts;
+
+  wb_orep *o = object( &sts);
+  if ( EVEN(sts)) return false;
+
+  while ( ODD(sts)) {
+    o->ref();
+    updateObject( o);
+
+    wb_orep *prev = o;
+    o = o->after( &sts);
+    prev->unref();
+  }
+  return true;
+}
+
+bool wb_vrepmem::updateSubClass( wb_adrep *subattr, char *body)
+{
+  pwr_tStatus sts;
+  pwr_tCid cid = subattr->subClass();
+  wb_cdrep *cdrep = m_merep->cdrep( &sts, cid);
+  wb_bdrep *bdrep = cdrep->bdrep( &sts, pwr_eBix_rt);
+  if ( EVEN(sts)) return false;
+
+  int subattr_elements = subattr->isArray() ? subattr->nElement() : 1;
+
+  for ( int i = 0; i < subattr_elements; i++) {
+    wb_adrep *adrep = bdrep->adrep( &sts);
+    while ( ODD(sts)) {
+      int elements = adrep->isArray() ? adrep->nElement() : 1;
+      if ( adrep->isClass()) {
+	updateSubClass( adrep, body + i * subattr->size() / subattr_elements + adrep->offset());
+      }
+      else {
+	switch ( adrep->type()) {
+	case pwr_eType_Objid: {
+	  pwr_tOid *oidp = (pwr_tOid *)(body + i * subattr->size() / subattr_elements + 
+					adrep->offset());
+	  for ( int j = 0; j < elements; j++) {
+	    if ( oidp->vid == m_source_vid && findObject( oidp->oix))
+	      oidp->vid = m_vid;
+	    else 
+	      *oidp = pwr_cNOid;
+	    oidp++;
+	  }
+	  break;
+	}
+	case pwr_eType_AttrRef: {
+	  pwr_sAttrRef *arp = (pwr_sAttrRef *)(body + i * subattr->size() / subattr_elements + 
+					adrep->offset());
+	  for ( int j = 0; j < elements; j++) {
+	    if ( arp->Objid.vid == m_source_vid && findObject( arp->Objid.oix))
+	      arp->Objid.vid = m_vid;
+	    else
+	      arp->Objid = pwr_cNOid;
+	    arp++;
+	  }
+	  break;
+	}
+	default:
+	  ;
+	}
+      }
+      wb_adrep *prev = adrep;
+      adrep = adrep->next( &sts);
+      delete prev;
+    }
+  }
+  delete bdrep;
+  delete cdrep;
+
+  return true;
+}
+
+bool wb_vrepmem::updateObject( wb_orep *o)
+{
+  pwr_tStatus sts;
+  wb_cdrep *cdrep = m_merep->cdrep( &sts, o->cid());
+  pwr_mClassDef flags = cdrep->flags();
+
+  for ( int i = 0; i < 2; i++) {
+    pwr_eBix bix = i ? pwr_eBix_rt : pwr_eBix_dev;
+
+    wb_bdrep *bdrep = cdrep->bdrep( &sts, bix);
+    if ( EVEN(sts)) continue;
+
+    char *body = (char *) readBody( &sts, o, bix, 0);
+
+    wb_adrep *adrep = bdrep->adrep( &sts);
+    while ( ODD(sts)) {
+      int elements = adrep->isArray() ? adrep->nElement() : 1;
+      if ( adrep->isClass()) {
+	updateSubClass( adrep, body + adrep->offset());
+      }
+      else {
+	switch ( adrep->type()) {
+	case pwr_eType_Objid: {
+	  pwr_tOid *oidp = (pwr_tOid *)(body + adrep->offset());
+	  for ( i = 0; i < elements; i++) {
+	    if ( oidp->vid == m_source_vid && findObject( oidp->oix))
+	      oidp->vid = m_vid;
+	    else
+	      *oidp = pwr_cNOid;
+	    oidp++;
+	  }
+	  break;
+	}
+	case pwr_eType_AttrRef: {
+	  pwr_sAttrRef *arp = (pwr_sAttrRef *)(body + adrep->offset());
+	  for ( i = 0; i < elements; i++) {
+	    if ( arp->Objid.vid == m_source_vid && findObject( arp->Objid.oix))
+	      arp->Objid.vid = m_vid;
+	    else
+	      arp->Objid = pwr_cNOid;
+	    arp++;
+	  }
+	  break;
+	}
+	default:
+	  ;
+	}
+      }
+      wb_adrep *prev = adrep;
+      adrep = adrep->next( &sts);
+      delete prev;
+    }
+    delete bdrep;
+  }
+
+  delete cdrep;
+
+  wb_orep *child = o->first( &sts);
+  while ( ODD(sts)) {
+    child->ref();
+    updateObject( child);
+
+    wb_orep *prev = child;
+    child = child->after( &sts);
+    prev->unref();
+  }
+  return true;
+}
+
+bool wb_vrepmem::importTreeObject(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
+                          pwr_tOid boid, const char *name,
+                          size_t rbSize, size_t dbSize, void *rbody, void *dbody)
+{
+  mem_object *memo = new mem_object();
+  strcpy( memo->m_name, name);
+  memo->m_oid.oix = oid.oix;
+  memo->m_oid.vid = m_vid;
+  memo->m_cid = cid;
+  memo->rbody_size = rbSize;
+  if ( memo->rbody_size) {
+    memo->rbody = malloc( memo->rbody_size);
+    memcpy( memo->rbody, rbody, memo->rbody_size);
+  }
+  memo->dbody_size = dbSize;
+  if ( memo->dbody_size) {
+    memo->dbody = malloc( memo->dbody_size);
+    memcpy( memo->dbody, dbody, memo->dbody_size);
+  }
+
+  if ( cdh_ObjidIsNull( poid) && cdh_ObjidIsNull( boid)) {
+    // This is a top object
+    if ( !root_object) {
+      root_object = memo;
+      m_source_vid = oid.vid;
+    }
+    else {
+      // Insert as last sibling to rootobject
+      mem_object *next = root_object;
+      while( next->fws)
+	next = next->fws;
+
+      next->fws = memo;
+      memo->bws = next;
+    }
+  }
+  else if ( cdh_ObjidIsNotNull( boid)) {
+    // Insert as next sibling to boid
+    mem_object *bws = findObject( boid.oix);
+    if ( !bws) {
+      delete memo;
+      return false;
+    }
+    memo->bws = bws;
+    memo->fws = bws->fws;
+    memo->fth = bws->fth;
+    if ( bws->fws)
+      bws->fws->bws = memo;
+    bws->fws = memo;
+  }
+  else {
+    // Insert as first child to poid
+    mem_object *fth = findObject( poid.oix);
+    if ( !fth) {
+      delete memo;
+      return false;
+    }
+    memo->fth = fth;
+    memo->fws = fth->fch;
+    if ( fth->fch)
+      fth->fch->bws = memo;
+    fth->fch = memo;
+  }
+  registerObject( memo->m_oid.oix, memo);
+
+  return true;
+}
+
+bool wb_vrepmem::importPasteObject(pwr_tOid destination, pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
+                          pwr_tOid boid, const char *name,
+                          size_t rbSize, size_t dbSize, void *rbody, void *dbody)
+{
+  mem_object *memo = new mem_object();
+  strcpy( memo->m_name, name);
+
+  memo->m_oid.oix = nextOix();
+
+  if ( cdh_ObjidIsNotNull( boid)) {
+    boid.oix = importTranslate( boid.oix);
+    if ( !boid.oix) return false;
+  }
+  if ( cdh_ObjidIsNotNull( poid)) {
+    poid.oix = importTranslate( poid.oix);
+    if ( !poid.oix) return false;
+  }
+
+  memo->m_oid.vid = m_vid;
+  memo->m_cid = cid;
+  memo->rbody_size = rbSize;
+  if ( memo->rbody_size) {
+    memo->rbody = malloc( memo->rbody_size);
+    memcpy( memo->rbody, rbody, memo->rbody_size);
+  }
+  memo->dbody_size = dbSize;
+  if ( memo->dbody_size) {
+    memo->dbody = malloc( memo->dbody_size);
+    memcpy( memo->dbody, dbody, memo->dbody_size);
+  }
+
+  if ( cdh_ObjidIsNull( poid) && cdh_ObjidIsNull( boid)) {
+    // This is the top object
+    importSetSourceVid( oid.vid);
+
+    if ( !root_object) {
+      if ( cdh_ObjidIsNull( destination))
+        root_object = memo;
+      else
+	return false;
+    }
+    else {
+      // Insert as next sibling to destination object
+      mem_object *dest = findObject( destination.oix);
+      if ( !dest) 
+	return false;
+
+      memo->bws = dest;
+      memo->fws = dest->fws;
+      memo->fth = dest->fth;
+      if ( dest->fws)
+	dest->fws->bws = memo;
+      dest->fws = memo;
+    }
+  }
+  else if ( cdh_ObjidIsNotNull( boid)) {
+    // Insert as next sibling to boid
+    mem_object *bws = findObject( boid.oix);
+    if ( !bws) {
+      delete memo;
+      return false;
+    }
+    memo->bws = bws;
+    memo->fws = bws->fws;
+    memo->fth = bws->fth;
+    if ( bws->fws)
+      bws->fws->bws = memo;
+    bws->fws = memo;
+  }
+  else {
+    // Insert as first child to poid
+    mem_object *fth = findObject( poid.oix);
+    if ( !fth) {
+      delete memo;
+      return false;
+    }
+    memo->fth = fth;
+    memo->fws = fth->fch;
+    if ( fth->fch)
+      fth->fch->bws = memo;
+    fth->fch = memo;
+  }
+  registerObject( memo->m_oid.oix, memo);
+  importTranslationTableInsert( oid.oix, memo->m_oid.oix);
+
+  return true;
+}
+
+bool wb_vrepmem::importPaste()
+{
+  importUpdateTree( this);
+  importTranslationTableClear();
+  return true;
+}
+
+bool wb_vrepmem::exportTree(wb_treeimport &i, pwr_tOid oid)
+{
+  mem_object *memo = findObject( oid.oix);
+  if ( !memo)
+    return false;
+
+  memo->exportTree( i, true);
+  return true;
+}
+
+bool wb_vrepmem::exportPaste(wb_treeimport &i, pwr_tOid destination)
+{
+  if ( root_object) {
+    root_object->exportPaste( i, destination, true);
+    i.importPaste();
+  }
+  return true;
+}
 
 
 

@@ -279,11 +279,12 @@ WVsel::WVsel (
   int		(*bc_success)( void *, pwr_tVolumeId *, int),
   void		(*bc_cancel)(),
   int		(*bc_time_to_exit)( void *),
-  int		show_volumes
+  int		show_volumes,
+  wb_eType      wv_wb_type
   ) : parent_ctx(wv_parent_ctx), parent_wid(wv_parent_wid), wbctx(wv_wbctx),
       vsel_bc_success(bc_success), vsel_bc_cancel(bc_cancel),
       vsel_bc_time_to_exit( bc_time_to_exit), volume_count(0), all(0),
-      write_priv(0)
+      write_priv(0), wb_type(wv_wb_type)
 {
   Arg		args[20];
   int		sts;
@@ -337,7 +338,7 @@ WVsel::WVsel (
   if ( volumename != NULL && *volumename != 0 && !show_volumes)
     /* Start the navigater for this volume */
     strcpy( volname, volumename);
-  else if ( !show_volumes)
+  else if ( !show_volumes && wb_type != wb_eType_Buffer)
   {
     /* If there is only one volume in the db, select this volume */
     volume_count = 0;
@@ -368,7 +369,7 @@ WVsel::WVsel (
   
   //  If volume name is supplied, find this volume and open the navigator.
 
-  if ( strcmp( volname, ""))
+  if ( strcmp( volname, "") && wb_type != wb_eType_Buffer)
     /* Check syntax, if new volumes is found, show the window */
     sts = check_volumelist( 1, &display_window);
 
@@ -451,7 +452,8 @@ WVsel::WVsel (
 
   MrmCloseHierarchy(s_DRMh);
 
-  sts = check_volumelist( 0, &display_window);
+  if ( wb_type != wb_eType_Buffer)
+    sts = check_volumelist( 0, &display_window);
 
   // Set input focus to the scrolled list widget
   XmProcessTraversal( widgets.volumelist, XmTRAVERSE_CURRENT);
@@ -523,7 +525,10 @@ pwr_tStatus WVsel::load_volumelist()
 	XmListDeleteAllItems( widgets.volumelist);
 	volume_count = 0;
 
-	sts = ldh_GetVolumeList( wbctx, &volume);
+	if ( wb_type != wb_eType_Buffer)
+	  sts = ldh_GetVolumeList( wbctx, &volume);
+	else
+	  sts = ldh_GetBufferList( wbctx, &volume);
 	while ( ODD(sts) )
 	{
 	  sts = ldh_GetVolumeClass( wbctx, volume, &classid);
@@ -755,6 +760,11 @@ pwr_tStatus WVsel::check_volumelist(
 	}
 	return 1;
 }
+
+
+
+
+
 
 
 

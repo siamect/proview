@@ -58,6 +58,8 @@ public:
   int flags() {return m_flags;}
   pwr_tOid boid();
   pwr_tCid subClass() { return m_subClass;}
+  bool isClass() const {return (m_flags & PWR_MASK_CLASS || m_flags & PWR_MASK_BUFFER);}
+  bool isArray() const {return (m_flags & PWR_MASK_ARRAY);}
 
   const char *name() const;
   wb_name longName();

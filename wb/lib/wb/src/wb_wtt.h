@@ -209,7 +209,7 @@ class Wtt {
     pwr_tObjid	input_objid;
     wtt_eInputMode input_mode;
     void	(*close_cb)(void *ctx);
-    void	(*open_volume_cb)(void *ctx, char *, wow_eFileSelType);
+    void	(*open_volume_cb)(void *ctx, wb_eType, char *, wow_eFileSelType);
     void	(*open_project_volume_cb)(void *ctx);
     int		(*time_to_exit_cb)(void *ctx);
     int		set_focus_disabled;

@@ -65,18 +65,31 @@ wb_vrep *wb_erep::volume( pwr_tStatus *sts)
 wb_vrep *wb_erep::volume(pwr_tStatus *sts, pwr_tVid vid)
 {
   vrep_iterator it = m_vrepdb.find( vid); 
-  if ( it == m_vrepdb.end()) {
-    it = m_vrepdbs.find(vid);
-    if ( it == m_vrepdbs.end()) {
-      it = m_vrepextern.find(vid);
-      if ( it == m_vrepextern.end()) {
-        *sts = LDH__NOSUCHVOL;
-        return 0;
-      }
-    }
+  if ( it != m_vrepdb.end()) {
+    *sts = LDH__SUCCESS;
+    return it->second;
   }
-  *sts = LDH__SUCCESS;
-  return it->second;
+
+  it = m_vrepdbs.find(vid);
+  if ( it != m_vrepdbs.end()) {
+    *sts = LDH__SUCCESS;
+    return it->second;
+  }
+
+  it = m_vrepextern.find(vid);
+  if ( it != m_vrepextern.end()) {
+    *sts = LDH__SUCCESS;
+    return it->second;
+  }
+
+  it = m_vrepbuffer.find(vid);
+  if ( it != m_vrepbuffer.end()) {
+    *sts = LDH__SUCCESS;
+    return it->second;
+  }
+
+  *sts = LDH__NOSUCHVOL;
+  return 0;
 }
 
 wb_vrep *wb_erep::volume(pwr_tStatus *sts, const char *name)
@@ -115,29 +128,71 @@ wb_vrep *wb_erep::externVolume(pwr_tStatus *sts, pwr_tVid vid)
   return it->second;
 }
 
+wb_vrep *wb_erep::bufferVolume(pwr_tStatus *sts)
+{
+  vrep_iterator it = m_vrepbuffer.begin(); 
+  if ( it == m_vrepbuffer.end()) {
+    *sts = LDH__NOSUCHVOL;
+    return 0;
+  }
+  *sts = LDH__SUCCESS;
+  return it->second;
+}
+
 wb_vrep *wb_erep::nextVolume(pwr_tStatus *sts, pwr_tVid vid)
 {
+  // Search in db
   vrep_iterator it = m_vrepdb.find( vid);
   if ( it != m_vrepdb.end()) {
     it++;
     if ( it != m_vrepdb.end()) {
+      *sts = LDH__SUCCESS;
+      return it->second;
+    }
+    else {
+      // Next volume in dbs
       it = m_vrepdbs.begin();
-      if ( it == m_vrepdbs.end()) {
-        *sts = LDH__NOSUCHVOL;
-        return 0;
+      if ( it != m_vrepdbs.end()) {
+	*sts = LDH__SUCCESS;
+	return it->second;
+      }
+      else {
+	*sts = LDH__NOSUCHVOL;
+	return 0;
       }
     }
   }
-  else {
-    it = m_vrepdbs.find(vid);
+
+  // Search in dbs
+  it = m_vrepdbs.find(vid);
+  if ( it != m_vrepdbs.end()) {
     it++;
-    if ( it == m_vrepdbs.end()) {
+    if ( it != m_vrepdbs.end()) {
+      *sts = LDH__SUCCESS;
+      return it->second;
+    }
+    else {
       *sts = LDH__NOSUCHVOL;
       return 0;
     }
   }
-  *sts = LDH__SUCCESS;
-  return it->second;
+
+  // Search in buffer
+  it = m_vrepbuffer.find(vid);
+  if ( it != m_vrepbuffer.end()) {
+    it++;
+    if ( it != m_vrepbuffer.end()) {
+      *sts = LDH__SUCCESS;
+      return it->second;
+    }
+    else {
+      *sts = LDH__NOSUCHVOL;
+      return 0;
+    }
+  }
+
+  *sts = LDH__NOSUCHVOL;
+  return 0;
 }
 
 void wb_erep::addDb( pwr_tStatus *sts, wb_vrep *vrep)
@@ -183,6 +238,20 @@ void wb_erep::addExtern( pwr_tStatus *sts, wb_vrep *vrep)
   }
 }
 
+void wb_erep::addBuffer( pwr_tStatus *sts, wb_vrep *vrep)
+{
+  vrep_iterator it = m_vrepbuffer.find( vrep->vid()); 
+  if ( it == m_vrepbuffer.end()) {
+    m_vrepbuffer[vrep->vid()] = vrep;
+    vrep->ref();
+    *sts = LDH__SUCCESS;
+  }
+  else {
+    *sts = LDH__VOLIDALREXI;
+    return;
+  }
+}
+
 void wb_erep::removeDb(pwr_tStatus *sts, wb_vrep *vrep)
 {
   vrep_iterator it = m_vrepdb.find( vrep->vid()); 
@@ -216,6 +285,18 @@ void wb_erep::removeExtern(pwr_tStatus *sts, wb_vrep *vrep)
   }
   it->second->unref();
   m_vrepextern.erase( it);
+  *sts = LDH__SUCCESS;
+}
+
+void wb_erep::removeBuffer(pwr_tStatus *sts, wb_vrep *vrep)
+{
+  vrep_iterator it = m_vrepbuffer.find( vrep->vid()); 
+  if ( it == m_vrepbuffer.end()) {
+    *sts = LDH__NOSUCHVOL;
+    return;
+  }
+  it->second->unref();
+  m_vrepbuffer.erase( it);
   *sts = LDH__SUCCESS;
 }
 
@@ -582,13 +663,17 @@ void wb_erep::bindMethods()
 #endif
 }
 
-int wb_erep::nextVolatileVid( pwr_tStatus *sts)
+int wb_erep::nextVolatileVid( pwr_tStatus *sts, char *name)
 {
   pwr_tVid vid = ldh_cVolatileVolMin + m_volatile_idx++;
   if ( vid > ldh_cVolatileVolMax) {
     *sts = LDH__VOLVOLATILEMAX;
     return 0;
   }
+  if ( name)
+    // Suggest a name
+    sprintf( name, "Buffer%03d", vid & 255);
+
   return vid;
 }
 

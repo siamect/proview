@@ -25,6 +25,7 @@ class wb_erep
   map<pwr_tVid, wb_vrep*> m_vrepdb;
   map<pwr_tVid, wb_vrep*> m_vrepdbs;
   map<pwr_tVid, wb_vrep*> m_vrepextern;
+  map<pwr_tVid, wb_vrep*> m_vrepbuffer;
   map< string, wb_tMethod> m_methods;
 
   char m_dir_list[10][200];
@@ -44,12 +45,15 @@ public:
   wb_vrep *volume(pwr_tStatus *sts, const char *name);
   wb_vrep *nextVolume(pwr_tStatus *sts, pwr_tVid vid);
   wb_vrep *externVolume(pwr_tStatus *sts, pwr_tVid vid);
+  wb_vrep *bufferVolume(pwr_tStatus *sts);
   void addDb( pwr_tStatus *sts, wb_vrep *vrep);
   void addDbs( pwr_tStatus *sts, wb_vrep *vrep);
   void addExtern( pwr_tStatus *sts, wb_vrep *vrep);
+  void addBuffer( pwr_tStatus *sts, wb_vrep *vrep);
   void removeDb( pwr_tStatus *sts, wb_vrep *vrep);
   void removeDbs( pwr_tStatus *sts, wb_vrep *vrep);
   void removeExtern( pwr_tStatus *sts, wb_vrep *vrep);
+  void removeBuffer( pwr_tStatus *sts, wb_vrep *vrep);
   void load( pwr_tStatus *sts);
 
   wb_orep *object( pwr_tStatus *sts, pwr_tOid oid);
@@ -59,7 +63,7 @@ public:
   wb_cdrep *cdrep( pwr_tStatus *sts, const wb_orep& o);
   wb_tdrep *tdrep( pwr_tStatus *sts, const wb_adrep& a);
   void method( pwr_tStatus *sts, char *methodName, wb_tMethod *method);
-  int nextVolatileVid( pwr_tStatus *sts);
+  int nextVolatileVid( pwr_tStatus *sts, char *name);
 
 private:
   void loadDirList( pwr_tStatus *status);

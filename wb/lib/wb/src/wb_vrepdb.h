@@ -124,6 +124,19 @@ public:
     
   virtual bool exportMeta(wb_import &e);
 
+  virtual bool exportTree(wb_treeimport &i, pwr_tOid oid) { return false;}
+  virtual bool importTree() { return false;}
+  virtual bool importTreeObject(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
+                          pwr_tOid boid, const char *name,
+                          size_t rbSize, size_t dbSize, void *rbody, void *dbody)
+    { return false;}
+  virtual bool importPaste() { return false;}
+  virtual bool importPasteObject(pwr_tOid destination, pwr_tOid oid, 
+			  pwr_tCid cid, pwr_tOid poid,
+                          pwr_tOid boid, const char *name,
+			  size_t rbSize, size_t dbSize, void *rbody, void *dbody)
+    { return false;}
+
 #if 0
   int del_family(DbTxn *txn, Dbc *cp, pwr_tOid poid);
 #endif

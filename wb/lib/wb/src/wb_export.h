@@ -16,7 +16,6 @@ public:
   virtual bool exportDbody(wb_import &e) = 0;
     
   virtual bool exportMeta(wb_import &e) = 0;
-    
 };
 
 #endif

@@ -672,6 +672,12 @@ ldh_GetVolumeList (
 );
 
 pwr_tStatus
+ldh_GetBufferList (
+  ldh_tWorkbench	Workbench,
+  pwr_tVolumeId		*Volume
+);
+
+pwr_tStatus
 ldh_GetNextVolume (
   ldh_tWorkbench	Workbench,
   pwr_tVolumeId		Volume,

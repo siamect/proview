@@ -132,6 +132,19 @@ public:
   virtual bool exportRbody(wb_import &e);
   virtual bool exportDbody(wb_import &e);
   virtual bool exportMeta(wb_import &e);
+  virtual bool exportTree(wb_treeimport &i, pwr_tOid oid);
+  bool wb_vrepdbs::exportTreeObject(wb_treeimport &i, dbs_sObject *op, bool isRoot);
+  virtual bool importTree() { return false;}
+  virtual bool importTreeObject(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
+                          pwr_tOid boid, const char *name,
+                          size_t rbSize, size_t dbSize, void *rbody, void *dbody)
+    { return false;}
+  virtual bool importPaste() { return false;}
+  virtual bool importPasteObject(pwr_tOid destination, pwr_tOid oid, 
+			  pwr_tCid cid, pwr_tOid poid,
+                          pwr_tOid boid, const char *name,
+			  size_t rbSize, size_t dbSize, void *rbody, void *dbody)
+    { return false;}
 
 };
 

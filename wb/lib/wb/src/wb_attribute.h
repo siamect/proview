@@ -103,10 +103,15 @@ public:
     
     
   pwr_tStatus sts() const { return m_sts;}
-            
+  wb_adrep *adrep() { return m_adrep;}
+
 private:
   void check() const;
   void init();
 };
 
 #endif
+
+
+
+
