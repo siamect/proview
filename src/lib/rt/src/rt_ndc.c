@@ -486,7 +486,7 @@ decode_tiny (
 
   for (; count > 0 && *size >= sizeof(char); count--) {
     *tp++ = *sp++;
-    (void) *size--;
+    (*size)--;
   }
 
   return TRUE;
