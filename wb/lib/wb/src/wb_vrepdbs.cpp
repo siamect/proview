@@ -178,7 +178,7 @@ wb_vrepdbs::abort(pwr_tStatus *sts)
 bool
 wb_vrepdbs::writeAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, unsigned int offset, unsigned int size, void *p)
 {
-    *sts = LDH__NYI;
+    //*sts = LDH__NYI;
     return false;
 }
 
@@ -186,20 +186,8 @@ wb_vrepdbs::writeAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, unsigned 
 void *
 wb_vrepdbs::readAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, unsigned int offset, unsigned int size, void *p)
 {
-    *sts = LDH__SUCCESS;
-
-    dbs_sObject *op = ((wb_orepdbs *)o)->o();
-    void *bp = dbs_Body(sts, dbsenv(), op, bix);
-    
-    if (bp == 0)
-        return 0;
-    
-    if (p) {
-        memcpy(p, bp, MIN(op->rbody.size, size));
-        return p;
-    }
-        
-    return bp;
+    //*sts = LDH__NYI;
+    return 0;
 }
 
 
