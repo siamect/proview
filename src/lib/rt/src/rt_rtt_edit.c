@@ -7310,8 +7310,8 @@ char		*parameter_ptr;\n\
   return RTT__SUCCESS;\n\
 }\n");
 
+	        fclose( fout_test);
 	      }
-	      fclose( fout_test);
 	    }
 	  }
 	  else if ( menu_ptr->type == DTT_MENUITEM_SYSPICTURE)
