@@ -2810,6 +2810,117 @@ gdh_SetCache (
   
 }
 
+pwr_tStatus
+gdh_GetVolumeList( 
+  pwr_tVid *vid
+)
+{
+  pool_sQlink		*vl;
+  gdb_sVolume		*vp;
+
+  gdh_ScopeLock {
+    vl = pool_Qsucc(NULL, gdbroot->pool, &gdbroot->db->vol_lh);
+    if (vl == NULL || vl == &gdbroot->db->vol_lh)
+      return GDH__NOSUCHVOL;
+
+    vp = pool_Qitem(vl, gdb_sVolume, l.vol_ll);
+
+    *vid = vp->g.vid;
+  } gdh_ScopeUnlock;
+  return GDH__SUCCESS;
+}
+
+pwr_tStatus
+gdh_GetNextVolume( 
+  pwr_tVid pvid,
+  pwr_tVid *vid
+)
+{
+  pool_sQlink		*vl;
+  gdb_sVolume		*vp;
+  pwr_tStatus 		sts;
+  pwr_tStatus		rsts = GDH__NOSUCHVOL;
+
+  gdh_ScopeLock {
+    for ( vl = pool_Qsucc(NULL, gdbroot->pool, &gdbroot->db->vol_lh);
+	  vl != &gdbroot->db->vol_lh;
+	  vl = pool_Qsucc(&sts, gdbroot->pool, vl)) {
+
+      vp = pool_Qitem(vl, gdb_sVolume, l.vol_ll);
+      if ( vp->g.vid == pvid) {
+	for ( vl = pool_Qsucc(&sts, gdbroot->pool, vl);
+	      vl != &gdbroot->db->vol_lh;
+	      vl = pool_Qsucc(&sts, gdbroot->pool, vl)) {
+	  vp = pool_Qitem(vl, gdb_sVolume, l.vol_ll);
+	  if ( vp->l.flags.b.isLoaded || vp->l.flags.b.isCached) {
+	    *vid = vp->g.vid;
+	    rsts = GDH__SUCCESS;
+	    break;
+	  }
+	}
+	if ( rsts == GDH__SUCCESS || vl == &gdbroot->db->vol_lh)
+	  break;
+      }
+    }    
+  } gdh_ScopeUnlock;
+
+  return rsts;
+}
+
+pwr_tStatus
+gdh_VolumeIdToName(
+  pwr_tVid vid,
+  char *name,
+  int size
+)
+{
+  gdb_sVolume *vp;
+  pwr_tStatus sts;
+  pwr_tStatus rsts = GDH__SUCCESS;
+
+  gdh_ScopeLock {
+    vp = hash_Search(&sts, gdbroot->vid_ht, &vid); 
+    if (vp != NULL) {
+      if (strlen(vp->g.name.orig) >= size)
+	rsts = GDH__NAMEBUF;
+      strncpy( name, vp->g.name.orig, size);
+    }
+    else
+      rsts = GDH__NOSUCHVOL;
+  } gdh_ScopeUnlock;
+
+  return rsts;
+}
+
+pwr_tStatus
+gdh_GetVolumeInfo(
+  pwr_tVid vid,
+  gdh_sVolumeInfo *info
+)
+{
+  gdb_sVolume *vp;
+  pwr_tStatus sts;
+  pwr_tStatus rsts = GDH__SUCCESS;
+
+  gdh_ScopeLock {
+    vp = hash_Search(&sts, gdbroot->vid_ht, &vid); 
+    if (vp != NULL) {
+      info->isCached = vp->l.flags.b.isCached ? 1 : 0;
+      info->isLoaded = vp->l.flags.b.isLoaded ? 1 : 0;
+      info->isMounted = vp->l.flags.b.isMounted ? 1 : 0;
+      info->time = vp->g.time;
+      info->cid = vp->g.cid;
+      info->nid = vp->g.nid;
+      strcpy( info->name, vp->g.name.orig);
+    }
+    else
+      rsts = GDH__NOSUCHVOL;
+  } gdh_ScopeUnlock;
+
+  return rsts;
+}
+
+#if 0
 pwr_tStatus 
 gdh_RegisterServer( 
   errh_eAnix anix,
@@ -2825,7 +2936,7 @@ gdh_RegisterServer(
   np->ProcObject[anix-1] = server_oid;
   return GDH__SUCCESS;
 }
-
+#endif
 
 
 

@@ -78,6 +78,21 @@ typedef struct {
 
 } gdh_sNodeInfo;
 
+/**
+ * Volume info
+ */
+typedef struct {
+
+  pwr_tBoolean isCached;        /**< Volume is cached */
+  pwr_tBoolean isLoaded;        /**< Volume is loaded */
+  pwr_tBoolean isMounted;       /**< Volume is mounted */
+  pwr_tTime time;            	/**< Version */
+  char name [32];               /**< Ascii name of volume (nul-terminated) */
+  pwr_tCid cid;			/**< Class of volume */
+  pwr_tNid nid;			/**< Node index */
+
+} gdh_sVolumeInfo;
+
 /* GDH entrypoints (as function prototypes).  */
 
 /** @} */
@@ -596,10 +611,28 @@ gdh_TranslateRtdbPointer (
 );
 
 
-pwr_tStatus 
-gdh_RegisterServer( 
-  errh_eAnix anix,
-  pwr_tOid server_oid
+pwr_tStatus
+gdh_GetVolumeList( 
+  pwr_tVid *vid
+);
+
+pwr_tStatus
+gdh_GetNextVolume( 
+  pwr_tVid pvid,
+  pwr_tVid *vid
+);
+
+pwr_tStatus
+gdh_VolumeIdToName(
+  pwr_tVid vid,
+  char *name,
+  int size
+);
+
+pwr_tStatus
+gdh_GetVolumeInfo(
+  pwr_tVid vid,
+  gdh_sVolumeInfo *info
 );
 
 /* Undocumented routines. For internal use only.  */
