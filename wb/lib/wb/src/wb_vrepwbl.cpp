@@ -1210,12 +1210,17 @@ int wb_vrepwbl::load_files( const char *file_spec)
 
     file[file_cnt]->parser = new wb_wblparser(*file[file_cnt]->lexer);
     file[file_cnt]->parser->setFilename( found_file);
+
+    // Antlr 2.7.3 seems to want an ASTFactory here...
+    // wb_wblfactory *factory = new wb_wblfactory();
+    // file[file_cnt]->parser->setASTNodeFactory( factory);
     file[file_cnt]->parser->setASTNodeFactory( wb_wblnode::factory);
 
     try {
       // Parse the input expression
       file[file_cnt]->parser->unit();
-      file[file_cnt]->rootAST = file[file_cnt]->parser->getAST();
+      AST *a = file[file_cnt]->parser->getAST();
+      file[file_cnt]->rootAST = (wb_wblnode *) a; 
       if ( !file[file_cnt]->rootAST) {
         error("File empty", found_file, 0);
         file_cnt--;
