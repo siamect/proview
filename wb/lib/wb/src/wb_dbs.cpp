@@ -156,7 +156,7 @@ wb_dbs::checkObject(sOentry *oep)
   case pwr_eClass_MountVolume:
   case pwr_eClass_CreateVolume:
   case pwr_eClass_MountObject:
-    if (m_volume.cid != pwr_eClass_RootVolume) {
+    if (m_volume.cid == pwr_eClass_RootVolume) {
       oep->o.flags.b.isMountClient = 1;
     }
     break;
