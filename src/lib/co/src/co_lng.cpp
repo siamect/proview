@@ -25,6 +25,7 @@ char Lng::items[][2][40] = {
       {"Open Plc...",  "Öppna Plc..."},
       {"Alarm list",   "Larm lista"},
       {"Event list",   "Händelse lista"},
+      {"Historical list",   "Historisk lista"},
       {"Link",         "Länkar"},
       {"Subscription Client",  "Prenumerationer Klient"},
       {"Subscription Server",  "Prenumerationer Server"},
