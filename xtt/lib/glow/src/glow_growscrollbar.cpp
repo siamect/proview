@@ -250,6 +250,24 @@ void GrowScrollBar::nav_erase( GlowTransform *t, void *node)
 			   glow_eDrawType_LineErase);
 }
 
+double GrowScrollBar::set_value( double value, double length) 
+{
+  bar_value = value; 
+  if ( length != 0)
+    bar_length = length;
+
+  if ( bar_value < min_value)
+    bar_value = min_value;
+  if ( bar_value > max_value - bar_length)
+    bar_value = max_value - bar_length;
+
+  if ( !fill) 
+    erase(); 
+
+  draw();
+  return bar_value;
+}
+
 void GrowScrollBar::set_range( double min, double max)
 { 
   max_value = max;

@@ -2696,6 +2696,14 @@ typedef GlowTraceData glow_sTraceData;
   */
   int grow_GetSelectedCell( grow_tObject object, int *column, int *row);
 
+  //! Check if a cell is visible, and scroll if not.
+  /*!
+    \param object	Table object.
+    \param column	Cell column.
+    \param row		Cell row.
+  */
+  int grow_TableMakeCellVisible( grow_tObject object, int column, int row);
+
   void grow_Convert( grow_tCtx ctx, glow_eConvert version);
 
   //! Check if a nodeclass is extern.

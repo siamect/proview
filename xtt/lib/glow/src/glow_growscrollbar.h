@@ -146,10 +146,9 @@ class GrowScrollBar : public GrowRect {
   /*!
     \param value	Bar value.
     \param length	Bar length.
+    \return		The actual new bar value.
   */
-  void set_value( double value, double length) { bar_value = value; bar_length = length;
-	                            if ( !fill) erase(); 
-	                            draw();};
+  double set_value( double value, double length = 0);
 
   //! Set the range for the bar value
   /*!

@@ -4118,6 +4118,11 @@ int grow_GetSelectedCell( grow_tObject object, int *column, int *row)
   return ((GrowTable *)object)->get_selected_cell( column, row);
 }
 
+int grow_TableMakeCellVisible( grow_tObject object, int column, int row)
+{
+  return ((GrowTable *)object)->make_cell_visible( column, row);
+}
+
 void grow_Convert( grow_tCtx ctx, glow_eConvert version)
 {
   ((GrowCtx *)ctx)->convert( version);
