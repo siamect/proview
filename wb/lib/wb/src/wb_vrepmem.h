@@ -56,19 +56,22 @@ class mem_object
 
     return true;
   }
-  bool exportPaste( wb_treeimport &i, pwr_tOid destination, bool isRoot, ldh_eDest destcode,
-		    bool keepoid) {
+  bool exportPaste( wb_treeimport &i, pwr_tOid destination, bool isRoot, 
+			ldh_eDest destcode, bool keepoid, pwr_tOid *rootlist) {
     pwr_tOid fthoid = (fth && !isRoot) ? fth->m_oid : pwr_cNOid;
     pwr_tOid bwsoid = (bws && !isRoot) ? bws->m_oid : pwr_cNOid;
+    pwr_tOid oid;
 
     i.importPasteObject( destination, destcode, keepoid, m_oid, m_cid, fthoid, bwsoid, 
-			 name(), rbody_size, dbody_size, rbody, dbody);
+			 name(), rbody_size, dbody_size, rbody, dbody, &oid);
+    if ( rootlist)
+      *rootlist++ = oid;
   
     if ( fch)
-      fch->exportPaste( i, destination, false, destcode, keepoid);
+      fch->exportPaste( i, destination, false, destcode, keepoid, 0);
 
     if ( fws)
-      fws->exportPaste( i, destination, false, destcode, keepoid);
+      fws->exportPaste( i, destination, false, destcode, keepoid, rootlist);
 
     return true;
   }
@@ -226,7 +229,8 @@ public:
   virtual bool exportDbody(wb_import &i);
   virtual bool exportMeta(wb_import &i);
   virtual bool exportTree(wb_treeimport &i, pwr_tOid oid);
-  bool exportPaste(wb_treeimport &i, pwr_tOid destination, ldh_eDest destcode, bool keepoid);
+  bool exportPaste(wb_treeimport &i, pwr_tOid destination, ldh_eDest destcode, bool keepoid,
+		   pwr_tOid **rootlist);
   virtual bool importTreeObject(wb_merep *merep, pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
                           pwr_tOid boid, const char *name,
                           size_t rbSize, size_t dbSize, void *rbody, void *dbody);
@@ -235,7 +239,8 @@ public:
 				 bool keepoid, pwr_tOid oid, 
 				 pwr_tCid cid, pwr_tOid poid,
 				 pwr_tOid boid, const char *name,
-				 size_t rbSize, size_t dbSize, void *rbody, void *dbody);
+				 size_t rbSize, size_t dbSize, void *rbody, void *dbody,
+				 pwr_tOid *roid);
   virtual bool importPaste();
   bool updateObject( wb_orep *o, bool keepref);
   bool updateSubClass( wb_adrep *subattr, char *body, bool keepref);

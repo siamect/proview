@@ -194,7 +194,8 @@ public:
 				 bool keepoid, pwr_tOid oid, 
 				 pwr_tCid cid, pwr_tOid poid,
 				 pwr_tOid boid, const char *name,
-				 size_t rbSize, size_t dbSize, void *rbody, void *dbody)
+				 size_t rbSize, size_t dbSize, void *rbody, void *dbody,
+				 pwr_tOid *roid)
     { return false;}
   virtual bool accessSupported( ldh_eAccess access) { return access == ldh_eAccess_ReadOnly;}
 };

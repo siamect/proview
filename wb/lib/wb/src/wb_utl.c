@@ -44,7 +44,6 @@
 #include "co_time.h"
 #include "co_dcli.h"
 #include "wb_ldh.h"
-#include "wb_ldhdump.h"
 #include "wb_ldh_msg.h"
 #include "wb_foe_msg.h"
 #include "wb_vldh_msg.h"
@@ -3229,94 +3228,6 @@ pwr_tStatus	utl_show_volumes(
 	return FOE__SUCCESS;
 }
 
-
-/*************************************************************************
-*
-* Name:		utl_show_objects_hier_class_name()
-*
-* Type		int
-*
-* Type		Parameter	IOGF	Description
-* ldh_tSesContext ldhses		I	ldh session.
-* char *	hiername	I	Name of a object in the hierarchy.
-* char *	class		I	Name of the class.
-*
-*
-* Description: 	Prints all objects of a specified class that is found
-*		below a specific object in the hierarchy.
-*
-**************************************************************************/
-
-int utl_wb_dump(
-  ldh_tSesContext ldhses,
-  int i_flag,
-  int n_flag,
-  int h_flag,
-  int r_flag, 
-  int indchr_arg,
-  char *objname,
-  char *dumpfile,
-  char *volume
-)
-{
-	int		sts, i;
-	char		vol_str[UTL_INPUTLIST_MAX + 1][80];
-	pwr_tVolumeId	volume_vect[UTL_INPUTLIST_MAX + 1];
-	pwr_tVolumeId	*volume_p;
-	pwr_tClassId	vol_class;
-	pwr_tVolumeId	vol_id;
-	int		nr;
-
-	if ( !h_flag && !r_flag)
-        {
-	  if ( volume != NULL)
-	  {
-	    /* Parse the volumestr */
-	    nr = utl_parse( volume, ", ", "", (char *)vol_str, 
-		sizeof( vol_str) / sizeof( vol_str[0]), sizeof( vol_str[0]));
-	    if ( (nr == 0) || ( nr > UTL_INPUTLIST_MAX))
-	      return FOE__PARSYNT;
-
-	    for ( i = 0; i < nr; i++)
-	    {
-	      sts = ldh_VolumeNameToId( ldh_SessionToWB( ldhses), vol_str[i],
-			&volume_vect[i]);
-	      if ( EVEN(sts)) return sts;
-	    }
-	    volume_vect[nr] = 0;
-	    volume_p = volume_vect;
-	  }
-	  else
-	  {
-	    /* Get all volumes that is not class and wb volumes */
-	    i = 0;
-	    sts = ldh_GetVolumeList( ldh_SessionToWB( ldhses), &vol_id);
-	    while ( ODD(sts) )
-	    {
-	      sts = ldh_GetVolumeClass( ldh_SessionToWB( ldhses), vol_id,
-			&vol_class);
-	      if (EVEN(sts)) return sts;
-
-	      if ( vol_class != pwr_eClass_ClassVolume)
-	      {
-	        volume_vect[i] = vol_id;
-	        i++;
-	        if ( i > UTL_INPUTLIST_MAX)
-	          return FOE__PARSYNT;
-	      }
-	      sts = ldh_GetNextVolume( ldh_SessionToWB( ldhses), vol_id, &vol_id);
-	    }
-	    volume_vect[i] = 0;
-	    volume_p = volume_vect;
-	  }
-	}
-	else 
-          volume_p = NULL;
-
-	sts = ldh_ldhdump( ldhses, i_flag, n_flag, h_flag, r_flag, indchr_arg,
-		objname, dumpfile, volume_p);
-	return sts;
-}
 
 /*************************************************************************
 *

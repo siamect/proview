@@ -954,6 +954,13 @@ ldh_CreateLoadFile(
   ldh_tSession     session
 );
 
+pwr_tStatus 
+ldh_WbDump(
+  ldh_tSesContext ldhses,
+  char *objname,
+  char *dumpfile
+);
+
 #ifdef __cplusplus
 }
 #endif

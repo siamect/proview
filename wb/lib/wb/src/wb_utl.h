@@ -487,18 +487,6 @@ pwr_tStatus	utl_show_volumes(
   int			allvolumes
 );
 
-int utl_wb_dump(
-  ldh_tSesContext ldhses,
-  int i_flag,
-  int n_flag,
-  int h_flag,
-  int r_flag, 
-  int indchr_arg,
-  char *objname,
-  char *dumpfile,
-  char *volume
-);
-
 int utl_revert ( 
   ldh_tSesContext ldhses,
   int		confirm

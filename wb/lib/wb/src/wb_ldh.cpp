@@ -11,6 +11,7 @@ This module contains the API-routines to the Local Data Handler, LDH.  */
 #include <time.h>
 #include <assert.h>
 #include <stdarg.h>
+#include <fstream.h>
 #ifdef OS_VMS
 #include <descrip.h>
 #include <libdef.h>
@@ -24,6 +25,7 @@ This module contains the API-routines to the Local Data Handler, LDH.  */
 #include "pwr_class.h"
 #include "wb_ldh_msg.h"
 #include "co_cdh.h"
+#include "co_dcli.h"
 #include "pwr_vararg.h"
 #include "co_ver.h"
 #include "rt_gdh.h"
@@ -37,6 +39,7 @@ This module contains the API-routines to the Local Data Handler, LDH.  */
 #include "wb_volume.h"
 #include "wb_error.h"
 #include "wb_vrepmem.h"
+#include "wb_print_wbl.h"
 #include "pwr_baseclasses.h"
 #include <X11/Intrinsic.h>
 
@@ -363,7 +366,7 @@ ldh_CreateObject(ldh_tSession session, pwr_tOid *oid, char *name, pwr_tCid cid, 
       wb_object d_o = wb_object();
       wb_destination d = wb_destination( doid, dest);
       wb_object o = sp->createObject(cdef, d, n);
-      if (!o) return o.sts();
+      if (!o) return sp->sts();
     
       *oid = o.oid();
       return o.sts();
@@ -372,7 +375,7 @@ ldh_CreateObject(ldh_tSession session, pwr_tOid *oid, char *name, pwr_tCid cid, 
       wb_object d_o = sp->object(doid);
       wb_destination d = d_o.destination(dest);
       wb_object o = sp->createObject(cdef, d, n);
-      if (!o) return o.sts();
+      if (!o) return sp->sts();
     
       *oid = o.oid();
       return o.sts();
@@ -409,7 +412,8 @@ ldh_DeleteObject(ldh_tSession session, pwr_tOid oid)
   wb_object o = sp->object(oid);
   if (!o) return o.sts();
     
-  return sp->deleteObject(o);
+  sp->deleteObject(o);
+  return sp->sts();
 }
 
 pwr_tStatus
@@ -895,7 +899,8 @@ ldh_MoveObject(ldh_tSession session, pwr_tOid oid, pwr_tOid doid, ldh_eDest dest
   if (!o) return o.sts();
   wb_destination d = d_o.destination(dest);
 
-  return sp->moveObject(o, d);
+  sp->moveObject(o, d);
+  return sp->sts();
 }
 
 pwr_tStatus
@@ -917,10 +922,8 @@ pwr_tStatus
 ldh_NameToObjid(ldh_tSession session, pwr_tOid *oid, char *name)
 {
   wb_session *sp = (wb_session *)session;
-  wb_name n = wb_name(name);
-  if ( n.evenSts()) return n.sts();
 
-  wb_object o = sp->object(n);
+  wb_object o = sp->object(name);
   if (!o) return o.sts();
     
   *oid = o.oid();
@@ -1237,8 +1240,8 @@ pwr_tStatus
 ldh_SetObjectBody(ldh_tSession session, pwr_tOid oid, char *bname, char *value, int size)
 {
   wb_session *sp = (wb_session *)session;
-  wb_object o = sp->object(oid);
-  wb_attribute a = sp->attribute(o, bname);
+  wb_attribute a = sp->attribute( oid, bname);
+  if ( !a) return a.sts();
 
   try {
     sp->writeAttribute(a, value);
@@ -1441,6 +1444,52 @@ ldh_Paste(ldh_tSession session, pwr_tOid doid, ldh_eDest dest, int keepoid, char
 pwr_tStatus
 ldh_CreateLoadFile(ldh_tSession session)
 {
-  return LDH__NYI;
+  wb_session *sp = (wb_session*)session;
+
+  try {
+    sp->createSnapshot( 0);
+  }
+  catch (wb_error& e) {
+    return e.sts();
+  }
+  return sp->sts();
 }
+
+pwr_tStatus 
+ldh_WbDump (
+  ldh_tSession session,
+  char *objname,
+  char *dumpfile
+) 
+{
+  wb_session *sp = (wb_session*)session;
+  char fname[200];
+
+  dcli_translate_filename( fname, dumpfile);
+  ofstream fp( fname);
+  if ( !fp) return LDH__FILEOPEN;
+
+  try {
+    wb_print_wbl wprint( fp);
+    if ( !objname)
+      wprint.printVolume( *sp);
+    else {
+      wb_object o = sp->object( objname);
+      wprint.printHierarchy( *sp, o);
+    }
+  }
+  catch ( wb_error& e) {
+    return e.sts();
+  }
+  return LDH__SUCCESS;
+}
+
+
+
 #endif
+
+
+
+
+
+

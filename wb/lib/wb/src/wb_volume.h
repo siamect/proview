@@ -81,16 +81,16 @@ public:
   bool exportTree( wb_volume &import, pwr_tOid oid);
     
   pwr_tStatus syntaxCheck( int *errorcount, int *warningcount);
-  pwr_tStatus syntaxCheckObject( wb_orep *orep, int *errorcount, int *warningcount);
-  pwr_tStatus triggSyntaxCheck( wb_orep *orep, int *errorcount, int *warningcount);
-  pwr_tStatus triggAnteAdopt( wb_orep *orep, pwr_tCid cid);
-  pwr_tStatus triggAnteCreate( wb_orep *father, pwr_tCid cid);
-  pwr_tStatus triggAnteMove( wb_orep *orep, wb_orep *father);
-  pwr_tStatus triggAnteUnadopt( wb_orep *father, wb_orep *orep);
-  pwr_tStatus triggPostAdopt( wb_orep *father, wb_orep *orep);
-  pwr_tStatus triggPostCreate( wb_orep *orep);
-  pwr_tStatus triggPostMove( wb_orep *orep);
-  pwr_tStatus triggPostUnadopt( wb_orep *father, wb_orep *orep);
+  pwr_tStatus syntaxCheckObject( wb_object& o, int *errorcount, int *warningcount);
+  pwr_tStatus triggSyntaxCheck( wb_object& o, int *errorcount, int *warningcount);
+  pwr_tStatus triggAnteAdopt( wb_object& o, pwr_tCid cid);
+  pwr_tStatus triggAnteCreate( wb_object& father, pwr_tCid cid);
+  pwr_tStatus triggAnteMove( wb_object& o, wb_object& father);
+  pwr_tStatus triggAnteUnadopt( wb_object& father, wb_object& o);
+  pwr_tStatus triggPostAdopt( wb_object& father, wb_object& o);
+  pwr_tStatus triggPostCreate( wb_object& o);
+  pwr_tStatus triggPostMove( wb_object& o);
+  pwr_tStatus triggPostUnadopt( wb_object& father, wb_object& o);
 };
 
 #endif

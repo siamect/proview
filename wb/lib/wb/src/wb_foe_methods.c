@@ -811,6 +811,8 @@ static void	foe_destroy(
         if ( foectx->set_focus_disabled)
           XtRemoveTimeOut( foectx->focus_timerid);
 
+	foectx->grectx->window_object->hw.foectx = 0;
+
 	/* Delete controled modules */
 	gre_del( foectx->grectx);
 	pal_del( foectx->node_palctx);

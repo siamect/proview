@@ -353,7 +353,7 @@ pwr_eBix wb_attribute::bix() const
 {
   check();
 
-  if (m_flags & PWR_MASK_SUBCLASS)
+  if (!m_adrep || m_flags & PWR_MASK_SUBCLASS)
     return m_bix;
 
   return m_adrep->bix();

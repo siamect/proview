@@ -68,13 +68,32 @@ wb_object wb_session::createObject(wb_cdef cdef, wb_destination d, wb_name name)
   if (isReadonly())
     throw wb_error_str("ReadOnlySession");
 
+  wb_object parent;
+  switch ( d.code()) {
+  case ldh_eDest_IntoFirst:
+  case ldh_eDest_IntoLast:
+    parent = object( d.oid());
+    break;
+  case ldh_eDest_After:
+  case ldh_eDest_Before:
+    parent = object( d.oid()).parent();
+    break;
+  default:
+  throw wb_error(LDH__NODEST);
+  }
+
+  m_sts = triggAnteCreate( parent, cdef.cid());
+  if ( evenSts()) return wb_object();
+  m_sts = triggAnteAdopt( parent, cdef.cid());
+  if ( evenSts()) return wb_object();
+
   orep = m_vrep->createObject(&m_sts, cdef, d, name);
 
   wb_object o = wb_object(m_sts, orep);
   ldh_sEvent *ep = m_srep->eventStart( o.oid(), ldh_eEvent_ObjectCreated);
   m_srep->eventNewFamily( ep, o);
-  // sts = triggPostCreate( orep);
-  // sts = triggPostAdopt( father, orep);
+  triggPostCreate( o);
+  triggPostAdopt( parent, o);
   m_srep->eventSend( ep);
   return o;
 }
@@ -86,13 +105,35 @@ wb_object wb_session::copyObject(wb_object o, wb_destination d, wb_name name)
   if (isReadonly())
     throw wb_error_str("ReadOnlySession");
 
+  wb_object parent;
+  switch ( d.code()) {
+  case ldh_eDest_IntoFirst:
+  case ldh_eDest_IntoLast:
+    parent = object( d.oid());
+    break;
+  case ldh_eDest_After:
+  case ldh_eDest_Before:
+    parent = object( d.oid()).parent();
+    break;
+  default:
+  throw wb_error(LDH__NODEST);
+  }
+
+  m_sts = triggAnteCreate( parent, o.cid());
+  if ( evenSts()) return wb_object();
+  m_sts = triggAnteAdopt( parent, o.cid());
+  if ( evenSts()) return wb_object();
+
   orep = m_vrep->copyObject(&m_sts, (wb_orep*)o, d, name);
 
-  ldh_sEvent *ep = m_srep->eventStart( orep->oid(), ldh_eEvent_ObjectCreated);
-  m_srep->eventNewFamily( ep, o);
+  wb_object onew = wb_object(m_sts, orep);
+  ldh_sEvent *ep = m_srep->eventStart( onew.oid(), ldh_eEvent_ObjectCreated);
+  m_srep->eventNewFamily( ep, onew);
+  triggPostCreate( onew);
+  triggPostAdopt( parent, onew);
   m_srep->eventSend( ep);
 
-  return wb_object(m_sts, orep);
+  return onew;
 }
 
 bool wb_session::moveObject(wb_object o, wb_destination d)
@@ -100,15 +141,41 @@ bool wb_session::moveObject(wb_object o, wb_destination d)
   if (isReadonly())
     throw wb_error_str("ReadOnlySession");
 
+  wb_object parent;
+  switch ( d.code()) {
+  case ldh_eDest_IntoFirst:
+  case ldh_eDest_IntoLast:
+    parent = object( d.oid());
+    break;
+  case ldh_eDest_After:
+  case ldh_eDest_Before:
+    parent = object( d.oid()).parent();
+    break;
+  default:
+  throw wb_error(LDH__NODEST);
+  }
+
+  wb_object old_parent = o.parent();
+  m_sts = triggAnteMove( o, parent);
+  if ( evenSts()) return false;
+  m_sts = triggAnteUnadopt( old_parent, o);
+  if ( evenSts()) return false;
+  m_sts = triggAnteAdopt( parent, o.cid());
+  if ( evenSts()) return false;
+
   ldh_sEvent *ep = m_srep->eventStart( o.oid(), ldh_eEvent_ObjectMoved);
   m_srep->eventOldFamily( ep, o);
 
-  bool sts = m_vrep->moveObject(&m_sts, (wb_orep*)o, d);
+  bool rsts = m_vrep->moveObject(&m_sts, (wb_orep*)o, d);
+
+  triggPostMove( o);
+  triggPostUnadopt( old_parent, o);
+  triggPostAdopt( parent, o);
 
   m_srep->eventNewFamily( ep, o);
   m_srep->eventSend( ep);
 
-  return sts;
+  return rsts;
 }
 
 
@@ -129,19 +196,27 @@ bool wb_session::deleteObject(wb_object o)
   if (isReadonly())
     throw wb_error_str("ReadOnlySession");
 
-  return m_vrep->deleteObject(&m_sts, (wb_orep*)o);
-    
-/*
-  if (!o.isLocal())
-  return LDH__OTHERVOLUME;
-    
-  if (o.hasChild())
-  return LDH__HAS_CHILD;
+  if (!isLocal( o)) {
+    m_sts = LDH__OTHERVOLUME;
+    return false;
+  }
+  if ( o.first()) {
+    m_sts = LDH__HAS_CHILD;
+    return false;
+  }
 
-  o.triggAnteUnadopt();
-  o.unaAdopt();
-  o.triggPostUnadopt();
-*/
+  pwr_tStatus sts;
+  wb_object parent = o.parent();
+  sts = triggAnteUnadopt( parent, o);
+
+  ldh_sEvent *ep = m_srep->eventStart( o.oid(), ldh_eEvent_ObjectDeleted);
+  m_srep->eventOldFamily( ep, o);
+
+  sts = triggPostUnadopt( parent, o);
+
+  bool rsts = m_vrep->deleteObject(&m_sts, (wb_orep*)o);
+  m_srep->eventSend( ep);
+  return rsts;
 }
 
 bool wb_session::deleteFamily(wb_object o)
@@ -149,7 +224,23 @@ bool wb_session::deleteFamily(wb_object o)
   if (isReadonly())
     throw wb_error_str("ReadOnlySession");
 
-  return m_vrep->deleteFamily(&m_sts, (wb_orep*)o);
+  if (!isLocal( o)) {
+    m_sts = LDH__OTHERVOLUME;
+    return false;
+  }
+
+  pwr_tStatus sts;
+  wb_object parent = o.parent();
+  sts = triggAnteUnadopt( parent, o);
+
+  ldh_sEvent *ep = m_srep->eventStart( o.oid(), ldh_eEvent_ObjectDeleted);
+  m_srep->eventOldFamily( ep, o);
+
+  sts = triggPostUnadopt( parent, o);
+
+  bool rsts = m_vrep->deleteFamily(&m_sts, (wb_orep*)o);
+  m_srep->eventSend( ep);
+  return rsts;
 }
 
 bool wb_session::writeAttribute(wb_attribute &a, void *p, size_t size)
@@ -302,7 +393,44 @@ bool wb_session::pasteOset( pwr_tOid doid, ldh_eDest dest,
     m_sts = LDH__PASTESELF;
     return false;
   }
-  mem->exportPaste( *m_vrep, doid, dest, keepoid);
+
+  // Trigg ante adopt
+  wb_object parent;
+  switch ( dest) {
+  case ldh_eDest_IntoFirst:
+  case ldh_eDest_IntoLast:
+    parent = object( doid);
+    break;
+  case ldh_eDest_After:
+  case ldh_eDest_Before:
+    parent = object( doid).parent();
+    break;
+  default:
+  throw wb_error(LDH__NODEST);
+  }
+
+  if ( parent) {
+    pwr_tStatus sts;
+    wb_orep *orep = mem->object( &sts);
+    while( ODD(sts)) {
+      orep->ref();
+      m_sts = triggAnteAdopt( parent, orep->cid());
+      if ( evenSts()) return false;
+      wb_orep *prev = orep;
+      orep = orep->after( &sts);
+      prev->unref();
+    }
+  }
+  pwr_tOid *olist;
+  mem->exportPaste( *m_vrep, doid, dest, keepoid, &olist);
+
+  if ( parent) {
+    for ( pwr_tOid *oidp = olist; cdh_ObjidIsNotNull(*oidp); oidp++) {
+      wb_object o = object(*oidp);
+      triggPostAdopt( parent, o);
+    }
+  }
+  free( olist);
 
   if ( dest == ldh_eDest_After || dest == ldh_eDest_Before)
     doid = pwr_cNOid;

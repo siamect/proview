@@ -273,20 +273,18 @@ dcli_tCmdTable	wnav_command_table[] = {
 		{
 			"WB",
 			&wnav_wb_func,
-			{ "dcli_arg1", "/OUTPUT", "/HIERARCHY", "/INDENT",
-			"/HEADER", "/VOLUME", "/LOADFILE", "/IGNORE",
-			"/FULL", "/ANNOUNCE", "/NOINDEX", "/ROOT"
+			{ "dcli_arg1", "/OUTPUT", "/HIERARCHY",
 			""}
 		},
 		{
 			"EXIT",
 			&wnav_exit_func,
-			{ "",}
+			{ ""}
 		},
 		{
 			"QUIT",
 			&wnav_exit_func,
-			{ "",}
+			{ ""}
 		},
 		{
 			"DEFINE",
@@ -2354,7 +2352,7 @@ static int	wnav_list_func(	void		*client_data,
     if ( !shortname)
     {
       // Search for local signal list descriptor
-      strcpy(descriptor_str, "wb:Local-Lists-SignalList");
+      strcpy(descriptor_str, "localWb:Lists-SignalList");
       sts = ldh_NameToObjid( wnav->ldhses, &objid, descriptor_str);
       if ( ODD(sts))
       {
@@ -2369,7 +2367,7 @@ static int	wnav_list_func(	void		*client_data,
       if ( EVEN(sts))
       {
         // No local found, take global
-        strcpy(descriptor_str, "wb:layout-Lists-SignalList");
+        strcpy(descriptor_str, "wb:Lists-SignalList");
         sts = utl_list( wnav->ldhses, descriptor_str, hierstr_p, 
 		objectstr_p, file, print, allvolumes, volumestr_p, 0);
         if ( EVEN(sts))
@@ -2383,7 +2381,7 @@ static int	wnav_list_func(	void		*client_data,
     {
       // Search for local signal list descriptor
 
-      strcpy( descriptor_str, "wb:Local-Lists-SignalListShort");
+      strcpy( descriptor_str, "localWb:Lists-SignalListShort");
       sts = ldh_NameToObjid( wnav->ldhses, &objid, descriptor_str);
       if ( ODD(sts))
       {
@@ -2398,7 +2396,7 @@ static int	wnav_list_func(	void		*client_data,
       if ( EVEN(sts))
       {
         // No local found, take global
-        strcpy( descriptor_str, "wb:layout-Lists-SignalListShort");
+        strcpy( descriptor_str, "wb:Lists-SignalListShort");
         sts = utl_list( wnav->ldhses, descriptor_str, hierstr_p, objectstr_p, 
 		file, print, allvolumes, volumestr_p, 0);
         if ( EVEN(sts))
@@ -2442,7 +2440,7 @@ static int	wnav_list_func(	void		*client_data,
     if ( EVEN(sts)) return sts;
 
     // Search for local signal list descriptor
-    strcpy(descriptor_str, "wb:Local-Lists-ChannelList");
+    strcpy(descriptor_str, "localWb:Lists-ChannelList");
     sts = ldh_NameToObjid( wnav->ldhses, &objid, descriptor_str);
     if ( ODD(sts))
     {
@@ -2457,7 +2455,7 @@ static int	wnav_list_func(	void		*client_data,
     if ( EVEN(sts))
     {
       // No local found, take global
-      strcpy(descriptor_str, "wb:layout-Lists-ChannelList");
+      strcpy(descriptor_str, "wb:Lists-ChannelList");
       sts = utl_list( wnav->ldhses, descriptor_str, hierstr_p, 
 		objectstr_p, file, print, allvolumes, volumestr_p, 0);
       if ( EVEN(sts))
@@ -2497,7 +2495,7 @@ static int	wnav_list_func(	void		*client_data,
     if ( EVEN(sts)) return sts;
 
     // Search for local signal list descriptor
-    strcpy(descriptor_str, "wb:Local-Lists-HierList");
+    strcpy(descriptor_str, "localWb:Lists-HierList");
     sts = ldh_NameToObjid( wnav->ldhses, &objid, descriptor_str);
     if ( ODD(sts))
     {
@@ -2512,7 +2510,7 @@ static int	wnav_list_func(	void		*client_data,
     if ( EVEN(sts))
     {
       // No local found, take global
-      strcpy(descriptor_str, "wb:layout-Lists-HierList");
+      strcpy(descriptor_str, "wb:Lists-HierList");
       sts = utl_list( wnav->ldhses, descriptor_str, hierstr_p, 
 		objectstr_p, file, print, allvolumes, volumestr_p, 0);
       if ( EVEN(sts))
@@ -2523,7 +2521,7 @@ static int	wnav_list_func(	void		*client_data,
     }
 
     // Write plcpgm list
-    strcpy(descriptor_str, "wb:Local-Lists-PlcPgmList");
+    strcpy(descriptor_str, "localWb:Lists-PlcPgmList");
     sts = ldh_NameToObjid( wnav->ldhses, &objid, descriptor_str);
     if ( ODD(sts))
     {
@@ -2538,7 +2536,7 @@ static int	wnav_list_func(	void		*client_data,
     if ( EVEN(sts))
     {
       // No local found, take global
-      strcpy(descriptor_str, "wb:layout-Lists-PlcPgmList");
+      strcpy(descriptor_str, "wb:Lists-PlcPgmList");
       sts = utl_list( wnav->ldhses, descriptor_str, hierstr_p, 
 		objectstr_p, file, print, allvolumes, volumestr_p, 0);
       if ( EVEN(sts))
@@ -2581,7 +2579,7 @@ static int	wnav_list_func(	void		*client_data,
     if ( EVEN(sts)) return sts;
 
     // Search for local signal list descriptor
-    strcpy(descriptor_str, "wb:Local-Lists-PlcModuleList");
+    strcpy(descriptor_str, "localWb:Lists-PlcModuleList");
     sts = ldh_NameToObjid( wnav->ldhses, &objid, descriptor_str);
     if ( ODD(sts))
     {
@@ -2596,7 +2594,7 @@ static int	wnav_list_func(	void		*client_data,
     if ( EVEN(sts))
     {
       // No local found, take global
-      strcpy(descriptor_str, "wb:layout-Lists-PlcModuleList");
+      strcpy(descriptor_str, "wb:Lists-PlcModuleList");
       sts = utl_list( wnav->ldhses, descriptor_str, hierstr_p, 
 		objectstr_p, file, print, allvolumes, volumestr_p, 0);
       if ( EVEN(sts))
@@ -2621,7 +2619,7 @@ static int	wnav_list_func(	void		*client_data,
 
     sprintf( file, "pwrp_load:rtt_crr_%s.dat", wnav_VolumeIdToStr( info.Volume));
 
-    strcpy( descriptor_str, "wb:Local-Lists-RttSignalList");
+    strcpy( descriptor_str, "localWb:Lists-RttSignalList");
     sts = ldh_NameToObjid( wnav->ldhses, &objid, descriptor_str);
     if ( ODD(sts))
     {
@@ -2635,7 +2633,7 @@ static int	wnav_list_func(	void		*client_data,
     if ( EVEN(sts))
     {
       // No local found, take global
-      strcpy(descriptor_str, "wb:layout-Lists-RttSignalList");
+      strcpy(descriptor_str, "wb:Lists-RttSignalList");
       sts = utl_list( wnav->ldhses, descriptor_str, NULL, NULL, file, 0, 0, NULL, 1);
       if ( EVEN(sts))
       {
@@ -2652,7 +2650,7 @@ static int	wnav_list_func(	void		*client_data,
 
     sprintf( file, "pwrp_load:rtt_crro_%s.dat", wnav_VolumeIdToStr( info.Volume));
 
-    strcpy(descriptor_str, "wb:Local-Lists-RttObjectList");
+    strcpy(descriptor_str, "localWb:Lists-RttObjectList");
     sts = ldh_NameToObjid( wnav->ldhses, &objid, descriptor_str);
     if ( ODD(sts))
     {
@@ -2666,7 +2664,7 @@ static int	wnav_list_func(	void		*client_data,
     if ( EVEN(sts))
     {
       // No local found, take global
-      strcpy(descriptor_str, "wb:layout-Lists-RttObjectList");
+      strcpy(descriptor_str, "wb:Lists-RttObjectList");
       sts = utl_list( wnav->ldhses, descriptor_str, NULL, NULL, file, 0, 0, NULL, 0);
       if ( EVEN(sts))
       {
@@ -2683,7 +2681,7 @@ static int	wnav_list_func(	void		*client_data,
 
     sprintf( file, "pwrp_load:rtt_crrc_%s.dat", wnav_VolumeIdToStr( info.Volume));
 
-    strcpy(descriptor_str, "wb:Local-Lists-RttCodeList");
+    strcpy(descriptor_str, "localWb:Lists-RttCodeList");
     sts = ldh_NameToObjid( wnav->ldhses, &objid, descriptor_str);
     if ( ODD(sts))
     {
@@ -2697,7 +2695,7 @@ static int	wnav_list_func(	void		*client_data,
     if ( EVEN(sts))
     {
       // No local found, take global
-      strcpy(descriptor_str, "wb:layout-Lists-RttCodeList");
+      strcpy(descriptor_str, "wb:Lists-RttCodeList");
       sts = utl_list( wnav->ldhses, descriptor_str, NULL, NULL, file, 0, 0, NULL, 0);
       if ( EVEN(sts))
       {
@@ -2710,7 +2708,7 @@ static int	wnav_list_func(	void		*client_data,
     sprintf( file, "pwrp_load:rtt_plc_%s.dat", wnav_VolumeIdToStr( info.Volume));
 
     // Search for local descriptor
-    strcpy(descriptor_str, "wb:Local-Lists-RttPlcList");
+    strcpy(descriptor_str, "localWb:Lists-RttPlcList");
     sts = ldh_NameToObjid( wnav->ldhses, &objid, descriptor_str);
     if ( ODD(sts))
     {
@@ -2725,7 +2723,7 @@ static int	wnav_list_func(	void		*client_data,
     if ( EVEN(sts))
     {
       // No local found, take global
-      strcpy(descriptor_str, "wb:layout-Lists-RttPlcList");
+      strcpy(descriptor_str, "wb:Lists-RttPlcList");
       sts = utl_list( wnav->ldhses, descriptor_str, NULL, NULL, file, 0, 0, NULL, 0);
       if ( EVEN(sts))
       {
@@ -3894,16 +3892,9 @@ static int	wnav_wb_func( 	void		*client_data,
   if ( strncmp( arg1_str, "DUMP", strlen( arg1_str)) == 0)
   {
     char	hierarchystr[80]; 
-    char	outputstr[80]; 
-    int		hierarchy_flag;
-    int		root_flag;
-    char	indentstr[80];
-    int		indent;
-    int		indent_flag;
-    int		header;
+    char	outputstr[200]; 
+    char        *hierarchystr_p;
     pwr_tStatus	sts;
-    char	volumestr[160];
-    char	*volumestr_p;
 
     if ( EVEN( dcli_get_qualifier( "/OUTPUT" , outputstr)))
     {
@@ -3912,226 +3903,21 @@ static int	wnav_wb_func( 	void		*client_data,
     }
 
     if ( ODD( dcli_get_qualifier( "/HIERARCHY" , hierarchystr)))
-      hierarchy_flag = 1;
+      hierarchystr_p = hierarchystr;
     else
-      hierarchy_flag = 0;
-
-    root_flag = 0;
-
-    if ( ODD( dcli_get_qualifier( "/INDENT" , indentstr)))
-    { 
-      indent_flag = 1;
-      sts = sscanf(indentstr, "%d", &indent);
-      if ( sts != 1)
-      {
-        wnav->message('E', "Syntax error");
-        return WNAV__SYNTAX;
-      }
-    }
-    else
-      indent_flag = 0;
-
-    header = ODD( dcli_get_qualifier( "/HEADER", NULL));
-
-    if ( ODD( dcli_get_qualifier( "/VOLUME" , volumestr)))
-      volumestr_p = volumestr;
-    else
-      volumestr_p = NULL;
+      hierarchystr_p = 0;
 
     sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->wbctx);
-
-    sts = utl_wb_dump( wnav->ldhses, indent_flag, header, hierarchy_flag,
-	root_flag, indent, hierarchystr, outputstr, volumestr_p);
-    if ( EVEN(sts))
-      wnav->message(' ', wnav_get_message(sts));
-    return sts;
-  }
-  else if ( strncmp( arg1_str, "EXPORT", strlen( arg1_str)) == 0)
-  {
-    char	outputstr[80]; 
-    int		hierarchy_flag;
-    char	hierarchystr[80]; 
-    int		root_flag;
-    char	indentstr[80];
-    int		indent;
-    int		indent_flag;
-    int		header;
-    pwr_tStatus	sts;
-    char	*volumestr_p;
-
-    if ( EVEN( dcli_get_qualifier( "/OUTPUT" , outputstr)))
-    {
-      wnav->message('E', "Qualifer required");
-      return WNAV__QUAL;
-    }
-
-    hierarchy_flag = 0;
-
-    if ( ODD( dcli_get_qualifier( "/HIERARCHY" , hierarchystr)))
-    {
-      root_flag = 1;
-      hierarchy_flag = 1;
-    }    
-    else
-      root_flag = 0;
-
-    if ( ODD( dcli_get_qualifier( "/INDENT" , indentstr)))
-    { 
-      indent_flag = 1;
-      sts = sscanf(indentstr, "%d", &indent);
-      if ( sts != 1) 
-      {
-        wnav->message('E', "Syntax error");
-        return WNAV__SYNTAX;
-      }
-    }
-    else
-      indent_flag = 0;
-
-    header = ODD( dcli_get_qualifier( "/HEADER", NULL));
-
-    volumestr_p = NULL;
-
-    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->wbctx);
-
-    sts = utl_wb_dump( wnav->ldhses, indent_flag, header, hierarchy_flag,
-	root_flag, indent, hierarchystr, outputstr, volumestr_p);
+    
+    sts = ldh_WbDump( wnav->ldhses, hierarchystr_p, outputstr);
     if ( EVEN(sts))
       wnav->message(' ', wnav_get_message(sts));
     return sts;
   }
   else if ( strncmp( arg1_str, "LOAD", strlen( arg1_str)) == 0)
   {
-    char	loadfilestr[80]; 
-    char	outputstr[80]; 
-    char	*rootstr_ptr; 
-    char	*outputstr_ptr; 
-    int		ignore_flag;
-    int		full_flag;
-    int		index_flag;
-    int		announce_flag;
-    pwr_tStatus	sts, status;
-    ldh_sSessInfo	info;
-
-    if ( !wnav->editmode)
-    {
-      wnav->message('E', "Not in edit mode");
-      return WNAV__NOEDIT;
-    }
-
-    if ( EVEN( dcli_get_qualifier( "/LOADFILE" , loadfilestr)))
-    {
-      wnav->message('E', "Qualifer required");
-      return WNAV__QUAL;
-    }
-
-    if ( ODD( dcli_get_qualifier( "/OUTPUT" , outputstr)))
-      outputstr_ptr = outputstr;
-    else
-      outputstr_ptr = NULL;
-
-    rootstr_ptr = NULL;
-
-    ignore_flag =  ODD( dcli_get_qualifier( "/IGNORE" , NULL));
-    full_flag = ODD( dcli_get_qualifier( "/FULL" , NULL));
-    announce_flag = ODD( dcli_get_qualifier( "/ANNOUNCE" , NULL));
-    index_flag = EVEN( dcli_get_qualifier( "/NOINDEX" , NULL));
-
-    // The ldh session has to be saved
-    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->wbctx);
-    sts = ldh_GetSessionInfo( wnav->ldhses, &info);
-    if ( EVEN(sts)) return sts;
-
-    if ( !info.Empty )
-    {
-      wnav->message('E', "Session is not saved");
-      return WNAV__NOTSAVED;
-    }
-
-    sts = ldh_SetSession( wnav->ldhses, ldh_eAccess_ReadOnly);
-    if ( EVEN(sts)) return sts;
-
-    sts = ldh_wbload( ldh_SessionToWB( wnav->ldhses), wnav->ldhses, 
-	ignore_flag, full_flag, rootstr_ptr, loadfilestr,
-	outputstr_ptr, announce_flag, !index_flag);
-    if ( EVEN(sts))
-      wnav->message(' ', wnav_get_message(sts));
-  
-    status = ldh_SetSession( wnav->ldhses, ldh_eAccess_ReadWrite);
-    if ( EVEN(status)) return status;
-
-    if ( wnav->window_type != wnav_eWindowType_No)
-      wnav->ldh_refresh( pwr_cNObjid);
-    if ( EVEN(sts)) return sts;
-  }
-  else if ( strncmp( arg1_str, "IMPORT", strlen( arg1_str)) == 0)
-  {
-    char	loadfilestr[80]; 
-    char	outputstr[80]; 
-    char	rootstr[80]; 
-    char	*rootstr_ptr; 
-    char	*outputstr_ptr; 
-    int		ignore_flag;
-    int		full_flag;
-    int		announce_flag;
-    pwr_tStatus	sts, status;
-    ldh_sSessInfo	info;
-    int		index_flag;
-
-    if ( !wnav->editmode)
-    {
-      wnav->message('E', "Not in edit mode");
-      return WNAV__NOEDIT;
-    }
-
-    if ( EVEN( dcli_get_qualifier( "/LOADFILE" , loadfilestr)))
-    {
-      wnav->message('E', "Qualifer required");
-      return WNAV__QUAL;
-    }
-
-    if ( ODD( dcli_get_qualifier( "/OUTPUT" , outputstr)))
-      outputstr_ptr = outputstr;
-    else
-      outputstr_ptr = NULL;
-
-    if ( ODD( dcli_get_qualifier( "/ROOT" , rootstr)))
-      rootstr_ptr = rootstr;
-    else
-      rootstr_ptr = NULL;
-
-    ignore_flag =  ODD( dcli_get_qualifier( "/IGNORE" , NULL));
-    full_flag = ODD( dcli_get_qualifier( "/FULL" , NULL));
-    announce_flag = ODD( dcli_get_qualifier( "/ANNOUNCE" , NULL));
-    index_flag = 1;
-
-    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->wbctx);
-
-    // The ldh session has to be saved
-    sts = ldh_GetSessionInfo( wnav->ldhses, &info);
-    if ( EVEN(sts)) return sts;
-
-    if ( !info.Empty )
-    {
-      wnav->message('E', "Session is not saved");
-      return WNAV__NOTSAVED;
-    }
-
-    sts = ldh_SetSession( wnav->ldhses, ldh_eAccess_ReadOnly);
-    if ( EVEN(sts)) return sts;
-
-    sts = ldh_wbload( ldh_SessionToWB(wnav->ldhses), wnav->ldhses, ignore_flag,
-	full_flag, rootstr_ptr, loadfilestr, outputstr_ptr, announce_flag, 
-	!index_flag);
-    if ( EVEN(sts))
-      wnav->message(' ', wnav_get_message(sts));
-  
-    status = ldh_SetSession( wnav->ldhses, ldh_eAccess_ReadWrite);
-    if ( EVEN(status)) return status;
-
-    if ( wnav->window_type != wnav_eWindowType_No)
-      wnav->ldh_refresh( pwr_cNObjid);
-    if ( EVEN(sts)) return sts;
+    wnav->message('E', "Not yet implemented");
+    return LDH__NYI;
   }
   else
   {

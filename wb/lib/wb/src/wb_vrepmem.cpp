@@ -581,6 +581,8 @@ wb_orep *wb_vrepmem::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination
     switch ( code) {
     case ldh_eDest_IntoFirst:
       memo->fws = dest->fch;
+      if ( dest->fch)
+	dest->fch->bws = memo;
       dest->fch = memo;
       memo->fth = dest;
       break;
@@ -598,6 +600,8 @@ wb_orep *wb_vrepmem::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination
     case ldh_eDest_After:
       memo->fws = dest->fws;
       memo->bws = dest;
+      if ( dest->fws)
+	dest->fws->bws = memo;
       dest->fws = memo;
       memo->fth = dest->fth;
       break;
@@ -682,6 +686,8 @@ wb_orep *wb_vrepmem::copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_destin
     switch ( code) {
     case ldh_eDest_IntoFirst:
       memo->fws = dest->fch;
+      if ( dest->fch)
+	dest->fch->bws = memo;
       dest->fch = memo;
       memo->fth = dest;
       break;
@@ -699,6 +705,8 @@ wb_orep *wb_vrepmem::copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_destin
     case ldh_eDest_After:
       memo->fws = dest->fws;
       memo->bws = dest;
+      if ( dest->fws)
+	dest->fws->bws = memo;
       dest->fws = memo;
       memo->fth = dest->fth;
       break;
@@ -766,6 +774,8 @@ bool wb_vrepmem::moveObject(pwr_tStatus *sts, wb_orep *orep, wb_destination &d)
   switch ( code) {
     case ldh_eDest_IntoFirst:
       memo->fws = dest->fch;
+      if ( dest->fch)
+	dest->fch->bws = memo;
       dest->fch = memo;
       memo->fth = dest;
       break;
@@ -783,6 +793,8 @@ bool wb_vrepmem::moveObject(pwr_tStatus *sts, wb_orep *orep, wb_destination &d)
     case ldh_eDest_After:
       memo->fws = dest->fws;
       memo->bws = dest;
+      if ( dest->fws)
+	dest->fws->bws = memo;
       dest->fws = memo;
       memo->fth = dest->fth;
       break;
@@ -1143,7 +1155,8 @@ bool wb_vrepmem::importPasteObject(pwr_tOid destination, ldh_eDest destcode,
 				   bool keepoid, pwr_tOid oid, 
 				   pwr_tCid cid, pwr_tOid poid,
 				   pwr_tOid boid, const char *name,
-				   size_t rbSize, size_t dbSize, void *rbody, void *dbody)
+				   size_t rbSize, size_t dbSize, void *rbody, void *dbody,
+				   pwr_tOid *roid)
 {
   mem_object *memo = new mem_object();
   strcpy( memo->m_name, name);
@@ -1256,6 +1269,7 @@ bool wb_vrepmem::importPasteObject(pwr_tOid destination, ldh_eDest destcode,
   registerObject( memo->m_oid.oix, memo);
   importTranslationTableInsert( oid.oix, memo->m_oid.oix);
 
+  *roid = memo->m_oid;
   return true;
 }
 
@@ -1277,10 +1291,17 @@ bool wb_vrepmem::exportTree(wb_treeimport &i, pwr_tOid oid)
 }
 
 bool wb_vrepmem::exportPaste(wb_treeimport &i, pwr_tOid destination, ldh_eDest destcode,
-			     bool keepoid)
+			     bool keepoid, pwr_tOid **rootlist)
 {
+  // Count number of topobjects
+  int top_cnt = 0;
+  for ( mem_object *top = root_object; top; top = top->fws)
+    top_cnt++;
+  
+  *rootlist = (pwr_tOid *) calloc( top_cnt + 1, sizeof(pwr_tOid));
+
   if ( root_object) {
-    root_object->exportPaste( i, destination, true, destcode, keepoid);
+    root_object->exportPaste( i, destination, true, destcode, keepoid, *rootlist);
     i.importPaste();
   }
   return true;

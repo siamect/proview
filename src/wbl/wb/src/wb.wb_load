@@ -12,12 +12,7 @@ Volume wb pwr_eClass_WorkBenchVolume 254.254.254.254
 EndVolume
 
 SObject wb:
-  Object layout $PlantHier
-  EndObject
-EndSObject
-
-SObject wb:layout
-  Object Lists $DocHier
+  Object Lists $PlantHier
     Object ListConfig ListConfig
     EndObject
     Object ChannelList ListDescriptor
