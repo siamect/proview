@@ -112,7 +112,10 @@ int	NavHelp::help( char *help_key, char *help_bookmark,
   int	header1;
   int	header2;
   int	bold;
+  int	code;
   int	horizontal_line;
+  int	style;
+  char  style_str[80];
   int   image;
   char  imagefile[80];
   int	register_bookmark = 0;
@@ -153,17 +156,13 @@ int	NavHelp::help( char *help_key, char *help_bookmark,
 	
   if ( !print_all)
     key_nr = dcli_parse( key, " 	", "", (char *)key_part,
-                	sizeof( key_part) / sizeof( key_part[0]), 
-			sizeof( key_part[0]), 0);
+			 sizeof( key_part) / sizeof( key_part[0]), 
+			 sizeof( key_part[0]), 0);
 
 
   sts = dcli_read_line( line, sizeof( line), file);
-  while ( ODD(sts))
-  {
-    if ( strncmp( line, "<include>", 9) == 0 || 
-         strncmp( line, "<INCLUDE>", 9) == 0)
-    {
-      
+  while ( ODD(sts)) {
+    if ( cdh_NoCaseStrncmp( line, "<include>", 9) == 0) {      
       help_remove_spaces( &line[9], include_file);
       // Replace symbol for language
       if ( strncmp( include_file, "$pwr_lang/", 10) == 0) {
@@ -174,18 +173,43 @@ int	NavHelp::help( char *help_key, char *help_bookmark,
 	strcpy( include_file, lng_include_file);
       }
 
-      sts = help( help_key, help_bookmark, navh_eHelpFile_Other, 
- 		  include_file, book_mark, strict);
-      if ( ODD(sts) && !print_all)
-      {
-        fclose( file);
-        return sts;
+      if ( !noprop) {
+	sts = help( help_key, help_bookmark, navh_eHelpFile_Other, 
+		    include_file, book_mark, strict);
+	if ( ODD(sts) && !print_all) {
+	  fclose( file);
+	  return sts;
+	}
       }
       hit = 0;
     }
-    else if ( strncmp( line, "<topic>", 7) == 0 || 
-              strncmp( line, "<TOPIC>", 7) == 0)
-    {
+    else if ( cdh_NoCaseStrncmp( line, "<chapter>", 9) == 0) {      
+      (insert_cb)( parent_ctx, navh_eItemType_Chapter, "",
+		   NULL, NULL, NULL, NULL, NULL, navh_eHelpFile_, 0, NULL);
+    }
+    else if ( cdh_NoCaseStrncmp( line, "</chapter>", 10) == 0) {
+      (insert_cb)( parent_ctx, navh_eItemType_EndChapter, "",
+		   NULL, NULL, NULL, NULL, NULL, navh_eHelpFile_, 0, NULL);
+    }
+    else if ( cdh_NoCaseStrncmp( line, "<headerlevel>", 13) == 0) {
+      (insert_cb)( parent_ctx, navh_eItemType_HeaderLevel, "",
+		   NULL, NULL, NULL, NULL, NULL, navh_eHelpFile_, 0, NULL);
+    }
+    else if ( cdh_NoCaseStrncmp( line, "</headerlevel>", 14) == 0) {
+      (insert_cb)( parent_ctx, navh_eItemType_EndHeaderLevel, "",
+		   NULL, NULL, NULL, NULL, NULL, navh_eHelpFile_, 0, NULL);
+    }
+    else if ( cdh_NoCaseStrncmp( line, "<pagebreak>", 11) == 0) {
+      (insert_cb)( parent_ctx, navh_eItemType_PageBreak, "",
+		   NULL, NULL, NULL, NULL, NULL, navh_eHelpFile_, 0, NULL);
+    }
+    else if ( cdh_NoCaseStrncmp( line, "<topic>", 7) == 0) {
+      if ( (s = strstr( line, "<style>")) || (s = strstr( line, "<STYLE>"))) {
+	style = 1;
+	help_remove_spaces( s + 7, style_str);
+	*s = 0;
+      }
+
       help_remove_spaces( &line[7], subject);
       cdh_ToLower( subject, subject);
       subject_nr = dcli_parse( subject, " 	", "", (char *)subject_part,
@@ -206,7 +230,17 @@ int	NavHelp::help( char *help_key, char *help_bookmark,
         }
       }
       else {
-        (insert_cb)( parent_ctx, navh_eItemType_Topic, subject,
+	if ( cdh_NoCaseStrcmp( subject_part[0], "__documenttitlepage") == 0)
+	  (insert_cb)( parent_ctx, navh_eItemType_DocTitlePage, subject,
+		       NULL, NULL, NULL, NULL, NULL, navh_eHelpFile_, 0, NULL);
+	else if ( cdh_NoCaseStrcmp( subject_part[0], "__documentinfopage") == 0)
+	  (insert_cb)( parent_ctx, navh_eItemType_DocInfoPage, subject,
+		       NULL, NULL, NULL, NULL, NULL, navh_eHelpFile_, 0, NULL);
+	else
+	  (insert_cb)( parent_ctx, navh_eItemType_Topic, subject,
+		       NULL, NULL, NULL, NULL, NULL, navh_eHelpFile_, 0, NULL);
+	if ( style)
+	  node = (insert_cb)( parent_ctx, navh_eItemType_Style, style_str,
 		      NULL, NULL, NULL, NULL, NULL, navh_eHelpFile_, 0, NULL);
         hit = 1;
       }
@@ -339,7 +373,9 @@ int	NavHelp::help( char *help_key, char *help_bookmark,
         header1 = 0;
         header2 = 0;
         bold = 0;
+	code = 0;
 	horizontal_line = 0;
+	style = 0;
         if ( (s = strstr( line, "<h1>")) || (s = strstr( line, "<H1>")))
         {
           header1 = 1;
@@ -353,6 +389,11 @@ int	NavHelp::help( char *help_key, char *help_bookmark,
         else if ( (s = strstr( line, "<b>")) || (s = strstr( line, "<B>")))
         {
           bold = 1;
+          strcpy( text1, s + 3);
+        }
+        else if ( (s = strstr( line, "<c>")) || (s = strstr( line, "<C>")))
+        {
+          code = 1;
           strcpy( text1, s + 3);
         }
         else if ( (s = strstr( line, "<hr>")) || (s = strstr( line, "<HR>")))
@@ -421,6 +462,18 @@ int	NavHelp::help( char *help_key, char *help_bookmark,
 	    register_bookmark = 0;
 	  }
 	}
+	else if ( code)
+	{
+          node = (insert_cb)( parent_ctx, navh_eItemType_HelpCode, text1, 
+		text2, text3, link, 
+		link_bookmark, link_filename_p, file_type, index_link,
+		bookmark_p);
+	  if ( register_bookmark)
+	  {
+	    bookmark_node = node;
+	    register_bookmark = 0;
+	  }
+	}
 	else if ( horizontal_line) {
 	  node = (insert_cb)( parent_ctx, navh_eItemType_HorizontalLine, NULL,
 		      NULL, NULL, NULL, NULL, NULL, navh_eHelpFile_, 0, NULL);
@@ -465,7 +518,7 @@ int	NavHelp::help( char *help_key, char *help_bookmark,
   }
   fclose( file);
 
-  if ( !hit)
+  if ( !print_all && !hit)
     return NAV__TOPICNOTFOUND;
   return NAV__SUCCESS;
 }

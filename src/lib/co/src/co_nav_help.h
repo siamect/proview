@@ -30,14 +30,23 @@ typedef enum {
 	navh_eItemType_HorizontalLine,
 	navh_eItemType_Topic,
 	navh_eItemType_EndTopic,
-	navh_eItemType_Image
+	navh_eItemType_Image,
+	navh_eItemType_DocTitlePage,
+	navh_eItemType_DocInfoPage,
+	navh_eItemType_Chapter,
+	navh_eItemType_EndChapter,
+	navh_eItemType_HeaderLevel,
+	navh_eItemType_EndHeaderLevel,
+	navh_eItemType_PageBreak,
+	navh_eItemType_Style,
+	navh_eItemType_HelpCode
 	} navh_eItemType;
 
 
 class NavHelp {
   public:
     NavHelp( void *h_parent_ctx, char *h_base_file, char *h_project_file) 
-      : parent_ctx(h_parent_ctx) 
+      : parent_ctx(h_parent_ctx), noprop(0)
       { strcpy(project_file, h_project_file);
         strcpy(base_file, h_base_file);};
     void 	        *parent_ctx;
@@ -47,10 +56,12 @@ class NavHelp {
     void 		(*draw_cb)( void *, int, void *);
     char                base_file[120];
     char                project_file[120];
+    int			noprop;
 
     int help( char *key, char *help_bookmark, navh_eHelpFile file_type, 
 	      char *file_name, void **bookmark, bool strict = false);
     int	help_index( navh_eHelpFile file_type, char *file_name);
+    void set_propagate( int prop) { noprop = !prop;}
 };
 
 
