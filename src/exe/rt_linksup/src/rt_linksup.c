@@ -24,6 +24,8 @@
 #include "rt_qcom.h"
 #include "rt_plc_timer.h"
 #include "rt_plc_utl.h"
+#include "rt_aproc.h"
+#include "rt_pwr_msg.h"
 
 /* In this version, only cTimerTimeScan is used.
    To save resources we only have one PAMS timer. */
@@ -80,25 +82,30 @@ int main (int argc, char ** argv)
   qcom_sQid	my_q = qcom_cNQid;
   qcom_sGet	get;
 
-  errh_Init("pwr_linksup");
+  errh_Init("pwr_linksup", errh_eAnix_linksup);
+  errh_SetStatus( PWR__SRVSTARTUP);
 
   if (!qcom_Init(&sts, NULL, "pwr_linksup")) {
     errh_Error("qcom_Init, %m", sts);
+    errh_SetStatus( PWR__SRVTERM);
     exit(sts);
   }
 
   sts = gdh_Init("pwr_linksup");
   if (EVEN(sts)) {
     errh_Fatal("gdh_Init, %m", sts);
+    errh_SetStatus( PWR__SRVTERM);
     exit(sts);
   }
 
   if (!qcom_CreateQ(&sts, &my_q, NULL, "events")) {
     errh_Fatal("qcom_CreateQ, %m", sts);
+    errh_SetStatus( PWR__SRVTERM);
     exit(sts);
   }
   if (!qcom_Bind(&sts, &my_q, &qcom_cQini)) {
     errh_Fatal("qcom_Bind(Qini), %m", sts);
+    errh_SetStatus( PWR__SRVTERM);
     exit(-1);
   }
 
@@ -117,8 +124,11 @@ int main (int argc, char ** argv)
     list_state = eListState_Scan;
   } else {
     errh_Info("No nodes to supervise, exiting");
+    errh_SetStatus( pwr_cNStatus);
     exit(0);
   }
+
+  errh_SetStatus( PWR__SRUN);
 
   for (;;) {
     scan_timers();
@@ -132,6 +142,7 @@ int main (int argc, char ** argv)
       }
       qcom_Free(&sts, get.data);
     }
+    aproc_TimeStamp();
   }
 }
 
@@ -215,6 +226,8 @@ event (
   } else if (new_event.b.swapInit & !cur_event.b.swapInit) {
     list_state = eListState_Wait;
     errh_Info("Warm restart initiated.");   
+  } else if (new_event.b.terminate & !cur_event.b.terminate) {
+    exit(0);
   }
 
   sav_event = ep->mask;

@@ -65,6 +65,8 @@ struct tra_sCtx{
   trace_t_node		*trace_list;
   char			filename[200];
   int			version;
+  int			has_host;
+  char			hostname[120];
 };
 
 

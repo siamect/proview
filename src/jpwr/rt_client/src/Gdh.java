@@ -1282,34 +1282,40 @@ public class Gdh
 	
 	try
 	{
-        switch (((jpwr.rt.Sub)(subscriptions.get(i))).typeId)
-        {
-          case Pwr.eType_Int32:
-          case Pwr.eType_UInt32:
-          case Pwr.eType_Int16:
-          case Pwr.eType_UInt16:
-          case Pwr.eType_Int8:
-          case Pwr.eType_UInt8:
-            ((jpwr.rt.Sub)(subscriptions.get(i))).setValue(in.readInt());
-	    break;
-          case Pwr.eType_Float32:
-            ((jpwr.rt.Sub)(subscriptions.get(i))).setValue(in.readFloat());
-            break;
-          case 0:
-          case Pwr.eType_Boolean:
-            ((jpwr.rt.Sub)(subscriptions.get(i))).setValue(in.readBoolean());
-            break;
-          default:
+	  if(((jpwr.rt.Sub)(subscriptions.get(i))).elements > 1)
+	  {
             ((jpwr.rt.Sub)(subscriptions.get(i))).setValue(in.readObject());
-            break;
-         }
-	 }
-	 catch(Exception e)
-	 {
-	   System.out.println("Fel vid mottagande i getObjectRefInfoAll " + e.toString());
-	 }
+	  }
+          else
+	  {
+            switch (((jpwr.rt.Sub)(subscriptions.get(i))).typeId)
+            {
+              case Pwr.eType_Int32:
+              case Pwr.eType_UInt32:
+              case Pwr.eType_Int16:
+              case Pwr.eType_UInt16:
+              case Pwr.eType_Int8:
+              case Pwr.eType_UInt8:
+                ((jpwr.rt.Sub)(subscriptions.get(i))).setValue(in.readInt());
+	      break;
+              case Pwr.eType_Float32:
+                ((jpwr.rt.Sub)(subscriptions.get(i))).setValue(in.readFloat());
+              break;
+              case 0:
+              case Pwr.eType_Boolean:
+                ((jpwr.rt.Sub)(subscriptions.get(i))).setValue(in.readBoolean());
+              break;
+              default:
+                ((jpwr.rt.Sub)(subscriptions.get(i))).setValue(in.readObject());
+              break;
+            }
+	  }
+	}
+	catch(Exception e)
+	{
+	  System.out.println("Fel vid mottagande i getObjectRefInfoAll " + e.toString());
+	}
 	
-	//((jpwr.rt.Sub)(subscriptions.get(i))).setValue(retArray[i]);
       }
 
       locked = false;

@@ -50,6 +50,10 @@
 #include "pwr_msg.h"
 #include "co_msg.h"
 #include "rt_errh.h"
+#include "pwr_class.h"
+#include "rt_gdh.h"
+#include "rt_errh_msg.h"
+#include "rt_pwr_msg.h"
 
 #define UNKNOWN_PROGRAM_NAME "Unknown name   "
 
@@ -109,6 +113,7 @@ static const char *indentStr = "  ";
 static char programName[16];
 static int interactive = 0;
 static int initDone = 0;
+static errh_eAnix errh_anix = errh_eNAnix;
 
 static char *get_header (char, char*);
 static char *get_message (const int, unsigned int, char*, int);
@@ -116,7 +121,7 @@ static char *get_name (char*, int);
 static char get_severity (pwr_tStatus);
 static void openLog ();
 static void set_name (char*);
-static void errh_send (char*);
+static void errh_send (char*, char, pwr_tStatus, errh_eMsgType);
 static void log_message (errh_sLog*, char, char*, va_list);
 static int msg_vsprintf (char *, const char *, aa_list, va_list);
 
@@ -142,12 +147,14 @@ errh_Interactive ()
 
 pwr_tStatus
 errh_Init (
-  char *name
+  char *name,
+  errh_eAnix anix
 )
 {
   get_name(programName, sizeof(programName) - 1);
   if (name != NULL && name[0] != '\0')
     set_name(name);
+  errh_anix = anix;
 
   if ( !initDone) {
     initDone = 1;
@@ -156,6 +163,20 @@ errh_Init (
 
   return 1;
 }
+
+void
+errh_SetStatus( pwr_tStatus sts)
+{
+  /* Send close message */
+  errh_send(0, 0, sts, errh_eMsgType_Status);
+}
+
+errh_eAnix
+errh_Anix()
+{
+  return errh_anix;
+}
+
 
 /* Check if a given messagenumber exists,
    return string representation if valid.  */
@@ -205,7 +226,7 @@ errh_Log (
   if (interactive)
     printf("%s\n", buff);
   else
-    errh_send(buff);
+    errh_send(buff, severity, 0, errh_eMsgType_Log);
 
   return buff;
 }
@@ -435,7 +456,7 @@ errh_CErrLog (
 
   s = get_header(get_severity(sts), string);
   msg_vsprintf(s, msg, args, NULL);
-  errh_send(string);
+  errh_send(string, get_severity(sts), sts, errh_eMsgType_Log);
 }
 
 /* Format a string.  */
@@ -621,7 +642,7 @@ get_header (char severity, char *s)
   struct tm tp, *t;
 
   if (!initDone)
-    errh_Init(NULL);
+    errh_Init(NULL, 0);
 
   if (interactive) {
     s += sprintf(s, "%c ", severity);
@@ -670,7 +691,7 @@ log_message (errh_sLog *lp, char severity, char *msg, va_list ap)
   if (interactive)
     printf("%s\n", string);
   else
-    errh_send(string);
+    errh_send(string, severity, 0, errh_eMsgType_Log);
 
   if (lp != NULL && lp->send) {
     lp->put.data = string;
@@ -1027,14 +1048,33 @@ number (
 }
 
 static void
-errh_send (char *s)
+errh_send (char *s, char severity, pwr_tStatus sts, errh_eMsgType message_type)
 {
-  int len = strlen(s);
 
 #if defined OS_LYNX || defined OS_LINUX
 
+  int len;
   if (mqid != (mqd_t)-1) {
-    if (mq_send(mqid, s, MIN(len, LOG_MAX_MSG_SIZE - 1), prio) == -1) {
+    errh_sMsg msg;
+
+    switch ( message_type) {
+    case errh_eMsgType_Log:
+      strncpy( msg.str, s, LOG_MAX_MSG_SIZE);
+      msg.str[LOG_MAX_MSG_SIZE-1] = 0;
+      msg.message_type = message_type;
+      msg.severity = severity;
+      msg.sts = sts;
+      msg.anix = errh_anix;
+      len = sizeof(msg) - sizeof(msg.message_type) - sizeof(msg.str) + strlen(msg.str) + 1;
+      break;
+    case errh_eMsgType_Status:
+      msg.message_type = message_type;
+      msg.sts = sts;
+      msg.anix = errh_anix;
+      len = sizeof(msg) - sizeof(msg.message_type) - sizeof(msg.str);
+      break;
+    }
+    if (mq_send(mqid, (char *)&msg, MIN(len, LOG_MAX_MSG_SIZE - 1), prio) == -1) {
 /*
       perror("mq_send");
 */
@@ -1052,6 +1092,9 @@ errh_send (char *s)
   static PORT	  	port;
   static pwr_tBoolean   portTrans = FALSE;
   static int		errorPrinted = 0;
+
+  if ( message_type != errh_eMsgType_Log)
+    return;
 
   if (!portTrans) {
     $DESCRIPTOR(dsc, "ERR_LOG_PORT");
@@ -1083,10 +1126,14 @@ errh_send (char *s)
 
 #else
 
+  if ( message_type != errh_eMsgType_Log)
+    return;
+
   printf("%s\n", s);
 
 #endif
 }
+
 
 #if 0
 int main(int argc, char **argv)

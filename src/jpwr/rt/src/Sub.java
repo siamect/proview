@@ -31,6 +31,7 @@
       this.valueBoolean = valueBoolean;
       this.valueString = valueString;
     }
+/*
     public void setValue(Object o)
     {
       if(o instanceof String)
@@ -42,6 +43,57 @@
       else if(o instanceof Float)
         this.valueFloat = ((Float)o).floatValue();
     }
+*/
+    public void setValue(Object o)
+    {
+      switch (typeId)
+      {
+      case Pwr.eType_Int32:
+      case Pwr.eType_UInt32:
+      case Pwr.eType_Int16:
+      case Pwr.eType_UInt16:
+      case Pwr.eType_Int8:
+      case Pwr.eType_UInt8:
+        if(elements > 1)
+	{
+	  //its an array
+	  this.valueIntArray = (int[])o;
+	}
+	else
+	  this.valueInt = ((Integer)o).intValue();    
+      break;
+      case Pwr.eType_Float32:
+        if(elements > 1)
+	{
+	  //its an array
+	  this.valueFloatArray = (float[])o;
+	}
+	else
+	  this.valueFloat = ((Float)o).floatValue();    
+
+      break;
+      case 0:
+      case Pwr.eType_Boolean:
+        if(elements > 1)
+	{
+	  //its an array
+	  this.valueBooleanArray = (boolean[])o;
+	}
+	else
+	  this.valueBoolean = ((Boolean)o).booleanValue();    
+      break;
+      default:
+        if(elements > 1)
+	{
+	  //its an array
+	  this.valueStringArray = (String[])o;
+	}
+	else
+	  this.valueString = (String)o;    
+      break;
+      }
+    }
+
     public void setValue(String o)
     {
       this.valueString = o;

@@ -24,12 +24,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "pwr.h"
+#include "pwr_class.h"
+#include "pwr_baseclasses.h"
+
 #include <Xm/Xm.h>
 #include <Mrm/MrmPublic.h>
 #include <Xm/XmP.h>
 
-#include "pwr.h"
-#include "pwr_class.h"
 
 #include "wb_ldh.h"
 #include "wb_vldh.h"
@@ -101,6 +103,12 @@ static pwr_tStatus trace_get_attr_m7( 	gre_ctx		grectx,
 					char		*object_str, 
 					char		*attr_str,
 					flow_eTraceType	*trace_type);
+static pwr_tStatus trace_get_attr_m9( 	gre_ctx		grectx, 
+					vldh_t_node	node, 
+					char		*debug_par,
+					char		*object_str, 
+					char		*attr_str,
+					flow_eTraceType	*trace_type);
 static pwr_tStatus trace_get_attr_mno( 	gre_ctx		grectx, 
 					vldh_t_node	node, 
 					char		*debug_par,
@@ -119,6 +127,7 @@ pwr_tStatus	(* trace_get_attr_m[TRA_MAX_TRACEMETHOD]) () = {
     &trace_get_attr_mno,
     &trace_get_attr_m7,
     &trace_get_attr_mno,
+    &trace_get_attr_m9
 };
 
 int trace_get_attributes( 	gre_ctx		grectx, 
@@ -637,6 +646,55 @@ pwr_tStatus trace_get_attr_con( 	gre_ctx		grectx,
   return TRA__SUCCESS;
 }
 
+
+/*************************************************************************
+*
+* Name:		trace_getm9 ()
+*
+* Type		int
+*
+* Description:
+* tracing method for the following objects:
+* GetAattr, GetDattr, GetIattr, StoDattr, SetDattr, ResDattr
+**************************************************************************/
+
+static pwr_tStatus trace_get_attr_m9( 	gre_ctx		grectx, 
+					vldh_t_node	node, 
+					char		*debug_par,
+					char		*object_str, 
+					char		*attr_str,
+					flow_eTraceType	*trace_type)
+{
+  pwr_tStatus		sts;
+  char			*attribute;
+  int			size;
+
+  /* In class editor, object is always $host */
+  strcpy( object_str, "$host");
+
+  /* Get attribute from Attribute */
+  sts = ldh_GetObjectPar( node->hn.window_pointer->hw.ldhsession,  
+		node->ln.object_did, "DevBody", "Attribute",
+		&attribute, &size); 
+  if ( EVEN(sts)) return sts;
+
+  strcpy( attr_str, attribute);
+  free((char *) attribute);
+
+  switch( node->ln.classid) {
+  case pwr_cClass_GetAattr:
+    *trace_type = flow_eTraceType_Float32;
+    break;
+  case pwr_cClass_GetIattr:
+    *trace_type = flow_eTraceType_Int32;
+    break;
+  default:
+    *trace_type = flow_eTraceType_Boolean;
+  }
+  return TRA__SUCCESS; 
+}
+
+
 pwr_tStatus trace_simsetup( foe_ctx foectx) 
 {
   flow_tCtx ctx = foectx->grectx->flow_ctx;
@@ -804,7 +862,7 @@ int trace_start( foe_ctx foectx)
       }
     }
 
-    gre_set_trace_attributes( grectx);
+    gre_set_trace_attributes( grectx, 0);
 
     trace_trasetup( foectx);
 

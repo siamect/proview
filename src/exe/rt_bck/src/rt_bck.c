@@ -55,6 +55,8 @@
 #include "co_cdh.h"
 #include "co_time.h"
 #include "co_dcli.h"
+#include "rt_pwr_msg.h"
+#include "rt_aproc.h"
 
 #define	check4a(sts,str) if((sts)==-1)perror(str)
 
@@ -763,6 +765,8 @@ bck_file_process (
 	backup_confp->ObjTimeSlow = wrtblk->cyclehead.objtime;
       }
 
+      aproc_TimeStamp();
+
       /* Signal bck_write_done */
 
       /* Change to Posix 1003.4 signal */
@@ -1271,6 +1275,8 @@ pwr_tUInt32 bck_init ()
   UNLOCK;
   if (EVEN(sts)) return sts;		/* Something wrong, quit */
 
+  aproc_RegisterObject( objid);
+
   LOCK;
   sts = gdh_ObjidToName(objid, name, sizeof name, cdh_mNName);
   UNLOCK;
@@ -1348,13 +1354,21 @@ int main ()
   pwr_tInt32 sts4a;
   pwr_tUInt32 c;
 
-  errh_Init("pwr_bck");
+  errh_Init("pwr_bck", errh_eAnix_bck);
+  errh_SetStatus( PWR__SRVSTARTUP);
 
   sts = gdh_Init("pwr_bck");
   if (EVEN(sts)) return sts;
 
+  aproc_TimeStamp();
+
   sts = bck_init();
-  if (EVEN(sts)) return sts;
+  if (EVEN(sts)) {
+    errh_Fatal( "Initialization error, %m", sts);
+    errh_SetStatus( PWR__SRVTERM);
+    exit(sts);
+  }
+  errh_SetStatus( PWR__SRUN);
 
   for (;;) {
 #ifdef OS_ELN
@@ -1382,7 +1396,12 @@ int main ()
     check4a(sts4a,"pthread_cond_broadcast error");
 
     pthread_mutex_unlock(&frcactmtx);
-
   }
 
 }
+
+
+
+
+
+

@@ -530,6 +530,7 @@ pwrc_create_func()
     mkdir $proot/common/inc
     mkdir $proot/common/tmp
     mkdir $proot/common/web
+    mkdir $proot/common/log
     mkdir $proot/$platform
     mkdir $proot/$platform/exe
     mkdir $proot/$platform/lib
@@ -813,6 +814,7 @@ pwrc_set_func()
     export pwrp_cmn=$pwrp_root
     export pwrp_tmp=$pwrp_root/common/tmp
     export pwrp_web=$pwrp_root/common/web
+    export pwrp_log=$pwrp_root/common/log
     export pwrp_exe=$pwrp_root/$platform/exe
     export pwrp_lib=$pwrp_root/$platform/lib
     export pwrp_obj=$pwrp_root/$platform/obj

@@ -256,6 +256,8 @@ int  xnav_attr_string_to_value( int type_id, char *value_str,
       break;
     }
     case pwr_eType_Int32:
+    case pwr_eType_Status:
+    case pwr_eType_NetStatus:
     {
       if ( sscanf( value_str, "%d", (int *)buffer_ptr) != 1)
         return XNAV__INPUT_SYNTAX;
@@ -581,6 +583,13 @@ void  xnav_attrvalue_to_string( int type_id, void *value_ptr,
     {
       *len = sprintf( str, "%s", cdh_SubidToString( NULL, 
 		*(pwr_tSubid *) value_ptr, 1));
+      break;
+    }
+    case pwr_eType_NetStatus:
+    case pwr_eType_Status:
+    {
+      msg_GetMsg( *(pwr_tStatus *)value_ptr, str, size);
+      *len = strlen( str);
       break;
     }
 
@@ -1462,6 +1471,8 @@ static void  xnav_type_id_to_name( int type_id, char *type_id_name)
     case pwr_eType_ObjectIx: strcpy( type_id_name, "ObjectIx"); break;
     case pwr_eType_RefId: strcpy( type_id_name, "RefId"); break;
     case pwr_eType_DeltaTime: strcpy( type_id_name, "DeltaTime"); break;
+    case pwr_eType_Status: strcpy( type_id_name, "Status"); break;
+    case pwr_eType_NetStatus: strcpy( type_id_name, "NetStatus"); break;
     default: strcpy( type_id_name, "");
   }
 }

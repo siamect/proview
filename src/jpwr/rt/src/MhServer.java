@@ -193,30 +193,35 @@ public class MhServer
     }
 
     gdh = new Gdh((Object)null);
-    errh = new Errh("MhServer");
+    errh = new Errh("MhServer", Errh.eAnix_webmonmh);
+    errh.setStatus( Errh.PWR__SRVSTARTUP);
     int sts = getHandlerObject();
     if(sts % 2 == 0)
     {
+      errh.setStatus(0);
       return;
     }
     if(log)
     {
       System.out.println("innan mh-skapande");
     }
-     mh = new Mh((Object)null, maxAlarms, maxEvents);
-     mhThread = new MhThread[maxConnections];
-     mhData = new MhData(maxAlarms, maxEvents);
+
+    mh = new Mh((Object)null, maxAlarms, maxEvents);
+    mhThread = new MhThread[maxConnections];
+    mhData = new MhData(maxAlarms, maxEvents);
      
-     PwrtStatus stsM = mh.outunitConnect(cdhrUserObj.objid);
-     if(stsM.evenSts())
-     {
-       System.out.println("Fel vid outunitConnect");
-       return;
-     }
+    PwrtStatus stsM = mh.outunitConnect(cdhrUserObj.objid);
+    if(stsM.evenSts())
+    {
+      System.out.println("Fel vid outunitConnect");
+      errh.setStatus( Errh.PWR__SRVTERM);
+      return;
+    }
      
-     MhSendThread mhSendThread = new MhSendThread(mh);
+    MhSendThread mhSendThread = new MhSendThread(mh);
 
      
+    errh.setStatus( Errh.PWR__SRUN);
      
 
     while(keepRunning)

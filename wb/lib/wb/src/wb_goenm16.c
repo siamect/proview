@@ -165,9 +165,9 @@ int goen_create_nodetype_m16(
   points_at_right = (outputpoints != 0);
 
   f_height  = 3 * f_repeat +
-	       (MAX(inputpoints,outputpoints)-1)*f_repeat;
+	       (max(inputpoints,outputpoints)-1)*f_repeat;
 
-  f_width = MAX( f_strlength * (2 + node_width), f_defwidth);
+  f_width = max( f_strlength * (2 + node_width), f_defwidth);
   f_namepos = f_width/2.0 - strlen( graphbody->graphname)*
 			      f_strlength/2.0;
 
@@ -485,8 +485,8 @@ int goen_get_point_info_m16( grectx, graphbody, point_nr, mask, node_width,
 	points_at_left = (inputpoints != 0);
 	points_at_right = (outputpoints != 0);
 
-	f_height  = (MAX(inputpoints,outputpoints) + 2)*f_repeat;
-	f_width = MAX( f_strlength * (2 + node_width), f_defwidth);
+	f_height  = (max(inputpoints,outputpoints) + 2)*f_repeat;
+	f_width = max( f_strlength * (2 + node_width), f_defwidth);
 
 	points_top = 0;
 	points_bottom = 0;

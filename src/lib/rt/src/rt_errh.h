@@ -17,6 +17,10 @@
 # include "rt_qcom.h"
 #endif
 
+#ifndef rt_errl_h
+# include "rt_errl.h"
+#endif
+
 #if defined __cplusplus
 extern "C" {
 #endif
@@ -38,6 +42,57 @@ extern "C" {
          return (((int)(sts)?((*sts)=(lsts)):(EVEN(lsts)?(errh_Bugcheck(lsts, (str)),(lsts)):(lsts))),a)
 #endif
 
+#define errh_cAnix_SrvSize 40
+
+typedef enum {
+  errh_eNAnix		= 0,
+  errh_eAnix_ini 	= 1,
+  errh_eAnix_qmon 	= 2,
+  errh_eAnix_neth 	= 3,
+  errh_eAnix_neth_acp 	= 4,
+  errh_eAnix_io		= 5,
+  errh_eAnix_tmon 	= 6,
+  errh_eAnix_emon 	= 7,
+  errh_eAnix_alim 	= 8,
+  errh_eAnix_bck 	= 9,
+  errh_eAnix_linksup 	= 10,
+  errh_eAnix_trend 	= 11,
+  errh_eAnix_fast 	= 12,
+  errh_eAnix_elog 	= 13,
+  errh_eAnix_webmon 	= 14,
+  errh_eAnix_webmonmh 	= 15,
+  errh_eAnix_plc 	= 16,
+  errh_eAnix_remote 	= 17,
+  errh_eAnix_nmps_bck 	= 18,
+  errh_eAnix_nmps_trans = 19,
+  errh_eAnix_reserv	= 20,
+  errh_eAnix_appl1	= 21,
+  errh_eAnix_appl2	= 22,
+  errh_eAnix_appl3	= 23,
+  errh_eAnix_appl4	= 24,
+  errh_eAnix_appl5	= 25,
+  errh_eAnix_appl6	= 26,
+  errh_eAnix_appl7	= 27,
+  errh_eAnix_appl8	= 28,
+  errh_eAnix_appl9	= 29,
+  errh_eAnix_appl10	= 30,
+  errh_eAnix_appl11	= 31,
+  errh_eAnix_appl12	= 32,
+  errh_eAnix_appl13	= 33,
+  errh_eAnix_appl14	= 34,
+  errh_eAnix_appl15	= 35,
+  errh_eAnix_appl16	= 36,
+  errh_eAnix_appl17	= 37,
+  errh_eAnix_appl18	= 38,
+  errh_eAnix_appl19	= 39,
+  errh_eAnix_appl20	= 40
+} errh_eAnix;
+
+typedef enum {
+  errh_eMsgType_Log	= 1,
+  errh_eMsgType_Status 	= 2
+} errh_eMsgType;
+
 
 typedef struct {
   pwr_tBoolean send;
@@ -45,10 +100,19 @@ typedef struct {
   qcom_sPut put;
 } errh_sLog;
 
+typedef struct {
+  long int message_type;
+  pwr_tStatus sts;
+  errh_eAnix anix;
+  char severity;
+  char str[LOG_MAX_MSG_SIZE];
+} errh_sMsg;
+
 /* NOTE! errh_Init MUST always be called before any other
 	 errh-function is called.  */
 
-pwr_tStatus	errh_Init	(char *programName);
+pwr_tStatus	errh_Init	(char *programName, errh_eAnix anix);
+void		errh_SetStatus  (pwr_tStatus sts);
 void		errh_Interactive	();
 char		*errh_GetMsg	(const pwr_tStatus sts, char *buf, int bufSize);
 char		*errh_GetText	(const pwr_tStatus sts, char *buf, int bufSize);
@@ -68,6 +132,7 @@ void		*errh_ErrArgAF	(char *s);
 void		*errh_ErrArgL	(int val);
 void		errh_CErrLog	(pwr_tStatus sts, ...);
 char		*errh_Message	(char *string, char severity, char *msg, ...);
+errh_eAnix	errh_Anix       ();
 
 #if defined __cplusplus
 }

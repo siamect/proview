@@ -20,6 +20,10 @@
 #include "pwr.h" 
 #endif
 
+#ifndef rt_errh_h
+#include "rt_errh.h"
+#endif
+
 typedef pwr_tSubid   gdh_tSubid;
 typedef pwr_tSubid   SUBID;
 typedef	pwr_tDlid    gdh_tDlid;
@@ -587,6 +591,11 @@ gdh_TranslateRtdbPointer (
 );
 
 
+pwr_tStatus 
+gdh_RegisterServer( 
+  errh_eAnix anix,
+  pwr_tOid server_oid
+);
 
 /* Undocumented routines. For internal use only.  */
 

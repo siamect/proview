@@ -200,6 +200,11 @@ typedef pwr_tTid        pwr_tTypeId;	//!< Type identity type.
   @aref status Status
 */
 typedef int             pwr_tStatus;		//!< Status type.
+/**
+  @aref netstatus NetStatus
+*/
+typedef int             pwr_tNetStatus;		//!< Network status type.
+
 typedef unsigned int    pwr_tGeneration;
 typedef unsigned int    pwr_tBid;
 typedef unsigned int    pwr_tVersion;
@@ -416,6 +421,7 @@ static const pwr_tCid       pwr_cNCid       = 0;	//!< Zero class identity consta
 static const pwr_tTid       pwr_cNTid       = 0;	//!< Zero type identity constant.
 static const pwr_tVid       pwr_cNVid       = 0;	//!< Zero volume identity constant.
 static const pwr_tNid       pwr_cNNid       = 0;	//!< Zero node identity constant.
+static const pwr_tStatus    pwr_cNStatus    = 0;	//!< Zero status constant.
 
 /* Gereral macro definitions  */
 

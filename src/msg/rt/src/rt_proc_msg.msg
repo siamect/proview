@@ -11,5 +11,5 @@ success		<successful completion>					/succ
 timedout	<call has timed out>					/info
 insvirmem	<insufficient virtual memory>				/error
 nyi		<not yet implemented>					/error
-
+anix		<zero errh_eAnix>					/error
 .end

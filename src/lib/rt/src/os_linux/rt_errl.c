@@ -31,6 +31,8 @@ static int newLogFile = 1;
 static int term = -1;
 static int yday = -1;
 static pwr_tBoolean logToStdout = FALSE;
+static void (*errl_log_cb)( void *, char *, char, pwr_tStatus, int, int) = 0;
+static void *errl_log_userdata = 0;
 
 static void CheckTimeStamp(int force);
 static void *log_thread(void *arg);
@@ -38,7 +40,9 @@ static void *log_thread(void *arg);
 
 void
 errl_Init (
-  const char	*termName
+  const char	*termName,
+  void (*log_cb)( void *, char *, char, pwr_tStatus, int, int),
+  void *userdata
 )
 {
   pthread_mutexattr_t mutexattr;
@@ -53,6 +57,8 @@ errl_Init (
   int policy;
   struct sched_param param;
 
+  errl_log_cb = log_cb;
+  errl_log_userdata = userdata;
   
   if (initDone)
     return;
@@ -204,34 +210,49 @@ static void *
 log_thread (void *arg)
 {
   int len;
-  char buf[LOG_MAX_MSG_SIZE];
+  errh_sMsg buf;
 
   while (1) {
-    len = mq_receive(mqid, buf, LOG_MAX_MSG_SIZE, NULL);
+    len = mq_receive(mqid, (char *)&buf, LOG_MAX_MSG_SIZE, NULL);
     if (len == -1) {
       if (errno != EINTR)
         perror("rt_logmod.c: mq_receive ");
     } else {
-      pthread_mutex_lock(&fileMutex);
-      if (logFile != -1) {			    			       
-	/* Set up a timer if you want better performance, ML */
-	CheckTimeStamp(newLogFile); 
-	newLogFile = 0; 	   
-	write(logFile, buf, len);
-	write(logFile, "\n", 1);
+      switch ( buf.message_type) {
+      case errh_eMsgType_Log:
+	len -= (sizeof(buf) - sizeof(buf.str) - sizeof(buf.message_type) + 1);
+	buf.str[len] = 0;
+	pthread_mutex_lock(&fileMutex);
+	if (logFile != -1) {			    			       
+	  /* Set up a timer if you want better performance, ML */
+	  CheckTimeStamp(newLogFile); 
+	  newLogFile = 0; 	   
+	  write(logFile, buf.str, len);
+	  write(logFile, "\n", 1);
+	}
+	pthread_mutex_unlock(&fileMutex);
+	
+	pthread_mutex_lock(&termMutex);
+	if (term != -1) {			    	
+	  write(term, buf.str, len);
+	  write(term, "\n", 1);
+	}
+	pthread_mutex_unlock(&termMutex);
+
+	if (logToStdout)
+	  printf("%.*s\n", len, buf.str);
+
+	if ( errl_log_cb)
+	  (errl_log_cb)( errl_log_userdata, buf.str, buf.severity, buf.sts, buf.anix, buf.message_type);
+	break;
+      case errh_eMsgType_Status:
+	if ( errl_log_cb)
+	  (errl_log_cb)( errl_log_userdata, 0, 0, buf.sts, buf.anix, buf.message_type);
       }
-      pthread_mutex_unlock(&fileMutex);
-
-      pthread_mutex_lock(&termMutex);
-      if (term != -1) {			    	
-	write(term, buf, len);
-	write(term, "\n", 1);
-      }
-      pthread_mutex_unlock(&termMutex);
-
-      if (logToStdout)
-	printf("%.*s\n", len, buf);
-
     }
   }
 }
+
+
+
+

@@ -16,6 +16,8 @@
 
 #include <stdio.h>
 #include "wb_foe_macros.h"
+#include "pwr.h"
+#include "pwr_baseclasses.h"
 
 #include <Xm/Xm.h>
 
@@ -99,6 +101,8 @@ int goen_create_nodetype_m7(
   static int	idx = 0;
   ldh_sParDef 	*bodydef;
   flow_tObject	cp;
+  char		trace_attr[80];
+  int		trace_type;
 
 
   sts = ldh_ClassIdToName(ldhses, class, name, sizeof(name), &size);
@@ -156,11 +160,11 @@ int goen_create_nodetype_m7(
 		(strlen( graphbody->graphname) + 2);
   f_height  = f_repeat;
   if ( annot_count <= 1)	
-    f_width = MAX( f_strlength * 2 + annot_width[0], f_defwidth) 
+    f_width = max( f_strlength * 2 + annot_width[0], f_defwidth) 
 			+ f_classnamewidth;
   else
   {
-    f_width = MAX( f_strlength * 4 + annot_width[0] + annot_width[1], 
+    f_width = max( f_strlength * 4 + annot_width[0] + annot_width[1], 
 			f_defwidth + f_strlength * 2) + f_classnamewidth;
     f_width_left = f_strlength * 2 + annot_width[1];
   }
@@ -232,18 +236,31 @@ int goen_create_nodetype_m7(
 		conpoint_nr++,
 		flow_eDirection_Right, &cp);
     flow_NodeClassAdd( nc_pid, cp);
-    if (bodydef[inputs+interns].Par->Output.Info.Type == pwr_eType_Float32)
-      flow_SetTraceAttr( cp, NULL,
-		bodydef[inputs+interns].Par->Output.Info.PgmName, 
-		flow_eTraceType_Float32);
-    else if (bodydef[inputs+interns].Par->Output.Info.Type == pwr_eType_Int32)
-      flow_SetTraceAttr( cp, NULL,
-		bodydef[inputs+interns].Par->Output.Info.PgmName, 
-		flow_eTraceType_Int32);
-    else if (bodydef[inputs+interns].Par->Output.Info.Type == pwr_eType_Boolean)
-      flow_SetTraceAttr( cp, NULL, 
-		bodydef[inputs+interns].Par->Output.Info.PgmName, 
-		flow_eTraceType_Boolean);
+
+    switch ( class) {
+    case pwr_cClass_GetAattr:
+    case pwr_cClass_GetIattr:
+    case pwr_cClass_GetDattr:
+      /* Use objects trace attribute */
+      strcpy( trace_attr, "$object");
+      break;
+    default:
+      strcpy( trace_attr, bodydef[inputs+interns].Par->Output.Info.PgmName);
+    }
+    switch (bodydef[inputs+interns].Par->Output.Info.Type) {
+    case pwr_eType_Float32:
+      trace_type = flow_eTraceType_Float32;
+      break;
+    case pwr_eType_Int32:
+      trace_type = flow_eTraceType_Int32;
+      break;
+    case pwr_eType_Boolean:
+      trace_type = flow_eTraceType_Boolean;
+      break;
+    default:
+      trace_type = flow_eTraceType_Int32;
+    }
+    flow_SetTraceAttr( cp, NULL, trace_attr, trace_type);
   }
 
   f_namelength = f_strlength*6;

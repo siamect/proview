@@ -49,6 +49,30 @@ extern "C" {
 #include "wb_cmdc.h"
 #include "wb.h"
 
+static char cmd_volume[80];
+static char *cmd_volume_p = 0;
+
+static void usage()
+{
+  cout << endl << endl <<
+    "pwrc        Proview workbench commands" << endl << endl << 
+    "Arguments:" << endl <<
+    "  -a             Load all configured databases." << endl <<
+    "  -v 'volume'    Load volume 'volume'." << endl <<
+    "  -h             Print usage." << endl << endl <<
+    "  Other arguments are treated as a command and passed to the command parser" << endl <<
+    "  If a command is given as an argument, the command will be executed and the" << endl <<
+    "  program is then terminated." << endl <<
+    "  If no command is given, pwrc will prompt for a command." << endl << endl <<
+    "Examples:" << endl <<
+    "  $ pwrc -v MyVolume" << endl <<
+    "  pwrc>" << endl << endl <<
+    "  $ pwrc -a show volume" << endl <<
+    "  directory     Attached Db  $DirectoryVolume 254.254.254.253" << endl <<
+    "  MyVolume               Db  $RootVolume        0.1.99.20" << endl <<
+    "  $" << endl;
+}
+
 static int cmd_get_wbctx( void *ctx, ldh_tWBContext *wbctx)
 {
   Cmd	*cmd = (Cmd *) ctx;
@@ -61,7 +85,7 @@ static int cmd_get_wbctx( void *ctx, ldh_tWBContext *wbctx)
   }
   else
   {
-    sts = ldh_OpenWB( &cmd->wbctx, 0);
+    sts = ldh_OpenWB( &cmd->wbctx, cmd_volume_p);
     if ( ODD(sts))
       *wbctx = cmd->wbctx;
   }
@@ -92,19 +116,25 @@ static int cmd_attach_volume_cb(
 
   if ( volid == 0)
   {
-    // Attach first rootvolume, or if no rootvolume exist some other volume
-    sts = ldh_GetVolumeList( cmd->wbctx, &vid);
-    while ( ODD(sts))
-    {
-      volid = vid;
-      sts = ldh_GetVolumeClass( cmd->wbctx, vid, &classid);
+    if ( cmd_volume_p != 0) {
+      // Attach argument volume
+      ldh_VolumeNameToId( cmd->wbctx, cmd_volume_p, &volid);
       if ( EVEN(sts)) return sts;
-
-      if ( classid == pwr_eClass_RootVolume)
-        break;
-      sts = ldh_GetNextVolume( cmd->wbctx, vid, &vid);
     }
-    if ( volid == 0) return sts;
+    else {
+      // Attach first rootvolume, or if no rootvolume exist some other volume
+      sts = ldh_GetVolumeList( cmd->wbctx, &vid);
+      while ( ODD(sts)) {
+	volid = vid;
+	sts = ldh_GetVolumeClass( cmd->wbctx, vid, &classid);
+	if ( EVEN(sts)) return sts;
+
+	if ( classid == pwr_eClass_RootVolume)
+	  break;
+	sts = ldh_GetNextVolume( cmd->wbctx, vid, &vid);
+      }
+      if ( volid == 0) return sts;
+    }
   }
 
   cmd->volid = volid;
@@ -255,18 +285,46 @@ int main(int argc, char *argv[])
   
   cmd = new Cmd;
 
-  /* If arguments, treat them as a command and then exit */
-  if ( argc >= 2 )
-  {
 
-    str[0] = 0;
-    for ( i = 1; i < argc; i++)
-    {
-      if ( i != 1)
-      strcat( str, " ");
+  /* If arguments, treat them as a command and then exit */
+  // Open directory volume as default
+  strcpy( cmd_volume, "directory");
+  cmd_volume_p = cmd_volume;
+
+  str[0] = 0;
+  for ( i = 1; i < argc; i++) {
+    if ( argv[i][0] == '-') {
+      switch ( argv[i][1]) {
+      case 'h':
+	usage();
+	exit(0);
+      case 'a':
+	// Load all volumes
+	cmd_volume_p = 0;
+	break;
+      case 'v':
+	// Load specified volume
+	if ( argc >= i) {
+	  strcpy( cmd_volume, argv[i+1]);
+	  cmd_volume_p = cmd_volume;
+	  i++;
+	  continue;
+	}
+	else
+	  cout << "Syntax error, volume is missing" << endl;
+	break;
+      default:
+	cout << "Unknown argument: " << argv[i] << endl;
+      }
+    }
+    else {
+      if ( str[0] != 0)
+	strcat( str, " ");
       strcat( str, argv[i]);
     }
+  }
 
+  if ( str[0] != 0) {
     dcli_remove_blank( str, str);
     sts = cmd->wnav->command(str);
     if ( ODD(sts))

@@ -24,8 +24,10 @@
 #include "rt_errh.h"
 #include "rt_csup.h"
 #include "rt_qcom.h"
+#include "rt_aproc.h"
 #include "rt_qcom_msg.h"
 #include "rt_ini_event.h"
+#include "rt_pwr_msg.h"
 
 #if defined(OS_ELN)
 #include "rt_io_dioc.h"
@@ -67,6 +69,8 @@ int main()
     if (init_io) {
       double f;
       sts = io_init(io_mProcess_IoComm, pwr_cNObjid, &io_ctx, 1, ihp->CycleTimeBus);
+      if ( ODD(sts)) 
+	errh_SetStatus( PWR__SRUN);
 #if defined(OS_ELN)
       ker$clear_event( &sts, io_comm_terminate);
       io_dioc_init();
@@ -95,6 +99,8 @@ int main()
       delay_action = csup_Exec(&sts, csup_lh, &next, &after, &now);
       if (delay_action == 2)
 	ihp->IOReadWriteFlag = FALSE;
+
+      aproc_TimeStamp();
     } else {
       ini_mEvent  new_event;
       qcom_sEvent *ep = (qcom_sEvent*) get.data;
@@ -103,11 +109,12 @@ int main()
       if (new_event.b.oldPlcStop && !swap_io) {
         swap_io = 1;
 	close_io = 1;
-	errh_Info("Close old io...");
+	errh_SetStatus(PWR__SRVRESTART);
       } else if (new_event.b.swapDone && swap_io) {
         swap_io = 0;
 	init_io = 1;
-	errh_Info("Init new io...");
+      } else if (new_event.b.terminate) {
+        exit(0);
       }
       if (close_io) {    
 	io_close(io_ctx);
@@ -129,7 +136,7 @@ init (qcom_sQid *qid, lst_sEntry **csup_lh)
   qcom_sQid qini;
   pwr_tObjid oid;
 
-  errh_Init("pwr_io");
+  errh_Init("pwr_io", errh_eAnix_io);
 
 #if defined(OS_ELN)
   /* Event to kill dioc */
@@ -166,7 +173,18 @@ init (qcom_sQid *qid, lst_sEntry **csup_lh)
     exit(sts);
   }
 
+  aproc_RegisterObject( oid);
+
   *csup_lh = csup_Init(&sts, oid, ihp->CycleTimeBus);
 
   return ihp;
 }
+
+
+
+
+
+
+
+
+

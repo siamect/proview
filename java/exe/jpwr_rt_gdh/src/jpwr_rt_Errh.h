@@ -7,14 +7,26 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+#undef jpwr_rt_Errh_eAnix_webmon
+#define jpwr_rt_Errh_eAnix_webmon 14L
+#undef jpwr_rt_Errh_eAnix_webmonmh
+#define jpwr_rt_Errh_eAnix_webmonmh 15L
 /* Inaccessible static: initDone */
 /*
  * Class:     jpwr_rt_Errh
  * Method:    init
- * Signature: (Ljava/lang/String;)I
+ * Signature: (Ljava/lang/String;I)I
  */
 JNIEXPORT jint JNICALL Java_jpwr_rt_Errh_init
-  (JNIEnv *, jobject, jstring);
+  (JNIEnv *, jobject, jstring, jint);
+
+/*
+ * Class:     jpwr_rt_Errh
+ * Method:    close
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_jpwr_rt_Errh_setStatus
+  (JNIEnv *, jobject, jint);
 
 /*
  * Class:     jpwr_rt_Errh

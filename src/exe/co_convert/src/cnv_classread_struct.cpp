@@ -750,6 +750,7 @@ int ClassRead::struct_check_typename( char *type_name)
 	"pwr_tInt16",
 	"pwr_tInt32",
 	"pwr_tStatus",
+	"pwr_tNetStatus",
 	"pwr_tInt64",
 	"pwr_tUInt64",
 	"pwr_tUInt8",

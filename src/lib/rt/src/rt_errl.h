@@ -23,7 +23,9 @@
 #define LOG_MAX_MSG_SIZE  256           /* length of logstring */
 
 pwr_tStatus	errl_Exit	();
-void		errl_Init	(const char *termname);
+void		errl_Init	(const char *termname,
+				 void (*log_cb)( void *, char *, char, pwr_tStatus, int, int),
+				 void *userdata);
 void		errl_SetTerm	(const char *termname);
 void		errl_SetFile	(const char *filename);
 

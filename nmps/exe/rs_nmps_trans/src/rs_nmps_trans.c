@@ -2819,6 +2819,8 @@ int main()
 	      if (EVEN(sts)) LogAndExit( sts);
 
 	      errh_Info("Warm restart completed");
+	    } else if (new_event.b.terminate) {
+              exit(0);
 	    }
 	  }
 	}

@@ -109,6 +109,13 @@ XmAnyCallbackStruct	*data;
 	vldh_t_wind	wind;
 	vldh_t_node	parent_node;
 	int	sts;
+	int 	size;
+	char 	name[120];
+	vldh_t_plc	plc;
+	char fname[80];
+	char classname[80];
+	pwr_tObjid classdef;
+
         if ( foectx->msg_label_id != 0 ) foe_message( foectx, ""); 
 
 	if ( data->event->type == ButtonRelease 
@@ -121,6 +128,7 @@ XmAnyCallbackStruct	*data;
 	/* Check that the parent node is saved */
 	
 	wind = foectx->grectx->window_object;
+	plc = wind->hw.plcobject_pointer;
 	parent_node = wind->hw.parent_node_pointer;
 	if ( parent_node != 0 )
 	{
@@ -141,9 +149,26 @@ XmAnyCallbackStruct	*data;
 	}
 	CLOCK_CURSOR;
 	if ( !foectx->classeditor) {
-	  sts = gre_set_trace_attributes( foectx->grectx);
-	  sts = gre_save( foectx->grectx);
+	  sts = gre_set_trace_attributes( foectx->grectx, 0);
+	  sts = gre_save( foectx->grectx, 0);
 	  sts = gre_undelete_reset( foectx->grectx);
+	}
+	else {
+	  sts = ldh_ObjidToName( wind->hw.ldhsession, plc->lp.objdid,
+				 ldh_eName_Hierarchy, name, sizeof( name), &size); 
+	  if ( EVEN(sts)) return;
+
+	  sts = ldh_GetParent( wind->hw.ldhsession, plc->lp.objdid, &classdef);
+	  if ( EVEN(sts)) return;
+
+	  sts = ldh_ObjidToName( wind->hw.ldhsession, classdef,
+				 ldh_eName_Object, classname, sizeof( classname), &size); 
+	  if ( EVEN(sts)) return;
+	  cdh_ToLower( classname, classname);
+	  sprintf( fname, "$pwrp_load/pwr_%s.flw", classname);
+	  sts = gre_set_trace_attributes( foectx->grectx, name);
+	  sts = gre_save( foectx->grectx, fname);
+	  sts = gre_undelete_reset( foectx->grectx);	  
 	}
 	foe_disable_ldh_cb(foectx);
 	sts = vldh_wind_save( foectx->grectx->window_object);

@@ -102,6 +102,8 @@ public class GeDynTable extends GeDynElem {
       if ( typeId[i] == Pwr.eType_Float32) {
         float[] value0 = dyn.en.gdh.getObjectRefInfoFloatArray( p[i], elements[i]);
 	for ( int j = 0; j < value0.length; j++) {
+	  if (j >= rows)
+	    break;
           if ( value0[j] != oldValueF[i][j] || firstScan) {
 	    sb = cFormat[i].format( value0[j], sb);
 	    ((GeTable)dyn.comp).setValueAt(new String(sb), j, i);
@@ -113,6 +115,8 @@ public class GeDynTable extends GeDynElem {
       else if ( typeId[i] == Pwr.eType_Boolean) {
         boolean[] value0 = dyn.en.gdh.getObjectRefInfoBooleanArray( p[i], elements[i]);
 	for ( int j = 0; j < value0.length; j++) {
+	  if (j >= rows)
+	    break;
           if ( value0[j] != oldValueB[i][j] || firstScan) {
 	    if ( value0[j])
 	      ((GeTable)dyn.comp).setValueAt("1", j, i);
@@ -131,6 +135,8 @@ public class GeDynTable extends GeDynElem {
 	        typeId[i] == Pwr.eType_UInt8) {
 	int value0[] = dyn.en.gdh.getObjectRefInfoIntArray( p[i], elements[i]);
 	for ( int j = 0; j < value0.length; j++) {
+	  if (j >= rows)
+	    break;
 	  if ( value0[j] != oldValueI[i][j] || firstScan) {
 	    sb = cFormat[i].format( value0[j], sb);
 	    ((GeTable)dyn.comp).setValueAt(new String(sb), j, i);
@@ -143,6 +149,8 @@ public class GeDynTable extends GeDynElem {
 		typeId[i] == Pwr.eType_Objid) {
 	String[] value0 = dyn.en.gdh.getObjectRefInfoStringArray( p[i], typeId[i], size[i], elements[i]);
 	for ( int j = 0; j < value0.length; j++) {
+	  if (j >= rows)
+	    break;
 	  if ( firstScan || value0[j].compareTo( oldValueS[i][j]) != 0) {
 	    sb = cFormat[i].format( value0[j], sb);
 	    ((GeTable)dyn.comp).setValueAt(new String(sb), j, i);

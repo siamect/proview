@@ -47,6 +47,9 @@
 #include "rt_qcom.h"
 #include "rt_qcom_msg.h"
 #include "rt_syi.h"
+#include "rt_aproc.h"
+#include "rt_pwr_msg.h"
+#include "rt_c_node.h"
 
 /* Local defines */
 
@@ -469,10 +472,12 @@ int main ()
   qcom_sNode myNode;
   qcom_sQattr qAttr;
 
-  errh_Init("pwr_emon");
+  errh_Init("pwr_emon", errh_eAnix_emon);
+  errh_SetStatus( PWR__SRVSTARTUP);
 
   if (!qcom_Init(&sts, 0, "pwr_emon")) {
     errh_Fatal("qcom_Init, %m", sts);
+    errh_SetStatus( PWR__SRVTERM);
     exit(sts);
   } 
 
@@ -493,6 +498,7 @@ int main ()
     }
     else {
       errh_Fatal("qcom_CreateQ, %m", sts);
+      errh_SetStatus( PWR__SRVTERM);
       exit(sts);
     }
   } 
@@ -500,6 +506,7 @@ int main ()
 
   if (!qcom_MyNode(&sts, &myNode)) {
     errh_Fatal("qcom_MyNode, %m", sts);
+    errh_SetStatus( PWR__SRVTERM);
     exit(sts);
   } 
   l.head.qid = myQid;
@@ -510,6 +517,7 @@ int main ()
   sts = gdh_Init("pwr_emon");
   if (EVEN(sts)) {
     errh_Error("gdh_Init, %m", sts);
+    errh_SetStatus( PWR__SRVTERM);
     exit(sts);
   }
 
@@ -572,6 +580,8 @@ int main ()
   mh_UtilWake();
 
   handlerEvent(eHEvent_Booted, 0);
+
+  errh_SetStatus( PWR__SRUN);
 
   for(;;) {
     receive(myQid);
@@ -1889,6 +1899,8 @@ fromEvent (
     l.supListState = eSupListState_Wait;
     errh_Info("Warm restart initiated.");   
     handlerEvent(eHEvent_RestartInit, l.head.nix);
+  } else if (new_event.b.terminate & !cur_event.b.terminate) {
+    exit(0);
   }
 
   sav_event = ep->mask;
@@ -1929,7 +1941,6 @@ getHandlerObject ()
     }
     created = TRUE;
   }
-
   aref.Objid = l.emonObject;
   aref.Offset = 0;
   aref.Size = sizeof(pwr_sClass_MessageHandler);
@@ -1979,6 +1990,8 @@ getHandlerObject ()
   l.timers[cOutunitIdx].multiple = MAX(1, cTimerOutunitSync / l.timerTime);
   l.timers[cOutunitIdx].count = 0;
   l.timers[cOutunitIdx].active = FALSE;
+
+  aproc_RegisterObject( l.emonObject);
 
 #if defined OS_VMS
 
@@ -3316,6 +3329,7 @@ receive (
         tmo = MIN(l.timerTime * 1000, tmo); 
       }
     }
+    aproc_TimeStamp();
   }    
 }
 
@@ -3862,6 +3876,8 @@ timeOut()
     l.timers[cOutunitIdx].count = 0;
     checkOutunits();
   }
+
+  pwrs_Node_Exec();
 }
 
 static void

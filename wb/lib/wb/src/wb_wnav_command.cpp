@@ -248,7 +248,7 @@ dcli_tCmdTable	wnav_command_table[] = {
 			"/LASTCHILD", "/VOLUME", "/ALL", 
 			"/CLASS", "/DEBUG", "/NODECONFIG",
 			"/NAME", "/IDENTITY", "/FILES", "/OUT", "/IGNORE",
-			""}
+			"/DIRECTORY", ""}
 		},
 		{
 			"NEW",
@@ -3318,34 +3318,45 @@ static int	wnav_create_func( void		*client_data,
 
     // Command is "CREATE VOLUME"
 
-    sts = 1;
-    if ( EVEN( dcli_get_qualifier( "/NAME", namestr)))
-      sts = 0;
+    if ( ODD( dcli_get_qualifier( "/DIRECTORY", 0))) {
+      strcpy( namestr, "directory");
+      vid = ldh_cDirectoryVolume;
+      cid = pwr_eClass_DirectoryVolume;
 
-    if ( EVEN( dcli_get_qualifier( "/CLASS", classtr)))
-      sts = 0;
-
-    if ( EVEN( dcli_get_qualifier( "/IDENTITY", identitystr)))
-      sts = 0;
-
-    if ( EVEN(sts)) {
-      wnav->message('E', "Qualifer required");
-      return WNAV__QUAL;
+      sts = wnav_wccm_get_wbctx_cb( wnav, &wnav->wbctx);
+      // sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
+      if ( EVEN(sts)) return sts;
     }
+    else {      
+      sts = 1;
+      if ( EVEN( dcli_get_qualifier( "/NAME", namestr)))
+	sts = 0;
 
-    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
-    if ( EVEN(sts)) return sts;
+      if ( EVEN( dcli_get_qualifier( "/CLASS", classtr)))
+	sts = 0;
+      
+      if ( EVEN( dcli_get_qualifier( "/IDENTITY", identitystr)))
+	sts = 0;
 
-    sts = ldh_ClassNameToId( wnav->ldhses, &cid, classtr);
-    if ( EVEN(sts)) {
-      wnav->message(' ', wnav_get_message(sts));
-      return sts;
-    }
+      if ( EVEN(sts)) {
+	wnav->message('E', "Qualifer required");
+	return WNAV__QUAL;
+      }
+
+      sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
+      if ( EVEN(sts)) return sts;
+
+      sts = ldh_ClassNameToId( wnav->ldhses, &cid, classtr);
+      if ( EVEN(sts)) {
+	wnav->message(' ', wnav_get_message(sts));
+	return sts;
+      }
     
-    sts = cdh_StringToVolumeId( identitystr, &vid);
-    if ( EVEN(sts)) {
-      wnav->message(' ', wnav_get_message(sts));
-      return sts;
+      sts = cdh_StringToVolumeId( identitystr, &vid);
+      if ( EVEN(sts)) {
+	wnav->message(' ', wnav_get_message(sts));
+	return sts;
+      }
     }
 
     try {

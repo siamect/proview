@@ -517,7 +517,7 @@ extern "C" ge_tCtx ge_new( Widget parent_wid,
     XtSetArg(args[i], XmNmaxAspectX, width); i++;
     XtSetArg(args[i], XmNmaxAspectY, height); i++;
   }
-  if ( x != 0 && y != 0)
+  if ( !(x == 0 && y == 0))
   {
     XtSetArg(args[i],XmNx, x);i++;
     XtSetArg(args[i],XmNy, y);i++;

@@ -913,8 +913,8 @@ int	gre_node_annot_message(
             case pwr_eType_Text:
             {
               strncpy( annot_str, parvalue, 
-                       MIN( sizeof(annot_str), annot_max_size));
-              annot_str[MIN( sizeof(annot_str), annot_max_size)-1] = 0;
+                       min( sizeof(annot_str), annot_max_size));
+              annot_str[min( sizeof(annot_str), annot_max_size)-1] = 0;
               break;
             }
             case pwr_eType_Char:
@@ -4361,7 +4361,7 @@ static int	gre_spawn( char *command)
 }
 #endif
 
-int	gre_set_trace_attributes( gre_ctx grectx)
+int	gre_set_trace_attributes( gre_ctx grectx, char *host)
 {
   flow_eTraceType 	trace_type;
   char			object_str[120];
@@ -4384,9 +4384,16 @@ int	gre_set_trace_attributes( gre_ctx grectx)
   {
     sts = trace_get_attributes( grectx, *node_ptr, object_str, attr_str,
 		&trace_type);
-    if ( ODD(sts) && sts != TRA__DISCARD )
+    if ( ODD(sts) && sts != TRA__DISCARD ) {
+      if ( host && strncmp( object_str, host, strlen(host)) == 0) {
+	char tmp[120];
+	strcpy( tmp, "$host");
+	strcat( tmp, &object_str[strlen(host)]);
+	strcpy( object_str, tmp);
+      }
       flow_SetTraceAttr( (*node_ptr)->hn.node_id, object_str,
 		attr_str, trace_type);
+    }
     else
     {
       switch( (*node_ptr)->ln.classid )
@@ -4440,6 +4447,12 @@ int	gre_set_trace_attributes( gre_ctx grectx)
 	         ldh_eName_Hierarchy, object_str, sizeof(object_str), &size);
           if ( EVEN(sts)) return sts;
       }
+      if ( host && strncmp( object_str, host, strlen(host)) == 0) {
+	char tmp[120];
+	strcpy( tmp, "$host");
+	strcat( tmp, &object_str[strlen(host)]);
+	strcpy( object_str, tmp);
+      }
       flow_SetTraceAttr( (*node_ptr)->hn.node_id, object_str,
       		"", flow_eTraceType_User);
     }
@@ -4449,15 +4462,19 @@ int	gre_set_trace_attributes( gre_ctx grectx)
   return GRE__SUCCESS;
 }
 
-int	gre_save( gre_ctx grectx)
+int	gre_save( gre_ctx grectx, char *filename)
 {
-  char filename[80];
+  char fname[200];
   int sts;
 
-  sprintf( filename, "pwrp_load:pwr_%s.flw",
+  if ( !filename) {
+    sprintf( fname, "pwrp_load:pwr_%s.flw",
 		vldh_IdToStr(0, grectx->window_object->lw.objdid));
-  dcli_translate_filename( filename, filename);
-  sts = flow_Save( grectx->flow_ctx, filename);  
+    dcli_translate_filename( fname, fname);
+  }
+  else
+    dcli_translate_filename( fname, filename);
+  sts = flow_Save( grectx->flow_ctx, fname);  
   return sts;
 }
 

@@ -28,6 +28,7 @@
 #include "rt_sanc.h"
 #include "rt_subc.h"
 #include "rt_net.h"
+#include "rt_pwr_msg.h"
 
 
 static void init(qcom_sQid *qid);
@@ -50,9 +51,11 @@ main (
   gdb_sNode		*np;
   qcom_sQid		qid = qcom_cNQid;
 
-  errh_Init("pwr_nacp");
+  errh_Init("pwr_nacp", errh_eAnix_neth_acp);
+  errh_SetStatus( PWR__SRVSTARTUP);
 
   init(&qid);
+  errh_SetStatus( PWR__SRUN);
 
   for (;;) {
     mp = receive(&qid, &get);
@@ -112,11 +115,13 @@ init (
   sts = gdh_Init("pwr_nacp");
   if (EVEN(sts)) {
     errh_Fatal("gdh_Init, %m", sts);
+    errh_SetStatus( PWR__SRVTERM);
     exit(sts);
   } 
 
   if (!qcom_AttachQ(&sts, &qcom_cQnacp)) {
     errh_Fatal("qcom_AttachQ, %m", sts);
+    errh_SetStatus( PWR__SRVTERM);
     exit(sts);
   } 
   *myQid = qcom_cQnacp;

@@ -327,7 +327,10 @@ static pwr_tStatus OpenClassGraph( xmenu_sMenuCall *ip)
   if ( EVEN(sts)) return sts;
   cdh_ToLower( classname, classname);
 
-  sprintf( filename, "pwr_exe:pwr_c_%s.pwg", classname);
+  if ( classname[0] == '$')
+    sprintf( filename, "pwr_exe:pwr_c_%s.pwg", &classname[1]);
+  else
+    sprintf( filename, "pwr_exe:pwr_c_%s.pwg", classname);
   dcli_translate_filename( fname, filename);
   sts = dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_INIT);
   dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_END);
@@ -374,7 +377,10 @@ static pwr_tStatus OpenClassGraphFilter( xmenu_sMenuCall *ip)
   if ( EVEN(sts)) return sts;
   cdh_ToLower( classname, classname);
 
-  sprintf( filename, "pwr_exe:pwr_c_%s.pwg", classname);
+  if ( classname[0] == '$')
+    sprintf( filename, "pwr_exe:pwr_c_%s.pwg", &classname[1]);
+  else
+    sprintf( filename, "pwr_exe:pwr_c_%s.pwg", classname);
   dcli_translate_filename( fname, filename);
   sts = dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_INIT);
   dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_END);
@@ -425,7 +431,7 @@ static pwr_tStatus OpenGraph( xmenu_sMenuCall *ip)
       }
     }
 
-    gdh_GetParent( objid, &objid);
+    sts = gdh_GetParent( objid, &objid);
   }
 
   return XNAV__SUCCESS;
@@ -476,7 +482,7 @@ static pwr_tStatus OpenGraphFilter( xmenu_sMenuCall *ip)
       }
     }
 
-    gdh_GetParent( objid, &objid);
+    sts = gdh_GetParent( objid, &objid);
   }
 
   return XNAV__INVISIBLE;
@@ -612,6 +618,75 @@ static pwr_tStatus DataSheetFilter( xmenu_sMenuCall *ip)
     return XNAV__INVISIBLE;
 
   return XNAV__SUCCESS;
+}
+
+// Open CircuitDiagram
+static pwr_tStatus CircuitDiagram( xmenu_sMenuCall *ip)
+{
+  int sts;
+  pwr_tURL circuitdiagram;
+  char name[140];
+  pwr_tObjid objid;
+  bool is_parent = false;
+
+  objid = ip->Pointed.Objid;
+  sts = XNAV__SUCCESS;
+  while( ODD(sts)) {
+    sts = gdh_ObjidToName( objid, name, sizeof(name),
+			cdh_mName_volumeStrict);
+    if ( EVEN(sts)) return sts;
+
+    strcat( name, ".CircuitDiagram");
+    sts = gdh_GetObjectInfo( name, (void *)circuitdiagram, sizeof(circuitdiagram));
+    if ( ODD(sts) && cdh_NoCaseStrcmp( circuitdiagram, "disabled") == 0)
+      break;
+    if ( ODD(sts) && strcmp( circuitdiagram, "") != 0) {
+      // CircuitDiagram found
+      xnav_open_URL( circuitdiagram);
+      break;
+    }
+    if ( !is_parent && EVEN(sts))
+      break;
+
+    is_parent = true;
+    sts = gdh_GetParent( objid, &objid);
+  }
+
+  return XNAV__SUCCESS;
+}
+
+// Open CircuitDiagram filter
+static pwr_tStatus CircuitDiagramFilter( xmenu_sMenuCall *ip)
+{
+  int sts;
+  pwr_tURL circuitdiagram;
+  char name[140];
+  pwr_tObjid objid;
+  bool is_parent = false;
+
+  objid = ip->Pointed.Objid;
+  sts = XNAV__SUCCESS;
+  while( ODD(sts)) {
+    sts = gdh_ObjidToName( objid, name, sizeof(name),
+			cdh_mName_volumeStrict);
+    if ( EVEN(sts)) return sts;
+
+    strcat( name, ".CircuitDiagram");
+    sts = gdh_GetObjectInfo( name, (void *)circuitdiagram, sizeof(circuitdiagram));
+    if ( ODD(sts) && cdh_NoCaseStrcmp( circuitdiagram, "disabled") == 0)
+      break;
+    if ( ODD(sts) && strcmp( circuitdiagram, "") != 0) {
+      // CircuitDiagram found
+      return XNAV__SUCCESS;
+    }
+    if ( !is_parent && EVEN(sts))
+      break;
+
+    is_parent = true;
+    sts = gdh_GetParent( objid, &objid);
+  }
+
+  return XNAV__INVISIBLE;
 }
 
 // Help Class
@@ -1041,6 +1116,8 @@ pwr_dExport pwr_BindXttMethods($Object) = {
   pwr_BindXttMethod(HelpFilter),
   pwr_BindXttMethod(DataSheet),
   pwr_BindXttMethod(DataSheetFilter),
+  pwr_BindXttMethod(CircuitDiagram),
+  pwr_BindXttMethod(CircuitDiagramFilter),
   pwr_BindXttMethod(HelpClass),
   pwr_BindXttMethod(HelpClassFilter),
   pwr_BindXttMethod(OpenTypeGraph),

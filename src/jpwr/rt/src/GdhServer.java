@@ -214,12 +214,17 @@ public class GdhServer
     }
 
     gdh = new Gdh((Object)null);
-    errh = new Errh("GdhServer");
+    errh = new Errh("GdhServer", Errh.eAnix_webmon);
+    errh.setStatus( Errh.PWR__SRVSTARTUP);
+    
     int sts = getHandlerObject();
     if(sts % 2 == 0)
     {
+      errh.setStatus( 0);
       return;
     }
+
+    errh.setStatus( Errh.PWR__SRUN);
 
     while(true)
     {

@@ -499,8 +499,8 @@ int	gre_redraw(
 
 int gre_view_setup( gre_ctx grectx);
 int gre_edit_setup( gre_ctx grectx);
-int gre_set_trace_attributes( gre_ctx grectx);
-int gre_save( gre_ctx grectx);
+int gre_set_trace_attributes( gre_ctx grectx, char *host);
+int gre_save( gre_ctx grectx, char *filename);
 void gre_set_grid_size( gre_ctx grectx, double size);
 
 #endif

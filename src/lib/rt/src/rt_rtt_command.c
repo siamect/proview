@@ -9261,25 +9261,7 @@ static int	rtt_set_parameter(
 	    memcpy( buffer_ptr, &value_objid, sizeof( value_objid));
 	    break;
 	  }
-	  case pwr_eType_Buffer:
-	  case pwr_eType_Enum:
-	  case pwr_eType_Struct:
-	  case pwr_eType_Mask:
-	  case pwr_eType_Array:
-	  case pwr_eType_Time:
-	  case pwr_eType_Text:
-	  case pwr_eType_AttrRef:
-	  case pwr_eType_UInt64:
-	  case pwr_eType_Int64:
-	  case pwr_eType_ClassId:
-	  case pwr_eType_TypeId:
-	  case pwr_eType_VolumeId:
-	  case pwr_eType_ObjectIx:
-	  case pwr_eType_RefId:
-	  case pwr_eType_DeltaTime:
-	  case pwr_eType__:
-	  case pwr_eType_:
-	    break;
+	  default: ;
 	}
 	if ( value_syntax_error)
 	{

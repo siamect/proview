@@ -31,6 +31,8 @@
 #include "rt_qcom_msg.h"
 #include "rt_qcom.h"
 #include "rt_ini_event.h"
+#include "rt_aproc.h"
+#include "rt_pwr_msg.h"
 
 #define Log_Error(a, b) errh_CErrLog(DS__ERROR, errh_ErrArgAF(b), errh_ErrArgMsg(a), NULL)
 #define Log(b) errh_CErrLog(DS__LOG, errh_ErrArgAF(b), NULL)
@@ -72,7 +74,9 @@ int main (int argc, char **argv)
   qcom_sGet get;
   int swap = 0;
 
-  errh_Init("pwr_trend");
+  errh_Init("pwr_trend", errh_eAnix_trend);
+  errh_SetStatus( PWR__SRVSTARTUP);
+
   sts = gdh_Init("ds_trend");
   If_Error_Log_Exit(sts, "gdh_Init");
 
@@ -112,6 +116,8 @@ int main (int argc, char **argv)
       ScanTime = 1;
   }
 
+  aproc_RegisterObject( ObjId);
+
   sts = InitTrendList(ScanTime, &LstHead);
   if (ODD(sts)) { 
     InitOK = TRUE;
@@ -127,6 +133,9 @@ int main (int argc, char **argv)
   clock_gettime(CLOCK_REALTIME, &LastScan);
   ScanDeltaTime.tv_sec =  ScanTime;
   ScanDeltaTime.tv_nsec = 0;
+
+  aproc_TimeStamp();
+  errh_SetStatus( PWR__SRUN);
 
   for (;;) {
 
@@ -150,12 +159,17 @@ int main (int argc, char **argv)
 	new_event.m  = ep->mask;
 	if (new_event.b.oldPlcStop && !swap) {
 	  swap = 1;
+	  errh_SetStatus( PWR__SRVRESTART);
 	  CloseTrendList( &LstHead);
 	} 
 	else if (new_event.b.swapDone && swap) {
 	  swap = 0;
 	  sts = InitTrendList( ScanTime, &LstHead);
+	  errh_SetStatus( PWR__SRUN);
 	  errh_Info("Warm restart completed");
+	}
+	else if (new_event.b.terminate) {
+	  exit(0);
 	}
       }
     }
@@ -163,6 +177,8 @@ int main (int argc, char **argv)
       StoreData(LstHead);
 
     LastScan = NextScan;
+
+    aproc_TimeStamp();
   }
 
   return 1;
@@ -222,6 +238,7 @@ InitTrendList (
     LstNode = calloc(1, sizeof(*LstNode));
     if (LstNode == NULL) {
       errh_CErrLog(DS__ERRALLOC, NULL);
+      errh_SetStatus( PWR__SRVTERM);
       exit(DS__ERRALLOC);
     }
 

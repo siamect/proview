@@ -160,7 +160,7 @@ dcli_tCmdTable	xnav_command_table[] = {
 			"/SCROLLBAR", "/WIDTH", "/HEIGHT", "/MENU", 
 			"/NAVIGATOR", "/CENTER", "/OBJECT", "/NEW", 
 			"/INSTANCE", "/COLLECT", "/FOCUS", "/INPUTEMPTY", 
-                        "/ENTRY", "/TITLE", "/ACCESS", ""}
+                        "/ENTRY", "/TITLE", "/ACCESS", "/CLASSGRAPH", ""}
 		},
 		{
 			"CLOSE",
@@ -1814,11 +1814,29 @@ static int	xnav_open_func(	void		*client_data,
   if ( strncmp( arg1_str, "GRAPH", strlen( arg1_str)) == 0)
   {
     char	object_str[80];
-    char	instance_str[80];
+    char	instance_str[120];
     char	*instance_p;
+    int		classgraph;
+    pwr_tStatus sts;
 
-    if ( ODD( dcli_get_qualifier( "/INSTANCE", instance_str)))
+    if ( ODD( dcli_get_qualifier( "/INSTANCE", instance_str))) {
       instance_p = instance_str;
+
+      if ( instance_str[0] == '&') {
+	pwr_tOid oid;
+	pwr_tStatus sts;
+
+	// Objid attribute the contains the instance
+        sts = gdh_GetObjectInfo( &instance_str[1], &oid, sizeof(oid));
+	if ( ODD(sts))
+	  sts = gdh_ObjidToName( oid, instance_str, sizeof(instance_str),
+			       cdh_mName_volumeStrict);
+	if ( EVEN(sts)) {
+	  xnav->message('E', "Instance object not found");
+	  return XNAV__HOLDCOMMAND;
+	}
+      }
+    }
     else
       instance_p = 0;
 
@@ -1833,7 +1851,7 @@ static int	xnav_open_func(	void		*client_data,
       int  inputempty;
 
       IF_NOGDH_RETURN;
-      if ( strncmp( object_str, "*-", 2) == 0)
+      if ( strncmp( object_str, "*-", 2) == 0 || strncmp( object_str, "$node-", 6) == 0)
       {
         // Replace * by the node object
         sts = gdh_GetNodeObject( 0, &node_objid);
@@ -1841,14 +1859,16 @@ static int	xnav_open_func(	void		*client_data,
         sts = gdh_ObjidToName( node_objid, xttgraph_name, sizeof(xttgraph_name), 
 			cdh_mNName);
         if ( EVEN(sts)) return sts;
-        strcat( xttgraph_name, &object_str[1]);
+	if ( object_str[0] == '*')
+	  strcat( xttgraph_name, &object_str[1]);
+	else
+	  strcat( xttgraph_name, &object_str[5]);	  
       }
       else
         strcpy( xttgraph_name, object_str);
         
       sts = gdh_NameToObjid( xttgraph_name, &objid);
-      if (EVEN(sts))
-      {
+      if (EVEN(sts)) {
         xnav->message('E', "Object not found");
         return XNAV__HOLDCOMMAND;
       }
@@ -1896,12 +1916,54 @@ static int	xnav_open_func(	void		*client_data,
       }
       else if ( EVEN( dcli_get_qualifier( "/FILE", file_str)))
       {
-        xnav->message('E',"Enter file");
-        return XNAV__HOLDCOMMAND;
+	if ( classgraph) {
+	  // Get file from class of instance object
+	  pwr_tOid oid;
+	  char cname[80];
+	  pwr_tCid cid;
+	  
+	  if ( !instance_p) {
+	    xnav->message('E',"Enter instance object");
+	    return XNAV__HOLDCOMMAND;
+	  }
+	  sts = gdh_NameToObjid( instance_p, &oid);
+	  if ( EVEN(sts)) {
+	    xnav->message('E',"Instance object not found");
+	    return XNAV__HOLDCOMMAND;
+	  }
+	  sts = gdh_GetObjectClass( oid, &cid);
+	  if ( EVEN(sts)) return sts;
+
+	  sts = gdh_ObjidToName( cdh_ClassIdToObjid( cid), cname, sizeof(cname),
+			   cdh_mName_object);
+	  if ( EVEN(sts)) return sts;
+	  if ( cname[0] == '$')
+	    sprintf( file_str, "pwr_c_%s", &cname[1]);
+	  else
+	    sprintf( file_str, "pwr_c_%s", cname);
+	}
+	else {
+	  xnav->message('E',"Enter file");
+	  return XNAV__HOLDCOMMAND;
+	}
       }
       if ( EVEN( dcli_get_qualifier( "/NAME", name_str)))
       {
-        strcpy( name_str, file_str);
+	if ( instance_p) {
+	  pwr_tOid oid;
+
+	  // Use object name as title
+	  sts = gdh_NameToObjid( instance_p, &oid);
+	  if ( EVEN(sts)) {
+	    xnav->message('E',"Instance object not found");
+	    return XNAV__HOLDCOMMAND;
+	  }
+	  sts = gdh_ObjidToName( oid, name_str, sizeof(name_str),
+			   cdh_mName_pathStrict);
+	  if ( EVEN(sts)) return sts;
+	}
+	else
+	  strcpy( name_str, file_str);
       }
       if ( ODD( dcli_get_qualifier( "/FOCUS", focus_str)))
         focus_p = focus_str;

@@ -35,6 +35,8 @@
 #include "rt_que.h"
 #include "rt_csup.h"
 #include "rt_ini_event.h"
+#include "rt_aproc.h"
+#include "rt_pwr_msg.h"
 
 static plc_sProcess	*init_process ();
 static pwr_tStatus	init_plc (plc_sProcess*);
@@ -143,7 +145,11 @@ int main (
   bck_ForceBackup(NULL);
 #endif
 
+  errh_SetStatus( PWR__SRUN);
+
   qcom_WaitAnd(&sts, &pp->eventQ, &qcom_cQini, ini_mEvent_oldPlcStop, qcom_cTmoEternal);
+
+  errh_SetStatus( PWR__SRVTERM);
 
   time_Uptime(&sts, &pp->PlcProcess->StopTime, NULL);
   stop_threads(pp);
@@ -170,7 +176,8 @@ init_process ()
   thread_SetPrio(NULL, 15);
 #endif
 
-  errh_Init("pwr_plc");
+  errh_Init("pwr_plc", errh_eAnix_plc);
+  errh_SetStatus( PWR__SRVSTARTUP);
 
   pp = (plc_sProcess *) calloc(1, sizeof(*pp));
   if (pp == NULL) {
@@ -181,6 +188,7 @@ init_process ()
   sts = gdh_Init("pwr_plc");
   if (EVEN(sts)) {
     errh_Fatal("gdh_Init, %m", sts);
+    errh_SetStatus( PWR__SRVTERM);
     exit(sts);
   }
 
@@ -193,12 +201,14 @@ init_process ()
   qcom_CreateQ(&sts, &pp->eventQ, NULL, "plcEvent");
   if (EVEN(sts)) {
     errh_Fatal("qcom_CreateQ(eventQ), %m", sts);
+    errh_SetStatus( PWR__SRVTERM);
     exit(sts);
   }
 
   sts = thread_MutexInit(&pp->io_copy_mutex);
   if (EVEN(sts)) {
     errh_Fatal("thread_MutexInit(io_copy_mutex), %m", sts);
+    errh_SetStatus( PWR__SRVTERM);
     exit(sts);
   }
 
@@ -214,8 +224,11 @@ init_plc (
   pwr_tObjid   	oid;
   pwr_tObjid   	pp_oid;
   pwr_tObjid   	io_oid;
+  pwr_tObjid	thread_oid;
   int		sec;
   int		msec;
+  int		i;
+  pwr_tCid	cid;
 
   sts = gdh_GetNodeObject(0, &oid);
   if (EVEN(sts)) {
@@ -234,6 +247,22 @@ init_plc (
 
   sts = gdh_ObjidToPointer(pp_oid, (void *)&pp->PlcProcess);
   if (EVEN(sts)) return sts;
+
+  i = 0;
+  sts = gdh_GetChild( pp_oid, &thread_oid);
+  while ( ODD(sts)) {
+    sts = gdh_GetObjectClass( thread_oid, &cid);
+    if ( EVEN(sts)) return sts;
+    
+    if ( cid == pwr_cClass_PlcThread)
+      pp->PlcProcess->PlcThreadObjects[i++] = thread_oid;
+
+    sts = gdh_GetNextSibling( thread_oid, &thread_oid);
+  }
+  for ( ; i > sizeof(pp->PlcProcess->PlcThreadObjects)/sizeof(pp->PlcProcess->PlcThreadObjects[0]); i++)
+    pp->PlcProcess->PlcThreadObjects[i] = pwr_cNObjid;
+
+  aproc_RegisterObject( pp_oid);
 
   sts = gdh_GetClassList(pwr_cClass_IOHandler, &io_oid);
   if (EVEN(sts)) {
@@ -370,8 +399,12 @@ link_io_base_areas (
   dlink_area((plc_sDlink *)&pp->base.di_a, "pwrNode-active-io-di", pp->IOHandler->DiCount * sizeof(pwr_tBoolean));
   dlink_area((plc_sDlink *)&pp->base.do_a, "pwrNode-active-io-do", pp->IOHandler->DoCount * sizeof(pwr_tBoolean));
   dlink_area((plc_sDlink *)&pp->base.dv_a, "pwrNode-active-io-dv", pp->IOHandler->DvCount * sizeof(pwr_tBoolean));
-  dlink_area((plc_sDlink *)&pp->base.av_i, "pwrNode-active-io-av_init", pp->IOHandler->AvCount * sizeof(pwr_tFloat32));
+  dlink_area((plc_sDlink *)&pp->base.ii_a, "pwrNode-active-io-ii", pp->IOHandler->IiCount * sizeof(pwr_tInt32));
+  dlink_area((plc_sDlink *)&pp->base.io_a, "pwrNode-active-io-io", pp->IOHandler->IoCount * sizeof(pwr_tInt32));
+  dlink_area((plc_sDlink *)&pp->base.iv_a, "pwrNode-active-io-iv", pp->IOHandler->IvCount * sizeof(pwr_tInt32));
+  dlink_area((plc_sDlink *)&pp->base.av_i, "pwrNode-active-io-av_init", pp->IOHandler->AvCount * sizeof(pwr_tInt32));
   dlink_area((plc_sDlink *)&pp->base.dv_i, "pwrNode-active-io-dv_init", pp->IOHandler->DvCount * sizeof(pwr_tInt32));
+  dlink_area((plc_sDlink *)&pp->base.iv_i, "pwrNode-active-io-iv_init", pp->IOHandler->DvCount * sizeof(pwr_tInt32));
 }
 
 /* Link to I/O copy areas.
@@ -409,6 +442,16 @@ link_io_copy_areas (
 
   tp->copy.dv_a = pp->base.dv_a;
   tp->copy.dv_a.p = calloc(1, tp->copy.dv_a.size);
+
+  tp->copy.ii_a = pp->base.ii_a;
+  tp->copy.ii_a.p = calloc(1, tp->copy.ii_a.size);
+
+  tp->copy.io_a = pp->base.io_a;
+  tp->copy.io_a.p = calloc(1, tp->copy.io_a.size);
+
+  tp->copy.iv_a = pp->base.iv_a;
+  tp->copy.iv_a.p = calloc(1, tp->copy.iv_a.size);
+
 }
 
 static void
@@ -544,6 +587,11 @@ save_values (
     if (p != NULL)
       *p = pp->base.av_a.p->Value[i];
   }
+  for (i = 0; i < pp->IOHandler->IvCount; i++) {
+    pwr_tInt32 *p = gdh_TranslateRtdbPointer(pp->base.iv_i.p->Value[i]);
+    if (p != NULL)
+      *p = pp->base.iv_a.p->Value[i];
+  }
   for (i = 0; i < pp->IOHandler->DvCount; i++) {
     pwr_tBoolean *p = gdh_TranslateRtdbPointer(pp->base.dv_i.p->Value[i]);
     if (p != NULL)
@@ -562,6 +610,11 @@ set_values (
     pwr_tFloat32 *p = gdh_TranslateRtdbPointer(pp->base.av_i.p->Value[i]);
     if (p != NULL)
       pp->base.av_a.p->Value[i] = *p;
+  }
+  for (i = 0; i < pp->IOHandler->IvCount; i++) {
+    pwr_tInt32 *p = gdh_TranslateRtdbPointer(pp->base.iv_i.p->Value[i]);
+    if (p != NULL)
+      pp->base.iv_a.p->Value[i] = *p;
   }
   for (i = 0; i < pp->IOHandler->DvCount; i++) {
     pwr_tBoolean *p = gdh_TranslateRtdbPointer(pp->base.dv_i.p->Value[i]);

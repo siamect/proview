@@ -25,9 +25,11 @@
 #include "rt_gdh.h"
 #include "rt_errh.h"
 #include "rt_gdh_msg.h"
+#include "rt_ini_event.h"
 #include "rt_qcom_msg.h"
 #include "rt_qcom.h"
 #include "rt_alimsrv.h"
+#include "rt_pwr_msg.h"
 
 
 typedef struct sAttribute sAttribute;
@@ -63,6 +65,7 @@ static tree_sTable *ltp;
 
 static alimsrv_sSupDataBuf *buildBuffer(alimsrv_sRequest*, unsigned int*);
 static void init();
+static void event (qcom_sGet	*get);
 static sAttribute *findAttribute(sObject*, pwr_sAttrRef*, pwr_tClassId);
 
 
@@ -237,7 +240,8 @@ int main (int argc, char **argv)
   XDR              xdrs;
   qcom_sQattr      qAttr;
 
-  errh_Init("pwr_alim");
+  errh_Init("pwr_alim", errh_eAnix_alim);
+  errh_SetStatus( PWR__SRVSTARTUP);
 
   if (!qcom_Init(&sts, 0, "pwr_alim")) {
     errh_Fatal("qcom_Init, %m", sts);
@@ -250,16 +254,25 @@ int main (int argc, char **argv)
   qAttr.quota = 100;
   if (!qcom_CreateQ(&sts, &myQId,  &qAttr, "pwr_alim")) {
     errh_Fatal("qcom_CreateQ, %m", sts);
+    errh_SetStatus( PWR__SRVTERM);
     exit(-1);
   } 
+  if (!qcom_Bind(&sts, &myQId, &qcom_cQini)) {
+    errh_Fatal("qcom_Bind, %m", sts);
+    errh_SetStatus( PWR__SRVTERM);
+    exit(-1);
+  }
 
   sts = gdh_Init("pwr_alim");
   if (EVEN(sts)) {
     errh_Fatal("gdh_Init, %m", sts);
+    errh_SetStatus( PWR__SRVTERM);
     exit(-1);
   } 
 
   init();
+
+  errh_SetStatus( PWR__SRUN);
 
   /* Loop forever and receive objid's */
 
@@ -268,6 +281,11 @@ int main (int argc, char **argv)
       get.maxSize = sizeof(request);
       get.data = (char *)&request;
       qcom_Get(&sts, &myQId, &get, qcom_cTmoEternal);
+      if (sts != QCOM__TMO && sts != QCOM__QEMPTY) {
+        if (get.type.b == qcom_eBtype_event) {
+          event(&get);
+        }
+      }
     } while (ODD(sts) && get.type.s != alimsrv_eSubType_Request && get.type.b != alimsrv_cMsgType);
 
     if (EVEN(sts)) {
@@ -304,4 +322,21 @@ int main (int argc, char **argv)
       free(bp);
     }
   }    
+}
+
+static void
+event (
+  qcom_sGet	*get
+)
+{
+  qcom_sEvent  *ep = (qcom_sEvent*) get->data;
+  ini_mEvent            new_event;
+
+  if (get->type.s != qcom_cIini)
+    return;
+
+  new_event.m = ep->mask;
+  if (new_event.b.terminate) {
+    exit(0);
+  }
 }

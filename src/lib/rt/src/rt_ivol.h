@@ -58,8 +58,7 @@ typedef struct {
   pwr_tUInt32		cvolMaxCount;
   pwr_tUInt32		cvolMinCount;
   pwr_tProjVersion	plcVersion;
-  pwr_tProjVersion	rtVersion;
-  pwr_tTime		rtCreTime;
+  pwr_tTime		rtVersion;
 } ivol_sNode;
 
 typedef struct {

@@ -120,6 +120,8 @@ typedef enum {
   pwr_eTix_ObjectIx	= 26,	/* Basic type */
   pwr_eTix_RefId	= 27,	/* Basic type */
   pwr_eTix_DeltaTime	= 28,	/* Basic type */
+  pwr_eTix_Status	= 29,	/* Basic type */
+  pwr_eTix_NetStatus	= 30,	/* Basic type */
   pwr_eTix_
 } pwr_eTix;
 
@@ -158,6 +160,8 @@ typedef enum {
   pwr_eType_ObjectIx	= pwr_TypeId(pwr_eTix_ObjectIx),
   pwr_eType_RefId	= pwr_TypeId(pwr_eTix_RefId),
   pwr_eType_DeltaTime	= pwr_TypeId(pwr_eTix_DeltaTime),
+  pwr_eType_Status	= pwr_TypeId(pwr_eTix_Status),
+  pwr_eType_NetStatus	= pwr_TypeId(pwr_eTix_NetStatus),
   pwr_eType_		= pwr_TypeId(pwr_eTix_)
 } pwr_eType;
 
@@ -919,10 +923,24 @@ struct pwr_s_Node
     pwr_tString80	Description;
     char		ErrLogTerm[132];
     char		ErrLogFile[132];
-    pwr_tProjVersion	BootVersion;
-    pwr_tTime		BootCreTime;
-    pwr_tProjVersion	CurVersion;
-    pwr_tTime		CurCreTime;
+    pwr_tTime		BootTime;
+    pwr_tTime		BootVersion;
+    pwr_tProjVersion	BootPlcVersion;
+    pwr_tTime		CurrentVersion;
+    pwr_tProjVersion	CurrentPlcVersion;
+    pwr_tUInt32		Restarts;
+    pwr_tTime		RestartTime;
+    pwr_tDeltaTime	RestartStallTime;
+    pwr_tTime		SystemTime;
+    pwr_tNetStatus	SystemStatus;  
+    pwr_tStatus		ProcStatus[40];
+    pwr_tStatus		ProcMsgSeverity[40];
+    pwr_tString80      	ProcMessage[40];
+    pwr_tOid		ProcObject[40];
+    pwr_tTime		ProcTimeStamp[40];
+    pwr_tStatus		ApplStatus[20];
+    pwr_tOid		ApplObject[20];
+    pwr_tTime		ApplTimeStamp[20];
     pwr_tBoolean	EmergBreakTrue;
     pwr_tUInt32		EmergBreakSelect;
     };

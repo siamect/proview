@@ -7,10 +7,12 @@
 
 #include "rt_elog.h"
 #include "twolist.h"
+#include "rt_aproc.h"
+#include "rt_pwr_msg.h"
 
 #define Log_Error(a, b) errh_Error("%s\n%m",b, a)
 #define Log(b) errh_Info(b)
-#define Log_Error_Exit(a, b) {Log_Error(a, b); exit(a);}
+#define Log_Error_Exit(a, b) {Log_Error(a, b); errh_SetStatus(PWR__SRVTERM); exit(a);}
 #define Log_Error_Return(a, b) {Log_Error(a, b); return (a);}
 #define If_Error_Log(a, b) if ((a & 1) != 1) Log_Error(a, b)
 #define If_Error_Log_Return(a, b) if ((a & 1) != 1) Log_Error_Return(a, b)
@@ -50,7 +52,8 @@ main ()
   pwr_tUInt32 nrOfEvents = 0;
   pwr_tUInt32 nrOfKeys = 0;
   
-  errh_Init("pwr_elog");
+  errh_Init("pwr_elog", errh_eAnix_elog);
+  errh_SetStatus( PWR__SRVSTARTUP);
 
   memset(&lHelCB, 0, sizeof(lHelCB));
 
@@ -80,12 +83,15 @@ main ()
 
   sts = mh_OutunitSetTimeout(lHelCB.ScanTime);
 
+  errh_SetStatus( PWR__SRUN);
+
   for (;;) {
     sts = mh_OutunitReceive();
     if (EVEN(sts) && sts != MH__TMO)
       Log_Error(sts, "mh_OutunitReceive");
     Store(&firstTime, &nrOfEvents, &nrOfKeys);
 
+    aproc_TimeStamp();
   }
 }
 
@@ -121,6 +127,7 @@ Init ()
   
   if (MH->EventLogSize == 0) {
     Log("EventLogSize = 0, no event logger will run on this node.");
+    errh_SetStatus( pwr_cNStatus);
     exit(1);
   }
 

@@ -3677,6 +3677,11 @@ void grow_StoreTransform( grow_tObject object)
   ((GlowArrayElem *)object)->store_transform();
 }
 
+int grow_TransformIsStored( grow_tObject object)
+{
+  return (int) ((GlowArrayElem *)object)->transform_is_stored();
+}
+
 void grow_AlignSelect( grow_tCtx ctx, glow_eAlignDirection direction)
 {
   ctx->align_select( direction);

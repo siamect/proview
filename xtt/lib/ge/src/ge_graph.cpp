@@ -70,7 +70,9 @@ static const    graph_sTypeStr	graph_type_table[] = {
     {"Objid",	pwr_eType_Objid,    sizeof(pwr_tObjid)},
     {"Time",	pwr_eType_Time,     sizeof(pwr_tTime)},
     {"DeltaTime", pwr_eType_DeltaTime, sizeof(pwr_tDeltaTime)},
-    {"AttrRef", pwr_eType_AttrRef,  sizeof(pwr_sAttrRef)}
+    {"AttrRef", pwr_eType_AttrRef,  sizeof(pwr_sAttrRef)},
+    {"Status", pwr_eType_Status,  sizeof(pwr_tStatus)},
+    {"NetStatus", pwr_eType_NetStatus,  sizeof(pwr_tNetStatus)}
     };
 
 static char null_str[] = "";
@@ -3322,10 +3324,8 @@ graph_eDatabase Graph::parse_attr_name( char *name, char *parsed_name,
 
   graph_remove_space( str, name);
   
-  if ( (s = strstr( str, "$user")))
-  {
-    if ( (s = strchr( str, '#')))
-    {
+  if ( (s = strstr( str, "$user"))) {
+    if ( (s = strchr( str, '#'))) {
       if ( strcmp( s, "##Float32") == 0)
         *type = pwr_eType_Float32;
       else if ( strcmp( s, "##Float64") == 0)
@@ -3338,8 +3338,7 @@ graph_eDatabase Graph::parse_attr_name( char *name, char *parsed_name,
         *type = pwr_eType_String;
       *s = 0;
     }
-    if ( str[0] == '!')
-    {
+    if ( str[0] == '!') {
       *inverted = 1;
       graph_remove_space( str, &str[1]);
     }
@@ -3349,11 +3348,9 @@ graph_eDatabase Graph::parse_attr_name( char *name, char *parsed_name,
 
     return graph_eDatabase_User;
   }
-  if ( (s = strstr( str, "$local.")))
-  {
+  if ( (s = strstr( str, "$local."))) {
     strcpy( parsed_name, s + strlen("$local."));
-    if ( (s = strchr( parsed_name, '#')))
-    {
+    if ( (s = strchr( parsed_name, '#'))) {
       if ( strcmp( s, "##Float32") == 0)
         *type = pwr_eType_Float32;
       else if ( strcmp( s, "##Float64") == 0)
@@ -3366,8 +3363,7 @@ graph_eDatabase Graph::parse_attr_name( char *name, char *parsed_name,
         *type = pwr_eType_String;
       *s = 0;
     }
-    if ( str[0] == '!')
-    {
+    if ( str[0] == '!') {
       *inverted = 1;
       graph_remove_space( str, &str[1]);
     }
@@ -3377,30 +3373,43 @@ graph_eDatabase Graph::parse_attr_name( char *name, char *parsed_name,
     return graph_eDatabase_Local;
   }
 
-  if ( (s = strstr( str, "$object")))
-  {
+  if ( (s = strstr( str, "$object"))) {
     strcpy( str1, s + strlen("$object"));
     strcpy( s, object_name);
     strcat( str, str1);
   }
+
+  if ( (s = strstr( str, "$node"))) {
+    char nodename[80];
+    pwr_tOid oid;
+    pwr_tStatus sts;
+
+    sts = gdh_GetNodeObject( 0, &oid);
+    if ( ODD(sts)) {
+      sts = gdh_ObjidToName( oid, nodename, sizeof(nodename), cdh_mName_pathStrict);
+      if ( ODD(sts)) {
+	strcpy( str1, s + strlen("$node"));
+	strcpy( s, nodename);
+	strcat( str, str1);
+      }
+    }
+  }
+
   if ( (s = strstr( str, "##")))
     string_to_type( s + 2, (pwr_eType *)type, size, &elements);
 
-  if ( (s = strchr( str, '#')))
-  {
+  if ( (s = strchr( str, '#'))) {
     *s = 0;
     if ( (s1 = strchr( s+1, '[')))
       strcat( str, s1);
   }
 
-  if ( str[0] == '!')
-  {
+  if ( str[0] == '!') {
     *inverted = 1;
     graph_remove_space( str, &str[1]);
     strcpy( parsed_name, str);
   }
-  else
-  {
+  else {
     *inverted = 0;
     strcpy( parsed_name, str);
   }

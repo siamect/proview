@@ -79,7 +79,8 @@ typedef enum {
 	cread_mState_Volume	= 1 << 17,
 	cread_mState_DParam	= 1 << 18,
 	cread_mState_TypeDef	= 1 << 19,
-	cread_mState_Type	= 1 << 20
+	cread_mState_Type	= 1 << 20,
+	cread_mState_StringAttr	= 1 << 21
 	} cread_mState;
 
 #define cread_cTmpFile1 "classread1.tmp"

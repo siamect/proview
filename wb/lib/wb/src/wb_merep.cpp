@@ -112,9 +112,9 @@ void wb_merep::removeDbs(pwr_tStatus *sts, wb_mvrep *mvrep)
 
 wb_cdrep *wb_merep::cdrep( pwr_tStatus *sts, const wb_orep& o)
 {
-  if ( m_erep && o.vrep() != m_vrep)
+  // if ( m_erep && o.vrep() != m_vrep)
     // Fetch from other meta environment
-    return m_erep->cdrep( sts, o);
+  // return m_erep->cdrep( sts, o);  ??? 
 
   pwr_tVid vid = cdh_CidToVid(o.cid());
   mvrep_iterator it =  m_mvrepdbs.find( vid);

@@ -169,6 +169,7 @@ scan (
     tp->after_scan = tp->before_scan;
   }
   clock_gettime(CLOCK_REALTIME, &tp->after_scan_abs);
+  pp->Node->SystemTime = tp->after_scan_abs;
   if (tp->log)
     pwrb_PlcThread_Exec(tp);
 
@@ -213,3 +214,5 @@ scan (
     tp->log = TRUE;
 
 }
+
+

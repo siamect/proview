@@ -4,21 +4,29 @@
 #include "rt_errh_msg.h"
 
 JNIEXPORT jint JNICALL Java_jpwr_rt_Errh_init
-  (JNIEnv *env, jobject object, jstring jname)
+  (JNIEnv *env, jobject object, jstring jname, jint janix)
 {
   jint		jsts;
   int		sts;
   char		*cstr;
   const char 	*name;
+  int		anix = janix;
 
   name = (*env)->GetStringUTFChars( env, jname, 0);
   cstr = (char *)name;
 
-  sts = errh_Init( cstr);
+  sts = errh_Init( cstr, anix);
   (*env)->ReleaseStringUTFChars( env, jname, cstr);
 
   jsts = (jint) sts;
   return jsts;
+}
+
+JNIEXPORT void JNICALL Java_jpwr_rt_Errh_setStatus
+  (JNIEnv *env, jobject object, jint jsts)
+{
+  int sts = jsts;
+  errh_SetStatus( sts);
 }
 
 JNIEXPORT void JNICALL Java_jpwr_rt_Errh_fatal

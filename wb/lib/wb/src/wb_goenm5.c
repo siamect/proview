@@ -158,11 +158,11 @@ int goen_create_nodetype_m5(
 
 	f_height  = f_repeat;
 	f_ordertypewidth =
-	 	MAX( f_ordertypewidth, annot_width[1] + f_strlength);
+	        max( f_ordertypewidth, annot_width[1] + f_strlength);
 	f_backcheckwidth =
-		MAX( f_backcheckwidth, annot_width[2] + 2 * f_strlength);
+		max( f_backcheckwidth, annot_width[2] + 2 * f_strlength);
 	f_width = f_ordertypewidth +
-		  MAX( f_defwidth, annot_width[0] + 2 * f_strlength) +
+		  max( f_defwidth, annot_width[0] + 2 * f_strlength) +
 		  f_backcheckwidth;
 
 	flow_CreateNodeClass(ctx, name, flow_eNodeGroup_Common, 

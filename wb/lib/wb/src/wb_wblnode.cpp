@@ -71,6 +71,10 @@ static wbl_sSym datatypes[] =
   ,{ "pwr_eTix_RefId", pwr_eTix_RefId }
   ,{ "pwr_eType_DeltaTime", pwr_eType_DeltaTime }
   ,{ "pwr_eTix_DeltaTime", pwr_eTix_DeltaTime }
+  ,{ "pwr_eType_Status", pwr_eType_Status }
+  ,{ "pwr_eTix_Status", pwr_eTix_Status }
+  ,{ "pwr_eType_NetStatus", pwr_eType_NetStatus }
+  ,{ "pwr_eTix_NetStatus", pwr_eTix_NetStatus }
   ,{ 0, 0 }
 };
 
@@ -1716,6 +1720,8 @@ int wb_wblnode::attrStringToValue( int type_id, char *value_str,
       break;
     }
     case pwr_eType_Int32:
+    case pwr_eType_Status:
+    case pwr_eType_NetStatus:
     {
       if ( sscanf( value_str, "%d", (int *)buffer_ptr) != 1)
         return 0;

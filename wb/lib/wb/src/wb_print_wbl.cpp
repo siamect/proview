@@ -349,6 +349,8 @@ void wb_print_wbl::printParameter(wb_volume& v,
     case pwr_eType_DeltaTime:
     case pwr_eType_Mask:
     case pwr_eType_Enum:
+    case pwr_eType_Status:
+    case pwr_eType_NetStatus:
       varOffset = varSize * i;
       val = valueb + varOffset;
       tval = tvalueb + varOffset;
@@ -551,54 +553,60 @@ bool wb_print_wbl::printValue (wb_volume& v,
     }
 
 #if 0      
-  } else {
-    ConvertObjectName( root, sp, conv_name);
-    sprintf(sval, "\"%s\"", conv_name);
-  }
+    } else {
+      ConvertObjectName( root, sp, conv_name);
+      sprintf(sval, "\"%s\"", conv_name);
+    }
 #endif
-  break;
- case pwr_eType_String: {
-   char *s = sval;
-   char *t = (char *)val;
-   *s++ = '"';
-   for ( int i = 0; i < varSize; i++) {
-     if ( *t == 0)
-       break;
-     if ( *t == '"')
-       *s++ = '\\'; 
-     *s++ = *t++;
-   }
-   *s++ = '"';
-   *s = 0;
-   // sprintf(sval, "\"%.*s\"", varSize, (char *)val);
-   break;
- }
- case pwr_eType_Time:
-   sts = time_AtoAscii((pwr_tTime *)val, time_eFormat_DateAndTime,
-                       timbuf, sizeof(timbuf)); 
-   if (ODD(sts)) {
-     sprintf(sval, "\"%s\"", timbuf);
-   } else {
-     sprintf(sval, "Bad time value");
-     m_errCnt++;
-     retval = FALSE;
-   }
-   break;
- case pwr_eType_DeltaTime:
-   sts = time_DtoAscii((pwr_tDeltaTime *)val, 1, timbuf, sizeof(timbuf));
-   if (ODD(sts)) {
-     sprintf(sval, "\"%s\"", timbuf);
-   } else {
-     sprintf(sval, "Bad time value");
-     m_errCnt++;
-     retval = FALSE;
-   }
-   break;
- default:
-   sprintf(sval, "Unknown attribute type: %d", adef.type());
-   m_errCnt++;
-   retval = FALSE;
-   break;
+    break;
+  case pwr_eType_String: {
+    char *s = sval;
+    char *t = (char *)val;
+    *s++ = '"';
+    for ( int i = 0; i < varSize; i++) {
+      if ( *t == 0)
+	break;
+      if ( *t == '"')
+	*s++ = '\\'; 
+      *s++ = *t++;
+    }
+    *s++ = '"';
+    *s = 0;
+    // sprintf(sval, "\"%.*s\"", varSize, (char *)val);
+    break;
+  }
+  case pwr_eType_Time:
+    sts = time_AtoAscii((pwr_tTime *)val, time_eFormat_DateAndTime,
+			timbuf, sizeof(timbuf)); 
+    if (ODD(sts)) {
+      sprintf(sval, "\"%s\"", timbuf);
+    } else {
+      sprintf(sval, "Bad time value");
+      m_errCnt++;
+      retval = FALSE;
+    }
+    break;
+  case pwr_eType_DeltaTime:
+    sts = time_DtoAscii((pwr_tDeltaTime *)val, 1, timbuf, sizeof(timbuf));
+    if (ODD(sts)) {
+      sprintf(sval, "\"%s\"", timbuf);
+    } else {
+      sprintf(sval, "Bad time value");
+      m_errCnt++;
+      retval = FALSE;
+    }
+    break;
+  case pwr_eType_Status:
+    sprintf(sval, "%d", *(pwr_tStatus *) val);
+    break;
+  case pwr_eType_NetStatus:
+    sprintf(sval, "%d", *(pwr_tNetStatus *) val);
+    break;
+  default:
+    sprintf(sval, "Unknown attribute type: %d", adef.type());
+    m_errCnt++;
+    retval = FALSE;
+    break;
 }
 
 *svalp = sval;

@@ -584,7 +584,10 @@ static void xtt_activate_opengraph( Widget w, Xtt *xtt, XmAnyCallbackStruct *dat
     sts = gdh_ObjidToName( cdh_ClassIdToObjid( classid),
 		  classname, sizeof(classname), cdh_mName_object);
     if ( EVEN(sts)) return;
-    cdh_ToLower( classname, classname);
+    if ( classname[0] == '$')
+      cdh_ToLower( classname, &classname[1]);
+    else
+      cdh_ToLower( classname, classname);
 
     sprintf( filename, "pwr_exe:pwr_c_%s.pwg", classname);
     dcli_translate_filename( fname, filename);

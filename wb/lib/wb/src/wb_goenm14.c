@@ -161,10 +161,10 @@ int goen_create_nodetype_m14(
     }
   }
 
-  f_height  = (MAX(inputpoints,outputpoints) + 2)*f_repeat
+  f_height  = (max(inputpoints,outputpoints) + 2)*f_repeat
 			+ (floor( code_height / GOEN_F_GRID) + 1) * GOEN_F_GRID;
-  f_width = MAX( f_strlength * (2 + node_width), f_defwidth);
-  f_width = MAX( f_width, code_width + f_strlength *2);
+  f_width = max( f_strlength * (2 + node_width), f_defwidth);
+  f_width = max( f_width, code_width + f_strlength *2);
   f_namepos = f_width/2.0 - strlen( graphbody->graphname)*
 			      f_strlength/2.0;
 
@@ -180,9 +180,9 @@ int goen_create_nodetype_m14(
 		f_height - f_repeat - f_yoffs, flow_eDrawType_Line, 2);
 
   flow_AddLine( nc_pid, 0, 
-	(MAX(inputpoints,outputpoints) + 1)*f_repeat - f_yoffs, 
+	(max(inputpoints,outputpoints) + 1)*f_repeat - f_yoffs, 
 	f_width, 
-	(MAX(inputpoints,outputpoints) + 1)*f_repeat - f_yoffs, 
+	(max(inputpoints,outputpoints) + 1)*f_repeat - f_yoffs, 
 	flow_eDrawType_Line, 2);
 
   if ( subwindowmark == 0 )

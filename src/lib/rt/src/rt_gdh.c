@@ -22,6 +22,7 @@
 #include "co_time.h"
 #include "rt_gdh_msg.h"
 #include "rt_hash_msg.h"
+#include "rt_pwr_msg.h"
 #include "pwr_class.h"
 #include "rt_errh.h"
 #include "rt_gdb.h"
@@ -2807,4 +2808,27 @@ gdh_SetCache (
 #endif
   
 }
+
+pwr_tStatus 
+gdh_RegisterServer( 
+  errh_eAnix anix,
+  pwr_tOid server_oid
+)
+{
+  pwr_sNode *np;
+  pwr_tStatus sts;
+
+  sts = gdh_ObjidToPointer( gdbroot->my_node->nod_oid, (void **)&np);
+  if ( EVEN(sts)) return sts;
+
+  np->ProcObject[anix-1] = server_oid;
+  return GDH__SUCCESS;
+}
+
+
+
+
+
+
+
 

@@ -36,6 +36,7 @@
 #include "rt_cvol.h"
 #include "rt_cvolsm.h"
 #include "rt_cvolcm.h"
+#include "rt_pwr_msg.h"
 
 /* Declare routines used by main.  */
 
@@ -348,6 +349,8 @@ fromEvent (
     flushNodes();
   } else if (new_event.b.swapInit & !cur_event.b.swapInit) {
     errh_Info("Warm restart initiated.");   
+  } else if (new_event.b.terminate & !cur_event.b.terminate) {
+    exit(0);   
   }
 
   sav_event = ep->mask;
@@ -525,7 +528,8 @@ init (
   pwr_tStatus	sts;
   qcom_sQid	qid;
 
-  errh_Init("pwr_neth");
+  errh_Init("pwr_neth", errh_eAnix_neth);
+  errh_SetStatus( PWR__SRVSTARTUP);
 
   /* NOTA BENE !
      The net handler does not call gdh_Init and thus may not use
@@ -537,6 +541,7 @@ init (
   gdb_MapDb(&sts, &qid, "pwr_neth");
   if (EVEN (sts)) {
     errh_Error("gdb_MapDb, %m", sts);
+    errh_SetStatus( PWR__SRVTERM);
     exit(sts);
   }
 
@@ -544,16 +549,19 @@ init (
 
   if (!qcom_Bind(&sts, &gdbroot->my_qid, &qcom_cQnetEvent)) {
     errh_Error("qcom_Bind(QnetEvent), %m", sts);
+    errh_SetStatus( PWR__SRVTERM);
     exit(sts);
   }
 
   if (!qcom_Bind(&sts, &gdbroot->my_qid, &qcom_cQapplEvent)) {
     errh_Error("qcom_Bind(QapplEvent), %m", sts);
+    errh_SetStatus( PWR__SRVTERM);
     exit(sts);
   }
 
   if (!qcom_Bind(&sts, &gdbroot->my_qid, &qcom_cQini)) {
     errh_Error("qcom_Bind(Qini), %m", sts);
+    errh_SetStatus( PWR__SRVTERM);
     exit(sts);
   }
 
@@ -669,6 +677,8 @@ mainLoop (void)
   pwr_tStatus	sts;
   qcom_sGet 	get;
   void		*mp;
+
+  errh_SetStatus( PWR__SRUN);
 
   for (;;) {
     memset(&get, 0, sizeof(get));

@@ -12,6 +12,8 @@ extern "C" {
 #include "rt_errh.h"
 #include "rt_qcom.h"
 #include "rt_ini_event.h"
+#include "rt_aproc.h"
+#include "rt_pwr_msg.h"
 #include "rt_qcom_msg.h"
 }
 
@@ -350,9 +352,12 @@ void rt_fast::open()
     scan_time = 1.0 / conf_p->BaseFrequency;
   }
   else {
-    errh_Info( "No fast configuration, using base frequency 10 Hz");
     scan_time = 0.1;
+    errh_Info( "No fast configuration, using base frequency 10 Hz");
+    oid = pwr_cNObjid;
   }
+
+  aproc_RegisterObject( oid);
 
   // Open FastCurve object
   sts = gdh_GetClassList( pwr_cClass_DsFastCurve, &oid);
@@ -384,6 +389,8 @@ void rt_fast::close()
 
 void rt_fast::scan()
 {
+  aproc_TimeStamp();
+
   for ( int i = 0; i < (int) objects.size(); i++)
     objects[i]->scan();
 }
@@ -400,23 +407,27 @@ void init( qcom_sQid *qid)
     exit(sts);
   }
 
-  errh_Init("pwr_fast");
+  errh_Init("pwr_fast", errh_eAnix_fast);
+  errh_SetStatus( PWR__SRVSTARTUP);
 
   if (!qcom_Init(&sts, 0, "pwr_fast")) {
-    errh_Fatal("qcom_Init, %m", sts);
-    exit(sts);
+    errh_Fatal("qcom_Init, %m", sts); 
+    errh_SetStatus( PWR__SRVTERM);
+   exit(sts);
   } 
 
   qAttr.type = qcom_eQtype_private;
   qAttr.quota = 100;
   if (!qcom_CreateQ(&sts, qid, &qAttr, "events")) {
     errh_Fatal("qcom_CreateQ, %m", sts);
+    errh_SetStatus( PWR__SRVTERM);
     exit(sts);
   } 
 
   qini = qcom_cQini;
   if (!qcom_Bind(&sts, qid, &qini)) {
     errh_Fatal("qcom_Bind(Qini), %m", sts);
+    errh_SetStatus( PWR__SRVTERM);
     exit(-1);
   }
 }
@@ -439,8 +450,13 @@ int main()
   }
   catch ( co_error& e) {
     errh_Error( (char *)e.what().c_str());
-    errh_Info( "rt_fast aborting");
+    errh_Fatal( "rt_fast aborting");
+    errh_SetStatus( PWR__SRVTERM);
+    exit(0);
   }
+
+  aproc_TimeStamp();
+  errh_SetStatus( PWR__SRUN);
 
   first_scan = true;
   for (;;) {
@@ -461,12 +477,15 @@ int main()
 
       new_event.m  = ep->mask;
       if (new_event.b.oldPlcStop && !swap) {
+	errh_SetStatus( PWR__SRVRESTART);
         swap = 1;
 	fast.close();
       } else if (new_event.b.swapDone && swap) {
         swap = 0;
 	fast.open();
-	errh_Info("Warm restart completed");
+	errh_SetStatus( PWR__SRUN);
+      } else if (new_event.b.terminate) {
+	exit(0);
       }
     }
     first_scan = false;

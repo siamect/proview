@@ -649,6 +649,12 @@ class GrowNode : public GlowNode {
    */
   void store_transform() { trf.store(); };
 
+  //! Check if there is a stored transform
+  /*! 
+    \return Returns true if the transform is previously stored with a call to store_tranform.
+  */
+  bool transform_is_stored() { return trf.is_stored(); };
+
   //! Get dynamic code argument
   /*!
     \param num		Argument number.

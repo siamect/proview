@@ -69,6 +69,7 @@ pwrb_PlcThread_Exec (
   if (o == NULL) 
     return;
 
+  o->ActualScanTime = tp->ActualScanTime;
   meanCount = o->ScanTimeMeanCount;
 
   if ((meanCount != 0) && (o->Count % meanCount == 0)) {

@@ -27,7 +27,8 @@ typedef union {
     pwr_Bits( ignoreFatal   , 1),
     pwr_Bits( verbose	    , 1),
     pwr_Bits( restart	    , 1),
-    pwr_Bits( fill_0	    , 3),,,
+    pwr_Bits( stop	    , 1),
+    pwr_Bits( fill_0	    , 2),,,
 
     pwr_Bits( interactive   , 1),
     pwr_Bits( busid	    , 1),
@@ -41,7 +42,7 @@ typedef union {
     pwr_Bits( plcfile	    , 1),
     pwr_Bits( nodefile	    , 1),
     pwr_Bits( fill_2	    , 3),,,
-    pwr_Bits( fill_3	    , 8),,,,,,,
+    pwr_Bits( fill_3	    , 8),,,,,,
   ) b;
 
 #define ini_mContext__			0
@@ -50,6 +51,7 @@ typedef union {
 #define ini_mContext_ignoreFatal	pwr_Bit(2)
 #define ini_mContext_verbose		pwr_Bit(3)
 #define ini_mContext_restart		pwr_Bit(4)
+#define ini_mContext_stop		pwr_Bit(5)
 
 #define ini_mContext_interactive	pwr_Bit(8)
 #define ini_mContext_busid		pwr_Bit(9)
@@ -189,5 +191,9 @@ pwr_tBoolean	ini_ReloadNode		(pwr_tStatus*, ini_sContext*);
 pwr_tBoolean	ini_ReloadVolume	(pwr_tStatus*, ini_sContext*, ivol_sVolume*);
 pwr_tBoolean	ini_UpdateBodies	(pwr_tStatus*, ini_sContext*, pwr_tBoolean);
 pwr_tBoolean	ini_UpdateDatabase	(pwr_tStatus*, ini_sContext*);
+void	 	ini_UpdateSystemInfo 	(ini_sContext*, int);
+void		ini_SetSystemStatus	(ini_sContext*, pwr_tStatus);
 
 #endif
+
+

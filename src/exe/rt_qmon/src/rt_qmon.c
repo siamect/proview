@@ -46,6 +46,8 @@
 #include "rt_que.h"
 #include "rt_thread.h"
 #include "rt_thread_msg.h"
+#include "rt_pwr_msg.h"
+#include "rt_ini_event.h"
 
 #if 1
 # define MAX_SEGSIZE	(8192 - sizeof(sHead))
@@ -313,11 +315,14 @@ main (int argc, char *argv[])
   pwr_tStatus	sts;
   qcom_sQid	qid = qdb_cQexport;
   qcom_sQid	neth_qid;
-
-  errh_Init("pwr_qmon");
+  qcom_sQid	my_q = qcom_cNQid;
+  
+  errh_Init("pwr_qmon", errh_eAnix_qmon);
+  errh_SetStatus( PWR__SRVSTARTUP);
 
   if (!qcom_Init(&sts, NULL, "pwr_qmon")) {
     errh_Fatal("qcom_Init, %m", sts);
+    errh_SetStatus( PWR__SRVTERM);
     exit(sts);
   }
 
@@ -327,8 +332,15 @@ main (int argc, char *argv[])
   qdb->thread_lock.cond_wait = thread_CondWait;
 #endif
 
+  if (!qcom_CreateQ(&sts, &my_q, NULL, "events")) {
+    errh_Fatal("qcom_CreateQ, %m", sts);
+    errh_SetStatus( PWR__SRVTERM);
+    exit(sts);
+  }
+
   if (!qcom_AttachQ(&sts, &qid)) {
     errh_Fatal("qcom_AttachQ, %m", sts);
+    errh_SetStatus( PWR__SRVTERM);
     exit(sts);
   }
   l.head.nid = qdb->my_node->nid;
@@ -380,8 +392,13 @@ main (int argc, char *argv[])
 
   } while (0);
 
-  sts = thread_Wait(NULL);	/* Wait forever */
+  errh_SetStatus( PWR__SRUN);
 
+  qcom_WaitAnd(&sts, &my_q, &qcom_cQini, ini_mEvent_terminate, qcom_cTmoEternal);
+    
+//  sts = thread_Wait(NULL);	/* Wait forever */
+
+  errh_SetStatus( PWR__SRVTERM);
   errh_Info("pwr_qmon says: I will soon die, %m", sts);
   cancel_links();
   thread_Cancel(&l.import.thread);

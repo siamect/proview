@@ -26,17 +26,23 @@
 #include "rt_qcom.h"
 #include "rt_io_base.h"
 #include "rt_ini_msg.h"
+#include "rt_errh_msg.h"
+#include "rt_pwr_msg.h"
 
 static ini_sContext	*createContext (int argc, char **argv);
 static int		checkErrors (ini_sContext*);
 static pwr_tStatus	events (ini_sContext *cp);
 static pwr_tStatus	interactive (int argc, char **argv, ini_sContext *cp);
+static pwr_tStatus	stop (int argc, char **argv, ini_sContext *cp);
 static void		load_backup ();
 static void		logChanges (ini_sContext*);
 static void		logCardinality (ini_sContext*);
 static pwr_tStatus	restart (ini_sContext *cp);
+static pwr_tStatus	terminate (ini_sContext *cp);
 static pwr_tStatus	start (ini_sContext *cp);
 static void		usage (char*);
+static void             ini_errl_cb( void *userdata, char *str, char severity, 
+				     pwr_tStatus sts, int anix, int message_type);
 
 
 void set_valid_time()
@@ -69,6 +75,8 @@ int main (int argc, char **argv)
 
   if (cp->flags.b.restart) {
     sts = interactive(argc, argv, cp);
+  } else if (cp->flags.b.stop) {
+    sts = stop(argc, argv, cp);
   } else {
     sts = start(cp);
     sts = events(cp);
@@ -94,16 +102,16 @@ start (
   else
     strcpy( console, cp->console);
   if ((fd = open(console, O_APPEND | O_WRONLY)) == -1)
-    errl_Init(NULL);
+    errl_Init(NULL, ini_errl_cb, cp);
   else {
     close(fd);
-    errl_Init(console);
+    errl_Init(console, ini_errl_cb, cp);
   }
 #else
-  errl_Init("CONSOLE:");
+  errl_Init("CONSOLE:", ini_errl_cb, cp);
 #endif
 
-  errh_Init("pwr_ini");
+  errh_Init("pwr_ini", errh_eAnix_ini);
 
   mh_UtilCreateEvent();
 
@@ -149,6 +157,9 @@ start (
       errh_LogInfo(&cp->log, "Setting log file to: %s", cp->np->ErrLogFile);
     }
   }
+
+  ini_SetSystemStatus( cp, PWR__STARTUP);
+  errh_SetStatus( PWR__STARTUP);
 
   sts = ini_RcReadAndSet(cp->dir, cp->nodename, cp->busid);
   if (EVEN(sts))
@@ -196,6 +207,9 @@ start (
   if (EVEN(sts) && sts != 0)
     errh_LogError(&cp->log, "ini_SetAttributeAfterPlc, %m", sts);
          
+  ini_SetSystemStatus( cp, PWR__RUNNING);
+  errh_SetStatus( PWR__SRUN);
+
   return sts;
 }
 
@@ -268,6 +282,76 @@ interactive (
 }
 
 static pwr_tStatus
+stop (
+  int		argc,
+  char		**argv,
+  ini_sContext	*cp
+)
+{
+  pwr_tStatus	sts;
+  qcom_sQid	qid;
+  qcom_sPut	put;
+  char          data[] = "Shutdown you fool!";
+/*  qcom_sGet	get;
+  char		*bp, *sp;
+  int		i;
+  int		len;
+  int		totlen; */
+
+//  errh_Interactive();
+
+  if (!qcom_Init(&sts, 0, "pwr_ini_stop")) {
+//    errh_LogFatal(&cp->log, "qcom_Init, %m", sts);
+    exit(sts);
+  } 
+
+//  qcom_CreateQ(&sts, &cp->myQ, NULL, "pwr_ini_restart");
+//  if (EVEN(sts)) {
+//    errh_LogFatal(&cp->log, "qcom_CreateQ, %m", sts);
+//    exit(sts);
+//  }
+
+//  for (i = 0, totlen = 0; i < argc; i++) {
+//    len = strlen(argv[i]);
+//    totlen += 1 + len;
+//    errh_LogInfo(&cp->log, "argv[%d]: %d \"%s\"", i, len, argv[i]);
+//  }
+//  bp = malloc(totlen);
+//  for (i = 0, sp = bp; i < argc; i++) {
+//    len = strlen(argv[i]);
+//    memcpy(sp, argv[i], len + 1);
+//    sp += len + 1;
+// }
+  
+  qid.qix = 550715;
+  qid.nid = 0;
+    put.type.b = 11;
+    put.type.s = 1;
+    put.reply.qix = 0;
+    put.reply.nid = 0;
+    put.data = data;
+    put.size = sizeof(data) + 1;
+  qcom_Put(&sts, &qid, &put);
+
+//  while (1) {
+//    char *s;
+
+//    get.data = NULL;
+//    s = qcom_Get(&sts, &cp->myQ, &get, 100000);
+//    if (sts == QCOM__TMO && sts == QCOM__QEMPTY) {
+//      break;
+//    } else if (s != NULL) {
+//      printf("%s\n", s);
+//      qcom_Free(NULL, s);
+//    }
+//    if (get.type.s == 2)
+//      break;
+//  }
+
+  return 0;
+}
+
+static pwr_tStatus
 restart (
   ini_sContext	*cp
 )
@@ -329,10 +413,27 @@ restart (
     time_DtoAscii(&cp->PlcProcess->StallTime, 1, time, sizeof(time));
     cp->log.put.type.s = 2;
     errh_LogInfo(&cp->log, "IO stall time: %s", time);
+    cp->np->RestartStallTime = cp->PlcProcess->StallTime;
   }
 
   ini_FreeBodies(&sts, cp, 0);
   ini_FreeBodies(&sts, cp, 1);
+
+  return sts;
+}
+
+static pwr_tStatus
+terminate (
+  ini_sContext	*cp
+)
+{
+  pwr_tStatus	sts;
+
+  qcom_SignalAnd(&sts, &qcom_cQini, 0);
+  qcom_SignalOr(&sts, &qcom_cQini, ini_mEvent_terminate);
+
+  qcom_SignalOr(&sts, &qcom_cQini, ini_mEvent_oldPlcStop);
+  qcom_WaitAnd(&sts, &cp->eventQ, &qcom_cQini, ini_mEvent_oldPlcStopDone, qcom_cTmoEternal);
 
   return sts;
 }
@@ -401,7 +502,7 @@ createContext (int argc, char **argv)
   ini_sContext *cp;
   pwr_tStatus sts;
 #if defined(OS_LYNX) || defined(OS_LINUX)
-  char *options = "a:b:c:d:efg:hin:p:q:ru:vwA:H:V";
+  char *options = "a:b:c:d:efg:hin:p:q:rsu:vwA:H:V";
 #else
   char *options = "a:b:d:efhin:p:q:rvwA:H:V";
 #endif
@@ -462,6 +563,9 @@ createContext (int argc, char **argv)
       cp->flags.b.restart = 1;
       cp->flags.b.interactive = 1;
       break;
+    case 's':
+      cp->flags.b.stop = 1;
+      break;
     case 'v':
       cp->flags.b.verbose = 1;
       break;
@@ -486,7 +590,7 @@ usage (
 )
 {
 #if defined(OS_LYNX) || defined(OS_LINUX)
-  fprintf(stderr, "usage: %s -a arg -b arg -d arg -efg arg -hip arg -q arg -ru arg -vwA arg -H arg\n", name);
+  fprintf(stderr, "usage: %s -a arg -b arg -d arg -efg arg -hip arg -q arg -ru arg -s arg -vwA arg -H arg\n", name);
 #else
   fprintf(stderr, "usage: %s -a arg -b arg -d arg -efhip arg -q arg -rvwA arg -H arg\n", name);
 #endif
@@ -505,6 +609,7 @@ usage (
   fprintf(stderr, "  -q arg: use 'arg' as qcom bus id\n");
   fprintf(stderr, "  -r    : restart with new versions of loadfiles and PLC\n");
 #if defined(OS_LYNX) || defined(OS_LINUX)
+  fprintf(stderr, "  -s    : stop of Proview/R\n");
   fprintf(stderr, "  -u arg: setuid to 'arg' before starting\n");
 #endif
   fprintf(stderr, "  -v    : verbose\n");
@@ -605,6 +710,14 @@ events (
 
     get.data = NULL;
     qcom_Get(&sts, &cp->myQ, &get, tmo_ms);
+    
+    /* Request for termination ?? */
+    if (sts != QCOM__TMO && sts != QCOM__QEMPTY && get.type.b == 11) {
+      sts = terminate(cp);
+      return sts;
+    }
+    
+    /* Request for restart */
     if (sts != QCOM__TMO && sts != QCOM__QEMPTY && get.data != NULL) {
       int len, i, argc, totlen;
       char **argv, *s;
@@ -650,6 +763,7 @@ events (
       }
     }
 #endif
+
   }
   return INI__SUCCESS;
 }
@@ -782,3 +896,49 @@ load_backup ()
     *iip = ivp->Value[i];
   }
 }
+
+static void ini_errl_cb( void *userdata, char *str, char severity, pwr_tStatus sts, int anix,
+			 int message_type)
+{
+  ini_sContext *cp = (ini_sContext *) userdata;
+
+  if ( anix == 0 || !cp->np) return;
+  if ( anix >= sizeof(cp->np->ProcStatus)/sizeof(cp->np->ProcStatus[0])) {
+    printf ( "Init: undefind anix %d\n", anix);
+    return;
+  }
+
+  switch ( message_type) {
+  case errh_eMsgType_Log:
+    if ( sts == 0) {
+      switch ( severity) {
+      case 'S':
+      case 'I':
+	sts = PWR__SRVINFO;
+	break;
+      case 'E':
+	sts = PWR__SRVERROR;
+	break;
+      case 'W':
+	sts = PWR__SRVWARNING;
+	break;
+      case 'F':
+	sts = PWR__SRVFATAL;
+	break;
+      }
+    }
+    cp->np->ProcMsgSeverity[anix-1] = sts;
+    strncpy( cp->np->ProcMessage[anix-1], &str[49], sizeof(cp->np->ProcMessage[0]));
+    cp->np->ProcMessage[anix-1][sizeof(cp->np->ProcMessage[0])-1] = 0;
+    break;
+  case errh_eMsgType_Status:
+    cp->np->ProcStatus[anix-1] = sts;
+    break;
+  }
+}
+
+
+
+
+
+

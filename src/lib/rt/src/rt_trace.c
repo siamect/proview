@@ -29,6 +29,7 @@
 
 #include "co_cdh.h"
 #include "co_api.h"
+#include "co_dcli.h"
 #include "co_mrm_util.h"
 #include "rt_gdh.h"
 #include "flow.h"
@@ -65,22 +66,81 @@ pwr_tStatus trace_simsetup( tra_tCtx tractx);
 pwr_tStatus trace_trasetup( tra_tCtx tractx);
 static char	*trace_IdToStr(  pwr_tObjid 	objid);
 
-static void trace_get_filename( pwr_tObjid window_objid, char *filename)
+static void trace_GetTraceAttr( tra_tCtx tractx, flow_tObject object, 
+				char *object_str, char *attr_str, flow_eTraceType *type)
 {
-#if defined OS_VMS
-  sprintf( filename, "pwrp_load:pwr_%s.flw", trace_IdToStr( window_objid));
-#else
-  {
-    char *s;
+  char name[120];
 
-    if ( (s = getenv( "pwrp_load")) == NULL)
-    {
-      printf( "** pwr_load is not defined\n");
-      return;
+  flow_GetTraceAttr( object, name, attr_str, type);
+  if ( tractx->has_host) {
+    /* Replace "$host" with hostname */
+    if ( strncmp( name, "$host", 5) == 0) {
+      strcpy( object_str, tractx->hostname);
+      strcat( object_str, &name[5]);
     }
-    sprintf( filename, "%s/pwr_%s.flw", s, trace_IdToStr( window_objid));
+    else
+      strcpy( object_str, name);
   }
-#endif
+  else
+    strcpy( object_str, name);
+}
+
+static void trace_get_save_filename( pwr_tObjid window_objid, char *filename)
+{
+  sprintf( filename, "$pwrp_load/pwr_%s.flwt", trace_IdToStr( window_objid));
+  dcli_translate_filename( filename, filename);
+}
+
+
+static int trace_get_filename( pwr_tObjid window_objid, char *filename,
+			       int *has_host, char *hostname)
+{
+  FILE *fp;
+  pwr_tOid host;
+  pwr_tCid cid;
+  char cname[80];
+  char fname[200];
+  int sts;
+  char name[120];
+
+  sprintf( fname, "$pwrp_load/pwr_%s.flw", trace_IdToStr( window_objid));
+  dcli_translate_filename( fname, fname);
+  
+  *has_host = 0;
+  fp =  fopen( fname, "r");
+  if ( !fp) {
+    /* Try class flowfile */
+    sts = gdh_GetParent( window_objid, &host);
+    if ( EVEN(sts)) return sts;
+
+    sts = gdh_GetObjectClass( host, &cid);
+    if ( EVEN(sts)) return sts;
+
+    if ( cid == pwr_cClass_plc)
+      return 0;
+    
+    sts = gdh_ObjidToName( cdh_ClassIdToObjid(cid), cname, sizeof(cname),
+			   cdh_mName_object);
+    if ( EVEN(sts)) return sts;
+
+    cdh_ToLower( cname, cname);
+    sprintf( fname, "$pwrp_load/pwr_%s.flw", cname);
+    dcli_translate_filename( fname, fname);
+    fp = fopen( fname, "r");
+    if ( !fp)
+      return 0;
+
+    sts = gdh_ObjidToName( host, name, sizeof(name),
+			   cdh_mName_volumeStrict);
+    if ( EVEN(sts)) return sts;
+
+    strcpy( hostname, name);
+    *has_host = 1;
+    
+  }
+  fclose( fp);
+  strcpy( filename, fname);
+  return 1;
 }
 
 static int trace_connect_bc( flow_tObject object, char *name, char *attr, 
@@ -90,10 +150,17 @@ static int trace_connect_bc( flow_tObject object, char *name, char *attr,
   int		size;
   pwr_tSubid	*subid_p, subid;
   int		sts;
+  tra_tCtx	tractx;
+
+  flow_GetCtxUserData( flow_GetCtx( object), (void **)&tractx);
 
 /*  printf( "Connecting %s.%s\n", name, attr);  */
 
   if ( strcmp( name, "") == 0 || strcmp( attr, "") == 0)
+    return 1;
+
+  if ( type != flow_eTraceType_Boolean &&
+       flow_GetNodeGroup( object) != flow_eNodeGroup_Trace)
     return 1;
 
   switch( type)
@@ -111,7 +178,17 @@ static int trace_connect_bc( flow_tObject object, char *name, char *attr,
       size = sizeof(pwr_tInt32);
   }
 
-  strcpy( attr_str, name);
+  if ( tractx->has_host) {
+    /* Replace "$host" with hostname */
+    if ( strncmp( name, "$host", 5) == 0) {
+      strcpy( attr_str, tractx->hostname);
+      strcat( attr_str, &name[5]);
+    }
+    else
+      strcpy( attr_str, name);
+  }
+  else
+    strcpy( attr_str, name);
   strcat( attr_str, ".");
   strcat( attr_str, attr);  
 
@@ -138,6 +215,10 @@ static int trace_disconnect_bc( flow_tObject object)
   if ( flow_GetObjectType( object) == flow_eObjectType_Node) {
 
     flow_GetTraceAttr( object, name, attr, &type);
+    if ( type != flow_eTraceType_Boolean &&
+	 flow_GetNodeGroup( object) != flow_eNodeGroup_Trace)
+      return 1;
+
     if ( !( strcmp( name, "") == 0 || strcmp( attr, "") == 0)) {
       flow_GetUserData( object, (void **) &subid_p);
       sts = gdh_UnrefObjectInfo( *subid_p);
@@ -207,9 +288,7 @@ static void tra_activate_savetrace( Widget w, tra_tCtx tractx, XmAnyCallbackStru
 {
   char		filename[120];
 
-  trace_get_filename( tractx->objid, filename);
-  strcat( filename, "t");
-
+  trace_get_save_filename( tractx->objid, filename);
   flow_SaveTrace( tractx->flow_ctx, filename);
 }
 
@@ -220,8 +299,7 @@ static void tra_activate_restoretrace( Widget w, tra_tCtx tractx, XmAnyCallbackS
   if ( !tractx->trace_started)
     return;
 
-  trace_get_filename( tractx->objid, filename);
-  strcat( filename, "t");
+  trace_get_save_filename( tractx->objid, filename);
   flow_OpenTrace( tractx->flow_ctx, filename);
 }
 
@@ -475,6 +553,7 @@ static int trace_flow_cb( FlowCtx *ctx, flow_tEvent event)
     {
       char			object_str[120];
       char			attr_str[80];
+      char			con_attr_str[80];
       flow_eTraceType		trace_type;
       flow_tNode		n1;
       flow_tCon			c1;
@@ -507,7 +586,10 @@ static int trace_flow_cb( FlowCtx *ctx, flow_tEvent event)
 
       /* Get attribute from connection point */
       sts = flow_GetConPointTraceAttr( event->con_create.source_object,
-		event->con_create.source_conpoint, attr_str, &trace_type);
+		event->con_create.source_conpoint, con_attr_str, &trace_type);
+      /* If "$object", use object trace attribute */
+      if ( strcmp( con_attr_str, "$object") != 0)
+        strcpy( attr_str, con_attr_str);
 
       if ( strcmp( attr_str, "") == 0)
         return 1;
@@ -589,7 +671,7 @@ static int trace_flow_cb( FlowCtx *ctx, flow_tEvent event)
 	  if ( flow_GetNodeGroup( event->object.object) != 
 		flow_eNodeGroup_Trace)
           {
-            flow_GetTraceAttr( event->object.object, object_str, attr_str,
+            trace_GetTraceAttr( tractx, event->object.object, object_str, attr_str,
 			&trace_type);
 
             sts = gdh_NameToObjid( object_str, &objid);
@@ -637,7 +719,7 @@ static int trace_flow_cb( FlowCtx *ctx, flow_tEvent event)
 	  if ( flow_GetNodeGroup( event->object.object) != 
 		flow_eNodeGroup_Trace)
           {
-            flow_GetTraceAttr( event->object.object, object_str, attr_str, 
+            trace_GetTraceAttr( tractx, event->object.object, object_str, attr_str, 
 			&trace_type);
 
             sts = gdh_NameToObjid( object_str, &objid);
@@ -797,7 +879,7 @@ static int trace_get_objid( tra_tCtx tractx, flow_tObject node,
   if ( EVEN(sts))
   {
     /* Try trace object */
-    flow_GetTraceAttr( node, object_name, attr_str, &trace_type);
+    trace_GetTraceAttr( tractx, node, object_name, attr_str, &trace_type);
 
     sts = gdh_NameToObjid( object_name, objid);
     if ( EVEN(sts)) return sts;
@@ -981,7 +1063,7 @@ static void trace_changevalue (
   else
   {	    
     /* Toggle the value, start to get the current value */
-    flow_GetTraceAttr( fnode, object_str, attr_str, &trace_type);
+    trace_GetTraceAttr( tractx, fnode, object_str, attr_str, &trace_type);
     strcpy( name, object_str);
     strcat( name, ".");
     strcat( name, attr_str);
@@ -1217,10 +1299,11 @@ tra_tCtx trace_new( 	void 		*parent_ctx,
   char 		name[80];
   char		filename[120];
   int		i;
-  FILE		*fp;
   pwr_tObjid	window_objid;
   pwr_tClassId	class;
   char   	title[100];
+  int		has_host;
+  char		hostname[120];
   MrmHierarchy s_DRMh;
   MrmType dclass;
   Widget	trace_widget;
@@ -1286,12 +1369,8 @@ tra_tCtx trace_new( 	void 		*parent_ctx,
          class == pwr_cClass_windowsubstep ))
     return NULL;
 
-  trace_get_filename( window_objid, filename);
-
-  fp =  fopen( filename, "r");
-  if ( !fp)
-    return NULL;
-  fclose( fp);
+  sts = trace_get_filename( window_objid, filename, &has_host, hostname);
+  if ( EVEN(sts)) return NULL;
 
   /* Create object context */
   tractx = (tra_tCtx) XtCalloc( 1, sizeof(*tractx));
@@ -1305,6 +1384,9 @@ tra_tCtx trace_new( 	void 		*parent_ctx,
   tractx->collect_insert_cb = collect_insert_cb;
   tractx->is_authorized_cb = is_authorized_cb;
   tractx->scan_time = 0.5;
+  tractx->has_host = has_host;
+  if ( has_host)
+    strcpy( tractx->hostname, hostname);
   reglist[0].value = (caddr_t) tractx;
  
   tractx->toplevel = XtCreatePopupShell( name, 

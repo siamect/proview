@@ -728,7 +728,7 @@ int goen_create_contype(
 	if ((graphbody->dashes < 0.0) || (graphbody->dashes > 1.0))
 	  return GOEN__BADCONGRAP;
 
-		MAX( 3 * graphbody->linewidth, 0.015);
+		max( 3 * graphbody->linewidth, 0.015);
 
 	/* Specify dashes */
 	if ((graphbody->dashes < 0.0) || (graphbody->dashes > 1.0))
@@ -1128,7 +1128,7 @@ int	goen_get_text_width(
 	  XTextExtents( font_id, text_line, length, &direction, &ascent, &descent,
 		&charstruct);
 	  line_width = charstruct.width;
-	  max_width = MAX( max_width, line_width);
+	  max_width = max( max_width, line_width);
 
 	  t = s + 1;
 	  rows++;

@@ -166,7 +166,7 @@ main ()
   mh_sMsgInfo ip;
   pwr_tObjid oid;
 
-  errh_Init("pwr_elog");
+  errh_Init("pwr_elog", errh_eAnix_elog);
 
   memset(&lHelCB, 0, sizeof(lHelCB));
 
@@ -242,6 +242,7 @@ Init ()
 
   if (MH->EventLogSize == 0) {
     Log("EventLogSize = 0, no event logger will run on this node.");
+    errh_SetStatus( pwr_cNStatus);
     exit(1);
   }
 

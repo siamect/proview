@@ -67,6 +67,16 @@ extern "C" {
     ge_eDynAttr_Menu
   } ge_eDynAttr;
 
+  //! Status value handled by GeStatus
+  typedef enum {
+    ge_ePwrStatus_No,
+    ge_ePwrStatus_Success,
+    ge_ePwrStatus_Warning,
+    ge_ePwrStatus_Error,
+    ge_ePwrStatus_Fatal
+  } ge_ePwrStatus;
+  
+
   //! Priority order for dyntypes and actiontypes. Lower value gives higher priority.
   typedef enum {
     ge_eDynPrio_Invisible,
@@ -93,6 +103,7 @@ extern "C" {
     ge_eDynPrio_Table,
     ge_eDynPrio_SliderBackground,
     ge_eDynPrio_Video,
+    ge_eDynPrio_StatusColor,
     ge_eDynPrio_PopupMenu,
     ge_eDynPrio_Confirm,
     ge_eDynPrio_SetDig,
@@ -143,7 +154,8 @@ extern "C" {
     ge_mDynType_FillLevel	= 1 << 21,
     ge_mDynType_FastCurve	= 1 << 22,
     ge_mDynType_AnalogText	= 1 << 23,
-    ge_mDynType_Table		= 1 << 24
+    ge_mDynType_Table		= 1 << 24,
+    ge_mDynType_StatusColor    	= 1 << 25
   } ge_mDynType;
 
   //! Action types.
@@ -237,6 +249,7 @@ extern "C" {
     ge_eSave_FastCurve	       		= 28,
     ge_eSave_AnalogText	       		= 29,
     ge_eSave_Table	       		= 30,
+    ge_eSave_StatusColor             	= 31,
     ge_eSave_PopupMenu			= 50,
     ge_eSave_SetDig			= 51,
     ge_eSave_ResetDig			= 52,
@@ -351,6 +364,8 @@ extern "C" {
     ge_eSave_Table_attribute12	   	= 3033,
     ge_eSave_Table_format12	   	= 3034,
     ge_eSave_Table_sel_attribute12     	= 3035,
+    ge_eSave_StatusColor_attribute     	= 3100,
+    ge_eSave_StatusColor_nostatus_color = 3101,
     ge_eSave_PopupMenu_ref_object      	= 5000,
     ge_eSave_SetDig_attribute		= 5100,
     ge_eSave_SetDig_instance		= 5101,
@@ -907,7 +922,7 @@ class GeDigFlash : public GeDynElem {
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, char *attr_name, int *cnt);
-  void replace_attribute( char *from, char *to, int *cnt, int strict);
+  void replace_attribute( char *from, char *to, int *cnt, int strict); 
   int set_color( grow_tObject object, glow_eDrawType color);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
 
@@ -1339,6 +1354,41 @@ class GeVideo : public GeDynElem {
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
 
+};
+
+//! Color of status attribute.
+class GeStatusColor : public GeDynElem {
+ public:
+  char attribute[120];
+  glow_eDrawType nostatus_color;
+
+  pwr_tStatus *p;
+  pwr_tSubid subid;
+  int size;
+  graph_eDatabase db;
+  int attr_type;
+  bool first_scan;
+  ge_ePwrStatus old_status;
+  pwr_tStatus old_value;
+  bool on;
+
+  GeStatusColor( GeDyn *e_dyn) : 
+    GeDynElem(e_dyn, ge_mDynType_StatusColor, (ge_mActionType) 0, ge_eDynPrio_StatusColor),
+    on(true)
+    { strcpy( attribute, "");}
+  GeStatusColor( const GeStatusColor& x) : 
+    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), nostatus_color(x.nostatus_color)
+    { strcpy(attribute, x.attribute);}
+  void get_attributes( attr_sItem *attrinfo, int *item_count);
+  void save( ofstream& fp);
+  void open( ifstream& fp);
+  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int disconnect( grow_tObject object);
+  int scan( grow_tObject object);
+  void set_attribute( grow_tObject object, char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
+  int set_color( grow_tObject object, glow_eDrawType color);
+  int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
 };
 
 //! Changes the fill color up to a certain level of the component.
@@ -1891,6 +1941,9 @@ class GeTable : public GeDynElem {
   char *old_value[TABLE_MAX_COL];
   int type_id[TABLE_MAX_COL];
   int elements[TABLE_MAX_COL];
+  int is_headerref[TABLE_MAX_COL];
+  char **headerref_p[TABLE_MAX_COL];
+  pwr_tSubid *headerref_subid[TABLE_MAX_COL];
 
   pwr_tBoolean *sel_p[TABLE_MAX_COL];
   pwr_tSubid sel_subid[TABLE_MAX_COL];
@@ -1902,6 +1955,7 @@ class GeTable : public GeDynElem {
 	      ge_eDynPrio_Table)
     { memset( attribute,0,sizeof(attribute)); memset( format,0,sizeof(format)); 
     memset( sel_attribute,0,sizeof(sel_attribute)); memset(old_value,0,sizeof(old_value));
+    memset( is_headerref, 0, sizeof(is_headerref)); memset(headerref_p,0,sizeof(headerref_p));
     }
   GeTable( const GeTable& x) : 
     GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)

@@ -2013,6 +2013,12 @@ typedef GlowTraceData glow_sTraceData;
   */
   void grow_StoreTransform( grow_tObject object);
 
+  //! Check if there is a stored transform
+  /*! 
+    \return Returns 1 if the transform is previously stored with a call to grow_StoreTransform.
+  */
+  int grow_TransformIsStored( grow_tObject object);
+
   //! Align the selected objects.
   /*!
     \param ctx		Grow context.

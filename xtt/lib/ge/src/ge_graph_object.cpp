@@ -52,6 +52,7 @@ static int graph_object_dx( Graph *graph, pwr_tObjid objid);
 static int graph_object_chanxx( Graph *graph, pwr_tObjid objid);
 static int graph_object_PID( Graph *graph, pwr_tObjid objid);
 static int graph_object_Mode( Graph *graph, pwr_tObjid objid);
+static int graph_object_PlcThread( Graph *graph, pwr_tObjid objid);
 static int graph_object_collect( Graph *graph, pwr_tObjid objid);
 static int graph_object_collect_build( Graph *graph, pwr_tObjid objid);
 
@@ -73,6 +74,7 @@ static graph_sObjectFunction graph_object_functions[] = {
 	{ pwr_cClass_ChanDo, &graph_object_chanxx},
 	{ pwr_cClass_pid, &graph_object_PID},
 	{ pwr_cClass_mode, &graph_object_Mode},
+	{ pwr_cClass_PlcThread, &graph_object_PlcThread},
 	{ 0, 0}};
 
 graph_sLocalDb *Graph::localdb_add( char *name, int type)
@@ -1877,3 +1879,164 @@ int Graph::create_node( char *node_name, char *subgraph_str, double x1,
 
   return 1;
 }
+
+
+
+//
+// Object graph for PlcThread
+//
+
+typedef struct {
+	pwr_tFloat32	*set_max_show_p;
+	pwr_tFloat32	*set_min_show_p;
+	pwr_tFloat32	set_max_show_old;
+	pwr_tFloat32	set_min_show_old;
+	grow_tObject 	set_bar_object;
+	grow_tObject 	set_trend_object;
+	grow_tObject 	hold_button_object;
+	float		*scan_time_p;
+	float		old_scan_time;
+	double		*data_set_scan_time_p;
+	int		*hold_button_p;
+	int		*hold_set_p;
+	} graph_sObjectPlcThread;
+
+static void graph_object_PlcThread_scan( Graph *graph)
+{
+  graph_sObjectPlcThread *od = (graph_sObjectPlcThread *)graph->graph_object_data;
+
+  // Reconfigure bar and trend if limits are changed
+  if ( od->set_max_show_p && od->set_min_show_p && 
+       ( *od->set_max_show_p != od->set_max_show_old ||
+	 *od->set_min_show_p != od->set_min_show_old)) {
+    if ( *od->set_max_show_p != *od->set_min_show_p) {
+      grow_SetBarRange( od->set_bar_object, double(*od->set_min_show_p), 
+		double(*od->set_max_show_p));
+      grow_SetTrendRange( od->set_trend_object, 0, double(*od->set_min_show_p), 
+		double(*od->set_max_show_p));
+      grow_SetTrendRange( od->set_trend_object, 1, double(*od->set_min_show_p), 
+		double(*od->set_max_show_p));
+    }
+    od->set_min_show_old = *od->set_min_show_p;
+    od->set_max_show_old = *od->set_max_show_p;
+  }      
+
+  // Reconfigure new scantime
+  if ( od->scan_time_p && 
+       *od->scan_time_p != od->old_scan_time)
+  {
+    if ( graph->scan_time > *od->scan_time_p/200)
+    {
+      graph->scan_time = *od->scan_time_p/200;
+      graph->animation_scan_time = *od->scan_time_p/200;
+    }
+    grow_SetTrendScanTime( od->set_trend_object, double( *od->scan_time_p/200));
+    od->old_scan_time = *od->scan_time_p;
+    *od->data_set_scan_time_p = double(*od->scan_time_p)/200;
+  }
+
+  if ( od->hold_button_p && *od->hold_button_p)
+  {
+    *od->hold_set_p = !*od->hold_set_p;
+    *od->hold_button_p = 0;
+    if ( *od->hold_set_p && od->hold_button_object)
+      grow_SetObjectColorTone( od->hold_button_object, glow_eDrawTone_Yellow);
+    else
+      grow_ResetObjectColorTone( od->hold_button_object);
+  }
+
+}
+
+static void graph_object_PlcThread_close( Graph *graph)
+{
+  free( graph->graph_object_data);
+}
+
+static int graph_object_PlcThread( Graph *graph, pwr_tObjid objid)
+{
+  pwr_sAttrRef attrref;
+  int sts;
+  graph_sObjectPlcThread *od;
+  pwr_tClassId	classid;
+  pwr_tFloat32 max_limit = 1;
+  pwr_tFloat32 min_limit = 0;
+  double scan_time;
+
+  od = (graph_sObjectPlcThread *) calloc( 1, sizeof(graph_sObjectPlcThread));
+  graph->graph_object_data = (void *) od;
+  graph->graph_object_close = graph_object_PlcThread_close;
+
+  sts = gdh_GetObjectClass( objid, &classid);
+  if ( EVEN(sts)) return sts;
+
+  // Get value for ScanTime
+  sts = gdh_ClassAttrToAttrref( classid, ".ScanTime", &attrref);
+  if ( EVEN(sts)) return sts;
+
+  attrref.Objid = objid;
+  sts = gdh_GetObjectInfoAttrref( &attrref, (void *)&max_limit, sizeof(max_limit));
+  if ( EVEN(sts)) return sts;
+
+  max_limit = max_limit * 2;
+
+  od->set_max_show_old = max_limit;
+  od->set_min_show_old = min_limit;
+
+  // Configure ProcVal and SetVal bar
+  sts = grow_FindObjectByName( graph->grow->ctx, "ActualScanTimeBar", 
+		&od->set_bar_object);
+  if ( EVEN(sts)) return sts;
+
+  if ( min_limit != max_limit)
+    grow_SetBarRange( od->set_bar_object, double(min_limit), double(max_limit));
+
+  // Get pointers to max and min value
+  od->set_max_show_p = (float *) graph->localdb_ref_or_create( "MaxShow", 
+		pwr_eType_Float32);
+  *od->set_max_show_p = od->set_max_show_old;
+
+  od->set_min_show_p = (float *) graph->localdb_ref_or_create( "MinShow", 
+		pwr_eType_Float32);
+  *od->set_min_show_p = od->set_min_show_old;
+
+  // Configure SetVal  trend
+  sts = grow_FindObjectByName( graph->grow->ctx, "ActualScanTimeTrend", 
+		&od->set_trend_object);
+  if ( EVEN(sts)) return sts;
+
+  if ( min_limit != max_limit) {
+    grow_SetTrendRange( od->set_trend_object, 0, double(min_limit), double(max_limit));
+    grow_SetTrendRange( od->set_trend_object, 1, double(min_limit), double(max_limit));
+  }
+
+  // Set scantime variable in local database
+  grow_GetTrendScanTime( od->set_trend_object, &scan_time);
+  od->scan_time_p = (float *) graph->localdb_ref_or_create( "ScanTime", 
+		pwr_eType_Float32);
+  od->old_scan_time = float( scan_time*200);
+  *od->scan_time_p = od->old_scan_time;
+
+  if ( graph->scan_time > *od->scan_time_p/200) {
+    graph->scan_time = *od->scan_time_p/200;
+    graph->animation_scan_time = *od->scan_time_p/200;
+  }
+
+  // Get Hold button
+  sts = grow_FindObjectByName( graph->grow->ctx, "TrendHold", 
+		&od->hold_button_object);
+  if ( ODD(sts))
+    od->hold_button_p = (int *) graph->localdb_ref_or_create( "TrendHold", 
+		pwr_eType_Boolean);
+
+  GeDyn *dyn;
+
+  grow_GetUserData( od->set_trend_object, (void **)&dyn);
+  od->data_set_scan_time_p = dyn->ref_trend_scantime();
+  od->hold_set_p = dyn->ref_trend_hold();
+
+  // Register scan function
+  graph->graph_object_scan = graph_object_PlcThread_scan;
+
+  return 1;
+}
+

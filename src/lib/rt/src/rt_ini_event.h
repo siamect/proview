@@ -23,7 +23,8 @@ typedef union {
     pwr_Bits( oldPlcStopDone	, 1),
 
     pwr_Bits( swapDone		, 1),
-    pwr_Bits( fill_1	    , 7),,,,,,,
+    pwr_Bits( terminate		, 1),
+    pwr_Bits( fill_1	    , 6),,,,,,
 
     pwr_Bits( fill_2	    , 8),,,,,,,,
     pwr_Bits( fill_3	    , 8),,,,,,,
@@ -40,6 +41,7 @@ typedef union {
 #define ini_mEvent_oldPlcStopDone	pwr_Bit(7)
 
 #define ini_mEvent_swapDone		pwr_Bit(8)
+#define ini_mEvent_terminate		pwr_Bit(9)
 #define ini_mEvent_			(~ini_mEvent__)
 } ini_mEvent;
  

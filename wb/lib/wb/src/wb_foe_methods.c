@@ -2949,10 +2949,10 @@ int foe_print_overview (
 	  {
 	    /* Calculate coordinates for an overview */
 	    gre_measure_object( *node_ptr, &ll_x, &ll_y, &width, &height);
-	    ll_x_min = MIN( ll_x_min, ll_x);
-	    ll_y_min = MIN( ll_y_min, ll_y);
-	    ur_x_max = MAX( ur_x_max, ll_x + width);
-	    ur_y_max = MAX( ur_y_max, ll_y + height);
+	    ll_x_min = min( ll_x_min, ll_x);
+	    ll_y_min = min( ll_y_min, ll_y);
+	    ur_x_max = max( ur_x_max, ll_x + width);
+	    ur_y_max = max( ur_y_max, ll_y + height);
 
 	    doc_count++;	  
 	  }
@@ -3654,8 +3654,8 @@ int foe_redraw_and_save ( foe_ctx foectx
 	foe_enable_ldh_cb(foectx);
 	if ( EVEN(sts)) return sts;
 
-	sts = gre_set_trace_attributes( foectx->grectx);
-	sts = gre_save( foectx->grectx);
+	sts = gre_set_trace_attributes( foectx->grectx, 0);
+	sts = gre_save( foectx->grectx, 0);
 	if ( EVEN(sts)) return sts;
 
 	return FOE__SUCCESS;

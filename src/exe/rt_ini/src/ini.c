@@ -258,6 +258,8 @@ readSectFile (
   time_AtoAscii(&cp->dbs.file.time, time_eFormat_DateAndTime, timbuf, sizeof(timbuf));
 
   errh_LogInfo(&cp->log, "Created %s", timbuf);
+  if ( !cp->node.rtVersion.tv_sec)
+    cp->node.rtVersion = cp->dbs.file.time;
 
 #if 1
   printf("Comment in file is not OK. fix when dbs_File is OK\n");
@@ -924,47 +926,34 @@ ini_LoadDirectory (
 
   return cp->dir;
 }
-
-#if 0
-ini_UpdateSystemInfo (ini_sContext *cp)
+
+void ini_SetSystemStatus( ini_sContext *cp, pwr_tStatus sts)
 {
-    /* Certain fields in the node and system objects must be filled in.  */
+  if ( !cp->np) return;
 
-    node_bp = ivol_GetBody(&sts, cp->node.nod_oid, NULL);
-    if (node_bp == NULL) {
-      errh_LogFatal(&cp->log, "Can not find a node object!");
-      return INI__ERROR;
-    }
-
-    Node = (pwr_sNode *) node_bp->body;
-
-    Node->BootVersion    = cp->node.rtVersion;
-    Node->BootCreTime    = cp->node.rtCreTime;
-    Node->CurVersion     = cp->node.rtVersion;
-    Node->CurCreTime     = cp->node.rtCreTime;
-    Node->BootPLCVersion = cp->node.plcVersion;
-    Node->CurPLCVersion  = cp->node.plcVersion;
-    clock_gettime(CLOCK_REALTIME, &Node->LastChgTime);
-#if 0
-//    Node->Swaps++;
-//    Node->LastCriticalDuration = ;
-//    Node->MeanCriticalDuration = ;
-#endif
-    
-
-    gdb_Unlock;
-
-    {
-      /* Set SystemName to project name given in boot file.  */
-      pwr_tStatus	  sts;
-      int		  size = MIN(sizeof(System.SystemName) - 1, strlen(cp->proj));
-      int		  gsize = MIN(sizeof(System.SystemGroup) - 1, strlen(cp->group));
-
-      sts = gdh_SetObjectInfo("pwrNode-System.SystemName", cp->proj, size);
-      sts = gdh_SetObjectInfo("pwrNode-System.SystemGroup", cp->group, gsize);
-    }
+  if ( ODD(sts) && ODD(cp->np->SystemStatus))
+    cp->np->SystemStatus = sts;
+  else if ( (sts & 7) >= (cp->np->SystemStatus & 7))
+    cp->np->SystemStatus = sts;
 }
-#endif
+
+
+void ini_UpdateSystemInfo ( ini_sContext *cp, int boot)
+{
+  if ( boot) {
+    cp->np->BootVersion = cp->node.rtVersion;
+    cp->np->BootPlcVersion = cp->node.plcVersion;
+    clock_gettime(CLOCK_REALTIME, &cp->np->BootTime);
+  }
+  cp->np->CurrentVersion = cp->node.rtVersion;
+  cp->np->CurrentPlcVersion = cp->node.plcVersion;
+
+  if ( !boot) {
+    cp->np->Restarts++;
+    clock_gettime(CLOCK_REALTIME, &cp->np->RestartTime);
+  }
+}
+
 
 void
 ini_ReadBootFile (
@@ -1472,6 +1461,7 @@ ini_CheckNode (
 {
 
   pwr_dStatus(sts, status, INI__SUCCESS);
+  cp->node.rtVersion.tv_sec = 0;
 
   return ini_IterVolumes(sts, cp, ini_CheckVolumeFile);
 }
@@ -1619,7 +1609,6 @@ ini_BuildNode (
   ini_sContext	*cp
 )
 {
-  pwr_sNode	*Node;
   ivol_sBody	*node_bp = NULL;
   pwr_tStatus	tsts;
   pwr_tObjid	oid = pwr_cNObjid;
@@ -1643,19 +1632,8 @@ ini_BuildNode (
       break;
     }
 
-    Node = (pwr_sNode *) node_bp->body;
-
-    Node->BootVersion    = cp->node.rtVersion;
-    Node->BootCreTime    = cp->node.rtCreTime;
-    Node->CurVersion     = cp->node.rtVersion;
-    Node->CurCreTime     = cp->node.rtCreTime;
-
-    cp->np = Node;
-#if 0
-    Node->BootPLCVersion = cp->node.plcVersion;
-    Node->CurPLCVersion  = cp->node.plcVersion;
-    clock_gettime(CLOCK_REALTIME, &Node->LastChgTime);
-#endif
+    cp->np = (pwr_sNode *) node_bp->body;
+    ini_UpdateSystemInfo( cp, 1);
 
   } gdb_ScopeUnlock;
 
@@ -1687,6 +1665,7 @@ ini_RebuildNode (
 {
   ivol_sVolume	*vp;
   lst_sEntry	*vl;
+  ivol_sBody	*node_bp = NULL;
 
   pwr_dStatus(sts, status, INI__SUCCESS);
 
@@ -1712,6 +1691,14 @@ ini_RebuildNode (
   create_active_io();
   if (cp->flags.b.verbose)
     errh_LogInfo(&cp->log, "Io areas created");
+
+  node_bp = ivol_GetBody(sts, cp->node.nod_oid, NULL);
+  if (node_bp == NULL) {
+    errh_LogFatal(&cp->log, "Can not find a node object!");
+  }
+  cp->np = (pwr_sNode *) node_bp->body;
+
+  ini_UpdateSystemInfo( cp, 0);
 
   return YES;
 }
@@ -2222,12 +2209,29 @@ delete_old_io ()
   if(ODD(sts)) gdh_DeleteObject(oid);
   sts = gdh_NameToObjid("pwrNode-old-io-dv", &oid);
   if(ODD(sts)) gdh_DeleteObject(oid);
+  sts = gdh_NameToObjid("pwrNode-old-io-ii", &oid);
+  if(ODD(sts)) gdh_DeleteObject(oid);
+  sts = gdh_NameToObjid("pwrNode-old-io-io", &oid);
+  if(ODD(sts)) gdh_DeleteObject(oid);
+  sts = gdh_NameToObjid("pwrNode-old-io-iv", &oid);
+  if(ODD(sts)) gdh_DeleteObject(oid);
   sts = gdh_NameToObjid("pwrNode-old-io-dv_init", &oid);
   if(ODD(sts)) gdh_DeleteObject(oid);
   sts = gdh_NameToObjid("pwrNode-old-io-av_init", &oid);
+  if(ODD(sts)) gdh_DeleteObject(oid);
+  sts = gdh_NameToObjid("pwrNode-old-io-iv_init", &oid);
   if(ODD(sts)) gdh_DeleteObject(oid);
   sts = gdh_NameToObjid("pwrNode-old-io", &oid);
   if(ODD(sts)) gdh_DeleteObject(oid);
   sts = gdh_NameToObjid("pwrNode-old", &oid);
   if(ODD(sts)) gdh_DeleteObject(oid);
 }
+
+
+
+
+
+
+
+
+

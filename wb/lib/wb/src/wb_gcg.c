@@ -13960,6 +13960,7 @@ vldh_t_node	node;
 	pwr_sAttrRef		attrref[2];
 	ldh_tWBContext		ldhwb;
 	pwr_sPlcWindow		*windbuffer;
+	pwr_sPlcNode		*nodebuffer;
 	unsigned long		point;
 	unsigned long		par_inverted;
 	vldh_t_node		output_node;
@@ -14068,12 +14069,15 @@ vldh_t_node	node;
 
 	  node->ln.subwindow = 1;
  	  node->ln.subwind_objdid[0] = window_objid;
-	  sts = ldh_SetObjectBuffer(
-			ldhses,
-			node->ln.object_did,
-			"DevBody",
-			"PlcNode",
-			(char *)&node->ln);
+
+	  sts = ldh_GetObjectBuffer( ldhses, node->ln.object_did,
+			"DevBody", "PlcNode", (pwr_eClass *) &windclass, 
+				     (char **)&nodebuffer, &size);
+	  if( EVEN(sts)) return sts;
+	  nodebuffer->subwindow = 1;
+ 	  nodebuffer->subwind_objdid[0] = window_objid;
+	  sts = ldh_SetObjectBuffer( ldhses, node->ln.object_did, 
+				     "DevBody", "PlcNode", (char *)nodebuffer);
 	  if( EVEN(sts)) return sts;
 
 	  sts = ldh_GetObjectBuffer( ldhses,

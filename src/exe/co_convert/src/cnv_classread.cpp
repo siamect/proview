@@ -63,6 +63,22 @@ int ClassRead::read( char *filename)
            !(state & cread_mState_Doc))
         continue;
 
+      if ( state & cread_mState_StringAttr) {
+	// Look for termination of string
+	int terminated = 0;
+	char *s = line; 
+	while ( *s) {
+	  if ( *s == '\"' && *(s-1) != '\\') {
+	    terminated = 1;
+	    break;
+	  }
+	  s++;
+	}
+	if ( terminated)
+	  state &= ~cread_mState_StringAttr;
+	continue;
+      }
+
       nr = dcli_parse( line, " 	=", "", (char *)line_part,
                 	sizeof( line_part) / sizeof( line_part[0]), 
 			sizeof( line_part[0]), 0);
@@ -445,6 +461,18 @@ int ClassRead::read( char *filename)
             default:
               ;
           }
+
+	  // Check if unterminated string
+	  int terminated = 1;
+	  char *s = line;
+	  while ( *s) {
+	    if ( *s == '\"' && *(s-1) != '\\')
+	      terminated = !terminated;
+	    s++;
+	  }
+	  if ( !terminated)
+	    state |= cread_mState_StringAttr;
+
           break;
         }
         case cread_eLine_DAttr:

@@ -34,12 +34,12 @@
 #define EVEN(a)	(((int)(a) & 1) == 0)
 #endif
 
-#ifndef MAX
-#define MAX(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
+#ifndef max
+#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
 #endif
 
-#ifndef MIN
-#define MIN(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
+#ifndef min
+#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
 #endif
 
 #define SwapInts(Dragon,Eagle)\
