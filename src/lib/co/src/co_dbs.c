@@ -655,6 +655,12 @@ dbs_Before(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op)
 
 
 dbs_sObject *
+dbs_Parent(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op)
+{
+    return dbs_Address(sts, ep, op->pref);
+}
+
+dbs_sObject *
 dbs_First(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op)
 {
     dbs_sQlink *ol;
