@@ -164,6 +164,11 @@ SObject pwrb:Class
         Attr debugpar = ""
       EndBody
     EndObject
+    Object PostCreate $DbCallBack
+      Body SysBody
+        Attr MethodName = "Backup-PostCreate"
+      EndBody
+    EndObject
     Object Template Backup
     EndObject
   EndObject
