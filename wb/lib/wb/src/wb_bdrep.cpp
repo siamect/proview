@@ -44,6 +44,10 @@ wb_adrep *wb_bdrep::adrep( pwr_tStatus *sts)
 wb_adrep *wb_bdrep::adrep( pwr_tStatus *sts, const char *aname)
 {
   wb_name n(aname);
+  if ( n.evenSts()) {
+    *sts = n.sts();
+    return 0;
+  }
   wb_orep *orep = m_orep->vrep()->child( sts, m_orep, n);
   if ( EVEN(*sts))
     return 0;

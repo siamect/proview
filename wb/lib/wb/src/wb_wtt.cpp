@@ -38,7 +38,6 @@ extern "C" {
 #include "wb_utl.h"
 #include "wb_lfu.h"
 #include "wb_login.h"
-
 #if defined OS_VMS
 #include "wb_ate.h"
 #include "wb_sped.h"
@@ -3180,8 +3179,10 @@ static pwr_tBoolean wtt_format_selection(
 				ldh_eName_Aref,
         			&name_ptr, &ret_len); 
       if ( EVEN(sts)) return FALSE;
-      s = strrchr( name_ptr, '.');
-      strcpy( attr_name, s + 1);
+      if ( (s = strrchr( name_ptr, '.')))
+	strcpy( attr_name, s + 1);
+      else
+	strcpy( attr_name, "");
     }
     strcat(buff, dot);
     strcat(buff, attr_name);
