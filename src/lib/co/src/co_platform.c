@@ -11,8 +11,25 @@
 
 
 /*
-*  co_GetOwnPlatform
-*/
+ * co_GetOwnFormat
+ */
+co_mFormat* co_GetOwnFormat(co_mFormat *format)
+{
+ 
+    format->m = 0;
+    format->b.bo = co_dHostByteOrder;
+    format->b.ct = co_dHostAsciiType;
+    format->b.ft = co_dHostFloatType;
+
+    return format;
+}
+
+
+
+
+/*
+ *  co_GetOwnPlatform
+ */
 co_sPlatform* co_GetOwnPlatform(co_sPlatform *platform)
 {
     platform->os = co_dHostOS;
@@ -22,13 +39,16 @@ co_sPlatform* co_GetOwnPlatform(co_sPlatform *platform)
     return platform;    
 }
 
-
-co_mFormat* co_GetOwnFormat(co_mFormat *format)
+/*
+ * co_SetFormat
+ */
+co_mFormat* co_SetFormat(co_mFormat *format, co_eBO bo, co_eFT ft)
 {
-    format->m = 0;
-    format->b.bo = co_dHostByteOrder;
-    format->b.ft = co_dHostFloatType;
-    format->b.ct = co_eCT_ascii;
+  format->m = 0;
+  format->b.bo = bo;
+  format->b.ft = ft;
+  format->b.ct = co_eCT_ascii;
 
-    return format;
+  return format;
 }
+

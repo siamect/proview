@@ -1,10 +1,6 @@
 #ifndef co_platform_h
 #define co_platform_h
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /* co_platform.h -- platform routines
 
    PROVIEW/R
@@ -12,6 +8,10 @@ extern "C" {
 
    This module contains data structures that descibes a PROVIEW platform  
    */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
 #ifndef pwr_h
@@ -55,15 +55,17 @@ extern "C" {
 #define ENDIAN_SWAP_BOOLP(s) (*(int *)s = (0 != *(int *)s))
 
 
-
+/** OS type
+ * @note Do not change the order. Must be backward compatible
+ */
 typedef enum {
     co_eOS__ = 0,
     co_eOS_Lynx,
     co_eOS_VMS,
     co_eOS_ELN,
-    co_eOS_WNT,
-    co_eOS_W95,
-    co_eOS_Amiga,
+    co_eOS_WNT,   /**< Pay me and I will do it */
+    co_eOS_W95,   /**< Never!! */
+    co_eOS_Amiga, /**< We are working on it ;-) */
     co_eOS_Linux,
     co_eOS_
 } co_eOS;
@@ -83,7 +85,9 @@ typedef enum {
 #endif
 
 
-/** Hardware type */
+/** Hardware type 
+  * @note Do not change the order. Must be backward compatible
+  */
  
 typedef enum {
   co_eHW__ = 0,
@@ -110,14 +114,20 @@ typedef enum {
 
 /** Integer and floating-point byte order.
  *
- *  @note The enum must not exceed 15 
+ *  Network is big    endian
+ *  68k     is big    endian
+ *  x86     is little endian
+ *  PPC     is both   endian
+ *  VAX     is little endian
+ *
+ * @note Do not change the order. Must be backward compatible
  */
 
 typedef enum {
     co_eBO__ = 0,
     co_eBO_big,
     co_eBO_little,
-    co_eBO_
+    co_eBO_middle /**< Not used, historical reasons */
 } co_eBO;
 
 
@@ -128,8 +138,7 @@ typedef enum {
 #endif
 
 
-
-/** Character representation type. Currently not used 
+/** Character representation type. Always set to ascii
  *
  *  @note The enum must not exceed 15 
  */
@@ -142,15 +151,20 @@ typedef enum {
 #define co_dHostAsciiType co_eCT_ascii
 
 
+
 /** Floating-point representation type.
  *
- *  @note The enum must not exceed 255
+ * @note Do not change the order. Must be backward compatible
  */
 typedef enum {
     co_eFT__ = 0,
-    co_eFT_ieee,
+    co_eFT_ieeeS,
+    co_eFT_ieeeT, /**< Not used */
+    co_eFT_ieeeK, /**< Not used */
+    co_eFT_vaxF,  /**< Not set, implicit for both vaxD and vaxG */
     co_eFT_vaxD,
     co_eFT_vaxG,
+    co_eFT_vaxH,  /**< Not used */
     co_eFT_
 } co_eFT;
 
@@ -161,7 +175,7 @@ typedef enum {
 #       define co_dHostFloatType co_eFT_vaxD
 #   endif
 #else
-#   define co_dHostFloatType co_eFT_ieee
+#   define co_dHostFloatType co_eFT_ieeeS
 #endif
 
 
@@ -169,15 +183,13 @@ typedef union {
     pwr_tBitMask m;
     pwr_32Bits (
         pwr_Bits( bo       , 4),,,,     /**< Byte order */
-        pwr_Bits( ct	   , 4),,,,     /**< Character representation */
+        pwr_Bits( ct	   , 4),,,,     /**< Not used. Character representation */
         pwr_Bits( ft	   , 8),,,,,,,, /**< Floting-point representation */
         pwr_Bits( reserved1, 8),,,,,,,,
         pwr_Bits( reserved2, 8),,,,,,,
       ) b;
 
 } co_mFormat;
-
-
 
 
 typedef struct {
@@ -187,12 +199,14 @@ typedef struct {
 } co_sPlatform;
 
 
+co_mFormat*   co_GetOwnFormat(co_mFormat *format);
+co_sPlatform* co_GetOwnPlatform(co_sPlatform *platform);
+co_mFormat*   co_SetFormat(co_mFormat *format, co_eBO bo, co_eFT ft);
 
-co_sPlatform *co_GetOwnPlatform(co_sPlatform *platform);
-co_mFormat *co_GetOwnFormat(co_mFormat *format);
 
-
-
+#ifdef __cplusplus
+}
+#endif
 
 
 #ifdef __cplusplus
