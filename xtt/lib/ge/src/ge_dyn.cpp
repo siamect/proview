@@ -174,6 +174,8 @@ GeDyn::GeDyn( const GeDyn& x) :
       e = new GeTable((const GeTable&) *elem); break;
     case ge_mDynType_StatusColor:
       e = new GeStatusColor((const GeStatusColor&) *elem); break;
+    case ge_mDynType_HostObject:
+      e = new GeHostObject((const GeHostObject&) *elem); break;
     default: ;
     }
     switch( elem->action_type) {
@@ -283,6 +285,7 @@ void GeDyn::open( ifstream& fp)
       case ge_eSave_AnalogText: e = (GeDynElem *) new GeAnalogText(this); break;
       case ge_eSave_Table: e = (GeDynElem *) new GeTable(this); break;
       case ge_eSave_StatusColor: e = (GeDynElem *) new GeStatusColor(this); break;
+      case ge_eSave_HostObject: e = (GeDynElem *) new GeHostObject(this); break;
       case ge_eSave_PopupMenu: e = (GeDynElem *) new GePopupMenu(this); break;
       case ge_eSave_SetDig: e = (GeDynElem *) new GeSetDig(this); break;
       case ge_eSave_ResetDig: e = (GeDynElem *) new GeResetDig(this); break;
@@ -522,6 +525,47 @@ void GeDyn::set_command( char *cmd)
   }
 }
 
+void GeDyn::set_hostobject( char *hostobject)
+{
+  for ( GeDynElem *elem = elements; elem; elem = elem->next) {
+    if ( elem->dyn_type == ge_mDynType_HostObject) {
+      strncpy( ((GeHostObject *)elem)->hostobject, hostobject, 
+	       sizeof(((GeHostObject *)elem)->hostobject));
+      break;
+    }
+  }
+}
+
+void GeDyn::get_hostobject( char *hostobject)
+{
+  for ( GeDynElem *elem = elements; elem; elem = elem->next) {
+    if ( elem->dyn_type == ge_mDynType_HostObject) {
+      strcpy( hostobject, ((GeHostObject *)elem)->hostobject);
+      break;
+    }
+  }
+}
+
+graph_eDatabase GeDyn::parse_attr_name( char *name, char *parsed_name, 
+					int *inverted, int *type, int *size, int *elem) 
+{
+  char *s;
+
+  if ( total_dyn_type & ge_mDynType_HostObject &&
+       (s = strstr( name, "$hostobject"))) {
+    // Replace string $hostobject with host object
+    char hostobject[120];
+    char n[120];
+
+    get_hostobject( hostobject);
+    strncpy( n, name, s - name);
+    strcpy( &n[s-name], hostobject);
+    strcat( n, s+strlen("$hostobject"));
+
+    return graph->parse_attr_name( n, parsed_name, inverted, type, size, elem);
+  }
+  return graph->parse_attr_name( name, parsed_name, inverted, type, size, elem);
+}
 void GeDyn::set_value_input( char *format, double min_value, double max_value)
 {
   for ( GeDynElem *elem = elements; elem; elem = elem->next) {
@@ -899,8 +943,163 @@ GeDynElem *GeDyn::create_dyn_element( int mask, int instance)
   case ge_mDynType_StatusColor:
     e = (GeDynElem *) new GeStatusColor(this);
     break;
+  case ge_mDynType_HostObject:
+    e = (GeDynElem *) new GeHostObject(this);
+    break;
   default: ;
   }
+  return e;
+}
+
+GeDynElem *GeDyn::copy_element( GeDynElem& x)
+{
+  GeDynElem *e = 0;
+
+  if ( x.action_type) {
+    switch ( x.action_type) {
+    case ge_mActionType_PopupMenu:
+      e = (GeDynElem *) new GePopupMenu((GePopupMenu&) x);
+      break;
+    case ge_mActionType_SetDig:
+      e = (GeDynElem *) new GeSetDig((GeSetDig&) x);
+      break;
+    case ge_mActionType_ResetDig:
+      e = (GeDynElem *) new GeResetDig((GeResetDig&) x);
+      break;
+    case ge_mActionType_ToggleDig:
+      e = (GeDynElem *) new GeToggleDig((GeToggleDig&) x);
+      break;
+    case ge_mActionType_StoDig:
+      e = (GeDynElem *) new GeStoDig((GeStoDig&) x);
+      break;
+    case ge_mActionType_Command:
+      e = (GeDynElem *) new GeCommand((GeCommand&) x);
+      break;
+    case ge_mActionType_CommandDoubleClick:
+      e = (GeDynElem *) new GeCommandDoubleClick((GeCommandDoubleClick&) x);
+      break;
+    case ge_mActionType_Confirm:
+      e = (GeDynElem *) new GeConfirm((GeConfirm&) x);
+      break;
+    case ge_mActionType_IncrAnalog:
+      e = (GeDynElem *) new GeIncrAnalog((GeIncrAnalog&) x);
+      break;
+    case ge_mActionType_RadioButton:
+      e = (GeDynElem *) new GeRadioButton((GeRadioButton&) x);
+      break;
+    case ge_mActionType_Slider:
+      e = (GeDynElem *) new GeSlider((GeSlider&) x);
+      break;
+    case ge_mActionType_ValueInput:
+      e = (GeDynElem *) new GeValueInput((GeValueInput&) x);
+      break;
+    case ge_mActionType_TipText:
+      e = (GeDynElem *) new GeTipText((GeTipText&) x);
+      break;
+    case ge_mActionType_Help:
+      e = (GeDynElem *) new GeHelp((GeHelp &) x);
+      break;
+    case ge_mActionType_OpenGraph:
+      e = (GeDynElem *) new GeOpenGraph((GeOpenGraph&) x);
+      break;
+    case ge_mActionType_OpenURL:
+      e = (GeDynElem *) new GeOpenURL((GeOpenURL&) x);
+      break;
+    case ge_mActionType_InputFocus:
+      e = (GeDynElem *) new GeInputFocus((GeInputFocus&) x);
+      break;
+    case ge_mActionType_CloseGraph:
+      e = (GeDynElem *) new GeCloseGraph((GeCloseGraph&) x);
+      break;
+    case ge_mActionType_PulldownMenu:
+      e = (GeDynElem *) new GePulldownMenu((GePulldownMenu&) x);
+      break;
+    case ge_mActionType_OptionMenu:
+      e = (GeDynElem *) new GeOptionMenu((GeOptionMenu&) x);
+      break;
+    default: ;
+    }
+  }
+  else if ( x.dyn_type) {
+    switch ( x.dyn_type) {
+    case ge_mDynType_DigLowColor:
+      e = (GeDynElem *) new GeDigLowColor((GeDigLowColor&) x);
+      break;
+    case ge_mDynType_DigColor:
+      e = (GeDynElem *) new GeDigColor((GeDigColor&) x);
+      break;
+    case ge_mDynType_DigWarning:
+      e = (GeDynElem *) new GeDigWarning((GeDigWarning&) x);
+      break;
+    case ge_mDynType_DigError:
+      e = (GeDynElem *) new GeDigError((GeDigError&) x);
+      break;
+    case ge_mDynType_DigFlash:
+      e = (GeDynElem *) new GeDigFlash((GeDigFlash&) x);
+      break;
+    case ge_mDynType_Invisible:
+      e = (GeDynElem *) new GeInvisible((GeInvisible&) x);
+      break;
+    case ge_mDynType_DigBorder:
+      e = (GeDynElem *) new GeDigBorder((GeDigBorder&) x);
+      break;
+    case ge_mDynType_DigText:
+      e = (GeDynElem *) new GeDigText((GeDigText&) x);
+      break;
+    case ge_mDynType_Value:
+      e = (GeDynElem *) new GeValue((GeValue&) x);
+      break;
+    case ge_mDynType_AnalogColor:
+      e = (GeDynElem *) new GeAnalogColor((GeAnalogColor&) x);
+      break;
+    case ge_mDynType_Rotate:
+      e = (GeDynElem *) new GeRotate((GeRotate&) x);
+      break;
+    case ge_mDynType_Move:
+      e = (GeDynElem *) new GeMove((GeMove&) x);
+      break;
+    case ge_mDynType_AnalogShift:
+      e = (GeDynElem *) new GeAnalogShift((GeAnalogShift&) x);
+      break;
+    case ge_mDynType_DigShift:
+      e = (GeDynElem *) new GeDigShift((GeDigShift&) x);
+      break;
+    case ge_mDynType_Animation:
+      e = (GeDynElem *) new GeAnimation((GeAnimation&) x);
+      break;
+    case ge_mDynType_Video:
+      e = (GeDynElem *) new GeVideo((GeVideo&) x);
+      break;
+    case ge_mDynType_Bar:
+      e = (GeDynElem *) new GeBar((GeBar&) x);
+      break;
+    case ge_mDynType_Trend:
+      e = (GeDynElem *) new GeTrend((GeTrend&) x);
+      break;
+    case ge_mDynType_FillLevel:
+      e = (GeDynElem *) new GeFillLevel((GeFillLevel&) x);
+      break;
+    case ge_mDynType_FastCurve:
+      e = (GeDynElem *) new GeFastCurve((GeFastCurve&) x);
+      break;
+    case ge_mDynType_AnalogText:
+      e = (GeDynElem *) new GeAnalogText((GeAnalogText&) x);
+      break;
+    case ge_mDynType_Table:
+      e = (GeDynElem *) new GeTable((GeTable&) x);
+      break;
+    case ge_mDynType_StatusColor:
+      e = (GeDynElem *) new GeStatusColor((GeStatusColor&) x);
+      break;
+    case ge_mDynType_HostObject:
+      e = (GeDynElem *) new GeHostObject((GeHostObject&) x);
+      break;
+    default: ;
+    }
+  }
+
+  if ( e)
+    e->dyn = this;
   return e;
 }
 
@@ -926,6 +1125,40 @@ void GeDyn::insert_element( GeDynElem *e)
   else {
     e->next = elements;
     elements = e;
+  }
+}
+
+void GeDyn::merge( GeDyn& x)
+{
+  GeDynElem *elem, *xelem, *prev, *next;
+  GeDynElem *e;
+
+  dyn_type = (ge_mDynType)(dyn_type | x.dyn_type);
+  total_dyn_type = (ge_mDynType)(total_dyn_type | x.total_dyn_type);
+  action_type = (ge_mActionType)(action_type | x.action_type);
+  total_action_type = (ge_mActionType)(total_action_type | x.total_action_type);
+  
+  for ( xelem = x.elements; xelem; xelem = xelem->next) {
+    prev = 0;
+    for ( elem = elements; elem; elem = elem->next) {
+      if ( elem->dyn_type == xelem->dyn_type && 
+	   elem->action_type == xelem->action_type) {
+	// Element exists in both, use element in x, i.e. remove current element
+	if ( !prev)
+	  elements = elem->next;
+	else
+	  prev->next = elem->next;
+	next = elem->next;
+	delete elem;
+	elem = next;
+	break;
+      }
+      prev = elem;
+    }
+    // Insert copy of x element
+    e = copy_element( *xelem);
+    if ( e)
+      insert_element( e);
   }
 }
 
@@ -1211,7 +1444,7 @@ int GeDigLowColor::connect( grow_tObject object, glow_sTraceData *trace_data)
 
   size = 4;
   p = 0;
-  db = dyn->graph->parse_attr_name( attribute, parsed_name,
+  db = dyn->parse_attr_name( attribute, parsed_name,
 				    &inverted, &attr_type, &attr_size);
   if ( strcmp( parsed_name,"") == 0)
     return 1;
@@ -1468,7 +1701,7 @@ int GeDigColor::connect( grow_tObject object, glow_sTraceData *trace_data)
 
   size = 4;
   p = 0;
-  db = dyn->graph->parse_attr_name( attribute, parsed_name,
+  db = dyn->parse_attr_name( attribute, parsed_name,
 				    &inverted, &attr_type, &attr_size);
   if ( strcmp( parsed_name,"") == 0)
     return 1;
@@ -1615,7 +1848,7 @@ int GeDigWarning::connect( grow_tObject object, glow_sTraceData *trace_data)
 
   size = 4;
   p = 0;
-  db = dyn->graph->parse_attr_name( attribute, parsed_name,
+  db = dyn->parse_attr_name( attribute, parsed_name,
 				    &inverted, &attr_type, &attr_size);
   if ( strcmp( parsed_name,"") == 0)
     return 1;
@@ -1756,7 +1989,7 @@ int GeDigError::connect( grow_tObject object, glow_sTraceData *trace_data)
 
   size = 4;
   p = 0;
-  db = dyn->graph->parse_attr_name( attribute, parsed_name,
+  db = dyn->parse_attr_name( attribute, parsed_name,
 				    &inverted, &attr_type, &attr_size);
   if ( strcmp( parsed_name,"") == 0)
     return 1;
@@ -1939,7 +2172,7 @@ int GeDigFlash::connect( grow_tObject object, glow_sTraceData *trace_data)
 
   size = 4;
   p = 0;
-  db = dyn->graph->parse_attr_name( attribute, parsed_name,
+  db = dyn->parse_attr_name( attribute, parsed_name,
 				    &inverted, &attr_type, &attr_size);
   if ( strcmp( parsed_name,"") == 0)
     return 1;
@@ -2102,7 +2335,7 @@ int GeInvisible::connect( grow_tObject object, glow_sTraceData *trace_data)
 
   size = 4;
   p = 0;
-  db = dyn->graph->parse_attr_name( attribute, parsed_name,
+  db = dyn->parse_attr_name( attribute, parsed_name,
 				    &inverted, &attr_type, &attr_size);
   if ( strcmp( parsed_name,"") == 0)
     return 1;
@@ -2243,7 +2476,7 @@ int GeDigBorder::connect( grow_tObject object, glow_sTraceData *trace_data)
 
   size = 4;
   p = 0;
-  db = dyn->graph->parse_attr_name( attribute, parsed_name,
+  db = dyn->parse_attr_name( attribute, parsed_name,
 				    &inverted, &attr_type, &attr_size);
   if ( strcmp( parsed_name,"") == 0)
     return 1;
@@ -2391,7 +2624,7 @@ int GeDigText::connect( grow_tObject object, glow_sTraceData *trace_data)
 
   size = 4;
   p = 0;
-  db = dyn->graph->parse_attr_name( attribute, parsed_name,
+  db = dyn->parse_attr_name( attribute, parsed_name,
 				    &inverted, &attr_type, &attr_size);
   if ( strcmp( parsed_name,"") == 0)
     return 1;
@@ -2570,7 +2803,7 @@ int GeValue::connect( grow_tObject object, glow_sTraceData *trace_data)
   int		inverted;
 
   p = 0;
-  db = dyn->graph->parse_attr_name( attribute, parsed_name,
+  db = dyn->parse_attr_name( attribute, parsed_name,
 				    &inverted, &attr_type, &attr_size);
   if ( strcmp( parsed_name,"") == 0)
     return 1;
@@ -2578,6 +2811,21 @@ int GeValue::connect( grow_tObject object, glow_sTraceData *trace_data)
   size = attr_size;
   switch ( db) {
   case graph_eDatabase_Gdh:
+
+    switch ( attr_type) {
+    case pwr_eType_Enum:
+    case pwr_eType_Mask: {
+      // Get attribute tid
+      pwr_sAttrRef ar;
+
+      sts = gdh_NameToAttrref( pwr_cNObjid, parsed_name, &ar);
+      if ( EVEN(sts)) break;
+      sts = gdh_GetAttrRefTid( &ar, &tid);
+      break;
+    }
+    default: ;
+    }
+
     sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, &p, &subid, attr_size);
     if ( EVEN(sts)) return sts;
     if ( attr_type != 0)
@@ -2735,6 +2983,41 @@ int GeValue::scan( grow_tObject object)
     if ( EVEN(sts))
       strcpy( timstr, "-");
     len = sprintf( buf, "%s", timstr);
+    break;
+  }
+  case pwr_eType_Enum: {
+    int sts;
+    bool converted = false;
+
+    switch ( format[strlen(format)-1]) {
+    case 's': {
+      // Format %s, convert enum to string
+      gdh_sValueDef *valuedef;
+      int 		rows;
+
+      sts = gdh_GetEnumValueDef( tid, &valuedef, &rows);
+      if ( EVEN(sts)) break;
+
+      for ( int i = 0; i < rows; i++) {
+	if ( valuedef[i].Value->Value == *(pwr_tInt32 *)p) {
+	  strcpy( buf, valuedef[i].Value->Text);
+	  len = strlen(buf);
+	  converted = true;
+	  break;
+	}
+      }
+      free( (char *)valuedef);
+      break;
+    }
+    default: ;
+    }
+    if ( !converted) {
+      sts = cdh_AttrValueToString( (pwr_eType) annot_typeid, 
+				 p, buf, sizeof(buf));
+      if ( EVEN(sts))
+	sprintf( buf, "Invalid type");
+      len = strlen(buf);
+    }
     break;
   }
   default: {
@@ -2914,7 +3197,7 @@ int GeValueInput::change_value( grow_tObject object, char *text)
   int		attr_type, attr_size;
   graph_eDatabase db;
 
-  db = dyn->graph->parse_attr_name( value_element->attribute, parsed_name, &inverted, 
+  db = dyn->parse_attr_name( value_element->attribute, parsed_name, &inverted, 
 			       &attr_type, &attr_size);
   if ( !annot_size ) {
     pwr_sAttrRef 	ar;
@@ -3272,7 +3555,7 @@ int GeAnalogColor::connect( grow_tObject object, glow_sTraceData *trace_data)
 
   if ( e->p == 0) {
     e->size = 4;
-    db = dyn->graph->parse_attr_name( e->attribute, parsed_name,
+    db = dyn->parse_attr_name( e->attribute, parsed_name,
 				    &inverted, &e->type, &e->size);
     if ( strcmp( parsed_name,"") == 0)
       return 1;
@@ -3552,7 +3835,7 @@ int GeRotate::connect( grow_tObject object, glow_sTraceData *trace_data)
 
   size = 4;
   p = 0;
-  db = dyn->graph->parse_attr_name( attribute, parsed_name,
+  db = dyn->parse_attr_name( attribute, parsed_name,
 				    &inverted, &attr_type, &attr_size);
   if ( strcmp( parsed_name,"") == 0)
     return 1;
@@ -3789,7 +4072,7 @@ int GeMove::connect( grow_tObject object, glow_sTraceData *trace_data)
   move_x_size = 4;
   move_x_type = pwr_eType_Float32;
   move_x_p = 0;
-  move_x_db = dyn->graph->parse_attr_name( move_x_attribute, parsed_name,
+  move_x_db = dyn->parse_attr_name( move_x_attribute, parsed_name,
 				    &inverted, &move_x_type, &move_x_size);
   if ( strcmp( parsed_name,"") != 0) {
     sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&move_x_p, 
@@ -3799,7 +4082,7 @@ int GeMove::connect( grow_tObject object, glow_sTraceData *trace_data)
   move_y_size = 4;
   move_y_type = pwr_eType_Float32;
   move_y_p = 0;
-  move_y_db = dyn->graph->parse_attr_name( move_y_attribute, parsed_name,
+  move_y_db = dyn->parse_attr_name( move_y_attribute, parsed_name,
 				    &inverted, &move_y_type, &move_y_size);
   if ( strcmp( parsed_name,"") != 0) {
     sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&move_y_p, 
@@ -3809,7 +4092,7 @@ int GeMove::connect( grow_tObject object, glow_sTraceData *trace_data)
   scale_x_size = 4;
   scale_x_type = pwr_eType_Float32;
   scale_x_p = 0;
-  scale_x_db = dyn->graph->parse_attr_name( scale_x_attribute, parsed_name,
+  scale_x_db = dyn->parse_attr_name( scale_x_attribute, parsed_name,
 				    &inverted, &scale_x_type, &scale_x_size);
   if ( strcmp( parsed_name,"") != 0) {
     sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&scale_x_p, 
@@ -3819,7 +4102,7 @@ int GeMove::connect( grow_tObject object, glow_sTraceData *trace_data)
   scale_y_size = 4;
   scale_y_type = pwr_eType_Float32;
   scale_y_p = 0;
-  scale_y_db = dyn->graph->parse_attr_name( scale_y_attribute, parsed_name,
+  scale_y_db = dyn->parse_attr_name( scale_y_attribute, parsed_name,
 				    &inverted, &scale_y_type, &scale_y_size);
   if ( strcmp( parsed_name,"") != 0) {
     sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&scale_y_p, 
@@ -4101,7 +4384,7 @@ int GeAnalogShift::connect( grow_tObject object, glow_sTraceData *trace_data)
 
   size = 4;
   p = 0;
-  db = dyn->graph->parse_attr_name( attribute, parsed_name,
+  db = dyn->parse_attr_name( attribute, parsed_name,
 				    &inverted, &type, &size);
   if ( strcmp( parsed_name,"") == 0)
     return 1;
@@ -4240,7 +4523,7 @@ int GeDigShift::connect( grow_tObject object, glow_sTraceData *trace_data)
 
   size = 4;
   p = 0;
-  db = dyn->graph->parse_attr_name( attribute, parsed_name,
+  db = dyn->parse_attr_name( attribute, parsed_name,
 				    &inverted, &attr_type, &attr_size);
   if ( strcmp( parsed_name,"") == 0)
     return 1;
@@ -4373,7 +4656,7 @@ int GeAnimation::connect( grow_tObject object, glow_sTraceData *trace_data)
 
   size = 4;
   p = 0;
-  db = dyn->graph->parse_attr_name( attribute, parsed_name,
+  db = dyn->parse_attr_name( attribute, parsed_name,
 				    &inverted, &attr_type, &attr_size);
   if ( strcmp( parsed_name,"") == 0)
     return 1;
@@ -4657,7 +4940,7 @@ int GeBar::connect( grow_tObject object, glow_sTraceData *trace_data)
 
   size = 4;
   p = 0;
-  db = dyn->graph->parse_attr_name( attribute, parsed_name,
+  db = dyn->parse_attr_name( attribute, parsed_name,
 				    &inverted, &attr_type, &attr_size);
   if ( strcmp( parsed_name,"") == 0)
     return 1;
@@ -4812,7 +5095,7 @@ int GeTrend::connect( grow_tObject object, glow_sTraceData *trace_data)
 
   size1 = 4;
   p1 = 0;
-  db1 = dyn->graph->parse_attr_name( attribute1, parsed_name,
+  db1 = dyn->parse_attr_name( attribute1, parsed_name,
 				    &inverted, &attr_type, &attr_size);
   if ( strcmp( parsed_name,"") != 0) {
 
@@ -4835,7 +5118,7 @@ int GeTrend::connect( grow_tObject object, glow_sTraceData *trace_data)
   }
   size2 = 4;
   p2 = 0;
-  db2 = dyn->graph->parse_attr_name( attribute2, parsed_name,
+  db2 = dyn->parse_attr_name( attribute2, parsed_name,
 				    &inverted, &attr_type, &attr_size);
   if ( strcmp( parsed_name,"") != 0) {
     switch ( db2) {
@@ -5253,7 +5536,7 @@ int GeTable::connect( grow_tObject object, glow_sTraceData *trace_data)
 
   for ( int i = 0; i < columns; i++) {
     p[i] = 0;
-    db[i] = dyn->graph->parse_attr_name( attribute[i], (char *)parsed_name,
+    db[i] = dyn->parse_attr_name( attribute[i], (char *)parsed_name,
 				    &inverted, &attr_type, &size[i], &elements[i]);
     if ( strcmp( parsed_name,"") == 0)
       continue;
@@ -5295,7 +5578,7 @@ int GeTable::connect( grow_tObject object, glow_sTraceData *trace_data)
       headerref_subid[i] = (pwr_tSubid *)calloc( elements[i], sizeof(pwr_tSubid));
 
 	
-      dyn->graph->parse_attr_name( attribute[0], (char *)h_parsed_name,
+      dyn->parse_attr_name( attribute[0], (char *)h_parsed_name,
 				   &h_inverted, &h_attr_type, &h_attr_size, &h_elements);
       objid_value = (pwr_tObjid *) calloc( h_elements, sizeof(pwr_tObjid));
       sts = gdh_GetObjectInfo( h_parsed_name, objid_value, 
@@ -5335,7 +5618,7 @@ int GeTable::connect( grow_tObject object, glow_sTraceData *trace_data)
 
     // Connect select array
     sel_p[i] = 0;
-    sel_db[i] = dyn->graph->parse_attr_name( sel_attribute[i], (char *)parsed_name,
+    sel_db[i] = dyn->parse_attr_name( sel_attribute[i], (char *)parsed_name,
 				    &inverted, &attr_type, &attr_size, &sel_elements[i]);
     if ( strcmp( parsed_name,"") == 0)
       continue;
@@ -5545,7 +5828,7 @@ int GeTable::action( grow_tObject object, glow_tEvent event)
 
     sts = grow_GetSelectedCell( object, &column, &row);
     if ( ODD(sts) && sel_p[column]) {
-      db = dyn->graph->parse_attr_name( sel_attribute[column], parsed_name, &inverted, &attr_type, 
+      db = dyn->parse_attr_name( sel_attribute[column], parsed_name, &inverted, &attr_type, 
 				      &attr_size);
       value = 0;
       sprintf( &parsed_name[strlen(parsed_name)], "[%d]", row);
@@ -5553,7 +5836,7 @@ int GeTable::action( grow_tObject object, glow_tEvent event)
       if ( EVEN(sts)) printf("Table error: %s\n", parsed_name);
     }
     if ( sel_p[event->table.column]) {
-      db = dyn->graph->parse_attr_name( sel_attribute[event->table.column], parsed_name, &inverted, &attr_type, 
+      db = dyn->parse_attr_name( sel_attribute[event->table.column], parsed_name, &inverted, &attr_type, 
 				      &attr_size);
       value = 1;
       sprintf( &parsed_name[strlen(parsed_name)], "[%d]", event->table.row);
@@ -5620,7 +5903,7 @@ int GeTable::action( grow_tObject object, glow_tEvent event)
     }
 
     if ( ODD(sts) && sel_p[column]) {
-      db = dyn->graph->parse_attr_name( sel_attribute[column], parsed_name, &inverted, &attr_type, 
+      db = dyn->parse_attr_name( sel_attribute[column], parsed_name, &inverted, &attr_type, 
 				      &attr_size);
       value = 0;
       sprintf( &parsed_name[strlen(parsed_name)], "[%d]", row);
@@ -5628,7 +5911,7 @@ int GeTable::action( grow_tObject object, glow_tEvent event)
       if ( EVEN(sts)) printf("Table error: %s\n", parsed_name);
     }
     if ( sel_p[new_column]) {
-      db = dyn->graph->parse_attr_name( sel_attribute[new_column], parsed_name, &inverted, &attr_type, 
+      db = dyn->parse_attr_name( sel_attribute[new_column], parsed_name, &inverted, &attr_type, 
 				      &attr_size);
       value = 1;
       sprintf( &parsed_name[strlen(parsed_name)], "[%d]", new_row);
@@ -5656,7 +5939,7 @@ int GeTable::action( grow_tObject object, glow_tEvent event)
       break;
     
     if ( type_id[event->table.column] == pwr_eType_Objid) {
-      dyn->graph->parse_attr_name( attribute[event->table.column], parsed_name, &inverted,
+      dyn->parse_attr_name( attribute[event->table.column], parsed_name, &inverted,
 				 &attr_type, &attr_size);
 
       sprintf( &parsed_name[strlen(parsed_name)], "[%d]", event->table.row);
@@ -5838,7 +6121,7 @@ int GeStatusColor::connect( grow_tObject object, glow_sTraceData *trace_data)
 
   size = 4;
   p = 0;
-  db = dyn->graph->parse_attr_name( attribute, parsed_name,
+  db = dyn->parse_attr_name( attribute, parsed_name,
 				    &inverted, &attr_type, &attr_size);
   if ( strcmp( parsed_name,"") == 0)
     return 1;
@@ -5983,6 +6266,70 @@ int GeStatusColor::export_java( grow_tObject object, ofstream& fp, bool first, c
   return 1;
 }
 
+void GeHostObject::get_attributes( attr_sItem *attrinfo, int *item_count)
+{
+  int i = *item_count;
+
+  strcpy( attrinfo[i].name, "HostObject.Object");
+  attrinfo[i].value = hostobject;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( hostobject);
+  *item_count = i;
+}
+
+void GeHostObject::set_attribute( grow_tObject object, char *attr_name, int *cnt)
+{
+  (*cnt)--;
+  if ( *cnt == 0) {
+    char msg[200];
+    char *s;
+
+    strncpy( hostobject, attr_name, sizeof( hostobject));
+    if ( (s = strrchr( hostobject, '.')))
+      *s = 0;
+	 
+    sprintf( msg, "HostObject.Object = %s", hostobject);
+    dyn->graph->message( 'I', msg);
+  }
+}
+
+void GeHostObject::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( hostobject, sizeof(hostobject), from, to, cnt, strict);
+}
+
+void GeHostObject::save( ofstream& fp)
+{
+  fp << int(ge_eSave_HostObject) << endl;
+  fp << int(ge_eSave_HostObject_object) << FSPACE << hostobject << endl;
+  fp << int(ge_eSave_End) << endl;
+}
+
+void GeHostObject::open( ifstream& fp)
+{
+  int		type;
+  int 		end_found = 0;
+  char		dummy[40];
+
+  for (;;)
+  {
+    fp >> type;
+    switch( type) {
+      case ge_eSave_HostObject: break;
+      case ge_eSave_HostObject_object:
+        fp.get();
+        fp.getline( hostobject, sizeof(hostobject));
+        break;
+      case ge_eSave_End: end_found = 1; break;
+      default:
+        cout << "GeHostObject:open syntax error" << endl;
+        fp.getline( dummy, sizeof(dummy));
+    }
+    if ( end_found)
+      break;
+  }  
+}
+
 void GeFillLevel::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
@@ -6099,7 +6446,7 @@ int GeFillLevel::connect( grow_tObject object, glow_sTraceData *trace_data)
 
   size = 4;
   p = 0;
-  db = dyn->graph->parse_attr_name( attribute, parsed_name,
+  db = dyn->parse_attr_name( attribute, parsed_name,
 				    &inverted, &attr_type, &attr_size);
   if ( strcmp( parsed_name,"") == 0)
     return 1;
@@ -6288,12 +6635,12 @@ int GePopupMenu::action( grow_tObject object, glow_tEvent event)
 
     if ( ref_object[0] == '&') {
       // Refobject starting with '&' indicates reference
-      dyn->graph->parse_attr_name( &ref_object[1], parsed_name, &inverted,
+      dyn->parse_attr_name( &ref_object[1], parsed_name, &inverted,
 				 &attr_type, &attr_size);
       reference = 1;
     }
     else {
-      dyn->graph->parse_attr_name( ref_object, parsed_name, &inverted,
+      dyn->parse_attr_name( ref_object, parsed_name, &inverted,
 				 &attr_type, &attr_size);
       if ( inverted) // Old syntax for reference
 	reference = 1;
@@ -6376,7 +6723,7 @@ int GePopupMenu::action( grow_tObject object, glow_tEvent event)
       char            	*s;
       pwr_sAttrRef    	attrref;
 
-      dyn->graph->parse_attr_name( ref_object, parsed_name, &inverted,
+      dyn->parse_attr_name( ref_object, parsed_name, &inverted,
 				   &attr_type, &attr_size);
       if ( inverted) {
 	// The ref_object is an objid-attribute that containts the object 
@@ -6545,7 +6892,7 @@ int GeSetDig::action( grow_tObject object, glow_tEvent event)
     if ( dyn->total_action_type & ge_mActionType_Confirm)
       break;
 
-    db = dyn->graph->parse_attr_name( attribute, parsed_name, &inverted, &attr_type, 
+    db = dyn->parse_attr_name( attribute, parsed_name, &inverted, &attr_type, 
 				      &attr_size);
     switch ( db) {
     case graph_eDatabase_Local:
@@ -6703,7 +7050,7 @@ int GeResetDig::action( grow_tObject object, glow_tEvent event)
     if ( dyn->total_action_type & ge_mActionType_Confirm)
       break;
 
-    dyn->graph->parse_attr_name( attribute, parsed_name, &inverted, &attr_type, &attr_size);
+    dyn->parse_attr_name( attribute, parsed_name, &inverted, &attr_type, &attr_size);
     sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
     if ( EVEN(sts)) printf("ResetDig error: %s\n", attribute);
     break;
@@ -6820,7 +7167,7 @@ int GeToggleDig::action( grow_tObject object, glow_tEvent event)
     if ( dyn->total_action_type & ge_mActionType_Confirm)
       break;
 
-    dyn->graph->parse_attr_name( attribute, parsed_name, &inverted, &attr_type, &attr_size);
+    dyn->parse_attr_name( attribute, parsed_name, &inverted, &attr_type, &attr_size);
     sts = gdh_GetObjectInfo( parsed_name, &value, sizeof(value));
     if ( EVEN(sts)) {
       printf("ToggleDig error: %s\n", attribute);
@@ -6934,7 +7281,7 @@ int GeStoDig::action( grow_tObject object, glow_tEvent event)
   case glow_eEvent_MB1Down:
     grow_SetObjectColorInverse( object, 1);
     value = 1;
-    dyn->graph->parse_attr_name( attribute, parsed_name, &inverted, &attr_type, &attr_size);
+    dyn->parse_attr_name( attribute, parsed_name, &inverted, &attr_type, &attr_size);
     sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
     if ( EVEN(sts)) {
       printf("StoDig error: %s\n", attribute);
@@ -6944,7 +7291,7 @@ int GeStoDig::action( grow_tObject object, glow_tEvent event)
   case glow_eEvent_MB1Up:
     grow_SetObjectColorInverse( object, 0);
     value = 0;
-    dyn->graph->parse_attr_name( attribute, parsed_name, &inverted, &attr_type, &attr_size);
+    dyn->parse_attr_name( attribute, parsed_name, &inverted, &attr_type, &attr_size);
     sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
     if ( EVEN(sts)) break;
 
@@ -7325,7 +7672,7 @@ int GeIncrAnalog::action( grow_tObject object, glow_tEvent event)
     int			inverted;
     int			attr_type, attr_size;
 
-    dyn->graph->parse_attr_name( attribute, parsed_name, &inverted, &attr_type, &attr_size);
+    dyn->parse_attr_name( attribute, parsed_name, &inverted, &attr_type, &attr_size);
 
     switch ( attr_type) {
     case pwr_eType_Int32: {
@@ -7450,7 +7797,7 @@ int GeRadioButton::connect( grow_tObject object, glow_sTraceData *trace_data)
 
   size = 4;
   p = 0;
-  db = dyn->graph->parse_attr_name( attribute, parsed_name,
+  db = dyn->parse_attr_name( attribute, parsed_name,
 				    &inverted, &attr_type, &attr_size);
   if ( strcmp( parsed_name,"") == 0)
     return 1;
@@ -7538,7 +7885,7 @@ int GeRadioButton::action( grow_tObject object, glow_tEvent event)
 	if ( gm_dyn->total_action_type & ge_mActionType_RadioButton ) {
 	  for ( GeDynElem *elem = gm_dyn->elements; elem; elem = elem->next) {
 	    if ( elem->action_type == ge_mActionType_RadioButton) {
-	      dyn->graph->parse_attr_name( ((GeRadioButton *)elem)->attribute, parsed_name,
+	      dyn->parse_attr_name( ((GeRadioButton *)elem)->attribute, parsed_name,
 					   &inverted, &attr_type, &attr_size);
 	      sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
 	    }
@@ -7550,7 +7897,7 @@ int GeRadioButton::action( grow_tObject object, glow_tEvent event)
 
     value = 1;
     
-    dyn->graph->parse_attr_name( attribute, parsed_name,
+    dyn->parse_attr_name( attribute, parsed_name,
 			    &inverted, &attr_type, &attr_size);
     sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
     if ( EVEN(sts)) printf("RadioButton error: %s\n", attribute);
@@ -8450,7 +8797,7 @@ int GeSlider::connect( grow_tObject object, glow_sTraceData *trace_data)
 
   size = 4;
   p = 0;
-  db = dyn->graph->parse_attr_name( attribute, parsed_name,
+  db = dyn->parse_attr_name( attribute, parsed_name,
 				    &inverted, &attr_type, &size);
   if ( strcmp( parsed_name,"") == 0)
     return 1;
@@ -8683,7 +9030,7 @@ int GeSlider::action( grow_tObject object, glow_tEvent event)
       if ( value < min_value)
 	value = min_value;
       
-      dyn->graph->parse_attr_name( attribute, parsed_name, &inverted, &attr_type, &attr_size);
+      dyn->parse_attr_name( attribute, parsed_name, &inverted, &attr_type, &attr_size);
       switch ( attr_type) {
       case pwr_eType_Float32:
 	sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
@@ -8821,7 +9168,7 @@ int GeFastCurve::connect( grow_tObject object, glow_sTraceData *trace_data)
   pwr_sClass_DsFastCurve fp;
   int		i;
 
-  dyn->graph->parse_attr_name( fast_object, parsed_name,
+  dyn->parse_attr_name( fast_object, parsed_name,
 				    &inverted, &attr_type, &attr_size);
   sts = gdh_GetObjectInfo( parsed_name, &fp, sizeof(fp));
   if ( EVEN(sts)) return 1;
@@ -10170,7 +10517,7 @@ int GeOptionMenu::connect( grow_tObject object, glow_sTraceData *trace_data)
   int		inverted;
 
   p = 0;
-  db = dyn->graph->parse_attr_name( attribute, parsed_name,
+  db = dyn->parse_attr_name( attribute, parsed_name,
 				    &inverted, &attr_type, &attr_size);
   if ( strcmp( parsed_name,"") == 0)
     return 1;
@@ -10395,7 +10742,7 @@ int GeOptionMenu::action( grow_tObject object, glow_tEvent event)
       int      		inverted;
       int      		attr_type, attr_size;
       
-      dyn->graph->parse_attr_name( attribute, parsed_name, &inverted, &attr_type, &attr_size);
+      dyn->parse_attr_name( attribute, parsed_name, &inverted, &attr_type, &attr_size);
       switch ( type_id) {
       case pwr_eType_Float32: {
 	pwr_tFloat32 value = items_enum[event->menu.item];

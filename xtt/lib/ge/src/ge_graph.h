@@ -441,6 +441,8 @@ class Graph {
   unsigned int        	default_access;		//!< Default access. Can be used to override the access of the current user.
   bool			keep_mode;		//!< Do not reset the edit mode when an object is created.
   char			confirm_text[200];	//!< Stored confirm text.
+  GeDyn			*subgraph_dyn;		//!< Subgraph default dynamics.
+  int			was_subgraph;		//!< Parameter to detect graph<->subgraph change.
   
   //! Create navigator window.
   /*! \param parent	Paren widget. */
@@ -695,6 +697,24 @@ class Graph {
     \param client_data	Pointer to grow info list.
   */
   int get_attr_items( grow_tObject object, attr_sItem **itemlist,
+		      int *item_cnt, void **client_data);
+
+  //! Get list of attributes for a subgraph.
+  /*! 
+    \param itemlist	List of attributes. 
+    \param item_cnt	Number of attributes in list.
+    \param client_data	Pointer to grow info list.
+  */
+  int get_subgraph_attr_items( attr_sItem **itemlist,
+		      int *item_cnt, void **client_data);
+
+  //! Get list of attributes for a graph.
+  /*! 
+    \param itemlist	List of attributes. 
+    \param item_cnt	Number of attributes in list.
+    \param client_data	Pointer to grow info list.
+  */
+  int get_graph_attr_items( attr_sItem **itemlist,
 		      int *item_cnt, void **client_data);
 
   //! Open attribute editor for a subgraph.
@@ -1124,6 +1144,13 @@ class Graph {
     \param y		y coordinate for object.
   */
   void create_axis( grow_tObject *object, double x, double y);
+
+  //! Set displayed folder in a folder object.
+  /*!
+    \param name		Object name of folder object.
+    \param idx		Index of folder to display.
+  */
+  int set_folder_index( char *name, int idx);
 
   //
   // Command module

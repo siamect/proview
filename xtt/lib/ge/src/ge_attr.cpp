@@ -33,6 +33,7 @@ extern "C" {
 #include "glow_growctx.h"
 #include "glow_growapi.h"
 #include "glow_growwidget.h"
+#include "flow_msg.h"
 
 #include "ge_attr.h"
 #include "ge_attrnav.h"

@@ -79,6 +79,7 @@ extern "C" {
 
   //! Priority order for dyntypes and actiontypes. Lower value gives higher priority.
   typedef enum {
+    ge_eDynPrio_HostObject,
     ge_eDynPrio_Invisible,
     ge_eDynPrio_DigFlash,
     ge_eDynPrio_DigError,
@@ -155,7 +156,8 @@ extern "C" {
     ge_mDynType_FastCurve	= 1 << 22,
     ge_mDynType_AnalogText	= 1 << 23,
     ge_mDynType_Table		= 1 << 24,
-    ge_mDynType_StatusColor    	= 1 << 25
+    ge_mDynType_StatusColor    	= 1 << 25,
+    ge_mDynType_HostObject    	= 1 << 26
   } ge_mDynType;
 
   //! Action types.
@@ -250,6 +252,7 @@ extern "C" {
     ge_eSave_AnalogText	       		= 29,
     ge_eSave_Table	       		= 30,
     ge_eSave_StatusColor             	= 31,
+    ge_eSave_HostObject             	= 32,
     ge_eSave_PopupMenu			= 50,
     ge_eSave_SetDig			= 51,
     ge_eSave_ResetDig			= 52,
@@ -368,6 +371,7 @@ extern "C" {
     ge_eSave_Table_sel_attribute12     	= 3035,
     ge_eSave_StatusColor_attribute     	= 3100,
     ge_eSave_StatusColor_nostatus_color = 3101,
+    ge_eSave_HostObject_object     	= 3200,
     ge_eSave_PopupMenu_ref_object      	= 5000,
     ge_eSave_SetDig_attribute		= 5100,
     ge_eSave_SetDig_instance		= 5101,
@@ -629,6 +633,8 @@ class GeDyn {
   void set_dyn( ge_mDynType type, ge_mActionType action);
   void unset_inherit( grow_tObject object);
   void set_command( char *cmd);
+  void set_hostobject( char *hostobject);
+  void get_hostobject( char *hostobject);
   void set_value_input( char *format, double min_value, double max_value);
   int *ref_slider_disabled();
   int *ref_trend_hold();
@@ -640,7 +646,11 @@ class GeDyn {
   void export_java_object( grow_tObject object, ofstream& fp, char *var_name);
   GeDynElem *create_dyn_element( int mask, int instance);
   GeDynElem *create_action_element( int mask, int instance);
+  GeDynElem *copy_element( GeDynElem& x);
   void replace_attribute( char *from, char *to, int *cnt, int strict);
+  graph_eDatabase parse_attr_name( char *name, char *parsed_name, 
+				   int *inverted, int *type, int *size, int *elem = 0);
+  void merge( GeDyn& x);
   static char *cmd_cnv( char *instr);
   static int instance_to_number( int instance);
   static void replace_attribute( char *attribute, int attr_size, char *from, char *to, int *cnt, int strict);
@@ -1042,10 +1052,11 @@ class GeValue : public GeDynElem {
   char old_value[80];
   int annot_typeid;
   int annot_size;
+  pwr_tTid tid;
 
   GeValue( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
     GeDynElem(e_dyn, ge_mDynType_Value, (ge_mActionType) 0, ge_eDynPrio_Value),
-    annot_typeid(0), annot_size(0)
+    annot_typeid(0), annot_size(0), tid(0)
     { strcpy( attribute, ""); strcpy( format, ""); instance = e_instance;}
   GeValue( const GeValue& x) : 
     GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)
@@ -1376,7 +1387,7 @@ class GeStatusColor : public GeDynElem {
 
   GeStatusColor( GeDyn *e_dyn) : 
     GeDynElem(e_dyn, ge_mDynType_StatusColor, (ge_mActionType) 0, ge_eDynPrio_StatusColor),
-    on(true)
+    nostatus_color(glow_eDrawType_Inherit), on(true)
     { strcpy( attribute, "");}
   GeStatusColor( const GeStatusColor& x) : 
     GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), nostatus_color(x.nostatus_color)
@@ -1431,6 +1442,24 @@ class GeFillLevel : public GeDynElem {
   void replace_attribute( char *from, char *to, int *cnt, int strict);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
 
+};
+
+//! HostObject connected to several attributes specified in the subgraph.
+class GeHostObject : public GeDynElem {
+ public:
+  char hostobject[120];
+
+  GeHostObject( GeDyn *e_dyn) : 
+    GeDynElem(e_dyn, ge_mDynType_HostObject, (ge_mActionType) 0, ge_eDynPrio_HostObject)
+    { strcpy( hostobject, "");}
+  GeHostObject( const GeHostObject& x) : 
+    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)
+    { strcpy(hostobject, x.hostobject);}
+  void get_attributes( attr_sItem *attrinfo, int *item_count);
+  void save( ofstream& fp);
+  void open( ifstream& fp);
+  void set_attribute( grow_tObject object, char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
 };
 
 //! Display the methods popup menu.

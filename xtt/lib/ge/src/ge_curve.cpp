@@ -735,16 +735,6 @@ int GeCurve::read_file( char *filename)
     return 0;
   }
 
-  if ( strncmp( line, "\"\"", 2) == 0) {
-    // If first name is "" it is missed by dcli_parse...
-    if ( nr == CURVE_MAX_COLS)
-      nr--;
-    for ( i = nr - 1; i >= 0; i--)
-      strcpy( item_str[i+1], item_str[i]);
-    strcpy( item_str[0], "\"\"");
-    nr++;
-  }
-
   printf( "line: %s\n", line);
   for ( i = 0; i < nr; i++)
     printf( "item: %s\n", item_str[i]);

@@ -16,7 +16,6 @@ extern "C" {
 #include "co_time.h"
 #include "pwr_baseclasses.h"
 #include "rt_gdh.h"
-#include "rt_types.h"
 #include "co_dcli.h"
 #include "ge_msg.h"
 }
@@ -772,10 +771,9 @@ static int graph_object_PID( Graph *graph, pwr_tObjid objid)
   char		classname[40];
   char		mode_name[120];
   char		cmd[200];
-  pwr_tFloat32 max_limit = 100;
-  pwr_tFloat32 min_limit = 0;
-  double scan_time;
-  unsigned int pid_alg;
+  pwr_tFloat32 	max_limit = 100;
+  pwr_tFloat32 	min_limit = 0;
+  double 	scan_time;
 
   od = (graph_sObjectPID *) calloc( 1, sizeof(graph_sObjectPID));
   graph->graph_object_data = (void *) od;
@@ -910,22 +908,6 @@ static int graph_object_PID( Graph *graph, pwr_tObjid objid)
   grow_GetUserData( od->out_trend_object, (void **)&dyn);
   od->data_out_scan_time_p = dyn->ref_trend_scantime();
   od->hold_out_p = dyn->ref_trend_hold();
-
-  // Get and convert PidAlg
-  sts = gdh_ClassAttrToAttrref( classid, ".PidAlg", &attrref);
-  if ( EVEN(sts)) return sts;
-
-  attrref.Objid = objid;
-  sts = gdh_GetObjectInfoAttrref( &attrref, (void *)&pid_alg, sizeof(pid_alg));
-  if ( EVEN(sts)) return sts;
-
-  sts =  types_translate_enum( classid, "PidAlg", pid_alg, od->pid_alg_str);
-
-  sts = grow_FindObjectByName( graph->grow->ctx, "PidAlg", &object);
-  if ( EVEN(sts)) return sts;
-
-  grow_GetUserData( object, (void **)&dyn);
-  dyn->set_p( (void *) od->pid_alg_str);
 
   // Register scan function
   graph->graph_object_scan = graph_object_PID_scan;

@@ -84,6 +84,7 @@ static attrnav_sEnumElement elem_dyn_type[] = {
 	{ (int) ge_mDynType_SliderBackground   	, "SliderBackground"},
 	{ (int) ge_mDynType_Video		, "Video"},
 	{ (int) ge_mDynType_Table		, "Table"},
+	{ (int) ge_mDynType_HostObject		, "HostObject"},
 	{ 0, ""}};
 
 static attrnav_sEnumElement elem_dyn_type_tone[] = {
@@ -113,6 +114,7 @@ static attrnav_sEnumElement elem_dyn_type_tone[] = {
 	{ (int) ge_mDynType_SliderBackground   	, "SliderBackground"},
 	{ (int) ge_mDynType_Video		, "Video"},
 	{ (int) ge_mDynType_Table		, "Table"},
+	{ (int) ge_mDynType_HostObject		, "HostObject"},
 	{ 0, ""}};
 
 static attrnav_sEnumElement elem_action_type[] = {
@@ -1266,6 +1268,13 @@ int AttrNav::set_attr_value( char *value_str)
 	}
       }
       memcpy( item->value_p, buffer, item->size);
+
+      if ( cdh_NoCaseStrcmp( item->name, "Subgraph") == 0 &&
+	   reconfigure_attr_cb) {
+	(reconfigure_attr_cb)(parent_ctx);
+	return FLOW__DESTROYED;
+      }
+
       break;
     }
     default:

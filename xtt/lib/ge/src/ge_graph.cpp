@@ -73,7 +73,9 @@ static const    graph_sTypeStr	graph_type_table[] = {
     {"DeltaTime", pwr_eType_DeltaTime, sizeof(pwr_tDeltaTime)},
     {"AttrRef", pwr_eType_AttrRef,  sizeof(pwr_sAttrRef)},
     {"Status", pwr_eType_Status,  sizeof(pwr_tStatus)},
-    {"NetStatus", pwr_eType_NetStatus,  sizeof(pwr_tNetStatus)}
+    {"NetStatus", pwr_eType_NetStatus,  sizeof(pwr_tNetStatus)},
+    {"Enum", pwr_eType_Enum,  sizeof(pwr_tEnum)},
+    {"Mask", pwr_eType_Mask,  sizeof(pwr_tMask)}
     };
 
 static char null_str[] = "";
@@ -88,8 +90,6 @@ static int graph_attr_recall_cb( void *g, grow_tObject object, int idx,
 				 GeDyn **old);
 static int graph_attr_set_data_cb( void *g, grow_tObject object, 
 				 GeDyn *data);
-static void graph_subgraphattr_redraw_cb( Attr *attrctx);
-static void graph_subgraphattr_close_cb( Attr *attrctx);
 static void graph_graphattr_redraw_cb( Attr *attrctx);
 static void graph_graphattr_close_cb( Attr *attrctx);
 static int graph_trace_disconnect_bc( grow_tObject object);
@@ -167,7 +167,8 @@ Graph::Graph(
 	scriptmode(0), current_cmd_object(0), graph_object_data(0),
 	graph_object_scan(0), graph_object_close(0), local_db(0),
 	use_default_access(xn_use_default_access), 
-	default_access(xn_default_access), keep_mode(false)
+	default_access(xn_default_access), keep_mode(false),
+        subgraph_dyn(0), was_subgraph(0)
 {
   strcpy( name, xn_name);
   strcpy( default_path, xn_default_path);
@@ -1534,8 +1535,29 @@ static int graph_reconfigure_attr_cb( void *g, grow_tObject object,
 {
   Graph	*graph = (Graph *)g;
 
-  return graph->get_attr_items( object, itemlist, itemlist_cnt, 
+
+  if ( object) {
+    // Object attributes
+    grow_FreeObjectAttrInfo( *(grow_sAttrInfo **)client_data);
+    return graph->get_attr_items( object, itemlist, itemlist_cnt, 
 	client_data);
+  }
+  else {
+    if ( graph->was_subgraph)
+      grow_FreeSubGraphAttrInfo( *(grow_sAttrInfo **)client_data);
+    else
+      grow_FreeGraphAttrInfo( *(grow_sAttrInfo **)client_data);
+	
+    if ( graph->is_subgraph()) {
+      // Subgraph attributes
+      return graph->get_subgraph_attr_items( itemlist, itemlist_cnt, client_data);
+    }
+    else {
+      // Graph attributes
+      return graph->get_graph_attr_items( itemlist, itemlist_cnt, client_data);
+    }
+  }
+  return 0;
 }
 
 static void graph_attr_store_cb( void *g, grow_tObject object)
@@ -1635,13 +1657,13 @@ static int graph_get_subgraph_info_cb( void *g, char *name,
   return 1;
 }
 
-int Graph::edit_subgraph_attributes()
+int Graph::get_subgraph_attr_items( attr_sItem **itemlist,
+				    int *item_cnt, void **client_data) 
 {
-  attr_sItem	items[40];
-  int		i;
+  static attr_sItem    	items[100];
+  int			i;
   grow_sAttrInfo	*grow_info, *grow_info_p;
   int			grow_info_cnt;
-  Attr   		*attr;
   int			dyn_type;
   int			dyn_action_type;
   char transtab[][32] = {	 	"DynType",		"DynType",
@@ -1660,9 +1682,28 @@ int Graph::edit_subgraph_attributes()
   grow_GetSubGraphAttrInfo( grow->ctx, (char *)transtab, &grow_info, &grow_info_cnt);
   grow_GetSubGraphDynType( grow->ctx, &dyn_type, &dyn_action_type);
 
-  grow_info_p = grow_info;
+  // Create dyn if change from graph to subgraph
+  if ( !was_subgraph) {
+    subgraph_dyn = new GeDyn(0);
+    was_subgraph = 1;
+  }
+
   memset( items, 0, sizeof(items));
-  for ( i = 0; i < grow_info_cnt; i++) {
+  *item_cnt = 0;
+  if ( subgraph_dyn && dyn_type & ge_mDynType_HostObject) {
+    subgraph_dyn->get_attributes( 0, items, item_cnt);
+
+    // Add "HostObject." to hostobjects itemss
+    for ( i = 0; i < *item_cnt; i++) {
+      char n[80];
+      strcpy( n, "HostObject.");
+      strcat( n, items[i].name);
+      strcpy( items[i].name, n);
+    }
+  }
+
+  grow_info_p = grow_info;
+  for ( i = *item_cnt; i < grow_info_cnt + *item_cnt; i++) {
     items[i].value = grow_info_p->value_p;
     strcpy( items[i].name, grow_info_p->name);
 
@@ -1687,23 +1728,46 @@ int Graph::edit_subgraph_attributes()
     items[i].multiline = grow_info_p->multiline;
     grow_info_p++;
   }
-
-  attr = new Attr( parent_wid, this, NULL, (attr_sItem *)&items, i);
-  attr->client_data = (void *)grow_info;
-  attr->close_cb = graph_subgraphattr_close_cb;
-  attr->redraw_cb = graph_subgraphattr_redraw_cb;
-  attr_list.insert( (void *) attr);
-  grow_SetModified( grow->ctx, 1);
+  *itemlist = items;
+  *item_cnt = i;
+  *client_data = (void *)grow_info;
   return 1;
 }
 
-int Graph::edit_graph_attributes()
+int Graph::edit_subgraph_attributes()
 {
-  attr_sItem	items[20];
-  int		i;
+  attr_sItem		*items;
+  int			item_cnt;
+  void			*client_data;
+  Attr   		*attr;
+
+  get_subgraph_attr_items( &items, &item_cnt, &client_data);
+  attr = new Attr( parent_wid, this, NULL, items, item_cnt);
+
+  attr->client_data = client_data;
+  attr->close_cb = graph_graphattr_close_cb;
+  attr->redraw_cb = graph_graphattr_redraw_cb;
+  attr->reconfigure_attr_cb = &graph_reconfigure_attr_cb;
+  attr_list.insert( (void *) attr);
+  grow_SetModified( grow->ctx, 1);
+  was_subgraph = is_subgraph();
+  return 1;
+}
+
+int Graph::get_graph_attr_items( attr_sItem **itemlist,
+				 int *item_cnt, void **client_data) 
+{
+  static attr_sItem	items[20];
+  int			i;
   grow_sAttrInfo	*grow_info, *grow_info_p;
   int			grow_info_cnt;
-  Attr		*attr;
+
+  // Delete dyn if change from subgraph to graph
+  if ( was_subgraph) {
+    delete subgraph_dyn;
+    subgraph_dyn = 0;
+    was_subgraph = 0;
+  }
 
   grow_GetGraphAttrInfo( grow->ctx, &grow_info, &grow_info_cnt);
 
@@ -1720,13 +1784,28 @@ int Graph::edit_graph_attributes()
     items[i].multiline = grow_info_p->multiline;
     grow_info_p++;
   }
+  *itemlist = items;
+  *item_cnt = grow_info_cnt;
+  *client_data = (void *)grow_info;
+  return 1;
+}
 
-  attr = new Attr( parent_wid, this, NULL, (attr_sItem *)&items, i);
-  attr->client_data = (void *)grow_info;
+int Graph::edit_graph_attributes()
+{
+  attr_sItem		*items;
+  int			item_cnt;
+  void			*client_data;
+  Attr   		*attr;
+
+  get_graph_attr_items( &items, &item_cnt, &client_data);
+  attr = new Attr( parent_wid, this, NULL, items, item_cnt);
+  attr->client_data = client_data;
   attr->close_cb = graph_graphattr_close_cb;
   attr->redraw_cb = graph_graphattr_redraw_cb;
+  attr->reconfigure_attr_cb = &graph_reconfigure_attr_cb;
   attr_list.insert( (void *) attr);
   grow_SetModified( grow->ctx, 1);
+  was_subgraph = is_subgraph();
   return 1;
 }
 //
@@ -1922,7 +2001,8 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
 	   grow_GetObjectType( event->object.object) == glow_eObjectType_GrowWindow ||
 	   grow_GetObjectType( event->object.object) == glow_eObjectType_GrowTrend ||
 	   grow_GetObjectType( event->object.object) == glow_eObjectType_GrowTable ||
-	   grow_GetObjectType( event->object.object) == glow_eObjectType_GrowBar) {
+	   grow_GetObjectType( event->object.object) == glow_eObjectType_GrowBar ||
+	   grow_GetObjectType( event->object.object) == glow_eObjectType_NodeClass) {
 	GeDyn *dyn;
 
         grow_GetUserData( event->object.object, (void **)&dyn);
@@ -2335,35 +2415,76 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
   return 1;
 }
 
-void graph_userdata_save_cb( void *f, grow_tObject object)
+void graph_userdata_save_cb( void *f, void *object, glow_eUserdataCbType utype)
 {
   ofstream *fp = (ofstream *)f;
-  GeDyn *dyn;
 
 
-  grow_GetUserData( object, (void **)&dyn);
+  switch ( utype) {
+  case glow_eUserdataCbType_Node:
+  case glow_eUserdataCbType_NodeClass: {
+    GeDyn *dyn;
+    
+    grow_GetUserData( object, (void **)&dyn);
 
-  dyn->save( *fp);
+    dyn->save( *fp);
+    break; 
+  }
+  case glow_eUserdataCbType_Ctx: {
+    Graph		*graph;
+
+    grow_GetCtxUserData( (GrowCtx *)object, (void **) &graph);
+
+    if ( graph->subgraph_dyn && graph->is_subgraph())
+      graph->subgraph_dyn->save( *fp);
+    break;
+  }
+  }
 }
 
-void graph_userdata_open_cb( void *f, grow_tObject object)
+void graph_userdata_open_cb( void *f, void *object, glow_eUserdataCbType utype)
 {
   ifstream *fp = (ifstream *)f;
   Graph *graph;
 
-  grow_GetCtxUserData( grow_GetCtx( object), (void **) &graph);
-  GeDyn *dyn = new GeDyn( graph);
-  grow_SetUserData( object, (void *)dyn);
 
-  dyn->open( *fp);
+  switch ( utype) {
+  case glow_eUserdataCbType_Node:
+  case glow_eUserdataCbType_NodeClass: {
+    grow_GetCtxUserData( grow_GetCtx( object), (void **) &graph);
+
+    GeDyn *dyn = new GeDyn( graph);
+    grow_SetUserData( object, (void *)dyn);
+
+    dyn->open( *fp);
+    break;
+  }
+  case glow_eUserdataCbType_Ctx: {
+    grow_GetCtxUserData( (GrowCtx *)object, (void **) &graph);
+
+    if ( graph->is_subgraph()) {
+      graph->subgraph_dyn = new GeDyn( graph);
+      graph->subgraph_dyn->open( *fp);
+    }
+    break;
+  }
+  }
 }
 
-void graph_userdata_copy_cb( grow_tObject object, void *old_data, void **new_data)
+void graph_userdata_copy_cb( void *object, void *old_data, void **new_data, 
+			     glow_eUserdataCbType utype)
 {
-  GeDyn *dyn = (GeDyn *)old_data;
-  GeDyn *new_dyn = new GeDyn( *dyn);
+  switch ( utype) {
+  case glow_eUserdataCbType_NodeClass:
+  case glow_eUserdataCbType_Node: {
+    GeDyn *dyn = (GeDyn *)old_data;
+    GeDyn *new_dyn = new GeDyn( *dyn);
 
-  *new_data = (void *) new_dyn;
+    *new_data = (void *) new_dyn;
+  }
+  case glow_eUserdataCbType_Ctx:
+    break;
+  }
 }
 
 int	GraphGbl::load_config( void *graph)
@@ -2652,37 +2773,33 @@ static void graph_attr_redraw_cb( Attr *attrctx)
 		       (grow_sAttrInfo *)attrctx->client_data);
 }
 
-static void graph_subgraphattr_redraw_cb( Attr *attrctx)
-{
-  Graph *graph = (Graph *) attrctx->parent_ctx;
-  char 	*argnames;
-  int  	*argtypes;
-  int  	*arg_cnt;
-  char	*code;
-  int		size;
-
-  grow_UpdateSubGraph( graph->grow->ctx,
-	(grow_sAttrInfo *)attrctx->client_data);
-
-  grow_GetSubGraphDynamic( graph->grow->ctx, &code, &size);
-  if ( size)
-  {
-    grow_RefSubGraphArgNames( graph->grow->ctx, &argnames, &argtypes, &arg_cnt);
-    graph->get_argnames( code, argnames, argtypes, arg_cnt);
-  }
-}
-
 static void graph_graphattr_redraw_cb( Attr *attrctx)
 {
   Graph *graph = (Graph *) attrctx->parent_ctx;
+  if ( graph->is_subgraph()) {
+    char 	*argnames;
+    int  	*argtypes;
+    int  	*arg_cnt;
+    char	*code;
+    int		size;
 
-  grow_UpdateGraph( graph->grow->ctx,
-	(grow_sAttrInfo *)attrctx->client_data);
+    grow_UpdateSubGraph( graph->grow->ctx,
+			 (grow_sAttrInfo *)attrctx->client_data);
+
+    grow_GetSubGraphDynamic( graph->grow->ctx, &code, &size);
+    if ( size) {
+      grow_RefSubGraphArgNames( graph->grow->ctx, &argnames, &argtypes, &arg_cnt);
+      graph->get_argnames( code, argnames, argtypes, arg_cnt);
+    }
+  }
+  else {
+    grow_UpdateGraph( graph->grow->ctx,
+		      (grow_sAttrInfo *)attrctx->client_data);
+  }
 }
 
 static void graph_attr_close_cb( Attr *attrctx)
 {
-//  grow_FreeObjectAttrInfo( (grow_sAttrInfo *)attrctx->client_data);
   Graph *graph = (Graph *) attrctx->parent_ctx;
 
   if ( attrctx->client_data)
@@ -2690,23 +2807,22 @@ static void graph_attr_close_cb( Attr *attrctx)
 		       (grow_sAttrInfo *)attrctx->client_data);
 
   ((Graph *)attrctx->parent_ctx)->attr_list.remove( (void *) attrctx);
-  delete attrctx;
-}
-
-static void graph_subgraphattr_close_cb( Attr *attrctx)
-{
-//  grow_FreeSubGraphAttrInfo( (grow_sAttrInfo *)attrctx->client_data);
-  ((Graph *)attrctx->parent_ctx)->attr_list.remove( (void *) attrctx);
+  grow_FreeObjectAttrInfo( (grow_sAttrInfo *)attrctx->client_data);
   delete attrctx;
 }
 
 static void graph_graphattr_close_cb( Attr *attrctx)
 {
-//  grow_FreeGraphAttrInfo( (grow_sAttrInfo *)attrctx->client_data);
-  ((Graph *)attrctx->parent_ctx)->attr_list.remove( (void *) attrctx);
+  Graph *graph = (Graph *) attrctx->parent_ctx;
+
+  if ( graph->is_subgraph())
+    grow_FreeSubGraphAttrInfo( (grow_sAttrInfo *)attrctx->client_data);
+  else
+    grow_FreeGraphAttrInfo( (grow_sAttrInfo *)attrctx->client_data);
+
+  graph->attr_list.remove( (void *) attrctx);
   delete attrctx;
 }
-
 
 int Graph::is_modified()
 {
@@ -2826,10 +2942,37 @@ static int graph_trace_connect_bc( grow_tObject object,
 	glow_sTraceData *trace_data)
 {
   GeDyn *dyn;
+  int			dyn_type;
+  int			dyn_action_type;
 
   grow_GetUserData( object, (void **)&dyn);
   if ( !dyn)
     return 1;
+
+  // Get Dyn from nodeclass i dyn_type is HostObject
+  grow_GetObjectClassDynType( object, &dyn_type, &dyn_action_type);
+  if ( dyn_type & ge_mDynType_HostObject &&
+       dyn->dyn_type & ge_mDynType_Inherit) {
+    GeDyn *nodeclass_dyn;
+    GeDyn *old_dyn;
+    char hostobject[120];
+
+    grow_GetObjectClassUserData( object, (void **) &nodeclass_dyn);
+    if ( nodeclass_dyn) {
+      old_dyn = dyn;
+      dyn = new GeDyn( *nodeclass_dyn);
+      old_dyn->get_hostobject( hostobject);
+#if 0
+      dyn->dyn_type = dyn->total_dyn_type = (ge_mDynType) (dyn->dyn_type | dyn_type);
+      dyn->update_elements();
+      dyn->set_hostobject( hostobject);
+#endif
+      dyn->merge( *old_dyn);
+      grow_SetUserData( object, (void *)dyn);
+
+      delete old_dyn;
+    }
+  }
 
   dyn->connect( object, trace_data);
 
@@ -2890,7 +3033,8 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
 	   grow_GetObjectType( event->object.object) == glow_eObjectType_GrowWindow ||
 	   grow_GetObjectType( event->object.object) == glow_eObjectType_GrowTrend ||
 	   grow_GetObjectType( event->object.object) == glow_eObjectType_GrowTable ||
-	   grow_GetObjectType( event->object.object) == glow_eObjectType_GrowBar) {
+	   grow_GetObjectType( event->object.object) == glow_eObjectType_GrowBar ||
+	   grow_GetObjectType( event->object.object) == glow_eObjectType_NodeClass) {
 	GeDyn *dyn;
 
         grow_GetUserData( event->object.object, (void **)&dyn);
@@ -3337,6 +3481,20 @@ int Graph::set_object_focus( char *name, int empty)
     grow_SetObjectInputFocus( object, 1);
 
   return GE__SUCCESS;
+}
+
+int Graph::set_folder_index( char *name, int idx)
+{
+  int  sts;
+  grow_tObject object;
+
+  sts = grow_FindObjectByName( grow->ctx, name, &object);
+  if ( EVEN(sts)) return GE__OBJNOTFOUND;
+
+  if ( grow_GetObjectType( object) != glow_eObjectType_GrowFolder)
+    return 0;
+
+  return grow_SetFolderIndex( object, idx);
 }
 
 static void graph_remove_space( char *out_str, char *in_str)
