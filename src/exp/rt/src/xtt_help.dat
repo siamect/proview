@@ -1,4 +1,61 @@
 
+<topic> __DocumentTitlePage
+
+<image> pwr_logga.gif
+
+
+
+
+
+
+<h1> Xtt
+
+
+
+<h2> Användarhandledning
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<hr>
+Claes Sjöfors 2004-12-15
+Version 4.0.0	
+<hr>
+</topic>
+
+<topic> __DocumentInfoPage
+
+
+Copyright 2004 SSAB Oxelösund AB
+All rights reserved.
+
+Second Edition December 2004
+ISBN 0-201-37922-8
+
+Notice: All information contained herein is the property of SSAB Oxelösund AB. 
+
+
+
+</topic>
+
+<chapter>
 <TOPIC> overview
 Xtt overview
 
@@ -6,6 +63,7 @@ Xtt overview
 <B>Operator window	<LINK> operator window
 <B>Alarmlist		<LINK> alarmlist
 <B>Eventlist		<LINK> eventlist
+<B>Blocked alarms	<LINK> blocklist
 <B>Trace		<LINK> trace
 <B>Graph windows	<LINK> graph window
 <B>Commands		<LINK> help command
@@ -14,19 +72,105 @@ Xtt overview
 <B>Classes              <LINK> classes
 <B>Index		<INDEX>
 </TOPIC>
-
+</chapter>
 //
 // Navigator
 //
 
+<chapter>
 <TOPIC> navigator
 Xtt navigator
 
-In the navigator you can look into the realtime database.
+The navigator, also called Xtt, is started from the "Navigator" button 
+in the operator window.
+
+The navigator you navigate in a tree stucture, usually the realtime 
+database, but there is also a tree menu from which different pictures and
+functions is opened. This menu is configurable and might differ from system
+to system.
+
+A tree item consists of one or several icons, an object or function name,
+and an optional description.
+
+The standard menu of Xtt is displayed below.
 
 Navigate with the mouse.	<LINK> navigate mouse
 Navigate with the keyboard.     <LINK> navigate keyboard
+Icons				<LINK> xtt_icons
 Menu				<LINK> xtt_menu
+</TOPIC>
+
+<TOPIC> xtt_icons
+Xtt Icons
+
+<h1>Menu icons
+<b>Map
+<image> xtthelp_icon_map.gif
+A menu item that can be opened.
+
+<b>Open map
+<image> xtthelp_icon_openmap.gif
+A menu item that is open. 
+
+<b>Leaf
+<image> xtthelp_icon_leaf.gif
+A menu item that cannot be opened.
+
+<b>List
+<image> xtthelp_icon_list.gif
+A menu item that displays a list.
+
+<b>Script
+<image> xtthelp_icon_script.gif
+A menu item that executes a script.
+
+<b>Graph
+<image> xtthelp_icon_graph.gif
+A menu item that opens a graph.
+<H1>Database
+<b>Map
+<image> xtthelp_icon_map.gif
+An object that has children.
+
+<b>Open map
+<image> xtthelp_icon_openmap.gif
+An who's children are shown.
+
+<b>Leaf
+<image> xtthelp_icon_leaf.gif
+An object without children.
+
+<b>Attribute
+<image> xtthelp_icon_attribute.gif
+An ordinary attribute of type Float32, Int32 etc.
+
+<b>Array attribute
+<image> xtthelp_icon_array.gif
+An array attribute
+
+<b>Enum attribute
+<image> xtthelp_icon_enum.gif
+An attribyte of type Enum.
+
+<b>Mask attribute
+<image> xtthelp_icon_mask.gif
+An attribute of type Mask.
+
+<b>Attribute object
+<image> xtthelp_icon_object.gif
+An attribute that is an object.
+<H2>Alarm info
+<b>Alarm
+<image> xtthelp_icon_alarmdown.gif
+The objects has a descendent with an alarm.
+<image> xtthelp_icon_alarmright.gif
+The object has an alarm.
+
+<b>Alarm blocking
+<image> xtthelp_icon_blockdown.gif
+Alarm blocking is set for a descendent of the object. 
+<image> xtthelp_icon_blockright.gif
+Alarm blocking is set for the object.
 </TOPIC>
 
 <TOPIC> navigate mouse
@@ -107,24 +251,54 @@ ZoomReset	<t><t>Return to the original size.
 Overview	<t><t>Show this xtt help.
 Project		<t><t>Show the project specific help.
 </TOPIC>
+</chapter>
 //
 // Operator window
 //
-
+<chapter>
 <TOPIC> operator window
 Operator window
 
 Help on operator window will soon be written...
 </TOPIC>
+<chapter>
+
+<topic> events
+Events
+
+The operator dialog for Proview contains functions for alarm 
+indication and alarm acknowledgement.
+
+An alarm may occur when for instance a signal has exceeded a
+certain limit. The value of the signal is supervised in 
+respect of the limit value, by a special supervision object.
+If the signal exceeds the limit, an alarm is generated.
+</topic>
 
 //
 // Alarmlist
 //
 
+<headerlevel>
 <TOPIC> alarmlist
 Alarmlist
 
-Help on alarmlist will soon be written...
+The Alarm List is started by activating the "Alarm List" button in
+the operator window. You can also start it from the navigator menu or
+with the xtt command 'show alarmlist'.
+
+In the alarm list prevailing alarms are shown, both acknowledged and 
+unacknowledged. Unacknowledged alarms are marked with a bell. An alarm
+is active as long as it is unacnowledged and the alarm condition i set.
+
+An alarm in the alarm list is shown with:
+- Color indicating the alarm priority
+- Possible indication of unacknowledged alarm
+- Event time
+- Event text
+- Event name (object/signal name)
+
+<image> xtthelp_alarmlist1.gif
 </TOPIC>
 
 //
@@ -134,34 +308,111 @@ Help on alarmlist will soon be written...
 <TOPIC> eventlist
 Eventlist
 
-Help on eventlist will soon be written...
+The event list is started when the "Event List" button is activated in
+the operator window. You can also start it from the navigator menu or
+with the xtt command 'show eventlist'.
+
+All events arriving at an operator station are shown in the event list.
+The length of the list is configured in the User object, and when the
+maximum length is reached, old events are dropped when new events arrive.
+
+For each event the eventlist displays:
+- Color indicating the alarm priority
+- Event type
+- Event time
+- Event text
+- Event name (object/signal name)
+
+<image> xtthelp_eventlist1.gif
+
 </TOPIC>
 
+//
+// Blocklist
+//
+
+<TOPIC> blocklist
+Blocked alarms
+
+The event list is started when the "Blocked Alarms" button is activated in
+the operator window. You can also start it from the navigator menu or
+with the xtt command 'show blocklist'.
+
+All blocked objects are shown in the list. 
+Alarms for an object are blocked in the Alarm Blocking Window. <link> blockingwindow
+
+For each event is displayed:
+- Color indicating the alarm priority of the blocking
+- Objectname
+- User the blocked the alarms.
+
+</TOPIC>
+
+<TOPIC> blockingwindow
+Alarm Blocking Window
+
+The Alarm Blocking Window is opened from the object popup menu (method
+"Block Alarms...", or with the xtt command 'eventlist block'.
+
+The window is used to block alarm for an object. All alarms with the 
+specified priority and with less priority are blocked, for the object 
+and its descendants.
+
+You can specify the priority of the alarm to block with radiobuttons.
+Here you also remove a blocking with the, with the radiobutton
+"No Blocking".
+
+<image> xtthelp_blockw.gif
+
+Only users with the privilege 'RtEvent' or 'System' are authorized to
+block alarms.
+</TOPIC>
+</headerlevel>
+</chapter>
+ 
 //
 // Trace
 //
 
+<chapter>
 <TOPIC> trace
 Trace
 
 Help on trace will soon be written...
 </TOPIC>
+</chapter>
 
 //
 // Graph window
 //
 
+<chapter>
 <TOPIC> graph window
 Graph window
 
 Help on graph window will soon be written...
 </TOPIC>
-
+</chapter>
 
 //
 // Commands
 //
+<chapter>
+<topic> commands
+Commands
 
+Most functions in Xtt can be opened or affected by a command. There
+are commands to open graphs, trends, trace, alarm and eventlist, to
+set attributes in the database etc.
+
+A command is executed from
+- the xtt command line, opened from the menu or with ctrl/B.
+- a button or menu item in a graph.
+- a button in the operator window.
+- a script file.
+</topic>
+
+<headerlevel>
 <TOPIC> symbol
 Symbol
 
@@ -174,13 +425,13 @@ The define-commands can be executed by the symbolfile. <LINK> symbolfile
 
 Example of symbol used as a short command.
 
-xtt> define p1 "show child/name=hql-hvk-pumpar-pump1"
-xtt> p1
+<c>xtt> define p1 "show child/name=hql-hvk-pumpar-pump1"
+<c>xtt> p1
 
 Example of symbol used as string replacement
 
-xtt> define p1 hql-hvk-pumpar-StartPump1
-xtt> open trace 'p1'
+<c>xtt> define p1 hql-hvk-pumpar-StartPump1
+<c>xtt> open trace 'p1'
 
 <H2>related subjects
 define <LINK> define
@@ -198,21 +449,22 @@ Here is some examples of userful commands.
 
 Shortcut to somewhere in the database hierarchy:
 
-<t>define rb9 "show children /name=hql-rb9" <LINK> define
+<c>   define rb9 "show children /name=hql-rb9" <LINK> define
 
 Shortcut to a graph:
 
-<t>define my_graph "open graph my_graph"
+<c>   define my_graph "open graph my_graph"
 
 Create items in the xtt menu.
 
-<t>create item/text="Maintenance"/menu/destination="DataBase"/before <LINK> create item
-<t>create item/text="My graph"/command="open graph my_graph"/pixmap=graph/dest=Maintenance/first
+<c>   create item/text="Maintenance"/menu/destination="DataBase"/before <LINK> create item
+<c>   create item/text="My graph"/command="open graph my_graph"/pixmap=graph
+<c>           /dest=Maintenance/first
 
 Remove items from the xtt standard menu.
 
-<t>delete item /name=exit <LINK> delete item
-<t>delete item /name=system-nethandler
+<c>   delete item /name=exit <LINK> delete item
+<c>   delete item /name=system-nethandler
 </TOPIC>
 
 <TOPIC> advanced user
@@ -235,6 +487,8 @@ Xtt commands
 <b>add parameter<t>Add an attribute to a picture 	<LINK> add parameter
 <b>add menu    <t>Add a menu item to a xtt menu  	<LINK> add menu
 <b>collect     <t>Add an attribute to collect list <LINK> collect
+<b>call method <t>Call a xtt method for an object <LINK> call method
+<b>check method <t>Call a xtt method filter for an object <LINK> check method
 <b>collect show<t>Show the collect list		<LINK> collect show
 <b>collect clear<t>Clear the collect list	<LINK> collect clear
 <b>close alarmlist <t>Close alarmlist		<LINK> close alarmlist
@@ -289,7 +543,38 @@ Xtt commands
 script <LINK> script
 </TOPIC>	
 
-<TOPIC> add parameter
+<TOPIC> call method <style> function
+Command   call method
+
+Call a xtt method for an object.
+Xtt methods are usually activated from the popup menu for an object.
+This is an additional way to activate a methods, from a command
+pushbutton in a Ge graph.
+
+<B>xtt> call method /method= /object=
+
+/method=	<t>the name of the method, i.e. the attribute ButtonName
+		<t>in the method definition.
+/object=	<t>the name of the object.
+</TOPIC>
+
+<TOPIC> check method <style> function
+Command   check method
+
+Call a xtt method filter for an object.
+Method filter are used to decide whether to display a method button or not.
+This command is used to disable a method button in a Ge graph. It returns
+the filter value to the caller. 
+It is only valid in a Ge graph.
+
+<B>xtt> check method /method= /object=
+
+/method=	<t>the name of the method, i.e. the attribute ButtonName
+		<t>in the method definition.
+/object=	<t>the name of the object.
+</TOPIC>
+
+<TOPIC> add parameter <style> function
 Command   add parameter
 
 Add an attribute to a list of attributes, and display the value of 
@@ -311,7 +596,7 @@ on the screen.
 show parameter <LINK> show parameter
 </TOPIC>
 
-<TOPIC> show parameter
+<TOPIC> show parameter <style> function
 Command   show parameter
 
 Create a new list, add an attributes to the list, and display the value of 
@@ -332,7 +617,7 @@ on the screen.
 add parameter <LINK> add parameter
 </TOPIC>
 
-<TOPIC> set parameter
+<TOPIC> set parameter <style> function
 Command   set parameter
 
 Set the value of an attribute.
@@ -344,7 +629,7 @@ Set the value of an attribute.
 /bypass=	<t>Bypass any access restrictions.
 </TOPIC>
 
-<TOPIC> set folder
+<TOPIC> set folder <style> function
 Command   set folder
 
 Set a folder in a tabbed window object.
@@ -355,7 +640,7 @@ Set a folder in a tabbed window object.
 /index=		<t>index of tab to set. Starting from 0.
 </TOPIC>
 
-<TOPIC> add menu
+<TOPIC> add menu <style> function
 Command   add menu
 
 Add a menu item to the xtt menu hierarchy. 
@@ -375,7 +660,7 @@ create item <LINK> create item
 delete item <LINK> delete item
 </TOPIC>
 
-<TOPIC> collect
+<TOPIC> collect <style> function
 Command   collect
 
 Add an attribute to the collection list.
@@ -396,7 +681,7 @@ collect show <LINK> collect show
 collect clear <LINK> collect clear
 </TOPIC>
 
-<TOPIC> collect show
+<TOPIC> collect show <style> function
 Command   collect show
 
 Display the collect list.
@@ -408,7 +693,7 @@ collect <LINK> collect
 collect clear <LINK> collect clear
 </TOPIC>
 
-<TOPIC> collect clear
+<TOPIC> collect clear <style> function
 Command   collect clear
 
 Clear the collect list.
@@ -420,7 +705,7 @@ collect <LINK> collect
 collect show <LINK> collect show
 </TOPIC>
 
-<TOPIC> create item
+<TOPIC> create item <style> function
 Command   create item
 
 Create a menu item in the xtt menu hierarchy.
@@ -449,7 +734,7 @@ add menu <LINK> add menu
 delete item <LINK> delete item
 </TOPIC>
 
-<TOPIC> crossreference
+<TOPIC> crossreference <style> function
 Command   crossreference
 
 Show crossreferences.
@@ -474,7 +759,7 @@ xtt> cross /name=hql-hvk-Start
 xtt> cross /function="CreateHvkObject"
 </TOPIC>
 
-<TOPIC> exit
+<TOPIC> exit <style> function
 Command   exit
 
 Close xtt.
@@ -482,7 +767,7 @@ Close xtt.
 <B>xtt> exit
 </TOPIC>
 
-<TOPIC> define
+<TOPIC> define <style> function
 Command define
 
 Define a symbol.
@@ -495,7 +780,7 @@ show symbol <LINK> show symbol
 symbolfile <LINK> symbolfile
 </TOPIC>	
 
-<TOPIC> delete item
+<TOPIC> delete item <style> function
 Command   delete item
 
 Delete a menu item.
@@ -515,7 +800,7 @@ add menu <LINK> add menu
 create item <LINK> create item
 </TOPIC>
 
-<TOPIC> help
+<TOPIC> help <style> function
 Command   help
 
 Display help information for a subject.
@@ -545,7 +830,7 @@ for in the base and project helpfiles.
 helpfile <LINK> helpfile
 </TOPIC>
 
-<TOPIC> login
+<TOPIC> login <style> function
 Command   login
 
 Login with username an password. The privileges of the user will be
@@ -557,7 +842,7 @@ fetched from the user database, and affect the access to the system.
 logout <LINK> logout
 </TOPIC>
 
-<TOPIC> logout
+<TOPIC> logout <style> function
 Command   logout
 
 Logout a user, and return to the original user.
@@ -568,7 +853,7 @@ Logout a user, and return to the original user.
 login <LINK> login
 </TOPIC>
 
-<TOPIC> open graph
+<TOPIC> open graph <style> function
 Command   open graph
 
 Open a ge graph. The graph can be supplied as a pwg-file or as
@@ -591,7 +876,7 @@ a XttGraph object.
 /inputempty <t>The input label of the input focus object will be empty.
 </TOPIC>
 
-<TOPIC> open jgraph
+<TOPIC> open jgraph <style> function
 Command   open jgraph
 
 Open a java frame. The java frame can be exported from Ge or drawn in
@@ -600,7 +885,7 @@ JBuilder.
 <B>xtt> open jgraph 'name'
 </TOPIC>
 
-<TOPIC> open trace
+<TOPIC> open trace <style> function
 Command   open trace
 
 Open trace for a plc window. If the name qualifier is omitted,
@@ -617,7 +902,7 @@ Examples
 xtt> open trace /name=hql-hvk-flow /center=Pid0
 </TOPIC>
 
-<TOPIC> open trend
+<TOPIC> open trend <style> function
 Command   open trend
 
 Open a graph for a DsTrend or PlotGroup object.
@@ -633,7 +918,7 @@ Examples
 xtt> open trend /name=hql-hvk-flow-Trend,hql-hvk-temperature-Trend
 </TOPIC>
 
-<TOPIC> open operatorwindow
+<TOPIC> open operatorwindow <style> function
 Command   open operatorwindow
 
 Open the operatorwindow.
@@ -641,7 +926,7 @@ Open the operatorwindow.
 <B>xtt> open operatorwindow 'opplace-object'
 </TOPIC>
 
-<TOPIC> close graph
+<TOPIC> close graph <style> function
 Command   close graph
 
 Close a ge graph. The graph can be supplied as a pwg-file or as
@@ -655,7 +940,7 @@ a GeGraph object.
 /instance <t>Open the class graph for this instance.
 </TOPIC>
 
-<TOPIC> close alarmlist
+<TOPIC> close alarmlist <style> function
 Command   close alarmlist
 
 Close the alarmlist.
@@ -664,7 +949,7 @@ Close the alarmlist.
 
 </TOPIC>
 
-<TOPIC> close eventlist
+<TOPIC> close eventlist <style> function
 Command   close eventlist
 
 Close the eventlist.
@@ -673,7 +958,7 @@ Close the eventlist.
 
 </TOPIC>
 
-<TOPIC> close navigator
+<TOPIC> close navigator <style> function
 Command   close navigator
 
 Close the navigator.
@@ -682,7 +967,7 @@ Close the navigator.
 
 </TOPIC>
 
-<TOPIC> search
+<TOPIC> search <style> function
 Command   search
 
 Search for an objectname or a string.
@@ -692,7 +977,7 @@ Search for an objectname or a string.
 <B>xtt> search /next
 </TOPIC>
 
-<TOPIC> set advanceduser
+<TOPIC> set advanceduser <style> function
 Command   set advanceduser
 
 Set or reset advanced user.
@@ -704,7 +989,7 @@ Set or reset advanced user.
 advanced user <LINK> advanced user
 </TOPIC>
 
-<TOPIC> setup
+<TOPIC> setup <style> function
 Xtt setup
 Setup of xtt properies
 
@@ -720,7 +1005,7 @@ Verify		<t><t>Verify commandfile execution.
 AdvancedUser	<t><t>User is advanced. <LINK> advanced user
 </TOPIC>
 
-<TOPIC> show version
+<TOPIC> show version <style> function
 Command   show version
 
 Show the xtt version
@@ -728,20 +1013,20 @@ Show the xtt version
 <B>xtt> show version
 </TOPIC>
 
-<TOPIC> show symbol
+<TOPIC> show symbol <style> function
 Command   show symbol
 
 Show one symbol, or all symbols
 
-<B>xtt> show symbol 'symbol'<t>Show symbol 'symbol'
-<B>xtt> show symbol<t>              Show all symbols
+<B>xtt> show symbol 'symbol'<t>	<t>Show symbol 'symbol'
+<B>xtt> show symbol<t>		<t>Show all symbols
 
 <h2>related subjects
 define <LINK> define
 symbol <LINK> symbol
 </TOPIC>
 
-<TOPIC> show plcpgm
+<TOPIC> show plcpgm <style> function
 Command   show plcpgm
 
 List the PlcPgm-objects in the system.
@@ -749,7 +1034,7 @@ List the PlcPgm-objects in the system.
 <B>xtt> show plcpgm
 </TOPIC>
 
-<TOPIC> show plcthreads
+<TOPIC> show plcthreads <style> function
 Command   show plcthreads
 
 Display the PlcThread-objects.
@@ -759,7 +1044,7 @@ the plc-threads.
 <B>xtt> show plcthreads
 </TOPIC>
 
-<TOPIC> show links
+<TOPIC> show links <style> function
 Command   show links
 
 Show the links to other proview systems.
@@ -767,7 +1052,7 @@ Show the links to other proview systems.
 <B>xtt> show links
 </TOPIC>
 
-<TOPIC> show logfiles
+<TOPIC> show logfiles <style> function
 Command   show logfiles
 
 Show the rtt log-files in the current work directory. 
@@ -780,7 +1065,7 @@ and then press return.
 <B>xtt> show logfiles
 </TOPIC>
 
-<TOPIC> show alarmlist
+<TOPIC> show alarmlist <style> function
 Command   show alarmlist
 
 Open the alarmlist window.
@@ -788,7 +1073,7 @@ Open the alarmlist window.
 <B>xtt> show alarmlist
 </TOPIC>
 
-<TOPIC> show eventlist
+<TOPIC> show eventlist <style> function
 Command   show eventlist
 
 Open the eventlist window.
@@ -796,7 +1081,7 @@ Open the eventlist window.
 <B>xtt> show eventlist
 </TOPIC>
 
-<TOPIC> show user
+<TOPIC> show user <style> function
 Command   show user
 
 Show the current user and his privileges.
@@ -804,13 +1089,13 @@ Show the current user and his privileges.
 <B>xtt> show user
 </TOPIC>
 
-<TOPIC> store
+<TOPIC> store <style> function
 Command   store
 
 Store an attribute list to a scrip-file, or store the current 
 symbol table to a scrip-file.
 The generated script-file can be executed from the command-prompt
-with @'filename', or it can be found among the scipt-files in the
+with @'filename', or it can be found among the script-files in the
 menu beneath 'Store'. 
 
 If the /collect is used, the attribute-list
@@ -824,7 +1109,7 @@ will be restored in the collect list.
 
 </TOPIC>
 
-<TOPIC> show logging
+<TOPIC> show logging <style> function
 Command   show logging
 
 Show a logging entry.
@@ -832,7 +1117,7 @@ Show a logging entry.
 <B>xtt> show logging /entry=
 </TOPIC>
 
-<TOPIC> logging
+<TOPIC> logging <style> function
 Command   logging
 
 A number of commands to handle the xtt logging.
@@ -844,11 +1129,13 @@ logging show		<LINK> logging show
 logging store		<LINK> logging store
 
 </TOPIC>
-
+</headerlevel>
+</chapter>
 
 //
 // Helpfile
 //
+<chapter>
 <TOPIC> helpfile
 Helpfile
 
@@ -1010,6 +1297,7 @@ Look at the outlook of this topic <link>helpfile_example
 <i></topic>
 </TOPIC>
 
+<headerlevel>
 <topic> helpfile_example
 Start and stop of engines.
 
@@ -1031,11 +1319,14 @@ Stop engine two by pressing the stop button.
 Max speed <t> 3200 <t> 5400
 Max current <t> 130 <t> 120
 </topic>
+</headerlevel>
+</chapter>
 
 //
 // Script
 //
 
+<chapter>
 <TOPIC> script
 Xtt script
 
@@ -1082,6 +1373,7 @@ GetCurrentText()	<LINK> getcurrenttext()
 GetCurrentObject()	<LINK> getcurrentobject()
 </TOPIC>
 
+<headerlevel>
 <TOPIC> execute script
 Execute a script
 
@@ -1118,17 +1410,17 @@ be string. In an assignment the value of an expression will be converted to the
 type of the assignment variable, even if the result is a string and the
 variable is of type float or int.
 
-Example
+<b>Example
 
-string 	str;
-int	i = 35;
-str = "Luthor" + i;
+<c>string  str;
+<c>int     i = 35;
+<c>str = "Luthor" + i;
 The value in str will be "Luthor35".
 
-float 	f;
-string 	str = "3.14";
-int	i = 159;
-f = str + i;
+<c>float   f;
+<c>string  str = "3.14";
+<c>int     i = 159;
+<c>f = str + i;
 The value in f will be 3.14159.
 </TOPIC>
 
@@ -1146,11 +1438,11 @@ A declaration consists of
 
 Example
 
-int		i;
-float		flow = 33.4;
-string		str = "Hello";
-extern	int 	jakob;
-global	float	ferdinand = 1234;
+int             i;
+float           flow = 33.4;
+string          str = "Hello";
+extern int      jakob;
+global float	ferdinand = 1234;
 </TOPIC>
 
 <TOPIC> operators
@@ -1187,24 +1479,24 @@ Operator	<t>Description		<t>Datatypes
 |=	 	<t>logical or and assign	<t>int
 </TOPIC>
 
-<TOPIC> main-endmain
+<TOPIC> main-endmain <style> function
 main-endmain
 
 The main and endmain statements controls where the execution starts and stops
 If no main and endmain statements will be found, the execution will start
 att the beginning of the file and stop at the end.
 
-Example
+<b>Example
 
-main()
-  int	a;
+<c>main()
+<c>  int a;
 
-  a = p1 + 5;
-  printf( "a = %d", a);
-endmain
+<c>  a = p1 + 5;
+<c>  printf( "a = %d", a);
+<c>endmain
 </TOPIC>
 
-<TOPIC> function-endfunction
+<TOPIC> function-endfunction <style> function
 function-endfunction
 
 A function declaration consists of
@@ -1220,19 +1512,19 @@ it is possible to return other values then the return value of the function.
 A function can contain one or several return statements. The return will hand
 over the execution to the caller and return the supplied value.
 
-Example
+<b>Example
 
-function float calculate_flow(float a, float b)
-  float	c;
-  c = a + b;
-  return c;
-endfunction
+<c>function float calculate_flow(float a, float b)
+<c>  float c;
+<c>  c = a + b;
+<c>  return c;
+<c>endfunction
 
 ...
-flow = korr * calculate_flow( v, 35.2);
+<c>flow = korr * calculate_flow( v, 35.2);
 </TOPIC>
 
-<TOPIC> if-else-endif
+<TOPIC> if-else-endif <style> function
 if-else-endif
 
 The lines between a if-endif statment will be executed if the expression
@@ -1240,34 +1532,34 @@ in the if-statment is true. The expression should be surrounded by parentheses.
 If an else statement is found between the if and endif the lines between else
 and endif will be executed if the if-exepression is false.
 
-Example
+<b>Example
 
-if ( i < 10 && i > 5)
-  a = b + c;
-endif
+<c>if ( i < 10 && i > 5)
+<c>  a = b + c;
+<c>endif
 
-if ( i < 10)
-  a = b + c;
-else
-  a = b - c;
-endif
+<c>if ( i < 10)
+<c>  a = b + c;
+<c>else
+<c>  a = b - c;
+<c>endif
 </TOPIC>
 
-<TOPIC> while-endwhile
+<TOPIC> while-endwhile <style> function
 while-endwhile
 
 The lines between a while-endwhile statment will be executed as long as the
 expression in the while-statment is true. The expression should be surrounded
 by parentheses.
 
-Example
+<b>Example
 
-while ( i < 10)
-  i++;
-endwhile
+<c>while ( i < 10)
+<c>  i++;
+<c>endwhile
 </TOPIC>
 
-<TOPIC> for-endfor
+<TOPIC> for-endfor <style> function
 for-endfor
 
 The lines between a for-endfor statment will be executed as long as the
@@ -1277,662 +1569,665 @@ The first expression will be executed the before the first loop, the third
 will be executed after every loop, the middle is executed before every loop
 and if true another loop is done, if false the loop is leaved.
 
-Example
+<b>Example
 
-for ( i = 0; i < 10; i++)
-  a += b;
-endfor
+<c>for ( i = 0; i < 10; i++)
+<c>  a += b;
+<c>endfor
 </TOPIC>
 
-<TOPIC> break
+<TOPIC> break <style> function
 break
 
 A break statement will search for the next endwhile or endfor statement
 continue the execution at the line after.
 
-Example
+<b>Example
 
-for ( i = 0; i < 10; i++)
-  a += b;
-  if ( a > 100)
-    break;
-endfor
+<c>for ( i = 0; i < 10; i++)
+<c>  a += b;
+<c>  if ( a > 100)
+<c>    break;
+<c>endfor
 </TOPIC>
 
-<TOPIC> continue
+<TOPIC> continue <style> function
 continue
 
 A continue statement will search for the previous while or for statement
 continue the loop execution.
 
-Example
+<b>Example
 
-for ( i = 0; i < 10; i++)
-  b = my_function(i);
-  if ( b > 100)
-    continue;
-  a += b;
-endfor
+<c>for ( i = 0; i < 10; i++)
+<c>  b = my_function(i);
+<c>  if ( b > 100)
+<c>    continue;
+<c>  a += b;
+<c>endfor
 </TOPIC>
 
-<TOPIC> goto
+<TOPIC> goto <style> function
 goto
 
 A goto will cause the execution to jump to a row defined by label.
 The label line is terminated with colon.
 
-Example
+<b>Example
 
-  b = attribute("MOTOR-ON.ActualValue", sts);
-  if (!sts)
-    goto some_error; 
-  ...
-some_error:
-  say("Something went wrong!");
+<c>  b = attribute("MOTOR-ON.ActualValue", sts);
+<c>  if (!sts)
+<c>    goto some_error; 
+<c>  ...
+<c>some_error:
+<c>  say("Something went wrong!");
 </TOPIC>
 
-<TOPIC> include
+<TOPIC> include <style> function
 include
 
 An script include-file containing functions can be included with the
 #include statement. The default file extention is '.rtt_com'
 
-Example
+<b>Example
 
-#include <my_functions>
+<c>#include <my_functions>
 </TOPIC>
 
-<TOPIC> printf()
+<TOPIC> printf() <style> function
 printf()
 
 int printf( string format [, (arbitrary type) arg1, (arbitrary type) arg2])
 
-Description
+<b>Description
 
 Formatted print. C-syntax. Format argument and non, one or two value arguments.
 Returns number of printed characters.
 
-Arguments
+<b>Arguments
 
-string 			format		Format.
-arbitrary type		arg1		Value argument. Optional. Can be int,
-					float or string.
-arbitrary type		arg2		Value argument. Optional. Can be int,
-					float or string.
+string 			<t>format	<t>Format.
+arbitrary type		<t>arg1		<t>Value argument. Optional. Can be int,
+			<t>		<t>float or string.
+arbitrary type		<t>arg2		<t>Value argument. Optional. Can be int,
+			<t>		<t>float or string.
 
-Example
+<b>Example
 
-  printf( "Watch out!");
-  printf( "a = %d", a);
-  printf( "a = %d och str = %s", a, str);
+<c>  printf( "Watch out!");
+<c>  printf( "a = %d", a);
+<c>  printf( "a = %d och str = %s", a, str);
 </TOPIC>
 
-<TOPIC> scanf()
+<TOPIC> scanf() <style> function
 scanf()
 
 int scanf( string format , (arbitrary type) arg1)
 
-Description
+<b>Description
 
 Formatted input. C-syntax
 Returns number of read characters.
 
-Arguments
+<b>Arguments
 
-string 			format		Format.
-arbitrary type		arg1		Value argument. Returned. Can be int,
-					float or string.
+string 			<t>format	<t>Format.
+arbitrary type		<t>arg1		<t>Value argument. Returned. Can be int,
+			<t>		<t>float or string.
 
-Example
+<b>Example
 
-  scanf( "%d", i);
+<c>  scanf( "%d", i);
 </TOPIC>
 
-<TOPIC> fprintf()
+<TOPIC> fprintf() <style> function
 fprintf()
 
 int fprintf( int file, string format [, (arbitrary type) arg1,
 	(arbitrary type) arg2])
 
-Description
+<b>Description
 
 Formatted print on file. C-syntax. Format argument and non, one or two value
 arguments.
 Returns number of printed characters.
 
-Arguments
+<b>Arguments
 
-int 			file		File id retured by fopen.
-string 			format		Format.
-arbitrary type		arg1		Value argument. Optional. Can be int,
-					float or string.
-arbitrary type		arg2		Value argument. Optional. Can be int,
-					float or string.
+int 			<t>file		<t>File id retured by fopen.
+string 			<t>format	<t>Format.
+arbitrary type		<t>arg1		<t>Value argument. Optional. Can be int,
+			<t>		<t>float or string.
+arbitrary type		<t>arg2		<t>Value argument. Optional. Can be int,
+			<t>		<t>float or string.
 
-Example
+<b>Example
 
-  int outfile;
-  outfile = fopen( "my_file.txt", "w");
-  if (!outfile)
-    exit();
-  fprintf( outfile, "Some text");
-  fprintf( outfile, "a = %d", a);
-  fclose( outfile);
+<c>  int outfile;
+<c>  outfile = fopen( "my_file.txt", "w");
+<c>  if (!outfile)
+<c>    exit();
+<c>  fprintf( outfile, "Some text");
+<c>  fprintf( outfile, "a = %d", a);
+<c>  fclose( outfile);
 </TOPIC>
 
-<TOPIC> fgets()
+<TOPIC> fgets() <style> function
 fgets()
 
 int fgets( string str, int file)
 
-Description
+<b>Description
 
 Reads a line from a specified file.
 Returns zero if end of file.
 
-Arguments
+<b>Arguments
 
-string 		str		Read line. Returned. 
-int		file		file returned by fopen.
+string 		<t>str		<t>Read line. Returned. 
+int		<t>file		<t>file returned by fopen.
 
-Example
+<b>Example
 
-  file = fopen("some_file.txt","r");
-  while( fgets( str, file))
-    say( str);
-  endwhile
-  fclose( file);
+<c>  file = fopen("some_file.txt","r");
+<c>  while( fgets( str, file))
+<c>    say( str);
+<c>  endwhile
+<c>  fclose( file);
 </TOPIC>
 
-<TOPIC> fopen()
+<TOPIC> fopen() <style> function
 fopen()
 
 int fopen( string filespec, string mode)
 
-Description
+<b>Description
 
 Opens a file for read or write.
 Returns a file identifier. If the file could not be opened, zero is returned.
 
-Arguments
+<b>Arguments
 
-string 		filespec	Name of file. 
-string		mode		Access mode
+string 		<t>filespec	<t>Name of file. 
+string		<t>mode		<t>Access mode
 
-Example
+<b>Example
 
-  int infile;
-  int outfile;
+<c>  int infile;
+<c>  int outfile;
 
-  infile = fopen("some_file.txt","r");
-  outfile = fopen("another_file.txt","w");
-  ...
-  fclose( infile);
-  fclose( outfile);
+<c>  infile = fopen("some_file.txt","r");
+<c>  outfile = fopen("another_file.txt","w");
+<c>  ...
+<c>  fclose( infile);
+<c>  fclose( outfile);
 </TOPIC>
 
-<TOPIC> fclose()
+<TOPIC> fclose() <style> function
 fclose()
 
 int fclose( int file)
 
-Description
+<b>Description
 
 Closes an opened file.
 
-Arguments
+<b>Arguments
 
-int		file		file-id returned by fopen.
+int		<t>file		<t>file-id returned by fopen.
 
-Example
+<b>Example
 
-  int infile;
-  infile = fopen("some_file.txt","r");
-  ...
-  fclose( infile);
+<c>  int infile;
+<c>  infile = fopen("some_file.txt","r");
+<c>  ...
+<c>  fclose( infile);
 </TOPIC>
 
-<TOPIC> exit()
+<TOPIC> exit() <style> function
 exit()
 
 int exit()
 
-Description
+<b>Description
 
 Terminates executions of the file.
 
-Example
+<b>Example
 
-  exit();
+<c>  exit();
 </TOPIC>
 
-<TOPIC> verify()
+<TOPIC> verify() <style> function
 verify()
 
 int verify( [int mode])
 
-Description
+<b>Description
 
 Sets or shows verification mode. If verification is on all executed lines will
 be displayed on the screen.
 Returns the current verification mode.
 
-Arguments
+<b>Arguments
 
-int		mode		verification on (1) or off (0). Optional.
+int		<t>mode		<t>verification on (1) or off (0). Optional.
 
-Example
+<b>Example
 
-  verify(1);
+<c>  verify(1);
 </TOPIC>
 
-<TOPIC> time()
+<TOPIC> time() <style> function
 time()
 
 string time()
 
-Description
+<b>Description
 
 Returns the current time in string format.
 
-Example
+<b>Example
 
-  string t;
-  t = time();
+<c>  string t;
+<c>  t = time();
 </TOPIC>
 
-<TOPIC> edit()
+<TOPIC> edit() <style> function
 edit()
 
 string edit( string str)
 
-Description
+<b>Description
 
 Removes leading and trailing spaces and tabs, and replaces multipel tabs and
 spaces with a single space.
 Returns the edited string.
 
-Arguments
+<b>Arguments
 
-string		str		string to be edited.
+string		<t>str		<t>string to be edited.
 
-Example
+<b>Example
 
-  collapsed_str = edit(str);
+<c>  collapsed_str = edit(str);
 </TOPIC>
 
-<TOPIC> extract()
+<TOPIC> extract() <style> function
 extract()
 
 string extract( int start, int length, string str)
 
-Description
+<b>Description
 
 Extracts the specified characters from the specified string.
 Returns the extracted characters as a string.
 
-Arguments
+<b>Arguments
 
-int		start		start position of the first character.
-int		length		number of characters to be extracted.
-string		str		string from which characters should be extracted.
+int		<t>start	<t>start position of the first character.
+int		<t>length	<t>number of characters to be extracted.
+string		<t>str		<t>string from which characters should be extracted.
 
-Example
+<b>Example
 
-  extracted_str = extract( 5, 7, str);
+<c>  extracted_str = extract( 5, 7, str);
 </TOPIC>
 
-<TOPIC> element()
+<TOPIC> element() <style> function
 element()
 
 string element( int number, string delimiter, string str)
 
-Description
+<b>Description
 
 Extracts one element from a string of elements.
 Returns the extracted element.
 
-Arguments
+<b>Arguments
 
-int		number		the number of the element.
-string		delimiter	delimiter character.
-string		str		string of elements.
+int		<t>number	<t>the number of the element.
+string		<t>delimiter	<t>delimiter character.
+string		<t>str		<t>string of elements.
 
-Example
+<b>Example
 
-  string str = "mary, lisa, anna, john";
-  string elem1;
-  elem1 = elment( 1, ",", str);
+<c>  string str = "mary, lisa, anna, john";
+<c>  string elem1;
+<c>  elem1 = elment( 1, ",", str);
 </TOPIC>
 
-<TOPIC> xtt-commands
+<TOPIC> xtt-commands <style> function
 Xtt commands
 
 All the xtt-commands is available in the script code. An rtt-command line
 should NOT be ended with a semicolon. Variables can be substituted in the
 command line by surrounding them with apostrophes.
 
-Example
+<b>Example
 
-  string 	name = "PUMP-VALVE-Open.ActualValue";
-  float	value = 2.2;
-  set parameter/name='name'/value='value'
+<c>  string name = "PUMP-VALVE-Open.ActualValue";
+<c>  float  value = 2.2;
+<c>  set parameter/name='name'/value='value'
 
-Example
+<b>Example
 
-  string name;
-  string parname;
-  int j;
-  int i;
-  for ( i = 0; i < 3; i++)
-    parname = "vkv-test-obj" + (i+1);
-    create obj/name='parname'
-    for ( j = 0; j < 3; j++)
-      name = parname + "-obj" + (j+1);
-      create obj/name='name'
-    endfor
-  endfor
+<c>  string name;
+<c>  string parname;
+<c>  int j;
+<c>  int i;
+<c>  for ( i = 0; i < 3; i++)
+<c>    parname = "vkv-test-obj" + (i+1);
+<c>    create obj/name='parname'
+<c>    for ( j = 0; j < 3; j++)
+<c>      name = parname + "-obj" + (j+1);
+<c>      create obj/name='name'
+<c>    endfor
+<c>  endfor
 </TOPIC>
 
-<TOPIC> getattribute()
+<TOPIC> getattribute() <style> function
 GetAttribute()
 
 (variable type) GetAttribute( string name [, int status])
 
-Description
+<b>Description
 
 Get the value of the specified attribute. The returned type is dependent
 of the attribute type. The attribute will be converted to int, float or string.
 
-Arguments
+<b>Arguments
 
-string		name		name of the attribute to be fetched.
-int		status		status of operation. Returned. If zero, the
-				attribute could not be fetched. Optional.
+string		<t>name		<t>name of the attribute to be fetched.
+int		<t>status	<t>status of operation. Returned. If zero, the
+		<t>		<t>attribute could not be fetched. Optional.
 
-Example
+<b>Example
 
-  int alarm;
-  int sts;
+<c>  int alarm;
+<c>  int sts;
 
-  alarm = GetAttribute("Roller-Motor-Alarm.ActualValue");
-  on = GetAttribute("Roller-Motor-On.ActualValue", sts);
-  if ( !sts)
-    say("Could not find motor on attribute!");
+<c>  alarm = GetAttribute("Roller-Motor-Alarm.ActualValue");
+<c>  on = GetAttribute("Roller-Motor-On.ActualValue", sts);
+<c>  if ( !sts)
+<c>    say("Could not find motor on attribute!");
 </TOPIC>
 
-<TOPIC> getchild()
+<TOPIC> getchild() <style> function
 GetChild()
 
 string GetChild( string name)
 
-Description
+<b>Description
 
 get the first child of an object. The next children can be fetched with
 GetNextSibling().
 Returns the name of the child. If no child exists a null-string is returned
 
-Arguments
+<b>Arguments
 
-string		name		name of object.
+string		<t>name		<t>name of object.
 
-Example
+<b>Example
 
-  string child;
+<c>  string child;
 
-  child = GetChild("Roller-Motor");
+<c>  child = GetChild("Roller-Motor");
 </TOPIC>
 
-<TOPIC> getparent()
+<TOPIC> getparent() <style> function
 GetParent()
 
 string GetParent( string name)
 
-Description
+<b>Description
 
 Get the parent of an object.
 Returns the name of the child. If no parent exists a null-string is returned.
 
-Arguments
+<b>Arguments
 
-string		name		name of object.
+string		<t>name		<t>name of object.
 
-Example
+<b>Example
 
-  string parent;
+<c>  string parent;
 
-  parent = GetChild("Roller-Motor");
+<c>  parent = GetChild("Roller-Motor");
 </TOPIC>
 
-<TOPIC> getnextsibling()
+<TOPIC> getnextsibling() <style> function
 GetNextSibling()
 
 string GetNextSibling( string name)
 
-Description
+<b>Description
 
 Get the next sibling of an object.
 Returns the name of the sibling. If no next sibling exists a null-string is
 returned.
 
-Arguments
+<b>Arguments
 
-string		name		name of object.
+string		<t>name		<t>name of object.
 
-Example
+<b>Example
 
- string name;
- int not_first;
+<c> string name;
+<c> int not_first;
 
- name = GetChild("Rt");
- not_first = 0;
- while ( name != "")
-   if ( !not_first)
-     create menu/title="The Rt objects"/text="'name'"/object="'name'"
-   else
-     add menu/text="'name'"/object="'name'"
-   endif
-   not_first = 1;
-   name = GetNextSibling(nname);
- endwhile
- if ( !not_first )
-   MessageError("No objects found");
+<c> name = GetChild("Rt");
+<c> not_first = 0;
+<c> while ( name != "")
+<c>   if ( !not_first)
+<c>     create menu/title="The Rt objects"/text="'name'"/object="'name'"
+<c>   else
+<c>     add menu/text="'name'"/object="'name'"
+<c>   endif
+<c>   not_first = 1;
+<c>   name = GetNextSibling(nname);
+<c> endwhile
+<c> if ( !not_first )
+<c>   MessageError("No objects found");
 </TOPIC>
 
-<TOPIC> getclasslist()
+<TOPIC> getclasslist() <style> function
 GetClassList()
 
 string GetClassList( string class)
 
-Description
+<b>Description
 
 Get the first object of a specified class. The next object of the class
 can be fetched whith GetNextObject().
 Returns the name of the first object. If no instances of the class exists a
 null-string is returned.
 
-Arguments
+<b>Arguments
 
-string		name		name of class.
+string		<t>name		<t>name of class.
 
-Example
+<b>Example
 
-  string name;
+<c>  string name;
 
-  name = GetClassList("Dv");
+<c>  name = GetClassList("Dv");
 </TOPIC>
 
-<TOPIC> getnextobject()
+<TOPIC> getnextobject() <style> function
 GetNextObject()
 
 string GetNextObject( string name)
 
-Description
+<b>Description
 
 Get the next object in a classlist.
 Returns the name of the object. If no next object exist a null-string is
 returned.
 
-Arguments
+<b>Arguments
 
-string		name		name of object.
+string		<t>name		<t>name of object.
 
-Example
+<b>Example
 
-  string name;
+<c>  string name;
 
-  name = GetClassList("Di");
-  while ( name != "")
-    printf("Di object found: %s", name);
-    name = GetNextObject(name);
-  endwhile
+<c>  name = GetClassList("Di");
+<c>  while ( name != "")
+<c>    printf("Di object found: %s", name);
+<c>    name = GetNextObject(name);
+<c>  endwhile
 </TOPIC>
 
-<TOPIC> getobjectclass()
+<TOPIC> getobjectclass() <style> function
 GetObjectClass()
 
 string GetObjectClass( string name)
 
-Description
+<b>Description
 
 Get the class of an object.
 Returns the name of the class.
 
-Arguments
+<b>Arguments
 
-string		name		name of object.
+string		<t>name		<t>name of object.
 
-Example
+<b>Example
 
-  string class;
+<c>  string class;
 
-  class = GetObjectClass("Motor-Enable");
+<c>  class = GetObjectClass("Motor-Enable");
 </TOPIC>
 
-<TOPIC> getnodeobject()
+<TOPIC> getnodeobject() <style> function
 GetNodeObject()
 
 string GetNodeObject()
 
-Description
+<b>Description
 
 Get the node object.
 Returns the name of the node object.
 
-Example
+<b>Example
 
-  string node;
-  node = GetNodeObject();
+<c>  string node;
+<c>  node = GetNodeObject();
 </TOPIC>
 
-<TOPIC> getrootlist()
+<TOPIC> getrootlist() <style> function
 GetRootList()
 
 string GetRootList()
 
-Description
+<b>Description
 
 Get the first object in the root list.
 Returns the name of the root object. The next object in the root list can be
 fetched with GetNextSibling().
 
-Example
+<b>Example
 
-  string name;
+<c>  string name;
 
-  name = GetRootList();
-  while( name != "")
-    printf( "Root object found: %s", name);
-    name = GetNextSibling(name);
-  endwhile
+<c>  name = GetRootList();
+<c>  while( name != "")
+<c>    printf( "Root object found: %s", name);
+<c>    name = GetNextSibling(name);
+<c>  endwhile
 </TOPIC>
 
-<TOPIC> cutobjectname()
+<TOPIC> cutobjectname() <style> function
 CutObjectName()
 
 string CutObjectName( string name, int segments)
 
-Description
+<b>Description
 
 Cut the first segments of an object name.
 Returns the last segments of an object name. The number of segments left is
 specified by the second argument
 
-Arguments
+<b>Arguments
 
-string		name		Path name of object.
-int		segments	Number of segments that should be left.
+string		<t>name		<t>Path name of object.
+int		<t>segments	<t>Number of segments that should be left.
 
-Example
+<b>Example
 
-  string path_name;
-  string object_name;
+<c>  string path_name;
+<c>  string object_name;
 
-  path_name = GetChild("Rt-Motor");
-  object_name = CutObjectName( path_name, 1);
+<c>  path_name = GetChild("Rt-Motor");
+<c>  object_name = CutObjectName( path_name, 1);
 </TOPIC>
 
-<TOPIC> messageerror()
+<TOPIC> messageerror() <style> function
 MessageError()
 
 string MessageError( string message)
 
-Description
+<b>Description
 
 Print an rtt error message on the screen.
 
-Example
+<b>Example
 
-  MessageError("Something went wrong");
+<c>  MessageError("Something went wrong");
 </TOPIC>
 
-<TOPIC> messageinfo()
+<TOPIC> messageinfo() <style> function
 MessageInfo()
 
 string MessageInfo( string message)
 
-Description
+<b>Description
 
 Print an rtt info message on the screen.
 
-Example
+<b>Example
 
-  MessageInfo("Everything is all right so far");
+<c>  MessageInfo("Everything is all right so far");
 </TOPIC>
 
-<TOPIC> getcurrenttext()
+<TOPIC> getcurrenttext() <style> function
 GetCurrentText()
 
 string GetCurrentText()
 
-Description
+<b>Description
 
 Get the text of the current menu item or update field.
 
-Example
+<b>Example
 
-  string text;
+<c>  string text;
 
-  text = GetCurrentText();
+<c>  text = GetCurrentText();
 </TOPIC>
 
-<TOPIC> getcurrentobject()
+<TOPIC> getcurrentobject() <style> function
 GetCurrentObject()
 
 string GetCurrentObject()
 
-Description
+<b>Description
 
 Get the object associated with the current menu item.
 If no object is associated, a null-string i returned.
 
-Example
+<b>Example
 
-  string object;
+<c>  string object;
 
-  object = GetCurrentObject();
+<c>  object = GetCurrentObject();
 </TOPIC>
+</headerlevel>
+</chapter>
 
+<chapter>
 <TOPIC> classes
 Classes
 
@@ -1940,7 +2235,7 @@ Classes
 <B>BaseClasses  	<LINK>pwrb
 
 </TOPIC>
-
+</chapter>
 <include> pwr_lang:pwrb_xtthelp.dat
 <include> pwr_exe:pwrs_xtthelp.dat
 
