@@ -65,6 +65,7 @@ static void		sendVolumes	(gdb_sNode*, pool_tRef);
 static void		sendVolumesR	(gdb_sNode*, net_sVolumes*, unsigned int);
 static void		volumes		(qcom_sGet*);
 static void		volumesR	(qcom_sGet*);
+static void		volumes7	(qcom_sGet*);
 #if 0
   static void		linkEvent	(pwr_tUInt32, net_eEvent);
   static void		sendIdAck	(gdb_sNode*);
@@ -74,7 +75,7 @@ static void		volumesR	(qcom_sGet*);
 
 /* Dispatcher for 'net_cMsgClass' messages.  */
 
-static char *cMsg[net_eMsg_] = {
+static char *cMsg[net_eMsg_end] = {
   "error",
   "id",
   "idAck",
@@ -104,9 +105,11 @@ static char *cMsg[net_eMsg_] = {
   "getCclass",
   "getCclassR",
   "getGclass",
-  "getGclassR"
+  "getGclassR",
+  "net_eMsg_",
+  "volumes7"
 };
-static void (*fromApplication[net_eMsg_])(qcom_sGet *) = {
+static void (*fromApplication[net_eMsg_end])(qcom_sGet *) = {
   netError,
   id,
   id,
@@ -136,7 +139,9 @@ static void (*fromApplication[net_eMsg_])(qcom_sGet *) = {
   cmvolsm_GetCclass,
   bugError,                     /* net_eMsg_GetCclassR will never reach neth */
   cmvolsm_GetGclass,
-  bugError                      /* net_eMsg_GetGclassR will never reach neth */
+  bugError,                     /* net_eMsg_GetGclassR will never reach neth */
+  bugError,                     /* net_eMsg_ */
+  volumes7
 };
 
 int
@@ -417,6 +422,7 @@ id (
   gdb_sNode	*np;
   gdb_sNode	*nid_np;
   net_eEvent	event;
+  pwr_tBoolean  cclassSupport = TRUE;
 
   gdb_AssumeUnlocked;
 
@@ -439,11 +445,25 @@ id (
     return;
   }
   if (mp->node.netver != net_cVersion) {
-    errh_Error("Proview net protocol version differs, '%s' ignored version: %d, node: %s", 
-      cMsg[get->type.s], mp->node.netver,
-      cdh_NodeIdToString(NULL, get->sender.nid, 0, 0));
-    return;
+    if (mp->node.netver == 7) {
+      cclassSupport = FALSE;
+      errh_Warning("Accepting older net protocol version, '%s' old version: %d, my version: %d, node: %s",
+                   cMsg[get->type.s], mp->node.netver, net_cVersion,
+                   cdh_NodeIdToString(NULL, get->sender.nid, 0, 0));
+                   
+    } else if (mp->node.netver > net_cVersion) {
+      errh_Warning("Accepting newer net protocol version, '%s' new version: %d, my version: %d, node: %s",
+                   cMsg[get->type.s], mp->node.netver, net_cVersion,
+                   cdh_NodeIdToString(NULL, get->sender.nid, 0, 0));
+    } else {      
+      errh_Error("Proview net protocol version not supported, '%s' ignored version: %d, my version: %d, node: %s", 
+                 cMsg[get->type.s], mp->node.netver, net_cVersion,
+                 cdh_NodeIdToString(NULL, get->sender.nid, 0, 0));
+      return;
+    }
   }
+
+
 
   if (get->type.s == net_eMsg_id)
     event = net_eEvent_id;
@@ -457,6 +477,8 @@ id (
     nid_np = hash_Search(&sts, gdbroot->nid_ht, &mp->hdr.nid);
     if (nid_np == NULL) {
       np->nid = mp->hdr.nid;
+      np->netver = mp->node.netver;
+      np->cclassSupport = cclassSupport;
       hash_Insert(&sts, gdbroot->nid_ht, np);
     } else if (nid_np != np ) {
       errh_Warning("New node (%s), attempts to appear as node (%s), '%s' ignored...",
@@ -840,6 +862,7 @@ sendVolumes (
 {
   pwr_tStatus		sts;
   net_sVolumes		*mp;
+  net_sVolumes7		*m7p;
   qcom_sQid		tgt;
   pwr_tUInt32		size;
   int			i;
@@ -848,6 +871,8 @@ sendVolumes (
   pool_sQlink		*vlStart;
   gdb_sVolume		*vp;
   int			maxVol = ((net_cSizeLarge - sizeof(*mp)) / sizeof(mp->g[0])) + 1;
+  pwr_tBoolean          cclassSupport;
+  net_eMsg              msgtype;
 
   if (gdbroot->db->log.b.messages) {
     errh_Info("Sending 'volumes' to %s (%s)",
@@ -855,6 +880,8 @@ sendVolumes (
   }
 
   gdb_ScopeLock {
+
+    cclassSupport = np->cclassSupport;
 
     if (vr == pool_cNRef) {
       vlStart = pool_Qsucc(NULL, gdbroot->pool, &gdbroot->my_node->own_lh);
@@ -867,20 +894,43 @@ sendVolumes (
     for (
       nVol = 0, vl = vlStart;
       nVol < maxVol && vl != &gdbroot->my_node->own_lh;
-      nVol++, vl = pool_Qsucc(NULL, gdbroot->pool, vl)
-    );
+      vl = pool_Qsucc(NULL, gdbroot->pool, vl)
+    ) {
+      if (!cclassSupport) {
+        vp = pool_Qitem(vl, gdb_sVolume, l.own_ll);
+        if (vp->l.flags.b.classvol)
+          continue;
+      }
+      nVol++;
+    }
     
-    size = sizeof(*mp) + ((nVol - 1) * sizeof(mp->g[0]));
+    if (!cclassSupport)
+      size = sizeof(*m7p) + ((nVol - 1) * sizeof(m7p->g[0]));
+    else
+      size = sizeof(*mp) + ((nVol - 1) * sizeof(mp->g[0]));
+
     mp = (net_sVolumes *) malloc(size);
     if (mp == NULL) break;
+
+    m7p = (net_sVolumes7 *) mp;
 
     for (
       i = 0, vl = vlStart;
       i < nVol && vl != &gdbroot->my_node->own_lh;
-      i++, vl = pool_Qsucc(NULL, gdbroot->pool, vl)
+      vl = pool_Qsucc(NULL, gdbroot->pool, vl)
     ) {
       vp = pool_Qitem(vl, gdb_sVolume, l.own_ll);
-      mp->g[i] = vp->g;
+
+      if (!cclassSupport) {
+        if (vp->l.flags.b.classvol)
+          continue;
+        else {
+          memcpy(&m7p->g[i], &vp->g, sizeof(m7p->g[0]));
+        }
+      } else
+        mp->g[i] = vp->g;
+
+      i++;
     }
        
     mp->count = i;
@@ -900,7 +950,12 @@ sendVolumes (
   tgt.nid  = np->nid;
   tgt.qix = net_cProcHandler;
 
-  if (!net_Put(&sts, &tgt, mp, net_eMsg_volumes, size))
+  if (!cclassSupport)
+    msgtype = net_eMsg_volumes7;
+  else
+    msgtype = net_eMsg_volumes;
+  
+  if (!net_Put(&sts, &tgt, mp, msgtype, size))
     errh_Error("Sending 'volumes' to %s (%s)\n%m",
       np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0), sts);
 
@@ -1017,6 +1072,57 @@ volumes (
     nodeUp(np);
 }
 
+/* Receive a list of all volumes owned by the sending node.  
+ * Neth version 7 of net_sVolumes
+ */
+
+static void
+volumes7 (
+  qcom_sGet 		*get
+)
+{
+  net_sVolumes7		*v7mp = (net_sVolumes7 *) get->data;
+  net_sVolumes		*vmp;
+  void                  *origdata;
+  int                   i;
+  int                   size;
+  pwr_tBoolean          ok = 1;
+  
+  size = sizeof(*vmp) + ((v7mp->count - 1) * sizeof(vmp->g[0]));
+  vmp = (net_sVolumes *) malloc(size);
+  if (vmp == NULL) {
+    errh_Error("Failed to allocate 'volumes7' from nid %d, count %d",
+               get->sender.nid, v7mp->count);
+    return;
+  }
+  
+
+  for (i = 0; i < v7mp->count; i++) {
+
+    if (v7mp->g[i].cid == pwr_eClass_ClassVolume) {
+      /* this should never happen */
+      errh_Error("Node, nid %d, net version 7 sent Class Volumes",
+                 get->sender.nid);
+      ok = 0;
+      break;
+    } else {
+      memcpy(&vmp->g[i], &v7mp->g[i], sizeof(v7mp->g[0]));
+      /* The time is only used for class volumes */
+      memset(&vmp->g[i].time, 0, sizeof(vmp->g[0].time));    
+    }
+  }
+  
+  if (ok) {
+    origdata = get->data;
+    get->data = vmp;
+    volumes(get);
+    get->data = origdata;
+  }
+  
+  free(vmp);
+}
+
+
 /* Receive a list of all volumes the remote node have mounted.  */
 
 static void
@@ -1050,6 +1156,7 @@ volumesR (
     sendVolumes(np, mp->ctx);
 
 }
+
 
 #if 0
 /* This is the link state machine
