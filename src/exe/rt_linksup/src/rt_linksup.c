@@ -288,14 +288,14 @@ init_node (
     int tmo;
 
     dt = MAX(1, (int)(o->SubscriptionInterval * 1000));
-    tmo = MAX(2 * dt, 10000); /* 10 s */
+    tmo = MAX(2 * dt/100, 100); /* 10 s */
     sts = gdh_SetSubscriptionDefaults (dt, tmo);
 
     tid.pwr = pwr_eClass_Node;
     tid.c.bix = 1;
     
     aref.Objid = o->Node;
-    sts = gdh_ClassAttrToAttrref(pwr_eClass_Node, ".CurVersion", &aref);
+    sts = gdh_ClassAttrToAttrref(pwr_eClass_Node, ".CurrentVersion", &aref);
     sts = gdh_SubRefObjectInfoAttrref(&aref, &o->SubId);
     if ( EVEN(sts))
       errh_Error("Couldn't get link to Node object, %m", sts);
