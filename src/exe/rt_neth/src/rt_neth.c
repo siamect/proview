@@ -1034,7 +1034,6 @@ volumes (
   gdb_sNode		*np;
   pwr_tUInt32		nid = get->sender.nid;
 
-
   gdb_ScopeLock {
 
     np = hash_Search(&sts, gdbroot->nid_ht, &nid);
@@ -1063,11 +1062,9 @@ volumes (
 
         
         if (vp->l.flags.b.isMounted) {
-          errh_Info("!!cvolcm_ConnectVolume %s", &vmp->g[i].name);
           cvolcm_ConnectVolume(&sts, vp, &vmp->g[i], np);
           nConnect++;
         } else {
-          errh_Info("!!Volume %s is not mounted", &vmp->g[i].name);
           vmp->g[i].vid = pwr_cNVolumeId;
         }
       }
@@ -1100,8 +1097,11 @@ volumes7 (
   int                   size;
   pwr_tBoolean          ok = 1;
   
+
   size = sizeof(*vmp) + ((v7mp->count - 1) * sizeof(vmp->g[0]));
   vmp = (net_sVolumes *) malloc(size);
+  vmp->count = 0;
+  
   if (vmp == NULL) {
     errh_Error("Failed to allocate 'volumes7' from nid %d, count %d",
                get->sender.nid, v7mp->count);
@@ -1120,7 +1120,8 @@ volumes7 (
     } else {
       memcpy(&vmp->g[i], &v7mp->g[i], sizeof(v7mp->g[0]));
       /* The time is only used for class volumes */
-      memset(&vmp->g[i].time, 0, sizeof(vmp->g[0].time));    
+      memset(&vmp->g[i].time, 0, sizeof(vmp->g[0].time));
+      vmp->count++;
     }
   }
   
