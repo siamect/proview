@@ -242,13 +242,13 @@ wb_attribute wb_volume::attribute( wb_name aname)
   if ( !cd)
     return wb_attribute();
 
-  wb_adrep *adrep = ((wb_cdrep *)cd)->adrep( &sts, aname.attributesAll());
+  wb_adrep *adrep = ((wb_cdrep *)cd)->adrep( &sts, aname.attributesAllTrue());
 
   if ( ODD(sts)) {
     bool shadowed = false;
     if ( aname.hasSuper()) {
       // Check if shadowed
-      wb_attrname an(aname.attributesAll());
+      wb_attrname an(aname.attributesAllTrue());
       wb_adrep *ad = ((wb_cdrep *)cd)->adrep( &sts, an.name(cdh_mName_attribute));
       if ( ODD(sts) && ad->offset() != adrep->offset()) {
 	shadowed = true;
@@ -266,7 +266,7 @@ wb_attribute wb_volume::attribute( wb_name aname)
   }
 #if 0
   // This only work on one level attributes... TODO
-  wb_adrep *adrep = ((wb_cdrep *)cd)->adrep( &sts, aname.attributesAll());
+  wb_adrep *adrep = ((wb_cdrep *)cd)->adrep( &sts, aname.attributesAllTrue());
   if ( ODD(sts)) {
     if ( aname.hasAttrIndex())
       return wb_attribute( sts, (wb_orep *)o, adrep, aname.attrIndex());
@@ -288,7 +288,7 @@ wb_attribute wb_volume::attribute( wb_object o, wb_attrname aname)
   if ( !cd)
     return wb_attribute();
 
-  wb_adrep *adrep = ((wb_cdrep *)cd)->adrep( &sts, aname.attributesAll());
+  wb_adrep *adrep = ((wb_cdrep *)cd)->adrep( &sts, aname.attributesAllTrue());
   if ( ODD(sts))
     return wb_attribute( sts, (wb_orep *)o, adrep);
   return wb_attribute();
