@@ -666,10 +666,14 @@ void wb_wblnode::buildAttribute( ref_wblnode classdef, ref_wblnode objbodydef,
 
   if ( !o->a.tid) {
     m_vrep->error( "Unknown attribute type", getFileName(), line_number);
+    ((pwr_sParam *)o->rbody)->Info.ParamIndex = *bindex;
+    (*bindex)++;
     return;
   }
   if ( !m_vrep->getTypeInfo( o->a.tid, &type, &size, &elements)) {
     m_vrep->error( "Can't find attribute type", getFileName(), line_number);
+    ((pwr_sParam *)o->rbody)->Info.ParamIndex = *bindex;
+    (*bindex)++;
     return;
   }
   if ( o->a.type == 0)
