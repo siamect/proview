@@ -102,6 +102,7 @@
 /** @todo Set better initial values */
 # define gdb_cMin_ccvolumes	150
 # define gdb_cMin_cclasses	300
+# define gdb_cMin_scObjects	300
 
 
 #if defined(OS_ELN)
@@ -363,6 +364,7 @@ typedef union {
 
 typedef struct {
   pool_sQlink		volmo_lh; /**< List of 'mounted on' in this volume.  */
+  pool_sQlink		sc_lh;/**< List of sub class objects in this volume.  */
   gdb_mNv		flags;
   pwr_tObjid		next_oid;
   co_mFormat            format;
@@ -672,7 +674,9 @@ typedef union {
     pwr_Bits( swapDelete		, 1 ),
     pwr_Bits( fill_1			, 7 ),,,,,,,
 
-    pwr_Bits( fill_2			, 8 ),,,,,,,,
+    pwr_Bits( isSc                      , 1 ), /* MUST be same as gdb_mSc */
+    pwr_Bits( hasSc                     , 1 ),
+    pwr_Bits( fill_2			, 6 ),,,,,,
 
     pwr_Bits( bodyDecoded		, 1 ),
     pwr_Bits( systemCreated		, 1 ),
@@ -690,6 +694,9 @@ typedef union {
 
 #define gdb_mNo_swapDelete		pwr_Bit(8)
 
+#define gdb_mNo_isSc		        pwr_Bit(16)
+#define gdb_mNo_hasSc		        pwr_Bit(17)
+
 #define gdb_mNo_bodyDecoded		pwr_Bit(24)
 #define gdb_mNo_systemCreated		pwr_Bit(25)
 #define gdb_mNo_			(~gdb_mNo__)
@@ -702,6 +709,8 @@ typedef union {
 
 typedef struct {
   pool_sQlink		cid_ll;		/**< Next/prv object of same class */
+  gdb_mNo		flags;          /**< NOTE! Must be placed directly after cid_ll 
+                                             the same position is needed in gdb_sScObject */
   pool_sQlink		cli_ll;		/**< Mount/Alias client list. */
   pool_sQlink		sib_lh;		/**< Head of children sibling list. */
   pool_sQlink		sib_ll;		/**< Sibling list.  */
@@ -711,8 +720,8 @@ typedef struct {
   pwr_tUInt32		subcount;
   pwr_tUInt32		sancount;
   gdb_sRalarm		ral;		/**< Remote alarm.  */
-  gdb_mNo		flags;
   dbs_mFlags		lflags;
+  pool_sQlink	 	sc_lh;        /**< Head of children sub class sibling list */
 } gdb_sNobject;
 
 typedef struct {
@@ -733,9 +742,73 @@ typedef struct {
   } u;
 } gdb_sObject;
 
+
+/** The Sub Class object. It's not a complete object it's just needed
+ *  when the class list is traversed.
+ */ 
+
+typedef union {
+  pwr_tBitMask m;
+  pwr_32Bits (
+    pwr_Bits( inScList			, 1 ),
+    pwr_Bits( inScTab			, 1 ),
+    pwr_Bits( inSibList			, 1 ),
+    pwr_Bits( inCidList			, 1 ),
+    pwr_Bits( fill_0			, 4 ),,,,
+
+    pwr_Bits( fill_1			, 8 ),,,,,,,,
+
+    pwr_Bits( isSc                      , 1 ), /* MUST be same as gdb_mNo */
+    pwr_Bits( hasSc                     , 1 ),
+    pwr_Bits( isParentSc                , 1 ),    
+    pwr_Bits( isArrayElem               , 1 ),    
+    pwr_Bits( fill_2			, 4 ),,,,
+
+    pwr_Bits( fill_3			, 8 ),,,,,,,
+  ) b;
+
+#define gdb_mSc__			0
+#define gdb_mSc_inScList		pwr_Bit(0)
+#define gdb_mSc_inScTab			pwr_Bit(1)
+#define gdb_mSc_inSibList		pwr_Bit(2)
+#define gdb_mSc_inCidList		pwr_Bit(3)
+
+#define gdb_mSc_isSc		        pwr_Bit(16)
+#define gdb_mSc_hasSc		        pwr_Bit(17)
+#define gdb_mSc_isParentSc      	pwr_Bit(18)
+#define gdb_mSc_isArrayElem	        pwr_Bit(19)
+#define gdb_mSc_			(~gdb_mSc__)
+
+} gdb_mSc;
+
+typedef struct {
+  pwr_tObjid            oid;            /**< Object Id */
+  pwr_tClassId          cid;            /**< Class Id */
+  pool_sQlink		sc_htl;	        /**< Sub Class hash table entry. */
+  pool_sQlink		sc_ll;	        /**< List of sub class objects in one volume. */
+  pool_tRef             vr;             /**< Volume reference */
+  pool_tRef             or;             /**< The "real" object */
+  pwr_tObjid            poid;
+  pool_tRef             por;            /**< Sub Class or Object Parent*/
+  pool_tRef             cr;             /**< Reference to gdb_sClass */
+  pwr_tUInt32           aidx;           /**< Attribute index in gdb_sClass */
+  pwr_tUInt32           elem;           /**< Index if array element, else ULONG_MAX */
+  pool_sQlink           cid_ll;         /**< Next/prv object of same class */
+  gdb_mSc               flags;          /**< NOTE! Must be placed directly after cid_ll 
+                                             the same position is needed in gdb_sNobject */
+  dbs_mFlags		lflags;
+  pool_sQlink           sib_ll;	        /**< Sibling list. */
+  pool_sQlink	 	sib_lh;         /**< Head of children sub class sibling list */
+  pwr_tUInt32           offset;         /**< Offset in parent body */
+  pwr_tUInt32           size;           /**< Size of body */
+  pool_tRef             body;	        /**< Address of actual body in the "real" object's
+                                             body. Must not be freed  */
+} gdb_sScObject; 
+
+
 typedef struct {
   pool_tRef		aor;		/**< Attribute object header reference.  */
-  pool_tRef		abr;		/**< Attribute object header reference.  */
+  pool_tRef		abr;		/**< Attribute object body reference.  */
   pwr_mAdef		flags;
   pwr_eType		type;
   pwr_tUInt32		offs;
@@ -743,6 +816,8 @@ typedef struct {
   pwr_tUInt32		elem;
   pwr_tUInt32		moffset;	/**< Attribute maximum offset within body.  */
   pwr_tAix		aix;
+  pwr_tClassId          cid;            /**< If class, Class Id */
+  pool_tRef             cr;             /**< If class, gdb_sClass reference */
 } gdb_sAttribute;
 
 typedef struct {
@@ -750,20 +825,17 @@ typedef struct {
   pwr_tClassId		cid;		/**< Class identity of class.  */
   pool_sQlink		class_ll;	/**< Entry in list of classes on node.  */
   pool_sQlink		cid_lh;		/**< Head of instance list of this class,
-					   Template excluded.  */
+					     Template excluded.  */
   pool_tRef		cor;		/**< Class object header reference.  */
   pool_tRef		cbr;		/**< Class object body reference.  */
   pool_tRef		bor;		/**< ObjBodyDef object header reference.  */
   pool_tRef		bbr;		/**< ObjBodyDef object body reference.  */
   pwr_tUInt32		size;		/**< Size of objects body.  */
+  pwr_tBoolean          hasSc;          /**< At least one attribute is a class */
   pwr_tUInt32		acount;		/**< Number of attributes.  */
-
-/* Not needed ???
-   pool_tRef		ar; */
-		/**< Pool reference to first attribute in gdb_sAttribute block.  */
-
   gdb_sAttribute	attr[1];
 } gdb_sClass;
+
 
 typedef struct {
   pool_sQlink		volmo_ll;	/**< Volume mounted on list.  */
@@ -868,6 +940,7 @@ typedef struct {
   pwr_tNodeId		nid;			/**< Node index for this node */
   pwr_tObjid		nod_oid;		/**< Object identifier for the node object.  */
   pwr_tUInt32		objects;		/**< Number of  */
+  pwr_tUInt32		scObjects;		/**< Number of  */
   pwr_tUInt32		volumes;		/**< Number of  */
   pwr_tUInt32		classes;		/**< Number of  */
   pwr_tUInt32		nodes;			/**< Number of  */
@@ -909,6 +982,7 @@ typedef struct {
     hash_sGtable	as_ht;		/**< mount soid -> alias server hash table.  */
     hash_sGtable	ccvol_ht;	/**< nid + vid -> cached class volume */
     hash_sGtable	cclass_ht;	/**< cid + cached voltime -> cached class */
+    hash_sGtable	sc_ht;	        /**< oid -> Sub Class object hash table*/
   } h;
 
   qcom_sQid		nethandler;	/**< local nethandler */
@@ -1001,8 +1075,9 @@ typedef struct {
     hash_sTable		family_ht;	/**< Family (poid + name) -> object hash table.  */
     hash_sTable		ms_ht;		/**< mount soid -> mount server hash table.  */
     hash_sTable		as_ht;		/**< mount soid -> alias server hash table.  */
-    hash_sTable		ccvol_ht;	/**< nid + vid -> cached class volume */
-    hash_sTable		cclass_ht;	/**< cid + cached voltime -> cached class */
+    hash_sTable		ccvol_ht;	/**< nid + vid -> cached class volume hash table*/
+    hash_sTable		cclass_ht;	/**< cid + cached voltime -> cached class hash table */
+    hash_sTable		sc_ht;	        /**< oid -> sub class object hash table  */
   } h;
   gdb_sGlobal		*db;		/**< Database Root, (in db_lock section) */
   sect_sHead		*sect;		/**< Section header for global database.  */
@@ -1021,8 +1096,9 @@ typedef struct {
   hash_sTable		*family_ht;	/**< Family table.  */
   hash_sTable		*ms_ht;		/**< mount soid -> mount server hash table.  */
   hash_sTable		*as_ht;		/**< mount soid -> alias server hash table.  */
-  hash_sTable		*ccvol_ht;	/**< nid + vid -> cached class volume */
-  hash_sTable		*cclass_ht;	/**< cid + cached voltime -> cached class */
+  hash_sTable		*ccvol_ht;	/**< nid + vid -> cached class volume hash table */
+  hash_sTable		*cclass_ht;	/**< cid + cached voltime -> cached class hash table */
+  hash_sTable		*sc_ht;	        /**< oid -> sub class object hash table  */
 
   gdb_sVolume		*my_volume;	/**< The local root volume.  */
   gdb_sVolume		*no_volume;	/**< The unknown volume with vid = 0.0.0.0.  */
@@ -1096,6 +1172,18 @@ gdb_AddObject (
   pwr_tObjid		poid,
   pwr_tBitMask		iflags,
   pwr_tObjid		soid
+);
+
+gdb_sScObject *
+gdb_AddScObject (
+  pwr_tStatus		*sts,
+  pwr_tObjid		oid,
+  pwr_tClassId		cid,
+  pwr_tUInt32		size,
+  pwr_tObjid		poid,
+  pwr_tUInt32           aidx,
+  pwr_tUInt32           elem,
+  gdb_mSc		flags
 );
 
 gdb_sVolume *

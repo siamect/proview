@@ -37,6 +37,12 @@ static dvmsFctn *convFctn = NULL;
 
 
 static pwr_tBoolean
+buildScObjects (
+  pwr_tStatus		*status,
+  gdb_sVolume		*vp
+);
+
+static pwr_tBoolean
 decodeObject (
   pwr_tStatus		*sts,
   gdb_sObject		*op,
@@ -75,6 +81,35 @@ mountVolume (
 );
 
 static pwr_tBoolean	updateObject (ivol_sVolume*, ivol_sObject*);
+
+/* Build ScObjects in a native volume.  */
+
+static pwr_tBoolean
+buildScObjects (
+  pwr_tStatus		*status,
+  gdb_sVolume		*vp
+)
+{
+  pool_sQlink		*scl;
+  gdb_sScObject		*scp;
+
+  pwr_dStatus(sts, status, GDH__SUCCESS); 
+
+  /* Link all sc objects.  */
+
+  for (
+    scl = pool_Qsucc(sts, gdbroot->pool, &vp->u.n.sc_lh);
+    scl != &vp->u.n.sc_lh;
+    scl = pool_Qsucc(sts, gdbroot->pool, scl)
+  ) {
+    scp = pool_Qitem(scl, gdb_sScObject, sc_ll);
+
+    vol_LinkScObject(sts, vp, scp, vol_mLinkSc_build);
+    pwr_Assert(ODD(*sts));
+
+  }
+  return YES;
+}
 
 /* Decode the body of an object.  */
 
@@ -289,7 +324,6 @@ updateObject (
   }
     
   op->u.n.flags.b.isMountClean = o->flags.b.isMountClean;
-  /*  op->u.n.rbTime = o->rbody.time; */
   op->u.n.time = o->time;
   op->u.n.lflags.m = o->flags.m;
 
@@ -397,6 +431,33 @@ ivol_BuildNode (
 
     mvol_LinkClass(sts, cp, gdb_mAdd__);
   }
+
+  /* Link Sub classes to attributes.  */
+
+  for (
+    cl = pool_Qsucc(sts, gdbroot->pool, &gdbroot->db->class_lh);
+    cl != &gdbroot->db->class_lh;
+  ) {
+    cp = pool_Qitem(cl, gdb_sClass, class_ll);
+    cl = pool_Qsucc(sts, gdbroot->pool, cl);
+
+    if (cp->hasSc)
+      mvol_LinkSubClassToAttribute(sts, cp);
+  }
+
+  /* Build ScObjects for native volumes.  */
+
+  for (
+    vl = pool_Qsucc(sts, gdbroot->pool, &gdbroot->db->vol_lh);
+    vl != &gdbroot->db->vol_lh;
+    vl = pool_Qsucc(sts, gdbroot->pool, vl)
+  ) {
+    vp = pool_Qitem(vl, gdb_sVolume, l.vol_ll);
+
+    if (vp->l.flags.b.isNative)
+      buildScObjects(sts, vp);
+  }
+
 
   convFctn = dvms_GetFctns(formatp);
   if (convFctn != NULL)
@@ -580,6 +641,42 @@ ivol_LoadObject (
   op->u.n.time = o->time;
   op->u.n.lflags.m = o->flags.m;
   return op;
+}
+
+/* Loads an object into the object database.
+   Used when initially populating the database, before
+   the nethandler is actually running. No checks are done except for
+   duplicate Objid. The only way to find an object is searching by
+   Objid. When InitialLoadDone is called, the rest of the relations
+   between the objects are put in place.  */
+
+gdb_sScObject *
+ivol_LoadScObject (
+  pwr_tStatus		*status,
+  ivol_sVolume		*lv,
+  dbs_sScObject		*sc,
+  pwr_tBitMask		ilink
+)
+{
+  gdb_sScObject	*scp;
+  gdb_mSc	flags;
+
+  pwr_dStatus(sts, status, GDH__SUCCESS);
+
+  flags.m = 0;
+  flags.b.isArrayElem = sc->flags.b.isArrayElem;
+  flags.b.hasSc = sc->flags.b.hasSubClass;
+  
+  scp = gdb_AddScObject(sts, sc->oid, sc->cid, sc->size, sc->poid, sc->aidx, sc->elem, flags);
+  if (scp == NULL) 
+    return NULL;
+  scp->lflags.m = sc->flags.m;
+  if (vol_LinkScObject(sts, lv->vp, scp, ilink) == NULL)
+    return NULL;
+  //  scp->flags.b.isMountClean = sc->flags.b.isMountClean;
+  //  scp->time = sc->time;
+
+  return scp;
 }
 
 /* Loads  */

@@ -22,11 +22,9 @@
 #endif
 #include "rt_ini_alias.h"
 #include "rt_ini_msg.h"
-/* #include "rt_load.h" */
 #include "rt_lst.h"
 #include "rt_errh.h"
 #include "rt_syi.h"
-#include "rt_load.h"
 
 #if defined OS_VMS
 # define cPrio_neth		8
@@ -88,6 +86,7 @@ static pwr_tBoolean	checkSect (pwr_tStatus*, ini_sContext*, int, int);
 static gdb_sObject*	oidToObject (pwr_tObjid);
 static pwr_tBoolean	loadSectObject (pwr_tStatus*, ini_sContext*, ivol_sVolume*);
 static pwr_tBoolean	loadSectRbody (pwr_tStatus*, ini_sContext*, ivol_sVolume*);
+static pwr_tBoolean     loadSectScObject (pwr_tStatus*, ini_sContext*, ivol_sVolume*);
 static pwr_tBoolean	loadSectVolume (pwr_tStatus*, ini_sContext*, ivol_sVolume*);
 static pwr_tBoolean	readSectFile (pwr_tStatus*, ini_sContext*);
 static pwr_tBoolean	readSectVolRef (pwr_tStatus*, ini_sContext*);
@@ -284,7 +283,7 @@ readSectVolRef (
 
 #if 0
 
-  if (fseek(cp->dbs.f, 0, SEEK_SET) != 0)
+  if (fseek(cp->dbs.f, cp->sect.offset, SEEK_SET) != 0)
     pwr_Return(NO, sts, errno_GetStatus());
 
 
@@ -400,7 +399,7 @@ loadSectRbody (
   while (i > 0) {
     fseek(cp->dbs.f, nextpos, SEEK_SET);
     if (!dbs_AlignedRead(sts, &ob, sizeof(ob), &cp->dbs)) {
-      errh_LogFatal(&cp->log, "loadSectObjbody, fread, %m", *sts);
+      errh_LogFatal(&cp->log, "loadSectRbody, fread, %m", *sts);
       return NO;
     }
 
@@ -461,11 +460,11 @@ reloadSectRbody (
   while (i > 0) {
     if (fseek(cp->dbs.f, nextpos, SEEK_SET) != 0) {
       *sts = errno_GetStatus();
-      errh_LogFatal(&cp->log, "reloadSectObjbody, fseek, %m", *sts);
+      errh_LogFatal(&cp->log, "reloadSectRbody, fseek, %m", *sts);
       break;
     }
     if (!dbs_AlignedRead(sts, &ob, sizeof(ob), &cp->dbs)) {
-      errh_LogFatal(&cp->log, "reloadSectObjbody, fread, %m", *sts);
+      errh_LogFatal(&cp->log, "reloadSectRbody, fread, %m", *sts);
       break;
     }
 
@@ -613,6 +612,49 @@ reloadSectObject (
 
   return ODD(*sts);
 
+}
+
+static pwr_tBoolean
+loadSectScObject (
+  pwr_tStatus		*status,
+  ini_sContext		*cp,
+  ivol_sVolume		*vp
+)
+{
+  pwr_tUInt32		i;
+  dbs_sScObject	        sc;
+  gdb_sScObject	        *scp;
+  PDR			pdrs;
+
+  pwr_dStatus(sts, status, INI__SUCCESS);
+
+  /* Read the section header by header */
+
+  if (fseek(cp->dbs.f, cp->sect.offset, SEEK_SET) != 0)
+    pwr_Return(NO, sts, errno_GetStatus());
+
+  for (i = 0; i < cp->sect.size; i += dbs_dAlign(sizeof(sc))) {
+    if (!dbs_AlignedRead(sts, &sc, sizeof(sc), &cp->dbs)) {
+      errh_LogFatal(&cp->log, "loadSectScObject, fread, %m", *sts);
+      break;
+    }
+
+    if (cp->dbs.file.format.m != cp->format.m) {
+      pdrmem_create(&pdrs, &sc, sizeof(sc), PDR_DECODE,
+                    cp->dbs.file.format, cp->format);
+      if(!pdr_dbs_sScObject(&pdrs, &sc))
+        pwr_Return(NO, sts, INI__XDR);
+    }
+
+    scp = ivol_LoadScObject(sts, vp, &sc, vol_mLinkSc_load);
+    if (scp == NULL) {
+      errh_LogError(&cp->log, "Loading object %s, parent %s\n%m",
+	cdh_ObjidToString(NULL, sc.oid, 0), cdh_ObjidToString(NULL, sc.poid, 0), *sts);
+      return NO;
+    }
+  }
+
+  return YES;
 }
 
 static pwr_tBoolean
@@ -1295,6 +1337,10 @@ ini_LoadVolume (
 	loadSectRbody(sts, cp, vp);
       break;
     default:
+    case dbs_eSect_scobject:
+      if (checkSect(sts, cp, sects, dbs_cVersionScObject))
+	loadSectScObject(sts, cp, vp);
+      break;
       *sts = INI__BADSECT;	/* Successful return status; means that */
       break;			/* we can continue after unknown sections */
     }
@@ -1305,6 +1351,8 @@ ini_LoadVolume (
 
   } while (cp->sect.type != dbs_eSect_rbody);
 
+
+  /** @todo add dbs_eSect_scobject to reqmask */
   reqmask = (1<<dbs_eSect_dir) | (1<<dbs_eSect_volume) | (1<<dbs_eSect_volref)
                | (1<<dbs_eSect_oid) | (1<<dbs_eSect_object) | (1<<dbs_eSect_rbody);
 

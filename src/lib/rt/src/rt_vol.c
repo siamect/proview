@@ -407,6 +407,124 @@ vol_LinkObject (
   return op;
 }
 
+/* Link a Sub Class object.  */
+
+gdb_sScObject *
+vol_LinkScObject (
+  pwr_tStatus		*sts,
+  gdb_sVolume		*vp,
+  gdb_sScObject	*scp,
+  pwr_tBitMask		ilink
+)
+{
+  pwr_tStatus		lsts = 1;
+  gdb_sObject		*pop = NULL;
+  gdb_sScObject		*pscp = NULL;
+  gdb_sClass		*cp;
+  vol_mLinkSc		link;
+  char			string[80];
+  
+
+  gdb_AssumeLocked;
+
+  link.m = ilink;
+
+  pwr_Assert(vp->g.vid == (scp->oid.vid & 0xffffff));
+
+  if (link.b.init) {
+    //scp->flags.m |= (vp->l.flags.m & gdb_mLv_objectFlags);
+    pool_Qinit(NULL, gdbroot->pool, &scp->sc_htl);
+    pool_Qinit(NULL, gdbroot->pool, &scp->sc_ll);
+    pool_Qinit(NULL, gdbroot->pool, &scp->cid_ll);
+    pool_Qinit(NULL, gdbroot->pool, &scp->sib_lh);
+    pool_Qinit(NULL, gdbroot->pool, &scp->sib_ll);
+
+    scp->flags.b.isParentSc = ((scp->poid.vid & 0xff000000) != 0);
+  }
+
+  
+  if (scp->flags.b.isParentSc) {
+    pscp = hash_Search(&lsts, gdbroot->sc_ht, &scp->poid);
+    if (pscp == NULL) {
+      sprintf(string, "Orphan found. Objid %s\n",  
+              cdh_ObjidToString(NULL, scp->oid, 0));
+      errh_Bugcheck(lsts, string);
+    }
+  } else {
+    pop = hash_Search(&lsts, gdbroot->oid_ht, &scp->poid);
+    if (pop == NULL) {
+      sprintf(string, "Orphan found. Objid %s\n",  
+              cdh_ObjidToString(NULL, scp->oid, 0));
+      errh_Bugcheck(lsts, string);
+    }
+  }
+  
+
+  if (link.b.scList && !scp->flags.b.inScList) {
+    pool_QinsertPred(NULL, gdbroot->pool, &scp->sc_ll, &vp->u.n.sc_lh);
+    scp->flags.b.inScList = 1;
+  }
+
+  if (link.b.scTab && !scp->flags.b.inScTab) {
+    scp = hash_Insert(&lsts, gdbroot->sc_ht, scp);
+    if (scp == NULL) 
+      pwr_Return(NULL, sts, lsts);
+    scp->flags.b.inScTab = 1;
+  }
+
+  if (link.b.parentRef && scp->por == pool_cNRef) {
+    if (scp->flags.b.isParentSc)
+      scp->por = pool_ItemReference(NULL, gdbroot->pool, pscp);
+    else
+      scp->por = pool_ItemReference(NULL, gdbroot->pool, pop);
+  }
+
+  if (link.b.volumeRef && scp->vr == pool_cNRef) {
+    scp->vr = pool_ItemReference(NULL, gdbroot->pool, vp);
+  }
+
+  if (link.b.classRef && scp->cr == pool_cNRef) {
+    cp = hash_Search(&lsts, gdbroot->cid_ht, &scp->cid);
+    if (cp != NULL) {
+      sprintf(string, "Class 0x%x not found for object, objid %s\n",  
+              scp->cid, cdh_ObjidToString(NULL, scp->oid, 0));
+
+      errh_Bugcheck(lsts, string);
+    }
+      
+    scp->cr = pool_ItemReference(NULL, gdbroot->pool, cp);
+  }
+
+
+  if(link.b.cidList && !scp->flags.b.inCidList)
+    mvol_LinkScObject(NULL, vp, scp);
+
+
+  if (link.b.sibList && !scp->flags.b.inSibList) {
+    if (scp->flags.b.isParentSc) {
+      pool_QinsertPred(NULL, gdbroot->pool, &scp->sib_ll, &pscp->sib_lh);
+      pscp->flags.b.hasSc = 1;
+
+    } else {    
+      pool_QinsertPred(NULL, gdbroot->pool, &scp->sib_ll, &pop->u.n.sc_lh);
+      pop->u.n.flags.b.hasSc = 1;
+    }
+    scp->flags.b.inSibList = 1;    
+  }
+
+  if (scp->body == pool_cNRef && scp->size > 0) {
+    if (scp->flags.b.isParentSc) {
+      pwr_Assert(pscp->body != pool_cNRef);
+      scp->body = pscp->body + scp->offset;
+    } else {
+      pwr_Assert(pop->u.n.body != pool_cNRef);
+      scp->body = pop->u.n.body + scp->offset;
+    }
+  }
+
+  return scp;
+}
+
 /* Mount a volume  */
 
 gdb_sVolume *

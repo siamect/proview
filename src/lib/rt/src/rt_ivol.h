@@ -104,6 +104,7 @@ pwr_tBoolean	ivol_DeleteVolume (pwr_tStatus*, gdb_sVolume*);
 ivol_sBody     *ivol_GetBody (pwr_tStatus*, pwr_tObjid, ivol_sBody*);
 pwr_tBoolean	ivol_InitiateVolumeUpdate (pwr_tStatus*, ivol_sVolume*);
 gdb_sObject    *ivol_LoadObject (pwr_tStatus*, ivol_sVolume*, dbs_sObject*, pwr_tBitMask);
+gdb_sScObject  *ivol_LoadScObject (pwr_tStatus*, ivol_sVolume*, dbs_sScObject*, pwr_tBitMask);
 gdb_sVolume    *ivol_LoadVolume (pwr_tStatus*, dbs_sVolume*, const co_mFormat*);
 pwr_tBoolean	ivol_RebuildVolume (pwr_tStatus*, ivol_sVolume*, const co_mFormat*);
 

@@ -140,6 +140,57 @@ typedef union {
 
 } vol_mLink;
 
+
+
+/** Link mask for sub classes */
+
+typedef union {
+  pwr_tBitMask m;
+  pwr_32Bits (
+    pwr_Bits( init			, 1),
+    pwr_Bits( scList			, 1),
+    pwr_Bits( scTab			, 1),
+    pwr_Bits( parentRef		        , 1),
+    pwr_Bits( volumeRef		        , 1),
+    pwr_Bits( classRef		        , 1),
+    pwr_Bits( sibList			, 1),
+    pwr_Bits( cidList			, 1),
+
+    pwr_Bits( body			, 1),
+    pwr_Bits( fill_1			, 7),,,,,,,
+
+    pwr_Bits( fill_2			, 8),,,,,,,,
+
+    pwr_Bits( fill_3			, 8),,,,,,,
+  ) b;
+
+#define vol_mLinkSc__			0
+#define vol_mLinkSc_init		pwr_Bit(0)
+#define vol_mLinkSc_scList		pwr_Bit(1)
+#define vol_mLinkSc_scTab		pwr_Bit(2)
+#define vol_mLinkSc_parentRef		pwr_Bit(3)
+#define vol_mLinkSc_volumeRef		pwr_Bit(4)
+#define vol_mLinkSc_classRef		pwr_Bit(5)
+#define vol_mLinkSc_sibList		pwr_Bit(6)
+#define vol_mLinkSc_cidList		pwr_Bit(7)
+
+#define vol_mLinkSc_body	        pwr_Bit(8)
+
+#define vol_mLinkSc_			(~vol_mLinkSc__)
+
+
+
+#define	vol_mLinkSc_load		(vol_mLinkSc_init|vol_mLinkSc_scList|vol_mLinkSc_scTab\
+				        |vol_mLinkSc_parentRef|vol_mLinkSc_volumeRef)
+
+
+#define	vol_mLinkSc_build		(vol_mLinkSc_sibList|vol_mLinkSc_cidList\
+				        |vol_mLinkSc_body|vol_mLinkSc_classRef)
+} vol_mLinkSc;
+
+
+
+
 typedef union {
   pwr_tBitMask m;
   pwr_32Bits (
@@ -270,6 +321,14 @@ vol_LinkObject (
   pwr_tStatus		*sts,
   gdb_sVolume		*vp,
   gdb_sObject		*op,
+  pwr_tBitMask		ilink
+);
+
+gdb_sScObject *
+vol_LinkScObject (
+  pwr_tStatus		*sts,
+  gdb_sVolume		*vp,
+  gdb_sScObject		*op,
   pwr_tBitMask		ilink
 );
 

@@ -71,6 +71,8 @@ evaluateInit (
   ip->objects += ip->objects / 2;
   ip->objects = MAX(ip->objects, gdb_cMin_objects);
 
+  /** @todo Get information from dbs-file */
+  ip->scObjects = MAX(ip->scObjects,     gdb_cMin_scObjects);
 
   /* The 'pool' pool contains object headers, subscription structures and
      other gdb internal structures. Make it at least 600k to begin with,
@@ -96,6 +98,7 @@ evaluateInit (
 /** @todo Better values for cached classes and volumes to the initial pool */
   errh_Info("Cached classes: %d : %d bytes", ip->cclasses, ip->cclasses * (sizeof(gdb_sCclass) + 20 * sizeof(gdb_sCattribute)));
   errh_Info("Cached class volumes: %d : %d bytes", ip->ccvolumes, ip->ccvolumes * sizeof(gdb_sCclassVolume));
+  errh_Info("Sub class objects: %d : %d bytes", ip->scObjects, ip->scObjects * sizeof(gdb_sScObject));
 
 
   ip->pool_isize =
@@ -109,7 +112,8 @@ evaluateInit (
     ip->aliasServers  * sizeof(gdb_sAliasServer) +
     ip->subServers    * sizeof(sub_sServer) +
     ip->subClients    * sizeof(sub_sClient) +
-    ip->sanServers    * sizeof(san_sServer);
+    ip->sanServers    * sizeof(san_sServer) +
+    ip->scObjects * sizeof(gdb_sScObject);
 
   ip->pool_isize = MAX(ip->pool_isize, gdb_cMin_pool_isize);
   ip->pool_esize = ip->pool_isize / 8;
@@ -206,6 +210,9 @@ mapLocalDb (
   gdbroot->cclass_ht = hash_Create(sts, gdbroot->pool, &gdbroot->h.cclass_ht, &gdbroot->db->h.cclass_ht, NULL, NULL);
   if (gdbroot->cclass_ht == NULL) errh_Bugcheck(*sts, "initiating cached class hash table");
 
+  gdbroot->sc_ht = hash_Create(sts, gdbroot->pool, &gdbroot->h.sc_ht, &gdbroot->db->h.sc_ht, NULL, NULL);
+  if (gdbroot->sc_ht == NULL) errh_Bugcheck(*sts, "initiating sub class object hash table");
+
 
   if (offsetof(sub_sClient, sid) != offsetof(sub_sServer, sid))
     errh_Bugcheck(GDH__WEIRD, "offset id: client - server");
@@ -215,6 +222,11 @@ mapLocalDb (
     errh_Bugcheck(GDH__WEIRD, "offset htl: client - server");
   if (offsetof(sub_sClient, subc_htl) != offsetof(dl_sLink, subc_htl))
     errh_Bugcheck(GDH__WEIRD, "offset htl: client - dlink");
+  if ((offsetof(gdb_sNobject, flags) - offsetof(gdb_sNobject, cid_ll)) 
+      != (offsetof(gdb_sScObject, flags) - offsetof(gdb_sScObject, cid_ll)))
+    errh_Bugcheck(GDH__WEIRD, "offset between cid_ll and flags in gdb_sNobject and gdb_sScObject");
+  if (gdb_mNo_isSc != gdb_mSc_isSc)
+    errh_Bugcheck(GDH__WEIRD, "gdb_mNo_isSubClass != gdb_mSc_isSubClass");
 
   return gdbroot;  
 }
@@ -681,6 +693,9 @@ gdb_CreateDb (
     hash_Init(&gdbroot->db->h.cclass_ht, ip->cclasses, sizeof(gdb_sCclassKey), sizeof(gdb_sCclass),
       offsetof(gdb_sCclass, key), offsetof(gdb_sCclass, cclass_htl), hash_eKey_memcmp);
 
+    hash_Init(&gdbroot->db->h.sc_ht, ip->scObjects, sizeof(pwr_tObjid), sizeof(gdb_sScObject),
+      offsetof(gdb_sScObject, sc_htl), offsetof(gdb_sCclass, cclass_htl), hash_eKey_oid);
+
     lp = mapLocalDb(sts);
     if (lp == NULL) break;
 
@@ -816,6 +831,38 @@ gdb_AddObject (
   return op;
 }
 
+/* Allocate an sub class object header and 
+   initiate it.  */
+
+gdb_sScObject *
+gdb_AddScObject (
+  pwr_tStatus		*sts,
+  pwr_tObjid		oid,
+  pwr_tClassId		cid,
+  pwr_tUInt32		size,
+  pwr_tObjid		poid,
+  pwr_tUInt32           aidx,
+  pwr_tUInt32           elem,
+  gdb_mSc		flags
+)
+{
+  gdb_sScObject	*scp;  
+
+  scp = pool_Alloc(sts, gdbroot->pool, sizeof(*scp));
+  if (scp == NULL) return NULL;
+
+  scp->oid = oid;
+  scp->cid = cid;
+  scp->poid = poid;
+  scp->aidx = aidx;
+  scp->elem = elem;
+  scp->flags.m = flags.m;
+  scp->flags.b.isSc = 1;
+  scp->size = size;
+    
+  return scp;
+}
+
 /* Load a volume */
 
 gdb_sVolume *
@@ -904,6 +951,7 @@ gdb_LoadVolume (
 
   if (vp->l.flags.b.isNative) {
     pool_Qinit(NULL, gdbroot->pool, &vp->u.n.volmo_lh);
+    pool_Qinit(NULL, gdbroot->pool, &vp->u.n.sc_lh);
     vp->u.n.next_oid.vid = vid;
     vp->u.n.format = *format;
     if (cid != pwr_eClass_DynamicVolume)

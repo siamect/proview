@@ -520,6 +520,32 @@ mvol_LinkClass (
 }
 
 gdb_sClass *
+mvol_LinkSubClassToAttribute (
+  pwr_tStatus		*sts,
+  gdb_sClass		*cp
+)
+{
+  gdb_sClass            *subcp;
+  int			i;
+
+
+  if (!cp->hasSc)
+    pwr_Return(cp, sts, MVOL__SUCCESS);
+
+
+  for (i = 0; i < cp->acount; i++) {
+    if (cp->attr[i].flags.b.isclass) {
+      subcp = hash_Search(sts, gdbroot->cid_ht, &cp->attr[i].cid);
+      if (subcp == NULL)
+        errh_Bugcheck(0, "No sub class");
+      cp->attr[i].cr = pool_Reference(sts, gdbroot->pool, subcp);
+    }
+  }
+
+  pwr_Return(cp, sts, MVOL__SUCCESS);
+}
+
+gdb_sClass *
 mvol_LinkObject (
   pwr_tStatus		*sts,
   gdb_sVolume		*vp,
@@ -596,6 +622,29 @@ mvol_LinkObject (
       break;
     }
   }
+
+  return cp;
+}
+
+gdb_sClass *
+mvol_LinkScObject (
+  pwr_tStatus		*sts,
+  gdb_sVolume		*vp,
+  gdb_sScObject		*scp
+)
+{
+  gdb_sClass		*cp;
+
+
+  cp = gdb_AddClass(sts, scp->cid, gdb_mAdd__);
+  if (cp == NULL) {
+    errh_Bugcheck(*sts, "mvol_LinkScObject add class");
+  }
+
+  pwr_Assert(!scp->flags.b.inCidList);
+
+  pool_QinsertPred(sts, gdbroot->pool, &scp->cid_ll, &cp->cid_lh);
+  scp->flags.b.inCidList = 1;
 
   return cp;
 }

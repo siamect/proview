@@ -110,11 +110,24 @@ mvol_LinkClass (
 );
 
 gdb_sClass *
+mvol_LinkSubClassToAttribute (
+  pwr_tStatus		*sts,
+  gdb_sClass		*cp
+);
+
+gdb_sClass *
 mvol_LinkObject (
   pwr_tStatus		*sts,
   gdb_sVolume		*vp,
   gdb_sObject		*op,
   pwr_tBitMask		ilink
+);
+
+gdb_sClass *
+mvol_LinkScObject (
+  pwr_tStatus		*sts,
+  gdb_sVolume		*vp,
+  gdb_sScObject		*scp
 );
 
 gdb_sClass *

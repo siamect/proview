@@ -610,7 +610,8 @@ struct net_sOidToObject {
 %    pwr_Bits( isAliasServer	, 1),
 %    pwr_Bits( isMountClient	, 1),
 %    pwr_Bits( inSibList	, 1),
-%    pwr_Bits( fill0		, 3),,,
+%    pwr_Bits( hasSubClass	, 1),
+%    pwr_Bits( fill0		, 2),,
 %
 %    pwr_Bits( fill1		, 8),,,,,,,,
 %    pwr_Bits( fill2		, 8),,,,,,,,
@@ -623,6 +624,7 @@ struct net_sOidToObject {
 %#define net_mGo_isAliasServer	pwr_Bit(2)
 %#define net_mGo_isMountClient	pwr_Bit(3)
 %#define net_mGo_inSibList	pwr_Bit(4)
+%#define net_mGo_hasSubClass	pwr_Bit(5)
 %
 %#define net_mGo_isClient	(net_mGo_isAliasClient|net_mGo_isMountClient)
 %
@@ -1025,7 +1027,7 @@ struct net_sGclass {
 
 struct net_sGetGclass {
   net_sMessage		hdr;
-  pwr_tUInt32		ver; /**< see net_sMeassge for comment */
+  pwr_tUInt32		ver; /**< see net_sMessage for comment */
   pwr_tClassId	       	cid;
   pwr_tUInt32 		aidx; /**< Starting attribute index */ 
 };
@@ -1038,7 +1040,7 @@ struct net_sGetGclass {
 %
 %typedef struct {
 %  net_sMessage 	hdr;/**< Header */
-%  pwr_tUInt32		ver;/**< see net_sMeassge for comment */
+%  pwr_tUInt32		ver;/**< see net_sMessage for comment */
 %  pwr_tStatus          sts;/**< Status */
 %
 %  /* The data below is only valid if ODD(sts) */
@@ -1142,7 +1144,7 @@ struct  net_sCclass {
 
 struct net_sGetCclass {
   net_sMessage		hdr;
-  pwr_tUInt32		ver; /**< see net_sMeassge for comment */
+  pwr_tUInt32		ver; /**< see net_sMessage for comment */
   pwr_tClassId	       	cid;
   pwr_tTime		time;
   pwr_tUInt32 		aidx; /**< Starting attribute index */ 
@@ -1154,7 +1156,7 @@ struct net_sGetCclass {
 %
 %typedef struct {
 %  net_sMessage 	hdr;   /**< Header */
-%  pwr_tUInt32		ver; /**< see net_sMeassge for comment */
+%  pwr_tUInt32		ver; /**< see net_sMessage for comment */
 %  pwr_tStatus          sts;   /**< Status */
 %  pwr_tBoolean         equal; /**< The remote class is equal to the native */
 %
