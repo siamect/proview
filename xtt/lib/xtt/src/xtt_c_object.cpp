@@ -71,6 +71,15 @@ static pwr_tStatus OpenCrossref( xmenu_sMenuCall *ip)
 //
 static pwr_tStatus OpenCrossrefFilter( xmenu_sMenuCall *ip)
 {
+  pwr_tClassId classid;
+  pwr_tStatus sts;
+
+  sts = gdh_GetObjectClass( ip->Pointed.Objid, &classid);
+  if ( EVEN(sts)) return sts;
+
+  if ( classid == pwr_eClass_PlantHier)
+    return XNAV__INVISIBLE;
+
   return 1;
 }
 

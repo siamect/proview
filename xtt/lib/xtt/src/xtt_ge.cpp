@@ -30,6 +30,7 @@ extern "C" {
 #include "rt_gdh_msg.h"
 #include "co_cdh.h"
 #include "co_time.h"
+#include "co_mrm_util.h"
 }
 
 #include "glow_growctx.h"
@@ -48,6 +49,43 @@ extern "C" {
 // Static variables
 
 static void ge_message( void *ctx, char severity, char *message);
+
+static void ge_enable_set_focus( ge_tCtx gectx)
+{
+  gectx->set_focus_disabled--;
+}
+
+static void ge_disable_set_focus( ge_tCtx gectx, int time)
+{
+  gectx->set_focus_disabled++;
+  gectx->focus_timerid = XtAppAddTimeOut(
+	XtWidgetToApplicationContext( gectx->toplevel), time,
+	(XtTimerCallbackProc)ge_enable_set_focus, gectx);
+}
+
+static void ge_action_inputfocus( Widget w, XmAnyCallbackStruct *data)
+{
+  Arg args[1];
+  ge_tCtx	gectx;
+
+  XtSetArg    (args[0], XmNuserData, &gectx);
+  XtGetValues (w, args, 1);
+
+  if ( !gectx)
+    return;
+
+  if ( mrm_IsIconicState(w))
+    return;
+
+  if ( gectx->set_focus_disabled)
+    return;
+
+  if ( gectx->graph)
+    ((Graph *)gectx->graph)->set_inputfocus(1);
+
+  ge_disable_set_focus( gectx, 400);
+
+}
 
 static void ge_graph_init_cb( void *client_data)
 {
@@ -107,7 +145,8 @@ static void ge_change_value_cb( void *ge_ctx, void *value_object, char *text)
   XtManageChild( gectx->value_dialog);
 
   ge_message( gectx, ' ', "");
-  XtSetKeyboardFocus( gectx->toplevel, gectx->value_input);
+  XtCallAcceptFocus( gectx->value_input, CurrentTime);
+  // XtSetKeyboardFocus( gectx->toplevel, gectx->value_input);
 
   XtSetArg(args[0],XmNvalue, text);
   XtSetValues( gectx->value_input, args, 1);
@@ -147,6 +186,19 @@ static void ge_popup_menu_cb( void *ge_ctx, pwr_sAttrRef attrref,
     (gectx->popup_menu_cb)( gectx->parent_ctx, attrref, item_type, utility, 
 			    arg, popup);
 }
+
+static int ge_call_method_cb( void *ge_ctx, char *method, char *filter,
+	     pwr_sAttrRef attrref, unsigned long item_type, unsigned long utility, 
+	     char *arg)
+{
+  ge_tCtx	gectx = (ge_tCtx)ge_ctx;
+
+  if ( gectx->call_method_cb)
+    return (gectx->call_method_cb)( gectx->parent_ctx, method, filter, attrref, item_type, utility, 
+			    arg);
+  else return 0;
+}
+
 static int ge_is_authorized_cb( void *ge_ctx, unsigned int access)
 {
   ge_tCtx	gectx = (ge_tCtx)ge_ctx;
@@ -352,12 +404,14 @@ extern "C" ge_tCtx ge_new( Widget parent_wid,
   char		wname[] = "Proview/R Ge";
 
   static char translations[] =
-    "<ConfigureNotify>: resize()\n";
+    "<ConfigureNotify>: resize()\n\
+<FocusIn>: ge_xtt_inputfocus()";
   static XtTranslations compiled_translations = NULL;
 
   static XtActionsRec actions[] =
   {
-    {"resize",      (XtActionProc) ge_action_resize}
+    {"ge_xtt_inputfocus",      (XtActionProc) ge_action_inputfocus},
+    {"resize",      (XtActionProc) ge_action_resize},
   };
 
   static MrmRegisterArg	reglist[] = {
@@ -485,6 +539,7 @@ extern "C" ge_tCtx ge_new( Widget parent_wid,
   ((Graph *)gectx->graph)->is_authorized_cb = &ge_is_authorized_cb;
   ((Graph *)gectx->graph)->get_current_objects_cb = &ge_get_current_objects_cb;
   ((Graph *)gectx->graph)->popup_menu_cb = &ge_popup_menu_cb;
+  ((Graph *)gectx->graph)->call_method_cb = &ge_call_method_cb;
  
   XtPopup( gectx->toplevel, XtGrabNone);
 

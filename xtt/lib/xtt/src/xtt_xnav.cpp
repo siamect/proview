@@ -66,7 +66,7 @@ static void xnav_xatt_close_cb( void *xnav, void *xatt);
 static void xnav_xcrr_close_cb( void *xnav, void *xcrr);
 static void xnav_trace_scan( XNav *xnav);
 static int xnav_trace_scan_bc( brow_tObject object, void *p);
-//static void  xnav_type_id_to_name( int type_id, char *type_id_name);
+// static void  xnav_type_id_to_name( int type_id, char *type_id_name);
 static int xnav_trace_connect_bc( brow_tObject object, char *name, char *attr, 
 	flow_eTraceType type, void **p);
 static int xnav_trace_disconnect_bc( brow_tObject object);

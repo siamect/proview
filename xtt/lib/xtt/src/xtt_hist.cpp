@@ -834,7 +834,7 @@ void Hist::get_hist_list()
     printf(" Fel vid skapande av databashandtag avslutar\n");
     return;
   }
-  if((ret = dataBaseP->open(dataBaseP, dbName, NULL, DATABASETYPE, DB_RDONLY, 0)) != 0)
+  if((ret = dataBaseP->open(dataBaseP, 0, dbName, NULL, DATABASETYPE, DB_RDONLY, 0)) != 0)
   {
     /*error opening/creating db send the mess to errh, then exit*/
     printf("error db_open: %s\n", db_strerror(ret));

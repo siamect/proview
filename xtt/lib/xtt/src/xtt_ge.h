@@ -47,9 +47,13 @@ typedef struct ge_sCtx {
   int		(*is_authorized_cb)(void *, unsigned int);
   void          (*popup_menu_cb)(void *, pwr_sAttrRef, unsigned long,
 					 unsigned long, char *, Widget *); 
+  int         	(*call_method_cb)(void *, char *, char *, pwr_sAttrRef,
+				  unsigned long, unsigned long, char *);
   int           (*get_current_objects_cb)(void *, pwr_sAttrRef **, int **);
   int		width;
   int		height;
+  int		set_focus_disabled;
+  XtIntervalId 	focus_timerid;
 } *ge_tCtx;
 
 void ge_pop( ge_tCtx gectx);

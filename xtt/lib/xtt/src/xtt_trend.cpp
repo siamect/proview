@@ -239,7 +239,7 @@ XttTrend::XttTrend(
   gcd->x_reverse = 1;
   gcd->get_borders();
   gcd->get_default_axis();
-  gcd->select_color();
+  gcd->select_color( 0);
 
   if ( !trend_list) {
     // Use axis values from plotgroup object

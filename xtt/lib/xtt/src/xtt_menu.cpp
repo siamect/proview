@@ -14,7 +14,6 @@ extern "C" {
 #include "co_dcli.h"
 #include "pwr_baseclasses.h"
 #include "co_ccm_msg.h"
-#include "co_api.h"
 #include "flow_x.h"
 }
 
@@ -44,6 +43,7 @@ extern "C" {
 #include "rt_xnav_msg.h"
 #include "xtt_xnav.h"
 #include "xtt_menu.h"
+#include "co_api.h"
 
 pwr_dImport pwr_BindXttMethods($Object);
 pwr_dImport pwr_BindXttMethods(PlcPgm);

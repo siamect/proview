@@ -9,6 +9,7 @@
 #include "flow_std.h"
 
 
+# include <vector>
 # include <stdio.h>
 # include <string.h>
 # include <stdlib.h>
@@ -58,6 +59,7 @@ extern "C" {
 #include "glow_curvewidget.h"
 #include "ge_curve.h"
 #include "xtt_trend.h"
+#include "xtt_fast.h"
 #include "xtt_xcrr.h"
 #include "xtt_menu.h"
 #include "xtt_url.h"
@@ -2237,6 +2239,71 @@ static int	xnav_open_func(	void		*client_data,
     else
       new XttTrend( xnav, xnav->parent_wid, title_str, &w, objid_vect, 
 		  pwr_cNObjid, &sts);
+  }
+  else if ( strncmp( arg1_str, "FAST", strlen( arg1_str)) == 0)
+  {
+    char name_str[80];
+    char *name_ptr;
+    char title_str[80];
+    pwr_tObjid objid;
+    Widget w;
+    int sts;
+    pwr_tClassId classid;
+
+    // Command is "OPEN FAST"
+
+    /* Get the name qualifier */
+    if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str)))
+    {
+      if ( name_str[0] != '/')
+        /* Assume that this is the namestring */
+        name_ptr = name_str;
+      else
+      {
+        xnav->message('E', "Syntax error");
+        return XNAV__HOLDCOMMAND; 	
+      } 
+    }
+    else
+    {
+      if ( ODD( dcli_get_qualifier( "/NAME", name_str)))
+        name_ptr = name_str;
+      else
+      {
+        /* Get the selected object */
+        sts = xnav->get_current_object( &objid, name_str, 
+	  sizeof( name_str), cdh_mName_path | cdh_mName_object);
+        if ( EVEN(sts))
+        {
+          xnav->message('E', "Enter name or select an object");
+          return XNAV__SUCCESS;
+        }
+        name_ptr = name_str;
+      }
+    }
+
+    sts = gdh_NameToObjid( name_str, &objid);
+    if (EVEN(sts)) {
+      xnav->message('E', "Object not found");
+      return XNAV__HOLDCOMMAND;
+    }
+    sts = gdh_GetObjectClass( objid, &classid);
+    if (EVEN(sts)) return sts;
+
+    switch ( classid) {
+    case pwr_cClass_DsFastCurve:
+      break;
+    default:
+      xnav->message('E', "Error in object class");
+      return XNAV__HOLDCOMMAND;
+    }
+
+    if ( EVEN( dcli_get_qualifier( "/TITLE", title_str))) {
+      strcpy( title_str, "Fast");
+    }
+
+    new XttFast( xnav, xnav->parent_wid, title_str, &w, objid, 
+		 &sts);
   }
   else if ( strncmp( arg1_str, "URL", strlen( arg1_str)) == 0)
   {
@@ -4941,6 +5008,7 @@ void XNav::open_graph( char *name, char *filename, int scrollbar, int menu,
 	&xnav_ge_get_current_objects_cb, &xnav_ge_is_authorized_cb);
     gectx->display_in_xnav_cb = xnav_ge_display_in_xnav_cb;
     gectx->popup_menu_cb = xnav_popup_menu_cb;
+    gectx->call_method_cb = xnav_call_method_cb;
 
     appl.insert( applist_eType_Graph, (void *)gectx, pwr_cNObjid, filename,
 		   object_name);
