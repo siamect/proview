@@ -9,12 +9,13 @@ wb_orepdbs::operator new(size_t size, wb_vrepdbs *v)
     return (void *)v->new_wb_orepdbs(size);
 }
 
+#if 0
 void
 wb_orepdbs::operator delete(void *p, wb_vrepdbs *v)
 {
     v->delete_wb_orepdbs(p);
 }
-
+#endif
 
 wb_orepdbs::wb_orepdbs(dbs_sObject *o)
 {
