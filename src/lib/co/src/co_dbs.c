@@ -354,13 +354,31 @@ dbs_Open(pwr_tStatus *sts, dbs_sEnv *ep, const char *filename)
     return ep;
 }
 
+static void
+printTree(dbs_sEnv *ep, dbs_sObject *op, int indent)
+{
+    pwr_tStatus sts;
+    static char space[] = "                                                                               ";
+
+    if (op == NULL)
+        return;
+
+    space[indent] = '\0';
+    printf("T %s %d.%d %s\n", space, op->oid.vid, op->oid.oix, op->name);
+    
+    space[indent] = ' ';
+    printTree(ep, dbs_First(&sts, ep, op), indent + 1);
+    printTree(ep, dbs_After(&sts, ep, op), indent);
+}
+
+
 dbs_sEnv *
 dbs_Map(pwr_tStatus *sts, dbs_sEnv *ep, const char *filename)
 {
     struct stat sb;
     int ret;
     int fd;
-
+#define DBS_DEBUG 1
 #if DBS_DEBUG
     int i;
     dbs_sFile *fp;
@@ -384,18 +402,18 @@ dbs_Map(pwr_tStatus *sts, dbs_sEnv *ep, const char *filename)
 
 #if DBS_DEBUG
     printf("st_dev....: %d\t\t%s\n",   (int)sb.st_dev,     "device");
-    printf("st_ino....: %d\t%s\n",   sb.st_ino,     "inode");
+    printf("st_ino....: %ld\t%s\n",   sb.st_ino,     "inode");
     printf("st_mode...: %d\t%s\n",   sb.st_mode,    "protection");
     printf("st_nlink..: %d\t\t%s\n", sb.st_nlink,   "number of hard links");
     printf("st_uid....: %d\t%s\n",   sb.st_uid,     "user ID of owner");
     printf("st_gid....: %d\t\t%s\n", sb.st_gid,     "group ID of owner");
     printf("st_redv...: %d\t\t%s\n",   (int)sb.st_rdev,    "device type (if inode device)");
-    printf("st_size...: %d\t\t%s\n", sb.st_size,    "total size, in bytes");
-    printf("st_blksize: %d\t%s\n",   sb.st_blksize, "blocksize for filesystem I/O");
-    printf("st_blocks.: %d\t\t%s\n", sb.st_blocks,  "number of blocks allocated");
-    printf("st_atime..: %d\t%s\n",   sb.st_atime,   "time of last access");
-    printf("st_mtime..: %d\t%s\n",   sb.st_mtime,   "time of last modification");
-    printf("st_ctime..: %d\t%s\n",   sb.st_ctime,   "time of last change");
+    printf("st_size...: %ld\t\t%s\n", sb.st_size,    "total size, in bytes");
+    printf("st_blksize: %ld\t%s\n",   sb.st_blksize, "blocksize for filesystem I/O");
+    printf("st_blocks.: %ld\t\t%s\n", sb.st_blocks,  "number of blocks allocated");
+    printf("st_atime..: %ld\t%s\n",   sb.st_atime,   "time of last access");
+    printf("st_mtime..: %ld\t%s\n",   sb.st_mtime,   "time of last modification");
+    printf("st_ctime..: %ld\t%s\n",   sb.st_ctime,   "time of last change");
     printf("st_mode...: %d\t%s\n",   sb.st_mode,    "mode");
 #endif
 
@@ -421,10 +439,9 @@ dbs_Map(pwr_tStatus *sts, dbs_sEnv *ep, const char *filename)
     ep->sect     = (dbs_sSect*)(ep->base + dbs_dAlign(sizeof(dbs_sFile)));
     ep->vp       = (dbs_sVolume*)(ep->base + ep->sect[dbs_eSect_volume].offset);
     ep->vrp      = (dbs_sVolRef*)(ep->base + ep->sect[dbs_eSect_volref].offset);
-    ep->name_bt  = (dbs_sBintab*)(ep->base + ep->sect[dbs_eSect_name].offset);
-    ep->oid_bt   = (dbs_sBintab*)(ep->base + ep->sect[dbs_eSect_oid].offset);
-    ep->class_bt = (dbs_sBintab*)(ep->base + ep->sect[dbs_eSect_class].offset);
-    
+    ep->name_bt  = &ep->vp->name_bt;
+    ep->oid_bt   = &ep->vp->oid_bt;
+    ep->class_bt = &ep->vp->class_bt;
 
 #if DBS_DEBUG
     fp = (dbs_sFile*)ep->base;
@@ -552,6 +569,10 @@ dbs_Map(pwr_tStatus *sts, dbs_sEnv *ep, const char *filename)
             op = dbs_Next(&sts, ep, op);
         }
     }
+
+    op = dbs_VolumeObject(sts, ep);
+    printTree(ep, op, 0);
+    
 #endif
     return ep;
 }
@@ -610,9 +631,8 @@ dbs_OidToObject(pwr_tStatus *sts, const dbs_sEnv *ep, pwr_tOid oid)
 {
     dbs_sOid *oidp;
     dbs_sObject *op;
-    dbs_sVolume *vp = (dbs_sVolume *)(ep->base + ep->sect[dbs_eSect_volume].offset);
 
-    oidp = (dbs_sOid *)dbs_Bfind(sts, ep, &vp->oid_bt, &oid, comp_oid);
+    oidp = (dbs_sOid *)dbs_Bfind(sts, ep, ep->oid_bt, &oid, comp_oid);
     if (oidp == NULL)
         return NULL;
     
@@ -625,12 +645,11 @@ dbs_sObject *
 dbs_After(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op)
 {
     dbs_sOid *oidp;
-    dbs_sVolume *vp = (dbs_sVolume *)(ep->base + ep->sect[dbs_eSect_volume].offset);
     dbs_sQlink *ol;
 
     dbs_sObject *pop;
     
-    oidp = (dbs_sOid *)dbs_Bfind(sts, ep, &vp->oid_bt, &op->poid, comp_oid);
+    oidp = (dbs_sOid *)dbs_Bfind(sts, ep, ep->oid_bt, &op->poid, comp_oid);
     if (oidp == NULL)
         return NULL;
     
@@ -649,12 +668,11 @@ dbs_sObject *
 dbs_Before(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op)
 {
     dbs_sOid *oidp;
-    dbs_sVolume *vp = (dbs_sVolume *)(ep->base + ep->sect[dbs_eSect_volume].offset);
     dbs_sQlink *ol;
 
     dbs_sObject *pop;
     
-    oidp = (dbs_sOid *)dbs_Bfind(sts, ep, &vp->oid_bt, &op->poid, comp_oid);
+    oidp = (dbs_sOid *)dbs_Bfind(sts, ep, ep->oid_bt, &op->poid, comp_oid);
     if (oidp == NULL)
         return NULL;
     
@@ -707,11 +725,10 @@ dbs_NameToObject(pwr_tStatus *sts, const dbs_sEnv *ep, pwr_tOid oid, char *name)
 {
     dbs_sOid *oidp;
     dbs_sObject *op;
-    dbs_sVolume *vp = (dbs_sVolume *)(ep->base + ep->sect[dbs_eSect_volume].offset);
     dbs_sName n;
     dbs_sName *np;
     
-    oidp = (dbs_sOid *)dbs_Bfind(sts, ep, &vp->oid_bt, &oid, comp_oid);
+    oidp = (dbs_sOid *)dbs_Bfind(sts, ep, ep->oid_bt, &oid, comp_oid);
     if (oidp == NULL)
         return NULL;
     
@@ -722,7 +739,7 @@ dbs_NameToObject(pwr_tStatus *sts, const dbs_sEnv *ep, pwr_tOid oid, char *name)
     n.poix = oid.oix;
     strcpy(n.normname, name);
     
-    np = (dbs_sName *)dbs_Bfind(sts, ep, &vp->name_bt, &n, comp_name);
+    np = (dbs_sName *)dbs_Bfind(sts, ep, ep->name_bt, &n, comp_name);
     if (np == NULL)
         return NULL;
     
@@ -753,10 +770,9 @@ dbs_sObject *
 dbs_ClassToObject(pwr_tStatus *sts, const dbs_sEnv *ep, pwr_tCid cid)
 {
     dbs_sClass *cp;
-    dbs_sVolume *vp = (dbs_sVolume *)(ep->base + ep->sect[dbs_eSect_volume].offset);
     dbs_sQlink *ol;
     
-    cp = (dbs_sClass *)dbs_Bfind(sts, ep, &vp->class_bt, &cid, comp_cid);
+    cp = (dbs_sClass *)dbs_Bfind(sts, ep, ep->class_bt, &cid, comp_cid);
     if (cp == NULL)
         return NULL;
     
@@ -772,10 +788,9 @@ dbs_sObject *
 dbs_Next(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op)
 {
     dbs_sClass *cp;
-    dbs_sVolume *vp = (dbs_sVolume *)(ep->base + ep->sect[dbs_eSect_volume].offset);
     dbs_sQlink *ol;
     
-    cp = (dbs_sClass *)dbs_Bfind(sts, ep, &vp->class_bt, &op->cid, comp_cid);
+    cp = (dbs_sClass *)dbs_Bfind(sts, ep, ep->class_bt, &op->cid, comp_cid);
     if (cp == NULL)
         return NULL;
     
@@ -791,10 +806,9 @@ dbs_sObject *
 dbs_Previous(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op)
 {
     dbs_sClass *cp;
-    dbs_sVolume *vp = (dbs_sVolume *)(ep->base + ep->sect[dbs_eSect_volume].offset);
     dbs_sQlink *ol;
     
-    cp = (dbs_sClass *)dbs_Bfind(sts, ep, &vp->class_bt, &op->cid, comp_cid);
+    cp = (dbs_sClass *)dbs_Bfind(sts, ep, ep->class_bt, &op->cid, comp_cid);
     if (cp == NULL)
         return NULL;
     
@@ -850,3 +864,10 @@ dbs_VolumeObject(pwr_tStatus *sts, const dbs_sEnv *ep)
     return (dbs_sObject *)(ep->base + ep->sect[dbs_eSect_object].offset);
 }
 
+dbs_sObject *dbs_Object(pwr_tStatus *sts, const dbs_sEnv *ep)
+{
+    dbs_sObject *op = dbs_VolumeObject(sts, ep);
+    if (op == NULL)
+        return NULL;
+    return dbs_First(sts, ep, op);    
+}
