@@ -1,5 +1,6 @@
 #include "wb_attribute.h"
 #include "wb_cdrep.h"
+#include "wb_bdrep.h"
 #include "wb_merep.h"
 #include "wb_attrname.h"
 #include "pwr.h"

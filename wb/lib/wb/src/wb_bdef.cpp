@@ -91,4 +91,4 @@ wb_adef wb_bdef::adef( const char *aname)
   wb_adrep *adrep = m_bdrep->adrep( &sts, aname);
   wb_adef a = wb_adef( adrep);
   return a;
-]
+}

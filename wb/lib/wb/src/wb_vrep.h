@@ -73,13 +73,13 @@ public:
   virtual bool commit(pwr_tStatus *sts) = 0;
   virtual bool abort(pwr_tStatus *sts) = 0;
 
-  virtual bool writeAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, unsigned int offset, unsigned int size, void *p) = 0;
+  virtual bool writeAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, unsigned int offset, unsigned int size, void *p) = 0;
 
-  virtual void *readAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, unsigned int offset, unsigned int size, void *p) = 0;
+  virtual void *readAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, unsigned int offset, unsigned int size, void *p) = 0;
 
-  virtual void *readBody(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, void *p) = 0;
+  virtual void *readBody(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, void *p) = 0;
 
-  virtual bool writeBody(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, void *p) = 0;
+  virtual bool writeBody(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, void *p) = 0;
 
   virtual wb_orep *ancestor(pwr_tStatus *sts, wb_orep *o) = 0;
 
