@@ -30,7 +30,7 @@ input_syntax	<Input syntax>					/error
 objnotfound	<Object is not found>				/error
 stringtolong	<String is too long>				/error
 fastconfig	<Error in fast configuration>			/error
-
+nochildren	<Item has no children>				/error
 
 
 
