@@ -1,5 +1,6 @@
 #include "wb_vrepdbs.h"
 #include "wb_orepdbs.h"
+#include "wb_erep.h"
 #include "wb_merep.h"
 
 void wb_vrepdbs::unref()
@@ -16,10 +17,7 @@ wb_vrep *wb_vrepdbs::ref()
 
 wb_vrepdbs::wb_vrepdbs(wb_erep *erep, const char *fileName) : m_erep(erep)
 {
-    pwr_tStatus sts;
-    
     m_merep = new wb_merep(m_erep, (wb_mvrep *)this);
-    m_merep->addDbs(&sts, (wb_mvrep *)this); // only if i am a class volume
     strcpy(m_fileName, fileName);
     m_isDbsenvLoaded = false;
 }
@@ -49,7 +47,10 @@ wb_vrepdbs::dbsenv()
 bool
 wb_vrepdbs::load()
 {
-    return dbsenv() != 0;
+    pwr_tStatus sts;
+    bool rsts = ( dbsenv() != 0);
+    m_merep->addDbs(&sts, (wb_mvrep *)this); // only if i am a class volume
+    return rsts;
 }
 
 
@@ -364,7 +365,9 @@ wb_vrepdbs::erep() const
 wb_vrep *
 wb_vrepdbs::next () const
 {
-    return 0;
+  pwr_tStatus sts;
+
+  return m_erep->nextVolume( &sts, vid());
 }
 
 wb_merep *

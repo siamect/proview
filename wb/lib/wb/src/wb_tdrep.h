@@ -18,15 +18,17 @@ class wb_tdrep
 
 public:
     wb_tdrep();
+    wb_tdrep(wb_mvrep *, pwr_tTid);
+    wb_tdrep( wb_mvrep *mvrep, wb_name name);
     wb_tdrep( const wb_adrep& a);
     wb_tdrep(wb_mvrep *, const wb_adrep&);
-    wb_tdrep(wb_mvrep *, pwr_tTid);
 
     void unref();
     wb_tdrep *ref();
 
     size_t size() { return 0;} // Fix   // get objects runtime body size
-    pwr_tTid tid() { return 0;} // Fix
+    pwr_tTid tid();
+    pwr_eType type() { return (pwr_eType)0;} // Fix
     int nElement() { return 0;} // Fix
 
     wb_name name() { wb_name n; return n;} // Fix // get type name

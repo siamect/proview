@@ -12,6 +12,8 @@
 #include "wb_ldh_msg.h"
 #include "wb_dbs.h"
 #include "wb_erep.h"
+#include "wb_merep.h"
+#include "wb_tdrep.h"
 #include "wb_ldh_msg.h"
 
 extern "C" {
@@ -43,9 +45,9 @@ wb_orep *wb_vrepwbl::object(pwr_tStatus *sts, pwr_tOid oid)
   return new wb_orepwbl( this, n);
 }
 
-wb_orep *wb_vrepwbl::object(pwr_tStatus *sts, char *name)
+wb_orep *wb_vrepwbl::object(pwr_tStatus *sts, wb_name name)
 {
-  ref_wblnode n = find( name);
+  ref_wblnode n = find( name.name());
   if ( !n) {
     *sts = LDH__NOSUCHOBJ;
     return 0;
@@ -313,7 +315,16 @@ int wb_vrepwbl::getTypeInfo( char *name, pwr_tTid *tid, pwr_eType *type, int *si
     }
   }
   if ( type_extern) {
-    return 0; // TODO...
+    pwr_tStatus sts;
+
+    wb_tdrep *tdrep = m_merep->tdrep( &sts, wname);
+    if ( EVEN(sts)) return 0;
+
+    *tid = tdrep->tid();
+    *type = tdrep->type();
+    *size = tdrep->size();
+    *elements = tdrep->nElement();
+    return 1;
   }
   return 1;
 }

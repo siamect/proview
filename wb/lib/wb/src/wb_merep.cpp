@@ -58,7 +58,8 @@ wb_cdrep *wb_merep::cdrep( pwr_tStatus *sts, const wb_orep& o)
     // Fetch from other meta environment
     return m_erep->cdrep( sts, o);
 
-  mvrep_iterator it =  m_mvrepdbs.find( cdh_CidToVid(o.cid()));
+  pwr_tVid vid = cdh_CidToVid(o.cid());
+  mvrep_iterator it =  m_mvrepdbs.find( vid);
   if ( it == m_mvrepdbs.end()) {
     *sts = LDH__NOSUCHVOL;
     return 0;
@@ -128,3 +129,24 @@ wb_tdrep *wb_merep::tdrep( pwr_tStatus *sts, pwr_tTid tid)
   }
   return it->second->tdrep( tid);
 }
+
+wb_tdrep *wb_merep::tdrep( pwr_tStatus *sts, wb_name name)
+{
+  wb_tdrep *tdrep;
+
+  for ( mvrep_iterator it = m_mvrepdbs.begin(); it != m_mvrepdbs.end(); it++) {
+    try {
+      tdrep = new wb_tdrep( it->second, name);
+      *sts = LDH__SUCCESS;
+      return tdrep;
+    }
+    catch ( wb_error& e) {
+      // Not found in this volume, try next
+    }
+  }
+
+  // Not found
+  *sts = LDH__NOTYPE;
+  return 0;
+}
+

@@ -31,6 +31,7 @@ class wb_merep {
     wb_cdrep *cdrep( pwr_tStatus *sts, wb_name name);
     wb_tdrep *tdrep( pwr_tStatus *sts, const wb_adrep& a);
     wb_tdrep *tdrep( pwr_tStatus *sts, pwr_tTid tid);
+    wb_tdrep *tdrep( pwr_tStatus *sts, wb_name name);
 };
 
 #endif

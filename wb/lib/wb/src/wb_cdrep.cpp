@@ -112,3 +112,8 @@ wb_name wb_cdrep::name()
   wb_name n = wb_name( m_orep->name());
   return n;
 }
+
+pwr_tCid wb_cdrep::cid()
+{
+  return cdh_ClassObjidToId( m_orep->oid());
+}

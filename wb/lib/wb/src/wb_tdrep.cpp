@@ -34,6 +34,18 @@ wb_tdrep::wb_tdrep( wb_mvrep *mvrep, pwr_tTid tid) : m_nRef(0)
   m_sts = LDH__SUCCESS;
 }
 
+wb_tdrep::wb_tdrep( wb_mvrep *mvrep, wb_name name) : m_nRef(0)
+{
+  char str[80];
+  strcpy( str, "Type-");
+  strcat( str, name.object());
+  m_orep = (wb_orepdbs *) mvrep->object( &m_sts, str);
+  if ( EVEN(m_sts)) throw wb_error( m_sts);
+
+  m_orep->ref();
+  m_sts = LDH__SUCCESS;
+}
+
 wb_tdrep::wb_tdrep( wb_mvrep *mvrep, const wb_adrep& a) : m_nRef(0)
 {
   pwr_tOid oid = cdh_TypeIdToObjid( a.type());
@@ -53,4 +65,9 @@ wb_tdrep::wb_tdrep( const wb_adrep& a) : m_nRef(0)
   m_orep = tdrep->m_orep;
   m_orep->ref();
   delete tdrep;
+}
+
+pwr_tTid wb_tdrep::tid()
+{
+  return cdh_TypeObjidToId( m_orep->oid());
 }

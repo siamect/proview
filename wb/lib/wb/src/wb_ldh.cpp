@@ -896,7 +896,10 @@ pwr_tStatus
 ldh_NameToObjid(ldh_tSession session, pwr_tOid *oid, char *name)
 {
     wb_session *sp = (wb_session *)session;
-    wb_object o = sp->object(name);
+    wb_name n = wb_name(name);
+    if ( n.evenSts()) return n.sts();
+
+    wb_object o = sp->object(n);
     if (!o) return o.sts();
     
     *oid = o.oid();

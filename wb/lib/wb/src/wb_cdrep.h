@@ -33,7 +33,7 @@ class wb_cdrep
     //wb_object& operator=(const wb_orep&);
 
     size_t size() { return 0;}   // Fix get objects runtime body size
-    pwr_tCid cid() { return 0;} // Fix
+    pwr_tCid cid();
     
 
     wb_name name(); // get class name
