@@ -457,7 +457,7 @@ void GrowTable::draw( GlowTransform *t, int highlight, int hot, void *node, void
 
     for ( int i = 0; i < rows; i++) {
       y += row_height * ctx->zoom_factor_y;
-      if ( y > ur_y)
+      if ( y - row_height * ctx->zoom_factor_y > ur_y)
 	break;
       if ( y > ll_y) {
 	glow_draw_line( ctx, ll_x, int(y), ll_x + header_w, int(y), drawtype, idx, 0);
@@ -530,7 +530,7 @@ void GrowTable::draw( GlowTransform *t, int highlight, int hot, void *node, void
   }
 
   for ( int i = 0; i < rows + 1; i++) {
-    if ( y > ur_y)
+    if ( y > ur_y) 
       break;
     if ( y > ll_y)
       glow_draw_line( ctx, t_ll_x, int(y), t_ur_x, int(y), drawtype, idx, 0);
@@ -550,7 +550,7 @@ void GrowTable::draw( GlowTransform *t, int highlight, int hot, void *node, void
       y = t_ll_y;
       for ( int j = 0; j < rows; j++) {
 	y += row_height * ctx->zoom_factor_y;
-	if ( y > ur_y)
+	if ( y - row_height * ctx->zoom_factor_y > ur_y)
 	  break;
 
 	if ( options & glow_mTableOptions_ZeroIfHeader) {
