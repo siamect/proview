@@ -2201,6 +2201,7 @@ static foe_ctx	foe_create_window(
 			    (XtCallbackProc)foe_activate_quit, foectx);
   }
 
+  wow_GetAtoms( foectx->cp.parent_wid, 0, &foectx->objid_atom, 0);
 
   /* SG 09.02.91 a top level should always be realized !
    * ML 16.03.94 changed Realize to Popup

@@ -70,6 +70,7 @@ class WAttNav {
     void 		(*change_value_cb)( void *);
     wb_eUtility		utility;
     int			displayed;
+    Atom		objid_atom;
 
     void start_trace( pwr_tObjid Objid, char *object_str);
     int set_attr_value( brow_tObject node, char *name, char *value_str);

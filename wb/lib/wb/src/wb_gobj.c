@@ -25,6 +25,7 @@
 #include "wb_gre.h"
 #include "wb_gobj.h"
 #include "wb_api.h"
+#include "co_wow.h"
 #include "pwr_baseclasses.h"
 
 #define	BEEP	    putchar( '\7' );
@@ -98,6 +99,51 @@ static int	gobj_expand_m2(	foe_ctx		foectx,
 				int		compress);
 /*_Local procedues_______________________________________________________*/
 
+
+static int gobj_get_select( foe_ctx foectx, pwr_sAttrRef *attrref, int *is_attr)
+{
+  pwr_tStatus sts;
+  char str[200];
+  vldh_t_plc plc = foectx->grectx->window_object->hw.plcobject_pointer;
+
+  if ( foectx->nav_palette_managed) {
+    sts = nav_get_select( foectx->navctx, attrref, is_attr);
+    if ( ODD(sts))
+      return sts;
+  }
+
+  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, attrref,
+				is_attr);
+  if ( ODD(sts))
+    return sts;
+
+  sts = wow_GetSelection( foectx->cp.parent_wid, str, sizeof(str), foectx->objid_atom);
+  if ( ODD(sts)) {
+    sts = ldh_NameToAttrRef( foectx->grectx->window_object->hw.ldhsession, str, attrref);
+    if ( ODD(sts)) {
+      if ( strchr( str, '.') != 0)
+	*is_attr = 1;
+      else
+	*is_attr = 0;
+    }
+    return sts;
+  }
+  else {
+    sts = wow_GetSelection( foectx->cp.parent_wid, str, sizeof(str), XA_STRING);
+    if ( ODD(sts)) {
+      sts = ldh_NameToAttrRef( foectx->grectx->window_object->hw.ldhsession, str, attrref);
+      if ( ODD(sts)) {
+	if ( strchr( str, '.') != 0)
+	  *is_attr = 1;
+	else
+	  *is_attr = 0;
+      }
+      return sts;
+    }
+  }
+  return sts;
+}
+
 
 /*************************************************************************
 *
@@ -129,7 +175,7 @@ int	gobj_get_object(
 	int			sts, size, connectmethod;
 	pwr_tClassId		bodyclass;
 	pwr_sGraphPlcNode 	*graphbody;
-	vldh_t_plc	plc;
+ 	vldh_t_plc	plc;
 
 	/* Fix to avoid crash if foe is started form hied */
 	plc = (node->hn.window_pointer)->hw.plcobject_pointer;
@@ -214,23 +260,14 @@ unsigned long	index;
 	/* Get the selected object in the navigator */
 	plc = (node->hn.window_pointer)->hw.plcobject_pointer;
 
-        sts = nav_get_select( foectx->navctx, &attrref, &is_attr);
-        if ( foectx->nav_palette_managed && ODD(sts))
-        {
-          objdid = attrref.Objid;
-        }
-        else
-        {
-	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
-					&is_attr);
-	  objdid = attrref.Objid;
-	  if ( EVEN(sts))
-	  { 
-	    foe_message( foectx,"Select a di object in the navigator");
-	    BEEP;
-	    return sts;
-	  }
+        sts = gobj_get_select( foectx, &attrref, &is_attr);
+	if ( EVEN(sts)) { 
+	  foe_message( foectx,"Select a Di object in the navigator");
+	  BEEP;
+	  return sts;
 	}
+	objdid = attrref.Objid;
+
 	ldhses =(node->hn.window_pointer)->hw.ldhsession;
 	/* Check that the objdid is a di object */
 	sts = ldh_GetObjectClass( ldhses, objdid, &class);
@@ -292,23 +329,14 @@ unsigned long	index;
 	/* Get the selected object in the navigator */
 	plc = (node->hn.window_pointer)->hw.plcobject_pointer;
 
-        sts = nav_get_select( foectx->navctx, &attrref, &is_attr);
-        if ( foectx->nav_palette_managed && ODD(sts))
-        {
-          objdid = attrref.Objid;
-        }
-        else
-        {
-	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
-					&is_attr);
-	  objdid = attrref.Objid;
-	  if ( EVEN(sts))
-	  { 
-	    foe_message( foectx,"Select a do object in the navigator");
-	    BEEP;
-	    return sts;
-	  }
+        sts = gobj_get_select( foectx, &attrref, &is_attr);
+	if ( EVEN(sts)) { 
+	  foe_message( foectx,"Select a Do object in the navigator");
+	  BEEP;
+	  return sts;
 	}
+	objdid = attrref.Objid;
+
 	ldhses =(node->hn.window_pointer)->hw.ldhsession;
 	/* Check that the objdid is a do object */
 	sts = ldh_GetObjectClass( ldhses, objdid, &class);
@@ -370,23 +398,14 @@ unsigned long	index;
 	/* Get the selected object in the navigator */
 	plc = (node->hn.window_pointer)->hw.plcobject_pointer;
 
-        sts = nav_get_select( foectx->navctx, &attrref, &is_attr);
-        if ( foectx->nav_palette_managed && ODD(sts))
-        {
-          objdid = attrref.Objid;
-        }
-        else
-        {
-	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
-					&is_attr);
-	  objdid = attrref.Objid;
-	  if ( EVEN(sts))
-	  { 
-	    foe_message( foectx,"Select a dv object in the navigator");
-	    BEEP;
-	    return sts;
-	  }
+        sts = gobj_get_select( foectx, &attrref, &is_attr);
+	if ( EVEN(sts)) { 
+	  foe_message( foectx,"Select a Dv object in the navigator");
+	  BEEP;
+	  return sts;
 	}
+	objdid = attrref.Objid;
+
 	ldhses =(node->hn.window_pointer)->hw.ldhsession;
 	/* Check that the objdid is a dv object */
 	sts = ldh_GetObjectClass( ldhses, objdid, &class);
@@ -447,23 +466,14 @@ unsigned long	index;
 	/* Get the selected object in the navigator */
 	plc = (node->hn.window_pointer)->hw.plcobject_pointer;
 
-        sts = nav_get_select( foectx->navctx, &attrref, &is_attr);
-        if ( foectx->nav_palette_managed && ODD(sts))
-        {
-          objdid = attrref.Objid;
-        }
-        else
-        {
-	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
-					&is_attr);
-	  objdid = attrref.Objid;
-	  if ( EVEN(sts))
-	  { 
-	    foe_message( foectx,"Select an ai object in the navigator");
-	    BEEP;
-	    return sts;
-	  }
+        sts = gobj_get_select( foectx, &attrref, &is_attr);
+	if ( EVEN(sts)) { 
+	  foe_message( foectx,"Select an Ai object in the navigator");
+	  BEEP;
+	  return sts;
 	}
+	objdid = attrref.Objid;
+
 	ldhses =(node->hn.window_pointer)->hw.ldhsession;
 	/* Check that the objdid is a ai object */
 	sts = ldh_GetObjectClass( ldhses, objdid, &class);
@@ -524,23 +534,14 @@ unsigned long	index;
 	/* Get the selected object in the navigator */
 	plc = (node->hn.window_pointer)->hw.plcobject_pointer;
 
-        sts = nav_get_select( foectx->navctx, &attrref, &is_attr);
-        if ( foectx->nav_palette_managed && ODD(sts))
-        {
-          objdid = attrref.Objid;
-        }
-        else
-        {
-	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
-					&is_attr);
-	  objdid = attrref.Objid;
-	  if ( EVEN(sts))
-	  { 
-	    foe_message( foectx,"Select an ao object in the navigator");
-	    BEEP;
-	    return sts;
-	  }
+        sts = gobj_get_select( foectx, &attrref, &is_attr);
+	if ( EVEN(sts)) { 
+	  foe_message( foectx,"Select an Ao object in the navigator");
+	  BEEP;
+	  return sts;
 	}
+	objdid = attrref.Objid;
+
 	ldhses =(node->hn.window_pointer)->hw.ldhsession;
 	/* Check that the objdid is an ao object */
 	sts = ldh_GetObjectClass( ldhses, objdid, &class);
@@ -601,23 +602,14 @@ unsigned long	index;
 	/* Get the selected object in the navigator */
 	plc = (node->hn.window_pointer)->hw.plcobject_pointer;
 
-        sts = nav_get_select( foectx->navctx, &attrref, &is_attr);
-        if ( foectx->nav_palette_managed && ODD(sts))
-        {
-          objdid = attrref.Objid;
-        }
-        else
-        {
-	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
-					&is_attr);
-	  objdid = attrref.Objid;
-	  if ( EVEN(sts))
-	  { 
-	    foe_message( foectx,"Select an av object in the navigator");
-	    BEEP;
-	    return sts;
-	  }
+        sts = gobj_get_select( foectx, &attrref, &is_attr);
+	if ( EVEN(sts)) { 
+	  foe_message( foectx,"Select an Av object in the navigator");
+	  BEEP;
+	  return sts;
 	}
+	objdid = attrref.Objid;
+
 	ldhses =(node->hn.window_pointer)->hw.ldhsession;
 	/* Check that the objdid is an av object */
 	sts = ldh_GetObjectClass( ldhses, objdid, &class);
@@ -685,30 +677,19 @@ unsigned long	index;
 	ldhses =(node->hn.window_pointer)->hw.ldhsession;
 
         parameter_found = 0;
-        sts = nav_get_select( foectx->navctx, &attrref, &is_attr);
-        if ( foectx->nav_palette_managed && ODD(sts))
-        {
-          objdid = attrref.Objid;
-          sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol,
-			&name, &size);
-	  if ( EVEN(sts)) return sts;
-	  if ( (s = strrchr( name, '.')) != 0)
-          {
-            strcpy( parameter, s+1);
-            parameter_found = 1;
-          }
-        }
-        else
-        {
-	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
-					&is_attr);
-	  objdid = attrref.Objid;
-	  if ( EVEN(sts))
-	  { 
-	    foe_message( foectx,"Select an object in the navigator");
-	    BEEP;
-	    return sts;
-	  }
+        sts = gobj_get_select( foectx, &attrref, &is_attr);
+	if ( EVEN(sts)) { 
+	  foe_message( foectx,"Select an object in the navigator");
+	  BEEP;
+	  return sts;
+	}
+	objdid = attrref.Objid;
+	sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol,
+				 &name, &size);
+	if ( EVEN(sts)) return sts;
+	if ( (s = strrchr( name, '.')) != 0) {
+	  strcpy( parameter, s+1);
+	  parameter_found = 1;
 	}
 	
 	/* Get a parameter of pwr_etype_ObjDId */
@@ -800,23 +781,14 @@ unsigned long	index;
 	/* Get the selected object in the navigator */
 	plc = (node->hn.window_pointer)->hw.plcobject_pointer;
 
-        sts = nav_get_select( foectx->navctx, &attrref, &is_attr);
-        if ( foectx->nav_palette_managed && ODD(sts))
-        {
-          objdid = attrref.Objid;
-        }
-        else
-        {
-	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
-					&is_attr);
-	  objdid = attrref.Objid;
-	  if ( EVEN(sts))
-	  { 
-	    foe_message( foectx,"Select a di, do or dv object in the navigator");
-	    BEEP;
-	    return sts;
-	  }
+        sts = gobj_get_select( foectx, &attrref, &is_attr);
+	if ( EVEN(sts)) { 
+	  foe_message( foectx,"Select a Di, Do or Dv object in the navigator");
+	  BEEP;
+	  return sts;
 	}
+	objdid = attrref.Objid;
+
 	ldhses =(node->hn.window_pointer)->hw.ldhsession;
 
 	/* Check that the objdid is a di,do or dv object */
@@ -881,23 +853,14 @@ unsigned long	index;
 	/* Get the selected object in the navigator */
 	plc = (node->hn.window_pointer)->hw.plcobject_pointer;
 
-        sts = nav_get_select( foectx->navctx, &attrref, &is_attr);
-        if ( foectx->nav_palette_managed && ODD(sts))
-        {
-          objdid = attrref.Objid;
-        }
-        else
-        {
-	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
-					&is_attr);
-	  objdid = attrref.Objid;
-	  if ( EVEN(sts))
-	  { 
-	    foe_message( foectx,"Select a co object in the navigator");
-	    BEEP;
-	    return sts;
-	  }
+        sts = gobj_get_select( foectx, &attrref, &is_attr);
+	if ( EVEN(sts)) { 
+	  foe_message( foectx,"Select a Co object in the navigator");
+	  BEEP;
+	  return sts;
 	}
+	objdid = attrref.Objid;
+
 	ldhses =(node->hn.window_pointer)->hw.ldhsession;
 	/* Check that the objdid is a co object */
 	sts = ldh_GetObjectClass( ldhses, objdid, &class);
@@ -959,23 +922,14 @@ unsigned long	index;
 	/* Get the selected object in the navigator */
 	plc = (node->hn.window_pointer)->hw.plcobject_pointer;
 
-        sts = nav_get_select( foectx->navctx, &attrref, &is_attr);
-        if ( foectx->nav_palette_managed && ODD(sts))
-        {
-          objdid = attrref.Objid;
-        }
-        else
-        {
-	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
-					&is_attr);
-	  objdid = attrref.Objid;
-	  if ( EVEN(sts))
-	  { 
-	    foe_message( foectx,"Select a do object in the navigator");
-	    BEEP;
-	    return sts;
-	  }
+        sts = gobj_get_select( foectx, &attrref, &is_attr);
+	if ( EVEN(sts)) { 
+	  foe_message( foectx,"Select a Do object in the navigator");
+	  BEEP;
+	  return sts;
 	}
+	objdid = attrref.Objid;
+
 	ldhses =(node->hn.window_pointer)->hw.ldhsession;
 	/* Check that the objdid is a do object */
 	sts = ldh_GetObjectClass( ldhses, objdid, &class);
@@ -1066,23 +1020,13 @@ unsigned long	index;
 	      ( node_count == 0) ) 
 	{
 	  /* Take the orderobject from the navigator */
-          sts = nav_get_select( foectx->navctx, &attrref, &is_attr);
-          if ( foectx->nav_palette_managed && ODD(sts))
-          {
-            objdid = attrref.Objid;
-          }
-          else
-          {
-	    sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
-					&is_attr);
-	    objdid = attrref.Objid;
-	    if ( EVEN(sts))
-	    {  
-	      foe_message( foectx,"Select an order object in the navigator or in the current window");
-	      BEEP;
-	      return sts;
-	    }
+	  sts = gobj_get_select( foectx, &attrref, &is_attr);
+	  if ( EVEN(sts)) { 
+	    foe_message( foectx,"Select an order object in the navigator or in the current window");
+	    BEEP;
+	    return sts;
 	  }
+	  objdid = attrref.Objid;
 	}
 	else if ( (node_count == 2) && 
 		(( *nodelist == node) || ( *(nodelist + 1) == node)))
@@ -1199,24 +1143,14 @@ unsigned long	index;
 	if ( ((node_count == 1) && (*nodelist == node)) ||
 	      ( node_count == 0) ) 
 	{
-	  /* Take the orderobject from the navigator */
-          sts = nav_get_select( foectx->navctx, &attrref, &is_attr);
-          if ( foectx->nav_palette_managed && ODD(sts))
-          {
-            objdid = attrref.Objid;
-          }
-          else
-          {
-	    sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
-					&is_attr);
-	    objdid = attrref.Objid;
-	    if ( EVEN(sts))
-	    { 
-	      foe_message( foectx,"Select a document object in the navigator or in the current window first");
-	      BEEP;
-	      return sts;
-	    }
+	  /* Take the document from the navigator */
+	  sts = gobj_get_select( foectx, &attrref, &is_attr);
+	  if ( EVEN(sts)) { 
+	    foe_message( foectx,"Select a document object in the navigator or in the current window first");
+	    BEEP;
+	    return sts;
 	  }
+	  objdid = attrref.Objid;
 	}
 	else if ( (node_count == 2) && 
 		(( *nodelist == node) || ( *(nodelist + 1) == node)))
@@ -1328,23 +1262,13 @@ unsigned long	index;
 	ldhses =(node->hn.window_pointer)->hw.ldhsession;
 
 	/* Take the object from the navigator */
-        sts = nav_get_select( foectx->navctx, &attrref, &is_attr);
-        if ( foectx->nav_palette_managed && ODD(sts))
-        {
-          objdid = attrref.Objid;
-        }
-        else
-        {
-	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
-					&is_attr);
-	  objdid = attrref.Objid;
-	  if ( EVEN(sts))
-	  { 
-	    foe_message( foectx,"Select an object in the navigator");
-	    BEEP;
-	    return sts;
-	  }
+	sts = gobj_get_select( foectx, &attrref, &is_attr);
+	if ( EVEN(sts)) { 
+	  foe_message( foectx,"Select an object in the navigator");
+	  BEEP;
+	  return sts;
 	}
+	objdid = attrref.Objid;
 	
 	/* Set the parameter value */
 	sts = ldh_SetObjectPar( ldhses,
@@ -1415,40 +1339,20 @@ unsigned long	index;
 	ldhses =(node->hn.window_pointer)->hw.ldhsession;
 
 	parameter_found = 0;
-        sts = nav_get_select( foectx->navctx, &attrref, &is_attr);
-        if ( foectx->nav_palette_managed && ODD(sts))
-        {
-          objdid = attrref.Objid;
-	  if ( is_attr)
-	  {
-            sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol,
+	sts = gobj_get_select( foectx, &attrref, &is_attr);
+	if ( EVEN(sts)) { 
+	  foe_message( foectx,"Select an digital signal in the navigator");
+	  BEEP;
+	  return sts;
+	}
+	objdid = attrref.Objid;
+	if ( is_attr) {
+	  sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol,
 			&name, &size);
-	    if ( EVEN(sts)) return sts;
-	    if ( (s = strrchr( name, '.')) != 0)
-            {
-              strcpy( parameter, s+1);
-              parameter_found = 1;
-            }
-          }
-        }
-        else
-        {
-	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
-					&is_attr);
-	  objdid = attrref.Objid;
-	  if ( ODD(sts) && is_attr) {
-	    sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol,
-				     &name, &size);
-	    if ( EVEN(sts)) return sts;
-	    if ( (s = strrchr( name, '.')) != 0) {
-	      strcpy( parameter, s+1);
-	      parameter_found = 1;
-	    }
-	  }
-	  if ( EVEN(sts)) { 
-	    foe_message( foectx,"Select an digital signal in the navigator");
-	    BEEP;
-	    return sts;
+	  if ( EVEN(sts)) return sts;
+	  if ( (s = strrchr( name, '.')) != 0) {
+	    strcpy( parameter, s+1);
+	    parameter_found = 1;
 	  }
 	}
 
@@ -1710,41 +1614,20 @@ unsigned long	index;
 	ldhses =(node->hn.window_pointer)->hw.ldhsession;
 
 	parameter_found = 0;
-        sts = nav_get_select( foectx->navctx, &attrref, &is_attr);
-        if ( foectx->nav_palette_managed && ODD(sts))
-        {
-          objdid = attrref.Objid;
-	  if ( is_attr)
-	  {
-            sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol,
-			&name, &size);
-	    if ( EVEN(sts)) return sts;
-	    if ( (s = strrchr( name, '.')) != 0)
-            {
-              strcpy( parameter, s+1);
-              parameter_found = 1;
-            }
-          }
-        }
-        else
-        {
-	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
-					&is_attr);
-	  objdid = attrref.Objid;
-	  if ( ODD(sts) && is_attr) {
-	    sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol,
-				     &name, &size);
-	    if ( EVEN(sts)) return sts;
-	    if ( (s = strrchr( name, '.')) != 0) {
-	      strcpy( parameter, s+1);
-	      parameter_found = 1;
-	    }
-	  }
-	  if ( EVEN(sts))
-	  { 
-	    foe_message( foectx,"Select an digital signal in the navigator");
-	    BEEP;
-	    return sts;
+	sts = gobj_get_select( foectx, &attrref, &is_attr);
+	if ( EVEN(sts)) { 
+	  foe_message( foectx,"Select an digital signal in the navigator");
+	  BEEP;
+	  return sts;
+	}
+	objdid = attrref.Objid;
+	if ( is_attr) {
+	  sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol,
+				   &name, &size);
+	  if ( EVEN(sts)) return sts;
+	  if ( (s = strrchr( name, '.')) != 0) {
+	    strcpy( parameter, s+1);
+	    parameter_found = 1;
 	  }
 	}
 
@@ -1996,41 +1879,20 @@ unsigned long	index;
 	ldhses =(node->hn.window_pointer)->hw.ldhsession;
 
 	parameter_found = 0;
-        sts = nav_get_select( foectx->navctx, &attrref, &is_attr);
-        if ( foectx->nav_palette_managed && ODD(sts))
-        {
-          objdid = attrref.Objid;
-	  if ( is_attr)
-	  {
-            sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol,
-			&name, &size);
-	    if ( EVEN(sts)) return sts;
-	    if ( (s = strrchr( name, '.')) != 0)
-            {
-              strcpy( parameter, s+1);
-              parameter_found = 1;
-            }
-          }
-        }
-        else
-        {
-	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
-					&is_attr);
-	  objdid = attrref.Objid;
-	  if ( ODD(sts) && is_attr) {
-	    sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol,
-				     &name, &size);
-	    if ( EVEN(sts)) return sts;
-	    if ( (s = strrchr( name, '.')) != 0) {
-	      strcpy( parameter, s+1);
-	      parameter_found = 1;
-	    }
-	  }
-	  if ( EVEN(sts))
-	  { 
-	    foe_message( foectx,"Select an digital signal in the navigator");
-	    BEEP;
-	    return sts;
+	sts = gobj_get_select( foectx, &attrref, &is_attr);
+	if ( EVEN(sts)) { 
+	  foe_message( foectx,"Select an digital signal in the navigator");
+	  BEEP;
+	  return sts;
+	}
+	objdid = attrref.Objid;
+	if ( is_attr) {
+	  sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol,
+				   &name, &size);
+	  if ( EVEN(sts)) return sts;
+	  if ( (s = strrchr( name, '.')) != 0) {
+	    strcpy( parameter, s+1);
+	    parameter_found = 1;
 	  }
 	}
 
@@ -2291,41 +2153,20 @@ unsigned long	index;
 	ldhses =(node->hn.window_pointer)->hw.ldhsession;
 
 	parameter_found = 0;
-        sts = nav_get_select( foectx->navctx, &attrref, &is_attr);
-        if ( foectx->nav_palette_managed && ODD(sts))
-        {
-          objdid = attrref.Objid;
-	  if ( is_attr)
-	  {
-            sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol,
-			&name, &size);
-	    if ( EVEN(sts)) return sts;
-	    if ( (s = strrchr( name, '.')) != 0)
-            {
-              strcpy( parameter, s+1);
-              parameter_found = 1;
-            }
-          }
-        }
-        else
-        {
-	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
-					&is_attr);
-	  objdid = attrref.Objid;
-	  if ( ODD(sts) && is_attr) {
-	    sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol,
-				     &name, &size);
-	    if ( EVEN(sts)) return sts;
-	    if ( (s = strrchr( name, '.')) != 0) {
-	      strcpy( parameter, s+1);
-	      parameter_found = 1;
-	    }
-	  }
-	  if ( EVEN(sts))
-	  { 
-	    foe_message( foectx,"Select an digital signal in the navigator");
-	    BEEP;
-	    return sts;
+	sts = gobj_get_select( foectx, &attrref, &is_attr);
+	if ( EVEN(sts)) { 
+	  foe_message( foectx,"Select an digital signal in the navigator");
+	  BEEP;
+	  return sts;
+	}
+	objdid = attrref.Objid;
+	if ( is_attr) {
+	  sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol,
+				   &name, &size);
+	  if ( EVEN(sts)) return sts;
+	  if ( (s = strrchr( name, '.')) != 0) {
+	    strcpy( parameter, s+1);
+	    parameter_found = 1;
 	  }
 	}
 
@@ -2556,23 +2397,14 @@ unsigned long	index;
 	/* Get the selected object in the navigator */
 	plc = (node->hn.window_pointer)->hw.plcobject_pointer;
 
-        sts = nav_get_select( foectx->navctx, &attrref, &is_attr);
-        if ( foectx->nav_palette_managed && ODD(sts))
-        {
-          objdid = attrref.Objid;
-        }
-        else
-        {
-	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
-					&is_attr);
-	  objdid = attrref.Objid;
-	  if ( EVEN(sts))
-	  { 
-	    foe_message( foectx,"Select a sv object in the navigator");
-	    BEEP;
-	    return sts;
-	  }
+	sts = gobj_get_select( foectx, &attrref, &is_attr);
+	if ( EVEN(sts)) { 
+	  foe_message( foectx,"Select Sv object in the navigator");
+	  BEEP;
+	  return sts;
 	}
+	objdid = attrref.Objid;
+
 	ldhses =(node->hn.window_pointer)->hw.ldhsession;
 	/* Check that the objdid is an av object */
 	sts = ldh_GetObjectClass( ldhses, objdid, &class);
@@ -2653,41 +2485,20 @@ unsigned long	index;
 	ldhses =(node->hn.window_pointer)->hw.ldhsession;
 
 	parameter_found = 0;
-        sts = nav_get_select( foectx->navctx, &attrref, &is_attr);
-        if ( foectx->nav_palette_managed && ODD(sts))
-        {
-          objdid = attrref.Objid;
-	  if ( is_attr)
-	  {
-            sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol,
-			&name, &size);
-	    if ( EVEN(sts)) return sts;
-	    if ( (s = strrchr( name, '.')) != 0)
-            {
-              strcpy( parameter, s+1);
-              parameter_found = 1;
-            }
-          }
-        }
-        else
-        {
-	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
-					&is_attr);
-	  objdid = attrref.Objid;
-	  if ( ODD(sts) && is_attr) {
-	    sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol,
-				     &name, &size);
-	    if ( EVEN(sts)) return sts;
-	    if ( (s = strrchr( name, '.')) != 0) {
-	      strcpy( parameter, s+1);
-	      parameter_found = 1;
-	    }
-	  }
-	  if ( EVEN(sts))
-	  { 
-	    foe_message( foectx,"Select a string value in the navigator");
-	    BEEP;
-	    return sts;
+	sts = gobj_get_select( foectx, &attrref, &is_attr);
+	if ( EVEN(sts)) { 
+	  foe_message( foectx,"Select string value in the navigator");
+	  BEEP;
+	  return sts;
+	}
+	objdid = attrref.Objid;
+	if ( is_attr) {
+	  sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol,
+				   &name, &size);
+	  if ( EVEN(sts)) return sts;
+	  if ( (s = strrchr( name, '.')) != 0) {
+	    strcpy( parameter, s+1);
+	    parameter_found = 1;
 	  }
 	}
 
@@ -2926,41 +2737,20 @@ unsigned long	index;
 	ldhses =(node->hn.window_pointer)->hw.ldhsession;
 
 	parameter_found = 0;
-        sts = nav_get_select( foectx->navctx, &attrref, &is_attr);
-        if ( foectx->nav_palette_managed && ODD(sts))
-        {
-          objdid = attrref.Objid;
-	  if ( is_attr)
-	  {
-            sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol,
-			&name, &size);
-	    if ( EVEN(sts)) return sts;
-	    if ( (s = strrchr( name, '.')) != 0)
-            {
-              strcpy( parameter, s+1);
-              parameter_found = 1;
-            }
-          }
-        }
-        else
-        {
-	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
-					&is_attr);
-	  objdid = attrref.Objid;
-	  if ( ODD(sts) && is_attr) {
-	    sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol,
-				     &name, &size);
-	    if ( EVEN(sts)) return sts;
-	    if ( (s = strrchr( name, '.')) != 0) {
-	      strcpy( parameter, s+1);
-	      parameter_found = 1;
-	    }
-	  }
-	  if ( EVEN(sts))
-	  { 
-	    foe_message( foectx,"Select an digital signal in the navigator");
-	    BEEP;
-	    return sts;
+	sts = gobj_get_select( foectx, &attrref, &is_attr);
+	if ( EVEN(sts)) { 
+	  foe_message( foectx,"Select a string value in the navigator");
+	  BEEP;
+	  return sts;
+	}
+	objdid = attrref.Objid;
+	if ( is_attr) {
+	  sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol,
+				   &name, &size);
+	  if ( EVEN(sts)) return sts;
+	  if ( (s = strrchr( name, '.')) != 0) {
+	    strcpy( parameter, s+1);
+	    parameter_found = 1;
 	  }
 	}
 
@@ -3178,20 +2968,14 @@ unsigned long	index;
 	/* Get the selected object in the navigator */
 	plc = (node->hn.window_pointer)->hw.plcobject_pointer;
 
-        sts = nav_get_select( foectx->navctx, &attrref, &is_attr);
-        if ( foectx->nav_palette_managed && ODD(sts)) {
-          objdid = attrref.Objid;
-        }
-        else {
-	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
-					&is_attr);
-	  objdid = attrref.Objid;
-	  if ( EVEN(sts)) {
-	    foe_message( foectx,"Select an iv object in the navigator");
-	    BEEP;
-	    return sts;
-	  }
+	sts = gobj_get_select( foectx, &attrref, &is_attr);
+	if ( EVEN(sts)) { 
+	  foe_message( foectx,"Select an Iv object in the navigator");
+	  BEEP;
+	  return sts;
 	}
+	objdid = attrref.Objid;
+
 	ldhses =(node->hn.window_pointer)->hw.ldhsession;
 	/* Check that the objdid is an iv object */
 	sts = ldh_GetObjectClass( ldhses, objdid, &class);
@@ -3251,20 +3035,14 @@ unsigned long	index;
 	/* Get the selected object in the navigator */
 	plc = (node->hn.window_pointer)->hw.plcobject_pointer;
 
-        sts = nav_get_select( foectx->navctx, &attrref, &is_attr);
-        if ( foectx->nav_palette_managed && ODD(sts)) {
-          objdid = attrref.Objid;
-        }
-        else {
-	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
-					&is_attr);
-	  objdid = attrref.Objid;
-	  if ( EVEN(sts)) {
-	    foe_message( foectx,"Select an Ii object in the navigator");
-	    BEEP;
-	    return sts;
-	  }
+	sts = gobj_get_select( foectx, &attrref, &is_attr);
+	if ( EVEN(sts)) { 
+	  foe_message( foectx,"Select an Ii object in the navigator");
+	  BEEP;
+	  return sts;
 	}
+	objdid = attrref.Objid;
+
 	ldhses =(node->hn.window_pointer)->hw.ldhsession;
 	/* Check that the objdid is an ii object */
 	sts = ldh_GetObjectClass( ldhses, objdid, &class);
@@ -3324,20 +3102,14 @@ unsigned long	index;
 	/* Get the selected object in the navigator */
 	plc = (node->hn.window_pointer)->hw.plcobject_pointer;
 
-        sts = nav_get_select( foectx->navctx, &attrref, &is_attr);
-        if ( foectx->nav_palette_managed && ODD(sts)) {
-          objdid = attrref.Objid;
-        }
-        else {
-	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
-					&is_attr);
-	  objdid = attrref.Objid;
-	  if ( EVEN(sts)) {
-	    foe_message( foectx,"Select an Io object in the navigator");
-	    BEEP;
-	    return sts;
-	  }
+	sts = gobj_get_select( foectx, &attrref, &is_attr);
+	if ( EVEN(sts)) { 
+	  foe_message( foectx,"Select an Io object in the navigator");
+	  BEEP;
+	  return sts;
 	}
+	objdid = attrref.Objid;
+
 	ldhses =(node->hn.window_pointer)->hw.ldhsession;
 	/* Check that the objdid is an io object */
 	sts = ldh_GetObjectClass( ldhses, objdid, &class);
@@ -3416,41 +3188,20 @@ unsigned long	index;
 	ldhses =(node->hn.window_pointer)->hw.ldhsession;
 
 	parameter_found = 0;
-        sts = nav_get_select( foectx->navctx, &attrref, &is_attr);
-        if ( foectx->nav_palette_managed && ODD(sts))
-        {
-          objdid = attrref.Objid;
-	  if ( is_attr)
-	  {
-            sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol,
-			&name, &size);
-	    if ( EVEN(sts)) return sts;
-	    if ( (s = strrchr( name, '.')) != 0)
-            {
-              strcpy( parameter, s+1);
-              parameter_found = 1;
-            }
-          }
-        }
-        else
-        {
-	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
-					&is_attr);
-	  objdid = attrref.Objid;
-	  if ( ODD(sts) && is_attr) {
-	    sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol,
-				     &name, &size);
-	    if ( EVEN(sts)) return sts;
-	    if ( (s = strrchr( name, '.')) != 0) {
-	      strcpy( parameter, s+1);
-	      parameter_found = 1;
-	    }
-	  }
-	  if ( EVEN(sts))
-	  { 
-	    foe_message( foectx,"Select an integer signal in the navigator");
-	    BEEP;
-	    return sts;
+	sts = gobj_get_select( foectx, &attrref, &is_attr);
+	if ( EVEN(sts)) { 
+	  foe_message( foectx,"Select an integer signal in the navigator");
+	  BEEP;
+	  return sts;
+	}
+	objdid = attrref.Objid;
+	if ( is_attr) {
+	  sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol,
+				   &name, &size);
+	  if ( EVEN(sts)) return sts;
+	  if ( (s = strrchr( name, '.')) != 0) {
+	    strcpy( parameter, s+1);
+	    parameter_found = 1;
 	  }
 	}
 
@@ -3706,41 +3457,20 @@ unsigned long	index;
 	ldhses =(node->hn.window_pointer)->hw.ldhsession;
 
 	parameter_found = 0;
-        sts = nav_get_select( foectx->navctx, &attrref, &is_attr);
-        if ( foectx->nav_palette_managed && ODD(sts))
-        {
-          objdid = attrref.Objid;
-	  if ( is_attr)
-	  {
-            sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol,
-			&name, &size);
-	    if ( EVEN(sts)) return sts;
-	    if ( (s = strrchr( name, '.')) != 0)
-            {
-              strcpy( parameter, s+1);
-              parameter_found = 1;
-            }
-          }
-        }
-        else
-        {
-	  sts = wtt_get_select_first( (wtt_tCtx)plc->hp.hinactx, &attrref,
-					&is_attr);
-	  objdid = attrref.Objid;
-	  if ( ODD(sts) && is_attr) {
-	    sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol,
-				     &name, &size);
-	    if ( EVEN(sts)) return sts;
-	    if ( (s = strrchr( name, '.')) != 0) {
-	      strcpy( parameter, s+1);
-	      parameter_found = 1;
-	    }
-	  }
-	  if ( EVEN(sts))
-	  { 
-	    foe_message( foectx,"Select an digital signal in the navigator");
-	    BEEP;
-	    return sts;
+	sts = gobj_get_select( foectx, &attrref, &is_attr);
+	if ( EVEN(sts)) { 
+	  foe_message( foectx,"Select an integer signal in the navigator");
+	  BEEP;
+	  return sts;
+	}
+	objdid = attrref.Objid;
+	if ( is_attr) {
+	  sts = ldh_AttrRefToName( ldhses, &attrref, ldh_eName_ArefVol,
+				   &name, &size);
+	  if ( EVEN(sts)) return sts;
+	  if ( (s = strrchr( name, '.')) != 0) {
+	    strcpy( parameter, s+1);
+	    parameter_found = 1;
 	  }
 	}
 

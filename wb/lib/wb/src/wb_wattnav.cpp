@@ -43,6 +43,7 @@ extern "C" {
 #include "wb_wnav.h"
 #include "wb_wnav_brow.h"
 #include "wb_wnav_item.h"
+#include "co_wow.h"
 
 static char null_str[] = "";
 
@@ -82,6 +83,7 @@ WAttNav::WAttNav(
 	wattnav_init_brow_cb, this, (Widget *)&brow_widget);
   XtManageChild( form_widget);
 
+  wow_GetAtoms( form_widget, 0, &objid_atom, 0);
   // Create the root item
   *w = form_widget;
 
@@ -564,6 +566,35 @@ static int wattnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
           ;
       }
       break;
+    case flow_eEvent_MB1DoubleClickCtrl:
+      switch ( event->object.object_type)
+      {
+        case flow_eObjectType_Node:
+          brow_GetUserData( event->object.object, (void **)&item);
+          switch( item->type) {
+	  case wnav_eItemType_Attr: 
+	  case wnav_eItemType_AttrArrayElem: {
+	    WItemBaseAttr 	*item_attr = (WItemBaseAttr *)item;
+	    char 		str[200];
+	    int 		sts;
+
+	    if ( item_attr->type_id == pwr_eType_Objid) {
+	      sts = wow_GetSelection( wattnav->form_widget, str, sizeof(str), wattnav->objid_atom);
+	      if ( EVEN(sts))
+		sts = wow_GetSelection( wattnav->form_widget, str, sizeof(str), XA_STRING);
+	    }
+	    if ( ODD(sts))
+	      wattnav->set_attr_value( item_attr->node, item_attr->attr, str);
+	    break;
+	  }
+	  default:
+	    ;
+          }
+          break;
+      default:
+	;
+      }
+      break;
     case flow_eEvent_Radiobutton:
     {
       switch ( event->object.object_type)
@@ -832,6 +863,8 @@ void WAttNav::enable_events()
   brow_EnableEvent( brow->ctx, flow_eEvent_MB1Click, flow_eEventType_CallBack, 
 	wattnav_brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_MB1DoubleClick, flow_eEventType_CallBack, 
+	wattnav_brow_cb);
+  brow_EnableEvent( brow->ctx, flow_eEvent_MB1DoubleClickCtrl, flow_eEventType_CallBack, 
 	wattnav_brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_SelectClear, flow_eEventType_CallBack, 
 	wattnav_brow_cb);

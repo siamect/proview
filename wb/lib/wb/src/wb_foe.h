@@ -156,6 +156,7 @@ struct s_foe_ctx
   struct 	s_widgets widgets ;
   int		set_focus_disabled;
   XtIntervalId focus_timerid;
+  Atom		objid_atom;
 };
 
 /* Methods */

@@ -65,6 +65,7 @@ extern "C" {
 #include "wb_wnav_msg.h"
 #include "wb_volume.h"
 #include "wb_env.h"
+#include "wb_wpkg.h"
 #include "co_msgwindow.h"
 
 
@@ -111,6 +112,7 @@ static void wtt_reset_avoid_deadlock( Wtt *wtt);
 static void wtt_set_avoid_deadlock( Wtt *wtt, int time);
 static void wtt_set_twowindows_cb( void *wtt, int two, int display_w1,
         int display_w2);
+static void wtt_message_cb( void *ctx, char severity, char *msg);
 
 static void wtt_set_twowindows_cb( void *wtt, int two, int display_w1,
         int display_w2)
@@ -153,9 +155,10 @@ extern "C" void wtt_uted_quit_cb( void *ctx)
   ((Wtt *)ctx)->utedctx = NULL;
 }
 
-extern "C" void wtt_distrw_quit_cb( void *ctx) 
+extern "C" void wtt_wpkg_quit_cb( void *ctx) 
 {
-  ((Wtt *)ctx)->distrwctx = NULL;
+  delete ((Wtt *)ctx)->wpkg;
+  ((Wtt *)ctx)->wpkg = NULL;
 }
 
 static void wtt_open_vsel_cb( void *ctx, wb_eType type, char *filename, wow_eFileSelType file_type)
@@ -503,6 +506,21 @@ static int wtt_set_focus_cb( void *ctx, void *component)
   return ((Wtt *)ctx)->set_focus( component);
 }
 
+void wtt_set_selection_owner_proc( Wtt *wtt)
+{
+  // Delay call to own selection, to make it possible to paste previous selection to value inputwith MB2
+  wtt->selection_timerid = 0;
+  if ( wtt->focused_wnav)
+    wtt->focused_wnav->set_selection_owner();
+}
+
+void wtt_set_palette_selection_owner_proc( Wtt *wtt)
+{
+  // Delay call to own selection, to make it possible to paste previous selection to value inputwith MB2
+  wtt->selection_timerid = 0;
+  wtt->palette->set_selection_owner();
+}
+
 int Wtt::set_focus( void *component)
 {
   if ( component == (void *)wnav)
@@ -511,7 +529,8 @@ int Wtt::set_focus( void *component)
     wnavnode->set_inputfocus( 0);
     palette->set_inputfocus( 0);
     focused_wnav = (WNav *)component;
-    focused_wnav->set_selection_owner();
+    selection_timerid = XtAppAddTimeOut( XtWidgetToApplicationContext( toplevel), 200,
+    	(XtTimerCallbackProc)wtt_set_selection_owner_proc, this);
   }
   else if ( component == (void *)wnavnode)
   {
@@ -519,15 +538,17 @@ int Wtt::set_focus( void *component)
     wnavnode->set_inputfocus( 1);
     palette->set_inputfocus( 0);
     focused_wnav = (WNav *)component;
-    focused_wnav->set_selection_owner();
+    selection_timerid = XtAppAddTimeOut( XtWidgetToApplicationContext( toplevel), 200,
+    	(XtTimerCallbackProc)wtt_set_selection_owner_proc, this);
   }
   else if ( component == (void *)palette)
   {
     wnav->set_inputfocus( 0);
     wnavnode->set_inputfocus( 0);
     palette->set_inputfocus( 1);
-    palette->set_selection_owner();
     focused_wnav = 0;
+    selection_timerid = XtAppAddTimeOut( XtWidgetToApplicationContext( toplevel), 200,
+    	(XtTimerCallbackProc)wtt_set_palette_selection_owner_proc, this);
   }
   return 1;
 }
@@ -540,6 +561,7 @@ static void wtt_create_popup_menu_cb( void *ctx, pwr_tObjid objid,
   Arg args[5]; 
   int i;
   short x1, y1, x2, y2, x3, y3;
+  short menu_x, menu_y;
 
   if ( !wtt->ldhses)
     return;
@@ -556,13 +578,15 @@ static void wtt_create_popup_menu_cb( void *ctx, pwr_tObjid objid,
   XtSetArg( args[1], XmNy, &y3);
   XtGetValues( wtt->toplevel, args, 2);
 
-  popup = wtt_create_popup_menu( wtt, objid, pwr_cNCid);
+  menu_x = x + x1 + x2 + x3 + 8;
+  menu_y = y + y1 + y2 + y3;
+  popup = wtt_create_popup_menu( wtt, objid, pwr_cNCid, wtt_message_cb);
   if ( !popup)
     return;
 
   i = 0;
-  XtSetArg(args[i], XmNx, x + x1 + x2 + x3 + 8);i++;
-  XtSetArg(args[i], XmNy, y + y1 + y2 + y3);i++;
+  XtSetArg(args[i], XmNx, menu_x);i++;
+  XtSetArg(args[i], XmNy, menu_y);i++;
   XtSetValues( popup ,args,i);
 
 //    XmMenuPosition(popup, (XButtonPressedEvent *)data->event);
@@ -577,6 +601,7 @@ static void wtt_create_pal_popup_menu_cb( void *ctx, pwr_tCid cid,
   Arg args[5]; 
   int i;
   short x1, y1, x2, y2, x3, y3;
+  short menu_x, menu_y;
 
   if ( !wtt->ldhses)
     return;
@@ -593,13 +618,15 @@ static void wtt_create_pal_popup_menu_cb( void *ctx, pwr_tCid cid,
   XtSetArg( args[1], XmNy, &y3);
   XtGetValues( wtt->toplevel, args, 2);
 
-  popup = wtt_create_popup_menu( wtt, pwr_cNObjid, cid);
+  menu_x = x + x1 + x2 + x3 + 8;
+  menu_y = y + y1 + y2 + y3;
+  popup = wtt_create_popup_menu( wtt, pwr_cNObjid, cid, wtt_message_cb);
   if ( !popup)
     return;
 
   i = 0;
-  XtSetArg(args[i], XmNx, x + x1 + x2 + x3 + 8);i++;
-  XtSetArg(args[i], XmNy, y + y1 + y2 + y3);i++;
+  XtSetArg(args[i], XmNx, menu_x);i++;
+  XtSetArg(args[i], XmNy, menu_y);i++;
   XtSetValues( popup ,args,i);
 
 //    XmMenuPosition(popup, (XButtonPressedEvent *)data->event);
@@ -1148,7 +1175,7 @@ void Wtt::set_twowindows( int two, int display_wnav, int display_wnavnode)
   }
 }
 
-void wtt_message_cb( void *ctx, char severity, char *msg)
+static void wtt_message_cb( void *ctx, char severity, char *msg)
 {
  ((Wtt *)ctx)->message( severity, msg);
 }
@@ -2124,20 +2151,17 @@ static void wtt_activate_createboot( Widget w, Wtt *wtt, XmAnyCallbackStruct *da
 
 static void wtt_activate_distribute( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
 {
-  int sts;
 
   wtt->message( ' ', "");
 
-  if ( wtt->distrwctx == NULL)
-  {
+  if ( wtt->wpkg == 0) {
     wtt->set_clock_cursor();
-    sts = distrw_new( wtt, wtt->toplevel, "Distribute", 
-		(distrw_ctx *)&wtt->distrwctx, wtt_distrw_quit_cb);
+    wtt->wpkg = new WPkg( wtt->toplevel, wtt);
+    wtt->wpkg->close_cb = wtt_wpkg_quit_cb;
     wtt->reset_cursor();
-    if ( EVEN(sts)) MESSAGE_RETURN_STS(sts);
   }
   else
-    distrw_raise_window( (distrw_ctx) wtt->distrwctx);
+    wtt->wpkg->pop();
 }
 
 static void wtt_activate_showcrossref( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
@@ -2406,7 +2430,7 @@ static void wtt_enable_set_focus( Wtt *wtt)
 static void wtt_disable_set_focus( Wtt *wtt, int time)
 {
   wtt->set_focus_disabled++;
-  wtt->focus_timerid = XtAppAddTimeOut(
+  wtt->disfocus_timerid = XtAppAddTimeOut(
 	XtWidgetToApplicationContext( wtt->toplevel), time,
 	(XtTimerCallbackProc)wtt_enable_set_focus, wtt);
 }
@@ -2438,9 +2462,11 @@ static void wtt_action_inputfocus( Widget w, XmAnyCallbackStruct *data)
   if ( wtt->set_focus_disabled)
     return;
 
-  if ( wtt->focused_wnav)
+  if ( wtt->focused_wnav) {
     wtt->set_focus( wtt->focused_wnav);
-
+    // wtt->focus_timerid = XtAppAddTimeOut( XtWidgetToApplicationContext( wtt->toplevel), 200,
+    //	(XtTimerCallbackProc)wtt_set_focus_proc, wtt);
+  }
   wtt_disable_set_focus( wtt, 400);
 }
 
@@ -3006,7 +3032,8 @@ static pwr_tBoolean wtt_format_selection(
     XtPointer   *value_return,
     unsigned long   *length_return,
     pwr_tBoolean is_class,
-    pwr_tBoolean is_attr
+    pwr_tBoolean is_attr,
+    wnav_eSelectionFormat format
     )
 {
   int	ret_len, i, j, size, sts;
@@ -3022,8 +3049,37 @@ static pwr_tBoolean wtt_format_selection(
   Wtt	*wtt = (Wtt *) ctx;
   pwr_tObjid object = attrref.Objid;
   char	*s;
+  int   select_syntax;
+  int	select_volume, select_attr, select_type;
 
-  if ( wtt->select_syntax == wtt_eSelectionMode_Extern && !wtt->select_attr)
+  switch ( format) {
+  case wnav_eSelectionFormat_User:
+    select_syntax = wtt->select_syntax;
+    select_volume = wtt->select_volume;
+    select_attr = wtt->select_attr;
+    select_type = wtt->select_type;
+    break;
+  case wnav_eSelectionFormat_Graph:
+    select_syntax = wtt_eSelectionMode_Normal;
+    select_volume = 1;
+    select_attr = 1;
+    select_type = 1;
+    break;
+  case wnav_eSelectionFormat_Objid:
+    select_syntax = wtt_eSelectionMode_Normal;
+    select_volume = 1;
+    select_attr = 0;
+    select_type = 0;
+    break;
+  case wnav_eSelectionFormat_Attrref:
+    select_syntax = wtt_eSelectionMode_Normal;
+    select_volume = 1;
+    select_attr = 1;
+    select_type = 0;
+    break;
+  }
+
+  if ( select_syntax == wtt_eSelectionMode_Extern && !select_attr)
   {
     sts = ldh_ObjidToName( wtt->ldhses, object, ldh_eName_Objid, 
 					   name, sizeof(name), &ret_len); 
@@ -3032,13 +3088,13 @@ static pwr_tBoolean wtt_format_selection(
     *length_return = strlen(name) + 1;
     return TRUE;
   }
-  else if ( wtt->select_syntax == wtt_eSelectionMode_Extern && wtt->select_attr)
+  else if ( select_syntax == wtt_eSelectionMode_Extern && select_attr)
   {
     sts = ldh_ObjidToName( wtt->ldhses, object, ldh_eName_Default,
 					   name, sizeof(name), &ret_len); 
     if (EVEN(sts)) return FALSE;
   }
-  else if ( wtt->select_volume)
+  else if ( select_volume)
   {
     sts = ldh_ObjidToName(wtt->ldhses, object, ldh_eName_VolPath, 
 					   name, sizeof(name), &ret_len); 
@@ -3051,7 +3107,7 @@ static pwr_tBoolean wtt_format_selection(
     if (EVEN(sts)) return FALSE;
   }
 
-  if (wtt->select_syntax == wtt_eSelectionMode_GMS)
+  if (select_syntax == wtt_eSelectionMode_GMS)
   {
     strcpy(hyphen, "\\-");
     strcpy(dot, "\\.");
@@ -3085,7 +3141,7 @@ static pwr_tBoolean wtt_format_selection(
 
 
   // Fetch and add attribute name if nessecary
-  if (wtt->select_attr && !is_class)
+  if (select_attr && !is_class)
   {
     sts = ldh_GetObjectClass(wtt->ldhses, object, &classid);
     if ( EVEN(sts)) return FALSE;
@@ -3108,7 +3164,7 @@ static pwr_tBoolean wtt_format_selection(
       sts = ldh_NameToAttrRef(wtt->ldhses, name, &attr_ref);
       if (ODD(sts))
       {
-        if (wtt->select_syntax == wtt_eSelectionMode_Extern && wtt->select_attr)
+        if (select_syntax == wtt_eSelectionMode_Extern && select_attr)
         {
            sts = ldh_AttrRefToName(wtt->ldhses, &attr_ref, 
 				ldh_eName_ArefExport,
@@ -3132,7 +3188,7 @@ static pwr_tBoolean wtt_format_selection(
     strcat(buff, dot);
     strcat(buff, attr_name);
 
-    if (wtt->select_type)
+    if (select_type)
     {
       // If attribute is an array element 
       // Get attribute definition for the array.
@@ -3172,7 +3228,7 @@ static pwr_tBoolean wtt_format_selection(
       }
     }
   }
-  if ( wtt->select_syntax == wtt_eSelectionMode_Extern && wtt->select_attr)
+  if ( select_syntax == wtt_eSelectionMode_Extern && select_attr)
   {
     sts = ldh_NameToAttrRef(wtt->ldhses, buff, &attr_ref);
     if (EVEN(sts)) return False;
@@ -3251,10 +3307,10 @@ Wtt::Wtt(
 	wbctx(wt_wbctx), volctx(wt_volctx), volid(wt_volid), ldhses(0),
 	editmode(0), twowindows(0), confirm_open(0), select_volume(0), 
         select_attr(0), select_type(0),
-        wnav_mapped(0), wnavnode_mapped(0), utedctx(0), distrwctx(0),
+        wnav_mapped(0), wnavnode_mapped(0), utedctx(0), wpkg(0),
 	close_cb(0), open_volume_cb(0), open_project_volume_cb(0), time_to_exit_cb(0),
-	set_focus_disabled(0), avoid_deadlock(0), clock_cursor(0),
-	cmd_current_recall(0), value_current_recall(0)
+	set_focus_disabled(0), disfocus_timerid(0), selection_timerid(0), avoid_deadlock(0), 
+	clock_cursor(0), cmd_current_recall(0), value_current_recall(0)
 {
   char		uid_filename[200] = {"pwr_exe:wb_wtt.uid"};
   char		*uid_filename_p = uid_filename;
@@ -3389,7 +3445,7 @@ Wtt::Wtt(
     {
       case pwr_eClass_DirectoryVolume:
         wb_type = wb_eType_Directory;
-        sprintf( title, "PwR Navigator Directory %s, %s", volname, name);
+        sprintf( title, "PwR Navigator Directory %s", name);
         strcpy( layout_w1, "ProjectNavigatorW1");
         strcpy( layout_w2, "ProjectNavigatorW2");
         strcpy( layout_palette, "ProjectNavigatorPalette");
@@ -3616,7 +3672,9 @@ Wtt::~Wtt()
   free_cursor();
 
   if ( set_focus_disabled)
-    XtRemoveTimeOut( focus_timerid);
+    XtRemoveTimeOut( disfocus_timerid);
+  if ( selection_timerid)
+    XtRemoveTimeOut( selection_timerid);
 
   wnav->closing_down = 1;
   wnavnode->closing_down = 1;

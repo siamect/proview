@@ -52,6 +52,8 @@ extern "C" {
 #include "co_wow.h"
 #endif
 
+class WPkg;
+
 typedef enum {
   	wtt_eNoEdit_Save,
   	wtt_eNoEdit_Revert,
@@ -205,7 +207,7 @@ class Wtt {
     Widget	menu_change_value_w;
     Widget	menu_edit_w;
     uted_ctx	utedctx;
-    void	*distrwctx;
+    WPkg	*wpkg;
     WNav	*input_wnav;
     brow_tObject input_node;
     pwr_tObjid	input_objid;
@@ -215,7 +217,8 @@ class Wtt {
     void	(*open_project_volume_cb)(void *ctx);
     int		(*time_to_exit_cb)(void *ctx);
     int		set_focus_disabled;
-    XtIntervalId focus_timerid;
+    XtIntervalId disfocus_timerid;
+    XtIntervalId selection_timerid;
     int		avoid_deadlock;
     XtIntervalId deadlock_timerid;
     int		clock_cursor;
@@ -253,7 +256,8 @@ class Wtt {
     ~Wtt();
 };
 
-Widget wtt_create_popup_menu( Wtt *wtt, pwr_tObjid objid, pwr_tCid cid);
+Widget wtt_create_popup_menu( Wtt *wtt, pwr_tObjid objid, pwr_tCid cid,
+			      void (*message_cb)(void *, char, char *));
 
 #if defined __cplusplus
 }

@@ -113,7 +113,12 @@ int  wnav_attr_string_to_value( ldh_tSesContext ldhses, int type_id, char *value
     }
     case pwr_eType_Char:
     {
-      if ( sscanf( value_str, "%c", (char *)buffer_ptr) != 1)
+      pwr_tChar c;
+      if ( strcmp( value_str, "") == 0) {
+        c = '\0';
+	memcpy( buffer_ptr, &c, sizeof(c));
+      }
+      else if ( sscanf( value_str, "%c", (char *)buffer_ptr) != 1)
         return WNAV__INPUT_SYNTAX;
       break;
     }
@@ -181,13 +186,17 @@ int  wnav_attr_string_to_value( ldh_tSesContext ldhses, int type_id, char *value
       strncpy( (char *)buffer_ptr, value_str, min(attr_size, buff_size));
       break;
     }
-    case pwr_eType_ObjDId:
+    case pwr_eType_Objid:
     {
       pwr_tObjid	objid;
 
-      sts = ldh_NameToObjid ( ldhses, &objid, value_str);
-      if (EVEN(sts)) return WNAV__OBJNOTFOUND;
-  	memcpy( buffer_ptr, &objid, sizeof(objid));
+      if ( strcmp( value_str, "") == 0)
+	objid = pwr_cNObjid;
+      else {
+	sts = ldh_NameToObjid ( ldhses, &objid, value_str);
+	if (EVEN(sts)) return WNAV__OBJNOTFOUND;
+      }
+      memcpy( buffer_ptr, &objid, sizeof(objid));
       break;
     }
     case pwr_eType_ClassId:
@@ -365,9 +374,16 @@ void  wnav_attrvalue_to_string( ldh_tSesContext ldhses, int type_id, void *value
     }
     case pwr_eType_Objid:
     {
+      ldh_sVolumeInfo info;
+      ldh_GetVolumeInfo( ldh_SessionToVol( ldhses), &info);
+
       objid = *(pwr_tObjid *)value_ptr;
-      sts = ldh_ObjidToName( ldhses, objid, ldh_eName_Hierarchy, 
-		str, sizeof(str), len);
+      if ( objid.vid == info.Volume)
+	sts = ldh_ObjidToName( ldhses, objid, ldh_eName_Hierarchy, 
+			       str, sizeof(str), len);
+      else
+	sts = ldh_ObjidToName( ldhses, objid, ldh_eName_VolPath, 
+			       str, sizeof(str), len);
       if (EVEN(sts))
       {
         strcpy( str, "");
@@ -379,9 +395,15 @@ void  wnav_attrvalue_to_string( ldh_tSesContext ldhses, int type_id, void *value
     case pwr_eType_AttrRef:
     {
       char *name_p;
+      ldh_sVolumeInfo info;
+      ldh_GetVolumeInfo( ldh_SessionToVol( ldhses), &info);
 
       attrref = (pwr_sAttrRef *) value_ptr;
-      sts = ldh_AttrRefToName( ldhses, attrref, ldh_eName_Aref, &name_p, len);
+      if ( attrref->Objid.vid == info.Volume)
+	sts = ldh_AttrRefToName( ldhses, attrref, ldh_eName_Aref, &name_p, len);
+      else
+	sts = ldh_AttrRefToName( ldhses, attrref, ldh_eName_ArefVol, &name_p, len);
+
       if (EVEN(sts))
       {
         strcpy( str, "");
@@ -586,6 +608,7 @@ WNav::WNav(
   // Create the root item
   *w = form_widget;
 
+  wow_GetAtoms( form_widget, &graph_atom, &objid_atom, &attrref_atom);
   gbl.load_config( this);
 
   if ( root_menu && !ldhses)
@@ -1154,7 +1177,9 @@ static int wnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
   if ( wnav->closing_down)
     return 1;
 
-  wnav->message( ' ', null_str);
+  if ( event->event != flow_eEvent_ObjectDeleted)
+    wnav->message( ' ', null_str);
+
   switch ( event->event)
   {
     case flow_eEvent_Key_Up:
@@ -1594,6 +1619,52 @@ static int wnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
           ;
       }
       break;
+    case flow_eEvent_MB1DoubleClickCtrl:
+      switch ( event->object.object_type) {
+        case flow_eObjectType_Node:
+          brow_GetUserData( event->object.object, (void **)&item);
+          switch( item->type) {
+	  case wnav_eItemType_Attr: 
+	  case wnav_eItemType_AttrArrayElem: {
+	    WItemBaseAttr 	*item_attr = (WItemBaseAttr *)item;
+	    pwr_sAttrRef      	*sel_list;
+	    int               	*sel_is_attr;
+	    int		      	sel_cnt = 0;
+	    char 		str[200];
+	    int 		size;
+
+	    if ( item_attr->type_id == pwr_eType_Objid) {
+
+	      if ( wnav->get_global_select_cb)
+		sts = (wnav->get_global_select_cb)( wnav->parent_ctx, &sel_list, 
+					      &sel_is_attr, &sel_cnt);
+	      if ( sel_cnt > 1) {
+		wnav->message( 'E', "Select one object"); 
+		break;
+	      }
+	      else if ( sel_cnt) {
+		sts = ldh_ObjidToName( wnav->ldhses, sel_list[0].Objid, ldh_eName_VolPath, str, 
+				       sizeof(str), &size);
+		if ( EVEN(sts)) return sts;
+	      }
+	      else {
+		sts = wow_GetSelection( wnav->form_widget, str, sizeof(str), wnav->objid_atom);
+		if ( EVEN(sts))
+		  sts = wow_GetSelection( wnav->form_widget, str, sizeof(str), XA_STRING);
+	      }
+	      if ( ODD(sts))
+		wnav->set_attr_value( item_attr->node, item_attr->objid, str);
+	      break;
+	    }
+	  }
+	  default:
+	    ;
+          }
+          break;
+      default:
+	;
+      }
+      break;
     case flow_eEvent_MB1Click:
     {
       // Select
@@ -1702,6 +1773,11 @@ static int wnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
 
       brow_SetSelectInverse( wnav->brow->ctx);
       break;
+    case flow_eEvent_MB3Down:
+    {
+      brow_SetClickSensitivity( wnav->brow->ctx, flow_mSensitivity_MB3Press);
+      break;
+    }
     case flow_eEvent_MB3Press:
     {
       // Popup menu
@@ -3018,7 +3094,7 @@ void WNav::enable_events( WNavBrow *brow)
 	wnav_brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_MB1DoubleClick, flow_eEventType_CallBack, 
 	wnav_brow_cb);
-  brow_EnableEvent( brow->ctx, flow_eEvent_MB1DoubleClickShiftCtrl, flow_eEventType_CallBack, 
+  brow_EnableEvent( brow->ctx, flow_eEvent_MB1DoubleClickCtrl, flow_eEventType_CallBack, 
 	wnav_brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_MB1Click, flow_eEventType_CallBack, 
 	wnav_brow_cb);
@@ -3065,6 +3141,8 @@ void WNav::enable_events( WNavBrow *brow)
   brow_EnableEvent( brow->ctx, flow_eEvent_MB1PressShift, flow_eEventType_RegionAddSelect, 
 	wnav_brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_MB3Press, flow_eEventType_CallBack, 
+	wnav_brow_cb);
+  brow_EnableEvent( brow->ctx, flow_eEvent_MB3Down, flow_eEventType_CallBack, 
 	wnav_brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Map, flow_eEventType_CallBack, 
 	wnav_brow_cb);
@@ -3153,11 +3231,25 @@ static Boolean wnav_sel_convert_cb(
 
   if (*target == XA_STRING ||
       *target == XA_TEXT(flow_Display(wnav->brow_widget)) ||
-      *target == XA_COMPOUND_TEXT(flow_Display(wnav->brow_widget)))
+      *target == XA_COMPOUND_TEXT(flow_Display(wnav->brow_widget)) ||
+      *target == wnav->graph_atom ||
+      *target == wnav->objid_atom ||
+      *target == wnav->attrref_atom)
   {
     brow_tNode	*node_list;
     int		node_count;
+    wnav_eSelectionFormat format;
   
+    if ( *target == wnav->graph_atom)
+      format = wnav_eSelectionFormat_Graph;
+    else if ( *target == wnav->objid_atom)
+      format = wnav_eSelectionFormat_Objid;
+    else if ( *target == wnav->attrref_atom)
+      format = wnav_eSelectionFormat_Attrref;
+    else
+      format = wnav_eSelectionFormat_User;
+	
+
     brow_GetSelectedNodes( wnav->brow->ctx, &node_list, &node_count);
     if ( !node_count)
       return FALSE;
@@ -3179,7 +3271,7 @@ static Boolean wnav_sel_convert_cb(
         sts = ldh_NameToAttrRef( wnav->ldhses, attr_str, &attrref);
         if ( EVEN(sts)) return FALSE;
         sts = (wnav->format_selection_cb)( wnav->parent_ctx, attrref, 
-		value_return, length_return, 0, 1);
+		value_return, length_return, 0, 1, format);
         if ( !sts) return FALSE;
 //        sts = ldh_AttrRefToName( wnav->ldhses, &attrref, ldh_eName_Aref, 
 //		&name_p, &size);
@@ -3190,7 +3282,7 @@ static Boolean wnav_sel_convert_cb(
         memset( &attrref, 0, sizeof(attrref));
         attrref.Objid = item->objid;
         sts = (wnav->format_selection_cb)( wnav->parent_ctx, attrref, 
-		value_return, length_return, 0, 0);
+		value_return, length_return, 0, 0, format);
         if ( !sts) return FALSE;
         break;
       default:
@@ -3200,7 +3292,10 @@ static Boolean wnav_sel_convert_cb(
     }
     free( node_list);
 
-    if ( *target == XA_COMPOUND_TEXT(flow_Display(wnav->brow_widget)))
+    if ( *target == XA_COMPOUND_TEXT(flow_Display(wnav->brow_widget)) ||
+ 	 *target == wnav->graph_atom ||
+ 	 *target == wnav->objid_atom ||
+	 *target == wnav->attrref_atom)
       *type_return = *target;
     else
       *type_return = XA_STRING;

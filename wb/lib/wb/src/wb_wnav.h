@@ -60,6 +60,13 @@ extern "C" {
 #define WNAV_BROW_MAX	25
 
 typedef enum {
+  wnav_eSelectionFormat_User,
+  wnav_eSelectionFormat_Graph,
+  wnav_eSelectionFormat_Objid,
+  wnav_eSelectionFormat_Attrref
+} wnav_eSelectionFormat;
+
+typedef enum {
 	wnav_mOpen_All		= ~0,
 	wnav_mOpen_Children	= 1 << 0,
 	wnav_mOpen_Attributes	= 1 << 1,
@@ -226,7 +233,7 @@ class WNav {
     void 		(*save_cb)( void *);
     void 		(*revert_cb)( void *, int confirm);
     pwr_tBoolean 	(*format_selection_cb)( void *, pwr_sAttrRef, XtPointer *,
-		 unsigned long *, pwr_tBoolean, pwr_tBoolean);
+			   unsigned long *, pwr_tBoolean, pwr_tBoolean, wnav_eSelectionFormat);
     int 		(*get_global_select_cb)( void *, pwr_sAttrRef **, 
 						 int **, int *);
     int 		(*global_unselect_objid_cb)( void *, pwr_tObjid objid);
@@ -264,6 +271,9 @@ class WNav {
     int                 init_help;
     int		        avoid_deadlock;
     XtIntervalId        deadlock_timerid;
+    Atom		graph_atom;
+    Atom		objid_atom;
+    Atom		attrref_atom;
 
     int create_object_item( pwr_tObjid objid, 
 		brow_tNode dest, flow_eDest dest_code, void **item,

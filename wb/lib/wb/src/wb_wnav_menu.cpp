@@ -33,6 +33,9 @@ extern "C" {
 #include <Xm/SeparatoG.h>
 #include <Xm/ToggleB.h>
 #include <Xm/ToggleBG.h>
+#include <X11/Xatom.h>
+#include <X11/Xmu/Atoms.h>
+#include <X11/Xmu/StdSel.h>
 
 #include "flow.h"
 #include "flow_browctx.h"
@@ -47,6 +50,7 @@ extern "C" {
 
 extern "C" {
 #include "co_api.h"
+#include "co_wow.h"
 }
 
 #define MENU_BAR      1
@@ -178,8 +182,8 @@ static Widget wnav_build_menu(
   return MenuType == MENU_POPUP ? Menu : Cascade;
 }
 
-
-Widget wtt_create_popup_menu( Wtt *wtt, pwr_tObjid objid, pwr_tCid cid)
+Widget wtt_create_popup_menu( Wtt *wtt, pwr_tObjid objid, pwr_tCid cid, 
+			      void (*message_cb)(void *, char, char *))
 {
   pwr_tStatus 	sts;
   int 		i;
@@ -193,6 +197,8 @@ Widget wtt_create_popup_menu( Wtt *wtt, pwr_tObjid objid, pwr_tCid cid)
 
   if (mcp == NULL)
     mcp = (ldh_sMenuCall *)XtCalloc(1, sizeof(ldh_sMenuCall));
+
+  mcp->message_cb = message_cb;
 
   if ( cid != pwr_cNCid) {
     // Popup in palette
@@ -267,6 +273,25 @@ Widget wtt_create_popup_menu( Wtt *wtt, pwr_tObjid objid, pwr_tCid cid)
 	mcp->Selected[0].Objid = cdh_ClassIdToObjid( cid);
 	mcp->Selected[1].Objid = pwr_cNObjid;
 	mcp->SelectCount = 1;
+      }
+      else {
+	// Get primary selection
+	char str[200];
+
+	sts = wow_GetSelection( wtt->wnav_form, str, sizeof(str), wtt->wnav->objid_atom);
+	if ( EVEN(sts))
+	  sts = wow_GetSelection( wtt->wnav_form, str, sizeof(str), XA_STRING);
+	if ( ODD(sts)) {
+	  sts = ldh_NameToObjid( mcp->PointedSession, &objid, str);
+	  if ( ODD(sts)) {
+	    XtFree( (char *) mcp->Selected);
+	    mcp->Selected = (pwr_sAttrRef *) XtCalloc( 2, sizeof (pwr_sAttrRef));
+	    mcp->SelectedSet = ldh_eMenuSet_Object;
+	    mcp->Selected[0].Objid = objid;
+	    mcp->Selected[1].Objid = pwr_cNObjid;
+	    mcp->SelectCount = 1;
+	  }
+	}
       }
     }
   }
