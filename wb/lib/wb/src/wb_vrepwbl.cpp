@@ -1164,7 +1164,10 @@ int wb_vrepwbl::getTemplateBody( pwr_tCid cid, pwr_eBix bix, size_t *size, void 
       if ( EVEN(sts)) return 0;
     
       wb_bdrep *bdrep = cdrep->bdrep( &sts, bix);
-      if ( EVEN(sts)) return 0;
+      if ( EVEN(sts)) {
+	delete cdrep;
+	return 0;
+      }
 
       *size = bdrep->size();
       delete bdrep;
