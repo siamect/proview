@@ -17,6 +17,9 @@
 # include "rt_qcom.h"
 #endif
 
+#if defined __cplusplus
+extern "C" {
+#endif
 
 #ifndef errh_Bugcheck
 # if defined OS_ELN || defined OS_VMS
@@ -65,5 +68,9 @@ void		*errh_ErrArgAF	(char *s);
 void		*errh_ErrArgL	(int val);
 void		errh_CErrLog	(pwr_tStatus sts, ...);
 char		*errh_Message	(char *string, char severity, char *msg, ...);
+
+#if defined __cplusplus
+}
+#endif
 
 #endif
