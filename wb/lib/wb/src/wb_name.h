@@ -152,7 +152,7 @@ public:
   // bool bodyId();
   // bool bodyName();
     
-  static char *unatName( char *name) { return wb_nrep::unatName( name);} 
+  static char *unatName( const char *name) { return wb_nrep::unatName( name);} 
   static bool checkObjectName( const char *name) { return wb_nrep::checkObjectName( name);}
 private:
   void check() const { if ( evenSts()) throw wb_error(m_sts);}

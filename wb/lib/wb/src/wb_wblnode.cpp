@@ -9,6 +9,8 @@
 #include "wb_dbs.h"
 #include "wb_name.h"
 
+#define wblAlign(size) ((size + 3) & ~3)
+
 struct wb_wblvocabTokenTypes tokens;
 
 /* Datatypes */
@@ -567,6 +569,9 @@ void wb_wblnode::buildAttribute( ref_wblnode classdef, ref_wblnode objbodydef,
   a_elements = ((pwr_sParam *)rbody)->Info.Elements;
   a_flags = ((pwr_sParam *)rbody)->Info.Flags;
 
+  if ( a_elements == 0)
+    a_elements = 1;
+
   if ( !a_tid) {
     m_vrep->error( "Unknown attribute type", getFileName(), line_number);
     return;
@@ -578,16 +583,27 @@ void wb_wblnode::buildAttribute( ref_wblnode classdef, ref_wblnode objbodydef,
   if ( a_type == 0)
     a_type = ((pwr_sParam *)rbody)->Info.Type = type;
 
-  // Check obsoletet definitions of size and offset
-  if ( a_size && a_size != a_elements * size)
-    m_vrep->error( "Mismatch in attribute size", getFileName(), line_number);
-  if ( a_offset && a_offset != *boffset)
-    m_vrep->error( "Mismatch in attribute offset", getFileName(), line_number);
-
-  a_size = ((pwr_sParam *)rbody)->Info.Size = a_elements * size;
-  a_offset = ((pwr_sParam *)rbody)->Info.Offset = *boffset;
+  if ( a_flags & pwr_mAdef_pointer) {
+    size = sizeof( void *);
+  }
+  if ( a_flags & pwr_mAdef_array) {
+    size *= a_elements;
+  }
+  if ( ((pwr_sParam *)rbody)->Info.PgmName[0] == 0) {
+    strncpy( ((pwr_sParam *)rbody)->Info.PgmName, wb_name::unatName( name()),
+	     sizeof( ((pwr_sParam *)rbody)->Info.PgmName));
+  }
+  if ( cdh_NoCaseStrcmp( cname, "$Input") == 0) {
+    a_size = ((pwr_sParam *)rbody)->Info.Size = size;
+    a_offset = ((pwr_sParam *)rbody)->Info.Offset = *boffset + sizeof( void *);
+    *boffset += sizeof( void *) + wblAlign( a_size);
+  }
+  else {
+    a_size = ((pwr_sParam *)rbody)->Info.Size = size;
+    a_offset = ((pwr_sParam *)rbody)->Info.Offset = *boffset;
+    *boffset += wblAlign( a_size);
+  }
   ((pwr_sParam *)rbody)->Info.ParamIndex = *bindex;
-  *boffset += a_size;
   (*bindex)++;
 }
 

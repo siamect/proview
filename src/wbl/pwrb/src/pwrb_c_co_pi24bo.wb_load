@@ -162,11 +162,26 @@ SObject pwrb:Class
     Object Template Co_PI24BO
       Body RtBody
 	Attr ConvMask = 65535
-        Attr COAbsFlag = 1
-        Attr NoOfBits = 24
-        Attr MulCount = 4
-        Attr CopWrRough = 1
-        Attr CopWrFine = 1
+        Attr COAbsFlag[0] = 1
+        Attr COAbsFlag[1] = 1
+        Attr COAbsFlag[2] = 1
+        Attr COAbsFlag[3] = 1
+        Attr NoOfBits[0] = 24
+        Attr NoOfBits[1] = 24
+        Attr NoOfBits[2] = 24
+        Attr NoOfBits[3] = 24
+        Attr MulCount[0] = 4
+        Attr MulCount[1] = 4
+        Attr MulCount[2] = 4
+        Attr MulCount[3] = 4
+        Attr CopWrRough[0] = 1
+        Attr CopWrRough[1] = 1
+        Attr CopWrRough[2] = 1
+        Attr CopWrRough[3] = 1
+        Attr CopWrFine[0] = 1
+        Attr CopWrFine[1] = 1
+        Attr CopWrFine[2] = 1
+        Attr CopWrFine[3] = 1
         Attr MaxNoOfCounters = 1
         Attr Process = 1
       EndBody

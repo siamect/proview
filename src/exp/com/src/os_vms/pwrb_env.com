@@ -134,6 +134,7 @@ $       defjob pwr_exe_en_us    pwrb_root:[os_'pwre_os'.hw_'pwre_hw'.exp.exe'dbg
 $       defjob pwr_exe_sv_se    pwrb_root:[os_'pwre_os'.hw_'pwre_hw'.exp.exe'dbg'.sv_se]
 $       defjob pwr_lib          pwrb_root:[os_'pwre_os'.hw_'pwre_hw'.exp.lib'dbg']
 $       defjob pwr_obj          pwrb_root:[os_'pwre_os'.hw_'pwre_hw'.exp.obj'dbg']
+$       defjob pwr_load         pwrb_root:[os_'pwre_os'.hw_'pwre_hw'.exp.load]
 $       defjob pwr_cnf          pwrb_root:[os_'pwre_os'.hw_'pwre_hw'.exp.cnf]
 $       defjob pwr_db           pwrb_root:[os_'pwre_os'.hw_'pwre_hw'.exp.db]
 $       defjob pwr_doc          pwrb_root:[os_'pwre_os'.hw_'pwre_hw'.exp.doc]
@@ -160,6 +161,7 @@ $       call undefjob pwr_exe_en_us
 $       call undefjob pwr_exe_sv_se    
 $       call undefjob pwr_lib          
 $       call undefjob pwr_obj          
+$       call undefjob pwr_load          
 $       call undefjob pwr_cnf          
 $       call undefjob pwr_db           
 $       call undefjob pwr_doc          

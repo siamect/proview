@@ -22,7 +22,7 @@
 #endif
 #include "rt_ini_alias.h"
 #include "rt_ini_msg.h"
-///#include "rt_load.h"
+/* #include "rt_load.h" */
 #include "rt_lst.h"
 #include "rt_errh.h"
 #include "rt_syi.h"
@@ -831,8 +831,8 @@ ini_LoadDirectory (
     } else {
       cp->busid = qcom_MyBus(sts);
     }
-    sprintf(cp->dir, "%s::%s", cp->hostspec, load_cNameDirectory);
-    sprintf(cp->bdir, "%s::%s", cp->hostspec, load_cBaseNameDirectory);
+    sprintf(cp->dir, "%s::%s", cp->hostspec, dbs_cNameDirectory);
+    sprintf(cp->bdir, "%s::%s", cp->hostspec, dbs_cNameBaseDirectory);
   }
 
 #elif defined(OS_VMS)
@@ -844,8 +844,8 @@ ini_LoadDirectory (
       if (s != NULL)
 	cp->busid = atoi(s);
     }
-    sprintf(cp->dir, "%s", load_cNameBaseDirectory);
-    sprintf(cp->dir, "%s", load_cNameDirectory);
+    sprintf(cp->bdir, "%s", dbs_cNameBaseDirectory);
+    sprintf(cp->dir, "%s", dbs_cNameDirectory);
   }
 #elif defined(OS_LYNX) || defined(OS_LINUX)
   {
@@ -945,7 +945,7 @@ ini_ReadBootFile (
   pwr_tVolumeId		vid;
 #endif
 
-  //  pwr_tProjVersion	ver;
+  /*  pwr_tProjVersion	ver;*/
   FILE *f;
   ivol_sVolume		*vp;
 

@@ -498,7 +498,6 @@ typedef struct {
 } gdb_sCclassVolume;
 
 
-#if 0
 /** Cached Attribute
  */
 #if 0
