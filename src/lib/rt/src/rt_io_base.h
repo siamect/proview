@@ -97,7 +97,8 @@ typedef enum {
 	io_mProcess_None	= 0,
 	io_mProcess_Plc		= 1 << 0,
 	io_mProcess_IoComm	= 1 << 1,
-	io_mProcess_User	= 1 << 2,
+	io_mProcess_Profibus   	= 1 << 2,
+	io_mProcess_User	= 1 << 3,
 	io_mProcess_All		= ~0
 } io_mProcess;
 

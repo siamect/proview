@@ -1723,7 +1723,9 @@ static pwr_tStatus io_init_agent(
       {
         if ( EVEN(sts))
 	  process = io_mProcess_All;
-        if ( process & io_mProcess_Plc)
+	if ( ctx->Process == io_mProcess_Profibus)
+	  ok = 1;
+        else if ( process & io_mProcess_Plc)
 	{
           /* Check thread also */
           strcpy( attrname, aname);
