@@ -668,6 +668,12 @@ int brow_GetNextSibling( brow_tCtx ctx, brow_tObject object,
   return ctx->get_next_sibling( (FlowArrayElem *)object, (FlowArrayElem **)sibling);
 }
 
+int brow_GetPreviousSibling( brow_tCtx ctx, brow_tObject object, 
+		brow_tObject *sibling)
+{
+  return ctx->get_previous_sibling( (FlowArrayElem *)object, (FlowArrayElem **)sibling);
+}
+
 int brow_IsVisible( brow_tCtx ctx, brow_tObject object)
 {
   return ctx->is_visible( (FlowArrayElem *)object);

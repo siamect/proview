@@ -481,6 +481,45 @@ int FlowArray::brow_get_next_sibling( FlowArrayElem *element,
    return FLOW__NONEXTSIBLING;
 }
 
+int FlowArray::brow_get_previous_sibling( FlowArrayElem *element, 
+		FlowArrayElem **sibling)
+{
+  int		i;
+  int		idx;
+  int		found;
+  int		level;
+
+  found = 0;
+  for ( i = 0; i < a_size; i++)
+  {
+    if ( *(a + i) == element)
+    {
+      idx = i;
+      found = 1;
+      break;
+    }
+  }
+  if ( !found)
+    return FLOW__NOELEM;
+
+  if ( idx == 0)
+    return FLOW__NONEXTSIBLING;
+
+  // Return previous element of the same level
+  level = ((FlowNode *)a[idx])->get_level();
+  for ( i = idx - 1; i <= 0; i--)
+  { 
+    if (((FlowNode *)a[i])->get_level() == level)
+    {
+      *sibling = a[i];
+      return 1;
+    }
+    if (((FlowNode *)a[i])->get_level() < level)
+      return FLOW__NONEXTSIBLING;
+   }
+   return FLOW__NONEXTSIBLING;
+}
+
 void FlowArray::zoom()
 {
   int		i;

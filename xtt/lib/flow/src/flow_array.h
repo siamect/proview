@@ -65,6 +65,8 @@ class FlowArray {
     int brow_get_child( FlowArrayElem *element, FlowArrayElem **child);
     int brow_get_next_sibling( FlowArrayElem *element, 
 		FlowArrayElem **sibling);
+    int brow_get_previous_sibling( FlowArrayElem *element, 
+		FlowArrayElem **sibling);
     void move_widgets( int x, int y);
     int get_first( FlowArrayElem **first);
     int get_last( FlowArrayElem **last);

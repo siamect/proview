@@ -196,6 +196,8 @@ int brow_GetParent( brow_tCtx ctx, brow_tObject object, brow_tObject *parent);
 int brow_GetChild( brow_tCtx ctx, brow_tObject object, brow_tObject *child);
 int brow_GetNextSibling( brow_tCtx ctx, brow_tObject object, 
 		brow_tObject *sibling);
+int brow_GetPreviousSibling( brow_tCtx ctx, brow_tObject object, 
+		brow_tObject *sibling);
 int brow_IsVisible( brow_tCtx ctx, brow_tObject object);
 int brow_CreateSecondaryCtx( brow_tCtx ctx, brow_tCtx *secondary_ctx,
         int (*init_proc)(brow_tCtx ctx, void *client_data),
