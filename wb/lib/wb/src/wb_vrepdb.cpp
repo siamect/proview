@@ -407,12 +407,12 @@ bool wb_vrepdb::deleteFamilyMember(pwr_tOid oid, wb_db_txn *txn)
   
   wb_db_dbody db(m_db, o.oid());
   rs = db.del(txn);
-  if (rs)
-    printf("wb_vrepdb::deleteFamilyMember, db.get rs %d\n", rs);
+  //if (rs)
+    //printf("wb_vrepdb::deleteFamilyMember, db.get rs %d\n", rs);
   wb_db_rbody rb(m_db, o.oid());
   rs = rb.del(txn);
-  if (rs)
-    printf("wb_vrepdb::deleteFamilyMember, rb.get rs %d\n", rs);
+ // if (rs)
+    //printf("wb_vrepdb::deleteFamilyMember, rb.get rs %d\n", rs);
   
   rs = o.del(txn);
   if (rs)
