@@ -219,7 +219,7 @@ wb_attribute wb_volume::attribute(pwr_tOid oid, const char *bname, const char *a
     // Other volume
     orep = m_vrep->erep()->object(&sts, oid);
 
-    wb_attribute a(sts, orep, bname, aname);
+  wb_attribute a(sts, orep, bname, aname);
     
   return a;
 }
