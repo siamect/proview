@@ -2744,7 +2744,7 @@ static int	xnav_close_func(	void		*client_data,
   else if ( strncmp( arg1_str, "NAVIGATOR", strlen( arg1_str)) == 0)
   {
     if ( xnav->close_cb)
-      (xnav->close_cb)( xnav->parent_ctx);
+      (xnav->close_cb)( xnav->parent_ctx, xnav->op ? 0 : 1);
   }
   else if ( strncmp( arg1_str, "ALL", strlen( arg1_str)) == 0)
   {
@@ -2829,7 +2829,7 @@ static int	xnav_close_func(	void		*client_data,
     }
     if ( !keep) {
       if ( xnav->close_cb)
-        (xnav->close_cb)( xnav->parent_ctx);
+        (xnav->close_cb)( xnav->parent_ctx, 0);
     }
 
     // Close alarmlist
@@ -3355,7 +3355,7 @@ static int	xnav_exit_func(	void		*client_data,
   XNav 		*xnav = (XNav *)client_data;
 
   if ( xnav->close_cb)
-    (xnav->close_cb)( xnav->parent_ctx);
+    (xnav->close_cb)( xnav->parent_ctx, xnav->op ? 0 : 1);
   else
     exit(1);
   return 1;
@@ -5383,10 +5383,10 @@ static void xnav_op_map_cb( void *ctx)
 static void xnav_op_close_cb( void *ctx)
 {
   XNav *xnav = (XNav *)ctx;
-  delete xnav->op;
-  xnav->op = 0;
+  // delete xnav->op;
+  // xnav->op = 0;
   if ( xnav->close_cb)
-    (xnav->close_cb)( xnav->parent_ctx);
+    (xnav->close_cb)( xnav->parent_ctx, 1);
 }
 
 static void xnav_op_help_cb( void *ctx, char *key)

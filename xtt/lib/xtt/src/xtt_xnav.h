@@ -264,7 +264,7 @@ class XNav {
     XtIntervalId	trace_timerid;
     int			trace_started;
     void 		(*message_cb)( void *, char, char *);
-    void 		(*close_cb)( void *);
+    void 		(*close_cb)( void *, int);
     void 		(*map_cb)( void *);
     void 		(*change_value_cb)( void *);
     void 		(*set_dimension_cb)( void *, int, int);

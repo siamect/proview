@@ -380,10 +380,10 @@ static void xtt_close_ok( void *ctx, void *data)
   exit(0);
 }
 
-static void xtt_close( void *ctx)
+static void xtt_close( void *ctx, int terminate)
 {
   Xtt	*xtt = (Xtt *) ctx;
-  if ( !xtt->xnav->op) {
+  if ( terminate) {
     wow_DisplayQuestion( xtt, xtt->toplevel, "Confirm", 
 			 "Do you want to close", xtt_close_ok, 0, 0);
     // delete xtt->xnav;
@@ -509,7 +509,7 @@ static void xtt_activate_command( Widget w, Xtt *xtt, XmAnyCallbackStruct *data)
 
 static void xtt_activate_exit( Widget w, Xtt *xtt, XmAnyCallbackStruct *data)
 {
-  xtt_close( xtt);
+    xtt_close( xtt, xtt->xnav->op ? 0 : 1);
 }
 
 static void xtt_activate_print( Widget w, Xtt *xtt, XmAnyCallbackStruct *data)
@@ -1099,7 +1099,7 @@ Xtt::Xtt( int argc, char *argv[], int *return_sts) :
 	(XtCallbackProc)xtt_activate_exit, this);
 
   if ( xnav->op)
-    xtt_close( this);
+    xtt_close( this, 0);
 
   // Start timer to check for qcom events
   timerid = XtAppAddTimeOut(
