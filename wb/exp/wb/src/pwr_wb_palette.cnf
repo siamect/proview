@@ -312,13 +312,19 @@ palette PlcEditorPalette
     class DArithm
     class DataArithm
     class Div
+    class Equal
     class Filter
+    class GreaterEqual
+    class GreaterThan
+    class LessEqual
+    class LessThan
     class Limit
     class Max
     class Maxmin
     class Min
     class Mul
     class Mux
+    class NotEqual
     class PiSpeed
     class Ramp
     class Select
@@ -390,21 +396,23 @@ palette PlcEditorPalette
   {
     class BwAnd
     class BwOr
-    class Equal
     class Even
-    class GreaterEqual
-    class GreaterThan
     class IAbs
     class IAdd
     class IDiv
+    class IEqual
+    class IGreaterEqual
+    class IGreaterThan
+    class ILessEqual
+    class ILessThan
     class ILimit
     class IMax
     class IMin
     class IMul
     class IMux
+    class INotEqual
+    class ISel
     class ISub
-    class LessEqual
-    class LessThan
     class Odd
   }
   menu Logic
