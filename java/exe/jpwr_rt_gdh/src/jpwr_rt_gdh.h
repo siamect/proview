@@ -142,6 +142,38 @@ JNIEXPORT jstring JNICALL Java_jpwr_rt_Gdh_getObjectRefInfoString
 
 /*
  * Class:     jpwr_rt_Gdh
+ * Method:    getObjectRefInfoFloatArray
+ * Signature: (II)[F
+ */
+JNIEXPORT jfloatArray JNICALL Java_jpwr_rt_Gdh_getObjectRefInfoFloatArray
+  (JNIEnv *, jobject, jint, jint);
+
+/*
+ * Class:     jpwr_rt_Gdh
+ * Method:    getObjectRefInfoBooleanArray
+ * Signature: (II)[Z
+ */
+JNIEXPORT jbooleanArray JNICALL Java_jpwr_rt_Gdh_getObjectRefInfoBooleanArray
+  (JNIEnv *, jobject, jint, jint);
+
+/*
+ * Class:     jpwr_rt_Gdh
+ * Method:    getObjectRefInfoIntArray
+ * Signature: (II)[I
+ */
+JNIEXPORT jintArray JNICALL Java_jpwr_rt_Gdh_getObjectRefInfoIntArray
+  (JNIEnv *, jobject, jint, jint);
+
+/*
+ * Class:     jpwr_rt_Gdh
+ * Method:    getObjectRefInfoStringArray
+ * Signature: (IIII)[Ljava/lang/String;
+ */
+JNIEXPORT jobjectArray JNICALL Java_jpwr_rt_Gdh_getObjectRefInfoStringArray
+  (JNIEnv *, jobject, jint, jint, jint, jint);
+
+/*
+ * Class:     jpwr_rt_Gdh
  * Method:    unrefObjectInfo
  * Signature: (Ljpwr/rt/PwrtRefId;)Ljpwr/rt/PwrtStatus;
  */

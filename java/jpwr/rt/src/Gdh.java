@@ -252,7 +252,7 @@ public class Gdh {
     return retVec;
   }
   public Vector unrefObjectInfo_Vector( Vector vec )
-  {
+  { 
     Vector retVec = new Vector();
 //    for(int i = 0;i < vec.size();i++)
 //    {
@@ -274,10 +274,17 @@ public class Gdh {
   public native CdhrObjid getObjectInfoObjid( String attributeName);
   public native PwrtStatus toggleObjectInfo( String attributeName);
   public native GdhrRefObjectInfo refObjectInfo( String attributeName);
+
   public native float getObjectRefInfoFloat( int id);
   public native boolean getObjectRefInfoBoolean( int id);
   public native int getObjectRefInfoInt( int id);
   public native String getObjectRefInfoString( int id, int typeid);
+
+  public native float[] getObjectRefInfoFloatArray( int id, int elements);
+  public native boolean[] getObjectRefInfoBooleanArray( int id, int elements);
+  public native int[] getObjectRefInfoIntArray( int id, int elements);
+  public native String[] getObjectRefInfoStringArray( int id, int typeid, int size, int elements);
+
   public native PwrtStatus unrefObjectInfo( PwrtRefId refid);
   public native CdhrObjid nameToObjid( String objectName);
   public native CdhrString objidToName( PwrtObjid objid, int nameType);

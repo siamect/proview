@@ -52,6 +52,13 @@ public class Gdh
   public final static int GET_PARENT = 44;
   public final static int GET_OBJECT_INFO_OBJID = 45;
 
+  public final static int GET_OBJECT_REF_INFO_BOOLEAN_ARRAY = 46;
+  public final static int GET_OBJECT_REF_INFO_FLOAT_ARRAY = 47;
+  public final static int GET_OBJECT_REF_INFO_INT_ARRAY = 48;
+  public final static int GET_OBJECT_REF_INFO_STRING_ARRAY = 49;
+
+
+
   public final static int __IO_EXCEPTION = 2000;
   public final static int __BUSY = 2002;
   public final static int __UNREFED = 0;
@@ -367,7 +374,7 @@ public class Gdh
         return new GdhrRefObjectInfo(null, 0, 0, 0);
       }
       //qqq
-      Sub sub = new Sub(attributeName, null, 0, typeId, subscriptionCount);
+      Sub sub = new Sub(attributeName, null, 0, typeId, subscriptionCount, 0, 0);
       subscriptions.insertElementAt(sub, subscriptionCount);
       subscriptionCount++;
       return new GdhrRefObjectInfo(refid, id, 1, typeId);
@@ -395,13 +402,15 @@ public class Gdh
         PwrtRefId refid = new PwrtRefId(rix, nid);
         int id = in.readInt();
         int typeId = in.readInt();
-        Sub sub = new Sub(attributeName, refid, id, typeId,subscriptionCount);
+	int size = in.readInt();
+	int elements = in.readInt();
+        Sub sub = new Sub(attributeName, refid, id, typeId,subscriptionCount, size, elements);
         sub.sts = 1;
         subscriptions.insertElementAt(sub, id);
         subscriptionCount++;
         refid = new PwrtRefId(id, 0);
         subLate++;
-        return new GdhrRefObjectInfo(refid, id, sts, typeId);
+        return new GdhrRefObjectInfo(refid, id, sts, typeId, size, elements);
       }
       catch(IOException e)
       {
@@ -420,6 +429,7 @@ public class Gdh
     int nid;
     int id;
     int typeId;
+
     PwrtRefId refid;
 
     if(listSent)
@@ -472,6 +482,8 @@ public class Gdh
         sub.refid = new PwrtRefId(rix, nid);
         id = in.readInt();
         typeId = in.readInt();
+	sub.size = in.readInt();
+	sub.elements = in.readInt();
       }
       locked = false;
       notify();
@@ -540,8 +552,7 @@ public class Gdh
 	}
         ret.id = ret.refid.rix;
 	subscriptions.add(ret);
-	//((Sub)retVec.get(i)).refid.rix = ((Sub)retVec.get(i)).id;
-	//System.out.println("Status " + ((Sub)retVec.get(i)).getSts());
+
       }
 	
       subscriptionCount += retVec.size();
@@ -591,17 +602,24 @@ public class Gdh
       //System.out.println("ArrayIndexOutOfBounds getObjectRefInfoFloat");
       return 0F;
       }
-    /*
-    try {
-      out.writeInt( GET_OBJECT_REF_INFO_FLOAT);
-      out.writeInt( id);
-      return in.readFloat();
-    } catch (IOException e) {
-      return 0F;
-    }
-*/
   }
 
+  public float[] getObjectRefInfoFloatArray(int id, int elements)
+  {
+    try{
+      Sub sub = (Sub)subscriptions.elementAt(id);
+      if(sub.oddSts())
+      {
+        return sub.valueFloatArray;
+      }
+      return null;
+    }
+    catch(ArrayIndexOutOfBoundsException e)
+    {
+      //System.out.println("ArrayIndexOutOfBounds getObjectRefInfoFloat");
+      return null;
+    }
+  }
 
   public boolean getObjectRefInfoBoolean(int id)
   {
@@ -619,45 +637,61 @@ public class Gdh
       //System.out.println("ArrayIndexOutOfBounds getObjectRefInfoBoolean");
       return false;
       }
-    /*
-    try {
-      out.writeInt( GET_OBJECT_REF_INFO_BOOLEAN);
-      out.writeInt( id);
-      return in.readBoolean();
-    } catch (IOException e) {
-      return false;
-    }
-*/
   }
 
+  public boolean[] getObjectRefInfoBooleanArray(int id, int elements)
+  {
+    try
+    {
+      Sub sub = (Sub)subscriptions.elementAt(id);
+      if(sub.oddSts())
+      {
+        return sub.valueBooleanArray;
+      }
+      return null;
+    }
+    catch(ArrayIndexOutOfBoundsException e)
+    {
+      //System.out.println("ArrayIndexOutOfBounds getObjectRefInfoBoolean");
+      return null;
+    }
+  }
 
   public int getObjectRefInfoInt(int id)
   {
     try
     {
-    Sub sub = (Sub)subscriptions.elementAt(id);
-    if(sub.oddSts())
-    {
-      return sub.valueInt;
+      Sub sub = (Sub)subscriptions.elementAt(id);
+      if(sub.oddSts())
+      {
+        return sub.valueInt;
+      }
+      return 0;
     }
-    return 0;
-    }
-        catch(ArrayIndexOutOfBoundsException e)
+    catch(ArrayIndexOutOfBoundsException e)
     {
       //System.out.println("ArrayIndexOutOfBounds getObjectRefInfoInt");
       return 0;
-      }
-    /*
-    try {
-      out.writeInt( GET_OBJECT_REF_INFO_INT);
-      out.writeInt( id);
-      return in.readInt();
-    } catch (IOException e) {
-      return 0;
     }
-*/
   }
 
+  public int[] getObjectRefInfoIntArray(int id, int elements)
+  {
+    try
+    {
+      Sub sub = (Sub)subscriptions.elementAt(id);
+      if(sub.oddSts())
+      {
+        return sub.valueIntArray;
+      }
+      return null;
+    }
+    catch(ArrayIndexOutOfBoundsException e)
+    {
+      //System.out.println("ArrayIndexOutOfBounds getObjectRefInfoInt");
+      return null;
+    }
+  }
 
   public String getObjectRefInfoString(int id, int typeid)
   {
@@ -677,17 +711,29 @@ public class Gdh
       //System.out.println("ArrayIndexOutOfBounds getObjectRefInfoString index " + id);
       return " ";
       }
-    /*
-    try {
-      out.writeInt( GET_OBJECT_REF_INFO_STRING);
-      out.writeInt( id);
-      out.writeInt( typeid);
-      return in.readUTF();
-    } catch (IOException e) {
-      return "";
-    }
-*/
   }
+
+  public String[] getObjectRefInfoStringArray(int id, int typeid, int size, int elements)
+  {
+    try
+    {
+    Sub sub = (Sub)subscriptions.elementAt(id);
+    if(sub.evenSts() || sub.valueStringArray == null)
+    {
+      if(sub.evenSts())
+        System.out.println("getObjectRefInfoString substs " + sub.getSts() +  " id " + id);
+      return null;
+    }
+    return sub.valueStringArray;
+    }
+    catch(ArrayIndexOutOfBoundsException e)
+    {
+      //System.out.println("ArrayIndexOutOfBounds getObjectRefInfoString index " + id);
+      return null;
+    }
+  }
+
+
 
 
   public synchronized PwrtStatus unrefObjectInfo(PwrtRefId refid)
@@ -1231,36 +1277,8 @@ public class Gdh
       out.writeInt(GET_OBJECT_REF_INFO_ALL);
       out.flush();
       
-      //Object retArray[] = (Object[])in.readObject();
-      
-      //Object retArray[] = (Object[])inbuff.readObject();
-      //Object ret[] = (Object[])retArray[0];
-      //String sVec[] = (String[])retArray[0];
-      //boolean bVec[] = (boolean[])retArray[1];
-      //int iVec[] = (int[])retArray[2];
-      //float fVec[] = (float[])retArray[3];
-/*   
-      int thSubSize = in.readInt();
-      
-      Object ret[] = (Object[])in.readObject();
-*/
-      //subscriptions.clear();
-      //subscriptions.setSize(ret.length);
-/*      
-      String sVec[] = (String[])in.readObject();
-      boolean bVec[] = (boolean[])in.readObject();
-      int iVec[] = (int[])in.readObject();
-      float fVec[] = (float[])in.readObject();
-*/      
       for(int i = 0; i < subscriptions.size();i++)
       {
-        //subscriptions.set(i, (jpwr.rt.Sub)ret[i]);
-        /*
-	((jpwr.rt.Sub)(subscriptions.get(i))).valueString = sVec[i];
-	((jpwr.rt.Sub)(subscriptions.get(i))).valueBoolean = bVec[i];
-	((jpwr.rt.Sub)(subscriptions.get(i))).valueInt = iVec[i];
-	((jpwr.rt.Sub)(subscriptions.get(i))).valueFloat = fVec[i];        
-        */
 	
 	try
 	{
@@ -1645,24 +1663,11 @@ public class Gdh
     return 0;
   }
 
-/*
-  private class Sub extends GdhrRefObjectInfo implements Serializable
-  {
-    String attrName;
-    int subscriptionsIndex;
-    int valueInt;
-    float valueFloat;
-    boolean valueBoolean;
-    String valueString;
-
-
-    public Sub(String attrName, PwrtRefId refid, int id, int typeId, int subscriptionsIndex)
-    {
-      super(refid, id, 0, typeId);
-      this.attrName = attrName;
-      this.subscriptionsIndex = subscriptionsIndex;
-    }
-  }
-*/
 }
+
+
+
+
+
+
 

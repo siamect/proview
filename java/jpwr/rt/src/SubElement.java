@@ -11,7 +11,7 @@
   {
     public int[] reffedByThread;
     public BitSet reffedByThreadBitSet;
-    Sub sub = new Sub(" ", new PwrtRefId(0, 0), 0, 0, 0);
+    Sub sub = new Sub(" ", new PwrtRefId(0, 0), 0, 0, 0,0,0);
 
 
     public SubElement(int maxConnections, int threadNumber)
@@ -40,6 +40,8 @@
       this.sub.id = obj.id;
       this.sub.sts = obj.sts;
       this.sub.typeId = obj.typeId;
+      this.sub.size = obj.size;
+      this.sub.elements = obj.elements;
       this.sub.subscriptionsIndex = subscriptionsIndex;
 
     }
@@ -48,3 +50,4 @@
       return (this.sub.attrName.equalsIgnoreCase(((SubElement)o).sub.attrName) && (((SubElement)o).sub.sts != 0));
     }
   }
+

@@ -14,6 +14,8 @@ public class GeDynTable extends GeDynElem {
   public boolean[] selAttrFound;
   PwrtRefId[] subid;
   int[] p;
+  public int[] elements;
+  public int[] size;
   public int[] typeId;
   public boolean[][] oldValueB;
   public float[][] oldValueF;
@@ -35,6 +37,8 @@ public class GeDynTable extends GeDynElem {
     p = new int[columns];
     subid = new PwrtRefId[columns];
     typeId = new int[columns];
+    elements = new int[columns];
+    size = new int[columns];
     attrFound = new boolean[columns];
     selAttrFound = new boolean[columns];
     oldValueB = new boolean[columns][];
@@ -57,6 +61,10 @@ public class GeDynTable extends GeDynElem {
 	  p[i] = ret.id;
 	  subid[i] = ret.refid;
 	  typeId[i] = ret.typeId;
+	  elements[i] = ret.getElements();
+          size[i] = ret.getSize();
+	  if ( elements[i] > rows)
+	    elements[i] = rows;
           if ( typeId[i] == Pwr.eType_Float32) {
             oldValueF[i] = new float[rows];
           }
@@ -92,26 +100,26 @@ public class GeDynTable extends GeDynElem {
 	continue;
 
       if ( typeId[i] == Pwr.eType_Float32) {
-        float value0 = dyn.en.gdh.getObjectRefInfoFloat( p[i]);
-	for ( int j = 0; j < 1; j++) {  // Just the first row...
-          if ( value0 != oldValueF[i][j] || firstScan) {
-	    sb = cFormat[i].format( value0, sb);
+        float[] value0 = dyn.en.gdh.getObjectRefInfoFloatArray( p[i], elements[i]);
+	for ( int j = 0; j < value0.length; j++) {
+          if ( value0[j] != oldValueF[i][j] || firstScan) {
+	    sb = cFormat[i].format( value0[j], sb);
 	    ((GeTable)dyn.comp).setValueAt(new String(sb), j, i);
             // dyn.repaintNow = true;
-            oldValueF[i][j] = value0;
+            oldValueF[i][j] = value0[j];
 	  }
         }
       }
       else if ( typeId[i] == Pwr.eType_Boolean) {
-        boolean value0 = dyn.en.gdh.getObjectRefInfoBoolean( p[i]);
-	for ( int j = 0; j < 1; j++) {  // Just the first row...
-          if ( value0 != oldValueB[i][j] || firstScan) {
-	    if ( value0)
+        boolean[] value0 = dyn.en.gdh.getObjectRefInfoBooleanArray( p[i], elements[i]);
+	for ( int j = 0; j < value0.length; j++) {
+          if ( value0[j] != oldValueB[i][j] || firstScan) {
+	    if ( value0[j])
 	      ((GeTable)dyn.comp).setValueAt("1", j, i);
 	    else
 	      ((GeTable)dyn.comp).setValueAt("0", j, i);
             // dyn.repaintNow = true;
-            oldValueB[i][j] = value0;
+            oldValueB[i][j] = value0[j];
 	  }
         }
       }
@@ -121,26 +129,26 @@ public class GeDynTable extends GeDynElem {
 	        typeId[i] == Pwr.eType_UInt16 ||
                 typeId[i] == Pwr.eType_Int8 ||
 	        typeId[i] == Pwr.eType_UInt8) {
-	int value0 = dyn.en.gdh.getObjectRefInfoInt( p[i]);
-	for ( int j = 0; j < 1; j++) {  // Just the first row...
-	  if ( value0 != oldValueI[i][j] || firstScan) {
-	    sb = cFormat[i].format( value0, sb);
+	int value0[] = dyn.en.gdh.getObjectRefInfoIntArray( p[i], elements[i]);
+	for ( int j = 0; j < value0.length; j++) {
+	  if ( value0[j] != oldValueI[i][j] || firstScan) {
+	    sb = cFormat[i].format( value0[j], sb);
 	    ((GeTable)dyn.comp).setValueAt(new String(sb), j, i);
 	    // dyn.repaintNow = true;
-	    oldValueI[i][j] = value0;
+	    oldValueI[i][j] = value0[j];
 	  }
         }
       }
       else if ( typeId[i] == Pwr.eType_String || 
 		typeId[i] == Pwr.eType_Objid) {
-	String value0 = dyn.en.gdh.getObjectRefInfoString( p[i], typeId[i]);
-	for ( int j = 0; j < 1; j++) {  // Just the first row...
-	  if ( firstScan || value0.compareTo( oldValueS[i][j]) != 0) {
-	    sb = cFormat[i].format( value0, sb);
+	String[] value0 = dyn.en.gdh.getObjectRefInfoStringArray( p[i], typeId[i], size[i], elements[i]);
+	for ( int j = 0; j < value0.length; j++) {
+	  if ( firstScan || value0[j].compareTo( oldValueS[i][j]) != 0) {
+	    sb = cFormat[i].format( value0[j], sb);
 	    ((GeTable)dyn.comp).setValueAt(new String(sb), j, i);
 	    // dyn.repaintNow = true;
 
-	    oldValueS[i][j] = value0;
+	    oldValueS[i][j] = value0[j];
 	  }
 	}
       }

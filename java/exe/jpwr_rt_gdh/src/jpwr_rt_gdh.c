@@ -250,6 +250,120 @@ JNIEXPORT jstring JNICALL Java_jpwr_rt_Gdh_getObjectRefInfoString
   }
 }
 
+JNIEXPORT jfloatArray JNICALL Java_jpwr_rt_Gdh_getObjectRefInfoFloatArray
+  (JNIEnv *env, jclass obj, jint id, jint size)
+{
+  jfloatArray jfloatArr = (*env)->NewFloatArray(env, size);
+  if(jfloatArr == NULL || ((float *)id == NULL) )
+  {
+    //something very weird has happen
+    return (jfloatArray)NULL;
+  }
+
+  (*env)->SetFloatArrayRegion(env, jfloatArr, 0, size, (jfloat *)id);
+
+  return jfloatArr;
+}
+
+
+JNIEXPORT jbooleanArray JNICALL Java_jpwr_rt_Gdh_getObjectRefInfoBooleanArray
+  (JNIEnv *env, jclass obj, jint id, jint size)
+{
+  jbooleanArray jbooleanArr = (*env)->NewBooleanArray(env, size);
+  if(jbooleanArr == NULL || ((pwr_tBoolean *)id == NULL) )
+  {
+    //something very weird has happen
+    return (jbooleanArray)NULL;
+  }
+
+  (*env)->SetBooleanArrayRegion(env, jbooleanArr, 0, size, (jboolean *)id);
+
+  return jbooleanArr;
+}
+
+
+JNIEXPORT jintArray JNICALL Java_jpwr_rt_Gdh_getObjectRefInfoIntArray
+  (JNIEnv *env, jclass obj, jint id, jint size)
+{
+  jintArray jintArr = (*env)->NewIntArray(env, size);
+  if(jintArr == NULL || ((pwr_tInt32 *)id == NULL) )
+  {
+    //something very weird has happen
+    return (jintArray)NULL;
+  }
+
+  (*env)->SetIntArrayRegion(env, jintArr, 0, size, (jint *)id);
+
+  return jintArr;
+
+}
+
+JNIEXPORT jobjectArray JNICALL Java_jpwr_rt_Gdh_getObjectRefInfoStringArray
+  (JNIEnv *env, jclass obj, jint id, jint jtypeid, jint size, jint elements)
+{
+
+  pwr_tTypeId typeid;
+  jobjectArray jobjectArr;
+  int i = 0;
+
+
+  //find the class for String[]
+  jclass strArrCls = (*env)->FindClass(env, "java/lang/String");
+
+  if(strArrCls == NULL)
+  {
+    return (jobjectArray)NULL;
+  }
+  //create a new String[]
+  jobjectArr = (*env)->NewObjectArray(env, elements, strArrCls, NULL);
+  
+  printf("size=%d\n", size); 
+  typeid = (pwr_tTypeId) jtypeid;
+  if ( typeid == 0 || typeid == pwr_eType_String)
+  {
+    // String is default
+    //put the result in an objectarray of Strings
+    for(i=0;i<elements;i++)
+    {
+      (*env)->SetObjectArrayElement(env, jobjectArr, i, (*env)->NewStringUTF( env, (char *)id));
+      id += size;
+    }
+  }
+  else
+  {
+    char buffer[256];
+    int len;
+    /*    
+    switch( typeid) {
+    case pwr_eType_Objid: 
+      size = sizeof(pwr_tObjid);
+      break;
+    case pwr_eType_AttrRef: 
+      size = sizeof(pwr_tAttrRef);
+      break;
+    case pwr_eType_Time: 
+      size = sizeof(pwr_tTime);
+      break;
+    case pwr_eType_DeltaTime: 
+      size = sizeof(pwr_tDeltaTime);
+      break;
+    default:
+      size = 4;
+    }
+*/
+    //put the result in an objectarray of Strings
+    for(i=0;i<elements;i++)
+    {
+      gdh_AttrToString( typeid, (void *)id, buffer, sizeof(buffer), 
+      	                &len, NULL);
+
+      (*env)->SetObjectArrayElement(env, jobjectArr, i, (*env)->NewStringUTF( env, (char *)buffer));
+      id += size;
+    }
+  }
+  return jobjectArr;
+}
+
 
 JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_refObjectInfo
   (JNIEnv *env, jclass obj, jstring name)
@@ -282,8 +396,8 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_refObjectInfo
   if(gdhrRefObjectInfo_cid == NULL)
   {
     gdhrRefObjectInfo_cid = (*env)->GetMethodID( env, gdhrRefObjectInfo_id,
-    	"<init>", "(Ljpwr/rt/PwrtRefId;III)V");
-    //printf("gdhrRefObjectInfo_cid initierad\n"); 
+    	"<init>", "(Ljpwr/rt/PwrtRefId;IIIII)V");
+
     if(gdhrRefObjectInfo_cid == NULL)
     {
       printf("fel vid init av gdhrRefObjectInfo_cid\n"); 
@@ -315,6 +429,7 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_refObjectInfo
   {
     typeid = pwr_eType_Boolean;
     size = sizeof(pwr_tBoolean);
+    elements = 1;
   }
 
   sts = gdh_RefObjectInfo( cstr, &attr_p, &subid, size);
@@ -332,8 +447,11 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_refObjectInfo
     id = 0;
 
   jsts = (jint) sts;
+  //we want the size of each element not the hole object
+  if(elements > 0)
+      size = size/elements;
   return_obj = (*env)->NewObject( env, gdhrRefObjectInfo_id,
-  	gdhrRefObjectInfo_cid, refid_obj, id, jsts, (jint)typeid);
+  	gdhrRefObjectInfo_cid, refid_obj, id, jsts, (jint)typeid, (jint)elements, (jint)size);
   return return_obj;
 }
 
@@ -472,7 +590,6 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_objidToName
   {
     cdhrString_cid = (*env)->GetMethodID( env, cdhrString_id,
     	  "<init>", "(Ljava/lang/String;I)V");
-    //printf("cdhrString_cid initierad\n");
   }
 
   PwrtObjid_id = (*env)->FindClass( env, "jpwr/rt/PwrtObjid");
@@ -480,7 +597,6 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_objidToName
   {
     PwrtObjid_getOix = (*env)->GetMethodID( env, PwrtObjid_id, "getOix", "()I");
     PwrtObjid_getVid = (*env)->GetMethodID( env, PwrtObjid_id, "getVid", "()I");
-    //printf("PwrtObjid_xxx initierad\n");
   }
 
   objid.oix = (*env)->CallIntMethod( env, objid_obj, PwrtObjid_getOix);
@@ -556,7 +672,6 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getChild
   {
     cdhrObjid_cid = (*env)->GetMethodID( env, cdhrObjid_id,
     	  "<init>", "(Ljpwr/rt/PwrtObjid;I)V");
-    //printf("cdhrObjid initierad\n");
   }
 
   PwrtObjid_id = (*env)->FindClass( env, "jpwr/rt/PwrtObjid");
@@ -567,7 +682,6 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getChild
     	  "<init>", "(II)V");
     PwrtObjid_getOix = (*env)->GetMethodID( env, PwrtObjid_id, "getOix", "()I");
     PwrtObjid_getVid = (*env)->GetMethodID( env, PwrtObjid_id, "getVid", "()I");
-    //printf("PwrtObjid_xxx initierade\n");
   }
 
   objid.oix = (*env)->CallIntMethod( env, objid_obj, PwrtObjid_getOix);

@@ -14,22 +14,16 @@
     public float valueFloat;
     public boolean valueBoolean;
     public String valueString;
-    /*
-    public PwrtRefId refid;
-    public int id;
-    public int sts;
-    public int typeId;
-    public int subId;
-    */
+
+    public int[] valueIntArray;
+    public float[] valueFloatArray;
+    public boolean[] valueBooleanArray;
+    public String[] valueStringArray;
+
     public Sub(String attrName, PwrtRefId refid, int id, int typeId, int
 	subscriptionsIndex, int valueInt, float valueFloat, boolean valueBoolean, String valueString)
     {
-      /*
-      this.refid = refid;
-      this.id = id;
-      this.sts = 0;
-      this.typeId = typeId;
-      */
+
       super(refid, id, 0, typeId); 
       this.subscriptionsIndex = subscriptionsIndex;
       this.valueInt = valueInt;
@@ -69,25 +63,20 @@
     
 
 
-    public Sub(String attrName, PwrtRefId refid, int id, int typeId, int subscriptionsIndex)
+    public Sub(String attrName, PwrtRefId refid, int id, int typeId, int subscriptionsIndex, int elements, int size)
     {
-      /*
-      this.refid = refid;
-      this.id = id;
-      this.sts = sts;
-      this.typeId = typeId;
-      */
-      super(refid, id, 0, typeId);
+      super(refid, id, 0, typeId, elements, size);
       this.attrName = attrName;
       this.subscriptionsIndex = subscriptionsIndex;
     }
 
-    //public boolean evenSts() { return (sts % 2 == 0);}
-    //public boolean oddSts() { return (sts % 2 == 1);}
-    //public int getSts() { return sts;}
 
     int getIndex()
     {
       return subscriptionsIndex;
     }
   }
+
+
+
+

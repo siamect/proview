@@ -62,13 +62,19 @@ public class GdhServer
   public final static int CRR_OBJECT = 43;
   public final static int GET_PARENT = 44;
   public final static int GET_OBJECT_INFO_OBJID = 45;
+
+  public final static int GET_OBJECT_REF_INFO_BOOLEAN_ARRAY = 46;
+  public final static int GET_OBJECT_REF_INFO_FLOAT_ARRAY = 47;
+  public final static int GET_OBJECT_REF_INFO_INT_ARRAY = 48;
+  public final static int GET_OBJECT_REF_INFO_STRING_ARRAY = 49;
+
   public final static int PORT = 4445;
 
   public final static int __IO_EXCEPTION = 2000;
   public final static int __UNREFED = 0;
 
   static ArrayList subscriptions = new ArrayList();
-//  static Vector nrOfSubscriptionClients = new Vector();
+
   static int subscriptionCount = 0;
 
   static int threadCount = 0;
@@ -277,14 +283,14 @@ public class GdhServer
      */
     public GdhThread(Socket clientSocket, int threadNumber, int maxConnections)
     {
-      /*
+      /************ In case of debugging this might be useful
       System.out.println("threadnumber : " + threadNumber + "maxconn " + maxConnections);
       try{
       System.out.println("HostName :" + clientSocket.getInetAddress().getHostName() +
                          "Delay : " + clientSocket.getTcpNoDelay());
       }
       catch(SocketException exc){}
-      */
+      *************************************/
       this.threadNumber = threadNumber;
       this.clientSocket = clientSocket;
       this.maxConnections = maxConnections;
@@ -315,9 +321,6 @@ public class GdhServer
         out.flush();
 	in = new ObjectInputStream(new BufferedInputStream(clientSocket.getInputStream()));
 	
-	//buff = new BufferedOutputStream(clientSocket.getOutputStream());
-        //outbuff = new ObjectOutputStream(buff);
-      
       }
       catch(IOException e)
       {
@@ -330,7 +333,6 @@ public class GdhServer
       try
       {
 
-//        out.writeLong(9998);
         int function = in.readInt();
         while(function != 9999)
         {
@@ -516,6 +518,8 @@ public class GdhServer
                   out.writeInt(ret.refid.nid);
                   out.writeInt(thSub.size() - 1);
                   out.writeInt(ret.typeId);
+		  out.writeInt(ret.size);
+		  out.writeInt(ret.elements);
                 }
                 out.flush();
               }
@@ -544,7 +548,8 @@ public class GdhServer
                     out.writeInt(ret.refid.nid);
                     out.writeInt(thSub.size() - 1);
                     out.writeInt(ret.typeId);
-
+		    out.writeInt(ret.size);
+  		    out.writeInt(ret.elements);
                   }
                 }
                 out.flush();
@@ -559,8 +564,6 @@ public class GdhServer
             case REF_OBJECT_INFO_VECTOR:
               try
               {
-                //System.out.println("Start på refobjinfvec" + (new Timestamp(new Date().getTime())).toString());
-                //Vector retVec = new Vector();
                 Vector vec = (Vector)in.readObject();
                 if(vec == null)
                 {
@@ -569,7 +572,6 @@ public class GdhServer
                   out.flush();
                   break;
                 }
-                //Sub gdhRet;
 		String attrName;
 		Vector gdhRet = new Vector(vec.size());
 		for(int j = 0; j < vec.size(); j++)
@@ -583,7 +585,9 @@ public class GdhServer
                                    new PwrtRefId(thSub.size() - 1, ret.refid.nid),
                                    ret.id,
                                    ret.typeId,
-                                   ret.subscriptionsIndex);
+				   ret.subscriptionsIndex,
+				   ret.elements,
+				   ret.size      );
                     retToCli.sts = ret.sts;
 		    gdhRet.add(retToCli);
 		  }
@@ -596,8 +600,6 @@ public class GdhServer
 
                 out.writeObject(gdhRet);
                 out.flush();
-                //out.reset();
-                //System.out.println("Stop på refobjinfvec " + (new Timestamp(new Date().getTime())).toString());
               }
               catch(NotSerializableException e)
               {
@@ -621,38 +623,17 @@ public class GdhServer
 	        System.out.println("Start GET_OBJECT_REF_INFO_ALL" + (new Timestamp(new Date().getTime())).toString());
               }
               Sub subElement;
-              //Object cli[] = new Object[thSub.size()];
+
 	      
               for(i = 0; i < thSub.size(); i++)
               {
                 subElement = ((Sub)thSub.elementAt(i));
                 int index = subElement.getIndex();
                 
-                //int id = (int)((SubElement)subCopy.elementAt(index)).sub.id;
-                //int typeId = (int)((SubElement)subCopy.elementAt(index)).sub.typeId;
-                
 		int id = subElement.id;
 		int typeId = subElement.typeId;
-                /*                if(sub.sts == __UNREFED)
-                {
-                  continue;
-                }
-                boolean found = false;
-                for(int j = 0; j < ((SubElement)subCopy.elementAt(i)).reffedByThread.length; j++)
-                {
-                  if(((SubElement)subCopy.elementAt(i)).reffedByThread[j][0] == threadNumber)
-                  {
-                    found = true;
-                    break;
-                  }
-                }
-                if(!found)
-                {
-                  continue;
-                }
-*/
-                //System.out.println(id + " typeId " + typeId);
-                //System.out.println("refinfoall");
+		int elements = subElement.elements;
+		int size = subElement.size;
                 switch (typeId)
                 {
                   case Pwr.eType_Int32:
@@ -661,49 +642,49 @@ public class GdhServer
                   case Pwr.eType_UInt16:
                   case Pwr.eType_Int8:
                   case Pwr.eType_UInt8:
-                    //cli[i] = new Integer(gdh.getObjectRefInfoInt(id));
-                    out.writeInt(gdh.getObjectRefInfoInt(id));
+		    if(elements > 1)
+		    {
+		      //its an array
+                      out.writeObject(gdh.getObjectRefInfoIntArray(id, elements));
+		    }
+                    else
+                      out.writeInt(gdh.getObjectRefInfoInt(id));
 		    break;
                   case Pwr.eType_Float32:
-                    //cli[i] = new Float(gdh.getObjectRefInfoFloat(id));
-                    out.writeFloat(gdh.getObjectRefInfoFloat(id));
+		    if(elements > 1)
+		    {
+		      //its an array
+                      out.writeObject(gdh.getObjectRefInfoFloatArray(id, elements));
+		    }
+                    else
+                      out.writeFloat(gdh.getObjectRefInfoFloat(id));
 		    break;
                   case 0:
                   case Pwr.eType_Boolean:
-                    //cli[i] = new Boolean(gdh.getObjectRefInfoBoolean(id));
-                    out.writeBoolean(gdh.getObjectRefInfoBoolean(id));
+		    if(elements > 1)
+		    {
+		      //its an array
+                      out.writeObject(gdh.getObjectRefInfoBooleanArray(id, elements));
+		    }
+                    else
+                      out.writeBoolean(gdh.getObjectRefInfoBoolean(id));
 		    break;
                   default:
-                    //cli[i] = gdh.getObjectRefInfoString(id, typeId);
-                    out.writeObject(gdh.getObjectRefInfoString(id, typeId));
+		    if(elements > 1)
+		    {
+		      //its an array
+                      out.writeObject(gdh.getObjectRefInfoStringArray(id, typeId, size, elements));
+		    }
+                    else
+                      out.writeObject(gdh.getObjectRefInfoString(id, typeId));
 		    break;
                 }
-                //index = null;
-                //id = null;
-                //typeId = null;
-
               }
               try
               {
-                //out.writeObject(cli);
                 out.flush();
-		/*
-                long K = 1024;
-                long freeMem = Runtime.getRuntime().freeMemory() / K;
-                long totalMem = Runtime.getRuntime().totalMemory() / K;
-                System.out.println("Storlek på thSub: " + thSub.size() +
-                  "storlek på sub: " + subscriptions.size() +
-                  "Tillgängligt minne: " + freeMem + " KB" +
-                  "Totalt minne: " + totalMem + " KB");
-                //ej behövligt
-                subCopy = null;
-                cli = null;
-                subElement = null;
-*/
-                //måste göras annars tar minnet slut...
+                //must be done if we dont want memory leaks...
                 out.reset();
-                //System.gc();
-                //System.runFinalization();
 		if(logRefInfoAll)
 		{
                   System.out.println("Slut GET_OBJECT_REF_INFO_ALL" + (new Timestamp(new Date().getTime())).toString());
@@ -724,7 +705,6 @@ public class GdhServer
               {
                 System.out.println("getObjectRefInfoAll: IO exception");
               }
-              //System.out.println("efter GET_OBJECT_REF_INFO_ALL");
               break;
             case GET_OBJECT_REF_INFO_FLOAT:
               try
@@ -779,6 +759,84 @@ public class GdhServer
                 System.out.println("getObjectRefInfoString: IO exception");
               }
               break;
+
+
+
+
+
+
+            case GET_OBJECT_REF_INFO_FLOAT_ARRAY:
+              try
+              {
+                int id = in.readInt();
+                int index = ((Sub)thSub.elementAt(id)).getIndex();
+		int elements = ((Sub)thSub.elementAt(id)).getElements();
+                out.writeObject(gdh.getObjectRefInfoFloatArray(index, elements));
+                out.flush();
+              }
+              catch(IOException e)
+              {
+                System.out.println("getObjectRefInfoFloatArray: IO exception");
+              }
+              break;
+            case GET_OBJECT_REF_INFO_BOOLEAN_ARRAY:
+              try
+              {
+                int id = in.readInt();
+                int index = ((Sub)thSub.elementAt(id)).getIndex();
+		int elements = ((Sub)thSub.elementAt(id)).getElements();
+                out.writeObject(gdh.getObjectRefInfoBooleanArray(index, elements));
+                out.flush();
+              }
+              catch(IOException e)
+              {
+                System.out.println("getObjectRefInfoBooleanArray: IO exception");
+              }
+              break;
+            case GET_OBJECT_REF_INFO_INT_ARRAY:
+              try
+              {
+                int id = in.readInt();
+                int index = ((Sub)thSub.elementAt(id)).getIndex();
+		int elements = ((Sub)thSub.elementAt(id)).getElements();
+                out.writeObject(gdh.getObjectRefInfoIntArray(index, elements));
+                out.flush();
+              }
+              catch(IOException e)
+              {
+                System.out.println("getObjectRefInfoIntArray: IO exception");
+              }
+              break;
+            case GET_OBJECT_REF_INFO_STRING_ARRAY:
+              try
+              {
+                int id = in.readInt();
+                int typeid = in.readInt();
+                int index = ((Sub)thSub.elementAt(id)).getIndex();
+		int elements = ((Sub)thSub.elementAt(id)).getElements();
+		int size = ((Sub)thSub.elementAt(id)).getSize();
+                out.writeObject(gdh.getObjectRefInfoStringArray(index, typeid, size, elements));
+                out.flush();
+              }
+              catch(IOException e)
+              {
+                System.out.println("getObjectRefInfoStringArray: IO exception");
+              }
+              break;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             case UNREF_OBJECT_INFO:
               try
               {
@@ -1425,10 +1483,9 @@ public class GdhServer
                       ThreadNumbersConnected[ii] += j + ", ";
                       NumberOfPrenumerations[ii] += subEl.reffedByThread[j] + ", ";
                     }
-                    //ObjectAttributeNames[ii] = ((SubElement)subcp.get(ii)).sub.attrName;
+
                   }
                 }
-                //Object obj[][] = {ObjectAttributeNames, ThreadNumbersConnected, NumberOfPrenumerations};
 
                 out.writeInt(subcp.size());
                 out.writeInt(nrOfSub);
@@ -1441,10 +1498,8 @@ public class GdhServer
 		out.writeLong(Runtime.getRuntime().totalMemory());
 		out.flush();
 
-                //måste göras annars tar minnet slut...
+                //must be done if we dont want memory leaks...
                 out.reset();
-
-                //System.gc();
 
               }
               catch(OutOfMemoryError e)
@@ -1492,17 +1547,17 @@ public class GdhServer
         {
           System.err.println("Close failed");
         }
-        //loopa igenom och kontrollera att alla prenumerationer har stoppats
+        //check that all subscriptions has stopped
 	for(i = 0; i < thSub.size(); i++)
         {
           try
           {
             sub = ((Sub)thSub.elementAt(i));
             int index = ((Sub)thSub.elementAt(i)).getIndex();
-            //PwrtRefId refid = (PwrtRefId)((SubElement)subCopy.elementAt(index)).sub.refid;
+
             PwrtStatus sts = this.unrefObjectInfo(new PwrtRefId(index, sub.refid.nid),
               threadNumber);
-            // System.out.println("unrefall :" + index + refid.nid);
+
           }
           catch(ArrayIndexOutOfBoundsException exc)
           {
@@ -1529,7 +1584,7 @@ public class GdhServer
      *@param  threadNumber  Description of the Parameter
      *@return               Description of the Return Value
      */
-    public synchronized Sub refObjectInfo(String attrName, int threadNumber /*, boolean putNextSubAtSubVecEnd*/)
+    public synchronized Sub refObjectInfo(String attrName, int threadNumber)
     {
       SubElement sub;
       int firstUnreffedIndex = subscriptionCount;
@@ -1562,8 +1617,6 @@ public class GdhServer
       if(ret.oddSts())
       {
         sub = new SubElement(maxConnections, threadNumber);
-        //sub.refObjectInfo = ret;
-        //sub.attrName = attrName;
         if(notFoundUnreffed)
         {
           //System.out.println("this.refObjectInfo ej reffad ej lucka i subsc.. " + attrName + " " + subscriptionCount);
@@ -1582,7 +1635,6 @@ public class GdhServer
           subscriptions.add(firstUnreffedIndex, sub);
           sub.reffedByThreadBitSet.set(threadNumber);
           sub.reffedByThread[threadNumber]++;
-	  //lastIndexReffed = firstUnreffedIndex;
         }
       }
       else
