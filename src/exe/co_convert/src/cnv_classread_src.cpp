@@ -112,6 +112,12 @@ int ClassRead::src_html_init( char *filename)
 
   // Open html file
   fp_src_html.open( dir_fname);
+#if defined OS_LINUX
+  if ( !fp_src_html.good()) {
+    printf( "Unable to open file %s\n", dir_fname);
+    return 0;
+  }
+#endif
 
   fp_src_html <<
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Frameset//EN\"\"http://www.w3.org/TR/REC-html40/frameset.dtd\">" << endl <<
