@@ -10825,92 +10825,6 @@ EndMin / EndMax flaggorna.
  
 <attr>FiltDer 
 Filtrerad derivata sparas till nästa exekevering. 
-
-@b Funktion 
-
-Vid P - respektive PD -reglering, dvs. då PidAlg = 6, 14 eller 30, beräknas 
-styrsignalen OutVal vid samplingstiden T = ScanTime som, 
-
-OutVal(T) = OutVal t = F term + a · (ControlDiff t + DerTime · FiltDer t ), där 
-F term = BiasGain · Bias är framkopplingstermen. 
-
-Derivatan beräknas som, ? = , där
-e t = ProcVal t , om D-termen baseras på ProcVal
-= ControlDiff t , om D-termen baseras på ControlDiff 
-
-Genom att lågpassfiltrera derivativan undertrycks störningar. 
-
-FiltDer t = a · ? + (1 - a)FiltDer t-1 = FiltDer t + ( ? - FiltDer t-1 ) · a 
-
-Med filterfaktorn a = DerGain ·  blir den filtrerade derivatan,
-FiltDer t = FiltDer t-1 + ( ? - FiltDer t ) · DerGain ·  , om
-1.0 = DerGain <  
-
-FiltDer t = ? , om DerGain ligger utanför intervallet sker ingen filtrering.
-a =  
-
-Sedan OutVal t beräknats kontrolleras den m.a.p MinOut och MaxOut . 
-
-Slutligen beräknas styrsignalsförändringen OutChange = OutVal t - OutVal t-1 
-
-Om det är OutChange snarare än OutVal , som ska mata ställdonet, vill man 
-kanske inte riskera att få den begränsad av MinOut / MaxOut . Om, 
-
-MinOut = MaxOut 
-
-sker ingen begänsning av OutVal t . 
-
-Om I-term ska ingå i styrsignalen beräknas först styrsignalsförändringen som, 
-
-OutChange(T) = OutVal t - OutVal t-1 =
-F t - F t-1 + a( P t - P t-1 + ß ·  · ControlDiff t + D-term) , där a -faktorn och 
-framkopplingstermen F t båda har samma betydelse somvid P- och PD-
-reglering. 
-
-För den proportionella termen gäller att:
-P t = ProcVal t , om P baseras på ProcVal
-= ControlDiff t , om P baseras på ControlDiff 
-
-I-delen kan tillfälligt kopplas bort, t.ex. för att undvika integrering av stora 
-eller små ControlDiff (regleravvikelser eller i.s.m. parametertrimmning
-ß = 0 , if IntOff is TRUE
-= 1 , when IntOff is FALSE 
-
-För derivata termen gäller att:,
-D term = DerTime · (FiltDer t - FiltDer t-1 ) , där FiltDer 
-
-beräknas på samma sätt som vid P- och PD-reglering. 
-
-Det nya värdet på OutVal beräknas därefter som, 
-
-OutVal t = OutVal t-1 + OutChange t 
-
-och slutligen kontrolleras att: 
-
-MinOut = OutVal t = MaxOut 
-
-Något krav avseende storleken på OutChange ställs ej.
-
-
-
-Regulatorn får en stötfri övergång då tvångsstyrning upphör, och kan ej 
-integrera upp utanför tillåtet reglerområde { MinOut , MaxOut }. 
-
-Om P-termen baseras på regleravvikelsen erhålls snabbare inreglering vid 
-börvärdesändring. En sådan P-del bör väljas för den 'innre' loopen i en 
-kaskadreglering. 
-
-Om P-delen bara verkar på ärvärdet fås långsammare svar vid 
-börvärdesändring, men också mindre processtörning till följd av kraftig 
-styrsignalförändring. 
-
-Tvångsstyrning ( 'forced control' ) kan användas för manuell inställning, 
-nollutställning vid ej drift.
-
-Pid-objektets attribut modifieras enligt följande: 
-
-Insignalen på fo1 -ingången tillsammans med OpMod -attributet i Mode -
-objektet bestämer aktuellt driftfall. 
 </attr>
 
 <attr>OpMod
@@ -16707,17 +16621,35 @@ Absolutvärdet av ingången.
 # Class Equal
 #
 <class> Equal
-@Summary Kontollerar om två heltal är lika.
-Equal jämför två heltals-värden och returnerar sant om de är lika.
+@Summary Kontollerar om två analoga värden är lika.
+Equal jämför två analoga värden och returnerar sant om de är lika.
 @image orm_equal_fo.gif
 <attr> In1
-Heltals ingång 1.
+Analog ingång 1.
 </attr>
 <attr> In2
-Heltals ingång 2.
+Analog ingång 2.
 </attr>
 <attr>Status
-Sann om ingång-värdena är lika.
+Sann om ingångs-värdena är lika.
+</attr>
+</class>
+
+#
+# Class NotEqual
+#
+<class> NotEqual
+@Summary Kontollerar om två analoga värden är olika.
+Equal jämför två analoga värden och returnerar sant om de är olika.
+@image orm_notequal_fo.gif
+<attr> In1
+Analog ingång 1.
+</attr>
+<attr> In2
+Analog ingång 2.
+</attr>
+<attr>Status
+Sann om ingångs-värdena är olika.
 </attr>
 </class>
 
@@ -16725,10 +16657,121 @@ Sann om ingång-värdena är lika.
 # Class GreaterEqual
 #
 <class> GreaterEqual
-@Summary Kontollerar om ett heltal är större än eller lika med ett annat.
-GreaterEqual jämför två heltals-värden och returnerar sant det första är större än
+@Summary Kontollerar om ett analogt är större än eller lika med ett annat.
+GreaterEqual jämför två analoga värden och returnerar sant det första är större än
 eller lika med det andra.
 @image orm_greaterequal_fo.gif
+<attr> In1
+Analog ingång 1.
+</attr>
+<attr> In2
+Analog ingång 2.
+</attr>
+<attr>Status
+Sann om In1 är större än eller lika med In2.
+</attr>
+</class>
+
+#
+# Class GreaterThan
+#
+<class> GreaterThan
+@Summary Kontollerar om ett analogt är större än ett annat.
+GreaterThan jämför två analoga värden och returnerar sant det första är större än
+det andra.
+@image orm_greaterthan_fo.gif
+<attr> In1
+Analog ingång 1.
+</attr>
+<attr> In2
+Analog ingång 2.
+</attr>
+<attr>Status
+Sann om In1 är större än In2.
+</attr>
+</class>
+#
+# Class LessEqual
+#
+<class> LessEqual
+@Summary Kontollerar om ett analogt är mindre än eller lika med ett annat.
+LessEqual jämför två analoga värden och returnerar sant det första är mindre än
+eller lika med det andra.
+@image orm_lessequal_fo.gif
+<attr> In1
+Analog ingång 1.
+</attr>
+<attr> In2
+Analog ingång 2.
+</attr>
+<attr>Status
+Sann om In1 är mindre än eller lika med In2.
+</attr>
+</class>
+
+#
+# Class LessThan
+#
+<class> LessThan
+@Summary Kontollerar om ett analogt är mindre än ett annat.
+LessThan jämför två analoga värden och returnerar sant det första är mindre än
+det andra.
+@image orm_lessthan_fo.gif
+<attr> In1
+Analog ingång 1.
+</attr>
+<attr> In2
+Analog ingång 2.
+</attr>
+<attr>Status
+Sann om In1 är mindre än In2.
+</attr>
+</class>
+
+#
+# Class IEqual
+#
+<class> IEqual
+@Summary Kontollerar om två heltal är lika.
+IEqual jämför två heltals-värden och returnerar sant om de är lika.
+@image orm_iequal_fo.gif
+<attr> In1
+Heltals ingång 1.
+</attr>
+<attr> In2
+Heltals ingång 2.
+</attr>
+<attr>Status
+Sann om ingångs-värdena är lika.
+</attr>
+</class>
+
+#
+# Class INotEqual
+#
+<class> INotEqual
+@Summary Kontollerar om två heltal är olika.
+INotEqual jämför två heltals-värden och returnerar sant om de är olika.
+@image orm_inotequal_fo.gif
+<attr> In1
+Heltals ingång 1.
+</attr>
+<attr> In2
+Heltals ingång 2.
+</attr>
+<attr>Status
+Sann om ingångs-värdena är olika.
+</attr>
+</class>
+
+#
+# Class IGreaterEqual
+#
+<class> IGreaterEqual
+@Summary Kontollerar om ett heltal är större än eller lika med ett annat.
+IGreaterEqual jämför två heltals-värden och returnerar sant det första är större än
+eller lika med det andra.
+@image orm_igreaterequal_fo.gif
 <attr> In1
 Heltals ingång 1.
 </attr>
@@ -16741,13 +16784,13 @@ Sann om In1 är större än eller lika med In2.
 </class>
 
 #
-# Class GreaterThan
+# Class IGreaterThan
 #
-<class> GreaterThan
+<class> IGreaterThan
 @Summary Kontollerar om ett heltal är större än ett annat.
-GreaterThan jämför två heltals-värden och returnerar sant det första är större än
+IGreaterThan jämför två heltals-värden och returnerar sant det första är större än
 det andra.
-@image orm_greaterthan_fo.gif
+@image orm_igreaterthan_fo.gif
 <attr> In1
 Heltals ingång 1.
 </attr>
@@ -16759,13 +16802,13 @@ Sann om In1 är större än In2.
 </attr>
 </class>
 #
-# Class LessEqual
+# Class ILessEqual
 #
-<class> LessEqual
+<class> ILessEqual
 @Summary Kontollerar om ett heltal är mindre än eller lika med ett annat.
-GreaterEqual jämför två heltals-värden och returnerar sant det första är mindre än
+ILessEqual jämför två heltals-värden och returnerar sant det första är mindre än
 eller lika med det andra.
-@image orm_lessequal_fo.gif
+@image orm_ilessequal_fo.gif
 <attr> In1
 Heltals ingång 1.
 </attr>
@@ -16773,18 +16816,18 @@ Heltals ingång 1.
 Heltals ingång 2.
 </attr>
 <attr>Status
-Sann om In1 är minder än eller lika med In2.
+Sann om In1 är mindre än eller lika med In2.
 </attr>
 </class>
 
 #
-# Class LessThan
+# Class ILessThan
 #
-<class> LessThan
+<class> ILessThan
 @Summary Kontollerar om ett heltal är mindre än ett annat.
-LessThan jämför två heltals-värden och returnerar sant det första är mindre än
+ILessThan jämför två heltals-värden och returnerar sant det första är mindre än
 det andra.
-@image orm_lessthan_fo.gif
+@image orm_ilessthan_fo.gif
 <attr> In1
 Heltals ingång 1.
 </attr>
@@ -16793,6 +16836,164 @@ Heltals ingång 2.
 </attr>
 <attr>Status
 Sann om In1 är mindre än In2.
+</attr>
+</class>
+
+#
+# Class BwAnd
+#
+<class> BwAnd
+@Summary Bitvis and.
+Bitvis and.
+@image orm_bwand_fo.gif
+<attr> In1
+Heltals ingång 1.
+</attr>
+<attr> In2
+Heltals ingång 2.
+</attr>
+<attr>Status
+Bitvis and av In1 och In2.
+</attr>
+</class>
+
+#
+# Class BwOr
+#
+<class> BwOr
+@Summary Bitvis or.
+Bitvis or.
+@image orm_bwor_fo.gif
+<attr> In1
+Heltals ingång 1.
+</attr>
+<attr> In2
+Heltals ingång 2.
+</attr>
+<attr>Status
+Bitvis or av In1 och In2.
+</attr>
+</class>
+
+#
+# Class Exp
+#
+<class> Exp
+@Summary Exponential funktion.
+Exponential funktion.
+@image orm_exp_fo.gif
+<attr> In
+Analog ingång.
+</attr>
+<attr> FactorIn
+Faktor som multipliceras med ingången före exponential-beräkningen.
+</attr>
+<attr> FactorVal
+Faktor som multipliceras med det beräknade exponential-värdet.
+</attr>
+<attr>ActVal
+Resultat.
+</attr>
+</class>
+
+#
+# Class Ln
+#
+<class> Ln
+@Summary Naturlig logaritm.
+Ln beräknar den naturliga logaritmen.
+@image orm_ln_fo.gif
+<attr> In
+Analog ingång.
+</attr>
+<attr> FactorIn
+Faktor som multipliceras med ingången före logaritm-beräkningen.
+</attr>
+<attr> FactorVal
+Faktor som multipliceras med det beräknade logaritm-värdet.
+</attr>
+<attr>ActVal
+Resultat.
+</attr>
+</class>
+
+#
+# Class Log
+#
+<class> Log
+@Summary Logaritm med 10 som bas.
+Log beräknar 10-logaritmen av ingångsvärdet.
+@image orm_log_fo.gif
+<attr> In
+Analog ingång.
+</attr>
+<attr> FactorIn
+Faktor som multipliceras med ingången före logaritm-beräkningen.
+</attr>
+<attr> FactorVal
+Faktor som multipliceras med det beräknade logaritm-värdet.
+</attr>
+<attr>ActVal
+Resultat.
+</attr>
+</class>
+
+#
+# Class Sqrt
+#
+<class> Sqrt
+@Summary Kvadratrots funktion.
+Sqrt beräknar kvatdratroten av ingångsvärdet.
+För ingångsvärdet gäller att In * FactorIn ska inte vara negativt.
+@image orm_sqrt_fo.gif
+<attr> In
+Analog ingång.
+</attr>
+<attr> FactorIn
+Faktor som multipliceras med ingången före kvadratsrots utdragningen.
+</attr>
+<attr> FactorVal
+Faktor som multipliceras med den beräknade kvadratroten.
+</attr>
+<attr>ActVal
+Resultat.
+</attr>
+</class>
+
+#
+# Class IAdd
+#
+<class> IAdd
+@Summary Heltals addition.
+Heltals addition.
+Addition av upp till 8 värden.
+@image orm_iadd_fo.gif
+<attr> In1
+Heltals ingång 1.
+</attr>
+<attr> In2
+Heltals ingång 2.
+</attr>
+<attr> In3
+Heltals ingång 3.
+</attr>
+<attr> In4
+Heltals ingång 4.
+</attr>
+<attr> In5
+Heltals ingång 5.
+</attr>
+<attr> In6
+Heltals ingång 6.
+</attr>
+<attr> In7
+Heltals ingång 7.
+</attr>
+<attr> In8
+Heltals ingång 8.
+</attr>
+<attr>ActVal
+Resultatet av additionen.
 </attr>
 </class>
 
