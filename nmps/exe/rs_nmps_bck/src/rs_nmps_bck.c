@@ -56,6 +56,7 @@
 #include "pwr_nmpsclasses.h"
 #include "co_cdh.h"
 #include "co_time.h"
+#include "co_dcli.h"
 #include "rt_gdh.h"
 #include "rt_errh.h"
 #include "rt_gdh_msg.h"
@@ -63,6 +64,9 @@
 #include "rs_nmps.h"
 #include "rs_nmps_msg.h"
 #include "rs_sutl.h"
+#include "rt_qcom.h"
+#include "rt_qcom_msg.h"
+#include "rt_ini_event.h"
 
 /*_Globala variabler______________________________________________________*/
 
@@ -286,6 +290,7 @@ int	nmpsbck_get_filename(
 	    *s = 0;
 	  strcat( outname, ext);
 	}
+	dcli_translate_filename( outname, outname);
 	return NMPS__SUCCESS;
 }
 
@@ -1092,7 +1097,7 @@ static pwr_tStatus	nmpsbck_open_file( 	bck_ctx	bckctx)
 {
 	nmpsbck_t_fileheader	fileheader;
 	pwr_tUInt32		csts;
-	char			filename[80];
+	char			filename[200];
 	float			reopen_time = 10;
 	int			first_time;
 	int			wait_some_time;
@@ -1555,7 +1560,7 @@ static pwr_tStatus	nmpsbck_read( bck_ctx	bckctx)
 	nmpsbck_t_data_list	*data_ptr;
 	nmpsbck_t_data_list	*next_ptr;
 	char			*objectp;
-	char			filename[80];
+	char			filename[200];
 	int			file_num = 1;
 	int			record_count;
 	pwr_tUInt32		cellarea_start[NMPSBCK_MAX_RECORDS];
@@ -2393,13 +2398,38 @@ int main()
 	int		count;
 	int		first_scan = 1;
 	int		file_reopen = 0;
+	qcom_sQid 	qid = qcom_cNQid;
+	qcom_sQattr 	qAttr;
+	qcom_sQid 	qini;
+	int		tmo;
+	int		swap = 0;
+	char 		mp[2000];
+	qcom_sGet 	get;
 
-	/* Init pams and gdh */
+	errh_Init("rs_nmps_bck", 0);
+
+	if (!qcom_Init(&sts, 0, "rs_nmps_bck")) {
+	  errh_Fatal("qcom_Init, %m", sts);
+	  exit(sts);
+	} 
+
+	qAttr.type = qcom_eQtype_private;
+	qAttr.quota = 100;
+	if (!qcom_CreateQ(&sts, &qid, &qAttr, "events")) {
+	  errh_Fatal("qcom_CreateQ, %m", sts);
+	  exit(sts);
+	} 
+
+	qini = qcom_cQini;
+	if (!qcom_Bind(&sts, &qid, &qini)) {
+	  errh_Fatal("qcom_Bind(Qini), %m", sts);
+	  exit(-1);
+	}
+
 	sts = gdh_Init("rs_nmps_bck");
 	if (EVEN(sts)) LogAndExit( sts);
 
-	for (;;)
-	{
+	for (;;) {
 	  bckctx = calloc( 1 , sizeof( *bckctx));
 	  if ( bckctx == 0 ) return NMPS__NOMEMORY;
 
@@ -2408,13 +2438,11 @@ int main()
 	  sts = nmps_get_bckconfig( bckctx);
 	  if (EVEN(sts)) LogAndExit( sts);
 
-	  if ( !bckctx->bckconfig->NoRead)
-	  {
+	  if ( !bckctx->bckconfig->NoRead) {
 	    /* Restore the old backup file */
 	    sts = nmpsbck_read( bckctx);
 	  }
-	  else
-	  {
+	  else {
 	    /* Release the cells by setting backup done flag */
 	    sts = nmpsbck_set_cell_backup_done();
 	    if (EVEN(sts)) LogAndExit( sts);
@@ -2428,58 +2456,85 @@ int main()
 
 	  scantime = bckctx->bckconfig->IncrementCycleTime;
 	  full_scan = bckctx->bckconfig->FullCycleTime / scantime + FLT_EPSILON;
+	  tmo = (int) scantime * 1000;
 
 	  count = 0;
-	  for (;;)
-	  {
-	    count++;
-	    if ( count > full_scan || first_scan || file_reopen ||
-		bckctx->record_count >= NMPSBCK_MAX_RECORDS - 1 ||
-	        bckctx->bckconfig->ForceFullBackup)
-	    {
-	      /* Time for full backup */
-	      if ( bckctx->bckconfig->ForceFullBackup)
-	        bckctx->bckconfig->ForceFullBackup = 0;
-	      bckctx->increment = 0;
-	      count = 0;
+	  for (;;) {
+	    get.maxSize = sizeof(mp);
+	    get.data = mp;
+	    qcom_Get(&sts,&qid, &get, tmo);
+	    if (sts == QCOM__TMO || sts == QCOM__QEMPTY) {
+	      if ( swap)
+		continue;
 
-	      /* Toggle file */
-	      if ( !file_reopen)
-	      {
-	        if ( bckctx->file_num == 1)
-	          bckctx->file_num = 2;
-	        else
-	          bckctx->file_num = 1;
+	      if ( bckctx->bckconfig->Initialize) {
+		bckctx->bckconfig->Initialize = 0;
+		nmpsbck_free( bckctx);
+		break;
 	      }
-	      file_reopen = 0;
-	    }
-	    else
-	    /* Incremental backup */
-	      bckctx->increment = 1;
 
-	    sts = nmpsbck_cell_handler( bckctx);
-	    if ( sts == NMPS__FILEREOPEN)
-	    {
-	      /* New file is opened, write a full backup */
-	      file_reopen = 1;
-	      continue;
-	    }
-	    if ( ODD(sts))
-	      bckctx->bckconfig->LoopCount++;
+	      count++;
+	      if ( count > full_scan || first_scan || file_reopen ||
+		   bckctx->record_count >= NMPSBCK_MAX_RECORDS - 1 ||
+		   bckctx->bckconfig->ForceFullBackup) {
+		/* Time for full backup */
+		if ( bckctx->bckconfig->ForceFullBackup)
+		  bckctx->bckconfig->ForceFullBackup = 0;
+		bckctx->increment = 0;
+		count = 0;
+
+		/* Toggle file */
+		if ( !file_reopen) {
+		  if ( bckctx->file_num == 1)
+		    bckctx->file_num = 2;
+		  else
+		    bckctx->file_num = 1;
+		}
+		file_reopen = 0;
+	      }
+	      else
+		/* Incremental backup */
+		bckctx->increment = 1;
+
+	      sts = nmpsbck_cell_handler( bckctx);
+	      if ( sts == NMPS__FILEREOPEN) {
+		/* New file is opened, write a full backup */
+		file_reopen = 1;
+		continue;
+	      }
+	      if ( ODD(sts))
+		bckctx->bckconfig->LoopCount++;
 
 #if 0
-	    else if (EVEN(sts)) LogAndExit( sts);
+	      else if (EVEN(sts)) LogAndExit( sts);
 #endif
 
-	    sutl_sleep( scantime);
 
-	    if ( bckctx->bckconfig->Initialize)
-	    {
-	      bckctx->bckconfig->Initialize = 0;
-	      nmpsbck_free( bckctx);
-	      break;
+	      // sutl_sleep( scantime);
+
+	      first_scan = 0;
 	    }
-	    first_scan = 0;
+	    else {
+	      ini_mEvent  new_event;
+	      qcom_sEvent *ep = (qcom_sEvent*) get.data;
+
+	      new_event.m  = ep->mask;
+	      if (new_event.b.oldPlcStop && !swap) {
+		swap = 1;
+		nmpsbck_free( bckctx);
+		break;
+	      } 
+	      else if (new_event.b.swapDone && swap) {
+		swap = 0;
+	      } 
+	      else if (new_event.b.terminate) {
+		exit(0);
+	      }
+	    }
 	  }
 	}
 }
+
+
+
+
