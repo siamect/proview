@@ -232,6 +232,42 @@ Objektet konfigureras med hjälp av 'Configuration Editor'.
 <attr>Description 
 Fri text för att beskriva objektets användning. 
 </attr>
+
+<attr>DefGraph 
+@Summary Ett XttGraph objekt som öppnar en graf för det här objektet.
+Ett XttGraph objekt som öppnar en graf som innehåller data för det här 
+objektet. Grafen kan öppnas från popup-menyn för objektet.
+</attr>
+
+<attr>DefTrend 
+@Summary Ett trend objekt som visar en trend för det här objektet.
+Ett DsTrend eller PlotGroup som innehåller en trend för det här objektet.
+Trenden kan öppnas från popup-menyn för objektet.
+</attr>
+
+<attr>HelpTopic
+@Summary Hjälp-text för objektet.
+Ett hjälp ämne (topic) i xtt-hjälp filen som innehåller hjälp för det
+här objektet. Hjälptexten kan visas från popup-menyn för objektet.
+</attr>
+
+<attr>DataSheet
+@Summary En URL till datablad för objektet.
+En URL till datablad för objektet. Databladet kan visas från popup-menyn
+för objektet.
+</attr>
+
+<attr>CircuitDiagram
+@Summary En URL till kopplings-schemat för utrustningen i det här objektet.
+En URL till kopplings-schemat för utrustningen i det här objektet.
+Kopplings-schemat kan visas från popup-menyn för objektet.
+
+Om attributet är tomt, kommer CircuitDiagram-metoden att leta efter nämrsta 
+förfader som har ett angivet kopplings-schema och använda denna URL istället.
+Om denna funktion ej önskas, lägg in strängen 'Disabled' i attributet. Detta
+kommer att stänga av CircuitDiagram-metoden för detta objekt, och för alla
+barn med tomt CircuitDiagram attribut.
+</attr>
 </class>
 
 #

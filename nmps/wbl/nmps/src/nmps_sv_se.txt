@@ -55,12 +55,11 @@ Maximalt antal dataobjekt som ska rymmas i cellen (maxvärde 30).
 Speciella funktioner hos cellobjektet.
 Function är en bitmask och olika funktioner kan kombineras.
 
-@b 4
-Om ett objekt tas bort ur cellen med externfunktionen (ExternOpType = 2, 3 el 
-4) tas dataobjektet även bort ur rtdb.
-@b 8
-När cellen återställs genom att resetobjektet, sätts tas dataobjektet även bort ur 
-rtdb.
+4 Om ett objekt tas bort ur cellen med externfunktionen (ExternOpType = 2, 3 el 4) 
+  tas dataobjektet även bort ur rtdb.
+
+8 När cellen återställs genom att resetobjektet, sätts tas dataobjektet även bort ur 
+  rtdb.
 </attr>
 
 <attr>LastIndex
@@ -89,23 +88,18 @@ externt program.
 <attr>ExternOpType
 
 Typ av extern operation:
-@b 0
-Lägger in ExternObjId på index 1 i cellen.
-@b 1
-Lägger in ExternObjId på index angivits i ExternIndex i cellen.
-@b 2
-Tar bort dataobjekt på index 1 i cellen.
-@b 3
-Tar bort dataobjekt på index angett i ExternIndex i cellen.
-@b 4
-Tar bort dataobjekt med objid som angivits med ExternObjId från cellen.
-@b 8
-Flytta dataobjekt med objid som angivits med ExternObjid framåt i cellen.
-@b 9
-Flytta dataobjekt med objid som angivits med ExternObjid bakåt i cellen.
-@b 10
-Tar bort dataobjekt med objid som angivits med ExternObjId från cellen. 
-Dataobjektet tas inte bort ur databasen även om Function för cellen är 4.
+0  Lägger in ExternObjId på index 1 i cellen.
+
+1  Lägger in ExternObjId på index angivits i ExternIndex i cellen.
+
+2  Tar bort dataobjekt på index 1 i cellen.
+
+3  Tar bort dataobjekt på index angett i ExternIndex i cellen.
+4  Tar bort dataobjekt med objid som angivits med ExternObjId från cellen.
+8  Flytta dataobjekt med objid som angivits med ExternObjid framåt i cellen.
+9  Flytta dataobjekt med objid som angivits med ExternObjid bakåt i cellen.
+10 Tar bort dataobjekt med objid som angivits med ExternObjId från cellen. 
+   Dataobjektet tas inte bort ur databasen även om Function för cellen är 4.
 </attr>
 
 <attr>ExternFlag
@@ -176,11 +170,10 @@ Koppling till ett NMpsTrp objekt.
 <attr>Function
 Speciella funktioner hos cellobjektet.
 
-@b 0
-NMPS tar bort sin direktlänkning av dataobjektet, men objektet tas ej bort ur 
-databasen.
-@b 4
-Objektet tas bort ur databasen.
+0  NMPS tar bort sin direktlänkning av dataobjektet, men objektet tas ej bort ur 
+   databasen.
+
+4  Objektet tas bort ur databasen.
 </attr>
 </class>
 
@@ -221,25 +214,24 @@ Speciella funktioner hos cellobjektet. Function är en bitmask och olika
 funktioner kan kombineras.
 
 Function
-@b 0
-Inga begränsningar på antal utvalda objekt.
-@b 1
-Högst ett objekt är utvalt. Om det finns ett utvalt objekt, och ett nytt väljs ut 
-kommer det tidigare utvalda att återställas.
-@b 2
-Exakt ett objekt är utvalt (om det finns objekt i cellen).
- Om det finns ett utvalt objekt, och ett nytt väljs ut kommer det tidigare utvalda 
-att återställas.
-Om det utvalda objektet transporteras ut ur cellen, eller om utval tas bort på 
-annat sätt, kommer det objekt med högsta index att väljas ut.
-@b 4
-Om ett objekt tas bort ur cellen med externfunktionen (ExternOpType = 2, 3 el 
-4) tas dataobjektet även bort ur rtdb. Detta funktion bör ej användas i de fall ett 
-dataobjekt kan befinna sig i flera celler samtidigt (Function 0 hos 
-transportobjektet).
-@b 8
-När cellen återställs genom att resetobjektet sätts, tas dataobjektet som finns i 
-cellen även bort ur databasen.
+0  Inga begränsningar på antal utvalda objekt.
+
+1  Högst ett objekt är utvalt. Om det finns ett utvalt objekt, och ett nytt väljs ut 
+   kommer det tidigare utvalda att återställas.
+
+2  Exakt ett objekt är utvalt (om det finns objekt i cellen).
+   Om det finns ett utvalt objekt, och ett nytt väljs ut kommer det tidigare utvalda 
+   att återställas.
+   Om det utvalda objektet transporteras ut ur cellen, eller om utval tas bort på 
+   annat sätt, kommer det objekt med högsta index att väljas ut.
+
+4  Om ett objekt tas bort ur cellen med externfunktionen (ExternOpType = 2, 3 el 4) 
+   tas dataobjektet även bort ur rtdb. Detta funktion bör ej användas i de fall ett 
+   dataobjekt kan befinna sig i flera celler samtidigt (Function 0 hos 
+   transportobjektet).
+
+8  När cellen återställs genom att resetobjektet sätts, tas dataobjektet som finns i 
+   cellen även bort ur databasen.
 </attr>
 
 <attr>LastIndex
@@ -268,29 +260,18 @@ externt program.
 <attr>ExternOpType
 
 Typ av extern operation:
-@b 0
-Lägger in ExternObjId på index 1 i cellen.
-@b 1
-Lägger in ExternObjId på index angett i ExternIndex i cellen.
-@b 2
-Tar bort dataobjekt på index 1 i cellen.
-@b 3
-Tar bort dataobjekt på index angett i ExternIndex i cellen.
-@b 4
-Tar bort dataobjekt med objid som angetts med ExternObjId från cellen.
-@b 5
-Väljer ut dataobjekt med objid angett i ExternObjId.
-@b 6
-Lägger in ExternObjId på index 1 i cellen och väljer ut det.
-@b 7
-Tar bort utval på objekt angivet i ExternObjId.
-@b 8
-Flytta dataobjekt med objid som angivits med ExternObjid framåt i cellen.
-@b 9
-Flytta dataobjekt med objid som angivits med ExternObjid bakåt i cellen.
-@b 10
-Tar bort dataobjekt med objid som angivits med ExternObjId från cellen. 
-Dataobjektet tas inte bort ur databasen även om Function för cellen är 4.
+0  Lägger in ExternObjId på index 1 i cellen.
+1  Lägger in ExternObjId på index angett i ExternIndex i cellen.
+2  Tar bort dataobjekt på index 1 i cellen.
+3  Tar bort dataobjekt på index angett i ExternIndex i cellen.
+4  Tar bort dataobjekt med objid som angetts med ExternObjId från cellen.
+5  Väljer ut dataobjekt med objid angett i ExternObjId.
+6  Lägger in ExternObjId på index 1 i cellen och väljer ut det.
+7  Tar bort utval på objekt angivet i ExternObjId.
+8  Flytta dataobjekt med objid som angivits med ExternObjid framåt i cellen.
+9  Flytta dataobjekt med objid som angivits med ExternObjid bakåt i cellen.
+10 Tar bort dataobjekt med objid som angivits med ExternObjId från cellen. 
+   Dataobjektet tas inte bort ur databasen även om Function för cellen är 4.
 </attr>
 
 <attr>ExternFlag
@@ -461,32 +442,32 @@ Kopplas till In attributet på ett cellobjekt.
 Anger vilken typ av transport som transportobjektet ska utföra.
 
 Function:
-@b 0
-Ett objekts flytta successivt mellan cellerna med framkant först och bakkant 
-sedan (eller vice versa). 
-Vid en positiv flank på TriggForwFront flyttas framkanten på dataobjektet från 
-In till Out.
-Vid en positiv flank på TriggForwBack flyttas bakkanten från In till Out.
-Vid en positiv flank på TriggReverseFront flyttas framkanten från Out till In.
-Vid en positiv flank på TriggReverseBack flyttas bakkanten från Out till In.
-@b 1
-Ett objekt flyttas mellan cellerna. Endast Trigg...Front ingångarna ska 
-användas för att trigga en transport.
-Vid en positiv flank på TriggFrowFront flyttas objektet från In till Out.
-Vid en positiv flank på TriggReverseFront flyttas objektet från Out till In.
-@b 2
-Samtliga objekt i sändcellen flyttas.
-Vid en positiv flank på TriggForwFront flyttas samtliga dataobjekt i cellen 
-kopplad till In, till cellen kopplad till Out. Vid en positiv flank på 
-TriggReverseFront flyttas samtliga dataobjekt i cellen kopplad till Out, till 
-cellen kopplad till In.
-@b 4
-Samma funktion som 2 med undantaget att flyttningen endast sker  om 
-mottagarcellen är tom.
-@b 8
-Återställer trigg-ingångar (om dessa ej är kopplade).
-@b 16
-Trigga på nivå istället för positiv flank.
+0  Ett objekts flytta successivt mellan cellerna med framkant först och bakkant 
+   sedan (eller vice versa). 
+   - Vid en positiv flank på TriggForwFront flyttas framkanten på dataobjektet från 
+     In till Out.
+   - Vid en positiv flank på TriggForwBack flyttas bakkanten från In till Out.
+   - Vid en positiv flank på TriggReverseFront flyttas framkanten från Out till In.
+   - Vid en positiv flank på TriggReverseBack flyttas bakkanten från Out till In.
+
+1  Ett objekt flyttas mellan cellerna. Endast Trigg...Front ingångarna ska 
+   användas för att trigga en transport.
+
+   - Vid en positiv flank på TriggFrowFront flyttas objektet från In till Out.
+   - Vid en positiv flank på TriggReverseFront flyttas objektet från Out till In.
+
+2  Samtliga objekt i sändcellen flyttas.
+   - Vid en positiv flank på TriggForwFront flyttas samtliga dataobjekt i cellen 
+     kopplad till In, till cellen kopplad till Out. Vid en positiv flank på 
+   - TriggReverseFront flyttas samtliga dataobjekt i cellen kopplad till Out, till 
+     cellen kopplad till In.
+
+4  Samma funktion som 2 med undantaget att flyttningen endast sker  om 
+   mottagarcellen är tom.
+
+8  Återställer trigg-ingångar (om dessa ej är kopplade).
+
+16 Trigga på nivå istället för positiv flank.
 </attr>
 
 <attr>TriggForwFront
@@ -1173,32 +1154,31 @@ Function-attributet ska inte vara satt.
 Anger vilken funktion som ska användas. En bitmask.
 
 Bit, Namn, Funktion
-@b 1
-DisplayObject
-Mottaget data kopieras till ett statiskt objekt, angivet i attributet DisplayObjekt.
-@b 2
-Accept
-Innan ett dynamisk objekt skapas väntas på accept från operatör och/eller 
-applikation.
-@b 4
-CellInsert
-Ett dynamisk objekt, namngivet efter nyckeln, skapas och läggs in i en cell.
-@b 8
-Change
-Triggning av förfrågan sker genom att värdet i Key, eller KeyStr ändras. 
-Triggning sker ej om värdet är 0 eller en NULL-string. Om biten ej är satt sker 
-triggning med Trigg-ingången eller OpTrigg attributet.
-@b 16
-AcceptBoth
-För att data ska accepteras, måste både Accept-ingången och OpAccept-
-attributet ha satts.
-@b 32
-DisplayReset
-Vid återställning nollställs visningsobjektet.
-@b 64
-IntKey
-Nyckeln är ett heltal som läggs i attributet Key. Om biten ej är satt är nyckeln 
-en sträng i KeyStr.
+1  DisplayObject
+   Mottaget data kopieras till ett statiskt objekt, angivet i attributet DisplayObjekt.
+
+2  Accept
+   Innan ett dynamisk objekt skapas väntas på accept från operatör och/eller 
+   applikation.
+
+4  CellInsert
+   Ett dynamisk objekt, namngivet efter nyckeln, skapas och läggs in i en cell.
+
+8  Change
+   Triggning av förfrågan sker genom att värdet i Key, eller KeyStr ändras. 
+   Triggning sker ej om värdet är 0 eller en NULL-string. Om biten ej är satt sker 
+   triggning med Trigg-ingången eller OpTrigg attributet.
+
+16 AcceptBoth
+   För att data ska accepteras, måste både Accept-ingången och OpAccept-
+   attributet ha satts.
+
+32 DisplayReset
+   Vid återställning nollställs visningsobjektet.
+
+64 IntKey
+   Nyckeln är ett heltal som läggs i attributet Key. Om biten ej är satt är nyckeln 
+   en sträng i KeyStr.
 </attr>
 
 <attr>TimeoutTime
@@ -1350,38 +1330,37 @@ IntKey-biten i Function-attributet ska inte vara satt.
 Anger vilken funktion som ska användas. En bitmask.
 
 Bit, Namn, Funktion
-@b 1
-DisplayObject
-Mottaget data kopieras till ett statiskt objekt, angivet i attributet DisplayObjekt.
-@b 2
-Accept
-Innan ett dynamisk objekt skapas väntas på accept från operatör och/eller 
-applikation.
-@b 4
-CellInsert
-Ett dynamisk objekt, namngivet efter nyckeln, skapas och läggs in i en cell.
-@b 8
-Ack
-Kvittens skickas till sändaren. Kvittensen skickas med remtrans-objektet 
-angivet i SendRemTrans.
-@b 16
-AcceptBoth
-För att data ska accepteras, måste både Accept-ingången och OpAccept-
-attributet ha satts.
-@b 32
-DisplayReset
-Vid återställning nollställs visningsobjektet.
-@b 64
-Header
-Mottagen trans antas innehålla en header med nyckel (string40) och status 
-(int32). Om motsvarande bit sätts i sändande DataSend-objekts Function-
-attribut kommer en header att läggas i transen. En header erfordras om ett 
-dynamiskt objekt ska skapas.
-@b 128
-AckOther
-Mottagningen av data fungerar samtidigt som en kvittens för en tidigare 
-sändning från ett DataSend-objekt. Den nyckel som DataSend-objektet skickar 
-måste finnas i den mottagna transen.
+1  DisplayObject
+   Mottaget data kopieras till ett statiskt objekt, angivet i attributet DisplayObjekt.
+
+2  Accept
+   Innan ett dynamisk objekt skapas väntas på accept från operatör och/eller 
+   applikation.
+
+4  CellInsert
+   Ett dynamisk objekt, namngivet efter nyckeln, skapas och läggs in i en cell.
+
+8  Ack
+   Kvittens skickas till sändaren. Kvittensen skickas med remtrans-objektet 
+   angivet i SendRemTrans.
+
+16 AcceptBoth
+   För att data ska accepteras, måste både Accept-ingången och OpAccept-
+   attributet ha satts.
+
+32 DisplayReset
+   Vid återställning nollställs visningsobjektet.
+
+64 Header
+   Mottagen trans antas innehålla en header med nyckel (string40) och status 
+   (int32). Om motsvarande bit sätts i sändande DataSend-objekts Function-
+   attribut kommer en header att läggas i transen. En header erfordras om ett 
+   dynamiskt objekt ska skapas.
+
+128 AckOther
+   Mottagningen av data fungerar samtidigt som en kvittens för en tidigare 
+   sändning från ett DataSend-objekt. Den nyckel som DataSend-objektet skickar 
+   måste finnas i den mottagna transen.
 </attr>
 
 <attr>AlarmText
@@ -1479,20 +1458,19 @@ Error-utgången tas ner efter ett scan.
 Anger vilken funktion som ska användas. En bitmask.
 
 Bit, Namn, Funktion:
-@b 8
-Ack
-En kvittens förväntas komma genom RcvRemTrans objektet inom Timout 
-tiden. DataSent flaggan sätts inte förrän kvittensen har anlänt.
-@b 64
-Header
-En header läggs först i transen innehållande objektsnamn (string40) och status 
-(int32).
-@b 128
-AckOther
-En kvittens förväntas komma till ett godtyckligt DataRcv-objekt, dvs 
-kvittensen kan innehålla data. Function för DataRcv-objektet ska också vara 
-AckOther. DataSent flaggan sätts vid sändningen och ej när kvittensen 
-kommer.
+8  Ack
+   En kvittens förväntas komma genom RcvRemTrans objektet inom Timout 
+   tiden. DataSent flaggan sätts inte förrän kvittensen har anlänt.
+
+64 Header
+   En header läggs först i transen innehållande objektsnamn (string40) och status 
+   (int32).
+
+128 AckOther
+    En kvittens förväntas komma till ett godtyckligt DataRcv-objekt, dvs 
+    kvittensen kan innehålla data. Function för DataRcv-objektet ska också vara 
+    AckOther. DataSent flaggan sätts vid sändningen och ej när kvittensen 
+    kommer.
 </attr>
 
 <attr>TimeoutTime
@@ -1627,16 +1605,15 @@ kopplas sker alltid konvertering.
 Anger vilken typ av konverterings-definition som används.
 
 ConvDefType, Namn, Funktion:
-@b 0 
-Object
-Konverteringen definieras av ett objekt av klassen ConvDef. Attributet 
-ToConvDef innehåller ConvDef objektet.
-@b 1
-File
-Konverteringen definieras av en fil.
-@b 2
-Class
-Konverteringen definieras av en klass.
+0  Object
+   Konverteringen definieras av ett objekt av klassen ConvDef. Attributet 
+   ToConvDef innehåller ConvDef objektet.
+
+1  File
+   Konverteringen definieras av en fil.
+
+2  Class
+   Konverteringen definieras av en klass.
 </attr>
 
 <attr>ToConvdef
