@@ -246,7 +246,10 @@ int	rtt_init_state_table()
 	state_table[0][RTT_K_CTRLD] = RTT_TERM + RTT_K_PREVPAGE;
 	state_table[0][RTT_K_CTRLF] = RTT_TERM + RTT_K_NEXTPAGE;
 	state_table[0][RTT_K_CTRLH] = RTT_TERM + RTT_K_HELP;
-	state_table[0][18] = RTT_TERM + RTT_K_PF4;
+	state_table[0][RTT_K_CTRLA] = RTT_TERM + RTT_K_PF1;
+	state_table[0][RTT_K_CTRLT] = RTT_TERM + RTT_K_PF2;
+	state_table[0][RTT_K_CTRLE] = RTT_TERM + RTT_K_PF3;
+	state_table[0][RTT_K_CTRLR] = RTT_TERM + RTT_K_PF4;
 	state_table[0][RTT_K_ESCAPE] = 1;
 	state_table[0][155] = 2;
 	state_table[0][143] = 3;

@@ -73,7 +73,7 @@ extern	int			rtt_noredraw;
 #ifdef RTT_MENU_MODULE
 /* Datasättning endast i modulen rs_rtt_menu */
 
-char				rtt_version[10] = "V3.2-0";
+char				rtt_version[10] = "V4.0.0";
 menu_ctx			rtt_collectionmenuctx = 0;
 rtt_t_menu_upd			*rtt_collectionmenulist = 0;
 menu_ctx			rtt_alarm_ctx = 0;

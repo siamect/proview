@@ -17,9 +17,9 @@ a number of functions that is specific for each item.\n\
 The following keys are defined.\n\n\
 ARROWS		Navigate in the menu and select an item.\n\
 RETURN		Execute a function or display a child menu if there is one.\n\
-PF1		Execute some function if specified.\n\
-PF2		Execute some function if specified.\n\
-PF3		Set the value of the current item.\n\
+PF1 or CTRL/A  	Execute some function if specified.\n\
+PF2 or CTRL/T  	Execute some function if specified.\n\
+PF3 or CTRL/E  	Set the value of the current item.\n\
 PF4 or CTRL/R	Go back to previous menu.\n\
 NEXT SIDE or CTRL/F	Go to next side of the menu.\n\
 PREV SIDE or CTRL/D	Go to previous side of the menu.\n\
@@ -38,9 +38,9 @@ a number of functions, show children or attributes, set the value of\n\
 an attribute. The following keys are defined.\n\n\
 ARROWS		Navigate in the menu and select an object.\n\
 RETURN		Display the children in the object hierarchy of the object.\n\
-PF1		Show the attributes of the object.\n\
-PF2		Debug the children of the object.\n\
-PF3		Set the value of a parameter.\n\
+PF1 or CTRL/A  	Show the attributes of the object.\n\
+PF2 or CTRL/T  	Debug the children of the object.\n\
+PF3 or CTRL/E  	Set the value of a parameter.\n\
 PF4 or CTRL/R	Go back to previous menu.\n\
 NEXT SIDE or CTRL/F	Go to next side of the menu.\n\
 PREV SIDE or CTRL/D	Go to previous side of the menu.\n\

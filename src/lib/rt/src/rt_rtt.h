@@ -151,14 +151,18 @@
 #endif
 #define	RTT_K_DELETE		127
 #define	RTT_K_BACKSPACE		8
+#define	RTT_K_CTRLA		1
 #define	RTT_K_CTRLB		2
 #define	RTT_K_CTRLC		3
 #define	RTT_K_CTRLD		4
+#define	RTT_K_CTRLE		5
 #define	RTT_K_CTRLF		6
 #define	RTT_K_CTRLH		8
 #define	RTT_K_CTRLK		11
 #define	RTT_K_CTRLL		12
 #define	RTT_K_CTRLN		14
+#define	RTT_K_CTRLR		18
+#define	RTT_K_CTRLT		20
 #define	RTT_K_CTRLV		22
 #define	RTT_K_CTRLW		23
 #define	RTT_K_CTRLZ		26
