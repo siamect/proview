@@ -1,0 +1,73 @@
+!  pwrs_c_menuref.wb_load -- Defines the class MenuRef.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+SObject pwrs:Class
+!/**
+!  @Group ClassDefinition
+!  Definition of a menu item that displays the menu of another object as
+!  a cascade menu.
+!*/
+!
+  Object $MenuRef $ClassDef pwr_eCix_MenuRef
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_SysBody
+      Attr Flags |= pwr_mClassDef_System
+    EndBody
+    Object SysBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "MenuRef"
+      EndBody
+      !/**
+      ! Button text
+      !*/
+      Object ButtonName $Attribute 1
+        Body SysBody
+	  Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      !/**
+      ! The attribute with this name in the pointed object
+      ! holds the name of the referenced object, which menu
+      ! is displayed as a cascade menu
+      !*/
+      Object RefAttribute $Attribute 2
+        Body SysBody
+	  Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object FilterName $Attribute 3
+        Body SysBody
+	  Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      Object FilterArguments $Attribute 4
+        Body SysBody
+	  Attr TypeRef = "pwrs:Type-$String40"
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 5
+        EndBody
+      EndObject
+      Object Filter $Attribute 5
+        Body SysBody
+	  Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object Template $MenuRef
+      Body SysBody
+      EndBody
+    EndObject
+  EndObject
+EndSObject
+
+
+
+
+
+
+
+
