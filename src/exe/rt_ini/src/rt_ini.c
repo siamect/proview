@@ -13,6 +13,7 @@
 #endif
 #include "co_ver.h"
 #include "co_time.h"
+#include "co_dcli.h"
 #include "ini.h"
 #include "ini_rc.h"
 #include "rt_ini_alias.h"
@@ -143,6 +144,7 @@ start (
       time(&t);
       tp = localtime(&t);
       strftime(fname, sizeof(fname), cp->np->ErrLogFile, tp );
+      dcli_translate_filename( fname, fname);
       errl_SetFile(fname);
       errh_LogInfo(&cp->log, "Setting log file to: %s", cp->np->ErrLogFile);
     }
