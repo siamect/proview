@@ -1,0 +1,97 @@
+pwre()
+{
+	if [ "$HOSTTYPE" = "alpha" ]; then
+		pwre_silent="-q"
+	else
+		pwre_silent="-s"
+	fi 
+
+	local flags="$-"
+
+	# Turn off filename globber
+	set -f
+
+	source $pwre_bin/pwre.source $@
+
+	if echo "$flags" | grep $pwre_silent -v f; then
+		set +f
+	fi
+}
+
+set_env()
+{
+	export pwre_env="$env"
+	export pwre_sroot="$1"
+	export pwre_vmsinc="$2"
+	export pwre_broot="$3"
+	export pwre_btype="$4"
+	export pwre_os="os_$5"
+	export pwre_hw="hw_$6"
+	export pwre_target="$pwre_os/$pwre_hw"
+
+	export pwre_bin="$pwre_sroot/tools/pwre/src/$pwre_os"
+        export pwre_dir_symbols="$pwre_bin/dir_symbols.mk"
+
+	export pwr_exe="$pwre_broot/$pwre_os/$pwre_hw/exp/exe"
+	export pwr_inc="$pwre_broot/$pwre_os/$pwre_hw/exp/inc"
+	export pwr_lib="$pwre_broot/$pwre_os/$pwre_hw/exp/lib"
+	export pwr_lis="$pwre_broot/$pwre_os/$pwre_hw/exp/lis"
+	export pwr_load="$pwre_broot/$pwre_os/$pwre_hw/exp/load"
+	export pwr_obj="$pwre_broot/$pwre_os/$pwre_hw/exp/obj"
+	export pwr_doc="$pwre_broot/$pwre_os/$pwre_hw/exp/doc"
+
+	export co_lib="$pwre_sroot/lib/co/src"
+	export op_lib="$pwre_sroot/lib/op/src"
+	export rt_lib="$pwre_sroot/lib/rt/src"
+	export wb_lib="$pwre_sroot/lib/wb/src"
+
+	export exe="$pwre_sroot/exe"
+	
+	if [ -e /usr/include/Imlib.h ]; then
+          export PWR_IMLIB=1
+	fi
+
+# PWR alias
+	alias pwr_root="cd $pwre_sroot" 
+
+	alias pwr_exe="cd $pwr_exe" 
+	alias pwr_inc="cd $pwr_inc" 
+	alias pwr_lib="cd $pwr_lib" 
+	alias pwr_lis="cd $pwr_lis" 
+	alias pwr_obj="cd $pwr_obj" 
+
+
+	alias co_lib="cd $pwre_sroot/lib/co/src"	
+	alias op_lib="cd $pwre_sroot/lib/op/src"	
+	alias rt_lib="cd $pwre_sroot/lib/rt/src"	
+	alias wb_lib="cd $pwre_sroot/lib/wb/src"	
+
+	alias db="cd $pwre_sroot/db"	
+	alias exe="cd $pwre_sroot/exe"	
+	alias exp="cd $pwre_sroot/exp"	
+	alias inc="cd $pwre_sroot/exp/inc/src"	
+	alias lib="cd $pwre_sroot/lib"	
+	alias hlp="cd $pwre_sroot/hlp"	
+	alias mmi="cd $pwre_sroot/mmi"	
+	alias msg="cd $pwre_sroot/msg"	
+	alias tools="cd $pwre_sroot/tools"	
+	alias wbl="cd $pwre_sroot/wbl"	
+
+	alias hw="cd $pwre_target"
+
+	alias bld="cd $pwre_broot/$pwre_target/bld"	
+	alias co_bld="cd $pwre_broot/$pwre_target/bld/lib/co"	
+	alias rt_bld="cd $pwre_broot/$pwre_target/bld/lib/rt"	
+	alias exe_bld="cd $pwre_broot/$pwre_target/bld/exe"	
+	alias tmp="cd $pwre_broot/$pwre_target/tmp"	
+
+}
+
+
+
+
+
+
+
+
+
