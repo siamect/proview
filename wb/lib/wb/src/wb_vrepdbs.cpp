@@ -66,9 +66,22 @@ wb_vrepdbs::object(pwr_tStatus *sts, pwr_tOid oid)
 }
 
 wb_orep *
-wb_vrepdbs::object(pwr_tStatus *sts, char *name)
+wb_vrepdbs::object(pwr_tStatus *sts, wb_name name)
 {
-    return 0;
+    *sts = LDH__SUCCESS;
+
+    dbs_sObject *op = dbs_VolumeObject(sts, dbsenv());
+    
+    for (int i = 0; op && name.hasSegment(i); i++) {
+        op = dbs_Child(sts, dbsenv(), op, name.normSegment(i));
+    }
+    
+    if (op == 0) {
+        *sts = LDH__NOSUCHOBJ;
+        return 0;
+    }    
+    
+    return new (this) wb_orepdbs(op);
 }
 
 wb_orep *
@@ -257,11 +270,11 @@ wb_vrepdbs::first(pwr_tStatus *sts, wb_orep *o)
 
 
 wb_orep *
-wb_vrepdbs::child(pwr_tStatus *sts, wb_orep *o, char *name)
+wb_vrepdbs::child(pwr_tStatus *sts, wb_orep *o, wb_name name)
 {
     *sts = LDH__SUCCESS;
 
-    dbs_sObject *op = dbs_Child(sts, dbsenv(), ((wb_orepdbs *)o)->o(), name);
+    dbs_sObject *op = dbs_Child(sts, dbsenv(), ((wb_orepdbs *)o)->o(), name.normObject());
     if (op == 0)
         return 0;
 

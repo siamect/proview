@@ -358,10 +358,11 @@ dbs_sEnv *
 dbs_Map(pwr_tStatus *sts, dbs_sEnv *ep, const char *filename)
 {
     struct stat sb;
-    int ret, i;
+    int ret;
     int fd;
-    //char *buf;
-    //int c;
+
+#if DBS_DEBUG
+    int i;
     dbs_sFile *fp;
     dbs_sSect *sp;
     dbs_sVolume *vp;
@@ -370,17 +371,18 @@ dbs_Map(pwr_tStatus *sts, dbs_sEnv *ep, const char *filename)
     dbs_sOid *oidp, *eoidp;
     dbs_uRefBits nf, nl, cf, cl, of, ol;
     dbs_sClass *cp, *ecp;
+#endif    
     
-    
+    *sts = DBS__SUCCESS;
+
     if ((ret = stat(filename, &sb)) != 0) {
+        *sts = errno_GetStatus();
         perror("stat");
         return NULL;
     }
 
-    *sts = DBS__SUCCESS;
-    memset(ep, 0, sizeof(*ep));
-    *sts = errno_GetStatus();
 
+#if DBS_DEBUG
     printf("st_dev....: %d\t\t%s\n",   (int)sb.st_dev,     "device");
     printf("st_ino....: %d\t%s\n",   sb.st_ino,     "inode");
     printf("st_mode...: %d\t%s\n",   sb.st_mode,    "protection");
@@ -395,21 +397,36 @@ dbs_Map(pwr_tStatus *sts, dbs_sEnv *ep, const char *filename)
     printf("st_mtime..: %d\t%s\n",   sb.st_mtime,   "time of last modification");
     printf("st_ctime..: %d\t%s\n",   sb.st_ctime,   "time of last change");
     printf("st_mode...: %d\t%s\n",   sb.st_mode,    "mode");
-    
+#endif
 
     fd = open(filename, O_RDWR);
+
+#if DBS_DEBUG
     printf("open fd: %d\n", fd);
+#endif
     
     errno = 0;
-    ep->base = mmap(NULL, sb.st_size, PROT_READ, MAP_SHARED, fd, 0);
-    perror("mmap");
-    printf("mmap buf: %d\n", ret);
-    
-    ret = close(fd);
-    printf("close ret: %d\n", ret);
+    memset(ep, 0, sizeof(*ep));
 
-    ep->flags.b.isMapped = 1;
+    ep->base = mmap(NULL, sb.st_size, PROT_READ, MAP_SHARED, fd, 0);
+    if (ep->base == NULL) {
+        *sts = errno_GetStatus();
+        perror("mmap");
+        ret = close(fd);
+        return NULL;
+    }
+    ret = close(fd);
     
+    ep->flags.b.isMapped = 1;
+    ep->sect     = (dbs_sSect*)(ep->base + dbs_dAlign(sizeof(dbs_sFile)));
+    ep->vp       = (dbs_sVolume*)(ep->base + ep->sect[dbs_eSect_volume].offset);
+    ep->vrp      = (dbs_sVolRef*)(ep->base + ep->sect[dbs_eSect_volref].offset);
+    ep->name_bt  = (dbs_sBintab*)(ep->base + ep->sect[dbs_eSect_name].offset);
+    ep->oid_bt   = (dbs_sBintab*)(ep->base + ep->sect[dbs_eSect_oid].offset);
+    ep->class_bt = (dbs_sBintab*)(ep->base + ep->sect[dbs_eSect_class].offset);
+    
+
+#if DBS_DEBUG
     fp = (dbs_sFile*)ep->base;
 
     printf("format.......: %d\n", fp->format.m);
@@ -445,13 +462,6 @@ dbs_Map(pwr_tStatus *sts, dbs_sEnv *ep, const char *filename)
     printf("name_bt....: %d.%d -> %d.%d %d\n", nf.b.sect, nf.b.offs, nl.b.sect, nl.b.offs, vp->name_bt.rsize);
     printf("class_bt...: %d.%d -> %d.%d %d\n", cf.b.sect, cf.b.offs, cl.b.sect, cl.b.offs, vp->class_bt.rsize);
     printf("oid_bt.....: %d.%d -> %d.%d %d\n", of.b.sect, of.b.offs, ol.b.sect, ol.b.offs, vp->oid_bt.rsize);
-
-    ep->sect     = (dbs_sSect*)(ep->base + dbs_dAlign(sizeof(dbs_sFile)));
-    ep->vp       = (dbs_sVolume*)(ep->base + ep->sect[dbs_eSect_volume].offset);
-    ep->vrp      = (dbs_sVolRef*)(ep->base + ep->sect[dbs_eSect_volref].offset);
-    ep->name_bt  = (dbs_sBintab*)(ep->base + ep->sect[dbs_eSect_name].offset);
-    ep->oid_bt   = (dbs_sBintab*)(ep->base + ep->sect[dbs_eSect_oid].offset);
-    ep->class_bt = (dbs_sBintab*)(ep->base + ep->sect[dbs_eSect_class].offset);
 
     sp = (dbs_sSect*)((char *)fp + dbs_dAlign(sizeof(dbs_sFile)));
 
@@ -542,7 +552,7 @@ dbs_Map(pwr_tStatus *sts, dbs_sEnv *ep, const char *filename)
             op = dbs_Next(&sts, ep, op);
         }
     }
-
+#endif
     return ep;
 }
 
@@ -832,5 +842,11 @@ dbs_GetVolumeName(pwr_tStatus *sts, dbs_sEnv *ep, char *name)
 {
     dbs_sVolume *vp = (dbs_sVolume *)(ep->base + ep->sect[dbs_eSect_volume].offset);
     strcpy(name, vp->name);
+}
+
+dbs_sObject *
+dbs_VolumeObject(pwr_tStatus *sts, const dbs_sEnv *ep)
+{
+    return (dbs_sObject *)(ep->base + ep->sect[dbs_eSect_object].offset);
 }
 

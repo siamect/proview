@@ -1007,7 +1007,7 @@ wb_orep *wb_vrepwbl::first(pwr_tStatus *sts, wb_orep *o)
     return orep;
 }
 
-wb_orep *wb_vrepwbl::child(pwr_tStatus *sts, wb_orep *o, char *name)
+wb_orep *wb_vrepwbl::child(pwr_tStatus *sts, wb_orep *o, wb_name name)
 {
     return 0;
 }

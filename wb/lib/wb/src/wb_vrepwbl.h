@@ -118,7 +118,7 @@ public:
 
     wb_orep *object(pwr_tStatus *sts);
     wb_orep *object(pwr_tStatus *sts, pwr_tOid oid);
-    wb_orep *object(pwr_tStatus *sts, char *name);
+    wb_orep *object(pwr_tStatus *sts, wb_name name);
     wb_orep *object(pwr_tStatus *sts, wb_orep *parent, wb_name name) 
       {return 0;};
 
@@ -161,7 +161,7 @@ public:
 
     wb_orep *first(pwr_tStatus *sts, wb_orep *o);
 
-    wb_orep *child(pwr_tStatus *sts, wb_orep *o, char *name);
+    wb_orep *child(pwr_tStatus *sts, wb_orep *o, wb_name name);
 
     wb_orep *last(pwr_tStatus *sts, wb_orep *o);
 

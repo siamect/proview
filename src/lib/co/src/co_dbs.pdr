@@ -575,6 +575,7 @@ struct dbs_sName {
 %dbs_sObject    *dbs_Child(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op, char *name);
 %dbs_sObject    *dbs_Ancestor(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op);
 %void            dbs_GetVolumeName(pwr_tStatus *sts, dbs_sEnv *ep, char *name);
+%dbs_sObject    *dbs_VolumeObject(pwr_tStatus *sts, const dbs_sEnv *ep);
 %
 %
 %#ifdef __cplusplus
