@@ -496,23 +496,14 @@ typedef struct {
   gdb_sCcVolKey		key;       /**< Hash table key */
   pwr_tTime             time;      /**< Time for the class volume */ 
   pwr_tBoolean          equalClasses; /**< True if the cached volume has the same versions as the local */
-  /*  gdb_sTouchQ           ccache; */    /**< The cache of classes */
 } gdb_sCclassVolume;
 
 
 /** Cached Attribute
  */
-#if 0
-typedef struct {
-
-} ndc_sAttribute;
-#endif
-
-
 
 typedef struct {
   net_sCattribute g;
-  /*  ndc_sAttribute conv; */
 } gdb_sCattribute;
 
 
@@ -787,7 +778,7 @@ typedef struct {
   pool_sQlink		sc_htl;	        /**< Sub Class hash table entry. */
   pool_sQlink		sc_ll;	        /**< List of sub class objects in one volume. */
   pool_tRef             vr;             /**< Volume reference */
-  pool_tRef             or;             /**< The "real" object */
+  pool_tRef             o_r;            /**< The "real" object. or is a reserved word in C++ */
   pwr_tObjid            poid;
   pool_tRef             por;            /**< Sub Class or Object Parent*/
   pool_tRef             cr;             /**< Reference to gdb_sClass */
