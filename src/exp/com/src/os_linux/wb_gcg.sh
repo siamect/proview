@@ -161,7 +161,7 @@ CompileRtNode()
     $Libs \
     $ld_opt \
     $pwr_obj/pwr_msg_rt.o $pwr_obj/pwr_msg_co.o \
-    -lpwr_rt -lpwr_co -lrpcsvc -lpwr_msg_dummy -lpthread -lm -lposix1b -lrt
+    -lpwr_rt -lpwr_co -lrpcsvc -lpwr_msg_dummy -lpthread -lm -lrt
   then
     echo "-- Plc program linked for $OsStr $say_linkdebug node $FileName" 
     gcg_status=$gcg__success
