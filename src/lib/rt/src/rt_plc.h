@@ -86,6 +86,12 @@ typedef struct {
   IO_AREA(pwr_sClass_IvArea) av_i;
   IO_AREA(pwr_sClass_IvArea) dv_i;
   IO_AREA(pwr_sClass_IvArea) iv_i;
+  IO_AREA(pwr_sClass_IvArea) ai_i;
+  IO_AREA(pwr_sClass_IvArea) di_i;
+  IO_AREA(pwr_sClass_DiArea) ii_i;
+  IO_AREA(pwr_sClass_IvArea) ao_i;
+  IO_AREA(pwr_sClass_DoArea) do_i;
+  IO_AREA(pwr_sClass_DoArea) io_i;
 } plc_sArea;
 
 #ifndef rt_io_base_h
