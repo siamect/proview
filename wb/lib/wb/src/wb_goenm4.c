@@ -42,7 +42,8 @@ typedef enum {
 	goen_eGraphIndex_GetSgeneric	= 36,
 	goen_eGraphIndex_StoSgeneric	= 37,
 	goen_eGraphIndex_GetIgeneric	= 38,
-	goen_eGraphIndex_StoIgeneric	= 39
+	goen_eGraphIndex_StoIgeneric	= 39,
+	goen_eGraphIndex_FirstScan	= 40
 	} goen_eGraphIndex;
 
 static	float	f_pinlength  = GOEN_F_PINLENGTH;
@@ -440,6 +441,20 @@ int goen_create_nodetype_m4(
 		flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE);
       else
         flow_AddText( nc, "StoD", f_strlength, 0.5 * f_strheight,
+		flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE);
+      break;
+    }
+    case goen_eGraphIndex_FirstScan:
+    {
+      f_width = GOEN_F_GRID * 4;
+      f_height = GOEN_F_GRID; 
+
+      flow_AddRect( nc, 0, -f_height/2, f_width, f_height, 
+		flow_eDrawType_Line, 2, flow_mDisplayLevel_1);
+      flow_AddLine( nc, f_width, 0, f_width + f_pinlength, 0, flow_eDrawType_Line, 2);
+      flow_AddConPoint( nc, f_width + f_pinlength, 0,
+		0, flow_eDirection_Right);
+      flow_AddText( nc, "FirstScan", f_strlength, 0.5 * f_strheight,
 		flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE);
       break;
     }
