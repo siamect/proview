@@ -1424,7 +1424,7 @@ int Graph::trend_init( graph_sObjectTrend *td, pwr_tObjid objid)
       attrref.Objid = objid;
       sts = gdh_GetObjectInfoAttrref( &attrref, (void *)&max_limit, sizeof(max_limit));
       if ( EVEN(sts)) return sts;
-      presminlimit_found = 1;
+      presmaxlimit_found = 1;
     }
     sts = gdh_ClassAttrToAttrref( classid, ".PresMinLimit", &attrref);
     if ( ODD(sts))
@@ -1432,7 +1432,7 @@ int Graph::trend_init( graph_sObjectTrend *td, pwr_tObjid objid)
       attrref.Objid = objid;
       sts = gdh_GetObjectInfoAttrref( &attrref, (void *)&min_limit, sizeof(min_limit));
       if ( EVEN(sts)) return sts;
-      presmaxlimit_found = 1;
+      presminlimit_found = 1;
     }
   }
   td->pres_max_limit_old = max_limit;
