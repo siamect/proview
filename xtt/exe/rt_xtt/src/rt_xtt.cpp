@@ -48,6 +48,7 @@ extern "C" {
 #include "xtt_xnav.h"
 #include "xtt_item.h"
 #include "co_lng.h"
+#include "co_xhelp.h"
 #include "rt_xnav_msg.h"
 
 //
@@ -717,14 +718,17 @@ static void xtt_activate_zoom_reset( Widget w, Xtt *xtt, XmAnyCallbackStruct *da
 
 static void xtt_activate_help( Widget w, Xtt *xtt, XmAnyCallbackStruct *data)
 {
-  xtt->xnav->open_help();
-  xtt->xnav->xhelp->help("overview", "", navh_eHelpFile_Base, NULL);
+  CoXHelp::dhelp("overview", "", navh_eHelpFile_Base, NULL, 0);
 }
 
 static void xtt_activate_help_project( Widget w, Xtt *xtt, XmAnyCallbackStruct *data)
 {
-  xtt->xnav->open_help();
-  xtt->xnav->xhelp->help("index", "", navh_eHelpFile_Project, NULL);
+  CoXHelp::dhelp("index", "", navh_eHelpFile_Project, NULL, 0);
+}
+
+static void xtt_activate_help_proview( Widget w, Xtt *xtt, XmAnyCallbackStruct *data)
+{
+  CoXHelp::dhelp( "version", "", navh_eHelpFile_Other, "$pwr_exe/xtt_version_help.dat", 0);
 }
 
 static void xtt_create_msg_label( Widget w, Xtt *xtt, XmAnyCallbackStruct *data)
@@ -878,6 +882,7 @@ Xtt::Xtt( int argc, char *argv[], int *return_sts) :
 	{"xtt_activate_zoom_reset",(caddr_t)xtt_activate_zoom_reset },
 	{"xtt_activate_help",(caddr_t)xtt_activate_help },
 	{"xtt_activate_help_project",(caddr_t)xtt_activate_help_project },
+	{"xtt_activate_help_proview",(caddr_t)xtt_activate_help_proview },
 	{"xtt_create_msg_label",(caddr_t)xtt_create_msg_label },
 	{"xtt_create_cmd_prompt",(caddr_t)xtt_create_cmd_prompt },
 	{"xtt_create_cmd_input",(caddr_t)xtt_create_cmd_input },
@@ -1038,6 +1043,10 @@ Xtt::Xtt( int argc, char *argv[], int *return_sts) :
   xnav->change_value_cb = &xtt_change_value;
   xnav->set_dimension_cb = &xtt_set_dimension;
 
+  // Create help window
+  CoXHelp *xhelp = new CoXHelp( toplevel, 0, xhelp_eUtility_Xtt, &sts);
+  CoXHelp::set_default( xhelp);
+
   XtRealizeWidget( toplevel);
 
 //  XmProcessTraversal( xnav->brow_widget, XmTRAVERSE_CURRENT);
@@ -1059,4 +1068,11 @@ Xtt::Xtt( int argc, char *argv[], int *return_sts) :
 
   xtt_mainloop( app_ctx, this);  
 }
+
+
+
+
+
+
+
 

@@ -55,6 +55,7 @@ extern "C" {
 #include "xtt_xnav_crr.h"
 #include "co_dcli_msg.h"
 #include "rt_xnav_msg.h"
+#include "co_xhelp.h"
 
 #include "glow_curvectx.h"
 #include "glow_curvewidget.h"
@@ -215,7 +216,7 @@ dcli_tCmdTable	xnav_command_table[] = {
 			{ "dcli_arg1", "dcli_arg2", "dcli_arg3", "dcli_arg4",
 			"/HELPFILE", "/POPNAVIGATOR", "/BOOKMARK", 
 			"/INDEX", "/BASE", "/RETURNCOMMAND", "/WIDTH",
-			"/HEIGHT", ""}
+			"/HEIGHT", "/VERSION", ""}
 		},
 		{
 			"LOGOUT",
@@ -304,28 +305,31 @@ static int	xnav_help_func(		void		*client_data,
   {
     if ( ODD( dcli_get_qualifier( "/HELPFILE", file_str)))
     {
-      sts = xnav->xhelp->help_index( navh_eHelpFile_Other, file_str);
+      sts = CoXHelp::dhelp_index( navh_eHelpFile_Other, file_str);
       if ( EVEN(sts))
         xnav->message('E', "Unable to find file");
     }
     else
     {
-      if ( ODD( dcli_get_qualifier( "/BASE", file_str))) {
-        xnav->open_help();
-        sts = xnav->xhelp->help_index( navh_eHelpFile_Base, NULL);
-      }
-      else {
-        xnav->open_help();
-        sts = xnav->xhelp->help_index( navh_eHelpFile_Project, NULL);
-      }
+      if ( ODD( dcli_get_qualifier( "/BASE", file_str)))
+        sts = CoXHelp::dhelp_index( navh_eHelpFile_Base, NULL);
+      else
+        sts = CoXHelp::dhelp_index( navh_eHelpFile_Project, NULL);
     }
     return 1;
   }
 
+  if ( ODD( dcli_get_qualifier( "/VERSION", 0))) {
+    sts = CoXHelp::dhelp( "version", "", navh_eHelpFile_Other, "$pwr_exe/xtt_version_help.dat", 0);
+    if ( EVEN(sts))
+      xnav->message('E', "No help on this subject");
+    return sts;
+  }
+
+  int strict = 0;
   if ( EVEN( dcli_get_qualifier( "dcli_arg1", arg_str)))
   {
-    xnav->open_help();
-    sts = xnav->xhelp->help( "help command", "", navh_eHelpFile_Base, NULL);
+    sts = CoXHelp::dhelp( "help command", "", navh_eHelpFile_Base, NULL, strict);
     return 1;
   }
   if ( EVEN( dcli_get_qualifier( "/BOOKMARK", bookmark_str)))
@@ -386,9 +390,15 @@ static int	xnav_help_func(		void		*client_data,
 
   if ( ODD( dcli_get_qualifier( "/HELPFILE", file_str)))
   {
-    xnav->open_help();
-    xnav->xhelp->set_dimension( width, height);
-    sts = xnav->xhelp->help( key, bookmark_str, navh_eHelpFile_Other, file_str);
+    sts = CoXHelp::dhelp( key, bookmark_str, navh_eHelpFile_Other, file_str, strict);
+    if ( EVEN(sts))
+      xnav->message('E', "No help on this subject");
+    else if ( strcmp( return_str, "") != 0)
+      xnav->set_push_command( return_str);
+  }
+  else if ( ODD( dcli_get_qualifier( "/BASE", 0)))
+  {
+    sts = CoXHelp::dhelp( key, bookmark_str, navh_eHelpFile_Base, 0, strict);
     if ( EVEN(sts))
       xnav->message('E', "No help on this subject");
     else if ( strcmp( return_str, "") != 0)
@@ -396,12 +406,10 @@ static int	xnav_help_func(		void		*client_data,
   }
   else
   {
-    xnav->open_help();
-    xnav->xhelp->set_dimension( width, height);
-    sts = xnav->xhelp->help( key, bookmark_str, navh_eHelpFile_Base, NULL);
+    sts = CoXHelp::dhelp( key, bookmark_str, navh_eHelpFile_Base, 0, strict);
     if ( EVEN(sts))
     {
-      sts = xnav->xhelp->help( key, bookmark_str, navh_eHelpFile_Project, NULL);
+      sts = CoXHelp::dhelp( key, bookmark_str, navh_eHelpFile_Project, 0, strict);
       if ( EVEN(sts))
         xnav->message('E', "No help on this subject");
     }
@@ -1856,6 +1864,16 @@ static int	xnav_open_func(	void		*client_data,
     else
       instance_p = 0;
 
+    if (  ODD( dcli_get_qualifier( "/CLASSGRAPH", 0))) {
+      classgraph = 1;
+      if ( !instance_p) {
+	xnav->message('E', "Instance is missing");
+	return XNAV__HOLDCOMMAND;
+      }
+    }
+    else
+      classgraph = 0;
+    
     if ( ODD( dcli_get_qualifier( "/OBJECT", object_str)))
     {
       pwr_tObjid objid;
@@ -1953,10 +1971,16 @@ static int	xnav_open_func(	void		*client_data,
 	  sts = gdh_ObjidToName( cdh_ClassIdToObjid( cid), cname, sizeof(cname),
 			   cdh_mName_object);
 	  if ( EVEN(sts)) return sts;
-	  if ( cname[0] == '$')
-	    sprintf( file_str, "pwr_c_%s", &cname[1]);
+
+	  cdh_ToLower( cname, cname);
+	  if ( cdh_CidToVid(cid) < cdh_cUserClassVolMin) {
+	    if ( cname[0] == '$')
+	      sprintf( file_str, "pwr_c_%s", &cname[1]);
+	    else
+	      sprintf( file_str, "pwr_c_%s", cname);
+	  }
 	  else
-	    sprintf( file_str, "pwr_c_%s", cname);
+	    strcpy( file_str, cname);
 	}
 	else {
 	  xnav->message('E',"Enter file");
@@ -2713,11 +2737,9 @@ static void xnav_ge_help_cb( ge_tCtx gectx, char *key)
   XNav *xnav = (XNav *)gectx->parent_ctx;
   int sts;
 
-  xnav->open_help();
-
-  sts = xnav->xhelp->help( key, "", navh_eHelpFile_Project, NULL);
+  sts = CoXHelp::dhelp( key, "", navh_eHelpFile_Project, NULL, 0);
   if ( EVEN(sts))
-    sts = xnav->xhelp->help( "graph window", "", navh_eHelpFile_Base, NULL);
+    sts = CoXHelp::dhelp( "graph window", "", navh_eHelpFile_Base, NULL, 0);
   if ( EVEN(sts))
     xnav->message( 'E', "Unable to find topic");
   else
@@ -5015,19 +5037,17 @@ static void xnav_ev_help_cb( void *ctx, char *key)
   pwr_tObjid objid;
   char objid_str[40];
 
-  xnav->open_help();
-
-  sts = xnav->xhelp->help( key, "", navh_eHelpFile_Project, NULL);
+  sts = CoXHelp::dhelp( key, "", navh_eHelpFile_Project, NULL, 0);
   if ( EVEN(sts)) {
     // Try to convert to objid and search for objid as topic
     sts = gdh_NameToObjid ( key, &objid);
     if ( ODD(sts)) {
       cdh_ObjidToString( objid_str, objid, 1);
-      sts = xnav->xhelp->help( objid_str, "", navh_eHelpFile_Project, NULL);
+      sts = CoXHelp::dhelp( objid_str, "", navh_eHelpFile_Project, NULL, 0);
     }
   }
   if ( EVEN(sts))
-    sts = xnav->xhelp->help( key, "", navh_eHelpFile_Base, NULL);
+    sts = CoXHelp::dhelp( key, "", navh_eHelpFile_Base, NULL, 0);
 
   if ( EVEN(sts))
     xnav->message( 'E', "Unable to find topic");
@@ -5216,9 +5236,7 @@ static void xnav_op_help_cb( void *ctx, char *key)
   XNav *xnav = (XNav *) ctx;
   int	sts;
 
-  xnav->open_help();
-
-  sts = xnav->xhelp->help( key, "", navh_eHelpFile_Project, NULL);
+  sts = CoXHelp::dhelp( key, "", navh_eHelpFile_Project, NULL, 0);
   if ( EVEN(sts))
     xnav->message( 'E', "Unable to find topic");
   else

@@ -46,6 +46,7 @@ extern "C" {
 }
 #include "co_lng.h"
 #include "co_error.h"
+#include "co_xhelp.h"
 #include "xtt_xnav.h"
 #include "xtt_item.h"
 #include "xtt_menu.h"
@@ -864,6 +865,7 @@ void XNav::start_trace( pwr_tObjid objid, char *object_str)
 
 }
 
+#if 0
 int XNav::open_help()
 {
   int sts;
@@ -878,6 +880,7 @@ int XNav::open_help()
   }
   return XNAV__SUCCESS;
 }
+#endif
 
 int XNav::open_object( pwr_tObjid objid)
 {
@@ -958,8 +961,7 @@ XNav::XNav(
 	set_dimension_cb(NULL), ccm_func_registred(0), verify(0),
 	menu_tree(NULL), ev(NULL), op(NULL), closing_down(0),
 	base_priv(pwr_mPrv_System), priv(pwr_mPrv_System), displayed(0),
-        current_logging_index(-1), search_last_found(0), search_compiled(0),
-	xhelp(0)
+        current_logging_index(-1), search_last_found(0), search_compiled(0)
 {
   strcpy( name, xn_name);
   strcpy( opplace_name, xn_opplace_name);
@@ -1543,19 +1545,17 @@ static void xnav_trace_help_cb(tra_tCtx tractx, char *key)
   pwr_tObjid objid;
   char objid_str[40];
 
-  xnav->open_help();
-
-  sts = xnav->xhelp->help( key, "", navh_eHelpFile_Project, NULL);
+  sts = CoXHelp::dhelp( key, "", navh_eHelpFile_Project, NULL, 0);
   if ( EVEN(sts)) {
     // Try to convert to objid and search for objid as topic
     sts = gdh_NameToObjid ( key, &objid);
     if ( ODD(sts)) {
       cdh_ObjidToString( objid_str, objid, 1);
-      sts = xnav->xhelp->help( objid_str, "", navh_eHelpFile_Project, NULL);
+      sts = CoXHelp::dhelp( objid_str, "", navh_eHelpFile_Project, NULL, 0);
     }
   }
   if ( EVEN(sts))
-    sts = xnav->xhelp->help( key, "", navh_eHelpFile_Base, NULL);
+    sts = CoXHelp::dhelp( key, "", navh_eHelpFile_Base, NULL, 0);
   if ( EVEN(sts))
     xnav->message( 'E', "Unable to find topic");
   else
@@ -2712,12 +2712,13 @@ int	XNavGbl::symbolfile_exec( void *xnav)
 {
   char cmd[80];
 
-  if ( strcmp( symbolfilename, "") != 0)
-  {
-    strcpy( cmd, "@");
-    strcat( cmd, symbolfilename);
-    ((XNav *)xnav)->command( cmd);
-  }
+  if ( strcmp( symbolfilename, "") == 0)
+    strcpy( symbolfilename, "$HOME/xtt_setup");
+
+  strcpy( cmd, "@");
+  strcat( cmd, symbolfilename);
+  ((XNav *)xnav)->command( cmd);
+
   return XNAV__SUCCESS;
 }
 
@@ -2832,6 +2833,7 @@ int	XNavGbl::load_config( void *xnav)
 		sizeof( symbolfilename)); 
   if ( EVEN(sts))
     strcpy( symbolfilename, "");
+  dcli_trim( symbolfilename, symbolfilename);
 
   return XNAV__SUCCESS;
 }

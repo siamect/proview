@@ -80,10 +80,6 @@ extern "C" {
 #include "xtt_menu.h"
 #endif
 
-#ifndef xtt_xhelp_h
-#include "xtt_xhelp.h"
-#endif
-
 #define xnav_cVersion	"X3.0b"
 #define XNAV_BROW_MAX	25
 #define XNAV_LOGG_MAX   10
@@ -278,7 +274,6 @@ class XNav {
     int			search_compiled;
     xnav_eSearchType	search_type;
     int                 init_help;
-    XHelp               *xhelp;
 
     void start_trace( pwr_tObjid Objid, char *object_str);
     void start_trace_selected();
@@ -333,7 +328,6 @@ class XNav {
     void enable_events( XNavBrow *brow);
     int open_object( pwr_tObjid objid);
     int open_crossref( pwr_tObjid objid);
-    int open_help();
     void swap( int mode);
 
 
