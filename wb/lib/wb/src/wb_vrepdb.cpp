@@ -188,6 +188,10 @@ wb_orep* wb_vrepdb::object(pwr_tStatus *sts)
     printf("vrepdb: %s\n", e.what());
     return 0;
   }
+  catch (wb_error &e) {
+    *sts = LDH__NOSUCHOBJ;
+    return 0;
+  }
 }
 
 wb_orep* wb_vrepdb::object(pwr_tStatus *sts, pwr_tOid oid)
