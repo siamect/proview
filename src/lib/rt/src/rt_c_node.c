@@ -31,8 +31,8 @@ pwrs_Node_Exec (
   int i;
   pwr_tTime current_time;
   pwr_tDeltaTime diff;
-  int severity;
-  int system_severity;
+  errh_eSeverity severity;
+  errh_eSeverity system_severity;
   int new_idx = -1;
   static float timeout[40] = {
     0,0,0,0,3,5,5,0,60,5,
@@ -53,13 +53,9 @@ pwrs_Node_Exec (
   if ( !np)
     return;
 
-  if ( !np->SystemStatus)
-    system_severity = - 1;
-  else
-    system_severity = np->SystemStatus & 7;
+  system_severity = errh_Severity( np->SystemStatus);
   clock_gettime( CLOCK_REALTIME, &current_time);
   for ( i = 0; i < sizeof(np->ProcStatus)/sizeof(np->ProcStatus[0]); i++) {
-    severity = np->ProcStatus[i] & 7;
     if ( np->ProcStatus[i] != 0 && timeout[i] != 0.0) {
       time_Adiff( &diff, &current_time, &np->ProcTimeStamp[i]);
 
@@ -71,8 +67,8 @@ pwrs_Node_Exec (
       }
     }
 
-    severity = np->ProcStatus[i] & 7;
-    if ( !(np->ProcStatus[i] == 0 || ODD(np->ProcStatus[i]))) {
+    severity = errh_Severity( np->ProcStatus[i]);
+    if ( np->ProcStatus[i] != 0 && EVEN(np->ProcStatus[i])) {
       if ( severity >= system_severity) {
 	new_idx = i;
 	system_severity = severity;
@@ -85,3 +81,20 @@ pwrs_Node_Exec (
   else if ( EVEN(np->SystemStatus))
     np->SystemStatus = PWR__RUNNING;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
