@@ -1,9 +1,9 @@
-!  pwrb_c_cstoip.wb_load -- Defines the class CStoIp.
+!  pwrb_c_stoatoip.wb_load -- Defines the class StoAtoIp.
 !
 !  PROVIEW/R
 !  Copyright (C) 1996 by Comator Process AB.
 !
-!  Conditional Store Integer parameter.
+!  Store Integer parameter.
 !
 ! Range ldh_eDId_Base
 !
@@ -11,31 +11,22 @@
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
 !  @Group Plc,PlcIO
-!  @Summary Conditional storage of integer attribute
-!  Conditional Storage Integer parameter.
-!  @image orm_cstoip_fo.gif
-!  
-!  Conditional storage of an integer value (attribute,
-!  input, or output signal of the type pwr_tInt32) on a
-!  specified 32-,16-, or 8-bits integer parameter in a
-!  local object.
-!  Conditional is aimed at the con-input, which is
-!  supposed to be connected. The decimals of the input
-!  signal is truncated to the next lower integer.
+!  @Summary Store analog valut to integer attribute
+!  Store analog value to Integer parameter. Used in run time to write in
+!  integer parameters.
+!  @image orm_stoatoip_fo.gif
+!
+!  Stores the value of an analog quantity ( e.g. output signal of the 
+!  type pwr_tFloat32) on the specified 32-, 16-, or 8-bits integer 
+!  parameter in a local object. The value is rounded to closest integer
+!  value.
 !  
 !  The last name segment of the object and the name of the
 !  parameter will be shown in the right empty part of the
-!  CStoIp symbol.
-!  The conditional input signal can be inverted by means
-!  of the Attribute Editor but the graphic symbol cannot
-!  display it. So the user is recommended -- if needed ---
-!  to an explicit use of an Inv object.
-!  
-!  It is not allowed, by means of a function in C or PLC
-!  programs, to write in any of the inputs.
+!  StoIp symbol.
 !*/
 SObject pwrb:Class
-  Object CStoIp $ClassDef 341
+  Object StoAtoIp $ClassDef 226 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
       Attr Method = pwr_eMethod_RtConnectionsAndDevBodies
@@ -43,45 +34,29 @@ SObject pwrb:Class
     EndBody
     Object RtBody $ObjBodyDef 1 
       Body SysBody
-        Attr StructName = "CStoIp"
+        Attr StructName = "StoAtoIp"
       EndBody
       !/**
-      !  The input is connected to an integer signal or left
-      !  open. In the latter case the In is considered to be
-      !  stored.
+      !  The input is connected to an analog signal or left
+      !  open. In the latter case In is default 0.0 and not
+      !  adjustable in the run time system. The In attribute
+      !  specifies which value should be assigned to the
+      !  parameter.
       !*/
       Object In $Input 1 
         Body SysBody
           Attr PgmName = "In"
           Attr Flags |= PWR_MASK_RTVIRTUAL
           Attr Flags |= PWR_MASK_DEVBODYREF
-          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "VAL"
-          Attr ConPointNr = 0
-        EndBody
-      EndObject
-      !/**
-      !  Specifies whether a storage will be done or not. FALSE
-      !  means no storage and TRUE means storage of an integer
-      !  value.
-      !*/
-      Object Cond $Input 2 
-        Body SysBody
-          Attr PgmName = "Cond"
-          Attr Flags |= PWR_MASK_STATE
-          Attr Flags |= PWR_MASK_RTVIRTUAL
-          Attr Flags |= PWR_MASK_DEVBODYREF
-          Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Boolean"
-          Attr GraphName = "con"
-          Attr ConPointNr = 1
         EndBody
       EndObject
     EndObject
     Object DevBody $ObjBodyDef 2 
       !/**
-      !  Specifies the name of the object where to store the
-      !  value.
+      !  Used by the PLC Editor. Specifies the complete name of
+      !  the current object.
       !*/
       Object Object $Intern 1 
         Body SysBody
@@ -93,8 +68,11 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Specifies, in an object specified by Object, the name
-      !  of the attribute where to store the value.
+      !  Used by the PLC Editor. Specifies the name of the
+      !  parameter. The editor is case-sensitive on this
+      !  attribute; i.e. if the attribute is named ActualValue
+      !  it has to be written ActualValue and not ACTUALVALUE,
+      !  for example.
       !*/
       Object Parameter $Intern 2 
         Body SysBody
@@ -107,7 +85,7 @@ SObject pwrb:Class
       EndObject
       !/**
       !  Specifies how many segments of the actual object name
-      !  that is to be displayed in the symbol of the CStoIp
+      !  that is to be displayed in the symbol of the StoAtoIp
       !  object. The segments are counted from behind.
       !  
       !  0 and 1 both result in displaying the last segment of
@@ -127,33 +105,30 @@ SObject pwrb:Class
     EndObject
     Object GraphPlcNode $GraphPlcNode
       Body SysBody
-        Attr object_type = 270
-        Attr parameters[0] = 2
+        Attr object_type = 259
+        Attr parameters[0] = 1
         Attr parameters[1] = 0
         Attr parameters[2] = 0
         Attr parameters[3] = 0
         Attr subwindows = 0
         Attr graphmethod = 15
         Attr graphindex = 0
-        Attr default_mask[0] = 3
+        Attr default_mask[0] = 1
         Attr default_mask[1] = 0
         Attr segname_annotation = 0
         Attr devbody_annotation = 1
         Attr compmethod = 12
         Attr compindex = 0
         Attr tracemethod = 0
-        Attr traceindex = 1
+        Attr traceindex = 0
         Attr connectmethod = 7
         Attr executeordermethod = 2
-        Attr objname = "CStoIp"
-        Attr graphname = "CStoIp"
-        Attr debugpar = "Cond"
+        Attr objname = "StoAtoIp"
+        Attr graphname = "StoAtoIp"
+        Attr debugpar = ""
       EndBody
     EndObject
-    Object Template CStoIp
-      Body RtBody
-        Attr Cond = 1
-      EndBody
+    Object Template StoAtoIp
       Body DevBody
         Attr ObjectSegments = 2
       EndBody

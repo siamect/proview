@@ -11,8 +11,8 @@
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
 !  @Group Plc,PlcIO
-!  @Summary Get integer attribute
-!  Get Integer parameter.
+!  @Summary Get integer attribute and convert to analog value
+!  Get Integer parameter and convert to analog value.
 !  @image orm_getip_fo.gif
 !
 !  Fetches the value of a 32-, 16- or 8-bits integer
@@ -27,22 +27,22 @@
 ! @b Example
 !  In the example below the value of the integer parameter, AccMod is stored: 
 !
-!  - unconditionally by StoIp 
-!  - conditionally by CStoIp 
+!  - unconditionally by StoAtoIp 
+!  - conditionally by CStoAtoIp 
 !
 !  The value is also unconditionally stored as a pwr_tFloat32 on an attribute 
-!  pwr_float32 in the object named TIC2M
+!  pwr_tFloat32 in the object named TIC2M
 !  @image orm_en1-93.gif
 !*/
 SObject pwrb:Class
-  Object GetIp $ClassDef 128 
+  Object GetIp $ClassDef 340
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
       Attr Method = pwr_eMethod_RtAndDevBodies
     EndBody
     Object RtBody $ObjBodyDef 1 
       Body SysBody
-        Attr StructName = "getip"
+        Attr StructName = "GetIp"
       EndBody
       !/**
       !  Used by the PLC Editor.
@@ -52,7 +52,7 @@ SObject pwrb:Class
           Attr PgmName = "ActVal"
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "VAL"
         EndBody
       EndObject
@@ -110,7 +110,7 @@ SObject pwrb:Class
     EndObject
     Object GraphPlcNode $GraphPlcNode
       Body SysBody
-        Attr object_type = 252
+        Attr object_type = 269
         Attr parameters[0] = 0
         Attr parameters[1] = 0
         Attr parameters[2] = 1
@@ -140,3 +140,4 @@ SObject pwrb:Class
     EndObject
   EndObject
 EndSObject
+

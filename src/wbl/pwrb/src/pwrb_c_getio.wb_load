@@ -1,80 +1,62 @@
-!  pwrb_c_cstoai.wb_load -- Defines the class CStoAi.
+!  pwrb_c_getio.wb_load -- Defines the class GetIo.
 !
 !  PROVIEW/R
 !  Copyright (C) 1996 by Comator Process AB.
 !
-!  <Description>.
-!
-! Range ldh_eDId_Base
+!  Get status of Integer Output signal.
 !
 !/**
 !  @Version 1.0
-!  @Code rt_plc_macro_io.h
-!  @Summary Conditional storage of Ai signal
-!  Conditional Storage Analog input.
-!  @image orm_cstoai_fo.gif  
+!  @Group Plc,PlcIO
+!  @Summary Get Integer output signal
+!  Get Integer output.
+!  @image orm_getio_fo.gif
 !  
-!  Conditional storage of an analog value on a specified
-!  local Ai-signal (= Ai object).
+!  Fetches the engineering value for a specified Io-signal
+!  from I/O-copied area. See PROVIEW/R Designer's Guide.
+!  The complete name of the Io-signal has to be supplied;
+!  its last segment is shown in the right empty part of
+!  the symbol.
 !  
-!  Conditional is aimed at the con-input, which is
-!  supposed to be connected.
-!  Note! This object is used for simulation purposes.
-!  IOSimulFlag will be set TRUE and IOReadWriteFlag FALSE
-!  in the $Node object, i.e. any physical I/O-hardware may
-!  not be used on the node in connection to this object.
+!  The GetIo object
+!  - is a pure address reference to the I/O-copied area
+!    for Io-signals,
+!  - contains no relevant information (=data) in rtdb,
+!  - is without executable code.
 !*/
 SObject pwrb:Class
-  Object CStoAi $ClassDef 74 
+  Object GetIo $ClassDef 331
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
-      Attr Method = pwr_eMethod_RtConnectionsAndDevBodies
+      Attr Method = pwr_eMethod_RtAndDevBodies
+      Attr Flags = pwr_mClassDef_DevOnly
     EndBody
     Object RtBody $ObjBodyDef 1 
-      Body SysBody
-        Attr StructName = "cstoai"
-      EndBody
       !/**
-      !  The input is connected to an analog signal or left
-      !  open. In the latter case the In value is considered to
-      !  be stored.
+      !  Used by the PLC Editor.
       !*/
-      Object In $Input 1 
+      Object ActVal $Output 1 
         Body SysBody
           Attr PgmName = "ActualValue"
-          Attr Flags |= PWR_MASK_RTVIRTUAL
-          Attr Flags |= PWR_MASK_DEVBODYREF
-          Attr TypeRef = "pwrs:Type-$Float32"
-          Attr GraphName = "VAL"
-        EndBody
-      EndObject
-      !/**
-      !  Specifies whether a storage will be done or not. FALSE
-      !  means no storage and TRUE means storage of an analog
-      !  value.
-      !*/
-      Object Cond $Input 2 
-        Body SysBody
-          Attr PgmName = "Cond"
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_RTVIRTUAL
           Attr Flags |= PWR_MASK_DEVBODYREF
-          Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$Boolean"
-          Attr GraphName = "con"
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "VAL"
         EndBody
       EndObject
     EndObject
     Object DevBody $ObjBodyDef 2 
       !/**
-      !  Specifies the name of the Ai object where to store the
-      !  value.
+      !  Used by the PLC Editor. Specifies the complete name of
+      !  the Io object.
       !*/
-      Object AiObject $Intern 1 
+      Object IoObject $Intern 1 
         Body SysBody
-          Attr PgmName = "AiObject"
+          Attr PgmName = "IoObject"
           Attr TypeRef = "pwrs:Type-$Objid"
-          Attr GraphName = "In"
+          Attr GraphName = "VAL"
           Attr NiNaAnnot = 1
           Attr NiNaSegments = 1
         EndBody
@@ -86,18 +68,20 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Objid"
           Attr Flags |= PWR_MASK_INVISIBLE
-          Attr NiNaAnnot = 3
+          Attr NiNaAnnot = 2
           Attr NiNaCond = 1
           Attr NiNaSegments = 1
         EndBody
       EndObject
       !/**
-      !  Specifies how many segments of the Ai object name that
-      !  is to be displayed in the symbol of the CStoAi object.
+      !  Specifies how many segments of the Io object name that
+      !  is to be displayed in the symbol of the GetIo object.
       !  The segments are counted from behind.
+      !  
       !  0 and 1 both result in displaying the last segment of
+      !  the signal object name.
       !*/
-      Object AiObjectSegments $Intern 3 
+      Object IoObjectSegments $Intern 3 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
         EndBody
@@ -105,7 +89,7 @@ SObject pwrb:Class
       !/**
       !  Specifies if the name on the channel object (
       !  associated with the signal object) is to be displayed
-      !  in the symbol of the CStoAi object or not. FALSE means
+      !  in the symbol of the GetIo object or not. FALSE means
       !  no displaying and TRUE displaying.
       !  See also SigChanConSegments.
       !*/
@@ -117,8 +101,9 @@ SObject pwrb:Class
       !/**
       !  Specifies, when ShowSigChanCon = TRUE, how many
       !  segments of the channel object name that is to be
-      !  displayed in the symbol of the CStoAi object. The
+      !  displayed in the symbol of the GetIo object. The
       !  segments are counted from behind.
+      !  
       !  0 and 1 both result in displaying the last segment of
       !  the channel object name.
       !*/
@@ -136,35 +121,36 @@ SObject pwrb:Class
     EndObject
     Object GraphPlcNode $GraphPlcNode
       Body SysBody
-        Attr object_type = 114
-        Attr parameters[0] = 2
+        Attr object_type = 144
+        Attr parameters[0] = 0
         Attr parameters[1] = 0
-        Attr parameters[2] = 0
+        Attr parameters[2] = 1
         Attr parameters[3] = 0
         Attr subwindows = 0
-        Attr graphmethod = 15
+        Attr graphmethod = 7
         Attr graphindex = 1
-        Attr default_mask[0] = 3
-        Attr default_mask[1] = 0
+        Attr default_mask[0] = 0
+        Attr default_mask[1] = 1
         Attr segname_annotation = 0
         Attr devbody_annotation = 1
-        Attr compmethod = 38
+        Attr compmethod = 8
         Attr compindex = 0
         Attr tracemethod = 0
-        Attr traceindex = 1
-        Attr connectmethod = 4
-        Attr executeordermethod = 2
-        Attr objname = "CStoAi"
-        Attr graphname = "CStoAi"
-        Attr debugpar = "Cond"
+        Attr traceindex = 0
+        Attr connectmethod = 23
+        Attr executeordermethod = 0
+        Attr objname = "GetIo"
+        Attr graphname = "Io"
+        Attr debugpar = ""
       EndBody
     EndObject
-    Object Template CStoAi
+    Object Template GetIo
       Body DevBody
-        Attr AiObjectSegments = 2
-        Attr ShowSigChanCon = 1
+        Attr IoObjectSegments = 2
         Attr SigChanConSegments = 2
+        Attr ShowSigChanCon = 1
       EndBody
     EndObject
   EndObject
 EndSObject
+

@@ -171,6 +171,69 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  Integer quantities that can be included in the Code
+      !  attribute. If , for example, I1 is connected, the
+      !  external signal is used, otherwise the internal
+      !  attribute IIn1. Changes in IIn1, ..., IIn8 in the run
+      !  time system are taken into consideration.
+      !*/
+      Object IIn1 $Input 33
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "I1"
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      Object IIn2 $Input 34
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "I2"
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      Object IIn3 $Input 35
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "I3"
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      Object IIn4 $Input 36
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "I4"
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      Object IIn5 $Input 37
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "I5"
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      Object IIn6 $Input 38
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "I6"
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      Object IIn7 $Input 39
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "I7"
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      Object IIn8 $Input 40
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "I8"
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      !/**
       !  The analog results of the latest Code evaluation.
       !*/
       Object OutA1 $Output 17 
@@ -320,13 +383,88 @@ SObject pwrb:Class
           Attr GraphName = "od8"
         EndBody
       EndObject
+      !/**
+      !  The integer results of the latest Code evaluation.
+      !*/
+      Object OutI1 $Output 41 
+        Body SysBody
+          Attr PgmName = "OutI1"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "OI1"
+        EndBody
+      EndObject
+      Object OutI2 $Output 42
+        Body SysBody
+          Attr PgmName = "OutI2"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "OI2"
+        EndBody
+      EndObject
+      Object OutI3 $Output 43 
+        Body SysBody
+          Attr PgmName = "OutI3"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "OI3"
+        EndBody
+      EndObject
+      Object OutI4 $Output 44 
+        Body SysBody
+          Attr PgmName = "OutI4"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "OI4"
+        EndBody
+      EndObject
+      Object OutI5 $Output 45 
+        Body SysBody
+          Attr PgmName = "OutI5"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "OI5"
+        EndBody
+      EndObject
+      Object OutI6 $Output 46 
+        Body SysBody
+          Attr PgmName = "OutI6"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "OI6"
+        EndBody
+      EndObject
+      Object OutI7 $Output 47 
+        Body SysBody
+          Attr PgmName = "OutI7"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "OI7"
+        EndBody
+      EndObject
+      Object OutI8 $Output 48 
+        Body SysBody
+          Attr PgmName = "OutI8"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "OI8"
+        EndBody
+      EndObject
     EndObject
     Object GraphPlcNode $GraphPlcNode
       Body SysBody
         Attr object_type = 11
-        Attr parameters[0] = 16
+        Attr parameters[0] = 24
         Attr parameters[1] = 0
-        Attr parameters[2] = 16
+        Attr parameters[2] = 24
         Attr parameters[3] = 0
         Attr subwindows = 1
         Attr graphmethod = 14
@@ -358,7 +496,7 @@ SObject pwrb:Class
       !  Attribute Editor and cannot be changed in the target
       !  environment. All C-statements are allowed.
       !  
-      !                 Note! If an arithmetical operator is followed by a graph
+      !  Note! If an arithmetical operator is followed by a graph
       !  name, e.g. A1, the operator and the graph name have to
       !  be separated by a space or a left parenthesis.
       !*/

@@ -1,4 +1,4 @@
-!  pwrb_c_ivarea.wb_load -- Defines the class IvArea.
+!  pwrb_c_ioarea.wb_load -- Defines the class IoArea.
 !
 !  PROVIEW/R
 !  Copyright (C) 1996 by Comator Process AB.
@@ -7,24 +7,24 @@
 !
 !/**
 !  @Version 1.0
-!  @Summary Area object for Iv values
-!  Area object for Iv values.
+!  @Summary Area object for Io values
+!  Area object for Io values.
 !
-!  The values of Iv-signals is stored in the Value
-!  attribut. The index is given by ValueIndex in the 
-!  Iv-objects which is assigned at io initiation.
+!  The values of Io-signals (Integer Output signals) is stored in the Value
+!  attribut. The index is given by ValueIndex in the Io-objects which is 
+!  assigned at io initiation.
 !
 !  The object is created at runtime in the dynamic system volume pwrNode.
 !*/
 SObject pwrb:Class
-  Object IvArea $ClassDef 280 
+  Object IoArea $ClassDef 327
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
       Attr Method = pwr_eMethod_Standard
     EndBody
     Object RtBody $ObjBodyDef 1 
       Body SysBody
-        Attr StructName = "IvArea"
+        Attr StructName = "IoArea"
       EndBody
       Object Value $Attribute 1 
         Body SysBody
@@ -37,3 +37,7 @@ SObject pwrb:Class
     EndObject
   EndObject
 EndSObject
+
+
+
+

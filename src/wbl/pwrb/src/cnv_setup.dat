@@ -24,3 +24,4 @@ group PlcDrive pwrb_drive.html
 group PlcEdit pwrb_bodytext.html
 group PlcString pwrb_atostr.html
 group PlcData pwrb_dataarithm.html
+group PlcConversion pwrb_atoi.html

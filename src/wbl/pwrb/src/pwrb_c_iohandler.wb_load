@@ -67,16 +67,33 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Float32"
         EndBody
       EndObject
+      !/**
+      !  Specifies that reading and writing from resp to the configured 
+      !  io systems should be executed.
+      !  This flag is set to false by the IO-handler if any fatal error
+      !  is detected.
+      !  At test and simulation cases, when no io should be performed,
+      !  this should be set to false, and IOSimulFlag should be set to
+      !  true.
+      !*/ 
       Object IOReadWriteFlag $Attribute 3
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
       EndObject
+      !/**
+      !  At test and simulation cases, when no io should be performed,
+      !  this should be set to true, and IOReadWriteFlag should be set
+      !  to false.
+      !*/ 
       Object IOSimulFlag $Attribute 4
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
       EndObject
+      !/**
+      !  Number of configured Di objects in the node.
+      !*/
       Object DiCount $Attribute 5
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
@@ -84,6 +101,9 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
+      !/**
+      !  Number of configured Do objects in the node.
+      !*/
       Object DoCount $Attribute 6
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
@@ -91,6 +111,9 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
+      !/**
+      !  Number of configured Ai objects in the node.
+      !*/
       Object AiCount $Attribute 7
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
@@ -98,6 +121,9 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
+      !/**
+      !  Number of configured Ao objects in the node.
+      !*/
       Object AoCount $Attribute 8
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
@@ -105,6 +131,9 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
+      !/**
+      !  Number of configured Av objects in the node.
+      !*/
       Object AvCount $Attribute 9
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
@@ -112,6 +141,9 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
+      !/**
+      !  Number of configured Dv objects in the node.
+      !*/
       Object DvCount $Attribute 10
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
@@ -119,7 +151,40 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
+      !/**
+      !  Number of configured Co objects in the node.
+      !*/
       Object CoCount $Attribute 11
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Number of configured Ii objects in the node.
+      !*/
+      Object IiCount $Attribute 12
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Number of configured Io (Integer Output) objects in the node.
+      !*/
+      Object IoCount $Attribute 13
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Number of configured Iv objects in the node.
+      !*/
+      Object IvCount $Attribute 14
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
 	  Attr Flags |= PWR_MASK_STATE

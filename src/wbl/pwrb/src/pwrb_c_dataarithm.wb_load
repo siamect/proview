@@ -260,6 +260,72 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      ! @Summary Integer input I1.
+      ! Integer input.
+      ! I1 or the aliasname is used to refer to the input in the code.
+      !*/
+      Object IIn1 $Input 37
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "I1"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Integer input I2.
+      ! Integer input.
+      ! I2 or the aliasname is used to refer to the input in the code.
+      !*/
+      Object IIn2 $Input 38
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "I2"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Integer input I3.
+      ! Integer input.
+      ! I3 or the aliasname is used to refer to the input in the code.
+      !*/
+      Object IIn3 $Input 39
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "I3"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Integer input I4.
+      ! Integer input.
+      ! I4 or the aliasname is used to refer to the input in the code.
+      !*/
+      Object IIn4 $Input 40
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "I4"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Integer input I5.
+      ! Integer input.
+      ! I5 or the aliasname is used to refer to the input in the code.
+      !*/
+      Object IIn5 $Input 41
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "I5"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Integer input I6.
+      ! Integer input.
+      ! I6 or the aliasname is used to refer to the input in the code.
+      !*/
+      Object IIn6 $Input 42
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "I6"
+        EndBody
+      EndObject
+      !/**
       ! @Summary Data object reference output ODa1.
       ! Data object reference output.
       ! ODa1 is used to refer to the output in the code.
@@ -536,6 +602,90 @@ SObject pwrb:Class
           Attr GraphName = "od6"
         EndBody
       EndObject
+      !/**
+      ! @Summary Integer output IO1.
+      ! Integer output.
+      ! IO1 is used to refer to the output in the code.
+      !*/
+      Object OutI1 $Output 43
+        Body SysBody
+          Attr PgmName = "OutI1"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "OI1"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Integer output IO2.
+      ! Integer output.
+      ! IO2 is used to refer to the output in the code.
+      !*/
+      Object OutI2 $Output 44
+        Body SysBody
+          Attr PgmName = "OutI2"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "OI2"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Integer output IO3.
+      ! Integer output.
+      ! IO3 is used to refer to the output in the code.
+      !*/
+      Object OutI3 $Output 45
+        Body SysBody
+          Attr PgmName = "OutI3"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "OI3"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Integer output IO4.
+      ! Integer output.
+      ! IO4 is used to refer to the output in the code.
+      !*/
+      Object OutI4 $Output 46
+        Body SysBody
+          Attr PgmName = "OutI4"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "OI4"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Integer output IO5.
+      ! Integer output.
+      ! IO5 is used to refer to the output in the code.
+      !*/
+      Object OutI5 $Output 47
+        Body SysBody
+          Attr PgmName = "OutI5"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "OI5"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Integer output IO6.
+      ! Integer output.
+      ! IO6 is used to refer to the output in the code.
+      !*/
+      Object OutI6 $Output 48
+        Body SysBody
+          Attr PgmName = "OutI6"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "OI6"
+        EndBody
+      EndObject
     EndObject
     !
     ! DATAARITHM Development Body
@@ -543,9 +693,9 @@ SObject pwrb:Class
     Object GraphPlcNode $GraphPlcNode
       Body SysBody
         Attr object_type = 224
-        Attr parameters[0] = 16
+        Attr parameters[0] = 22
         Attr parameters[1] = 0
-        Attr parameters[2] = 16
+        Attr parameters[2] = 22
         Attr parameters[3] = 0
         Attr subwindows = 0
         Attr graphmethod = 14

@@ -1,29 +1,24 @@
-!  pwrb_c_itostr.wb_load -- Defines the class ItoStr.
+!  pwrb_c_itoa.wb_load -- Defines the class ItoA.
 !
 !  PROVIEW/R
 !  Copyright (C) 1996 by Comator Process AB.
 !
 !  <Description>.
 !
-! Range ldh_eDId_Base
-!
 !/**
 !  @Version 1.0
-!  @Code rt_plc_macro_string.h
-!  @Group Plc,PlcString,PlcConversion
-!  @Summary Convert integer value to string.
-!  Convert integer value to string.
-!  @image orm_itostr_fo.gif
+!  @Code rt_plc_macro_io.h
+!  @Group Plc,PlcConversion
+!  @Summary Convert integer value to analog
+!  Convert integer value to analog.
+!  @image orm_itoa_fo.gif
 !
-!  The ItoStr object converts the value of the integer input to
-!  at string stored in ActVal.
+!  The ItoA object converts the value of the integer input to
+!  an analog value stored in ActVal.
 !
-!  Note that an erroneous format specification may cause the
-!  plcprogram to terminate. The size of the output of the conversion should
-!  not exceed 79 characters.
 !*/
 SObject pwrb:Class
-  Object ItoStr $ClassDef 312 
+  Object ItoA $ClassDef 344
     Body SysBody
       Attr Editor = pwr_eEditor_PlcEd
       Attr Method = pwr_eMethod_Connections
@@ -31,10 +26,10 @@ SObject pwrb:Class
     EndBody
     Object RtBody $ObjBodyDef 1 
       Body SysBody
-         Attr StructName = "ItoStr"
+         Attr StructName = "ItoA"
       EndBody
       !/**
-      !  Integer input that will be converted to string.
+      !  Integer input that will be converted to analog value.
       !*/
       Object In $Input 1 
         Body SysBody
@@ -47,21 +42,13 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  c-format that specifies the conversion.
-      !*/
-      Object Format $Intern 2 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$String80"
-        EndBody
-      EndObject
-      !/**
-      !  Output that contains the string.
+      !  Output that contains the analog value.
       !*/
       Object ActVal $Output 3
         Body SysBody
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$String80"
+          Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "Val"
         EndBody
       EndObject
@@ -78,7 +65,7 @@ SObject pwrb:Class
       Body SysBody
         Attr object_type = 11
         Attr parameters[0] = 1
-        Attr parameters[1] = 1
+        Attr parameters[1] = 0
         Attr parameters[2] = 1
         Attr parameters[3] = 0
         Attr subwindows = 0
@@ -92,13 +79,8 @@ SObject pwrb:Class
         Attr tracemethod = 0
         Attr traceindex = 0
 	Attr executeordermethod = 2
-        Attr objname = "ItoStr"
-        Attr graphname = "ItoStr"
-      EndBody
-    EndObject
-    Object Template ItoStr
-      Body RtBody
-        Attr Format = "%d"
+        Attr objname = "ItoA"
+        Attr graphname = "ItoA"
       EndBody
     EndObject
   EndObject

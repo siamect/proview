@@ -1,0 +1,401 @@
+!  pwrb_c_dtomask.wb_load -- Defines the class DtoMask.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_arithm.c
+!  @Group Plc,PlcConversion
+!  @Summary Assambles digital signals to an integer bit-mask
+!  Assambles digital signals to an integer bit-mask.
+!  @image orm_dtomask_fo.gif
+!  
+!  The object has 32 digital inputs, and one 32-bit integer output.
+!  Each input represents a bit in the output. When the input is true
+!  the corresponding bit is set to 1, and when the input is false the
+!  bit is set to 0.
+!
+! @b See Also  
+!  @classlink MaskToD pwrb_masktod.html
+!*/
+SObject pwrb:Class
+  Object DtoMask $ClassDef 345
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Connections
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "DtoMask"
+      EndBody
+      !/**
+      !  Digital input representing bit number 1.
+      !*/
+      Object d1 $Input 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "d1"
+        EndBody
+      EndObject
+      !/**
+      !  Digital input representing bit number 2.
+      !*/
+      Object d2 $Input 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "d2"
+        EndBody
+      EndObject
+      !/**
+      !  Digital input representing bit number 3.
+      !*/
+      Object d3 $Input 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "d3"
+        EndBody
+      EndObject
+      !/**
+      !  Digital input representing bit number 4.
+      !*/
+      Object d4 $Input 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "d4"
+        EndBody
+      EndObject
+      !/**
+      !  Digital input representing bit number 5.
+      !*/
+      Object d5 $Input 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "d5"
+        EndBody
+      EndObject
+      !/**
+      !  Digital input representing bit number 6.
+      !*/
+      Object d6 $Input 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "d6"
+        EndBody
+      EndObject
+      !/**
+      !  Digital input representing bit number 7.
+      !*/
+      Object d7 $Input 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "d7"
+        EndBody
+      EndObject
+      !/**
+      !  Digital input representing bit number 8.
+      !*/
+      Object d8 $Input 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "d8"
+        EndBody
+      EndObject
+      !/**
+      !  Digital input representing bit number 9.
+      !*/
+      Object d9 $Input 9
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "d9"
+        EndBody
+      EndObject
+      !/**
+      !  Digital input representing bit number 10.
+      !*/
+      Object d10 $Input 10
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "d10"
+        EndBody
+      EndObject
+      !/**
+      !  Digital input representing bit number 11.
+      !*/
+      Object d11 $Input 11 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "d11"
+        EndBody
+      EndObject
+      !/**
+      !  Digital input representing bit number 12.
+      !*/
+      Object d12 $Input 12 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "d12"
+        EndBody
+      EndObject
+      !/**
+      !  Digital input representing bit number 13.
+      !*/
+      Object d13 $Input 13 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "d13"
+        EndBody
+      EndObject
+      !/**
+      !  Digital input representing bit number 14.
+      !*/
+      Object d14 $Input 14 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "d14"
+        EndBody
+      EndObject
+      !/**
+      !  Digital input representing bit number 15.
+      !*/
+      Object d15 $Input 15 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "d15"
+        EndBody
+      EndObject
+      !/**
+      !  Digital input representing bit number 16.
+      !*/
+      Object d16 $Input 16 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "d16"
+        EndBody
+      EndObject
+      !/**
+      !  Digital input representing bit number 17.
+      !*/
+      Object d17 $Input 17 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "d17"
+        EndBody
+      EndObject
+      !/**
+      !  Digital input representing bit number 18.
+      !*/
+      Object d18 $Input 18 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "d18"
+        EndBody
+      EndObject
+      !/**
+      !  Digital input representing bit number 19.
+      !*/
+      Object d19 $Input 19 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "d19"
+        EndBody
+      EndObject
+      !/**
+      !  Digital input representing bit number 20.
+      !*/
+      Object d20 $Input 20 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "d20"
+        EndBody
+      EndObject
+      !/**
+      !  Digital input representing bit number 21.
+      !*/
+      Object d21 $Input 21 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "d21"
+        EndBody
+      EndObject
+      !/**
+      !  Digital input representing bit number 22.
+      !*/
+      Object d22 $Input 22
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "d22"
+        EndBody
+      EndObject
+      !/**
+      !  Digital input representing bit number 23.
+      !*/
+      Object d23 $Input 23 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "d23"
+        EndBody
+      EndObject
+      !/**
+      !  Digital input representing bit number 24.
+      !*/
+      Object d24 $Input 24 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "d24"
+        EndBody
+      EndObject
+      !/**
+      !  Digital input representing bit number 25.
+      !*/
+      Object d25 $Input 25 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "d25"
+        EndBody
+      EndObject
+      !/**
+      !  Digital input representing bit number 26.
+      !*/
+      Object d26 $Input 26 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "d26"
+        EndBody
+      EndObject
+      !/**
+      !  Digital input representing bit number 27.
+      !*/
+      Object d27 $Input 27 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "d27"
+        EndBody
+      EndObject
+      !/**
+      !  Digital input representing bit number 28.
+      !*/
+      Object d28 $Input 28 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "d28"
+        EndBody
+      EndObject
+      !/**
+      !  Digital input representing bit number 29.
+      !*/
+      Object d29 $Input 29 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "d29"
+        EndBody
+      EndObject
+      !/**
+      !  Digital input representing bit number 30.
+      !*/
+      Object d30 $Input 30 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "d30"
+        EndBody
+      EndObject
+      !/**
+      !  Digital input representing bit number 31.
+      !*/
+      Object d31 $Input 31 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "d31"
+        EndBody
+      EndObject
+      !/**
+      !  Digital input representing bit number 32.
+      !*/
+      Object d32 $Input 32 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "d32"
+        EndBody
+      EndObject
+      !/**
+      !  Bit mask.
+      !*/
+      Object Mask $Output 33
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Mask"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 11
+        Attr parameters[0] = 32
+        Attr parameters[1] = 0
+        Attr parameters[2] = 1
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 0
+        Attr graphindex = 0
+        Attr default_mask[0] = 63
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 1
+        Attr compmethod = 4
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+	Attr executeordermethod = 2
+        Attr objname = "DtoMask"
+        Attr graphname = "DtoMask"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+  EndObject
+EndSObject
+
+

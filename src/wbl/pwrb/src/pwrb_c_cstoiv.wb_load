@@ -1,9 +1,9 @@
-!  pwrb_c_cstoip.wb_load -- Defines the class CStoIp.
+!  pwrb_c_cstoiv.wb_load -- Defines the class CStoIv.
 !
 !  PROVIEW/R
 !  Copyright (C) 1996 by Comator Process AB.
 !
-!  Conditional Store Integer parameter.
+!  Conditional Store value of Integer Value signal.
 !
 ! Range ldh_eDId_Base
 !
@@ -11,31 +11,21 @@
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
 !  @Group Plc,PlcIO
-!  @Summary Conditional storage of integer attribute
-!  Conditional Storage Integer parameter.
-!  @image orm_cstoip_fo.gif
+!  Conditional Storage Integer value.
+!  @image orm_cstoiv_fo.gif
 !  
-!  Conditional storage of an integer value (attribute,
-!  input, or output signal of the type pwr_tInt32) on a
-!  specified 32-,16-, or 8-bits integer parameter in a
-!  local object.
+!  Conditional storage of an integer value on a specified
+!  local Iv-signal (= Iv object).
 !  Conditional is aimed at the con-input, which is
-!  supposed to be connected. The decimals of the input
-!  signal is truncated to the next lower integer.
+!  supposed to be connected.
 !  
-!  The last name segment of the object and the name of the
-!  parameter will be shown in the right empty part of the
-!  CStoIp symbol.
 !  The conditional input signal can be inverted by means
-!  of the Attribute Editor but the graphic symbol cannot
-!  display it. So the user is recommended -- if needed ---
-!  to an explicit use of an Inv object.
-!  
+!  of the Attribute Editor.
 !  It is not allowed, by means of a function in C or PLC
 !  programs, to write in any of the inputs.
 !*/
 SObject pwrb:Class
-  Object CStoIp $ClassDef 341
+  Object CStoIv $ClassDef 337
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
       Attr Method = pwr_eMethod_RtConnectionsAndDevBodies
@@ -43,21 +33,20 @@ SObject pwrb:Class
     EndBody
     Object RtBody $ObjBodyDef 1 
       Body SysBody
-        Attr StructName = "CStoIp"
+        Attr StructName = "cstoiv"
       EndBody
       !/**
       !  The input is connected to an integer signal or left
-      !  open. In the latter case the In is considered to be
-      !  stored.
+      !  open. In the latter case the value of In, is considered
+      !  to be stored.
       !*/
       Object In $Input 1 
         Body SysBody
-          Attr PgmName = "In"
+          Attr PgmName = "ActualValue"
           Attr Flags |= PWR_MASK_RTVIRTUAL
           Attr Flags |= PWR_MASK_DEVBODYREF
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "VAL"
-          Attr ConPointNr = 0
         EndBody
       EndObject
       !/**
@@ -74,7 +63,6 @@ SObject pwrb:Class
           Attr Flags |= PWR_MASK_NOEDIT
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "con"
-          Attr ConPointNr = 1
         EndBody
       EndObject
     EndObject
@@ -83,42 +71,26 @@ SObject pwrb:Class
       !  Specifies the name of the object where to store the
       !  value.
       !*/
-      Object Object $Intern 1 
+      Object IvObject $Intern 1 
         Body SysBody
-          Attr PgmName = "Object"
+          Attr PgmName = "IvObject"
           Attr TypeRef = "pwrs:Type-$Objid"
-          Attr GraphName = "sts"
+          Attr GraphName = "In"
           Attr NiNaAnnot = 1
           Attr NiNaSegments = 1
         EndBody
       EndObject
       !/**
-      !  Specifies, in an object specified by Object, the name
-      !  of the attribute where to store the value.
+      !  Specifies how many segments of the Iv object name that
+      !  is to be displayed in the symbol of the CStoIv object.
+      !  The segments are counted from behind.
       !*/
-      Object Parameter $Intern 2 
-        Body SysBody
-          Attr PgmName = "Parameter"
-          Attr TypeRef = "pwrs:Type-$String80"
-          Attr GraphName = "par"
-          Attr NiNaAnnot = 2
-          Attr ConPointNr = 0
-        EndBody
-      EndObject
-      !/**
-      !  Specifies how many segments of the actual object name
-      !  that is to be displayed in the symbol of the CStoIp
-      !  object. The segments are counted from behind.
-      !  
-      !  0 and 1 both result in displaying the last segment of
-      !  the actual object name.
-      !*/
-      Object ObjectSegments $Intern 3 
+      Object IvObjectSegments $Intern 2 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
         EndBody
       EndObject
-      Object PlcNode $Buffer 4 
+      Object PlcNode $Buffer 3 
         Body SysBody
           Attr Class = pwr_eClass_PlcNode
           Attr Flags |= PWR_MASK_INVISIBLE
@@ -127,35 +99,35 @@ SObject pwrb:Class
     EndObject
     Object GraphPlcNode $GraphPlcNode
       Body SysBody
-        Attr object_type = 270
+        Attr object_type = 148
         Attr parameters[0] = 2
         Attr parameters[1] = 0
         Attr parameters[2] = 0
         Attr parameters[3] = 0
         Attr subwindows = 0
         Attr graphmethod = 15
-        Attr graphindex = 0
+        Attr graphindex = 1
         Attr default_mask[0] = 3
         Attr default_mask[1] = 0
         Attr segname_annotation = 0
         Attr devbody_annotation = 1
-        Attr compmethod = 12
+        Attr compmethod = 11
         Attr compindex = 0
         Attr tracemethod = 0
         Attr traceindex = 1
-        Attr connectmethod = 7
+        Attr connectmethod = 21
         Attr executeordermethod = 2
-        Attr objname = "CStoIp"
-        Attr graphname = "CStoIp"
+        Attr objname = "CStoIv"
+        Attr graphname = "CStoIv"
         Attr debugpar = "Cond"
       EndBody
     EndObject
-    Object Template CStoIp
+    Object Template CStoIv
       Body RtBody
         Attr Cond = 1
       EndBody
       Body DevBody
-        Attr ObjectSegments = 2
+        Attr IvObjectSegments = 2
       EndBody
     EndObject
   EndObject

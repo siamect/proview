@@ -1,0 +1,429 @@
+!  pwrb_c_masktod.wb_load -- Defines the class MaskToD.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_arithm.c
+!  @Group Plc,PlcConversion
+!  @Summary Deassambles integer bit-mask to digital signals
+!  Deassambles integer bitmask to digital signals.
+!  @image orm_masktod_fo.gif
+!  
+!  The object has one 32-bit integer input, and 32 digital outputs.
+!  Each output represents a bit in the input. When a bit is 1, the
+!  corresponding output is set to true, and when the bit is 0, the
+!  output it set to false.
+!
+! @b See Also  
+!  @classlink DtoMask pwrb_dtomask.html
+!*/
+SObject pwrb:Class
+  Object MaskToD $ClassDef 346
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Connections
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "MaskToD"
+      EndBody
+      !/**
+      !  Bit mask.
+      !*/
+      Object Mask $Input 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Mask"
+        EndBody
+      EndObject
+      !/**
+      !  Digital input representing bit number 1.
+      !*/
+      Object od1 $Output 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od1"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing bit number 2.
+      !*/
+      Object od2 $Output 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od2"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing bit number 3.
+      !*/
+      Object od3 $Output 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od3"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing bit number 4.
+      !*/
+      Object od4 $Output 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od4"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing bit number 5.
+      !*/
+      Object od5 $Output 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od5"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing bit number 6.
+      !*/
+      Object od6 $Output 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od6"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing bit number 7.
+      !*/
+      Object od7 $Output 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od7"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing bit number 8.
+      !*/
+      Object od8 $Output 9
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od8"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing bit number 9.
+      !*/
+      Object od9 $Output 10
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od9"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing bit number 10.
+      !*/
+      Object od10 $Output 11
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od10"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing bit number 11.
+      !*/
+      Object od11 $Output 12 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od11"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing bit number 12.
+      !*/
+      Object od12 $Output 13 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od12"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing bit number 13.
+      !*/
+      Object od13 $Output 14 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od13"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing bit number 14.
+      !*/
+      Object od14 $Output 15 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od14"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing bit number 15.
+      !*/
+      Object od15 $Output 16 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od15"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing bit number 16.
+      !*/
+      Object od16 $Output 17 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od16"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing bit number 17.
+      !*/
+      Object od17 $Output 18 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od17"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing bit number 18.
+      !*/
+      Object od18 $Output 19 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od18"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing bit number 19.
+      !*/
+      Object od19 $Output 20 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od19"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing bit number 20.
+      !*/
+      Object od20 $Output 21 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od20"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing bit number 21.
+      !*/
+      Object od21 $Output 22 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od21"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing bit number 22.
+      !*/
+      Object od22 $Output 23
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od22"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing bit number 23.
+      !*/
+      Object od23 $Output 24 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od23"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing bit number 24.
+      !*/
+      Object od24 $Output 25 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od24"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing bit number 25.
+      !*/
+      Object od25 $Output 26 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od25"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing bit number 26.
+      !*/
+      Object od26 $Output 27 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od26"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing bit number 27.
+      !*/
+      Object od27 $Output 28 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od27"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing bit number 28.
+      !*/
+      Object od28 $Output 29 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od28"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing bit number 29.
+      !*/
+      Object od29 $Output 30 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od29"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing bit number 30.
+      !*/
+      Object od30 $Output 31 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od30"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing bit number 31.
+      !*/
+      Object od31 $Output 32 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od31"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing bit number 32.
+      !*/
+      Object od32 $Output 33 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od32"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 11
+        Attr parameters[0] = 1
+        Attr parameters[1] = 0
+        Attr parameters[2] = 32
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 0
+        Attr graphindex = 0
+        Attr default_mask[0] = 1
+        Attr default_mask[1] = 255
+        Attr segname_annotation = 1
+        Attr compmethod = 4
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+	Attr executeordermethod = 2
+        Attr objname = "MaskToD"
+        Attr graphname = "MaskToD"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,486 @@
+!  pwrb_c_enumtod.wb_load -- Defines the class EnumToD.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_arithm.c
+!  @Group Plc,PlcConversion
+!  @Summary Identify at enumeration value.
+!  Identify an enumeration value.
+!  @image orm_enumtod_fo.gif
+!  
+!  The inputvalue is compared to values in an intern array, which
+!  by default, has the values 0, 1, 2, ..., 31. If the input is equal
+!  to a values in the array, the corresponding output is set to true,
+!  otherwise it is set to false.
+!  
+! @b See Also  
+!  @classlink DtoEnum pwrb_dtoenum.html
+!*/
+SObject pwrb:Class
+  Object EnumToD $ClassDef 348
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Connections
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "EnumToD"
+      EndBody
+      !/**
+      !  Enumeration input value.
+      !*/
+      Object Enum $Input 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Enum"
+        EndBody
+      EndObject
+      !/**
+      !  Enumeration values.
+      !  This array contains the enumeration values, that the
+      !  input value is compared with. If the input value is equal
+      !  to a value in the array, the corresponding digital output
+      !  is set to true, otherwise it is set to false.
+      !*/
+      Object EnumValues $Intern 2
+        Body SysBody
+          Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 32
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing enumeration value at index 0 in EnumValues.
+      !*/
+      Object od0 $Output 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od0"
+        EndBody
+      EndObject
+      !/**
+      !  Digital input representing enumeration value at index 1 in EnumValues.
+      !*/
+      Object od1 $Output 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od1"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing enumeration value at index 2 in EnumValues.
+      !*/
+      Object od2 $Output 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od2"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing enumeration value at index 3 in EnumValues.
+      !*/
+      Object od3 $Output 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od3"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing enumeration value at index 4 in EnumValues.
+      !*/
+      Object od4 $Output 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od4"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing enumeration value at index 5 in EnumValues.
+      !*/
+      Object od5 $Output 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od5"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing enumeration value at index 6 in EnumValues.
+      !*/
+      Object od6 $Output 9
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od6"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing enumeration value at index 7 in EnumValues.
+      !*/
+      Object od7 $Output 10
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od7"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing enumeration value at index 8 in EnumValues.
+      !*/
+      Object od8 $Output 11
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od8"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing enumeration value at index 9 in EnumValues.
+      !*/
+      Object od9 $Output 12
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od9"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing enumeration value at index 10 in EnumValues.
+      !*/
+      Object od10 $Output 13
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od10"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing enumeration value at index 11 in EnumValues.
+      !*/
+      Object od11 $Output 14 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od11"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing enumeration value at index 12 in EnumValues.
+      !*/
+      Object od12 $Output 15 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od12"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing enumeration value at index 13 in EnumValues.
+      !*/
+      Object od13 $Output 16 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od13"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing enumeration value at index 14 in EnumValues.
+      !*/
+      Object od14 $Output 17 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od14"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing enumeration value at index 15 in EnumValues.
+      !*/
+      Object od15 $Output 18 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od15"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing enumeration value at index 16 in EnumValues.
+      !*/
+      Object od16 $Output 19 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od16"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing enumeration value at index 17 in EnumValues.
+      !*/
+      Object od17 $Output 20 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od17"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing enumeration value at index 18 in EnumValues.
+      !*/
+      Object od18 $Output 21 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od18"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing enumeration value at index 19 in EnumValues.
+      !*/
+      Object od19 $Output 22 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od19"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing enumeration value at index 20 in EnumValues.
+      !*/
+      Object od20 $Output 23 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od20"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing enumeration value at index 21 in EnumValues.
+      !*/
+      Object od21 $Output 24 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od21"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing enumeration value at index 22 in EnumValues.
+      !*/
+      Object od22 $Output 25
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od22"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing enumeration value at index 23 in EnumValues.
+      !*/
+      Object od23 $Output 26 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od23"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing enumeration value at index 24 in EnumValues.
+      !*/
+      Object od24 $Output 27 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od24"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing enumeration value at index 25 in EnumValues.
+      !*/
+      Object od25 $Output 28 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od25"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing enumeration value at index 26 in EnumValues.
+      !*/
+      Object od26 $Output 29 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od26"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing enumeration value at index 27 in EnumValues.
+      !*/
+      Object od27 $Output 30 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od27"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing enumeration value at index 28 in EnumValues.
+      !*/
+      Object od28 $Output 31 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od28"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing enumeration value at index 29 in EnumValues.
+      !*/
+      Object od29 $Output 32 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od29"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing enumeration value at index 30 in EnumValues.
+      !*/
+      Object od30 $Output 33 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od30"
+        EndBody
+      EndObject
+      !/**
+      !  Digital output representing enumeration value at index 31 in EnumValues.
+      !*/
+      Object od31 $Output 34 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "od31"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 11
+        Attr parameters[0] = 1
+        Attr parameters[1] = 1
+        Attr parameters[2] = 32
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 0
+        Attr graphindex = 0
+        Attr default_mask[0] = 1
+        Attr default_mask[1] = 255
+        Attr segname_annotation = 1
+        Attr compmethod = 4
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+	Attr executeordermethod = 2
+        Attr objname = "EnumToD"
+        Attr graphname = "EnumToD"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    Object Template EnumToD
+      Body RtBody
+        Attr EnumValues[0] = 0
+        Attr EnumValues[1] = 1
+        Attr EnumValues[2] = 2
+        Attr EnumValues[3] = 3
+        Attr EnumValues[4] = 4
+        Attr EnumValues[5] = 5
+        Attr EnumValues[6] = 6
+        Attr EnumValues[7] = 7
+        Attr EnumValues[8] = 8
+        Attr EnumValues[9] = 9
+        Attr EnumValues[10] = 10
+        Attr EnumValues[11] = 11
+        Attr EnumValues[12] = 12
+        Attr EnumValues[13] = 13
+        Attr EnumValues[14] = 14
+        Attr EnumValues[15] = 15
+        Attr EnumValues[16] = 16
+        Attr EnumValues[17] = 17
+        Attr EnumValues[18] = 18
+        Attr EnumValues[19] = 19
+        Attr EnumValues[20] = 20
+        Attr EnumValues[21] = 21
+        Attr EnumValues[22] = 22
+        Attr EnumValues[23] = 23
+        Attr EnumValues[24] = 24
+        Attr EnumValues[25] = 52
+        Attr EnumValues[26] = 26
+        Attr EnumValues[27] = 27
+        Attr EnumValues[28] = 28
+        Attr EnumValues[29] = 29
+        Attr EnumValues[30] = 30
+        Attr EnumValues[31] = 31
+      EndBody
+    EndObject
+  EndObject
+EndSObject
+
+
+
+
+
+
+

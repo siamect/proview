@@ -1,4 +1,4 @@
-!  pwrb_c_cstoip.wb_load -- Defines the class CStoIp.
+!  pwrb_c_cstoatoip.wb_load -- Defines the class CStoAtoIp.
 !
 !  PROVIEW/R
 !  Copyright (C) 1996 by Comator Process AB.
@@ -13,19 +13,19 @@
 !  @Group Plc,PlcIO
 !  @Summary Conditional storage of integer attribute
 !  Conditional Storage Integer parameter.
-!  @image orm_cstoip_fo.gif
+!  @image orm_cstoatoip_fo.gif
 !  
-!  Conditional storage of an integer value (attribute,
-!  input, or output signal of the type pwr_tInt32) on a
+!  Conditional storage of an analog value ( parameter,
+!  input, or output signal of the type pwr_tFloat32) on a
 !  specified 32-,16-, or 8-bits integer parameter in a
 !  local object.
 !  Conditional is aimed at the con-input, which is
-!  supposed to be connected. The decimals of the input
-!  signal is truncated to the next lower integer.
+!  supposed to be connected. The analog value is rounded to
+!  closest integer value.
 !  
 !  The last name segment of the object and the name of the
 !  parameter will be shown in the right empty part of the
-!  CStoIp symbol.
+!  CStoAtoIp symbol.
 !  The conditional input signal can be inverted by means
 !  of the Attribute Editor but the graphic symbol cannot
 !  display it. So the user is recommended -- if needed ---
@@ -35,7 +35,7 @@
 !  programs, to write in any of the inputs.
 !*/
 SObject pwrb:Class
-  Object CStoIp $ClassDef 341
+  Object CStoAtoIp $ClassDef 78 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
       Attr Method = pwr_eMethod_RtConnectionsAndDevBodies
@@ -43,10 +43,10 @@ SObject pwrb:Class
     EndBody
     Object RtBody $ObjBodyDef 1 
       Body SysBody
-        Attr StructName = "CStoIp"
+        Attr StructName = "CStoAtoIp"
       EndBody
       !/**
-      !  The input is connected to an integer signal or left
+      !  The input is connected to an analog signal or left
       !  open. In the latter case the In is considered to be
       !  stored.
       !*/
@@ -55,14 +55,14 @@ SObject pwrb:Class
           Attr PgmName = "In"
           Attr Flags |= PWR_MASK_RTVIRTUAL
           Attr Flags |= PWR_MASK_DEVBODYREF
-          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "VAL"
           Attr ConPointNr = 0
         EndBody
       EndObject
       !/**
       !  Specifies whether a storage will be done or not. FALSE
-      !  means no storage and TRUE means storage of an integer
+      !  means no storage and TRUE means storage of an analog
       !  value.
       !*/
       Object Cond $Input 2 
@@ -107,7 +107,7 @@ SObject pwrb:Class
       EndObject
       !/**
       !  Specifies how many segments of the actual object name
-      !  that is to be displayed in the symbol of the CStoIp
+      !  that is to be displayed in the symbol of the CStoAtoIp
       !  object. The segments are counted from behind.
       !  
       !  0 and 1 both result in displaying the last segment of
@@ -127,7 +127,7 @@ SObject pwrb:Class
     EndObject
     Object GraphPlcNode $GraphPlcNode
       Body SysBody
-        Attr object_type = 270
+        Attr object_type = 251
         Attr parameters[0] = 2
         Attr parameters[1] = 0
         Attr parameters[2] = 0
@@ -145,12 +145,12 @@ SObject pwrb:Class
         Attr traceindex = 1
         Attr connectmethod = 7
         Attr executeordermethod = 2
-        Attr objname = "CStoIp"
-        Attr graphname = "CStoIp"
+        Attr objname = "CStoAtoIp"
+        Attr graphname = "CStoAtoIp"
         Attr debugpar = "Cond"
       EndBody
     EndObject
-    Object Template CStoIp
+    Object Template CStoAtoIp
       Body RtBody
         Attr Cond = 1
       EndBody

@@ -1,9 +1,9 @@
-!  pwrb_c_stoip.wb_load -- Defines the class StoIp.
+!  pwrb_c_getiptoa.wb_load -- Defines the class GetIpToA.
 !
 !  PROVIEW/R
 !  Copyright (C) 1996 by Comator Process AB.
 !
-!  Store Integer parameter.
+!  GET status of any Integer Parameter.
 !
 ! Range ldh_eDId_Base
 !
@@ -11,69 +11,73 @@
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
 !  @Group Plc,PlcIO
-!  @Summary Store integer value to integer attribute
-!  Store integer value (attribute, input or output signal) 
-!  to Integer parameter. Used in run time to write in
-!  integer parameters.
-!  @image orm_stoip_fo.gif
+!  @Summary Get integer attribute and convert to analog value
+!  Get Integer parameter and convert to analog value.
+!  @image orm_getiptoa_fo.gif
 !
-!  Stores the value of an integer
-!  quantity ( e.g. output signal of the type pwr_tInt32)
-!  on the specified 32-, 16-, or 8-bits integer parameter
-!  in a local object.
+!  Fetches the value of a 32-, 16- or 8-bits integer
+!  parameter in arbitrary object.
 !  
-!  The last name segment of the object and the name of the
-!  parameter will be shown in the right empty part of the
-!  StoIp symbol.
+!  The complete name of the parameter has to be supplied.
+!  The GetIp object
+!  - is a pure address reference,
+!  - contains no relevant information (=data) in rtdb,
+!  - is without executable code.
+!
+! @b Example
+!  In the example below the value of the integer parameter, AccMod is stored: 
+!
+!  - unconditionally by StoAtoIp 
+!  - conditionally by CStoAtoIp 
+!
+!  The value is also unconditionally stored as a pwr_tFloat32 on an attribute 
+!  pwr_tFloat32 in the object named TIC2M
+!  @image orm_en1-93.gif
 !*/
 SObject pwrb:Class
-  Object StoIp $ClassDef 342 
+  Object GetIpToA $ClassDef 128 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
-      Attr Method = pwr_eMethod_RtConnectionsAndDevBodies
-      Attr Flags = pwr_mClassDef_DevOnly
+      Attr Method = pwr_eMethod_RtAndDevBodies
     EndBody
     Object RtBody $ObjBodyDef 1 
       Body SysBody
-        Attr StructName = "StoIp"
+        Attr StructName = "GetIpToA"
       EndBody
       !/**
-      !  The input is connected to an integer signal or left
-      !  open. In the latter case In is default 0 and not
-      !  adjustable in the run time system. The In attribute
-      !  specifies which value should be assigned to the
-      !  parameter.
+      !  Used by the PLC Editor.
       !*/
-      Object In $Input 1 
+      Object ActVal $Output 1 
         Body SysBody
-          Attr PgmName = "In"
-          Attr Flags |= PWR_MASK_RTVIRTUAL
-          Attr Flags |= PWR_MASK_DEVBODYREF
-          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr PgmName = "ActVal"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "VAL"
         EndBody
       EndObject
     EndObject
     Object DevBody $ObjBodyDef 2 
       !/**
-      !  Used by the PLC Editor. Specifies the complete name of
-      !  the current object.
+      !  Used by the PLC Editor. Specifies the name of the
+      !  actual object.
       !*/
-      Object Object $Intern 1 
+      Object IpObject $Intern 1 
         Body SysBody
-          Attr PgmName = "Object"
+          Attr PgmName = "IpObject"
           Attr TypeRef = "pwrs:Type-$Objid"
-          Attr GraphName = "sts"
+          Attr GraphName = "VAL"
           Attr NiNaAnnot = 1
           Attr NiNaSegments = 1
         EndBody
       EndObject
       !/**
       !  Used by the PLC Editor. Specifies the name of the
-      !  parameter. The editor is case-sensitive on this
-      !  attribute; i.e. if the attribute is named ActualValue
-      !  it has to be written ActualValue and not ACTUALVALUE,
-      !  for example.
+      !  parameter.
+      !  
+      !  Note! The editor is case-sensitive on this attribute; i.e.
+      !  if the attribute is named ActualValue it has to be
+      !  written ActualValue and not ACTUALVALUE, for example.
       !*/
       Object Parameter $Intern 2 
         Body SysBody
@@ -86,13 +90,13 @@ SObject pwrb:Class
       EndObject
       !/**
       !  Specifies how many segments of the actual object name
-      !  that is to be displayed in the symbol of the StoIp
+      !  that is to be displayed in the symbol of the GetDp
       !  object. The segments are counted from behind.
       !  
       !  0 and 1 both result in displaying the last segment of
       !  the actual object name.
       !*/
-      Object ObjectSegments $Intern 3 
+      Object IpObjectSegments $Intern 3 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
         EndBody
@@ -106,33 +110,34 @@ SObject pwrb:Class
     EndObject
     Object GraphPlcNode $GraphPlcNode
       Body SysBody
-        Attr object_type = 271
-        Attr parameters[0] = 1
+        Attr object_type = 252
+        Attr parameters[0] = 0
         Attr parameters[1] = 0
-        Attr parameters[2] = 0
+        Attr parameters[2] = 1
         Attr parameters[3] = 0
         Attr subwindows = 0
         Attr graphmethod = 15
         Attr graphindex = 0
-        Attr default_mask[0] = 1
-        Attr default_mask[1] = 0
+        Attr default_mask[0] = 0
+        Attr default_mask[1] = 1
         Attr segname_annotation = 0
         Attr devbody_annotation = 1
-        Attr compmethod = 12
+        Attr compmethod = 36
         Attr compindex = 0
         Attr tracemethod = 0
         Attr traceindex = 0
         Attr connectmethod = 7
         Attr executeordermethod = 2
-        Attr objname = "StoIp"
-        Attr graphname = "StoIp"
+        Attr objname = "GetIpToA"
+        Attr graphname = "GetIpToA"
         Attr debugpar = ""
       EndBody
     EndObject
-    Object Template StoIp
+    Object Template GetIpToA
       Body DevBody
-        Attr ObjectSegments = 2
+        Attr IpObjectSegments = 2
       EndBody
     EndObject
   EndObject
 EndSObject
+

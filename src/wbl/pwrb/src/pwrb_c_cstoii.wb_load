@@ -1,4 +1,4 @@
-!  pwrb_c_cstoai.wb_load -- Defines the class CStoAi.
+!  pwrb_c_cstoii.wb_load -- Defines the class CStoIi.
 !
 !  PROVIEW/R
 !  Copyright (C) 1996 by Comator Process AB.
@@ -10,32 +10,34 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
-!  @Summary Conditional storage of Ai signal
-!  Conditional Storage Analog input.
-!  @image orm_cstoai_fo.gif  
-!  
-!  Conditional storage of an analog value on a specified
-!  local Ai-signal (= Ai object).
+!  @Summary Conditional storage of Ii signal
+!  Conditional Storage Integer input.
+!  @image orm_cstoii_fo.gif  
+!
+!  Conditional storage of an integer value on a specified
+!  local Ii-signal (= Ii object).
 !  
 !  Conditional is aimed at the con-input, which is
 !  supposed to be connected.
-!  Note! This object is used for simulation purposes.
-!  IOSimulFlag will be set TRUE and IOReadWriteFlag FALSE
-!  in the $Node object, i.e. any physical I/O-hardware may
+!
+! @b Note!
+!  This object is used for simulation purposes.
+!  SimulFlag will be set TRUE and ReadWriteFlag FALSE
+!  in the IOHandler object, i.e. any physical I/O-hardware may
 !  not be used on the node in connection to this object.
 !*/
 SObject pwrb:Class
-  Object CStoAi $ClassDef 74 
+  Object CStoIi $ClassDef 335 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
       Attr Method = pwr_eMethod_RtConnectionsAndDevBodies
     EndBody
     Object RtBody $ObjBodyDef 1 
       Body SysBody
-        Attr StructName = "cstoai"
+        Attr StructName = "cstoii"
       EndBody
       !/**
-      !  The input is connected to an analog signal or left
+      !  The input is connected to an integer signal or left
       !  open. In the latter case the In value is considered to
       !  be stored.
       !*/
@@ -44,13 +46,13 @@ SObject pwrb:Class
           Attr PgmName = "ActualValue"
           Attr Flags |= PWR_MASK_RTVIRTUAL
           Attr Flags |= PWR_MASK_DEVBODYREF
-          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "VAL"
         EndBody
       EndObject
       !/**
       !  Specifies whether a storage will be done or not. FALSE
-      !  means no storage and TRUE means storage of an analog
+      !  means no storage and TRUE means storage of an integer
       !  value.
       !*/
       Object Cond $Input 2 
@@ -67,12 +69,12 @@ SObject pwrb:Class
     EndObject
     Object DevBody $ObjBodyDef 2 
       !/**
-      !  Specifies the name of the Ai object where to store the
+      !  Specifies the name of the Ii object where to store the
       !  value.
       !*/
-      Object AiObject $Intern 1 
+      Object IiObject $Intern 1 
         Body SysBody
-          Attr PgmName = "AiObject"
+          Attr PgmName = "IiObject"
           Attr TypeRef = "pwrs:Type-$Objid"
           Attr GraphName = "In"
           Attr NiNaAnnot = 1
@@ -92,12 +94,12 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Specifies how many segments of the Ai object name that
-      !  is to be displayed in the symbol of the CStoAi object.
+      !  Specifies how many segments of the Ii object name that
+      !  is to be displayed in the symbol of the CStoIi object.
       !  The segments are counted from behind.
       !  0 and 1 both result in displaying the last segment of
       !*/
-      Object AiObjectSegments $Intern 3 
+      Object IiObjectSegments $Intern 3 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
         EndBody
@@ -105,7 +107,7 @@ SObject pwrb:Class
       !/**
       !  Specifies if the name on the channel object (
       !  associated with the signal object) is to be displayed
-      !  in the symbol of the CStoAi object or not. FALSE means
+      !  in the symbol of the CStoIi object or not. FALSE means
       !  no displaying and TRUE displaying.
       !  See also SigChanConSegments.
       !*/
@@ -117,7 +119,7 @@ SObject pwrb:Class
       !/**
       !  Specifies, when ShowSigChanCon = TRUE, how many
       !  segments of the channel object name that is to be
-      !  displayed in the symbol of the CStoAi object. The
+      !  displayed in the symbol of the CStoIi object. The
       !  segments are counted from behind.
       !  0 and 1 both result in displaying the last segment of
       !  the channel object name.
@@ -136,7 +138,7 @@ SObject pwrb:Class
     EndObject
     Object GraphPlcNode $GraphPlcNode
       Body SysBody
-        Attr object_type = 114
+        Attr object_type = 268
         Attr parameters[0] = 2
         Attr parameters[1] = 0
         Attr parameters[2] = 0
@@ -152,16 +154,16 @@ SObject pwrb:Class
         Attr compindex = 0
         Attr tracemethod = 0
         Attr traceindex = 1
-        Attr connectmethod = 4
+        Attr connectmethod = 22
         Attr executeordermethod = 2
-        Attr objname = "CStoAi"
-        Attr graphname = "CStoAi"
+        Attr objname = "CStoIi"
+        Attr graphname = "CStoIi"
         Attr debugpar = "Cond"
       EndBody
     EndObject
-    Object Template CStoAi
+    Object Template CStoIi
       Body DevBody
-        Attr AiObjectSegments = 2
+        Attr IiObjectSegments = 2
         Attr ShowSigChanCon = 1
         Attr SigChanConSegments = 2
       EndBody
