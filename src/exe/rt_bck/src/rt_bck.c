@@ -981,6 +981,14 @@ void bck_list_build (
   UNLOCK;
   while (ODD(sts)) {
 
+    if ( objid.vid < cdh_cUserVolMin) {
+      // In template plc, continue
+      LOCK;
+      sts = gdh_GetNextObject(objid, &objid);
+      UNLOCK;
+      continue;
+    }
+
     /* Find body of backup object */
 
     LOCK;

@@ -449,6 +449,13 @@ pwr_tStatus bck_print( char *filename)
 
   sts = gdh_GetClassList( pwr_cClass_Backup, &objid);
   while ( ODD(sts)) {
+    if ( objid.vid < cdh_cUserVolMin) {
+      // In template plc, continue
+      sts = gdh_GetNextObject(objid, &objid);
+      continue;
+    }
+
+
     sts = gdh_ObjidToName( objid, objname, sizeof(objname), cdh_mName_volumeStrict); 
     if ( EVEN(sts)) return sts;
 
