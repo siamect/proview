@@ -111,6 +111,7 @@ qos_WaitQue (
 
   qdb_Unlock;
 
+  if (qp->lock.waiting) {
     if (tmo != qcom_cTmoEternal) {
       ok = futex_timed_wait(&(qp->lock.pid), 0, (struct timespec *) time_MsToD(&dtime, tmo));
     } else {
@@ -125,7 +126,8 @@ qos_WaitQue (
     if (ok == EWOULDBLOCK) {
       errh_Error("waitQue - Deadlock would occur");
     }
-
+  }
+  
   qdb_Lock;
 
   if ((qp->lock.waiting) || (ok == ETIMEDOUT)) {
