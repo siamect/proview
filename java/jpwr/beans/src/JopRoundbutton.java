@@ -115,6 +115,7 @@ public class JopRoundbutton extends JComponent implements JopDynamic, JopConfirm
       }
     }
   }
+  public void confirmNo() {}
   public void confirmYes() {
     PwrtStatus sts;
     switch ( clickAction) {

@@ -13,8 +13,6 @@ local_java_sources := \
 	JopDigimageBeanInfo.java \
 	JopImage.java \
 	JopImageBeanInfo.java \
-	JopTextField.java \
-	JopTextFieldBeanInfo.java \
 	JopFramethin.java \
 	JopFramethinBeanInfo.java \
 	JopFramemedium.java \
@@ -84,6 +82,8 @@ local_java_sources := \
 	JopCon_v.java \
 	JopCon_vBeanInfo.java
 
+#	JopTextField.java \
+#	JopTextFieldBeanInfo.java \
 #	JopButtoncommand.java \
 #	JopHydraulicpump.java \
 #	JopIndroundlarge.java \
