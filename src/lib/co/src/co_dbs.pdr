@@ -292,7 +292,7 @@ enum dbs_eFile {
 #endif
 
 struct dbs_sFile {
-    co_mFormat     format;           /**< Data representation format. Always stored in network order */
+    co_mFormat      format;           /**< Data representation format. Always stored in network order */
     pwr_tUInt32     cookie;           /**< */
     pwr_tUInt32     size;             /**< total size of load file */
     pwr_tUInt32     offset;           /**< offset to directory counted from start of file */
