@@ -79,6 +79,7 @@
 # define cPrio_fast		(cPrio_base + 15)
 # define cPrio_trend		(cPrio_base + 15)
 # define cPrio_webmon		(cPrio_base + 15)
+# define cPrio_webmonmh		(cPrio_base + 15)
 # define cPrio_elog		(cPrio_base + 15)
 # define cPrio_plc_init		(cPrio_base + 5)
 #endif
@@ -1940,7 +1941,10 @@ ini_ProcTable (
   pp = ini_ProcInsert(sts, cp, "pwr_elog", "pwr_elog_%d", 0, 1, "rt_elog", cPrio_elog, 0, "");
   pp->proc.flags.b.system = 1;
 
-  pp = ini_ProcInsert(sts, cp, "pwr_webmon", "pwr_webmon_%d", 0, 1, "rt_webmon.sh", cPrio_fast, 0, "");
+  pp = ini_ProcInsert(sts, cp, "pwr_webmon", "pwr_webmon_%d", 0, 1, "rt_webmon.sh", cPrio_webmon, 0, "");
+  pp->proc.flags.b.system = 1;
+
+  pp = ini_ProcInsert(sts, cp, "pwr_webmonmh", "pwr_webmonmh_%d", 0, 1, "rt_webmonmh.sh", cPrio_webmonmh, 0, "");
   pp->proc.flags.b.system = 1;
 #endif
 
