@@ -143,7 +143,7 @@ class GrowTable : public GrowRect {
   double		header_row_height;	//!< Height of header row.
   double		row_height;		//!< Row hight.
   double		column_width[TABLE_MAX_COL]; //!< Width of each column.
-  char			header_text[40][TABLE_MAX_COL]; //!< Header text for each column.
+  char			header_text[TABLE_MAX_COL][40]; //!< Header text for each column.
   int			column_size[TABLE_MAX_COL]; //!< Max length of text in column.
   int			value_size;		//!< Total size of cell_value.
   char			*cell_value;		//!< Contains the cell values.

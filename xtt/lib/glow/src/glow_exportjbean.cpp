@@ -2011,6 +2011,90 @@ void GlowExportJBean::folder( double x1, double y1, double x2, double y2,
   }
 }
 
+void GlowExportJBean::table( double x1, double y1, double x2, double y2,
+    	glow_eDrawType	fill_drawtype, int fill,
+	int rows, int columns, int header_row, int header_column,
+	int text_idx, glow_eDrawType text_drawtype,
+	double row_height, double *column_width, char *header_text,
+	glow_eExportPass pass, int *shape_cnt, int node_cnt, ofstream& fp)
+{
+  double dim_x0, dim_x1, dim_y0, dim_y1;
+  char var_name[40];
+  char class_name[] = "GeTable";
+  int text_size;
+  char bold_str[20];
+
+  strcpy( var_name, class_name);
+  var_name[0] = _tolower(var_name[0]);
+  sprintf( &var_name[strlen(var_name)], "%d", node_cnt);
+
+  switch ( pass)
+  {
+    case glow_eExportPass_Shape:
+      break;
+    case glow_eExportPass_Declare:
+    {
+      fp <<
+"  " << class_name << "	" << var_name << ";" << endl;
+      break;
+    }
+    case glow_eExportPass_Attributes:
+    {
+      switch ( text_idx)
+      {
+        case 0: text_size = 8; break;
+        case 1: text_size = 10; break;
+        case 2: text_size = 12; break;
+        case 3: text_size = 14; break;
+        case 4: text_size = 14; break;
+        case 5: text_size = 18; break;
+        case 6: text_size = 18; break;
+        case 7: text_size = 18; break;
+        default: text_size = 24;
+      }
+      if ( text_drawtype == glow_eDrawType_TextHelveticaBold)
+        strcpy(bold_str, "BOLD");
+      else
+        strcpy(bold_str, "PLAIN");
+
+
+      ((GrowCtx *)ctx)->measure_javabean( &dim_x1, &dim_x0, &dim_y1, &dim_y0);
+
+      fp <<
+"    " << var_name << " = new " << class_name << "(session, " << 
+	rows << "," << columns << "," << header_row << "," << header_column << ");" << endl <<
+"    " << var_name << ".setRowHeight(" << int(row_height) << ");" << endl;
+      char *text_p = header_text;
+      for ( int i = 0; i < columns; i++) {
+	fp << 
+"    " << var_name << ".setHeaderText(" << i << ",\"" << text_p << "\");" << endl <<
+"    " << var_name << ".setColumnWidth(" << i << "," << int(column_width[i]) << ");" << endl;
+	text_p += 40;
+      }
+      if ( fill_drawtype != glow_eDrawType_No)
+        fp <<
+"    " << var_name << ".setFillColor(" << (int)fill_drawtype << ");" << endl;
+      fp <<
+"    " << var_name << ".setFont(new Font(\"Helvetica\", Font." << bold_str 
+	 << ", " << text_size << "));" << endl;
+
+      fp <<
+"    " << var_name << ".setBounds(new Rectangle(" << 
+	(int)(x1 - dim_x0 /* - glow_cJBean_Offset) */) << "," << 
+	(int)(y1 - dim_y0 /* - glow_cJBean_Offset) */) << "," << 
+	(int)(x2 - x1 + 2 * glow_cJBean_Offset) << "," << 
+	(int)(y2 - y1 + 2 * glow_cJBean_Offset) << "));" << endl;
+      fp <<
+"    localPanel.add(" << var_name << ", null);" << endl;
+      break;
+    }
+    case glow_eExportPass_Draw:
+      break;
+    default:
+      ;
+  }
+}
+
 void GlowExportJBean::slider( double x1, double y1, double x2, double y2,
 	char *class_name,
     	glow_eDrawType border_drawtype,

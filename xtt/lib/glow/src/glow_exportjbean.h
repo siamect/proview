@@ -131,6 +131,12 @@ class GlowExportJBean {
 	char *folder_file_names, char *folder_text, 
 	int *folder_v_scrollbar, int *folder_h_scrollbar,
         glow_eExportPass pass, int *shape_cnt, int node_cnt, ofstream& fp);
+    void table( double x1, double y1, double x2, double y2,
+    	glow_eDrawType	fill_drawtype, int fill,
+	int rows, int columns, int header_row, int header_column,
+	int text_idx, glow_eDrawType text_drawtype,
+	double row_height, double *column_width, char *header_text,
+	glow_eExportPass pass, int *shape_cnt, int node_cnt, ofstream& fp);
     void slider( double x1, double y1, double x2, double y2,
 	char *class_name,
     	glow_eDrawType border_drawtype,

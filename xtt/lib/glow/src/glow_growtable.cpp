@@ -781,6 +781,7 @@ void GrowTable::export_javabean( GlowTransform *t, void *node,
 	glow_eExportPass pass, int *shape_cnt, int node_cnt, int in_nc, ofstream &fp)
 {
   double x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
+  double cwidth[TABLE_MAX_COL];
 
   if (!t)
   {
@@ -802,11 +803,15 @@ void GrowTable::export_javabean( GlowTransform *t, void *node,
   ll_y = min( y1, y2);
   ur_y = max( y1, y2);
 
-  //  ((GrowCtx *)ctx)->export_jbean->bar( ll_x, ll_y, ur_x, ur_y,
-  //  	draw_type, fill_drawtype, bar_drawtype, bar_bordercolor, fill,
-  //	border, min_value, max_value, bar_borderwidth,
-  //	line_width, rotation,
-  //  	pass, shape_cnt, node_cnt, fp);
+  for ( int i = 0; i < columns; i++)
+    cwidth[i] = column_width[i] * ctx->zoom_factor_x;
+
+  ((GrowCtx *)ctx)->export_jbean->table( ll_x, ll_y, ur_x, ur_y,
+				       fill_drawtype, fill, rows, columns, header_row,
+				       header_column, text_size, text_drawtype,
+				       row_height * ctx->zoom_factor_y, (double *)cwidth,
+				       (char *)header_text,
+				       pass, shape_cnt, node_cnt, fp);
 }
 
 void GrowTable::convert( glow_eConvert version) 
