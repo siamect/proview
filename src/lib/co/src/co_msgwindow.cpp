@@ -331,12 +331,12 @@ static void msg_activate_zoom_reset( Widget w, MsgWindow *msgw, XmAnyCallbackStr
 
 static void msg_activate_help( Widget w, MsgWindow *msgw, XmAnyCallbackStruct *data)
 {
-  XHelp::dhelp( "message window", 0, navh_eHelpFile_Base, 0, true);
+  CoXHelp::dhelp( "message window", 0, navh_eHelpFile_Base, 0, true);
 }
 
 static void msg_activate_help_message( Widget w, MsgWindow *msgw, XmAnyCallbackStruct *data)
 {
-  XHelp::dhelp( "message window", 0, navh_eHelpFile_Base, 0, true);
+  CoXHelp::dhelp( "message window", 0, navh_eHelpFile_Base, 0, true);
 }
 
 static void msg_create_form( Widget w, MsgWindow *msgw, XmAnyCallbackStruct *data)
