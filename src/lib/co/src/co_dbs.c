@@ -10,9 +10,9 @@
 
 #include "pwr.h"
 #include "co_dbs.h"
+#include "co_dbs_msg.h"
 #include "co_errno.h"
 #include "co_platform.h"
-#include "rt_errh.h"
 
 
 
@@ -267,7 +267,7 @@ dbs_Reference(pwr_tStatus sts*, dbs_sEnv *ep, void *adrs)
 pwr_tBoolean
 dbs_Close(pwr_tStatus *sts, dbs_sEnv *ep) 
 {
-     *sts = 1; /** @todo msg code */ 
+     *sts = DBS__SUCCESS;
      fclose(ep->f);
      ep->f = NULL;
  
@@ -281,19 +281,17 @@ dbs_Open(pwr_tStatus *sts, dbs_sEnv *ep, const char *filename)
     co_mFormat srcFormat, ownFormat;
     PDR pdrs;
 
-    *sts = 1; /** @todo msg code */ 
+    *sts = DBS__SUCCESS;
     memset(ep, 0, sizeof(*ep));
     
     f = fopen(filename, "r");
     if (f == NULL) {
         *sts = errno_GetStatus();
-        errh_Error("Failed to open: %s, %m", filename, *sts);
         return NULL;
     } 
 
     if (fread(&ep->file, sizeof(ep->file), 1, f) == 0) {
         *sts = errno_GetStatus();
-        errh_Error("Failed to read dbs_sFile from: %s, %m", filename, *sts);
         fclose(f);
         return NULL;
     }
@@ -308,9 +306,7 @@ dbs_Open(pwr_tStatus *sts, dbs_sEnv *ep, const char *filename)
     if (srcFormat.m != ownFormat.m) {
         pdrmem_create(&pdrs, &ep->file, sizeof(ep->file), PDR_DECODE, srcFormat, ownFormat);
         if (!pdr_dbs_sFile(&pdrs, &ep->file)) {
-            /** @todo Define error messages for co_dbs */
-            *sts = 2;
-            errh_Error("pdr_dbs_sFile failed for: %s", filename);
+            *sts = DBS__PDRFILE;
             fclose(f);
             return NULL;
         }
@@ -326,7 +322,7 @@ pwr_tBoolean
 dbs_AlignedRead(pwr_tStatus *sts, void *buf, pwr_tUInt32 size, dbs_sEnv *ep)
 {
     int offset;
-    *sts = 1; /**@todo dbs errorcode */
+    *sts = DBS__SUCCESS;   
     
 
     if (fread(buf, size, 1, ep->f) == 0)
