@@ -25,6 +25,7 @@ public:
   wb_db_ohead m_ohead;
   
   wb_vrepdb(wb_erep *erep, const char *fileName);
+  wb_vrepdb(wb_erep *erep, pwr_tVid, pwr_tCid, const char *volumeName, const char *fileName);
 
   virtual void unref();
   virtual wb_vrep *ref();

@@ -692,7 +692,8 @@ void wb_db_dbody::iter(wb_import &i)
   m_dbc->close();
 }
 
-wb_db::wb_db()
+wb_db::wb_db() :
+  m_vid(pwr_cNVid)
 {
 }
 
@@ -720,15 +721,101 @@ void wb_db::close()
   m_env->close(0);
 }
 
-void wb_db::create(pwr_tVid vid, pwr_tCid cid, const char *volumeName, const char *fileName)
+void wb_db::copy(wb_export &e, const char *fileName)
 {
-  m_vid = vid;
-  m_cid = cid;
-  strcpy(m_volumeName, volumeName);
   dcli_translate_filename(m_fileName, fileName);
   //int rc = m_env->txn_begin(0, (DbTxn **)&m_txn, 0);
   
   openDb(false);
+  importVolume(e);
+  close();
+  openDb(true);
+  
+  try {
+    m_env->txn_begin(0, (DbTxn **)&m_txn, 0);
+    
+    wb_db_info i(this);
+    i.get(m_txn);
+    m_vid = i.vid();
+    m_cid = i.cid();
+    strcpy(m_volumeName, i.name());
+  }
+  catch (DbException &e) {
+    //txn->abort();
+    printf("exeption: %s\n", e.what());
+  }
+
+}
+
+void wb_db::create(pwr_tVid vid, pwr_tCid cid, const char *volumeName, const char *fileName)
+{
+  m_vid = vid;
+  m_cid = cid;
+  pwr_tStatus sts;
+  strcpy(m_volumeName, volumeName);
+  dcli_translate_filename(m_fileName, fileName);
+  //int rc = m_env->txn_begin(0, (DbTxn **)&m_txn, 0);
+  size_t rbSize = 0;
+  pwr_uVolume volume;
+  pwr_tTime time;  
+  pwr_tOid oid;
+  
+  
+  openDb(true);
+
+  memset(&volume, 0, sizeof(volume));
+  
+  switch (cid) {
+  case pwr_eClass_RootVolume:
+    rbSize = sizeof(pwr_sRootVolume);
+    break;
+  case pwr_eClass_SubVolume:
+    rbSize = sizeof(pwr_sSubVolume);
+    break;
+  case pwr_eClass_SystemVolume:
+    rbSize = sizeof(pwr_sSystemVolume);
+    break;
+  case pwr_eClass_ClassVolume:
+    rbSize = sizeof(pwr_sClassVolume);
+    break;
+  case pwr_eClass_WorkBenchVolume:
+    rbSize = sizeof(pwr_sWorkBenchVolume);
+    break;
+  case pwr_eClass_DirectoryVolume:
+    rbSize = sizeof(pwr_sDirectoryVolume);
+    break;
+  case pwr_eClass_SharedVolume:
+  case pwr_eClass_CreateVolume:
+  case pwr_eClass_MountVolume:
+  case pwr_eClass_MountObject:
+  case pwr_eClass_VolatileVolume:
+  case pwr_eClass_DynamicVolume:
+  default:
+    break;
+  }
+  
+  oid.vid = vid;
+  oid.oix = pwr_cNOix;
+  wb_name n(volumeName);
+  pwr_mClassDef flags;
+  
+
+  try {
+    m_env->txn_begin(0, (DbTxn **)&m_txn, 0);
+    
+    importHead(oid, cid, pwr_cNOid, pwr_cNOid, pwr_cNOid, pwr_cNOid, pwr_cNOid, n.name(), n.normName(), flags, time, time, time, rbSize, 0);
+
+    wb_db_info i(this);
+    i.get(m_txn);
+    m_vid = i.vid();
+    m_cid = i.cid();
+    strcpy(m_volumeName, i.name());
+    commit(&sts);
+  }
+  catch (DbException &e) {
+    //txn->abort();
+    printf("exeption: %s\n", e.what());
+  }
 }
 
 wb_db_txn *wb_db::begin(wb_db_txn *txn)

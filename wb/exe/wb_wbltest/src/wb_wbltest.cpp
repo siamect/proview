@@ -20,6 +20,53 @@
 #if 1
 int main( int argc, char *argv[])
 {
+  //pwr_tStatus sts;
+  //dbs_sEnv env;
+  //dbs_sEnv *ep;
+  wb_erep *erep = new wb_erep();
+
+  if (argc <= 2) exit(0);
+  //  ep = dbs_Map(&sts, &env, argv[1]);
+  wb_vrepdbs *vdbs = new wb_vrepdbs(erep, argv[1]);
+  vdbs->load();
+
+  wb_dbs dbs(vdbs);
+  dbs.setFileName("lasse.dbs");
+  dbs.importVolume(*vdbs);
+  
+  //wb_orepdbs *op = (wb_orepdbs *)vdbs->object(&sts);
+
+  wb_db db(pwr_cNVid);
+  
+  db.copy(*vdbs, argv[2]);
+  //db.importVolume(*vdbs);
+  db.close();
+
+  wb_vrepdb vdb(erep, argv[2]);
+  
+  wb_dbs adbs(vdbs);
+  adbs.setFileName("alasse.dbs");
+  adbs.importVolume(vdb);
+}
+
+#elif 0
+int main( int argc, char *argv[])
+{
+  //pwr_tStatus sts;
+  //dbs_sEnv env;
+  //dbs_sEnv *ep;
+  wb_erep *erep = new wb_erep();
+
+  if (argc <= 2) exit(0);
+
+  //wb_vrepdb vdb(erep, argv[2]);
+  wb_vrepdb vdb(erep, 1000, pwr_eClass_RootVolume, "Lasse", argv[2]);
+  
+}
+
+#elif 0
+int main( int argc, char *argv[])
+{
   pwr_tStatus sts;
   //dbs_sEnv env;
   //dbs_sEnv *ep;
@@ -34,7 +81,7 @@ int main( int argc, char *argv[])
   dbs.setFileName("lasse.dbs");
   dbs.importVolume(*vdbs);
   
-  wb_orepdbs *op = (wb_orepdbs *)vdbs->object(&sts);
+  //wb_orepdbs *op = (wb_orepdbs *)vdbs->object(&sts);
 
   wb_db db(vdbs->vid());
   db.create(vdbs->vid(), vdbs->cid(), vdbs->name(), argv[2]);

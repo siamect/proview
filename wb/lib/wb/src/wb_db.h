@@ -65,6 +65,7 @@ public:
   void open(const char *fileName);
   void openDb(bool useTxn);
   
+  void copy(wb_export &e, const char *fileName);
   void create(pwr_tVid vid, pwr_tCid cid, const char *volumeName, const char *fileName);
   
   int del_family(wb_db_txn *txn, Dbc *cp, pwr_tOid poid);

@@ -37,6 +37,21 @@ wb_vrepdb::wb_vrepdb(wb_erep *erep, const char *fileName) :
   m_merep = m_erep->merep();
 }
 
+wb_vrepdb::wb_vrepdb(wb_erep *erep, pwr_tVid vid, pwr_tCid cid, const char *volumeName, const char *fileName) :
+  m_erep(erep), m_nRef(0), m_ohead()
+{  
+  strcpy(m_fileName, fileName);
+
+  m_db = new wb_db();
+  m_db->create(vid, cid, volumeName, fileName);
+  m_ohead.setDb(m_db);
+  strcpy(m_name, m_db->volumeName());
+  m_vid = m_db->vid();
+  m_cid = m_db->cid();
+
+  m_merep = m_erep->merep();
+}
+
 wb_erep *wb_vrepdb::erep()
 {
   return m_erep;
