@@ -275,6 +275,37 @@ int	NavHelp::help( char *help_key, char *help_bookmark,
             link_filename_p = link_filename;
           }
 	}
+        else if ( (s = strstr( line, "<weblink>")) || (s = strstr( line, "<WEBLINK>")))
+	{
+          help_remove_spaces( s + 9, link);
+	  *s = 0;
+
+          link_nr = dcli_parse( link, ",", "", (char *)link_part,
+                	sizeof( link_part) / sizeof( link_part[0]),
+			sizeof( link_part[0]), 0);
+          if ( link_nr == 1)
+	  {
+	    strcpy( link, "$web:");
+	    help_remove_spaces( link_part[0], &link[5]);
+            strcpy( link_bookmark, "");
+            link_filename_p = file_name;
+	  }
+          else if ( link_nr == 2)
+	  {
+	    strcpy( link, "$web:");
+	    help_remove_spaces( link_part[0], &link[5]);
+	    help_remove_spaces( link_part[1], link_bookmark);
+            link_filename_p = file_name;
+          }
+          else if ( link_nr > 2)
+	  {
+	    strcpy( link, "$web:");
+	    help_remove_spaces( link_part[0], &link[5]);
+	    help_remove_spaces( link_part[1], link_bookmark);
+	    help_remove_spaces( link_part[2], link_filename);
+            link_filename_p = link_filename;
+          }
+	}
         else
 	{
           strcpy( link, "");

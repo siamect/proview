@@ -802,7 +802,11 @@ int HItemHelpImage::doubleclick_action( CoXHelpNavBrow *brow, CoXHelpNav *xhelpn
 
   if ( strcmp( link, "") != 0)
   {
-    if ( (strstr( link, ".htm") != 0) || (strstr( link, ".pdf") != 0)) {
+    if ( strncmp( link, "$web:", 5) == 0) {
+      // Open the url
+      xhelpnav_open_URL( xhelpnav, &link[5]);
+    }
+    else if ( (strstr( link, ".htm") != 0) || (strstr( link, ".pdf") != 0)) {
       // Open the url
       xhelpnav_open_URL( xhelpnav, link);
     }
@@ -924,7 +928,11 @@ int HItemHelp::doubleclick_action( CoXHelpNavBrow *brow, CoXHelpNav *xhelpnav, d
   }
   else if ( strcmp( link, "") != 0)
   {
-    if ( (strstr( link, ".htm") != 0) || (strstr( link, ".pdf") != 0)) {
+    if ( strncmp( link, "$web:", 5) == 0) {
+      // Open the url
+      xhelpnav_open_URL( xhelpnav, &link[5]);
+    }
+    else if ( (strstr( link, ".htm") != 0) || (strstr( link, ".pdf") != 0)) {
       // Open the url
       xhelpnav_open_URL( xhelpnav, link);
     }
@@ -991,7 +999,11 @@ int HItemHelpBold::doubleclick_action( CoXHelpNavBrow *brow, CoXHelpNav *xhelpna
   }
   else if ( strcmp( link, "") != 0)
   {
-    if ( (strstr( link, ".htm") != 0) || (strstr( link, ".pdf") != 0)) {
+    if ( strncmp( link, "$web:", 5) == 0) {
+      // Open the url
+      xhelpnav_open_URL( xhelpnav, &link[5]);
+    }
+    else if ( (strstr( link, ".htm") != 0) || (strstr( link, ".pdf") != 0)) {
       // Open the url
       xhelpnav_open_URL( xhelpnav, link);
     }
