@@ -8,16 +8,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#if defined OS_VMS
-#include <descrip.h>
-#include <lib$routines.h>
-#include <libdef.h>
-#include <libdtdef.h>
-#include <lnmdef.h>
-#include <clidef.h>
-#include <ssdef.h>
-#include <starlet.h>
-#endif
+#include <sys/stat.h>
 #include <string.h>
 #include <ctype.h>
 
@@ -973,7 +964,7 @@ static int gcg_cc(
  	  sprintf( cmd, "%s %d %ld %s %d %s %s %s", 
 	    fname, gcg_debug, filetype, p1, os, p2, p3, systemname);
 	  sts = system( cmd);
-          if ( sts != 0) return GSX__SWINDERR;
+          if ( sts != 0) return GSX__CCERROR;
 	}
 	else
 	{
@@ -3228,6 +3219,7 @@ static int	gcg_get_outputstring_spec(
 	  free((char *) parameter);
 	  return GSX__SPECFOUND;
 	}
+#if 0
 	if ( output_node->ln.classid == pwr_cClass_GetIp)
 	{
 	  /* Get the objdid stored in the parameter */
@@ -3268,6 +3260,7 @@ static int	gcg_get_outputstring_spec(
 	  free((char *) parameter);
 	  return GSX__SPECFOUND;
 	}
+#endif
 	/**********************************************************
 	*  GETPI
 	***********************************************************/	
@@ -3719,10 +3712,12 @@ static int gcg_error_msg(
 	      printf("        in object  %s\n", hier_name);
 	    msgw_message_plcobject( sts, "   in object", hier_name, node->ln.object_did);
 	  }
-	  if ( (sts & 2) && !(sts & 1))
-	    gcgctx->errorcount++;
-	  else if ( !(sts & 2) && !(sts & 1))
-	    gcgctx->warningcount++;
+	  if ( gcgctx) {
+	    if ( (sts & 2) && !(sts & 1))
+	      gcgctx->errorcount++;
+	    else if ( !(sts & 2) && !(sts & 1))
+	      gcgctx->warningcount++;
+	  }
 	}
 	return GSX__SUCCESS;
 }
@@ -5391,7 +5386,10 @@ unsigned long	spawn;
 
 	        sts = gcg_cc( GCG_PLC, module_name, plclibrary, 
 						plc_name, opsys, spawn);
-                if ( EVEN(sts)) (*errorcount)++;
+                if ( EVEN(sts)) {
+		  gcg_error_msg( 0, sts, 0);
+		  (*errorcount)++;
+		}
 	      }
 	    }          
 	  }
@@ -5697,7 +5695,10 @@ unsigned long	spawn;
 	      IF_PR {
                 sts = gcg_cc( GCG_WIND, module_name, plclibrary, wind_name, 
 			opsys, spawn);
-                if ( EVEN(sts)) (*errorcount)++;
+                if ( EVEN(sts)) {
+		  gcg_error_msg( 0, sts, 0);
+		  (*errorcount)++;
+		}
 	      }
 	    }
           }
@@ -14143,7 +14144,37 @@ vldh_t_node	node;
 		gcgctx->print, 0, gcg_debug);
 	  node->hn.subwindowobject[0] = 0;
 	}
-	free( (char *)instance_time);
+	else {
+	  // Check if new structfile
+	  char *s;
+	  char fname[200];
+	  struct stat info;
+	  pwr_tTime		*compile_time;
+
+	  /* Get compilation time in parameter Compiled */
+	  sts = ldh_GetObjectPar( ldhses, window_objid, 
+			"DevBody", "Compiled",
+			(char **)&compile_time, &size); 
+	  if (EVEN(sts)) return sts;
+
+	  if ( (s = strchr( oname, ':')))
+	    *s = 0;
+	  sprintf( fname, "$pwrp_inc/pwr_%sclasses.h", oname);
+	  cdh_ToLower( fname, fname);
+	  dcli_translate_filename( fname, fname);
+
+	  sts = stat( fname, &info);
+	  if ( sts != -1 && info.st_ctime > compile_time->tv_sec) {
+	    /* Compile the subwindow... */
+	    ldhwb = ldh_SessionToWB( ldhses);
+	    sts = gcg_wind_comp_all( ldhwb, ldhses, window_objid,
+		gcgctx->print, 0, gcg_debug);
+	  }
+	  free( (char *)compile_time);
+
+	}
+	if ( found)
+	  free( (char *)instance_time);
 	free( (char *)template_time);
 
 	/* Print the code */
