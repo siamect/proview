@@ -34,6 +34,7 @@ class wb_erep
   int m_dir_cnt;
   int m_volatile_idx;
   int m_buffer_max;
+  bool m_ref_merep_occupied;
 
 public:
   wb_erep();
@@ -72,6 +73,7 @@ public:
   int nextVolatileVid( pwr_tStatus *sts, char *name);
   void setRefMerep( wb_merep *merep);
   void resetRefMerep();
+  bool refMerepOccupied() { return m_ref_merep_occupied;}
 
   static void volumeNameToFilename( pwr_tStatus *sts, char *name, char *filename);
 
@@ -81,6 +83,8 @@ private:
   void loadMeta( pwr_tStatus *status, char *db);
   void loadLocalWb( pwr_tStatus *sts);
   void bindMethods();
+
+  static void at_exit();
 };
 
 #endif

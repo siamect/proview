@@ -13,6 +13,7 @@
 #include "wb_tdrep.h"
 #include "wb_adrep.h"
 #include "wb_name.h"
+#include "wb_dblock.h"
 #include "wb_ldh_msg.h"
 #include "co_msgwindow.h"
 
@@ -26,14 +27,22 @@ extern "C" {
 pwr_dImport pwr_BindClasses(System);
 pwr_dImport pwr_BindClasses(Base);
 
-wb_erep::wb_erep() : m_dir_cnt(0), m_volatile_idx(0), m_buffer_max(10)
+wb_erep::wb_erep() : m_dir_cnt(0), m_volatile_idx(0), m_buffer_max(10),
+		     m_ref_merep_occupied(false)
 {
   m_merep = new wb_merep(0);
+
+  atexit( at_exit);
 }
 
 wb_erep::~wb_erep()
 {
   delete m_merep;
+}
+
+void wb_erep::at_exit()
+{
+  wb_dblock::dbunlock_all();
 }
 
 void wb_erep::unref()
@@ -558,6 +567,8 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
     }
     else {
       // Load db for this volume
+      char uname[80];
+
       if ( db) {
 	// If db is specified, load only specified db, load as dbs instead
 	if ( cdh_NoCaseStrcmp( vol_array[0], db) != 0) {
@@ -591,15 +602,37 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
 
       sts = dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_INIT);
       dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_END);
-      if ( ODD(sts)) {
-	wb_vrepdb *vrepdb = new wb_vrepdb( this, vname);
-	vrepdb->name(vol_array[0]);
-	addDb( &sts, vrepdb);
-	MsgWindow::message( 'I', "Database opened", vname);
-	vol_cnt++;
+      if ( wb_dblock::is_locked(vname, uname)) {
+	MsgWindow::message( 'E', "Database is locked by user", uname, vname);
+	// Try to load dbs-file instead
+	cdh_ToLower( vol_array[0], vol_array[0]);
+        strcpy( vname, "$pwrp_load/");
+        strcat( vname, vol_array[0]);
+        strcat( vname, ".dbs");
+        dcli_translate_filename( vname, vname);
+
+        try {
+          vrep = new wb_vrepdbs( this, vname);
+          vrep->load();
+          addDbs( &sts, vrep);
+	  MsgWindow::message( 'I', "Volume loaded", vname);
+          vol_cnt++;
+        }
+        catch ( wb_error& e) {
+	  MsgWindow::message( 'E', "Unable to open volume", vname, e.what().c_str());
+        }
       }
-      else
-	MsgWindow::message( 'E', "Database not found", vname);
+      else {
+	if ( ODD(sts)) {
+	  wb_vrepdb *vrepdb = new wb_vrepdb( this, vname);
+	  vrepdb->name(vol_array[0]);
+	  addDb( &sts, vrepdb);
+	  MsgWindow::message( 'I', "Database opened", vname);
+	  vol_cnt++;
+	}
+	else
+	  MsgWindow::message( 'E', "Database not found", vname);
+      }
     }
   }
   fpm.close();
@@ -617,20 +650,26 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
   // Load directory volume
 
   if ( !db || (db && cdh_NoCaseStrcmp( "directory", db) == 0)) {
+    char uname[80];
+
     strcpy( vname, "$pwrp_db/directory.db");
     dcli_translate_filename( vname, vname);
 
     sts = dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_INIT);
     dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_END);
-    if ( ODD(sts)) {
-      wb_vrepdb *vrepdb = new wb_vrepdb( this, vname);
-      vrepdb->name("directory");
-      addDb( &sts, vrepdb);
-      MsgWindow::message( 'I', "Database opened", vname);
-    }
-    if ( EVEN(sts)) {
-      *status = LDH__PROJCONFIG;
-      return;
+    if ( wb_dblock::is_locked(vname, uname))
+      MsgWindow::message( 'E', "Database is locked by user", uname, vname);
+    else {
+      if ( ODD(sts)) {
+	wb_vrepdb *vrepdb = new wb_vrepdb( this, vname);
+	vrepdb->name("directory");
+	addDb( &sts, vrepdb);
+	MsgWindow::message( 'I', "Database opened", vname);
+      }
+      if ( EVEN(sts)) {
+	*status = LDH__PROJCONFIG;
+	return;
+      }
     }
   }
   if ( !vol_cnt)
@@ -866,6 +905,7 @@ void wb_erep::volumeNameToFilename( pwr_tStatus *sts, char *name, char *filename
 void wb_erep::setRefMerep( wb_merep *merep)
 {
   pwr_tStatus sts;
+  m_ref_merep_occupied = true;
 
   wb_vrepref *vrepref = (wb_vrepref *) volume( &sts, ldh_cPlcConnectVolume);
   if ( ODD(sts))
@@ -881,6 +921,7 @@ void wb_erep::setRefMerep( wb_merep *merep)
 void wb_erep::resetRefMerep()
 {
   pwr_tStatus sts;
+  m_ref_merep_occupied = false;
 
   wb_vrepref *vrepref = (wb_vrepref *) volume( &sts, ldh_cPlcConnectVolume);
   if ( ODD(sts))
