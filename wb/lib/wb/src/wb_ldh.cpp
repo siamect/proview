@@ -1930,6 +1930,69 @@ ldh_GetSuperClass( ldh_tSession session, pwr_tCid cid, pwr_tCid *super)
   return LDH__SUCCESS;
 }
 
+pwr_tStatus
+ldh_GetMaskBitDef( ldh_tSession session, pwr_tTid tid, ldh_sBitDef **bitdef,
+		   int *rows)
+{
+  wb_session *sp = (wb_session *)session;
+
+  wb_object to = sp->object( cdh_TypeIdToObjid( tid));
+  if (!to) return to.sts();
+
+  int bit_cnt = 0;
+  for ( wb_object bito = to.first(); bito; bito = bito.after()) {
+    if ( bito.cid() == pwr_eClass_Bit)
+      bit_cnt++;
+  }
+  if ( !bit_cnt)
+    return LDH__NOTYPE;
+
+  *bitdef = (ldh_sBitDef *) calloc( bit_cnt, sizeof(ldh_sBitDef));
+  *rows = 0;
+  for ( wb_object bito = to.first(); bito; bito = bito.after()) {
+    if ( bito.cid() == pwr_eClass_Bit) {
+      wb_attribute a = sp->attribute( bito.oid(), "SysBody");
+      if ( !a) return a.sts();
+
+      strcpy( (*bitdef)[*rows].Name, bito.name());
+      (*bitdef)[*rows].Bit = (pwr_sBit *) a.value();
+      (*rows)++;
+    }
+  }
+  return LDH__SUCCESS;
+}
+
+pwr_tStatus
+ldh_GetEnumValueDef( ldh_tSession session, pwr_tTid tid, ldh_sValueDef **valuedef,
+		   int *rows)
+{
+  wb_session *sp = (wb_session *)session;
+
+  wb_object to = sp->object( cdh_TypeIdToObjid( tid));
+  if (!to) return to.sts();
+
+  int val_cnt = 0;
+  for ( wb_object valo = to.first(); valo; valo = valo.after()) {
+    if ( valo.cid() == pwr_eClass_Value)
+      val_cnt++;
+  }
+  if ( !val_cnt)
+    return LDH__NOTYPE;
+
+  *valuedef = (ldh_sValueDef *) calloc( val_cnt, sizeof(ldh_sValueDef));
+  *rows = 0;
+  for ( wb_object valo = to.first(); valo; valo = valo.after()) {
+    if ( valo.cid() == pwr_eClass_Value) {
+      wb_attribute a = sp->attribute( valo.oid(), "SysBody");
+      if ( !a) return a.sts();
+
+      strcpy( (*valuedef)[*rows].Name, valo.name());
+      (*valuedef)[*rows].Value = (pwr_sValue *) a.value();
+      (*rows)++;
+    }
+  }
+  return LDH__SUCCESS;
+}
 #endif
 
 

@@ -81,9 +81,9 @@ pwr_tStatus wsx_error_msg(
     int			*warningcount
 )
 {
-	static char msg[256];
-	int	status, size;
-	char	name[80];
+	static char 	msg[256];
+	int		status, size;
+	pwr_tOName	name;
 	FILE 		*logfile;
 
 	logfile = NULL;

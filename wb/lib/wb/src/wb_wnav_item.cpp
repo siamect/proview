@@ -14,7 +14,6 @@ extern "C" {
 #include "wb_ldh.h"
 #include "co_cdh.h"
 #include "co_time.h"
-#include "rt_types.h"
 #include "pwr_baseclasses.h"
 #include "co_dcli.h"
 }
@@ -386,6 +385,7 @@ int WItemBaseObject::open_attributes( WNav *wnav, double x, double y)
 		parname,
 		bodydef[j].Par->Output.Info.Elements, 
 		bodydef[j].Par->Output.Info.Type, 
+		bodydef[j].Par->Output.TypeRef, 
 		bodydef[j].Par->Output.Info.Size, 
 		bodydef[j].Par->Output.Info.Flags,
 		body, output_cnt);
@@ -397,6 +397,7 @@ int WItemBaseObject::open_attributes( WNav *wnav, double x, double y)
 		parname,
 		bodydef[j].Par->Output.Info.Elements, 
 		bodydef[j].Par->Output.Info.Type, 
+		bodydef[j].Par->Output.TypeRef, 
 		bodydef[j].Par->Output.Info.Size, 
 		bodydef[j].Par->Output.Info.Flags,
 		body, 0);
@@ -411,6 +412,7 @@ int WItemBaseObject::open_attributes( WNav *wnav, double x, double y)
               new WItemAttr( wnav->brow, wnav->ldhses, objid, node, 
 		flow_eDest_IntoLast, parname,
 		bodydef[j].Par->Input.Info.Type, 
+		bodydef[j].Par->Input.TypeRef, 
 		bodydef[j].Par->Input.Info.Size,
 		bodydef[j].Par->Input.Info.Flags,
 		body, 0);
@@ -418,6 +420,7 @@ int WItemBaseObject::open_attributes( WNav *wnav, double x, double y)
               new WItemAttrInputInv( wnav->brow, wnav->ldhses, objid, node, 
 		flow_eDest_IntoLast, parname,
 		bodydef[j].Par->Input.Info.Type, 
+		bodydef[j].Par->Input.TypeRef, 
 		bodydef[j].Par->Input.Info.Size,
 		bodydef[j].Par->Input.Info.Flags,
 		body, input_cnt);
@@ -425,6 +428,7 @@ int WItemBaseObject::open_attributes( WNav *wnav, double x, double y)
               new WItemAttrInputF( wnav->brow, wnav->ldhses, objid, node, 
 		flow_eDest_IntoLast, parname,
 		bodydef[j].Par->Input.Info.Type, 
+		bodydef[j].Par->Input.TypeRef, 
 		bodydef[j].Par->Input.Info.Size,
 		bodydef[j].Par->Input.Info.Flags,
 		body, input_cnt);
@@ -432,6 +436,7 @@ int WItemBaseObject::open_attributes( WNav *wnav, double x, double y)
               new WItemAttrInput( wnav->brow, wnav->ldhses, objid, node,
 		flow_eDest_IntoLast, parname,
 		bodydef[j].Par->Input.Info.Type, 
+		bodydef[j].Par->Input.TypeRef, 
 		bodydef[j].Par->Input.Info.Size,
 		bodydef[j].Par->Input.Info.Flags,
 		body, input_cnt);
@@ -442,6 +447,7 @@ int WItemBaseObject::open_attributes( WNav *wnav, double x, double y)
               new WItemAttr( wnav->brow, wnav->ldhses, objid, node,
 		flow_eDest_IntoLast, parname,
 		bodydef[j].Par->Input.Info.Type, 
+		bodydef[j].Par->Input.TypeRef, 
 		bodydef[j].Par->Input.Info.Size,
 		bodydef[j].Par->Input.Info.Flags,
 		body, 0);
@@ -449,6 +455,7 @@ int WItemBaseObject::open_attributes( WNav *wnav, double x, double y)
               new WItemAttrInputF( wnav->brow, wnav->ldhses, objid, node,
 		flow_eDest_IntoLast, parname,
 		bodydef[j].Par->Input.Info.Type, 
+		bodydef[j].Par->Input.TypeRef, 
 		bodydef[j].Par->Input.Info.Size,
 		bodydef[j].Par->Input.Info.Flags,
 		body, input_cnt);
@@ -462,6 +469,7 @@ int WItemBaseObject::open_attributes( WNav *wnav, double x, double y)
             new WItemAttr( wnav->brow, wnav->ldhses, objid, node, 
 		flow_eDest_IntoLast, parname,
 		bodydef[j].Par->Output.Info.Type, 
+		bodydef[j].Par->Output.TypeRef, 
 		bodydef[j].Par->Output.Info.Size,
 		bodydef[j].Par->Output.Info.Flags,
 		body, 0);
@@ -469,6 +477,7 @@ int WItemBaseObject::open_attributes( WNav *wnav, double x, double y)
             new WItemAttrOutput( wnav->brow, wnav->ldhses, objid, node, 
 		flow_eDest_IntoLast, parname,
 		bodydef[j].Par->Output.Info.Type, 
+		bodydef[j].Par->Output.TypeRef, 
 		bodydef[j].Par->Output.Info.Size,
 		bodydef[j].Par->Output.Info.Flags,
 		body, output_cnt);
@@ -488,6 +497,7 @@ int WItemBaseObject::open_attributes( WNav *wnav, double x, double y)
 	    new WItemAttr( wnav->brow, wnav->ldhses, objid, node, 
 		flow_eDest_IntoLast, parname,
 		bodydef[j].Par->Output.Info.Type, 
+		bodydef[j].Par->Output.TypeRef, 
 		bodydef[j].Par->Output.Info.Size,
 		bodydef[j].Par->Output.Info.Flags,
 		body, 0);
@@ -981,10 +991,11 @@ int WItemFile::open_children( WNav *wnav, double x, double y)
 WItemBaseAttr::WItemBaseAttr(
 	WNavBrow *item_brow, ldh_tSesContext item_ldhses, 
 	pwr_tObjid item_objid,
-	char *attr_name, int attr_type_id, int attr_size, int attr_flags,
+	char *attr_name, int attr_type_id, pwr_tTid attr_tid,
+	int attr_size, int attr_flags,
 	char *attr_body) :
 	WItem(item_objid, 0), brow(item_brow), ldhses(item_ldhses),
-	type_id(attr_type_id), size(attr_size), flags(attr_flags)
+	type_id(attr_type_id), tid(attr_tid), size(attr_size), flags(attr_flags)
 {
   strcpy( attr, attr_name);
   strcpy( body, attr_body);
@@ -1023,10 +1034,11 @@ WItemAttr::WItemAttr(
 	WNavBrow *item_brow, ldh_tSesContext item_ldhses, 
 	pwr_tObjid item_objid,
 	brow_tNode dest, flow_eDest dest_code,
-	char *attr_name, int attr_type_id, int attr_size, int attr_flags,
+	char *attr_name, int attr_type_id, pwr_tTid attr_tid, 
+	int attr_size, int attr_flags,
 	char *attr_body, int fullname) :
 	WItemBaseAttr( item_brow, item_ldhses, item_objid, attr_name,
-	attr_type_id, attr_size, attr_flags, attr_body)
+	attr_type_id, attr_tid, attr_size, attr_flags, attr_body)
 {
   char	obj_name[120];
   char	annot[120];
@@ -1140,39 +1152,42 @@ int WItemAttr::open_children( double x, double y)
     brow_ResetNodraw( brow->ctx);
     brow_Redraw( brow->ctx, node_y);
   }
-  else // if ( parent && !noedit)
+  else // if ( parent && !noedit) 
   {
-    types_sEnumElement	*elem_p;
+    if ( type_id == pwr_eType_Enum) {
+      ldh_sValueDef *vd;
+      int rows;
 
-    if ( type_id == pwr_eType_Enum)
-    {
-      sts = types_find_enum( classid, name, &elem_p);
+      sts = ldh_GetEnumValueDef( ldhses, tid, &vd, &rows);
       if ( EVEN(sts)) return WNAV__NOCHILDREN;
 
       // Create some children
       brow_SetNodraw( brow->ctx);
 
-      for ( ; elem_p->name[0] != 0; elem_p++)
-      {
-        new WItemEnum( brow, ldhses, objid, elem_p->name, attr, type_id,
-		size, flags, body, elem_p->num, 0, 0,
+      for ( int i = 0; i < rows; i++) {
+        new WItemEnum( brow, ldhses, objid, vd[i].Value->Text, attr, 
+	        type_id, tid,
+		size, flags, body, vd[i].Value->Value, 0, 0,
 		node, flow_eDest_IntoLast);
       }
+      free( (char *)vd);
     }
-    else
-    {
-      sts = types_find_mask( classid, name, &elem_p);
+    else {
+      ldh_sBitDef *bd;
+      int rows;
+
+      sts = ldh_GetMaskBitDef( ldhses, tid, &bd, &rows);
       if ( EVEN(sts)) return WNAV__NOCHILDREN;
 
       // Create some children
       brow_SetNodraw( brow->ctx);
 
-      for ( ; elem_p->name[0] != 0; elem_p++)
-      {
-        new WItemMask( brow, ldhses, objid, elem_p->name, attr, type_id,
-		size, flags, body, (unsigned int) elem_p->num, 0, 0, 
+      for ( int i = 0; i < rows; i++) {
+        new WItemMask( brow, ldhses, objid, bd[i].Bit->Text, attr, type_id,
+		tid, size, flags, body, (unsigned int) bd[i].Bit->Value, 0, 0, 
 		node, flow_eDest_IntoLast);
       }
+      free( (char *)bd);
     }
 
     brow_SetOpen( node, wnav_mOpen_Children);
@@ -1233,16 +1248,28 @@ int WItemAttr::update()
 
   switch( type_id)
   {
-    case pwr_eType_Enum:
-      sts = types_translate_enum( classid, attr, * (unsigned int *)value, buf);
-      if ( EVEN(sts))
-        wnav_attrvalue_to_string( ldhses, type_id, value, &buff, &len);
-      else
-      {
-        buff = buf;        
-        len = strlen(buf);
+    case pwr_eType_Enum: {
+      ldh_sValueDef *vd;
+      int rows;
+      bool found = false;
+
+      sts = ldh_GetEnumValueDef( ldhses, tid, &vd, &rows);
+      if ( ODD(sts)) {
+	for ( int i = 0; i < rows; i++) {
+	  if ( vd[i].Value->Value == *(pwr_tInt32 *)value) {
+	    strcpy( buff, vd[i].Value->Text);
+	    buff = buf;        
+	    len = strlen(buf);
+	    found = true;
+	    break;
+	  }
+	}
+	free( (char *)vd);
       }
+      if ( EVEN(sts) || !found)
+        wnav_attrvalue_to_string( ldhses, type_id, value, &buff, &len);
       break;
+    }
     default:
       wnav_attrvalue_to_string( ldhses, type_id, value, &buff, &len);
   }
@@ -1257,10 +1284,11 @@ WItemAttrInput::WItemAttrInput(
 	WNavBrow *item_brow, ldh_tSesContext item_ldhses, 
 	pwr_tObjid item_objid,
 	brow_tNode dest, flow_eDest dest_code,
-	char *attr_name, int attr_type_id, int attr_size, int attr_flags,
+	char *attr_name, int attr_type_id, pwr_tTid attr_tid, 
+	int attr_size, int attr_flags,
 	char *attr_body, int attr_input_num) :
 	WItemBaseAttr( item_brow, item_ldhses, item_objid, attr_name,
-	attr_type_id, attr_size, attr_flags, attr_body)
+	attr_type_id, attr_tid, attr_size, attr_flags, attr_body)
 {
   char	obj_name[120];
   char	annot[120];
@@ -1398,10 +1426,11 @@ WItemAttrInputF::WItemAttrInputF(
 	WNavBrow *item_brow, ldh_tSesContext item_ldhses, 
 	pwr_tObjid item_objid,
 	brow_tNode dest, flow_eDest dest_code,
-	char *attr_name, int attr_type_id, int attr_size, int attr_flags,
+	char *attr_name, int attr_type_id, pwr_tTid attr_tid,
+	int attr_size, int attr_flags,
 	char *attr_body, int attr_input_num) :
 	WItemBaseAttr( item_brow, item_ldhses, item_objid, attr_name,
-	attr_type_id, attr_size, attr_flags, attr_body)
+	attr_type_id, attr_tid, attr_size, attr_flags, attr_body)
 {
   char	obj_name[120];
   char	annot[120];
@@ -1519,10 +1548,11 @@ WItemAttrInputInv::WItemAttrInputInv(
 	WNavBrow *item_brow, ldh_tSesContext item_ldhses, 
 	pwr_tObjid item_objid,
 	brow_tNode dest, flow_eDest dest_code,
-	char *attr_name, int attr_type_id, int attr_size, int attr_flags,
+	char *attr_name, int attr_type_id, pwr_tTid attr_tid,
+	int attr_size, int attr_flags,
 	char *attr_body, int attr_input_num) :
 	WItemBaseAttr( item_brow, item_ldhses, item_objid, attr_name,
-	attr_type_id, attr_size, attr_flags, attr_body)
+	attr_type_id, attr_tid, attr_size, attr_flags, attr_body)
 {
   char	obj_name[120];
   char	annot[120];
@@ -1640,10 +1670,11 @@ WItemAttrOutput::WItemAttrOutput(
 	WNavBrow *item_brow, ldh_tSesContext item_ldhses, 
 	pwr_tObjid item_objid,
 	brow_tNode dest, flow_eDest dest_code,
-	char *attr_name, int attr_type_id, int attr_size, int attr_flags,
+	char *attr_name, int attr_type_id, pwr_tTid attr_tid,
+	int attr_size, int attr_flags,
 	char *attr_body, int attr_output_num) :
 	WItemBaseAttr( item_brow, item_ldhses, item_objid, attr_name,
-	attr_type_id, attr_size, attr_flags, attr_body)
+	attr_type_id, attr_tid, attr_size, attr_flags, attr_body)
 {
   char	obj_name[120];
   char	annot[120];
@@ -1764,10 +1795,11 @@ WItemAttrArray::WItemAttrArray(
 	WNavBrow *item_brow, ldh_tSesContext item_ldhses, 
 	pwr_tObjid item_objid,
 	brow_tNode dest, flow_eDest dest_code,
-	char *attr_name, int attr_elements, int attr_type_id,
+	char *attr_name, int attr_elements, int attr_type_id, 
+	pwr_tTid attr_tid,
 	int attr_size, int attr_flags, char *attr_body, int fullname) :
 	WItemBaseAttr( item_brow, item_ldhses, item_objid, attr_name,
-	attr_type_id, attr_size, attr_flags, attr_body),
+	attr_type_id, attr_tid, attr_size, attr_flags, attr_body),
 	elements(attr_elements)
 {
   ldh_sSessInfo info;
@@ -1835,7 +1867,7 @@ int WItemAttrArray::open_attributes( double x, double y)
 				size / elements, true, i, flags, body, 0);
       else
 	new WItemAttrArrayElem( brow, ldhses, objid, node, 
-				flow_eDest_IntoLast, name, i, type_id, 
+				flow_eDest_IntoLast, name, i, type_id, tid,
 				size / elements, i * size / elements, flags, body);
     }
 
@@ -1868,9 +1900,10 @@ WItemAttrArrayOutput::WItemAttrArrayOutput(
 	pwr_tObjid item_objid,
 	brow_tNode dest, flow_eDest dest_code,
 	char *attr_name, int attr_elements, int attr_type_id,
+	pwr_tTid attr_tid,
 	int attr_size, int attr_flags, char *attr_body, int attr_output_num) :
 	WItemBaseAttr( item_brow, item_ldhses, item_objid, attr_name,
-	attr_type_id, attr_size, attr_flags, attr_body),
+	attr_type_id, attr_tid, attr_size, attr_flags, attr_body),
 	elements(attr_elements)
 {
   ldh_sSessInfo info;
@@ -1987,7 +2020,7 @@ int WItemAttrArrayOutput::open_attributes( double x, double y)
     for ( i = 0; i < elements; i++)
     {
       new WItemAttrArrayElem( brow, ldhses, objid, node, 
-		flow_eDest_IntoLast, name, i, type_id, 
+		flow_eDest_IntoLast, name, i, type_id, tid,
 		size / elements, i * size / elements, flags, body);
     }
 
@@ -2023,7 +2056,7 @@ WItemAttrObject::WItemAttrObject(
 	int attr_size, bool attr_is_elem, int attr_idx, int attr_flags,
 	char *attr_body, int fullname) :
 	WItemBaseAttr( item_brow, item_ldhses, item_objid, attr_name,
-		       attr_type_id, attr_size, attr_flags, attr_body),
+		       attr_type_id, 0, attr_size, attr_flags, attr_body),
 	is_elem(attr_is_elem), idx(attr_idx)
 {
   ldh_sSessInfo info;
@@ -2189,6 +2222,7 @@ int WItemAttrObject::open_attributes( double x, double y)
 		parname,
 		bodydef[j].Par->Output.Info.Elements, 
 		bodydef[j].Par->Output.Info.Type, 
+		bodydef[j].Par->Output.TypeRef, 
 		bodydef[j].Par->Output.Info.Size, 
 		bodydef[j].Par->Output.Info.Flags,
 		body, output_cnt);
@@ -2200,6 +2234,7 @@ int WItemAttrObject::open_attributes( double x, double y)
 		parname,
 		bodydef[j].Par->Output.Info.Elements, 
 		bodydef[j].Par->Output.Info.Type, 
+		bodydef[j].Par->Output.TypeRef, 
 		bodydef[j].Par->Output.Info.Size, 
 		bodydef[j].Par->Output.Info.Flags,
 		body, 0);
@@ -2212,6 +2247,7 @@ int WItemAttrObject::open_attributes( double x, double y)
               new WItemAttr( brow, ldhses, objid, node, 
 		flow_eDest_IntoLast, parname,
 		bodydef[j].Par->Input.Info.Type, 
+		bodydef[j].Par->Input.TypeRef, 
 		bodydef[j].Par->Input.Info.Size,
 		bodydef[j].Par->Input.Info.Flags,
 		body, 0);
@@ -2219,6 +2255,7 @@ int WItemAttrObject::open_attributes( double x, double y)
               new WItemAttrInputInv( brow, ldhses, objid, node, 
 		flow_eDest_IntoLast, parname,
 		bodydef[j].Par->Input.Info.Type, 
+		bodydef[j].Par->Input.TypeRef, 
 		bodydef[j].Par->Input.Info.Size,
 		bodydef[j].Par->Input.Info.Flags,
 		body, input_cnt);
@@ -2226,6 +2263,7 @@ int WItemAttrObject::open_attributes( double x, double y)
               new WItemAttrInputF( brow, ldhses, objid, node, 
 		flow_eDest_IntoLast, parname,
 		bodydef[j].Par->Input.Info.Type, 
+		bodydef[j].Par->Input.TypeRef, 
 		bodydef[j].Par->Input.Info.Size,
 		bodydef[j].Par->Input.Info.Flags,
 		body, input_cnt);
@@ -2233,6 +2271,7 @@ int WItemAttrObject::open_attributes( double x, double y)
               new WItemAttrInput( brow, ldhses, objid, node,
 		flow_eDest_IntoLast, parname,
 		bodydef[j].Par->Input.Info.Type, 
+		bodydef[j].Par->Input.TypeRef, 
 		bodydef[j].Par->Input.Info.Size,
 		bodydef[j].Par->Input.Info.Flags,
 		body, input_cnt);
@@ -2242,6 +2281,7 @@ int WItemAttrObject::open_attributes( double x, double y)
               new WItemAttr( brow, ldhses, objid, node,
 		flow_eDest_IntoLast, parname,
 		bodydef[j].Par->Input.Info.Type, 
+		bodydef[j].Par->Input.TypeRef, 
 		bodydef[j].Par->Input.Info.Size,
 		bodydef[j].Par->Input.Info.Flags,
 		body, 0);
@@ -2249,6 +2289,7 @@ int WItemAttrObject::open_attributes( double x, double y)
               new WItemAttrInputF( brow, ldhses, objid, node,
 		flow_eDest_IntoLast, parname,
 		bodydef[j].Par->Input.Info.Type, 
+		bodydef[j].Par->Input.TypeRef, 
 		bodydef[j].Par->Input.Info.Size,
 		bodydef[j].Par->Input.Info.Flags,
 		body, input_cnt);
@@ -2261,6 +2302,7 @@ int WItemAttrObject::open_attributes( double x, double y)
             new WItemAttr( brow, ldhses, objid, node, 
 		flow_eDest_IntoLast, parname,
 		bodydef[j].Par->Output.Info.Type, 
+		bodydef[j].Par->Output.TypeRef, 
 		bodydef[j].Par->Output.Info.Size,
 		bodydef[j].Par->Output.Info.Flags,
 		body, 0);
@@ -2268,6 +2310,7 @@ int WItemAttrObject::open_attributes( double x, double y)
             new WItemAttrOutput( brow, ldhses, objid, node, 
 		flow_eDest_IntoLast, parname,
 		bodydef[j].Par->Output.Info.Type, 
+		bodydef[j].Par->Output.TypeRef, 
 		bodydef[j].Par->Output.Info.Size,
 		bodydef[j].Par->Output.Info.Flags,
 		body, output_cnt);
@@ -2286,6 +2329,7 @@ int WItemAttrObject::open_attributes( double x, double y)
 	    new WItemAttr( brow, ldhses, objid, node, 
 		flow_eDest_IntoLast, parname,
 		bodydef[j].Par->Output.Info.Type, 
+		bodydef[j].Par->Output.TypeRef, 
 		bodydef[j].Par->Output.Info.Size,
 		bodydef[j].Par->Output.Info.Flags,
 		body, 0);
@@ -2376,9 +2420,10 @@ WItemAttrArrayElem::WItemAttrArrayElem(
 	pwr_tObjid item_objid,
 	brow_tNode dest, flow_eDest dest_code,
 	char *attr_name, int attr_element, int attr_type_id,
-	int attr_size, int attr_offset, int attr_flags, char *attr_body) :
+	pwr_tTid attr_tid, int attr_size, int attr_offset, 
+	int attr_flags, char *attr_body) :
 	WItemBaseAttr( item_brow, item_ldhses, item_objid, attr_name,
-	attr_type_id, attr_size, attr_flags, attr_body),
+	attr_type_id, attr_tid, attr_size, attr_flags, attr_body),
 	element(attr_element), offset(attr_offset)
 {
   char	annot[120];
@@ -2494,37 +2539,40 @@ int WItemAttrArrayElem::open_children( double x, double y)
   }
   else // if ( parent && !noedit)
   {
-    types_sEnumElement	*elem_p;
+    if ( type_id == pwr_eType_Enum) {
+      ldh_sValueDef *vd;
+      int rows;
 
-    if ( type_id == pwr_eType_Enum)
-    {
-      sts = types_find_enum( classid, attr, &elem_p);
+      sts = ldh_GetEnumValueDef( ldhses, tid, &vd, &rows);
       if ( EVEN(sts)) return WNAV__NOCHILDREN;
 
       // Create some children
       brow_SetNodraw( brow->ctx);
 
-      for ( ; elem_p->name[0] != 0; elem_p++)
-      {
-        new WItemEnum( brow, ldhses, objid, elem_p->name, attr, type_id,
-		size, flags, body, elem_p->num, 1, element,
+      for ( int i = 0; i < rows; i++) {
+        new WItemEnum( brow, ldhses, objid, vd[i].Value->Text, attr, 
+	        type_id, tid,
+		size, flags, body, vd[i].Value->Value, 1, element,
 		node, flow_eDest_IntoLast);
       }
+      free( (char *)vd);
     }
-    else
-    {
-      sts = types_find_mask( classid, attr, &elem_p);
+    else {
+      ldh_sBitDef *bd;
+      int rows;
+
+      sts = ldh_GetMaskBitDef( ldhses, tid, &bd, &rows);
       if ( EVEN(sts)) return WNAV__NOCHILDREN;
 
       // Create some children
       brow_SetNodraw( brow->ctx);
 
-      for ( ; elem_p->name[0] != 0; elem_p++)
-      {
-        new WItemMask( brow, ldhses, objid, elem_p->name, attr, type_id,
-		size, flags, body, (unsigned int) elem_p->num, 1, element,
-		node, flow_eDest_IntoLast);
+      for ( int i = 0; i < rows; i++) {
+        new WItemMask( brow, ldhses, objid, bd[i].Bit->Text, attr, type_id,
+		tid, size, flags, body, (unsigned int) bd[i].Bit->Value, 1, 
+		element, node, flow_eDest_IntoLast);
       }
+      free( (char *)bd);
     }
 
     brow_SetOpen( node, wnav_mOpen_Children);
@@ -2585,18 +2633,30 @@ int WItemAttrArrayElem::update()
 
   switch( type_id)
   {
-    case pwr_eType_Enum:
-      sts = types_translate_enum( classid, attr, 
-	* (unsigned int *)((char *) value + size * element), buf);
-      if ( EVEN(sts))
+    case pwr_eType_Enum: {
+      ldh_sValueDef *vd;
+      int rows;
+      bool found = false;
+
+      sts = ldh_GetEnumValueDef( ldhses, tid, &vd, &rows);
+      if ( ODD(sts)) {
+	for ( int i = 0; i < rows; i++) {
+	  if ( vd[i].Value->Value == 
+	       * (pwr_tInt32 *)((char *) value + size * element)) {
+	    strcpy( buff, vd[i].Value->Text);
+	    buff = buf;        
+	    len = strlen(buf);
+	    found = true;
+	    break;
+	  }
+	}
+	free( (char *)vd);
+      }
+      if ( EVEN(sts) || !found)
         wnav_attrvalue_to_string( ldhses, type_id, 
 		(char *) value + size * element, &buff, &len);
-      else
-      {
-        buff = buf;        
-        len = strlen(buf);
-      }
       break;
+    }
     default:
       wnav_attrvalue_to_string( ldhses, type_id, 
 		(char *) value + size * element, &buff, &len);
@@ -2611,11 +2671,12 @@ WItemEnum::WItemEnum(
 	WNavBrow *item_brow, ldh_tSesContext item_ldhses, 
 	pwr_tObjid item_objid, 
 	char *attr_enum_name, char *attr_name, 
-	int attr_type_id, int attr_size, int attr_flags, char *attr_body,
+	int attr_type_id, pwr_tTid attr_tid, 
+	int attr_size, int attr_flags, char *attr_body,
 	unsigned int item_num, int item_is_element, int item_element,
 	brow_tNode dest, flow_eDest dest_code) :
 	WItemBaseAttr( item_brow, item_ldhses, item_objid, attr_name,
-	attr_type_id, attr_size, attr_flags, attr_body),
+	attr_type_id, attr_tid, attr_size, attr_flags, attr_body),
 	num(item_num), is_element(item_is_element), element(item_element)
 {
   ldh_sSessInfo info;
@@ -2737,11 +2798,12 @@ WItemMask::WItemMask(
 	WNavBrow *item_brow, ldh_tSesContext item_ldhses, 
 	pwr_tObjid item_objid, 
 	char *attr_mask_name, char *attr_name, 
-	int attr_type_id, int attr_size, int attr_flags, char *attr_body,
+	int attr_type_id, pwr_tTid attr_tid,
+	int attr_size, int attr_flags, char *attr_body,
 	unsigned int item_mask, int item_is_element, int item_element,
 	brow_tNode dest, flow_eDest dest_code) :
 	WItemBaseAttr( item_brow, item_ldhses, item_objid, attr_name,
-	attr_type_id, attr_size, attr_flags, attr_body),
+	attr_type_id, attr_tid, attr_size, attr_flags, attr_body),
 	mask(item_mask), is_element(item_is_element), element(item_element)
 {
   ldh_sSessInfo info;

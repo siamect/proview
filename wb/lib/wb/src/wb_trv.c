@@ -181,8 +181,8 @@ static int trv_wildcard (
 	char	*s;
 	char	*t;
 	char	*u;
-	char	checkstr[80];
-	char	upper_name[80];
+	char	checkstr[240];
+	char	upper_name[240];
 	char	namechar;
 
 	/* Convert to upper case */
@@ -1078,7 +1078,7 @@ static int trv_get_child_object_hi_cl_na (
 	pwr_tClassId		obj_class;
 	pwr_tObjid		childobjdid;
 	int			name_ok, class_ok;
-	char			obj_name[80];
+	pwr_tOName     		obj_name;
 	int			i;
 
 	/* Check class if class is specified */
@@ -1444,10 +1444,10 @@ int trv_get_children_class_name (
 )
 {
 	int			sts, size;
-	pwr_tObjid	objdid;
-	pwr_tClassId	obj_class;
+	pwr_tObjid		objdid;
+	pwr_tClassId		obj_class;
 	int			name_ok, class_ok;
-	char			obj_name[80];
+	pwr_tOName     		obj_name;
 	int			i;
 
 
@@ -1546,7 +1546,7 @@ static int trv_get_child_object_name (
 )
 {
 	int			sts, size;
-	char			obj_name[80];
+	pwr_tOName     		obj_name;
 
 	/* Get the name of the object */
 	sts = ldh_ObjidToName( ldhses, objdid, ldh_eName_Hierarchy,
@@ -1618,9 +1618,9 @@ static int trv_get_child_object_hier_name (
   void		*arg5
 )
 {
-	int			sts, size;
+	int	       	sts, size;
 	pwr_tObjid	childobjdid;
-	char			obj_name[80];
+	pwr_tOName     	obj_name;
 
 	if ( *hierflag == TRV_CROSS_RETURN ) 
 	  return GSX__SUCCESS;
@@ -2083,7 +2083,7 @@ static int trv_get_child_object_search (
 	pwr_tClassId		obj_class;
 	pwr_tObjid		childobjdid;
 	int			name_ok, class_ok;
-	char			obj_name[80];
+	pwr_tOName     		obj_name;
 	int			i;
 	pwr_sAttrRef		aref;
 

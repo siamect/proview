@@ -544,12 +544,12 @@ static int ini_set_attribute (
 	/* Get type of the parameter from info in the class object */
 
 	int		sts;
-	char		hiername[80];
+	pwr_tOName     	hiername;
 	char		parname[80];
 	pwr_tClassId    class;
 	pwr_tObjid	classObject;
 	pwr_sParInfo	parinfo;
-	char		objname[80];
+	pwr_tOName     	objname;
 	char		name_array[2][80];
 	int		nr;
 	pwr_tObjid	objid;

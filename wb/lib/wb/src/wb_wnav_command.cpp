@@ -1852,7 +1852,7 @@ static int	wnav_compile_func(	void		*client_data,
 {
   WNav *wnav = (WNav *)client_data;
 
-  char		hierstr[120];
+  char   	hierstr[120];
   char		*hierstr_p;
   char		plcpgmstr[120];
   char		*plcpgmstr_p;
@@ -2007,9 +2007,9 @@ static int	wnav_print_func(	void		*client_data,
 {
   WNav *wnav = (WNav *)client_data;
 
-  char		plcpgm_str[80]; 
-  char		hier_str[80]; 
-  char		from_str[80];
+  char		plcpgm_str[120]; 
+  char		hier_str[120]; 
+  char		from_str[120];
   char		*fromstr_ptr;
   int		sts;
   int		document;
@@ -2109,9 +2109,9 @@ static int	wnav_redraw_func(	void		*client_data,
 {
   WNav *wnav = (WNav *)client_data;
 
-  char		plcpgm_str[80]; 
-  char		hier_str[80]; 
-  char		from_str[80];
+  char		plcpgm_str[120]; 
+  char		hier_str[120]; 
+  char		from_str[120];
   char		*fromstr_ptr;
   int		sts;
 
@@ -4213,10 +4213,10 @@ int WNav::get_rootlist()
 
 int WNav::command( char* input_str)
 {
-  char		command[160];
+  pwr_tCmd     	command;
   int		sts, sym_sts;
   char		symbol_value[80];
-  char		filename[120];
+  pwr_tFileName	filename;
 
   dcli_toupper( input_str, input_str);
   sts = dcli_replace_symbol( input_str, command, sizeof(command));
@@ -5518,10 +5518,10 @@ int	WNav::show_file(
 {
   int		sts;
   char		title[80] = "FILE LIST";
-  char		found_file[120];
+  pwr_tFileName	found_file;
   char		dev[80], dir[80], file[80], type[80];
   int		version;
-  char		file_spec[80];
+  pwr_tFileName	file_spec;
   char		text[80];
   item_eFileType file_type;
 

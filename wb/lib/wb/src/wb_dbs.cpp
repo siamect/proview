@@ -1129,6 +1129,8 @@ void
 wb_dbs::cidInsert(pwr_tStatus *sts, pwr_tCid cid, sCentry **cep)
 {
   *cep = (sCentry*)tree_Insert(sts, m_class_th, &cid);
+  // if ( cdh_CidToVid(cid) == 1)
+  //   return;
   if (*sts == TREE__INSERTED) {
     // Insert depending classes
     pwr_tCid *lst;

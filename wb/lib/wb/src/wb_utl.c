@@ -1414,7 +1414,7 @@ static int utl_tableofcont_insert (
 {
 	int		size, sts;
 	utl_t_contlist	*list_ptr;
-	char		hier_name[80];
+	pwr_tOName     	hier_name;
 	char		*np;
 	
 	/* Get object name */
@@ -1828,7 +1828,7 @@ static int	u_open(
     int			append
 )
 {
-	char fname[120];
+	pwr_tFileName fname;
 
 	/* Open file */
 	if ( *filename == '\0')
@@ -1922,7 +1922,7 @@ int utl_show_node (
 	unsigned long	rtnode_count;
 	pwr_tObjid	*rtnodelist;
 	pwr_tObjid	*rtnodelist_ptr;
-	char		hier_name[80];
+	pwr_tOName     	hier_name;
 
 	  /* Open file */
 	  utl_ctx_new( &utlctx, ldhses, "", UTL_PORTRAIT);
@@ -1994,7 +1994,7 @@ int utl_show_plcpgm (
 	unsigned long	plc_count;
 	pwr_tObjid	*plclist;
 	pwr_tObjid	*plclist_ptr;
-	char		hier_name[80];	
+	pwr_tOName     	hier_name;	
 	float		*scantime_ptr;
 
 
@@ -2079,7 +2079,7 @@ int utl_show_window (
 	unsigned long	wind_count;
 	pwr_tObjid	*windlist;
 	pwr_tObjid	*windlist_ptr;
-	char		hier_name[80];	
+	pwr_tOName     	hier_name;	
 	pwr_tObjid	plc;
 	pwr_tObjid	window;
 
@@ -2166,7 +2166,7 @@ int utl_show_modules (
 	pwr_tTime	comp_time;
 	pwr_tTime	mod_time;
 	pwr_tObjid	objdid;
-	char		hier_name[80];
+	pwr_tOName     	hier_name;
 	char		*s;
 	pwr_tClassId	class_vect[5];
 	int		single_object = 0;
@@ -2386,8 +2386,8 @@ int utl_show_object (
 	int		sts, size;
 	int		i;
 	pwr_tClassId	class;
-	char		hier_name[80];	
-	char		class_hier_name[80];	
+	pwr_tOName     	hier_name;	
+	pwr_tOName     	class_hier_name;	
 	pwr_tObjid	window;
 	unsigned long	object_count;
 	pwr_tObjid	*objectlist;
@@ -3464,7 +3464,7 @@ static int utl_print_object (
 {
 	int		sts, size;
 	pwr_tClassId	class;
-	char		hier_name[80];
+	pwr_tOName     	hier_name;
 	char		class_name[80];
 	char		objdid_str[40];
 	pwr_sAttrRef	aref = cdh_ObjidToAref( Objdid);
@@ -3526,7 +3526,7 @@ static int utl_print_aref (
 {
 	int		sts, size;
 	pwr_tClassId	class;
-	char		hier_name[240];
+	pwr_tAName     	hier_name;
 	char		class_name[80];
 	char		objdid_str[40];
 	char		*np;
@@ -3779,10 +3779,10 @@ static int utl_print_object_full (
 {
 	int		sts, size, i, j, k;
 	pwr_tClassId	class;
-	char		aname[240];
+	pwr_tAName     	aname;
 	char		pname[120];
 	char 		*np, *s;
-	char		hier_name[80];
+	pwr_tOName     	hier_name;
 	char		*hier_name_p;
 	ldh_sParDef 	*bodydef;
 	int		rows;
@@ -4197,9 +4197,9 @@ static int utl_print_object_par (
 {
 	int		sts, size, i, j, k;
 	pwr_tClassId	class;
-	char		pname[120];
+	pwr_tAName     	pname;
 	char		*np, *s;
-	char		hier_name[80];
+	pwr_tOName     	hier_name;
 	char		*hier_name_p;
 	ldh_sParDef 	*bodydef;
 	int		rows;
@@ -4598,7 +4598,7 @@ static int utl_print_class (
 )
 {
 	int		sts, size;
-	char		hier_name[80];
+	pwr_tOName     	hier_name;
 	char		class_str[80];
 
 	/* Print the name of the actual object */
@@ -4866,7 +4866,7 @@ static int utl_set_parameter (
 	int		sts, size, i, j, k;
 	int		parsize;
 	pwr_tClassId	class;
-	char		hier_name[80];
+	pwr_tOName     	hier_name;
 	char		objdid_name[80];
 	char		*objdid_name_p;
 	ldh_sParDef 	*bodydef;
@@ -5247,7 +5247,7 @@ int utl_show_connection (
 	utl_ctx	utlctx;
 	int		sts, size;
 	int		i;
-	char		hier_name[80];	
+	pwr_tOName     	hier_name;	
 	pwr_tObjid	window;
 	unsigned long	object_count;
 	pwr_tObjid	*objectlist;
@@ -5797,7 +5797,7 @@ int utl_crossref_hier_class_name (
 	utl_t_list	*crrlist_ptr;
 	char		title[] = 
 "  Object							 Class";
-	char		crrhier_name[80];
+	pwr_tOName     	crrhier_name;
 	char		crrclass_name[80];
 	pwr_tClassId	crrclass;
 	char		class_str[UTL_INPUTLIST_MAX + 1][80];
@@ -6368,7 +6368,7 @@ int utl_print_plc_hier (
 	utl_t_objidlist	*list_ptr;
 	utl_t_objidlist	*plcpgmlist;
 	int		plcpgmcount;
-	char		plcname[80];
+	pwr_tOName     	plcname;
 	pwr_tObjid      fromobjdid;
 	int		from;
 	int		from_found;
@@ -6861,7 +6861,7 @@ int utl_redraw_plc_hier (
 	utl_t_objidlist	*list_ptr;
 	utl_t_objidlist	*plcpgmlist;
 	int		plcpgmcount;
-	char		plcname[80];
+	pwr_tOName     	plcname;
 	pwr_tObjid	fromobjdid;
 	int		from;
 	int		from_found;
@@ -7028,7 +7028,7 @@ int utl_redraw_windows (
 
 	  /* Start foe for the root window */
 	  sts = foe_new(0, parent_widget, "AutoPrint", plc, ldhwb, ldhses,
-		&foectx, 0, ldh_eAccess_ReadWrite);
+		&foectx, 0, ldh_eAccess_SharedReadWrite);
 	  if ( EVEN(sts)) return sts;
 
 	  /* Redraw the window */
@@ -7070,7 +7070,7 @@ int utl_redraw_windows (
 	    sts = foe_new_local( foectx, foectx->widgets.foe_window,
 		node->hn.name, pwr_cNObjid, 0, parentwind->hw.ldhses,
 		node, windowindex, new_window, &foectx, 0, 
-		ldh_eAccess_ReadWrite, foe_eFuncAccess_Edit);
+		ldh_eAccess_SharedReadWrite, foe_eFuncAccess_Edit);
 
 	    /* Redraw the window */
 	    sts = foe_redraw_and_save( foectx);
@@ -7128,7 +7128,7 @@ static int utl_content (
 )
 {
 	int		sts, size, i;
-	char		hier_name[80];
+	pwr_tOName     	hier_name;
 	char		*page;
 
 	/* Get the page parameter if there is one */
@@ -8551,7 +8551,7 @@ static int utl_list_get_parvalue (
 {
 	int		sts, size, i, j;
 	pwr_tClassId	class;
-	char		hier_name[80];
+	pwr_tOName     	hier_name;
 	char		*hier_name_p;
 	ldh_sParDef 	*bodydef;
 	int		rows;
@@ -10069,7 +10069,7 @@ static int utl_object_delete (
 )
 {
 	static char	yes_or_no[200];	
-	char		hier_name[80];
+	pwr_tOName     	hier_name;
 	int		sts, size;
 
 #if defined OS_VMS
@@ -10142,8 +10142,8 @@ static int utl_tree_delete (
   unsigned long	dum3
 )
 {
-	static char		yes_or_no[200];	
-	char		hier_name[80];
+	static char	yes_or_no[200];	
+	pwr_tOName     	hier_name;
 	int		sts, size;
 
 #if defined OS_VMS
@@ -10472,14 +10472,14 @@ int utl_export_object (
 	pwr_tObjid  objdid;
 	FILE		*output_file;
 	char		str[200];
-	char		hiername[80];
+	pwr_tOName     	hiername;
 	pwr_tClassId	bodyclass;
 	pwr_sGraphPlcNode 	*graphbody;
 	ldh_sParDef 	*bodydef;
 	int		rows;
 	int		found;
 	char		debugpar[32];
-	char 		fname[120];
+	pwr_tFileName	fname;
 
 	/* Check if prefix */
 	if ( prefix != NULL )

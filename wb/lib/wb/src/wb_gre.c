@@ -3165,7 +3165,7 @@ int	gre_print_docobj(
 	vldh_t_node doc_obj
 )
 {
-	char filename[120];
+	pwr_tFileName filename;
 	double ll_x, ll_y, ur_x, ur_y;
 	static char	cmd[250] ;
 #if defined OS_VMS
@@ -3251,8 +3251,8 @@ int gre_print_rectangle(
 	char	*file_id
 )
 {
-	char filename[120];
-	char	cmd[250] ;
+	pwr_tFileName 	filename;
+	char		cmd[250] ;
 
 	sprintf( filename, "pwrp_tmp:pssdoc%s.ps", file_id);
 	dcli_translate_filename( filename, filename);

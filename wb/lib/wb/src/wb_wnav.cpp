@@ -967,7 +967,7 @@ int WNav::get_select( pwr_sAttrRef **attrref, int **is_attr, int *cnt)
   brow_tNode	*node_list;
   int		node_count;
   WItem		*item;
-  char		attr_str[120];
+  pwr_tAName   	attr_str;
   int		sts;
   pwr_sAttrRef	*ap;
   int		size;
@@ -2250,7 +2250,7 @@ int	WNav::setup()
 
 int	WNavGbl::symbolfile_exec( void *wnav)
 {
-  char cmd[80];
+  pwr_tCmd cmd;
 
   if ( strcmp( symbolfilename, "") != 0)
   {
@@ -3234,7 +3234,7 @@ static Boolean wnav_sel_convert_cb(
   int 		sts;
   int		size;
   WItem		*item;
-  char		attr_str[120];
+  pwr_tAName   	attr_str;
   pwr_sAttrRef attrref;
   char          name[200];
 
@@ -3368,7 +3368,7 @@ static int wnav_init_brow_base_cb( FlowCtx *fctx, void *client_data)
   WNav *wnav = (WNav *) client_data;
   BrowCtx *ctx = (BrowCtx *)fctx;
   int		sts;
-  char		cmd[80];
+  pwr_tCmd     	cmd;
 
   wnav->brow = new WNavBrow( ctx, (void *)wnav);
   wnav->brow_stack[0] = new WNavBrow( ctx, (void *)wnav);

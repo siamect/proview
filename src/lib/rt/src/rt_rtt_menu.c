@@ -439,14 +439,14 @@ static int	rtt_rttconfig()
 	pwr_tClassId	class;
 	pwr_tObjid	objid;
 	pwr_tObjid	node;
-	char		hiername[80];
+	pwr_tOName     	hiername;
 	char		parname[80];
 	int		found;
 	int		sts;
 	char		*s;
 	pwr_tBoolean	boolean_val;
 	pwr_tFloat32	float32_val;
-	char		filename[80];
+	pwr_tFileName  	filename;
 
 	if ( rtt_ConfigureObject[0])
 	{
@@ -5104,7 +5104,7 @@ static int	rtt_print_value(
 			int		y,
 			unsigned long	priv)
 {
-	char			hiername[120];
+	pwr_tOName     		hiername;
 	pwr_tObjid		objid;
 	pwr_sAttrRef		*attrref;
 	int			sts;
@@ -5499,7 +5499,7 @@ static int	rtt_edit_print_value(
 			rtt_t_menu_upd	*menu_ptr,
 			unsigned long	init)
 {
-	char		hiername[80];
+	pwr_tOName     	hiername;
 	pwr_tObjid	objid;
 	int		sts;
 	char		*s;
@@ -6113,8 +6113,8 @@ static int	rtt_attribute_elements(
 	char		nr[10];
 	char 		*parameter_ptr;
 	SUBID 		subid;
-	char		parameter_name[120];
-	char		objname[80];
+	pwr_tOName     	parameter_name;
+	pwr_tAName     	objname;
 	char		classname[80];
 	pwr_tObjid	childobjid;
 	int		parameter_count = 0;
@@ -6303,7 +6303,7 @@ int	rtt_show_object_as_struct(
 	char 		*parameter_ptr;
 	char 		*object_ptr;
 	SUBID 		subid;
-	char		objname[80];
+	pwr_tOName     	objname;
 	char		classname[80];
 	pwr_tObjid	childobjid;
 	int		parameter_count;
@@ -6448,8 +6448,8 @@ int	rtt_object_parameters(
 	char 		*parameter_ptr;
 	pwr_tOid	childobjid;
 	pwr_tSubid	subid;
-	char		parameter_name[120];
-	char		objname[80];
+	pwr_tOName     	parameter_name;
+	pwr_tAName     	objname;
 	int		parameter_count;
 	int		hide_elements;
 	rtt_t_menu_upd	*menu_ptr;
@@ -6719,7 +6719,7 @@ int	rtt_show_file(
 {
 	int		sts;
 	char		title[80] = "FILE LIST";
-	char		found_file[120];
+	pwr_tFileName  	found_file;
 	rtt_t_menu	*menulist = 0;
 	rtt_t_menu	*menu_ptr;
 	int		i;
@@ -6727,7 +6727,7 @@ int	rtt_show_file(
 	char		dev[80], dir[80], file[80], type[80];
 	int		version;
 	int		hide_dir;
-	char		file_spec[80];
+        pwr_tFileName  	file_spec;
 	char		text[80];
 	char		*arg1_ptr[500];
 	int		arg1_ptr_size = sizeof(arg1_ptr)/sizeof(arg1_ptr[0]);
@@ -6871,10 +6871,10 @@ int	rtt_hierarchy_child(
 {
 	int		sts;
 	pwr_tObjid	objid;
-	char		hiername[120];
+	pwr_tOName     	hiername;
 	char		classname[80];
 	char		description[80];
-	char		objname[80];
+	pwr_tAName     	objname;
 	char		*s;
 	char		title[80];
 	rtt_t_menu	*menulist = 0;
@@ -6999,8 +6999,8 @@ int	rtt_hierarchy(
 			void		*arg4)
 {
 	int		sts;
-	char		objname[80];
-	char		hiername[80];
+	pwr_tOName     	objname;
+	pwr_tOName     	hiername;
 	char		title[] = "OBJECT HIERARCHY";
 	pwr_tObjid	objid;
 	rtt_t_menu	*menulist = 0;
@@ -7106,8 +7106,8 @@ int	rtt_class_hierarchy(
 			void		*arg4)
 {
 	int		sts;
-	char		objname[80];
-	char		hiername[80];
+	pwr_tOName     	objname;
+	pwr_tOName     	hiername;
 	char		title[] = "CLASS HIERARCHY";
 	pwr_tObjid	objid;
 	rtt_t_menu	*menulist = 0;
@@ -8349,7 +8349,7 @@ int	rtt_objidtoclassname(
 			char		*name)
 {
 	pwr_tClassId	class;
-	char		hiername[80];
+	pwr_tOName     	hiername;
 	char		*s;
 	int		sts;
 
@@ -8722,7 +8722,7 @@ static int	rtt_menu_new_update_add(
 			int		item_count)
 {
 	int		sts;
-	char		hiername[80];
+	pwr_tOName     	hiername;
 	char		parname[80];
 	pwr_tClassId	class;
 	unsigned long	elements;
@@ -8730,7 +8730,7 @@ static int	rtt_menu_new_update_add(
 	SUBID 		subid;
 	pwr_sParInfo
 	parinfo;
-	char		objname[80];
+	pwr_tOName     	objname;
 	char		*s;
 	char		name_array[2][80];
 	int		nr;
@@ -9810,8 +9810,8 @@ int	rtt_get_defaultfilename(
 			char	*outname,
 			char	*ext)
 {
-	char	filename[80];
-	char 	*s, *s2;
+	pwr_tFileName	filename;
+	char 		*s, *s2;
 
 #if defined(OS_ELN)
 	/* Add default vmsnode if no node is suplied */

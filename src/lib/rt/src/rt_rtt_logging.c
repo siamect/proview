@@ -774,7 +774,7 @@ int	rtt_logging_store_entry(
 {
 	rtt_t_loggtable	*entry_ptr;
 	int		i;
-	char		filename_str[120];
+	pwr_tFileName  	filename_str;
 	FILE		*outfile;
 	char		message[120];
 	int		found_parameter;
@@ -875,7 +875,7 @@ int	rtt_logging_store_all(
 {
 	rtt_t_loggtable	*entry_ptr;
 	int		i, j;
-	char		filename_str[120];
+	pwr_tFileName  	filename_str;
 	FILE		*outfile;
 	char		message[120];
 	int		entry;
@@ -1269,7 +1269,7 @@ void	*rtt_logging_logproc( void *arg)
 	int		first_scan;
 	pwr_tObjid		objid;
 	pwr_sAttrRef		*attrref;
-	char			hiername[120];
+	pwr_tAName     		hiername;
 	char			timstr[64];
 	char			parname[40];
 	char			*s;
@@ -1846,7 +1846,7 @@ static int	rtt_get_parinfo(
 			char		*parameter_name,
 			pwr_sParInfo	*parinfo)
 {
-	char		hiername[80];
+	pwr_tOName     	hiername;
 	char		parname[80];
 	char		name_array[2][80];
 	int		nr;
@@ -1854,7 +1854,7 @@ static int	rtt_get_parinfo(
 	pwr_tObjid	objid;
 	pwr_tObjid	parameter;
 	pwr_tClassId	class;
-	char		objname[80];
+	pwr_tOName     	objname;
 	char		classname[80];
 
 	/* Get object name */

@@ -153,7 +153,7 @@ void wb_pkg::readConfig()
 	
 	  sprintf( dir, "$pwrp_root/%s/exe/", cdh_OpSysToStr( n.opsys()));
 	  sprintf( fname, "%s%s", dir, plcname); 
-	  pkg_pattern pplc( fname, "", 'E');
+	  pkg_pattern pplc( fname, "", 'W');
 	  n.push_back( pplc);
 	}
 

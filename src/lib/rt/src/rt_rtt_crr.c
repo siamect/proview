@@ -182,8 +182,8 @@ int	rtt_crossref_signal(
 			void		*arg3,
 			void		*arg4)
 {
-	char 	hiername[80];
-	int	sts;
+	pwr_tOName	hiername;
+	int		sts;
 
 	sts = gdh_ObjidToName ( objid, hiername, sizeof(hiername), cdh_mNName);
 	if ( EVEN(sts)) 
@@ -260,24 +260,24 @@ int	rtt_crr_signal(
 			char	*filename,
 			char	*signalname)
 {
-	char	default_filename[80];
-	FILE	*file;
-	char	line[200];
-	int	hierarchy_spaces;
-	char	hierarchy[80];
-	int	object_spaces;
-	char	object[80];
-	char	objname[80];
-	char	show_objname[80];
-	int	spaces;
-	int	first;
-	int	sts;	
-	char	*s;
-	int	wildcard;
-	int	signalcount = 0;
-	char	filestr[80];
-	int	lines;
-	char	*buff;
+	pwr_tFileName	default_filename;
+	FILE		*file;
+	char		line[200];
+	int		hierarchy_spaces;
+	char		hierarchy[80];
+	int		object_spaces;
+	char		object[80];
+	pwr_tOName     	objname;
+	char		show_objname[80];
+	int		spaces;
+	int		first;
+	int		sts;	
+	char		*s;
+	int		wildcard;
+	int		signalcount = 0;
+	pwr_tFileName  	filestr;
+	int		lines;
+	char		*buff;
 	pwr_tVolumeId	volid;
 	pwr_tObjid	objid;
 	int		buffcnt;
@@ -467,24 +467,24 @@ int	rtt_crr_object(
 			char	*filename,
 			char	*objectname)
 {
-	char	default_filename[80];
-	FILE	*file;
-	char	line[200];
-	int	hierarchy_spaces;
-	char	hierarchy[80];
-	int	object_spaces;
-	char	object[80];
-	char	objname[80];
-	char	show_objname[80];
-	int	spaces;
-	int	first;
-	int	sts;	
-	char	*s;
-	int	wildcard;
-	int	signalcount = 0;
-	char	filestr[80];
-	int	lines;
-	char	*buff;
+	pwr_tFileName	default_filename;
+	FILE		*file;
+	char		line[200];
+	int		hierarchy_spaces;
+	char		hierarchy[80];
+	int		object_spaces;
+	char		object[80];
+	pwr_tOName     	objname;
+	char		show_objname[80];
+	int		spaces;
+	int		first;
+	int		sts;	
+	char		*s;
+	int		wildcard;
+	int		signalcount = 0;
+	pwr_tFileName  	filestr;
+	int		lines;
+	char		*buff;
 	pwr_tVolumeId	volid;
 	pwr_tObjid	objid;
 	int		buffcnt;
@@ -664,31 +664,31 @@ int	rtt_crr_code(
 			int	func,
 			int	case_sensitive)
 {
-	char	default_filename[80];
-	FILE	*file;
-	char	line[200];
-	char	tst_line[200];
-	int	hierarchy_spaces;
-	char	hierarchy[80];
-	int	object_spaces;
-	char	object[80];
-	char	objname[80];
-	int	spaces;
-	int	first;
-	int	sts;	
-	char	*s;
-	int	signalcount = 0;
-	char	filestr[80];
-	int	lines;
-	char	*buff;
+	pwr_tFileName	default_filename;
+	FILE		*file;
+	char		line[200];
+	char		tst_line[200];
+	int		hierarchy_spaces;
+	char		hierarchy[80];
+	int		object_spaces;
+	char		object[80];
+	pwr_tOName	objname;
+	int		spaces;
+	int		first;
+	int		sts;	
+	char		*s;
+	int		signalcount = 0;
+	char		filestr[80];
+	int		lines;
+	char		*buff;
 	pwr_tVolumeId	volid;
 	pwr_tObjid	objid;
-	int	buffcnt;
-	int	len;
-	int	i;
-	int	objname_written;
-	int	hit;
-	char	*tst_char;
+	int		buffcnt;
+	int		len;
+	int		i;
+	int		objname_written;
+	int		hit;
+	char		*tst_char;
 
 	/* Open file */
 	if ( filename == NULL)
@@ -903,21 +903,21 @@ int	rtt_show_signals(
 			char		*windowname,
 			int		debug)
 {
-	char	default_filename[80];
-	FILE	*file;
-	char	line[200];
-	int	window_spaces;
-	char	window[80];
-	char	object[80];
-	char	objname[80];
-	int	spaces = 30;
-	int	sts;	
-	char	*s;
-	int	wildcard;
-	char	title[120];
-	char	classname[32];
-	int	j;
-	int	index = 0;
+	pwr_tFileName	default_filename;
+	FILE		*file;
+	char		line[200];
+	int		window_spaces;
+	char		window[80];
+	char		object[80];
+	pwr_tOName     	objname;
+	int		spaces = 30;
+	int		sts;	
+	char		*s;
+	int		wildcard;
+	char		title[120];
+	char		classname[32];
+	int		j;
+	int		index = 0;
 	pwr_tObjid	objid;
 	pwr_tObjid	childobjid;
 	rtt_t_menu	*menulist = 0;

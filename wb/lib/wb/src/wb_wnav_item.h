@@ -214,12 +214,14 @@ class WItemBaseAttr : public WItem {
     WItemBaseAttr( 
 	WNavBrow *item_brow, ldh_tSesContext item_ldhses, 
 	pwr_tObjid item_objid,
-	char *attr_name, int attr_type_id, int attr_size, int attr_flags,
+	char *attr_name, int attr_type_id, pwr_tTid attr_tid,
+	int attr_size, int attr_flags,
 	char *attr_body);
 
     WNavBrow *brow;
     ldh_tSesContext ldhses;
     int type_id;
+    pwr_tTid tid;
     int size;
     int flags;
     char attr[40];
@@ -237,7 +239,8 @@ class WItemAttr : public WItemBaseAttr {
 	WNavBrow *item_brow, ldh_tSesContext item_ldhses, 
 	pwr_tObjid item_objid,
 	brow_tNode dest, flow_eDest dest_code,
-	char *attr_name, int attr_type_id, int attr_size, int attr_flags,
+	char *attr_name, int attr_type_id, pwr_tTid attr_tid,
+	int attr_size, int attr_flags,
 	char *attr_body, int fullname);
      int open_children( double x, double y);
      int close( double x, double y);
@@ -250,7 +253,8 @@ class WItemAttrInput : public WItemBaseAttr {
 	WNavBrow *item_brow, ldh_tSesContext item_ldhses, 
 	pwr_tObjid item_objid,
 	brow_tNode dest, flow_eDest dest_code,
-	char *attr_name, int attr_type_id, int attr_size, int attr_flags,
+	char *attr_name, int attr_type_id, pwr_tTid attr_tid,
+	int attr_size, int attr_flags,
 	char *attr_body, int attr_input_num);
      int update();
      int set_mask( int radio_button, int value);
@@ -263,7 +267,8 @@ class WItemAttrInputF : public WItemBaseAttr {
 	WNavBrow *item_brow, ldh_tSesContext item_ldhses, 
 	pwr_tObjid item_objid,
 	brow_tNode dest, flow_eDest dest_code,
-	char *attr_name, int attr_type_id, int attr_size, int attr_flags,
+	char *attr_name, int attr_type_id, pwr_tTid attr_tid,
+	int attr_size, int attr_flags,
 	char *attr_body, int attr_input_num);
      int update();
      int set_mask( int radio_button, int value);
@@ -276,7 +281,8 @@ class WItemAttrInputInv : public WItemBaseAttr {
 	WNavBrow *item_brow, ldh_tSesContext item_ldhses, 
 	pwr_tObjid item_objid,
 	brow_tNode dest, flow_eDest dest_code,
-	char *attr_name, int attr_type_id, int attr_size, int attr_flags,
+	char *attr_name, int attr_type_id, pwr_tTid attr_tid,
+	int attr_size, int attr_flags,
 	char *attr_body, int attr_input_num);
      int update();
      int set_mask( int radio_button, int value);
@@ -289,7 +295,8 @@ class WItemAttrOutput : public WItemBaseAttr {
 	WNavBrow *item_brow, ldh_tSesContext item_ldhses, 
 	pwr_tObjid item_objid,
 	brow_tNode dest, flow_eDest dest_code,
-	char *attr_name, int attr_type_id, int attr_size, int attr_flags,
+	char *attr_name, int attr_type_id, pwr_tTid attr_tid,
+	int attr_size, int attr_flags,
 	char *attr_body, int attr_output_num);
      int update();
      int set_mask( int radio_button, int value);
@@ -304,7 +311,8 @@ class WItemAttrArray : public WItemBaseAttr {
 	pwr_tObjid item_objid,
 	brow_tNode dest, flow_eDest dest_code,
 	char *attr_name, int attr_elements, int attr_type_id, 
-	int attr_size, int attr_flags, char *attr_body, int fullname);
+	pwr_tTid attr_tid, int attr_size, int attr_flags, 
+	char *attr_body, int fullname);
     int     open_children( double x, double y) {return 1;};
     int     open_attributes( double x, double y);
     int     close( double x, double y);
@@ -319,6 +327,7 @@ class WItemAttrArrayOutput : public WItemBaseAttr {
 	pwr_tObjid item_objid,
 	brow_tNode dest, flow_eDest dest_code,
 	char *attr_name, int attr_elements, int attr_type_id, 
+	pwr_tTid attr_tid,
 	int attr_size, int attr_flags, char *attr_body, int attr_output_num);
     int     open_children( double x, double y) {return 1;};
     int     open_attributes( double x, double y);
@@ -336,7 +345,8 @@ class WItemAttrArrayElem : public WItemBaseAttr {
 	pwr_tObjid item_objid,
 	brow_tNode dest, flow_eDest dest_code,
 	char *attr_name, int attr_element, int attr_type_id,
-	int attr_size, int attr_offset, int attr_flags, char *attr_body);
+	pwr_tTid attr_tid, int attr_size, int attr_offset, 
+	int attr_flags, char *attr_body);
      int open_children( double x, double y);
      int close( double x, double y);
      int update();
@@ -367,7 +377,8 @@ class WItemEnum : public WItemBaseAttr {
 	WNavBrow *item_brow, ldh_tSesContext item_ldhses, 
 	pwr_tObjid item_objid, 
 	char *attr_enum_name, char *attr_name, 
-	int attr_type_id, int attr_size, int attr_flags, char *attr_body,
+	int attr_type_id, pwr_tTid attr_tid, int attr_size, 
+	int attr_flags, char *attr_body,
 	unsigned int item_num, int item_is_element, int item_element,
 	brow_tNode dest, flow_eDest dest_code);
     char	 	enum_name[40];
@@ -385,7 +396,8 @@ class WItemMask : public WItemBaseAttr {
 	WNavBrow *item_brow, ldh_tSesContext item_ldhses, 
 	pwr_tObjid item_objid, 
 	char *attr_mask_name, char *attr_name, 
-	int attr_type_id, int attr_size, int attr_flags, char *attr_body,
+	int attr_type_id, pwr_tTid attr_tid, int attr_size, 
+	int attr_flags, char *attr_body,
 	unsigned int item_mask, int item_is_element, int item_element,
 	brow_tNode dest, flow_eDest dest_code);
     char	 	mask_name[40];

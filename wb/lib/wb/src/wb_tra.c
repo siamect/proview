@@ -1215,7 +1215,7 @@ static int trace_flow_cb( FlowCtx *ctx, flow_tEvent event)
 
 int	trace_save( gre_ctx grectx)
 {
-  char filename[80];
+  pwr_tFileName filename;
   int sts;
 
   if (!grectx->trace_started)
@@ -1228,7 +1228,7 @@ int	trace_save( gre_ctx grectx)
 
 int	trace_restore( gre_ctx grectx)
 {
-  char filename[80];
+  pwr_tFileName filename;
   int sts;
 
   if (!grectx->trace_started)
@@ -1248,7 +1248,7 @@ static void trace_changevalue (
   foe_ctx		foectx;
   ldh_tSesContext	ldhses;
   pwr_tStatus 		sts;
-  char			name[160];
+  char			name[200];
   pwr_tBoolean		value;
   char			object_str[120];
   char			attr_str[80];
@@ -1324,7 +1324,7 @@ static pwr_tStatus	trace_aanalyse_set_value(
 {
   ldh_tSesContext	ldhses;
   pwr_tStatus 		sts;
-  char			name[160];
+  char			name[200];
   pwr_tBoolean		boolean_value;
   pwr_tFloat32		float_value;
   char			object_str[120];

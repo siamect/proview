@@ -739,10 +739,10 @@ static int gcg_get_converted_hiername(
     char	*converted_name
 )
 {
-	char	name[80];
-	int	sts, size;
-	char	*b,*s;
-	int	i;	
+	pwr_tOName	name;
+	int		sts, size;
+	char		*b,*s;
+	int		i;	
 
 	/* Get the hierarchy name */
 	sts = ldh_ObjidToName( ldhses, objdid, ldh_eName_Hierarchy,
@@ -979,8 +979,8 @@ static int gcg_cc(
 #else
 	char		systemname[80];
 	int		sts;
-	static char	cmd[256];
-	char		fname[120];
+	static pwr_tCmd	cmd;
+	pwr_tFileName  	fname;
 
 	// TODO 
 	if ( 1 /* os & pwr_mOpSys_X86_LINUX */ )
@@ -1505,7 +1505,7 @@ int gcg_get_connected_parameter (
 {
 	gcg_t_ctx		gcgctx;
 	char			*name;
-	char			hier_name[120];
+	pwr_tOName     		hier_name;
 	vldh_t_node		output_node;
 	unsigned long		output_count;
 	unsigned long		output_point;
@@ -3307,9 +3307,9 @@ static int	gcg_get_outputstring_spec(
 	pwr_sAttrRef	*attrref;
 	pwr_tClassId	class;
 	ldh_tSesContext ldhses;
-	char *name_p;
-	char aname[120];
-	char *s;
+	char 		*name_p;
+	pwr_tAName     	aname;
+	char 		*s;
 	
 	ldhses = (output_node->hn.wind)->hw.ldhses;
 
@@ -3930,9 +3930,9 @@ static int gcg_error_msg(
     vldh_t_node	node
 )
 {
-	static char msg[256];
-	int	status, size;
-	char	hier_name[80];
+	static char 	msg[256];
+	int		status, size;
+	pwr_tOName	hier_name;
 	FILE 		*logfile;
 
 	logfile = NULL;
@@ -3995,9 +3995,9 @@ int gcg_wind_msg(
     vldh_t_wind	wind
 )
 {
-	static char msg[256];
-	int	status, size;
-	char	hier_name[80];
+	static char 	msg[256];
+	int		status, size;
+	pwr_tOName	hier_name;
 	FILE 		*logfile;
 
 	logfile = NULL;
@@ -4074,9 +4074,9 @@ static int gcg_plc_msg(
     pwr_tObjid		plcobjdid
 )
 {
-	static char msg[256];
-	int	status, size;
-	char	hier_name[80];
+	static char 	msg[256];
+	int		status, size;
+	pwr_tOName	hier_name;
 	FILE 		*logfile;
 
 	logfile = NULL;
@@ -4832,21 +4832,21 @@ static pwr_tStatus gcg_read_volume_plclist(
   unsigned long	*thread_count, 
   gcg_t_threadlist **threadlist)
 {
-	FILE	*file;
-	char	filenames[80];
-	char	fullfilename[80];
-	char	type[20];
-	int	line_count = 0;
-	char	line[160];
-	char	objid_str[20];
-	char	thread_str[20];
-	float	scantime;
-	int	executeorder;
-	int	prio;
-	int	sts;
-	gcg_t_plclist *plclist_pointer;
+	FILE		*file;
+	pwr_tFileName	filenames;
+	pwr_tFileName	fullfilename;
+	char		type[20];
+	int		line_count = 0;
+	char		line[160];
+	char		objid_str[20];
+	char		thread_str[20];
+	float		scantime;
+	int		executeorder;
+	int		prio;
+	int		sts;
+	gcg_t_plclist 	*plclist_pointer;
 	gcg_t_threadlist *threadlist_pointer;
-	char	name[120];
+	char		name[120];
 
 	sprintf( filenames, "%s%s", gcgmv_filenames[0], 
 		vldh_VolumeIdToStr( volid));
@@ -4937,10 +4937,10 @@ int	gcg_comp_rtnode(
 )
 {
 	int			i, j, k, l, sts;
-	char			fullfilename[80];
+	pwr_tFileName  		fullfilename;
 	FILE			*files[2];
 	char			module_name[80];
-	char			plcfilename[80];
+	pwr_tFileName	       	plcfilename;
 	unsigned long		plc_count;
 	gcg_t_plclist		*plclist;
 	gcg_t_timebase		*timebase;
@@ -5308,8 +5308,8 @@ int	gcg_comp_volume(
 )
 {
 	int			i, sts, size;
-	char			filenames[80];
-	char			fullfilename[80];
+	pwr_tFileName  		filenames;
+	pwr_tFileName  		fullfilename;
 	FILE			*file;
 	unsigned long		plc_count;
 	gcg_t_plclist		*plclist;
@@ -5506,8 +5506,8 @@ unsigned long	spawn;
 	unsigned long		ldhwind_count;
 	pwr_tObjid		*ldhwindlist;
 	int			i, sts, size;
-	char			filenames[ GCG_MAXFILES ][80];
-	char			fullfilename[80];
+	pwr_tFileName	       	filenames[ GCG_MAXFILES ];
+	pwr_tFileName	       	fullfilename;
 	gcg_t_files		files;
 	char			module_name[80];
         pwr_mOpSys		operating_system;
@@ -5707,7 +5707,7 @@ unsigned long	spawn;
 	vldh_t_node		node;
 	int			i,j;
 	gcg_ctx			gcgctx;
-	char			fullfilename[80];
+	pwr_tFileName  		fullfilename;
 	char			module_name[80];
 	char			*name;
 	pwr_mOpSys		operating_system;
@@ -6579,7 +6579,7 @@ vldh_t_node	node;
 	pwr_sAttrRef		refattrref;
 	pwr_sAttrRef		*refattrref_ptr;
 	ldh_sAttrRefInfo	info;
-	char			aname[200];
+        pwr_tAName	       	aname;
 	char			*name_p;
 	ldh_tSesContext 	ldhses;
 	char			*s;
@@ -7908,7 +7908,7 @@ vldh_t_node	node;
 	pwr_sAttrRef		*refattrref_ptr;
 	ldh_tSesContext 	ldhses;
 	pwr_tClassId		class;
-	char			aname[200];
+	pwr_tAName     		aname;
 	char			*name_p;
 	ldh_sAttrRefInfo	info;
 	vldh_t_node		output_node;
@@ -10178,7 +10178,7 @@ vldh_t_node	node;
 	vldh_t_node		next_node;
 	unsigned long		next_point;
 	unsigned long		cellcount;
-	char			hier_name[80];
+	pwr_tOName     		hier_name;
 
 	ldhses = (node->hn.wind)->hw.ldhses; 
 
@@ -10668,7 +10668,7 @@ vldh_t_node	node;
 	int			size;
 	pwr_sAttrRef		refattrref;
 	pwr_sAttrRef		*refattrref_ptr;
-	char			aname[200];
+	pwr_tAName     		aname;
 	char			*name_p;
 	char			*s;
 	ldh_sAttrRefInfo	info;
@@ -10827,7 +10827,7 @@ vldh_t_node	node;
 	int			size;
 	ldh_tSesContext 	ldhses;
 	char			parname[80];	
-	char			conn_obj[80];	
+	pwr_tOName     		conn_obj;	
 	char			conn_par[80];	
 	vldh_t_node		conn_node;
 	unsigned long		point = 0;
@@ -13969,7 +13969,7 @@ vldh_t_node	node;
 	char			output_prefix;
 	char			output_par[32];
 	char			*name;
-        char			oname[120];
+        pwr_tOName	       	oname;
 	pwr_tClassId		class;
 	pwr_tTime		*instance_time;
 	pwr_tTime		*template_time;
@@ -14664,10 +14664,10 @@ static int	gcg_file_check(
     char	*filename
 )
 {
-	FILE 	*checkfile;
-	char	found_file[80];
-	pwr_tStatus sts;
-        unsigned long search_ctx;
+	FILE 		*checkfile;
+	pwr_tFileName	found_file;
+	pwr_tStatus 	sts;
+        unsigned long 	search_ctx;
 
         search_ctx = 0;
         sts = dcli_search_file( filename, found_file, DCLI_DIR_SEARCH_INIT);

@@ -75,6 +75,12 @@ static wbl_sSym datatypes[] =
   ,{ "pwr_eTix_Status", pwr_eTix_Status }
   ,{ "pwr_eType_NetStatus", pwr_eType_NetStatus }
   ,{ "pwr_eTix_NetStatus", pwr_eTix_NetStatus }
+  ,{ "pwr_eTypeDef_AdefFlags", pwr_eTypeDef_AdefFlags }
+  ,{ "pwr_eTdix_AdefFlags", pwr_eTdix_AdefFlags }
+  ,{ "pwr_eTypeDef_ClassDefFlags", pwr_eTypeDef_ClassDefFlags }
+  ,{ "pwr_eTdix_ClassDefFlags", pwr_eTdix_ClassDefFlags }
+  ,{ "pwr_eTypeDef_ObjBodyDefFlags", pwr_eTypeDef_ObjBodyDefFlags }
+  ,{ "pwr_eTdix_ObjBodyDefFlags", pwr_eTdix_ObjBodyDefFlags }
   ,{ 0, 0 }
 };
 
@@ -165,6 +171,8 @@ static wbl_sSym classes[] =
   ,{ "pwr_eCix_MenuCascade", pwr_eCix_MenuCascade }
   ,{ "pwr_eClass_MenuButton", pwr_eClass_MenuButton }
   ,{ "pwr_eCix_MenuButton", pwr_eCix_MenuButton }
+  ,{ "pwr_eClass_MenuRef", pwr_eClass_MenuRef }
+  ,{ "pwr_eCix_MenuRef", pwr_eCix_MenuRef }
   ,{ "pwr_eClass_Object", pwr_eClass_Object }
   ,{ "pwr_eCix_Object", pwr_eCix_Object }
   ,{ "pwr_eClass_DbCallBack", pwr_eClass_DbCallBack }
@@ -195,6 +203,10 @@ static wbl_sSym classes[] =
   ,{ "pwr_eCix_MountVolume", pwr_eCix_MountVolume }
   ,{ "pwr_eClass_MountObject", pwr_eClass_MountObject }
   ,{ "pwr_eCix_MountObject", pwr_eCix_MountObject }
+  ,{ "pwr_eClass_Bit", pwr_eClass_Bit }
+  ,{ "pwr_eCix_Bit", pwr_eCix_Bit }
+  ,{ "pwr_eClass_Value", pwr_eClass_Value }
+  ,{ "pwr_eCix_Value", pwr_eCix_Value }
   ,{ 0, 0 }
 };
 
@@ -534,6 +546,8 @@ void wb_wblnode::build( bool recursive)
       o->ty.tid = ((pwr_sTypeDef *)o->rbody)->TypeRef;
       o->ty.type = ((pwr_sTypeDef *)o->rbody)->Type;
       o->ty.size = ((pwr_sTypeDef *)o->rbody)->Size;
+      if ( ((pwr_sTypeDef *)o->rbody)->Elements == 0)
+	((pwr_sTypeDef *)o->rbody)->Elements = 1;
       o->ty.elements = ((pwr_sTypeDef *)o->rbody)->Elements;
       if ( o->ty.type == 0) {
 	pwr_eType type;

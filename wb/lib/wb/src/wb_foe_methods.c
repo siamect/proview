@@ -1766,7 +1766,8 @@ int foe_new_local(
 	      /* No, create new foe window and load the window */	
 	      old_foectx = parent_ctx ;
 
-	      access = ldh_eAccess_ReadOnly;
+	      if ( access == ldh_eAccess_ReadWrite)
+		access = ldh_eAccess_ReadOnly;
 
 	      sts = vldh_get_wind_objdid( 
 		nodeobject->ln.subwind_oid[windowindex], &windowobject); 

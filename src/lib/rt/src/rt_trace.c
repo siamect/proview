@@ -99,9 +99,9 @@ static int trace_get_filename( pwr_tObjid window_objid, char *filename,
   pwr_tOid host;
   pwr_tCid cid;
   char cname[80];
-  char fname[200];
+  pwr_tFileName fname;
   int sts;
-  char name[120];
+  pwr_tOName name;
   pwr_sAttrRef conar;
 
   sprintf( fname, "$pwrp_load/pwr_%s.flw", trace_IdToStr( window_objid));
@@ -317,7 +317,7 @@ static void tra_activate_print( Widget w, tra_tCtx tractx, XmAnyCallbackStruct *
 
 static void tra_activate_savetrace( Widget w, tra_tCtx tractx, XmAnyCallbackStruct *data)
 {
-  char		filename[120];
+  pwr_tFileName	filename;
 
   trace_get_save_filename( tractx->objid, filename);
   flow_SaveTrace( tractx->flow_ctx, filename);
@@ -325,7 +325,7 @@ static void tra_activate_savetrace( Widget w, tra_tCtx tractx, XmAnyCallbackStru
 
 static void tra_activate_restoretrace( Widget w, tra_tCtx tractx, XmAnyCallbackStruct *data)
 {
-  char		filename[120];
+  pwr_tFileName	filename;
 
   if ( !tractx->trace_started)
     return;
@@ -552,8 +552,8 @@ static void tra_activate_help( Widget w, tra_tCtx tractx, XmAnyCallbackStruct *d
 
 static void tra_activate_helpplc( Widget w, tra_tCtx tractx, XmAnyCallbackStruct *data)
 {
-  char	name[120];
-  int 	sts;
+  pwr_tOName	name;
+  int 		sts;
 
   sts = gdh_ObjidToName( tractx->objid, name, sizeof(name), cdh_mNName); 
   if (EVEN(sts)) return;
@@ -793,7 +793,7 @@ static int trace_flow_cb( FlowCtx *ctx, flow_tEvent event)
     }
     case flow_eEvent_MB1DoubleClickShift:
     {
-      char			name[120];
+      pwr_tOName       		name;
       char			object_name[120];
       pwr_tObjid		objid;
       int			sts;
@@ -900,8 +900,8 @@ static void trace_close_cb( tra_tCtx child_tractx)
 static int trace_get_objid( tra_tCtx tractx, flow_tObject node,
 		pwr_tObjid *objid)
 {
-  char			name[120];
-  char			object_name[120];
+  pwr_tOName	        name;
+  pwr_tOName   		object_name;
   int			sts;
   char			attr_str[80];
   flow_eTraceType	trace_type;
@@ -1077,7 +1077,7 @@ static void trace_changevalue (
 )
 {
   pwr_tStatus 		sts;
-  char			name[160];
+  char		       	name[200];
   pwr_tBoolean		value;
   char			object_str[120];
   char			attr_str[80];
@@ -1151,7 +1151,7 @@ static pwr_tStatus	trace_aanalyse_set_value(
 )
 {
   pwr_tStatus 		sts;
-  char			name[160];
+  char			name[200];
   pwr_tBoolean		boolean_value;
   pwr_tFloat32		float_value;
   char			object_str[120];
@@ -1335,15 +1335,15 @@ tra_tCtx trace_new( 	void 		*parent_ctx,
   Arg 		args[20];
   unsigned long sts;
   tra_tCtx	tractx;
-  char 		name[80];
-  char		filename[120];
+  pwr_tOName   	name;
+  pwr_tFileName	filename;
   int		i;
   pwr_tObjid	window_objid;
   pwr_tClassId	class;
   char   	title[100];
   int		has_host;
-  char		hostname[120];
-  char		plcconnect[120];
+  pwr_tOName   	hostname;
+  pwr_tOName   	plcconnect;
   MrmHierarchy s_DRMh;
   MrmType dclass;
   Widget	trace_widget;

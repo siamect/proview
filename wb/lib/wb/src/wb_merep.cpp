@@ -12,7 +12,7 @@
 static int compCatt( tree_sTable *tp, tree_sNode *x, tree_sNode *y);
 
 wb_merep::wb_merep( const wb_merep& x, wb_vrep *vrep) : 
-  m_mvrepdbs(x.m_mvrepdbs), m_erep(x.m_erep), m_vrep(vrep)
+  m_mvrepdbs(x.m_mvrepdbs), m_erep(x.m_erep), m_vrep(vrep), m_catt_tt(0)
 {
   for ( mvrep_iterator it = m_mvrepdbs.begin(); it != m_mvrepdbs.end(); it++)
     it->second->ref();
@@ -296,15 +296,21 @@ int wb_merep::getAttrInfoRec( wb_attrname *attr, pwr_eBix bix, pwr_tCid cid, siz
 void wb_merep::classDependency( pwr_tStatus *sts, pwr_tCid cid, 
 				pwr_tCid **lst, int *cnt)
 {
+  *lst = 0;
+  *cnt = 0;
+  *sts = LDH__SUCCESS;
+
   wb_cdrep *cd = cdrep( sts, cid);
   if ( !cd) return;
 
   wb_bdrep *bd = cd->bdrep( sts, pwr_eBix_rt);
   if ( !bd) { 
     delete cd; 
-    *lst = 0;
-    *cnt = 0;
-    *sts = LDH__SUCCESS;
+    return;
+  }
+  if ( bd->nAttribute() == 0) {
+    delete cd;
+    delete bd;
     return;
   }
 
@@ -323,7 +329,6 @@ void wb_merep::classDependency( pwr_tStatus *sts, pwr_tCid cid,
   }
   delete cd;
   delete bd;
-  *sts = LDH__SUCCESS;
 }
 
 void wb_merep::insertCattObject( pwr_tStatus *sts, pwr_tCid cid, 

@@ -790,6 +790,7 @@ int	WAttNav::object_attr()
 		parname,
 		bodydef[j].Par->Output.Info.Elements, 
 		bodydef[j].Par->Output.Info.Type, 
+		bodydef[j].Par->Output.TypeRef, 
 		bodydef[j].Par->Output.Info.Size, 
 		bodydef[j].Par->Output.Info.Flags,
 		body, output_cnt);
@@ -801,6 +802,7 @@ int	WAttNav::object_attr()
 		parname,
 		bodydef[j].Par->Output.Info.Elements, 
 		bodydef[j].Par->Output.Info.Type, 
+		bodydef[j].Par->Output.TypeRef, 
 		bodydef[j].Par->Output.Info.Size, 
 		bodydef[j].Par->Output.Info.Flags,
 		body, 0);
@@ -817,6 +819,7 @@ int	WAttNav::object_attr()
             new WItemAttr( brow, ldhses, objid, NULL, 
 		flow_eDest_IntoLast, parname,
 		bodydef[j].Par->Input.Info.Type, 
+		bodydef[j].Par->Input.TypeRef, 
 		bodydef[j].Par->Input.Info.Size,
 		bodydef[j].Par->Input.Info.Flags,
 		body, 0);
@@ -824,6 +827,7 @@ int	WAttNav::object_attr()
             new WItemAttrInputInv( brow, ldhses, objid, NULL, 
 		flow_eDest_IntoLast, parname,
 		bodydef[j].Par->Input.Info.Type, 
+		bodydef[j].Par->Input.TypeRef, 
 		bodydef[j].Par->Input.Info.Size,
 		bodydef[j].Par->Input.Info.Flags,
 		body, input_cnt);
@@ -831,6 +835,7 @@ int	WAttNav::object_attr()
             new WItemAttrInputF( brow, ldhses, objid, NULL, 
 		flow_eDest_IntoLast, parname,
 		bodydef[j].Par->Input.Info.Type, 
+		bodydef[j].Par->Input.TypeRef, 
 		bodydef[j].Par->Input.Info.Size,
 		bodydef[j].Par->Input.Info.Flags,
 		body, input_cnt);
@@ -838,6 +843,7 @@ int	WAttNav::object_attr()
             new WItemAttrInput( brow, ldhses, objid, NULL,
 		flow_eDest_IntoLast, parname,
 		bodydef[j].Par->Input.Info.Type, 
+		bodydef[j].Par->Input.TypeRef, 
 		bodydef[j].Par->Input.Info.Size,
 		bodydef[j].Par->Input.Info.Flags,
 		body, input_cnt);
@@ -847,6 +853,7 @@ int	WAttNav::object_attr()
             new WItemAttr( brow, ldhses, objid, NULL,
 		flow_eDest_IntoLast, parname,
 		bodydef[j].Par->Input.Info.Type, 
+		bodydef[j].Par->Input.TypeRef, 
 		bodydef[j].Par->Input.Info.Size,
 		bodydef[j].Par->Input.Info.Flags,
 		body, 0);
@@ -854,6 +861,7 @@ int	WAttNav::object_attr()
             new WItemAttrInputF( brow, ldhses, objid, NULL,
 		flow_eDest_IntoLast, parname,
 		bodydef[j].Par->Input.Info.Type, 
+		bodydef[j].Par->Input.TypeRef, 
 		bodydef[j].Par->Input.Info.Size,
 		bodydef[j].Par->Input.Info.Flags,
 		body, input_cnt);
@@ -871,6 +879,7 @@ int	WAttNav::object_attr()
           new WItemAttr( brow, ldhses, objid, NULL, 
 		flow_eDest_IntoLast, parname,
 		bodydef[j].Par->Output.Info.Type, 
+		bodydef[j].Par->Output.TypeRef, 
 		bodydef[j].Par->Output.Info.Size,
 		bodydef[j].Par->Output.Info.Flags,
 		body, 0);
@@ -878,6 +887,7 @@ int	WAttNav::object_attr()
           new WItemAttrOutput( brow, ldhses, objid, NULL, 
 		flow_eDest_IntoLast, parname,
 		bodydef[j].Par->Output.Info.Type, 
+		bodydef[j].Par->Output.TypeRef, 
 		bodydef[j].Par->Output.Info.Size,
 		bodydef[j].Par->Output.Info.Flags,
 		body, output_cnt);
@@ -891,6 +901,7 @@ int	WAttNav::object_attr()
         new WItemAttr( brow, ldhses, objid, NULL, 
 		flow_eDest_IntoLast, parname,
 		bodydef[j].Par->Output.Info.Type, 
+		bodydef[j].Par->Output.TypeRef, 
 		bodydef[j].Par->Output.Info.Size,
 		bodydef[j].Par->Output.Info.Flags,
 		body, 0);

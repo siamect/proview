@@ -108,13 +108,13 @@ XmAnyCallbackStruct	*data;
 {
 	vldh_t_wind	wind;
 	vldh_t_node	parent_node;
-	int	sts;
-	int 	size;
-	char 	name[120];
+	int		sts;
+	int 		size;
+	pwr_tOName 	name;
 	vldh_t_plc	plc;
-	char fname[80];
-	char classname[80];
-	pwr_tObjid classdef;
+	pwr_tFileName 	fname;
+	char 		classname[80];
+	pwr_tObjid 	classdef;
 
         if ( foectx->msg_label_id != 0 ) foe_message( foectx, ""); 
 
@@ -384,7 +384,7 @@ void foe_activate_quit (
 	}
 	if ( wind_count > 0) XtFree((char *) windlist);
 
-	if ( create_count > 0 )
+	if ( create_count > 0 && foectx->access != ldh_eAccess_SharedReadWrite)
 	{
 	  /* Created subwindows found, inform and break */
 	  sprintf( message, 

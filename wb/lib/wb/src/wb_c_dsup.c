@@ -7,7 +7,7 @@
 #include "wb_pwrs.h"
 #include "wb_ldh_msg.h"
 #include "wb_pwrb_msg.h"
-#include "pwrb_c_dsup.h"
+#include "pwr_baseclasses.h"
 #include "wb_ldh.h"
 
 

@@ -95,7 +95,7 @@ typedef	struct	plc_objtag {
     int			status;			/* deleted , created, loaded etc */
     struct plc_objtag	*next;			/* link to next plcobject in vldh */
     vldh_t_windobject 	*wind;			/* if zero wind not loaded */
-    char		object_name[80];	
+    pwr_tOName		object_name;	
     ldh_tSesContext	ldhsesctx;		/* ldh session ctx from hied */
     ldh_tWBContext	ldhwbctx;		/* workbench ctx from hied */
     void		*hinactx;		/* navigator ctx */

@@ -1553,7 +1553,7 @@ int vldh_wind_load_all (
 
 	  /* LOOK FOR A BUGG!!! */
 	  if ( !(source_found && dest_found )) {
-	    char name[80];
+	    pwr_tOName name;
 
 	    rsts = VLDH__WINDCORRUPT;
 

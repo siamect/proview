@@ -784,6 +784,7 @@ int wb_vrepwbl::getAttrInfoRec( wb_attrname *attr, pwr_eBix bix, pwr_tCid cid, s
     else IF_ATTR( Size, pwr_eType_Int32, 1, level)
     else IF_ATTR( TypeRef, pwr_eType_TypeId, 1, level)
     else IF_ATTR( Elements, pwr_eType_Int32, 1, level)
+    else IF_ATTR( PgmName, pwr_eType_String, 1, level)
     return 1;
   }
   case pwr_eClass_ClassDef:
@@ -1031,6 +1032,13 @@ int wb_vrepwbl::nameToAttrRef( const char *name, pwr_sAttrRef *attrref)
     // Fix
     return 0;
   }
+  else if ( strncmp( name, "_O", 2) == 0) {
+    pwr_tOid oid;
+
+    cdh_StringToObjid( name, &oid);
+    *attrref = cdh_ObjidToAref( oid);
+    return 1;
+  }
 
   wb_name aname = wb_name(name);
   if ( aname.evenSts()) return 0;
@@ -1114,6 +1122,8 @@ int wb_vrepwbl::nameToAttrRef( const char *name, pwr_sAttrRef *attrref)
     attrref->Offset = 0;
     attrref->Size = bdrep->size();
     attrref->Body = cdh_TypeObjidToId( bdrep->boid());
+    attrref->Flags.m = 0;
+    attrref->Flags.b.Object = 1;
 
     delete cdrep;
     delete bdrep;
@@ -1142,6 +1152,11 @@ int wb_vrepwbl::nameToAttrRef( const char *name, pwr_sAttrRef *attrref)
     attrref->Flags.m = 0;
     if ( a_flags & pwr_mAdef_pointer && !(a_flags & pwr_mAdef_private))
       attrref->Flags.b.Indirect = 1;
+    if ( cdh_tidIsCid( a_tid & ~pwr_eBix_rt))
+      attrref->Flags.b.ObjectAttr = 1;
+    if ( a_flags & pwr_mAdef_array &&
+	 ! an.hasAttrIndex(an.attributes()-1))
+      attrref->Flags.b.Array = 1;
   }
   return LDH__SUCCESS;
 }

@@ -59,6 +59,8 @@ typedef struct ldh_s_ObjInfo	ldh_sObjInfo;
 typedef struct ldh_s_AttrRefInfo ldh_sAttrRefInfo;
 typedef struct ldh_s_VolumeInfo	ldh_sVolumeInfo;
 typedef struct ldh_s_ParDef	ldh_sParDef;
+typedef struct ldh_s_BitDef	ldh_sBitDef;
+typedef struct ldh_s_ValueDef	ldh_sValueDef;
 typedef struct ldh_s_RefInfo	ldh_sRefInfo;
 typedef struct ldh_s_RefUsage	ldh_sRefUsage;
 typedef struct ldh_s_SessInfo	ldh_sSessInfo;
@@ -352,6 +354,16 @@ struct ldh_s_ParDef {
   pwr_eClass		ParClass;
   unsigned int	       	Flags;
   pwr_uParDef		*Par;
+};
+
+struct ldh_s_BitDef {
+  pwr_tObjName		Name;
+  pwr_sBit		*Bit;
+};
+
+struct ldh_s_ValueDef {
+  pwr_tObjName		Name;
+  pwr_sValue		*Value;
 };
 
 struct ldh_s_LCB {
@@ -1107,6 +1119,22 @@ ldh_GetSuperClass(
   ldh_tSession session,
   pwr_tCid cid,
   pwr_tCid *super
+);
+
+pwr_tStatus
+ldh_GetMaskBitDef(
+  ldh_tSession session,
+  pwr_tTid tid,
+  ldh_sBitDef **bitdef,
+  int *rows
+);
+
+pwr_tStatus
+ldh_GetEnumValueDef( 
+  ldh_tSession session,
+  pwr_tTid tid,
+  ldh_sValueDef **valuedef,
+  int *rows
 );
 
 #ifdef __cplusplus
