@@ -52,6 +52,9 @@ extern "C" {
 static char ge_version[] = "V3.4.0";
 static Graph *current_graph;
 
+static void graph_group_replace_attr( grow_tObject group, char *from_str, char *to_str, 
+				      int *replace_cnt, int strict);
+
 static int	graph_show_func(void		*client_data,
 				void		*client_flag);
 static int	graph_save_func(void		*client_data,
@@ -65,6 +68,8 @@ static int	graph_set_func(	void		*client_data,
 static int	graph_add_func(	void		*client_data,
 				void		*client_flag);
 static int	graph_create_func( void		*client_data,
+				void		*client_flag);
+static int	graph_replace_func( void		*client_data,
 				void		*client_flag);
 static int	graph_rotate_func( void		*client_data,
 				void		*client_flag);
@@ -81,6 +86,8 @@ static int	graph_group_func( void		*client_data,
 static int	graph_select_func( void		*client_data,
 				void		*client_flag);
 static int	graph_export_func( void		*client_data,
+				void		*client_flag);
+static int	graph_replace_func( void	*client_data,
 				void		*client_flag);
 
 dcli_tCmdTable	graph_command_table[] = {
@@ -144,6 +151,12 @@ dcli_tCmdTable	graph_command_table[] = {
 			{ "dcli_arg1", "/X1", "/Y1", "/X2", "/Y2", 
 			"/WIDTH", "/HEIGHT", "/ANGEL1", "/ANGEL2",
 			"/TEXT", "/SUBGRAPH",
+			""}
+		},
+		{
+			"REPLACE",
+			&graph_replace_func,
+			{ "dcli_arg1", "/FROM", "/TO", "/STRICT",
 			""}
 		},
 		{
@@ -2155,6 +2168,184 @@ static int	graph_create_func( void		*client_data,
   return GE__SUCCESS;
 }
 
+static int	graph_replace_func( void	*client_data,
+				void		*client_flag)
+{
+  Graph *graph = (Graph *)client_data;
+
+  char	arg1_str[80];
+  int	arg1_sts;
+	
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str);
+
+  if ( strncmp( arg1_str, "ATTRIBUTE", strlen( arg1_str)) == 0)
+  {
+    grow_tObject 	*sel_list;
+    int			sel_count;
+    glow_sTraceData	*trace_data;
+    bool		modified;
+    char 		*s;
+    char		tmp[120];
+    char		from_str[120];
+    char		to_str[120];
+    int			offs;
+    int			replace_cnt = 0;
+    int			strict;
+    char		str[120];
+
+    if ( EVEN( dcli_get_qualifier( "/FROM", from_str))) {
+      graph->message('E', "Syntax error");
+      return GE__SYNTAX;
+    }
+
+    if ( EVEN( dcli_get_qualifier( "/TO", to_str))) {
+      graph->message('E', "Syntax error");
+      return GE__SYNTAX;
+    }
+
+    strict = ODD( dcli_get_qualifier( "/STRICT", 0));
+    if ( !strict)
+      cdh_ToLower( from_str, from_str);
+
+    grow_GetSelectList( graph->grow->ctx, &sel_list, &sel_count);
+    for ( int i = 0; i < sel_count; i++) {
+      switch( grow_GetObjectType( sel_list[i])) {
+      case glow_eObjectType_GrowGroup:
+	graph_group_replace_attr( sel_list[i], from_str, to_str, &replace_cnt, strict);
+	// Do this for groups also (no break)
+      case glow_eObjectType_GrowNode:
+      case glow_eObjectType_GrowSlider:
+      case glow_eObjectType_GrowTrend:
+      case glow_eObjectType_GrowBar:
+	grow_GetTraceAttr( sel_list[i], &trace_data);
+	modified = false;
+	for ( int j = 0; 
+	      j < (int)(sizeof( trace_data->data)/sizeof(trace_data->data[0]));
+	      j++) {
+	  strncpy( str, trace_data->data[j], sizeof(str));
+	  if ( !strict)
+	    cdh_ToLower( str, str);
+	  s = strstr( str, from_str);
+	  if ( s) {
+	    offs = (int)( s - str);
+	    strcpy( tmp, s + strlen(from_str));
+	    strncpy( &trace_data->data[j][offs], to_str, 
+		     sizeof(trace_data->data[0]) - offs);
+	    trace_data->data[j][sizeof(trace_data->data[0])-1] = 0;
+	    strncat( trace_data->data[j], tmp, 
+		     sizeof(trace_data->data[0])-strlen(trace_data->data[j]));
+	    modified = true;
+	  }
+	}
+	strncpy( str, trace_data->ref_object, sizeof(str));
+	if ( !strict)
+	  cdh_ToLower( str, str);
+	s = strstr( str, from_str);
+	if ( s) {
+	  offs = (int)( s - str);
+	  strcpy( tmp, s + strlen(from_str));
+	  strncpy( &trace_data->ref_object[offs], to_str, 
+		   sizeof(trace_data->ref_object) - offs);
+	  trace_data->ref_object[sizeof(trace_data->ref_object)-1] = 0;
+	  strncat( trace_data->ref_object, tmp, 
+		   sizeof(trace_data->ref_object)-strlen(trace_data->ref_object));
+	  modified = true;
+	}
+	if ( modified) {
+	  grow_SetTraceAttr( sel_list[i], trace_data);
+	  replace_cnt++;
+	}
+	break;
+      default:
+	;
+      }
+    }
+    if ( replace_cnt) {
+      char msg[80];
+      sprintf( msg, "%d attributes replaced", replace_cnt);
+      graph->message('I', msg);
+    }
+    else
+      graph->message('I', "Nothing replaced");
+      
+  }
+  else
+  {
+    graph->message('E', "Syntax error");
+    return GE__SYNTAX;
+  }
+  return GE__SUCCESS;
+}
+
+
+static void graph_group_replace_attr( grow_tObject group, char *from_str, char *to_str, 
+				      int *replace_cnt, int strict)
+{
+  grow_tObject 	*objectlist;
+  int 		object_cnt;
+  glow_sTraceData  *trace_data;
+  bool		modified;
+  char 		*s;
+  char		tmp[120];
+  int		offs;
+  char		str[120];
+  
+  grow_GetGroupObjectList( group, &objectlist, &object_cnt);
+  for ( int i = 0; i < object_cnt; i++) {
+
+    switch( grow_GetObjectType( objectlist[i])) {
+    case glow_eObjectType_GrowGroup:
+      graph_group_replace_attr( objectlist[i], from_str, to_str, replace_cnt, strict);
+      // Do this for groups also (no break)
+    case glow_eObjectType_GrowNode:
+    case glow_eObjectType_GrowSlider:
+    case glow_eObjectType_GrowTrend:
+    case glow_eObjectType_GrowBar:
+      grow_GetTraceAttr( objectlist[i], &trace_data);
+      modified = false;
+      for ( int j = 0; 
+	    j < (int)(sizeof( trace_data->data)/sizeof(trace_data->data[0]));
+	    j++) {
+	strncpy( str, trace_data->data[j], sizeof(str));
+	if ( strict)
+	  cdh_ToLower( str, str);
+	s = strstr( str, from_str);
+	if ( s) {
+	  offs = (int)( s - str);
+	  strcpy( tmp, s + strlen(from_str));
+	  strncpy( &trace_data->data[j][offs], to_str, 
+		   sizeof(trace_data->data[0]) - offs);
+	  trace_data->data[j][sizeof(trace_data->data[0])-1] = 0;
+	  strncat( trace_data->data[j], tmp, 
+		   sizeof(trace_data->data[0])-strlen(trace_data->data[j]));
+	  modified = true;
+	}
+      }
+
+      strncpy( str, trace_data->ref_object, sizeof(str));
+      if ( strict)
+	cdh_ToLower( str, str);
+      s = strstr( str, from_str);
+      if ( s) {
+	offs = (int)( s - str);
+	strcpy( tmp, s + strlen(from_str));
+	strncpy( &trace_data->ref_object[offs], to_str, 
+		 sizeof(trace_data->ref_object) - offs);
+	trace_data->ref_object[sizeof(trace_data->ref_object)-1] = 0;
+	strncat( trace_data->ref_object, tmp, 
+		 sizeof(trace_data->ref_object)-strlen(trace_data->ref_object));
+	modified = true;
+      }
+      if ( modified) {
+	grow_SetTraceAttr( objectlist[i], trace_data);
+	(*replace_cnt)++;
+      }
+      break;
+    default:
+      ;
+    }
+  }
+}
 
 int Graph::command( char* input_str)
 {
