@@ -111,6 +111,11 @@ if [ -e /etc/rc2.d/S90pwr ]; then
 fi
 ln -s /etc/init.d/pwr /etc/rc2.d/S90pwr
 
+if [ -e /etc/rc2.d/S90gdhserver ]; then
+  rm /etc/rc2.d/S90gdhserver
+fi
+ln -s /etc/init.d/gdhserver /etc/rc2.d/S90gdhserver
+
 # Create project
 new_project=0
 if [ ! -e $proot ]; then

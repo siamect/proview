@@ -44,6 +44,8 @@ cp $pkgsrc/pwrp_profile $pkgroot/etc
 chmod a+x $pkgroot/etc/pwrp_profile
 cp $pkgsrc/pwr $pkgroot/etc/init.d
 chmod a+x $pkgroot/etc/init.d/pwr
+cp $pkgsrc/gdhserver $pkgroot/etc/init.d
+chmod a+x $pkgroot/etc/init.d/gdhserver
 
 # Man pages
 mkdir -p $pkgroot/usr/share/man/man1
