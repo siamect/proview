@@ -205,15 +205,18 @@ sub build_all ()
   _build("wbl", "pwrb", "copy");
   _build("wbl", "nmps", "copy");
   _build("wbl", "ssab", "copy");
+  _build("wbl", "tlog", "copy");
   _build("lib", "ge", "all");
   _build("lib", "wb", "all");
   _build("lib", "rt", "all");
+  _build("lib", "rs", "all");
   _build("exp", "rt", "all");
   _build("lib", "msg_dummy", "all");
   _build("exe", "wb*", "all");
   _build("lib", "dtt", "all");
   _build("exp", "rt", "all");
   _build("exe", "rt*", "all");
+  _build("exe", "rs*", "all");
   _build("exe", "jpwr*", "all");
   _build("exp", "ge", "all");
   _build("mmi", "*", "copy");
