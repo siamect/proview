@@ -113,7 +113,7 @@ WItemObject::WItemObject( WNav *wnav, pwr_tObjid item_objid,
       if ( ODD(sts))
       {
         brow_SetAnnotation( node, next_annot++, descr, strlen(descr));
-        XtFree( descr);
+        free( descr);
       }
     }
     if ( wnav->gbl.show_alias && classid == pwr_eClass_Alias)
@@ -129,7 +129,7 @@ WItemObject::WItemObject( WNav *wnav, pwr_tObjid item_objid,
 		alias_name, sizeof(alias_name), &size);
          if ( EVEN(sts))
            strcpy( alias_name, "-");
-         XtFree((char *) ref_object);
+         free((char *) ref_object);
          brow_SetAnnotation( node, next_annot++, alias_name, strlen(alias_name));
        }
     }
@@ -466,7 +466,7 @@ int WItemBaseObject::open_attributes( WNav *wnav, double x, double y)
           attr_exist = 1;
         }
       }
-      XtFree((char *) bodydef);	
+      free((char *) bodydef);	
     }
 
     if ( attr_exist && !is_root)
@@ -860,12 +860,12 @@ int WItemObjectName::get_value( char **value)
   int size = 120;
   int sts;
 
-  segname = XtMalloc( size);
+  segname = (char *) malloc( size);
   sts = ldh_ObjidToName( ldhses, objid, ldh_eName_Object, 
 	segname, size, &size);
   if ( EVEN(sts))
   {
-    XtFree( segname);
+    free( segname);
     return sts;
   }
   *value = segname;
@@ -1300,7 +1300,7 @@ int WItemAttr::update()
   }
 
   brow_SetAnnotation( node, 1, buff, len);
-  XtFree( (char *)value);
+  free( (char *)value);
   return WNAV__SUCCESS;
 }
 
@@ -1369,7 +1369,7 @@ int WItemAttrInput::update()
 
   wnav_attrvalue_to_string( ldhses, type_id, value, &buff, &len);
   brow_SetAnnotation( node, 1, buff, len);
-  XtFree( (char *)value);
+  free( (char *)value);
 
   sts = ldh_GetObjectBuffer( ldhses, objid, "DevBody", "PlcNode", &eclass,	
 	(char **)&plcnode, &psize);
@@ -1387,7 +1387,7 @@ int WItemAttrInput::update()
   else
     brow_SetRadiobutton( node, 1, 0);
 
-  XtFree((char *)plcnode);
+  free((char *)plcnode);
 
   return WNAV__SUCCESS;
 }
@@ -1438,7 +1438,7 @@ int WItemAttrInput::set_mask( int radio_button, int value)
       brow_SetRadiobutton( node, 1, 0);
   }
 
-  XtFree((char *)plcnode);
+  free((char *)plcnode);
   return WNAV__SUCCESS;
 }
 
@@ -1506,7 +1506,7 @@ int WItemAttrInputF::update()
 
   wnav_attrvalue_to_string( ldhses, type_id, value, &buff, &len);
   brow_SetAnnotation( node, 1, buff, len);
-  XtFree( (char *)value);
+  free( (char *)value);
 
   sts = ldh_GetObjectBuffer( ldhses, objid, "DevBody", "PlcNode", &eclass,	
 	(char **)&plcnode, &psize);
@@ -1518,7 +1518,7 @@ int WItemAttrInputF::update()
   else
     brow_SetRadiobutton( node, 0, 0);
 
-  XtFree((char *)plcnode);
+  free((char *)plcnode);
 
   return WNAV__SUCCESS;
 }
@@ -1555,7 +1555,7 @@ int WItemAttrInputF::set_mask( int radio_button, int value)
     else
       brow_SetRadiobutton( node, 0, 0);
   }
-  XtFree((char *)plcnode);
+  free((char *)plcnode);
   return WNAV__SUCCESS;
 }
 
@@ -1623,7 +1623,7 @@ int WItemAttrInputInv::update()
 
   wnav_attrvalue_to_string( ldhses, type_id, value, &buff, &len);
   brow_SetAnnotation( node, 1, buff, len);
-  XtFree( (char *)value);
+  free( (char *)value);
 
   sts = ldh_GetObjectBuffer( ldhses, objid, "DevBody", "PlcNode", &eclass,	
 	(char **)&plcnode, &psize);
@@ -1635,7 +1635,7 @@ int WItemAttrInputInv::update()
   else
     brow_SetRadiobutton( node, 0, 0);
 
-  XtFree((char *)plcnode);
+  free((char *)plcnode);
 
   return WNAV__SUCCESS;
 }
@@ -1672,7 +1672,7 @@ int WItemAttrInputInv::set_mask( int radio_button, int value)
     else
       brow_SetRadiobutton( node, 0, 0);
   }
-  XtFree((char *)plcnode);
+  free((char *)plcnode);
   return WNAV__SUCCESS;
 }
 
@@ -1740,7 +1740,7 @@ int WItemAttrOutput::update()
 
   wnav_attrvalue_to_string( ldhses, type_id, value, &buff, &len);
   brow_SetAnnotation( node, 1, buff, len);
-  XtFree( (char *)value);
+  free( (char *)value);
 
   sts = ldh_GetObjectBuffer( ldhses, objid, "DevBody", "PlcNode", &eclass,	
 	(char **)&plcnode, &psize);
@@ -1752,7 +1752,7 @@ int WItemAttrOutput::update()
   else
     brow_SetRadiobutton( node, 0, 0);
 
-  XtFree((char *)plcnode);
+  free((char *)plcnode);
 
   return WNAV__SUCCESS;
 }
@@ -1789,7 +1789,7 @@ int WItemAttrOutput::set_mask( int radio_button, int value)
     else
       brow_SetRadiobutton( node, 0, 0);
 
-    XtFree((char *)plcnode);
+    free((char *)plcnode);
   }
 
   return WNAV__SUCCESS;
@@ -1939,7 +1939,7 @@ int WItemAttrArrayOutput::update()
   else
     brow_SetRadiobutton( node, 0, 0);
 
-  XtFree((char *)plcnode);
+  free((char *)plcnode);
 
   return WNAV__SUCCESS;
 }
@@ -1976,7 +1976,7 @@ int WItemAttrArrayOutput::set_mask( int radio_button, int value)
     else
       brow_SetRadiobutton( node, 0, 0);
 
-    XtFree((char *)plcnode);
+    free((char *)plcnode);
   }
 
   return WNAV__SUCCESS;
@@ -2102,9 +2102,9 @@ int WItemAttrArrayElem::get_value( char **value)
 		attr, &attr_value, &psize);
   if ( EVEN(sts)) return sts;
 
-  *value = (char *) XtMalloc( size);
+  *value = (char *) malloc( size);
   memcpy( *value, attr_value + offset, size);
-  XtFree( attr_value);
+  free( attr_value);
 
   return WNAV__SUCCESS;
 }
@@ -2261,7 +2261,7 @@ int WItemAttrArrayElem::update()
   }
 
   brow_SetAnnotation( node, 1, buff, len);
-  XtFree( (char *)value);
+  free( (char *)value);
   return WNAV__SUCCESS;
 }
 
@@ -2325,9 +2325,9 @@ int WItemEnum::update()
   else
     brow_SetRadiobutton( node, 0, 0);
   if ( !is_element)
-    XtFree( (char *)value);
+    free( (char *)value);
   else
-    XtFree( buf);
+    free( buf);
   return WNAV__SUCCESS;
 }
 
@@ -2360,7 +2360,7 @@ int WItemEnum::set()
     if ( EVEN(sts)) return sts;
 
     // Warning!! the item will be deleted here by the ldh backcall
-    XtFree( buf);
+    free( buf);
   }
 
   if ( !ldh_cb_used)
@@ -2451,9 +2451,9 @@ int WItemMask::update()
   else
     brow_SetRadiobutton( node, 0, 0);
   if ( !is_element)
-    XtFree( (char *)value);
+    free( (char *)value);
   else
-    XtFree( buf);
+    free( buf);
   return WNAV__SUCCESS;
 }
 
@@ -2511,9 +2511,9 @@ int WItemMask::set( int set_value)
   }
 
   if ( !is_elem)
-    XtFree( (char *)value);
+    free( (char *)value);
   else
-    XtFree( buf);
+    free( buf);
 
   if ( !ldh_cb_used)
   {

@@ -151,7 +151,7 @@ int WAttNav::check_attr( int *multiline, brow_tObject *node,
       sts = item->get_value( (char **)&p);
       wnav_attrvalue_to_string( ldhses, item->type_id, p, init_value, 
 				  &len);
-      XtFree( p);
+      free( p);
       *size = item->size;
       if ( item->type_id == pwr_eType_Text)
         *multiline = 1;
@@ -173,7 +173,7 @@ int WAttNav::check_attr( int *multiline, brow_tObject *node,
       sts = ((WItemObjectName *)base_item)->get_value( &p);
       if ( ODD(sts)) {
         strcpy( name, p);
-        XtFree( p);
+        free( p);
       }
       else
         strcpy( name, "");
@@ -820,7 +820,7 @@ int	WAttNav::object_attr()
         attr_exist = 1;
       }
     }
-    XtFree((char *) bodydef);	
+    free((char *) bodydef);	
   }
   brow_ResetNodraw( brow->ctx);
   brow_Redraw( brow->ctx, 0);
@@ -977,7 +977,7 @@ int WAttNav::set_attr_value( brow_tObject node, char *name, char *value_str)
         memcpy( value + item->element * item->size, buff, item->size);
         sts = ldh_SetObjectPar( ldhses, item->objid, item->body,
 		item->attr, value, size);
-        XtFree( (char *)value);
+        free( (char *)value);
 
         item->update();
       }

@@ -51,7 +51,8 @@ public:
     wb_object object(pwr_tCid cid) const { wb_object o; return o;} // Fix
     wb_object object(const char *name) const;
     
-    wb_attribute attribute(pwr_tOid oid, const char *aname, const char *bname) const;
+    wb_attribute attribute(pwr_tOid oid, const char *bname, const char *aname) const;
+    wb_attribute attribute(pwr_tOid oid, const char *bname) const;
     wb_attribute attribute(wb_object o, wb_adef adef) { wb_attribute a; return a;}; // Fix
     wb_attribute attribute(wb_object o, wb_name aname) { wb_attribute a; return a;}; // Fix
     wb_attribute attribute(wb_name aname) { wb_attribute a; return a;}; // Fix

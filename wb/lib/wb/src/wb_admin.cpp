@@ -523,9 +523,6 @@ int Admin::open_input()
   else
     XmTextSetString( text_w, "");
 
-  if ( value)
-    XtFree( value);
-
   message( ' ', "");
   flow_SetInputFocus( text_w);
   set_prompt( "admin >");

@@ -15,7 +15,8 @@ wb_adrep *wb_adrep::ref()
   return this;
 }
 
-wb_adrep::wb_adrep( wb_orepdbs& o): m_nRef(0), m_orep(&o), m_sts(LDH__SUCCESS)
+wb_adrep::wb_adrep( wb_orepdbs& o): m_nRef(0), m_orep(&o), m_sts(LDH__SUCCESS),
+				    m_bufferClass(pwr_eClass__)
 {
   m_orep->ref();
 
@@ -110,6 +111,7 @@ wb_adrep::wb_adrep( wb_orepdbs& o): m_nRef(0), m_orep(&o), m_sts(LDH__SUCCESS)
       m_paramindex = attr.Info.ParamIndex;
       m_flags = attr.Info.Flags;
       m_tid = 0;
+      m_bufferClass = attr.Class;
 
       break;
     }

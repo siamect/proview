@@ -42,11 +42,12 @@ public:
     wb_attribute(const wb_attribute&);
     wb_attribute(pwr_tStatus, wb_orep* const );
     wb_attribute(pwr_tStatus, wb_orep* const, wb_adrep* const);
-    wb_attribute(pwr_tStatus, wb_orep* const, const char* aname, const char* bname = 0);
+    wb_attribute(pwr_tStatus, wb_orep* const, const char* bname);
+    wb_attribute(pwr_tStatus, wb_orep* const, const char* aname, const char* bname);
 
     ~wb_attribute();
     wb_attribute& operator=(const wb_attribute&);
-    operator bool() const { return evenSts();}
+    operator bool() const { return oddSts();}
     operator wb_orep*() const;
     bool operator==(wb_attribute&);
     
@@ -69,6 +70,7 @@ public:
     bool checkXref();
     pwr_sAttrXRef *xref();
     pwr_sObjXRef *oxref();
+    pwr_eClass bufferClass();
     
     void *value( void *p = 0);
     void *value(void *vp, size_t size, pwr_tStatus*);

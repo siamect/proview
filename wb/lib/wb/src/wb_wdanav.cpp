@@ -698,7 +698,7 @@ int	WdaNav::get_attr()
     if ( found)
       break;
 
-    XtFree((char *) bodydef);
+    free((char *) bodydef);
   }
 
   if ( !found) {
@@ -707,14 +707,14 @@ int	WdaNav::get_attr()
   }
 
   if ( bodydef[j].Par->Output.Info.Type == pwr_eType_Buffer) {
-    XtFree((char *) bodydef);
+    free((char *) bodydef);
     brow_ResetNodraw( brow->ctx);
     return WDA__ATTRINVALID;
   }
 
   if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_ARRAY ) {
     if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_INVISIBLE ) {
-      XtFree((char *) bodydef);
+      free((char *) bodydef);
       brow_ResetNodraw( brow->ctx);
       return WDA__ATTRINVISIBLE;
     }
@@ -728,7 +728,7 @@ int	WdaNav::get_attr()
 		       (void *)this, (void *) &bodydef[j], (void *) body,
 		       NULL, NULL);
 
-  XtFree((char *) bodydef);	
+  free((char *) bodydef);	
 
   brow_ResetNodraw( brow->ctx);
   brow_Redraw( brow->ctx, 0);
@@ -996,7 +996,7 @@ int WdaNav::set_attr_value( brow_tObject node, char *name, char *value_str)
         memcpy( value + item->element * item->size, buff, item->size);
         sts = ldh_SetObjectPar( ldhses, item->objid, item->body,
 		item->attr, value, size);
-        XtFree( (char *)value);
+        free( (char *)value);
 
         item->update();
       }

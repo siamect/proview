@@ -201,11 +201,11 @@ wb_vrepdbs::readAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, unsigned i
         return 0;
     
     if (p) {
-        memcpy(p, bp, MIN(op->rbody.size, size));
+        memcpy(p, (char *)bp + offset, MIN(op->rbody.size - offset, size));
         return p;
     }
         
-    return bp;
+    return (void *)((char *)bp + offset);
 }
 
 

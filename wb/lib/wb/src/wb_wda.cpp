@@ -147,7 +147,7 @@ void Wda::change_value( int set_focus)
   }
 
   if ( value)
-    XtFree( value);
+    free( value);
 
   message( ' ', "");
   if ( set_focus)
@@ -580,7 +580,7 @@ void Wda::open_attr_dialog()
     for ( j = 0; j < rows; j++)
       attr_cnt++;
 
-    XtFree((char *) bodydef);
+    free((char *) bodydef);
   }
 
   attr_vect = (char (*)[80]) calloc( attr_cnt + 1, 80);
@@ -602,7 +602,7 @@ void Wda::open_attr_dialog()
     for ( j = 0; j < rows; j++)
       strcpy( attr_vect[attr_cnt++], bodydef[j].ParName);
 
-    XtFree((char *) bodydef);
+    free((char *) bodydef);
   }
   strcpy( attr_vect[attr_cnt], "");
 
@@ -646,11 +646,11 @@ int Wda::next_attr()
       else if ( get_next) {
         strcpy( attribute, bodydef[j].ParName);
         sts = ((WdaNav *)wdanav)->update( objid, classid, attribute);
-        XtFree((char *) bodydef);
+        free((char *) bodydef);
         return WDA__SUCCESS;
       }
     }
-    XtFree((char *) bodydef);
+    free((char *) bodydef);
   }
   return WDA__NONEXTATTR;
 }
@@ -689,19 +689,19 @@ int Wda::prev_attr()
       if ( cdh_NoCaseStrcmp( attribute, bodydef[j].ParName) == 0) {
         if ( strcmp( prev_attr, "") == 0) {
           // get_last = 1;
-          XtFree((char *) bodydef);
+          free((char *) bodydef);
           return WDA__NOPREVATTR;
         }
         else {
           strcpy( attribute, prev_attr);
           sts = ((WdaNav *)wdanav)->update( objid, classid, attribute);
-          XtFree((char *) bodydef);
+          free((char *) bodydef);
           return WDA__SUCCESS;
         }
       }
       strcpy( prev_attr, bodydef[j].ParName);
     }
-    XtFree((char *) bodydef);
+    free((char *) bodydef);
   }
 
   if ( get_last && strcmp( prev_attr, "") != 0) {

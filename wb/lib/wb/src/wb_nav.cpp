@@ -371,7 +371,7 @@ int ItemObject::open_attributes( Nav *nav, double x, double y)
 		bodydef[i].Par->Param.Info.Type, is_root);
         } 
       }
-      XtFree( (char *)bodydef);
+      free( (char *)bodydef);
     }
 
     if ( attr_exist && !is_root)

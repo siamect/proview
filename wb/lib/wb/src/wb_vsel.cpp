@@ -78,7 +78,7 @@ void WVsel::vsel_activate_ok (
 	int 		i;
 	pwr_tVolumeId	*volume_ptr;
 
-	volume_ptr = (pwr_tVolumeId *) XtCalloc( vsel->volume_count, 
+	volume_ptr = (pwr_tVolumeId *) calloc( vsel->volume_count, 
 		sizeof( pwr_tVolumeId));
 	if (XmListGetSelectedPos( vsel->widgets.volumelist, 
 		&pos_list, &pos_cnt)) 
@@ -91,7 +91,7 @@ void WVsel::vsel_activate_ok (
 
 	if (vsel->vsel_bc_success != NULL)
 	  sts = (vsel->vsel_bc_success) ( vsel, volume_ptr, pos_cnt);
-        XtFree( (char *) volume_ptr);
+        free( (char *) volume_ptr);
 
 	if ( ODD(sts)) 
 	{
@@ -217,13 +217,13 @@ void WVsel::vsel_action_volumelist(
 	  // The ok callback will be called later
 	  return;
 
-	volume_ptr = (pwr_tVolumeId *) XtCalloc( 1, sizeof( pwr_tVolumeId));
+	volume_ptr = (pwr_tVolumeId *) calloc( 1, sizeof( pwr_tVolumeId));
 
         *volume_ptr = vsel->volumes[ data->item_position - 1];
 
 	if (vsel->vsel_bc_success != NULL)
 	  sts = (vsel->vsel_bc_success) ( vsel, volume_ptr, 1);
-        XtFree( (char *) volume_ptr);
+        free( (char *) volume_ptr);
 
 	if ( ODD(sts)) 
 	{

@@ -58,8 +58,30 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep * const orep, wb_adrep * con
   }
 }
 
-wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep * const orep, const char *aname, const char *bname) :
-  wb_status(sts), m_orep(orep)
+wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep * const orep, const char *bname) :
+  wb_status(sts), m_orep(orep), m_adrep(0), m_size(0), m_offset(0), m_tid(0),
+  m_elements(0), m_type(pwr_eType_), m_flags(0)
+{
+  if ( orep == 0)
+    m_sts = LDH__NOSUCHATTR;
+  else {
+    wb_cdrep *cd = m_orep->vrep()->merep()->cdrep( &m_sts, m_orep->cid());
+    if ( oddSts()) {
+      wb_bdrep *bd = cd->bdrep( &m_sts, bname);
+      if ( oddSts()) {
+	m_size = bd->size();
+        delete bd;
+      }
+      delete cd;
+    }
+    if ( oddSts())
+      m_orep->ref();
+  }
+}
+
+wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep * const orep, char const *bname, const char *aname) :
+  wb_status(sts), m_orep(orep), m_adrep(0), m_size(0), m_offset(0), m_tid(0),
+  m_elements(0), m_type(pwr_eType_), m_flags(0)
 {
   if ( orep == 0)
     m_sts = LDH__NOSUCHATTR;
@@ -203,6 +225,14 @@ pwr_tOid wb_attribute::boid()
 {
   pwr_tOid oid;
   return oid;  // Fix
+}
+
+pwr_eClass wb_attribute::bufferClass()
+{
+  // This is not recursive for subclasses
+  if ( m_adrep)
+    return m_adrep->bufferClass();
+  return pwr_eClass__;
 }
 
 bool wb_attribute::checkXref()

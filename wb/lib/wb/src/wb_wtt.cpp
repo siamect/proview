@@ -1890,7 +1890,7 @@ static void wtt_activate_openge( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
       if ( EVEN(sts)) break;
 
       cdh_ToLower( graph_name, action);
-      XtFree( (char *)action);
+      free( (char *)action);
     }
     else if ( classid == pwr_cClass_WebGraph) {
       sts = ldh_GetObjectPar( wtt->ldhses, attrref.Objid, "RtBody",
@@ -1900,7 +1900,7 @@ static void wtt_activate_openge( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
       cdh_ToLower( graph_name, action);
       if ( strcmp( graph_name, "") != 0 && strstr( graph_name, ".pwg") == 0)
         strcat( graph_name, ".pwg");
-      XtFree( (char *)action);
+      free( (char *)action);
     }
     else
       break;

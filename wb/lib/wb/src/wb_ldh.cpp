@@ -548,9 +548,9 @@ ldh_GetObjectBody(ldh_tSession session, pwr_tOid oid, char *bname, void **buff, 
     wb_object o = sp->object(oid);
     wb_attribute a = sp->attribute(o, bname);
 
-    *buff = XtMalloc(a.size());
+    *buff = malloc(a.size());
     if (*buff == NULL) return LDH__INSVIRMEM;
-    memcpy(*buff, a.value( 0), a.size());
+    a.value( *buff);
     if (size != NULL) *size = a.size();
   
     return LDH__SUCCESS;
@@ -591,14 +591,10 @@ ldh_GetObjectBuffer(ldh_tSession session, pwr_tOid oid, char *bname,
 
     *value = (char *)calloc(1, a.size());
     *size = a.size();
-    //*bufferclass = a.?;
-    
-    //wb_value v(value, size);
-    //if (!v) return v.sts();
-    
-    //v = a.value();
-    //return v.sts();
-    return LDH__NYI;
+
+    a.value( value);
+    *bufferclass = a.bufferClass();
+    return LDH__SUCCESS;
 }
 
 pwr_tStatus
@@ -647,9 +643,9 @@ ldh_GetObjectPar(ldh_tSession session, pwr_tOid oid, char *bname, char *aname, c
     
     *buff = (char *)calloc(1, a.size());
     if (*buff == NULL) return LDH__INSVIRMEM;
-    memcpy(*buff, a.value(), a.size());
+    a.value( *buff);
     if (size != 0)
-        *size = a.size();
+      *size = a.size();
 
     return a.sts();
 }
