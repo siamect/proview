@@ -52,14 +52,14 @@ wb_dbs::wb_dbs(wb_vrep *v)
     sprintf(m_name, dbs_cNameVolume, dbs_cDirectory, m_v->name());
     dcli_translate_filename(m_name, m_name);
 
-    m_oix_th = tree_CreateTable(&sts, sizeof(pwr_tOix), offsetof(sOentry, o.oid.oix),
-                                sizeof(sOentry), 1000, tree_Comp_oix);
+    m_oix_th = tree_CreateTable(&sts, sizeof(pwr_tOid), offsetof(sOentry, o.oid),
+                                sizeof(sOentry), 1000, tree_Comp_oid);
 
     m_name_th = tree_CreateTable(&sts, sizeof(dbs_sName), offsetof(sNentry, n.poix),
                                  sizeof(sNentry), 1000, comp_dbs_name);
 
-    m_class_th = tree_CreateTable(&sts, sizeof(pwr_tOid), offsetof(sCentry, c),
-                                  sizeof(sCentry), 1000, tree_Comp_oid);
+    m_class_th = tree_CreateTable(&sts, sizeof(pwr_tCid), offsetof(sCentry, c),
+                                  sizeof(sCentry), 1000, tree_Comp_cid);
 }
 
 wb_dbs::~wb_dbs()
@@ -169,7 +169,10 @@ wb_dbs::installObject(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid, pwr_tOid boid, 
     sOentry     *oep;
     pwr_tStatus  sts;
     
-    oep = (sOentry *)tree_Insert(&sts, m_oix_th, &oid.oix);
+    if (cdh_ObjidIsNull(oid))
+        printf("Error: object is null!\n");
+
+    oep = (sOentry *)tree_Insert(&sts, m_oix_th, &oid);
     if (sts == TREE__INSERTED) {
     } else {
         printf("Error: object is already inserted!\n");
@@ -183,11 +186,16 @@ wb_dbs::installObject(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid, pwr_tOid boid, 
     oep->flags.b.exist = 1;
 
     // Link objects to its relatives
-    oep->poep = (sOentry *)tree_Insert(&sts, m_oix_th, &poid.oix);
-    oep->boep = (sOentry *)tree_Insert(&sts, m_oix_th, &boid.oix);
-    oep->aoep = (sOentry *)tree_Insert(&sts, m_oix_th, &aoid.oix);
-    oep->foep = (sOentry *)tree_Insert(&sts, m_oix_th, &foid.oix);
-    oep->loep = (sOentry *)tree_Insert(&sts, m_oix_th, &loid.oix);
+    if (cdh_ObjidIsNotNull(poid))
+        oep->poep = (sOentry *)tree_Insert(&sts, m_oix_th, &poid);
+    if (cdh_ObjidIsNotNull(boid))
+        oep->boep = (sOentry *)tree_Insert(&sts, m_oix_th, &boid);
+    if (cdh_ObjidIsNotNull(aoid))
+        oep->aoep = (sOentry *)tree_Insert(&sts, m_oix_th, &aoid);
+    if (cdh_ObjidIsNotNull(foid))
+        oep->foep = (sOentry *)tree_Insert(&sts, m_oix_th, &foid);
+    if (cdh_ObjidIsNotNull(loid))
+        oep->loep = (sOentry *)tree_Insert(&sts, m_oix_th, &loid);
 
     m_volume.cardinality++;    
 
@@ -493,7 +501,7 @@ wb_dbs::writeSectVolref()
 
     memset(&ce, 0, sizeof(ce));
     ce.c.cid = 0;
-    cep = (sCentry*)tree_FindSuccessor(&sts, m_class_th, &ce);
+    cep = (sCentry*)tree_FindSuccessor(&sts, m_class_th, &ce.c.cid);
     while (cep) {
         cdh_uTypeId cid;
         cdh_uVolumeId vid;
@@ -625,7 +633,7 @@ wb_dbs::installDbody(pwr_tOid oid, void *body)
     
     memset(b, 0, sizeof(b));
     
-    oep = (sOentry *)tree_Find(&sts, m_oix_th, &oid.oix);
+    oep = (sOentry *)tree_Find(&sts, m_oix_th, &oid);
     if (EVEN(sts)) {
     }
 
@@ -671,7 +679,7 @@ wb_dbs::installRbody(pwr_tOid oid, void *body)
     
     memset(b, 0, sizeof(b));
     
-    oep = (sOentry *)tree_Find(&sts, m_oix_th, &oid.oix);
+    oep = (sOentry *)tree_Find(&sts, m_oix_th, &oid);
     if (EVEN(sts)) {
     }
 
