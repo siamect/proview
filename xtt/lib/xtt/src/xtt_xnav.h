@@ -80,6 +80,10 @@ extern "C" {
 #include "xtt_menu.h"
 #endif
 
+#ifndef xtt_clog_h
+#include "xtt_clog.h"
+#endif
+
 #define xnav_cVersion	"X3.0b"
 #define XNAV_BROW_MAX	25
 #define XNAV_LOGG_MAX   10
@@ -259,6 +263,7 @@ class XNav {
     xnav_sMenu 		*menu_tree;
     Ev			*ev;
     Op			*op;
+    CLog		*clog;
     int			closing_down;
     char		opplace_name[80];
     char		base_user[80];

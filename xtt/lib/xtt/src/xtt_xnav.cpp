@@ -959,7 +959,7 @@ XNav::XNav(
 	brow_cnt(0), TraceList(NULL), trace_started(0),
 	message_cb(NULL), close_cb(NULL), map_cb(NULL), change_value_cb(NULL),
 	set_dimension_cb(NULL), ccm_func_registred(0), verify(0),
-	menu_tree(NULL), ev(NULL), op(NULL), closing_down(0),
+	menu_tree(NULL), ev(0), op(0), clog(0), closing_down(0),
 	base_priv(pwr_mPrv_System), priv(pwr_mPrv_System), displayed(0),
         current_logging_index(-1), search_last_found(0), search_compiled(0)
 {

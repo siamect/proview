@@ -11,6 +11,7 @@
 #include <stdlib.h>
 
 extern "C" {
+#include "rt_net.h"
 #include "rt_gdh.h"
 #include "rt_gdh_msg.h"
 #include "co_cdh.h"
@@ -44,7 +45,6 @@ extern "C" {
 #include "rt_qdb.h"
 #include "rt_hash.h"
 #include "rt_pool.h"
-#include "rt_net.h"
 #include "rt_sub.h"
 #include "rt_io_base.h"
 }

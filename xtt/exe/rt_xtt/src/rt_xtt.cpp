@@ -103,6 +103,7 @@ static xnav_sStartMenu system_menu[] = {
 	{ "PlcThread", 	xnav_eItemType_Command, (void *) "show plcthread"},
 	{ "PlcPgm", 	xnav_eItemType_Command,	(void *) "show plcpgm"},
 	{ "Logging", 	xnav_eItemType_Menu,	(void *)&logging_menu},
+	{ "System Messages", xnav_eItemType_Command,	(void *) "open consolelog"},
 	{ "", 0, NULL}};
 static xnav_sStartMenu root_menu[] = {
 	{ "Database", 	xnav_eItemType_Command, (void *) "show database"},

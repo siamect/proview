@@ -58,6 +58,15 @@ c_Hide_event_name	: compound_string("Dölj händelsenamn");
 c_Hide_event_text	: compound_string("Dölj händelsetext");
 c_Help_on_selected_event : compound_string("Hjälp för utvald händelse");
 
+! module xtt_clog.uil
+
+c_NextFile         	: compound_string("Nästa Fil");
+c_PreviousFile         	: compound_string("Föregående Fil");
+c_SelectFile         	: compound_string("Välj Fil");
+c_Filter         	: compound_string("Filter");
+c_Consolelog         	: compound_string("Konsollogg");
+c_Help_on_selected_msg  : compound_string("Hjälp för utvalt meddelande");
+
 ! module xtt_trace.uil
 
 c_SaveTrace		: compound_string("Spara Trace");

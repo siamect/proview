@@ -103,6 +103,7 @@ static void xnav_op_map_cb( void *ctx);
 static int xnav_op_get_alarm_info_cb( void *xnav, evlist_sAlarmInfo *info);
 static void xnav_op_ack_last_cb( void *xnav, unsigned long type, unsigned long prio);
 static void xnav_trend_close_cb( void *ctx, XttTrend *trend);
+static void xnav_clog_close_cb( void *ctx);
 
 static int	xnav_help_func(		void		*client_data,
 					void		*client_flag);
@@ -2421,6 +2422,24 @@ static int	xnav_open_func(	void		*client_data,
     sts = xnav_open_URL( arg2_str);
     if ( EVEN(sts))
       xnav->message(' ', XNav::get_message(sts));
+  }
+  else if ( strncmp( arg1_str, "CONSOLELOG", strlen( arg1_str)) == 0)
+  {
+    int         sts;
+
+    if ( xnav->clog)
+      xnav->clog->pop();
+    else {
+      xnav->clog = new CLog( xnav, xnav->parent_wid, "Console log", &sts);
+      if ( EVEN(sts)) {
+        delete xnav->clog;
+        xnav->op = 0;
+        xnav->message('E', "Unable to open console log");
+        return XNAV__SUCCESS;
+      }
+      xnav->clog->help_cb = xnav_ev_help_cb;
+      xnav->clog->close_cb = xnav_clog_close_cb;
+    }
   }
   else
     xnav->message('E',"Syntax error");
@@ -5028,6 +5047,13 @@ int xnav_call_method_cb( void *xnav, char *method, char *filter,
 void xnav_start_trace_cb( void *xnav, pwr_tObjid objid, char *name)
 {
   ((XNav *)xnav)->start_trace( objid, name);
+}
+
+static void xnav_clog_close_cb( void *ctx)
+{
+  XNav *xnav = (XNav *)ctx;
+  delete xnav->clog;
+  xnav->clog = 0;
 }
 
 static void xnav_ev_help_cb( void *ctx, char *key)

@@ -58,6 +58,15 @@ c_Hide_event_name	: compound_string("Hide event name");
 c_Hide_event_text	: compound_string("Hide event text");
 c_Help_on_selected_event : compound_string("Help on selected event");
 
+! module xtt_clog.uil
+
+c_NextFile         	: compound_string("Next File");
+c_PreviousFile         	: compound_string("Previous File");
+c_SelectFile         	: compound_string("Select File");
+c_Filter         	: compound_string("Filter");
+c_Consolelog         	: compound_string("ConsoleLog");
+c_Help_on_selected_msg  : compound_string("Help on selected message");
+
 ! module xtt_trace.uil
 
 c_SaveTrace		: compound_string("SaveTrace");
