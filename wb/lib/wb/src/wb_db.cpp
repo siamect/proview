@@ -229,7 +229,7 @@ wb_db_ohead &wb_db_ohead::get(wb_db_txn *txn)
   m_data.set_ulen(sizeof(m_o));
   m_data.set_flags(DB_DBT_USERMEM);
 
-  int ret = m_db->m_t_ohead->get(txn, &m_key, &m_data, 0);
+  m_db->m_t_ohead->get(txn, &m_key, &m_data, 0);
   return *this;
 }
 
@@ -244,7 +244,7 @@ wb_db_ohead &wb_db_ohead::get(wb_db_txn *txn, pwr_tOid oid)
   m_data.set_ulen(sizeof(m_o));
   m_data.set_flags(DB_DBT_USERMEM);
 
-  int ret = m_db->m_t_ohead->get(txn, &m_key, &m_data, 0);
+  m_db->m_t_ohead->get(txn, &m_key, &m_data, 0);
   return *this;
 }
 
@@ -279,6 +279,16 @@ void wb_db_rbody::put(wb_db_txn *txn)
   m_db->m_t_rbody->put(txn, &m_key, &m_data, 0);
 }
 
+void wb_db_rbody::put(wb_db_txn *txn, size_t offset, size_t size, void *p)
+{
+  m_data.set_doff(offset);
+  m_data.set_dlen(size);
+  m_data.set_data(p);
+  m_data.set_ulen(size);
+  m_data.set_flags(DB_DBT_PARTIAL);
+  
+  m_db->m_t_rbody->get(txn, &m_key, &m_data, 0);
+}
 
 void wb_db_rbody::get(wb_db_txn *txn, size_t offset, size_t size, void *p)
 {
@@ -306,15 +316,26 @@ void wb_db_dbody::put(wb_db_txn *txn)
   m_db->m_t_dbody->put(txn, &m_key, &m_data, 0);
 }
 
+void wb_db_dbody::put(wb_db_txn *txn, size_t offset, size_t size, void *p)
+{
+  m_data.set_doff(offset);
+  m_data.set_dlen(size);
+  m_data.set_data(p);
+  m_data.set_ulen(size);
+  m_data.set_flags(DB_DBT_PARTIAL);
+  
+  m_db->m_t_dbody->put(txn, &m_key, &m_data, 0);
+}
+
 void wb_db_dbody::get(wb_db_txn *txn, size_t offset, size_t size, void *p)
 {
   m_data.set_doff(offset);
   m_data.set_dlen(size);
   m_data.set_data(p);
   m_data.set_ulen(size);
-  m_data.set_flags(DB_DBT_USERMEM);
+  m_data.set_flags(DB_DBT_USERMEM|DB_DBT_PARTIAL);
   
-  m_db->m_t_dbody->get(txn, &m_key, &m_data, DB_DBT_PARTIAL);
+  m_db->m_t_dbody->get(txn, &m_key, &m_data, 0);
 }
 
 
@@ -372,6 +393,34 @@ void  wb_db::open(const char *fileName)
   strcpy(m_volumeName, i.name());
 }
 
+static void printstat(DbEnv *ep, char *s)
+{
+  DB_LOCK_STAT *lp;
+  
+  ep->lock_stat(&lp, 0);
+  printf("DbEnv loc statistics, %s:\n", s);
+  printf("  lastid.......: %d\n", lp->st_lastid);
+  printf("  nmodes.......: %d\n", lp->st_nmodes);
+  printf("  maxlocks:....: %d\n", lp->st_maxlocks);
+  printf("  maxlockers...: %d\n", lp->st_maxlockers);
+  printf("  maxobjects...: %d\n", lp->st_maxobjects);
+  printf("  nlocks.......: %d\n", lp->st_nlocks);
+  printf("  maxnlocks....: %d\n", lp->st_maxnlocks);
+  printf("  nlockers.....: %d\n", lp->st_nlockers);
+  printf("  maxnlockers..: %d\n", lp->st_maxnlockers);
+  printf("  nobjects.....: %d\n", lp->st_nobjects);
+  printf("  maxnobjects..: %d\n", lp->st_maxnobjects);
+  printf("  nrequests....: %d\n", lp->st_nrequests);
+  printf("  nreleases....: %d\n", lp->st_nreleases);
+  printf("  nnowaits.....: %d\n", lp->st_nnowaits);
+  printf("  nconflicts...: %d\n", lp->st_nconflicts);
+  printf("  ndeadlocks...: %d\n", lp->st_ndeadlocks);
+  printf("  regsize......: %d\n", lp->st_regsize);
+  printf("  region_wait..: %d\n", lp->st_region_wait);
+  printf("  region_nowait: %d\n", lp->st_region_nowait);
+  printf("\n");
+}
+
 void wb_db::openDb()
 {
   struct stat sb;
@@ -388,7 +437,9 @@ void wb_db::openDb()
   m_env = new DbEnv(0/*DB_CXX_NO_EXCEPTIONS*/);
   m_env->set_errpfx("PWR db");
 	//m_env->set_cachesize(0, 256 * 1024 * 1024, 0);
-
+  m_env->set_lk_max_locks(200000);
+  m_env->set_lk_max_objects(20000);
+  
 #if 1
   m_env->open(m_fileName,
               DB_CREATE | DB_INIT_LOCK | DB_INIT_LOG | DB_INIT_MPOOL | DB_INIT_TXN | DB_RECOVER,
@@ -398,6 +449,8 @@ void wb_db::openDb()
               DB_CREATE | DB_INIT_MPOOL,
               S_IRUSR | S_IWUSR);
 #endif
+  printstat(m_env, "after open env");
+  
   m_t_ohead = new Db(m_env, 0);
   m_t_rbody = new Db(m_env, 0);
   m_t_dbody = new Db(m_env, 0);
@@ -411,6 +464,7 @@ void wb_db::openDb()
   m_t_class->open("class", NULL, DB_BTREE, DB_CREATE, S_IRUSR | S_IWUSR);
   m_t_name->open("name", NULL, DB_BTREE, DB_CREATE, S_IRUSR | S_IWUSR);
   m_t_info->open("info", NULL, DB_BTREE, DB_CREATE, S_IRUSR | S_IWUSR);
+  printstat(m_env, "after open databases");
     
 }
 
@@ -536,21 +590,30 @@ bool wb_db::deleteOset(pwr_tStatus *sts, wb_oset *o)
 bool wb_db::importVolume(wb_export &e)
 {
   try {
-//    m_env->txn_begin(0, (DbTxn **)&m_txn, 0);
-    m_txn = 0;
+    m_env->txn_begin(0, (DbTxn **)&m_txn, 0);
+//    m_txn = 0;
     
+  printstat(m_env, "importVolume");
     e.exportHead(*this);
+  printstat(m_env, "after head");
     e.exportRbody(*this);
+  printstat(m_env, "after rbody");
     e.exportDbody(*this);
+  printstat(m_env, "after dbody");
     e.exportMeta(*this);
+  printstat(m_env, "after meta");
     
-    //m_txn->commit(0);
-    //m_env->txn_checkpoint(0, 0, 0);
+    m_txn->commit(0);
+  printstat(m_env, "after commit");
+    m_env->txn_checkpoint(0, 0, 0);
+  printstat(m_env, "after checkpoint");
     return true;
   }
   catch (DbException &e) {
-    //m_txn->abort();
+  printstat(m_env, "after exception");
+    m_txn->abort();
     printf("exeption: %s\n", e.what());
+  printstat(m_env, "after abort");
     return false;
   }
 }
@@ -564,7 +627,7 @@ bool wb_db::importHead(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
 {
   wb_db_ohead o(this, oid, cid, poid, boid, aoid, foid, loid, name, normname, ohTime, rbTime, dbTime, rbSize, dbSize);
   o.put(m_txn);
-  printf("head put: %d.%d %s\n", oid.vid, oid.oix, name);
+  //printf("head put: %d.%d %s\n", oid.vid, oid.oix, name);
   wb_db_name n(this, oid, poid, normname);
   n.put(m_txn);
   wb_db_class c(this, cid, oid);
@@ -584,7 +647,7 @@ bool wb_db::importHead(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
 bool wb_db::importRbody(pwr_tOid oid, size_t size, void *body)
 {
   wb_db_rbody rb(this, oid, size, body);
-  printf("rbody size: %d.%d %d\n", oid.vid, oid.oix, size);
+  //printf("rbody size: %d.%d %d\n", oid.vid, oid.oix, size);
   rb.put(m_txn);
   return true;
 }
@@ -592,7 +655,7 @@ bool wb_db::importRbody(pwr_tOid oid, size_t size, void *body)
 bool wb_db::importDbody(pwr_tOid oid, size_t size, void *body)
 {
   wb_db_dbody db(this, oid, size, body);
-  printf("dbody size: %d.%d %d\n", oid.vid, oid.oix, size);
+  //printf("dbody size: %d.%d %d\n", oid.vid, oid.oix, size);
   db.put(m_txn);
   return true;
 }

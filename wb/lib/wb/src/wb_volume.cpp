@@ -272,7 +272,7 @@ wb_attribute wb_volume::attribute(const pwr_sAttrRef* arp) const
 
 
   // We have found a matching attribute
-  if (ODD(sts)) {  
+  if (ODD(sts)) {
     if (arp->Size == 0 || arp->Size > (adrep->size() / adrep->nElement())) {
       // Map whole atribute
       idx = (adrep->nElement() > 1) ? -1 : 0;

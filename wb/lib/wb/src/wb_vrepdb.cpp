@@ -364,21 +364,38 @@ bool wb_vrepdb::renameObject(pwr_tStatus *sts, wb_orep *orp, wb_name &name)
   }
 }
 
-bool wb_vrepdb::writeAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, size_t offset, size_t size, void *p)
+bool wb_vrepdb::writeAttribute(pwr_tStatus *sts, wb_orep *orp, pwr_eBix bix, size_t offset, size_t size, void *p)
 {
-  *sts = LDH__NYI;
-  //body.oid = ?;
-  //body.bix = ?;
-  //key.data = &body;
-  //key.len = sizeof(body);
+  try {
+    m_ohead.get(m_txn, orp->oid());
+    *sts = LDH__SUCCESS;
+  
+    switch (bix) {
+    case pwr_eBix_rt:
+    {
     
-  //data.data = ?;
-  //data.offset = ?;
-  //data.size = ?;
+      wb_db_rbody rb(m_db, m_ohead.oid());
+      rb.put(m_txn, offset, size, p);
+      break;
+    }
+    case pwr_eBix_dev:
+    {
     
-  //update(body-tab)
+      wb_db_dbody db(m_db, m_ohead.oid());
+      db.put(m_txn, offset, size, p);
+      break;
+    }
+    default:
+      break;
+    }
 
-  return true;
+    return true;
+  }
+  catch (DbException &e) {
+    *sts = LDH__NOSUCHOBJ;
+    printf("vrepdb: %s\n", e.what());
+    return false;
+  }
 }
 
 void *wb_vrepdb::readAttribute(pwr_tStatus *sts, const wb_orep *orp, pwr_eBix bix, size_t offset, size_t size, void *p)
@@ -398,7 +415,7 @@ void *wb_vrepdb::readAttribute(pwr_tStatus *sts, const wb_orep *orp, pwr_eBix bi
     case pwr_eBix_dev:
     {
     
-      wb_db_rbody db(m_db, m_ohead.oid());
+      wb_db_dbody db(m_db, m_ohead.oid());
       db.get(m_txn, offset, size, p);
       break;
     }
@@ -430,7 +447,7 @@ void *wb_vrepdb::readBody(pwr_tStatus *sts, const wb_orep *orp, pwr_eBix bix, vo
     }
     case pwr_eBix_dev:
     {
-      wb_db_rbody db(m_db, m_ohead.oid());
+      wb_db_dbody db(m_db, m_ohead.oid());
       db.get(m_txn, 0, m_ohead.dbSize(), p);
       break;
     }

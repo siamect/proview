@@ -1228,7 +1228,7 @@ ldh_SetObjectBuffer(ldh_tSession session, pwr_tOid oid, char *bname, char *aname
   wb_attribute a = o.attribute(bname, aname);
   if (!a) return a.sts();
     
-  sp->writeAttribute(/*a, value*/);
+  sp->writeAttribute(a, value);
 
   return sp->sts();
 }
@@ -1240,14 +1240,13 @@ pwr_tStatus
 ldh_SetObjectName(ldh_tSession session, pwr_tOid oid, char *name)
 {
   wb_session *sp = (wb_session*)session;
-
   wb_object o = sp->object(oid);
   if (!o) return o.sts();
 
   wb_name n(name);
-  pwr_tStatus sts = sp->renameObject(o, n);
+  sp->renameObject(o, n);
     
-  return sts;
+  return sp->sts();
 }
 
 pwr_tStatus
@@ -1258,18 +1257,22 @@ ldh_SetObjectPar(ldh_tSession session, pwr_tOid oid, char *bname,
 
   wb_object o = sp->object(oid);
   if (!o) return o.sts();
+
   wb_attribute a = o.attribute(bname, aname);
   if (!a) return a.sts();
-    
-  return sp->writeAttribute(/*a, value, size*/);
+
+  sp->writeAttribute(a, value, size);
+
+  return sp->sts();
 }
 
 pwr_tStatus
 ldh_SetSession(ldh_tSession session, ldh_eAccess access)
 {
   wb_session *sp = (wb_session*)session;
+  sp->access(access);
 
-  return sp->access(access);
+  return sp->sts();
 }
 
 pwr_tStatus

@@ -258,7 +258,7 @@ public:
                 
 };
 
-class wb_db_body
+class wb_db_dbody
 {
 public:
   wb_db *m_db;
@@ -270,9 +270,12 @@ public:
   Dbt m_key;
   Dbt m_data;
 
-  wb_db_body(wb_db *db, pwr_tOid oid, size_t size, void *p);
-  
+  wb_db_dbody(wb_db *db, pwr_tOid oid);
+  wb_db_dbody(wb_db *db, pwr_tOid oid, size_t size, void *p);
+   
+  void get(wb_db_txn *txn, size_t offset, size_t size, void *p);
   void put(wb_db_txn *txn);
+  void put(wb_db_txn *txn, size_t offset, size_t size, void *p);
 };
 
 class wb_db_rbody
@@ -290,27 +293,9 @@ public:
   wb_db_rbody(wb_db *db, pwr_tOid oid);
   wb_db_rbody(wb_db *db, pwr_tOid oid, size_t size, void *p);
   
-  void put(wb_db_txn *txn);
   void get(wb_db_txn *txn, size_t offset, size_t size, void *p);
-};
-
-class wb_db_dbody
-{
-public:
-  wb_db *m_db;
-
-  pwr_tOid m_oid;
-  size_t m_size;
-  void *m_p;
-  
-  Dbt m_key;
-  Dbt m_data;
-
-  wb_db_dbody(wb_db *db, pwr_tOid oid);
-  wb_db_dbody(wb_db *db, pwr_tOid oid, size_t size, void *p);
-  
   void put(wb_db_txn *txn);
-  void get(wb_db_txn *txn, size_t offset, size_t size, void *p);
+  void put(wb_db_txn *txn, size_t offset, size_t size, void *p);
 };
 
 class wb_db_txn : public DbTxn

@@ -123,6 +123,22 @@ bool wb_session::deleteFamily(wb_object o)
   return m_vrep->deleteFamily(&m_sts, (wb_orep*)o);
 }
 
+bool wb_session::writeAttribute(wb_attribute &a, void *p, size_t size)
+{
+  if (isReadonly())
+    throw wb_error_str("ReadOnlySession");
+
+  return m_vrep->writeAttribute(&m_sts, (wb_orep*)a, a.bix(), a.offset(), a.size(), p);
+}
+
+bool wb_session::writeAttribute(wb_attribute &a, void *p)
+{
+  if (isReadonly())
+    throw wb_error_str("ReadOnlySession");
+
+  return m_vrep->writeAttribute(&m_sts, (wb_orep*)a, a.bix(), a.offset(), a.size(), p);
+}
+
 pwr_tStatus wb_session::getMenu( ldh_sMenuCall *ip)
 {
   pwr_tStatus		sts;
@@ -354,7 +370,6 @@ void wb_session::getAllMenuItems( ldh_sMenuCall	*ip, ldh_sMenuItem **Item, wb_cd
     }
   }
 }
-
 
 pwr_tStatus wb_session::callMenuMethod( ldh_sMenuCall *mcp, int Index)
 {

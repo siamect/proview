@@ -68,7 +68,8 @@ public:
   bool deleteObject(wb_object o);
   bool deleteFamily(wb_object o);
 
-  bool writeAttribute() {return false;} // Fix
+  bool writeAttribute(wb_attribute &a, void *p, size_t size);
+  bool writeAttribute(wb_attribute &a, void *p);
   bool writeBody() {return false;} // Fix
 
   void getAllMenuItems( ldh_sMenuCall	*ip, ldh_sMenuItem **Item, wb_cdrep *cdrep,
