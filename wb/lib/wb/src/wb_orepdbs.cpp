@@ -28,6 +28,7 @@ wb_orepdbs::~wb_orepdbs()
 {
 }
 #endif
+
 /*
 wb_orepdbs *wb_orepdbs::ref()
 {
@@ -194,4 +195,20 @@ wb_adrep *wb_orepdbs::attribute(pwr_tStatus *sts)
 wb_adrep *wb_orepdbs::attribute(pwr_tStatus *sts, const char *name)
 {
     return 0;//m_vrep->attribute(sts, cid(), name);
+}
+
+wb_position
+wb_orepdbs::position()
+{
+  wb_position pos;
+
+  return pos;
+}
+
+wb_position
+wb_orepdbs::position(ldh_eDest dest)
+{
+  wb_position pos;
+
+  return pos;
 }

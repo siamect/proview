@@ -29,6 +29,7 @@ wb_vrepdbs::dbsenv()
     if (!m_isDbsenvLoaded) {
         ep = dbs_Map(&sts, &m_dbsenv, m_fileName);
         if (!ep) {
+            throw wb_error(sts);
         }
         m_isDbsenvLoaded = true;
     } else {

@@ -19,10 +19,8 @@ class wb_orepdbs : public wb_orep
     
 public:
 
-
-    wb_orepdbs(int oid);
     wb_orepdbs(dbs_sObject *o);
-    ~wb_orepdbs();
+    //~wb_orepdbs();
 
     void* operator new(size_t size, wb_vrepdbs *v);
     void operator delete(void *p, wb_vrepdbs *v);
