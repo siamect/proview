@@ -1044,6 +1044,8 @@ ini_ReadBootFile (
       if (!cp->flags.b.plcfile) {
 #if defined OS_LYNX || defined OS_LINUX
 	sprintf(cp->plcfile.name, dbs_cNamePlc, "", cp->nodename, cp->busid, cp->node.plcVersion);
+#elif defined OS_VMS
+	sprintf(cp->plcfile.name, dbs_cNamePlc, "pwrp_exe:", cp->nodename, cp->busid, cp->node.plcVersion);
 #else
 	sprintf(cp->plcfile.name, dbs_cNamePlc, cp->dir, cp->nodename, cp->busid, cp->node.plcVersion);
 #endif
