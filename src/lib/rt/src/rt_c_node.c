@@ -60,7 +60,8 @@ pwrs_Node_Exec (
       time_Adiff( &diff, &current_time, &np->ProcTimeStamp[i]);
 
       if ( time_DToFloat( 0, &diff) > timeout[i]) {
-	np->ProcStatus[i] = PWR__PTIMEOUT;
+	if ( errh_Severity( np->ProcStatus[i]) < errh_Severity(PWR__PTIMEOUT))
+	  np->ProcStatus[i] = PWR__PTIMEOUT;
       }
       else if ( np->ProcStatus[i] == PWR__PTIMEOUT) {
 	np->ProcStatus[i] = (i < errh_cAnix_SrvSize) ? PWR__SRUN : PWR__ARUN;
@@ -80,6 +81,45 @@ pwrs_Node_Exec (
     np->SystemStatus = np->ProcStatus[new_idx];
   else if ( EVEN(np->SystemStatus))
     np->SystemStatus = PWR__RUNNING;
+}
+
+
+
+
+/* Supervise emon server process */
+void
+pwrs_Node_SupEmon (
+)
+{
+  int i = errh_eAnix_emon - 1;
+  pwr_tTime current_time;
+  pwr_tDeltaTime diff;
+  static float timeout = 3;
+
+  if ( !np) {
+    pwr_tOid oid;
+    pwr_tStatus sts;
+
+    sts = gdh_GetNodeObject( 0, &oid);
+    if ( ODD(sts))
+      gdh_ObjidToPointer( oid, (void **) &np);
+    if ( EVEN(sts)) return;
+  }
+
+  if ( !np)
+    return;
+
+  if ( np->ProcStatus[i] != 0 && np->ProcStatus[i] != PWR__PTIMEOUT) {
+    clock_gettime( CLOCK_REALTIME, &current_time);
+    time_Adiff( &diff, &current_time, &np->ProcTimeStamp[i]);
+
+    if ( time_DToFloat( 0, &diff) > timeout) {
+      if ( errh_Severity( np->ProcStatus[i]) < errh_Severity(PWR__PTIMEOUT)) {
+	np->ProcStatus[i] = PWR__PTIMEOUT;
+	np->SystemStatus = PWR__PTIMEOUT;
+      }
+    }
+  }
 }
 
 
