@@ -65,6 +65,9 @@
 #include "rt_rtt_dir.h"
 #include "rt_rtt_msg.h"
 #include "dtt_rttsys_functions.h"
+#include "rt_ini_event.h"
+#include "rt_qcom.h"
+#include "rt_qcom_msg.h"
 
 
 /* Nice functions */
@@ -103,6 +106,8 @@ static int		rtt_print_buffer_len;
 static rtt_t_store_menuctx	*rtt_menuctx_store = 0;
 static rtt_t_menu	*rtt_root_menu = 0;
 static rtt_t_menu	*rtt_menu_deletebuf = 0;
+static qcom_sQid	my_q = {0, 0};
+static qcom_sGet	get;
 
 static unsigned short state_table[10][256];
 
@@ -325,6 +330,13 @@ int	rtt_initialize( char	*login,
 
 	  if ( rtt_gdh_started)
 	    sts = rtt_rttconfig();
+
+          if (!qcom_CreateQ(&sts, &my_q, NULL, "events")) {
+            exit(sts);
+          }
+          if (!qcom_Bind(&sts, &my_q, &qcom_cQini)) {
+            exit(-1);
+          }
 	}
 
 	if ( rtt_AlarmAutoLoad)
@@ -9745,6 +9757,26 @@ int	rtt_scan(
 			menu_ctx	ctx)
 {
 	int	sts;
+
+        /* Check if rt_ini left us a message */
+        get.data = NULL;
+        qcom_Get(&sts, &my_q, &get, 0);
+        if (sts != QCOM__TMO && sts != QCOM__QEMPTY) {
+          if (get.type.b == qcom_eBtype_event) {
+	    if (get.type.s == qcom_cIini) {
+	      qcom_sEvent  *ep = (qcom_sEvent*) get.data;
+	      ini_mEvent   new_event;
+	      
+	      new_event.m = ep->mask;
+	      if (new_event.b.terminate) {
+	        rtt_logging_close_files();
+	        qio_reset((int *) rtt_chn);
+	        exit(0);
+	      }
+	    }
+          }
+          qcom_Free(&sts, get.data);
+        }
 
 	/* Get new alarm messages */
 	sts = rtt_alarm_update ( ctx); 
