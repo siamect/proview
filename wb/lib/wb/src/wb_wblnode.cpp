@@ -580,6 +580,24 @@ void wb_wblnode::postBuild()
     ch->postBuild();
     ch = ch->o->fws;
   }
+
+  if ( isVolume()) {
+    size_t size, offset;
+    int elements;
+    pwr_tTypeId tid;
+    pwr_eType type;
+    pwr_tObjectIx no;
+
+    // Transfer next_oix to volumes rtbody
+
+    if ( m_vrep->getAttrInfo( "NextOix", pwr_eBix_sys, o->m_cid, &size, &offset,
+                               &tid, &elements, &type)) {
+     
+      no = *(pwr_tObjectIx *)((char *)o->rbody + offset);
+      if ( no < (pwr_tObjectIx)m_vrep->next_oix)
+	*(pwr_tObjectIx *)((char *)o->rbody + offset) = m_vrep->next_oix;
+    }
+  }
 }
 
 void wb_wblnode::buildObjBodyDef( ref_wblnode classdef)
