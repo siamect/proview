@@ -37,6 +37,11 @@
 #include "rt_sansm.h"
 #include "rt_subcm.h"
 #include "rt_subsm.h"
+#include "rt_aproc.h"
+#include "rt_pwr_msg.h"
+#include "rt_ini_event.h"
+#include "rt_qcom.h"
+#include "rt_qcom_msg.h"
 
 typedef struct s_Timer	    sTimer;
 
@@ -71,6 +76,11 @@ static time_tClock	last_clock;
 #ifdef OS_VMS
   static int		timer_flag;
 #endif
+
+static void
+event (
+  qcom_sGet	*get
+);
 
 static void
 sancAdd (
@@ -202,17 +212,38 @@ main (
   char			**argv
 )
 {
+  pwr_tStatus           sts;
   time_tClock		wait_clock;
-
+  qcom_sQid	        my_q = qcom_cNQid;
+  qcom_sGet	        get;
+  int                   tmo = 0;
 
   init();
+
+  if (!qcom_CreateQ(&sts, &my_q, NULL, "events")) {
+    exit(sts);
+  }
+  if (!qcom_Bind(&sts, &my_q, &qcom_cQini)) {
+    exit(-1);
+  }
 
   gdbroot->db->log.b.tmon = 0;
 
   for (wait_clock = 0;;) {
 
+    get.data = NULL;
+    qcom_Get(&sts, &my_q, &get, tmo);
+    if (sts != QCOM__TMO && sts != QCOM__QEMPTY) {
+      if (get.type.b == qcom_eBtype_event) {
+        event(&get);
+      }
+      qcom_Free(&sts, get.data);
+    }
+
     if (wait_clock != 0)
       waitClock(wait_clock);
+
+    aproc_TimeStamp();
 
     now_clock = time_Clock(NULL, NULL);
     if (now_clock < last_clock) { 
@@ -229,6 +260,23 @@ main (
 
     getWaitClock(&wait_clock, last_clock);
     
+  }
+}
+
+static void
+event (
+  qcom_sGet	*get
+)
+{
+  qcom_sEvent  *ep = (qcom_sEvent*) get->data;
+  ini_mEvent            new_event;
+
+  if (get->type.s != qcom_cIini)
+    return;
+
+  new_event.m = ep->mask;
+  if (new_event.b.terminate) {
+    exit(0);
   }
 }
 
@@ -757,17 +805,20 @@ init(
   pwr_tStatus		sts;
 
   /* Initialize.  */
-  errh_Init("pwr_tmon");
+  errh_Init("pwr_tmon", errh_eAnix_tmon);
+  errh_SetStatus( PWR__SRVSTARTUP);
 
   qcom_Init(&sts, 0, "pwr_tmon");
   if (EVEN (sts)) {
     errh_Error("qcom_Init, %m", sts);
+    errh_SetStatus( PWR__SRVTERM);
     exit(sts);
   }
 
   sts = gdh_Init("pwr_tmon");
   if (EVEN (sts)) {
     errh_Error("gdh_Init, %m", sts);
+    errh_SetStatus( PWR__SRVTERM);
     exit(sts);
   }
 
@@ -796,6 +847,7 @@ init(
     subcCheck(newTimer(NULL, NULL, subcCheck)); 
   } gdb_ScopeUnlock;
 
+  errh_SetStatus( PWR__SRUN);
 }
 
 static void
