@@ -64,8 +64,10 @@ static int xhelpnav_init_brow_cb( BrowCtx *ctx, void *client_data);
 static int xhelpnav_init_brow_base_cb( FlowCtx *fctx, void *client_data);
 static int help_cmp_items( const void *node1, const void *node2);
 
-static void xhelpnav_open_URL( char *link)
+static void xhelpnav_open_URL( CoXHelpNav *xhelpnav, char *url)
 {
+  if ( xhelpnav->open_URL_cb)
+    (xhelpnav->open_URL_cb)( xhelpnav->parent_ctx, url);
 }
 
 //
@@ -288,7 +290,7 @@ CoXHelpNav::CoXHelpNav(
 	pwr_tStatus *status) :
 	parent_ctx(xn_parent_ctx), parent_wid(xn_parent_wid),
 	brow_cnt(0), closing_down(0), displayed(0), utility(xn_utility),
-	search_node(0), search_strict(false)
+	search_node(0), search_strict(false), open_URL_cb(0)
 {
   strcpy( name, xn_name);
   strcpy( search_str, "");
@@ -442,6 +444,14 @@ static int xhelpnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
         brow_CenterObject( xhelpnav->brow->ctx, object, 0.75);
       if ( node_count)
         free( node_list);
+      break;
+    }
+    case flow_eEvent_Key_PageDown: {
+      brow_Page( xhelpnav->brow->ctx, 0.95);
+      break;
+    }
+    case flow_eEvent_Key_PageUp: {
+      brow_Page( xhelpnav->brow->ctx, -0.95);
       break;
     }
     case flow_eEvent_Key_Return:
@@ -794,7 +804,7 @@ int HItemHelpImage::doubleclick_action( CoXHelpNavBrow *brow, CoXHelpNav *xhelpn
   {
     if ( (strstr( link, ".htm") != 0) || (strstr( link, ".pdf") != 0)) {
       // Open the url
-      xhelpnav_open_URL( link);
+      xhelpnav_open_URL( xhelpnav, link);
     }
     else {
       if ( file_name[0] == 0)
@@ -916,7 +926,7 @@ int HItemHelp::doubleclick_action( CoXHelpNavBrow *brow, CoXHelpNav *xhelpnav, d
   {
     if ( (strstr( link, ".htm") != 0) || (strstr( link, ".pdf") != 0)) {
       // Open the url
-      xhelpnav_open_URL( link);
+      xhelpnav_open_URL( xhelpnav, link);
     }
     else {
       if ( file_name[0] == 0)
@@ -983,7 +993,7 @@ int HItemHelpBold::doubleclick_action( CoXHelpNavBrow *brow, CoXHelpNav *xhelpna
   {
     if ( (strstr( link, ".htm") != 0) || (strstr( link, ".pdf") != 0)) {
       // Open the url
-      xhelpnav_open_URL( link);
+      xhelpnav_open_URL( xhelpnav, link);
     }
     else {
       if ( file_name[0] == 0)

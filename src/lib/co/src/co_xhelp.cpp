@@ -47,6 +47,14 @@ CoXHelp *CoXHelp::default_xhelp = 0;
 
 // Prototype declarations
 
+static void xhelp_open_URL_cb( void *ctx, char *url)
+{
+  CoXHelp *xhelp = (CoXHelp *)ctx;
+
+  if ( xhelp->open_URL_cb)
+    (xhelp->open_URL_cb)( xhelp->parent_ctx, url);
+}
+
 static void xhelp_open_input_dialog( CoXHelp *xhelp, char *text, char *title,
 	char *init_text,
 	void (*ok_cb)( CoXHelp *, char *))
@@ -283,7 +291,7 @@ CoXHelp::CoXHelp(
 	xhelp_eUtility	utility,
         int             *xa_sts) :
  	parent_wid(xa_parent_wid), parent_ctx(xa_parent_ctx), 
-	client_data(0), close_cb(0), set_focus_disabled(0), 
+	client_data(0), close_cb(0), open_URL_cb(0), set_focus_disabled(0), 
 	displayed(0)
 {
   char		uid_filename[120] = {"xtt_xhelp.uid"};
@@ -373,6 +381,7 @@ CoXHelp::CoXHelp(
 
   xhelpnav = new CoXHelpNav( (void *)this, xhelpnav_form, title, utility, &brow_widget, 
                              &sts);
+  xhelpnav->open_URL_cb = xhelp_open_URL_cb;
 
   // XtPopup( parent_wid, XtGrabNone);
   // displayed = 1;

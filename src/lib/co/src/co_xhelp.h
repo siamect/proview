@@ -37,6 +37,7 @@ class CoXHelp {
     Widget	xhelpnav_form;
     void	*client_data;
     void	(*close_cb) ( void *, void *);
+    void 	(*open_URL_cb)( void *, char *);
     int		set_focus_disabled;
     XtIntervalId focus_timerid;
     int         displayed;

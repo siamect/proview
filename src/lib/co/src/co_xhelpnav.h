@@ -106,6 +106,7 @@ class CoXHelpNav {
     brow_tNode		search_node;
     char		search_str[80];
     bool 		search_strict;
+    void 		(*open_URL_cb)( void *, char *);
 
     void print( char *filename);
     void zoom( double zoom_factor);
