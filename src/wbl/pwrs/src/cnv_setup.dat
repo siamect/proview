@@ -7,3 +7,6 @@ group NodeConfiguration pwrs_appl.html
 group PlantConfiguration pwrs_libhier.html
 group ClassDefinition pwrs_attribute.html
 group Volumes pwrs_classvolume.html
+group Types pwrs_attrref.html
+group DerivedTypes pwrs_string132.html
+group BasicTypes pwrs_attrref.html

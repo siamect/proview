@@ -6,7 +6,16 @@
 SObject pwrs:Class
 !/**
 !  @Group TypeDefinition
-!  Definition of a type.
+!  Definition of a base type.
+!  The base types are defined in the systemclass volume pwrs.
+!
+!  Base types and derived types are used to define the type of an
+!  attribute in an object. The type is defined by the TypeRef attribute
+!  in the $Attribute object (also in $Input, $Inter, $Output).
+!
+! @b See also
+!  @classlink $TypeHier pwrs_typehier.html
+!  @classlink $TypeDef pwrs_typedef.html
 !*/
   Object $Type $ClassDef pwr_eCix_Type
     Body SysBody

@@ -52,9 +52,10 @@ $(inc_dir)/pwr_systemclasses.h :
 
 $(doc_dir)/orm/pwrs_allclasses.html :
 	@ echo "Generating html files for pwrs classes..."
-	@ co_convert -w -d $(doc_dir)/orm -g $(pwre_sroot)/wbl/pwrs/src/cnv_setup.dat "$(pwre_sroot)/wbl/pwrs/src/pwrs_c_*.wb_load"
+	@ co_convert -w -d $(doc_dir)/orm -g $(pwre_sroot)/wbl/pwrs/src/cnv_setup.dat "$(pwre_sroot)/wbl/pwrs/src/pwrs_*.wb_load"
 	@ echo "Generating html files for pwrs structs..."
 	@ co_convert -c -d $(doc_dir)/orm $(inc_dir)/pwr_systemclasses.h
+	@ co_convert -c -d $(doc_dir)/orm $(inc_dir)/pwr.h
 
 $(exe_dir)/pwrs_xtthelp.dat :
 	@ echo "Generating xtt help files for pwrs classes"

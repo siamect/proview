@@ -5,8 +5,18 @@
 !
 !  <Description>.
 !
-!
 SObject pwrs:Type
+!/**
+!  @Version 1.0
+!  @Code pwr.h
+!  @Group BasicTypes,Types
+!  Absolute time. Basic type.
+!  The absolute time is a calender time. Compare with the delta time wich is the
+!  the elapsed time between two points of time.
+!
+! @b See also
+!  @classlink DeltaTime pwrs_deltatime.html
+!*/
   Object $Time pwr_eClass_Type pwr_eTix_Time
     Body SysBody
      Attr Type = pwr_eType_Time

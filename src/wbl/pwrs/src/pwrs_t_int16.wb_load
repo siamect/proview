@@ -5,8 +5,13 @@
 !
 !  <Description>.
 !
-!
 SObject pwrs:Type
+!/**
+!  @Version 1.0
+!  @Code pwr.h
+!  @Group BasicTypes,Types
+!  16-bit integer. Basic type.
+!*/
   Object $Int16 pwr_eClass_Type pwr_eTix_Int16
     Body SysBody
      Attr Type = pwr_eType_Int16

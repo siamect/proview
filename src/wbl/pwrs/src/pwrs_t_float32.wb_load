@@ -5,8 +5,15 @@
 !
 !  <Description>.
 !
-!
 SObject pwrs:Type
+!/**
+!  @Version 1.0
+!  @Code pwr.h
+!  @Group BasicTypes,Types
+!  Basic type 32-bit float.
+!
+!  This type is used for analog signals and attributes.
+!*/
   Object $Float32 pwr_eClass_Type pwr_eTix_Float32
     Body SysBody
       Attr Type = pwr_eType_Float32
@@ -14,3 +21,4 @@ SObject pwrs:Type
     EndBody
   EndObject
 EndSObject
+

@@ -5,8 +5,19 @@
 !
 !  <Description>.
 !
-!
 SObject pwrs:Type
+!/**
+!  @Version 1.0
+!  @Code pwr.h
+!  @Group BasicTypes,Types
+!  Delta time. Basic type.
+!  The delta time is the elapsed time between two points of time. Compare
+!  with an absolute time (the Time type), which is a calender time.
+!  The differens between two absolute times will result in a delta time.
+!
+! @b See also
+!  @classlink Time pwrs_time.html
+!*/
   Object $DeltaTime pwr_eClass_Type pwr_eTix_DeltaTime
     Body SysBody
      Attr Type = pwr_eType_DeltaTime

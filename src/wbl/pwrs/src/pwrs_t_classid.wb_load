@@ -5,8 +5,16 @@
 !
 !  <Description>.
 !
-!
 SObject pwrs:Type
+!/**
+!  @Version 1.0
+!  @Code pwr.h
+!  @Group BasicTypes,Types
+!  Class identity. Basic type.
+!
+!  Every class has a unic identity, derived from the classvolume
+!  identity and the class index.
+!*/
   Object $ClassId pwr_eClass_Type pwr_eTix_ClassId
     Body SysBody
       Attr Type = pwr_eType_ClassId

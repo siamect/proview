@@ -96,12 +96,12 @@ SObject pwrs:Class
       !  @Summary Bitmask for attribute properties.
       !  Bitmask for attribute properties.
       !
-      !  PWR_MASK_POINTER	Attribute is a pointer.
-      !  PWR_MASK_ARRAY		Attribute is an array.
-      !  PWR_MASK_STATE	        Value will not be loaded from develompent database.
-      !  PWR_MASK_CONST	        Value is a constant.
-      !  PWR_MASK_RTVIRTUAL	Attribute doesn't exist in runtime environment
-      !  PWR_MASK_DEVBODYREF	Used for input and output attributes, where the
+      !  PWR_MASK_POINTER       Attribute is a pointer.
+      !  PWR_MASK_ARRAY         Attribute is an array.
+      !  PWR_MASK_STATE         Value will not be loaded from develompent database.
+      !  PWR_MASK_CONST         Value is a constant.
+      !  PWR_MASK_RTVIRTUAL     Attribute doesn't exist in runtime environment
+      !  PWR_MASK_DEVBODYREF    Used for input and output attributes, where the
       !                         connection refers another object which is found
       !                         in the first attribute of type Objid in DevBody.
       !  PWR_MASK_OBJIDSELF     Contains the objects own objid. Used in timer attributes.
@@ -112,6 +112,11 @@ SObject pwrs:Class
       !  PWR_MASK_NOREMOVE      Can't be removed in plc editor.
       !  PWR_MASK_RTDBREF       Contains an rtdb reference.
       !  PWR_MASK_PRIVATE       Should not be interpreted by an object editor.
+      !  PWR_MASK_ISCLASS       Attribute is specified by a class.
+      !  PWR_MASK_SUBCLASS      ...
+      !  PWR_MASK_BUFFER        ...
+      !  PWR_MASK_NOWBL         Attribute will not be to printed to wb_load file.
+      !  PWR_MASK_ALWAYSWBL     Attribute is always printed to wb_load file.
       !*/
       Object Flags pwr_eClass_Param	5
         Body SysBody

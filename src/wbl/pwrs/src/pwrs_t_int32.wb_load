@@ -7,6 +7,14 @@
 !
 !
 SObject pwrs:Type
+!/**
+!  @Version 1.0
+!  @Code pwr.h
+!  @Group BasicTypes,Types
+!  32-bit integer. Basic type.
+!
+!  This type is used for integer signals.
+!*/
   Object $Int32 pwr_eClass_Type pwr_eTix_Int32
     Body SysBody
      Attr Type = pwr_eType_Int32

@@ -54,6 +54,7 @@ typedef enum {
 	cread_eLine_EndBuff,
 	cread_eLine_Range,
 	cread_eLine_TypeDef,
+	cread_eLine_Type,
 	cread_eLine_Unknown
 	} cread_eLine;
 
@@ -77,7 +78,8 @@ typedef enum {
 	cread_mState_Template	= 1 << 16,
 	cread_mState_Volume	= 1 << 17,
 	cread_mState_DParam	= 1 << 18,
-	cread_mState_TypeDef	= 1 << 19
+	cread_mState_TypeDef	= 1 << 19,
+	cread_mState_Type	= 1 << 20
 	} cread_mState;
 
 #define cread_cTmpFile1 "classread1.tmp"
@@ -211,6 +213,7 @@ class ClassRead {
     int html_graphplcnode();
     int html_graphplccon();
     int html_template();
+    int html_typedef();
 
     // xtthelp
     int		generate_xtthelp;

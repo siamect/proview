@@ -6,7 +6,19 @@
 SObject pwrs:Class
 !/**
 !  @Group TypeDefinition
-!  Definition of a type.
+!  Definition of a derived type.
+!  A derived type is an array of a base type.
+!
+!  A $TypeDef object reside in the type hierarchy in a class volume, and
+!  is placed as a child to the $TypeHier object.
+!
+!  Base types and derived types are used to define the type of an
+!  attribute in an object. The type is defined by the TypeRef attribute
+!  in the $Attribute object (also in $Input, $Inter, $Output).
+!
+! @b See also
+!  @classlink $TypeHier pwrs_typehier.html
+!  @classlink $Type pwrs_type.html
 !*/
   Object $TypeDef $ClassDef pwr_eCix_TypeDef
     Body SysBody
@@ -17,6 +29,9 @@ SObject pwrs:Class
       Body SysBody
         Attr StructName = "TypeDef"
       EndBody
+      !/**
+      ! Compiled type.
+      !*/
       Object Type $Attribute 1
         Body SysBody
 	  Attr TypeRef = "pwrs:Type-$Int32"
@@ -24,6 +39,9 @@ SObject pwrs:Class
           Attr Flags |= PWR_MASK_NOWBL
 	EndBody
       EndObject
+      !/**
+      ! Compiled size.
+      !*/
       Object Size $Attribute 2
         Body SysBody
 	  Attr TypeRef = "pwrs:Type-$Int32"
@@ -31,12 +49,18 @@ SObject pwrs:Class
           Attr Flags |= PWR_MASK_NOWBL
 	EndBody
       EndObject
+      !/**
+      ! Base type.
+      !*/
       Object TypeRef $Attribute 3
         Body SysBody
 	  Attr TypeRef = "pwrs:Type-$TypeId"
           Attr Flags |= PWR_MASK_ALWAYSWBL
 	EndBody
       EndObject
+      !/**
+      ! Number of elements.
+      !*/
       Object Elements $Attribute 4
         Body SysBody
 	  Attr TypeRef = "pwrs:Type-$Int32"

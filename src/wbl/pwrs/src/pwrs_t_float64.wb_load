@@ -5,8 +5,16 @@
 !
 !  <Description>.
 !
-!
 SObject pwrs:Type
+!/**
+!  @Version 1.0
+!  @Code pwr.h
+!  @Group BasicTypes,Types
+!  64-bit float. Basic type.
+!
+! @b See also
+!  @classlink Time pwrs_time.html
+!*/
   Object $Float64 pwr_eClass_Type pwr_eTix_Float64
     Body SysBody
       Attr Type = pwr_eType_Float64

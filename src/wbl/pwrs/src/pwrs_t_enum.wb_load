@@ -5,8 +5,14 @@
 !
 !  <Description>.
 !
-!
 SObject pwrs:Type
+!/**
+!  @Version 1.0
+!  @Code pwr.h
+!  @Group BasicTypes,Types
+!  Enumeration value. Basic type.
+!  
+!*/
   Object $Enum pwr_eClass_Type pwr_eTix_Enum
     Body SysBody
       Attr Type = pwr_eType_Enum

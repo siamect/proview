@@ -7,6 +7,18 @@
 !
 !
 SObject pwrs:Type
+!/**
+!  @Version 1.0
+!  @Code pwr.h
+!  @Group DerivedTypes,Types
+!  1024 characters null-terminated text. Derived type from Text.
+!
+!  The maximum length of the text without the null termination is
+!  1023 characters.
+!
+! @b See also
+!  @classlink Text pwrs_text.html
+!*/
    Object $Text1024 $TypeDef 9
     Body SysBody
       Attr Type = pwr_eType_Text

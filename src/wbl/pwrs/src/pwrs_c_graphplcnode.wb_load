@@ -35,7 +35,7 @@ SObject pwrs:Class
       !  @Summary Number of input, intern and output attributes.
       !  Number of input, intern and output attributes.
       !  Element 0 : the number of input attributes.
-      !  Element 1 : the number of inter attributes.
+      !  Element 1 : the number of intern attributes.
       !  Element 3 : the number of output attributes.
       !  Element 4 : not used.
       !*/
@@ -76,7 +76,7 @@ SObject pwrs:Class
         EndBody
       EndObject
       !/**
-      !  Not userd.
+      !  Not used.
       !*/
       Object sw_page_y $Attribute 6
         Body SysBody
@@ -86,7 +86,32 @@ SObject pwrs:Class
         EndBody
       EndObject
       !/**
+      !  @Summary Method for drawing the plc symbol.
       !  Method for drawing the plc symbol.
+      !  
+      !  0: The ordinary symbol for an object. Symbol with 
+      !      - header row containing class name, 
+      !      - footer row containing object names,
+      !      - leadnames for all inputs and outputs.
+      !  @image orm_filter_fo.gif
+      !  1: Symbol for objects where the inputs and outputs doesn't have to
+      !     be specified. 
+      !     Symbol without leadnames for inputs and outputs. 
+      !  @image orm_inv_fo.gif
+      !  2: Equivalent with method 0, but equiped with an extra annotation
+      !     field above the footer.
+      !  3: Method for Text objects.
+      !  4: Method for objects with special design.
+      !  5: Method for a grafcet order.
+      !  6: Method for document objects.
+      !  7: Method for singlerow objects with maximum one input and one output.
+      !     Displays the class name and object name in the object.
+      !  @image orm_scantime_fo.gif
+      !  8 and 9: This method uses method 7, 15 or 0 dependent on the number of
+      !     used inputs and outputs.
+      !  14: Method for singleline arithm objects.
+      !  15: Method for double row objects with maximum two inputs and two outputs.
+      !  @image orm_cstoiv_fo.gif
       !*/
       Object graphmethod $Attribute 7
         Body SysBody
@@ -133,7 +158,7 @@ SObject pwrs:Class
       EndObject
       !/**
       !  Attributes whose value will be displayed in an annotation
-      !  will be serach for in RtBody.
+      !  will be searched for in RtBody.
       !*/
       Object rtbody_annotation $Attribute 11
         Body SysBody
@@ -150,7 +175,13 @@ SObject pwrs:Class
         EndBody
       EndObject
       !/**
+      !  @Summary Compilation method. Method that generates plc code for the object.
       !  Compilation method. Method that generates plc code for the object.
+      !
+      !  2:  Method for object without any plc code.
+      !  4:  Method for an object with a standard function call.
+      !  5:  Method for an object with a standard macro call.
+      !  58: Method for an object with template plc code in class definition.
       !*/
       Object compmethod $Attribute 13
         Body SysBody
@@ -186,7 +217,9 @@ SObject pwrs:Class
         EndBody
       EndObject
       !/**
+      !  @Summary Method to connect the object to another object.
       !  Method to connect the object to another object.
+      !  0: No connect function.
       !*/
       Object connectmethod $Attribute 17
         Body SysBody
@@ -195,7 +228,10 @@ SObject pwrs:Class
         EndBody
       EndObject
       !/**
+      !  @Summary Method to calculate the execute order in the plc program.
       !  Method to calculate the execute order in the plc program.
+      !  0: No executable code for this object.
+      !  2: Ordinary method for objects with executable code.
       !*/
       Object executeordermethod $Attribute 18
         Body SysBody
@@ -243,3 +279,5 @@ SObject pwrs:Class
     EndObject
   EndObject
 EndSObject
+
+

@@ -5,8 +5,14 @@
 !
 !  <Description>.
 !
-!
 SObject pwrs:Type
+!/**
+!  @Version 1.0
+!  @Code pwr.h
+!  @Group BasicTypes,Types
+!  Reference identity. Basic type.
+!  A reference identity is an identity for a subscription or a direct link.
+!*/
   Object $RefId pwr_eClass_Type pwr_eTix_RefId
     Body SysBody
       Attr Type = pwr_eType_RefId

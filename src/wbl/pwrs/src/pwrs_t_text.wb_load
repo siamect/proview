@@ -7,6 +7,18 @@
 !
 !
 SObject pwrs:Type
+!/**
+!  @Version 1.0
+!  @Code pwr.h
+!  @Group BasicTypes,Types
+!  8-bit character. Basic type.
+!  The Text type is a base type for the derived text type Text1024
+!
+!  The Text type is multiline, unlike the String type which is single line.
+!
+! @b See also
+!  @classlink Text1024 pwrs_text1024.html
+!*/
   Object $Text pwr_eClass_Type pwr_eTix_Text
     Body SysBody
       Attr Type = pwr_eType_Text

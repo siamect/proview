@@ -5,8 +5,19 @@
 !
 !  <Description>.
 !
-!
 SObject pwrs:Type
+!/**
+!  @Version 1.0
+!  @Code pwr.h
+!  @Group DerivedTypes,Types
+!  132 characters null-terminated string. Derived type from String.
+!
+!  The maximum length of the string without the null termination is
+!  131 characters.
+!
+! @b See also
+!  @classlink String pwrs_string.html
+!*/
    Object $String132 $TypeDef 2
     Body SysBody
       Attr Type = pwr_eType_String

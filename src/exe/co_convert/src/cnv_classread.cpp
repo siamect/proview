@@ -117,8 +117,16 @@ int ClassRead::read( char *filename)
         linetype = cread_eLine_Attribute;
       else if ( strcmp( low( line_part[0]), "object") == 0 &&
 		nr > 2 &&
+                strcmp( low( line_part[2]), "pwr_eclass_typedef") == 0)
+        linetype = cread_eLine_TypeDef;
+      else if ( strcmp( low( line_part[0]), "object") == 0 &&
+		nr > 2 &&
                 strcmp( low( line_part[2]), "$typedef") == 0)
         linetype = cread_eLine_TypeDef;
+      else if ( strcmp( low( line_part[0]), "object") == 0 &&
+		nr > 2 &&
+                strcmp( low( line_part[2]), "pwr_eclass_type") == 0)
+        linetype = cread_eLine_Type;
       else if ( strcmp( low( line_part[0]), "object") == 0 &&
 		nr > 2 &&
                 strcmp( low( line_part[2]), "$objbodydef") == 0)
@@ -220,6 +228,15 @@ int ClassRead::read( char *filename)
         case cread_eLine_TypeDef:
           state |= cread_mState_TypeDef;
           object_state = cread_mState_TypeDef;
+          typedef_init();
+          if ( line_part[1][0] == '$')
+            strcpy( typedef_name, &line_part[1][1]);
+          else
+            strcpy( typedef_name, line_part[1]);
+          break;
+        case cread_eLine_Type:
+          state |= cread_mState_Type;
+          object_state = cread_mState_Type;
           typedef_init();
           if ( line_part[1][0] == '$')
             strcpy( typedef_name, &line_part[1][1]);
@@ -363,6 +380,15 @@ int ClassRead::read( char *filename)
               struct_class_close();
 #endif
           }
+          else if ( state & cread_mState_Type) {
+            state &= ~cread_mState_Type;
+#if 0
+            if ( generate_html && html_class_open)
+              html_class_close();
+	    if ( generate_struct && struct_class_open)
+              struct_class_close();
+#endif
+          }
           else if ( state & cread_mState_Object)
           {
             object_level--;
@@ -407,6 +433,7 @@ int ClassRead::read( char *filename)
               class_attr( attr_name, attr_value);
               break;
             case cread_mState_TypeDef:
+            case cread_mState_Type:
               typedef_attr( attr_name, attr_value);
               break;
             case cread_mState_ObjBodyDef:
@@ -455,6 +482,7 @@ int ClassRead::read( char *filename)
               class_attr( attr_name, attr_value);
               break;
             case cread_mState_TypeDef:
+            case cread_mState_Type:
               typedef_attr( attr_name, attr_value);
               break;
             case cread_mState_ObjBodyDef:
@@ -1001,6 +1029,7 @@ int ClassRead::object_close()
       class_close();
       break;
     case cread_mState_TypeDef:
+    case cread_mState_Type:
       typedef_close();
       break;
     case cread_mState_Object:
@@ -1038,14 +1067,21 @@ int ClassRead::typedef_attr( char *name, char *value)
 
 int ClassRead::typedef_close()
 {
-  if ( first_class) {
-    if ( generate_struct)
-      struct_init();
 
+  if ( first_class) {
+    if ( generate_html)
+      html_init( typedef_name);
+    if ( generate_struct &&
+	 object_state == cread_mState_TypeDef)
+      struct_init();
+    
     first_class = 0;
   }
 
-  if ( generate_struct)
+  if ( generate_html)
+    html_typedef();
+  if ( generate_struct &&
+       object_state == cread_mState_TypeDef)
     struct_typedef();
 
   doc_fresh = 0;

@@ -5,8 +5,21 @@
 !
 !  <Description>.
 !
-!
 SObject pwrs:Type
+!/**
+!  @Version 1.0
+!  @Code pwr.h
+!  @Group BasicTypes,Types
+!  Object identity. Basic type.
+!
+!  Every object has an unic identity.
+!  The object identity consists of the volume identity and
+!  the object index.
+!
+! @b See also
+!  @classlink VolumeId pwrs_volumeid.html
+!  @classlink ObjectIx pwrs_objectix.html
+!*/
   Object $Objid pwr_eClass_Type pwr_eTix_Objid
     Body SysBody
       Attr Type = pwr_eType_Objid

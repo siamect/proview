@@ -6,6 +6,20 @@
 !  <Description>.
 !
 SObject pwrs:Type
+!/**
+!  @Version 1.0
+!  @Code pwr.h
+!  @Group BasicTypes,Types
+!  Basic type attribute reference.
+!  Reference to an attribute in an object. 
+!
+!  The reference contains
+!    - objid of the referenced object
+!    - classid of body
+!    - offset of the attribute
+!    - size of the attribute
+!    - a flagword. If the bit Indirect is set, the attribute is a pointer.
+!*/
   Object $AttrRef pwr_eClass_Type pwr_eTix_AttrRef
     Body SysBody
       Attr Type = pwr_eType_AttrRef

@@ -6,7 +6,18 @@
 SObject pwrs:Class
 !/**
 !  @Group ClassDefinition
-!  Root of a type definition tree.
+!  Root object of a type definition hierarchy.
+!  The TypeHier object is a toplevel object in a class volume, and act as
+!  the anscestor to the type definition hierarchy.
+!  It should be named 'Type', and there kan only be one $TypeDef object in a
+!  ClassVolume.
+!
+!  Below the $TypeHier object, all the types in the volume are defined with
+!  $Type or $TypeDef objects.
+!
+! @b See also
+!  @classlink $Type pwrs_type.html
+!  @classlink $TypeDef pwrs_typedef.html
 !*/
   Object $TypeHier $ClassDef pwr_eCix_TypeHier
     Body SysBody

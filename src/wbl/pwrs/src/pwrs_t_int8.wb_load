@@ -7,6 +7,12 @@
 !
 !
 SObject pwrs:Type
+!/**
+!  @Version 1.0
+!  @Code pwr.h
+!  @Group BasicTypes,Types
+!  8-bit integer. Basic type.
+!*/
   Object $Int8 pwr_eClass_Type pwr_eTix_Int8
     Body SysBody
       Attr Type = pwr_eType_Int8

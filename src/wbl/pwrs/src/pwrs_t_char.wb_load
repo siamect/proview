@@ -5,8 +5,13 @@
 !
 !  <Description>.
 !
-!
 SObject pwrs:Type
+!/**
+!  @Version 1.0
+!  @Code pwr.h
+!  @Group BasicTypes,Types
+!  Basic type character.
+!*/
   Object $Char pwr_eClass_Type pwr_eTix_Char
     Body SysBody
       Attr Type = pwr_eType_Char

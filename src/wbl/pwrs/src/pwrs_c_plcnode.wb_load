@@ -5,8 +5,17 @@
 !
 !  <Description>.
 !
-!
 SObject pwrs:Class
+!/**
+!  @Version 1.0
+!  PlcNode specifies a buffer attribute used by the plc-editor.
+!
+!  The buffer attribute stores plc-editor data for a plc object.
+!  The data is handled only by the plc editor.
+!
+!  All plc objects should have a PlcNode buffer in DevBody.
+!*/
+! 
   Object $PlcNode $ClassDef pwr_eCix_PlcNode
     Body SysBody
       Attr Flags |= pwr_mClassDef_DevOnly

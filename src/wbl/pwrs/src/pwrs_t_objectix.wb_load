@@ -7,6 +7,18 @@
 !
 !
 SObject pwrs:Type
+!/**
+!  @Version 1.0
+!  @Code pwr.h
+!  @Group BasicTypes,Types
+!  Object index. Basic type.
+!
+!  Every object has an unic index within a volume.
+!  Together with the volume identity it constitutes the object identity.
+!
+! @b See also
+!  @classlink Objid pwrs_objid.html
+!*/
   Object $ObjectIx pwr_eClass_Type pwr_eTix_ObjectIx
     Body SysBody
       Attr Type = pwr_eType_ObjectIx

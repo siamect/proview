@@ -5,8 +5,26 @@
 !
 !  <Description>.
 !
-!
 SObject pwrs:Type
+!/**
+!  @Version 1.0
+!  @Code pwr.h
+!  @Group BasicTypes,Types
+!  Volume identity. Basic type.
+!
+!  Every volume has a unic identity, a 32-bit word usually specified in the for
+!  v1.v2.v3.v4 where v1, v2, v3 and v4 are numbers in the interval 0-255.
+!  Dependent of the class of the volume, the numbers is choosen in separate
+!  intervals:
+!
+!     RootVolume,SubVolume:       0.1-254.1-254.1-254
+!     System ClassVolumes:        0.    0.  0-1.1-254
+!     User ClassVolumes:          0.    0.2-254.1-254
+!     DirectoryVolume:          254.  254.  254.  253
+!     WorkbenchVolume:          254.  254.  254.  254
+!     Local WorkbenchVolume:    254.  254.  254.  252
+!     VolatileVolume:           254.  254.  254.0-100
+!*/
   Object $VolumeId pwr_eClass_Type pwr_eTix_VolumeId
     Body SysBody
       Attr Type = pwr_eType_VolumeId

@@ -7,7 +7,15 @@
 !
 !
 SObject pwrs:Type
-
+!/**
+!  @Version 1.0
+!  @Code pwr.h
+!  @Group DerivedTypes,Types
+!  16 characters string. Derived type from String.
+!
+! @b See also
+!  @classlink String pwrs_string.html
+!*/
   Object $GraphName $TypeDef 1
     Body SysBody
       Attr Type = pwr_eType_String
