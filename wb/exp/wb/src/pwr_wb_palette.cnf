@@ -76,6 +76,7 @@ palette NavigatorPalette
       class MessageHandler
       class PlcProcess
       class PlcThread
+      class RemoteConfig
       class WebHandler
       class IOHandler
     }
@@ -116,9 +117,6 @@ palette NavigatorPalette
       menu Slaves
       {
         class Pb_DP_Slave
-        class Pb_ET200M
-        class Pb_NPBA12
-        class Pb_Euro2500
       }
       menu Modules
       {
@@ -126,6 +124,42 @@ palette NavigatorPalette
         class Pb_Do
         class Pb_Ai
         class Pb_Ao
+	class Pb_Ii
+	class Pb_Io
+      }
+    }
+    menu Remote
+    {
+      class RemoteConfig
+      class RemnodeUDP
+      class RemnodeTCP
+      class RemnodeALCM
+      class RemnodeSerial
+      class RemnodeModbus
+      class Remnode3964R
+      class RemTrans
+      menu Buffers
+      {
+        class Buff256
+	class Buff1440
+	class Buff4096
+	class Buff32k
+	class BuffStr80
+      }
+      menu RemoteIO
+      {
+        class RemAi
+	class RemAo
+	class RemDi
+	class RemDo
+	class RemCo
+	class RemDv
+        class RemChanAi
+	class RemChanAo
+	class RemChanDi
+	class RemChanDo
+	class RemChanCo
+	class RemChanDv	
       }
     }
     menu Operator
@@ -458,10 +492,12 @@ palette PlcEditorPalette
     }
     menu String
     {
+      class CStoNumSp
       class CStoSv
       class CStoSp
       class GetSp
       class GetSv
+      class StoNumSp
       class StoSp
       class StoSv
       class Strcat
