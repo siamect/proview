@@ -42,6 +42,7 @@ class Lng {
     static char items[][2][40];
 
     static void set( lng_eLanguage language) { lang = language;};
+    static lng_eLanguage current() { return lang;}
     static void set( char *language) 
       { if ( strcmp(language,"en_us") == 0) lang = lng_eLanguage_en_us;
         else if ( strcmp(language,"sv_se") == 0) lang = lng_eLanguage_sv_se;};
