@@ -214,6 +214,10 @@ wb_orep* wb_vrepdb::object(pwr_tStatus *sts, wb_name &name)
     for (int i = 0; name.hasSegment(i); i++) {
       wb_db_name n(m_db, poid, name.normSegment(i));
       int rc = n.get(m_db->m_txn);
+      if (rc) {
+	*sts = LDH__NOSUCHOBJ;
+	return 0;
+      }
       poid = n.oid();
       
     }
