@@ -1,0 +1,294 @@
+!  pwrb_c_remnodetcp.wb_load -- Defines the class RemnodeTCP.
+!
+!  PROVIEW/R
+!  Copyright (C) 1997 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+SObject pwrb:Class
+!/**
+!  @Version 1.0
+!  @Group Servers,NodeConfiguration
+!  @Summary Configures communication to a remote using the TCP/ip protocol.
+!  Configures communication to a remote using the TCP/ip protocol.
+!
+! @b Object graph
+!  @image orm_remnodetcp_og.gif
+!
+! @b See also
+!  @classlink RemoteConfig pwrp_remoteconfig.html
+!  @classlink RemTrans ssab_remtrans.html
+!*/
+  Object RemnodeTCP $ClassDef 367
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "RemnodeTCP"
+      EndBody
+      !/**
+      ! Optional description.
+      !*/
+      Object Description $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Process priority for the transport process
+      !*/
+      Object Prio $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      !/**
+      !  Device name for the ethernet device, ex eth0.
+      !  Dynamic change is not possible.
+      !*/
+      Object DevName $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String32"
+	EndBody
+      EndObject
+      !/**
+      !  Hostname for the remote node.
+      !  Dynamic change is not possible.
+      !*/
+      Object RemoteHostname $Attribute 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String32"
+	EndBody
+      EndObject
+      !/**
+      !  IP-address for the remote node. If address is omitted or invalid, RemoteHostname
+      !  is used to get the address either locally or through DNS lookup.
+      !  Dynamic change is not possible.
+      !*/
+      Object RemoteAddress $Attribute 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String32"
+	EndBody
+      EndObject
+      !/**
+      !  Local portnumber.
+      !  Dynamic change is not possible.
+      !*/
+      Object LocalPort $Attribute 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	EndBody
+      EndObject
+      !/**
+      !  Remote portnumber.
+      !  Dynamic change is not possible.
+      !*/
+      Object RemotePort $Attribute 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	EndBody
+      EndObject
+      !/**
+      !  Connection mode determines if our side should act as client or as server.
+      !  Dynamic change is not possible.
+      !*/
+      Object ConnectionMode $Attribute 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Enum"
+	EndBody
+      EndObject      
+      !/**
+      !  Attribute that indicates connection with the remote node. 
+      !  The link is considered down when we reach the link supervision timeout
+      !  time without receiving any keepalive or other message.
+      !  The link is considered up again when receiving any kind of message.
+      !*/
+      Object LinkUp $Attribute 9
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      !/**
+      !  Time in seconds before the link is considered down.
+      !  Dynamic change is possible
+      !*/
+      Object LinkTimeout $Attribute 10
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	EndBody
+      EndObject
+      !/**
+      !  When set, this attribute tells the remote handler not to start 
+      !  or restart the process that handles this remote node. If the transport process 
+      !  is running while the attribute is set it will terminate.
+      !  Dynamic change is possible.
+      !*/
+      Object Disable $Attribute 11
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	EndBody
+      EndObject
+      !/**
+      !  This attribute shows how many times the remote handler has restarted the 
+      !  transport process that handles this remnode.
+      !  Dynamic change is possible and can be used in order to earn more restarts.
+      !*/
+      Object RestartCount $Attribute 12
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      !/**
+      !  The restart limit tells the remote handler how many times the transport process
+      !  that handle this remnode can be restarted.
+      !  Dynamic change is possible and can be used in order to earn more restarts.
+      !*/
+      Object RestartLimit $Attribute 13
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	EndBody
+      EndObject
+      !/**
+      !  The restart time is set by the transport process at startup and therefore
+      !  shows the latest (re)starttime.
+      !*/
+      Object RestartTime $Attribute 14
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Time"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      !/**
+      !  Scantime in seconds for outgoing RemTrans objects.
+      !  Dynamic change is possible.
+      !*/
+      Object ScanTime $Attribute 15
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	EndBody
+      EndObject
+      !/**
+      !  Time in seconds to wait before retransmit when using acknowledge and buffering.
+      !  For more information about acknowledge handling and retransmitting, 
+      !  refer to the documentation of the RemTrans object.
+      !  Dynamic change is possible.
+      !*/
+      Object RetransmitTime $Attribute 16
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	EndBody
+      EndObject
+      !/**
+      !  When set, this attribute enables the sending of keepalive messages. 
+      !  Dynamic change is possible.
+      !*/
+      Object UseKeepalive $Attribute 17
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	EndBody
+      EndObject
+      !/**
+      !  Time in seconds between the sending of keepalive messages if keepalive 
+      !  messages is enabled with UseKeepalive.
+      !  Dynamic change is possible.
+      !*/
+      Object KeepaliveTime $Attribute 18
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	EndBody
+      EndObject
+      !/**
+      !  Counter that keeps track of incoming and outgoing keepalive messanges.
+      !  The counter is incremented when a keppalive message is sent and decremented
+      !  when such a message is received.
+      !*/
+      Object KeepaliveDiff $Attribute 19
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      !/**
+      !  When set, this attribute disables use of the special Remote TCP header
+      !  in each send message. Furthermore, when receiving a message, the whole part
+      !  of the message is treated as data which means that it is not possible to
+      !  tell which ingoing RemTrans object the message is meant for since this information
+      !  lies in the header. Therefore each incoming message is placed in the first found
+      !  RemTrans object.
+      !  Dynamic change is possible.
+      !*/
+      Object DisableHeader $Attribute 20
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	EndBody
+      EndObject
+      !/**
+      !  Error counter.
+      !*/
+      Object ErrCount $Attribute 21
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      !/**
+      !  Type of remnode. Used in the RemoteConfig classgraph.
+      !*/
+      Object Id $Attribute 22
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String8"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      !/**
+      !  Contains the objid for the RemTrans objects for this remnode.
+      !  The objid's are inserted by the remote process.
+      !*/
+      Object RemTransObjects $Attribute 23
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 25
+	EndBody
+      EndObject
+    EndObject
+    Object Template RemnodeTCP
+      Body RtBody
+        Attr Prio = 15
+	Attr DevName = "eth0"
+	Attr LocalPort = 0
+	Attr RemotePort = 0
+	Attr ConnectionMode = 0
+	Attr LinkUp = 0
+	Attr LinkTimeout = 3.0
+	Attr Disable = 0
+	Attr RestartCount = 0
+	Attr RestartLimit = 100
+	Attr ScanTime = 0.1
+	Attr RetransmitTime = 10.0
+	Attr UseKeepalive = 1
+	Attr KeepaliveTime = 1.0
+	Attr DisableHeader = 0
+	Attr Id = "TCP"
+      EndBody
+    EndObject
+  EndObject
+EndSObject

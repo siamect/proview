@@ -36,13 +36,19 @@ SObject         pwrb:Class
         EndBody
       EndObject
 !
-      Object 	NumberOfChannels $Attribute 4
+      Object 	Orientation $Attribute 4
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$Enum"
+        EndBody
+      EndObject
+!
+      Object 	NumberOfChannels $Attribute 5
         Body	SysBody
           Attr	TypeRef  = "pwrs:Type-$UInt8"
         EndBody
       EndObject
 !
-      Object 	Status          $Attribute 5
+      Object 	Status          $Attribute 6
         Body	SysBody
           Attr	TypeRef  = "pwrs:Type-$UInt8"
 	  Attr  Flags |= PWR_MASK_NOEDIT
@@ -50,62 +56,54 @@ SObject         pwrb:Class
         EndBody
       EndObject
 !
-      Object 	TestMask1	$Attribute 6
+      Object 	TestMask1	$Attribute 7
         Body	SysBody
           Attr	TypeRef  = "pwrs:Type-$UInt16"
         EndBody
       EndObject
       !
-      Object 	TestMask2	$Attribute 7
+      Object 	TestMask2	$Attribute 8
         Body	SysBody
           Attr	TypeRef  = "pwrs:Type-$UInt16"
         EndBody
       EndObject
       !
-      Object 	InvMask1	$Attribute 8
+      Object 	InvMask1	$Attribute 9
         Body	SysBody
           Attr	TypeRef  = "pwrs:Type-$UInt16"
         EndBody
       EndObject
       !
-      Object 	InvMask2	$Attribute 9
+      Object 	InvMask2	$Attribute 10
         Body	SysBody
           Attr	TypeRef  = "pwrs:Type-$UInt16"
         EndBody
       EndObject
       !
-      Object 	TestValue1	$Attribute 10
+      Object 	TestValue1	$Attribute 11
         Body	SysBody
           Attr	TypeRef  = "pwrs:Type-$UInt16"
         EndBody
       EndObject
       !
-      Object 	TestValue2	$Attribute 11
+      Object 	TestValue2	$Attribute 12
         Body	SysBody
           Attr	TypeRef  = "pwrs:Type-$UInt16"
         EndBody
       EndObject
       !
-      Object 	FixedOutValue1	$Attribute 12
+      Object 	FixedOutValue1	$Attribute 13
         Body	SysBody
           Attr	TypeRef  = "pwrs:Type-$UInt16"
         EndBody
       EndObject
       !
-      Object 	FixedOutValue2	$Attribute 13
+      Object 	FixedOutValue2	$Attribute 14
         Body	SysBody
           Attr	TypeRef  = "pwrs:Type-$UInt16"
         EndBody
       EndObject
       !
-      Object 	BytesOfInput $Attribute 14
-        Body	SysBody
-          Attr	TypeRef  = "pwrs:Type-$UInt16"
-	  Attr  Flags |= PWR_MASK_NOEDIT
-	  Attr  Flags |= PWR_MASK_INVISIBLE
-        EndBody
-      EndObject
-!
       Object 	BytesOfOutput $Attribute 15
         Body	SysBody
           Attr	TypeRef  = "pwrs:Type-$UInt16"
@@ -114,15 +112,7 @@ SObject         pwrb:Class
         EndBody
       EndObject
 !
-      Object 	OffsetInputs $Attribute 16
-        Body	SysBody
-          Attr	TypeRef  = "pwrs:Type-$UInt16"
-	  Attr  Flags |= PWR_MASK_NOEDIT
-	  Attr  Flags |= PWR_MASK_INVISIBLE
-        EndBody
-      EndObject
-!
-      Object 	OffsetOutputs $Attribute 17
+      Object 	OffsetOutputs $Attribute 16
         Body	SysBody
           Attr	TypeRef  = "pwrs:Type-$UInt16"
 	  Attr  Flags |= PWR_MASK_NOEDIT
@@ -145,10 +135,9 @@ SObject         pwrb:Class
 	Attr FixedOutValue2 = 0
 	Attr Process = 1
 	Attr Status = 0
+	Attr Orientation = 8
 	Attr NumberOfChannels = 32
-	Attr BytesOfInput = 0
 	Attr BytesOfOutput = 0
-	Attr OffsetInputs = 0
 	Attr OffsetOutputs = 0
       EndBody
     EndObject	! Template

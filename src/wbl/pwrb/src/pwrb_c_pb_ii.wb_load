@@ -1,6 +1,6 @@
 SObject pwrb:Class
 !
-  Object Pb_Ai $ClassDef 293
+  Object Pb_Ii $ClassDef 371
 !
 !
     Body	SysBody
@@ -10,7 +10,7 @@ SObject pwrb:Class
     !
     Object	RtBody	$ObjBodyDef 1
       Body	SysBody
-        Attr	StructName = "Pb_Ai"
+        Attr	StructName = "Pb_Ii"
       EndBody
       !
       ! Description of object
@@ -77,7 +77,7 @@ SObject pwrb:Class
 !
     EndObject	! Rt body
 !
-    Object Template Pb_Ai
+    Object Template Pb_Ii
       Body RtBody
       	Attr NumberRepresentation = 0
         Attr NumberOfChannels = 4

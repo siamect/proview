@@ -31,29 +31,27 @@ SObject         pwrb:Class
         EndBody
       EndObject
 !
-      Object 	NumberOfChannels $Attribute 4
+      Object 	NumberRepresentation $Attribute 4
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$Enum"
+        EndBody
+      EndObject
+!
+      Object 	NumberOfChannels $Attribute 5
         Body	SysBody
           Attr	TypeRef  = "pwrs:Type-$UInt8"
         EndBody
       EndObject
 !
-      Object 	BytesPerChannel $Attribute 5
+      Object 	BytesPerChannel $Attribute 6
         Body	SysBody
           Attr	TypeRef  = "pwrs:Type-$UInt8"
         EndBody
       EndObject
 !
-      Object 	Status          $Attribute 6
+      Object 	Status          $Attribute 7
         Body	SysBody
           Attr	TypeRef  = "pwrs:Type-$UInt8"
-	  Attr  Flags |= PWR_MASK_NOEDIT
-	  Attr  Flags |= PWR_MASK_INVISIBLE
-        EndBody
-      EndObject
-!
-      Object 	BytesOfInput $Attribute 7
-        Body	SysBody
-          Attr	TypeRef  = "pwrs:Type-$UInt16"
 	  Attr  Flags |= PWR_MASK_NOEDIT
 	  Attr  Flags |= PWR_MASK_INVISIBLE
         EndBody
@@ -67,15 +65,7 @@ SObject         pwrb:Class
         EndBody
       EndObject
 !
-      Object 	OffsetInputs $Attribute 9
-        Body	SysBody
-          Attr	TypeRef  = "pwrs:Type-$UInt16"
-	  Attr  Flags |= PWR_MASK_NOEDIT
-	  Attr  Flags |= PWR_MASK_INVISIBLE
-        EndBody
-      EndObject
-!
-      Object 	OffsetOutputs $Attribute 10
+      Object 	OffsetOutputs $Attribute 9
         Body	SysBody
           Attr	TypeRef  = "pwrs:Type-$UInt16"
 	  Attr  Flags |= PWR_MASK_NOEDIT
@@ -91,9 +81,7 @@ SObject         pwrb:Class
 	Attr BytesPerChannel = 2
 	Attr Process = 1
 	Attr Status = 0
-	Attr BytesOfInput = 0
 	Attr BytesOfOutput = 0
-	Attr OffsetInputs = 0
 	Attr OffsetOutputs = 0
       EndBody
     EndObject	! Template

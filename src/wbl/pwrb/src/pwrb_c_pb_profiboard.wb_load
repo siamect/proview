@@ -8,8 +8,15 @@
 ! Range ldh_eDId_Base
 !
 SObject         pwrb:Class
-!
-!
+!/**
+! @Author Claes Jurstrand
+! @Version 1.0
+! @Group IO,IO_Profibus
+! @Summary Configurates a Profibus PCI master card (Softing profiboard)
+! Configurates a Profibus PCI master card (Softing Profiboard). Available on LynxOS and Linux.
+! The object should be named Px, where x is the number of the device, eg P1.
+! You can have maximum two buses (master cards) on each system.
+!*/
   Object  	Pb_Profiboard	$ClassDef 287
 !
     Body	SysBody
@@ -21,29 +28,38 @@ SObject         pwrb:Class
       Body	SysBody
         Attr	StructName = "Pb_Profiboard"
       EndBody
-      !
-      ! Description of object
-      !
+      !/**
+      ! Text description of the object (comment).
+      !*/
       Object 	Description	$Attribute 1
         Body	SysBody
           Attr	TypeRef  = "pwrs:Type-$String80"
         EndBody
       EndObject
-      !
-!
+      !/**
+      ! Defines the Proview process that will handle I/O for the bus.
+      ! 1 for the PLC process (default).
+      !*/
       Object 	Process		$Attribute 2
         Body	SysBody
           Attr	TypeRef  = "pwrs:Type-$UInt16"
         EndBody
       EndObject
-!
+      !/**
+      ! Defines which of the PLC threads that will handle I/O for the bus (if Process = 1).
+      !*/
       Object 	ThreadObject	$Attribute 3
         Body	SysBody
           Attr	TypeRef  = "pwrs:Type-$Objid"
         EndBody
       EndObject
-!
-      !
+      !/**
+      ! Indicates the current state of the bus in runtime. Updated by the I/O-handler.
+      ! 0 : Bus is not initialized.
+      ! 1 : Bus is in stopped mode.
+      ! 2 : Bus is in cleared mode.
+      ! 3 : Bus is in operating mode (this should be the normal state when running).
+      !*/
       Object 	Status		$Attribute 4
         Body	SysBody
           Attr	TypeRef  = "pwrs:Type-$UInt8"
@@ -51,7 +67,9 @@ SObject         pwrb:Class
 	  Attr  Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
-      !
+      !/**
+      ! Flag that disables the initialization of the bus. Can´t be set dynamically.
+      !*/
       Object 	DisableBus	$Attribute 5
         Body	SysBody
           Attr	TypeRef  = "pwrs:Type-$UInt8"
@@ -59,8 +77,9 @@ SObject         pwrb:Class
 	  Attr  Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
-      !
-      !
+      !/**
+      ! Number of configured slaves in the bus. Updated by the I/O-handler.
+      !*/
       Object 	NumberSlaves	$Attribute 6
         Body	SysBody
           Attr	TypeRef  = "pwrs:Type-$UInt16"
@@ -68,128 +87,230 @@ SObject         pwrb:Class
 	  Attr  Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
-!
+      !/**
+      ! Number of the bus. You can have one or two buses (master cards) on each system.
+      !*/
       Object 	BusNumber	$Attribute 7
         Body	SysBody
           Attr	TypeRef  = "pwrs:Type-$UInt16"
         EndBody
       EndObject
-!
+      !/**
+      ! Maximum number of slaves allowed on the bus. Range 0..127.
+      !*/
       Object 	MaxNumberSlaves	$Attribute 8
         Body	SysBody
           Attr	TypeRef  = "pwrs:Type-$UInt16"
         EndBody
       EndObject
-      !
-      !
+      !/**
+      ! Maximum size of each slaves output area.
+      !*/
       Object 	MaxSlaveOutputLen $Attribute 9
         Body	SysBody
           Attr	TypeRef  = "pwrs:Type-$UInt16"
         EndBody
       EndObject
-      !
-      !
+      !/**
+      ! Maximum size of each slaves input area.
+      !*/
       Object 	MaxSlaveInputLen $Attribute 10
         Body	SysBody
           Attr	TypeRef  = "pwrs:Type-$UInt16"
         EndBody
       EndObject
-      !
+      !/**
+      ! Baud rate for the bus in Kbit/s. Possible values are 500, 1500, 3000, 6000, 12000.
+      ! Note that the values for some of the following attributes are depending on the 
+      ! baud rate. For further information about these bus parameters, please refer to the 
+      ! documentation from Softing.
+      !*/
       Object 	BaudRate	$Attribute 11
         Body	SysBody
           Attr	TypeRef  = "pwrs:Type-$UInt16"
         EndBody
       EndObject
-!
-      Object 	Tsl		$Attribute 12
+      !/**
+      ! Watchdog timer for write supervision in the master card. This watchdog is 
+      ! activated at the first write operation after initialization. If the timer later 
+      ! elapses without a write operation, the master card will reset itself, and the bus 
+      ! will stop, leaving all slaves to stall when their own stalltime elapses.
+      ! Range 100..10000 ms
+      !*/
+      Object 	StallTime	$Attribute 12
         Body	SysBody
           Attr	TypeRef  = "pwrs:Type-$UInt16"
         EndBody
       EndObject
-!
-      Object 	MinTsdr		$Attribute 13
+      !/**
+      ! Slot time, the maximum time a master station must wait for a transaction response. 
+      ! Range 37..16383 Bit Times.
+      ! Recommended values for each baudrate:
+      ! 500 kbit/s - 200
+      ! 1500 kbit/s - 300
+      ! 3000 kbit/s - 400
+      ! 6000 kbit/s - 600
+      ! 12000 kbit/s - 1000
+      !*/
+      Object 	Tsl		$Attribute 13
         Body	SysBody
           Attr	TypeRef  = "pwrs:Type-$UInt16"
         EndBody
       EndObject
-!
-      Object 	MaxTsdr		$Attribute 14
+      !/**
+      ! Minimum station delay time for responder, the period of time which may elapse before 
+      ! the responder can send the response frame. Range 11..1023 Bit Times.
+      ! Recommended values for each baudrate:
+      ! 500 kbit/s - 11
+      ! 1500 kbit/s - 11
+      ! 3000 kbit/s - 11
+      ! 6000 kbit/s - 11
+      ! 12000 kbit/s - 11
+      !*/
+      Object 	MinTsdr		$Attribute 14
         Body	SysBody
           Attr	TypeRef  = "pwrs:Type-$UInt16"
         EndBody
       EndObject
-!
-      Object 	Tqui		$Attribute 15
+      !/**
+      ! Maximum station delay time for responder, the responder has to send the response frame
+      ! before this time is elapsed. Range 37..2^16-1 Bit Times.
+      ! Recommended values for each baudrate:
+      ! 500 kbit/s - 100
+      ! 1500 kbit/s - 150
+      ! 3000 kbit/s - 250
+      ! 6000 kbit/s - 450
+      ! 12000 kbit/s - 800
+      !*/
+      Object 	MaxTsdr		$Attribute 15
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt16"
+        EndBody
+      EndObject
+      !/**
+      ! Quiet time, the period of time which a transmitting station must wait after the end of a frame
+      ! before enabling its receiver. It is significant when using repeaters. Range 0..493 Bit Times.
+      ! Recommended values for each baudrate:
+      ! 500 kbit/s - 0
+      ! 1500 kbit/s - 0
+      ! 3000 kbit/s - 3
+      ! 6000 kbit/s - 6
+      ! 12000 kbit/s - 9
+      !*/
+      Object 	Tqui		$Attribute 16
         Body	SysBody
           Attr	TypeRef  = "pwrs:Type-$UInt8"
         EndBody
       EndObject
-!
-      Object 	Tset		$Attribute 16
+      !/**
+      ! Setup time, the time between the occurance of an interrupt request and the necessary request 
+      ! action is performed. Range 1..494-Tqui BitTimes.
+      ! Recommended values for each baudrate:
+      ! 500 kbit/s - 1
+      ! 1500 kbit/s - 1
+      ! 3000 kbit/s - 4
+      ! 6000 kbit/s - 8
+      ! 12000 kbit/s - 16
+      !*/
+      Object 	Tset		$Attribute 17
         Body	SysBody
           Attr	TypeRef  = "pwrs:Type-$UInt8"
         EndBody
       EndObject
-!
-      Object 	Ttr		$Attribute 17
+      !/**
+      ! Target rotation time, the anticipated time for one token rotation on the bus, including
+      ! allowances for high and low priority transactions and GAP maintenance. 
+      ! Range 256..2^24-1 Bit Times.
+      ! The value is irrelevant in Profibus DP operations.
+      !*/
+      Object 	Ttr		$Attribute 18
         Body	SysBody
           Attr	TypeRef  = "pwrs:Type-$UInt32"
         EndBody
       EndObject
-!
-      Object 	G		$Attribute 18
+      !/**
+      ! Gap update factor, defines the number of token rotations between GAP maintenance cycles.
+      ! Range 1..100.
+      ! Recommended values for each baudrate:
+      ! 500 kbit/s - 1
+      ! 1500 kbit/s - 10
+      ! 3000 kbit/s - 10
+      ! 6000 kbit/s - 10
+      ! 12000 kbit/s - 10
+      !*/
+      Object 	G		$Attribute 19
         Body	SysBody
           Attr	TypeRef  = "pwrs:Type-$UInt8"
         EndBody
       EndObject
-!
-      Object 	Hsa		$Attribute 19
+      !/**
+      ! Highest station address. Range 1..126.
+      !*/
+      Object 	Hsa		$Attribute 20
         Body	SysBody
           Attr	TypeRef  = "pwrs:Type-$UInt8"
         EndBody
       EndObject
-!
-      Object 	MaxRetryLimit	$Attribute 20
+      !/**
+      ! Maximum retry limit, indicates how often FDL has to repeat the request frame when no response 
+      ! or acknowledge frame is receive from the recognized station within the slot time. Range 0..7.
+      ! Recommended values for each baudrate:
+      ! 500 kbit/s - 1
+      ! 1500 kbit/s - 1
+      ! 3000 kbit/s - 2
+      ! 6000 kbit/s - 3
+      ! 12000 kbit/s - 4
+      !*/
+      Object 	MaxRetryLimit	$Attribute 21
         Body	SysBody
           Attr	TypeRef  = "pwrs:Type-$UInt8"
         EndBody
       EndObject
-!
-      Object 	BpFlag		$Attribute 21
+      !/**
+      ! Bus parameter flag. Should not be changed from the default value.
+      !*/
+      Object 	BpFlag		$Attribute 22
         Body	SysBody
           Attr	TypeRef  = "pwrs:Type-$UInt8"
         EndBody
       EndObject
-!
-      Object 	MinSlaveInterval	$Attribute 22
+      !/**
+      ! Data exchange cycle time in 100 us. Should not be changed from the default value.
+      !*/
+      Object 	MinSlaveInterval	$Attribute 23
         Body	SysBody
           Attr	TypeRef  = "pwrs:Type-$UInt16"
         EndBody
       EndObject
-!
-      Object 	PollTimeout		$Attribute 23
+      !/**
+      ! Watchdog timer for Master to Master communication.
+      !*/
+      Object 	PollTimeout		$Attribute 24
         Body	SysBody
           Attr	TypeRef  = "pwrs:Type-$UInt16"
         EndBody
       EndObject
-!
-      Object 	DataControlTime		$Attribute 24
+      !/**
+      ! Control interval for global control status reports of the DP master.
+      !*/
+      Object 	DataControlTime		$Attribute 25
         Body	SysBody
           Attr	TypeRef  = "pwrs:Type-$UInt16"
         EndBody
       EndObject
-!
-      Object 	Diag $Attribute 25
+      !/**
+      ! Area for receiving diagnostic data from the master. Not implemented yet.
+      !*/
+      Object 	Diag $Attribute 26
         Body	SysBody
           Attr	TypeRef  = "pwrs:Type-$UInt8"
 	  Attr  Flags |= PWR_MASK_ARRAY
-          Attr  Elements = 128
+          Attr  Elements = 256
 	  Attr  Flags |= PWR_MASK_NOEDIT
 	  Attr  Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
 !
-      !
     EndObject	! Rt body
 !
     Object Template Pb_Profiboard
@@ -198,16 +319,17 @@ SObject         pwrb:Class
         Attr MaxNumberSlaves = 48
         Attr MaxSlaveOutputLen = 128
         Attr MaxSlaveInputLen = 128
-        Attr BaudRate = 1500
-        Attr Tsl = 3000
-	Attr MinTsdr = 150
-	Attr MaxTsdr = 980
-	Attr Tqui = 0
-	Attr Tset = 240
+        Attr BaudRate = 12000
+	Attr StallTime = 3000
+        Attr Tsl = 1000
+	Attr MinTsdr = 11
+	Attr MaxTsdr = 800
+	Attr Tqui = 9
+	Attr Tset = 16
 	Attr Ttr = 300000
 	Attr G = 10
 	Attr Hsa = 126
-	Attr MaxRetryLimit = 1
+	Attr MaxRetryLimit = 4
         Attr NumberSlaves = 0
 	Attr Status = 0
 	Attr DisableBus = 0

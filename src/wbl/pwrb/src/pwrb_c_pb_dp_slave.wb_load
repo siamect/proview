@@ -1,6 +1,7 @@
 SObject         pwrb:Class
 !/**
 !  @Version 1.0
+!  @Group IO,IO_Profibus
 !  Object that configure one Profibus DP slave.
 !*/
 !
@@ -58,14 +59,14 @@ SObject         pwrb:Class
 !
       Object 	ByteOrdering	$Attribute 7
         Body	SysBody
-          Attr	TypeRef  = "pwrs:Type-$UInt16"
+          Attr	TypeRef  = "pwrs:Type-$Enum"
         EndBody
       EndObject
       !
 !
       Object 	StallAction	$Attribute 8
         Body	SysBody
-          Attr	TypeRef  = "pwrs:Type-$UInt8"
+          Attr	TypeRef  = "pwrs:Type-$Enum"
         EndBody
       EndObject
 !
@@ -274,12 +275,56 @@ SObject         pwrb:Class
       !
     EndObject	! Rt body
 !
+    Object ConfiguratorPosnn $Menu
+      Object Pointed $Menu
+        Object HelpClass $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Configure"
+	    Attr MethodName = "Pb_DP_Slave-Configure"
+	    Attr FilterName = "Pb_DP_Slave-ConfigureFilter"
+	  EndBody
+        EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPoscn $Menu
+      Object Pointed $Menu
+        Object HelpClass $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Configure"
+	    Attr MethodName = "Pb_DP_Slave-Configure"
+	    Attr FilterName = "Pb_DP_Slave-ConfigureFilter"
+	  EndBody
+        EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPosos $Menu
+      Object Pointed $Menu
+        Object HelpClass $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Configure"
+	    Attr MethodName = "Pb_DP_Slave-Configure"
+	    Attr FilterName = "Pb_DP_Slave-ConfigureFilter"
+	  EndBody
+        EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPoson $Menu
+      Object Pointed $Menu
+        Object HelpClass $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Configure"
+	    Attr MethodName = "Pb_DP_Slave-Configure"
+	    Attr FilterName = "Pb_DP_Slave-ConfigureFilter"
+	  EndBody
+        EndObject
+      EndObject
+    EndObject
     Object Template Pb_DP_Slave
       Body RtBody
 	Attr Process = 1
         Attr SlaveAddress = 0
         Attr StallAction = 1
-	Attr ByteOrdering = 1
+	Attr ByteOrdering = 0
 	Attr Status = 0
 	Attr DisableSlave = 0
 	Attr ErrorCount = 0
