@@ -11025,8 +11025,7 @@ int utl_realloc (
 int utl_create_loadfiles (
   ldh_tSesContext ldhses,
   char		*volumes,
-  int		allvolumes,
-  int		classvolumes
+  int		allvolumes
 )
 {
 	int		sts;
@@ -11042,7 +11041,6 @@ int utl_create_loadfiles (
 	pwr_tVolumeId	vol_id;
 	pwr_tVolumeId	current_volid;
 	ldh_sVolumeInfo volinfo;
-	int		vtype;
 
 	/* Session has to be saved */
 	sts = ldh_GetSessionInfo( ldhses, &info);
@@ -11054,23 +11052,19 @@ int utl_create_loadfiles (
 	if (EVEN(sts)) return sts;
 	current_volid = volinfo.Volume;
 
-	if ( volumes != NULL)
-	{
+	if ( volumes != NULL) {
 	  /* Parse the volumestr */
 	  nr = utl_parse( volumes, ", ", "", (char *)vol_str, 
 		sizeof( vol_str) / sizeof( vol_str[0]), sizeof( vol_str[0]));
-	  if ( (nr == 0) || ( nr > UTL_INPUTLIST_MAX))
-	  {
+	  if ( (nr == 0) || ( nr > UTL_INPUTLIST_MAX)) {
 	    status = FOE__PARSYNT;
 	    goto error_return;
 	  }	
 
-	  for ( i = 0; i < nr; i++)
-	  {
+	  for ( i = 0; i < nr; i++) {
 	    sts = ldh_VolumeNameToId( ldh_SessionToWB( ldhses), vol_str[i],
 			&volume_vect[i]);
-	    if ( EVEN(sts))
-	    {
+	    if ( EVEN(sts)) {
 	      status = sts;
 	      goto error_return;
 	    }	
@@ -11080,23 +11074,19 @@ int utl_create_loadfiles (
 	else
 	  volume_vect[0] = 0;
 	
-	if ( allvolumes || classvolumes)
-	{
-	  /* Get all volumes that is not class and wb volumes */
+	if ( allvolumes) {
+	  // Get all volumes that is not class, directory and wb volumes
 	  i = 0;
 	  sts = ldh_GetVolumeList( ldh_SessionToWB( ldhses), &vol_id);
-	  while ( ODD(sts) )
-	  {
+	  while ( ODD(sts) ) {
 	    sts = ldh_GetVolumeClass( ldh_SessionToWB( ldhses), vol_id,
 			&vol_class);
 	    if (EVEN(sts)) return sts;
 
-	    if ((vol_class == pwr_eClass_WorkBenchVolume) ||
-		(!classvolumes && vol_class == pwr_eClass_ClassVolume) ||
-		(!allvolumes && vol_class != pwr_eClass_ClassVolume))
-	    {
-	      sts = ldh_GetNextVolume( ldh_SessionToWB( ldhses), vol_id,
-			&vol_id);
+	    if ( vol_class == pwr_eClass_WorkBenchVolume ||
+		 vol_class == pwr_eClass_ClassVolume ||
+		 vol_class == pwr_eClass_DirectoryVolume) {
+	      sts = ldh_GetNextVolume( ldh_SessionToWB( ldhses), vol_id, &vol_id);
 	      continue;
 	    }
 
@@ -11110,81 +11100,46 @@ int utl_create_loadfiles (
 	  volume_vect[i] = 0;
 	}
 
-        if ( volumes == NULL && ! allvolumes && ! classvolumes)
-	{
+        if ( volumes == NULL && !allvolumes) {
           // Take the current volume
           volume_vect[0] = current_volid;
           volume_vect[1] = 0;
 	}
 
-	for ( vtype = 0; vtype < 3; vtype++)
-	{
-	    
-	  for ( i = 0; volume_vect[i] != 0; i++)
-  	  {
-	    sts = ldh_GetVolumeClass( ldh_SessionToWB( ldhses), volume_vect[i],
-			&vol_class);
-	    if (EVEN(sts)) return sts;
+	for ( i = 0; volume_vect[i] != 0; i++) {
+	  other_volume_attached = 0;
+	  if ( current_volid != volume_vect[i]) {
+	    /* Attach this volume */
+	    sts = ldh_AttachVolume( ldh_SessionToWB(ldhses), volume_vect[i], &volctx);
+	    if ( EVEN(sts)) return sts;
+	    other_volume_attached = 1;
 
-	    if ( vtype == 0)
-	    {
-	      /* Take the systemclassvolume first */
-	      if ( volume_vect[i] != 1)
-	        continue;
-	    }
-	    else if ( vtype == 1)
-	    {
-	      /* Take the other classvolumes */
-	      if ( volume_vect[i] == 1)
-	        continue;
-	      if ( vol_class != pwr_eClass_ClassVolume)
-	        continue;
-	    }
-	    else if ( vtype == 2)
-	    {
-	      /* Take the other volumes */
-	      if ( vol_class == pwr_eClass_ClassVolume)
-	        continue;
-	    }
-	    other_volume_attached = 0;
-	    if ( current_volid != volume_vect[i])
-	    {
-	      /* Attach this volume */
-	      sts = ldh_AttachVolume( ldh_SessionToWB(ldhses), volume_vect[i], 
-			&volctx);
-	      if ( EVEN(sts)) return sts;
-	      other_volume_attached = 1;
+	    /* Open a read session */
+	    sts = ldh_OpenSession(&l_ldhses, volctx, ldh_eAccess_ReadOnly, 
+				  ldh_eUtility_Pwr);
+	    if ( EVEN(sts)) return sts;
+	  }
+	  else {
+	    l_ldhses = ldhses;
+	    /* Set session to ReadOnly */
+	    sts = ldh_SetSession( ldhses, ldh_eAccess_ReadOnly);
+	    if ( EVEN(sts)) return sts;
+	  }
 
-	      /* Open a read session */
-	      sts = ldh_OpenSession(&l_ldhses, volctx, ldh_eAccess_ReadOnly, 
-			ldh_eUtility_Pwr);
-	      if ( EVEN(sts)) return sts;
-	    }
-	    else
-	    {
-	      l_ldhses = ldhses;
-	      /* Set session to ReadOnly */
-	      sts = ldh_SetSession( ldhses, ldh_eAccess_ReadOnly);
-	      if ( EVEN(sts)) return sts;
-	    }
+	  status = lfu_create_loadfile( l_ldhses);
+	  if ( ODD(sts))
+	    status = ldh_CreateLoadFile( l_ldhses);
 
-	    status = lfu_create_loadfile( l_ldhses);
-	    if ( ODD(sts))
-	      status = ldh_CreateLoadFile( l_ldhses);
-
-	    if ( other_volume_attached)
-	    {
+	  if ( other_volume_attached) {
 	      ldh_CloseSession( l_ldhses);
 	      ldh_DetachVolume( ldh_SessionToWB(ldhses), volctx);
-	    }
-	    else
-	    {
-	      /* Return to session access ReadWrite */
-	      sts = ldh_SetSession( ldhses, ldh_eAccess_ReadWrite);
-	      if ( EVEN(sts)) return sts;
-	    }
-	    if ( EVEN(status)) return status;
 	  }
+	  else {
+	    /* Return to session access ReadWrite */
+	    sts = ldh_SetSession( ldhses, ldh_eAccess_ReadWrite);
+	    if ( EVEN(sts)) return sts;
+	  }
+	  if ( EVEN(status)) return status;
 	}
 	return FOE__SUCCESS;
 

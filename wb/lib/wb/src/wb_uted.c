@@ -231,7 +231,6 @@ static uted_t_command	commands[ UTED_MAX_COMMANDS ] = {
 { "Create LoadFiles", UTED_PROC_PWRPLC, 0, 1,{
   {"Volume", 		0, 	0,		1, 	0, UTED_QUAL_QUAL},
   {"All",	 	0, 	0,		0, 	1, UTED_QUAL_QUAL},
-  {"Class"	, 	0, 	0,		0, 	1, UTED_QUAL_QUAL},
   {"",}}},
 { "Create BootFiles", UTED_PROC_PWRPLC, 0, 1,{
   {"NodeConfig", 	0, 	0,		1, 	0, UTED_QUAL_QUAL},

@@ -437,8 +437,7 @@ int utl_realloc (
 int utl_create_loadfiles (
   ldh_tSesContext ldhses,
   char		*volumes,
-  int		allvolumes,
-  int		classvolumes
+  int		allvolumes
 );
 
 int utl_create_bootfile (
