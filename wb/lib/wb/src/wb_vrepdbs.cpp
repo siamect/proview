@@ -19,7 +19,7 @@ wb_vrep *wb_vrepdbs::ref()
 
 wb_vrepdbs::wb_vrepdbs(wb_erep *erep, const char *fileName) : m_erep(erep), m_nRef(0), m_duplicate(false)
 {
-  printf("wb_vrepdbs(erep, fileName):%s\n", fileName);
+  // printf("wb_vrepdbs(erep, fileName):%s\n", fileName);
   strcpy(m_fileName, fileName);
   m_isDbsenvLoaded = false;
   if (false && isCommonMeta())
@@ -30,12 +30,12 @@ wb_vrepdbs::wb_vrepdbs(wb_erep *erep, const char *fileName) : m_erep(erep), m_nR
 
 wb_vrepdbs::wb_vrepdbs(wb_erep *erep, wb_merep * merep, const char *fileName, dbs_sMenv *mep, dbs_sVenv *vep) : m_erep(erep), m_merep(merep), m_nRef(0), m_dbsmep(mep), m_dbsvep(vep), m_duplicate(false)
 {
-  printf("wb_vrepdbs(erep, fileName, mep, vep):%d,%s\n", vep->vp->vid, fileName);
+  // printf("wb_vrepdbs(erep, fileName, mep, vep):%d,%s\n", vep->vp->vid, fileName);
   strcpy(m_fileName, fileName);
   strcpy(m_name, m_dbsvep->vp->name);
   m_vid = m_dbsvep->vp->vid;
   m_cid = m_dbsvep->vp->cid;
-  printf("m_name: %s, m_vid: %d, m_cid: %d\n", m_name, m_vid, m_cid);
+  // printf("m_name: %s, m_vid: %d, m_cid: %d\n", m_name, m_vid, m_cid);
   m_isDbsenvLoaded = true;
 }
 
@@ -56,12 +56,12 @@ dbs_sVenv *wb_vrepdbs::dbsenv()
     strcpy(m_name, m_dbsvep->vp->name);
     m_vid = m_dbsvep->vp->vid;
     m_cid = m_dbsvep->vp->cid;
-    printf("m_name: %s, m_vid: %d, m_cid: %d\n", m_name, m_vid, m_cid);
+    // printf("m_name: %s, m_vid: %d, m_cid: %d\n", m_name, m_vid, m_cid);
 
     for (int i = 0; i < dbs_nVolRef(&sts, m_dbsmep); i++) {
       dbs_sVenv *vep = dbs_Vmap(&sts, i + 1, m_dbsmep);
       wb_vrepdbs *vp = new wb_vrepdbs(m_erep, m_merep, m_fileName, m_dbsmep, vep);
-      printf("before addDbs, i:%d, name: %s, vid: %d\n", i, vep->vp->name, vep->vp->vid);
+      // printf("before addDbs, i:%d, name: %s, vid: %d\n", i, vep->vp->name, vep->vp->vid);
       m_merep->addDbs(&sts, (wb_mvrep *)vp);
     }
   } else {
