@@ -113,7 +113,7 @@ pwr_tCid wb_adef::cid()
   return m_adrep->cid();
 }
 
-pwr_tOix wb_adef::bix() 
+pwr_eBix wb_adef::bix() 
 {
   check();
   return m_adrep->bix();

@@ -1,5 +1,6 @@
 
 #include "wb_mvrep.h"
+#include "wb_tdrep.h"
 
 wb_cdrep *wb_mvrep::cdrep( pwr_tCid cid)
 {

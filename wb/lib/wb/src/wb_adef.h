@@ -42,7 +42,7 @@ public:
     pwr_tOid aoid();
     pwr_tAix aix();
     pwr_tCid cid();
-    pwr_tOix bix();
+    pwr_eBix bix();
     pwr_tOid boid();
     
     wb_adef next();

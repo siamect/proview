@@ -2,10 +2,12 @@
 #define wb_mvrep_h
 
 #include "wb_vrep.h"
-#include "wb_cdrep.h"
-#include "wb_tdrep.h"
-#include "wb_bdrep.h"
-#include "wb_adrep.h"
+
+class wb_adrep;
+class wb_cdrep;
+class wb_orep;
+class wb_tdrep;
+
 
 class wb_mvrep : public wb_vrep {
  public:

@@ -26,7 +26,7 @@ wb_adrep::wb_adrep( wb_orepdbs& o): m_nRef(0), m_orep(&o), m_sts(LDH__SUCCESS),
     {
       pwr_sParam attr;
 
-      m_orep->m_vrep->readBody( &sts, m_orep, cdh_eBix_sys, (void *) &attr);
+      m_orep->m_vrep->readBody( &sts, m_orep, pwr_eBix_sys, (void *) &attr);
       if ( EVEN(sts)) throw wb_error(sts);
 
       strcpy( m_pgmname, attr.Info.PgmName);
@@ -45,7 +45,7 @@ wb_adrep::wb_adrep( wb_orepdbs& o): m_nRef(0), m_orep(&o), m_sts(LDH__SUCCESS),
     {
       pwr_sIntern attr;
 
-      m_orep->m_vrep->readBody( &sts, m_orep, cdh_eBix_sys, (void *) &attr);
+      m_orep->m_vrep->readBody( &sts, m_orep, pwr_eBix_sys, (void *) &attr);
       if ( EVEN(sts)) throw wb_error(sts);
 
       strcpy( m_pgmname, attr.Info.PgmName);
@@ -64,7 +64,7 @@ wb_adrep::wb_adrep( wb_orepdbs& o): m_nRef(0), m_orep(&o), m_sts(LDH__SUCCESS),
     {
       pwr_sObjXRef attr;
 
-      m_orep->m_vrep->readBody( &sts, m_orep, cdh_eBix_sys, (void *) &attr);
+      m_orep->m_vrep->readBody( &sts, m_orep, pwr_eBix_sys, (void *) &attr);
       if ( EVEN(sts)) throw wb_error(sts);
 
       strcpy( m_pgmname, attr.Info.PgmName);
@@ -82,7 +82,7 @@ wb_adrep::wb_adrep( wb_orepdbs& o): m_nRef(0), m_orep(&o), m_sts(LDH__SUCCESS),
     {
       pwr_sAttrXRef attr;
 
-      m_orep->m_vrep->readBody( &sts, m_orep, cdh_eBix_sys, (void *) &attr);
+      m_orep->m_vrep->readBody( &sts, m_orep, pwr_eBix_sys, (void *) &attr);
       if ( EVEN(sts)) throw wb_error(sts);
 
       strcpy( m_pgmname, attr.Info.PgmName);
@@ -100,7 +100,7 @@ wb_adrep::wb_adrep( wb_orepdbs& o): m_nRef(0), m_orep(&o), m_sts(LDH__SUCCESS),
     {
       pwr_sBuffer attr;
 
-      m_orep->m_vrep->readBody( &sts, m_orep, cdh_eBix_sys, (void *) &attr);
+      m_orep->m_vrep->readBody( &sts, m_orep, pwr_eBix_sys, (void *) &attr);
       if ( EVEN(sts)) throw wb_error(sts);
 
       strcpy( m_pgmname, attr.Info.PgmName);
@@ -110,6 +110,7 @@ wb_adrep::wb_adrep( wb_orepdbs& o): m_nRef(0), m_orep(&o), m_sts(LDH__SUCCESS),
       m_elements = attr.Info.Elements;
       m_paramindex = attr.Info.ParamIndex;
       m_flags = attr.Info.Flags;
+      m_flags |= PWR_MASK_BUFFER;
       m_tid = 0;
       m_bufferClass = attr.Class;
 
@@ -165,9 +166,9 @@ int wb_adrep::aix()
   return cdh_oixToAix( m_orep->oid().oix);
 }
 
-cdh_eBix wb_adrep::bix()
+pwr_eBix wb_adrep::bix()
 {
-  return (cdh_eBix) cdh_oixToBix( m_orep->oid().oix);
+  return (pwr_eBix) cdh_oixToBix( m_orep->oid().oix);
 }
 
 pwr_sAttrRef wb_adrep::aref()
@@ -247,5 +248,5 @@ void *wb_adrep::body( void *p)
       throw wb_error(LDH__NYI);
   }
 
-  return m_orep->m_vrep->readBody( &sts, m_orep, cdh_eBix_sys, p);
+  return m_orep->m_vrep->readBody( &sts, m_orep, pwr_eBix_sys, p);
 }

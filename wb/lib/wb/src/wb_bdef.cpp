@@ -35,7 +35,7 @@ wb_bdef::wb_bdef(const wb_adef *a)
 {
 }
 
-wb_bdef::wb_bdef(const wb_orep *o, pwr_tOix bix)
+wb_bdef::wb_bdef(const wb_orep *o, pwr_eBix bix)
 {
 }
 
@@ -44,7 +44,7 @@ pwr_tOid wb_bdef::boid()
     return m_bdrep->boid();
 }
 
-pwr_tOix wb_bdef::bix()
+pwr_eBix wb_bdef::bix()
 {
     return m_bdrep->bix();
 }
@@ -59,14 +59,14 @@ int wb_bdef::nAttribute()
     return m_bdrep->nAttribute();
 }
 
-wb_name wb_bdef::name()
+const char* wb_bdef::name() const
 {
     return m_bdrep->name();
 }
 
-wb_name wb_bdef::name(ldh_eName type)
+wb_name wb_bdef::longName() const
 {
-    return m_bdrep->name(type);
+    return m_bdrep->longName();
 }
 
 pwr_sAttrRef wb_bdef::aref()

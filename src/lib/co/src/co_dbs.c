@@ -918,15 +918,15 @@ dbs_Object(pwr_tStatus *sts, const dbs_sEnv *ep)
 }
 
 void *
-dbs_Body(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op, cdh_eBix bix)
+dbs_Body(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op, pwr_eBix bix)
 {
     char *p = NULL;
     
     switch (bix) {
-    case cdh_eBix_rt:
+    case pwr_eBix_rt:
         p = dbs_Address(sts, ep, op->rbody.ref);
         break;
-    case cdh_eBix_dev:
+    case pwr_eBix_dev:
         p = dbs_Address(sts, ep, op->dbody.ref);
         break;
     default:

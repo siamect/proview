@@ -9,6 +9,7 @@
 #include "wb_location.h"
 #include "wb_attribute.h"
 
+class wb_bdef;
 class wb_orep;
 class wb_location;
 class wb_attribute;
@@ -70,6 +71,9 @@ public:
     size_t rbSize();  //< size of run time body
     size_t dbSize();  //< size of development body
     
+    wb_bdef bdef(const char* bname);
+    wb_bdef bdef(pwr_eBix bix);
+
     wb_attribute attribute();
     wb_attribute attribute(const char *aname);
     wb_attribute attribute(const char *bname, const char *aname);

@@ -2,6 +2,7 @@
 
 #include "wb_merep.h"
 #include "wb_erep.h"
+#include "wb_tdrep.h"
 #include "wb_attrname.h"
 #include "wb_ldh_msg.h"
 
@@ -156,14 +157,14 @@ wb_tdrep *wb_merep::tdrep( pwr_tStatus *sts, wb_name name)
   return 0;
 }
 
-int wb_merep::getAttrInfoRec( wb_attrname *attr, cdh_eBix bix, pwr_tCid cid, int *size,
+int wb_merep::getAttrInfoRec( wb_attrname *attr, pwr_eBix bix, pwr_tCid cid, int *size,
 		     int *offset, pwr_tTid *tid, int *elements, 
 		     pwr_eType *type, int *flags, int level)
 {
   pwr_tStatus sts;
 
   if ( level > 0)
-    bix = cdh_eBix_rt;
+    bix = pwr_eBix_rt;
 
   wb_cdrep *cd = cdrep( &sts, cid);
   if ( EVEN(sts)) return 0;

@@ -14,9 +14,6 @@
 #include "wb_attrname.h"
 
 #define WBL_FILEMAX 500
-#define wbl_eBix_SysBody 1
-#define wbl_eBix_RtBody  1
-#define wbl_eBix_DevBody 2
 
 class wb_orepwbl;
 
@@ -65,11 +62,11 @@ public:
     virtual void iterDbody(wb_dbs *);
 #if 0
     void iterObject( void *udata,
-		     pwr_tStatus (*bc)(void *,pwr_tOid, pwr_tCid, pwr_tOid, pwr_tOid,
-				       pwr_tOid, pwr_tOid, pwr_tOid, const char *,
-				       pwr_tTime, int, int));
+                     pwr_tStatus (*bc)(void *,pwr_tOid, pwr_tCid, pwr_tOid, pwr_tOid,
+                                       pwr_tOid, pwr_tOid, pwr_tOid, const char *,
+                                       pwr_tTime, int, int));
     void iterBody( void *udata,
-		   pwr_tStatus (*bc)(void *,pwr_tOid, void *, void *));
+                   pwr_tStatus (*bc)(void *,pwr_tOid, void *, void *));
 #endif
     int load( const char *fname);
     int load_files( const char *file_spec);
@@ -86,17 +83,17 @@ public:
     bool registerObject( pwr_tOix oix, ref_wblnode node);
     int nextOix() { return ++next_oix; }
     int classNameToCid( const char *name, pwr_tCid *cid);
-    int getTemplateBody( pwr_tCid cid, int bix, int *size, void **body);
+    int getTemplateBody( pwr_tCid cid, pwr_eBix bix, int *size, void **body);
     int getTypeInfo( pwr_tTid tid, pwr_eType *type, int *size,
-		     int *elements);
+                     int *elements);
     int getTypeInfo( const char *type, pwr_tTid *tid, pwr_eType *type, int *size,
-		     int *elements);
+                     int *elements);
     int getClassInfo( pwr_tCid cid, int *rsize, int *dsize);
-    int getAttrInfo( const char *attr, cdh_eBix bix, pwr_tCid cid, int *size,
-		     int *offset, pwr_tTid *tid, int *elements, pwr_eType *type);
-    int getAttrInfoRec( wb_attrname *attr, cdh_eBix bix, pwr_tCid cid, int *size,
-			int *offset, pwr_tTid *tid, int *elements, 
-			pwr_eType *type, int level);
+    int getAttrInfo( const char *attr, pwr_eBix bix, pwr_tCid cid, int *size,
+                     int *offset, pwr_tTid *tid, int *elements, pwr_eType *type);
+    int getAttrInfoRec( wb_attrname *attr, pwr_eBix bix, pwr_tCid cid, int *size,
+                        int *offset, pwr_tTid *tid, int *elements, 
+                        pwr_eType *type, int level);
     ref_wblnode findObject( pwr_tOix oix);
     ref_wblnode findClass( const char *name);
     ref_wblnode findType( const char *name);
@@ -145,13 +142,13 @@ public:
     bool commit(pwr_tStatus *sts) {return false;};
     bool abort(pwr_tStatus *sts) {return false;};
 
-    virtual bool writeAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, unsigned int offset, unsigned int size, void *p) {return false;};
+    virtual bool writeAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, unsigned int offset, unsigned int size, void *p) {return false;};
 
-    virtual void *readAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, unsigned int offset, unsigned int size, void *p);
+    virtual void *readAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, unsigned int offset, unsigned int size, void *p);
 
-    virtual void *readBody(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, void *p);
+    virtual void *readBody(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, void *p);
 
-    virtual bool writeBody(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, void *p) {return false;};
+    virtual bool writeBody(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, void *p) {return false;};
 
 
     wb_orep *ancestor(pwr_tStatus *sts, wb_orep *o);

@@ -61,9 +61,6 @@ public:
 
     wb_adef adef(pwr_sAttrRef *arp) { wb_adef a; return a;}; // Fix
     wb_adef adef(pwr_tCid cid, const char *bname, const char *aname);
-
-    wb_bdef bdef(wb_cdef cdef, const char *bname);
-    wb_bdef bdef(wb_object o, const char *bname);
     
     wb_cdef cdef(wb_object o);
     wb_cdef cdef(pwr_tCid cid);

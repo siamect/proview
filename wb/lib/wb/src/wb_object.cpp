@@ -319,7 +319,7 @@ size_t wb_object::rbSize()
   check();
 
   wb_cdef c = wb_cdef( *m_orep);
-  wb_bdef b = c.bdef( cdh_eBix_rt);
+  wb_bdef b = c.bdef( pwr_eBix_rt);
   if ( !b)
     return 0;
 
@@ -329,13 +329,29 @@ size_t wb_object::rbSize()
 size_t wb_object::dbSize()
 {
   wb_cdef c = wb_cdef( *m_orep);
-  wb_bdef b = c.bdef( cdh_eBix_dev);
+  wb_bdef b = c.bdef( pwr_eBix_dev);
   if ( !b)
     return 0;
 
   return b.size();
 }
 
+
+wb_bdef wb_object::bdef(const char* bname)
+{
+  check();
+  
+  wb_cdef cdef(*m_orep);
+  return cdef.bdef(bname);
+}
+
+wb_bdef wb_object::bdef(pwr_eBix bix)
+{
+  check();
+  
+  wb_cdef cdef(*m_orep);
+  return cdef.bdef(bix);
+}
 
 /*      Object SigChanCon $ObjXRef 2
 

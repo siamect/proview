@@ -1,6 +1,6 @@
 #include "wb_cdef.h"
 #include "wb_adef.h"
-
+#include "wb_object.h"
 
 wb_cdef::wb_cdef() : wb_status(LDH__NOCLASS), m_cdrep(0)
 {
@@ -116,7 +116,7 @@ wb_bdef wb_cdef::bdef( const char *bname)
     return wb_bdef();
 }
 
-wb_bdef wb_cdef::bdef( pwr_tOix bix)
+wb_bdef wb_cdef::bdef( pwr_eBix bix)
 {
   check();
   pwr_tStatus sts;

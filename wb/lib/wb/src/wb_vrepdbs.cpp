@@ -182,7 +182,7 @@ wb_vrepdbs::abort(pwr_tStatus *sts)
 
 
 bool
-wb_vrepdbs::writeAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, unsigned int offset, unsigned int size, void *p)
+wb_vrepdbs::writeAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, unsigned int offset, unsigned int size, void *p)
 {
     *sts = LDH__NYI;
     return false;
@@ -190,7 +190,7 @@ wb_vrepdbs::writeAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, unsigned 
 
 
 void *
-wb_vrepdbs::readAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, unsigned int offset, unsigned int size, void *p)
+wb_vrepdbs::readAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, unsigned int offset, unsigned int size, void *p)
 {
     *sts = LDH__SUCCESS;
 
@@ -204,10 +204,10 @@ wb_vrepdbs::readAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, unsigned i
     
     if (p) {
       switch (bix) {
-      case cdh_eBix_rt:
+      case pwr_eBix_rt:
         memcpy(p, (char *)bp + offset, MIN(op->rbody.size - offset, size));
 	break;
-      case cdh_eBix_dev:
+      case pwr_eBix_dev:
 	memcpy(p, (char *)bp + offset, MIN(op->dbody.size - offset, size));
 	break;
       default:
@@ -222,7 +222,7 @@ wb_vrepdbs::readAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, unsigned i
 
 
 void *
-wb_vrepdbs::readBody(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, void *p)
+wb_vrepdbs::readBody(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, void *p)
 {
   *sts = LDH__SUCCESS;
     
@@ -236,10 +236,10 @@ wb_vrepdbs::readBody(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, void *p)
     
   if (p) {
     switch (bix) {
-    case cdh_eBix_rt:
+    case pwr_eBix_rt:
       memcpy(p, bp, op->rbody.size);
       break;
-    case cdh_eBix_dev:
+    case pwr_eBix_dev:
       memcpy(p, bp, op->dbody.size);
       break;
     default:
@@ -254,7 +254,7 @@ wb_vrepdbs::readBody(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, void *p)
 
 
 bool
-wb_vrepdbs::writeBody(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, void *p)
+wb_vrepdbs::writeBody(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, void *p)
 {
     *sts = LDH__NYI;
     return false;

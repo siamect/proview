@@ -3,7 +3,6 @@
 
 #include "pwr.h"
 #include "wb_bdrep.h"
-#include "wb_object.h"
 #include "wb_name.h"
 
 class wb_orep;
@@ -22,7 +21,7 @@ public:
     wb_bdef& operator=(const wb_bdef&);
 
     wb_bdef(const wb_adef *a);
-    wb_bdef(const wb_orep *o, pwr_tAix bix);
+    wb_bdef(const wb_orep *o, pwr_eBix bix);
 
     ~wb_bdef() {}; // Fix
 
@@ -31,12 +30,12 @@ public:
     bool operator==(wb_bdef&);
     
     pwr_tOid boid();
-    pwr_tOix bix();
+    pwr_eBix bix();
     size_t size();
     int nAttribute();
 
-    wb_name name(); // get attribute name
-    wb_name name(ldh_eName type);
+    const char* name() const; // get body name
+    wb_name longName() const;
 
     pwr_sAttrRef aref();
     

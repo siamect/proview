@@ -54,15 +54,15 @@ protected:
 
         struct {
             pwr_tOix oix;
-            pwr_tOix bix;
+            pwr_eBix bix;
         } m_data;
     
 
         ob_k();
         ob_k(wb_orepdb *o);
-        ob_k(wb_orepdb *o, pwr_tOix bix);
+        ob_k(wb_orepdb *o, pwr_eBix bix);
         ob_k(pwr_tOix oix);
-        ob_k(pwr_tOix oix, pwr_tOix bix);
+        ob_k(pwr_tOix oix, pwr_eBix bix);
     
     };
 
@@ -149,13 +149,13 @@ public:
     virtual bool commit(pwr_tStatus *sts);
     virtual bool abort(pwr_tStatus *sts);
 
-    virtual bool writeAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, unsigned int offset, unsigned int size, void *p);
+    virtual bool writeAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, unsigned int offset, unsigned int size, void *p);
 
-    virtual void *readAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, unsigned int offset, unsigned int size, void *p);
+    virtual void *readAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, unsigned int offset, unsigned int size, void *p);
 
-    virtual void *readBody(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, void *p);
+    virtual void *readBody(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, void *p);
 
-    virtual bool writeBody(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, void *p);
+    virtual bool writeBody(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, void *p);
 
     virtual wb_orep *ancestor(pwr_tStatus *sts, wb_orep *o) const;
 

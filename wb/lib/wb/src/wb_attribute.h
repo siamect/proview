@@ -36,14 +36,17 @@ class wb_attribute : public wb_status
     int m_elements;
     pwr_eType m_type;
     int m_flags;
-
+    
+    pwr_eBix m_bix; // Used when sub class
+  
 public:
     wb_attribute();
     wb_attribute(const wb_attribute&);
-    wb_attribute(pwr_tStatus, wb_orep* const );
-    wb_attribute(pwr_tStatus, wb_orep* const, wb_adrep* const);
-    wb_attribute(pwr_tStatus, wb_orep* const, const char* bname);
-    wb_attribute(pwr_tStatus, wb_orep* const, const char* aname, const char* bname);
+    wb_attribute(pwr_tStatus, wb_orep*);
+    wb_attribute(pwr_tStatus, wb_orep*, wb_adrep*);
+    wb_attribute(pwr_tStatus, wb_orep*, const char* bname);
+    wb_attribute(pwr_tStatus, wb_orep*, const char* bname, const char* aname);
+    wb_attribute(wb_attribute& pa, int idx, const char* aname);
 
     ~wb_attribute();
     wb_attribute& operator=(const wb_attribute&);
@@ -52,6 +55,10 @@ public:
     bool operator==(wb_attribute&);
     
     //wb_object& operator=(const wb_orep&);
+
+    bool isClass() const {return (m_flags & PWR_MASK_CLASS || m_flags & PWR_MASK_BUFFER);}
+    bool isArray() const {return (m_flags & PWR_MASK_ARRAY);}
+    
 
     pwr_tOid aoid();  // get objects object id
     pwr_sAttrRef aref();
@@ -65,7 +72,7 @@ public:
     pwr_tAix aix();
     // Class of attribute object
     pwr_tCid cid();
-    pwr_tAix bix();
+    pwr_eBix bix();
     pwr_tOid boid();
     bool checkXref();
     pwr_sAttrXRef *xref();
@@ -80,8 +87,11 @@ public:
     pwr_tStatus fromString(char *);
     
     
-    wb_attribute next();
-    wb_attribute prev();
+    wb_attribute after();
+    wb_attribute before();
+
+    wb_attribute first(int idx);
+    wb_attribute child(int idx, const char* name);
     
 
     const char *name() const;

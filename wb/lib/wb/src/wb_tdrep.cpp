@@ -86,7 +86,7 @@ void wb_tdrep::init()
     {
       pwr_sTypeDef body;
 
-      m_orep->m_vrep->readBody( &sts, m_orep, cdh_eBix_sys, (void *) &body);
+      m_orep->m_vrep->readBody( &sts, m_orep, pwr_eBix_sys, (void *) &body);
       if ( EVEN(sts)) throw wb_error(sts);
 
       m_size = body.Size;
@@ -99,7 +99,7 @@ void wb_tdrep::init()
     {
       pwr_sTypeDef body;
 
-      m_orep->m_vrep->readBody( &sts, m_orep, cdh_eBix_sys, (void *) &body);
+      m_orep->m_vrep->readBody( &sts, m_orep, pwr_eBix_sys, (void *) &body);
       if ( EVEN(sts)) throw wb_error(sts);
 
       m_size = body.Size;

@@ -42,7 +42,7 @@ class wb_cdef : public wb_status
     const char *name() const;
     wb_name longName();
 
-    wb_bdef bdef(pwr_tOix bix);
+    wb_bdef bdef(pwr_eBix bix);
     wb_bdef bdef(const char *bname);
     wb_bdef bdef(wb_name bname);
 

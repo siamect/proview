@@ -2,8 +2,6 @@
 #define wb_destination_h
 
 #include "pwr.h"
-#include "wb_object.h"
-#include "wb_orep.h"
 #include "wb_ldh.h"
 
 class wb_orep;

@@ -4,14 +4,13 @@
 #include "pwr.h"
 #include "pwr_class.h"
 #include "wb_name.h"
-#include "wb_orep.h"
 
-class wb_adef;
-class wb_orep;
-class wb_mvrep;
-class wb_bdrep;
-class wb_orepdbs;
 class wb_adrep;
+class wb_bdrep;
+class wb_mvrep;
+class wb_orep;
+class wb_orepdbs;
+
 
 class wb_cdrep 
 {
@@ -41,12 +40,12 @@ class wb_cdrep
     void name(const char *name);
     void name(wb_name *name);
     
-    wb_bdrep *bdrep( pwr_tStatus *sts, int bix);
+    wb_bdrep *bdrep( pwr_tStatus *sts, pwr_eBix bix);
     wb_bdrep *bdrep( pwr_tStatus *sts, const char *bname);
     wb_adrep *adrep( pwr_tStatus *sts, const char *aname);    
     wb_orep *classBody( pwr_tStatus *sts, const char *bname);
 
-    void templateBody( pwr_tStatus *sts, cdh_eBix bix, void *p);
+    void templateBody( pwr_tStatus *sts, pwr_eBix bix, void *p);
 
     pwr_tStatus sts() { return m_sts;}
 };

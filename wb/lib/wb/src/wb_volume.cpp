@@ -149,18 +149,6 @@ wb_adef wb_volume::adef( pwr_tCid cid, const char *bname, const char *aname)
   return bdef.adef( aname);
 }
 
-wb_bdef wb_volume::bdef(wb_cdef cdef, const char *bname)
-{
-  return cdef.bdef( bname);
-}
-
-wb_bdef wb_volume::bdef(wb_object o, const char *bname)
-{
-  wb_orep *orep = o;
-  wb_cdef cdef = wb_cdef(*orep);
-
-  return cdef.bdef( bname);
-}
 
 wb_cdef wb_volume::cdef(wb_object o)
 {

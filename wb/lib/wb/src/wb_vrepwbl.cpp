@@ -500,9 +500,9 @@ int wb_vrepwbl::getClassInfo( pwr_tCid cid, int *rsize, int *dsize)
     wb_wblnode *n_body = n->o_fch;
     while( n_body) {
       if ( n_body->isObjBodyDef() && 
-	   (n_body->b_bix == wbl_eBix_SysBody || n_body->b_bix == wbl_eBix_RtBody)) 
+	   (n_body->b_bix == pwr_eBix_sys || n_body->b_bix == pwr_eBix_rt)) 
 	*rsize = n_body->b_size;
-      else if ( n_body->isObjBodyDef() && n_body->b_bix == wbl_eBix_DevBody) 
+      else if ( n_body->isObjBodyDef() && n_body->b_bix == pwr_eBix_dev) 
 	*dsize = n_body->b_size;
       n_body = n_body->o_fws;
     }
@@ -515,7 +515,7 @@ int wb_vrepwbl::getClassInfo( pwr_tCid cid, int *rsize, int *dsize)
     wb_cdrep *cdrep = m_merep->cdrep( &sts, cid);
     if ( EVEN(sts)) return 0;
     
-    wb_bdrep *bdrep = cdrep->bdrep( &sts, cdh_eBix_rt);
+    wb_bdrep *bdrep = cdrep->bdrep( &sts, pwr_eBix_rt);
     if ( ODD(sts)) {
       *rsize = bdrep->size();
       delete bdrep;
@@ -523,7 +523,7 @@ int wb_vrepwbl::getClassInfo( pwr_tCid cid, int *rsize, int *dsize)
     else
       *rsize = 0;
 
-    bdrep = cdrep->bdrep( &sts, cdh_eBix_dev);
+    bdrep = cdrep->bdrep( &sts, pwr_eBix_dev);
     if ( ODD(sts)) {
       *dsize = bdrep->size();
       delete bdrep;
@@ -546,7 +546,7 @@ int wb_vrepwbl::getClassInfo( pwr_tCid cid, int *rsize, int *dsize)
         *elements = elem; }
 
 
-int wb_vrepwbl::getAttrInfo( const char *attr, cdh_eBix bix, pwr_tCid cid, int *size,
+int wb_vrepwbl::getAttrInfo( const char *attr, pwr_eBix bix, pwr_tCid cid, int *size,
 		     int *offset, pwr_tTid *tid, int *elements, pwr_eType *type)
 {
   int a_size;
@@ -571,19 +571,19 @@ int wb_vrepwbl::getAttrInfo( const char *attr, cdh_eBix bix, pwr_tCid cid, int *
   return 0;
 }
 
-int wb_vrepwbl::getAttrInfoRec( wb_attrname *attr, cdh_eBix bix, pwr_tCid cid, int *size,
+int wb_vrepwbl::getAttrInfoRec( wb_attrname *attr, pwr_eBix bix, pwr_tCid cid, int *size,
 		     int *offset, pwr_tTid *tid, int *elements, pwr_eType *type,
 		     int level)
 {
   if ( level > 0)
-    bix = cdh_eBix_rt;
+    bix = pwr_eBix_rt;
 
   switch( cid) {
     case pwr_eClass_Type:
     {
       pwr_sType o;
 
-      if ( bix != cdh_eBix_sys)
+      if ( bix != pwr_eBix_sys)
         return 0;
       if ( attr->attributeIsEqual("Type", level)) {
         *size = sizeof( o.Type);
@@ -603,7 +603,7 @@ int wb_vrepwbl::getAttrInfoRec( wb_attrname *attr, cdh_eBix bix, pwr_tCid cid, i
     {
       pwr_sTypeDef o;
 
-      if ( bix != cdh_eBix_sys)
+      if ( bix != pwr_eBix_sys)
         return 0;
       IF_ATTR( Type, pwr_eType_UInt32, 1, level)
       else IF_ATTR( Size, pwr_eType_Int32, 1, level)
@@ -615,7 +615,7 @@ int wb_vrepwbl::getAttrInfoRec( wb_attrname *attr, cdh_eBix bix, pwr_tCid cid, i
     {
       pwr_sClassDef o;
 
-      if ( bix != cdh_eBix_sys)
+      if ( bix != pwr_eBix_sys)
         return 0;
       IF_ATTR( Editor, pwr_eType_UInt32, 1, level)
       else IF_ATTR( Method, pwr_eType_UInt32, 1, level)
@@ -628,7 +628,7 @@ int wb_vrepwbl::getAttrInfoRec( wb_attrname *attr, cdh_eBix bix, pwr_tCid cid, i
     {
       pwr_sClassVolume o;
 
-      if ( bix != cdh_eBix_sys)
+      if ( bix != pwr_eBix_sys)
         return 0;
       IF_ATTR( Description, pwr_eType_String, 1, level)
       else IF_ATTR( NextOix, pwr_eType_ObjectIx, 1, level)
@@ -647,7 +647,7 @@ int wb_vrepwbl::getAttrInfoRec( wb_attrname *attr, cdh_eBix bix, pwr_tCid cid, i
     {
       pwr_sObjBodyDef o;
 
-      if ( bix != cdh_eBix_sys)
+      if ( bix != pwr_eBix_sys)
         return 0;
       IF_ATTR( StructName, pwr_eType_String, 1, level)
       else IF_ATTR( NumOfParams, pwr_eType_UInt32, 1, level)
@@ -660,7 +660,7 @@ int wb_vrepwbl::getAttrInfoRec( wb_attrname *attr, cdh_eBix bix, pwr_tCid cid, i
     {
       pwr_sParam o;
 
-      if ( bix != cdh_eBix_sys)
+      if ( bix != pwr_eBix_sys)
         return 0;
       if ( attr->attributeIsEqual( "PgmName", level)) {
         *size = sizeof( o.Info.PgmName);
@@ -812,7 +812,7 @@ int wb_vrepwbl::nameToAttrRef( const char *name, pwr_sAttrRef *attrref)
   pwr_tTid a_tid;
   int a_elements;
   pwr_eType a_type;
-  cdh_eBix bix;
+  pwr_eBix bix;
   pwr_tCid cid;
 
   if ( strncmp( name, "_A", 2) == 0) {
@@ -853,7 +853,7 @@ int wb_vrepwbl::nameToAttrRef( const char *name, pwr_sAttrRef *attrref)
     wb_cdrep *cdrep = m_merep->cdrep( &sts, cid);
     if ( EVEN(sts)) return sts;
 
-    wb_bdrep *bdrep = cdrep->bdrep( &sts, cdh_eBix_rt);
+    wb_bdrep *bdrep = cdrep->bdrep( &sts, pwr_eBix_rt);
     if ( EVEN(sts)) return sts;
 
     attrref->Objid = oid;
@@ -869,13 +869,13 @@ int wb_vrepwbl::nameToAttrRef( const char *name, pwr_sAttrRef *attrref)
     if ( an.evenSts()) return an.sts();
 
     // Try rtbody
-    bix = cdh_eBix_rt;
+    bix = pwr_eBix_rt;
     sts = getAttrInfo( an.name(), bix, cid, &a_size,
 		       &a_offset, &a_tid, &a_elements, &a_type);
     if ( EVEN(sts)) {
       // Try devbody
-      bix = cdh_eBix_dev;
-      sts = getAttrInfo( an.name(), cdh_eBix_dev, cid, &a_size,
+      bix = pwr_eBix_dev;
+      sts = getAttrInfo( an.name(), pwr_eBix_dev, cid, &a_size,
 			 &a_offset, &a_tid, &a_elements, &a_type);
       if ( EVEN(sts)) return sts;
     }
@@ -887,53 +887,53 @@ int wb_vrepwbl::nameToAttrRef( const char *name, pwr_sAttrRef *attrref)
   return LDH__SUCCESS;
 }
 
-int wb_vrepwbl::getTemplateBody( pwr_tCid cid, int bix, int *size, void **body)
+int wb_vrepwbl::getTemplateBody( pwr_tCid cid, pwr_eBix bix, int *size, void **body)
 {
   switch ( cid) {
     case pwr_eClass_Type:
-      if ( bix != cdh_eBix_sys)
+      if ( bix != pwr_eBix_sys)
         return 0;
       *size = sizeof( pwr_sType);
       *body = calloc( 1, *size);
       return 1;
     case pwr_eClass_TypeDef:
-      if ( bix != cdh_eBix_sys)
+      if ( bix != pwr_eBix_sys)
         return 0;
       *size = sizeof( pwr_sTypeDef);
       *body = calloc( 1, *size);
       return 1;
     case pwr_eClass_ClassDef:
-      if ( bix != cdh_eBix_sys)
+      if ( bix != pwr_eBix_sys)
         return 0;
       *size = sizeof( pwr_sClassDef);
       *body = calloc( 1, *size);
       return 1;
     case pwr_eClass_ClassVolume:
-      if ( bix != cdh_eBix_sys)
+      if ( bix != pwr_eBix_sys)
         return 0;
       *size = sizeof( pwr_sClassVolume);
       *body = calloc( 1, *size);
       return 1;
     case pwr_eClass_ClassHier:
-      if ( bix != cdh_eBix_sys)
+      if ( bix != pwr_eBix_sys)
         return 0;
       *size = 0;
       *body = 0;
       return 1;
     case pwr_eClass_TypeHier:
-      if ( bix != cdh_eBix_sys)
+      if ( bix != pwr_eBix_sys)
         return 0;
       *size = 0;
       *body = 0;
       return 1;
     case pwr_eClass_ObjBodyDef:
-      if ( bix != cdh_eBix_sys)
+      if ( bix != pwr_eBix_sys)
         return 0;
       *size = sizeof( pwr_sObjBodyDef);
       *body = calloc( 1, *size);
       return 1;
     case pwr_eClass_Param:
-      if ( bix != cdh_eBix_sys)
+      if ( bix != pwr_eBix_sys)
         return 0;
       *size = sizeof( pwr_sParam);
       *body = calloc( 1, *size);
@@ -949,14 +949,14 @@ int wb_vrepwbl::getTemplateBody( pwr_tCid cid, int bix, int *size, void **body)
         if ( !n->c_template)
           return 0;
 
-        if ( bix == cdh_eBix_sys || bix == cdh_eBix_rt) {
+        if ( bix == pwr_eBix_sys || bix == pwr_eBix_rt) {
           *size = n->c_template->rbody_size;
           if ( *size) {
             *body = calloc( 1, *size);
             memcpy( *body, n->c_template->rbody, *size);
           }
         }
-        else if ( bix == cdh_eBix_dev) {
+        else if ( bix == pwr_eBix_dev) {
           *size = n->c_template->dbody_size;
           if ( *size) {
             *body = calloc( 1, *size);
@@ -980,7 +980,7 @@ int wb_vrepwbl::getTemplateBody( pwr_tCid cid, int bix, int *size, void **body)
          
         if ( *size) {
           *body = calloc( 1, *size);
-          cdrep->templateBody( &sts, (cdh_eBix) bix, *body);
+          cdrep->templateBody( &sts, (pwr_eBix) bix, *body);
           if ( EVEN(sts)) {
 	    free( body);
 	    delete cdrep;
@@ -1261,7 +1261,7 @@ void wb_vrepwbl::objectName(wb_orep *o, char *str)
     free( vect);
 }
 
-void *wb_vrepwbl::readAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, 
+void *wb_vrepwbl::readAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, 
 				unsigned int offset, unsigned int size, void *p)
 {
   *sts = LDH__SUCCESS;
@@ -1269,7 +1269,7 @@ void *wb_vrepwbl::readAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix,
   wb_wblnode *n = ((wb_orepwbl *) o)->wblNode();
 
   switch ( bix) {
-  case cdh_eBix_rt:
+  case pwr_eBix_rt:
     if ( n->rbody_size == 0) {
       *sts = LDH__NOSUCHBODY;
       return 0;
@@ -1279,7 +1279,7 @@ void *wb_vrepwbl::readAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix,
       return p;
     }
     return (void *)((char *)n->rbody + offset);
-  case cdh_eBix_dev:
+  case pwr_eBix_dev:
     if ( n->dbody_size == 0) {
       *sts = LDH__NOSUCHBODY;
       return 0;
@@ -1295,14 +1295,14 @@ void *wb_vrepwbl::readAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix,
   }
 }
 
-void *wb_vrepwbl::readBody(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, void *p)
+void *wb_vrepwbl::readBody(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, void *p)
 {
   *sts = LDH__SUCCESS;
     
   wb_wblnode *n = ((wb_orepwbl *) o)->wblNode();
 
   switch ( bix) {
-  case cdh_eBix_rt:
+  case pwr_eBix_rt:
     if ( n->rbody_size == 0) {
       *sts = LDH__NOSUCHBODY;
       return 0;
@@ -1312,7 +1312,7 @@ void *wb_vrepwbl::readBody(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, void *p)
       return p;
     }
     return n->rbody;
-  case cdh_eBix_dev:
+  case pwr_eBix_dev:
     if ( n->dbody_size == 0) {
       *sts = LDH__NOSUCHBODY;
       return 0;

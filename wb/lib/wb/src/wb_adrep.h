@@ -1,10 +1,13 @@
 #ifndef wb_adrep_h
 #define wb_adrep_h
 
-#include "pwr.h"
-#include "wb_cdrep.h"
-#include "wb_bdrep.h"
+#include "pwr_class.h"
+#include "co_cdh.h"
 
+#include "wb_name.h"
+
+class wb_bdrep;
+class wb_cdrep;
 class wb_orepdbs;
 class wb_vrep;
 
@@ -49,7 +52,7 @@ class wb_adrep
     pwr_tOid aoid();
     int aix();
     pwr_tCid cid();
-    cdh_eBix bix();
+    pwr_eBix bix();
     int flags() {return m_flags;}
     pwr_tOid boid();
     pwr_eClass bufferClass() { return m_bufferClass;}

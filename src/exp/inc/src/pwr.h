@@ -111,6 +111,15 @@ typedef pwr_tOix        pwr_tObjectIx;
 typedef unsigned int	pwr_tMask;
 typedef unsigned int	pwr_tEnum;
 
+typedef enum {
+  pwr_eBix__	    = 0,
+  pwr_eBix_sys	    = 1,
+  pwr_eBix_rt	    = 1,
+  pwr_eBix_dev	    = 2,
+  pwr_eBix_template = 7,
+  pwr_eBix_
+} pwr_eBix;
+
 typedef struct {
   pwr_tOix    oix;
   pwr_tVid    vid;

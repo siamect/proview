@@ -2,11 +2,9 @@
 #define wb_bdrep_h
 
 #include "pwr.h"
-#include "wb_orep.h"
-#include "wb_object.h"
+#include "wb_ldh.h"
 #include "wb_name.h"
 
-class wb_adef;
 class wb_adrep;
 class wb_orepdbs;
 
@@ -28,12 +26,13 @@ public:
     pwr_sAttrRef aref() { pwr_sAttrRef a; return a;} // Fix
     size_t size();
     int nAttribute();
-    cdh_eBix bix();
+    pwr_eBix bix();
     pwr_tOid boid();
     
 
-    wb_name name() { wb_name n; return n;} // Fix // get attribute name
-    wb_name name(ldh_eName type) { wb_name n; return n;} // Fix
+    const char* name() const;   // get body  name
+    wb_name longName() const;
+  
     
     wb_adrep *adrep( pwr_tStatus *sts); // Get first attribute
     wb_adrep *adrep( pwr_tStatus *sts, const char *aname);

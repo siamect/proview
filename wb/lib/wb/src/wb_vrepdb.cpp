@@ -40,7 +40,7 @@ typedef struct {
 typedef struct {
     struct {
         pwr_tOix oix;
-        pwr_tBix bix;
+        pwr_eBix bix;
     } key;
     void *data;
 } ldh_sDbBody;
@@ -105,7 +105,7 @@ wb_vrepdb::oh_d::oh_d(wb_orepdb *o)
 wb_vrepdb::ob_k::ob_k()
 {
     m_data.oix = 0;
-    m_data.bix = 0;
+    m_data.bix = pwr_eBix__;
     
     set_data(&m_data);
     set_size(sizeof(m_data));
@@ -114,7 +114,7 @@ wb_vrepdb::ob_k::ob_k()
 wb_vrepdb::ob_k::ob_k(pwr_tOix oix)
 {
     m_data.oix = oix;
-    m_data.bix = 0;
+    m_data.bix = pwr_eBix__;
     
     set_data(&m_data);
     set_size(sizeof(m_data));
@@ -123,13 +123,13 @@ wb_vrepdb::ob_k::ob_k(pwr_tOix oix)
 wb_vrepdb::ob_k::ob_k(wb_orepdb *o)
 {
     m_data.oix = o->oix();
-    m_data.bix = 0;
+    m_data.bix = pwr_eBix__;
     
     set_data(&m_data);
     set_size(sizeof(m_data));
 }
 
-wb_vrepdb::ob_k::ob_k(wb_orepdb *o, pwr_tOix bix)
+wb_vrepdb::ob_k::ob_k(wb_orepdb *o, pwr_eBix bix)
 {
     m_data.oix = o->oix();
     m_data.bix = bix;
@@ -803,7 +803,7 @@ bool wb_vrepdb::renameObject(pwr_tStatus *sts, wb_orep *o, wb_name name)
     return true;
 }
 
-bool wb_vrepdb::writeAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, unsigned int offset, unsigned int size, void *p)
+bool wb_vrepdb::writeAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, unsigned int offset, unsigned int size, void *p)
 {
     //body.oix = ?;
     //body.bix = ?;
@@ -820,7 +820,7 @@ bool wb_vrepdb::writeAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, unsig
 }
 
 void *
-wb_vrepdb::readAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, unsigned int offset, unsigned int size, void *p)
+wb_vrepdb::readAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, unsigned int offset, unsigned int size, void *p)
 {
     ob_k obk(o->oix(), bix);
     //ob_d obd;
@@ -857,13 +857,13 @@ wb_vrepdb::readAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, unsigned in
 }
 
 void *
-wb_vrepdb::readBody(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, void *p)
+wb_vrepdb::readBody(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, void *p)
 {
     return 0;
 }
 
 bool
-wb_vrepdb::writeBody(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, void *p)
+wb_vrepdb::writeBody(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, void *p)
 {
     return true;
 }

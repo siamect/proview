@@ -50,9 +50,9 @@ wb_adrep *wb_bdrep::adrep( pwr_tStatus *sts, const char *aname)
   return adrep;
 }
 
-cdh_eBix wb_bdrep::bix()
+pwr_eBix wb_bdrep::bix()
 {
-  return (cdh_eBix) cdh_oixToBix( m_orep->oid().oix);
+  return  cdh_oixToBix( m_orep->oid().oix);
 }
 
 size_t wb_bdrep::size()
@@ -60,7 +60,7 @@ size_t wb_bdrep::size()
   pwr_tStatus sts;
   pwr_sObjBodyDef body;
 
-  m_orep->m_vrep->readBody( &sts, m_orep, cdh_eBix_sys, (void *) &body);
+  m_orep->m_vrep->readBody( &sts, m_orep, pwr_eBix_sys, (void *) &body);
   if ( EVEN(sts)) throw wb_error(sts);
 
   return body.Size;
@@ -98,4 +98,15 @@ int wb_bdrep::nAttribute()
 pwr_tOid wb_bdrep::boid() 
 { 
   return m_orep->oid();
+}
+
+
+const char* wb_bdrep::name() const
+{
+  return m_orep->name();
+}
+
+wb_name wb_bdrep::longName() const
+{
+  return m_orep->longName();
 }

@@ -91,13 +91,13 @@ wb_bdrep *wb_cdrep::bdrep( pwr_tStatus *sts, const char *bname)
   return bdrep;
 }
 
-wb_bdrep *wb_cdrep::bdrep( pwr_tStatus *sts, int bix)
+wb_bdrep *wb_cdrep::bdrep( pwr_tStatus *sts, pwr_eBix bix)
 {
   wb_orepdbs *orep = (wb_orepdbs *)m_orep->m_vrep->first( sts, m_orep);
   wb_orepdbs *old;
   while ( ODD(*sts)) {
     if ( orep->cid() == pwr_eClass_ObjBodyDef &&
-	 cdh_oixToBix( orep->oid().oix) == (unsigned int) bix) {
+	 cdh_oixToBix( orep->oid().oix) ==  bix) {
       wb_bdrep *bdrep = new wb_bdrep( *orep);
       return bdrep;
     }
@@ -152,13 +152,13 @@ pwr_tCid wb_cdrep::cid()
   return cdh_ClassObjidToId( m_orep->oid());
 }
 
-void wb_cdrep::templateBody( pwr_tStatus *sts, cdh_eBix bix, void *p)
+void wb_cdrep::templateBody( pwr_tStatus *sts, pwr_eBix bix, void *p)
 {
   // Get objid for template object
   pwr_tOid oid;
   int cix = cdh_oixToCix( m_orep->oid().oix);  
   oid.vid = m_orep->oid().vid;
-  oid.oix = cdh_cixToOix( cix, cdh_eBix_template, 0);
+  oid.oix = cdh_cixToOix( cix, pwr_eBix_template, 0);
 
   wb_orepdbs *orep = (wb_orepdbs *)m_orep->m_vrep->object( sts, oid);
   if ( EVEN(*sts)) return;

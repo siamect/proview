@@ -38,14 +38,6 @@ typedef enum {
   cdh_eVid3_qid   = 130
 } cdh_eVId3;
 
-typedef enum {
-  cdh_eBix__	    = 0,
-  cdh_eBix_sys	    = 1,
-  cdh_eBix_rt	    = 1,
-  cdh_eBix_dev	    = 2,
-  cdh_eBix_template = 7,
-  cdh_eBix_
-} cdh_eBix;
 
 #define cdh_CidToVid(cid) ((cid) >> 16)
 #define cdh_TidToVid(tid) ((tid) >> 16)
@@ -53,7 +45,7 @@ typedef enum {
 #define cdh_tixToTid( Vid, Tyg, Tix) (0 + (Vid << 16) + (1 << 15) + (Tyg << 11) +  Tix)
 #define cdh_cixToOix( Cix, Bix, Aix) (0 + (1 << 31) + (Cix << 18) + (Bix << 15) + Aix)
 #define cdh_tixToOix( Tyg, Tix) (0 + (1 << 31) + (1 << 30) + (Tyg << 26) + (Tix << 15))
-#define cdh_oixToBix( Oix) ((Oix >> 15) & 7)
+#define cdh_oixToBix( Oix) ((pwr_eBix)((Oix >> 15) & 7))
 #define cdh_oixToCix( Oix) ((Oix >> 18) & 0xfff)
 #define cdh_oixToAix( Oix) (Oix & 0xfff)
 
