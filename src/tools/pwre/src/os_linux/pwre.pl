@@ -352,8 +352,10 @@ sub create()
   create_dir($newdir . "/doc");
   create_dir($newdir . "/doc/dox");
   create_dir($newdir . "/doc/sv_se");
+  create_dir($newdir . "/doc/en_us");
   create_dir($newdir . "/doc/prm");
-  create_dir($newdir . "/doc/orm");
+  create_dir($newdir . "/doc/sv_se/orm");
+  create_dir($newdir . "/doc/en_us/orm");
   create_dir($newdir . "/doc/help");
 
   $newdir = $root . "/tmp";
