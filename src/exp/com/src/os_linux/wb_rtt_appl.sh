@@ -8,16 +8,17 @@ action=$2
 is_rttsys=$3
 opsys=$4
 menuname=dtt_appl_${name}_m
+applname=ra_rtt_${name}
 exename=ra_rtt_${name} 
 arname=ra_rtt_${name}.a
 arname_pict=ra_rtt_${name}_pict.a
 
 
-if [ is_rttsys="0" ]
+if [ $is_rttsys = "0" ]
 then
 # echo "Not rttsys"
 
-  if [ action="1" ]
+  if [ $action = "1" ]
   then
 #   echo "Link"
     if [ ! -e $pwrp_lib/${arname} ]
@@ -49,4 +50,26 @@ then
      -lpwr_dtt\
      -lpwr_rt -lpwr_co -lpwr_msg_dummy -lrpcsvc -lpthread -lm -lposix1b -lrt 
   fi
+
+  if [ $action = "2" ]
+  then
+#   echo "Compile"
+    cc=gcc
+    cinc="-I$pwr_inc -I$pwrp_rttbld -I$pwrp_inc -I$pwrp_cmn/common/inc -I-"
+    cflags="-DOS_LINUX=1 -DOS=linux -DHW_X86=1 -DHW=x86 -O3 -DGNU_SOURCE -DPWR_NDEBUG -D_REENTRANT"
+
+    ${cc} -c -o $pwrp_obj/${applname}.o \
+        $pwrp_rtt/${applname}.c \
+        ${cinc} ${cflags}
+    ar rc $pwrp_lib/${arname} $pwrp_obj/${applname}.o 
+
+  fi
 fi
+
+
+
+
+
+
+
+
