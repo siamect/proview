@@ -177,5 +177,39 @@ SObject pwrs:Class
 	EndObject
       EndObject
     EndObject
+    Object ConfiguratorPosnn $Menu
+      Object Pointed $Menu
+	Object ConfigFo $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "ConfigFo"
+	    Attr MethodName = "$ClassDef-ConfigFc"
+	  EndBody
+	EndObject
+	Object ConfigConnectedFo $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "ConfigConnectedFo"
+	    Attr MethodName = "$ClassDef-ConfigFc"
+	    Attr MethodArguments[0] = "PlcConnect"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPosos $Menu
+      Object Pointed $Menu
+	Object ConfigFo $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "ConfigFo"
+	    Attr MethodName = "$ClassDef-ConfigFc"
+	  EndBody
+	EndObject
+	Object ConfigConnectedFo $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "ConfigConnectedFo"
+	    Attr MethodName = "$ClassDef-ConfigFc"
+	    Attr MethodArguments[0] = "PlcConnect"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
   EndObject
 EndSObject
