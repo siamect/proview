@@ -10,7 +10,7 @@
 SObject pwrb:Class
 !/**
 !  @Version 1.0
-!  @Code rt_plc_arithm.c
+!  @Code rt_plc_macro_div.h
 !  @Group Plc,PlcInteger
 !  @Summary Bitwise or.
 !  Bitwise or.
