@@ -214,11 +214,7 @@ public class FlowFrame extends JFrame implements JopUtilityIfc {
       System.out.println( "Menu: " + e.getActionCommand());
       if ( e.getActionCommand().equals("Close")) {
 
-        for ( int i = 0; i < ctx.cmn.a.size(); i++) {
-          Object o = ctx.cmn.a.get(i);
-          engine.remove( o);
-  	  session.removeUtility( this);
-        }
+	closeFlow();
 	dispose();
       }
       if ( e.getActionCommand().equals("Show Crossreferences")) {
@@ -299,15 +295,19 @@ public class FlowFrame extends JFrame implements JopUtilityIfc {
     return null;
   }  
 
+  public void closeFlow() {
+    for ( int i = 0; i < ctx.cmn.a.size(); i++) {
+      Object o = ctx.cmn.a.get(i);
+      engine.remove( o);
+    }
+    session.removeUtility( this);
+  }
+
   // Exit when window is closed
   protected void processWindowEvent(WindowEvent e) {
     super.processWindowEvent(e);
     if (e.getID() == WindowEvent.WINDOW_CLOSING) {
-      for ( int i = 0; i < ctx.cmn.a.size(); i++) {
-        Object o = ctx.cmn.a.get(i);
-        engine.remove( o);
-	session.removeUtility( this);
-      }
+      closeFlow();
     }
   }
 }

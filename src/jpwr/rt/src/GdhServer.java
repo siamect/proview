@@ -398,12 +398,13 @@ public class GdhServer
                 String attrName = in.readUTF();
                 CdhrBoolean ret = gdh.getObjectInfoBoolean(attrName);
                 out.writeInt(ret.sts);
-                out.flush();
+                //out.flush();
                 if(ret.oddSts())
                 {
                   out.writeBoolean(ret.value);
-                  out.flush();
+                  //out.flush();
                 }
+		out.flush();
               }
               catch(IOException e)
               {
@@ -416,12 +417,13 @@ public class GdhServer
                 String attrName = in.readUTF();
                 CdhrInt ret = gdh.getObjectInfoInt(attrName);
                 out.writeInt(ret.sts);
-                out.flush();
+                //out.flush();
                 if(ret.oddSts())
                 {
                   out.writeInt(ret.value);
-		  out.flush();
+		  //out.flush();
                 }
+		out.flush();
               }
               catch(IOException e)
               {
@@ -434,12 +436,13 @@ public class GdhServer
                 String attrName = in.readUTF();
                 CdhrFloat ret = gdh.getObjectInfoFloat(attrName);
                 out.writeInt(ret.sts);
-                out.flush();
+                //out.flush();
                 if(ret.oddSts())
                 {
                   out.writeFloat(ret.value);
-                  out.flush();
+                  //out.flush();
                 }
+		out.flush();
               }
               catch(IOException e)
               {
@@ -452,12 +455,13 @@ public class GdhServer
                 String attrName = in.readUTF();
                 CdhrString ret = gdh.getObjectInfoString(attrName);
                 out.writeInt(ret.sts);
-                out.flush();
+                //out.flush();
                 if(ret.oddSts())
                 {
                   out.writeUTF(ret.str);
-                  out.flush();
+                  //out.flush();
                 }
+		out.flush();
               }
               catch(IOException e)
               {
@@ -470,13 +474,14 @@ public class GdhServer
                 String name = in.readUTF();
                 CdhrObjid ret = gdh.getObjectInfoObjid(name);
                 out.writeInt(ret.getSts());
-                out.flush();
+                //out.flush();
                 if(ret.oddSts())
                 {
                   out.writeInt(ret.objid.oix);
                   out.writeInt(ret.objid.vid);
-                  out.flush();
+                  //out.flush();
                 }
+		out.flush();
               }
               catch(IOException e)
               {
@@ -901,13 +906,14 @@ public class GdhServer
                 PwrtObjid objid = new PwrtObjid(oix, vid);
                 CdhrObjid ret = gdh.getChild(objid);
                 out.writeInt(ret.getSts());
-                out.flush();
+                //out.flush();
                 if(ret.oddSts())
                 {
                   out.writeInt(ret.objid.oix);
                   out.writeInt(ret.objid.vid);
-                  out.flush();
+                  //out.flush();
                 }
+		out.flush();
               }
               catch(IOException e)
               {
@@ -922,13 +928,14 @@ public class GdhServer
                 PwrtObjid objid = new PwrtObjid(oix, vid);
                 CdhrObjid ret = gdh.getParent(objid);
                 out.writeInt(ret.getSts());
-                out.flush();
+                //out.flush();
                 if(ret.oddSts())
                 {
                   out.writeInt(ret.objid.oix);
                   out.writeInt(ret.objid.vid);
-                  out.flush();
+                  //out.flush();
                 }
+		out.flush();
               }
               catch(IOException e)
               {
@@ -943,13 +950,14 @@ public class GdhServer
                 PwrtObjid objid = new PwrtObjid(oix, vid);
                 CdhrObjid ret = gdh.getNextSibling(objid);
                 out.writeInt(ret.getSts());
-                out.flush();
+                //out.flush();
                 if(ret.oddSts())
                 {
                   out.writeInt(ret.objid.oix);
                   out.writeInt(ret.objid.vid);
-                  out.flush();
+                  //out.flush();
                 }
+		out.flush();
               }
               catch(IOException e)
               {
@@ -981,13 +989,14 @@ public class GdhServer
                 int classid = in.readInt();
                 CdhrObjid ret = gdh.getClassList(classid);
                 out.writeInt(ret.getSts());
-                out.flush();
+                //out.flush();
                 if(ret.oddSts())
                 {
                   out.writeInt(ret.objid.oix);
                   out.writeInt(ret.objid.vid);
-                  out.flush();
+                  //out.flush();
                 }
+		out.flush();
               }
               catch(IOException e)
               {

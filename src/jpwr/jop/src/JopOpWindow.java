@@ -11,6 +11,8 @@ public class JopOpWindow extends JPanel {
   Object root;
 
   public JopOpWindow( JopSession session, Object root) {
+    // super( BoxLayout.Y_AXIS);
+    // createGlue();
     this.session = session;
     this.root = root;
     en = session.getEngine();
@@ -147,11 +149,18 @@ public class JopOpWindow extends JPanel {
     boolean scrollbar;
     String instance;
 
+    public Dimension getPreferredSize() {
+      return new Dimension( 200, 25);
+    }
+    public Dimension getMininumSize() { return getPreferredSize();}
+    public Dimension getMaximumSize() { return getPreferredSize();}
+
     public OpWindButton( JopSession bsession, String name, String text, int btype) {
       this.session = bsession;
       this.action = name;
       this.type = btype;
       setText( text);
+      setHorizontalTextPosition( SwingConstants.LEFT);
       this.addMouseListener(new MouseAdapter() {
         public void mouseReleased(MouseEvent e) {
 	  switch ( type) {

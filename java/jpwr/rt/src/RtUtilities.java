@@ -82,10 +82,10 @@ public class RtUtilities {
       int offs1;
       int offs2;
 
-      // Replace дец in instance name because mozilla can't pass them as
+      // Replace едц in instance name because mozilla can't pass them as 
       // parameter
       for ( int i = 0; i < instance.length(); i++) {
-        if ( instanceBuff[i] == 'е' || instanceBuff[i] == 'Е')
+        if ( instanceBuff[i] == 'е' || instanceBuff[i] == 'е')
           instanceBuff[i] = '\\';
         if ( instanceBuff[i] == 'д' || instanceBuff[i] == 'Д')
           instanceBuff[i] = '/';

@@ -105,7 +105,6 @@ public class MhTable extends JPanel
     //Create the scroll pane and add the table to it.
     scrollPaneEv = new JScrollPane(eventTable);
     scrollPaneEv.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-    //scrollPaneEv.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
     //Add the scroll pane to this window.
     this.initColumnSizes(eventTable, evModel, false);
     scrollPaneEv.getViewport().setBackground(Color.white);
@@ -204,10 +203,15 @@ public class MhTable extends JPanel
     {
       URL url;
       String urlString = "127.0.0.1";
-      if(root instanceof JApplet)
+      try
       {
         url = ((JApplet)root).getCodeBase();
-        urlString = url.getHost();
+	if(url != null)
+          urlString = url.getHost();
+      }
+      catch(Exception e)
+      {
+        System.out.println(e.toString());
       }
       if(trace)
       {

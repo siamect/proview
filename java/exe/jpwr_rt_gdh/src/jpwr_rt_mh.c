@@ -7,8 +7,6 @@
 #include "rt_mh_outunit.h"
 #include "rt_mh_util.h"
 
-
-
 #include "rt_gdh.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
@@ -16,39 +14,11 @@
 #include "co_cdh_msg.h"
 #include "rt_gdh_msg.h"
 
-/*från xtt_ev.cpp*/
 pwr_tStatus ev_mh_ack_bc( mh_sAck *MsgP);
 pwr_tStatus ev_mh_return_bc( mh_sReturn *MsgP);
 pwr_tStatus ev_mh_alarm_bc( mh_sMessage *MsgP);
 pwr_tStatus ev_mh_info_bc( mh_sMessage *MsgP);
 pwr_tStatus ev_mh_clear_alarmlist_bc( pwr_tNodeIndex nix);
-/*slut på från xtt_ev.cpp*/
-const int EventType_Info = 0;
-const int EventType_Return = 1;
-const int EventType_Ack = 2;
-const int EventType_Alarm = 3;
-const int EventType_ClearAlarmList = 4;
-/*från jpwr_rt_gdh.c
-typedef struct {
-  char		TypeStr[32];
-  pwr_eType	Type;
-  int		Size;
-} gdh_sSuffixTable;
-
-static int gdh_ExtractNameSuffix(	char   *Name,
-                          		char   **Suffix);
-static void  gdh_TranslateSuffixToClassData (
-    char        *SuffixPtr,
-    pwr_eType 	*PwrType,
-    int		*PwrSize,
-    int  	*NoOfElements);
-static int gdh_StringToAttr( char *str_value, char *buffer_p, int buffer_size,
-	pwr_eType attrtype, int attrsize);
-static void  gdh_AttrToString( int type_id, void *value_ptr,
-        char *str, int size, int *len, char *format);
-static void gdh_ConvertUTFstring( char *out, char *in);
-//slut på från jpwr_rt_gdh.c
-*/
 
 jclass Mh_id;
 jmethodID Mh_messReceived_id;
@@ -72,7 +42,7 @@ JNIEXPORT void JNICALL Java_jpwr_rt_Mh_initIDs
   sts = (*env)->GetJavaVM(env, &jvm);
   if(sts)
   {
-    printf("Skit vid GetJavaVM\n");
+    printf("Hittar ej JavaVM\n");
   }
 }
 
@@ -110,7 +80,6 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Mh_outunitAck
     //hämta upp classid och sedan pekare till konstruktorn för PwrtStatus
     pwrtStatus_cid = (*env)->GetMethodID( env, pwrtStatus_id,
     	                                  "<init>", "(I)V");  
-    printf("efter status methodidhämtning\n");
     if(pwrtStatus_cid == NULL)
     {
       printf("fel vid PwrtStatus methodidhämtning\n");
@@ -147,31 +116,21 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Mh_outunitAck
     sts = -2;//lyckades inte hitta fältet
   }
   
-  //printf("efter birthtime hämtning\n");
-  
   eventId.Nix = (pwr_tNodeIndex)(*env)->GetIntField(env,id,nix_fid);
   eventId.Idx = (pwr_tUInt32)(*env)->GetIntField(env,id,idx_fid);
-  
-  //printf("efter getfielad\n");
-  
+    
   jstr = (*env)->GetObjectField(env,id,birthTime_fid);
   (const char *)str_copy = (*env)->GetStringUTFChars(env,jstr,NULL);
-  //strcpy(str, str_copy);
+
   if (str_copy ==NULL)
   {
     sts = -1;//out of memory
   }
-  //printf("efter strcpy\n");
-  //printf("str = %s", str);
   
   time_AsciiToA(str_copy, &eventId.BirthTime);
   
-  //printf("efter AsciiToA\n");
-  //printf("eventid= %d %d ", eventId.Idx, eventId.Nix); 
   sts = mh_OutunitAck(&eventId);
-  //printf("efter outunitack2 sts %d\n", sts);
   (*env)->ReleaseStringUTFChars(env,jstr,str_copy);
-  //(*env)->ReleaseStringUTFChars(env,jstr,str);
   
   jsts = (jint) sts; 
   //skapa returobjekt
@@ -222,22 +181,9 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Mh_outunitConnect
   //hämta oix och vid för objektet som skickats med från anroparen
   user.oix = (*env)->CallIntMethod( env, objid_obj, PwrtObjid_getOix);
   user.vid = (*env)->CallIntMethod( env, objid_obj, PwrtObjid_getVid);
-  
-  //printf("user.oix = %d user.vid = %d\n", user.oix, user.vid);
-  
+    
   // Wait for mh has flagged initizated qqq vad är detta 
-  //printf("innan waitformh\n");
   mh_UtilWaitForMh();
-  //printf("efter waitformh\n");
-
-/*
-  sts = gdh_ObjidToPointer ( user, (pwr_tAddress *) &userobject_ptr);
-  if ( EVEN(sts)) 
-  {
-    printf("skit vid objidtopinter\n");
-  }
-*/
-
 
   //gör connect
   sts = mh_OutunitConnect(
@@ -253,8 +199,6 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Mh_outunitConnect
 		ev_mh_info_bc,
 		ev_mh_return_bc
 		);
-  //printf("I connect C-kod sts= %d\n", sts);
-    
   jsts = (jint) sts;
   
   //skapa returobjekt
@@ -279,7 +223,6 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Mh_outunitDisConnect
     	"<init>", "(I)V");
   
   sts = mh_OutunitDisconnect();
-  //printf("I disconnect C-kod sts= %d\n", sts);
   
   jsts = (jint) sts;
   
@@ -312,16 +255,13 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Mh_outunitReceive
     //hämta upp classid och sedan pekare till konstruktorn för PwrtStatus
     pwrtStatus_cid = (*env)->GetMethodID( env, pwrtStatus_id,
     	                                  "<init>", "(I)V");
-    printf("efter PwrtStatus methodid hämtning\n");
     if(pwrtStatus_cid == NULL)
     {
       printf("fel vid PwrtStatus methodid hämtning\n");
       return NULL;
     }
   }
-  //printf("Innan receive C-kod\n");
   sts = mh_OutunitReceive();
-  //printf("Efter receive C-kod sts= %d\n", sts);
   jsts = (jint) sts;
   
   //skapa returobjekt
@@ -426,7 +366,7 @@ pwr_tStatus ev_mh_return_bc( mh_sReturn *MsgP)
   
   char birthTime_str[40];
   
-  pwr_tObjid objid = MsgP->Info.SupObject;
+  pwr_tObjid objid = MsgP->Info.Object;
   pwr_tTime time = MsgP->Info.EventTime;
   pwr_tTime birthTime = MsgP->Info.Id.BirthTime;
   
@@ -494,7 +434,7 @@ pwr_tStatus ev_mh_alarm_bc( mh_sMessage *MsgP)
   
   char birthTime_str[40];
   
-  pwr_tObjid objid = MsgP->Info.SupObject;
+  pwr_tObjid objid = MsgP->Info.Object;
   pwr_tTime time = MsgP->Info.EventTime;
   pwr_tTime birthTime = MsgP->Info.Id.BirthTime;
   
@@ -562,7 +502,7 @@ pwr_tStatus ev_mh_info_bc( mh_sMessage *MsgP)
   
   char birthTime_str[40];
   
-  pwr_tObjid objid = MsgP->Info.SupObject;
+  pwr_tObjid objid = MsgP->Info.Object;
   pwr_tTime time = MsgP->Info.EventTime;
   pwr_tTime birthTime = MsgP->Info.Id.BirthTime;
   

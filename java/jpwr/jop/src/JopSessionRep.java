@@ -51,7 +51,7 @@ public class JopSessionRep implements JopSessionIfc {
 
   public void openAlarmList() {
     if ( alarmList == null) {
-      alarmList = new MhFrame();
+      alarmList = new MhFrame(session);
       alarmList.setVisible( true);
     }
     else {

@@ -33,7 +33,7 @@ public class XttTree extends JPanel
   JTextField userValue = new JTextField(25);
   /**  Description of the Field */
   JLabel userValueLabel = new JLabel("Value input: ");
-  JLabel labelMessage = new JLabel("Jonas Nylund was here");
+  JLabel labelMessage = new JLabel("Navigator ver 1.0");
   Dimension size;
   /**  Description of the Field */
   JTree tree;
@@ -276,7 +276,7 @@ public class XttTree extends JPanel
     //then expand row 0 so we can se the rootlevel in the system
     tree.expandRow(0);
     
-    tree.setScrollsOnExpand(false);
+    tree.setScrollsOnExpand(true);
     tree.setRootVisible(false);
     tree.setShowsRootHandles(true);
     tree.setSelectionRow(0);
@@ -701,6 +701,10 @@ public class XttTree extends JPanel
     String str = this.gdh.objidToName(objid, Cdh.mName_pathStrict).str;
     if(str != null)
       this.find(str);
+    TreePath selectedPath = this.tree.getSelectionPath();
+    System.out.println(selectedPath);
+    if(selectedPath != null)
+      this.tree.scrollPathToVisible(selectedPath);
   }
   
   public void find(String userStr)
@@ -793,11 +797,11 @@ public class XttTree extends JPanel
         
         System.out.println("Hittat sökväg");
 	TreePath tp = new TreePath(tn.getPath());
-	if(tn.isLeaf())
-	{
-	  addObjectInfo(tp);
-	}
-	else
+//	if(tn.isLeaf())
+//	{
+//	  addObjectInfo(tp);
+//	}
+//	else
 	  this.tree.expandPath(tp);
 	this.tree.setSelectionPath(tp);
 	return tp;

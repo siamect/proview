@@ -38,7 +38,7 @@ public class JopOpWindowFrame extends JFrame {
     scrollPane = new JScrollPane(localPanel);
     contentPane.add(scrollPane, BorderLayout.CENTER);
     contentPane.setOpaque(true);
-    localPanel.setLayout(new BoxLayout( localPanel, BoxLayout.Y_AXIS));
+    localPanel.setLayout( new BoxLayout( localPanel, BoxLayout.Y_AXIS));
     localPanel.setOpaque(true);
     localPanel.setBackground( Color.white);
     this.setTitle("Operator Window");
@@ -55,3 +55,5 @@ public class JopOpWindowFrame extends JFrame {
     }
   }
 }
+
+

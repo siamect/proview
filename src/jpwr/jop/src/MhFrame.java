@@ -25,6 +25,11 @@ import java.awt.event.*;
  */
 public class MhFrame extends JFrame
 {
+  JopSession session;
+  JopEngine engine;
+  XttTree xttTree;
+  Object root;
+  
   /**  Description of the Field */
   BorderLayout borderLayout1 = new BorderLayout();
 
@@ -54,6 +59,7 @@ public class MhFrame extends JFrame
 
 
   /**  Constructor for the MhClient object */
+/*
   public MhFrame() 
   {
     addWindowListener(
@@ -68,7 +74,24 @@ public class MhFrame extends JFrame
       
     this.init(); 
   }
+*/
 
+  public MhFrame()
+  {
+    engine = new JopEngine( 1000, (Object)this);
+    session = new JopSession( engine, (Object)this);
+    root = (Object) this;
+    init();
+
+  }
+  public MhFrame( JopSession session)
+  {
+    this.session = session;
+    engine = session.getEngine();
+    root = session.getRoot();
+    init();
+  }  
+  
   /**  Description of the Method */
   public void destroy()
   {
@@ -110,7 +133,7 @@ public class MhFrame extends JFrame
 
     messagePanel.add(labelMessage, BorderLayout.NORTH);
     //Logg.logg("MhClient: Före XttTree-skapande", 6);
-    this.mhTable = new MhTable(this, false, this.labelMessage);
+    this.mhTable = new MhTable(root, false, this.labelMessage);
     //Logg.logg("MhClient: mhTable-skapande klart", 6);
     this.contentPane.add(this.mhTable.splitPane, BorderLayout.CENTER);
 
