@@ -989,6 +989,7 @@ cdh_StringToObjectIx (
   pwr_tObjectIx		loix = pwr_cNObjectIx;
 
   pwr_Assert(oix != NULL);
+  errno = 0;
 
   if (*s == '_') s++;
   if (*s == 'X' || *s == 'x') s++;
