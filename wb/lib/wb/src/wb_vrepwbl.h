@@ -118,6 +118,7 @@ public:
 
     wb_orep *object(pwr_tStatus *sts);
     wb_orep *object(pwr_tStatus *sts, pwr_tOid oid);
+    wb_orep *object(pwr_tStatus *sts, char *name);
     wb_orep *object(pwr_tStatus *sts, wb_orep *parent, wb_name name) 
       {return 0;};
 

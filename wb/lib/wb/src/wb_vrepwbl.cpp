@@ -43,6 +43,17 @@ wb_orep *wb_vrepwbl::object(pwr_tStatus *sts, pwr_tOid oid)
   return new wb_orepwbl( this, n);
 }
 
+wb_orep *wb_vrepwbl::object(pwr_tStatus *sts, char *name)
+{
+  ref_wblnode n = find( name);
+  if ( !n) {
+    *sts = LDH__NOSUCHOBJ;
+    return 0;
+  }
+  *sts = LDH__SUCCESS;
+  return new wb_orepwbl( this, n);
+}
+
 wb_vrep *wb_vrepwbl::next() const
 {
   pwr_tStatus sts;

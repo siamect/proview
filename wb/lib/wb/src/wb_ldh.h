@@ -380,12 +380,6 @@ pwr_tStatus ldh_ClassNameToId (
   char *name
 );
 
-pwr_tStatus ldh_ClassNameToObjid (
-  ldh_tSession Session,
-  pwr_tObjid *objid,
-  char *name
-);
-
 pwr_tStatus ldh_CloseSession (
   ldh_tSession Session
 );

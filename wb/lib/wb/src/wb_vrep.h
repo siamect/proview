@@ -35,6 +35,7 @@ public:
 
     virtual wb_orep *object(pwr_tStatus *sts) = 0;
     virtual wb_orep *object(pwr_tStatus *sts, pwr_tOid oid) = 0;
+    virtual wb_orep *object(pwr_tStatus *sts, char *name) = 0;
     virtual wb_orep *object(pwr_tStatus *sts, wb_orep *parent, wb_name name) = 0;
 
     virtual wb_orep *createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination d, wb_name name) = 0;

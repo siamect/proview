@@ -9,6 +9,7 @@
 #include "wb_orep.h"
 #include "wb_tdrep.h"
 #include "wb_adrep.h"
+#include "wb_name.h"
 #include "wb_ldh_msg.h"
 
 extern "C" {
@@ -76,10 +77,12 @@ wb_vrep *wb_erep::volume(pwr_tStatus *sts, char *name) // Fix
 {
   vrep_iterator it;
   for ( it = m_vrepdb.begin(); it != m_vrepdb.end(); it++) {
-    // Check name
+    if ( cdh_NoCaseStrcmp( it->second->name(), name) == 0)
+      return it->second;
   }
   for ( it = m_vrepdbs.begin(); it != m_vrepdbs.end(); it++) {
-    // Check name
+    if ( cdh_NoCaseStrcmp( it->second->name(), name) == 0)
+      return it->second;
   }
   *sts = LDH__NOSUCHVOL;
   return 0;
@@ -413,7 +416,23 @@ wb_tdrep *wb_erep::tdrep( pwr_tStatus *sts, const wb_adrep& a)
   return vrep->merep()->tdrep( sts, a);
 }
 
+wb_orep *wb_erep::object(pwr_tStatus *sts, pwr_tOid oid)
+{
+  wb_vrep *vrep = volume( sts, oid.vid);
+  if ( EVEN(*sts)) return 0;
 
+  return vrep->object( sts, oid);
+}
+
+wb_orep *wb_erep::object(pwr_tStatus *sts, char *name)
+{
+  wb_name n = wb_name(name);
+
+  wb_vrep *vrep = volume( sts, n.volume());
+  if ( EVEN(*sts)) return 0;
+
+  return vrep->object( sts, name);
+}
 
 
 

@@ -106,18 +106,15 @@ wb_object wb_volume::object(pwr_tOid oid) const
 {
     pwr_tStatus sts;
     wb_orep *orep;
-    wb_vrep *vrep;
     wb_object o;
     
     if (oid.vid == m_vrep->vid())
-      vrep = m_vrep;
+      // This volume
+      orep = m_vrep->object( &sts, oid);
     else
-      vrep = m_vrep->erep()->volume(&sts, oid.vid);
+      // Other volume
+      orep = m_vrep->erep()->object(&sts, oid);
 
-    if ( !vrep)
-      return o;
-    
-    orep = vrep->object(&sts, oid);
     o = wb_object(sts, orep);
     
     return o;
@@ -127,33 +124,80 @@ wb_object wb_volume::object(char *name) const
 {
     pwr_tStatus sts;
     wb_orep *orep;
-    wb_vrep *vrep;
     wb_object o;
     
     wb_name n = wb_name( name);
     if ( !n.hasVolume() || n.volumeIsEqual( m_vrep->name()))
-      vrep = m_vrep;
+      // This volume
+      orep = m_vrep->object( &sts, name);
     else
-      vrep = m_vrep->erep()->volume(&sts, n.volume());
+      // Other volume
+      orep = m_vrep->erep()->object(&sts, name);
 
-    if ( !vrep)
-      return o;
-    
-	 // orep = vrep->object(&sts, name); // Fix
     o = wb_object(sts, orep);
     
     return o;
 }
 
+wb_adef wb_volume::adef( pwr_tCid cid, char *bname, char *aname)
+{
+  pwr_tStatus sts;
+
+  wb_cdrep *cdrep = m_vrep->merep()->cdrep( &sts, cid);
+  if ( EVEN(sts)) return 0;
+
+  wb_cdef cdef = wb_cdef(cdrep);
+  wb_bdef bdef = cdef.bdef( bname);
+  return bdef.adef( aname);
+}
+
+wb_bdef wb_volume::bdef(wb_cdef cdef, char *bname)
+{
+  return cdef.bdef( bname);
+}
+
+wb_bdef wb_volume::bdef(wb_object o, char *bname)
+{
+  wb_orep *orep = o;
+  wb_cdef cdef = wb_cdef(*orep);
+
+  return cdef.bdef( bname);
+}
+
 wb_cdef wb_volume::cdef(wb_object o)
 {
   pwr_tStatus sts;
-  return wb_cdef(m_vrep->erep()->merep()->cdrep( &sts, o.cid()));
+  wb_orep *orep = o;
+  wb_cdrep *cdrep;
+  if ( orep->vrep() == m_vrep)
+    // Object in this volume
+    cdrep = m_vrep->merep()->cdrep( &sts, *orep);
+  else
+    // Object in other volume, get class info from this volume's meta environment
+    cdrep = m_vrep->erep()->cdrep( &sts, *orep);
+  return wb_cdef( cdrep);
 }
 
+wb_cdef wb_volume::cdef(pwr_tCid cid)
+{
+  pwr_tStatus sts;
 
+  // Look in this volume's meta environment only
+  return wb_cdef(m_vrep->merep()->cdrep( &sts, cid));
+}
 
+wb_cdef wb_volume::cdef(pwr_tOid coid)
+{
+  return cdef( cdh_ClassObjidToId( coid));
+}
 
+wb_cdef wb_volume::cdef(wb_name n)
+{
+  pwr_tStatus sts;
+
+  // Look in this volume's meta environment only
+  return wb_cdef(m_vrep->merep()->cdrep( &sts, n));
+}
 
 
 

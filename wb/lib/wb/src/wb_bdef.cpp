@@ -74,9 +74,21 @@ pwr_sAttrRef wb_bdef::aref()
     return m_bdrep->aref();
 }
 
-wb_adef wb_bdef::adef()  // Fix
+wb_adef wb_bdef::adef()
 {
-  wb_adef a;
+  pwr_tStatus sts;
+
+  wb_adrep *adrep = m_bdrep->adrep( &sts);
+  wb_adef a = wb_adef( adrep);
+  return a;
+}
+
+wb_adef wb_bdef::adef( char *aname)
+{
+  pwr_tStatus sts;
+
+  wb_adrep *adrep = m_bdrep->adrep( &sts, aname);
+  wb_adef a = wb_adef( adrep);
   return a;
 }
 

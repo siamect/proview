@@ -17,6 +17,8 @@ class wb_merep {
     wb_erep *m_erep;
     wb_vrep *m_vrep;
 
+    typedef map<pwr_tVid, wb_mvrep*>::iterator mvrep_iterator;
+
  public:
     wb_merep( wb_erep *erep, wb_vrep *vrep = 0) : m_erep(erep), m_vrep(vrep) {}
     wb_mvrep *volume(pwr_tStatus *sts);
@@ -26,6 +28,7 @@ class wb_merep {
 
     wb_cdrep *cdrep( pwr_tStatus *sts, const wb_orep& o);
     wb_cdrep *cdrep( pwr_tStatus *sts, pwr_tCid cid);
+    wb_cdrep *cdrep( pwr_tStatus *sts, wb_name name);
     wb_tdrep *tdrep( pwr_tStatus *sts, const wb_adrep& a);
     wb_tdrep *tdrep( pwr_tStatus *sts, pwr_tTid tid);
 };

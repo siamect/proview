@@ -287,19 +287,6 @@ ldh_ClassNameToId(ldh_tSession session, pwr_tCid *cid, char *name)
     return c.sts();
 }
 
-
-pwr_tStatus
-ldh_ClassNameToObjid(ldh_tSession session, pwr_tOid *oid, char *name)
-{
-    wb_session *sp = (wb_session *)session;
-
-    wb_cdef c = sp->cdef(name);
-    if (!c) return c.sts();
-    
-    *oid = c.oid();
-    return c.sts();
-}
-
 pwr_tStatus
 ldh_CloseSession(ldh_tSession session)
 {

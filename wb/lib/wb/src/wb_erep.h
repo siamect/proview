@@ -47,6 +47,9 @@ public:
     void removeExtern( pwr_tStatus *sts, wb_vrep *vrep);
     void load( pwr_tStatus *sts);
 
+    wb_orep *object( pwr_tStatus *sts, pwr_tOid oid);
+    wb_orep *object( pwr_tStatus *sts, char *name);
+
     wb_cdrep *cdrep( pwr_tStatus *sts, const wb_orep& o);
     wb_tdrep *tdrep( pwr_tStatus *sts, const wb_adrep& a);
 

@@ -25,6 +25,7 @@ class wb_cdrep
     wb_cdrep(const wb_orep&);  // x = other orep
     wb_cdrep(wb_mvrep *, const wb_orep&);
     wb_cdrep(wb_mvrep *, pwr_tCid);
+    wb_cdrep(wb_mvrep *, wb_name);
 
     void unref();
     wb_cdrep *ref();

@@ -27,6 +27,7 @@ public:
     virtual wb_erep *erep() const;
 
     virtual wb_orep *object(pwr_tStatus *sts, pwr_tOid oid);
+    virtual wb_orep *object(pwr_tStatus *sts, char *name);
     virtual wb_orep *object(pwr_tStatus *sts, wb_orep *parent, wb_name name);
 
     virtual wb_orep *createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination d, wb_name name);
