@@ -5,6 +5,7 @@
 !
 !  Get status of Integer Output signal.
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group Plc,PlcIO
@@ -24,7 +25,6 @@
 !  - contains no relevant information (=data) in rtdb,
 !  - is without executable code.
 !*/
-SObject pwrb:Class
   Object GetIo $ClassDef 331
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

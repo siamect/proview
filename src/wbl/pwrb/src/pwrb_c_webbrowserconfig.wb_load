@@ -4,6 +4,7 @@
 !  Copyright (C) 1996 by Comator Process AB.
 !
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group Operator,NodeConfiguration
@@ -12,7 +13,6 @@
 !  opening an URL.
 !  You can also define symbols used in URL's.
 !*/
-SObject pwrb:Class
   Object WebBrowserConfig $ClassDef 302 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

@@ -5,6 +5,7 @@
 !
 !  <Description>.
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group Plc,PlcData
@@ -19,7 +20,6 @@
 !  @classlink DataArithm pwrb_dataarithm.html
 !*/
 !
-SObject pwrb:Class
   Object GetData $ClassDef 275
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

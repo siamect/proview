@@ -7,6 +7,7 @@
 !
 ! Range ldh_eDId_Base
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Code rt_plc_arithm.c
@@ -24,7 +25,6 @@
 !  If Gain is in m³/pulse the division gives m³/seconds.
 !  By TimFact = 3600 seconds/h the result will be in m³/h.
 !*/
-SObject pwrb:Class
   Object PiSpeed $ClassDef 176 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

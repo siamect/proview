@@ -6,6 +6,7 @@
 !  <Description>.
 !
 !
+SObject pwrs:Class
 !/**
 !  @Version 1.0
 !  @Group Volumes
@@ -15,7 +16,6 @@
 !  This object should not be configured in the configurator.
 !  A dynamic volume is configured by a CreateVolume object.
 !*/
-SObject pwrs:Class
   Object $DynamicVolume $ClassDef pwr_eCix_DynamicVolume
     Body SysBody
       Attr Flags |= pwr_mClassDef_System

@@ -5,6 +5,7 @@
 !
 !  <Description>.
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group ProjectConfiguration
@@ -27,7 +28,6 @@
 !  @classlink NodeConfig pwrb_nodeconfig.html
 !  @classlink Distribute pwrb_distribute.html
 !*/
-SObject pwrb:Class
   Object ApplDistribute $ClassDef 17 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

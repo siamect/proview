@@ -5,6 +5,7 @@
 !
 !  Web graph.
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Summary Defines a web graph in a proview website
@@ -16,7 +17,6 @@
 !  @classlink WebHandler pwrb_webhandler.html
 !  @classlink WebLink pwrb_weblink.html
 !*/
-SObject pwrb:Class
   Object WebGraph $ClassDef 300 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

@@ -6,6 +6,7 @@
 !  <Description>.
 !
 !
+SObject pwrs:Class
 !/**
 !  @Version 1.0
 !  @Group NodeConfiguration
@@ -41,7 +42,6 @@
 !  it, would not be accessible any longer. Therefor
 !  PROVIEW will put such objects below $Orphange.
 !*/
-SObject pwrs:Class
   Object $NodeHier $ClassDef pwr_eCix_NodeHier
     Body SysBody
       Attr Flags |= pwr_mClassDef_System

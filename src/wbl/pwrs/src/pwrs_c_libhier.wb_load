@@ -6,6 +6,7 @@
 !  <Description>.
 !
 !
+SObject pwrs:Class
 !/**
 !  @Version 1.0
 !  @Group PlantConfiguration
@@ -33,7 +34,6 @@
 !  Create Load Files ... to the node.
 !  Contains no relevant information (=data) in rtdb.
 !*/
-SObject pwrs:Class
   Object $LibHier $ClassDef pwr_eCix_LibHier
     Body SysBody
       Attr Flags |= pwr_mClassDef_DevOnly

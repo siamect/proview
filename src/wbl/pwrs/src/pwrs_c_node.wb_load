@@ -6,6 +6,7 @@
 !  <Description>.
 !
 !
+SObject pwrs:Class
 !/**
 !  @Version 1.0
 !  @Group NodeConfiguration
@@ -20,7 +21,6 @@
 !  it is defining. All descendants are implicitly
 !  associated with the same node.
 !*/
-SObject pwrs:Class
   Object $Node $ClassDef pwr_eCix_Node
     Body SysBody
       Attr Flags |= pwr_mClassDef_System

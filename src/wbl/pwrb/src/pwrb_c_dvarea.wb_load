@@ -5,6 +5,7 @@
 !
 !  <Description>.
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Summary Area object for Dv values
@@ -16,7 +17,6 @@
 !
 !  The object is created at runtime in the dynamic system volume pwrNode.
 !*/
-SObject pwrb:Class
   Object DvArea $ClassDef 112 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

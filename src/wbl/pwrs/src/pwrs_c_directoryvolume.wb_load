@@ -5,6 +5,7 @@
 !
 !  <Description>.
 !
+SObject pwrs:Class
 !/**
 !  @Version 1.0
 !  @Group Volumes
@@ -14,7 +15,6 @@
 !  This object is not displayed in the object hierarchy in the navigator,
 !  though it can be opened from menu.
 !*/
-SObject pwrs:Class
   Object $DirectoryVolume $ClassDef pwr_eCix_DirectoryVolume
     Body SysBody
       Attr Flags |= pwr_mClassDef_System

@@ -5,6 +5,7 @@
 !
 !  <Description>.
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group Operator,NodeConfiguration
@@ -31,7 +32,6 @@
 !  @classlink User pwrb_user.html
 !*/
 !
-SObject pwrb:Class
   Object XttGraph $ClassDef 299 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

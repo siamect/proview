@@ -7,6 +7,7 @@
 !
 ! Range ldh_eDId_Base
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group IO,NodeConfiguration,Servers
@@ -27,7 +28,6 @@
 !  create one at initiating of the node's rtdb. The
 !  attributes will then be assigned the default values.
 !*/
-SObject pwrb:Class
   Object IOHandler $ClassDef 138 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

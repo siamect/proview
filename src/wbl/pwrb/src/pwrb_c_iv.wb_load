@@ -5,6 +5,7 @@
 !
 !  Integer calculated Value.
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group PlantConfiguration,Signals
@@ -18,7 +19,6 @@
 !  Put the object below a $PlantHier object in the
 !  development environment.
 !*/
-SObject pwrb:Class
   Object Iv $ClassDef 326 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

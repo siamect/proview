@@ -2,6 +2,7 @@
 !
 !  PROVIEW/R
 !
+SObject NMps:Class
 !/**
 !  @Version 1.0
 !  @Group MaterialPlanning,Plc
@@ -22,7 +23,6 @@
 !  @classlink CLoop nmps_cloop.html
 !  @classlink CurrentData nmps_currentdata.html
 !*/
-SObject NMps:Class
   Object CurrentIndex $ClassDef 12
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

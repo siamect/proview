@@ -5,6 +5,7 @@
 !
 !  Supervision of a cyclic process.
 !
+SObject pwrb:Class
 !/**
 ! @Code rt_csup.c
 ! @Group Supervision,NodeConfiguration
@@ -17,7 +18,6 @@
 ! If thread itself is hanging in execution delay could anyway be detected by
 ! rt_emon. This depends of course on at what priorities the processes are running.
 !*/
-SObject pwrb:Class
   Object CycleSup $ClassDef 281
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

@@ -5,6 +5,7 @@
 !
 !  <Description>.
 !
+SObject pwrs:Class
 !/**
 !  @Version 1.0
 !  @Group ClassDefinition
@@ -13,12 +14,16 @@
 !  the anscestor to the class definition hierarchy.
 !  It is generally named 'Class'.
 !*/
-SObject pwrs:Class
   Object $ClassHier $ClassDef pwr_eCix_ClassHier
     Body SysBody
       Attr Flags |= pwr_mClassDef_System
       Attr Flags |= pwr_mClassDef_Multinode
       Attr Flags |= pwr_mClassDef_TopObject
     EndBody
+    Object AnteCreate $DbCallBack
+      Body SysBody
+        Attr MethodName = "$ClassHier-AnteCreate"
+      EndBody
+    EndObject
   EndObject
 EndSObject

@@ -7,6 +7,7 @@
 !
 ! Range ldh_eDId_Base
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group PlantConfiguration,Signals
@@ -17,7 +18,6 @@
 !  Configuration.
 !  
 !*/
-SObject pwrb:Class
   Object Sv $ClassDef 303 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

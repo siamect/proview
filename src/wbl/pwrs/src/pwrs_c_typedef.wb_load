@@ -3,11 +3,11 @@
 !  PROVIEW/R
 !  Copyright (C) 1996 by Comator Process AB.
 !
+SObject pwrs:Class
 !/**
 !  @Group TypeDefinition
 !  Definition of a type.
 !*/
-SObject pwrs:Class
   Object $TypeDef $ClassDef pwr_eCix_TypeDef
     Body SysBody
       Attr Flags |= pwr_mClassDef_System
@@ -20,16 +20,21 @@ SObject pwrs:Class
       Object Type $Attribute 1
         Body SysBody
 	  Attr TypeRef = "pwrs:Type-$Int32"
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOWBL
 	EndBody
       EndObject
       Object Size $Attribute 2
         Body SysBody
 	  Attr TypeRef = "pwrs:Type-$Int32"
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOWBL
 	EndBody
       EndObject
       Object TypeRef $Attribute 3
         Body SysBody
 	  Attr TypeRef = "pwrs:Type-$TypeId"
+          Attr Flags |= PWR_MASK_ALWAYSWBL
 	EndBody
       EndObject
       Object Elements $Attribute 4

@@ -7,6 +7,7 @@
 !
 ! Range ldh_eDId_Base
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
@@ -38,7 +39,6 @@
 !  objects with the analog inputs left open; see below.
 !  @image orm_en1-45.gif
 !*/
-SObject pwrb:Class
   Object CStoAp $ClassDef 76 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

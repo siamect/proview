@@ -5,6 +5,7 @@
 !
 !  Web handler.
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group Servers,NodeConfiguration,Operator
@@ -31,7 +32,6 @@
 !  @classlink WebGraph pwrb_webgraph.html
 !  @classlink WebLink pwrb_weblink.html
 !*/
-SObject pwrb:Class
   Object WebHandler $ClassDef 296 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

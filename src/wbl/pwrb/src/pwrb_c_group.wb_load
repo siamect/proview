@@ -5,10 +5,10 @@
 !
 !  <Description>.
 !
+SObject pwrb:Class
 !/**
 !  Obsolete from V3.4
 !*/
-SObject pwrb:Class
   Object Group $ClassDef 133 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

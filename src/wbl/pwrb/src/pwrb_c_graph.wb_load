@@ -7,6 +7,7 @@
 !
 ! Range ldh_eDId_Base
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group Operator,NodeConfiguration
@@ -24,7 +25,6 @@
 !  Window.
 !  A Graph object may be used by several User objects.
 !*/
-SObject pwrb:Class
   Object Graph $ClassDef 130 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

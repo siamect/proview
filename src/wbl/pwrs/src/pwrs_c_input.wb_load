@@ -6,6 +6,7 @@
 !  <Description>.
 !
 !
+SObject pwrs:Class
 !/**
 !  @Version 1.0
 !  @Group ClassDefinition
@@ -19,7 +20,6 @@
 !  exist in runtime, and no local value can be set.
 !  The Input object reside in a class volume as a child of an ObjBodyDef object.
 !*/
-SObject pwrs:Class
   Object $Input $ClassDef pwr_eCix_Input
     Body SysBody
       Attr Flags |= pwr_mClassDef_System
@@ -43,6 +43,8 @@ SObject pwrs:Class
       Object Type $Attribute 2
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
+          Attr Flags = PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOWBL
         EndBody
       EndObject
       !/**
@@ -51,6 +53,8 @@ SObject pwrs:Class
       Object Offset $Attribute 3
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags = PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOWBL
         EndBody
       EndObject
       !/**
@@ -59,6 +63,8 @@ SObject pwrs:Class
       Object Size $Attribute 4
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags = PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOWBL
         EndBody
       EndObject
       !/**
@@ -101,6 +107,8 @@ SObject pwrs:Class
       Object ParamIndex $Attribute 7
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags = PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOWBL
         EndBody
       EndObject
       !/**
@@ -109,6 +117,7 @@ SObject pwrs:Class
       Object TypeRef $Attribute 8
         Body SysBody
           Attr TypeRef = "pwrs:Type-$TypeId"
+          Attr Flags = PWR_MASK_ALWAYSWBL
         EndBody
       EndObject
       !/**
@@ -202,6 +211,16 @@ SObject pwrs:Class
     Object Template $Input
       Body SysBody
         Attr Elements = 1
+      EndBody
+    EndObject
+    Object AnteCreate $DbCallBack
+      Body SysBody
+        Attr MethodName = "$Attribute-AnteCreate"
+      EndBody
+    EndObject
+    Object AnteMove $DbCallBack
+      Body SysBody
+        Attr MethodName = "$Attribute-AnteMove"
       EndBody
     EndObject
   EndObject

@@ -5,6 +5,7 @@
 !
 !  STORE value of Analog Output signal.
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
@@ -25,7 +26,6 @@
 !  in the IOHandler object, i.e. any physical I/O-hardware may
 !  not be used on the node in connection to this object.
 !*/
-SObject pwrb:Class
   Object StoIi $ClassDef 333 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

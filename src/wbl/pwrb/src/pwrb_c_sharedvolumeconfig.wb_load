@@ -5,12 +5,12 @@
 !
 !  <Description>.
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  Not yet implemented.
 !*/
 !
-SObject pwrb:Class
   Object SharedVolumeConfig $ClassDef 205 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

@@ -6,6 +6,7 @@
 !  <Description>.
 !
 !
+SObject pwrs:Class
 !/**
 !  @Version 1.0
 !  @Group NodeConfiguration,Volume
@@ -13,7 +14,6 @@
 !  A dynamic volume will be created in runtime, and mounted to the
 !  CreateVolume object.
 !*/
-SObject pwrs:Class
   Object $CreateVolume $ClassDef pwr_eCix_CreateVolume
     Body SysBody
       Attr Flags |= pwr_mClassDef_System

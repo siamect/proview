@@ -1,5 +1,6 @@
 ! Filename:	NMPS_C_RunningTime.wb_load
 !
+SObject NMps:Class
 !/**
 !  @Version 1.0
 !  @Code rs_plc_runtime.c
@@ -28,10 +29,6 @@
 ! There should always be an object backup for each RunningTime object. The Backup
 ! object can be connected to the 'sta'-output from the RunningTime object.
 !*/
-!
-SObject NMps:Class
-!
-!		RunningTime-objekt
 !
   Object RunningTime $ClassDef 47
     Body SysBody

@@ -3,6 +3,7 @@
 !  PROVIEW/R
 !  Copyright (C) 1996 by Comator Process AB.
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group Plc,PlcIO
@@ -15,7 +16,6 @@
 !*/
 !
 !
-SObject pwrb:Class
   Object GetAgeneric $ClassDef 285 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

@@ -5,6 +5,7 @@
 !
 ! Range ldh_eDId_Base
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Code rt_plc_arithm.c
@@ -51,7 +52,6 @@
 !     delay of one second. Tim specifies from which register to get ActVal.
 !  @image orm_en1-19.gif
 !*/
-SObject pwrb:Class
   Object Adelay $ClassDef 3 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
@@ -202,7 +202,7 @@ SObject pwrb:Class
       EndObject
       !/**
       !  The maximum allowed value of Tim at changes made by an operator.
-      !  
+      !*/
       Object MaxTim $Intern 12 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"

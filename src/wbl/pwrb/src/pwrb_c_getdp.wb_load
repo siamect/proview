@@ -7,6 +7,7 @@
 !
 ! Range ldh_eDId_Base
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group Plc,PlcIO
@@ -25,7 +26,6 @@
 !  - contains no relevant information (=data) in rtdb,
 !  - is without executable code.
 !*/
-SObject pwrb:Class
   Object GetDp $ClassDef 126 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

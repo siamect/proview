@@ -5,6 +5,7 @@
 !
 !  <Description>.
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Code rt_plc_arithm.c
@@ -21,7 +22,6 @@
 ! @b See Also  
 !  @classlink DtoMask pwrb_dtomask.html
 !*/
-SObject pwrb:Class
   Object MaskToD $ClassDef 346
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

@@ -3,11 +3,11 @@
 !  PROVIEW/R
 !  Copyright (C) 1996 by Comator Process AB.
 !
+SObject pwrs:Class
 !/**
 !  @Group Volumes
 !  Sub volume.
 !*/
-SObject pwrs:Class
   Object $SubVolume $ClassDef pwr_eCix_SubVolume
     Body SysBody
       Attr Flags |= pwr_mClassDef_System

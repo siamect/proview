@@ -7,6 +7,7 @@
 !
 ! Range ldh_eDId_Base
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group Plc,PlcString,PlcConversion
@@ -20,7 +21,6 @@
 !  plcprogram to terminate. The size of the output of the conversion should
 !  not exceed 79 characters.
 !*/
-SObject pwrb:Class
   Object AtoStr $ClassDef 308 
     Body SysBody
       Attr Editor = pwr_eEditor_PlcEd

@@ -5,6 +5,7 @@
 !
 !  <Description>.
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group Plc,PlcIO
@@ -16,7 +17,6 @@
 !  @image orm_getdgeneric_fo.gif
 !*/
 !
-SObject pwrb:Class
   Object GetDgeneric $ClassDef 282 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

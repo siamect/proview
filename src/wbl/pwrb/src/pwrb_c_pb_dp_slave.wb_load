@@ -1,8 +1,8 @@
+SObject         pwrb:Class
 !/**
 !  @Version 1.0
 !  Object that configure one Profibus DP slave.
 !*/
-SObject         pwrb:Class
 !
   Object  	Pb_DP_Slave	$ClassDef 298
 !
@@ -301,4 +301,3 @@ SObject         pwrb:Class
   EndObject	! Pb_DP_Slave
 !
 EndSObject
-!

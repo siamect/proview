@@ -6,6 +6,7 @@
 !  DataStorage Fast Curve.
 !
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  Stores data for a fast graph à la storage oscilloscope.
@@ -76,7 +77,6 @@
 !  @classlink Buff32k ssab_buff32k.html
 !  @classlink DsFastConf pwrb_dsfastconf.html
 !*/
-SObject pwrb:Class
   Object DsFastCurve $ClassDef 318 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

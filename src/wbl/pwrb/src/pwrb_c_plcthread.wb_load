@@ -3,6 +3,7 @@
 !  PROVIEW/R
 !  Copyright (C) 1999 by Mandator AB.
 !
+SObject pwrb:Class
 !/**
 ! @Code rt_c_plcthread.c
 ! @Group Servers,NodeConfiguration
@@ -11,7 +12,6 @@
 ! which starts all threads. The rest of the parameters are output from the
 ! plc thread and updated periodically.
 !*/
-SObject pwrb:Class
   Object PlcThread $ClassDef 261 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

@@ -2,6 +2,7 @@
 !
 !  PROVIEW/R
 !
+SObject NMps:Class
 !/**
 !  @Version 1.0
 !  @Code rs_plc_macro_nmps.h
@@ -21,7 +22,6 @@
 !  @classlink RemTrans ssab_remtrans.html
 !  @classlink RemTransRcv nmps_remtransrcv.html
 !*/
-SObject NMps:Class
   Object RemTransSend $ClassDef 27
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

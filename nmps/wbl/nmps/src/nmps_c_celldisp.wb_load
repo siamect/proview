@@ -4,6 +4,7 @@
 !
 !  <Description>.
 !
+SObject NMps:Class
 !/**
 !  @Version 1.0
 !  @Code rs_plc_nmps_display.c
@@ -56,7 +57,6 @@
 !  @classlink CellUpdate nmps_cellupdate.html
 !  @classlink NMpsCell nmps_cell.html
 !*/
-SObject NMps:Class
   Object CellDisp $ClassDef 44
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

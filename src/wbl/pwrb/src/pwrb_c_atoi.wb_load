@@ -5,6 +5,7 @@
 !
 !  <Description>.
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
@@ -17,7 +18,6 @@
 !  an integer (pwr_tInt32) stored in ActVal.
 !  The analog value is rounded to closest integer value.
 !*/
-SObject pwrb:Class
   Object AtoI $ClassDef 343
     Body SysBody
       Attr Editor = pwr_eEditor_PlcEd

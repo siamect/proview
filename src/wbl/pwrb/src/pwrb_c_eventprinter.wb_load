@@ -7,6 +7,7 @@
 !
 ! Range ldh_eDId_Base
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group Operator,NodeConfiguration
@@ -18,7 +19,6 @@
 !  is named pwr_exe:rs_mh_eventprinter.exe in an operator
 !  node. It is only available on operator nodes
 !*/
-SObject pwrb:Class
   Object EventPrinter $ClassDef 115 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

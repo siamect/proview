@@ -5,6 +5,7 @@
 !
 !  <Description>.
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Code rt_plc_data.c
@@ -52,7 +53,6 @@
 !  @classlink DpDistribute pwrb_dpdistribute.html
 !*/
 !
-SObject pwrb:Class
   Object ApDistribute $ClassDef 270
     Body SysBody
       Attr Editor = pwr_eEditor_PlcEd

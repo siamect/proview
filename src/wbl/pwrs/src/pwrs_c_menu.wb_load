@@ -3,12 +3,12 @@
 !  PROVIEW/R
 !  Copyright (C) 1996 by Comator Process AB.
 !
+SObject pwrs:Class
 !/**
 !  @Group ClassDefinition
 !  Root of a menu description tree.
 !*/
 !
-SObject pwrs:Class
   Object $Menu $ClassDef pwr_eCix_Menu
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

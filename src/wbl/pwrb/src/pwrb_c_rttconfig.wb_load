@@ -7,13 +7,13 @@
 !
 ! Range ldh_eDId_Base
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group Operator,NodeConfiguration
 !  @Summary Configuration of rtt and xtt.
 !  Configuration of rtt and xtt.
 !*/
-SObject pwrb:Class
   Object RttConfig $ClassDef 276
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

@@ -7,6 +7,7 @@
 !
 ! Range ldh_eDId_Base
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Code rt_plc_arithm.c
@@ -19,7 +20,6 @@
 !  proportional to the rate of change (derivative) of the
 !  input.
 !*/
-SObject pwrb:Class
   Object Speed $ClassDef 209 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

@@ -5,6 +5,7 @@
 !
 !  <Description>.
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
@@ -17,7 +18,6 @@
 !  an analog value stored in ActVal.
 !
 !*/
-SObject pwrb:Class
   Object ItoA $ClassDef 344
     Body SysBody
       Attr Editor = pwr_eEditor_PlcEd

@@ -6,6 +6,7 @@
 !  <Description>.
 !
 !
+SObject pwrs:Class
 !/**
 !  @Version 1.0
 !  Grouping object used by 'documents'.
@@ -33,7 +34,6 @@
 !  'Lists'. 'Lists' ought to be by the class $DocHier and
 !  be configured in the workbench volume.
 !*/
-SObject pwrs:Class
   Object $DocHier $ClassDef pwr_eCix_DocHier
     Body SysBody
       Attr Flags |= pwr_mClassDef_DevOnly

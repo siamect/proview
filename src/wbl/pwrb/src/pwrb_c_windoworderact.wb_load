@@ -7,6 +7,7 @@
 !
 ! Range ldh_eDId_Base
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_div.h
@@ -21,7 +22,6 @@
 !  the real-time database as well as the window itself,
 !  i.e. the WindowPlc object.
 !*/
-SObject pwrb:Class
   Object WindowOrderact $ClassDef 255 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

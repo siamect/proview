@@ -7,6 +7,7 @@
 !
 ! Range ldh_eDId_Base
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_grafcet.h
@@ -102,7 +103,6 @@
 !  Figure A Sequential Chain with Repetition of a Step shows that the order of
 !  execution in a sequential chain can also go backwards.
 !*/
-SObject pwrb:Class
   Object Step $ClassDef 215 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

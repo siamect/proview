@@ -2,6 +2,7 @@
 !
 !  PROVIEW/R
 !
+SObject NMps:Class
 !/**
 !  @Version 1.0
 !  @Code rs_plc_macro_nmps.h
@@ -17,7 +18,6 @@
 !  @classlink GetData nmps_currentindex.html
 !  @classlink DataCopy nmps_datacopy.html
 !*/
-SObject NMps:Class
   Object DataReset $ClassDef 10
     Body SysBody
       Attr Editor = pwr_eEditor_PlcEd

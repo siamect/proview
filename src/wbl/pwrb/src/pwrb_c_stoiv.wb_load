@@ -5,6 +5,7 @@
 !
 !  Store Integer Value.
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
@@ -22,7 +23,6 @@
 !  its last segment is shown in the right empty part of
 !  the symbol.
 !*/
-SObject pwrb:Class
   Object StoIv $ClassDef 334 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

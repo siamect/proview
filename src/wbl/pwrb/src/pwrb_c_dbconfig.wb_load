@@ -5,10 +5,10 @@
 !
 !  <Description>.
 !
+SObject pwrb:Class
 !/**
 ! @Group ProjectConfiguration
 !*/
-SObject pwrb:Class
   Object DbConfig $ClassDef 83 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

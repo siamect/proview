@@ -6,6 +6,7 @@
 !  <Description>.
 !
 ! Range ldh_eDId_Base
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group IO,IO_PSS9000
@@ -16,7 +17,6 @@
 !  to the card objects of the rack.
 !
 !*/
-SObject pwrb:Class
   Object Rack_SSAB $ClassDef 188 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

@@ -5,6 +5,7 @@
 !
 !  Analog Output card HVAO4.
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group IO,IO_PSS9000
@@ -15,7 +16,6 @@
 !  Each used cannel of the card is configured with a ChanAo object, placed below the
 !  Ao_HVAO4 object.
 !*/
-SObject pwrb:Class
   Object Ao_HVAO4 $ClassDef 13 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

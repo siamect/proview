@@ -7,6 +7,7 @@
 !
 ! Range ldh_eDId_Base
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group PlantConfiguration,Plc
@@ -43,7 +44,6 @@
 !  If any attribute in the PlcPgm object is changed it is
 !  necessary to 'compile' the PLC program.
 !*/
-SObject pwrb:Class
   Object PlcPgm $ClassDef 177 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

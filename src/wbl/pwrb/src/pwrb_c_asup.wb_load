@@ -7,6 +7,7 @@
 !
 ! Range ldh_eDId_Base
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_sup.h
@@ -92,7 +93,6 @@
 ! @b See Also  
 !  @classlink DSup pwrb_dsup.html
 !*/
-SObject pwrb:Class
   Object ASup $ClassDef 18 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

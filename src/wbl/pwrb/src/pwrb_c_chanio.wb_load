@@ -5,6 +5,7 @@
 !
 !  Channel Integer Output.
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group IO,Channels,NodeConfiguration
@@ -21,7 +22,6 @@
 !  Rack and card objects to different I/O systems are
 !  documented separately.
 !*/
-SObject pwrb:Class
   Object ChanIo $ClassDef 323
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

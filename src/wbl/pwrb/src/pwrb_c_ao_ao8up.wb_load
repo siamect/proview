@@ -5,6 +5,7 @@
 !
 !  Analog Output card HVAO4.
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group IO,IO_PSS9000
@@ -27,7 +28,6 @@
 !  @b See hardware specification
 !  @Link AO8uP http://intern.oxelosund.ssab.se/pss/Hårdvara/PSS-kort-data.htm#AO8uP
 !*/
-SObject pwrb:Class
   Object Ao_AO8uP $ClassDef 320
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

@@ -5,6 +5,7 @@
 !
 !  Web link.
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Summary Defines a web link in a proview website
@@ -16,7 +17,6 @@
 !  @classlink WebHandler pwrb_webhandler.html
 !  @classlink WebGraph pwrb_webgraph.html
 !*/
-SObject pwrb:Class
   Object WebLink $ClassDef 301 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

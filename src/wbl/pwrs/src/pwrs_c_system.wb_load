@@ -6,6 +6,7 @@
 !  <Description>.
 !
 !
+SObject pwrs:Class
 !/**
 !  @Version 1.0
 !  An object common for all the nodes in a PROVIEW/R
@@ -15,7 +16,6 @@
 !  among others.
 !  The object is placed on the top level in the directory volume.
 !*/
-SObject pwrs:Class
   Object $System $ClassDef pwr_eCix_System
     Body SysBody
       Attr Flags |= pwr_mClassDef_System

@@ -7,6 +7,7 @@
 !
 ! Range ldh_eDId_Base
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_string.h
@@ -20,7 +21,6 @@
 !
 !  The two inputs both has to be connected to string outputs.
 !*/
-SObject pwrb:Class
   Object Strcat $ClassDef 306 
     Body SysBody
       Attr Editor = pwr_eEditor_PlcEd

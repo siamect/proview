@@ -8,13 +8,13 @@
 !  and is thus loaded with DObject etc.
 !
 !
+SObject pwrs:Class
 !/**
 !  @Version 1.0
 !  @Group ClassDefinition
 !  Definition of an object body. The object is a part of the class
 !  definition tree for a class, and has a $ClassDef object as parent.
 !*/
-SObject pwrs:Class
   Object $ObjBodyDef pwr_eClass_ClassDef pwr_eCix_ObjBodyDef
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
@@ -43,6 +43,8 @@ SObject pwrs:Class
       Object NumOfParams $Attribute 2
         Body SysBody
           Attr TypeRef = pwr_eType_UInt32
+          Attr Flags = PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOWBL
         EndBody
       EndObject
       !/**
@@ -51,6 +53,8 @@ SObject pwrs:Class
       Object Size $Attribute 3
         Body SysBody
           Attr TypeRef = pwr_eType_UInt32
+          Attr Flags = PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOWBL
         EndBody
       EndObject
       !/**
@@ -59,6 +63,7 @@ SObject pwrs:Class
       Object NextAix $Attribute 4
         Body SysBody
           Attr TypeRef = pwr_eType_ObjectIx
+          Attr Flags = PWR_MASK_NOEDIT
         EndBody
       EndObject
       !/**
@@ -77,6 +82,16 @@ SObject pwrs:Class
         Attr Size = 0
         Attr NextAix = 0
         Attr Flags = 0
+      EndBody
+    EndObject
+    Object AnteCreate $DbCallBack
+      Body SysBody
+        Attr MethodName = "$ObjBodyDef-AnteCreate"
+      EndBody
+    EndObject
+    Object AnteMove $DbCallBack
+      Body SysBody
+        Attr MethodName = "$ObjBodyDef-AnteMove"
       EndBody
     EndObject
   EndObject

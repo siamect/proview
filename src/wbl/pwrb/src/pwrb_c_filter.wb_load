@@ -7,6 +7,7 @@
 !
 ! Range ldh_eDId_Base
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Code rt_plc_arithm.c
@@ -33,7 +34,6 @@
 !  a character of a slowly moving average.
 !  @image orm_en1-78.gif
 !*/
-SObject pwrb:Class
   Object Filter $ClassDef 117 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

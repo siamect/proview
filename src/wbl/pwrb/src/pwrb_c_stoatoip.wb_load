@@ -7,6 +7,7 @@
 !
 ! Range ldh_eDId_Base
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
@@ -25,7 +26,6 @@
 !  parameter will be shown in the right empty part of the
 !  StoIp symbol.
 !*/
-SObject pwrb:Class
   Object StoAtoIp $ClassDef 226 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

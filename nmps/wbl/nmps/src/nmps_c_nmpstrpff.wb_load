@@ -2,6 +2,7 @@
 !
 !  PROVIEW/R
 !
+SObject NMps:Class
 !/**
 !  @Version 1.0
 !  @Code rs_plc_nmps.c
@@ -25,7 +26,6 @@
 !  @classlink NMpsCell nmps_nmpscell.html
 !  @classlink NMpsStoreCell nmps_nmpsstorecell.html
 !*/
-SObject NMps:Class
   Object NMpsTrpFF $ClassDef 6
     Body SysBody
       Attr Editor = pwr_eEditor_PlcEd

@@ -5,6 +5,7 @@
 !
 !  <Description>.
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Code rt_plc_arithm.c
@@ -22,7 +23,6 @@
 ! @b See Also
 !  @classlink EnumToD pwrb_enumtod.html
 !*/
-SObject pwrb:Class
   Object DtoEnum $ClassDef 347
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

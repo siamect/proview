@@ -5,6 +5,7 @@
 !
 !  Analog Input card HVAI32.
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group IO,IO_PSS9000
@@ -15,7 +16,6 @@
 !  Each used cannel of the card is configured with a ChanAi or ChanAit object, placed below the
 !  Ai_HVAI32 object.
 !*/
-SObject pwrb:Class
   Object Ai_HVAI32 $ClassDef 7 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

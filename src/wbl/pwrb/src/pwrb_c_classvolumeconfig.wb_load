@@ -5,10 +5,10 @@
 !
 !  <Description>.
 !
+SObject pwrb:Class
 !/**
 ! @Group ProjectConfiguration
 !*/
-SObject pwrb:Class
   Object ClassVolumeConfig $ClassDef 35 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
@@ -32,53 +32,54 @@ SObject pwrb:Class
     EndObject
     Object NavigatorPosnn $Menu
       Object Pointed $Menu
-	Object OpenDb $MenuButton
+	Object OpenClassEditor $MenuButton
 	  Body SysBody
-	    Attr ButtonName = "Open Db..."
-	    Attr MethodName = "ClassVolumeConfig-OpenDb"
+	    Attr ButtonName = "Open ClassEditor..."
+	    Attr MethodName = "ClassVolumeConfig-EditClassVolume"
 	  EndBody
 	EndObject
       EndObject
     EndObject
     Object NavigatorPoson $Menu
       Object Pointed $Menu
-	Object OpenDb $MenuButton
+	Object OpenClassEditor $MenuButton
 	  Body SysBody
-	    Attr ButtonName = "Open Db..."
-	    Attr MethodName = "ClassVolumeConfig-OpenDb"
+	    Attr ButtonName = "Open ClassEditor..."
+	    Attr MethodName = "ClassVolumeConfig-EditClassVolume"
 	  EndBody
 	EndObject
       EndObject
     EndObject
     Object NavigatorPosos $Menu
       Object Pointed $Menu
-	Object OpenDb $MenuButton
+	Object OpenClassEditor $MenuButton
 	  Body SysBody
-	    Attr ButtonName = "Open Db..."
-	    Attr MethodName = "ClassVolumeConfig-OpenDb"
+	    Attr ButtonName = "Open ClassEditor..."
+	    Attr MethodName = "ClassVolumeConfig-EditClassVolume"
 	  EndBody
 	EndObject
       EndObject
     EndObject
     Object NavigatorPosms $Menu
       Object Pointed $Menu
-	Object OpenDb $MenuButton
+	Object OpenClassEditor $MenuButton
 	  Body SysBody
-	    Attr ButtonName = "Open Db..."
-	    Attr MethodName = "ClassVolumeConfig-OpenDb"
+	    Attr ButtonName = "Open ClassEditor..."
+	    Attr MethodName = "ClassVolumeConfig-EditClassVolume"
 	  EndBody
 	EndObject
       EndObject
     EndObject
     Object NavigatorPosmn $Menu
       Object Pointed $Menu
-	Object OpenDb $MenuButton
+	Object OpenClassEditor $MenuButton
 	  Body SysBody
-	    Attr ButtonName = "Open Db..."
-	    Attr MethodName = "ClassVolumeConfig-OpenDb"
+	    Attr ButtonName = "Open ClassEditor..."
+	    Attr MethodName = "ClassVolumeConfig-EditClassVolume"
 	  EndBody
 	EndObject
       EndObject
     EndObject
   EndObject
 EndSObject
+

@@ -7,6 +7,7 @@
 !
 ! Range ldh_eDId_Base
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Summary Describes the contents and appearance of a single list.
@@ -129,7 +130,6 @@
 !
 !  The ListDescriptor object exists only in the development environment. 
 !*/
-SObject pwrb:Class
   Object ListDescriptor $ClassDef 143 
     Body SysBody
       Attr Flags |= pwr_mClassDef_DevOnly

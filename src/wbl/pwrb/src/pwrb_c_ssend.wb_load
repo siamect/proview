@@ -7,6 +7,7 @@
 !
 ! Range ldh_eDId_Base
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_grafcet.h
@@ -25,7 +26,6 @@
 !  Setxx or Resxx objects. The output can also be left
 !  open or be used as an ordinary binary signal.
 !*/
-SObject pwrb:Class
   Object SsEnd $ClassDef 214 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
@@ -57,7 +57,7 @@ SObject pwrb:Class
       !  
       !  Order[1] is a copy of Order[0]. The Trans object looks
       !  on Order[0] and Order[1].
-      !/**
+      !*/
       Object Order $Output 2 
         Body SysBody
           Attr PgmName = "Status"

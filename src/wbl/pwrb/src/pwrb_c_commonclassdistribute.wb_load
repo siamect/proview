@@ -3,10 +3,10 @@
 !  PROVIEW/R
 !  Copyright (C) 1996 by Comator Process AB.
 !
+SObject pwrb:Class
 !/**
 ! @Group ProjectConfiguration
 !*/
-SObject pwrb:Class
   Object CommonClassDistribute $ClassDef 38 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

@@ -5,6 +5,7 @@
 !
 !  Counter card PI24BO.
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group IO,IO_PSS9000
@@ -15,7 +16,6 @@
 !  Each used cannel of the card is configured with a ChanCo object, placed below the
 !  Co_PI24BO object.
 !*/
-SObject pwrb:Class
   Object Co_PI24BO $ClassDef 72 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

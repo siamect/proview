@@ -2,6 +2,7 @@
 !
 !  PROVIEW/R
 !
+SObject NMps:Class
 !/**
 !  @Version 1.0
 !  @Group MaterialPlanning
@@ -17,7 +18,6 @@
 ! @b See also
 !  @classlink NMpsMirrorConfig nmps_nmpsmirrorconfig.html  
 !*/
-SObject NMps:Class
   Object NMpsConvConfig $ClassDef 31 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

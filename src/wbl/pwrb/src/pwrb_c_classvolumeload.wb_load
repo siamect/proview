@@ -5,6 +5,7 @@
 !
 !  <Description>.
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group ProjectConfiguration
@@ -25,7 +26,6 @@
 !  
 !*/
 !
-SObject pwrb:Class
   Object ClassVolumeLoad $ClassDef 36 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

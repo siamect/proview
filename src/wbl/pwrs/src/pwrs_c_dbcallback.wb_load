@@ -4,11 +4,11 @@
 !  Copyright (C) 1996 by Comator Process AB.
 !
 !  <Description>.
+SObject pwrs:Class
 !/**
 !  @Group ClassDefinition
 !  Definition of callback method.
 !*/
-SObject pwrs:Class
   Object $DbCallBack $ClassDef pwr_eCix_DbCallBack
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

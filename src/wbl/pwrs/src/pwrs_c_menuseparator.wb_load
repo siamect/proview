@@ -3,11 +3,11 @@
 !  PROVIEW/R
 !  Copyright (C) 1996 by Comator Process AB.
 !
+SObject pwrs:Class
 !/**
 !  @Group ClassDefinition
 !  Definition of a separator in the popup menu.
 !*/
-SObject pwrs:Class
   Object $MenuSeparator $ClassDef pwr_eCix_MenuSeparator
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

@@ -5,13 +5,13 @@
 !
 !  <Description>.
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group ProjectConfiguration
 !  Not yet implemented.
 !*/
 !
-SObject pwrb:Class
   Object SubVolumeLoad $ClassDef 233 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

@@ -7,6 +7,7 @@
 !
 ! Range ldh_eDId_Base
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group Servers,NodeConfiguration
@@ -31,7 +32,6 @@
 !  development environment normally configure a
 !  MessageHandler object as well.
 !*/
-SObject pwrb:Class
   Object MessageHandler $ClassDef 146 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

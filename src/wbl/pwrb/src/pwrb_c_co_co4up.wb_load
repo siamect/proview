@@ -7,6 +7,7 @@
 !
 !  Note! This object shares methods with Co_PI24BO and should have an identical data structure.
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group IO,IO_PSS9000
@@ -20,7 +21,6 @@
 !  @b See hardware specification
 !  @Link CO4uP http://intern.oxelosund.ssab.se/pss/Hårdvara/PSS-kort-data.htm#CO4uP
 !*/
-SObject pwrb:Class
   Object Co_CO4uP $ClassDef 319
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

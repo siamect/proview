@@ -7,6 +7,7 @@
 !
 ! Range ldh_eDId_Base
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group PlantConfiguration,Signals
@@ -22,7 +23,6 @@
 !  to the same target node as its associated channel
 !  object.
 !*/
-SObject pwrb:Class
   Object Ao $ClassDef 10 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

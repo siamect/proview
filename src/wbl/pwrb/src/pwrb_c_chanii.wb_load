@@ -5,6 +5,7 @@
 !
 !  Channel Integer Input.
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group IO,Channels,NodeConfiguration
@@ -17,7 +18,6 @@
 !  ChanIi objects are configured below a suitable Io-card or module 
 !  object.
 !*/
-SObject pwrb:Class
   Object ChanIi $ClassDef 322
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

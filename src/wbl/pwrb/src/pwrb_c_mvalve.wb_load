@@ -7,6 +7,7 @@
 !
 ! Range ldh_eDId_Base
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Code rt_plc_drive.c
@@ -65,7 +66,6 @@
 !  Alarm at error in contactor response or too long operation time. 
 !  Operational order is broken by activated end limit position.
 !*/
-SObject pwrb:Class
   Object MValve $ClassDef 159 
     Body SysBody
        Attr Editor = pwr_eEditor_PlcEd

@@ -7,6 +7,7 @@
 !
 ! Range ldh_eDId_Base
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_logic.h
@@ -18,7 +19,6 @@
 !  The output is FALSE when the inputs are equal and TRUE
 !  when the inputs are different.
 !*/
-SObject pwrb:Class
   Object XOr $ClassDef 258 
     Body SysBody
       Attr Editor = pwr_eEditor_PlcEd
@@ -54,7 +54,7 @@ SObject pwrb:Class
       EndObject
       !/**
       !  Current status of the object.
-      !/**
+      !*/
       Object Status $Output 3 
         Body SysBody
           Attr PgmName = "Status"

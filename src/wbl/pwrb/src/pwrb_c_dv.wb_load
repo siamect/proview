@@ -7,6 +7,7 @@
 !
 ! Range ldh_eDId_Base
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group PlantConfiguration,Signals
@@ -24,7 +25,6 @@
 !  The object is assigned an initial value (!= FALSE ) in
 !  the target environment, for example by means of StoDv.
 !*/
-SObject pwrb:Class
   Object Dv $ClassDef 111 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

@@ -7,6 +7,7 @@
 !
 ! Range ldh_eDId_Base
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Code rt_plc_data.c
@@ -48,8 +49,6 @@
 !  @classlink ApCollect pwrb_apcollect.html
 !  @classlink DpDistribute pwrb_dpdistribute.html
 !*/
-
-SObject pwrb:Class
   Object DpCollect $ClassDef 273
     Body SysBody
       Attr Editor = pwr_eEditor_PlcEd

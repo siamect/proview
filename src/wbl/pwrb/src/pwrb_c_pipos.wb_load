@@ -7,6 +7,7 @@
 !
 ! Range ldh_eDId_Base
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Code rt_plc_io.c
@@ -31,7 +32,6 @@
 !  How to carry out the calibrations is described below
 !  under Calibration.
 !*/
-SObject pwrb:Class
   Object PiPos $ClassDef 175 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

@@ -6,6 +6,7 @@
 !  <Description>.
 !
 !
+SObject pwrs:Class
 !/**
 !  @Version 1.0
 !  @Group NodeConfiguration
@@ -62,7 +63,6 @@
 !  User-mode stack is default one page and the standard
 !  port of the job gets message limit = 10.
 !*/
-SObject pwrs:Class
   Object $Appl $ClassDef pwr_eCix_Appl
     Body SysBody
       Attr Flags |= pwr_mClassDef_System

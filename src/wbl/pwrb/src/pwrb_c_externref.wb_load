@@ -7,6 +7,7 @@
 !
 ! Range ldh_eDId_Base
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  Makes it possible to indicate, in cross- and external
@@ -38,7 +39,6 @@
 !  objects of certain process graphics have then been collected 
 !  below its own $PlantHier object. 
 !*/
-SObject pwrb:Class
   Object ExternRef $ClassDef 116 
     Body SysBody
       Attr Flags |= pwr_mClassDef_DevOnly

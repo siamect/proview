@@ -7,6 +7,7 @@
 !
 ! Range ldh_eDId_Base
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Code rt_plc_arithm.c
@@ -39,7 +40,6 @@
 !  3. The following objects accumulate the value of an analog signal. 
 !  @image orm_en1-226.gif
 !*/
-SObject pwrb:Class
   Object Sum $ClassDef 234 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

@@ -7,6 +7,7 @@
 !
 ! Range ldh_eDId_Base
 !
+SObject         pwrb:Class
 !/**
 !  @Version 1.0
 !  @Code rt_plc_pid.c
@@ -195,7 +196,6 @@
 ! @b See also
 !  @classlink Mode pwrb_mode.html
 !*/
-SObject pwrb:Class
   Object PID $ClassDef 174 
     Body SysBody
       Attr Editor = pwr_eEditor_PlcEd

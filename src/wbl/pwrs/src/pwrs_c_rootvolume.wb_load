@@ -3,11 +3,11 @@
 !  PROVIEW/R
 !  Copyright (C) 1996 by Comator Process AB.
 !
+SObject pwrs:Class
 !/**
 !  @Group Volumes
 !  The root volume is loaded at runtime startup.
 !*/
-SObject pwrs:Class
   Object $RootVolume $ClassDef pwr_eCix_RootVolume
     Body SysBody
       Attr Flags |= pwr_mClassDef_System

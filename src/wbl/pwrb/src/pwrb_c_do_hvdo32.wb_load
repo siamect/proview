@@ -3,6 +3,7 @@
 !  PROVIEW/R
 !  Copyright (C) 1996,99 by Mandator AB.
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group IO,IO_PSS9000
@@ -17,7 +18,6 @@
 !  @b See hardware specification
 !  @Link DO32DKS http://intern.oxelosund.ssab.se/pss/Hårdvara/PSS-kort-data.htm#DO32D
 !*/
-SObject pwrb:Class
   Object Do_HVDO32 $ClassDef 99 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

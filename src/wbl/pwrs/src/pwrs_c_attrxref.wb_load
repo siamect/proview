@@ -5,12 +5,12 @@
 !
 !  <Description>.
 !
+SObject pwrs:Class
 !/**
 !  @Version 1.0
 !  @Group ClassDefinition
 !  Definition of a mutual attribute referens attribute. 
 !*/
-SObject pwrs:Class
   Object $AttrXRef $ClassDef pwr_eCix_AttrXRef
     Body SysBody
       Attr Flags |= pwr_mClassDef_System
@@ -34,6 +34,8 @@ SObject pwrs:Class
       Object Type $Attribute 2
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
+          Attr Flags = PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOWBL
         EndBody
       EndObject
       !/**
@@ -42,6 +44,8 @@ SObject pwrs:Class
       Object Offset $Attribute 3
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags = PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOWBL
         EndBody
       EndObject
       !/**
@@ -50,6 +54,8 @@ SObject pwrs:Class
       Object Size $Attribute 4
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags = PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOWBL
         EndBody
       EndObject
       !/**
@@ -92,6 +98,8 @@ SObject pwrs:Class
       Object ParamIndex $Attribute 7
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags = PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOWBL
         EndBody
       EndObject
       Object Identity $Attribute 8
@@ -118,6 +126,16 @@ SObject pwrs:Class
     Object Template $AttrXRef
       Body SysBody
         Attr Elements = 1
+      EndBody
+    EndObject
+    Object AnteCreate $DbCallBack
+      Body SysBody
+        Attr MethodName = "$Attribute-AnteCreate"
+      EndBody
+    EndObject
+    Object AnteMove $DbCallBack
+      Body SysBody
+        Attr MethodName = "$Attribute-AnteMove"
       EndBody
     EndObject
   EndObject

@@ -6,13 +6,13 @@
 !  <Description>.
 !
 !
+SObject pwrs:Class
 !/**
 !  @Version 1.0
 !  @Group ClassDefinition
 !  Description class for a Buffer in plc objects.
 !  The buffer contains graphic data used by the plc editor.
 !*/
-SObject pwrs:Class
   Object $GraphPlcNode $ClassDef pwr_eCix_GraphPlcNode
     Body SysBody
       Attr Flags |= pwr_mClassDef_DevOnly
@@ -28,6 +28,7 @@ SObject pwrs:Class
       Object object_type $Attribute 1
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_ALWAYSWBL
         EndBody
       EndObject
       !/**
@@ -41,6 +42,7 @@ SObject pwrs:Class
       Object parameters $Attribute 2
         Body SysBody
           Attr Flags |= PWR_MASK_ARRAY
+          Attr Flags |= PWR_MASK_ALWAYSWBL
           Attr Elements = 4
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
@@ -88,6 +90,7 @@ SObject pwrs:Class
       !*/
       Object graphmethod $Attribute 7
         Body SysBody
+          Attr Flags |= PWR_MASK_ALWAYSWBL
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
@@ -96,6 +99,7 @@ SObject pwrs:Class
       !*/
       Object graphindex $Attribute 8
         Body SysBody
+          Attr Flags |= PWR_MASK_ALWAYSWBL
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
@@ -113,6 +117,7 @@ SObject pwrs:Class
       Object default_mask $Attribute 9
         Body SysBody
           Attr Flags |= PWR_MASK_ARRAY
+          Attr Flags |= PWR_MASK_ALWAYSWBL
           Attr Elements = 2
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
@@ -122,6 +127,7 @@ SObject pwrs:Class
       !*/
       Object segname_annotation $Attribute 10
         Body SysBody
+          Attr Flags |= PWR_MASK_ALWAYSWBL
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
@@ -148,6 +154,7 @@ SObject pwrs:Class
       !*/
       Object compmethod $Attribute 13
         Body SysBody
+          Attr Flags |= PWR_MASK_ALWAYSWBL
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
@@ -156,6 +163,7 @@ SObject pwrs:Class
       !*/
       Object compindex $Attribute 14
         Body SysBody
+          Attr Flags |= PWR_MASK_ALWAYSWBL
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
@@ -164,6 +172,7 @@ SObject pwrs:Class
       !*/
       Object tracemethod $Attribute 15
         Body SysBody
+          Attr Flags |= PWR_MASK_ALWAYSWBL
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
@@ -172,6 +181,7 @@ SObject pwrs:Class
       !*/
       Object traceindex $Attribute 16
         Body SysBody
+          Attr Flags |= PWR_MASK_ALWAYSWBL
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
@@ -180,6 +190,7 @@ SObject pwrs:Class
       !*/
       Object connectmethod $Attribute 17
         Body SysBody
+          Attr Flags |= PWR_MASK_ALWAYSWBL
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
@@ -188,6 +199,7 @@ SObject pwrs:Class
       !*/
       Object executeordermethod $Attribute 18
         Body SysBody
+          Attr Flags |= PWR_MASK_ALWAYSWBL
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
@@ -217,6 +229,17 @@ SObject pwrs:Class
       EndObject
     EndObject
     Object Template $GraphPlcNode
+      Body SysBody
+        Attr object_type = 11
+!        Attr segname_annotation = 1
+!        Attr compmethod = 4
+!        Attr executeordermethod = 2
+      EndBody
+    EndObject
+    Object AnteCreate $DbCallBack
+      Body SysBody
+        Attr MethodName = "$ObjBodyDef-AnteCreate"
+      EndBody
     EndObject
   EndObject
 EndSObject

@@ -7,6 +7,7 @@
 !
 ! Range ldh_eDId_Base
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_logic.h
@@ -19,7 +20,6 @@
 !  
 !  At detecting Status is TRUE during one program cycle.
 !*/
-SObject pwrb:Class
   Object Edge $ClassDef 114 
     Body SysBody
       Attr Editor = pwr_eEditor_PlcEd

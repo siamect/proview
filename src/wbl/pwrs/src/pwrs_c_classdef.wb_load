@@ -7,13 +7,13 @@
 !  This class is defined before class definitions are completed,
 !  and is thus loaded with DObject etc.
 !
+SObject pwrs:Class
 !/**
 !  @Version 1.0
 !  @Group ClassDefinition
 !  Definition of a class. The object is the root of an
 !  object tree that defines bodies and attributes in a class.
 !*/
-SObject pwrs:Class
   Object $ClassDef pwr_eClass_ClassDef pwr_eCix_ClassDef
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
@@ -93,7 +93,8 @@ SObject pwrs:Class
           Attr Type = pwr_eType_UInt32
           Attr Offset = 12
           Attr Size = 4
-          Attr Flags = 0
+          Attr Flags = PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOWBL
           Attr Elements = 1
           Attr ParamIndex = 4
           Attr TypeRef = pwr_eType_UInt32
@@ -120,6 +121,61 @@ SObject pwrs:Class
         Attr Editor = pwr_eEditor_AttrEd
         Attr Method = pwr_eMethod_SysBody
       EndBody
+    EndObject
+    Object AnteCreate $DbCallBack
+      Body SysBody
+        Attr MethodName = "$ClassDef-AnteCreate"
+      EndBody
+    EndObject
+    Object NavigatorPosnn $Menu
+      Object Pointed $Menu
+	Object OpenGe $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open ClassGraph"
+	    Attr MethodName = "$ClassDef-OpenClassGraph"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object NavigatorPoson $Menu
+      Object Pointed $Menu
+	Object OpenGe $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open ClassGraph..."
+	    Attr MethodName = "$ClassDef-OpenClassGraph"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object NavigatorPosos $Menu
+      Object Pointed $Menu
+	Object OpenGe $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open ClassGraph..."
+	    Attr MethodName = "$ClassDef-OpenClassGraph"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object NavigatorPosms $Menu
+      Object Pointed $Menu
+	Object OpenGe $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open ClassGraph..."
+	    Attr MethodName = "$ClassDef-OpenClassGraph"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object NavigatorPosmn $Menu
+      Object Pointed $Menu
+	Object OpenGe $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open ClassGraph..."
+	    Attr MethodName = "$ClassDef-OpenClassGraph"
+	  EndBody
+	EndObject
+      EndObject
     EndObject
   EndObject
 EndSObject

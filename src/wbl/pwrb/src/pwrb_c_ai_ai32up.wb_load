@@ -5,6 +5,7 @@
 !
 !  Analog Input card AI32uP.
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group IO,IO_PSS9000
@@ -28,7 +29,6 @@
 !  @b See hardware specification
 !  @Link AI32uP http://intern.oxelosund.ssab.se/pss/Hårdvara/PSS-kort-data.htm#AI32uP
 !*/
-SObject pwrb:Class
   Object Ai_AI32uP $ClassDef 277 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

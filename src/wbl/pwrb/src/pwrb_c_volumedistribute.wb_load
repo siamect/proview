@@ -5,10 +5,10 @@
 !
 !  <Description>.
 !
+SObject pwrb:Class
 !/**
 ! @Group ProjectConfiguration
 !*/
-SObject pwrb:Class
   Object VolumeDistribute $ClassDef 247 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

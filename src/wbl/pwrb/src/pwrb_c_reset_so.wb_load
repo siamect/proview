@@ -7,6 +7,7 @@
 !
 ! Range ldh_eDId_Base
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_grafcet.h
@@ -34,7 +35,6 @@
 !  @image orm_reset_so_1.gif 
 !  Reset of an S-order 
 !*/
-SObject pwrb:Class
   Object Reset_SO $ClassDef 194 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

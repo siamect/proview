@@ -7,6 +7,7 @@
 !
 ! Range ldh_eDId_Base
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Summary Stores data for a fast graph à la storage oscilloscope.
@@ -67,7 +68,6 @@
 !  - pwr_tInt8, pwr_tInt16, pwr_tInt32
 !  - pwr_tUInt8, pwr_tUInt16, pwr_tUInt32
 !*/
-SObject pwrb:Class
   Object DsFast $ClassDef 104 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

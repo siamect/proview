@@ -7,6 +7,7 @@
 !
 ! Range ldh_eDId_Base
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group Operator,NodeConfiguration
@@ -58,7 +59,6 @@
 !    demands acknowledgement first will be announced by
 !    the reminder function.
 !*/
-SObject pwrb:Class
   Object OpPlace $ClassDef 164 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

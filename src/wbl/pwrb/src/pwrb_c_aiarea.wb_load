@@ -7,6 +7,7 @@
 !
 ! Range ldh_eDId_Base
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Summary Area object for Ai values
@@ -18,7 +19,6 @@
 !
 !  The object is created at runtime in the dynamic system volume pwrNode.
 !*/
-SObject pwrb:Class
   Object AiArea $ClassDef 8 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
@@ -29,7 +29,8 @@ SObject pwrb:Class
         Attr StructName = "AiArea"
       EndBody
       !/**
-      !  
+      ! Array containing the values of the ai signals
+      !*/
       Object Value $Attribute 1 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -41,3 +42,18 @@ SObject pwrb:Class
     EndObject
   EndObject
 EndSObject
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

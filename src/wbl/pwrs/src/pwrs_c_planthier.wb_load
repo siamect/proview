@@ -6,6 +6,7 @@
 !  <Description>.
 !
 !
+SObject pwrs:Class
 !/**
 !  @Version 1.0
 !  @Group PlantConfiguration
@@ -26,7 +27,6 @@
 !  
 !  Contains no relevant information (=data) in rtdb.
 !*/
-SObject pwrs:Class
   Object $PlantHier $ClassDef pwr_eCix_PlantHier
     Body SysBody
       Attr Flags |= pwr_mClassDef_System

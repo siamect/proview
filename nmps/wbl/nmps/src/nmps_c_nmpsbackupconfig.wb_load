@@ -1,11 +1,11 @@
 !  nmps_c_nmpsbackupconfig.wb_load -- Defines the class NMpsBackupConfig.
 !
 !  PROVIEW/R
+SObject NMps:Class
 !/**
 !  @Group MaterialPlanning,Servers,NodeConfiguration
 !*/
 !
-SObject NMps:Class
   Object NMpsBackupConfig $ClassDef 29
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

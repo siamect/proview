@@ -2,6 +2,7 @@
 !
 !  PROVIEW/R
 !
+SObject NMps:Class
 !/**
 !  @Version 1.0
 !  @Code rs_plc_nmps.c
@@ -25,7 +26,6 @@
 !  @classlink GetData nmps_getdata.html
 !  @classlink DataArithm pwrb_dataarithm.html
 !*/
-SObject NMps:Class
   Object DataSelect $ClassDef 15
     Body SysBody
       Attr Editor = pwr_eEditor_PlcEd

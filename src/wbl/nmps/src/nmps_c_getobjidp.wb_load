@@ -2,10 +2,10 @@
 !
 !  PROVIEW/R
 !
+SObject NMps:Class
 !/**
 !  @Group Plc
 !*/
-SObject NMps:Class
   Object GetObjidp $ClassDef 20
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

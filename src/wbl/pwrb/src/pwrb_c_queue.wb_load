@@ -7,6 +7,7 @@
 !
 ! Range ldh_eDId_Base
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  Configures a queue assigned to receive Package Handler
@@ -23,7 +24,6 @@
 !  and put in the same node as the application program
 !  which is to receive the messages.
 !*/
-SObject pwrb:Class
   Object Queue $ClassDef 185 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

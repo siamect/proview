@@ -5,13 +5,13 @@
 !
 !  Supervision of links to Node-objects.
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group Supervision,NodeConfiguration
 !  @Summary Supervises a link to another node.
 !  Supervises a link to another node.
 !*/
-SObject pwrb:Class
   Object NodeLinkSup $ClassDef 161 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

@@ -7,13 +7,13 @@
 !  and is thus loaded with DObject etc.
 !
 !
+SObject pwrs:Class
 !/**
 !  @Version 1.0
 !  @Group ClassDefinition
 !  Definition of an attribute.
 !  The Attribute object reside in a class volume as a child of an ObjBodyDef object.
 !*/
-SObject pwrs:Class
   Object $Attribute pwr_eClass_ClassDef pwr_eCix_Param
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
@@ -53,7 +53,8 @@ SObject pwrs:Class
           Attr Type = pwr_eType_Int32
           Attr Offset = 32
           Attr Size = 4
-          Attr Flags = 0
+          Attr Flags = PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOWBL
           Attr Elements = 1
           Attr ParamIndex = 2
           Attr TypeRef = pwr_eType_Int32
@@ -68,7 +69,8 @@ SObject pwrs:Class
           Attr Type = pwr_eType_UInt32
           Attr Offset = 36
           Attr Size = 4
-          Attr Flags = 0
+          Attr Flags = PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOWBL
           Attr Elements = 1
           Attr ParamIndex = 3
           Attr TypeRef = pwr_eType_UInt32
@@ -83,7 +85,8 @@ SObject pwrs:Class
           Attr Type = pwr_eType_UInt32
           Attr Offset = 40
           Attr Size = 4
-          Attr Flags = 0
+          Attr Flags = PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOWBL
           Attr Elements = 1
           Attr ParamIndex = 4
           Attr TypeRef = pwr_eType_UInt32
@@ -146,7 +149,8 @@ SObject pwrs:Class
           Attr Type = pwr_eType_UInt32
           Attr Offset = 52
           Attr Size = 4
-          Attr Flags = 0
+          Attr Flags = PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOWBL
           Attr Elements = 1
           Attr ParamIndex = 7
           Attr TypeRef = pwr_eType_UInt32
@@ -161,7 +165,7 @@ SObject pwrs:Class
           Attr Type = pwr_eType_TypeId
           Attr Offset = 56
           Attr Size = 4
-          Attr Flags = 0
+          Attr Flags = PWR_MASK_ALWAYSWBL
           Attr Elements = 1
           Attr ParamIndex = 8
           Attr TypeRef = pwr_eType_TypeId
@@ -173,5 +177,20 @@ SObject pwrs:Class
         Attr Elements = 1
       EndBody
     EndObject
+    Object AnteCreate $DbCallBack
+      Body SysBody
+        Attr MethodName = "$Attribute-AnteCreate"
+      EndBody
+    EndObject
+    Object AnteMove $DbCallBack
+      Body SysBody
+        Attr MethodName = "$Attribute-AnteMove"
+      EndBody
+    EndObject
   EndObject
 EndSObject
+
+
+
+
+

@@ -7,6 +7,7 @@
 !
 ! Range ldh_eDId_Base
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group Plc,PlcEdit
@@ -21,7 +22,6 @@
 !  -  connect an output with an input on the same object
 !
 !*/
-SObject pwrb:Class
   Object Point $ClassDef 180 
     Body SysBody
       Attr Flags |= pwr_mClassDef_DevOnly

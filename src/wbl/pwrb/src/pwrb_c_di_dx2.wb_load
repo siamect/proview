@@ -5,6 +5,7 @@
 !
 !  Digital Input card DIX2.
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group IO,IO_PSS9000
@@ -19,7 +20,6 @@
 !  @b See hardware specification
 !  @Link DI32D http://intern.oxelosund.ssab.se/pss/Hårdvara/PSS-kort-data.htm#DI32D
 !*/
-SObject pwrb:Class
   Object Di_DIX2 $ClassDef 90 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd

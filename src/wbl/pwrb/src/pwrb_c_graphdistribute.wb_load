@@ -5,6 +5,7 @@
 !
 !  <Description>.
 !
+SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Summary Obsolete from V4.0.
@@ -28,7 +29,6 @@
 !  @classlink ApplDistribute pwrb_appldistribute.html
 !*/
 !
-SObject pwrb:Class
   Object GraphDistribute $ClassDef 131 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
