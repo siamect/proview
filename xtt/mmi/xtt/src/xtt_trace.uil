@@ -35,6 +35,11 @@ procedure
 	tra_activate_zoomin(integer);
 	tra_activate_zoomout(integer);
 	tra_activate_zoomreset(integer);
+	tra_activate_scantime1(integer);
+	tra_activate_scantime2(integer);
+	tra_activate_scantime3(integer);
+	tra_activate_scantime4(integer);
+	tra_activate_scantime5(integer);
 	tra_activate_help(integer);
 	tra_activate_helpplc(integer);
 	tra_create_form(integer);
@@ -328,6 +333,87 @@ object view_entry : XmCascadeButton
             XmNactivateCallback = procedure tra_activate_zoomreset(tra_ctx);
           };
         };
+        XmCascadeButton      
+	{
+   	  arguments
+   	  {
+            XmNlabelString = compound_string("ScanTime");
+	    XmNfontList	    = menu_font;
+	  };  
+  	  callbacks
+   	  {
+!   	    MrmNcreateCallback = procedure ute_create_batchoptmenu( ute_ctx) ;
+   	  };
+   	  controls
+   	  {
+       	    XmPulldownMenu
+            {
+              controls
+              {
+                XmPushButton
+                {
+                  arguments
+                  {
+                    XmNlabelString = compound_string("0.50");
+                    XmNfontList	    = menu_font;
+	          };
+		  callbacks
+		  {
+                    XmNactivateCallback = procedure tra_activate_scantime1(tra_ctx);
+		  };
+	        };
+                XmPushButton
+                {
+                  arguments
+                  {
+                    XmNlabelString = compound_string("0.20");
+                    XmNfontList	    = menu_font;
+	          };
+		  callbacks
+		  {
+                    XmNactivateCallback = procedure tra_activate_scantime2(tra_ctx);
+		  };
+	        };
+                XmPushButton
+                {
+                  arguments
+                  {
+                    XmNlabelString = compound_string("0.10");
+                    XmNfontList	    = menu_font;
+	          };
+		  callbacks
+		  {
+                    XmNactivateCallback = procedure tra_activate_scantime3(tra_ctx);
+		  };
+	        };
+                XmPushButton
+                {
+                  arguments
+                  {
+                    XmNlabelString = compound_string("0.05");
+                    XmNfontList	    = menu_font;
+	          };
+		  callbacks
+		  {
+                    XmNactivateCallback = procedure tra_activate_scantime4(tra_ctx);
+		  };
+	        };
+                XmPushButton
+                {
+                  arguments
+                  {
+                    XmNlabelString = compound_string("0.02");
+                    XmNfontList	    = menu_font;
+	          };
+		  callbacks
+		  {
+                    XmNactivateCallback = procedure tra_activate_scantime5(tra_ctx);
+		  };
+	        };
+	      };
+	    };
+          };
+	};
       };
     };
   };

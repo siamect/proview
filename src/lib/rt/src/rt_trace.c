@@ -151,7 +151,7 @@ static void trace_scan( tra_tCtx tractx)
     flow_TraceScan( tractx->flow_ctx);
 
     tractx->trace_timerid = XtAppAddTimeOut(
-	XtWidgetToApplicationContext(tractx->flow_widget) ,500,
+	XtWidgetToApplicationContext(tractx->flow_widget), tractx->scan_time * 1000,
 	(XtTimerCallbackProc)trace_scan, tractx);
   }
 }
@@ -396,6 +396,31 @@ static void tra_activate_zoomout( Widget w, tra_tCtx tractx, XmAnyCallbackStruct
 static void tra_activate_zoomreset( Widget w, tra_tCtx tractx, XmAnyCallbackStruct *data)
 {
   flow_UnZoom( tractx->flow_ctx);
+}
+
+static void tra_activate_scantime1( Widget w, tra_tCtx tractx, XmAnyCallbackStruct *data)
+{
+  tractx->scan_time = 0.5;
+}
+
+static void tra_activate_scantime2( Widget w, tra_tCtx tractx, XmAnyCallbackStruct *data)
+{
+  tractx->scan_time = 0.2;
+}
+
+static void tra_activate_scantime3( Widget w, tra_tCtx tractx, XmAnyCallbackStruct *data)
+{
+  tractx->scan_time = 0.1;
+}
+
+static void tra_activate_scantime4( Widget w, tra_tCtx tractx, XmAnyCallbackStruct *data)
+{
+  tractx->scan_time = 0.05;
+}
+
+static void tra_activate_scantime5( Widget w, tra_tCtx tractx, XmAnyCallbackStruct *data)
+{
+  tractx->scan_time = 0.02;
 }
 
 static void tra_activate_help( Widget w, tra_tCtx tractx, XmAnyCallbackStruct *data)
@@ -1153,6 +1178,11 @@ tra_tCtx trace_new( 	void 		*parent_ctx,
 	{"tra_activate_zoomin",(caddr_t)tra_activate_zoomin },
 	{"tra_activate_zoomout",(caddr_t)tra_activate_zoomout },
 	{"tra_activate_zoomreset",(caddr_t)tra_activate_zoomreset },
+	{"tra_activate_scantime1",(caddr_t)tra_activate_scantime1 },
+	{"tra_activate_scantime2",(caddr_t)tra_activate_scantime2 },
+	{"tra_activate_scantime3",(caddr_t)tra_activate_scantime3 },
+	{"tra_activate_scantime4",(caddr_t)tra_activate_scantime4 },
+	{"tra_activate_scantime5",(caddr_t)tra_activate_scantime5 },
 	{"tra_activate_help",(caddr_t)tra_activate_help },
 	{"tra_activate_helpplc",(caddr_t)tra_activate_helpplc },
 	{"tra_create_form",(caddr_t)tra_create_form },
@@ -1211,6 +1241,7 @@ tra_tCtx trace_new( 	void 		*parent_ctx,
   tractx->display_object_cb = display_object_cb;
   tractx->collect_insert_cb = collect_insert_cb;
   tractx->is_authorized_cb = is_authorized_cb;
+  tractx->scan_time = 0.5;
   reglist[0].value = (caddr_t) tractx;
  
   tractx->toplevel = XtCreatePopupShell( name, 

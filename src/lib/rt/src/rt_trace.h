@@ -44,6 +44,7 @@ struct tra_sCtx{
   flow_tCtx		flow_ctx;
   flow_tNode		trace_changenode;
   pwr_tObjid		objid;
+  double		scan_time;
   void			(*close_cb) (tra_tCtx);
   void			(*help_cb) (tra_tCtx, char *);
   void			(*subwindow_cb) (void *parent_ctx, pwr_tObjid objid);
