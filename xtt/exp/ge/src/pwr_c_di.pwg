@@ -2,21 +2,21 @@
 100 20.7179
 135 20.7179
 101 20
-102 122
-103 -53
-104 5.07053
-136 5.07053
+102 -46
+103 -93
+104 4.721
+136 4.721
 105 100
-106 3
-107 -12
+106 -10
+107 -21
 108 40.1436
 109 0.7
 110 8.2577
 111 1.20546
-116 26
+116 0
 117 0
-118 164
-119 106
+118 127
+119 99
 120 0
 121 Claes context
 122 0
@@ -6657,7 +6657,7 @@ pwr_exe:
 103 0
 9
 900 $cmd(check method/method="Hist Event..."/object=$object)
-901 0
+901 1
 99
 55
 5500 call method/method="Hist Event..."/object=$object
@@ -6787,7 +6787,7 @@ pwr_exe:
 103 0
 9
 900 $cmd(check method/method="Note"/object=$object)
-901 0
+901 1
 99
 55
 5500 call method/method="Note"/object=$object
