@@ -1213,8 +1213,10 @@ cSup_exec (
 	o->Acked = FALSE;
 	o->AlarmCheck = FALSE;
 	o->DelayNoted = TRUE;
-	if (o->DelayAction == 2)
+	if (o->DelayAction == 2) {
 	  l.iohp->IOReadWriteFlag = FALSE;
+	  errh_SetStatus( MH__IOSTALLED);
+	}
       }
     }
   } else if (diff <= 0 || (o->Delayed && o->Timely)) {
