@@ -1134,6 +1134,21 @@ errh_send (char *s, char severity, pwr_tStatus sts, errh_eMsgType message_type)
 #endif
 }
 
+errh_eSeverity errh_Severity( pwr_tStatus sts)
+{
+  if ( sts == 0)
+    return errh_eSeverity_Null;
+
+  switch ( sts & 7) {
+  case 1: return errh_eSeverity_Success; 
+  case 3: return errh_eSeverity_Info; 
+  case 0: return errh_eSeverity_Warning; 
+  case 2: return errh_eSeverity_Error; 
+  case 4: return errh_eSeverity_Fatal; 
+  default: return errh_eSeverity_Null;
+  }
+}
+
 
 #if 0
 int main(int argc, char **argv)

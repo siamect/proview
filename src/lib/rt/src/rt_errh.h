@@ -42,6 +42,22 @@ extern "C" {
          return (((int)(sts)?((*sts)=(lsts)):(EVEN(lsts)?(errh_Bugcheck(lsts, (str)),(lsts)):(lsts))),a)
 #endif
 
+#define errh_SeveritySuccess(sts) 	((sts) & 7 == 3)
+#define errh_SeverityInfo(sts) 		((sts) & 7 == 1)
+#define errh_SeverityWarning(sts) 	((sts) & 7 == 0)
+#define errh_SeverityError(sts) 	((sts) & 7 == 2)
+#define errh_SeverityFatal(sts) 	((sts) & 7 == 4)
+
+typedef enum {
+  errh_eSeverity_Null,
+  errh_eSeverity_Success,
+  errh_eSeverity_Info,
+  errh_eSeverity_Warning,
+  errh_eSeverity_Error,
+  errh_eSeverity_Fatal
+} errh_eSeverity;
+
+
 #define errh_cAnix_SrvSize 40
 
 typedef enum {
@@ -133,9 +149,14 @@ void		*errh_ErrArgL	(int val);
 void		errh_CErrLog	(pwr_tStatus sts, ...);
 char		*errh_Message	(char *string, char severity, char *msg, ...);
 errh_eAnix	errh_Anix       ();
-
+errh_eSeverity	errh_Severity	(pwr_tStatus);
 #if defined __cplusplus
 }
 #endif
 
 #endif
+
+
+
+
+
