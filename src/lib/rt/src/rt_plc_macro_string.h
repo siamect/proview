@@ -79,6 +79,26 @@
   }
 
 /*_*
+  STONUMSP								
+  Store a number of characters into string attribute			
+  @aref stonumsp StoNumSp
+*/
+#define stonumsp_exec(ut,in,size,num) \
+  strncpy( ut, in, num < size ? num : size); \
+  ut[size-1] = 0;
+
+/*_*
+  CSTONUMSP
+  Store conditionally a number of characters into string attribute	
+  @aref cstonumsp CStoNumSp
+*/
+#define cstonumsp_exec(ut,in,cond,size, num) \
+  if ( cond) { \
+    strncpy( ut, in, num < size ? num : size); \
+    ut[size-1] = 0; \
+  }
+
+/*_*
   SUBSTR
   @aref substr SubStr
 */
