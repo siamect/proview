@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_grafcet.h
+!  @Group Plc,PlcGrafcet
 !  @Summary The first step in a Grafcet-chain
 !  The first step in a Grafcet-chain.
 !  @image orm_initstep_fo.gif

@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_string.h
+!  @Group Plc,PlcString
 !  @Summary Conditional storage of string value.
 !  Conditional storage of string value.
 !  @image orm_cstosv_fo.gif

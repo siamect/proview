@@ -2,8 +2,22 @@
 !
 !  PROVIEW/R
 !
-!  <Description>.
+!/**
+!  @Version 1.0
+!  @Code rs_plc_nmps.c
+!  @Group MaterialPlanning,Plc
+!  @Summary Mirror the contents of cell objects.
 !
+!  The NMpsMirrorCell object mirrors the content of one or a number of cell objects.
+!  @image orm_nmpsmirrorcell_fo.gif
+!  The mirrored cells can reside in the same node, or in another node. Also the data
+!  objects and selected parts of the content of the data objects can be mirrored. Se
+!  the MmpsMirrorConfig object for configuration of the mirror function.
+! 
+! @b See also
+!  @classlink NMpsMirrorConfig nmps_nmpsmirrorconfig.html
+!  @classlink NMpsCell nmps_nmpscell.html
+!*/
 SObject NMps:Class
   Object NMpsMirrorCell $ClassDef 30 
     Body SysBody
@@ -14,6 +28,9 @@ SObject NMps:Class
       Body SysBody
         Attr StructName = "NMpsMirrorCell"
       EndBody
+      !/**
+      ! Cell objects that is mirrored. The objects can reside on another node.
+      !*/
       Object CellObjects $Intern 1 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Objid"
@@ -21,31 +38,55 @@ SObject NMps:Class
 	  Attr Elements = 10
         EndBody
       EndObject
+      !/**
+      ! Number of mirrored cell objects
+      !*/
       Object NumberOfCellObj $Intern 2 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
+      !/**
+      ! Specifies that converted data objects, whose original objects
+      ! is removed from the mirrored cells, are to be collected into a
+      ! collect cell.
+      !*/
       Object DataCollect $Intern 3 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
       EndObject
+      !/**
+      ! Cell that converted data objects, whose original objects is
+      ! remove from the mirrored cells, are inserted into.
+      !*/
       Object CollectCell $Intern 4 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Objid"
         EndBody
       EndObject
+      !/**
+      ! Specifies that the data objects is converted and mirrored.
+      !*/ 
       Object DataObjConv $Intern 5 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
       EndObject
+      !/**
+      ! Configuration object that specifies the mirroring and conversion of data objects.
+      !*/
       Object ConvConfig $Intern 6 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Objid"
         EndBody
       EndObject
+      !/**
+      ! Time in seconds that a disappeared data object is kept by the mirroring function.
+      ! When mirroring between nodes, an data object could for a short time disappear, during
+      ! the transportation between two cells. As the converted object is kept, the connection
+      ! with the original data object will be resumed.
+      !*/
       Object ReleaseTime  $Intern 7 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -56,12 +97,18 @@ SObject NMps:Class
           Attr TypeRef = "pwrs:Type-$Float32"
         EndBody
       EndObject
+      !/**
+      ! Max number of data objects in the cell. Maximium value is 30.
+      !*/
       Object MaxSize $Intern 9 
         Body SysBody
           Attr PgmName = "MaxSize"
           Attr TypeRef = "pwrs:Type-$UInt16"
         EndBody
       EndObject
+      !/**
+      !  Not implemented.
+      !*/
       Object Function $Intern 10 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
@@ -97,6 +144,9 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
+      !/**
+      ! Indicates that the cell is full.
+      !*/
       Object CellFull $Output 15 
         Body SysBody
           Attr PgmName = "CellFull"
@@ -113,6 +163,9 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
+      !/**
+      ! Pointer to data object with highest index.
+      !*/
       Object DataLastP $Output 17 
         Body SysBody
           Attr PgmName = "DataLastP"
@@ -124,6 +177,9 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_NOEDIT
         EndBody
       EndObject
+      !/**
+      ! Objid for data object with highest index.
+      !*/
       Object DataLast_ObjId $Intern 18 
         Body SysBody
           Attr PgmName = "DataLast_ObjId"
@@ -197,6 +253,9 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
+      !/**
+      ! Pointer to data object in index 1.
+      !*/
       Object Data1P $Output 28 
         Body SysBody
           Attr PgmName = "Data1P"
@@ -208,6 +267,9 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_NOEDIT
         EndBody
       EndObject
+      !/**
+      ! Objid of data object in index 1.
+      !*/
       Object Data1_ObjId $Intern 29 
         Body SysBody
           Attr PgmName = "Data1_ObjId"

@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_string.h
+!  @Group Plc,PlcString
 !  @Summary Store string attribute
 !  Store String parameter. Used in run time to write in
 !  string parameters.

@@ -4,6 +4,22 @@
 !
 !  <Description>.
 !
+!/**
+!  @Version 1.0
+!  @Code rs_plc_nmps.c
+!  @Group MaterialPlanning,Plc
+!  @Summary End station in a NMpsCell sequence.
+!
+!  The NMpsOutCell object is the end station in a NMpsCell sequence.
+!  @image orm_nmpsoutcell_fo.gif
+!  A data object transported into an outcell i removed from the sequence.
+!  The NMpsOutCell does not handle front and back of data objects. Transport objects
+!  connected to the cell should have function 1 or 2.
+!
+! @b See also
+!  @classlink NMpsCell nmps_nmpscell.html
+!  @classlink NMpsTrp nmps_nmpstrp.html
+!*/
 SObject NMps:Class
   Object NMpsOutCell $ClassDef 3
     Body SysBody
@@ -14,6 +30,9 @@ SObject NMps:Class
       Body SysBody
         Attr StructName = "NMpsOutCell"
       EndBody
+      !/**
+      ! Connection to a transport object, NMpsTrp.
+      !*/
       Object In $Output 1
         Body SysBody
           Attr PgmName = "In"
@@ -42,6 +61,17 @@ SObject NMps:Class
           Attr TypeRef = "pwrs:Type-$UInt16"
         EndBody
       EndObject
+      !/**
+      ! @Summary Special functions of the cell.
+      ! Special functions of the cell. 
+      ! Function is a bitmask, and the functions can be superimposed.
+      !
+      ! 0   A data object that is transported to the cell, is removed from the cell 
+      !     sequence, but remains in the database.
+      !
+      ! 4   A data object that is transported to the cell, is removed from the cell 
+      !     sequence, and also remove from the database.
+      !*/
       Object Function $Intern 4
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Mask"

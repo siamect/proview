@@ -8,6 +8,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group PlantConfiguration
 !  Puts objects or object structures aside, which, by some
 !  reason, should not be used in the current runtime
 !  system.

@@ -2,8 +2,22 @@
 !
 !  PROVIEW/R
 !
-!  <Description>.
+!/**
+!  @Version 1.0
+!  @Code rs_plc_macro_nmps.h
+!  @Group Remote,Plc
+!  @Summary Supervision of a receive RemTrans object and unpacks the receive buffer.
+!  The object supervises a receive RemTrans object. 
+!  @image orm_remtransrcv_fo.gif
+!  In a subwindow, code for unpacking the receive buffer of the remtrans 
+!  can be programmed. 
+!  When a transaction is recived, the subwindow is executed and the output
+!  Recieved is set to mark that new data is present.
 !
+! @b See also
+!  @classlink RemTrans ssab_remtrans.html
+!  @classlink RemTransSend nmps_remtranssend.html
+!*/
 SObject NMps:Class
   Object RemTransRcv $ClassDef 28
     Body SysBody
@@ -18,6 +32,9 @@ SObject NMps:Class
       Body SysBody
         Attr StructName = "RemTransRcv"
       EndBody
+      !/**
+      ! Data input connected to a GetData refering to the RemTrans object.
+      !*/
       Object RemTrans $Input 1
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -29,6 +46,11 @@ SObject NMps:Class
           Attr GraphName = "Trs"
         EndBody
       EndObject
+      !/**
+      ! Data is received. DataValid in the RemTrans object is detected, and
+      ! the subwindow is executed.
+      ! Received is true in one cycle.
+      !*/
       Object Received $Output 2
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE

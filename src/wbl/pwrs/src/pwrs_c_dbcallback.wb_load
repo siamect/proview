@@ -4,8 +4,10 @@
 !  Copyright (C) 1996 by Comator Process AB.
 !
 !  <Description>.
-!
-!
+!/**
+!  @Group ClassDefinition
+!  Definition of callback method.
+!*/
 SObject pwrs:Class
   Object $DbCallBack $ClassDef pwr_eCix_DbCallBack
     Body SysBody

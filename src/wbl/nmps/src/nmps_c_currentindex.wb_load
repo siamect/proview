@@ -2,8 +2,26 @@
 !
 !  PROVIEW/R
 !
-!  <Description>.
+!/**
+!  @Version 1.0
+!  @Group MaterialPlanning,Plc
+!  @Summary Get the index of the current data object in a NMpsCell or a CLoop subwindow.
 !
+!  Get the index of the current data object in a NMpsCell or a CLoop subwindow.
+!  @image orm_currentindex_fo.gif
+!  The object is used in a NMpsCell or a CLoop subwindow. 
+!
+!  A cell subwindow is exectuted one time for each data object in the cell, 
+!  in one plc scan, plus one initiate execution.
+!  The output hold the index of the currently executed data object.
+!  In the initiate execution, the current index is zero.
+!
+!  In a cloop subwindow, CurrentIndex keeps the index of the current loop.
+! @b See also
+!  @classlink NMpsCell nmps_nmpscell.html
+!  @classlink CLoop nmps_cloop.html
+!  @classlink CurrentData nmps_currentdata.html
+!*/
 SObject NMps:Class
   Object CurrentIndex $ClassDef 12
     Body SysBody
@@ -18,6 +36,9 @@ SObject NMps:Class
       Body SysBody
         Attr StructName = "currentindex"
       EndBody
+      !/**
+      ! The index of the currently executed data object.
+      !*/
       Object DataCurrent_Index $Output 1
         Body SysBody
           Attr PgmName = "CurrentIndex"

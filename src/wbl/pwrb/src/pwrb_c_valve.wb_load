@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_drive.c
+!  @Group Plc,PlcDrive
 !  @Summary Valve positioner with on/off state
 !  Valve positioner with two states, i.e. on-off action
 !  and operation time supervision.

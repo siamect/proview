@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group Plc,PlcString
 !  @Summary Get String attribute
 !  Get String parameter.
 !  @image orm_getsp_fo.gif

@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
+!  @Group Plc,PlcIO
 !  @Summary Store Ao signal
 !  Stores an analog value ( e.g. output signal of the type
 !  pwr_tFloat32) on the specified local Ao object.

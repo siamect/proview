@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group Servers,NodeConfiguration
 !  @Summary Configuration of DsTrend process
 !  Specifies attributes of a single DsTrend job.
 !  

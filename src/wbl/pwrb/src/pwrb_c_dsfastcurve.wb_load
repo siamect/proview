@@ -1,0 +1,367 @@
+!  pwrb_c_dsfastcurve.wb_load -- Defines the class DsFastCurve.
+!
+!  PROVIEW/R
+!  Copyright (C) 2003 by SSAB Oxelosund AB.
+!
+!  DataStorage Fast Curve.
+!
+!
+!/**
+!  @Version 1.0
+!  Stores data for a fast graph à la storage oscilloscope.
+!  
+!  In one DsFastCurve object, up to 10 attributes can be specified.
+!  The storage of the attributes will be trigger by the same event,
+!  stored with the same frequency, and the curves will be plotted 
+!  in the same fastcurve window.
+!
+!  The names of the attributes is specified the the Attribute array.
+!  For every attribute, a storage area object also has to be specified.
+!  An attribute may be referred to by several different DsTrendCurve
+!  objects, for example to store at different frequencies.
+!  
+!  The sampling rate is specified the the ScanTime attribute.
+!  The sampling will start when a trigger event is detected. In some
+!  cases, when data before the trigger event is valid, the sampling will
+!  go on even before the trigger event.
+!
+!  The different types of triggering is specified in the Function attribute.
+!
+!  @b Trigg conditions
+!  There are three ways to trigger a fast curve:
+!
+!  - Manual trigg. A manual trigg is executed by setting the TriggMan attribute.
+!    Manual triggering has to be configured in the Function attribute.
+!
+!  - Trigg on an digital signal. If a reference to a digital attribute is put in 
+!    TriggObject, a positive edge of this attribute will trigger the fastcurve.
+!
+!  - Level. The level of the first curve attribute can trigger the fastcurve. When the
+!    value of the attribute passes the value in TriggLevel from beneath, a trigger will
+!    take place. LevelTrigg has to be configured in the Function attribute.
+!
+!  @b Store data before trigg
+!  Sometimes the data before the trigg is of interest, and this can be stored by setting 
+!
+!  - the BeforeTrigg bit in Functions
+!  - the number of points before trigg that should be stored in NoOfPointsBeforeTrigg.
+!
+!  In the BeforeTrigg function the data has to continously stored before the trigger event. 
+!  This continously storing is started by the user by setting the Prepare attribute, 
+!  or as soon as the previous curve is displayed, if the AlwaysPrepared bit is configured 
+!  in Function. In the latter case, the data of the previous curve is immediately 
+!  overwritten after beeing displayed.
+!
+!  @b Storage arrays
+!  Storage arrays has to be supplied by the user, one array for the time axis data, and
+!  one for each configured attribute. For example, Buff1440, Buff4096 or Buff32k objects
+!  can be used for the data storage. These will store up to 360, 1024 resp. 8192 points of
+!  pwr_tFloat32 attributes.
+!
+!  @b Data types
+!  The datatypes that can be stored is
+!  - pwr_tFloat32, pwr_tFloat64
+!  - pwr_tInt32, pwr_tUInt32, pwr_tInt16, pwr_tUInt16, pwr_tInt8, pwr_tUInt8
+!
+!  The time is stored as pwr_tFloat32.
+!
+!  @b Server
+!  DsFastCurve objects is handled by the fast server rt_fast.
+!  The base frequency for the fast server process is configured in
+!  the DsFastConf object.
+!
+!  @b Se also
+!  @classlink Buff1440 ssab_buff1440.html
+!  @classlink Buff4096 ssab_buff4096.html
+!  @classlink Buff32k ssab_buff32k.html
+!  @classlink DsFastConf pwrb_dsfastconf.html
+!*/
+SObject pwrb:Class
+  Object DsFastCurve $ClassDef 318 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "DsFastCurve"
+      EndBody
+      !/**
+      !  Optional text.
+      !*/
+      Object Description $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Title of the fast window.
+      !*/
+      Object Title $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Fast function.
+      !  Bitmask for fast function.
+      !  - ManTrigg       1     Alow manual trigg.
+      !  - LevelTrigg     2     Trigg on level of first curve attribute.
+      !  - BeforeTrigg    4     Display points before trigg.
+      !  - AlwaysPrepared 8     Overwrite previous curve as soon as is is viewed.
+      !*/
+      Object Function $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Mask"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Measurement is active. 
+      !  Measurement is active. 
+      !  If function is TriggBefore Active is also set in prepare phase.
+      !*/
+      Object Active $Attribute 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Scantime in seconds. Multiple of the base scantime configured in DsFastConf object.
+      !*/
+      Object ScanTime $Attribute 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  The complete name of an external binary trigger signal,
+      !  for example a local quantity, PROC1-Di123.ActualValue.
+      !  The attribute is left blank if no external trigger
+      !  signal will be used.
+      !*/
+      Object TriggObject $Attribute 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$AttrRef"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Manual trigg. 
+      ! Manual trigg.
+      ! A manual trigg can be executed by setting TriggMan. Manual triggering has
+      ! to be configured in the Function attribute with the ManTrigg bit.
+      ! TriggMan is reset by the server.
+      !*/
+      Object TriggMan $Attribute 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      ! Trigg level.
+      ! Trigg level used when function LevelTrigg is set.
+      ! The value of the first curve attribute (in Attribute[0]) is compared with
+      ! TriggLevel. When the value passes TriggLevel from beneath, a trigger is activated.
+      !*/
+      Object TriggLevel $Attribute 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Prepare for a trigg.
+      ! Prepare for a trigg. When the BeforeTrigg function is configured, data has to be
+      ! stored before the trigg, and this is done when Prepare is set.
+      ! If function is AlwaysPrepared, Prepare is set as soon as the New flag is reset, otherwise
+      ! Prepare has to be set by the user. When prepare is set, the data for the previous curve
+      ! is overwritten.
+      ! Prepare is reset by the handler.
+      !*/
+      Object Prepare $Attribute 9
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Stores measurants data types. It has to be of any of
+      !  the types pwr_tBoolean, pwr_tFloat32, pwr_tFloat64,
+      !  pwr_tInt8, pwr_tInt16, pwr_tInt32, pwr_tUInt8,
+      !  pwr_tUInt16, or pwr_tUInt32.
+      !*/
+      Object AttributeType $Attribute 10
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$TypeId"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 10
+        EndBody
+      EndObject
+      !/**
+      !  The complete name of analog sampled attributes, for
+      !  example PROC1-TEMP1.ActualValue. The attributes have to
+      !  be represented by local objects.
+      !*/
+      Object Attribute $Attribute 11
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$AttrRef"
+          Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 10
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Data buffers. Array attributes that contains the data of the curves.
+      !  Data buffers. Array attributes that contains the data of the curves.
+      !  Objects for the databuffers has to be configured by the user. The extent of the
+      !  buffer attributes should equal or exceed the storeage size, i.e. the size of the
+      !  sampled attribute's type multiplied by NoOfPoints.
+      !*/
+      Object Buffers $Attribute 12
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$AttrRef"
+          Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 10
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Time buffer. An array attribute that contain the time axis data for the curves.
+      !  Time buffer. An array attribute that contain the time axis data for the curves.
+      !  The object for the time buffer has to be configured by the user. The extent of the
+      !  buffer attributes should equal or exceed the storeage size for the time data, which
+      !  is 4 * NoOfPoints. The time is stored as a pwr_tFloat32.
+      !*/
+      Object TimeBuffer $Attribute 13
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$AttrRef"
+        EndBody
+      EndObject
+      !/**
+      !  Minimum value of Y-axis range. Optional.
+      !*/
+      Object YMinValue $Attribute 14
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 10
+        EndBody
+      EndObject
+      !/**
+      !  Maximum value for Y-axis range. Optional.
+      !*/
+      Object YMaxValue $Attribute 15
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 10
+        EndBody
+      EndObject
+      !/**
+      !  Number of samples in the curve.
+      !*/
+      Object NoOfPoints $Attribute 16
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Number of samples before the trigger point.
+      !  Number of samples before the trigger point.
+      !  If BeforeTrigg is set in the Function attribute, samples will be stored
+      !  before the trigg event. This is the number of points before the trigg
+      !  that will be viewed. The number should be greater than 1 and less than
+      !  NoOfPoints.
+      !*/
+      Object NoOfPointsBeforeTrigg $Attribute 17
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the first element in DataBuffer since the
+      !  triggering has taken place.
+      !*/
+      Object TriggIndex $Attribute 18
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the first element in the data buffer with valid data.
+      !*/
+      Object FirstIndex $Attribute 19
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the last element in the data buffer with valid data.
+      !*/
+      Object LastIndex $Attribute 20
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Indicates that there is a new fast curve to display.
+      !  Indicates that there is a new fast curve to display. 
+      !	 New is set when data is successfully stored to indicate for the
+      !  any Fast window that new data is present. New is reset after
+      !  approximately 2 seconds.
+      !*/
+      Object New $Attribute 21
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Indicates if a curve is configured correctly and the data for the curve will be stored.
+      !*/
+      Object CurveValid $Attribute 22
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 10
+        EndBody
+      EndObject
+      !/**
+      !  Time for the last detecteced trigg event.
+      !*/
+      Object TriggTime $Attribute 23
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Time"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object Template DsFastCurve
+      Body RtBody
+	Attr ScanTime = 0.1
+ 	Attr NoOfPoints = 100
+      EndBody
+    EndObject
+  EndObject
+EndSObject
+
+
+
+
+
+
+
+

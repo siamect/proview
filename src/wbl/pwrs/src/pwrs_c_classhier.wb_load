@@ -7,6 +7,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group ClassDefinition
 !  Root object of a class hierarchy.
 !  The ClassHier object is a toplevel object in a class volume, and act as
 !  the anscestor to the class definition hierarchy.

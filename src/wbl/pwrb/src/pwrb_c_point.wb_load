@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group Plc,PlcEdit
 !  Object that makes it possible to the configurator to
 !  have an influence on the route of the connection lines.
 !  

@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group Plc,PlcAnalog
 !  @Summary Table for curve interpolation.
 !  A Curve object interpolates in a table specified by a
 !  Table object.

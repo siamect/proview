@@ -4,6 +4,58 @@
 !
 !  <Description>.
 !
+!/**
+!  @Version 1.0
+!  @Code rs_plc_nmps_display.c
+!  @Group MaterialPlanning,Plc
+!  @Summary Display contents of data object in NMps cells.
+!  CellDisp objects are used to display the content of data objects
+!  that is stored i NMpsCells, in the process graphics. It also makes it 
+!  possible for the operator to remove data objects form the cell, move 
+!  dataobjects forward or backwards in the cell, or select a data object 
+!  to gain more information about the object.
+!  @image orm_celldisp_fo.gif
+!
+!  With the CellDisp object you can display a table of the data objects
+!  in a cell, with the object name, and some selected attributes. The 
+!  CellDisp object contains a number or arrays the values for the selected 
+!  attributes is copied. The arrays can be displayed in a MMI picture.
+!  
+!  There is also a select function, where a data object is selected, and
+!  the selected object is copied to a dispay object, i.e. a permanent object
+!  of the same class as the data object. If the content of the display
+!  object is viewed in the process graphics, it will always display the
+!  content of the currently selected data object.
+!
+!  Several tables in the same process graph, can have a common select
+!  function, by using the DispLink object. One common DispLink object
+!  is connected to all the DispCell, which will guarantee that at most
+!  one data object is selected. In the DispLink object there is also
+!  functions to remove the selected data object, or to move the object
+!  forward or backward in the cell.
+!
+!  The selection is done, either with a select button in each row of
+!  the table, or with the SelectNext/SelectPrevious function in the
+!  DispLink object. With SelectNext/SelectPrevious the selection can
+!  be performed with the function keys.
+!
+!  One table cah display up to 10 cell objects. In the CellDisp object
+!  there is room for 5 attributes of type float, 5 integers and 5
+!  boolean. There is also an array containing the objid of the data
+!  objects.
+!
+!  Maximum number of data objects displayed in one table is 60.
+!  The connected cell objects can be of class NMpsCell or
+!  NMpsStoreCell.
+!  A DispLink object can link an unlimited number of CellDisp objects.
+!  The select function is not conntected to the select function of the
+!  NMpsStoreCell.
+!
+! @b See also
+!  @classlink DispLink nmps_displink.html
+!  @classlink CellUpdate nmps_cellupdate.html
+!  @classlink NMpsCell nmps_cell.html
+!*/
 SObject NMps:Class
   Object CellDisp $ClassDef 44
     Body SysBody
@@ -18,6 +70,9 @@ SObject NMps:Class
       Body SysBody
         Attr StructName = "CellDisp"
       EndBody
+      !/**
+      ! Data input connected to a GetData refering to a NMpsCell or NMpsStoreCell object.
+      !*/
       Object Cell1 $Input 1
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -28,6 +83,9 @@ SObject NMps:Class
           Attr GraphName = "Cell1"
         EndBody
       EndObject
+      !/**
+      ! Data input connected to a GetData refering to a NMpsCell or NMpsStoreCell object.
+      !*/
       Object Cell2 $Input 2
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -37,6 +95,9 @@ SObject NMps:Class
           Attr GraphName = "Cell2"
         EndBody
       EndObject
+      !/**
+      ! Data input connected to a GetData refering to a NMpsCell or NMpsStoreCell object.
+      !*/
       Object Cell3 $Input 3
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -46,6 +107,9 @@ SObject NMps:Class
           Attr GraphName = "Cell3"
         EndBody
       EndObject
+      !/**
+      ! Data input connected to a GetData refering to a NMpsCell or NMpsStoreCell object.
+      !*/
       Object Cell4 $Input 4
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -55,6 +119,9 @@ SObject NMps:Class
           Attr GraphName = "Cell4"
         EndBody
       EndObject
+      !/**
+      ! Data input connected to a GetData refering to a NMpsCell or NMpsStoreCell object.
+      !*/
       Object Cell5 $Input 5
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -64,6 +131,9 @@ SObject NMps:Class
           Attr GraphName = "Cell5"
         EndBody
       EndObject
+      !/**
+      ! Data input connected to a GetData refering to a NMpsCell or NMpsStoreCell object.
+      !*/
       Object Cell6 $Input 6
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -73,6 +143,9 @@ SObject NMps:Class
           Attr GraphName = "Cell6"
         EndBody
       EndObject
+      !/**
+      ! Data input connected to a GetData refering to a NMpsCell or NMpsStoreCell object.
+      !*/
       Object Cell7 $Input 7
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -82,6 +155,9 @@ SObject NMps:Class
           Attr GraphName = "Cell7"
         EndBody
       EndObject
+      !/**
+      ! Data input connected to a GetData refering to a NMpsCell or NMpsStoreCell object.
+      !*/
       Object Cell8 $Input 8
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -91,6 +167,9 @@ SObject NMps:Class
           Attr GraphName = "Cell8"
         EndBody
       EndObject
+      !/**
+      ! Data input connected to a GetData refering to a NMpsCell or NMpsStoreCell object.
+      !*/
       Object Cell9 $Input 9
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -100,6 +179,9 @@ SObject NMps:Class
           Attr GraphName = "Cell9"
         EndBody
       EndObject
+      !/**
+      ! Data input connected to a GetData refering to a NMpsCell or NMpsStoreCell object.
+      !*/
       Object Cell10 $Input 10
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -109,6 +191,12 @@ SObject NMps:Class
           Attr GraphName = "Cell10"
         EndBody
       EndObject
+      !/**
+      ! Connected to the output of a DispLink object. Is used to link the select 
+      ! function with other DispLink objects, or to use the function for remove
+      ! the selected data object from the cell, move the object forward or backward,
+      ! or select next or previous object.
+      !*/
       Object Link $Input 11
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -117,6 +205,12 @@ SObject NMps:Class
           Attr GraphName = "Link"
         EndBody
       EndObject
+      !/**
+      ! Connected to a GetData object refering to a display object of the same 
+      ! class as the data objects handled by the cells. The DisplayObject makes
+      ! it possible to display more detailed information for the seleted object.
+      ! The content of the selected data object is copied to the display object.
+      !*/
       Object DisplayObject $Input 12
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -126,31 +220,60 @@ SObject NMps:Class
           Attr GraphName = "DObj"
         EndBody
       EndObject
+      !/**
+      ! Class of the data objects handled by the cell.
+      !*/
       Object DataClass $Intern 13
         Body SysBody
           Attr TypeRef = "pwrs:Type-$ClassId"
         EndBody
       EndObject
+      !/**
+      ! Specific functions
+      ! - 0 Normal function.
+      ! - 1 The data objects are stored in reverse order.
+      !*/
       Object Function $Intern 14
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
         EndBody
       EndObject
+      !/**
+      ! If the selection function is shared with other DispCell objects, the must
+      ! be a specified order, that the selection is moved between the different
+      ! DispCell tables. The DispCell objects connected to one DispLink object are
+      ! numbered from 1 and upwards. The number for each DispCell object has to
+      ! be unic and the should be no jumps in the enumeration.
+      !*/ 
       Object Number $Intern 15
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
         EndBody
       EndObject
+      !/**
+      ! Size of the displayed table (number or rows). Largest size is 60.
+      !*/
       Object MaxSize $Intern 16
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
         EndBody
       EndObject
+      !/**
+      ! SelDirection changes the selection direction, i.e the function of
+      ! SelectNext/SelectPrevious and MoveForward/MoveBackward is reversed.
+      ! This is useful if several CellDisp objects are linked, and some 
+      ! displayes their objects in normal order, other in reverse order.
+      !*/
       Object SelDirection $Intern 17
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
         EndBody
       EndObject
+      !/**
+      ! The name of attributes of type float in the data object, that
+      ! should be displayed in the table. Up to 5 float attributes can be specified.
+      ! The attribute in FloatAttr[0] is copied to F1, FloatAttr[1] to F2, etc.
+      !*/
       Object FloatAttr $Intern 18
         Body SysBody
           Attr TypeRef = "pwrs:Type-$String32"
@@ -158,6 +281,11 @@ SObject NMps:Class
 	  Attr Elements = 5
         EndBody
       EndObject
+      !/**
+      ! The name of attributes of type boolean in the data object, that
+      ! should be displayed in the table. Up to 5 boolean attributes can be specified.
+      ! The attribute in BooleanAttr[0] is copied to B1, BooleanAttr[1] to B2, etc.
+      !*/
       Object BooleanAttr $Intern 19
         Body SysBody
           Attr TypeRef = "pwrs:Type-$String32"
@@ -165,6 +293,11 @@ SObject NMps:Class
 	  Attr Elements = 5
         EndBody
       EndObject
+      !/**
+      ! The name of attributes of type integer in the data object, that
+      ! should be displayed in the table. Up to 5 integer attributes can be specified.
+      ! The attribute in IntAttr[0] is copied to I1, IntAttr[1] to I2, etc.
+      !*/
       Object IntAttr $Intern 20
         Body SysBody
           Attr TypeRef = "pwrs:Type-$String32"
@@ -172,6 +305,11 @@ SObject NMps:Class
 	  Attr Elements = 5
         EndBody
       EndObject
+      !/**
+      ! Array for selecting objects in the table.
+      ! An object in a row is selected by setting the corresponding index in Select.
+      ! Select[n] could be connected to a pushbutton of row n in the table.
+      !*/
       Object Select $Intern 21
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
@@ -190,6 +328,9 @@ SObject NMps:Class
 	  Attr Elements = 60
         EndBody
       EndObject
+      !/**
+      ! Array with objid of the data objects.
+      !*/
       Object Objid $Intern 23
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Objid"
@@ -199,6 +340,9 @@ SObject NMps:Class
 	  Attr Elements = 60
         EndBody
       EndObject
+      !/**
+      ! Contains the values of the attribute specfied in FloatAttr[0].
+      !*/
       Object F1 $Intern 24
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -208,6 +352,9 @@ SObject NMps:Class
 	  Attr Elements = 60
         EndBody
       EndObject
+      !/**
+      ! Contains the values of the attribute specfied in FloatAttr[1].
+      !*/
       Object F2 $Intern 25
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -217,6 +364,9 @@ SObject NMps:Class
 	  Attr Elements = 60
         EndBody
       EndObject
+      !/**
+      ! Contains the values of the attribute specfied in FloatAttr[2].
+      !*/
       Object F3 $Intern 26
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -226,6 +376,9 @@ SObject NMps:Class
 	  Attr Elements = 60
         EndBody
       EndObject
+      !/**
+      ! Contains the values of the attribute specfied in FloatAttr[3].
+      !*/
       Object F4 $Intern 27
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -235,6 +388,9 @@ SObject NMps:Class
 	  Attr Elements = 60
         EndBody
       EndObject
+      !/**
+      ! Contains the values of the attribute specfied in FloatAttr[4].
+      !*/
       Object F5 $Intern 28
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -244,6 +400,9 @@ SObject NMps:Class
 	  Attr Elements = 60
         EndBody
       EndObject
+      !/**
+      ! Contains the values of the attribute specfied in BooleanAttr[0].
+      !*/
       Object B1 $Intern 29
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
@@ -253,6 +412,9 @@ SObject NMps:Class
 	  Attr Elements = 60
         EndBody
       EndObject
+      !/**
+      ! Contains the values of the attribute specfied in BooleanAttr[1].
+      !*/
       Object B2 $Intern 30
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
@@ -262,6 +424,9 @@ SObject NMps:Class
 	  Attr Elements = 60
         EndBody
       EndObject
+      !/**
+      ! Contains the values of the attribute specfied in BooleanAttr[2].
+      !*/
       Object B3 $Intern 31
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
@@ -271,6 +436,9 @@ SObject NMps:Class
 	  Attr Elements = 60
         EndBody
       EndObject
+      !/**
+      ! Contains the values of the attribute specfied in BooleanAttr[3].
+      !*/
       Object B4 $Intern 32
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
@@ -280,6 +448,9 @@ SObject NMps:Class
 	  Attr Elements = 60
         EndBody
       EndObject
+      !/**
+      ! Contains the values of the attribute specfied in BooleanAttr[4].
+      !*/
       Object B5 $Intern 33
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
@@ -289,6 +460,9 @@ SObject NMps:Class
 	  Attr Elements = 60
         EndBody
       EndObject
+      !/**
+      ! Contains the values of the attribute specfied in IntAttr[0].
+      !*/
       Object I1 $Intern 34
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
@@ -298,6 +472,9 @@ SObject NMps:Class
 	  Attr Elements = 60
         EndBody
       EndObject
+      !/**
+      ! Contains the values of the attribute specfied in IntAttr[1].
+      !*/
       Object I2 $Intern 35
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
@@ -307,6 +484,9 @@ SObject NMps:Class
 	  Attr Elements = 60
         EndBody
       EndObject
+      !/**
+      ! Contains the values of the attribute specfied in IntAttr[2].
+      !*/
       Object I3 $Intern 36
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
@@ -316,6 +496,9 @@ SObject NMps:Class
 	  Attr Elements = 60
         EndBody
       EndObject
+      !/**
+      ! Contains the values of the attribute specfied in IntAttr[3].
+      !*/
       Object I4 $Intern 37
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
@@ -325,6 +508,9 @@ SObject NMps:Class
 	  Attr Elements = 60
         EndBody
       EndObject
+      !/**
+      ! Contains the values of the attribute specfied in IntAttr[4].
+      !*/
       Object I5 $Intern 38
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
@@ -334,6 +520,9 @@ SObject NMps:Class
 	  Attr Elements = 60
         EndBody
       EndObject
+      !/**
+      ! Calculated offset for the float attributes.
+      !*/
       Object FloatAttrOffs $Intern 39
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
@@ -342,6 +531,9 @@ SObject NMps:Class
 	  Attr Elements = 5
         EndBody
       EndObject
+      !/**
+      ! Calculated offset for the boolean attributes.
+      !*/
       Object BooleanAttrOffs $Intern 40
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
@@ -350,6 +542,9 @@ SObject NMps:Class
 	  Attr Elements = 5
         EndBody
       EndObject
+      !/**
+      ! Calculated offset for the integer attributes.
+      !*/
       Object IntAttrOffs $Intern 41
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"

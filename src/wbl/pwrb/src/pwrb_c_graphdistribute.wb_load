@@ -7,6 +7,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group ProjectConfiguration
 !  @Summary Configures distribution of graphs.
 !  The GraphDistribute object configures distribution of ge graphs
 !  and other files related to the operator environment.

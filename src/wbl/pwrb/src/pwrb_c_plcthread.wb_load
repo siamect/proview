@@ -3,6 +3,14 @@
 !  PROVIEW/R
 !  Copyright (C) 1999 by Mandator AB.
 !
+!/**
+! @Code rt_c_plcthread.c
+! @Group Servers,NodeConfiguration
+! @Summary Keeps data of a plc thread. In runtime data is updated periodically.
+! Keeps data of a plc thread. Prio and ScanTime are input to the plc process
+! which starts all threads. The rest of the parameters are output from the
+! plc thread and updated periodically.
+!*/
 SObject pwrb:Class
   Object PlcThread $ClassDef 261 
     Body SysBody
@@ -14,21 +22,33 @@ SObject pwrb:Class
       Body SysBody
         Attr StructName = "PlcThread"
       EndBody 
+      !/**
+      !  Description of the plc thread.
+      !*/
       Object Description $Attribute 1
         Body SysBody
           Attr TypeRef = "pwrs:Type-$String80"
         EndBody
       EndObject
+      !/**
+      !  Priority of the plc thread.
+      !*/
       Object Prio $Attribute 2
 	Body SysBody
 	  Attr TypeRef = "pwrs:Type-$Int32"
 	EndBody
       EndObject
+      !/**
+      !  Scan time for the plc thread.
+      !*/
       Object ScanTime $Attribute 3
 	Body SysBody
 	  Attr TypeRef = "pwrs:Type-$Float32"
 	EndBody
       EndObject
+      !/**
+      !  Minimum actual scan time since start of thread.
+      !*/
       Object ScanTimeMin $Attribute 4
 	Body SysBody
 	  Attr TypeRef = "pwrs:Type-$Float32"
@@ -36,6 +56,9 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
 	EndBody
       EndObject
+      !/**
+      !  Mean scan time for last x cycles (x defined by 'ScanTimeMeanCount').
+      !*/
       Object ScanTimeMean $Attribute 5
 	Body SysBody
 	  Attr TypeRef = "pwrs:Type-$Float32"
@@ -43,6 +66,9 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
 	EndBody
       EndObject
+      !/**
+      !  Maximum actual scan time since start of thread.
+      !*/
       Object ScanTimeMax $Attribute 6
 	Body SysBody
 	  Attr TypeRef = "pwrs:Type-$Float32"
@@ -50,6 +76,9 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
 	EndBody
       EndObject
+      !/**
+      !  Number of cycles to base 'ScanTimeMean' on.
+      !*/
       Object ScanTimeMeanCount $Attribute 7
 	Body SysBody
 	  Attr TypeRef = "pwrs:Type-$Int32"
@@ -57,6 +86,9 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
 	EndBody
       EndObject
+      !/**
+      !  Total number of cycles since start of thread.
+      !*/
       Object Count $Attribute 8
 	Body SysBody
 	  Attr TypeRef = "pwrs:Type-$Int32"
@@ -64,6 +96,9 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
 	EndBody
       EndObject
+      !/**
+      !  Actual execution time for last cycle (exlusive wait time).
+      !*/
       Object Last $Attribute 9
 	Body SysBody
 	  Attr TypeRef = "pwrs:Type-$Float32"
@@ -71,6 +106,9 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
 	EndBody
       EndObject
+      !/**
+      !  Total execution time since start of thread.
+      !*/
       Object Sum $Attribute 10
 	Body SysBody
 	  Attr TypeRef = "pwrs:Type-$Float32"
@@ -78,6 +116,9 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
 	EndBody
       EndObject
+      !/**
+      !  Minimum execution time for a cycle since start of thread.
+      !*/
       Object Min $Attribute 11
 	Body SysBody
 	  Attr TypeRef = "pwrs:Type-$Float32"
@@ -85,6 +126,9 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
 	EndBody
       EndObject
+      !/**
+      !  Mean execution time since start of plc thread.
+      !*/
       Object Mean $Attribute 12
 	Body SysBody
 	  Attr TypeRef = "pwrs:Type-$Float32"
@@ -92,6 +136,9 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
 	EndBody
       EndObject
+      !/**
+      !  Relation between mean execution time and supposed scan time(percentage).
+      !*/
       Object Coverage $Attribute 13
 	Body SysBody
 	  Attr TypeRef = "pwrs:Type-$Float32"
@@ -99,6 +146,9 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
 	EndBody
       EndObject
+      !/**
+      !  Maximum execution time for a cycle since start of thread.
+      !*/
       Object Max $Attribute 14
 	Body SysBody
 	  Attr TypeRef = "pwrs:Type-$Float32"
@@ -106,6 +156,9 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
 	EndBody
       EndObject
+      !/**
+      !  Number of cycles where exection is less than 1/8:th of 'ScanTime'. 
+      !*/
       Object Count_1_8 $Attribute 15
 	Body SysBody
 	  Attr TypeRef = "pwrs:Type-$Int32"
@@ -113,6 +166,9 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
 	EndBody
       EndObject
+      !/**
+      !  Number of cycles where exection is less than 1/4:th of 'ScanTime'.
+      !*/
       Object Count_1_4 $Attribute 16
 	Body SysBody
 	  Attr TypeRef = "pwrs:Type-$Int32"
@@ -120,6 +176,9 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
 	EndBody
       EndObject
+      !/**
+      !  Number of cycles where exection is less than 1/2:th of 'ScanTime'.
+      !*/
       Object Count_1_2 $Attribute 17
 	Body SysBody
 	  Attr TypeRef = "pwrs:Type-$Int32"
@@ -127,6 +186,9 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
 	EndBody
       EndObject
+      !/**
+      !  Number of cycles where exection is less than 'ScanTime'.
+      !*/
       Object Count_1_1 $Attribute 18
 	Body SysBody
 	  Attr TypeRef = "pwrs:Type-$Int32"
@@ -134,6 +196,9 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
 	EndBody
       EndObject
+      !/**
+      !  Number of cycles where exection is less than 2 times 'ScanTime'.
+      !*/
       Object Count_2_1 $Attribute 19
 	Body SysBody
 	  Attr TypeRef = "pwrs:Type-$Int32"
@@ -141,6 +206,9 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
 	EndBody
       EndObject
+      !/**
+      !  Number of cycles where exection is less than 4 times 'ScanTime'.
+      !*/
       Object Count_4_1 $Attribute 20
 	Body SysBody
 	  Attr TypeRef = "pwrs:Type-$Int32"
@@ -148,6 +216,9 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
 	EndBody
       EndObject
+      !/**
+      !  Number of cycles where exection is less than 8 times 'ScanTime'.
+      !*/
       Object Count_8_1 $Attribute 21
 	Body SysBody
 	  Attr TypeRef = "pwrs:Type-$Int32"
@@ -155,6 +226,9 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
 	EndBody
       EndObject
+      !/**
+      !  Number of cycles where exection is more than 8 times 'ScanTime'.
+      !*/
       Object CountHigh $Attribute 22
 	Body SysBody
 	  Attr TypeRef = "pwrs:Type-$Int32"
@@ -162,6 +236,9 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
 	EndBody
       EndObject
+      !/**
+      !  Number of cycles where a cycle did not start on time. 
+      !*/
       Object SlipCount $Attribute 33
 	Body SysBody
 	  Attr TypeRef = "pwrs:Type-$Int32"
@@ -169,6 +246,9 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
 	EndBody
       EndObject
+      !/**
+      !  1/8:th of 'ScanTime'.
+      !*/
       Object Limit_1_8 $Attribute 23
 	Body SysBody
 	  Attr TypeRef = "pwrs:Type-$Float32"
@@ -176,6 +256,9 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
 	EndBody
       EndObject
+      !/**
+      !  1/4:th of 'ScanTime'.
+      !*/
       Object Limit_1_4 $Attribute 24
 	Body SysBody
 	  Attr TypeRef = "pwrs:Type-$Float32"
@@ -183,6 +266,9 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
 	EndBody
       EndObject
+      !/**
+      !  1/2:th of 'ScanTime'.
+      !*/
       Object Limit_1_2 $Attribute 25
 	Body SysBody
 	  Attr TypeRef = "pwrs:Type-$Float32"
@@ -190,6 +276,9 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
 	EndBody
       EndObject
+      !/**
+      !  1/1:th of 'ScanTime'.
+      !*/
       Object Limit_1_1 $Attribute 26
 	Body SysBody
 	  Attr TypeRef = "pwrs:Type-$Float32"
@@ -197,6 +286,9 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
 	EndBody
       EndObject
+      !/**
+      !  2/1:th of 'ScanTime'.
+      !*/
       Object Limit_2_1 $Attribute 27
 	Body SysBody
 	  Attr TypeRef = "pwrs:Type-$Float32"
@@ -204,6 +296,9 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
 	EndBody
       EndObject
+      !/**
+      !  4/1:th of 'ScanTime'.
+      !*/
       Object Limit_4_1 $Attribute 28
 	Body SysBody
 	  Attr TypeRef = "pwrs:Type-$Float32"
@@ -211,6 +306,9 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
 	EndBody
       EndObject
+      !/**
+      !  8/1:th of 'ScanTime'.
+      !*/
       Object Limit_8_1 $Attribute 29
 	Body SysBody
 	  Attr TypeRef = "pwrs:Type-$Float32"
@@ -218,6 +316,9 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
 	EndBody
       EndObject
+      !/**
+      !  Direct link.
+      !*/
       Object Dlid $Attribute 30
 	Body SysBody
 	  Attr TypeRef = "pwrs:Type-$RefId"
@@ -225,6 +326,9 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
 	EndBody
       EndObject
+      !/**
+      !  Absoulute time when 'ScanTimeMean' was last calculated.
+      !*/
       Object ScanTimeStart $Attribute 31
 	Body SysBody
 	  Attr TypeRef = "pwrs:Type-$Time"
@@ -232,6 +336,9 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
 	EndBody
       EndObject
+      !/**
+      !  Used for timer-handling
+      !*/
       Object TimerStart $Attribute 32
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"

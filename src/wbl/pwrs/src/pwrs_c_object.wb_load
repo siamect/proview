@@ -3,9 +3,10 @@
 !  PROVIEW/R
 !  Copyright (C) 1996 by Comator Process AB.
 !
-!  <Description>.
-!
-!
+!/**
+!  @Group ClassDefinition
+!  Class for default popup menu definitions.
+!*/
 SObject pwrs:Class
   Object $Object $ClassDef pwr_eCix_Object
     Body SysBody

@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_arithm.c
+!  @Group Plc,PlcAnalog
 !  @Summary Time integrator
 !  Time integrator.
 !  @image orm_timint_fo.gif

@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_logic.h
+!  @Group Plc,PlcAnalog
 !  @Summary User-defined logical expression
 !  User-defined logical expression.
 !  @image orm_darithm_fo.gif

@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_pid.c
+!  @Group Plc,PlcControl
 !  @Summary Positional 3-step controller
 !  Positional 3-step controller with position feedback and
 !  dead zone. Positional is aimed at the input signal and

@@ -2,8 +2,25 @@
 !
 !  PROVIEW/R
 !
-!  <Description>.
+!/**
+!  @Version 1.0
+!  @Group MaterialPlanning,Plc
+!  @Summary Get a reference to the current data object in a NMpsCell subwindow.
 !
+!  Get a reference the current data object in a NMpsCell subwindow.
+!  @image orm_currentdata_fo.gif
+!  The object is used in a NMpsCell subwindow. A cell subwindow is exectuted
+!  one time for each data object in the cell, in one plc scan, plus one initiate
+!  execution.
+!  The output hold a pointer of the currently executed data object. This can be
+!  used as input to a data input of a DataArithm object.
+!  In the initiate execution, the current data is zero.
+!
+! @b See also
+!  @classlink NMpsCell nmps_nmpscell.html
+!  @classlink CurrentIndex nmps_currentindex.html
+!  @classlink DataArithm pwrb_dataarithm.html
+!*/
 SObject NMps:Class
   Object CurrentData $ClassDef 11
     Body SysBody
@@ -18,6 +35,9 @@ SObject NMps:Class
       Body SysBody
         Attr StructName = "currentdata"
       EndBody
+      !/**
+      ! Pointer to the currently executed data object.
+      !*/
       Object DataCurrentP $Output 1
         Body SysBody
           Attr PgmName = "DataCurrentP"

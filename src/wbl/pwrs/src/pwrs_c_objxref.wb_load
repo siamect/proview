@@ -3,8 +3,10 @@
 !  PROVIEW/R
 !  Copyright (C) 1996 by Comator Process AB.
 !
-!  <Description>.
-!
+!/**
+!  @Group ClassDefinition
+!  Definition of a cross reference attribute.
+!*/
 !
 SObject pwrs:Class
   Object $ObjXRef $ClassDef pwr_eCix_ObjXRef

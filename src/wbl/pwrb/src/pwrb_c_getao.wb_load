@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group Plc,PlcIO
 !  @Summary Get Ao signal
 !  Get Analog output.
 !  @image orm_getao_fo.gif

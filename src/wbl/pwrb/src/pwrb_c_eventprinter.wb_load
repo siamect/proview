@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group Operator,NodeConfiguration
 !  Configures an event printer for transcription of alarm
 !  respectively info messages.
 !  

@@ -3,9 +3,10 @@
 !  PROVIEW/R
 !  Copyright (C) 1996 by Comator Process AB.
 !
-!  <Description>.
-!
-!
+!/**
+!  @Group ClassDefinition
+!  Root of a runtime popup menu defintion tree.
+!*/
 SObject pwrs:Class
   Object $RtMenu $ClassDef pwr_eCix_RtMenu
     Body SysBody

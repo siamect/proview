@@ -8,6 +8,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group Volumes
 !  A dynamic volume only exist in runtime, and contains object that is
 !  created and deleted in runtime.
 !  When the dynamic volume is created, also a dynamic volume object is created.

@@ -2,8 +2,20 @@
 !
 !  PROVIEW/R
 !
-!  <Description>.
+!/**
+!  @Version 1.0
+!  @Code rs_plc_macro_nmps.h
+!  @Group Plc
+!  @Summary A loop object with a subwindow that is executed a number of times each plcscan.
 !
+!  A loop object with a subwindow that is executed a number of times each plcscan.
+!  @image orm_cloop_fo.gif
+!  The object has a loop index which is fetched with the CurrentIndex object.
+!  The index is controlled by the attribute StartIndex, StopIndex and Increment.
+!
+! @b See also
+!  @classlink CurrentIndex nmps_currentindex.html
+!*/
 SObject NMps:Class
   Object CLoop $ClassDef 14
     Body SysBody
@@ -15,6 +27,9 @@ SObject NMps:Class
       Body SysBody
         Attr StructName = "CLoop"
       EndBody
+      !/**
+      ! Input for conditional execution of the loop.
+      !*/
       Object Condition $Input 1
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
@@ -22,24 +37,36 @@ SObject NMps:Class
           Attr GraphName = "con"
         EndBody
       EndObject
+      !/**
+      ! Start value for the loop index.
+      !*/
       Object StartIndex $Input 2
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "Start"
         EndBody
       EndObject
+      !/**
+      ! Increment of loop index each loop scan.
+      !*/
       Object Increment $Input 3
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "Incr"
         EndBody
       EndObject
+      !/**
+      ! When loop index has reached this value, the loop is stoped.
+      !*/ 
       Object StopIndex $Input 4
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "Stop"
         EndBody
       EndObject
+      !/**
+      ! Loop index. The loop index is reference by CurrentIndex objects in the subwindow.
+      !*/
       Object CurrentIndex $Intern 5
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"

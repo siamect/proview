@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group PlantConfiguration,Signals
 !  @Summary Pulse output signal
 !  Pulse Output. A modified Do object to make specified
 !  pulses on a Do-channel.

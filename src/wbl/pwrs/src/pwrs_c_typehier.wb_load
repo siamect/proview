@@ -3,9 +3,10 @@
 !  PROVIEW/R
 !  Copyright (C) 1996 by Comator Process AB.
 !
-!  <Description>.
-!
-!
+!/**
+!  @Group ClassDefinition
+!  Root of a type definition tree.
+!*/
 SObject pwrs:Class
   Object $TypeHier $ClassDef pwr_eCix_TypeHier
     Body SysBody

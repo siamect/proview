@@ -2,8 +2,55 @@
 !
 !  PROVIEW/R
 !
-!  <Description>.
+!/**
+!  @Version 1.0
+!  @Code rs_plc_nmps.c
+!  @Group MaterialPlanning,Plc
+!  @Summary Container of data objects.
 !
+!  The NMpsCell object is a container for data objects.
+!  @image orm_nmpscell_fo.gif
+!  The cell contains a number of positions to store references to data objects.
+!  The positions are numbered from 1. Every position contains a pointer to
+!  the data object, objid for the object, two boolean that marks if the rear
+!  or front is inside the cell, and finally a directlink id.
+!
+!  The first inserted data object is always placed in position 1. When more
+!  objects are inserted at the front end of the cell, they are inserted at
+!  position 1 and the other data object are shifted downwards in the cell.
+!
+!  Data object can also be inserted at the rear end of the cell. In this case
+!  it is positioned in the free position with lowest index.
+!
+!  Data objects can be inserted
+!
+!  1. by a connected transport object (NMpsTrp, NMpsTrpRR or NMpsTrpFF). A transport
+!     object can insert an object at the front or rear end of the cell.
+!  2. by the extern function. This is used by application programs. An data object can
+!     be inserted at arbitrary position.
+!
+! @b Subwindow
+! A subwindow to a NMpsCell object is used, when the same operation should be
+! executed for all the data objects in the cell. The code of the subwindow will,
+! during one plc scan, be executed
+!
+! - one time for initiation
+! - one time for each data object in the cell.
+!
+! The data objects are refered to with the CurrentData object. You can also use
+! the CurrentIndex object, which gives the index of the current data object.
+! During the initiation phase, CurrentData and CurrentIndex is zero.
+!
+! Since the subwindow is executed several times in the same plc scan, it should
+! not contain objects with state attributes.
+!
+! @b See also
+!  @classlink CurrentData nmps_currentdata.html
+!  @classlink CurrentIndex nmps_currentindex.html
+!  @classlink NMpsTrp nmps_nmpstrp.html
+!  @classlink NMpsTrpFF nmps_nmpstrpff.html
+!  @classlink NMpsTrpRR nmps_nmpstrprr.html
+!*/
 SObject NMps:Class
   Object NMpsCell $ClassDef 1
     Body SysBody
@@ -14,6 +61,17 @@ SObject NMps:Class
       Body SysBody
         Attr StructName = "NMpsCell"
       EndBody
+      !/**
+      ! @Summary Connection to a transport object, NMpsTrp, NMpsTrpFF or NMpsTrpRR.
+      ! Connection to a transport object, NMpsTrp, NMpsTrpFF or NMpsTrpRR.
+      !
+      ! Data objects transported into the cell is inserted at the front end of the cell.
+      ! They will be inserted at first position and the other data object are
+      ! shifted downwards in the cell.
+      !
+      ! Data objects transported from the cell is fetched from the front end with
+      ! index 1. The other data objects are shifted upward in the cell.
+      !*/
       Object In $Output 1
         Body SysBody
           Attr PgmName = "In"
@@ -25,6 +83,16 @@ SObject NMps:Class
           Attr GraphName = "In"
         EndBody
       EndObject
+      !/**
+      ! @Summary Connection to a transport object, NMpsTrp, NMpsTrpFF or NMpsTrpRR.
+      ! Connection to a transport object, NMpsTrp, NMpsTrpFF or NMpsTrpRR.
+      ! Data transported into the cell is inserted at the rear end of the cell.
+      ! They will be inserted at first free position and the other data object 
+      ! remains their position.
+      !
+      ! Data objects transported from the cell is fetched from the rear end.
+      ! The other data object remains their position.
+      !*/
       Object Out $Output 2
         Body SysBody
           Attr PgmName = "Out"
@@ -36,17 +104,39 @@ SObject NMps:Class
           Attr GraphName = "Out"
         EndBody
       EndObject
+      !/**
+      !  Maximum number of data objects in the cell. Larges MaxSize is 30.
+      !*/
       Object MaxSize $Intern 3
         Body SysBody
           Attr PgmName = "MaxSize"
           Attr TypeRef = "pwrs:Type-$UInt16"
         EndBody
       EndObject
+      !/**
+      ! @Summary Special functions of the cell.
+      ! Special functions of the cell. 
+      ! Function is a bitmask, and the functions can be superimposed.
+      !
+      ! 4   If an data object is removed from the cell by the extern function
+      !     (ExternOpType=2,3 or 4) the data object is also remove from the rtdb 
+      !     database.
+      !
+      ! 8   When the cell is reseted by the ResetObject, the dataobject is also
+      !     removed from the database rtdb.
+      !*/
       Object Function $Intern 4
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Mask"
         EndBody
       EndObject
+      !/**
+      ! @Summary Digital object that will cause reset of the cell, i.e. all data object are removed.
+      ! Digital object that will cause reset of the cell, i.e. all data object are removed.
+      ! Name of an attribute of type pwr_tBoolean. When the attribute is high,
+      ! all the data object are removed from the cell. If Function 8 is set, the objects
+      ! is also removed from the rtdb database.
+      !*/
       Object ResetObject $Intern 5
         Body SysBody
           Attr TypeRef = "pwrs:Type-$ObjId"
@@ -61,6 +151,11 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
+      !/**
+      ! @Summary Flag for interaction with the nmps backup process. 
+      ! Flag for interaction with the nmps backup process. 
+      ! If the flag is set the cell is included in the next incremental backup.
+      !*/
       Object BackupNow $Intern 48
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
@@ -68,6 +163,9 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
+      !/**
+      ! Indicates that the cell i loaded from the nmps backup at startup.
+      !*/
       Object ReloadDone $Intern 49
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
@@ -75,6 +173,9 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
+      !/**
+      ! Flag for interaction with nmps applications using the NMpsAppl API.
+      !*/
       Object ReleaseAppl $Intern 263
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
@@ -82,6 +183,9 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
+      !/**
+      ! Flag that indicates that initiation should be done.
+      !*/
       Object InitTime $Intern 50
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
@@ -96,6 +200,9 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
+      !/**
+      ! Flag for interaction with the nmps mirror handler.
+      !*/
       Object MirrorRestart $Intern 52
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
@@ -103,6 +210,9 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
+      !/**
+      ! Indicates that the cell is full. Number of data objects equals MaxSize.
+      !*/
       Object CellFull $Output 7
         Body SysBody
           Attr PgmName = "CellFull"
@@ -112,6 +222,9 @@ SObject NMps:Class
           Attr GraphName = "full"
         EndBody
       EndObject
+      !/**
+      ! Number of data objects in the cell.
+      !*/
       Object NumberOfData $Intern 8
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt16"
@@ -119,6 +232,9 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
+      !/**
+      ! Not used.
+      !*/
       Object DataSelected $Intern 9
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt16"
@@ -126,6 +242,9 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
+      !/**
+      ! The last occupied index in the cell.
+      !*/
       Object LastIndex $Intern 10
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt16"
@@ -133,6 +252,9 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
+      !/**
+      ! Not used.
+      !*/
       Object SelectIndex $Intern 11
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt16"
@@ -140,6 +262,11 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
+      !/**
+      ! @Summary Indicates that a new object is inserted at front end of cell.
+      ! Indicates that a new object is inserted at front end of cell.
+      ! FrontNew is true in one plc scan.
+      !*/
       Object FrontNew $Output 12
         Body SysBody
           Attr PgmName = "FrontNew"
@@ -149,6 +276,11 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
+      !/**
+      ! @Summary Indicates that a new object is inserted at rear end of cell.
+      ! Indicates that a new object is inserted at rear end of cell.
+      ! RearNew is true in one plc scan.
+      !*/
       Object RearNew $Output 13
         Body SysBody
           Attr PgmName = "RearNew"
@@ -232,6 +364,9 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
+      !/**
+      ! Objid for a data object that is inserted from an extern program.
+      !*/
       Object ExternObjId $Intern 23
         Body SysBody
           Attr PgmName = "ExternObjId"
@@ -240,6 +375,22 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
+      !/**
+      ! @Summary Type of extern operation.
+      ! Type of extern operation.
+      !
+      ! 0   Insert ExternObjid into index 1 in the cell.
+      ! 1   Insert ExternObjid into the index specified in ExternIndex.
+      ! 2   Remove the object in index 1 in the cell.
+      ! 3   Remove the object in the index specified in ExternIndex.
+      ! 4   Remove the object with the objid specified in ExternObjid.
+      ! 8   Move the object specified in ExternObjid one step forward in the cell
+      !     (to higher index).
+      ! 9   Move the object specified in ExternObjid one step backwards in the cell
+      !     (to lower index).
+      ! 10  Remove the object with the objid specified in ExternObjid. The object
+      !     is not remove from the database, even if Function 4 is specified.
+      !*/
       Object ExternOpType $Intern 24
         Body SysBody
           Attr PgmName = "ExternOpType"
@@ -248,6 +399,15 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
+      !/**
+      ! @Summary Indicates that an extern function should be executed.
+      ! Indicates that an extern function shoud be executed.
+      ! When an application wan't to execute an extern function, it should
+      ! first fill in the other extern attributes and the the ExternFlag.
+      ! If there is a chance of collision between application programs,
+      ! you should check that ExternFlag is not already set.
+      ! The ExternFlag is reset by the cell when the extern function is finished.
+      !*/
       Object ExternFlag $Intern 25
         Body SysBody
           Attr PgmName = "ExternFlag"
@@ -256,6 +416,9 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
+      !/**
+      ! Index in the cell where an object is to be inserted or remove.
+      !*/
       Object ExternIndex $Intern 26
         Body SysBody
           Attr PgmName = "ExternIndex"
@@ -264,6 +427,9 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
+      !/**
+      ! Status of the last executed extern operation.
+      !*/
       Object ExternStatus $Intern 27
         Body SysBody
           Attr PgmName = "ExternStatus"
@@ -328,6 +494,9 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
+      !/**
+      ! Pointer to data object with highest index.
+      !*/
       Object DataLastP $Output 35
         Body SysBody
           Attr PgmName = "DataLastP"
@@ -339,6 +508,9 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_NOEDIT
         EndBody
       EndObject
+      !/**
+      ! Objid for data object with highest index.
+      !*/
       Object DataLast_ObjId $Intern 36
         Body SysBody
           Attr PgmName = "DataLast_ObjId"
@@ -347,6 +519,9 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
+      !/**
+      ! True if the front of the data object with highest index is inside the cell.
+      !*/
       Object DataLast_Front $Intern 37
         Body SysBody
           Attr PgmName = "DataLast_Front"
@@ -355,6 +530,9 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
+      !/**
+      ! True if the back of the data object with highest index is inside the cell.
+      !*/
       Object DataLast_Back $Intern 38
         Body SysBody
           Attr PgmName = "DataLast_Back"
@@ -428,6 +606,9 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
+      !/**
+      ! Pointer to data object in index 1.
+      !*/
       Object Data1P $Output 53
         Body SysBody
           Attr PgmName = "Data1P"
@@ -439,6 +620,9 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_NOEDIT
         EndBody
       EndObject
+      !/**
+      ! Objid of data object in index 1.
+      !*/
       Object Data1_ObjId $Intern 54
         Body SysBody
           Attr PgmName = "Data1_ObjId"
@@ -447,6 +631,9 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
+      !/**
+      ! True if the front of the data object in index 1 is inside the cell.
+      !*/
       Object Data1_Front $Intern 55
         Body SysBody
           Attr PgmName = "Data1_Front"
@@ -455,6 +642,9 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
+      !/**
+      ! True if the back of the data object in index 1 is inside the cell.
+      !*/
       Object Data1_Back $Intern 56
         Body SysBody
           Attr PgmName = "Data1_Back"

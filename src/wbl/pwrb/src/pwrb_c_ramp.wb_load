@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_arithm.c
+!  @Group Plc,PlcAnalog
 !  @Summary Limits a quantity's rate of change
 !  Limits a quantity's rate of change.
 !  @image orm_ramp_fo.gif

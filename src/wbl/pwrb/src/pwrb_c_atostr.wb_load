@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_string.h
+!  @Group Plc,PlcString
 !  @Summary Convert analog value to string
 !  Convert analog value to string.
 !  @image orm_atostr_fo.gif

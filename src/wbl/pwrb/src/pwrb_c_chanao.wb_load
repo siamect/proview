@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group IO,Channels,NodeConfiguration
 !  @Summary Configures an analog output channel
 !  Configures an analog output channel independent of the
 !  type of physical Ao-card.

@@ -3,8 +3,10 @@
 !  PROVIEW/R
 !  Copyright (C) 1996 by Comator Process AB.
 !
-!  <Description>.
-!
+!/**
+!  @Group ClassDefinition
+!  Root of a menu description tree.
+!*/
 !
 SObject pwrs:Class
   Object $Menu $ClassDef pwr_eCix_Menu

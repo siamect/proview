@@ -8,6 +8,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_logic.h
+!  @Group Plc,PlcAnalog
 !  @Summary Arithmetical expression in the C programming language
 !  Arithmetical expression in the C programming language.
 !

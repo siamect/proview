@@ -7,6 +7,12 @@
 !
 ! Range ldh_eDId_Base
 !
+!/**
+!  @Version 1.0
+!  @Group Operator,NodeConfiguration
+!  @Summary Configuration of rtt and xtt.
+!  Configuration of rtt and xtt.
+!*/
 SObject pwrb:Class
   Object RttConfig $ClassDef 276
     Body SysBody

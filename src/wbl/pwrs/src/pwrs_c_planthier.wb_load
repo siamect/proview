@@ -8,6 +8,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group PlantConfiguration
 !  Top and grouping object that helps to form structures
 !  in the Plant Hierarchy in the Plant Configuration.
 !  

@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group ClassDefinition
 !  Definition of an attribute.
 !  The Attribute object reside in a class volume as a child of an ObjBodyDef object.
 !*/

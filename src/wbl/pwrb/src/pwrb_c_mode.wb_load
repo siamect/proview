@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_pid.c
+!  @Group Plc,PlcControl
 !  @Summary Select control modes or forced control of Pid objects.
 !  Used to select control modes (MANUAL / AUTO / CASCADE)
 !  or forced control of Pid objects.

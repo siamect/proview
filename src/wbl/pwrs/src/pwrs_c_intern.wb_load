@@ -8,6 +8,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group ClassDefinition
 !  Definition of an intern attribute. 
 !  Intern attributes are used in plc-objects for attributes that should not
 !  be displayed as an input or output pin in the plc symbol. 

@@ -7,6 +7,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group ProjectConfiguration
 !  @Summary Configures root volume to load in a proview node.
 !  The RootVolumeLoad object configures the root volume to
 !  load into a proview node when proview is started on this node.

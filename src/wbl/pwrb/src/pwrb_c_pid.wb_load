@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_pid.c
+!  @Group Plc,PlcControl
 !  @Summary Implements the robust PID control algorithm
 !  Implements the robust PID control algorithm.
 !  @image orm_en1-141.gif

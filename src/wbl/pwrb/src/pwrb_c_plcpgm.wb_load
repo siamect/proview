@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group PlantConfiguration,Plc
 !  @Summary Configures a PLC program
 !  Configures a PLC program.
 !  

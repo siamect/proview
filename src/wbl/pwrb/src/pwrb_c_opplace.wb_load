@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group Operator,NodeConfiguration
 !  @Summary Configures a logical operator station for operator
 !  Configures a logical operator station for operator
 !  dialogue. A logical operator station represents a work

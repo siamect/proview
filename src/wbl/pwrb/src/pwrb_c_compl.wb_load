@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_arithm.c
+!  @Group Plc,PlcAnalog
 !  @Summary Compares an analog value with a low limit
 !  Compares an analog value (signal or parameter) with a
 !  low limit.

@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group Operator,NodeConfiguration
 !  @Summary Configures a group of trend or fast graphs
 !  Configures a group of trend or fast graphs.
 !  

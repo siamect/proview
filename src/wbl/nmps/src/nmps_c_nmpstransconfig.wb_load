@@ -2,8 +2,9 @@
 !
 !  PROVIEW/R
 !
-!  <Description>.
-!
+!/**
+!  @Group Servers,NodeConfiguration
+!*/
 SObject NMps:Class
   Object NMpsTransConfig $ClassDef 43
     Body SysBody

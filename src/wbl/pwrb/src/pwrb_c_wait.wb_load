@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_logic.h
+!  @Group Plc,PlcLogic
 !  @Summary On-state or set delay
 !  On-state or set delay.
 !  @image orm_wait_fo.gif

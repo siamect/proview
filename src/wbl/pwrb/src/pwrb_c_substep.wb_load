@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_grafcet.h
+!  @Group Plc,PlcGrafcet
 !  @Summary Grafcet step representing a sub-sequential chain
 !  Grafcet step representing an underlying sequential
 !  chain, a sub-sequential chain.

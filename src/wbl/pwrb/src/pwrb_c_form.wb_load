@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group Operator,NodeConfiguration
 !  Configures a window to display a form.
 !  
 !  To display forms on a node the forms have to be

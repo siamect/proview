@@ -3,9 +3,10 @@
 !  PROVIEW/R
 !  Copyright (C) 1996 by Comator Process AB.
 !
-!  <Description>.
-!
-!
+!/**
+!  @Group PlantConfiguration,NodeConfiguration
+!  Mount a volume.
+!*/
 SObject pwrs:Class
   Object $MountObject $ClassDef pwr_eCix_MountObject
     Body SysBody

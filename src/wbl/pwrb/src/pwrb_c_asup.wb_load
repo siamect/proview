@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_sup.h
+!  @Group Plc,PlcAnalog,Supervision,PlantConfiguration
 !  @Summary Analog supervisory
 !  Analog Supervisory.
 !  @image orm_asup_fo.gif

@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group Plc,PlcIO
 !  @Summary Get digital value
 !  Get Digital value.
 !

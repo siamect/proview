@@ -2,8 +2,29 @@
 !
 !  PROVIEW/R
 !
-!  <Description>.
+!/**
+!  @Version 1.0
+!  @Code rs_plc_nmps.c
+!  @Group Plc,PlcData
+!  @Summary Select one data input due to the suppied index.
 !
+!  Select one data input due to the supplied index.
+!  @image orm_dataselect_fo.gif
+!  Up to sixteen data object can be connected to the DataSelect object. One
+!  of these is passed to the output. The input can be connected to data output, 
+!  of for example GetData or DataArith objects.
+!
+!  MaxIndex specifies the number of used inputs. All the input between 1 and 
+!  MaxIndex has to be connected.
+!
+!  Index specifies which data input to select. Index 1 selects the first, 2 the 
+!  second etc. If Index < 1 the first is selected, and if Index > MaxIndex the
+!  last (MaxIndex) is selected.
+!
+! @b See also
+!  @classlink GetData nmps_getdata.html
+!  @classlink DataArithm pwrb_dataarithm.html
+!*/
 SObject NMps:Class
   Object DataSelect $ClassDef 15
     Body SysBody
@@ -17,18 +38,27 @@ SObject NMps:Class
       Body SysBody
         Attr StructName = "DataSelect"
       EndBody
+      !/**
+      ! Controls which data input is selected. For Index 1 the first is select etc.
+      !*/
       Object Index $Input 1
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "Idx"
         EndBody
       EndObject
+      !/**
+      ! Number of connected data inputs. All inputs between 1 and MaxIndex has to be connected.
+      !*/
       Object MaxIndex $Input 2
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "Max"
         EndBody
       EndObject
+      !/**
+      !  Data input.
+      !*/
       Object DataIn1 $Input 3
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -36,6 +66,9 @@ SObject NMps:Class
           Attr GraphName = "Da1"
         EndBody
       EndObject
+      !/**
+      !  Data input.
+      !*/
       Object DataIn2 $Input 4
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -43,6 +76,9 @@ SObject NMps:Class
           Attr GraphName = "Da2"
         EndBody
       EndObject
+      !/**
+      !  Data input.
+      !*/
       Object DataIn3 $Input 5
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -50,6 +86,9 @@ SObject NMps:Class
           Attr GraphName = "Da3"
         EndBody
       EndObject
+      !/**
+      !  Data input.
+      !*/
       Object DataIn4 $Input 6
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -57,6 +96,9 @@ SObject NMps:Class
           Attr GraphName = "Da4"
         EndBody
       EndObject
+      !/**
+      !  Data input.
+      !*/
       Object DataIn5 $Input 7
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -64,6 +106,9 @@ SObject NMps:Class
           Attr GraphName = "Da5"
         EndBody
       EndObject
+      !/**
+      !  Data input.
+      !*/
       Object DataIn6 $Input 8
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -71,6 +116,9 @@ SObject NMps:Class
           Attr GraphName = "Da6"
         EndBody
       EndObject
+      !/**
+      !  Data input.
+      !*/
       Object DataIn7 $Input 9
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -78,6 +126,9 @@ SObject NMps:Class
           Attr GraphName = "Da7"
         EndBody
       EndObject
+      !/**
+      !  Data input.
+      !*/
       Object DataIn8 $Input 10
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -85,6 +136,9 @@ SObject NMps:Class
           Attr GraphName = "Da8"
         EndBody
       EndObject
+      !/**
+      !  Data input.
+      !*/
       Object DataIn9 $Input 11
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -92,6 +146,9 @@ SObject NMps:Class
           Attr GraphName = "Da9"
         EndBody
       EndObject
+      !/**
+      !  Data input.
+      !*/
       Object DataIn10 $Input 12
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -99,6 +156,9 @@ SObject NMps:Class
           Attr GraphName = "Da10"
         EndBody
       EndObject
+      !/**
+      !  Data input.
+      !*/
       Object DataIn11 $Input 13
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -106,6 +166,9 @@ SObject NMps:Class
           Attr GraphName = "Da11"
         EndBody
       EndObject
+      !/**
+      !  Data input.
+      !*/
       Object DataIn12 $Input 14
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -113,6 +176,9 @@ SObject NMps:Class
           Attr GraphName = "Da12"
         EndBody
       EndObject
+      !/**
+      !  Data input.
+      !*/
       Object DataIn13 $Input 15
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -120,6 +186,9 @@ SObject NMps:Class
           Attr GraphName = "Da13"
         EndBody
       EndObject
+      !/**
+      !  Data input.
+      !*/
       Object DataIn14 $Input 16
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -127,6 +196,9 @@ SObject NMps:Class
           Attr GraphName = "Da14"
         EndBody
       EndObject
+      !/**
+      !  Data input.
+      !*/
       Object DataIn15 $Input 17
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -134,6 +206,9 @@ SObject NMps:Class
           Attr GraphName = "Da15"
         EndBody
       EndObject
+      !/**
+      !  Data input.
+      !*/
       Object DataIn16 $Input 18
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -141,6 +216,9 @@ SObject NMps:Class
           Attr GraphName = "Da16"
         EndBody
       EndObject
+      !/**
+      !  Data output with a reference to the data object of the selected input.
+      !*/
       Object OutDataP $Output 19
         Body SysBody
           Attr PgmName = "OutDataP"
@@ -152,6 +230,9 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_NOEDIT
         EndBody
       EndObject
+      !/**
+      !  Objid of the data object of the selected input.
+      !*/
       Object OutData_ObjId $Intern 20
         Body SysBody
           Attr PgmName = "OutData_ObjId"

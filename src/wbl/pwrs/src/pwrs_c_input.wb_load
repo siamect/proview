@@ -8,6 +8,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group ClassDefinition
 !  Definition of an input attribute. 
 !  Input attributes are used in plc-objects, and are displayed as input pins 
 !  on the plc symbol. The input contains a pointer and a value. If the input 

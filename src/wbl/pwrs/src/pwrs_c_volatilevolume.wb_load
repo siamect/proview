@@ -3,9 +3,10 @@
 !  PROVIEW/R
 !  Copyright (C) 1996 by Comator Process AB.
 !
-!  <Description>.
-!
-!
+!/**
+!  @Group Volumes
+!  Volume to store paste buffers in development environment.
+!*/
 SObject pwrs:Class
   Object $VolatileVolume $ClassDef pwr_eCix_VolatileVolume
     Body SysBody

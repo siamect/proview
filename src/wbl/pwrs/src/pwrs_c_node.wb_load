@@ -8,6 +8,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group NodeConfiguration
 !  Configures a node in the Node Configuration.
 !  
 !  The object is placed below a $NodeHier object or in the

@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group Plc,PlcEdit
 !  @Summary Configures documents in the PLC editor
 !  Configures in the working area of the PLC Editor an
 !  area in A-format.

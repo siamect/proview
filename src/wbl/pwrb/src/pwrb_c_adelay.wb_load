@@ -8,6 +8,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_arithm.c
+!  @Group Plc,PlcAnalog
 !  @Summary Time delay of an analog signal
 !  Time delay of an analog signal.
 !  @image orm_adelay_fo.gif

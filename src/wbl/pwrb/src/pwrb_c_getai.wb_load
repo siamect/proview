@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group Plc,PlcIO
 !  @Summary Get Ai signal
 !  Get Analog input.
 !  @image orm_getai_fo.gif

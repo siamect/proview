@@ -6,6 +6,12 @@
 !  <Description>.
 !
 !
+!/**
+!  @Version 1.0
+!  @Group Servers,NodeConfiguration
+!  @Summary Configures the plc process
+!  Configures the plc process.
+!*/
 SObject pwrb:Class
   Object PlcProcess $ClassDef 279
     Body SysBody

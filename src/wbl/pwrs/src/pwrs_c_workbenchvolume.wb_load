@@ -3,9 +3,11 @@
 !  PROVIEW/R
 !  Copyright (C) 1996 by Comator Process AB.
 !
-!  <Description>.
-!
-!
+!/**
+!  @Group Volumes
+!  The wb volume is loaded in the workbench and contains setup data
+!  for the workbench.
+!*/
 SObject pwrs:Class
   Object $WorkBenchVolume $ClassDef pwr_eCix_WorkBenchVolume
     Body SysBody

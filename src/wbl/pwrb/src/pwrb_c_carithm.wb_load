@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_logic.h
+!  @Group Plc,PlcAnalog
 !  @Summary User programmable object in the C programming language
 !  User programmable object in the C programming language.
 !  @image orm_carithm_fo.gif

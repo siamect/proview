@@ -7,6 +7,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group Plc,PlcIO
 !  @Summary Temporary object produced by the plc editor.
 !  A StoAgeneric object is a temporary object, created in the plc-editor
 !  when a connection is created from an analog output. The object will

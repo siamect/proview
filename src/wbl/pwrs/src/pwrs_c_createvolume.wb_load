@@ -8,6 +8,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group NodeConfiguration,Volume
 !  Creation of a dynamic volume.
 !  A dynamic volume will be created in runtime, and mounted to the
 !  CreateVolume object.

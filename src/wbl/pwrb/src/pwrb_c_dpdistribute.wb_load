@@ -8,6 +8,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_data.c
+!  @Group Plc,PlcIO
 !  @Summary Expands the number of boolean outputs that can be handled in a DataArithm.
 !  The DpDistribute expands the number of boolean outputs that can be
 !  handled in a DataArithm object.

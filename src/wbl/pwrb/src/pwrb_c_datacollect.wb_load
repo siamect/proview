@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group Plc,PlcData
 !  @Summary Expands the number of data attributes that can be handled in a DataArithm.
 !  The DataCollect object expands the number of data attribues that
 !  can be handled in a DataArithm object.

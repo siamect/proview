@@ -1,0 +1,9 @@
+#
+# Setup file for co_convert
+#
+
+# Definition of groups
+group NodeConfiguration pwrs_appl.html
+group PlantConfiguration pwrs_libhier.html
+group ClassDefinition pwrs_attribute.html
+group Volumes pwrs_classvolume.html

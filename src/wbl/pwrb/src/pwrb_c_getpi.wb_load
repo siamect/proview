@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
+!  @Group Plc,PlcIO
 !  @Summary Get Co signal
 !  Get Pulse input.
 !  @image orm_getpi_fo.gif

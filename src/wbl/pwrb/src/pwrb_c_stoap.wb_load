@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
+!  @Group Plc,PlcIO
 !  @Summary Store analog attribute
 !  Store Analog parameter. Used in run time to write in
 !  analog parameters.

@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group Plc,PlcEdit
 !  @Summary Object to display the value of some PLC attributes
 !  Object to display the value of some important PLC
 !  program attributes.

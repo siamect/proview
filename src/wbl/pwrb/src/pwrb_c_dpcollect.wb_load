@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_data.c
+!  @Group Plc,PlcIO
 !  @Summary Expands the number of Boolean attributes that can be handled in a DataArithm.
 !  The DpCollect object expands the number of Boolean attribues that
 !  can be handled in a DataArithm object.

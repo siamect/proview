@@ -2,8 +2,21 @@
 !
 !  PROVIEW/R
 !
-!  <Description>.
+!/**
+!  @Version 1.0
+!  @Code rs_plc_macro_nmps.h
+!  @Group Plc,PlcData
+!  @Summary Copy a data object.
 !
+!  Copy the content of a data object to another data object.
+!  @image orm_datacopy_fo.gif
+!  Note! At least one of the data objects has to be fetched with a GetData object.
+!  The copy is executed when the condition input is true.
+!
+! @b See also
+!  @classlink GetData nmps_currentindex.html
+!  @classlink DataReset nmps_datareset.html
+!*/
 SObject NMps:Class
   Object DataCopy $ClassDef 9
     Body SysBody
@@ -17,6 +30,9 @@ SObject NMps:Class
       Body SysBody
         Attr StructName = "datacopy"
       EndBody
+      !/**
+      ! Data input connected to an output that keeps a reference to the source data object.
+      !*/
       Object DataFrom $Input 1
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -25,6 +41,9 @@ SObject NMps:Class
           Attr GraphName = "From"
         EndBody
       EndObject
+      !/**
+      ! Data input connected to an output that keeps a reference to the target data object.
+      !*/
       Object DataTo $Input 2
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
@@ -33,6 +52,9 @@ SObject NMps:Class
           Attr GraphName = "To"
         EndBody
       EndObject
+      !/**
+      ! When Condition is true, the copy is executed.
+      !*/
       Object Condition $Input 3
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"

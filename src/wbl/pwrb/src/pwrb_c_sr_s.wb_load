@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_logic.h
+!  @Group Plc,PlcLogic
 !  @Summary Set Reset flip-flop
 !  Set Reset flip-flop.
 !  @image orm_sr_s_fo.gif

@@ -7,6 +7,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group ProjectConfiguration
 !  @Summary Configures a proview node that belongs to another project.
 !  The FriendNodeConfig object configures a proview node that belong to
 !  another project, that is the owner a volume mounted by some node in 

@@ -6,7 +6,16 @@
 !  <Description>.
 !
 ! Range ldh_eDId_Base
+!/**
+!  @Version 1.0
+!  @Group IO,IO_PSS9000
+!  @Summary Configuration of a PSS9000 rack.
+!  Configuration of a PSS9000 rack.
+!  The rack object resides in the root volume of the process node. 
+!  The rack object is placed below the $Node object, and is parent 
+!  to the card objects of the rack.
 !
+!*/
 SObject pwrb:Class
   Object Rack_SSAB $ClassDef 188 
     Body SysBody
@@ -18,17 +27,26 @@ SObject pwrb:Class
       Body SysBody
         Attr StructName = "Rack_SSAB"
       EndBody
+      !/**
+      ! Type of IO system. Obsolete since V2.7.
+      !*/
       Object IOSysType $Attribute 1 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt16"
           Attr Flags |= PWR_MASK_CONST
         EndBody
       EndObject
+      !/**
+      ! Optional description.
+      !*/
       Object Description $Attribute 2 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$String80"
         EndBody
       EndObject
+      !/**
+      ! Maximum number of cards.
+      !*/
       Object MaxNoOfCards $Attribute 3 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt16"

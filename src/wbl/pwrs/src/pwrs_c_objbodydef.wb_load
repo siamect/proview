@@ -10,6 +10,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group ClassDefinition
 !  Definition of an object body. The object is a part of the class
 !  definition tree for a class, and has a $ClassDef object as parent.
 !*/

@@ -8,6 +8,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group NodeConfiguration
 !  Configures loading of a specified image file into a
 !  node at booting and starts its execution.
 !  

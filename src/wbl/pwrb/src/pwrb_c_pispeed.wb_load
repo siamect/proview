@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_arithm.c
+!  @Group Plc,PlcAnalog
 !  @Summary Derivative a pulse Co-signal
 !  Derivative a pulse Pi-signal.
 !  @image orm_pispeed_fo.gif

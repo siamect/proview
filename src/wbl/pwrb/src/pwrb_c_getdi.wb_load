@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group Plc,PlcIO
 !  @Summary Get Di signal
 !  Get Digital input.
 !  @image orm_getdi_fo.gif

@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group Plc,PlcIO
 !  @Summary Get digital attribute
 !  Get Digital parameter.
 !  @image orm_getdp_fo.gif

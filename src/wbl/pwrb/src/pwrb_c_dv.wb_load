@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group PlantConfiguration,Signals
 !  @Summary Digital value
 !  Digital value.
 !  

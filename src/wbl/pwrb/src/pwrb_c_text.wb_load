@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group Plc,PlcEdit
 !  @Summary Single-row text object
 !  Single-row text object.
 !

@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_logic.h
+!  @Group Plc,PlcLogic
 !  @Summary One-shot pulse with variable width
 !  One-shot pulse with variable width.
 !  @image orm_pulse_fo.gif

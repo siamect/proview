@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_string.h
+!  @Group Plc,PlcString
 !  @Summary Extract a substring from a string.
 !  Extract a substring from a string.
 !  @image orm_substr_fo.gif

@@ -3,9 +3,11 @@
 !  PROVIEW/R
 !  Copyright (C) 1996 by Comator Process AB.
 !
-!  <Description>.
-!
-!
+!/**
+!  @Group Volumes
+!  Volume shared by several nodes.
+!  Not implemented.
+!*/
 SObject pwrs:Class
   Object $SharedVolume $ClassDef pwr_eCix_SharedVolume
     Body SysBody

@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group Servers,NodeConfiguration
 !  @Summary Configuration of DsFast process
 !  Specifies attributes of a single DsFast.
 !  

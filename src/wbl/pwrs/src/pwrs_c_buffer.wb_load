@@ -8,6 +8,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group ClassDefinition
 !  Definition of a buffer.
 !  A buffer is a memeber of a body and contains a number of attributes that
 !  is used by a specific tool, and not of public interest. The content of a 

@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_data.c
+!  @Group Plc,PlcIO
 !  @Summary Expands the number of analog attributes that can be handled in a DataArithm.
 !  The ApCollect object expands the number of analog attribues that
 !  can be handled in a DataArithm object.

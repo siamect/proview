@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group Plc,PlcEdit
 !  @Summary Multi-row comment in plc document
 !  Object to create a multi-row text.
 !  

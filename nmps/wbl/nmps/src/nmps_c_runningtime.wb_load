@@ -1,6 +1,33 @@
 ! Filename:	NMPS_C_RunningTime.wb_load
 !
-! This file defines user-object for Running Time Measurement
+!/**
+!  @Version 1.0
+!  @Code rs_plc_runtime.c
+!  @Group Plc
+!  @Summary Running time measurement
+!  Running time Measurement.
+!  @image orm_runningtime_fo.gif
+!
+! Running Time concept in Proview is a way to standardize the measurement of 
+! running time for different machines.
+!
+! The RunningTime object executes under the PLC. It uses a Boolean Input, and 
+! measures the time and the running time for the signal.
+!
+! All measured times are stored in the object. Times are stored as number of hours
+! (integer) and number of seconds up to 1 hour (float). There are measurements 
+! for Total Time, Total running time, Trip time and Trip running time. We also note
+! number of starts for each period. The Running time as part of the total time in
+! percent is calculated for both total and trip.
+!
+! There is also the possibility to reset the Trip measurement in each object. The
+! values from the last trip measurement is saved in the object as OldTrip.
+! We also note the time for the last start for the signal, and the time for the 
+! last ResetTrip.
+!
+! There should always be an object backup for each RunningTime object. The Backup
+! object can be connected to the 'sta'-output from the RunningTime object.
+!*/
 !
 SObject NMps:Class
 !
@@ -15,7 +42,9 @@ SObject NMps:Class
       Body SysBody
         Attr StructName = "RunningTime"
       EndBody
-!		Running Signal
+      !/**
+      ! Input signal.
+      !*/
       Object Running $Input 1
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
@@ -26,7 +55,10 @@ SObject NMps:Class
           Attr GraphName = "run"
         EndBody
       EndObject
-!		Start
+      !/**
+      ! Output signal is True for one cycle when we detect edge of Running input.
+      ! Output pin is mainly used for connection of Backup-object.
+      !*/
       Object Start $Output 2
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
@@ -34,160 +66,207 @@ SObject NMps:Class
           Attr GraphName = "sta"
         EndBody
       EndObject
-!		Description
+      !/**
+      ! Documentation only.
+      !*/
       Object Description $Intern 3
         Body SysBody
           Attr TypeRef = "pwrs:Type-$String40"
         EndBody
       EndObject
-!		TripReset
+      !/**
+      ! Used to move Trip data to OldTrip, and to reset all Trip data.
+      !*/
       Object TripReset $Intern 4
         Body SysBody
           Attr Flags = PWR_MASK_NOEDIT
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
       EndObject
-!		StartTime
+      !/**
+      ! Date and time for latest edge of input.
+      !*/
       Object StartTime $Intern 5
         Body SysBody
           Attr Flags = PWR_MASK_NOEDIT
           Attr TypeRef = "pwrs:Type-$Time"
         EndBody
       EndObject
-!		ResetTime
+      !/**
+      ! Date and time for last Trip reset.
+      !*/
       Object ResetTime $Intern 6
         Body SysBody
           Attr Flags = PWR_MASK_NOEDIT
           Attr TypeRef = "pwrs:Type-$Time"
         EndBody
       EndObject
-!		Total Number of starts
+      !/**
+      ! Total number of detected starts.
+      !*/
       Object TotalNOfStarts $Intern 7
         Body SysBody
           Attr Flags = PWR_MASK_NOEDIT
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
-!		Total Running Time (Hours)
+      !/**
+      ! Total number of running hours.
+      !*/
       Object TotalRunHours $Intern 8
         Body SysBody
           Attr Flags = PWR_MASK_NOEDIT
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
-!		Total Running Time (Up to 1 hour)
+      !/**
+      ! Total number of running seconds up to one hour.
+      !*/
       Object TotalRunSeconds $Intern 9
         Body SysBody
           Attr Flags = PWR_MASK_NOEDIT
           Attr TypeRef = "pwrs:Type-$Float32"
         EndBody
       EndObject
-!		Total Calendar Time (Hours)
+      !/**
+      ! Total number of calendar hours.
+      !*/
       Object TotalHours $Intern 10
         Body SysBody
           Attr Flags = PWR_MASK_NOEDIT
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
-!		Total Calendar Time (Up to 1 hour)
+      !/**
+      ! Total number of calendar secons up to one hour.
+      !*/
       Object TotalSeconds $Intern 11
         Body SysBody
           Attr Flags = PWR_MASK_NOEDIT
           Attr TypeRef = "pwrs:Type-$Float32"
         EndBody
       EndObject
-!		Total Usage %
+      !/**
+      ! Percent running time compared to time.
+      !*/
       Object TotalUsage $Intern 12
         Body SysBody
           Attr Flags = PWR_MASK_NOEDIT
           Attr TypeRef = "pwrs:Type-$Float32"
         EndBody
       EndObject
-!		Trip Number of starts
+      !/**
+      ! Total number of detected starts since Trip reset.
+      !*/
       Object TripNOfStarts $Intern 13
         Body SysBody
           Attr Flags = PWR_MASK_NOEDIT
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
-!		Trip Running Time (Hours)
+      !/**
+      ! Total number of running hours since trip reset.
+      !*/
       Object TripRunHours $Intern 14
         Body SysBody
           Attr Flags = PWR_MASK_NOEDIT
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
-!		Trip Running Time (Up to 1 hour)
+      !/**
+      ! Total number of running seconds since trip reset, up to one hour.
+      !*/
       Object TripRunSeconds $Intern 15
         Body SysBody
           Attr Flags = PWR_MASK_NOEDIT
           Attr TypeRef = "pwrs:Type-$Float32"
         EndBody
       EndObject
-!		Trip Calendar Time (Hours)
+      !/**
+      ! Total number of calendar hours since trip reset.
+      !*/
       Object TripHours $Intern 16
         Body SysBody
           Attr Flags = PWR_MASK_NOEDIT
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
-!		Trip Calendar Time (Up to 1 hour)
+      !/**
+      ! Total number of calendar seconds since trip reset, up to one hour.
+      !*/
       Object TripSeconds $Intern 17
         Body SysBody
           Attr Flags = PWR_MASK_NOEDIT
           Attr TypeRef = "pwrs:Type-$Float32"
         EndBody
       EndObject
-!		Trip Usage %
+      !/**
+      ! Precent running time compared to time.
+      !*/
       Object TripUsage $Intern 18
         Body SysBody
           Attr Flags = PWR_MASK_NOEDIT
           Attr TypeRef = "pwrs:Type-$Float32"
         EndBody
       EndObject
-!		OldTrip Number of starts
+      !/**
+      ! Total number of detected starts between last Trip resets.
+      !*/
       Object OldTripNOfStarts $Intern 19
         Body SysBody
           Attr Flags = PWR_MASK_NOEDIT
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
-!		OldTrip Running Time (Hours)
+      !/**
+      ! Total number of running hours between last trip resets.
+      !*/
       Object OldTripRunHours $Intern 20
         Body SysBody
           Attr Flags = PWR_MASK_NOEDIT
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
-!		OldTrip Running Time (Up to 1 hour)
+      !/**
+      ! Total number of running seconds between last trip resets, up to one hour.
+      !*/
       Object OldTripRunSeconds $Intern 21
         Body SysBody
           Attr Flags = PWR_MASK_NOEDIT
           Attr TypeRef = "pwrs:Type-$Float32"
         EndBody
       EndObject
-!		OldTrip Calendar Time (Hours)
+      !/**
+      ! Total number of calendar hours between last trip resets.
+      !*/
       Object OldTripHours $Intern 22
         Body SysBody
           Attr Flags = PWR_MASK_NOEDIT
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
-!		OldTrip Calendar Time (Up to 1 hour)
+      !/**
+      ! Total number of calendar seconds between last trip resets, up to one hour.
+      !*/
       Object OldTripSeconds $Intern 23
         Body SysBody
           Attr Flags = PWR_MASK_NOEDIT
           Attr TypeRef = "pwrs:Type-$Float32"
         EndBody
       EndObject
-!		Old Trip Usage %
+      !/**
+      ! Precent running time compared to time.
+      !*/
       Object OldTripUsage $Intern 24
         Body SysBody
           Attr Flags = PWR_MASK_NOEDIT
           Attr TypeRef = "pwrs:Type-$Float32"
         EndBody
       EndObject
-!		Scan Time Secs
+      !/**
+      ! Internal attribute for calculation of time since last execution.
+      ! Date and time, or uptime depending on platform.
+      !*/
       Object ScanTime $Intern 25
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"

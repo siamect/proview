@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_string.h
+!  @Group Plc,PlcString
 !  @Summary Convert integer value to string.
 !  Convert integer value to string.
 !  @image orm_itostr_fo.gif

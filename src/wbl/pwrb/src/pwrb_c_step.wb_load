@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_grafcet.h
+!  @Group Plc,PlcGrafcet
 !  @Summary An ordinary sequential Grafcet step
 !  An ordinary sequential Grafcet step.
 !  @image orm_step_fo.gif

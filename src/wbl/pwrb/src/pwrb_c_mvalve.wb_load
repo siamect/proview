@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_drive.c
+!  @Group Plc,PlcDrive
 !  @Summary Motor valve positioner
 !  Motor valve positioner with three operating states and
 !  supervision of operation time and contactor response.

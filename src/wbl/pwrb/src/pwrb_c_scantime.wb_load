@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_div.h
+!  @Group Plc,PlcAnalog
 !  @Summary Fetches the scantime of the current plc thread
 !  Fetches the scantime of the current plc thread.
 !  @image orm_scantime_fo.gif

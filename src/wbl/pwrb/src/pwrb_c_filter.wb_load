@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_arithm.c
+!  @Group Plc,PlcAnalog
 !  @Summary First order lag filter
 !  First Order Lag Filter.
 !  @image orm_filter_fo.gif

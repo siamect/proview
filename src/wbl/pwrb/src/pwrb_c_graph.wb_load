@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group Operator,NodeConfiguration
 !  @Summary Configures a window to display GMS-graphic
 !  Configures a window to display GMS-graphic.
 !  

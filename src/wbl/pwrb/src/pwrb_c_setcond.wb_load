@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_grafcet.h
+!  @Group Plc,PlcGrafcet
 !  @Summary Stores the status of a conditional window into the parent object
 !  Stores, in the associated object, i.e. an Order or
 !  Trans object, the status of a conditional window.

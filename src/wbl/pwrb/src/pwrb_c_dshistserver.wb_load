@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group Servers,NodeConfiguration
 !  Configures the server for historical data storage. (Datasto
 !  History Server).
 !  

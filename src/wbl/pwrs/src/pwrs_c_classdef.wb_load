@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group ClassDefinition
 !  Definition of a class. The object is the root of an
 !  object tree that defines bodies and attributes in a class.
 !*/

@@ -5,8 +5,9 @@
 !
 !  <Description>.
 !
-! Range ldh_eDId_Base
-!
+!/**
+! @Group ProjectConfiguration
+!*/
 SObject pwrb:Class
   Object VolumeDistribute $ClassDef 247 
     Body SysBody

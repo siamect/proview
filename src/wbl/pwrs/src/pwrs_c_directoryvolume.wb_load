@@ -7,6 +7,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group Volumes
 !  A directory volume contains object that configures a project in
 !  databases, volumes and nodes.
 !  When a directory volume is created, also a directoryvolume object is created.

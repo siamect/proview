@@ -2,8 +2,16 @@
 !
 !  PROVIEW/R
 !
-!  <Description>.
+!/**
+!  @Version 1.0
+!  @Group MaterialPlanning,Servers,NodeConfiguration
+!  @Summary Configuration of the NMpsMirror function.
+!  Configuration of the NMpsMirror function, i.e. mirroring of cell
+!  and data objects.
 !
+! @b See also
+!  @classlink NMpsMirrorCell nmps_nmpsmirrorcell.html  
+!*/
 SObject NMps:Class
   Object NMpsMirrorConfig $ClassDef 32 
     Body SysBody
@@ -14,11 +22,17 @@ SObject NMps:Class
       Body SysBody
         Attr StructName = "NMpsMirrorConfig"
       EndBody
+      !/**
+      ! Cycle time for the mirror server.
+      !*/
       Object ScanTime $Attribute 1 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
         EndBody
       EndObject
+      !/**
+      ! Number of found NMpsMirrorCell objects.
+      !*/
       Object MirrorCellCount $Attribute 2 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
@@ -26,6 +40,9 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
+      !/**
+      ! Number of initiated NMpsMirrorCell objects.
+      !*/
       Object MirrorCellInitCount $Attribute 3 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
@@ -33,6 +50,9 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
+      !/**
+      ! Number of mirrored cell objects.
+      !*/
       Object OrigCellCount $Attribute 4 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
@@ -40,6 +60,10 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
+      !/**
+      ! Number of mirrored cell objects, that is mirrored
+      ! from a remote node.
+      !*/
       Object RemoteOrigCellCount $Attribute 5 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
@@ -47,6 +71,9 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
+      !/**
+      ! Number of mirrored cell with no contact.
+      !*/
       Object OrigCellDownCount $Attribute 6 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
@@ -54,6 +81,9 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
+      !/**
+      ! Number of handled data object.
+      !*/
       Object DataObjectCount $Attribute 7 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
@@ -61,6 +91,9 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
+      !/**
+      ! Number of data object that is converted.
+      !*/
       Object ConvertDataCount $Attribute 8 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
@@ -68,6 +101,9 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
+      !/**
+      ! Number of data object that is mirrored from a remote node.
+      !*/
       Object RemoteDataCount $Attribute 9 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
@@ -75,6 +111,9 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
+      !/**
+      ! Number of remote data objects with lost contact.
+      !*/
       Object RemoteDataDownCount $Attribute 10 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
@@ -82,6 +121,11 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
+      !/**
+      ! Number of data objects that is removed from the original cell,
+      ! but is keps due to that the ReleaseTime for the NMpsMirrorCell
+      ! has not expired yet.
+      !*/
       Object PendingRemoveDataCount $Attribute 11 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
@@ -89,6 +133,9 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
+      !/**
+      ! Number of data objects remove from the mirroring function.
+      !*/
       Object RemoveDataCount $Attribute 12 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
@@ -96,6 +143,9 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
+      !/**
+      ! Number of data object created in rtdb by the mirroring function.
+      !*/
       Object CreateDataCount $Attribute 13 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
@@ -103,6 +153,9 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
+      !/**
+      ! Number of data object deleted from rtdb  by the mirroring function.
+      !*/
       Object DeleteDataCount $Attribute 14 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
@@ -110,6 +163,9 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
+      !/**
+      ! Number of data objects with lost and resumed contact.
+      !*/
       Object ReconnectDataCount $Attribute 15 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
@@ -117,6 +173,9 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
+      !/**
+      ! Loop counger for the mirror server.
+      !*/
       Object LoopCount $Attribute 16 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
@@ -124,6 +183,10 @@ SObject NMps:Class
 	  Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
+      !/**
+      ! If Initialize is set, it forces an initialization of the mirror function.
+      ! This might be required after a soft restart.
+      !*/
       Object Initialize $Attribute 17 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"

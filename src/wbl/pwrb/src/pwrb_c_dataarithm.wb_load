@@ -7,6 +7,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group Plc,PlcAnalog,PlcData
 !  @Summary User programmable object with data inputs and outputs.
 !  User progammable object with data inputs and outputs. 
 !  @image orm_dataarithm_fo.gif

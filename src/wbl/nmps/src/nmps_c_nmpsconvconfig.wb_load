@@ -2,8 +2,21 @@
 !
 !  PROVIEW/R
 !
-!  <Description>.
+!/**
+!  @Version 1.0
+!  @Group MaterialPlanning
+!  @Summary Configuration of mirroring and conversion of data objects.
+!  Configuration of mirroring and conversion of data objects.
 !
+!  When a data object is mirrored by the NMpsCellMirror function, a 
+!  new object is created by the mirror function, and inserted into the
+!  mirror cell. This object can be of another class then the original
+!  object, and the mirroring of data from the original data object, to
+!  the new object is configured in a mirror configuration object.
+!
+! @b See also
+!  @classlink NMpsMirrorConfig nmps_nmpsmirrorconfig.html  
+!*/
 SObject NMps:Class
   Object NMpsConvConfig $ClassDef 31 
     Body SysBody
@@ -14,36 +27,58 @@ SObject NMps:Class
       Body SysBody
         Attr StructName = "NMpsConvConfig"
       EndBody
+      !/**
+      ! Class of data objects in cell objects that i mirrored.
+      !*/
       Object InDataClass $Attribute 1 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Objid"
         EndBody
       EndObject
+      !/**
+      ! Class of the data object that is created by the mirror function.
+      !*/
       Object OutDataClass  $Attribute 2 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Objid"
         EndBody
       EndObject
+      !/**
+      ! Parent object to the created objects.
+      !*/
       Object OutDataParent  $Attribute 3 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Objid"
         EndBody
       EndObject
+      !/**
+      ! Start offset in the original data object of the data area that is
+      ! copied to the new data object.
+      !*/
       Object CopyOffset  $Attribute 4 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
+      !/**
+      ! Offset in the new object where the copied data area is placed.
+      !*/
       Object PasteOffset  $Attribute 5 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
+      !/**
+      ! Size in bytes of the copied data area.
+      !*/
       Object CopySize  $Attribute 6 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
+      !/**
+      ! Not used.
+      !*/
       Object UpdateTime  $Attribute 7 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"

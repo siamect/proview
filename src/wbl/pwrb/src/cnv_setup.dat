@@ -1,0 +1,26 @@
+#
+# Setup file for co_convert
+#
+
+# Definition of groups
+group NodeConfiguration pwrb_backup_conf.html
+group PlantConfiguration pwrb_ai.html
+group ProjectConfiguration pwrb_appldistribute.html
+group Plc pwrb_aarithm.html
+group Operator pwrb_eventprinter.html
+group Servers pwrb_backup_conf.html
+group Supervision pwrb_asup.html
+group IO pwrb_chanai.html
+group Signals pwrb_ai.html
+group Channels pwrb_chanai.html
+group IO_Profibus
+group IO_PSS9000 pwrb_ai_ai32up.html
+group PlcGrafcet pwrb_initstep.html
+group PlcIO pwrb_apcollect.html
+group PlcLogic pwrb_and.html
+group PlcAnalog pwrb_aarithm.html
+group PlcControl pwrb_inc3p.html
+group PlcDrive pwrb_drive.html
+group PlcEdit pwrb_bodytext.html
+group PlcString pwrb_atostr.html
+group PlcData pwrb_dataarithm.html

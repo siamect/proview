@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_string.h
+!  @Group Plc,PlcString
 !  @Summary Concatenate two strings.
 !  Concatenate two strings.
 !  @image orm_strcat_fo.gif
@@ -62,7 +63,7 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  &Summary Output string that contains the result.
+      !  @Summary Output string that contains the result.
       !  Output string that contains the result of the concatenation.
       !  Max size of the ouput string is 79 characters. If this size
       !  is exceeded the result is cut off.

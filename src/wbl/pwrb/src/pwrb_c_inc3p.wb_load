@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_pid.c
+!  @Group Plc,PlcControl
 !  @Summary Incremental 3-point output with dead zone
 !  Incremental 3-point output with dead zone. Incremental
 !  comes from the type of input and the digit 3 of the

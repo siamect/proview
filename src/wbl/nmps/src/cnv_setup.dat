@@ -1,0 +1,11 @@
+#
+# Setup file for co_convert
+#
+
+# Definition of groups
+group NodeConfiguration nmps_nmpsmirrorconfig.html
+group Servers nmps_nmpsmirrorconfig.html
+group Plc nmps_celldisp.html
+group PlcData nmps_datacopy.html
+group MaterialPlanning nmps_celldisp.html
+group Remote nmps_remtransrcv.html

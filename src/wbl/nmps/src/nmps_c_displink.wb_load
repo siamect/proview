@@ -1,8 +1,9 @@
 !  nmps_c_displink.wb_load -- Defines the class DispLink.
 !
 !  PROVIEW/R
-!
-!  <Description>.
+!/**
+!  @Group MaterialPlanning,Plc
+!*/
 !
 SObject NMps:Class
   Object DispLink $ClassDef 45

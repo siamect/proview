@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_sup.h
+!  @Group Plc,PlcLogic,Supervision,PlantConfiguration
 !  @Summary Digital supervisory
 !  Digital Supervisory.
 !  @image orm_dsup_fo.gif

@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group Servers,NodeConfiguration
 !  @Summary Configures the event monitor
 !  Specifies attributes to a single message handler.
 !  

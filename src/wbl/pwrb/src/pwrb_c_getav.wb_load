@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group Plc,PlcIO
 !  @Summary Get analog value
 !  Get Analog value.
 !  @image orm_getav_fo.gif

@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group IO,Channels,NodeConfiguration
 !  @Summary Configures a digital output channel
 !  Configures a digital output channel independent of the
 !  type of physical Do-card.

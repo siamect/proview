@@ -2,8 +2,9 @@
 !
 !  PROVIEW/R
 !
-!  <Description>.
-!
+!/**
+!  @Group Plc
+!*/
 SObject NMps:Class
   Object GetObjidp $ClassDef 20
     Body SysBody

@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group Plc,PlcString
 !  @Summary Get string value
 !  Get String value.
 !  @image orm_getsv_fo.gif

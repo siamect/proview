@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_io.c
+!  @Group Plc,PlcLogic
 !  @Summary Pulse counter
 !  Pulse counter.
 !  @image orm_count_fo.gif

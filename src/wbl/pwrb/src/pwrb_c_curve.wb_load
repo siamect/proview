@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_arithm.c
+!  @Group Plc,PlcAnalog
 !  @Summary Interpolates in a table
 !  Interpolates in a table.
 !  @image orm_curve_fo.gif

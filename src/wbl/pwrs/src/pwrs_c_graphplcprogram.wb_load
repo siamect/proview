@@ -8,6 +8,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group ClassDefinition
 !  Description class for a Buffer in plc program objects.
 !  The buffer contains graphic data used by the plc editor.
 !*/

@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_grafcet.h
+!  @Group Plc,PlcGrafcet
 !  @Summary Resets a stored Grafcet order
 !  Resets a stored Grafcet order when the input is TRUE.
 !  @image orm_reset_so_fo.gif

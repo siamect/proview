@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group Plc,PlcIO
 !  @Summary Get Do signal
 !  Get Digital output.
 !  @image orm_getdo_fo.gif

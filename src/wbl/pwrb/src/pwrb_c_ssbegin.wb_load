@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_grafcet.h
+!  @Group Plc,PlcGrafcet
 !  @Summary The first Grafcet step in a sub-sequential chain
 !  The first Grafcet step in a sub-sequential chain.
 !  @image orm_ssbegin_fo.gif

@@ -8,6 +8,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group ClassDefinition
 !  Definition of an output attribute. 
 !  Output attributes are used in plc-objects, and are displayed as output pins 
 !  in the plc symbol. The output contains a value, that generally is calculated

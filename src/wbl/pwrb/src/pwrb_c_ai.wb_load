@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group PlantConfiguration,Signals
 !  @Summary Analog input signal
 !  Analog input.
 !  

@@ -35,7 +35,7 @@ copy : $(inc_dir)/pwr_nmpsclasses.h
 
 lib  : $(load_dir)/nmps.dbs
 
-exe : $(doc_dir)/nmps_allclasses.html \
+exe : $(doc_dir)/orm/nmps_allclasses.html \
       $(exe_dir)/nmps_xtthelp.dat
 
 clean : 
@@ -51,14 +51,14 @@ $(inc_dir)/pwr_nmpsclasses.h :
 	@ echo "Generating struct files for nmps classes..."
 	@ co_convert -sv -d $(inc_dir) "$(pwre_sroot)/wbl/nmps/src/nmps_c_*.wb_load"
 
-$(doc_dir)/nmps_allclasses.html :
+$(doc_dir)/orm/nmps_allclasses.html :
 	@ echo "Generating html files for nmps classes..."
-	@ co_convert -w -d $(doc_dir) "$(pwre_sroot)/wbl/nmps/src/nmps_c_*.wb_load"
+	@ co_convert -w -d $(doc_dir)/orm -g $(pwre_sroot)/wbl/nmps/src/cnv_setup.dat "$(pwre_sroot)/wbl/nmps/src/nmps_c_*.wb_load"
 	@ echo "Generating html files for nmps structs..."
-	@ co_convert -c -d $(doc_dir) $(inc_dir)/pwr_nmpsclasses.h
+	@ co_convert -c -d $(doc_dir)/orm $(inc_dir)/pwr_nmpsclasses.h
 	@ echo "Generating html files for nmps code..."
-	@ co_convert -c -d $(doc_dir) "$(pwre_sroot)/lib/rs/src/rs_plc_macro_nmps.h"
-	@ co_convert -c -d $(doc_dir) "$(pwre_sroot)/lib/rs/src/rs_plc_nmps*.c"
+	@ co_convert -c -d $(doc_dir)/orm "$(pwre_sroot)/lib/rs/src/rs_plc_macro_nmps.h"
+	@ co_convert -c -d $(doc_dir)/orm "$(pwre_sroot)/lib/rs/src/rs_plc_*.c"
 
 $(exe_dir)/nmps_xtthelp.dat :
 	@ echo "Generating xtt help files for nmps classes"

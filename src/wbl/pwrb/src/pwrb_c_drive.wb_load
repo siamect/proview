@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_drive.c
+!  @Group Plc,PlcDrive
 !  @Summary Start/Stop motor control
 !  START/ STOP motor control with supervision of contactor
 !  response and motion guard.

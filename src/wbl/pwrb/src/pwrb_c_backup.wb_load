@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_logic.h
+!  @Group Plc,PlantConfiguration
 !  @Summary Backup of objects or attributes
 !  Points out a data segment in rtdb where the items will
 !  be backed up on a file.

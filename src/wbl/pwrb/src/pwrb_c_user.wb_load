@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group Operator,NodeConfiguration
 !  @Summary Configures a user category of an operator station
 !  Configures a user category of an operator station.
 !  

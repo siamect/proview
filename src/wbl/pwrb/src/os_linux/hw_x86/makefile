@@ -35,7 +35,7 @@ copy : $(inc_dir)/pwr_baseclasses.h
 
 lib  : $(load_dir)/pwrb.dbs
 
-exe : $(doc_dir)/pwrb_allclasses.html \
+exe : $(doc_dir)/orm/pwrb_allclasses.html \
       $(exe_dir)/pwrb_xtthelp.dat
 
 clean : 
@@ -51,14 +51,16 @@ $(inc_dir)/pwr_baseclasses.h :
 	@ echo "Generating struct files for pwrb classes..."
 	@ co_convert -sv -d $(inc_dir) "$(pwre_sroot)/wbl/pwrb/src/pwrb_c_*.wb_load"
 
-$(doc_dir)/pwrb_allclasses.html :
+$(doc_dir)/orm/pwrb_allclasses.html :
 	@ echo "Generating html files for pwrb classes..."
-	@ co_convert -w -d $(doc_dir) "$(pwre_sroot)/wbl/pwrb/src/pwrb_c_*.wb_load"
+	@ co_convert -w -d $(doc_dir)/orm -g $(pwre_sroot)/wbl/pwrb/src/cnv_setup.dat "$(pwre_sroot)/wbl/pwrb/src/pwrb_c_*.wb_load"
 	@ echo "Generating html files for pwrb structs..."
-	@ co_convert -c -d $(doc_dir) $(inc_dir)/pwr_baseclasses.h
+	@ co_convert -c -d $(doc_dir)/orm $(inc_dir)/pwr_baseclasses.h
 	@ echo "Generating html files for pwrb code..."
-	@ co_convert -c -d $(doc_dir) "$(pwre_sroot)/lib/rt/src/rt_plc_macro_*.h"
-	@ co_convert -c -d $(doc_dir) "$(pwre_sroot)/lib/rt/src/rt_plc_*.c"
+	@ co_convert -c -d $(doc_dir)/orm "$(pwre_sroot)/lib/rt/src/rt_plc_macro_*.h"
+	@ co_convert -c -d $(doc_dir)/orm "$(pwre_sroot)/lib/rt/src/rt_plc_*.c"
+	@ co_convert -c -d $(doc_dir)/orm "$(pwre_sroot)/lib/rt/src/rt_c_*.c"
+	@ co_convert -c -d $(doc_dir)/orm "$(pwre_sroot)/lib/rt/src/rt_csup.c"
 
 $(exe_dir)/pwrb_xtthelp.dat :
 	@ echo "Generating xtt help files for pwrb classes"
@@ -74,8 +76,8 @@ clean_pwrb_xtthelp :
 		 $(rm) $(rmflags) $(exe_dir)/pwrb_xtthelp.dat; \
 	  fi
 clean_pwrb_html :
-	@ if [ -e $(doc_dir)/pwrb_allclasses.html ]; then \
-	        $(rm) $(rmflags) $(doc_dir)/pwrb_*.html; \
+	@ if [ -e $(doc_dir)/orm/pwrb_allclasses.html ]; then \
+	        $(rm) $(rmflags) $(doc_dir)/orm/pwrb_*.html; \
 	  fi
 
 clean_baseclasses :

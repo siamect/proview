@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_arithm.c
+!  @Group Plc,PlcAnalog
 !  @Summary Limits an analog signal up/downwards
 !  Limits an analog signal up/downwards and signals if a
 !  limitation has taken place.

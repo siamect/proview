@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
+!  @Group Plc,PlcIO
 !  @Summary Conditional storage of integer attribute
 !  Conditional Storage Integer parameter.
 !  @image orm_cstoip_fo.gif

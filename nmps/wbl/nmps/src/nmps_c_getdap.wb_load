@@ -2,8 +2,9 @@
 !
 !  PROVIEW/R
 !
-!  <Description>.
-!
+!/**
+!  @Group MaterialPlanning,Plc
+!*/
 SObject NMps:Class
   Object GetDap $ClassDef 19
     Body SysBody

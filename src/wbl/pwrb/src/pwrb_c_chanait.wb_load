@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group IO,Channels,NodeConfiguration
 !  @Summary Configures an analog input channel with table conversion
 !  Configures an analog input channel independent of the
 !  type of physical Ai-card. The conversion from signal

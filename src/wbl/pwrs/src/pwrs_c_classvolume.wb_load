@@ -8,6 +8,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group Volumes,ClassDefinition
 !  A class volume contains class and type definition hierarchies.
 !  When a class volume is created, also a classvolume object is created.
 !  This object is not displayed in the object hierarchy in the navigator,

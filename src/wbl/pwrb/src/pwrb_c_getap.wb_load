@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group Plc,PlcIO
 !  @Summary Get analog attribute
 !  Get Analog parameter.
 !  @image orm_getap_fo.gif

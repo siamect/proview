@@ -8,6 +8,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Group NodeConfiguration
 !  Top and grouping object that helps to form structures
 !  in the Node Hierarchy in the Node Configuration.
 !  

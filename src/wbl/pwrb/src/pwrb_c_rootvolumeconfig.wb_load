@@ -5,8 +5,9 @@
 !
 !  <Description>.
 !
-! Range ldh_eDId_Base
-!
+!/**
+! @Group ProjectConfiguration
+!*/
 SObject pwrb:Class
   Object RootVolumeConfig $ClassDef 195 
     Body SysBody

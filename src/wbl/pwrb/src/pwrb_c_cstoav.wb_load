@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
+!  @Group Plc,PlcIO
 !  Conditional Storage Analog value.
 !  @image orm_cstoav_fo.gif
 !  
