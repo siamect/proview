@@ -586,7 +586,7 @@ checkSync ()
       return;
     if (!hp->linkUp)
       return;
-    handlerLog(hp, "Sending sync");
+    // handlerLog(hp, "Sending sync");
     sendToHandler(hp, mh_eMsg_OutunitSync, 0, NULL);
   }
 }
