@@ -37,5 +37,7 @@ errascef	<associate event flag cluster in '%s'>			/error
 errgetef	<get event flag for PLC timer>				/fatal
 nonodeobj       <no node objects exists>				/error
 ininstep	<initialize init steps>					/error
-
+iostalled	<IO stalled, cyclesup delay detected>			/fatal
+ioread		<IO stalled, io read error>				/fatal
+iowrite		<IO stalled, io write error>				/fatal
 .end
