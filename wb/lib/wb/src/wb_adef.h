@@ -35,9 +35,10 @@ public:
     pwr_sAttrRef aref();
     size_t size();   // get objects runtime body size
     int offset();
-    int type();
+    pwr_eType type();
     int nElement();
     int index();
+    int flags();
     pwr_tOid aoid();
     pwr_tAix aix();
     pwr_tCid cid();

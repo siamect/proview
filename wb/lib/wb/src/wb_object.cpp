@@ -90,11 +90,15 @@ wb_object::operator wb_orep*() const
 
 const char *wb_object::name()
 { 
+  check("wb_object::name()");
+
   return m_orep->name();
 }
 
 wb_name wb_object::longName()
 { 
+  check("wb_object::longName()");
+
   return m_orep->longName();
 }
 
@@ -172,6 +176,19 @@ wb_object wb_object::first()
     
     pwr_tStatus sts = LDH__SUCCESS;
     wb_orep *orep = m_orep->first(&sts);
+    wb_object o(sts, orep);
+    return o;
+}
+
+//
+// Get the child with the given name.
+//
+wb_object wb_object::child( const char* name)
+{
+    check("wb_object::child()");
+    
+    pwr_tStatus sts = LDH__SUCCESS;
+    wb_orep *orep = m_orep->child(&sts, name);
     wb_object o(sts, orep);
     return o;
 }

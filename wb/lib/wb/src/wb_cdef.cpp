@@ -76,7 +76,8 @@ wb_cdef& wb_cdef::operator=(const wb_cdef& x)
 
 void wb_cdef::check() const
 {
-  if ( !m_cdrep) throw wb_error(m_sts);
+  if ( !m_cdrep) 
+      throw wb_error(m_sts);
 }
 
 size_t wb_cdef::size()

@@ -71,7 +71,7 @@ int wb_adef::offset()
   return m_adrep->offset();
 }
 
-int wb_adef::type() 
+pwr_eType wb_adef::type() 
 {
   check();
   return m_adrep->type();
@@ -87,6 +87,12 @@ int wb_adef::index()
 {
   check();
   return m_adrep->index();
+}
+
+int wb_adef::flags() 
+{
+  check();
+  return m_adrep->flags();
 }
 
 pwr_tOid wb_adef::aoid() 
