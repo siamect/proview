@@ -6,6 +6,7 @@
  */
 
 #include <cfloat>
+#include <assert.h>
 
 #include "wb_print_wbl.h"
 
