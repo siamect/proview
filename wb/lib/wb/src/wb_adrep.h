@@ -54,7 +54,7 @@ class wb_adrep
 
     char *name();
     wb_name longName();
-    void body( void **p);
+    void *body( void *p = 0);
 
     wb_vrep *vrep() const;
 };

@@ -131,8 +131,8 @@ wb_name wb_adef::longName()
   return m_adrep->longName();
 }
 
-void wb_adef::body( void **p)
+void *wb_adef::body( void *p)
 {
   check();
-  m_adrep->body( p);
+  return m_adrep->body( p);
 }

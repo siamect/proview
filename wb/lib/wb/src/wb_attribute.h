@@ -3,7 +3,6 @@
 
 #include "pwr.h"
 #include "wb_orep.h"
-#include "wb_adrep.h"
 #include "wb_name.h"
 #include "wb_object.h"
 #include "wb_ldh.h"
@@ -31,17 +30,24 @@ class wb_attribute : public wb_status
     wb_orep *m_orep;
     wb_adrep *m_adrep;
     
+    size_t m_size;
+    int m_offset;
+    pwr_tTid m_tid;
+    int m_elements;
+    pwr_eType m_type;
+    int m_flags;
+
 public:
     wb_attribute();
-    wb_attribute(const wb_attribute&);  // x = other_object
-    wb_attribute(pwr_tStatus, wb_orep* const );  // x = other orep
-    wb_attribute(pwr_tStatus, wb_orep* const, char*);
-    wb_attribute(pwr_tStatus, wb_orep* const, wb_adrep* const) {};
+    wb_attribute(const wb_attribute&);
+    wb_attribute(pwr_tStatus, wb_orep* const );
+    wb_attribute(pwr_tStatus, wb_orep* const, wb_adrep* const);
+    wb_attribute(pwr_tStatus, wb_orep* const, char* aname, char* bname = 0);
 
+    ~wb_attribute();
     wb_attribute& operator=(const wb_attribute&);
-    operator bool() const { return (m_adrep != 0);} // Fix
+    operator bool() const { return evenSts();}
     operator wb_orep*() const;
-    operator wb_adrep*() const;
     bool operator==(wb_attribute&);
     
     //wb_object& operator=(const wb_orep&);
@@ -49,9 +55,9 @@ public:
     pwr_tOid aoid();  // get objects object id
     pwr_sAttrRef aref();
     pwr_sAttrRef *aref(pwr_sAttrRef *arp);
-    size_t size();   // get objects runtime body size
+    size_t size();
     int offset();
-    int type();
+    pwr_eType type();
     int nElement();
     int index();
     int flags();
@@ -64,9 +70,8 @@ public:
     pwr_sAttrXRef *xref();
     pwr_sObjXRef *oxref();
     
-    void *value();
-    pwr_tStatus value(void *vp);
-    pwr_tStatus value(void *vp, size_t size);
+    void *value( void *p = 0);
+    void *value(void *vp, size_t size, pwr_tStatus*);
     
     string toString();
     pwr_tStatus fromString(string);
@@ -85,6 +90,9 @@ public:
     
     pwr_tStatus sts() { return m_sts;}
             
+   private:
+    void check();
+    void init();
 };
 
 #endif

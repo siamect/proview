@@ -197,6 +197,22 @@ wb_cdef wb_volume::cdef(wb_name n)
   return wb_cdef(m_vrep->merep()->cdrep( &sts, n));
 }
 
+wb_attribute wb_volume::attribute(pwr_tOid oid, char *aname, char *bname) const
+{
+    pwr_tStatus sts;
+    wb_orep *orep;
+    
+    if (oid.vid == m_vrep->vid())
+      // This volume
+      orep = m_vrep->object( &sts, oid);
+    else
+      // Other volume
+      orep = m_vrep->erep()->object(&sts, oid);
+
+    wb_attribute a = wb_attribute(sts, orep, aname, bname);
+    
+    return a;
+}
 
 
 

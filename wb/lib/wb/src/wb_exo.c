@@ -416,7 +416,7 @@ vldh_t_node	node;
 	    }
 	    i++;
 	  }
-	  XtFree((char *) bodydef);
+	  free((char *) bodydef);
 	}
 
 	/* Check the nodes connected with executer order connections */
@@ -589,7 +589,7 @@ vldh_t_node	node;
 	  }
 	  i++;
 	}
-	XtFree((char *) bodydef);
+	free((char *) bodydef);
 
 	/* Check the nodes connected with executer order connections */
 

@@ -222,7 +222,7 @@ wb_name wb_adrep::longName()
   return m_orep->longName();
 }
 
-void wb_adrep::body( void **p)
+void *wb_adrep::body( void *p)
 {
   pwr_tStatus sts;
   int size;
@@ -249,7 +249,5 @@ void wb_adrep::body( void **p)
       throw wb_error(LDH__NYI);
   }
 
-  *p = calloc( 1, size);
-  m_orep->m_vrep->readBody( &sts, m_orep, cdh_eBix_sys, *p);
-  if ( EVEN(sts)) throw wb_error(sts);
+  return m_orep->m_vrep->readBody( &sts, m_orep, cdh_eBix_sys, p);
 }

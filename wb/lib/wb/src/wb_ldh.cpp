@@ -550,7 +550,7 @@ ldh_GetObjectBody(ldh_tSession session, pwr_tOid oid, char *bname, void **buff, 
 
     *buff = XtMalloc(a.size());
     if (*buff == NULL) return LDH__INSVIRMEM;
-    memcpy(*buff, a.value(), a.size());
+    memcpy(*buff, a.value( 0), a.size());
     if (size != NULL) *size = a.size();
   
     return LDH__SUCCESS;
@@ -575,7 +575,7 @@ ldh_GetObjectBodyDef(ldh_tSession session, pwr_tCid cid, char *bname,
       strcpy((*bdef)[a.index()].ParName, a.name());
       (*bdef)[a.index()].ParLevel = 1;
       (*bdef)[a.index()].ParClass = (pwr_eClass)a.cid();
-      a.body( (void **) &(*bdef)[a.index()].Par);
+      (*bdef)[a.index()].Par = (pwr_uParDef *) a.body();
     }
     
     return LDH__SUCCESS;

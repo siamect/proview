@@ -921,7 +921,7 @@ static int cmd_attribute_func (
 	  }
 	  if ( found )
 	    break;
-	  XtFree((char *) bodydef);	
+	  free((char *) bodydef);	
 	}
 	if ( !found)
 	{

@@ -49,7 +49,7 @@ public:
 
     char *name();
     wb_name longName();
-    void body( void **p);
+    void *body( void *p = 0);
     
   private:
     void check();

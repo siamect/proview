@@ -910,7 +910,7 @@ static pwr_tStatus gen_m4 (
 	if ( !found )
 	{
 	  XtFree((char *) parvalue);	
-	  XtFree((char *) bodydef);	
+	  free((char *) bodydef);	
 	  return FOE__SUCCESS;
 	}
 	
@@ -919,7 +919,7 @@ static pwr_tStatus gen_m4 (
 	if( EVEN(sts))
 	{
 	  XtFree((char *) parvalue);	
-	  XtFree((char *) bodydef);	
+	  free((char *) bodydef);	
 	  return FOE__SUCCESS;
 	}
 	XtFree((char *) parvalue);
@@ -934,7 +934,7 @@ static pwr_tStatus gen_m4 (
 	fprintf( genctx->file, "/%s=%s.%s\n", (bodydef[i].ParName), 
 		object_name, parameter);
 	XtFree((char *) parameter);
-	XtFree((char *) bodydef);	
+	free((char *) bodydef);	
 
 	return FOE__SUCCESS;
 }
@@ -1426,7 +1426,7 @@ static pwr_tStatus gen_m8 (
 	  XtFree( parvalue);
 
 	}
-	XtFree((char *) bodydef);
+	free((char *) bodydef);
 	
 	/* Get the objdid for order children of this node */
 	found = 0;
@@ -2034,7 +2034,7 @@ static pwr_tStatus gen_print_inputs (
 	  }	  
 	}
 
-	XtFree((char *) bodydef);	
+	free((char *) bodydef);	
 	return GSX__SUCCESS;
 }
 
@@ -2310,7 +2310,7 @@ static pwr_tStatus gen_print_interns (
 	    XtFree( object_par);
 	    XtFree( template_par);
 	  }
-	  XtFree((char *) bodydef);	
+	  free((char *) bodydef);	
 	}
 
 

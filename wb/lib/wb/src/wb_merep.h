@@ -36,7 +36,7 @@ class wb_merep {
 
     int getAttrInfoRec( wb_attrname *attr, int bix, pwr_tCid cid, int *size,
 			int *offset, pwr_tTid *tid, int *elements, 
-			pwr_eType *type, int level);
+			pwr_eType *type, int *flags, int level);
 
 };
 

@@ -563,6 +563,9 @@ int wb_vrepwbl::getAttrInfoRec( wb_attrname *attr, int bix, pwr_tCid cid, int *s
 		     int *offset, pwr_tTid *tid, int *elements, pwr_eType *type,
 		     int level)
 {
+  if ( level > 0)
+    bix = cdh_eBix_rt;
+
   switch( cid) {
     case pwr_eClass_Type:
     {
@@ -746,7 +749,9 @@ int wb_vrepwbl::getAttrInfoRec( wb_attrname *attr, int bix, pwr_tCid cid, int *s
       }
       else {
         // Search type in other volumes
-        return m_erep->merep()->getAttrInfoRec( attr, bix, cid, size, offset, tid, elements, type, level);
+        int flags;
+        return m_erep->merep()->getAttrInfoRec( attr, bix, cid, size, offset, tid, 
+						elements, type, &flags, level);
       }
     }
   }
