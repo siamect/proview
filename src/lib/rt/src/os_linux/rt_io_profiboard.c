@@ -146,6 +146,8 @@ pwr_tUInt16 pb_cmi_poll(int fp,
   crs.retval_ptr = &retval;
 
   sts = ioctl(fp, PB_IOCTL_CMI_READ, (char *) &crs);
+  
+  if (sts != 0) return PB_DEVICE_ERROR;
 
   if (retval == CON_IND_RECEIVED) {
 
@@ -222,6 +224,7 @@ pwr_tUInt16 pb_cmi_get_data(int fp,
   retry_counter = 10;
   do {
        read(fp, (char *) &user_arg, data_size);
+       if (retval == E_IF_FATAL_ERROR) break;
   }
   while(retval != E_OK && retry_counter-- > 0);
 
@@ -250,6 +253,7 @@ pwr_tUInt16 pb_cmi_set_data(int fp,
   retry_counter = 10;
   do {
        write(fp, (char *) &user_arg, data_size);
+       if (retval == E_IF_FATAL_ERROR) break;
   }
   while(retval != E_OK && retry_counter-- > 0);
 

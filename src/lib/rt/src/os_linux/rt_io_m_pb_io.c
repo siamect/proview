@@ -1,4 +1,4 @@
-/* rt_io_m_pb_di.c
+/* rt_io_m_pb_io.c
    PROVIEW/R	*/
 
 #pragma pack(1)
@@ -24,7 +24,7 @@
 
 
 /*----------------------------------------------------------------------------*\
-   Init method for the Pb module Di
+   Init method for the Pb module Io
 \*----------------------------------------------------------------------------*/
 static pwr_tStatus IoCardInit (
   io_tCtx	ctx,
@@ -34,71 +34,78 @@ static pwr_tStatus IoCardInit (
 ) 
 {
   io_sCardLocal *local;
-  pwr_sClass_Pb_Di *op;
+  pwr_sClass_Pb_Io *op;
 
-  op = (pwr_sClass_Pb_Di *) cp->op;
+  op = (pwr_sClass_Pb_Io *) cp->op;
   local = (io_sCardLocal *) cp->Local;
 
-  // Check configuration 
-  
-  if (op->NumberOfChannels != 8 && op->NumberOfChannels != 16 && op->NumberOfChannels != 32)
-    op->Status = 0;
-    
-  if (op->Orientation > op->NumberOfChannels)
-    op->Status = 0;  
+  if (rp->Class != pwr_cClass_Pb_DP_Slave) {
+    errh_Info( "Illegal object type %s", cp->Name );
+    return 1;
+  }
 
-  if (op->Status < 1) errh_Info( "Error initializing Pb module Di %s", cp->Name );
+  if (op->Status < 1) {
+    errh_Info( "Error initializing Pb module Io %s", cp->Name );
+  }
 
   return 1;
 }
 
 
 /*----------------------------------------------------------------------------*\
-   Read method for the Pb module Di
+   Write method for the Pb module Io
 \*----------------------------------------------------------------------------*/
-static pwr_tStatus IoCardRead (
+static pwr_tStatus IoCardWrite (
   io_tCtx	ctx,
   io_sAgent	*ap,
   io_sRack	*rp,
   io_sCard	*cp
 ) 
 {
-  io_sCardLocal *local;
-  pwr_sClass_Pb_Di *op;
-  pwr_sClass_Pb_DP_Slave *slave;
 
-  pwr_tUInt16 data[2] = {0, 0};
-  pwr_tUInt32 *data32;
-  
+  io_sCardLocal *local;
+  pwr_sClass_Pb_Io *op;
+  pwr_sClass_Pb_DP_Slave *slave;
+  int i;
+  pwr_tInt8 data8 = 0;
+  pwr_tInt16 data16 = 0;
+  pwr_tInt32 data32 = 0;
+  pwr_sClass_ChanIo *cop;
+  pwr_sClass_Io *sop;
+  io_sChannel *chanp;
+
   local = (io_sCardLocal *) cp->Local;
-  op = (pwr_sClass_Pb_Di *) cp->op;
+  op = (pwr_sClass_Pb_Io *) cp->op;
   slave = (pwr_sClass_Pb_DP_Slave *) rp->op;
 
   if (op->Status >= 1) {
 
-    memcpy(&data, local->input_area + op->OffsetInputs, op->BytesOfInput);
+    for (i=0; i<cp->ChanListSize; i++) {
 
-    if (slave->ByteOrdering == PB_BYTEORDERING_BE) {
-      if (op->Orientation == PB_ORIENTATION_WORD) {
-        data[0] = swap16(data[0]);
-        data[1] = swap16(data[1]);
+      chanp = &cp->chanlist[i];
+      if (!chanp->cop) continue;
+
+      cop = (pwr_sClass_ChanIo *) chanp->cop;
+      sop = (pwr_sClass_Io *) chanp->sop;
+
+      if (cop->TestOn != 0) continue;
+
+      data32 = *(pwr_tInt32 *) chanp->vbp;
+
+      if (op->BytesPerChannel == 4) {
+        if (slave->ByteOrdering == PB_BYTEORDERING_BE) data32 = swap32(data32);
+        memcpy(local->output_area + op->OffsetOutputs + 4*i, &data32, 4);
       }
-      else if (op->Orientation == PB_ORIENTATION_DWORD) {
-      	data32 = (pwr_tUInt32 *) &data;
-	*data32 = swap32(*data32);
+      else if (op->BytesPerChannel == 2) {
+        data16 = (pwr_tInt16) data32;
+        if (slave->ByteOrdering == PB_BYTEORDERING_BE) data16 = swap16(data16);
+        memcpy(local->output_area + op->OffsetOutputs + 2*i, &data16, 2);
+      }
+      else if (op->BytesPerChannel == 1) {
+        data8 = (pwr_tInt8) data32;
+        memcpy(local->output_area + op->OffsetOutputs + i, &data8, 1);
       }
     }
-
-    // Packa upp
-    
-    data[0] = data[0] ^ op->InvMask1;
-    io_DiUnpackWord(cp, data[0], op->ConvMask1, 0);
-
-    if (op->NumberOfChannels > 16) {
-      data[1] = data[1] ^ op->InvMask2;
-      io_DiUnpackWord(cp, data[1], op->ConvMask2, 1);
-    }
-
   }
   return 1;
 }
@@ -128,9 +135,9 @@ static pwr_tStatus IoCardClose (
   Every method to be exported to the workbench should be registred here.
 \*----------------------------------------------------------------------------*/
 
-pwr_dExport pwr_BindIoMethods(Pb_Di) = {
+pwr_dExport pwr_BindIoMethods(Pb_Io) = {
   pwr_BindIoMethod(IoCardInit),
-  pwr_BindIoMethod(IoCardRead),
+  pwr_BindIoMethod(IoCardWrite),
   pwr_BindIoMethod(IoCardClose),
   pwr_NullMethod
 };

@@ -35,8 +35,9 @@ static pwr_tStatus IoRackInit (
   io_sRack	*rp
 ) 
 {
+
+/*
   io_sAgentLocal *local_agent;
-  io_sRackLocal *local_rack;
   io_sCardLocal *local_card;
 
   pwr_sClass_Pb_DP_Slave *op;
@@ -52,9 +53,10 @@ static pwr_tStatus IoRackInit (
   pwr_sClass_Pb_Do *dop;
   pwr_sClass_Pb_Ai *aip;
   pwr_sClass_Pb_Ao *aop;
+  pwr_sClass_Pb_Ii *iip;
+  pwr_sClass_Pb_Io *iop;
 
   local_agent = (io_sAgentLocal *) (ap->Local);
-  local_rack = (io_sRackLocal *) (rp->Local);
 
   fp = local_agent->Pb_fp;
 
@@ -64,9 +66,6 @@ static pwr_tStatus IoRackInit (
   rqtp.tv_nsec = 0;
 
   // Try to initialize slave.
-
-  local_rack->initialized = 0;
-  op->Status = 0;
 
   if (op->Status < 1) {
 
@@ -120,12 +119,18 @@ static pwr_tStatus IoRackInit (
   op->NumberModules = 0;
 
   while(cardp) {
-    local_card = calloc(1, sizeof(*local_card));
-    cardp->Local = local_card;
+    if (!cardp->Local) {
+      local_card = calloc(1, sizeof(*local_card));
+      cardp->Local = local_card;
+    }
+    else
+      local_card = cardp->Local;
+      
     local_card->input_area = (void *) &(op->Inputs);
     local_card->output_area = (void *) &(op->Outputs);
     local_card->initialized = 0;
-
+    errh_Info("Init module %s", cardp->Name);
+    
     switch (cardp->Class) {
 
       case pwr_cClass_Pb_Di:
@@ -163,6 +168,24 @@ static pwr_tStatus IoRackInit (
         aop->Status = 1;
 	local_card->initialized = 1;
         break;
+
+      case pwr_cClass_Pb_Ii:
+        iip = (pwr_sClass_Pb_Ii *) cardp->op;
+        iip->OffsetInputs = input_counter;
+        iip->BytesOfInput = iip->NumberOfChannels * iip->BytesPerChannel;
+        input_counter += iip->BytesOfInput;
+        iip->Status = 1;
+	local_card->initialized = 1;
+        break;
+
+      case pwr_cClass_Pb_Io:
+        iop = (pwr_sClass_Pb_Io *) cardp->op;
+        iop->OffsetOutputs = output_counter;
+        iop->BytesOfOutput = iop->NumberOfChannels * iop->BytesPerChannel;
+        output_counter += iop->BytesOfOutput;
+        iop->Status = 1;
+	local_card->initialized = 1;
+        break;
     }
 
     op->NumberModules++;
@@ -175,9 +198,10 @@ static pwr_tStatus IoRackInit (
 //    return IO__SUCCESS;
   }
 
-  op->Status = 1;
-  local_rack->initialized = 1;
+  op->Status = PB_SLAVE_STATE_STOPPED;
+*/
   errh_Info( "Init DP slave %s", rp->Name );
+
   return IO__SUCCESS;
 }
 
@@ -191,39 +215,33 @@ static pwr_tStatus IoRackRead (
   io_sRack	*rp
 ) 
 {
-  io_sRackLocal *local;
   io_sAgentLocal *agent_local;
   pwr_sClass_Pb_DP_Slave *op;
   int fp;
   unsigned char diag;
   pwr_tUInt16 sts;
 
-  local = (io_sRackLocal *) rp->Local;
   agent_local = (io_sAgentLocal *) (ap->Local);
   fp = agent_local->Pb_fp;
+  
   op = (pwr_sClass_Pb_DP_Slave *) rp->op;
 
-  if (local->initialized == 1)
-    op->Status = 1;
-  else 
-    op->Status = 0;
-
-  if (op->Status > 0 && op->DisableSlave == 0) {
+  if (op->Status > PB_SLAVE_STATE_NOTINIT && op->DisableSlave == 0) {
 
     sts = pb_cmi_get_data(fp, ID_DP_STATUS_IMAGE, op->SlaveAddress, 1, &diag);
 
     if ((sts != PB_OK) || (diag & 1)) {
-      op->Status = 1;
+      op->Status = PB_SLAVE_STATE_STOPPED;
       op->ErrorCount++;
-      if (op->StallAction > 0) {
+      if (op->ErrorCount > op->ErrorSoftLimit && op->StallAction >= PB_STALLACTION_RESET) {
         memset(&op->Inputs, 0, op->BytesOfInput);
       }
     }
     else {
-      op->Status = 2;
+      op->Status = PB_SLAVE_STATE_OPERATE;
     }
 
-    if ((op->Status > 1) && op->BytesOfInput > 0) {
+    if ((op->Status > PB_SLAVE_STATE_STOPPED) && op->BytesOfInput > 0) {
 
       sts = pb_cmi_get_data(fp, 
 			ID_DP_SLAVE_IO_IMAGE, 
@@ -237,10 +255,13 @@ static pwr_tStatus IoRackRead (
         op->ErrorCount = 0;
     }
 
-    if (op->ErrorCount > op->ErrorHardLimit && op->StallAction == 2)
+    if (op->ErrorCount > op->ErrorHardLimit && op->StallAction >= PB_STALLACTION_BREAK)
       ctx->Node->EmergBreakTrue = 1;
   }
-
+/*  
+  else if (op->Status == PB_SLAVE_STATE_NOTINIT)
+    IoRackInit(ctx, ap, rp);
+*/
   return IO__SUCCESS;
 }
 
@@ -254,20 +275,18 @@ static pwr_tStatus IoRackWrite (
   io_sRack	*rp
 ) 
 {
-  io_sRackLocal *local;
   io_sAgentLocal *agent_local;
   pwr_sClass_Pb_DP_Slave *op;
   int fp;
   pwr_tUInt16 sts;
 
-  local = (io_sRackLocal *) rp->Local;
   agent_local = (io_sAgentLocal *) (ap->Local);
   fp = agent_local->Pb_fp;
   op = (pwr_sClass_Pb_DP_Slave *) rp->op;
 
   // Write the whole I/O output area from local area
 
-  if (op->Status > 0 && op->DisableSlave == 0) {
+  if (op->Status > PB_SLAVE_STATE_NOTINIT && op->DisableSlave == 0) {
 
     if (op->BytesOfOutput > 0) {
 
@@ -294,13 +313,6 @@ static pwr_tStatus IoRackClose (
   io_sRack	*rp
 ) 
 {
-  io_sRackLocal 	*local;
-
-  /* Free dynamic memory  */
-  local = rp->Local;
-
-  free( (char *)local);
-
   return 1;
 }
 

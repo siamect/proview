@@ -36,20 +36,12 @@ static pwr_tStatus IoCardInit (
   io_sCardLocal *local;
   pwr_sClass_Pb_Ao *op;
   io_sChannel *chanp;
-  pwr_sClass_Pb_DP_Slave *slave;
   int i;
 
   op = (pwr_sClass_Pb_Ao *) cp->op;
   local = (io_sCardLocal *) cp->Local;
 
-  if (rp->Class == pwr_cClass_Pb_DP_Slave) {
-    slave = (pwr_sClass_Pb_DP_Slave *) rp->op;
-
-    /* Byte swap if Big Endian (bit 0) */
-
-    if (slave->ByteOrdering & 1) local->byte_swap = 1;
-  }
-  else {
+  if (rp->Class != pwr_cClass_Pb_DP_Slave) {
     errh_Info( "Illegal object type %s", cp->Name );
     return 1;
   }
@@ -82,7 +74,9 @@ static pwr_tStatus IoCardWrite (
 {
   io_sCardLocal *local;
   pwr_sClass_Pb_Ao *op;
+  pwr_sClass_Pb_DP_Slave *slave;
   int i;
+  pwr_tInt8 data8 = 0;
   pwr_tInt16 data16 = 0;
   pwr_tInt32 data32 = 0;
   pwr_sClass_ChanAo *cop;
@@ -94,6 +88,7 @@ static pwr_tStatus IoCardWrite (
 
   local = (io_sCardLocal *) cp->Local;
   op = (pwr_sClass_Pb_Ao *) cp->op;
+  slave = (pwr_sClass_Pb_DP_Slave *) rp->op;
   
   if (op->Status >= 1) {
 
@@ -137,20 +132,30 @@ static pwr_tStatus IoCardWrite (
 	sop->RawValue = 0;
 
         data32 = (pwr_tInt32) rawvalue;
-        if (local->byte_swap == 1) data32 = swap32(data32);
+        if (slave->ByteOrdering == PB_BYTEORDERING_BE) data32 = swap32(data32);
 
         memcpy(local->output_area + op->OffsetOutputs + 4*i, &data32, 4);
       }
-      else {
+      else if (op->BytesPerChannel == 2) {
         if ( rawvalue > 0)
           sop->RawValue = rawvalue + 0.5;
         else
           sop->RawValue = rawvalue - 0.5;
 
         data16 = (pwr_tInt16) sop->RawValue;
-        if (local->byte_swap == 1) data16 = swap16(data16);
+        if (slave->ByteOrdering == PB_BYTEORDERING_BE) data16 = swap16(data16);
 
         memcpy(local->output_area + op->OffsetOutputs + 2*i, &data16, 2);
+      }
+      else if (op->BytesPerChannel == 1) {
+        if ( rawvalue > 0)
+          sop->RawValue = rawvalue + 0.5;
+        else
+          sop->RawValue = rawvalue - 0.5;
+
+        data8 = (pwr_tInt8) sop->RawValue;
+
+        memcpy(local->output_area + op->OffsetOutputs + i, &data8, 1);
       }
     }
   }

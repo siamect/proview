@@ -35,32 +35,17 @@ static pwr_tStatus IoCardInit (
 {
   io_sCardLocal *local;
   pwr_sClass_Pb_Do *op;
-  pwr_sClass_Pb_DP_Slave *slave;
 
   op = (pwr_sClass_Pb_Do *) cp->op;
   local = (io_sCardLocal *) cp->Local;
 
-  local->byte_swap = 0;
+  if (op->NumberOfChannels != 8 && op->NumberOfChannels != 16 && op->NumberOfChannels != 32)
+    op->Status = 0;
+    
+  if (op->Orientation > op->NumberOfChannels)
+    op->Status = 0;  
 
-  if (rp->Class == pwr_cClass_Pb_DP_Slave) {
-    slave = (pwr_sClass_Pb_DP_Slave *) rp->op;
-
-    /* Byte swap if Big Endian (bit 0) and
-       Digital modules wordoriented  (bit 1) */
-
-    if ((slave->ByteOrdering & 1) &&
-        (slave->ByteOrdering & 1<<1))
-      local->byte_swap = 1;
-
-  }
-  else {
-    errh_Info( "Error initializing Pb module Do %s", cp->Name );
-    return 1;
-  }
-
-  if (op->Status < 1) {
-    errh_Info( "Error initializing Pb module Do %s", cp->Name );
-  }
+  if (op->Status < 1) errh_Info( "Error initializing Pb module Do %s", cp->Name );
 
   return 1;
 }
@@ -78,21 +63,31 @@ static pwr_tStatus IoCardWrite (
 {
   io_sCardLocal *local;
   pwr_sClass_Pb_Do *op;
+  pwr_sClass_Pb_DP_Slave *slave;
+
   pwr_tUInt16 data[2] = {0, 0};
-//  pwr_tUInt16 invmask;
-//  pwr_tUInt16 convmask;
-  int i;
+  pwr_tUInt32 *data32;
 
   local = (io_sCardLocal *) cp->Local;
   op = (pwr_sClass_Pb_Do *) cp->op;
+  slave = (pwr_sClass_Pb_DP_Slave *) rp->op;
 
   if (op->Status >= 1) {
 
-    for (i=0; i<2; i++) {
-      if (i==1 && op->NumberOfChannels <= 16) break;
-      io_DoPackWord(cp, &data[i], i);
-      if (local->byte_swap == 1) data[i] = swap16(data[i]);      
-    }
+    io_DoPackWord(cp, &data[0], 0);
+    if (op->NumberOfChannels > 16) io_DoPackWord(cp, &data[1], 1);
+
+    if (slave->ByteOrdering == PB_BYTEORDERING_BE) {
+      if (op->Orientation == PB_ORIENTATION_WORD) {
+        data[0] = swap16(data[0]);
+        data[1] = swap16(data[1]);
+      }
+      else if (op->Orientation == PB_ORIENTATION_DWORD) {
+      	data32 = (pwr_tUInt32 *) &data;
+	*data32 = swap32(*data32);
+      }
+    }    
+
     memcpy(local->output_area + op->OffsetOutputs, &data, op->BytesOfOutput);
   }
   return 1;

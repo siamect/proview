@@ -31,10 +31,11 @@
 void ConvertAi (
   pwr_sClass_ChanAi   *cop,
   pwr_tInt16	      nobits,
-  pwr_tInt16	      rawvalue16,
-  pwr_tInt32	      rawvalue32,
+  pwr_tUInt8	      rawvalue8,
+  pwr_tUInt16	      rawvalue16,
+  pwr_tUInt32	      rawvalue32,
   pwr_tFloat32	      *actvalue_p,
-  io_sCardLocal       *local
+  pwr_tEnum	      representation
 )
 
 {
@@ -45,16 +46,22 @@ void ConvertAi (
   int			i;
 
   if (nobits == 32) {
-    if (local->unsign_rawval)
-      f_raw = (float) ((unsigned int) rawvalue32);
+    if (representation == PB_NUMREP_SIGNEDINT)
+      f_raw = (float) ((int) rawvalue32);
     else
       f_raw = (float) rawvalue32;
   }
-  else {
-    if (local->unsign_rawval)
-      f_raw = (float) ((unsigned short) rawvalue16);
+  else if (nobits == 16){
+    if (representation == PB_NUMREP_SIGNEDINT)
+      f_raw = (float) ((short) rawvalue16);
     else
       f_raw = (float) rawvalue16;
+  }
+  else if (nobits == 8){
+    if (representation == PB_NUMREP_SIGNEDINT)
+      f_raw = (float) ((char) rawvalue8);
+    else
+      f_raw = (float) rawvalue8;
   }
 
   switch ( cop->SensorPolyType)
@@ -102,10 +109,11 @@ void ConvertAi (
 void ConvertAit (
   pwr_sClass_ChanAit  *cop,
   pwr_tInt16	      nobits,
-  pwr_tInt16	      rawvalue16,
-  pwr_tInt32	      rawvalue32,
+  pwr_tUInt16	      rawvalue8,
+  pwr_tUInt16	      rawvalue16,
+  pwr_tUInt32	      rawvalue32,
   pwr_tFloat32	      *actvalue_p,
-  io_sCardLocal       *local
+  pwr_tEnum	      representation
 ) 
 {
   pwr_tFloat32	Slope;
@@ -118,16 +126,22 @@ void ConvertAit (
   pwr_tFloat32  f_raw;
 
   if (nobits == 32) {
-    if (local->unsign_rawval)
-      f_raw = (float) ((unsigned int) rawvalue32);
+    if (representation == PB_NUMREP_SIGNEDINT)
+      f_raw = (float) ((int) rawvalue32);
     else
       f_raw = (float) rawvalue32;
   }
-  else {
-    if (local->unsign_rawval)
-      f_raw = (float) ((unsigned short) rawvalue16);
+  else if (nobits == 16) {
+    if (representation == PB_NUMREP_SIGNEDINT)
+      f_raw = (float) ((short) rawvalue16);
     else
       f_raw = (float) rawvalue16;
+  }
+  else if (nobits == 8) {
+    if (representation == PB_NUMREP_SIGNEDINT)
+      f_raw = (float) ((char) rawvalue8);
+    else
+      f_raw = (float) rawvalue8;
   }
 
   sigvalue = cop->SigValPolyCoef0 + cop->SigValPolyCoef1 * f_raw;
@@ -163,24 +177,11 @@ static pwr_tStatus IoCardInit (
   pwr_sClass_Pb_Ai *op;
   int i;
   io_sChannel *chanp;
-  pwr_sClass_Pb_DP_Slave *slave;
 
   op = (pwr_sClass_Pb_Ai *) cp->op;
   local = (io_sCardLocal *) cp->Local;
 
-  local->byte_swap = 0;
-  local->unsign_rawval = 0;
-
-  if (rp->Class == pwr_cClass_Pb_DP_Slave) {
-    slave = (pwr_sClass_Pb_DP_Slave *) rp->op;
-    
-    /* Byte swap if Big Endian (bit 0) */
-    if (slave->ByteOrdering & 1) local->byte_swap = 1;
-
-    /* Signed or unsigned rawvalue? (bit 2) */
-    if (slave->ByteOrdering & 1<<2) local->unsign_rawval = 1;
-  }
-  else {
+  if (rp->Class != pwr_cClass_Pb_DP_Slave) {
     errh_Info( "Illegal object type %s", cp->Name );
     return 1;
   }
@@ -216,9 +217,12 @@ static pwr_tStatus IoCardRead (
 {
   io_sCardLocal *local;
   pwr_sClass_Pb_Ai *op;
+  pwr_sClass_Pb_DP_Slave *slave;
   io_sChannel *chanp;
   pwr_sClass_ChanAi *cop;
   pwr_sClass_Ai *sop;
+  pwr_tInt8 data8 = 0;
+  pwr_tUInt8 udata8 = 0;
   pwr_tInt16 data16 = 0;
   pwr_tUInt16 udata16 = 0;
   pwr_tInt32 data32 = 0;
@@ -228,7 +232,8 @@ static pwr_tStatus IoCardRead (
 
   local = (io_sCardLocal *) cp->Local;
   op = (pwr_sClass_Pb_Ai *) cp->op;
-
+  slave = (pwr_sClass_Pb_DP_Slave *) rp->op;
+  
   if (op->Status >= 1) {
     
     for (i=0; i<cp->ChanListSize; i++) {
@@ -243,39 +248,58 @@ static pwr_tStatus IoCardRead (
 
       if (cop->ConversionOn) {
         if (local->scancount[i] <= 1) {
+	
           if (op->BytesPerChannel == 4) {
 	    memcpy(&udata32, local->input_area + op->OffsetInputs + 4*i, 4);
-	    if (local->byte_swap == 1) udata32 = swap32(udata32);
+	    if (slave->ByteOrdering == PB_BYTEORDERING_BE) udata32 = swap32(udata32);
 	    data32 = (pwr_tInt32) udata32;
 	    sop->RawValue = 0;		
-            if (local->unsign_rawval)
+            if (op->NumberRepresentation == PB_NUMREP_UNSIGNEDINT)
      	      sop->SigValue = udata32 * cop->SigValPolyCoef1 + cop->SigValPolyCoef0;
             else
      	      sop->SigValue = data32 * cop->SigValPolyCoef1 + cop->SigValPolyCoef0;
             switch(chanp->ChanClass) {
               case pwr_cClass_ChanAi:
-                ConvertAi(cop, 32, 0, data32, &actvalue, local);
+                ConvertAi(cop, 32, 0, 0, udata32, &actvalue, op->NumberRepresentation);
                 break;
               case pwr_cClass_ChanAit:
-  	        ConvertAit((pwr_sClass_ChanAit *) cop, 32, 0, data32, &actvalue, local);
+  	        ConvertAit((pwr_sClass_ChanAit *) cop, 32, 0, 0, udata32, &actvalue, op->NumberRepresentation);
 	        break;
             }
           }
-          else {
+          else if (op->BytesPerChannel == 2) {
 	    memcpy(&udata16, local->input_area + op->OffsetInputs + 2*i, 2);
-	    if (local->byte_swap == 1) udata16 = swap16(udata16);
+	    if (slave->ByteOrdering == PB_BYTEORDERING_BE) udata16 = swap16(udata16);
 	    data16 = (pwr_tInt16) udata16;
 	    sop->RawValue = udata16;
-            if (local->unsign_rawval)
+            if (op->NumberRepresentation == PB_NUMREP_UNSIGNEDINT)
      	      sop->SigValue = udata16 * cop->SigValPolyCoef1 + cop->SigValPolyCoef0;
             else
      	      sop->SigValue = data16 * cop->SigValPolyCoef1 + cop->SigValPolyCoef0;
             switch(chanp->ChanClass) {
               case pwr_cClass_ChanAi:
-                ConvertAi(cop, 16, data16, 0, &actvalue, local);
+                ConvertAi(cop, 16, 0, udata16, 0, &actvalue, op->NumberRepresentation);
                 break;
               case pwr_cClass_ChanAit:
-  	        ConvertAit((pwr_sClass_ChanAit *) cop, 16, data16, 0, &actvalue, local);
+  	        ConvertAit((pwr_sClass_ChanAit *) cop, 16, 0, udata16, 0, &actvalue, op->NumberRepresentation);
+	        break;
+            }
+          }
+
+          else if (op->BytesPerChannel == 1) {
+	    memcpy(&udata8, local->input_area + op->OffsetInputs + i, 1);
+	    data8 = (pwr_tInt8) udata8;
+	    sop->RawValue = udata8;
+            if (op->NumberRepresentation == PB_NUMREP_UNSIGNEDINT)
+     	      sop->SigValue = udata8 * cop->SigValPolyCoef1 + cop->SigValPolyCoef0;
+            else
+     	      sop->SigValue = data8 * cop->SigValPolyCoef1 + cop->SigValPolyCoef0;
+            switch(chanp->ChanClass) {
+              case pwr_cClass_ChanAi:
+                ConvertAi(cop, 8, udata8, 0, 0, &actvalue, op->NumberRepresentation);
+                break;
+              case pwr_cClass_ChanAit:
+  	        ConvertAit((pwr_sClass_ChanAit *) cop, 8, udata8, 0, 0, &actvalue, op->NumberRepresentation);
 	        break;
             }
           }
