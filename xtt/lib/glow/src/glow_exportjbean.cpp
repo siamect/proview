@@ -1885,6 +1885,132 @@ void GlowExportJBean::axis( double x1, double y1, double x2, double y2,
   }
 }
 
+void GlowExportJBean::window( double x1, double y1, double x2, double y2,
+	char *filename,
+        int vertical_scrollbar, int horizontal_scrollbar,
+	glow_eExportPass pass, int *shape_cnt, int node_cnt, ofstream& fp)
+{
+  double dim_x0, dim_x1, dim_y0, dim_y1;
+  char var_name[40];
+  char class_name[] = "JScrollPane";
+  char class_fname[80];
+  char var_fname[80];
+  char *s;
+
+  strcpy( var_name, class_name);
+  var_name[0] = _tolower(var_name[0]);
+  sprintf( &var_name[strlen(var_name)], "%d", node_cnt);
+
+  // Convert filename to java class
+  strcpy( class_fname, filename);
+  if ( (s = strchr( class_fname, '.')))
+    *s = 0;
+  sprintf( var_fname, "%s%d", class_fname, node_cnt);
+  class_fname[0] = _toupper( class_fname[0]);
+
+  switch ( pass)
+  {
+    case glow_eExportPass_Shape:
+      break;
+    case glow_eExportPass_Declare:
+    {
+      fp <<
+"  " << class_name << "	" << var_name << ";" << endl;
+      break;
+    }
+    case glow_eExportPass_Attributes:
+    {
+      ((GrowCtx *)ctx)->measure_javabean( &dim_x1, &dim_x0, &dim_y1, &dim_y0);
+
+      fp <<
+"    " << class_fname << " " << var_fname << " = new " << class_fname << "(session, null, false);" << endl <<
+"    " << var_name << " = new " << class_name << "(" << var_fname << ".localPanel);" << endl <<
+"    " << var_name << ".setBounds(new Rectangle(" << 
+	(int)(x1 - dim_x0 /* - glow_cJBean_Offset) */) << "," << 
+	(int)(y1 - dim_y0 /* - glow_cJBean_Offset) */) << "," << 
+	(int)(x2 - x1 + 2 * glow_cJBean_Offset) << "," << 
+	(int)(y2 - y1 + 2 * glow_cJBean_Offset) << "));" << endl <<
+"    localPanel.add(" << var_name << ", null);" << endl;
+      break;
+    }
+    case glow_eExportPass_Draw:
+      break;
+    default:
+      ;
+  }
+}
+
+void GlowExportJBean::folder( double x1, double y1, double x2, double y2,
+	int folders,
+	char *folder_file_names, char *folder_text, 
+	int *folder_v_scrollbar, int *folder_h_scrollbar,
+	glow_eExportPass pass, int *shape_cnt, int node_cnt, ofstream& fp)
+{
+  double dim_x0, dim_x1, dim_y0, dim_y1;
+  char var_name[40];
+  char class_name[] = "JTabbedPane";
+  char class_fname[80];
+  char var_fname[80];
+  char *s;
+
+  strcpy( var_name, class_name);
+  var_name[0] = _tolower(var_name[0]);
+  sprintf( &var_name[strlen(var_name)], "%d", node_cnt);
+
+  switch ( pass)
+  {
+    case glow_eExportPass_Shape:
+      break;
+    case glow_eExportPass_Declare:
+    {
+      fp <<
+"  " << class_name << "	" << var_name << ";" << endl;
+      break;
+    }
+    case glow_eExportPass_Attributes:
+    {
+      ((GrowCtx *)ctx)->measure_javabean( &dim_x1, &dim_x0, &dim_y1, &dim_y0);
+
+      fp <<
+"    " << var_name << " = new " << class_name << "();" << endl;
+
+      char *fname_p = folder_file_names;
+      char *text_p = folder_text;
+      for ( int i = 0; i < folders; i++) {
+	strcpy( class_fname, fname_p);
+	if ( (s = strchr( class_fname, '.')))
+	  *s = 0;
+	sprintf( var_fname, "%s%d_%d", class_fname, node_cnt, i);
+	class_fname[0] = _toupper( class_fname[0]);
+
+	fp <<
+"    " << class_fname << " " << var_fname << " = new " << class_fname << "(session, null, false);" << endl;
+	if ( folder_v_scrollbar[i] || folder_h_scrollbar[i])
+	  fp <<
+"    " << var_name << ".addTab(\"" << text_p << "\", new JScrollPane(" << var_fname << ".localPanel));" << endl;
+	else 
+	  fp <<
+"    " << var_name << ".addTab(\"" << text_p << "\", " << var_fname << ".localPanel);" << endl;
+	fname_p += 80;
+	text_p += 80;
+      }
+
+      fp <<
+"    " << var_name << ".setBounds(new Rectangle(" << 
+	(int)(x1 - dim_x0 /* - glow_cJBean_Offset) */) << "," << 
+	(int)(y1 - dim_y0 /* - glow_cJBean_Offset) */) << "," << 
+	(int)(x2 - x1 + 2 * glow_cJBean_Offset) << "," << 
+	(int)(y2 - y1 + 2 * glow_cJBean_Offset) << "));" << endl <<
+"    localPanel.add(" << var_name << ", null);" << endl;
+      break;
+    }
+    case glow_eExportPass_Draw:
+      break;
+    default:
+      ;
+  }
+}
+
 void GlowExportJBean::slider( double x1, double y1, double x2, double y2,
 	char *class_name,
     	glow_eDrawType border_drawtype,
