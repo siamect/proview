@@ -1,0 +1,22 @@
+!  pwrs_t_status.wb_load -- Defines the basic type Status
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+SObject pwrs:Type
+!/**
+!  @Version 1.0
+!  @Code pwr.h
+!  @Group BasicTypes,Types
+!  Status value. Basic type.
+!  
+!*/
+  Object $Status pwr_eClass_Type pwr_eTix_Status
+    Body SysBody
+      Attr Type = pwr_eType_Status
+      Attr Size = 4
+    EndBody
+  EndObject
+EndSObject

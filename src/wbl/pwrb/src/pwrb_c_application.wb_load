@@ -1,0 +1,43 @@
+!  pwrb_c_application.wb_load -- Defines the class Application.
+!
+!  PROVIEW/R
+!  Copyright (C) 1997 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+SObject pwrb:Class
+!/**
+!  @Version 1.0
+!  @Group NodeConfiguration
+!  @Summary Configures the an application
+!  Configures an application.
+!*/
+  Object Application $ClassDef 363
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "Application"
+      EndBody 
+      Object Description $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      Object BuildCmd $Attribute 2
+	Body SysBody
+	  Attr TypeRef = "pwrs:Type-$String80"
+	EndBody
+      EndObject
+      Object Anix $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject
