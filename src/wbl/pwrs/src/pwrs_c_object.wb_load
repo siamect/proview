@@ -881,6 +881,13 @@ SObject pwrs:Class
 	  Attr FilterName = "$Object-HelpFilter"
 	EndBody
       EndObject
+      Object Note $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Note"
+	  Attr MethodName = "$Object-Note"
+	  Attr FilterName = "$Object-NoteFilter"
+	EndBody
+      EndObject
       Object Separator1 $MenuSeparator
       EndObject
       Object OpenObject $MenuButton
@@ -995,6 +1002,13 @@ SObject pwrs:Class
 	  Attr ButtonName = "Help"
 	  Attr MethodName = "$Object-Help"
 	  Attr FilterName = "$Object-HelpFilter"
+	EndBody
+      EndObject
+      Object Note $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Note"
+	  Attr MethodName = "$Object-Note"
+	  Attr FilterName = "$Object-NoteFilter"
 	EndBody
       EndObject
       Object Separator1 $MenuSeparator
