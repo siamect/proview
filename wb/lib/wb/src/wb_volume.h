@@ -22,7 +22,6 @@ class wb_volume : public wb_status
 {
 protected:
     wb_vrep *m_vrep;
-    pwr_tVid m_vid;
 
 public:
     
@@ -41,7 +40,7 @@ public:
 
     wb_env env();
     
-    pwr_tVid vid() const { return m_vid;}
+    pwr_tVid vid() const { return m_vrep->vid();}
     pwr_tCid cid() const { return m_vrep->cid();}
     char *name() const { return m_vrep->name();}
 

@@ -5,6 +5,7 @@
 #include "wb_erep.h"
 #include "wb_merep.h"
 #include "wb_vrepwbl.h"  // Should be wb_vrepdbs.h ...
+#include "wb_vrepdbs.h"
 #include "wb_cdrep.h"
 #include "wb_orep.h"
 #include "wb_tdrep.h"
@@ -296,9 +297,15 @@ void wb_erep::loadCommonMeta( pwr_tStatus *status)
       cdh_StringToVolumeId( vol_array[1], &vid);
       cout << "Loading volume: " << vname << " " << vid << endl;
 
-      wb_vrepwbl *vrep = new wb_vrepwbl( this, vid);
-      vrep->name( vol_array[0]);
-      addDbs( &sts, vrep);
+      try {
+        wb_vrepdbs *vrep = new wb_vrepdbs( this, vname);
+        vrep->load();
+        // vrep->name( vol_array[0]);
+        addDbs( &sts, vrep);
+      }
+      catch ( wb_error& e) {
+	cout << "** Unable to open volume " << vname << " " << e.what() << endl;
+      }
     }
     fpm.close();
   }
@@ -315,7 +322,7 @@ void wb_erep::loadMeta( pwr_tStatus *status)
   int i;
   pwr_tVid vid;
   pwr_tStatus sts;
-  wb_vrepwbl *vrep;
+  wb_vrepdbs *vrep;
   int vol_cnt = 0;
 
   strcpy( fname, load_cNameVolumeList);
@@ -370,9 +377,15 @@ void wb_erep::loadMeta( pwr_tStatus *status)
 	  if ( ODD(sts)) {
 	    cout << "Found: " << found_file << endl;
 	    // Load...
-            vrep = new wb_vrepwbl( this, vid);
-            vrep->name( vol_array[0]);
-            addDbs( &sts, vrep);
+	    try {
+              vrep = new wb_vrepdbs( this, vname);
+	      vrep->load();
+              // vrep->name( vol_array[0]);
+              addDbs( &sts, vrep);
+	    }
+	    catch ( wb_error& e) {
+	      cout << "** Unable to open volume " << vname << " " << e.what() << endl;
+	    }
 	    break;
 	  }
 	}
@@ -385,9 +398,9 @@ void wb_erep::loadMeta( pwr_tStatus *status)
       strcat( vname, ".dbs");
       dcli_translate_filename( vname, vname);
 
-      vrep = new wb_vrepwbl( this, vid);
-      vrep->name(vol_array[0]);
-      addDbs( &sts, vrep);
+      wb_vrepwbl *vrepdb = new wb_vrepwbl( this, vid); // Should be wb_vrepdb...
+      vrepdb->name(vol_array[0]);
+      addDbs( &sts, vrepdb);
       vol_cnt++;
     }
   }

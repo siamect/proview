@@ -1,7 +1,7 @@
 #include "wb_volume.h"
 #include "wb_merep.h"
 
-wb_volume::wb_volume() : wb_status(LDH__NOSUCHVOL), m_vrep(0), m_vid(0)
+wb_volume::wb_volume() : wb_status(LDH__NOSUCHVOL), m_vrep(0)
 {
 }
 
@@ -10,7 +10,6 @@ wb_volume::wb_volume(wb_vrep *vrep) : wb_status(LDH__SUCCESS), m_vrep(vrep)
   if ( !m_vrep)
     m_sts = LDH__NOSUCHVOL;
   else {
-    m_vid = m_vrep->vid();
     m_vrep->ref();
   }
 }
@@ -21,7 +20,7 @@ wb_volume::~wb_volume()
     m_vrep->unref();
 }
 
-wb_volume::wb_volume( const wb_volume &v) : wb_status(v.sts()), m_vrep(v.m_vrep), m_vid(v.vid())
+wb_volume::wb_volume( const wb_volume &v) : wb_status(v.sts()), m_vrep(v.m_vrep)
 {
   if ( m_vrep)
     m_vrep->ref();
@@ -37,7 +36,6 @@ wb_volume& wb_volume::operator=(const wb_volume& x)
       m_vrep->unref();
     m_vrep = x.m_vrep;
     m_sts = x.sts();
-    m_vid = x.vid();
     
     return *this;
 }

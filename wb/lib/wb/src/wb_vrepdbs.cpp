@@ -284,13 +284,13 @@ wb_vrepdbs::cid() const
 pwr_tVid
 wb_vrepdbs::vid() const
 {
-    return 0;
+    return m_vid;
 }
 
 wb_erep *
 wb_vrepdbs::erep() const
 {
-    return 0;
+    return m_erep;
 }
 
 wb_vrep *
