@@ -129,6 +129,8 @@ static const qcom_sQid qdb_cQmonitor	= {qdb_cImonitor, 0};
 #define qdb_cMin_pool_isize	600000
 #define qdb_cMaxSegSize		1456
 
+#define qdb_cQix_ReservedMin	100
+#define qdb_cQix_ReservedMax	199
 
 /* General database lock to keep consistency.
  

@@ -1088,6 +1088,8 @@ qdb_AddQue (
     qp = hash_Search(sts, &qdb->qix_ht, &qix);
     if (qp != NULL) pwr_Return(NULL, sts, QCOM__QALLREXIST);
   } else {
+    if ( qdb->g->qid.qix == qdb_cQix_ReservedMin)
+      qdb->g->qid.qix = qdb_cQix_ReservedMax + 1;
     qix = qdb->g->qid.qix++;
   }
 
