@@ -1,0 +1,64 @@
+!  pwrb_c_remoteconfig.wb_load -- Defines the class RemoteConfig.
+!
+!  PROVIEW/R
+!  Copyright (C) 1997 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+SObject pwrb:Class
+!/**
+!  @Version 1.0
+!  @Group Servers,NodeConfiguration
+!  @Summary Configures the remotehandler.
+!  Configures the remotehandler.
+!
+! @b Object graph
+!  @image orm_remoteconfig_og.gif
+!
+! @b See also
+!  @classlink RemNode ssab_remnode.html
+!  @classlink RemTrans ssab_remtrans.html
+!*/
+  Object RemoteConfig $ClassDef 364
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "RemoteConfig"
+      EndBody 
+      !/**
+      ! Optional description.
+      !*/
+      Object Description $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Disable remote communications.
+      !*/
+      Object Disable $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	EndBody
+      EndObject
+      !/**
+      !  Contains the objid for the RemNode objects.
+      !  The objid's are inserted by the remotehandler.
+      !*/
+      Object RemNodeObjects $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 25
+	EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject
