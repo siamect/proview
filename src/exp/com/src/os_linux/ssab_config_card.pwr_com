@@ -47,16 +47,16 @@ function int ssab_create_signal( string rname, string resname, string chname, st
       channels = 32;
     endif
     if ( type == "AI")
-      cardclass = "Ai_AI32up";
+      cardclass = "Ai_AI32uP";
       channels = 32;
     endif
     if ( type == "AO")
-      cardclass = "Ao_HVAO4";
-      channels = 4;
+      cardclass = "Ao_AO8uP";
+      channels = 8;
     endif
     if ( type == "CO")
-      cardclass = "Co_PI24BO";
-      channels = 1;
+      cardclass = "Co_CO4uP";
+      channels = 4;
     endif
 !   Create the card
     conf card/rack='rname'/cardname='cname'/cardclass='cardclass'/channelname=#/chanidentity='cname'#
