@@ -215,6 +215,8 @@ pkg_dir_func()
     if [ $1 == ${1##*/} ]; then
       # Add path
       pattern="/home/pwrp/*$1*"
+    elif [ ${1:0:1} == "/" ]; then
+      pattern=$1*
     else
       pattern=*$1*
     fi
@@ -236,6 +238,8 @@ pkg_dirbrief_func()
     if [ $1 == ${1##*/} ]; then
       # Add path
       pattern="/home/pwrp/*$1*"
+    elif [ ${1:0:1} == "/" ]; then
+      pattern=$1*
     else
       pattern=*$1*
     fi
