@@ -208,6 +208,8 @@ int mrm_TextInput( Widget w, XEvent *event, char *recall, int line_size,
     case XK_Right:
       XmTextClearSelection( w, CurrentTime);
       pos = XmTextGetCursorPosition( w);
+      if ( pos >= line_size - 1)
+        break;
       pos++;
       if ( pos > strlen(text))
         break;
@@ -241,6 +243,7 @@ int mrm_TextInput( Widget w, XEvent *event, char *recall, int line_size,
         return 0;
       if ( keysym > 256)
         return 0;
+
       if ( XmTextGetSelectionPosition( w, &left, &right)) {
         for ( s = text + left, t = text + right; *t; s++,t++)
 	  *s = *t; 
@@ -248,6 +251,8 @@ int mrm_TextInput( Widget w, XEvent *event, char *recall, int line_size,
         XmTextSetCursorPosition( w, left);
       }
       pos = XmTextGetCursorPosition( w);
+      if ( pos >= line_size - 1)
+        break;
       if ( pos == 0)
         strcpy( newtext, "");
       else
