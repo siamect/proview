@@ -82,6 +82,7 @@ typedef enum {
 	graph_eTrace_DigShift		= 19,
 	graph_eTrace_Move		= 20,
 	graph_eTrace_SliderBackground	= 21,
+	graph_eTrace_Video		= 22,
 	graph_eTrace_No		        = 999,
 	graph_eTrace_SetDig		= 1000,
 	graph_eTrace_ResetDig		= 1001,

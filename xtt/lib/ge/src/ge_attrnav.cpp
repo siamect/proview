@@ -106,6 +106,7 @@ static attrnav_sEnumElement elem_trace_type[] = {
 	{ (int) graph_eTrace_RadioButton	, "RadioButton"},
 	{ (int) graph_eTrace_Slider		, "Slider"},
 	{ (int) graph_eTrace_SliderBackground	, "SliderBackground"},
+	{ (int) graph_eTrace_Video		, "Video"},
 	{ (int) graph_eTrace_No		        , "No"},
 	{ 0, ""}};
 

@@ -1718,6 +1718,30 @@ int Graph::get_attr_items( grow_tObject object, attr_sItem **itemlist,
 		&grow_info_cnt);
         break;
       }
+      case graph_eTrace_Video:
+      {
+        char transtab[][32] = {	 	"SubGraph",		"SubGraph",
+					"TraceData1", 		"",
+					"TraceData2",		"",
+					"TraceData3",		"",
+					"TraceData4",		"",
+					"TraceData5",		"",
+					"TraceData6",		"",
+					"TraceData7",		"",
+					"TraceData8",		"",
+					"TraceData9",		"",
+					"TraceAttrType",	"Type",
+					"TraceColor",		"",
+					"TraceColor2",		"",
+					"TraceAccess",		"",
+					"TraceCycle",		"Cycle",
+					"TraceRefObject",	"RefObject",
+					"Dynamic",		"",
+					""};
+        grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
+		&grow_info_cnt);
+        break;
+      }
       case graph_eTrace_SetDig:
       case graph_eTrace_ResetDig:
       case graph_eTrace_ToggleDig:
@@ -4262,6 +4286,18 @@ static int graph_trace_connect_bc( grow_tObject object,
           trace_data->p = (void *)&dummy;
         break;
       }
+      case graph_eTrace_Video:
+      {
+        data = (graph_sTraceData *) calloc( 1, sizeof( *data));
+        data->access = trace_data->access;
+        data->type = trace_type;
+        data->cycle = cycle;
+
+        data->first_scan = 1;
+        grow_SetUserData( object, (void *)data);
+        trace_data->p = (void *)&dummy;
+	break;
+      }
       default:
         ;
     }
@@ -5859,6 +5895,21 @@ static int graph_trace_scan_bc( grow_tObject object, void *p)
         else
           grow_SetObjectVisibility( object, 0);
         *(pwr_tBoolean *)data->old_value[2] = *(pwr_tBoolean *)data->p[2];
+      }
+      break;
+    }
+    case graph_eTrace_Video:
+    {
+      grow_tObject 	*objectlist;
+      int 		object_cnt;
+
+      grow_GetGroupObjectList( object, &objectlist, &object_cnt);
+
+      for ( int i = 0; i < object_cnt; i++) {
+	if ( grow_GetObjectType( objectlist[i]) == glow_eObjectType_GrowImage) {
+	  grow_ImageUpdate( objectlist[i]);
+	  break;
+	}	
       }
       break;
     }
