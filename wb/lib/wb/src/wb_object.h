@@ -40,7 +40,7 @@ public:
   void user(void *p) {} // Fix  // set user data
   void *user() { return 0;} // Fix   // get user data
     
-  ldh_sRefInfo *refinfo(ldh_sRefInfo *rp) { ldh_sRefInfo *r; return r;} // Fix
+  ldh_sRefInfo *refinfo(ldh_sRefInfo *rp) { memset(rp,0,sizeof(*rp)); return rp;} // Fix
     
 
   pwr_tOid oid();  //< Object identifier of this object
