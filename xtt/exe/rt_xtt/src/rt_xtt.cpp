@@ -254,6 +254,8 @@ static void xtt_qcom_events( Xtt *xtt)
       } else if (new_event.b.swapDone && swap) {
 	swap = 0;
 	xtt->xnav->swap(1);
+      } else if (new_event.b.terminate) {
+	exit(0);
       }
     }
   }
