@@ -40,7 +40,7 @@ $(bld_dir)/%.c : %.l
 
 
 %.o : %.c
-#	@ echo "Warning, rule shall normally not be used: %.o : %.c"
+	@ echo "Warning, rule shall normally not be used: %.o : %.c"
 ifeq ($(nodep),)
 	@ $(log_c_d)
 	@ $(SHELL) -ec '$(cc) -MM $(cinc) $(csetos) $(source) \
@@ -138,9 +138,12 @@ $(bld_dir)/%_xdr.o : %.x
 	@ rm $(bld_dir)/$(sname)_xdr.t
 ifeq ($(nodep),)
 	@ $(SHELL) -ec '$(cc) -MM $(cinc) $(csetos) $(bld_dir)/$(sname)_xdr.c \
-	  | sed '\''s|$*_xdr\.o[ ]*|$(bld_dir)/&|g'\'' > $(bld_dir)/$(sname)_xdr.d'
+	  | sed '\''s|$*_xdr\.o[ ]*|$(bld_dir)/&|g'\'' \
+	  | sed '\''s|$(bld_dir)/$(sname)_xdr.c||'\'' > $(bld_dir)/$(sname)_xdr.d'
 endif
 	@ $(cc) $(cflags) $(csetos) $(cinc) -c -o $(bld_dir)/$(sname)_xdr.o $(bld_dir)/$(sname)_xdr.c
+	@ mv $(bld_dir)/$(sname)_xdr.c $(bld_dir)/$(sname)_xdr_compiled.c
+
 
 $(inc_dir)/%.h : %.pdr
 	@ $(log_x_h)
@@ -150,9 +153,16 @@ $(inc_dir)/%.h : %.pdr
 	@ tools_pdrgen -h -o $(target) $(source)
 
 
-$(bld_dir)/%_pdr.c : %.pdr
+$(bld_dir)/%_pdr.o : %.pdr
 	@ $(log_x_lib)
 	@ tools_pdrgen -c -o $(bld_dir)/$(sname)_pdr.c $(source)
+ifeq ($(nodep),)
+	@ $(SHELL) -ec '$(cc) -MM $(cinc) $(csetos) $(bld_dir)/$(sname)_pdr.c \
+	  | sed '\''s|$*_pdr\.o[ ]*|$(bld_dir)/&|g'\'' \
+	  | sed '\''s|$(bld_dir)/$(sname)_pdr.c||'\'' > $(bld_dir)/$(sname)_pdr.d'
+endif
+	@ $(cc) $(cflags) $(csetos) $(cinc) -c -o $(bld_dir)/$(sname)_pdr.o $(bld_dir)/$(sname)_pdr.c
+	@ mv $(bld_dir)/$(sname)_pdr.c $(bld_dir)/$(sname)_pdr_compiled.c
 
 
 (%.o) : %.o
