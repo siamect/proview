@@ -61,6 +61,7 @@ $(doc_dir)/orm/pwrs_allclasses.html :
 	@ echo "Generating html files for pwrs structs..."
 	@ co_convert -c -d $(doc_dir)/orm $(inc_dir)/pwr_systemclasses.h
 	@ co_convert -c -d $(doc_dir)/orm $(inc_dir)/pwr.h
+	@ co_convert -c -d $(doc_dir)/orm $(inc_dir)/pwr_class.h
 
 $(exe_dir)/pwrs_xtthelp.dat :
 	@ echo "Generating xtt help files for pwrs classes"

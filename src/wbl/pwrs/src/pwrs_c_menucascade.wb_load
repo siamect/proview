@@ -6,7 +6,7 @@
 SObject pwrs:Class
 !/**
 !  @Group ClassDefinition
-!  Definition of a casecade menu in the popup menu.
+!  Definition of a cascade menu in the popup menu.
 !*/
 !
   Object $MenuCascade $ClassDef pwr_eCix_MenuCascade

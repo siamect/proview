@@ -71,7 +71,7 @@ SObject pwrs:Class
       !*/
       Object Flags $Attribute 5
         Body SysBody
-          Attr TypeRef = pwr_eType_Mask
+          Attr TypeRef = pwr_eTypeDef_ObjBodyDefFlags
         EndBody
       EndObject
     EndObject

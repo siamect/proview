@@ -46,7 +46,7 @@ SObject pwrs:Class
       EndObject
       Object Flags $Attribute 5
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Mask"
+          Attr TypeRef = "pwrs:Type-$AdefFlags"
         EndBody
       EndObject
       Object Elements $Attribute 6

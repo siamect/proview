@@ -1,0 +1,101 @@
+!  pwrs_td_opsysenum.wb_load -- Defines the type OpSysEnum
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+SObject pwrs:Type
+!/**
+!  @Version 1.0
+!  @Code pwr.h
+!  @Group DerivedTypes,Types
+!  Operating system enumeration.
+!*/
+  Object $OpSysEnum $TypeDef 19
+    Body SysBody
+      Attr TypeRef = "pwrs:Type-$Mask"
+      Attr PgmName = "OpSys"
+    EndBody
+    !/**
+    !  Operating system is VAXELN on VAX
+    !*/
+    Object VAX_ELN $Value
+     Body SysBody
+       Attr PgmName = "VAX_ELN"
+       Attr Text = "VAXELN on VAX"
+       Attr Value = 1
+     EndBody
+    EndObject
+    !/**
+    !  Operating system is OpenVMS on VAX
+    !*/
+    Object VAX_VMS $Value
+     Body SysBody
+       Attr PgmName = "VAX_VMS"
+       Attr Text = "OpenVMS on VAX"
+       Attr Value = 2
+     EndBody
+    EndObject
+    !/**
+    !  Operating system is OpenVMS on Alpha
+    !*/
+    Object AXP_VMS $Value
+     Body SysBody
+       Attr PgmName = "AXP_VMS"
+       Attr Text = "OpenVMS on Alpha"
+       Attr Value = 4
+     EndBody
+    EndObject
+    !/**
+    !  Operating system is LynxOS on PowerPC
+    !*/
+    Object PPC_LYNX $Value
+     Body SysBody
+       Attr PgmName = "PPC_LYNX"
+       Attr Text = "LynxOS on PowerPC"
+       Attr Value = 8
+     EndBody
+    EndObject
+    !/**
+    !  Operating system is LynxOS on x86
+    !*/
+    Object X86_LYNX $Value
+     Body SysBody
+       Attr PgmName = "X86_LYNX"
+       Attr Text = "LynxOS on x86"
+       Attr Value = 16
+     EndBody
+    EndObject
+    !/**
+    !  Operating system is Linux on PowerPC
+    !*/
+    Object PPC_LINUX $Value
+     Body SysBody
+       Attr PgmName = "PPC_LINUX"
+       Attr Text = "Linux on PowerPC"
+       Attr Value = 32
+     EndBody
+    EndObject
+    !/**
+    !  Operating system is Linux on x86
+    !*/
+    Object X86_LINUX $Value
+     Body SysBody
+       Attr PgmName = "X86_LINUX"
+       Attr Text = "Linux on x86"
+       Attr Value = 64
+     EndBody
+    EndObject
+    !/**
+    !  Operating system is AXP_LINUX
+    !*/
+    Object AXP_LINUX $Value
+     Body SysBody
+       Attr PgmName = "AXP_LINUX"
+       Attr Text = "Linux on Alpha"
+       Attr Value = 128
+     EndBody
+    EndObject
+  EndObject
+EndSObject

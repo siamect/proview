@@ -1,0 +1,49 @@
+!  pwrs_c_bit.wb_load -- Defines the class Bit.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+SObject pwrs:Class
+!/**
+!  @Version 1.0
+!  @Group ClassDefinition
+!  Definition of a bit in a bitmask.
+!  The Bit object reside in a class volume as a child to a TypeDef of
+!  type Mask. Each Value object defines a bit in the mask.
+!
+!  The value is of type UInt32, i.e. it can define the value
+!  1,2,4,8,16,32,64,128,256,512,1024,2048,4096,8192,16384,32768,...,4294967296.
+!*/
+  Object $Bit $ClassDef pwr_eCix_Bit
+    Body SysBody
+      Attr Flags |= pwr_mClassDef_System
+    EndBody
+    Object SysBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "Bit"
+      EndBody
+      Object Text $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String32"
+        EndBody
+      EndObject
+      Object PgmName $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String32"
+        EndBody
+      EndObject
+      Object Value $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject
+
+
+
+

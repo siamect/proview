@@ -84,7 +84,7 @@ SObject pwrs:Class
           Attr Flags = 0
           Attr Elements = 1
           Attr ParamIndex = 3
-          Attr TypeRef = pwr_eType_Mask
+          Attr TypeRef = pwr_eTypeDef_ClassDefFlags
         EndBody
       EndObject
       Object NumOfObjBodies pwr_eClass_Param

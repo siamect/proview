@@ -1,0 +1,49 @@
+!  pwrs_c_value.wb_load -- Defines the class $Value.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+SObject pwrs:Class
+!/**
+!  @Version 1.0
+!  @Group ClassDefinition
+!  Definition of a value in an enumeration.
+!  The Value object reside in a class volume as a child to a TypeDef of
+!  type Enum. Each Value object defines a value in the enumeration.
+!
+!  The value is of type Int32, i.e. it can define values from 
+!  -2147483647 to 2147483647.
+!*/
+  Object $Value $ClassDef pwr_eCix_Value
+    Body SysBody
+      Attr Flags |= pwr_mClassDef_System
+    EndBody
+    Object SysBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "Value"
+      EndBody
+       Object Text $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String32"
+        EndBody
+      EndObject
+      Object PgmName $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String32"
+        EndBody
+      EndObject
+     Object Value $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject
+
+
+
+

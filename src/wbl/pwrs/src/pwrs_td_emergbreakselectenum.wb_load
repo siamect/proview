@@ -1,0 +1,78 @@
+!  pwrs_td_emergbreakselectenum.wb_load -- Defines the type EmergBreakSelectEnum
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+SObject pwrs:Type
+!/**
+!  @Version 1.0
+!  @Code pwr.h
+!  @Group DerivedTypes,Types
+!  Selection of Emergency break actions. Derived from Enum.
+!
+! @b See also
+!  @classlink $Node pwrs_node.html
+!  @classlink $Enum pwrs_enum.html
+!*/
+  Object $EmergBreakSelectEnum $TypeDef 17
+    Body SysBody
+      Attr Type = pwr_eType_Enum
+      Attr Size = 4
+      Attr TypeRef = "pwrs:Type-$Enum"
+      Attr Elements = 1
+      Attr PgmName = "EmergBreakSelect"
+    EndBody
+    !/**
+    !  No action.
+    !*/
+    Object NoAction $Value
+     Body SysBody
+       Attr PgmName = "NoAction"
+       Attr Text = "NoAction"
+       Attr Value = 0
+     EndBody
+    EndObject
+    !/**
+    !  Reboot the node.
+    !*/
+    Object Reboot $Value
+     Body SysBody
+       Attr PgmName = "Reboot"
+       Attr Text = "Reboot"
+       Attr Value = 1
+     EndBody
+    EndObject
+    !/**
+    !  The output signals are frozen on defined values specified
+    !  by FixedOutValue the output card objects.
+    !*/
+    Object FixedOutputValues $Value
+     Body SysBody
+       Attr PgmName = "FixedOutputValues"
+       Attr Text = "FixedOutputValues"
+       Attr Value = 2
+     EndBody
+    EndObject
+    !/**
+    !  Stops I/O. Reset of output signals. See also
+    !  ErrorHardLimit in card objects.
+    !*/
+    Object StopIO $Value
+     Body SysBody
+       Attr PgmName = "StopIO"
+       Attr Text = "Stop I/O"
+       Attr Value = 3
+     EndBody
+    EndObject
+  EndObject
+EndSObject
+
+
+
+
+
+
+
+

@@ -1,0 +1,164 @@
+!  pwrs_td_classdefflags.wb_load -- Defines the type ClassDefFlags
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+SObject pwrs:Type
+!/**
+!  @Version 1.0
+!  @Code pwr_class.h
+!  @Group DerivedTypes,Types
+!  ClassDef definintion flag bitmask. Derived from Mask.
+!
+! @b See also
+!  @classlink Mask pwrs_mask.html
+!*/
+  Object $ClassDefFlags $TypeDef 16
+    Body SysBody
+      Attr Type = pwr_eType_Mask
+      Attr Size = 4
+      Attr TypeRef = "pwrs:Type-$Mask"
+      Attr Elements = 1
+    EndBody
+    !/**
+    !  Object exists only in development environment.
+    !*/
+    Object DevOnly $Bit
+     Body SysBody
+       Attr PgmName = "DevOnly"
+       Attr Text = "DevOnly"
+       Attr Value = 1
+     EndBody
+    EndObject
+    !/**
+    !  Object is a system object.
+    !*/
+    Object System $Bit
+     Body SysBody
+       Attr PgmName = "System"
+       Attr Text = "System"
+       Attr Value = 2
+     EndBody
+    EndObject
+    !/**
+    !  Object is a multinode object.
+    !*/
+    Object Multinode $Bit
+     Body SysBody
+       Attr PgmName = "Multinode"
+       Attr Text = "Multinod"
+       Attr Value = 4
+     EndBody
+    EndObject
+    !/**
+    !  Object contains ObjXRefs.
+    !*/
+    Object ObjXRef $Bit
+     Body SysBody
+       Attr PgmName = "ObjXRef"
+       Attr Text = "ObjXRef"
+       Attr Value = 8
+     EndBody
+    EndObject
+    !/**
+    !  Object has a runtime body.
+    !*/
+    Object RtBody $Bit
+     Body SysBody
+       Attr PgmName = "RtBody"
+       Attr Text = "RtBody"
+       Attr Value = 16
+     EndBody
+    EndObject
+    !/**
+    !  Object contains AttrXRefs.
+    !*/
+    Object AttrXRef $Bit
+     Body SysBody
+       Attr PgmName = "AttrXRef"
+       Attr Text = "AttrXRef"
+       Attr Value = 32
+     EndBody
+    EndObject
+    !/**
+    !  Object contains ObjRefs.
+    !*/
+    Object ObjRef $Bit
+     Body SysBody
+       Attr PgmName = "ObjRef"
+       Attr Text = "ObjRef"
+       Attr Value = 64
+     EndBody
+    EndObject
+    !/**
+    !  Object contains AttrRefs.
+    !*/
+    Object AttrRef $Bit
+     Body SysBody
+       Attr PgmName = "AttrRef"
+       Attr Text = "AttrRef"
+       Attr Value = 128
+     EndBody
+    EndObject
+    !/**
+    !  Object can be a top level object.
+    !*/
+    Object TopObject $Bit
+     Body SysBody
+       Attr PgmName = "TopObject"
+       Attr Text = "TopObject"
+       Attr Value = 256
+     EndBody
+    EndObject
+    !/**
+    !  Object can not have children.
+    !*/
+    Object NoAdopt $Bit
+     Body SysBody
+       Attr PgmName = "NoAdopt"
+       Attr Text = "NoAdopt"
+       Attr Value = 512
+     EndBody
+    EndObject
+    !/**
+    !  Object is a template object.
+    !*/
+    Object Template $Bit
+     Body SysBody
+       Attr PgmName = "Template"
+       Attr Text = "Template"
+       Attr Value = 1024
+     EndBody
+    EndObject
+    !/**
+    !  Object is an IO object.
+    !*/
+    Object IO $Bit
+     Body SysBody
+       Attr PgmName = "IO"
+       Attr Text = "IO"
+       Attr Value = 2048
+     EndBody
+    EndObject
+    !/**
+    !  Object has callbacks.
+    !*/
+    Object HasCallBack $Bit
+     Body SysBody
+       Attr PgmName = "HasCallBack"
+       Attr Text = "HasCallBack"
+       Attr Value = 4096
+     EndBody
+    EndObject
+  EndObject
+EndSObject
+
+
+
+
+
+
+
+

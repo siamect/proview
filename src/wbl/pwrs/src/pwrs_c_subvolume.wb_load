@@ -60,7 +60,7 @@ SObject pwrs:Class
       EndObject
       Object OperatingSystem $Attribute 8
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Mask"
+          Attr TypeRef = "pwrs:Type-$OpSysMask"
         EndBody
       EndObject
     EndObject

@@ -256,7 +256,7 @@ SObject pwrs:Class
       !*/
       Object EmergBreakSelect $Attribute 25
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Enum"
+          Attr TypeRef = "pwrs:Type-$EmergBreakSelectEnum"
         EndBody
       EndObject
     EndObject

@@ -1,0 +1,269 @@
+!  pwrs_td_adefflags.wb_load -- Defines the type AdefFlags
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+SObject pwrs:Type
+!/**
+!  @Version 1.0
+!  @Code pwr_class.h
+!  @Group DerivedTypes,Types
+!  Attribute definintion flag bitmask. Derived from Mask.
+!
+! @b See also
+!  @classlink Mask pwrs_mask.html
+!*/
+  Object $AdefFlags $TypeDef 15
+    Body SysBody
+      Attr Type = pwr_eType_Mask
+      Attr Size = 4
+      Attr TypeRef = "pwrs:Type-$Mask"
+      Attr Elements = 1
+      Attr PgmName = "Adef"
+    EndBody
+    !/**
+    !  Attribute is a pointer.
+    !  If bit private is set, it is an absolute pointer, and
+    !  only valid in the owner process.
+    !  If private is not set, it is a pool relative pointer, which
+    !  can be translated to all processes.
+    !*/
+    Object Pointer $Bit
+     Body SysBody
+       Attr PgmName = "pointer"
+       Attr Text = "Pointer"
+       Attr Value = 1
+     EndBody
+    EndObject
+    !/**
+    !  Attribute is an array.
+    !  The size of the array is stored in the Element attribute.
+    !*/
+    Object Array $Bit
+     Body SysBody
+       Attr PgmName = "array"
+       Attr Text = "Array"
+       Attr Value = 2
+     EndBody
+    EndObject
+    !/**
+    !  Not yet implemented.
+    !*/
+    Object Backup $Bit
+     Body SysBody
+       Attr PgmName = "backup"
+       Attr Text = "Backup"
+       Attr Value = 4
+     EndBody
+    EndObject
+    !/**
+    !  Not yet implemented.
+    !*/
+    Object ChangeLog $Bit
+     Body SysBody
+       Attr PgmName = "changelog"
+       Attr Text = "ChangeLog"
+       Attr Value = 8
+     EndBody
+    EndObject
+    !/**
+    !  State.
+    !  Value is only valid in runtime, and can not
+    !  be set in the development environment.
+    !*/
+    Object State $Bit
+     Body SysBody
+       Attr PgmName = "state"
+       Attr Text = "State"
+       Attr Value = 16
+     EndBody
+    EndObject
+    !/**
+    !  Constant value.
+    !*/
+    Object Const $Bit
+     Body SysBody
+       Attr PgmName = "const"
+       Attr Text = "Const"
+       Attr Value = 32
+     EndBody
+    EndObject
+    !/**
+    !  Attribute is not valid in runtime, though it resides
+    !  in the runtime body.
+    !*/
+    Object RtVirtual $Bit
+     Body SysBody
+       Attr PgmName = "rtvirtual"
+       Attr Text = "RtVirtual"
+       Attr Value = 64
+     EndBody
+    EndObject
+    !/**
+    !  The DevBody contains an corresponding attribute.
+    !*/
+    Object DevBodyRef $Bit
+     Body SysBody
+       Attr PgmName = "devbodyref"
+       Attr Text = "DevBodyRef"
+       Attr Value = 128
+     EndBody
+    EndObject
+    !/**
+    !  Not yet implemented.
+    !*/
+    Object Dynamic $Bit
+     Body SysBody
+       Attr PgmName = "dynamic"
+       Attr Text = "Dynamic"
+       Attr Value = 256
+     EndBody
+    EndObject
+    !/**
+    !  The attribtute contains the objects own objid.
+    !*/
+    Object ObjidSelf $Bit
+     Body SysBody
+       Attr PgmName = "objidself"
+       Attr Text = "ObjidSelf"
+       Attr Value = 512
+     EndBody
+    EndObject
+    !/**
+    !  The value of the attribute can not be changed in the
+    !  configurator.
+    !*/
+    Object NoEdit $Bit
+     Body SysBody
+       Attr PgmName = "noedit"
+       Attr Text = "NoEdit"
+       Attr Value = 1024
+     EndBody
+    EndObject
+    !/**
+    !  The attribute is invisible in the navigator.
+    !*/
+    Object Invisible $Bit
+     Body SysBody
+       Attr PgmName = "invisible"
+       Attr Text = "Invisible"
+       Attr Value = 2048
+     EndBody
+    EndObject
+    !/**
+    !  Not yet implemented.
+    !*/
+    Object RefDirect $Bit
+     Body SysBody
+       Attr PgmName = "refdirect"
+       Attr Text = "RefDirect"
+       Attr Value = 4096
+     EndBody
+    EndObject
+    !/**
+    !  Input can not be inverted.
+    !  Used for $Input attributes in function objects.
+    !*/
+    Object NoInvert $Bit
+     Body SysBody
+       Attr PgmName = "noinvert"
+       Attr Text = "NoInvert"
+       Attr Value = 8192
+     EndBody
+    EndObject
+    !/**
+    !  Input or output pin can not be removed.
+    !  Used for $Input and $Output attributes in function objects.
+    !*/
+    Object NoRemove $Bit
+     Body SysBody
+       Attr PgmName = "noremove"
+       Attr Text = "NoRemove"
+       Attr Value = 16384
+     EndBody
+    EndObject
+    !/**
+    !  Not yet implemented.
+    !*/
+    Object RtdbRef $Bit
+     Body SysBody
+       Attr PgmName = "rtdbref"
+       Attr Text = "RtdbRef"
+       Attr Value = 32768
+     EndBody
+    EndObject
+    !/**
+    !  Private pointer. The pointer can only be used by the
+    !  owner process.
+    !*/
+    Object Private $Bit
+     Body SysBody
+       Attr PgmName = "private"
+       Attr Text = "Private"
+       Attr Value = 65536
+     EndBody
+    EndObject
+    !/**
+    !  The attribute is an attribute object, i.e it is defined
+    !  by a class.
+    !  The ClassId for the class is stored in the TypeRef attribute.
+    !*/
+    Object Class $Bit
+     Body SysBody
+       Attr PgmName = "class"
+       Attr Text = "Class"
+       Attr Value = 131072
+     EndBody
+    EndObject
+    !/**
+    !  The attribute defines a superclass.
+    !  A superclass attribute i the first attribute in RtBody,
+    !  and is named "Super".
+    !  The ClassId for the superclass is stored in the TypeRef attribute.
+    !*/
+    Object SuperClass $Bit
+     Body SysBody
+       Attr PgmName = "superclass"
+       Attr Text = "SuperClass"
+       Attr Value = 262144
+     EndBody
+    EndObject
+    !/**
+    !  Attribute is a buffer attribute.
+    !*/
+    Object Buffer $Bit
+     Body SysBody
+       Attr PgmName = "buffer"
+       Attr Text = "Buffer"
+       Attr Value = 524288
+     EndBody
+    EndObject
+    !/**
+    !  The value of the attriute is not stored in wb_load files.
+    !*/
+    Object NoWbl $Bit
+     Body SysBody
+       Attr PgmName = "nowbl"
+       Attr Text = "NoWbl"
+       Attr Value = 1048576
+     EndBody
+    EndObject
+    !/**
+    !  The value of the attribute is always stored in wb_load files.
+    !*/
+    Object AlwaysWbl $Bit
+     Body SysBody
+       Attr PgmName = "alwayswbl"
+       Attr Text = "AlwaysWbl"
+       Attr Value = 2097152
+     EndBody
+    EndObject
+  EndObject
+EndSObject
+
+
+
+
+

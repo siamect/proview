@@ -66,6 +66,14 @@ SObject pwrs:Class
 	  Attr TypeRef = "pwrs:Type-$Int32"
 	EndBody
       EndObject
+      !/**
+      ! Name of enum and mask typedefs in c.
+      !*/
+      Object PgmName $Attribute 5
+        Body SysBody
+	  Attr TypeRef = "pwrs:Type-$PgmName"
+	EndBody
+      EndObject
     EndObject
   EndObject
 EndSObject
