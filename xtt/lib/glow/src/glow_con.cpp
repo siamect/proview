@@ -4127,7 +4127,7 @@ void GlowCon::export_javabean( GlowTransform *t, void *node,
     if ( (shadow || border) && cc->con_type == glow_eConType_Routed && cc->corner == glow_eCorner_Rounded) {    
       for ( i = 0; i < l_num; i++)
 	((GlowLine *)line_a[i])->export_javabean_shadow( t, node, pass, shape_cnt,
-							 node_cnt, in_nc, fp, border, shadow);
+							 node_cnt, in_nc, fp, shadow, border);
       for ( i = 0; i < a_num; i++)
 	((GlowArc *)arc_a[i])->export_javabean_shadow( t, node, pass, shape_cnt,
 						       node_cnt, in_nc, fp, border, shadow);
