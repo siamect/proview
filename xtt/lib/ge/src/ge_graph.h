@@ -380,7 +380,7 @@ class Graph {
   void 		(*change_name_cb)( void *, void *, char *);
   void 		(*change_value_cb)( void *, void *, char *);
   void 		(*confirm_cb)( void *, void *, char *);
-  void 		(*command_cb)( void *, char *);
+  int 		(*command_cb)( void *, char *);
   void 		(*load_graph_cb)( void *, char *);
   int 		(*get_plant_select_cb)( void *, char *attr_name);
   void 		(*display_in_xnav_cb)( void *, pwr_sAttrRef *arp);
@@ -1070,8 +1070,9 @@ class Graph {
   /*!
     \param in	Input command.
     \param out	Converted command.
+    \param dyn  Dynamics.
   */
-  void get_command( char *in, char *out);
+  void get_command( char *in, char *out, GeDyn *dyn);
 
   //! Check if graph is configured to be exported as a java applet.
   /*! \return		1 if graph can be exported as a java applet, else 0. */

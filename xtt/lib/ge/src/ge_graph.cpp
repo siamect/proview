@@ -524,6 +524,8 @@ void Graph::open( char *filename)
   grid_size_y = grow_attr.grid_size_y;
   grid_size_x = grow_attr.grid_size_x;
   grid = grow_attr.grid_on;
+
+  was_subgraph = is_subgraph();
 }
 
 //
@@ -1617,7 +1619,7 @@ static int graph_get_subgraph_info_cb( void *g, char *name,
 	attr_sItem **itemlist, int *itemlist_cnt)
 {
   Graph	*graph = (Graph *)g;
-  static attr_sItem	items[10];
+  static attr_sItem	items[40];
   int			i;
   grow_sAttrInfo	*grow_info, *grow_info_p;
   int			grow_info_cnt;
@@ -1625,6 +1627,7 @@ static int graph_get_subgraph_info_cb( void *g, char *name,
   grow_tObject		object;
   int			dyn_type;
   int			dyn_action_type;
+  int			item_cnt;
 
   sts = grow_FindNodeClassByName( graph->grow->ctx, name, &object);
   if ( EVEN(sts)) return sts;
@@ -1652,8 +1655,28 @@ static int graph_get_subgraph_info_cb( void *g, char *name,
     items[i].multiline = grow_info_p->multiline;
     grow_info_p++;
   }
+
+  GeDyn *dyn;
+  grow_GetUserData( object, (void **)&dyn);
+
+  item_cnt = 0;
+  if ( dyn && dyn_type & ge_mDynType_HostObject) {
+    dyn->get_attributes( 0, &items[grow_info_cnt], &item_cnt);
+
+    // Add "HostObject." to hostobjects items
+    for ( i = grow_info_cnt; i < grow_info_cnt + item_cnt; i++) {
+      char n[80];
+      strcpy( n, "HostObject.");
+      strcat( n, items[i].name);
+      strcpy( items[i].name, n);
+      items[i].noedit = 1;
+    }
+  }
+
+  grow_FreeObjectAttrInfo( grow_info);
+
   *itemlist = items;
-  *itemlist_cnt = grow_info_cnt;
+  *itemlist_cnt = grow_info_cnt + item_cnt;
   return 1;
 }
 
@@ -1693,7 +1716,7 @@ int Graph::get_subgraph_attr_items( attr_sItem **itemlist,
   if ( subgraph_dyn && dyn_type & ge_mDynType_HostObject) {
     subgraph_dyn->get_attributes( 0, items, item_cnt);
 
-    // Add "HostObject." to hostobjects itemss
+    // Add "HostObject." to hostobjects items
     for ( i = 0; i < *item_cnt; i++) {
       char n[80];
       strcpy( n, "HostObject.");
@@ -2065,33 +2088,37 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
       int		sts;
       char		dev[80], dir[80], file[80], type[32];
       int		version;
+      GeDyn 		*dyn;
 
       // Create subgraph object
       sts = (graph->get_current_subgraph_cb)( graph->parent_ctx, sub_name, 
 		filename);
-      if ( EVEN(sts))
-      { 
+      if ( EVEN(sts)) { 
         graph->message( 'E', "Select a SubGraph");
         break;
       }
       dcli_parse_filename( filename, dev, dir, file, type, &version);
       cdh_ToLower( sub_name, file);
-      if ( strcmp( type, ".pwsg") == 0)
-      {
+      if ( strcmp( type, ".pwsg") == 0) {
         sts = grow_FindNodeClassByName( graph->grow->ctx, 
 		sub_name, &nc);
-        if ( EVEN(sts))
-        {
+        if ( EVEN(sts)) {
           // Load the subgraph
           grow_OpenSubGraph( graph->grow->ctx, filename);
         }
         sts = grow_FindNodeClassByName( graph->grow->ctx, 
 		sub_name, &nc);
-        if ( EVEN(sts))
-        {
+        if ( EVEN(sts)) {
           graph->message( 'E', "Unable to open subgraph");
           break;
         }
+    
+	grow_GetUserData( nc, (void **)&dyn);
+	if ( !dyn) {
+	  // Old version nodeclass without dyn, create dyn
+	  GeDyn *dyn = new GeDyn( graph);
+	  grow_SetUserData( nc, (void *)dyn);
+	}
 
         sprintf( name, "O%d", grow_GetNextObjectNameNumber( graph->grow->ctx));
 
@@ -3523,17 +3550,40 @@ static void graph_remove_space( char *out_str, char *in_str)
   *s = 0;
 }
 
-void Graph::get_command( char *in, char *out)
+void Graph::get_command( char *in, char *out, GeDyn *dyn)
 {
-  char *s, *s0, *t0;
+  char *s, *t0;
+  char *s0 = in;
+  pwr_tCmd str;
 
-  if ( strcmp( object_name, "") == 0) {
+  if ( dyn && dyn->total_dyn_type & ge_mDynType_HostObject) {
+    char hostobject[120];
+
+    dyn->get_hostobject( hostobject);
+
+    t0 = str;
+    s0 = in;
+    while ( (s = strstr( s0, "$hostobject"))) {
+      strncpy( t0, s0, s-s0);
+      t0 += s - s0;
+      strcpy( t0, hostobject); 
+      t0 += strlen(hostobject);
+      s0 = s + strlen("$hostobject");
+    }
+    strcpy( t0, s0);
+
+    if ( strcmp( object_name, "") == 0) {
+      strcpy( out, str);
+      return;
+    }
+    s0 = str;
+  }
+  else if ( strcmp( object_name, "") == 0) {
     strcpy( out, in);
     return;
   }
 
   t0 = out;
-  s0 = in;
   while ( (s = strstr( s0, "$object"))) {
     strncpy( t0, s0, s-s0);
     t0 += s - s0;
@@ -4179,7 +4229,7 @@ void GraphRecallBuff::insert( GeDyn *data, char *data_key, grow_tObject object)
 
   if ( cnt == size)
     delete buff[size-1];
-  for ( i = cnt - 1; i > 0; i--) {
+  for ( i = cnt; i > 0; i--) {
     buff[i] = buff[i-1];
     strcpy( key[i], key[i-1]);
   }

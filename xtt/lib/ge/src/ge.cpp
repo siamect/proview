@@ -927,9 +927,10 @@ static void ge_change_value_cb( void *ge_ctx, void *value_object, char *text)
   gectx->current_value_object = value_object;
 }
 
-static void ge_command_cb( void *ge_ctx, char *command)
+static int ge_command_cb( void *ge_ctx, char *command)
 {
   printf( "** Command not defined in this environment\n  '%s'\n", command);
+  return 0;
 }
 
 static int ge_get_plant_select_cb( void *ge_ctx, char *select_name)
