@@ -11,6 +11,10 @@
 # include <string.h>
 #endif
 
+#if defined(OS_LINUX)
+# include <pwd.h>
+#endif
+
 #include "pwr.h"
 #include "pwr_class.h"
 #include "pwr_baseclasses.h"
@@ -58,11 +62,31 @@ plc_thread (
   pwr_tStatus sts;
   int rel_vec;
   int phase;
+  uid_t ruid;
   plc_sProcess *pp = tp->pp;
 
   /* Phase 1.  */
   
   tp->init(1, tp);
+
+  thread_SetPrio(&tp->tid, tp->prio);
+
+  /* Once thread's has set it's priority don't run as root */
+
+#if defined(OS_LINUX)
+  struct passwd *pwd;
+  
+  ruid = getuid();
+  
+  if (ruid == 0) {
+    pwd = getpwnam("pwrp");
+    if (pwd != NULL) {
+      setreuid(pwd->pw_uid, pwd->pw_uid);
+    }
+  }
+  else 
+    setreuid(ruid, ruid);
+#endif
 
   que_Put(&sts, &tp->q_out, &tp->event, (void *)1);
   phase = (int)que_Get(&sts, &tp->q_in, NULL, NULL);
@@ -77,8 +101,6 @@ plc_thread (
   pwr_Assert(phase == 3);
 
   /* Phase 3.  */
-
-  thread_SetPrio(&tp->tid, tp->prio);
 
   rel_vec = ((tp->pp->PlcProcess->ChgCount - 1) % 2) + 1;
   sts = io_init(io_mProcess_Plc, tp->aref.Objid, &tp->plc_io_ctx, rel_vec, tp->f_scan_time);
@@ -115,7 +137,7 @@ plc_thread (
   que_Put(&sts, &tp->q_out, &tp->event, (void *)3);
   phase = (int)que_Get(&sts, &tp->q_in, NULL, NULL);
   pwr_Assert(phase == 4);
-
+  
   /* Phase 4.  */
 
   que_Put(&sts, &tp->q_out, &tp->event, (void *)4);
