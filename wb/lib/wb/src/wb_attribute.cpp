@@ -34,20 +34,15 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep * orep) :
   else {
     m_orep->ref();
 
-  // m_size == get rtbody size... Fix
     wb_cdef cdef(*orep);
     if (EVEN(cdef.sts())) {
-      char msg[256];
       m_sts = cdef.sts();
-      sprintf(msg, "Can't get cdef for orep: %s", orep->name());  
-      throw wb_error_str(m_sts, msg);
+      return;
     }
     wb_bdef bdef(((wb_cdrep *)cdef)->bdrep(&m_sts, pwr_eBix_rt));
     if (EVEN(bdef.sts())) {
-      char msg[256];
       m_sts = bdef.sts();
-      sprintf(msg, "Can't get bdef for orep: %s", orep->name());  
-      throw wb_error_str(m_sts, msg);
+      return;
     }
 
     m_size = bdef.size();
@@ -117,8 +112,11 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, const char *bname) :
   if ( orep == 0)
     m_sts = LDH__NOSUCHATTR;
   else {
+    m_orep->ref();
+
     wb_cdrep *cd = m_orep->vrep()->merep()->cdrep( &m_sts, m_orep->cid());
     if ( oddSts()) {
+
       wb_bdrep *bd = cd->bdrep( &m_sts, bname);
       if ( oddSts()) {
         m_size = bd->size();
@@ -127,10 +125,6 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, const char *bname) :
       }
       delete cd;
     }
-    if ( oddSts())
-      m_orep->ref();
-    else
-      m_orep = 0;
   }
 }
 
@@ -141,6 +135,8 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, const char *bname, co
   if ( orep == 0)
     m_sts = LDH__NOSUCHATTR;
   else {
+    m_orep->ref();
+
     wb_attrname n = wb_attrname(aname);  
     wb_bdrep *bd = 0;
     wb_cdrep *cd = m_orep->vrep()->merep()->cdrep( &m_sts, m_orep->cid());
@@ -172,10 +168,10 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, const char *bname, co
       if ( bd) 
         delete bd;
     }
-    if ( oddSts())
-      m_orep->ref();
-    else
-      m_orep = 0;
+    // if ( oddSts())
+    //  m_orep->ref();
+    // else
+    //  m_orep = 0;
   }
 }
 
