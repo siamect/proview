@@ -1,5 +1,6 @@
 #include "co_cdh.h"
 #include "wb_cdrep.h"
+#include "wb_erep.h"
 #include "wb_merep.h"
 #include "wb_ldh_msg.h"
 #include "co_dbs.h"
@@ -175,6 +176,26 @@ pwr_tCid wb_cdrep::cid()
 
 void wb_cdrep::templateBody( pwr_tStatus *sts, pwr_eBix bix, void *p)
 {
+  pwr_tStatus status;
+
+  // Search for template in localWb
+  wb_vrep *localwb = m_orep->vrep()->erep()->volume( &status, ldh_cWBVolLocal);
+  if ( ODD(status)) {
+    char name[120];
+    sprintf( name, "Templates-%s", m_orep->name());
+    wb_name n = wb_name(name);
+    wb_orep *templ = localwb->object( &status, n);
+    if ( ODD(status) && templ->cid() == cid()) {
+      templ->ref();
+      localwb->readBody( &status, templ, bix, p);
+      templ->unref();
+      if ( ODD(status)) {
+	*sts = LDH__SUCCESS;
+	return;
+      }
+    }
+  }
+
   // Get objid for template object
   pwr_tOid oid;
   int cix = cdh_oixToCix( m_orep->oid().oix);  

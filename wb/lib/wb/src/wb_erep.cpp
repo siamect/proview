@@ -575,10 +575,11 @@ void wb_erep::bindMethods()
     delete cdrep;
   }
 
+#if DEBUG
   for (  methods_iterator it = m_methods.begin(); it != m_methods.end(); it++) {
     cout << " Method: " << it->first << endl;
   }
-
+#endif
 }
 
 
