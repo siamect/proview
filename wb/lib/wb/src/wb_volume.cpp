@@ -220,7 +220,7 @@ wb_attribute wb_volume::attribute(pwr_tOid oid, const char *bname, const char *a
     orep = m_vrep->erep()->object(&sts, oid);
 
   wb_attribute a(sts, orep, bname, aname);
-    
+
   return a;
 }
 
@@ -242,9 +242,14 @@ wb_attribute wb_volume::attribute( wb_name aname)
   if ( !cd)
     return wb_attribute();
 
+  // This only work on one level attributes... TODO
   wb_adrep *adrep = ((wb_cdrep *)cd)->adrep( &sts, aname.wholeAttr());
-  if ( ODD(sts))
-    return wb_attribute( sts, (wb_orep *)o, adrep);
+  if ( ODD(sts)) {
+    if ( aname.hasAttrIndex())
+      return wb_attribute( sts, (wb_orep *)o, adrep, aname.attrIndex());
+    else
+      return wb_attribute( sts, (wb_orep *)o, adrep);
+  }
   return wb_attribute();
 }
 
@@ -277,7 +282,7 @@ wb_attribute wb_volume::attribute(pwr_tOid oid, const char *bname) const
     // Other volume
     orep = m_vrep->erep()->object(&sts, oid);
 
-    wb_attribute a(sts, orep, bname);
+  wb_attribute a(sts, orep, bname);
     
   return a;
 }
@@ -637,6 +642,64 @@ pwr_tStatus wb_volume::triggPostUnadopt( wb_object& father, wb_object& o)
   return sts;
 }
 
+ldh_sRefInfo *wb_volume::refinfo( wb_object o, ldh_sRefInfo *rp)
+{
+  memset( rp, 0, sizeof(*rp));
+
+  wb_cdef cd = cdef( o);
+  wb_bdef bd = cd.bdef( pwr_eBix_rt);
+  wb_attribute body = wb_attribute( bd.sts(), (wb_orep *)o, bd.name());
+  char *bp = (char *)body.value(0);
+  pwr_tOid oid;
+  pwr_sAttrRef attrref;
+
+  wb_adef ad = bd.adef();
+  while ( ad) {
+    switch ( ad.cid()) {
+    case pwr_eClass_Input:
+    case pwr_eClass_Output:
+    case pwr_eClass_Intern:
+    case pwr_eClass_Param:
+      switch ( ad.type()) {
+      case pwr_eType_Objid:
+	for ( int i = 0; i < ad.nElement(); i++) {
+	  rp->ObjRef.Total++;
+	  oid = *(pwr_tOid *)(bp + ad.offset() + i * ad.size() / ad.nElement());
+	  if ( cdh_ObjidIsNotNull( oid)) {
+	    rp->ObjRef.Used++;
+	    wb_object otst = object(oid);
+	    if ( !otst)
+	      rp->ObjRef.Errors++;
+	  }
+	}
+	break;
+      case pwr_eType_AttrRef:
+	for ( int i = 0; i < ad.nElement(); i++) {
+	  rp->ObjRef.Total++;
+	  attrref = *(pwr_sAttrRef *)(bp + ad.offset() + i * ad.size() / ad.nElement());
+	  if ( cdh_ObjidIsNotNull( attrref.Objid)) {
+	    rp->ObjRef.Used++;
+	    wb_object otst = object(attrref.Objid);
+	    if ( !otst)
+	      rp->ObjRef.Errors++;
+	  }
+	}
+	break;
+      default: ;
+      }
+      break;
+    case pwr_eClass_AttrXRef:
+      // TODO
+      break;
+    case pwr_eClass_ObjXRef:
+      // TODO
+      break;
+    default: ;
+    }
+    ad = ad.next();
+  }
+  return rp;
+}
 
 
 

@@ -93,6 +93,8 @@ public:
   pwr_tStatus triggPostCreate( wb_object& o);
   pwr_tStatus triggPostMove( wb_object& o);
   pwr_tStatus triggPostUnadopt( wb_object& father, wb_object& o);
+
+  ldh_sRefInfo *refinfo( wb_object o, ldh_sRefInfo *rp);
 };
 
 #endif
