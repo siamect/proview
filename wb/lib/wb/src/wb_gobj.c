@@ -3731,6 +3731,17 @@ int	gobj_expand(	foe_ctx		foectx,
           case pwr_cClass_stosp:
           case pwr_cClass_cstosp:
           case pwr_cClass_GetSp:
+          case pwr_cClass_stonumsp:
+          case pwr_cClass_cstonumsp:
+          case pwr_cClass_GetIi:
+          case pwr_cClass_GetIo:
+          case pwr_cClass_GetIv:
+          case pwr_cClass_stoii:
+          case pwr_cClass_stoio:
+          case pwr_cClass_stoiv:
+          case pwr_cClass_cstoii:
+          case pwr_cClass_cstoio:
+          case pwr_cClass_cstoiv:
 	    sts = gobj_expand_m1( foectx, node, compress);
 	    break;
           case pwr_cClass_and:
