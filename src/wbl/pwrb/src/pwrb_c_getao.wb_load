@@ -1,0 +1,154 @@
+!  pwrb_c_getao.wb_load -- Defines the class GetAo.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  GET status of Analog Output signal.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  Get Analog output.
+!  
+!  Fetches the engineering value for a specified Ao-signal
+!  from I/O-copied area. See PROVIEW/R Designer's Guide.
+!  The complete name of the Ao-signal has to be supplied;
+!  its last segment is shown in the right empty part of
+!  the symbol.
+!  
+!  The GetAo object
+!  · is a pure address reference to the I/O-copied area
+!    for Ao-signals,
+!  · contains no relevant information (=data) in rtdb,
+!  · is without executable code.
+!*/
+SObject pwrb:Class
+  Object GetAo $ClassDef 121 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_RtAndDevBodies
+      Attr Flags = pwr_mClassDef_DevOnly
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      !/**
+      !  Used by the PLC Editor.
+      !*/
+      Object ActVal $Output 1 
+        Body SysBody
+          Attr PgmName = "ActualValue"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_RTVIRTUAL
+          Attr Flags |= PWR_MASK_DEVBODYREF
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "VAL"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      !/**
+      !  Used by the PLC Editor. Specifies the complete name of
+      !  the Ao object.
+      !*/
+      Object AoObject $Intern 1 
+        Body SysBody
+          Attr PgmName = "AoObject"
+          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr GraphName = "VAL"
+          Attr NiNaAnnot = 1
+          Attr NiNaSegments = 1
+        EndBody
+      EndObject
+      !/**
+      !  Used by the PLC Editor.
+      !*/
+      Object SigChanCon $Intern 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr NiNaAnnot = 2
+          Attr NiNaCond = 1
+          Attr NiNaSegments = 1
+        EndBody
+      EndObject
+      !/**
+      !  Specifies how many segments of the Ao object name that
+      !  is to be displayed in the symbol of the GetAo object.
+      !  The segments are counted from behind.
+      !  
+      !  0 and 1 both result in displaying the last segment of
+      !  the signal object name.
+      !*/
+      Object AoObjectSegments $Intern 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies if the name on the channel object (
+      !  associated with the signal object) is to be displayed
+      !  in the symbol of the GetAo object or not. FALSE means
+      !  no displaying and TRUE displaying.
+      !  See also SigChanConSegments.
+      !*/
+      Object ShowSigChanCon $Intern 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies, when ShowSigChanCon = TRUE, how many
+      !  segments of the channel object name that is to be
+      !  displayed in the symbol of the GetAo object. The
+      !  segments are counted from behind.
+      !  
+      !  0 and 1 both result in displaying the last segment of
+      !  the channel object name.
+      !*/
+      Object SigChanConSegments $Intern 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      Object PlcNode $Buffer 6 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 65
+        Attr parameters[0] = 0
+        Attr parameters[1] = 0
+        Attr parameters[2] = 1
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 7
+        Attr graphindex = 1
+        Attr default_mask[0] = 0
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 0
+        Attr devbody_annotation = 1
+        Attr compmethod = 8
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+        Attr connectmethod = 5
+        Attr executeordermethod = 0
+        Attr objname = "GetAo"
+        Attr graphname = "Ao"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    Object Template GetAo
+      Body DevBody
+        Attr AoObjectSegments = 1
+        Attr SigChanConSegments = 1
+        Attr ShowSigChanCon = 0
+      EndBody
+    EndObject
+  EndObject
+EndSObject

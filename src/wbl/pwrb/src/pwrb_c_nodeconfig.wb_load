@@ -1,0 +1,145 @@
+!  pwrb_c_nodeconfig.wb_load -- Defines the class nodeconfig.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!/**
+!  @Version 1.0
+!  @Summary Configures a proview node in the current project.
+!  The NodeConfig object configures a node in the current project
+!  on which the proview runtime environment should be started.
+!
+!  The NodeConfig object is created in the project volume as a toplevel
+!  object in the node-hierachy. Is is the root of an object tree of 
+!  voluemload and distribution object, which together configures QCOM,
+!  nethandler and the distributor. The following objects can be a part
+!  of the tree.
+!
+!  The NodeConfig object should have a RootVolumeLoad object as
+!  a child, that states the volume to load on this node. 
+!
+!  Any additional classvolumes that belongs to a mounted volume can
+!  be loaded with a ClassVolumeLoad object.
+!
+!  Distribution objects (ApplDistribute, GraphDistribute) configures 
+!  application programs and other files that should be copied to the node.
+!
+!  Se also
+!  @classlink RootVolumeLoad pwrb_rootvolumeload.html
+!  @classlink ClassVolumeLoad pwrb_classvolumeload.html
+!  @classlink FriendNodeConfig pwrb_friendnodeconfig.html
+!  @classlink ApplDistribute pwrb_appldistribute.html
+!  @classlink GraphDistribute pwrb_graphdistribute.html
+!  @classlink SystemDistribute pwrb_systemdistribute.html
+!  
+!*/
+SObject pwrb:Class
+  Object NodeConfig $ClassDef 160 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+      Attr Flags |= pwr_mClassDef_TopObject
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "NodeConfig"
+      EndBody
+      !/**
+      !  Description of the node
+      !*/
+      Object Description $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Name of the node
+      !*/
+      Object NodeName $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Operating system of the node
+      !*/
+      Object OperatingSystem $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Enum"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Boot system of the node.
+      !  Boot system of the node.
+      !  Loadfiles, applications and graph-files will be copied to this
+      !  node by the distributor.
+      !  In most cases this is the node itself. 
+      !  For ELN systems that is booted from a VMS node, the the VMS-node
+      !  is the boot node.
+      !  If the node is a development node which has access to the
+      !  directories of the development environment, no distribution is
+      !  required. This is marked with a '-' sign in the BootNode attribute.
+      !*/
+      Object BootNode $Attribute 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      ! QCOM bus number.
+      !*/
+      Object BusNumber $Attribute 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      ! Ip address of the node.
+      !*/
+      Object Address $Attribute 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String16"
+        EndBody
+      EndObject
+      !/**
+      ! QCOM port, if different from standard port.
+      !*/
+      Object Port $Attribute 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      ! Gathers all plcprograms to a single thread with on scantime.
+      !*/
+      Object SimulateSingleProcess $Attribute 8 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      ! Scantime of the single plc-thread.
+      !*/
+      Object SimulateSingleScanTime $Attribute 9 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      ! Disables distribution for this node.
+      !*/
+      Object DistributeDisable $Attribute 10
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject
+
+
+
+
+

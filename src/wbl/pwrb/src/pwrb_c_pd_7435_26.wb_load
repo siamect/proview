@@ -1,0 +1,127 @@
+!  pwrb_c_pd_7435_26.wb_load -- Defines the class Pd_7435_26.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996,99 by Mandator AB.
+!
+!  RTP Programmable delay counter card 7435_26.
+!
+! Range ldh_eDId_Base
+!
+SObject pwrb:Class
+  Object Pd_7435_26 $ClassDef 173 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_RtAndDevBodies
+      Attr Flags |= pwr_mClassDef_IO
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "Pd_7435_26"
+      EndBody
+      Object IOSysType $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+          Attr Flags |= PWR_MASK_CONST
+        EndBody
+      EndObject
+      Object Description $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      Object DevName $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object DevNumber $Attribute 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+          Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object ErrorCount $Attribute 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object ErrorSoftLimit $Attribute 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object ErrorHardLimit $Attribute 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object DevPolyType $Attribute 8 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+        EndBody
+      EndObject
+      Object DevPolyCoef0 $Attribute 9 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      Object DevPolyCoef1 $Attribute 10 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      Object MaxNoOfChannels $Attribute 11 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+          Attr Flags |= PWR_MASK_CONST
+        EndBody
+      EndObject
+      Object CardAddress $Attribute 12 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object Process $Attribute 13
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object ThreadObject $Intern 14
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object ChannelAllocation $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+    EndObject
+    Object Template Pd_7435_26
+      Body RtBody
+        Attr IOSysType = 3
+        Attr MaxNoOfChannels = 1
+        Attr Process = 1
+      EndBody
+    EndObject
+    Object AnteAdopt $DbCallBack
+      Body SysBody
+        Attr MethodName = "Pd_7435_26-AnteAdopt"
+      EndBody
+    EndObject
+    Object PostUnadopt $DbCallBack
+      Body SysBody
+        Attr MethodName = "Pd_7435_26-PostUnadopt"
+      EndBody
+    EndObject
+    Object PostAdopt $DbCallBack
+      Body SysBody
+        Attr MethodName = "Pd_7435_26-PostAdopt"
+      EndBody
+    EndObject
+  EndObject
+EndSObject

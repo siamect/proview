@@ -1,0 +1,13 @@
+!  op_trendstate.uil -- <short description>
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  This module includes trendstate's textstrings.
+!
+module op_trendstate
+names = case_sensitive
+
+include file 'pwr_lang:inc_trendstate_txt.uil'; 
+
+end module;

@@ -1,0 +1,141 @@
+!  inc_hel_txt.uil -- <short description>
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  This module defines english texts for the historical event list.
+!
+value
+
+! Exported constants
+
+   histtitle		: exported "Historical Event List";
+   stattitle		: exported "Statistics";
+
+   hel_AscizTable	: exported asciz_string_table
+	(	
+        "Ala-",                         ! AlaStr
+        "Ack-",                         ! AckStr
+        "Rtn-",                         ! RtnStr
+        "Can-",                         ! CancStr
+        "Blo-",                         ! BlkStr
+        "Rbl-",                         ! RblkStr
+        "Cbl-",                         ! CblkStr
+        "Ubl-",                         ! UblkStr
+	"Lost",				! LostStr
+        "Msg",                          ! MsgStr
+	"MPS  ",			! MpsStr
+	"Moved:",			! MpsMovedStr
+	"From:",			! MpsFromStr
+	"To:",				! MpsToStr
+	"OpPlace:",			! OpPlaceStr
+	"Operator:",			! OperatorStr	
+	"Value : ",			! ValueStr
+	"Limit : ",			! LimitStr
+	"Invalid time",			! InvalidTimeStr
+	"Print failed",			! PrintFailedStr
+	"Search failed",		! SearchFailedStr
+	"Node is invalid",		! NodeInvalidStr
+	"events match the condition",   ! MatchStr
+        "lost messages",		! LostMessagesStr
+        "Max number of events fetched.\nPlease limit the search conditions.", !MaxFetchStr
+	"P R O V I E W / R     A L A R M   S T A T I S T I C S",  ! RepStatTitleStr
+	"P R O V I E W / R     H I S T O R I C A L   E V E N T   L I S T",       ! RepListTitleStr
+	"Object",    			! RepObjectStr
+	"Event text",			! RepAlarmTextStr
+	"Start time",    		! RepStartTimeStr
+	"Stop time",    		! RepStopTimeStr
+	"Search condition",    		! RepSettingsStr
+	"Presentation",    		! RepPresentationStr
+	"Name",    			! RepPresentationNameStr
+	"Priority",			! RepPresentationPrioStr
+	"Cause",    			! RepPresentationCauseStr
+	"Active",    			! RepActiveStr
+	"Acknowledge",    		! RepAckStr
+	"Return",    			! RepCancelStr
+	"Block",    			! RepBlockStr
+	"Unblock",    			! RepUnblockStr
+	"Message",			! RepMsgStr
+	"High",    			! RepHighStr
+	"Low",    			! RepLowStr
+	"Digital",     			! RepDigitalStr
+	"Other",	    		! RepOtherStr
+	"(not used)",    		! RepNotUsedStr
+	"Printed: All",			! RepPrintAllStr
+	"Printed: Visible"		! RepPrintVisStr
+	);
+
+   hel_CSTable : exported compound_string_table
+	(
+        "Hide Time",			! RemoveTimeStr
+        "Show Time",                    ! ShowTimeStr
+        "Hide Object Identity",		! RemoveObjectStr
+        "Show Object Identity",         ! ShowObjectStr
+        "Hide Event Text",		! RemoveEventTextStr
+        "Show Event Text"               ! ShowEventTextStr
+	);
+        
+! Constants used by the co_CvtTimeToAsc function. See pwr_inc:TimeUtil.h
+    Solution		: 0;	! second.
+    Format		: 1;	! 0=Swedish, 1=GB
+    hel_IntTable	:  exported integer_table(Solution,Format);
+
+
+    histformtitle	: "Historical Event List: Search Condition";
+    statformtitle	: "Statistics: Search Condition";
+    OK			: "OK";
+    Apply		: "Apply";
+    Cancel		: "Cancel";
+    time		: "Time";
+    objectname		: "Object name";
+    cause		: "Cause";
+    starttime		: "Start time:";
+    priority		: "Priority";
+    today		: "Today";
+    yesterday		: "Yesterday";
+    thisweek		: "This Week";
+    lastweek		: "Last Week";
+    thismonth		: "This Month";
+    lastmonth		: "Last Month";
+    all			: "All";
+    stoptime		: "Stop time:";
+    daybreak		: "Day break:";
+    eventtype		: "Event type";
+    eventtext		: "Event text";
+    a_alarm		: "A-Alarm";
+    b_alarm		: "B-Alarm";
+    c_alarm		: "C-Alarm";
+    d_alarm		: "D-Alarm";
+    message		: "Message";
+    active		: "Active";
+    acknowledge		: "Ack";
+    return		: "Return";
+    block		: "Block";
+    unblock		: "Unblock";
+    limit		: "Limit";
+    high		: "High";
+    low			: "Low";
+    digital		: "Digital";
+    other		: "Other";
+    node		: "Node";
+    presentation	: "Presentation:";
+    sort		: "New row for:";
+    name		: "Name";
+    lost		: "Lost messages";
+    timevalue		: ".....";
+    result		: ".....";
+    searchtime		: "Time for search:";
+    searchresult	: "Search result:";
+    search		: "Search Condition...";
+    statistics		: "Statistics...";
+
+
+    printvis		: "Visible Events";
+    printvis$		: "V";
+    printall		: "All Events";
+    printall$		: "A";
+    printallstat	: "All Statistics";
+    printallstat$	: "A";
+
+    
+

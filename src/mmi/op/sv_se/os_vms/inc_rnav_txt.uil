@@ -1,0 +1,30 @@
+!  inc_rnav_txt.uil -- runtime navigator
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  This module defines swedish texts for the navigator  window.
+!
+value
+    title       : exported "Runtime Navigatör på ";
+    iconName    : exported "Runtime Navigatör";
+  
+    block	: "Blockera...";
+    block$	: "B";
+    blockList	: "Block Lista...";
+    blockList$	: "L";
+    copyMode	: "Kopieringsmod";
+    copyMode$	: "m";
+    func	: "Funktioner";
+    func$	: "F";
+    objectName	: "Objektnamn"; 
+    objectName$	: "O"; 
+    objectAttr	: "Objektnamn + Attribut"; 
+    objectAttr$	: "A"; 
+    openObject	: "Öppna Objekt..."; 
+    openObject$	: "O"; 
+    refresh	: "Uppdatera";
+    refresh$	: "U";
+    openPlc	: "Öppna Plc..."; 
+    openPlc$	: "P"; 
+

@@ -1,0 +1,160 @@
+!  nmps_c_funcoutput.wb_load -- Defines the class FuncOutput.
+!
+!  PROVIEW/R
+!
+!  <Description>.
+!
+SObject NMps:Class
+  Object FuncOutput $ClassDef 24
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_RtConnectionsAndDevBodies
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "FuncOutput"
+      EndBody
+      Object OA1 $Input 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "OA1"
+        EndBody
+      EndObject
+      Object OA2 $Input 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "OA2"
+        EndBody
+      EndObject
+      Object OA3 $Input 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "OA3"
+        EndBody
+      EndObject
+      Object OA4 $Input 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "OA4"
+        EndBody
+      EndObject
+      Object OA5 $Input 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "OA5"
+        EndBody
+      EndObject
+      Object OA6 $Input 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "OA6"
+        EndBody
+      EndObject
+      Object OA7 $Input 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "OA7"
+        EndBody
+      EndObject
+      Object OA8 $Input 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "OA8"
+        EndBody
+      EndObject
+      Object od1 $Input 9
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "od1"
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      Object od2 $Input 10
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "od2"
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      Object od3 $Input 11
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "od3"
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      Object od4 $Input 12
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "od4"
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      Object od5 $Input 13
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "od5"
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      Object od6 $Input 14
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "od6"
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      Object od7 $Input 15
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "od7"
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      Object od8 $Input 16
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "od8"
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 11
+        Attr parameters[0] = 16
+        Attr parameters[1] = 0
+        Attr parameters[2] = 0
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 0
+        Attr graphindex = 0
+        Attr default_mask[0] = 1
+        Attr default_mask[1] = 0
+        Attr segname_annotation = 1
+        Attr compmethod = 54
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+        Attr executeordermethod = 2
+        Attr objname = "FuncOut"
+        Attr graphname = "FuncOut"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    Object DevBody $ObjBodyDef 2
+      Object Index $Intern 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object PlcNode $Buffer 2
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,154 @@
+!  pwrb_c_do_7437_83.wb_load -- Defines the class Do_7437_83.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996,99 by Mandator AB.
+!
+!  RTP Digital Output card 7437_83.
+!
+SObject pwrb:Class
+  Object Do_7437_83 $ClassDef 98 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_RtAndDevBodies
+      Attr Flags |= pwr_mClassDef_IO
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "Do_7437_83"
+      EndBody
+      Object IOSysType $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+          Attr Flags |= PWR_MASK_CONST
+        EndBody
+      EndObject
+      Object Description $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      Object DevName $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object DevNumber $Attribute 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+          Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object ErrorCount $Attribute 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object ErrorSoftLimit $Attribute 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object ErrorHardLimit $Attribute 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object InvMask1 $Attribute 8 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+        EndBody
+      EndObject
+      Object InvMask2 $Attribute 9 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+        EndBody
+      EndObject
+      Object TestMask1 $Attribute 10 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+          Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object TestMask2 $Attribute 11 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+          Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object TestValue1 $Attribute 12 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+          Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object TestValue2 $Attribute 13 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+          Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object FixedOutValue1 $Attribute 14 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+        EndBody
+      EndObject
+      Object FixedOutValue2 $Attribute 15 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+        EndBody
+      EndObject
+      Object MaxNoOfChannels $Attribute 16 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+          Attr Flags |= PWR_MASK_CONST
+        EndBody
+      EndObject
+      Object CardAddress $Attribute 17 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object Process $Attribute 18
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object ThreadObject $Intern 19
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object ChannelAllocation $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+    EndObject
+    Object Template Do_7437_83
+      Body RtBody
+        Attr IOSysType = 3
+        Attr MaxNoOfChannels = 16
+        Attr Process = 1
+      EndBody
+    EndObject
+    Object AnteAdopt $DbCallBack
+      Body SysBody
+        Attr MethodName = "Do_7437_83-AnteAdopt"
+      EndBody
+    EndObject
+    Object PostUnadopt $DbCallBack
+      Body SysBody
+        Attr MethodName = "Do_7437_83-PostUnadopt"
+      EndBody
+    EndObject
+    Object PostAdopt $DbCallBack
+      Body SysBody
+        Attr MethodName = "Do_7437_83-PostAdopt"
+      EndBody
+    EndObject
+  EndObject
+EndSObject

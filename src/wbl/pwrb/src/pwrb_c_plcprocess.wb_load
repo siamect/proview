@@ -1,0 +1,106 @@
+!  pwrb_c_plcprocess.wb_load -- Defines the class PlcProcess.
+!
+!  PROVIEW/R
+!  Copyright (C) 1997 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+SObject pwrb:Class
+  Object PlcProcess $ClassDef 279
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "PlcProcess"
+      EndBody 
+      Object Description $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      Object Prio $Attribute 2
+	Body SysBody
+	  Attr TypeRef = "pwrs:Type-$Int32"
+	EndBody
+      EndObject
+      Object StartWithDebug $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object SubscriptionInterval $Attribute 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      Object BootVersion $Attribute 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object CurVersion $Attribute 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object StartTime $Attribute 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$DeltaTime"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object StopTime $Attribute 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$DeltaTime"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object StallTime $Attribute 9
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$DeltaTime"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object LastChgTime $Attribute 10
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Time"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object ChgCount $Attribute 11
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object TimerStart $Attribute 12
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_PRIVATE
+	EndBody
+      EndObject
+    EndObject
+    Object Template PlcProcess
+      Body RtBody
+	Attr Prio = 5
+	Attr SubscriptionInterval = 1.0
+      EndBody
+    EndObject
+  EndObject
+EndSObject

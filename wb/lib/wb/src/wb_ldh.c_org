@@ -1,0 +1,6041 @@
+/* wb_ldh.c -- local data handler
+
+   PROVIEW/R
+   Copyright (C) 1996 by Comator Process AB.
+
+   This module contains the API-routines to the Local Data Handler, LDH.  */
+
+#include <string.h>
+#include <stdlib.h>
+#include <time.h>
+#include <assert.h>
+#include <stdarg.h>
+#ifdef OS_VMS
+#include <descrip.h>
+#include <libdef.h>
+#include <lnmdef.h>
+#include <starlet.h>
+#include <lib$routines.h>
+#endif
+#include <stdarg.h>
+#include <X11/Intrinsic.h>
+#include "pwr.h"
+#include "wb_ldhi.h"
+#include "pwr_class.h"
+#include "wb_ldh_msg.h"
+#include "co_cdh.h"
+#include "pwr_vararg.h"
+#include "co_ver.h"
+#include "rt_gdh.h"
+#include "wb_ldh.h"
+#include "wb_ldhdb.h"
+#include "wb_pwrs.h"
+
+pwr_dImport pwr_BindClasses(System);
+pwr_dImport pwr_BindClasses(Base);
+
+static ldh_sMenuItem ldh_lMenuItem[100];
+
+static int ldh_gLog_a = 0;
+static int ldh_gLog_b = 0;
+static int ldh_gLog_c = 0;
+
+static struct {
+  pwr_tString32 Name;
+  ldh_eUtility Value;
+} ldh_lUtility[] = {
+  {"__",		ldh_eUtility__},
+  {"Navigator",		ldh_eUtility_Navigator},
+  {"Configurator",	ldh_eUtility_Configurator},
+  {"-",			ldh_eUtility_}
+};
+
+static struct {
+  pwr_tString32 Name;
+  pwr_tChar Char;
+  ldh_eMenuSet Value;
+} ldh_lMenuSet[] = {
+  {"__",		'\0', ldh_eMenuSet__},
+  {"Attribute",		'a',  ldh_eMenuSet_Attribute},
+  {"Class",		'c',  ldh_eMenuSet_Class},
+  {"Many",		'm',  ldh_eMenuSet_Many},
+  {"None",		'n',  ldh_eMenuSet_None},
+  {"Object",		'o',  ldh_eMenuSet_Object},
+  {"-",			'\0', ldh_eMenuSet_}
+};
+
+/*============================================================================*\
+  Function prototypes to local functions.
+\*============================================================================*/
+
+static ldh_sEvent *eventAlloc (
+  ldhi_sSession  *sp
+);
+static void eventFree (
+  ldhi_sSession  *sp,
+  ldh_sEvent	    *fep,
+  ldh_sEvent	    *lep
+);
+static void eventNewFamily (
+  ldhi_sSession  *sp,
+  ldh_sEvent	    *ep,
+  ldhi_sObjHead	    *ohp
+);
+static void eventOldFamily (
+  ldhi_sSession  *sp,
+  ldh_sEvent	    *ep,
+  ldhi_sObjHead	    *ohp
+);
+static void eventSend (
+  ldhi_sSession  *sp,
+  ldh_sEvent	    *ep
+);
+static void
+eventSendAllSessions (
+  ldhi_sSession	*sp,
+  ldh_eEvent		event
+);
+
+static ldh_sEvent   *eventStart (
+  ldhi_sSession  *sp,
+  pwr_tObjid	    Object,
+  ldh_eEvent	    event
+);
+static void getAllBodies (
+  ldhi_sObjHead	    *ohp,
+  ldhi_sObjHead	    *chp
+);
+static void getAllMenuItems (
+  ldh_sMenuCall	    *ip,
+  ldh_sMenuItem	    **Item,
+  ldhi_sObjHead	    *ohp,
+  pwr_tUInt32	    Level,
+  int		    *nItems,
+  int		    AddSeparator
+);
+static void getLogging (
+);
+static int hasAccess (
+  ldhi_sSession  *sp,
+  ldh_eAccess	    access,
+  pwr_tStatus	    *sts
+);
+static pwr_tStatus openWB (
+  ldhi_sWorkbench **wbctx,
+  int iflag
+);
+static pwr_tStatus triggAnteAdopt (
+  ldhi_sSession  *sp,
+  ldhi_sObjHead	    *fahp,
+  ldhi_sObjHead	    *chp
+);
+static pwr_tStatus triggAnteCreate (
+  ldhi_sSession  *sp,
+  ldhi_sObjHead	    *fahp,
+  ldhi_sObjHead	    *chp
+);
+static pwr_tStatus triggAnteMove (
+  ldhi_sSession  *sp,
+  ldhi_sObjHead	    *ohp,
+  ldhi_sObjHead	    *fahp
+);
+static pwr_tStatus triggAnteUnadopt (
+  ldhi_sSession  *sp,
+  ldhi_sObjHead	    *fahp,
+  ldhi_sObjHead	    *ohp
+);
+static pwr_tStatus triggPostAdopt (
+  ldhi_sSession  *sp,
+  ldhi_sObjHead	    *fahp,
+  ldhi_sObjHead	    *ohp
+);
+static pwr_tStatus triggPostCreate (
+  ldhi_sSession  *sp,
+  ldhi_sObjHead	    *ohp
+);
+static pwr_tStatus triggPostMove (
+  ldhi_sSession  *sp,
+  ldhi_sObjHead	    *ohp
+);
+static pwr_tStatus triggPostUnadopt (
+  ldhi_sSession  *sp,
+  ldhi_sObjHead	    *fahp,
+  ldhi_sObjHead	    *ohp
+);
+static pwr_tStatus
+triggSyntaxCheck (
+  ldhi_sSession	*sp,
+  ldhi_sObjHead		*ohp,
+  int			*errorcount,
+  int			*warningcount
+);
+static pwr_tStatus
+syntaxCheckObject (
+  ldhi_sSession	*sp,
+  ldhi_sObjHead		*ohp,
+  int			*errorcount,
+  int			*warningcount
+);
+
+static pwr_tStatus
+setOix (
+  ldhi_sObjHead	    *ohp,
+  pwr_uVolume	    *Volume
+)
+{
+  pwr_tStatus	    sts;
+  int		    mask = 63;
+  int		    next = (int) Volume->Root.NextOix;
+
+  if (next < 0) {
+    Volume->Root.NextOix = pwr_cNObjectIx;
+    return LDH__SUCCESS;
+  }
+
+  if ((next % 64) != 1)
+    Volume->Root.NextOix = next = ((next + 63) & (~mask)) + 1;
+
+  if ((next - 1) > ohp->vhp->freeOix.high) {
+    sts = ldhdb_SetOix(ohp->db.objid.vid, next - 1);
+    if (EVEN(sts)) return sts;
+    ohp->vhp->freeOix.high = next - 1;
+    ohp->vhp->freeOix.next = MAX(next - 64, ohp->vhp->freeOix.next);
+  }
+
+  return LDH__SUCCESS;
+}
+
+static ldh_sEvent *
+eventAlloc (
+  ldhi_sSession	*sp
+)
+{
+  static const int	cEventAlloc = 100;
+  ldh_sEvent		*ep = NULL;
+  ldh_sEvent		*nep;
+  ldh_sEvent		*oep;
+  int			i;
+
+  if ((ep = sp->wb->fep) == NULL) {
+    ep = (ldh_sEvent *) XtCalloc(1, cEventAlloc * sizeof(ldh_sEvent));
+    if (ep == NULL) {
+      printf("** eventAlloc: Out of virtual memory.\n");
+      return ep;
+    }
+    for (i = 0, nep = oep = ep; i < cEventAlloc - 2; i++) {
+      oep->nep = ++nep;
+      oep = nep;
+    }
+  }
+
+  sp->wb->fep = ep->nep;
+
+  memset(ep, 0, sizeof(*ep));
+  return ep;
+}
+
+static void
+eventFree (
+  ldhi_sSession	*sp,
+  ldh_sEvent		*fep,
+  ldh_sEvent		*lep
+)
+{
+
+  if (fep != NULL && lep != NULL) {
+    lep->nep = sp->wb->fep;
+    sp->wb->fep = fep;
+  }
+}
+
+static void 
+eventNewFamily (
+  ldhi_sSession	*sp,
+  ldh_sEvent		*ep,
+  ldhi_sObjHead		*ohp
+)
+{
+
+  if (sp->sendThisSession == NULL)
+    return;
+
+  if (ep == NULL)
+    return;
+
+  if (ohp->fahp != NULL && ohp->fahp != ohp->vhp->ohp)
+    ep->NewParent = ohp->fahp->db.objid;
+
+  if (ohp->silst.bwhp != NULL)
+    ep->NewLsibling = ohp->silst.bwhp->db.objid;
+
+  if (ohp->silst.fwhp != NULL)
+    ep->NewRsibling = ohp->silst.fwhp->db.objid;
+  
+}
+
+static void
+eventOldFamily (
+  ldhi_sSession	*sp,
+  ldh_sEvent		*ep,
+  ldhi_sObjHead		*ohp
+)
+{
+
+  if (sp->sendThisSession == NULL)
+    return;
+
+  if (ep == NULL)
+    return;
+
+  if (ohp->fahp != NULL && ohp->fahp != ohp->vhp->ohp)
+    ep->OldParent = ohp->fahp->db.objid;
+
+  if (ohp->silst.bwhp != NULL)
+    ep->OldLsibling = ohp->silst.bwhp->db.objid;
+
+  if (ohp->silst.fwhp != NULL)
+    ep->OldRsibling = ohp->silst.fwhp->db.objid;
+  
+}
+
+static void
+eventSend (
+  ldhi_sSession	*sp,
+  ldh_sEvent		*ep
+)
+{
+
+  if (sp->sendThisSession == NULL)
+    return;
+
+  if (ep == NULL)
+    return;
+
+  if (sp->fep != ep)
+    return;
+
+  sp->sendThisSession(sp->editorContext, sp->fep);
+
+  eventFree(sp, sp->fep, sp->lep);
+  sp->fep = sp->lep = NULL;
+}
+
+static void
+eventSendAllSessions (
+  ldhi_sSession	*sp,
+  ldh_eEvent		event
+)
+{
+  int			i;
+  ldhi_sSession	*scp;
+  ldh_sEvent		*ep;
+
+  ep = eventAlloc(sp);
+
+  if (ep == NULL)
+    return;
+
+  ep->Event = event;
+
+  for (i = 1; i < ldh_eUtility_; i++) {
+    for (scp = sp->volctx->utility[i]; scp != NULL; scp = scp->seslst) {
+      if (sp == scp) {
+	if (sp->sendThisSession != NULL)
+	  sp->sendThisSession(sp->editorContext, ep);
+      } else if (scp->sendOtherSession != NULL) {
+	scp->sendOtherSession(scp->editorContext, ep);
+      }
+    }
+  }
+
+  eventFree(sp, ep, ep);
+}
+
+static void
+eventSendSession (
+  ldhi_sSession	*sp,
+  ldh_eEvent		event
+)
+{
+  ldh_sEvent		*ep;
+
+  ep = eventAlloc(sp);
+
+  if (ep == NULL)
+    return;
+
+  ep->Event = event;
+
+  if (sp->sendThisSession != NULL) {
+    sp->sendThisSession(sp->editorContext, ep);
+  }
+
+  eventFree(sp, ep, ep);
+}
+
+static ldh_sEvent *
+eventStart (
+  ldhi_sSession	*sp,
+  pwr_tObjid		Object,
+  ldh_eEvent		event
+)
+{
+  ldh_sEvent		*ep;
+
+  if (sp->sendThisSession == NULL)
+    return NULL;
+
+  ep = eventAlloc(sp);
+
+  if (ep == NULL)
+    return ep;
+
+  ep->Event   = event;
+  ep->Object  = Object;
+  
+  if (sp->fep == NULL) {
+    sp->fep = ep;
+  } else {
+    sp->lep->nep = ep;
+    ep->pep = sp->lep;
+  }
+  sp->lep = ep;
+
+  return ep;
+}
+
+static int
+inThisVolume (
+  ldhi_sSession	*sp,
+  ldhi_sObjHead		*ohp
+)
+{
+
+  if (ohp->fahp == NULL && ohp != ohp->vhp->ohp) {
+    printf("Object: %s\n   Has no father, setting father to volume!\n", 
+      ldhi_PathName(ohp, 1));
+    ohp->fahp = ohp->vhp->ohp;
+  }
+
+  return sp->vhp == ohp->vhp;
+}
+
+static void
+getAllBodies (
+  ldhi_sObjHead		*ohp,
+  ldhi_sObjHead		*chp
+)
+{
+  ldhi_sObjHead		*chhp;
+  ldhi_sObjBody		*obp;
+  ldhi_sBinding		*bp;
+  pwr_sMenuButton	*mbp;
+  typedef pwr_tBoolean (*tFilter)();
+
+  if (ohp->db.classid == pwr_eClass_ClassDef) {
+    chp = ohp;
+  }
+  if (ohp->db.classid == pwr_eClass_MenuButton) {
+    ldhi_GetObjectBody(NULL, ohp, ldhi_eBid_SysBody, &obp);
+    mbp = (pwr_sMenuButton *)obp->body;
+    if (mbp->MethodName[0] != '\0') {
+      bp = (ldhi_sBinding *) ldh_TreeFind(ldhi_gWB.bindtab, mbp->MethodName);
+      if (bp != NULL) {
+	if (ldh_gLog_a)
+	  printf("-- %s\n   menu method bound to: %s\n",
+	    ldhi_PathName(ohp, 1), mbp->MethodName);
+	mbp->Method = bp->method;
+      } else {
+	if (ldh_gLog_b)
+	  printf("!! %s\n   menu method not bound to: %s\n",
+	    ldhi_PathName(ohp, 1), mbp->MethodName);
+	mbp->Method = NULL;
+      }
+    }
+    if (mbp->FilterName[0] != '\0') {
+      bp = (ldhi_sBinding *) ldh_TreeFind(ldhi_gWB.bindtab, mbp->FilterName);
+      if (bp != NULL) {
+	if (ldh_gLog_a)
+	  printf("-- %s\n   menu filter bound to: %s\n",
+	    ldhi_PathName(ohp, 1), mbp->FilterName);
+	mbp->Filter = (tFilter) bp->method;
+      } else {
+	if (ldh_gLog_b)
+	  printf("!! %s\n   menu filter not bound to: %s\n",
+	    ldhi_PathName(ohp, 1), mbp->FilterName);
+	mbp->Filter = NULL;
+      }
+    }
+  }
+
+  for (chhp = ohp->chhp; chhp != NULL; chhp = chhp->silst.fwhp) {
+    getAllBodies(chhp, chp);
+  }
+}
+
+static void
+getAllMenuItems (
+  ldh_sMenuCall		*ip,
+  ldh_sMenuItem		**Item,
+  ldhi_sObjHead		*ohp,
+  pwr_tUInt32		Level,
+  int			*nItems,
+  int			AddSeparator
+)
+{
+  ldhi_sObjHead		*chhp;
+  ldhi_sObjBody		*obp;
+  pwr_sMenuButton	*mbp;
+  pwr_sMenuCascade	*mcp;
+
+  Level++;
+  memset(*Item, 0, sizeof(**Item));
+
+  if(AddSeparator) {
+    (*Item)->Level = Level;
+    (*Item)->Item = ldh_eMenuItem_Separator;
+    (*Item)->MenuObject = pwr_cNObjid;
+    (*Item)++;
+    (*nItems)++;
+  } else if (ohp->db.classid == pwr_eClass_MenuButton) {
+    ldhi_GetObjectBody(NULL, ohp, ldhi_eBid_SysBody, &obp);
+    mbp = (pwr_sMenuButton *)obp->body;
+    (*Item)->Level = Level;
+    (*Item)->Item = ldh_eMenuItem_Button;
+    (*Item)->MenuObject = ohp->db.objid;
+
+    if (mbp->Method == NULL) 
+      (*Item)->Flags.f.Sensitive = 0;
+    else if (mbp->Filter != NULL)
+      (*Item)->Flags.f.Sensitive = mbp->Filter(ip, mbp);
+    else
+      (*Item)->Flags.f.Sensitive = 1;
+
+    strcpy((*Item)->Name, mbp->ButtonName);
+    (*Item)->Method = mbp->Method;
+    (*Item)++;
+    (*nItems)++;
+  } else if (ohp->db.classid == pwr_eClass_MenuSeparator) {
+    (*Item)->Level = Level;
+    (*Item)->Item = ldh_eMenuItem_Separator;
+    (*Item)->MenuObject = ohp->db.objid;
+    (*Item)++;
+    (*nItems)++;
+  } else if (ohp->db.classid == pwr_eClass_MenuCascade) {
+    ldhi_GetObjectBody(NULL, ohp, ldhi_eBid_SysBody, &obp);
+    mcp = (pwr_sMenuCascade *)obp->body;
+    (*Item)->Level = Level;
+    (*Item)->Item = ldh_eMenuItem_Cascade;
+    (*Item)->Flags.f.Sensitive = 1;
+    strcpy((*Item)->Name, mcp->ButtonName);
+    (*Item)->MenuObject = ohp->db.objid;
+    (*Item)++;
+    (*nItems)++;
+
+    for (chhp = ohp->chhp; chhp != NULL; chhp = chhp->silst.fwhp) {
+      getAllMenuItems(ip, Item, chhp, Level, nItems, 0);
+    }
+  }
+}
+
+static void
+getLogging ()
+{
+#ifdef OS_VMS
+  pwr_tStatus		sts;
+  char			logname[] = "pwr_ldh_log";
+  unsigned short	len	    = 0;
+  char			pwr_ldh_log[256];
+
+  $DESCRIPTOR(logname_d, "pwr_ldh_log");
+  $DESCRIPTOR(tab, "LNM$PROCESS_TABLE");
+
+  unsigned long		attr = LNM$M_CASE_BLIND;
+  struct {
+    unsigned short	item_length;
+    unsigned short	item_code;
+    void*		item_address;
+    void*		item_reslen;
+  } itmlst[2] = {
+    {sizeof(pwr_ldh_log), LNM$_STRING, NULL, NULL},
+    {0, 0, NULL, NULL}
+  };
+
+  itmlst[0].item_address = pwr_ldh_log;
+  itmlst[0].item_reslen = &len;
+  sts = sys$trnlnm(&attr, &tab, &logname_d, NULL, itmlst);      
+  if (EVEN(sts))
+    return;
+
+  pwr_ldh_log[len] = '\0';
+
+  ldh_gLog_a = strchr(pwr_ldh_log, 'a') != NULL;
+  ldh_gLog_b = strchr(pwr_ldh_log, 'b') != NULL;
+  ldh_gLog_c = strchr(pwr_ldh_log, 'c') != NULL;
+#endif
+}
+
+static int
+hasAccess (
+  ldhi_sSession	*sp,
+  ldh_eAccess		access,
+  pwr_tStatus		*sts
+)
+{
+  ldhi_sSession	*scp;
+  
+  *sts = LDH__NOSUCHSESS;
+
+  if (sp == NULL) return 0;
+
+  for (scp = sp->volctx->utility[sp->utility]; scp != NULL; scp = scp->seslst)
+    if (sp == scp) break;
+  if (scp == NULL) return 0;
+
+  *sts = LDH__NOACCESS;
+  
+  switch (access) {
+  case ldh_eAccess_ReadWrite:
+    if (sp->access != ldh_eAccess_ReadWrite) return 0;
+    break;
+  case ldh_eAccess_ReadOnly:
+    break;
+  default:
+    return 1;
+    break;
+  }
+
+  *sts = LDH__SUCCESS;
+  return 1;
+}
+
+/*----------------------------------------------------------------------------*\
+  Function prototype defined in wb_pwrs.h
+\*----------------------------------------------------------------------------*/
+
+static pwr_tStatus
+triggAnteAdopt (
+  ldhi_sSession	*sp,
+  ldhi_sObjHead		*fahp,
+  ldhi_sObjHead		*chp
+)
+{
+  pwr_tStatus		sts = LDH__SUCCESS;
+  ldh_eAccess		access = sp->access;
+  pwr_tObjid		Father = pwr_cNObjid;
+
+  if (
+    fahp != NULL &&
+    fahp->chp->dbCallBack[ldhi_eDbCallBack_AnteAdopt] != NULL
+  ) {
+    sp->access = ldh_eAccess_ReadOnly;
+    if (fahp->db.objid.oix != pwr_cNObjectIx)
+      Father = fahp->db.objid;
+    sts = (fahp->chp->dbCallBack[ldhi_eDbCallBack_AnteAdopt])(
+      sp, Father, cdh_ClassObjidToId(chp->db.objid));
+    sp->access = access;
+  }
+
+  return sts;
+}
+
+/*----------------------------------------------------------------------------*\
+  Function prototype defined in wb_pwrs.h
+\*----------------------------------------------------------------------------*/
+
+static pwr_tStatus
+triggAnteCreate (
+  ldhi_sSession  *sp,
+  ldhi_sObjHead	    *fahp,
+  ldhi_sObjHead	    *chp
+)
+{
+  pwr_tStatus	    sts	    = LDH__SUCCESS;
+  ldh_eAccess	    access  = sp->access;
+  pwr_tObjid	    Father  = pwr_cNObjid;
+
+  if (
+    chp != NULL &&
+    chp->dbCallBack[ldhi_eDbCallBack_AnteCreate] != NULL
+  ) {
+    if (fahp != NULL && fahp->db.objid.oix != pwr_cNObjectIx)
+      Father = fahp->db.objid;
+    sp->access = ldh_eAccess_ReadOnly;
+    sts = (chp->dbCallBack[ldhi_eDbCallBack_AnteCreate])(
+      sp, Father, cdh_ClassObjidToId(chp->db.objid));
+    sp->access = access;
+  }
+
+  return sts;
+}
+
+/*----------------------------------------------------------------------------*\
+  Function prototype defined in wb_pwrs.h
+\*----------------------------------------------------------------------------*/
+
+static pwr_tStatus
+triggAnteMove (
+  ldhi_sSession	*sp,
+  ldhi_sObjHead		*ohp,
+  ldhi_sObjHead		*fahp
+)
+{
+  pwr_tStatus		sts	= LDH__SUCCESS;
+  ldh_eAccess		access  = sp->access;
+  pwr_tObjid		Father  = pwr_cNObjid;
+  pwr_tClassId		Class   = pwr_cNClassId;
+
+  if (
+    ohp != NULL &&
+    ohp->chp->dbCallBack[ldhi_eDbCallBack_AnteMove] != NULL
+  ) {
+    sp->access = ldh_eAccess_ReadOnly;
+    if (fahp != NULL && fahp->db.objid.oix != pwr_cNObjectIx) {
+      Father  = fahp->db.objid;
+      Class   = fahp->db.classid;
+    }
+    sts = (ohp->chp->dbCallBack[ldhi_eDbCallBack_AnteMove])(
+      sp, ohp->db.objid, Father, Class);
+    sp->access = access;
+  }
+
+  return sts;
+}
+
+/*----------------------------------------------------------------------------*\
+  Function prototype defined in wb_pwrs.h
+\*----------------------------------------------------------------------------*/
+
+static pwr_tStatus
+triggAnteUnadopt (
+  ldhi_sSession	*sp,
+  ldhi_sObjHead		*fahp,
+  ldhi_sObjHead		*ohp
+)
+{
+  pwr_tStatus		sts	= LDH__SUCCESS;
+  ldh_eAccess		access	= sp->access;
+  pwr_tObjid		Father	= pwr_cNObjid;
+
+  if (
+    fahp != NULL &&
+    fahp->chp->dbCallBack[ldhi_eDbCallBack_AnteUnadopt] != NULL
+  ) {
+    sp->access = ldh_eAccess_ReadOnly;
+    if (fahp->db.objid.oix != pwr_cNObjectIx)
+      Father = fahp->db.objid;
+    sts = (fahp->chp->dbCallBack[ldhi_eDbCallBack_AnteUnadopt])(
+      sp, Father, ohp->db.objid, ohp->db.classid);
+    sp->access = access;
+  }
+
+  return sts;
+}
+
+/*----------------------------------------------------------------------------*\
+  Function prototype defined in wb_pwrs.h
+\*----------------------------------------------------------------------------*/
+
+static pwr_tStatus
+triggPostAdopt (
+  ldhi_sSession	*sp,
+  ldhi_sObjHead		*fahp,
+  ldhi_sObjHead		*ohp
+)
+{
+  pwr_tStatus		sts = LDH__SUCCESS;
+  pwr_tObjid		Father = pwr_cNObjid;
+
+  if (
+    fahp != NULL &&
+    fahp->chp->dbCallBack[ldhi_eDbCallBack_PostAdopt] != NULL
+  ) {
+    if (fahp->db.objid.oix != pwr_cNObjectIx)
+      Father = fahp->db.objid;
+    sts = (fahp->chp->dbCallBack[ldhi_eDbCallBack_PostAdopt])(
+      sp, Father, ohp->db.objid, ohp->db.classid);
+  }
+
+  return sts;
+}
+
+/*----------------------------------------------------------------------------*\
+  Function prototype defined in wb_pwrs.h
+\*----------------------------------------------------------------------------*/
+
+static pwr_tStatus
+triggPostCreate (
+  ldhi_sSession	*sp,
+  ldhi_sObjHead		*ohp
+)
+{
+  pwr_tStatus		sts	= LDH__SUCCESS;
+  pwr_tObjid		Father  = pwr_cNObjid;
+  pwr_tClassId		Class   = pwr_cNClassId;
+
+  if (
+    ohp != NULL &&
+    ohp->chp->dbCallBack[ldhi_eDbCallBack_PostCreate] != NULL
+  ) {
+    if (ohp->fahp != NULL && ohp->fahp->db.objid.oix != pwr_cNObjectIx) {
+      Father = ohp->fahp->db.objid;
+      Class = ohp->fahp->db.classid;
+    }
+    sts = (ohp->chp->dbCallBack[ldhi_eDbCallBack_PostCreate])(
+      sp, ohp->db.objid, Father, Class);
+  }
+
+  return sts;
+}
+
+/*----------------------------------------------------------------------------*\
+  Function prototype defined in wb_pwrs.h
+\*----------------------------------------------------------------------------*/
+
+static pwr_tStatus
+triggPostMove (
+  ldhi_sSession	*sp,
+  ldhi_sObjHead		*ohp
+)
+{
+  pwr_tStatus		sts	= LDH__SUCCESS;
+  pwr_tObjid		Father  = pwr_cNObjid;
+  pwr_tClassId		Class   = pwr_cNClassId;
+
+  if (
+    ohp != NULL &&
+    ohp->chp->dbCallBack[ldhi_eDbCallBack_PostMove] != NULL
+  ) {
+    if (ohp->fahp != NULL && ohp->fahp->db.objid.oix != pwr_cNObjectIx) {
+      Father = ohp->fahp->db.objid;
+      Class  = ohp->fahp->db.classid;
+    }
+    sts = (ohp->chp->dbCallBack[ldhi_eDbCallBack_PostMove])(
+      sp, ohp->db.objid, Father, Class);
+  }
+
+  return sts;
+}
+
+/*----------------------------------------------------------------------------*\
+  Function prototype defined in wb_pwrs.h
+\*----------------------------------------------------------------------------*/
+
+static pwr_tStatus
+triggPostUnadopt (
+  ldhi_sSession	*sp,
+  ldhi_sObjHead		*fahp,
+  ldhi_sObjHead		*ohp
+)
+{
+  pwr_tStatus		sts = LDH__SUCCESS;
+  pwr_tObjid		Father  = pwr_cNObjid;
+
+  if (
+    fahp != NULL &&
+    fahp->chp->dbCallBack[ldhi_eDbCallBack_PostUnadopt] != NULL
+  ) {
+    if (fahp->db.objid.oix != pwr_cNObjectIx)
+      Father = fahp->db.objid;
+    sts = (fahp->chp->dbCallBack[ldhi_eDbCallBack_PostUnadopt])(
+      sp, Father, ohp->db.objid, ohp->db.classid);
+  }
+
+  return sts;
+}
+
+/*----------------------------------------------------------------------------*\
+  Function prototype defined in wb_pwrs.h
+\*----------------------------------------------------------------------------*/
+
+static pwr_tStatus
+triggSyntaxCheck (
+  ldhi_sSession	*sp,
+  ldhi_sObjHead		*ohp,
+  int			*errorcount,
+  int			*warningcount
+)
+{
+  pwr_tStatus		sts	= LDH__SUCCESS;
+
+  if (
+    ohp != NULL &&
+    ohp->chp->dbCallBack[ldhi_eDbCallBack_SyntaxCheck] != NULL
+  ) {
+    sts = (ohp->chp->dbCallBack[ldhi_eDbCallBack_SyntaxCheck])(
+      sp, ohp->db.objid, errorcount, warningcount);
+  }
+
+  return sts;
+}
+
+
+/*============================================================================*\
+  Exported functions.
+\*============================================================================*/
+
+pwr_tStatus
+ldh_AttachVolume (
+  ldhi_sWorkbench	*wb,
+  pwr_tVolumeId		vid,
+  ldhi_sVolContext	**VolContext
+)
+{
+  ldhi_sVidEntry	*vtp;
+  ldhi_sVolContext	*volctx;
+
+  vtp = (ldhi_sVidEntry *) ldh_TreeFind(wb->vidtab, &vid);
+  if (vtp == NULL) return LDH__NOSUCHVOL;
+
+  if (vtp->vhp->volctx != NULL)
+    return LDH__VOLALRATT;
+
+  volctx = (ldhi_sVolContext *) XtCalloc(1, sizeof(ldhi_sVolContext));
+  if (volctx == NULL)
+    return LDH__INSVIRMEM;
+
+
+  vtp->vhp->volctx = volctx;
+  volctx->vhp = vtp->vhp;
+  volctx->wb = wb;
+
+  *VolContext = volctx;
+  return LDH__SUCCESS;
+}
+
+
+pwr_tStatus
+ldh_SAttachVolume (
+  ldhi_sWorkbench	*wb,
+  pwr_tVolumeId		vid,
+  ldhi_sVolContext	**VolContext
+)
+{
+  ldhi_sVidEntry	*vtp;
+
+  vtp = (ldhi_sVidEntry *) ldh_TreeFind(wb->vidtab, &vid);
+  if (vtp == NULL) return LDH__NOSUCHVOL;
+
+  *VolContext = vtp->vhp->volctx;
+  return LDH__SUCCESS;
+}
+
+pwr_tStatus
+ldh_DeleteVolume (
+  ldhi_sWorkbench	*wb,
+  pwr_tVolumeId		vid
+)
+{
+  pwr_tStatus		sts;
+  ldhi_sVidEntry	*vtp;
+  ldhi_sVolContext	*volctx;
+  ldhi_sSession	*sp;
+
+  /* Make sure the volume is emtpy, only the volume object
+     must be there.
+     Remove the volume from the vid table, remove it from 
+     the wb database, and free space.  */
+
+  vtp = (ldhi_sVidEntry *) ldh_TreeFind(wb->vidtab, &vid);
+  if (vtp == NULL) return LDH__NOSUCHVOL;
+
+  if (vtp->vhp->volctx != NULL)
+    return LDH__VOLALRATT;
+
+  if (vtp->vhp->ohp->chhp != NULL)
+    return LDH__VOLNOTEMPTY;
+
+  sts = ldh_AttachVolume(wb, vid, &volctx);
+  if (EVEN(sts)) return sts;
+
+  sts = ldh_OpenSession(&sp, volctx, ldh_eAccess_ReadWrite, ldh_eUtility_CreateVolume);
+  if (EVEN(sts)) return sts;
+
+  sts = ldh_DeleteObject(sp, vtp->vhp->ohp->db.objid);
+  if (EVEN(sts)) return sts;
+
+  sts = ldh_SaveSession(sp);
+  if (EVEN(sts)) return sts;
+
+  sts = ldhdb_RemoveVolume((unsigned int)vid);
+  if (EVEN(sts)) return sts;
+  
+  sts = ldh_CloseSession(sp);
+  if (EVEN(sts)) return sts;
+
+  sts = ldh_DetachVolume(wb, volctx);  
+  if (EVEN(sts)) return sts;
+
+  ldh_TreeDelete(vtp->vhp->oixtab);
+
+  ldhi_FreeVolHead(vtp->vhp);
+
+  ldh_TreeRemove(wb->vidtab, &vid);
+
+  return LDH__SUCCESS;
+}
+
+pwr_tStatus
+ldh_DetachVolume (
+  ldhi_sWorkbench	*wb,
+  ldhi_sVolContext	*volctx
+)
+{
+  ldhi_sSession	*scp;
+  ldhi_sSession	**lscp;
+  ldh_eUtility		utility;
+
+  for (utility = ldh_eUtility__ + 1; utility != ldh_eUtility_; utility++) {
+    for (
+      lscp = &volctx->utility[utility],
+      scp = *lscp; scp != NULL; lscp = &scp->seslst,
+      scp = scp->seslst
+    ) {
+	return LDH__ATTNOTEMPTY;
+    }
+  }
+
+  volctx->vhp->volctx = NULL;
+  XtFree((char *) volctx);
+  return LDH__SUCCESS;
+}
+
+pwr_tStatus
+ldh_GetVolumeList (
+  ldhi_sWorkbench	*wb,
+  pwr_tVolumeId		*vid
+)
+{
+  ldhi_sVidEntry	*vtp;
+
+  assert(wb != NULL);
+  assert(vid != NULL);
+
+  vtp = (ldhi_sVidEntry *) ldh_TreeMinimum(wb->vidtab);
+  if (vtp == NULL) return LDH__NOSUCHVOL;
+
+  *vid = vtp->vhp->ohp->db.objid.vid;
+
+  return LDH__SUCCESS;
+}
+
+pwr_tStatus
+ldh_GetNextVolume (
+  ldhi_sWorkbench	*wb,
+  pwr_tVolumeId		vid,
+  pwr_tVolumeId		*new_vid
+)
+{
+  ldhi_sVidEntry	*vtp;
+
+  assert(wb != NULL);
+  assert(new_vid != NULL);
+
+  vtp = (ldhi_sVidEntry *) ldh_TreeFind(wb->vidtab, &vid);
+  if (vtp == NULL) return LDH__NOSUCHVOL;
+
+  vtp = (ldhi_sVidEntry *) ldh_TreeSuccessor(wb->vidtab, (ldh_sTreeNode*) vtp);
+  if (vtp == NULL) return LDH__NOSUCHVOL;
+
+  *new_vid = vtp->vhp->ohp->db.objid.vid;
+
+  return LDH__SUCCESS;
+}
+
+pwr_tStatus
+ldh_GetPreviousVolume (
+  ldhi_sWorkbench	*wb,
+  pwr_tVolumeId		vid,
+  pwr_tVolumeId		*new_vid
+)
+{
+  ldhi_sVidEntry	*vtp;
+
+  assert(wb != NULL);
+  assert(new_vid != NULL);
+
+  vtp = (ldhi_sVidEntry *) ldh_TreeFind(wb->vidtab, &vid);
+  if (vtp == NULL) return LDH__NOSUCHVOL;
+
+  vtp = (ldhi_sVidEntry *) ldh_TreePredecessor(wb->vidtab, (ldh_sTreeNode*) vtp);
+  if (vtp == NULL) return LDH__NOSUCHVOL;
+
+  *new_vid = vtp->vhp->ohp->db.objid.vid;
+
+  return LDH__SUCCESS;
+}
+
+/*  Convert a volume identity to a corresponding name.
+    
+    If the name of the volume is not available, the name
+    is given in an alphanumerical form:
+
+	_V0.123.34.63
+
+    */
+ 
+pwr_tStatus
+ldh_VolumeIdToName (
+  ldhi_sWorkbench	*wb,
+  pwr_tVolumeId		vid,
+  char			*name,
+  int			maxsize,
+  int			*size
+)
+{
+  static pwr_tObjName	s;
+  ldhi_sVidEntry	*vtp;
+  int			len;
+  
+  vtp = (ldhi_sVidEntry *) ldh_TreeFind(wb->vidtab, &vid);
+  if (vtp == NULL) {
+    s[0] = '\0';
+    cdh_VolumeIdToString(s, vid, 1, 0);
+  } else {
+    strcpy(s, vtp->vhp->ohp->db.name.data);
+  }
+
+  len = strlen(s);
+  if (len < maxsize) {
+    strcpy(name, s);
+  } else {
+    return LDH__NAMEBUF;
+  }
+
+  if (size != NULL)
+    *size = len;
+
+  return LDH__SUCCESS;
+}
+
+/*  Convert a volume name to its corresponding
+    volume identity.  */
+
+pwr_tStatus
+ldh_VolumeNameToId (
+  ldhi_sWorkbench	*wb,
+  char			*name,
+  pwr_tVolumeId		*volid
+)
+{
+  pwr_tStatus		sts;
+  ldhi_sObjName		nn;
+  ldhi_sVidEntry	*vtp;
+
+  assert(wb != NULL);
+  assert(volid != NULL);
+
+  sts = ldhi_SetNormObjName(&nn, name);
+  if (EVEN(sts)) return sts;
+
+  for (
+    vtp = (ldhi_sVidEntry *) ldh_TreeMinimum(wb->vidtab);
+    vtp != NULL;
+    vtp = (ldhi_sVidEntry *) ldh_TreeSuccessor(wb->vidtab,
+      (ldh_sTreeNode *) vtp)
+  ) {
+    if (vtp->vhp->ohp->db.normname.packname.key == nn.packname.key) {
+      if (strcmp(vtp->vhp->ohp->db.normname.data, nn.data) == 0) {
+	*volid = vtp->vhp->vid;
+	return LDH__SUCCESS;
+      }
+    }
+  }
+
+  /*  Try id name.  */
+  sts = cdh_StringToVolumeId(name, volid);
+  return sts;
+}
+
+pwr_tStatus
+ldh_GetVolumeClass (
+  ldhi_sWorkbench	*wb,
+  pwr_tVolumeId		vid,
+  pwr_tClassId		*classid
+)
+{
+  ldhi_sVidEntry	*vtp;
+
+  assert(wb != NULL);
+  assert(classid != NULL);
+
+  vtp = (ldhi_sVidEntry *) ldh_TreeFind(wb->vidtab, &vid);
+  if (vtp == NULL) return LDH__NOSUCHVOL;
+
+  *classid = vtp->vhp->ohp->db.classid;
+
+  return LDH__SUCCESS;
+}
+
+/*  Returns the name of an object attribute identified by an
+    attribute reference. A pointer to the name and the size
+    of it is returned.  */
+
+pwr_tStatus
+ldh_AttrRefToName (
+  ldhi_sSession	*sp,
+  pwr_sAttrRef		*arp,
+  ldh_eName		nametype,
+  char			**aname,
+  int			*size
+)
+{
+  pwr_tStatus		sts;
+  ldhi_sObjHead		*ohp;
+  ldhi_sObjHead		*bhp;
+  static char		buff[512];
+  int			ofallback;  /* Fallback on object.  */
+  int			tfallback;  /* Fallback on type.  */
+  char			*as;
+  char			*ps;
+  
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
+
+  assert(aname != NULL);
+  assert(arp != NULL);
+
+  sts = ldhi_ObjidToOh(sp->wb, arp->Objid, &ohp);
+  ofallback = EVEN((sts));
+  sts = ldhi_ObjidToOh(sp->wb, cdh_TypeIdToObjid(arp->Body), &bhp);
+  tfallback = EVEN((sts));
+
+  buff[0] = '\0';
+
+  sts = LDH__SUCCESS;
+
+  switch (nametype) {
+  case ldh_eName_Aref:
+  case ldh_eName_ArefVol:
+    if (!ofallback && !tfallback) {
+      ps = ldhi_PathName(ohp, (nametype == ldh_eName_ArefVol) || !inThisVolume(sp, ohp));
+      as = ldhi_ArefToAname(sp, ohp, arp);
+      strcpy(buff, ps);
+      if (strlen(as) > 0) {
+	strcat(buff, ".");
+	strcat(buff, as);
+      }
+    } else if (!tfallback) {
+      sprintf(buff, "_A%s(%s)%s", cdh_ObjidToString(NULL, arp->Objid, 0),
+	ldhi_PathName(bhp, 1), ldhi_ArefToAname(sp, ohp, arp));
+    } else {
+      sprintf(buff, "_A%s(%s)%s", cdh_ObjidToString(NULL, arp->Objid, 0),
+	cdh_TypeIdToString(NULL, arp->Body, 1), ldhi_ArefToAname(sp, ohp, arp));
+    }
+    break;
+  case ldh_eName_ArefExport:
+    if (tfallback) {
+      sts = LDH__NOSUCHCLASS;
+      break;
+    }
+    sprintf(buff, "_A%s(%s)%s", cdh_ObjidToString(NULL, arp->Objid, 0),
+      ldhi_PathName(bhp, 1), ldhi_ArefToAname(sp, ohp, arp));
+    break;
+  case ldh_eName_ArefId:
+    sprintf(buff, "_A%s(%s)[%u.%u]", cdh_ObjidToString(NULL, arp->Objid, 0),
+      cdh_TypeIdToString(NULL, arp->Body, 1), arp->Offset, arp->Size);
+    break;
+  case ldh_eName_Default:
+    if (!ofallback && !tfallback) {
+      ps = ldhi_PathName(ohp, !inThisVolume(sp, ohp));
+      as = ldhi_ArefToAname(sp, ohp, arp);
+      strcpy(buff, ps);
+      if (strlen(as) > 0) {
+	strcat(buff, ".");
+	strcat(buff, as);
+      }
+    } else if (!tfallback) {
+      sprintf(buff, "_A%s(%s)%s", cdh_ObjidToString(NULL, arp->Objid, 0),
+	ldhi_PathName(bhp, 1), ldhi_ArefToAname(sp, ohp, arp));
+    } else {
+      sprintf(buff, "_A%s(%s)%s", cdh_ObjidToString(NULL, arp->Objid, 0),
+	cdh_TypeIdToString(NULL, arp->Body, 1), ldhi_ArefToAname(sp, ohp, arp));
+    }
+    break;
+  default:
+    return LDH__NYI;
+  }
+  
+  if (size != NULL) *size = strlen(buff);
+  *aname = buff;
+
+  return sts;
+}
+
+pwr_tStatus
+ldh_CallMenuMethod (
+  ldh_sMenuCall		*mcp,
+  int			Index
+)
+{
+  pwr_tStatus		sts = LDH__SUCCESS;
+  pwr_tStatus		(*method)() = mcp->ItemList[Index].Method;
+  ldh_sEvent		*ep;
+  ldhi_sSession	*sp = mcp->PointedSession; 
+
+  ep = eventStart(sp, pwr_cNObjid, ldh_eEvent_MenuMethodCalled);
+
+  if (method != NULL)
+    sts = (*method)(mcp);
+
+  eventSend(sp, ep);
+
+  return sts;
+}
+
+pwr_tStatus
+ldh_ChangeObjectName (
+  ldhi_sSession	*sp,
+  pwr_tObjid		objid,
+  char			*newname
+)
+{
+  pwr_tStatus		sts;
+  ldhi_sObjHead		*ohp;
+  ldhi_sObjHead		*shp;	/* sibling header pointer. */
+  ldhi_sObjName		nn;
+  ldh_sEvent		*ep;
+  ldhi_sVidEntry	*vtp;
+
+  if (!hasAccess(sp, ldh_eAccess_ReadWrite, &sts)) return sts;
+  if (newname == NULL) return LDH__BADPARAM;
+  if (*newname == '\0') return LDH__BADNAME;
+
+  sts = ldhi_ObjidToOh(sp->wb, objid, &ohp);
+  if (EVEN(sts)) return sts;
+
+  if (!inThisVolume(sp, ohp)) return LDH__OTHERVOLUME;
+
+  newname = ldhi_TrimName(newname);
+
+  sts = ldhi_SetNormObjName(&nn, newname);
+  if (EVEN(sts)) return sts;
+
+  if (ohp == ohp->vhp->ohp) {
+    /* This is the volume object.  */
+    for (
+      vtp = (ldhi_sVidEntry *) ldh_TreeMinimum(sp->wb->vidtab);
+      vtp != NULL;
+      vtp = (ldhi_sVidEntry *) ldh_TreeSuccessor(sp->wb->vidtab,
+	(ldh_sTreeNode *) vtp)
+    ) {
+      if (vtp->vhp->ohp->db.normname.packname.key == nn.packname.key) {
+	if (strcmp(vtp->vhp->ohp->db.normname.data, nn.data) == 0) {
+	  if (vtp->vhp->ohp == ohp) {
+	    if (strcmp(ohp->db.name.data, newname) == 0)
+	      return LDH__SUCCESS;
+	  } else 
+	    return LDH__NAMALREXI;
+	}
+      }
+    }
+  } else {
+    sts = ldhi_FindSiblingByName(sp, ohp->fahp->chhp, &nn, &shp);
+    if (ODD(sts)) {
+      if (ohp == shp) {
+	if (strcmp(ohp->db.name.data, newname) == 0)
+	  return LDH__SUCCESS;
+      } else
+	return LDH__NAMALREXI;
+    }
+  }
+
+  ldhi_SetObjName(&ohp->db.name, newname); 
+  ohp->db.normname = nn;
+
+  sts = ldhi_MarkObject(sp, ldhi_mChange_IsRenamed, ohp);
+
+  ep = eventStart(sp, objid, ldh_eEvent_ObjectRenamed);
+  eventSend(sp, ep);
+
+  return sts;
+}
+
+pwr_tStatus
+ldh_CheckAttrXRef (
+  ldhi_sSession  *sp,
+  pwr_sAttrRef	    *PattrRef
+)
+{
+  pwr_tStatus	    sts;
+  pwr_sAttrRef	    SattrRef;
+  pwr_sAttrRef	    SattrXRef;
+  pwr_sAttrRef	    NullAttr;
+  pwr_sAttrXRef	    PattrDef;
+  pwr_sAttrXRef	    SattrDef;
+
+  memset(&NullAttr, 0, sizeof(NullAttr));
+  
+  sts = ldh_ReadAttribute(sp, PattrRef, &SattrRef, sizeof(pwr_sAttrRef));
+  if (EVEN(sts)) return sts;
+
+  if (cdh_ObjidIsNull(SattrRef.Objid)) {
+    if (memcmp(&SattrRef, &NullAttr, sizeof(pwr_sAttrRef)) == 0)
+      return LDH__UNCONN;
+    else
+      return LDH__ERRCONN;
+  }
+
+  sts = ldh_GetAttrXRefDef(sp, PattrRef, &PattrDef);
+  if (EVEN(sts)) return sts;
+
+  sts = ldh_GetAttrXRefDef(sp, &SattrRef, &SattrDef);
+  if (EVEN(sts)) return sts;
+
+  if (strncmp(PattrDef.Identity, SattrDef.Identity, sizeof(SattrDef.Identity)) != 0)
+    return LDH__ERRCONN;
+
+  if (strncmp(PattrDef.Source, SattrDef.Target, sizeof(PattrDef.Source)) != 0)
+    return LDH__ERRCONN;
+
+  if (strncmp(PattrDef.Target, SattrDef.Source, sizeof(SattrDef.Source)) != 0)
+    return LDH__ERRCONN;
+
+  sts = ldh_ReadAttribute(sp, &SattrRef, &SattrXRef, sizeof(pwr_sAttrRef));
+  if (EVEN(sts)) return sts;
+
+  if (memcmp(PattrRef, &SattrXRef, sizeof(pwr_sAttrRef)) != 0)
+    return LDH__ERRCONN;
+
+  return LDH__CONNECTED;
+}
+
+pwr_tStatus
+ldh_CheckAttrXRefs (
+  ldhi_sSession  *sp,
+  pwr_sAttrRef	    *PattrRef,
+  pwr_sAttrRef	    *SattrRef
+)
+{
+  return LDH__NYI;
+}
+
+pwr_tStatus
+ldh_CheckObjXRef (
+  ldhi_sSession  *sp,
+  pwr_tObjid	    Pobject,
+  pwr_tObjName	    PattrName
+)
+{
+  pwr_tStatus	    sts = LDH__SUCCESS;
+  pwr_sAttrRef	    PattrRef;
+  pwr_tObjid	    Pobjid;
+  pwr_sAttrRef	    SattrRef;
+  pwr_tObjid	    Sobjid;
+  pwr_sObjXRef	    PobjXDef;
+  pwr_sObjXRef	    SobjXDef;
+
+  sts = ldh_GetAttrRef(sp, Pobject, PattrName, &PattrRef);
+  if (EVEN(sts)) return sts;
+
+  sts = ldh_ReadAttribute(sp, &PattrRef, &Pobjid, sizeof(pwr_tObjid));
+  if (EVEN(sts)) return sts;
+
+  if (cdh_ObjidIsNull(Pobjid))
+    return LDH__UNCONN;
+
+  sts = ldh_GetObjXRefDef(sp, &PattrRef, &PobjXDef);
+  if (EVEN(sts)) return sts;
+
+  sts = ldh_GetAttrRef(sp, Pobjid, PobjXDef.TargetAttribute, &SattrRef);
+  if (EVEN(sts)) return sts;
+
+  sts = ldh_GetObjXRefDef(sp, &SattrRef, &SobjXDef);
+  if (EVEN(sts)) return sts;
+
+  if (strncmp(PobjXDef.Identity, SobjXDef.Identity, sizeof(SobjXDef.Identity)) != 0)
+    return LDH__ERRCONN;
+
+  if (strncmp(PobjXDef.Source, SobjXDef.Target, sizeof(PobjXDef.Source)) != 0)
+    return LDH__ERRCONN;
+
+  if (strncmp(PobjXDef.Target, SobjXDef.Source, sizeof(SobjXDef.Source)) != 0)
+    return LDH__ERRCONN;
+
+  sts = ldh_ReadAttribute(sp, &SattrRef, &Sobjid, sizeof(pwr_tObjid));
+  if (EVEN(sts)) return sts;
+
+  if (cdh_ObjidIsEqual(Sobjid, Pobject)) {
+    return LDH__CONNECTED;
+  } else {
+    return LDH__ERRCONN;
+  }
+}
+
+pwr_tStatus
+ldh_CheckObjXRefs (
+  ldhi_sSession  *sp,
+  pwr_tObjid	    Pobject,
+  pwr_tObjName	    PattrName,
+  pwr_tObjid	    Sobject,
+  pwr_tObjName	    SattrName
+)
+{
+  return LDH__NYI;
+}
+
+pwr_tStatus
+ldh_ClassNameToId (
+  ldhi_sSession	*sp,
+  pwr_tClassId		*cid,
+  char			*name
+)
+{
+  pwr_tStatus sts;
+  pwr_tObjid objid;
+
+  /* Check parameters. */
+
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
+  if (name == NULL || name[0] == '\0') return LDH__BADPARAM;
+  assert(cid != NULL);
+
+  sts = ldh_ClassNameToObjid(sp, &objid, name);
+  if (EVEN(sts)) return sts;
+
+  *cid = cdh_ClassObjidToId(objid);
+
+  return LDH__SUCCESS;
+}
+
+pwr_tStatus
+ldh_ClassNameToObjid (
+  ldhi_sSession	*sp,
+  pwr_tObjid		*objid,
+  char			*name
+)
+{
+  pwr_tStatus		sts;
+  ldhi_sObjHead		*hihp;	/* Hierarchy object head pointer. */
+  ldhi_sObjHead		*chp;		/* Class head pointer. */
+  ldhi_sObjName		nn;
+  ldhi_sVidEntry	*vtp;
+
+  /* Check parameters. */
+
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
+  if (name == NULL || name[0] == '\0') return LDH__BADPARAM;
+  if (objid == NULL) return LDH__BADPARAM;
+
+  /* Check existence of classname. */
+  
+  for (
+    vtp = (ldhi_sVidEntry *) ldh_TreeMinimum(sp->wb->vidtab);
+    vtp != NULL;
+    vtp = (ldhi_sVidEntry *) ldh_TreeSuccessor(sp->wb->vidtab,
+      (ldh_sTreeNode *) vtp)
+  ) {
+    if (vtp->vhp->ohp->db.classid == pwr_eClass_ClassVolume) {
+      for (hihp = vtp->vhp->ohp->chhp; hihp != NULL; hihp = hihp->silst.fwhp) {
+	if (hihp->db.classid == pwr_eClass_ClassHier) {
+	  sts = ldhi_SetNormObjName(&nn, name);
+	  if (EVEN(sts)) return LDH__NOSUCHCLASS;
+	  sts = ldhi_FindSiblingByName(sp, hihp->chhp, &nn, &chp);
+	  if (sts == LDH__SUCCESS) {
+	    *objid = chp->db.objid;
+	    return LDH__SUCCESS;
+	  }
+	}
+      }
+    }
+  }
+
+  return LDH__NOSUCHCLASS;
+}
+
+pwr_tStatus
+ldh_CloseSession (
+  ldhi_sSession *sp
+)
+{
+  pwr_tStatus sts;
+  ldhi_sSession *scp, **lscp;
+  
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts))
+    return sts;
+  if (!ldh_TreeIsEmpty(sp->oixtab))
+    return LDH__SESSNOTEMPTY;
+
+  ldh_TreeDelete(sp->oixtab);
+  ldh_TreeDelete(sp->octxtab);
+  for (
+    lscp = &sp->volctx->utility[sp->utility],
+    scp = *lscp; scp != NULL; lscp = &scp->seslst,
+    scp = scp->seslst
+  ) {
+    if (sp == scp) {
+      *lscp = scp->seslst;
+      break;
+    }
+  }
+  XtFree((char *) scp);
+  return LDH__SUCCESS;
+}
+
+pwr_tStatus
+ldh_CloseWB (
+  ldhi_sWorkbench *wbctx
+)
+{
+  return LDH__SUCCESS;
+}
+
+pwr_tStatus
+ldh_CopyObject (
+  ldhi_sSession    *sp,
+  pwr_tObjid	      *objid,
+  char		      *name,
+  pwr_tObjid	      srcoid,
+  pwr_tObjid	      dstoid,
+  ldh_eDest	      dest
+)
+{
+  pwr_tStatus	      sts;
+  ldhi_sObjHead	      *ohp;		/* Object head pointer. */
+  ldhi_sObjHead	      *dhp;		/* Destination head pointer. */
+  ldhi_sObjHead	      *shp;		/* Source head pointer. */
+  ldhi_sObjHead	      *chp;		/* Class head pointer. */
+  ldhi_sObjHead	      *clbhp;		/* Class body head pointer. */
+  ldhi_sObjHead	      *fshp;		/* First sibling head pointer. */
+  ldhi_sObjHead	      *fahp;
+  ldhi_sOixEntry      *otp;
+  ldhi_sObjBody	      *cbp;
+  char		      *namep;
+  ldhi_sObjName	      nn;
+  char		      newname[50];
+  pwr_tObjid	      oid;
+  pwr_tObjectIx	      oix = pwr_cNObjectIx;
+  pwr_sClassDef	      *ClassDef;
+  ldh_sEvent	      *ep;
+
+  if (!hasAccess(sp, ldh_eAccess_ReadWrite, &sts)) return sts;
+
+  /* Check existence of destination object. */
+
+  if (!cdh_ObjidIsNull(dstoid)) {
+    sts = ldhi_ObjidToOh(sp->wb, dstoid, &dhp);
+    if (EVEN(sts)) return sts;
+  }  else
+    dhp = sp->vhp->ohp;
+  
+  if (!inThisVolume(sp, dhp)) return LDH__OTHERVOLUME;
+
+  /* Check destination code. */
+
+  switch (dest) {
+  case ldh_eDest_IntoFirst:
+  case ldh_eDest_IntoLast:
+    fahp = dhp;
+    fshp = dhp->chhp;
+    break;
+  case ldh_eDest_After:
+  case ldh_eDest_Before:
+    if (dhp == sp->vhp->ohp) return LDH__BADDEST;
+    fahp = dhp->fahp;
+    fshp = dhp->fahp->chhp;
+    break;
+  default:
+    return LDH__NODEST;
+  }
+
+  /* Check existence of objectname. */
+  
+  if (name != NULL  && name[0] != '\0') {
+    sts = ldhi_SetNormObjName(&nn, name);
+    if (EVEN(sts)) return sts;
+
+    sts = ldhi_FindSiblingByName(sp, fshp, &nn, NULL);
+    if (ODD(sts)) return LDH__NAMALREXI;
+
+    namep = name;
+  }
+
+  /* Check existence of source. */
+
+  sts = ldhi_ObjidToOh(sp->wb, srcoid, &shp);
+  if (EVEN(sts)) return LDH__NOSUCHOBJ;
+
+  /* Check existence of class. */
+
+  sts = ldhi_ObjidToOh(sp->wb, cdh_ClassIdToObjid(shp->db.classid), &chp);
+  if (EVEN(sts)) return LDH__NOCLASS;
+  if (chp->db.classid != pwr_eClass_ClassDef) return LDH__NOCLASS;
+  sts = ldhi_GetObjectBody(sp, chp, ldhi_eBid_SysBody, &cbp);	
+  if (EVEN(sts)) return LDH__NOCLASS;
+  ClassDef = (pwr_sClassDef*) cbp->body;
+
+  if (fahp == sp->vhp->ohp) {
+    if (!ClassDef->Flags.f.TopObject)
+      return LDH__NOTOP;
+  } else {
+    if (fahp->db.flags.f.NoAdopt)
+      return LDH__NOADOPT;
+  }
+
+  sts = triggAnteAdopt(sp, fahp, chp);
+  if (EVEN(sts)) return sts;
+  sts = ldhi_AssignOix(sp, &oix, shp->db.classid, chp, fahp, name);
+  if (EVEN(sts)) return sts;
+  
+  if (name == NULL || name[0] == '\0') {
+    sprintf(newname, "C%u_%s", oix, shp->db.name.data);
+    newname[sizeof(pwr_tObjName) - 1] = '\0';
+    ldhi_SetNormObjName(&nn, newname);
+    namep = newname;
+  }
+
+  ohp = ldhi_AllocObjHead();
+  if (ohp == NULL) return LDH__INSVIRMEM;
+
+  otp = (ldhi_sOixEntry *) ldh_TreeInsert(sp->vhp->oixtab, &oix);
+  if (otp == (void *) 1)
+    return LDH__DBINCON;  /* Duplicate oix. */
+  if (otp == NULL)
+    return LDH__INSVIRMEM;
+
+  otp->ohp = ohp;
+
+  oid.vid = sp->vhp->vid;
+  oid.oix = oix;
+
+  ohp->db.objid = oid;
+  ohp->vhp = sp->vhp;
+  ohp->db.dh_gen = 0;    
+  ohp->db.rh_gen = 0;    
+  ldhi_SetObjName(&ohp->db.name, namep);
+  ohp->db.normname = nn;
+  ohp->db.classid = shp->db.classid;
+  ohp->chp = chp;
+  ohp->db.flags.m = ClassDef->Flags.m;
+
+  sts = ldhi_AdoptObject(sp, ohp, dhp, dest);
+  if (EVEN(sts)) return sts;
+
+  /* Copy source object bodies. */
+  /* Left to do: Check for XRefs in source body */
+
+  for (clbhp = chp->chhp; clbhp != NULL; clbhp = clbhp->silst.fwhp)
+    if (clbhp->db.classid == pwr_eClass_ObjBodyDef &&
+      strcmp("Template", clbhp->db.name.data) != 0
+    )
+      ldhi_CopyObjectBody(sp, ohp, shp, clbhp);
+
+  sts = ldhi_MarkObject(sp, ldhi_mChange_Created, ohp);
+
+  if (objid != NULL)
+    *objid = oid;
+
+  ep = eventStart(sp, oid, ldh_eEvent_ObjectCopied);
+  eventNewFamily(sp, ep, ohp);
+
+  sts = triggPostAdopt(sp, ohp->fahp, ohp);
+
+  eventSend(sp, ep);
+  return sts;
+}
+
+pwr_tStatus
+ldh_CreateObject (
+  ldhi_sSession  *sp,
+  pwr_tObjid	    *objid,
+  char		    *name,
+  pwr_tClassId	    classid,
+  pwr_tObjid	    dstoid,
+  ldh_eDest	    dest
+)
+{
+  pwr_tStatus	    sts;
+  ldhi_sObjHead	    *ohp;		/* Object head pointer. */
+  ldhi_sObjHead	    *dhp;		/* Destination head pointer. */
+  ldhi_sObjHead	    *chp;		/* Class head pointer. */
+  ldhi_sObjHead	    *clbhp;		/* Class body head pointer. */
+  ldhi_sObjHead	    *fshp;		/* First sibling head pointer. */
+  ldhi_sObjHead	    *fahp;		/* father head pointer */
+  ldhi_sOixEntry    *otp;
+  char		    *namep;
+  ldhi_sObjName	    nn;
+  pwr_tObjName	    objname;
+  pwr_tObjid	    oid;
+  pwr_tObjectIx	    oix = pwr_cNObjectIx;
+  pwr_sClassDef	    *ClassDef;
+  ldhi_sObjBody	    *cbp;
+  ldh_sEvent	    *ep;
+
+  if (!hasAccess(sp, ldh_eAccess_ReadWrite, &sts)) return sts;
+
+  /* Check existence of destination object. */
+
+  if (!cdh_ObjidIsNull(dstoid)) {
+    sts = ldhi_ObjidToOh(sp->wb, dstoid, &dhp);
+    if (EVEN(sts)) return sts;
+  }  else
+    dhp = sp->vhp->ohp;
+  
+  if (!inThisVolume(sp, dhp)) return LDH__OTHERVOLUME;
+
+  /* Check existence of class. */
+
+  sts = ldhi_ObjidToOh(sp->wb, cdh_ClassIdToObjid(classid), &chp);
+  if (EVEN(sts)) return LDH__NOCLASS;
+  if (chp->db.classid != pwr_eClass_ClassDef) return LDH__NOCLASS;
+  sts = ldhi_GetObjectBody(sp, chp, ldhi_eBid_SysBody, &cbp);
+  if (EVEN(sts)) return LDH__NOCLASS;
+  ClassDef = (pwr_sClassDef*) cbp->body;
+
+  /* Check destination code. */
+
+  switch (dest) {
+  case ldh_eDest_IntoFirst:
+  case ldh_eDest_IntoLast:
+    fahp = dhp;
+    fshp = dhp->chhp;
+    break;
+  case ldh_eDest_After:
+  case ldh_eDest_Before:
+    if (dhp == sp->vhp->ohp) return LDH__BADDEST;
+    fahp = dhp->fahp;
+    fshp = dhp->fahp->chhp;
+    break;
+  default:
+    return LDH__NODEST;
+  }
+
+  if (fahp == sp->vhp->ohp) {
+    if (!ClassDef->Flags.f.TopObject)
+      return LDH__NOTOP;
+  } else {
+    if (fahp->db.flags.f.NoAdopt)
+      return LDH__NOADOPT;
+  }
+
+  sts = triggAnteCreate(sp, fahp, chp);
+  if (EVEN(sts)) return sts;
+  sts = triggAnteAdopt(sp, fahp, chp);
+  if (EVEN(sts)) return sts;
+
+  /* Check existence of objectname. */
+  
+  if (name != NULL  && name[0] != '\0') {
+    sts = ldhi_SetNormObjName(&nn, name);
+    if (EVEN(sts)) return sts;
+
+    sts = ldhi_FindSiblingByName(sp, fshp, &nn, NULL);
+    if (ODD(sts)) return LDH__NAMALREXI;
+
+    namep = name;
+  }
+
+  sts = ldhi_AssignOix(sp, &oix, classid, chp, fahp, name);
+  if (EVEN(sts)) return sts;
+  
+  if (name == NULL || name[0] == '\0') {
+    ldhi_GetUniqueObjectName(sp, oix, objname);
+    ldhi_SetNormObjName(&nn, objname);
+    namep = objname;
+  }
+
+  ohp = ldhi_AllocObjHead();
+  if (ohp == NULL) return LDH__INSVIRMEM;
+
+  otp = (ldhi_sOixEntry *) ldh_TreeInsert(sp->vhp->oixtab, &oix);
+  if (otp == (void *) 1)
+    return LDH__DBINCON;  /* Duplicate oix. */
+  if (otp == NULL)
+    return LDH__INSVIRMEM;
+
+  otp->ohp = ohp;
+
+  oid.vid = sp->vhp->vid;
+  oid.oix = oix;
+
+  ohp->db.objid = oid;
+  ohp->vhp = sp->vhp;
+  ohp->db.dh_gen = 0;    
+  ohp->db.rh_gen = 0;    
+  ldhi_SetObjName(&ohp->db.name, namep);
+  ohp->db.normname = nn;
+  ohp->db.classid = classid;
+  ohp->chp = chp;
+  ohp->db.flags.m = ClassDef->Flags.m;
+
+  sts = ldhi_AdoptObject(sp, ohp, dhp, dest);
+  if (EVEN(sts)) return sts;
+
+  /* Create default bodies, ie copy template object. */
+
+  for (clbhp = chp->chhp; clbhp != NULL; clbhp = clbhp->silst.fwhp)
+    if (clbhp->db.classid == pwr_eClass_ObjBodyDef
+      && strcmp("Template", clbhp->db.name.data) != 0
+    )
+      ldhi_CopyObjectBody(sp, ohp, chp->tmphp, clbhp);
+
+  if (objid != NULL)
+    *objid = oid;
+
+  sts = ldhi_MarkObject(sp, ldhi_mChange_Created, ohp);
+
+  ep = eventStart(sp, oid, ldh_eEvent_ObjectCreated);
+  eventNewFamily(sp, ep, ohp);
+
+  sts = triggPostCreate(sp, ohp);
+  sts = triggPostAdopt(sp, ohp->fahp, ohp);
+
+  eventSend(sp, ep);
+
+  return sts;
+}
+
+pwr_tStatus
+ldh_CreateVolume (
+  ldhi_sWorkbench	*wb,
+  ldhi_sSession	**Session,
+  pwr_tVolumeId		vid,
+  char			*name,
+  pwr_tClassId		classid
+)
+{
+  pwr_tStatus		sts;
+  ldhi_sObjName		nn;
+  ldhi_sVidEntry	*vtp;
+  ldhi_sOixEntry	*otp;
+  ldhi_sObjHead		*ohp;
+  ldhi_sObjHead		*chp;
+  ldhi_sObjBody		*obp;
+  ldhi_sVolHead		*vhp;
+  ldhi_sSession	*sp;
+  ldhi_sVolContext	*volctx;
+  unsigned int		bsize;
+
+  assert(wb != NULL);
+  assert(Session != NULL);
+
+  /* Check that volume id and name does not exist.  */
+
+  vtp = (ldhi_sVidEntry *) ldh_TreeFind(wb->vidtab, &vid);
+  if (vtp != NULL) return LDH__VOLIDALREXI;
+
+  sts = ldhi_SetNormObjName(&nn, name);
+  if (EVEN(sts)) return sts;
+
+  for (
+    vtp = (ldhi_sVidEntry *) ldh_TreeMinimum(wb->vidtab);
+    vtp != NULL;
+    vtp = (ldhi_sVidEntry *) ldh_TreeSuccessor(wb->vidtab,
+      (ldh_sTreeNode *) vtp)
+  ) {
+    if (vtp->vhp->ohp->db.normname.packname.key == nn.packname.key) {
+      if (strcmp(vtp->vhp->ohp->db.normname.data, nn.data) == 0) {
+	return LDH__VOLNAMALREXI;
+      }
+    }
+  }
+
+  /* Check volume class.  */
+  switch (classid) {
+  case pwr_eClass_RootVolume:
+    bsize = sizeof(pwr_sRootVolume);
+    break;
+  case pwr_eClass_ClassVolume:
+    bsize = sizeof(pwr_sClassVolume);
+    break;
+  case pwr_eClass_WorkBenchVolume:
+    bsize = sizeof(pwr_sWorkBenchVolume);
+    break;
+  case pwr_eClass_DirectoryVolume:
+    bsize = sizeof(pwr_sDirectoryVolume);
+    break;
+  case pwr_eClass_SubVolume:
+  case pwr_eClass_SharedVolume:
+  case pwr_eClass_DynamicVolume:
+  case pwr_eClass_SystemVolume:
+    return LDH__NYI;
+  default:
+    return LDH__NOSUCHCLASS;
+  }
+
+  /* Create volume header.  */
+
+  vhp = ldhi_AllocVolHead();
+  if (vhp == NULL)
+    return LDH__INSVIRMEM;
+
+  vtp = (ldhi_sVidEntry *) ldh_TreeInsert(wb->vidtab, &vid);
+  vtp->vhp = vhp;
+
+  vhp->vid = vid;
+  vhp->oixtab = ldh_TreeCreate(sizeof(pwr_tObjectIx),
+    offsetof(ldhi_sOixEntry, oix), sizeof(ldhi_sOixEntry), 1000,
+    ldh_eTreeComp_ObjectIx, NULL);
+
+  if (vhp->oixtab == NULL)
+    return LDH__INSVIRMEM;
+
+  /* Create volume object header.  */
+
+  ohp = ldhi_AllocObjHead();
+  if (ohp == NULL)
+    return LDH__INSVIRMEM;
+
+  vhp->ohp = ohp;
+  ohp->db.objid.oix = pwr_cNObjectIx; 
+  ohp->db.objid.vid = vid; 
+  ohp->db.classid = classid; 
+  ldhi_SetObjName(&ohp->db.name, name);
+  ohp->db.normname = nn;
+  ohp->vhp = vhp;
+
+  sts = ldhi_ObjidToOh(wb, cdh_ClassIdToObjid(classid), &chp);
+  if (ODD(sts)) ohp->chp = chp;
+
+  /* Attach volume.  */
+
+  sts = ldh_AttachVolume(wb, vid, &volctx);
+  if (EVEN(sts)) return sts;
+
+  sts = ldh_OpenSession(&sp, volctx, ldh_eAccess_ReadWrite, ldh_eUtility_CreateVolume);
+  if (EVEN(sts)) return sts;
+
+  /* !!! To do !!! What happens if something goes wrong ? */
+  otp = (ldhi_sOixEntry *) ldh_TreeInsert(vhp->oixtab, &ohp->db.objid.oix);
+  otp->ohp = ohp;
+
+  sts = ldhi_MarkObject(sp, ldhi_mChange_Created, ohp);
+  if (EVEN(sts)) return sts;
+  
+  /* Create volume object body. */
+
+  obp = &ohp->body[0];
+  obp->size = bsize;
+  obp->body = XtCalloc(1, obp->size);
+  if (obp->body == NULL) return LDH__INSVIRMEM;
+  obp->exist = 1;
+  ohp->db.b_siz[0] = obp->size;
+
+  sts = ldhi_MarkObject(sp, (ldhi_mChange_RBodyIsModified | ldhi_mChange_FlagsAreModified), ohp);
+  if (EVEN(sts)) return sts;
+
+  sts = ldh_SaveSession(sp);
+  if (EVEN(sts)) return sts;
+
+  sts = ldhdb_AddVolume((unsigned int)vid);
+  if (EVEN(sts)) return sts;
+  
+  *Session = sp;
+
+  return sts;
+}
+
+pwr_tStatus
+ldh_CopyObjects (
+  ldhi_sSession *sp,
+  pwr_tObjid *objid,
+  char *name,
+  pwr_tObjid srcoid,
+  pwr_tObjid dstoid,
+  ldh_eDest dest
+)
+{
+  
+  return LDH__NYI;
+}
+#if 0
+pwr_tStatus
+ldh_CopyObjectTrees (
+  ldhi_sSession  *sp,
+  pwr_sAttrRef	    *arp,
+  pwr_tObjid	    dstoid,
+  ldh_eDest	    dest,
+  pwr_tBoolean	    Self
+)
+{
+  pwr_tStatus	    sts	      = LDH__SUCCESS;
+  ldh_sTree         *refTable;
+  ldhi_sRefEntry    *ctep;
+  ldhi_sObjHead	    *dhp;
+  ldhi_sObjHead	    *oohp;
+  ldhi_sObjHead	    *nohp;
+  ldhi_sObjHead	    *clbhp;
+  ldhi_eBid	    bid;
+  ldhi_sObjBody	    *nobp;
+  void		    *bp;
+  ldhi_sOixEntry    *otp;
+  pwr_tObjid	    odid;
+  int		    i;
+  int		    j;
+  int		    nItem;
+  char		    NewName[50];
+  ldh_sEvent	    *esp;
+  ldh_sEvent	    *ep;
+  pwr_tObjectIx	    oix;
+
+  if (!hasAccess(sp, ldh_eAccess_ReadWrite, &sts)) return sts;
+
+  /* check existence of destination object. */
+
+  if (!cdh_ObjidIsNull(dstoid)) {
+    sts = ldhi_ObjidToOh(sp->wb, dstoid, &dhp);
+    if (EVEN(sts)) return sts;
+  } else {
+    dhp = sp->vhp->ohp;
+  }
+
+  if (sp->vhp->ohp->db.classid == pwr_eClass_ClassVolume)
+    return LDH__NOCLASSVOL;
+
+  if (!inThisVolume(sp, dhp)) return LDH__OTHERVOLUME;
+
+  for (i = 0; !cdh_ObjidIsNull(arp[i].Objid); i++) {
+    sts = ldhi_ObjidToOh(sp->wb, arp[i].Objid, &oohp);
+    if (EVEN(sts)) return sts;
+    if (Self)
+      dhp = oohp;
+    sts = ldh_IsOkCopyObject(sp, oohp->db.objid, dhp->db.objid, dest);
+    if (EVEN(sts)) return sts;
+  }
+  nItem = i;
+
+  refTable = ldh_TreeCreate(sizeof(pwr_tObjid),
+    offsetof(ldhi_sRefEntry, oldOid), sizeof(ldhi_sRefEntry), 1000,
+    ldh_eTreeComp_Objid, NULL);
+
+  for (i = 0; i < nItem; i++) {
+    ldhi_ObjidToOh(sp->wb, arp[i].Objid, &oohp);
+    ldhi_CopyObjectFamily(sp, oohp, &nohp, refTable, 1);
+  }
+
+  for (
+    ctep = (ldhi_sRefEntry *) ldh_TreeMinimum(refTable);
+    ctep != NULL;
+    ctep = (ldhi_sRefEntry *) ldh_TreeSuccessor(refTable, (ldh_sTreeNode *) ctep)
+  ) {
+    /* assign new objids to all objects */
+    oix = 0;
+    oohp = ctep->oohp;
+    sts = ldhi_AssignOix(sp, &oix, oohp->db.classid, NULL, oohp->fahp, oohp->db.name.data);
+    if (EVEN(sts)) exit(2)/* left to do: */;
+    ctep->newOid.oix = oix;
+    ctep->newOid.vid = sp->vhp->vid;
+    ctep->nohp->db.objid = ctep->newOid;
+  }
+
+  for (
+    ctep = (ldhi_sRefEntry *) ldh_TreeMinimum(refTable);
+    ctep != NULL;
+    ctep = (ldhi_sRefEntry *) ldh_TreeSuccessor(refTable, (ldh_sTreeNode *) ctep)
+  ) {
+    /* create new bodies */
+    oohp = ctep->oohp;
+    nohp = ctep->nohp;
+    nohp->db.dh_gen = 0;
+    nohp->db.rh_gen = 0;
+
+    for (clbhp = oohp->chp->chhp; clbhp != NULL; clbhp = clbhp->silst.fwhp)
+      if (clbhp->db.classid == pwr_eClass_ObjBodyDef &&
+	strcmp("Template", clbhp->db.name.data) != 0
+      ) {
+	/* copy bodies and fix references */
+	sts = ldhi_CopyObjectBody(sp, nohp, oohp, clbhp);
+	sts = ldhi_BodyNameToBid(clbhp->db.name.data, &bid);
+	sts = ldhi_GetObjectBody(sp, nohp, bid, &nobp);
+	bp = nobp->body;
+	sts = ldhi_FixObjectReferences(sp, nohp, clbhp->chhp, refTable, ctep, bp, 0);
+      }
+
+    if (nohp->fahp != NULL) {
+      nohp->db.father = nohp->fahp->db.objid;
+      if (nohp->silst.bwhp != NULL)
+	nohp->db.bwsoid = nohp->silst.bwhp->db.objid;
+      else
+	nohp->db.bwsoid = pwr_cNObjid;
+      
+      if (nohp->silst.fwhp != NULL)
+	nohp->db.fwsoid = nohp->silst.fwhp->db.objid;
+      else
+	nohp->db.fwsoid = pwr_cNObjid;
+    }
+    
+    memset(&nohp->dbcpy, 0, sizeof(nohp->dbcpy));
+
+    otp = (ldhi_sOixEntry *) ldh_TreeInsert(sp->vhp->oixtab, &ctep->newOid.oix);
+    if (otp == (void *) 1)
+      /* left to do: mark session as inconsistent, cannot be saved */
+      return LDH__DBINCON;  /* Duplicate oix. */
+    if (otp == NULL)
+      /* left to do: mark session as inconsistent, cannot be saved */
+      return LDH__INSVIRMEM;
+
+    otp->ohp = nohp;
+
+    /* insert object into current session */
+    sts = ldhi_MarkObject(sp, ldhi_mChange_Created, nohp);
+
+  }
+
+  esp = eventStart(sp, pwr_cNObjid, ldh_eEvent_ObjectTreeCopied);
+
+  for (i = 0; i < nItem; i++) {
+    switch (dest) {
+    case ldh_eDest_After:
+    case ldh_eDest_IntoFirst:
+      j = nItem - 1 - i;
+      break;
+    default:
+      j = i;
+      break;
+    }
+
+    odid = arp[j].Objid;
+    ctep = (ldhi_sRefEntry *) ldh_TreeFind(refTable, &odid);
+    nohp = ctep->nohp;
+    if (Self)
+      dhp = ctep->oohp;
+    /* give root object a unique name */
+    sprintf(NewName, "C%u_%s", nohp->db.objid.oix, nohp->db.name.data);
+    NewName[31] = '\0';
+    ldhi_SetObjName(&nohp->db.name, NewName);
+    ldhi_SetNormObjName(&nohp->db.normname, NewName);
+
+    /* move root object to it's destination */
+    sts = ldhi_AdoptObject(sp, nohp, dhp, dest);
+    if (EVEN(sts)) printf("** Error adopting Oh\n");
+
+    ep = eventStart(sp, nohp->db.objid, ldh_eEvent_ObjectCreated);
+    eventNewFamily(sp, ep, nohp);
+    
+    triggPostAdopt(sp, nohp->fahp, nohp); 
+
+    eventSend(sp, ep);
+  }
+
+  eventSend(sp, esp);
+
+  ldh_TreeDelete(refTable);
+
+  return sts;
+}
+#endif
+
+/*----------------------------------------------------------------------------*\
+  If bodies are to be created, class has to exist in WB.
+\*----------------------------------------------------------------------------*/
+
+pwr_tStatus
+ldh_DefineObject (
+  ldhi_sSession	*sp,
+  pwr_tObjid		*objid,
+  char			*name,
+  pwr_tObjectIx		oix,
+  pwr_tClassId		classid,
+  pwr_tObjid		dstoid,
+  ldh_eDest		dest,
+  int			crebody	/* Are bodies to be created or not ? */
+) {
+  pwr_tStatus		sts;
+  ldhi_sObjHead		*ohp;		/* Object head pointer. */
+  ldhi_sObjHead		*dhp;		/* Destination head pointer. */
+  ldhi_sObjHead		*chp = NULL;	/* Class head pointer. */
+  ldhi_sObjHead		*cbhp;		/* Class body head pointer. */
+  ldhi_sObjHead		*fhp;		/* Father head pointer. */
+  ldhi_sObjHead		*fshp;		/* First sibling head pointer. */
+  ldhi_sOixEntry	*otp;
+  char			*namep;
+  ldhi_sObjName		nn;
+  pwr_tObjName		objname;
+  pwr_sClassDef		*ClassDef;
+  ldhi_sObjBody		*cbp;
+
+  if (!hasAccess(sp, ldh_eAccess_ReadWrite, &sts)) return sts;
+
+  /* Check existence of destination object. */
+
+  if (!cdh_ObjidIsNull(dstoid)) {
+    sts = ldhi_ObjidToOh(sp->wb, dstoid, &dhp);
+    if (EVEN(sts)) return sts;
+  } else
+    dhp = sp->vhp->ohp;
+  
+  if (!inThisVolume(sp, dhp)) return LDH__OTHERVOLUME;
+
+  /* Check destination code. */
+
+  switch (dest) {
+  case ldh_eDest_IntoFirst:
+  case ldh_eDest_IntoLast:
+    fshp = dhp->chhp;
+    fhp = dhp;
+    break;
+  case ldh_eDest_After:
+  case ldh_eDest_Before:
+    if (dhp == sp->vhp->ohp) return LDH__BADDEST;
+    fshp = dhp->fahp->chhp;
+    fhp = dhp->fahp;
+    break;
+  default:
+    return LDH__NODEST;
+  }
+
+  /* Check existence of objectname. */
+  
+  if (name != NULL  && name[0] != '\0') {
+    sts = ldhi_SetNormObjName(&nn, name);
+    if (EVEN(sts)) return sts;
+
+    sts = ldhi_FindSiblingByName(sp, fshp, &nn, NULL);
+    if (ODD(sts)) return LDH__NAMALREXI;
+
+    namep = name;
+  }
+
+  if (crebody) {
+    /* Check existence of class. If default bodies are to be created, */
+    /* the class must exist in the Workbench. */
+
+    sts = ldhi_ObjidToOh(sp->wb, cdh_ClassIdToObjid(classid), &chp);
+    if (EVEN(sts)) return LDH__NOCLASS;
+    if (chp->db.classid != pwr_eClass_ClassDef) return LDH__NOCLASS;
+    sts = ldhi_GetObjectBody(sp, chp, ldhi_eBid_SysBody, &cbp);
+    if (EVEN(sts)) return LDH__NOCLASS;
+    ClassDef = (pwr_sClassDef*) cbp->body;
+  }
+
+  /* Get objid. */
+
+  sts = ldhi_AssignOix(sp, &oix, classid, chp, fhp, name);
+  if (EVEN(sts)) return sts;
+  
+  /* If no objectname is given, create one. */
+
+  if (name == NULL || name[0] == '\0') {
+    ldhi_GetUniqueObjectName(sp, oix, objname);
+    ldhi_SetNormObjName(&nn, objname);
+    namep = objname;
+  }
+
+  ohp = ldhi_AllocObjHead();
+  if (ohp == NULL) return LDH__INSVIRMEM;
+
+  otp = (ldhi_sOixEntry *) ldh_TreeInsert(sp->vhp->oixtab, &oix);
+  if (otp == (void *) 1)
+    return LDH__DBINCON;  /* Duplicate oix. */
+  if (otp == NULL)
+    return LDH__INSVIRMEM;
+
+  otp->ohp = ohp;
+
+  ohp->db.objid.oix = oix;
+  ohp->db.objid.vid = sp->vhp->vid;
+  ohp->vhp = sp->vhp;
+  ohp->db.dh_gen = 0;    
+  ohp->db.rh_gen = 0;    
+  ldhi_SetObjName(&ohp->db.name, namep);
+  ohp->db.normname = nn;
+  ohp->db.classid = classid;
+  ohp->chp = chp;
+  if (crebody) {
+    ohp->db.flags.m = ClassDef->Flags.m;
+  }
+
+  sts = ldhi_AdoptObject(sp, ohp, dhp, dest);
+  if (EVEN(sts)) return sts;
+
+  if (ohp->fahp != NULL)
+    ohp->db.father = ohp->fahp->db.objid;
+  else
+    ohp->db.father = pwr_cNObjid;
+
+  if (ohp->silst.bwhp != NULL)
+    ohp->db.bwsoid = ohp->silst.bwhp->db.objid;
+  else
+    ohp->db.bwsoid = pwr_cNObjid;
+  
+  if (ohp->silst.fwhp != NULL)
+    ohp->db.fwsoid = ohp->silst.fwhp->db.objid;
+  else
+    ohp->db.fwsoid = pwr_cNObjid;
+  
+
+  /* Create default bodies. */
+
+  if (crebody)
+    for (cbhp = chp->chhp; cbhp != NULL; cbhp = cbhp->silst.fwhp)
+      if (
+	cbhp->db.classid == pwr_eClass_ObjBodyDef
+	&& strcmp("Template", cbhp->db.name.data) != 0
+      ) {
+	if (
+	  ohp->fahp != NULL
+	  && classid == cdh_ClassObjidToId(ohp->fahp->db.objid)
+	  && strcmp("Template", ohp->db.name.data) == 0
+	) {
+	  /* This is a template object! */
+	  ldhi_CreateObjectBody(sp, ohp, cbhp);
+	} else
+	  ldhi_CopyObjectBody(sp, ohp, chp->tmphp, cbhp);
+      }
+
+  sts  = ldhi_MarkObject(sp, ldhi_mChange_Created, ohp);
+
+  if (objid != NULL)
+    *objid = ohp->db.objid;
+
+  return sts;
+}
+
+pwr_tStatus
+ldh_DefineObjectBody (
+  ldhi_sSession	*sp,
+  pwr_tObjid		object,
+  char			*bodyname,
+  char			*body,
+  int			size
+) {
+  pwr_tStatus		sts;
+  ldhi_sObjHead		*ohp;
+  ldhi_sObjBody		*obp;
+  ldhi_eBid		bid;
+
+
+  /* Check parameters. */
+
+  if (!hasAccess(sp, ldh_eAccess_ReadWrite, &sts)) return sts;
+  if (bodyname == NULL) return LDH__BADPARAM;
+  if (*bodyname == '\0') return LDH__NOSUCHBODY;
+  if (body == NULL) return LDH__BADPARAM;
+  
+  sts = ldhi_ObjidToOh(sp->wb, object, &ohp);
+  if (EVEN(sts)) return LDH__NOSUCHOBJ;
+
+  if (!inThisVolume(sp, ohp)) return LDH__OTHERVOLUME;
+
+  sts = ldhi_BodyNameToBid(bodyname, &bid);
+  if (EVEN(sts)) return sts;
+
+  if (bid == 0) {
+    ohp->db.flags.f.RtBody = 1;
+    sts = ldhi_MarkObject(sp, (ldhi_mChange_RBodyIsModified | ldhi_mChange_FlagsAreModified), ohp);
+    if (EVEN(sts)) return sts;
+  } else {
+    sts = ldhi_MarkObject(sp, ldhi_mChange_DBodyIsModified, ohp);
+    if (EVEN(sts)) return sts;
+  }
+
+  obp = &ohp->body[bid];
+  obp->size = size;
+  obp->body = XtMalloc(obp->size);
+  if (obp->body == NULL) return LDH__INSVIRMEM;
+  memcpy(obp->body, body, obp->size);
+  obp->exist = 1;
+  ohp->db.b_siz[bid] = obp->size;
+
+  if (ohp->db.objid.oix == pwr_cNObjectIx && bid == 0) {
+    sts = setOix(ohp, (pwr_uVolume *) obp->body);
+    if (EVEN(sts)) return sts;
+  }
+
+  return LDH__SUCCESS;
+}
+
+pwr_tStatus
+ldh_DeleteObject (
+  ldhi_sSession	*sp,
+  pwr_tObjid		objid
+) {
+  pwr_tStatus		sts;
+  ldhi_sObjHead		*ohp;
+  ldh_sEvent		*ep;
+
+  if (!hasAccess(sp, ldh_eAccess_ReadWrite, &sts)) return sts;
+
+  if (objid.oix == pwr_cNObjectIx && sp->utility != ldh_eUtility_CreateVolume)
+    return LDH__NOSUCHOBJ;
+
+  sts = ldhi_ObjidToOh(sp->wb, objid, &ohp);
+  if (EVEN(sts)) return sts;
+
+  if (!inThisVolume(sp, ohp)) return LDH__OTHERVOLUME;
+
+  if (ohp->chhp != NULL)		/* The object has a child. */
+    return LDH__HAS_CHILD;
+
+  sts = triggAnteUnadopt(sp, ohp->fahp, ohp);
+  if (EVEN(sts)) return sts;
+
+  ep = eventStart(sp, objid, ldh_eEvent_ObjectDeleted);
+  eventOldFamily(sp, ep, ohp);
+
+  sts = triggPostUnadopt(sp, ohp->fahp, ohp);
+
+  ldhi_UnadoptObject(sp, ohp, 1);
+  ldhi_MarkObject(sp, ldhi_mChange_IsDeleted, ohp);
+
+  eventSend(sp, ep);
+
+  return sts;
+}
+
+pwr_tStatus
+ldh_DeleteObjectTree (
+  ldhi_sSession	*sp,
+  pwr_tObjid		objid
+) {
+  pwr_tStatus		sts;
+  ldhi_sObjHead		*ohp;
+  ldh_sEvent		*ep;
+
+  if (!hasAccess(sp, ldh_eAccess_ReadWrite, &sts)) return sts;
+
+  if (objid.oix == pwr_cNObjectIx)
+    return LDH__NOSUCHOBJ;
+
+  sts = ldhi_ObjidToOh(sp->wb, objid, &ohp);
+  if (EVEN(sts)) return sts;
+
+  if (!inThisVolume(sp, ohp)) return LDH__OTHERVOLUME;
+
+  sts = triggAnteUnadopt(sp, ohp->fahp, ohp);
+  if (EVEN(sts)) return sts;
+
+  ep = eventStart(sp, objid, ldh_eEvent_ObjectDeleted);
+  eventOldFamily(sp, ep, ohp);
+
+  sts = triggPostUnadopt(sp, ohp->fahp, ohp);
+
+  sts = ldhi_UnadoptObject(sp, ohp, 1);
+
+  sts = ldhi_DeleteObjectTree(sp, ohp);
+
+  eventSend(sp, ep);
+
+  return sts;
+}
+pwr_tStatus
+ldh_EvalObject (
+  ldhi_sSession	*sp,
+  pwr_tObjid		objid
+) {
+  pwr_tStatus		sts;
+  ldhi_sObjHead		*ohp;
+  ldhi_sObjHead		*chp;	/* ClassDef object header. */
+
+  /* Check parameters. */
+
+  if (!hasAccess(sp, ldh_eAccess_ReadWrite, &sts)) return sts;
+
+  /* Check if object exists. */
+
+  sts = ldhi_ObjidToOh(sp->wb, objid, &ohp);
+  if (EVEN(sts)) return sts;
+
+  if (!inThisVolume(sp, ohp)) return LDH__OTHERVOLUME;
+
+  if (objid.oix > ldhi_cMaxUserOix) {
+    ohp->db.flags.f.System = 1;
+    sts = ldhi_MarkObject(sp, ldhi_mChange_FlagsAreModified, ohp);
+    if (EVEN(sts)) return sts;
+  }
+
+  if (ohp->chp == NULL) {
+    /* Link object to ClassDef. */
+    sts = ldhi_ObjidToOh(sp->wb, cdh_ClassIdToObjid(ohp->db.classid), &chp);
+    if (sts == LDH__SUCCESS)
+      ohp->chp = chp;
+    else
+      ohp->chp = NULL;	/*!!! This is a fix !!!*/
+  }
+
+  switch (ohp->db.classid) {
+  case pwr_eClass_ObjBodyDef:
+    sts = ldhi_EvalObjectBodyDef(sp, ohp);
+    break;
+  case pwr_eClass_ClassDef:
+    if (ohp->fahp != NULL && ohp->fahp->db.classid == pwr_eClass_ClassDef)
+      return LDH__SUCCESS;    /* This is the $ClassDef template. */
+    sts = ldhi_EvalClassDef(sp, ohp);
+    break;
+  default:
+    sts = LDH__SUCCESS;
+    break;
+  }
+
+  return sts;
+}
+
+pwr_tStatus
+ldh_GetAttrDef (
+  ldhi_sSession	*sp,
+  pwr_tClassId		Class,
+  char			*BodyName,
+  char			*AttrName,
+  ldh_sParDef		*AttrDef
+) {
+  pwr_tStatus		sts;
+  ldhi_sObjHead		*ohp;
+  ldhi_sObjHead		*obhp;		/* ObjBodyDef object header pointer */
+  ldhi_sObjHead		*php;		/* Parameter object header pointer */
+  ldhi_sObjBody		*pbp;		/* Object body pointer */
+  ldhi_sObjName		nn;
+
+  /* Check parameters. */
+
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
+  if (BodyName == NULL) return LDH__BADPARAM;
+  if (*BodyName == '\0') return LDH__NOSUCHBODY;
+  if (AttrName == NULL) return LDH__BADPARAM;
+  if (*AttrName == '\0') return LDH__NOSUCHATTR;
+  if (AttrDef == NULL) return LDH__BADPARAM;
+
+  sts = ldhi_ObjidToOh(sp->wb, cdh_ClassIdToObjid(Class), &ohp);
+  if (EVEN(sts)) return LDH__NOSUCHCLASS;
+  if (ohp->db.classid != pwr_eClass_ClassDef) return LDH__NOSUCHCLASS;
+
+  if (ohp->chhp == NULL) return LDH__NOSUCHBODY;
+  sts = ldhi_SetNormObjName(&nn, BodyName);
+  if (EVEN(sts)) return LDH__NOSUCHBODY;
+  sts = ldhi_FindSiblingByName(sp, ohp->chhp, &nn, &obhp);
+  if (EVEN(sts)) return LDH__NOSUCHBODY;
+  if (obhp->db.classid != pwr_eClass_ObjBodyDef) return LDH__NOSUCHBODY;
+
+  if (obhp->chhp == NULL) return LDH__NOSUCHATTR;
+  sts = ldhi_SetNormObjName(&nn, AttrName);
+  if (EVEN(sts)) return LDH__NOSUCHATTR;
+  sts = ldhi_FindSiblingByName(sp, obhp->chhp, &nn, &php);
+  if (EVEN(sts)) return LDH__NOSUCHATTR;
+
+  sts = ldhi_GetObjectBody(sp, php, ldhi_eBid_SysBody, &pbp);
+  if (EVEN(sts)) return sts;
+      
+  strcpy(AttrDef->ParName, php->db.name.data);
+  AttrDef->ParLevel = 1;
+  AttrDef->ParClass = php->db.classid;
+  AttrDef->Par = (void *) pbp->body;
+  
+  return LDH__SUCCESS;
+}
+
+pwr_tStatus
+ldh_GetAttrRef (
+  ldhi_sSession	*sp,
+  pwr_tObjid		Object,
+  char			*AttrName,
+  pwr_sAttrRef		*AttrRef
+) {
+  pwr_tStatus		sts = LDH__SUCCESS;
+  ldhi_sObjHead		*ohp;
+  ldhi_sObjHead		*ahp;
+  ldhi_sObjBody		*abp;
+  ldhi_sObjHead		*obhp;
+  pwr_sParam		*Param;
+  ldhi_sObjName		nn;
+
+  /* Check parameters. */
+
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
+  if (AttrName == NULL) return LDH__BADPARAM;
+  if (*AttrName == '\0') return LDH__NOSUCHATTR;
+  if (AttrRef == NULL) return LDH__BADPARAM;
+
+  assert(sp != NULL);
+  assert(AttrRef != NULL);
+  assert(AttrName != NULL);
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
+
+  sts = ldhi_ObjidToOh(sp->wb, Object, &ohp);
+  if (EVEN(sts)) return sts;
+
+  /* Find first attribute */
+  if (ohp->db.flags.f.System) {
+    sts = ldhi_SetNormObjName(&nn, "SysBody");
+    sts = ldhi_FindSiblingByName(sp, ohp->chp->chhp, &nn, &obhp);
+    if (EVEN(sts)) return LDH__NOSUCHATTR;
+  } else {
+    sts = ldhi_SetNormObjName(&nn, "RtBody");
+    sts = ldhi_FindSiblingByName(sp, ohp->chp->chhp, &nn, &obhp);
+    if (EVEN(sts)) return LDH__NOSUCHATTR; /* We do not handle DevBody */
+  }
+
+  sts = ldhi_SetNormObjName(&nn, AttrName);
+  if (EVEN(sts)) return LDH__NOSUCHATTR;
+  sts = ldhi_FindSiblingByName(sp, obhp->chhp, &nn, &ahp);
+  if (EVEN(sts)) return LDH__NOSUCHATTR;
+  ldhi_GetObjectBody(sp, ahp, ldhi_eBid_SysBody, &abp);
+  if (EVEN(sts)) return sts;
+
+  Param		    = (pwr_sParam *) abp->body;
+  AttrRef->Objid    = Object;
+  AttrRef->Offset   = Param->Info.Offset;
+  AttrRef->Size	    = Param->Info.Size;
+  AttrRef->Flags.m  = 0;
+
+  return LDH__SUCCESS;
+}
+
+pwr_tStatus
+ldh_GetAttrXRefDef (
+  ldhi_sSession	*sp,
+  pwr_sAttrRef		*AttrRef,
+  pwr_sAttrXRef		*AttrXRef
+) {
+  pwr_tStatus		sts;
+  ldhi_sObjHead		*ohp;
+  ldhi_sObjHead		*ahp;
+  ldhi_sObjBody		*abp;
+  ldhi_sObjHead		*obhp;
+  pwr_sParam		*Param;
+  ldhi_sObjName		nn;
+  
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
+  if (AttrXRef == NULL) return LDH__BADPARAM;
+  if (AttrRef == NULL) return LDH__BADPARAM;
+
+  if (AttrRef->Objid.oix == pwr_cNObjectIx)
+    return LDH__NOSUCHOBJ;
+
+  sts = ldhi_ObjidToOh(sp->wb, AttrRef->Objid, &ohp);
+  if (EVEN(sts)) return sts;
+
+  /* Find first attribute */
+  if (ohp->db.flags.f.System) {
+    sts = ldhi_SetNormObjName(&nn, "SysBody");
+    sts = ldhi_FindSiblingByName(sp, ohp->chp->chhp, &nn, &obhp);
+    if (EVEN(sts)) return LDH__NOSUCHATTR;
+  } else {
+    sts = ldhi_SetNormObjName(&nn, "RtBody");
+    sts = ldhi_FindSiblingByName(sp, ohp->chp->chhp, &nn, &obhp);
+    if (EVEN(sts)) return LDH__NOSUCHATTR; /* We do not handle DevBody */
+  }
+
+  for (ahp = obhp->chhp; ahp != NULL; ahp = ahp->silst.fwhp) {
+    ldhi_GetObjectBody(sp, ahp, ldhi_eBid_SysBody, &abp);
+    Param = (pwr_sParam *) abp->body;
+    if (AttrRef->Offset < Param->Info.Offset + Param->Info.Size)
+      break;
+  }
+  if (ahp == NULL) return LDH__NOSUCHATTR;
+
+  if (ahp->db.classid != pwr_eClass_AttrXRef)
+    return LDH__NOAXREF;
+
+  /* Check that attribute reference is on a even boundary */
+
+  if (((AttrRef->Offset - Param->Info.Offset) % (Param->Info.Size / Param->Info.Elements)) != 0)
+    return LDH__NOSUCHATTR;
+
+  memcpy(AttrXRef, Param, sizeof(pwr_sAttrXRef));
+
+  return LDH__SUCCESS;
+}
+
+/*  Get first child of an object.  */
+
+pwr_tStatus
+ldh_GetChild (
+  ldhi_sSession	*sp,
+  pwr_tObjid		objid,
+  pwr_tObjid		*new_objid
+) {
+  pwr_tStatus		sts;
+  ldhi_sObjHead		*ohp;
+  ldhi_sObjBody		*obp;
+  pwr_sMountObject	*MountObject;
+
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
+  if (new_objid == NULL) return LDH__BADPARAM;
+
+  if (objid.oix == pwr_cNObjectIx)
+    return LDH__NOSUCHOBJ;
+
+  sts = ldhi_ObjidToOh(sp->wb, objid, &ohp);
+  if (EVEN(sts)) return sts;
+
+  if (ohp->db.classid == pwr_eClass_MountObject) {
+    sts = ldhi_GetObjectBody(sp, ohp, ldhi_eBid_SysBody, &obp);
+    if (EVEN(sts)) return sts;
+    MountObject = (pwr_sMountObject *) obp->body;
+    sts = ldhi_ObjidToOh(sp->wb, MountObject->Object, &ohp);
+    if (EVEN(sts)) return LDH__NO_CHILD;
+  }
+
+  if (ohp->chhp == NULL)
+    sts = LDH__NO_CHILD;
+  else
+    *new_objid = ohp->chhp->db.objid;
+
+  return sts;
+}
+
+pwr_tStatus
+ldh_GetClassBody (
+  ldhi_sSession	*sp,
+  pwr_tClassId		classid,
+  char			*bodyname,
+  pwr_tClassId		*bodyclass,
+  char			**body,
+  int			*size
+) {
+  pwr_tStatus		sts;
+  ldhi_sObjHead		*ohp;
+  ldhi_sObjHead		*cbhp;	/* ClassBody header pointer */
+  ldhi_sObjBody		*obp;	/* Object body pointer */
+  ldhi_sObjName		nn;
+
+  /* Check parameters. */
+
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
+  if (*bodyname == '\0') return LDH__NOSUCHBODY;
+  if (body == NULL) return LDH__BADPARAM;
+  
+  sts = ldhi_ObjidToOh(sp->wb, cdh_ClassIdToObjid(classid), &ohp);
+  if (EVEN(sts)) return LDH__NOSUCHCLASS;
+  if (ohp->db.classid != pwr_eClass_ClassDef) return LDH__NOSUCHCLASS;
+
+  if (ohp->chhp == NULL) return LDH__NOSUCHBODY;
+  sts = ldhi_SetNormObjName(&nn,  bodyname);
+  if (EVEN(sts)) return LDH__NOSUCHBODY;
+  sts = ldhi_FindSiblingByName(sp, ohp->chhp, &nn, &cbhp);
+  if (EVEN(sts)) return LDH__NOSUCHBODY;
+
+  sts = ldhi_GetObjectBody(sp, cbhp, ldhi_eBid_SysBody, &obp);
+  if (EVEN(sts)) return sts;
+  
+  *body = obp->body;
+  if (bodyclass != NULL) *bodyclass = cbhp->db.classid;
+  if (size != NULL) *size = obp->size;
+  
+  return LDH__SUCCESS;
+}
+
+pwr_tStatus
+ldh_GetClassList (
+  ldhi_sSession	*sp,
+  pwr_tClassId		classid,
+  pwr_tObjid		*objid
+) {
+
+  return LDH__NYI;
+}
+#if 0
+
+/*  Give information about the current volume.  */
+
+pwr_tStatus
+ldh_GetInfo (
+  ldhi_sSession	*sp,
+  pwr_tObjid		objid,
+  ldh_sObjInfo		*Info
+)
+/* !!! To do !!! */
+{
+  pwr_tStatus		sts;
+  ldhi_sObjHead		*ohp;
+  pwr_tObjid		node;
+
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
+  if (Info == NULL) return LDH__BADPARAM;
+
+  sts = ldhi_ObjidToOh(sp->wb, objid, &ohp);
+  if (EVEN(sts)) return sts;
+
+  sts = ldhi_FindNode(sp, ohp, &node);
+  if (ODD(sts))
+    Info->Node = node;
+
+  return sts;
+}
+#endif
+
+/* Returns the objid of the next object of the same class.  */
+
+pwr_tStatus
+ldh_GetNextObject (
+  ldhi_sSession	*sp,
+  pwr_tObjid		objid,
+  pwr_tObjid		*new_objid
+)
+{
+  pwr_tStatus		sts;
+
+  return LDH__NYI;
+
+  return sts;
+}
+
+pwr_tStatus
+ldh_GetMenu (
+  ldh_sMenuCall		*ip
+)
+/* !!! To do !!! */
+{
+  pwr_tStatus		sts;
+  ldhi_sObjHead		*ohp;
+  ldhi_sObjHead		*chhp;
+  ldh_sMenuItem		*Item = (ldh_sMenuItem *) &ldh_lMenuItem;
+  pwr_tUInt32		i;
+  pwr_tObjName		MenuFolder;
+  pwr_tString80		Menu;
+  pwr_tString80		ClassName;
+  pwr_tBoolean		isSame = FALSE;
+  pwr_tClassId		Class;
+  pwr_tObjid		Object;
+  int			size;
+  int			nItems = 0;
+
+  for (i = 0; i < ip->SelectCount; i++) {
+    if (cdh_ObjidIsEqual(ip->Pointed.Objid, ip->Selected[i].Objid)) {
+      isSame = TRUE;
+      break;
+    }
+  }
+
+  sprintf(MenuFolder, "%sP%cs%c%c",
+    ldh_lUtility[ip->PointedSession->utility].Name,
+    ldh_lMenuSet[ip->PointedSet].Char,
+    ldh_lMenuSet[ip->SelectedSet].Char,
+    (isSame ? 's' : 'n')
+  );
+
+  /* Find generic menues of pointed object */
+
+  sprintf(Menu, "pwrs:Class-$Object-%s-Pointed", MenuFolder);
+
+  sts = ldh_NameToObjid(ip->PointedSession, &Object, Menu);
+
+  while (ODD(sts)) {
+    sts = ldhi_ObjidToOh(ip->PointedSession->wb, Object, &ohp);
+    if (ohp == NULL) break; 
+    for (chhp = ohp->chhp; chhp != NULL; chhp = chhp->silst.fwhp) {
+      getAllMenuItems(ip, &Item, chhp, 0, &nItems, 0);
+    }
+    break;
+  }
+
+  /* Find specific menues of pointed object */
+
+  if (ip->PointedSet == ldh_eMenuSet_Class) {
+    Class = cdh_ClassObjidToId(ip->Pointed.Objid);
+  } else {
+    sts = ldh_GetObjectClass(ip->PointedSession, ip->Pointed.Objid, &Class);
+  }
+
+  sts = ldh_ClassIdToName(ip->PointedSession, Class, ClassName, sizeof(ClassName) - 1, NULL);
+  sprintf(Menu, "%s-%s-Pointed", ClassName, MenuFolder);
+
+  sts = ldh_NameToObjid(ip->PointedSession, &Object, Menu);
+
+  getAllMenuItems(ip, &Item, chhp, 0, &nItems, 1);
+
+  while (ODD(sts)) {
+    sts = ldhi_ObjidToOh(ip->PointedSession->wb, Object, &ohp);
+    if (ohp == NULL) break; 
+    for (chhp = ohp->chhp; chhp != NULL; chhp = chhp->silst.fwhp) {
+      getAllMenuItems(ip, &Item, chhp, 0, &nItems, 0);
+    }
+    break;
+  }
+
+  switch (ip->SelectedSet) {
+  case ldh_eMenuSet_Attribute:
+  case ldh_eMenuSet_Class:
+  case ldh_eMenuSet_Many:
+  case ldh_eMenuSet_Object:
+    /* Find generic menues for selected object(s) */
+    sprintf(Menu, "pwrs:Class-$Object-%s-Selected", MenuFolder);
+    sts = ldh_NameToObjid(ip->PointedSession, &Object, Menu);
+    getAllMenuItems(ip, &Item, chhp, 0, &nItems, 1);
+    if (ODD(sts)) {
+      sts = ldhi_ObjidToOh(ip->PointedSession->wb, Object, &ohp);
+      for (chhp = ohp->chhp; chhp != NULL; chhp = chhp->silst.fwhp) {
+	getAllMenuItems(ip, &Item, chhp, 0, &nItems, 0);
+      }
+    }
+
+    /* Find specific menues for selected object(s) */
+    if (ip->PointedSet == ldh_eMenuSet_Class) {
+      Class = ip->Pointed.Objid.oix;  /* !!! To do !!! */
+    } else {
+      sts = ldh_GetObjectClass(ip->PointedSession, ip->Pointed.Objid, &Class);
+    }
+    sts = ldh_ObjidToName(ip->PointedSession, cdh_ClassIdToObjid(Class), ldh_eName_Hierarchy,
+      ClassName, sizeof(ClassName), &size);
+    sprintf(Menu, "%s-%s-Selected", ClassName, MenuFolder);
+    sts = ldh_NameToObjid(ip->PointedSession, &Object, Menu);
+    getAllMenuItems(ip, &Item, chhp, 0, &nItems, 1);
+    while (ODD(sts)) {
+      sts = ldhi_ObjidToOh(ip->PointedSession->wb, Object, &ohp);
+      if (ohp == NULL) break;
+      for (chhp = ohp->chhp; chhp != NULL; chhp = chhp->silst.fwhp) {
+	getAllMenuItems(ip, &Item, chhp, 0, &nItems, 0);
+      }
+      break;
+    }
+    break;
+  default:
+    break;
+  }
+
+  Item->Level = 0;
+  ip->ItemList = ldh_lMenuItem;
+  ip->ItemCount = nItems - 1;
+  return LDH__SUCCESS;
+}
+
+pwr_tStatus
+ldh_GetNextSibling (
+  ldhi_sSession	*sp,
+  pwr_tObjid		objid,
+  pwr_tObjid		*new_objid
+) {
+  pwr_tStatus		sts;
+  ldhi_sObjHead		*ohp;
+
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
+  if (sp == NULL) return LDH__NOSUCHSESS;
+  if (new_objid == NULL) return LDH__BADPARAM;
+
+  if (objid.oix == pwr_cNObjectIx)
+    return LDH__NOSUCHOBJ;
+
+  sts = ldhi_ObjidToOh(sp->wb, objid, &ohp);
+  if (EVEN(sts)) return sts;
+
+  if ( ohp->silst.fwhp == NULL)
+    sts = LDH__NO_SIBLING;
+  else
+    *new_objid = ohp->silst.fwhp->db.objid;
+
+  return sts;
+}
+
+/* Gets a named body of an object. Buffer space to keep the body is
+   allocated by the routine and a pointer to the buffer is returned
+   in the body parameter. It is the responsibility of the caller to free
+   this space when no longer needed. Use XtFree().  */
+
+pwr_tStatus
+ldh_GetObjectBody (
+  ldhi_sSession	*sp,		/* Session context */
+  pwr_tObjid		object,		/* Object identity */
+  char			*bodyname,	/* Name of body */
+  void			**body,
+  int			*size
+)
+{
+  pwr_tStatus		sts;
+  ldhi_sObjHead		*ohp;
+  ldhi_sObjBody		*obp;		/* Object body pointer */
+  ldhi_eBid		bid;
+
+  /* Check parameters. */
+
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
+  if (*bodyname == '\0') return LDH__NOSUCHBODY;
+  if (body == NULL) return LDH__BADPARAM;
+  
+  sts = ldhi_ObjidToOh(sp->wb, object, &ohp);
+  if (EVEN(sts)) return LDH__NOSUCHOBJ;
+
+  sts = ldhi_BodyNameToBid(bodyname, &bid);
+  if (EVEN(sts)) return sts;
+  sts = ldhi_GetObjectBody(sp, ohp, bid, &obp);
+  if (EVEN(sts)) return sts;
+  
+  *body = XtMalloc(obp->size);
+  if (*body == NULL) return LDH__INSVIRMEM;
+  memcpy(*body, obp->body, obp->size);
+  if (size != NULL) *size = obp->size;
+  
+  return LDH__SUCCESS;
+}
+
+pwr_tStatus
+ldh_GetObjectBodyDef (
+  ldhi_sSession	*sp,
+  pwr_tClassId		classid,
+  char			*bodyname,
+  int			maxlev,
+  ldh_sParDef		**bodydef,
+  int			*rows
+) {
+  pwr_tStatus		sts;
+  ldhi_sObjHead		*ohp;
+  ldhi_sObjHead		*obhp;	/* ObjBodyDef object header pointer */
+  ldhi_sObjHead		*php;		/* Parameter object header pointer */
+  ldhi_sObjBody		*obp;		/* Object body pointer */
+  pwr_sObjBodyDef	*objBodyDef;
+  int			i;
+  ldhi_sObjName		nn;
+
+  /* Check parameters. */
+
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
+  if (*bodyname == '\0') return LDH__NOSUCHBODY;
+  if (bodydef == NULL) return LDH__BADPARAM;
+
+  sts = ldhi_ObjidToOh(sp->wb, cdh_ClassIdToObjid(classid), &ohp);
+  if (EVEN(sts)) return LDH__NOSUCHCLASS;
+  if (ohp->db.classid != pwr_eClass_ClassDef) return LDH__NOSUCHCLASS;
+
+  if (ohp->chhp == NULL) return LDH__NOSUCHBODY;
+  sts = ldhi_SetNormObjName(&nn, bodyname);
+  if (EVEN(sts)) return LDH__NOSUCHBODY;
+  sts = ldhi_FindSiblingByName(sp, ohp->chhp, &nn, &obhp);
+  if (EVEN(sts)) return LDH__NOSUCHBODY;
+  if (obhp->db.classid != pwr_eClass_ObjBodyDef) return LDH__NOSUCHBODY;
+
+  sts = ldhi_GetObjectBody(sp, obhp, ldhi_eBid_SysBody, &obp);
+  if (EVEN(sts)) return sts;
+      
+  objBodyDef = (pwr_sObjBodyDef *) obp->body;
+  if (rows != NULL) *rows = objBodyDef->NumOfParams;
+  
+  *bodydef = (ldh_sParDef *) XtMalloc(sizeof(ldh_sParDef) * objBodyDef->NumOfParams);
+  if (*bodydef == NULL) return LDH__INSVIRMEM;
+
+  for (
+    i = 0, php = obhp->chhp;
+    i < objBodyDef->NumOfParams && php != NULL;
+    i++, php = php->silst.fwhp
+  ) {
+    sts = ldhi_GetObjectBody(sp, php, ldhi_eBid_SysBody, &obp);
+    if (EVEN(sts)) return sts;
+    strcpy((*bodydef)[i].ParName, php->db.name.data);
+    (*bodydef)[i].ParLevel = 1;
+    (*bodydef)[i].ParClass = php->db.classid;
+    (*bodydef)[i].Par = (void *) obp->body;
+  }
+  
+  if (i == objBodyDef->NumOfParams && php == NULL)
+    return LDH__SUCCESS;
+
+  /* Something is dead wrong with the body definition. */
+  return LDH__DEFERROR;
+
+}
+
+pwr_tStatus
+ldh_GetObjectBuffer (
+  ldhi_sSession	*sp,
+  pwr_tObjid		objid,
+  char			*bodyname,
+  char			*buffername,
+  pwr_eClass		*bufferclass,
+  char			**buff,
+  int			*size
+) {
+  pwr_tStatus		sts;
+  ldhi_sObjHead		*chp;
+  ldhi_sObjHead		*ohp;
+  ldhi_sObjHead		*bufhp;
+  ldhi_sObjHead		*obhp;		/* ObjBodyDef object header pointer */
+  ldhi_sObjBody		*obp;		/* Object body pointer */
+  ldhi_sObjBody		*bufbp;		/* Buffer object body pointer */
+  pwr_sBuffer		*Buffer;
+  ldhi_eBid		bid;
+  ldhi_sObjName		nn;
+
+  /* Check parameters. */
+
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
+  if (bodyname == NULL) return LDH__BADPARAM;
+  if (buffername == NULL) return LDH__BADPARAM;
+  if (*bodyname == '\0') return LDH__NOSUCHBODY;
+  if (*buffername == '\0') return LDH__NOSUCHBUFFER;
+  if (buff == NULL) return LDH__BADPARAM;
+
+  sts = ldhi_ObjidToOh(sp->wb, objid, &ohp);
+  if (EVEN(sts)) return LDH__NOSUCHOBJ;
+
+  sts = ldhi_ObjidToOh(sp->wb, cdh_ClassIdToObjid(ohp->db.classid), &chp);
+  if (EVEN(sts)) return LDH__NOSUCHCLASS;
+  if (chp->db.classid != pwr_eClass_ClassDef) return LDH__NOSUCHCLASS;
+
+  if (chp->chhp == NULL) return LDH__NOSUCHBODY;
+  sts  = ldhi_SetNormObjName(&nn, bodyname);
+  if (EVEN(sts)) return LDH__NOSUCHBODY;
+  sts = ldhi_FindSiblingByName(sp, chp->chhp, &nn, &obhp);
+  if (EVEN(sts)) return LDH__NOSUCHBODY;
+  if (obhp->db.classid != pwr_eClass_ObjBodyDef) return LDH__NOSUCHBODY;
+
+  if (obhp->chhp == NULL) return LDH__NOSUCHBUFFER;
+  sts  = ldhi_SetNormObjName(&nn, buffername);
+  if (EVEN(sts)) return LDH__NOSUCHBUFFER;
+  sts = ldhi_FindSiblingByName(sp, obhp->chhp, &nn, &bufhp);
+  if (EVEN(sts)) return LDH__NOSUCHBUFFER;
+  if (bufhp->db.classid != pwr_eClass_Buffer) return LDH__NOSUCHBUFFER;
+
+  sts = ldhi_GetObjectBody(sp, bufhp, ldhi_eBid_SysBody, &bufbp);
+  if (EVEN(sts)) return sts;
+      
+  Buffer = (pwr_sBuffer *) bufbp->body;
+  if (bufferclass != NULL) *bufferclass = Buffer->Class;
+  if (size != NULL) *size = Buffer->Info.Size;
+  
+  sts = ldhi_BodyNameToBid(bodyname, &bid);
+  if (EVEN(sts)) return sts;
+  sts = ldhi_GetObjectBody(sp, ohp, bid, &obp);
+  if (EVEN(sts)) return sts;
+      
+  *buff = XtMalloc(Buffer->Info.Size);
+  if (*buff == NULL) return LDH__INSVIRMEM;
+  memcpy(*buff, obp->body + Buffer->Info.Offset, Buffer->Info.Size);
+  
+  return LDH__SUCCESS;
+}
+
+pwr_tStatus
+ldh_GetObjectClass (
+  ldhi_sSession	*sp,
+  pwr_tObjid		objid,
+  pwr_tClassId		*classid
+) {
+  pwr_tStatus		sts;
+  ldhi_sObjHead		*ohp;
+
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
+  if (sp == NULL) return LDH__NOSUCHSESS;
+  if (classid == NULL) return LDH__BADPARAM;
+
+  sts = ldhi_ObjidToOh(sp->wb, objid, &ohp);
+  if (EVEN(sts)) return sts;
+
+  *classid = ohp->db.classid;
+
+  return LDH__SUCCESS;
+}
+
+pwr_tStatus
+ldh_GetObjectContext (
+  ldhi_sSession	*sp,
+  pwr_tObjid		objid,
+  ldh_sObjContext	**octx
+) {
+  pwr_tStatus		sts;
+  ldhi_sOctxEntry	*octxp;
+
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
+  if (octx == NULL) return LDH__BADPARAM;
+  if (cdh_ObjidIsNull(objid)) return LDH__NOSUCHOBJ;
+
+  octxp = (ldhi_sOctxEntry *) ldh_TreeFind(sp->octxtab, &objid);
+  if (octxp == NULL) {
+    octxp = (ldhi_sOctxEntry *) ldh_TreeInsert(sp->octxtab, &objid);
+    if (octxp == NULL) return LDH__INSVIRMEM;
+  }
+
+  *octx = (ldh_sObjContext *) &octxp->octx;
+
+  return LDH__SUCCESS;
+}
+
+/*  Give information about an object.  */
+
+pwr_tStatus
+ldh_GetObjectInfo (
+    ldhi_sSession	*sp,
+    pwr_tObjid		objid,
+    ldh_sObjInfo	*Info
+)
+{
+  pwr_tStatus		sts;
+  ldhi_sObjHead		*ohp;
+
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
+  if (Info == NULL) return LDH__BADPARAM;
+
+  sts = ldhi_ObjidToOh(sp->wb, objid, &ohp);
+  if (EVEN(sts)) return sts;
+
+  Info->Volume = ohp->vhp->ohp->db.objid.vid;
+
+  return sts;
+}
+
+pwr_tStatus
+ldh_GetObjectPar (
+  ldhi_sSession	*sp,
+  pwr_tObjid		objid,
+  char			*bodyname,
+  char			*parname,
+  char			**buff,
+  int			*size
+) {
+  pwr_tStatus		sts;
+  ldhi_sObjHead		*chp; 
+  ldhi_sObjHead		*ohp;
+  ldhi_sObjHead		*parhp;		/* Parameter object header pointer */
+  ldhi_sObjHead		*obhp;		/* ObjBodyDef object header pointer */
+  ldhi_sObjBody		*obp;		/* Object body pointer */
+  ldhi_sObjBody		*parbp;		/* Parameter object body pointer */
+  pwr_sParam		*Param;
+  ldhi_eBid		bid;
+  pwr_tObjName		UseBodyName;
+  ldhi_sObjName		nn;
+
+  /* Check parameters. */
+
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
+  if (bodyname == NULL) return LDH__BADPARAM;
+  if (parname == NULL) return LDH__BADPARAM;
+  if (*bodyname == '\0') return LDH__NOSUCHBODY;
+  if (*parname == '\0') return LDH__NOSUCHATTR;
+  if (buff == NULL) return LDH__BADPARAM;
+
+  /* Check if object exists. */
+
+  sts = ldhi_ObjidToOh(sp->wb, objid, &ohp);
+  if (EVEN(sts)) return LDH__NOSUCHOBJ;
+
+  /* Check if class exists. */
+
+  sts = ldhi_ObjidToOh(sp->wb, cdh_ClassIdToObjid(ohp->db.classid), &chp);
+  if (EVEN(sts)) return LDH__NOSUCHCLASS;
+  if (chp->db.classid != pwr_eClass_ClassDef) return LDH__NOSUCHCLASS;
+
+  /* Check if body exists. */
+
+  if (ohp->db.flags.f.System && strcmp(bodyname, "RtBody") == 0) {
+      strcpy(UseBodyName, "SysBody");
+  } else {
+    strcpy(UseBodyName, bodyname);
+  }
+
+  if (chp->chhp == NULL) return LDH__NOSUCHBODY;
+  sts = ldhi_SetNormObjName(&nn, UseBodyName);
+  if (EVEN(sts)) return LDH__NOSUCHBODY;
+  sts = ldhi_FindSiblingByName(sp, chp->chhp, &nn, &obhp);
+  if (EVEN(sts)) return LDH__NOSUCHBODY;
+  if (obhp->db.classid != pwr_eClass_ObjBodyDef) return LDH__NOSUCHBODY;
+
+  /* Check if parameter exists. */
+
+  if (obhp->chhp == NULL) return LDH__NOSUCHATTR;
+  sts = ldhi_SetNormObjName(&nn, parname);
+  if (EVEN(sts)) return LDH__NOSUCHATTR;
+  sts = ldhi_FindSiblingByName(sp, obhp->chhp, &nn, &parhp);
+  if (EVEN(sts)) return LDH__NOSUCHATTR;
+
+  switch (parhp->db.classid) {
+  case pwr_eClass_Input:
+  case pwr_eClass_Output:
+  case pwr_eClass_Intern:
+  case pwr_eClass_ObjXRef:
+  case pwr_eClass_Buffer:
+  case pwr_eClass_Param:
+    break;
+  default:
+    return LDH__NOSUCHATTR;
+  }
+
+  /* Get body of the parameter definition object. */
+
+  sts = ldhi_GetObjectBody(sp, parhp, ldhi_eBid_SysBody, &parbp);
+  if (EVEN(sts)) return sts;
+      
+  Param = (pwr_sParam *) parbp->body;
+  if (size != NULL) *size = Param->Info.Size;
+  
+  /* Get body of object containing wanted parameter. */
+
+  sts = ldhi_BodyNameToBid(bodyname, &bid);
+  if (EVEN(sts)) return sts;
+  sts = ldhi_GetObjectBody(sp, ohp, bid, &obp);
+  if (EVEN(sts)) return sts;
+      
+  *buff = XtMalloc(Param->Info.Size);
+  if (*buff == NULL) return LDH__INSVIRMEM;
+  memcpy(*buff, obp->body + Param->Info.Offset, Param->Info.Size);
+  
+  return LDH__SUCCESS;
+}
+
+pwr_tStatus
+ldh_GetObjXRefDef (
+  ldhi_sSession	*sp,
+  pwr_sAttrRef		*AttrRef,
+  pwr_sObjXRef		*ObjXRef
+) {
+  pwr_tStatus		sts;
+  ldhi_sObjHead		*ohp;
+  ldhi_sObjHead		*ahp;
+  ldhi_sObjBody		*abp;
+  ldhi_sObjHead		*obhp;
+  pwr_sParam		*Param;
+  ldhi_sObjName		nn;
+  
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
+  if (ObjXRef == NULL) return LDH__BADPARAM;
+  if (AttrRef == NULL) return LDH__BADPARAM;
+
+  sts = ldhi_ObjidToOh(sp->wb, AttrRef->Objid, &ohp);
+  if (EVEN(sts)) return sts;
+
+  /* Find first attribute */
+  if (ohp->db.flags.f.System) {
+    sts = ldhi_SetNormObjName(&nn, "SysBody");
+    sts = ldhi_FindSiblingByName(sp, ohp->chp->chhp, &nn, &obhp);
+    if (EVEN(sts)) return LDH__NOSUCHATTR;
+  } else {
+    sts = ldhi_SetNormObjName(&nn, "RtBody");
+    sts = ldhi_FindSiblingByName(sp, ohp->chp->chhp, &nn, &obhp);
+    if (EVEN(sts)) return LDH__NOSUCHATTR; /* We do not handle DevBody */
+  }
+
+  for (ahp = obhp->chhp; ahp != NULL; ahp = ahp->silst.fwhp) {
+    ldhi_GetObjectBody(sp, ahp, ldhi_eBid_SysBody, &abp);
+    Param = (pwr_sParam *) abp->body;
+    if (AttrRef->Offset < Param->Info.Offset + Param->Info.Size)
+      break;
+  }
+  if (ahp == NULL) return LDH__NOSUCHATTR;
+
+  if (ahp->db.classid != pwr_eClass_ObjXRef)
+    return LDH__NOOXREF;
+
+  /* Check that attribute reference is on a even boundary */
+
+  if (((AttrRef->Offset - Param->Info.Offset) % (Param->Info.Size / Param->Info.Elements)) != 0)
+    return LDH__NOSUCHATTR;
+
+  memcpy(ObjXRef, Param, sizeof(pwr_sObjXRef));
+
+  return LDH__SUCCESS;
+}
+
+pwr_tStatus
+ldh_GetParent (
+  ldhi_sSession	*sp,
+  pwr_tObjid		objid,
+  pwr_tObjid		*new_objid
+) {
+  pwr_tStatus		sts;
+  ldhi_sObjHead		*ohp;
+
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
+  if (new_objid == NULL) return LDH__BADPARAM;
+
+  sts = ldhi_ObjidToOh(sp->wb, objid, &ohp);
+  if (EVEN(sts)) return sts;
+
+  if (ohp->fahp == ohp->vhp->ohp)
+    sts = LDH__NO_PARENT;
+  else
+    *new_objid = ohp->fahp->db.objid;
+
+  return sts;
+}
+
+pwr_tStatus
+ldh_GetPreviousObject (
+  ldhi_sSession	*sp,
+  pwr_tObjid		objid,
+  pwr_tObjid		*new_objid
+) {
+  pwr_tStatus		sts;
+
+  return LDH__NYI;
+
+  return sts;
+}
+
+pwr_tStatus
+ldh_GetPreviousSibling (
+  ldhi_sSession	*sp,
+  pwr_tObjid		objid,
+  pwr_tObjid		*new_objid
+)
+{
+  pwr_tStatus		sts;
+  ldhi_sObjHead		*ohp;
+
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
+  if (new_objid == NULL) return LDH__BADPARAM;
+
+  sts = ldhi_ObjidToOh(sp->wb, objid, &ohp);
+  if (EVEN(sts)) return sts;
+
+  if (ohp->vhp->ohp == ohp)
+    return LDH__NOSUCHOBJ;
+
+  if (ohp->silst.bwhp == NULL)
+    sts = LDH__NO_SIBLING;
+  else
+    *new_objid = ohp->silst.bwhp->db.objid;
+
+  return sts;
+}
+
+/* Get the number of different references from the current
+   object to other objects.  */
+
+pwr_tStatus
+ldh_GetReferenceInfo (
+  ldhi_sSession	*sp,
+  pwr_tObjid		Object,
+  ldh_sRefInfo		*RefInfo
+)
+{
+  pwr_tStatus		sts;
+  pwr_tObjid		*Objid;
+  pwr_tUInt32		Offset = 0;
+  ldhi_sObjHead		*ohp;
+  ldhi_sObjHead		*php;
+  ldhi_sObjHead		*obhp;
+  ldhi_sObjBody		*obp;
+  ldhi_sObjBody		*pbp;
+  int			i;
+  pwr_sParam		*Param;
+  void			*bp;
+  pwr_sAttrRef		*Attribute;
+  pwr_sAttrRef		TattrRef;
+  ldhi_sObjName		nn;
+
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
+  if (RefInfo == NULL) return LDH__BADPARAM;
+
+  sts = ldhi_ObjidToOh(sp->wb, Object, &ohp);
+  if (EVEN(sts)) return sts;
+
+  memset(RefInfo, 0, sizeof(*RefInfo));
+  memset(&TattrRef, 0, sizeof(TattrRef));
+  TattrRef.Objid = Object;
+
+  if ((ohp->db.flags.m & pwr_mClassDef_HasRef) == 0)
+    return LDH__SUCCESS;
+
+  /* Find first attribute */
+  if (ohp->db.flags.f.System) {
+    sts = ldhi_SetNormObjName(&nn, "SysBody");
+    sts = ldhi_FindSiblingByName(sp, ohp->chp->chhp, &nn, &obhp);
+    if (EVEN(sts)) return LDH__NOSUCHATTR;
+    sts = ldhi_GetObjectBody(sp, ohp, ldhi_eBid_SysBody, &obp);
+    if (EVEN(sts)) return sts;
+  } else {
+    sts = ldhi_SetNormObjName(&nn, "RtBody");
+    sts = ldhi_FindSiblingByName(sp, ohp->chp->chhp, &nn, &obhp);
+    if (EVEN(sts)) return LDH__NOSUCHATTR; /* We do not handle DevBody */
+    sts = ldhi_GetObjectBody(sp, ohp, ldhi_eBid_RtBody, &obp);
+    if (EVEN(sts)) return sts;
+  }
+
+  bp = obp->body;
+
+  for (php = obhp->chhp; php != NULL; php = php->silst.fwhp) {
+    /* get attribute definition body */
+    sts = ldhi_GetObjectBody(sp, php, ldhi_eBid_SysBody, &pbp);
+    if (EVEN(sts)) return sts;
+
+    Param = (pwr_sParam *) pbp->body;
+
+    switch (php->db.classid) {
+    case pwr_eClass_Input:
+    case pwr_eClass_Output:
+    case pwr_eClass_Intern:
+    case pwr_eClass_Param:
+      switch (Param->TypeRef) {
+      case pwr_eType_Objid:
+	for (i = 0; i < Param->Info.Elements; i++) {
+	  RefInfo->ObjRef.Total++;
+	  Objid = (pwr_tObjid *) ((char *) bp + Offset + Param->Info.Offset +
+	    i * (Param->Info.Size/Param->Info.Elements));
+	  if (!cdh_ObjidIsNull(*Objid)) {
+	    RefInfo->ObjRef.Used++;
+	    sts = ldhi_ObjidToOh(sp->wb, *Objid, NULL);
+	    if (EVEN(sts)) {
+	      RefInfo->ObjRef.Errors++;
+	    }
+	  }
+	}
+	break;
+      case pwr_eType_AttrRef:
+	for (i = 0; i < Param->Info.Elements; i++) {
+	  RefInfo->AttrRef.Total++;
+	  Attribute = (pwr_sAttrRef *) ((char *) bp + Offset + Param->Info.Offset +
+	    i * (Param->Info.Size/Param->Info.Elements));
+	  if (!cdh_ObjidIsNull(Attribute->Objid)) {
+	    RefInfo->AttrRef.Used++;
+	    sts = ldhi_ObjidToOh(sp->wb, Attribute->Objid, NULL);
+	    if (EVEN(sts)) {
+	      RefInfo->AttrRef.Errors++;
+	    }
+	  }
+	}
+	break;
+      }
+      break;
+    case pwr_eClass_AttrXRef:
+      for (i = 0; i < Param->Info.Elements; i++) {
+	RefInfo->AttrXRef.Total++;
+	TattrRef.Offset = Offset + Param->Info.Offset +
+	  i * (Param->Info.Size/Param->Info.Elements);
+	TattrRef.Size = Param->Info.Size/Param->Info.Elements;
+	sts = ldh_CheckAttrXRef(sp, &TattrRef);
+	if (EVEN(sts)) {
+	  RefInfo->AttrXRef.Used++;
+	  RefInfo->AttrXRef.Errors++;
+	} else if (sts != LDH__UNCONN) {
+	  RefInfo->AttrXRef.Used++;
+	}
+      }
+      break;
+    case pwr_eClass_ObjXRef:
+      for (i = 0; i < Param->Info.Elements; i++) {
+	RefInfo->ObjXRef.Total++;
+	sts = ldh_CheckObjXRef(sp, ohp->db.objid, php->db.name.data);
+	if (EVEN(sts)) {
+	  RefInfo->ObjXRef.Used++;
+	  RefInfo->ObjXRef.Errors++;
+        } else if (sts != LDH__UNCONN) {
+	  RefInfo->ObjXRef.Used++;
+	}
+      }
+      break;
+    default:
+      continue;
+    }
+  }
+  return LDH__SUCCESS;
+}
+
+/* Get first object in root list.  */
+
+pwr_tStatus
+ldh_GetRootList (
+  ldhi_sSession	*sp,
+  pwr_tObjid		*objid
+)
+{
+  pwr_tStatus		sts;
+
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
+  if (objid == NULL) return LDH__BADPARAM;
+
+  if (sp->vhp->ohp->chhp == NULL)
+    return LDH__NOSUCHOBJ;
+
+  *objid = sp->vhp->ohp->chhp->db.objid;
+
+  return LDH__SUCCESS;
+}
+
+/* Get first object in root list.  */
+
+pwr_tStatus
+ldh_GetVolumeRootList (
+  ldhi_sSession	*sp,
+  pwr_tVolumeId		vid,
+  pwr_tObjid		*objid
+)
+{
+  pwr_tStatus		sts;
+  ldhi_sVidEntry	*vtp;
+
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
+  if (objid == NULL) return LDH__BADPARAM;
+
+  vtp = (ldhi_sVidEntry *) ldh_TreeFind(sp->wb->vidtab, &vid);
+  if (vtp == NULL) return LDH__NOSUCHVOL;
+
+  if (vtp->vhp->ohp->chhp == NULL)
+    return LDH__NOSUCHOBJ;
+
+  *objid = vtp->vhp->ohp->chhp->db.objid;
+
+  return LDH__SUCCESS;
+}
+
+pwr_tStatus
+ldh_GetSessionInfo (
+  ldhi_sSession	*sp,
+  ldh_sSessInfo		*Info
+)
+{
+  pwr_tStatus		sts;
+
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
+  if (Info == NULL) return LDH__BADPARAM;
+
+  Info->Access = sp->access;
+  Info->Utility = sp->utility;
+  Info->Empty = ldh_TreeIsEmpty(sp->oixtab);
+
+  return LDH__SUCCESS;
+}
+
+pwr_tStatus
+ldh_GetVolumeInfo (
+  ldhi_sVolContext	*vp,
+  ldh_sVolumeInfo	*Info
+)
+{
+  pwr_tStatus		sts;
+  ldhi_sObjBody		*obp;
+  pwr_sClassVolume	*ClassVolume;
+
+  assert(vp != NULL);
+  assert(Info != NULL);
+
+  Info->Volume	= vp->vhp->vid;
+  Info->Class	= vp->vhp->ohp->db.classid;
+
+  sts = ldhi_GetObjectBody(NULL, vp->vhp->ohp, ldhi_eBid_SysBody, &obp);
+  if (EVEN(sts)) return sts;
+  ClassVolume = (pwr_sClassVolume *) obp->body;
+
+  Info->Version	= ClassVolume->RtVersion;
+
+  return LDH__SUCCESS;
+}
+
+pwr_tStatus
+ldh_GetUniqueObjectName (
+  ldhi_sSession	*sp,
+  pwr_tObjid		objid,
+  char			*Name
+)
+{
+  pwr_tStatus		sts;
+  ldhi_sObjHead		*ohp;
+
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
+
+  sts = ldhi_ObjidToOh(sp->wb, objid, &ohp);
+  if (EVEN(sts)) return sts;
+
+  sts = ldhi_GetUniqueObjectName(sp, objid.oix, Name);
+
+  return sts;
+}
+
+pwr_tStatus
+ldh_IsOkCreateObject (
+  ldhi_sSession	*sp,
+  pwr_tClassId		classid,
+  pwr_tObjid		dstoid,
+  ldh_eDest		dest
+)
+{
+  pwr_tStatus		sts;
+  ldhi_sObjHead		*chp;
+  ldhi_sObjHead		*dhp;
+  ldhi_sObjHead		*fahp;
+  pwr_sClassDef		*ClassDef;
+  ldhi_sObjBody		*cbp;
+
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
+
+  if (!cdh_ObjidIsNull(dstoid)) {
+    sts = ldhi_ObjidToOh(sp->wb, dstoid, &dhp);
+    if (EVEN(sts)) return sts;
+  } else
+    dhp = sp->vhp->ohp;
+
+  if (!inThisVolume(sp, dhp)) return LDH__OTHERVOLUME;
+
+  sts = ldhi_ObjidToOh(sp->wb, cdh_ClassIdToObjid(classid), &chp);
+  if (EVEN(sts)) return LDH__NOCLASS;
+  if (chp->db.classid != pwr_eClass_ClassDef) return LDH__NOCLASS;
+  sts = ldhi_GetObjectBody(sp, chp, ldhi_eBid_SysBody, &cbp);
+  if (EVEN(sts)) return LDH__NOCLASS;
+  ClassDef = (pwr_sClassDef*) cbp->body;
+
+  /* Check destination code. */
+
+  switch (dest) {
+  case ldh_eDest_IntoFirst:
+  case ldh_eDest_IntoLast:
+    fahp = dhp;
+    break;
+  case ldh_eDest_After:
+  case ldh_eDest_Before:
+    if (dhp == sp->vhp->ohp) return LDH__BADDEST;
+    fahp = dhp->fahp;
+    break;
+  default:
+    return LDH__NODEST;
+  }
+
+  if (fahp == sp->vhp->ohp) {
+    if (!ClassDef->Flags.f.TopObject)
+      return LDH__NOTOP;
+  } else {
+    if (fahp->db.flags.f.NoAdopt)
+      return LDH__NOADOPT;
+  }
+
+  sts = triggAnteCreate(sp, fahp, chp);
+  if (EVEN(sts)) return sts;
+
+  sts = triggAnteAdopt(sp, fahp, chp);
+
+  return sts;
+}
+
+pwr_tStatus
+ldh_IsOkCopyObject (
+  ldhi_sSession	*sp,
+  pwr_tObjid		objid,
+  pwr_tObjid		dstoid,
+  ldh_eDest		dest
+) {
+  pwr_tStatus		sts;
+  ldhi_sObjHead		*ohp;
+  ldhi_sObjHead		*dhp;
+  ldhi_sObjHead		*fahp;
+
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
+
+  sts = ldhi_ObjidToOh(sp->wb, objid, &ohp);
+  if (EVEN(sts)) return sts;
+
+  if (!cdh_ObjidIsNull(dstoid)) {
+    sts = ldhi_ObjidToOh(sp->wb, dstoid, &dhp);
+    if (EVEN(sts)) return sts;
+  } else
+    dhp = sp->vhp->ohp;
+
+  if (!inThisVolume(sp, dhp)) return LDH__OTHERVOLUME;
+
+  /* Check destination code. */
+
+  switch (dest) {
+  case ldh_eDest_IntoFirst:
+  case ldh_eDest_IntoLast:
+    fahp = dhp;
+    break;
+  case ldh_eDest_After:
+  case ldh_eDest_Before:
+    if (dhp == sp->vhp->ohp) return LDH__BADDEST;
+    fahp = dhp->fahp;
+    break;
+  default:
+    return LDH__NODEST;
+  }
+
+  if (fahp == sp->vhp->ohp) {
+    if (!ohp->db.flags.f.TopObject)
+      return LDH__NOTOP;
+  } else {
+    if (fahp->db.flags.f.NoAdopt)
+      return LDH__NOADOPT;
+  }
+
+  sts = triggAnteAdopt(sp, fahp, ohp->chp);
+
+  return sts;
+}
+
+pwr_tStatus
+ldh_IsOkMoveObject (
+  ldhi_sSession	*sp,
+  pwr_tObjid		objid,
+  pwr_tObjid		dstoid,
+  ldh_eDest		dest
+)
+{
+  pwr_tStatus		sts;
+  pwr_tStatus		adopt_sts = LDH__SUCCESS;
+  ldhi_sObjHead		*ohp;
+  ldhi_sObjHead		*dhp;
+  ldhi_sObjHead		*shp;
+  ldhi_sObjHead		*fahp;
+  ldhi_sObjHead		*fshp;
+  ldhi_sObjHead		*sfahp;
+  ldhi_sObjHead		*dfahp;
+
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
+
+  sts = ldhi_ObjidToOh(sp->wb, objid, &ohp);
+  if (EVEN(sts)) return sts;
+
+  sfahp = ohp->fahp;
+
+  if (!cdh_ObjidIsNull(dstoid)) {
+    sts = ldhi_ObjidToOh(sp->wb, dstoid, &dhp);
+    if (EVEN(sts)) return sts;
+    fahp = dhp;
+  } else
+    fahp = dhp = sp->vhp->ohp;
+
+  if (!inThisVolume(sp, dhp)) return LDH__OTHERVOLUME;
+
+  /* Check if destination is related to object to be moved. */
+
+  while (fahp != sp->vhp->ohp) {
+    if (ohp == fahp) return LDH__BADDEST;
+    fahp = fahp->fahp;
+  } 
+
+  /* Check destination code. */
+
+  switch (dest) {
+  case ldh_eDest_IntoFirst:
+  case ldh_eDest_IntoLast:
+    dfahp = dhp;
+    fshp = dhp->chhp;
+    break;
+  case ldh_eDest_After:
+  case ldh_eDest_Before:
+    if (dhp == sp->vhp->ohp) return LDH__BADDEST;
+    dfahp = dhp->fahp;
+    fshp = dhp->fahp->chhp;
+    break;
+  default:
+    return LDH__NODEST;
+  }
+
+  if (dfahp == sp->vhp->ohp) {
+    if (!ohp->db.flags.f.TopObject)
+      return LDH__NOTOP;
+  } else {
+    if (dfahp->db.flags.f.NoAdopt)
+      return LDH__NOADOPT;
+  }
+
+  if (dfahp != sfahp) {
+    sts = triggAnteMove(sp, ohp, dfahp);
+    if (EVEN(sts)) return sts;
+    sts = triggAnteUnadopt(sp, sfahp, ohp);
+    if (EVEN(sts)) return sts;
+    adopt_sts = triggAnteAdopt(sp, dfahp, ohp->chp);
+    if (EVEN(adopt_sts)) return adopt_sts;
+  }
+
+  if (adopt_sts != LDH__ADOPTRENAME) {
+    sts = ldhi_FindSiblingByName(sp, fshp, &ohp->db.normname, &shp);
+    if (ODD(sts)) {
+      if (ohp != shp)
+	return LDH__NAMALREXI;
+    }
+  }
+
+  return LDH__SUCCESS;
+}
+
+#if 0 /* !!! To do !!! Doesn't seem to be used */
+pwr_tStatus
+ldh_MapMethod (
+  ldhi_sSession	*sp,
+  pwr_tObjid		Object,
+  char			*methodName,
+  pwr_tStatus		(*method)()
+)
+{
+  pwr_tStatus		sts = LDH__SUCCESS;
+  pwr_tString80		Name;
+  ldhi_sBinding		*bp;
+  ldhi_sObjHead		*ohp;
+
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
+
+  sts = ldhi_ObjidToOh(sp->wb, Object, &ohp);
+  if (EVEN(sts)) return sts;
+
+  strcpy(Name, ohp->chp->db.name.data);
+  strcat(Name, "-");
+  strcat(Name, methodName);
+
+  bp = (ldhi_sBinding *) ldh_TreeFind(sp->wb->bindtab, Name);
+  if (bp == NULL) return ???;
+
+  method = bp->method;
+
+  return sts;
+}
+#endif
+
+pwr_tStatus
+ldh_MoveObject (
+  ldhi_sSession	*sp,
+  pwr_tObjid		objid,
+  pwr_tObjid		dstoid,
+  ldh_eDest		dest
+)
+{
+  pwr_tStatus		sts;
+  pwr_tStatus		adopt_sts = LDH__SUCCESS;
+  ldhi_sObjHead		*chp;
+  ldhi_sObjHead		*ohp;
+  ldhi_sObjHead		*dhp;
+  ldhi_sObjHead		*shp;
+  ldhi_sObjHead		*fahp;
+  ldhi_sObjHead		*fshp;
+  ldhi_sObjHead		*sfahp;
+  ldhi_sObjHead		*dfahp;
+  ldh_sEvent		*ep;
+
+  if (!hasAccess(sp, ldh_eAccess_ReadWrite, &sts)) return sts;
+
+  sts = ldhi_ObjidToOh(sp->wb, objid, &ohp);
+  if (EVEN(sts)) return sts;
+
+  if (!inThisVolume(sp, ohp)) return LDH__OTHERVOLUME;
+
+  sts = ldhi_ObjidToOh(sp->wb, cdh_ClassIdToObjid(ohp->db.classid), &chp);
+  if (EVEN(sts)) return LDH__NOCLASS;
+
+  sfahp = ohp->fahp;
+
+  if (!cdh_ObjidIsNull(dstoid)) {
+    sts = ldhi_ObjidToOh(sp->wb, dstoid, &dhp);
+    if (EVEN(sts)) return sts;
+    fahp = dhp;
+  } else
+    fahp = dhp = sp->vhp->ohp;
+
+  if (!inThisVolume(sp, dhp)) return LDH__OTHERVOLUME;
+
+  /* Check if destination is related to object to be moved. */
+
+  while (fahp != sp->vhp->ohp) {
+    if (ohp == fahp) return LDH__BADDEST;
+    fahp = fahp->fahp;
+  } 
+
+  /* Check destination code. */
+
+  switch (dest) {
+  case ldh_eDest_IntoFirst:
+  case ldh_eDest_IntoLast:
+    dfahp = dhp;
+    fshp = dhp->chhp;
+    break;
+  case ldh_eDest_After:
+  case ldh_eDest_Before:
+    dfahp = dhp->fahp;
+    if (dhp == sp->vhp->ohp) return LDH__BADDEST;
+    fshp = dhp->fahp->chhp;
+    break;
+  default:
+    return LDH__NODEST;
+  }
+
+  if (dfahp == sp->vhp->ohp) {
+    if (!ohp->db.flags.f.TopObject)
+      return LDH__NOTOP;
+  } else {
+    if (dfahp->db.flags.f.NoAdopt)
+      return LDH__NOADOPT;
+  }
+
+  if (dfahp != sfahp) {
+    sts = triggAnteMove(sp, ohp, dfahp);
+    if (EVEN(sts)) return sts;
+    sts = triggAnteUnadopt(sp, sfahp, ohp);
+    if (EVEN(sts)) return sts;
+    adopt_sts = triggAnteAdopt(sp, dfahp, ohp->chp);
+    if (EVEN(adopt_sts)) return adopt_sts;
+  }
+
+  if (adopt_sts != LDH__ADOPTRENAME) {
+    sts = ldhi_FindSiblingByName(sp, fshp, &ohp->db.normname, &shp);
+    if (ODD(sts)) {
+      if (ohp != shp)
+	return LDH__NAMALREXI;
+    }
+  }
+
+  ep = eventStart(sp, objid, ldh_eEvent_ObjectMoved);
+  eventOldFamily(sp, ep, ohp);
+
+  ldhi_UnadoptObject(sp, ohp, 1);
+  ldhi_MarkObject(sp, ldhi_mChange_IsMoved, ohp);
+  ldhi_AdoptObject(sp, ohp, dhp, dest);
+
+  if (dfahp != sfahp) {
+    triggPostMove(sp, ohp);
+    triggPostUnadopt(sp, sfahp, ohp);
+    triggPostAdopt(sp, dfahp, ohp);
+  }
+
+  eventNewFamily(sp, ep, ohp);
+  eventSend(sp, ep);
+
+  return LDH__SUCCESS;
+}
+
+pwr_tStatus
+ldh_NameToAttrRef (
+  ldhi_sSession	*sp,
+  char			*AttrName,
+  pwr_sAttrRef		*AttrRef
+)
+/* !!! To do !!! Take care of new name types.  */
+{
+  pwr_tStatus		sts;
+  ldhi_sObjHead		*ohp;
+  ldhi_sObjHead		*obhp;
+  ldhi_sObjHead		*ahp;
+  ldhi_sObjHead		*fshp;	    /* Pointer to first sibling in list. */
+  ldhi_sObjBody		*abp;
+  ldhi_sObjBody		*obp;
+  int			i;
+  int			len;
+  char			*s;
+  ldhi_sNormName	*NameBuf;
+  pwr_sParam		*Param;
+  pwr_sObjBodyDef	*ObjBodyDef;
+  ldhi_sObjName		nn;
+
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
+  assert(AttrRef != NULL);
+  assert(AttrName != NULL);
+  if (*AttrName == '\0') return LDH__NOSUCHATTR;
+
+  while (*AttrName == ' ')
+    AttrName++;
+  len = strlen(AttrName);
+  if (len <= 0)
+    return LDH__NOSUCHATTR;
+  s = AttrName + len - 1;
+  while (*s == ' ')
+    *s-- = '\0';
+
+  if (*AttrName == '\0')	    /* Attributes must have a name. */
+    return LDH__NOSUCHATTR;
+
+  sts = ldhi_AllocNormName(pwr_cNObjid, AttrName, &NameBuf);
+  if (EVEN(sts)) return sts;
+
+  for (fshp = sp->vhp->ohp->chhp, i = 0; i < NameBuf->nseg; i++, fshp = ohp->chhp) {
+    sts = ldhi_SetNormObjName(&nn, NameBuf->seg[i]);
+    if (EVEN(sts)) goto error;
+    sts = ldhi_FindSiblingByName(sp, fshp, &nn, &ohp);
+    if (EVEN(sts)) goto error;
+  }
+
+  if (ohp->db.flags.f.System) {
+    sts = ldhi_SetNormObjName(&nn, "SysBody");
+    sts = ldhi_FindSiblingByName(sp, ohp->chp->chhp, &nn, &obhp);
+    if (EVEN(sts)) goto error;
+  } else {
+    sts = ldhi_SetNormObjName(&nn, "RtBody");
+    sts = ldhi_FindSiblingByName(sp, ohp->chp->chhp, &nn, &obhp);
+    if (EVEN(sts)) goto error; /* We do not handle DevBody */
+  }
+  if (NameBuf->parstr != '\0') {
+    sts = ldhi_SetNormObjName(&nn, NameBuf->parstr);
+    if (EVEN(sts)) goto error;
+    sts = ldhi_FindSiblingByName(sp, obhp->chhp, &nn, &ahp);
+    if (EVEN(sts)) goto error;
+    ldhi_GetObjectBody(sp, ahp, ldhi_eBid_SysBody, &abp);
+    Param = (pwr_sParam *) abp->body;
+    if (NameBuf->index == ULONG_MAX) {
+      AttrRef->Offset = Param->Info.Offset;
+      AttrRef->Size = Param->Info.Size;
+      AttrRef->Flags.b.Indirect = Param->Info.Flags & PWR_MASK_POINTER;
+    } else if (Param->Info.Elements == 1) {
+      sts = LDH__ATTRINDEX;
+      goto error;
+    } else if (NameBuf->index == 0) {
+      AttrRef->Offset = Param->Info.Offset;
+      AttrRef->Size = Param->Info.Size / Param->Info.Elements;
+      AttrRef->Flags.b.Indirect = Param->Info.Flags & PWR_MASK_POINTER;
+    } else if (NameBuf->index > Param->Info.Elements) {
+      sts = LDH__ATTRINDEX;
+      goto error;
+    } else {
+      AttrRef->Offset = Param->Info.Offset
+	+ (Param->Info.Size / Param->Info.Elements) * NameBuf->index;
+      AttrRef->Size = Param->Info.Size / Param->Info.Elements;
+      AttrRef->Flags.b.Indirect = Param->Info.Flags & PWR_MASK_POINTER;
+    }
+  } else {
+    ldhi_GetObjectBody(sp, obhp, ldhi_eBid_SysBody, &obp);
+    ObjBodyDef = (pwr_sObjBodyDef *) obp->body;
+    AttrRef->Offset = 0;
+    AttrRef->Size = ObjBodyDef->Size;
+    AttrRef->Flags.m = 0;
+  }
+  AttrRef->Objid = ohp->db.objid;
+  AttrRef->Body  = cdh_TypeObjidToId(obhp->db.objid);
+
+  ldhi_FreeNormName(NameBuf);
+  return sts;
+
+error:
+  ldhi_FreeNormName(NameBuf);
+  return sts;
+}
+
+/*  Get the object identifier of a named object.  */
+
+pwr_tStatus
+ldh_NameToObjid (
+  ldhi_sSession	*sp,
+  pwr_tObjid		*objid,
+  char			*objname
+)
+{
+  pwr_tStatus		sts = LDH__SUCCESS;
+  ldhi_sObjHead		*ohp;
+  ldhi_sObjHead		*vohp;
+  ldhi_sObjHead		*mohp;
+  ldhi_sObjHead		*fshp;	    /* Pointer to first sibling in list. */
+  ldhi_sObjBody		*obp;
+  char			normname[256];
+  int			len;
+  char			*s;
+  char			*d;
+  pwr_sMountObject	*MountObject;
+  ldhi_sObjName		nn;
+  pwr_tObjid		oid;
+
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
+  if (objid == NULL) return LDH__BADPARAM;
+  if (objname == NULL) return LDH__BADPARAM;
+
+  while (*objname == ' ')
+    objname++;
+  len = strlen(objname);
+  if (len <= 0)
+    return LDH__BADNAME;
+  s = objname + len - 1;
+  while (*s == ' ')
+    *s-- = '\0';
+
+  if (*objname == '-')	    /* No hyphen at beginning of name! */
+    return LDH__BADNAME;
+
+  if (*objname == '\0')	    /* Objects must have a name. */
+    return LDH__BADNAME;
+
+  if (*objname == '_') {
+    sts = ldhi_StringToObjid(objname, &oid);
+    if (EVEN(sts)) return sts;
+    *objid = oid;
+  } else {
+    sts = ldhi_NormalizePathName(normname, objname, sizeof(normname)-1);
+    if (EVEN(sts))
+      return sts;
+
+    d = strchr(normname, ':');
+    if (d == NULL) {
+      s = normname;
+      fshp = sp->vhp->ohp->chhp;
+    } else {
+      *d = '\0';
+      s = d + 1;
+      sts = ldhi_VolumeNameToOh(sp, normname, &vohp);
+      if (EVEN(sts)) return sts;
+      fshp = vohp->chhp;
+    }
+
+    if (*s == '\0') {
+      /* Only volume name was given.  */
+      *objid = vohp->db.objid;
+      return sts;
+    }
+
+    for (s = strtok(s, "-"); s != NULL; s = strtok(NULL, "-")) {
+      mohp = NULL;
+      ldhi_SetObjName(&nn, s);
+      sts = ldhi_FindSiblingByName(sp, fshp, &nn, &ohp);
+      if (EVEN(sts)) return sts;
+      if (ohp->db.classid == pwr_eClass_MountObject) {
+	sts = ldhi_GetObjectBody(sp, ohp, ldhi_eBid_SysBody, &obp);
+	if (EVEN(sts)) return sts;
+	MountObject = (pwr_sMountObject *) obp->body;
+	mohp = ohp;
+	sts = ldhi_ObjidToOh(sp->wb, MountObject->Object, &ohp);
+	if (EVEN(sts)) return LDH__NOSUCHVOL;
+      }
+      fshp = ohp->chhp;
+    }
+    /*	If last object was a mount object then return the
+	mount object and not the mounted object.  */
+    if (mohp != NULL)
+      ohp = mohp;
+
+    *objid = ohp->db.objid;
+  }
+
+  return sts;
+}
+
+/* Returns the name of an object identified by its objid.
+   The caller is responsible for supplying a buffer at
+   least as big as maxsize.  */
+
+pwr_tStatus
+ldh_ObjidToName (
+  ldhi_sSession	*sp,
+  pwr_tObjid		objid,
+  ldh_eName		nametype,
+  char			*namebuf,
+  int			maxsize,
+  int			*size
+)
+{
+  pwr_tStatus		sts;
+  pwr_tBoolean		fallback = 0;
+  ldhi_sObjHead		*ohp;
+  char			*s = NULL;
+  unsigned long		len;
+
+  assert(sp != NULL);
+  assert(namebuf != NULL);
+
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
+  sts = ldhi_ObjidToOh(sp->wb, objid, &ohp);
+  fallback = EVEN(sts);
+
+  switch (nametype) {
+  case ldh_eName_Object:
+    if (fallback)
+      return sts;
+    s = ohp->db.name.data;
+    break;
+  case ldh_eName_Hierarchy:
+    if (fallback) {
+      s = cdh_ObjidToString(NULL, objid, 1);
+    } else {
+      s = ldhi_PathName(ohp, !inThisVolume(sp, ohp));
+    }
+    break;
+  case ldh_eName_Path:
+    if (fallback)
+      return sts;
+    s = ldhi_PathName(ohp->fahp, !inThisVolume(sp, ohp));
+    break;
+  case ldh_eName_VolPath:
+    if (fallback) {
+      s = cdh_ObjidToString(NULL, objid, 1);
+    } else {
+      s = ldhi_PathName(ohp, 1);
+    }
+    break;
+  case ldh_eName_Objid:
+    s = cdh_ObjidToString(NULL, objid, 1);
+    break;
+  case ldh_eName_Default:
+    if (fallback) {
+      s = cdh_ObjidToString(NULL, objid, 1);
+    } else if (objid.oix == pwr_cNObjectIx) {
+      s = ldhi_PathName(ohp, 1);
+    } else {
+      s = ldhi_PathName(ohp, !inThisVolume(sp, ohp));
+    }
+  default:
+    sts = LDH__NYI;
+    break;
+  }
+
+  len = strlen(s);
+  if (len < maxsize) {
+     strcpy(namebuf, s);
+  } else {
+    return LDH__NAMEBUF;
+  }
+
+  if (size != NULL)
+    *size = len;
+
+  return LDH__SUCCESS;
+}
+#if 0
+
+pwr_tStatus
+ldh_TypeNameToId (
+  ldhi_sSession *sp,
+  pwr_tObjid *objid,
+  char *objname
+)
+{
+}
+#endif
+
+/* Returns the name of a type identified by its type identifier.
+   The caller is responsible for supplying a buffer at
+   least as big as maxsize.  */
+
+pwr_tStatus
+ldh_TypeIdToName (
+  ldhi_sSession *sp,
+  pwr_tTypeId type,
+  char *namebuf,
+  int maxsize,
+  int *size
+)
+{
+  pwr_tStatus sts;
+  ldhi_sObjHead *ohp;
+  char *s;
+  unsigned int len;
+
+  if (sp == NULL) return LDH__NOSUCHSESS;
+  if (namebuf == NULL) return LDH__BADPARAM;
+
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
+  sts = ldhi_ObjidToOh(sp->wb, cdh_TypeIdToObjid(type), &ohp);
+  if (EVEN(sts)) return sts;
+
+  s = ldhi_PathName(ohp, 1);
+  
+  len = strlen(s);
+  if (len < maxsize) {
+    strcpy(namebuf, s);
+  } else {
+    return LDH__NAMEBUF;
+  }
+
+  if (size != NULL)
+    *size = len;
+
+  return LDH__SUCCESS;
+}
+
+/* Returns the name of a class identified by its classid.
+   The caller is responsible for supplying a buffer at
+   least as big as maxsize.  */
+
+pwr_tStatus
+ldh_ClassIdToName (
+  ldhi_sSession	*sp,
+  pwr_tClassId		classid,
+  char			*namebuf,
+  int			maxsize,
+  int			*size
+)
+{
+  pwr_tStatus sts;
+  ldhi_sObjHead *ohp;
+  char *s;
+  unsigned int len;
+
+  if (sp == NULL) return LDH__NOSUCHSESS;
+  if (namebuf == NULL) return LDH__BADPARAM;
+
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
+  sts = ldhi_ObjidToOh(sp->wb, cdh_ClassIdToObjid(classid), &ohp);
+  if (EVEN(sts)) return sts;
+
+  s = ldhi_PathName(ohp, 1);
+  
+  len = strlen(s);
+  if (len < maxsize) {
+    strcpy(namebuf, s);
+  } else {
+    return LDH__NAMEBUF;
+  }
+
+  if (size != NULL)
+    *size = len;
+
+  return LDH__SUCCESS;
+}
+
+
+void
+ldh_AddThisSessionCallback (
+  ldhi_sSession	*Session,
+  void			*editorContext,
+  pwr_tStatus		(*ReceiveThisSession)(
+			  void *editorContext,
+			  ldh_sEvent *event
+			)
+)
+{
+  Session->editorContext = editorContext;
+  Session->sendThisSession = ReceiveThisSession;
+}
+
+
+void
+ldh_AddOtherSessionCallback (
+  ldhi_sSession	*Session,
+  void			*editorContext,
+  pwr_tStatus		(*ReceiveOtherSession)(
+			  void *editorContext,
+			  ldh_sEvent *event
+			)
+)
+{
+  Session->editorContext = editorContext;
+  Session->sendOtherSession = ReceiveOtherSession;
+}
+
+
+pwr_tStatus
+ldh_OpenSession (
+  ldhi_sSession	**Session,
+  ldhi_sVolContext	*volctx,
+  ldh_eAccess		access,
+  ldh_eUtility		utility
+)
+{
+  pwr_tStatus sts = LDH__SUCCESS;
+  ldhi_sSession *sp;
+  int i;
+  void *editorContext = NULL;
+  typedef pwr_tStatus (*tReceive)(
+    void *editorContext,
+    ldh_sEvent *event
+  );
+  ldhi_tSesEventCB  sendThisSession = NULL;
+  ldhi_tSesEventCB  sendOtherSession = NULL;
+
+  if (volctx == NULL) return LDH__BADPARAM;
+  if (Session == NULL) return LDH__BADPARAM;
+  if (access <= ldh_eAccess__ || access >= ldh_eAccess_)
+    return LDH__BADPARAM;
+  if (utility <= ldh_eUtility__ || utility >= ldh_eUtility_)
+    return LDH__BADPARAM;
+
+  /* Create new session context. */
+
+  switch (utility) {
+  case ldh_eUtility_Navigator:
+    if (access != ldh_eAccess_ReadOnly) return LDH__BADPARAM;
+    break;
+  case ldh_eUtility_Loader:
+  case ldh_eUtility_Configurator:
+  case ldh_eUtility_Pwr:
+    if (access == ldh_eAccess_ReadOnly)
+      break;
+    for (i = ldh_eUtility_Navigator + 1; i < ldh_eUtility_; i++)
+      for (sp = volctx->utility[i]; sp != NULL; sp = sp->seslst)
+	if (sp->access != ldh_eAccess_ReadOnly) return LDH__OTHERSESS;
+    break;
+  case ldh_eUtility_PlcEditor:
+    if (access == ldh_eAccess_ReadOnly)
+      break;
+    for (i = ldh_eUtility_Navigator + 1; i < ldh_eUtility_; i++)
+      for (sp = volctx->utility[i]; sp != NULL; sp = sp->seslst)
+	if (sp->utility != utility && sp->access != ldh_eAccess_ReadOnly) return LDH__OTHERSESS;
+    break;
+  default:
+    ;
+  }
+
+  sp = (ldhi_sSession *) XtCalloc(1, sizeof(ldhi_sSession));
+  if (sp == NULL) return LDH__INSVIRMEM;
+
+  sp->time = time(0);
+  sp->seslst = volctx->utility[utility];
+  volctx->utility[utility] = sp;
+  sp->wb = volctx->wb;
+  sp->vhp = volctx->vhp;
+  sp->volctx = volctx;
+  sp->oixtab = ldh_TreeCreate(sizeof(pwr_tObjectIx),
+    offsetof(ldhi_sOixEntry, oix), sizeof(ldhi_sOixEntry), 100,
+    ldh_eTreeComp_ObjectIx, NULL);
+  sp->octxtab = ldh_TreeCreate(sizeof(pwr_tObjid),
+    offsetof(ldhi_sOctxEntry, octx), sizeof(ldhi_sOctxEntry), 100,
+    ldh_eTreeComp_Objid, NULL);
+  sp->access = access;
+  sp->utility = utility;
+  sp->editorContext = editorContext;
+  sp->sendThisSession = sendThisSession;
+  sp->sendOtherSession = sendOtherSession;
+  
+  *Session = sp;
+
+  return sts;
+}
+
+/* This routine creates a new memory resident workbench and populates
+   it with objects from database on disk.  */
+
+pwr_tStatus
+ldh_OpenWB (
+  ldhi_sWorkbench **wbctx
+)
+{
+  extern pwr_tStatus openWB();
+
+  return openWB(wbctx, 1);
+}
+
+pwr_tStatus
+ldh_TOpenWB (
+  ldhi_sWorkbench **wbctx,
+  int iflag
+)
+{
+
+  return openWB(wbctx, iflag);
+}
+
+static pwr_tStatus
+openWB (
+  ldhi_sWorkbench	**wbctx,
+  int			iflag
+)
+{
+  pwr_tStatus		sts;
+  ldhi_sObjHead		*ohp;
+  ldhi_sObjHead		*fahp;
+  ldhi_sObjHead		*brhp;
+  ldhi_sObjHead		*chp;
+  ldhi_sOixEntry	*otp;
+  ldhi_sVolHead		*vhp;
+  ldhi_sVidEntry	*vtp;
+  ldhi_sWorkbench	*wb;
+  int i, j;
+
+  getLogging();
+
+  if (wbctx == NULL) return LDH__BADPARAM;
+  *wbctx = NULL;
+
+  ver_WriteVersionInfo("PROVIEW/R Workbench Database");
+
+#if 0
+  FILE *lf;
+  char *lfname = "pwrp_db:wb_lockfile.tmp;1";
+
+  lf = fopen (lfname, "a+");
+  if (lf == NULL) {
+    printf("** Database is locked by another user!!\n");
+    return LDH__DBLOCKED;
+  }
+#endif
+
+  printf("   Opening database...\n");
+
+  /* Load object headers. */
+  
+  ldhi_gWB.hdlst = NULL;
+  ldhi_gWB.bdlst = NULL;
+  wb = &ldhi_gWB;
+
+  /* Create workbench tables.  */
+
+  wb->vidtab = ldh_TreeCreate(sizeof(pwr_tVolumeId),
+    offsetof(ldhi_sVidEntry, vid), sizeof(ldhi_sVidEntry), 10,
+    ldh_eTreeComp_VolumeId, NULL);
+
+  if (wb->vidtab == NULL)
+    return LDH__INSVIRMEM;
+
+  wb->bindtab = ldh_TreeCreate(sizeof(((ldhi_sBinding *)NULL)->methodName),
+    offsetof(ldhi_sBinding, methodName), sizeof(ldhi_sBinding), 100,
+    ldh_eTreeComp_Strncmp, NULL);
+
+  if (wb->bindtab == NULL)
+    return LDH__INSVIRMEM;
+
+  sts = ldhdb_LoadObjectHeaders(wb);
+  if (EVEN(sts)) return sts;
+
+  /* Build objid tree. */
+
+  for (ohp = wb->hdlst; ohp != NULL; ohp = ohp->hdlst) {
+    vtp = (ldhi_sVidEntry *) ldh_TreeFind(wb->vidtab, &ohp->db.objid.vid);
+    if (vtp == NULL) {
+      vtp = (ldhi_sVidEntry *) ldh_TreeInsert(wb->vidtab, &ohp->db.objid.vid);
+      if (vtp == NULL)
+	return LDH__INSVIRMEM;
+
+      vhp = ldhi_AllocVolHead();
+      if (vhp == NULL)
+	return LDH__INSVIRMEM;
+
+      vtp->vhp = vhp;
+      vhp->vid = ohp->db.objid.vid;
+
+      sts = ldhdb_GetOix((unsigned int) vhp->vid, &vhp->freeOix);
+      if (EVEN(sts)) return sts;
+
+      vhp->oixtab = ldh_TreeCreate(sizeof(pwr_tObjectIx),
+	offsetof(ldhi_sOixEntry, oix), sizeof(ldhi_sOixEntry), 1000,
+	ldh_eTreeComp_ObjectIx, NULL);
+
+      if (vhp->oixtab == NULL)
+	return LDH__INSVIRMEM;
+
+    }
+    otp = (ldhi_sOixEntry *) ldh_TreeInsert(vtp->vhp->oixtab, &ohp->db.objid.oix);
+    if (otp == NULL)
+      return LDH__INSVIRMEM;
+    if (otp == (void *) 1) {
+      printf("\n!!! Two objects with same object identity!\n");
+      printf("    Objid........: %s\n", cdh_ObjidToString(NULL, ohp->db.objid, 0));
+      otp = (ldhi_sOixEntry *) ldh_TreeFind(vtp->vhp->oixtab, &ohp->db.objid.oix);
+      printf("    Object_1 name: %s\n", otp->ohp->db.name.data);
+      printf("    Object_2 name: %s\n", ohp->db.name.data);
+      return LDH__DBINCON;
+    }
+
+    ohp->vhp = vtp->vhp;
+    otp->ohp = ohp;
+
+    /* Copy db header to copy area dbcpy */
+
+    memcpy(&ohp->dbcpy, &ohp->db, sizeof(ohp->db));
+
+    if (ohp->db.objid.oix == 0) {
+      /* This is the volume object.  */
+      vtp->vhp->ohp = ohp;
+    }
+  }
+
+  /* Link each object to father, brother and classdef. */
+
+  for (ohp = wb->hdlst; ohp != NULL; ohp = ohp->hdlst) {
+    /* Link to father. */
+    if (ohp->db.objid.oix != pwr_cNObjectIx) {
+      sts = ldhi_ObjidToOh(wb, ohp->db.father, &fahp);
+      if (EVEN(sts)) {
+	printf("\n!!! Father doesn't exist:\n");
+	printf("    Objid..: %s\n", cdh_ObjidToString(NULL, ohp->db.objid, 0));
+	printf("    Objname: %s\n", ohp->db.name.data);
+	printf("    Father.: %s\n", cdh_ObjidToString(NULL, ohp->db.father, 0));
+	return LDH__DBINCON;
+      }
+      ohp->fahp = fahp;
+      /* Link template object to ClassDef. */
+      if (fahp->db.classid == pwr_eClass_ClassDef &&
+	  strcmp("Template", ohp->db.name.data) == 0
+      ) {
+	/* This is a template object. */
+	if (!cdh_ObjidIsEqual(cdh_ClassIdToObjid(ohp->db.classid), fahp->db.objid)) {
+	  printf("\n!!! Template object of incorrect class:\n");
+	  printf("    Objid..: %s\n", cdh_ObjidToString(NULL, ohp->db.objid, 0));
+	  printf("    Objname: %s\n", ohp->db.name.data);
+	  printf("    Class..: %s\n", cdh_ClassIdToString(NULL, ohp->db.classid, 1));
+	  return LDH__DBINCON;
+	} else {
+	  fahp->tmphp = ohp;
+	}
+      }
+
+      /* Link to backward sibling. */
+      if (cdh_ObjidIsNull(ohp->db.bwsoid)) {
+	/* No brother => first child. */
+	if (fahp->chhp != NULL) {
+	  printf("More than one first child\n   Object: %s, Father: %s, Current: %s\n",
+	    ohp->db.name.data, fahp->db.name.data, fahp->chhp->db.name.data); 
+	} else {
+	  fahp->chhp = ohp;
+	}
+      } else {
+	/* Link to backward sibling. */
+	sts = ldhi_ObjidToOh(wb, ohp->db.bwsoid, &brhp);
+	if (EVEN(sts)) {
+	  printf("\n!!! My backward sibling doesn't exist:\n");
+	  printf("    Object.: %s\n", cdh_ObjidToString(NULL, ohp->db.objid, 0));
+	  printf("    Objname: %s\n", ohp->db.name.data);
+	  printf("    Sibling: %s\n", cdh_ObjidToString(NULL, ohp->db.bwsoid, 0));
+	  return LDH__DBINCON;
+	}
+	if (cdh_ObjidIsNotEqual(brhp->db.fwsoid, ohp->db.objid)) {
+	  printf("\n!!! My backward sibling does not like me:\n");
+	  printf("    Object: %s\n", cdh_ObjidToString(NULL, ohp->db.objid, 0));
+	  printf("    Objname: %s\n", ohp->db.name.data);
+	  printf("    Sibling: %s\n", cdh_ObjidToString(NULL, ohp->db.bwsoid, 0));
+	  return LDH__DBINCON;
+	} else {
+	  ohp->silst.bwhp = brhp;
+	}
+      }
+      /* Link to forwardward sibling. */
+      if (cdh_ObjidIsNotNull(ohp->db.fwsoid)) {
+	sts = ldhi_ObjidToOh(wb, ohp->db.fwsoid, &brhp);
+	if (EVEN(sts)) {
+	  printf("\n!!! My forward sibling doesn't exist:\n");
+	  printf("    Object.: %s\n", cdh_ObjidToString(NULL, ohp->db.objid, 0));
+	  printf("    Objname: %s\n", ohp->db.name.data);
+	  printf("    Sibling: %s\n", cdh_ObjidToString(NULL, ohp->db.fwsoid, 0));
+	  return LDH__DBINCON;
+	}
+	if (cdh_ObjidIsNotEqual(brhp->db.bwsoid, ohp->db.objid)) {
+	  printf("\n!!! My forward sibling does not like me:\n");
+	  printf("    Object: %s\n", cdh_ObjidToString(NULL, ohp->db.objid, 0));
+	  printf("    Objname: %s\n", ohp->db.name.data);
+	  printf("    Sibling: %s\n", cdh_ObjidToString(NULL, ohp->db.fwsoid, 0));
+	  return LDH__DBINCON;
+	} else {
+	  ohp->silst.fwhp = brhp;
+	}
+      }
+    } else {
+      /* The volume object has no father or brother. */
+    }
+
+    /* Link to classdef. */
+    sts = ldhi_ObjidToOh(wb, cdh_ClassIdToObjid(ohp->db.classid), &chp);
+    if (EVEN(sts)) {
+      printf("\n!!! Class doesn't exist: %s, Object: %s, %s\n",
+	cdh_ClassIdToString(NULL, ohp->db.classid, 1), ohp->db.name.data,
+	cdh_ObjidToString(NULL, ohp->db.objid, 0));
+      if (iflag)
+	return LDH__DBINCON;
+    } else {
+      ohp->chp = chp;
+    }
+  }
+
+  *wbctx = wb;
+  
+  if (iflag) {
+    if (ldh_gLog_c)
+      printf("   creating method binding table...\n");
+    
+    for (i = 0;; i++) {
+      if (pwr_gSystem_ClassMethods[i].ClassName[0] == '\0') break;
+      for (j = 0;; j++) {
+	if ((*pwr_gSystem_ClassMethods[i].Methods)[j].MethodName[0] == '\0')
+	  break;
+	ldhi_BindMethod(pwr_gSystem_ClassMethods[i].ClassName,
+	  (*pwr_gSystem_ClassMethods[i].Methods)[j].MethodName,
+	  (*pwr_gSystem_ClassMethods[i].Methods)[j].Method
+	);
+      }
+    }
+
+    for (i = 0;; i++) {
+      if (pwr_gBase_ClassMethods[i].ClassName[0] == '\0') break;
+      for (j = 0;; j++) {
+	if ((*pwr_gBase_ClassMethods[i].Methods)[j].MethodName[0] == '\0')
+	  break;
+	ldhi_BindMethod(pwr_gBase_ClassMethods[i].ClassName,
+	  (*pwr_gBase_ClassMethods[i].Methods)[j].MethodName,
+	  (*pwr_gBase_ClassMethods[i].Methods)[j].Method
+	);
+      }
+    }
+
+#if 0
+    if (ldh_gLog_c)
+      ldhi_PrintBinding((ldhi_sObjTree **) &wb->bindtab);
+#endif
+
+    if (ldh_gLog_c)
+      printf("   initiating meta data...\n");
+
+    for (
+      vtp = (ldhi_sVidEntry *) ldh_TreeMinimum(wb->vidtab);
+      vtp != NULL;
+      vtp = (ldhi_sVidEntry *) ldh_TreeSuccessor(wb->vidtab,
+	(ldh_sTreeNode *) vtp)
+    ) {
+      if (vtp->vhp->ohp->db.classid == pwr_eClass_ClassVolume) {
+	for (ohp = vtp->vhp->ohp->chhp; ohp != NULL; ohp = ohp->silst.fwhp) {
+	  if (ohp->db.classid == pwr_eClass_ClassHier) {
+	    getAllBodies(ohp, NULL);
+	  }
+	}
+      }
+    }
+  }
+
+  printf("   Database is opened.\n");
+
+  return LDH__SUCCESS;
+  } /* ldh_OpenWB */
+
+/* Reads an attribute of an object into a buffer supplied in the call.  */
+
+pwr_tStatus
+ldh_ReadAttribute (
+  ldhi_sSession	*sp,
+  pwr_sAttrRef		*attref,
+  void			*ap,
+  int			size
+)
+{
+  pwr_tStatus		sts;
+  void			*val;
+
+  /* Check parameters. */
+
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
+  if (attref == NULL) return LDH__BADPARAM;
+  if (ap == NULL) return LDH__BADPARAM;
+  
+  sts = ldhi_MapAttribute(sp, attref, &val);
+  if (EVEN(sts)) return sts;
+
+  memcpy(ap, val, size);
+  
+  return LDH__SUCCESS;
+}
+
+/* Reads a named body of an object into a buffer supplied in the call.  */
+
+pwr_tStatus
+ldh_ReadObjectBody (
+  ldhi_sSession	*sp,
+  pwr_tObjid		object,
+  char			*bodyname,
+  void			*body,
+  int			size
+)
+{
+  pwr_tStatus		sts;
+  ldhi_sObjHead		*ohp;
+  ldhi_sObjBody		*obp;
+  ldhi_eBid		bid;
+
+  /* Check parameters. */
+
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
+  if (*bodyname == '\0') return LDH__NOSUCHBODY;
+  if (body == NULL) return LDH__BADPARAM;
+  
+  sts = ldhi_ObjidToOh(sp->wb, object, &ohp);
+  if (EVEN(sts)) return LDH__NOSUCHOBJ;
+
+  sts = ldhi_BodyNameToBid(bodyname, &bid);
+  if (EVEN(sts)) return sts;
+  sts = ldhi_GetObjectBody(sp, ohp, bid, &obp);
+  if (EVEN(sts)) return sts;
+  
+  memcpy(body, obp->body, MIN(obp->size, size));
+  
+  return LDH__SUCCESS;
+}
+
+pwr_tStatus
+ldh_RebuildWB (
+  ldhi_sSession	*sp
+)
+/* !!! To do !!! */
+{
+  pwr_tStatus		sts;
+  ldhi_sObjBody		*cbp;
+  pwr_sClassDef		*ClassDef;
+  ldhi_sObjHead		*ohp;
+  int			total	= 0;
+  int			changed	= 0;
+  int			error	= 0;
+
+  for (ohp = sp->wb->hdlst; ohp != NULL; ohp = ohp->hdlst) {
+    if (ohp->db.objid.vid != sp->vhp->vid) continue;
+    total++;
+    sts = ldhi_GetObjectBody(sp, ohp->chp, ldhi_eBid_SysBody, &cbp);
+    if (ODD(sts)) {
+      ClassDef = (pwr_sClassDef*) cbp->body;
+      if ((ohp->db.flags.m & ClassDef->Flags.m) != ClassDef->Flags.m) {
+	ohp->db.flags.m |= ClassDef->Flags.m;
+	sts = ldhi_MarkObject(sp, ldhi_mChange_FlagsAreModified, ohp);
+	changed++;
+      }
+    } else {
+      error++;
+    }
+  }
+  printf("%d objects found, %d modified. %d errors.\n", total, changed, error);
+  return LDH__SUCCESS;
+}
+
+pwr_tStatus
+ldh_RevertSession (
+  ldhi_sSession	*sp
+)
+{
+  pwr_tStatus		sts;
+  ldhi_sOixEntry	*otp;
+  ldhi_sOixEntry	*ntp;
+
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts))
+    return sts;
+
+  if (ldh_TreeIsEmpty(sp->oixtab))
+    return LDH__SUCCESS;
+
+  for (
+    otp = (ldhi_sOixEntry *) ldh_TreeMinimum(sp->oixtab);
+    otp != NULL;
+    otp = ntp
+  ) {
+    ntp = (ldhi_sOixEntry *) ldh_TreeSuccessor(sp->oixtab,
+      (ldh_sTreeNode *) otp);
+    ldhi_RevertObject(sp, otp->ohp);
+  }
+
+  for (
+    otp = (ldhi_sOixEntry *) ldh_TreeMinimum(sp->oixtab);
+    otp != NULL;
+    otp = (ldhi_sOixEntry *) ldh_TreeSuccessor(sp->oixtab,
+      (ldh_sTreeNode *) otp)
+  ) {
+    ldhi_ConnectObject(sp, otp->ohp);
+  }
+
+#if 0
+  ldh_TreeEmpty(sp->oixtab);
+#endif
+  ldh_TreeDelete(sp->oixtab);
+  sp->oixtab = ldh_TreeCreate(sizeof(pwr_tObjectIx),
+    offsetof(ldhi_sOixEntry, oix), sizeof(ldhi_sOixEntry), 100,
+    ldh_eTreeComp_ObjectIx, NULL);
+
+  eventSendSession(sp, ldh_eEvent_SessionReverted);
+
+  return LDH__SUCCESS;
+}
+
+/* Save all changes to objects done in the session.  */
+
+pwr_tStatus
+ldh_SaveSession (
+  ldhi_sSession	*sp
+)
+{
+  pwr_tStatus		sts     = LDH__SUCCESS;
+  ldhi_sOixEntry	*otp;
+
+  if (!hasAccess(sp, ldh_eAccess_ReadWrite, &sts)) return sts;
+
+  for (
+    otp = (ldhi_sOixEntry *) ldh_TreeMinimum(sp->oixtab);
+    otp != NULL;
+    otp = (ldhi_sOixEntry *) ldh_TreeSuccessor(sp->oixtab,
+      (ldh_sTreeNode *) otp)
+  ) {
+    ldhi_MarkObjectForSave(sp, otp->ohp);
+  }
+
+  sts = ldhdb_StoreObjects(sp);
+  if (EVEN(sts)) return sts;
+
+  for (
+    otp = (ldhi_sOixEntry *) ldh_TreeMinimum(sp->oixtab);
+    otp != NULL;
+    otp = (ldhi_sOixEntry *) ldh_TreeSuccessor(sp->oixtab,
+      (ldh_sTreeNode *) otp)
+  ) {
+    ldhi_MarkObjectAsSaved(sp, otp->ohp);
+  }
+
+#if 0
+  ldh_TreeEmpty(sp->oixtab);
+#endif
+  ldh_TreeDelete(sp->oixtab);
+  sp->oixtab = ldh_TreeCreate(sizeof(pwr_tObjectIx),
+    offsetof(ldhi_sOixEntry, oix), sizeof(ldhi_sOixEntry), 100,
+    ldh_eTreeComp_ObjectIx, NULL);
+
+  eventSendAllSessions(sp, ldh_eEvent_SessionSaved);
+
+  return LDH__SUCCESS;
+}
+
+ldhi_sVolContext *
+ldh_SessionToVol (
+  ldhi_sSession	*sp
+)
+{
+  pwr_tStatus		sts;
+
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts))
+    return NULL;
+
+  return sp->volctx;
+
+}
+
+ldhi_sWorkbench *
+ldh_SessionToWB (
+  ldhi_sSession	*sp
+)
+{
+  pwr_tStatus		sts;
+
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts))
+    return NULL;
+
+  return sp->wb;
+
+}
+
+/* Updates a named body of an object.  */
+
+pwr_tStatus
+ldh_SetObjectBody (
+  ldhi_sSession	*sp,
+  pwr_tObjid		object,
+  char			*bodyname,
+  char			*body,
+  int			size
+)
+{
+  pwr_tStatus		sts;
+  ldhi_sObjHead		*ohp;
+  ldhi_sObjBody		*obp;
+  ldhi_eBid		bid;
+  ldh_sEvent		*ep;
+
+  if (!hasAccess(sp, ldh_eAccess_ReadWrite, &sts)) return sts;
+  if (bodyname == NULL) return LDH__BADPARAM;
+  if (body == NULL) return LDH__BADPARAM;
+  if (*bodyname == '\0') return LDH__NOSUCHBODY;
+  
+  sts = ldhi_ObjidToOh(sp->wb, object, &ohp);
+  if (EVEN(sts)) return LDH__NOSUCHOBJ;
+
+  if (!inThisVolume(sp, ohp)) return LDH__OTHERVOLUME;
+
+  sts = ldhi_BodyNameToBid(bodyname, &bid);
+  if (EVEN(sts)) return sts;
+  sts = ldhi_GetObjectBody(sp, ohp, bid, &obp);
+  if (EVEN(sts)) return sts;
+  
+  if (size > obp->size) return LDH__BODYTOBIG;
+  if (memcmp(obp->body, body, size) != 0) {
+    memcpy(obp->body, body, size);
+    if (ohp->db.objid.oix == pwr_cNObjectIx && bid == 0) {
+      sts = setOix(ohp, (pwr_uVolume *) obp->body);
+      if (EVEN(sts)) return sts;
+    }
+    sts = ldhi_MarkObject(sp, ldhi_mChange_BodyIsModified, ohp);
+
+    ep = eventStart(sp, object, ldh_eEvent_BodyModified);
+    eventSend(sp, ep);
+  }
+  
+  return sts;
+}
+
+pwr_tStatus
+ldh_SetObjectBuffer (
+  ldhi_sSession	*sp,
+  pwr_tObjid		objid,
+  char			*bodyname,
+  char			*buffername,
+  char			*buff
+)
+{
+  pwr_tStatus		sts;
+  ldhi_sObjHead		*chp;
+  ldhi_sObjHead		*ohp;
+  ldhi_sObjHead		*bufhp;
+  ldhi_sObjHead		*obhp;
+  ldhi_sObjBody		*obp;
+  ldhi_sObjBody		*bufbp;
+  pwr_sBuffer		*Buffer;
+  ldhi_eBid		bid;
+  int			size;
+  ldh_sEvent		*ep;
+  ldhi_sObjName		nn;
+
+  if (!hasAccess(sp, ldh_eAccess_ReadWrite, &sts)) return sts;
+  if (bodyname == NULL) return LDH__BADPARAM;
+  if (buffername == NULL) return LDH__BADPARAM;
+  if (*bodyname == '\0') return LDH__NOSUCHBODY;
+  if (*buffername == '\0') return LDH__NOSUCHBUFFER;
+  if (buff == NULL) return LDH__BADPARAM;
+
+  sts = ldhi_ObjidToOh(sp->wb, objid, &ohp);
+  if (EVEN(sts)) return LDH__NOSUCHOBJ;
+
+  if (!inThisVolume(sp, ohp)) return LDH__OTHERVOLUME;
+
+  sts = ldhi_ObjidToOh(sp->wb, cdh_ClassIdToObjid(ohp->db.classid), &chp);
+  if (EVEN(sts)) return LDH__NOSUCHCLASS;
+  if (chp->db.classid != pwr_eClass_ClassDef) return LDH__NOSUCHCLASS;
+
+  if (chp->chhp == NULL) return LDH__NOSUCHBODY;
+  sts = ldhi_SetNormObjName(&nn, bodyname);
+  if (EVEN(sts)) return LDH__NOSUCHBODY;
+  sts = ldhi_FindSiblingByName(sp, chp->chhp, &nn, &obhp);
+  if (EVEN(sts)) return LDH__NOSUCHBODY;
+  if (obhp->db.classid != pwr_eClass_ObjBodyDef) return LDH__NOSUCHBODY;
+
+  if (obhp->chhp == NULL) return LDH__NOSUCHBUFFER;
+  sts = ldhi_SetNormObjName(&nn, buffername);
+  if (EVEN(sts)) return LDH__NOSUCHBUFFER;
+  sts = ldhi_FindSiblingByName(sp, obhp->chhp, &nn, &bufhp);
+  if (EVEN(sts)) return LDH__NOSUCHBUFFER;
+  if (bufhp->db.classid != pwr_eClass_Buffer) return LDH__NOSUCHBUFFER;
+
+  sts = ldhi_GetObjectBody(sp, bufhp, ldhi_eBid_SysBody, &bufbp);
+  if (EVEN(sts)) return sts;
+      
+  Buffer = (pwr_sBuffer *) bufbp->body;
+  size = Buffer->Info.Size;
+  
+  sts = ldhi_BodyNameToBid(bodyname, &bid);
+  if (EVEN(sts)) return sts;
+  sts = ldhi_GetObjectBody(sp, ohp, bid, &obp);
+  if (EVEN(sts)) return sts;
+      
+  memcpy(obp->body + Buffer->Info.Offset, buff, Buffer->Info.Size);
+
+  sts = ldhi_MarkObject(sp, ldhi_mChange_BodyIsModified, ohp);
+  
+  ep = eventStart(sp, objid, ldh_eEvent_AttributeModified);
+  eventSend(sp, ep);
+
+  return sts;
+}
+
+/* The same as ChangeObjectName but without notification.  */
+
+pwr_tStatus
+ldh_SetObjectName (
+  ldhi_sSession	*sp,
+  pwr_tObjid		objid,
+  char			*newname
+)
+{
+  pwr_tStatus		sts;
+  ldhi_sObjHead		*ohp;
+  ldhi_sObjHead		*shp;		/* Sibling header pointer. */
+  ldhi_sObjName		nn;
+
+  if (!hasAccess(sp, ldh_eAccess_ReadWrite, &sts)) return sts;
+  if (newname == NULL) return LDH__BADPARAM;
+  if (*newname == '\0') return LDH__BADNAME;
+
+  sts = ldhi_ObjidToOh(sp->wb, objid, &ohp);
+  if (EVEN(sts)) return sts;
+
+  if (!inThisVolume(sp, ohp)) return LDH__OTHERVOLUME;
+
+  newname = ldhi_TrimName(newname);
+
+  sts = ldhi_SetNormObjName(&nn, newname);
+  if (EVEN(sts)) return sts;
+
+  sts = ldhi_FindSiblingByName(sp, ohp->fahp->chhp, &nn, &shp);
+  if (ODD(sts)) {
+    if (ohp == shp) {
+      if (strcmp(ohp->db.name.data, newname) == 0)
+	  return LDH__SUCCESS;
+    } else
+      return LDH__NAMALREXI;
+  }
+
+  ldhi_SetObjName(&ohp->db.name, newname); 
+  ohp->db.normname = nn;
+
+  sts = ldhi_MarkObject(sp, ldhi_mChange_IsRenamed, ohp);
+
+  return sts;
+}
+
+pwr_tStatus
+ldh_SetObjectPar (
+  ldhi_sSession	*sp,
+  pwr_tObjid		objid,
+  char			*bodyname,
+  char			*parname,
+  char			*buff,
+  int			size
+)
+{
+  pwr_tStatus		sts;
+  ldhi_sObjHead		*chp;
+  ldhi_sObjHead		*ohp;
+  ldhi_sObjHead		*parhp;
+  ldhi_sObjHead		*obhp;
+  ldhi_sObjBody		*obp;
+  ldhi_sObjBody		*parbp;
+  ldhi_eBid		bid;
+  pwr_sParam		*Param;
+  ldh_sEvent		*ep;
+  ldhi_sObjName		nn;
+
+  /* Check parameters. */
+
+  if (!hasAccess(sp, ldh_eAccess_ReadWrite, &sts)) return sts;
+  if (bodyname == NULL) return LDH__BADPARAM;
+  if (parname == NULL) return LDH__BADPARAM;
+  if (*bodyname == '\0') return LDH__NOSUCHBODY;
+  if (*parname == '\0') return LDH__NOSUCHATTR;
+  if (buff == NULL) return LDH__BADPARAM;
+  if (size < 0) return LDH__BADPARAM;
+
+  /* Check if object exists. */
+
+  sts = ldhi_ObjidToOh(sp->wb, objid, &ohp);
+  if (EVEN(sts)) return LDH__NOSUCHOBJ;
+
+  if (!inThisVolume(sp, ohp)) return LDH__OTHERVOLUME;
+
+  /* Check if class exists. */
+
+  sts = ldhi_ObjidToOh(sp->wb, cdh_ClassIdToObjid(ohp->db.classid), &chp);
+  if (EVEN(sts)) return LDH__NOSUCHCLASS;
+  if (chp->db.classid != pwr_eClass_ClassDef) return LDH__NOSUCHCLASS;
+
+  /* Check if body exists. */
+
+  if (chp->chhp == NULL) return LDH__NOSUCHBODY;
+  sts = ldhi_SetNormObjName(&nn, bodyname);
+  if (EVEN(sts)) return LDH__NOSUCHBODY;
+  sts = ldhi_FindSiblingByName(sp, chp->chhp, &nn, &obhp);
+  if (EVEN(sts)) return LDH__NOSUCHBODY;
+  if (obhp->db.classid != pwr_eClass_ObjBodyDef) return LDH__NOSUCHBODY;
+
+  /* Check if parameter exists. */
+
+  if (obhp->chhp == NULL) return LDH__NOSUCHATTR;
+  sts = ldhi_SetNormObjName(&nn, parname);
+  if (EVEN(sts)) return LDH__NOSUCHATTR;
+  sts = ldhi_FindSiblingByName(sp, obhp->chhp, &nn, &parhp);
+  if (EVEN(sts)) return LDH__NOSUCHATTR;
+
+  switch (parhp->db.classid) {
+  case pwr_eClass_Input:
+  case pwr_eClass_Output:
+  case pwr_eClass_Intern:
+  case pwr_eClass_ObjXRef:
+  case pwr_eClass_Buffer:
+  case pwr_eClass_Param:
+    break;
+  default:
+    return LDH__NOSUCHATTR;
+  }
+
+  /* Get body of the parameter definition object. */
+
+  sts = ldhi_GetObjectBody(sp, parhp, ldhi_eBid_SysBody, &parbp);
+  if (EVEN(sts)) return sts;
+      
+  Param = (pwr_sParam *) parbp->body;
+  
+  /* Get body of object containing wanted parameter. */
+
+  sts = ldhi_BodyNameToBid(bodyname, &bid);
+  if (EVEN(sts)) return sts;
+  sts = ldhi_GetObjectBody(sp, ohp, bid, &obp);
+  if (EVEN(sts)) return sts;
+      
+  memcpy(obp->body + Param->Info.Offset, buff, MIN(Param->Info.Size, size));
+
+  sts = ldhi_MarkObject(sp, ldhi_mChange_BodyIsModified, ohp);
+  
+  ep = eventStart(sp, objid, ldh_eEvent_AttributeModified);
+  eventSend(sp, ep);
+
+  return sts;
+}
+
+pwr_tStatus
+ldh_SetSession (
+  ldhi_sSession	*sp,
+  ldh_eAccess		access
+)
+{
+  ldhi_sSession	*lsp;
+  int i;
+
+  if (sp == NULL)
+    return LDH__NOSUCHSESS;
+  if (access <= ldh_eAccess__ || access >= ldh_eAccess_)
+    return LDH__BADPARAM;
+
+  /* Check that session exists */
+
+  for (lsp = sp->volctx->utility[sp->utility]; lsp != NULL; lsp = lsp->seslst)
+    if (sp == lsp) break;
+  if (lsp == NULL) return LDH__NOSUCHSESS;
+
+  switch (sp->utility) {
+  case ldh_eUtility_Navigator:
+    if (access != ldh_eAccess_ReadOnly)
+      return LDH__BADPARAM;
+    break;
+  case ldh_eUtility_Loader:
+  case ldh_eUtility_Configurator:
+  case ldh_eUtility_Pwr:
+    if (access == ldh_eAccess_ReadOnly)
+      break;
+    for (i = ldh_eUtility_Navigator + 1; i < ldh_eUtility_; i++)
+      for (lsp = sp->volctx->utility[i]; lsp != NULL; lsp = lsp->seslst)
+	if (lsp != sp && lsp->access != ldh_eAccess_ReadOnly)
+	  return LDH__OTHERSESS;
+    break;
+  case ldh_eUtility_PlcEditor:
+    if (access == ldh_eAccess_ReadOnly)
+      break;
+    for (i = ldh_eUtility_Navigator + 1; i < ldh_eUtility_; i++)
+      for (lsp = sp->volctx->utility[i]; lsp != NULL; lsp = lsp->seslst)
+	if (lsp != sp && lsp->utility != sp->utility && lsp->access != ldh_eAccess_ReadOnly)
+	  return LDH__OTHERSESS;
+    break;
+  default:
+    ;
+  }
+
+  if (
+    sp->access == ldh_eAccess_ReadWrite
+    && access == ldh_eAccess_ReadOnly
+    && !ldh_TreeIsEmpty(sp->oixtab)
+  )
+    return LDH__SESSNOTEMPTY;
+
+  sp->access = access;
+  
+  return LDH__SUCCESS;
+}
+
+pwr_tStatus
+ldh_StringGetAttribute (
+  ldhi_sSession	*sp,
+  pwr_sAttrRef		*AttrRef,
+  pwr_tUInt32		MaxSize,
+  char			*String
+)
+{
+  pwr_tStatus		sts = LDH__SUCCESS;
+  ldhi_sObjHead		*ohp;
+  ldhi_sObjHead		*ahp;
+  ldhi_sObjBody		*abp;
+  ldhi_sObjBody		*obp;
+  ldhi_sObjHead		*obhp;
+  char			*np;
+  static char		NameBuffer[512];
+  int			size;
+  pwr_sParam		*Param;
+  void			*val;
+  pwr_tObjid		Object;
+  pwr_sAttrRef		Attribute;
+  static char		NoObject[] = "*** Refers to non existing object ***";
+  static char		NoAttr[] =   "*** Refers to non existing attribute ***";
+  ldhi_sObjName		nn;
+  
+  assert(sp != NULL);
+  assert(AttrRef != NULL);
+  assert(String != NULL);
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
+
+  sts = ldhi_ObjidToOh(sp->wb, AttrRef->Objid, &ohp);
+  if (EVEN(sts)) return sts;
+
+  NameBuffer[0] = '\0';
+
+  /* Find first attribute */
+  if (ohp->db.flags.f.System) {
+    sts = ldhi_SetNormObjName(&nn, "SysBody");
+    sts = ldhi_FindSiblingByName(sp, ohp->chp->chhp, &nn, &obhp);
+    if (EVEN(sts)) return LDH__NOSUCHATTR;
+    sts = ldhi_GetObjectBody(sp, ohp, ldhi_eBid_SysBody, &obp);
+    if (EVEN(sts)) return sts;
+  } else {
+    sts = ldhi_SetNormObjName(&nn, "RtBody");
+    sts = ldhi_FindSiblingByName(sp, ohp->chp->chhp, &nn, &obhp);
+    if (EVEN(sts)) return LDH__NOSUCHATTR; /* We do not handle DevBody */
+    sts = ldhi_GetObjectBody(sp, ohp, ldhi_eBid_RtBody, &obp);
+    if (EVEN(sts)) return sts;
+  }
+
+  for (ahp = obhp->chhp; ahp != NULL; ahp = ahp->silst.fwhp) {
+    ldhi_GetObjectBody(sp, ahp, ldhi_eBid_SysBody, &abp);
+    Param = (pwr_sParam *) abp->body;
+    if (AttrRef->Offset < Param->Info.Offset + Param->Info.Size)
+      break;
+  }
+  if (ahp == NULL) return LDH__NOSUCHATTR;
+
+  /* Check that attribute reference is on a even boundary */
+
+  if (((AttrRef->Offset - Param->Info.Offset) %
+    (Param->Info.Size / Param->Info.Elements)) != 0
+  )
+    return LDH__NOSUCHATTR;
+
+  if (AttrRef->Size > Param->Info.Size) {
+    return LDH__NOSUCHATTR;
+  } else if (AttrRef->Size != (Param->Info.Size / Param->Info.Elements)) {
+    return LDH__NOSUCHATTR;
+  } else {
+    val = (void*) (obp->body + AttrRef->Offset);
+  }
+
+  switch (ahp->db.classid) {
+  case pwr_eClass_Param:
+  case pwr_eClass_Input:
+  case pwr_eClass_Intern:
+  case pwr_eClass_Output:
+  case pwr_eClass_ObjXRef:
+    switch (Param->Info.Type) {
+    case pwr_eType_Boolean:
+    case pwr_eType_Float32:
+    case pwr_eType_Float64:
+    case pwr_eType_Char:
+    case pwr_eType_String:
+    case pwr_eType_Int8:
+    case pwr_eType_Int16:
+    case pwr_eType_Int32:
+    case pwr_eType_UInt8:
+    case pwr_eType_UInt16:
+    case pwr_eType_UInt32:
+    case pwr_eType_Time:
+    case pwr_eType_DeltaTime:
+      sts = cdh_AttrValueToString(Param->Info.Type, val, String, MaxSize); 
+      break;
+
+    case pwr_eType_TypeId:
+/* !!! To do !!! */
+    case pwr_eType_ClassId:
+/* !!! To do !!! */
+    case pwr_eType_VolumeId:
+/* !!! To do !!! */
+      break;
+    case pwr_eType_Objid:
+      Object = *(pwr_tObjid *) val;
+      if (cdh_ObjidIsNull(Object)) {
+	  String = '\0';
+      } else {
+	sts = ldh_ObjidToName (sp, Object, ldh_eName_Hierarchy,
+	  String, MaxSize, &size
+	);
+	if (EVEN(sts))
+/* !!! To do !!! */
+	    strncpy(String, NoObject, MaxSize);
+      }
+      return LDH__SUCCESS;
+      break;
+
+    case pwr_eType_AttrRef:
+      Attribute = *(pwr_sAttrRef *) val;
+      if (cdh_ObjidIsNull(Attribute.Objid)) {
+	String = '\0';
+      } else {
+	sts = ldh_AttrRefToName(sp, &Attribute, ldh_eName_Aref, &np, &size);
+	if (EVEN(sts))
+/* !!! To do !!! */
+	  strncpy(String, NoAttr, MaxSize);
+	else
+	  strncpy(String, np, MaxSize);
+	  if (size > MaxSize)
+	    return LDH__NAMEBUF;
+      }
+      return LDH__SUCCESS;
+      break;
+    case pwr_eType_Array:
+    case pwr_eType_Buffer:
+    case pwr_eType_Enum:
+    case pwr_eType_Mask:
+    case pwr_eType_Struct:
+      return LDH__NOSUCHATTR;
+      break;
+    default:
+      return LDH__NOSUCHATTR;
+      break;
+    }
+    break;
+  case pwr_eClass_Buffer:
+    return LDH__NOSUCHATTR;
+    break;
+  default:
+    return LDH__NOSUCHATTR;
+    break;
+  }
+
+  return sts;
+}
+
+pwr_tStatus
+ldh_StringSetAttribute (
+  ldhi_sSession	*sp,
+  pwr_sAttrRef		*AttrRef,
+  char			*String,
+  pwr_tBoolean		Write
+)
+{
+  pwr_tStatus		sts     = LDH__SUCCESS;
+  ldhi_sObjHead		*ohp;
+  ldhi_sObjHead		*ahp;
+  ldhi_sObjBody		*abp;
+  ldhi_sObjBody		*obp;
+  ldhi_sObjHead		*obhp;
+  pwr_sParam		*Param;
+  char			*val[2048];
+  ldh_sEvent		*ep;
+  ldhi_sObjName		nn;
+  
+  assert(sp != NULL);
+  assert(AttrRef != NULL);
+  assert(String != NULL);
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
+
+  sts = ldhi_ObjidToOh(sp->wb, AttrRef->Objid, &ohp);
+  if (EVEN(sts)) return sts;
+
+  if (!inThisVolume(sp, ohp)) return LDH__OTHERVOLUME;
+
+  /* Find first attribute */
+  if (ohp->db.flags.f.System) {
+    sts = ldhi_SetNormObjName(&nn, "SysBody");
+    sts = ldhi_FindSiblingByName(sp, ohp->chp->chhp, &nn, &obhp);
+    if (EVEN(sts)) return LDH__NOSUCHATTR;
+    sts = ldhi_GetObjectBody(sp, ohp, ldhi_eBid_SysBody, &obp);
+    if (EVEN(sts)) return sts;
+  } else {
+    sts = ldhi_SetNormObjName(&nn, "RtBody");
+    sts = ldhi_FindSiblingByName(sp, ohp->chp->chhp, &nn, &obhp);
+    if (EVEN(sts)) return LDH__NOSUCHATTR; /* We do not handle DevBody */
+    sts = ldhi_GetObjectBody(sp, ohp, ldhi_eBid_RtBody, &obp);
+    if (EVEN(sts)) return sts;
+  }
+
+  for (ahp = obhp->chhp; ahp != NULL; ahp = ahp->silst.fwhp) {
+    ldhi_GetObjectBody(sp, ahp, ldhi_eBid_SysBody, &abp);
+    Param = (pwr_sParam *) abp->body;
+    if (AttrRef->Offset < Param->Info.Offset + Param->Info.Size)
+      break;
+  }
+  if (ahp == NULL) return LDH__NOSUCHATTR;
+
+  /* Check that attribute reference is on a even boundary */
+
+  if (((AttrRef->Offset - Param->Info.Offset) %
+    (Param->Info.Size / Param->Info.Elements)) != 0
+  )
+    return LDH__NOSUCHATTR;
+
+  if (AttrRef->Size > Param->Info.Size) {
+    return LDH__NOSUCHATTR;
+  } else if (AttrRef->Size != (Param->Info.Size / Param->Info.Elements)) {
+    return LDH__NOSUCHATTR;
+  } else {
+    memset(val, 0, AttrRef->Size);
+  }
+
+  switch (ahp->db.classid) {
+  case pwr_eClass_Param:
+  case pwr_eClass_Input:
+  case pwr_eClass_Intern:
+  case pwr_eClass_Output:
+  case pwr_eClass_ObjXRef:
+    switch (Param->Info.Type) {
+    case pwr_eType_Boolean:
+    case pwr_eType_Float32:
+    case pwr_eType_Float64:
+    case pwr_eType_Char:
+    case pwr_eType_String:
+    case pwr_eType_Int8:
+    case pwr_eType_Int16:
+    case pwr_eType_Int32:
+    case pwr_eType_UInt8:
+    case pwr_eType_UInt16:
+    case pwr_eType_UInt32:
+    case pwr_eType_Time:
+    case pwr_eType_DeltaTime:
+      sts = cdh_StringToAttrValue(Param->Info.Type, String, (void *) val); 
+      break;
+
+    case pwr_eType_TypeId:
+/* !!! To do !!! */
+    case pwr_eType_ClassId:
+/* !!! To do !!! */
+    case pwr_eType_VolumeId:
+/* !!! To do !!! */
+      break;
+
+    case pwr_eType_Objid:
+      if (*String == '\0') {
+	memset(val, 0, sizeof(pwr_tObjid));
+      } else {
+	sts = ldh_NameToObjid(sp, (pwr_tObjid *) val, String);
+      }
+      break;
+
+    case pwr_eType_AttrRef:
+      if (*String == '\0') {
+	memset(val, 0, sizeof(pwr_sAttrRef));
+      } else {
+	sts = ldh_NameToAttrRef(sp, String, (pwr_sAttrRef *) val);
+      }
+      break;
+    case pwr_eType_Array:
+    case pwr_eType_Buffer:
+    case pwr_eType_Enum:
+    case pwr_eType_Mask:
+    case pwr_eType_Struct:
+      return LDH__NOSUCHATTR;
+      break;
+    default:
+      return LDH__NOSUCHATTR;
+      break;
+    }
+    break;
+  case pwr_eClass_Buffer:
+    return LDH__NOSUCHATTR;
+    break;
+  default:
+    return LDH__NOSUCHATTR;
+    break;
+  }
+
+  if (Write && ODD(sts)) {
+    memcpy(obp->body + AttrRef->Offset, val, AttrRef->Size);
+    sts = ldhi_MarkObject(sp, ldhi_mChange_BodyIsModified, ohp);
+
+    ep = eventStart(sp, AttrRef->Objid, ldh_eEvent_AttributeModified);
+    eventSend(sp, ep);
+  }
+
+  return sts;
+}
+
+/*  Writes an attribute of an object from a buffer supplied in the call.  */
+
+pwr_tStatus
+ldh_WriteAttribute (
+  ldhi_sSession	*sp,
+  pwr_sAttrRef		*AttrRef,
+  void			*ap,
+  int			size
+)
+{
+  pwr_tStatus		sts;
+  void			*val;
+  ldhi_sObjHead		*ohp;
+  ldh_sEvent		*ep;
+
+  /* Check parameters. */
+
+  /* !!! To do !!! Check if access really should be ldh_eAccess_ReadOnly !!! */
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
+  if (AttrRef == NULL) return LDH__BADPARAM;
+  if (ap == NULL) return LDH__BADPARAM;
+  
+  sts = ldhi_ObjidToOh(sp->wb, AttrRef->Objid, &ohp);
+  if (EVEN(sts)) return sts;
+
+  if (!inThisVolume(sp, ohp)) return LDH__OTHERVOLUME;
+
+  sts = ldhi_MapAttribute(sp, AttrRef, &val);
+  if (EVEN(sts)) return sts;
+
+  memcpy(val, ap, MIN(size, AttrRef->Size));
+  sts = ldhi_MarkObject(sp, ldhi_mChange_BodyIsModified, ohp);
+  
+  ep = eventStart(sp, AttrRef->Objid, ldh_eEvent_AttributeModified);
+  eventSend(sp, ep);
+
+  return LDH__SUCCESS;
+}
+
+/*  Returns 1 if object is owned by the volume attached to
+    the current session.  */
+
+pwr_tBoolean
+ldh_LocalObject (
+  ldhi_sSession      *sp,
+  pwr_tObjid		Object
+)
+{
+  pwr_tStatus		sts;
+  ldhi_sObjHead		*ohp;
+
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
+
+  sts = ldhi_ObjidToOh(sp->wb, Object, &ohp);
+  if (EVEN(sts)) return 0;
+
+  return inThisVolume(sp, ohp);
+}
+
+#if 0
+pwr_tStatus
+ldh_CreateLoadFile (
+  ldhi_sVolContext	*volctx
+)
+{
+  ldhi_sSession	*scp;
+  ldhi_sSession	**lscp;
+  ldh_eUtility		utility;
+
+  /* Check that no ReadWrite session is open.  */
+
+  for (utility = ldh_eUtility__ + 1; utility != ldh_eUtility_; utility++) {
+    for (
+      lscp = &volctx->utility[utility], scp = *lscp;
+      scp != NULL;
+      lscp = &scp->seslst, scp = scp->seslst
+    ) {
+	if (scp->access == ldh_eAccess_ReadWrite)
+	  return LDH__ATTNOTEMPTY;
+    }
+  }
+
+  do {
+    sts = ldh_OpenSession(&sp, volctx, ldh_eAccess_ReadWrite, ldh_eUtility_Loader);
+    if (EVEN(sts)) break;
+
+    sts = ldhld_CreateLoadFile(sp, volctx);
+    if (EVEN(sts)) break;
+
+    sts = ldh_SaveSession(sp)
+    if (EVEN(sts)) break;
+
+    return ldh_CloseSession(sp);
+  } while (1);
+
+  ldh_RevertSession(sp)
+  ldh_CloseSession(sp)
+
+  return LDH__?;
+}
+#endif
+
+static pwr_tStatus
+syntaxCheckObject (
+  ldhi_sSession	*sp,
+  ldhi_sObjHead		*ohp,
+  int			*errorcount,
+  int			*warningcount
+)
+{
+  pwr_tStatus		sts;
+  ldhi_sObjHead		*chhp;
+
+
+  sts = triggSyntaxCheck(sp, ohp, errorcount, warningcount);
+  if (EVEN(sts)) return sts;
+
+  switch (ohp->db.classid) {
+  case pwr_eClass_LibHier:
+    break;
+
+  default:
+    for (chhp = ohp->chhp; chhp != NULL; chhp = chhp->silst.fwhp) {
+      sts = syntaxCheckObject(sp, chhp, errorcount, warningcount);
+      if (EVEN(sts)) return sts;
+    }
+  }
+
+  return LDH__SUCCESS;
+}
+
+
+pwr_tStatus
+ldh_SyntaxCheck (
+  ldhi_sSession	*sp,
+  int			*errorcount,
+  int			*warningcount
+)
+{
+  pwr_tStatus		sts;
+
+  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
+
+  sts = syntaxCheckObject( sp, sp->vhp->ohp, errorcount, warningcount);
+  return sts;
+}
+
+pwr_tStatus
+ldh_CopyObjectTrees (
+  ldhi_sSession     *sp,
+  pwr_sAttrRef	    *arp,
+  pwr_tObjid	    doid,
+  ldh_eDest	    dest,
+  pwr_tBoolean	    self
+)
+{
+  pwr_tStatus sts = LDH__SUCCESS;
+  ldhi_sSet	    *sep;
+  ldhi_sSetMember   *smp;
+  ldh_sEvent	    *esp;
+  ldh_sEvent	    *ep;
+  ldhi_sObjHead     *dhp;
+
+  if (!hasAccess(sp, ldh_eAccess_ReadWrite, &sts)) return sts;
+
+  do {
+
+    sts = ldhi_NewSet(sp, &sep, arp, dest);
+    if (EVEN(sts)) break;
+
+    sts = ldhi_CheckSetDestination(sp, sep, doid, dest, self, &dhp);
+    if (EVEN(sts)) break;
+
+    sts = ldhi_PopulateSet(sp, sep);
+    if (EVEN(sts)) break;
+
+    sts = ldhi_CopySet(sep, NO);
+    if (EVEN(sts)) break;
+
+    sts = ldhi_InstalSet(sp, sep, doid, dest, self);
+    if (EVEN(sts)) break;
+
+    esp = eventStart(sp, pwr_cNObjid, ldh_eEvent_ObjectTreeCopied);
+
+    for (smp = sep->frlp; smp != NULL; smp = smp->frlp) {
+      char name[50];
+
+      if (!smp->isTop) continue;
+
+      sprintf(name, "C%u_%s", smp->nohp->db.objid.oix, smp->nohp->db.name.data);
+      name[31] = '\0';
+      ldhi_SetObjName(&smp->nohp->db.name, name);
+      ldhi_SetNormObjName(&smp->nohp->db.normname, name);
+
+      /* move root object to it's destination */
+      if (self)
+	dhp = smp->oohp;
+      sts = ldhi_AdoptObject(sp, smp->nohp, dhp, dest);
+      if (EVEN(sts)) printf("** Error adopting Oh\n");
+
+      ep = eventStart(sp, smp->nohp->db.objid, ldh_eEvent_ObjectCreated);
+      eventNewFamily(sp, ep, smp->nohp);
+      
+      triggPostAdopt(sp, smp->nohp->fahp, smp->nohp); 
+
+      eventSend(sp, ep);
+
+    }
+
+    eventSend(sp, esp);
+
+    ldhi_DeleteSet(sep, NO, NO);
+
+    return sts;
+
+  } while (0);
+
+  /* We got here because of an error, clean up! */
+
+  ldhi_DeleteSet(sep, NO, YES);
+  return sts;
+}
+
+
+/* Make a copy of object trees pointed at by AREF and
+   put the copy in a pastebuffer associated whith the
+   workbench context. The original object trees are
+   left untouched.  */
+
+pwr_tStatus
+ldh_Copy (
+  ldhi_sSession	*sp,
+  pwr_sAttrRef		*arp
+)
+{
+  pwr_tStatus sts;
+  ldhi_sSet *sep;
+
+  sts = ldhi_NewSet(sp, &sep, arp, ldh_eDest_IntoFirst);
+  if (EVEN(sts)) {
+    ldhi_DeleteSet(sep, NO, NO);
+    return sts;
+  }
+
+  sts = ldhi_PopulateSet(sp, sep);
+  if (EVEN(sts)) {
+    ldhi_DeleteSet(sep, NO, NO);
+    return sts;
+  }
+
+  sts = ldhi_CopySet(sep, YES);
+  if (EVEN(sts)) {
+    ldhi_DeleteSet(sep, NO, YES);
+    return sts;
+  }
+
+  if (sp->wb->sep != NULL)
+    ldhi_DeleteSet(sp->wb->sep, YES, YES);
+
+  sp->wb->sep = sep;
+
+  return LDH__SUCCESS;
+}
+
+/* Make a copy of object trees pointed at by AREF and
+   put the copy in a pastebuffer associated whith the
+   workbench context. The original object trees are
+   deleted but can be retrieved by reverting. */
+
+pwr_tStatus
+ldh_Cut (
+  ldhi_sSession	*sp,
+  pwr_sAttrRef		*arp
+)
+{
+  pwr_tStatus sts;
+  ldhi_sSet *sep;
+  ldhi_sSetMember *smp;
+  pwr_sAttrRef *larp;
+
+  if (!hasAccess(sp, ldh_eAccess_ReadWrite, &sts)) return sts;
+
+  /* Check that it is OK to delete object trees. */
+  for (larp = arp; !cdh_ObjidIsNull(larp->Objid); larp++) {
+    if (larp->Objid.vid != sp->vhp->vid)
+      return LDH__OTHERVOLUME;
+  }
+
+
+  sts = ldhi_NewSet(sp, &sep, arp, ldh_eDest_IntoFirst);
+  if (EVEN(sts)) {
+    ldhi_DeleteSet(sep, NO, NO);
+    return sts;
+  }
+
+  sts = ldhi_PopulateSet(sp, sep);
+  if (EVEN(sts)) {
+    ldhi_DeleteSet(sep, NO, NO);
+    return sts;
+  }
+
+  sts = ldhi_CopySet(sep, YES);
+  if (EVEN(sts)) {
+    ldhi_DeleteSet(sep, NO, YES);
+    return sts;
+  }
+
+  if (sp->wb->sep != NULL)
+    ldhi_DeleteSet(sp->wb->sep, YES, YES);
+
+  sp->wb->sep = sep;
+
+  for (smp = sep->frlp; smp != NULL; smp = smp->frlp) {
+    if (!smp->isTop) continue;
+
+    ldh_DeleteObjectTree(sp, smp->oldOid);
+  }
+
+  return LDH__SUCCESS;
+}
+
+pwr_tStatus
+ldh_Paste (
+  ldhi_sSession     *sp,
+  pwr_tObjid	    doid,
+  ldh_eDest	    dest
+)
+{
+  pwr_tStatus	    sts	= LDH__SUCCESS;
+  ldh_sEvent	    *esp;
+  ldh_sEvent	    *ep;
+  ldhi_sSetMember   *smp;
+  ldhi_sObjHead	    *dhp;
+
+  if (!hasAccess(sp, ldh_eAccess_ReadWrite, &sts)) return sts;
+
+  sts = ldhi_CheckSetDestination(sp, sp->wb->sep, doid, dest, 0, &dhp);
+  if (EVEN(sts)) return sts;
+
+  sts = ldhi_CopySet(sp->wb->sep, NO);
+  if (EVEN(sts)) return sts;
+
+  sts = ldhi_InstalSet(sp, sp->wb->sep, doid, dest, 0);
+
+  esp = eventStart(sp, pwr_cNObjid, ldh_eEvent_ObjectTreeCopied);
+
+  for (smp = sp->wb->sep->frlp; smp != NULL; smp = smp->frlp) {
+    char name[50];
+
+    if (!smp->isTop) continue;
+
+    sprintf(name, "C%u_%s", smp->nohp->db.objid.oix, smp->nohp->db.name.data);
+    name[31] = '\0';
+    ldhi_SetObjName(&smp->nohp->db.name, name);
+    ldhi_SetNormObjName(&smp->nohp->db.normname, name);
+
+    /* move root object to it's destination */
+    sts = ldhi_AdoptObject(sp, smp->nohp, dhp, dest);
+    if (EVEN(sts)) printf("** Error adopting Oh\n");
+
+    ep = eventStart(sp, smp->nohp->db.objid, ldh_eEvent_ObjectCreated);
+    eventNewFamily(sp, ep, smp->nohp);
+    
+    triggPostAdopt(sp, smp->nohp->fahp, smp->nohp); 
+
+    eventSend(sp, ep);
+
+    smp->nohp = NULL;
+
+  }
+
+
+  eventSend(sp, esp);
+
+  return sts;
+}

@@ -1,0 +1,102 @@
+!  pwrb_c_reset_so.wb_load -- Defines the class Reset_SO.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  Reset SOrder.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_macro_grafcet.h
+!  
+!  If the Order object has no S-order attribute nothing
+!  will happens.
+!  Usually, the Reset_SO is located in a Grafcet program,
+!  but it is not necessary. It does no matter if it is
+!  located in an ordinary PLC program.
+!  
+!  Contains no relevant information (=data) in rtdb.
+!*/
+SObject pwrb:Class
+  Object Reset_SO $ClassDef 194 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_RtConnectionsAndDevBodies
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "reset_so"
+      EndBody
+      !/**
+      !  Specifies whether a reset will be done or not. FALSE
+      !  means no reset and TRUE means reset on the stored
+      !  order.
+      !*/
+      Object In $Input 1 
+        Body SysBody
+          Attr PgmName = "In"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_RTVIRTUAL
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOREMOVE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "in"
+          Attr ConPointNr = 0
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      !/**
+      !  Specifies the complete name of the Order object. Used
+      !  by the PLC Editor
+      !*/
+      Object OrderObject $Intern 1 
+        Body SysBody
+          Attr PgmName = "OrderObject"
+          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr GraphName = "Order"
+          Attr NiNaAnnot = 1
+        EndBody
+      EndObject
+      Object PlcNode $Buffer 2 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 35
+        Attr parameters[0] = 1
+        Attr parameters[1] = 0
+        Attr parameters[2] = 0
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 7
+        Attr graphindex = 1
+        Attr default_mask[0] = 1
+        Attr default_mask[1] = 0
+        Attr segname_annotation = 0
+        Attr devbody_annotation = 1
+        Attr compmethod = 18
+        Attr compindex = 0
+        Attr tracemethod = 3
+        Attr traceindex = 1
+        Attr connectmethod = 11
+        Attr executeordermethod = 6
+        Attr objname = "ResSO"
+        Attr graphname = "ResSO"
+        Attr debugpar = "In"
+      EndBody
+    EndObject
+    Object Template  Reset_SO
+      Body RtBody
+        Attr In = 0
+      EndBody
+    EndObject
+  EndObject
+EndSObject

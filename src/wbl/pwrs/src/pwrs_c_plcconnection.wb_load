@@ -1,0 +1,95 @@
+!  pwrs_c_plcconnection.wb_load -- Defines the class PlcConnection.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+SObject pwrs:Class
+  Object $PlcConnection $ClassDef pwr_eCix_PlcConnection
+    Body SysBody
+      Attr Flags |= pwr_mClassDef_DevOnly
+      Attr Flags |= pwr_mClassDef_System
+    EndBody
+    Object SysBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "PlcConnection"
+      EndBody
+      Object objdid $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      Object object_type $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object classid $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ClassId"
+        EndBody
+      EndObject
+      Object curvature $Attribute 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object drawtype $Attribute 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object attributes $Attribute 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object refnr $Attribute 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object source_point $Attribute 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object source_node_did $Attribute 9
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      Object dest_point $Attribute 10
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object dest_node_did $Attribute 11
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      Object point_count $Attribute 12
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object point $Buffer 13
+        Body SysBody
+          Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 10
+          Attr Class = pwr_eClass_Point
+        EndBody
+      EndObject
+      Object window_did $Attribute 14
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+    EndObject
+    Object Template $PlcConnection
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,89 @@
+!  inc_xtt.uil
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  This module defines english texts for xtt.
+!
+value
+
+c_File    		: compound_string("File");
+c_Close     		: compound_string("Close");
+c_Print   		: compound_string("Print");
+c_Edit   		: compound_string("Edit");
+c_Search   		: compound_string("Search");
+c_Find_Object   	: compound_string("Find Object");
+c_Find_Regular_expression : compound_string("Find Regular expression");
+c_Find_Next   		: compound_string("Find Next");
+c_Collapse   		: compound_string("Collapse");
+c_Functions   		: compound_string("Functions");
+c_Open_Object   	: compound_string("Open Object");
+c_Open_Plc   		: compound_string("Open Plc");
+c_Open_ClassGraph   	: compound_string("Open ClassGraph");
+c_Show_Crossreferences  : compound_string("Show Crossreferences");
+c_Change_Value   	: compound_string("Change Value");
+c_Command   		: compound_string("Command");
+c_Collect_insert   	: compound_string("Collect insert");
+c_Collect_show   	: compound_string("Collect show");
+c_Advanced_user  	: compound_string("Advanced user");
+c_View   		: compound_string("View");
+c_Zoom_in   		: compound_string("Zoom in");
+c_Zoom_out   		: compound_string("Zoom ut");
+c_Zoom_reset   		: compound_string("Zoom reset");
+c_Help   		: compound_string("Help");
+c_Overview   		: compound_string("Overview");
+c_Project   		: compound_string("Project");
+
+! module xtt_op.uil
+
+c_Alarmlist		: compound_string("Alarmlist");
+c_Eventlist		: compound_string("Eventlist");
+c_Navigator		: compound_string("Navigator");
+
+! module xtt_xatt.uil
+
+c_Close_change_value	: compound_string("Close change value");
+c_Display_object_in_navigator : compound_string("Display object in navigator");
+c_Ok			: compound_string("Ok");
+c_Cancel		: compound_string("Cancel");
+
+! module xtt_eve.uil
+
+c_Acknowledge		: compound_string("Acknowledge");
+c_Display_hundredth	: compound_string("Display hundredth");
+c_Hide_event_name	: compound_string("Hide event name");
+c_Hide_event_text	: compound_string("Hide event text");
+c_Help_on_selected_event : compound_string("Help on selected event");
+
+! module xtt_trace.uil
+
+c_SaveTrace		: compound_string("SaveTrace");
+c_RestoreTrace		: compound_string("RestoreTrace");
+c_Mode			: compound_string("Mode");
+c_Trace			: compound_string("Trace");
+c_Simulate		: compound_string("Simulate");
+c_Plc			: compound_string("Plc");
+
+! module xtt_curve.uil
+
+c_Refresh		: compound_string("Refresh");
+c_Bright_background	: compound_string("Bright background");
+c_Show_names		: compound_string("Show names");
+c_Filled_curves		: compound_string("Filled curves");
+c_X_axis_limits		: compound_string("X-axis limits");
+k_Min_Max_value		: "Min Max value";
+k_MinValue		: "MinValue";
+k_MaxValue		: "MaxValue";
+
+! module xtt_ge.uil
+
+k_Ok			: "Ok";
+k_Yes			: "Yes";
+k_Cancel		: "Cancel";
+k_No			: "No";
+k_Help			: "Help";
+k_Confirm		: "Confirm";
+k_Enter_Value		: "Enter Value";
+k_Message		: "Message";
+k_Value_input		: "Value input";
+

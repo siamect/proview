@@ -1,0 +1,750 @@
+!  wb_admin.uil -- <short description>
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+module wb_admin
+        version = 'v1.0'
+        names = case_sensitive
+        objects = {
+                XmSeparator = gadget ;
+                }
+identifier
+	admin_ctx;
+procedure
+	admin_activate_exit(integer);
+	admin_activate_refresh(integer);
+	admin_activate_print(integer);
+	admin_activate_command(integer);
+	admin_activate_openproject(integer);
+	admin_activate_createproject(integer);
+	admin_activate_deleteproject(integer);
+	admin_activate_copyproject(integer);
+	admin_activate_moveproject(integer);
+	admin_activate_renameproject(integer);
+	admin_activate_projectprop(integer);
+	admin_activate_zoomin(integer);
+	admin_activate_zoomout(integer);
+	admin_activate_zoomreset(integer);
+	admin_activate_help(integer);
+	admin_create_msg_label(integer);
+	admin_create_cmd_prompt(integer);
+	admin_create_cmd_input(integer);
+	admin_create_adminnav_form(integer);
+
+	adminprop_create_prop(integer); 
+	adminprop_activate_ok(integer); 
+	adminprop_activate_cancel(integer); 
+	adminprop_create_projnamevalue(integer); 
+	adminprop_create_basevalue(integer); 
+	adminprop_create_pathvalue(integer); 
+	adminprop_create_hiervalue(integer); 
+	adminprop_create_descriptvalue(integer); 
+	adminprop_create_projna_noedit(integer); 
+	adminprop_create_base_noedit(integer); 
+	adminprop_create_path_noedit(integer); 
+	adminprop_create_hier_noedit(integer); 
+	adminprop_create_descr_noedit(integer); 
+
+value
+	menu_font : font ('-*-Helvetica-Bold-R-Normal--12-*-*-*-P-*-ISO8859-1');
+
+!----------------------------------------
+! First declare the 'top level' widgets.  These are not controlled by
+! any other widgets.  They are each fetched individually as needed.
+!----------------------------------------
+
+object  admin_window : XmMainWindow
+{
+  arguments
+  {
+    XmNx = 0;
+    XmNy = 0;
+!    XmNwidth = 450;
+!    XmNheight = 400;
+  };
+  controls
+  {
+     XmMenuBar	admin_menu;
+     XmForm  	form;
+  };
+};
+
+
+object form : XmForm
+{
+   arguments
+   {
+     XmNtraversalOn = false;
+     XmNwidth = 400;
+     XmNheight = 600;
+     XmNresizePolicy = XmRESIZE_NONE;
+   };
+   controls
+   {
+     XmPanedWindow adminnav_form;
+     XmLabel	msg_label;
+     XmText	cmd_input;
+     XmLabel	cmd_prompt;
+   };
+};
+
+object admin_menu : XmMenuBar
+{
+  arguments
+  {
+    XmNorientation 	= XmHORIZONTAL;
+    XmNspacing  	= 15;
+    XmNmenuHelpWidget 	= XmCascadeButton help_entry; 
+  };
+  controls
+  {
+    XmCascadeButton file_entry;
+    XmCascadeButton functions_entry;
+    XmCascadeButton view_entry;
+    XmCascadeButton help_entry;
+  };
+};
+
+object file_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString  = compound_string("File");
+    XmNfontList	    = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Refresh");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure admin_activate_refresh(admin_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Print");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure admin_activate_print(admin_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Close");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure admin_activate_exit(admin_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+object functions_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString = compound_string("Functions");
+    XmNfontList	   = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Command");
+            XmNmnemonic = keysym('o');
+	    XmNaccelerator = "Ctrl<Key>B";
+	    XmNacceleratorText = compound_string('Ctrl+B');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure admin_activate_command(admin_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Open Project");
+            XmNmnemonic = keysym('O');
+	    XmNaccelerator = "Ctrl<Key>L";
+	    XmNacceleratorText = compound_string('Ctrl+L');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure admin_activate_openproject(admin_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Create Project");
+            XmNmnemonic = keysym('C');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure admin_activate_createproject(admin_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Delete Project");
+            XmNmnemonic = keysym('D');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure admin_activate_deleteproject(admin_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Copy Project");
+            XmNmnemonic = keysym('o');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure admin_activate_copyproject(admin_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Move Project");
+            XmNmnemonic = keysym('M');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure admin_activate_moveproject(admin_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Rename Project");
+            XmNmnemonic = keysym('R');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure admin_activate_renameproject(admin_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Project Properties");
+            XmNmnemonic = keysym('r');
+!	    XmNaccelerator = "Ctrl<Key>O";
+!	    XmNacceleratorText = compound_string('Ctrl+O');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure admin_activate_projectprop(admin_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+
+object view_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString  = compound_string("View");
+    XmNfontList	    = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Zoom in");
+            XmNmnemonic = keysym('Z');
+	    XmNaccelerator = "Ctrl<Key>I";
+	    XmNacceleratorText = compound_string('Ctrl+I');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure admin_activate_zoomin(admin_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Zoom out");
+            XmNmnemonic = keysym('o');
+	    XmNaccelerator = "Ctrl<Key>O";
+	    XmNacceleratorText = compound_string('Ctrl+O');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure admin_activate_zoomout(admin_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Zoom reset");
+            XmNmnemonic = keysym('r');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure admin_activate_zoomreset(admin_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+object help_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString = compound_string("Help");
+    XmNfontList	   = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Help");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+	    XmNactivateCallback = procedure admin_activate_help(admin_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+object adminnav_form : XmPanedWindow
+{
+   arguments
+   {
+     XmNleftAttachment 	= 	XmATTACH_FORM;
+     XmNrightAttachment 	= XmATTACH_FORM;
+     XmNbottomAttachment    	= XmATTACH_FORM;
+     XmNbottomOffset        	= 50;
+     XmNtopAttachment    	= XmATTACH_FORM;
+!     XmNheight = 300;
+!     XmNpaneMinimum = 300;
+   };
+   controls
+   {
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure admin_create_adminnav_form( admin_ctx);
+   };
+};
+
+object msg_label : XmLabel
+{
+   arguments
+   {
+     XmNborderWidth 		= 0;
+     XmNrightAttachment 	= XmATTACH_FORM;
+     XmNleftAttachment 		= XmATTACH_FORM;
+     XmNbottomAttachment    	= XmATTACH_FORM;
+     XmNalignment		= XmALIGNMENT_BEGINNING;
+     XmNlabelString		= "";
+     XmNheight			= 20;
+     XmNfontList	   		= menu_font;
+   };
+   controls
+   {
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure admin_create_msg_label( admin_ctx);
+   };
+};
+
+object cmd_prompt : XmLabel
+{
+   arguments
+   {
+!      XmNborderWidth 		= 1;
+      XmNleftAttachment 	= XmATTACH_FORM;
+!      XmNbottomAttachment    	= XmATTACH_FORM;
+!      XmNbottomOffset        	= 20;
+      XmNtopAttachment    	= XmATTACH_WIDGET;
+      XmNtopWidget		= XmPanedWindow adminnav_form;
+      XmNalignment		= XmALIGNMENT_BEGINNING;
+      XmNlabelString		= "";
+      XmNwidth			= 50;
+      XmNheight			= 30;
+      XmNfontList	   	= menu_font;
+   };
+   controls
+   {
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure admin_create_cmd_prompt ( admin_ctx) ;
+   };
+};
+
+object cmd_input : XmText
+{
+   arguments
+   {
+      XmNleftAttachment 	= XmATTACH_FORM;
+      XmNleftOffset        	= 50;
+      XmNrightAttachment 	= XmATTACH_FORM;
+!      XmNbottomAttachment    	= XmATTACH_FORM;
+!      XmNbottomOffset        	= 20;
+      XmNtopAttachment    	= XmATTACH_WIDGET;
+      XmNtopWidget		= XmPanedWindow adminnav_form;
+!      XmNeditMode		= XmMULTI_LINE_EDIT;
+      XmNrows 			= 1;
+      XmNborderWidth		= 0;
+      XmNshadowThickness	= 0;
+      XmNheight			= 30;
+      XmNfontList	   	= menu_font;
+   };
+   controls
+   {
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure admin_create_cmd_input( admin_ctx);
+   };
+};
+
+
+object adminprop_dia : XmFormDialog {
+   arguments {
+     XmNwidth = 600;
+     XmNheight = 280;
+     XmNinitialFocus = XmText projnamevalue;
+     XmNautoUnmanage     = false;
+     XmNbuttonFontList	   	= menu_font;
+     XmNlabelFontList	   	= menu_font;
+     XmNtextFontList	   	= menu_font;
+   };
+   controls {
+     XmLabel	     	projnamelabel;
+     XmLabel	     	baselabel;
+     XmLabel	     	pathlabel;
+     XmLabel	     	hierlabel;
+     XmLabel	     	descriptlabel;
+     XmLabel	     	projname_noedit;
+     XmLabel	     	base_noedit;
+     XmLabel	     	path_noedit;
+     XmLabel	     	hier_noedit;
+     XmLabel	     	descript_noedit;
+     XmText		projnamevalue;
+     XmText		basevalue;
+     XmText		pathvalue;
+     XmText		hiervalue;
+     XmText		descriptvalue;
+     XmPushButton	ok;
+     XmPushButton	cancel;
+   };
+};
+
+object ok : XmPushButton {
+   arguments {
+      XmNbottomAttachment 	= XmATTACH_FORM;
+      XmNleftAttachment 	= XmATTACH_FORM;
+      XmNleftOffset	        = 30;
+      XmNbottomOffset	        = 10;
+      XmNwidth = 65;
+      XmNheight = 30;
+      XmNlabelString = compound_string("OK");
+      XmNfontList	    = menu_font;
+   };
+   callbacks {
+      XmNactivateCallback = procedure adminprop_activate_ok ( admin_ctx) ;
+   };
+};
+object cancel : XmPushButton {
+   arguments {
+      XmNbottomAttachment 	= XmATTACH_FORM;
+      XmNrightAttachment 	= XmATTACH_FORM;
+      XmNrightOffset	        = 30;
+      XmNbottomOffset	        = 10;
+      XmNwidth = 65;
+      XmNheight = 30;
+      XmNlabelString = compound_string("Cancel");
+      XmNfontList	    = menu_font;
+   };
+   callbacks {
+      XmNactivateCallback = procedure adminprop_activate_cancel ( admin_ctx) ;
+   };
+};
+
+object projnamevalue : XmText {
+   arguments {
+      XmNresizeHeight 	= false;
+      XmNmarginHeight 	= 1;
+      XmNy 			= 30;
+      XmNrows 			= 1;
+      XmNleftAttachment 	= XmATTACH_FORM;
+      XmNleftOffset	        = 130;
+      XmNrightAttachment 	= XmATTACH_FORM;
+      XmNrightOffset	        = 20;
+      XmNfontList	    = menu_font;
+   };
+   callbacks {
+     MrmNcreateCallback 	= procedure adminprop_create_projnamevalue(admin_ctx);
+   };
+};
+
+object basevalue : XmText
+{
+   arguments {
+      XmNresizeHeight 	= false;
+      XmNmarginHeight 	= 1;
+      XmNy 		= 60;
+      XmNrows 		= 1;
+      XmNleftAttachment 	= XmATTACH_FORM;
+      XmNleftOffset	        = 130;
+      XmNrightAttachment 	= XmATTACH_FORM;
+      XmNrightOffset	        = 20;
+      XmNfontList	= menu_font;
+   };
+   callbacks {
+      MrmNcreateCallback 	= procedure adminprop_create_basevalue(admin_ctx);
+   };
+};
+
+object pathvalue : XmText
+{
+   arguments {
+      XmNresizeHeight 	= false;
+      XmNmarginHeight 	= 1;
+      XmNy 		= 90;
+      XmNrows 		= 1;
+      XmNleftAttachment 	= XmATTACH_FORM;
+      XmNleftOffset	        = 130;
+      XmNrightAttachment 	= XmATTACH_FORM;
+      XmNrightOffset	        = 20;
+      XmNfontList	= menu_font;
+   };
+   callbacks {
+      MrmNcreateCallback 	= procedure adminprop_create_pathvalue(admin_ctx);
+   };
+};
+
+object hiervalue : XmText
+{
+   arguments {
+      XmNresizeHeight 	= false;
+      XmNmarginHeight 	= 1;
+      XmNy 		= 120;
+      XmNrows 		= 1;
+      XmNleftAttachment 	= XmATTACH_FORM;
+      XmNleftOffset	        = 130;
+      XmNrightAttachment 	= XmATTACH_FORM;
+      XmNrightOffset	        = 20;
+      XmNfontList	= menu_font;
+   };
+   callbacks {
+      MrmNcreateCallback 	= procedure adminprop_create_hiervalue(admin_ctx);
+   };
+};
+
+object descriptvalue : XmText
+{
+   arguments {
+      XmNresizeHeight 	= false;
+      XmNmarginHeight 	= 1;
+      XmNy 		= 150;
+      XmNrows 		= 1;
+      XmNleftAttachment 	= XmATTACH_FORM;
+      XmNleftOffset	        = 130;
+      XmNrightAttachment 	= XmATTACH_FORM;
+      XmNrightOffset	        = 20;
+      XmNfontList	= menu_font;
+   };
+   callbacks {
+      MrmNcreateCallback 	= procedure adminprop_create_descriptvalue(admin_ctx);
+   };
+};
+
+object projname_noedit : XmLabel {
+   arguments {
+      XmNy 			= 30;
+      XmNleftAttachment 	= XmATTACH_FORM;
+      XmNleftOffset	        = 130;
+      XmNfontList	    = menu_font;
+   };
+   callbacks {
+     MrmNcreateCallback 	= procedure adminprop_create_projna_noedit(admin_ctx);
+   };
+};
+
+object base_noedit : XmLabel
+{
+   arguments {
+      XmNy 		= 60;
+      XmNleftAttachment 	= XmATTACH_FORM;
+      XmNleftOffset	        = 130;
+      XmNfontList	= menu_font;
+   };
+   callbacks {
+      MrmNcreateCallback 	= procedure adminprop_create_base_noedit(admin_ctx);
+   };
+};
+
+object path_noedit : XmLabel
+{
+   arguments {
+      XmNy 		= 90;
+      XmNleftAttachment 	= XmATTACH_FORM;
+      XmNleftOffset	        = 130;
+      XmNfontList	= menu_font;
+   };
+   callbacks {
+      MrmNcreateCallback 	= procedure adminprop_create_path_noedit(admin_ctx);
+   };
+};
+
+object hier_noedit : XmLabel
+{
+   arguments {
+      XmNy 		= 120;
+      XmNleftAttachment 	= XmATTACH_FORM;
+      XmNleftOffset	        = 130;
+      XmNfontList	= menu_font;
+   };
+   callbacks {
+      MrmNcreateCallback 	= procedure adminprop_create_hier_noedit(admin_ctx);
+   };
+};
+
+object descript_noedit : XmLabel
+{
+   arguments {
+      XmNy 		= 150;
+      XmNleftAttachment 	= XmATTACH_FORM;
+      XmNleftOffset	        = 130;
+      XmNfontList	= menu_font;
+   };
+   callbacks {
+      MrmNcreateCallback 	= procedure adminprop_create_descr_noedit(admin_ctx);
+   };
+};
+
+object projnamelabel : XmLabel {
+   arguments {
+	XmNx 		= 40;
+	XmNy 		= 30;
+        XmNlabelString	= "Project name";
+	XmNfontList	    = menu_font;
+   };
+};
+
+object baselabel : XmLabel {
+   arguments {
+	XmNx 		= 40;
+	XmNy 		= 60;
+        XmNlabelString	= "Base";
+        XmNfontList	    = menu_font;
+   };
+};
+
+object pathlabel : XmLabel {
+   arguments {
+	XmNx 		= 40;
+	XmNy 		= 90;
+        XmNlabelString	= "Path";
+        XmNfontList	    = menu_font;
+   };
+};
+
+object hierlabel : XmLabel {
+   arguments {
+	XmNx 		= 40;
+	XmNy 		= 120;
+        XmNlabelString	= "Hierarchy";
+        XmNfontList	    = menu_font;
+   };
+};
+
+object descriptlabel : XmLabel {
+   arguments {
+	XmNx 		= 40;
+	XmNy 		= 150;
+        XmNlabelString	= "Description";
+        XmNfontList	    = menu_font;
+   };
+};
+
+
+end module;
+
+
+
+
+
+
+
+

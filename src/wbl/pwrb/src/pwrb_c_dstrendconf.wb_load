@@ -1,0 +1,59 @@
+!  pwrb_c_dstrendconf.wb_load -- Defines the class DsTrendConf.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  DsTrend configure object.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  Specifies attributes of a single DsTrend job.
+!  
+!  In every node where trend graphs shall be stored there
+!  is a need for a DsTrend job which is searching through
+!  the local DsTrend objects.
+!  
+!         Hints
+!  Because a DsTrend job default is loaded to each OpenVMS
+!  node it is suitable to configure DsTrendConf object on
+!  this nodes. The DsTrendConf objects are placed below
+!  the $Node objects.
+!  
+!  If a Ds_Trend job is loaded to a node that has no
+!  DsTrendConf object, it will execute with 1 Hz.
+!  
+!         See Also
+!  DsTrend.
+!*/
+SObject pwrb:Class
+  Object DsTrendConf $ClassDef 109 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "DsTrendConf"
+      EndBody
+      !/**
+      !  The scanning period, in seconds, of the DsTrend job. 
+      !  1 <= ScanTime <= 3600.
+      !  The ScanTime attribute in every DsTrend object
+      !  belonging to the same same node as the DsTrendConf are
+      !  assigned the value of the attribute!
+      !*/
+      Object ScanTime $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+    EndObject
+    Object Template DsTrendConf
+      Body RtBody
+        Attr ScanTime = 1
+      EndBody
+    EndObject
+  EndObject
+EndSObject

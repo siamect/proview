@@ -1,0 +1,66 @@
+!  ssab_c_LoggConfig.wb_load -- Defines the class LoggConfig.
+!
+!  PROVIEW/R
+!
+!  <Description>.
+!
+SObject SSAB:Class
+  Object LoggConfig $ClassDef 2
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    !
+    ! LoggConfig Runtime Body
+    !
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "LoggConfig"
+      EndBody
+      !
+      ! Parameter Description
+      !
+      Object LoggFile $Param 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object NewVersion $Param 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Identity $Param 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object LoggCount $Param 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object FileOpenCount $Param 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+    EndObject
+    !
+    ! Template för LoggConfig
+    !
+    Object Template LoggConfig
+      Body RtBody
+      EndBody
+    EndObject
+  !
+  ! End RttConfig
+  !
+  EndObject
+EndSObject

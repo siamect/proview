@@ -1,0 +1,66 @@
+comma := ,
+empty :=
+space := $(empty) $(empty)
+
+pred_9	:= 8
+pred_8	:= 7
+pred_7	:= 6
+pred_6	:= 5
+pred_5	:= 4
+pred_4	:= 3
+pred_3	:= 2
+pred_2	:= 1
+pred_1	:= 0
+
+cwd_dirs := $(subst /,$(space), $(CWD))
+
+word	:= $(words $(cwd_dirs))
+hw_name	:= $(word $(word), $(cwd_dirs))
+ifneq ($(findstring hw, $(hw_name)), hw)
+include ___error___hw_name
+endif
+
+prev	:= pred_ $(word) 
+pred	:= $(subst $(space),$(empty),$(prev))
+word	:= $($(pred))
+os_name	:= $(word $(word), $(cwd_dirs))
+ifneq ($(findstring os, $(os_name)), os)
+include ___error___os_name
+endif
+
+prev	:= pred_ $(word) 
+pred	:= $(subst $(space),$(empty),$(prev))
+word	:= $($(pred))
+src_name	:= $(word $(word), $(cwd_dirs))
+ifneq ($(src_name), src)
+include ___error___no_source_subdirectory
+endif
+
+prev	:= pred_ $(word) 
+pred	:= $(subst $(space),$(empty),$(prev))
+word	:= $($(pred))
+comp_name	:= $(word $(word), $(cwd_dirs))
+
+prev	:= pred_ $(word) 
+pred	:= $(subst $(space),$(empty),$(prev))
+word	:= $($(pred))
+type_name	:= $(word $(word), $(cwd_dirs))
+
+prev	:= pred_ $(word) 
+pred	:= $(subst $(space),$(empty),$(prev))
+word	:= $($(pred))
+root_name	:= $(word $(word), $(cwd_dirs))
+ifneq ($(src_name), src)
+include ___error___incorrect_source_root
+endif
+
+rest = /$(type_name)/$(comp_name)/src/$(os_name)/$(hw_name)/
+source_root := $(subst $(rest),$(empty),$(CWD))
+
+all:
+	write sys$$output "$(hw_name)"
+	write sys$$output "$(os_name)"
+	write sys$$output "$(comp_name)"
+	write sys$$output "$(type_name)"
+	write sys$$output "$(rest)"
+	write sys$$output "$(source_root)"

@@ -1,0 +1,366 @@
+!  pwrb_c_dsfast.wb_load -- Defines the class DsFast.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  DataStorage FASTcurve.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  Stores data for a fast graph à la storage oscilloscope.
+!  
+!  In every node where fast graphs should be stored there
+!  is a need for a DsFast job to search through the local
+!  data storage objects of the node.
+!  For every attribute to be plotted there has to be a
+!  data storage object. Attributes in the objects specify
+!  for example the name of the sampled attribute and how
+!  often it is to be stored, see figure 3-11. An attribute
+!  may be referred to by several different data storage
+!  objects, for example to store at different frequencies.
+!  
+!                   Note! Remember that the sampling rate of physical hardware
+!  is finite. At present Ai-signals are sampled at 5 Hz
+!  and Co-, Di-, Do-, and Dv-signals at the base frequency
+!  which is equal to the fastest running PLC program of
+!  the node. Highest possible base frequency is 50 Hz.
+!  Data is stored in a circular buffer with a size of
+!  NoOfBufElement.
+!  
+!  The cycle of samples is started when the Start-flag
+!  (see below) is set. This can be done by means of the
+!  Start-button in the fast graph. The attribute is
+!  sampled and the values are stored in the DataBuffer.
+!  When all elements in the buffer have got values once in
+!  this way, AllDataOK is set.
+!  The Trigged flag can be set by two different events:
+!  1
+!     manually from for example the fast graph by the
+!     Trigger- button. In this case TrigManTrue is set.
+!  2  via the outer signal named by the TrigName
+!     attribute.
+!  
+!  The cycle of samples continues with further
+!  NoOfBufElement - SampBeforeTrig samples when the
+!  Trigged flag has been set and stops after that. Test
+!  values in the buffer are frozen and the plotting is
+!  done in the fast graph.
+!  The sampled attribute has to be a local quantity. So,
+!  DsFast objects have to reside at the same node as the
+!  sampled attribute in the runtime environment.
+!  
+!  The DsFast module is included in the EBUILD-file of the
+!  node by means of:
+!        program PWR_EXE:RS_DS_FAST.EXE_ELN /warm_debug
+!  The sampled attribute is supposed to be of any of the
+!  types:
+!  
+!  - pwr_tBoolean
+!  - pwr_tFloat32, pwr_tFloat64
+!  
+!  - pwr_tInt8, pwr_tInt16, pwr_tInt32
+!  - pwr_tUInt8, pwr_tUInt16, pwr_tUInt32
+!*/
+SObject pwrb:Class
+  Object DsFast $ClassDef 104 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "DsFast"
+      EndBody
+      !/**
+      !  Optional text.
+      !*/
+      Object Description $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies whether the storage will be done or not.
+      !  FALSE means that the storage shall be stopped. TRUE
+      !  causes the storage to start. This can be done by the
+      !  start button in the fast graph. The attribute is set
+      !  FALSE when a storage cycle is ended.
+      !*/
+      Object Start $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  The frequency of the DsFast job in Hz. See also
+      !  Multiple below.
+      !  The attribute is assigned the same value as the
+      !  corresponding attribute in the DsFastConf object of the
+      !  node. This is done at the initialisation of the DsFast
+      !  job.
+      !*/
+      Object BaseFrequency $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  The individual quantity is stored at the frequency of
+      !  BaseFrequency/ Multiple.
+      !*/
+      Object Multiple $Attribute 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies at which scan this data storage object has to
+      !  be updated. Is put equal to Multiple and is then
+      !  decreased at every scan. If NextMultiple = 0 storage
+      !  will take place and NextMultiple is put equal to the
+      !  value of Multiple.
+      !*/
+      Object NextMultiple $Attribute 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the trigger condition of the binary trigger
+      !  signal named by TrigName. The following values are
+      !  possible:
+      !  
+      !     -- 0   the trigger signal is disabled.
+      !     -- 1   leading edge, i.e. the transition FALSE -> TRUE starts storage.
+      !     -- 2   trailing edge, i.e. the transition TRUE -> FALSE starts storage.
+      !*/
+      Object TrigMode $Attribute 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt8"
+        EndBody
+      EndObject
+      !/**
+      !  The complete name of an external binary trigger signal,
+      !  for example a local quantity, PROC1-Di123.ActualValue.
+      !  The attribute is left blank if no external trigger
+      !  signal will be used.
+      !*/
+      Object TrigName $Attribute 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$AttrRef"
+        EndBody
+      EndObject
+      !/**
+      !  Pointer to the trigger signal specified by TrigName.
+      !*/
+      Object TrigPointer $Attribute 8 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Identity at subscription of the trigger signal.
+      !*/
+      Object TrigSubId $Attribute 9 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$RefId"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Specifies an unconditional setting of the trigger
+      !  signal independent of the state of TrigName. Is set
+      !  TRUE for example via the trigger button in the fast
+      !  graph and becomes FALSE when the cycle of the sample is
+      !  ended.
+      !*/
+      Object TrigManTrue $Attribute 10 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Stores measurant's data type. It has to be of any of
+      !  the types pwr_tBoolean, pwr_tFloat32, pwr_tFloat64,
+      !  pwr_tInt8, pwr_tInt16, pwr_tInt32, pwr_tUInt8,
+      !  pwr_tUInt16, or pwr_tUInt32.
+      !*/
+      Object DataType $Attribute 11 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt8"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  The complete name of an analog sampled attribute, for
+      !  example PROC1-TEMP1.ActualValue. The attribute has to
+      !  be represented by a local object.
+      !*/
+      Object DataName $Attribute 12 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$AttrRef"
+        EndBody
+      EndObject
+      !/**
+      !  Pointer to the attribute which is to be stored.
+      !*/
+      Object DataPointer $Attribute 13 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Identity at subscription of the sampled attribute.
+      !*/
+      Object DataSubId $Attribute 14 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$RefId"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Length, in seconds, of the testing result. If the time
+      !  exceeds what is possible to store in DataBuffer, the
+      !  storage is stopped when DataBuffer is filled.
+      !  StorageTime, Multiple, BaseFrequency and NoOfBufElement
+      !  determines NoOfSample.
+      !*/
+      Object StorageTime $Attribute 15 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Number of samples which can be stored in the DataBuffer.
+      !  SampBeforeTrig
+      !*/
+      Object NoOfSample $Attribute 16 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Number of samples before the trigger point. These
+      !  samples are included in the testing result.
+      !*/
+      Object SampBeforeTrig $Attribute 17 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the first element in DataBuffer since the
+      !  triggering has taken place.
+      !*/
+      Object TrigIndex $Attribute 18 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Specifies if the trigger condition, under current cycle
+      !  of samples, has been satisfied or not. Becomes FALSE as
+      !  soon as the cycle of samples is ended. TRUE means that
+      !  the trigger condition is established.
+      !*/
+      Object Trigged $Attribute 19 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the location in the buffer where the next
+      !  writing will be done.
+      !*/
+      Object NextIndex $Attribute 20 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Specifies if the whole buffer has been updated since
+      !  the Start attribute was set or not. Becomes FALSE as
+      !  soon as the cycle of samples is ended. TRUE means that
+      !  the DataBuffer has been updated at least once.
+      !*/
+      Object AllDataOK $Attribute 21 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Maximum number of elements in DataBuffer. Specifies the
+      !  number of samples which can be stored at the same time.
+      !  DataBuffer[460]
+      !*/
+      Object NoOfBufElement $Attribute 22 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+          Attr Flags |= PWR_MASK_CONST
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Total accessible storage memory. The maximum size is
+      !  determined by NoOfBufElement.
+      !*/
+      Object DataBuffer $Attribute 23 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+!        Attr Elements = 3000
+          Attr Elements = 460
+        EndBody
+      EndObject
+    EndObject
+    Object Template DsFast
+      Body RtBody
+	Attr StorageTime = 9
+ 	Attr BaseFrequency = 50
+	Attr Multiple = 1
+        Attr NoOfBufElement = 460
+      EndBody
+    EndObject
+    Object PostCreate $DbCallBack
+      Body SysBody
+        Attr MethodName = "DsFast-PostCreate"
+      EndBody
+    EndObject
+    Object PostMove $DbCallBack
+      Body SysBody
+        Attr MethodName = "DsFast-PostMove"
+      EndBody
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,18 @@
+!  pwrs_td_url.wb_load -- Defines the type URL
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+SObject pwrs:Type
+   Object $URL $TypeDef 13
+    Body SysBody
+      Attr Type = pwr_eType_String
+      Attr Size = 160
+      Attr TypeRef = "pwrs:Type-$String"
+      Attr Elements = 160
+    EndBody
+  EndObject
+EndSObject

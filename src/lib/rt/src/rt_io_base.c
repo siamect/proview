@@ -1,0 +1,2543 @@
+/* rt_io_base.c -- io base routines.
+
+   PROVIEW/R
+   Copyright (C) 1994 by Comator Process AB.  */
+
+#if defined(OS_ELN)
+# include string
+# include stdlib
+# include stdio
+# include float
+# include math
+#else
+# include <string.h>
+# include <stdlib.h>
+# include <stdio.h>
+# include <float.h>
+# include <math.h>
+#endif
+
+#include "pwr.h"
+#include "pwr_class.h"
+#include "pwr_baseclasses.h"
+#include "rt_gdh.h"
+#include "rt_gdh_msg.h"
+#include "rt_io_msg.h"
+#include "co_cdh.h"
+#include "rt_errh.h"
+#include "rt_io_supervise.h"
+#include "rt_io_base.h"
+
+#define IO_CONVMASK_ALL         0xFFFF
+#define IO_CLASSES_SIZE 	200
+
+#define DI_AREA_MIN_SIZE	2048
+#define DO_AREA_MIN_SIZE	2048
+#define AI_AREA_MIN_SIZE	512
+#define AO_AREA_MIN_SIZE	512
+#define DV_AREA_MIN_SIZE	4096
+#define AV_AREA_MIN_SIZE	512
+#define CO_AREA_MIN_SIZE	64
+
+
+pwr_tBoolean io_writeerr;
+pwr_tBoolean io_readerr;
+pwr_tBoolean io_fatal_error;
+
+pwr_dImport pwr_BindIoUserClasses(User);
+
+pwr_dImport pwr_BindIoMethods(Node);
+pwr_dImport pwr_BindIoMethods(Rack_SSAB);
+pwr_dImport pwr_BindIoMethods(Di_DIX2);
+pwr_dImport pwr_BindIoMethods(Do_HVDO32);
+pwr_dImport pwr_BindIoMethods(Ao_HVAO4);
+pwr_dImport pwr_BindIoMethods(Ai_HVAI32);
+pwr_dImport pwr_BindIoMethods(Ai_AI32uP);
+pwr_dImport pwr_BindIoMethods(Co_PI24BO);
+#if defined(OS_ELN)
+pwr_dImport pwr_BindIoMethods(RTP_DIOC);
+pwr_dImport pwr_BindIoMethods(Rack_RTP);
+pwr_dImport pwr_BindIoMethods(Ai_7436);
+pwr_dImport pwr_BindIoMethods(Ao_7455_20);
+pwr_dImport pwr_BindIoMethods(Ao_7455_30);
+pwr_dImport pwr_BindIoMethods(Pd_7435_26);
+pwr_dImport pwr_BindIoMethods(Di_7437_37);
+pwr_dImport pwr_BindIoMethods(Do_7437_83);
+pwr_dImport pwr_BindIoMethods(Co_7435_33);
+pwr_dImport pwr_BindIoMethods(Co_7437_33);
+#endif
+
+#if defined(OS_LYNX)
+pwr_dImport pwr_BindIoMethods(Pb_Profiboard);
+pwr_dImport pwr_BindIoMethods(Pb_DP_Slave);
+pwr_dImport pwr_BindIoMethods(Pb_ET200M);
+pwr_dImport pwr_BindIoMethods(Pb_NPBA12);
+pwr_dImport pwr_BindIoMethods(Pb_Euro2500);
+pwr_dImport pwr_BindIoMethods(Pb_Di);
+pwr_dImport pwr_BindIoMethods(Pb_Do);
+pwr_dImport pwr_BindIoMethods(Pb_Ai);
+pwr_dImport pwr_BindIoMethods(Pb_Ao);
+#endif
+
+pwr_BindIoClasses(Base) = {
+  pwr_BindIoClass(Node),
+  pwr_BindIoClass(Rack_SSAB),
+  pwr_BindIoClass(Di_DIX2),
+  pwr_BindIoClass(Do_HVDO32),
+  pwr_BindIoClass(Ao_HVAO4),
+  pwr_BindIoClass(Ai_HVAI32),
+  pwr_BindIoClass(Ai_AI32uP),
+  pwr_BindIoClass(Co_PI24BO),
+#if defined(OS_ELN)
+  pwr_BindIoClass(RTP_DIOC),
+  pwr_BindIoClass(Rack_RTP),
+  pwr_BindIoClass(Ai_7436),
+  pwr_BindIoClass(Ao_7455_20),
+  pwr_BindIoClass(Ao_7455_30),
+  pwr_BindIoClass(Pd_7435_26),
+  pwr_BindIoClass(Di_7437_37),
+  pwr_BindIoClass(Do_7437_83),
+  pwr_BindIoClass(Co_7435_33),
+  pwr_BindIoClass(Co_7437_33),
+#endif
+#if defined(OS_LYNX)
+  pwr_BindIoClass(Pb_Profiboard),
+  pwr_BindIoClass(Pb_DP_Slave),
+  pwr_BindIoClass(Pb_ET200M),
+  pwr_BindIoClass(Pb_NPBA12),
+  pwr_BindIoClass(Pb_Euro2500),
+  pwr_BindIoClass(Pb_Di),
+  pwr_BindIoClass(Pb_Do),
+  pwr_BindIoClass(Pb_Ai),
+  pwr_BindIoClass(Pb_Ao),
+#endif
+  pwr_NullClass
+};
+
+typedef struct s_cardlist {
+	pwr_tObjid		objid;
+	pwr_tUInt32		maxnoofchannels;
+	struct s_cardlist	*next;
+} io_sCardList;
+
+static pwr_tStatus io_trv_child(
+  pwr_tObjid 	parent,
+  int		deep,
+  pwr_tStatus	(* func) (),
+  void		*arg1,
+  void		*arg2,
+  int		arg3);
+
+
+/*----------------------------------------------------------------------------*\
+  Initialization of ai signals and channels.
+\*----------------------------------------------------------------------------*/
+
+pwr_tStatus io_init_ai_signals( 
+  pwr_sClass_IOHandler		*io_op)
+{
+  pwr_tStatus			sts;
+  pwr_tObjid			area_objid;
+  pwr_sClass_AiArea		*area_op;
+  pwr_sClass_Ai			*sig_op;
+  pwr_sClass_ChanAi		*chan_op;
+  pwr_tObjid			sig_objid;
+  pwr_tObjid			chan_objid;
+  char				buf[140];
+  pwr_tUInt32			chan_count;
+
+  /* Get pointer to area-object */
+  sts = gdh_NameToObjid( "pwrNode-active-io-ai", &area_objid);
+  if (EVEN(sts)) return sts;
+
+  sts = gdh_ObjidToPointer( area_objid, (void *) &area_op);
+  if (EVEN(sts)) return sts;
+
+  /* Clear pointers to ValueBase */
+
+  sts = gdh_GetClassList(pwr_cClass_Ai, &sig_objid);
+  while (ODD(sts)) 
+  {
+    sts = gdh_ObjidToPointer( sig_objid, (void *) &sig_op);
+    if (EVEN(sts)) return sts;
+    sig_op->ActualValue = NULL;
+    sts = gdh_GetNextObject(sig_objid, &sig_objid);
+  }
+
+  /* Loop channel objects */
+  chan_count = 0;
+  sts = gdh_GetClassList(pwr_cClass_ChanAi, &chan_objid);
+  while (ODD(sts)) 
+  {
+    sts = gdh_ObjidToPointer( chan_objid, (void *) &chan_op);
+    if (EVEN(sts)) return sts;
+		
+    if ( cdh_ObjidIsNull( chan_op->SigChanCon))
+    {
+      sts = gdh_ObjidToName( chan_objid, buf, sizeof(buf), cdh_mNName);
+      if ( EVEN(sts)) return sts;
+/*
+      errh_Info("IO init: Channel is not connected '%s'", buf);
+*/
+      sts = gdh_GetNextObject( chan_objid, &chan_objid);
+      continue;
+    }
+    sts = gdh_ObjidToPointer( chan_op->SigChanCon, (void *) &sig_op);	
+    if ( EVEN(sts))
+    {
+      sts = gdh_ObjidToName( chan_objid, buf, sizeof(buf), cdh_mNName);
+      if ( EVEN(sts)) return sts;
+      errh_Error("IO init: Channel SigChanCon does not exist '%s'", buf);
+      sts = gdh_GetNextObject( chan_objid, &chan_objid);
+      continue;
+    }
+	
+    /* Check that connection is mutual */
+    if ( cdh_ObjidIsNotEqual( chan_objid, sig_op->SigChanCon))
+    {
+      sts = gdh_ObjidToName( chan_objid, buf, sizeof(buf), cdh_mNName);
+      if ( EVEN(sts)) return sts;
+      errh_Error("IO init: Channel connection is not mutual '%s'", buf);
+      sts = gdh_GetNextObject( chan_objid, &chan_objid);
+      continue;
+    }
+	
+    gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue,
+		&area_op->Value[ chan_count]);
+    sig_op->ValueIndex = chan_count;
+    chan_count++;
+    sts = gdh_GetNextObject( chan_objid, &chan_objid);
+  }
+
+  sts = gdh_GetClassList(pwr_cClass_ChanAit, &chan_objid);
+  while (ODD(sts)) 
+  {
+    sts = gdh_ObjidToPointer( chan_objid, (void *) &chan_op);
+    if (EVEN(sts)) return sts;
+		
+    if ( cdh_ObjidIsNull( chan_op->SigChanCon))
+    {
+      sts = gdh_ObjidToName( chan_objid, buf, sizeof(buf), cdh_mNName);
+      if ( EVEN(sts)) return sts;
+/*
+      errh_Info("IO init: Channel is not connected '%s'", buf);
+*/
+      sts = gdh_GetNextObject( chan_objid, &chan_objid);
+      continue;
+    }
+    sts = gdh_ObjidToPointer( chan_op->SigChanCon, (void *) &sig_op);	
+    if ( EVEN(sts))
+    {
+      sts = gdh_ObjidToName( chan_objid, buf, sizeof(buf), cdh_mNName);
+      if ( EVEN(sts)) return sts;
+      errh_Error("IO init: Channel SigChanCon does not exist '%s'", buf);
+      sts = gdh_GetNextObject( chan_objid, &chan_objid);
+      continue;
+    }
+	
+    /* Check that connection is mutual */
+    if ( cdh_ObjidIsNotEqual( chan_objid, sig_op->SigChanCon))
+    {
+      sts = gdh_ObjidToName( chan_objid, buf, sizeof(buf), cdh_mNName);
+      if ( EVEN(sts)) return sts;
+      errh_Error("IO init: Channel connection is not mutual '%s'", buf);
+      sts = gdh_GetNextObject( chan_objid, &chan_objid);
+      continue;
+    }
+	
+    gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue,
+		&area_op->Value[ chan_count]);
+    sig_op->ValueIndex = chan_count;
+    chan_count++;
+    sts = gdh_GetNextObject( chan_objid, &chan_objid);
+  }
+
+  /* Initiate remaining signals */
+  sts = gdh_GetClassList( pwr_cClass_Ai, &sig_objid);
+  while (ODD(sts)) 
+  {
+    sts = gdh_ObjidToPointer( sig_objid, (void *) &sig_op);
+    if (EVEN(sts)) return sts;
+
+    if ( sig_op->ActualValue == NULL) 
+    {
+      sts = gdh_ObjidToName( sig_objid, buf, sizeof(buf), cdh_mNName);
+      if ( EVEN(sts)) return sts;
+      errh_Info("IO init: Signal is not connected '%s'", buf);
+      gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, 
+		&area_op->Value[chan_count]);
+      sig_op->ValueIndex = chan_count;
+      chan_count++;
+    }
+    sts = gdh_GetNextObject( sig_objid, &sig_objid);
+  }
+
+  /* Store number of AI in node object  */
+  io_op->AiCount = chan_count;
+
+  return IO__SUCCESS;
+}
+
+
+/*----------------------------------------------------------------------------*\
+  Initialization of ao signals and channels.
+\*----------------------------------------------------------------------------*/
+
+pwr_tStatus io_init_ao_signals(
+  pwr_sClass_IOHandler		*io_op)
+{
+  pwr_tStatus			sts;
+  pwr_tObjid			area_objid;
+  pwr_sClass_AoArea		*area_op;
+  pwr_sClass_Ao			*sig_op;
+  pwr_sClass_ChanAo		*chan_op;
+  pwr_tObjid			sig_objid;
+  pwr_tObjid			chan_objid;
+  char				buf[140];
+  pwr_tUInt32			chan_count;
+  pwr_tClassId			class;
+
+  /* Get pointer to area-object */
+  sts = gdh_NameToObjid( "pwrNode-active-io-ao", &area_objid);
+  if (EVEN(sts)) return sts;
+
+  sts = gdh_ObjidToPointer( area_objid, (void *) &area_op);
+  if (EVEN(sts)) return sts;
+
+  /* Clear pointers to ValueBase */
+
+  sts = gdh_GetClassList(pwr_cClass_Ao, &sig_objid);
+  while (ODD(sts)) 
+  {
+    sts = gdh_ObjidToPointer( sig_objid, (void *) &sig_op);
+    if (EVEN(sts)) return sts;
+    sig_op->ActualValue = NULL;
+    sts = gdh_GetNextObject(sig_objid, &sig_objid);
+  }
+
+  /* Loop channel objects */
+  chan_count = 0;
+  sts = gdh_GetClassList(pwr_cClass_ChanAo, &chan_objid);
+  while (ODD(sts)) 
+  {
+    sts = gdh_GetObjectClass( chan_objid, &class);
+    if (EVEN(sts)) return sts;
+
+    sts = gdh_ObjidToPointer( chan_objid, (void *) &chan_op);
+    if (EVEN(sts)) return sts;
+		
+    if ( cdh_ObjidIsNull( chan_op->SigChanCon))
+    {
+      sts = gdh_ObjidToName( chan_objid, buf, sizeof(buf), cdh_mNName);
+      if ( EVEN(sts)) return sts;
+/*
+      errh_Info("IO init: Channel is not connected '%s'", buf);
+*/
+      sts = gdh_GetNextObject( chan_objid, &chan_objid);
+      continue;
+    }
+    sts = gdh_ObjidToPointer( chan_op->SigChanCon, (void *) &sig_op);	
+    if ( EVEN(sts))
+    {
+      sts = gdh_ObjidToName( chan_objid, buf, sizeof(buf), cdh_mNName);
+      if ( EVEN(sts)) return sts;
+      errh_Error("IO init: Channel SigChanCon does not exist '%s'", buf);
+      sts = gdh_GetNextObject( chan_objid, &chan_objid);
+      continue;
+    }
+	
+    /* Check that connection is mutual */
+    if ( cdh_ObjidIsNotEqual( chan_objid, sig_op->SigChanCon))
+    {
+      sts = gdh_ObjidToName( chan_objid, buf, sizeof(buf), cdh_mNName);
+      if ( EVEN(sts)) return sts;
+      errh_Error("IO init: Channel connection is not mutual '%s'", buf);
+      sts = gdh_GetNextObject( chan_objid, &chan_objid);
+      continue;
+    }
+	
+    gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue,
+		&area_op->Value[ chan_count]);
+    sig_op->ValueIndex = chan_count;
+    chan_count++;
+    sts = gdh_GetNextObject( chan_objid, &chan_objid);
+  }
+
+
+  /* Initiate remaining signals */
+  sts = gdh_GetClassList( pwr_cClass_Ao, &sig_objid);
+  while (ODD(sts))
+  {
+    sts = gdh_ObjidToPointer( sig_objid, (void *) &sig_op);
+    if (EVEN(sts)) return sts;
+
+    if ( sig_op->ActualValue == NULL)
+    {
+      sts = gdh_ObjidToName( sig_objid, buf, sizeof(buf), cdh_mNName);
+      if ( EVEN(sts)) return sts;
+      errh_Info("IO init: Signal is not connected '%s'", buf);
+      gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, &area_op->Value[chan_count]);
+      sig_op->ValueIndex = chan_count;
+      chan_count++;
+    }
+    sts = gdh_GetNextObject( sig_objid, &sig_objid);
+  }
+
+  /* Store number of AO in node object  */
+  io_op->AoCount = chan_count;
+  return IO__SUCCESS;
+}
+
+
+/*----------------------------------------------------------------------------*\
+  Initialization of di signals and channels.
+\*----------------------------------------------------------------------------*/
+
+pwr_tStatus io_init_di_signals(
+  pwr_sClass_IOHandler		*io_op)
+{
+  pwr_tStatus			sts;
+  pwr_tObjid			area_objid;
+  pwr_sClass_DiArea		*area_op;
+  pwr_sClass_Di			*sig_op;
+  pwr_sClass_ChanDi		*chan_op;
+  pwr_tObjid			sig_objid;
+  pwr_tObjid			chan_objid;
+  char				buf[140];
+  pwr_tUInt32			chan_count;
+  pwr_tClassId			class;
+
+  /* Get pointer to area-object */
+  sts = gdh_NameToObjid( "pwrNode-active-io-di", &area_objid);
+  if (EVEN(sts)) return sts;
+
+  sts = gdh_ObjidToPointer( area_objid, (void *) &area_op);
+  if (EVEN(sts)) return sts;
+
+  /* Clear pointers to ValueBase */
+
+  sts = gdh_GetClassList(pwr_cClass_Di, &sig_objid);
+  while (ODD(sts)) 
+  {
+    sts = gdh_ObjidToPointer( sig_objid, (void *) &sig_op);
+    if (EVEN(sts)) return sts;
+    sig_op->ActualValue = NULL;
+    sts = gdh_GetNextObject(sig_objid, &sig_objid);
+  }
+
+  /* Loop channel objects */
+  chan_count = 0;
+  sts = gdh_GetClassList(pwr_cClass_ChanDi, &chan_objid);
+  while (ODD(sts)) 
+  {
+    sts = gdh_GetObjectClass( chan_objid, &class);
+    if (EVEN(sts)) return sts;
+
+    sts = gdh_ObjidToPointer( chan_objid, (void *) &chan_op);
+    if (EVEN(sts)) return sts;
+		
+    if ( cdh_ObjidIsNull( chan_op->SigChanCon))
+    {
+      sts = gdh_ObjidToName( chan_objid, buf, sizeof(buf), cdh_mNName);
+      if ( EVEN(sts)) return sts;
+/*
+      errh_Info("IO init: Channel is not connected '%s'", buf);
+*/
+      sts = gdh_GetNextObject( chan_objid, &chan_objid);
+      continue;
+    }
+    sts = gdh_ObjidToPointer( chan_op->SigChanCon, (void *) &sig_op);	
+    if ( EVEN(sts))
+    {
+      sts = gdh_ObjidToName( chan_objid, buf, sizeof(buf), cdh_mNName);
+      if ( EVEN(sts)) return sts;
+      errh_Error("IO init: Channel SigChanCon does not exist '%s'", buf);
+      sts = gdh_GetNextObject( chan_objid, &chan_objid);
+      continue;
+    }
+	
+    /* Check that connection is mutual */
+    if ( cdh_ObjidIsNotEqual( chan_objid, sig_op->SigChanCon))
+    {
+      sts = gdh_ObjidToName( chan_objid, buf, sizeof(buf), cdh_mNName);
+      if ( EVEN(sts)) return sts;
+      errh_Error("IO init: Channel connection is not mutual '%s'", buf);
+      sts = gdh_GetNextObject( chan_objid, &chan_objid);
+      continue;
+    }
+	
+    gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue,
+		&area_op->Value[ chan_count]);
+    sig_op->ValueIndex = chan_count;
+    chan_count++;
+    sts = gdh_GetNextObject( chan_objid, &chan_objid);
+  }
+
+  /* Initiate remaining signals */
+  sts = gdh_GetClassList( pwr_cClass_Di, &sig_objid);
+  while (ODD(sts)) 
+  {
+    sts = gdh_ObjidToPointer( sig_objid, (void *) &sig_op);
+    if (EVEN(sts)) return sts;
+
+    if ( sig_op->ActualValue == NULL) 
+    {
+      sts = gdh_ObjidToName( sig_objid, buf, sizeof(buf), cdh_mNName);
+      if ( EVEN(sts)) return sts;
+      errh_Info("IO init: Signal is not connected '%s'", buf);
+      gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, &area_op->Value[chan_count]);
+      sig_op->ValueIndex = chan_count;
+      chan_count++;
+    }
+    sts = gdh_GetNextObject( sig_objid, &sig_objid);
+  }
+
+  /* Store number of Di in node object  */
+  io_op->DiCount = chan_count;
+
+  return IO__SUCCESS;
+}
+
+
+/*----------------------------------------------------------------------------*\
+  Initialization of do signals and channels.
+\*----------------------------------------------------------------------------*/
+
+pwr_tStatus io_init_do_signals(
+  pwr_sClass_IOHandler		*io_op)
+{
+  pwr_tStatus			sts;
+  pwr_tObjid			area_objid;
+  pwr_sClass_DoArea		*area_op;
+  pwr_sClass_Do			*sig_op;
+  pwr_sClass_ChanDo		*chan_op;
+  pwr_tObjid			sig_objid;
+  pwr_tObjid			chan_objid;
+  char				buf[140];
+  pwr_tUInt32			chan_count;
+  pwr_tClassId			class;
+
+  /* Get pointer to area-object */
+  sts = gdh_NameToObjid( "pwrNode-active-io-do", &area_objid);
+  if (EVEN(sts)) return sts;
+
+  sts = gdh_ObjidToPointer( area_objid, (void *) &area_op);
+  if (EVEN(sts)) return sts;
+
+  /* Clear pointers to ValueBase */
+
+  sts = gdh_GetClassList(pwr_cClass_Do, &sig_objid);
+  while (ODD(sts)) 
+  {
+    sts = gdh_ObjidToPointer( sig_objid, (void *) &sig_op);
+    if (EVEN(sts)) return sts;
+    sig_op->ActualValue = NULL;
+    sts = gdh_GetNextObject(sig_objid, &sig_objid);
+  }
+  sts = gdh_GetClassList(pwr_cClass_Po, &sig_objid);
+  while (ODD(sts)) 
+  {
+    sts = gdh_ObjidToPointer( sig_objid, (void *) &sig_op);
+    if (EVEN(sts)) return sts;
+    sig_op->ActualValue = NULL;
+    sts = gdh_GetNextObject(sig_objid, &sig_objid);
+  }
+
+
+  /* Loop channel objects */
+  chan_count = 0;
+  sts = gdh_GetClassList(pwr_cClass_ChanDo, &chan_objid);
+  while (ODD(sts)) 
+  {
+    sts = gdh_GetObjectClass( chan_objid, &class);
+    if (EVEN(sts)) return sts;
+
+    sts = gdh_ObjidToPointer( chan_objid, (void *) &chan_op);
+    if (EVEN(sts)) return sts;
+		
+    if ( cdh_ObjidIsNull( chan_op->SigChanCon))
+    {
+      sts = gdh_ObjidToName( chan_objid, buf, sizeof(buf), cdh_mNName);
+      if ( EVEN(sts)) return sts;
+/*
+      errh_Info("IO init: Channel is not connected '%s'", buf);
+*/
+      sts = gdh_GetNextObject( chan_objid, &chan_objid);
+      continue;
+    }
+    sts = gdh_ObjidToPointer( chan_op->SigChanCon, (void *) &sig_op);	
+    if ( EVEN(sts))
+    {
+      sts = gdh_ObjidToName( chan_objid, buf, sizeof(buf), cdh_mNName);
+      if ( EVEN(sts)) return sts;
+      errh_Error("IO init: Channel SigChanCon does not exist '%s'", buf);
+      sts = gdh_GetNextObject( chan_objid, &chan_objid);
+      continue;
+    }
+	
+    /* Check that connection is mutual */
+    if ( cdh_ObjidIsNotEqual( chan_objid, sig_op->SigChanCon))
+    {
+      sts = gdh_ObjidToName( chan_objid, buf, sizeof(buf), cdh_mNName);
+      if ( EVEN(sts)) return sts;
+      errh_Error("IO init: Channel connection is not mutual '%s'", buf);
+      sts = gdh_GetNextObject( chan_objid, &chan_objid);
+      continue;
+    }
+
+    gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue,
+		&area_op->Value[ chan_count]);
+    sig_op->ValueIndex = chan_count;
+    chan_count++;
+    sts = gdh_GetNextObject( chan_objid, &chan_objid);
+  }
+	
+  /* Initiate remaining signals */
+  sts = gdh_GetClassList( pwr_cClass_Do, &sig_objid);
+  while (ODD(sts)) 
+  {
+    sts = gdh_ObjidToPointer( sig_objid, (void *) &sig_op);
+    if (EVEN(sts)) return sts;
+
+    if ( sig_op->ActualValue == NULL) 
+    {
+      sts = gdh_ObjidToName( sig_objid, buf, sizeof(buf), cdh_mNName);
+      if ( EVEN(sts)) return sts;
+      errh_Info("IO init: Signal is not connected '%s'", buf);
+      gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, 
+		&area_op->Value[chan_count]);
+      sig_op->ValueIndex = chan_count;
+      chan_count++;
+    }
+    sts = gdh_GetNextObject( sig_objid, &sig_objid);
+  }
+  sts = gdh_GetClassList( pwr_cClass_Po, &sig_objid);
+  while (ODD(sts)) 
+  {
+    sts = gdh_ObjidToPointer( sig_objid, (void *) &sig_op);
+    if (EVEN(sts)) return sts;
+
+    if ( sig_op->ActualValue == NULL) 
+    {
+      sts = gdh_ObjidToName( sig_objid, buf, sizeof(buf), cdh_mNName);
+      if ( EVEN(sts)) return sts;
+      errh_Info("IO init: Signal is not connected '%s'", buf);
+      gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, 
+		&area_op->Value[chan_count]);
+      sig_op->ValueIndex = chan_count;
+      chan_count++;
+    }
+    sts = gdh_GetNextObject( sig_objid, &sig_objid);
+  }
+
+  /* Store number of Do in node object  */
+  io_op->DoCount = chan_count;
+
+  return IO__SUCCESS;
+}
+
+
+/*----------------------------------------------------------------------------*\
+  Initialization of co signals and channels.
+\*----------------------------------------------------------------------------*/
+
+pwr_tStatus io_init_co_signals( 
+  pwr_sClass_IOHandler		*io_op)
+{
+  pwr_tStatus			sts;
+  pwr_tObjid			area_objid;
+  pwr_sClass_CoArea		*area_op;
+  pwr_sClass_CaArea		*abs_area_op;
+  pwr_sClass_Co			*sig_op;
+  pwr_sClass_ChanCo		*chan_op;
+  pwr_tObjid			sig_objid;
+  pwr_tObjid			chan_objid;
+  char				buf[140];
+  pwr_tUInt32			chan_count;
+
+  /* Get pointer to area-object */
+  sts = gdh_NameToObjid( "pwrNode-active-io-co", &area_objid);
+  if (EVEN(sts)) return sts;
+
+  sts = gdh_ObjidToPointer( area_objid, (void *) &area_op);
+  if (EVEN(sts)) return sts;
+
+  sts = gdh_NameToObjid( "pwrNode-active-io-ca", &area_objid);
+  if (EVEN(sts)) return sts;
+
+  sts = gdh_ObjidToPointer( area_objid, (void *) &abs_area_op);
+  if (EVEN(sts)) return sts;
+
+  /* Clear pointers to ValueBase */
+
+  sts = gdh_GetClassList(pwr_cClass_Co, &sig_objid);
+  while (ODD(sts)) 
+  {
+    sts = gdh_ObjidToPointer( sig_objid, (void *) &sig_op);
+    if (EVEN(sts)) return sts;
+    sig_op->RawValue = NULL;
+    sig_op->AbsValue = NULL;
+    sts = gdh_GetNextObject(sig_objid, &sig_objid);
+  }
+
+  /* Loop channel objects */
+  chan_count = 0;
+  sts = gdh_GetClassList(pwr_cClass_ChanCo, &chan_objid);
+  while (ODD(sts)) 
+  {
+    sts = gdh_ObjidToPointer( chan_objid, (void *) &chan_op);
+    if (EVEN(sts)) return sts;
+		
+    if ( cdh_ObjidIsNull( chan_op->SigChanCon))
+    {
+      sts = gdh_ObjidToName( chan_objid, buf, sizeof(buf), cdh_mNName);
+      if ( EVEN(sts)) return sts;
+/*
+      errh_Info("IO init: Channel is not connected '%s'", buf);
+*/
+      sts = gdh_GetNextObject( chan_objid, &chan_objid);
+      continue;
+    }
+    sts = gdh_ObjidToPointer( chan_op->SigChanCon, (void *) &sig_op);	
+    if ( EVEN(sts))
+    {
+      sts = gdh_ObjidToName( chan_objid, buf, sizeof(buf), cdh_mNName);
+      if ( EVEN(sts)) return sts;
+      errh_Error("IO init: Channel SigChanCon does not exist '%s'", buf);
+      sts = gdh_GetNextObject( chan_objid, &chan_objid);
+      continue;
+    }
+	
+    /* Check that connection is mutual */
+    if ( cdh_ObjidIsNotEqual( chan_objid, sig_op->SigChanCon))
+    {
+      sts = gdh_ObjidToName( chan_objid, buf, sizeof(buf), cdh_mNName);
+      if ( EVEN(sts)) return sts;
+      errh_Error("IO init: Channel connection is not mutual '%s'", buf);
+      sts = gdh_GetNextObject( chan_objid, &chan_objid);
+      continue;
+    }
+	
+    gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->RawValue,
+		&area_op->Value[ chan_count]);
+    gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->AbsValue,
+		&abs_area_op->Value[ chan_count]);
+    sig_op->ValueIndex = chan_count;
+    chan_count++;
+    sts = gdh_GetNextObject( chan_objid, &chan_objid);
+  }
+
+  /* Initiate remaining signals */
+  sts = gdh_GetClassList( pwr_cClass_Co, &sig_objid);
+  while (ODD(sts)) 
+  {
+    sts = gdh_ObjidToPointer( sig_objid, (void *) &sig_op);
+    if (EVEN(sts)) return sts;
+
+    if ( sig_op->RawValue == NULL) 
+    {
+      sts = gdh_ObjidToName( sig_objid, buf, sizeof(buf), cdh_mNName);
+      if ( EVEN(sts)) return sts;
+      errh_Info("IO init: Signal is not connected '%s'", buf);
+      gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->RawValue, 
+		&area_op->Value[chan_count]);
+      gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->AbsValue, 
+		&abs_area_op->Value[chan_count]);
+      sig_op->ValueIndex = chan_count;
+      chan_count++;
+    }
+    sts = gdh_GetNextObject( sig_objid, &sig_objid);
+  }
+
+  /* Store number of CO in node object  */
+  io_op->CoCount = chan_count;
+
+  return IO__SUCCESS;
+}
+
+
+
+/*----------------------------------------------------------------------------*\
+  Initialization of av signals.
+\*----------------------------------------------------------------------------*/
+
+static pwr_tStatus
+io_init_av_signals (
+  pwr_sClass_IOHandler		*io_op)
+{
+  pwr_tObjid			area_objid;
+  pwr_tObjid			oid;
+  pwr_sClass_AvArea		*area_op;
+  pwr_sClass_Av			*o;
+  pwr_tStatus			sts;
+  pwr_tFloat32			*p;
+  pwr_tInt32			av_count = 0;	
+  pwr_sClass_IvArea		*iarea_op;
+ 
+  /* Get pointer to area-object */
+  sts = gdh_NameToObjid( "pwrNode-active-io-av", &area_objid);
+  if (EVEN(sts)) return sts;
+
+  sts = gdh_ObjidToPointer( area_objid, (void *) &area_op);
+  if (EVEN(sts)) return sts;
+
+  /* Get pointer to area-object */
+  sts = gdh_NameToObjid( "pwrNode-active-io-av_init", &area_objid);
+  if (EVEN(sts)) return sts;
+
+  sts = gdh_ObjidToPointer( area_objid, (void *) &iarea_op);
+  if (EVEN(sts)) return sts;
+
+  p = area_op->Value; 
+
+  /* Loop Av-object */
+
+  sts = gdh_GetClassList(pwr_cClass_Av, &oid);
+  if (EVEN(sts) && sts != GDH__NOSUCHOBJ && sts != GDH__BADOBJTYPE && sts != GDH__NO_TYPE) {
+    errh_Error("Get class list of Av\n%m", sts);
+  }
+
+  while (ODD(sts)) {
+    sts = gdh_ObjidToPointer(oid, (void *)&o);
+    if (EVEN(sts) && sts != GDH__NO_TYPE) return sts;
+			    
+    if (sts != GDH__REMOTE) {
+      gdh_StoreRtdbPointer( (pwr_tUInt32 *)&o->ActualValue, p);
+      o->ValueIndex = av_count;
+#if 0
+      *p = o->InitialValue;
+#endif
+      gdh_StoreRtdbPointer( (pwr_tUInt32 *)&iarea_op->Value[av_count], &o->InitialValue);
+      av_count++;
+      p++;
+    }
+
+    sts = gdh_GetNextObject(oid, &oid);
+    if (EVEN(sts) && sts != GDH__NO_TYPE) return sts;
+  }		
+
+  if (sts == GDH__NO_TYPE || sts == GDH__NOSUCHOBJ || sts == GDH__BADOBJTYPE) 
+    sts = IO__SUCCESS;
+
+  io_op->AvCount = av_count;
+
+  return sts;
+}
+
+/*----------------------------------------------------------------------------*\
+  Initialization of dv signals.
+\*----------------------------------------------------------------------------*/
+
+static pwr_tStatus
+io_init_dv_signals (
+  pwr_sClass_IOHandler	    *io_op)
+{
+  pwr_tObjid		    area_objid;
+  pwr_tObjid		    oid;
+  pwr_sClass_DvArea	    *area_op;
+  pwr_sClass_Dv		    *o;
+  pwr_tStatus		    sts;
+  pwr_tBoolean		    *p;
+  pwr_tInt32		    dv_count=0;
+  pwr_sClass_IvArea	    *iarea_op;
+ 
+  /* Get pointer to area-object */
+  sts = gdh_NameToObjid( "pwrNode-active-io-dv", &area_objid);
+  if (EVEN(sts)) return sts;
+
+  sts = gdh_ObjidToPointer( area_objid, (void *) &area_op);
+  if (EVEN(sts)) return sts;
+
+  /* Get pointer to area-object */
+  sts = gdh_NameToObjid( "pwrNode-active-io-dv_init", &area_objid);
+  if (EVEN(sts)) return sts;
+
+  sts = gdh_ObjidToPointer( area_objid, (void *) &iarea_op);
+  if (EVEN(sts)) return sts;
+
+  p = area_op->Value; 
+
+  /* Loop DV-object */
+
+  sts = gdh_GetClassList(pwr_cClass_Dv, &oid);
+  if (EVEN(sts) && sts != GDH__NOSUCHOBJ && sts != GDH__BADOBJTYPE && sts != GDH__NO_TYPE) {
+    errh_Error("Get class list of Dv\n%m", sts);
+  }
+
+  while (ODD(sts)) {
+    sts = gdh_ObjidToPointer(oid, (void *)&o);
+    if (EVEN(sts) && sts != GDH__NO_TYPE) return sts;
+			    
+    if (sts != GDH__REMOTE)  {
+      gdh_StoreRtdbPointer( (pwr_tUInt32 *)&o->ActualValue, p);
+      o->ValueIndex = dv_count;
+#if 0
+      *p = o->InitialValue;
+#endif
+      gdh_StoreRtdbPointer( (pwr_tUInt32 *)&iarea_op->Value[dv_count], &o->InitialValue);
+      dv_count++;
+      p++;
+    }
+
+    sts = gdh_GetNextObject(oid, &oid);
+    if (EVEN(sts) && sts != GDH__NO_TYPE) return sts;
+  }		
+
+  if (sts == GDH__NO_TYPE || sts == GDH__NOSUCHOBJ || sts == GDH__BADOBJTYPE) 
+    sts = IO__SUCCESS;
+
+  io_op->DvCount = dv_count;
+
+  return sts;
+}
+
+
+/*----------------------------------------------------------------------------*\
+  Initialize io handler object.
+\*----------------------------------------------------------------------------*/
+
+static pwr_tStatus io_init_iohandler_object (  
+  void
+) 
+{
+  pwr_tStatus		sts;
+  pwr_tObjid		oid;
+  pwr_sClass_IOHandler	*o;
+  pwr_tString80		Name;
+
+  /* Default values in seconds */
+  pwr_tFloat32		CycleTimeBus = 0.2;
+  pwr_tFloat32		CycleTimeSerial = 1.0;
+  pwr_tFloat32		CycleTimeBusMin = 0.02;
+  pwr_tFloat32		CycleTimeSerialMin = 0.5;
+
+  /* Get IOHandler object */
+  sts = gdh_GetClassList(pwr_cClass_IOHandler, &oid);
+  if (EVEN(sts))
+  {
+    if (sts != GDH__NOSUCHOBJ && sts != GDH__NO_TYPE)
+      return sts;
+    else
+    {
+      /* Create Handler object */
+      strcpy(Name,"pwrNode-IOHandler");
+      sts = gdh_CreateObject(Name, pwr_cClass_IOHandler,
+	sizeof(pwr_sClass_IOHandler), &oid, pwr_cNObjid, 0, pwr_cNObjid);
+      if (EVEN(sts)) return sts;
+
+      sts = gdh_ObjidToPointer( oid, (void *) &o);
+      if (EVEN(sts)) return sts;
+
+      o->CycleTimeBus = CycleTimeBus;
+      o->CycleTimeSerial = CycleTimeSerial;
+    }
+  }
+  else
+  {
+    sts = gdh_ObjidToPointer( oid, (void *) &o);
+    if (EVEN(sts)) return sts;
+
+    if ( o->CycleTimeBus < CycleTimeBusMin)
+      o->CycleTimeBus = CycleTimeBusMin;
+    if ( o->CycleTimeSerial < CycleTimeSerialMin)
+      o->CycleTimeSerial = CycleTimeSerial;
+  }  
+
+  return IO__SUCCESS;
+
+}
+
+
+/*----------------------------------------------------------------------------*\
+  Get io handler object.
+\*----------------------------------------------------------------------------*/
+
+pwr_tStatus io_get_iohandler_object (  
+  pwr_sClass_IOHandler	**o,
+  pwr_tObjid		*roid
+)
+{
+  pwr_tStatus		sts;
+  pwr_tObjid		oid;
+
+  /* Get IOHandler object */
+  sts = gdh_GetClassList(pwr_cClass_IOHandler, &oid);
+  if (EVEN(sts)) return sts;
+
+  sts = gdh_ObjidToPointer( oid, (void *) o);
+  if (EVEN(sts)) return sts;
+
+  if (roid != NULL)
+    *roid = oid;
+  return IO__SUCCESS;
+}
+
+
+/*----------------------------------------------------------------------------*\
+  Initialization of signals and channels.
+\*----------------------------------------------------------------------------*/
+
+pwr_tStatus io_init_signals( void)
+{
+  pwr_tStatus	sts;
+  pwr_sClass_IOHandler	*io_op;
+
+  io_init_iohandler_object();
+  sts = io_get_iohandler_object(&io_op, NULL);  
+  if ( EVEN(sts)) return sts;
+
+  sts = io_init_di_signals( io_op);
+  if ( EVEN(sts)) return sts;
+
+  sts = io_init_do_signals( io_op);
+  if ( EVEN(sts)) return sts;
+
+  sts = io_init_ai_signals( io_op);
+  if ( EVEN(sts)) return sts;
+
+  sts = io_init_ao_signals( io_op);
+  if ( EVEN(sts)) return sts;
+
+  sts = io_init_co_signals( io_op);
+  if ( EVEN(sts)) return sts;
+
+  sts = io_init_dv_signals( io_op);
+  if ( EVEN(sts)) return sts;
+
+  sts = io_init_av_signals( io_op);
+  if ( EVEN(sts)) return sts;
+
+  sts = io_init_iohandler_object();
+  if ( EVEN(sts)) return sts;
+
+  return IO__SUCCESS;
+}
+
+
+/*----------------------------------------------------------------------------*\
+  Find the io methods for a class.
+\*----------------------------------------------------------------------------*/
+static pwr_tStatus io_FindMethods( 
+  pwr_tClassId 	class,
+  io_eType	type,
+  pwr_tStatus 	(** Init) (),
+  pwr_tStatus 	(** Close) (),
+  pwr_tStatus 	(** Read) (),
+  pwr_tStatus 	(** Write) ()
+)
+{
+  char		cname[80];
+  int		found;
+  pwr_tStatus 	sts;
+  int		i, j;
+  char 		*s;  
+  char		init_methodstr[80];
+  char		close_methodstr[80];
+  char		read_methodstr[80];
+  char		write_methodstr[80];
+
+  /* Detect name of methods to look for */
+  switch ( type)
+  {
+    case io_eType_Agent:
+      strcpy( init_methodstr, "IoAgentInit");
+      strcpy( close_methodstr, "IoAgentClose");
+      strcpy( read_methodstr, "IoAgentRead");
+      strcpy( write_methodstr, "IoAgentWrite");
+      break;
+    case io_eType_Rack:
+      strcpy( init_methodstr, "IoRackInit");
+      strcpy( close_methodstr, "IoRackClose");
+      strcpy( read_methodstr, "IoRackRead");
+      strcpy( write_methodstr, "IoRackWrite");
+      break;
+    case io_eType_Card:
+      strcpy( init_methodstr, "IoCardInit");
+      strcpy( close_methodstr, "IoCardClose");
+      strcpy( read_methodstr, "IoCardRead");
+      strcpy( write_methodstr, "IoCardWrite");
+      break;
+    default:
+      return IO__NOMETHOD;
+  }
+
+  sts = gdh_ObjidToName( cdh_ClassIdToObjid( class), cname, sizeof(cname),
+		cdh_mName_object);
+  if ( EVEN(sts)) return sts;
+
+  /* Why does cdh_mName_object return the path ? */
+  if ( (s = strrchr( cname, '-')) != 0)
+    strcpy( cname, ++s);
+
+  if ( strcmp( cname, "$Node")  == 0)
+    strcpy( cname, "Node");
+
+  if ( Init != NULL)
+    *Init = NULL;
+  if ( Read != NULL)
+    *Read = NULL;
+  if ( Write != NULL)
+    *Write = NULL;
+  if ( Close != NULL)
+    *Close = NULL;
+
+  found = 0;
+  /* Search i IoUser methods */
+  for ( i = 0;; i++)
+  {
+    if (pwr_gUser_IoUserClassMethods[i].ClassName[0] == '\0') break;
+    {
+      if ( strcmp(pwr_gUser_IoUserClassMethods[i].ClassName, cname) == 0)
+      {
+        for (j = 0;; j++) 
+        {
+	  found = 1;
+          if ((*pwr_gUser_IoUserClassMethods[i].Methods)[j].MethodName[0] == '\0')
+	    break;
+          if ( Init != NULL &&
+               strcmp( (*pwr_gUser_IoUserClassMethods[i].Methods)[j].MethodName,
+			init_methodstr) == 0)
+	    *Init = (*pwr_gUser_IoUserClassMethods[i].Methods)[j].Method;
+	  else if ( Close != NULL &&
+	            strcmp( (*pwr_gUser_IoUserClassMethods[i].Methods)[j].MethodName,
+			close_methodstr) == 0)
+	    *Close = (*pwr_gUser_IoUserClassMethods[i].Methods)[j].Method;
+	  else if ( Read != NULL &&
+	            strcmp( (*pwr_gUser_IoUserClassMethods[i].Methods)[j].MethodName,
+			read_methodstr) == 0)
+	    *Read = (*pwr_gUser_IoUserClassMethods[i].Methods)[j].Method;
+	  else if ( Write != NULL &&
+	            strcmp( (*pwr_gUser_IoUserClassMethods[i].Methods)[j].MethodName,
+			write_methodstr) == 0)
+	    *Write = (*pwr_gUser_IoUserClassMethods[i].Methods)[j].Method;
+	}
+      }
+      if ( found)
+	break;
+    }
+  }
+  if (!found)
+  {
+    for ( i = 0;; i++)
+    {
+      if (pwr_gBase_IoClassMethods[i].ClassName[0] == '\0') break;
+      {
+        if ( strcmp(pwr_gBase_IoClassMethods[i].ClassName, cname) == 0)
+        {
+          for (j = 0;; j++) 
+          {
+	    found = 1;
+            if ((*pwr_gBase_IoClassMethods[i].Methods)[j].MethodName[0] == '\0')
+	      break;
+            if ( Init != NULL &&
+               strcmp( (*pwr_gBase_IoClassMethods[i].Methods)[j].MethodName,
+			init_methodstr) == 0)
+	      *Init = (*pwr_gBase_IoClassMethods[i].Methods)[j].Method;
+	    else if ( Close != NULL &&
+	            strcmp( (*pwr_gBase_IoClassMethods[i].Methods)[j].MethodName,
+			close_methodstr) == 0)
+	      *Close = (*pwr_gBase_IoClassMethods[i].Methods)[j].Method;
+	    else if ( Read != NULL &&
+	            strcmp( (*pwr_gBase_IoClassMethods[i].Methods)[j].MethodName,
+			read_methodstr) == 0)
+	      *Read = (*pwr_gBase_IoClassMethods[i].Methods)[j].Method;
+	    else if ( Write != NULL &&
+	            strcmp( (*pwr_gBase_IoClassMethods[i].Methods)[j].MethodName,
+			write_methodstr) == 0)
+	      *Write = (*pwr_gBase_IoClassMethods[i].Methods)[j].Method;
+	  }
+        }
+        if ( found)
+	  break;
+      }
+    }
+  }
+  if ( !found)
+    return IO__NOMETHOD;
+  return IO__SUCCESS;
+}
+
+
+/*----------------------------------------------------------------------------*\
+  Find classes belonging to an specific IO-type.
+\*----------------------------------------------------------------------------*/
+pwr_tStatus io_GetIoTypeClasses( 
+  io_eType	type,
+  pwr_tClassId 	**classes,
+  int		*size
+)
+{
+
+  pwr_tStatus 	sts;
+  int		i, j;
+  char		init_methodstr[80];
+  char		close_methodstr[80];
+  char		read_methodstr[80];
+  char		write_methodstr[80];
+
+  /* Detect name of methods to look for */
+  switch ( type)
+  {
+    case io_eType_Agent:
+      strcpy( init_methodstr, "IoAgentInit");
+      strcpy( close_methodstr, "IoAgentClose");
+      strcpy( read_methodstr, "IoAgentRead");
+      strcpy( write_methodstr, "IoAgentWrite");
+      break;
+    case io_eType_Rack:
+      strcpy( init_methodstr, "IoRackInit");
+      strcpy( close_methodstr, "IoRackClose");
+      strcpy( read_methodstr, "IoRackRead");
+      strcpy( write_methodstr, "IoRackWrite");
+      break;
+    case io_eType_Card:
+      strcpy( init_methodstr, "IoCardInit");
+      strcpy( close_methodstr, "IoCardClose");
+      strcpy( read_methodstr, "IoCardRead");
+      strcpy( write_methodstr, "IoCardWrite");
+      break;
+    default:
+      return IO__NOMETHOD;
+  }
+
+  *size = 0;
+  *classes = calloc( IO_CLASSES_SIZE, sizeof(pwr_tClassId));
+
+  /* Search i IoUser methods */
+  for ( i = 0;; i++)
+  {
+    if (pwr_gUser_IoUserClassMethods[i].ClassName[0] == '\0') 
+      break;
+
+    for (j = 0;; j++) 
+    {
+      if ((*pwr_gUser_IoUserClassMethods[i].Methods)[j].MethodName[0] == '\0')
+	break;
+      if ( (strcmp( (*pwr_gUser_IoUserClassMethods[i].Methods)[j].MethodName,
+			init_methodstr) == 0) ||
+           (strcmp( (*pwr_gUser_IoUserClassMethods[i].Methods)[j].MethodName,
+			close_methodstr) == 0) ||
+           (strcmp( (*pwr_gUser_IoUserClassMethods[i].Methods)[j].MethodName,
+			read_methodstr) == 0) ||
+           (strcmp( (*pwr_gUser_IoUserClassMethods[i].Methods)[j].MethodName,
+			write_methodstr) == 0))
+      {
+	/* This is a class of the desired type, insert in list */
+	if ( *size >= IO_CLASSES_SIZE)
+	  return IO__CLASSEXCEED;
+
+	sts = gdh_ClassNameToId( pwr_gUser_IoUserClassMethods[i].ClassName,
+		&(*classes)[ *size]);
+	if ( ODD(sts))
+	  (*size)++;
+        break;
+      }
+    }
+  }
+  /* Search i IoBase methods */
+  for ( i = 0;; i++)
+  {
+    if (pwr_gBase_IoClassMethods[i].ClassName[0] == '\0') 
+      break;
+
+    for (j = 0;; j++) 
+    {
+      if ((*pwr_gBase_IoClassMethods[i].Methods)[j].MethodName[0] == '\0')
+	break;
+      if ( (strcmp( (*pwr_gBase_IoClassMethods[i].Methods)[j].MethodName,
+			init_methodstr) == 0) ||
+           (strcmp( (*pwr_gBase_IoClassMethods[i].Methods)[j].MethodName,
+			close_methodstr) == 0) ||
+           (strcmp( (*pwr_gBase_IoClassMethods[i].Methods)[j].MethodName,
+			read_methodstr) == 0) ||
+           (strcmp( (*pwr_gBase_IoClassMethods[i].Methods)[j].MethodName,
+			write_methodstr) == 0))
+      {
+	/* This is a class of the desired type, insert in list */
+	if ( *size >= IO_CLASSES_SIZE)
+	  return IO__CLASSEXCEED;
+
+        if ( strcmp( pwr_gBase_IoClassMethods[i].ClassName, "Node") == 0)
+	  sts = gdh_ClassNameToId( "$Node",
+		&(*classes)[ *size]);
+        else
+	  sts = gdh_ClassNameToId( pwr_gBase_IoClassMethods[i].ClassName,
+		&(*classes)[ *size]);
+	if ( ODD(sts))
+	  (*size)++;
+        break;
+      }
+    }
+  }
+  return IO__SUCCESS;
+}
+
+
+/*----------------------------------------------------------------------------*\
+  Insert a card object into the context list.
+\*----------------------------------------------------------------------------*/
+static pwr_tStatus io_init_card(
+  pwr_tObjid	objid, 
+  io_tCtx	ctx,
+  io_sRack	*rp,
+  int		agent_type)
+{
+  pwr_tStatus 	sts;
+  pwr_tClassId	class;  
+  pwr_tStatus 	(* CardInit) ();
+  pwr_tStatus 	(* CardClose) ();
+  pwr_tStatus 	(* CardRead) ();
+  pwr_tStatus 	(* CardWrite) ();
+  char		cname[140];
+  char		attrname[140];
+  pwr_tUInt32	process;
+  io_sCard	*cp;
+  io_sCard	*clp;
+  pwr_sAttrRef	attrref;
+  pwr_tObjid	chan;
+  pwr_tDlid	chandlid;
+  pwr_tDlid	sigdlid;
+  pwr_tUInt32	number;
+  pwr_tUInt16	maxchan;
+  pwr_tObjid	sigchancon;
+  void		*chan_op;
+  void		*sig_op;
+  io_sChannel	*chanp;
+  pwr_tClassId	sigclass;
+  pwr_tFloat32	scantime;
+  pwr_tObjid	thread;
+  int		ok;
+
+  sts = gdh_GetObjectClass( objid, &class);
+  if ( EVEN(sts)) return sts;
+
+  sts = io_FindMethods( class, io_eType_Card, 
+		&CardInit, &CardClose, &CardRead, &CardWrite);
+  if ( ODD(sts))
+  {
+    if ( CardInit != NULL || CardClose != NULL || CardRead != NULL || CardWrite != NULL)
+    {
+      /* This is a card object */
+      /* Check if the rack should be handled by this process */      
+      
+      sts = gdh_ObjidToName( objid, cname, sizeof(cname),
+		cdh_mName_volumeStrict);
+      if ( EVEN(sts)) return sts;
+
+      ok = 0;
+      strcpy( attrname, cname);
+      strcat( attrname, ".Process");
+      sts = gdh_GetObjectInfo( attrname, &process, sizeof(process));
+      if ( (EVEN(sts) && ctx->Process == io_mProcess_User) ||
+	   (ODD(sts) && ctx->Process == (int) process))
+      {
+        if ( process == io_mProcess_Plc)
+	{
+          /* Check thread also */
+          strcpy( attrname, cname);
+          strcat( attrname, ".ThreadObject");
+          sts = gdh_GetObjectInfo( attrname, &thread, sizeof(thread));
+	  if ( ODD(sts) && cdh_ObjidIsEqual( thread, ctx->Thread))
+	    ok = 1;
+	}
+	else
+	  ok = 1;
+      }
+
+      if ( ok)
+      {
+        /* Tread this card in this process */
+        strcpy( attrname, cname);
+        strcat( attrname, ".MaxNoOfChannels");
+        sts = gdh_GetObjectInfo( attrname, &maxchan, sizeof(maxchan));
+	if ( EVEN(sts))
+        {
+          strcpy( attrname, cname);
+          strcat( attrname, ".MaxNoOfCounters");
+          sts = gdh_GetObjectInfo( attrname, &maxchan, sizeof(maxchan));
+          if ( EVEN(sts))
+	    maxchan = IO_CHANLIST_SIZE;
+        }
+
+        cp = calloc( 1, sizeof(io_sCard));
+        cp->chanlist = (io_sChannel *) calloc( maxchan, sizeof(io_sChannel));
+	cp->ChanListSize = maxchan;
+	cp->Class = class;
+	cp->Objid = objid;
+	strcpy( cp->Name, cname);
+	if ( CardRead != NULL)
+	  cp->Action |= io_mAction_Read;
+	if ( CardWrite != NULL)
+	  cp->Action |= io_mAction_Write;
+	cp->Init = CardInit;
+	cp->Close = CardClose;
+	cp->Read = CardRead;
+	cp->Write = CardWrite;
+	if ( agent_type == io_eType_Agent)
+          cp->AgentControlled = 1;
+	memset( &attrref, 0, sizeof(attrref));
+	attrref.Objid = objid;
+        sts = gdh_DLRefObjectInfoAttrref( &attrref, (void *) &cp->op, &cp->Dlid);
+        if ( EVEN(sts)) return sts;
+        strcpy( attrname, cname);
+        strcat( attrname, ".ScanTime");
+        sts = gdh_GetObjectInfo( attrname, &scantime, sizeof(scantime));
+	if (ODD(sts)) 
+          cp->scan_interval = scantime / ctx->ScanTime + FLT_EPSILON;
+	else
+          cp->scan_interval = 1;
+ 
+	/* Insert last in cardlist */
+	if ( rp->cardlist == NULL)
+          rp->cardlist = cp;
+	else
+	{
+	  for ( clp = rp->cardlist; clp->next != NULL; clp = clp->next) ;
+          clp->next = cp;
+	}
+
+	/* Fill in the channel and signal lists */
+
+        sts = gdh_GetChild( objid, &chan);
+        while( ODD(sts))
+	{
+	  memset( &attrref, 0, sizeof(attrref));
+	  attrref.Objid = chan;
+          sts = gdh_DLRefObjectInfoAttrref( &attrref, (void *) &chan_op, &chandlid);
+          if ( EVEN(sts)) return sts;
+
+	  sts = gdh_GetObjectClass( chan, &class);
+	  if ( EVEN(sts)) return sts;
+
+	  switch ( class)
+	  {
+	    case pwr_cClass_ChanAi:
+	      sigchancon = ((pwr_sClass_ChanAi *) chan_op)->SigChanCon;
+	      number = ((pwr_sClass_ChanAi *) chan_op)->Number;
+	      break;
+	    case pwr_cClass_ChanAit:
+	      sigchancon = ((pwr_sClass_ChanAit *) chan_op)->SigChanCon;
+	      number = ((pwr_sClass_ChanAit *) chan_op)->Number;
+	      break;
+	    case pwr_cClass_ChanAo:
+	      sigchancon = ((pwr_sClass_ChanAo *) chan_op)->SigChanCon;
+	      number = ((pwr_sClass_ChanAo *) chan_op)->Number;
+	      break;
+	    case pwr_cClass_ChanDo:
+	      sigchancon = ((pwr_sClass_ChanDo *) chan_op)->SigChanCon;
+	      number = ((pwr_sClass_ChanDo *) chan_op)->Number;
+	      break;
+	    case pwr_cClass_ChanDi:
+	      sigchancon = ((pwr_sClass_ChanDi *) chan_op)->SigChanCon;
+	      number = ((pwr_sClass_ChanDi *) chan_op)->Number;
+	      break;
+	    case pwr_cClass_ChanCo:
+	      sigchancon = ((pwr_sClass_ChanCo *) chan_op)->SigChanCon;
+	      number = ((pwr_sClass_ChanCo *) chan_op)->Number;
+	      break;
+	    default:
+	      sts = gdh_DLUnrefObjectInfo( chandlid);
+	      sts = gdh_GetNextSibling( chan, &chan);
+	      continue;
+	  }
+
+	  if ( (int) number > maxchan-1)
+          {
+	    /* Number out of range */
+	    errh_Error( 
+		"IO init error: number out of range %s, chan nr %d", 
+		cp->Name, number);
+	    sts = gdh_DLUnrefObjectInfo( chandlid);
+	    sts = gdh_GetNextSibling( chan, &chan);
+	    continue;
+          }
+	  /* Find signal */
+	  if ( cdh_ObjidIsNull( sigchancon))
+	  {
+	    /* Not connected */
+	    sts = gdh_DLUnrefObjectInfo( chandlid);
+	    sts = gdh_GetNextSibling( chan, &chan);
+	    continue;
+	  }
+	  
+	  sts = gdh_GetObjectClass( sigchancon, &sigclass);
+          if ( EVEN(sts))
+	  {
+	    sts = gdh_DLUnrefObjectInfo( chandlid);
+	    sts = gdh_GetNextSibling( chan, &chan);
+	    continue;
+	  }
+
+	  memset( &attrref, 0, sizeof(attrref));
+	  attrref.Objid = sigchancon;
+          sts = gdh_DLRefObjectInfoAttrref( &attrref, (void *) &sig_op, &sigdlid);
+          if ( EVEN(sts))
+	  {
+	    sts = gdh_DLUnrefObjectInfo( chandlid);
+	    sts = gdh_GetNextSibling( chan, &chan);
+	    continue;
+	  }
+	  
+	  /* Insert */
+	  chanp = &cp->chanlist[number];
+	  chanp->cop = chan_op;
+	  chanp->ChanDlid = chandlid;
+	  chanp->ChanObjid = chan;
+	  chanp->sop = sig_op;
+	  chanp->SigDlid = sigdlid;
+	  chanp->SigObjid = sigchancon;
+	  chanp->ChanClass = class;
+	  chanp->SigClass = sigclass;
+	  switch( sigclass)
+	  {
+	    case pwr_cClass_Di:
+	      chanp->vbp = gdh_TranslateRtdbPointer( 
+		(pwr_tUInt32) ((pwr_sClass_Di *)sig_op)->ActualValue);
+	      break;
+	    case pwr_cClass_Do:
+	      chanp->vbp = gdh_TranslateRtdbPointer( 
+		(pwr_tUInt32) ((pwr_sClass_Do *)sig_op)->ActualValue);
+	      break;
+	    case pwr_cClass_Po:
+	      chanp->vbp = gdh_TranslateRtdbPointer( 
+		(pwr_tUInt32) ((pwr_sClass_Po *)sig_op)->ActualValue);
+	      break;
+	    case pwr_cClass_Ai:
+	      chanp->vbp = gdh_TranslateRtdbPointer( 
+		(pwr_tUInt32) ((pwr_sClass_Ai *)sig_op)->ActualValue);
+	      break;
+	    case pwr_cClass_Ao:
+	      chanp->vbp = gdh_TranslateRtdbPointer( 
+		(pwr_tUInt32) ((pwr_sClass_Ao *)sig_op)->ActualValue);
+	      break;
+	    case pwr_cClass_Co:
+	      chanp->vbp = gdh_TranslateRtdbPointer( 
+		(pwr_tUInt32) ((pwr_sClass_Co *)sig_op)->RawValue);
+	      chanp->abs_vbp = gdh_TranslateRtdbPointer( 
+		(pwr_tUInt32) ((pwr_sClass_Co *)sig_op)->AbsValue);
+	      break;
+	    default:
+	      errh_Error( 
+		"IO init error: unknown signal class card  %, chan nr %d", 
+		cp->Name, number);
+	      sts = gdh_DLUnrefObjectInfo( chandlid);
+	      sts = gdh_DLUnrefObjectInfo( sigdlid);
+	      memset( chanp, 0, sizeof(*chanp));
+	  }
+
+	  /* If the signal has a Sup-object as a child, this will be inserted
+	     in the suplist */
+          /* if ( process != io_mProcess_Plc) */
+	  io_ConnectToSupLst( ctx->SupCtx, sigclass, sigchancon, sig_op);
+
+	  sts = gdh_GetNextSibling( chan, &chan);
+	}
+      }
+    }
+  }
+  return IO__SUCCESS;
+}
+
+
+/*----------------------------------------------------------------------------*\
+  Insert a rack object in the context list.
+\*----------------------------------------------------------------------------*/
+static pwr_tStatus io_init_rack(
+  pwr_tObjid	objid,
+  io_tCtx	ctx,
+  io_sAgent	*ap,
+  int		agent_type)
+{
+  pwr_tStatus	sts;
+  pwr_tClassId	class;  
+  pwr_tStatus 	(* RackInit) ();
+  pwr_tStatus 	(* RackClose) ();
+  pwr_tStatus 	(* RackRead) ();
+  pwr_tStatus 	(* RackWrite) ();
+  pwr_tStatus 	(* AgentInit) ();
+  pwr_tStatus 	(* AgentClose) ();
+  pwr_tStatus 	(* AgentRead) ();
+  pwr_tStatus 	(* AgentWrite) ();
+  char		rname[140];
+  char		attrname[140];
+  pwr_tUInt32	process;
+  io_sRack	*rp;
+  io_sRack	*rlp;
+  pwr_sAttrRef	attrref;
+  pwr_tFloat32	scantime;
+  pwr_tObjid	thread;
+  int		ok;
+
+  sts = gdh_GetObjectClass( objid, &class);
+  if ( EVEN(sts)) return sts;
+
+  if ( agent_type == io_eType_Node)
+  {
+    /* If this is an agent object, ignore this object and the descendents */
+    sts = io_FindMethods( class, io_eType_Agent, &AgentInit, &AgentClose, 
+		&AgentRead, &AgentWrite);
+    if ( ODD(sts) &&
+         (AgentInit != NULL || AgentClose != NULL || AgentRead != NULL || AgentWrite != NULL))
+      return IO__TRV_NEXT;
+  }
+
+  sts = io_FindMethods( class, io_eType_Rack, &RackInit, &RackClose, &RackRead, &RackWrite);
+  if ( ODD(sts))
+  {
+    if ( RackInit != NULL || RackClose != NULL || RackRead != NULL || RackWrite != NULL)
+    {
+      /* This is a rack object,  */
+      /* Check if the rack should be handled by this process */      
+      
+      sts = gdh_ObjidToName( objid, rname, sizeof(rname),
+		cdh_mName_volumeStrict);
+      if ( EVEN(sts)) return sts;
+
+      ok = 0;
+      strcpy( attrname, rname);
+      strcat( attrname, ".Process");
+
+      sts = gdh_GetObjectInfo( attrname, &process, sizeof(process));
+      if ( EVEN(sts) ||
+	   (ODD(sts) && ctx->Process & process))
+      {
+        if ( EVEN(sts))
+	  process = io_mProcess_All;
+
+        if ( process & io_mProcess_Plc)
+	{
+          /* Check thread also */
+          strcpy( attrname, rname);
+          strcat( attrname, ".ThreadObject");
+          sts = gdh_GetObjectInfo( attrname, &thread, sizeof(thread));
+          if ( EVEN(sts))
+            ok = 1;
+	  else if ( ODD(sts) && cdh_ObjidIsEqual( thread, ctx->Thread))
+	    ok = 1;
+	}
+	else
+	  ok = 1;
+      }
+
+      if ( ok)
+      {
+
+        /* Treat this rack in this process */
+        rp = calloc( 1, sizeof(io_sRack));
+	rp->Class = class;
+	rp->Objid = objid;
+	strcpy( rp->Name, rname);
+	rp->Process = process;
+	if ( RackRead != NULL)
+	  rp->Action |= io_mAction_Read;
+	if ( RackWrite != NULL)
+	  rp->Action |= io_mAction_Write;
+	rp->Init = RackInit;
+	rp->Close = RackClose;
+	rp->Read = RackRead;
+	rp->Write = RackWrite;
+	if ( agent_type == io_eType_Agent)
+          rp->AgentControlled = 1;
+	memset( &attrref, 0, sizeof(attrref));
+	attrref.Objid = objid;
+        sts = gdh_DLRefObjectInfoAttrref( &attrref, &rp->op, &rp->Dlid);
+        if ( EVEN(sts)) return sts;
+        strcpy( attrname, rname);
+        strcat( attrname, ".ScanTime");
+        sts = gdh_GetObjectInfo( attrname, &scantime, sizeof(scantime));
+	if (ODD(sts)) 
+          rp->scan_interval = scantime / ctx->ScanTime + FLT_EPSILON;
+	else
+          rp->scan_interval = 1;
+ 
+	/* Insert last in racklist */
+	if ( ap->racklist == NULL)
+          ap->racklist = rp;
+	else
+	{
+	  for ( rlp = ap->racklist; rlp->next != NULL; rlp = rlp->next) ;
+          rlp->next = rp;
+	}
+
+        sts = io_trv_child( objid, 0, io_init_card, ctx, rp, agent_type);
+      }
+      return IO__TRV_NEXT;
+    }
+  }
+  return IO__SUCCESS;
+}
+
+
+/*----------------------------------------------------------------------------*\
+  Insert an agent object in the context list.
+\*----------------------------------------------------------------------------*/
+static pwr_tStatus io_init_agent(
+  pwr_tObjid	objid,
+  io_tCtx	ctx,
+  void		*dummy,
+  int		agent_type)
+{
+  pwr_tStatus	sts;
+  pwr_tClassId	class;  
+  pwr_tStatus 	(* AgentInit) ();
+  pwr_tStatus 	(* AgentClose) ();
+  pwr_tStatus 	(* AgentRead) ();
+  pwr_tStatus 	(* AgentWrite) ();
+  char		aname[140];
+  char		attrname[140];
+  pwr_tUInt32	process;
+  io_sAgent	*ap;
+  io_sAgent	*alp;
+  pwr_sAttrRef	attrref;
+  pwr_tFloat32	scantime;
+  pwr_tObjid	thread;
+  int		ok;
+
+  sts = gdh_GetObjectClass( objid, &class);
+  if ( EVEN(sts)) return sts;
+
+  sts = io_FindMethods( class, io_eType_Agent, &AgentInit, &AgentClose, &AgentRead, &AgentWrite);
+  if ( ODD(sts))
+  {
+    if ( AgentInit != NULL || AgentClose != NULL || AgentRead != NULL || AgentWrite != NULL)
+    {
+      /* This is a agent object or the node object,  */
+      /* Check if the agent should be handled by this process */ 
+      
+      sts = gdh_ObjidToName( objid, aname, sizeof(aname),
+		cdh_mName_volumeStrict);
+      if ( EVEN(sts)) return sts;
+
+      ok = 0;
+      strcpy( attrname, aname);
+      strcat( attrname, ".Process");
+      sts = gdh_GetObjectInfo( attrname, &process, sizeof(process));
+      if ( EVEN(sts) ||
+	   (ODD(sts) && ctx->Process & process))
+      {
+        if ( EVEN(sts))
+	  process = io_mProcess_All;
+        if ( process & io_mProcess_Plc)
+	{
+          /* Check thread also */
+          strcpy( attrname, aname);
+          strcat( attrname, ".ThreadObject");
+          sts = gdh_GetObjectInfo( attrname, &thread, sizeof(thread));
+          if ( EVEN(sts))
+            ok = 1;
+	  else if ( ODD(sts) && cdh_ObjidIsEqual( thread, ctx->Thread))
+	    ok = 1;
+	}
+	else
+	  ok = 1;
+      }
+
+      if ( ok)
+      {
+
+        /* Treat this agent in this process */
+        ap = calloc( 1, sizeof(io_sAgent));
+	ap->Class = class;
+	ap->Objid = objid;
+	strcpy( ap->Name, aname);
+	ap->Process = process;
+	if ( AgentRead != NULL)
+	  ap->Action |= io_mAction_Read;
+	if ( AgentWrite != NULL)
+	  ap->Action |= io_mAction_Write;
+	ap->Init = AgentInit;
+	ap->Close = AgentClose;
+	ap->Read = AgentRead;
+	ap->Write = AgentWrite;
+	memset( &attrref, 0, sizeof(attrref));
+	attrref.Objid = objid;
+        sts = gdh_DLRefObjectInfoAttrref( &attrref, &ap->op, &ap->Dlid);
+        if ( EVEN(sts)) return sts;
+        strcpy( attrname, aname);
+        strcat( attrname, ".ScanTime");
+        sts = gdh_GetObjectInfo( attrname, &scantime, sizeof(scantime));
+	if (ODD(sts)) 
+          ap->scan_interval = scantime / ctx->ScanTime + FLT_EPSILON;
+	else
+          ap->scan_interval = 1;
+ 
+	/* Insert last in agentlist */
+	if ( ctx->agentlist == NULL)
+          ctx->agentlist = ap;
+	else
+	{
+	  for ( alp = ctx->agentlist; alp->next != NULL; alp = alp->next) ;
+          alp->next = ap;
+	}
+
+        sts = io_trv_child( objid, 0, io_init_rack, ctx, ap, agent_type);
+      }
+    }
+  }
+  return IO__SUCCESS;
+}
+
+
+/*----------------------------------------------------------------------------*\
+  Traverse all the children or all the descendants to an object.
+\*----------------------------------------------------------------------------*/
+static pwr_tStatus io_trv_child(
+  pwr_tObjid 	parent,
+  int		deep,
+  pwr_tStatus	(* func) (),
+  void		*arg1,
+  void		*arg2,
+  int		arg3)
+{
+  pwr_tObjid	child;
+  pwr_tStatus 	sts;
+  
+  sts = gdh_GetChild( parent, &child);
+  while ( ODD(sts))
+  {
+    sts = (func) ( child, arg1, arg2, arg3);
+    if ( EVEN(sts)) return sts;
+
+    if ( deep && sts != IO__TRV_NEXT)
+    {
+      sts = io_trv_child( child, deep, func, arg1, arg2, arg3);
+      if ( EVEN(sts)) return sts;
+    }
+    sts = gdh_GetNextSibling( child, &child);
+  }
+  return IO__SUCCESS;
+}
+
+
+
+/*----------------------------------------------------------------------------*\
+  Move di data word to valuebase.
+\*----------------------------------------------------------------------------*/
+void io_DiUnpackWord( 
+  io_sCard	*cp,
+  pwr_tUInt16	data,
+  pwr_tUInt16	mask,
+  int		index)
+{
+  io_sChannel 	*chanp;
+
+  if ( index == 0)
+    chanp = &cp->chanlist[0];
+  else
+    chanp = &cp->chanlist[16];
+
+  if ( mask == IO_CONVMASK_ALL)
+  {
+    /* No conversion test */
+    if ( chanp->cop)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 1) != 0);
+    chanp++;
+    if ( chanp->cop)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 2) != 0);
+    chanp++;
+    if ( chanp->cop)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 4) != 0);
+    chanp++;
+    if ( chanp->cop)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 8) != 0);
+    chanp++;
+    if ( chanp->cop)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 16) != 0);
+    chanp++;
+    if ( chanp->cop)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 32) != 0);
+    chanp++;
+    if ( chanp->cop)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 64) != 0);
+    chanp++;
+    if ( chanp->cop)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 128) != 0);
+    chanp++;
+    if ( chanp->cop)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 256) != 0);
+    chanp++;
+    if ( chanp->cop)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 512) != 0);
+    chanp++;
+    if ( chanp->cop)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 1024) != 0);
+    chanp++;
+    if ( chanp->cop)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 2048) != 0);
+    chanp++;
+    if ( chanp->cop)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 4096) != 0);
+    chanp++;
+    if ( chanp->cop)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 8192) != 0);
+    chanp++;
+    if ( chanp->cop)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 16384) != 0);
+    chanp++;
+    if ( chanp->cop)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 32768) != 0);
+    chanp++;
+  }
+  else
+  {
+    if ( chanp->cop && mask & 1)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 1) != 0);
+    chanp++;
+    if ( chanp->cop && mask & 2)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 2) != 0);
+    chanp++;
+    if ( chanp->cop && mask & 4)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 4) != 0);
+    chanp++;
+    if ( chanp->cop && mask & 8)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 8) != 0);
+    chanp++;
+    if ( chanp->cop && mask & 16)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 16) != 0);
+    chanp++;
+    if ( chanp->cop && mask & 32)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 32) != 0);
+    chanp++;
+    if ( chanp->cop && mask & 64)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 64) != 0);
+    chanp++;
+    if ( chanp->cop && mask & 128)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 128) != 0);
+    chanp++;
+    if ( chanp->cop && mask & 256)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 256) != 0);
+    chanp++;
+    if ( chanp->cop && mask & 512)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 512) != 0);
+    chanp++;
+    if ( chanp->cop && mask & 1024)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 1024) != 0);
+    chanp++;
+    if ( chanp->cop && mask & 2048)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 2048) != 0);
+    chanp++;
+    if ( chanp->cop && mask & 4096)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 4096) != 0);
+    chanp++;
+    if ( chanp->cop && mask & 8192)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 8192) != 0);
+    chanp++;
+    if ( chanp->cop && mask & 16384)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 16384) != 0);
+    chanp++;
+    if ( chanp->cop && mask & 32768)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 32768) != 0);
+    chanp++;
+  }
+}
+
+/*----------------------------------------------------------------------------*\
+  Move do from valuebase to data word.
+\*----------------------------------------------------------------------------*/
+void io_DoPackWord( 
+  io_sCard	*cp,
+  pwr_tUInt16	*data,
+  int		index)
+{
+  io_sChannel 	*chanp;
+
+  if ( index == 0)
+    chanp = &cp->chanlist[0];
+  else
+    chanp = &cp->chanlist[16];
+
+  *data = 0;
+  if ( chanp->cop && * (pwr_tUInt16 *) (chanp->vbp))
+    *data |= 1;
+  chanp++;
+  if ( chanp->cop && * (pwr_tUInt16 *) (chanp->vbp))
+    *data |= 2;
+  chanp++;
+  if ( chanp->cop && * (pwr_tUInt16 *) (chanp->vbp))
+    *data |= 4;
+  chanp++;
+  if ( chanp->cop && * (pwr_tUInt16 *) (chanp->vbp))
+    *data |= 8;
+  chanp++;
+  if ( chanp->cop && * (pwr_tUInt16 *) (chanp->vbp))
+    *data |= 16;
+  chanp++;
+  if ( chanp->cop && * (pwr_tUInt16 *) (chanp->vbp))
+    *data |= 32;
+  chanp++;
+  if ( chanp->cop && * (pwr_tUInt16 *) (chanp->vbp))
+    *data |= 64;
+  chanp++;
+  if ( chanp->cop && * (pwr_tUInt16 *) (chanp->vbp))
+    *data |= 128;
+  chanp++;
+  if ( chanp->cop && * (pwr_tUInt16 *) (chanp->vbp))
+    *data |= 256;
+  chanp++;
+  if ( chanp->cop && * (pwr_tUInt16 *) (chanp->vbp))
+    *data |= 512;
+  chanp++;
+  if ( chanp->cop && * (pwr_tUInt16 *) (chanp->vbp))
+    *data |= 1024;
+  chanp++;
+  if ( chanp->cop && * (pwr_tUInt16 *) (chanp->vbp))
+    *data |= 2048;
+  chanp++;
+  if ( chanp->cop && * (pwr_tUInt16 *) (chanp->vbp))
+    *data |= 4096;
+  chanp++;
+  if ( chanp->cop && * (pwr_tUInt16 *) (chanp->vbp))
+    *data |= 8192;
+  chanp++;
+  if ( chanp->cop && * (pwr_tUInt16 *) (chanp->vbp))
+    *data |= 16384;
+  chanp++;
+  if ( chanp->cop && * (pwr_tUInt16 *) (chanp->vbp))
+    *data |= 32768;
+  chanp++;
+}
+
+/*----------------------------------------------------------------------------*\
+  Initialize io racks and cards.
+\*----------------------------------------------------------------------------*/
+
+pwr_tStatus io_init ( 
+  io_mProcess	process,
+  pwr_tObjid	thread,
+  io_tCtx 	*ctx,
+  int		relativ_vector,
+  float		scan_time)
+{
+  pwr_tObjid 	node;
+  pwr_sNode	*node_op;
+  pwr_sClass_IOHandler	*io_op;
+  pwr_tStatus	sts;
+  io_sAgent	*ap;
+  io_sRack	*rp;
+  io_sCard	*cp;
+  int		rw_action_found;
+
+  if ( scan_time <= 0)
+    return IO__TIMEINVALID;
+
+  sts = io_get_iohandler_object(&io_op, NULL);
+  if ( EVEN(sts)) return sts;
+
+  sts = gdh_GetNodeObject( 0, &node);
+  if ( EVEN(sts)) return sts;
+
+  sts = gdh_ObjidToPointer( node, (void *) &node_op);
+  if ( EVEN(sts)) return sts;
+
+  *ctx = calloc( 1, sizeof(**ctx));
+  (*ctx)->Process = process;
+  (*ctx)->RelativVector = relativ_vector;
+  (*ctx)->Node = node_op;
+  (*ctx)->IOHandler = io_op;
+  (*ctx)->ScanTime = scan_time;
+  (*ctx)->Thread = thread;
+
+  /* Init of timerlist for Sup-objects */
+  /* if ( process != io_mProcess_Plc) */
+  io_InitSupLst( &(*ctx)->SupCtx, scan_time);
+
+  if ( (*ctx)->Node->EmergBreakTrue || !(*ctx)->IOHandler->IOReadWriteFlag)
+    return IO__IS_STOPPED;
+
+  /* Traverse all objects in the NodeHierarchy, find methods and build
+     the io context tree for the local racks and cards. */
+  sts = io_init_agent( node, *ctx, NULL, io_eType_Node);
+  if ( EVEN(sts)) return sts;
+
+  /* Build the io context tree for the remote racks and cards. */
+  sts = io_trv_child( node, 1, io_init_agent, *ctx, NULL, io_eType_Agent);
+
+/*
+  sts = io_init_signals();
+  if ( EVEN(sts)) return sts;
+*/
+
+  /* Call the init methods for racks and cards */
+  rw_action_found = 0;
+  for ( ap = (*ctx)->agentlist; ap != NULL; ap = ap->next)
+  {
+    if ( ap->Process & process)
+    {
+      if ( ap->Init != NULL)
+      {
+        sts = (ap->Init) ( *ctx, ap);
+        if ( EVEN(sts)) return sts;
+        if (ap->Action & io_mAction_Read || ap->Action & io_mAction_Write)
+          rw_action_found = 1;
+      }
+      for ( rp = ap->racklist; rp != NULL; rp = rp->next)
+      {
+        if ( rp->Process & process)
+        {
+          if ( rp->Init != NULL)
+          {
+            sts = (rp->Init) ( *ctx, ap, rp);
+            if ( EVEN(sts)) return sts;
+
+            if ( rp->Action & io_mAction_Read || rp->Action & io_mAction_Write)
+              rw_action_found = 1;
+          }
+          for ( cp = rp->cardlist; cp != NULL; cp = cp->next)
+          {
+            if ( cp->Init != NULL)
+            {
+              sts = (cp->Init) ( *ctx, ap, rp, cp);
+              if ( EVEN(sts)) return sts;
+
+              if ( cp->Action & io_mAction_Read || cp->Action & io_mAction_Write)
+                rw_action_found = 1;
+	    }
+          }
+        }
+      }
+    }
+  }
+  if ( !rw_action_found)
+  {
+    errh_Info("IO init: no read or write actions found for this process");
+    return IO__NO_RWACTION;
+  }
+  return IO__SUCCESS;
+}
+
+
+
+/*----------------------------------------------------------------------------*\
+  Read io racks and cards.
+\*----------------------------------------------------------------------------*/
+pwr_tStatus io_read(
+  io_tCtx 	ctx)
+{
+  pwr_tStatus	sts;
+  io_sAgent	*ap;
+  io_sRack	*rp;
+  io_sCard	*cp;
+
+  if ( ctx->Node->EmergBreakTrue || !ctx->IOHandler->IOReadWriteFlag)
+    return IO__IS_STOPPED;
+
+  /* Call the read methods for agents, racks and cards */
+  for ( ap = ctx->agentlist; ap != NULL; ap = ap->next)
+  {
+    if ( ap->Process & ctx->Process &&
+         ap->Action & io_mAction_Read)
+    {
+      if ( ap->scan_interval_cnt <= 1)
+      {
+        sts = (ap->Read) ( ctx, ap);
+        if ( EVEN(sts)) return sts;
+        ap->scan_interval_cnt = ap->scan_interval;
+      }
+      else
+        ap->scan_interval_cnt--;
+    }
+
+    for ( rp = ap->racklist; rp != NULL; rp = rp->next)
+    {
+      if ( rp->Process & ctx->Process &&
+           rp->Action & io_mAction_Read)
+      {
+        if ( rp->scan_interval_cnt <= 1)
+        {
+          sts = (rp->Read) ( ctx, ap, rp);
+          if ( EVEN(sts)) return sts;
+          rp->scan_interval_cnt = rp->scan_interval;
+        }
+        else
+          rp->scan_interval_cnt--;
+      }
+
+      for ( cp = rp->cardlist; cp != NULL; cp = cp->next)
+      {
+        if ( cp->Action & io_mAction_Read)
+        {
+          if ( cp->scan_interval_cnt <= 1)
+          {
+            sts = (cp->Read) ( ctx, ap, rp, cp);
+            if ( EVEN(sts)) return sts;
+            cp->scan_interval_cnt = cp->scan_interval;
+          }
+          else
+            cp->scan_interval_cnt--;
+        }
+      }
+    }
+  }
+
+  /* Scan the Sup lists */
+  /* if ( ctx->Process != io_mProcess_Plc) */
+  sts = io_ScanSupLst( ctx->SupCtx);
+
+  return IO__SUCCESS;
+}
+
+
+/*----------------------------------------------------------------------------*\
+  Write io racks and cards.
+\*----------------------------------------------------------------------------*/
+pwr_tStatus io_write(
+  io_tCtx 	ctx)
+{
+  pwr_tStatus	sts;
+  io_sAgent	*ap;
+  io_sRack	*rp;
+  io_sCard	*cp;
+
+  if ( ctx->Node->EmergBreakTrue || !ctx->IOHandler->IOReadWriteFlag)
+    return IO__IS_STOPPED;
+
+  /* Call the write methods for agents, racks and cards, in reverse order */
+  for ( ap = ctx->agentlist; ap != NULL; ap = ap->next)
+  {
+    for ( rp = ap->racklist; rp != NULL; rp = rp->next)
+    {
+      for ( cp = rp->cardlist; cp != NULL; cp = cp->next)
+      {
+        if ( cp->Action & io_mAction_Write)
+        {
+          if ( cp->scan_interval_cnt <= 1)
+          {
+            sts = (cp->Write) ( ctx, ap, rp, cp);
+            if ( EVEN(sts)) return sts;
+            cp->scan_interval_cnt = cp->scan_interval;
+          }
+          else
+            cp->scan_interval_cnt--;
+        }
+      }
+      if ( rp->Process & ctx->Process &&
+           rp->Action & io_mAction_Write)
+      {
+        if ( rp->scan_interval_cnt <= 1)
+        {
+          sts = (rp->Write) ( ctx, ap, rp);
+          if ( EVEN(sts)) return sts;
+          rp->scan_interval_cnt = rp->scan_interval;
+        }
+        else
+          rp->scan_interval_cnt--;
+      }
+
+    }
+    if ( ap->Process & ctx->Process &&
+         ap->Action & io_mAction_Write)
+    {
+      if ( ap->scan_interval_cnt <= 1)
+      {
+        sts = (ap->Write) ( ctx, ap);
+        if ( EVEN(sts)) return sts;
+        ap->scan_interval_cnt = ap->scan_interval;
+      }
+      else
+        ap->scan_interval_cnt--;
+    }
+
+  }
+  return IO__SUCCESS;
+}
+
+
+/*----------------------------------------------------------------------------*\
+  Close Io.
+\*----------------------------------------------------------------------------*/
+pwr_tStatus io_close(
+  io_tCtx 	ctx)
+{
+  int		i;
+  pwr_tStatus	sts;
+  io_sAgent	*ap;
+  io_sRack	*rp;
+  io_sCard	*cp;
+  io_sAgent	*ap_next;
+  io_sRack	*rp_next;
+  io_sCard	*cp_next;
+
+  /* Call the write methods for agents, racks and cards, in reverse order */
+  for ( ap = ctx->agentlist; ap != NULL; ap = ap->next)
+  {
+    for ( rp = ap->racklist; rp != NULL; rp = rp->next)
+    {
+      for ( cp = rp->cardlist; cp != NULL; cp = cp->next)
+      {
+        if ( cp->Close)
+        {
+          sts = (cp->Close) ( ctx, ap, rp, cp);
+          if ( EVEN(sts)) return sts;
+        }
+      }
+      if ( rp->Process & ctx->Process &&
+           rp->Close)
+      {
+        sts = (rp->Close) ( ctx, ap, rp);
+        if ( EVEN(sts)) return sts;
+      }
+
+    }
+    if ( ap->Process & ctx->Process &&
+         ap->Close)
+    {
+      sts = (ap->Close) ( ctx, ap);
+      if ( EVEN(sts)) return sts;
+    }
+
+  }
+
+  /* if ( ctx->Process != io_mProcess_Plc) */
+  io_ClearSupLst( ctx->SupCtx);
+
+  /* Free ctx */
+  for ( ap = ctx->agentlist; ap != NULL; ap = ap_next)
+  {
+    for ( rp = ap->racklist; rp != NULL; rp = rp_next)
+    {
+      for ( cp = rp->cardlist; cp != NULL; cp = cp_next)
+      {
+        if ( cp->chanlist)
+	{
+	  for ( i = 0; i < cp->ChanListSize; i++)
+	  {
+	    if ( cp->chanlist[i].cop)
+	    {
+	      gdh_DLUnrefObjectInfo( cp->chanlist[i].ChanDlid);
+	      gdh_DLUnrefObjectInfo( cp->chanlist[i].SigDlid);
+	    }
+	  }
+          free( (char *) cp->chanlist);
+        }
+	gdh_DLUnrefObjectInfo( cp->Dlid);
+        cp_next = cp->next;
+        free( (char *) cp);
+      }
+      gdh_DLUnrefObjectInfo( rp->Dlid);
+      rp_next = rp->next;
+      free( (char *) rp);
+    }
+    gdh_DLUnrefObjectInfo( ap->Dlid);
+    ap_next = ap->next;
+    free( (char *) ap);
+  }
+  free( ctx);
+
+  return IO__SUCCESS;
+}
+
+
+/*----------------------------------------------------------------------------*\
+  Calculate polynomial coefficients for ai conversion.
+\*----------------------------------------------------------------------------*/
+
+pwr_tStatus io_AiRangeToCoef( 
+  io_sChannel 	*chanp)
+{
+  pwr_sClass_ChanAi	*cop;
+  char			buf[120];
+  pwr_tStatus		sts;
+  pwr_tFloat32		PolyCoef1;
+  pwr_tFloat32		PolyCoef0;
+
+  cop = chanp->cop;
+
+  if ( cop)
+  {
+    cop->CalculateNewCoef = 0;
+
+    /* Coef for RawValue to SignalValue conversion */
+    if ( cop->RawValRangeHigh != cop->RawValRangeLow)
+    {
+      cop->SigValPolyCoef1 =
+	(cop->ChannelSigValRangeHigh - cop->ChannelSigValRangeLow) /
+	(cop->RawValRangeHigh - cop->RawValRangeLow);
+      cop->SigValPolyCoef0 = cop->ChannelSigValRangeHigh - 
+	cop->RawValRangeHigh * cop->SigValPolyCoef1;
+    }
+    else
+    {
+      sts = gdh_ObjidToName( chanp->ChanObjid, buf, sizeof(buf), 
+			cdh_mName_volumeStrict);
+      if ( EVEN(sts)) return sts;
+      errh_Error( "Invalid RawValueRange in Ai channel %s", buf);
+      return IO__CHANRANGE;
+    }
+
+    /* Coef for RawValue to ActualValue conversion */
+    if ( chanp->ChanClass != pwr_cClass_ChanAit && cop->SensorPolyType == 1)
+    {
+      if ( cop->SensorSigValRangeHigh != cop->SensorSigValRangeLow)
+      {
+        PolyCoef1 = (cop->ActValRangeHigh - cop->ActValRangeLow)/
+		(cop->SensorSigValRangeHigh - cop->SensorSigValRangeLow);
+        PolyCoef0 = cop->ActValRangeHigh - cop->SensorSigValRangeHigh *
+		PolyCoef1;
+        cop->SensorPolyCoef1 = cop->SigValPolyCoef1 * PolyCoef1;
+        cop->SensorPolyCoef0 = PolyCoef0 + PolyCoef1*
+		cop->SigValPolyCoef0;
+      }
+      else
+      {
+        sts = gdh_ObjidToName( chanp->ChanObjid, buf, sizeof(buf), 
+			cdh_mName_volumeStrict);
+        if ( EVEN(sts)) return sts;
+ 	errh_Error( "Invalid SensorSigValueRange in Ai channel %s", buf);
+        return IO__CHANRANGE;
+      }
+    }
+  }
+  return IO__SUCCESS;
+}
+
+
+/*----------------------------------------------------------------------------*\
+  Calculate polynomial coefficients for ao conversion.
+\*----------------------------------------------------------------------------*/
+
+pwr_tStatus io_AoRangeToCoef( 
+  io_sChannel 	*chanp)
+{
+  pwr_sClass_ChanAo	*cop;
+  char			buf[120];
+  pwr_tStatus		sts;
+  pwr_tFloat32		PolyCoef1;
+  pwr_tFloat32		PolyCoef0;
+
+  cop = chanp->cop;
+
+  if ( cop)
+  {
+    cop->CalculateNewCoef = 0;
+
+    /* Coef for ActualValue to RawValue conversion */
+    if ( cop->ActValRangeHigh != cop->ActValRangeLow)
+    {
+      cop->SigValPolyCoef1 = (cop->SensorSigValRangeHigh - cop->SensorSigValRangeLow)/
+		(cop->ActValRangeHigh - cop->ActValRangeLow);
+      cop->SigValPolyCoef0 = cop->SensorSigValRangeHigh - cop->ActValRangeHigh *
+		cop->SigValPolyCoef1;
+    }
+    else
+    {
+      sts = gdh_ObjidToName( chanp->ChanObjid, buf, sizeof(buf), 
+			cdh_mName_volumeStrict);
+      if ( EVEN(sts)) return sts;
+      errh_Error( "Invalid ActValueRange in Ao channel %s", buf);
+      return IO__CHANRANGE;
+    }
+    /* Coef for ActualValue to SignalValue conversion */
+    if ( cop->ChannelSigValRangeHigh != 0)
+    {
+      PolyCoef1 =
+	(cop->RawValRangeHigh - cop->RawValRangeLow) /
+	(cop->ChannelSigValRangeHigh - cop->ChannelSigValRangeLow);
+      PolyCoef0 = cop->RawValRangeHigh - cop->ChannelSigValRangeHigh *
+		PolyCoef1;
+      cop->OutPolyCoef1 = cop->SigValPolyCoef1 * PolyCoef1;
+      cop->OutPolyCoef0 = PolyCoef0 + PolyCoef1*
+		cop->SigValPolyCoef0;
+    }
+    else
+    {
+      sts = gdh_ObjidToName( chanp->ChanObjid, buf, sizeof(buf), 
+			cdh_mName_volumeStrict);
+      if ( EVEN(sts)) return sts;
+      errh_Error( "Invalid ChannelSigValueRange in Ao channel %s", buf);
+      return IO__CHANRANGE;
+    }
+  }
+  return IO__SUCCESS;
+}
+
+
+/*----------------------------------------------------------------------------*\
+  Convert ai from rawvalue to actualvalue.
+\*----------------------------------------------------------------------------*/
+
+void io_ConvertAi (
+  pwr_sClass_ChanAi  *cop,
+  pwr_tInt16	      rawvalue,
+  pwr_tFloat32	      *actvalue_p
+) 
+{
+  pwr_tFloat32		sigvalue;
+  pwr_tFloat32		actvalue;
+  pwr_tFloat32		*polycoef_p;
+  int			i;
+
+  switch ( cop->SensorPolyType)
+  {
+    case 0:
+      *actvalue_p = cop->SigValPolyCoef0 + cop->SigValPolyCoef1 * rawvalue;
+      break;
+    case 1:
+      *actvalue_p = cop->SensorPolyCoef0 + cop->SensorPolyCoef1 * rawvalue;
+      break;
+    case 2:
+      sigvalue = cop->SigValPolyCoef0 + cop->SigValPolyCoef1 * rawvalue;
+      polycoef_p = &cop->SensorPolyCoef2;
+      actvalue = 0;
+      for ( i = 0; i < 3; i++)
+      {
+        actvalue = sigvalue * actvalue + *polycoef_p;
+        polycoef_p--;
+      }
+      *actvalue_p = actvalue;
+      break;
+    case 3:
+      sigvalue = cop->SigValPolyCoef0 + cop->SigValPolyCoef1 * rawvalue;
+      actvalue = cop->SensorPolyCoef0 + cop->SensorPolyCoef1 * sigvalue;
+      if ( actvalue >= 0)
+        *actvalue_p = cop->SensorPolyCoef2 * sqrt( actvalue);
+      else
+        *actvalue_p = 0;
+      break;      
+    case 4:
+      sigvalue = cop->SigValPolyCoef0 + cop->SigValPolyCoef1 * rawvalue;
+      actvalue = cop->SensorPolyCoef0 + cop->SensorPolyCoef1 * sigvalue;
+      if ( actvalue >= 0)
+        *actvalue_p = cop->SensorPolyCoef2 * sqrt( actvalue);
+      else
+        *actvalue_p = -cop->SensorPolyCoef2 * sqrt( -actvalue);
+      break;      
+  }
+}
+
+
+/*----------------------------------------------------------------------------*\
+  Convert ait from rawvalue to actualvalue.
+\*----------------------------------------------------------------------------*/
+
+void io_ConvertAit (
+  pwr_sClass_ChanAit  *cop,
+  pwr_tInt16	      rawvalue,
+  pwr_tFloat32	      *actvalue_p
+) 
+{
+  pwr_tFloat32	Slope;
+  pwr_tFloat32  Intercept;
+  pwr_tFloat32  TransTabValue;
+  pwr_tUInt16	First = 0;
+  pwr_tUInt16	Middle;
+  pwr_tUInt16	Last;
+  pwr_tFloat32  sigvalue;
+
+  sigvalue = cop->SigValPolyCoef0 + cop->SigValPolyCoef1 * rawvalue;
+
+  Last = cop->NoOfCoordinates;
+
+  while ( (Last - First) > 1) {
+    Middle = (First+Last) / 2;
+    TransTabValue = cop->InValue[Middle];
+    if (sigvalue < TransTabValue)
+      Last = Middle;
+    else
+      First = Middle;
+  }
+  
+  Intercept = cop->Intercept[First];
+  Slope = cop->Slope[First];
+  *actvalue_p = Intercept + sigvalue * Slope; 
+}
+

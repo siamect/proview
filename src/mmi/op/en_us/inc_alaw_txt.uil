@@ -1,0 +1,38 @@
+!  inc_alaw_txt.uil -- alarm window
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  This module defines english texts for the alarmwindow.
+!
+value
+ 
+   alaw_AscizTable	: exported asciz_string_table
+	(
+	"VALUE : ",
+	"LIMIT : "
+	);
+
+! Constants used by the co_CvtTimeToAsc function. See pwr_inc:TimeUtil.h
+   Solution : 0;	! second.
+   Format  : 1;		! Swedish =0 , ENGLISH = 1.
+   alaw_IntTable :  exported integer_table(Solution,Format);
+
+   NumString1 : compound_string("0",separate = true);
+   NumString2 : compound_string("0");
+   NumString : NumString1 & NumString2;
+   NumTextString1 : compound_string(" Unack ",separate = true);
+   NumTextString2 : compound_string(" Exist");
+   NumTextString : NumTextString1 & NumTextString2;
+   AckText :compound_string("Acknowledge");
+   SelText :compound_string("Select");
+     
+   AlarmString1 : compound_string("",separate = true);
+   AlarmString2 : compound_string("");
+   AlarmString : AlarmString1 & AlarmString2;
+
+   BigFont : font('*helvetica-bold-r-*-140-*');
+
+   ButtonWidth : 115;
+   ButtonHeight : 30;
+   AlawTitle  : compound_string("Alarm window");

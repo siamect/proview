@@ -1,0 +1,75 @@
+!  pwrb_l_base.wb_load -- Defines basic layouts.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+SObject wb:layout-Configurator-w1-AllClasses
+  Object NMps $GroupRef
+  EndObject
+EndSObject
+!
+SObject wb:layout-PlcEditor-w1
+  Object NMps $Group
+    Object CellDisp $Group
+    EndObject
+    Object CellUpdate $Group
+    EndObject
+    Object CLoop $Group
+    EndObject
+    Object CurrentData $Group
+    EndObject
+    Object CurrentIndex $Group
+    EndObject
+    Object DataCopy $Group
+    EndObject
+    Object DataCnv $Group
+    EndObject
+    Object DataRcv $Group
+    EndObject
+    Object DataRequest $Group
+    EndObject
+    Object DataReset $Group
+    EndObject
+    Object DataSelect $Group
+    EndObject
+    Object DataSend $Group
+    EndObject
+    Object DispLink $Group
+    EndObject
+    Object GetDap $Group
+    EndObject
+    Object GetObjidp $Group
+    EndObject
+    Object Func $Group
+    EndObject
+    Object FuncExtend $Group
+    EndObject
+    Object FuncInput $Group
+    EndObject
+    Object FuncOutput $Group
+    EndObject
+    Object NMpsCell $Group
+    EndObject
+    Object NMpsMirrorCell $Group
+    EndObject
+    Object NMpsOutCell $Group
+    EndObject
+    Object NMpsStoreCell $Group
+    EndObject
+    Object NMpsTrp $Group
+    EndObject
+    Object NMpsTrpFF $Group
+    EndObject
+    Object NMpsTrpRR $Group
+    EndObject
+    Object RemTransRcv $Group
+    EndObject
+    Object RemTransSend $Group
+    EndObject
+    Object RunningTime $Group
+    EndObject
+  EndObject
+EndSObject

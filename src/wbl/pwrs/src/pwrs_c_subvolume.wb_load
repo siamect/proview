@@ -1,0 +1,71 @@
+!  pwrs_c_subvolume.wb_load -- Defines the class SubVolume.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+SObject pwrs:Class
+  Object $SubVolume $ClassDef pwr_eCix_SubVolume
+    Body SysBody
+      Attr Flags |= pwr_mClassDef_System
+      Attr Flags |= pwr_mClassDef_TopObject
+    EndBody
+    Object SysBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "SubVolume"
+      EndBody
+      Object Description $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      Object NextOix $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ObjectIx"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object RtVersion $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object RtCreTime $Attribute 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Time"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object RtCreator $Attribute 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String16"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object RtCardinality $Attribute 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object RtBodySize $Attribute 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object OperatingSystem $Attribute 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Mask"
+        EndBody
+      EndObject
+    EndObject
+    Object Template $SubVolume
+      Body SysBody
+      EndBody
+    EndObject
+  EndObject
+EndSObject

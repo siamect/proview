@@ -1,0 +1,12 @@
+!  inc_trendlist_txt.uil -- <short description>
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  This file defines english texts for the trend and fast list window.
+!
+value
+    titleTrend	    : exported "Trend Graphs";
+    iconTrend	    : exported "Trend Graphs";
+    titleFast	    : exported "Fast Graphs";
+    iconFast	    : exported "Fast Graphs";

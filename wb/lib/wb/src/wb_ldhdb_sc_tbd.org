@@ -1,0 +1,620 @@
+/*  wb_ldhdb.sc -- local data handler, data base interface
+
+   PROVIEW/R
+   Copyright (C) 1993-1996 by Comator Process AB.
+
+   <Description>  */
+
+#include <stdio.h>
+#include <string.h>
+#include <lib$routines.h>
+#include <sql_literals.h>
+#include <sql_sqlca.h>
+#include "wb_ldh.h"
+#include "wb_ldhi.h"
+#include "wb_ldhdb.h"
+#include "wb_ldh_msg.h"
+#include <X11/Intrinsic.h>
+
+
+static int SQLCODE;
+extern int sql$signal ();
+
+struct ldhdb_s_Objid {	/* This much match pwr_tObjid.  */ 
+  int oix;
+  int vid;
+};
+
+struct ldhdb_s_ObjDbHead { /* This must match ldhi_sObjDbHead.  */
+  struct ldhdb_s_Objid	objid;
+  int			class;
+  $SQL_VARCHAR(32)	name;
+  int			packname;
+  $SQL_VARCHAR(32)	normname;
+  int			packnname;
+  struct ldhdb_s_Objid	father;
+  struct ldhdb_s_Objid	bwsoid;
+  struct ldhdb_s_Objid	fwsoid;
+  int			rh_gen;
+  int			dh_gen;
+  int			rb_gen;
+  int			db_gen;
+  int			rb_siz;
+  int			db_siz;
+  int			flags;
+  char			dbkey[8];
+};
+
+static $SQL_VARCHAR(65535) lBody;
+static void ldhdb_SQLError(int);
+
+exec sql declare alias for compiletime filename pwr_db:wb
+  runtime filename pwrp_db:wb;
+
+
+/* Load all object headers into the workbench.  */
+
+pwr_tStatus
+ldhdb_LoadObjectHeaders (
+  ldhi_sWBContext *wb
+)
+{
+  pwr_tStatus sts = LDH__SUCCESS;
+  struct ldhdb_s_ObjDbHead dbhd;
+  ldhi_sObjHead *ohp;
+  short int rb_gen_ind;
+  short int db_gen_ind;
+  int i;
+
+  memset(&dbhd, 0, sizeof(dbhd));
+
+  exec sql whenever sqlerror goto error_handler;
+
+  exec sql set transaction read only reserving object for
+    shared read;
+  exec sql declare tc_object cursor for select
+    oix, ovid, classid,
+    name, packname, normname, packnname, father, fvid,
+    bwsoix, bwsvid, fwsoix, fwsvid,
+    rh_gen, dh_gen, rb_gen, db_gen,
+    rb_siz, db_siz, flags, dbkey
+    from object;
+
+  exec sql open tc_object;
+
+  for(;;) {
+    rb_gen_ind = db_gen_ind = 0;
+    exec sql fetch tc_object into
+      :dbhd.objid.oix, :dbhd.objid.vid, :dbhd.class,
+      :dbhd.name, :dbhd.packname, :dbhd.normname,
+      :dbhd.packnname, :dbhd.father.oix, :dbhd.father.vid,
+      :dbhd.bwsoid.oix, :dbhd.bwsoid.vid, :dbhd.fwsoid.oix, :dbhd.fwsoid.vid,
+      :dbhd.dh_gen, :dbhd.rh_gen,
+      :dbhd.rb_gen:rb_gen_ind, :dbhd.db_gen:db_gen_ind,
+      :dbhd.rb_siz, :dbhd.db_siz, :dbhd.flags, :dbhd.dbkey;
+    if (SQLCODE == SQLCODE_EOS) break;
+    ohp = ldhi_AllocObjHead();
+    if (ohp == NULL) {
+      sts = LDH__INSVIRMEM;
+      goto return_error;
+    }
+    dbhd.name.data[dbhd.name.len] = '\0';
+    dbhd.normname.data[dbhd.name.len] = '\0';
+    memcpy(&ohp->db, &dbhd, sizeof(dbhd));
+    ohp->body[0].exist = rb_gen_ind != -1;
+    ohp->body[1].exist = db_gen_ind != -1;
+    
+    for (i = 0; i < 2; i++) {
+      if (!ohp->body[i].exist) {
+        ohp->db.b_gen[i] = 0;
+        ohp->db.b_siz[i] = 0;
+      }
+    }
+
+    /* Link to head list. */
+    ohp->hdlst = wb->hdlst;
+    wb->hdlst = ohp;
+  }
+
+  exec sql close tc_object;
+  exec sql commit;
+  return LDH__SUCCESS;
+
+error_handler:
+  ldhdb_SQLError(SQLCODE);
+  sql$signal();
+  exec sql rollback;
+  return LDH__DBERROR;
+
+return_error:
+  exec sql rollback;
+  return sts;
+}
+
+/*----------------------------------------------------------------------------*\
+  Stores all object modified in one session.
+\*----------------------------------------------------------------------------*/
+
+pwr_tStatus
+ldhdb_StoreObjects (
+  ldhi_sSesContext	*sp
+)
+{
+  struct ldhdb_s_ObjDbHead dbhd;
+
+  ldhi_sObjHead		*ohp;
+  ldhi_sOixEntry	*otp;
+  int			i;
+  char			rb_dbkey[8];
+  char			db_dbkey[8];
+  short int		rb_ind = 0;
+  short int		db_ind = 0;
+
+  exec sql whenever sqlerror goto error_handler;
+
+  exec sql set transaction read write reserving object for
+    protected write;
+
+  exec sql declare b_itcursor table cursor for select
+    rb_body, db_body from object where dbkey = :dbhd.dbkey;
+
+  exec sql declare rb_ilcursor insert only list cursor for select
+    rb_body where current of b_itcursor;
+
+  exec sql declare db_ilcursor insert only list cursor for select
+    db_body where current of b_itcursor;
+
+  for (
+    otp = (ldhi_sOixEntry *) ldh_TreeMinimum(sp->oixtab);
+    otp != NULL;
+    otp = (ldhi_sOixEntry *) ldh_TreeSuccessor(sp->oixtab,
+      (ldh_sTreeNode *) otp)
+  ) {
+    ohp = otp->ohp;
+    memcpy(&dbhd, &ohp->db, sizeof(dbhd));
+    if (ohp->change.f.IsDeleted) {
+      exec sql delete from object where dbkey = :dbhd.dbkey;
+      continue;
+    } else if (ohp->change.f.IsCreated) {
+      exec sql insert into object (
+	oix, ovid, classid, name, packname,
+	normname, packnname, father, fvid,
+	bwsoix, bwsvid, fwsoix, fwsvid,
+	rh_gen, dh_gen, rb_siz, db_siz, flags
+      ) values (
+	:dbhd.objid.oix, :dbhd.objid.vid, :dbhd.class, :dbhd.name, :dbhd.packname,
+	:dbhd.normname, :dbhd.packnname, :dbhd.father.oix, :dbhd.father.vid,
+	:dbhd.bwsoid.oix, :dbhd.bwsoid.vid, :dbhd.fwsoid.oix, :dbhd.fwsoid.vid,
+	:dbhd.rh_gen, :dbhd.dh_gen, :dbhd.rb_siz, :dbhd.db_siz, :dbhd.flags
+      ) returning dbkey into :dbhd.dbkey;
+      memcpy(&ohp->db, &dbhd, sizeof(dbhd)); /* We want the new DBKEY */
+    } else if (ohp->change.m & ldhi_mChange_HeadIsModified) {
+      exec sql update object set
+	classid = :dbhd.class,
+	name = :dbhd.name,
+	packname = :dbhd.packname,
+	normname = :dbhd.normname,
+	packnname = :dbhd.packnname,
+	father = :dbhd.father.oix,
+	fvid = :dbhd.father.vid,
+	bwsoix = :dbhd.bwsoid.oix,
+	bwsvid = :dbhd.bwsoid.vid,
+	fwsoix = :dbhd.fwsoid.oix,
+	fwsvid = :dbhd.fwsoid.vid,
+	rh_gen = :dbhd.rh_gen,
+	dh_gen = :dbhd.dh_gen,
+	rb_siz = :dbhd.rb_siz,
+	db_siz = :dbhd.db_siz,
+	flags = :dbhd.flags
+      where dbkey = :dbhd.dbkey;
+    }
+
+    if (ohp->change.m & ldhi_mChange_BodyIsModified) {
+      exec sql open b_itcursor;
+      exec sql fetch b_itcursor into :rb_dbkey:rb_ind, :db_dbkey:db_ind;
+      for (i = 0; i < 2; i++) {
+	if (ohp->body[i].exist) {
+	  if (i == 0 && ohp->change.f.RBodyIsModified) {
+	    lBody.len = ohp->body[i].size;
+	    memcpy(lBody.data, ohp->body[i].body, lBody.len);
+	    exec sql update object set
+	      rb_gen = :dbhd.rb_gen
+	    where dbkey = :dbhd.dbkey;
+	    exec sql open rb_ilcursor;
+	    exec sql insert into cursor rb_ilcursor values (:lBody);
+	    exec sql close rb_ilcursor;
+	  } else if (ohp->change.f.DBodyIsModified) {
+	    lBody.len = ohp->body[i].size;
+	    memcpy(lBody.data, ohp->body[i].body, lBody.len);
+	    exec sql update object set
+	      db_gen = :dbhd.db_gen
+	    where dbkey = :dbhd.dbkey;
+	    exec sql open db_ilcursor;
+	    exec sql insert into cursor db_ilcursor values (:lBody);
+	    exec sql close db_ilcursor;
+	  }
+	}
+      }
+      exec sql close b_itcursor;
+    }
+  }
+
+  exec sql commit;
+  return LDH__SUCCESS;
+
+error_handler:
+  ldhdb_SQLError(SQLCODE);
+  sql$signal();
+  exec sql rollback;
+  return LDH__DBERROR;
+}
+
+/* Gets a current range of oix.  */
+
+pwr_tStatus
+ldhdb_GetOix (
+  int			vid,
+  ldhi_sFreeOix		*freeOix
+)
+{
+  int			oix;
+  int			mask = 63;
+
+  exec sql whenever sqlerror goto error_handler;
+
+  exec sql set transaction read only;
+
+  exec sql select oix into :oix from volume where vid = :vid;
+
+  if (SQLCODE == SQLCODE_EOS) {
+    exec sql rollback;
+    return LDH__NOSUCHVOL;
+  }
+
+  freeOix->next = freeOix->high = (oix + 63) & (~mask);  
+
+  if (oix < 0) {
+    exec sql rollback;
+    lib$signal(LDH__NOOBJDID);
+    return LDH__NOOBJDID;
+  }
+
+  exec sql rollback;
+
+  return LDH__SUCCESS;
+
+error_handler:
+  ldhdb_SQLError(SQLCODE);
+  sql$signal();
+  exec sql rollback;
+  return LDH__DBERROR;
+}
+
+/* Gets a new range of new oix's.  */
+
+pwr_tStatus
+ldhdb_NextOix (
+  int			vid,
+  ldhi_sFreeOix		*freeOix
+)
+{
+  int			oix;
+  int			mask = 63;
+
+  exec sql whenever sqlerror goto error_handler;
+
+  exec sql set transaction read write reserving volume for
+    protected write;
+
+  exec sql select oix into :oix from volume where vid = :vid;
+
+  if (SQLCODE == SQLCODE_EOS) {
+    exec sql rollback;
+    return LDH__NOSUCHVOL;
+  }
+
+  freeOix->next = oix = ((oix + 63) & (~mask)) + 1;
+  freeOix->high = oix = (oix + 63) & (~mask);  
+
+  if (oix <= 0) {
+    exec sql rollback;
+    lib$signal(LDH__NOOBJDID);
+    return LDH__NOOBJDID;
+  }
+
+  exec sql update volume set oix = :oix where vid = :vid;
+
+  if (SQLCODE == SQLCODE_EOS) goto error_handler;
+
+  exec sql commit;
+
+  return LDH__SUCCESS;
+
+error_handler:
+  ldhdb_SQLError(SQLCODE);
+  sql$signal();
+  exec sql rollback;
+  return LDH__DBERROR;
+}
+
+/* Gets a new range of new oix's.  */
+
+pwr_tStatus
+ldhdb_SetOix (
+  int			vid,
+  int			oix
+)
+{
+
+  exec sql whenever sqlerror goto error_handler;
+
+  exec sql set transaction read write reserving volume for
+    protected write;
+
+  exec sql update volume set oix = :oix where vid = :vid;
+
+  if (SQLCODE == SQLCODE_EOS) goto error_handler;
+
+  exec sql commit;
+
+  return LDH__SUCCESS;
+
+error_handler:
+  ldhdb_SQLError(SQLCODE);
+  sql$signal();
+  exec sql rollback;
+  return LDH__DBERROR;
+}
+
+/* Add a volume to the volume table.  */
+
+pwr_tStatus
+ldhdb_AddVolume (
+  int		vid
+)
+{
+  int		oix = 0;
+
+  exec sql whenever sqlerror goto error_handler;
+
+  exec sql set transaction read write reserving volume for
+    protected write;
+
+  exec sql insert into volume values (:vid, :oix);
+
+  exec sql commit;
+
+  return LDH__SUCCESS;
+
+error_handler:
+  ldhdb_SQLError(SQLCODE);
+  sql$signal();
+  exec sql rollback;
+  return LDH__DBERROR;
+}
+
+/* Remove a volume from the volume table.  */
+
+pwr_tStatus
+ldhdb_RemoveVolume (
+  int		vid
+)
+{
+
+  exec sql whenever sqlerror goto error_handler;
+
+  exec sql set transaction read write reserving volume for
+    protected write;
+
+  exec sql delete from volume where vid = :vid;
+
+  if (SQLCODE == SQLCODE_EOS) {
+    exec sql rollback;
+    return LDH__NOSUCHVOL;
+  }
+
+  exec sql commit;
+
+  return LDH__SUCCESS;
+
+error_handler:
+  ldhdb_SQLError(SQLCODE);
+  sql$signal();
+  exec sql rollback;
+  return LDH__DBERROR;
+}
+
+/*----------------------------------------------------------------------------*\
+  Gets existing object bodies for one object.
+\*----------------------------------------------------------------------------*/
+
+pwr_tStatus
+ldhdb_GetObjectBodies (
+  ldhi_sObjHead		*ohp
+)
+{
+  pwr_tStatus		sts = LDH__SUCCESS;
+  int			i;
+  struct ldhdb_s_ObjDbHead dbhd;
+  char			rb_dbkey[8];
+  char			db_dbkey[8];
+  short int		rb_ind = 0;
+  short int		db_ind = 0;
+  pwr_uVolume		*Volume;
+
+  exec sql whenever sqlerror goto error_handler;
+
+  exec sql set transaction read only reserving object for
+    shared read;
+
+  exec sql declare b_rtcursor read only table cursor for select
+    rb_body, db_body from object where dbkey = :dbhd.dbkey;
+
+  exec sql declare rb_rlcursor read only list cursor for select
+    rb_body where current of b_rtcursor;
+
+  exec sql declare db_rlcursor read only list cursor for select
+    db_body where current of b_rtcursor;
+
+  memcpy(&dbhd, &ohp->db, sizeof(dbhd));
+
+  exec sql open b_rtcursor;
+  exec sql fetch b_rtcursor into :rb_dbkey:rb_ind, :db_dbkey:db_ind;
+
+  for (i = 0; i < 2; i++) {
+    if (!ohp->body[i].exist) continue;
+    if (i == 0) {
+      if (rb_ind == -1) continue;
+      exec sql open rb_rlcursor;
+      exec sql fetch rb_rlcursor into :lBody;
+      exec sql close rb_rlcursor;
+    } else {
+      if (db_ind == -1) continue;
+      exec sql open db_rlcursor;
+      exec sql fetch db_rlcursor into :lBody;
+      exec sql close db_rlcursor;
+    }
+    ohp->body[i].size = lBody.len;
+    if (lBody.len == 0) continue;
+    ohp->body[i].body = XtMalloc(lBody.len);
+    if (ohp->body[i].body == NULL) {
+      sts = LDH__INSVIRMEM;
+      goto return_error;
+    }
+    memcpy(ohp->body[i].body, lBody.data, lBody.len);
+  }
+
+  exec sql close b_rtcursor;
+  exec sql commit;
+
+  if (ohp->db.objid.oix == pwr_cNObjectIx && ohp->body[0].exist) {
+    switch (ohp->db.class) {
+    case pwr_eClass_RootVolume:
+    case pwr_eClass_ClassVolume:
+    case pwr_eClass_WorkBenchVolume:
+    case pwr_eClass_DirectoryVolume:
+    case pwr_eClass_SubVolume:
+    case pwr_eClass_SharedVolume:
+    case pwr_eClass_DynamicVolume:
+    case pwr_eClass_SystemVolume:
+      Volume = (pwr_uVolume *) ohp->body[0].body;
+      if (Volume != NULL) Volume->Root.NextOix = ohp->vhp->freeOix.high + 1;
+      break;
+    default:
+      break;
+    }
+  }
+
+  return LDH__SUCCESS;
+
+error_handler:
+  ldhdb_SQLError(SQLCODE);
+  sql$signal();
+  exec sql rollback;
+  return LDH__DBERROR;
+
+return_error:
+  exec sql rollback;
+  return sts;
+}
+
+/*----------------------------------------------------------------------------*\
+  Initializes the workbench on disk.
+\*----------------------------------------------------------------------------*/
+/*
+pwr_tStatus
+ldhdb_InitWB ()
+{
+  long did_system = LDHI_MIN_SYSOBJ;
+  long did_base = LDHI_MIN_BASOBJ;
+  long did_user = LDHI_MIN_USROBJ;
+  long range_system = ldh_eDId_System;
+  long range_base = ldh_eDId_Base;
+  long range_user = ldh_eDId_User;
+
+  exec sql whenever sqlerror goto error_handler;
+
+  exec sql set transaction read write reserving object, oix
+    for protected write;
+
+  exec sql delete from object;
+  exec sql delete from oix;
+
+  exec sql insert into oix values (:range_system, :did_system);
+  exec sql insert into oix values (:range_base, :did_base);
+  exec sql insert into oix values (:range_user, :did_user);
+
+  exec sql commit;
+  return LDH__SUCCESS;
+
+error_handler:
+  ldhdb_SQLError(SQLCODE);
+  sql$signal();
+  exec sql rollback;
+  return LDH__DBERROR;
+}
+*/
+
+/*----------------------------------------------------------------------------*\
+  Prints a message corresponding to a SQL-error.
+\*----------------------------------------------------------------------------*/
+
+static void ldhdb_SQLError (
+  int sql_sts
+)
+{
+
+  switch (sql_sts) {
+  case SQLCODE_BAD_TXN_STATE:
+    printf("SQL-Error: Invalid transaction state\n");
+    break;
+  case SQLCODE_CURALROPE:
+    printf("SQL-Error: WARNING Cursor is already open\n");
+    break;
+  case SQLCODE_CURNOTOPE:
+    printf("SQL-Error: Cursor not open\n");
+    break;
+  case SQLCODE_DEADLOCK:
+    printf("SQL-Error: Deadlock encountered\n");
+    break;
+  case SQLCODE_EOS:
+    printf("SQL-Error: SELECT or cursor got to end of stream\n");
+    break;
+  case SQLCODE_INTEG_FAIL:
+    printf("SQL-Error: Constraint failed\n");
+    break;
+  case SQLCODE_LOCK_CONFLICT:
+    printf("SQL-Error: Lock conflict\n");
+    break;
+  case SQLCODE_NO_DUP:
+    printf("SQL-Error: Duplicate on index\n");
+    break;
+  case SQLCODE_NOT_VALID:
+    printf("SQL-Error: Valid-if failed\n");
+    break;
+  case SQLCODE_NULLNOIND:
+    printf("SQL-Error: NULL value and no indicator variable\n");
+    break;
+  case SQLCODE_OUTOFRAN:
+    printf("SQL-Error: Value is out of range for a host variable\n");
+    break;
+  case SQLCODE_RDBERR:
+    printf("SQL-Error: Rdb returned an error\n");
+    break;
+  case SQLCODE_ROTXN:
+    printf("SQL-Error: Read write operation in read-only transaction\n");
+    break;
+  case SQLCODE_SUCCESS:
+    /* printf("SQL-Error: Command completed successfully\n"); */
+    break;
+  case SQLCODE_UDCURNOPE:
+    printf("SQL-Error: Cursor in update or delete not open\n");
+    break;
+  case SQLCODE_UDCURNPOS:
+    printf("SQL-Error: Cursor in update or delete not positioned on record\n");
+    break;
+  default:
+    printf("SQL-Error: Unknown SQL error SQLCA.SQLCODE: %d\n", sql_sts);
+    break;
+  }
+}

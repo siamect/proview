@@ -1,0 +1,300 @@
+!  pwrb_c_dstrend.wb_load -- Defines the class DsTrend.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  DataStorage TRENDcurve.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  Long time storage of data for a trend graph.
+!  
+!  In every node where trend graphs shall be stored there
+!  is a need of a DsTrend job, which is searching through
+!  the local data storage objects of the node.
+!  Every measurant which has to be plotted demands a data
+!  storage object. Attributes in the objects specify for
+!  example the name of the measurant and how often it is
+!  to be stored, see figure 3-13. A measurant may be used
+!  by several different data storage objects, for example
+!  to store at different frequencies.
+!
+!  Note! Remember that the sampling rate of physical hardware
+!  is finite. At present Ai-signals are sampled at 5 Hz,
+!  Co-, Di-, Do-, and Dv-signals at the base frequency
+!  determined by the fastest running PLC program of the
+!  node. Highest possible base frequency is 50 Hz.
+!  A trend graph consists of measurant data collected at
+!  some frequency.
+!  
+!  Collected values are stored in DataBuffer. Internally
+!  DataBuffer is divided into two equal sub-buffers. The
+!  way of working is to update every element in one of the
+!  sub-buffers and then continue with the first element in
+!  the other sub-buffer. When also the last element in the
+!  second sub-buffer has been updated the updating process
+!  continues with the first element in the first
+!  sub-buffer. The sub-buffers are updated in turn.
+!  BufferStatus specifies how the sub-buffers are used in
+!  a certain moment.
+!  The measurant has to be a local quantity. So, DsTrend
+!  objects have to reside at the same node as the
+!  mesurants in the runtime environment.
+!  The dsTrend module is included in the EBUILD-file of
+!  the node by means of program
+!  PWR_EXE:RS_DS_TREND.EXE_ELN /warm_debug
+!  
+!  The measurant is supposed to be of any of the types:
+!  - pwr_tBoolean
+!  - pwr_tFloat32, pwr_tFloat64
+!  - pwr_tInt8, pwr_tInt16, pwr_tInt32
+!  - pwr_tUInt8, pwr_tUInt16, pwr_tUInt32
+!  
+!      Hints
+!  
+!  If a signal is associated with an object by the type
+!  DsTrend, DsFast, or DsHist this relation may be marked
+!  by putting the object direct below the current signal
+!  object.
+!*/
+SObject pwrb:Class
+  Object DsTrend $ClassDef 108 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "DsTrend"
+      EndBody
+      !/**
+      !  Optional text.
+      !*/
+      Object Description $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  The scanning period, in seconds, of the DsTrend job.
+      !  See also Multiple.
+      !  
+      !  The attribute, is assigned the same value as
+      !  corresponding attribute in the DsTrendConf object of
+      !  the node. This is done at the initialisation of the
+      !  DsTrend job.
+      !*/
+      Object ScanTime $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  The individual quantity is stored at the period of
+      !  ScanTime * Multiple.
+      !*/
+      Object Multiple $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies at which scan this data storage object has to
+      !  be updated. It is set equal to Multiple and then
+      !  decreased at every scanning. If NextMultiple = 0
+      !  storage will take place, and NextMultiple is set equal
+      !  to the value of Multiple.
+      !*/
+      Object NextMultiple $Attribute 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  The datatype of stored measurant. It has to be any of
+      !  the types pwr_tBoolean, pwr_tFloat32, pwr_tFloat64,
+      !  pwr_tInt8, pwr_tInt16, pwr_tInt32, pwr_tUInt8,
+      !  pwr_tUInt16, or pwr_tUInt32.
+      !*/
+      Object DataType $Attribute 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt8"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  The complete name of the analog measurant, for example
+      !  PROC1-TEMP1.ActualValue. The measurant has to be
+      !  represented by a local object.
+      !*/
+      Object DataName $Attribute 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$AttrRef"
+        EndBody
+      EndObject
+      !/**
+      !  Pointer to the analog measurant which is to be stored.
+      !*/
+      Object DataPointer $Attribute 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Identity at subscription of the measurant.
+      !*/
+      Object DataSubId $Attribute 8 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$RefId"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Length, in seconds, of the testing result. If the time
+      !  exceeds what is possible to store in DataBuffer, the
+      !  storage is stopped when DataBuffer has been filled.
+      !  StorageTime, Multiple , BaseFrequency and
+      !  NoOfBufElement determines NoOfSample.
+      !*/
+      Object StorageTime $Attribute 9 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Number of samples per sub-buffer.
+      !*/
+      Object NoOfSample $Attribute 10 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Specifies which sub-buffer is used for writing at the
+      !  moment.
+      !  
+      !  = 0, .... (NoOfBuffers - 1)
+      !  NextWriteIndex[2]
+      !*/
+      Object WriteBuffer $Attribute 11 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the location in the current sub-buffer where
+      !  the next writing will be done.
+      !*/
+      Object NextWriteIndex $Attribute 12 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Elements = 2
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the current status of the sub-buffers.
+      !  
+      !   -- 0     The sub-buffer is not used for writing.
+      !   -- 1     The sub-buffer is used for writing.
+      !*/
+      Object BufferStatus $Attribute 13 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Elements = 2
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the number of sub-buffers in the area
+      !  DataBuffer.
+      !*/
+      Object NoOfBuffers $Attribute 14 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+          Attr Flags |= PWR_MASK_CONST
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the number of elements in every sub-buffer.
+      !  BufferTime[2]
+      !*/
+      Object NoOfBufElement $Attribute 15 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+          Attr Flags |= PWR_MASK_CONST
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Time (per sub-buffer) when the first storage in a
+      !  writing session was made.
+      !*/
+      Object BufferTime $Attribute 16 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Time"
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Elements = 2
+        EndBody
+      EndObject
+      !/**
+      !  Total accessible storage memory. The maximum size is
+      !  determined by NoOfBuffers NoOfBufElement, which is
+      !  equal to the maximum number of samples in the same
+      !  storage cycle.
+      !*/
+      Object DataBuffer $Attribute 17 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+!        Attr Elements = 600
+          Attr Elements = 478
+        EndBody
+      EndObject
+    EndObject
+    Object Template DsTrend
+      Body RtBody
+	Attr Multiple = 1
+	Attr StorageTime = 239
+        Attr BufferStatus[0] = 1
+        Attr BufferStatus[1] = 1
+        Attr NoOfBuffers = 2
+        Attr NoOfBufElement = 239
+      EndBody
+    EndObject
+    Object PostCreate $DbCallBack
+      Body SysBody
+        Attr MethodName = "DsTrend-PostCreate"
+      EndBody
+    EndObject
+    Object PostMove $DbCallBack
+      Body SysBody
+        Attr MethodName = "DsTrend-PostMove"
+      EndBody
+    EndObject
+  EndObject
+EndSObject

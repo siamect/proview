@@ -1,0 +1,16 @@
+!  rt_qmon.opt - link options file
+!
+!  PROVIEW/R
+!  Copyright (C) 1997-98 by Mandator AB.
+!
+!  <Description>.
+!
+pwr_obj:rt_qmon.obj
+!<  share>psect_attr=_CTYPE_,exe
+!<noshare>pwr_lib:libpwr_rt/lib
+!<noshare>pwr_lib:libpwr_co/lib
+!<  share>pwr_exe:libpwr/share
+!<noshare>pwr_obj:pwr_msg_co.obj
+!<noshare>pwr_obj:pwr_msg_rt.obj
+!<noshare>eln$rpc_lib:librpc/lib
+!<noshare>eln$:rtl.olb/inc=(ker$msgdef_text,eln$msgdef_text)

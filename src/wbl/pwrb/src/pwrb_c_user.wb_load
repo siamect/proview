@@ -1,0 +1,210 @@
+!  pwrb_c_user.wb_load -- Defines the class User.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  Configures a user category of an operator station.
+!  
+!  Configures a user category below the OpPlace
+!  object. The User object and the OpPlace object
+!  become a couple if their OpNumber have the same value.
+!*/
+SObject pwrb:Class
+  Object User $ClassDef 245 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "User"
+      EndBody
+      Object Description $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies unconditionally the wildcard character
+      !  asterisk (*)
+      !*/
+      Object UserName $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String16"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies unconditionally the wildcard character
+      !  asterisk (*)
+      !*/
+      Object PassWord $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String16"
+        EndBody
+      EndObject
+      !/**
+      !  The operator stations are numbered by means of OpNumber
+      !  of the OpPlace object; ( see p. 3-232). By specifying
+      !  here the value of OpNumber for the wanted OpPlace
+      !  object the User object is associated with a certain
+      !  OpPlace object.
+      !*/
+      Object OpNumber $Attribute 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      !/**
+      !  Not used.
+      !*/
+      Object NoOfAlarms $Attribute 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Not used.
+      !*/
+      Object MaxNoOfAlarms $Attribute 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Not used.
+      !*/
+      Object NoOfEvents $Attribute 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the maximum number of contemporary events in
+      !  the user's event list, i.e. the skyline of the events.
+      !  When the number of events exceeds MaxNoOfEvents the
+      !  oldest event disappears from the list.
+      !  To this list events are sent from the message handler
+      !  in respective node. In each node the message handler
+      !  has its own skyline of events (also named MaxNoOfEvents)
+      !  defined by a MessageHandler object. In principle, the
+      !  User object's skyline of events should be selected as å
+      !  MaxNoOfEvents, added up over MaxNoOfEvents in the
+      !  MessageHandler objects in all nodes throughout the
+      !  PROVIEW/R system, or make it simple and assign the
+      !  attribute e.g. 200.
+      !*/
+      Object MaxNoOfEvents $Attribute 8 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+          Attr Flags = 0
+        EndBody
+      EndObject
+      Object SelectListIsUpdated $Attribute 16 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  A message created by an ASup or DSup object gets the
+      !  same identity as the supervised object. Messages
+      !  produced in an application by means of mh_ApplMessage
+      !  (see PROVIEW/R Programmer's Reference Manual) get an
+      !  identity according to the calling parameter EventName.
+      !  
+      !  SelectList specifies the hierarchies from which
+      !  messages are to be sent to the user. Up to 8 different
+      !  hierarchies can be specified. If messages from e.g. a
+      !  Watchdog object in a node will be received, then the
+      !  name of the node will be specified.
+      !  
+      !  Note! If the SelectList is left blank no message at all is
+      !  sent to the user.
+      !*/
+      Object SelectList $Attribute 9 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 20
+        EndBody
+      EndObject
+      !/**
+      !  Each attribute specifies the complete name of a Form or
+      !  Graph object which is to be activated by a function
+      !  button in the operator window. The name has to be
+      !  filled on in a consecutive way with the beginning of
+      !  FastAvail[0], representing the first function button in
+      !  the first row.
+      !*/
+      Object FastAvail $Attribute 10 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 15
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the number of defined FastAvaill[] attributes
+      !  and the number of visible buttons in the operator
+      !  window. The value has to be in the range 0 - 15.
+      !  NavigatorWritePriv
+      !*/
+      Object NoFastAvail $Attribute 11 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      !/**
+      !  Not used.
+      !*/
+      Object PrivObjList $Attribute 12 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr Flags |= PWR_MASK_ARRAY
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Elements = 10
+        EndBody
+      EndObject
+      !/**
+      !  Not used.
+      !*/
+      Object PrivList $Attribute 13 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr Flags |= PWR_MASK_ARRAY
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Elements = 10
+        EndBody
+      EndObject
+      Object NoPriv $Attribute 14 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  From Runtime Navigator the operator may invoke
+      !  Attribute Editor to inspect different objects.
+      !  NavigatorWritePriv specifies the operator's authority
+      !  to change attributes from Attribute Editor. FALSE means
+      !  that the operator only may view at the attributes and
+      !  TRUE means write accsess as well.
+      !*/
+      Object NavigatorWritePriv $Attribute 15 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject

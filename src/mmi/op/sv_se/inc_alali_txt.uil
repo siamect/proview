@@ -1,0 +1,42 @@
+!  inc_alali_txt.uil -- alarm limits
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  This module defines swedish texts for the alarm limits window.
+!
+value
+
+! Exported constants
+   alali_OnlyFloatInLimit_text : exported compound_string("Endast flyttal är tillåtna i fält för Gräns.");     
+   alali_OnlyFloatInHyst_text  : exported compound_string("Endast flyttal är tillåtna i fält för Hysteres."); 
+
+   alali_AscizTable : exported asciz_string_table
+	(
+	"Larmgränser : ",  ! AlarmLimitsText
+	"Position:",       ! DigPositionText
+	"Gräns:",          ! LimitText
+	"Till",            ! OnText
+	"Från"		   ! OffText
+        );
+	
+
+
+   ackMessage		: "Kvittensmeddelande:";
+   acousticAlarm	: "Akustiskt larm:";
+   alarmMessage		: "Larmmeddelande:";
+   alarmText		: "Larmtext:";
+   analog		: "Analog";
+   description		: "Beskrivning:";
+   digital		: "Digital";
+   hysteresis		: "Hysteres:";
+   limit		: "Gräns:";
+   prio			: "Prioritet:";
+   returnMessage	: "Returmeddelande:";
+   returnText		: "Text vid retur:";
+   selectListObject	: "Välj ett list objekt";
+   unit			: "Enhet:";
+
+
+   Col2LeftOffset	: 80;
+   

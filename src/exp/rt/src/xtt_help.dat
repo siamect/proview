@@ -1,0 +1,1875 @@
+<TOPIC> overview
+Xtt overview
+
+<B>Navigator		<LINK> navigator
+<B>Operator window	<LINK> operator window
+<B>Alarmlist		<LINK> alarmlist
+<B>Eventlist		<LINK> eventlist
+<B>Trace		<LINK> trace
+<B>Graph windows	<LINK> graph window
+<B>Commands		<LINK> help command
+<B>Script		<LINK> script
+<B>Helpfile		<LINK> helpfile
+<B>Classes              <LINK> classes
+<B>Index		<INDEX>
+</TOPIC>
+
+//
+// Navigator
+//
+
+<TOPIC> navigator
+Xtt navigator
+
+In the navigator you can look into the realtime database.
+
+You kan navigate with the mouse or	<LINK> navigate mouse
+with the keyboard. 			<LINK> navigate keyboard
+</TOPIC>
+
+<TOPIC> navigate mouse
+Navigate with the mouse
+
+ClickMB1	<t><t>Select an item.
+DoubleClickMB1	<t><t>Open an item.
+Shift/DoubleClickMB1<t><t>Open an object.
+Ctrl+Shift/DoubleClickMB1<t><t>Open trace for a PlcPgm.
+</TOPIC>
+
+<TOPIC> navigate keyboard
+Navigate with the keyboard
+
+ArrowUp		<t><t>Select an item.
+ArrowDown 	<t><t>Select an item.
+ArrowRight	<t><t>Open an item.
+		<t><t>If advanced user, change attribute value. <LINK> advanced user
+ArrowLeft	<t><t>Close an item.
+Shift/ArrowRight<t><t>Open an object.
+Ctrl/L		<t><t>Open trace for a plcpgm.
+Ctrl/R		<t><t>Show crossreferences for an object.
+Ctrl/A		<t><t>Change attribute value.
+Ctrl/V		<t><t>Add an object to the collect list.
+Ctrl/N		<t><t>Show collected objects.
+
+Rtt compatible keys
+
+Return		<t><t>Open a item.
+PF1		<t><t>Open an object.
+PF2		<t><t>Show crossreferences for an object.
+PF3		<t><t>Change attribute value.
+PF4		<t><t>Close an item.
+
+The PF-keys are not supported by some window managers.
+</TOPIC>
+
+//
+// Operator window
+//
+
+<TOPIC> operator window
+Operator window
+
+Help on operator window will soon be written...
+</TOPIC>
+
+//
+// Alarmlist
+//
+
+<TOPIC> alarmlist
+Alarmlist
+
+Help on alarmlist will soon be written...
+</TOPIC>
+
+//
+// Eventlist
+//
+
+<TOPIC> eventlist
+Eventlist
+
+Help on eventlist will soon be written...
+</TOPIC>
+
+//
+// Trace
+//
+
+<TOPIC> trace
+Trace
+
+Help on trace will soon be written...
+</TOPIC>
+
+//
+// Graph window
+//
+
+<TOPIC> graph window
+Graph window
+
+Help on graph window will soon be written...
+</TOPIC>
+
+
+//
+// Commands
+//
+
+<TOPIC> symbol
+Symbol
+
+A xtt symbol can be used as a short command or as string replacement
+in a command. If the symbol is used as string replacement the symbol-
+name should be surrounded by quotes.
+
+Symbols are created with the define command. <LINK> define
+The define-commands can be executed by the symbolfile. <LINK> symbolfile
+
+Example of symbol used as a short command.
+
+xtt> define p1 "show child/name=hql-hvk-pumpar-pump1"
+xtt> p1
+
+Example of symbol used as string replacement
+
+xtt> define p1 hql-hvk-pumpar-StartPump1
+xtt> open trace 'p1'
+
+<H2>related subjects
+define <LINK> define
+show symbol <LINK> show symbol
+symbolfile <LINK> symbolfile
+</TOPIC>
+
+<TOPIC> symbolfile
+Symbol file
+
+The symbolfile is a command-file that is executed att xtt startup.
+It can contain definitions of symbols,
+modification of the xtt menu, and other xtt commands.
+Here is some examples of userful commands.
+
+Shortcut to somewhere in the database hierarchy:
+
+<t>define rb9 "show children /name=hql-rb9" <LINK> define
+
+Shortcut to a graph:
+
+<t>define my_graph "open graph my_graph"
+
+Create items in the xtt menu.
+
+<t>create item/text="Maintenance"/menu/destination="DataBase"/before <LINK> create item
+<t>create item/text="My graph"/command="open graph my_graph"/dest=Maintenance/first
+
+Remove items from the xtt standard menu.
+
+<t>delete item /name=exit <LINK> delete item
+<t>delete item /name=system-nethandler
+</TOPIC>
+
+<TOPIC> advanced user
+Advanced user
+
+The advanced user allow some key-combinations that
+might confuse the unexperienced user.
+
+Advance user is set from setup or 	<LINK> setup
+with the command 'set advanceduser'	<LINK> set advanceduser
+
+Additional key's for advanced user
+
+ArrowRight	<t> Change attribute value.
+</TOPIC>
+
+<TOPIC> help command
+Xtt commands
+
+<b>add parameter<t>Add an attribute to a picture 	<LINK> add parameter
+<b>add menu    <t>Add a menu item to a xtt menu  	<LINK> add menu
+<b>collect     <t>Add an attribute to collect list <LINK> collect
+<b>collect show<t>Show the collect list		<LINK> collect show
+<b>collect clear<t>Clear the collect list	<LINK> collect clear
+<b>close alarmlist <t>Close alarmlist		<LINK> close alarmlist
+<b>close eventlist <t>Close eventlist		<LINK> close eventlist
+<b>close graph <t>Close a graph			<LINK> close graph
+<b>close navigator <t>Close the navigator	<LINK> close navigator
+<b>create item <t>Create a menu item		<LINK> create item
+<b>crossreference<t>Show crossreferenses	<LINK> crossreference
+<b>exit        <t>close xtt			<LINK> exit
+<b>define      <t>Define a symbol		<LINK> define
+<b>delete item <t>Delete a menu item		<LINK> delete item
+<b>help        <t>Display help			<LINK> help
+<b>login       <t>User login			<LINK> login
+<b>logout      <t>User logout			<LINK> logout
+<b>logging     <t>Logg attributes to file	<LINK> logging
+<b>open graph  <t>Open a graph			<LINK> open graph
+<b>open jgraph <t>Open a java graph		<LINK> open jgraph
+<b>open trend  <t>Open DsTrend or PlotGroup graph	<LINK> open trend
+<b>open operatorwindow<t>Open the operator window 	<LINK> open operatorwindow
+<b>search	<t>Leta efter object eller sträng <LINK> search
+<b>set advanceduser<t>Set advanced user		<LINK> set advanceduser
+<b>setup       <t>Xtt setup			<LINK> setup
+<b>show version<t>Show xtt version		<LINK> show version
+<b>show symbol <t>Show a symbol			<LINK> show symbol
+<b>show plcpgm <t>Show PlcPgm objects		<LINK> show plcpgm
+<b>show plcthreads<t>Show PlcThread objects	<LINK> show plcthreads
+<b>show links  <t>Show links			<LINK> show links
+<b>show logfiles<t>Show rtt loggfiles		<LINK> show logfiles
+<b>show subsrv <t>Show subscription server	<LINK> show subsrv
+<b>show subcli <t>Show subscription client	<LINK> show subcli
+<b>show device <t>Show devices			<LINK> show device
+<b>show remnode<t>Show RemNode objects		<LINK> show remnode
+<b>show remtrans<t>Show RemTrans objects	<LINK> show remtrans
+<b>show database<t>Show the runtime database	<LINK> show database
+<b>show file  <t>Show files			<LINK> show file
+<b>show graph <t>Show graph-files		<LINK> show graph
+<b>show time  <t>Show current time		<LINK> show time
+<b>show default<t>Show default directory	<LINK> show default
+<b>show children<t>Show the children of an object <LINK> show children
+<b>show object<t>Show the content of an object	<LINK> show object
+<b>show objid <t>Show object identity		<LINK> show objid
+<b>show parameter<t>Show an object attribute	<LINK> show parameter
+<b>show logging<t>Show a logging entry		<LINK> show logging
+<b>show eventlist<t>Show the event list		<LINK> show eventlist
+<b>show alarmlist<t>Show the alarm list		<LINK> show alarmlist
+<b>show user  <t>Show current user		<LINK> show user
+<b>store      <t>Store an attribute list in a file <LINK> store
+
+<H2>related subjects
+script <LINK> script
+</TOPIC>	
+
+<TOPIC> add parameter
+Command   add parameter
+
+Add an attribute to a list of attributes, and display the value of 
+the attribute. 
+A list of attributes will be created with the command 'show parameter',
+and more attributes can be added to the list with 'add parameter'.
+
+Object that matches the class, name and hierarchy description are displayed
+on the screen.
+
+<B>xtt> add parameter /parameter= /name= /class= /hierarchy=
+
+/parameter=	<t>the name of the parameter to be displayed.
+/name=		<t>the name of the object. Wildcard is allowed.
+/class=		<t>displays objects of this class.
+/hierarchy=	<t>displays objects below this object in the hierarchy.
+
+<H2>related subjects
+show parameter <LINK> show parameter
+</TOPIC>
+
+<TOPIC> show parameter
+Command   show parameter
+
+Create a new list, add an attributes to the list, and display the value of 
+the attributes. 
+More attributes can be added to the list with 'add parameter'.
+
+Object that matches the class, name and hierarchy description are displayed
+on the screen.
+
+<B>xtt> show parameter /parameter= /name= /class= /hierarchy=
+
+/parameter=	<t>the name of the parameter to be displayed.
+/name=		<t>the name of the object. Wildcard is allowed.
+/class=		<t>displays objects of this class.
+/hierarchy=	<t>displays objects below this object in the hierarchy.
+
+<H2>related subjects
+add parameter <LINK> add parameter
+</TOPIC>
+
+<TOPIC> add menu
+Command   add menu
+
+Add a menu item to the xtt menu hierarchy. 
+The menu is placed last in the current menu.
+The action of the item can be to execute a xtt 
+command, or display the attributes of an object.
+
+<B>xtt> add menu /text= /command=
+<B>xtt> add menu /text= /object=
+
+/text<t>Text of the menu item.
+/command<t>Xtt command to be executed when the item is activated.
+/object<t>Object that will be displayed when the item is activated.
+
+<H2>related subjects
+create item <LINK> create item
+delete item <LINK> delete item
+</TOPIC>
+
+<TOPIC> collect
+Command   collect
+
+Add an attribute to the collection list.
+If the name qualifier is omitted the current
+selected attribute will be collected.
+
+<B>xtt> collect
+<B>xtt> collect /name=
+
+/name<t>Name of the attribute
+
+Example
+
+xtt> collect /name=hql-hvk-Start.ActualValue
+
+<H2>related subjects
+collect show <LINK> collect show
+collect clear <LINK> collect clear
+</TOPIC>
+
+<TOPIC> collect show
+Command   collect show
+
+Display the collect list.
+
+<B>xtt> collect show
+
+<H2>related subjects
+collect <LINK> collect
+collect clear <LINK> collect clear
+</TOPIC>
+
+<TOPIC> collect clear
+Command   collect clear
+
+Clear the collect list.
+
+<B>xtt> collect clear
+
+<H2>related subjects
+collect <LINK> collect
+collect show <LINK> collect show
+</TOPIC>
+
+<TOPIC> create item
+Command   create item
+
+Create a menu item in the xtt menu hierarchy.
+The action of the item can be either to execute 
+a command, or to open a menu.
+
+<B>xtt> create item /text= /command= /destination= /after /before /firstchild /lastchild
+<B>xtt> create item /text= /menu /destination= /after /before /firstchild /lastchild
+
+/text<t>Item text.
+/command<t>Xtt command to be executed when the item is activated.
+/menu	<t>The item will display a menu.
+/destination<t>The destination item. Can be the parent or a sibling.
+/after	<t>Positions the item after the destination item.
+/before	<t>Positions the item before the destination item.
+/firstchild<t>Positions the item as first child of the destination item.
+/lastchild<t>Positions the item as last child of the destination item.
+
+Example
+
+xtt> create item /text="Motor1"/dest=Maintenance-Motors/command="open graph motor1"/first
+
+<H2>related subjects
+add menu <LINK> add menu
+delete item <LINK> delete item
+</TOPIC>
+
+<TOPIC> crossreference
+Command   crossreference
+
+Show crossreferences.
+Crossreferences can be displayed for
+- Signals.
+- Object references with GetData.
+- c-functions or strings used in the code of CArithm- or DataArithm-objects.
+If qualifiers are omitted the selected object will be examined.
+
+<B>xtt> crossreference
+<B>xtt> crossreference /name=
+<B>xtt> crossreference /function= [/brief]
+<B>xtt> crossreference /string= [/brief]
+
+/name 	<t> Name of an object.
+/function<t>Name of a c-function referenced in CArithm or DataArithm.
+/string	<t> String that will be searched for in the code of CArithm- and DataArithm-object.
+
+Examles
+
+xtt> cross /name=hql-hvk-Start
+xtt> cross /function="CreateHvkObject"
+</TOPIC>
+
+<TOPIC> exit
+Command   exit
+
+Close xtt.
+
+<B>xtt> exit
+</TOPIC>
+
+<TOPIC> define
+Command define
+
+Define a symbol.
+
+<B>xtt> define 'symbolname' 'text'
+
+<h2>related subjects
+symbol <LINK> symbol
+show symbol <LINK> show symbol
+symbolfile <LINK> symbolfile
+</TOPIC>	
+
+<TOPIC> delete item
+Command   delete item
+
+Delete a menu item.
+The menu item can be created by the user or an item of
+the xtt standard configuration.
+
+<B>xtt> delete item /name=
+
+/name<t>Name of the menu item.
+
+Example
+
+xtt> delete item /name=exit
+
+<H2>related subjects
+add menu <LINK> add menu
+create item <LINK> create item
+</TOPIC>
+
+<TOPIC> help
+Command   help
+
+Display help information for a subject.
+The help information will be searched for in a help file. The
+file can be the base helpfile, the project helpfile or another
+help file.
+
+If no helpfile is supplied the subject will be searched
+for in the base and project helpfiles.
+
+<B>xtt> help 'subject' [/popnavigator] [/bookmark=] [/helpfile=]
+<B>                       [/returncommand=][/width=][/height=]
+
+/popnavigator	<t>The help window (the navigator) will be displayed on top of
+		<t>the other window and gain input focus. This is useful if
+		<t>the command is used in a ge graph.
+/bookmark	<t>The name of a bookmark inside the topic. The display will
+		<t>be positioned at the bookmark.
+/helpfile	<t>A help file that contains information of the help subject.
+/returncommand	<t>A command that is executed when returning from the help
+		<t>subject. This i usually used to return to a main topic when
+		<t>help is called from a command button in a ge picture.
+/width		<t>Desired width of the help window.
+/height		<t>Desired height of the help window.
+
+<H2>related subjects
+helpfile <LINK> helpfile
+</TOPIC>
+
+<TOPIC> login
+Command   login
+
+Login with username an password. The privileges of the user will be
+fetched from the user database, and affect the access to the system.
+
+<B>xtt> login 'username' 'password'
+
+<H2>related subjects
+logout <LINK> logout
+</TOPIC>
+
+<TOPIC> logout
+Command   logout
+
+Logout a user, and return to the original user.
+
+<B>xtt> logout
+
+<H2>related subjects
+login <LINK> login
+</TOPIC>
+
+<TOPIC> open graph
+Command   open graph
+
+Open a ge graph. The graph can be supplied as a pwg-file or as
+a XttGraph object.
+
+<B>xtt> open graph 'filename' /width= /height= /scrollbar /menu /navigator
+<B>                           /instance= /focus= /inputempty
+<B>xtt> open graph /object= /focus= /inputempty
+
+/width	<t>Width in pixel.
+/height	<t>Height in pixel.
+/scrollbar<t>Scrollbars will be displayed in the graph window.
+/menu	<t>A menu will be displayed in the graph window.
+/navigator<t>A navigator window will be opened.
+/object	<t>A XttGraph-object. If the namestring begins with '*', * is
+	<t>replaced by the node object.
+/instance <t>Open the class graph for this instance.
+/focus  <t>Name of a value input object. The object will gain input focus 
+        <t>when the graph is opened.
+/inputempty <t>The input label of the input focus object will be empty.
+</TOPIC>
+
+<TOPIC> open jgraph
+Command   open jgraph
+
+Open a java frame. The java frame can be exported from Ge or drawn in
+JBuilder.
+
+<B>xtt> open jgraph 'name'
+</TOPIC>
+
+<TOPIC> open trace
+Command   open trace
+
+Open trace for a plc window. If the name qualifier is omitted,
+trace will be opened for the selected PlcPgm or PlcWindow.
+
+<B>xtt> open trace [/name=] [/center=]
+
+/name	<t>PlcPgm or PlcWindow.
+/center <t>Object in the plc-window that will be centered and selected.
+	<t>Use the last segment of the name.
+
+Examples
+
+xtt> open trace /name=hql-hvk-flow /center=Pid0
+</TOPIC>
+
+<TOPIC> open trend
+Command   open trend
+
+Open a graph for a DsTrend or PlotGroup object.
+
+<B>xtt> open trend [/name=] [/title=]
+
+/name	<t>DsTrend or PlotGroup. Can be a list of DsTrend-objects separated
+        <t>by comma.
+/title  <t>Title of graph window.
+
+Examples
+
+xtt> open trend /name=hql-hvk-flow-Trend,hql-hvk-temperature-Trend
+</TOPIC>
+
+<TOPIC> open operatorwindow
+Command   open operatorwindow
+
+Open the operatorwindow.
+
+<B>xtt> open operatorwindow 'opplace-object'
+</TOPIC>
+
+<TOPIC> close graph
+Command   close graph
+
+Close a ge graph. The graph can be supplied as a pwg-file or as
+a GeGraph object.
+
+<B>xtt> close graph 'filename' /instance=
+<B>xtt> close graph /object=
+
+/object	<t>A XttGraph-object. If the namestring begins with '*', * is
+	<t>replaced by the node object.
+/instance <t>Open the class graph for this instance.
+</TOPIC>
+
+<TOPIC> close alarmlist
+Command   close alarmlist
+
+Close the alarmlist.
+
+<B>xtt> close alarmlist
+
+</TOPIC>
+
+<TOPIC> close eventlist
+Command   close eventlist
+
+Close the eventlist.
+
+<B>xtt> close eventlist
+
+</TOPIC>
+
+<TOPIC> close navigator
+Command   close navigator
+
+Close the navigator.
+
+<B>xtt> close navigator
+
+</TOPIC>
+
+<TOPIC> search
+Command   search
+
+Search for an objectname or a string.
+
+<B>xtt> search 'object'
+<B>xtt> search /regularexpression 'expression'
+<B>xtt> search /next
+</TOPIC>
+
+<TOPIC> set advanceduser
+Command   set advanceduser
+
+Set or reset advanced user.
+
+<B>xtt> set advanceduser
+<B>xtt> set noadvanceduser
+
+<H2>related subjects
+advanced user <LINK> advanced user
+</TOPIC>
+
+<TOPIC> setup
+Xtt setup
+Setup of xtt properies
+
+ConfigureObject	<t><t>RttConfigure object.
+DefaultDirectory<t><t>Default directory for commandfiles.
+Scantime	<t><t>Scan time for update fileds.
+AlarmMessage	<t><t>Display last alarm in the Xtt-message field.
+AlarmBeep	<t><t>Beep if unacknowleged alarms exist.
+AlarmReturn	<t><t>Display return events in the eventlist.
+AlarmAck	<t><t>Display acknowlege events in the eventlist.
+SymbolFilename	<t><t>Symbolfile.		<LINK> symbolfile
+Verify		<t><t>Verify commandfile execution.
+AdvancedUser	<t><t>User is advanced. <LINK> advanced user
+</TOPIC>
+
+<TOPIC> show version
+Command   show version
+
+Show the xtt version
+
+<B>xtt> show version
+</TOPIC>
+
+<TOPIC> show symbol
+Command   show symbol
+
+Show one symbol, or all symbols
+
+<B>xtt> show symbol 'symbol'<t>Show symbol 'symbol'
+<B>xtt> show symbol<t>              Show all symbols
+
+<h2>related subjects
+define <LINK> define
+symbol <LINK> symbol
+</TOPIC>
+
+<TOPIC> show plcpgm
+Command   show plcpgm
+
+List the PlcPgm-objects in the system.
+
+<B>xtt> show plcpgm
+</TOPIC>
+
+<TOPIC> show plcthreads
+Command   show plcthreads
+
+Display the PlcThread-objects.
+The PlcThreads contains information and statistics for
+the plc-threads.
+
+<B>xtt> show plcthreads
+</TOPIC>
+
+<TOPIC> show links
+Command   show links
+
+Show the links to other proview systems.
+
+<B>xtt> show links
+</TOPIC>
+
+<TOPIC> show logfiles
+Command   show logfiles
+
+Show the rtt log-files in the current work directory. 
+A log-file is created by the logging function in rtt or xtt and
+has the filetype .rtt_log.
+
+A logfile i opened with double-click, or by selecting the file 
+and then press return.
+
+<B>xtt> show logfiles
+</TOPIC>
+
+<TOPIC> show alarmlist
+Command   show alarmlist
+
+Open the alarmlist window.
+
+<B>xtt> show alarmlist
+</TOPIC>
+
+<TOPIC> show eventlist
+Command   show eventlist
+
+Open the eventlist window.
+
+<B>xtt> show eventlist
+</TOPIC>
+
+<TOPIC> show user
+Command   show user
+
+Show the current user and his privileges.
+
+<B>xtt> show user
+</TOPIC>
+
+<TOPIC> store
+Command   store
+
+Store an attribute list to a scrip-file, or store the current 
+symbol table to a scrip-file.
+The generated script-file can be executed from the command-prompt
+with @'filename', or it can be found among the scipt-files in the
+menu beneath 'Store'. 
+
+If the /collect is used, the attribute-list
+will be restored in the collect list.
+
+<B>xtt> store 'filename' [/collect]
+<B>xtt> store 'filename' /symbols
+
+/collect <t>The list is restored in the collection list.
+/symbols <t>The current symbol table is stored.
+
+</TOPIC>
+
+<TOPIC> show logging
+Command   show logging
+
+Show a logging entry.
+
+<B>xtt> show logging /entry=
+</TOPIC>
+
+<TOPIC> logging
+Command   logging
+
+A number of commands to handle the xtt logging.
+
+logging start		<LINK> logging start
+logging stop		<LINK> logging stop
+logging set		<LINK> logging set
+logging show		<LINK> logging show
+logging store		<LINK> logging store
+
+</TOPIC>
+
+
+//
+// Helpfile
+//
+<TOPIC> helpfile
+Helpfile
+
+Xtt read helptext from a helpfile. 
+The default helpfile for a project is pwrp_exe:rtt_help.dat.
+Help topics from this file will be reached from
+
+- the help-command in the navigator.
+- the help-button in the operators-window will search for 
+   topic "index".
+- the event and alarmlist help on selected event will search
+   a topic with the eventname (objectname) of the event.
+- help in a ge-graph window will search for a topic with the graph-name.
+- a commandbutton in a ge-graph that executes a help command.
+- help in a trace window will search for a topic with the
+   name of the plc-window.
+
+<h1>Syntax
+There are a number of different tags that influence the search
+and the conversion of the helpfile.
+
+<h2>
+<ib><topic>
+<i><topic> begin a topic and should be placed in the first position
+<i>of a line. The topic-tag should be followed by the key that
+<i>the help function will search for. All the following lines untill
+<i> a </topic> tag will be displayed as text for the topic.
+
+<i><topic> 'key'
+
+<h2>
+<ib></topic>
+<i>End a topic. </topic> should bo placed in the first position 
+<i>of a line.
+
+<b>Example
+<i><topic> start engine
+The engine will be started by...
+<i></topic>
+
+The command
+<b>xtt> help start engine
+will display the text of this topic.
+
+<h2>
+<ib><bookmark>
+Bookmark is a line inside a topic which can be found by a
+link-tag or the /bookmark qualifier in the help command. The
+bookmark tag should be placed at the end of the line and should
+be followed by a name.
+
+<i>'some text' <bookmark> 'name'
+
+<b>Example
+<i>This is a bookmark. <bookmark> first_engine
+
+The command
+<b>xtt> help start engine/bookmark=first_engine
+will display the text of the topic and scroll to the bookmark.
+
+<h2>
+<ib><link>
+<i>The <link> tag is a link to another help topic. The <link> tag
+<i>should be placed at the end of the line. When the line of the link
+<i>is doubleclicked the topic of the link will be displayed. The link
+<i>tag should be followed by the topic, and can also be followed by a 
+<i>bookmark and the helpfile where the topic reside, separated with comma.
+<i>If a line contains a link, is will be marked with an arrow.
+
+<i>'some text'   <link> 'topic'[,'bookmark'][,'helpfile']
+
+<b>Example
+<i>Link to first engine <link> show engine, first_engine
+
+<h2>
+<ib><index>
+<i>The <index> tag is a special link that will display an index of
+<i>the helpfile, that is a list of all the topics in alpabetical order.
+
+<i>'some text' <index>
+
+<h2>
+<ib><h1>
+<i>The <h1> tag will display a line as a header with larger text size. 
+<i>The tag should be placed at the beginning of the line. A header line 
+<i>can't contain any links.
+
+<i><h1>'header text'
+
+<b>Example
+<i><h1>This is a h1 header
+will be displayed as
+<h1>This is a h1 header
+
+
+<h2>
+<ib><h2>
+<i>The <h2> tag will display a line as a header with bold text surrounded
+<i>by grey lines. The tag should be placed at the beginning of the line. 
+<i>A header line can't contain any links.
+
+<b>Example
+<i><h2>This is a h2 header
+will be displayed as
+<h2>This is a h2 header
+
+
+<h2>
+<ib><b>
+<i>The <b> tag will display a line with bold text.
+<i>The tag should be placed at the beginning of the line. 
+
+<b>Example
+<i><b>This is a bold line
+will be displayed as
+<b>This is a bold line
+
+<h2>
+<ib><t>
+<i>The <t> tag makes i possible to write columns. Only three columns
+<i>(two <t> tags) is allowed.
+
+<b>Example
+<i>Col1 <t> Col2 <t> Col3
+will be displayed as
+Col1 <t> Col2 <t> Col3
+
+<h2>
+<ib><include>
+<i>Includes another helpfile. The <inlclude> tag should not be placed
+<i>inside a topic.
+
+<i><include> 'filname'
+
+<h2>
+<b>Example
+Look at the outlook of this topic <link>helpfile_example
+
+<i><topic> helpfile_example
+<i>Start and stop of engines.
+
+<i>Engine 1 <link> helpfile_example, bm_engine_1
+<i>Engine 2 <link> helpfile_example, bm_engine_2
+<i>Characteristics <link> helpfile_example, bm_char
+
+<i><h1>Engine 1 <bookmark> bm_engine_1
+<i>Start engine one by pressing the start button.
+<i>Stop engine one by pressing the stop button.
+
+<i><h1>Engine 2 <bookmark> bm_engine_2
+<i>Start engine two by pressing the start button.
+<i>Stop engine two by pressing the stop button.
+
+<i><h2>Characteristics <bookmark> bm_char
+
+<i><b><t>Engine1 <t>Engine2
+<i>Max speed <t> 3200 <t> 5400
+<i>Max current <t> 130 <t> 120
+<i></topic>
+</TOPIC>
+
+<topic> helpfile_example
+Start and stop of engines.
+
+Engine 1 <link> helpfile_example, bm_engine_1
+Engine 2 <link> helpfile_example, bm_engine_2
+Characteristics <link> helpfile_example, bm_char
+
+<h1>Engine 1 <bookmark> bm_engine_1
+Start engine one by pressing the start button.
+Stop engine one by pressing the stop button.
+
+<h1>Engine 2 <bookmark> bm_engine_2
+Start engine two by pressing the start button.
+Stop engine two by pressing the stop button.
+
+<h2>Characteristics <bookmark> bm_char
+
+<b><t>Engine1 <t>Engine2
+Max speed <t> 3200 <t> 5400
+Max current <t> 130 <t> 120
+</topic>
+
+//
+// Script
+//
+
+<TOPIC> script
+Xtt script
+
+execute script		<LINK> execute script
+datatypes		<LINK> datatypes
+datatype conversions	<LINK> datatype conversions
+variable declarations	<LINK> variable declarations
+operators		<LINK> operators
+main-endmain		<LINK> main-endmain
+function-endfunction	<LINK> function-endfunction
+if-else-endif		<LINK> if-else-endif
+while-endwhile		<LINK> while-endwhile
+for-endfor		<LINK> for-endfor
+break			<LINK> break
+continue		<LINK> continue
+goto			<LINK> goto
+include			<LINK> include
+printf()		<LINK> printf()
+scanf()			<LINK> scanf()
+fprintf()		<LINK> fprintf()
+fgets()			<LINK> fgets()
+fopen()			<LINK> fopen()
+fclose()		<LINK> fclose()
+exit()			<LINK> exit()
+verify()		<LINK> verify()
+time()			<LINK> time()
+edit()			<LINK> edit()
+extract()		<LINK> extract()
+element()		<LINK> element()
+xtt-commands		<LINK> xtt-commands
+GetAttribute()		<LINK> getattribute()
+GetChild()		<LINK> getchild()
+GetParent()		<LINK> getparent()
+GetNextSibling()	<LINK> getnextsibling()
+GetClassList()		<LINK> getclasslist()
+GetNextObject()		<LINK> getnextobject()
+GetObjectClass()	<LINK> getobjectclass()
+GetNodeObject()		<LINK> getnodeobject()
+GetRootList()		<LINK> getrootlist()
+CutObjectName()		<LINK> cutobjectname()
+MessageError()		<LINK> messageerror()
+MessageInfo()		<LINK> messageinfo()
+GetCurrentText()	<LINK> getcurrenttext()
+GetCurrentObject()	<LINK> getcurrentobject()
+</TOPIC>
+
+<TOPIC> execute script
+Execute a script
+
+A script-file will be executed from the command-line with the command
+
+xtt> @'filename'
+
+</TOPIC>
+
+<TOPIC> datatypes
+Datatypes
+
+The datatypes are float, int and string.
+
+int	<t>integer value.
+float	<t>32-bit float value.
+string	<t>80 character string (null terminated).
+
+There are three different tables in which a variable can be declared: local, 
+global and extern. A local variable is known inside a function, a global is 
+known in all functions in a file (with include-files), an external is known 
+for all files executed in a rtt session.
+
+</TOPIC>
+
+<TOPIC> datatype conversions
+Datatype conversions
+
+If an expression consists of variables and functions of different datatypes
+the variables will be converted with the precedence string, float, int. If
+two operands in an expression is of type int and float, the result will be float
+If two operands is of type float and string, or int and string, the result will
+be string. In an assignment the value of an expression will be converted to the
+type of the assignment variable, even if the result is a string and the
+variable is of type float or int.
+
+Example
+
+string 	str;
+int	i = 35;
+str = "Luthor" + i;
+The value in str will be "Luthor35".
+
+float 	f;
+string 	str = "3.14";
+int	i = 159;
+f = str + i;
+The value in f will be 3.14159.
+</TOPIC>
+
+<TOPIC> variable declarations
+Variable declarations
+
+A variable must be declared before it is used.
+A declaration consists of
+- the table (global or extern, if local the table is suppressed)
+- the datatype (int, float or string)
+- the variable name (case sensitive)
+- equal mark followed by an init value, if omitted the init value is zero or
+  null-string
+- semicolon
+
+Example
+
+int		i;
+float		flow = 33.4;
+string		str = "Hello";
+extern	int 	jakob;
+global	float	ferdinand = 1234;
+</TOPIC>
+
+<TOPIC> operators
+Operators
+
+The operators have the same function as i c, with some limitations. All
+operators are not implemented. Some operators (+,=,==) can also operate on
+string variables. Precedence of operators is similar to c.
+
+Operator	<t>Description		<t>Datatypes
++		<t>plus			<t>int, float, string
+-		<t>minus			<t>int, float
+*		<t>times			<t>int, float
+/		<t>divide			<t>int, float
+++	 	<t>increment, postfix only.	<t>int, float
+--	 	<t>decrement, postfix only	<t>int, float
+>>	 	<t>bits right-shifted		<t>int
+<<	 	<t>bits left-shifted		<t>int
+<		<t>less then			<t>int, float
+>		<t>greater then		<t>int, float
+<=	 	<t>less equal			<t>int, float
+>=	 	<t>greater equal		<t>int, float
+==	 	<t>equal			<t>int, float, string
+!=	 	<t>not equal			<t>int, float, string
+&		<t>bitwise and		<t>int
+|		<t>bitwise or			<t>int
+&&	 	<t>logical and		<t>int
+||	 	<t>logical or			<t>int
+!		<t>logical not		<t>int
+=		<t>assign			<t>int, float, string
++=	 	<t>add and assign		<t>int, float
+-=	 	<t>minus and assign		<t>int, float
+&=	 	<t>logical and and assign	<t>int
+|=	 	<t>logical or and assign	<t>int
+</TOPIC>
+
+<TOPIC> main-endmain
+main-endmain
+
+The main and endmain statements controls where the execution starts and stops
+If no main and endmain statements will be found, the execution will start
+att the beginning of the file and stop at the end.
+
+Example
+
+main()
+  int	a;
+
+  a = p1 + 5;
+  printf( "a = %d", a);
+endmain
+</TOPIC>
+
+<TOPIC> function-endfunction
+function-endfunction
+
+A function declaration consists of
+- the datatype of the return value for the function
+- the name of the function
+- an argumentlist delimited by comma and surrounded by parenthesis. The
+  argumentlist must include a typedeclaration and a name for eatch argument.
+
+The arguments supplied by the caller will be converted to the type of the
+to the type declared in the argument list. If an argument is changed inside
+the function, the new value will be transferred to the caller. In this way
+it is possible to return other values then the return value of the function.
+A function can contain one or several return statements. The return will hand
+over the execution to the caller and return the supplied value.
+
+Example
+
+function float calculate_flow(float a, float b)
+  float	c;
+  c = a + b;
+  return c;
+endfunction
+
+...
+flow = korr * calculate_flow( v, 35.2);
+</TOPIC>
+
+<TOPIC> if-else-endif
+if-else-endif
+
+The lines between a if-endif statment will be executed if the expression
+in the if-statment is true. The expression should be surrounded by parentheses.
+If an else statement is found between the if and endif the lines between else
+and endif will be executed if the if-exepression is false.
+
+Example
+
+if ( i < 10 && i > 5)
+  a = b + c;
+endif
+
+if ( i < 10)
+  a = b + c;
+else
+  a = b - c;
+endif
+</TOPIC>
+
+<TOPIC> while-endwhile
+while-endwhile
+
+The lines between a while-endwhile statment will be executed as long as the
+expression in the while-statment is true. The expression should be surrounded
+by parentheses.
+
+Example
+
+while ( i < 10)
+  i++;
+endwhile
+</TOPIC>
+
+<TOPIC> for-endfor
+for-endfor
+
+The lines between a for-endfor statment will be executed as long as the
+middle expression in the for-statment is true. The for expression consists
+of three expression, delimited by semicolon and surrounded by parentheses.
+The first expression will be executed the before the first loop, the third
+will be executed after every loop, the middle is executed before every loop
+and if true another loop is done, if false the loop is leaved.
+
+Example
+
+for ( i = 0; i < 10; i++)
+  a += b;
+endfor
+</TOPIC>
+
+<TOPIC> break
+break
+
+A break statement will search for the next endwhile or endfor statement
+continue the execution at the line after.
+
+Example
+
+for ( i = 0; i < 10; i++)
+  a += b;
+  if ( a > 100)
+    break;
+endfor
+</TOPIC>
+
+<TOPIC> continue
+continue
+
+A continue statement will search for the previous while or for statement
+continue the loop execution.
+
+Example
+
+for ( i = 0; i < 10; i++)
+  b = my_function(i);
+  if ( b > 100)
+    continue;
+  a += b;
+endfor
+</TOPIC>
+
+<TOPIC> goto
+goto
+
+A goto will cause the execution to jump to a row defined by label.
+The label line is terminated with colon.
+
+Example
+
+  b = attribute("MOTOR-ON.ActualValue", sts);
+  if (!sts)
+    goto some_error; 
+  ...
+some_error:
+  say("Something went wrong!");
+</TOPIC>
+
+<TOPIC> include
+include
+
+An script include-file containing functions can be included with the
+#include statement. The default file extention is '.rtt_com'
+
+Example
+
+#include <my_functions>
+</TOPIC>
+
+<TOPIC> printf()
+printf()
+
+int printf( string format [, (arbitrary type) arg1, (arbitrary type) arg2])
+
+Description
+
+Formatted print. C-syntax. Format argument and non, one or two value arguments.
+Returns number of printed characters.
+
+Arguments
+
+string 			format		Format.
+arbitrary type		arg1		Value argument. Optional. Can be int,
+					float or string.
+arbitrary type		arg2		Value argument. Optional. Can be int,
+					float or string.
+
+Example
+
+  printf( "Watch out!");
+  printf( "a = %d", a);
+  printf( "a = %d och str = %s", a, str);
+</TOPIC>
+
+<TOPIC> scanf()
+scanf()
+
+int scanf( string format , (arbitrary type) arg1)
+
+Description
+
+Formatted input. C-syntax
+Returns number of read characters.
+
+Arguments
+
+string 			format		Format.
+arbitrary type		arg1		Value argument. Returned. Can be int,
+					float or string.
+
+Example
+
+  scanf( "%d", i);
+</TOPIC>
+
+<TOPIC> fprintf()
+fprintf()
+
+int fprintf( int file, string format [, (arbitrary type) arg1,
+	(arbitrary type) arg2])
+
+Description
+
+Formatted print on file. C-syntax. Format argument and non, one or two value
+arguments.
+Returns number of printed characters.
+
+Arguments
+
+int 			file		File id retured by fopen.
+string 			format		Format.
+arbitrary type		arg1		Value argument. Optional. Can be int,
+					float or string.
+arbitrary type		arg2		Value argument. Optional. Can be int,
+					float or string.
+
+Example
+
+  int outfile;
+  outfile = fopen( "my_file.txt", "w");
+  if (!outfile)
+    exit();
+  fprintf( outfile, "Some text");
+  fprintf( outfile, "a = %d", a);
+  fclose( outfile);
+</TOPIC>
+
+<TOPIC> fgets()
+fgets()
+
+int fgets( string str, int file)
+
+Description
+
+Reads a line from a specified file.
+Returns zero if end of file.
+
+Arguments
+
+string 		str		Read line. Returned. 
+int		file		file returned by fopen.
+
+Example
+
+  file = fopen("some_file.txt","r");
+  while( fgets( str, file))
+    say( str);
+  endwhile
+  fclose( file);
+</TOPIC>
+
+<TOPIC> fopen()
+fopen()
+
+int fopen( string filespec, string mode)
+
+Description
+
+Opens a file for read or write.
+Returns a file identifier. If the file could not be opened, zero is returned.
+
+Arguments
+
+string 		filespec	Name of file. 
+string		mode		Access mode
+
+Example
+
+  int infile;
+  int outfile;
+
+  infile = fopen("some_file.txt","r");
+  outfile = fopen("another_file.txt","w");
+  ...
+  fclose( infile);
+  fclose( outfile);
+</TOPIC>
+
+<TOPIC> fclose()
+fclose()
+
+int fclose( int file)
+
+Description
+
+Closes an opened file.
+
+Arguments
+
+int		file		file-id returned by fopen.
+
+Example
+
+  int infile;
+  infile = fopen("some_file.txt","r");
+  ...
+  fclose( infile);
+</TOPIC>
+
+<TOPIC> exit()
+exit()
+
+int exit()
+
+Description
+
+Terminates executions of the file.
+
+Example
+
+  exit();
+</TOPIC>
+
+<TOPIC> verify()
+verify()
+
+int verify( [int mode])
+
+Description
+
+Sets or shows verification mode. If verification is on all executed lines will
+be displayed on the screen.
+Returns the current verification mode.
+
+Arguments
+
+int		mode		verification on (1) or off (0). Optional.
+
+Example
+
+  verify(1);
+</TOPIC>
+
+<TOPIC> time()
+time()
+
+string time()
+
+Description
+
+Returns the current time in string format.
+
+Example
+
+  string t;
+  t = time();
+</TOPIC>
+
+<TOPIC> edit()
+edit()
+
+string edit( string str)
+
+Description
+
+Removes leading and trailing spaces and tabs, and replaces multipel tabs and
+spaces with a single space.
+Returns the edited string.
+
+Arguments
+
+string		str		string to be edited.
+
+Example
+
+  collapsed_str = edit(str);
+</TOPIC>
+
+<TOPIC> extract()
+extract()
+
+string extract( int start, int length, string str)
+
+Description
+
+Extracts the specified characters from the specified string.
+Returns the extracted characters as a string.
+
+Arguments
+
+int		start		start position of the first character.
+int		length		number of characters to be extracted.
+string		str		string from which characters should be extracted.
+
+Example
+
+  extracted_str = extract( 5, 7, str);
+</TOPIC>
+
+<TOPIC> element()
+element()
+
+string element( int number, string delimiter, string str)
+
+Description
+
+Extracts one element from a string of elements.
+Returns the extracted element.
+
+Arguments
+
+int		number		the number of the element.
+string		delimiter	delimiter character.
+string		str		string of elements.
+
+Example
+
+  string str = "mary, lisa, anna, john";
+  string elem1;
+  elem1 = elment( 1, ",", str);
+</TOPIC>
+
+<TOPIC> xtt-commands
+Xtt commands
+
+All the xtt-commands is available in the script code. An rtt-command line
+should NOT be ended with a semicolon. Variables can be substituted in the
+command line by surrounding them with apostrophes.
+
+Example
+
+  string 	name = "PUMP-VALVE-Open.ActualValue";
+  float	value = 2.2;
+  set parameter/name='name'/value='value'
+
+Example
+
+  string name;
+  string parname;
+  int j;
+  int i;
+  for ( i = 0; i < 3; i++)
+    parname = "vkv-test-obj" + (i+1);
+    create obj/name='parname'
+    for ( j = 0; j < 3; j++)
+      name = parname + "-obj" + (j+1);
+      create obj/name='name'
+    endfor
+  endfor
+</TOPIC>
+
+<TOPIC> getattribute()
+GetAttribute()
+
+(variable type) GetAttribute( string name [, int status])
+
+Description
+
+Get the value of the specified attribute. The returned type is dependent
+of the attribute type. The attribute will be converted to int, float or string.
+
+Arguments
+
+string		name		name of the attribute to be fetched.
+int		status		status of operation. Returned. If zero, the
+				attribute could not be fetched. Optional.
+
+Example
+
+  int alarm;
+  int sts;
+
+  alarm = GetAttribute("Roller-Motor-Alarm.ActualValue");
+  on = GetAttribute("Roller-Motor-On.ActualValue", sts);
+  if ( !sts)
+    say("Could not find motor on attribute!");
+</TOPIC>
+
+<TOPIC> getchild()
+GetChild()
+
+string GetChild( string name)
+
+Description
+
+get the first child of an object. The next children can be fetched with
+GetNextSibling().
+Returns the name of the child. If no child exists a null-string is returned
+
+Arguments
+
+string		name		name of object.
+
+Example
+
+  string child;
+
+  child = GetChild("Roller-Motor");
+</TOPIC>
+
+<TOPIC> getparent()
+GetParent()
+
+string GetParent( string name)
+
+Description
+
+Get the parent of an object.
+Returns the name of the child. If no parent exists a null-string is returned.
+
+Arguments
+
+string		name		name of object.
+
+Example
+
+  string parent;
+
+  parent = GetChild("Roller-Motor");
+</TOPIC>
+
+<TOPIC> getnextsibling()
+GetNextSibling()
+
+string GetNextSibling( string name)
+
+Description
+
+Get the next sibling of an object.
+Returns the name of the sibling. If no next sibling exists a null-string is
+returned.
+
+Arguments
+
+string		name		name of object.
+
+Example
+
+ string name;
+ int not_first;
+
+ name = GetChild("Rt");
+ not_first = 0;
+ while ( name != "")
+   if ( !not_first)
+     create menu/title="The Rt objects"/text="'name'"/object="'name'"
+   else
+     add menu/text="'name'"/object="'name'"
+   endif
+   not_first = 1;
+   name = GetNextSibling(nname);
+ endwhile
+ if ( !not_first )
+   MessageError("No objects found");
+</TOPIC>
+
+<TOPIC> getclasslist()
+GetClassList()
+
+string GetClassList( string class)
+
+Description
+
+Get the first object of a specified class. The next object of the class
+can be fetched whith GetNextObject().
+Returns the name of the first object. If no instances of the class exists a
+null-string is returned.
+
+Arguments
+
+string		name		name of class.
+
+Example
+
+  string name;
+
+  name = GetClassList("Dv");
+</TOPIC>
+
+<TOPIC> getnextobject()
+GetNextObject()
+
+string GetNextObject( string name)
+
+Description
+
+Get the next object in a classlist.
+Returns the name of the object. If no next object exist a null-string is
+returned.
+
+Arguments
+
+string		name		name of object.
+
+Example
+
+  string name;
+
+  name = GetClassList("Di");
+  while ( name != "")
+    printf("Di object found: %s", name);
+    name = GetNextObject(name);
+  endwhile
+</TOPIC>
+
+<TOPIC> getobjectclass()
+GetObjectClass()
+
+string GetObjectClass( string name)
+
+Description
+
+Get the class of an object.
+Returns the name of the class.
+
+Arguments
+
+string		name		name of object.
+
+Example
+
+  string class;
+
+  class = GetObjectClass("Motor-Enable");
+</TOPIC>
+
+<TOPIC> getnodeobject()
+GetNodeObject()
+
+string GetNodeObject()
+
+Description
+
+Get the node object.
+Returns the name of the node object.
+
+Example
+
+  string node;
+  node = GetNodeObject();
+</TOPIC>
+
+<TOPIC> getrootlist()
+GetRootList()
+
+string GetRootList()
+
+Description
+
+Get the first object in the root list.
+Returns the name of the root object. The next object in the root list can be
+fetched with GetNextSibling().
+
+Example
+
+  string name;
+
+  name = GetRootList();
+  while( name != "")
+    printf( "Root object found: %s", name);
+    name = GetNextSibling(name);
+  endwhile
+</TOPIC>
+
+<TOPIC> cutobjectname()
+CutObjectName()
+
+string CutObjectName( string name, int segments)
+
+Description
+
+Cut the first segments of an object name.
+Returns the last segments of an object name. The number of segments left is
+specified by the second argument
+
+Arguments
+
+string		name		Path name of object.
+int		segments	Number of segments that should be left.
+
+Example
+
+  string path_name;
+  string object_name;
+
+  path_name = GetChild("Rt-Motor");
+  object_name = CutObjectName( path_name, 1);
+</TOPIC>
+
+<TOPIC> messageerror()
+MessageError()
+
+string MessageError( string message)
+
+Description
+
+Print an rtt error message on the screen.
+
+Example
+
+  MessageError("Something went wrong");
+</TOPIC>
+
+<TOPIC> messageinfo()
+MessageInfo()
+
+string MessageInfo( string message)
+
+Description
+
+Print an rtt info message on the screen.
+
+Example
+
+  MessageInfo("Everything is all right so far");
+</TOPIC>
+
+<TOPIC> getcurrenttext()
+GetCurrentText()
+
+string GetCurrentText()
+
+Description
+
+Get the text of the current menu item or update field.
+
+Example
+
+  string text;
+
+  text = GetCurrentText();
+</TOPIC>
+
+<TOPIC> getcurrentobject()
+GetCurrentObject()
+
+string GetCurrentObject()
+
+Description
+
+Get the object associated with the current menu item.
+If no object is associated, a null-string i returned.
+
+Example
+
+  string object;
+
+  object = GetCurrentObject();
+</TOPIC>
+
+<TOPIC> classes
+Classes
+
+<B>SystemClasses        <LINK>pwrs
+<B>BaseClasses  	<LINK>pwrb
+
+</TOPIC>
+
+<include> pwr_exe:pwrb_xtthelp.dat
+<include> pwr_exe:pwrs_xtthelp.dat
+

@@ -1,0 +1,127 @@
+!  pwrb_c_getdp.wb_load -- Defines the class GetDp.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  GET status of any Digital Parameter.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  Get Digital parameter.
+!  
+!  Fetches the value of a digital quantity ( e.g. output
+!  signal from an object or internal digital variable) in
+!  arbitrary object.
+!  
+!  The complete name of the quantity has to be supplied.
+!
+!  The GetDp object
+!  
+!  · is a pure address reference to a binary quantity,
+!  · contains no relevant information (=data) in rtdb,
+!  · is without executable code.
+!*/
+SObject pwrb:Class
+  Object GetDp $ClassDef 126 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_DevBodyOnly
+      Attr Flags = pwr_mClassDef_DevOnly
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      !/**
+      !  Used by the PLC Editor.
+      !*/
+      Object Status $Output 1 
+        Body SysBody
+          Attr PgmName = "Status"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_RTVIRTUAL
+          Attr Flags |= PWR_MASK_DEVBODYREF
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "sts"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      !/**
+      !  Used by the PLC Editor. Specifies the complete name of
+      !  the actual object.
+      !*/
+      Object DpObject $Intern 1 
+        Body SysBody
+          Attr PgmName = "DpObject"
+          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr GraphName = "sts"
+          Attr NiNaAnnot = 1
+          Attr NiNaSegments = 1
+          Attr ConPointNr = 0
+        EndBody
+      EndObject
+      !/**
+      !  Used by the PLC Editor. Specifies the name of the
+      !  parameter. The editor is case-sensitive on this
+      !  attribute; i.e. if the attribute is named ActualValue
+      !  it has to be written ActualValue and not ACTUALVALUE,
+      !  for example.
+      !*/
+      Object Parameter $Intern 2 
+        Body SysBody
+          Attr PgmName = "Parameter"
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr GraphName = "par"
+          Attr NiNaAnnot = 2
+          Attr ConPointNr = 0
+        EndBody
+      EndObject
+      !/**
+      !  Specifies how many segments of the actual object name
+      !  that is to be displayed in the symbol of the GetDp
+      !  object. The segments are counted from behind.
+      !*/
+      Object DpObjectSegments $Intern 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      Object PlcNode $Buffer 4 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 256
+        Attr parameters[0] = 0
+        Attr parameters[1] = 0
+        Attr parameters[2] = 1
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 15
+        Attr graphindex = 0
+        Attr default_mask[0] = 0
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 0
+        Attr devbody_annotation = 1
+        Attr compmethod = 10
+        Attr compindex = 0
+        Attr tracemethod = 1
+        Attr traceindex = 1
+        Attr connectmethod = 7
+        Attr executeordermethod = 0
+        Attr objname = "GetDp"
+        Attr graphname = "Dp"
+        Attr debugpar = "Status"
+      EndBody
+    EndObject
+    Object Template GetDp
+      Body DevBody
+        Attr DpObjectSegments = 1
+      EndBody
+    EndObject
+  EndObject
+EndSObject

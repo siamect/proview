@@ -1,0 +1,9 @@
+!  pwr_batch.opt -- <short description>
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+pwr_obj:pwr_batch.obj
+pwr_lib:libpwr_co/lib

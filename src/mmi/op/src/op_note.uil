@@ -1,0 +1,244 @@
+!  op_note.uil -- event notes
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+module op_note
+    version = 'v1.0'
+    names = case_sensitive
+    objects = { XmSeparator 	= gadget ;
+                XmLabel 	= widget ;
+                XmPushButton 	= widget ;
+                XmToggleButton 	= widget ; }
+
+! INCLUDE FILES
+include file 'pwr_lang:inc_standard_txt.uil';
+include file 'pwr_lang:inc_note_txt.uil';
+
+! NOTES INSTANCE IDENTIFIER
+
+identifier
+    note_ctx;
+
+! CONSTANTS, defining the gemotry of the application
+
+value
+    k_main_x	: exported 100;
+    k_main_y	: exported 100;
+
+    BoxHeight           : 450;
+    BoxWidth		: 630;
+    ButtonWidth : 70;
+    OkLeftOffset : 10;
+    SavePosition : 40;
+
+    TextButtonOffset : 5;
+    BottomOffset : 5;
+
+! CALLBACK PROCEDURES
+
+procedure
+    note_menu_exit_cb(any);
+    note_menu_quit_cb(any);
+    note_menu_save_cb(any);
+    note_simp_text_cr_cb(any);
+    note_label_cr_cb(any);
+
+! PARENT WIDGET
+
+object init_main : XmMainWindow 
+{
+  arguments
+  {
+    XmNx = 10;
+    XmNy = 10;
+    XmNwidth = BoxWidth;
+    XmNheight = BoxHeight;
+  };
+};
+
+
+!EDITOR WIDGET
+
+object note_main : XmMainWindow
+{
+  arguments
+  {
+    XmNx = 10;
+    XmNy = 10;
+    XmNheight = BoxHeight;
+    XmNwidth = BoxWidth;
+  };
+
+  controls
+  {
+     XmForm		adb;
+  };
+};
+
+object adb : XmForm
+{
+  arguments
+  {
+     XmNdefaultButton = XmPushButton cancelPb;
+     XmNcancelButton = XmPushButton cancelPb;
+  };
+
+  controls
+  {
+     XmPushButton	okPb;
+     XmPushButton	savePb;
+     XmPushButton	cancelPb;
+     XmScrolledText	text;
+  };
+};
+
+
+object okPb : XmPushButton 
+{
+   arguments
+   {
+      XmNwidth = ButtonWidth;
+      XmNleftAttachment = XmATTACH_FORM;
+      XmNleftOffset = OkLeftOffset;
+      XmNbottomAttachment = XmATTACH_FORM;
+      XmNbottomOffset = BottomOffset;
+      XmNlabelString = compound_string($ok);
+   };
+   callbacks
+   {
+      XmNactivateCallback = procedure note_menu_exit_cb(note_ctx);
+   };
+};
+
+object savePb : XmPushButton 
+{
+   arguments
+   {
+      XmNwidth= ButtonWidth;
+      XmNleftAttachment = XmATTACH_POSITION;
+      XmNleftPosition = SavePosition;
+      XmNbottomAttachment = XmATTACH_FORM;
+      XmNbottomOffset = BottomOffset;
+      XmNlabelString = compound_string($save);
+   };
+   callbacks
+   {
+      XmNactivateCallback = procedure note_menu_save_cb(note_ctx);
+   };
+};
+
+
+object cancelPb : XmPushButton 
+{
+   arguments
+   {
+      XmNwidth = ButtonWidth;
+      XmNbottomAttachment = XmATTACH_FORM;
+      XmNbottomOffset = BottomOffset;
+      XmNrightAttachment = XmATTACH_FORM;
+      XmNrightOffset = OkLeftOffset;
+      XmNlabelString = compound_string($cancel);
+   };
+   callbacks
+   {
+      XmNactivateCallback = procedure note_menu_quit_cb(note_ctx);
+   };
+};
+
+! EDITOR TEXT WIDGET
+
+object text : XmScrolledText
+{
+  arguments
+  {
+     XmNtopAttachment = XmATTACH_FORM;
+     XmNleftAttachment = XmATTACH_FORM;
+     XmNrightAttachment = XmATTACH_FORM;
+     XmNbottomAttachment = XmATTACH_WIDGET;
+     XmNbottomWidget = XmPushButton okPb;
+     XmNbottomOffset = TextButtonOffset;
+     XmNmarginWidth = 2;
+     XmNmarginHeight = 2;
+     XmNresizeWidth = false;
+     XmNeditMode = XmMULTI_LINE_EDIT;
+     XmNwordWrap = true;	
+     XmNpendingDelete = false;	
+  };
+  callbacks
+  {
+     MrmNcreateCallback = procedure note_simp_text_cr_cb(note_ctx);
+  };
+};
+
+
+! Not used anymore
+! EDITOR MENU BAR WIDGET
+
+object menubar : XmMenuBar
+{
+  arguments
+  {
+    XmNorientation = XmHORIZONTAL;
+    XmNspacing     = 15;                   ! Pixels between XmNlistItems in menu
+  };
+
+  controls
+  {                              
+    XmCascadeButton filePulldown;
+  };
+
+  callbacks
+  {
+  };
+
+};
+
+! EDITOR MENU BAR PULLDOWN WIDGETS
+
+object filePulldown : XmCascadeButton
+{
+  arguments {    
+    XmNlabelString = compound_string($file);	
+    XmNmnemonic = keysym($file$);
+    };
+
+  controls {    
+    XmPulldownMenu filedownMenu;	
+    };
+}; 
+
+! EDITOR MENU BAR PULLDOWN MENU WIDGETS
+
+object filedownMenu : XmPulldownMenu
+{
+  arguments{    XmNorientation = XmVERTICAL;	};
+  controls
+  {
+    XmPushButton
+    {
+      arguments { 
+	XmNlabelString = compound_string("Quit"); 
+	XmNmnemonic = keysym("Q");
+ 	};
+      callbacks{ 
+	XmNactivateCallback = procedure note_menu_quit_cb(note_ctx); };
+      };
+    XmPushButton
+    {
+      arguments
+	{ 
+	  XmNlabelString = compound_string($exit); 
+	  XmNmnemonic = keysym($exit$);
+	  };
+      callbacks { 
+	XmNactivateCallback = procedure note_menu_exit_cb(note_ctx); };
+      };
+   };
+};
+
+
+	      	
+end module;

@@ -1,0 +1,278 @@
+!  pwrb_c_chando.wb_load -- Defines the class ChanDo.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  CHANnel Digital Output.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  Configures a digital output channel independent of the
+!  type of physical Do-card.
+!  
+!  ActualValue belongs to the Do object. The shadowed
+!  attributes are defined in a card object, the Emerg-attribut
+!  in a $Node object, and the rest in the ChanDo object.
+!  
+!  If EmergBreakTrue = TRUE and EmergBreakSelect = 2 then
+!  the output is based on FixedOutValue. Otherwise TestOn
+!  will settles which attribute the output is based on.
+!  
+!      Hints
+!  
+!  ChanDo objects are configured below a suitable Do-card
+!  object.
+!  Rack and card objects to different I/O systems are
+!  documented separately.
+!  
+!  To create card object with channel objects belonging to
+!  it the function 'Configure Card' in "Utility Window" is
+!  recommended.
+!*/
+SObject pwrb:Class
+  Object ChanDo $ClassDef 34 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+      Attr Flags |= pwr_mClassDef_IO
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "ChanDo"
+      EndBody
+      !/**
+      !  Optional text, for example to describe the channel or
+      !  its employment.
+      !*/
+      Object Description $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Name of a signal object, i.e. Do object, connected with
+      !  the channel object.
+      !*/
+      Object SigChanCon $ObjXRef 2
+
+        Body SysBody
+          Attr Identity = "Do"
+          Attr Source = "ChanDo"
+          Attr Target = "Do"
+          Attr SourceAttribute = "SigChanCon"
+          Attr TargetAttribute = "SigChanCon"
+        EndBody
+      EndObject
+      !/**
+      !  The identity of the channel. Optional, for example Do0
+      !  to denote the first channel, physical cable marking,
+      !*/
+      Object Identity $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      !/**
+      !  The Number attribute is used to associate the ChanDo
+      !  object to a fixed channel on the card named by
+      !  SigChanCon. The physical channels of the card are
+      !  numbered in the interval {0,1, ... , (MaxNoOfChannels-1)},
+      !  where MaxNoOfChannels is an attribute in the card
+      !  object.
+      !  The channels of the card are numbered according to the
+      !  instructions of the card manufacturer.
+      !*/
+      Object Number $Attribute 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies if the ActualValue should be inverted or not,
+      !  before it is written to the output. FALSE means that
+      !  ActualValue should not be inverted; TRUE means that it
+      !  should be inverted.
+      !  There is today no sense in assigning a value to the
+      !  attribute in the development environment, as no
+      !  attention is paid to it in the target environment.
+      !  Instead, this is done by means of the attribute
+      !  InvMask1 in the card object.
+      !  
+      !  However, the value of InvertOn can be changed via the
+      !  more info form of the object in the target environment.
+      !*/
+      Object InvertOn $Attribute 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies if the output will be based on ActualValue or
+      !  TestValue. FALSE means that the output should be based
+      !  on ActualValue; TRUE means that TestValue should be
+      !  used.
+      !  There is today no sense in assigning a value to the
+      !  attribute in the development environment, as no
+      !  attention is paid to it in the target environment.
+      !  Instead, this is done by means of the attribute
+      !  TestMask1 in the card object.
+      !  
+      !  However, the value of TestOn can be changed via the
+      !  more info form of the object in the target environment.
+      !*/
+      Object TestOn $Attribute 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      !/**
+      !  The output signal is based on the TestValue instead of
+      !  ActualValue when TestOn is TRUE.
+      !  
+      !  There is today no sense in assigning a value to the
+      !  attribute in the development environment, as no
+      !  attention is paid to it in the target environment.
+      !  Instead, this is done by means of the attribute
+      !  TestValue1 in the card object.
+      !  However, the value of TestValue can be changed via the
+      !  more info form of the object in the target environment.
+      !*/
+      Object TestValue $Attribute 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      !/**
+      !  Action value. The output signal is equal to
+      !  FixedOutValue when EmergBreakTrue is TRUE and
+      !  EmergBreakSelect = 2 . The EmergBreak-attributes belong
+      !  to the $Node object.
+      !  There is today no sense in assigning a value to the
+      !  attribute in the development environment, as no
+      !  attention is paid to it in the target environment.
+      !  Instead, this is done by means of the attribute
+      !  FixedOutValue1 in the card object.
+      !  
+      !  However, the value of FixedOutValue can be changed via
+      !  the more info form of the object in the target
+      !  environment.
+      !*/
+      Object FixedOutValue $Attribute 8 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+    EndObject
+    Object Defaults $Object
+      Body SysBody
+        Attr Name = "%02.2d"
+      EndBody
+    EndObject
+    Object ConfiguratorPosnn $Menu
+      Object Pointed $Menu
+	Object Disconnect $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Disconnect Signal"
+	    Attr MethodName = "$ObjXRef-DisconnectSingle"
+	    Attr MethodArguments[0] = "SigChanCon"
+	    Attr FilterName = "$ObjXRef-IsOkDisconnectSingle"
+	    Attr FilterArguments[0] = "SigChanCon"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPoson $Menu
+      Object Pointed $Menu
+	Object Connect $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Connect Signal"
+	    Attr MethodName = "$ObjXRef-Connect"
+	    Attr MethodArguments[0] = "SigChanCon"
+	    Attr MethodArguments[1] = "SigChanCon"
+	    Attr FilterName = "$ObjXRef-IsOkConnect"
+	    Attr FilterArguments[0] = "SigChanCon"
+	    Attr FilterArguments[1] = "SigChanCon"
+	  EndBody
+	EndObject
+	Object Disconnect $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Disconnect Signal"
+	    Attr MethodName = "$ObjXRef-Disconnect"
+	    Attr MethodArguments[0] = "SigChanCon"
+	    Attr MethodArguments[1] = "SigChanCon"
+	    Attr FilterName = "$ObjXRef-IsOkDisconnect"
+	    Attr FilterArguments[0] = "SigChanCon"
+	    Attr FilterArguments[1] = "SigChanCon"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPosos $Menu
+      Object Pointed $Menu
+	Object Disconnect $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Disconnect Signal"
+	    Attr MethodName = "$ObjXRef-DisconnectSingle"
+	    Attr MethodArguments[0] = "SigChanCon"
+	    Attr FilterName = "$ObjXRef-IsOkDisconnectSingle"
+	    Attr FilterArguments[0] = "SigChanCon"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPcsnn $Menu
+      Object Pointed $Menu
+	Object SetDefaults $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Default Name..."
+	    Attr MethodName = "$Object-SetDefaults"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPcscs $Menu
+      Object Pointed $Menu
+	Object SetDefaults $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Default Name..."
+	    Attr MethodName = "$Object-SetDefaults"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPcscn $Menu
+      Object Pointed $Menu
+	Object SetDefaults $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Default Name..."
+	    Attr MethodName = "$Object-SetDefaults"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPcson $Menu
+      Object Pointed $Menu
+	Object SetDefaults $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Default Name..."
+	    Attr MethodName = "$Object-SetDefaults"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPcsmn $Menu
+      Object Pointed $Menu
+	Object SetDefaults $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Default Name..."
+	    Attr MethodName = "$Object-SetDefaults"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+  EndObject
+EndSObject

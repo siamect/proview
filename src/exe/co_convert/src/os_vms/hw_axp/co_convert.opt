@@ -1,0 +1,16 @@
+!  co_convert.opt -- link options file for work bench
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+pwr_obj:co_convert
+pwr_obj:cnv_classread
+pwr_obj:cnv_classread_html
+pwr_obj:cnv_classread_xtthelp
+pwr_obj:cnv_classread_src
+pwr_obj:cnv_classread_struct
+pwr_obj:cnv_help
+pwr_lib:libpwr_co/lib
+pwr_obj:pwr_msg_co.obj

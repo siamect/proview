@@ -1,0 +1,166 @@
+!  pwrb_c_webhandler.wb_load -- Defines the class WebHandler.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  Web handler.
+!
+!/**
+!  @Version 1.0
+!  The WebHandler object defines a website on a proview node.
+!
+!  The existence of a WebHandler object in a node will cause a 
+!  server process (GdhServer) to start, which provides the graph-applets 
+!  with information from the realtime database.
+!
+!  With the 'Generate website' function in Ge it is also possible to
+!  produce html-files for a website, containing a menu-frame and an
+!  applet frame. The links in the menu is defined by WebGraph and WebLink
+!  objects that are children to the WebHandler object.
+!
+!  If the EnableLogin attribute is set, the menu will contain a link to
+!  a login-applet which makes it possible to login as a proview user, and
+!  gain privilege to make changes to the database.
+!
+!  The EnableNavigator, EnableAlarmList and EnableEventList are not yet
+!  implemented.
+!
+!  Se also
+!  @classlink WebGraph pwrb_webgraph.html
+!  @classlink WebLink pwrb_weblink.html
+!*/
+SObject pwrb:Class
+  Object WebHandler $ClassDef 296 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+      Attr PopEditor = 1
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "WebHandler"
+      EndBody
+      !/**
+      !  @Summary Max number of web connections to the GdhServer process
+      !  Max number of connections to the GdhServer process.
+      !  Every graph-applet that is displayed, opens a link to the GdhSever
+      !  process. If MaxConnections is exceeded, the connect request will
+      !  be rejected.
+      !*/
+      Object MaxConnections $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Number of current connection to the GdhServer process
+      !  Number of current connections to the GdhSever process.
+      !  Every graph-applet opens a link to the GdhServer process. The current
+      !  number of links is displayed in this attribute.
+      !*/
+      Object CurrentConnections $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Name of the html-file for the start page.
+      !*/
+      Object FileName $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Title in the menu frame.
+      !*/
+      Object Title $Attribute 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Additional text in the menu frame.
+      !*/
+      Object Text $Attribute 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary A login entry will be placed in the menu frame.
+      !  A login entry will be placed in the menu frame, that makes it possible
+      !  to login as a proview user, and gain privileges to make changes to
+      !  the database.
+      !*/
+      Object EnableLogin $Attribute 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Not yet implemented
+      !*/
+      Object EnableAlarmList $Attribute 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Not yet implemented
+      !*/
+      Object EnableEventList $Attribute 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Not yet implemented
+      !*/
+      Object EnableNavigator $Attribute 9
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Not yet implemented
+      !*/
+      Object UserObject $Attribute 10
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary css-file that will be used by generated html-files.
+      !  css-file (Cascading Style Sheets) that will be used by
+      !  generated html-files.
+      !*/
+      Object StyleSheet $Attribute 11
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary URL in right frame when the website is opened
+      !  The URL that will be displayed in the right frame when the
+      !  web-site is opened.
+      !*/
+      Object StartURL $Attribute 12
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+    EndObject
+    !
+    ! Template for WebHandler
+    !
+    Object Template WebHandler
+      Body RtBody
+        Attr FileName = "index.html"
+        Attr MaxConnections = 50
+      EndBody
+    EndObject
+  EndObject
+EndSObject

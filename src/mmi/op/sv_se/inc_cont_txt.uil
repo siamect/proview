@@ -1,0 +1,15 @@
+!  inc_cont_txt.uil -- <short description>
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+value
+   title	: exported "PROVIEW/R  Operatörsfönster";
+   icon		: exported "Operatörsfönster  PROVIEW/R";
+   exit_button	: exported "Avsluta\\ Operatörsmiljön";
+   object_k	: exported "Objekt : ";		!STRING16
+   objNotExist  : exported "Det finns ingen information om objektet."; 
+   exitMessage  : exported compound_string("Vill du verkligen avsluta operatörsmiljön?"); 
+   

@@ -1,0 +1,144 @@
+!  nmps_c_mirrorconfig.wb_load -- Defines the class NMpsMirrorConfig.
+!
+!  PROVIEW/R
+!
+!  <Description>.
+!
+SObject NMps:Class
+  Object NMpsMirrorConfig $ClassDef 32 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "NMpsMirrorConfig"
+      EndBody
+      Object ScanTime $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      Object MirrorCellCount $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object MirrorCellInitCount $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object OrigCellCount $Attribute 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object RemoteOrigCellCount $Attribute 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object OrigCellDownCount $Attribute 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object DataObjectCount $Attribute 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object ConvertDataCount $Attribute 8 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object RemoteDataCount $Attribute 9 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object RemoteDataDownCount $Attribute 10 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object PendingRemoveDataCount $Attribute 11 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object RemoveDataCount $Attribute 12 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object CreateDataCount $Attribute 13 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object DeleteDataCount $Attribute 14 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object ReconnectDataCount $Attribute 15 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object LoopCount $Attribute 16 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Initialize $Attribute 17 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+    EndObject
+    !
+    ! Template object 
+    !
+    Object Template NMpsMirrorConfig
+      Body RtBody
+	Attr ScanTime = 1
+      EndBody
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,120 @@
+! Name: sys$login:pwr_opwin.dat
+! 
+
+
+
+
+! Turn on all window manager decorations and functions (border, iconify...) 
+PWR_OPWIN.mwmDecorations: 1
+PWR_OPWIN.mwmFunctions:   1
+
+
+
+! Configuration of Global function keys
+*hotkeys: \
+     <Key>F1: AlarmWinButton(AckBell) \n\
+     Shift<Key>F1: AlarmWinButton(AckMsg) \n\
+     <Key>F2: AlarmWinButton(AckA) \n\
+     <Key>F3: AlarmWinButton(AckB) \n\
+     <Key>F4: OpWinButton(AlarmList) \n\
+     Ctrl<Key>F4: OpWinButton(HistList) \n\
+     <Key>F5: OpWinButton(EventList) \n\
+     Ctrl<Key>F5: OpWinButton(BlockList) \n\
+     <Key>F6: OpWinButton(FastAvail1) \n\
+     <Key>F7: OpWinButton(FastAvail2) \n\
+     <Key>F8: OpWinButton(FastAvail3) \n\
+     <Key>F9: OpWinButton(FastAvail4) \n\
+     <Key>F10: OpWinButton(FastAvail5) \n\
+     Shift<Key>F6: OpWinButton(FastAvail6) \n\
+     Shift<Key>F7: OpWinButton(FastAvail7) \n\
+     Shift<Key>F8: OpWinButton(FastAvail8) \n\
+     Shift<Key>F9: OpWinButton(FastAvail9) \n\
+     Shift<Key>F10: OpWinButton(FastAvail10) \n\
+     Ctrl<Key>F6: OpWinButton(FastAvail11) \n\
+     Ctrl<Key>F7: OpWinButton(FastAvail12) \n\
+     Ctrl<Key>F8: OpWinButton(FastAvail13) \n\
+     Ctrl<Key>F9: OpWinButton(FastAvail14) \n\
+     Ctrl<Key>F10: OpWinButton(FastAvail15) \n\
+     <Key>F11: OpWinButton(GraphObject) \n\
+     <Key>F12: OpWinButton(TrendObject) \n\
+     <Key>F13: OpWinButton(Object) \n\
+     <Key>F14: OpWinButton(TextField) \n\
+
+
+
+
+! General configuration of Function Keys for GMS graphics
+
+*gms*XmDrawingArea.translations: #override\
+    ~Shift ~Ctrl ~Alt ~Meta <Key>KP_F1: GmsActivate(inc10) \n\
+    ~Shift ~Ctrl ~Alt ~Meta <Key>KP_F2: GmsActivate(inc1) \n\
+    ~Shift ~Ctrl ~Alt ~Meta <Key>KP_F3: GmsActivate(dec1) \n\
+    ~Shift ~Ctrl ~Alt ~Meta <Key>KP_F4: GmsActivate(dec10) \n\
+    ~Shift ~Ctrl ~Alt ~Meta <Key>F18:	GmsActivate(more) \n\
+    ~Shift  Ctrl ~Alt ~Meta <Key>F18:	GmsPrint()\n\
+    ~Shift ~Ctrl ~Alt ~Meta <Key>F20:	GmsCancel()
+
+
+! Mode: Activate PID with F17
+
+*gms.objectForm.mode.translations: #override\
+    ~Shift ~Ctrl ~Alt ~Meta <Key>KP_F1: GmsActivate(inc10) \n\
+    ~Shift ~Ctrl ~Alt ~Meta <Key>KP_F2: GmsActivate(inc1) \n\
+    ~Shift ~Ctrl ~Alt ~Meta <Key>KP_F3: GmsActivate(dec1) \n\
+    ~Shift ~Ctrl ~Alt ~Meta <Key>KP_F4: GmsActivate(dec10) \n\
+    ~Shift ~Ctrl ~Alt ~Meta <Key>F17:	GmsActivate(pid) \n\
+    ~Shift ~Ctrl ~Alt ~Meta <Key>F18:	GmsActivate(more) \n\
+    ~Shift  Ctrl ~Alt ~Meta <Key>F18:	GmsPrint()\n\
+    ~Shift ~Ctrl ~Alt ~Meta <Key>F20:	GmsCancel()
+
+
+! PID: Activate Mode with F17
+
+*gms.objectForm.pID.translations: #override\
+    ~Shift ~Ctrl ~Alt ~Meta <Key>F17: GmsActivate(mode) \n\
+    ~Shift ~Ctrl ~Alt ~Meta <Key>F18: GmsActivate(more) \n\
+    ~Shift  Ctrl ~Alt ~Meta <Key>F18: GmsPrint()\n\
+    ~Shift ~Ctrl ~Alt ~Meta <Key>F20: GmsCancel()
+
+
+
+
+! Forms. 
+! Example: Activating an input field named PresMaxLimit with F18
+
+*opForm*XmText.translations: #override\
+    ~Shift ~Ctrl ~Alt ~Meta <Key>F18: OpFormSetFocus(PresMaxLimit)\n\
+    ~Shift ~Ctrl ~Alt ~Meta <Key>F19: OpFormClearField()\n\
+    ~Shift ~Ctrl ~Alt ~Meta <Key>F20: OpFormCancel()
+
+*opForm*XmList.translations: #override\
+    ~Shift ~Ctrl ~Alt ~Meta <Key>F18: OpFormSetFocus(PresMaxLimit)\n\
+    ~Shift ~Ctrl ~Alt ~Meta <Key>F20: OpFormCancel()
+
+*opForm*.XmPushButton.translations: #replace\
+    <Btn1Down>, <Btn1Up>:		Activate() Disarm() \n\
+    <Btn1Down>:				Arm() \n\
+    <Btn1Up>:				Activate() Disarm() \n\
+    <EnterWindow>:			Enter() \n\
+    <LeaveWindow>:			Leave() \n\
+    ~Shift ~Ctrl ~Alt ~Meta <Key>F18:	OpFormSetFocus(PresMaxLimit)\n\
+    ~Shift ~Ctrl ~Alt ~Meta <Key>F20:   OpFormCancel()
+
+*opForm*.XmToggleButton.translations: #replace\
+    <Btn1Down>:				    Arm() \n\
+    <Btn1Up>:				    Select() Disarm() \n\
+    <EnterWindow>:			    Enter() \n\
+    <LeaveWindow>:			    Leave() \n\
+    ~Shift ~Ctrl ~Alt ~Meta <Key>F18:	    OpFormSetFocus(PresMaxLimit)\n\
+    ~Shift ~Ctrl ~Alt ~Meta <Key>F20:	    OpFormCancel()
+
+
+*opForm*.XmRowColumn.translations: #override\
+    <Btn1Down>:				    MenuBtnDown() \n\
+    <Btn1Up>:				    MenuBtnUp() \n\
+    ~Shift ~Ctrl ~Alt ~Meta <Key> Return:   ManagerGadgetSelect() \n\
+    ~Shift ~Ctrl ~Alt ~Meta <Key> space:    ManagerGadgetSelect() \n\
+    ~Shift ~Ctrl ~Alt ~Meta <Key>F18:	    OpFormSetFocus(PresMaxLimit)\n\
+    ~Shift ~Ctrl ~Alt ~Meta <Key>F20:	    OpFormCancel()
+
+

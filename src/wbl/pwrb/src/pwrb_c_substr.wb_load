@@ -1,0 +1,118 @@
+!  pwrb_c_substr.wb_load -- Defines the class SubStr.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_macro_string.h
+!  @Summary Extract a substring from a string.
+!  Extract a substring from a string.
+!  
+!  The SubStr extracts a substring from at string at the specified
+!  offset and with the specified length.
+!
+!*/
+SObject pwrb:Class
+  Object SubStr $ClassDef 314 
+    Body SysBody
+      Attr Editor = pwr_eEditor_PlcEd
+      Attr Method = pwr_eMethod_Connections
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+         Attr StructName = "SubStr"
+      EndBody
+      !/**
+      !  @Summary String input that the substring will be extracted from.
+      !  String input that the substring will be extracted from. 
+      !  The input has to be connected to an output of type String.
+      !*/
+      Object In $Input 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_RTVIRTUAL
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOREMOVE
+          Attr GraphName = "In"
+        EndBody
+      EndObject
+      !/**
+      !  Start index of the substring. First character has index 0.
+      !*/
+      Object Start $Intern 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Length of the substring.
+      !  Length of the substring.
+      !  The maximum length is 79 characters. If the maximum length
+      !  is exceede the substring will be cut off.
+      !*/
+      Object Length $Intern 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Output that contains the substring.
+      !*/
+      Object ActVal $Output 4
+        Body SysBody
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr GraphName = "Val"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 11
+        Attr parameters[0] = 1
+        Attr parameters[1] = 2
+        Attr parameters[2] = 1
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 1
+        Attr graphindex = 0
+        Attr default_mask[0] = 1
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 1
+        Attr compmethod = 5
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+	Attr executeordermethod = 2
+        Attr objname = "SubStr"
+        Attr graphname = "SubStr"
+      Endbody
+    EndObject
+    Object Template SubStr
+      Body RtBody
+        Attr Length = 10
+      EndBody
+    EndObject
+  EndObject
+EndSObject
+
+
+
+
+

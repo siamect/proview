@@ -1,0 +1,91 @@
+!  pwrs_c_objxref.wb_load -- Defines the class ObjXRef.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+SObject pwrs:Class
+  Object $ObjXRef $ClassDef pwr_eCix_ObjXRef
+    Body SysBody
+      Attr Flags |= pwr_mClassDef_System
+      Attr Flags |= pwr_mClassDef_Multinode
+    EndBody
+    Object SysBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "ObjXRef"
+      EndBody
+      Object PgmName $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$PgmName"
+        EndBody
+      EndObject
+      Object Type $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      Object Offset $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object Size $Attribute 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object Flags $Attribute 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Mask"
+        EndBody
+      EndObject
+      Object Elements $Attribute 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object ParamIndex $Attribute 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object Identity $Attribute 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$XRef"
+        EndBody
+      EndObject
+      Object Source $Attribute 9
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$XRef"
+        EndBody
+      EndObject
+      Object Target $Attribute 10
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$XRef"
+        EndBody
+      EndObject
+      Object XRefType $Attribute 11
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object SourceAttribute $Attribute 12
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ObjName"
+        EndBody
+      EndObject
+      Object TargetAttribute $Attribute 13
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ObjName"
+        EndBody
+      EndObject
+    EndObject
+    Object Template $ObjXRef
+      Body SysBody
+        Attr Elements = 1
+      EndBody
+    EndObject
+  EndObject
+EndSObject

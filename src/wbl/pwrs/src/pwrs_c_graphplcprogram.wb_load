@@ -1,0 +1,44 @@
+!  pwrs_c_graphplcprogram.wb_load -- Defines the class GraphPlcProgram.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+!/**
+!  @Version 1.0
+!  Description class for a Buffer in plc program objects.
+!  The buffer contains graphic data used by the plc editor.
+!*/
+SObject pwrs:Class
+  Object $GraphPlcProgram $ClassDef pwr_eCix_GraphPlcProgram
+    Body SysBody
+      Attr Flags |= pwr_mClassDef_DevOnly
+      Attr Flags |= pwr_mClassDef_System
+    EndBody
+    Object SysBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "GraphPlcProgram"
+      EndBody
+      !/**
+      !  Not used.
+      !*/
+      Object plc_type $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Class of plc window.
+      !*/
+      Object subwindow_class $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ClassId"
+        EndBody
+      EndObject
+    EndObject
+    Object Template $GraphPlcProgram
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,24 @@
+!  pwrb_c_commonclassdistribute.wb_load -- Defines the class CommonClassDistribute.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+SObject pwrb:Class
+  Object CommonClassDistribute $ClassDef 38 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_RtAndDevBodies
+    EndBody
+    Object DevBody $ObjBodyDef 2 
+      Object TargetProject $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject

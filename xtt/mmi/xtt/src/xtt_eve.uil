@@ -1,0 +1,646 @@
+!  rt_xtt_eve.uil -- <short description>
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+module rt_xtt_eve
+        version = 'v1.0'
+        names = case_sensitive
+        objects = {
+                XmSeparator = gadget ;
+                }
+
+include file 'inc_xtt.uil';
+
+identifier
+	ev_ctx;
+procedure
+	ev_eve_activate_exit(integer);
+	ev_eve_activate_ack_last(integer);
+	ev_eve_activate_zoom_in(integer);
+	ev_eve_activate_zoom_out(integer);
+	ev_eve_activate_zoom_reset(integer);
+	ev_eve_activate_open_plc(integer);
+	ev_eve_activate_display_in_xnav(integer);
+	ev_eve_activate_disp_hundredth(integer);
+	ev_eve_activate_hide_object(integer);
+	ev_eve_activate_hide_text(integer);
+	ev_eve_activate_help(integer);
+	ev_eve_activate_helpevent(integer);
+	ev_eve_create_form(integer);
+	ev_ala_activate_exit(integer);
+	ev_ala_activate_ack_last(integer);
+	ev_ala_activate_zoom_in(integer);
+	ev_ala_activate_zoom_out(integer);
+	ev_ala_activate_zoom_reset(integer);
+	ev_ala_activate_open_plc(integer);
+	ev_ala_activate_display_in_xnav(integer);
+	ev_ala_activate_disp_hundredth(integer);
+	ev_ala_activate_hide_object(integer);
+	ev_ala_activate_hide_text(integer);
+	ev_ala_activate_help(integer);
+	ev_ala_activate_helpevent(integer);
+	ev_ala_create_form(integer);
+
+value
+	menu_font : font ('-*-Helvetica-Bold-R-Normal--12-*-*-*-P-*-ISO8859-1');
+
+!----------------------------------------
+! First declare the 'top level' widgets.  These are not controlled by
+! any other widgets.  They are each fetched individually as needed.
+!----------------------------------------
+
+object  eve_window : XmMainWindow
+{
+  arguments
+  {
+    XmNx = 0;
+    XmNy = 0;
+  };
+  controls
+  {
+     XmMenuBar	eve_menu;
+     XmForm     eve_form;
+  };
+};
+
+
+object eve_form : XmForm
+{
+  arguments
+  {
+     XmNwidth = 200;
+     XmNheight = 200;
+     XmNresizePolicy = XmRESIZE_NONE;
+  };
+  controls
+  {
+     XmPanedWindow eve_pane;
+  };
+};
+
+object eve_menu : XmMenuBar
+{
+  arguments
+  {
+    XmNorientation 	= XmHORIZONTAL;
+    XmNspacing  	= 15;
+    XmNmenuHelpWidget 	= XmCascadeButton eve_help_entry; 
+  };
+  controls
+  {
+    XmCascadeButton eve_file_entry;
+    XmCascadeButton eve_functions_entry;
+    XmCascadeButton eve_view_entry;
+    XmCascadeButton eve_help_entry;
+  };
+};
+
+object eve_file_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString  = c_File;
+    XmNfontList	    = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Close;
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ev_eve_activate_exit(ev_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+object eve_functions_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString  = c_Functions;
+    XmNfontList	    = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Acknowledge;
+            XmNmnemonic = keysym('k');
+	    XmNaccelerator = "Ctrl<Key>K";
+	    XmNacceleratorText = compound_string('Ctrl+K');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ev_eve_activate_ack_last(ev_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Open_Plc;
+            XmNmnemonic = keysym('l');
+	    XmNaccelerator = "Ctrl<Key>L";
+	    XmNacceleratorText = compound_string('Ctrl+L');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ev_eve_activate_open_plc(ev_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Display_object_in_navigator;
+            XmNmnemonic = keysym('D');
+	    XmNaccelerator = "Ctrl<Key>D";
+	    XmNacceleratorText = compound_string('Ctrl+D');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ev_eve_activate_display_in_xnav(ev_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+
+object eve_view_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString = c_View;
+    XmNfontList	   = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Zoom_in;
+            XmNmnemonic = keysym('I');
+	    XmNaccelerator = "Ctrl<Key>I";
+	    XmNacceleratorText = compound_string('Ctrl+I');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ev_eve_activate_zoom_in(ev_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Zoom_out;
+            XmNmnemonic = keysym('O');
+	    XmNaccelerator = "Ctrl<Key>O";
+	    XmNacceleratorText = compound_string('Ctrl+O');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ev_eve_activate_zoom_out(ev_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Zoom_reset;
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ev_eve_activate_zoom_reset(ev_ctx);
+          };
+	};
+        XmToggleButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Display_hundredth;
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNvalueChangedCallback = procedure ev_eve_activate_disp_hundredth(ev_ctx);
+          };
+	};
+        XmToggleButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Hide_event_name;
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNvalueChangedCallback = procedure ev_eve_activate_hide_object(ev_ctx);
+          };
+	};
+        XmToggleButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Hide_event_text;
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNvalueChangedCallback = procedure ev_eve_activate_hide_text(ev_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+object eve_help_entry : XmCascadeButton      
+{
+  arguments
+  {
+      XmNlabelString = c_Help;
+      XmNfontList    = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = c_Eventlist;
+            XmNfontList	   = menu_font;
+          };
+          callbacks
+          {
+            XmNactivateCallback = procedure ev_eve_activate_help(ev_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = c_Help_on_selected_event;
+            XmNfontList	   = menu_font;
+          };
+          callbacks
+          {
+            XmNactivateCallback = procedure ev_eve_activate_helpevent(ev_ctx);
+          };
+        };
+      }; !Controls
+    }; !Pulldown_menu
+  }; !Controls
+}; ! help_entry
+
+object eve_pane : XmPanedWindow
+{
+   arguments
+   {
+     XmNleftAttachment 		= XmATTACH_FORM;
+     XmNrightAttachment 	= XmATTACH_FORM;
+     XmNbottomAttachment    	= XmATTACH_FORM;
+     XmNtopAttachment    	= XmATTACH_FORM;
+   };
+   controls
+   {
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure ev_eve_create_form( ev_ctx);
+   };
+};
+
+object  ala_window : XmMainWindow
+{
+  arguments
+  {
+    XmNx = 0;
+    XmNy = 0;
+  };
+  controls
+  {
+     XmMenuBar	ala_menu;
+     XmForm     ala_form;
+  };
+};
+
+
+object ala_form : XmForm
+{
+  arguments
+  {
+     XmNwidth = 200;
+     XmNheight = 200;
+     XmNresizePolicy = XmRESIZE_NONE;
+  };
+  controls
+  {
+     XmPanedWindow ala_pane;
+  };
+};
+
+object ala_menu : XmMenuBar
+{
+  arguments
+  {
+    XmNorientation 	= XmHORIZONTAL;
+    XmNspacing  	= 15;
+    XmNmenuHelpWidget 	= XmCascadeButton ala_help_entry; 
+  };
+  controls
+  {
+    XmCascadeButton ala_file_entry;
+    XmCascadeButton ala_functions_entry;
+    XmCascadeButton ala_view_entry;
+    XmCascadeButton ala_help_entry;
+  };
+};
+
+object ala_file_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString  = c_File;
+    XmNfontList	    = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Close;
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ev_ala_activate_exit(ev_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+object ala_functions_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString  = c_Functions;
+    XmNfontList	    = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Acknowledge;
+            XmNmnemonic = keysym('k');
+	    XmNaccelerator = "Ctrl<Key>K";
+	    XmNacceleratorText = compound_string('Ctrl+K');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ev_ala_activate_ack_last(ev_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Open_Plc;
+            XmNmnemonic = keysym('l');
+	    XmNaccelerator = "Ctrl<Key>L";
+	    XmNacceleratorText = compound_string('Ctrl+L');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ev_ala_activate_open_plc(ev_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Display_object_in_navigator;
+            XmNmnemonic = keysym('D');
+	    XmNaccelerator = "Ctrl<Key>D";
+	    XmNacceleratorText = compound_string('Ctrl+D');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ev_ala_activate_display_in_xnav(ev_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+object ala_view_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString = c_View;
+    XmNfontList	   = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Zoom_in;
+            XmNmnemonic = keysym('I');
+	    XmNaccelerator = "Ctrl<Key>I";
+	    XmNacceleratorText = compound_string('Ctrl+I');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ev_ala_activate_zoom_in(ev_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Zoom_out;
+            XmNmnemonic = keysym('O');
+	    XmNaccelerator = "Ctrl<Key>O";
+	    XmNacceleratorText = compound_string('Ctrl+O');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ev_ala_activate_zoom_out(ev_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Zoom_reset;
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ev_ala_activate_zoom_reset(ev_ctx);
+          };
+	};
+        XmToggleButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Display_hundredth;
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNvalueChangedCallback = procedure ev_ala_activate_disp_hundredth(ev_ctx);
+          };
+	};
+        XmToggleButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Hide_event_name;
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNvalueChangedCallback = procedure ev_ala_activate_hide_object(ev_ctx);
+          };
+	};
+        XmToggleButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Hide_event_text;
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNvalueChangedCallback = procedure ev_ala_activate_hide_text(ev_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+object ala_help_entry : XmCascadeButton      
+{
+  arguments
+  {
+      XmNlabelString = c_Help;
+      XmNfontList    = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = c_Alarmlist;
+            XmNfontList	   = menu_font;
+          };
+          callbacks
+          {
+            XmNactivateCallback = procedure ev_ala_activate_help(ev_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = c_Help_on_selected_event;
+            XmNfontList	   = menu_font;
+          };
+          callbacks
+          {
+            XmNactivateCallback = procedure ev_ala_activate_helpevent(ev_ctx);
+          };
+        };
+      }; !Controls
+    }; !Pulldown_menu
+  }; !Controls
+}; ! help_entry
+
+object ala_pane : XmPanedWindow
+{
+   arguments
+   {
+     XmNleftAttachment 		= XmATTACH_FORM;
+     XmNrightAttachment 	= XmATTACH_FORM;
+     XmNbottomAttachment    	= XmATTACH_FORM;
+     XmNtopAttachment    	= XmATTACH_FORM;
+   };
+   controls
+   {
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure ev_ala_create_form( ev_ctx);
+   };
+};
+
+end module;

@@ -1,0 +1,15 @@
+!  pwr_msggen.idf -- Message generation tool
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  Defines what to import from message generation tools to platform
+!  os_vms-hw_vax.
+!
+<identification>
+version		= "V1.0"
+product		= "PWR_MSGGEN_V1_0"
+description	= "Message generation tools"
+<backup>
+pwr_msggen.exe_vax_vms	pwr_exe:pwr_msggen.exe
+<end>

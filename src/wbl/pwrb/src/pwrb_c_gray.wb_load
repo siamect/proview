@@ -1,0 +1,254 @@
+!  pwrb_c_gray.wb_load -- Defines the class Gray.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  Convert from Graycode to float.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_io.c
+!  Converts a 16-bits Gray code value into its decimal
+!  equivalent.
+!  
+!  The Gray code has the property that a change of the
+!  output signal one unit can always be accomplished by
+!  changing only one digital input.
+! 
+!  16 binary positions implies the resolution 1 on 2**16  = 65 536.
+!*/
+SObject pwrb:Class
+  Object Gray $ClassDef 132 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Connections
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "gray"
+      EndBody
+      !/**
+      !  di0 is the least significant and diF the most
+      !  significant bit.
+      !*/
+      Object Din0 $Input 1 
+        Body SysBody
+          Attr PgmName = "Din0"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "di0"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      Object Din1 $Input 2 
+        Body SysBody
+          Attr PgmName = "Din1"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "di1"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      Object Din2 $Input 3 
+        Body SysBody
+          Attr PgmName = "Din2"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "di2"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      Object Din3 $Input 4 
+        Body SysBody
+          Attr PgmName = "Din3"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "di3"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      Object Din4 $Input 5 
+        Body SysBody
+          Attr PgmName = "Din4"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "di4"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      Object Din5 $Input 6 
+        Body SysBody
+          Attr PgmName = "Din5"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "di5"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      Object Din6 $Input 7 
+        Body SysBody
+          Attr PgmName = "Din6"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "di6"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      Object Din7 $Input 8 
+        Body SysBody
+          Attr PgmName = "Din7"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "di7"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      Object Din8 $Input 9 
+        Body SysBody
+          Attr PgmName = "Din8"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "di8"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      Object Din9 $Input 10 
+        Body SysBody
+          Attr PgmName = "Din9"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "di9"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      Object DinA $Input 11 
+        Body SysBody
+          Attr PgmName = "DinA"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "diA"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      Object DinB $Input 12 
+        Body SysBody
+          Attr PgmName = "DinB"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "diB"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      Object DinC $Input 13 
+        Body SysBody
+          Attr PgmName = "DinC"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "diC"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      Object DinD $Input 14 
+        Body SysBody
+          Attr PgmName = "DinD"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "diD"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      Object DinE $Input 15 
+        Body SysBody
+          Attr PgmName = "DinE"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "diE"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      Object DinF $Input 16 
+        Body SysBody
+          Attr PgmName = "DinF"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "diF"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the result of the conversion.
+      !*/
+      Object ActVal $Output 17 
+        Body SysBody
+          Attr PgmName = "ActVal"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "OUT"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies if all inputs will be inverted or not. FALSE
+      !  means that no inputs will be inverted; TRUE means that
+      !  all inputs will be inverted. If, for example, only the
+      !  4 first inputs are used the 12 others have to be set to
+      !  avoid an error.
+      !*/
+      Object Inv $Intern 18 
+        Body SysBody
+          Attr PgmName = "Inv"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "inv"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 87
+        Attr parameters[0] = 16
+        Attr parameters[1] = 0
+        Attr parameters[2] = 1
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 0
+        Attr graphindex = 0
+        Attr default_mask[0] = 65535
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 1
+        Attr compmethod = 4
+        Attr compindex = 0
+        Attr executeordermethod = 2
+        Attr objname = "Gray"
+        Attr graphname = "Gray"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+  EndObject
+EndSObject

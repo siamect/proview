@@ -1,0 +1,6167 @@
+!   wb_foe.hlp -- <short description>
+!
+!   PROVIEW/R
+!   Copyright (C) 1996 by Comator Process AB.
+!
+!   <Description>.  */
+!
+
+! level 1.
+1 Help
+
+! For this module do not give any other command because they will appear
+! as text when you enter the help command at the DCL level.
+!
+!=Title Overview
+!=Keyword Overview
+
+Plceditorn är ett vertyg för att skapa plcprogram och
+reglerloopar i proview/R.
+
+Plceditorn består av
+- en meny
+- en palett för objekt
+- en palett för förbindningslinjer
+- en arbetsarea 
+- ett navigationsfönster
+
+! level 2. 
+2 Start
+=Title Getting started
+=Keyword Start
+=include HELP Meny Function
+
+To be able to edit a plcprogram you should be in the "edit" function.
+
+The default function is view. 
+
+You change function by pulling down the function menu entry.
+
+! level 2. 
+2 Objekt
+=Title Objekt
+=Keyword Objekt
+
+För att få information om ett objekt:
+
+Klicka Ctrl/MB1 på objektet i arbetsarean.
+
+
+! level 2. 
+2 Menu
+=Title Meny
+Val ur menyn sker enligt motif standard.
+
+Hjälp för en funktion i menyn fås genom att trycka ner
+hjälptangenten och välja önskad funktion i menyn.
+
+En meny kan öppnas från tangenbordet genom att trycka på
+'kombinera tecken' och den bokstav som är understruken i 
+aktuellt menu alternativ.
+Välj sedan vidare i menyn med den understrukna bokstaven,
+eller navigera med pilar och utför med return ('kombinera
+tecken' behövs enbart första gången för att öppna menyn.
+
+Acceleratorer
+
+Med hjälp av acceleratorer kan man utföra funktionen i
+ett menyalternativ genom tangentryckningar,
+utan att öppna menyn. Tangenterna står beskrivna till
+höger i menytexten för de menyalternativ som
+innehåller acceleratorer.
+Observera att Lock tangenten ej får vara intrycka för
+att acceleratorerna ska fungera.
+
+! level 3. 
+3 File
+=Title File
+=Keyword File
+
+! level 4. 
+4 Save
+=Title Save 
+=Keyword Save
+Sparar innehållet i aktuellt fönster i databasen.
+
+! level 4. 
+4 Close
+=Title Close
+=Keyword Close
+Stänger aktuellt fönster. Om det finns ändringar som
+ej är sparade får man en fråga om dessa ska sparas.
+
+! level 4. 
+4 PrintDocuments
+=Title PrintDocuments
+=Keyword PrintDocuments
+Skriver ut innehållet i samtliga documentobjekt i fönstret
+på postscriptfiler (pssdoc*.ps).  
+
+För att lägga ut de genererade filerna till lämplig printer-
+kö ska symbolen PWR_FOE_GRE_PRINT definieras. t ex
+
+$PWR_FOE_GRE_PRINT == 
+		"print/que=laser_post /noform "
+
+! level 4. 
+4 PrintOverview
+=Title PrintOverview
+=Keyword PrintOverview
+Skriver ut samtliga documentobjekt i fönstret på
+ett A4 ark.
+
+! level 4. 
+4 PrintSelect
+=Title PrintSelect
+=Keyword PrintSelect
+Skriver ut utvalda dokumentobjekt i fönstret.
+
+! level 4. 
+4 PlcAttribute
+=Title Plc attribute
+=Keyword Plc attribute
+Tar fram attributeditorn för aktuellt plcprogram med
+möjlighet att mata in 
+- nodtillhörighet dvs den elnnode i nodehierarkin som 
+  programmet ska laddas till
+- scanfrekvens, den frekvens plcprogramet ska gå med
+- resetobjekt, ett di, do eller dv objekt som återställer
+  samtliga grafcetsekvenser till utgångsläget, dvs
+  gör samtliga initstep aktiva och övriga ste (och 
+  S-order) inaktiva.
+ 
+Attributen kan visas på dokumentet med ShowPlcAttr 
+objektet.
+
+! level 4. 
+4 Syntax
+=Title Syntax
+=Keyword Syntax
+Syntax kontroll
+
+Kontrollerar att alla förbindningar är korrekta.
+
+Syntax regler
+
+Allmänt
+
+
+För logiska objekt måste samtliga synliga ingångar 
+vara kopplade. Ej kopplade ingångar kan ej datasättas 
+eller påverkas från bilder eller applikationsprogram 
+(undantag är stoxx, resxx, setxx objekt).
+
+Sto'xx', res'xx' och set'xx' objekt är undantag 
+från ovanstående regel. 
+
+För sto'xx' objekt och csto'xx' 
+objekt som ej är kopplat läggs värdet för inparametern 
+i attributeditorn in som en konstant. Genom att använda
+fönster med villkorlig exekvering (orderaktivitet och 
+csub) kan man  lägga in olika konstanter i ett objekt 
+vid olika tillfällen. 
+
+För set'xx' och res'xx' objekt sätt en ej kopplad 
+ingång till true.
+
+För beräknings objekt kan man datasätta ej kopplade 
+parametrar eftersom  pekaren för ingången kommar att 
+peka in i eget objekt. Ett initialvärde kan ges i 
+attributeditorn, och detta värde kan sedan ändras från 
+en operatörsbild eller rs_watch.
+
+Grafcet
+
+Syntax för grafcet följer standard men innehåller 
+vissa tillägg. En utgång på ett orderobjekt är en 
+logisk signal som kan kopplas till ett logikbojekt. 
+[ven orderutgången på ett step objekt kan användes 
+som en logisk signal och behöver alltså ej kopplas 
+till en order. Vid denna typ av kopplingar erhålls
+ej funktionen med villkorlig exekvering som finns i 
+en order.
+
+! level 4. 
+4 Compile
+=Title Compile
+=Keyword Compile
+Genererar och kompilerar c-kod för aktuellt fönster.
+
+! level 4. 
+4 DeleteWindow
+=Title Delete window
+=Keyword Delete window
+Samtliga objekt i fönstret rensas ut ur databasen och 
+fönstret tas bort från skärmen.
+
+! level 3. 
+3 Edit
+=Title Edit
+=Keyword Edit
+Funktioner för att hantera objekt och editera 
+arbetsarean.
+
+! level 4. 
+4 CopyRegion
+=Title Copy region
+=Keyword Copy region
+Kopierar samtliga utvalda objekt till paste region 
+bufferten. 
+Copy region kräver att man först har gjort
+select region.
+
+! level 4. 
+4 MoveRegion
+=Title Move region
+=Keyword Move region
+Flyttar utvalda objekt 
+
+Move region kräver att man först har gjort
+select region.
+
+! level 4. 
+4 CutRegion
+=Title Cut region
+=Keyword Cut region
+Flyttar samtliga utvalda objekt till paste region 
+bufferten.
+Cut region kräver att man först har gjort
+select region.
+
+! level 4. 
+4 PasteRegion
+=Title Paste region
+=Keyword Paste region
+Kopierar samtliga objekt i paste region bufferten 
+till aktuellt fönster. 
+
+Ett område som valt ut och funktionerna cut eller copy 
+applicerats på återskapas resp kopieras genom paste
+region. En rektangel med samma geometri som den 
+utvalda  arean skapas och användaren kan flytta 
+på den med  Shift/MB1 ( se flytta objekt).
+När rektangeln släpps skapas objekten med samma relation 
+till denna som de hade till den tidigare utvalda arean. 
+
+
+! level 4. 
+4 UndoSelect
+=Title UndoSelect
+=Keyword UndoSelect
+Återställer alla utvalda objekt.
+
+! level 4. 
+4 UndoDelete
+=Title UndoDelete
+=Keyword UndoDelete
+Återskapar de objekt som tagits bort med den senaste 
+delete eller cut operationen.
+
+! level 4. 
+4 Connect
+=Title Connect
+=Keyword Connect
+Vissa objekt t ex getdi, setao, kräver reference till io
+objekt eller andra objekt. Ett alternativ till att mata
+in namnet på dessa i attributeditorn är att välja ut 
+referensobjektet i navigatören och klicka med MB3 på det
+refererande objektet i plceditorn, eller att välja ut båda
+och välja connect i menyn. Objekt med flera referenser
+t ex pos3p och inc3p hämtas de utvalda objekten i 
+navigatören genom att klicka i över resp undre delen 
+av det referande objektet med MB3.
+
+Följande objekt påverkas av connect:
+
+getdi, getdo, stodo, resdo, setdo, getdv, resdv, 
+setdv, getai, getao, stoao, cstoao, getav, stoav, 
+cstoav, getdp, stodp, resdp, setdp, getap, stoap, 
+cstoap, getpi
+
+Lägger in utvalt objekt i navigatören och kontrollerar
+att klassen är ok. 
+- muscallback: utvalt objekt läggs in i det objekt
+man klikcat på.
+- menycallback:	utvalt objekt i navigatören läggs in
+i utvalt objekt i fedit.
+
+Reset_so	
+
+Lägger in utvalt orderobjekt.
+Om ett objekt är utvalt i foe ( tillsammans med
+eller utan reset_so objektet), tas detta som 
+orderobjekt  och placeras i parametern OrderObject 
+i reset_so objektet. Annars hämtas orderobjektet
+från utvalt objekt i navigatören.
+
+ShowPlcattr	
+
+Lägger in det i navigatören utvalda di, do eller
+dv-objektet parametern ResetObject i plcpgm objeket 
+för plcprogrammet.
+
+Out3p, Inc3p
+
+Lägger in det i navigatören utvalda do-objektet
+i parametern DoClose eller DoOpen beroende om man
+klickar i övre eller undre delen av objektet.
+
+
+
+
+! level 4. 
+4 Delete
+=Title Delete
+=Keyword Delete
+Ta bort samtliga utvalda objekt.
+Objekten kan återskapas med Undelete
+
+! level 3. 
+3 Functions
+=Title Functions
+=Keyword Functions
+Funktioner som opererar på objekt.
+Välj ut ett objekt och aktivera aktuell funktion.
+
+! level 4. 
+4 OpenObject
+=Title OpenObject
+=Keyword OpenObject
+Öppnar attributeditorn för utvalt objekt.
+Endast ett objekt får vara utvalt.
+
+! level 4. 
+4 Subwindow
+=Title Subwindow
+=Keyword Subwindow
+Skapar ett subwindow för utvalt objekt.
+Endast ett objekt för vara utvalt.
+
+Följande objekt har underfönster:
+- Order: orderaktivitet och villkor. 
+	Ett villkorsfönster kan endast öppnas genom 
+	dubbelklick Shift/MB3 i orderobjektets vänstra
+	del.
+- Trans: villkor
+- Substep: substep
+- CSub
+
+! level 3. 
+3 Search
+=Title Search
+=Keyword Search
+Sökning efter objekt eller textsträngar i fönstret.
+Objektsnamn eller en textsträng som ska sökas efter
+skrivs i ett inmatningsfält, vid tryckning på return 
+letas aktuellt objekt upp, väljs ut och placeras 
+mitt i fönstret.
+
+Search Object söker efter objekt som ligger i fönstret, 
+vid sökning efter objekt som refereras i fönstret, t ex
+signaler, ska Search String användas.
+
+! level 4. 
+4 Object
+=Title Search Object
+=Keyword SearchObject
+Sökning efter ett objekt i fönstret.
+Mata in sista segmentet i objektsnamnet.
+Aktuellt objekt letas upp, väljs ut och placeras
+i mitten på fönstret.
+
+! level 4. 
+4 String
+=Title Search String
+=Keyword SearchString
+Sökning efter en textsträng i fönstret.
+Mata in textsträngen. Objekt där textsträngen förekommer 
+väljs ut och och placeras i mitten på fönstret.
+Nästa objekt där strängen förekommer letas upp
+genom att aktivera SearchNext. 
+
+! level 4. 
+4 Next
+=Title Search Next
+=Keyword SearchNext
+Vidare sökning efter en textsträng i fönstret.
+Söker vidare efter den textsträng som initierats med
+SearchString.
+
+! level 3. 
+3 View
+=Title View
+=Keyword View
+Funktioner för att påverka editeringsmiljön.
+
+! level 4. 
+4 Gridsize
+=Title Gridsize
+=Keyword Gridsize
+Ändrar gridsizen till det valda värdet.
+
+! level 4. 
+4 ZoomIn
+=Title Zoom In
+=Keyword ZoomIn
+Visar ett mindre område av arbetsarean
+i fönstret.
+
+! level 4. 
+4 ZoomOut
+=Title Zoom Out
+=Keyword ZoomOut
+Visar ett större område av arbetsarean
+i fönstret.
+
+! level 4. 
+4 ZoomReset
+=Title Zoom Reset
+=Keyword ZoomReset
+Återställer till ursprunglig zoomnings grad.
+
+! level 4. 
+4 ShowGrid
+=Title Show grid
+=Keyword Show grid
+Ritar ut gridpunkterna på skärmen, fn enbart i den 
+delen av arbetsarean som är synlig.
+
+! level 4. 
+4 ConnectionPalette
+=Title Connection Palette
+=Keyword ConnectionPalette
+Ger användaren möjlighet att välja en linjetyp ur
+connection paletten. Om user connection ej är valt
+väljer plceditorn linjetype utgående från typen av de förbundna
+parametrarna.
+
+Linjetyp ska väljas ur connectionpaletten följande fall:
+- Vid återkopplingar i plc nät.
+- Vid styrning av exekveringsordningen.
+- Vid förgreningar och sammanföringar i grafcet
+	(TransDiv, TransConv, StepDiv, StepConv).
+- När två Point objekt sammankopplas och förbindningen
+	är av typen float.
+
+! level 4. 
+4 ConnectionReference
+=Title Connection Reference
+=Keyword ConnectionReference
+Ritar ut kopplingar mellan objekt som flaggor 
+istället för linjer. Ger möjlighet att begränsa
+antalet linjer och öka läsbarheten i komplexa
+kopplingar.
+
+Förbindningen skapas på vanligt sätt med press MB1,
+men representeras grafiskt med en flagga på vardera
+kopplingpunken.
+
+Endast en referens connection bör kopplas till en 
+kopplingspunkt eftersom de fn läggs ovanpå varandra. 
+
+! level 4. 
+4 ShowExecuteorder
+=Title ShowExecuteorder
+=Keyword ShowExecuteorder
+Visar exekveringsordningen i fönstret.
+
+! level 4. 
+4 Redraw
+=Title Redraw
+=Keyword Redraw
+Ritar om samtliga kopplingar i ett fönster.
+
+! level 3. 
+3 Mode
+=Title Mode
+=Keyword Mode
+The function block editor can be used in 4 differents ways:
+	VIEW, EDIT, TRACE and SIMULATE.
+They are accessible by pulling down the function entry on the menu bar.
+
+All the menu entries and the mouse action allowed in the edit function 
+are not allowed in the other functions.
+The palettes are also dependant of the mode.
+The menu entries that are disable are grey the one that are enable are black.
+
+By default view is the given mode but,
+the current function is given by default to the subwindows opened from 
+the current window.
+
+
+! level 4.
+4 View
+=Title View
+=Keyword View
+With VIEW you only "look" at an existing program.
+No editing mouse events or menu entries are allowed. You can
+	print the window 
+	open the existing subwindows
+	call the attribute editor on a object ( but not edit with it)
+
+! level 4.
+4 Edit
+=Title Edit
+=Keyword Edit
+=Include Help 
+With EDIT you create or modify an existing program.
+All the events and menu entries are allowed . 
+
+! level 4. 
+4 Simulate
+=Title Simulate
+=Keyword Simulate
+Simulate gör det möjligt att sätta värden på de parametrar
+som trace övervakar i ett fönster.
+
+Logiska parametrar: värdet togglas genom att dubbelklicka (Ctrl/Shift MB1)
+på det objekt i fönstret som visar status på aktuell parameter.
+
+Analoga parametrar: Ett nytt värde kan matas in genom att
+en analys node kopplas till aktuell parameter. Vid dubbel
+klick på analysnoden ges möjlighet ändra värdet.
+
+! level 4.
+4 Trace
+=Title Trace
+=Keyword Trace
+=include Help Menu Mode
+TRACE permits you examine the run time value of the objects 
+displayed in the current window. 
+
+If you activate simulate in the menu you can also set values
+(double click MB1).
+
+The prenumeration is continue whith a frequence of one second.
+
+There is two way to trace the value of a parameter:
+  higligth the object which relevant parameter is true.
+  display the value of the paraeter in a trace_analyse object.
+
+From trace you can :
+  Create , delete , connect trace_analyse objects.
+  Move objects.
+  Call the attribute editor and help on the objects.
+  Open existing subwindows.
+
+Notice: 
+There is no way actually to verify that the current window that you 
+want to trace is the last one that has been compiled and loaded in the rtdb.
+
+
+You start the third process ( nethandler ) when you load the rtdb : 
+1. Enter the symbol pwr_start from dcl level.
+2. Give the name of the load file that has been created with pwr_creload.
+Notice that you should kill the nethandler process ( if there is any ) 
+before calling pwr_start.
+
+! level 5.
+5 Nethandler
+=Title Nethandler dependency
+=Keyword Nethandler
+
+You cannot initiate trace if the nethandler is down. But if the nethandler '
+process is stopped after that you have run trace once ,TRACE DOES NOT NOTICE IT.
+
+The falling of the nethandler has no consequences for seeing the objects under
+the default VMS node but you cannot see the objects under the other nodes .
+You succed to connect analyse object to parameters but the value displayed is
+always 0.
+
+! level 5.
+5 HighlightObject
+=Title Trace highlight object
+=Keyword Trace
+
+The highlight is initialised on all the "may be highlighted objects"
+WHEN THE TRACE FUNCTION IS CHOOSEN.
+
+The "may be highlighted objects" are : 
+ all the  GRAFCET objects .
+ all the  LOGIC objects except : count , pulse , timer , wait , waith .
+ all the  IO digital objects : 
+   the object that refers to a Dp , Dv , Di or DO.
+ the DANALYSE objects .
+
+These objects are highlighted when the "relevant" output parameter is true. 
+
+DANALYSE objects are highlighted when parameter to wich they are 
+connected is true.
+
+! level 6.
+6 RelevantParameter
+=Title Trace highlight object relevant parameter
+=Keyword Trace
+
+If the object does not refer to another object:
+The name of the "relevant " parameter 
+   is given by the debugparameter field 
+     under the developpement body of the object 
+
+If the object refer to another object :
+The pgname of the parameter refered by the debugparameter field 
+is the pgname of the parameter to trace in the refered object!
+
+Notice that SETCOND and CSUB objects refer to another object through
+the connection .
+
+
+! level 5.
+5 AnaObject
+=Title Trace analyse objects
+=Keyword Trace
+
+By connecting an TRACE_ANALYSE object to a parameter you start
+a prenumeration on the RTDB to this parameter . To do this:
+
+  Start the trace function
+  Choose an analyse object from the palette ,
+  Draw a connection from it to the parameter of an object.
+
+To a FLOAT or INT parameter connect a AANALYSE object . 
+The value of the parameter is displayed in the analyse object.
+
+Connect a DANALYSE object to a Boolean parameter .
+The DANALYSE object is higlighted when the parameter is true.
+
+
+! level 5.
+5 TraceMessages
+=Title Trace messages
+=Keyword Trace
+
+Error messages:
+If the trace function cannot work properly a message that finish with 
+    "Please change function " 
+is displayed. 
+
+The user should correct the error before trying trace again.
+Therefore the mouse events are disable after such a message is displayed.
+
+Information messages :
+the other message are purely informationnal.
+
+! level 6.
+6 ErrorMessages
+=Title Trace error messages
+=Keyword Trace
+
+C'ANT INITIATE: 
+Reason: The initial link to the rtdb can't be done.
+Solution : Verify with pams that the nodes communicate with each other
+and that the nethandler is running on your node.
+
+THE PLC IS NOT LOADED IN THE RTDB.
+Reason: A Plc program with the same name of the one the user is viwing , 
+is not found in the rtdb.
+Solution : load the plc in the rtdb ! 
+
+CAN'T SHOW THE PARAMETER VALUES ON THE SCREEN .
+Reason : There is a problem with the display of the parameter.
+No problem with the link to the rtdb.
+Solution : quotas ? 
+
+CAN'T GET ALL THE NODES TO TRACE .BAD NODE: 
+Reason: 
+Trace does not successeed to get (in the rdb) the preliminary information 
+for the node specifyed by  when it parses the "to be highligted nodes" .
+Some nodes can be traced only if they are properly connected. 
+Solution: Compile and load the plc program to verify that the connections 
+are correct.
+
+CAN'T GET THE PRENUMERATION LIST TO THE RTDB.
+Reason: The operation operation that gives the pointers to the rtdb 
+was not successful.
+Solution: ?
+
+CAN'T GET LINK TO RTDB .BAD NODE: 
+Reason : The parameter specifyed with  is not found in the rtdb.
+THe plc program is probably not loaded.
+Solution: Compile and load the plc program in the rtdb.
+
+! level 6.
+6 InfoMessages
+=Title Trace info messages
+=Keyword Trace
+
+SUCCEFULLY STARTED BUT NO NODES TO HIGHLIGHT IN THIS WINDOW:
+Among all the nodes displayed in the window none is of the type 
+" to be highligted ". 
+
+CONNECTION REFUSED :
+Reason : The connection between an analyse node and an parameter 
+is refused for some reason.
+Solution : Try to see the parameter with watch.
+
+CONNECTION NOT ALLOWED , THERE IS NO ANALYSE NODE CONNECTED    or
+CONNECTION NOT ALLOWED BETWEEN TWO ANALYSE NODES :
+Reason: In the trace function you can only draw connection from or to an
+analyse node.
+
+CONNECTION NOT ALLOWED TO A GRAFCET OBJECT.
+All the grafcet object are higligthed if the relevant parameter is true.
+As it is meaningless to trace the other parameters the connection to an 
+analyse object is disable.
+
+CONNECTION REFUSED, UNCOMPATIBLE PARAMETER TYE
+The parameter type is incompatible with the analyse object it is connected to.
+Solution : connect it to another type of analyse object.
+
+CONNECTION REFUSED. CANNOT GET THE PARAMETER TYPE.
+It is not possible the get the information (in the RDB) for the parameter that 
+you try to connect to.
+Solution : ?
+
+NO ANALYSE OBJECT TO DELETE.
+THe only editing operations in trace refers to the analyse object !
+
+! level 2. 
+2 MusFunktioner
+=Title Mus funktioner 
+=Keyword Mus
+Musfunktioner i edit:
+
+	  | klick	| dubbelklick	 | press
+__________________________________________________________
+MB1	  | select	| attribut	 | select region
+	  | objekt 	| editor	 | 
+__________________________________________________________
+MB2	  | skapa	| ta bort objekt | skapa 
+	  | objekt	| eller linje	 | koppling
+__________________________________________________________
+MB3	  |  		| 		 | popup menu
+	  |     	|		 | 
+__________________________________________________________
+Shift/MB1 | add select	| skapa		 | flytta 
+	  | objekt	| subwindows	 | objekt
+__________________________________________________________
+Ctrl/MB1  | Help on 	| connect	 | 
+	  | Object	|		 | 
+__________________________________________________________
+Ctrl/	  | 		| copy	 	 | 
+Shift/MB1 | 		|		 | 
+__________________________________________________________
+Ctrl/ 	  | paste	| cut		 | 
+Shift/MB2 |		|		 | 
+__________________________________________________________
+
+Musfunktioner i trace:
+
+	  | klick	| dubbelklick	 | press
+__________________________________________________________
+MB1	  |      	| attribut	 |
+	  |      	| editor	 | 
+__________________________________________________________
+MB2	  | skapa analys| ta bort analys | skapa 
+	  | objekt	| objekt	 | connection
+__________________________________________________________
+MB3	  |  		| 		 | popup menu
+	  |     	|		 | 
+__________________________________________________________
+Shift/MB1 | 		| öppna		 | flytta 
+	  |		| subwindows	 | objekt
+__________________________________________________________
+Ctrl/MB1  | Help on 	| 		 | 
+	  | Object	| 		 | 
+__________________________________________________________
+Ctrl/	  | 		| sätt värde	 | 
+Shift/MB1 | 		| (om simulate)  | 
+__________________________________________________________
+
+
+! level 3. 
+3 SkapaObjekt
+=Title Skapa Objekt 
+=Keyword SkapaObjekt
+Välj ett objekt i objekts paletten och klicka med MB2
+någonstans i arbetsarean. Om cursorn är placerad på ett
+existerande objekt kommer ej något objekt att skapas.
+
+! level 3. 
+3 SkapaFörbindning
+=Title Skapa förbindning
+=Keyword SkapaFörbindning
+Placera cursorn på objektet från vilken förbindnings-
+linjen ska dras. Tryck ned MB2, flytta cursorn till 
+destinations objektet och släpp MB2. Plceditorn väljer
+den närmaste kopplingspunkten och det säkraste stället
+att träffa rätt punkt är på objektskroppen i närheten
+av roten kopplings pinnen. Riktningen för linjen har
+dvs om linjen dras från A till B, eller
+från B till A, har ingen betydelse för plceditorn och 
+påverkar ej kodgenereringen.
+
+
+! level 3. 
+3 SelectObjekt
+=Title Select objekt 
+=Keyword SelectObjekt
+Placera cursorn på objektet och klicka med MB1.
+Att objektet är utvalt markeras med highlight.
+Tidigare utvalda objekt återställs.
+
+! level 3. 
+3 AddSelectObjekt
+=Title Add select objekt 
+=Keyword AddSelectObjekt
+Placera cursorn på objektet och klicka med Shift/MB1.
+Att objektet är utvalt markeras med highlight.
+Tidigare utvalda objekt återställs ej.
+
+! level 3. 
+3 DeleteObjekt
+=Title Delete objekt
+=Keyword DeleteObjekt
+Ta bort ett objekt
+Placera cursorn på objektet och dubbelklicka med MB2.
+
+Ta bort en förbindning
+Placera cursorn på förbindningen och dubbelklicka med MB2.
+
+Ta bort alla utvalda objekt
+Dubbelklicka MB2 på något fritt utrymme i arbetsarean,
+eller välj delete i menyn.
+
+ 
+
+! level 3. 
+3 Connect
+=Title Connect
+=Keyword Connect
+Vissa objekt t ex getdi, setao, kräver reference till io
+objekt eller andra objekt. Ett alternativ till att mata
+in namnet på dessa i attributeditorn är att välja ut 
+referensobjektet i navigatören och dubbelklicka med 
+Ctrl/MB1 på det refererande objektet i plceditorn, eller
+att välja ut båda och välja connect i menyn. Objekt 
+med flera referenser t ex pos3p och inc3p hämtas de 
+utvalda objekten i navigatören genom att klicka i över 
+resp undre delen av det referande objektet med MB3.
+
+! level 3. 
+3 Attributeditor
+=Title Attributeditor
+=Keyword Attributeditor
+Attributeditorn för ett objekt startas genom 
+dubbelklick MB1. 
+
+I attributeditorn ge möjlighet att 
+- datasätta parameterar i objekt
+- välja vilka in eller utgångar som ska visas i plceditorn
+- invertera logiska ingångar
+
+Attributeditorn är under utveckling och har följande 
+brister:
+
+- Alla parameterar visas, även sådana som ej ska datasättas
+  av konstruktören. Undvik att mata in värden på dessa.
+- Endast för vissa typer av objekt är det tillåtet att
+  invertera in ingång (objekt vars kod beskrivs av ett 
+  macro),  men även andra objekt kan inverteras i 
+  attributeditorn.
+  Se i objektsbeskrivningen om invertering är tillåtet
+  eller ej.
+
+! level 3. 
+3 SelectRegion
+=Title Select region
+=Keyword SelectRegion
+Pressa ned MB1, flytta cursorn och släpp MB1.
+Alla objekt som befinner sig med någon del inom den
+rektangel som skapas kommer att väljas ut, liksom de
+förbindningslinjer som går mellan två utvalda objekt.
+
+! level 3. 
+3 SkapaSubwindow
+=Title Skapa subwindow
+=Keyword SkapaSubwindow
+För vissa objekt kan man öppna ett fönster genom 
+dubbelklick Shift/MB1. Ett underfönster kommer i databasen
+att vara barn till det objekt under vilket det är skapat.
+Detta innebär vissa restriktioner för att göra quit, save
+och delete för att man ska undvika att ta bort roten till
+ett sparat underfönster.
+
+Följande objekt har underfönster:
+- Order: orderaktivitet och villkor. För att kunna öppna
+	ett villkorsfönster måste order ha ett C attribut.
+	Villkorsfönstret öppnas genom att klicka i vänstra
+	delen på orderobjektet, och aktivitetsfönstret
+	genom att klicka i högra delen.
+- Trans
+- Substep
+- CSub
+
+! level 3. 
+3 FlyttaObjekt
+=Title Flytta objekt
+=Keyword FlyttaObjekt
+Placera cursorn på objektet, press Shift/MB1 och flytta
+cursorn till den nya positionen. När MB1 släpps kommer
+objektet att flyttas.
+
+! level 3. 
+3 Copy
+=Title Copy
+=Keyword Copy
+
+Kopiera ett objekt
+Placera cursorn på objektet och dubbelklicka Ctrl/Shift/MB1.
+Objektet återskapas med single paste klick Ctrl/Shift/MB2.
+
+Kopiera ett område
+Välj ut ett område (select region) och dubbelklicka Ctrl/Shift/MB1 i 
+något fritt utrymme i arbetsarean. Alla utvalda objekt 
+och förbindnings linjer kommer kopieras. Kopieringen sker
+med paste region i menyn eller singleklick Ctrl/Shift/MB2.
+
+
+! level 3. 
+3 Cut
+=Title Cut
+=Keyword Cut
+
+Cut objekt
+Placera cursorn på objektet och dubbelklicka Ctrl/Shift/MB2.
+Objektet återskapas med single paste singleklick Ctrl/Shift/MB2.
+Objektet får alltid ett nytt namn när det återskapas.
+
+Cut region
+Välj ut ett område och dubbelklicka Ctrl/Shift/MB2 i något fritt
+utrymme i arbetsarean. Alla utvalda objekt och förbindnings
+linjer kommer att tas bort. Objekten återskapas med paste 
+region i menyn eller singleklick Ctrl/Shift/MB2.
+
+Objektet får alltid ett nytt namn och en ny identitet
+när det återskapas. Undvik därför att använda cut och 
+paste på objekt som referas av andra objekt (S-order). 
+Använd copy eller move region istället.
+
+! level 3. 
+3 Paste
+=Title Paste
+=Keyword Paste
+Det finns två pastebuffertar i plceditorn. En för enstaka 
+objekt (paste single objekt) och en för en area 
+(paste region). Pastebufferten är gemensam för 
+alla fönster och kan användas för att flytta 
+objekt mellan olika fönster. 
+
+Paste single objekt
+Ett enstaka objekt på vilkte man gjort cut eller copy
+genom att placera cursorn direkt på objektet kommer 
+att återskapas eller kopieras med singleklick Ctrl/Shift/MB2.
+
+Paste region
+Ett område som valt ut och funktionerna cut eller copy 
+applicerats på återskapas resp kopieras genom singleklick 
+Ctrl/Shift/MB2. En rektangel med samma geometri som den 
+utvalda  arean skapas och användaren kan flytta 
+på den med  Shift/MB1 ( se flytta objekt).
+När rektangeln släpps skapas objekten med samma relation 
+till denna som de hade till den tidigare utvalda arean. 
+
+! level 3. 
+3 HelpObjekt
+=Title Help on an object 
+=Keyword HelpObjekt
+Klicka på ett objekt med Ctrl/MB1 för att få information
+om objekts klassen.
+
+! level 2. 
+2 Navigations fönster
+=Title Navigations fönster
+=Keyword Navigations fönster
+Navigationsfönstret skapas eller tas bort genom at klicka 
+längst ner till vänster i plceditorn. 
+
+Navigationsfönstret ger en överblick hela arbetsarean
+och ger möjlighet till att scrolla och zooma på ett 
+enkelt sätt.
+
+Scrollning: Ta tag i rektangeln som markerar den i huvud-
+fönstret synliga delen av arbetsarean men press MB1. 
+Flytta cursorn till det område som ska editeras så flyttas
+huvudfönstret till detta område.
+
+Zoomning: Ta tag i rektangeln med press MB2 och ändra
+storleken på den genom att flytta cursorn.
+
+! level 2. 
+2 ObjektPalett
+=Title Objekt palett 
+=Keyword Objekt palett
+Objekten i paletten är indelade i ett antal grupper
+
+IO	Hanterar och referar till io signaler
+Grafcet	Objekt för att bygga grafcetsekvenser
+Logic 	Block för  digitala signaler 
+Analog	Beräkningsblock för analoga signaler
+Control	Regulatorer
+Edit	Objekt för editor funktioner
+
+Välj ett objekt genom att expandera vald grupp 
+(dubbelklick MB1), och välj önskat objekt med MB1.
+ 
+! level 3. 
+3 Logic
+=Title Logic
+=Keyword Logic
+=Include And
+=Include Or
+=Include Xor
+=Include Edge
+=Include SR_S
+=Include SR_R
+=Include Inv
+=Include Pulse
+=Include Wait
+=Include Timer
+=Include Dsup
+=Include Asup
+=Include Count
+
+	Logik-block
+	___________
+
+	AND	Och-grind
+	OR	Eller-grind
+	XOR	Antingen-eller-grind
+	EDGE	Flankavkänning
+	SR_S	SR-vippa som sätts vid båda till
+	SR_R	SR-vippa som nollas vid båda till
+	INV	Inverterare
+	PULSE	Tidsbestämd puls startas vid positiv flank
+	WAIT	Tillslagsfördröjning
+	TIMER	Frånslagsfördröjning
+	DSUP	Digitalt larm
+	ASUP	Analogt larm
+	COUNT	Räknare
+
+I samtliga dessa block kan man invertera insignalerna direkt.
+Inget särskilt inverteringsobjekt krävs.
+För övriga block får man göra ett inverteringsblock mha en
+OR-grind med en inverterad ingång.
+
+Timerfunktionen har en länkad lista med aktiva timers.
+I länkade listan ligger återstående tid som ticks.
+I respektive objekt ligger alltid inställd tid som sekunder.
+Det finns en global variabel "timerstart" som pekar på 
+första aktiva timer. Varje enskilt objekt lägger in 
+sin timer i timer-kön och sätter sin flagga som aktiv. 
+Kan även sätta sin flagga som passiv för att få den 
+uttrådad ur kön. Timerhanteraren sköter alltid den 
+verkliga uttrådningen av passiva timers. Den löper igenom
+samtliga timers i aktiva kön. Tickräknaren räknas ned.
+Om tiden gått ut sätts timerflaggan ej aktiv.
+Om timern är ej aktiv trådas den av från timer-kön.
+Timer-hanterarens scantid måste vara minst lika 
+snabb som den snabbaste av systemets exekveringstider.
+
+ängsta hanterbara tid är beroende på timer-tiden.
+ 32 bits integer (2 147 483 647 tic största 
+positiva heltal) med timertic på  20 ms 
+ger max 42 949 672 sek vilket motsvarar ca 497 dagar, 
+dvs drygt ett år. 
+
+Timer-struct:
+  TimerFlag	char	Markerar aktiv timer
+  TimerNext	*timer	Pekar på nästa timer i kön
+  TimerCount	int	Antal återstående ticks
+  TimerDO	*char	Signal som skall 
+			nollas då timern blir inaktiv 
+\vriga signaler som normalt behövs för att hantera timern
+  TimerTime	float	Inställningsvärde i sekunder.
+  TimerDODum	char	Dummy. TimerDO pekar hit om 
+			ej använd.
+  TimerAcc	int	Operatörsrättigheter för 
+			inställd tid
+  TimerMin	float	Minsta inställda tid för operatör
+  TimerMax	float	Högsta inställda tid för operatör
+
+Om operatören går in och ändrar TimerTid för löpande 
+timer, måste även TimerCount ändras med 
+tidsskillnaden i ticks. 
+
+! level 3. 
+3 IO
+=Title IO
+=Keyword IO
+=Include GetDi
+=Include GetDo
+=Include GetDv
+=Include GetDp
+=Include GetAi
+=Include GetAo
+=Include GetAv
+=Include GetAp
+=Include GetPi
+=Include PiPos
+=Include StoDo
+=Include StoDv
+=Include StoDp
+=Include StoAo
+=Include StoAv
+=Include StoAp
+=Include SetDo
+=Include SetDv
+=Include ResDo
+=Include ResDv
+=Include BCDDo
+=Include DiBCD
+
+
+I/O-block
+_________
+
+GETDI	Hämta status	Digital ingång
+GETDO	- " -		Digital utgång
+GETDV	- " -		Digital mellanlagring (fd ME)
+GETDP	- " -		Godtycklig digital parameter 
+			godtyckligt block
+GETAI	Hämta värde	Analog ingång
+GETAO	- " -		Analog utgång
+GETAV	- " -		Analog mellanlagring (fd BE)
+GETAP	- " -		Godtycklig analog parameter 
+			godtyckligt block
+GETPI	Läs av pulsräknarkort
+PIPOS	Konvertera pulsråvärde till position
+
+STODO	Lagra status	DO
+STODV	- " -		DV
+STODP	- " -		Godtycklig parameter godtyckligt
+			block
+STOAO	Lagra värde i	AO
+STOAV	- " -		AV
+STOAP	- " -		Godtycklig parameter godtyckligt
+			block
+SETDO	Ettställ om sant
+SETDV	- " -
+RESDO	Nollställ om sant
+RESDV	- " -
+BCDDO	Konvertera float till BCD
+DIBCD	Konvertera BCD till float
+
+Digitala signaler anges som typ char.
+
+! level 3. 
+3 Analog
+=Title Analog
+=Keyword Analog
+=Include Sum
+=Include Maxmin
+=Include Limit
+=Include Comph
+=Include Compl
+=Include Select
+=Include Ramp
+=Include Filter
+=Include Speed
+=Include Timint
+=Include Curve
+=Include Table
+=Include Adelay
+=Include AArithm
+=Include DArithm
+
+Beräknings-block
+________________
+
+SUM	Summation med viktsfaktor
+MAXMIN	Välj högsta och lägsta värde
+LIMIT	Begränsa värde uppåt och nedåt
+COMPH	Jämför mot hög gräns med hysteres
+COMPL	Jämför mot låg gräns med hysteres
+SELECT	Omkopplare
+RAMP	Begränsa ändringshastighet
+FILTER	Exponential-filter
+SPEED	Derivering
+TIMINT	Integrering
+CURVE	Interpollation
+TABLE	Tabell till interpollationsblock
+ADELAY	Fördröjning av analog signal
+AARITHM	Fritt programmerat aritmetiskt uttryck
+DARITHM Fritt programmerat logiskt uttryck
+
+
+! level 3. 
+3 Drive Entry
+=Title Drive
+=Include Drive
+=Include Valve
+=Include MValve
+=Include Posit
+
+Motorstyrnings-block
+____________________
+
+DRIVE		Motorstyrning
+VALVE		Magnetventilstyrning
+MVALVE		Motorventilstyrning
+POSIT		Positionering
+
+! level 3. 
+3 PID entry
+=Title PID
+=Include PID
+=Include Mode
+=Include Pos3P
+=Include Inc3P
+=Include Out2P
+
+Regulator-block + hjälpblock
+____________________________
+
+PID	PID-regulator
+MODE	Sköter reglermod och tvångsstyrning åt PID
+POS3P	Digital 3-pkts utgång (öka / minska) med 
+	lägesåterföring
+INC3P	Digital 3-pkts utgång (öka / minska) utan 
+	lägesåterföring
+OUT2P	Digital 2-pkts utgång (till / från)
+
+! level 3. 
+3 Grafcet
+=Title Grafcet
+=Keyword Grafcet
+=Include InitStep
+=Include Step
+=Include SubStep
+=Include SsBegin
+=Include SsEnd
+=Include Trans
+=Include Order
+=Include D_order
+=Include L_order
+=Include P_order
+=Include C_order
+=Include S_order
+=Include Reset_SO
+=Include OrderAact
+=Include SetCond
+
+Grafcet-block
+_____________
+
+INITSTEP Huvudsekvenssteg
+STEP	Sekvenssteg
+SUBSTEP	Sekvenssteg med underliggande delsekvens
+SSBEGIN	Första sekvenssteg i delsekvens
+SSEND	Sista sekvens i delsekvens
+TRANS	\vergångsvillkor
+ORDER	Innehåller kod som exekveras under visst steg
+D_ORDER	Fördröjning av order
+L_ORDER	Tidsbegränsad order
+P_ORDER	Pulsad order en programcykel
+C_ORDER	Villkorlig order
+S_ORDER	Lagrad order
+RESET_SO Tag ned lagrad S_ORDER
+ORDERACT Läs status för aktiv order
+SETCOND	Lagra villkorsresultat i TRANS eller C_ORDER
+
+Till varje sekvenssteg kan flera orderlistor kopplas
+Varje orderlista består av noll eller fler förorder som 
+avslutas med ett ORDER-objekt.
+Orderlista exekveras om steget (eller S_ORDER) är aktiv
+samt en gång med inaktivt steg.
+Vid t.ex. D_ORDER + ORDER utförs koden direkt då steget 
+blivit aktivt även om ordern ännu inte är aktiv. 
+Orderstatus kan användas som insignal i exekverande 
+koden genom ORDER_ACT.
+
+! level 3. 
+3 Edit
+=Title Edit
+=Keyword Edit
+=Include Document
+=Include Point
+=Include ShowPlcAttr
+
+Edit-block
+_____________
+
+Document	Objekt för siduppdelning och printning.
+Point		Objekt för styrning och sammankoppling
+		av förbindningslinjer.
+ShowPlcAttr	Objekt för att visa plcattribut i editorn.
+
+
+! level 2. 
+2 ConnectionPalett
+=Title Connection palett 
+=Keyword Connection palett
+Linjetype kan väljas i connection paletten om 
+User connection har aktiverats i menyn.
+
+Linjetypen måste väljas av användaren i följande fall:
+- Vid återkopplingar i plc nät.
+- Vid styrning av exekveringsordningen.
+- Vid förgreningar och sammanföringar i grafcet
+	(TransDiv, TransConv, StepDiv, StepConv).
+- När två Point objekt sammankopplas och förbindningen
+	är av typen float.
+
+Objekten i paletten är indelade i ett antal grupper
+
+CONPLC		förbindningslinjer i ett plcnät.
+
+		ConDigital och ConAnalog är default för kopplingar
+		mellan digitala resp analoga parametrar och 
+		innebär dels ett signal flöde, dels bestämning
+		av exekveringsordning för objekten.
+
+		Feedback kopplingarna innebär enbart ett signal-
+		flöde och påverkar ej exekveringsordningen mellan
+		objekten. Vid återkopplingar i plcnät måste 
+		feedback kopplingar användas eftersom exekverings-
+		ordningen annars ej kan bestämmas entydigt.
+
+CONGRAFCET	förbindningslinjer i grafcet.
+		Vid förgreningar och sammanföringar i grafcet
+		skall följande typer användas:
+		
+		TransDiv	förgrening från ett transobjekt. 
+		TransConv	sammanföring till ett transobjekt.
+		StepDiv		förgrening från ett stepobjekt.
+		StepConv	sammanföring till ett stepobjekt.
+
+CONDOCUMENT	förbindningar som kan användas för dokumentation.
+		Påverkar ej signalflöde eller exekveringsordning.
+
+! level 3. 
+3 CONPLC
+=Title CONPLC 
+=Keyword CONPLC 
+
+Kopplingar i ett plcnät.
+
+! level 4. 
+4 ConDigital 
+=Title ConDigital 
+=Keyword ConDigital 
+
+Connection
+
+Förbindning mellan två digitala parameterar i ett
+plc nät.
+
+Signalöverförande och exekveringsordningsbestämmande.
+
+! level 4. 
+4 ConAnalog 
+=Title ConAnalog 
+=Keyword ConAnalog 
+
+Connection
+
+Förbindning mellan två analoga parameterar i ett
+plc nät.
+
+Signalöverförande och exekveringsordningsbestämmande.
+
+! level 4. 
+4 ConFeedbackDigital 
+=Title ConFeedbackDigital 
+=Keyword ConFeedbackDigital 
+
+Connection
+
+Återkoppling mellan två digitala parameterar i ett
+plc nät.
+
+Signalöverförande, ej exekveringsordningsbestämmande.
+
+! level 4. 
+4 ConFeedbackAnalog 
+=Title ConFeedbackAnalog 
+=Keyword ConFeedbackAnalog 
+
+Connection
+
+Återkoppling mellan två analoga parameterar i ett
+plc nät.
+
+Signalöverförande, ej exekveringsordningsbestämmande.
+
+! level 4. 
+4 ConExecuteOrder
+=Title ConExecuterOrder 
+=Keyword ConExecuteOrder 
+
+Connection
+
+Koppling som bestämmer exekveringsordningen mellan två objekt.
+Det objekt kopplingen utgår ifrån kommer att exekvera före
+det objekt den pekar på.
+
+Exekveringsordningsbestämmande, ej signalöverförande. 
+
+! level 3. 
+3 CONGRAFCET
+=Title CONGRAFCET 
+=Keyword CONGRAFCET 
+
+Kopplingar i en grafcet sekvens.
+
+! level 4. 
+4 StepConv 
+=Title StepConv 
+=Keyword StepConv 
+
+Connection
+
+Används när en grafcet sekvens divergerar från 
+ett steg till flera transitions.
+
+Lägger brytpunkterna på ett bestämt avstånd från
+det övre objektet.
+
+! level 4. 
+4 StepDiv 
+=Title StepDiv 
+=Keyword StepDiv 
+
+Connection
+
+Används när en grafcet sekvens konvergerar från 
+flera transitions ett steg steg.
+
+Lägger brytpunkterna på ett bestämt avstånd från
+det under objektet.
+
+
+! level 4. 
+4 TransConv 
+=Title TransConv 
+=Keyword TransConv 
+
+Connection
+Simultaneus transition convergence.
+
+Används när en grafcet sekvens divergerar från 
+en transition till flera steg.
+
+Lägger brytpunkterna på ett bestämt avstånd från
+det undre objektet.
+
+
+! level 4. 
+4 TransDiv 
+=Title TransDiv 
+=Keyword TransDiv 
+
+Connection
+Simultaneus transition divergence.
+
+Används när en grafcet sekvens konvergerar från 
+flera transitions till ett steg.
+
+Lägger brytpunkterna på ett bestämt avstånd från
+det övre objektet.
+
+
+
+! level 2
+2 Utilities
+=Title Utilities 
+=Keyword Utilites 
+UTILITIES omfattar ett antal funktioner för att få information om
+databasen, skriva ut listor och dokument mm.
+
+Välj den funktion som du vill utföra under 'command'.
+Funktionerna finns beskrivna under pwr_cmd.
+
+Ange lämliga indata till funktionen i de fält som dyker upp
+till höger i fönstret. En 'insert' knapp till ett fält innebär
+att men kan lägga in ett objekt från navigatören genom att 
+välja ut det och sedan klicka på 'insert' knappen. 
+
+Välj om funktionen ska köras i batch eller ej under 'batch'.
+
+Genom att aktivera 'OK' utförs funktionen eller läggs upp på 
+batchkön.
+
+För att kunna välja en funktion som modifierar databasen krävs
+att man sätter 'edit' under 'functions' i menyn.
+
+Gjorda förändringar lagras med 'save' under 'file' i menyn.
+
+Avsluta med 'Cancel' eller 'Quit'.
+
+! level 3
+3 Exit
+=Title Exit 
+=Keyword Exit 
+Avslutar sessionen.
+Om förändringar är gjorda i databasen
+frågas om dessa ska sparas eller ej.
+
+! level 3
+3 Save
+=Title Save 
+=Keyword Save 
+Sparar utförda förändringar i databasen.
+
+! level 3
+3 ShowCommand
+=Title Show command 
+=Keyword ShowCommand
+Visar det pwr_cmd kommando som motsvarar aktuell funktion.
+Kommandot placeras i kommando fönstret om detta är aktiverat.
+
+! level 3
+3 CommandWindow
+=Title Command Window 
+=Keyword CommandWindow
+Skapar (eller tar bort) ett fönster med möjlighet att mata in pwr_cmd
+kommandon.
+
+! level 3
+3 Edit
+=Title Edit
+=Keyword Edit
+Tillåter användaren att göra förändringar i databasen. 
+
+Gjorda förändringar sparas med save.
+
+! level 3
+3 Batch
+=Title Batch
+=Keyword Batch
+Lägger upp kommandot på lämplig batchkö.
+
+Symbolen PWR_UTE_SUBMIT ska tilldelas önskat submit kommand, tex
+
+PWR_UTE_SUBMIT == "submit /queue=sys$batch /log /keep /noprint"
+
+! level 3
+3 CurrentSession
+=Title Current session
+=Keyword CurrentSession
+Kommandot körs direkt i samma process som pwr_dev.
+
+! level 3
+3 Apply
+=Title Apply
+=Keyword Apply
+Utför valt kommando eller lägger upp det på batchkön.
+
+! level 2
+2 pwr_cmd
+=Title pwr_cmd 
+=Keyword pwr_cmd 
+PWR_CMD omfattar ett antal funktioner för hantera arbetsbänken, 
+t ex ta ut listor, kompilera och skriva ut plcprogram.
+
+
+! level 3
+3 save
+=Title save 
+=Keyword save 
+Sparar utförda ändringar i databasen.
+
+! level 3
+3 exit
+=Title exit
+=Keyword exit
+Sparar gjorda förändringar i databasen och avslutar exekveringen.
+
+! level 3
+3 quit
+=Title quit 
+=Keyword quit 
+Avslutar utan att spara några förändringar i databasen.
+
+! level 3
+3 show
+=Title show 
+=Keyword show 
+Show listar information objekt, plcprogram, noder mm.
+
+! level 4
+4 node
+=Title node 
+=Keyword node 
+Listar samtliga noder i databasen.
+
+Syntax:
+
+pwr>show node
+
+! level 4
+4 plcpgm
+=Title plcpgm 
+=Keyword plcpgm 
+
+Listar samtliga noder i systemet och de plcpgm som hör till 
+respektive node.
+
+Syntax:
+
+pwr>show plcpgm
+
+! level 4
+4 window
+=Title window 
+=Keyword window 
+Listar samtliga windows i ett plcpgm.
+
+Syntax:
+
+pwr>show window/plcpgm=
+
+
+! level 5
+5 /plcpgm
+=Title /plcpgm 
+=Keyword /plcpgm 
+Hierarkinamnet på det plcpgm-objekt för vilket 
+window-objekten ska listas.
+
+! level 4
+4 objects
+=Title objects 
+=Keyword objects 
+Visar 
+- vilka objekt som finns i ett fönster.
+- vilka objekt som finns i systemet av en viss klass.
+- objektsnamn för ett objdid.
+
+
+Syntax:
+
+pwr>show objects/objid=
+pwr>show objects/class=/hierarchy=/name=/full
+pwr>show objects/class=/hierarchy=/name=/parameter=
+
+! level 5
+5 /window
+=Title /window 
+=Keyword /window 
+Hierarkinamnet på det window-objekt för vilket 
+objekten ska listas.
+
+! level 5
+5 /objid
+=Title /objid
+=Keyword /objid
+Objid på det objekt för vilket objektsnamnet ska 
+visas.
+
+Objid ges på formatet
+ _Oa.b.c.d:e eller a.b.c.d:e eller a_b_c_d_e
+
+Ex _O0.0.1.12:1345 eller 0.0.1.12:1345 eller 0_0_1_12_1345
+
+! level 5
+5 /class
+=Title /class
+=Keyword /class
+Namnet på den klassen för vilken alla  
+instanser ska listas.
+
+! level 5
+5 /hierarchy
+=Title /hierarchy
+=Keyword /hierarchy
+Namnet på det objekt i hierarkin under för vilken alla  
+objekt av en viss klass ska listas.
+
+! level 5
+5 /name
+=Title /name
+=Keyword /name
+Namnet på det objekt som ska listas.
+Wildcard är tillåtet.
+
+! level 5
+5 /allvolumes
+=Title /allvolumes
+=Keyword /allvolumes
+Anger att sökning efter objekt ska ske i samtliga volymer
+i aktuell databas.
+
+! level 5
+5 /full
+=Title /full
+=Keyword /full
+Innehållet i parametrar som är datasatta från attributeditorn skrivs ut.
+
+Kan endast användas tillsammans med kvalifierarna /name, /class 
+eller /hierarchy.
+
+! level 5
+5 /parameter
+=Title /parameter
+=Keyword /parameter
+Innehållet i en parameter skrivs ut.
+
+Kan endast användas tillsammans med kvalifierarna /name, /class 
+eller /hierarchy. Om wildcard används i namnet krävs att klassen anges.
+
+! level 5
+5 /output
+=Title /output
+=Keyword /output
+Resultatet av operationen skrivs ut på den fil som anges.
+
+! level 5
+5 /noterminal
+=Title /noterminal
+=Keyword /noterminal
+Resultatet av operationen skrivs ej ut på terminalen.
+
+! level 4
+4 connections
+=Title connections 
+=Keyword connections 
+
+Listar samtliga connection-object i ett window.
+
+Syntax:
+
+pwr>show connections/window=
+
+! level 5
+5 /window
+=Title /window 
+=Keyword /window 
+Hierarkinamnet på det window-objekt för vilket 
+connections-objekten ska listas.
+
+! level 4
+4 modules
+=Title modules
+=Keyword modules
+
+Visar information om objectsmodulerna som skapas vid
+kompilering av plcpgm och windows.
+
+Syntax:
+
+pwr>show modules
+pwr>show modules/name=
+pwr>show modules/objid=
+
+! level 5
+5 /name
+=Title /name
+=Keyword /name
+Hierarkinamnet på det window-objekt eller plcpgm för vilket 
+info ska visas.
+
+! level 5
+5 /objid
+=Title /objid
+=Keyword /objid
+Objid på det window-objekt eller plcpgm för vilket 
+info ska visas.
+
+
+! level 5
+5 /output
+=Title /output
+=Keyword /output
+Resultatet av operationen skrivs ut på den fil som anges.
+
+! level 4
+4 class
+=Title class
+=Keyword class
+
+Visar alla klasser i en klasshierarki. 
+Default klasshierarki är BaseClasses.
+
+Syntax:
+
+pwr>show class
+pwr>show class/classhier=/name=
+pwr>show class/classhier=/name=/full
+pwr>show class/classhier=/name=/all/contents
+
+! level 5
+5 /classhier
+=Title /classhier
+=Keyword /classhier
+Namnet på den klasshierarki (objekt av klassen $ClassHier) 
+för vilkan all klasser ska visas.
+
+! level 5
+5 /name
+=Title /name
+=Keyword /name
+Namn på class. 
+Wildcard accepteras.
+
+! level 5
+5 /output
+=Title /output
+=Keyword /output
+Resultatet av operationen skrivs ut på den fil som anges.
+
+! level 5
+5 /noterminal
+=Title /noterminal
+=Keyword /noterminal
+Resultatet av operationen skrivs ej ut på terminalen.
+
+! level 5
+5 /full
+=Title /full
+=Keyword /full
+Skriver ut namnet på all parametrar i klassen, samt typ och storlek på
+parametern.
+
+! level 5
+5 /all
+=Title /all
+=Keyword /all
+Listar alla klassobjekt, dvs även body-objekt och parmeterobjekt.
+
+! level 5
+5 /contents
+=Title /contents
+=Keyword /contents
+Skriver ut innehållet i ett klassobjekt.
+
+! level 4
+4 hierarchy
+=Title hierarchy
+=Keyword hierarchy
+
+Visar samtliga hierarkiobjekt (av klassen $Hierarachy) i systemet.
+
+Syntax:
+
+pwr>show hierarchy
+
+! level 5
+5 /output
+=Title /output
+=Keyword /output
+Resultatet av operationen skrivs ut på den fil som anges.
+
+! level 5
+5 /noterminal
+=Title /noterminal
+=Keyword /noterminal
+Resultatet av operationen skrivs ej ut på terminalen.
+
+! level 4
+4 volume
+=Title volume
+=Keyword volume
+
+Visar användarvolymer i database, samt vilken som är attached.
+
+Syntax:
+
+pwr>show volume
+
+! level 4
+4 bootfiles
+=Title bootfiles
+=Keyword bootfiles
+
+
+Visar bootfiler som finns på filkatalogen pwrp_load (på ELN-noder på 
+filkatalogen <sys0.sysexe>.
+Utan kvalifierare visas högsta versionen av bootfiler för konfigurerade
+noder. 
+Med kvalifieraren /node visas alla versioner av bootfilen för en nod.
+Med kvalifieraren /bootnode kan man se bootfilerna på andra noder.
+
+pwr> show bootfiles
+
+5 /node
+=Title /node
+=Keyword /node
+
+Visar alla versioner av bootfiler för en nod.
+
+pwr> show boot/node=ptxlab
+
+5 /bootnode
+=Title /bootnode
+=Keyword /bootnode
+
+Visar bootfiler på en bootnod.
+Utan kvalifieraren /node visas högsta versionen av bootfiler 
+för alla noder som har aktuell bootnod konfigurerad som bootnod. 
+Med kvalifieraren /node visas alla versioner av bootfilen för en viss nod.
+
+pwr> show boot/bootnode=ptxlab
+
+
+5 /busnumber
+=Title /busnumber
+=Keyword /busnumber
+
+Visar noder som tillhör en viss dmq- eller qcom-bus.
+
+
+! level 4
+4 loadfiles
+=Title loadfiles
+=Keyword loadfiles
+
+Visar den uppsättning laddfiler som tillhör bootfilerna för noderna 
+i projektet.
+
+Följande filer visas
+- bootfilen för respektive nod
+- exe-filen för plc-programmet (om detta finns)
+- laddatafiler för samtliga volymer som finns refererade i bootfilen och 
+  laddatafilerna.
+- rtt-filer för korsreferser mm (om dessa finns genererade)
+
+Dessutom görs en kontroll av att filerna existerar, och att 
+versionerna i de olika filerna överensstämmer. 
+Kontrollen av versioner sker enbart i det urval av filer som har 
+begärts, dvs väljer man att lista enbart en nod, kontrolleras inte 
+att versionerna i andra noder överensstämmer med versionerna för 
+denna nod.
+Eventuella fel eller varningar skrivs ut i fältet .File/Comment.. 
+
+Exempel på fel: 
+ ** No such file	   en fil som refereras finns en på filkatalogen.
+ ** Version mismatch	   en laddatafil för en volym 
+			   refereras med olika version i olika filer.
+ -- Higher version exist   det finns en högre version av filen på 
+			   filkatalogen.
+
+Utan några kvalifierare visas laddfilerna för högsta versionen 
+av bootfilerna till samtliga konfigurerade noder i projektet.
+Med kvalifieraren /node visar man laddfilerna för en nod. 
+Man kan då även titta på andra bootfiler än den högsta versionen 
+mha /vms_vers.
+Med /bootnode tittar man på laddfiler på en bootnod, och 
+med /busnumber kan man välja laddfiler som tillhör en viss dmq- 
+eller qcom-bus.
+
+pwr> show load
+
+5 /node
+=Title /node
+=Keyword /node
+
+Visar laddfiler för en nod.
+
+5 /vms_version
+=Title /vms_version
+=Keyword /vms_version
+
+Visar laddfiler som hör till en bestämd version av bootfilen för 
+en nod. 
+Måste kombineras med /node och kan ej kombineras med /bootnode.
+
+pwr> sho load/node=ptxlab/vms_vers=23
+
+5 /bootnode
+=Title /bootnode
+=Keyword /bootnode
+
+
+Visar laddfiler på en bootnod
+
+pwr> sho load/bootnode=ptxlab
+
+5 /busnumber
+=Title /busnumber
+=Keyword /busnumber
+
+Visar laddfiler för noder som tillhör en viss dmq- eller qcom-nod.
+
+
+! level 4
+4 applications
+=Title applications
+=Keyword applications
+
+Visar applikationer som konfigurerats med ApplDistribute-objekt.
+
+pwr> show appl
+
+5 /remote
+=Title /remote
+=Keyword /remote
+
+Visar och kontrollerar datum för  filerna på bootnoderna. 
+Om det finns senare versioner av filen i utvecklingsmiljön 
+markeras detta med en pil.
+
+
+! level 4
+4 graph
+=Title graph
+=Keyword graph
+
+Visar grafikfiler som finns konfigurerade med GraphDistribute-objekt.
+Funktionen är densamma som 'show appl'.
+
+pwr> show graph
+
+5 /remote
+=Title /remote
+=Keyword /remote
+
+Visar och kontrollerar datum för  filerna på bootnoderna. 
+Om det finns senare versioner av filen i utvecklingsmiljön 
+markeras detta med en pil.
+
+
+! level 4
+4 system
+=Title system
+=Keyword system
+
+Visar systemfiler konfigurerade med SystemDistribute-objekt.
+
+pwr> show system
+
+5 /remote
+=Title /remote
+=Keyword /remote
+
+Visar och kontrollerar datum för  filerna på bootnoderna. 
+Om det finns senare versioner av filen i utvecklingsmiljön 
+markeras detta med en pil.
+
+
+! level 4
+4 db
+=Title db
+=Keyword db
+
+Visar tidpunkt för senaste kopiering av databaser.
+
+pwr> show db
+
+
+! level 3
+3 compile
+=Title compile
+=Keyword compile
+
+Kompilerar logik och grafcet fönster skapade i plceditorn.
+Kompilering kan ske för ett fönster, för alla fönster i 
+ett plcpgm eller för alla fönster och plcpgm i en eller 
+flera volymer.
+
+Syntax:
+
+pwr>compile /window=
+pwr>compile /plcpgm=
+pwr>compile /volumes=
+pwr>compile /allvolumes
+pwr>compile /from_plcpgm=
+
+! level 4
+4 /window
+=Title /window
+=Keyword /window
+Hierarkinamnet på det window-objekt som ska komileras.
+
+! level 4
+4 /plcpgm
+=Title /plcpgm
+=Keyword /plcpgm
+Hierarkinamnet på det plcpgm som ska komileras.
+
+! level 4
+4 /volume
+=Title /volume
+=Keyword /volume
+Namn på en eller flera volymer. Samtiga plcpgm i angivna
+volymer kommera att kompileras.
+
+Kan vara en lista på volymer
+
+! level 4
+4 /allvolumes
+=Title /allvolumes
+=Keyword /allvolumes
+
+Samtliga plcpgm i samtliga volymer kommer att kompileras.
+
+! level 4
+4 /debug
+=Title /debug
+=Keyword /debug
+
+Kompilering sker med debug.
+
+! level 4
+4 /modified
+=Title /modified
+=Keyword /modified
+
+Endast plc-moduler som är modifierade sedan senaste kompilering
+kommer att kompileras.
+
+! level 3
+3 crossreference
+=Title crossreference
+=Keyword crossreference
+
+Listar referenser i plcprogrammet för 
+- ett objekt 
+- samtliga objekt av en klass.
+- samtliga objekt av en klass under ett objekt i hierarkin.
+Syntax:
+
+pwr>crossreferense/object=
+pwr>crossreferense/class=
+pwr>crossreferense/hierarchy=/class=/name=
+
+! level 4
+4 /object
+=Title /object
+=Keyword /object
+Hierarkinamnet på det objekt för vilket referenserna ska
+listas. 
+
+! level 4
+4 /class
+=Title /class
+=Keyword /class
+Namnet på den klass för vilken referenser för samtliga objekt som 
+tillhör klassen ska listas.
+
+! level 4
+4 /hierarchy
+=Title /hierarchy
+=Keyword /hierarchy
+Namnet på det objekt för vilket referenser för samtliga objekt som 
+ligger under objektet i hierarkien och som tillhör en viss klass 
+ska listas. 
+Endast giltigt tillsammans med kvalifieraren /class.
+
+! level 4
+4 /name
+=Title /name
+=Keyword /name
+Namnet på objekt för vilka korsreferenser ska listas.
+Wildcard accepteras.
+
+! level 5
+5 /output
+=Title /output
+=Keyword /output
+Resultatet av operationen skrivs ut på den fil som anges.
+
+! level 5
+5 /noterminal
+=Title /noterminal
+=Keyword /noterminal
+Resultatet av operationen skrivs ej ut på terminalen.
+
+
+! level 3
+3 print
+=Title print
+=Keyword print
+
+Skriver ut dokument.
+- skriver ut samtliga dokument i ett plcprogram. 
+- skriver ut samtliga dokument i alla plcprogram som finns under ett
+  objekt i hierarkien.
+- skriver ut samtliga dokument i en volym.
+
+Syntax:
+
+pwr>print /plcpgm= [/nooverview][/nodocument]
+pwr>print /hierarchy= [/nooverview][/nodocument]
+pwr>print /all [/nooverview][/nodocument]
+
+! level 4
+4 /plcpgm
+=Title /plcpgm
+=Keyword /plcpgm
+Utskrift av alla dokument i ett plcprogram.
+Namnet på plcpgm objectet anges.
+
+! level 4
+4 /hierarchy
+=Title /hierarchy
+=Keyword /hierarchy
+Utskrift av samtliga dokument i alla plcprogram som finns under
+ett objekt i hierarkien.
+Namnet på hierakiobjektet anges.
+
+! level 4
+4 /all
+=Title /all
+=Keyword /all
+Utskrift av samtliga dokument i aktuell volym.
+
+! level 4
+4 /nooverview
+=Title /nooverview
+=Keyword /nooverview
+Ej utskrift av en översiktsbild av dokumenten i ett fönster.
+
+! level 4
+4 /nodocument
+=Title /nodocument
+=Keyword /nodocument
+Anges om enbart översiksbilden ska skrivas ut.
+
+
+! level 3
+3 document
+=Title document
+=Keyword document
+
+Hanterar dokument
+- lägger in sidnummer i dokumenten.
+- skriver ut en lista på alla dokument med sidnr.
+
+Syntax:
+
+pwr>document /repage
+pwr>document /list
+
+! level 4
+4 /repage
+=Title /repage
+=Keyword /repage
+Sidnumrerar samtliga dokument i databasen.
+Numreringen sker i den ordning objekten ligger i databasen.
+
+Sidnumreringen sparas vid ett exit eller save kommando.
+
+! level 4
+4 /list
+=Title /list
+=Keyword /list
+Skriver ut en lista på samtliga dokument i systemet.
+
+! level 5
+5 /output
+=Title /output
+=Keyword /output
+Resultatet av operationen skrivs ut på den fil som anges.
+Endast tillåtet med kvalifieraren /list.
+
+! level 5
+5 /noterminal
+=Title /noterminal
+=Keyword /noterminal
+Resultatet av operationen skrivs ej ut på terminalen.
+Endast tillåtet med kvalifieraren /list.
+
+
+! level 3
+3 set
+=Title set
+=Keyword set
+
+set omfattar ett antal funktioner:
+
+- sätta värden på attribut i objekt.
+- knyta pwr_cmd till en databas eller en volym.
+- sätta defaultvärden i templateobjekt.
+
+! level 4
+4 attribute
+=Title attribute
+=Keyword attribute
+
+Gör det möjligt att sätta värden på attribut i ett eller
+ett antal objekt.
+
+De objekt som ska datasättas specificeras med kvalifierarna /name /class
+och /hierarchy.
+
+Om samma värde ska tilldelas samtliga objekt ges detta med 
+kvalifieraren  /value. Om denna utelämnas frågas efter ett nytt 
+värde för varje enskilt objekt.
+
+Datasättningen sparas i databasen vid ett exit eller save kommando.
+
+Syntax:
+
+pwr>set attribute/attribute=/name=/hierarchy=/class=
+pwr>set attribute/attribute=/value=/name=/hierarchy=/class=
+
+! level 5
+5 /attribute
+=Title /attribute
+=Keyword /attribute
+Namn på det attribute som ska datasättas.
+
+! level 5
+5 /value
+=Title /value
+=Keyword /value
+Värdet som ska tilldelas parametern. 
+Om /value utelämnas frågas efter ett värde för varje enskilt objekt.
+
+! level 5
+5 /class
+=Title /class
+=Keyword /class
+Väljer ut objekt av en viss klass.
+
+
+! level 5
+5 /hierarchy
+=Title /hierarchy
+=Keyword /hierarchy
+Namnet på ett objekt för vilket samtliga objekt som 
+ligger under objektet i hierarkien ska påverkas av setkommandot.
+
+! level 5
+5 /name
+=Title /name
+=Keyword /name
+Namnet på objekt för vilka en paremeter ska sättas.
+Wildcard accepteras.
+
+Om wildcard används måste kvaliferaren /class ges.
+
+! level 5
+5 /log
+=Title /log
+=Keyword /log
+Loggar alla gjorda datasättningar på terminalen eller på fil.
+
+! level 5
+5 /noconfirm
+=Title /noconfirm
+=Keyword /noconfirm
+Datasättningen sker utan föregående fråga om datasättningen ska 
+genomföras eller ej.
+
+! level 5
+5 /output
+=Title /output
+=Keyword /output
+Resultatet av operationen skrivs ut på den fil som anges.
+Endast tillåtet med kvalifieraren /list.
+
+! level 5
+5 /noterminal
+=Title /noterminal
+=Keyword /noterminal
+Resultatet av operationen skrivs ej ut på terminalen.
+
+
+! level 4
+4 db
+=Title db
+=Keyword db
+
+Knyter pwr_cmd databasen med angivet id.
+En databas får inte redan ha öppnats för att man ska
+kunna knyta sig till en databas.
+
+5 /dbid
+=Title /dbid
+=Keyword /dbid
+
+Id för databasen.
+
+! level 4
+4 volume
+=Title volume
+=Keyword volume
+
+Knyter pwr_cmd till en volym.
+
+5 /volumename
+=Title /volumename
+=Keyword /volumename
+
+Namn på volymen.
+
+! level 4
+4 template
+=Title template
+=Keyword template
+
+Sätt defaultvärden på antal segment av namnet för kanaler och signaler som
+ska visas i plc-dokument.
+
+5 /signalobjectseg
+=Title /signalobjectseg
+=Keyword /signalobjectseg
+
+Antal segment i signalnamnet.
+
+5 /signalobjectseg
+=Title /sigchanconseg
+=Keyword /sigchanconseg
+
+Antal segment i kanalnamnet.
+
+5 /shosigchancon
+=Title /shosigchancon
+=Keyword /shosigchancon
+
+Anger om kanalen ska visas eller ej.
+
+5 /shodetecttext
+=Title /shodetecttext
+=Keyword /shodetecttext
+
+Anger om larmtexten i ASup och DSupobjekt ska visas eller ej.
+
+! level 3
+3 list
+=Title list
+=Keyword list
+
+Skriver ut listor på objekt och parametrar.
+
+Listornas utseende beskrivs av listdescriptor objekt. För 
+signaler, kanaler, hierarkier och plcpgm finns fördefinierade
+listobjekt.
+
+
+list signals		Lista på signaler med korsreferenser.
+list channels		Lista på kort och kanaler.
+list hierarchy		Lista på hierarkier och plcpgm.
+list plcpgm		Lista på ett fönster i ett plc.
+list descriptor		Lista specificerad av användaren med ett
+			ListDescriptor objekt.
+
+Listorna skickas till en printer kö som specificeras med 
+symbolen PWR_FOE_PRINT. Listor som ska skrivas ut i liggande
+format skickas till kö och form specificerad med symbolen
+PWR_FOE_PRINT_LAND  tex
+
+  PWR_FOE_PRINT == "print/queue=laser_vu1"
+  PWR_FOE_PRINT_LAND == "print/queue=laser_vu1/form=laser_land"
+
+
+
+Syntax:
+
+pwr>list signals [/hierarchy=] [/shortname] 
+		[/volumes=] [/allvolumes]
+pwr>list channels [/node=]
+		[/volumes=] [/allvolumes]
+pwr>list hierarchy [/hierarchy=]
+		[/volumes=] [/allvolumes]
+pwr>list plcpgm [/hierarchy=] [/plcpgm=]
+		[/volumes=] [/allvolumes]
+pwr>list descriptor	/descriptor=
+		[/volumes=] [/allvolumes]
+
+! level 4
+4 signals
+=Title signals
+=Keyword signals
+Lista på signaler samt korsreferenser till varje signal.
+
+! level 5
+5 /hierarchy
+=Title /hierarchy
+=Keyword /hierarchy
+Namnet på ett hierarkiobjekt under vilket signalerna ska listas.
+
+! level 5
+5 /volumes
+=Title /volumes
+=Keyword /volumes
+Namn på en eller flera volymer i vilka objeket ska listas.
+
+! level 5
+5 /allvolumes
+=Title /allvolumes
+=Keyword /allvolumes
+Objekt is samtliga volymer i databasen ska listas.
+
+! level 5
+5 /shortname
+=Title /shortname
+=Keyword /shortname
+Listan ordnas i alfabetisk ordning efter sista segmentet i signalnamnet.
+
+! level 5
+5 /output
+=Title /output
+=Keyword /output
+Om resultatet önskas på fil anges filspec här.
+
+Listan skickas ej till printer kö om /output anges.
+
+! level 4
+4 channels
+=Title channels
+=Keyword channels
+Lista på kort och kanaler.
+
+! level 5
+5 /node
+=Title /node
+=Keyword /node
+Namnet på en node för vilken kanaler ska listas.
+
+Default listas samtliga noder.
+
+! level 5
+5 /volumes
+=Title /volumes
+=Keyword /volumes
+Namn på en eller flera volymer i vilka objeket ska listas.
+
+! level 5
+5 /allvolumes
+=Title /allvolumes
+=Keyword /allvolumes
+Objekt is samtliga volymer i databasen ska listas.
+
+! level 5
+5 /output
+=Title /output
+=Keyword /output
+Om resultatet önskas på fil anges filspec här.
+
+Listan skickas ej till printer kö om /output anges.
+
+! level 4
+4 hierarchy
+=Title hierarchy
+=Keyword hierarchy
+Lista på hierarki och plcpgm objekt.
+
+! level 5
+5 /hierarchy
+=Title /hierarchy
+=Keyword /hierarchy
+Namnet på ett hierarkiobjekt under vilket hierarki och 
+plcpgm objekten ska listas.
+
+! level 5
+5 /volumes
+=Title /volumes
+=Keyword /volumes
+Namn på en eller flera volymer i vilka objeket ska listas.
+
+! level 5
+5 /allvolumes
+=Title /allvolumes
+=Keyword /allvolumes
+Objekt is samtliga volymer i databasen ska listas.
+
+! level 5
+5 /output
+=Title /output
+=Keyword /output
+Om resultatet önskas på fil anges filspec här.
+
+Listan skickas ej till printer kö om /output anges.
+
+! level 4
+4 plcpgm
+=Title plcpgm
+=Keyword plcpgm
+Lista på plc program.
+
+För varje fönster listas:
+
+- signaler som refereras i fönstret.
+- objekt i andra plcprogram som refereras i fönstret.
+- objekt i fönstet som refereras i andra plcpgm.
+
+! level 5
+5 /hierarchy
+=Title /hierarchy
+=Keyword /hierarchy
+Namnet på ett hierarkiobjekt under vilket plcprogram ska listas.
+
+! level 5
+5 /plcpgm
+=Title /plcpgm
+=Keyword /plcpgm
+Namnet på ett plcpgm som ska listas.
+
+! level 5
+5 /volumes
+=Title /volumes
+=Keyword /volumes
+Namn på en eller flera volymer i vilka objeket ska listas.
+
+! level 5
+5 /allvolumes
+=Title /allvolumes
+=Keyword /allvolumes
+Objekt is samtliga volymer i databasen ska listas.
+
+! level 5
+5 /output
+=Title /output
+=Keyword /output
+Om resultatet önskas på fil anges filspec här.
+
+Listan skickas ej till printer kö om /output anges.
+
+! level 4
+4 descriptor
+=Title descriptor
+=Keyword descriptor
+Lista på objekt och parameterar specificerade med ett
+ListDescriptor objekt.
+
+! level 5
+5 /hierarchy
+=Title /hierarchy
+=Keyword /hierarchy
+Namnet på ett hierarkiobjekt under vilket objekt ska listas.
+
+! level 5
+5 /descriptor
+=Title /descriptor
+=Keyword /descriptor
+Namnet på det ListDescriptor objekt som specificerar listan.
+
+! level 5
+5 /object
+=Title /hierarchy
+=Keyword /hierarchy
+Namnet på ett objekt som ska listas.
+
+! level 5
+5 /volumes
+=Title /volumes
+=Keyword /volumes
+Namn på en eller flera volymer i vilka objeket ska listas.
+
+! level 5
+5 /allvolumes
+=Title /allvolumes
+=Keyword /allvolumes
+Objekt is samtliga volymer i databasen ska listas.
+
+! level 5
+5 /output
+=Title /output
+=Keyword /output
+Om resultatet önskas på fil anges filspec här.
+
+Listan skickas ej till printer kö om /output anges.
+
+! level 3
+3 configure
+=Title configure
+=Keyword configure
+
+Hjälpmedel för att konfigurera systemet.
+
+configure card		konfigurerar ett kort.
+
+Syntax:
+
+pwr>configure card /rack= /cardname= /cardclass= /channelname=
+		Ä/chanidentity=Å Ä/chandescription=Å Ä/table=Å
+
+! level 4
+4 card
+=Title card
+=Keyword card
+Konfigurerar ett kort med maximalt antal kanaler.
+
+Skapar ett kortobjekt av specificerad klass och kanalobjekt under kortet.
+
+! level 5
+5 /rack
+=Title /rack
+=Keyword /rack
+Namnet på rackobjektet under vilket kortet ska ligga.
+
+! level 5
+5 /cardname
+=Title /cardname
+=Keyword /cardname
+Namn på det skapade kortobjektet. 
+
+Endast sista segmentet av namnet ska anges.
+
+! level 5
+5 /cardclass
+=Title /cardclass
+=Keyword /cardclass
+Klass på skapat kortobjekt.
+
+! level 5
+5 /channelname
+=Title /channelname
+=Keyword /channelname
+Namn på skapade kanalobjekt.
+
+Endast sista segmentet av namnet ska anges.
+
+Ett # tecken kommer att ersättas av kanalnummer.
+
+Ex /channelname=di33#
+ger kanalnamn di3301, di3302, di3303...
+
+För kort som innehåller flera kanaler måste namnet inehålla ett 
+# tecken.
+
+! level 5
+5 /chanidentity
+=Title /chanidentity
+=Keyword /chanidentity
+Kanalens identitet. 
+Läggs in i parametern Identity i kanalobjektet.
+
+Ett # tecken kommer att ersättas av kanalnummer.
+
+! level 5
+5 /chandescription
+=Title /chandescription
+=Keyword /chandescription
+Beskrivning av kanalen.
+Läggs in i parametern Description i kanalobjektet.
+
+Ett # tecken kommer att ersättas av kanalnummer.
+
+! level 5
+5 /table
+=Title /table
+=Keyword /table
+De kanaler som ska vara av typen tabell ( tex ChanAit) anges 
+med en lista eller ett intervall av kanalnummer.
+
+ex
+ /table = 3
+ /table = (3,5,6)
+ /table = (3,5,6,10-20)
+                                  
+! level 3                                   
+3 sort
+=Title sort
+=Keyword sort
+
+Hjälpmedel för att sortera en syskonskara av objekt.
+Tre olika sorterings alternativ finns, i samtliga placeras 
+objekt av klasserna $Hierarchy och PlcPgm placeras först
+och sedan övriga objekt på följande sätt:
+
+- efter bokstavsordning på objektnamnet (default).
+
+- placerar signaler först ordnade i klasser, och sedan 
+  övriga objekt i bokstavsordning (/signals).
+
+- ordnar objekten efter klasstillhörighet, lägger 
+  klasserna i bokstavsordning och objekten inom varje 
+  klass i bokstavsordning.
+
+Syntax:
+
+pwr>sort /parent= [/signals] [/class]
+
+
+! level 4
+4 /parent
+=Title /parent
+=Keyword /parent
+Namn på förälder objekt till den syskonskara som ska sorteras. 
+
+! level 4
+4 /signals
+=Title /signals
+=Keyword /signals                                 
+Placerar objekt av klasserna $Hierarchy och PlcPgm
+först, sedan signaler ordnade i klasser (Ai, Ao, Av, Di, Do 
+resp Dv), och sedan övriga objekt i bokstavsordning.
+
+! level 4
+4 /class
+=Title /class
+=Keyword /class
+Placerar objekt av klasserna $Hierarchy och PlcPgm först och 
+sedan ordnas övriga objekt objekten efter klasstillhörighet, 
+lägger klasserna i bokstavsordning och objekten inom varje 
+klass i bokstavsordning.
+
+! level 3                                   
+3 copy
+=Title copy
+=Keyword copy
+
+Kopiering ett objekt eller en hierararki av objekt, eller
+kopiering av laddfiler.
+
+
+
+! level 4
+4 objects
+=Title objects
+=Keyword objects
+
+Kopiering ett objekt eller en hierararki av objekt.
+
+Syntax:
+
+pwr> copy objects /source= /destination= /name= 
+	[/hierarchy] [/before] [/after][/first] [/last]
+
+! level 5                                   
+5 /source                                
+=Title /source
+=Keyword /source
+
+Namn på objekt som ska kopieras.
+
+! level 5                                   
+5 /destination
+=Title /destination
+=Keyword /destination
+
+Plats dit aktuellt objekt ska kopieras. Namn på förälder eller syskon. 
+Om /last eller /first anges kommer objektet att läggas som barn 
+till destinations objeket, om /before eller /after som syskon.
+
+! level 5                                   
+5 /name
+=Title /name
+=Keyword /name
+
+Namn på objekt som ska skapas, sista namn ledet.
+
+! level 5                                   
+5 /hierarchy
+=Title /hierarchy
+=Keyword /hierarchy
+
+Samtliga objekt som ligger under source objektet kopieras också.
+
+
+! level 5
+5 /last                             
+=Title /last
+=Keyword /last
+
+Objektets position blir som sista barn till destinations
+objeket.
+
+! level 5
+5 /first
+=Title /first
+=Keyword /first
+
+Objektets position blir som första barn till destinations
+objeket.
+
+! level 5
+5 /after
+=Title /after
+=Keyword /after
+
+Objektets position blir som syskon efter destinations
+objeket.
+
+! level 5
+5 /before
+=Title /before
+=Keyword /before
+
+Objektets position blir som syskon före destinations
+objeket.
+
+! level 4
+4 loadfiles
+=Title loadfiles
+=Keyword loadfiles
+
+Kopierar laddfiler till bootnoder.
+Endast filer som inte redan finns på bootnoden kopieras. Med 
+kvalifierar /overlay kan man välja att kopiera filer även om 
+de redan finns på bootnoden.
+Med kvalifieraren /node kan man kopiera laddfiler som tillhör 
+en viss nod, och med /bootnodes kan man kopiera laddfiler för 
+noder som har en viss nod som bootnod.
+
+pwr> copy load
+-- Opening link to PTXLAB...
+-- Opening link to PTXOP9...
+
+LD_BOOT_PTXLAB_0000.DAT;24          98-03-19 08:41 -> PTXLAB
+LD_BOOT_PTXLAB_0000.DAT;24          98-03-19 08:41 -> PTXOP9
+PLC_PTXLAB_0000_00038.EXE;1         98-03-19 08:39 -> PTXLAB
+PLC_PTXLAB_0000_00038.EXE;1         98-03-19 08:39 -> PTXOP9
+LD_VOL_000_001_099_001_00025.DAT;1  98-03-13 11:05 -> PTXLAB
+LD_VOL_000_001_099_001_00025.DAT;1  98-03-13 11:05 -> PTXOP9
+
+
+Copy LD_BOOT_PTXLAB_0000.DAT;24          -> PTXLAB ? (Y/N/Q/A)[Y] >A
+
+
+5 /node
+=Title /node
+=Keyword /node
+
+Kopiera laddfiler som tillhör en viss nod till bootnoderna för denna nod.
+
+5 /bootnode
+=Title /bootnode
+=Keyword /bootnode
+
+Kopiera laddfiler för noder som har aktuell nod som bootnode till 
+denna bootnod.
+
+5 /vms_vers
+=Title /vms_vers
+=Keyword /vms_vers
+
+Kopiera laddfiler som tillhör en viss version av bootnoden.
+Kan endast kombineras med kvalifieraren /node.
+
+5 /noconfirm
+=Title /noconfirm
+=Keyword /noconfirm
+
+Kopieringen sker utan föregående fråga.
+
+5 /overlay
+=Title /overlay
+=Keyword /overlay
+
+Kopiering sker oavsett om filerna redan finns på bootnoden.
+
+5 /busnumber
+=Title /busnumber
+=Keyword /busnumber
+
+Laddfiler för noder som tillhör en viss dmq- eller qcom-bus väljs ut.
+
+! level 4
+4 applications
+=Title applications
+=Keyword applications
+
+Kopiering av applikationer konfigurerade med ett ApplDistribute-objekt.
+
+pwr> copy appl
+-- Opening link to PTXLAB...
+-- Opening link to PTXOP9...
+
+<VAX_ELN.EXE>RS_RTT_PTXLAB.EXE_ELN;1    -> PTXLAB::RS_RTT_PTXLAB.EXE_ELN;1
+<VAX_ELN.EXE>RS_RTT_PTXLAB.EXE_ELN;1    -> PTXOP9::<VAX_ELN.EXE>RS_RTT_PTXLAB.EXE_ELN;3
+<EPAMSV13.USER_507>PAMSINIT.TXT;56      -> PTXLAB::PAMSINIT.TXT;56
+<EPAMSV13.USER_507>PAMSINIT.TXT;56      -> PTXOP9::<EPAMSV13.USER_507>PAMSINIT.TXT;56
+
+Copy <VAX_ELN.EXE>RS_RTT_PTXLAB.EXE_ELN;1 -> PTXLAB::RS_RTT_PTXLAB.EXE_ELN;1 ? (Y/N/Q/A)[Y] >y
+
+5 /noconfirm
+=Title /noconfirm
+=Keyword /noconfirm
+
+Kopieringen sker utan föregående fråga.
+
+5 /overlay
+=Title /overlay
+=Keyword /overlay
+
+Kopiering sker oavsett om filerna redan finns på bootnoden.
+
+! level 4
+4 graph
+=Title graph
+=Keyword graph
+
+Kopiering av grafikfiler konfigurerade med GraphDistribute-objekt 
+till bootnoder.
+
+pwr> copy graph
+-- Opening link to PTXLAB...
+-- Opening link to PTXOP9...
+
+<AXP_VMS.EXE>LAB_PROC.M1;1             -> PTXOP9::LAB_PROC.M1;1
+<AXP_VMS.EXE>LAB_PUMP.M1;1             -> PTXOP9::LAB_PUMP.M1;3
+
+Copy <AXP_VMS.EXE>LAB_PROC.M1;1 -> PTXLAB::LAB_PROC.M1;1 ? (Y/N/Q/A)[Y] >y
+
+5 /noconfirm
+=Title /noconfirm
+=Keyword /noconfirm
+
+Kopieringen sker utan föregående fråga.
+
+5 /overlay
+=Title /overlay
+=Keyword /overlay
+
+Kopiering sker oavsett om filerna redan finns på bootnoden.
+
+! level 4
+4 system
+=Title system
+=Keyword system
+
+Kopiering av systemfiler konfigurerade med SystemDistribute-objekt 
+till bootnoder.
+
+pwr> copy sys
+-- Opening link to PTXLAB...
+-- Opening link to PTXOP9...
+
+VXELN1.SYS;30                           -> PTXOP9::VXELN1.SYS;2
+
+Copy VXELN1.SYS;30 -> PTXOP9::VXELN1.SYS;2 ? (Y/N/Q/A)[Y] >
+
+5 /noconfirm
+=Title /noconfirm
+=Keyword /noconfirm
+
+Kopieringen sker utan föregående fråga.
+
+5 /overlay
+=Title /overlay
+=Keyword /overlay
+
+Kopiering sker oavsett om filerna redan finns på bootnoden.
+
+! level 4
+4 db
+=Title db
+=Keyword db
+
+Kopierar databaser konfigurerade med DbDistribute-objekt.
+I listan anges Id för databasen och till vilken nod den ska kopieras.
+
+pwr> copy db
+Id          Node       Remote date
+----------  ---------- --------------
+DBPWRUTB    HK1OP1     98-03-02 11:01
+DBPWRUTB    HK1OP2     98-03-02 11:05
+DBPWRUTB    HK1OP3     98-02-27 16:32
+DirectoryDb HK1OP1     98-02-27 15:16
+DirectoryDb HK1OP2     98-02-27 15:30
+DirectoryDb HK1OP3     98-02-27 16:36
+
+Copy Db DBPWRUTB     -> HK1OP1 ? (Y/N/Q/A)[Y] >
+
+5 /noconfirm
+=Title /noconfirm
+=Keyword /noconfirm
+
+Kopieringen sker utan föregående fråga.
+
+! level 4
+4 all
+=Title all
+=Keyword all
+
+Kopierar laddfiler, applikationer, grafikfiler och systemfiler 
+till bootnoder. Utför kommandona 'copy load', 'copy appl', 
+'copy graph' och 'copy system'.
+
+5 /noconfirm
+=Title /noconfirm
+=Keyword /noconfirm
+
+Kopieringen sker utan föregående fråga.
+
+5 /overlay
+=Title /overlay
+=Keyword /overlay
+
+Kopiering sker oavsett om filerna redan finns på bootnoden.
+
+! level 3                                   
+3 purge
+=Title purge
+=Keyword purge
+
+Rensa bort gamla laddatafiler.
+
+! level 4                                   
+4 loadfiles
+=Title loadfiles
+=Keyword loadfiles
+
+Rensar bort gamla laddatafiler.
+Eftersom versionsnummer ligger i namnet på laddatafilerna 
+fungerar inte VMS ordinare purge på dessa filer.
+Purge load tar bort alla filer som inte refereras i utvalda bootfiler.
+Med kvalifieraren /keep talar man om hur många versioner av bootfiler 
+man vill spara.
+
+pwr> purge load
+
+5 /keep
+=Title /keep
+=Keyword /keep
+
+Anger hur många versioner av bootfiler man vill spara. 
+Samtliga filer som refereras i bootfilerna kommer att sparas.
+Default 1.
+
+5 /bootnode
+=Title /bootnode
+=Keyword /bootnode
+
+Rensar laddfiler på angiven bootnod.
+
+5 /noconfirm
+=Title /noconfirm
+=Keyword /noconfirm
+
+Borttagning sker utan föregående fråga.
+
+! level 3                                   
+3 move
+=Title move
+=Keyword move
+
+Flyttar eller byter namn på ett eller flera objekt.
+
+Syntax:
+
+pwr> move objects /source= /destination= [/rename]
+	[/first][/last][/after][/before]
+pwr> move objects /source= /destination=
+
+! level 4                                   
+4 objects
+=Title objects
+=Keyword objects
+
+Flyttar ett eller byter namn på ett objekt.
+
+! level 5                                   
+5 /source                                
+=Title /source
+=Keyword /source
+
+Namn på objekt som ska flyttas eller bytas namn på.
+
+! level 5                                   
+5 /destination                                
+=Title /destination
+=Keyword /destination
+
+Position där objektet ska ligga.
+Om enbart namnbyte ska ske kan destinationen utelämnas.
+Positionens förhållande till objektet bestäms av 
+kvalifierarna /last, /first, /after och /before.
+
+! level 5
+5 /last                             
+=Title /last
+=Keyword /last
+
+Objektets position blir som sista barn till destinations
+objeket.
+
+! level 5
+5 /first
+=Title /first
+=Keyword /first
+
+Objektets position blir som första barn till destinations
+objeket.
+
+! level 5
+5 /after
+=Title /after
+=Keyword /after
+
+Objektets position blir som syskon efter destinations
+objeket.
+
+! level 5
+5 /before
+=Title /before
+=Keyword /before
+
+Objektets position blir som syskon före destinations
+objeket.
+
+! level 4                                   
+4 window
+=Title window
+=Keyword window
+
+Flyttar samtliga objekt under ett windowobjekt
+till ett annat windowobjekt.
+Används när ett plcprogram ska struktureras om
+och t ex en sekvens ska flyttas i under ett
+CSub fönster för villkorlig exekvering.
+Cut och paste funktionen i plceditorn omfattar
+ej flyttning av underfönster. Om man behöver
+flytta ett fönster som innehåller underfönster
+är det lämpligt att använda 'move window'.
+
+Flyttningen sker mellan två fönster (source
+och destination). Destinations fönstret ska vara
+tomt före flyttningen (även eventuella dokument
+objekt bör vara borttagna).
+
+
+! level 5                                   
+5 /source                                
+=Title /source
+=Keyword /source
+
+Namn på window objekt som är förälder till de
+objekt som ska flyttas.
+
+! level 5                                   
+5 /destination                                
+=Title /destination
+=Keyword /destination
+
+Window objekt som objeken kommer att flyttas till.
+
+! level 3                                   
+3 create
+=Title create
+=Keyword create
+
+Skapar objekt, structfiler, laddfiler eller bootfil
+
+Syntax:
+
+pwr> create object /destination= /name= /class=
+	[/first][/last][/after][/before]
+
+pwr> create loadfiles [/node=( node1, node2, ...)]
+	[/systemmetaobjects][/projectmetaobjects][/commonobjects][/debug]
+
+pwr> create bootfile
+
+pwr> create structfiles /userclasses
+
+! level 4                                   
+4 object
+=Title object
+=Keyword object
+
+Skapar ett objekt.
+
+! level 5                                   
+5 /name
+=Title /name
+=Keyword /name
+
+Objektets name (sista ledet).
+
+! level 5                                   
+5 /class
+=Title /class
+=Keyword /class
+
+Objektets klass.
+
+! level 5                                   
+5 /destination                                
+=Title /destination
+=Keyword /destination
+
+Position där objektet ska ligga.
+Om enbart namnbyte ska ske kan destinationen utelämnas.
+Positionens förhållande till objektet bestäms av 
+kvalifierarna /last, /first, /after och /before.
+
+! level 5
+5 /last                             
+=Title /last
+=Keyword /last
+
+Objektets position blir som sista barn till destinations
+objeket.
+
+! level 5
+5 /first
+=Title /first
+=Keyword /first
+
+Objektets position blir som första barn till destinations
+objeket.
+
+! level 5
+5 /after
+=Title /after
+=Keyword /after
+
+Objektets position blir som syskon efter destinations
+objeket.
+
+! level 5
+5 /before
+=Title /before
+=Keyword /before
+
+Objektets position blir som syskon före destinations
+objeket.
+
+! level 4
+4 loadfiles
+=Title loadfiles
+=Keyword loadfiles
+
+Skapar laddfiler.
+
+! level 5                                   
+5 /volume
+=Title /volume
+=Keyword /volume
+
+Volym för vilken laddata skapas. Kan vara en lista på
+volymer.
+
+! level 5                                   
+5 /allvolumes
+=Title /allvolumes
+=Keyword /allvolumes
+
+Laddata skapas för samtliga volymer i databasen (ej klassvolymer).
+
+! level 5                                   
+5 /classvolumes
+=Title /classvolumes
+=Keyword /classvolumes
+
+Laddata skapas för samtliga klassvolymer i databasen.
+
+
+! level 4
+4 bootfile
+=Title bootfile
+=Keyword bootfile
+
+Skapar nya bootfiler.
+
+! level 5                                   
+5 /nodeconfig
+=Title /nodeconfig
+=Keyword /nodeconfig
+
+NodeConfig objekt för vilket bootfil ska skapas.
+Kan vara en lista på objekt.
+
+! level 5                                   
+5 /debug
+=Title /debug
+=Keyword /debug
+
+Plcprogrammet länkas med debug.
+
+! level 5                                   
+5 /allnodes
+=Title /allnodes
+=Keyword /allnodes
+
+Skapar bootfiler för samtliga noder i systemet.
+
+! level 4
+4 structfiles
+=Title structfiles
+=Keyword structfiles
+
+Skapar include filer för klasser i en klassvolym.
+
+! level 5                                   
+5 /volume
+=Title /volume
+=Keyword /volume
+
+Klassvolym för vilken structfil ska skapas. Kan vara en lista på
+volymer.
+
+! level 3                                   
+3 connect
+=Title connect
+=Keyword connect
+
+Koppla ihop ett kanalobjekt med ett signalobjekt.
+
+Syntax:
+
+pwr> connect /source= /destination= [/disconnect]
+
+! level 4                                   
+4 /source                                
+=Title /source
+=Keyword /source
+
+Ett kanal eller signalobjekt.
+
+! level 4                                   
+4 /destination                                
+=Title /destination
+=Keyword /destination
+
+Ett kanal eller signalobjekt.
+
+! level 4                                   
+4 /disconnect
+=Title /disconnect
+=Keyword /disconnect
+
+Om något av objekten redan är kopplat görs disconnect före kopplingen.
+
+
+! level 3                                   
+3 disconnect
+=Title disconnect
+=Keyword disconnect
+
+Bryter kopplingen mellan kanal och signalobjekt.
+
+Syntax:
+
+pwr> disconnect /source= 
+
+! level 4                                   
+4 /source                                
+=Title /source
+=Keyword /source
+
+Namn på ett av objekten.
+
+! level 3                                   
+3 delete
+=Title delete
+=Keyword delete
+
+Tar bort objekt ur databasen,
+eller tar bort alla laddatafiler.
+
+Syntax:
+
+pwr> delete objects /hierarchy= /name= /class= /noconfirm
+		/nolog
+
+pwr> delete tree /name= /noconfirm /nolog
+
+! level 4                                   
+4 objects
+=Title objects
+=Keyword objects
+
+Tar bort objekt ur databasen.
+
+! level 5                                   
+5 /name
+=Title /name
+=Keyword /name
+
+Namn på objekt.
+Wildcard är tillòåtet.
+
+! level 5                                   
+5 /class
+=Title /class
+=Keyword /class
+
+Namnet på den klass eller en lista på de klasser för vilka
+alla instanser ska tas bort.
+
+! level 5                                   
+5 /hierarchy
+=Title /hierarchy
+=Keyword /hierarchy
+
+Namnet på det objekt i hierarkin under vilket alla objekt
+ska tas bort.
+
+! level 5                                   
+5 /noconfirm
+=Title /noconfirm
+=Keyword /noconfirm
+
+Borttagningen sker utan fåföregående fråga om objektet
+ska tas bort eller ej.
+
+! level 5                                   
+5 /nolog
+=Title /nolog
+=Keyword /nolog
+
+Borttagningen av objekt logga ej på skärmen.
+
+! level 4                                   
+4 tree
+=Title tree
+=Keyword tree
+
+Tar bort ett objektsträd ur databasen.
+
+! level 5                                   
+5 /name
+=Title /name
+=Keyword /name
+
+Namn på objekt rot-objektet till trädet.
+Även rotobjektet kommer att tas bort.
+
+! level 5                                   
+5 /noconfirm
+=Title /noconfirm
+=Keyword /noconfirm
+
+Borttagningen sker utan fåföregående fråga om trädet
+ska tas bort eller ej.
+
+! level 5                                   
+5 /nolog
+=Title /nolog
+=Keyword /nolog
+
+Borttagningen av trädet loggas ej på skärmen.
+
+! level 4                                   
+4 loadfiles
+=Title loadfiles
+=Keyword loadfiles
+
+Ta bort alla laddatafiler.
+
+5 /bootnode
+=Title /bootnode
+=Keyword /bootnode
+
+Noden på vilken laddatafilerna ska tas bort.
+
+5 /noconfirm
+=Title /noconfirm
+=Keyword /noconfirm
+
+Borttagningen sker utan föregående fråga.
+
+! level 4                                   
+4 volume
+=Title volume
+=Keyword volume
+
+Ta bort en volym ur databasen.
+
+Samtliga objekt i volymen måste vara borttagna innan
+volymen kan tas bort.
+
+5 /name
+=Title /name
+=Keyword /name
+
+Namnet på den volym som ska tas bort.
+
+5 /noconfirm
+=Title /noconfirm
+=Keyword /noconfirm
+
+Borttagningen sker utan föregående fråga.
+
+! level 3                                   
+3 wb
+=Title wb
+=Keyword wb
+
+Laddar in en textfil i databasen, eller skriver ut innehållet
+i databasen på en textfil.
+
+Syntax:
+
+pwr>wb load/loadfile= /output= [/ignore][/full]
+pwr>wb dump/output= [/hierarchy=][/volume=][/ignore][/full]
+pwr>wb import/loadfile= /root= /output= [/ignore][/full]
+pwr>wb export/ouput= /hierarchy=
+
+! level 4                                   
+4 load
+=Title load
+=Keyword load
+
+Laddar en textfil i databasen.
+Om syntax fel ges laddas ej innehållet i databasen.
+
+! level 5
+5 /loadfile
+=Title /loadfile
+=Keyword /loadfile
+
+Namn på fil med objektsbeskrivningar som ska laddas.
+Filen kan vara genererad med wbdump funktionen eller
+editerad.
+
+Default extention för filen är '.wb_load'.
+
+! level 5
+5 /output
+=Title /output
+=Keyword /output
+
+Namn på list fil som innehåller eventuella felutskrifter
+laddningen.
+
+! level 5
+5 /full
+=Title /full
+=Keyword /full
+
+Samtliga rader i load filen kommer att skrivas i listfilen.
+
+! level 5
+5 /ignore
+=Title /ignore
+=Keyword /ignore
+
+Laddning sker trots att eventuella syntax fel
+upptäcks vid laddningen.
+
+
+! level 4                                   
+4 import
+=Title import
+=Keyword import
+
+Laddar en fil skapad med 'wb export'.
+
+/root ska innehålla namnet på rot-objektet.
+Föräldern till rotobjektet måste existera, man själva
+rotobjektet skapas vid laddningen.
+
+Om syntax fel ges laddas ej innehållet i databasen.
+
+! level 5
+5 /loadfile
+=Title /loadfile
+=Keyword /loadfile
+
+Namn på fil med objektsbeskrivningar som ska laddas.
+Filen ska vara genererad med 'wb export' funktionen.
+Default extention för filen är '.pload'.
+
+! level 5
+5 /output
+=Title /output
+=Keyword /output
+
+Namn på list fil som innehåller eventuella felutskrifter
+laddningen.
+
+! level 5
+5 /full
+=Title /full
+=Keyword /full
+
+Samtliga rader i load filen kommer att skrivas i listfilen.
+
+! level 5
+5 /ignore
+=Title /ignore
+=Keyword /ignore
+
+Laddning sker trots att eventuella syntax fel
+upptäcks vid laddningen.
+
+
+! level 4                                   
+4 dump
+=Title dump
+=Keyword dump
+
+Dumpar objekt i databasen på en textfil.
+Textfilen kan återladdas med 'wb load' kommandot.
+Med /volume eller /hierarchy kan vissa delar av
+databasen väljas ut. 
+
+Default kommer samtliga volymer utom klassvolymer 
+att dumpas.
+
+Syntax:
+
+pwr>wb dump /output= [/hierarchy=] [/volume=][/indent=]
+		[/header]
+
+
+! level 5
+5 /output
+=Title /output
+=Keyword /output
+
+Namn på dumpfilen.
+
+Default extention för filen är '.wb_load'.
+
+! level 5
+5 /hierarchy
+=Title /hierarchy
+=Keyword /hierarchy
+
+Namn på ett objekt i hierarki som kommer att dumpas
+tillsammans med samtliga sin ättlingar.
+
+! level 5
+5 /volume
+=Title /volume
+=Keyword /volume
+
+Namn på en eller flera volymer som ska dumpas. Hela volymerna
+(inklusive själva volymen) kommer att dumpas.
+
+! level 5
+5 /indent
+=Title /indent
+=Keyword /indent
+
+Antal space i marginalen som markerar en ny hierarki nivå 
+i dumpfilen.
+
+! level 5
+5 /header
+=Title /header
+=Keyword /header
+
+En kommentar med objektsnamn skrivs ut före varje objekt
+i dumpfilen.
+
+! level 4                                   
+4 export
+=Title export
+=Keyword export
+
+Skriver objekt i databasen under en hierarki på en textfil.
+Hierarkin kan återladdas under ett annat namn, eller i
+en annan databas.
+
+Syntax:
+
+pwr>wb export /output= [/hierarchy=] [/indent=][/header]
+
+
+! level 5
+5 /output
+=Title /output
+=Keyword /output
+
+Namn på dumpfilen.
+
+Default extention för filen är '.pload'.
+
+! level 5
+5 /hierarchy
+=Title /hierarchy
+=Keyword /hierarchy
+
+Namn på ett objekt i hierarki som kommer att dumpas
+tillsammans med samtliga sin ättlingar.
+
+! level 5
+5 /indent
+=Title /indent
+=Keyword /indent
+
+Antal space i marginalen som markerar en ny hierarki nivå 
+i dumpfilen.
+
+! level 5
+5 /header
+=Title /header
+=Keyword /header
+
+En kommentar med objektsnamn skrivs ut före varje objekt
+i dumpfilen.
+
+! level 1. 
+1 pwr_au
+
+Pwr_au auktoriserar användare i proview och tilldelar
+användaren password och privilegier.
+
+En användare specificeras med system och username.
+
+! level 2.
+2 quit
+
+Avsluta utan att spara.
+
+! level 2.
+2 exit
+
+Spara och avsluta.
+
+! level 2.
+2 save
+
+Spara gjorda förändringar.
+
+! level 2.
+2 add
+
+Skapa en ny användare.
+
+3 /username
+
+Användarnamn
+
+3 /system
+
+System namn ( en parameter i systemobjektet).
+
+3 /password
+
+Password
+
+3 /pwrprv
+
+Användaren ges samtliga proview privilegier.
+ 
+ /nopwrprv rensar samtliga privilegier.
+
+3 /devplc
+
+Ger rättighet att editera ett plcprogram samt att 
+simulera under trace.
+ /noplcdev tar bort detta privilegie.
+
+3 /devconfig
+Ger rättighet att ta upp configurations editorn.
+ /noplcconfig tar bort detta privilegie.
+
+! level 2.
+2 modify
+
+Modifiera data för en användare.
+
+3 /username
+
+Användarnamn
+
+3 /system
+
+System namn ( en parameter i systemobjektet).
+
+3 /password
+
+Password
+
+3 /pwrprv
+
+Användaren ges samtliga proview privilegier.
+ 
+ /nopwrprv rensar samtliga privilegier.
+
+3 /devplc
+
+Ger rättighet att editera ett plcprogram samt att 
+simulera under trace.
+ /noplcdev tar bort detta privilegie.
+
+3 /devconfig
+Ger rättighet att ta upp configurations editorn.
+ /noplcconfig tar bort detta privilegie.
+
+
+! level 2.
+2 remove
+
+Ta bort en användare.
+
+3 /username
+
+Användarnamn
+
+3 /system
+
+System namn ( en parameter i systemobjektet).
+
+! level 2.
+2 show
+
+Visa en eller samtliga användare.
+
+3 /all
+
+Lista samtliga användare.
+
+3 /username
+
+Användarnamn
+
+3 /system
+
+System namn ( en parameter i systemobjektet).
+
+
+
+! level 1. 
+1 And
+=Title And
+=Keyword And
+Objekt		AND
+
+Funktion	Och-grind för upp till 8 ingångar
+
+Macro		and_exec(obj,expr)
+
+Insignaler:
+  1-8 st av typ char. Ingen motsvarighet i databasen 
+		eller koden
+Utsignaler:
+  Status	char	Aktuellt värde av uttrycket
+
+! level 1. 
+1 Or
+=Title Or
+=Keyword Or
+Objekt		OR
+
+Funktion	Eller-grind för upp till 8 ingångar
+
+Macro		or_exec(obj,expr)
+
+Insignaler:
+  1-8 st av typ char. Ingen motsvarighet i databasen 
+		eller koden
+Utsignaler:
+  Status	char	Aktuellt värde av uttrycket
+
+! level 1. 
+1 XOr
+=Title XOr
+=Keyword XOr
+Objekt		XOR
+
+Funktion	Antingen-eller-grind
+
+Macro		xor_exec(obj,in1,in2)
+
+Insignaler:
+  in1		char	Insignal 1. Ej i databasen
+  in2		char	Insignal 2. Ej i databasen
+  
+  sts	Status	char	Aktuellt värde av uttrycket
+
+! level 1. 
+1 Edge
+=Title Edge
+=Keyword Edge
+Objekt		EDGE
+
+Funktion	Avkänning av positiv flank. Vid 
+		detektering sätts status till 
+		i en programcykel. 
+Macro		edge_exec(obj,in)
+
+Insignaler:
+  in		char	Insignal. Ej i databasen
+Utsignaler:
+  Status	char	Flank detekterad
+Parametrar:
+  StatusOld char	Sparad insignal
+
+! level 1. 
+1 SR_S
+=Title SR_S
+=Keyword SR_S
+Objekt		SR_S
+
+Funktion	SR-vippa. Om både Set och Reset är till 
+		sätts Status till true.
+
+Macro		srs_exec(obj,set,res)
+
+Insignaler:
+  set		char	Sätt-signal. Ej i databasen
+  res		char	Reset-signal. Ej i databasen
+Utsignaler:
+  sts	Status	char	Aktuellt status.
+Parametrar:
+  Acc	int	Operatörsrättigheter att ändra status
+
+! level 1. 
+1 SR_R
+=Title SR_R
+=Keyword SR_R
+Objekt		SR_R
+
+Funktion	SR-vippa. Om både Set och Reset är till
+		sätts Status till false.
+Macro		srr_exec(obj,set,res)
+
+Insignaler:
+  set		char	Sätt-signal. Ej i databasen
+  res		char	Reset-signal. Ej i databasen
+Utsignaler:
+  sts	Status	char	Aktuellt status.
+Parametrar:
+  Acc	int	Operatörsrättigheter att ändra status
+
+! level 1. 
+1 Inv
+=Title Inv
+=Keyword Inv
+Objekt		INV
+
+Funktion	Invertera logik-signal
+
+Macro		inv_exec(obj,in)
+
+Insignaler:
+  in		char	Insignal. Ej i databasen
+Utsignaler:
+  sts	Status	char	Aktuellt status.
+
+! level 1. 
+1 Pulse
+=Title Pulse
+=Keyword Pulse
+Objekt		PULSE
+
+Funktion	Tidsbestämd puls startas på positiv flank.
+
+Macro		pulse_exec(obj,in)
+
+Insignaler:
+  in		char	Insignal. Ej i databasen
+Utsignaler:
+  sts	Status	char	Aktuellt status.
+Parametrar:
+  StatusOld char	Föregående in-värde
+  TimerFlag	char	Markerar aktiv timer
+  TimerNext	*timer	Pekar på nästa timer i kön
+  TimerCount	int	Antal återstående ticks
+  TimerDO		*char	Dummy.
+  TimerTime	float	Inställningsvärde i sekunder.
+  TimerDODum	char	Dummy. TimerDO pekar hit.
+  TimerAcc	int	Operatörsrättigheter för inställd 
+			tid
+  TimerMin	float	Minsta inställda tid för operatör
+  TimerMax	float	Högsta inställda tid för operatör
+Om reset-signal krävs kan pulsen istället realiseras med
+en WAIT, en OR, och en SRR.
+
+! level 1. 
+1 Wait
+=Title Wait
+=Keyword Wait
+Objekt		WAIT
+
+Funktion	Tillslagsfördröjning
+
+Macro		wait_exec(obj,in)
+
+Insignaler:
+  in		char	Insignal. Ej i databasen
+Utsignaler:
+  sts	Status	char	Aktuellt status.
+Parametrar:
+  StatusOld char	Föregående in-värde
+  TimerFlag	char	Markerar aktiv timer
+  TimerNext	*timer	Pekar på nästa timer i kön
+  TimerCount	int	Antal återstående ticks
+  TimerDO		*char	Dummy
+  TimerTime	float	Inställningsvärde i sekunder.
+  TimerDODum	char	Dummy. TimerDO pekar hit.
+  TimerAcc	int	Operatörsrättigheter för inställd
+			tid
+  TimerMin	float	Minsta inställda tid för operatör
+  TimerMax	float	Högsta inställda tid för operatör
+
+! level 1. 
+1 Timer
+=Title Timer
+=Keyword Timer
+Objekt		TIMER
+
+Funktion	Frånslagsfördröjning
+
+Macro		timer_exec(obj,in)
+
+Insignaler:
+  in		char	Insignal. Ej i databasen
+Utsignaler:
+  sts	Status	char	Aktuellt status.
+Parametrar:
+  StatusOld char	Föregående in-värde
+  TimerFlag	char	Markerar aktiv timer
+  TimerNext	*timer	Pekar på nästa timer i kön
+  TimerCount	int	Antal återstående ticks
+  TimerDO		*char	Dummypekare.
+  TimerTime	float	Inställningsvärde i sekunder.
+  TimerDODum	char	Dummy. TimerDO pekar hit.
+  TimerAcc	int	Operatörsrättigheter för inställd
+			tid
+  TimerMin	float	Minsta inställda tid för operatör
+  TimerMax	float	Högsta inställda tid för operatör
+Om Resetfunktion krävs för att bryta tiden, kan 
+timer-funktionen i stället lösas med en WAIT, 
+en OR och en SRS.
+
+! level 1. 
+1 Dsup
+=Title Dsup
+=Keyword Dsup
+Object		DSUP
+
+Funktion	Larm- och meddelande-block för digital 
+		signal. Vid larm skickas telegram 
+		till larmhanteraren. 
+Macro		dsup_exec(obj,in,con)
+
+Insignaler:
+  in		char	Signal som larmövervakas
+  con		char	Frigivningssignal för 
+			larmövervakning
+Parametrar:
+  Alarm	char	Larmstatus
+
+! level 1. 
+1 Asup
+=Title Asup
+=Keyword Asup
+Object		ASUP
+
+Funktion	Larm- och meddelande-block för analog 
+		signal med hysteres.
+		Vid larm skickas telegram till 
+		larmhanteraren.
+
+Macro		asup_exec(obj,in,con)
+
+Insignaler:
+  in		float	Signal som larmövervakas
+  con		char	Frigivningssignal för 
+			larmövervakning
+Parametrar:
+  AlarmLimit	float	Larmgräns
+  Hysteres	float	Hysteres
+  Alarm		char	Larmstatus
+
+! level 1. 
+1 Count
+=Title Count
+=Keyword Count
+Object		COUNT
+
+Funktion	Räknare som kan upp, räkna ner, 
+		nollställas, och
+		inställas på förbestämt värde.
+		Kan användas som pulsräknarkort i 
+		mjukvara för max
+		en puls varannat varv. (Flankdetektering)
+
+Subrutin deklaration
+  void count_exec(object)
+  rtdb_counttype *object
+Insignaler:
+  up	CountUp	char	Flank ökar Accum
+  	CountUpP *char	Pekare (Default &CountUp)
+  do	CountDown char	Flank minskar Accum
+  	CountDownP *char	Pekare (Default &CountDown)
+  c	Clear	char	Flank nollar Accum
+  	ClearP	*char	Pekare (Default &Clear)
+  i	Init	char	Flank sätter Accum = Preset
+  	InitP	*char	Pekare (Default &Init)
+Utsignaler:
+  PI	Accum	int	Aktuellt räknarvärde
+  pos	Pos	char	Accum > 0
+  z	Zero	char	Accum == 0
+  neg	Neg	char	Accum < 0
+  eq	Equal	char	Accum == Preset
+Parametrar:
+  Preset	int	Förinställt värde
+  AccPre	int	Operatörsrättighet till 
+			Preset-värde
+  AccAccum	int	Operatörsrättighet till Accum-värde
+
+
+! level 1. 
+1 GetDi
+=Title GetDi, GetDo, GetDv
+=Keyword GetDi
+Object		GETDI, GETDO, GETDV, GETDP
+
+Funktion	Hämta digital signal från I/O-kopierad 
+		area.
+		Funktionen utgör bara en adressreferens.
+		Ingen exekverbar kod.
+		Inget eget objekt i databasen.
+Utsignaler:
+  sts	Status	char	Digital status för signalen
+
+
+! level 1. 
+1 GetDo
+=Title GetDi, GetDo, GetDv
+=Keyword GetDi
+Object		GETDI, GETDO, GETDV, GETDP
+
+Funktion	Hämta digital signal från I/O-kopierad 
+		area.
+		Funktionen utgör bara en adressreferens.
+		Ingen exekverbar kod.
+		Inget eget objekt i databasen.
+Utsignaler:
+  sts	Status	char	Digital status för signalen
+
+
+! level 1. 
+1 GetDv
+=Title GetDi, GetDo, GetDv
+=Keyword GetDi
+Object		GETDI, GETDO, GETDV, GETDP
+
+Funktion	Hämta digital signal från I/O-kopierad 
+		area.
+		Funktionen utgör bara en adressreferens.
+		Ingen exekverbar kod.
+		Inget eget objekt i databasen.
+Utsignaler:
+  sts	Status	char	Digital status för signalen
+
+
+! level 1. 
+1 GetDp
+=Title GetDi, GetDo, GetDv
+=Keyword GetDi
+Object		GETDI, GETDO, GETDV, GETDP
+
+Funktion	Hämta digital signal från I/O-kopierad 
+		area.
+		Funktionen utgör bara en adressreferens.
+		Ingen exekverbar kod.
+		Inget eget objekt i databasen.
+Utsignaler:
+  sts	Status	char	Digital status för signalen
+
+
+! level 1. 
+1 GetAi
+=Title GetAi, GetAo, GetAv
+=Keyword GetAi
+Object		GETAI, GETAO, GETAV, GETAP
+
+Funktion	Hämta ingenjörsvärde för signalen
+		Funktionen utgör bara en adressreferens.
+		Ingen exekverbar kod.
+		Inget eget objekt i databasen.
+Utsignaler:
+  VAL	ActVal	float	Aktuellt värde
+
+! level 1. 
+1 GetAo
+=Title GetAi, GetAo, GetAv
+=Keyword GetAi
+Object		GETAI, GETAO, GETAV, GETAP
+
+Funktion	Hämta ingenjörsvärde för signalen
+		Funktionen utgör bara en adressreferens.
+		Ingen exekverbar kod.
+		Inget eget objekt i databasen.
+Utsignaler:
+  VAL	ActVal	float	Aktuellt värde
+
+! level 1. 
+1 GetAv
+=Title GetAi, GetAo, GetAv
+=Keyword GetAi
+Object		GETAI, GETAO, GETAV, GETAP
+
+Funktion	Hämta ingenjörsvärde för signalen
+		Funktionen utgör bara en adressreferens.
+		Ingen exekverbar kod.
+		Inget eget objekt i databasen.
+Utsignaler:
+  VAL	ActVal	float	Aktuellt värde
+
+! level 1. 
+1 GetAp
+=Title GetAi, GetAo, GetAv
+=Keyword GetAi
+Object		GETAI, GETAO, GETAV, GETAP
+
+Funktion	Hämta ingenjörsvärde för signalen
+		Funktionen utgör bara en adressreferens.
+		Ingen exekverbar kod.
+		Inget eget objekt i databasen.
+Utsignaler:
+  VAL	ActVal	float	Aktuellt värde
+
+! level 1. 
+1 GetPi
+=Title GetPi
+=Keyword GetPi
+Object		GETPI
+
+Funktion	Hämta I/O-kopierat råvärde från 
+		pulsgivarkort.
+		Funktionen utgör bara en adressreferens.
+		Ingen exekverbar kod.
+		Inget eget objekt i databasen.
+Utsignaler:
+  PI	PulsIn		int	Kortets avlästa råvärde
+  PIX	PulsInEx	int	Utökat råvärde 32 bitar
+
+! level 1. 
+1 PiPos
+=Title PiPos
+=Keyword PiPos
+Object		PIPOS
+
+Funktion	Konvertera råvärde från PI till position.
+		Kalibrering av operatör eller automatik.
+		Varning för kalibrering i automatik pga 
+		tidsupplösningen
+
+Subrutin deklaration
+  void pipos_exec(object)
+  rtdb_pipostype *object
+Insignaler:
+  PI	PulsIn		int	Råvärde Används ej
+  PulsInP		*int	Pekare (Default PulsIn)
+  CP1	CalPos1		float	Position i 
+				kalibreringspunkt 1
+  	CalPos1P	*float	Pekare (Default OpPos1)
+  co1	CalOrder1	char	Kalibreringsorder 1
+  	CalOrder1P	*char	Pekare (Default CalOrder1)
+  CP2	CalPos2		float	Används ej
+  	CalPos2P	*float	Pekare (Default OpPos2)
+  co2	CalOrder2	char	Kalibreringsorder 2
+  	CalOrderP	*char	Pekare (Default 
+				CalOrder2)
+Utsignaler:
+  POS	ActVal		float	Aktuell position
+			för exekvering eller Konfi:
+  Gain	float	Konfi eller beräknat lägesdiff per puls
+Parametrar enbart för exekvering
+  CalOrder1Old	char	För flankdetektering
+  CalOrder2Old	char	För flankdetektering
+  PICal1	int	Råvärde vid senaste kalibrering
+			i punkt 1
+Parametrar enbart för operatörshantering:
+  OpPos1	float	Fast värde Kalibreringspunkt 1
+  OpPos2	float	Fast värde Kalibreringspunkt 2
+  AccPos1	int	Accessrättighet till OpPos1
+  AccOrd1	int	Accessrättighet till CalOrder1
+  AccPos2	int	Accessrättighet till OpPos2
+  AccOrd2	int	Accessrättighet till CalOrder2
+  MinPos1	float	Minvärde Pos1
+  MaxPos1	float	Maxvärde Pos1
+  MinPos2	float	Minvärde Pos2
+  MaxPos2	float	Maxvärde Pos2
+
+Utförande:
+  Position beräknas som pos i kal.pkt 
+  1 + diff råvärde * Gain
+
+  Kalibrering kan ske på operatörsorder eller på extern 
+  signal (pos flank) antingen mot operatörsangiven / 
+  fördefinierat läge eller till externt läge.
+  I kalibreringsläge 1 bestäms absolutläget.
+  Om kalibreringsläge två används, måste denna ske 
+  efter läge 1.
+  Här bestäms enbart Gain som skillnad i pos / skillnad 
+  i råvärde.
+  Gain kan också ges vid konfi.
+
+! level 1. 
+1 StoDo
+=Title StoDo, StoDv, StoDp
+=Keyword StoDo
+Object		STODO, STODV, STODP
+
+Funktion	Lagra digital signal
+		Inget eget object i RTDB.
+
+Macro		stodo_exec(obj,in)
+Insignaler:
+  sts	in	char	insignal
+Parameter:
+  obj	objektsnamn
+
+! level 1. 
+1 StoDv
+=Title StoDo, StoDv, StoDp
+=Keyword StoDo
+Object		STODO, STODV, STODP
+
+Funktion	Lagra digital signal
+		Inget eget object i RTDB.
+
+Macro		stodo_exec(obj,in)
+Insignaler:
+  sts	in	char	insignal
+Parameter:
+  obj	objektsnamn
+
+! level 1. 
+1 StoDp
+=Title StoDo, StoDv, StoDp
+=Keyword StoDo
+Object		STODO, STODV, STODP
+
+Funktion	Lagra digital signal
+		Inget eget object i RTDB.
+
+Macro		stodo_exec(obj,in)
+Insignaler:
+  sts	in	char	insignal
+Parameter:
+  obj	objektsnamn
+
+! level 1. 
+1 StoAo
+=Title StoAo, StoAv, StoAp
+=Keyword StoAo
+Object		STOAO, STOAV, STOAP
+
+Funktion	Lagra analog signal
+		Inget eget object i RTDB.
+
+Macro		stoao_exec(obj,in)
+Insignaler:
+  VAL	in	float	insignal
+Parameter:
+  obj	objektsnamn
+
+! level 1. 
+1 StoAv
+=Title StoAo, StoAv, StoAp
+=Keyword StoAo
+Object		STOAO, STOAV, STOAP
+
+Funktion	Lagra analog signal
+		Inget eget object i RTDB.
+
+Macro		stoao_exec(obj,in)
+Insignaler:
+  VAL	in	float	insignal
+Parameter:
+  obj	objektsnamn
+
+! level 1. 
+1 StoAp
+=Title StoAo, StoAv, StoAp
+=Keyword StoAo
+Object		STOAO, STOAV, STOAP
+
+Funktion	Lagra analog signal
+		Inget eget object i RTDB.
+
+Macro		stoao_exec(obj,in)
+Insignaler:
+  VAL	in	float	insignal
+Parameter:
+  obj	objektsnamn
+
+! level 1. 
+1 SetDo
+=Title SetDo, SetDv
+=Keyword SetDo
+Object		SETDO, SETDV
+
+Funktion	Ettställ digital signal om insignal sann.
+		Inget eget object i RTDB.
+
+Macro		setdo_exec(obj,in)
+Insignaler:
+  sts	in	char	insignal
+Parameter:
+  obj	objektsnamn
+
+! level 1. 
+1 SetDv
+=Title SetDo, SetDv
+=Keyword SetDo
+Object		SETDO, SETDV
+
+Funktion	Ettställ digital signal om insignal sann.
+		Inget eget object i RTDB.
+
+Macro		setdo_exec(obj,in)
+Insignaler:
+  sts	in	char	insignal
+Parameter:
+  obj	objektsnamn
+
+! level 1. 
+1 ResDo
+=Title ResDo, ResDv
+=Keyword And
+Object		RESDO, RESDV
+
+Funktion	Nollställ digital signal om insignal sann.
+		Inget eget object i RTDB.
+
+Macro		stodo_exec(obj,in)
+
+Insignaler:
+  sts	in	char	insignal
+Parameter:
+  obj	objektsnamn
+
+! level 1. 
+1 ResDv
+=Title ResDo, ResDv
+=Keyword And
+Object		RESDO, RESDV
+
+Funktion	Nollställ digital signal om insignal sann.
+		Inget eget object i RTDB.
+
+Macro		stodo_exec(obj,in)
+
+Insignaler:
+  sts	in	char	insignal
+Parameter:
+  obj	objektsnamn
+
+! level 1. 
+1 BCDDo
+=Title BCDDo
+=Keyword BCDDo
+Object		BCDDO
+
+Funktion	Konvertera flyttal till 4 BCD-kodade 
+		siffror	(16 dig signaler). Ev overflow 
+		beräknas.
+
+Subrutin deklaration
+  void bcddo_exec(object)
+  rtdb_bcddotype *object
+Insignaler:
+  IN	In	float	Används ej
+  InP	*float	Pekare (Default &In)
+Utsignaler:
+  do0	BCD0	char	Utdata. Minst sign bit lägsta 
+			siffra
+		  .	.
+  doF	BCDF	char	Utdata. Mest sign bit högsta 
+			siffra
+  RES	Rest	float	Rest. Insignal/10000, eller
+			insignal om denna < 0.
+! level 1. 
+1 DiBCD
+=Title DiBCD
+=Keyword DiBCD
+Object		DIBCD
+
+Funktion	Konvertera 4 BCD-kodade siffror till 
+		flyttal.
+
+Subrutin deklaration
+  void dibcd_exec(object)
+  rtdb_dibcdtype *object
+Insignaler:
+  di0	BCD0		char	Minst sign bit. 
+				Används ej.
+  	BCD0P		*char	Pekare (Default &BCD0)
+		.	.
+  diF	BCDF		char	Mest sign bit. Används ej
+  	BCDFP		*char	Pekare (Default &BCDF)
+Utsignaler:
+  VAL	ActVal		float	Aktuellt värde. -1 om fel.
+  err	Error		char	Felflagga.
+
+
+! level 1. 
+1 Sum
+=Title Sum
+=Keyword Sum
+Objekt		SUM
+
+Funktion	Summationsblock med upp till 8 ingångar
+		Varje ingång har egen viktsfaktor.
+		Dessutom finns en fast konstant som ingår i summationen.
+		Icke kopplade ingångar har pekare NULL.
+
+Subrutin deklaration
+		void sum_exec(object)
+		rtdb_sumtype *object
+Insignaler:
+  IN1		In1		float	Värde insignal 1
+		In1P		*float	Pekare (Default NULL)
+  .
+  .
+  IN8		In8		float	Värde insignal 8
+		In8P		*float	Pekare (Default NULL)
+Utsignaler:
+  VAL		ActVal		float	Utsignal
+Parametrar:
+  Const		float	Fast konstant som adderas
+  FVect[8]	float	Viktsfaktorer per signal
+  AccConst	int	Op.rättigheter till Const
+  MinConst	float	Min Const
+  MaxConst	float	Max Const
+  AccFact[8]	int	Op.rättigheter till FVect[]
+  MinFact[8]	float	Minvärde faktorer
+  MaxFact[8]	float	Maxvärde faktorer
+
+! level 1. 
+1 Maxmin
+=Title Maxmin
+=Keyword Maxmin
+Objekt		MAXMIN
+
+Funktion	Välj ut högsta och lägsta värde.
+		Upp till 8 insignaler.
+		De två första kan vara konstanter.
+
+Subrutin deklaration
+		void maxmin_exec(object)
+		rtdb_maxmintype *object
+Insignaler:
+  IN1		In1	float	Värde insignal 1
+		In1P	*float	Pekare (Default &In1)
+  IN2		In2	float	Värde insignal 2
+		In2P	*float	Pekare (Default &In2)
+  IN3		In3	float	Värde insignal 3
+		In3P	*float	Pekare (Default NULL)
+  .
+  .
+  IN8		In8	float	Värde insignal 8
+		In8P	*float	Pekare (Default NULL)
+Utsignaler:
+  MAX		MaxVal		float	Högsta värde
+  MIN		MinVal		float	Lägsta värde
+
+! level 1. 
+1 Limit
+=Title Limit
+=Keyword Limit
+Objekt		LIMIT
+
+Funktion	Begränsa insignal uppåt och nedåt
+		Gränserna kan kopplas externt eller ligga
+		fasta i blocket.
+		Om maxgränsen blir lägre än mingränsen 
+		kommer maxgränsen att gälla.
+
+Subrutin deklaration
+		void limit_exec(object)
+		rtdb_limittype *object
+Insignaler:
+  MAX	Max	float	Aktuellt värde på maxgränsen
+	MaxP	*float	Pekare (Default &Max)
+  IN	In	float	Värde på insignalen
+	InP	*float	Pekare (Default &In1)
+  MIN	Min	float	Aktuellt värde på mingränsen
+	MinP	*float	Pekare (Default &Min)
+Utsignaler:
+	VAL	ActVal	float	Begränsat värde
+	hl	High	char	Flagga maxbegränsning gäller
+	ll	Low	char	Flagga minbegränsning gäller
+		
+Parametrar:
+  AccIn	int	Op.rättigheter till Insignalen. 
+		(0 om extern)
+  AccMax	int	Op.rättigheter till maxgränsen. 
+		(0 om extern)
+  AccMin	int	Op.rättigheter till mingränsen. 
+		(0 om extern)
+  MinInC	float	Minvärde på insignalen
+  MaxInC	float	Maxvärde på insignalen
+  MinmaxC	float	Minvärde på maxgränsen
+  MaxmaxC	float	Maxvärde på maxgränsen
+  MinminC	float	Minvärde på mingränsen
+  MaxminC	float	Maxvärde på mingränsen
+
+! level 1. 
+1 Comph
+=Title Comph
+=Keyword Comph
+Objekt		COMPH
+
+Funktion	Jämför insignal med övre gränsvärde.
+		Sann då in går över gränsen.
+		För frånslag finns en hysteresgräns
+		Maxgränsen kan kopplas externt eller 
+		ligga fast i blocket.
+
+Subrutin deklaration
+		void comph_exec(object)
+		rtdb_comphtype *object
+Insignaler:
+  HIG	Lim	float	Aktuellt värde på maxgränsen
+	LimP	*float	Pekare (Default &Lim)
+  IN	In	float	Värde på insignalen
+	InP	*float	Pekare (Default &In)
+Utsignaler:
+  hl	High	char	Flagga gräns överskriden
+		
+Parametrar:
+  Hysteres float	Hysteresvärde
+  AccLim	int	Op.rättigheter till gränsvärdet. (0 om extern)
+  MinLim	float	Minvärde på gränsvärdet
+  MaxLim	float	Maxvärde på gränsvärdet
+  AccHys	int	Op.rättigheter till hysteres
+  MinHys	float	Min värde hysteres (>=0)
+  MaxHys	float	Maxvärde hysteres
+
+! level 1. 
+1 Compl
+=Title Compl
+=Keyword Compl
+Objekt		COMPL
+
+Funktion	Jämför insignal med undre gränsvärde.
+		Sann då in går under gränsen.
+		För frånslag finns en hysteresgräns
+		Mingränsen kan kopplas externt eller 
+		ligga fast i blocket.
+
+Subrutin deklaration
+		void compl_exec(object)
+		rtdb_compltype *object
+Insignaler:
+  IN	In	float	Värde på insignalen
+	InP	*float	Pekare (Default &In)
+  LOW	Lim	float	Aktuellt värde på mingränsen
+	LimP	*float	Pekare (Default &Lim)
+Utsignaler:
+  ll	Low	char	Flagga gräns underskriden
+		
+Parametrar:
+  Hysteres float	Hysteresvärde
+  AccLim	int	Op.rättigheter till gränsvärdet. 
+			(0 om extern)
+  MinLim	float	Minvärde på gränsvärdet
+  MaxLim	float	Maxvärde på gränsvärdet
+  AccHys	int	Op.rättigheter till hysteres
+  MinHys	float	Min värde hysteres (>=0)
+  MaxHys	float	Maxvärde hysteres
+
+! level 1. 
+1 Select
+=Title Select
+=Keyword Select
+Objekt		SELECT
+
+Funktion	Välj mellan två analogasignaler
+		Både analogavärdena och kontrollsignalen
+		kan kopplas externt eller ligga internt i 
+		blocket
+
+Subrutin deklaration
+		void select_exec(object)
+		rtdb_selecttype *object
+Insignaler:
+  HIG	High	float	Värde på första insignalen
+	HighP	*float	Pekare (Default &High)
+  LOW	Low	float	Värde på andra insignalen
+	LowP	*float	Pekare (Default &Low)
+  con	Control	char	Värde på kontrollsignalen
+	ControlP *float	Pekare (Default &Control)
+Utsignaler:
+  VAL	ActVal	float	Valt värde
+  NOT	NotActVal float	Det ej valda värdet
+		
+Parametrar:
+  AccHigh	int	Op.rättigheter till första värde
+  AccLow	int	Op.rättigheter till andra värde
+  AccCon	int	Op.rättigheter till kontrollsignal
+  MinHigh	float	Minvärde på första värde
+  MaxHigh	float	Maxvärde på första värde
+  MinLow	float	Minvärde på andra värde
+  MaxLow	float	Maxvärde på andra värde
+
+! level 1. 
+1 Ramp
+=Title Ramp
+=Keyword Ramp
+Objekt		RAMP
+
+Funktion	Begränsa ändringshastighet.
+		Separat gränshastighet för öka och minska.
+
+Subrutin deklaration
+		void ramp_exec(object)
+		rtdb_ramptype *object
+Insignaler:
+  IN	In	float	Värde på insignalen
+	InP	*float	Pekare (Default &In)
+  FB	FeedB	float	Används ej
+	FeedBP	*float	Pekare (Default &ActVal)
+Utsignaler:
+  VAL	ActVal	float	Begränsat värde
+		
+Parametrar:
+  ScanTime 	float	Programcykeltid
+  RampUp	float	Max ökning per sekund. 
+			<= 0 ger ingen begr.
+  RampDown 	float	Max minskning per sekund
+  AccUp	int	Op.rättigheter till första värde
+  AccDown	int	Op.rättigheter till andra värde
+  MinUp	float	Minvärde på ökningsgräns
+  MaxUp	float	Maxvärde på ökningsgräns
+  MinDown	float	Minvärde på minskningsgräns
+  MaxDown	float	Maxvärde på minskningsgräns
+
+! level 1. 
+1 Filter
+=Title Filter
+=Keyword Filter
+Objekt		FILTER
+
+Funktion	Exponentialfiltrering
+
+Subrutin deklaration
+		void filter_exec(object)
+		rtdb_filtertype *object
+Insignaler:
+  IN	In	float	Värde på insignalen
+	InP	*float	Pekare (Default &In)
+  FB	FeedB	float	Används ej
+	FeedBP	*float	Pekare (Default &ActVal)
+Utsignaler:
+  VAL	ActVal	float	Filtrerat värde
+	
+Parametrar:
+  ScanTime 	float	Programcykeltid
+  FiltCon	float	Filtrerkonstant i sekunder
+  AccCon	int	Op.rättigheter till 
+			filtrerkonstant
+  MinCon	float	Minvärde på filtrerkonstant
+  MaxCon	float	Maxvärde på filtrerkonstant
+
+! level 1. 
+1 Speed
+=Title Speed
+=Keyword Speed
+Objekt		SPEED
+
+Funktion	Derivering
+
+Subrutin deklaration
+		void speed_exec(object)
+		rtdb_speedtype *object
+Insignaler:
+  IN	In	float	Värde på insignalen
+	InP	*float	Pekare (Default &In)
+Utsignaler:
+  VAL	ActVal	float	Ändring dividerat med cykeltiden
+Parametrar:
+  ScanTime float	Programcykeltid i sek
+		
+
+! level 1. 
+1 Timint
+=Title Timint
+=Keyword Timint
+Objekt		TIMINT
+
+Funktion	Integrering
+
+Subrutin deklaration
+		void timint_exec(object)
+		rtdb_timinttype *object
+Insignaler:
+  IN	In	float	Värde på insignalen
+	InP	*float	Pekare (Default &In)
+  z	Clear	char	Nollställnig av ackumulerad signal
+	ClearP	*float	Pekare (Default &Clear)
+Utsignaler:
+  VAL	ActVal	float	Ackumulerad signal
+Parametrar:
+  ScanTime float	Programcykeltid i sek
+  AccVal	int	Operatörsrättigheter till ActVal
+
+! level 1. 
+1 Curve
+=Title Curve
+=Keyword Curve
+Objekt		CURVE
+
+Funktion	Interpollation i tabell
+		Om insignalen ligger utanför 
+		tabellområdet tas första resp sista 
+		tabellvärde
+
+Subrutin deklaration
+		void curve_exec(object)
+		rtdb_curvetype *object
+Insignaler:
+  IN	In	float	Värde på insignalen
+	InP	*float	Pekare (Default &In)
+  TAB	Tab	float	Används ej
+	TabP	*float	Pekare till TABLE area. 
+		(Default NULL)
+Utsignaler:
+  VAL	ActVal	float	Aktuellt tabellvärde
+
+! level 1. 
+1 Table
+=Title Table
+=Keyword Table
+Objekt		TABLE
+
+Funktion	Interpollationstabell till CURVE.
+		Max 50 talpar X - Y. (Kan få vara 
+		dynamisk storlek)
+		X-värden ligger i stigande ordning.
+		Flera CURVE-block kan knytas till samma 
+		TABLE.
+		Ingen egen exekverbar kod.
+
+Utsignaler:
+  TAB	TabVect[101]	float	Tabell värden
+
+	TabVect[0]	Antal använda talpar i tabellen
+	TabVect[1]	X1
+	TabVect[2]	Y1
+	TabVect[3]	X2
+	TabVect[4]	Y2
+	...
+	TabVect[99]	X50
+	TabVect[100]	Y50
+
+! level 1. 
+1 Adelay
+=Title Adelay
+=Keyword Adelay
+Objekt		ADELAY
+
+Funktion	Tidsfördröjning av analog signal.
+		Tidsfördröjningen  kan vara variabel
+		inom en fast gräns.
+		Fördröjningen realiseras i ett 
+		skiftregister med 100 steg. Upplösningen 
+		per steg blir maxtiden / 100. Om det 
+		krävs större upplösning måste man 
+		seriekoppla flera ADELAY-block.
+		Om tidsupplösningen blir sämre än 
+		cykeltiden sker medelvärdesbildning i 
+		varje steg.
+		Aktuell fördröjning bestämmer index i 
+		skiftregistret varifrån ärvärdet hämtas.
+		Interpollation mellan registervärdena 
+		sker.
+		Under initieringsfasen begränsas 
+		fördröjningen till löptid sedan omstart
+
+Subrutin deklaration
+		void adelay_exec(object)
+		rtdb_adelaytype *object
+Insignaler:
+  IN	In	float	Värde på insignalen
+	InP	*float	Pekare (Default &In)
+  TIM	Tim	float	Aktuell tidsfördröjning i 
+			sekunder
+	TimP	*float	Pekare (Default &Tim)
+Utsignaler:
+  VAL	ActVal	float	Fördröjd signal
+Parametrar:
+  ScanTime	float	Programcykeltid
+  TimVect[100]	float	Cykliskt register
+  StoInd	int	Index nästa position för lagring
+  MaxCount	int	Antal cykler per steg >= 1; 
+			100*MaxCount = Max fördröjning
+  StoredNumbers	int	Räknare under initieringsfas
+  Count		int	Varvräknare för skift
+  AccTim		int	Op.rättigheter till TimCon
+  MinTim		float	Min tidsfördröjning
+  MaxTim		float	Max tidsfördröjning
+
+! level 1. 
+1 AArithm
+=Title Aarithm
+=Keyword Aarithm
+Objekt		AARITHM
+
+Funktion	Friprogrammerat uttryck i C-språket
+		Högst 8 analoga och 8 digitala ingångar
+		Några tänkbara användningar:
+		fabs(A1)	absolutbelopp
+		fexp(A1)	exponentialfunktion
+		fln(A1)		logaritm
+		fsin(A1)	sinus
+		A1 * A2		Multiplikation
+		(d1 && d2) ? A1 + A2 : A3 Alternativ
+
+Macro		aarithm_exec(obj,expr)
+
+Insignaler:
+  A1		Analog signal som ingår i beräkningsuttrycket
+  .
+  A8		- " -
+  d1		Digital signal som ingår i beräkningsuttrycket
+  .
+  d8		- " -
+Utsignaler:
+  VAL	ActVal	float	Utsignal
+
+! level 1. 
+1 DArithm
+=Title Darithm
+=Keyword Darithm
+Objekt		DARITHM
+
+Funktion	Friprogrammerat uttryck i C-språket
+		Högst 8 digitala och 8 analoga ingångar
+
+Macro		darithm_exec(obj,expr)
+
+Insignaler:
+  d1		Digital signal som ingår i 
+		beräkningsuttrycket
+  .
+  d8		- " -
+  A1		Analog signal som ingår i 
+		beräkningsuttrycket
+  .
+  A8		- " -
+Utsignaler:
+  sta	Status	char	Utsignal
+
+! level 1. 
+1 Drive
+=Title Drive
+=Keyword Drive
+Objekt		DRIVE
+
+Funktion	Enkel motorstyrning med tidsövervakning
+		av kontaktorsvar och hastighetsvakt.
+
+Subrutin deklaration
+		void drive_exec(object)
+		rtdb_drivetype *object
+
+Insignaler:
+  sta	AutoStart char	Fjärrstartorder
+	AutoStartP *char Pekare (Default &AutoStart)
+  lok	Local	char	Lokalstyrning
+	LocalP	*char	Pekare (Default &Local)
+  lst	LocStart char	Lokal start
+	LocStartP *char	Pekare (Default &LocStart)
+  ldr	LocDrive char	Lokal driftorder (0 stoppar)
+	LocDriveP *char	Pekare (Default &LocDrive) 
+  con	ConOn	char	Kontaktorsvar
+	ConOnP	*char	Pekare (Default &Order)
+  sl	Speed	char	Hastighetsvakt
+	SpeedP	*char	Pekare (Default &Order)
+  ss	SafeStop char	Säkerhetsförregling stopp
+	SafeStopP *char	Pekare (Default &SafeStop)
+  ps	ProdStop char	Driftsförregling stopp
+	ProdStopP *char	Pekare (Default &ProdStop)
+  nos	NoStart	char	Starthinder
+	NoStartP *char	Pekare (Default &NoStart)
+Utsignaler:
+  man	ManMode	char	Manuell mod
+  ord	Order	char	Driftsorder utsignal
+  ind	Ind	char	Driftsorder, kontaktorsvar och utsignal
+  al1	Alarm1	char	Larm Startar ej
+  al2	Alarm2	char	Larm Tappat kontaktorsvar
+  al3	Alarm3	char	Larm hastighetsvakt
+Parametrar:
+  ManSta	char	Manuell startorder. Tas ned 
+			av koden.
+  ManStp	char	Manuell stopporder. Tas ned 
+			av koden.
+  ProdTim	float	Max svarstid kontaktor
+  SpeedTim	float	Max svarstid hastighetsvakt
+  TimerFlag	char	Markerar aktiv timer
+  TimerNext	*char	Pekare till nästa timer i kön
+  TimerCount	int	Antal återstående ticks
+  TimerDO	*char	&TimerDODum
+  TimerTime	float	Inställningsvärde i sek sätts i 
+			runtime
+  TimerDODum	char	Dummy
+  ManAcc	int	Op.rättigheter Man mod / Auto mod
+  Status	int	0 - Stop,	1 - Stoppar,
+			2 - Vänta på kontaktor,
+			3 - Vänta på hastighetsvakt,
+			4 - Drift
+
+För fram/back-drift använder man lämpligen två enkla 
+drifter, vilka förregla rvarandra för samtidig drift 
+via SafeStop.
+
+! level 1. 
+1 Valve
+=Title Valve
+=Keyword Valve
+Objekt		VALVE
+
+Funktion	Magnetventilstyrning med 
+		gångtidsövervakning
+
+Subrutin deklaration
+		void valve_exec(object)
+		rtdb_valvetype *object
+
+Insignaler:
+  aop	AutoOpen char	Extern \ppna order i automatik
+	AutoOpenP *char	Pekare (Default &AutoOpen)
+  eop	EndOpen	char	Ändläge öppen
+	EndOpenP *char	Pekare (Default &EndOpen)
+  ecl	EndClosed char	Ändläge stängd
+	EndClosedP *char Pekare (Default &EndClosed)
+  loc	Local	char	Lokal styrning
+	LocalP	*char	Pekare (Default &Local)
+  lop	LocalOpen char	Lokal order \ppna
+	LocalOpenP *char Pekare (Default &LocalOpen)
+  lcl	LocalClose char	Lokal order Stäng
+	LocalCloseP *char Pekare (Default &LocalClose)
+  sop	SafeOpen char	Säkerhetsförregling \ppna
+	SafeOpenP *char	Pekare (Default &SafeOpen)
+  scl	SafeClose char	Säkerhetsförregling Stäng
+	SafeCloseP *char Pekare (Default &SafeClose)
+  pop	ProdOpen char	Driftsförregling \ppna
+	ProdOpenP *char	Pekare (Default &ProdOpen)
+  pcl	ProdClose char	Driftsföregling Stäng
+	ProdCloseP *char Pekare (Default &ProdClose)
+Utsignaler:  
+  man	ManMode	char	Manuell mod
+  oop	OrderOpen char	Order öppna
+  iop	IndOpen	char	Indikering order och ändläge 
+			öppen
+  icl	IndClosed char	Indikering order och ändläge 
+			stängd
+  al1	Alarm1	char	Larm Gångtidsövervakning öppna
+  al2	Alarm2	char	Larm Gångtidsövervakning stäng
+  al3	Alarm3	char	Larm tappat gränsläge öppen
+  al4	Alarm4	char	Larm tappat gränsläge stängd
+Parametrar:
+  ManOpen		char	Manuell öppna-order
+  ManClose	char	Manuell stäng-order
+  TimerFlag	char	Markerar aktiv timer
+  TimerNext	*char	Pekare till nästa timer i kön
+  TimerCount	int	Antal återstående ticks
+  TimerDO		*char	&TimerDODum
+  TimerTime	float	Inställningsvärde i sek sätts i 
+			runtime
+  TimerDODum	char	Dummy
+  Status	int	0 - stänger,	1 - öppnar,
+			2 - stängd,	3 - öppen
+
+! level 1. 
+1 MValve
+=Title MValve
+=Keyword MValve
+Objekt		MVALVE
+
+Funktion	Motorventilstyrning med 
+		gångtidsövervakning och
+		övervakning kontaktorsvar.
+
+Subrutin deklaration
+		void mvalve_exec(object)
+		rtdb_mvalvetype *object
+
+Insignaler:
+  aop	AutoOpen char	Extern \ppna-order i automatik
+	AutoOpenP *char	Pekare (Default &AutoOpen)
+  acl	AutoClose char	Extern Stäng-order i automatik
+	AutoCloseP *char	Pekare (Default &AutoClose)
+  eop	EndOpen	char	Ändläge öppen
+	EndOpenP *char	Pekare (Default &EndOpen)
+  ecl	EndClosed char	Ändläge stängd
+	EndClosedP *char Pekare (Default &EndClosed)
+  cop	ConOpen	char	Kontaktorsvar
+	ConOpenP *char	Pekare (Default &OrderOpen)
+  ccl	ConClose char	Kontaktorsvar
+	ConCloseP *char	Pekare (Default &OrderClose)
+  loc	Local	char	Lokal styrning
+	LocalP	*char	Pekare (Default &Local)
+  lop	LocalOpen char	Lokal order \ppna
+	LocalOpenP *char Pekare (Default &LocalOpen)
+  lcl	LocalClose char	Lokal order Stäng
+	LocalCloseP *char Pekare (Default &LocalClose)
+  lst	LocalStop char	Lokal order Stopp
+	LocalStoppP *char Pekare (Default &LocalStop)
+  sop	SafeOpen char	Säkerhetsförregling \ppna
+	SafeOpenP *char	Pekare (Default &SafeOpen)
+  scl	SafeClose char	Säkerhetsförregling Stäng
+	SafeCloseP *char Pekare (Default &SafeClose)
+  sst	SafeStop char	Säkerhetsförregling Stopp
+	SafeStopP*char	Pekare (Default &SafeStop)
+  pop	ProdOpen char	Driftsförregling \ppna
+	ProdOpenP *char	Pekare (Default &ProdOpen)
+  pcl	ProdClose char	Driftsföregling Stäng
+	ProdCloseP *char Pekare (Default &ProdClose)
+  pst	ProdStop char	Driftsföregling Stopp
+	ProdStopP *char	Pekare (Default &ProdStop)
+Utsignaler:
+  man	ManMode	char	Manuell mod
+  oop	OrderOpen char	Order öppna
+  ocl	OrderClose char	Order stäng
+  iop	IndOpen	char	Ind ändläge öppen och ej ny order
+  icl	IndClosed char	Ind ändläge stängd och ej ny order
+  al1	Alarm1	char	Larm Gångtidsövervakning öppna
+  al2	Alarm2	char	Larm Gångtidsövervakning stäng
+  al3	Alarm3	char	Larm tappat gränsläge öppen
+  al4	Alarm4	char	Larm tappat gränsläge stängd
+  al5	Alarm5	char	Larm kontaktorsvar öppna
+  al6	Alarm6	char	Larm kontaktorsvar stäng
+  
+Parametrar:
+  ManOpen	char	Manuell order öppna
+  ManClose	char	Manuell order stäng
+  ManStop	char	Manuell stopp-order
+  Ctime		float	Max tid kontaktorsvar
+  RunTime	float	Max gångtid
+  TimerFlag	char	Markerar aktiv timer
+  TimerNext	*char	Pekare till nästa timer i kön
+  TimerCount	int	Antal återstående ticks
+  TimerDO	*char	&TimerDODum
+  TimerTime	float	Inställningsvärde i sek sätts i 
+			runtime
+  TimerDODum	char	Dummy
+  Status	int	1 / -1	Väntar på kontaktorsvar 
+				ö / s
+			2 / -2	\ppnar / stänger
+			3 / -3	\ppen / stängd
+
+! level 1. 
+1 Posit
+=Title Posit
+=Keyword Posit
+Objekt		POSIT
+
+Funktion	Positionering
+
+Subrutin deklaration
+		void posit_exec(object)
+		rtdb_posittype *object
+
+Insignaler:
+  PV	PosVal		float	Position ärvärde
+	PosValP		*float	Pekare (Default &PosVal)
+  SV	SetPos		float	Position börvärde
+	SetPosP		*float	Pekare (Default &SetPos)
+  pos	AutoPos		char	Order start positionering
+	AutoPosP	*char	Pekare (Default &AutoPos)
+  res	Reset		char	Order avbryt positionering
+
+Utsignaler:
+  man	ManMode	char	Manuell mod
+  pon	PosOn	char	Positionering pågår
+  o1	Order1	char	Order Fram
+  o2	Order2	char	Order Back
+  inp	InPlace	char	Ind innanför dödzon
+  ERR	PosError float	Positioneringsavvikelse 
+			(Är - Bör)
+Parametrar:  
+  DeadZone1	float	Dödzon Är > Bör
+  DeadZone2	float	Dödzon Är < Bör
+  TimerFlag	char	Markerar aktiv timer
+  TimerNext	*char	Pekare till nästa timer i kön
+  TimerCount	int	Antal återstående ticks
+  TimerDO	*char	&TimerDODum
+  TimerTime	float	Tid inom dödzon som bryter pos. 
+			sek
+  TimerDODum	char	Dummy
+  TimerAcc	int	Operatörsrättigheter till 
+			TimerTime
+  TimerMin	float	Minsta tid för operatör
+  TimerMax	float	Högsta tid för operatör
+
+! level 1. 
+1 PID
+=Title PID
+=Keyword Pid
+Objekt		PID
+
+Funktion	Regulator
+
+Subrutin deklaration
+		void pid_exec(object)
+		rtdb_pidtype *object
+
+Insignaler:
+  PV	ProcVal	float	Ärvärde
+	ProcValP *float	Pekare (Default &ProcVal)
+  SV	SetVal	float	Börvärde
+	SetValP	*float	Pekare (Default &SetVal)
+  BIS	Bias	float	Framkoppling
+	BiasP	*float	Pekare (Default &Bias)
+  FOV	ForcVal	float	Används ej
+	ForcValP *float	Pekare (Default &ForcVal)
+  for	Force	char	Order tvångsstyrning
+	ForceP	*char	Pekare (Default &Force)
+  iof	IntOff	char	Order integration bortkopplad
+	IntOffP	*char	Pekare (Default &IntOff)
+Utsignaler:
+  OUT	OutVal	float	Styrsignal
+  OC	OutChange float	Styrsignalsförändring
+  DIF	ControlDiff float Regleravvikelse (Är -Bör)
+Parametrar:
+  ScanTime	float	Programcykeltid i sek
+  PidAlg	int	Regleralgoritm
+  Gain		float	Förstärkning (Positiv)
+  IntTime	float	Integrationstid sekunder
+  DerTime	float	Deriveringstid sekunder
+  DerGain	float	Filtrerfaktor derivata
+  Inverse	char	Flagga indirekt reglering
+  BiasGain	float	Framkopplingsförstärkning
+  MinOut	float	Bottning styrsignal vid reglering
+  MaxOut	float	Bottning styrsignal vid reglering
+Parametrar för operatörsrättigheter:
+  AccGain	int	Op.rättigheter för Gain
+  AccInt	int	Op.rättigheter för IntTime
+  AccDer	int	Op.rättigheter för DerTime
+  AccDGain 	int	Op.rättigheter för DerGain
+  AccBias	int	Op.rättigheter för Bias (Om 
+			intern vid PD-regulator)
+  AccBGain 	int	Op.rättigheter för BiasGain
+  MinGain	float	Min förstärkning
+  MaxGain	float	Max förstärkning
+  ...		Min och max för samtliga ovan
+  AccIntOff int	Op.rättigheter för IntOff
+Parametrar för ren exekvering.
+  FiltDer	float	Filtrerad derivata sparas till 
+			nästa programcykel
+
+Algoritmer för PID:
+  PID bygger på en ideal regleralgoritm  
+	Kp * (1 + 1/Ti*s + s*Td/(1+s*Td))
+
+Både P- och D-del kan kopplas till antingen 
+regleravvikelse eller ärvärde.
+
+Vid P- eller PD-algoritm beräknas utsignalen med 
+absolut algoritm. Därefter utvärderas reglerförändringen.
+Om I-del finns, beräknas ändringen i utsignal. 
+Därefter ackumuleras denna till utsignalen, och 
+begränsning sker. Regulatorn får därigenom stötfri 
+övergång vid tvångsstyrning, och kan ej integrera upp 
+utanför tillåtna reglerområdet.
+
+D-delen filtreras med filtrerfaktor DerGain, om 
+DerGain > 1 (motsvarar ingen filtrering) och 
+DerGain * SampleTime < DerTime
+(Filtrera inte hårdare än deriveringstiden).
+
+Framkoppling kan användas för vilken algoritm som helst.
+För PD kan konstant värde på framkopplingen användas som 
+bias.
+
+I-delen kan tillfälligt kopplas bort, t.ex. för att 
+undvika integrering av små avvikelser.
+
+Regulatorn kan ställas i tvångsstyrning. Detta sker
+lämpligen tillsammans med MODE-blocket. Funktionen kan 
+användas för manuell inställning, nollutställning vid 
+ej drift, och tracking-funktion vid alternativreglering.
+
+Algoritmer för olika värden på PidAlg:
+  1	I-del finns
+  2	P-del finns (Alltid utom ren I-regulator)
+  4	P verkar på regleravvikelse
+  8	D-del finns
+  16	D verkar på regleravvikelse
+
+  1	I	Ren integrering. Gain används ej.
+  3	I + P	P verkar på ärvärdet
+  6	P	Ren P-regulator
+  7	PI	P verkar på avvikelse
+  11	I+PD	P och D verkar på ärvärdet
+  14	P+D	P verkar på avvikelse, D på ärvärde
+  15	PI+D	P verkar på avvikelse, D på ärvärde
+  30	PD	P och D verkar på avvikelse
+  31	PID	P och D verkar på avvikelse
+
+\vriga kombinationer är teoretiskt möjliga, men ej 
+tillåtna.
+
+! level 1. 
+1 Mode
+=Title Mode
+=Keyword Mode
+Object		MODE
+
+Funktion	Sköter reglermod och tvångsstyrning åt 
+		PID
+
+Subrutin deklaration
+		void mode_exec(object)
+		rtdb_modetype *object
+Insignaler:
+  XSV	XSetVal	float	Externt börvärde
+	XSetValP *float	Pekare (Default &XSetVal)
+  XFO	XForcVal float	Tvångsstyrningsvärde
+	XForcValP *float Pekare (Default &XForcVal)
+  fo1	Forc1	char	Order tvångsstyrning även om 
+			manuell
+	Forc1P	*char	Pekare (Default &Forc1)
+  fo2	Forc2	char	Order tvångsstyrning om ej i 
+			manuell
+	Forc2P	*char	Pekare (Default &Forc2)
+  OUT	OutVal	float	Senast utlagda börvärde för 
+			regulatorn
+	OutValP *float	Pekare (Default &OutVal)
+Utsignaler:
+  SV	SetVal	float	Börvärde
+  FOV	ForcVal	float	Tvångskörnings / Manuellvärde
+  for	Force	char	Regulatorn tvångskörs eller 
+			manuell
+  aut	AutMode	char	AutoMode
+  cas	CascMode char	Extern mod = Caskad
+Parametrar:
+  OpMod		int	Begärd Mod
+  AccMod	int	Bitmask tillåtna reglermoder
+  AccOut	int	Op.rättigheter manuell utsignal
+  MinOut	float	Min manuell utsignal
+  MaxOut	float	Max manuell utsignal
+  AccSet	int	Op.rättigheter Börvärde
+  MinSet	float	Min Börvärde
+  MaxSet	float	Max Börvärde
+
+! level 1. 
+1 Pos3P
+=Title Pos3P
+=Keyword Pos3P
+Object		POS3P
+
+Funktion	3-pktsutgång med lägesåterföring
+
+Subrutin deklaration
+		void pos3p_exec(object)
+		rtdb_pos3ptype *object
+Insignaler:
+  OUT	OutVal	float	Regulatorutgång. Börvärde läge
+	OutValP	*float	Pekare (Default &OutVal)
+  POS	Pos	float	Position lägesåterföring
+	PosP	*float	Pekare (Default &Pos)
+Utsignaler:	  
+  ope	Open	char	Order \ppna
+  clo	Close	char	Order Stäng
+Parametrar:
+  Gain	float	Förstärkning sekunder per styrsignal
+		Normalt alltså total gångtid/100
+		Används bara med timerstyrning utgångar
+  ErrSta float	Dödzon som sätter öppna eller stäng
+  ErrSto float	Dödzon som avbryter öppna och stäng
+  OpenP	*char	Pekare till öppnasignal vid timerstyrning
+		( Default &TimerDODum)
+  CloseP *char	Pekare till stängsignal vid timerstyrning
+		( Default &TimerDODum)
+  TimerFlag char Markerar aktiv Timer
+  TimerNext *char Pekar på nästa timer i kön
+  TimerCount int Antal återstående ticks
+  TimerDO *char	Pekare vid timerstyrning (Runtime)
+  TimerTime float Inställd tid beräknas i runtime.
+  TimerDODum char Dummy
+
+! level 1. 
+1 Inc3P
+=Title Inc3P
+=Keyword Inc3P
+Object		INC3P
+
+Funktion	3-pktsutgång utan lägesåterföring
+
+Subrutin deklaration
+		void inc3p_exec(object)
+		rtdb_inc3ptype *object
+Insignaler:
+  OC	OutChange float	Styrsignalsförändring
+	OutChangeP *float Pekare (Default &OutChange)
+Utsignaler:  
+  ope	Open	char	Order \ppna
+  clo	Close	char	Order Stäng
+Parametrar:
+  ScanTime float	Programcykeltid i sek
+  Gain	 float	Förstärkning sekunder per styrsignal
+  MinTim float	Kortaste utställningstid
+  MaxTim float	Max tid för integrering utan ingrepp
+  OpenP	 *char	Pekare till öppnasignal vid timerstyrning
+		( Default &TimerDODum)
+  CloseP *char	Pekare till stängsignal vid timerstyrning
+		( Default &TimerDODum)
+  TimerFlag	char	Markerar aktiv Timer
+  TimerNext	*char	Pekar på nästa timer i kön
+  TimerCount	int	Antal återstående ticks
+  TimerDO	*char	Pekare vid timerstyrning (Runtime)
+  TimerTime	float	Inställd tid beräknas i runtime.
+  TimerDODum	char	Dummy
+Parametrar för exekvering:
+  Acc	float	Ackumulerad styrsignal - ingrepp som tid
+  AccTim	float	Ackumulerad tid utan ingrepp
+
+! level 1. 
+1 Out2P
+=Title Out2P
+=Keyword Out2P
+Object		OUT2P
+
+Funktion	Två-punktsutgång. 
+		(Till / Från / Pulsad )
+
+Subrutin deklaration
+		void out2p_exec(object)
+		rtdb_out2ptype *object
+Insignaler:
+  OUT	OutVal	float	Styrsignal från regulator
+	OutValP	*float	Pekare (Default &OutVal)
+Utsignaler:
+  on	Order	char	Order till
+Parametrar:
+  ScanTime 	float	Programcykeltid i sek
+  MaxOut	float	Gräns för ständigt tillslag
+  MinOut	float	Gräns för ständigt frånslag
+  Period	float	Periodtid i sek vid pulsning 
+			(Mellan gränserna)
+  RunTime	float	Ackumulerad tid sedan senaste 
+			omslag
+
+! level 1. 
+1 InitStep
+=Title InitStep
+=Keyword InitStep
+Object		INITSTEP
+
+Funktion	Sekvenssteg som sätts aktivt vid Reset av
+		GrafCet-kedjan.
+		En enkel order kan kopplas direkt på 
+		steget utan explicit order-blocks-fönster.
+
+Macro	initstep_exec(obj,chain,reset)
+
+Utsignaler:
+  STA	Status(2)	char	Aktiv resp Steg aktivt
+Parametrar:
+  ResetOld	char	Detektera nyss nollställd kedja.
+
+! level 1. 
+1 Step
+=Title Step
+=Keyword Step
+Object		STEP
+
+Funktion	Sekvenssteg som sätts passivt vid Reset 
+		av GrafCet-kedjan.
+		En enkel order kan kopplas direkt på 
+		steget utan explicit order-blocks-fönster.
+
+Macro	step_exec(obj,chain,reset)
+
+Utsignaler:
+  STA	Status(2)	char	Aktiv resp Steg aktivt
+
+! level 1. 
+1 SubStep
+=Title SubStep
+=Keyword SubStep
+Object		SUBSTEP
+
+Funktion	Sekvenssteg som sätts passivt vid Reset 
+		av GrafCet-kedjan och som har delsekvens 
+		under sig.
+		En enkel order kan kopplas direkt på 
+		steget utan explicit order-blocks-fönster.
+
+Macro	substep_exec(obj,subseq,chain,reset)
+
+Utsignaler:
+  STA	Status(2) char	Aktiv resp underkedja klar.
+
+! level 1. 
+1 SsBegin
+=Title SsBegin
+=Keyword SsBegin
+Object		SSBEGIN
+
+Funktion	Första sekvenssteg i delsekvenskedja. 
+		Sätts aktiv då överliggande SUBSTEP blivit
+		aktiv. En enkel order kan kopplas direkt 
+		på steget utan explicit 
+		order-blocks-fönster.
+
+Macro	ssbegin_exec(obj,substepobj,chain,reset)
+
+Utsignaler:
+  STA	Status(2)	char	Aktiv resp Steg aktivt
+Parametrar:
+  StatusOld	char	För flankdetekt av aktiv SUBSTEP
+
+! level 1. 
+1 SsEnd
+=Title SsEnd
+=Keyword SsEnd
+Object		SSEND
+
+Funktion	Sista sekvenssteg i delsekvenskedja. 
+		Sätter överliggande SUBSTEP 
+		klarmarkerad då aktiv.
+		En enkel order kan kopplas direkt på 
+		steget utan explicit order-blocks-fönster.
+
+Macro	ssend_exec(obj,substepobj,chain,reset)
+
+Utsignaler:
+  STA	Status(2)	char	Aktiv resp Steg aktivt
+
+! level 1. 
+1 Trans
+=Title Trans
+=Keyword Trans
+Object		TRANS
+
+Funktion	\vergångsvillkor överför aktivtstatus 
+		från ett eller flera ovanliggande steg, 
+		till ett eller flera efterföljande steg.
+		Kan ritas grafiskt som enkelt 
+		övergångsvillkor, parallellförgrening 
+		eller parallellsammanföring.
+
+Macro	trans_exec(obj,Insteplist,Utsteplist,cond,reset)
+		Insteplist =	[ &Step1.Status[0],
+				&Step2.Status[0], ..., 0]
+		Utsteplist =	[ &Step1.Status[0],
+				&Step2.Status[0], ..., 0]
+
+Exekvering:	Kontrollerar om samtliga föreliggande 
+		steg är aktiva och var det även föreg 
+		varv. I så fall kontrolleras villkoret. 
+		Om villkoret är uppfyllt överförs
+		aktiv status till efterföljande steg.
+		Vid reset nollställs samtliga flaggor för 
+		manuella ingrepp.
+Insignaler:
+  Adresslista till ovanliggande stegs status
+  Adresslista till efterföljande stegs status
+Parametrar:
+  Cond	char	Villkorsstatus. Sätts i conduttrycket mha 
+		SETCOND-objekt
+  ActOld	char	Sparar status om aktiva inblock. 
+		Används för att stoppa upp aktiv flaggan 
+		max 1 steg per varv.
+  Man	char	Flagga att operatören tagit över villkoret
+  OpCond	char	Operatörens villkor. Nollas vid 
+		övergång
+  Acc	int	Operatörsbehörighet för manuell
+
+! level 1. 
+1 Order
+=Title Order
+=Keyword Order
+=Include D_order
+=Include L_order
+=Include P_order
+=Include C_order
+=Include S_order
+=Include Reset_SO
+
+Object		ORDER
+
+Funktion	Exekvera kod om överliggande steg aktivt.
+
+Macro		order_exec(obj,stepobj,chain)
+
+Exekvering	Tittar på överliggande steg / order
+		Aktivt medför order aktiv.
+		\verliggande steg aktivt ( Status[1] ) 
+		eller order aktiv eller nyss varit aktiv
+		medför att koden exekveras.
+		I underliggande kod kan man använda sig av
+		aktiv order som insignal genom blocket 
+		ORDERACT
+
+Insignaler:
+  pekare till överliggande stegs status 
+		( vektor med två element )
+Parametrar:
+  Status(2)	char	Aktiv status
+Presentation:
+  En orderlista visas som ett block. T ex en DCS-order.
+  I verkligheten består den av en D_ORDER, en C_ORDER 
+  och en ORDER  vilka är seriekopplade.
+
+! level 1. 
+1 D_order
+=Title D_order
+=Keyword D_order
+Object		D_ORDER
+
+Funktion	Fördröjning av order
+
+Macro		dorder_exec(obj,stepobj)
+
+Exekvering	Tittar på överliggande steg / order.
+		Aktiv flaggan kopplas till en
+		tillslagsfördröjning som sedan kopplas 
+		till egna orderns aktivflagga.
+		\verliggande stegflagga ( Status[1] ) 
+		kopieras till egna stegflaggan
+
+Insignaler:
+  pekare till överliggande stegs status 
+		( vektor med två element )
+Utsignaler:
+  STA	Status(2) char	Aktiv resp Steg aktivt
+Parametrar:
+  Old		char	För flankdetektering
+  TimerFlag	char	Markerar aktiv timer
+  TimerNext	*timer	Pekar på nästa timer i kön
+  TimerCount	int	Antal återstående ticks
+  TimerDO	*char	Pekare till dummy = &TimerDODum
+  TimerTime	float	Inställningsvärde i sek
+  TimerDODum	char	Dummy
+  TimerAcc	int	Operatörsrättigheter till 
+			inställd tid
+  TimerMin	float	Minsta inställda tid för operatör
+  TimerMax	float	Högsta inställda tid för operatör
+
+! level 1. 
+1 L_order
+=Title L_order
+=Keyword L_order
+Object		L_ORDER
+
+Funktion	Tidsbegränsning av order
+
+Macro		lorder_exec(obj,stepobj)
+
+Exekvering	Tittar på överliggande steg / order.
+		Aktiv flaggan kopplas till en
+		timer. Ordern sätts aktiv om \verliggande
+		är aktiv och timern inte gått ut.
+		\verliggande stegflagga ( Status[1] ) 
+		kopieras till egna stegflaggan
+
+Insignaler:
+  pekare till överliggande stegs status 
+		( vektor med två element )
+Utsignaler:
+  STA	Status(2)	char	Aktiv resp Steg aktivt
+Parametrar:
+  StatusOld	char	För att känna av ny insignal.
+  TimerFlag	char	Markerar aktiv timer
+  TimerNext	*timer	Pekar på nästa timer i kön
+  TimerCount	int	Antal återstående ticks
+  TimerDO	*char	Pekare till dummy = &TimerDODum
+  TimerTime	float	Inställningsvärde i sek
+  TimerDODum	char	Dummy
+  TimerAcc	int	Operatörsrättigheter till 
+			inställd tid
+  TimerMin	float	Minsta inställda tid för operatör
+  TimerMax	float	Högsta inställda tid för operatör
+
+! level 1. 
+1 P_order
+=Title P_order
+=Keyword P_order
+  Object		P_ORDER
+
+  Funktion	Pulsad order en programcykel
+
+  Macro		porder_exec(obj,stepobj)
+
+  Exekvering	Tittar på överliggande steg / order.
+		Ordern sätts aktiv då överliggande blir 
+		aktiv och inaktiv i nästa programsteg.
+		\verliggande stegflagga ( Status[1] ) 
+		kopieras till egna stegflaggan
+
+Insignaler:
+  pekare till överliggande stegs status 
+		( vektor med två element )
+Utsignaler:
+  STA	Status(2) char	Aktiv resp Steg aktivt
+Parametrar:
+  StatusOld	char	För att känna av ny insignal.
+
+! level 1. 
+1 C_order
+=Title C_order
+=Keyword C_order
+Object		C_ORDER
+
+Funktion	Villkorlig order
+
+Macro		corder_exec(obj,stepobj,cond)
+
+Exekvering	Tittar på överliggande steg / order.
+		Om aktiv exekveras villkoret cond. Detta 
+		avslutas med ett SETCOND-block, som 
+		skriver till C_ordern. Om även villkoret
+		är uppfyllt sätts aktiv-flaggan.
+		\verliggande stegflagga ( Status[1] ) 
+		kopieras till egna stegflaggan.
+
+Insignaler:
+  pekare till överliggande stegs status 
+		( vektor med två element )
+Utsignaler:
+  STA	Status(2) char	Aktiv resp Steg aktivt
+Parametrar:
+  Cond	char	Flagga för uppfyllt villkor
+
+! level 1. 
+1 S_order
+=Title S_order
+=Keyword S_order
+Object		S_ORDER
+
+Funktion	Självhållning för order
+
+Macro		sorder_exec(obj,stepobj,reset)
+
+Exekvering	Tittar på överliggande steg / order.
+		När överliggande blir aktiv (flank),
+		sätts egna ordern aktiv.
+		Denna tas ej ned förrän något annat 
+		block sätter resetflagga i 
+		S_ORDER-blocket, eller hela 
+		GrafCet-kedjan startas om.
+
+Insignaler:
+  pekare till överliggande stegs status 
+		( vektor med två element )
+Utsignaler:
+  STA	Status		char	Aktiv
+Parametrar:
+  Old		char	För flankdetektering
+  Reset		char	Flagga att ordern har nollats
+			från en RESET_SO-order
+
+! level 1. 
+1 Reset_SO
+=Title Reset_so
+=Keyword Reset_so
+Object		RESET_SO
+
+Funktion	Sätt resetflagga i S_ORDER
+		Inget eget object i RTDB
+		Kan enbart köras i underfönster till 
+		ORDER
+
+Macro		reset_so_exec(sorderobj,in)
+
+Insignaler:
+  in		char	Kopplas normalt till ORDERACT
+Parametrar:
+  sorderobj	Pekar ut det S_ORDER-objekt som skall
+				nollställas.
+
+! level 1. 
+1 OrderAact
+=Title OrderAct
+=Keyword OrderAct
+Object		ORDERACT
+
+Funktion	Hämta aktiv status för överliggande ORDER.
+		Ingen exekverbar kod. Inget eget objekt i 
+		RTDB.
+		Används bara i grafiska editorn i 
+		Orderfönster för att hämta aktuellt status.
+Utsignaler:
+  sta		char	ORDER aktiv
+
+! level 1. 
+1 SetCond
+=Title SetCond
+=Keyword SetCond
+Objekt		SETCOND
+
+Funktion	Lagra resultat av villkorsuttryck i 
+		TRANS-objekt eller C_ORDER-objekt.
+		Förekommer bara i villkorsfönster för 
+		dessa block.
+		Inget eget block i RTDB.
+
+Macro		setcond_exec(villkorobj,in)
+
+! level 1. 
+1 Document
+=Title Document
+=Keyword Edit
+=Keyword Print
+Objekt		Document
+
+Funktion	Innehållet i dokumentobjekten läggs ut på
+		printerkön mha Print i menyn.
+		Varje fönster kan innehålla godtyckligt 
+		antal dokumentobjekt.
+		När Print aktiveras fylls information 
+		som tex plcprogram, fönster, tid in i
+		dokumenthuvudet. 
+		Formatet ändras med attributeditorn. 
+		Objektet är känsligr för klick på
+		ramen och i dokumenthuvudet.
+
+! level 1. 
+1 Point
+=Title Point
+=Keyword Edit
+Objekt		Point
+
+Funktion	Pointobjektet kan användas i följande
+		fall:
+		- När en förbindninslinje ska förgrenas.
+		- När användaren vill styra vägen för 
+		  en förbindningslinje.
+		- När man vill koppla förbindningslinje
+		  mellan två kopplingspunkter på samma
+		  objekt.
+
+! level 1. 
+1 ShowPlcAttr
+=Title ShowPlcAttr 
+=Keyword Edit
+Objekt		ShoPlcAttr
+
+Funktion	ShoPlcAttr visar up plcprogrammet attribut
+		i editorn.
+
+
+!
+!	CONNECTIONS
+!
+! level 1. 
+1 ConThinNoArr 
+=Title ConThinNoArr 
+=Keyword ConThinNoArr 
+
+Connection
+
+Grafik:		Heldragen
+Tjocklek:	Tunn
+Pilar: 		Nej
+Hörn:		Rundade
+
+Default för förbindning mellan två parameterar
+av typen boolean.
+
+! level 1. 
+1 ConThinOneArr 
+=Title ConThinOneArr 
+=Keyword ConThinOneArr 
+
+Connection
+
+Grafik:		Heldragen
+Tjocklek:	Tunn
+Pilar: 		En
+Hörn:		Rundade
+
+! level 1. 
+1 ConThinTwoArr 
+=Title ConThinTwoArr 
+=Keyword ConThinTwoArr 
+
+Connection
+
+Grafik:		Heldragen
+Tjocklek:	Tunn
+Pilar: 		Två
+Hörn:		Rundade
+
+! level 1. 
+1 ConMeNoArr 
+=Title ConMeNoArr 
+=Keyword ConMeNoArr 
+
+Connection
+
+Grafik:		Heldragen
+Tjocklek:	Medium
+Pilar: 		Nej
+Hörn:		Rundade
+
+Default för förbindning mellan två parameterar
+av typen float.
+
+! level 1. 
+1 ConMeOneArr 
+=Title ConMeOneArr 
+=Keyword ConMeOneArr 
+
+Connection
+
+Grafik:		Heldragen
+Tjocklek:	Medium
+Pilar: 		En
+Hörn:		Rundade
+
+
+! level 1. 
+1 ConMeTwoArr 
+=Title ConMeTwoArr 
+=Keyword ConMeTwoArr 
+
+Connection
+
+Grafik:		Heldragen
+Tjocklek:	Medium
+Pilar: 		Två
+Hörn:		Rundade
+
+! level 1. 
+1 ConDaThinNoArr 
+=Title ConDaThinNoArr 
+=Keyword ConDaThinNoArr 
+
+Connection
+
+Grafik:		Streckad
+Tjocklek:	Tunn
+Pilar: 		Nej
+Hörn:		Rundade
+
+
+! level 1. 
+1 ConDaThinOneArr 
+=Title ConDaThinOneArr 
+=Keyword ConDaThinOneArr 
+
+Connection
+
+Grafik:		Streckad
+Tjocklek:	Tunn
+Pilar: 		En
+Hörn:		Rundade
+
+
+! level 1. 
+1 ConDaThinTwoArr 
+=Title ConDaThinTwoArr 
+=Keyword ConDaThinTwoArr 
+
+Connection
+
+Grafik:		Streckad
+Tjocklek:	Tunn
+Pilar: 		Två
+Hörn:		Rundade
+
+
+! level 1. 
+1 ConDaMeNoArr 
+=Title ConDaMeNoArr 
+=Keyword ConDaMeNoArr 
+
+Connection
+
+Grafik:		Streckad
+Tjocklek:	Medium
+Pilar: 		Nej
+Hörn:		Rundade
+
+! level 1. 
+1 ConDaMeOneArr 
+=Title ConDaMeOneArr 
+=Keyword ConDaMeOneArr 
+
+Connection
+
+Grafik:		Streckad
+Tjocklek:	Medium
+Pilar: 		En
+Hörn:		Rundade
+
+! level 1. 
+1 ConDaMeTwoArr 
+=Title ConDaMeTwoArr 
+=Keyword ConDaMeTwoArr 
+
+Connection
+
+Grafik:		Streckad
+Tjocklek:	Medium
+Pilar: 		Två
+Hörn:		Rundade
+! level 1. 
+1 ConReMeNoArr 
+=Title ConReMeNoArr 
+=Keyword ConReMeNoArr 
+
+Connection
+
+Grafik:		Heldragen
+Tjocklek:	Medium
+Pilar: 		Nej
+Hörn:		Spetsiga
+
+Default för förbindning mellan två grafcet objekt.
+
+! level 1. 
+1 ConReMeOneArr 
+=Title ConReMeOneArr 
+=Keyword ConReMeOneArr 
+
+Connection
+
+Grafik:		Heldragen
+Tjocklek:	Medium
+Pilar: 		En
+Hörn:		Spetsiga
+
+! level 1. 
+1 ConReMeTwoArr 
+=Title ConReMeTwoArr 
+=Keyword ConReMeTwoArr 
+
+Connection
+
+Grafik:		Heldragen
+Tjocklek:	Medium
+Pilar: 		Två
+Hörn:		Spetsiga
+
+! level 1. 
+1 StepConv 
+=Title StepConv 
+=Keyword StepConv 
+
+Connection
+
+Grafik:		Heldragen
+Tjocklek:	Medium
+Pilar: 		Nej
+Hörn:		Spetsiga
+
+Lägger brytpunkterna på ett bestämt avstånd från
+det övre objektet.
+
+Används när en grafcet sekvens divergerar från 
+ett steg till flera transitions.
+
+! level 1. 
+1 StepDiv 
+=Title StepDiv 
+=Keyword StepDiv 
+
+Connection
+
+Grafik:		Heldragen
+Tjocklek:	Medium
+Pilar: 		Nej
+Hörn:		Spetsiga
+
+Lägger brytpunkterna på ett bestämt avstånd från
+det under objektet.
+
+Används när en grafcet sekvens konvergerar från 
+flera transitions ett steg steg.
+
+
+! level 1. 
+1 TransConv 
+=Title TransConv 
+=Keyword TransConv 
+
+Connection
+Simultaneus transition convergence.
+
+Grafik:		Heldragen, dubba linjer mellan brytpunkterna.
+Tjocklek:	Medium
+Pilar: 		Nej
+Hörn:		Spetsiga
+
+Lägger brytpunkterna på ett bestämt avstånd från
+det undre objektet.
+
+Används när en grafcet sekvens divergerar från 
+en transition till flera steg.
+
+
+! level 1. 
+1 TransDiv 
+=Title TransDiv 
+=Keyword TransDiv 
+
+Connection
+Simultaneus transition divergence.
+
+Grafik:		Heldragen, dubba linjer mellan brytpunkterna.
+Tjocklek:	Medium
+Pilar: 		Nej
+Hörn:		Spetsiga
+
+Lägger brytpunkterna på ett bestämt avstånd från
+det övre objektet.
+
+Används när en grafcet sekvens konvergerar från 
+flera transitions till ett steg.
+

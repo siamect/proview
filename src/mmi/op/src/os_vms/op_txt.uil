@@ -1,0 +1,15 @@
+!  inc_txt.uil -- <short description>
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  This module includes	standard texts for the operator environment.
+!
+module op_txt
+names = case_sensitive
+
+! INCLUDE FILES
+include file 'pwr_lang:inc_standard_txt.uil'; 
+
+
+end module;

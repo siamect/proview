@@ -1,0 +1,94 @@
+!  inc_xtt.uil
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  This module defines swedish texts for xtt.
+!
+value
+
+c_File    		: compound_string("Arkiv");
+c_Close     		: compound_string("Stäng");
+c_Print   		: compound_string("Skriv ut");
+c_Edit   		: compound_string("Redigera");
+c_Search   		: compound_string("Sök");
+c_Find_Object   	: compound_string("Sök Objekt");
+c_Find_Regular_expression : compound_string("Sök reguljärt uttryck");
+c_Find_Next   		: compound_string("Sök Nästa");
+c_Collapse   		: compound_string("Fäll ihop");
+c_Functions   		: compound_string("Funktioner");
+c_Open_Object   	: compound_string("Öppna Objekt");
+c_Open_Plc   		: compound_string("Öppna Plc");
+c_Open_ClassGraph   	: compound_string("Öppna KlassBild");
+c_Show_Crossreferences  : compound_string("Visa korsreferenser");
+c_Change_Value   	: compound_string("Ändra Värde");
+c_Command   		: compound_string("Kommando");
+c_Collect_insert   	: compound_string("Addera till Samlingsbild");
+c_Collect_show   	: compound_string("Visa Samlingsbild");
+c_Advanced_user  	: compound_string("Avancerad användare");
+c_View   		: compound_string("Visa");
+c_Zoom_in   		: compound_string("Zooma in");
+c_Zoom_out   		: compound_string("Zooma ut");
+c_Zoom_reset   		: compound_string("Återställ zoom");
+c_Help   		: compound_string("Hjälp");
+c_Overview   		: compound_string("Översikt");
+c_Project   		: compound_string("Projekt");
+
+! module xtt_op.uil
+
+c_Alarmlist		: compound_string("Larmlista");
+c_Eventlist		: compound_string("Händelselista");
+c_Navigator		: compound_string("Navigatör");
+
+! module xtt_xatt.uil
+
+c_Close_change_value	: compound_string("Stäng ändra värde");
+c_Display_object_in_navigator : compound_string("Visa objekt i navigatören");
+c_Ok			: compound_string("Ok");
+c_Cancel		: compound_string("Avbryt");
+
+! module xtt_eve.uil
+
+c_Acknowledge		: compound_string("Kvittera");
+c_Display_hundredth	: compound_string("Visa hundradelar");
+c_Hide_event_name	: compound_string("Dölj händelsenamn");
+c_Hide_event_text	: compound_string("Dölj händelsetext");
+c_Help_on_selected_event : compound_string("Hjälp för utvald händelse");
+
+! module xtt_trace.uil
+
+c_SaveTrace		: compound_string("Spara Trace");
+c_RestoreTrace		: compound_string("Återskapa Trace");
+c_Mode			: compound_string("Mod");
+c_Trace			: compound_string("Trace");
+c_Simulate		: compound_string("Simulera");
+c_Plc			: compound_string("Plc");
+
+! module xtt_curve.uil
+
+c_Refresh		: compound_string("Uppdatera");
+c_Bright_background	: compound_string("Ljus bakgrund");
+c_Show_names		: compound_string("Visa namn");
+c_Filled_curves		: compound_string("Fyllda kurvor");
+c_X_axis_limits		: compound_string("X-axel gränser");
+k_Min_Max_value		: "Min Max värde";
+k_MinValue		: "MinVärde";
+k_MaxValue		: "MaxVärde";
+
+! module xtt_ge.uil
+
+k_Ok			: "Ok";
+k_Yes			: "Ja";
+k_Cancel		: "Avbryt";
+k_No			: "Nej";
+k_Help			: "Hjälp";
+k_Confirm		: "Verifiera";
+k_Enter_Value		: "Ange värde";
+k_Message		: "Meddelande";
+k_Value_input		: "Värde inmatning";
+
+
+
+
+
+

@@ -1,0 +1,16 @@
+!  op_pidmoreform.uil -- <short description>
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  This module includes PIDMoreForm's textstrings.
+!
+module op_pidmoreform
+names = case_sensitive
+
+! INCLUDE FILES
+include file 'pwr_lang:inc_standard_txt.uil';
+include file 'pwr_lang:inc_pidmoreform_txt.uil'; 
+
+
+end module;

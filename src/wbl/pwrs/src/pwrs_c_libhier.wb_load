@@ -1,0 +1,56 @@
+!  pwrs_c_libhier.wb_load -- Defines the class LibHier.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+!/**
+!  @Version 1.0
+!  Puts objects or object structures aside, which, by some
+!  reason, should not be used in the current runtime
+!  system.
+!  
+!  $LibHier object is created in the work-bench by means
+!  of the Configuration Editor. It can be located only in
+!  the Plant Configuration.
+!  
+!  A PROVIEW/R system can have several $LibHier (Library
+!  Hierarchy ) objects placed on the top level or below
+!  another $LibHier object.
+!  Objects located below a $LibHier object will not be
+!  loaded into the runtime system. This will be the case
+!  for example when new structures are under development
+!  in an existing PROVIEW/R system, when a PLC program is
+!  not to be used at the moment but maybe later etc.
+!  
+!  Also structures from the Node Configuration can be
+!  placed below a $LibHier object. But if the goal is to
+!  prevent a new node structure under development from
+!  being loaded into the runtime system, please do not
+!  Create Load Files ... to the node.
+!  Contains no relevant information (=data) in rtdb.
+!*/
+SObject pwrs:Class
+  Object $LibHier $ClassDef pwr_eCix_LibHier
+    Body SysBody
+      Attr Flags |= pwr_mClassDef_DevOnly
+      Attr Flags |= pwr_mClassDef_System
+      Attr Flags |= pwr_mClassDef_TopObject
+    EndBody
+    Object SysBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "LibHier"
+      EndBody
+      !/**
+      !  Optional text to describe the use of the object.
+      !*/
+      Object Description $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject

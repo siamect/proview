@@ -1,0 +1,51 @@
+!  rt_xtt.opt -- <short description>
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+pwr_obj:rt_xtt.obj
+pwr_obj:xtt_xnav.obj
+pwr_obj:xtt_xnav_command.obj
+pwr_obj:xtt_xnav_tables.obj
+pwr_obj:xtt_xnav_crr.obj
+pwr_obj:xtt_xnav_help.obj
+pwr_obj:xtt_item.obj
+pwr_obj:xtt_localdb.obj
+pwr_obj:xtt_ge.obj
+pwr_obj:xtt_ev.obj
+pwr_obj:xtt_evlist.obj
+pwr_obj:xtt_op.obj
+pwr_obj:xtt_jop.obj
+pwr_obj:xtt_hotkey.obj
+pwr_obj:xtt_trend.obj
+pwr_obj:xtt_xatt.obj
+pwr_obj:xtt_xcrr.obj
+pwr_obj:xtt_xattnav.obj
+pwr_obj:xtt_menu.obj
+pwr_obj:xtt_xhelp.obj
+pwr_obj:xtt_url.obj
+pwr_obj:xtt_logging.obj
+pwr_obj:xtt_xnav_brow.obj
+pwr_obj:xtt_c_object.obj
+pwr_obj:xtt_c_plcpgm.obj
+pwr_obj:rt_io_user.obj
+pwr_lib:libpwr_ge/lib
+pwr_lib:libpwr_rt/lib
+pwr_lib:libpwr_co/lib
+pwr_lib:libpwr_flow/lib
+pwr_lib:libpwr_glow/lib
+pwr_obj:pwr_msg_co.obj
+pwr_obj:pwr_msg_rt.obj
+sys$share:decw$xlibshr/share
+sys$share:decw$xtlibshrr5/share
+sys$share:decw$xmlibshr12/share
+sys$share:decw$mrmlibshr12/share
+sys$share:decw$dxmlibshr12/share
+sys$library:decc$shr/share
+sys$library:cma$rtl/share               ! Posix 1003.4a
+sys$library:cma$open_rtl/share          ! Posix 1003.4a
+sys$library:cma$open_lib_shr/share      ! Posix 1003.4a
+!@sys$library_posix$g_rtl_option.opt    ! Posix 1003.1 & 1003.4
+sys$share:!AS<tcpip>$rpcxdr_shr/share

@@ -1,0 +1,12 @@
+!  inc_note_txt.uil -- event notes
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  This module defines swedish texts for the note window.
+value
+
+! Exported constants
+
+    ActionText		: exported compound_string('Åtgärdstext : ');
+    ToBigSegmentText	: exported compound_string('Åtgärdstexten kan ej sparas. För stort text block.');

@@ -1,0 +1,116 @@
+!  pwrs_c_buffer.wb_load -- Defines the class Buffer.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+!/**
+!  @Version 1.0
+!  Definition of a buffer.
+!  A buffer is a memeber of a body and contains a number of attributes that
+!  is used by a specific tool, and not of public interest. The content of a 
+!  buffer is not displayed in the object editor.
+!  The Buffer object reside in a class volume as a child of an ObjBodyDef object.
+!*/
+SObject pwrs:Class
+  Object $Buffer $ClassDef pwr_eCix_Buffer
+    Body SysBody
+      Attr Flags |= pwr_mClassDef_System
+      Attr Flags |= pwr_mClassDef_Multinode
+    EndBody
+    Object SysBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "Buffer"
+      EndBody
+      !/**
+      !  Name for the element the c-struct.
+      !*/
+      Object PgmName $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$PgmName"
+        EndBody
+      EndObject
+      !/**
+      !  Compiled system type.
+      !*/
+      Object Type $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      !/**
+      !  Compiled offset in body.
+      !*/
+      Object Offset $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Compiled size, number of bytes.
+      !*/
+      Object Size $Attribute 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Bitmask for attribute properties.
+      !  Bitmask for attribute properties.
+      !
+      !  PWR_MASK_POINTER	Attribute is a pointer.
+      !  PWR_MASK_ARRAY		Attribute is an array.
+      !  PWR_MASK_STATE	        Value will not be loaded from develompent database.
+      !  PWR_MASK_CONST	        Value is a constant.
+      !  PWR_MASK_RTVIRTUAL	Attribute doesn't exist in runtime environment
+      !  PWR_MASK_DEVBODYREF	Used for input and output attributes, where the
+      !                         connection refers another object which is found
+      !                         in the first attribute of type Objid in DevBody.
+      !  PWR_MASK_OBJIDSELF     Contains the objects own objid. Used in timer attributes.
+      !  PWR_MASK_NOEDIT        Value can't be changed in object editor.
+      !  PWR_MASK_INVISIBLE     Attribute will not be displayed in object editor.
+      !  PWR_MASK_REFDIRECT     If an AttrRef, should not give value pointed to.
+      !  PWR_MASK_NOINVERT      Can't be inverted in plc editor.
+      !  PWR_MASK_NOREMOVE      Can't be removed in plc editor.
+      !  PWR_MASK_RTDBREF       Contains an rtdb reference.
+      !  PWR_MASK_PRIVATE       Should not be interpreted by an object editor.
+      !*/
+      Object Flags $Attribute 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Mask"
+        EndBody
+      EndObject
+      !/**
+      !  If array, number of elements..
+      !*/
+      Object Elements $Attribute 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Index of attribute within a body.
+      !*/
+      Object ParamIndex $Attribute 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Class that defines the content of the buffer.
+      !*/
+      Object Class $Attribute 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ClassId"
+        EndBody
+      EndObject
+    EndObject
+    Object Template $Buffer
+      Body SysBody
+        Attr Elements = 1
+      EndBody
+    EndObject
+  EndObject
+EndSObject

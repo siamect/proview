@@ -1,0 +1,456 @@
+!  op_rnav.uil -- runtime navigator
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  Defines the widget hierarchy for the runtime navigator.
+!
+module op_rnav
+        version = 'v1.0'
+        names = case_sensitive
+        objects = {
+                XmSeparator = gadget ;
+                XmLabel = gadget ;
+                XmPushButton = gadget ;
+                XmToggleButton = gadget ;
+                }
+
+include file 'pwr_lang:inc_standard_txt.uil';
+include file 'pwr_lang:inc_rnav_txt.uil';
+
+value
+    k_message_height : 23;
+
+
+
+
+
+
+
+value
+    bitmap_colors : color_table ( background color = ' ', foreground color = '*');
+! Icon size 50x50
+    icon : exported icon ( color_table=bitmap_colors,
+
+'                                                  ',
+'                                                  ',
+'  * * * * * * * * * *  *   *  * * * * * * * * * **',
+' * * * * * * * * * * * **  * * * * * * * * * * * *',
+'  * * * * * * * * * *  * * *  * * * * * * * * * **',
+' * * * * * * * * * * * *  ** * * * * * * * * * * *',
+'  * * * * * * * * * *  *   *  * * * * * * * * * **',
+' * * * * * * * * * * ********* * * * * * * * * * *',
+'  * * * * * * * * ***    *    *** * * * * * * * **',
+' * * * * * * * ***       *       *** * * * * * * *',
+'  * * * * * * **        ***        ** * * * * * **',
+' * * * * * * **         ***         ** * * * * * *',
+'  * * * * * *          * * *          * * * * * **',
+' * * * * * *           * * *           * * * * * *',
+'  * * * * **           * * *           ** * * * **',
+' * * * * **    *      *  *  *      *    ** * * * *',
+'  * * * **      **    *  *  *    **      ** * * **',
+' * * * * *      ***   *  *  *   ***      * * * * *',
+'  * * * *        **** *  *  * ****        * * * **',
+' * * * **         ****   *   ****         ** * * *',
+'  * * * *         ****   *   ****         * * * **',
+' * * * *           ***   *   ****          * * * *',
+'       *       ****   *  *  *   ****       *     *',
+' **   **    ***        * * *        ***    * *** *',
+'  *   **  **            ***            **  **   **',
+' * * * **************************************   **',
+'   * * *  **            ***            **  **   **',
+' *  *  *    ***        * * *        ***    * *** *',
+'       *       ****   *  *  *   ****       *     *',
+' * * * *           ***   *   ***           * * * *',
+'  * * * *         ****   *   ****         * * * **',
+' * * * **         ****   *   ****         ** * * *',
+'  * * * *        **** *  *  * ****        * * * **',
+' * * * * *      ***   *  *  *   ***      * * * * *',
+'  * * * **      **    *  *  *    **      ** * * **',
+' * * * * *     *      *  *  *      *    ** * * * *',
+'  * * * * **           * * *           ** * * * **',
+' * * * * * *           * * *           * * * * * *',
+'  * * * * * *          * * *          *** * * * **',
+' * * * * * * **         ***         ** * * * * * *',
+'  * * * * * * **        ***        ** * * * * * **',
+' * * * * * * * ***       *       *** * * * * * * *',
+'  * * * * * * * * ***    *    *** * * * * * * * **',
+' * * * * * * * * * * ********* * * * * * * * * * *',
+'  * * * * * * * * * *   ***   * * * * * * * * * **',
+' * * * * * * * * * * * *     * * * * * * * * * * *',
+'  * * * * * * * * * *   ***   * * * * * * * * * **',
+' * * * * * * * * * * *     * * * * * * * * * * * *',
+'  * * * * * * * * * *   ***   * * * * * * * * * **',
+' *************************************************');
+
+
+
+
+identifier
+    rnav_ctx;
+    hi_ctx;
+
+procedure
+
+    rnav_NodeHierFormCr(any);
+    rnav_PlantHierFormCr(any);
+    rnav_MessageLabelCr(any);
+    rnav_PaneCr(any) ;
+    rnav_SelModeCr(any) ;
+    
+
+    rnav_MenuAttrCb(any);
+    rnav_MenuTraceCb(any);
+    rnav_MenuExitCb(any);
+    rnav_MenuBlockCb(any);
+    rnav_MenuBlockListCb(any);
+    rnav_MenuRefreshCb(any);
+    rnav_MenuSelModeCb(any);
+    rnav_MenuSetSelectedCb(any);
+
+    rnav_PopupAttrCb(any);
+    rnav_PopupTraceCb(any);
+    rnav_PopupBlockCb(any);
+    rnav_PopupSetSelectedCb(any);
+    rnav_PopupDoneCb(any);
+
+    rnav_SetInsensitiveCb(any);
+
+
+
+
+!----------------------------------------
+!  Create the hierachy editor widget
+!----------------------------------------
+
+object main : XmMainWindow {
+
+  arguments {  
+  };
+
+  controls {
+    XmForm  form;
+  };
+};
+
+object form : XmForm {
+
+  arguments {
+  };
+
+  controls {
+    XmMenuBar	menuBar;
+    XmPanedWindow paneWindow;
+!  XmForm      plantHierForm;
+!  XmForm      nodeHierForm;
+!  XmLabel	messageLabel;
+  };
+};
+
+
+
+!                                              
+! menuBar                                           
+!
+
+object menuBar : XmMenuBar {
+  arguments {
+    XmNorientation	= XmHORIZONTAL;
+    XmNspacing		= 15;           ! Pixels between XmNlistItems in menu
+    XmNtopAttachment	= XmATTACH_FORM;
+    XmNleftAttachment   = XmATTACH_FORM;
+    XmNrightAttachment	= XmATTACH_FORM;
+  };
+  controls {                              
+    XmCascadeButton filePulldown;
+    XmCascadeButton editPulldown;
+    XmCascadeButton functionPulldown;
+  };
+  callbacks  {
+  };
+};
+
+object filePulldown : XmCascadeButton {
+  arguments {    
+    XmNlabelString = compound_string($file);
+    XmNmnemonic    = keysym($file$);
+  };
+  controls {
+    XmPulldownMenu filedownMenu;	
+  };
+};
+
+
+object filedownMenu : XmPulldownMenu {
+  arguments {    
+    XmNorientation = XmVERTICAL;
+  };
+  controls {
+    XmPushButton {
+      arguments { 
+	XmNlabelString = compound_string(refresh); 
+        XmNmnemonic    = keysym(refresh$);
+	XmNaccelerator = "Ctrl<Key>R:";
+	XmNacceleratorText = compound_string('Ctrl+R');
+      };
+      callbacks { 
+	XmNactivateCallback = procedure rnav_MenuRefreshCb(rnav_ctx); 
+      };
+    };
+    XmSeparator {
+    };
+    XmPushButton {
+      arguments { 
+	XmNlabelString = compound_string($exit); 
+	XmNmnemonic    = keysym($exit$);
+	XmNaccelerator = "Ctrl<Key>E:";
+	XmNacceleratorText = compound_string('Ctrl+E');
+      };
+      callbacks { 
+	XmNactivateCallback = procedure rnav_MenuExitCb(rnav_ctx); 
+      };
+    };
+  };
+};
+
+
+object editPulldown : XmCascadeButton {
+  arguments {    
+    XmNlabelString = compound_string($edit);
+    XmNmnemonic    = keysym($edit$);
+  };
+  controls {
+    XmPulldownMenu editdownMenu;	
+  };
+};
+
+
+object editdownMenu : XmPulldownMenu {
+  arguments {    
+    XmNorientation = XmVERTICAL;
+  };
+  controls {
+    XmCascadeButton {
+      arguments { 
+	XmNlabelString = compound_string(copyMode);	
+        XmNmnemonic         = keysym(copyMode$);
+      };
+      controls {    
+        XmPulldownMenu {
+	  arguments {    
+	    XmNorientation = XmVERTICAL;	
+	    XmNradioBehavior = true;
+	    XmNradioAlwaysOne = true;
+	  };
+	  controls {
+	    normal : XmToggleButton {
+	      arguments { 
+		XmNlabelString = compound_string(objectName); 
+		XmNmnemonic    = keysym(objectName$);
+	      };
+	      callbacks { 
+		XmNvalueChangedCallback = procedure rnav_MenuSelModeCb(rnav_ctx); 
+		MrmNcreateCallback = procedure rnav_SelModeCr(rnav_ctx);
+	      };
+	    };
+	    normalAttr : XmToggleButton {
+	      arguments { 
+		XmNlabelString = compound_string(objectAttr); 
+		XmNmnemonic    = keysym(objectAttr$);
+	      };
+	      callbacks { 
+		XmNvalueChangedCallback = procedure rnav_MenuSelModeCb(rnav_ctx); 
+	      };
+	    };
+	  };
+	};
+      };
+    };
+  };
+};
+
+object functionPulldown : XmCascadeButton {
+  arguments {    
+    XmNlabelString = compound_string(func);
+    XmNmnemonic    = keysym(func$);
+  };
+  controls {
+    XmPulldownMenu functiondownMenu;	
+  };
+};
+
+
+object functiondownMenu : XmPulldownMenu {
+  arguments {    
+    XmNorientation = XmVERTICAL;
+  };
+  controls {
+    XmPushButton {
+      arguments { 
+	XmNlabelString = compound_string(openObject); 
+        XmNmnemonic    = keysym(openObject$);
+      };
+      callbacks { 
+	XmNactivateCallback = procedure rnav_MenuAttrCb(rnav_ctx); 
+      };
+    };
+    XmPushButton {
+      arguments { 
+	XmNlabelString = compound_string(openPlc); 
+        XmNmnemonic    = keysym(openPlc$);
+      };
+      callbacks { 
+	XmNactivateCallback = procedure rnav_MenuTraceCb(rnav_ctx); 
+      };
+    };
+    XmSeparator {
+    };
+    XmPushButton {
+      arguments { 
+	XmNlabelString = compound_string(block); 
+	XmNmnemonic    = keysym(block$);
+      };
+      callbacks { 
+	XmNactivateCallback = procedure rnav_MenuBlockCb(rnav_ctx); 
+	MrmNcreateCallback = procedure rnav_SetInsensitiveCb(rnav_ctx);
+      };
+    };
+    XmPushButton {
+      arguments { 
+	XmNlabelString = compound_string(blockList); 
+	XmNmnemonic    = keysym(blockList$);
+      };
+      callbacks { 
+	XmNactivateCallback = procedure rnav_MenuBlockListCb(rnav_ctx); 
+	MrmNcreateCallback = procedure rnav_SetInsensitiveCb(rnav_ctx);
+      };
+    };
+  };
+};
+
+
+object paneWindow : XmPanedWindow
+{
+  arguments
+  {
+!    XmNwidth = k_palette_width;
+      XmNborderWidth = 1;
+      XmNtopAttachment    = XmATTACH_WIDGET;
+      XmNtopWidget        = XmMenuBar menuBar;
+      XmNbottomAttachment = XmATTACH_FORM;
+      XmNleftAttachment	  = XmATTACH_FORM;
+      XmNrightAttachment  = XmATTACH_FORM;
+  };
+
+  controls
+  {
+  };
+
+  callbacks
+  {
+     MrmNcreateCallback = procedure rnav_PaneCr (rnav_ctx) ;
+  };
+};
+
+object messageLabel : XmLabel {
+  arguments{
+    XmNborderWidth = 1;
+    XmNbottomAttachment = XmATTACH_FORM;
+    XmNrightAttachment 	= XmATTACH_FORM;
+    XmNleftAttachment 	= XmATTACH_FORM;
+    XmNmarginLeft	= 10;
+    XmNalignment	= XmALIGNMENT_BEGINNING;
+    XmNlabelString	= "";
+    XmNheight		= k_message_height;
+   };
+
+   controls {
+   };
+
+   callbacks {
+     MrmNcreateCallback = procedure rnav_MessageLabelCr(rnav_ctx) ;
+   };
+};
+
+object plantHierForm : XmForm {
+  arguments {
+    XmNborderWidth	= 1;
+    XmNheight		= 500;
+    XmNtopAttachment    = XmATTACH_WIDGET;
+    XmNtopWidget        = XmMenuBar menuBar;
+    XmNbottomAttachment = XmATTACH_FORM;
+!  XmNbottomOffset     = k_message_height;
+    XmNleftAttachment   = XmATTACH_FORM;  
+    XmNrightAttachment  = XmATTACH_WIDGET;
+    XmNrightWidget      = XmForm nodeHierForm;
+  };
+  callbacks { 
+    MrmNcreateCallback = procedure rnav_PlantHierFormCr (rnav_ctx); 
+  };
+};
+
+object nodeHierForm : XmForm {
+  arguments {
+    XmNborderWidth	= 1;
+    XmNfractionBase	= 100;
+    XmNleftAttachment	= XmATTACH_POSITION;
+    XmNleftPosition	= 50;
+    XmNtopAttachment    = XmATTACH_WIDGET;
+    XmNtopWidget        = XmMenuBar menuBar;
+    XmNbottomAttachment = XmATTACH_FORM;
+!  XmNbottomOffset     = k_message_height;
+    XmNrightAttachment  = XmATTACH_FORM;
+  };
+  callbacks{ 
+    MrmNcreateCallback = procedure rnav_NodeHierFormCr (rnav_ctx); 
+  };
+};
+
+!----------------------------------------
+!  Create the popup menu widget
+!----------------------------------------
+
+object  popupMenu : XmPopupMenu {
+  controls {
+    XmPushButton {
+      arguments { 
+	XmNlabelString = compound_string(openObject);   
+	};
+      callbacks { 
+	XmNactivateCallback = procedure rnav_PopupAttrCb(hi_ctx); 
+      };
+    };
+    XmPushButton {
+      arguments { 
+	XmNlabelString = compound_string(openPlc);   
+	};
+      callbacks { 
+	XmNactivateCallback = procedure rnav_PopupTraceCb(hi_ctx); 
+      };
+    };
+    XmPushButton {
+      arguments { 
+	XmNlabelString = compound_string(block);   
+	};
+      callbacks { 
+	XmNactivateCallback = procedure rnav_PopupBlockCb(hi_ctx); 
+	MrmNcreateCallback = procedure rnav_SetInsensitiveCb(rnav_ctx);
+      };
+    };
+    XmPushButton {
+      arguments { 
+	XmNlabelString = compound_string($zSetSelected);   
+	};
+      callbacks { 
+	XmNactivateCallback = procedure rnav_PopupSetSelectedCb(hi_ctx); 
+	MrmNcreateCallback = procedure rnav_SetInsensitiveCb(rnav_ctx);
+      };
+    };
+  };
+  callbacks { 
+    XmNunmapCallback = procedure rnav_PopupDoneCb(hi_ctx); 
+    };
+};
+
+
+end module;

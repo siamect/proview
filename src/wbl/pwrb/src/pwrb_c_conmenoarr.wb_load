@@ -1,0 +1,40 @@
+! VAX/DEC CMS REPLACEMENT HISTORY, Element PWRB_C_CONMENOARR.WB_LOAD
+! *1     4-MAY-1994 22:36:02 PWRD "(CO-V1_0-8) Define the class ConMeNoArr"
+! VAX/DEC CMS REPLACEMENT HISTORY, Element PWRB_C_CONMENOARR.WB_LOAD
+!
+!  PROVIEW/R
+!
+!  Filename:	
+!	pwr_bmd:pwrb_c_conmenoarr.wb_load
+!	
+!  Definition:	
+!	Defines the class ConMeNoArr. 
+!
+! Range ldh_eDId_Base
+!
+SObject pwrb:Class
+  Object ConMeNoArr $ClassDef 57 
+    Body SysBody
+      Attr Flags |= pwr_mClassDef_DevOnly
+    EndBody
+    Object DevBody $ObjBodyDef 2 
+      Object PlcConnection $Buffer 1 
+        Body SysBody
+	  Attr PgmName = "PlcCon"
+          Attr Class = pwr_eClass_PlcConnection
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcCon $GraphPlcConnection
+      Body SysBody
+        Attr con_type = 3
+        Attr arrows = 0
+        Attr linewidth = 0.005
+        Attr dashes = 0.
+        Attr fillpattern = 0
+        Attr curvature = 0
+        Attr corners = .01
+      EndBody
+    EndObject
+  EndObject
+EndSObject

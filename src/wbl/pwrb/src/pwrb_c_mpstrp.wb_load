@@ -1,0 +1,169 @@
+!  pwrb_c_mpstrp.wb_load -- Defines the class MpsTrp.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+SObject mps:Class
+  Object MpsTrp $ClassDef 156 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "mpsTrp"
+      EndBody
+      Object In $Input 1 
+        Body SysBody
+          Attr PgmName = "In"
+	  Attr Flags |= PWR_MASK_RTVIRTUAL
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "remove"
+          Attr ConPointNr = 0
+        EndBody
+      EndObject
+      Object InTrigg $Input 2 
+        Body SysBody
+          Attr PgmName = "InTriggFlag"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "intrigg"
+          Attr ConPointNr = 1
+        EndBody
+      EndObject
+      Object Out $Input 3 
+        Body SysBody
+          Attr PgmName = "Out"
+	  Attr Flags |= PWR_MASK_RTVIRTUAL
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "load"
+          Attr ConPointNr = 2
+        EndBody
+      EndObject
+      Object ExecuteOrder $Intern 4 
+        Body SysBody
+          Attr PgmName = "ExecuteOrder"
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object TriggFlag $Intern 5 
+        Body SysBody
+          Attr PgmName = "TriggFlag"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object InTriggOld $Intern 6 
+        Body SysBody
+          Attr PgmName = "InTriggOld"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object LoggFlag $Intern 7 
+        Body SysBody
+          Attr PgmName = "LoggFlag"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object StartSenderFlag $Intern 8 
+        Body SysBody
+          Attr PgmName = "StartFlag"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object StartReceiverFlag $Intern 9 
+        Body SysBody
+          Attr PgmName = "StartReceiverFlag"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object TriggMode $Intern 10 
+        Body SysBody
+          Attr PgmName = "TriggMode"
+          Attr TypeRef = "pwrs:Type-$UInt8"
+        EndBody
+      EndObject
+      Object NumberOfIdToMove $Intern 11 
+        Body SysBody
+          Attr PgmName = "NumberOfIdToMove"
+          Attr TypeRef = "pwrs:Type-$UInt16"
+        EndBody
+      EndObject
+      Object NameOfSendCell $Intern 12 
+        Body SysBody
+          Attr PgmName = "NameOfSendCell"
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      Object ChannelOfSendCell $Intern 13 
+        Body SysBody
+          Attr PgmName = "ChannelOfSendCell"
+          Attr TypeRef = "pwrs:Type-$UInt8"
+        EndBody
+      EndObject
+      Object ObjidOfSendCell $Intern 14 
+        Body SysBody
+          Attr PgmName = "ObjidOfSendCell"
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object NameOfReceivCell $Intern 15 
+        Body SysBody
+          Attr PgmName = "NameOfReceivCell"
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      Object ChannelOfReceivCell $Intern 16 
+        Body SysBody
+          Attr PgmName = "ChannelOfReceivCell"
+          Attr TypeRef = "pwrs:Type-$UInt8"
+        EndBody
+      EndObject
+      Object ObjidOfReceivCell $Intern 17 
+        Body SysBody
+          Attr PgmName = "ObjidOfReceivCell"
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 226
+        Attr parameters[0] = 3
+        Attr parameters[1] = 0
+        Attr parameters[2] = 0
+        Attr parameters[3] = 0
+        Attr subwindows = 1
+        Attr subwindow_class[0] = "pwrb:Class-WindowPlc"
+        Attr graphmethod = 4
+        Attr graphindex = 31
+        Attr default_mask[0] = 1
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 1
+        Attr compmethod = 33
+        Attr compindex = 1
+        Attr tracemethod = 0
+        Attr traceindex = 1
+        Attr objname = "TRP"
+        Attr graphname = "TRPcell"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    Object Template MpsTrp
+      Body RtBody
+        Attr NumberOfIdToMove = 1
+        Attr ChannelOfSendCell = 1
+        Attr ChannelOfReceivCell = 1
+      EndBody
+    EndObject
+  EndObject
+EndSObject

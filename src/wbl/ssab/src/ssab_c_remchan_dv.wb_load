@@ -1,0 +1,106 @@
+!  ssab_c_RemChan_Dv.wb_load -- Defines the class RemChan_Dv.
+!
+!  PROVIEW/R
+!
+!  <Description>.
+!
+SObject SSAB:Class
+  !
+  ! RemChan_Dv	-	Dv
+  !
+  Object RemChan_Dv $ClassDef 18
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    !
+    ! RemChan_Dv Runtime Body
+    !
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "RemChan_Dv"
+      EndBody
+      !
+      ! Parameter Description
+      !
+      Object Description $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !
+      ! Parameter SigChanCon
+      !
+      Object SigChanCon $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      !
+      ! Parameter ActualValue
+      !
+      Object ActualValue $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !
+      ! Parameter ConvOff	Bit offset in transbuffer
+      !
+      Object ConvOff $Attribute 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !
+      ! Parameter BuffOff	Byte offset in transbuffer
+      !
+      Object BuffOff $Attribute 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !
+      ! Parameter ConvMask	Bitmask
+      !
+      Object ConvMask $Attribute 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt8"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !
+      ! Parameter PwrIsMaster
+      !
+      Object PwrIsMaster $Attribute 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !
+      ! Parameter OldValue
+      !
+      Object OldValue $Attribute 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+    EndObject
+    !
+    ! Template för RemChan_Dv
+    !
+    Object Template RemChan_Dv
+      Body RtBody
+        Attr PwrIsMaster = 1
+      EndBody
+    EndObject
+  !
+  ! End RemChan_Dv
+  !
+  EndObject
+EndSObject

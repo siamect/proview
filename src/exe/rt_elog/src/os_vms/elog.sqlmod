@@ -1,0 +1,243 @@
+--
+-- PROVIEW/R  -  Runtime environment  -  Message Handler
+--
+-- Filename:
+--   rmh_src:rs_mh_heldb.sqlmod
+--
+-- Description:
+--     
+-- Copyright © Comator Process AB 1994.
+
+module	  eventlog
+language  c
+parameter colons
+declare alias for filename pwrp_db:rt_eventlog
+
+--
+-- Commit
+--
+procedure mh_HeldbCommit
+  sqlca
+  ;
+  commit
+  ;
+
+--
+-- Rollback
+--
+procedure mh_HeldbRollback
+  sqlca
+  ;
+  rollback
+  ;
+
+--
+-- Inserts an event into the Event table
+--
+procedure mh_HeldbInsertEvent
+  sqlca
+  :Event  record
+    StoreIdx	date,
+    BirthTime	date,
+    Nid		integer,
+    Idx		integer,
+    EventTime	date,
+    DetectTime	date,
+    ObjectOix	integer,
+    ObjectVid	integer,
+    SupObjectOix integer,
+    SupObjectVid integer,
+    EventFlags	integer,
+    EventName	varchar(80),
+    EventType	integer,
+    TargetIdx	integer,
+    OutunitOix	integer,
+    OutunitVid	integer,
+    EventText	varchar(80),
+    EventPrio	integer,
+    Status	integer,
+    SupType	integer,
+    AValue	real,
+    DValue	integer,
+    CtrlLimit	real,
+    Hysteres	real,
+    High	integer,
+    Unit	varchar(16),
+    Missing	integer
+  end record
+  ;
+
+  insert into Event values (:Event)
+  ;
+
+--
+-- Updates an event in the Event table
+--
+procedure mh_HeldbUpdateEvent
+  sqlca
+  :Event  record
+    StoreIdx	date,
+    BirthTime	date,
+    Nid		integer,
+    Idx		integer,
+    EventTime	date,
+    DetectTime	date,
+    ObjectOix	integer,
+    ObjectVid	integer,
+    SupObjectOix integer,
+    SupObjectVid integer,
+    EventFlags	integer,
+    EventName	varchar(80),
+    EventType	integer,
+    TargetIdx	integer,
+    OutunitOix	integer,
+    OutunitVid	integer,
+    EventText	varchar(80),
+    EventPrio	integer,
+    Status	integer,
+    SupType	integer,
+    AValue	real,
+    DValue	integer,
+    CtrlLimit	real,
+    Hysteres	real,
+    High	integer,
+    Unit	varchar(16),
+    Missing	integer
+  end record
+  ;
+
+  update Event set
+    StoreIdx    = :Event.StoreIdx,
+    EventTime	= :Event.EventTime,
+    DetectTime	= :Event.DetectTime,
+    ObjectOix	= :Event.ObjectOix,
+    ObjectVid	= :Event.ObjectVid,
+    SupObjectOix = :Event.SupObjectOix,
+    SupObjectVid = :Event.SupObjectVid,
+    EventFlags	= :Event.EventFlags,
+    EventName	= :Event.EventName,
+    EventType	= :Event.EventType,
+    TargetIdx	= :Event.TargetIdx,
+    OutunitOix	= :Event.OutunitOix,
+    OutunitVid	= :Event.OutunitVid,
+    EventText	= :Event.EventText,
+    EventPrio	= :Event.EventPrio,
+    Status	= :Event.Status,
+    SupType	= :Event.SupType,
+    AValue	= :Event.AValue,
+    DValue	= :Event.DValue,
+    CtrlLimit	= :Event.CtrlLimit,
+    Hysteres	= :Event.Hysteres,
+    High	= :Event.High,
+    Unit	= :Event.Unit,
+    Missing	= :Event.Missing
+  where
+    BirthTime	= :Event.BirthTime	and
+    Nid		= :Event.Nid		and
+    Idx		= :Event.Idx
+  ;
+
+--
+-- Find the newest event
+--
+procedure mh_HeldbMaxStoreIdx
+  sqlca
+  :StoreIdx     date
+  ;
+
+  select max(StoreIdx)
+    into :StoreIdx
+    from Event
+  ;
+
+--
+-- Find the oldest event
+--
+procedure mh_HeldbMinStoreIdx
+  sqlca
+  :StoreIdx     date
+  ;
+
+  select min(StoreIdx)
+    into :StoreIdx
+    from Event
+  ;
+
+--
+-- Delete all events older than a specific StoreIdx
+--
+procedure mh_HeldbPurge
+  sqlca
+  :StoreIdx	date
+  ;
+
+  delete from Event where StoreIdx < :StoreIdx
+  ;
+
+--
+-- Find latest event from a specific node
+--
+procedure mh_HeldbLatestEvent
+  sqlca
+  :Nid		integer
+  :BirthTime	date
+  :Idx		integer
+  ;
+
+  select max(Idx)
+    into :Idx
+    from Event
+    where
+      Nid = :Nid
+    and 
+      BirthTime = :BirthTime
+  ;
+ 
+--
+-- Find latest Incarnation from a specific node
+--
+procedure mh_HeldbLatestIncarnation
+  sqlca
+  :Nid		integer
+  :BirthTime	date
+  ;
+
+  select max(BirthTime)
+    into :BirthTime
+    from Event
+    where
+      Nid = :Nid
+  ;
+ 
+--
+-- Gets the number of events in table Event
+--
+procedure mh_HeldbEventCardinality
+  sqlca
+  :Cardinality	integer
+  ;
+
+  select count(*)
+  into :Cardinality
+  from Event
+  ;
+
+--
+-- Set transaction for read from table Event
+--
+procedure mh_HeldbSetTxro
+  sqlca
+  ;
+
+  set transaction read only
+  ;
+
+--
+-- Set transaction for write on table Event
+--
+procedure mh_HeldbSetTxrw
+  sqlca
+  ;
+
+  set transaction read write reserving Event for protected write
+  ;

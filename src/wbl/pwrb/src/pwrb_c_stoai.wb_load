@@ -1,0 +1,158 @@
+!  pwrb_c_stoai.wb_load -- Defines the class StoAi
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  STORE value of Analog Output signal.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_macro_io.h
+!  Store Analog input.
+!  
+!  Stores an analog value ( e.g. output signal of the type
+!  pwr_tFloat32) on the specified local Ai object.
+!  
+!  The complete name of the Ai object has to be supplied;
+!  its last segment is shown in the right empty part of
+!  the symbol.
+!
+!  Note! This object is used for simulation purposes.
+!  IOSimulFlag will be set TRUE and IOReadWriteFlag FALSE
+!  in the $Node object, i.e. any physical I/O-hardware may
+!  not be used on the node in connection to this object.
+!*/
+SObject pwrb:Class
+  Object StoAi $ClassDef 218 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_RtConnectionsAndDevBodies
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "stoai"
+      EndBody
+      !/**
+      !  The input is connected to an analog signal or left
+      !  open. In the latter case In is default 0.0 and not
+      !  adjustable in the run time system. The In attribute
+      !  specifies which value should be assigned to the
+      !  Ai-signal.
+      !*/
+      Object In $Input 1 
+        Body SysBody
+          Attr PgmName = "ActualValue"
+          Attr Flags |= PWR_MASK_RTVIRTUAL
+          Attr Flags |= PWR_MASK_DEVBODYREF
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "VAL"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      !/**
+      !  Used by the PLC Editor. Specifies the complete name of
+      !  the current Ai object.
+      !*/
+      Object AiObject $Intern 1 
+        Body SysBody
+          Attr PgmName = "AiObject"
+          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr GraphName = "In"
+          Attr NiNaAnnot = 1
+          Attr NiNaSegments = 1
+        EndBody
+      EndObject
+      !/**
+      !  Used by the PLC Editor.
+      !*/
+      Object SigChanCon $Intern 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr NiNaAnnot = 2
+          Attr NiNaCond = 1
+          Attr NiNaSegments = 1
+        EndBody
+      EndObject
+      !/**
+      !  Specifies how many segments of the Ai object name that
+      !  is to be displayed in the symbol of the StoAi object.
+      !  The segments are counted from behind.
+      !  
+      !  0 and 1 both result in displaying the last segment of
+      !  the signal object name.
+      !*/
+      Object AiObjectSegments $Intern 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies if the name on the channel object (
+      !  associated with the signal object) is to be displayed
+      !  in the symbol of the StoAi object or not. FALSE means
+      !  no displaying and TRUE displaying.
+      !  See also SigChanConSegments.
+      !*/
+      Object ShowSigChanCon $Intern 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies, when ShowSigChanCon = TRUE, how many
+      !  segments of the channel object name that is to be
+      !  displayed in the symbol of the StoAi object. The
+      !  segments are counted from behind.
+      !  0 and 1 both result in displaying the last segment of
+      !  the channel object name.
+      !*/
+      Object SigChanConSegments $Intern 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      Object PlcNode $Buffer 6 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 115
+        Attr parameters[0] = 1
+        Attr parameters[1] = 0
+        Attr parameters[2] = 0
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 7
+        Attr graphindex = 1
+        Attr default_mask[0] = 1
+        Attr default_mask[1] = 0
+        Attr segname_annotation = 0
+        Attr devbody_annotation = 1
+        Attr compmethod = 38
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+        Attr connectmethod = 4
+        Attr executeordermethod = 2
+        Attr objname = "StoAi"
+        Attr graphname = "StoAi"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    Object Template StoAi
+      Body DevBody
+        Attr AiObjectSegments = 1
+        Attr ShowSigChanCon = 0
+        Attr SigChanConSegments = 1
+      EndBody
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,16 @@
+!  pwrs_t_deltatime.wb_load -- Defines the basic type Time
+!
+!  PROVIEW/R
+!  Copyright (C) 1997 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+SObject pwrs:Type
+  Object $DeltaTime pwr_eClass_Type pwr_eTix_DeltaTime
+    Body SysBody
+     Attr Type = pwr_eType_DeltaTime
+     Attr Size = 8
+    EndBody
+  EndObject
+EndSObject

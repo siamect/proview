@@ -1,0 +1,37 @@
+!  pwrs_c_point.wb_load -- Defines the class Point.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+SObject pwrs:Class
+  Object $Point $ClassDef pwr_eCix_Point
+    Body SysBody
+      Attr Flags |= pwr_mClassDef_DevOnly
+      Attr Flags |= pwr_mClassDef_System
+    EndBody
+    Object SysBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "AnyPoint"
+      EndBody
+      Object x $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      Object y $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+    EndObject
+    Object Template $Point
+      Body SysBody
+        Attr x = 0
+        Attr y = 0
+      EndBody
+    EndObject
+  EndObject
+EndSObject

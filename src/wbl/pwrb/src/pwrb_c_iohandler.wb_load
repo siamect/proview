@@ -1,0 +1,139 @@
+!  pwrb_c_iohandler.wb_load -- Defines the class IOHandler.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  I/O Handler.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  Contains attributes which are used by the IO job.
+!  
+!  The IO job handles,
+!  
+!  -  analog signals connected to the local I/O-system
+!  -  analog, digital and pulse counter signals connected
+!     to remote I/O-system(s)
+!  
+!  IOHandler is configured in the development environment
+!  below any $Node object that represents a process node.
+!  This is normally done by the development environment in
+!  connection with configuring of a $Node object.
+!  If no IOHandler object is configured PROVIEW will
+!  create one at initiating of the node's rtdb. The
+!  attributes will then be assigned the default values.
+!*/
+SObject pwrb:Class
+  Object IOHandler $ClassDef 138 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+      Attr PopEditor = 1
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "IOHandler"
+      EndBody
+      !/**
+      !  Specifies, in seconds, by which cycle time Ai and Ao
+      !  signals connected to local I/O-system(s) will be read
+      !  in and converted to engineering values respective
+      !  converted to raw values and read out.
+      !  The minimum allowed cycle time is 0.1 second.
+      !*/
+      Object CycleTimeBus $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  A process node may besides its local I/O-system be
+      !  connected to remote I/O-system(s).
+      !  The attribute specifies, in seconds, by which cycle
+      !  time raw values of physical signals (Ai, Ao, Co, Di,
+      !  and Do) are read in from remote I/O-system(s) and
+      !  converted to engineering values respectively are
+      !  converted from engineering values to raw values and
+      !  read out to the remote I/O-system(s).
+      !  
+      !  The minimum allowed cycle time is 0.5 second.
+      !*/
+      Object CycleTimeSerial $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      Object IOReadWriteFlag $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object IOSimulFlag $Attribute 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object DiCount $Attribute 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object DoCount $Attribute 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object AiCount $Attribute 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object AoCount $Attribute 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object AvCount $Attribute 9
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object DvCount $Attribute 10
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object CoCount $Attribute 11
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    !
+    ! Template for IOHandler
+    !
+    Object Template IOHandler
+      Body RtBody
+        Attr CycleTimeBus = 0.2
+        Attr CycleTimeSerial = 1.0
+	Attr IOReadWriteFlag = 1
+      EndBody
+    EndObject
+  EndObject
+EndSObject

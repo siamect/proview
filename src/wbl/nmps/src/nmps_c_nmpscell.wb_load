@@ -1,0 +1,2021 @@
+!  pwrb_c_nmpscell.wb_load -- Defines the class NMpsCell.
+!
+!  PROVIEW/R
+!
+!  <Description>.
+!
+SObject NMps:Class
+  Object NMpsCell $ClassDef 1
+    Body SysBody
+      Attr Editor = pwr_eEditor_PlcEd
+      Attr Method = pwr_eMethod_Connections
+    EndBody
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "NMpsCell"
+      EndBody
+      Object In $Output 1
+        Body SysBody
+          Attr PgmName = "In"
+          Attr InputType = 1
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_RTVIRTUAL
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "In"
+        EndBody
+      EndObject
+      Object Out $Output 2
+        Body SysBody
+          Attr PgmName = "Out"
+          Attr InputType = 2
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_RTVIRTUAL
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Out"
+        EndBody
+      EndObject
+      Object MaxSize $Intern 3
+        Body SysBody
+          Attr PgmName = "MaxSize"
+          Attr TypeRef = "pwrs:Type-$UInt16"
+        EndBody
+      EndObject
+      Object Function $Intern 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Mask"
+        EndBody
+      EndObject
+      Object ResetObject $Intern 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ObjId"
+        EndBody
+      EndObject
+      Object ResetObjectP $Intern 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object BackupNow $Intern 48
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object ReloadDone $Intern 49
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object ReleaseAppl $Intern 263
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object InitTime $Intern 50
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object BackupNowMsg $Intern 51
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object MirrorRestart $Intern 52
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object CellFull $Output 7
+        Body SysBody
+          Attr PgmName = "CellFull"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_STATE
+          Attr GraphName = "full"
+        EndBody
+      EndObject
+      Object NumberOfData $Intern 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object DataSelected $Intern 9
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object LastIndex $Intern 10
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object SelectIndex $Intern 11
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object FrontNew $Output 12
+        Body SysBody
+          Attr PgmName = "FrontNew"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "fnew"
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object RearNew $Output 13
+        Body SysBody
+          Attr PgmName = "RearNew"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "rnew"
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object InPointer $Intern 14
+        Body SysBody
+          Attr PgmName = "InPointer"
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object InObjId $Intern 15
+        Body SysBody
+          Attr PgmName = "InObjId"
+          Attr TypeRef = "pwrs:Type-$ObjId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object InDlid $Intern 16
+        Body SysBody
+          Attr PgmName = "InDlid"
+          Attr TypeRef = "pwrs:Type-$RefId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object InOpType $Intern 17
+        Body SysBody
+          Attr PgmName = "InOpType"
+          Attr TypeRef = "pwrs:Type-$UInt16"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object InFlag $Intern 18
+        Body SysBody
+          Attr PgmName = "InFlag"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object OutFrontOpType $Intern 19
+        Body SysBody
+          Attr PgmName = "OutFrontOpType"
+          Attr TypeRef = "pwrs:Type-$UInt16"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object OutFrontFlag $Intern 20
+        Body SysBody
+          Attr PgmName = "OutFrontFlag"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object OutRearOpType $Intern 21
+        Body SysBody
+          Attr PgmName = "OutRearOpType"
+          Attr TypeRef = "pwrs:Type-$UInt16"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object OutRearFlag $Intern 22
+        Body SysBody
+          Attr PgmName = "OutRearFlag"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object ExternObjId $Intern 23
+        Body SysBody
+          Attr PgmName = "ExternObjId"
+          Attr TypeRef = "pwrs:Type-$ObjId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object ExternOpType $Intern 24
+        Body SysBody
+          Attr PgmName = "ExternOpType"
+          Attr TypeRef = "pwrs:Type-$UInt16"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object ExternFlag $Intern 25
+        Body SysBody
+          Attr PgmName = "ExternFlag"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object ExternIndex $Intern 26
+        Body SysBody
+          Attr PgmName = "ExternIndex"
+          Attr TypeRef = "pwrs:Type-$UInt16"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object ExternStatus $Intern 27
+        Body SysBody
+          Attr PgmName = "ExternStatus"
+          Attr TypeRef = "pwrs:Type-$Int32"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object DataLP $Intern 28
+        Body SysBody
+          Attr PgmName = "DataLP"
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object DataL_ObjId $Intern 29
+        Body SysBody
+          Attr PgmName = "DataL_ObjId"
+          Attr TypeRef = "pwrs:Type-$ObjId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object DataL_Front $Intern 30
+        Body SysBody
+          Attr PgmName = "DataL_Front"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object DataL_Back $Intern 31
+        Body SysBody
+          Attr PgmName = "DataL_Back"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object DataL_Dlid $Intern 32
+        Body SysBody
+          Attr PgmName = "DataL_Dlid"
+          Attr TypeRef = "pwrs:Type-$RefId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object DataL_Select $Intern 33
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object DataL_SelectOld $Intern 34
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object DataLastP $Output 35
+        Body SysBody
+          Attr PgmName = "DataLastP"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "DL"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object DataLast_ObjId $Intern 36
+        Body SysBody
+          Attr PgmName = "DataLast_ObjId"
+          Attr TypeRef = "pwrs:Type-$ObjId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object DataLast_Front $Intern 37
+        Body SysBody
+          Attr PgmName = "DataLast_Front"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object DataLast_Back $Intern 38
+        Body SysBody
+          Attr PgmName = "DataLast_Back"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object DataLast_Dlid $Intern 39
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$RefId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object DataLast_Select $Intern 40
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object DataLast_SelectOld $Intern 41
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object DataCurrentP $Intern 42
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object DataCurrent_ObjId $Intern 43
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ObjId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object DataCurrent_Front $Intern 44
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object DataCurrent_Back $Intern 45
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Idx $Intern 46
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object CurrentIndex $Intern 47
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data1P $Output 53
+        Body SysBody
+          Attr PgmName = "Data1P"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "D1"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object Data1_ObjId $Intern 54
+        Body SysBody
+          Attr PgmName = "Data1_ObjId"
+          Attr TypeRef = "pwrs:Type-$ObjId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data1_Front $Intern 55
+        Body SysBody
+          Attr PgmName = "Data1_Front"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data1_Back $Intern 56
+        Body SysBody
+          Attr PgmName = "Data1_Back"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data1_Dlid $Intern 57
+        Body SysBody
+          Attr PgmName = "Data1_Dlid"
+          Attr TypeRef = "pwrs:Type-$RefId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data1_Select $Intern 58
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data1_SelectOld $Intern 59
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data2P $Output 60
+        Body SysBody
+          Attr PgmName = "Data2P"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "D2"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object Data2_ObjId $Intern 61
+        Body SysBody
+          Attr PgmName = "Data2_ObjId"
+          Attr TypeRef = "pwrs:Type-$ObjId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data2_Front $Intern 62
+        Body SysBody
+          Attr PgmName = "Data2_Front"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data2_Back $Intern 63
+        Body SysBody
+          Attr PgmName = "Data2_Back"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data2_Dlid $Intern 64
+        Body SysBody
+          Attr PgmName = "Data2_Dlid"
+          Attr TypeRef = "pwrs:Type-$RefId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data2_Select $Intern 65
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data2_SelectOld $Intern 66
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data3P $Output 67
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "D3"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object Data3_ObjId $Intern 68
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ObjId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data3_Front $Intern 69
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data3_Back $Intern 70
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data3_Dlid $Intern 71
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$RefId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data3_Select $Intern 72
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data3_SelectOld $Intern 73
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data4P $Output 74
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "D4"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object Data4_ObjId $Intern 75
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ObjId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data4_Front $Intern 76
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data4_Back $Intern 77
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data4_Dlid $Intern 78
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$RefId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data4_Select $Intern 79
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data4_SelectOld $Intern 80
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data5P $Output 81
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "D5"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object Data5_ObjId $Intern 82
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ObjId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data5_Front $Intern 83
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data5_Back $Intern 84
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data5_Dlid $Intern 85
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$RefId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data5_Select $Intern 86
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data5_SelectOld $Intern 87
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data6P $Output 88
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "D6"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object Data6_ObjId $Intern 89
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ObjId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data6_Front $Intern 90
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data6_Back $Intern 91
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data6_Dlid $Intern 92
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$RefId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data6_Select $Intern 93
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data6_SelectOld $Intern 94
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data7P $Output 95
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "D7"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object Data7_ObjId $Intern 96
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ObjId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data7_Front $Intern 97
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data7_Back $Intern 98
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data7_Dlid $Intern 99
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$RefId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data7_Select $Intern 100
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data7_SelectOld $Intern 101
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data8P $Output 102
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "D8"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object Data8_ObjId $Intern 103
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ObjId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data8_Front $Intern 104
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data8_Back $Intern 105
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data8_Dlid $Intern 106
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$RefId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data8_Select $Intern 107
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data8_SelectOld $Intern 108
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data9P $Intern 109
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object Data9_ObjId $Intern 110
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ObjId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data9_Front $Intern 111
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data9_Back $Intern 112
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data9_Dlid $Intern 113
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$RefId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data9_Select $Intern 114
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data9_SelectOld $Intern 115
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data10P $Intern 116
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object Data10_ObjId $Intern 117
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ObjId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data10_Front $Intern 118
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data10_Back $Intern 119
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data10_Dlid $Intern 120
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$RefId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data10_Select $Intern 121
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data10_SelectOld $Intern 122
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data11P $Intern 123
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object Data11_ObjId $Intern 124
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ObjId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data11_Front $Intern 125
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data11_Back $Intern 126
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data11_Dlid $Intern 127
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$RefId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data11_Select $Intern 128
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data11_SelectOld $Intern 129
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data12P $Intern 130
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object Data12_ObjId $Intern 131
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ObjId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data12_Front $Intern 132
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data12_Back $Intern 133
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data12_Dlid $Intern 134
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$RefId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data12_Select $Intern 135
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data12_SelectOld $Intern 136
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data13P $Intern 137
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object Data13_ObjId $Intern 138
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ObjId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data13_Front $Intern 139
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data13_Back $Intern 140
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data13_Dlid $Intern 141
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$RefId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data13_Select $Intern 142
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data13_SelectOld $Intern 143
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data14P $Intern 144
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object Data14_ObjId $Intern 145
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ObjId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data14_Front $Intern 146
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data14_Back $Intern 147
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data14_Dlid $Intern 148
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$RefId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data14_Select $Intern 149
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data14_SelectOld $Intern 150
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data15P $Intern 151
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object Data15_ObjId $Intern 152
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ObjId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data15_Front $Intern 153
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data15_Back $Intern 154
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data15_Dlid $Intern 155
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$RefId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data15_Select $Intern 156
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data15_SelectOld $Intern 157
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data16P $Intern 158
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object Data16_ObjId $Intern 159
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ObjId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data16_Front $Intern 160
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data16_Back $Intern 161
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data16_Dlid $Intern 162
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$RefId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data16_Select $Intern 163
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data16_SelectOld $Intern 164
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data17P $Intern 165
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object Data17_ObjId $Intern 166
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ObjId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data17_Front $Intern 167
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data17_Back $Intern 168
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data17_Dlid $Intern 169
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$RefId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data17_Select $Intern 170
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data17_SelectOld $Intern 171
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data18P $Intern 172
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object Data18_ObjId $Intern 173
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ObjId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data18_Front $Intern 174
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data18_Back $Intern 175
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data18_Dlid $Intern 176
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$RefId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data18_Select $Intern 177
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data18_SelectOld $Intern 178
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data19P $Intern 179
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object Data19_ObjId $Intern 180
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ObjId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data19_Front $Intern 181
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data19_Back $Intern 182
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data19_Dlid $Intern 183
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$RefId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data19_Select $Intern 184
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data19_SelectOld $Intern 185
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data20P $Intern 186
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object Data20_ObjId $Intern 187
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ObjId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data20_Front $Intern 188
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data20_Back $Intern 189
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data20_Dlid $Intern 190
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$RefId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data20_Select $Intern 191
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data20_SelectOld $Intern 192
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data21P $Intern 193
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object Data21_ObjId $Intern 194
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ObjId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data21_Front $Intern 195
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data21_Back $Intern 196
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data21_Dlid $Intern 197
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$RefId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data21_Select $Intern 198
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data21_SelectOld $Intern 199
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data22P $Intern 200
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object Data22_ObjId $Intern 201
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ObjId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data22_Front $Intern 202
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data22_Back $Intern 203
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data22_Dlid $Intern 204
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$RefId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data22_Select $Intern 205
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data22_SelectOld $Intern 206
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data23P $Intern 207
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object Data23_ObjId $Intern 208
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ObjId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data23_Front $Intern 209
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data23_Back $Intern 210
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data23_Dlid $Intern 211
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$RefId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data23_Select $Intern 212
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data23_SelectOld $Intern 213
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data24P $Intern 214
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object Data24_ObjId $Intern 215
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ObjId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data24_Front $Intern 216
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data24_Back $Intern 217
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data24_Dlid $Intern 218
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$RefId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data24_Select $Intern 219
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data24_SelectOld $Intern 220
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data25P $Intern 221
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object Data25_ObjId $Intern 222
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ObjId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data25_Front $Intern 223
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data25_Back $Intern 224
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data25_Dlid $Intern 225
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$RefId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data25_Select $Intern 226
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data25_SelectOld $Intern 227
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data26P $Intern 228
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object Data26_ObjId $Intern 229
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ObjId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data26_Front $Intern 230
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data26_Back $Intern 231
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data26_Dlid $Intern 232
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$RefId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data26_Select $Intern 233
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data26_SelectOld $Intern 234
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data27P $Intern 235
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object Data27_ObjId $Intern 236
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ObjId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data27_Front $Intern 237
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data27_Back $Intern 238
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data27_Dlid $Intern 239
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$RefId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data27_Select $Intern 240
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data27_SelectOld $Intern 241
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data28P $Intern 242
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object Data28_ObjId $Intern 243
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ObjId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data28_Front $Intern 244
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data28_Back $Intern 245
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data28_Dlid $Intern 246
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$RefId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data28_Select $Intern 247
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data28_SelectOld $Intern 248
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data29P $Intern 249
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object Data29_ObjId $Intern 250
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ObjId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data29_Front $Intern 251
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data29_Back $Intern 252
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data29_Dlid $Intern 253
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$RefId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data29_Select $Intern 254
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data29_SelectOld $Intern 255
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data30P $Intern 256
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object Data30_ObjId $Intern 257
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ObjId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data30_Front $Intern 258
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data30_Back $Intern 259
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data30_Dlid $Intern 260
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$RefId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data30_Select $Intern 261
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object Data30_SelectOld $Intern 262
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2
+      Object PlcNode $Buffer  
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 220
+        Attr parameters[0] = 0
+        Attr parameters[1] = 0
+        Attr parameters[2] = 14
+        Attr parameters[3] = 0
+        Attr subwindows = 1
+        Attr subwindow_class[0] = "pwrb:Class-WindowPlc"
+        Attr graphmethod = 16
+        Attr graphindex = 1
+        Attr default_mask[0] = 0
+        Attr default_mask[1] = 3
+        Attr segname_annotation = 1
+        Attr compmethod = 46
+        Attr compindex = 1
+        Attr tracemethod = 0
+        Attr traceindex = 1
+	Attr executeordermethod = 8
+        Attr objname = "Cell"
+        Attr graphname = "Cell"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    !
+    ! Template object 
+    !
+    Object Template NMpsCell
+      Body RtBody
+        Attr MaxSize = 8
+      EndBody
+    EndObject
+  EndObject
+EndSObject

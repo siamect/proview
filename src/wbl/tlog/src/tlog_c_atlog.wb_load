@@ -1,0 +1,127 @@
+!  tlog_c_AtLog.wb_load -- Defines the class AtLog.
+!
+!  PROVIEW/R
+!
+!  <Description>.
+!
+SObject TLog:Class
+  Object AtLog $ClassDef 1
+    Body SysBody
+      Attr Editor = pwr_eEditor_PlcEd
+      Attr Method = pwr_eMethod_RtConnectionsAndDevBodies
+    EndBody
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "AtLog"
+      EndBody
+      Object In $Input 1
+        Body SysBody
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      Object InOld $Intern 2
+        Body SysBody
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      Object Limit $Intern 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      Object UpSignal $Intern 4
+        Body SysBody
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object DownSignal $Intern 5
+        Body SysBody
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object UpTime $Intern 6
+        Body SysBody
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+          Attr TypeRef = "pwrs:Type-$Time"
+        EndBody
+      EndObject
+      Object DownTime $Intern 7
+        Body SysBody
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+          Attr TypeRef = "pwrs:Type-$Time"
+        EndBody
+      EndObject
+      Object UpText $Intern 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+          Attr NiNaAnnot = 2
+          Attr NiNaCond = 1
+        EndBody
+      EndObject
+      Object DownText $Intern 9
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object Attribute $Intern 10
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$AttrRef"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2
+      Object ShowUpText $Intern 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object PlcNode $Buffer 2
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 111
+        Attr parameters[0] = 1
+        Attr parameters[1] = 0
+        Attr parameters[2] = 0
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 7
+        Attr graphindex = 1
+        Attr default_mask[0] = 1
+        Attr default_mask[1] = 0
+        Attr segname_annotation = 1
+        Attr rtbody_annotation = 1
+        Attr compmethod = 47
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+        Attr objname = "AtLog"
+        Attr graphname = "AtLog"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    !
+    ! Template object 
+    !
+    Object Template AtLog
+      Body DevBody
+        Attr ShowUpText = 0
+      EndBody
+    EndObject
+  EndObject
+EndSObject

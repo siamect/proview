@@ -1,0 +1,63 @@
+!  pwrs_c_nodehier.wb_load -- Defines the class NodeHier.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+!/**
+!  @Version 1.0
+!  Top and grouping object that helps to form structures
+!  in the Node Hierarchy in the Node Configuration.
+!  
+!  A PROVIEW/R system can have several $NodeHier objects
+!  placed on the top level or below another $NodeHier
+!  object.
+!  
+!  The object is used at the Node Configuration in a way
+!  analog to the $PlantHier object in the Plant
+!  Configuration. The advantage in using the object is not
+!  always obvious. One way in a PROVIEW/R system with
+!  several nodes is to collect operator and process
+!  stations below separate $NodeHier objects.
+!  Is created in the development environment by means of
+!  the Configuration Editor.
+!  
+!  Contains no relevant information (=data) in rtdb.
+!  If, for the current node, no instance by the class
+!  $NodeHier with the name $Orphange exist, it will be
+!  created at 'Create Load Files ...'. This is the
+!  background:
+!  
+!  In the target environment it is possible to create
+!  objects dynamically. This may be done from application
+!  programs by call to the system routine
+!  gdh_CreateObject(...). Created objects have always to
+!  be put below a parent object, i.e. they cannot exist on
+!  the root level. If such an parent object is deleted at
+!  program changing, the dynamically created objects below
+!  it, would not be accessible any longer. Therefor
+!  PROVIEW will put such objects below $Orphange.
+!*/
+SObject pwrs:Class
+  Object $NodeHier $ClassDef pwr_eCix_NodeHier
+    Body SysBody
+      Attr Flags |= pwr_mClassDef_System
+      Attr Flags |= pwr_mClassDef_TopObject
+    EndBody
+    Object SysBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "NodeHier"
+      EndBody
+      !/**
+      !  Optional text to describe the use of the object.
+      !*/
+      Object Description $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject

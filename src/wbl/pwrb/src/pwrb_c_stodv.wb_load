@@ -1,0 +1,112 @@
+!  pwrb_c_stodv.wb_load -- Defines the class StoDv.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  STOre status of Digital Value.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_macro_io.h
+!  Store Digital value.
+!  
+!  Stores the value of a digital quantity on the specified
+!  local Dv object.
+!  The complete name of the Dv object has to be supplied;
+!  its last segment is shown in the right empty part of
+!  the symbol.
+!*/
+SObject pwrb:Class
+  Object StoDv $ClassDef 225 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_RtConnectionsAndDevBodies
+      Attr Flags = pwr_mClassDef_DevOnly
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "stodv"
+      EndBody
+      !/**
+      !  The input is connected to a digital quantity or left
+      !  open. In the latter case In is default FALSE and not
+      !  adjustable in the run time system. The In attribute
+      !  specifies which value should be assigned to the
+      !  Dv-signal.
+      !*/
+      Object In $Input 1 
+        Body SysBody
+          Attr PgmName = "ActualValue"
+          Attr Flags |= PWR_MASK_RTVIRTUAL
+          Attr Flags |= PWR_MASK_DEVBODYREF
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "in"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      !/**
+      !  Used by the PLC Editor. Specifies the complete name of
+      !  the current Dv object.
+      !*/
+      Object DvObject $Intern 1 
+        Body SysBody
+          Attr PgmName = "DvObject"
+          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr GraphName = "In"
+          Attr NiNaAnnot = 1
+          Attr NiNaSegments = 1
+          Attr ConPointNr = 2
+        EndBody
+      EndObject
+      !/**
+      !  Specifies how many segments of the Dv object name that
+      !  is to be displayed in the symbol of the StoDv object.
+      !  The segments are counted from behind.
+      !*/
+      Object DvObjectSegments $Intern 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      Object PlcNode $Buffer 3 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 71
+        Attr parameters[0] = 1
+        Attr parameters[1] = 0
+        Attr parameters[2] = 0
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 7
+        Attr graphindex = 1
+        Attr default_mask[0] = 1
+        Attr default_mask[1] = 0
+        Attr segname_annotation = 0
+        Attr devbody_annotation = 1
+        Attr compmethod = 11
+        Attr compindex = 0
+        Attr tracemethod = 1
+        Attr traceindex = 1
+        Attr connectmethod = 3
+        Attr executeordermethod = 6
+        Attr objname = "StoDv"
+        Attr graphname = "StoDv"
+        Attr debugpar = "In"
+      EndBody
+    EndObject
+    Object Template StoDv
+      Body DevBody
+        Attr DvObjectSegments = 1
+      EndBody
+    EndObject
+  EndObject
+EndSObject

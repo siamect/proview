@@ -1,0 +1,937 @@
+!  pwrb_c_listdescriptor.wb_load -- Defines the class ListDescriptor.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  Describes the contents and appearance of a single list.
+!  
+!  The utility pwr_plc contains functions to handle the
+!  work-bench database, e.g. to create lists, i.e. a set
+!  of object names in the work-bench database, which
+!  satisfies some searching criteria specified in
+!  ListDescriptor objects.
+!  Information about different types of standard lists are
+!  found in PROVIEW/R Designer's Guide. Most standard
+!  lists are a compound of several lists, each controlled
+!  by a ListDescriptor object.
+!*/
+SObject pwrb:Class
+  Object ListDescriptor $ClassDef 143 
+    Body SysBody
+      Attr Flags |= pwr_mClassDef_DevOnly
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_DevBodyOnly
+    EndBody
+    Object DevBody $ObjBodyDef 2 
+      !/**
+      !  Specifies a text which will be written in the header
+      !  section.
+      !*/
+      Object Title $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies a header text which will be written at the
+      !  beginning of each page.
+      !*/
+      Object PageHeader $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Checks whether the listing contains a cross-reference
+      !  list or not. A cross-reference list contains the name
+      !  of each object that refers to the current signal object
+      !  or, in other words, it answers the question -- Who use
+      !  the current signal object? The searching will be
+      !  carried out among all the objects in the work-bench
+      !  database. The attribute is used in signal lists.
+      !*/
+      Object Crossreference $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Checks whether the listing contains external references
+      !  and how. The searching will be carried out among all
+      !  the objects throughout the work-bench database. Assume
+      !  that an object is found according to the searching key.
+      !  The following values are possible:
+      !  
+      !  -- 0  No external reference list is to be done.
+      !  -- 1  Objects below a selected object can refer to
+      !        objects/attributes that are neither signal
+      !        objects nor belonging to this hierarchy.
+      !        Specify "1" to involve the names of such
+      !  
+      !  -- 2  The names of signal objects referred to by
+      !        objects below the selected object (usually
+      !        Getxxx, Setxxx, Stoxxx etc) are printed out.
+      !        The name of channel objects connected to the
+      !  
+      !  -- 3  Objects in other hierarchies may refer to
+      !        attributes belonging to objects below the
+      !        selected object. Specify "3" to involve the
+      !        names of objects ( signal objects excluded) in
+      !        other hierarchies with this type of references.
+      !*/
+      Object Externreference $Attribute 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Enum"
+        EndBody
+      EndObject
+      !/**
+      !  If the searching is controlled by ListDescriptor
+      !  objects arranged in several levels this attribute will
+      !  influence the result.
+      !
+      !  Assign to Deep the value TRUE if the searching is to be
+      !  done on all levels below the selected hierarchy and
+      !  FALSE if the searching is to be limited to the first
+      !  level below the selected hierarchy.
+      !*/
+      Object Deep $Attribute 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies in which order the names of the objects are
+      !  to be listed. The following values are possible:
+      !  
+      !  -- 0 The names of the objects are listed in the same
+      !       order as they where found in in the work-bench
+      !       database ( the order they where displayed in the
+      !  
+      !  -- 1 The names of the objects are listed in
+      !       alphabetical order according to the first segment
+      !  
+      !  -- 2 The names of the objects are listed in
+      !       alphabetical order according to the last segment
+      !  -- 3 The names of the objects are listed in
+      !       alphabetical order according to the name of the
+      !*/
+      Object AlphaOrder $Attribute 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Enum"
+        EndBody
+      EndObject
+      !/**
+      !  If the name of the objects that match the searching
+      !  criteria would not be printed in any ( ordinary or
+      !  advanced) list, please specify TRUE, otherwise FALSE.
+      !  They may be used only as pure search keys by sublists.
+      !*/
+      Object NoPrint $Attribute 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Assume that an object is found according to the
+      !  searching criteria. NoPrintIfNoList = TRUE means that
+      !  the name is printed in the list only if the object is
+      !  followed by a none-empty sublist.
+      !*/
+      Object NoPrintIfNoList $Attribute 8 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Bit map to control which attributes of the selected
+      !  objects' are to be printed in an ordinary list. A
+      !  combination of flags is allowed. The possible values
+      !  are as follows:
+      !  
+      !  -- 0   The Full attribute will not influence the list.
+      !  
+      !  -- 1   All the attributes whose values differ from the
+      !         template ( original) object will be printed.
+      !  -- 2   The name of the object will be printed only if
+      !         it is modified.
+      !  -- 4   Changes in attributes that belong to the
+      !         object's RtBody will not be involved in the list.
+      !  
+      !  -- 8   Changes in attributes that belong to the
+      !         object's DevBody will not be involved in the list.
+      !  -- 16
+      !  
+      !  -- 32  Changes in attributes that belong to the
+      !         object's SysBody will not be involved in the list.
+      !  -- 64  Print Stoxx, Setxx, and Resxx objects if their
+      !         inputs have been left open and been assigned a
+      !         value.
+      !*/
+      Object Full $Attribute 9 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Mask"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the text orientation on the paper.
+      !*/
+      Object Landscape $Attribute 10 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  1 --  Page break before printing the name of a new
+      !        object. Useful when the 'parent' list consists of
+      !  2  -- Page break and restart of the page numbering from
+      !        page 1 before printing the name of a new object.
+      !*/
+      Object PageBreak $Attribute 11 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Enum"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the number of rows, counted from the end of
+      !  the page, when a new page is to be created.
+      !*/
+      Object RowsToPageBreak $Attribute 12 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt8"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the number of empty rows in the list before
+      !  respectively after the name of an object.
+      !*/
+      Object ClearRowsPre $Attribute 13 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt8"
+        EndBody
+      EndObject
+      Object ClearRowsPost $Attribute 14 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt8"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the number of empty rows before respectively
+      !  after the list of object names.
+      !*/
+      Object ClearRowsPreList $Attribute 15 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt8"
+        EndBody
+      EndObject
+      Object ClearRowsPostList $Attribute 16 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt8"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies whether to enable or disable printing of the
+      !  header of the columns. TRUE means that P1ColumnHeader,
+      !  P2ColumnHeader, ... will be printed.
+      !*/
+      Object ColumnHeader $Attribute 17 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies whether the header of the columns will be
+      !  underlined or not. TRUE means that the header of the
+      !  columns is underlined.
+      !*/
+      Object ColHead_____ $Attribute 18 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies if a table of contents will be created in the
+      !  corresponding list and then how. The following values
+      !  are possible:
+      !  
+      !  -- 0  No table of contents.
+      !  -- 1  The name of an object that matches the search
+      !        criteria will be part of the table of contents
+      !  
+      !  -- 2  The name of an object that matches the search
+      !        criteria will be part of the table of contents
+      !        only if it is not written in any list; e.g. if
+      !*/
+      Object TableOfContents $Attribute 19 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Enum"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the number of segments in the object name to
+      !  be printed in the table of contents. The segments are
+      !  counted from the last segment and forward.
+      !*/
+      Object TCSegments $Attribute 20 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt8"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies characters preceding the TcSegments.
+      !*/
+      Object TCMarginString $Attribute 21 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String16"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the object where the searching is to be
+      !  started. If left blank all objects in the Plant and
+      !  Node Configuration will be selected.
+      !*/
+      Object Hierarchyobject $Attribute 22 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Searching on objects with a specified name among the
+      !  objects selected by Hierarchyobject. Wildcards (*) are
+      !  allowed in Name. If left blank or if specifying objects
+      !  outside the quantity defined by Hierarchyobject this
+      !  will not affect the quantity of objects selected by
+      !  Hierarchyobject. See also Deep.
+      !*/
+      Object Name $Attribute 23 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Searching on objects which belong to specified class or
+      !  classes. The searching is carried out among the
+      !  quantity of objects which satisfy Hierarchyobject and
+      !  Name. Specify the name of class/es, for example
+      !  Di,Do,Dv,Ai,Ao,Av,Co. If more than one class, please
+      !  separate the names by comma. See also Deep.
+      !*/
+      Object Class $Attribute 24 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  If some of the selected objects' attributes are to be
+      !  found in the ordinary transcription, please specify the
+      !  names of the attributes here.
+      !*/
+      Object Parameter $Attribute 25 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Advanced transcription. For objects that match the
+      !  searching criteria it is possible to specify what to
+      !  print, both about the object itself and its attributes.
+      !  
+      !  1  Specify the name of an attribute ( e.g. ActualValue,
+      !     Description, see figure 3-26) in the selected object
+      !     and the value of the attribute will be written out.
+      !  2  Other data about the selected object may also be
+      !     interesting; see figure 3-27. The following
+      !     alternatives exist:
+      !  
+      !  
+      !  PrintObjName    The complete name of a selected
+      !                  object will be written.
+      !  PrintObjClass   Printing the class of a selected
+      !                  object according to PrintObjName.
+      !  
+      !  PrintNode       Printing the name of the node, to
+      !                  which the object belongs.
+      !  PrintObjRefPar  Printing the name of object and
+      !                  attribute referred to by some
+      !                  object located below the current
+      !                  object. The printed object belongs
+      !  
+      !  PrintRefObjPar  Printing the name of object and
+      !                  attribute referred to by objects in
+      !                  other hierarchies. The object
+      !  PrintRefObj     Printing the name of an object that
+      !                  is located below the current object
+      !                  and referred to from other
+      !  
+      !  PrintRefClass   Printing the class of referred
+      !                  object according to PrintRefObjPar
+      !  PrintObjSigChan Printing the name of connected
+      !                  object. Relevant to signal and
+      !  
+      !  PrintSigChanId  Printing the value of Identity.
+      !                  Relevant to channel objects.
+      !  PrintWrite      Printing the value of Write.
+      !                  Relevant to ExternRef objects.
+      !*/
+      Object P1Parameter $Attribute 26 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the name of the column.
+      !*/
+      Object P1ColumnHeader $Attribute 27 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies characters preceding the PxParameter.
+      !*/
+      Object P1MarginString $Attribute 28 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies whether to enable or disable printing of the
+      !  name of the attribute. TRUE means that the name of the
+      !  attribute is written.
+      !*/
+      Object P1PrintParName $Attribute 29 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies whether the row is to be finished after this
+      !  column or not. TRUE means that this is the last column
+      !  of the row.
+      !*/
+      Object P1CarriageRet $Attribute 30 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the width of the column in the unit of tabs.
+      !  P1Segments
+      !*/
+      Object P1SizeTabs $Attribute 31 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int16"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the number of segments in the object name to
+      !  be printed. The segments are counted from the last
+      !  segment and forward.
+      !  
+      !  Note! Column 2 to 15 are handled in the same way as column
+      !  1. As far as attributes are concerned see column 1
+      !  above.
+      !*/
+      Object P1Segments $Attribute 32 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int16"
+        EndBody
+      EndObject
+      Object P2Parameter $Attribute 33 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object P2ColumnHeader $Attribute 34 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object P2MarginString $Attribute 35 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object P2PrintParName $Attribute 36 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object P2CarriageRet $Attribute 37 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object P2SizeTabs $Attribute 38 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int16"
+        EndBody
+      EndObject
+      Object P2Segments $Attribute 39 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int16"
+        EndBody
+      EndObject
+      Object P3Parameter $Attribute 40 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object P3ColumnHeader $Attribute 41 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object P3MarginString $Attribute 42 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object P3PrintParName $Attribute 43 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object P3CarriageRet $Attribute 44 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object P3SizeTabs $Attribute 45 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int16"
+        EndBody
+      EndObject
+      Object P3Segments $Attribute 46 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int16"
+        EndBody
+      EndObject
+      Object P4Parameter $Attribute 47 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object P4ColumnHeader $Attribute 48 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object P4MarginString $Attribute 49 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object P4PrintParName $Attribute 50 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object P4CarriageRet $Attribute 51 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object P4SizeTabs $Attribute 52 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int16"
+        EndBody
+      EndObject
+      Object P4Segments $Attribute 53 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int16"
+        EndBody
+      EndObject
+      Object P5Parameter $Attribute 54 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object P5ColumnHeader $Attribute 55 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object P5MarginString $Attribute 56 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object P5PrintParName $Attribute 57 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object P5CarriageRet $Attribute 58 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object P5SizeTabs $Attribute 59 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int16"
+        EndBody
+      EndObject
+      Object P5Segments $Attribute 60 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int16"
+        EndBody
+      EndObject
+      Object P6Parameter $Attribute 61 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object P6ColumnHeader $Attribute 62 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object P6MarginString $Attribute 63 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object P6PrintParName $Attribute 64 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object P6CarriageRet $Attribute 65 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object P6SizeTabs $Attribute 66 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int16"
+        EndBody
+      EndObject
+      Object P6Segments $Attribute 67 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int16"
+        EndBody
+      EndObject
+      Object P7Parameter $Attribute 68 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object P7ColumnHeader $Attribute 69 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object P7MarginString $Attribute 70 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object P7PrintParName $Attribute 71 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object P7CarriageRet $Attribute 72 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object P7SizeTabs $Attribute 73 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int16"
+        EndBody
+      EndObject
+      Object P7Segments $Attribute 74 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int16"
+        EndBody
+      EndObject
+      Object P8Parameter $Attribute 75 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object P8ColumnHeader $Attribute 76 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object P8MarginString $Attribute 77 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object P8PrintParName $Attribute 78 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object P8CarriageRet $Attribute 79 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object P8SizeTabs $Attribute 80 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int16"
+        EndBody
+      EndObject
+      Object P8Segments $Attribute 81 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int16"
+        EndBody
+      EndObject
+      Object P9Parameter $Attribute 82 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object P9ColumnHeader $Attribute 83 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object P9MarginString $Attribute 84 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object P9PrintParName $Attribute 85 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object P9CarriageRet $Attribute 86 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object P9SizeTabs $Attribute 87 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int16"
+        EndBody
+      EndObject
+      Object P9Segments $Attribute 88 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int16"
+        EndBody
+      EndObject
+      Object P10Parameter $Attribute 89 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object P10ColumnHeader $Attribute 90 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object P10MarginString $Attribute 91 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object P10PrintParName $Attribute 92 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object P10CarriageRet $Attribute 93 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object P10SizeTabs $Attribute 94 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int16"
+        EndBody
+      EndObject
+      Object P10Segments $Attribute 95 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int16"
+        EndBody
+      EndObject
+      Object P11Parameter $Attribute 96 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object P11ColumnHeader $Attribute 97 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object P11MarginString $Attribute 98 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object P11PrintParName $Attribute 99 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object P11CarriageRet $Attribute 100 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object P11SizeTabs $Attribute 101 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int16"
+        EndBody
+      EndObject
+      Object P11Segments $Attribute 102 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int16"
+        EndBody
+      EndObject
+      Object P12Parameter $Attribute 103 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object P12ColumnHeader $Attribute 104 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object P12MarginString $Attribute 105 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object P12PrintParName $Attribute 106 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object P12CarriageRet $Attribute 107 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object P12SizeTabs $Attribute 108 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int16"
+        EndBody
+      EndObject
+      Object P12Segments $Attribute 109 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int16"
+        EndBody
+      EndObject
+      Object P13Parameter $Attribute 110 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object P13ColumnHeader $Attribute 111 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object P13MarginString $Attribute 112 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object P13PrintParName $Attribute 113 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object P13CarriageRet $Attribute 114 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object P13SizeTabs $Attribute 115 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int16"
+        EndBody
+      EndObject
+      Object P13Segments $Attribute 116 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int16"
+        EndBody
+      EndObject
+      Object P14Parameter $Attribute 117 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object P14ColumnHeader $Attribute 118 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object P14MarginString $Attribute 119 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object P14PrintParName $Attribute 120 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object P14CarriageRet $Attribute 121 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object P14SizeTabs $Attribute 122 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int16"
+        EndBody
+      EndObject
+      Object P14Segments $Attribute 123 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int16"
+        EndBody
+      EndObject
+      Object P15Parameter $Attribute 124 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object P15ColumnHeader $Attribute 125 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object P15MarginString $Attribute 126 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object P15PrintParName $Attribute 127 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object P15CarriageRet $Attribute 128 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object P15SizeTabs $Attribute 129 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int16"
+        EndBody
+      EndObject
+      Object P15Segments $Attribute 130 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int16"
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,1524 @@
+!  op_alali.uil -- alarm list
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!   This module defines the widget hierarchy for the alarmlimits
+!   XmDrawingArea.
+!
+module op_alali
+names = case_sensitive
+objects = { 
+            XmPushButton     = gadget;           
+	    XmToggleButton   = gadget;
+            XmLabel           = gadget; 
+	  }          
+
+! INCLUDE FILES
+include file 'pwr_lang:inc_standard_txt.uil';
+include file 'pwr_lang:inc_alali_txt.uil'; 
+
+value
+
+
+! CONSTANTS, Defining the geometry of the application.
+
+   FormLabelLeftOffset  : 5;
+
+   LabelTextTopOffset   : - 6;
+   LabelRadioTopOffset  : -6;
+   LabelButtonTopOffset  : 10;
+
+
+!   RadioLabelTopOffset  : 20;
+   RadioLabelTopOffset  : 10;
+   TextLabelTopOffset   : 20;
+   TextTextTopOffset   : 10;
+
+   OKButtLeftOffset	: 15;
+   ApplyButtPosition	: 38;
+   CancelButtRightOffset : 15;
+
+   SeparatorPbOffset	: 15;
+   ButtonWidth		: 70;
+   BigButtonWidth	: 140;
+   PopUpWidth		: 400;
+!   PopUpHeight		: 600;
+
+
+   DescrY		: 15;
+   HeadLblX             : 80;
+   HeadLblY             : 2;
+   Space		: 1;
+   ButtonMargOffset     : 15;
+   ListPbOffset		: 250;
+
+
+
+   DescrMaxLength	: 39;
+   DetTxtLength		: 40;
+   DetTxtMaxLength	: 79;
+   RtTxtLength		: 40;
+   RtTxtMaxLength	: 79;
+   LimitTxtMaxLength	: 15;
+   UnitTxtMaxLength	: 15;
+
+
+
+! alali INSTANCE IDENTIFIER
+identifier
+   AlaliP;
+   
+! CALLBACK PROCEDURES, In order of occurrence.
+
+procedure
+   alali_List_cr(any); 
+   alali_PbSeparator_cr(any);
+   alali_AnalogDialog_cr(any);
+   alali_DigitalDialog_cr(any);
+
+   alali_AnaDescrSText_cr(any);
+   alali_DigDescrSText_cr(any);
+
+   alali_AnaMsgToTgl_cr(any);
+   alali_AnaMsgFromTgl_cr(any);
+   alali_DigMsgToTgl_cr(any);
+   alali_DigMsgFromTgl_cr(any);
+
+   alali_AnaDetSText_cr(any);  
+   alali_DigDetSText_cr(any);  
+
+   alali_AnaRtMsgYesTgl_cr(any);
+   alali_AnaRtMsgNoTgl_cr(any);
+   alali_DigRtMsgYesTgl_cr(any);
+   alali_DigRtMsgNoTgl_cr(any);
+   alali_AnaRtSText_cr(any);
+   alali_DigRtSText_cr(any);
+
+   alali_AnaAckMsgYesTgl_cr(any);
+   alali_AnaAckMsgNoTgl_cr(any);
+   alali_DigAckMsgYesTgl_cr(any);
+   alali_DigAckMsgNoTgl_cr(any);
+
+   alali_AnaBellYesTgl_cr(any);
+   alali_AnaBellNoTgl_cr(any);
+   alali_DigBellYesTgl_cr(any);
+   alali_DigBellNoTgl_cr(any);
+
+   alali_AnaPrioOption_cr(any);
+   alali_AnaPrioA_cr(any);
+   alali_AnaPrioB_cr(any);
+   alali_AnaPrioC_cr(any);
+   alali_AnaPrioD_cr(any);
+   alali_DigPrioOption_cr(any);
+   alali_DigPrioA_cr(any);
+   alali_DigPrioB_cr(any);
+   alali_DigPrioC_cr(any);
+   alali_DigPrioD_cr(any);
+
+   alali_AnaLimitSText_cr(any);
+   alali_AnaHystSText_cr(any);
+   alali_AnaUnitSText_cr(any);
+
+   alali_DigAlarmPosTgl_cr(any);
+   alali_DigAlarmPosFromTgl_cr(any);
+
+   alali_MessageBox_cr(any);
+   alali_ActionText_cr(any);
+
+   alali_SelectCtrlObj_cb(any);      
+   alali_ActionText_cb(any);
+   alali_Quit_cb(any);
+   alali_AnaOk_cb(any);
+   alali_AnaSave_cb(any);
+   alali_AnaQuit_cb(any);
+   alali_DigOk_cb(any);
+   alali_DigSave_cb(any);
+   alali_DigQuit_cb(any);
+
+object alarmLimitsWindow : XmFormDialog
+{
+   arguments
+   {
+!    XmNx = 0;
+!    XmNy = 180;
+!    XmNwidth = PopUpWidth;
+!    XmNheight = PopUpHeight;
+      XmNautoUnmanage = false;
+      XmNnoResize = false;
+      XmNdefaultButton = XmPushButton cancelPb;
+      XmNcancelButton = XmPushButton cancelPb;
+
+   };
+   controls
+   {
+                 XmScrolledList		listBox;
+		 XmLabel		infoLabel;
+		 XmSeparator		pbSeparator;
+		 XmPushButton		actionTextPb;
+		 XmPushButton		cancelPb;
+		 XmBulletinBoard	spaceBox;
+!		 XmForm	analogDialog;  ! Fetched from program
+!		 XmForm	digitalDialog; ! Fetched from program
+      unmanaged  XmInformationDialog	messageBox;
+   };
+};
+
+object listBox : XmScrolledList 
+{
+   arguments
+   {
+!    XmNx = 1;
+!    XmNy = 1;
+!    XmNwidth = ListBoxWidth;
+      XmNleftAttachment = XmATTACH_FORM;      
+      XmNrightAttachment = XmATTACH_FORM;      
+      XmNvisibleItemCount = 4;
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alali_List_cr(AlaliP);
+      XmNbrowseSelectionCallback = procedure alali_SelectCtrlObj_cb(AlaliP);
+   };
+};
+
+
+object infoLabel : XmLabel
+{
+   arguments
+   { 
+      XmNleftAttachment = XmATTACH_POSITION;      
+      XmNleftPosition = 30;      
+      XmNtopAttachment = XmATTACH_FORM;      
+      XmNtopOffset = 120;      
+      XmNlabelString = compound_string(selectListObject);
+   };
+};
+
+
+object pbSeparator : XmSeparator 
+{
+   arguments
+   {
+      XmNtopAttachment = XmATTACH_WIDGET;
+      XmNtopWidget = XmScrolledList listBox;
+      XmNtopOffset = ListPbOffset;
+      XmNleftAttachment = XmATTACH_FORM;
+      XmNrightAttachment = XmATTACH_FORM;
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alali_PbSeparator_cr(AlaliP);
+   };
+};
+object actionTextPb : XmPushButton 
+{
+   arguments
+   {
+      XmNtopAttachment = XmATTACH_WIDGET;
+      XmNtopWidget = XmSeparator pbSeparator;
+      XmNtopOffset = SeparatorPbOffset;
+      XmNleftAttachment = XmATTACH_FORM;
+      XmNleftOffset = ButtonMargOffset;
+!    XmNbottomAttachment = XmATTACH_FORM;
+!    XmNbottomOffset = Space;
+!    XmNx = 10;
+!    XmNy = 300;
+      XmNwidth = BigButtonWidth;
+      XmNsensitive = false;
+      XmNlabelString = compound_string($zActionText);
+   };
+   callbacks
+   {
+      XmNactivateCallback = procedure alali_ActionText_cb(AlaliP);
+      MrmNcreateCallback = procedure alali_ActionText_cr(AlaliP);
+   };
+};
+
+object cancelPb : XmPushButton 
+{
+   arguments
+   {
+      XmNtopAttachment = XmATTACH_WIDGET;
+      XmNtopWidget = XmSeparator pbSeparator;
+      XmNtopOffset = SeparatorPbOffset;
+      XmNrightAttachment = XmATTACH_FORM;
+      XmNrightOffset = ButtonMargOffset;
+      XmNwidth = ButtonWidth;
+      XmNlabelString = compound_string($cancel);
+   };
+   callbacks
+   {
+      XmNactivateCallback = procedure alali_Quit_cb(AlaliP);
+   };
+};
+
+object spaceBox : XmBulletinBoard 
+{
+   arguments
+     
+   {
+      XmNborderWidth = 0;
+      XmNheight = 5;
+      XmNtopAttachment = XmATTACH_WIDGET;
+      XmNtopWidget = XmPushButton cancelPb;
+      XmNleftAttachment = XmATTACH_FORM;
+      XmNleftOffset = 1;
+      XmNrightAttachment = XmATTACH_FORM;
+      XmNrightOffset = 1;
+   };
+   controls
+   {
+   };
+};
+
+
+
+object analogDialog : XmForm
+{
+   arguments
+   {
+      XmNtopAttachment = XmATTACH_WIDGET;
+      XmNtopOffset = Space;
+      XmNleftAttachment = XmATTACH_FORM;      
+      XmNleftOffset = Space;
+      XmNrightAttachment = XmATTACH_FORM;      
+      XmNrightOffset = Space;
+   };
+   controls
+   {
+      XmLabel		anaHeadLabel;
+      XmLabel		anaDescrLabel;
+      XmText		anaDescrSText;
+      XmLabel		anaMsgLabel;
+      XmRadioBox	anaMsgRadio;
+      XmLabel		anaDetTxt1Label;
+      XmText		anaDetSText;
+      XmLabel		anaRtMsgLabel;      
+      XmRadioBox	anaRtMsgRadio;
+      XmLabel		anaRtTxtLabel;
+      XmText		anaRtSText;		
+      XmLabel		anaAckMsgLabel;      
+      XmRadioBox	anaAckMsgRadio;
+      XmLabel		anaBellLabel;      
+      XmRadioBox	anaBellRadio;
+      XmLabel		anaPrioLabel;      
+      XmOptionMenu	anaPrioOption;
+      XmLabel		anaLimitLabel;      
+      XmText		anaLimitSText;
+      XmLabel		anaHystLabel;
+      XmText		anaHystSText;
+      XmLabel		anaUnitLabel;
+      XmText		anaUnitSText;
+      XmPushButton	anaOkPb;
+      XmPushButton	anaSavePb;
+      XmPushButton	anaCancelPb;
+      XmBulletinBoard   anaSpaceBox;
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alali_AnalogDialog_cr(AlaliP);
+   };
+};
+
+      
+
+object anaHeadLabel : XmLabel
+{
+   arguments
+   { 
+      XmNleftAttachment = XmATTACH_FORM;
+      XmNtopAttachment = XmATTACH_FORM;
+      XmNleftOffset =HeadLblX;
+      XmNtopOffset = HeadLblY;
+      XmNlabelString = compound_string(analog);
+   };
+};
+object anaDescrLabel : XmLabel
+{
+   arguments
+   { 
+      XmNleftAttachment = XmATTACH_FORM;
+      XmNleftOffset = FormLabelLeftOffset;
+      XmNtopAttachment = XmATTACH_WIDGET;
+      XmNtopWidget = XmLabel anaHeadLabel;
+      XmNtopOffset = DescrY;
+      XmNlabelString = compound_string(description);
+   };
+};
+object anaDescrSText : XmText
+{
+   arguments
+   { 
+      XmNleftAttachment = XmATTACH_WIDGET;
+      XmNleftWidget= XmLabel anaDescrLabel;
+      XmNleftOffset = Col2LeftOffset;
+      XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+      XmNtopWidget = XmLabel anaDescrLabel;
+      XmNtopOffset = LabelTextTopOffset;
+      XmNresizeHeight = false;
+      XmNresizeWidth = false;
+      XmNcolumns = DescrMaxLength;
+      XmNmaxLength = DescrMaxLength;
+   };
+   callbacks 
+   {
+      MrmNcreateCallback = procedure alali_AnaDescrSText_cr(AlaliP);
+   };
+};
+
+
+object anaMsgLabel : XmLabel
+{
+   arguments
+   { 
+      XmNleftAttachment = XmATTACH_FORM;
+      XmNleftOffset = FormLabelLeftOffset;
+      XmNtopAttachment = XmATTACH_WIDGET;
+      XmNtopWidget = XmText anaDescrSText;
+      XmNtopOffset = TextLabelTopOffset;
+      XmNlabelString = compound_string(alarmMessage);
+   };
+};
+object anaMsgRadio : XmRadioBox
+{
+   arguments
+   { 
+      XmNleftAttachment = XmATTACH_WIDGET;
+      XmNleftWidget= XmLabel anaDescrLabel;
+      XmNleftOffset = Col2LeftOffset;
+      XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+      XmNtopWidget= XmLabel anaMsgLabel;
+      XmNtopOffset = LabelRadioTopOffset;
+      XmNorientation = XmHORIZONTAL;
+   };
+   controls
+   {
+      XmToggleButton	anaMsgToTgl;
+      XmToggleButton	anaMsgFromTgl;
+   };
+};
+
+object anaMsgToTgl : XmToggleButton
+{
+   arguments
+   {
+      XmNindicatorType = XmONE_OF_MANY;
+      XmNlabelString = compound_string($on);
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alali_AnaMsgToTgl_cr(AlaliP);
+   };
+};
+
+object anaMsgFromTgl : XmToggleButton
+{
+   arguments
+   {
+      XmNindicatorType = XmONE_OF_MANY;
+      XmNlabelString = compound_string($off);
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alali_AnaMsgFromTgl_cr(AlaliP);
+   };
+};
+
+
+object anaDetTxt1Label : XmLabel
+{
+   arguments
+   { 
+      XmNleftAttachment = XmATTACH_FORM;
+      XmNleftOffset = FormLabelLeftOffset;
+      XmNtopAttachment = XmATTACH_WIDGET;
+      XmNtopWidget = XmRadioBox anaMsgRadio;
+      XmNtopOffset =  RadioLabelTopOffset;
+      XmNlabelString = compound_string(alarmText);
+      XmNalignment = XmALIGNMENT_BEGINNING;
+   };
+};
+
+
+object anaDetSText : XmText
+{
+   arguments
+   { 
+      XmNleftAttachment = XmATTACH_WIDGET;
+      XmNleftWidget = XmLabel anaDescrLabel;
+      XmNleftOffset = Col2LeftOffset;
+      XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+      XmNtopWidget = XmLabel anaDetTxt1Label;
+      XmNtopOffset = LabelTextTopOffset;
+      XmNresizeHeight = false;
+      XmNresizeWidth = false;
+      XmNcolumns = DetTxtLength;
+      XmNmaxLength = DetTxtMaxLength;
+   };
+   callbacks 
+   {
+      MrmNcreateCallback = procedure alali_AnaDetSText_cr(AlaliP);
+   };
+};
+
+
+object anaRtMsgLabel : XmLabel
+{
+   arguments
+   { 
+      XmNleftAttachment = XmATTACH_FORM;
+      XmNleftOffset = FormLabelLeftOffset;
+      XmNtopAttachment = XmATTACH_WIDGET;
+      XmNtopWidget = XmText anaDetSText;
+      XmNtopOffset = TextLabelTopOffset;
+      XmNlabelString = compound_string(returnMessage);
+   };
+};
+
+object anaRtMsgRadio : XmRadioBox
+{
+   arguments
+   { 
+      XmNleftAttachment = XmATTACH_WIDGET;
+      XmNleftWidget = XmLabel anaDescrLabel;
+      XmNleftOffset = Col2LeftOffset;
+      XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+      XmNtopWidget = XmLabel anaRtMsgLabel;
+      XmNtopOffset = LabelRadioTopOffset;
+      XmNorientation = XmHORIZONTAL;
+   };
+   controls
+   {
+      XmToggleButton	anaRtMsgYesTgl;
+      XmToggleButton	anaRtMsgNoTgl;
+   };
+};
+
+object anaRtMsgYesTgl : XmToggleButton
+{
+   arguments
+   {
+      XmNindicatorType = XmONE_OF_MANY;
+      XmNlabelString = compound_string($yes);
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alali_AnaRtMsgYesTgl_cr(AlaliP);
+   };
+};
+
+object anaRtMsgNoTgl : XmToggleButton
+{
+   arguments
+   {
+      XmNindicatorType = XmONE_OF_MANY;
+      XmNlabelString = compound_string($no);
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alali_AnaRtMsgNoTgl_cr(AlaliP);
+   };
+};
+
+object anaRtTxtLabel : XmLabel
+{
+   arguments
+   { 
+      XmNleftAttachment = XmATTACH_FORM;
+      XmNleftOffset = FormLabelLeftOffset;
+      XmNtopAttachment = XmATTACH_WIDGET;
+      XmNtopWidget = XmRadioBox anaRtMsgRadio;
+      XmNtopOffset = RadioLabelTopOffset;
+      XmNlabelString = compound_string(returnText);
+   };
+};
+
+object anaRtSText : XmText
+{
+   arguments
+   { 
+      XmNleftAttachment = XmATTACH_WIDGET;
+      XmNleftWidget = XmLabel anaDescrLabel;
+      XmNleftOffset = Col2LeftOffset;
+      XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+      XmNtopWidget = XmLabel anaRtTxtLabel;
+      XmNtopOffset = LabelTextTopOffset;
+      XmNresizeHeight = false;
+      XmNresizeWidth = false;
+      XmNcolumns = RtTxtLength;
+      XmNmaxLength = RtTxtMaxLength;
+   };
+   callbacks 
+   {
+      MrmNcreateCallback = procedure alali_AnaRtSText_cr(AlaliP);
+   };
+};
+
+
+object anaAckMsgLabel : XmLabel
+{
+   arguments
+   { 
+      XmNleftAttachment = XmATTACH_FORM;      
+      XmNleftOffset = FormLabelLeftOffset;
+      XmNtopAttachment = XmATTACH_WIDGET;
+      XmNtopWidget = XmText anaRtSText;
+      XmNtopOffset = TextLabelTopOffset;
+      XmNlabelString = compound_string(ackMessage);
+   };
+};
+
+
+object anaAckMsgRadio : XmRadioBox
+{
+   arguments
+   { 
+      XmNleftAttachment = XmATTACH_WIDGET;
+      XmNleftWidget = XmLabel anaDescrLabel;
+      XmNleftOffset = Col2LeftOffset;
+      XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+      XmNtopWidget= XmLabel anaAckMsgLabel;
+      XmNtopOffset = LabelRadioTopOffset;
+      XmNorientation = XmHORIZONTAL;
+   };
+   controls
+   {
+      XmToggleButton	anaAckMsgYesTgl;
+      XmToggleButton	anaAckMsgNoTgl;
+   };
+};
+
+object anaAckMsgYesTgl : XmToggleButton
+{
+   arguments
+   {
+      XmNindicatorType = XmONE_OF_MANY;
+      XmNlabelString = compound_string($yes);
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alali_AnaAckMsgYesTgl_cr(AlaliP);
+   };
+};
+
+object anaAckMsgNoTgl : XmToggleButton
+{
+   arguments
+   {
+      XmNindicatorType = XmONE_OF_MANY;
+      XmNlabelString = compound_string($no);
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alali_AnaAckMsgNoTgl_cr(AlaliP);
+   };
+};
+
+
+object anaBellLabel : XmLabel
+{
+   arguments
+   { 
+      XmNleftAttachment = XmATTACH_FORM;      
+      XmNleftOffset = FormLabelLeftOffset;
+      XmNtopAttachment = XmATTACH_WIDGET;
+      XmNtopWidget = XmRadioBox anaAckMsgRadio;
+      XmNtopOffset = RadioLabelTopOffset;
+      XmNlabelString = compound_string(acousticAlarm);
+   };
+};
+
+object anaBellRadio : XmRadioBox
+{
+   arguments
+   { 
+      XmNleftAttachment = XmATTACH_WIDGET;
+      XmNleftWidget = XmLabel anaDescrLabel;
+      XmNleftOffset = Col2LeftOffset;
+      XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+      XmNtopWidget = XmLabel anaBellLabel;
+      XmNtopOffset = LabelRadioTopOffset;
+      XmNorientation = XmHORIZONTAL;
+   };
+   controls
+   {
+      XmToggleButton	anaBellYesTgl;
+      XmToggleButton	anaBellNoTgl;
+   };
+};
+
+object anaBellYesTgl : XmToggleButton
+{
+   arguments
+   {
+      XmNindicatorType = XmONE_OF_MANY;
+      XmNlabelString = compound_string($yes);
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alali_AnaBellYesTgl_cr(AlaliP);
+   };
+};
+
+object anaBellNoTgl : XmToggleButton
+{
+   arguments
+   {
+      XmNindicatorType = XmONE_OF_MANY;
+      XmNlabelString = compound_string($no);
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alali_AnaBellNoTgl_cr(AlaliP);
+   };
+};
+
+
+object anaPrioLabel : XmLabel
+{
+   arguments
+   { 
+      XmNleftAttachment = XmATTACH_FORM;
+      XmNleftOffset = FormLabelLeftOffset;
+      XmNtopAttachment = XmATTACH_WIDGET;
+      XmNtopWidget = XmRadioBox anaBellRadio;
+      XmNtopOffset = RadioLabelTopOffset;
+      XmNlabelString = compound_string(prio);
+      XmNalignment = XmALIGNMENT_BEGINNING;
+   };
+};
+
+   
+object anaPrioOption: XmOptionMenu 
+{
+   arguments
+   {
+      XmNleftAttachment = XmATTACH_WIDGET;
+      XmNleftWidget = XmLabel anaDescrLabel;
+      XmNleftOffset = Col2LeftOffset;
+      XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+      XmNtopWidget = XmLabel anaPrioLabel;
+      XmNtopOffset = LabelRadioTopOffset;
+   };
+   controls
+   {
+      XmPulldownMenu 
+      {
+	 arguments
+	 {
+	 };
+	 controls
+	 {
+	    XmPushButton 
+	    {
+	       arguments
+	       {
+		  XmNlabelString = compound_string("A");
+	       };
+	       callbacks 
+	       {
+		  MrmNcreateCallback = procedure alali_AnaPrioA_cr(AlaliP);
+	       };
+	    };
+	    XmPushButton 
+	    {
+	       arguments
+	       {
+		  XmNlabelString = compound_string("B");
+	       };
+	       callbacks 
+	       {
+		  MrmNcreateCallback = procedure alali_AnaPrioB_cr(AlaliP);
+	       };
+	    };
+	    XmPushButton 
+	    {
+	       arguments
+	       {
+		  XmNlabelString = compound_string("C");
+	       };
+	       callbacks 
+	       {
+		  MrmNcreateCallback = procedure alali_AnaPrioC_cr(AlaliP);
+	       };
+	    };
+	    XmPushButton 
+	    {
+	       arguments
+	       {
+		  XmNlabelString = compound_string("D");
+	       };
+	       callbacks 
+	       {
+		  MrmNcreateCallback = procedure alali_AnaPrioD_cr(AlaliP);
+	       };
+	    };
+	 };
+      };
+   };
+   callbacks 
+   {
+      MrmNcreateCallback = procedure alali_AnaPrioOption_cr(AlaliP);
+   };
+};
+
+
+object anaLimitLabel : XmLabel
+{
+   arguments
+   { 
+      XmNleftAttachment = XmATTACH_FORM;
+      XmNleftOffset = FormLabelLeftOffset;
+      XmNtopAttachment = XmATTACH_WIDGET;
+      XmNtopWidget = XmOptionMenu anaPrioOption;
+      XmNtopOffset = RadioLabelTopOffset;
+      XmNlabelString = compound_string(limit);
+      XmNalignment = XmALIGNMENT_BEGINNING;
+   };
+};
+
+object anaLimitSText : XmText
+{
+   arguments
+   { 
+      XmNleftAttachment = XmATTACH_WIDGET;
+      XmNleftWidget = XmLabel anaDescrLabel;
+      XmNleftOffset = Col2LeftOffset;
+      XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+      XmNtopWidget = XmLabel anaLimitLabel;
+      XmNtopOffset = LabelTextTopOffset;
+      XmNresizeHeight = false;
+      XmNresizeWidth = false;
+      XmNcolumns = LimitTxtMaxLength;
+      XmNmaxLength = LimitTxtMaxLength;
+   };
+   callbacks 
+   {
+      MrmNcreateCallback = procedure alali_AnaLimitSText_cr(AlaliP);
+   };
+};
+
+object anaHystLabel : XmLabel
+{
+   arguments
+   { 
+      XmNleftAttachment = XmATTACH_FORM;
+      XmNleftOffset = FormLabelLeftOffset;
+      XmNtopAttachment = XmATTACH_WIDGET;
+      XmNtopWidget = XmText anaLimitSText;
+      XmNtopOffset = TextTextTopOffset;
+      XmNlabelString = compound_string(hysteresis);
+      XmNalignment = XmALIGNMENT_BEGINNING;
+   };
+};
+
+object anaHystSText : XmText
+{
+   arguments
+   { 
+      XmNleftAttachment = XmATTACH_WIDGET;
+      XmNleftWidget = XmLabel anaDescrLabel;
+      XmNleftOffset = Col2LeftOffset;
+      XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+      XmNtopWidget = XmLabel anaHystLabel;
+      XmNtopOffset = LabelTextTopOffset;
+      XmNresizeHeight = false;
+      XmNresizeWidth = false;
+      XmNcolumns = LimitTxtMaxLength;
+      XmNmaxLength = LimitTxtMaxLength;
+   };
+   callbacks 
+   {
+      MrmNcreateCallback = procedure alali_AnaHystSText_cr(AlaliP);
+   };
+};
+
+object anaUnitLabel : XmLabel
+{
+   arguments
+   { 
+      XmNleftAttachment = XmATTACH_FORM;
+      XmNleftOffset = FormLabelLeftOffset;
+      XmNtopAttachment = XmATTACH_WIDGET;
+      XmNtopWidget = XmText anaHystSText;
+      XmNtopOffset = TextTextTopOffset;
+      XmNlabelString = compound_string(unit);
+      XmNalignment = XmALIGNMENT_BEGINNING;
+   };
+};
+
+object anaUnitSText : XmText
+{
+   arguments
+   { 
+      XmNleftAttachment = XmATTACH_WIDGET;
+      XmNleftWidget = XmLabel anaDescrLabel;
+      XmNleftOffset = Col2LeftOffset;
+      XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+      XmNtopWidget = XmLabel anaUnitLabel;
+      XmNtopOffset = LabelTextTopOffset;
+      XmNresizeHeight = false;
+      XmNresizeWidth = false;
+      XmNcolumns = UnitTxtMaxLength;
+      XmNmaxLength = UnitTxtMaxLength;
+   };
+   callbacks 
+   {
+      MrmNcreateCallback = procedure alali_AnaUnitSText_cr(AlaliP);
+   };
+};
+
+object anaOkPb : XmPushButton 
+{
+   arguments
+   {
+      XmNleftAttachment = XmATTACH_FORM;
+      XmNleftOffset = OKButtLeftOffset;
+      XmNtopAttachment = XmATTACH_WIDGET;
+      XmNtopWidget = XmText anaUnitSText;
+      XmNtopOffset = LabelButtonTopOffset;
+      XmNwidth = ButtonWidth;
+      XmNlabelString = compound_string($ok);
+   };
+   callbacks
+   {
+      XmNactivateCallback = procedure alali_AnaOk_cb(AlaliP);
+   };
+};
+
+object anaSavePb : XmPushButton 
+{
+   arguments
+   {
+      XmNleftAttachment = XmATTACH_POSITION;
+      XmNleftPosition = ApplyButtPosition;
+      XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+      XmNtopWidget = XmPushButton anaOkPb;
+      XmNwidth = ButtonWidth;
+      XmNlabelString = compound_string($save);
+   };
+   callbacks
+   {
+      XmNactivateCallback = procedure alali_AnaSave_cb(AlaliP);
+   };
+};
+
+
+object anaCancelPb : XmPushButton 
+{
+   arguments
+   {
+      XmNrightAttachment = XmATTACH_FORM;
+      XmNrightOffset = CancelButtRightOffset;
+      XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+      XmNtopWidget = XmPushButton anaOkPb;
+      XmNwidth = ButtonWidth;
+      XmNlabelString = compound_string($cancel);
+   };
+   callbacks
+   {
+      XmNactivateCallback = procedure alali_AnaQuit_cb(AlaliP);
+   };
+};
+
+object anaSpaceBox : XmBulletinBoard
+{
+   arguments
+
+   {
+      XmNborderWidth = 0;
+      XmNheight = 5;
+      XmNtopAttachment = XmATTACH_WIDGET;
+      XmNtopWidget = XmPushButton anaOkPb;
+      XmNleftAttachment = XmATTACH_FORM;
+      XmNleftOffset = 1;
+      XmNrightAttachment = XmATTACH_FORM;
+      XmNrightOffset = 1;
+   };
+   controls
+   {
+   };
+};
+
+
+
+
+
+
+
+object digitalDialog : XmForm
+{
+   arguments
+   {
+      XmNtopAttachment = XmATTACH_WIDGET;
+      XmNtopOffset = Space;
+      XmNleftAttachment = XmATTACH_FORM;      
+      XmNleftOffset = Space;
+      XmNrightAttachment = XmATTACH_FORM;      
+      XmNrightOffset = Space;
+   };
+   controls
+   {
+      XmLabel		digHeadLabel;
+      XmLabel		digDescrLabel;
+      XmText		digDescrSText;
+      XmLabel		digMsgLabel;
+      XmRadioBox	digMsgRadio;
+      XmLabel		digDetTxt1Label;
+      XmText		digDetSText;
+      XmLabel		digRtMsgLabel;      
+      XmRadioBox	digRtMsgRadio;
+      XmLabel		digRtTxtLabel;
+      XmText		digRtSText;		
+      XmLabel		digAckMsgLabel;      
+      XmRadioBox	digAckMsgRadio;
+      XmLabel		digBellLabel;      
+      XmRadioBox	digBellRadio;
+      XmLabel		digPrioLabel;      
+      XmOptionMenu	digPrioOption;
+      XmPushButton	digOkPb;
+      XmPushButton	digSavePb;
+      XmPushButton	digCancelPb;
+      XmBulletinBoard   digSpaceBox;
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alali_DigitalDialog_cr(AlaliP);
+   };
+};
+
+object digHeadLabel : XmLabel
+{
+   arguments
+   { 
+      XmNleftAttachment = XmATTACH_FORM;
+      XmNtopAttachment = XmATTACH_FORM;
+      XmNleftOffset = HeadLblX;
+      XmNtopOffset = HeadLblY;
+      XmNlabelString = compound_string(digital);
+   };
+};
+
+object digDescrLabel : XmLabel
+{
+   arguments
+   { 
+      XmNleftAttachment = XmATTACH_FORM;
+      XmNleftOffset = FormLabelLeftOffset;
+      XmNtopAttachment = XmATTACH_WIDGET;
+      XmNtopWidget = XmLabel digHeadLabel;
+      XmNtopOffset = DescrY;
+      XmNlabelString = compound_string(description);
+   };
+};
+
+object digDescrSText : XmText
+{
+   arguments
+   { 
+      XmNleftAttachment = XmATTACH_WIDGET;
+      XmNleftWidget= XmLabel digDescrLabel;
+      XmNleftOffset = Col2LeftOffset;
+      XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+      XmNtopWidget = XmLabel digDescrLabel;
+      XmNtopOffset = LabelTextTopOffset;
+      XmNresizeHeight = false;
+      XmNresizeWidth = false;
+      XmNcolumns = DescrMaxLength;
+      XmNmaxLength = DescrMaxLength;
+   };
+   callbacks 
+   {
+      MrmNcreateCallback = procedure alali_DigDescrSText_cr(AlaliP);
+   };
+};
+object digMsgLabel : XmLabel
+{
+   arguments
+   { 
+      XmNleftAttachment = XmATTACH_FORM;
+      XmNleftOffset = FormLabelLeftOffset;
+      XmNtopAttachment = XmATTACH_WIDGET;
+      XmNtopWidget = XmText digDescrSText;
+      XmNtopOffset = TextLabelTopOffset;
+      XmNlabelString = compound_string(alarmMessage);
+   };
+};
+
+object digMsgRadio : XmRadioBox
+{
+   arguments
+   { 
+      XmNleftAttachment = XmATTACH_WIDGET;
+      XmNleftWidget= XmLabel digDescrLabel;
+      XmNleftOffset = Col2LeftOffset;
+      XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+      XmNtopWidget= XmLabel digMsgLabel;
+      XmNtopOffset = LabelRadioTopOffset;
+      XmNorientation = XmHORIZONTAL;
+   };
+   controls
+   {
+      XmToggleButton	digMsgToTgl;
+      XmToggleButton	digMsgFromTgl;
+   };
+};
+
+object digMsgToTgl: XmToggleButton
+{
+   arguments
+   {
+      XmNindicatorType = XmONE_OF_MANY;
+      XmNlabelString = compound_string($on);
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alali_DigMsgToTgl_cr(AlaliP);
+   };
+};
+
+object digMsgFromTgl : XmToggleButton
+{
+   arguments
+   {
+      XmNindicatorType = XmONE_OF_MANY;
+      XmNlabelString = compound_string($off);
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alali_DigMsgFromTgl_cr(AlaliP);
+   };
+};
+
+object digDetTxt1Label : XmLabel
+{
+   arguments
+   { 
+      XmNleftAttachment = XmATTACH_FORM;
+      XmNleftOffset = FormLabelLeftOffset;
+      XmNtopAttachment = XmATTACH_WIDGET;
+      XmNtopWidget = XmRadioBox digMsgRadio;
+      XmNtopOffset = RadioLabelTopOffset;
+      XmNlabelString = compound_string(alarmText);
+      XmNalignment = XmALIGNMENT_BEGINNING;
+   };
+};
+
+object digDetSText : XmText
+{
+   arguments
+   { 
+      XmNleftAttachment = XmATTACH_WIDGET;
+      XmNleftWidget = XmLabel digDescrLabel;
+      XmNleftOffset = Col2LeftOffset;
+      XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+      XmNtopWidget = XmLabel digDetTxt1Label;
+      XmNtopOffset = LabelTextTopOffset;
+      XmNresizeHeight = false;
+      XmNresizeWidth = false;
+      XmNcolumns = DetTxtLength;
+      XmNmaxLength = DetTxtMaxLength;
+   };
+   callbacks 
+   {
+      MrmNcreateCallback = procedure alali_DigDetSText_cr(AlaliP);
+   };
+};
+
+object digRtMsgLabel : XmLabel
+{
+   arguments
+   { 
+      XmNleftAttachment = XmATTACH_FORM;
+      XmNleftOffset =	FormLabelLeftOffset;
+      XmNtopAttachment = XmATTACH_WIDGET;
+      XmNtopWidget = XmText digDetSText;
+      XmNtopOffset = TextLabelTopOffset;
+      XmNlabelString = compound_string(returnMessage);
+   };
+};
+
+object digRtMsgRadio : XmRadioBox
+{
+   arguments
+   { 
+      XmNleftAttachment = XmATTACH_WIDGET;
+      XmNleftWidget = XmLabel digDescrLabel;
+      XmNleftOffset = Col2LeftOffset;
+      XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+      XmNtopWidget = XmLabel digRtMsgLabel;
+      XmNtopOffset = LabelRadioTopOffset;
+      XmNorientation = XmHORIZONTAL;
+   };
+   controls
+   {
+      XmToggleButton	digRtMsgYesTgl;
+      XmToggleButton	digRtMsgNoTgl;
+   };
+};
+
+object digRtMsgYesTgl : XmToggleButton
+{
+   arguments
+   {
+      XmNindicatorType = XmONE_OF_MANY;
+      XmNlabelString = compound_string($yes);
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alali_DigRtMsgYesTgl_cr(AlaliP);
+   };
+};
+
+object digRtMsgNoTgl : XmToggleButton
+{
+   arguments
+   {
+      XmNindicatorType = XmONE_OF_MANY;
+      XmNlabelString = compound_string($no);
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alali_DigRtMsgNoTgl_cr(AlaliP);
+   };
+};
+
+
+object digRtTxtLabel : XmLabel
+{
+   arguments
+   { 
+      XmNleftAttachment = XmATTACH_FORM;
+      XmNleftOffset = FormLabelLeftOffset;
+      XmNtopAttachment = XmATTACH_WIDGET;
+      XmNtopWidget = XmRadioBox digRtMsgRadio;
+      XmNtopOffset = RadioLabelTopOffset;
+      XmNlabelString = compound_string(returnText);
+   };
+};
+
+
+object digRtSText : XmText
+{
+   arguments
+   { 
+      XmNleftAttachment = XmATTACH_WIDGET;
+      XmNleftWidget = XmLabel digDescrLabel;
+      XmNleftOffset = Col2LeftOffset;
+      XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+      XmNtopWidget = XmLabel digRtTxtLabel;
+      XmNtopOffset = LabelTextTopOffset;
+      XmNresizeHeight = false;
+      XmNresizeWidth = false;
+      XmNcolumns = RtTxtLength;
+      XmNmaxLength = RtTxtMaxLength;
+   };
+   callbacks 
+   {
+      MrmNcreateCallback = procedure alali_DigRtSText_cr(AlaliP);
+   };
+};
+
+
+
+
+object digAckMsgLabel : XmLabel
+{
+   arguments
+   { 
+      XmNleftAttachment = XmATTACH_FORM;
+      XmNleftOffset = FormLabelLeftOffset;
+      XmNtopAttachment = XmATTACH_WIDGET;
+      XmNtopWidget = XmText digRtSText;
+      XmNtopOffset = TextLabelTopOffset;
+      XmNlabelString = compound_string(ackMessage);
+   };
+};
+object digAckMsgRadio : XmRadioBox
+{
+   arguments
+   { 
+      XmNleftAttachment = XmATTACH_WIDGET;
+      XmNleftWidget = XmLabel digDescrLabel;
+      XmNleftOffset = Col2LeftOffset;
+      XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+      XmNtopWidget= XmLabel digAckMsgLabel;
+      XmNtopOffset = LabelRadioTopOffset;
+      XmNorientation = XmHORIZONTAL;
+   };
+   controls
+   {
+      XmToggleButton	digAckMsgYesTgl;
+      XmToggleButton	digAckMsgNoTgl;
+   };
+};
+
+object digAckMsgYesTgl : XmToggleButton
+{
+   arguments
+   {
+      XmNindicatorType = XmONE_OF_MANY;
+      XmNlabelString = compound_string($yes);
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alali_DigAckMsgYesTgl_cr(AlaliP);
+   };
+};
+
+object digAckMsgNoTgl : XmToggleButton
+{
+   arguments
+   {
+      XmNindicatorType = XmONE_OF_MANY;
+      XmNlabelString = compound_string($no);
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alali_DigAckMsgNoTgl_cr(AlaliP);
+   };
+};
+
+object digBellLabel : XmLabel
+{
+   arguments
+   { 
+      XmNleftAttachment = XmATTACH_FORM;
+      XmNleftOffset = FormLabelLeftOffset;
+      XmNtopAttachment = XmATTACH_WIDGET;
+      XmNtopWidget = XmRadioBox digAckMsgRadio;
+      XmNtopOffset = RadioLabelTopOffset;
+      XmNlabelString = compound_string(acousticAlarm);
+   };
+};
+
+object digBellRadio : XmRadioBox
+{
+   arguments
+   { 
+      XmNleftAttachment = XmATTACH_WIDGET;
+      XmNleftWidget = XmLabel digDescrLabel;
+      XmNleftOffset = Col2LeftOffset;
+      XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+      XmNtopWidget = XmLabel digBellLabel;
+      XmNtopOffset = LabelRadioTopOffset;
+      XmNorientation = XmHORIZONTAL;
+   };
+   controls
+   {
+      XmToggleButton	digBellYesTgl;
+      XmToggleButton	digBellNoTgl;
+   };
+};
+
+object digBellYesTgl : XmToggleButton
+{
+   arguments
+   {
+      XmNindicatorType = XmONE_OF_MANY;
+      XmNlabelString = compound_string($yes);
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alali_DigBellYesTgl_cr(AlaliP);
+   };
+};
+
+object digBellNoTgl : XmToggleButton
+{
+   arguments
+   {
+      XmNindicatorType = XmONE_OF_MANY;
+      XmNlabelString = compound_string($no);
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alali_DigBellNoTgl_cr(AlaliP);
+   };
+};
+
+
+
+
+
+object digPrioLabel : XmLabel
+{
+   arguments
+   { 
+      XmNleftAttachment = XmATTACH_FORM;
+      XmNleftOffset = FormLabelLeftOffset;
+      XmNtopAttachment = XmATTACH_WIDGET;
+      XmNtopWidget = XmRadioBox digBellRadio;
+      XmNtopOffset = RadioLabelTopOffset;
+      XmNlabelString = compound_string(prio);
+      XmNalignment = XmALIGNMENT_BEGINNING;
+   };
+};
+
+   
+object digPrioOption: XmOptionMenu 
+{
+   arguments
+   {
+      XmNleftAttachment = XmATTACH_WIDGET;
+      XmNleftWidget = XmLabel digDescrLabel;
+      XmNleftOffset = Col2LeftOffset;
+      XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+      XmNtopWidget = XmLabel digPrioLabel;
+      XmNtopOffset = LabelRadioTopOffset;
+   };
+   controls
+   {
+      XmPulldownMenu 
+      {
+	 arguments
+	 {
+	 };
+	 controls
+	 {
+	    XmPushButton 
+	    {
+	       arguments
+	       {
+		  XmNlabelString = compound_string("A");
+	       };
+	       callbacks 
+	       {
+		  MrmNcreateCallback = procedure alali_DigPrioA_cr(AlaliP);
+	       };
+	    };
+	    XmPushButton 
+	    {
+	       arguments
+	       {
+		  XmNlabelString = compound_string("B");
+	       };
+	       callbacks 
+	       {
+		  MrmNcreateCallback = procedure alali_DigPrioB_cr(AlaliP);
+	       };
+	    };
+	    XmPushButton 
+	    {
+	       arguments
+	       {
+		  XmNlabelString = compound_string("C");
+	       };
+	       callbacks 
+	       {
+		  MrmNcreateCallback = procedure alali_DigPrioC_cr(AlaliP);
+	       };
+	    };
+	    XmPushButton 
+	    {
+	       arguments
+	       {
+		  XmNlabelString = compound_string("D");
+	       };
+	       callbacks 
+	       {
+		  MrmNcreateCallback = procedure alali_DigPrioD_cr(AlaliP);
+	       };
+	    };
+	 };
+      };
+   };
+   callbacks 
+   {
+      MrmNcreateCallback = procedure alali_DigPrioOption_cr(AlaliP);
+   };
+};
+
+
+
+object digOkPb : XmPushButton 
+{
+   arguments
+   {
+      XmNleftAttachment = XmATTACH_FORM;
+      XmNleftOffset = OKButtLeftOffset;
+      XmNtopAttachment = XmATTACH_WIDGET;
+      XmNtopWidget = XmOptionMenu digPrioOption;
+      XmNtopOffset = LabelButtonTopOffset;
+      XmNwidth = ButtonWidth;
+      XmNlabelString = compound_string($ok);
+   };
+   callbacks
+   {
+      XmNactivateCallback = procedure alali_DigOk_cb(AlaliP);
+   };
+};
+
+object digSavePb : XmPushButton 
+{
+   arguments
+   {
+      XmNleftAttachment = XmATTACH_POSITION;
+      XmNleftPosition = ApplyButtPosition;
+      XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+      XmNtopWidget = XmPushButton digOkPb;
+      XmNwidth = ButtonWidth;
+      XmNlabelString = compound_string($save);
+   };
+   callbacks
+   {
+      XmNactivateCallback = procedure alali_DigSave_cb(AlaliP);
+   };
+};
+
+
+object digCancelPb : XmPushButton 
+{
+   arguments
+   {
+      XmNrightAttachment = XmATTACH_FORM;
+      XmNrightOffset = CancelButtRightOffset;
+      XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+      XmNtopWidget = XmPushButton digOkPb;
+      XmNwidth = ButtonWidth;
+      XmNlabelString = compound_string($cancel);
+   };
+   callbacks
+   {
+      XmNactivateCallback = procedure alali_DigQuit_cb(AlaliP);
+   };
+};
+
+object digSpaceBox : XmBulletinBoard 
+{
+   arguments
+     
+   {
+      XmNborderWidth = 0;
+      XmNheight = 5;
+      XmNtopAttachment = XmATTACH_WIDGET;
+      XmNtopWidget = XmPushButton digOkPb;
+      XmNleftAttachment = XmATTACH_FORM;
+      XmNleftOffset = 1;
+      XmNrightAttachment = XmATTACH_FORM;
+      XmNrightOffset = 1;
+   };
+   controls
+   {
+   };
+};
+
+
+object messageBox : XmInformationDialog
+{
+   arguments
+   {
+      XmNleftAttachment = XmATTACH_FORM;
+      XmNtopAttachment = XmATTACH_FORM;
+      XmNleftOffset = 400;
+      XmNtopOffset = 300;
+      XmNokLabelString = compound_string($acknowledge);
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alali_MessageBox_cr(AlaliP);
+   };
+};
+
+end module;

@@ -1,0 +1,88 @@
+!  inc_standard_txt.uil -- <short description>
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+! 
+value
+  $acknowledge	  : "Kvittera";
+  $add            : "Lägg till";
+  $apply          : "Tillämpa";
+  $cancel         : "Avbryt";
+  $cancel_e       : exported "Avbryt";
+  $clear          : "Rensa";
+  $clear$         : "R";
+  $close          : "Stänga";
+  $close$         : "S";
+  $commands       : "Kommandon";
+  $commands$      : "K";
+  $copy           : "Kopiera";
+  $copy$          : "K";
+  $copyObject     : "Kopiera...";
+  $copyObject$    : "K";
+  $cut            : "Klippa";
+  $cut$           : "l";
+  $delete         : "Radera";
+  $delete$        : "R";
+  $eTitle         : exported "Fel";
+  $edit           : "Redigera";
+  $edit$          : "e";
+  $editObject     : "Redigera...";
+  $editObject$    : "e";
+  $exit           : "Avsluta";
+  $exit$          : "A";
+  $file           : "Arkiv";
+  $file$          : "A";
+  $help           : "Hjälp";
+  $help$          : "H";
+  $helpButt       : "Hjälp";
+  $max_e          : exported "Max";
+  $min_e          : exported "Min";
+  $new            : "Ny";
+  $new$           : "N";
+  $no             : "Nej";
+  $no_e           : exported "Nej";
+  $no_s_e         : exported compound_string("Nej");
+  $object_c	  : "Objekt:";
+  $ok             : "OK";
+  $ok_e           : exported "OK";
+  $off            : "Från";
+  $off_e          : exported "Från";
+  $on             : "Till";
+  $on_e           : exported "Till";
+  $open           : "Öppna...";
+  $open$          : "p";
+  $options        : "Tillval";
+  $options$       : "v";
+  $paste          : "Klistra";
+  $paste$         : "i";
+  $print          : "Skriv Ut";
+  $print$         : "U";
+  $qTitle         : exported "Fråga";
+  $remove	  : "Ta bort";
+  $save           : "Spara";
+  $save$          : "S";
+  $saveAs         : "Spara Som...";
+  $saveAs$        : "m";
+  $search         : "Sök";
+  $undo           : "Ångra";
+  $undo$          : "n";
+  $update         : "Uppdatera";
+  $update$        : "p";
+  $view           : "Visa";
+  $view$          : "V";
+  $yes            : "Ja";
+  $yes_e          : exported "Ja";
+  $yes_s_e        : exported compound_string("Ja");
+
+
+  $zActionText	    : "Åtgärdstext ...";
+  $zAttribute	    : "Attribut ...";
+  $zNotValidValue_e : exported " är ett otillåtet värde!";
+  $zSetSelected	    : "Välj ut";
+  $zTooLarge_e	    : exported " är för stort ";
+  $zTooSmall_e	    : exported " är för litet ";
+  $zValOutOfBound_e : exported "Värdet utanför gränserna!";  
+!================================================================
+

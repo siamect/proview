@@ -1,0 +1,16 @@
+!  pwrs_t_struct.wb_load -- Defines the basic type Struct
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+SObject pwrs:Type
+  Object $Struct pwr_eClass_Type pwr_eTix_Struct
+    Body SysBody
+     Attr Type = pwr_eType_Struct
+     Attr Size = 0
+   EndBody
+  EndObject
+EndSObject

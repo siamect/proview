@@ -1,0 +1,205 @@
+!  ssab_c_RemChan_Di.wb_load -- Defines the class RemChan_Di.
+!
+!  PROVIEW/R
+!
+!  <Description>.
+!
+SObject SSAB:Class
+  !
+  ! RemChan_Di	-	REMote CHANnel Digital Input
+  !
+  Object RemChan_Di $ClassDef 13
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    !
+    ! RemChan_Di Runtime Body
+    !
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "RemChan_Di"
+      EndBody
+      !
+      ! Parameter Description
+      !
+      Object Description $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !
+      ! Parameter SigChanCon
+      !
+      Object SigChanCon $ObjXRef 2
+        Body SysBody
+          Attr Identity = "Di"
+          Attr Source = "ChanDi"
+          Attr Target = "Di"
+          Attr SourceAttribute = "SigChanCon"
+          Attr TargetAttribute = "SigChanCon"
+        EndBody
+      EndObject
+      !
+      ! Parameter Identity
+      !
+      Object Identity $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      !
+      ! Parameter ActualValue
+      !
+      Object ActualValue $Attribute 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !
+      ! Parameter ConvOff	Bit offset in transbuffer
+      !
+      Object ConvOff $Attribute 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !
+      ! Parameter BuffOff	Byte offset in transbuffer
+      !
+      Object BuffOff $Attribute 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !
+      ! Parameter ConvMask	Bitmask
+      !
+      Object ConvMask $Attribute 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt8"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+    EndObject
+    !
+    ! Menu-objects
+    !
+    Object ConfiguratorPosnn $Menu
+      Object Pointed $Menu
+        Object Disconnect $MenuButton
+          Body SysBody
+            Attr ButtonName = "Disconnect Signal"
+            Attr MethodName = "$ObjXRef-DisconnectSingle"
+            Attr MethodArguments[0] = "SigChanCon"
+            Attr FilterName = "$ObjXRef-IsOkDisconnectSingle"
+            Attr FilterArguments[0] = "SigChanCon"
+          EndBody
+        EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPoson $Menu
+      Object Pointed $Menu
+        Object Connect $MenuButton
+          Body SysBody
+            Attr ButtonName = "Connect Signal"
+            Attr MethodName = "$ObjXRef-Connect"
+            Attr MethodArguments[0] = "SigChanCon"
+            Attr MethodArguments[1] = "SigChanCon"
+            Attr FilterName = "$ObjXRef-IsOkConnect"
+            Attr FilterArguments[0] = "SigChanCon"
+            Attr FilterArguments[1] = "SigChanCon"
+          EndBody
+        EndObject
+        Object Disconnect $MenuButton
+          Body SysBody
+            Attr ButtonName = "Disconnect Signal"
+            Attr MethodName = "$ObjXRef-Disconnect"
+            Attr MethodArguments[0] = "SigChanCon"
+            Attr MethodArguments[1] = "SigChanCon"
+            Attr FilterName = "$ObjXRef-IsOkDisconnect"
+            Attr FilterArguments[0] = "SigChanCon"
+            Attr FilterArguments[1] = "SigChanCon"
+          EndBody
+        EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPosos $Menu
+      Object Pointed $Menu
+        Object Disconnect $MenuButton
+          Body SysBody
+            Attr ButtonName = "Disconnect Signal"
+            Attr MethodName = "$ObjXRef-DisconnectSingle"
+            Attr MethodArguments[0] = "SigChanCon"
+            Attr FilterName = "$ObjXRef-IsOkDisconnectSingle"
+            Attr FilterArguments[0] = "SigChanCon"
+          EndBody
+        EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPcsnn $Menu
+      Object Pointed $Menu
+        Object SetDefaults $MenuButton
+          Body SysBody
+            Attr ButtonName = "Default Name..."
+            Attr MethodName = "$Object-SetDefaults"
+          EndBody
+        EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPcscs $Menu
+      Object Pointed $Menu
+        Object SetDefaults $MenuButton
+          Body SysBody
+            Attr ButtonName = "Default Name..."
+            Attr MethodName = "$Object-SetDefaults"
+          EndBody
+        EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPcscn $Menu
+      Object Pointed $Menu
+        Object SetDefaults $MenuButton
+          Body SysBody
+            Attr ButtonName = "Default Name..."
+            Attr MethodName = "$Object-SetDefaults"
+          EndBody
+        EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPcson $Menu
+      Object Pointed $Menu
+        Object SetDefaults $MenuButton
+          Body SysBody
+            Attr ButtonName = "Default Name..."
+            Attr MethodName = "$Object-SetDefaults"
+          EndBody
+        EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPcsmn $Menu
+      Object Pointed $Menu
+        Object SetDefaults $MenuButton
+          Body SysBody
+            Attr ButtonName = "Default Name..."
+            Attr MethodName = "$Object-SetDefaults"
+          EndBody
+        EndObject
+      EndObject
+    EndObject
+    !
+    ! Template för RemChan_Di
+    !
+    Object Template RemChan_Di
+      Body RtBody
+      EndBody
+    EndObject
+  !
+  ! End RemChan_Di
+  !
+  EndObject
+EndSObject

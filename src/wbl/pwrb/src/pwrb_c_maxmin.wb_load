@@ -1,0 +1,168 @@
+!  pwrb_c_maxmin.wb_load -- Defines the class Maxmin.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_arithm.c
+!  Max/Min selector.
+!  
+!  The Maxmin object chooses the highest respective lowest
+!  current value among up to 8 input signals where the
+!  first two may be constants.
+!  
+!  Selected inputs have to be consecutively chosen.
+!*/
+SObject pwrb:Class
+  Object Maxmin $ClassDef 145 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Connections
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "maxmin"
+      EndBody
+      !/**
+      !  Value of the input signal 1.
+      !*/
+      Object In1 $Input 1 
+        Body SysBody
+          Attr PgmName = "In1"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "IN1"
+        EndBody
+      EndObject
+      !/**
+      !  Value of the input signal 2.
+      !*/
+      Object In2 $Input 2 
+        Body SysBody
+          Attr PgmName = "In2"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "IN2"
+        EndBody
+      EndObject
+      !/**
+      !  Value of the input signal 3, signal 4, ..., signal 8.
+      !*/
+      Object In3 $Input 3 
+        Body SysBody
+          Attr PgmName = "In3"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "IN3"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object In4 $Input 4 
+        Body SysBody
+          Attr PgmName = "In4"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "IN4"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object In5 $Input 5 
+        Body SysBody
+          Attr PgmName = "In5"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "IN5"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object In6 $Input 6 
+        Body SysBody
+          Attr PgmName = "In6"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "IN6"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object In7 $Input 7 
+        Body SysBody
+          Attr PgmName = "In7"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "IN7"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object In8 $Input 8 
+        Body SysBody
+          Attr PgmName = "In8"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "IN8"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  The attribute specifies the highest current value, i.e.
+      !  Max (In1, In2, ..., In8)
+      !*/
+      Object MaxVal $Output 9 
+        Body SysBody
+          Attr PgmName = "MaxVal"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MAX"
+        EndBody
+      EndObject
+      !/**
+      !  The attribute specifies the lowest current value, i.e.
+      !  Min(In1, In2, ..., In8)
+      !*/
+      Object MinVal $Output 10 
+        Body SysBody
+          Attr PgmName = "MinVal"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MIN"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 121
+        Attr parameters[0] = 8
+        Attr parameters[1] = 0
+        Attr parameters[2] = 2
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 0
+        Attr graphindex = 0
+        Attr default_mask[0] = 3
+        Attr default_mask[1] = 3
+        Attr segname_annotation = 1
+        Attr compmethod = 29
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+	Attr executeordermethod = 2
+        Attr objname = "Maxmin"
+        Attr graphname = "Maxmin"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+  EndObject
+EndSObject

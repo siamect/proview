@@ -1,0 +1,54 @@
+!  tlog_c_TLogConfigure.wb_load -- Defines the class TLogConfigure.
+!
+!  PROVIEW/R
+!
+!  <Description>.
+!
+SObject TLog:Class
+  Object TLogConfigure $ClassDef 19
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "TLogConfigure"
+      EndBody
+      Object TLogDirectory $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object UserObject $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      Object On $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object CycleTime $Attribute 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      Object AutoAck $Attribute 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+    EndObject
+    !
+    ! Template object 
+    !
+    Object Template TLogConfigure
+      Body RtBody
+        Attr TLogDirectory = "pwrp_tlog:"
+        Attr On = 1
+        Attr AutoAck = 1
+      EndBody
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,269 @@
+!  pwrb_c_ai.wb_load -- Defines the class Ai.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  Ai, Analog Input.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  Analog input.
+!  
+!  Configures an analog input signal in the Plant
+!  Configuration.
+!  
+!  Hints
+!  
+!  Put the object below a $PlantHier object in the
+!  development environment in such a way that it belongs
+!  to the same target node as its associated channel
+!  object.
+!*/
+SObject pwrb:Class
+  Object Ai $ClassDef 4 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+      Attr PopEditor = 1
+      Attr Flags |= pwr_mClassDef_IO
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "Ai"
+      EndBody
+      !/**
+      !  Optional text, e.g. name of the signal or what it
+      !  represents.
+      !*/
+      Object Description $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Name of the associated channel object.
+      !*/
+      Object SigChanCon $ObjXRef 2
+
+        Body SysBody
+          Attr Identity = "Ai"
+          Attr Source = "Ai"
+          Attr Target = "ChanAi"
+          Attr SourceAttribute = "SigChanCon"
+          Attr TargetAttribute = "SigChanCon"
+        EndBody
+      EndObject
+      !/**
+      !  Index in the AIValue array of the Ai_Value_Base objects
+      !  that are used for base frequency and partial frequency
+      !  samples. Initiated at boot time by rs_init.
+      !*/
+      Object ValueIndex $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      !/**
+      !  Pointer to the engineering value, named ActualValue.
+      !*/
+      Object ActualValue $Attribute 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      !/**
+      !  Engineering unit of ActualValue.
+      !*/
+      Object Unit $Attribute 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String16"
+        EndBody
+      EndObject
+      !/**
+      !  Number of decimals at presentation of ActualValue.
+      !*/
+      Object NoOfDecimals $Attribute 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt8"
+        EndBody
+      EndObject
+      !/**
+      !  The lower respectively upper limits in the bar graph at
+      !  presentation of ActualValue in the object display.
+      !*/
+      Object PresMaxLimit $Attribute 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      Object PresMinLimit $Attribute 8 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Signal value.
+      !*/
+      Object SigValue $Attribute 9 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      !/**
+      !  Raw value, i.e. normally the bit pattern of
+      !  A/D-converter.
+      !*/
+      Object RawValue $Attribute 10 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+          Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      !/**
+      !  @Summary A XttGraph object that will open a graph for this object.
+      !  A XttGraph object that will open a graph that contains data for
+      !  this object. This graph can be opened from the popup menu for
+      !  this object.
+      !*/
+      Object DefGraph $Attribute 11 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary A trend object that displays a trend for this object.
+      !  A DsTrend or PlotGroup object that contains a trend for this object.
+      !  The trend can be opened from the popup menu for this object.
+      !*/
+      Object DefTrend $Attribute 12 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary A help topic for this hierarchy.
+      !  A help topic in the xtt help file that contains help for this hierarchy.
+      !  The help can be displayed from the popup menu for this object.
+      !*/
+      Object HelpTopic $Attribute 15
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary A URL to the data sheet for the equipment in this hierarchy.
+      !  A URL to the data sheet for the equipment in this hierarchy.
+      !  The data sheet can be displayed from the popup menu for this object.
+      !*/
+      Object DataSheet $Attribute 16
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$URL"
+        EndBody
+      EndObject
+      !/**
+      !  The internal filter function concerns only local
+      !  "Ïsignals.
+      !  Specifies the selected filter. The possible types of
+      !  filters are:
+      !  
+      !  0 -- No filtering.
+      !  
+      !  1 -- Exponential filter.
+      !     The filtering is done on the engineering value,
+      !     ActualValue, before storage in rtdb according:
+      !  
+      !     ActulaValue(t) = ActulaValue(t-1) + a * (InValue - ActulaValue(t-1)), 
+      !     where ActulaValue(t-1) is the
+      !     engineering value stored at the former sampel
+      !     and InValue(t) the current engineering value
+      !     before filtering.
+      !     a = ScanInterval * CycleTimeBus /
+      !     FilterAttribute[0] and 0 < a < 1.0 
+      !     If a >= 0 no filtering is done. The less a the harder
+      !     filtering.
+      !
+      !     The product ScanInterval * CycleTimeBus specifies the updating
+      !     period of the signal
+      !*/
+      Object FilterType $Attribute 13 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Enum"
+        EndBody
+      EndObject
+      !/**
+      !  Defines filter constants in selected function, see
+      !  FilterType. The constants are specified in seconds.
+      !  Only if FilterType = 1 and FilterAttribute[0] >
+      !  ScanInterval CycleTimeBus (= the updating period of
+      !  the signal) is filtering done.
+      !*/
+      Object FilterAttribute $Attribute 14 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Elements = 4
+        EndBody
+      EndObject
+    EndObject
+    Object Template Ai
+    EndObject
+    Object ConfiguratorPosnn $Menu
+      Object Pointed $Menu
+	Object Disconnect $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Disconnect Channel"
+	    Attr MethodName = "$ObjXRef-DisconnectSingle"
+	    Attr MethodArguments[0] = "SigChanCon"
+	    Attr FilterName = "$ObjXRef-IsOkDisconnectSingle"
+	    Attr FilterArguments[0] = "SigChanCon"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPoson $Menu
+      Object Pointed $Menu
+	Object Connect $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Connect Channel"
+	    Attr MethodName = "$ObjXRef-Connect"
+	    Attr MethodArguments[0] = "SigChanCon"
+	    Attr MethodArguments[1] = "SigChanCon"
+	    Attr FilterName = "$ObjXRef-IsOkConnect"
+	    Attr FilterArguments[0] = "SigChanCon"
+	    Attr FilterArguments[1] = "SigChanCon"
+	  EndBody
+	EndObject
+	Object Disconnect $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Disconnect Channel"
+	    Attr MethodName = "$ObjXRef-Disconnect"
+	    Attr MethodArguments[0] = "SigChanCon"
+	    Attr MethodArguments[1] = "SigChanCon"
+	    Attr FilterName = "$ObjXRef-IsOkDisconnect"
+	    Attr FilterArguments[0] = "SigChanCon"
+	    Attr FilterArguments[1] = "SigChanCon"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPosos $Menu
+      Object Pointed $Menu
+	Object Disconnect $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Disconnect Channel"
+	    Attr MethodName = "$ObjXRef-DisconnectSingle"
+	    Attr MethodArguments[0] = "SigChanCon"
+	    Attr FilterName = "$ObjXRef-IsOkDisconnectSingle"
+	    Attr FilterArguments[0] = "SigChanCon"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+  EndObject
+EndSObject

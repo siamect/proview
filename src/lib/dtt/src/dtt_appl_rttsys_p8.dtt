@@ -1,0 +1,614 @@
+32 0 0 113 0 0 0 0 108 120 120 116 120 109 0 0 0 0 0 0 0 32 
+32 0 0 119 120 120 120 120 118 0 32 113 0 119 120 120 120 120 120 120 120 32 
+32 0 79 113 77 70 84 73 113 80 83 113 79 113 0 0 0 0 0 0 0 32 
+32 0 98 113 111 111 121 110 113 114 101 113 117 113 0 0 0 0 0 0 0 32 
+32 0 106 113 100 114 112 118 113 111 116 113 116 113 0 0 0 0 0 0 0 80 
+32 0 101 113 101 99 101 101 113 99 86 113 86 113 0 0 0 0 0 0 0 70 
+32 0 99 113 0 101 0 114 113 86 97 113 97 113 0 0 0 0 0 0 0 49 
+32 0 116 113 32 0 0 115 113 97 108 113 108 113 0 0 0 0 0 0 0 32 
+32 0 32 113 0 0 0 101 113 108 117 113 117 113 0 0 0 0 0 0 0 67 
+32 0 0 113 0 0 0 0 113 117 101 113 101 113 0 0 0 0 0 0 0 104 
+32 0 0 113 0 0 0 0 113 101 0 113 0 113 0 0 0 0 0 0 0 97 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 110 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 103 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 101 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 32 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 109 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 111 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 100 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 101 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 32 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 32 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 32 
+32 0 0 119 120 120 120 120 110 120 120 110 120 118 0 0 0 0 0 0 0 32 
+79 0 0 113 83 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 32 
+98 0 32 113 101 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 32 
+106 0 32 113 108 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 32 
+101 0 32 113 101 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 120 
+99 0 0 113 99 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 32 
+116 0 0 113 116 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 32 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 32 
+80 0 0 113 109 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 80 
+105 0 0 113 111 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 70 
+99 0 0 113 100 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 51 
+116 0 0 113 101 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 32 
+117 0 0 113 32 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 67 
+114 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 104 
+101 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 97 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 110 
+80 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 103 
+73 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 101 
+68 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 32 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 118 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 97 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 108 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 117 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 101 
+32 0 0 119 120 120 120 120 118 0 0 113 0 119 120 120 120 120 120 120 120 32 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 32 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 32 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 32 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 32 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 32 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 32 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 120 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 32 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 32 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 32 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 80 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 70 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 52 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 32 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 66 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 97 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 99 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 107 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 32 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 32 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 32 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 32 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 32 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 32 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 32 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 32 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 32 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 32 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 32 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 32 
+32 0 0 113 0 0 0 0 113 0 0 113 0 113 0 0 0 0 0 0 0 32 
+32 0 0 119 120 120 120 120 118 0 0 113 0 119 120 120 120 120 120 120 120 32 
+32 0 0 113 0 0 0 0 107 120 120 117 120 106 0 0 0 0 0 0 0 32 
+2 0 0 1 0 0 0 0 1 1 1 1 1 1 0 0 0 0 0 0 0 32 
+2 0 0 1 1 1 1 1 1 0 1 1 0 1 1 1 1 1 1 1 1 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 3 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 3 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 3 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 3 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 1 1 1 1 1 0 0 1 0 1 1 1 1 1 1 1 1 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 3 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 3 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 3 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 2 
+2 0 0 1 1 1 1 1 1 0 0 1 0 1 1 1 1 1 1 1 1 2 
+2 0 0 1 0 0 0 0 1 1 1 1 1 1 0 0 0 0 0 0 0 2 
+
+*******************************************************************
+RTTSYS_OBJECT_PID
+*******************************************************************
+Number		1
+Text		"%"
+Type		UPDATE
+Parameter	PID_OBJECT_PROCVAL
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	9
+Decimals	2
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	FLOAT
+x,y		12	9
+-------------------------------------------------------------------
+Number		2
+Text		"%"
+Type		UPDATE
+Parameter	PID_OBJECT_SETVAL
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	9
+Decimals	2
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	FLOAT
+x,y		12	10
+-------------------------------------------------------------------
+Number		3
+Text		"%"
+Type		UPDATE
+Parameter	PID_OBJECT_OUTVAL
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	9
+Decimals	2
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	FLOAT
+x,y		12	12
+-------------------------------------------------------------------
+Number		4
+Text		"%"
+Type		UPDATE
+Parameter	PID_OBJECT_BAR_PROCVAL
+Text/Dualpar	""
+Privileges	NO
+Outputflags	BAR
+Characters	56
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	FLOAT
+x,y		23	9
+-------------------------------------------------------------------
+Number		5
+Text		"%"
+Type		UPDATE
+Parameter	PID_OBJECT_BAR_SETVAL
+Text/Dualpar	""
+Privileges	NO
+Outputflags	BAR
+Characters	56
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	FLOAT
+x,y		23	10
+-------------------------------------------------------------------
+Number		6
+Text		"%"
+Type		UPDATE
+Parameter	PID_OBJECT_BAR_OUTVAL
+Text/Dualpar	""
+Privileges	NO
+Outputflags	BAR
+Characters	56
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	FLOAT
+x,y		23	12
+-------------------------------------------------------------------
+Number		7
+Text		"Auto SetValue"
+Type		UPDATE
+Parameter	PID_OBJECT_MODE_SETVAL
+Text/Dualpar	""
+Privileges	OP
+Outputflags	
+Characters	9
+Decimals	2
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	FLOAT
+x,y		2	15
+-------------------------------------------------------------------
+Number		8
+Text		"Man  OutValue"
+Type		UPDATE
+Parameter	PID_OBJECT_MODE_FORCVAL
+Text/Dualpar	""
+Privileges	OP
+Outputflags	
+Characters	9
+Decimals	2
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	FLOAT
+x,y		2	16
+-------------------------------------------------------------------
+Number		9
+Text		"Bias         "
+Type		UPDATE
+Parameter	PID_OBJECT_BIAS
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	9
+Decimals	2
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	FLOAT
+x,y		2	17
+-------------------------------------------------------------------
+Number		10
+Text		"%"
+Type		UPDATE
+Parameter	PID_OBJECT_MODE
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	4
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING10
+x,y		12	4
+-------------------------------------------------------------------
+Number		11
+Text		"MinOutValue  "
+Type		UPDATE
+Parameter	PID_OBJECT_PID_MINOUT
+Text/Dualpar	""
+Privileges	OP
+Outputflags	
+Characters	9
+Decimals	2
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	FLOAT
+x,y		2	18
+-------------------------------------------------------------------
+Number		12
+Text		"MaxOutValue  "
+Type		UPDATE
+Parameter	PID_OBJECT_PID_MAXOUT
+Text/Dualpar	""
+Privileges	OP
+Outputflags	
+Characters	9
+Decimals	2
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	FLOAT
+x,y		2	19
+-------------------------------------------------------------------
+Number		13
+Text		"Man "
+Type		SET
+Parameter	PID_OBJECT_SETMAN
+Text/Dualpar	""
+Privileges	OP
+Outputflags	NO
+Characters	0
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		37	4
+-------------------------------------------------------------------
+Number		14
+Text		"Auto"
+Type		SET
+Parameter	PID_OBJECT_SETAUTO
+Text/Dualpar	""
+Privileges	OP
+Outputflags	NO
+Characters	0
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		37	5
+-------------------------------------------------------------------
+Number		15
+Text		"Casc"
+Type		SET
+Parameter	PID_OBJECT_SETCASC
+Text/Dualpar	""
+Privileges	OP
+Outputflags	NO
+Characters	0
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		37	6
+-------------------------------------------------------------------
+Number		16
+Text		"SetMinShow"
+Type		UPDATE
+Parameter	PID_OBJECT_SETMINSHOW
+Text/Dualpar	""
+Privileges	OP
+Outputflags	
+Characters	9
+Decimals	2
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	FLOAT
+x,y		48	4
+-------------------------------------------------------------------
+Number		17
+Text		"SetMaxShow"
+Type		UPDATE
+Parameter	PID_OBJECT_SETMAXSHOW
+Text/Dualpar	""
+Privileges	OP
+Outputflags	
+Characters	9
+Decimals	2
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	FLOAT
+x,y		48	5
+-------------------------------------------------------------------
+Number		18
+Text		"OutMinShow"
+Type		UPDATE
+Parameter	PID_OBJECT_OUTMINSHOW
+Text/Dualpar	""
+Privileges	OP
+Outputflags	
+Characters	9
+Decimals	2
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	FLOAT
+x,y		48	6
+-------------------------------------------------------------------
+Number		19
+Text		"OutMaxShow"
+Type		UPDATE
+Parameter	PID_OBJECT_OUTMAXSHOW
+Text/Dualpar	""
+Privileges	OP
+Outputflags	
+Characters	9
+Decimals	2
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	FLOAT
+x,y		48	7
+-------------------------------------------------------------------
+Number		20
+Text		"Gain        "
+Type		UPDATE
+Parameter	PID_OBJECT_GAIN
+Text/Dualpar	""
+Privileges	EL
+Outputflags	
+Characters	9
+Decimals	2
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	FLOAT
+x,y		48	15
+-------------------------------------------------------------------
+Number		21
+Text		"IntTime     "
+Type		UPDATE
+Parameter	PID_OBJECT_INTTIME
+Text/Dualpar	""
+Privileges	EL
+Outputflags	
+Characters	9
+Decimals	2
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	FLOAT
+x,y		48	16
+-------------------------------------------------------------------
+Number		22
+Text		"DerTime     "
+Type		UPDATE
+Parameter	PID_OBJECT_DERTIME
+Text/Dualpar	""
+Privileges	EL
+Outputflags	
+Characters	9
+Decimals	2
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	FLOAT
+x,y		48	17
+-------------------------------------------------------------------
+Number		23
+Text		"DerGain     "
+Type		UPDATE
+Parameter	PID_OBJECT_DERGAIN
+Text/Dualpar	""
+Privileges	EL
+Outputflags	
+Characters	9
+Decimals	2
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	FLOAT
+x,y		48	18
+-------------------------------------------------------------------
+Number		24
+Text		"BiasGain    "
+Type		UPDATE
+Parameter	PID_OBJECT_BIASGAIN
+Text/Dualpar	""
+Privileges	EL
+Outputflags	
+Characters	9
+Decimals	2
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	FLOAT
+x,y		48	19
+-------------------------------------------------------------------
+Number		25
+Text		"%"
+Type		UPDATE
+Parameter	PID_OBJECT_SETENGUNIT
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	6
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	STRING
+x,y		72	4
+-------------------------------------------------------------------
+Number		26
+Text		"%"
+Type		UPDATE
+Parameter	PID_OBJECT_OUTENGUNIT
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	6
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	STRING
+x,y		72	6
+-------------------------------------------------------------------
+Number		27
+Text		"%"
+Type		UPDATE
+Parameter	PID_OBJECT_FORCE
+Text/Dualpar	""
+Privileges	NO
+Outputflags	ONOFF
+Characters	0
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	BOOLEAN
+x,y		12	5
+-------------------------------------------------------------------
+Number		28
+Text		"%"
+Type		UPDATE
+Parameter	PID_OBJECT_TYPE
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	4
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING10
+x,y		12	6
+-------------------------------------------------------------------
+Number		29
+Text		"%"
+Type		UPDATE
+Parameter	PID_OBJECT_INVERSE
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	4
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING10
+x,y		12	7
+-------------------------------------------------------------------
+Number		30
+Text		"%"
+Type		UPDATE
+Parameter	OBJECTNAME
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	65
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		12	2
+-------------------------------------------------------------------

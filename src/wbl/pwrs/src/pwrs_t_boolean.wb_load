@@ -1,0 +1,16 @@
+!  pwrs_t_boolean.wb_load -- Defines the basic type Boolean
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+SObject pwrs:Type
+  Object $Boolean pwr_eClass_Type pwr_eTix_Boolean
+    Body SysBody
+      Attr Type = pwr_eType_Boolean
+      Attr Size = 4
+    EndBody
+  EndObject
+EndSObject

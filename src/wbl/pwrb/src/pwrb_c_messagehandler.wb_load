@@ -1,0 +1,200 @@
+!  pwrb_c_messagehandler.wb_load -- Defines the class MessageHandler.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  Specifies attributes to a single message handler.
+!  
+!  Every message handler job needs a MessageHandler
+!  object.
+!  If any MessageHandler object is not explicitly
+!  configured to a node it will likewise be created in the
+!  runtime system. In this case the attributes are
+!  assigned their default values. If the user does not
+!  accept these default values, please create a
+!  MessageHandler object below the node's $Node object,
+!  name it MessageHandler and assign desired values to the
+!  attributes.
+!  
+!  In connection with configuring of a $Node object the
+!  development environment normally configure a
+!  MessageHandler object as well.
+!*/
+SObject pwrb:Class
+  Object MessageHandler $ClassDef 146 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "MessageHandler"
+      EndBody
+      Object OutunitServer $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object BlockFile $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object EventLogSize $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the maximum number of events that the node's
+      !  message handler contemporary will contain in its event
+      !  list, i.e. the skyline of the events. When NoOfEvents
+      !  exceeds MaxNoOfEvents the oldest event disappears from
+      !  the list.
+      !*/
+      Object EventListSize $Attribute 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the maximum number of contemporary alarms to
+      !  any application job. The attribute is used to prevent a
+      !  single job from occupying whole event list of the
+      !  message handler.
+      !*/
+      Object MaxApplAlarms $Attribute 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object DetectTimer $Intern 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      Object MessageTimer $Intern 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      Object AlarmFirstIdx $Attribute 8 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object AlarmLastIdx $Attribute 9 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  The number of active alarms counted from time of boot.
+      !*/
+      Object AlarmCount $Attribute 10 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object AlarmMaxCount $Attribute 11 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object BlockFirstIdx $Attribute 12 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object BlockLastIdx $Attribute 13 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object BlockCount $Attribute 14 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object BlockMaxCount $Attribute 15 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object EventFirstIdx $Attribute 16 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object EventLastIdx $Attribute 17 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  The number of events counted from time of boot.
+      !*/
+      Object EventCount $Attribute 18 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object EventMaxCount $Attribute 19 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object FreeCount $Attribute 20 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object ScanCycleSup $Attribute 21 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+    EndObject
+    Object Template MessageHandler
+      Body RtBody
+        Attr EventListSize = 100
+        Attr MaxApplAlarms = 50
+        Attr DetectTimer = 1.0
+        Attr MessageTimer = 1.0
+        Attr ScanCycleSup = 1
+      EndBody
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,14 @@
+!  op_rnav_sum_block.xbm -- <short description>
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+#define PS_NAV_SUM_BLOCK_width 16
+#define PS_NAV_SUM_BLOCK_height 10
+#define PS_NAV_SUM_BLOCK_x_hot 0
+#define PS_NAV_SUM_BLOCK_y_hot 0
+static char PS_NAV_SUM_BLOCK_bits[] = {
+   0xff, 0xff, 0x47, 0xf2, 0x5d, 0x9a, 0x79, 0x8e, 0xe1, 0x83, 0xe1, 0x83,
+   0x71, 0x8e, 0x59, 0x9e, 0x4f, 0xf2, 0xff, 0xff};

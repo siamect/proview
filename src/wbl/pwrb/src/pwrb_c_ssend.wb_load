@@ -1,0 +1,103 @@
+!  pwrb_c_ssend.wb_load -- Defines the class Ssend.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_macro_grafcet.h
+!  The last Grafcet step in a sub-sequential chain.
+!  
+!  The object remains active until its SubStep object
+!  becomes active. See figure 3-50.
+!  The object sets Order[1]= TRUE in its parent, i.e. the
+!  current SubStep object.
+!  
+!  To the right output one or more Order objects can be
+!  connected at the same time as well as one or more Stoxx,
+!  Setxx or Resxx objects. The output can also be left
+!  open or be used as an ordinary binary signal.
+!*/
+SObject pwrb:Class
+  Object SsEnd $ClassDef 214 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_RtAndDevBodies
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "ssend"
+      EndBody
+      Object Status $Output 1 
+        Body SysBody
+          Attr PgmName = "StatusIn"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_RTVIRTUAL
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "sts1"
+          Attr ConPointNr = 0
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the status of the step. FALSE means an
+      !  inactive step, and TRUE means an active step. The value
+      !  may be picked up in another program by means of a GetDp
+      !  object; see figure 3-22 on page 3-184. In the structure
+      !  of the object or referenced this attribute is named
+      !  Status[0].
+      !  
+      !  Order[1] is a copy of Order[0]. The Trans object looks
+      !  on Order[0] and Order[1].
+      !/**
+      Object Order $Output 2 
+        Body SysBody
+          Attr PgmName = "Status"
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Elements = 2
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "Order"
+          Attr ConPointNr = 1
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 39
+        Attr parameters[0] = 0
+        Attr parameters[1] = 0
+        Attr parameters[2] = 2
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 4
+        Attr graphindex = 13
+        Attr default_mask[0] = 0
+        Attr default_mask[1] = 3
+        Attr segname_annotation = 1
+        Attr compmethod = 27
+        Attr compindex = 1
+        Attr tracemethod = 7
+        Attr traceindex = 1
+	Attr executeordermethod = 7
+        Attr objname = "SE"
+        Attr graphname = "SsEnd"
+        Attr debugpar = "Order[0]"
+      EndBody
+    EndObject
+  EndObject
+EndSObject

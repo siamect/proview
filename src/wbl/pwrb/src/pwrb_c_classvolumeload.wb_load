@@ -1,0 +1,47 @@
+!  pwrb_c_ClassVolumeLoad.wb_load -- Defines the class ClassVolumeLoad.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!/**
+!  @Version 1.0
+!  @Summary Configures a class volume to load in a proview node.
+!  The ClassVolumeLoad object configures a class volume to
+!  load into a proview node when proview is started on this node.
+!  If a mounted volume contains objects of classes that is not loaded
+!  by default into the node, a ClassVolumeLoad object will force a
+!  load of the classvolume.
+!
+!  The object should be configured in the  project volume as a child 
+!  to a NodeConfig object.
+!
+!  The name of the object states the volume to load.
+!
+!  @classlink NodeConfig pwrb_nodeconfig.html
+!  @classlink ClassVolumeLoad pwrb_classvolumeload.html
+!  
+!*/
+!
+SObject pwrb:Class
+  Object ClassVolumeLoad $ClassDef 36 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "ClassVolumeLoad"
+      EndBody
+      !/**
+      !  Description of the object
+      !*/
+      Object Description $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject

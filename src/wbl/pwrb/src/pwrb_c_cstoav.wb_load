@@ -1,0 +1,132 @@
+!  pwrb_c_cstoav.wb_load -- Defines the class CStoAv.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  Conditional Store value of Analog Value signal.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_macro_io.h
+!  Conditional Storage Analog value.
+!  
+!  Conditional storage of an analog value on a specified
+!  local Av-signal (= Av object).
+!  Conditional is aimed at the con-input, which is
+!  supposed to be connected.
+!  
+!  The conditional input signal can be inverted by means
+!  of the Attribute Editor.
+!  It is not allowed, by means of a function in C or PLC
+!  programs, to write in any of the inputs.
+!*/
+SObject pwrb:Class
+  Object CStoAv $ClassDef 77 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_RtConnectionsAndDevBodies
+      Attr Flags = pwr_mClassDef_DevOnly
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "cstoav"
+      EndBody
+      !/**
+      !  The input is connected to an analog signal or left
+      !  open. In the latter case the value of In, is considered
+      !  to be stored.
+      !*/
+      Object In $Input 1 
+        Body SysBody
+          Attr PgmName = "ActualValue"
+          Attr Flags |= PWR_MASK_RTVIRTUAL
+          Attr Flags |= PWR_MASK_DEVBODYREF
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "VAL"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies whether a storage will be done or not. FALSE
+      !  means no storage and TRUE means storage of an analog
+      !  value.
+      !*/
+      Object Cond $Input 2 
+        Body SysBody
+          Attr PgmName = "Cond"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_RTVIRTUAL
+          Attr Flags |= PWR_MASK_DEVBODYREF
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "con"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      !/**
+      !  Specifies the name of the object where to store the
+      !  value.
+      !*/
+      Object AvObject $Intern 1 
+        Body SysBody
+          Attr PgmName = "AvObject"
+          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr GraphName = "In"
+          Attr NiNaAnnot = 1
+          Attr NiNaSegments = 1
+        EndBody
+      EndObject
+      !/**
+      !  Specifies how many segments of the Av object name that
+      !  is to be displayed in the symbol of the CStoAv object.
+      !  The segments are counted from behind.
+      !*/
+      Object AvObjectSegments $Intern 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      Object PlcNode $Buffer 3 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 85
+        Attr parameters[0] = 2
+        Attr parameters[1] = 0
+        Attr parameters[2] = 0
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 15
+        Attr graphindex = 1
+        Attr default_mask[0] = 3
+        Attr default_mask[1] = 0
+        Attr segname_annotation = 0
+        Attr devbody_annotation = 1
+        Attr compmethod = 11
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 1
+        Attr connectmethod = 6
+        Attr executeordermethod = 2
+        Attr objname = "CStoAv"
+        Attr graphname = "CStoAv"
+        Attr debugpar = "Cond"
+      EndBody
+    EndObject
+    Object Template CStoAv
+      Body RtBody
+        Attr Cond = 1
+      EndBody
+      Body DevBody
+        Attr AvObjectSegments = 1
+      EndBody
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,11 @@
+!  nmps_ch_nmpsclasses.wb_load -- NMps:Class hierarchy.
+!
+!  PROVIEW/R
+!
+!  <Description>.
+!
+!
+SObject NMps:
+  Object Class $ClassHier
+  EndObject
+EndSObject

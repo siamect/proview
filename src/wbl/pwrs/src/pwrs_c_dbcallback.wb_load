@@ -1,0 +1,51 @@
+!  pwrs_c_dbcallback.wb_load -- Defines the class DbCallBack.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+SObject pwrs:Class
+  Object $DbCallBack $ClassDef pwr_eCix_DbCallBack
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_SysBody
+      Attr Flags |= pwr_mClassDef_System
+      Attr Flags |= pwr_mClassDef_DevOnly
+    EndBody
+    Object SysBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "DbCallBack"
+      EndBody
+      Object MethodName $Attribute 1
+        Body SysBody
+	  Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      Object MethodArguments $Attribute 2
+        Body SysBody
+	  Attr TypeRef = "pwrs:Type-$String40"
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 5
+        EndBody
+      EndObject
+      Object Method $Attribute 3
+        Body SysBody
+	  Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object Flags $Attribute 4
+        Body SysBody
+	  Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object Template $DbCallBack
+      Body SysBody
+      EndBody
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,41 @@
+!  pwrb_c_aoarea.wb_load -- Defines the class AoArea.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Summary Area object for Ao values
+!  Area object for Ao values.
+!
+!  The values of Ao-signals is stored in the Value attribut. The
+!  index is given by ValueIndex in the Ao-objects which is assigned
+!  at io initiation.
+!
+!  The object is created at runtime in the dynamic system volume pwrNode.
+!*/
+SObject pwrb:Class
+  Object AoArea $ClassDef 15 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "AoArea"
+      EndBody
+      Object Value $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Flags |= PWR_MASK_STATE
+          Attr Elements = 1
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject

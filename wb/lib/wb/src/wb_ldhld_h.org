@@ -1,0 +1,31 @@
+#ifndef wb_ldhld_h
+#define wb_ldhld_h
+
+/* wb_ldhld.h -- <short description>
+
+   PROVIEW/R
+   Copyright (C) 1996 by Comator Process AB.
+
+   This module contains functions to create load data files.  */
+
+#ifndef pwr_class_h
+#include "pwr_class.h"
+#endif
+#ifndef wb_ldh_h
+#include "wb_ldh.h"
+#endif
+
+/*============================================================================*\
+  Exported functions.
+\*============================================================================*/
+
+pwr_tStatus ldhld_CreateLoadFile (
+  ldh_tSesContext Session
+);
+pwr_tStatus ldhld_Diff (
+  char *NodeName,
+  pwr_tProjVersion NewDnoVersion,
+  char *DiffFileName,
+  char *DECnetNodeName
+);
+#endif

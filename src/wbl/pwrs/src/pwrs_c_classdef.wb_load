@@ -1,0 +1,124 @@
+!  pwrs_c_classdef.wb_load -- Defines the class ClassDef.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  NOTE !
+!  This class is defined before class definitions are completed,
+!  and is thus loaded with DObject etc.
+!
+!/**
+!  @Version 1.0
+!  Definition of a class. The object is the root of an
+!  object tree that defines bodies and attributes in a class.
+!*/
+SObject pwrs:Class
+  Object $ClassDef pwr_eClass_ClassDef pwr_eCix_ClassDef
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_SysBody
+      Attr Flags = 6
+      Attr NumOfObjBodies = 1
+      Attr PopEditor = 0
+    EndBody
+    Object SysBody pwr_eClass_ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "ClassDef"
+        Attr NumOfParams = 4
+        Attr Size = 16
+      EndBody
+      !/**
+      !  Editor to call on an "Open" command.
+      !*/
+      Object Editor pwr_eClass_Param
+        Body SysBody
+          Attr PgmName = "Editor"
+          Attr Type = pwr_eType_Int32
+          Attr Offset = 0
+          Attr Size = 4
+          Attr Flags = 0
+          Attr Elements = 1
+          Attr ParamIndex = 1
+          Attr TypeRef = pwr_eType_Int32
+        EndBody
+      EndObject
+      !/**
+      !  Method used by the called editor.
+      !*/
+      Object Method pwr_eClass_Param
+        Body SysBody
+          Attr PgmName = "Method"
+          Attr Type = pwr_eType_Int32
+          Attr Offset = 4
+          Attr Size = 4
+          Attr Flags = 0
+          Attr Elements = 1
+          Attr ParamIndex = 2
+          Attr TypeRef = pwr_eType_Int32
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Bitmask for class properties.
+      !  Bitmask for class properties
+      !
+      !  DevOnly	object exists only in development environment
+      !  System	  	object is a system object
+      !  Multinode	object is a multinode object
+      !  ObjXRef	object contains ObjXRefs
+      !  RtBody	  	object has a body in runtime
+      !  AttrXRef	object contains AttrXRefs
+      !  ObjRef	  	object contains ObjRefs
+      !  AttrRef	object contains AttrRefs
+      !  TopObject	object can be top object
+      !  NoAdopt	object can not have children
+      !  Template	object is a template object
+      !  IO	  	object is an IO object
+      !*/
+      Object Flags pwr_eClass_Param
+        Body SysBody
+          Attr PgmName = "Flags"
+          Attr Type = pwr_eType_Mask
+          Attr Offset = 8
+          Attr Size = 4
+          Attr Flags = 0
+          Attr Elements = 1
+          Attr ParamIndex = 3
+          Attr TypeRef = pwr_eType_Mask
+        EndBody
+      EndObject
+      Object NumOfObjBodies pwr_eClass_Param
+        Body SysBody
+          Attr PgmName = "NumOfObjBodies"
+          Attr Type = pwr_eType_UInt32
+          Attr Offset = 12
+          Attr Size = 4
+          Attr Flags = 0
+          Attr Elements = 1
+          Attr ParamIndex = 4
+          Attr TypeRef = pwr_eType_UInt32
+        EndBody
+      EndObject
+      !/**
+      !  What kind of mmi picture dispacher to user
+      !*/
+      Object PopEditor pwr_eClass_Param
+        Body SysBody
+          Attr PgmName = "PopEditor"
+          Attr Type = pwr_eType_Int32
+          Attr Offset = 16
+          Attr Size = 4
+          Attr Flags = 0
+          Attr Elements = 1
+          Attr ParamIndex = 4
+          Attr TypeRef = pwr_eType_Int32
+        EndBody
+      EndObject
+    EndObject
+    Object Template $ClassDef
+      Body SysBody
+        Attr Editor = pwr_eEditor_AttrEd
+        Attr Method = pwr_eMethod_SysBody
+      EndBody
+    EndObject
+  EndObject
+EndSObject

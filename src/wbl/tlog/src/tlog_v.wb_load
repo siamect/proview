@@ -1,0 +1,7 @@
+!  tlog_v.wb_load -- Loads the tlog volume
+!
+!  PROVIEW/R
+!
+!
+Volume TLog pwr_eClass_ClassVolume 0.0.1.2
+EndVolume

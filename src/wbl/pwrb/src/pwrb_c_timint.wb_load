@@ -1,0 +1,156 @@
+!  pwrb_c_timint.wb_load -- Defines the class Timint.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_arithm.c
+!  Time integrator.
+!  
+!  A curve f(t) is supposed to be made up of a large
+!  number of rectangular sections, each with a width
+!  ScanTime and a height Int. The output varies in
+!  accordance with both magnitude and duration of the
+!  input. The output is proportional to the time integral
+!  of the input.
+!  
+!  With the z-input it is possible to clear the
+!  integrator.
+!*/
+SObject pwrb:Class
+  Object Timint $ClassDef 239 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Connections
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "timint"
+      EndBody
+      !/**
+      !  The input signal. The dimension is supposed to be
+      !  something per unit of time.
+      !*/
+      Object In $Input 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "IN"
+        EndBody
+      EndObject
+      !/**
+      !  On a leading edge OldAcc is set equal to ActValt-1 and
+      !  then ActValt-1 = 0.
+      !*/
+      Object Clear $Input 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "z"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      !/**
+      !  The output signal.
+      !
+      !  ActVal(t) = ActVal(t-1) + In(t) * ScanTime / TimFactIn
+      !*/
+      Object ActVal $Output 3 
+        Body SysBody
+          Attr PgmName = "ActVal"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "VAL"
+        EndBody
+      EndObject
+      !/**
+      !   1 / TimFact is the derivative time, i.e. the time which elapses
+      !  when the ouput signal arises from 0 to In, if In is a constant value.
+      !  The factor is in seconds per unit of time.
+      !*/
+      Object TimFact $Intern 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "TimFact"
+        EndBody
+      EndObject
+      !/**
+      !  Program cycle time in seconds.
+      !*/
+      Object ScanTime $Intern 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "ScanTime"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_PRIVATE
+        EndBody
+      EndObject
+      !/**
+      !  The operator's authorities to change ActVal.
+      !   0   -- Changes not allowed.
+      !   != 0 -- Changes allowed.
+      !*/
+      Object AccVal $Intern 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "AccVal"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the value of the output signal ActVal when
+      !  the integrator was cleared last time.
+      !*/
+      Object OldAcc $Intern 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "OldAcc"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 134
+        Attr parameters[0] = 2
+        Attr parameters[1] = 0
+        Attr parameters[2] = 1
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 0
+        Attr graphindex = 0
+        Attr default_mask[0] = 3
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 1
+        Attr compmethod = 4
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+	Attr executeordermethod = 2
+        Attr objname = "Timint"
+        Attr graphname = "Timint"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    Object Template Timint
+      Body RtBody
+        Attr TimFact = 1.0
+      EndBody
+    EndObject
+  EndObject
+EndSObject

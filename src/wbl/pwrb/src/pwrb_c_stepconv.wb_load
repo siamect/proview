@@ -1,0 +1,36 @@
+!  pwrb_c_stepconv.wb_load -- Defines the class StepConv.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+SObject pwrb:Class
+  Object StepConv $ClassDef 216 
+    Body SysBody
+      Attr Flags |= pwr_mClassDef_DevOnly
+    EndBody
+    Object DevBody $ObjBodyDef 2 
+      Object PlcConnection $Buffer 1 
+        Body SysBody
+	  Attr PgmName = "PlcCon"
+          Attr Class = pwr_eClass_PlcConnection
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcCon $GraphPlcConnection
+      Body SysBody
+        Attr con_type = 21
+        Attr arrows = 0
+        Attr linewidth = 0.005
+        Attr dashes = 0.
+        Attr fillpattern = 0
+        Attr curvature = 6
+        Attr corners = 0.0
+        Attr attributes = 90
+      EndBody
+    EndObject
+  EndObject
+EndSObject

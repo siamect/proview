@@ -1,0 +1,99 @@
+!  pwrb_c_table.wb_load -- Defines the class Table.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  A Curve object interpolates in a table specified by a
+!  Table object.
+!  
+!  The table has to consist of at least 2 of up to 50
+!  possible pairs of numbers (x,y).
+!  The x-values have to be arranged in an increasing
+!  order. At step functions two consecutive x-values are
+!  always equal.
+!  Several Curve objects can be connected to one and the
+!  same Table object.
+!  
+!  The object contains only data without any executable
+!  code.
+!*/
+SObject pwrb:Class
+  Object Table $ClassDef 236 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Connections
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "table"
+      EndBody
+      !/**
+      !  The output has to be connected to a Curve object.
+      !
+      !  TabVect[0]
+      !  Specifies the current number of pairs of numbers in the
+      !  table.
+      !  
+      !  TabVect[1], TabVect[2]
+      !  The initial pair of numbers {x1, y1}
+      !  
+      !  TabVect[3], TabVect[4]
+      !  The second pair of numbers {x2, y2}
+      !*/
+      Object TabVect $Output 1 
+        Body SysBody
+          Attr PgmName = "TabVect"
+          Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 101
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "TAB"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 130
+        Attr parameters[0] = 0
+        Attr parameters[1] = 0
+        Attr parameters[2] = 1
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 0
+        Attr graphindex = 0
+        Attr default_mask[0] = 0
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 1
+        Attr compmethod = 21
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+	Attr executeordermethod = 0
+        Attr objname = "Table"
+        Attr graphname = "Table"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    Object Template Table
+      Body RtBody
+        Attr TabVect[0] = 2.0
+        Attr TabVect[3] = 100.0
+        Attr TabVect[4] = 100.0
+      EndBody
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,70 @@
+!  pwrb_c_datareset.wb_load -- Defines the class DataReset.
+!
+!  PROVIEW/R
+!
+!  <Description>.
+!
+SObject NMps:Class
+  Object DataReset $ClassDef 10
+    Body SysBody
+      Attr Editor = pwr_eEditor_PlcEd
+      Attr Method = pwr_eMethod_Connections
+    EndBody
+    !
+    ! DATARESET Runtime Body
+    !
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "datareset"
+      EndBody
+      Object Data $Input 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr GraphName = "Data"
+        EndBody
+      EndObject
+      Object Condition $Input 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "cond"
+        EndBody
+      EndObject
+    EndObject
+    !
+    ! DATARESET Development Body
+    !
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 221
+        Attr parameters[0] = 2
+        Attr parameters[1] = 0
+        Attr parameters[2] = 0
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 0
+        Attr graphindex = 0
+        Attr default_mask[0] = 3
+        Attr default_mask[1] = 0
+        Attr segname_annotation = 1
+        Attr compmethod = 45
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+	Attr executeordermethod = 2
+        Attr objname = "DataReset"
+        Attr graphname = "DataReset"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    Object DevBody $ObjBodyDef 2
+      Object PlcNode $Buffer 1
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject

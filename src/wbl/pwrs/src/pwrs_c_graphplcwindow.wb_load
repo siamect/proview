@@ -1,0 +1,213 @@
+!  pwrs_c_graphplcwindow.wb_load -- Defines the class GraphPlcWindow.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+!/**
+!  @Version 1.0
+!  Description class for a Buffer in plc window objects.
+!  The buffer contains graphic data used by the plc editor.
+!*/
+SObject pwrs:Class
+  Object $GraphPlcWindow $ClassDef pwr_eCix_GraphPlcWindow
+    Body SysBody
+      Attr Flags |= pwr_mClassDef_DevOnly
+      Attr Flags |= pwr_mClassDef_System
+    EndBody
+    Object SysBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "GraphPlcWindow"
+      EndBody
+      !/**
+      !  Not used.
+      !*/
+      Object window_type $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Number of default objects.
+      !  Number of default objects.
+      !  At creation time, some objects can be created in the window by defalt,
+      !  for example document objects.
+      !  The number of objects is specified her and the class of the object
+      !  in 'defobj_class'.
+      !  The maximum number of default objects is 5.
+      !*/
+      Object defaultobjects $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Default width in pixel.
+      !*/
+      Object width $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Default height in pixel.
+      !*/
+      Object height $Attribute 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Not used.
+      !*/
+      Object x $Attribute 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Not used.
+      !*/
+      Object y $Attribute 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Not used.
+      !*/
+      Object zoom $Attribute 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Not used.
+      !*/
+      Object node_palettelayout $Attribute 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      !/**
+      !  Not used.
+      !*/
+      Object con_palettelayout $Attribute 9
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      !/**
+      !  Not used.
+      !*/
+      Object trace_palettelayout $Attribute 10
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      !/**
+      !  Not used.
+      !*/
+      Object sim_palettelayout $Attribute 11
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Class of default objects.
+      !  Class of default objects.
+      !  At creation time, some objects can be created in the window by defalt,
+      !  for example document objects.
+      !  The object class is specified her and the number of objects
+      !  in 'defaultobjects'.
+      !*/
+      Object defobj_class $Attribute 12
+        Body SysBody
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Elements = 5
+          Attr TypeRef = "pwrs:Type-$ClassId"
+        EndBody
+      EndObject
+      !/**
+      !  x-coordinates for default objects.
+      !*/
+      Object defobj_x $Attribute 13
+        Body SysBody
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Elements = 5
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  y-coordinate for default objects.
+      !*/
+      Object defobj_y $Attribute 14
+        Body SysBody
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Elements = 5
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Compilation method for window.
+      !*/
+      Object compmethod $Attribute 15
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Not used
+      !*/
+      Object compindex $Attribute 16
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Not used.
+      !*/
+      Object tracemethod $Attribute 17
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Not used.
+      !*/
+      Object traceindex $Attribute 18
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Not used.
+      !*/
+      Object executeordermethod $Attribute 19
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Name for an object instance created by the plc editor.
+      !*/
+      Object objname $Attribute 20
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String16"
+        EndBody
+      EndObject
+      !/**
+      !  Not used.
+      !*/
+      Object graphname $Attribute 21
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String16"
+        EndBody
+      EndObject
+    EndObject
+    Object Template $GraphPlcWindow
+    EndObject
+  EndObject
+EndSObject

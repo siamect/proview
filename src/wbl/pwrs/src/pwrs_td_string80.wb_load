@@ -1,0 +1,18 @@
+!  pwrs_td_string80.wb_load -- Defines the type String80
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+SObject pwrs:Type
+  Object $String80 $TypeDef 8
+    Body SysBody
+      Attr Type = pwr_eType_String
+      Attr Size = 80
+      Attr TypeRef = "pwrs:Type-$String"
+      Attr Elements = 80
+    EndBody
+  EndObject
+EndSObject

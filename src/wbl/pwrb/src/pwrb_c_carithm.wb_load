@@ -1,0 +1,365 @@
+!  pwrb_c_carithm.wb_load -- Defines the class CArithm.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_macro_logic.h
+!  User programmable object in the C programming language.
+!  
+!  The code is edited by means of the Attribute Editor at
+!  the object's Code attribute.
+!  
+!  Up to 8 analog inputs respectively outputs and up to 8
+!  digital inputs respectively outputs.
+!  Digital inputs may be inverted either by means of the
+!  Attribute Editor, or by the logical operator '!' in the
+!  Code attribute.
+!  
+!      Hints
+!  
+!  The symbol of the CArithm accommodates to the Code
+!  attribute. To avoid very wide CArithm objects finish
+!  statements with return.
+!  
+!      See Also
+!  AArithm, DArithm.
+!*/
+SObject pwrb:Class
+  Object CArithm $ClassDef 26 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_RtConnectionsAndDevBodies
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "carithm"
+      EndBody
+      !/**
+      !  Analog quantities that can be included in the Code
+      !  attribute. If , for example, A1 is connected, the
+      !  external signal is used, otherwise the internal
+      !  attribute AIn1. Changes in AIn1, ..., AIn8 in the run
+      !  time system are taken into consideration.
+      !*/
+      Object AIn1 $Input 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "A1"
+        EndBody
+      EndObject
+      Object AIn2 $Input 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "A2"
+        EndBody
+      EndObject
+      Object AIn3 $Input 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "A3"
+        EndBody
+      EndObject
+      Object AIn4 $Input 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "A4"
+        EndBody
+      EndObject
+      Object AIn5 $Input 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "A5"
+        EndBody
+      EndObject
+      Object AIn6 $Input 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "A6"
+        EndBody
+      EndObject
+      Object AIn7 $Input 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "A7"
+        EndBody
+      EndObject
+      Object AIn8 $Input 8 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "A8"
+        EndBody
+      EndObject
+      !/**
+      !  Digital quantities that can be included in the Code
+      !  attribute. If , for example, d1 is connected, the
+      !  external signal is used, otherwise the internal
+      !  attribute DIn1. Changes in DIn1, ..., DIn8 in the run
+      !  time system are taken into consideration.
+      !*/
+      Object DIn1 $Input 9 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "d1"
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      Object DIn2 $Input 10 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "d2"
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      Object DIn3 $Input 11 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "d3"
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      Object DIn4 $Input 12 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "d4"
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      Object DIn5 $Input 13 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "d5"
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      Object DIn6 $Input 14 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "d6"
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      Object DIn7 $Input 15 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "d7"
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      Object DIn8 $Input 16 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "d8"
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      !/**
+      !  The analog results of the latest Code evaluation.
+      !*/
+      Object OutA1 $Output 17 
+        Body SysBody
+          Attr PgmName = "OutA1"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "OA1"
+        EndBody
+      EndObject
+      Object OutA2 $Output 18 
+        Body SysBody
+          Attr PgmName = "OutA2"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "OA2"
+        EndBody
+      EndObject
+      Object OutA3 $Output 19 
+        Body SysBody
+          Attr PgmName = "OutA3"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "OA3"
+        EndBody
+      EndObject
+      Object OutA4 $Output 20 
+        Body SysBody
+          Attr PgmName = "OutA4"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "OA4"
+        EndBody
+      EndObject
+      Object OutA5 $Output 21 
+        Body SysBody
+          Attr PgmName = "OutA5"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "OA5"
+        EndBody
+      EndObject
+      Object OutA6 $Output 22 
+        Body SysBody
+          Attr PgmName = "OutA6"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "OA6"
+        EndBody
+      EndObject
+      Object OutA7 $Output 23 
+        Body SysBody
+          Attr PgmName = "OutA7"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "OA7"
+        EndBody
+      EndObject
+      Object OutA8 $Output 24 
+        Body SysBody
+          Attr PgmName = "OutA8"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "OA8"
+        EndBody
+      EndObject
+      !/**
+      !  The binary results of the latest Code evaluation.
+      !*/
+      Object OutD1 $Output 25 
+        Body SysBody
+          Attr PgmName = "OutD1"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "od1"
+        EndBody
+      EndObject
+      Object OutD2 $Output 26 
+        Body SysBody
+          Attr PgmName = "OutD2"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "od2"
+        EndBody
+      EndObject
+      Object OutD3 $Output 27 
+        Body SysBody
+          Attr PgmName = "OutD3"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "od3"
+        EndBody
+      EndObject
+      Object OutD4 $Output 28 
+        Body SysBody
+          Attr PgmName = "OutD4"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "od4"
+        EndBody
+      EndObject
+      Object OutD5 $Output 29 
+        Body SysBody
+          Attr PgmName = "OutD5"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "od5"
+        EndBody
+      EndObject
+      Object OutD6 $Output 30 
+        Body SysBody
+          Attr PgmName = "OutD6"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "od6"
+        EndBody
+      EndObject
+      Object OutD7 $Output 31 
+        Body SysBody
+          Attr PgmName = "OutD7"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "od7"
+        EndBody
+      EndObject
+      Object OutD8 $Output 32 
+        Body SysBody
+          Attr PgmName = "OutD8"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "od8"
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 11
+        Attr parameters[0] = 16
+        Attr parameters[1] = 0
+        Attr parameters[2] = 16
+        Attr parameters[3] = 0
+        Attr subwindows = 1
+        Attr graphmethod = 14
+        Attr graphindex = 0
+        Attr default_mask[0] = 1
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 3
+        Attr devbody_annotation = 1
+        Attr compmethod = 40
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+        Attr executeordermethod = 2
+        Attr objname = "CArit"
+        Attr graphname = "CArithm"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Ordinary code in the C programming language of up to
+      !  1024 characters. The code is edited by means of the
+      !  Attribute Editor and cannot be changed in the target
+      !  environment. All C-statements are allowed.
+      !  
+      !                 Note! If an arithmetical operator is followed by a graph
+      !  name, e.g. A1, the operator and the graph name have to
+      !  be separated by a space or a left parenthesis.
+      !*/
+      Object Code $Intern 2 
+        Body SysBody
+          Attr PgmName = "Code"
+          Attr TypeRef = "pwrs:Type-$Text1024"
+          Attr GraphName = "code"
+          Attr NiNaAnnot = 1
+          Attr ConPointNr = 0
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject

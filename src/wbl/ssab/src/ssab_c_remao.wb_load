@@ -1,0 +1,43 @@
+!  ssab_c_RemAo.wb_load -- Defines the class RemAo.
+!
+!  PROVIEW/R
+!
+!  <Description>.
+!
+SObject SSAB:Class
+  !
+  ! RemAo
+  !
+  Object RemAo $ClassDef 11
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    !
+    ! RemAo Runtime Body
+    !
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "RemAo"
+      EndBody
+      !
+      ! Parameter Description
+      !
+      Object Description $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+    EndObject ! $ObjBodyDef
+    !
+    ! Template för RemAo
+    !
+    Object Template RemAo
+      Body RtBody
+      EndBody
+    EndObject
+  !
+  ! End RemAo
+  !
+  EndObject
+EndSObject

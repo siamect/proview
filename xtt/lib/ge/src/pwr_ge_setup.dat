@@ -1,0 +1,155 @@
+path
+{
+  pwrp_pop:
+  pwrp_exe:
+  ssab_exe:
+  pwr_exe:
+}
+menu Images
+{
+  subgraph	GrayInd		jpwr/jop/jop_grayind.gif 	6
+  subgraph	GreenInd	jpwr/jop/jop_greenind.gif 	6
+}
+menu Process
+{
+  subgraph 	Valve	 	pwr_exe:pwr_valve.pwsg 			1
+  subgraph 	ValveManuel	pwr_exe:pwr_valvemanuel.pwsg 		4
+  subgraph 	ValveControl	pwr_exe:pwr_valvecontrol.pwsg 		2
+}
+menu Electric
+{
+  subgraph 	Motor		pwr_exe:pwr_motor.pwsg 			23
+  subgraph 	SpeedSwitch	pwr_exe:pwr_speedswitch.pwsg 		24
+  subgraph 	EmergencyStop	pwr_exe:pwr_emergencystop.pwsg 		5
+}
+menu Indicators
+{
+  subgraph 	IndSquare 	pwr_exe:pwr_indsquare.pwsg 		5
+  subgraph 	IndSquareTextFront pwr_exe:pwr_indsquaretextfront.pwsg 	5
+  subgraph 	IndSquareTextRear pwr_exe:pwr_indsquaretextrear.pwsg 	5
+  subgraph 	IndSquareLarge 	pwr_exe:pwr_indsquarelarge.pwsg 	5
+  subgraph 	IndRound 	pwr_exe:pwr_indround.pwsg 		6
+  subgraph 	IndRoundTextFront pwr_exe:pwr_indroundtextfront.pwsg 	6
+  subgraph 	IndRoundTextRear pwr_exe:pwr_indroundtextrear.pwsg 	6
+  subgraph 	IndRoundLarge 	pwr_exe:pwr_indroundlarge.pwsg 		6
+  subgraph 	IndSoap 	pwr_exe:pwr_indsoap.pwsg 		21
+  subgraph 	TrafficLight 	pwr_exe:pwr_trafficlight.pwsg 		5
+}
+menu Values
+{
+  subgraph 	ValueSmall	 pwr_exe:pwr_valuesmall.pwsg 		8
+  subgraph 	ValueMedium	 pwr_exe:pwr_valuemedium.pwsg 		8
+  subgraph 	ValueLarge	 pwr_exe:pwr_valuelarge.pwsg 		8
+  subgraph 	ValueInputSmall	pwr_exe:pwr_valueinputsmall.pwsg 	8
+  subgraph 	ValueInputMedium pwr_exe:pwr_valueinputmedium.pwsg 	8
+  subgraph 	ValueInputLarge	pwr_exe:pwr_valueinputlarge.pwsg 	8
+  subgraph 	ValueLong	pwr_exe:pwr_valuelong.pwsg 		8
+  subgraph 	ValueReliefDown	pwr_exe:pwr_valuereliefdown.pwsg 	8
+  subgraph 	ValueReliefUp	pwr_exe:pwr_valuereliefup.pwsg 		8
+}
+menu Pushbuttons
+{
+  subgraph 	ButtonSet 	pwr_exe:pwr_buttonset.pwsg		7
+  subgraph 	ButtonReset 	pwr_exe:pwr_buttonreset.pwsg		7
+  subgraph 	ButtonToggle 	pwr_exe:pwr_buttontoggle.pwsg 		7
+  subgraph 	ButtonCommand 	pwr_exe:pwr_buttoncommand.pwsg 		7
+  subgraph 	ButtonSetConfirm pwr_exe:pwr_buttonsetconfirm.pwsg 	7
+  subgraph 	ButtonResetConfirm pwr_exe:pwr_buttonresetconfirm.pwsg 	7
+  subgraph 	ButtonToggleConfirm pwr_exe:pwr_buttontoggleconfirm.pwsg 7
+  subgraph 	ButtonCommandConfirm pwr_exe:pwr_buttoncommandconfirm.pwsg 7
+  subgraph 	ButtonUp 	pwr_exe:pwr_buttonup.pwsg		7
+  subgraph 	ButtonDown 	pwr_exe:pwr_buttondown.pwsg		7
+  subgraph 	ButtonLeft 	pwr_exe:pwr_buttonleft.pwsg		7
+  subgraph 	ButtonRight 	pwr_exe:pwr_buttonright.pwsg		7
+  subgraph 	RoundButton 	pwr_exe:pwr_roundbutton.pwsg		6
+  subgraph 	SoapButton 	pwr_exe:pwr_soapbutton.pwsg		21
+  subgraph 	SmallButton 	pwr_exe:pwr_smallbutton.pwsg		7
+  subgraph 	LargeButton 	pwr_exe:pwr_largebutton.pwsg		7
+  subgraph 	ButtonInfo 	pwr_exe:pwr_buttoninfo.pwsg		7
+  subgraph 	ButtonHelp 	pwr_exe:pwr_buttonhelp.pwsg		7
+  subgraph	CheckBox	pwr_exe:pwr_checkbox.pwsg		5
+  subgraph	CheckBoxRelief	pwr_exe:pwr_checkboxrelief.pwsg		5
+  subgraph	RadioButton	pwr_exe:pwr_radiobutton.pwsg		6
+  subgraph	RadioButtonRelief pwr_exe:pwr_radiobuttonrelief.pwsg	6
+}
+menu Sliders
+{
+  subgraph 	SliderArrow 	pwr_exe:pwr_sliderarrow.pwsg		7
+  subgraph 	Slider1 	pwr_exe:pwr_slider1.pwsg		7
+  subgraph 	SliderBackground1 pwr_exe:pwr_sliderbackground1.pwsg	8
+  subgraph 	Slider2 	pwr_exe:pwr_slider2.pwsg		7
+  subgraph 	SliderBackground2 pwr_exe:pwr_sliderbackground2.pwsg	8
+}
+menu Hydraulics
+{
+  subgraph 	CheckValve	pwr_exe:pwr_checkvalve.pwsg		13
+  subgraph 	Tank	 	pwr_exe:pwr_tank.pwsg			14
+  subgraph 	Filter	 	pwr_exe:pwr_filter.pwsg 		15
+  subgraph 	Pump	 	pwr_exe:pwr_hydraulicpump.pwsg 		17
+  subgraph 	PressureSwitch	pwr_exe:pwr_pressureswitch.pwsg 	16
+  subgraph 	PressureGauge	pwr_exe:pwr_pressuregauge.pwsg 		18
+  subgraph 	ReleaseValve	pwr_exe:pwr_releasevalve.pwsg 		19
+  subgraph 	ReleaseValveRight pwr_exe:pwr_releasevalveright.pwsg 	20
+}
+menu Grafcet
+{
+  subgraph 	InitStep 	pwr_exe:pwr_initstep.pwsg		5
+  subgraph 	Step 		pwr_exe:pwr_step.pwsg			5
+  subgraph 	Trans	 	pwr_exe:pwr_trans.pwsg			9
+  subgraph 	Order	 	pwr_exe:pwr_order.pwsg			8
+}
+menu Layout
+{
+  subgraph 	FrameThin 	pwr_exe:pwr_framethin.pwsg		8
+  subgraph 	FrameMedium 	pwr_exe:pwr_framemedium.pwsg 		8
+  subgraph 	FrameThick 	pwr_exe:pwr_framethick.pwsg 		8
+  subgraph 	FrameRoundCorners pwr_exe:pwr_frameroundcorners.pwsg 	21
+  subgraph 	ReliefThin 	pwr_exe:pwr_reliefthin.pwsg		8
+  subgraph 	ReliefMedium 	pwr_exe:pwr_reliefmedium.pwsg 		8
+  subgraph 	ReliefThick 	pwr_exe:pwr_reliefthick.pwsg 		8
+  subgraph 	ReliefGray 	pwr_exe:pwr_reliefgray.pwsg 		8
+  subgraph 	ReliefRoundCornersMedium pwr_exe:pwr_reliefroundcornersmedium.pwsg 21
+  subgraph 	ReliefRoundCornersThick pwr_exe:pwr_reliefroundcornersthick.pwsg 	21
+  subgraph 	ReliefRoundCornersGray pwr_exe:pwr_reliefroundcornersgray.pwsg 	21
+  subgraph 	CrossConnection pwr_exe:pwr_crossconnection.pwsg 	9
+  subgraph 	ThreeWayConnection pwr_exe:pwr_threewayconnection.pwsg 	10
+  subgraph 	CornerConnection pwr_exe:pwr_cornerconnection.pwsg 	11
+  subgraph 	PinConnection 	pwr_exe:pwr_pinconnection.pwsg 		22
+  subgraph 	Arrow		pwr_exe:pwr_arrow.pwsg 			12
+}
+menu Other
+{
+  menu Animations
+  {
+    subgraph 	PumpAnim 	pwr_exe:pwr_pumpanim.pwsg		17
+    subgraph 	PadlockAnim 	pwr_exe:pwr_padlockanim.pwsg		5
+    subgraph 	ValveAnim 	pwr_exe:pwr_valveanim.pwsg		1
+    subgraph 	MotorAnim	pwr_exe:pwr_motoranim.pwsg 		23
+    subgraph 	ScrewAnim	pwr_exe:pwr_screw.pwsg 			5
+    subgraph 	IndAnimSquare 	pwr_exe:pwr_indanimsquare.pwsg 		5
+    subgraph 	IndAnimRound 	pwr_exe:pwr_indanimround.pwsg 		6
+    subgraph 	IndPulsarSquare pwr_exe:pwr_indpulsarsquare.pwsg 	5
+    subgraph 	IndPulsarRound 	pwr_exe:pwr_indpulsarround.pwsg 	6
+    subgraph 	Smile	 	pwr_exe:pwr_smile.pwsg 			6
+  }
+  subgraph 	Padlock		pwr_exe:pwr_padlock.pwsg 		5
+  subgraph	Needle		pwr_exe:pwr_needle.pwsg			5
+  subgraph 	Pc		pwr_exe:pwr_pc.pwsg 			5
+  subgraph 	Pulpet		pwr_exe:pwr_pulpet.pwsg 		5
+  subgraph 	Rack		pwr_exe:pwr_rack.pwsg 			5
+  subgraph 	Terminal	pwr_exe:pwr_terminal.pwsg 		5
+}
+localsubgraphs Ssab ssab_exe:*.pwsg
+menu Local
+{
+  localsubgraphs Subgraphs pwrp_pop:*.pwsg
+  localsubgraphs Images pwrp_pop:*.gif,pwrp_pop:*.jpg
+}
+
+
+
+
+
+
+
+

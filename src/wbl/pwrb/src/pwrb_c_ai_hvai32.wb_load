@@ -1,0 +1,116 @@
+!  pwrb_c_ai_hvai32.wb_load -- Defines the class Ai_HVAI32.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  Analog Input card HVAI32.
+!
+! Range ldh_eDId_Base
+!
+SObject pwrb:Class
+  Object Ai_HVAI32 $ClassDef 7 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_RtAndDevBodies
+      Attr Flags |= pwr_mClassDef_IO
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "Ai_HVAI32"
+      EndBody
+      Object Description $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      Object DevName $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object ErrorCount $Attribute 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object ErrorSoftLimit $Attribute 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object ErrorHardLimit $Attribute 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object DevPolyCoef0 $Attribute 9 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object DevPolyCoef1 $Attribute 10 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object MaxNoOfChannels $Attribute 11 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+          Attr Flags |= PWR_MASK_CONST
+        EndBody
+      EndObject
+      Object RegAddress $Attribute 12 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object VectAddress $Attribute 13 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object Process $Attribute 14
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object ThreadObject $Intern 15
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object ChannelAllocation $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+    EndObject
+    Object Template Ai_HVAI32
+      Body RtBody
+        Attr MaxNoOfChannels = 32
+        Attr Process = 2
+      EndBody
+    EndObject
+    Object AnteAdopt $DbCallBack
+      Body SysBody
+        Attr MethodName = "Ai_HVAI32-AnteAdopt"
+      EndBody
+    EndObject
+    Object PostUnadopt $DbCallBack
+      Body SysBody
+        Attr MethodName = "Ai_HVAI32-PostUnadopt"
+      EndBody
+    EndObject
+    Object PostAdopt $DbCallBack
+      Body SysBody
+        Attr MethodName = "Ai_HVAI32-PostAdopt"
+      EndBody
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,141 @@
+!  inc_hel_txt.uil -- historical event list
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  This module defines swedish texts for the historical event list.
+!
+value
+
+! Exported constants
+
+   histtitle		: exported "Historisk Händelselista";
+   stattitle		: exported "Statistik";
+
+   hel_AscizTable	: exported asciz_string_table
+	(	
+	"Lar-",				! AlaStr
+	"Kvi-",				! AckStr
+	"Ret-",				! RtnStr
+	"Ann-",				! CancStr
+	"Blo-",				! BlkStr
+	"Rbl-",				! RblkStr
+	"Abl-",				! CblkStr
+	"Dbl-",				! UblkStr
+	"Miss",				! LostStr
+	"Med",				! MsgStr
+	"MPS  ",			! MpsStr
+	"Flyttat:",			! MpsMovedStr
+	"Från:",			! MpsFromStr
+	"Till:",			! MpsToStr
+	"OpPlats:",			! OpPlaceStr
+	"Operatör:",			! OperatorStr	
+	"Värde : ",			! ValueStr
+	"Gräns : ",			! LimitStr
+	"Ogiltig tid",			! InvalidTimeStr
+	"Utskrift kunde ej göras",	! PrintFailedStr
+	"Sökning misslyckades",		! SearchFailedStr
+	"Nod saknas",			! NodeInvalidStr
+	"händelser uppfyller villkoret", ! MatchStr
+	"tappade meddelanden",		! LostMessagesStr
+	"Max antal händelser har hämtats.\nBegränsa sökvillkoret.", !MaxFetchStr 
+	"P R O V I E W / R     L A R M S T A T I S T I K",    ! RepStatTitleStr
+	"P R O V I E W / R     H I S T O R I S K   H Ä N D E L S E L I S T A ",        ! RepListTitleStr
+	"Objekt",    			! RepObjectStr
+	"Händelsetext",			! RepAlarmTextStr
+	"Starttid",    			! RepStartTimeStr
+	"Stoptid",    			! RepStopTimeStr
+	"Sökvillkor",    		! RepSettingsStr
+	"Presentation",    		! RepPresentationStr
+	"Namn",    			! RepPresentationNameStr
+	"Prioritet",    		! RepPresentationPrioStr
+	"Orsak",    			! RepPresentationCauseStr
+	"Aktiv",    			! RepActiveStr
+	"Kvittens",    			! RepAckStr
+	"Retur",    			! RepCancelStr
+	"Block",    			! RepBlockStr
+	"Deblock",    			! RepUnblockStr
+	"Meddelande",    		! RepMsgStr
+	"Hög",    			! RepHighStr
+	"Låg",    			! RepLowStr
+	"Digital",    			! RepDigitalStr
+	"Annan",     			! RepOtherStr
+	"(ej med)",    			! RepNotUsedStr
+        "Utskrift: Alla",               ! RepPrintAllStr
+        "Utskrift: Synliga"             ! RepPrintVisStr
+	);
+
+   hel_CSTable : exported compound_string_table
+	(
+	"Dölj Tid",			! RemoveTimeStr
+	"Visa Tid",			! ShowTimeStr
+	"Dölj Objektidentitet",		! RemoveObjectStr
+	"Visa Objektidentitet",		! ShowObjectStr
+	"Dölj Händelsetext",		! RemoveEventTextStr
+	"Visa Händelsetext"		! ShowEventTextStr
+	);
+        
+! Constants used by the co_CvtTimeToAsc function. See pwr_inc:TimeUtil.h
+    Solution		: 0;	! second.
+    Format		: 0;	! 0=Swedish, 1=GB
+    hel_IntTable	:  exported integer_table(Solution,Format);
+
+
+    histformtitle	: "Sökvillkor: Historisk händelselista";
+    statformtitle	: "Sökvillkor: Statistik";
+    OK			: "OK";
+    Apply		: "Utför";
+    Cancel		: "Avbryt";
+    time		: "Tid";
+    objectname		: "Objektnamn";
+    cause		: "Orsak";
+    starttime		: "Starttid:";
+    priority		: "Prioritet";
+    today               : "Idag";
+    yesterday           : "Igår";
+    thisweek            : "Denna vecka";
+    lastweek            : "Förra veckan";
+    thismonth           : "Denna månad";
+    lastmonth           : "Förra månaden";
+    all			: "Allt";
+    stoptime		: "Sluttid:";
+    daybreak		: "Dygnsskifte:";
+    eventtype		: "Händelsetyp";
+    eventtext		: "Text";
+    a_alarm		: "A-larm";
+    b_alarm		: "B-larm";
+    c_alarm		: "C-larm";
+    d_alarm		: "D-larm";
+    message		: "Meddelande";
+    active		: "Aktiv";
+    acknowledge		: "Kvit";
+    return		: "Retur";
+    block		: "Block";
+    unblock		: "Deblock";
+    limit		: "Gräns";
+    high		: "Hög";
+    low			: "Låg";
+    digital		: "Digital";
+    other		: "Annan";
+    node		: "Nod";
+    presentation	: "Presentation:";
+    sort		: "Ny rad för:";
+    name		: "Namn";
+    lost		: "Tappade meddelanden";
+    timevalue		: ".....";
+    result		: ".....";
+    searchtime		: "Tid för sökning:";
+    searchresult	: "Sökresultat:";
+    search		: "Sökvillkor...";
+    statistics		: "Statistik...";
+
+
+    printvis		: "Skriv ut synliga händelser";
+    printvis$		: "S";
+    printall		: "Skriv ut alla händelser";
+    printall$		: "a";
+    printallstat	: "Skriv ut all statistik";
+    printallstat$	: "a";
+
+    
+

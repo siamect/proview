@@ -1,0 +1,270 @@
+!  rt_xtt_xhelp.uil -- <short description>
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+module wb_xhelp
+        version = 'v1.0'
+        names = case_sensitive
+        objects = {
+                XmSeparator = gadget ;
+                }
+
+include file 'inc_xtt.uil';
+
+identifier
+	xhelp_ctx;
+procedure
+	xhelp_activate_exit(integer);
+	xhelp_activate_zoom_in(integer);
+	xhelp_activate_zoom_out(integer);
+	xhelp_activate_zoom_reset(integer);
+	xhelp_activate_help(integer);
+	xhelp_create_xhelpnav_form(integer);
+
+value
+	menu_font : font ('-*-Helvetica-Bold-R-Normal--12-*-*-*-P-*-ISO8859-1');
+
+!----------------------------------------
+! First declare the 'top level' widgets.  These are not controlled by
+! any other widgets.  They are each fetched individually as needed.
+!----------------------------------------
+
+object  xhelp_window : XmMainWindow
+{
+  arguments
+  {
+    XmNx = 0;
+    XmNy = 0;
+    XmNwidth = 450;
+    XmNheight = 400;
+  };
+  controls
+  {
+     XmMenuBar	xhelp_menu;
+     XmPanedWindow  main_pane;
+  };
+};
+
+
+object main_pane : XmPanedWindow
+{
+   arguments
+   {
+     XmNtraversalOn = false;
+   };
+   controls
+   {
+     XmPanedWindow xhelpnav_form;
+   };
+};
+
+
+object xhelp_menu : XmMenuBar
+{
+  arguments
+  {
+    XmNorientation 	= XmHORIZONTAL;
+    XmNspacing  	= 15;
+    XmNmenuHelpWidget 	= XmCascadeButton help_entry; 
+  };
+  controls
+  {
+    XmCascadeButton file_entry;
+    XmCascadeButton view_entry;
+    XmCascadeButton help_entry;
+  };
+};
+
+object file_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString  = c_File;
+    XmNfontList	    = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Close;
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure xhelp_activate_exit(xhelp_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+object functions_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString = c_Functions;
+    XmNfontList	   = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Open_Plc;
+            XmNmnemonic = keysym('O');
+	    XmNaccelerator = "Ctrl<Key>L";
+	    XmNacceleratorText = compound_string('Ctrl+L');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+!            XmNactivateCallback = procedure xhelp_activate_openplc(xhelp_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+
+object view_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString = c_View;
+    XmNfontList	   = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Zoom_in;
+            XmNmnemonic = keysym('I');
+	    XmNaccelerator = "Ctrl<Key>I";
+	    XmNacceleratorText = compound_string('Ctrl+I');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure xhelp_activate_zoom_in(xhelp_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Zoom_out;
+            XmNmnemonic = keysym('O');
+	    XmNaccelerator = "Ctrl<Key>O";
+	    XmNacceleratorText = compound_string('Ctrl+O');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure xhelp_activate_zoom_out(xhelp_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Zoom_reset;
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure xhelp_activate_zoom_reset(xhelp_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+object help_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString = c_Help;
+    XmNfontList	   = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Help;
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+	    XmNactivateCallback = procedure xhelp_activate_help(xhelp_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+object xhelpnav_form : XmPanedWindow
+{
+   arguments
+   {
+!     XmNleftAttachment 	= 	XmATTACH_FORM;
+!     XmNrightAttachment 	= XmATTACH_FORM;
+!     XmNbottomAttachment    	= XmATTACH_FORM;
+!     XmNbottomOffset        	= 150;
+!     XmNtopAttachment    	= XmATTACH_FORM;
+!     XmNheight = 300;
+!     XmNpaneMaximum = 700;
+   };
+   controls
+   {
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure xhelp_create_xhelpnav_form( xhelp_ctx);
+   };
+};
+
+end module;
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,82 @@
+!  pwrb_c_eventprinter.wb_load -- Defines the class EventPrinter.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  Configures an event printer for transcription of alarm
+!  respectively info messages.
+!  
+!  Puts the object below a $Node object in the same node
+!  as the transcription process will execute. This process
+!  is named pwr_exe:rs_mh_eventprinter.exe in an operator
+!  node. It is only available on operator nodes
+!*/
+SObject pwrb:Class
+  Object EventPrinter $ClassDef 115 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "EventPrinter"
+      EndBody
+      !/**
+      !  Optional text to describe the EventPrinter object.
+      !*/
+      Object Description $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the name of the terminal port, e.g. LTA55
+      !*/
+      Object DeviceName $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the size of the row.
+      !*/
+      Object RowSize $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int16"
+        EndBody
+      EndObject
+      !/**
+      !  Messages initiated by ASup or DSup object get the same
+      !  identity as the supervised object. For messages sent
+      !  from mh_ApplMessage ( see PROVIEW/R Programmer's
+      !  Reference Manual ) the identity comes out of the
+      !  calling attribute EventName.
+      !  In SelectList is the hierarchies of messages that will
+      !  be sent to the EventPrinter object specified. Up to 10
+      !  different hierarchies can be specified. If messages
+      !  from Watchdog objects in some node are wanted, for
+      !  example, is the name of the node specified here. If
+      !  SelectList is left blank no message at all is sent to
+      !  the EventPrinter object.
+      !*/
+      Object SelectList $Attribute 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Elements = 10
+        EndBody
+      EndObject
+    EndObject
+    Object Template EventPrinter
+      Body RtBody
+        Attr RowSize = 80
+      EndBody
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,228 @@
+!  pwrb_c_darithm.wb_load -- Defines the class DArithm.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_macro_logic.h
+!  User-defined logical expression.
+!  
+!  Optional programmable logical expression in the C
+!  programming language. The expression is edited by means
+!  of the Attribute Editor at the object's Expression
+!  attribute. The expression, that does not include '=',
+!  is translated at the compilation.
+!  
+!  The Expression attribute is shown in the object.
+!  Up to 8 analog ( A1, ..., A8) and 8 digital ( d1, ...,
+!  d8) inputs.
+!  
+!  Digital inputs could be inverted either by means of the
+!  Attribute Editor or by the logical operator '!' in the
+!  Expression attribute.
+!  
+!  Note! If an arithmetic operator is followed by a graph
+!  name, e.g. A1, the operator and the graph name have to
+!  be separated by a space or a left parenthesis.
+!  If an input will be used as a constant quantity it is
+!  suitable to make the input invisible by marking Unused.
+!  We prefer to write the constant value direct into the
+!  Expression if it is not supposed to be changed. In this
+!  case no input is used. On the other hand, if we have to
+!  be able to adjust the constant in run time it is a good
+!  idea to use an Av or Dv object, as this will make it
+!  easier to get access from the object display. Unused
+!  inputs make compilation errors.
+!  
+!      Example
+!  
+!  1 Maximum one of d1 - d5 is TRUE or d6
+!  
+!        Expression: ((d1 + d2 + d3 + d4 + d5) < 2) || d6
+!  
+!  2 Comparison.
+!  
+!        Expression: (A1 + 3.5 * A2) < A3
+!  
+!   See Also
+!   AArithm that calculates the value of arithmetic
+!*/
+SObject pwrb:Class
+  Object DArithm $ClassDef 82 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_RtConnectionsAndDevBodies
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "darithm"
+      EndBody
+      !/**
+      !  Digital quantities included in the Expression
+      !*/
+      Object DIn1 $Input 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "d1"
+        EndBody
+      EndObject
+      Object DIn2 $Input 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "d2"
+        EndBody
+      EndObject
+      Object DIn3 $Input 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "d3"
+        EndBody
+      EndObject
+      Object DIn4 $Input 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "d4"
+        EndBody
+      EndObject
+      Object DIn5 $Input 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "d5"
+        EndBody
+      EndObject
+      Object DIn6 $Input 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "d6"
+        EndBody
+      EndObject
+      Object DIn7 $Input 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "d7"
+        EndBody
+      EndObject
+      Object DIn8 $Input 8 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "d8"
+        EndBody
+      EndObject
+      !/**
+      !  Analog quantities included in the Expression attribute.
+      !*/
+      Object AIn1 $Input 9 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "A1"
+        EndBody
+      EndObject
+      Object AIn2 $Input 10 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "A2"
+        EndBody
+      EndObject
+      Object AIn3 $Input 11 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "A3"
+        EndBody
+      EndObject
+      Object AIn4 $Input 12 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "A4"
+        EndBody
+      EndObject
+      Object AIn5 $Input 13 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "A5"
+        EndBody
+      EndObject
+      Object AIn6 $Input 14 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "A6"
+        EndBody
+      EndObject
+      Object AIn7 $Input 15 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "A7"
+        EndBody
+      EndObject
+      Object AIn8 $Input 16 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "A8"
+        EndBody
+      EndObject
+      !/**
+      !  The result of the latest Expression evaluation.
+      !*/
+      Object Status $Output 17 
+        Body SysBody
+          Attr PgmName = "Status"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "sts"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      !/**
+      !  Logical expression in the C programming language. The
+      !  expression is edited by means of the Attribute Editor
+      !  and can not be changed in the target environment.
+      !*/
+      Object Expression $Intern 1 
+        Body SysBody
+          Attr PgmName = "Expr"
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr GraphName = "expr"
+          Attr NiNaAnnot = 1
+          Attr ConPointNr = 0
+        EndBody
+      EndObject
+      Object PlcNode $Buffer 2 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 133
+        Attr parameters[0] = 16
+        Attr parameters[1] = 0
+        Attr parameters[2] = 1
+        Attr parameters[3] = 0
+        Attr subwindows = 1
+        Attr graphmethod = 2
+        Attr graphindex = 0
+        Attr default_mask[0] = 3
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 3
+        Attr devbody_annotation = 1
+        Attr compmethod = 22
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+        Attr executeordermethod = 2
+        Attr objname = "DArit"
+        Attr graphname = "DArithm"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+  EndObject
+EndSObject

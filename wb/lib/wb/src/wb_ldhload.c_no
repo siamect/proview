@@ -1,0 +1,3209 @@
+/* wb_ldhload.c -- <short description>
+
+   PROVIEW/R
+   Copyright (C) 1996 by Comator Process AB.
+
+   <Description>.  */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+#include <errno.h>
+#include <limits.h>
+#include <float.h>
+#include <math.h>
+#ifdef OS_VMS
+#include <descrip.h>
+#include <lib$routines.h>
+#endif
+#include <X11/Intrinsic.h>
+#include "pwr.h"
+#include "pwr_class.h"
+#include "co_cdh.h"
+#include "co_dcli.h"
+#include "co_time.h"
+#include "co_msg.h"
+#include "wb_ldh_msg.h"
+#include "wb_ldh.h"
+#include "wb_ldhload.h"
+
+#define	If_Error_Then  if ( (status & 1) != 1)
+#define	If_Not_Error_Then  if ( (status & 1) )
+
+#define WBLOAD_MAXVOLUMES 20
+
+/* Record types */
+#define	T_NONE		0
+#define	T_ATTR		1
+#define	T_BODY		2
+#define	T_ENDBODY	3
+#define	T_OBJECT	4
+#define	T_ENDOBJECT	5
+#define	T_BUFFER	6
+#define	T_ENDBUFFER	7
+#define	T_NOBODY	8
+#define	T_COMMENT	9
+
+#define	T_DATTR		10
+#define	T_DBODY		11
+#define	T_ENDDBODY	12
+#define	T_DOBJECT	13
+#define	T_ENDDOBJECT	14
+#define	T_DBUFFER	15
+#define	T_ENDDBUFFER	16
+#define	T_RANGE		17
+
+#define	T_SOBJECT	18
+#define	T_ENDSOBJECT	19
+#define	T_HEAD		20
+
+#define	T_VOLUME	21
+#define	T_ENDVOLUME	22
+#define	T_DVOLUME	23
+#define	T_ENDDVOLUME	24
+
+#define	T_COMMENT_DOCSTART 25
+#define	T_COMMENT_DOCEND 26
+
+#define BUFSIZE 512
+
+#define NewString(str) (strcpy(malloc((unsigned) strlen(str) + 1), str))
+#define DP( _A_ ) {if (announce) _A_; };
+#ifndef abs
+#define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
+#endif
+
+int announce = 0;
+int errcnt = 0;
+int savcnt = 0;
+int volsavcnt = 0;
+char *root = NULL;
+
+struct s_sym
+{
+  char	*sym;
+  int	value;
+};
+
+static struct s_sym symlist[] =
+{
+   { "ATTR", T_ATTR }
+/* ,{ "PAR", T_ATTR } */
+  ,{ "BODY", T_BODY }
+  ,{ "ENDBODY", T_ENDBODY }
+  ,{ "OBJECT", T_OBJECT }
+  ,{ "ENDOBJECT", T_ENDOBJECT }
+  ,{ "BUFFER", T_BUFFER }
+  ,{ "ENDBUFFER", T_ENDBUFFER }
+  ,{ "NOBODY", T_NOBODY }
+  ,{ "!", T_COMMENT }
+
+  ,{ "DATTR", T_DATTR }
+/*  ,{ "DPAR", T_DATTR } */
+  ,{ "DBODY", T_DBODY }
+  ,{ "ENDDBODY", T_ENDDBODY }
+  ,{ "DOBJECT", T_DOBJECT }
+  ,{ "ENDDOBJECT", T_ENDDOBJECT }
+  ,{ "DBUFFER", T_DBUFFER }
+  ,{ "ENDDBUFFER", T_ENDDBUFFER }
+  ,{ "RANGE", T_RANGE }
+
+  ,{ "SOBJECT", T_SOBJECT }
+  ,{ "ENDSOBJECT", T_ENDSOBJECT }
+  ,{ "HEAD", T_HEAD }
+
+  ,{ "VOLUME", T_VOLUME }
+  ,{ "ENDVOLUME", T_ENDVOLUME }
+  ,{ "DVOLUME", T_DVOLUME }
+  ,{ "ENDDVOLUME", T_ENDDVOLUME }
+
+  ,{ "!/**", T_COMMENT_DOCSTART }
+  ,{ "!*/", T_COMMENT_DOCEND }
+  ,{  0, 0 }
+};
+
+/* Datatypes */
+static struct s_sym datatypes[] =
+{
+   { "pwr_eType_Boolean", pwr_eType_Boolean }
+  ,{ "pwr_eTix_Boolean", pwr_eTix_Boolean }
+  ,{ "pwr_eType_Float32", pwr_eType_Float32 }
+  ,{ "pwr_eTix_Float32", pwr_eTix_Float32 }
+  ,{ "pwr_eType_Float64", pwr_eType_Float64 }
+  ,{ "pwr_eTix_Float64", pwr_eTix_Float64 }
+  ,{ "pwr_eType_Char", pwr_eType_Char }
+  ,{ "pwr_eTix_Char", pwr_eTix_Char }
+  ,{ "pwr_eType_Int8", pwr_eType_Int8 }
+  ,{ "pwr_eTix_Int8", pwr_eTix_Int8 }
+  ,{ "pwr_eType_Int16", pwr_eType_Int16 }
+  ,{ "pwr_eTix_Int16", pwr_eTix_Int16 }
+  ,{ "pwr_eType_Int32", pwr_eType_Int32 }
+  ,{ "pwr_eTix_Int32", pwr_eTix_Int32 }
+  ,{ "pwr_eType_UInt8", pwr_eType_UInt8 }
+  ,{ "pwr_eTix_UInt8", pwr_eTix_UInt8 }
+  ,{ "pwr_eType_UInt16", pwr_eType_UInt16 }
+  ,{ "pwr_eTix_UInt16", pwr_eTix_UInt16 }
+  ,{ "pwr_eType_UInt32", pwr_eType_UInt32 }
+  ,{ "pwr_eTix_UInt32", pwr_eTix_UInt32 }
+/*  ,{ "pwr_eType_ObjDId", pwr_eType_ObjDId } */
+/*  ,{ "pwr_eTix_ObjDId", pwr_eTix_ObjDId } */
+  ,{ "pwr_eType_Buffer", pwr_eType_Buffer }
+  ,{ "pwr_eTix_Buffer", pwr_eTix_Buffer }
+  ,{ "pwr_eType_String", pwr_eType_String }
+  ,{ "pwr_eTix_String", pwr_eTix_String }
+  ,{ "pwr_eType_Enum", pwr_eType_Enum }
+  ,{ "pwr_eTix_Enum", pwr_eTix_Enum }
+  ,{ "pwr_eType_Struct", pwr_eType_Struct }
+  ,{ "pwr_eTix_Struct", pwr_eTix_Struct }
+  ,{ "pwr_eType_Mask", pwr_eType_Mask }
+  ,{ "pwr_eTix_Mask", pwr_eTix_Mask }
+  ,{ "pwr_eType_Array", pwr_eType_Array }
+  ,{ "pwr_eTix_Array", pwr_eTix_Array }
+  ,{ "pwr_eType_Time", pwr_eType_Time }
+  ,{ "pwr_eTix_Time", pwr_eTix_Time }
+  ,{ "pwr_eType_Text", pwr_eType_Text }
+  ,{ "pwr_eTix_Text", pwr_eTix_Text }
+  ,{ "pwr_eType_Objid", pwr_eType_Objid }
+  ,{ "pwr_eTix_Objid", pwr_eTix_Objid }
+  ,{ "pwr_eType_AttrRef", pwr_eType_AttrRef }
+  ,{ "pwr_eTix_AttrRef", pwr_eTix_AttrRef }
+  ,{ "pwr_eType_ClassId", pwr_eType_ClassId }
+  ,{ "pwr_eTix_ClassId", pwr_eTix_ClassId }
+  ,{ "pwr_eType_TypeId", pwr_eType_TypeId }
+  ,{ "pwr_eTix_TypeId", pwr_eTix_TypeId }
+  ,{ "pwr_eType_VolumeId", pwr_eType_VolumeId }
+  ,{ "pwr_eTix_VolumeId", pwr_eTix_VolumeId }
+  ,{ "pwr_eType_ObjectIx", pwr_eType_ObjectIx }
+  ,{ "pwr_eTix_ObjectIx", pwr_eTix_ObjectIx }
+  ,{ "pwr_eType_RefId", pwr_eType_RefId }
+  ,{ "pwr_eTix_RefId", pwr_eTix_RefId }
+  ,{ "pwr_eType_DeltaTime", pwr_eType_DeltaTime }
+  ,{ "pwr_eTix_DeltaTime", pwr_eTix_DeltaTime }
+  ,{ 0, 0 }
+};
+
+/* System Classes */
+static struct s_sym classes[] =
+{
+   { "pwr_eClass_ClassDef", pwr_eClass_ClassDef }
+  ,{ "pwr_eCix_ClassDef", pwr_eCix_ClassDef }
+  ,{ "pwr_eClass_Type", pwr_eClass_Type }
+  ,{ "pwr_eCix_Type", pwr_eCix_Type }
+  ,{ "pwr_eClass_TypeDef", pwr_eClass_TypeDef }
+  ,{ "pwr_eCix_TypeDef", pwr_eCix_TypeDef }
+  ,{ "pwr_eClass_ObjBodyDef", pwr_eClass_ObjBodyDef }
+  ,{ "pwr_eCix_ObjBodyDef", pwr_eCix_ObjBodyDef }
+  ,{ "pwr_eClass_Param", pwr_eClass_Param }
+  ,{ "pwr_eCix_Param", pwr_eCix_Param }
+  ,{ "pwr_eClass_Input", pwr_eClass_Input }
+  ,{ "pwr_eCix_Input", pwr_eCix_Input }
+  ,{ "pwr_eClass_Output", pwr_eClass_Output }
+  ,{ "pwr_eCix_Output", pwr_eCix_Output }
+  ,{ "pwr_eClass_Intern", pwr_eClass_Intern }
+  ,{ "pwr_eCix_Intern", pwr_eCix_Intern }
+  ,{ "pwr_eClass_Buffer", pwr_eClass_Buffer }
+  ,{ "pwr_eCix_Buffer", pwr_eCix_Buffer }
+  ,{ "pwr_eClass_ObjXRef", pwr_eClass_ObjXRef }
+  ,{ "pwr_eCix_ObjXRef", pwr_eCix_ObjXRef }
+  ,{ "pwr_eClass_Layout", pwr_eClass_Layout }
+  ,{ "pwr_eCix_Layout", pwr_eCix_Layout }
+  ,{ "pwr_eClass_Group", pwr_eClass_Group }
+  ,{ "pwr_eCix_Group", pwr_eCix_Group }
+  ,{ "pwr_eClass_GroupRef", pwr_eClass_GroupRef }
+  ,{ "pwr_eCix_GroupRef", pwr_eCix_GroupRef }
+  ,{ "pwr_eClass_TypeHier", pwr_eClass_TypeHier }
+  ,{ "pwr_eCix_TypeHier", pwr_eCix_TypeHier }
+  ,{ "pwr_eClass_ClassHier", pwr_eClass_ClassHier }
+  ,{ "pwr_eCix_ClassHier", pwr_eCix_ClassHier }
+  ,{ "pwr_eClass_ModHier", pwr_eClass_ModHier }
+  ,{ "pwr_eCix_ModHier", pwr_eCix_ModHier }
+  ,{ "pwr_eClass_PlantHier", pwr_eClass_PlantHier }
+  ,{ "pwr_eCix_PlantHier", pwr_eCix_PlantHier }
+  ,{ "pwr_eClass_PlcProgram", pwr_eClass_PlcProgram }
+  ,{ "pwr_eCix_PlcProgram", pwr_eCix_PlcProgram }
+  ,{ "pwr_eClass_PlcWindow", pwr_eClass_PlcWindow }
+  ,{ "pwr_eCix_PlcWindow", pwr_eCix_PlcWindow }
+  ,{ "pwr_eClass_PlcNode", pwr_eClass_PlcNode }
+  ,{ "pwr_eCix_PlcNode", pwr_eCix_PlcNode }
+  ,{ "pwr_eClass_PlcConnection", pwr_eClass_PlcConnection }
+  ,{ "pwr_eCix_PlcConnection", pwr_eCix_PlcConnection }
+  ,{ "pwr_eClass_Point", pwr_eClass_Point }
+  ,{ "pwr_eCix_Point", pwr_eCix_Point }
+  ,{ "pwr_eClass_GraphPlcProgram", pwr_eClass_GraphPlcProgram }
+  ,{ "pwr_eCix_GraphPlcProgram", pwr_eCix_GraphPlcProgram }
+  ,{ "pwr_eClass_GraphPlcWindow", pwr_eClass_GraphPlcWindow }
+  ,{ "pwr_eCix_GraphPlcWindow", pwr_eCix_GraphPlcWindow }
+  ,{ "pwr_eClass_GraphPlcNode", pwr_eClass_GraphPlcNode }
+  ,{ "pwr_eCix_GraphPlcNode", pwr_eCix_GraphPlcNode }
+  ,{ "pwr_eClass_GraphPlcConnection", pwr_eClass_GraphPlcConnection }
+  ,{ "pwr_eCix_GraphPlcConnection", pwr_eCix_GraphPlcConnection }
+  ,{ "pwr_eClass_PlcPgm", pwr_eClass_PlcPgm }
+  ,{ "pwr_eCix_PlcPgm", pwr_eCix_PlcPgm }
+/*  ,{ "pwr_eClass_Hierarchy", pwr_eClass_Hierarchy }*/
+/*  ,{ "pwr_eCix_Hierarchy", pwr_eCix_Hierarchy }*/
+  ,{ "pwr_eClass_NodeHier", pwr_eClass_NodeHier }
+  ,{ "pwr_eCix_NodeHier", pwr_eCix_NodeHier }
+  ,{ "pwr_eClass_PgmDef", pwr_eClass_PgmDef }
+  ,{ "pwr_eCix_PgmDef", pwr_eCix_PgmDef }
+  ,{ "pwr_eClass_Node", pwr_eClass_Node }
+  ,{ "pwr_eCix_Node", pwr_eCix_Node }
+  ,{ "pwr_eClass_Appl", pwr_eClass_Appl }
+  ,{ "pwr_eCix_Appl", pwr_eCix_Appl }
+  ,{ "pwr_eClass_System", pwr_eClass_System }
+  ,{ "pwr_eCix_System", pwr_eCix_System }
+  ,{ "pwr_eClass_LibHier", pwr_eClass_LibHier }
+  ,{ "pwr_eCix_LibHier", pwr_eCix_LibHier }
+  ,{ "pwr_eClass_DocHier", pwr_eClass_DocHier }
+  ,{ "pwr_eCix_DocHier", pwr_eCix_DocHier }
+  ,{ "pwr_eClass_SystemVersion", pwr_eClass_SystemVersion }
+  ,{ "pwr_eCix_SystemVersion", pwr_eCix_SystemVersion }
+  ,{ "pwr_eClass_NodeVersion", pwr_eClass_NodeVersion }
+  ,{ "pwr_eCix_NodeVersion", pwr_eCix_NodeVersion }
+  ,{ "pwr_eClass_BootVersion", pwr_eClass_BootVersion }
+  ,{ "pwr_eCix_BootVersion", pwr_eCix_BootVersion }
+  ,{ "pwr_eClass_AttrXRef", pwr_eClass_AttrXRef }
+  ,{ "pwr_eCix_AttrXRef", pwr_eCix_AttrXRef }
+  ,{ "pwr_eClass_Menu", pwr_eClass_Menu }
+  ,{ "pwr_eCix_Menu", pwr_eCix_Menu }
+  ,{ "pwr_eClass_MenuSeparator", pwr_eClass_MenuSeparator }
+  ,{ "pwr_eCix_MenuSeparator", pwr_eCix_MenuSeparator }
+  ,{ "pwr_eClass_MenuCascade", pwr_eClass_MenuCascade }
+  ,{ "pwr_eCix_MenuCascade", pwr_eCix_MenuCascade }
+  ,{ "pwr_eClass_MenuButton", pwr_eClass_MenuButton }
+  ,{ "pwr_eCix_MenuButton", pwr_eCix_MenuButton }
+  ,{ "pwr_eClass_Object", pwr_eClass_Object }
+  ,{ "pwr_eCix_Object", pwr_eCix_Object }
+  ,{ "pwr_eClass_DbCallBack", pwr_eClass_DbCallBack }
+  ,{ "pwr_eCix_DbCallBack", pwr_eCix_DbCallBack }
+  ,{ "pwr_eClass_Alias", pwr_eClass_Alias }
+  ,{ "pwr_eCix_Alias", pwr_eCix_Alias }
+  ,{ "pwr_eClass_RootVolume", pwr_eClass_RootVolume }
+  ,{ "pwr_eCix_RootVolume", pwr_eCix_RootVolume }
+  ,{ "pwr_eClass_SubVolume", pwr_eClass_SubVolume }
+  ,{ "pwr_eCix_SubVolume", pwr_eCix_SubVolume }
+  ,{ "pwr_eClass_SharedVolume", pwr_eClass_SharedVolume }
+  ,{ "pwr_eCix_SharedVolume", pwr_eCix_SharedVolume }
+  ,{ "pwr_eClass_DynamicVolume", pwr_eClass_DynamicVolume }
+  ,{ "pwr_eCix_DynamicVolume", pwr_eCix_DynamicVolume }
+  ,{ "pwr_eClass_SystemVolume", pwr_eClass_SystemVolume }
+  ,{ "pwr_eCix_SystemVolume", pwr_eCix_SystemVolume }
+  ,{ "pwr_eClass_ClassVolume", pwr_eClass_ClassVolume }
+  ,{ "pwr_eCix_ClassVolume", pwr_eCix_ClassVolume }
+  ,{ "pwr_eClass_WorkBenchVolume", pwr_eClass_WorkBenchVolume }
+  ,{ "pwr_eCix_WorkBenchVolume", pwr_eCix_WorkBenchVolume }
+  ,{ "pwr_eClass_DirectoryVolume", pwr_eClass_DirectoryVolume }
+  ,{ "pwr_eCix_DirectoryVolume", pwr_eCix_DirectoryVolume }
+  ,{ "pwr_eClass_CreateVolume", pwr_eClass_CreateVolume }
+  ,{ "pwr_eCix_CreateVolume", pwr_eCix_CreateVolume }
+  ,{ "pwr_eClass_MountVolume", pwr_eClass_MountVolume }
+  ,{ "pwr_eCix_MountVolume", pwr_eCix_MountVolume }
+  ,{ "pwr_eClass_MountObject", pwr_eClass_MountObject }
+  ,{ "pwr_eCix_MountObject", pwr_eCix_MountObject }
+  ,{ "pwr_eClass_RtMenu", pwr_eClass_RtMenu }
+  ,{ "pwr_eCix_RtMenu", pwr_eCix_RtMenu }
+  ,{ 0, 0 }
+};
+
+
+/* Datatypes */
+static struct s_sym editor[] =
+{
+   { "pwr_eEditor_HiEd", pwr_eEditor_HiEd }
+  ,{ "pwr_eEditor_PlcEd", pwr_eEditor_PlcEd }
+  ,{ "pwr_eEditor_AttrEd", pwr_eEditor_AttrEd }
+  ,{ "pwr_eEditor_ClassEd", pwr_eEditor_ClassEd }
+
+  ,{ "pwr_eMethod__", pwr_eMethod__ }
+  ,{ "pwr_eMethod_Standard", pwr_eMethod_Standard }
+  ,{ "pwr_eMethod_Connections", pwr_eMethod_Connections }
+  ,{ "pwr_eMethod_DrawingInfo", pwr_eMethod_DrawingInfo }
+  ,{ "pwr_eMethod_DevBodyOnly", pwr_eMethod_DevBodyOnly }
+  ,{ "pwr_eMethod_RtAndDevBodies", pwr_eMethod_RtAndDevBodies }
+  ,{ "pwr_eMethod_RtConnectionsAndDevBodies", pwr_eMethod_RtConnectionsAndDevBodies }
+  ,{ "pwr_eMethod_DevBodyWithChkb", pwr_eMethod_DevBodyWithChkb }
+  ,{ "pwr_eMethod_SysBody", pwr_eMethod_SysBody }
+  ,{ "pwr_eMethod_DevBodyConnections", pwr_eMethod_DevBodyConnections }
+  ,{ "pwr_ePopEditor__", pwr_ePopEditor__ }
+  ,{ "pwr_ePopEditor_GMS", pwr_ePopEditor_GMS }
+  ,{ "pwr_ePopEditor_Opcom", pwr_ePopEditor_Opcom }
+  ,{ 0, 0 }
+};
+
+static struct s_sym attr_flags[] =
+{
+/* Bitmask for flags */
+
+   { "PWR_MASK_POINTER",	PWR_MASK_POINTER } 
+  ,{ "PWR_MASK_ARRAY",		PWR_MASK_ARRAY } 
+  ,{ "PWR_MASK_BACKUP",		PWR_MASK_BACKUP } 
+  ,{ "PWR_MASK_CHANGELOG",	PWR_MASK_CHANGELOG } 
+  ,{ "PWR_MASK_STATE",		PWR_MASK_STATE } 
+  ,{ "PWR_MASK_CONST",		PWR_MASK_CONST } 
+  ,{ "PWR_MASK_RTVIRTUAL",	PWR_MASK_RTVIRTUAL } 
+  ,{ "PWR_MASK_DEVBODYREF",	PWR_MASK_DEVBODYREF } 
+  ,{ "PWR_MASK_DYNAMIC",	PWR_MASK_DYNAMIC } 
+  ,{ "PWR_MASK_OBJDIDSELF",	PWR_MASK_OBJDIDSELF } 
+  ,{ "PWR_MASK_OBJIDSELF",	PWR_MASK_OBJIDSELF } 
+  ,{ "PWR_MASK_NOEDIT",		PWR_MASK_NOEDIT } 
+  ,{ "PWR_MASK_INVISIBLE",	PWR_MASK_INVISIBLE } 
+  ,{ "PWR_MASK_REFDIRECT",	PWR_MASK_REFDIRECT }
+  ,{ "PWR_MASK_NOINVERT",	PWR_MASK_NOINVERT }
+  ,{ "PWR_MASK_NOREMOVE",	PWR_MASK_NOREMOVE }
+  ,{ "PWR_MASK_RTDBREF",	PWR_MASK_RTDBREF }
+  ,{ "PWR_MASK_PRIVATE",	PWR_MASK_PRIVATE }
+
+  ,{ "pwr_mClassDef_DevOnly",	pwr_mClassDef_DevOnly }
+  ,{ "pwr_mClassDef_System",	pwr_mClassDef_System }
+  ,{ "pwr_mClassDef_Multinode",	pwr_mClassDef_Multinode }
+  ,{ "pwr_mClassDef_ObjXRef",	pwr_mClassDef_ObjXRef }
+  ,{ "pwr_mClassDef_RtBody",	pwr_mClassDef_RtBody }
+  ,{ "pwr_mClassDef_AttrXRef",	pwr_mClassDef_AttrXRef }
+  ,{ "pwr_mClassDef_ObjRef",	pwr_mClassDef_ObjRef }
+  ,{ "pwr_mClassDef_AttrRef",	pwr_mClassDef_AttrRef }
+  ,{ "pwr_mClassDef_TopObject",	pwr_mClassDef_TopObject }
+  ,{ "pwr_mClassDef_NoAdopt",	pwr_mClassDef_NoAdopt }
+  ,{ "pwr_mClassDef_Template",	pwr_mClassDef_Template }
+  ,{ "pwr_mClassDef_IO",	pwr_mClassDef_IO }
+  ,{ 0, 0 }
+};
+
+/* Types for dattr */
+static struct s_sym dattr_types[] =
+{
+/* { "Vnn", 0 } */
+   { "L", 1 }
+  ,{ "UL", 2 }
+  ,{ "O", 3 }
+  ,{ "S", 4 }
+  ,{ "US", 5 }
+  ,{ "C", 6 }
+  ,{ "T", 7 }
+  ,{ "VO", 8 }
+  ,{ "CI", 9 }
+  ,{ 0, 0 }
+};
+
+
+static int dattr_size[] =
+{
+  0, 4, 4, 8, 2, 2, 1, 4, 4, 4
+};
+
+static int dattr_typecvt[] =
+{
+  pwr_eType_String,
+  pwr_eType_Int32,
+  pwr_eType_UInt32,
+  pwr_eType_Objid,
+  pwr_eType_Int16,
+  pwr_eType_UInt16,
+  pwr_eType_Char,
+  pwr_eType_TypeId,
+  pwr_eType_VolumeId,
+  pwr_eType_ClassId,
+};
+
+
+struct s_record
+{
+  int	rtyp;
+  char	p1[50];
+  char	p2[50];
+  char	p3[50];
+  char	p4[50];
+  char	p5[50];
+};
+
+struct sobject
+{
+  struct sobject *prev;		/* Next active object */
+  char	name[50];		/* Name of object */
+  pwr_tObjid	od;			/* objid */
+  pwr_tClassId	class;			/* objects class */
+
+  int	currnamlen;		/* Length of root name for current name */
+  pwr_tObjid	prevod;			/* Parent objid */
+};
+
+struct s_fixup
+{
+  struct s_fixup *next;
+  int	line;
+  pwr_tObjid	od;
+  pwr_tClassId	class;		/*  pwr_eType_Objid or pwr_eType_AttrRef */
+  char	bodyname[50];
+  char	attr[50];
+  unsigned int size;
+  unsigned int offset;
+  char	*objidref;
+  ldh_tSesContext sess;		/* Current session */
+};
+
+struct s_BodyBuf
+{
+  struct s_BodyBuf *next;	/* Next lower level buffer */
+  ldh_sParDef	*bodydef;	/* Current structure body definition */
+  int	rows;			/* Rows in structure body definition */
+  int	offset;			/* Offset to start of this part */
+};
+
+struct sheader
+{
+
+  ldh_tWBContext wbctx;		/* Database workbench */
+  ldh_tVolContext volctx;	/* Current volume */
+  ldh_tSesContext sess;		/* Current session */
+
+  FILE *fp;			/* File to read from */
+  char buf[BUFSIZE];		/* Read buffer */
+  int cline;			/* Current line */
+  int dont_read;		/* Reread last line */
+  int parse;			/* Parsing is turned on */
+
+  struct s_record *r;		/* Current parse record */
+
+  char currname[512];		/* Current/father object full name */
+  pwr_tObjid	od;		/* Current/father object objid */
+  int	level;			/* Current/father object level */
+  int	define;			/* Current/father object is DOBJECT */
+  struct sobject *cobj;		/* List of active objects */
+
+  char	bodyname[50];		/* Current bodyname */
+  char	*body;			/* Current body buffer */
+  int	bodysize;		/* Current body size */
+
+  struct s_BodyBuf *cbd;	/* Current body definition list */
+
+  char	*dbody;			/* Current dbody buffer */
+  char	*dbodyp;		/* Current dbody buffer position */
+  
+  struct s_fixup *fixup;	/* Linked list for objidreference fixup */
+
+  char volumenamelst[WBLOAD_MAXVOLUMES][50]; /* List of names of attached volumes */
+  ldh_tVolContext volctxlst[WBLOAD_MAXVOLUMES]; /* List of volctx of attached volumes */
+  ldh_tSesContext sesslst[WBLOAD_MAXVOLUMES];	/* List of opened session for attached volumes */
+  int detachvolume[WBLOAD_MAXVOLUMES];	/* Flag if volume should be detached */
+  int volumecreated[WBLOAD_MAXVOLUMES];	/* Flag if volume is created */
+  int  volumecount;		/* Number of attached volumes */
+};
+
+
+static FILE *listing;
+static int iflag = 0;	/* i=1 =>Ignore errors, load to WB */
+static int lflag = 0;	/* l=1 =>List all lines */
+static int noidxflag = 0; /* noidx=1 =>Ignore index */
+
+int wbload_psts(unsigned long int sts, char *mess, FILE *listing);
+static void GetFileName(char *, char *, char *);
+static void CheckIfRoot( 
+  char *root, 
+  char *name,
+  char *converted_name
+);
+static pwr_tStatus process_range( struct sheader *h);
+static int add_object( struct sheader *h);
+static int add_volume( struct sheader *h);
+static int reference_object( struct sheader *h);
+static void rem_object( struct sheader *h);
+static void rem_volume( struct sheader *h);
+static void process_body( struct sheader *h);
+static void process_head( struct sheader *h);
+static void process_dbody( struct sheader *h);
+static void process_buffer( struct sheader *h);
+static void process_dbuffer( struct sheader *h);
+static void process_attr( struct sheader *h);
+static void process_dattr( struct sheader *h);
+static void add_objidfixup(
+  struct sheader *h,
+  pwr_tObjid od,
+  pwr_tClassId class,
+  char *bodyname,
+  char *attr,
+  char *objidref,
+  int size,
+  int offset,
+  ldh_tSesContext sess
+);
+static void fixup_objid( struct sheader *h );
+static char *decode_attribute (
+  char *line,
+  char *attr,
+  char *buf,
+  int type,
+  int size
+);
+static int convconst (
+  int *val,
+  char *str
+);
+static void putback_token(struct sheader *h);
+static int get_token(struct sheader *h );
+static int get_record (
+  FILE *fp,
+  char *buf,
+  int *dont_read,
+  int *cline,
+  int parse,
+  int level
+);
+static void check_record	(
+  char *buf,
+  struct s_record *r
+);
+static int lookup (
+  int *type,
+  char *keyword,
+  struct s_sym *table
+);
+static int attrlookup (
+  int *index, 
+  char *keyword,
+  ldh_sParDef *table,
+  int max
+);
+static void GetFileName (
+  char *inname, 
+  char *outname, 
+  char *ext
+);
+static int find_volume( 
+	struct sheader *h,
+	char *volumename
+);
+
+
+pwr_tStatus ldh_wbload ( 
+  ldh_tWBContext wbctx,
+  ldh_tSesContext sess,
+  int i_flag,
+  int l_flag,
+  char  *rootname,
+  char	*loadfile,
+  char  *listfile,
+  int	announce_arg,
+  int 	noidx_flag
+) {
+  int	status;
+  struct sheader *h;
+  FILE *fp;
+  int	find_endobject = 0;
+  char *s;
+  char rootparent[256];
+  char filename[80];
+  ldh_sVolumeInfo info;
+  char volumename[32];
+  int size;
+  int i;
+
+  lflag = l_flag;
+  iflag = i_flag;
+  noidxflag = noidx_flag;
+  savcnt = 0;
+  volsavcnt = 0;
+  errcnt = 0;
+  root = rootname;
+
+  if ( root != NULL)
+    GetFileName( loadfile, filename, ".pload");
+  else
+    GetFileName( loadfile, filename, ".wb_load");
+  dcli_translate_filename( filename, filename);
+
+  fp = fopen( filename, "r");
+  if (fp == 0)
+  {
+    perror( loadfile);
+    return LDH__FILEOPEN;
+  }
+
+  if ( listfile != NULL)
+  {
+    GetFileName( listfile, filename, ".lis");
+    listing = fopen( filename, "w");
+    if (listing == 0)
+    {
+      perror( listfile);
+      return LDH__FILEOPEN;
+    }
+  }
+  else
+    listing = stderr;
+
+  announce = announce_arg;
+
+/*
+ * Now allocate header structure
+ */
+  h = (struct sheader *) XtCalloc( 1, sizeof( *h ));
+
+/*
+ * Implicit
+  *h->currname = '\0';
+  h->level = 0;
+  h->cobj = 0;
+  h->od = 0;
+  h->fixup = NULL;
+*/
+  h->r = (struct s_record *) XtCalloc( 1, sizeof( *h->r ));
+  h->fp = fp;
+
+/* Open database */
+  h->wbctx = wbctx;
+
+  if ( root != NULL)
+    {
+    /* Get parent of root object */  
+    strcpy( rootparent, root);
+    s = strrchr( rootparent, '-');
+    if ( s != 0)
+      {
+      *s = 0;
+      /* Lookup object */
+      status = ldh_NameToObjid(
+		sess,
+		(pwr_tObjid *) &h->od,
+		rootparent );
+      If_Error_Then
+        {
+        wbload_psts( status, "ldh_NameToObjid", listing );
+        fprintf(listing, "%%WBLOAD-E-Error Parent to root does not exist" );
+        return(LDH__WBLOAD);
+        }
+      }
+    }
+
+  if ( sess != 0)
+     {
+     /* Open a new session in the current volume ctx */
+
+     h->volctxlst[h->volumecount] = ldh_SessionToVol( sess);
+
+     status = ldh_GetVolumeInfo( h->volctxlst[h->volumecount], &info);
+     if (!wbload_psts(status, "ldh_GetVolumeInfo", NULL))
+        {
+        if (listing != stderr) fclose( listing );
+        return(LDH__WBLOAD);
+        }
+
+     status = ldh_VolumeIdToName( h->wbctx, info.Volume, volumename, 
+		sizeof(volumename), &size);
+     if (!wbload_psts(status, "ldh_VolumeIdToName", NULL))
+        {
+        if (listing != stderr) fclose( listing );
+        return(LDH__WBLOAD);
+        }
+
+     s = volumename;
+
+     status = ldh_OpenSession( &h->sesslst[h->volumecount], 
+	      h->volctxlst[h->volumecount], ldh_eAccess_ReadWrite, 
+	      ldh_eUtility_Pwr);
+     if (!wbload_psts(status, "ldh_OpenSession", NULL))
+        {
+        if (listing != stderr) fclose( listing );
+        return(LDH__WBLOAD);
+        }
+ 
+     strcpy( h->volumenamelst[h->volumecount], volumename);
+     h->volctx = h->volctxlst[h->volumecount];
+     h->sess = h->sesslst[h->volumecount];
+     h->detachvolume[h->volumecount] = 0;
+     h->volumecount++;
+     }
+
+
+
+/*
+ * Now, get lines from the file, decode and load the database
+ */
+  h->parse = (find_endobject == 0);
+  while( get_token( h ) )
+  {
+    h->parse = (find_endobject == 0);
+    check_record( h->buf, h->r);
+    if ( find_endobject == 0 )
+    {
+      switch( h->r->rtyp )
+      {
+      case T_VOLUME:
+      case T_DVOLUME:
+	find_endobject = add_volume( h );
+	break;
+
+      case T_OBJECT:
+      case T_DOBJECT:
+	find_endobject = add_object( h );
+	break;
+
+      case T_SOBJECT:
+	find_endobject = reference_object( h );
+	break;
+
+      case T_HEAD:
+	process_head( h );
+	break;
+
+      case T_RANGE:
+	process_range( h );
+	break;
+	
+      case T_BODY:
+	process_body( h );
+	break;
+
+      case T_DBODY:
+	process_dbody( h );
+	break;
+
+
+      case T_ENDSOBJECT:
+	if (h->level != 1)
+	  {
+	  fprintf(listing, "%%WBLOAD-E-Error <EndSObject> level error at line: %d,\n>>> %s", h->cline, h->buf );
+	  ++errcnt;
+	  }
+      case T_ENDDOBJECT:
+      case T_ENDOBJECT:
+	rem_object( h );
+	break;
+
+      case T_ENDDVOLUME:
+      case T_ENDVOLUME:
+	if (h->level != 1)
+	  {
+	  fprintf(listing, "%%WBLOAD-E-Error <EndVolume> level error at line: %d,\n>>> %s", h->cline, h->buf );
+	  ++errcnt;
+	  }
+        else
+	  {
+	  rem_volume( h );
+	  }
+	break;
+
+      default:
+	fprintf(listing, "%%WBLOAD-E-Error at line: %d,\n>>> %s", h->cline, h->buf );
+	++errcnt;
+      }
+    }
+    else
+    {
+      switch( h->r->rtyp )
+      {
+      case T_OBJECT:
+      case T_DOBJECT:
+      case T_VOLUME:
+	++find_endobject;
+	break;
+
+      case T_ENDSOBJECT:
+      case T_ENDDOBJECT:
+      case T_ENDOBJECT:
+      case T_ENDVOLUME:
+	--find_endobject;
+	break;
+
+      default:
+	break;
+      };
+    }
+    h->parse = (find_endobject == 0);
+  }
+  fclose( h->fp );
+
+  fixup_objid( h );
+
+  if (errcnt == 0 || iflag)
+  {
+    for ( i = 0; i < h->volumecount; i++)
+    {
+       status = ldh_SaveSession(h->sesslst[i]);
+       If_Error_Then
+         wbload_psts( status, "ldh_SaveSession", listing );
+
+       status = ldh_CloseSession(h->sesslst[i]);
+       If_Error_Then
+         wbload_psts( status, "ldh_CloseSession", listing );
+
+       if ( h->detachvolume[i])
+       {
+         status = ldh_DetachVolume( h->wbctx, h->volctxlst[i]);
+         If_Error_Then
+           wbload_psts( status, "ldh_DetachVolume", listing );
+       }
+     }
+  }
+  else
+  {
+    for ( i = 0; i < h->volumecount; i++)
+    {
+       status = ldh_RevertSession(h->sesslst[i]);
+       If_Error_Then
+         wbload_psts( status, "ldh_RevertSession", listing );
+
+       status = ldh_CloseSession(h->sesslst[i]);
+       If_Error_Then
+         wbload_psts( status, "ldh_CloseSession", listing );
+
+       status = ldh_GetVolumeInfo( h->volctxlst[i], &info);
+       If_Error_Then
+         wbload_psts( status, "ldh_GetVolumeInfo", listing );
+
+       if ( h->detachvolume[i])
+       {
+         status = ldh_DetachVolume( h->wbctx, h->volctxlst[i]);
+         If_Error_Then
+           wbload_psts( status, "ldh_DetachVolume", listing );
+       }
+
+       if ( h->volumecreated[i])
+       {
+         status = ldh_DeleteVolume( h->wbctx, info.Volume);
+         If_Error_Then
+           wbload_psts( status, "ldh_DeleteVolume", listing );
+       }
+     }
+  }
+
+  if (listing != stderr) fclose( listing );
+
+
+  if (errcnt != 0 || EVEN(status))
+    {
+    printf("%%WBLOAD-E-Errors during load: %d,\n", errcnt );
+    if (iflag)
+      {
+      if (savcnt)
+        printf("%%WBLOAD-I-Saved %d object%s saved to workbench.\n", savcnt, 
+		(savcnt == 1 ? " was": "s were") );
+      if (volsavcnt)
+        printf("%%WBLOAD-I-Saved %d volume%s saved to workbench.\n", volsavcnt,
+		(volsavcnt == 1 ? " was": "s were") );
+      if ( !volsavcnt && !savcnt)
+        printf("%%WBLOAD-I-Saved No volumes or objects saved to workbench.\n");
+      }
+    else
+      {
+      printf(" No objects or volumes were saved to work bench.\n");
+      return(LDH__WBLOAD);
+      }
+    }
+  else
+    {
+    if (savcnt)
+      printf("%%WBLOAD-I-Success %d object%s saved to workbench.\n", savcnt, 
+		(savcnt == 1 ? " was": "s were") );
+    if (volsavcnt)
+      printf("%%WBLOAD-I-Success %d volume%s saved to workbench.\n", volsavcnt,
+		(volsavcnt == 1 ? " was": "s were") );
+    if ( !volsavcnt && !savcnt)
+      printf("%%WBLOAD-I-Success No volumes or objects saved to workbench.\n");
+    }
+
+  if (errcnt > 0)
+        {
+        return LDH__WBLOAD;
+        }
+
+  return LDH__SUCCESS;
+
+}
+
+
+static void CheckIfRoot( 
+  char *root, 
+  char *name,
+  char *converted_name
+) {
+  char *s;
+#define ROOTOBJECTMARK "#rootobject#"
+  if ( root == NULL)
+  {
+    strcpy( converted_name, name);
+    return;
+  }
+  if ( strcmp( ROOTOBJECTMARK, name) == 0 )
+  {
+    s = strrchr( root, '-');
+    if ( s != 0)
+      {
+      s++;
+      strcpy( converted_name, s);
+      }
+    else
+      strcpy( converted_name, root);
+  }
+  else
+    strcpy( converted_name, name);
+}
+
+static void ConvertObjectName( 
+  char *root, 
+  char *name,
+  char *converted_name)
+{
+  char *s;
+#define ROOTMARK "#root#"
+  if ( root == NULL)
+  {
+    strcpy( converted_name, name);
+    return;
+  }
+  s = name + strlen(ROOTMARK);
+  if ( strncmp( ROOTMARK, name, strlen(ROOTMARK)) == 0 &&
+	(*s == '-' || *s == 0))
+  {
+    strcpy( converted_name, root);
+    strcat( converted_name, s);
+  }
+  else
+    strcpy( converted_name, name);
+}
+
+/*------------------------------------------------------------*/
+/*
+ * RANGE <objidrange>
+ *
+ *  Action:
+ *  	Append object to current name and create object
+ *
+ */
+/*------------------------------------------------------------*/
+
+static pwr_tStatus process_range( struct sheader *h)
+{
+
+  DP( fprintf( listing, "process_range\n") );
+
+  fprintf(listing, "%%WBLOAD-W-Warning <Range> is obsolete at line: %d,\n>>> %s",
+			h->cline, h->buf );
+  return 1;
+
+
+}
+
+/*------------------------------------------------------------*/
+/*
+ * VOLUME <volumename> <classname> <volid>
+ *
+ *  ACTION:
+ *	Create volume
+ *
+ */
+/*------------------------------------------------------------*/
+
+#define ERROR_IN_VOLUME( _A_ ) 	{ objerror = _A_; goto add_volume_error; }
+
+static int add_volume( struct sheader *h)
+{
+  struct sobject *o;
+  char *objerror;
+  struct s_record *r = h->r;
+  char buf[512];
+  int status;
+  ldh_tSesContext sess;
+
+  DP( fprintf( listing, "add_volume %s\n", r->p2 ) );
+
+  o = (struct sobject *) XtCalloc( 1, sizeof(struct sobject ) );
+
+/* Get name from p2 */
+  if ( *r->p2 == '\0' ) ERROR_IN_VOLUME( "Element 2: No volume name given" );
+  CheckIfRoot( root, r->p2, o->name);
+
+/*
+ * Decode Class of volume from p3
+ * 1) Classname in LDH
+ * 2) system classes direct
+ * 3) integer value
+ */
+
+  if ( *r->p3 == '\0' ) ERROR_IN_VOLUME( "Element 3: No class name given" );
+
+  status = ldh_ClassNameToId(
+		h->sess,
+		&o->class,
+		r->p3 );
+  If_Error_Then
+  {
+    if (sscanf( r->p3, "%d%s", &o->class, buf ) != 1)
+    {
+      if (*r->p3 == '$')
+      {
+        if (strcmp( r->p3, "$Attribute") != 0)
+          sprintf( buf, "pwr_eClass_%s", &r->p3[1]);
+	else
+	  strcpy( buf, "pwr_eClass_Param");
+        if (!lookup( (int *) &o->class, buf, classes ))
+	{
+          if (!lookup( (int *) &o->class, buf, datatypes ))
+            ERROR_IN_VOLUME( "Element 3: Class not known" )
+        }
+      }
+      else
+      {
+        if (!lookup( (int *) &o->class, r->p3, classes ))
+	{
+          if (!lookup( (int *) &o->class, r->p3, datatypes ))
+          ERROR_IN_VOLUME( "Element 3: Class not known" )
+        }
+      }
+    }
+  }
+
+
+/*
+ * Find volid of volume from p4 if specifified
+ * !!! To do !!!
+ */
+  if ( *r->p4 != '\0' )
+  {
+    status = cdh_StringToVolumeId( r->p4, &o->od.vid);
+    if (EVEN(status))
+      ERROR_IN_VOLUME( "Element 4: Error in volume identity" );
+  };
+
+/*
+ * Call LDH to create volume
+ */
+
+/* Create volume */
+  status = ldh_CreateVolume(
+		h->wbctx,
+		&sess,
+		o->od.vid,
+		o->name,
+		o->class);
+  If_Error_Then
+    {
+    wbload_psts( status, "ldh_CreateVolume", listing );
+    ERROR_IN_VOLUME( "Error creating volume" )
+    }
+  else
+    ++volsavcnt;
+
+/*
+ * Store the session 
+ */
+  h->detachvolume[h->volumecount] = 1;
+  h->volumecreated[h->volumecount] = 1;
+  h->volctxlst[h->volumecount] = ldh_SessionToVol( sess);
+  h->sesslst[h->volumecount] = sess;
+  strcpy( h->volumenamelst[h->volumecount], o->name);
+  h->volctx = h->volctxlst[h->volumecount];
+  h->sess = h->sesslst[h->volumecount];
+  h->volumecount++;
+
+/* Set this object as current/father object */
+  o->prevod = h->od;
+  h->od = o->od;
+
+  o->prev = h->cobj;
+  o->currnamlen = strlen( h->currname );
+  sprintf(&h->currname[o->currnamlen], "%s%s",
+		(h->level != 0) ? "-" : "", o->name );
+  h->cobj = o;
+  ++h->level;
+
+  return( 0 );
+
+add_volume_error:
+  fprintf(listing, "%%WBLOAD-E-Error %s in <Volume> at line: %d,\n>>> %s", objerror, h->cline, h->buf );
+  ++errcnt;
+  XtFree((char *) o);
+
+  return(1);
+}
+
+/*------------------------------------------------------------*/
+/*
+ * OBJECT <objectname> <classname> <objid>
+ *
+ *  ACTION:
+ *	Create object and append object to current name.
+ *
+ */
+/*------------------------------------------------------------*/
+
+#define ERROR_IN_OBJECT( _A_ ) 	{ objerror = _A_; goto error; }
+
+static int add_object( struct sheader *h)
+{
+  struct sobject *o;
+  char *objerror;
+  struct s_record *r = h->r;
+  char buf[512];
+  int status;
+  pwr_tObjectIx oix;
+
+  DP( fprintf( listing, "add_object %s\n", r->p2 ) );
+
+  o = (struct sobject *) XtCalloc( 1, sizeof(struct sobject ) );
+
+/* Get name from p2 */
+  if ( *r->p2 == '\0' ) ERROR_IN_OBJECT( "Element 2: No object name given" );
+  CheckIfRoot( root, r->p2, o->name);
+
+/*
+ * Decode Class of object from p3
+ * 1) Classname in LDH
+ * 2) system classes direct
+ * 3) integer value
+ */
+
+  if ( *r->p3 == '\0' ) ERROR_IN_OBJECT( "Element 3: No class name given" );
+
+  status = ldh_ClassNameToId(
+		h->sess,
+		&o->class,
+		r->p3 );
+  If_Error_Then
+  {
+    if (sscanf( r->p3, "%d%s", &o->class, buf ) != 1)
+    {
+      if (*r->p3 == '$')
+      {
+        if (strcmp( r->p3, "$Attribute") != 0)
+          sprintf( buf, "pwr_eClass_%s", &r->p3[1]);
+	else
+	  strcpy( buf, "pwr_eClass_Param");
+        if (!lookup( (int *) &o->class, buf, classes ))
+	{
+          if (!lookup( (int *) &o->class, buf, datatypes ))
+            ERROR_IN_OBJECT( "Element 3: Class not known" )
+        }
+      }
+      else
+      {
+        if (!lookup( (int *) &o->class, r->p3, classes ))
+	{
+          if (!lookup( (int *) &o->class, r->p3, datatypes ))
+          ERROR_IN_OBJECT( "Element 3: Class not known" )
+        }
+      }
+    }
+  }
+
+
+/*
+ * Find objid of object from p4 if specifified
+ * !!! To do !!!
+ */
+  oix = 0;
+  if ( !noidxflag && *r->p4 != '\0' )
+  {
+    if (!lookup( (int *) &oix, r->p4, classes ))
+    {
+      if (!lookup( (int *) &oix, r->p4, datatypes ))
+      {
+        if (sscanf( r->p4, "%d%s", &oix, buf ) != 1)
+          ERROR_IN_OBJECT( "Element 4: No known fixed system object identity" );
+      }
+    }
+  }
+
+/*
+ * Call LDH to create object
+ */
+
+/* Create object */
+  status = ldh_DefineObject(
+		h->sess,
+		&o->od,
+		o->name,
+		oix,
+		o->class,
+		h->od,
+		ldh_eDest_IntoLast,
+		h->r->rtyp == T_OBJECT );
+  If_Error_Then
+    {
+    wbload_psts( status, "ldh_DefineObject", listing );
+    ERROR_IN_OBJECT( "Error creating object" )
+    }
+  else
+    ++savcnt;
+
+/* Set this object as current/father object */
+  o->prevod = h->od;
+  h->od = o->od;
+
+  o->prev = h->cobj;
+  o->currnamlen = strlen( h->currname );
+  sprintf(&h->currname[o->currnamlen], "%s%s",
+		(h->level != 0) ? "-" : "", o->name );
+  h->cobj = o;
+  ++h->level;
+
+  return( 0 );
+
+error:
+  fprintf(listing, "%%WBLOAD-E-Error %s in <Object> at line: %d,\n>>> %s", objerror, h->cline, h->buf );
+  ++errcnt;
+  XtFree((char *) o);
+
+  return(1);
+}
+
+/*------------------------------------------------------------*/
+/*
+ * SOBJECT <fullobjectname>
+ *
+ *  Action:
+ *  	Reference an existing object at level 0
+ *
+ */
+/*------------------------------------------------------------*/
+
+#define ERROR_IN_SOBJECT( _A_ ) { objerror = _A_; goto error; }
+
+static int reference_object( struct sheader *h)
+{
+  struct sobject *o;
+  char *objerror;
+  struct s_record *r = h->r;
+  int status;
+  char *s;
+  char volumename[50];
+
+  DP( fprintf( listing, "reference_object %s\n", r->p2 ) );
+
+  o = (struct sobject *) XtCalloc( 1, sizeof(struct sobject ) );
+
+/* Check for level 0 */
+  if ( h->level != 0 ) ERROR_IN_OBJECT( "SObject only valid at level 0" );
+
+/* Get name and volume */
+  if ( *r->p2 == '\0' ) ERROR_IN_SOBJECT( "No object name given" );
+  strcpy( volumename, r->p2 );
+  s = strchr( volumename, ':');
+  if ( s != 0)
+  {
+    strcpy( o->name, s+1 );
+    *s = 0;
+    status = find_volume( h, volumename);
+    If_Error_Then
+    {
+      ERROR_IN_SOBJECT( "Volume not known" );
+    }
+    if ( !strcmp(o->name, ""))
+    {
+      /* No object, just volume is supplied */
+      ++h->level;
+      return( 0 );
+    }
+  }
+  else
+    strcpy( o->name, r->p2 );
+
+/* Lookup object */
+  status = ldh_NameToObjid(
+		h->sess,
+		(pwr_tObjid *) &o->od,
+		o->name );
+  If_Error_Then
+  {
+    wbload_psts( status, "ldh_NameToObjid", listing );
+    ERROR_IN_SOBJECT( "Object not known" );
+  }
+
+
+/* Fetch class of object */
+  status = ldh_GetObjectClass(
+		h->sess,
+		o->od,
+		&o->class);
+  If_Error_Then
+  {
+    wbload_psts( status, "ldh_GetObjectClass", listing );
+    ERROR_IN_SOBJECT( "Class of object not known" );
+  }
+
+/* Set this object as current/father object */
+  o->prevod = h->od;
+  h->od = o->od;
+
+  o->prev = h->cobj;
+  o->currnamlen = strlen( h->currname );
+  sprintf(&h->currname[o->currnamlen], "%s%s",
+		(h->level != 0) ? "-" : "", o->name );
+  h->cobj = o;
+  ++h->level;
+
+  return( 0 );
+
+error:
+    fprintf(listing, "%%WBLOAD-E-Error %s in <SObject> at line: %d,\n>>> %s", objerror, h->cline, h->buf );
+  ++errcnt;
+  XtFree((char *) o);
+
+  return(1);
+}
+
+/*------------------------------------------------------------*/
+/*
+ * ENDOBJECT <eval>
+ *
+ *  Action:
+ *  	Restore previous object as current
+ *
+ */
+/*------------------------------------------------------------*/
+
+static void rem_object( struct sheader *h)
+{
+  struct sobject *o = h->cobj;
+  int status;
+
+/*
+ * Evaluate object
+ */
+
+  if ( cdh_ObjidIsNull( h->od))
+  {
+    --h->level;
+    return;
+  }
+
+  status = ldh_EvalObject( h->sess, h->od );
+  If_Error_Then
+  {
+    fprintf(listing, "%%WBLOAD-E-Error in <EndxObject> at line: %d,\n>>> %s", h->cline, h->buf );
+    wbload_psts( status, "ldh_EvalObject", listing );
+    ++errcnt;
+  }
+
+  /* Get up one level */
+  if (h->level > 0)
+  {
+    h->currname[o->currnamlen] = '\0';
+    h->od = o->prevod;
+    h->cobj = o->prev;
+    --h->level;
+
+    XtFree((char *) o);
+  }
+  else
+  {  
+    fprintf(listing, "%%WBLOAD-E-Error Unmatched <EndxObject> at line: %d,\n>>> %s", h->cline, h->buf );
+    ++errcnt;
+  }
+}
+
+/*------------------------------------------------------------*/
+/*
+ * ENDOBJECT <eval>
+ *
+ *  Action:
+ *  	Restore previous object as current
+ *
+ */
+/*------------------------------------------------------------*/
+
+static void rem_volume( struct sheader *h)
+{
+  struct sobject *o = h->cobj;
+  int status;
+
+/*
+ * Evaluate object
+ */
+
+  status = ldh_EvalObject( h->sess, h->od );
+  If_Error_Then
+  {
+    fprintf(listing, "%%WBLOAD-E-Error in <EndxVolume> at line: %d,\n>>> %s", h->cline, h->buf );
+    wbload_psts( status, "ldh_EvalObject", listing );
+    ++errcnt;
+  }
+  /* Get up one level */
+  if (h->level > 0)
+  {
+    h->currname[o->currnamlen] = '\0';
+    h->od = o->prevod;
+    h->cobj = o->prev;
+    --h->level;
+
+    XtFree((char *) o);
+  }
+  else
+  {  
+    fprintf(listing, "%%WBLOAD-E-Error Unmatched <EndxObject> at line: %d,\n>>> %s", h->cline, h->buf );
+    ++errcnt;
+  }
+}
+
+/*------------------------------------------------------------*/
+/*
+ * BODY name
+ *  ATTR
+ *  BUFFER
+ * ENDBODY
+ */
+/*------------------------------------------------------------*/
+
+#define ERROR_IN_BODY( _A_ )\
+{\
+  fprintf(listing, "%%WBLOAD-E-Error %s in <Body> at line: %d,\n>>> %s", _A_, h->cline, h->buf );\
+  flush_endbody = 1;\
+  ++errcnt;\
+  break;\
+}
+
+static void process_body( struct sheader *h)
+{
+  int endbody = FALSE;
+  int flush_endbody = FALSE;
+  struct s_record *r = h->r;
+  int status;
+
+/*
+ * Handle body
+ * ERROR => flush_endbody = TRUE
+ */
+  DP( fprintf( listing, "process_body %s\n", r->p2 ) );
+
+  h->cbd = (struct s_BodyBuf *) XtCalloc( 1, sizeof(*h->cbd) );
+  h->body = NULL;
+
+  while ( TRUE )
+  {
+
+/* Check for name */
+    if (*r->p2 == '\0')  ERROR_IN_BODY( "No object body name given" );
+
+/* Fetch the body definition */
+    status = ldh_GetObjectBodyDef(
+	h->sess,
+	h->cobj->class,
+	r->p2,
+	1,
+	&h->cbd->bodydef,
+	&h->cbd->rows );
+    If_Error_Then
+    {
+      wbload_psts( status, "ldh_GetObjectBodyDef", listing );
+      ERROR_IN_BODY( "Name of object body not known" );
+    }
+
+/* Fetch the body contents */
+    status = ldh_GetObjectBody(
+	h->sess,
+	h->od,
+	r->p2,
+	(void *) &h->body,
+	&h->bodysize );
+    If_Error_Then
+    {
+      wbload_psts( status, "ldh_GetObjectBody", listing );
+      ERROR_IN_BODY( "Body not known to ldh" );
+    }
+
+    break;
+  }
+  strcpy( h->bodyname, r->p2 );
+
+/*
+ * Handle all params
+ */
+
+  h->parse = (flush_endbody == 0);
+  while( !endbody && get_token( h ) )
+  {
+    h->parse = (flush_endbody == 0);
+    check_record( h->buf, h->r);
+    switch( h->r->rtyp )
+    {
+    case T_ATTR:
+	if (!flush_endbody) process_attr( h );
+	break;
+
+    case T_BUFFER:
+	if (!flush_endbody) process_buffer( h );
+	break;
+
+    case T_DOBJECT:
+    case T_ENDDOBJECT:
+    case T_OBJECT:
+    case T_ENDOBJECT:
+    case T_ENDVOLUME:
+	fprintf(listing, "%%WBLOAD-E-Error <EndBody> missing at line: %d,\n>>> %s", h->cline, h->buf );
+        ++errcnt;
+	putback_token( h );
+	/* break; */
+
+    case T_ENDBODY:
+	/* Store the filled in body */
+	if (!flush_endbody)
+	{
+	  status = ldh_SetObjectBody(
+	    h->sess,
+	    h->od,
+	    h->bodyname,
+	    h->body,
+	    h->bodysize );
+          If_Error_Then
+	  {
+	    wbload_psts( status, "ldh_SetObjectBody", listing );
+            ++errcnt;
+	  }
+	}
+	endbody = TRUE;
+	break;
+
+    case T_BODY:
+	fprintf(listing, "%%WBLOAD-E-Error Bodies can not be nested, line %d,\n>>> %s", h->cline, h->buf );
+        ++errcnt;
+	break;
+
+    case T_ENDBUFFER:
+	if (flush_endbody)
+	  break;
+
+    default:
+	fprintf(listing, "%%WBLOAD-E-Error Incorrect line: %d,\n>>> %s", h->cline, h->buf );
+        ++errcnt;
+	break;
+    }
+    h->parse = (flush_endbody == 0);
+  }
+
+  if( h->cbd->bodydef != NULL) XtFree((char *) h->cbd->bodydef);
+  if( h->body != NULL) XtFree((char *) h->body);
+  XtFree((char *) h->cbd);
+  h->cbd = NULL;
+  h->body = NULL;
+  h->parse = TRUE;
+
+  return;
+}
+
+/*------------------------------------------------------------*/
+/*
+ * HEAD "Wandted-node" "Actual-node"
+ */
+/*------------------------------------------------------------*/
+
+#define ERROR_IN_HEAD( _A_ )\
+{\
+  fprintf(listing, "%%WBLOAD-E-Error %s in <Head> at line: %d,\n>>> %s", _A_, h->cline, h->buf );\
+  ++errcnt;\
+  return;\
+}
+
+static void process_head( struct sheader *h)
+{
+  char buf[512];
+  char nbuf[512];
+  struct s_record *r = h->r;
+  int status;
+  int wantod, actod;
+
+/*
+ * Handle body
+ * ERROR => flush_endbody = TRUE
+ */
+  DP( fprintf( listing, "process_head\n") );
+
+  return;
+/* Must have both parameters */
+  if (*r->p2 == '\0' || *r->p3 == '\0')  ERROR_IN_HEAD( "Two objects needed in Head statement" );
+
+  wantod = 0;
+  actod = 0;
+
+/* Read wanted parameter */
+  if (*r->p2 == '"')
+  {
+    if (sscanf( r->p2, "\"%[^\"]", nbuf ) != 1)
+      ERROR_IN_HEAD( "Element 2: Incorrect number of \""  );
+    ConvertObjectName( root, nbuf, buf);
+
+    status = ldh_NameToObjid(
+		h->sess,
+		(pwr_tObjid *) &wantod,
+		buf );
+    If_Error_Then
+    {
+      wbload_psts( status, "ldh_NameToObjid", listing );
+      ERROR_IN_HEAD( "Element 2: Object not known" );
+    }
+  }
+  else
+  {
+    if (strcmp(r->p2, "0") != 0)
+      ERROR_IN_HEAD( "Element 2: Only 0 or string surrounded by \" is valid" );
+  }
+
+/* Read actual parameter */
+  if (*r->p3 == '"')
+  {
+    if (sscanf( r->p3, "\"%[^\"]", buf ) != 1)
+      ERROR_IN_HEAD( "Element 3: Incorrect number of \"" );
+
+    status = ldh_NameToObjid(
+		h->sess,
+		(pwr_tObjid *) &actod,
+		buf );
+    If_Error_Then
+    {
+      wbload_psts( status, "ldh_NameToObjid", listing );
+      ERROR_IN_HEAD(  "Element 3: Object not known"  );
+    }
+  }
+  else
+  {
+    if (strcmp(r->p3, "0") != 0)
+      ERROR_IN_HEAD( "Element 3: Only 0 or string surrounded by \" is valid" );
+  }
+
+/* Set the node owning the object  */
+#if 0
+  status = ldh_SetObjectNode(
+	h->sess,
+	h->od,
+	wantod,
+	actod );
+  If_Error_Then
+  {
+    wbload_psts( status, "ldh_SetObjectNode", listing );
+    ERROR_IN_HEAD( "Error setting node ownership" );
+  }
+#endif
+}
+
+/*------------------------------------------------------------*/
+/*
+ * DBODY name size
+ *  DATTR 
+ *  DBUFFER
+ *  ENDDBUFFER
+ * ENDDBODY
+ */
+/*------------------------------------------------------------*/
+
+#define ERROR_IN_DBODY( _A_ )\
+{\
+  fprintf(listing, "%%WBLOAD-E-Error %s in <DBody> at line: %d,\n>>> %s", _A_, h->cline, h->buf );\
+  flush_enddbody = 1;\
+  ++errcnt;\
+  break;\
+}
+
+static void process_dbody( struct sheader *h)
+{
+  char *bodyerror = "";
+  int enddbody = FALSE;
+  int flush_enddbody = FALSE;
+  struct s_record *r = h->r;
+  int size;
+  int status;
+  char errtext[100];
+
+/*
+ * Handle body
+ * ERROR => flush_endbody = TRUE
+ */
+  DP( fprintf( listing, "process_dbody %s\n", r->p2 ) );
+
+  h->dbody = NULL;
+
+  while( TRUE )
+  {
+/* Check for name */
+    if (*r->p2 == '\0')  ERROR_IN_DBODY( "Element 2: No object body name given" );
+    strcpy( h->bodyname, r->p2 );
+
+/* Check for size */
+    if (*r->p3 == '\0') ERROR_IN_DBODY( "Element 3: No object body size given" );
+    bodyerror = decode_attribute(h->buf, r->p3, (char *) &size, pwr_eType_UInt32, 4 );
+    if (*bodyerror != '\0')
+      {
+      sprintf(errtext, "Element 3: %s", bodyerror);
+      ERROR_IN_DBODY( errtext );
+      }
+
+/* Allocate body to fill */
+    h->dbody = XtCalloc( 1, size );
+    h->dbodyp = h->dbody;
+    break;
+  }
+
+
+/*
+ * Handle all params
+ */
+  h->parse = (flush_enddbody == 0);
+  while( !enddbody && get_token( h ) )
+  {
+    h->parse = (flush_enddbody == 0);
+    check_record( h->buf, h->r);
+    switch( h->r->rtyp )
+    {
+    case T_DATTR:
+	if (!flush_enddbody) process_dattr( h );
+	break;
+
+    case T_DBUFFER:
+	if (!flush_enddbody) process_buffer( h );
+	break;
+
+    case T_OBJECT:
+    case T_ENDOBJECT:
+    case T_DOBJECT:
+    case T_ENDDOBJECT:
+    case T_VOLUME:
+    case T_ENDVOLUME:
+	fprintf(listing, "%%WBLOAD-E-Error Missing <EndDBody> at line: %d,\n>>> %s", h->cline, h->buf );
+	putback_token( h );
+	enddbody = TRUE;
+        ++errcnt;
+	break;
+
+    case T_ENDDBODY:
+	/* Here we call ldh and do a set object body */
+	if (!flush_enddbody)
+	{
+	  status = ldh_DefineObjectBody(
+			h->sess,
+			h->od,
+			h->bodyname,
+			h->dbody,
+			size );
+	  If_Error_Then
+	  {
+	    wbload_psts( status, "ldh_DefineObjectBody", listing );
+	    ++errcnt;
+	  }
+	}
+	enddbody = TRUE;
+	break;
+
+    case T_DBODY:
+	fprintf(listing, "%%WBLOAD-E-Error <DBody> can not be nested, line: %d,\n>>> %s", h->cline, h->buf );
+        ++errcnt;
+	break;
+
+    case T_ENDBUFFER:
+	if (flush_enddbody)
+	  break;
+
+    default:
+	fprintf(listing, "%%WBLOAD-E-Error Incorrect line: %d,\n>>> %s", h->cline, h->buf );
+        ++errcnt;
+	break;
+    }
+    h->parse = (flush_enddbody == 0);
+  }
+
+  if (h->dbody != NULL) XtFree((char *) h->dbody);
+  h->parse = TRUE;
+
+  return;
+}
+
+/*------------------------------------------------------------*/
+/*
+ * BUFFER name
+ *  ATTR
+ * ENDBUFFER
+ */
+/*------------------------------------------------------------*/
+
+#define ERROR_IN_BUFFER( _A_ )\
+{\
+  fprintf(listing, "%%WBLOAD-E-Error %s in <Buffer> at line: %d,\n>>> %s", _A_, h->cline, h->buf );\
+  flush_endbuffer = 1;\
+  ++errcnt;\
+  break;\
+}
+
+static void process_buffer( struct sheader *h)
+{
+  int status;
+
+  char buf[80];
+  int endbuffer = FALSE;
+  int flush_endbuffer = FALSE;
+  struct s_record *r = h->r;
+  pwr_sBuffer *buffer;
+  int arrayindex;
+  int index;
+  int size;
+  int type;
+  struct s_BodyBuf *b;
+
+/*
+ * Handle BUFFER
+ * ERROR => flush_bufferbody = TRUE
+ *
+ * Name should be looked up in the current body attributes.
+ * The type must be $Buffer.
+ * Using the Buffer.class-field, fetch a the sysbody for that class
+ * These body attributes will be used to determine what metod to use
+ * when decoding the attributes.
+ */
+  DP( fprintf( listing, "process_buffer %s\n", r->p2 ) );
+
+  b = NULL;
+
+  while( TRUE )
+  {
+/* Check for name */
+    if (*r->p2 == '\0') ERROR_IN_BUFFER( "No buffer name given" );
+
+/* extract index in arrayattribute */
+    if ( sscanf(r->p2, "%[^[][%d]", buf, &arrayindex ) != 2)
+    {
+      strcpy( buf, r->p2 );
+      arrayindex = 0;
+    }
+
+/* Check if attribute exists */
+    if (!attrlookup( &index, buf, h->cbd->bodydef, h->cbd->rows))
+      ERROR_IN_BUFFER( "Buffer attribute not known" );
+
+/* Read attribute */
+    if ( h->cbd->bodydef[index].ParClass != pwr_eClass_Buffer)
+      ERROR_IN_BUFFER( "Attribute is no buffer" );
+
+    buffer = (pwr_sBuffer *) h->cbd->bodydef[index].Par;
+    size = buffer->Info.Size;
+    type = buffer->Info.Type;
+    
+    b = (struct s_BodyBuf *) XtCalloc( 1, sizeof(*b) );
+/* Fetch attribute definitions for the SysBody buffer */
+    status = ldh_GetObjectBodyDef(
+	h->sess,
+	buffer->Class,
+	"SysBody",
+	1,
+	&b->bodydef,
+	&b->rows );
+    If_Error_Then
+    {
+      XtFree((char *) b);
+      b = NULL;
+      wbload_psts( status, "ldh_GetObjectBodyDef", listing );
+      ERROR_IN_BUFFER( "Buffer not known" );
+    }
+
+    /* Set current offset as previous offset + current offset */
+    b->offset = h->cbd->offset + buffer->Info.Offset +
+		  arrayindex * (size / buffer->Info.Elements);
+    b->next = h->cbd;
+    h->cbd = b;
+    break;
+  }
+
+
+/*
+ * Handle all parameters
+ */
+
+  h->parse = (flush_endbuffer == 0);
+  while( !endbuffer && get_token( h ) )
+  {
+    h->parse = (flush_endbuffer == 0);
+    check_record( h->buf, h->r);
+    switch( h->r->rtyp )
+    {
+
+    case T_ATTR:
+	if (!flush_endbuffer) process_attr( h );
+	break;
+
+    case T_OBJECT:
+    case T_ENDOBJECT:
+    case T_BODY:
+    case T_ENDBODY:
+    case T_VOLUME:
+    case T_ENDVOLUME:
+	fprintf( listing, "%%WBLOAD-E-Error Missing <EndBuffer> at line: %d,\n>>> %s", h->cline, h->buf );
+	putback_token( h );
+        ++errcnt;
+	/* break; */
+
+    case T_ENDBUFFER:
+	endbuffer = TRUE;
+	break;
+
+    case T_BUFFER:
+	if (!flush_endbuffer) process_buffer( h );
+	break;
+
+    default:
+	fprintf(listing, "%%WBLOAD-E-Error Incorrect line: %d,\n>>> %s", h->cline, h->buf );
+        ++errcnt;
+	break;
+    }
+    h->parse = (flush_endbuffer == 0);
+  }
+  h->parse = TRUE;
+
+  if ( b != NULL )
+  {
+    if (b != h->cbd)
+    {
+      fprintf(stderr, "%%WBLOAD-F-Fatal error!\n");
+      ++errcnt;
+    }
+    h->cbd = b->next;
+    XtFree((char *) b->bodydef);
+    XtFree((char *) b);
+  }
+}
+
+/*------------------------------------------------------------*/
+/*
+ * DBUFFER name ?size?
+ *  DATTR
+ * ENDDBUFFER
+ */
+/*------------------------------------------------------------*/
+
+#define ERROR_IN_DBUFFER( _A_ )\
+{\
+  fprintf(listing, "%%WBLOAD-E-Error %s in <DBuffer> at line: %d,\n>>> %s", _A_, h->cline, h->buf );\
+  flush_enddbuffer = 1;\
+  ++errcnt;\
+}
+
+static void process_dbuffer( struct sheader *h)
+{
+  int enddbuffer = FALSE;
+  int flush_enddbuffer = FALSE;
+  struct s_record *r = h->r;
+
+/*
+ * Handle DBUFFER name size
+ * ERROR => flush_bufferbody = TRUE
+ *
+ * The type assumed to be $Buffer with the size = the sum of the
+ * attributes size
+ *
+ */
+  DP( fprintf( listing, "process_dbuffer %s\n", r->p2 ) );
+
+  h->dbody = NULL;
+
+/* Check for name */
+  if (*r->p2 == '\0') ERROR_IN_DBUFFER( "No buffer name given" );
+
+/*
+ * Handle all dattrs
+ */
+
+  h->parse = (flush_enddbuffer == 0);
+  while( !enddbuffer && get_token( h ) )
+  {
+    h->parse = (flush_enddbuffer == 0);
+    check_record( h->buf, h->r);
+    switch( h->r->rtyp )
+    {
+    case T_DATTR:
+	if (!flush_enddbuffer) process_dattr( h );
+	break;
+
+    case T_OBJECT:
+    case T_ENDOBJECT:
+    case T_BODY:
+    case T_ENDBODY:
+    case T_VOLUME:
+    case T_ENDVOLUME:
+	fprintf( listing, "%%WBLOAD-E-Error Missing <EndDBuffer> at line: %d,\n>>> %s", h->cline, h->buf );
+	putback_token( h );
+        ++errcnt;
+	/* break; */
+
+    case T_ENDDBUFFER:
+	enddbuffer = TRUE;
+	break;
+
+    case T_DBUFFER:
+	if (!flush_enddbuffer) process_dbuffer( h );
+	break;
+
+    default:
+	fprintf( listing, "%%WBLOAD-E-Error Incorrect line: %d,\n>>> %s", h->cline, h->buf );
+        ++errcnt;
+	break;
+    }
+    h->parse = (flush_enddbuffer == 0);
+  }
+  h->parse = TRUE;
+}
+
+/*------------------------------------------------------------*/
+/*
+ * ATTR name = data
+ */
+/*------------------------------------------------------------*/
+
+#define ERROR_IN_ATTR( _A_ ) 	{ attrerror = _A_; goto error; }
+
+static void process_attr( struct sheader *h)
+{
+  struct s_record *r = h->r;
+  int status;
+  char timbuf[24];
+
+  char *attrerror = "";
+  char buf[2048];
+  char cbuf[256];
+  int index;
+  int arrayindex;
+  int type;
+  int size;
+  int offset;
+  pwr_tObjid od;
+  pwr_tVolumeId vd;
+  pwr_tClassId cd;
+  pwr_tTypeId td;
+  pwr_sAttrRef ar;
+  pwr_sParInfo *info;
+  char errtext[100];
+  int orflag;
+  int found;
+  pwr_tObjectIx oix;
+  char *prevc;
+
+  DP( fprintf( listing, "process_attr %s", r->p2 ) );
+
+/*
+ * Check for "="
+ * Using the current body, lookup the attribute to check for existance
+ * Arrays can't be handled yet
+ * Using the datatype, parse the datafield.
+ */
+
+/* Check for name */
+  if (*r->p2 == '\0') ERROR_IN_ATTR( "Element 2: No attribute name given" );
+
+/* Check for "=" */
+  orflag = strcmp(r->p3, "|=") == 0;
+  if ( !((*r->p3 == '=') || orflag) ) ERROR_IN_ATTR( "Element 3: no = given" );
+
+/* Check for value */
+  if (*r->p4 == '\0') ERROR_IN_ATTR( "Element 4: no value given" );
+
+/* extract index in arrayattribute */
+  if ( sscanf(r->p2, "%[^[][%d]", buf, &arrayindex ) != 2)
+  {
+    strcpy( buf, r->p2 );
+    arrayindex = 0;
+  }
+
+/* Check if attribute exists */
+  if (!attrlookup( &index, buf, h->cbd->bodydef, h->cbd->rows))
+    ERROR_IN_ATTR( "Element 2: attribute not known" );
+
+/* Read attribute from body */
+  info = &h->cbd->bodydef[index].Par->Input.Info;
+
+  size = info->Size / info->Elements;
+  type = info->Type;
+  offset = info->Offset + h->cbd->offset + arrayindex * size;
+
+  attrerror = decode_attribute( h->buf, r->p4, buf, type, size);
+  if (*attrerror != '\0')
+      {
+      sprintf(errtext, "Element 4: %s", attrerror);
+      ERROR_IN_ATTR( errtext);
+      }
+
+
+/* Pad with nulls */
+  if (type == pwr_eType_String)
+  {
+    int len = strlen( buf );
+    if (len < size)
+      memset( buf + len, '\0', size - len );
+  }
+  else if (type == pwr_eType_Text)
+  {
+   /* Adjust offset and size for Text-format */
+    int len = strlen( buf );
+    offset = info->Offset + h->cbd->offset + arrayindex;
+    if (arrayindex >= size )
+    {
+      sprintf(errtext, "Element 4: Index to big %d (%d)", arrayindex, size - 1);
+      ERROR_IN_ATTR( errtext);
+    }
+    else if (arrayindex + len > (size-1) )
+    {
+      sprintf(errtext, "Element 4: String too long, %d chars truncated",
+		(arrayindex+len)-(size-1) );
+      DP( fprintf( listing, "\n") );
+      fprintf(listing, "%%WBLOAD-E-Error %s in <Attr> at line: %d,\n>>> %s",
+		errtext, h->cline, h->buf );
+      ++errcnt;
+      len = size - arrayindex - 1;
+    }
+    size = len;
+  }
+
+/* Handle objid reference fixups */
+  if (type == pwr_eType_Objid && *r->p4 == '"')
+  {
+    found = 0;
+    if ( !strncmp( buf, "_O", 2))
+    {
+      status = cdh_StringToObjid( buf, &od);
+      If_Error_Then
+       found = 0;
+      else
+      {
+        memcpy( h->body + offset, &od, size );
+        found = 1;
+      }
+    }
+    if ( !found)
+    {
+      ConvertObjectName( root, buf, cbuf);
+      status = ldh_NameToObjid(
+		h->sess,
+		(pwr_tObjid *) &od,
+		cbuf );
+      if (status != LDH__SUCCESS)
+        add_objidfixup( h, h->od, type, h->bodyname, r->p2, cbuf, size, offset, h->sess );
+      else
+        memcpy( h->body + offset, &od, size );
+    }
+  }
+  else if (type == pwr_eType_ClassId && *r->p4 == '"')
+  {
+    ConvertObjectName( root, buf, cbuf);
+    status = ldh_NameToObjid(
+		h->sess,
+		&od,
+		cbuf );
+    if (status != LDH__SUCCESS)
+      add_objidfixup( h, h->od, type, h->bodyname, r->p2, cbuf, size, offset, h->sess );
+    else {
+      cd = cdh_ClassObjidToId(od);
+      memcpy( h->body + offset, &cd, size );
+    }
+  }
+  else if (type == pwr_eType_VolumeId && *r->p4 == '"')
+  {
+    found = 0;
+    if ( !strncmp( buf, "_V", 2))
+    {
+      status = cdh_StringToVolumeId( buf, &vd);
+      If_Error_Then
+       found = 0;
+      else
+      {
+        memcpy( h->body + offset, &vd, size );
+        found = 1;
+      }
+    }
+    if ( !found)
+    {
+      ConvertObjectName( root, buf, cbuf);
+      status = ldh_VolumeNameToId(
+		h->sess,
+		cbuf,
+		&vd);
+      if (status != LDH__SUCCESS)
+        add_objidfixup( h, h->od, type, h->bodyname, r->p2, cbuf, size, offset, h->sess );
+      else
+        memcpy( h->body + offset, &od, size );
+    }
+  }
+  else if (type == pwr_eType_TypeId && *r->p4 == '"')
+  {
+    ConvertObjectName( root, buf, cbuf);
+    status = ldh_NameToObjid(
+		h->sess,
+		&od,
+		cbuf );
+    if (status != LDH__SUCCESS)
+      add_objidfixup( h, h->od, type, h->bodyname, r->p2, cbuf, size, offset, h->sess );
+    else {
+      td = cdh_TypeObjidToId(od);
+      memcpy( h->body + offset, &td, size );
+    }
+  }
+  else if (type == pwr_eType_AttrRef && *r->p4 == '"')
+  {
+    ConvertObjectName( root, buf, cbuf);
+    status = ldh_NameToAttrRef(
+		h->sess,
+		cbuf,
+		&ar );
+    if (status != LDH__SUCCESS)
+      add_objidfixup( h, h->od, type, h->bodyname, r->p2, cbuf, size, offset, h->sess );
+    else
+      memcpy( h->body + offset, &ar, size );
+  }
+  else if (type == pwr_eType_ObjectIx && *r->p4 == '"')
+  {
+    status = cdh_StringToObjectIx( buf, &oix);
+    if (EVEN(status))
+    {
+      wbload_psts( status, "StringToObjectIx", listing );
+      ERROR_IN_ATTR( "Element 4: Invalid ObjectIx" );
+    }
+    memcpy( h->body + offset, &oix, size );
+  }
+  else if (type == pwr_eType_Time)
+  {
+    if (strlen(buf) > 23)
+      ERROR_IN_ATTR( "Element 4: Invalid time string, too long" );
+    strcpy(timbuf, buf);
+    status = time_AsciiToA(timbuf, (pwr_tTime *)buf);
+    If_Error_Then
+    {
+      wbload_psts( status, "time_AsciiToA", listing );
+      ERROR_IN_ATTR( "Element 4: Invalid time string" );
+    }
+    memcpy( h->body + offset, buf, size );
+  }
+  else if (type == pwr_eType_DeltaTime)
+  {
+    if (strlen(buf) > 23)
+      ERROR_IN_ATTR( "Element 4: Invalid delta time string, too long" );
+    strcpy(timbuf, buf);
+    status = time_AsciiToD(timbuf, (pwr_tDeltaTime *)buf);
+    If_Error_Then
+    {
+      wbload_psts( status, "time_AsciiToD", listing );
+      ERROR_IN_ATTR( "Element 4: Invalid time string" );
+    }
+    memcpy( h->body + offset, buf, size );
+  }
+  else if (type == pwr_eType_Text)
+  {
+    prevc = h->body + offset - 1;
+    if ( (arrayindex != 0)  && (*prevc == 0))
+      /* This was ment to be linefeed */
+      strcat( prevc, "\n");
+    memcpy( h->body + offset, buf, size );
+  }
+  else if (type == pwr_eType_RefId)
+  {
+    memset( h->body + offset, 0, size );
+  }
+  else if (orflag)
+  {
+    if ( !(type == pwr_eType_UInt32 || type == pwr_eType_Mask))
+    {
+      ERROR_IN_ATTR( "Element 4: Invalid |= assignment" );
+    }
+    else
+      *(unsigned int *) (h->body + offset) |= *(unsigned int *) buf;
+  }
+  else
+    memcpy( h->body + offset, buf, size );
+
+  DP( fprintf( listing, ", %d:%d\n", offset, size ) );
+
+  return;
+
+error:
+  DP( fprintf( listing, "\n") );
+  fprintf(listing, "%%WBLOAD-E-Error %s in <Attr> at line: %d,\n>>> %s", attrerror, h->cline, h->buf );
+  ++errcnt;
+
+}
+
+/*------------------------------------------------------------*/
+/*
+ * DATTR name = type data
+ */
+/*------------------------------------------------------------*/
+
+#define ERROR_IN_DATTR( _A_ ) 	{ dattrerror = _A_; goto error; }
+
+static void process_dattr( struct sheader *h)
+{
+  struct s_record *r = h->r;
+  int status;
+  char timbuf[24];
+  pwr_sAttrRef ar;
+
+  char *dattrerror = "";
+  char buf[2048];
+  int type;
+  int size;
+  pwr_tObjid od;
+  pwr_tClassId cd;
+  pwr_tTypeId td;
+  pwr_tVolumeId vid;
+  pwr_tObjectIx oix;
+  char errtext[100];
+  int found;
+
+  DP( fprintf( listing, "process_dattr %s", r->p2 ) );
+
+/*
+ * Check for "="
+ * Using the current body, lookup the attribute to check for existance
+ * Arrays can't be handled yet
+ * Using the datatype, parse the datafield.
+ */
+
+/* Check for name */
+  if (*r->p2 == '\0') ERROR_IN_DATTR( "Element 2: No attribute name given" );
+
+/* Check for "=" */
+  if (*r->p3 != '=') ERROR_IN_DATTR( "Element 3: no = given" );
+
+/* Check for type */
+  if (*r->p4 == '\0') ERROR_IN_DATTR( "Element 4: no type given" );
+
+/* Check for value */
+  if (*r->p5 == '\0') ERROR_IN_DATTR( "Element 4: no value given" );
+
+/* Array index is ignored */
+  if (lookup( &type, r->p4, dattr_types ))
+    size = dattr_size[type];
+  else
+  {
+    if ( sscanf(r->p4, "V%d%*s", &size ) != 1)  
+      ERROR_IN_DATTR( "Element 4: no size given" )
+    else
+      type = 0;
+  }
+
+  type = dattr_typecvt[ type ];
+
+/* Read attribute */
+  dattrerror = decode_attribute( h->buf, r->p5, buf, type, size );
+  if (*dattrerror != '\0')
+    {
+    sprintf(errtext, "Element 5: %s", dattrerror);
+    ERROR_IN_DATTR( errtext );
+    }
+
+/* Pad with nulls */
+  if (type == pwr_eType_String)
+  {
+    int len = strlen( buf );
+    if (len < size)
+      memset( buf + len, '\0', size - len );
+  }
+
+/* Handle objid reference fixups */
+  if (type == pwr_eType_Objid && *r->p5 == '"')
+  {
+    found = 0;
+    if ( !strncmp( buf, "_O", 2))
+    {
+      status = cdh_StringToObjid( buf, &od);
+      If_Error_Then
+       found = 0;
+      else
+      {
+        memcpy( h->dbodyp, &od, size );
+        found = 1;
+      }
+    }
+    if ( !found)
+    {
+      status = ldh_NameToObjid(
+		h->sess,
+		&od,
+		buf );
+      if (status != LDH__SUCCESS)
+        add_objidfixup( h, h->od, type, h->bodyname, r->p2, buf, size,
+			h->dbodyp - h->dbody, h->sess );
+      else
+        memcpy( h->dbodyp, &od, size );
+    }
+  }
+  else if (type == pwr_eType_ClassId && *r->p5 == '"')
+  {
+    status = ldh_NameToObjid(
+		h->sess,
+		&od,
+		buf );
+    if (status != LDH__SUCCESS)
+      add_objidfixup( h, h->od, type, h->bodyname, r->p2, buf, size,
+			h->dbodyp - h->dbody, h->sess );
+    else {
+      cd = cdh_ClassObjidToId(od);
+      memcpy( h->dbodyp, &cd, size );
+    }
+  }
+  else if (type == pwr_eType_TypeId && *r->p5 == '"')
+  {
+    status = ldh_NameToObjid(
+		h->sess,
+		&od,
+		buf );
+    if (status != LDH__SUCCESS)
+      add_objidfixup( h, h->od, type, h->bodyname, r->p2, buf, size,
+			h->dbodyp - h->dbody, h->sess );
+    else {
+      td = cdh_TypeObjidToId(od);
+      memcpy( h->dbodyp, &td, size );
+    }
+  }
+  else if (type == pwr_eType_AttrRef && *r->p5 == '"')
+  {
+    status = ldh_NameToAttrRef(
+		h->sess,
+		buf,
+		&ar );
+    if (status != LDH__SUCCESS)
+      add_objidfixup( h, h->od, type, h->bodyname, r->p2, buf, size,
+			h->dbodyp - h->dbody, h->sess );
+    else
+      memcpy( h->dbodyp, &ar, size );
+  }
+  else if (type == pwr_eType_Time)
+  {
+    if (strlen(buf) > 23) ERROR_IN_DATTR( "Element 5: Invalid time string, too long" );
+    strcpy(timbuf, buf);
+    status = time_AsciiToA(timbuf, (pwr_tTime *)buf);
+    If_Error_Then
+    {
+      wbload_psts( status, "time_AsciiToA", listing );
+      ERROR_IN_DATTR( "Element 5: Invalid time string" );
+    }
+    memcpy( h->dbodyp, buf, size );
+  }
+  else if (type == pwr_eType_DeltaTime)
+  {
+    if (strlen(buf) > 23) ERROR_IN_DATTR( "Element 5: Invalid time string, too long" );
+    strcpy(timbuf, buf);
+    status = time_AsciiToD(timbuf, (pwr_tDeltaTime *)buf);
+    If_Error_Then
+    {
+      wbload_psts( status, "time_AsciiToD", listing );
+      ERROR_IN_DATTR( "Element 5: Invalid delta time string" );
+    }
+    memcpy( h->dbodyp, buf, size );
+  }
+  else if (type == pwr_eType_ObjectIx && *r->p5 == '"')
+  {
+    status = cdh_StringToObjectIx( buf, &oix);
+    if (EVEN(status))
+    {
+      wbload_psts( status, "StringToObjectIx", listing );
+      ERROR_IN_DATTR( "Element 5: Invalid ObjectIx" );
+    }
+    memcpy( h->dbodyp, &oix, size );
+  }
+  else if (type == pwr_eType_VolumeId && *r->p5 == '"')
+  {
+    status = cdh_StringToVolumeId( buf, &vid);
+    if (EVEN(status))
+    {
+      wbload_psts( status, "StringToVolumeId", listing );
+      ERROR_IN_DATTR( "Element 5: Invalid VolumeId" );
+    }
+    memcpy( h->dbodyp, &vid, size );
+  }
+  else
+    memcpy( h->dbodyp, buf, size );
+
+  DP( fprintf( listing, ", %d:%d\n", h->dbodyp - h->dbody, size ) );
+
+  h->dbodyp += size;
+
+  return;
+
+error:
+  DP( fprintf( listing, "\n") );
+  fprintf(listing, "%%WBLOAD-E-Error %s in <DAttr> at line: %d,\n>>> %s", dattrerror, h->cline, h->buf );
+  ++errcnt;
+
+}
+
+/*------------------------------------------------------------*/
+#ifndef XtNewString
+#define XtNewString(str) (strcpy(XtMalloc((unsigned) strlen(str) + 1), str))
+#endif
+
+static void add_objidfixup(
+  struct sheader *h,
+  pwr_tObjid od,
+  pwr_tClassId class,
+  char *bodyname,
+  char *attr,
+  char *objidref,
+  int size,
+  int offset,
+  ldh_tSesContext sess
+) {
+  struct s_fixup *fix;
+
+  fix = (struct s_fixup *) XtMalloc( sizeof( *fix ));
+
+  fix->line = h->cline;
+  fix->od = od;
+  fix->class = class;
+  strcpy(fix->bodyname, bodyname);
+  strcpy(fix->attr, attr);
+  fix->size = size;
+  fix->offset = offset;
+  fix->objidref = XtNewString( objidref );
+  fix->sess = sess;
+
+  fix->next = h->fixup;
+  h->fixup = fix;
+
+}
+
+
+static void fixup_objid( struct sheader *h )
+{
+  int status;
+  struct s_fixup *fix;
+  char	*body;
+  int	bodysize;
+  char	fixupbuf[512];
+  pwr_tObjid od;
+  pwr_tClassId cd;
+  pwr_tTypeId td;
+
+  while ( (fix = h->fixup) != NULL)
+  {
+    if (announce)
+    {
+      fprintf(listing, "%%WBLOAD-I-Fixup at line %d: objid %d class %d %s %s %s.\n",
+	fix->line,
+	fix->od.oix,
+	fix->class,
+	fix->bodyname,
+	fix->attr,
+	fix->objidref );
+    }
+
+/* Get name Converted */
+    if (fix->class == pwr_eType_Objid)
+    {
+      status = ldh_NameToObjid(
+		fix->sess,
+		(pwr_tObjid *) &fixupbuf[0],
+		fix->objidref );
+      If_Error_Then
+      {
+        fprintf(listing, "%%WBLOAD-E-Error in fixup at line: %d.\n", fix->line);
+        wbload_psts( status, "ldh_NameToObjid", listing );
+        ++errcnt;
+        goto error;
+      }
+    }
+    else if (fix->class == pwr_eType_ClassId)
+    {
+      status = ldh_NameToObjid(
+		fix->sess,
+		&od,
+		fix->objidref );
+      If_Error_Then
+      {
+        fprintf(listing, "%%WBLOAD-E-Error in fixup at line: %d.\n", fix->line);
+        wbload_psts( status, "ldh_NameToObjid", listing );
+        ++errcnt;
+        goto error;
+      }
+      cd = cdh_ClassObjidToId(od);
+      memcpy(fixupbuf, &cd, sizeof(cd));
+    }
+    else if (fix->class == pwr_eType_TypeId)
+    {
+      status = ldh_NameToObjid(
+		fix->sess,
+		&od,
+		fix->objidref );
+      If_Error_Then
+      {
+        fprintf(listing, "%%WBLOAD-E-Error in fixup at line: %d.\n", fix->line);
+        wbload_psts( status, "ldh_NameToObjid", listing );
+        ++errcnt;
+        goto error;
+      }
+      td = cdh_TypeObjidToId(od);
+      memcpy(fixupbuf, &td, sizeof(td));
+    }
+    else if (fix->class == pwr_eType_AttrRef)
+    {
+      status = ldh_NameToAttrRef(
+		fix->sess,
+		fix->objidref,
+		(pwr_sAttrRef *) &fixupbuf[0] );
+      If_Error_Then
+      {
+        fprintf(listing, "%%WBLOAD-E-Error in fixup at line: %d.\n", fix->line);
+        wbload_psts( status, "ldh_NameToObjid", listing );
+        ++errcnt;
+        goto error;
+      }
+    }
+    else
+    {
+      fprintf(listing, "%%WBLOAD-E-Error in fixup type at line: %d.\n", fix->line);
+      wbload_psts( status, "ldh_NameToObjid", listing );
+      ++errcnt;
+      goto error;
+    }
+
+
+/* Fetch the body contents */
+    status = ldh_GetObjectBody(
+	    fix->sess,
+	    fix->od,
+	    fix->bodyname,
+	    (void *) &body,
+	    &bodysize );
+    If_Error_Then
+    {
+      fprintf(listing, "%%WBLOAD-E-Error in fixup at line: %d.\n", fix->line );
+      wbload_psts( status, "ldh_GetObjectBody", listing );
+      ++errcnt;
+      goto error;
+    }
+
+    memcpy( body + fix->offset, &fixupbuf[0], fix->size );
+
+    status = ldh_SetObjectBody(
+	    fix->sess,
+	    fix->od,
+	    fix->bodyname,
+	    body,
+	    bodysize );
+    If_Error_Then
+    {
+      fprintf(listing, "%%WBLOAD-E-Error in fixup at line %d.\n", fix->line );
+      wbload_psts( status, "ldh_SetObjectBody", listing );
+      ++errcnt;
+      goto error;
+    }
+
+error:
+    h->fixup = fix->next;
+    XtFree((char *) fix->objidref);
+    XtFree((char *) fix);
+  }
+}
+
+/*------------------------------------------------------------*/
+
+#define ERROR_IN_DECODE( _A_ ) 	return( _A_ )
+
+static char *decode_attribute (
+  char *line,
+  char *attr,
+  char *buf,
+  int type,
+  int size
+) {
+  char ch;
+  int val;
+  pwr_tFloat64 floatval;
+  char *begin;
+  char *end;
+
+  errno = 0;
+
+  switch ( type ) {
+    case pwr_eType_Boolean:
+	if (sscanf( attr, "%d", (int *) buf ) == 1) break;
+	ERROR_IN_DECODE( "Invalid Boolean value" );
+	break;
+
+    case pwr_eType_Float32:
+	floatval = strtod(attr, (char**) NULL);
+	if (errno == ERANGE || fabs(floatval) > FLT_MAX)
+	     ERROR_IN_DECODE( "Invalid Float32 value" );
+	*(pwr_tFloat32 *)buf = (pwr_tFloat32) floatval;
+	break;
+
+    case pwr_eType_Float64:
+	floatval = strtod(attr, (char**) NULL);
+	if (errno == ERANGE || fabs(floatval) > DBL_MAX)
+	     ERROR_IN_DECODE( "Invalid Float64 value" );
+	*(pwr_tFloat64 *)buf = (pwr_tFloat64) floatval;
+	break;
+
+    case pwr_eType_Char:
+	val = strlen(attr);
+	if (*attr != '"' || val < 2 ) ERROR_IN_DECODE( "Invalid Char value" );
+        if (val == 2)
+          *buf = '\0';
+	else
+          *buf = attr[1];
+	break;
+
+    case pwr_eType_String:
+	if (*attr != '"') ERROR_IN_DECODE( "String not started with \"" );
+	begin = strchr(line, '"');
+	end = strrchr(line, '"');
+	if (end == begin) ERROR_IN_DECODE( "String not ended with \"" );
+        *buf = '\0';
+	if (end == begin + 1) break;
+	memcpy(buf, begin + 1, end - begin - 1);
+	buf[end - begin - 1] = '\0';
+	break;
+
+    case pwr_eType_Int8:
+	if(!convconst( &val, attr ))
+	    {
+	    val = strtol(attr, (char**) NULL, 10);
+	    if (errno == ERANGE || val > SCHAR_MAX || val < SCHAR_MIN)
+		ERROR_IN_DECODE( "Invalid Int8 value" );
+	    }
+	*(pwr_tInt8 *)buf = val;
+	break;
+
+    case pwr_eType_Int16:
+	if(!convconst( &val, attr ))
+	    {
+	    val = strtol(attr, (char**) NULL, 10);
+	    if (errno == ERANGE || val > SHRT_MAX || val < SHRT_MIN)
+		ERROR_IN_DECODE( "Invalid Int16 value" );
+	    }
+	*(pwr_tInt16 *)buf = val;
+	break;
+
+    case pwr_eType_Int32:
+	if(!convconst( &val, attr ))
+	    {
+	    val = strtol(attr, (char**) NULL, 10);
+	    if (errno == ERANGE || val > LONG_MAX || val < LONG_MIN)
+		ERROR_IN_DECODE( "Invalid Int32 value" );
+	    }
+	*(pwr_tInt32 *)buf = val;
+	break;
+
+    case pwr_eType_UInt8:
+	if(!convconst( &val, attr ))
+	    {
+	    val = strtoul(attr, (char**) NULL, 10);
+	    if (errno == ERANGE || val > UCHAR_MAX)
+		ERROR_IN_DECODE( "Invalid UInt8 value" );
+	    }
+	*(pwr_tUInt8 *)buf = val;
+	break;
+
+    case pwr_eType_UInt16:
+	if(!convconst( &val, attr ))
+	    {
+	    val = strtoul(attr, (char**) NULL, 10);
+	    if (errno == ERANGE || val > USHRT_MAX)
+		ERROR_IN_DECODE( "Invalid UInt16 value" );
+	    }
+	*(pwr_tUInt16 *)buf = val;
+	break;
+
+    case pwr_eType_UInt32:
+	if(!convconst( &val, attr ))
+	    {
+	    val = strtoul(attr, (char**) NULL, 10);
+	    if (errno == ERANGE || val > ULONG_MAX)
+		ERROR_IN_DECODE( "Invalid UInt32 value" );
+	    }
+	*(pwr_tUInt32 *)buf = val;
+	break;
+
+    case pwr_eType_Time:
+	if (*attr != '"')
+	  ERROR_IN_DECODE( "Invalid Time value, should be surrounded by \"" );
+	if (sscanf( line, "%*[^\"]\"%[^\"]", buf ) == 1) break;
+        *buf = '\0';
+	if (attr[1] == '"') break;
+	ERROR_IN_DECODE( "Invalid Time value" );
+	break;
+
+    case pwr_eType_DeltaTime:
+	if (*attr != '"')
+	  ERROR_IN_DECODE( "Invalid DeltaTime value, should be surrounded by \"" );
+	if (sscanf( line, "%*[^\"]\"%[^\"]", buf ) == 1) break;
+        *buf = '\0';
+	if (attr[1] == '"') break;
+	ERROR_IN_DECODE( "Invalid DeltaTime value" );
+	break;
+
+    case pwr_eType_Struct:
+	ERROR_IN_DECODE( "Error decoding Struct" );
+	break;
+
+    case pwr_eType_Mask:
+	if(!convconst( &val, attr ))
+	    {
+	    val = strtoul(attr, (char**) NULL, 10);
+	    if (errno == ERANGE || val > ULONG_MAX)
+		ERROR_IN_DECODE( "Invalid Mask value" );
+	    }
+	*(pwr_tMask *)buf = val;
+	break;
+
+    case pwr_eType_Enum:
+	if(!convconst( &val, attr ))
+	    {
+	    val = strtoul(attr, (char**) NULL, 10);
+	    if (errno == ERANGE || val > ULONG_MAX)
+		ERROR_IN_DECODE( "Invalid Enu, value" );
+	    }
+	*(pwr_tEnum *)buf = val;
+	break;
+
+    case pwr_eType_Buffer:
+	ERROR_IN_DECODE( "Error decoding Buffer" );
+	break;
+
+    case pwr_eType_Array:
+	ERROR_IN_DECODE( "Error decoding Array" );
+	break;
+
+    case pwr_eType_Objid:
+	if (*attr == '"')
+	{
+	  if (sscanf( line, "%*[^\"]\"%[^\"]", buf ) == 1) break;
+	  ERROR_IN_DECODE( "Invalid object name" );
+	}
+	else
+	{
+	if(!convconst( &val, attr ))
+	    {
+	    val = strtol(attr, (char**) NULL, 10);
+	    if (errno == ERANGE || val > LONG_MAX || val < LONG_MIN)
+		ERROR_IN_DECODE( "Invalid object identity" );
+	    }
+	*(pwr_tInt32 *)buf = val;
+	}
+	break;
+
+    case pwr_eType_ClassId: /* !!! To do !!! */
+	if (*attr == '"')
+	{
+	  if (sscanf( line, "%*[^\"]\"%[^\"]", buf ) == 1) break;
+	  ERROR_IN_DECODE( "Invalid class name" );
+	}
+	else
+	{
+	if(!convconst( &val, attr ))
+	    {
+	    val = strtol(attr, (char**) NULL, 10);
+	    if (errno == ERANGE || val > LONG_MAX || val < LONG_MIN)
+		ERROR_IN_DECODE( "Invalid class identity" );
+	    }
+	*(pwr_tInt32 *)buf = val;
+	}
+	break;
+
+    case pwr_eType_TypeId:  /* !!! To do !!! */
+    case pwr_eType_VolumeId:  /* !!! To do !!! */
+    case pwr_eType_ObjectIx:  /* !!! To do !!! */
+	if (*attr == '"')
+	{
+	  if (sscanf( line, "%*[^\"]\"%[^\"]", buf ) == 1) break;
+	  ERROR_IN_DECODE( "Invalid type name" );
+	}
+	else
+	{
+	if(!convconst( &val, attr ))
+	    {
+	    val = strtol(attr, (char**) NULL, 10);
+	    if (errno == ERANGE || val > LONG_MAX || val < LONG_MIN)
+		ERROR_IN_DECODE( "Invalid type identity" );
+	    }
+	*(pwr_tInt32 *)buf = val;
+	}
+	break;
+
+    case pwr_eType_Text:
+	ch = *attr;
+	if (ch != '"' && ch != '\'')
+	  ERROR_IN_DECODE( "String not started with \" or ' " );
+	begin = strchr(line, ch);
+	end = strrchr(line, ch);
+	if (end == begin)
+	  ERROR_IN_DECODE( "String not ended with \" or ' " );
+        *buf = '\0';
+	if (end == begin + 1)
+	  break;
+	memcpy(buf, begin + 1, end - begin - 1);
+	buf[end - begin - 1] = '\0';
+	break;
+	
+    case pwr_eType_AttrRef:
+	if (*attr != '"') ERROR_IN_DECODE( "AttrRef not started with \"" );
+	if (sscanf( line, "%*[^\"]\"%[^\"]", buf ) == 1) break;
+        *buf = '\0';
+	if (attr[1] == '"') break;
+	ERROR_IN_DECODE( "Invalid AttrRef value" );
+	break;
+
+    default:
+	ERROR_IN_DECODE( "Error decoding unknown type" );
+	break;
+  }
+
+  return( "" );
+}
+
+/*------------------------------------------------------------*/
+
+static int convconst (
+  int *val,
+  char *str
+) {
+  if (lookup( val, str, classes ))	return( TRUE );
+  if (lookup( val, str, editor ))	return( TRUE );
+  if (lookup( val, str, datatypes ))	return( TRUE );
+  if (lookup( val, str, attr_flags  ))  return( TRUE );
+  return( FALSE );
+}
+
+/*------------------------------------------------------------*/
+
+
+static void putback_token(struct sheader *h)
+{
+  if (h->dont_read)
+    {
+    fprintf(listing, "%%WBLOAD-E-Error Only one token can be putback.\n");
+    ++errcnt;
+    }
+  else
+    h->dont_read = 1;
+}
+
+
+static int get_token(struct sheader *h)
+{
+  int skip = TRUE;
+  int cond;
+
+  while( skip &&
+    (cond = get_record(h->fp, h->buf,
+      &h->dont_read, &h->cline, h->parse, h->level))
+  ) {
+    check_record( h->buf, h->r);
+    switch( h->r->rtyp ) {
+    case T_COMMENT:
+    case T_COMMENT_DOCSTART:
+    case T_COMMENT_DOCEND:
+    case T_NOBODY:
+	break;
+
+    case T_NONE:
+	fprintf(listing, "%%WBLOAD-E-Error Incorrect line: %d,\n>>> %s", h->cline, h->buf );
+	++errcnt;
+	break;
+
+    default:
+	skip = FALSE;
+	break;
+    }
+  }
+
+  return( cond );
+}
+ 
+
+static int get_record (
+  FILE *fp,
+  char *buf,
+  int *dont_read,
+  int *cline,
+  int parse,
+  int level
+) {
+  int notend;
+
+  if (*dont_read) {
+    *dont_read = 0;
+    if ( (*buf == '\n') || (*buf == '\0') )
+      return( !feof(fp) );
+    else
+      return( 1 );
+  }
+
+  strcpy(buf, "\n");
+  while ( (notend = !feof(fp)) && ((*buf == '\n') || (*buf == '\0')) ) {
+    ++(*cline);
+    fgets(buf, BUFSIZE, fp );
+    if(!feof(fp) && lflag)
+    {
+      if (parse)
+        fprintf(listing, "%5d%5d\t%s", *cline, level, buf );
+      else
+        fprintf(listing, "%5d    X\t%s", *cline, buf );
+    }
+  }
+
+  return( notend );
+}
+
+
+static void check_record (
+  char *buf,
+  struct s_record *r
+) {
+  int cnt;
+  char *cp;
+
+  *r->p1 = '\0';
+  *r->p2 = '\0';
+  *r->p3 = '\0';
+  *r->p4 = '\0';
+  *r->p5 = '\0';
+  cnt = sscanf(buf, " %s %s %s %s %s",
+		r->p1, r->p2, r->p3, r->p4, r->p5 );
+
+  if (cnt > 0)
+  {
+    cp = (char*)(r->p1) - 1;
+    while( *++cp )
+      *cp = _toupper( *cp );
+  }  
+
+  if (!lookup( &r->rtyp, r->p1, &symlist[0]) )
+    r->rtyp = T_NONE;
+}
+
+
+static int lookup (
+  int *type,
+  char *keyword,
+  struct s_sym *table
+) {
+  int cond;
+  struct s_sym *p = table;
+
+  while ( p->sym != NULL && (cond = strcmp( keyword, p->sym)) )
+    ++p;
+
+  if ( (cond = (cond == 0))) *type = p->value;
+
+  return( cond );
+}
+
+
+static int attrlookup (
+  int *index, 
+  char *keyword,
+  ldh_sParDef *table,
+  int max
+) {
+  int cond;
+  ldh_sParDef *p = table;
+
+  while ( max-- && (cond = strcmp( keyword, p->ParName)) )
+    ++p;
+
+  if ( (cond = (cond == 0))) *index = p - table;
+
+  return( cond );
+}
+
+
+
+int wbload_psts	(
+  unsigned long int sts,
+  char *mess,
+  FILE *listing
+) {
+  static char msg[256];
+
+  if (!(sts & 1))
+  {
+    msg_GetMsg( sts, msg, sizeof(msg));
+
+    if (listing != NULL)
+      fprintf(listing, "%%WBLOAD-E-Error %s,\n -%s\n", mess, msg);
+    else
+      printf("%%WBLOAD-E-Error %s\n -%s\n", mess, msg);
+   }
+
+ return (sts & 1);
+}
+
+static void GetFileName (
+  char *inname, 
+  char *outname, 
+  char *ext
+) {
+  char	*s;
+  char	*s2;
+
+  strcpy( outname, inname);
+  
+  /* Look for extention in filename */
+  if ( ext != NULL) {
+    s = strrchr( inname, ':');
+    if ( s == 0)
+      s = inname;
+
+    s2 = strrchr( s, '>');
+    if ( s2 == 0) {
+      s2 = strrchr( s, ']');
+      if ( s2 == 0)
+	s2 = s;
+    }
+
+    s = strrchr( s2, '.');
+    if ( s == 0) {
+      /* No extention found, add extention */
+      strcat( outname, ext);
+    }
+  }
+}
+
+static int find_volume( 
+	struct sheader *h,
+	char *volumename
+)
+{
+  int i;
+  pwr_tVolumeId volid;
+  pwr_tStatus status;
+
+  /* Check if volume already is attached */
+  for ( i = 0; i < h->volumecount; i++)
+  {
+    if ( !strcmp( volumename, h->volumenamelst[i]))
+    {
+      h->volctx = h->volctxlst[i];
+      h->sess = h->sesslst[i];
+      return 1;
+    }
+  }
+
+  /* Volume is not yet attached */
+  if ( h->volumecount >= WBLOAD_MAXVOLUMES)
+  {
+    fprintf(listing, "%%WBLOAD-E-Error Max number of Volumes exceeded, error at line: %d:\n>>> %s",
+			h->cline, h->buf );
+    return 2;
+  }
+
+  status = ldh_VolumeNameToId( h->wbctx, volumename, &volid);
+  If_Error_Then
+  {
+    fprintf(listing, "%%WBLOAD-E-Error Volume does not exist, error at line: %d:\n>>> %s",
+			h->cline, h->buf );
+    return status;
+  }
+
+  status = ldh_AttachVolume( h->wbctx, volid, &h->volctxlst[h->volumecount]);
+  If_Error_Then
+  {
+    fprintf(listing, "%%WBLOAD-E-Error Unable to attatch volume, at line: %d:\n>>> %s",
+			h->cline, h->buf );
+    return status;
+  }
+
+  status = ldh_OpenSession( &h->sesslst[h->volumecount], 
+	      h->volctxlst[h->volumecount], ldh_eAccess_ReadWrite, 
+	      ldh_eUtility_Pwr);
+  If_Error_Then
+  {
+    fprintf(listing, "%%WBLOAD-E-Error Unable open session, at line: %d:\n>>> %s",
+			h->cline, h->buf );
+    return status;
+  }
+  strcpy( h->volumenamelst[h->volumecount], volumename);
+  h->detachvolume[h->volumecount] = 1;
+  h->volctx = h->volctxlst[h->volumecount];
+  h->sess = h->sesslst[h->volumecount];
+  h->volumecount++;
+  return 1;
+}

@@ -1,0 +1,97 @@
+!  tlog_c_TLogExecAllOn.wb_load -- Defines the class TLogExecAllOn.
+!
+!  PROVIEW/R
+!
+!  <Description>.
+!
+SObject TLog:Class
+  Object TLogExecAllOn $ClassDef 24
+    Body SysBody
+      Attr Editor = pwr_eEditor_PlcEd
+      Attr Method = pwr_eMethod_Connections
+    EndBody
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "TLogExecAllOn"
+      EndBody
+      Object In $Input 1
+        Body SysBody
+	  Attr Flags |= PWR_MASK_RTVIRTUAL
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object ExecOn $Output 2
+        Body SysBody
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_STATE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object InOld $Intern 3
+        Body SysBody
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object ExecOnOld $Intern 4
+        Body SysBody
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object ExecOnSignal $Intern 5
+        Body SysBody
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object LogTime $Intern 6
+        Body SysBody
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+          Attr TypeRef = "pwrs:Type-$Time"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2
+      Object PlcNode $Buffer 1
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 105
+        Attr parameters[0] = 1
+        Attr parameters[1] = 0
+        Attr parameters[2] = 1
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 7
+        Attr graphindex = 1
+        Attr default_mask[0] = 1
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 1
+        Attr compmethod = 5
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+        Attr objname = "EXON"
+        Attr graphname = "EXON"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    !
+    ! Template object 
+    !
+    Object Template TLogExecAllOn
+    EndObject
+  EndObject
+EndSObject

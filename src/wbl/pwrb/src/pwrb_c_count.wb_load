@@ -1,0 +1,221 @@
+!  pwrb_c_count.wb_load -- Defines the class Count.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_io.c
+!  Pulse counter.
+!  
+!  The counter can be increased, decreased, cleared or set
+!  equal to a present value.
+!  The counter is triggered on leading edges.
+!  
+!      Hints
+!  
+!  The object can be used as a 'pulse counter card' in the
+!  software at maximum one pulse every second (edge
+!  detecting) loop , i.e. a maximum of 25 Hz, if the base
+!  period T0 is equal to ScanTime of the fastest possible
+!  running PLC program ( = 20 milliseconds) of the node.
+!*/
+SObject pwrb:Class
+  Object Count $ClassDef 69 
+    Body SysBody
+      Attr Editor = pwr_eEditor_PlcEd
+      Attr Method = pwr_eMethod_Connections
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+         Attr StructName = "count"
+      EndBody
+      !/**
+      !  A leading edge yields a counting-up and Accum is
+      !  increased by one.
+      !*/
+      Object CountUp $Input 1 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "up"
+        EndBody
+      EndObject
+      !/**
+      !  A leading edge yields a counting-down and Accum is
+      !  decreased by one.
+      !*/
+      Object CountDown $Input 2 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "do"
+        EndBody
+      EndObject
+      !/**
+      !  A leading edge clears Accum.
+      !*/
+      Object Clear $Input 3 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "c"
+        EndBody
+      EndObject
+      !/**
+      !  A leading edge sets Accum = Preset.
+      !*/
+      Object Init $Input 4 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "i"
+        EndBody
+      EndObject
+      !/**
+      !  Accumulated counter value. This value may be used as
+      !  RawValue of the PiPos object on page 3-265.
+      !  The range is -2 147 483 648 to 2 147 483 647. So it
+      !  will be possible to accumulate pulses continuously
+      !  during 994 days at 25 Hz without overflow, if Accum = 0
+      !  at the beginning.
+      !*/
+      Object Accum $Output 5 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr PgmName = "Accum"
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "PI"
+        EndBody
+      EndObject
+      !/**
+      !  Indicates if Accum > 0, or not. FALSE means that Accum
+      !  >= 0 and TRUE means that Accum > 0.
+      !*/
+      Object Pos $Output 6 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr PgmName = "Pos"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "pos"
+        EndBody
+      EndObject
+      !/**
+      !  Indicates if Accum = 0, or not. FALSE means that Accum
+      !  != 0 and TRUE means that Accum = 0.
+      !*/
+      Object Zero $Output 7 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr PgmName = "Zero"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "z"
+        EndBody
+      EndObject
+      !/**
+      !  Indicates if Accum < 0, or not. FALSE means that Accum
+      !  >= 0 and TRUE means that Accum < 0.
+      !*/
+      Object Neg $Output 8 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr PgmName = "Neg"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "neg"
+        EndBody
+      EndObject
+      !/**
+      !  Indicates if Accum = Preset, or not. FALSE means that
+      !  Accum != Preset and TRUE means that Accum = Preset.
+      !*/
+      Object Equal $Output 9 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr PgmName = "Equal"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "eq"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies a present integer value.
+      !*/
+      Object Preset $Intern 10 
+        Body SysBody
+          Attr PgmName = "Preset"
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Preset"
+        EndBody
+      EndObject
+      Object AccPre $Intern 11 
+        Body SysBody
+          Attr PgmName = "AccPre"
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "AccPre"
+        EndBody
+      EndObject
+      !/**
+      !  The operator's authorities to change the Preset
+      !  respectively Accum attribute.
+      !  
+      !   0   -- Changes not allowed.
+      !   !=0 -- Changes allowed.
+      !*/
+      Object AccAccum $Intern 12 
+        Body SysBody
+          Attr PgmName = "AccAccum"
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "AccAccum"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 101
+        Attr parameters[0] = 4
+        Attr parameters[1] = 0
+        Attr parameters[2] = 5
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 0
+        Attr graphindex = 0
+        Attr default_mask[0] = 11
+        Attr default_mask[1] = 5
+        Attr segname_annotation = 1
+        Attr compmethod = 4
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+	Attr executeordermethod = 2
+        Attr objname = "Count"
+        Attr graphname = "Count"
+        Attr debugpar = ""
+      Endbody
+    EndObject
+  EndObject
+EndSObject

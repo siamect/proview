@@ -1,0 +1,139 @@
+!** Invisible: Include file for io configuration script
+!
+! Create a signal.
+! If the card of the signal does not exist, the card with channels, and signals
+! positioned in the reservhierarchy, will be created, and signals and channels
+! will be connected.
+! If the card already exist the signal will be move from the reservhierarchy
+! to the given destination
+!
+function int ssab_create_signal( string rname, string resname, string chname, string signame, string chan_descr, string chan_ident, string sig_descr)
+  string 	cname;
+  string 	cardclass;
+  string 	type;
+  int		channels;
+  int		i;
+  int		j;
+  string	newname;
+  string	oldname;
+  string	rnam;
+  string	chnam;
+  string	cnam;
+  string	hnam;
+  string	snam;
+  string	chnr_str;
+  string	tnam;
+  int		sts;
+
+! Check if card exist
+  cname = extract( 1, 4, chname);
+  chname = toupper( chname);
+  type = extract( 1, 2, chname);
+  chnr_str = extract( 5, 2, chname);
+
+  cnam=rname + "-" + cname;
+  if ( !ObjectExist( cnam))
+!   Create the rack and reservhierarchy if not created
+    ssab_create_object( rname, "Rack_SSAB");
+    ssab_create_object( resname, "$PlantHier");
+
+!   The card didn't exist, create it
+    if ( type == "DI")
+      cardclass = "Di_DIX2";
+      channels = 32;
+    endif
+    if ( type == "DO")
+      cardclass = "Do_HVDO32";
+      channels = 32;
+    endif
+    if ( type == "AI")
+      cardclass = "Ai_AI32up";
+      channels = 32;
+    endif
+    if ( type == "AO")
+      cardclass = "Ao_HVAO4";
+      channels = 4;
+    endif
+    if ( type == "CO")
+      cardclass = "Co_PI24BO";
+      channels = 1;
+    endif
+!   Create the card
+    conf card/rack='rname'/cardname='cname'/cardclass='cardclass'/channelname=#/chanidentity='cname'#
+    set attr/noco/name='rname'-'cname'/attr=ErrorSoftLimit/value=15
+    set attr/noco/name='rname'-'cname'/attr=ErrorHardLimit/value=50
+    set attr/noco/name='rname'-'cname'/attr=DevName/value='cname'
+
+!   Change the name of the channels to offset 01
+    for ( i = channels - 1; i >= 0; i--)
+      cnam = rname + "-" + cname;
+      sprintf( oldname, "%s-%02.2d", cnam, i);
+      j = i + 1;
+      sprintf( newname, "%02.2d", j);
+      move object/source='oldname'/rename='newname'
+    endfor
+
+!   Create signalobjects in reserv hierarchy
+    for ( i = 1; i < channels + 1; i++)
+      sprintf( rnam, "Reserv_%s%02.2d", cname, i);
+      create object/dest='resname'/class='type'/name="'rnam'"
+    endfor
+
+!   Connect channels and signals
+    for ( i = 1; i < channels + 1; i++)
+      sprintf( rnam, "Reserv_%s%02.2d", cname, i);
+      sprintf( chnam, "%02.2d", i);
+      set attr/noco/name='resname'-'rnam'/attr=SigChanCon/value='rname'-'cname'-'chnam'
+      set attr/noco/name='rname'-'cname'-'chnam'/attr=SigChanCon/value='resname'-'rnam'
+    endfor
+  endif
+
+! Set description and identity in channel
+  set attr/noco/name='rname'-'cname'-'chnr_str'/attr=Description/value="'chan_descr'"
+  set attr/noco/name='rname'-'cname'-'chnr_str'/attr=Identity/value="'chan_ident'"
+
+! Set description in signal
+  sprintf( rnam, "Reserv_%s%s", cname, chnr_str);
+  set attr/noco/name='resname'-'rnam'/attr=Description/value="'sig_descr'"
+
+! Move signal to the final destination
+  i = strrchr( signame, "-");
+  if ( i)
+    i++;
+    j = i - 2;
+    hnam = extract( 1, j, signame);
+    snam = extract( i, 80, signame);
+  endif
+  ssab_create_object( hnam, "$PlantHier");
+  move obj/source='resname'-'rnam'/dest='hnam'/rename="'snam'"
+endfunction
+
+!
+! Create an object and it's ancestors if they doesn't exist
+!
+function int  ssab_create_object( string name, string class)
+  int	 i;
+  int	 j;
+  string parent;
+  string object;
+  int	 sts;
+
+  i = strrchr( name, "-");
+  if ( i)
+    i++;
+    j = i - 2;
+    parent = extract( 1, j, name);
+    object = extract( i, 80, name);
+  else
+    object = name;
+    parent = "";
+  endif
+
+  if ( !ObjectExist( name))
+    if ( parent != "")
+      ssab_create_object( parent, class);
+    endif
+    create object/dest="'parent'"/class='class'/name="'object'"
+  endif
+endfunction
+

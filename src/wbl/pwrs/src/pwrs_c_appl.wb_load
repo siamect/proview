@@ -1,0 +1,215 @@
+!  pwrs_c_appl.wb_load -- Defines the class Appl.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+!/**
+!  @Version 1.0
+!  Configures loading of a specified image file into a
+!  node at booting and starts its execution.
+!  
+!  An image file may always be loaded 'manually' into a
+!  target node in the run-time system. The way to do it
+!  'automatically' depends on the type of the target node.
+!  
+!  If the target node is a VAXELN node ( i.e. a process
+!  station) the image file can be loaded 'automatically'
+!  in two different ways:
+!  1 The name of the image file can be entered in the
+!  'Program Description Menu' of the EBUILD session.
+!  This results in an EBUILD-produced SYS-file designed
+!  for a specific target node.
+!  
+!  At booting the following should be carried out:
+!  a.  rs_init create rtdb by:
+!        -- reading the boot file
+!        -- reading the load files
+!  
+!  b. since rtdb has been created all programs specified
+!     by the SYS-file are started, and this may require
+!     an instantaneous need of memory.
+!  2 The image file is loaded by means of an $Appl
+!  object.
+!  
+!  a. See 1a above.
+!  b. The PLC-file designed for the target node is
+!     loaded and begins to execute a PLC job. The Net
+!     Handler starts.
+!  
+!  c. The local $Appl objects are gone through.
+!     Specified image files are loaded and the
+!     corresponding jobs are created.
+!  d. We can from EDEBUG ( by UNLOAD) remove a program
+!     image identified by ProgramName, which has earlier
+!     been created by means of the $Appl object
+!     technique described here.
+!  
+!  e. This method is recommended for user-defined image
+!     files.
+!  
+!  When the target node is an OpenVMS node ( i.e. an
+!  operator station) the $Appl object method is used.
+!  The $Appl object is placed below the $Node object on
+!  the target node.
+!  
+!  The use of some attributes in the $Appl object differ
+!  between VAXELN and OpenVMS node. Notice e.g.
+!  JobPriority.
+!  User-mode stack is default one page and the standard
+!  port of the job gets message limit = 10.
+!*/
+SObject pwrs:Class
+  Object $Appl $ClassDef pwr_eCix_Appl
+    Body SysBody
+      Attr Flags |= pwr_mClassDef_System
+    EndBody
+    Object SysBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "Appl"
+      EndBody
+      !/**
+      !  Optional text to describe the use of the object.
+      !*/
+      Object Description $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Supplies a string of up to 255 characters that specifies the name of the image file to be loaded to the node.
+      !  Supplies a string of up to 255 characters that
+      !  specifies the name of the image file to be loaded to
+      !  the node.
+      !  
+      !  Syntax:
+      !  <area number>.<node number>::<device>[<directory>]
+      !  <filne name>.<extension>
+      !  
+      !  Example. 1.30::pwrp_exe:ra_mps.exe_eln
+      !*/
+      Object FileName $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String256"
+        EndBody
+      EndObject
+      !/**
+      !  Supplies a string of up to 39 characters giving the
+      !  name by which the program is to be known, for example
+      !  by the debugger. Example: RA_MPS
+      !*/
+      Object ProgramName $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Specifies if the program shall be loaded with or without debugger.
+      !  Specifies if the program shall be loaded with or
+      !  without debugger. FALSE means that the debugger does
+      !  not get control of the program; TRUE means that the
+      !  debugger gets control of the program when it is started
+      !  provided that it has been compiled and linked with
+      !  debugger.
+      !*/
+      Object StartWithDebug $Attribute 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object Load $Attribute 10
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object Run $Attribute 11
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Specifying the mode, in which the program is run.
+      !  VAXELN     Specifying the mode, in which the program is
+      !             run. FALSE means User-mode, which is the
+      !             normal case. Specifies TRUE if the program
+      !             uses routines that require Kernsl-mode.
+      !  OpenVMS    The attribute is not used.
+      !*/
+      Object KernelMode $Attribute 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Supplies the size of the kernel-mode stack.
+      !  VAXELN     Supplies the size, in pages, of the
+      !             kernel-mode stack for jobs running this
+      !             program. User-mode programs require at least
+      !             one page of kernal stack; maximum is 32767 pages.
+      !  OpenVMS    The attribute is not used.
+      !*/
+      Object KernelStackSize $Attribute 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Priority of job (VAX_ELN) or process (other os).
+      !  Supplies an integer from 0 to 31 that in the case of
+      !  VAXELN specifies the starting job priority and in the
+      !  case of OpenVMS the starting process priority.
+      !  
+      !  VAXELN    0 is the highest and 31 the lowest priority.
+      !            The normal priority is 16.
+      !  
+      !  OpenVMS   31 is the highest and 0 the lowest priority.
+      !            The base priority is often 4.
+      !*/
+      Object JobPriority $Attribute 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      !/**
+      !  VAXELN  Supplies an integer from 0 to 16 that
+      !          specifies the starting process priority for
+      !          this program. 0 is the highest and 16 the
+      !          lowest priority.
+      !  
+      !          ProcessPriority is the initial priority
+      !          assigned to the main- and sub-processes being
+      !          created by the object. The priorities can later be
+      !          changed by the program itself.
+      !  
+      !  OpenVMS The attribute is not used.
+      !*/
+      Object ProcessPriority $Attribute 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Optional supply of a string representing arguments.
+      !  Optional supply of a string of up to 255 characters
+      !  representing arguments, separated by comma and passed
+      !  to the program at start.
+      !  
+      !  Example: 1: "","","","LTA0","VTSBR1","MG2LOD",""
+      !  Example: 2: "","CONSOLE:","CONSOLE:"
+      !*/
+      Object Arg $Attribute 9
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String256"
+        EndBody
+      EndObject
+    EndObject
+    Object Template $Appl
+      Body SysBody
+        Attr Load = 1
+        Attr Run = 1
+      EndBody
+    EndObject
+  EndObject
+EndSObject

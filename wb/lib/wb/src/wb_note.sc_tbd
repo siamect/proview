@@ -1,0 +1,298 @@
+/*  wb_note.sc -- load and dump the notes database
+
+   PROVIEW/R
+   Copyright (C) 1995-1996 by Comator Process AB.
+
+   This program dumps a action text database:
+   pointed to by the logical name pwrp_db_notes,
+   to a named text file.
+   The text file can later be loaded into the database.
+
+   The program is very usefull when upgrading to a new PROVIEW/R version.  */
+  
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <descrip.h>
+#include <lib$routines.h>
+
+#include <sql_literals.h>
+
+#include "wb_ldh.h"
+#include "wb_note.h"
+
+extern int sql$signal();
+
+static int SQLCODE;
+
+exec sql declare local alias for compiletime filename pwr_db:op_note
+  runtime filename pwrp_db_notes;    
+
+
+pwr_tStatus note_dump(
+  ldh_tSesContext Session,
+  char		  *filename
+)
+{
+	
+  char Text[65536];
+  pwr_tStatus sts;
+  pwr_tObjid Object;
+  int vid, oix;
+  char Name[256];
+  char Resume[8];
+  int NameSize;
+  char *sp;
+  FILE *fp;
+  int nowrite;
+  
+  fp = fopen( filename, "w");
+  if (fp == NULL)
+    return 0;
+
+  exec sql whenever sqlerror goto dump_sqlerror_handler;
+
+  exec sql set transaction read only
+    reserving resumes for shared read;
+
+  exec sql declare o_tcursor read only table cursor for select
+    vid, oix, resume from resumes;
+
+  exec sql declare r_lcursor read only list cursor for select
+    resume where current of o_tcursor;
+
+  exec sql open o_tcursor;
+
+  for (;;) {
+
+    nowrite = 0;
+    exec sql fetch o_tcursor into :vid, oix, :Resume;
+    if (SQLCODE == SQLCODE_EOS) break;
+    Object.vid = vid;
+    Object.oix = oix;
+    sts = ldh_ObjidToName(Session, Object, ldh_eName_VolPath, Name,
+      sizeof(Name), &NameSize);
+    if (EVEN(sts))
+    {
+      strcpy(Name, "! Nonexisting object !");
+      nowrite = 1;
+    }
+    if ( strncmp( Name, "_O", 2) == 0)
+      nowrite = 1;
+
+    if ( nowrite)
+      fprintf(fp, "! Object: %s\n", Name);
+    else
+      fprintf(fp, "Object: %s\n", Name);
+
+    exec sql open r_lcursor;
+    exec sql fetch r_lcursor into :Text;
+    exec sql close r_lcursor;
+
+    for (sp = strtok(Text, "\n"); sp != NULL; sp = strtok(NULL, "\n")) {
+      if ( !nowrite)
+        fprintf(fp, " %s\n", sp);
+    }
+  }
+
+  exec sql close o_tcursor;
+  exec sql commit;
+  fclose(fp);
+  return 1;
+
+dump_sqlerror_handler:
+  sql$signal();
+dump_error_handler:
+  exec sql rollback;
+  if (fp != NULL) fclose(fp);
+  return 0;
+}
+
+
+
+
+
+pwr_tStatus node_load(
+	  ldh_tSesContext 	Session,
+	  char			*loadfile,
+	  char			*listfile,
+	  int			oflag,
+	  int			iflag
+)
+{
+  char Text[65536];
+  pwr_tStatus sts;
+  pwr_tObjid Object;
+  int vid, oix;
+  char Name[256];
+  char String[256];
+  char Resume[8];
+  long int NameSize;
+  int line = 0;
+  int sline = 0;
+  int errcount = 0;
+  int wrncount = 0;
+  int loacount = 0;
+  char *n;
+  char *s;
+  char *t;
+  int slen;
+  int tlen;
+  int c;
+  FILE *fp;
+  FILE *lfp = stdout;
+  
+  fp = fopen( loadfile, "r");
+  if (fp == NULL)
+    return 0;
+
+  if ( listfile) {
+    lfp = fopen( listfile, "w");
+    if (lfp == NULL) { 
+      fclose(fp);
+      return 0;
+    }
+  }
+
+  exec sql whenever sqlerror goto load_sqlerror_handler;
+
+  exec sql set transaction read write
+    reserving resumes for shared write;
+
+  exec sql declare od_tcursor table cursor for select
+    vid, oix, resume from resumes
+    where (vid = :vid and oix = :oix);
+
+  exec sql declare oi_tcursor insert only table cursor for select
+    vid, oix, resume from resumes;
+
+  exec sql declare ri_lcursor insert only list cursor for select
+    resume where current of oi_tcursor;
+
+
+  for (s = fgets(String, sizeof(String), fp), ++line;;) {
+
+    /* find object */
+    for (; s != NULL; s = fgets(String, sizeof(String), fp), ++line) {
+      if (*s == 'O') break;
+    }
+    if (s == NULL) break;
+  
+    if (strstr(s, "Object: ") != s) {
+      fprintf(lfp, "** Syntax error on line %d\n  %s\n", line, s);
+      goto load_error_handler;
+    }
+
+    sline = line;
+
+    n = s + strlen("Object: ");
+    String[strlen(String) - 1] = '\0';
+    strcpy(Name, n);
+
+    /* remove space at end of line */
+    s = Name + strlen(Name);
+    s--;
+    while( s >= Name)
+    {
+      if ( !(*s == 9 || *s == 32)) 
+	break;
+      s--;
+    }
+    s++;
+    *s = 0;
+
+    sts = ldh_NameToObjid(Session, &Object, Name);
+    if (EVEN(sts)) {
+      fprintf(lfp, "** Object does not exist. At line %d\n   %s\n", sline, Name);
+      ++errcount;
+      s = fgets(String, sizeof(String), fp);
+      ++line;
+      continue;
+    }
+    vid = Object.vid;
+    oix = Object.oix;
+    memset(&Text, 0, sizeof(Text));
+
+    /* read all text lines beginning with space */
+    for (
+      s = fgets(String, sizeof(String), fp), t = Text, tlen = 0, ++line;
+      s != NULL;
+      s = fgets(String, sizeof(String), fp), ++line
+    ) {
+      if (*s == '!' )
+	continue;
+      if (*s == 'O')
+	break;
+      if (*s != ' ') {
+	fprintf(lfp, "** Syntax error on line %d\n   %s\n", line, s);
+	goto load_error_handler;
+      }
+      slen = strlen(s) - 1;
+      if (tlen + slen > sizeof(Text)) {
+	fprintf(lfp, "!! Text will be truncated. At line %d\n   %s\n", line, s);
+	++wrncount;
+	break;
+      }
+      strcpy(&Text[tlen], s + 1);
+      tlen += slen;
+    }
+  
+    exec sql open od_tcursor;
+    exec sql fetch od_tcursor into :vid, :oix, :Resume;
+
+    if (SQLCODE == 0) {
+      if (oflag) {
+	fprintf(lfp,
+	  "!! Object allready exists, will be overwritten. At line %d\n   %s\n", sline, Name);
+	++wrncount;
+	exec sql delete from resumes where current of od_tcursor;
+      } else {
+	fprintf(lfp,
+	  "** Object allready exists, will not be loaded. At line %d\n   %s\n", sline, Name);
+	++errcount;
+	exec sql close od_tcursor;
+	continue;
+      }
+    }
+
+    exec sql close od_tcursor;
+
+    exec sql open oi_tcursor;
+      exec sql insert into cursor oi_tcursor (vid, oix) values (:vid, :oix);
+	exec sql open ri_lcursor;
+	  exec sql insert into cursor ri_lcursor values (:Text);
+	exec sql close ri_lcursor;
+    exec sql close oi_tcursor;
+
+    ++loacount;
+
+  }
+
+  if (errcount == 0 || iflag) {
+    exec sql commit;
+  } else {
+    exec sql rollback;
+    loacount = 0;
+  }
+  fclose(fp);
+  if (lfp != stdout) fprintf(lfp, "Objects loaded: %d\n", loacount);
+  fprintf(stdout, "Objects loaded: %d\n", loacount);
+  fprintf(stderr, "Warnings: %d, errors: %d\n", wrncount, errcount); 
+  if (lfp != stdout) fprintf(lfp, "Warnings: %d, errors: %d\n", wrncount, errcount); 
+  if (lfp != stdout) fclose(lfp);
+  return 1;
+
+load_sqlerror_handler:
+  fprintf(stderr, "SQL error\n");
+  if (lfp != stdout) fprintf(lfp, "SQL error\n");
+  sql$signal();
+load_error_handler:
+  exec sql rollback;
+  fprintf(stderr, "Fatal error, nothing was loaded!\n");
+  if (lfp != stdout) fprintf(lfp, "Fatal error, nothing was loaded!\n");
+  fprintf(stderr, "Warnings: %d, errors: %d\n", wrncount, errcount); 
+  if (lfp != stdout) fprintf(lfp, "Warnings: %d, errors: %d\n", wrncount, errcount);
+  if (fp != NULL) fclose(fp);
+  if (lfp != stdout) fclose(lfp);
+  exit(0);
+}

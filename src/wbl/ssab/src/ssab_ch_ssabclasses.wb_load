@@ -1,0 +1,11 @@
+!  ssab_ch_ssabclasses.wb_load -- SSAB:Class hierarchy.
+!
+!  PROVIEW/R
+!
+!  <Description>.
+!
+!
+SObject SSAB:
+  Object Class $ClassHier
+  EndObject
+EndSObject

@@ -1,0 +1,137 @@
+!  pwrs_c_nodeversion.wb_load -- Defines the class NodeVersion.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+SObject pwrs:Class
+  Object $NodeVersion $ClassDef pwr_eCix_NodeVersion
+    Body SysBody
+      Attr Flags |= pwr_mClassDef_DevOnly
+      Attr Flags |= pwr_mClassDef_System
+    EndBody
+    Object SysBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "NodeVersion"
+      EndBody
+      Object Node $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object Cardinality $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object BodySize $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object DnoVersion $Attribute 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object DnoCreTime $Attribute 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Time"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object DnoCardinality $Attribute 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object DnoBodySize $Attribute 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object RsmoVersion $Attribute 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object RsmoCreTime $Attribute 9
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Time"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object RsmoCardinality $Attribute 10
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object RsmoBodySize $Attribute 11
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object RpmoVersion $Attribute 12
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object RpmoCreTime $Attribute 13
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Time"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object RpmoCardinality $Attribute 14
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object RpmoBodySize $Attribute 15
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object RcoVersion $Attribute 16
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object RcoCreTime $Attribute 17
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Time"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object RcoCardinality $Attribute 18
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object RcoBodySize $Attribute 19
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+    EndObject
+    Object Template $NodeVersion
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,59 @@
+!  pwrb_c_webbrowserconfig.wb_load -- Defines the class WebBrowserConfig.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!
+!/**
+!  @Version 1.0
+!  The WebBrowser object defines which web browser that will used when
+!  opening an URL.
+!  You can also define symbols used in URL's.
+!*/
+SObject pwrb:Class
+  Object WebBrowserConfig $ClassDef 302 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+      Attr PopEditor = 1
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "WebBrowserConfig"
+      EndBody
+      !/**
+      !  The webbrowser used when opening an URL.
+      !*/
+      Object WebBrowser $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Definition of symbols used in URL's.
+      !  Definition of symbols used in URL's.
+      !  A symbols found in an URL will be replace by it's value. In an
+      !  URL the symbol should have a '$' sign as prefix.
+      !  In the definition, one element of the URL_Symbol array contains
+      !  the symbol name and value separated with space or TAB.
+      !
+      !  Example
+      !  The symbol common is defined
+      !
+      !  URL_Symbols[0]      common  http://newton:8080/pwr
+      !
+      !  and used in an URL
+      !  
+      !  $common/my_datasheet.html
+      !*/
+      Object URL_Symbols $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 10
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject
+

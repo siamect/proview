@@ -1,0 +1,14 @@
+!  inc_trendstate_txt_en.uil -- <short description>
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  This module includes trendstate's textstrings.
+!
+value
+
+    trendstate_AscizTable : exported asciz_string_table
+	(
+        "Node is down, the picture can not be displayed.",
+        "No valid time is available"
+ 	); 

@@ -1,0 +1,328 @@
+!  pwrb_c_datacollect.wb_load -- Defines the class DataCollect.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Summary Expands the number of data attributes that can be handled in a DataArithm.
+!  The DataCollect object expands the number of data attribues that
+!  can be handled in a DataArithm object.
+!
+!  The DataCollect has 24 data inputs, which values are stored in an array.
+!  By connecting the output of the DataCollect object to a Data input of a
+!  DataArithm object, it is possible to handle the array in the code of the
+!  DataArithm. This expands the number of data inputs to the DataArithm
+!  from ordinary 4 to 96, when all four data inputs are connected to DataCollect
+!  objects.
+!
+!  Another advantage of DataCollect is that its sometimes convenient to have
+!  the values arranged in an array, to use for example in an for or
+!  while loop.
+!
+!  MaxIndex should be assigned the number of used inputs in the DataCollect
+!  object.
+!
+!  Example
+!
+!  This is the code in a DataArithm which has a DataCollect object connected
+!  to the Da1 input.
+!
+!  classdef Da1 DataCollect;
+!  int i;
+!
+!  OA1 = 0;
+!  for ( i = 0; i < Da1->MaxIndex; i++)
+!    if ( ((pwr_sClass_Mtrl *)(Da1->DataP[i]))->Length > 10.0)
+!      OA1++;
+!
+!*/
+SObject pwrb:Class
+  Object DataCollect $ClassDef 272
+    Body SysBody
+      Attr Editor = pwr_eEditor_PlcEd
+      Attr Method = pwr_eMethod_Connections
+    EndBody
+    !
+    ! DATASELECT Runtime Body
+    !
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "DataCollect"
+      EndBody
+      !/**
+      !  @Summary Data input
+      !  Data input
+      !*/
+      Object DataIn1 $Input 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+          Attr GraphName = "Da1"
+        EndBody
+      EndObject
+      Object DataIn2 $Input 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+          Attr GraphName = "Da2"
+        EndBody
+      EndObject
+      Object DataIn3 $Input 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+          Attr GraphName = "Da3"
+        EndBody
+      EndObject
+      Object DataIn4 $Input 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+          Attr GraphName = "Da4"
+        EndBody
+      EndObject
+      Object DataIn5 $Input 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+          Attr GraphName = "Da5"
+        EndBody
+      EndObject
+      Object DataIn6 $Input 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+          Attr GraphName = "Da6"
+        EndBody
+      EndObject
+      Object DataIn7 $Input 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+          Attr GraphName = "Da7"
+        EndBody
+      EndObject
+      Object DataIn8 $Input 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+          Attr GraphName = "Da8"
+        EndBody
+      EndObject
+      Object DataIn9 $Input 9
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+          Attr GraphName = "Da9"
+        EndBody
+      EndObject
+      Object DataIn10 $Input 10
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+          Attr GraphName = "Da10"
+        EndBody
+      EndObject
+      Object DataIn11 $Input 11
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+          Attr GraphName = "Da11"
+        EndBody
+      EndObject
+      Object DataIn12 $Input 12
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+          Attr GraphName = "Da12"
+        EndBody
+      EndObject
+      Object DataIn13 $Input 13
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+          Attr GraphName = "Da13"
+        EndBody
+      EndObject
+      Object DataIn14 $Input 14
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+          Attr GraphName = "Da14"
+        EndBody
+      EndObject
+      Object DataIn15 $Input 15
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+          Attr GraphName = "Da15"
+        EndBody
+      EndObject
+      Object DataIn16 $Input 16
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+          Attr GraphName = "Da16"
+        EndBody
+      EndObject
+      Object DataIn17 $Input 17
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+          Attr GraphName = "Da17"
+        EndBody
+      EndObject
+      Object DataIn18 $Input 18
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+          Attr GraphName = "Da18"
+        EndBody
+      EndObject
+      Object DataIn19 $Input 19
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+          Attr GraphName = "Da19"
+        EndBody
+      EndObject
+      Object DataIn20 $Input 20
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+          Attr GraphName = "Da20"
+        EndBody
+      EndObject
+      Object DataIn21 $Input 21
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+          Attr GraphName = "Da21"
+        EndBody
+      EndObject
+      Object DataIn22 $Input 22
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+          Attr GraphName = "Da22"
+        EndBody
+      EndObject
+      Object DataIn23 $Input 23
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+          Attr GraphName = "Da23"
+        EndBody
+      EndObject
+      Object DataIn24 $Input 24
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+          Attr GraphName = "Da24"
+        EndBody
+      EndObject
+      !/**
+      !  Number of used inputs.
+      !*/
+      Object MaxIndex $Intern 25
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      !/**
+      !  Array that contains pointers to the the data input objects.
+      !*/
+      Object DataP $Intern 26
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 24
+        EndBody
+      EndObject
+      !/**
+      !  Array that contains objid to the the data input objects.
+      !*/
+      Object DataObjId $Intern 27
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ObjId"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 24
+        EndBody
+      EndObject
+      !/**
+      !  Data output that can be connected to a DataArithm (or som other Data input).
+      !*/
+      Object OutDataP $Output 28
+        Body SysBody
+          Attr PgmName = "OutDataP"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "Out"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_PRIVATE
+        EndBody
+      EndObject
+      Object OutData_ObjId $Intern 29
+        Body SysBody
+          Attr PgmName = "OutData_ObjId"
+          Attr TypeRef = "pwrs:Type-$ObjId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+    EndObject
+    !
+    ! DATACOLLECT Development Body
+    !
+    Object DevBody $ObjBodyDef 2
+      Object PlcNode $Buffer 1
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 11
+        Attr parameters[0] = 24
+        Attr parameters[1] = 3
+        Attr parameters[2] = 1
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 16
+        Attr graphindex = 0
+        Attr default_mask[0] = 3
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 1
+        Attr compmethod = 51
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+	Attr executeordermethod = 2
+        Attr objname = "DataCollect"
+        Attr graphname = "DataCollect"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    !
+    ! Template object 
+    !
+    Object Template DataCollect
+      Body RtBody
+        Attr MaxIndex = 2
+      EndBody
+    EndObject
+  EndObject
+EndSObject

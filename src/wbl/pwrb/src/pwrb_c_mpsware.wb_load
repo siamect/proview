@@ -1,0 +1,176 @@
+!  pwrb_c_mpsware.wb_load -- Defines the class MpsWare.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+SObject mps:Class
+  Object MpsWare $ClassDef 158 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "mpsWare"
+      EndBody
+      Object In $Output 1 
+        Body SysBody
+          Attr PgmName = "In"
+	  Attr Flags |= PWR_MASK_RTVIRTUAL
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "load"
+          Attr ConPointNr = 0
+        EndBody
+      EndObject
+      Object Out $Output 2 
+        Body SysBody
+          Attr PgmName = "Out"
+	  Attr Flags |= PWR_MASK_RTVIRTUAL
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "remove"
+          Attr ConPointNr = 1
+        EndBody
+      EndObject
+      Object ExecuteOrder $Intern 3 
+        Body SysBody
+          Attr PgmName = "ExecuteOrder"
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object FilePointer $Intern 4 
+        Body SysBody
+          Attr PgmName = "FilePointer"
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object ObjPosition $Intern 5 
+        Body SysBody
+          Attr PgmName = "ObjPosition"
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object ActiveFlag $Intern 6 
+        Body SysBody
+          Attr PgmName = "ActiveFlag"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object UpdateCounter $Intern 7 
+        Body SysBody
+          Attr PgmName = "UpdateCounter"
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object TypeOfOperation $Intern 8 
+        Body SysBody
+          Attr PgmName = "TypeOfOperation"
+          Attr TypeRef = "pwrs:Type-$UInt8"
+        EndBody
+      EndObject
+      Object TriggMode $Intern 9 
+        Body SysBody
+          Attr PgmName = "TriggMode"
+          Attr TypeRef = "pwrs:Type-$UInt8"
+        EndBody
+      EndObject
+      Object Channel $Intern 10 
+        Body SysBody
+          Attr PgmName = "Channel"
+          Attr TypeRef = "pwrs:Type-$UInt8"
+        EndBody
+      EndObject
+      Object InputPosition $Intern 11 
+        Body SysBody
+          Attr PgmName = "InputPosition"
+          Attr TypeRef = "pwrs:Type-$UInt16"
+        EndBody
+      EndObject
+      Object MtrlObjname $Intern 12 
+        Body SysBody
+          Attr PgmName = "MtrlObjname"
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      Object AcceptMtrlTypes $Intern 13 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_ARRAY
+          Attr Elements = 6
+          Attr PgmName = "AcceptMtrlTypes"
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      Object MaxAcceptMtrlTypes $Intern 14 
+        Body SysBody
+          Attr PgmName = "MaxAcceptMtrlTypes"
+          Attr TypeRef = "pwrs:Type-$UInt8"
+        EndBody
+      EndObject
+      Object StartCellRoutine $Intern 15 
+        Body SysBody
+          Attr PgmName = "StartCellRoutine"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object MaxWareContent $Intern 16 
+        Body SysBody
+          Attr PgmName = "MaxWareContent"
+          Attr TypeRef = "pwrs:Type-$UInt16"
+        EndBody
+      EndObject
+      Object WareContent $Intern 17 
+        Body SysBody
+          Attr PgmName = "WareContent"
+          Attr TypeRef = "pwrs:Type-$UInt16"
+        EndBody
+      EndObject
+      Object Ware $Intern 18 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_ARRAY
+          Attr Elements = 15
+          Attr PgmName = "Ware"
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 222
+        Attr parameters[0] = 0
+        Attr parameters[1] = 0
+        Attr parameters[2] = 2
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 4
+        Attr graphindex = 28
+        Attr default_mask[0] = 1
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 1
+        Attr compmethod = 2
+        Attr compindex = 1
+        Attr tracemethod = 0
+        Attr traceindex = 1
+        Attr objname = "WARE"
+        Attr graphname = "WAREcell"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    Object Template MpsWare
+      Body RtBody
+        Attr UpdateCounter = 1
+        Attr MaxAcceptMtrlTypes = 6
+        Attr WareContent = 0
+      EndBody
+    EndObject
+  EndObject
+EndSObject

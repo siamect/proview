@@ -1,0 +1,63 @@
+!  inc_blkl_txt.uil -- block list
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  This module defines english texts for the block list.
+!
+value
+   title		: exported "Blockeringslista";
+
+
+
+   blkl_AscizTable	: exported asciz_string_table
+	(
+	"Alla",
+	"P R O V I E W / R     L A R M B L O C K E R A D E    O B J E K T",
+	"OpPlats:",
+	"Operatör:",
+	"Utskrivna:",
+	"Tid:",
+	"Synliga",
+	"Totala antalet larmblockerade objekt:"
+	);
+
+
+! Strings for the menu buttons
+
+   blkl_CSTable : exported compound_string_table
+        (
+        "Dölj Tid",
+        "Visa Tid",
+        "Dölj Objektidentitet",
+        "Visa Objektidentitet",
+        "Dölj Text",
+        "Visa Text"
+        );
+   
+
+
+! Constants used by the co_CvtTimeToAsc function. See pwr_inc:TimeUtil.h
+    Solution : 0;	! second.
+    Format  : 0;	! 0=Swedish, 1=GB
+    blkl_IntTable :  exported integer_table(Solution,Format);
+
+
+    BigButtonWidth	: 220;
+
+    allBlock		: "Alla Blockeringar";
+    allBlock$		: "A";
+    changeBlock		: "Ändra Blockering...";
+    functions		: "Funktioner";
+    functions$		: "F";
+    hideObject		: "Dölj Objektidentitet";
+    hideObject$		: "O";
+    hideText		: "Dölj Text";
+    hideText$		: "x";
+    hideTime		: "Dölj Tid";
+    hideTime$		: "T";
+    visBlock		: "Synliga Blockeringar";
+    visBlock$		: "S";
+
+
+

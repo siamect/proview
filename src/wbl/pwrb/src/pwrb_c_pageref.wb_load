@@ -1,0 +1,54 @@
+!  pwrb_c_pageref.wb_load -- Defines the class PageRef.
+!
+!  PROVIEW/R
+!  Copyright (C) 1997 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+SObject pwrb:Class
+  Object PageRef $ClassDef 259
+    Body SysBody
+      Attr Flags |= pwr_mClassDef_DevOnly
+    EndBody
+    Object DevBody $ObjBodyDef 2 
+      Object PageAttr $Intern 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$AttrRef"
+          Attr NiNaAnnot = 1
+        EndBody
+      EndObject
+      Object PlcNode $Buffer 4 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 11
+        Attr parameters[0] = 0
+        Attr parameters[1] = 0
+        Attr parameters[2] = 0
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 4
+        Attr graphindex = 42
+        Attr default_mask[0] = 0
+        Attr default_mask[1] = 0
+        Attr segname_annotation = 0
+        Attr devbody_annotation = 1
+        Attr compmethod = 2
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+        Attr connectmethod = 12
+        Attr objname = "PageRef"
+        Attr graphname = "PageRef"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+  EndObject
+EndSObject

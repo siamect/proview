@@ -1,0 +1,285 @@
+!  pwrb_c_po.wb_load -- Defines the class Po.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  Pulse Output.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  Pulse Output. A modified Do object to make specified
+!  pulses on a Do-channel.
+!  
+!  Po objects are associated to ChanDo in the same way as
+!  Do objects. Note that it is ActualValue
+!  before any eventual inversion that are used to initiate
+!  pulses.
+!  The object generates, when ActualValue makes a certain
+!  transition, a pulse with the duration of PulseLength.
+!  PosFlank specifies which ActualValue transition that
+!  will initiate a pulse. If a positive or negative pulse
+!  is generated depend on PosPulse.
+!  
+!  ActualValue is handled e.g. from application programs
+!  by the system call: gdh_SetObjectInfo(...)
+!  If ResetActualValue = TRUE, PROVIEW will restore
+!  ActualValue after trigger detection. The restoration is
+!  done independent of the current state of the output;
+!  i.e. independent of any eventual propagating pulse or
+!  not. Repeated triggering during propagating pulse do
+!  not affect the existing pulse.
+!  
+!  The output signal is equal to FixedOutValue when
+!  EmergBreakTrue is TRUE and EmergBreakSelect = 2 and
+!  equal to TestValue when TestOn is TRUE, i.e. no
+!  filtering in this cases.
+!  
+!      Hints
+!  Put the object below a $PlantHier object in the
+!  development environment in such a way that it belongs
+!  to the same target node as its associated channel
+!*/
+SObject pwrb:Class
+  Object Po $ClassDef 179 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+      Attr PopEditor = 1
+      Attr Flags |= pwr_mClassDef_IO
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "Po"
+      EndBody
+      !/**
+      !  Optional text, for example the name of the signal or
+      !  what it represents.
+      !*/
+      Object Description $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Name of the associated channel object.
+      !*/
+      Object SigChanCon $ObjXRef 2
+
+        Body SysBody
+          Attr Identity = "Do"
+          Attr Source = "Do"
+          Attr Target = "ChanDo"
+          Attr SourceAttribute = "SigChanCon"
+          Attr TargetAttribute = "SigChanCon"
+        EndBody
+      EndObject
+      !/**
+      !  Index in the DOValue array at the DoArea objects
+      !  that are used for base frequency and partial frequency
+      !  samples. Initiated at boot time by rt_ini.
+      !*/
+      Object ValueIndex $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      !/**
+      !  Pointer to ActualValue after conversion, if any.
+      !*/
+      Object ActualValue $Attribute 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object SigValue $Attribute 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      !/**
+      !  @Summary A XttGraph object that will open a graph for this object.
+      !  A XttGraph object that will open a graph that contains data for
+      !  this object. This graph can be opened from the popup menu for
+      !  this object.
+      !*/
+      Object DefGraph $Attribute 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary A trend object that displays a trend for this object.
+      !  A DsTrend or PlotGroup object that contains a trend for this object.
+      !  The trend can be opened from the popup menu for this object.
+      !*/
+      Object DefTrend $Attribute 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary A help topic for this hierarchy.
+      !  A help topic in the xtt help file that contains help for this hierarchy.
+      !  The help can be displayed from the popup menu for this object.
+      !*/
+      Object HelpTopic $Attribute 14
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary A URL to the data sheet for the equipment in this hierarchy.
+      !  A URL to the data sheet for the equipment in this hierarchy.
+      !  The data sheet can be displayed from the popup menu for this object.
+      !*/
+      Object DataSheet $Attribute 15
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$URL"
+        EndBody
+      EndObject
+      !/**
+      !  Text associated to ActualValue = FALSE. At presentation
+      !  when ActualValue = FALSE TextWhenValIs0 is displayed;
+      !  OFF may often be a suitable text.
+      !  The attribute is used by the object display.
+      !*/
+      Object TextWhenValIs0 $Attribute 8 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String16"
+        EndBody
+      EndObject
+      !/**
+      !  Text associated to ActualValue = TRUE. At presentation
+      !  when ActualValue = TRUE TextWhenValIs1 is displayed; ON
+      !  may often be a suitable text.
+      !  The attribute is used by the object display.
+      !*/
+      Object TextWhenValIs1 $Attribute 9 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String16"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the pulse duration in seconds.
+      !*/
+      Object PulseLength $Attribute 10 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies if the trigger condition is a leading or
+      !  trailing edge. Trigging is only possible when the
+      !  object is "at rest position", i.e. no pulse generating.
+      !  
+      !  - TRUE means that the object is trigged when
+      !  ActualValue does the transition FALSE -> TRUE.
+      !  - FALSE means that the object is trigged when
+      !  ActualValue does the opposite transition TRUE ->
+      !  FALSE.
+      !*/
+      Object PosFlank $Attribute 11 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies if a positive or negative pulse is to be
+      !  generated when the object is  trigged.
+      !  - TRUE means that a positive pulse is generated when
+      !  the object is  trigged. In "the rest position" is
+      !  the output FALSE.
+      !  
+      !  - FALSE means that a negative pulse is generated when
+      !  the object is trigged.  In "the rest position" is
+      !  the output TRUE.
+      !*/
+      Object PosPulse $Attribute 12 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies if PROVIEW will restore ActualValue after
+      !  trigger detection or not.
+      !  - TRUE means that ActualValue is set:
+      !  a.
+      !     FALSE after triggering, if PosFlank = TRUE
+      !  b. TRUE after triggering, if PosFlank = FALSE
+      !  
+      !  The restoration of ActualValue is done direct after
+      !  trigger detection and independent of the current
+      !  state of the output; i.e. independent of any
+      !  eventual progagating pulse or not. Repeated
+      !  triggering during propagating pulse do not affect
+      !  the existing pulse.
+      !  - FALSE means that PROVIEW do not restore ActualValue.
+      !*/
+      Object ResetActualValue $Attribute 13 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+    EndObject
+    Object Template Po
+    EndObject
+    Object ConfiguratorPosnn $Menu
+      Object Pointed $Menu
+	Object Disconnect $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Disconnect Channel"
+	    Attr MethodName = "$ObjXRef-DisconnectSingle"
+	    Attr MethodArguments[0] = "SigChanCon"
+	    Attr FilterName = "$ObjXRef-IsOkDisconnectSingle"
+	    Attr FilterArguments[0] = "SigChanCon"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPoson $Menu
+      Object Pointed $Menu
+	Object Connect $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Connect Channel"
+	    Attr MethodName = "$ObjXRef-Connect"
+	    Attr MethodArguments[0] = "SigChanCon"
+	    Attr MethodArguments[1] = "SigChanCon"
+	    Attr FilterName = "$ObjXRef-IsOkConnect"
+	    Attr FilterArguments[0] = "SigChanCon"
+	    Attr FilterArguments[1] = "SigChanCon"
+	  EndBody
+	EndObject
+	Object Disconnect $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Disconnect Channel"
+	    Attr MethodName = "$ObjXRef-Disconnect"
+	    Attr MethodArguments[0] = "SigChanCon"
+	    Attr MethodArguments[1] = "SigChanCon"
+	    Attr FilterName = "$ObjXRef-IsOkDisconnect"
+	    Attr FilterArguments[0] = "SigChanCon"
+	    Attr FilterArguments[1] = "SigChanCon"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPosos $Menu
+      Object Pointed $Menu
+	Object Disconnect $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Disconnect Channel"
+	    Attr MethodName = "$ObjXRef-DisconnectSingle"
+	    Attr MethodArguments[0] = "SigChanCon"
+	    Attr FilterName = "$ObjXRef-IsOkDisconnectSingle"
+	    Attr FilterArguments[0] = "SigChanCon"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+  EndObject
+EndSObject

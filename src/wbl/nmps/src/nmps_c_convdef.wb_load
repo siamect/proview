@@ -1,0 +1,28 @@
+!  nmps_c_convdef.wb_load -- Defines the class ConvDef.
+!
+!  PROVIEW/R
+!
+!  <Description>.
+!
+SObject NMps:Class
+  Object ConvDef $ClassDef 39
+    Body SysBody
+      Attr Editor = pwr_eEditor_Standard
+    EndBody
+    !
+    ! CONVDEF Runtime Body
+    !
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "ConvDef"
+      EndBody
+      Object Param $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 200
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,126 @@
+!  pwrb_c_dshistserver.wb_load -- Defines the class DsHistServer.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  Configures the server for historical data storage. (Datasto
+!  History Server).
+!  
+!  Historical data storage is an option in PROVIEW/R.
+!  Data storage is done in a relational database, Rdb. The
+!  relations are supposed to be created and named on
+!  delivery of the option. The number of relations are
+!  default 4.
+!  
+!  DsHistServer is configured in the development
+!  environment below the $Node object which represents the
+!  node where the Rdb storage will be done. This node will
+!  be referred to as the 'historical storage node'.
+!  In the 'historical storage node', subscriptions to
+!  quantities that will be included in the storage, are
+!  automatically set up. Data, to form an average, are
+!  stored in a local buffer at each storage time and an
+!  aritmethical average will be calculated before storage.
+!  Quantities which are included in the historical
+!  storage, but whose values are not accessible (there may
+!  be time-out in the subscription e.g.) will be stored as
+!  null characters.
+!
+!         See Also
+!  DsHist,
+!*/
+SObject pwrb:Class
+  Object DsHistServer $ClassDef 107 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "DsHistServer"
+      EndBody
+      Object Description $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the name of a relation in Rdb. A relation
+      !  consist of one row to each storage time with up to 1500
+      !  data columns.
+      !  The attribute is case sensitive i.e. if the relation is
+      !  named HistoricRelation_1 it has to be written
+      !  HistoricRelation_1 and not historicrelation_1,for
+      !  example.
+      !*/
+      Object Table $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies, in seconds, the time between two storages in
+      !  the relation. The attribute has to be an integer
+      !  multiple of ScanTime; se below.
+      !*/
+      Object StoreInterval $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies, in seconds, the time between two samples.
+      !  The minimum allowed value is 10 seconds.
+      !  
+      !  If StoreInterval = ScanTime latest sample will be
+      !  stored.
+      !  If StoreInterval > ScanTime storage according to
+      !  FilterFunction will be done.
+      !*/
+      Object ScanTime $Attribute 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies, in days, how long data will be saved in Rdb.
+      !  Rdb is on delivery created to hold a certain number of
+      !  samples of the data quantities. The following
+      !  expression will be satisfied,
+      !  
+      !  StoreTime <= "maximum number of samples" * StoreInterval
+      !*/
+      Object StoreTime $Attribute 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies how a sample will be handled before storage.
+      !  The following alternatives exist:
+      !   --  At storage the latest sample of the quantity will
+      !   --  At storage the arithmetical average of the quantity
+      !       will be used.
+      !*/
+      Object FilterFunction $Attribute 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+        EndBody
+      EndObject
+    EndObject
+    Object Template DsHistServer
+      Body RtBody
+        Attr ScanTime = 10
+        Attr StoreInterval = 10
+        Attr StoreTime = 2
+        Attr FilterFunction = 0
+      EndBody
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,221 @@
+!  pwrs_c_graphplcnode.wb_load -- Defines the class GraphPlcNode.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+!/**
+!  @Version 1.0
+!  Description class for a Buffer in plc objects.
+!  The buffer contains graphic data used by the plc editor.
+!*/
+SObject pwrs:Class
+  Object $GraphPlcNode $ClassDef pwr_eCix_GraphPlcNode
+    Body SysBody
+      Attr Flags |= pwr_mClassDef_DevOnly
+      Attr Flags |= pwr_mClassDef_System
+    EndBody
+    Object SysBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "GraphPlcNode"
+      EndBody
+      !/**
+      !  Plceditor type for the class.
+      !*/
+      Object object_type $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Number of input, intern and output attributes.
+      !  Number of input, intern and output attributes.
+      !  Element 0 : the number of input attributes.
+      !  Element 1 : the number of inter attributes.
+      !  Element 3 : the number of output attributes.
+      !  Element 4 : not used.
+      !*/
+      Object parameters $Attribute 2
+        Body SysBody
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Elements = 4
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Number of plc subwindows.
+      !*/
+      Object subwindows $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Class of subwindows.
+      !*/
+      Object subwindow_class $Attribute 4
+        Body SysBody
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Elements = 2
+          Attr TypeRef = "pwrs:Type-$ClassId"
+        EndBody
+      EndObject
+      !/**
+      !  Not used.
+      !*/
+      Object sw_page_x $Attribute 5
+        Body SysBody
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Elements = 2
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Not userd.
+      !*/
+      Object sw_page_y $Attribute 6
+        Body SysBody
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Elements = 2
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Method for drawing the plc symbol.
+      !*/
+      Object graphmethod $Attribute 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Index used by the grapich method.
+      !*/
+      Object graphindex $Attribute 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary The default input and output configuration.
+      !  The default input and output configuration.
+      !  An array of bitmasks.
+      !  Element 0: mask for input attributes, if a bit is set, the corresponding
+      !             input will be displayed.
+      !  Element 1: mask for output attributes, if a bit is set, the corresponding
+      !             output will be displayed.
+      !  Element 2: mask for input attributes, if a bit is set, the corresponding
+      !             output will be inverted.
+      !*/
+      Object default_mask $Attribute 9
+        Body SysBody
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Elements = 2
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Annotation in which the object name will be displayed.
+      !*/
+      Object segname_annotation $Attribute 10
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Attributes whose value will be displayed in an annotation
+      !  will be serach for in RtBody.
+      !*/
+      Object rtbody_annotation $Attribute 11
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Attributes whose value will be displayed in an annotation
+      !  will be serach for in DevBody.
+      !*/
+      Object devbody_annotation $Attribute 12
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Compilation method. Method that generates plc code for the object.
+      !*/
+      Object compmethod $Attribute 13
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Not used.
+      !*/
+      Object compindex $Attribute 14
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      ! Metod used by trace.
+      !*/
+      Object tracemethod $Attribute 15
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Not used.
+      !*/
+      Object traceindex $Attribute 16
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Method to connect the object to another object.
+      !*/
+      Object connectmethod $Attribute 17
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Method to calculate the execute order in the plc program.
+      !*/
+      Object executeordermethod $Attribute 18
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Name for class displayed in the plc editor.
+      !*/
+      Object objname $Attribute 19
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String16"
+        EndBody
+      EndObject
+      !/**
+      !  Name for an object instance created in the plc editor.
+      !*/
+      Object graphname $Attribute 20
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String16"
+        EndBody
+      EndObject
+      !/**
+      !  Name of the attribute that trace uses to display the status of the object.
+      !*/
+      Object debugpar $Attribute 21
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String32"
+        EndBody
+      EndObject
+    EndObject
+    Object Template $GraphPlcNode
+    EndObject
+  EndObject
+EndSObject

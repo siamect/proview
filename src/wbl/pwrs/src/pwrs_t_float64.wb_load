@@ -1,0 +1,16 @@
+!  pwrs_t_float64.wb_load -- Defines the basic type Float64
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+SObject pwrs:Type
+  Object $Float64 pwr_eClass_Type pwr_eTix_Float64
+    Body SysBody
+      Attr Type = pwr_eType_Float64
+      Attr Size = 8
+    EndBody
+  EndObject
+EndSObject

@@ -1,0 +1,58 @@
+!  inc_evel_txt.uil -- evnet list
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  This module defines swedish texts for the event list.
+!
+value
+
+! Exported constants
+
+   title		: exported "Händelselista";
+
+
+   evel_AscizTable      : exported asciz_string_table
+        (
+        "Lar-",		! AckStr
+        "Kvi-",		! AckStr
+        "Ret-",		! RtnStr
+        "Ann-",		! CancStr
+        "Med ",		! MsgStr
+	"Blo-",		! BlkStr
+	"Rbl-",		! RblkStr
+	"Abl-",		! CblkStr
+	"Dbl-",		! UblkStr
+        "OpPlats:",      ! OpPlaceStr
+        "Operatör:",     ! OperatorStr
+        "Värde : ",     ! ValueStr
+        "Gräns : "      ! LimitStr
+        );
+
+   evel_CSTable : exported compound_string_table
+	(
+	"Dölj Tid",			! RemoveTimeStr
+	"Visa Tid",			! ShowTimeStr
+	"Dölj Objektidentitet",		! RemoveObjectStr
+	"Visa Objektidentitet",		! ShowObjectStr
+	"Dölj Händelsetext",		! RemoveEventTextStr
+	"Visa Händelsetext"		! ShowEventTextStr
+	);
+        
+! Constants used by the co_CvtTimeToAsc function. See pwr_inc:TimeUtil.h
+    Solution		: 0;	! second.
+    Format		: 0;	! 0=Swedish, 1=GB
+    evel_IntTable	:  exported integer_table(Solution,Format);
+
+
+    clearSelections	: "Rensa alla Markeringar";
+    clearSelections$	: "R";
+    functions		: "Funktioner";
+    functions$		: "F";
+    hideEvent		: "Dölj Händelsetext";
+    hideEvent$		: "H";
+    hideObject		: "Dölj Objektidentitet";
+    hideObject$		: "O";
+    hideTime		: "Dölj Tid";
+    hideTime$		: "T";
+    histList		: "Historik...";

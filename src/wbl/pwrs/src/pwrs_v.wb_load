@@ -1,0 +1,7 @@
+!  pwrs_v.wb_load -- Loads the pwrs volume
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+Volume pwrs pwr_eClass_ClassVolume 0.0.0.1
+EndVolume

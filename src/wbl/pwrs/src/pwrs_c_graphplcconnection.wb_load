@@ -1,0 +1,116 @@
+!  pwrs_c_graphplcconnection.wb_load -- Defines the class GraphPlcConnection.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+!/**
+!  @Version 1.0
+!  Description class for a Buffer in plc connection objects.
+!  The buffer contains graphic data used by the plc editor.
+!*/
+SObject pwrs:Class
+  Object $GraphPlcConnection $ClassDef pwr_eCix_GraphPlcConnection
+    Body SysBody
+      Attr Flags |= pwr_mClassDef_DevOnly
+      Attr Flags |= pwr_mClassDef_System
+    EndBody
+    Object SysBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "GraphPlcConnection"
+      EndBody
+      !/**
+      !  Unic id for the connection class.
+      !*/
+      Object con_type $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Number of arrows.
+      !*/
+      Object arrows $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      !/**
+      !  Line width.
+      !*/
+      Object linewidth $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Dashed line.
+      !*/
+      Object dashes $Attribute 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Gray or black color.
+      !*/
+      Object fillpattern $Attribute 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      !/**
+      !  Not used.
+      !*/
+      Object color $Attribute 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Connection curvature.
+      !  Connection curvature.
+      !  0  Routed
+      !  1  jagged
+      !  2  rectilinear
+      !  3  transition divergens
+      !  4  transition convergens
+      !  5  step divergens
+      !  6  step convergens
+      !*/
+      Object curvature $Attribute 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      !/**
+      !  Size of rounded corners.
+      !*/
+      Object corners $Attribute 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Connection attributes.
+      !  Bitmask for connection attributes.
+      !  1   object to object, connection between two objects
+      !  2   output to input, connection between two attributes
+      !  4   not used
+      !  8   not used
+      !  16  executeorder, the connection influence the execute order
+      !  32  not used
+      !  64  signal, the connections tranfer a signal value
+      !*/
+      Object attributes $Attribute 9
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+    EndObject
+    Object Template $GraphPlcConnection
+    EndObject
+  EndObject
+EndSObject

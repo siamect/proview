@@ -1,0 +1,97 @@
+!  pwrb_c_csub.wb_load -- Defines the class CSub.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_macro_grafcet.h
+!  Conditional execution of objects located in a
+!  Sub-window.
+!  
+!  The code in the sub-window is,
+!  executed if, and only if, the logical input signal is
+!  TRUE; compare with an ordinary Order object where
+!  execution is done as long as the input is TRUE and
+!  after that further once, i.e. an Order object is
+!  always executed at least twice.
+!  put below a WindowPlc object (see p. 3-396) below the
+!  CSub-object.
+!  
+!  The input is connected to any logical signal; an Order
+!  object is only connected to Grafcet-steps.
+!  
+!  By means of the Attribute Editor the value of the input
+!  signal can be inverted.
+!  The sub-window may contain PLC objects without any
+!  known restrictions.
+!*/
+SObject pwrb:Class
+  Object CSub $ClassDef 79 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Connections
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "csub"
+      EndBody
+      !/**
+      !  Specifies whether the sub-window will be executed or
+      !  not. FALSE means no execution and TRUE means execution
+      !  of the objects in the sub-window.
+      !*/
+      Object in $Input 1 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_RTVIRTUAL
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "in"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 104
+        Attr parameters[0] = 1
+        Attr parameters[1] = 0
+        Attr parameters[2] = 0
+        Attr parameters[3] = 0
+        Attr subwindows = 1
+        Attr subwindow_class[0] = "pwrb:Class-WindowPlc"
+        Attr graphmethod = 7
+        Attr graphindex = 0
+        Attr default_mask[0] = 1
+        Attr default_mask[1] = 0
+        Attr segname_annotation = 1
+        Attr compmethod = 17
+        Attr compindex = 0
+        Attr tracemethod = 2
+        Attr traceindex = 1
+	Attr executeordermethod = 2
+        Attr objname = "CSub"
+        Attr graphname = "CSub"
+        Attr debugpar = "in"
+      Endbody
+    EndObject
+    Object Template CSub
+      Body RtBody
+        Attr in = 1
+      EndBody
+    EndObject
+  EndObject
+EndSObject

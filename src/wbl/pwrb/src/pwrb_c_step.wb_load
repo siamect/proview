@@ -1,0 +1,116 @@
+!  pwrb_c_step.wb_load -- Defines the class Step.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_macro_grafcet.h
+!  An ordinary sequential Grafcet step.
+!  
+!  To the right output one or more Order objects can be
+!  connected at the same time as well as one or more Stoxx,
+!  Setxx or Resxx objects. The output can also be left
+!  open or be used as an ordinary binary signal.
+!  
+!  The vertical connections are connected to Trans
+!  objects.
+!  Each step in a sequential chain will be cleared by a
+!  common reset signal; for more information see the
+!  InitStep object.
+!*/  
+SObject pwrb:Class
+  Object Step $ClassDef 215 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "step"
+      EndBody
+      Object Status $Output 1 
+        Body SysBody
+          Attr PgmName = "StatusIn"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_RTVIRTUAL
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "sts1"
+          Attr ConPointNr = 0
+        EndBody
+      EndObject
+      Object Status2 $Output 2 
+        Body SysBody
+          Attr PgmName = "StatusOut"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_RTVIRTUAL
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "sts2"
+          Attr ConPointNr = 2
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the status of the step. FALSE means an
+      !  inactive step, and TRUE means an active step. The value
+      !  may be picked up in another program by means of a GetDp
+      !  object; see figure 3-22 on page 3-184. In the structure
+      !  of the object or referenced this attribute is named
+      !  Status[0].
+      !  
+      !  Order[1] is a copy of Order[0]. The Trans object looks
+      !  on Order[0] and Order[1].
+      !*/
+      Object Order $Output 3 
+        Body SysBody
+          Attr PgmName = "Status"
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOREMOVE
+          Attr Elements = 2
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "Order"
+          Attr ConPointNr = 1
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 30
+        Attr parameters[0] = 0
+        Attr parameters[1] = 0
+        Attr parameters[2] = 3
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 4
+        Attr graphindex = 2
+        Attr default_mask[0] = 0
+        Attr default_mask[1] = 7
+        Attr segname_annotation = 1
+        Attr compmethod = 14
+        Attr compindex = 1
+        Attr tracemethod = 7
+        Attr traceindex = 1
+	Attr executeordermethod = 4
+        Attr objname = "S"
+        Attr graphname = "S"
+        Attr debugpar = "Order[0]"
+      EndBody
+    EndObject
+  EndObject
+EndSObject

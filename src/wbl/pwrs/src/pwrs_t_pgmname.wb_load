@@ -1,0 +1,18 @@
+!  pwrs_t_pgmname.wb_load -- Defines the basic type PgmName
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+SObject pwrs:Type
+  Object $PgmName pwr_eClass_TypeDef 11
+    Body SysBody
+      Attr Type = pwr_eType_String
+      Attr Size = 32
+      Attr TypeRef = pwr_eType_String
+      Attr Elements = 32
+    EndBody
+  EndObject
+EndSObject

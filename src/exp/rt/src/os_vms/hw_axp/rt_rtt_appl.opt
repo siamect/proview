@@ -1,0 +1,18 @@
+!  rt_rtt_appl.opt -- <short description>
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+pwr_obj:dtt_rttsys.obj
+pwr_obj:rt_io_user.obj
+pwr_lib:libpwr_dtt/lib
+pwr_lib:libpwr_rt/lib
+pwr_lib:libpwr_co/lib
+pwr_lib:libpwr_wb/lib
+pwr_obj:pwr_msg_co.obj
+pwr_obj:pwr_msg_rt.obj
+pwr_obj:pwr_msg_wb.obj
+sys$library:decc$shr/share
+sys$share:ucx$rpcxdr_shr/share

@@ -1,0 +1,12 @@
+!  pwrb_v.wb_load -- Loads the pwrb volume
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  NOTE !
+!  This class is defined before class definitions are completed,
+!  and is thus loaded with DObject etc.
+!
+!
+Volume pwrb pwr_eClass_ClassVolume 0.0.0.2
+EndVolume

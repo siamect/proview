@@ -1,0 +1,75 @@
+!  pwrb_c_currentindex.wb_load -- Defines the class CurrentIndex.
+!
+!  PROVIEW/R
+!
+!  <Description>.
+!
+SObject NMps:Class
+  Object CurrentIndex $ClassDef 12
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_DevBodyOnly
+      Attr PopEditor = 2
+    EndBody
+    !
+    ! CURRENTINDEX Runtime Body
+    !
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "currentindex"
+      EndBody
+      Object DataCurrent_Index $Output 1
+        Body SysBody
+          Attr PgmName = "CurrentIndex"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_RTVIRTUAL
+	  Attr Flags |= PWR_MASK_DEVBODYREF
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "Out"
+        EndBody
+      EndObject
+    EndObject
+    !
+    ! DATACOPY Development Body
+    !
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 228
+        Attr parameters[0] = 0
+        Attr parameters[1] = 0
+        Attr parameters[2] = 1
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 0
+        Attr graphindex = 0
+        Attr default_mask[0] = 0
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 1
+        Attr compmethod = 44
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+	Attr executeordermethod = 2
+        Attr objname = "CurrIndex"
+        Attr graphname = "CurrIndex"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    Object DevBody $ObjBodyDef 2
+      Object CellObject $Intern 1
+        Body SysBody
+          Attr PgmName = "CellObject"
+          Attr TypeRef = "pwrs:Type-$Objid"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object PlcNode $Buffer 2
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject

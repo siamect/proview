@@ -1,0 +1,11 @@
+/* HELP FILE FOR rttsys */
+
+
+RTT_HELP_START
+/* Put the help texts for your menues an pictures here */
+
+RTT_HELP_SUBJ("")
+RTT_HELP_INFO("Välj ut önskat ämne med piltangenterna och tryck på RETURN")
+RTT_HELP_TEXT("Pwr_rtt visar info om databasen...")
+
+RTT_HELP_END

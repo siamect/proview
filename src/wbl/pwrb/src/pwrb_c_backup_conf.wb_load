@@ -1,0 +1,221 @@
+!  pwrb_c_backup_conf.wb_load -- Defines the class Backup_Conf.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  Configures the backup-function of a node.
+!  
+!  The objects or parts of objects that will be included
+!  in the backup-function are configured by means of
+!  Backup objects.
+!  
+!  The backup of an individual object can be done fast or
+!  slow. The meaning of fast respectively slow is defined
+!  by CycleFast and CycleSlow.
+!  The object has to be configured direct below a $Node
+!  object representing a process node.
+!
+!      See Also
+!
+!  Backup
+!*/
+SObject pwrb:Class
+  Object Backup_Conf $ClassDef 23 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    !
+    ! Backup_Conf Runtime Body
+    !
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "Backup_Conf"
+      EndBody
+      !
+      ! Parameter BackupFile
+      !
+      !/**
+      !  Specifies a string of up to 79 characters naming the
+      !  backup file. If the file is not stored in the local
+      !  node the node designation should be included, for
+      !  example 1.30::PWRP_LOAD:VKVAMN.PWRBCK
+      !*/
+      Object BackupFile $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !
+      ! Parameter CycleFast, in 10ths of seconds
+      !
+      !/**
+      !  Specifies the period of the fast backup cycle in tenth
+      !  of seconds, for example 300, i.e. 30 seconds. If
+      !  CycleFast = 0, a default (=BCK_DEFAULT_FAST ) cycle
+      !  period is selected. This default period is 10 seconds
+      !  at the moment.
+      !*/
+      Object CycleFast $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !
+      ! Parameter CycleSlow, in 10ths of seconds
+      !
+      !/**
+      !  Specifies the period of the slow backup cycle in tenth
+      !  of seconds; for example 1200, i.e. 120 seconds. If
+      !  CycleSlow = 0, a default (=BCK_DEFAULT_SLOW ) cycle
+      !  period is selected. This default period is 60 seconds
+      !  at the moment.
+      !*/
+      Object CycleSlow $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !
+      ! Parameter CntFast, # of successful fast backups
+      !
+      !/**
+      !  The numbers of elapsed fast respectively slow backup
+      !  cycles.
+      !*/
+      Object CntFast $Attribute 4 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !
+      ! Parameter CntSlow, # of successful slow backups
+      !
+      !/**
+      !  The number of bytes updated during a fast respectively
+      !  slow backup cycle.
+      !*/
+      Object CntSlow $Attribute 5 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !
+      ! Parameter BytesFast, # of bytes in last successful fast backup
+      !
+      !/**
+      !  The number of bytes updated during a fast respectively
+      !  slow backup cycle.
+      !*/
+      Object BytesFast $Attribute 6 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !
+      ! Parameter BytesSlow, # of bytes in last successful slow backup
+      !
+      Object BytesSlow $Attribute 7 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !
+      ! Parameter SegFast, # of segments in last successful fast backup
+      !
+      !/**
+      !  The number of Backup objects included in the last fast
+      !  respectively slow backup cycle.
+      !*/
+      Object SegFast $Attribute 8 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !
+      ! Parameter SegSlow, # of segments in last successful slow backup
+      !
+      Object SegSlow $Attribute 9 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !
+      ! Parameter ObjTimeFast, Objects up to this point are in the
+      ! fast backup
+      !
+      !/**
+      !  Time when Backup objects included in the last fast
+      !  respectively slow backup cycle were updated.
+      !*/
+      Object ObjTimeFast $Attribute 10 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Time"
+        EndBody
+      EndObject
+      !
+      ! Parameter ObjTimeSlow, Objects up to this point are in the
+      ! slow backup
+      !
+      Object ObjTimeSlow $Attribute 11 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Time"
+        EndBody
+      EndObject
+      !
+      ! Parameter LastWrite
+      !
+      !/**
+      !  Time at the last writing in the backup-file with no
+      !  regard to fast or slow backup cycles.
+      !*/
+      Object LastWrite $Attribute 12 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Time"
+        EndBody
+      EndObject
+      !
+      ! Parameter DiskStatus
+      !
+      !/**
+      !  Status code after the last disk operation.
+      !*/
+      Object DiskStatus $Attribute 13 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+    EndObject
+    !
+    ! Template for Backup_Conf
+    !
+    Object Template Backup_Conf
+    EndObject
+  EndObject
+EndSObject

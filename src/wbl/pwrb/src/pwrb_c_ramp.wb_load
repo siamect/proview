@@ -1,0 +1,184 @@
+!  pwrb_c_ramp.wb_load -- Defines the class Ramp.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_arithm.c
+!  Limits a quantity's rate of change.
+!  
+!  Separate limit rates at increase respectively decrease;
+!  RampUp and RampDown.
+!  Sets du = RampUp * ScanTime and dn = RampDown * ScanTime.
+!
+!  An external signal may also be used as feedback.
+!*/
+SObject pwrb:Class
+  Object Ramp $ClassDef 189 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Connections
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "ramp"
+      EndBody
+      !/**
+      !  Value of the input signal.
+      !*/
+      Object In $Input 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "IN"
+        EndBody
+      EndObject
+      !/**
+      !  External feedback. If the input is left open the
+      !  VAL-output will be used as an internal input signal.
+      !*/
+      Object FeedB $Input 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "FB"
+        EndBody
+      EndObject
+      !/**
+      !  Output signal, se above.
+      !*/
+      Object ActVal $Output 3 
+        Body SysBody
+          Attr PgmName = "ActVal"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "VAL"
+        EndBody
+      EndObject
+      !/**
+      !  Program cycle time in seconds.
+      !*/
+      Object ScanTime $Intern 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "ScanTime"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_PRIVATE
+        EndBody
+      EndObject
+      !/**
+      !  Maximum increase per second. If RampUp £ 0 no
+      !  limitation upwards is done.
+      !*/
+      Object RampUp $Intern 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "RampUp"
+        EndBody
+      EndObject
+      !/**
+      !  Maximum decrease per second. If RampDown £ 0 no
+      !  limitation downwards is done.
+      !*/
+      Object RampDown $Intern 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "RampDown"
+        EndBody
+      EndObject
+      Object RampUpAbs $Intern 13 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "RampUpAbs"
+        EndBody
+      EndObject
+      !/**
+      !  The operator's authorities to change RampUp
+      !  respectively RampDown.
+      !     0   -- Changes not allowed.
+      !     != 0 -- Changes allowed.
+      !*/
+      Object AccUp $Intern 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "AccUp"
+        EndBody
+      EndObject
+      Object AccDown $Intern 8 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "AccDown"
+        EndBody
+      EndObject
+      !/**
+      !  The minimum and maximum allowed value of RampUp at
+      !  changes made by an operator.
+      !*/
+      Object MinUp $Intern 9 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MinUp"
+        EndBody
+      EndObject
+      Object MaxUp $Intern 10 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MaxUp"
+        EndBody
+      EndObject
+      !/**
+      !  The minimum and maximum allowed value of RampDown at
+      !  changes made by an operator.
+      !*/
+      Object MinDown $Intern 11 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MinDown"
+        EndBody
+      EndObject
+      Object MaxDown $Intern 12 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MaxDown"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 126
+        Attr parameters[0] = 2
+        Attr parameters[1] = 0
+        Attr parameters[2] = 1
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 0
+        Attr graphindex = 0
+        Attr default_mask[0] = 1
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 1
+        Attr compmethod = 32
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+	Attr executeordermethod = 2
+        Attr objname = "Ramp"
+        Attr graphname = "Ramp"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+  EndObject
+EndSObject

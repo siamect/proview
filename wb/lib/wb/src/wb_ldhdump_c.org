@@ -1,0 +1,1151 @@
+/* wb_ldhdump.c -- <short description>
+
+   PROVIEW/R
+   Copyright (C) 1996 by Comator Process AB.
+
+   Dumps work bench to ASCII-text file.  */
+
+#include <stdio.h>
+#include <descrip.h>
+#include <float.h>
+#include <string.h>
+#ifdef OS_VMS
+#include <lib$routines.h>
+#endif
+#include "wb_ldhi.h"
+#include "wb_ldhdb.h"
+#include "wb_ldhdump.h"
+#include "pwr.h"
+#include "co_cdh.h"
+#include "co_time.h"
+#include "wb_ldh_msg.h"
+#include "wb_utl.h"
+
+static FILE *fp;
+static int errcnt = 0;
+static int indchr = 3;
+static int iflag = 0;
+static int nflag = 0;
+static int hflag = 0;
+static int rflag = 0;
+static int idxflag = 0;
+static int rootobject = 0;
+
+/*============================================================================*\
+  Function prototypes to local functions.
+\*============================================================================*/
+
+static void GetFileName ( 	
+   char *, 
+   char *, 
+   char *
+);
+static void PrintObject (
+  ldhi_sSesContext *,
+  ldhi_sObjHead *,
+  int,
+  char *
+);
+static void PrintHierarchy (
+  ldhi_sSesContext *,
+  ldhi_sObjHead *
+);
+static pwr_tStatus PrintVolume (
+  pwr_tVolumeId 	volid,
+  ldhi_sSesContext 	*sesctx
+);
+static void PrintBody (
+  ldhi_sSesContext *,
+  ldhi_sObjHead *,
+  ldhi_sObjBody *,
+  ldhi_sObjBody *,
+  int,
+  int,
+  char *
+);
+static void PrintParameter (
+  ldhi_sSesContext *,
+  ldhi_sObjHead *,
+  ldhi_sObjBody *,
+  ldhi_sObjBody *,
+  ldhi_sObjBody *,
+  int,
+  int,
+  char *
+);
+static void PrintBuffer (
+  ldhi_sSesContext *,
+  ldhi_sObjHead *,
+  ldhi_sObjBody *,
+  ldhi_sObjBody *,
+  ldhi_sObjBody *,
+  int,
+  int,
+  char *
+);
+static pwr_tBoolean PrintValue (
+  ldhi_sSesContext *,
+  pwr_sParam *,
+  void *,
+  int,
+  char **,
+  char *
+);
+static void PrintText (
+  int offset,
+  pwr_sParam *Param,
+  ldhi_sObjHead *php,
+  ldhi_sObjBody *obp,
+  int level
+);
+static char *Indent(int);
+
+static void ConvertObjectName( 
+  char *root, 
+  char *name,
+  char *converted_name
+);
+
+/*============================================================================*\
+  Local functions.
+\*============================================================================*/
+
+/*----------------------------------------------------------------------------*\
+\*----------------------------------------------------------------------------*/
+
+
+static void GetFileName (
+  char *inname, 
+  char *outname, 
+  char *ext
+) {
+  char	*s;
+  char	*s2;
+
+  strcpy(outname, inname);
+
+  /* Look for extention in filename */
+  if ( ext != NULL) {
+    s = strrchr( inname, ':');
+    if ( s == 0)
+      s = inname;
+
+    s2 = strrchr( s, '>');
+    if ( s2 == 0) {
+      s2 = strrchr( s, ']');
+      if ( s2 == 0)
+	s2 = s;
+    }
+
+    s = strrchr( s2, '.');
+    if ( s == 0) {
+      /* No extention found, add extention */
+      strcat( outname, ext);
+    }
+  }
+}
+
+
+/*----------------------------------------------------------------------------*\
+\*----------------------------------------------------------------------------*/
+
+static int ldhdump_psts (
+  unsigned long int sts,
+  FILE *logfile
+) {
+  static int msgsts;
+  static int msglen;
+  static char msg[256];
+  static $DESCRIPTOR(msgdesc, msg);
+
+  if (!(sts & 1)) {
+    msgsts = sts;
+    lib$sys_getmsg(&msgsts, &msglen, &msgdesc, 0, 0);
+    msg[msglen]='\0';
+    if (logfile != NULL)
+      fprintf(logfile, "%s\n", msg);
+    else
+      printf("%s\n", msg);
+    lib$signal(sts);
+  }
+
+  return sts & 1;
+}
+
+
+/*----------------------------------------------------------------------------*\
+\*----------------------------------------------------------------------------*/
+
+static void CheckIfRoot ( 
+  char *root, 
+  char *name,
+  char *converted_name
+) {
+  char *s;
+#define ROOTOBJECTMARK "#rootobject#"
+
+  if (root == NULL) {
+    strcpy( converted_name, name);
+    return;
+  }
+  if (rootobject) {
+    strcpy( converted_name, ROOTOBJECTMARK);
+    rootobject = 0;
+  } else {
+    strcpy( converted_name, name);
+  }
+}
+
+static void ConvertObjectName ( 
+  char *root, 
+  char *name,
+  char *converted_name
+) {
+  char *s;
+#define ROOTMARK "#root#"
+
+  /* Replace root with the ROOTMARK */
+
+  if (root == NULL) {
+    strcpy( converted_name, name);
+    return;
+  }
+  s = name + strlen(root);
+  if (strncmp( root, name, strlen(root)) == 0 && (*s == '-' || *s == 0)) {
+    strcpy(converted_name, ROOTMARK);
+    strcat(converted_name, s);
+  } else {
+    strcpy(converted_name, name);
+  }
+}
+
+
+/*----------------------------------------------------------------------------*\
+\*----------------------------------------------------------------------------*/
+
+static void PrintObject (
+  ldhi_sSesContext *sesctx,
+  ldhi_sObjHead *ohp,
+  int level,
+  char *root
+) {
+  unsigned long sts;
+  ldhi_sObjHead *chhp;
+  ldhi_sObjHead *thp;
+  int size;
+  ldhi_sObjBody *obp;
+  ldhi_sObjBody *tbp;
+  int i;
+  pwr_tString80 conv_name;
+  ldhi_sObjName objname;
+  unsigned int idx;
+  cdh_uObjid	uid;
+
+  /* Print object and all its children. */
+
+  CheckIfRoot( root, ohp->db.name.data, conv_name);
+  if (nflag) {
+    fprintf(fp, "%s!\n", Indent(level));
+    fprintf(fp, "%s! %s\n", Indent(level), conv_name);
+    fprintf(fp, "%s!\n", Indent(level));
+  }
+
+  if ( idxflag)
+  {
+    switch ( ohp->db.class)
+    {
+      case pwr_eClass_ClassDef:
+        uid.pwr = ohp->db.objid;
+        idx = uid.c.cix;
+        break;
+      case pwr_eClass_TypeDef:
+        uid.pwr = ohp->db.objid;
+        idx = uid.t.tix;
+        break;
+      case pwr_eClass_ObjBodyDef:
+        uid.pwr = ohp->db.objid;
+        idx = uid.c.bix;
+        break;
+      case pwr_eClass_Param:
+      case pwr_eClass_Input:
+      case pwr_eClass_Output:
+      case pwr_eClass_Intern:
+      case pwr_eClass_Buffer:
+      case pwr_eClass_ObjXRef:
+        uid.pwr = ohp->db.objid;
+        idx = uid.c.aix;
+        break;
+      default:
+        idx = (unsigned long) ohp->db.objid.oix;
+    }
+    fprintf(fp, "%sObject %s %s %u\n", Indent(level), conv_name, 
+	ohp->chp->db.name.data, idx);
+  }
+  else
+    fprintf(fp, "%sObject %s %s\n", Indent(level), conv_name, 
+	ohp->chp->db.name.data);
+
+  if (ohp->body[0].body == NULL || ohp->body[1].body == NULL) {
+    sts = ldhdb_GetObjectBodies( ohp);
+    ldhdump_psts(sts, NULL);
+  }
+
+  /* Find Template object */
+
+  sts = ldhi_SetNormObjName(&objname, "Template");
+  sts = ldhi_FindSiblingByName(sesctx, ohp->chp->chhp, &objname, &thp);
+  if (EVEN(sts)) return;
+
+  if (thp->body[0].body == NULL || thp->body[1].body == NULL) {
+    sts = ldhdb_GetObjectBodies( thp);
+    ldhdump_psts(sts, NULL);
+  }
+
+  /* Print all bodies */
+
+  for (i = 0; i < 2; i++) {
+    obp = &ohp->body[i];
+    tbp = &thp->body[i];
+    if (obp == NULL) continue;
+    PrintBody(sesctx, ohp, obp, tbp, level+1, i, root);
+  }
+
+  /* Print all children */
+
+  for (chhp = ohp->chhp ; chhp != NULL; chhp = chhp->silst.fwhp)
+    PrintObject(sesctx, chhp, level+1, root);
+
+  fprintf(fp, "%sEndObject\n", Indent(level));
+}
+
+static void PrintHierarchy (
+  ldhi_sSesContext *sesctx,
+  ldhi_sObjHead *ohp
+) {
+  unsigned long sts;
+  int size;
+  int i;
+  pwr_tString80 conv_name;
+  pwr_tString80 vol_name;
+  pwr_tString80 parent_name;
+  int level = 0;
+
+  /* Print object and all its children. */
+
+  if (nflag) {
+    fprintf(fp, "%s!\n", Indent(level));
+    fprintf(fp, "%s! %s\n", Indent(level), conv_name);
+    fprintf(fp, "%s!\n", Indent(level));
+  }
+
+  sts = ldh_VolumeIdToName( ldh_SessionToWB( sesctx),
+		ohp->db.objid.vid, vol_name, sizeof( vol_name), &size);
+  if ( ohp->fahp == ohp->vhp->ohp)
+    fprintf(fp, "%sSObject %s:\n", Indent(level), vol_name);
+  else
+  {
+    sts = ldh_ObjidToName (sesctx, ohp->fahp->db.objid, ldh_eName_Hierarchy,
+	parent_name, sizeof(parent_name), &size);
+    fprintf(fp, "%sSObject %s:%s\n", Indent(level), vol_name, parent_name);
+  }
+  PrintObject( sesctx, ohp, level+1, NULL);
+
+  fprintf(fp, "%sEndSObject\n", Indent(level));
+}
+
+static pwr_tStatus PrintVolume (
+  pwr_tVolumeId 	volid,
+  ldhi_sSesContext 	*in_sesctx
+) {
+  unsigned long sts;
+  ldhi_sObjHead *chhp;
+  ldhi_sObjHead *thp;
+  int size;
+  ldhi_sObjBody *obp;
+  ldhi_sObjBody *tbp;
+  int i;
+  pwr_tString80 conv_name;
+  int level = 0;
+  pwr_tObjid objid;
+  ldhi_sObjHead *ohp;
+  pwr_tClassId volclass;
+  ldhi_sObjName objname;
+  int previous_idxflag;
+  ldhi_sSesContext 	*sesctx;
+  ldh_sVolumeInfo 	info;
+  ldh_tVolContext	volctx;
+  int			other_volume_attached;
+
+  /* If sesctx is not context for the wanted volume, attach the volume */
+  sts = ldh_GetVolumeInfo( ldh_SessionToVol( in_sesctx), &info);
+  ldhdump_psts(sts, NULL);
+  if (EVEN(sts)) return sts;
+
+  other_volume_attached = 0;
+  if ( info.Volume == volid)
+  {
+    sesctx = in_sesctx;
+  }
+  else
+  {
+    /* Attach this volume */
+    sts = ldh_AttachVolume( ldh_SessionToWB( in_sesctx), volid, &volctx);
+    ldhdump_psts(sts, NULL);
+    if ( EVEN(sts)) return sts;
+
+    other_volume_attached = 1;
+
+    /* Open a read session */
+    sts = ldh_OpenSession( &sesctx, volctx, ldh_eAccess_ReadOnly,
+			ldh_eUtility_Pwr);
+    if ( EVEN(sts)) 
+    {
+      ldh_DetachVolume( ldh_SessionToWB( sesctx), volctx);
+      ldhdump_psts(sts, NULL);
+      return sts;
+    }
+  }
+
+  /* Print volume and all its objects */
+  sts = ldh_VolumeIdToName( ldh_SessionToWB( sesctx),
+		volid, conv_name, sizeof( conv_name), &size);
+  ldhdump_psts(sts, NULL);
+  if ( EVEN(sts)) return sts;
+  sts = ldh_GetVolumeClass( ldh_SessionToWB( sesctx), volid, &volclass);
+  ldhdump_psts(sts, NULL);
+  if ( EVEN(sts)) return sts;
+
+  if (nflag) {
+    fprintf(fp, "%s!\n", Indent(level));
+    fprintf(fp, "%s! %s\n", Indent(level), conv_name);
+    fprintf(fp, "%s!\n", Indent(level));
+  }
+
+  objid.oix = 0;
+  objid.vid = volid;
+  sts = ldhi_ObjidToOh(sesctx->wb, objid, &ohp);
+  ldhdump_psts(sts, NULL);
+  if (EVEN(sts)) return sts;
+
+  if ( volclass == pwr_eClass_WorkBenchVolume)
+  {
+    /* The wb volume is already  loadad in the distribution kit */
+    fprintf(fp, "%sSObject %s:\n", Indent(level), conv_name,
+		ohp->chp->db.name.data, 
+		cdh_VolumeIdToString( NULL, volid, 0, 0));
+    /* Don't print index for wb-volume objects */
+    previous_idxflag = idxflag;
+    idxflag = 0;
+  }
+  else
+  {
+    fprintf(fp, "%sVolume %s %s %s\n", Indent(level), conv_name, 
+		ohp->chp->db.name.data, 
+		cdh_VolumeIdToString( NULL, volid, 0, 0));
+
+    if (ohp->body[0].body == NULL || ohp->body[1].body == NULL) {
+      sts = ldhdb_GetObjectBodies( ohp);
+      ldhdump_psts(sts, NULL);
+    }
+
+    /* Find Template object */
+
+    sts = ldhi_SetNormObjName(&objname, "Template");
+    sts = ldhi_FindSiblingByName(sesctx, ohp->chp->chhp, &objname, &thp);
+    ldhdump_psts(sts, NULL);
+    if (EVEN(sts)) return sts;
+
+    if (thp->body[0].body == NULL || thp->body[1].body == NULL) {
+      sts = ldhdb_GetObjectBodies( thp);
+      ldhdump_psts(sts, NULL);
+    }
+
+    /* Print all bodies */
+
+    for (i = 0; i < 2; i++) {
+      obp = &ohp->body[i];
+      tbp = &thp->body[i];
+      if (obp == NULL) continue;
+      PrintBody(sesctx, ohp, obp, tbp, level+1, i, NULL);
+    }
+  }
+
+  /* Print all children */
+  if ( volclass == pwr_eClass_ClassVolume)
+  {
+    /* Print $TypeHier first, then $ClassHier */
+    for (chhp = ohp->chhp ; chhp != NULL; chhp = chhp->silst.fwhp)
+      if (chhp->db.class == pwr_eClass_TypeHier) 
+        PrintObject(sesctx, chhp, level+1, NULL);
+    for (chhp = ohp->chhp ; chhp != NULL; chhp = chhp->silst.fwhp)
+      if (chhp->db.class == pwr_eClass_ClassHier) 
+        PrintObject(sesctx, chhp, level+1, NULL);
+    for (chhp = ohp->chhp ; chhp != NULL; chhp = chhp->silst.fwhp)
+      if (chhp->db.class != pwr_eClass_ClassHier &&
+          chhp->db.class != pwr_eClass_TypeHier) 
+        PrintObject(sesctx, chhp, level+1, NULL);
+  }
+  else if ( volclass == pwr_eClass_WorkBenchVolume)
+  {
+    /* Don't print the standard layout */
+    for (chhp = ohp->chhp ; chhp != NULL; chhp = chhp->silst.fwhp)
+      if ( !(chhp->db.class == pwr_eClass_Layout &&
+	     !strcmp( chhp->db.name.data, "layout")))
+        PrintObject(sesctx, chhp, level+1, NULL);
+  }
+  else if ( volclass == pwr_eClass_RootVolume ||
+            volclass == pwr_eClass_SubVolume ||
+            volclass == pwr_eClass_SharedVolume ||
+            volclass == pwr_eClass_DirectoryVolume)
+  {
+    /* Print $NodeHier first */
+    for (chhp = ohp->chhp ; chhp != NULL; chhp = chhp->silst.fwhp)
+      if (chhp->db.class == pwr_eClass_NodeHier || 
+          chhp->db.class == pwr_eClass_Node)
+        PrintObject(sesctx, chhp, level+1, NULL);
+    for (chhp = ohp->chhp ; chhp != NULL; chhp = chhp->silst.fwhp)
+      if (chhp->db.class != pwr_eClass_NodeHier &&
+          chhp->db.class != pwr_eClass_Node) 
+        PrintObject(sesctx, chhp, level+1, NULL);
+  }
+  if ( volclass == pwr_eClass_WorkBenchVolume)
+  {
+    fprintf(fp, "%sEndSObject\n", Indent(level));
+    idxflag = previous_idxflag;
+  }
+  else
+    fprintf(fp, "%sEndVolume\n", Indent(level));
+
+  if ( other_volume_attached)
+  {
+    ldh_CloseSession( sesctx);
+    ldh_DetachVolume( ldh_SessionToWB( in_sesctx), volctx);
+  }
+  return LDH__SUCCESS;
+}
+
+/*----------------------------------------------------------------------------*\
+\*----------------------------------------------------------------------------*/
+
+static void PrintBody (
+  ldhi_sSesContext *sesctx,
+  ldhi_sObjHead *ohp,
+  ldhi_sObjBody *obp,
+  ldhi_sObjBody *tbp,
+  int level,
+  int bid,
+  char *root
+) {
+  unsigned long sts;
+  int size;
+  int i;
+  ldhi_sObjHead *obhp;
+  ldhi_sObjHead *php;
+  ldhi_sObjBody *pbp;
+  pwr_sParam *Param;
+  pwr_tObjName name;
+  ldhi_sObjName objname;
+
+  if (bid == 1)
+    strcpy(name, "DevBody");
+  else if (bid == 0 && (unsigned long) ohp->chp->db.objid.vid == 1)
+    strcpy(name, "SysBody");
+  else if (bid == 0)
+    strcpy(name, "RtBody");
+  else
+    return;
+
+  sts = ldhi_SetNormObjName(&objname, name);
+  sts = ldhi_FindSiblingByName(sesctx, ohp->chp->chhp, &objname, &obhp);
+  if (EVEN(sts)) return;
+
+  fprintf(fp, "%sBody %s\n", Indent(level), name);
+
+  /* Print all parameters */
+
+  for (php = obhp->chhp; php != NULL; php = php->silst.fwhp) {
+    sts = ldhi_GetObjectBody(sesctx, php, ldhi_eBid_SysBody, &pbp);
+    if (EVEN(sts)) continue;
+
+    Param = (pwr_sParam *) pbp->body;
+    if ((Param->Info.Flags & PWR_MASK_POINTER) != 0)
+      continue;
+
+    switch (php->db.class) {
+    case pwr_eClass_Param:
+    case pwr_eClass_Input:
+    case pwr_eClass_Intern:
+    case pwr_eClass_Output:
+    case pwr_eClass_ObjXRef:
+      PrintParameter(sesctx, php, pbp, obp, tbp, 0, level+1, root);
+      break;
+    case pwr_eClass_Buffer:
+      PrintBuffer(sesctx, php, pbp, obp, tbp, 0, level+1, root);
+      break;
+    default:
+      fprintf(fp, "! %%WBDUMP-E-Error Unknown attribute class: %u \n",
+	php->db.class);
+      errcnt++;
+      break;
+    }
+  }
+  fprintf(fp, "%sEndBody\n", Indent(level));
+}
+
+/*----------------------------------------------------------------------------*\
+\*----------------------------------------------------------------------------*/
+
+static void PrintBuffer (
+  ldhi_sSesContext *sesctx,
+  ldhi_sObjHead *bhp,
+  ldhi_sObjBody *bbp,
+  ldhi_sObjBody *obp,
+  ldhi_sObjBody *tbp,
+  int offset,
+  int level,
+  char *root
+) {
+  unsigned long sts;
+  int i;
+  ldhi_sObjHead *php;
+  ldhi_sObjBody *pbp;
+  ldhi_sObjHead *chp;
+  ldhi_sObjHead *obhp;
+  pwr_sBuffer *Buffer;
+  int buff_offset;
+  ldhi_sObjName objname;
+
+  Buffer = (pwr_sBuffer *) bbp->body;
+  sts = ldhi_ObjidToOh(sesctx->wb, cdh_ClassIdToObjid(Buffer->Class), &chp);
+  if (EVEN(sts)) {
+    fprintf(fp, "! %%WBDUMP-E-Error Unknown buffer class: %u\n",
+      Buffer->Class);
+    errcnt++;
+    return;
+  }
+
+  for (i = 0; i < Buffer->Info.Elements; i++) {
+    if (Buffer->Info.Flags & PWR_MASK_ARRAY)
+      fprintf(fp, "%sBuffer %s[%d]\n", Indent(level), bhp->db.name.data, i);
+    else
+      fprintf(fp, "%sBuffer %s\n", Indent(level), bhp->db.name.data);
+
+    /* Print all parameters */
+
+    sts = ldhi_SetNormObjName(&objname, "SysBody");
+    sts = ldhi_FindSiblingByName(sesctx, chp->chhp, &objname, &obhp);
+    if (EVEN(sts)) {
+      fprintf(fp, "! %%WBDUMP-E-Error Buffer class: %u not defined\n",
+	Buffer->Class);
+      errcnt++;
+      return;
+    }
+
+    buff_offset = offset + Buffer->Info.Offset
+      + (Buffer->Info.Size / Buffer->Info.Elements) * i;
+
+    for (php = obhp->chhp; php != NULL; php = php->silst.fwhp) {
+      sts = ldhi_GetObjectBody(sesctx, php, ldhi_eBid_SysBody, &pbp);
+      if (EVEN(sts)) continue;
+      
+      switch (php->db.class) {
+      case pwr_eClass_Param:
+      case pwr_eClass_Input:
+      case pwr_eClass_Intern:
+      case pwr_eClass_Output:
+      case pwr_eClass_ObjXRef:
+	PrintParameter(sesctx, php, pbp, obp, tbp, buff_offset, level+1, root);
+	break;
+      case pwr_eClass_Buffer:
+	PrintBuffer(sesctx, php, pbp, obp, tbp, buff_offset, level+1, root);
+	break;
+      default:
+	fprintf(fp, "! %%WBDUMP-E-Error Unknown attribute class: %u\n",
+	  php->db.class);
+	errcnt++;
+	break;
+      }
+    }
+    fprintf(fp, "%sEndBuffer\n", Indent(level));
+  }
+
+}
+
+/*----------------------------------------------------------------------------*\
+\*----------------------------------------------------------------------------*/
+
+static void PrintParameter (
+  ldhi_sSesContext *sesctx,
+  ldhi_sObjHead *php,
+  ldhi_sObjBody *pbp,
+  ldhi_sObjBody *obp,
+  ldhi_sObjBody *tbp,
+  int offset,
+  int level,
+  char *root
+) {
+  void *val;
+  int size;
+  int i;
+  int varoffset;
+  int varsize;
+  unsigned long sts;
+  pwr_sParam *Param;
+  char *svalp;
+  pwr_tBoolean ParValOk;
+
+  Param = (pwr_sParam *) pbp->body;
+
+  if (Param->Info.Type == pwr_eType_Text) {
+    PrintText(offset, Param, php, obp, level);
+    return;
+  }
+
+  for (i = 0; i < Param->Info.Elements; i++) {
+    switch (Param->Info.Type) {
+    case pwr_eType_Boolean:
+    case pwr_eType_Float32:
+    case pwr_eType_Float64:
+    case pwr_eType_Char:
+    case pwr_eType_String:
+    case pwr_eType_Int8:
+    case pwr_eType_Int16:
+    case pwr_eType_Int32:
+    case pwr_eType_UInt8:
+    case pwr_eType_UInt16:
+    case pwr_eType_UInt32:
+    case pwr_eType_Objid:
+    case pwr_eType_TypeId:
+    case pwr_eType_ClassId:
+    case pwr_eType_AttrRef:
+    case pwr_eType_Time:
+    case pwr_eType_VolumeId:
+    case pwr_eType_ObjectIx:
+    case pwr_eType_RefId:
+    case pwr_eType_DeltaTime:
+      varsize = Param->Info.Size / Param->Info.Elements;
+      varoffset = offset + Param->Info.Offset + varsize * i;
+
+      if (obp != tbp) {
+	/* Not Template object of this class... */
+	/* .. and parameter equals template parameter, ... */
+	if (Param->Info.Type == pwr_eType_String) {
+	  if (
+	    strncmp(obp->body + varoffset, tbp->body + varoffset, varsize) == 0
+	  ) {
+	    continue;	/* ... then don't write it. */
+	  }
+	} else if (
+	  memcmp(obp->body + varoffset, tbp->body + varoffset, varsize) == 0
+	) {
+	  continue;	/* ... then don't write it. */
+	}
+      }
+
+      val = obp->body + varoffset;
+      ParValOk = PrintValue(sesctx, Param, val, varsize, &svalp, root);
+
+      if (Param->Info.Flags & PWR_MASK_ARRAY) {
+	fprintf(fp, "%s%sAttr %s[%d] = %s", (ParValOk ? "" : "! %%WBDUMP-E-Error "),
+	  (ParValOk ? Indent(level) : ""), php->db.name.data, i, svalp);
+      } else {
+	fprintf(fp, "%s%sAttr %s = %s", (ParValOk ? "" : "! %%WBDUMP-E-Error "),
+	  (ParValOk ? Indent(level) : ""), php->db.name.data, svalp);
+      }
+      break;
+    case pwr_eType_Array:
+      fprintf(fp, "! %%WBDUMP-E-Error Type pwr_eType_Array is not yet implemented.\n");
+      errcnt++;
+      break;
+    case pwr_eType_Buffer:
+      fprintf(fp, "! %%WBDUMP-E-Error Type pwr_eType_Buffer is not yet implemented.\n");
+      errcnt++;
+      break;
+    case pwr_eType_Enum:
+      fprintf(fp, "! %%WBDUMP-E-Error Type pwr_eType_Enum is not yet implemented.\n");
+      errcnt++;
+      break;
+    case pwr_eType_Mask:
+      fprintf(fp, "! %%WBDUMP-E-Error Type pwr_eType_Mask is not yet implemented.\n");
+      errcnt++;
+      break;
+    case pwr_eType_Struct:
+      fprintf(fp, "! %%WBDUMP-E-Error Type pwr_eType_Struct is not yet implemented.\n");
+      errcnt++;
+      break;
+    default:
+      fprintf(fp, "! %%WBDUMP-E-Error Unknown type: %d.\n", Param->Info.Type);
+      errcnt++;
+      break;
+    }
+
+    fprintf(fp, "\n");
+  }
+
+}
+
+/*----------------------------------------------------------------------------*\
+\*----------------------------------------------------------------------------*/
+
+static void PrintText (
+  int offset,
+  pwr_sParam *Param,
+  ldhi_sObjHead *php,
+  ldhi_sObjBody *obp,
+  int level
+) {
+  char *ip, *op, *sp, *np;
+  int len, index, idxinc;
+#define C_MAXLEN 60
+
+  ip = obp->body + offset + Param->Info.Offset;
+  if (!memchr(ip, '\0', Param->Info.Size))
+    *(ip + Param->Info.Size - 1) = '\0';
+
+  index = 0;
+  sp = ip;
+  while (TRUE) {
+    op = memchr(sp,'\n', C_MAXLEN );
+    np = memchr(sp,'\0', C_MAXLEN );
+    if (op == NULL || (np != NULL && op > np))
+      op = np;
+    if (!(idxinc = (op != NULL))) {
+      len = strlen( sp );
+      if (len > C_MAXLEN)
+	len = C_MAXLEN;
+      op = sp + len;
+    }
+
+    fprintf(fp, "%sAttr %s[%d] = \"%.*s\"\n", Indent(level), php->db.name.data,
+		 index, op-sp, sp);
+    if (*op == '\0')
+	break;
+
+    index += (int) (op - sp) + idxinc;
+    sp = op + idxinc;
+  }
+  return;      
+}
+
+/*----------------------------------------------------------------------------*\
+\*----------------------------------------------------------------------------*/
+
+static pwr_tBoolean PrintValue (
+  ldhi_sSesContext *sesctx,
+  pwr_sParam *Param,
+  void *val,
+  int varsize,
+  char **svalp,
+  char *root
+) {
+  int size;
+  char buff[256];
+  char conv_name[256];
+  unsigned long sts;
+  char timbuf[24];
+  static char sval[512];
+  char *sp;
+  pwr_tBoolean retval = TRUE;
+
+  sval[0] = '\0';
+
+  if (Param->Info.Flags & PWR_MASK_POINTER) {
+    sprintf(sval, "%u", *(unsigned int *) val);
+    *svalp = sval;
+    return TRUE;
+  }
+
+  switch (Param->Info.Type) {
+  case pwr_eType_Boolean:
+    sprintf(sval, "%d", *(pwr_tBoolean *) val);
+    break;
+  case pwr_eType_Float32:
+    sprintf(sval, "%.*e", FLT_DIG, *(pwr_tFloat32 *) val);
+    break;
+  case pwr_eType_Float64:
+    sprintf(sval, "%.*e", DBL_DIG, *(pwr_tFloat64 *) val);
+    break;
+  case pwr_eType_Char:
+    if (*(pwr_tChar *) val == 0)
+      sprintf(sval, "\"\"");
+    else
+      sprintf(sval, "\"%c\"", *(pwr_tChar *) val);
+    break;
+  case pwr_eType_Int8:
+    sprintf(sval, "%d", *(pwr_tInt8 *) val);
+    break;
+  case pwr_eType_Int16:
+    sprintf(sval, "%d", *(pwr_tInt16 *) val);
+    break;
+  case pwr_eType_Int32:
+    sprintf(sval, "%d", *(pwr_tInt32 *) val);
+    break;
+  case pwr_eType_UInt8:
+    sprintf(sval, "%u", *(pwr_tUInt8 *) val);
+    break;
+  case pwr_eType_UInt16:
+    sprintf(sval, "%u", *(pwr_tUInt16 *) val);
+    break;
+  case pwr_eType_UInt32:
+    sprintf(sval, "%u", *(pwr_tUInt32 *) val);
+    break;
+  case pwr_eType_RefId:
+    sprintf(sval, "0");
+    break;
+  case pwr_eType_Objid:	/* !!! To do !!! */
+    if ( ldh_LocalObject( sesctx, *(pwr_tObjid *) val))
+    {
+      sts = ldh_ObjidToName (sesctx, *(pwr_tObjid *) val, ldh_eName_Hierarchy,
+	buff, 256, &size);
+      if (EVEN(sts)) {
+	sprintf(sval, "Unknown object, identity: %d", (*(pwr_tObjid *) val).oix);
+	errcnt++;
+	retval = FALSE;
+      } else {
+        ConvertObjectName( root, buff, conv_name);
+        sprintf(sval, "\"%s\"", conv_name);
+      }
+    }
+    else
+      sprintf(sval, "\"%s\"", cdh_ObjidToString(NULL,*(pwr_tObjid *) val,1));
+    break;
+  case pwr_eType_ObjectIx:
+    if ( *(pwr_tObjectIx *) val == 0)
+      sprintf(sval, "0");
+    else
+      sprintf(sval, "\"%s\"", cdh_ObjectIxToString(NULL, *(pwr_tObjectIx *) val,1));
+    break;
+  case pwr_eType_VolumeId:
+    if ( *(pwr_tVolumeId *) val == 0)
+      sprintf(sval, "0");
+    else
+      sprintf(sval, "\"%s\"", cdh_VolumeIdToString(NULL, *(pwr_tVolumeId *) val,1,0));
+    break;
+  case pwr_eType_ClassId:	/* !!! To do !!! */
+    if (*(pwr_tClassId *) val == 0)
+      sprintf(sval, "0");
+    else
+    {
+      sts = ldh_ClassIdToName (sesctx, *(pwr_tClassId *) val, 
+		buff, 256, &size);
+      if (EVEN(sts)) 
+      {
+	sprintf(sval, "Unknown class, identity: %d", (*(pwr_tClassId *) val));
+ 	errcnt++;
+	retval = FALSE;
+      } 
+      else 
+      {
+        ConvertObjectName( root, buff, conv_name);
+        sprintf(sval, "\"%s\"", conv_name);
+      }
+    }
+    break;
+  case pwr_eType_TypeId:	/* !!! To do !!! */
+    if (*(pwr_tTypeId *) val == 0)
+      sprintf(sval, "0");
+    else
+    {
+      sts = ldh_TypeIdToName (sesctx, *(pwr_tTypeId *) val, 
+		buff, 256, &size);
+      if (EVEN(sts)) 
+      {
+	sprintf(sval, "Unknown type, identity: %d", (*(pwr_tTypeId *) val));
+ 	errcnt++;
+	retval = FALSE;
+      } 
+      else 
+      {
+        ConvertObjectName( root, buff, conv_name);
+        sprintf(sval, "\"%s\"", conv_name);
+      }
+    }
+    break;
+  case pwr_eType_AttrRef:
+    sts = ldh_AttrRefToName(sesctx, (pwr_sAttrRef *) val,  ldh_eName_Aref, &sp, NULL);
+    if (EVEN(sts)) {
+      if (!cdh_ObjidIsNull(*(pwr_tObjid *) val)) {
+	sprintf(sval, "Unknown attribute, object identity: %d", (*(pwr_tObjid *) val).oix);
+	errcnt++;
+	retval = FALSE;
+      } else {
+	sprintf(sval, "0");
+      }
+    } else {
+      ConvertObjectName( root, sp, conv_name);
+      sprintf(sval, "\"%s\"", conv_name);
+    }
+    break;
+  case pwr_eType_String:
+    sprintf(sval, "\"%.*s\"", varsize, val);
+    break;
+  case pwr_eType_Time:
+    sts = time_AtoAscii((pwr_tTime *)val, time_eFormat_DateAndTime,
+      						timbuf, sizeof(timbuf)); 
+    if (ODD(sts)) {
+      sprintf(sval, "\"%s\"", timbuf);
+    } else {
+      sprintf(sval, "Bad time value");
+      errcnt++;
+      retval = FALSE;
+    }
+    break;
+  case pwr_eType_DeltaTime:
+    sts = time_DtoAscii((pwr_tDeltaTime *)val, 1, timbuf, sizeof(timbuf));
+    if (ODD(sts)) {
+      sprintf(sval, "\"%s\"", timbuf);
+    } else {
+      sprintf(sval, "Bad time value");
+      errcnt++;
+      retval = FALSE;
+    }
+    break;
+  default:
+    sprintf(sval, "Unknown attribute type: %d", Param->Info.Type);
+    errcnt++;
+    retval = FALSE;
+    break;
+  }
+
+  *svalp = sval;
+  return retval;
+}
+
+/*----------------------------------------------------------------------------*\
+\*----------------------------------------------------------------------------*/
+
+static char *Indent (
+  int level
+) {
+  static char indbuff[256];
+  static int inited = 0;
+  static int llevel;
+  int ilevel = indchr * level;
+
+  if (inited) {
+    if (ilevel == llevel)
+      return indbuff;
+    indbuff[llevel] = ' ';
+  } else {
+    inited = 1;
+    memset(indbuff, ' ', 256);
+  }
+
+  indbuff[ilevel] = '\0';
+  llevel = ilevel;
+
+  return indbuff;
+}
+/*============================================================================*\
+  Exported functions.
+\*============================================================================*/
+
+/*----------------------------------------------------------------------------*\
+\*----------------------------------------------------------------------------*/
+pwr_tStatus ldh_ldhdump (
+  ldh_tSesContext ldhses,
+  int i_flag,
+  int n_flag,
+  int h_flag,
+  int r_flag, 
+  int indchr_arg,
+  char *objname,
+  char *dumpfile,
+  pwr_tVolumeId *volumelist
+) {
+  unsigned long sts;
+  pwr_tObjid objid;
+  pwr_tClassId class;
+  ldhi_sObjHead *ohp;
+  int i;
+  int c;
+  pwr_tString80 root;
+  int size;  
+  char	filename[80];
+  pwr_tVolumeId *volume_ptr;
+  pwr_tClassId volclass;
+  ldhi_sSesContext *sesctx;
+
+  sesctx = (ldhi_sSesContext *) ldhses;
+
+  iflag = i_flag;
+  hflag = h_flag;
+  rflag = r_flag;
+  nflag = n_flag;
+  if ( iflag)
+    indchr = indchr_arg;
+  errcnt = 0;
+  rootobject = 1;
+  if ( rflag)
+    idxflag = 0;
+  else
+    idxflag = 1;
+
+  if ( rflag)
+    GetFileName( dumpfile, filename, ".pload");
+  else
+    GetFileName( dumpfile, filename, ".wb_load");
+  fp = fopen( filename, "w");
+  if ( fp == 0)
+  {
+    perror( dumpfile);
+    return LDH__FILEOPEN;
+  }
+
+  if ( volumelist)
+  {
+    /* Print ClassVolumes first */
+    volume_ptr = volumelist;
+    while( *volume_ptr != 0)
+    {
+      sts = ldh_GetVolumeClass( ldh_SessionToWB( sesctx), *volume_ptr, &volclass);
+      if ( EVEN(sts)) return sts;
+      if ( volclass == pwr_eClass_ClassVolume)
+      {
+        sts = PrintVolume( *volume_ptr, sesctx);
+        if (EVEN(sts)) return sts;
+      }
+      volume_ptr++;
+    }
+
+    volume_ptr = volumelist;
+    while( *volume_ptr != 0)
+    {
+      sts = ldh_GetVolumeClass( ldh_SessionToWB( sesctx), *volume_ptr, &volclass);
+      if ( EVEN(sts)) return sts;
+      if ( volclass != pwr_eClass_ClassVolume)
+      {
+        sts = PrintVolume( *volume_ptr, sesctx);
+        if (EVEN(sts)) return sts;
+      }
+      volume_ptr++;
+    }
+  }
+  else if (hflag) 
+  {
+    /* Print selected hierarchy. */
+    sts = ldh_NameToObjid(sesctx, &objid, objname);
+    if (EVEN(sts)) return(sts);
+    if ( !ldh_LocalObject( sesctx, objid))
+      return LDH__OTHERVOLUME;
+
+    sts = ldhi_ObjidToOh(sesctx->wb, objid, &ohp);
+    if (EVEN(sts)) return(sts);
+    if (rflag) 
+    {
+      sts = ldh_ObjidToName (sesctx, objid, ldh_eName_Hierarchy,
+      root, sizeof(root), &size);
+      if (EVEN(sts)) return(sts);
+      PrintObject(sesctx, ohp, 0, root);
+    } 
+    else 
+      PrintHierarchy(sesctx, ohp);
+  } 
+  fclose(fp);
+
+  if (errcnt > 0) {
+    printf("%%PWR_WBDUMP-E-Errors during dump: %d\n", errcnt);
+    return LDH__WBDUMP;
+  }
+  return LDH__SUCCESS;
+}

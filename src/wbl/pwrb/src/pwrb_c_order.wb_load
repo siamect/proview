@@ -1,0 +1,333 @@
+!  pwrb_c_order.wb_load -- Defines the class Order.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_macro_grafcet.h
+!  A Grafcet order.
+!  
+!  To every sequential step one or more Order objects can
+!  be connected.
+!  Activities ( e.g. StoDo, ResDv, And, Or, Wait objects)
+!  associated to the Order object can either be connected
+!  direct to the output of the object or be placed in an
+!  activity window (a sub-window), which can improve the
+!  structure of the program. The objects in the activity
+!  window get a WindowOrderact object (see p. 3-395) as
+!  parent object.
+!  
+!                   Note! The object's order list consists of either an
+!  activity window or one or more Stoxx, Setxx, or Resxx
+!  objects directly connected to the output of the Order
+!  object. Remainder objects (e.g. And, Or, Wait, etc.)
+!  direct connected to the output of the Order object are
+!  not included in the order list. This means that, such
+!  objects are executing each time when the PLC program
+!  executes independent of the state of step or Order
+!  object.
+!  
+!                   Note! Code in the object's order list (see figure 3-34) is
+!  executing as long as the step, to which the order
+!  belongs to, is active or the order ( if stored) is
+!  active. The last execution of the order list will be
+!  with an inactive Order object. This means that, if the
+!  state of the Order object, Status[0] is TRUE, when the
+!  state of the step makes the transition 1 --> 0 or a
+!  stored order is reset ( by a Reset_SO object), one
+!  further execution of the object's order list is done.
+!  From an executing point of view Stoxx, Setxx and Resxx
+!  objects are treated in the same way if they reside in
+!  an activity window or they are directly connected to
+!  the Order object.
+!  
+!  The status of the order can be used as an input signal
+!  to an activity window. The status of the order is then
+!  fetched by means of the OrderAct object.
+!  The Order object can be provided with a delay function,
+!  time limit, pulse, store, and conditional attributes.
+!  This is done by means of the Attribute Editor. Selected
+!  attributes are shown in the symbol of the object.
+!  
+!  If none of these attributes exist the order becomes
+!  active as long as the step is active and becomes
+!  inactive when the step does.
+!  
+!  We talk about a C-order when the condition attribute is
+!  set. The condition of a C-order can be defined in one
+!  of the following two ways (see figure 3-55, p. 3-366):
+!
+!  1  by direct connecting of a binary condition to the
+!  symbol's vertical input.
+!
+!  2  by a combinational circuit in a conditional window.
+!  A SetCond object in the conditional window stores
+!  the condition state in the Order object. The objects
+!  in the window get a WindowCond object (see p. 3-394)
+!  as parent object.
+!  Opposite to an activity window a conditional window is
+!  evaluated each time when the PLC program executes.
+!*/
+SObject pwrb:Class
+  Object Order $ClassDef 166 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_RtConnectionsAndDevBodies
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "order"
+      EndBody
+      !/**
+      !  Status input. Checks the state of the connected step,
+      !  i.e. InitStep, Step, SubStep, SsBegin, or SsEnd object,
+      !  by looking on its Status[0] and Status[1].
+      !*/
+      Object Step $Input 1 
+        Body SysBody
+          Attr PgmName = "Step"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_RTVIRTUAL
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "step"
+          Attr ConPointNr = 0
+        EndBody
+      EndObject
+      !/**
+      !  Conditional input. The activity can be done
+      !  conditionally. One way to implement this is by direct
+      !  connection to a binary signal.
+      !*/
+      Object Cond $Input 2 
+        Body SysBody
+          Attr PgmName = "Cond"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_RTVIRTUAL
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOINVERT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "Cond"
+          Attr ConPointNr = 1
+        EndBody
+      EndObject
+      !/**
+      !  Status[0] specifies the state of the object. FALSE means an
+      !  inactive order and TRUE means an active order. The
+      !  value may be picked up in another program by means of a
+      !  GetDp object.
+      !  
+      !  Status[1] :
+      !  TRUE means that the step belonging to this object is
+      !  active or that a stored order is active. It controls
+      !  the execution of the object's order list.
+      !  
+      !  Suppose a D-order, i.e. an order with the delay
+      !  attribute set, with an order list. When the step
+      !  becomes active Status[1] is set. The activity window
+      !  will execute with Status[0] = FALSE. An OrderAct object
+      !  in the activity window fetches the value of Status[0]
+      !  in the Order object, i.e. FALSE.
+      !  When the delay elapses Status[0] becomes TRUE and the
+      !  execution of the activity window continues as long as
+      !  Status[1] = TRUE or as long as Status[0] was TRUE at
+      !  the last scanning.
+      !*/
+      Object Status $Output 3 
+        Body SysBody
+          Attr PgmName = "Status"
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Elements = 2
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "sts"
+          Attr ConPointNr = 2
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      !/**
+      !  The Order object can be provided with the following
+      !  attributes ( note capital letters):
+      !  
+      !  D = Delayed  The order to start the activity is delayed
+      !               for a certain time counting from where the
+      !               step became active. AttrTime1, ....,
+      !  
+      !  L = Limited  The order starts the activity at once but
+      !               its duration is limited to a certain time.
+      !               AttrTime1, ...., AttrTime6 specifies the
+      !  P = Pulse    If the activity shall continue during only
+      !               one program cycle the L-attribute is
+      !  
+      !  C =          The order to start the activity is denied
+      !  Condition    as long as the condition is not satisfied.
+      !  
+      !  S = Stored   The order to start the activity is stored
+      !               in such a way that the activity remains
+      !               even then the step has become inactive. A
+      !               stored order is reset by means of the
+      !  
+      !  
+      !  These attributes are sometimes named order-attributes.
+      !  Everyone of these attributes defines a sub-object in
+      !  rtdb. A sub-object with the name S is of the S-order
+      !  type and so on. This means that only one order
+      !  attribute of every kind may exist in the Order object.
+      !  
+      !  A maximum of 5 order-attributes can be connected to an
+      !  Order object The sequence of the order-attributes
+      !  determines the function, e.g.
+      !   · A CDS-order latches if the step is active and the
+      !     condition has been satisfied during the specified
+      !     time. The order remains active until it has been
+      !     reset by a Reset_SO object.
+      !   · A SDC-order latches as soon as the step becomes
+      !     active, but the order does not become active until
+      !     the specified time has elapsed and follows then the
+      !     status of the condition.
+      !   · DSC-order. The execution of the object's order list
+      !     starts as soon as the step become active. After the
+      !     specified delay the order latches if the step remains
+      !     active. The order becomes active when the condition
+      !     is satisfied. The status of the order can change
+      !     according to the condition. The order remains stored
+      !     until it has been reset by a Reset_SO object.
+      !*/
+      Object Attr1 $Intern 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Char"
+          Attr NiNaAnnot = 2
+          Attr ConPointNr = 0
+        EndBody
+      EndObject
+      !/**
+      !  Specifies, in seconds, a time used by the D and L
+      !  order-attributes. AttrTime1 is associated to Attr1 and
+      !  so on.
+      !*/
+      Object AttrTime1 $Intern 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr NiNaAnnot = 3
+          Attr ConPointNr = 0
+        EndBody
+      EndObject
+      Object Attr2 $Intern 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Char"
+          Attr ConPointNr = 0
+        EndBody
+      EndObject
+      Object AttrTime2 $Intern 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr ConPointNr = 0
+        EndBody
+      EndObject
+      Object Attr3 $Intern 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Char"
+          Attr ConPointNr = 0
+        EndBody
+      EndObject
+      Object AttrTime3 $Intern 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr ConPointNr = 0
+        EndBody
+      EndObject
+      Object Attr4 $Intern 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Char"
+          Attr ConPointNr = 0
+        EndBody
+      EndObject
+      Object AttrTime4 $Intern 8 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr ConPointNr = 0
+        EndBody
+      EndObject
+      Object Attr5 $Intern 9 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Char"
+          Attr ConPointNr = 0
+        EndBody
+      EndObject
+      Object AttrTime5 $Intern 10 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr ConPointNr = 0
+        EndBody
+      EndObject
+      Object Attr6 $Intern 11 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Char"
+          Attr ConPointNr = 0
+        EndBody
+      EndObject
+      Object AttrTime6 $Intern 12 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr ConPointNr = 0
+        EndBody
+      EndObject
+      !/**
+      !  Specifies if the AttrTime-values, used by the D and L
+      !  order-attributes, are to be displayed in the symbol of
+      !  the Order object or not. FALSE means no displaying and
+      !  TRUE displaying. The units are seconds.
+      !*/
+      Object ShowAttrTime $Intern 13 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object PlcNode $Buffer 14 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 34
+        Attr parameters[0] = 2
+        Attr parameters[1] = 0
+        Attr parameters[2] = 1
+        Attr parameters[3] = 0
+        Attr subwindows = 2
+        Attr subwindow_class[0] = "pwrb:Class-WindowOrderact"
+        Attr subwindow_class[1] = "pwrb:Class-WindowCond"
+        Attr graphmethod = 5
+        Attr graphindex = 1
+        Attr default_mask[0] = 1
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 1
+        Attr devbody_annotation = 1
+        Attr compmethod = 16
+        Attr compindex = 1
+        Attr tracemethod = 7
+        Attr traceindex = 1
+        Attr executeordermethod = 5
+        Attr objname = "Ord"
+        Attr graphname = "Ord"
+        Attr debugpar = "Status[0]"
+      EndBody
+    EndObject
+    Object Template Order
+      Body DevBody
+        Attr ShowAttrTime = 1
+      EndBody
+    EndObject
+  EndObject
+EndSObject

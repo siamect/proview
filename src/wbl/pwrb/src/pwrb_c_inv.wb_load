@@ -1,0 +1,87 @@
+!  pwrb_c_inv.wb_load -- Defines the class Inv.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_macro_logic.h
+!  Logical inverter.
+!  
+!  Inverts a logical signal.
+!*/
+SObject pwrb:Class
+  Object Inv $ClassDef 137 
+    Body SysBody
+      Attr Editor = pwr_eEditor_PlcEd
+      Attr Method = pwr_eMethod_Connections
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+         Attr StructName = "inv"
+      EndBody
+      !/**
+      !  The logical signal to be inverted.
+      !*/
+      Object in $Input 1 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_RTVIRTUAL
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOREMOVE
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "in"
+        EndBody
+      EndObject
+      !/**
+      !  The inverted output signal.
+      !*/
+      Object Status $Output 2 
+        Body SysBody
+          Attr PgmName = "Status"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "sts"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 102
+        Attr parameters[0] = 1
+        Attr parameters[1] = 0
+        Attr parameters[2] = 1
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 1
+        Attr graphindex = 0
+        Attr default_mask[0] = 1
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 1
+        Attr compmethod = 5
+        Attr compindex = 0
+        Attr tracemethod = 3
+        Attr traceindex = 1
+	Attr executeordermethod = 2
+        Attr objname = "Inv"
+        Attr graphname = "Inv"
+        Attr debugpar = "Status"
+      Endbody
+    EndObject
+  EndObject
+EndSObject

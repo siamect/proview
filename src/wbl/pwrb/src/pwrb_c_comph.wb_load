@@ -1,0 +1,171 @@
+!  pwrb_c_comph.wb_load -- Defines the class Comph.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_arithm.c
+!  Compares an analog value ( signal or parameter) to a high
+!  limit.
+!  
+!  Both the input signal and the limit can be either
+!  constants, defined by the Attribute Editor, or ordinary
+!  analog signals.
+!  The output is TRUE when the input signal is greater
+!  than the high limit i.e. Lim. The hysteresis is taken
+!  into account when the output signal is to be FALSE. The
+!  output becomes FALSE as soon as the input becomes less
+!  than or equal to the high limit minus the hysteresis.
+!  
+!         See Also
+!  
+!  Compl.
+!*/
+SObject pwrb:Class
+  Object Comph $ClassDef 39 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Connections
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "comph"
+      EndBody
+      !/**
+      !  Specifies the actual high limit. The value may be
+      !  dynamic or static.
+      !*/
+      Object Lim $Input 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "HIG"
+        EndBody
+      EndObject
+      !/**
+      !  The value that will be compared to the limit.
+      !*/
+      Object In $Input 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "IN"
+        EndBody
+      EndObject
+      !/**
+      !  The flag specifies if In exceeds the high limit or not.
+      !  FALSE means that In does not exceed the limit; TRUE
+      !  means that In exceeds the limit or has exceeded the
+      !  limit but do not get a level, in according to the
+      !  hysteresis, where the flag is to be reset.
+      !*/
+      Object High $Output 3 
+        Body SysBody
+          Attr PgmName = "High"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "hl"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the hysteresis. A value < 0 is not valid.
+      !*/
+      Object Hysteres $Intern 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "Hysteres"
+        EndBody
+      EndObject
+      !/**
+      !  The operator's authorities to change Lim. There is no
+      !  meaning to change the attribute manual, if it also
+      !  being updated by an external signal.
+      !   0   -- Changes not allowed.
+      !   !=0 -- Changes allowed.
+      !*/
+      Object AccLim $Intern 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "AccLim"
+        EndBody
+      EndObject
+      !/**
+      !  The minimum and maximum allowed value of Lim at changes
+      !  made by an operator.
+      !*/
+      Object MinLim $Intern 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MinLim"
+        EndBody
+      EndObject
+      Object MaxLim $Intern 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MaxLim"
+        EndBody
+      EndObject
+      !/**
+      !  The operator's authorities to change Hysteres.
+      !*/
+      Object AccHys $Intern 8 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "AccHys"
+        EndBody
+      EndObject
+      !/**
+      !  The minimum ( >= 0) and maximum allowed value of
+      !  Hysteres at changes made by an operator.
+      !*/
+      Object MinHys $Intern 9 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MinHys"
+        EndBody
+      EndObject
+      Object MaxHys $Intern 10 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MaxHys"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 123
+        Attr parameters[0] = 2
+        Attr parameters[1] = 0
+        Attr parameters[2] = 1
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 0
+        Attr graphindex = 0
+        Attr default_mask[0] = 3
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 1
+        Attr compmethod = 4
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+	Attr executeordermethod = 2
+        Attr objname = "Comph"
+        Attr graphname = "Comph"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+  EndObject
+EndSObject

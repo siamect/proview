@@ -1,0 +1,324 @@
+!  pwrb_c_pos3p.wb_load -- Defines the class Pos3P.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_pid.c
+!  Positional 3-step controller with position feedback and
+!  dead zone. Positional is aimed at the input signal and
+!  the digit 3 on the fact that the output signals specify
+!  one of three distinct orders e.g. increase / decrease /
+!  0.
+!  
+!  Exactly as for Inc3P it is possible to govern by means
+!  of the outputs Open / Close and/or the signals named by
+!  DoOpen/DoClose. The outputs and the signals may be set
+!  at a frequency determined by the PlcPgm object. But
+!  only the signals may be reset by the timer control. The
+!  duration of the pulses of the outputs, Open and Close,
+!  becomes an integer multiple of the cycle time of the
+!  PLC program.
+!  The object has a built-in timer control which can offer
+!  a better resolution since the timer control always
+!  execute each tick.
+!  
+!  If an output signal is to be set or not depends on the
+!  size of the control error OutVal - Pos and the separate
+!  dead zones specified by ErrSo and ErrSta. The dead zone
+!  prevents cycles from repeating to rapidly and becoming
+!  destructive to the equipment.
+!  The duration of the DoOpen/DoClose signals, the pulse
+!  length, is equal to
+! 
+!                   Gain * | OutVal - Pos |
+!  
+!  If the pulse length is less than the scanning interval
+!  the signals are cleared by the timer control before the
+!  next scanning starts.
+!  
+!  It is possible to use the outputs Open / Close and the
+!  signals named by DoOpen/DoClose at the same time.
+!*/
+SObject pwrb:Class
+  Object Pos3P $ClassDef 182 
+    Body SysBody
+      Attr Editor = pwr_eEditor_PlcEd
+      Attr Method = pwr_eMethod_RtConnectionsAndDevBodies
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "pos3p"
+      EndBody
+      !/**
+      !  Set point value. Often connected to the OutVal of a Pid
+      !  object.
+      !*/
+      Object OutVal $Input 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "OUT"
+        EndBody
+      EndObject
+      !/**
+      !  Position feedback, the process value.
+      !*/
+      Object Pos $Input 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "POS"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  Specifies order to open or not. FALSE means no action;
+      !  TRUE means open ( up, increment, right or what else may
+      !  be relevant to this output).
+      !*/
+      Object Open $Output 3 
+        Body SysBody
+          Attr PgmName = "Open"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "ope"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies order to close or not. FALSE means no action;
+      !  TRUE means close ( down, decrement, left or what else
+      !  may be relevant to this output).
+      !*/
+      Object Close $Output 4 
+        Body SysBody
+          Attr PgmName = "Close"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "clo"
+        EndBody
+      EndObject
+      !/**
+      !  Gain, in seconds, per control signal unit. The control
+      !  signal is often in the range 0 - 100 %. Suppose it is
+      !  possible to measure the running time, e.g. the time to
+      !  drive a valve from completely open to completely
+      !  closed. Then select Gain as running time divided by the
+      !  range; ( here 100 - 0).
+      !  
+      !  Gain is only used in conjunction with timer control of
+      !  the outputs.
+      !*/
+      Object Gain $Intern 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "Gain"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the dead zone value which the control error
+      !  has to exceed before an open- or close-signal will be
+      !  set or started.
+      !  
+      !  The demand on the dead zone is 0 £ ErrSto £ ErrSta
+      !  Open or Close is set when the absolute value of (OutVal(t)
+      !  - Pos(t) ) is greater than ErrSta.
+      !*/
+      Object ErrSta $Intern 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "ErrSta"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the dead zone value which the control error
+      !  have to be below before an open- or close-signal will
+      !  be reset or stopped.
+      !  Open or Close is interrupted when the absolute value of
+      !  (OutVal(t)  - Post(t)) is less than ErrSto.
+      !  The demand on the dead zone is 0 <= ErrSto <= ErrSta
+      !*/
+      Object ErrSto $Intern 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "ErrSto"
+        EndBody
+      EndObject
+      Object OpenP $Intern 8 
+        Body SysBody
+          Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object CloseP $Intern 9 
+        Body SysBody
+          Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      ! ++
+      ! Timer struct
+      !
+      !/**
+      !  Indicates an active timer.
+      !*/
+      Object TimerFlag $Intern 10 
+        Body SysBody
+          Attr PgmName = "TimerFlag"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Points to the next element in the timer queue.
+      !  TimerCount
+      !*/
+      Object TimerNext $Intern 11 
+        Body SysBody
+          Attr PgmName = "TimerNext"
+          Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Number of remaining ticks.
+      !*/
+      Object TimerCount $Intern 12 
+        Body SysBody
+          Attr PgmName = "TimerCount"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Points to a Do or Dv object or, if these are not used,
+      !  to TimerDoDum. After a time of TimerTime the signal
+      !  specified by TimerDo is cleared.
+      !*/
+      Object TimerDO $Intern 13 
+        Body SysBody
+          Attr PgmName = "TimerDO"
+          Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Delay, in seconds, is set in run time. Specifies when
+      !  the outputs have to be reset.
+      !*/
+      Object TimerTime $Intern 14 
+        Body SysBody
+          Attr PgmName = "TimerTime"
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Dummy. If TimerDoDum does not point to a Do or Dv
+      !  object it points to this attribute.
+      !*/
+      Object TimerDODum $Intern 15 
+        Body SysBody
+          Attr PgmName = "TimerDODum"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Identity of this object is set at load file creation.
+      !  Used by the run time system.
+      !*/
+      Object TimerObjDId $Intern 16 
+        Body SysBody
+          Attr Flags |= PWR_MASK_OBJDIDSELF
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      !
+      ! End Timer struct
+      ! --
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      !/**
+      !  Name of an external opening signal e.g. Do or Dv object
+      !  ( corresponding to Open) at timer control. Also if
+      !  DoOpen specifies a signal Open is handled by the
+      !  object.
+      !*/
+      Object DoOpen $Intern 1 
+        Body SysBody
+          Attr PgmName = "DoOpen"
+          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr NiNaAnnot = 1
+        EndBody
+      EndObject
+      !/**
+      !  Name of an external closing signal, e.g. Do or Dv
+      !  object ( corresponding to Close) at timer control. Also
+      !  if DoClose specifies a signal Close is handled by the
+      !  object.
+      !*/
+      Object DoClose $Intern 2 
+        Body SysBody
+          Attr PgmName = "DoClose"
+          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr NiNaAnnot = 2
+        EndBody
+      EndObject
+      Object PlcNode $Buffer 3 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 152
+        Attr parameters[0] = 2
+        Attr parameters[1] = 0
+        Attr parameters[2] = 2
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 2
+        Attr graphindex = 0
+        Attr default_mask[0] = 3
+        Attr default_mask[1] = 3
+        Attr segname_annotation = 3
+        Attr devbody_annotation = 1
+        Attr compmethod = 23
+        Attr compindex = 0
+        Attr connectmethod = 10
+        Attr executeordermethod = 2
+        Attr objname = "Pos3P"
+        Attr graphname = "Pos3P"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    Object Template Pos3P
+      Body RtBody
+        Attr Gain = 1.0
+      EndBody
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,51 @@
+!  pwrs_c_alias.wb_load -- Defines the class Alias.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+SObject pwrs:Class
+  Object $Alias $ClassDef pwr_eCix_Alias
+    Body SysBody
+      Attr Flags |= pwr_mClassDef_System
+      Attr Flags |= pwr_mClassDef_TopObject
+      Attr Flags |= pwr_mClassDef_NoAdopt
+    EndBody
+    Object SysBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "Alias"
+      EndBody
+      Object Description $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      Object Object $Attribute 2
+        Body SysBody
+	  Attr TypeRef = "pwrs:Type-$Objid"
+	EndBody
+      EndObject
+    EndObject
+    Object AnteAttrUpdate $DbCallBack
+      Body SysBody
+        Attr MethodName = "$Alias-AnteAttrUpdate"
+      EndBody
+    EndObject
+    Object AnteBodyUpdate $DbCallBack
+      Body SysBody
+        Attr MethodName = "$Alias-AnteBodyUpdate"
+      EndBody
+    EndObject
+    Object AnteLoad $DbCallBack
+      Body SysBody
+        Attr MethodName = "$Alias-AnteLoad"
+      EndBody
+    EndObject
+    Object AnteMove $DbCallBack
+      Body SysBody
+        Attr MethodName = "$Alias-AnteMove"
+      EndBody
+    EndObject
+  EndObject
+EndSObject

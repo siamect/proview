@@ -1,0 +1,453 @@
+!  pwrb_c_opplace.wb_load -- Defines the class OpPlace.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  Configures a logical operator station for operator
+!  dialogue. A logical operator station represents a work
+!  station, X-terminal etc.
+!  
+!  The object specifies where files are to be fetched and
+!  on which screen they are to be displayed.
+!  Put the object below the actual $Node object in the
+!  Node Configuration.
+!  
+!  There may be one or more OpPlace objects below a $Node
+!  object. This will be the case when the node consists of
+!  both a work station and an X-terminal; see figure 3-32
+!  on p. 3-238.
+!  There may exist one and only one user category, i.e.
+!  only one User object (see p. 3-368), for every OpPlace
+!  object. If an operator station has to be configured for
+!  different user categories there is a need for one
+!  OpPlace object per category.
+!  
+!  When an event-message, which demand an acknowledgement,
+!  arrives the acoustic signal is activated according to
+!  BellVolume and BellDelay.
+!  In two different situations it is possible to avoid
+!  continually activating the acoustic signal:
+!  
+!  1 At 'alarm streams' this may be done by demanding a
+!  certain time between acknowledgement ( of acoustic
+!  signal or event ) until an arriving event that
+!  demands acknowledgement once again is allowed to
+!  activate the acoustic signal in the normal way. This
+!  blocking time is specified by means of
+!  TimeBeforeNextBell.
+!
+!  2 Reminder of any unacknowledged event. To remind the
+!  operator, after an acknowledgement of acoustic
+!  signal or after an alarm acknowledgement,   about
+!  remaining unacknowledged events a short acoustic
+!  signal sounds with the period of ReactivateBellTime.
+!  After a certain number of such periods (
+!  ReactivateBellCount specifies the numbers) the
+!  reminder time has  expired and the acoustic signal
+!  is activated in the normal way again. If there is no
+!  unacknowledged event at present and
+!  TimeBeforeNextBell > 0 then an arriving event that
+!  demands acknowledgement first will be announced by
+!  the reminder function.
+!*/
+SObject pwrb:Class
+  Object OpPlace $ClassDef 164 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "OpPlace"
+      EndBody
+      !/**
+      !  Optional text to describe the user category etc.
+      !*/
+      Object Description $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  The logical operator stations are numbered in a unique
+      !  way within each node in the PROVIEW/R system. Sometimes
+      !  one numbering is done all over the nodes in PROVIEW/R
+      !  system; e.g. 1, 2, ....
+      !  OpNumber is also an attribute in User object. A
+      !  specific OpPlace object and a specific User object is
+      !  connected to each other by specifying the same value to
+      !  OpNumber in both objects.
+      !*/
+      Object OpNumber $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies on which monitor the operator dialogue will
+      !  take place.
+      !  If the operator communication is run on the local node
+      !  and the display is to be displayed on the own monitor
+      !  ('default display') the Display attribute ought to be
+      !  left blank.
+      !*/
+      Object Display $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  When there is application-written code behind any
+      !  GMS-graphic the actual files are linked together in an
+      !  exe-file whose directory and filename is specified
+      !  here.
+      !  
+      !  The attribute is left blank if there is only codeless
+      !  GMS-graphics for the logical operator station. In such
+      !  cases pwr_exe:ps-cont.exe will execute to handle
+      !  Operator Window, forms, and GMS-graphics.
+      !*/
+      Object OpWinProgram $Attribute 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the logical name, e.g. pwr_lang: , on the
+      !  path to the PROVIEW/R distribution's *.frm, *.m1 etc
+      !  files;.
+      !  
+      !  The most effective handling is set up by the following
+      !  steps:
+      !  1  Put FilePath[0] to ' pwr_lang:' and leave the other
+      !  FilePath attributes blank. ( 'lang' in pwr_lang
+      !  comes from language)
+      !  2 Put the path 'pwrp_exe' of the project's *.frm, *.m1
+      !  etc files by the command
+      !  
+      !        $ set default pwrp_exe
+      !  3 Activate the operator communication by the command:
+      !  
+      !         $  pwr_pop <name of actual OpPlace object>
+      !  
+      !  FilePath[1] specifies another path to *.frm, *.m1, .... files.
+      !  
+      !  If the method described below FilePath[0] is not used
+      !  the logical name of the path of the project's *.frm,
+      !  *.m1, .... has to be specified here, i.e. pwrp_exe:
+      !  
+      !  FilePath[2],FilePath[3] specifies further paths to look for files. If there is
+      !  none, leave the attributes blank.
+      !*/
+      Object FilePath $Attribute 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 4
+        EndBody
+      EndObject
+      !/**
+      !  Specifies if the process that handles the presentation
+      !  of alarm list, event list, blocked alarm list and alarm
+      !  limits is to be included in the operator dialogue or
+      !  not. FALSE means that no presentation is to be included
+      !  in the operator dialogue and TRUE that it is to be
+      !  included.
+      !  
+      !  The attribute has no influence on the alarm
+      !  supervision.
+      !  When the alarm presentation is included in the operator
+      !  dialogue the presentation may be displayed on a
+      !  separate monitor if AlarmDisplay is defined, otherwise
+      !  on the same monitor as the rest of the operator
+      !  dialogue.
+      !*/
+      Object AlarmProcess $Attribute 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  The attribute is used to define a separate monitor for
+      !  presentation of the alarm handling when AlarmProcess is
+      !  TRUE. The syntax is the same as for Display, se above.
+      !*/
+      Object AlarmDisplay $Attribute 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies if there will be a button in the Operator
+      !  Window to activate the Runtime Navigator or not. FALSE
+      !  means that the Operator Window has no button to
+      !  activate the Runtime Navigator and TRUE that the button
+      !  exist.
+      !*/
+      Object Navigator $Attribute 8 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object HistEvent $Attribute 9 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies if there will be a button in the Operator
+      !  Window to activate the historical trend graphs or not.
+      !  FALSE means that the Operator Window has no button to
+      !  activate the historical trend graphs and TRUE that the
+      !  button exist.
+      !*/
+      Object HistTrend $Attribute 10 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies if the alternative 'Exit Operator' will be
+      !  visible in the Window Manager menu of the Operator
+      !  Window or not. By choosing 'Exit Operator' it is
+      !  possible to exit the operator environment.
+      !  
+      !  FALSE means that the alternative 'Exit Operator' will
+      !  be unvisible in Window Manager menu and TRUE that it is
+      !  made visible.
+      !*/
+      Object ExitButton $Attribute 11 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  The strength of the beep on the operator station is
+      !  specified in the range 0 - 10, where 0 switches the
+      !  beep off.
+      !  
+      !  The acoustic signal (the beep) is used, for instance,
+      !  to pay attention to receiving of alarms.
+      !*/
+      Object BellVolume $Attribute 12 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt8"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies, in milliseconds, the delay between two
+      !  consecutive beeps, two acoustic signals.
+      !*/
+      Object BellDelay $Attribute 13 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  The blocking time, the time when the normal acoustic
+      !  signal is disabled, is counted from the latest
+      !  acknowledgement ( of acoustic signal or event ) and has
+      !  the duration TimeBeforeNextBell. The unit is in tens of
+      !  seconds. During this time no arriving event that
+      !  demands acknowledgement may activate the acoustic
+      !  signal the normal way.
+      !*/
+      Object TimeBeforeNextBell $Attribute 14 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Reminder of any unacknowledged event during the
+      !  reminder time.
+      !  This acoustic signal, which is much shorter then the
+      !  normal signal, will be reactivated with the period
+      !  ReactivateBellTime when,
+      !  
+      !  · any unacknowledged event exist
+      !  · there is no unacknowledged event at present and
+      !  TimeBeforeNextBell > 0 but an event that demands
+      !  acknowledgement arrives
+      !  
+      !  The reminder time is as longest ReactivateBellTime *
+      !  ReactivateBellCount and is counted from the moment when
+      !  the acoustic signal is acknowledged or alarm
+      !  acknowledgement is done. If TimeBeforeNextBell = 0 the
+      !  reminder function is discontinued directly as soon as
+      !  an event that demand acknowledgement arrives.
+      !  
+      !  ReactivateBellTime is specified in tens of seconds.
+      !*/
+      Object ReactivateBellTime $Attribute 15 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  The duration of the reminder time is determined by
+      !  ReactivateBellTime ReactivateBellCount. During this
+      !  time sounds maximally ReactivateBellCount short
+      !  acoustic signals
+      !*/
+      Object ReactivateBellCount $Attribute 16 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+        EndBody
+      EndObject
+      !/**
+      !  Messages from message handlers are sent to out units in
+      !  the PROVIEW/R system. Each out unit receives this
+      !  messages in a queue according to its Select-attributes.
+      !  
+      !  The operator dialogue is an out unit represented by a
+      !  User object.
+      !  MhScanInterval specifies, in tens of seconds, how often
+      !  this message queue is emptied.
+      !*/
+      Object MhScanInterval $Attribute 17 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject      
+      !/**
+      !  Specifies, in tens of seconds, the updating period for
+      !  all subscriptions to none-local objects made by the
+      !  operator dialogue.
+      !  It is suitable to specify the period of subscription in
+      !  a way that will match UpdateInterval in Graph objects
+      !  etc. Times less then one second is not recommended.
+      !*/
+      Object SubscriptionInterval $Attribute 18 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      Object GraphicsUpdateInterval $Attribute 19 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the name of the printer queue used to
+      !  ANSI-files, e.g. event list, blocked alarm list and
+      !  alarm statistics. Qualifiers of Print command may be
+      !  used.
+      !  Example: LPS17_ANSI/notify/del
+      !*/
+      Object ANSIQueue $Attribute 20 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the name of the PostScript printer queue used
+      !  to print process graphics etc. The Print command
+      !  qualifiers may be used.
+      !  
+      !  Example:. LPS17_PS/notify/del
+      !*/
+      Object PostScriptQueue $Attribute 21 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the attribute follows the acoustic signal.
+      !  By supervise the condition of the attribute, from a PLC
+      !  program for instance, it is possible to use the
+      !  acoustic signal to handle more activities.
+      !  
+      !  The attribute is FALSE when the acoustic signal is off
+      !  and TRUE when the signal is on.
+      !*/
+      Object IsBellOn $Attribute 22 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Specifies if there is any current unacknowledged
+      !  A-alarm or not. FALSE means no unacknowledged A-alarm
+      !  and TRUE indicates current, existing or none-existing,
+      !  unacknowledged A-alarm.
+      !*/
+      Object UnackedAAlarm $Attribute 23 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Specifies if there is any current unacknowledged
+      !  B-alarm or not. FALSE means no unacknowledged B-alarm
+      !  and TRUE indicates current, existing or none-existing,
+      !  unacknowledged B-alarm.
+      !*/
+      Object UnackedBAlarm $Attribute 24 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Specifies if there is any current unacknowledged
+      !  C-alarm or not. FALSE means no unacknowledged C-alarm
+      !  and TRUE indicates current, existing or none-existing,
+      !  unacknowledged C-alarm.
+      !*/
+      Object UnackedCAlarm $Attribute 25 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Specifies if there is any current unacknowledged
+      !  D-alarm or not. FALSE means no unacknowledged D-alarm
+      !  and TRUE indicates current, existing or none-existing,
+      !  unacknowledged D-alarm.
+      !*/
+      Object UnackedDAlarm $Attribute 26 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Used by the Package Handler; see PROVIEW/R Programmer's
+      !  Reference Manual.
+      !*/
+      Object Address $Attribute 27 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object Template OpPlace
+      Body RtBody
+        Attr FilePath[0] = "pwr_lang:"
+        Attr FilePath[1] = "pwrp_exe:"
+        Attr AlarmProcess = 1
+        Attr Navigator = 1
+        Attr HistEvent = 1
+        Attr ExitButton = 1
+        Attr BellVolume = 7
+        Attr BellDelay = 1.5
+	Attr TimeBeforeNextBell = 0
+	Attr ReactivateBellTime = 8.0
+	Attr ReactivateBellCount = 10
+	Attr MhScanInterval = 1.0
+	Attr SubscriptionInterval = 1.0
+        Attr GraphicsUpdateInterval = 0.25
+      EndBody
+    EndObject
+  EndObject
+EndSObject

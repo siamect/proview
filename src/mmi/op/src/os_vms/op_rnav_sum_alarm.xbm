@@ -1,0 +1,14 @@
+!  op_rnav_sum_alarm.xbm -- <short description>
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+#define PS_NAV_SUM_ALARM_width 16
+#define PS_NAV_SUM_ALARM_height 10
+#define PS_NAV_SUM_ALARM_x_hot 0
+#define PS_NAV_SUM_ALARM_y_hot 0
+static char PS_NAV_SUM_ALARM_bits[] = {
+   0xff, 0xff, 0x41, 0x82, 0x41, 0x82, 0x41, 0x82, 0x41, 0x82, 0x41, 0x82,
+   0x41, 0x82, 0x41, 0x82, 0x41, 0x82, 0xff, 0xff};

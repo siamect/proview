@@ -1,0 +1,228 @@
+!  pwrb_c_graph.wb_load -- Defines the class Graph.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  Configures a window to display GMS-graphic.
+!  
+!  To display GMS-graphics on a monitor the graphics have
+!  to be associated with Graph objects located on the same
+!  node as where the graphics will be displayed.
+!  
+!  The users or categories of users of an operator station
+!  are represented by User objects. Graph objects, which
+!  are specified in the FastAvail-attribute of the User
+!  object, may be activated direct from the Operator
+!  Window.
+!  A Graph object may be used by several User objects.
+!*/
+SObject pwrb:Class
+  Object Graph $ClassDef 130 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "Graph"
+      EndBody
+      !/**
+      !  Optional text.
+      !*/
+      Object Description $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  The name of the window is shown in the top of the
+      !  window.
+      !  
+      !  By default, window with GMS-graphic, is labelled with
+      !  the name of the corresponding Graph object. By means of
+      !  Title the window is assigned its own name.
+      !*/
+      Object Title $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the name of the GMS-graphic m1-file
+      !  exclusively path and extension.
+      !*/
+      Object GMS_Model $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr Flags = 0
+        EndBody
+      EndObject
+      !/**
+      !  If CodeBehind is FALSE, UpdateInterval, specifies in
+      !  seconds, the updating period of the display named by
+      !  GMS_Model.
+      !*/
+      Object UpdateInterval $Attribute 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags = 0
+        EndBody
+      EndObject
+      !/**
+      !  Specifies, in pixels, where on the monitor the
+      !  GMS-graphic window will be located. X, Y concern the
+      !  coordinates of the upper left corner of the window. The
+      !  entire surface of the monitor may be e.g. 1280  1024
+      !  pixels.
+      !
+      !  If the window is moved, the attributes are updated.
+      !  This means that the latest position of the window will
+      !  be used when the window is displayed next time.
+      !  -1, -1 specifies a default position.
+      !*/
+      Object X $Attribute 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int16"
+          Attr Flags = 0
+        EndBody
+      EndObject
+      Object Y $Attribute 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int16"
+          Attr Flags = 0
+        EndBody
+      EndObject
+      !/**
+      !  The proportion between the height and width to a
+      !  GMS-graphic window is always constant. If the width is
+      !  changed the height will be changed in a way that makes
+      !  the proportions preserved.
+      !  The attribute specifies the width, in pixels, of the
+      !  window. A negative value corresponds to a default
+      !  width.
+      !  
+      !  If the width is changed, the attribute is updated. This
+      !  means that the latest width of the window will be used
+      !  when the window is displayed next time.
+      !*/
+      Object Width $Attribute 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int16"
+          Attr Flags = 0
+        EndBody
+      EndObject
+      !/**
+      !  The attributes specify in GMS coordinate system (World
+      !  Coordinates) which portion of the Model will be
+      !  displayed on a monitor. ( A Model are collections of
+      !  lines, circles etc.)
+      !*/
+      Object GmsX1 $Attribute 8 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags = 0
+        EndBody
+      EndObject
+      Object GmsY1 $Attribute 9 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags = 0
+        EndBody
+      EndObject
+      Object GmsX2 $Attribute 10 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags = 0
+        EndBody
+      EndObject
+      Object GmsY2 $Attribute 11 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags = 0
+        EndBody
+      EndObject
+      Object FirstInputField $Attribute 12 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String32"
+          Attr Flags = 0
+        EndBody
+      EndObject
+      !/**
+      !  Specifies if the subscriptions of the GMS-graphic will
+      !  be deleted or not when the window is iconfied. FALSE
+      !  means that the subscriptions are not deleted and TRUE
+      !  that they are deleted when the window is iconfied.
+      !  If there are several iconfied windows with
+      !  RemSubscrWhenIcon = TRUE, the corresponding
+      !  subscriptions do not put any load on the system. On the
+      !  other hand, the subscriptions have to be set up each
+      !  time the window is to be displayed.
+      !*/
+      Object RemSubscrWhenIcon $Attribute 13 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags = 0
+        EndBody
+      EndObject
+      !/**
+      !  The attribute is designed to specify the number on the
+      !  monitor where to display the window. (Cf. with Display
+      !  in an OpPlace object where Server is an element)
+      !  
+      !  ScreenNo = -1 implies that the window will be displayed
+      !  on the same monitor as Operator Window.
+      !  Not used today.
+      !*/
+      Object ScreenNo $Attribute 14 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int8"
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Specifies if there is an application-written code
+      !  behind the GMS-graphic or not. FALSE means no
+      !  application code; see also UpdateInterval.
+      !  TRUE means that the GMS-graphic, named by GMS_Model, is
+      !  maintained by an application-written program; see
+      !  ClassName.
+      !*/
+      Object CodeBehind $Attribute 15 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags = 0
+        EndBody
+      EndObject
+      !/**
+      !  If CodeBehind is TRUE the attribute identifies which
+      !  routines are used by the graphic. The routines ought to
+      !  be linked to the operator environment.
+      !*/
+      Object ClassName $Attribute 16 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+          Attr Flags = 0
+        EndBody
+      EndObject
+    EndObject
+    Object Template Graph
+      Body RtBody
+        Attr UpdateInterval = 1.0
+        Attr X = -1
+        Attr Y = -1
+        Attr Width = -1
+        Attr GmsX1 = 0.0
+        Attr GmsY1 = 0.0
+        Attr GmsX2 = 100.0
+        Attr GmsY2 = 75.0
+        Attr ScreenNo = -1
+      EndBody
+    EndObject
+  EndObject
+EndSObject

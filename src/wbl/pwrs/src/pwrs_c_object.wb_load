@@ -1,0 +1,604 @@
+!  pwrs_c_object.wb_load -- Defines the class Object.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+SObject pwrs:Class
+  Object $Object $ClassDef pwr_eCix_Object
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_SysBody
+      Attr Flags |= pwr_mClassDef_System
+      Attr Flags |= pwr_mClassDef_DevOnly
+    EndBody
+    Object SysBody $ObjBodyDef 1
+      Object Name $Attribute 1
+        Body SysBody
+	  Attr TypeRef = "pwrs:Type-$ObjName"
+	EndBody
+      EndObject
+    EndObject
+    Object Template $Object
+    EndObject
+    Object ConfiguratorPcsnn $Menu
+      Object Pointed $Menu
+	Object OpenTemplate $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Default Values..."
+	    Attr MethodName = "$Object-OpenTemplate"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPcscs $Menu
+      Object Pointed $Menu
+	Object OpenTemplate $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Default Values..."
+	    Attr MethodName = "$Object-OpenTemplate"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPcscn $Menu
+      Object Pointed $Menu
+	Object OpenTemplate $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Default Values..."
+	    Attr MethodName = "$Object-OpenTemplate"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPcson $Menu
+      Object Pointed $Menu
+	Object OpenTemplate $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Default Values..."
+	    Attr MethodName = "$Object-OpenTemplate"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPcsms $Menu
+      Object Pointed $Menu
+	Object OpenTemplate $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Default Values..."
+	    Attr MethodName = "$Object-OpenTemplate"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPcsmn $Menu
+      Object Pointed $Menu
+	Object OpenTemplate $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Default Values..."
+	    Attr MethodName = "$Object-OpenTemplate"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPosnn $Menu
+      Object Pointed $Menu
+	Object Open $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open Object..."
+	    Attr MethodName = "$Object-OpenObject"
+	  EndBody
+	EndObject
+	Object Delete $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Delete Object"
+	    Attr MethodName = "$Object-DeleteObject"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPoscn $Menu
+      Object Pointed $Menu
+	Object Open $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open Object..."
+	    Attr MethodName = "$Object-OpenObject"
+	  EndBody
+	EndObject
+      EndObject
+      Object Selected $Menu
+	Object CreateObject $MenuCascade
+	  Body SysBody
+	    Attr ButtonName = "Create Object"
+	  EndBody
+	  Object Before $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "Before"
+	      Attr MethodName = "$Object-CreateObject"
+	      Attr MethodArguments[0] = "Before"
+	      Attr FilterName = "$Object-IsOkCreateObject"
+	      Attr FilterArguments[0] = "Before"
+	    EndBody
+	  EndObject
+	  Object After $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "After"
+	      Attr MethodName = "$Object-CreateObject"
+	      Attr MethodArguments[0] = "After"
+	      Attr FilterName = "$Object-IsOkCreateObject"
+	      Attr FilterArguments[0] = "After"
+	    EndBody
+	  EndObject
+	  Object First $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "First Child"
+	      Attr MethodName = "$Object-CreateObject"
+	      Attr MethodArguments[0] = "First"
+	      Attr FilterName = "$Object-IsOkCreateObject"
+	      Attr FilterArguments[0] = "First"
+	    EndBody
+	  EndObject
+	  Object Last $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "Last Child"
+	      Attr MethodName = "$Object-CreateObject"
+	      Attr MethodArguments[0] = "Last"
+	      Attr FilterName = "$Object-IsOkCreateObject"
+	      Attr FilterArguments[0] = "Last"
+	    EndBody
+	  EndObject
+	EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPosos $Menu
+      Object Pointed $Menu
+	Object Open $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open Object..."
+	    Attr MethodName = "$Object-OpenObject"
+	  EndBody
+	EndObject
+	Object Delete $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Delete Object"
+	    Attr MethodName = "$Object-DeleteObject"
+	  EndBody
+	EndObject
+      EndObject
+      Object Selected $Menu
+	Object CopyObject $MenuCascade
+	  Body SysBody
+	    Attr ButtonName = "Copy Selected Object"
+	  EndBody
+	  Object Before $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "Before"
+	      Attr MethodName = "$Object-CopyObject"
+	      Attr MethodArguments[0] = "Before"
+	      Attr FilterName = "$Object-IsOkCopyObject"
+	      Attr FilterArguments[0] = "Before"
+	    EndBody
+	  EndObject
+	  Object After $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "After"
+	      Attr MethodName = "$Object-CopyObject"
+	      Attr MethodArguments[0] = "After"
+	      Attr FilterName = "$Object-IsOkCopyObject"
+	      Attr FilterArguments[0] = "After"
+	    EndBody
+	  EndObject
+	EndObject
+	Object CopyTree $MenuCascade
+	  Body SysBody
+	    Attr ButtonName = "Copy Selected Tree"
+	  EndBody
+	  Object Before $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "Before"
+	      Attr MethodName = "$Object-CopyObjectTree"
+	      Attr MethodArguments[0] = "Before"
+	      Attr FilterName = "$Object-IsOkCopyObjectTree"
+	      Attr FilterArguments[0] = "Before"
+	    EndBody
+	  EndObject
+	  Object After $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "After"
+	      Attr MethodName = "$Object-CopyObjectTree"
+	      Attr MethodArguments[0] = "After"
+	      Attr FilterName = "$Object-IsOkCopyObjectTree"
+	      Attr FilterArguments[0] = "After"
+	    EndBody
+	  EndObject
+	EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPoson $Menu
+      Object Pointed $Menu
+	Object Open $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open Object..."
+	    Attr MethodName = "$Object-OpenObject"
+	  EndBody
+	EndObject
+      EndObject
+      Object Selected $Menu
+	Object Copy $MenuCascade
+	  Body SysBody
+	    Attr ButtonName = "Copy Selected Object"
+	  EndBody
+	  Object Before $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "Before"
+	      Attr MethodName = "$Object-CopyObject"
+	      Attr MethodArguments[0] = "Before"
+	      Attr FilterName = "$Object-IsOkCopyObject"
+	      Attr FilterArguments[0] = "Before"
+	    EndBody
+	  EndObject
+	  Object After $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "After"
+	      Attr MethodName = "$Object-CopyObject"
+	      Attr MethodArguments[0] = "After"
+	      Attr FilterName = "$Object-IsOkCopyObject"
+	      Attr FilterArguments[0] = "After"
+	    EndBody
+	  EndObject
+	  Object First $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "First Child"
+	      Attr MethodName = "$Object-CopyObject"
+	      Attr MethodArguments[0] = "First"
+	      Attr FilterName = "$Object-IsOkCopyObject"
+	      Attr FilterArguments[0] = "First"
+	    EndBody
+	  EndObject
+	  Object Last $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "Last Child"
+	      Attr MethodName = "$Object-CopyObject"
+	      Attr MethodArguments[0] = "Last"
+	      Attr FilterName = "$Object-IsOkCopyObject"
+	      Attr FilterArguments[0] = "Last"
+	    EndBody
+	  EndObject
+	EndObject
+	Object CopyTree $MenuCascade
+	  Body SysBody
+	    Attr ButtonName = "Copy Selected Tree"
+	  EndBody
+	  Object Before $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "Before"
+	      Attr MethodName = "$Object-CopyObjectTree"
+	      Attr MethodArguments[0] = "Before"
+	      Attr FilterName = "$Object-IsOkCopyObjectTree"
+	      Attr FilterArguments[0] = "Before"
+	    EndBody
+	  EndObject
+	  Object After $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "After"
+	      Attr MethodName = "$Object-CopyObjectTree"
+	      Attr MethodArguments[0] = "After"
+	      Attr FilterName = "$Object-IsOkCopyObjectTree"
+	      Attr FilterArguments[0] = "After"
+	    EndBody
+	  EndObject
+	  Object First $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "First Child"
+	      Attr MethodName = "$Object-CopyObjectTree"
+	      Attr MethodArguments[0] = "First"
+	      Attr FilterName = "$Object-IsOkCopyObjectTree"
+	      Attr FilterArguments[0] = "First"
+	    EndBody
+	  EndObject
+	  Object Last $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "Last Child"
+	      Attr MethodName = "$Object-CopyObjectTree"
+	      Attr MethodArguments[0] = "Last"
+	      Attr FilterName = "$Object-IsOkCopyObjectTree"
+	      Attr FilterArguments[0] = "Last"
+	    EndBody
+	  EndObject
+	EndObject
+	Object Move $MenuCascade
+	  Body SysBody
+	    Attr ButtonName = "Move Selected Object"
+	  EndBody
+	  Object Before $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "Before"
+	      Attr MethodName = "$Object-MoveObject"
+	      Attr MethodArguments[0] = "Before"
+	      Attr FilterName = "$Object-IsOkMoveObject"
+	      Attr FilterArguments[0] = "Before"
+	    EndBody
+	  EndObject
+	  Object After $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "After"
+	      Attr MethodName = "$Object-MoveObject"
+	      Attr MethodArguments[0] = "After"
+	      Attr FilterName = "$Object-IsOkMoveObject"
+	      Attr FilterArguments[0] = "After"
+	    EndBody
+	  EndObject
+	  Object First $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "First Child"
+	      Attr MethodName = "$Object-MoveObject"
+	      Attr MethodArguments[0] = "First"
+	      Attr FilterName = "$Object-IsOkMoveObject"
+	      Attr FilterArguments[0] = "First"
+	    EndBody
+	  EndObject
+	  Object Last $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "Last Child"
+	      Attr MethodName = "$Object-MoveObject"
+	      Attr MethodArguments[0] = "Last"
+	      Attr FilterName = "$Object-IsOkMoveObject"
+	      Attr FilterArguments[0] = "Last"
+	    EndBody
+	  EndObject
+	EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPosmn $Menu
+      Object Pointed $Menu
+	Object Open $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open Object..."
+	    Attr MethodName = "$Object-OpenObject"
+	  EndBody
+	EndObject
+      EndObject
+      Object Selected $Menu
+	Object Copy $MenuCascade
+	  Body SysBody
+	    Attr ButtonName = "Copy Selected Objects"
+	  EndBody
+	  Object Before $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "Before"
+	      Attr MethodName = "$Object-CopyObject"
+	      Attr MethodArguments[0] = "Before"
+	      Attr FilterName = "$Object-IsOkCopyObject"
+	      Attr FilterArguments[0] = "Before"
+	    EndBody
+	  EndObject
+	  Object After $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "After"
+	      Attr MethodName = "$Object-CopyObject"
+	      Attr MethodArguments[0] = "After"
+	      Attr FilterName = "$Object-IsOkCopyObject"
+	      Attr FilterArguments[0] = "After"
+	    EndBody
+	  EndObject
+	  Object First $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "First Children"
+	      Attr MethodName = "$Object-CopyObject"
+	      Attr MethodArguments[0] = "First"
+	      Attr FilterName = "$Object-IsOkCopyObject"
+	      Attr FilterArguments[0] = "First"
+	    EndBody
+	  EndObject
+	  Object Last $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "Last Children"
+	      Attr MethodName = "$Object-CopyObject"
+	      Attr MethodArguments[0] = "Last"
+	      Attr FilterName = "$Object-IsOkCopyObject"
+	      Attr FilterArguments[0] = "Last"
+	    EndBody
+	  EndObject
+	EndObject
+	Object CopyTree $MenuCascade
+	  Body SysBody
+	    Attr ButtonName = "Copy Selected Trees"
+	  EndBody
+	  Object Before $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "Before"
+	      Attr MethodName = "$Object-CopyObjectTree"
+	      Attr MethodArguments[0] = "Before"
+	      Attr FilterName = "$Object-IsOkCopyObjectTree"
+	      Attr FilterArguments[0] = "Before"
+	    EndBody
+	  EndObject
+	  Object After $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "After"
+	      Attr MethodName = "$Object-CopyObjectTree"
+	      Attr MethodArguments[0] = "After"
+	      Attr FilterName = "$Object-IsOkCopyObjectTree"
+	      Attr FilterArguments[0] = "After"
+	    EndBody
+	  EndObject
+	  Object First $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "First Children"
+	      Attr MethodName = "$Object-CopyObjectTree"
+	      Attr MethodArguments[0] = "First"
+	      Attr FilterName = "$Object-IsOkCopyObjectTree"
+	      Attr FilterArguments[0] = "First"
+	    EndBody
+	  EndObject
+	  Object Last $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "Last Children"
+	      Attr MethodName = "$Object-CopyObjectTree"
+	      Attr MethodArguments[0] = "Last"
+	      Attr FilterName = "$Object-IsOkCopyObjectTree"
+	      Attr FilterArguments[0] = "Last"
+	    EndBody
+	  EndObject
+	EndObject
+	Object Move $MenuCascade
+	  Body SysBody
+	    Attr ButtonName = "Move Selected Objects"
+	  EndBody
+	  Object Before $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "Before"
+	      Attr MethodName = "$Object-MoveObject"
+	      Attr MethodArguments[0] = "Before"
+	      Attr FilterName = "$Object-IsOkMoveObject"
+	      Attr FilterArguments[0] = "Before"
+	    EndBody
+	  EndObject
+	  Object After $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "After"
+	      Attr MethodName = "$Object-MoveObject"
+	      Attr MethodArguments[0] = "After"
+	      Attr FilterName = "$Object-IsOkMoveObject"
+	      Attr FilterArguments[0] = "After"
+	    EndBody
+	  EndObject
+	  Object First $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "First Children"
+	      Attr MethodName = "$Object-MoveObject"
+	      Attr MethodArguments[0] = "First"
+	      Attr FilterName = "$Object-IsOkMoveObject"
+	      Attr FilterArguments[0] = "First"
+	    EndBody
+	  EndObject
+	  Object Last $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "Last Children"
+	      Attr MethodName = "$Object-MoveObject"
+	      Attr MethodArguments[0] = "Last"
+	      Attr FilterName = "$Object-IsOkMoveObject"
+	      Attr FilterArguments[0] = "Last"
+	    EndBody
+	  EndObject
+	EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPosms $Menu
+      Object Pointed $Menu
+	Object Open $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open Object..."
+	    Attr MethodName = "$Object-OpenObject"
+	  EndBody
+	EndObject
+      EndObject
+      Object Selected $Menu
+	Object CopyObjects $MenuCascade
+	  Body SysBody
+	    Attr ButtonName = "Copy Selected Objects"
+	  EndBody
+	  Object Before $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "Before Original"
+	      Attr MethodName = "$Object-CopyObject"
+	      Attr MethodArguments[0] = "Before"
+	      Attr FilterName = "$Object-IsOkCopyObject"
+	      Attr FilterArguments[0] = "Before"
+	    EndBody
+	  EndObject
+	  Object After $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "After Original"
+	      Attr MethodName = "$Object-CopyObject"
+	      Attr MethodArguments[0] = "After"
+	      Attr FilterName = "$Object-IsOkCopyObject"
+	      Attr FilterArguments[0] = "After"
+	    EndBody
+	  EndObject
+	EndObject
+	Object CopyTrees $MenuCascade
+	  Body SysBody
+	    Attr ButtonName = "Copy Selected Trees"
+	  EndBody
+	  Object Before $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "Before Original"
+	      Attr MethodName = "$Object-CopyObjectTree"
+	      Attr MethodArguments[0] = "Before"
+	      Attr FilterName = "$Object-IsOkCopyObjectTree"
+	      Attr FilterArguments[0] = "Before"
+	    EndBody
+	  EndObject
+	  Object After $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "After Original"
+	      Attr MethodName = "$Object-CopyObjectTree"
+	      Attr MethodArguments[0] = "After"
+	      Attr FilterName = "$Object-IsOkCopyObjectTree"
+	      Attr FilterArguments[0] = "After"
+	    EndBody
+	  EndObject
+	EndObject
+	Object DeleteObjects $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Delete Selected Objects"
+	    Attr MethodName = "$Object-DeleteObjects"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object NavigatorPosnn $Menu
+      Object Pointed $Menu
+	Object Open $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open Object..."
+	    Attr MethodName = "$Object-OpenObject"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object NavigatorPosos $Menu
+      Object Pointed $Menu
+	Object Open $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open Object..."
+	    Attr MethodName = "$Object-OpenObject"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object NavigatorPoson $Menu
+      Object Pointed $Menu
+	Object Open $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open Object..."
+	    Attr MethodName = "$Object-OpenObject"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object NavigatorPosmn $Menu
+      Object Pointed $Menu
+	Object Open $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open Object..."
+	    Attr MethodName = "$Object-OpenObject"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object NavigatorPosms $Menu
+      Object Pointed $Menu
+	Object Open $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open Object..."
+	    Attr MethodName = "$Object-OpenObject"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+  EndObject
+EndSObject

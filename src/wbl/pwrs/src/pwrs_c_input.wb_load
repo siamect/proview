@@ -1,0 +1,207 @@
+!  pwrs_c_input.wb_load -- Defines the class Input.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+!/**
+!  @Version 1.0
+!  Definition of an input attribute. 
+!  Input attributes are used in plc-objects, and are displayed as input pins 
+!  on the plc symbol. The input contains a pointer and a value. If the input 
+!  is connected in the plc editor, the value is fetched from the connected 
+!  attribute, otherwise the value is fetched from the local value in the 
+!  input attribute. The local value can be set in the object editor. 
+!  If the PWR_MASK_RTVIRTUAL bit is set in the Flag word, the input does not 
+!  exist in runtime, and no local value can be set.
+!  The Input object reside in a class volume as a child of an ObjBodyDef object.
+!*/
+SObject pwrs:Class
+  Object $Input $ClassDef pwr_eCix_Input
+    Body SysBody
+      Attr Flags |= pwr_mClassDef_System
+      Attr Flags |= pwr_mClassDef_Multinode
+    EndBody
+    Object SysBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "Input"
+      EndBody
+      !/**
+      !  Name for the element the c-struct.
+      !*/
+      Object PgmName $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$PgmName"
+        EndBody
+      EndObject
+      !/**
+      !  Compiled system type.
+      !*/
+      Object Type $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      !/**
+      !  Compiled offset in body.
+      !*/
+      Object Offset $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Compiled size, number of bytes.
+      !*/
+      Object Size $Attribute 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Bitmask for attribute properties.
+      !  Bitmask for attribute properties.
+      !
+      !  PWR_MASK_POINTER	Attribute is a pointer.
+      !  PWR_MASK_ARRAY		Attribute is an array.
+      !  PWR_MASK_STATE	        Value will not be loaded from develompent database.
+      !  PWR_MASK_CONST	        Value is a constant.
+      !  PWR_MASK_RTVIRTUAL	Attribute doesn't exist in runtime environment
+      !  PWR_MASK_DEVBODYREF	Used for input and output attributes, where the
+      !                         connection refers another object which is found
+      !                         in the first attribute of type Objid in DevBody.
+      !  PWR_MASK_OBJIDSELF     Contains the objects own objid. Used in timer attributes.
+      !  PWR_MASK_NOEDIT        Value can't be changed in object editor.
+      !  PWR_MASK_INVISIBLE     Attribute will not be displayed in object editor.
+      !  PWR_MASK_REFDIRECT     If an AttrRef, should not give value pointed to.
+      !  PWR_MASK_NOINVERT      Can't be inverted in plc editor.
+      !  PWR_MASK_NOREMOVE      Can't be removed in plc editor.
+      !  PWR_MASK_RTDBREF       Contains an rtdb reference.
+      !  PWR_MASK_PRIVATE       Should not be interpreted by an object editor.
+      !*/
+      Object Flags $Attribute 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Mask"
+        EndBody
+      EndObject
+      !/**
+      !  If array, number of elements..
+      !*/
+      Object Elements $Attribute 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Index of attribute within a body.
+      !*/
+      Object ParamIndex $Attribute 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Reference to the object defining the type.
+      !*/
+      Object TypeRef $Attribute 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$TypeId"
+        EndBody
+      EndObject
+      !/**
+      !  Name displayed in plc editor.
+      !*/
+      Object GraphName $Attribute 9
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$GraphName"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Direction of input or output pin.
+      !  Direction of input or output pin.
+      !  Implemented in graphmethod 16 only.
+      !  0: Ordinare direction, left for inputs and right for outputs.
+      !  1: Pin positioned on top of symbol, direction up
+      !  2: Pin positioned on bottom of symbol, direction down
+      !*/
+      Object InputType $Attribute 10
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary The value will be displayed in the plc symbol.
+      !  The value will be displayed in the plc symbol. The plc symbol
+      !  contains places where individual text can be drawn, annotations.
+      !  The annotations are numbered, and NiNaAnnot is the number of the
+      !  annotation where the value of the attribute will be drawn.
+      !*/
+      Object NiNaAnnot $Attribute 11
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Special condition for an annotation to be drawn or not.
+      !  Special condition for an annotation to be drawn or not.
+      !  In some cases, the condition whether an attribute should be displayed
+      !  in an annotation or not, can be configured from the object editor.
+      !  If NiNaCond is true, the condition will be fetched from an attribute
+      !  named Show'attributename' in devbody.
+      !  For example, the DSup object has an attribute ShowDetectText which
+      !  is the condition for DetectText to be displayed in the plc symbol.
+      !*/
+      Object NiNaCond $Attribute 12
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Special condition for the number of segments to be displayed for an objid.
+      !  Special condition for the number of segments to be displayed for an
+      !  objid.
+      !  In some cases, the number of name segments for an objid attribute 
+      !  that should be displayed in an annotatation, can be configured from 
+      !  the object editor.
+      !  If NiNaSegments is true, the number of segments will be fetched 
+      !  from an attribute named 'attributename'Segments in devbody.
+      !  For example, the GetDi object has an attribute SigChanConSegments 
+      !  which contains the number of segments of SigChanCon to be displayed 
+      !  in the plc symbol.
+      !*/
+      Object NiNaSegments $Attribute 13
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Not used.
+      !*/
+      Object DebAnnot $Attribute 14
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Connection point in plc symbol for this attribute.
+      !  Number of the connection point for this attribute.
+      !  Used only in graphmethod 4.
+      !  Graphmethod 4 contains a number of symbols with fix number of input
+      !  and output pins. ConPointNr relates an attribute to a specific input 
+      !  or output pin.
+      !*/
+      Object ConPointNr $Attribute 15
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+    EndObject
+    Object Template $Input
+      Body SysBody
+        Attr Elements = 1
+      EndBody
+    EndObject
+  EndObject
+EndSObject

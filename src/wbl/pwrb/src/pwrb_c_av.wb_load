@@ -1,0 +1,160 @@
+!  pwrb_c_av.wb_load -- Defines the class Av.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  Analog value.
+!  
+!  Configures a calculated analog value ( floating point
+!  number) in the Plant Configuration.
+!
+!      Hints
+!  
+!  Put the object below a $PlantHier object in the
+!  development environment.
+!  The object is assigned an initial value (!= 0 ) in the
+!  target environment, for example by means of StoAv.
+!*/
+SObject pwrb:Class
+  Object Av $ClassDef 19 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+      Attr PopEditor = 1
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "Av"
+      EndBody
+      !/**
+      !  Optional text, for example, the name of the signal or
+      !  what it represents.
+      !*/
+      Object Description $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Index in the AvArea array of the Area objects
+      !  that are used for base frequency and partial frequency
+      !  samples. Initiated at boot time by rt_ini.
+      !*/
+      Object ValueIndex $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      !/**
+      !  Pointer to the engineering value, named ActualValue.
+      !*/
+      Object ActualValue $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      !/**
+      !  InitialValue specifies starting value of the signal at
+      !  so called 'cold start'. Which value that is used as
+      !  starting value at warm restart ( = change of PLC
+      !  program ) depends on whether the signal is new or not.
+      !  If the signal has exist in the last program its last
+      !  value will be used as starting value, otherwise InitialValue
+      !*/
+      Object InitialValue $Attribute 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Engineering unit of ActualValue.
+      !*/
+      Object Unit $Attribute 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String16"
+        EndBody
+      EndObject
+      !/**
+      !  The lower respectively upper limits in the bar graph at
+      !  presentation of ActualValue in the object display.
+      !*/
+      Object NoOfDecimals $Attribute 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt8"
+        EndBody
+      EndObject
+      !/**
+      !  The lower respectively upper limits in the bar graph at
+      !  presentation of ActualValue in the object display.
+      !*/
+      Object PresMaxLimit $Attribute 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      Object PresMinLimit $Attribute 8 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary A XttGraph object that will open a graph for this object.
+      !  A XttGraph object that will open a graph that contains data for
+      !  this object. This graph can be opened from the popup menu for
+      !  this object.
+      !*/
+      Object DefGraph $Attribute 9 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary A trend object that displays a trend for this object.
+      !  A DsTrend or PlotGroup object that contains a trend for this object.
+      !  The trend can be opened from the popup menu for this object.
+      !*/
+      Object DefTrend $Attribute 10 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary A help topic for this hierarchy.
+      !  A help topic in the xtt help file that contains help for this hierarchy.
+      !  The help can be displayed from the popup menu for this object.
+      !*/
+      Object HelpTopic $Attribute 12
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary A URL to the data sheet for the equipment in this hierarchy.
+      !  A URL to the data sheet for the equipment in this hierarchy.
+      !  The data sheet can be displayed from the popup menu for this object.
+      !*/
+      Object DataSheet $Attribute 13
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$URL"
+        EndBody
+      EndObject
+      !/**
+      !  Not used.
+      !*/
+      Object OwnedByPLC $Attribute 11 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject

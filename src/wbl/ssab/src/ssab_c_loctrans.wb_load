@@ -1,0 +1,42 @@
+!  ssab_c_loctrans.wb_load -- Defines the class LocTrans.
+!
+!  PROVIEW/R
+!
+!  <Description>.
+!
+SObject SSAB:Class
+  !
+  ! LocTrans -	Local Trans descripton
+  !
+  Object LocTrans $ClassDef 23
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    !
+    ! RemTrans Runtime Body
+    !
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "LocTrans"
+      EndBody
+      !
+      ! Parameter Description
+      !
+      Object Description $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !
+      ! Parameter DataValid
+      !
+      Object DataValid $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+    EndObject
+  EndObject ! $ClassDef
+EndSObject  ! SObject

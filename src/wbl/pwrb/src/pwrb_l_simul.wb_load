@@ -1,0 +1,24 @@
+!  pwrb_l_simul.wb_load -- Defines layouts for simulation objects.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+SObject wb:layout-PlcEditor-w1
+  Object Simulate $Group
+    Object CStoAi $Group
+    EndObject
+    Object StoAi $Group
+    EndObject
+    Object ResDi $Group
+    EndObject
+    Object SetDi $Group
+    EndObject
+    Object StoDi $Group
+    EndObject
+    Object StoPi $Group
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,12 @@
+!  pwrb_ch_basetypes.wb_load -- BaseTypes hierarchy.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+SObject pwrb:
+   Object Type $TypeHier
+   EndObject
+EndSObject

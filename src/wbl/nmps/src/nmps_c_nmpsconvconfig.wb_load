@@ -1,0 +1,62 @@
+!  nmps_c_convconfig.wb_load -- Defines the class NMpsConvConfig.
+!
+!  PROVIEW/R
+!
+!  <Description>.
+!
+SObject NMps:Class
+  Object NMpsConvConfig $ClassDef 31 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "NMpsConvConfig"
+      EndBody
+      Object InDataClass $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      Object OutDataClass  $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      Object OutDataParent  $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      Object CopyOffset  $Attribute 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object PasteOffset  $Attribute 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object CopySize  $Attribute 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object UpdateTime  $Attribute 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+    EndObject
+    !
+    ! Template object 
+    !
+    Object Template NMpsConvConfig
+      Body RtBody
+	Attr UpdateTime = 1
+      EndBody
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,73 @@
+!  pwrb_c_dsfastconf.wb_load -- Defines the class DsFastConf.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  DsFast configure object.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  Specifies attributes of a single DsFast.
+!  
+!  In every node where fast graphs should be stored there
+!  has to be a DsFast job to search through the local
+!  DsFast objects.
+!  
+!      Hints
+!  
+!  The DsFastConf object is placed below the $Node object.
+!  If a Ds_Fast job is loaded to a node, which has no
+!  DsFastConf object, it will execute with 10 Hz.
+!  
+!  A Ds_Fast job has to be loaded and started in each
+!  node, where data for fast graphs should be stored. If
+!  the node is a OpenVMS node this is done by means of an
+!  Appl object and for a VAXELN node either by an Appl
+!  object or is the dsFast module included in the
+!  EBUILD-file.
+!  
+!      See Also
+!  DsFast
+!*/
+SObject pwrb:Class
+  Object DsFastConf $ClassDef 105 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "DsFastConf"
+      EndBody
+      !/**
+      !  The frequency of the DsFast job in Hz.
+      !  
+      !  1 <= BaseFrequency <= 50.
+      !  The BaseFrequency attribute in every DsFast object
+      !  belonging to the same node as the DsFastConf are
+      !  assigned the value of the attribute!
+      !  
+      !  Digital signals and pulse counter signals are handled
+      !  in PLC programs which are working with different cycle
+      !  times. This times are always an integer multiple of 20
+      !  ms, which in the frequency plane means that only some
+      !  discrete frequencies are allowed; e.g. 50 Hz, 25 Hz,
+      !  ....
+      !  Local analog signals are handled in a time specified by
+      !  IOHandler.
+      !*/
+      Object BaseFrequency $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+    EndObject
+    Object Template DsFastConf
+      Body RtBody
+        Attr BaseFrequency = 10
+      EndBody
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,239 @@
+! CMS REPLACEMENT HISTORY, Element RS_HD_FREECOL_UTIL.UIL
+! *1     7-OCT-1994 15:30:22 GPD "(CO-V1.0-11) New module"
+! CMS REPLACEMENT HISTORY, Element RS_HD_FREECOL_UTIL.UIL
+!*
+!*                PROVIEW/R
+!*               =================
+!*************************************************************************
+!*
+!* Filename:             RS_HD_FREECOL_UTIL.UIL
+!*
+!*                       Date    Pgm.    Read.   Remark
+!* Modified              940415  LE              Initial creation.
+!*
+!*
+!* Description:
+!*	Utility function which frees unused columns in the 
+!*	long time datastorage database.
+!*
+!**************************************************************************
+!**************************************************************************
+
+module RS_HD_FREECOL_UTIL
+
+procedure ButtonFunction(string);
+procedure CreateW(string);
+procedure ListSelect(string);
+
+
+! APPLICATION SHELL ICONS
+
+value
+    bitmap_colors : color_table ( background color = ' ', foreground color = '*');
+! Icon size 50x50
+    WinIcon : exported icon ( color_table=bitmap_colors,
+
+'                                                  ',
+'                                                  ',
+'  *   *   *   *   *   *   *   *   *   *   *   *   ',
+'                                                  ',
+'    *   *   *   *   *   *   *   *   *   *   *   * ',
+'   ***                                            ',
+'  *****   *   *   *   *   *   *   *   *   *   *   ',
+'   *****                                          ',
+'    *****   *   *   *   *   *   *   *   *   *   * ',
+'     *****                                        ',
+'  *   *****   *   *   *   *   *   *   *   *   *   ',
+'       *****                                      ',
+'    *   *****   *   *   *   *   *   *   *   *   * ',
+'         ***** ***                                ',
+'  *   *   *********   *   *   *   *   *   *   *   ',
+'           *********                              ',
+'    *   *   *********   *********************   * ',
+'             *** *****  * * * * * * * * * * *     ',
+'  *   *   *   *   ***** ** * * * * * * * * ** *   ',
+'                   ****** * * * * * * * * * *     ',
+'    *   *   *   *   ******** * * * * * * * **   * ',
+'                     ****** * * * * * * * * *     ',
+'  *   *   *   *   *   ****** * * * * * * * ** *   ',
+'                       **** * * * * * * * * *     ',
+'    *   *   *   *   * ****** * * * * * * * **   * ',
+'                        * * * * * * * * * * *     ',
+'  *   *   *   *   *   * ** * * * * * * * * ** *   ',
+'                        * * * * * * * * * * *     ',
+'    *   *   *   *   *   ** * *         * * **   * ',
+'                        * * *           * * *     ',
+'  *   *   *   *   *   * ** * *         * * ** *   ',
+'                        * * * * * * * * * * *     ',
+'    *   *   *   *   *   ** * * * * * * * * **   * ',
+'                        * * * * * * * * * * *     ',
+'  *   *   *   *   *   * ** * * * * * * * * ** *   ',
+'                        * * * * * * * * * * *     ',
+'    *   *   *   *   *   ** * * * * * * * * **   * ',
+'                        * * * * * * * * * * *     ',
+'  *   *   *   *   *   * ** * * * * * * * * ** *   ',
+'                        * * * * * * * * * * *     ',
+'    *   *   *   *   *   ** * * * * * * * * **   * ',
+'                        * * * * * * * * * * *     ',
+'  *   *   *   *   *   * ** * * * * * * * * ** *   ',
+'                        * * * * * * * * * * *     ',
+'    *   *   *   *   *   ** * * * * * * * * **   * ',
+'                        *********************     ',
+'  *   *   *   *   *   *   *   *   *   *   *   *   ',
+'                                                  ',
+'    *   *   *   *   *   *   *   *   *   *   *   * ',
+'                                                  ');
+
+
+object RS_HD_FREECOL_UTILWindow : XmMainWindow {
+    arguments {
+        XmNwidth = 400;
+        XmNheight = 400;
+    };
+controls {
+    XmForm RS_HD_FREECOL_UTILForm;
+    };
+callbacks {
+    };
+};
+
+
+object RS_HD_FREECOL_UTILForm : XmForm {
+    arguments {
+    };
+controls {
+        XmText HeadText;
+        XmLabel RelationsText;
+        XmScrolledList RelationsList;
+        XmLabel PointsText;
+        XmScrolledList PointsList;
+        XmPushButton DeleteButton;
+        XmPushButton ExitButton;
+};
+callbacks {
+};
+};
+
+
+object HeadText : XmText {
+    arguments {
+	XmNy = 10;
+	XmNleftAttachment = XmATTACH_FORM;
+	XmNleftOffset = 10;
+	XmNrightAttachment = XmATTACH_FORM;
+	XmNrightOffset = 10;
+	XmNeditable = false;
+	XmNsensitive = false;
+	XmNshadowThickness = 1;
+    };
+controls {
+};
+callbacks {
+    MrmNcreateCallback = procedure CreateW('HeadText');
+};
+};
+
+object RelationsText : XmLabel {
+    arguments {
+        XmNx = 10;
+        XmNy = 50;
+        XmNlabelString = 'Relations:';
+    };
+controls {
+};
+callbacks {
+};
+};
+
+
+object RelationsList : XmScrolledList {
+    arguments {
+        XmNy = 80;
+	XmNleftAttachment = XmATTACH_FORM;
+	XmNleftOffset = 10;
+	XmNrightAttachment = XmATTACH_FORM;
+	XmNrightOffset = 10;
+        XmNvisibleItemCount = 5;
+        XmNselectionPolicy  = XmSINGLE_SELECT;
+    };
+controls {
+};
+callbacks {
+    XmNsingleSelectionCallback = procedure ListSelect('RelationsList');
+    MrmNcreateCallback = procedure CreateW('RelationsList');
+};
+};
+
+
+object PointsText : XmLabel {
+    arguments {
+        XmNx = 10;
+        XmNy = 230;
+        XmNlabelString = 'Points:';
+    };
+controls {
+};
+callbacks {
+};
+};
+
+
+object PointsList : XmScrolledList {
+    arguments {
+        XmNy = 260;
+	XmNtopAttachment = XmATTACH_WIDGET;
+	XmNtopOffset = 10;
+	XmNtopWidget = XmLabel PointsText;
+	XmNleftAttachment = XmATTACH_FORM;
+	XmNleftOffset = 10;
+	XmNrightAttachment = XmATTACH_FORM;
+	XmNrightOffset = 10;
+        XmNselectionPolicy  = XmSINGLE_SELECT;
+	XmNbottomAttachment = XmATTACH_FORM;
+	XmNbottomOffset = 50;
+    };
+controls {
+};
+callbacks {
+    XmNsingleSelectionCallback = procedure ListSelect('PointsList');
+    MrmNcreateCallback = procedure CreateW('PointsList');
+};
+};
+
+
+object DeleteButton : XmPushButton {
+    arguments {
+	XmNleftAttachment = XmATTACH_FORM;
+	XmNleftOffset = 10;
+	XmNbottomAttachment = XmATTACH_FORM;
+	XmNbottomOffset = 10;
+	XmNwidth = 100;
+        XmNlabelString = 'Delete';
+    };
+controls {
+};
+callbacks {
+    XmNactivateCallback = procedure ButtonFunction('DeleteButton');
+    MrmNcreateCallback = procedure CreateW('DeleteButton');
+};
+};
+
+
+object ExitButton : XmPushButton {
+    arguments {
+	XmNrightAttachment = XmATTACH_FORM;
+	XmNrightOffset = 10;
+	XmNbottomAttachment = XmATTACH_FORM;
+	XmNbottomOffset = 10;
+	XmNwidth = 100;
+        XmNlabelString = 'Exit';
+    };
+controls {
+};
+callbacks {
+    XmNactivateCallback = procedure ButtonFunction('ExitButton');
+};
+};
+
+
+end module;

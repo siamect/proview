@@ -1,0 +1,78 @@
+!  pwrb_c_RootVolumeConfig.wb_load -- Defines the class RootVolumeConfig.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+SObject pwrb:Class
+  Object RootVolumeConfig $ClassDef 195 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+      Attr Flags |= pwr_mClassDef_TopObject
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "RootVolumeConfig"
+      EndBody
+      Object Description $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+    EndObject
+    Object NavigatorPosnn $Menu
+      Object Pointed $Menu
+	Object OpenDb $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open Db..."
+	    Attr MethodName = "RootVolumeConfig-OpenDb"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object NavigatorPoson $Menu
+      Object Pointed $Menu
+	Object OpenDb $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open Db..."
+	    Attr MethodName = "RootVolumeConfig-OpenDb"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object NavigatorPosos $Menu
+      Object Pointed $Menu
+	Object OpenDb $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open Db..."
+	    Attr MethodName = "RootVolumeConfig-OpenDb"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object NavigatorPosms $Menu
+      Object Pointed $Menu
+	Object OpenDb $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open Db..."
+	    Attr MethodName = "RootVolumeConfig-OpenDb"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object NavigatorPosmn $Menu
+      Object Pointed $Menu
+	Object OpenDb $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open Db..."
+	    Attr MethodName = "RootVolumeConfig-OpenDb"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+  EndObject
+EndSObject

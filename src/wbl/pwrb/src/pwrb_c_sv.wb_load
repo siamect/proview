@@ -1,0 +1,48 @@
+!  pwrb_c_sv.wb_load -- Defines the class Sv.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  Digital calculated Value.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  String value.
+!  
+!  Configures a text string value in the Plant
+!  Configuration.
+!  
+!*/
+SObject pwrb:Class
+  Object Sv $ClassDef 303 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+      Attr PopEditor = 1
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "Sv"
+      EndBody
+      !/**
+      !  Description of the string value.
+      !*/
+      Object Description $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  The string value.
+      !*/
+      Object ActualValue $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject
+

@@ -1,0 +1,15 @@
+!  op_trendmoreform.uil -- <short description>
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  This file includes trend and fast moreform's textstrings.
+!
+module op_trendmoreform
+names = case_sensitive
+
+! INCLUDE FILES
+ 
+include file 'pwr_lang:inc_trendmoreform_txt.uil'; 
+
+end module;

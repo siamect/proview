@@ -1,0 +1,148 @@
+!  pwrb_c_out2p.wb_load -- Defines the class Out2P.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_pid.c
+!  Converts an analog signal into a binary signal which
+!  varies in the time. The binary output has a
+!  pulse-proportional relay action in the dead zone, if
+!  MinOut < MaxOut, else on/off-action with hysteresis.
+!  
+!  The digit 2 in the object name comes from the output
+!  which may have two distinct values with a two-step
+!  action; e.g. full on / full off but also with the
+!  meaning of open / closed, forward / backward, or right
+!  / left etc.
+!  
+!*/
+SObject pwrb:Class
+  Object Out2P $ClassDef 168 
+    Body SysBody
+      Attr Editor = pwr_eEditor_PlcEd
+      Attr Method = pwr_eMethod_Connections
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "out2p"
+      EndBody
+      !/**
+      !  Input signal, e.g. the OutChange of a Pid object.
+      !*/
+      Object OutVal $Input 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "OUT"
+        EndBody
+      EndObject
+      !/**
+      !  The performance of the output signal is different
+      !  depending on MinOut < MaxOut or MinOut ³ MaxOut. See
+      !  above.
+      !*/
+      Object Order $Output 2 
+        Body SysBody
+          Attr PgmName = "Order"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "on"
+        EndBody
+      EndObject
+      !/**
+      !  Program cycle period in seconds.
+      !*/
+      Object ScanTime $Intern 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "ScanTime"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_PRIVATE
+        EndBody
+      EndObject
+      !/**
+      !  The upper and lower end of the dead zone. Two cases
+      !  with different performance depending on MinOut < MaxOut
+      !  or MinOut >= MaxOut.
+      !*/
+      Object MaxOut $Intern 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MaxOut"
+        EndBody
+      EndObject
+      Object MinOut $Intern 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MinOut"
+        EndBody
+      EndObject
+      !/**
+      !  Pulse period, in seconds, at pulse-proportional relay
+      !  action.
+      !*/
+      Object Period $Intern 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "Period"
+        EndBody
+      EndObject
+      !/**
+      !  Accumulated time in seconds counted from the last
+      !  change of state.
+      !*/
+      Object RunTime $Intern 7 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "RunTime"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 154
+        Attr parameters[0] = 1
+        Attr parameters[1] = 0
+        Attr parameters[2] = 1
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 0
+        Attr graphindex = 0
+        Attr default_mask[0] = 1
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 0
+        Attr compmethod = 4
+        Attr compindex = 0
+	Attr executeordermethod = 2
+        Attr objname = "Out2P"
+        Attr graphname = "Out2P"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    Object Template Out2P
+      Body RtBody
+        Attr MaxOut = 100.0
+        Attr Period = 60
+      EndBody
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,67 @@
+!  pwrb_c_weblink.wb_load -- Defines the class WebLink.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  Web link.
+!
+!/**
+!  @Version 1.0
+!  The WebGraph object defines a web link in a proview website, and will
+!  be displayed as an entry in the menu frame.
+!  WebLink objects should be positioned as children to a WebHandler object.
+!  
+!
+!  Se also
+!  @classlink WebHandler pwrb_webhandler.html
+!  @classlink WebGraph pwrb_webgraph.html
+!*/
+SObject pwrb:Class
+  Object WebLink $ClassDef 301 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+      Attr PopEditor = 1
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "WebLink"
+      EndBody
+      !/**
+      !  The URL.
+      !*/
+      Object URL $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String256"
+        EndBody
+      EndObject
+      !/**
+      !  Text in the menu frame for this link
+      !*/
+      Object Text $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Target window.
+      !  Target window.
+      !  The window contains two frames, the menu frame to the left
+      !  and the applet frame to the right.
+      !  By default the URL is displayed in the applet window, but it is also
+      !  possible to display it in a separate window, or to also cover the menu
+      !  frame.
+      !
+      !  0: Right frame
+      !  1: Parent 
+      !  2: Separate window
+      !*/
+      Object WebTarget $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Enum"
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject
+

@@ -1,0 +1,43 @@
+!  ssab_c_RemCo.wb_load -- Defines the class RemCo.
+!
+!  PROVIEW/R
+!
+!  <Description>.
+!
+SObject SSAB:Class
+  !
+  ! RemCo
+  !
+  Object RemCo $ClassDef 12
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    !
+    ! RemCo Runtime Body
+    !
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "RemCo"
+      EndBody
+      !
+      ! Parameter Description
+      !
+      Object Description $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+    EndObject ! $ObjBodyDef
+    !
+    ! Template för RemCo
+    !
+    Object Template RemCo
+      Body RtBody
+      EndBody
+    EndObject
+  !
+  ! End RemCo
+  !
+  EndObject
+EndSObject

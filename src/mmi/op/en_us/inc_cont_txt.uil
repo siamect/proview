@@ -1,0 +1,16 @@
+!  inc_cont_txt.uil -- <short description>
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+
+value
+   title	: exported "PROVIEW/R  Operator Window";
+   icon		: exported "Operator Window  PROVIEW/R";
+   exit_button	: exported "Exit\\ Operator";
+   object_k	: exported "Object : ";		!STRING16
+   objNotExist  : exported "There is no information available on the object."; 
+   exitMessage  : exported compound_string("Do you really want to exit the operator environment?"); 
+   

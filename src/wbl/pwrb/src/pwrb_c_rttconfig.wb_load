@@ -1,0 +1,91 @@
+!  pwrb_c_rttconfig.wb_load -- Defines the class RttConfig.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+SObject pwrb:Class
+  Object RttConfig $ClassDef 276
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    !
+    ! Runtime Body
+    !
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "RttConfig"
+      EndBody
+      !
+      ! Parameter Description
+      !
+      Object DefaultVMSNode $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object UserObject $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      Object AlarmAutoLoad $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt8"
+        EndBody
+      EndObject
+      Object AlarmMessage $Attribute 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt8"
+        EndBody
+      EndObject
+      Object AlarmBeep $Attribute 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt8"
+        EndBody
+      EndObject
+      Object AlarmReturn $Attribute 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt8"
+        EndBody
+      EndObject
+      Object AlarmAck $Attribute 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt8"
+        EndBody
+      EndObject
+      Object DescriptionOff $Attribute 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object DefaultDirectory $Attribute 9
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      Object SymbolFileName $Attribute 10
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      Object ScanTime $Attribute 11
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+    EndObject
+    !
+    ! Template for RttConfig
+    !
+    Object Template RttConfig
+      Body RtBody
+        Attr DefaultVMSNode = ""
+      EndBody
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,359 @@
+!  pwrb_c_aarithm.wb_load -- Defines the class AArithm.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_macro_logic.h
+!  Optional programmable arithmetical expression in the C
+!  programming language. The expression is edited by means
+!  of the Attribute Editor at the object's Expression
+!  attribute. The expression, which does not include '=' ,
+!  is translated at the compilation.
+!  The Expression attribute is shown in the object.
+!  
+!  Up to 8 analog ( A1, ..., A8) and 8 digital ( d1, ...,
+!  d8) inputs.
+!  Digital inputs may be inverted either by means of the
+!  Attribute Editor, or by the logical operator '!' in the
+!  Expression attribute.
+!  
+!  Note! If an arithmetical operator is followed by a graph
+!  name, e.g. A1, the operator and the graph name have to
+!  be separated by a space or a left parenthesis.
+!  
+!  If an input is used as a constant quantity it is
+!  suitable to make the input invisible by marking Unused.
+!  We prefer to write the constant direct into the Expression
+!  if it is not supposed to be changed. In this case no
+!  input is used. On the other hand, if we have to adjust
+!  the constant in run time it is a good idea to make use
+!  of an Av or Dv object, as this will make it easier to
+!  get access to the constant from the object display.
+!  Unused inputs give compilation errors.
+!  Mathematical functions in the C programming language
+!  can be used, for instance:
+!  
+!  _ exp(A1)  exponential function
+!  _ log10(A1)             base-10 logarithm of A1
+!  _ sin(A1)  sine of A1
+!  _ (1.2E3 + A1) * ( A2 + 3.7 )   arithmetic, note the constants.
+!  - fabs( A1)             absolute value
+!  - pow(A1, A2)           A1 rasied to the A2-th power.
+!  - there is an often used conditional operator, '?', in
+!  the C programming language used to evaluate
+!  alternatives. In the following example '&&' means
+!  logical AND,
+!  (d1 && d2) ? A1 + A2 : A3, means that VAL = A1+ A2,
+!  if d1 and d2 are TRUE , otherwise VAL = A3
+!
+!  See Also
+!  DArithm, which calculates the value of logical
+!  expressions.
+!*/
+SObject pwrb:Class
+  Object AArithm $ClassDef 2 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_RtConnectionsAndDevBodies
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "aarithm"
+      EndBody
+      !/**
+      !  @Summary Analog quantity that can be included in the
+      !  Analog quantity that can be included in the
+      !  Expression attribute. If A1 is
+      !  connected, the external signal is used, otherwise the
+      !  internal attribute AIn1. Changes in AIn1, ..., AIn8 in
+      !  the run time system are taken into consideration.
+      !*/
+      Object AIn1 $Input 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "A1"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Analog quantity that can be included in the
+      !  Analog quantity that can be included in the
+      !  Expression attribute. If A2 is
+      !  connected, the external signal is used, otherwise the
+      !  internal attribute AIn2. Changes in AIn1, ..., AIn8 in
+      !  the run time system are taken into consideration.
+      !*/
+      Object AIn2 $Input 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "A2"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Analog quantity that can be included in the
+      !  Analog quantity that can be included in the
+      !  Expression attribute. If A3 is
+      !  connected, the external signal is used, otherwise the
+      !  internal attribute AIn3. Changes in AIn1, ..., AIn8 in
+      !  the run time system are taken into consideration.
+      !*/
+      Object AIn3 $Input 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "A3"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Analog quantity that can be included in the
+      !  Analog quantity that can be included in the
+      !  Expression attribute. If A4 is
+      !  connected, the external signal is used, otherwise the
+      !  internal attribute AIn4. Changes in AIn1, ..., AIn8 in
+      !  the run time system are taken into consideration.
+      !*/
+      Object AIn4 $Input 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "A4"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Analog quantity that can be included in the
+      !  Analog quantity that can be included in the
+      !  Expression attribute. If A5 is
+      !  connected, the external signal is used, otherwise the
+      !  internal attribute AIn5. Changes in AIn1, ..., AIn8 in
+      !  the run time system are taken into consideration.
+      !*/
+      Object AIn5 $Input 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "A5"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Analog quantity that can be included in the
+      !  Analog quantity that can be included in the
+      !  Expression attribute. If A6 is
+      !  connected, the external signal is used, otherwise the
+      !  internal attribute AIn6. Changes in AIn1, ..., AIn8 in
+      !  the run time system are taken into consideration.
+      !*/
+      Object AIn6 $Input 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "A6"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Analog quantity that can be included in the
+      !  Analog quantity that can be included in the
+      !  Expression attribute. If A7 is
+      !  connected, the external signal is used, otherwise the
+      !  internal attribute AIn7. Changes in AIn1, ..., AIn8 in
+      !  the run time system are taken into consideration.
+      !*/
+      Object AIn7 $Input 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "A7"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Analog quantity that can be included in the
+      !  Analog quantity that can be included in the
+      !  Expression attribute. If A8 is
+      !  connected, the external signal is used, otherwise the
+      !  internal attribute AIn8. Changes in AIn1, ..., AIn8 in
+      !  the run time system are taken into consideration.
+      !*/
+      Object AIn8 $Input 8 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "A8"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Digital quantity that can be included in the
+      !  Digital quantity that can be included in the
+      !  Expression attribute. If d1 is
+      !  connected, the external signal is used, otherwise the
+      !  internal attribute DIn1. Changes in DIn1, ..., DIn8 in
+      !  the run time system are taken into consideration.
+      !*/
+      Object DIn1 $Input 9 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "d1"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Digital quantity that can be included in the
+      !  Digital quantity that can be included in the
+      !  Expression attribute. If d2 is
+      !  connected, the external signal is used, otherwise the
+      !  internal attribute DIn2. Changes in DIn1, ..., DIn8 in
+      !  the run time system are taken into consideration.
+      !*/
+      Object DIn2 $Input 10 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "d2"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Digital quantity that can be included in the
+      !  Digital quantity that can be included in the
+      !  Expression attribute. If d3 is
+      !  connected, the external signal is used, otherwise the
+      !  internal attribute DIn3. Changes in DIn1, ..., DIn8 in
+      !  the run time system are taken into consideration.
+      !*/
+      Object DIn3 $Input 11 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "d3"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Digital quantity that can be included in the
+      !  Digital quantity that can be included in the
+      !  Expression attribute. If d4 is
+      !  connected, the external signal is used, otherwise the
+      !  internal attribute DIn4. Changes in DIn1, ..., DIn8 in
+      !  the run time system are taken into consideration.
+      !*/
+      Object DIn4 $Input 12 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "d4"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Digital quantity that can be included in the
+      !  Digital quantity that can be included in the
+      !  Expression attribute. If d5 is
+      !  connected, the external signal is used, otherwise the
+      !  internal attribute DIn5. Changes in DIn1, ..., DIn8 in
+      !  the run time system are taken into consideration.
+      !*/
+      Object DIn5 $Input 13 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "d5"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Digital quantity that can be included in the
+      !  Digital quantity that can be included in the
+      !  Expression attribute. If d6 is
+      !  connected, the external signal is used, otherwise the
+      !  internal attribute DIn6. Changes in DIn1, ..., DIn8 in
+      !  the run time system are taken into consideration.
+      !*/
+      Object DIn6 $Input 14 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "d6"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Digital quantity that can be included in the
+      !  Digital quantity that can be included in the
+      !  Expression attribute. If d7 is
+      !  connected, the external signal is used, otherwise the
+      !  internal attribute DIn7. Changes in DIn1, ..., DIn8 in
+      !  the run time system are taken into consideration.
+      !*/
+      Object DIn7 $Input 15 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "d7"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Digital quantity that can be included in the
+      !  Digital quantity that can be included in the
+      !  Expression attribute. If d8 is
+      !  connected, the external signal is used, otherwise the
+      !  internal attribute DIn8. Changes in DIn1, ..., DIn8 in
+      !  the run time system are taken into consideration.
+      !*/
+      Object DIn8 $Input 16 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "d8"
+        EndBody
+      EndObject
+      !/**
+      !  The result of the latest Expression evaluation.
+      !*/
+      Object ActVal $Output 17 
+        Body SysBody
+          Attr PgmName = "ActVal"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "VAL"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      !/**
+      !  Arithmetic expression in the C programming language.
+      !  The expression is edited by means of the Attribute
+      !  Editor and cannot be changed in the target environment.
+      !  
+      !  Example
+      !
+      !  This example shows how digital signals can be counted.
+      !  Some signals are counted if they are TRUE others if
+      !  they are FALSE and then the sum is stored. Note that
+      !  Di1 and Di2 are included in the sum if they are FALSE.
+      !*/
+      Object Expression $Intern 1 
+        Body SysBody
+          Attr PgmName = "Expr"
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr GraphName = "expr"
+          Attr NiNaAnnot = 1
+          Attr ConPointNr = 0
+        EndBody
+      EndObject
+      Object PlcNode $Buffer 2 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 132
+        Attr parameters[0] = 16
+        Attr parameters[1] = 0
+        Attr parameters[2] = 1
+        Attr parameters[3] = 0
+        Attr subwindows = 1
+        Attr graphmethod = 2
+        Attr graphindex = 0
+        Attr default_mask[0] = 1
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 3
+        Attr devbody_annotation = 1
+        Attr compmethod = 22
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+        Attr executeordermethod = 2
+        Attr objname = "AArit"
+        Attr graphname = "AArithm"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+  EndObject
+EndSObject

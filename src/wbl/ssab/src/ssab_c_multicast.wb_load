@@ -1,0 +1,45 @@
+!  ssab_c_MultiCast.wb_load -- Defines the class MultiCast.
+!
+!  PROVIEW/R
+!
+!  <Description>.
+!
+SObject SSAB:Class
+  !
+  ! MultiCast	-	MultiCast adresses for Remote ALCM
+  !
+  Object MultiCast $ClassDef 5
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    !
+    ! MultiCast Runtime Body
+    !
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "MultiCast"
+      EndBody
+      !
+      ! Parameter Address	Area and node number for 8 adresses
+      !
+      Object Address $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+          Attr Flags   |= PWR_MASK_ARRAY
+          Attr Elements = 16
+        EndBody
+      EndObject
+    EndObject
+    !
+    ! Template för MultiCast
+    !
+    Object Template MultiCast
+      Body RtBody
+      EndBody
+    EndObject
+  !
+  ! End MultiCast
+  !
+  EndObject ! $ClassDef
+EndSObject  ! SObject

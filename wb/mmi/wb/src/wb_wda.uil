@@ -1,0 +1,569 @@
+!  wb_wda.uil -- <short description>
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+module wb_wda
+        version = 'v1.0'
+        names = case_sensitive
+        objects = {
+                XmSeparator = gadget ;
+                }
+identifier
+	wda_ctx;
+procedure
+	wda_activate_exit(integer);
+	wda_activate_print(integer);
+	wda_activate_setclass(integer);
+	wda_activate_setattr(integer);
+	wda_activate_nextattr(integer);
+	wda_activate_prevattr(integer);
+	wda_activate_change_value(integer);
+	wda_activate_close_changeval(integer);
+	wda_activate_help(integer);
+	wda_create_msg_label(integer);
+	wda_create_cmd_prompt(integer);
+	wda_create_cmd_input(integer);
+	wda_create_cmd_scrolledinput(integer);
+	wda_create_cmd_scrolled_ok(integer);
+	wda_create_cmd_scrolled_ca(integer);
+	wda_create_wdanav_form(integer);
+	wda_activate_cmd_scrolledinput(integer);
+	wda_activate_cmd_scrolled_ok(integer);
+	wda_activate_cmd_scrolled_ca(integer);
+	wdaclass_activate_ok(integer);
+	wdaclass_activate_cancel(integer);
+	wdaclass_create_hiervalue(integer);
+	wdaclass_create_classvalue(integer);
+
+value
+	menu_font : font ('-*-Helvetica-Bold-R-Normal--12-*-*-*-P-*-ISO8859-1');
+
+!----------------------------------------
+! First declare the 'top level' widgets.  These are not controlled by
+! any other widgets.  They are each fetched individually as needed.
+!----------------------------------------
+
+object  wda_window : XmMainWindow
+{
+  arguments
+  {
+    XmNx = 0;
+    XmNy = 0;
+    XmNwidth = 450;
+    XmNheight = 400;
+  };
+  controls
+  {
+     XmMenuBar	wda_menu;
+     XmPanedWindow  main_pane;
+  };
+};
+
+
+object main_pane : XmPanedWindow
+{
+   arguments
+   {
+     XmNtraversalOn = false;
+   };
+   controls
+   {
+     XmPanedWindow wdanav_form;
+     XmForm form;
+   };
+};
+
+object form : XmForm
+{
+  arguments
+  {
+     XmNwidth = 500;
+     XmNheight = 50;
+     XmNpaneMinimum = 50;
+     XmNpaneMaximum = 200;
+!     XmNresizePolicy = XmRESIZE_NONE;
+  };
+  controls
+  {
+     XmPushButton	cmd_scrolled_ok;
+     XmPushButton	cmd_scrolled_cancel;
+     XmLabel	msg_label;
+     XmText	cmd_input;
+     XmScrolledText	cmd_scrolledinput;
+     XmLabel	cmd_prompt;
+  };
+};
+
+object wda_menu : XmMenuBar
+{
+  arguments
+  {
+    XmNorientation 	= XmHORIZONTAL;
+    XmNspacing  	= 15;
+    XmNmenuHelpWidget 	= XmCascadeButton help_entry; 
+  };
+  controls
+  {
+    XmCascadeButton file_entry;
+    XmCascadeButton functions_entry;
+    XmCascadeButton help_entry;
+  };
+};
+
+object file_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString  = compound_string("File");
+    XmNfontList	    = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Select Class");
+            XmNmnemonic = keysym('e');
+	    XmNaccelerator = "Ctrl<Key>C";
+	    XmNacceleratorText = compound_string('Ctrl+C');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wda_activate_setclass(wda_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Select Attribute");
+            XmNmnemonic = keysym('A');
+	    XmNaccelerator = "Ctrl<Key>A";
+	    XmNacceleratorText = compound_string('Ctrl+A');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wda_activate_setattr(wda_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Next Attribute");
+            XmNmnemonic = keysym('N');
+	    XmNaccelerator = "Ctrl<Key>N";
+	    XmNacceleratorText = compound_string('Ctrl+N');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wda_activate_nextattr(wda_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Previous Attribute");
+            XmNmnemonic = keysym('P');
+	    XmNaccelerator = "Ctrl<Key>P";
+	    XmNacceleratorText = compound_string('Ctrl+P');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wda_activate_prevattr(wda_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Print");
+            XmNmnemonic = keysym('r');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wda_activate_print(wda_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Close");
+            XmNmnemonic = keysym('C');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wda_activate_exit(wda_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+object functions_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString = compound_string("Functions");
+    XmNfontList	   = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Change value");
+            XmNmnemonic = keysym('H');
+	    XmNaccelerator = "Ctrl<Key>Q";
+	    XmNacceleratorText = compound_string('Ctrl+Q');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wda_activate_change_value(wda_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Close change value");
+            XmNmnemonic = keysym('C');
+	    XmNaccelerator = "Ctrl<Key>W";
+	    XmNacceleratorText = compound_string('Ctrl+W');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wda_activate_close_changeval(wda_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+
+object help_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString = compound_string("Help");
+    XmNfontList	   = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Help");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+	    XmNactivateCallback = procedure wda_activate_help(wda_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+object wdanav_form : XmPanedWindow
+{
+   arguments
+   {
+!     XmNleftAttachment 	= 	XmATTACH_FORM;
+!     XmNrightAttachment 	= XmATTACH_FORM;
+!     XmNbottomAttachment    	= XmATTACH_FORM;
+!     XmNbottomOffset        	= 150;
+!     XmNtopAttachment    	= XmATTACH_FORM;
+!     XmNheight = 300;
+!     XmNpaneMaximum = 700;
+   };
+   controls
+   {
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure wda_create_wdanav_form( wda_ctx);
+   };
+};
+
+object msg_label : XmLabel
+{
+   arguments
+   {
+     XmNborderWidth 		= 0;
+     XmNrightAttachment 	= XmATTACH_FORM;
+     XmNleftAttachment 		= XmATTACH_FORM;
+     XmNbottomAttachment    	= XmATTACH_FORM;
+     XmNalignment		= XmALIGNMENT_BEGINNING;
+     XmNlabelString		= "";
+     XmNheight			= 20;
+     XmNfontList	   		= menu_font;
+   };
+   controls
+   {
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure wda_create_msg_label( wda_ctx);
+   };
+};
+
+object cmd_prompt : XmLabel
+{
+   arguments
+   {
+!      XmNborderWidth 		= 1;
+      XmNleftAttachment 	= XmATTACH_FORM;
+!      XmNbottomAttachment    	= XmATTACH_FORM;
+!      XmNbottomOffset        	= 20;
+      XmNtopAttachment    	= XmATTACH_WIDGET;
+      XmNtopWidget		= XmPanedWindow wdanav_form;
+      XmNalignment		= XmALIGNMENT_BEGINNING;
+      XmNlabelString		= "";
+      XmNwidth			= 50;
+      XmNheight			= 30;
+      XmNfontList	   	= menu_font;
+   };
+   controls
+   {
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure wda_create_cmd_prompt ( wda_ctx) ;
+   };
+};
+
+object cmd_input : XmText
+{
+   arguments
+   {
+      XmNleftAttachment 	= XmATTACH_FORM;
+      XmNleftOffset        	= 50;
+      XmNrightAttachment 	= XmATTACH_FORM;
+!      XmNbottomAttachment    	= XmATTACH_FORM;
+!      XmNbottomOffset        	= 20;
+      XmNtopAttachment    	= XmATTACH_WIDGET;
+      XmNtopWidget		= XmPanedWindow wdanav_form;
+!      XmNeditMode		= XmMULTI_LINE_EDIT;
+      XmNrows 			= 1;
+      XmNborderWidth		= 0;
+      XmNshadowThickness	= 0;
+      XmNheight			= 30;
+      XmNfontList	   	= menu_font;
+   };
+   controls
+   {
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure wda_create_cmd_input( wda_ctx);
+   };
+};
+
+object cmd_scrolledinput : XmScrolledText
+{
+   arguments
+   {
+      XmNleftAttachment 	= XmATTACH_FORM;
+      XmNleftOffset        	= 50;
+      XmNrightAttachment 	= XmATTACH_FORM;
+      XmNbottomAttachment    	= XmATTACH_FORM;
+      XmNbottomOffset        	= 20;
+      XmNtopAttachment    	= XmATTACH_WIDGET;
+      XmNtopWidget		= XmPanedWindow wdanav_form;
+      XmNeditMode		= XmMULTI_LINE_EDIT;
+      XmNrows 			= 5;
+!      XmNborderWidth		= 0;
+!      XmNshadowThickness	= 0;
+!      XmNheight			= 130;
+      XmNfontList	   	= menu_font;
+   };
+   controls
+   {
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure wda_create_cmd_scrolledinput( wda_ctx);
+     XmNactivateCallback = procedure wda_activate_cmd_scrolledinput( wda_ctx);
+   };
+};
+
+object cmd_scrolled_ok : XmPushButton
+{ 
+  arguments
+  {
+    XmNlabelString = compound_string("Ok");
+    XmNleftAttachment 		= XmATTACH_FORM;
+    XmNleftOffset        	= 50;
+    XmNbottomAttachment    	= XmATTACH_FORM;
+!    XmNbottomOffset        	= 1;
+    XmNalignment		= XmALIGNMENT_BEGINNING;
+    XmNwidth			= 50;
+    XmNheight			= 20;
+    XmNfontList	   		= menu_font;
+  };
+  callbacks
+  {
+    MrmNcreateCallback = procedure wda_create_cmd_scrolled_ok( wda_ctx);
+    XmNactivateCallback = procedure wda_activate_cmd_scrolled_ok(wda_ctx);
+  };
+};
+object cmd_scrolled_cancel : XmPushButton
+{ 
+  arguments
+  {
+    XmNlabelString = compound_string("Cancel");
+    XmNleftAttachment 		= XmATTACH_FORM;
+    XmNleftOffset        	= 150;
+    XmNbottomAttachment    	= XmATTACH_FORM;
+!    XmNbottomOffset        	= 1;
+    XmNalignment		= XmALIGNMENT_BEGINNING;
+    XmNwidth			= 50;
+    XmNheight			= 20;
+    XmNfontList	   		= menu_font;
+  };
+  callbacks
+  {
+    MrmNcreateCallback = procedure wda_create_cmd_scrolled_ca( wda_ctx);
+    XmNactivateCallback = procedure wda_activate_cmd_scrolled_ca(wda_ctx);
+  };
+};
+
+object wdaclass_dia : XmFormDialog {
+   arguments {
+     XmNwidth = 600;
+     XmNheight = 180;
+     XmNinitialFocus = XmText classvalue;
+     XmNautoUnmanage     = false;
+     XmNbuttonFontList	   	= menu_font;
+     XmNlabelFontList	   	= menu_font;
+     XmNtextFontList	   	= menu_font;
+     XmNtitle		= "Class Dialog";
+   };
+   controls {
+     XmLabel	     	classlabel;
+     XmLabel	     	hierlabel;
+     XmText		classvalue;
+     XmText		hiervalue;
+     XmPushButton	ok;
+     XmPushButton	cancel;
+   };
+};
+
+object ok : XmPushButton {
+   arguments {
+      XmNbottomAttachment 	= XmATTACH_FORM;
+      XmNleftAttachment 	= XmATTACH_FORM;
+      XmNleftOffset	        = 30;
+      XmNbottomOffset	        = 10;
+      XmNwidth = 65;
+      XmNheight = 30;
+      XmNlabelString = compound_string("OK");
+      XmNfontList	    = menu_font;
+   };
+   callbacks {
+      XmNactivateCallback = procedure wdaclass_activate_ok ( wda_ctx) ;
+   };
+};
+object cancel : XmPushButton {
+   arguments {
+      XmNbottomAttachment 	= XmATTACH_FORM;
+      XmNrightAttachment 	= XmATTACH_FORM;
+      XmNrightOffset	        = 30;
+      XmNbottomOffset	        = 10;
+      XmNwidth = 65;
+      XmNheight = 30;
+      XmNlabelString = compound_string("Cancel");
+      XmNfontList	    = menu_font;
+   };
+   callbacks {
+      XmNactivateCallback = procedure wdaclass_activate_cancel ( wda_ctx) ;
+   };
+};
+
+object classvalue : XmText {
+   arguments {
+      XmNresizeHeight 	= false;
+      XmNmarginHeight 	= 1;
+      XmNy 			= 30;
+      XmNrows 			= 1;
+      XmNleftAttachment 	= XmATTACH_FORM;
+      XmNleftOffset	        = 130;
+      XmNrightAttachment 	= XmATTACH_FORM;
+      XmNrightOffset	        = 20;
+      XmNfontList	    = menu_font;
+   };
+   callbacks {
+     MrmNcreateCallback 	= procedure wdaclass_create_classvalue(wda_ctx);
+   };
+};
+
+object hiervalue : XmText
+{
+   arguments {
+      XmNresizeHeight 	= false;
+      XmNmarginHeight 	= 1;
+      XmNy 		= 60;
+      XmNrows 		= 1;
+      XmNleftAttachment 	= XmATTACH_FORM;
+      XmNleftOffset	        = 130;
+      XmNrightAttachment 	= XmATTACH_FORM;
+      XmNrightOffset	        = 20;
+      XmNfontList	= menu_font;
+   };
+   callbacks {
+      MrmNcreateCallback 	= procedure wdaclass_create_hiervalue(wda_ctx);
+   };
+};
+
+object classlabel : XmLabel {
+   arguments {
+	XmNx 		= 40;
+	XmNy 		= 30;
+        XmNlabelString	= "Class";
+	XmNfontList	    = menu_font;
+   };
+};
+
+object hierlabel : XmLabel {
+   arguments {
+	XmNx 		= 40;
+	XmNy 		= 60;
+        XmNlabelString	= "Hierarchy";
+        XmNfontList	    = menu_font;
+   };
+};
+
+end module;
+

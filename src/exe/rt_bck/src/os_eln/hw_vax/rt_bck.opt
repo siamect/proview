@@ -1,0 +1,16 @@
+!  rt_bck.opt -- <short description>
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+pwr_obj:rt_bck.obj
+!<  share>psect_attr=_CTYPE_,exe
+!<noshare>pwr_lib:libpwr_rt/lib
+!<noshare>pwr_lib:libpwr_co/lib
+!<  share>pwr_exe:libpwr/share
+!<noshare>pwr_obj:pwr_msg_co.obj
+!<noshare>pwr_obj:pwr_msg_rt.obj
+!<noshare>eln$rpc_lib:librpc/lib
+!<noshare>eln$:rtl.olb/inc=(ker$msgdef_text,eln$msgdef_text)

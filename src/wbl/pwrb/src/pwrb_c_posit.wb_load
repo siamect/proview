@@ -1,0 +1,387 @@
+!  pwrb_c_posit.wb_load -- Defines the class Posit.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_drive.c
+!  Positioner.
+!  
+!  The positioning is carried out, without any hysteresis,
+!  by the output signals Order1 and Order2.
+!  One of two operating modes, MANUAL / AUTO, is selected
+!  by means of the output signal ManMode in the following
+!  way:
+!       ...
+!*/
+SObject pwrb:Class
+  Object Posit $ClassDef 183 
+    Body SysBody
+       Attr Editor = pwr_eEditor_PlcEd
+       Attr Method = pwr_eMethod_Connections
+       Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "posit"
+      EndBody
+      !/**
+      !  Specifies process value of the position.
+      !*/
+      Object PosVal $Input 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "PV"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  Specifies set point of the position disregarding mode.
+      !  A connected input signal is read only in AUTO mode. It
+      !  means that it is possible to write in the attribute at
+      !  MANUAL mode without any interference from an outer
+      !  signal.
+      !*/
+      Object SetPos $Input 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "SV"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies a start positioning request in operational
+      !  mode AUTO. FALSE has no meaning. The transition FALSE
+      !  -> TRUE means start positioning request and, if Reset
+      !  is FALSE, PosOn becomes TRUE and the positioning
+      !  starts.
+      !*/
+      Object AutoPos $Input 3 
+        Body SysBody
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOINVERT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "pos"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies a stop positioning request disregarding the
+      !  mode. FALSE has no meaning; TRUE means a stop
+      !  positioning request and prevents any further
+      !  positioning as long as it is set.
+      !*/
+      Object Reset $Input 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "res"
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      !/**
+      !  Specifies required operational mode, MANUAL or AUTO.
+      !  Used as an ordinary parameter, e.g. it may be written
+      !  into from display programs. The advantage of placing
+      !  this attribute as an output is that it will be easier
+      !  to use it in the graphic configuration.
+      !  
+      !    FALSE -- required operational mode is AUTO
+      !    TRUE  --    -  "  -              MANUAL
+      !*/
+      Object ManMode $Output 5 
+        Body SysBody
+          Attr PgmName = "ManMode"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "man"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies if positioning continues or not. FALSE means
+      !  no positioning at the moment and TRUE means that
+      !  positioning is running. In MANUAL mode the positioning
+      !  is started, if Reset is FALSE, by setting PosOn to
+      !  TRUE, and it can be stopped by setting PosOn to FALSE.
+      !*/
+      Object PosOn $Output 6 
+        Body SysBody
+          Attr PgmName = "PosOn"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "pon"
+        EndBody
+      EndObject
+      !/**
+      !  This operational order specifies a backward order, i.e.
+      !  towards less PosVal. FALSE means no backward order, and
+      !  TRUE means a backward order as long as PosOn is TRUE
+      !  and PosVal > SetPos + DeadZone1.
+      !*/
+      Object Order1 $Output 7 
+        Body SysBody
+          Attr PgmName = "Order1"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "o1"
+        EndBody
+      EndObject
+      !/**
+      !  This operational order specifies a forward order, i.e.
+      !  towards greater PosVal. FALSE means no forward order
+      !  and TRUE means a forward order as long as PosOn is TRUE
+      !  and PosVal < SetPos - DeadZone2.
+      !*/
+      Object Order2 $Output 8 
+        Body SysBody
+          Attr PgmName = "Order2"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "o2"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies if PosVal is in the 'target' range or not.
+      !  FALSE means no and TRUE means that the answer is yes.
+      !*/
+      Object InPlace $Output 9 
+        Body SysBody
+          Attr PgmName = "InPlace"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "inp"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the position error (= PosVal - SetPos). It is
+      !  calculated continuously.
+      !*/
+      Object PosError $Output 10 
+        Body SysBody
+          Attr PgmName = "PosError"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "ERR"
+        EndBody
+      EndObject
+      !/**
+      !  The values, which have to be >= 0, specify the lower and
+      !  the upper end in the 'target' range.
+      !*/
+      Object DeadZone1 $Intern 11 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "DeadZone1"
+        EndBody
+      EndObject
+      !/**
+      !  The values, which have to be >= 0, specify the lower and
+      !  the upper end in the 'target' range.
+      !*/
+      Object DeadZone2 $Intern 12 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "DeadZone2"
+        EndBody
+      EndObject
+      ! ++
+      ! Timer struct
+      !
+      Object TimerFlag $Intern 13 
+        Body SysBody
+          Attr PgmName = "TimerFlag"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Points to the next element in the timer queue.
+      !*/
+      Object TimerNext $Intern 14 
+        Body SysBody
+          Attr PgmName = "TimerNext"
+          Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Number of remaining ticks.
+      !*/
+      Object TimerCount $Intern 15 
+        Body SysBody
+          Attr PgmName = "TimerCount"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Points to a Do or Dv object or, if these are not used,
+      !  to TimerDoDum. After a time of TimerTime the signal
+      !  specified by TimerDo is cleared.
+      !*/
+      Object TimerDO $Intern 16 
+        Body SysBody
+          Attr PgmName = "TimerDO"
+          Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the time, in seconds, during which the PosVal
+      !  has to be in the 'target' range to interrupt the
+      !  positioning. See above.
+      !*/
+      Object TimerTime $Intern 17 
+        Body SysBody
+          Attr PgmName = "TimerTime"
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Dummy. If TimerDoDum does not point to a Do or Dv
+      !  object it points to this attribute.
+      !*/
+      Object TimerDODum $Intern 18 
+        Body SysBody
+          Attr PgmName = "TimerDODum"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Identity of this object is set at load file creation.
+      !  Used by the run time system.
+      !*/
+      Object TimerObjDId $Intern 19 
+        Body SysBody
+          Attr Flags |= PWR_MASK_OBJDIDSELF
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      !/**
+      !  The operator's authorities to change TimerTime can be
+      !  restricted. Not implemented.
+      !  
+      !   0   -- Changes not allowed.
+      !   != 0 -- Changes allowed.
+      !*/
+      Object TimerAcc $Intern 20 
+        Body SysBody
+          Attr PgmName = "TimerAcc"
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies a valid interval at changes made by the
+      !  operator on TimerTime.
+      !
+      !  TimerMin <= TimerTime <= TimerMax
+      !*/
+      Object TimerMin $Intern 21 
+        Body SysBody
+          Attr PgmName = "TimerMin"
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      Object TimerMax $Intern 22 
+        Body SysBody
+          Attr PgmName = "TimerMax"
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !
+      ! End Timer struct
+      ! --
+      Object ManAcc $Intern 23 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "ManAcc"
+        EndBody
+      EndObject
+      Object ShowMin $Intern 24 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "ShowMin"
+        EndBody
+      EndObject
+      Object ShowMax $Intern 25 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "ShowMax"
+        EndBody
+      EndObject
+      Object SetAcc $Intern 26 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "SetAcc"
+        EndBody
+      EndObject
+      Object SetMin $Intern 27 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "SetMin"
+        EndBody
+      EndObject
+      Object SetMax $Intern 28 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "SetMax"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 183
+        Attr parameters[0] = 4
+        Attr parameters[1] = 0
+        Attr parameters[2] = 6
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 0
+        Attr graphindex = 0
+        Attr default_mask[0] = 15
+        Attr default_mask[1] = 30
+        Attr segname_annotation = 1
+        Attr compmethod = 4
+        Attr compindex = 0
+        Attr executeordermethod = 2
+        Attr objname = "Posit"
+        Attr graphname = "Posit"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    Object Template Posit
+      Body RtBody
+        Attr TimerTime = 10.0
+      EndBody
+    EndObject
+  EndObject
+EndSObject

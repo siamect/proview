@@ -1,0 +1,120 @@
+!  tlog_c_COtLog.wb_load -- Defines the class COtLog.
+!
+!  PROVIEW/R
+!
+!  <Description>.
+!
+SObject TLog:Class
+  Object COtLog $ClassDef 11
+    Body SysBody
+      Attr Editor = pwr_eEditor_PlcEd
+      Attr Method = pwr_eMethod_RtConnectionsAndDevBodies
+    EndBody
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "COtLog"
+      EndBody
+      Object In $Input 1
+        Body SysBody
+	  Attr Flags |= PWR_MASK_RTVIRTUAL
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      Object Cond $Input 2
+        Body SysBody
+	  Attr Flags |= PWR_MASK_RTVIRTUAL
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "con"
+        EndBody
+      EndObject
+      Object CondOld $Intern 3
+        Body SysBody
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object LogSignal $Intern 4
+        Body SysBody
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object LogTime $Intern 5
+        Body SysBody
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+          Attr TypeRef = "pwrs:Type-$Time"
+        EndBody
+      EndObject
+      Object LogText $Intern 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+          Attr NiNaAnnot = 2
+          Attr NiNaCond = 1
+        EndBody
+      EndObject
+      Object Attribute $Intern 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$AttrRef"
+        EndBody
+      EndObject
+      Object LogValue $Intern 8
+        Body SysBody
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2
+      Object ShowLogText $Intern 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object PlcNode $Buffer 2
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 106
+        Attr parameters[0] = 2
+        Attr parameters[1] = 0
+        Attr parameters[2] = 0
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 15
+        Attr graphindex = 1
+        Attr default_mask[0] = 3
+        Attr default_mask[1] = 0
+        Attr segname_annotation = 1
+        Attr rtbody_annotation = 1
+        Attr compmethod = 47
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+        Attr objname = "COtLog"
+        Attr graphname = "COtLog"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    !
+    ! Template object 
+    !
+    Object Template COtLog
+      Body DevBody
+        Attr ShowLogText = 0
+      EndBody
+    EndObject
+  EndObject
+EndSObject

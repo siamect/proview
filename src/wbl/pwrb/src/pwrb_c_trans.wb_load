@@ -1,0 +1,204 @@
+!  pwrb_c_trans.wb_load -- Defines the class Trans.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_macro_grafcet.h
+!  A Grafcet transition condition.
+!  
+!  If the transition condition (see below) is satisfied,
+!  and every step object (i.e. an object by the type Step,
+!  InitStep, or SubStep) directly connected to the input
+!  of the Trans object is active, the active status will
+!  be transferred to all the step objects directly
+!  connected to the output of the Trans object, while the
+!  earlier active step objects become inactive.
+!  
+!  The possible transition conditions are as follows:
+!  
+!  1  an underlying conditional window. The objects in the
+!     window get a WindowCond object (see p. 3-394) as
+!     parent object. The status of the conditional window
+!     is stored in the Trans object by means of a SetCond
+!     object in the window.
+!  2  directly in a combinational circuit connected to the
+!     left horizontal part of the symbol (see T4 in figure
+!     3-55 on p. 3-366).
+!  3
+!     the condition is set as always TRUE ( Cond = 1 ) or
+!     always FALSE ( Cond = 0 ) at the configuring.
+!  To the vertical line of the symbol step objects are
+!  connected. When status is transferred it is always from
+!  the step/s/ that precede the Trans object to the
+!  step/s/ that follow the Trans object.
+!  
+!  The operator gets the opportunity to control the
+!  transition condition manually by setting Man = 1. The
+!  conditional window is being executed as usual, but the
+!  operator can override the transition condition by
+!  setting OpCond. As soon as a manually initiated
+!  transition has taken place the OpCond flag is cleared
+!  by the PROVIEW/R system which implies that the operator
+!  has to set the OpCond flag to trigger each transition.
+!  The Man flag remains set until cleared by the operator.
+!  At reset of a sequential chain ( see the description of
+!  InitStep, are neither the Man flag nor the
+!  OpCond flag is cleared.
+!*/
+SObject pwrb:Class
+  Object Trans $ClassDef 242 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "trans"
+      EndBody
+      Object InStep $Input 1 
+        Body SysBody
+          Attr PgmName = "InStep"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_RTVIRTUAL
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "In"
+          Attr ConPointNr = 0
+        EndBody
+      EndObject
+      Object OutStep $Input 2 
+        Body SysBody
+          Attr PgmName = "OutStep"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_RTVIRTUAL
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "Out"
+          Attr ConPointNr = 2
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the conditional status. The condition is set
+      !  in one of the following ways:
+      !    · a SetCond object in an underlying conditional
+      !      window
+      !  
+      !    · a direct connection to the transition
+      !*/
+      Object Cond $Input 3 
+        Body SysBody
+          Attr PgmName = "Cond"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "Cond"
+          Attr ConPointNr = 1
+	  Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      !/**
+      !  Saves the status of preceding steps. Used to limit the
+      !  maximum of transitions to one per sequential chain and
+      !  executing cycle.
+      !*/
+      Object ActOld $Intern 4 
+        Body SysBody
+          Attr PgmName = "ActOld"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "ActOld"
+          Attr ConPointNr = 0
+        EndBody
+      EndObject
+      !/**
+      !  Specifies whether to enable or disable a manually
+      !  initiated transition. FALSE disables a manually
+      !  initiated transition and TRUE enables it.
+      !*/
+      Object Man $Intern 5 
+        Body SysBody
+          Attr PgmName = "Man"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "Man"
+          Attr ConPointNr = 0
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the status of the manual condition. The
+      !  transition takes place when OpCond and Man both are
+      !  TRUE. The OpCond flag is cleared by the PROVIEW/R
+      !  system after the transition.
+      !*/
+      Object OpCond $Intern 6 
+        Body SysBody
+          Attr PgmName = "OpCond"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "OpCond"
+          Attr ConPointNr = 0
+        EndBody
+      EndObject
+      !/**
+      !  The operator's authorities to initiate a transition
+      !  manually.
+      !   0   -- Changes not allowed.
+      !   != 0 -- Changes allowed.
+      !*/
+      Object Acc $Intern 7 
+        Body SysBody
+          Attr PgmName = "Acc"
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Acc"
+          Attr ConPointNr = 0
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 33
+        Attr parameters[0] = 3
+        Attr parameters[1] = 0
+        Attr parameters[2] = 0
+        Attr parameters[3] = 0
+        Attr subwindows = 1
+        Attr subwindow_class[0] = "pwrb:Class-WindowCond"
+        Attr graphmethod = 4
+        Attr graphindex = 5
+        Attr default_mask[0] = 3
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 1
+        Attr compmethod = 15
+        Attr compindex = 1
+        Attr tracemethod = 3
+        Attr traceindex = 1
+	Attr executeordermethod = 3
+        Attr objname = "T"
+        Attr graphname = "T"
+        Attr debugpar = "Cond"
+      EndBody
+    EndObject
+    Object Template Trans
+      Body RtBody
+        Attr Cond = 1
+      EndBody
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,18 @@
+!  pwrs_td_xref.wb_load -- Defines the type XRef
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+SObject pwrs:Type
+  Object $XRef $TypeDef 10
+    Body SysBody
+      Attr Type = pwr_eType_String
+      Attr Size = 32
+      Attr TypeRef = "pwrs:Type-$String"
+      Attr Elements = 32
+    EndBody
+  EndObject
+EndSObject

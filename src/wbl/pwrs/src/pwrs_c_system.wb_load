@@ -1,0 +1,61 @@
+!  pwrs_c_system.wb_load -- Defines the class System.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+!/**
+!  @Version 1.0
+!  An object common for all the nodes in a PROVIEW/R
+!  system.
+!  
+!  SystemName is used to identify one PROVIEW/R system
+!  among others.
+!  The object is placed on the top level in the directory volume.
+!*/
+SObject pwrs:Class
+  Object $System $ClassDef pwr_eCix_System
+    Body SysBody
+      Attr Flags |= pwr_mClassDef_System
+      Attr Flags |= pwr_mClassDef_TopObject
+    EndBody
+    Object SysBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "System"
+      EndBody
+      !/**
+      !  Optional text to describe the use of the object.
+      !*/
+      Object Description $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the name or notation of a PROVIEW/R system.
+      !  
+      !  The SystemName is used by load data files and for
+      !  authorisations.
+      !*/
+      Object SystemName $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the name of the system group that the system
+      !  is a member of.
+      !  The SystemGroup is used for authorisation.
+      !*/
+      Object SystemGroup $Attribute 9
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+    EndObject
+    Object Template $System
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,2435 @@
+!  op_hel.uil -- <short description>
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  This module defines the widget hierarchy for the event history
+!  window(s).
+!
+module op_hel
+    names = case_sensitive
+
+!objects = { 
+!          XmPushButton     = gadget;           
+!          XmLabel           = gadget; 
+!	  }          
+
+! INCLUDE FILES
+ 
+include file 'pwr_lang:inc_standard_txt.uil';
+include file 'pwr_lang:inc_hel_txt.uil';
+
+! APPLICATION SHELL ICONS
+
+value
+    bitmap_colors : color_table ( background color = ' ', foreground color = '*');
+! Icon size 50x50
+    HistWinIcon : exported icon ( color_table=bitmap_colors,
+
+'                                                  ',
+'                                                  ',
+'  * * * * * * * * * * * * * * * * * * * * * * * **',
+' * * * * * * * * * * * * * * * * * * * * * * * * *',
+'  * * * * * * * * * * * * * * * * * * * * * * * **',
+' * * * * * * * * * * * * * * * * * * * * * * * * *',
+'  * * * * * * * * * * * * * * * * * * * * * * * **',
+' * * * * * * * * * * * * * * * * * * * * * * * * *',
+'  * * * * * * * * * * * * * * * * * * * * * * * **',
+' * * * * * * * * * * * * * * * * * * * * * * * * *',
+'  * * * * * * * * * * * * * * * * * * * * * * * **',
+' * * * * * * * * ***************************** * *',
+'  * * * * * * * ***************************** * **',
+' * * * * * * * ** ***** ***** ***** ***** ** * * *',
+'  * * * * * * ***************************** * * **',
+' * * * * * * * *************************** *** * *',
+'  * * * * * * ****** ***** ***** ***** **** * * **',
+' * * * * * * ***************************** * * * *',
+'  * * * * * ***************************** *** * **',
+' * * * * * ****** ***** ***** ***** **** *** * * *',
+'  * * * * * ***************************** * * * **',
+' * * * * * ***************************** * * * * *',
+'  * * * * **** ***** ***** ***** ****** *** * * **',
+' * * * * ***************************** *** * * * *',
+'  * * * * ***************************** * * * * **',
+' * * * * ** ***** ***** ***** ******** * * * * * *',
+'  * * * ***************************** *** * * * **',
+' * * * ***************************** *** * * * * *',
+'  * * ******** ***** ***** ***** ** * * * * * * **',
+' * * * ***************************** * * * * * * *',
+'  * * ***************************** *** * * * * **',
+' * * ****** ***** ***** ***** **** *** * * * * * *',
+'  * ***************************** * * * * * * * **',
+' * * ***************************** * * * * * * * *',
+'  * ***************************** *** * * * * * **',
+' * **                            *** * * * * * * *',
+'  * * * * * * * * * * * * * * * * * * * * * * * **',
+' * ** * * * * * * * * * * * * * ** * * * * * * * *',
+'  * *                            ** * * * * * * **',
+' * ******************************* * * * * * * * *',
+'  * * * * * * * * * * * * * * * * * * * * * * * **',
+' * * * * * * * * * * * * * * * * * * * * * * * * *',
+'  * * * * * * * * * * * * * * * * * * * * * * * **',
+' * * * * * * * * * * * * * * * * * * * * * * * * *',
+'  * * * * * * * * * * * * * * * * * * * * * * * **',
+' * * * * * * * * * * * * * * * * * * * * * * * * *',
+'  * * * * * * * * * * * * * * * * * * * * * * * **',
+' * * * * * * * * * * * * * * * * * * * * * * * * *',
+'  * * * * * * * * * * * * * * * * * * * * * * * **',
+' *************************************************');
+
+value
+! Icon size 50x50
+    StatWinIcon : exported icon ( color_table=bitmap_colors,
+
+'                                                  ',
+'                                                  ',
+'  * * * * * * * * * * * * * * * * * * * * * * * **',
+' * * * * * * * * * * * * * * * * * * * * * * * * *',
+'  ************************* * * * * * * * * * * **',
+' * *                      ** * * * * * * * * * * *',
+'  **                      * * * * * * * * * * * **',
+' * *                      ** * * * * * * * * * * *',
+'  **                      * * * * * * * * * * * **',
+' * *                   ** ** * * * * * * * * * * *',
+'  **          **       ** * * * * * * * * * * * **',
+' * * **       **       ** ******************** * *',
+'  ** **    ** **       ** ******************* * **',
+' * * ** ** ** **    ** ** *** ***** ***** ** * * *',
+'  ** ** ** ** **    ** ** ***************** * * **',
+' * * ** ** ** **    ** ** **************** *** * *',
+'  ** ** ** ** ** ** ** ** ****** ***** **** * * **',
+' * * ** ** ** ** ** ** ** **************** * * * *',
+'  ** ** ** ** ** ** ** ** *************** *** * **',
+' * * ** ** ** ** ** ** ** *** ***** **** *** * * *',
+'  *************************************** * * * **',
+' * * * * * ***************************** * * * * *',
+'  * * * * **** ***** ***** ***** ****** *** * * **',
+' * * * * ***************************** *** * * * *',
+'  * * * * ***************************** * * * * **',
+' * * * * ** ***** ***** ***** ******** * * * * * *',
+'  * * * ***************************** *** * * * **',
+' * * * ***************************** *** * * * * *',
+'  * * ******** ***** ***** ***** ** * * * * * * **',
+' * * * ***************************** * * * * * * *',
+'  * * ***************************** *** * * * * **',
+' * * ****** ***** ***** ***** **** *** * * * * * *',
+'  * ***************************** * * * * * * * **',
+' * * ***************************** * * * * * * * *',
+'  * ***************************** *** * * * * * **',
+' * **                            *** * * * * * * *',
+'  * * * * * * * * * * * * * * * * * * * * * * * **',
+' * ** * * * * * * * * * * * * * ** * * * * * * * *',
+'  * *                            ** * * * * * * **',
+' * ******************************* * * * * * * * *',
+'  * * * * * * * * * * * * * * * * * * * * * * * **',
+' * * * * * * * * * * * * * * * * * * * * * * * * *',
+'  * * * * * * * * * * * * * * * * * * * * * * * **',
+' * * * * * * * * * * * * * * * * * * * * * * * * *',
+'  * * * * * * * * * * * * * * * * * * * * * * * **',
+' * * * * * * * * * * * * * * * * * * * * * * * * *',
+'  * * * * * * * * * * * * * * * * * * * * * * * **',
+' * * * * * * * * * * * * * * * * * * * * * * * * *',
+'  * * * * * * * * * * * * * * * * * * * * * * * **',
+' *************************************************');
+
+
+
+value
+
+! CONSTANTS, Defining the geometry of the application.
+    ButtonWidth 		: 70;
+    BigButtonWidth 		: 140;
+
+    SvnBottomOffset		: 5;
+    SpaceBetweenButtonVert	: 3;
+    SpaceBetweenButtonHoriz	: 25;
+    ButtonBottomOffset		: 5;
+    ButtonLeftOffset		: 10;
+    ButtonRightOffset		: 10;
+    labelLeftFormOffset		: 5;
+    labelTopFormOffset		: 9;
+    labelOptionTopOffset	: -3;
+    labelTextTopOffset		: -6;
+    timeObjectOffset		: 75;
+    objectValueOffset		: 20;
+    valuePrioOffset		: 20;
+    prioEventOffset		: 20;
+    eventTextOffset		: 20;
+    toggleHorizOffset		: 20;
+ 
+
+value
+	hformtitle		: compound_string(histformtitle);
+        sformtitle		: compound_string(statformtitle);
+        OKlabel			: compound_string(OK);
+	Applylabel		: compound_string(Apply);
+	Cancellabel		: compound_string(Cancel);
+	timelabel		: compound_string(time);
+	objectlabel		: compound_string(objectname);
+	causelabel		: compound_string(cause);
+	starttimelabel		: compound_string(starttime);
+	prioritylabel		: compound_string(priority);
+        todaylabel              : compound_string(today);
+        yesterdaylabel          : compound_string(yesterday);
+        thisweeklabel           : compound_string(thisweek);
+        lastweeklabel           : compound_string(lastweek);
+        thismonthlabel          : compound_string(thismonth);
+        lastmonthlabel          : compound_string(lastmonth);
+	alllabel		: compound_string(all);
+ 	stoptimelabel		: compound_string(stoptime);
+	daybreaklabel		: compound_string(daybreak);
+	eventtypelabel		: compound_string(eventtype);
+	eventtextlabel		: compound_string(eventtext);
+	a_alarmlabel		: compound_string(a_alarm);
+	b_alarmlabel		: compound_string(b_alarm);
+	c_alarmlabel		: compound_string(c_alarm);
+	d_alarmlabel		: compound_string(d_alarm);
+	messagelabel		: compound_string(message);
+	activelabel		: compound_string(active);
+	acknowledgelabel	: compound_string(acknowledge);
+	returnlabel		: compound_string(return);
+	blocklabel		: compound_string(block);
+	unblocklabel		: compound_string(unblock);
+	lostlabel		: compound_string(lost);
+	limitlabel		: compound_string(limit);
+	highlabel		: compound_string(high);
+	lowlabel		: compound_string(low);
+	digitallabel		: compound_string(digital);
+	otherlabel		: compound_string(other);
+	nodelabel		: compound_string(node);
+	presentationlabel	: compound_string(presentation);
+	sortlabel		: compound_string(sort);
+	namelabel		: compound_string(name);
+        searchtimelabel		: compound_string(searchtime);
+	searchresultlabel	: compound_string(searchresult);
+
+identifier
+	hel_ctx;
+
+
+! CALLBACK PROCEDURES
+procedure
+
+! Callbacks from pushbuttons in the menu bar.
+   	hel_list_print_cb(any);
+   	hel_list_printall_cb(any);
+
+! Callbacks from pushbuttons
+   	hel_list_select_cb(any);
+	hel_list_startdialog_cb(any);
+	hel_list_startstat_cb(any);
+   	hel_list_quit_cb(any);
+
+! Callbacks from the svn widget.
+   	hel_list_Svn_cr(any);
+   	hel_list_SvnGetEntry_bc(any);
+   	hel_list_SvnAttach_bc(any);
+
+
+! Callbacks from pushbuttons in the menu bar.
+   	hel_stat_print_cb(any);
+
+! Callbacks from pushbuttons
+   	hel_stat_select_cb(any);
+   	hel_stat_quit_cb(any);
+	hel_stat_startdialog_cb(any);
+
+! Callbacks from the svn widget.
+   	hel_stat_Svn_cr(any);
+   	hel_stat_SvnGetEntry_bc(any);
+   	hel_stat_SvnAttach_bc(any);
+
+
+! Callbacks from the statistics dialog widgets
+	hel_stat_ok_cb(any);
+	hel_stat_apply_cb(any);
+	hel_stat_cancel_cb(any);
+        hel_stat_today_cb(any);
+        hel_stat_yesterday_cb(any);
+        hel_stat_thisw_cb(any);
+        hel_stat_lastw_cb(any);
+        hel_stat_thism_cb(any);
+        hel_stat_lastm_cb(any);
+        hel_stat_all_cb(any);
+        hel_stat_time_cb(any);
+
+        hel_stat_start_time_entry_cr(any);
+        hel_stat_stop_time_entry_cr(any);
+        hel_stat_day_break_entry_cr(any);
+        hel_stat_objectname_entry_cr(any);
+        hel_stat_nodename_entry_cr(any);
+        hel_stat_a_toggle_cr(any);
+        hel_stat_b_toggle_cr(any);
+        hel_stat_c_toggle_cr(any);
+        hel_stat_d_toggle_cr(any);
+        hel_stat_msg_toggle_cr(any);
+        hel_stat_name_toggle_cr(any);
+        hel_stat_prio_toggle_cr(any);
+        hel_stat_cause_toggle_cr(any);
+        hel_stat_lost_toggle_cr(any);
+        hel_stat_high_toggle_cr(any);
+        hel_stat_low_toggle_cr(any);
+        hel_stat_digital_toggle_cr(any);
+        hel_stat_other_toggle_cr(any);
+
+        hel_stat_day_break_value_cr(any);
+        hel_stat_time_value1_cr(any);
+        hel_stat_result1_cr(any);
+        hel_stat_time_value2_cr(any);
+        hel_stat_result2_cr(any);
+
+	hel_stat_start_time_entry_lf(any);
+	hel_stat_stop_time_entry_lf(any);
+	hel_stat_day_break_entry_lf(any);
+
+! Callbacks from the search dialog widgets
+        hel_list_ok_cb(any);
+        hel_list_apply_cb(any);
+        hel_list_cancel_cb(any);
+        hel_list_today_cb(any);
+        hel_list_yesterday_cb(any);
+        hel_list_thisw_cb(any);
+        hel_list_lastw_cb(any);
+        hel_list_thism_cb(any);
+        hel_list_lastm_cb(any);
+        hel_list_all_cb(any);
+        hel_list_time_cb(any);
+
+        hel_list_start_time_entry_cr(any);
+        hel_list_stop_time_entry_cr(any);
+        hel_list_day_break_entry_cr(any);
+        hel_list_objectname_entry_cr(any);
+        hel_list_text_entry_cr(any);
+        hel_list_llimit_entry_cr(any);
+        hel_list_hlimit_entry_cr(any);
+
+        hel_list_a_toggle_cr(any);
+        hel_list_b_toggle_cr(any);
+        hel_list_c_toggle_cr(any);
+        hel_list_d_toggle_cr(any);
+        hel_list_msg_toggle_cr(any);
+
+        hel_list_alarm_toggle_cr(any);
+        hel_list_ack_toggle_cr(any);
+        hel_list_ret_toggle_cr(any);
+        hel_list_block_toggle_cr(any);
+        hel_list_unblock_toggle_cr(any);
+        hel_list_lost_toggle_cr(any);
+
+        hel_list_high_toggle_cr(any);
+        hel_list_low_toggle_cr(any);
+        hel_list_digital_toggle_cr(any);
+        hel_list_other_toggle_cr(any);
+
+        hel_list_day_break_value_cr(any);
+
+	hel_list_start_time_entry_lf(any);
+	hel_list_stop_time_entry_lf(any);
+	hel_list_day_break_entry_lf(any);
+
+
+
+!*************************************************************
+!
+! Event list window 
+!
+!*************************************************************
+
+object hl_main : XmMainWindow 
+{
+   arguments
+   {
+   };
+   controls
+   {
+      XmMenuBar hl_menuBar;
+      XmForm hl_adb;
+   };
+
+};
+object hl_adb : XmForm 
+{
+   arguments
+   {
+   };
+   controls
+   {
+      XmPushButton	hl_SelPb;
+      XmPushButton	hl_SearchPb;
+      XmPushButton	hl_StatPb;
+      XmPushButton	hl_QuitPb;
+      DXmSvn		hl_Svn;
+   };
+};
+
+
+!*************************************************************
+!
+! Menu bar and its objects
+!
+!*************************************************************
+object hl_menuBar : XmMenuBar
+{
+   arguments
+   {
+      XmNorientation = XmHORIZONTAL;
+      XmNspacing     = 15;                   ! Pixels between XmNlistItems in menu
+   };
+   controls
+   {                              
+      XmCascadeButton hl_printPulldown;
+   };
+   callbacks
+   {
+   };
+};
+
+object hl_printPulldown : XmCascadeButton
+{
+   arguments
+   {    
+      XmNlabelString = compound_string($print);	
+      XmNmnemonic = keysym($print$);
+   };
+   controls
+   {    
+      XmPulldownMenu hl_printPulldownMenu;	
+   };
+};
+
+object hl_printPulldownMenu : XmPulldownMenu
+{
+   arguments
+   {    
+      XmNorientation = XmVERTICAL;	
+   };
+   controls
+   {
+      XmPushButton
+      {
+         arguments
+	 { 
+	    XmNlabelString = compound_string(printvis);
+	    XmNmnemonic = keysym(printvis$);
+	 };
+	 callbacks
+	 { 
+	    XmNactivateCallback = procedure hel_list_print_cb(hel_ctx); 
+	 };
+      };
+      XmPushButton
+      {
+         arguments
+	 { 
+	    XmNlabelString = compound_string(printall);
+	    XmNmnemonic = keysym(printall$);
+	 };
+	 callbacks
+	 { 
+	    XmNactivateCallback = procedure hel_list_printall_cb(hel_ctx); 
+	 };
+      };
+   };
+};
+
+
+!*************************************************************
+!
+! Push buttons
+!
+!*************************************************************
+object hl_SelPb : XmPushButton 
+{
+   arguments
+   {
+      XmNleftAttachment = XmATTACH_FORM;
+      XmNleftOffset = ButtonLeftOffset;
+      XmNbottomAttachment = XmATTACH_FORM;
+      XmNbottomOffset = ButtonBottomOffset;
+      XmNlabelString = compound_string($zSetSelected);
+   };
+   callbacks
+   {
+      XmNactivateCallback = procedure hel_list_select_cb(hel_ctx);
+   };
+};
+
+object hl_SearchPb : XmPushButton 
+{
+   arguments
+   {
+      XmNleftAttachment = XmATTACH_WIDGET;
+      XmNleftWidget = hl_SelPb;
+      XmNleftOffset = ButtonLeftOffset;
+      XmNbottomAttachment = XmATTACH_FORM;
+      XmNbottomOffset = ButtonBottomOffset;
+      XmNlabelString = compound_string(search);
+   };
+   callbacks
+   {
+      XmNactivateCallback = procedure hel_list_startdialog_cb(hel_ctx);
+   };
+};
+
+object hl_StatPb : XmPushButton 
+{
+   arguments
+   {
+      XmNleftAttachment = XmATTACH_WIDGET;
+      XmNleftWidget = hl_SearchPb;
+      XmNleftOffset = ButtonLeftOffset;
+      XmNbottomAttachment = XmATTACH_FORM;
+      XmNbottomOffset = ButtonBottomOffset;
+      XmNlabelString = compound_string(statistics);
+   };
+   callbacks
+   {
+      XmNactivateCallback = procedure hel_list_startstat_cb(hel_ctx);
+   };
+};
+
+
+object hl_QuitPb : XmPushButton 
+{
+   arguments
+   {
+      XmNrightAttachment = XmATTACH_FORM;
+      XmNrightOffset = ButtonRightOffset;
+      XmNbottomAttachment = XmATTACH_FORM;
+      XmNbottomOffset = ButtonBottomOffset;
+      XmNlabelString = Cancellabel;
+   };
+   callbacks
+   {
+      XmNactivateCallback = procedure hel_list_quit_cb(hel_ctx);
+   };
+};
+
+
+!*************************************************************
+!
+! Svn widget
+!
+!*************************************************************
+object hl_Svn : DXmSvn
+{
+  arguments
+  {
+    XmNtopAttachment = XmATTACH_FORM;
+    XmNbottomAttachment = XmATTACH_WIDGET;
+    XmNbottomWidget = XmPushButton hl_SelPb;
+    XmNbottomOffset = SvnBottomOffset;
+    XmNleftAttachment = XmATTACH_FORM;
+    XmNrightAttachment = XmATTACH_FORM;
+    DXmSvnNstartColumnComponent = 3;
+    DXmSvnNexpectHighlighting = false ;
+    DXmSvnNcolumnLines = false;
+    DXmSvnNmultipleSelections = false;
+  };
+
+  controls
+  {
+  };
+
+  callbacks
+  {
+    MrmNcreateCallback			= procedure hel_list_Svn_cr(hel_ctx);
+    DXmSvnNgetEntryCallback		= procedure hel_list_SvnGetEntry_bc(hel_ctx);
+    DXmSvnNattachToSourceCallback	= procedure hel_list_SvnAttach_bc(hel_ctx);
+  };
+};
+
+
+
+!*************************************************************
+!
+! Statistics window 
+!
+!*************************************************************
+
+object hs_main : XmMainWindow 
+{
+   arguments
+   {
+   };
+   controls
+   {
+      XmMenuBar hs_menuBar;
+      XmForm hs_adb;
+   };
+
+};
+
+object hs_adb : XmForm 
+{
+   arguments
+   {
+   };
+   controls
+   {
+	XmForm hs_adb1;
+	XmForm hs_adb3;
+   };
+};
+
+object hs_adb1 : XmForm 
+{
+   arguments
+   {
+	XmNtopAttachment = XmATTACH_FORM;
+        XmNleftAttachment = XmATTACH_FORM;
+        XmNrightAttachment = XmATTACH_FORM;
+	XmNheight = 60;
+   };
+   controls
+   {
+	XmFrame hs_mainresframe;
+   };
+};
+
+object hs_mainresframe : XmFrame 
+{
+    arguments
+    {
+	XmNshadowType = XmSHADOW_IN;
+	XmNshadowThickness = 3;
+        XmNleftAttachment = XmATTACH_FORM;
+        XmNleftOffset = 0;
+        XmNrightAttachment = XmATTACH_FORM;
+        XmNrightOffset = 0;
+        XmNbottomAttachment = XmATTACH_FORM;
+        XmNbottomOffset = 0;
+        XmNtopAttachment = XmATTACH_FORM;
+        XmNtopOffset = 0;
+    };
+    controls
+    {
+        XmForm hs_adb2;
+    };
+};
+
+
+object hs_adb2 : XmForm 
+{
+   arguments
+   {
+   };
+   controls
+   {
+	XmLabel hs_mainresLabel;
+	XmLabel hs_mainresValue;
+	XmLabel hs_maintimeLabel;
+	XmLabel hs_maintimeValue;
+   };
+};
+
+object hs_mainresLabel : XmLabel {
+   arguments
+   {
+       XmNlabelString = searchresultlabel;
+       XmNleftAttachment = XmATTACH_FORM;
+       XmNtopAttachment = XmATTACH_FORM;
+       XmNleftOffset = labelLeftFormOffset;
+       XmNtopOffset = 5;
+   };
+   controls
+   {
+   };
+};
+
+object hs_mainresValue : XmLabel {
+   arguments
+   {
+        XmNlabelString = compound_string(".....");
+        XmNleftAttachment = XmATTACH_WIDGET;
+	XmNleftWidget = XmLabel hs_mainresLabel;
+        XmNtopAttachment = XmATTACH_FORM;
+        XmNleftOffset = 10;
+        XmNtopOffset = 5;
+   };
+   callbacks
+   {
+	MrmNcreateCallback = procedure hel_stat_result1_cr(hel_ctx);
+   };
+};
+
+object hs_maintimeLabel: XmLabel 
+   {
+   arguments
+            {
+       XmNlabelString = searchtimelabel;
+       XmNleftAttachment = XmATTACH_FORM;
+       XmNtopAttachment = XmATTACH_WIDGET;
+       XmNtopWidget = XmLabel hs_mainresLabel;
+       XmNleftOffset = labelLeftFormOffset;
+       XmNtopOffset = 5;
+   };
+};
+
+object hs_maintimeValue : XmLabel  
+{
+    arguments
+    {
+        XmNlabelString = compound_string(".....");
+        XmNleftAttachment = XmATTACH_WIDGET;
+	XmNleftWidget = XmLabel hs_maintimeLabel;
+        XmNtopAttachment = XmATTACH_WIDGET;
+        XmNtopWidget = XmLabel hs_mainresLabel;
+        XmNleftOffset = 10;
+        XmNtopOffset = 5;
+    };
+    callbacks
+    {
+	MrmNcreateCallback = procedure hel_stat_time_value1_cr(hel_ctx);
+    };
+};
+
+
+object hs_adb3 : XmForm 
+{
+   arguments
+   {
+    XmNtopAttachment = XmATTACH_WIDGET;
+    XmNtopWidget = XmForm hs_adb1;
+    XmNleftAttachment = XmATTACH_FORM;
+    XmNrightAttachment = XmATTACH_FORM;
+    XmNbottomAttachment = XmATTACH_FORM;
+   };
+   controls
+   {
+      XmPushButton	hs_SelPb;
+      XmPushButton	hs_SearchPb;
+      XmPushButton	hs_QuitPb;
+      DXmSvn		hs_Svn;
+   };
+};
+
+
+!*************************************************************
+!
+! Menu bar and its objects
+!
+!*************************************************************
+object hs_menuBar : XmMenuBar
+{
+   arguments
+   {
+      XmNorientation = XmHORIZONTAL;
+      XmNspacing     = 15;                   ! Pixels between XmNlistItems in menu
+   };
+   controls
+   {                              
+      XmCascadeButton hs_printPulldown;
+   };
+   callbacks
+   {
+   };
+};
+
+object hs_printPulldown : XmCascadeButton
+{
+   arguments
+   {    
+      XmNlabelString = compound_string($print);	
+      XmNmnemonic = keysym($print$);
+   };
+   controls
+   {    
+      XmPulldownMenu hs_printPulldownMenu;	
+   };
+};
+
+object hs_printPulldownMenu : XmPulldownMenu
+{
+   arguments
+   {    
+      XmNorientation = XmVERTICAL;	
+   };
+   controls
+   {
+      XmPushButton
+      {
+         arguments
+	 { 
+	    XmNlabelString = compound_string(printallstat);
+	    XmNmnemonic = keysym(printallstat$);
+	 };
+	 callbacks
+	 { 
+	    XmNactivateCallback = procedure hel_stat_print_cb(hel_ctx); 
+	 };
+      };
+   };
+};
+
+
+!*************************************************************
+!
+! Push buttons
+!
+!*************************************************************
+object hs_SelPb : XmPushButton 
+{
+   arguments
+   {
+      XmNleftAttachment = XmATTACH_FORM;
+      XmNleftOffset = ButtonLeftOffset;
+      XmNbottomAttachment = XmATTACH_FORM;
+      XmNbottomOffset = ButtonBottomOffset;
+      XmNlabelString = compound_string($zSetSelected);
+   };
+   callbacks
+   {
+      XmNactivateCallback = procedure hel_stat_select_cb(hel_ctx);
+   };
+};
+
+object hs_SearchPb : XmPushButton 
+{
+   arguments
+   {
+      XmNleftAttachment = XmATTACH_WIDGET;
+      XmNleftWidget = hs_SelPb;
+      XmNleftOffset = ButtonLeftOffset;
+      XmNbottomAttachment = XmATTACH_FORM;
+      XmNbottomOffset = ButtonBottomOffset;
+      XmNlabelString = compound_string(search);
+   };
+   callbacks
+   {
+      XmNactivateCallback = procedure hel_stat_startdialog_cb(hel_ctx);
+   };
+};
+
+
+object hs_QuitPb : XmPushButton 
+{
+   arguments
+   {
+      XmNrightAttachment = XmATTACH_FORM;
+      XmNrightOffset = ButtonRightOffset;
+      XmNbottomAttachment = XmATTACH_FORM;
+      XmNbottomOffset = ButtonBottomOffset;
+      XmNlabelString = Cancellabel;
+   };
+   callbacks
+   {
+      XmNactivateCallback = procedure hel_stat_quit_cb(hel_ctx);
+   };
+};
+
+
+!*************************************************************
+!
+! Svn widget
+!
+!*************************************************************
+object hs_Svn : DXmSvn
+{
+  arguments
+  {
+    XmNtopAttachment = XmATTACH_FORM;
+    XmNbottomAttachment = XmATTACH_WIDGET;
+    XmNbottomWidget = XmPushButton hs_SelPb;
+    XmNbottomOffset = SvnBottomOffset;
+    XmNleftAttachment = XmATTACH_FORM;
+    XmNrightAttachment = XmATTACH_FORM;
+    DXmSvnNstartColumnComponent = 3;
+    DXmSvnNexpectHighlighting = false ;
+    DXmSvnNcolumnLines = false;
+    DXmSvnNmultipleSelections = false;
+  };
+
+  controls
+  {
+  };
+
+  callbacks
+  {
+    MrmNcreateCallback			= procedure hel_stat_Svn_cr(hel_ctx);
+    DXmSvnNgetEntryCallback		= procedure hel_stat_SvnGetEntry_bc(hel_ctx);
+    DXmSvnNattachToSourceCallback	= procedure hel_stat_SvnAttach_bc(hel_ctx);
+  };
+};
+
+
+
+!*************************************************************
+!
+! This is the search dialog for the mainwindow. Where we define
+! the search clause for events to show.
+!
+!*************************************************************
+object
+!_
+    histSearchDialog: XmFormDialog
+        {
+        arguments
+            {
+            XmNwidth = 880;
+            XmNborderWidth = 1;
+	    XmNnoResize = true;
+            XmNdialogTitle = hformtitle;
+            XmNheight = 0;
+            };
+        controls
+            {
+            XmLabel hl_timeLabel;
+            XmLabel hl_objectLabel;
+            XmLabel hl_valueLabel;
+            XmLabel hl_prioLabel;
+            XmLabel hl_eventLabel;
+            XmLabel hl_textLabel;
+            XmLabel hl_startTimeLabel;
+            XmOptionMenu hl_timeInterval;
+            XmTextField hl_startTimeText;
+            XmLabel hl_stopTimeLabel;
+            XmTextField hl_stopTimeText;
+            XmLabel hl_dayBreakLabel;
+            XmTextField hl_dayText;
+            XmLabel hl_dayBreakValueLabel;
+            XmTextField hl_objectName;
+            XmTextField hl_llimitValue;
+            XmToggleButton hl_aAlarmToggle;
+            XmToggleButton hl_bAlarmToggle;
+            XmToggleButton hl_cAlarmToggle;
+            XmToggleButton hl_dAlarmToggle;
+            XmToggleButton hl_msgToggle;
+            XmToggleButton hl_alarmToggle;
+            XmToggleButton hl_ackToggle;
+            XmToggleButton hl_retToggle;
+            XmToggleButton hl_blockToggle;
+            XmToggleButton hl_unblockToggle;
+            XmToggleButton hl_lostToggle;
+            XmTextField hl_textField;
+            XmFrame 
+                {
+                arguments
+                    {
+		    XmNshadowThickness = 0;
+                    XmNleftAttachment = XmATTACH_FORM;
+                    XmNleftOffset = 0;
+                    XmNrightAttachment = XmATTACH_FORM;
+                    XmNrightOffset = 0;
+                    XmNbottomAttachment = XmATTACH_FORM;
+                    XmNbottomOffset = 0;
+                    XmNtopAttachment = XmATTACH_WIDGET;
+                    XmNtopOffset = 15;
+                    XmNtopWidget = XmTextField hl_textField;
+                    };
+                controls
+                    {
+                    XmForm 
+                        {
+                        arguments
+                            {
+                            XmNheight = 50;
+                            XmNresizePolicy = XmRESIZE_NONE;
+                            };
+                        controls
+                            {
+                            XmPushButton 
+                                {
+                                arguments
+                                    {
+                                    XmNlabelString = OKlabel;
+                                    XmNleftAttachment = XmATTACH_POSITION;
+                                    XmNtopAttachment = XmATTACH_POSITION;
+                                    XmNleftPosition = 15;
+                                    XmNtopPosition = 20;
+                                    XmNwidth = ButtonWidth;
+                                    };
+				callbacks
+				    {
+					XmNactivateCallback = procedure hel_list_ok_cb(hel_ctx);
+				    };
+                                };
+                            XmPushButton 
+                                {
+                                arguments
+                                    {
+                                    XmNlabelString = Applylabel;
+                                    XmNleftAttachment = XmATTACH_POSITION;
+                                    XmNtopAttachment = XmATTACH_POSITION;
+                                    XmNleftPosition = 45;
+                                    XmNtopPosition = 20;
+                                    XmNwidth = ButtonWidth;
+                                    };
+				callbacks
+				    {
+					XmNactivateCallback = procedure hel_list_apply_cb(hel_ctx);
+				    };
+                                };
+                            XmPushButton 
+                                {
+                                arguments
+                                    {
+                                    XmNlabelString = Cancellabel;
+                                    XmNleftAttachment = XmATTACH_POSITION;
+                                    XmNtopAttachment = XmATTACH_POSITION;
+                                    XmNleftPosition = 75;
+                                    XmNtopPosition = 20;
+                                    XmNwidth = ButtonWidth;
+                                    };
+				callbacks
+				    {
+					XmNactivateCallback = procedure hel_list_cancel_cb(hel_ctx);
+				    };
+                                };
+                            };
+                        };
+                    };
+                };
+            XmTextField hl_hlimitValue;
+            XmLabel hl_limitLabel;
+            XmToggleButton hl_lowToggle;
+            XmToggleButton hl_highToggle;
+            XmToggleButton hl_digitalToggle;
+            XmToggleButton hl_otherToggle;
+            };
+        };
+
+
+!*************************************************************
+!
+! This is the widgets int the search dialog for the mainwindow. 
+!
+!*************************************************************
+    hl_timeLabel: XmLabel 
+        {
+        arguments
+            {
+            XmNlabelString = timelabel;
+            XmNleftAttachment = XmATTACH_FORM;
+            XmNtopAttachment = XmATTACH_FORM;
+            XmNleftOffset = labelLeftFormOffset;
+            XmNtopOffset = labelTopFormOffset;
+            };
+        };
+    hl_objectLabel: XmLabel 
+        {
+        arguments
+            {
+            XmNlabelString = objectlabel;
+            XmNleftAttachment = XmATTACH_FORM;
+            XmNtopAttachment = XmATTACH_WIDGET;
+            XmNleftOffset = labelLeftFormOffset;
+            XmNtopOffset = timeObjectOffset;
+            XmNtopWidget = XmLabel hl_timeLabel;
+            };
+        };
+    hl_valueLabel: XmLabel 
+        {
+        arguments
+            {
+            XmNlabelString = causelabel;
+            XmNleftAttachment = XmATTACH_FORM;
+            XmNtopAttachment = XmATTACH_WIDGET;
+            XmNleftOffset = labelLeftFormOffset;
+            XmNtopOffset = objectValueOffset;
+            XmNtopWidget = XmLabel hl_prioLabel;
+            };
+        };
+    hl_prioLabel: XmLabel 
+        {
+        arguments
+            {
+            XmNlabelString = prioritylabel;
+            XmNleftAttachment = XmATTACH_FORM;
+            XmNtopAttachment = XmATTACH_WIDGET;
+            XmNleftOffset = labelLeftFormOffset;
+            XmNtopOffset = objectValueOffset;
+            XmNtopWidget = XmLabel hl_eventLabel;
+            };
+        };
+    hl_timeInterval: XmOptionMenu 
+        {
+        arguments
+            {
+            XmNtopAttachment = XmATTACH_FORM;
+            XmNtopOffset = labelTopFormOffset;
+            XmNleftAttachment = XmATTACH_WIDGET;
+            XmNleftOffset = 110;
+            XmNleftWidget = XmLabel hl_timeLabel;
+            };
+        controls
+            {
+            XmPulldownMenu 
+                {
+                arguments
+                    {
+                    XmNborderWidth = 1;
+                    };
+                controls
+                    {
+                    XmPushButton 
+                        {
+                        arguments
+                            {
+                            XmNlabelString = todaylabel;
+                            };
+                            callbacks
+                            {
+		            XmNactivateCallback = procedure hel_list_today_cb(hel_ctx);
+                            };
+                         };
+                    XmPushButton 
+                        {
+                        arguments
+                            {
+                            XmNlabelString = yesterdaylabel;
+                            };
+                            callbacks
+                            {
+			    XmNactivateCallback = procedure hel_list_yesterday_cb(hel_ctx);
+                            };
+                         };
+                    XmPushButton 
+                        {
+                        arguments
+                            {
+                            XmNlabelString = thisweeklabel;
+                            };
+                            callbacks
+                            {
+			    XmNactivateCallback = procedure hel_list_thisw_cb(hel_ctx);
+                            };
+                         };
+                    XmPushButton 
+                        {
+                        arguments
+                            {
+                            XmNlabelString = lastweeklabel;
+                            };
+                            callbacks
+                            {
+			    XmNactivateCallback = procedure hel_list_lastw_cb(hel_ctx);
+                            };
+                         };
+                    XmPushButton 
+                        {
+                        arguments
+                            {
+                            XmNlabelString = thismonthlabel;
+                            };
+                            callbacks
+                            {
+			    XmNactivateCallback = procedure hel_list_thism_cb(hel_ctx);
+                            };
+                        };
+                    XmPushButton 
+                        {
+                        arguments
+                            {
+                            XmNlabelString = lastmonthlabel;
+                            };
+                            callbacks
+                            {
+			    XmNactivateCallback = procedure hel_list_lastm_cb(hel_ctx);
+                            };
+                        };
+                    XmPushButton 
+                        {
+                        arguments
+                            {
+                            XmNlabelString = alllabel;
+                            };
+                            callbacks
+                            {
+			    XmNactivateCallback = procedure hel_list_all_cb(hel_ctx);
+                            };
+                        };
+                    XmPushButton 
+                        {
+                        arguments
+                            {
+                            XmNlabelString = timelabel;
+                            };
+                            callbacks
+                            {
+			    XmNactivateCallback = procedure hel_list_time_cb(hel_ctx);
+                            };
+                         };
+                    };
+                };
+            };
+        };
+    hl_startTimeLabel: XmLabel 
+        {
+        arguments
+            {
+            XmNlabelString = starttimelabel;
+            XmNleftAttachment = XmATTACH_WIDGET;
+            XmNleftWidget = XmOptionMenu hl_timeInterval;
+            XmNleftOffset = 47;
+            XmNtopAttachment = XmATTACH_FORM;
+            XmNtopOffset = labelTopFormOffset;
+            };
+        };
+    hl_startTimeText: XmTextField 
+        {
+        arguments
+            {
+            XmNcolumns = 22;
+	    XmNmaxLength = 22;
+            XmNleftAttachment = XmATTACH_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftOffset = 15;
+            XmNtopOffset = labelTextTopOffset;
+            XmNleftWidget = XmLabel hl_startTimeLabel;
+            XmNtopWidget = XmLabel hl_startTimeLabel;
+            };
+        callbacks
+            {
+            MrmNcreateCallback = procedure hel_list_start_time_entry_cr(hel_ctx);
+	    XmNlosingFocusCallback = procedure hel_list_start_time_entry_lf(hel_ctx);
+            };
+         };
+    hl_stopTimeLabel: XmLabel 
+        {
+        arguments
+            {
+            XmNlabelString = stoptimelabel;
+            XmNleftAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNtopAttachment = XmATTACH_WIDGET;
+            XmNleftOffset = 0;
+            XmNtopOffset = 22;
+            XmNtopWidget = XmLabel hl_startTimeLabel;
+            XmNleftWidget = XmLabel hl_startTimeLabel;
+            };
+        };
+    hl_stopTimeText: XmTextField 
+        {
+        arguments
+            {
+            XmNcolumns = 22;
+	    XmNmaxLength = 22;
+            XmNleftAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftOffset = 0;
+            XmNtopOffset = labelTextTopOffset;
+            XmNleftWidget = XmTextField hl_startTimeText;
+            XmNtopWidget = XmLabel hl_stopTimeLabel;
+            };
+        callbacks
+            {
+            MrmNcreateCallback = procedure hel_list_stop_time_entry_cr(hel_ctx);
+	    XmNlosingFocusCallback = procedure hel_list_stop_time_entry_lf(hel_ctx);
+            };
+         };
+    hl_dayBreakLabel: XmLabel 
+        {
+        arguments
+            {
+            XmNlabelString = daybreaklabel;
+            XmNleftAttachment = XmATTACH_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftOffset = 47;
+            XmNtopOffset = 0;
+            XmNleftWidget = XmTextField hl_startTimeText;
+            XmNtopWidget = XmLabel hl_startTimeLabel;
+            };
+        };
+    hl_dayText: XmTextField 
+        {
+        arguments
+            {
+            XmNcolumns = 5;
+	    XmNmaxLength = 5;
+            XmNleftAttachment = XmATTACH_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftOffset = 15;
+            XmNtopOffset = labelTextTopOffset;
+            XmNtopWidget = XmLabel hl_dayBreakLabel;
+/*
+            XmNvalue = "06:00";
+*/
+            XmNx = 621;
+            XmNleftWidget = XmLabel hl_dayBreakLabel;
+            };
+        callbacks
+            {
+            MrmNcreateCallback = procedure hel_list_day_break_entry_cr(hel_ctx);
+	    XmNlosingFocusCallback = procedure hel_list_day_break_entry_lf(hel_ctx);
+            };
+        };
+    hl_dayBreakValueLabel: XmLabel 
+        {
+        arguments
+            {
+/*
+            XmNlabelString =  compound_string("06:00");
+*/
+            XmNleftAttachment = XmATTACH_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftOffset = 15;
+            XmNtopOffset = 35;
+            XmNleftWidget = XmLabel hl_dayBreakLabel;
+            XmNtopWidget = XmLabel hl_dayBreakLabel;
+            };
+        callbacks
+            {
+            MrmNcreateCallback = procedure hel_list_day_break_value_cr(hel_ctx);
+            };
+        };
+    hl_eventLabel: XmLabel 
+        {
+        arguments
+            {
+            XmNlabelString = eventtypelabel;
+            XmNleftAttachment = XmATTACH_FORM;
+            XmNtopAttachment = XmATTACH_WIDGET;
+            XmNleftOffset = labelLeftFormOffset;
+            XmNtopOffset = objectValueOffset;
+            XmNtopWidget = XmLabel hl_objectLabel;
+            };
+        };
+    hl_textLabel: XmLabel 
+        {
+        arguments
+            {
+            XmNlabelString = eventtextlabel;
+            XmNleftAttachment = XmATTACH_FORM;
+            XmNtopAttachment = XmATTACH_WIDGET;
+            XmNleftOffset = labelLeftFormOffset;
+            XmNtopOffset = objectValueOffset;
+            XmNtopWidget = XmLabel hl_valueLabel;
+            };
+        };
+    hl_objectName: XmTextField 
+        {
+        arguments
+            {
+            XmNcolumns = 60;
+            XmNleftAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftOffset = 0;
+            XmNtopWidget = XmLabel hl_objectLabel;
+            XmNtopOffset = labelTextTopOffset;
+	    XmNleftWidget = XmOptionMenu hl_timeInterval;
+            };
+        callbacks
+            {
+            MrmNcreateCallback = procedure hel_list_objectname_entry_cr(hel_ctx);
+            };
+         };
+    hl_hlimitValue: XmTextField
+        {
+        arguments
+            {
+            XmNcolumns = 10;
+            XmNleftAttachment = XmATTACH_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftOffset = 22;
+            XmNtopOffset = 0;
+            XmNtopWidget = XmTextField hl_llimitValue;
+            XmNleftWidget = XmTextField hl_llimitValue;
+            };
+        callbacks
+            {
+            MrmNcreateCallback = procedure hel_list_hlimit_entry_cr(hel_ctx);
+            };
+        };
+    hl_llimitValue: XmTextField 
+        {
+        arguments
+            {
+            XmNcolumns = 10;
+            XmNleftAttachment = XmATTACH_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftOffset = 7;
+            XmNtopOffset = labelTextTopOffset;
+            XmNleftWidget = XmLabel hl_limitLabel;
+            XmNtopWidget = XmLabel hl_valueLabel;
+            };
+        callbacks
+            {
+            MrmNcreateCallback = procedure hel_list_llimit_entry_cr(hel_ctx);
+            };
+        };
+    hl_aAlarmToggle: XmToggleButton 
+        {
+        arguments
+            {
+            XmNlabelString = a_alarmlabel;
+            XmNleftAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftOffset = 0;
+            XmNtopOffset = 0;
+            XmNtopWidget = XmLabel hl_prioLabel;
+            XmNx = 185;
+            XmNleftWidget = XmToggleButton hl_highToggle;
+            };
+        callbacks
+            {
+            MrmNcreateCallback = procedure hel_list_a_toggle_cr(hel_ctx);
+            };
+        };
+    hl_bAlarmToggle: XmToggleButton 
+        {
+        arguments
+            {
+            XmNlabelString = b_alarmlabel;
+            XmNleftAttachment = XmATTACH_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftOffset = toggleHorizOffset;
+            XmNtopOffset = 0;
+            XmNtopWidget = XmLabel hl_prioLabel;
+            XmNx = 188;
+            XmNleftWidget = XmToggleButton hl_aAlarmToggle;
+            };
+        callbacks
+            {
+            MrmNcreateCallback = procedure hel_list_b_toggle_cr(hel_ctx);
+            };
+        };
+    hl_cAlarmToggle: XmToggleButton 
+        {
+        arguments
+            {
+            XmNlabelString = c_alarmlabel;
+            XmNleftAttachment = XmATTACH_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftOffset = toggleHorizOffset;
+            XmNtopOffset = 0;
+            XmNtopWidget = XmLabel hl_prioLabel;
+            XmNleftWidget = XmToggleButton hl_bAlarmToggle;
+            };
+        callbacks
+            {
+            MrmNcreateCallback = procedure hel_list_c_toggle_cr(hel_ctx);
+            };
+        };
+    hl_dAlarmToggle: XmToggleButton 
+        {
+        arguments
+            {
+            XmNlabelString = d_alarmlabel;
+            XmNleftAttachment = XmATTACH_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftOffset = toggleHorizOffset;
+            XmNtopOffset = 0;
+            XmNtopWidget = XmLabel hl_prioLabel;
+            XmNleftWidget = XmToggleButton hl_cAlarmToggle;
+            };
+        callbacks
+            {
+            MrmNcreateCallback = procedure hel_list_d_toggle_cr(hel_ctx);
+            };
+        };
+    hl_msgToggle: XmToggleButton 
+        {
+        arguments
+            {
+            XmNlabelString = messagelabel;
+            XmNleftAttachment = XmATTACH_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftOffset = toggleHorizOffset;
+            XmNtopOffset = 0;
+            XmNtopWidget = XmLabel hl_prioLabel;
+            XmNleftWidget = XmToggleButton hl_dAlarmToggle;
+            };
+        callbacks
+            {
+            MrmNcreateCallback = procedure hel_list_msg_toggle_cr(hel_ctx);
+            };
+        };
+    hl_alarmToggle: XmToggleButton 
+        {
+        arguments
+            {
+            XmNlabelString = activelabel;
+            XmNleftAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftOffset = 0;
+            XmNtopOffset = 0;
+            XmNtopWidget = XmLabel hl_eventLabel;
+            XmNleftWidget = XmToggleButton hl_aAlarmToggle;
+            };
+        callbacks
+            {
+            MrmNcreateCallback = procedure hel_list_alarm_toggle_cr(hel_ctx);
+            };
+        };
+    hl_ackToggle: XmToggleButton 
+        {
+        arguments
+            {
+            XmNlabelString = acknowledgelabel;
+            XmNleftAttachment = XmATTACH_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNtopOffset = 0;
+            XmNtopWidget = XmLabel hl_eventLabel;
+            XmNleftWidget = XmToggleButton hl_alarmToggle;
+            XmNleftOffset = toggleHorizOffset;
+            };
+        callbacks
+            {
+            MrmNcreateCallback = procedure hel_list_ack_toggle_cr(hel_ctx);
+            };
+        };
+    hl_retToggle: XmToggleButton 
+        {
+        arguments
+            {
+            XmNlabelString = returnlabel;
+            XmNleftAttachment = XmATTACH_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNtopOffset = 0;
+            XmNtopWidget = XmLabel hl_eventLabel;
+            XmNleftWidget = XmToggleButton hl_ackToggle;
+            XmNleftOffset = toggleHorizOffset;
+            };
+        callbacks
+            {
+            MrmNcreateCallback = procedure hel_list_ret_toggle_cr(hel_ctx);
+            };
+        };
+    hl_blockToggle: XmToggleButton 
+        {
+        arguments
+            {
+            XmNlabelString = blocklabel;
+            XmNleftAttachment = XmATTACH_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNtopOffset = 0;
+            XmNtopWidget = XmLabel hl_eventLabel;
+            XmNleftWidget = XmToggleButton hl_retToggle;
+            XmNleftOffset = toggleHorizOffset;
+            };
+        callbacks
+            {
+            MrmNcreateCallback = procedure hel_list_block_toggle_cr(hel_ctx);
+            };
+        };
+    hl_unblockToggle: XmToggleButton 
+        {
+        arguments
+            {
+            XmNlabelString = unblocklabel;
+            XmNleftAttachment = XmATTACH_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNtopOffset = 0;
+            XmNtopWidget = XmLabel hl_eventLabel;
+            XmNleftWidget = XmToggleButton hl_blockToggle;
+            XmNleftOffset = toggleHorizOffset;
+            };
+        callbacks
+            {
+            MrmNcreateCallback = procedure hel_list_unblock_toggle_cr(hel_ctx);
+            };
+        };
+    hl_lostToggle: XmToggleButton 
+        {
+        arguments
+            {
+            XmNlabelString = lostlabel;
+            XmNleftAttachment = XmATTACH_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNtopOffset = 0;
+            XmNtopWidget = XmLabel hl_eventLabel;
+            XmNleftWidget = XmToggleButton hl_unblockToggle;
+            XmNleftOffset = toggleHorizOffset;
+            };
+        callbacks
+            {
+            MrmNcreateCallback = procedure hel_list_lost_toggle_cr(hel_ctx);
+            };
+        };
+    hl_textField: XmTextField 
+        {
+        arguments
+            {
+            XmNcolumns = 60;
+            XmNleftAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftOffset = 0;
+            XmNtopOffset = labelTextTopOffset;
+            XmNleftWidget = XmToggleButton hl_alarmToggle;
+            XmNtopWidget = XmLabel hl_textLabel;
+            };
+        callbacks
+            {
+            MrmNcreateCallback = procedure hel_list_text_entry_cr(hel_ctx);
+            };
+        };
+    hl_limitLabel: XmLabel 
+        {
+        arguments
+            {
+            XmNlabelString = limitlabel;
+            XmNleftAttachment = XmATTACH_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftOffset = 53;
+            XmNtopOffset = 1;
+            XmNtopWidget = XmLabel hl_valueLabel;
+            XmNx = 406;
+            XmNleftWidget = XmToggleButton hl_otherToggle;
+            };
+        };
+    hl_highToggle: XmToggleButton 
+        {
+        arguments
+            {
+            XmNlabelString = highlabel;
+            XmNleftAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftOffset = 0;
+            XmNtopOffset = 0;
+            XmNleftWidget = XmTextField hl_objectName;
+            XmNtopWidget = XmLabel hl_valueLabel;
+            };
+        callbacks
+            {
+            MrmNcreateCallback = procedure hel_list_high_toggle_cr(hel_ctx);
+            };
+        };
+    hl_lowToggle: XmToggleButton 
+        {
+        arguments
+            {
+            XmNlabelString = lowlabel;
+            XmNleftAttachment = XmATTACH_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNtopOffset = 0;
+            XmNleftWidget = XmToggleButton hl_highToggle;
+            XmNleftOffset = 15;
+            XmNtopWidget = XmToggleButton hl_highToggle;
+            };
+        callbacks
+            {
+            MrmNcreateCallback = procedure hel_list_low_toggle_cr(hel_ctx);
+            };
+        };
+    hl_digitalToggle: XmToggleButton 
+        {
+        arguments
+            {
+            XmNlabelString = digitallabel;
+            XmNleftAttachment = XmATTACH_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftWidget = XmToggleButton hl_lowToggle;
+            XmNleftOffset = 26;
+            XmNtopWidget = XmToggleButton hl_lowToggle;
+            };
+        callbacks
+            {
+            MrmNcreateCallback = procedure hel_list_digital_toggle_cr(hel_ctx);
+            };
+        };
+    hl_otherToggle: XmToggleButton 
+        {
+        arguments
+            {
+            XmNlabelString = otherlabel;
+            XmNleftAttachment = XmATTACH_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftWidget = XmToggleButton hl_digitalToggle;
+            XmNleftOffset = 26;
+            XmNtopWidget = XmToggleButton hl_digitalToggle;
+            };
+        callbacks
+            {
+            MrmNcreateCallback = procedure hel_list_other_toggle_cr(hel_ctx);
+            };
+        };
+
+
+!*************************************************************
+!
+! This is the search dialog for the statwindow. Where we define
+! the search clause for statistics to show.
+!
+!*************************************************************
+object
+!_
+    statSearchDialog: XmFormDialog
+        {
+        arguments
+            {
+            XmNwidth = 860;
+            XmNborderWidth = 1;
+	    XmNnoResize = true;
+            XmNdialogTitle = sformtitle;
+            XmNheight = 0;
+            };
+        controls
+            {
+            XmLabel hs_timeLabel;
+            XmLabel hs_objectLabel;
+            XmLabel hs_valueLabel;
+            XmLabel hs_prioLabel;
+            XmLabel hs_startTimeLabel;
+            XmOptionMenu hs_timeInterval;
+            XmTextField hs_startTimeText;
+            XmLabel hs_stopTimeLabel;
+            XmTextField hs_stopTimeText;
+            XmLabel hs_dayBreakLabel;
+            XmTextField hs_dayText;
+            XmLabel hs_dayBreakValueLabel;
+            XmTextField hs_objectName;
+	    XmLabel hs_nodeLabel;
+	    XmTextField hs_nodeName;
+            XmToggleButton hs_aAlarmToggle;
+            XmToggleButton hs_bAlarmToggle;
+            XmToggleButton hs_cAlarmToggle;
+            XmToggleButton hs_dAlarmToggle;
+            XmToggleButton hs_msgToggle;
+            XmFrame
+                {
+                arguments
+                    {
+		    XmNshadowThickness = 0;
+                    XmNleftAttachment = XmATTACH_FORM;
+                    XmNleftOffset = 0;
+                    XmNrightAttachment = XmATTACH_FORM;
+                    XmNrightOffset = 0;
+                    XmNbottomAttachment = XmATTACH_FORM;
+                    XmNbottomOffset = 0;
+                    XmNtopAttachment = XmATTACH_WIDGET;
+                    XmNtopOffset = 15;
+                    XmNtopWidget = XmLabel hs_searchresultLabel;
+                    };
+                controls
+                    {
+                    XmForm 
+                        {
+                        arguments
+                            {
+                            XmNheight = 50;
+                            XmNresizePolicy = XmRESIZE_NONE;
+                            };
+                        controls
+                            {
+                            XmPushButton 
+                                {
+                                arguments
+                                    {
+                                    XmNlabelString = OKlabel;
+                                    XmNleftAttachment = XmATTACH_POSITION;
+                                    XmNtopAttachment = XmATTACH_POSITION;
+                                    XmNleftPosition = 15;
+                                    XmNtopPosition = 20;
+                                    XmNwidth = ButtonWidth;
+                                    };
+				callbacks
+				    {
+					XmNactivateCallback = procedure hel_stat_ok_cb(hel_ctx);
+				    };
+                                };
+                            XmPushButton 
+                                {
+                                arguments
+                                    {
+                                    XmNlabelString = Applylabel;
+                                    XmNleftAttachment = XmATTACH_POSITION;
+                                    XmNtopAttachment = XmATTACH_POSITION;
+                                    XmNleftPosition = 45;
+                                    XmNtopPosition = 20;
+                                    XmNwidth = ButtonWidth;
+                                    };
+				callbacks
+				    {
+					XmNactivateCallback = procedure hel_stat_apply_cb(hel_ctx);
+				    };
+                                };
+                            XmPushButton 
+                                {
+                                arguments
+                                    {
+                                    XmNlabelString = Cancellabel;
+                                    XmNleftAttachment = XmATTACH_POSITION;
+                                    XmNtopAttachment = XmATTACH_POSITION;
+                                    XmNleftPosition = 75;
+                                    XmNtopPosition = 20;
+                                    XmNwidth = ButtonWidth;
+                                    };
+				callbacks
+				    {
+					XmNactivateCallback = procedure hel_stat_cancel_cb(hel_ctx);
+				    };
+                                };
+                            };
+                        };
+                    };
+                };
+            XmSeparatorGadget hs_resultSeparator;
+            XmLabel hs_searchresultLabel;
+            XmLabel hs_resultLabel;
+            XmLabel hs_resultTimeLabel;
+            XmLabel hs_timeValueLabel;
+            XmSeparatorGadget hs_firstSep;
+            XmLabel hs_sortLabel;
+            XmToggleButton hs_nameToggle;
+            XmToggleButton hs_prioToggle;
+            XmToggleButton hs_valueToggle;
+	    XmToggleButton hs_lostToggle;
+            XmToggleButton hs_highToggle;
+            XmToggleButton hs_lowToggle;
+            XmToggleButton hs_digitalToggle;
+            XmToggleButton hs_otherToggle;
+            XmLabel hs_presentationLabel;
+            };
+        };
+
+
+!*************************************************************
+!
+! This is the widgets int the search dialog for the statwindow. 
+!
+!*************************************************************
+    hs_timeLabel: XmLabel
+        {
+        arguments
+            {
+            XmNlabelString = timelabel;
+            XmNleftAttachment = XmATTACH_FORM;
+            XmNtopAttachment = XmATTACH_FORM;
+            XmNleftOffset = labelLeftFormOffset;
+            XmNtopOffset = 10;
+            };
+        };
+    hs_objectLabel: XmLabel 
+        {
+        arguments
+            {
+            XmNlabelString = objectlabel;
+            XmNleftAttachment = XmATTACH_FORM;
+            XmNtopAttachment = XmATTACH_WIDGET;
+            XmNleftOffset = labelLeftFormOffset;
+            XmNtopOffset = timeObjectOffset;
+            XmNtopWidget = XmLabel hs_timeLabel;
+            };
+        };
+    hs_valueLabel: XmLabel 
+        {
+        arguments
+            {
+            XmNlabelString = causelabel;
+            XmNleftAttachment = XmATTACH_FORM;
+            XmNtopAttachment = XmATTACH_WIDGET;
+            XmNleftOffset = labelLeftFormOffset;
+            XmNtopOffset = 20;
+            XmNtopWidget = XmLabel hs_prioLabel;
+            };
+        };
+    hs_prioLabel: XmLabel 
+        {
+        arguments
+            {
+            XmNlabelString = prioritylabel;
+            XmNleftAttachment = XmATTACH_FORM;
+            XmNtopAttachment = XmATTACH_WIDGET;
+            XmNleftOffset = labelLeftFormOffset;
+            XmNtopWidget = XmLabel hs_objectLabel;
+            XmNtopOffset = 20;
+            };
+        };
+    hs_startTimeLabel: XmLabel 
+        {
+        arguments
+            {
+            XmNlabelString = starttimelabel;
+            XmNleftAttachment = XmATTACH_WIDGET;
+            XmNleftWidget = XmOptionMenu hs_timeInterval;
+            XmNleftOffset = 47;
+            XmNtopAttachment = XmATTACH_FORM;
+            XmNtopOffset = labelTopFormOffset;
+            };
+        };
+    hs_startTimeText: XmTextField 
+        {
+        arguments
+            {
+            XmNcolumns = 22;
+	    XmNmaxLength = 22;
+            XmNleftAttachment = XmATTACH_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftOffset = 15;
+            XmNtopOffset = labelTextTopOffset;
+            XmNleftWidget = XmLabel hs_startTimeLabel;
+            XmNtopWidget = XmLabel hs_startTimeLabel;
+            };
+	callbacks
+	    {
+	    MrmNcreateCallback = procedure hel_stat_start_time_entry_cr(hel_ctx);
+	    XmNlosingFocusCallback = procedure hel_stat_start_time_entry_lf(hel_ctx);
+	    };
+        };
+    hs_stopTimeLabel: XmLabel 
+        {
+        arguments
+            {
+            XmNlabelString = stoptimelabel;
+            XmNleftAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNtopAttachment = XmATTACH_WIDGET;
+            XmNleftOffset = 0;
+            XmNtopOffset = 22;
+            XmNtopWidget = XmLabel hs_startTimeLabel;
+            XmNleftWidget = XmLabel hs_startTimeLabel;
+            };
+        };
+    hs_timeInterval: XmOptionMenu 
+        {
+        arguments
+            {
+            XmNtopAttachment = XmATTACH_FORM;
+            XmNtopOffset = labelTopFormOffset;
+            XmNleftAttachment = XmATTACH_WIDGET;
+            XmNleftOffset = 110;
+            XmNleftWidget = XmLabel hs_timeLabel;
+            };
+        controls
+            {
+            XmPulldownMenu 
+                {
+                arguments
+                    {
+                    XmNborderWidth = 1;
+                    };
+                controls
+                    {
+                    XmPushButton 
+                        {
+                        arguments
+                            {
+                            XmNlabelString = todaylabel;
+                            };
+                            callbacks
+                            {
+		            XmNactivateCallback = procedure hel_stat_today_cb(hel_ctx);
+                            };
+                         };
+                    XmPushButton 
+                        {
+                        arguments
+                            {
+                            XmNlabelString = yesterdaylabel;
+                            };
+                            callbacks
+                            {
+			    XmNactivateCallback = procedure hel_stat_yesterday_cb(hel_ctx);
+                            };
+                         };
+                    XmPushButton 
+                        {
+                        arguments
+                            {
+                            XmNlabelString = thisweeklabel;
+                            };
+                            callbacks
+                            {
+			    XmNactivateCallback = procedure hel_stat_thisw_cb(hel_ctx);
+                            };
+                         };
+                    XmPushButton 
+                        {
+                        arguments
+                            {
+                            XmNlabelString = lastweeklabel;
+                            };
+                            callbacks
+                            {
+			    XmNactivateCallback = procedure hel_stat_lastw_cb(hel_ctx);
+                            };
+                         };
+                    XmPushButton 
+                        {
+                        arguments
+                            {
+                            XmNlabelString = thismonthlabel;
+                            };
+                            callbacks
+                            {
+			    XmNactivateCallback = procedure hel_stat_thism_cb(hel_ctx);
+                            };
+                        };
+                    XmPushButton 
+                        {
+                        arguments
+                            {
+                            XmNlabelString = lastmonthlabel;
+                            };
+                            callbacks
+                            {
+			    XmNactivateCallback = procedure hel_stat_lastm_cb(hel_ctx);
+                            };
+                        };
+                    XmPushButton 
+                        {
+                        arguments
+                            {
+                            XmNlabelString = alllabel;
+                            };
+                            callbacks
+                            {
+			    XmNactivateCallback = procedure hel_stat_all_cb(hel_ctx);
+                            };
+                        };
+                    XmPushButton 
+                        {
+                        arguments
+                            {
+                            XmNlabelString = timelabel;
+                            };
+                            callbacks
+                            {
+			    XmNactivateCallback = procedure hel_stat_time_cb(hel_ctx);
+                            };
+                         };
+                    };
+                };
+            };
+        };
+    hs_stopTimeText: XmTextField 
+        {
+        arguments
+            {
+            XmNcolumns = 22;
+	    XmNmaxLength = 22;
+            XmNleftAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftOffset = 0;
+            XmNtopOffset = labelTextTopOffset;
+            XmNleftWidget = XmTextField hs_startTimeText;
+            XmNtopWidget = XmLabel hs_stopTimeLabel;
+            };
+	callbacks
+	    {
+	    MrmNcreateCallback = procedure hel_stat_stop_time_entry_cr(hel_ctx);
+	    XmNlosingFocusCallback = procedure hel_stat_stop_time_entry_lf(hel_ctx);
+	    };
+        };
+    hs_dayBreakLabel: XmLabel 
+        {
+        arguments
+            {
+            XmNlabelString = daybreaklabel;
+            XmNleftAttachment = XmATTACH_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftOffset = 47;
+            XmNtopOffset = 0;
+            XmNleftWidget = XmTextField hs_startTimeText;
+            XmNtopWidget = XmLabel hs_startTimeLabel;
+            };
+        };
+    hs_dayText: XmTextField 
+        {
+        arguments
+            {
+            XmNcolumns = 5;
+	    XmNmaxLength = 5;
+            XmNleftAttachment = XmATTACH_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftOffset = 15;
+            XmNtopOffset = labelTextTopOffset;
+            XmNtopWidget = XmLabel hs_dayBreakLabel;
+/*
+            XmNvalue = "06:00";
+*/
+            XmNleftWidget = XmLabel hs_dayBreakLabel;
+            };
+	callbacks
+	    {
+	    MrmNcreateCallback = procedure hel_stat_day_break_entry_cr(hel_ctx);
+	    XmNlosingFocusCallback = procedure hel_stat_day_break_entry_lf(hel_ctx);
+	    };
+        };
+    hs_dayBreakValueLabel: XmLabel 
+        {
+        arguments
+            {
+/*
+            XmNlabelString = compound_string("06:00");
+*/
+            XmNleftAttachment = XmATTACH_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftOffset = 15;
+            XmNtopOffset = 35;
+            XmNleftWidget = XmLabel hs_dayBreakLabel;
+            XmNtopWidget = XmLabel hs_dayBreakLabel;
+            };
+	callbacks
+	    {
+	    MrmNcreateCallback = procedure hel_stat_day_break_value_cr(hel_ctx);
+	    };
+        };
+    hs_objectName: XmTextField 
+        {
+        arguments
+            {
+            XmNcolumns = 45;
+            XmNleftAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftOffset = 0;
+            XmNtopWidget = XmLabel hs_objectLabel;
+            XmNtopOffset = labelTextTopOffset;
+	    XmNleftWidget = XmOptionMenu hs_timeInterval;
+            };
+	callbacks
+	    {
+	    MrmNcreateCallback = procedure hel_stat_objectname_entry_cr(hel_ctx);
+	    };
+        };
+    hs_nodeLabel: XmLabel 
+        {
+        arguments
+            {
+            XmNlabelString = nodelabel;
+            XmNleftAttachment = XmATTACH_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftOffset = 15;
+            XmNtopWidget = XmLabel hs_objectLabel;
+            XmNleftWidget = XmTextField hs_objectName;
+            };
+        };
+    hs_nodeName: XmTextField 
+        {
+        arguments
+            {
+            XmNcolumns = 15;
+            XmNleftAttachment = XmATTACH_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftOffset = 10;
+            XmNtopWidget = XmLabel hs_objectLabel;
+            XmNtopOffset = labelTextTopOffset;
+            XmNleftWidget = XmLabel hs_nodeLabel;
+            };
+	callbacks
+	    {
+	    MrmNcreateCallback = procedure hel_stat_nodename_entry_cr(hel_ctx);
+	    };
+        };
+    hs_aAlarmToggle: XmToggleButton 
+        {
+        arguments
+            {
+            XmNlabelString = a_alarmlabel;
+            XmNleftAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftOffset = 0;
+            XmNtopOffset = 0;
+            XmNtopWidget = XmLabel hs_prioLabel;
+            XmNx = 188;
+            XmNleftWidget = XmToggleButton hs_highToggle;
+            };
+	callbacks
+	    {
+	    MrmNcreateCallback = procedure hel_stat_a_toggle_cr(hel_ctx);
+	    };
+        };
+    hs_bAlarmToggle: XmToggleButton 
+        {
+        arguments
+            {
+            XmNlabelString = b_alarmlabel;
+            XmNleftAttachment = XmATTACH_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftOffset = toggleHorizOffset;
+            XmNtopOffset = 0;
+            XmNtopWidget = XmLabel hs_prioLabel;
+            XmNleftWidget = XmToggleButton hs_aAlarmToggle;
+            };
+	callbacks
+	    {
+	    MrmNcreateCallback = procedure hel_stat_b_toggle_cr(hel_ctx);
+	    };
+        };
+    hs_cAlarmToggle: XmToggleButton 
+        {
+        arguments
+            {
+            XmNlabelString = c_alarmlabel;
+            XmNleftAttachment = XmATTACH_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftOffset = toggleHorizOffset;
+            XmNtopOffset = 0;
+            XmNtopWidget = XmLabel hs_prioLabel;
+            XmNleftWidget = XmToggleButton hs_bAlarmToggle;
+            };
+	callbacks
+	    {
+	    MrmNcreateCallback = procedure hel_stat_c_toggle_cr(hel_ctx);
+	    };
+        };
+    hs_dAlarmToggle: XmToggleButton 
+        {
+        arguments
+            {
+            XmNlabelString = d_alarmlabel;
+            XmNleftAttachment = XmATTACH_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftOffset = toggleHorizOffset;
+            XmNtopOffset = 0;
+            XmNtopWidget = XmLabel hs_prioLabel;
+            XmNleftWidget = XmToggleButton hs_cAlarmToggle;
+            };
+	callbacks
+	    {
+	    MrmNcreateCallback = procedure hel_stat_d_toggle_cr(hel_ctx);
+	    };
+        };
+    hs_msgToggle: XmToggleButton 
+        {
+        arguments
+            {
+            XmNlabelString = messagelabel;
+            XmNleftAttachment = XmATTACH_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftOffset = toggleHorizOffset;
+            XmNtopOffset = 0;
+            XmNtopWidget = XmLabel hs_prioLabel;
+            XmNleftWidget = XmToggleButton hs_dAlarmToggle;
+            };
+	callbacks
+	    {
+	    MrmNcreateCallback = procedure hel_stat_msg_toggle_cr(hel_ctx);
+	    };
+        };
+    hs_searchresultLabel: XmLabel 
+        {
+        arguments
+            {
+            XmNlabelString = searchresultlabel;
+            XmNleftAttachment = XmATTACH_FORM;
+            XmNtopAttachment = XmATTACH_WIDGET;
+            XmNleftOffset = labelLeftFormOffset;
+            XmNtopWidget = XmLabel hs_resultTimeLabel;
+            XmNtopOffset = 10;
+            };
+        };
+    hs_resultLabel: XmLabel
+        {
+        arguments
+            {
+            XmNlabelString = compound_string(".....");
+            XmNleftAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftOffset = 0;
+            XmNtopOffset = 0;
+            XmNtopWidget = XmLabel hs_searchresultLabel;
+            XmNleftWidget = XmLabel hs_timeValueLabel;
+            };
+	callbacks
+	    {
+	    MrmNcreateCallback = procedure hel_stat_result2_cr(hel_ctx);
+	    };
+        };
+    hs_resultTimeLabel: XmLabel 
+        {
+        arguments
+            {
+            XmNlabelString = searchtimelabel;
+            XmNleftAttachment = XmATTACH_FORM;
+            XmNtopAttachment = XmATTACH_WIDGET;
+            XmNleftOffset = labelLeftFormOffset;
+            XmNtopWidget = XmSeparatorGadget hs_resultSeparator;
+            XmNtopOffset = 10;
+            };
+        };
+    hs_resultSeparator: XmSeparatorGadget 
+        {
+        arguments
+            {
+            XmNleftAttachment = XmATTACH_FORM;
+            XmNleftOffset = 0;
+            XmNrightAttachment = XmATTACH_FORM;
+            XmNrightOffset = 0;
+            XmNtopAttachment = XmATTACH_WIDGET;
+            XmNtopWidget = XmLabel hs_sortLabel;
+            XmNtopOffset = 20;
+            };
+        };
+    hs_firstSep: XmSeparatorGadget 
+        {
+        arguments
+            {
+            XmNleftAttachment = XmATTACH_FORM;
+            XmNtopAttachment = XmATTACH_WIDGET;
+            XmNleftOffset = 0;
+            XmNtopOffset = 20;
+            XmNrightAttachment = XmATTACH_FORM;
+            XmNrightOffset = 0;
+            XmNtopWidget = XmLabel hs_valueLabel;
+            };
+        };
+    hs_sortLabel: XmLabel 
+        {
+        arguments
+            {
+            XmNlabelString = sortlabel;
+            XmNleftAttachment = XmATTACH_FORM;
+            XmNtopAttachment = XmATTACH_WIDGET;
+            XmNtopWidget = XmLabel hs_presentationLabel;
+            XmNleftOffset = labelLeftFormOffset;
+            XmNtopOffset = 3;
+            };
+        };
+    hs_nameToggle: XmToggleButton 
+        {
+        arguments
+            {
+            XmNlabelString = namelabel;
+            XmNleftAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftWidget = XmToggleButton hs_aAlarmToggle;
+            XmNtopWidget = XmLabel hs_sortLabel;
+            XmNleftOffset = 0;
+            XmNtopOffset = 0;
+            };
+	callbacks
+	    {
+	    MrmNcreateCallback = procedure hel_stat_name_toggle_cr(hel_ctx);
+	    };
+        };
+    hs_prioToggle: XmToggleButton 
+        {
+        arguments
+            {
+            XmNlabelString = prioritylabel;
+            XmNleftAttachment = XmATTACH_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftWidget = XmToggleButton hs_nameToggle;
+            XmNtopWidget = XmLabel hs_sortLabel;
+            XmNleftOffset = toggleHorizOffset;
+            XmNtopOffset = 0;
+            };
+	callbacks
+	    {
+	    MrmNcreateCallback = procedure hel_stat_prio_toggle_cr(hel_ctx);
+	    };
+        };
+    hs_valueToggle: XmToggleButton 
+        {
+        arguments
+            {
+            XmNlabelString = causelabel;
+            XmNleftAttachment = XmATTACH_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftOffset = toggleHorizOffset;
+            XmNtopOffset = 0;
+            XmNtopWidget = XmLabel hs_sortLabel;
+            XmNleftWidget = XmToggleButton hs_prioToggle;
+            };
+	callbacks
+	    {
+	    MrmNcreateCallback = procedure hel_stat_cause_toggle_cr(hel_ctx);
+	    };
+        };
+    hs_lostToggle: XmToggleButton 
+        {
+        arguments
+            {
+            XmNlabelString = lostlabel;
+            XmNleftAttachment = XmATTACH_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftOffset = toggleHorizOffset;
+            XmNtopOffset = 0;
+            XmNtopWidget = XmLabel hs_sortLabel;
+            XmNleftWidget = XmToggleButton hs_valueToggle;
+            };
+	callbacks
+	    {
+	    MrmNcreateCallback = procedure hel_stat_lost_toggle_cr(hel_ctx);
+	    };
+        };
+    hs_timeValueLabel: XmLabel 
+        {
+        arguments
+            {
+            XmNlabelString = compound_string(".....");
+            XmNleftAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftOffset = 0;
+            XmNtopOffset = 0;
+            XmNtopWidget = XmLabel hs_resultTimeLabel;
+            XmNleftWidget = XmToggleButton hs_nameToggle;
+            };
+	callbacks
+	    {
+	    MrmNcreateCallback = procedure hel_stat_time_value2_cr(hel_ctx);
+	    };
+        };
+    hs_highToggle: XmToggleButton
+        {
+        arguments
+            {
+            XmNlabelString = highlabel;
+            XmNleftAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftOffset = 0;
+            XmNtopOffset = 0;
+            XmNleftWidget = XmTextField hs_objectName;
+            XmNtopWidget = XmLabel hs_valueLabel;
+            };
+	callbacks
+	    {
+	    MrmNcreateCallback = procedure hel_stat_high_toggle_cr(hel_ctx);
+	    };
+        };
+    hs_lowToggle: XmToggleButton 
+        {
+        arguments
+            {
+            XmNlabelString = lowlabel;
+            XmNleftAttachment = XmATTACH_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftOffset = 23;
+            XmNtopOffset = 0;
+            XmNleftWidget = XmToggleButton hs_highToggle;
+            XmNtopWidget = XmToggleButton hs_highToggle;
+            };
+	callbacks
+	    {
+	    MrmNcreateCallback = procedure hel_stat_low_toggle_cr(hel_ctx);
+	    };
+        };
+    hs_digitalToggle: XmToggleButton 
+        {
+        arguments
+            {
+            XmNlabelString = digitallabel;
+            XmNleftAttachment = XmATTACH_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftOffset = 23;
+            XmNtopOffset = 0;
+            XmNleftWidget = XmToggleButton hs_lowToggle;
+            XmNtopWidget = XmToggleButton hs_lowToggle;
+            };
+	callbacks
+	    {
+	    MrmNcreateCallback = procedure hel_stat_digital_toggle_cr(hel_ctx);
+	    };
+        };
+    hs_otherToggle: XmToggleButton 
+        {
+        arguments
+            {
+            XmNlabelString = otherlabel;
+            XmNleftAttachment = XmATTACH_WIDGET;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftOffset = 23;
+            XmNtopOffset = 0;
+            XmNleftWidget = XmToggleButton hs_digitalToggle;
+            XmNtopWidget = XmToggleButton hs_digitalToggle;
+            };
+	callbacks
+	    {
+	    MrmNcreateCallback = procedure hel_stat_other_toggle_cr(hel_ctx);
+	    };
+        };
+    hs_presentationLabel: XmLabel 
+        {
+        arguments
+            {
+            XmNlabelString = presentationlabel;
+            XmNleftAttachment = XmATTACH_FORM;
+            XmNtopAttachment = XmATTACH_OPPOSITE_WIDGET;
+            XmNleftOffset = labelLeftFormOffset;
+            XmNtopOffset = 8;
+            XmNtopWidget = XmSeparatorGadget hs_firstSep;
+            };
+        };
+
+end module;
+

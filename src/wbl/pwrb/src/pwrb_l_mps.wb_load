@@ -1,0 +1,33 @@
+!  pwrb_l_mps.wb_load -- Defines layouts for MPS objects.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+SObject wb:layout-Configurator-w1-AllClasses
+  Object mps $GroupRef
+  EndObject
+EndSObject
+!
+SObject wb:layout-PlcEditor-w1
+  Object MPS $Group
+    Object MpsIn $Group
+    EndObject
+    Object MpsOut $Group
+    EndObject
+    Object MpsQueue $Group
+    EndObject
+    Object MpsStack $Group
+    EndObject
+    Object MpsTriggTrp $Group
+    EndObject
+    Object MpsTrp $Group
+    EndObject
+    Object MpsTube $Group
+    EndObject
+    Object MpsWare $Group
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,767 @@
+!  pwrb_c_mvalve.wb_load -- Defines the class MValve.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_drive.c
+!  Motor valve positioner with three operating states and
+!  supervision of operation time and contactor response.
+!  
+!  This object is similar to the Valve object but can
+!  furthermore be stopped in a continues order, i.e.
+!  three-level action.
+!  The operating states, here named OPEN, STOP, and CLOSE,
+!  can be interpreted as: up - stop - down, right - stop -
+!  left, increase - stop - decrease etc.
+!  
+!  By means of the operation time supervision it is
+!  possible to detect if the final control element is
+!  stopped between the two operating states.
+!  One of three operating modes, LOCAL / MANUAL / AUTO, is
+!  selected by means of the input signal Local and the
+!  output signal ManMode in the following way:
+!  
+!  In AUTO mode AutoOpen/AutoClose-request remains as long
+!  as the operation has to continue, else the motion stops
+!  in some intermediate position.
+!  If there are conflicting requests the request with the
+!  highest priority wins; see below.
+!  
+!  Contactor alarm, Alarm5 or Alarm 6, stops current
+!  operation. A new order resets the alarms and initiates
+!  a new operation.
+!*/
+SObject pwrb:Class
+  Object MValve $ClassDef 159 
+    Body SysBody
+       Attr Editor = pwr_eEditor_PlcEd
+       Attr Method = pwr_eMethod_Connections
+       Attr PopEditor = 1
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "mvalve"
+      EndBody
+      !/**
+      !  Specifies an OPEN request in operational mode AUTO.
+      !  FALSE has no meaning and TRUE means OPEN request.
+      !*/
+      Object AutoOpen $Input 1 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "aop"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies a CLOSE request in operational mode AUTO.
+      !  FALSE has no meaning and TRUE means CLOSE request.
+      !*/
+      Object AutoClose $Input 2 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "acl"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies whether the end limit position of OPEN is
+      !  activated or not. FALSE means "no" and TRUE means that
+      !  the answer is yes and OrderOpen is reset. Used by
+      !  Alarm1 and Alarm3.
+      !*/
+      Object EndOpen $Input 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "eop"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      !/**
+      !  Specifies whether the end limit position of CLOSE is
+      !  activated or not. FALSE means "no" and TRUE means that
+      !  the answer is yes and OrderClose is reset.
+      !  Used by Alarm2 and Alarm4.
+      !*/
+      Object EndClose $Input 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "ecl"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      !/**
+      !  Contactor response at OPEN-order.
+      !  If the cop-input is left open the oop-output will be
+      !  used as an internal input signal and the value is
+      !  stored in ConOpen. FALSE means that the contactor has
+      !  not been closed, but TRUE means that it has.
+      !*/
+      Object ConOpen $Input 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "cop"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      !/**
+      !  Contactor response at CLOSE-order.
+      !  If the ccl-input is left open the ocl-output will be
+      !  used as an internal input signal and the value is
+      !  stored in ConClose. FALSE means that the contactor has
+      !  not been closed, but TRUE means that it has.
+      !*/
+      Object ConClose $Input 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "ccl"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      !/**
+      !  Selection of operational mode. The signal may proceed
+      !  from a rotary switch, for example. FALSE means that the
+      !  operational mode 'NOT LOCAL' is selected and ManMode
+      !  whether it is MANUAL or AUTO. TRUE means that the
+      !  operational mode LOCAL has been selected.
+      !*/
+      Object Local $Input 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "loc"
+	  Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      !/**
+      !  Specifies OPEN, CLOSE respectively STOP request in
+      !  operational mode LOCAL. FALSE means no action.
+      !  LocalOpen = TRUE, implies that the operation order
+      !  OrderOpen is set and will be set until a CLOSE or STOP
+      !  request is made.
+      !  
+      !  LocalClose = TRUE, implies the operation order
+      !  OrderClose is set and will be set until an OPEN or STOP
+      !  request is made.
+      !  LocalStop = TRUE, implies that the operation orders,
+      !  OrderClose and OrderOpen, will be reset and remain
+      !  reset until an OPEN or CLOSE request is made.
+      !*/
+      Object LocalOpen $Input 8 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "lop"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      Object LocalClose $Input 9 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "lcl"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      Object LocalStop $Input 10 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "lst"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the state of the safety interlocking at OPEN
+      !  operation. This interlocking is valid independent of
+      !  operational mode.
+      !  
+      !  FALSE means that this safety interlocking is not
+      !  activated. TRUE means unconditionally OPEN, i.e. the
+      !  operation order OrderOpen is set, unless any of
+      !  SafeClose, SafeStop or Alarm5 is TRUE. If SafeClose =
+      !  SafeOpen = SafeStop = TRUE SafeStop wins.
+      !*/
+      Object SafeOpen $Input 11 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "sop"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the state of the safety interlocking at CLOSE
+      !  operation. This interlocking is valid independent of
+      !  operational mode.
+      !  
+      !  FALSE means that this safety interlocking is not
+      !  activated. TRUE means unconditionally CLOSE, i.e. the
+      !  operation order OrderClose is set, unless any of
+      !  SafeOpen, SafeStop or Alarm6 is TRUE. If SafeClose =
+      !  SafeOpen = SafeStop = TRUE SafeStop wins.
+      !*/
+      Object SafeClose $Input 12 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "scl"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the state of the safety interlocking at STOP
+      !  operation. This interlocking is valid independent of
+      !  operational mode.
+      !  FALSE means that this safety interlocking is not
+      !  activated. TRUE means unconditional STOP, i.e. both the
+      !  operation orders, OrderClose and OrderOpen are reset.
+      !  If SafeClose = SafeOpen = SafeStop = TRUE SafeStop wins.
+      !*/
+      Object SafeStop $Input 13 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "sst"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the state of the production interlocking at
+      !  OPEN operation and is valid only for the operational
+      !  modes AUTO and MANUAL. FALSE means that the production
+      !  interlocking is not activated. TRUE means that the
+      !  operation order OrderOpen is set, unless SafeClose,
+      !  SafeStop, ProdClose, ProdStop, Alarm5, or Local is set.
+      !*/
+      Object ProdOpen $Input 14 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "pop"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the state of the production interlocking at
+      !  CLOSE operation and is valid only for the operational
+      !  modes AUTO and MANUAL. FALSE means that the production
+      !  interlocking is not activated. TRUE means that the
+      !  operation order OrderClose is set, unless SafeOpen,
+      !  SafeStop, ProdStop, Alarms, or Local is set.
+      !*/
+      Object ProdClose $Input 15 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "pcl"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the state of the production interlocking at
+      !  STOP operation and is valid only for the operational
+      !  modes AUTO and MANUAL. FALSE means that the production
+      !  interlocking is not activated. TRUE means that
+      !  operation orders, OrderClose and OrderOpen are reset,
+      !  unless SafeOpen, SafeClose, or Local is set.
+      !*/
+      Object ProdStop $Input 16 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "pst"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      !/**
+      !  Specifies required operational mode ( MANUAL or AUTO)
+      !  when LOCAL is FALSE. Used as an ordinary parameter,
+      !  e.g. it may be written into from display programs. The
+      !  advantage of placing this attribute as an output is
+      !  that it will be easier to use it in the graphic
+      !  configuration. If Local is FALSE means
+      !  
+      !      FALSE -- required operational mode is AUTO
+      !      TRUE  --    -  "  -              MANUAL
+      !*/
+      Object ManMode $Output 17 
+        Body SysBody
+          Attr PgmName = "ManMode"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "man"
+        EndBody
+      EndObject
+      !/**
+      !  This operational order specifies one of the three
+      !  operating states. FALSE means here that OPEN state is
+      !  not activated, and if OrderClose is also FALSE it means
+      !  STOP state. TRUE means OPEN state.
+      !*/
+      Object OrderOpen $Output 18 
+        Body SysBody
+          Attr PgmName = "OrderOpen"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "oop"
+        EndBody
+      EndObject
+      !/**
+      !  This operational order specifies one of the three
+      !  operating states. FALSE means here that CLOSE state is
+      !  not activated, and if OrderOpen is also FALSE it means
+      !  STOP state. TRUE means CLOSE state.
+      !*/
+      Object OrderClose $Output 19 
+        Body SysBody
+          Attr PgmName = "OrderClose"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "ocl"
+        EndBody
+      EndObject
+      !/**
+      !  The attribute is a confirmation of the current OPENED
+      !  state and that an OPENING operation has not yet
+      !  started. TRUE indicates EndOpen = TRUE and IndClosed =
+      !  OrderClose = Local = EndClose = FALSE, otherwise
+      !  IndOpen is FALSE.
+      !*/
+      Object IndOpen $Output 20 
+        Body SysBody
+          Attr PgmName = "IndOpen"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "iop"
+        EndBody
+      EndObject
+      !/**
+      !  The attribute is a confirmation of the current CLOSED
+      !  state and that a CLOSING operation has not yet started.
+      !  TRUE indicates EndClose = TRUE and IndOpen = OrderOpen
+      !  = Local = EndOpen = FALSE, otherwise IndOpen is FALSE.
+      !*/
+      Object IndClosed $Output 21 
+        Body SysBody
+          Attr PgmName = "IndClosed"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "icl"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies if the OrderOpen has been set during a time
+      !  longer than RunTime without any activating of the end
+      !  position, i.e. EndOpen has not been set.
+      !  FALSE means no alarm; TRUE means that EndOpen was not
+      !  set within the time limit value RunTime. The
+      !  operational order, OrderOpen, is not influenced by the
+      !  alarm.
+      !  
+      !  The alarm remains until EndOpen is TRUE or a CLOSE
+      !  request is made; it is not affected by a STOP-request.
+      !  Connects a DSup object to the output if a message will
+      !  be sent and specifies DetectText in the DSup object;
+      !  e.g. 'Too long operation time at OPEN-order on xxx'
+      !*/
+      Object Alarm1 $Output 22 
+        Body SysBody
+          Attr PgmName = "Alarm1"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "al1"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies if the OrderClose has been set during a time
+      !  longer than RunTime without any activating of the end
+      !  position, i.e. EndClosed has not been set.
+      !  
+      !  FALSE means no alarm; TRUE means that EndClosed was not
+      !  set within the time limit value RunTime. The
+      !  operational order, OrderClose, is not influenced by the
+      !  alarm.
+      !  The alarm remains until EndClosed is TRUE or an OPEN
+      !  request is made; it is not affected by a STOP-request.
+      !  
+      !  Connects a DSup object to the output if a message will
+      !  be sent and specifies DetectText in the DSup object;
+      !  e.g. 'Too long operation time at CLOSE-order on xxx'
+      !*/
+      Object Alarm2 $Output 23 
+        Body SysBody
+          Attr PgmName = "Alarm2"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "al2"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies if the EndOpen signal is lost, i.e. makes the
+      !  transition TRUE -> FALSE without OrderClose being TRUE
+      !  or if both limit position indicators ( EndClose and
+      !  EndClosed) are activated at the same time. The
+      !  operational order, OrderOpen, is not influenced by the
+      !  alarm.
+      !  The alarm remains until EndOpen = TRUE and EndClose =
+      !  FALSE or OrderClose is set.
+      !  
+      !  Connects a DSup object to the output if a message will
+      !  be sent and specifies DetectText in the DSup object;
+      !  e.g. 'Lost limit position OPENED on xxx'.
+      !*/
+      Object Alarm3 $Output 24 
+        Body SysBody
+          Attr PgmName = "Alarm3"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "al3"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies if the EndClosed signal is lost, i.e. makes
+      !  the transition TRUE -> FALSE without OrderOpen being
+      !  TRUE or if both limit position indicators ( EndClose
+      !  and EndClosed) are activated at the same time. The
+      !  operational order OrderClose is not influenced by the
+      !  alarm.
+      !  
+      !  The alarm remains until EndClose = TRUE and EndOpen =
+      !  FALSE or OrderClose is set.
+      !  Connect a DSup object to the output if message is to be
+      !  sent and specifies DetectText in the DSup object; e.g.
+      !  'Lost limit position CLOSED on xxx'.
+      !  
+      !  If EndClose = EndOpen = TRUE are both Alarm3 and Alarm4
+      !  set.
+      !*/
+      Object Alarm4 $Output 25 
+        Body SysBody
+          Attr PgmName = "Alarm4"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "al4"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies if the contactor response at an OPEN
+      !  operation arrived within the time limit value Ctime and
+      !  still remains or not. FALSE means no alarm; TRUE means
+      !  that the contactor response arrived within the time
+      !  limit value Ctime but disappeared later; OrderOpen is
+      !  reset by the PROVIEW/R system.
+      !  Connects a DSup object to the output if a message will
+      !  be sent and specifies DetectText in the DSup object;
+      !  e.g. 'The contactor response is lost at OPEN operation
+      !  on xxxx'.
+      !  
+      !  The alarm remains until either OrderOpen or OrderClose
+      !  is set.
+      !*/
+      Object Alarm5 $Output 26 
+        Body SysBody
+          Attr PgmName = "Alarm5"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "al5"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies if the contactor response at an CLOSE
+      !  operation arrived within the time limit value Ctime and
+      !  still remains or not. FALSE means no alarm; TRUE means
+      !  that the contactor response arrived within the time
+      !  limit value Ctime but disappeared later; OrderClose is
+      !  reset by the PROVIEW/R system.
+      !  Connects a DSup object to the output if a message will
+      !  be sent and specifies DetectText in the DSup object;
+      !  e.g. 'The contactor response is lost at CLOSE operation
+      !  on xxxx'.
+      !  
+      !  The alarm remains until either OrderOpen or OrderClose
+      !  is set.
+      !*/
+      Object Alarm6 $Output 27 
+        Body SysBody
+          Attr PgmName = "Alarm6"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "al6"
+        EndBody
+      EndObject
+      !/**
+      !  Sum of alarms. Specifies if any of the alarms exist or
+      !  not. FALSE means no active alarms at all in this
+      !  object; TRUE means that at least one of Alarm1, ... ,
+      !  Alarm6 is on.
+      !  
+      !  Connects a DSup object to the output if a message will
+      !  be sent and specifies DetectText in the DSup object.
+      !*/
+      Object SumAlarm $Output 28 
+        Body SysBody
+          Attr PgmName = "SumAlarm"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "als"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies, in seconds, the time limit value ( ³ 0 ) of
+      !  the contactor response. If the response exceeds this
+      !  value Alarm5 or Alarm6 is set. The time is counted from
+      !  the moment when OrderOpen or OrderClose becomes TRUE.
+      !*/
+      Object Ctime $Intern 29 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "Ctime"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the value, in seconds, of the operation
+      !  timer. If OrderOpen has been set or reset during a time
+      !  longer then TimerTime without any activating of the end
+      !  corresponding position Alarm1 or Alarm2 is set.
+      !*/
+      Object RunTime $Intern 30 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "RunTime"
+        EndBody
+      EndObject
+      ! ++
+      ! Timer struct
+      !
+      !/**
+      !  Indicates an active timer.
+      !*/
+      Object TimerFlag $Intern 31 
+        Body SysBody
+          Attr PgmName = "TimerFlag"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Points to the next element in the timer queue.
+      !*/
+      Object TimerNext $Intern 32 
+        Body SysBody
+          Attr PgmName = "TimerNext"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Number of remaining ticks.
+      !*/
+      Object TimerCount $Intern 33 
+        Body SysBody
+          Attr PgmName = "TimerCount"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Points to a Do or Dv object or, if these are not used,
+      !  to TimerDoDum. After a time of TimerTime the signal
+      !  specified by TimerDo is cleared.
+      !*/
+      Object TimerDO $Intern 34 
+        Body SysBody
+          Attr PgmName = "TimerDO"
+          Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the timer in seconds. It is set in run
+      !  time to Ctime or RunTime.
+      !*/
+      Object TimerTime $Intern 35 
+        Body SysBody
+          Attr PgmName = "TimerTime"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Dummy. If TimerDoDum does not point to a Do or Dv
+      !  object it points to this attribute.
+      !*/
+      Object TimerDODum $Intern 36 
+        Body SysBody
+          Attr PgmName = "TimerDODum"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Identity of this object is set at load file creation.
+      !  Used by the run time system.
+      !*/
+      Object TimerObjDId $Intern 37 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_OBJDIDSELF
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      !
+      ! End Timer struct
+      ! --
+      !/**
+      !  The operator's authorities to change between the
+      !  operational modes MANUAL / AUTO can be restricted.
+      !     0   -- Changes not allowed.
+      !     != 0 -- Changes allowed.
+      !*/
+      Object ManAcc $Intern 38 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "ManAcc"
+        EndBody
+      EndObject
+      !/**
+      !  The possible statues values are as follows:
+      !   1 or -1 -- Waiting for OPEN or CLOSE indication
+      !   2 or -2 -- OPENING or CLOSING
+      !   3 or -3 -- OPEN or CLOSED
+      !*/
+      Object Status $Intern 39 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Status"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies OPEN request in the operational mode MANUAL.
+      !  FALSE means no request; TRUE means OPEN request. The
+      !  request is reset by the PROVIEW/R system when it has
+      !  been noticed.
+      !*/
+      Object ManOpen $Intern 40 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "ManOpen"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  Specifies CLOSE request in the operational mode MANUAL.
+      !  FALSE means no request; TRUE means CLOSE request. The
+      !  request is reset by the PROVIEW/R system when it has
+      !  been noticed.
+      !*/
+      Object ManClose $Intern 41 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "ManClose"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  Specifies STOP request in the operational mode MANUAL.
+      !  FALSE means no request; TRUE means STOP request. The
+      !  request is reset by the PROVIEW/R system when it has
+      !  been noticed.
+      !*/
+      Object ManStop $Intern 42 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "ManStop"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 182
+        Attr parameters[0] = 16
+        Attr parameters[1] = 0
+        Attr parameters[2] = 12
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 0
+        Attr graphindex = 0
+        Attr default_mask[0] = 63
+        Attr default_mask[1] = 2078
+        Attr segname_annotation = 1
+        Attr compmethod = 31
+        Attr compindex = 0
+	Attr executeordermethod = 2
+        Attr objname = "MValve"
+        Attr graphname = "MValve"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    Object Template MValve
+      Body RtBody
+        Attr Ctime = 1.0
+        Attr RunTime = 60.0
+        Attr ManAcc = 15
+      EndBody
+    EndObject
+  EndObject
+EndSObject

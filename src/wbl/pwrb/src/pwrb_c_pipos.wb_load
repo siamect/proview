@@ -1,0 +1,399 @@
+!  pwrb_c_pipos.wb_load -- Defines the class PiPos.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  Conversion of  PI signal to position.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_io.c
+!  Translates a pulse counter value into an engineering
+!  value, e.g. position, volume etc.
+!  
+!  Suppose the engineering value is a position. The actual
+!  position is then calculated at every scanning by means
+!  of the straight line equation
+!          ActVal = Gain * (PulsIn - PiCal1) + PosCal1
+!  
+!  The ActVal position is calculated relative to the
+!  position in calibration point 1 by means of the current
+!  pulse signal, PulsIn, saved pulse signal PiCal1, and
+!  saved position, PosCal1, at calibration point 1. The
+!  Gain factor is either specified or calculated by means
+!  of a second calibration point, calibration point 2.
+!  How to carry out the calibrations is described below
+!  under Calibration.
+!*/
+SObject pwrb:Class
+  Object PiPos $ClassDef 175 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Connections
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "pipos"
+      EndBody
+      !/**
+      !  Pulse counter value, e.g. the pulse number PI or PIX
+      !  from a GetPi or Count object.
+      !*/
+      Object PulsIn $Input 1 
+        Body SysBody
+          Attr PgmName = "PulsIn"
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "PI"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  Specifies a position that will be used at the next
+      !  absolute value calibration at point 1.
+      !  
+      !  The attribute can be assigned a value in the
+      !  development environment by means of the Attribute
+      !  Editor and in the target environment e.g. by means of a
+      !  function in C or PLC programs. If the input is
+      !  connected the value of the connected quantity is used
+      !  at calibration.
+      !*/
+      Object CalPos1 $Input 2 
+        Body SysBody
+          Attr PgmName = "CalPos1"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "CP1"
+        EndBody
+      EndObject
+      !/**
+      !  Calibration order 1.
+      !  Specifies whether to start an absolute value
+      !  calibration in point 1 or not. FALSE means no action.
+      !  The transition FALSE -> TRUE triggers the calibration
+      !  in point 1 and the pulse value PulsIn is read and
+      !  stored in PICal1, and the value of CalPos1 is moved
+      !  into PosCal1. A connected input signal is supposed to
+      !  be a pulse.
+      !  
+      !  If the input left open it can be set from anywhere when
+      !  to trigger the calibration. In this case it is cleared
+      !  by the PROVIEW/R system when it has been noticed.
+      !*/
+      Object CalOrder1 $Input 3 
+        Body SysBody
+          Attr PgmName = "CalOrder1"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOINVERT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "co1"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies a position that will be used at the next gain
+      !  factor calibration at point 2.
+      !  
+      !  The attribute can be assigned a value in the
+      !  development environment by means of the Attribute
+      !  Editor and in the target environment, for instance, by
+      !  means of a function in C or PLC programs. If the input
+      !  is connected the value of the connected quantity is
+      !  used at calibration.
+      !*/
+      Object CalPos2 $Input 4 
+        Body SysBody
+          Attr PgmName = "CalPos2"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "CP2"
+        EndBody
+      EndObject
+      !/**
+      !  Calibration order 2.
+      !  
+      !  Specifies whether to start a gain factor calibration in
+      !  point 2 or not. FALSE means no action. The transition
+      !  FALSE -> TRUE triggers the gain calibration in point 2.
+      !  A connected input signal is supposed to be a pulse.
+      !  If the input is left open it can be set from anywhere
+      !  when to trigger the calibration. In this case it is
+      !  cleared by the PROVIEW/R system when it has been
+      !  noticed.
+      !*/
+      Object CalOrder2 $Input 5 
+        Body SysBody
+          Attr PgmName = "CalOrder2"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOINVERT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "co2"
+        EndBody
+      EndObject
+      !/**
+      !  Current position. The unit comes from the unit of Gain.
+      !  If Gain is in mm per pulse then ActVal will be in mm.
+      !*/
+      Object ActVal $Output 6 
+        Body SysBody
+          Attr PgmName = "ActVal"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "POS"
+        EndBody
+      EndObject
+      !/**
+      !  If the conversion factor is denoted Omsfak is Omsfak =
+      !  the number of pulses per x-unit, where x-unit can be
+      !  mm, degrees etc. The Gain is obtained as the value of 1 / Omsfak.
+      !  The value is either specified or calculated; see
+      !  Calibration below.
+      !*/
+      Object Gain $Intern 7 
+        Body SysBody
+          Attr PgmName = "Gain"
+          Attr Flags |= PWR_MASK_CHANGELOG
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "Gain"
+        EndBody
+      EndObject
+      !/**
+      !  Pulse counter value at the last absolute value
+      !  calibration at point 1. Its corresponding position
+      !  value is specified by PosCal1.
+      !*/
+      Object PICal1 $Intern 8 
+        Body SysBody
+          Attr PgmName = "PICal1"
+          Attr Flags |= PWR_MASK_CHANGELOG
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "PICal1"
+        EndBody
+      EndObject
+      !/**
+      !  Used at edge detecting.
+      !*/
+      Object CalOrder1Old $Intern 9 
+        Body SysBody
+          Attr PgmName = "CalOrder1Old"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "CalOrder1Old"
+        EndBody
+      EndObject
+      !/**
+      !  Used at edge detecting.
+      !*/
+      Object CalOrder2Old $Intern 10 
+        Body SysBody
+          Attr PgmName = "CalOrder2Old"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "CalOrder2Old"
+        EndBody
+      EndObject
+      !/**
+      !  Position value at the last absolute value calibration
+      !  at point 1. Its corresponding pulse counter value is
+      !  specified by PiCal1. PosCal1 has the same unit as
+      !  ActVal.
+      !*/
+      Object PosCal1 $Intern 11 
+        Body SysBody
+          Attr PgmName = "PosCal1"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "PosCal1"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Position value at the last gain calibration at point 2.
+      !*/
+      Object PosCal2 $Intern 12 
+        Body SysBody
+          Attr PgmName = "PosCal2"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "CalPos2"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  The operator's authorities regarding CalPos1
+      !  respectively CalOrder1.
+      !  
+      !   0   -- Changes not allowed.
+      !   != 0 -- Changes allowed.
+      !*/
+      Object AccCalPos1 $Intern 13 
+        Body SysBody
+          Attr PgmName = "AccCalPos1"
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "AccCalPos1"
+        EndBody
+      EndObject
+      !/**
+      !  The operator's authorities regarding CalPos2
+      !  respectively CalOrder2.
+      !   0   -- Changes not allowed.
+      !   != 0 -- Changes allowed.
+      !*/
+      Object AccCalOrder1 $Intern 14 
+        Body SysBody
+          Attr PgmName = "AccCalOrder1"
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "AccCalOrder1"
+        EndBody
+      EndObject
+      !/**
+      !  The minimum and maximum allowed value of CalPos1 at
+      !  changes made by an operator.
+      !*/
+      Object AccCalPos2 $Intern 15 
+        Body SysBody
+          Attr PgmName = "AccCalPos2"
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "AccCalPos2"
+        EndBody
+      EndObject
+      Object AccCalOrder2 $Intern 16 
+        Body SysBody
+          Attr PgmName = "AccCalOrder2"
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "AccCalOrder2"
+        EndBody
+      EndObject
+      !/**
+      !  The minimum and maximum allowed value of CalPos2 at
+      !  changes made by an operator.
+      !  
+      !      Calibration
+      !  Determination of absolute position. Calibration by
+      !  means of calibration point 1.
+      !  
+      !  In fact, there are four different methods to determine
+      !  the absolute position:
+      !  1 No calibration. At configuration specifies the pulse
+      !  value PICal1 when ActVal is equal to the known
+      !  position PosCal1. This method can be used if the
+      !  pulse value is known at a fixed position at the
+      !  configuration stage.
+      !  
+      !  2 The operator calibrates. The operator specifies the
+      !  position CalPos1 and then gives order to calibrate
+      !  by setting CalOrder1.
+      !  3 Automatic calibration at a fixed position. Connects
+      !  co1 to a digital signal. Specify the corresponding
+      !  position in CalPos1. At a leading edge on CalOrder1
+      !  the pulse value PulsIn is read and stored in PICal1,
+      !  and the value of CalPos1 is moved into PosCal1.
+      !  
+      !  4 Automatic calibration against a varying position.
+      !  The same as for a fixed position but CalPos1 is also
+      !  connected to a calculated position signal. At a
+      !  leading edge on CalOrder1 the pulse value PulsIn is
+      !  read and stored in PICal1, and PosCal1 is updated by
+      !  a value from the external signal.
+      !  Automatic calibration ought to be done at low speed
+      !  to avoid position error.
+      !  
+      !  Determination of gain. Calibration by means of
+      !  calibration point 2.
+      !  1  No calibration.
+      !     The designer specifies the value of Gain; (= the
+      !     difference in position per pulse). This is the
+      !     normal case when the characteristic of the position
+      !     transducer is known. If the conversion factor is
+      !     denoted Omsfak , Omsfak is equal to the number of
+      !     pulses per x-unit, where x-unit can be mm, degrees,
+      !     etc. The Gain is obtained as the value of 1 /
+      !     Omsfak.
+      !  2  Moment 2, 3 and 4 as for absolute position above.
+      !     The calibration in point 1 has to be done first.
+      !     Then a calibration is carried out in point 2, at
+      !     which a new position and its corresponding pulse
+      !     value are read. The values are compared with those
+      !     from point value, and Gain is calculated.
+      !  
+      !     Automatic calibration of the gain is supposed to be
+      !     unusual. However it is possible that there is a need
+      !     of re-calibration at exchange of measuring unit.
+      !*/
+      Object MinCalPos1 $Intern 17 
+        Body SysBody
+          Attr PgmName = "MinCalPos1"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MinCalPos1"
+        EndBody
+      EndObject
+      Object MaxCalPos1 $Intern 18 
+        Body SysBody
+          Attr PgmName = "MaxCalPos1"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MaxCalPos1"
+        EndBody
+      EndObject
+      Object MinCalPos2 $Intern 19 
+        Body SysBody
+          Attr PgmName = "MinCalPos2"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MinCalPos2"
+        EndBody
+      EndObject
+      Object MaxCalPos2 $Intern 20 
+        Body SysBody
+          Attr PgmName = "MaxCalPos2"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MaxCalPos2"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 69
+        Attr parameters[0] = 5
+        Attr parameters[1] = 0
+        Attr parameters[2] = 1
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 0
+        Attr graphindex = 0
+        Attr default_mask[0] = 1
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 1
+        Attr compmethod = 4
+        Attr compindex = 0
+        Attr executeordermethod = 2
+        Attr objname = "PiPos"
+        Attr graphname = "PiPos"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    Object Template PiPos
+      Body RtBody
+        Attr Gain = 1.0
+        Attr AccCalPos1 = 15
+        Attr AccCalOrder1 = 15
+      EndBody
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,84 @@
+!  pwrb_c_friendnodeconfig.wb_load -- Defines the class friendnodeconfig.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!/**
+!  @Version 1.0
+!  @Summary Configures a proview node that belongs to another project.
+!  The FriendNodeConfig object configures a proview node that belong to
+!  another project, that is the owner a volume mounted by some node in 
+!  the current project.
+!
+!  The FriendNodeConfig object is created in the project volume as a toplevel
+!  object in the node-hierachy.
+!
+!  Se also
+!  @classlink NodeConfig pwrb_nodeconfig.html
+!  
+!*/
+!
+SObject pwrb:Class
+  Object FriendNodeConfig $ClassDef 286 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+      Attr Flags |= pwr_mClassDef_TopObject
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "FriendNodeConfig"
+      EndBody
+      !/**
+      !  Description of the node
+      !*/
+      Object Description $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Name of the node
+      !*/
+      Object NodeName $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      ! QCOM bus number.
+      !*/
+      Object BusNumber $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      ! Ip address of the node.
+      !*/
+      Object Address $Attribute 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String16"
+        EndBody
+      EndObject
+      !/**
+      ! QCOM port, if different from standard port.
+      !*/
+      Object Port $Attribute 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      ! Name of the rootvolume of the node.
+      !*/
+      Object Volume $Attribute 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject

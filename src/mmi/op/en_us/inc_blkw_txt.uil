@@ -1,0 +1,31 @@
+!  inc_blkw_txt.uil -- block window
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  This module defines english texts for the block window.
+!
+value
+    title		: exported "Alarm Blocking";
+
+    blkw_AscizTable	: exported asciz_string_table
+	(
+	"There is no information available on the object",
+	"The alarm blocking failed!",
+	"Link to handler is down",
+	"You can not block common objects!",
+	"There is at least one mount object below.\nThey will not be blocked."
+	);
+
+
+
+
+    AAlarm		: "A-Alarm";
+    BAlarm		: "B-Alarm";
+    CAlarm		: "C-Alarm";
+    DAlarm		: "D-Alarm";
+
+    Block		: "Block:";
+    List		: "List...";
+    NoBlock		: "No Blocking";
+

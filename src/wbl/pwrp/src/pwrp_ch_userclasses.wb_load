@@ -1,0 +1,11 @@
+!  pwrp_ch_userclasses.wb_load -- UserClasses hierarchy.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+Range ldh_eDId_User
+!
+Object UserClasses $ClassHier
+EndObject

@@ -1,0 +1,94 @@
+!  pwrs_c_directoryvolume.wb_load -- Defines the class DirectoryVolume.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!/**
+!  @Version 1.0
+!  A directory volume contains object that configures a project in
+!  databases, volumes and nodes.
+!  When a directory volume is created, also a directoryvolume object is created.
+!  This object is not displayed in the object hierarchy in the navigator,
+!  though it can be opened from menu.
+!*/
+SObject pwrs:Class
+  Object $DirectoryVolume $ClassDef pwr_eCix_DirectoryVolume
+    Body SysBody
+      Attr Flags |= pwr_mClassDef_System
+      Attr Flags |= pwr_mClassDef_TopObject
+    EndBody
+    Object SysBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "DirectoryVolume"
+      EndBody
+      !/**
+      !  Optional text for description.
+      !*/
+      Object Description $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Next free object index
+      !*/
+      Object NextOix $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ObjectIx"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  Not used.
+      !*/
+      Object RtVersion $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  Not used.
+      !*/
+      Object RtCreTime $Attribute 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Time"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  Not used.
+      !*/
+      Object RtCreator $Attribute 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String16"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  Not used.
+      !*/
+      Object RtCardinality $Attribute 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  Not used.
+      !*/
+      Object RtBodySize $Attribute 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+    EndObject
+    Object Template $DirectoryVolume
+      Body SysBody
+      EndBody
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,18 @@
+!  pwrs_td_string16.wb_load -- Defines the type String16
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+SObject pwrs:Type
+  Object $String16 $TypeDef 3
+    Body SysBody
+      Attr Type = pwr_eType_String
+      Attr Size = 16
+      Attr TypeRef = "pwrs:Type-$String"
+      Attr Elements = 16
+    EndBody
+  EndObject
+EndSObject

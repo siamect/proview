@@ -1,0 +1,573 @@
+!  pwrb_c_drive.wb_load -- Defines the class Drive.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_drive.c
+!  START/ STOP motor control with supervision of contactor
+!  response and motion guard.
+!  Three different types of interlockings:
+!   · safety interlocking SafeStop
+!   · production interlocking ProdStop
+!   · 'prevent to start' interlocking, NoStart
+!
+!  SafeStop and ProdStop disable, each separately, the
+!  internal alarms (Alarm1, ..., Alarm3), i.e. when
+!  SafeStop or ProdStop is set the alarms are prevented
+!  from getting TRUE.
+!  A forward-back operation may be implemented by two
+!  Drive objects with mutual interlocking by SafeStop.
+!
+!  One of three operating modes, LOCAL / MANUAL / AUTO, is
+!  selected by means of the input signal Local and the
+!  output signal ManMode in the following way:
+!  
+!   LOCAL  
+!         · Used at operation from for example an outer
+!           operator's console, switching equipment etc.
+!         · Only safety interlocking SafeStop is taken
+!           into account.
+!         · LocStart has a spring back push button
+!           function with a closing start function. The
+!           signal has to be set until ConOn is TRUE;
+!           see below.
+!         · LocDrive has a spring back push button
+!           function with an opening stop function. STOP
+!           is also done when Local is reset.
+!  
+!  MANUAL/AUTO
+!         · Both production and safety interlockings are
+!           concerned.
+!         · In MANUAL mode START/STOP request is handled
+!           by the operator by means of the attributes
+!           ManSta respectively ManSto.
+!         · In AUTO mode START request is done on a
+!           leading edge on AutoStart; STOP request when
+!           AutoStart is FALSE, i.e. not at any edge but
+!           on the level.
+!         · The changes,
+!           -- AUTO -> MANUAL, do not influence the
+!             operational order, Order.
+!           -- MANUAL -> AUTO. If the operational order
+!  
+!  Supervision. If contactor response respectively motion
+!  guard are not used the corresponding input is left
+!  open. Internally the output signal Order is used
+!  instead of the missed input signal; i.e. it is not the
+!  value of ProdTim or SpeedTim itself that determines if
+!  these are concerned or not.
+!*/
+SObject pwrb:Class
+  Object Drive $ClassDef 103 
+    Body SysBody
+       Attr Editor = pwr_eEditor_PlcEd
+       Attr Method = pwr_eMethod_Connections
+       Attr PopEditor = 1
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "drive"
+      EndBody
+      !/**
+      !  Specifies START/STOP request at operational mode AUTO.
+      !  FALSE means STOP request. The transition FALSE -> TRUE
+      !  means START request.
+      !*/
+      Object AutoStart $Input 1 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "sta"
+        EndBody
+      EndObject
+      Object AutoNoStop $Input 2 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "nst"
+        EndBody
+      EndObject
+      !/**
+      !  Selection of operational mode. The signal may proceed
+      !  from for example a rotary switch. FALSE means that
+      !  operational mode 'NOT LOCAL' is selected and ManMode
+      !  whether it is MANUAL or AUTO. TRUE means that
+      !  operational mode LOCAL has been selected.
+      !*/
+      Object Local $Input 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "loc"
+	  Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      !/**
+      !  Specifies START request at operational mode LOCAL.
+      !  FALSE means no action; TRUE implies that the
+      !  operational order, Order, has been set.
+      !*/
+      Object LocStart $Input 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "lst"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      !/**
+      !  Specifies STOP request in operational mode LOCAL. FALSE
+      !  implies that the operational order, Order, is reset;
+      !  note closing function. TRUE means no action, but is
+      !  necessary too allow next START request by LocStart.
+      !*/
+      Object LocDrive $Input 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "ldr"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      !/**
+      !  Contactor response.
+      !  If the con-input is left open the ord-output will be
+      !  used as an internal input signal and the value will be
+      !  stored in ConOn. FALSE means that the contactor has not
+      !  been closed and TRUE that it has been closed.
+      !*/
+      Object ConOn $Input 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "con"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      !/**
+      !  Tachometric relay or motion guard.
+      !  
+      !  If the sl-input is left open the ind-output will be
+      !  used as an internal input signal and the value will be
+      !  stored in Speed. FALSE means no motion and TRUE
+      !  indicates motion.
+      !*/
+      Object Speed $Input 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "sl"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the state of the safety interlocking. FALSE
+      !  means that the safety interlocking is not activated.
+      !  TRUE means that unconditional STOP, i.e. the
+      !  operational order, Order, is set to STOP independent of
+      !  operational mode.
+      !*/
+      Object SafeStop $Input 8 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "ss"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the state of the production interlocking and
+      !  is not valid in the operational mode LOCAL. FALSE means
+      !  that the production interlocking is not activated. TRUE
+      !  means that the operational order, Order, is set to
+      !  STOP; valid only for the operational modes AUTO and
+      !  MANUAL.
+      !*/
+      Object ProdStop $Input 9 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "ps"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the state of 'prevent to start' interlocking
+      !  and is not valid in the operational mode LOCAL. FALSE
+      !  means that the 'prevent to start' interlocking is not
+      !  activated. TRUE means that some 'prevent to start'
+      !  interlocking exist. If NoStart makes the transition
+      !  FALSE -> TRUE when the operational order, Order, has
+      !  already been set TRUE, there will be no effect on the
+      !  operational order.
+      !*/
+      Object NoStart $Input 10 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "nos"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      !/**
+      !  Specifies required operational mode ( MANUAL or AUTO)
+      !  when LOCAL is FALSE. Used as an ordinary parameter e.g.
+      !  it may be written into from display programs. The
+      !  advantage of placing this attribute as an output is
+      !  that it will be easier to use it in the graphic
+      !  configuration. If Local is FALSE it means that
+      !      --  FALSE  required operational mode is AUTO
+      !      --  TRUE            -  "  -              MANUAL
+      !*/
+      Object ManMode $Output 11 
+        Body SysBody
+          Attr PgmName = "ManMode"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "man"
+        EndBody
+      EndObject
+      !/**
+      !  The operational order specifies either START or STOP.
+      !  FALSE means STOP and TRUE means START.
+      !*/
+      Object Order $Output 12 
+        Body SysBody
+          Attr PgmName = "Order"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "ord"
+        EndBody
+      EndObject
+      !/**
+      !  Operational indicator with respect to drive or not
+      !  drive. The attribute is a confirmation of the current
+      !  operational state. It is used for example to interlock
+      !  operational mode or alarms only relevant to run time.
+      !  FALSE means no drive; TRUE means operational order with
+      !  response from contactor and motion guard, i.e. drive
+      !  and Order = ConOn = Speed is TRUE and operational mode
+      !  is 'NOT LOCAL'.
+      !*/
+      Object Ind $Output 13 
+        Body SysBody
+          Attr PgmName = "Ind"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "ind"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies if the contactor response arrived within the
+      !  time limit value ProdTim or not. FALSE means no alarm;
+      !  TRUE means that the contactor response did not arrive
+      !  within the time limit value ProdTim. The operational
+      !  order, Order, is set to STOP and the alarm remains
+      !  until the next START requirement (AutoStart makes the
+      !  transition FALSE -> TRUE or ManSta becomes TRUE) is
+      !  accomplished.
+      !  
+      !  Connects a DSup object to the output if message shall
+      !  be sent and specifies DetectText in the DSup object,
+      !  e.g. 'The motor xxx did not start'
+      !*/
+      !*/
+      Object Alarm1 $Output 14 
+        Body SysBody
+          Attr PgmName = "Alarm1"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "al1"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies if the contactor response arrived within the
+      !  time limit value ProdTim and still remains or not.
+      !  FALSE means no alarm; TRUE means the contactor response
+      !  arrived within the time limit value ProdTim but
+      !  disappeared later. The operational order, Order, is set
+      !  to STOP and the alarm remains until the next START
+      !  requirement is accomplished.
+      !  
+      !  Connects a DSup object to the output if message shall
+      !  be sent and specifies DetectText in the DSup object,
+      !  e.g. 'The contactor response is lost on xxxx'.
+      !*/
+      Object Alarm2 $Output 15 
+        Body SysBody
+          Attr PgmName = "Alarm2"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "al2"
+        EndBody
+      EndObject
+      !/**
+      !  FALSE means no alarm.
+      !  TRUE means that the contactor response has arrived, but
+      !  Speed did not arrived within the time limit value
+      !  SpeedTim or disappeared later. The operational order,
+      !  Order, is set to STOP and the alarm remains until the
+      !  next START requirement is accomplished.
+      !  
+      !  Connects a DSup object to the output if message shall
+      !  be sent and specifies DetectText in the DSup object,
+      !  e.g. 'No motion on ....', 'No operational pressure in ...'
+      !*/
+      Object Alarm3 $Output 16 
+        Body SysBody
+          Attr PgmName = "Alarm3"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "al3"
+        EndBody
+      EndObject
+      !/**
+      !  Sum of alarms. Specifies if any alarms exist or not.
+      !  FALSE means no active alarms at all in this object;
+      !  TRUE means that at least one of Alarm1, Alarm2 or Alarm3
+      !  is on.
+      !  
+      !  Connects a DSup object to the output if message shall
+      !  be sent and specifies DetectText in the DSup object.
+      !*/
+      Object SumAlarm $Output 17 
+        Body SysBody
+          Attr PgmName = "SumAlarm"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "als"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies START request in the operational mode MANUAL.
+      !  FALSE means no request; TRUE means START request. The
+      !  request is reset by the PROVIEW/R system when it has
+      !  been noticed.
+      !*/
+      Object ManSta $Intern 18 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "ManSta"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  Specifies STOP request in the operational mode MANUAL.
+      !  FALSE means no request; TRUE means STOP request. The
+      !  request is reset by the PROVIEW/R system when it has
+      !  been noticed.
+      !*/
+      Object ManStp $Intern 19 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "ManStp"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  Specifies, in seconds, the time limit value ( >= 0 ) of
+      !  contactor response. If the response exceeds this value
+      !  Alarm1 is set. The time is counted from the moment when
+      !  Order becomes TRUE.
+      !*/
+      Object ProdTim $Intern 20 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "ProdTim"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies, in seconds, the time limit value ( ³ 0 ) of
+      !  motion response. If the response exceeds this value
+      !  Alarm3 is set. The time is counted from the moment when
+      !  ConOn becomes TRUE.
+      !*/
+      Object SpeedTim $Intern 21 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "SpeedTim"
+        EndBody
+      EndObject
+      !
+      ! Timer struct
+      ! ++
+      !/**
+      !  Indicates an active timer.
+      !*/
+      Object TimerFlag $Intern 22 
+        Body SysBody
+          Attr PgmName = "TimerFlag"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Points to the next element in the timer queue.
+      !*/
+      Object TimerNext $Intern 23 
+        Body SysBody
+          Attr PgmName = "TimerNext"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Number of remaining ticks.
+      !*/
+      Object TimerCount $Intern 24 
+        Body SysBody
+          Attr PgmName = "TimerCount"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Points to a Do or Dv object or, if these are not used,
+      !  to TimerDoDum. After a time of TimerTime the signal
+      !  specified by TimerDo is cleared.
+      !*/
+      Object TimerDO $Intern 25 
+        Body SysBody
+          Attr PgmName = "TimerDO"
+          Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the timer in seconds. It is set in run
+      !  time to ProdTime or SpeedTime.
+      !*/
+      Object TimerTime $Intern 26 
+        Body SysBody
+          Attr PgmName = "TimerTime"
+	  Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Dummy. If TimerDoDum does not point to a Do or Dv
+      !  object it points to this attribute.
+      !*/
+      Object TimerDODum $Intern 27 
+        Body SysBody
+          Attr PgmName = "TimerDODum"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Identity of this object is set at load file creation.
+      !  Used by the run time system.
+      !*/
+      Object TimerObjDId $Intern 28 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_OBJDIDSELF
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      ! --
+      ! End Timer struct
+      !
+      !/**
+      !  The operator's authorities to change between the
+      !  operational modes MANUAL / AUTO can be restricted.
+      !     0   -- Changes not allowed.
+      !    !=0 -- Changes allowed.
+      !*/
+      Object ManAcc $Intern 29 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "ManAcc"
+        EndBody
+      EndObject
+      !/**
+      !  The possible values are as follows:
+      !  
+      !   -- 0    Stopped; Order = Ind = FALSE
+      !   -- 1    Stopping; Order = FALSE and Ind = TRUE
+      !   -- 2    Waits for the contactor response to arrive
+      !   -- 3    Waits for the motion guard to indicate motion
+      !   -- 4    Drive
+      !*/
+      Object Status $Intern 30 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Status"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 180
+        Attr parameters[0] = 10
+        Attr parameters[1] = 0
+        Attr parameters[2] = 7
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 0
+        Attr graphindex = 0
+        Attr default_mask[0] = 161
+        Attr default_mask[1] = 70
+        Attr segname_annotation = 1
+        Attr compmethod = 30
+        Attr compindex = 0
+	Attr executeordermethod = 2
+        Attr objname = "Drive"
+        Attr graphname = "Drive"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    Object Template Drive
+      Body RtBody
+        Attr LocDrive = 1
+        Attr ProdTim = 1.0
+        Attr SpeedTim = 2.0
+        Attr ManAcc = 15
+      EndBody
+    EndObject
+  EndObject
+EndSObject

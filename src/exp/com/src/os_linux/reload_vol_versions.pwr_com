@@ -1,0 +1,54 @@
+!** Invisible: Script used by reload.sh to save classvolume versions
+!
+
+main()
+  string v;
+  string class;
+  string attr;
+  int    version;
+  int	 sts;
+  int	 file;
+  string fname;
+  string cmd;
+  int    file_open;
+
+  printf("\n");
+  printf("-- ssab_exe:ssab_reload_vol_versions\n");
+  printf("-- Script to store current classvolume versions\n\n");
+
+  fname = "$pwrp_db/reload_vol_versions_" + p1 + ".pwr_com";
+  fname = translate_filename( fname);
+  file_open = 0;
+  v = GetVolumeList();
+  while( v != "")
+    class = GetVolumeClass( v);
+    if ( class == "$ClassVolume" && v != "pwrs" && v != "pwrb" && v != "mps" && v != "NMps" && v != "TLog" && v != "SSAB" && v != "SA")
+
+      if ( !file_open)
+        file = fopen( fname, "w");
+        if ( !file)
+          printf("Unable to open file %s\n", fname);
+          exit(0);
+        endif
+
+        fprintf( file, "printf(\"\\n\");\n");
+        fprintf( file, "printf(\"-- %s\\n\");\n", fname);
+        fprintf( file, "printf(\"-- Script to restore current classvolume versions\\n\\n\");\n");
+        file_open = 1;
+      endif
+
+      attr = v + ":.RtVersion";
+      version = GetAttribute( attr, sts);
+      printf( "-- Store version %d of volume '%s'\n", version, v);
+      fprintf(file, "printf( \"-- Restore version number %d in volume '%s'\\n\");\n", version, v);
+      fprintf(file, "set volume/volume=%s\n", v);
+      fprintf(file, "set attr/name=%s:/attr=RtVersion/value=%d/noconf\n", v, version);
+      fprintf(file, "save\n");
+    endif
+    v = GetNextVolume(v);
+  endwhile
+  if ( file_open)
+    fclose(file);
+  endif
+
+endmain

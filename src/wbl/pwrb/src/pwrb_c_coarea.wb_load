@@ -1,0 +1,41 @@
+!  pwrb_c_coarea.wb_load -- Defines the class CoArea.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Summary Area object for Co raw values
+!  Area object for Co raw values.
+!
+!  The raw values of Co-signals is stored in the Value attribut. The
+!  index is given by ValueIndex in the Co-objects which is assigned
+!  at io initiation.
+!
+!  The object is created at runtime in the dynamic system volume pwrNode.
+!*/
+SObject pwrb:Class
+  Object CoArea $ClassDef 73 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "CoArea"
+      EndBody
+      Object Value $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Flags |= PWR_MASK_STATE
+          Attr Elements = 1
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,340 @@
+!  pwrb_c_chanao.wb_load -- Defines the class ChanAo.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  CHANnel Analog Output.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  Configures an analog output channel independent of the
+!  type of physical Ao-card.
+!  
+!  If EmergBreakTrue = TRUE and EmergBreakSelect = 2 then
+!  the output is based on FixedOutValue. Otherwise TestOn
+!  will settles which attribute the output is based on.
+!  
+!      Hints
+!  
+!  ChanAo objects are configured below a suitable card
+!  object.
+!  
+!  Rack and card objects to different I/O systems are
+!  documented separately.
+!  To create card object with channel objects belonging to
+!  it the function 'Configure Card' in "Utility Window" is
+!  recommended.
+!*/
+SObject pwrb:Class
+  Object ChanAo $ClassDef 30 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+      Attr Flags |= pwr_mClassDef_IO
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "ChanAo"
+      EndBody
+      !/**
+      !  Optional text, for example to describe the channel or
+      !  its employment.
+      !*/
+      Object Description $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Name of a signal object, i.e. Ao object, connected with
+      !  the channel object.
+      !*/
+      Object SigChanCon $ObjXRef 2
+
+        Body SysBody
+          Attr Identity = "Ao"
+          Attr Source = "ChanAo"
+          Attr Target = "Ao"
+          Attr SourceAttribute = "SigChanCon"
+          Attr TargetAttribute = "SigChanCon"
+        EndBody
+      EndObject
+      !/**
+      !  The identity of the channel. Optional, for example Ao0
+      !  to denote the first channel, physical cable marking,
+      !  etc.
+      !*/
+      Object Identity $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      !/**
+      !  The Number attribute is used to associate the ChanAo
+      !  object to a fixed channel on the card named by
+      !  SigChanCon. The physical channels of the card are
+      !  numbered in the interval {0,1, ... , (MaxNoOfChannels-1)}
+      !  ,where MaxNoOfChannels is an attribute in the card
+      !  object.
+      !  
+      !  The channels of the card are numbered according to the
+      !  instructions of the card manufacturer.
+      !*/
+      Object Number $Attribute 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies if the output signal will be based on the
+      !  ActualValue or the TestValue; see figure 3-4. FALSE
+      !  means that ActualValue is used; TRUE means TestValue.
+      !*/
+      Object TestOn $Attribute 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      !/**
+      !  The output signal is based on the TestValue instead of
+      !  ActualValue when TestOn is TRUE.
+      !*/
+      Object TestValue $Attribute 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      !/**
+      !  Action value. The output signal is equal to
+      !  FixedOutValue when EmergBreakTrue is TRUE and
+      !  EmergBreakSelect = 2. The EmergBreak-attributes belong
+      !  to the $Node object.
+      !*/
+      Object FixedOutValue $Attribute 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      Object CalculateNewCoef $Attribute 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies in which way the engineering value will be
+      !  converted to SigValue. The possible types of
+      !  conversions are:
+      !  
+      !     -- 0   No conversion: SigValue = ActualValue
+      !     -- 1   Normal conversion according to the output signal polynomial:
+      !        SigValue = OutPolyCoef0 + OutPolyCoef1 * ActualValue
+      !  
+      !  The attribute ActualValue belongs to an Ai object.
+      !*/
+      Object OutPolyType $Attribute 9
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+        EndBody
+      EndObject
+      !/**
+      !  The constant term in a OutPolyType expression, see
+      !  above.
+      !*/
+      Object OutPolyCoef0 $Attribute 10
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Coefficient in an OutPolyType expression, see above.
+      !*/
+      Object OutPolyCoef1 $Attribute 11
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      Object ActValRangeLow $Attribute 12
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      Object ActValRangeHigh $Attribute 13
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      Object SigValPolyCoef0 $Attribute 14
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object SigValPolyCoef1 $Attribute 15
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object SensorSigValRangeLow $Attribute 16
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      Object SensorSigValRangeHigh $Attribute 17
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      Object SigValueUnit $Attribute 18
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String16"
+        EndBody
+      EndObject
+      Object ChannelSigValRangeLow $Attribute 19
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      Object ChannelSigValRangeHigh $Attribute 20
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      Object RawValRangeLow $Attribute 21
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      Object RawValRangeHigh $Attribute 22
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+    EndObject
+    Object Template ChanAo
+      Body RtBody
+        Attr OutPolyType = 1
+        Attr ActValRangeLow = -100
+        Attr ActValRangeHigh = 100
+        Attr SensorSigValRangeLow = -5
+        Attr SensorSigValRangeHigh = 5
+        Attr ChannelSigValRangeLow = -5
+        Attr ChannelSigValRangeHigh = 5
+        Attr SigValueUnit = "V"
+      EndBody
+    EndObject
+    Object Defaults $Object
+      Body SysBody
+        Attr Name = "%02.2d"
+      EndBody
+    EndObject
+    Object ConfiguratorPosnn $Menu
+      Object Pointed $Menu
+	Object Disconnect $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Disconnect Signal"
+	    Attr MethodName = "$ObjXRef-DisconnectSingle"
+	    Attr MethodArguments[0] = "SigChanCon"
+	    Attr FilterName = "$ObjXRef-IsOkDisconnectSingle"
+	    Attr FilterArguments[0] = "SigChanCon"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPoson $Menu
+      Object Pointed $Menu
+	Object Connect $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Connect Signal"
+	    Attr MethodName = "$ObjXRef-Connect"
+	    Attr MethodArguments[0] = "SigChanCon"
+	    Attr MethodArguments[1] = "SigChanCon"
+	    Attr FilterName = "$ObjXRef-IsOkConnect"
+	    Attr FilterArguments[0] = "SigChanCon"
+	    Attr FilterArguments[1] = "SigChanCon"
+	  EndBody
+	EndObject
+	Object Disconnect $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Disconnect Signal"
+	    Attr MethodName = "$ObjXRef-Disconnect"
+	    Attr MethodArguments[0] = "SigChanCon"
+	    Attr MethodArguments[1] = "SigChanCon"
+	    Attr FilterName = "$ObjXRef-IsOkDisconnect"
+	    Attr FilterArguments[0] = "SigChanCon"
+	    Attr FilterArguments[1] = "SigChanCon"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPosos $Menu
+      Object Pointed $Menu
+	Object Disconnect $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Disconnect Signal"
+	    Attr MethodName = "$ObjXRef-DisconnectSingle"
+	    Attr MethodArguments[0] = "SigChanCon"
+	    Attr FilterName = "$ObjXRef-IsOkDisconnectSingle"
+	    Attr FilterArguments[0] = "SigChanCon"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPcsnn $Menu
+      Object Pointed $Menu
+	Object SetDefaults $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Default Name..."
+	    Attr MethodName = "$Object-SetDefaults"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPcscs $Menu
+      Object Pointed $Menu
+	Object SetDefaults $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Default Name..."
+	    Attr MethodName = "$Object-SetDefaults"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPcscn $Menu
+      Object Pointed $Menu
+	Object SetDefaults $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Default Name..."
+	    Attr MethodName = "$Object-SetDefaults"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPcson $Menu
+      Object Pointed $Menu
+	Object SetDefaults $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Default Name..."
+	    Attr MethodName = "$Object-SetDefaults"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPcsmn $Menu
+      Object Pointed $Menu
+	Object SetDefaults $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Default Name..."
+	    Attr MethodName = "$Object-SetDefaults"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+  EndObject
+EndSObject

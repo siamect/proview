@@ -1,0 +1,15 @@
+!  inc_alas_txt.uil -- alarm selection list
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  This module defines english texts for the alarm select list.
+!
+value
+
+! Exported constants
+   k_AllreadyInList_text   : exported "The text is already in the listbox.";
+   k_ObjNotExist_text	   : exported "The object does not exist.";
+   k_ListFull_text	   : exported "The list is full.";
+   title		   : exported "Alarm Selections";
+

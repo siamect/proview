@@ -1,0 +1,168 @@
+!  pwrb_c_nmpstrp.wb_load -- Defines the class NMpsTrp.
+!
+!  PROVIEW/R
+!
+!  <Description>.
+!
+SObject NMps:Class
+  Object NMpsTrp $ClassDef 4
+    Body SysBody
+      Attr Editor = pwr_eEditor_PlcEd
+      Attr Method = pwr_eMethod_Connections
+    EndBody
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "NMpsTrp"
+      EndBody
+      Object In $Input 1
+        Body SysBody
+          Attr PgmName = "In"
+          Attr InputType = 1
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "In"
+        EndBody
+      EndObject
+      Object Out $Input 2
+        Body SysBody
+          Attr PgmName = "Out"
+          Attr InputType = 2
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Out"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object TriggForwFront $Input 3
+        Body SysBody
+          Attr PgmName = "TriggForwFront"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "f"
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      Object TriggForwBack $Input 4
+        Body SysBody
+          Attr PgmName = "TriggForwBack"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "fb"
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      Object TriggReverseFront $Input 5
+        Body SysBody
+          Attr PgmName = "TriggReverseFront"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "r"
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      Object TriggReverseBack $Input 6
+        Body SysBody
+          Attr PgmName = "TriggReverseBack"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "rb"
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      Object Status $Output 7
+        Body SysBody
+          Attr PgmName = "Status"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "sts"
+	  Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object Function $Intern 8
+        Body SysBody
+          Attr PgmName = "Function"
+          Attr TypeRef = "pwrs:Type-$Mask"
+        EndBody
+      EndObject
+      Object OldTriggForwFront $Intern 9
+        Body SysBody
+          Attr PgmName = "OldTriggForwFront"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object OldTriggForwBack $Intern 10
+        Body SysBody
+          Attr PgmName = "OldTriggForwBack"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object OldTriggReverseFront $Intern 11
+        Body SysBody
+          Attr PgmName = "OldTriggReverseFront"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object OldTriggReverseBack $Intern 12
+        Body SysBody
+          Attr PgmName = "OldTriggReverseBack"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object FuncAllForward $Intern 13
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object FuncAllReverse $Intern 14
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2
+      Object PlcNode $Buffer 1
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 223
+        Attr parameters[0] = 6
+        Attr parameters[1] = 0
+        Attr parameters[2] = 1
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 16
+        Attr graphindex = 1
+        Attr default_mask[0] = 7
+        Attr default_mask[1] = 0
+        Attr segname_annotation = 1
+        Attr compmethod = 41
+        Attr compindex = 1
+        Attr tracemethod = 0
+        Attr traceindex = 1
+	Attr executeordermethod = 9
+        Attr objname = "Trp"
+        Attr graphname = "Trp"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    !
+    ! Template object 
+    !
+    Object Template NMpsTrp
+      Body RtBody
+        Attr Function = 1
+      EndBody
+    EndObject
+  EndObject
+EndSObject

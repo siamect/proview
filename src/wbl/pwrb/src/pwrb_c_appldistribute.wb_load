@@ -1,0 +1,63 @@
+!  pwrb_c_appldistribute.wb_load -- Defines the class ApplDistribute.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!/**
+!  @Version 1.0
+!  @Summary Configures distribution of applications.
+!  The ApplDistribute object configures distribution of applications,
+!  script-files, data-files etc, to process and operator stations.
+!
+!  One ApplDistribute object causes one or several files (with wildcard
+!  specification) to be copied from  the development project environment
+!  to a process or operator station.
+!
+!  The object reside in the project volume beneath a NodeConfig object.
+!  The specified file will be copied to the boot node of the NodeConfig 
+!  object, which is specified in the BootNode attribute.
+!
+!  The distribution is carried out by the distribution window in the
+!  navigator, or by pwr_cmd with the command 'copy appl' or 'copy all'.
+!
+!  Se also
+!  @classlink NodeConfig pwrb_nodeconfig.html
+!  @classlink GraphDistribute pwrb_graphdistribute.html
+!*/
+SObject pwrb:Class
+  Object ApplDistribute $ClassDef 17 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_RtAndDevBodies
+    EndBody
+    Object DevBody $ObjBodyDef 2 
+      !/**
+      ! @Summary Source file specification.
+      ! Source file specification.
+      ! The asterisk (*) wild card character can be used in the file
+      ! specification.
+      !
+      ! Example
+      !   $pwrp_load/*.flw
+      !*/
+      Object Source $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Target file specification.
+      ! Target file specification.
+      ! Should only be supplied if the target path or filename differs
+      ! from the source.
+      !*/
+      Object Target $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject

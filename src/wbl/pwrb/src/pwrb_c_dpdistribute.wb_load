@@ -1,0 +1,355 @@
+!  pwrb_c_dpdistribute.wb_load -- Defines the class DpDistribute.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_data.c
+!  @Summary Expands the number of boolean outputs that can be handled in a DataArithm.
+!  The DpDistribute expands the number of boolean outputs that can be
+!  handled in a DataArithm object.
+!
+!  The DpDistribute has 24 digital outputs, which values can be set from
+!  an array of Boolean declared in the code of a DataArithm. By connecting
+!  the data input of the DpDistribute to an data output of a DataArithm, 
+!  and placing the address of the boolean array in the data output, the
+!  values of the array will be copied to the Dp outpus of the DpDistribute
+!  object. This expands the number of digital outputs from the DataArithm
+!  from ordinary 9 to 96, if all four data ouputs are connected to DpDistribute
+!  objects.
+!
+!  Another advantage of DpDistribute is that its sometimes convenient to have
+!  the values arranged in an array, for example to handle in an for or
+!  while loop.
+!
+!  MaxIndex should be assigned the number of used outputs in the DpDistribute
+!  object. The value can be set at runtime or in the configurator.
+!
+!  The array should be a static declared array of pwr_tBoolean, with size
+!  greater or equal to the value in MaxIndex. Use the type pwr_sDpDistribute
+!  defined in $pwr_inc/rt_plc_data.h.
+!
+!  Example 
+!
+!  This is the code in a DataArithm witch has a DpDistribute object connected
+!  to the ODa1 output.
+!
+!    static pwr_sDpDistribute vect;
+!    int i;
+!
+!    ODa1 = vect;
+!    for ( i = 0; i < 24; i++) {
+!      if ( d1)
+!        vect[i] = 1;
+!      else
+!        vect[i] = 0;
+!    }
+! 
+!  Se also
+!  @classlink DataArithm pwrb_dataarithm.html
+!  @classlink DpCollect pwrb_dpcollect.html
+!  @classlink ApDistribute pwrb_apdistribute.html
+!*/
+!
+SObject pwrb:Class
+  Object DpDistribute $ClassDef 274
+    Body SysBody
+      Attr Editor = pwr_eEditor_PlcEd
+      Attr Method = pwr_eMethod_Connections
+    EndBody
+    !
+    ! DPDISTRIBUTE Runtime Body
+    !
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "DpDistribute"
+      EndBody
+      !/**
+      !  @Summary Data input connected to a data output of a DataArithm object.
+      !  Data input connected to a data output of a DataArithm object.
+      !  In the DataAritm code, the address of en array should be placed in
+      !  the connected data output.
+      !*/
+      Object DataIn $Input 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOREMOVE
+	  Attr Flags |= PWR_MASK_NOINVERT
+	  Attr Flags |= PWR_MASK_STATE
+          Attr GraphName = "Da"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the first element in the array.
+      !*/
+      Object DpOut1 $Output 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "Dp1"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the second element in the array.
+      !*/
+      Object DpOut2 $Output 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "Dp2"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the third element in the array.
+      !*/
+      Object DpOut3 $Output 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "Dp3"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the corresponding element in the array.
+      !*/
+      Object DpOut4 $Output 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "Dp4"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the corresponding element in the array.
+      !*/
+      Object DpOut5 $Output 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "Dp5"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the corresponding element in the array.
+      !*/
+      Object DpOut6 $Output 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "Dp6"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the corresponding element in the array.
+      !*/
+      Object DpOut7 $Output 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "Dp7"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the corresponding element in the array.
+      !*/
+      Object DpOut8 $Output 9
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "Dp8"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the corresponding element in the array.
+      !*/
+      Object DpOut9 $Output 10
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "Dp9"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the corresponding element in the array.
+      !*/
+      Object DpOut10 $Output 11
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "Dp10"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the corresponding element in the array.
+      !*/
+      Object DpOut11 $Output 12
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "Dp11"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the corresponding element in the array.
+      !*/
+      Object DpOut12 $Output 13
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "Dp12"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the corresponding element in the array.
+      !*/
+      Object DpOut13 $Output 14
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "Dp13"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the corresponding element in the array.
+      !*/
+      Object DpOut14 $Output 15
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "Dp14"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the corresponding element in the array.
+      !*/
+      Object DpOut15 $Output 16
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "Dp15"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the corresponding element in the array.
+      !*/
+      Object DpOut16 $Output 17
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "Dp16"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the corresponding element in the array.
+      !*/
+      Object DpOut17 $Output 18
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "Dp17"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the corresponding element in the array.
+      !*/
+      Object DpOut18 $Output 19
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "Dp18"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the corresponding element in the array.
+      !*/
+      Object DpOut19 $Output 20
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "Dp19"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the corresponding element in the array.
+      !*/
+      Object DpOut20 $Output 21
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "Dp20"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the corresponding element in the array.
+      !*/
+      Object DpOut21 $Output 22
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "Dp21"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the corresponding element in the array.
+      !*/
+      Object DpOut22 $Output 23
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "Dp22"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the corresponding element in the array.
+      !*/
+      Object DpOut23 $Output 24
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "Dp23"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the corresponding element in the array.
+      !*/
+      Object DpOut24 $Output 25
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "Dp24"
+        EndBody
+      EndObject
+      !/**
+      !  Number of used outputs. This value has to be supplied by the user.
+      !*/
+      Object MaxIndex $Intern 26
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+    EndObject
+    !
+    ! DPDISTRIBUTE Development Body
+    !
+    Object DevBody $ObjBodyDef 2
+      Object PlcNode $Buffer 1
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 11
+        Attr parameters[0] = 1
+        Attr parameters[1] = 2
+        Attr parameters[2] = 24
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 16
+        Attr graphindex = 0
+        Attr default_mask[0] = 1
+        Attr default_mask[1] = 3
+        Attr segname_annotation = 1
+        Attr compmethod = 4
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+	Attr executeordermethod = 2
+        Attr objname = "DpDistr"
+        Attr graphname = "DpDistr"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    !
+    ! Template object 
+    !
+    Object Template DpDistribute
+      Body RtBody
+        Attr MaxIndex = 2
+      EndBody
+    EndObject
+  EndObject
+EndSObject

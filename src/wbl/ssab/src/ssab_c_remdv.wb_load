@@ -1,0 +1,43 @@
+!  ssab_c_RemDv.wb_load -- Defines the class RemDv.
+!
+!  PROVIEW/R
+!
+!  <Description>.
+!
+SObject SSAB:Class
+  !
+  ! RemDv
+  !
+  Object RemDv $ClassDef 9
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    !
+    ! RemDi Runtime Body
+    !
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "RemDv"
+      EndBody
+      !
+      ! Parameter Description
+      !
+      Object Description $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+    EndObject ! $ObjBodyDef
+    !
+    ! Template för RemDv
+    !
+    Object Template RemDv
+      Body RtBody
+      EndBody
+    EndObject
+  !
+  ! End RemDv
+  !
+  EndObject
+EndSObject

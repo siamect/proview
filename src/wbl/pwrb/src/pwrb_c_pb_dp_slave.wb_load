@@ -1,0 +1,304 @@
+!/**
+!  @Version 1.0
+!  Object that configure one Profibus DP slave.
+!*/
+SObject         pwrb:Class
+!
+  Object  	Pb_DP_Slave	$ClassDef 298
+!
+    Body	SysBody
+      Attr	Editor = pwr_eEditor_AttrEd
+      Attr	Method = pwr_eMethod_Standard
+    EndBody
+    !
+    Object	RtBody	$ObjBodyDef 1
+      Body	SysBody
+        Attr	StructName = "Pb_DP_Slave"
+      EndBody
+      !
+      ! Description of object
+      !
+      Object 	Description	$Attribute 1
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !
+      Object 	GSDfile		$Attribute 2
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !
+      Object 	Status $Attribute 3
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt8"
+	  Attr  Flags |= PWR_MASK_NOEDIT
+	  Attr  Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+!
+      Object 	Process		$Attribute 4
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt16"
+        EndBody
+      EndObject
+!
+      Object 	ThreadObject	$Attribute 5
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+!
+      Object 	SlaveAddress	$Attribute 6
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt16"
+        EndBody
+      EndObject
+!
+      Object 	ByteOrdering	$Attribute 7
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt16"
+        EndBody
+      EndObject
+      !
+!
+      Object 	StallAction	$Attribute 8
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt8"
+        EndBody
+      EndObject
+!
+!
+      Object 	DisableSlave $Attribute 9
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt8"
+        EndBody
+      EndObject
+!
+      !
+      Object 	ErrorCount	$Attribute 10
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt16"
+	  Attr  Flags |= PWR_MASK_NOEDIT
+	  Attr  Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !
+      Object 	ErrorSoftLimit	$Attribute 11
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt16"
+        EndBody
+      EndObject
+      !
+      Object 	ErrorHardLimit	$Attribute 12
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt16"
+        EndBody
+      EndObject
+      !
+!
+      Object 	VendorName	$Attribute 13
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+!
+      Object 	ModelName	$Attribute 14
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+!
+      Object 	Revision	$Attribute 15
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+!
+      Object 	HardwareRelease	$Attribute 35
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+!
+      Object 	SoftwareRelease	$Attribute 36
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+!
+      Object 	PNOIdent	$Attribute 16
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !
+      Object 	GroupIdent	$Attribute 17
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt8"
+        EndBody
+      EndObject
+      !
+      Object 	WdFact1		$Attribute 18
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt8"
+        EndBody
+      EndObject
+      !
+      Object 	WdFact2		$Attribute 19
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt8"
+        EndBody
+      EndObject
+      !
+      Object 	PrmUserDataLen $Attribute 20
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt16"
+        EndBody
+      EndObject
+      !
+      !
+      Object 	PrmUserData $Attribute 21
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt8"
+	  Attr  Flags |= PWR_MASK_ARRAY
+          Attr  Elements = 256
+        EndBody
+      EndObject
+      !
+      Object 	AutoConfigure $Attribute 22
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt8"
+        EndBody
+      EndObject
+!
+      Object 	ConfigDataLen $Attribute 23
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt16"
+        EndBody
+      EndObject
+      !
+      Object 	ConfigData $Attribute 24
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt8"
+	  Attr  Flags |= PWR_MASK_ARRAY
+          Attr  Elements = 256
+        EndBody
+      EndObject
+      !
+      Object 	SlaveUserDataLen $Attribute 25
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt16"
+        EndBody
+      EndObject
+      !
+      Object 	SlaveUserData $Attribute 26
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt8"
+	  Attr  Flags |= PWR_MASK_ARRAY
+          Attr  Elements = 256
+        EndBody
+      EndObject
+      !
+      Object 	BytesOfInput $Attribute 27
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt16"
+	  Attr  Flags |= PWR_MASK_NOEDIT
+	  Attr  Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !
+      Object 	BytesOfOutput $Attribute 28
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt16"
+	  Attr  Flags |= PWR_MASK_NOEDIT
+	  Attr  Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !
+      Object 	OffsetInputs $Attribute 29
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt16"
+	  Attr  Flags |= PWR_MASK_NOEDIT
+	  Attr  Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !
+      Object 	OffsetOutputs $Attribute 30
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt16"
+	  Attr  Flags |= PWR_MASK_NOEDIT
+	  Attr  Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !
+      Object 	NumberModules $Attribute 31
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt16"
+	  Attr  Flags |= PWR_MASK_NOEDIT
+	  Attr  Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !
+      Object 	Inputs $Attribute 32
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt8"
+	  Attr  Flags |= PWR_MASK_ARRAY
+          Attr  Elements = 256
+	  Attr  Flags |= PWR_MASK_NOEDIT
+	  Attr  Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !
+      Object 	Outputs $Attribute 33
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt8"
+	  Attr  Flags |= PWR_MASK_ARRAY
+          Attr  Elements = 256
+	  Attr  Flags |= PWR_MASK_NOEDIT
+	  Attr  Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+!
+      Object 	Diag $Attribute 34
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt8"
+	  Attr  Flags |= PWR_MASK_ARRAY
+          Attr  Elements = 256
+	  Attr  Flags |= PWR_MASK_NOEDIT
+	  Attr  Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+!
+      !
+    EndObject	! Rt body
+!
+    Object Template Pb_DP_Slave
+      Body RtBody
+	Attr Process = 1
+        Attr SlaveAddress = 0
+        Attr StallAction = 1
+	Attr ByteOrdering = 1
+	Attr Status = 0
+	Attr DisableSlave = 0
+	Attr ErrorCount = 0
+	Attr ErrorSoftLimit = 15
+	Attr ErrorHardLimit = 50
+	Attr WdFact1 = 100
+	Attr WdFact2 = 10
+	Attr GroupIdent = 0
+	Attr AutoConfigure = 0
+	Attr ConfigDataLen = 0
+	Attr BytesOfInput = 0
+	Attr BytesOfOutput = 0
+	Attr OffsetInputs = 0
+	Attr OffsetOutputs = 0
+	Attr NumberModules = 0
+      EndBody
+    EndObject	! Template
+!
+  EndObject	! Pb_DP_Slave
+!
+EndSObject
+!

@@ -1,0 +1,114 @@
+#ifndef wb_pwrs_h
+#define wb_pwrs_h
+
+/* wb_pwrs.h -- common include file for work bench methods.
+
+   PROVIEW/R
+   Copyright (C) 1994 by Comator Process AB.
+
+   <Description>.  */
+
+#ifndef pwr_h
+#include "pwr.h"
+#endif
+
+#ifndef pwr_class_h
+#include "pwr_class.h"
+#endif
+
+#ifndef wb_ldh_h
+#include "wb_ldh.h"
+#endif
+
+#ifndef NULL
+#define NULL (void *) 0
+#endif
+
+#define pwrs_cSmdVersionStr "V2.7.0"
+
+typedef struct {
+  pwr_tObjName MethodName;
+  pwr_tStatus (*Method)();
+} pwr_sMethodBinding;
+
+typedef struct {
+  pwr_tObjName ClassName;
+  pwr_sMethodBinding (*Methods)[];
+} pwr_sClassBinding;
+
+#if defined __DECC || OS_LINUX
+#define pwr_BindMethods(Class) pwr_sMethodBinding pwr_g ## Class ## _Methods[]
+#define pwr_BindClasses(Type) pwr_sClassBinding pwr_g ## Type ## _ClassMethods[]
+#define pwr_BindClass(Class) {#Class, (void *)pwr_g ## Class ## _Methods}
+#define pwr_BindMethod(Method) {#Method, (pwr_tStatus (*)())Method}
+#else
+#define pwr_BindMethods(Class) pwr_sMethodBinding pwr_g/**/Class/**/_Methods[]
+#define pwr_BindClasses(Type) pwr_sClassBinding pwr_g/**/Type/**/_ClassMethods[]
+#define pwr_BindClass(Class) {"Class", pwr_g/**/Class/**/_Methods}
+#define pwr_BindMethod(Method) {"Method", (pwr_tStatus (*)())Method}
+#endif
+
+
+#define pwr_NullMethod {"", NULL}
+
+#define pwr_NullClass {"", NULL}
+
+/*----------------------------------------------------------------------------*\
+  Prototypes for DbCallbacks
+\*----------------------------------------------------------------------------*/
+
+#if defined OS_VMS
+static pwr_tStatus AnteAdopt (
+  ldh_tSesContext   Session,
+  pwr_tObjid	    Father,   /* object about to adopt a new child */
+  pwr_tClassId	    Class     /* class of new child */
+);
+static pwr_tStatus AnteCreate (
+  ldh_tSesContext   Session,
+  pwr_tObjid	    Father,   /* father of object to be created */
+  pwr_tClassId	    Class     /* class of new child */
+);
+static pwr_tStatus AnteMove (
+  ldh_tSesContext   Session,
+  pwr_tObjid	    Object,   /* object about to be moved */
+  pwr_tObjid	    Father,   /* new father */
+  pwr_tClassId	    Class     /* class of father */
+);
+static pwr_tStatus AnteUnadopt (
+  ldh_tSesContext   Session,
+  pwr_tObjid	    Father,   /* object about to unadopt a child */
+  pwr_tObjid	    Child,    /* child object to be unadopted */
+  pwr_tClassId	    Class     /* class of child */
+);
+static pwr_tStatus PostAdopt (
+  ldh_tSesContext   Session,
+  pwr_tObjid	    Father,   /* father of adopted child */
+  pwr_tObjid	    Child,    /* adopted child */
+  pwr_tClassId	    Class     /* class of adopted child */
+);
+static pwr_tStatus PostCreate (
+  ldh_tSesContext   Session,
+  pwr_tObjid	    Object,   /* created object */
+  pwr_tObjid	    Father,    /* father of created object */
+  pwr_tClassId	    Class     /* class of father */
+);
+static pwr_tStatus PostMove (
+  ldh_tSesContext   Session,
+  pwr_tObjid	    Object,   /* moved object */
+  pwr_tObjid	    Father,   /* new father */
+  pwr_tClassId	    Class     /* class of father */
+);
+static pwr_tStatus PostUnadopt (
+  ldh_tSesContext   Session,
+  pwr_tObjid	    Father,   /* father of unadopted child */
+  pwr_tObjid	    Child,    /* unadopted child */
+  pwr_tClassId	    Class     /* class of child */
+);
+static pwr_tStatus SyntaxCheck (
+  ldh_tSesContext   Session,
+  pwr_tObjid	    Object,    /* object to check */
+  int 		    *ErrorCount, /* accumulated error count */
+  int               *WarningCount /* accumulated warning count */ 
+);
+#endif
+#endif

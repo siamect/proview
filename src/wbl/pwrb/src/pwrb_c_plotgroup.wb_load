@@ -1,0 +1,191 @@
+!  pwrb_c_plotgroup.wb_load -- Defines the class PlotGroup.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  Configures a group of trend or fast graphs.
+!  
+!  The PlotGroup object brings together a number of fast or
+!  trend graphs into a group of graphs by the
+!  corresponding data storage objects
+!  being pointed out by YObjectName. 
+!  In Xtt up to 20 graphs from storage objects can be displayed,
+!  and in the GMS operators environment, up to 4 can be displayed.
+!  The graphs brought together, in reality the measured quantities,
+!  may be sampled by different frequencies.
+!  The graphs are always plotted as a function of time.
+!  Suppose that the fastest sampled measured quantity in a
+!  group is being sampled by the frequency BaseFrequency.
+!  The width of the "time window" at the display is then
+!  NumPoints * BaseFrequency.
+!  Between samples in a slowly sampled graph interpolation
+!  takes place.
+!  
+!         Hints
+!  The buttons 'Trend' and 'Fast' in the operator
+!  environment display both lists of those PlotGroup objects
+!  ( or graphs) that are available on the node independent
+!  of the user. Which list a specific PlotGroup object
+!  belongs to depends of Trend.
+!*/
+SObject pwrb:Class
+  Object PlotGroup $ClassDef 178 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "PlotGroup"
+      EndBody
+      !/**
+      !  Optional text.
+      !*/
+      Object Description $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      Object Title $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies whether the group of graphs consists of fast
+      !  or trend graphs. FALSE means fast graphs and TRUE means
+      !  trend graphs.
+      !*/
+      Object Trend $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags = 0
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the names of up to four DsTrend or DsFast
+      !  objects. Which graphs to be
+      !  plotted may not be changed from the more info form of
+      !  the PlotGroup object.
+      !*/
+      Object YObjectName $Attribute 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 20
+        EndBody
+      EndObject
+      !/**
+      !  Specify the engineering units of the plotted
+      !  quantities. The units are not changeable from the more
+      !  info form of the PlotGroup object.
+      !*/
+      Object YUnit $Attribute 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String8"
+          Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 20
+        EndBody
+      EndObject
+      !/**
+      !  Specifies, for respective graph the upper and the lower
+      !  display limit of the vertical axis.
+      !*/
+      Object YMaxValue $Attribute 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 20
+        EndBody
+      EndObject
+      Object YMinValue $Attribute 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 20
+        EndBody
+      EndObject
+      !/**
+      !  Specifies, for respective vertical axis, the value of
+      !  major and minor scale division; YTickminor <
+      !  YTickmajor.
+      !*/
+      Object YTickmajor $Attribute 8 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 20
+        EndBody
+      EndObject
+      Object YTickminor $Attribute 9 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 20
+        EndBody
+      EndObject
+      !/**
+      !  Not used.
+      !*/
+      Object XMaxValue $Attribute 10 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object XMinValue $Attribute 11 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the number of samples the graphs are to be
+      !  rolled when updating.
+      !*/
+      Object XShiftVal $Attribute 12 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr Flags = 0
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the major and the minor scale division for
+      !  the horizontal axis; XTickminor < XTickmajor. The value
+      !  of XTickmajor also determines the grid size.
+      !*/
+      Object XTickmajor $Attribute 13 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr Flags = 0
+        EndBody
+      EndObject
+      Object XTickminor $Attribute 14 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr Flags = 0
+        EndBody
+      EndObject
+      !/**
+      !  Determines the width of the time window.
+      !  
+      !  0 < NumPoints * number of elements in the data storage
+      !  object's DataBuffer. Is adjusted automatically at
+      !  selection of a new measured quantity from the object
+      !  display of the PlotGroup.
+      !*/
+      Object NumPoints $Attribute 15 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr Flags = 0
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject

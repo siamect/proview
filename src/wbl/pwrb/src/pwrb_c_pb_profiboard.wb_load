@@ -1,0 +1,225 @@
+!  pwrb_c_pb_profiboard.wb_load -- Defines the class pb_profiboard
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+SObject         pwrb:Class
+!
+!
+  Object  	Pb_Profiboard	$ClassDef 287
+!
+    Body	SysBody
+      Attr	Editor = pwr_eEditor_AttrEd
+      Attr	Method = pwr_eMethod_Standard
+    EndBody
+    !
+    Object	RtBody	$ObjBodyDef 1
+      Body	SysBody
+        Attr	StructName = "Pb_Profiboard"
+      EndBody
+      !
+      ! Description of object
+      !
+      Object 	Description	$Attribute 1
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !
+!
+      Object 	Process		$Attribute 2
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt16"
+        EndBody
+      EndObject
+!
+      Object 	ThreadObject	$Attribute 3
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+!
+      !
+      Object 	Status		$Attribute 4
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt8"
+	  Attr  Flags |= PWR_MASK_NOEDIT
+	  Attr  Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !
+      Object 	DisableBus	$Attribute 5
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt8"
+	  Attr  Flags |= PWR_MASK_NOEDIT
+	  Attr  Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !
+      !
+      Object 	NumberSlaves	$Attribute 6
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt16"
+	  Attr  Flags |= PWR_MASK_NOEDIT
+	  Attr  Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+!
+      Object 	BusNumber	$Attribute 7
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt16"
+        EndBody
+      EndObject
+!
+      Object 	MaxNumberSlaves	$Attribute 8
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt16"
+        EndBody
+      EndObject
+      !
+      !
+      Object 	MaxSlaveOutputLen $Attribute 9
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt16"
+        EndBody
+      EndObject
+      !
+      !
+      Object 	MaxSlaveInputLen $Attribute 10
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt16"
+        EndBody
+      EndObject
+      !
+      Object 	BaudRate	$Attribute 11
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt16"
+        EndBody
+      EndObject
+!
+      Object 	Tsl		$Attribute 12
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt16"
+        EndBody
+      EndObject
+!
+      Object 	MinTsdr		$Attribute 13
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt16"
+        EndBody
+      EndObject
+!
+      Object 	MaxTsdr		$Attribute 14
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt16"
+        EndBody
+      EndObject
+!
+      Object 	Tqui		$Attribute 15
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt8"
+        EndBody
+      EndObject
+!
+      Object 	Tset		$Attribute 16
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt8"
+        EndBody
+      EndObject
+!
+      Object 	Ttr		$Attribute 17
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+!
+      Object 	G		$Attribute 18
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt8"
+        EndBody
+      EndObject
+!
+      Object 	Hsa		$Attribute 19
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt8"
+        EndBody
+      EndObject
+!
+      Object 	MaxRetryLimit	$Attribute 20
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt8"
+        EndBody
+      EndObject
+!
+      Object 	BpFlag		$Attribute 21
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt8"
+        EndBody
+      EndObject
+!
+      Object 	MinSlaveInterval	$Attribute 22
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt16"
+        EndBody
+      EndObject
+!
+      Object 	PollTimeout		$Attribute 23
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt16"
+        EndBody
+      EndObject
+!
+      Object 	DataControlTime		$Attribute 24
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt16"
+        EndBody
+      EndObject
+!
+      Object 	Diag $Attribute 25
+        Body	SysBody
+          Attr	TypeRef  = "pwrs:Type-$UInt8"
+	  Attr  Flags |= PWR_MASK_ARRAY
+          Attr  Elements = 128
+	  Attr  Flags |= PWR_MASK_NOEDIT
+	  Attr  Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+!
+      !
+    EndObject	! Rt body
+!
+    Object Template Pb_Profiboard
+      Body RtBody
+        Attr BusNumber = 1
+        Attr MaxNumberSlaves = 48
+        Attr MaxSlaveOutputLen = 128
+        Attr MaxSlaveInputLen = 128
+        Attr BaudRate = 1500
+        Attr Tsl = 3000
+	Attr MinTsdr = 150
+	Attr MaxTsdr = 980
+	Attr Tqui = 0
+	Attr Tset = 240
+	Attr Ttr = 300000
+	Attr G = 10
+	Attr Hsa = 126
+	Attr MaxRetryLimit = 1
+        Attr NumberSlaves = 0
+	Attr Status = 0
+	Attr DisableBus = 0
+	Attr Process = 1
+	Attr BpFlag = 0
+	Attr MinSlaveInterval = 1
+	Attr PollTimeout = 1000
+	Attr DataControlTime = 100
+      EndBody
+    EndObject	! Template
+!
+  EndObject	! Pb_Profiboard
+!
+EndSObject
+!

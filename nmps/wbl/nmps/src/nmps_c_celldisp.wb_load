@@ -1,0 +1,426 @@
+!  nmps_c_celldisp.wb_load -- Defines the class CellDisp.
+!
+!  PROVIEW/R
+!
+!  <Description>.
+!
+SObject NMps:Class
+  Object CellDisp $ClassDef 44
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_RtConnectionsAndDevBodies
+      Attr PopEditor = 2
+    EndBody
+    !
+    ! CellDisp Runtime Body
+    !
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "CellDisp"
+      EndBody
+      Object Cell1 $Input 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOREMOVE
+          Attr GraphName = "Cell1"
+        EndBody
+      EndObject
+      Object Cell2 $Input 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "Cell2"
+        EndBody
+      EndObject
+      Object Cell3 $Input 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "Cell3"
+        EndBody
+      EndObject
+      Object Cell4 $Input 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "Cell4"
+        EndBody
+      EndObject
+      Object Cell5 $Input 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "Cell5"
+        EndBody
+      EndObject
+      Object Cell6 $Input 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "Cell6"
+        EndBody
+      EndObject
+      Object Cell7 $Input 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "Cell7"
+        EndBody
+      EndObject
+      Object Cell8 $Input 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "Cell8"
+        EndBody
+      EndObject
+      Object Cell9 $Input 9
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "Cell9"
+        EndBody
+      EndObject
+      Object Cell10 $Input 10
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "Cell10"
+        EndBody
+      EndObject
+      Object Link $Input 11
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "Link"
+        EndBody
+      EndObject
+      Object DisplayObject $Input 12
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr GraphName = "DObj"
+        EndBody
+      EndObject
+      Object DataClass $Intern 13
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ClassId"
+        EndBody
+      EndObject
+      Object Function $Intern 14
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      Object Number $Intern 15
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      Object MaxSize $Intern 16
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      Object SelDirection $Intern 17
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      Object FloatAttr $Intern 18
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String32"
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 5
+        EndBody
+      EndObject
+      Object BooleanAttr $Intern 19
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String32"
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 5
+        EndBody
+      EndObject
+      Object IntAttr $Intern 20
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String32"
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 5
+        EndBody
+      EndObject
+      Object Select $Intern 21
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 60
+        EndBody
+      EndObject
+      Object OldSelect $Intern 22
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 60
+        EndBody
+      EndObject
+      Object Objid $Intern 23
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 60
+        EndBody
+      EndObject
+      Object F1 $Intern 24
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 60
+        EndBody
+      EndObject
+      Object F2 $Intern 25
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 60
+        EndBody
+      EndObject
+      Object F3 $Intern 26
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 60
+        EndBody
+      EndObject
+      Object F4 $Intern 27
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 60
+        EndBody
+      EndObject
+      Object F5 $Intern 28
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 60
+        EndBody
+      EndObject
+      Object B1 $Intern 29
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 60
+        EndBody
+      EndObject
+      Object B2 $Intern 30
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 60
+        EndBody
+      EndObject
+      Object B3 $Intern 31
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 60
+        EndBody
+      EndObject
+      Object B4 $Intern 32
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 60
+        EndBody
+      EndObject
+      Object B5 $Intern 33
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 60
+        EndBody
+      EndObject
+      Object I1 $Intern 34
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 60
+        EndBody
+      EndObject
+      Object I2 $Intern 35
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 60
+        EndBody
+      EndObject
+      Object I3 $Intern 36
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 60
+        EndBody
+      EndObject
+      Object I4 $Intern 37
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 60
+        EndBody
+      EndObject
+      Object I5 $Intern 38
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 60
+        EndBody
+      EndObject
+      Object FloatAttrOffs $Intern 39
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 5
+        EndBody
+      EndObject
+      Object BooleanAttrOffs $Intern 40
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 5
+        EndBody
+      EndObject
+      Object IntAttrOffs $Intern 41
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 5
+        EndBody
+      EndObject
+      Object SelectObjid $Intern 42
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object DataSize $Intern 43
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object OldLastIndex $Intern 44
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    !
+    ! CellDisp Development Body
+    !
+    Object DevBody $ObjBodyDef 2
+      Object PlcNode $Buffer 1
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 11
+        Attr parameters[0] = 12
+        Attr parameters[1] = 0
+        Attr parameters[2] = 0
+        Attr parameters[3] = 0
+        Attr graphmethod = 0
+        Attr graphindex = 0
+        Attr default_mask[0] = 1
+        Attr default_mask[1] = 0
+        Attr segname_annotation = 1
+        Attr devbody_annotation = 0
+        Attr compmethod = 35
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+	Attr executeordermethod = 2
+        Attr objname = "CellDisp"
+        Attr graphname = "CellDisp"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    !
+    ! Template object 
+    !
+    Object Template CellDisp
+      Body RtBody
+        Attr MaxSize = 60
+      EndBody
+    EndObject
+  EndObject
+EndSObject

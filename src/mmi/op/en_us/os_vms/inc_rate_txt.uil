@@ -1,0 +1,16 @@
+!  inc_rate_txt.uil -- <short description>
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  This module defines english texts for the attribute  window.
+!
+value
+    set			: "Set:";	
+    errorTitle		: exported "Attribute Editor: Error";
+    notValidValueFor	: exported "is not a valid value for";
+    notValidAttribute   : exported "is not a valid attribute";
+    notSetAttrAlloc	: exported "Can't set attribute\nAllocation error\nSize:";
+    notSetAttrGdh	: exported "Can't set attribute\nGdh error\nStatus:";
+    title		: exported "Attribute Editor";
+

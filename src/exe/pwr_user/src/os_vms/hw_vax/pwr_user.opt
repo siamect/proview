@@ -1,0 +1,9 @@
+!  pwr_user.opt -- <short description>
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+pwr_obj:pwr_user.obj
+pwr_lib:libpwr_co/lib

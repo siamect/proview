@@ -1,0 +1,173 @@
+!  pwrb_c_initstep.wb_load -- Defines the class InitStep.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_macro_grafcet.h
+!  The first step in a Grafcet-chain.
+!  
+!  At least one InitStep object has to be included in
+!  every sequential chain.
+!  
+!  The object is active when the PLC program that contains
+!  the object is to start running.
+!  The PlcPgm object has an attribute, ResetObject, where
+!  the name of a Di , Do, or Dv object is specified. This
+!  attribute is used as a reset signal in one or more
+!  sequential chains in the PLC program in the following
+!  way. When the reset signal makes the transition:
+!  
+!   · 0 -> 1 each Step, InitStep and Order object in the
+!     PLC program becomes inactive. Stored orders are
+!     aborted.
+!   · 1 -> 0 the InitStep object(s) of the PLC program
+!     becomes active.
+!  
+!  If individual reset signals are required for every
+!  single sequential chain the number of sequential chains
+!  has to be limited to one per PLC program.
+!  The vertical connections are connected to Trans
+!  objects.
+!  
+!  The horizontal connection may at the same time be
+!  connected to one or more Order objects as well as one
+!  or more Stoxx , Setxx or Resxx objects; see figure 3-51
+!  on page 3-328. It may also be left open or used as an
+!  ordinary binary signal; see figure 3-22 on page 3-184.
+!*/
+SObject pwrb:Class
+  Object InitStep $ClassDef 136 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "initstep"
+      EndBody
+      !/**
+      !  Used by the PLC Editor.
+      !*/
+      Object Status $Output 1 
+        Body SysBody
+          Attr PgmName = "StatusIn"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_RTVIRTUAL
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "sts1"
+          Attr ConPointNr = 0
+        EndBody
+      EndObject
+      !/**
+      !  Used by the PLC Editor.
+      !*/
+      Object Status2 $Output 2 
+        Body SysBody
+          Attr PgmName = "StatusOut"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_RTVIRTUAL
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "sts2"
+          Attr ConPointNr = 2
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the state of the step. FALSE means an
+      !  inactive step and TRUE means an active step. The value
+      !  may be picked up in another program by means of a GetDp
+      !  object.
+      !  Order[0] is an output both to Order and Trans objects.
+      !  
+      !  It is set by the preceding Trans object. The subsequent
+      !  Trans object checks both Order[0] and Order[1]. If
+      !  Order[0] = Order[1] = TRUE Order[0] is cleared by the
+      !  subsequent step.
+      !  In the structure of the object or referenced this
+      !  attribute is named Status[0].
+      !  
+      !  Order[1] is a dummy variable that follows Order[0].
+      !  In the structure of the object or referenced this
+      !  attribute is named Status[1].
+      !*/
+      Object Order $Output 3 
+        Body SysBody
+          Attr PgmName = "Status"
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOREMOVE
+          Attr Elements = 2
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "Order"
+          Attr ConPointNr = 1
+        EndBody
+      EndObject
+      Object ResetOld $Intern 4 
+        Body SysBody
+          Attr PgmName = "ResetOld"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "ResetOld"
+          Attr ConPointNr = 0
+        EndBody
+      EndObject
+      Object StatusInit $Intern 5 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "StatusInit"
+          Attr ConPointNr = 0
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 31
+        Attr parameters[0] = 0
+        Attr parameters[1] = 0
+        Attr parameters[2] = 3
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 4
+        Attr graphindex = 3
+        Attr default_mask[0] = 0
+        Attr default_mask[1] = 7
+        Attr segname_annotation = 1
+        Attr compmethod = 13
+        Attr compindex = 1
+        Attr tracemethod = 7
+        Attr traceindex = 1
+	Attr executeordermethod = 4
+        Attr objname = "IS"
+        Attr graphname = "IS"
+        Attr debugpar = "Order[0]"
+      EndBody
+    EndObject
+    Object Template InitStep
+      Body RtBody
+        Attr Status = 1
+      EndBody
+    EndObject
+  EndObject
+EndSObject

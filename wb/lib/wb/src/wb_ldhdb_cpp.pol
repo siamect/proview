@@ -1,0 +1,1083 @@
+/*  wb_ldhdb.sc -- local data handler, data base interface
+
+   PROVIEW/R
+   Copyright (C) 1993-1996 by Comator Process AB.
+
+   <Description>  */
+
+#include <iostream>
+#include <iomanip>
+#include <sqlplus.hh>
+#include <custom.hh>
+
+#include <stdio.h>
+#include <string.h>
+//#include <lib$routines.h>
+//#include <sql_literals.h>
+//#include <sql_sqlca.h>
+extern "C" {
+#include "wb_ldh.h"
+#include "wb_ldhi.h"
+#include "wb_ldhdb.h"
+#include "wb_ldh_msg.h"
+}
+//#include <X11/Intrinsic.h>
+
+static int SQLCODE;
+//extern int sql$signal ();
+
+sql_create_20(object, 2, 20, int, oix, int, ovid, int, classid, string, name, int, packname, string, normname, int, packnname, int, father, int, fvid, int, bwsoix, int, bwsvid, int, fwsoix, int, fwsvid, int, rh_gen, int, dh_gen, int, rb_gen, int, db_gen, int, rb_siz, int, db_siz, int, flags)
+/*
+	Where: 
+
+	# is the number of valuables in the vector 
+	NAME is the name of the structure you wish to create 
+	CMP is the number that tells c++, if not set to 0, that if the first cmp variables are the same then the two structures are the same. 
+	CNST is the number, if not set to 0, that will create a constructor which will populate the first n variables. 
+	TYPE1 is the type name for first item and ITEM1 is the valuables name for the first item etc.. 
+*/
+
+/*
+struct ldhdb_s_Objid {	/* This much match pwr_tObjid.  */ /*
+  int oix;
+  int vid;
+};
+
+struct ldhdb_s_ObjDbHead { /* This must match ldhi_sObjDbHead.  *//*
+  struct ldhdb_s_Objid	objid;
+  int			class;
+  $SQL_VARCHAR(32)	name;
+  int			packname;
+  $SQL_VARCHAR(32)	normname;
+  int			packnname;
+  struct ldhdb_s_Objid	father;
+  struct ldhdb_s_Objid	bwsoid;
+  struct ldhdb_s_Objid	fwsoid;
+  int			rh_gen;
+  int			dh_gen;
+  int			rb_gen;
+  int			db_gen;
+  int			rb_siz;
+  int			db_siz;
+  int			flags;
+  char			dbkey[8];
+};
+
+static $SQL_VARCHAR(65535) lBody;*/
+
+static void ldhdb_SQLError(int);
+
+/*
+exec sql declare alias for compiletime filename pwr_db:wb
+  runtime filename pwrp_db:wb;
+*/
+
+/* Load all object headers into the workbench.  */
+
+pwr_tStatus
+ldhdb_LoadObjectHeaders (
+  ldhi_sWBContext *wb
+)
+{
+//  cout<< "ldhdb_LoadObjectHeaders"<< endl;
+  pwr_tStatus sts = LDH__SUCCESS;
+//  struct ldhdb_s_ObjDbHead dbhd;
+  ldhi_sObjHead *ohp;
+//  short int rb_gen_ind;
+//  short int db_gen_ind;
+
+//  memset(&dbhd, 0, sizeof(dbhd));
+
+	try {
+		Connection con( use_exceptions );
+		con.connect( "proview" );
+
+		Query query = con.query();
+		query << "select oix, ovid, classid, name, packname, normname, packnname, "
+				"father, fvid, bwsoix, bwsvid, fwsoix, fwsvid, rh_gen, dh_gen, rb_gen, "
+				"db_gen, rb_siz, db_siz, flags from object";
+
+		Result res = query.store();
+		for( Result::iterator i = res.begin(); i != res.end(); ++i) {
+			ohp = ldhi_AllocObjHead();
+
+/*			cout << "oix: " << (*i)[ "oix" ] << endl;
+			cout << "vid: " << (*i)[ "ovid" ] << endl;
+			cout << "classid: " << (*i)[ "classid" ] << endl;
+			cout << "normname: " << (*i)[ "normname" ].c_str() << endl;
+			cout << "father: " << (*i)[ "father" ] << endl;
+			cout << "fvid: " << (*i)[ "fvid" ] << endl;
+			cout << "bwsoix: " << (*i)[ "bwsoix" ] << endl;
+			cout << "bwsvid: " << (*i)[ "bwsvid" ] << endl;
+			cout << "fwsoix: " << (*i)[ "fwsoix" ] << endl;
+			cout << "fwsvid: " << (*i)[ "fwsvid" ] << endl;
+*/
+			ohp->db.objid.oix = (*i)[ "oix" ];
+			ohp->db.objid.vid = (*i)[ "ovid" ];
+			ohp->db.classid   = (*i)[ "classid" ];
+// Frågan är om metoden ldhi_SetNormObjName i wb_ldhi.c ska användas istället för strcpy? 
+			strcpy( ohp->db.name.data, (*i)[ "name" ].c_str() );
+			ohp->db.name.len = strlen(ohp->db.name.data);
+// De här packname sparas som int i databasen men är någon typ av union. Jag chansar på att sätta key.
+			ohp->db.name.packname.key = (*i)[ "packname" ];
+			strcpy( ohp->db.normname.data, (*i)[ "normname" ].c_str() );
+			ohp->db.normname.len = strlen(ohp->db.normname.data);
+			ohp->db.normname.packname.key = (*i)[ "packnname" ];
+			ohp->db.father.oix = (*i)[ "father" ];
+			ohp->db.father.vid = (*i)[ "fvid" ];
+ 			ohp->db.bwsoid.oix = (*i)[ "bwsoix" ];
+			ohp->db.bwsoid.vid = (*i)[ "bwsvid" ];
+ 			ohp->db.fwsoid.oix = (*i)[ "fwsoix" ];
+			ohp->db.fwsoid.vid = (*i)[ "fwsvid" ];
+			ohp->db.rh_gen     = (*i)[ "rh_gen" ];
+			ohp->db.dh_gen     = (*i)[ "dh_gen" ];
+/*
+			ohp->db.b_gen[ 0 ] << (*i)[ "rb_gen" ];
+			ohp->db.b_gen[ 1 ] << (*i)[ "db_gen" ];
+			ohp->db.b_siz[ 0 ] << (*i)[ "rb_siz" ];
+			ohp->db.b_siz[ 1 ] << (*i)[ "db_siz" ];
+*/
+
+			ohp->db.flags.m << (*i)[ "flags" ];
+
+		//		char	dbkey[8];	/* DBKEY to object */
+
+			ohp->body[0].exist = res.types( 15 ).base_type() != typeid( Null<int> );
+			ohp->body[1].exist = res.types( 16 ).base_type() != typeid( Null<int> );
+			for(int j = 0; j < 2; ++j ) {
+				if (!ohp->body[ j ].exist) {
+					ohp->db.b_gen[ j ] = 0;
+					ohp->db.b_siz[ j ] = 0;
+				}
+			}
+
+			ohp->hdlst = wb->hdlst;
+			wb->hdlst = ohp;
+		}
+	} catch( exception err ) {
+		cerr << "Error: " << err.what() << endl;
+		return LDH__DBERROR;
+	}
+//  cout << "ldhdb_LoadObjectHeaders: Load object headers is returning with success" << endl;
+  return LDH__SUCCESS;
+/*  exec sql whenever sqlerror goto error_handler;
+
+  exec sql set transaction read only reserving object for
+    shared read;
+  exec sql declare tc_object cursor for select
+    oix, ovid, classid,
+    name, packname, normname, packnname, father, fvid,
+    bwsoix, bwsvid, fwsoix, fwsvid,
+    rh_gen, dh_gen, rb_gen, db_gen,
+    rb_siz, db_siz, flags, dbkey
+    from object;
+
+  exec sql open tc_object;
+
+  for(;;) {
+    rb_gen_ind = db_gen_ind = 0;
+    exec sql fetch tc_object into
+      :dbhd.objid.oix, :dbhd.objid.vid, :dbhd.class,
+      :dbhd.name, :dbhd.packname, :dbhd.normname,
+      :dbhd.packnname, :dbhd.father.oix, :dbhd.father.vid,
+      :dbhd.bwsoid.oix, :dbhd.bwsoid.vid, :dbhd.fwsoid.oix, :dbhd.fwsoid.vid,
+      :dbhd.dh_gen, :dbhd.rh_gen,
+      :dbhd.rb_gen:rb_gen_ind, :dbhd.db_gen:db_gen_ind,
+      :dbhd.rb_siz, :dbhd.db_siz, :dbhd.flags, :dbhd.dbkey;
+    if (SQLCODE == SQLCODE_EOS) break;
+    ohp = ldhi_AllocObjHead();
+    if (ohp == NULL) {
+      sts = LDH__INSVIRMEM;
+      goto return_error;
+    }
+    dbhd.name.data[dbhd.name.len] = '\0';
+    dbhd.normname.data[dbhd.name.len] = '\0';
+    memcpy(&ohp->db, &dbhd, sizeof(dbhd));
+    ohp->body[0].exist = rb_gen_ind != -1;
+    ohp->body[1].exist = db_gen_ind != -1;
+    
+    for (i = 0; i < 2; i++) {
+      if (!ohp->body[i].exist) {
+        ohp->db.b_gen[i] = 0;
+        ohp->db.b_siz[i] = 0;
+      }
+    }
+*/
+
+    /* Link to head list. */
+/*    ohp->hdlst = wb->hdlst;
+    wb->hdlst = ohp;
+  }
+
+  exec sql close tc_object;
+  exec sql commit;
+  return LDH__SUCCESS;
+
+error_handler:
+  ldhdb_SQLError(SQLCODE);
+  sql$signal();
+  exec sql rollback;
+  return LDH__DBERROR;
+
+return_error:
+  exec sql rollback;
+  return sts;
+*/
+}
+
+/*----------------------------------------------------------------------------*\
+  Stores all object modified in one session.
+\*----------------------------------------------------------------------------*/
+
+pwr_tStatus
+ldhdb_StoreObjects (
+  ldhi_sSesContext	*sp
+)
+{
+//  cout<<"ldhdb_StoreObjects"<<endl;
+//  struct ldhdb_s_ObjDbHead dbhd;
+
+  ldhi_sObjHead		*ohp;
+  ldhi_sOixEntry	*otp;
+  int			i;
+  char			rb_dbkey[8];
+  char			db_dbkey[8];
+  short int		rb_ind = 0;
+  short int		db_ind = 0;
+
+/*
+  exec sql whenever sqlerror goto error_handler;
+
+  exec sql set transaction read write reserving object for
+    protected write;
+
+  exec sql declare b_itcursor table cursor for select
+    rb_body, db_body from object where dbkey = :dbhd.dbkey;
+
+  exec sql declare rb_ilcursor insert only list cursor for select
+    rb_body where current of b_itcursor;
+
+  exec sql declare db_ilcursor insert only list cursor for select
+    db_body where current of b_itcursor;
+*/
+	Connection con( use_exceptions );
+	try {
+		con.connect( "proview" );
+		Query query = con.query();
+		for( otp = (ldhi_sOixEntry *) ldh_TreeMinimum(sp->oixtab); 
+			otp != NULL; 
+			otp = (ldhi_sOixEntry *) ldh_TreeSuccessor(sp->oixtab, (ldh_sTreeNode *) otp)  )  {
+			ohp = otp->ohp;
+	//    memcpy(&dbhd, &ohp->db, sizeof(dbhd));
+			if( ohp->change.f.IsDeleted ) {
+			//      exec sql delete from object where dbkey = :dbhd.dbkey;
+				query.reset();
+				query << "delete from object where oix = " << ohp->db.objid.oix << " and ovid = " << ohp->db.objid.vid;
+
+//				cout << query.preview() << endl;
+
+				query.execute();
+				continue;
+			} 
+			else if( ohp->change.f.IsCreated ) {
+				object row;
+/*                        cout<<"ohp->change.f.IsCreated"<<endl;
+			cout<<"ohp->db.objid.oix="<<ohp->db.objid.oix<<endl;
+                        cout<<"ohp->db.objid.vid="<<ohp->db.objid.vid<<endl;
+			cout<<"ohp->db.classid="<<ohp->db.classid<<endl;
+			cout<<"ohp->db.name.data="<<ohp->db.name.data<<endl;
+		        cout<<"ohp->db.name.packname.key="<<ohp->db.name.packname.key<<endl; 
+			cout<<"ohp->db.normname.data="<<ohp->db.normname.data<<endl;
+			cout<<"ohp->db.normname.packname.key="<<ohp->db.normname.packname.key<<endl;
+			cout<<"ohp->db.father.oix="<<ohp->db.father.oix<<endl;
+			cout<<"ohp->db.father.vid="<<ohp->db.father.vid<<endl;
+			cout<<"ohp->db.bwsoid.oix="<<ohp->db.bwsoid.oix<<endl;
+			cout<<"ohp->db.bwsoid.vid="<<ohp->db.bwsoid.vid<<endl;
+			cout<<"ohp->db.fwsoid.oix="<<ohp->db.fwsoid.oix<<endl;
+			cout<<"ohp->db.fwsoid.vid="<<ohp->db.fwsoid.vid<<endl;
+			cout<<"ohp->db.rh_gen="<<ohp->db.rh_gen<<endl;
+			cout<<"ohp->db.dh_gen="<<ohp->db.dh_gen<<endl;
+			cout<<"ohp->db.b_gen[ 0 ]="<<ohp->db.b_gen[ 0 ]<<endl;
+			cout<<"ohp->db.b_gen[ 1 ]="<<ohp->db.b_gen[ 1 ]<<endl;
+			cout<<"ohp->db.b_siz[ 0 ]="<<ohp->db.b_siz[ 0 ]<<endl;
+			cout<<"ohp->db.b_siz[ 1 ]="<<ohp->db.b_siz[ 1 ]<<endl;
+			cout<<"ohp->db.flags.m="<<ohp->db.flags.m<<endl;
+*/
+				row.set( ohp->db.objid.oix, ohp->db.objid.vid, ohp->db.classid, ohp->db.name.data,
+						ohp->db.name.packname.key, ohp->db.normname.data, ohp->db.normname.packname.key,
+						ohp->db.father.oix, ohp->db.father.vid, ohp->db.bwsoid.oix, ohp->db.bwsoid.vid,
+						ohp->db.fwsoid.oix, ohp->db.fwsoid.vid ,ohp->db.rh_gen ,ohp->db.dh_gen,
+						ohp->db.b_gen[ 0 ] ,ohp->db.b_gen[ 1 ] ,ohp->db.b_siz[ 0 ] ,ohp->db.b_siz[ 1 ] , ohp->db.flags.m );
+
+				query.reset();
+				query.insert( row );
+
+				cout << query.preview() << endl;
+
+				query.execute();
+			} 
+/*
+				exec sql insert into object (
+			oix, ovid, classid, name, packname,
+			normname, packnname, father, fvid,
+			bwsoix, bwsvid, fwsoix, fwsvid,
+			rh_gen, dh_gen, rb_siz, db_siz, flags
+			  ) values (
+			:dbhd.objid.oix, :dbhd.objid.vid, :dbhd.class, :dbhd.name, :dbhd.packname,
+			:dbhd.normname, :dbhd.packnname, :dbhd.father.oix, :dbhd.father.vid,
+			:dbhd.bwsoid.oix, :dbhd.bwsoid.vid, :dbhd.fwsoid.oix, :dbhd.fwsoid.vid,
+			:dbhd.rh_gen, :dbhd.dh_gen, :dbhd.rb_siz, :dbhd.db_siz, :dbhd.flags
+			  ) returning dbkey into :dbhd.dbkey;
+			  memcpy(&ohp->db, &dbhd, sizeof(dbhd)); /* We want the new DBKEY */
+
+			else if( ohp->change.m & ldhi_mChange_HeadIsModified ) {
+/*                        cout<<"ohp->change.m & ldhi_mChange_HeadIsModified"<<endl;
+			cout<<"ohp->db.objid.oix="<<ohp->db.objid.oix<<endl;
+                        cout<<"ohp->db.objid.vid="<<ohp->db.objid.vid<<endl;
+			cout<<"ohp->db.classid="<<ohp->db.classid<<endl;
+			cout<<"ohp->db.name.data="<<ohp->db.name.data<<endl;
+		        cout<<"ohp->db.name.packname.key="<<ohp->db.name.packname.key<<endl; 
+			cout<<"ohp->db.normname.data="<<ohp->db.normname.data<<endl;
+			cout<<"ohp->db.normname.packname.key="<<ohp->db.normname.packname.key<<endl;
+			cout<<"ohp->db.father.oix="<<ohp->db.father.oix<<endl;
+			cout<<"ohp->db.father.vid="<<ohp->db.father.vid<<endl;
+			cout<<"ohp->db.bwsoid.oix="<<ohp->db.bwsoid.oix<<endl;
+			cout<<"ohp->db.bwsoid.vid="<<ohp->db.bwsoid.vid<<endl;
+			cout<<"ohp->db.fwsoid.oix="<<ohp->db.fwsoid.oix<<endl;
+			cout<<"ohp->db.fwsoid.vid="<<ohp->db.fwsoid.vid<<endl;
+			cout<<"ohp->db.rh_gen="<<ohp->db.rh_gen<<endl;
+			cout<<"ohp->db.dh_gen="<<ohp->db.dh_gen<<endl;
+			cout<<"ohp->db.b_gen[ 0 ]="<<ohp->db.b_gen[ 0 ]<<endl;
+			cout<<"ohp->db.b_gen[ 1 ]="<<ohp->db.b_gen[ 1 ]<<endl;
+			cout<<"ohp->db.b_siz[ 0 ]="<<ohp->db.b_siz[ 0 ]<<endl;
+			cout<<"ohp->db.b_siz[ 1 ]="<<ohp->db.b_siz[ 1 ]<<endl;
+			cout<<"ohp->db.flags.m="<<ohp->db.flags.m<<endl;
+*/
+				query.reset();
+				query << "select oix, ovid, classid, name, packname, normname, packnname, "
+					"father, fvid, bwsoix, bwsvid, fwsoix, fwsvid, rh_gen, dh_gen, rb_gen, "
+					"db_gen, rb_siz, db_siz, flags from object where oix = " <<  ohp->db.objid.oix << "and ovid = " << ohp->db.objid.vid;
+				object row( query.store()[ 0 ] );
+				object oriRow( row );
+				
+				row.oix = ohp->db.objid.oix;
+				row.ovid = ohp->db.objid.vid;
+				row.classid = ohp->db.classid;
+				row.name = ohp->db.name.data;
+				row.packname = ohp->db.name.packname.key;
+				row.normname = ohp->db.normname.data;
+				row.packnname = ohp->db.normname.packname.key;
+				row.father = ohp->db.father.oix;
+				row.fvid = ohp->db.father.vid;
+ 				row.bwsoix = ohp->db.bwsoid.oix;
+				row.bwsvid = ohp->db.bwsoid.vid;
+ 				row.fwsoix = ohp->db.fwsoid.oix;
+				row.fwsvid = ohp->db.fwsoid.vid;
+				row.rh_gen = ohp->db.rh_gen;
+				row.dh_gen = ohp->db.dh_gen;
+//				row.rb_gen = ohp->db.b_gen[ 0 ];
+//				row.db_gen = ohp->db.b_gen[ 1 ];
+				row.rb_siz = ohp->db.b_siz[ 0 ];
+				row.db_siz = ohp->db.b_siz[ 1 ];
+				row.flags = ohp->db.flags.m;
+
+				query.update( oriRow, row );
+
+//				cout << query.preview() << endl;
+
+				query.execute();
+			}
+/*
+			exec sql update object set
+			classid = :dbhd.class,
+			name = :dbhd.name,
+			packname = :dbhd.packname,
+			normname = :dbhd.normname,
+			packnname = :dbhd.packnname,
+			father = :dbhd.father.oix,
+			fvid = :dbhd.father.vid,
+			bwsoix = :dbhd.bwsoid.oix,
+			bwsvid = :dbhd.bwsoid.vid,
+			fwsoix = :dbhd.fwsoid.oix,
+			fwsvid = :dbhd.fwsoid.vid,
+			rh_gen = :dbhd.rh_gen,
+			dh_gen = :dbhd.dh_gen,
+			rb_siz = :dbhd.rb_siz,
+			db_siz = :dbhd.db_siz,
+			flags = :dbhd.flags
+			  where dbkey = :dbhd.dbkey;
+*/
+			if( ohp->change.m & ldhi_mChange_BodyIsModified ) {
+				for( i = 0; i < 2; i++) {
+					query.reset();
+					if( ohp->body[ i ].exist ) {
+						query << "select oix, ovid, rb_siz, db_siz, rb_body, db_body from object where oix = "
+						      <<  ohp->db.objid.oix << "and ovid = " << ohp->db.objid.vid;
+						object row( query.store()[ 0 ] );
+						object oriRow( row );
+				
+						if( i == 0 && ohp->change.f.RBodyIsModified ) {
+							row.rb_siz = ohp->db.b_siz[i];
+							//memcpy(&row.rb_body,ohp->body[i].body,ohp->db.b_siz[ i ]);
+							query.update( oriRow, row );
+
+							cout << query.preview() << endl;
+
+							query.execute();
+						} else if (ohp->change.f.DBodyIsModified) {
+							row.db_siz = ohp->db.b_siz[i];
+							//memcpy(&row.db_body,ohp->body[i].body,ohp->db.b_siz[ i ]);
+							query.update( oriRow, row );
+
+							cout << query.preview() << endl;
+
+							query.execute();
+						}
+					}
+				}
+			}
+/*			
+			exec sql open b_itcursor;
+			exec sql fetch b_itcursor into :rb_dbkey:rb_ind, :db_dbkey:db_ind;
+			for (i = 0; i < 2; i++) {
+				if (ohp->body[i].exist) {
+					if (i == 0 && ohp->change.f.RBodyIsModified) {
+						lBody.len = ohp->body[i].size;
+						memcpy(lBody.data, ohp->body[i].body, lBody.len);
+						exec sql update object set
+						rb_gen = :dbhd.rb_gen
+						where dbkey = :dbhd.dbkey;
+						exec sql open rb_ilcursor;
+						exec sql insert into cursor rb_ilcursor values (:lBody);
+						exec sql close rb_ilcursor;
+					} else if (ohp->change.f.DBodyIsModified) {
+						lBody.len = ohp->body[i].size;
+						memcpy(lBody.data, ohp->body[i].body, lBody.len);
+						exec sql update object set
+						db_gen = :dbhd.db_gen
+						where dbkey = :dbhd.dbkey;
+						exec sql open db_ilcursor;
+						exec sql insert into cursor db_ilcursor values (:lBody);
+						exec sql close db_ilcursor;
+					}
+				}
+			}
+			exec sql close b_itcursor;
+*/
+		}
+	} catch( exception err ) {
+		cerr << "Error: " << err.what() << endl;
+		return LDH__DBERROR;
+	}
+//  cout<<"ldhdb_StoreObjects returned with success"<<endl;
+  return LDH__SUCCESS;
+
+/*
+  exec sql commit;
+  return LDH__SUCCESS;
+
+error_handler:
+  ldhdb_SQLError(SQLCODE);
+  sql$signal();
+  exec sql rollback;
+  return LDH__DBERROR;
+*/
+}
+
+/* Gets a current range of oix.  */
+
+pwr_tStatus
+ldhdb_GetOix (
+  int			vid,
+  ldhi_sFreeOix		*freeOix
+)
+{
+	int			oix;
+	int			mask = 63;
+//        cout <<"ldhdb_GetOix"<<endl;
+	Connection con( use_exceptions );
+	try {
+		con.connect( "proview" );
+		Query query = con.query();
+	
+		query << "select oix from volume where vid = " << vid;
+
+//		cout << query.preview() << endl;
+		
+		Result res = query.store();
+
+		if( 0 == res.size() )
+			return LDH__NOSUCHVOL;
+		
+		Result::iterator i = res.begin();
+
+		oix = (*i)["oix"];
+// 		Row row = res[ 0 ];
+//		oix << row[ "oix" ];
+/*
+		exec sql whenever sqlerror goto error_handler;
+
+		exec sql set transaction read only;
+
+		exec sql select oix into :oix from volume where vid = :vid;
+
+		if (SQLCODE == SQLCODE_EOS) {
+			exec sql rollback;
+			return LDH__NOSUCHVOL;
+		}
+*/
+		freeOix->next = freeOix->high = (oix + 63) & (~mask);  
+
+		if( oix < 0 ) {
+/*
+			exec sql rollback;
+			lib$signal(LDH__NOOBJDID);
+*/
+			return LDH__NOOBJDID;
+		}
+
+//	exec sql rollback;
+
+	} catch( exception err ) {
+		cerr << "Error: " << err.what() << endl;
+		return LDH__DBERROR;
+	}
+//        cout <<"ldhdb_GetOix returned with success"<<endl;
+	return LDH__SUCCESS;
+
+/*
+	error_handler:
+	ldhdb_SQLError(SQLCODE);
+	sql$signal();
+	exec sql rollback;
+	return LDH__DBERROR;
+*/
+}
+
+/* Gets a new range of new oix's.  */
+
+pwr_tStatus
+ldhdb_NextOix (
+  int			vid,
+  ldhi_sFreeOix		*freeOix
+)
+{
+	  int			oix;
+	  int			mask = 63;
+//        cout<<"ldhdb_NextOix"<<endl;
+	Connection con( use_exceptions );
+	try {
+		con.connect( "proview" );
+		Query query = con.query();
+		
+		if( !query.exec( "lock tables volume write" ) )
+			return LDH__DBERROR;
+
+		query << "select oix from volume where vid = " << vid;
+
+//		cout << query.preview() << endl;
+
+		Result res = query.store();
+
+		if( 0 == res.size() ) {
+			query.exec( "unlock tables" );
+			return LDH__NOSUCHVOL;
+		}
+
+		Result::iterator i = res.begin();
+
+		oix = (*i) ["oix"];
+//		Row row = res[ 0 ];
+//		oix << row[ "oix" ];
+
+/*
+		exec sql whenever sqlerror goto error_handler;
+
+		exec sql set transaction read write reserving volume for
+		protected write;
+
+		exec sql select oix into :oix from volume where vid = :vid;
+
+		if (SQLCODE == SQLCODE_EOS) {
+			exec sql rollback;
+			return LDH__NOSUCHVOL;
+		}
+*/
+		freeOix->next = oix = ((oix + 63) & (~mask)) + 1;
+		freeOix->high = oix = (oix + 63) & (~mask);  
+
+		if( oix <= 0 ) {
+/*
+			exec sql rollback;
+			lib$signal(LDH__NOOBJDID);
+*/
+			query.exec( "unlock tables" );
+			return LDH__NOOBJDID;
+		}
+
+		query.reset();
+		query << "update volume set oix = " << oix << " where vid = " << vid;
+		
+//		cout << query.preview() << endl;
+
+		if( !query.execute() ) {
+			query.exec( "unlock tables" );
+			return LDH__DBERROR;
+		}
+
+		query.exec( "unlock tables" );
+	} catch( exception err ) {
+		cerr << "Error: " << err.what() << endl;
+		return LDH__DBERROR;
+	}
+//        cout<<"ldhdb_NextOix returned with success"<<endl;
+	return LDH__SUCCESS;
+		
+/*
+		exec sql update volume set oix = :oix where vid = :vid;
+
+		if (SQLCODE == SQLCODE_EOS)
+			goto error_handler;
+
+		exec sql commit;
+
+		return LDH__SUCCESS;
+
+		error_handler:
+		ldhdb_SQLError(SQLCODE);
+		sql$signal();
+		exec sql rollback;
+	return LDH__DBERROR;
+*/
+}
+
+/* Gets a new range of new oix's.  */
+
+pwr_tStatus
+ldhdb_SetOix (
+  int			vid,
+  int			oix
+)
+{
+//        cout<<"ldhdb_SetOix"<<endl;
+	Connection con( use_exceptions );
+	try {
+		con.connect( "proview" );
+		Query query = con.query();
+		
+		if( !query.exec( "lock tables volume write" ) )
+			return LDH__DBERROR;
+
+		query.reset();
+		query << "update volume set oix = " << oix << " where vid = " << vid;
+		
+//		cout << query.preview() << endl;
+
+		if( !query.execute() ) {
+			query.exec( "unlock tables" );
+			return LDH__DBERROR;
+		}
+
+		query.exec( "unlock tables" );
+	} catch( exception err ) {
+		cerr << "Error: " << err.what() << endl;
+		return LDH__DBERROR;
+	}
+//        cout<<"ldhdb_SetOix returned with success"<<endl;
+	return LDH__SUCCESS;
+
+/*
+		exec sql whenever sqlerror goto error_handler;
+
+		exec sql set transaction read write reserving volume for
+		protected write;
+
+		exec sql update volume set oix = :oix where vid = :vid;
+
+		if (SQLCODE == SQLCODE_EOS) goto error_handler;
+
+		exec sql commit;
+
+		return LDH__SUCCESS;
+
+		error_handler:
+		ldhdb_SQLError(SQLCODE);
+		sql$signal();
+		exec sql rollback;
+		return LDH__DBERROR;
+*/
+}
+
+/* Add a volume to the volume table.  */
+
+pwr_tStatus
+ldhdb_AddVolume (
+  int		vid
+)
+{
+//        cout<<"ldhdb_AddVolume"<<endl;
+	Connection con( use_exceptions );
+	try {
+		con.connect( "proview" );
+		Query query = con.query();
+		
+		if( !query.exec( "lock tables volume write" ) )
+			return LDH__DBERROR;
+
+		query.reset();
+		query << "insert into volume (vid, oix) values (" << vid << ", 0)";
+		
+		cout << query.preview() << endl;
+
+		if( !query.execute() ) {
+			query.exec( "unlock tables" );
+			return LDH__DBERROR;
+		}
+
+		query.exec( "unlock tables" );
+	} catch( exception err ) {
+		cerr << "Error: " << err.what() << endl;
+		return LDH__DBERROR;
+	}
+
+//        cout<<"ldhdb_AddVolume returned with success"<<endl;
+	return LDH__SUCCESS;
+/*
+	int		oix = 0;
+
+	exec sql whenever sqlerror goto error_handler;
+
+	exec sql set transaction read write reserving volume for
+	protected write;
+
+	exec sql insert into volume values (:vid, :oix);
+
+	exec sql commit;
+
+	return LDH__SUCCESS;
+
+	error_handler:
+	ldhdb_SQLError(SQLCODE);
+	sql$signal();
+	exec sql rollback;
+	return LDH__DBERROR;
+*/
+}
+
+/* Remove a volume from the volume table.  */
+
+pwr_tStatus
+ldhdb_RemoveVolume (
+  int		vid
+)
+{
+//        cout<<"ldhdb_RemoveVolume"<<endl;
+	Connection con( use_exceptions );
+	try {
+		con.connect( "proview" );
+		Query query = con.query();
+		
+		if( !query.exec( "lock tables volume write" ) )
+			return LDH__DBERROR;
+
+		query.reset();
+		query << "delete from volume where vid = " << vid;
+
+//		cout << query.preview() << endl;
+
+		if( !query.execute() ) {
+			query.exec( "unlock tables" );
+			return LDH__DBERROR;
+		}
+
+		query.exec( "unlock tables" );
+	} catch( exception err ) {
+		cerr << "Error: " << err.what() << endl;
+		return LDH__DBERROR;
+	}
+//        cout<<"ldhdb_RemoveVolume returned with success"<<endl;
+	return LDH__SUCCESS;
+/*
+  exec sql whenever sqlerror goto error_handler;
+
+  exec sql set transaction read write reserving volume for
+    protected write;
+
+  exec sql delete from volume where vid = :vid;
+
+  if (SQLCODE == SQLCODE_EOS) {
+    exec sql rollback;
+    return LDH__NOSUCHVOL;
+  }
+
+  exec sql commit;
+
+  return LDH__SUCCESS;
+
+error_handler:
+  ldhdb_SQLError(SQLCODE);
+  sql$signal();
+  exec sql rollback;
+  return LDH__DBERROR;
+*/
+}
+
+/*----------------------------------------------------------------------------*\
+  Gets existing object bodies for one object.
+\*----------------------------------------------------------------------------*/
+
+pwr_tStatus
+ldhdb_GetObjectBodies (
+  ldhi_sObjHead		*ohp
+)
+{
+//	pwr_tStatus		sts = LDH__SUCCESS;
+	int			i;
+/*
+	struct ldhdb_s_ObjDbHead dbhd;
+	char			rb_dbkey[8];
+	char			db_dbkey[8];
+	short int		rb_ind = 0;
+	short int		db_ind = 0;
+*/
+	pwr_uVolume		*Volume;
+         
+//	cout<<"ldhdb_GetObjectBodies"<<endl;
+	
+	Connection con( use_exceptions );
+	try {
+		con.connect( "proview" );
+		Query query = con.query();
+
+//		if( !query.exec( "lock tables object write" ) )
+//			return LDH__DBERROR;
+
+		query.reset();
+		query << "select rb_body, db_body from object where oix=" 
+		<< ohp->db.objid.oix << " and ovid=" << ohp->db.objid.vid;
+
+		cout << query.preview() << endl;
+
+		ResUse res = query.use();
+		Row row = res.fetch_row();
+		long unsigned int *length = res.fetch_lengths(); 
+
+/*
+  exec sql whenever sqlerror goto error_handler;
+
+  exec sql set transaction read only reserving object for
+    shared read;
+
+  exec sql declare b_rtcursor read only table cursor for select
+    rb_body, db_body from object where dbkey = :dbhd.dbkey;
+
+  exec sql declare rb_rlcursor read only list cursor for select
+    rb_body where current of b_rtcursor;
+
+  exec sql declare db_rlcursor read only list cursor for select
+    db_body where current of b_rtcursor;
+
+  memcpy(&dbhd, &ohp->db, sizeof(dbhd));
+
+  exec sql open b_rtcursor;
+  exec sql fetch b_rtcursor into :rb_dbkey:rb_ind, :db_dbkey:db_ind;
+*/
+
+		for( i = 0; i < 2; i++) {
+			if( !ohp->body[ i ].exist )
+				continue;
+			if( i == 0 ) {
+				if( res.types( 0 ).base_type() == typeid( Null<string> ) )
+					continue;
+			} else {
+				if( res.types( 1 ).base_type() == typeid( Null<string> ) )
+					continue;
+			}
+			ohp->body[ i ].size = *length;
+			if( *length == 0 )
+				continue;
+/* Compile warnings
+			../../wb_ldhdb.cpp: warning: implicit declaration of function `int XtMalloc(...)'
+			../../wb_ldhdb.cpp: warning: assignment to `char *' from `int' lacks a cast
+*/
+			ohp->body[ i ].body = XtMalloc( *length );
+			if( ohp->body[ i ].body == NULL ) {
+				query.reset();
+//				query.exec( "unlock tables" );
+				return LDH__INSVIRMEM;
+			}
+			memcpy( ohp->body[ i ].body, row.raw_data( i ), *length );
+			++length;
+		}
+		
+		query.reset();
+
+//		query.exec( "unlock tables" );
+	} catch( exception err ) {
+		cerr << "Error: " << err.what() << endl;
+		return LDH__DBERROR;
+	}
+/*
+	for (i = 0; i < 2; i++) {
+		if (!ohp->body[i].exist) continue;
+		if (i == 0) {
+			if (rb_ind == -1) continue;
+			exec sql open rb_rlcursor;
+			exec sql fetch rb_rlcursor into :lBody;
+			exec sql close rb_rlcursor;
+		} else {
+			if (db_ind == -1) continue;
+			exec sql open db_rlcursor;
+			exec sql fetch db_rlcursor into :lBody;
+			exec sql close db_rlcursor;
+		}
+		ohp->body[i].size = lBody.len;
+		if (lBody.len == 0) continue;
+		ohp->body[i].body = XtMalloc(lBody.len);
+		if (ohp->body[i].body == NULL) {
+			sts = LDH__INSVIRMEM;
+			goto return_error;
+		}
+		memcpy(ohp->body[i].body, lBody.data, lBody.len);
+	}
+
+  exec sql close b_rtcursor;
+  exec sql commit;
+*/
+	if( ohp->db.objid.oix == pwr_cNObjectIx && ohp->body[ 0 ].exist ) {
+		switch (ohp->db.classid) {
+			case pwr_eClass_RootVolume:
+			case pwr_eClass_ClassVolume:
+			case pwr_eClass_WorkBenchVolume:
+			case pwr_eClass_DirectoryVolume:
+			case pwr_eClass_SubVolume:
+			case pwr_eClass_SharedVolume:
+			case pwr_eClass_DynamicVolume:
+			case pwr_eClass_SystemVolume:
+				Volume = (pwr_uVolume *) ohp->body[0].body;
+				if (Volume != NULL)
+					Volume->Root.NextOix = ohp->vhp->freeOix.high + 1;
+				break;
+			
+			default:
+				break;
+		}
+	}
+         
+//	cout<<"ldhdb_GetObjectBodies returned with success"<<endl;
+	return LDH__SUCCESS;
+/*
+error_handler:
+  ldhdb_SQLError(SQLCODE);
+  sql$signal();
+  exec sql rollback;
+  return LDH__DBERROR;
+
+return_error:
+  exec sql rollback;
+  return sts;
+*/
+}
+
+/*----------------------------------------------------------------------------*\
+  Initializes the workbench on disk.
+\*----------------------------------------------------------------------------*/
+/*
+pwr_tStatus
+ldhdb_InitWB ()
+{
+  long did_system = LDHI_MIN_SYSOBJ;
+  long did_base = LDHI_MIN_BASOBJ;
+  long did_user = LDHI_MIN_USROBJ;
+  long range_system = ldh_eDId_System;
+  long range_base = ldh_eDId_Base;
+  long range_user = ldh_eDId_User;
+
+  exec sql whenever sqlerror goto error_handler;
+
+  exec sql set transaction read write reserving object, oix
+    for protected write;
+
+  exec sql delete from object;
+  exec sql delete from oix;
+
+  exec sql insert into oix values (:range_system, :did_system);
+  exec sql insert into oix values (:range_base, :did_base);
+  exec sql insert into oix values (:range_user, :did_user);
+
+  exec sql commit;
+  return LDH__SUCCESS;
+
+error_handler:
+  ldhdb_SQLError(SQLCODE);
+  sql$signal();
+  exec sql rollback;
+  return LDH__DBERROR;
+}
+*/
+
+/*----------------------------------------------------------------------------*\
+  Prints a message corresponding to a SQL-error.
+\*----------------------------------------------------------------------------*/
+
+static void ldhdb_SQLError (
+  int sql_sts
+)
+{
+/*
+  switch (sql_sts) {
+  case SQLCODE_BAD_TXN_STATE:
+    printf("SQL-Error: Invalid transaction state\n");
+    break;
+  case SQLCODE_CURALROPE:
+    printf("SQL-Error: WARNING Cursor is already open\n");
+    break;
+  case SQLCODE_CURNOTOPE:
+    printf("SQL-Error: Cursor not open\n");
+    break;
+  case SQLCODE_DEADLOCK:
+    printf("SQL-Error: Deadlock encountered\n");
+    break;
+  case SQLCODE_EOS:
+    printf("SQL-Error: SELECT or cursor got to end of stream\n");
+    break;
+  case SQLCODE_INTEG_FAIL:
+    printf("SQL-Error: Constraint failed\n");
+    break;
+  case SQLCODE_LOCK_CONFLICT:
+    printf("SQL-Error: Lock conflict\n");
+    break;
+  case SQLCODE_NO_DUP:
+    printf("SQL-Error: Duplicate on index\n");
+    break;
+  case SQLCODE_NOT_VALID:
+    printf("SQL-Error: Valid-if failed\n");
+    break;
+  case SQLCODE_NULLNOIND:
+    printf("SQL-Error: NULL value and no indicator variable\n");
+    break;
+  case SQLCODE_OUTOFRAN:
+    printf("SQL-Error: Value is out of range for a host variable\n");
+    break;
+  case SQLCODE_RDBERR:
+    printf("SQL-Error: Rdb returned an error\n");
+    break;
+  case SQLCODE_ROTXN:
+    printf("SQL-Error: Read write operation in read-only transaction\n");
+    break;
+  case SQLCODE_SUCCESS:
+//  printf("SQL-Error: Command completed successfully\n"); 
+    break;
+  case SQLCODE_UDCURNOPE:
+    printf("SQL-Error: Cursor in update or delete not open\n");
+    break;
+  case SQLCODE_UDCURNPOS:
+    printf("SQL-Error: Cursor in update or delete not positioned on record\n");
+    break;
+  default:
+    printf("SQL-Error: Unknown SQL error SQLCA.SQLCODE: %d\n", sql_sts);
+    break;
+  }
+*/
+	printf("No SQLCODEs available");
+}

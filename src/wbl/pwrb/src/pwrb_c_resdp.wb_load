@@ -1,0 +1,138 @@
+!  pwrb_c_resdp.wb_load -- Defines the class ResDp.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  Reset Digital parameter.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_macro_io.h
+!  Reset Digital parameter.
+!  
+!  If the input signal is TRUE, the value of the specified
+!  local digital quantity
+!  ( e.g. internal digital variable in an arbitrary
+!  object) is cleared at the execution, otherwise there
+!  will be no effect on the digital quantity.
+!  
+!  The complete name of the digital quantity has to be
+!  supplied; see hints below.
+!*/
+SObject pwrb:Class
+  Object ResDp $ClassDef 192 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_RtConnectionsAndDevBodies
+      Attr Flags = pwr_mClassDef_DevOnly
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "resdp"
+      EndBody
+      !/**
+      !  The input is connected to a binary signal or left open.
+      !  In the latter case In is default TRUE and the condition
+      !  not adjustable in the run time system and consequently
+      !  the function is unconditional.
+      !  
+      !  Specifies whether the binary quantity is to be cleared
+      !  or not. FALSE means that the quantity is not effected,
+      !  and TRUE means that a local quantity is reset.
+      !*/
+      Object In $Input 1 
+        Body SysBody
+          Attr PgmName = "In"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_RTVIRTUAL
+          Attr Flags |= PWR_MASK_DEVBODYREF
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "in"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      !/**
+      !  Used by the PLC Editor. Specifies the complete name of
+      !  the actual object.
+      !*/
+      Object Object $Intern 1 
+        Body SysBody
+          Attr PgmName = "Object"
+          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr GraphName = "sts"
+          Attr NiNaAnnot = 1
+          Attr NiNaSegments = 1
+        EndBody
+      EndObject
+      !/**
+      !  Used by the PLC Editor. Specifies the name of the
+      !  parameter. The editor is case-sensitive on this
+      !  attribute; i.e. if the attribute is named ActualValue
+      !  it has to be written ActualValue and not ACTUALVALUE,
+      !  for example.
+      !*/
+      Object Parameter $Intern 2 
+        Body SysBody
+          Attr PgmName = "Par"
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr GraphName = "par"
+          Attr NiNaAnnot = 2
+          Attr ConPointNr = 0
+        EndBody
+      EndObject
+      !/**
+      !  Specifies how many segments of the actual object name
+      !  that is to be displayed in the symbol of the ResDp
+      !  object. The segments are counted from behind.
+      !*/
+      Object ObjectSegments $Intern 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      Object PlcNode $Buffer 4 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 258
+        Attr parameters[0] = 1
+        Attr parameters[1] = 0
+        Attr parameters[2] = 0
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 15
+        Attr graphindex = 0
+        Attr default_mask[0] = 1
+        Attr default_mask[1] = 0
+        Attr segname_annotation = 0
+        Attr devbody_annotation = 1
+        Attr compmethod = 12
+        Attr compindex = 0
+        Attr tracemethod = 4
+        Attr traceindex = 1
+        Attr connectmethod = 7
+        Attr executeordermethod = 6
+        Attr objname = "ResDp"
+        Attr graphname = "ResDp"
+        Attr debugpar = "In"
+      EndBody
+    EndObject
+    Object Template ResDp
+      Body RtBody
+        Attr In = 1
+      EndBody
+      Body DevBody
+        Attr ObjectSegments = 1
+      EndBody
+    EndObject
+  EndObject
+EndSObject

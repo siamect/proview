@@ -1,0 +1,102 @@
+!  pwrb_c_form.wb_load -- Defines the class Form.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  Form object, description of a form.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  Configures a window to display a form.
+!  
+!  To display forms on a node the forms have to be
+!  associated with a Form object located on the same node
+!  as where the forms will be displayed.
+!  The users or categories of users of an operator station
+!  are represented by User objects. When a user of an
+!  operator station wants to display a form the name of
+!  the form shall be in a Form object and the name of such
+!  a Form object in the FastAvail-attribute in the User
+!  object of the user. In this way a Form object may be
+!  used by several User objects.
+!  
+!  Puts the object below the $Node object at the same
+!  level as the OpPlace object.
+!*/
+SObject pwrb:Class
+  Object Form $ClassDef 118 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "Form"
+      EndBody
+      !/**
+      !  Optional text.
+      !*/
+      Object Description $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      Object Title $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the name of the forms frm-file exclusively
+      !  path and extension.
+      !*/
+      Object FormName $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+          Attr Flags = 0
+        EndBody
+      EndObject
+      Object X $Attribute 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int16"
+          Attr Flags = 0
+        EndBody
+      EndObject
+      Object Y $Attribute 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int16"
+          Attr Flags = 0
+        EndBody
+      EndObject
+      Object FirstInputField $Attribute 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String32"
+          Attr Flags = 0
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the maximum numbers of instances named by
+      !  FormName which are allowed to exist on the monitor at
+      !  the same time. If MaxNoOfInstances = 1, the form is
+      !  already on the monitor and the operator tries to
+      !  require the form once again no further instance of the
+      !  form is displayed.
+      !*/
+      Object MaxNoOfInstances $Attribute 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+          Attr Flags = 0
+        EndBody
+      EndObject
+    EndObject
+    Object Template Form
+      Body RtBody
+        Attr MaxNoOfInstances = 1
+        Attr X = -1
+        Attr Y = -1
+      EndBody
+    EndObject
+  EndObject
+EndSObject

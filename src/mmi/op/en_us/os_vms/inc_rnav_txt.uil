@@ -1,0 +1,29 @@
+!  inc_rnav_txt.uil -- runtime navigator
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  This module defines english texts for the navigator  window.
+!
+value
+    title	: exported "Runtime Navigator on ";
+    iconName	: exported "Runtime Navigator";
+
+    block	: "Block...";
+    block$	: "B";
+    blockList	: "Block List...";
+    blockList$	: "L";
+    copyMode	: "CopyMode";
+    copyMode$	: "M";
+    func	: "Functions";
+    func$	: "u";
+    objectName	: "Object Name"; 
+    objectName$	: "O"; 
+    objectAttr	: "Object Name + Attribute"; 
+    objectAttr$	: "A"; 
+    openObject	: "Open Object..."; 
+    openObject$	: "O"; 
+    refresh	: "Refresh";
+    refresh$	: "R";
+    openPlc	: "Open Plc..."; 
+    openPlc$	: "P"; 

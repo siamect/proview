@@ -1,0 +1,78 @@
+!  pwrb_c_datacopy.wb_load -- Defines the class DataCopy.
+!
+!  PROVIEW/R
+!
+!  <Description>.
+!
+SObject NMps:Class
+  Object DataCopy $ClassDef 9
+    Body SysBody
+      Attr Editor = pwr_eEditor_PlcEd
+      Attr Method = pwr_eMethod_Connections
+    EndBody
+    !
+    ! DATACOPY Runtime Body
+    !
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "datacopy"
+      EndBody
+      Object DataFrom $Input 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr GraphName = "From"
+        EndBody
+      EndObject
+      Object DataTo $Input 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr GraphName = "To"
+        EndBody
+      EndObject
+      Object Condition $Input 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "cond"
+        EndBody
+      EndObject
+    EndObject
+    !
+    ! DATACOPY Development Body
+    !
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 226
+        Attr parameters[0] = 3
+        Attr parameters[1] = 0
+        Attr parameters[2] = 0
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 0
+        Attr graphindex = 0
+        Attr default_mask[0] = 7
+        Attr default_mask[1] = 0
+        Attr segname_annotation = 1
+        Attr compmethod = 45
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+	Attr executeordermethod = 2
+        Attr objname = "DataCopy"
+        Attr graphname = "DataCopy"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    Object DevBody $ObjBodyDef 2
+      Object PlcNode $Buffer 1
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject

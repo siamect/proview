@@ -1,0 +1,112 @@
+!  pwrb_c_text.wb_load -- Defines the class Text.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  Single-row text object.
+!
+!  If no text is specified, in e.g. a Frame object, the
+!  object can be used to frame other objects.
+!  
+!  The only difference between Frame, Head, Text, and
+!  Title is the default values of the attributes.
+!  
+!  They are used in Document objects where, for instance,
+!   · Title specifies what the configuration is doing, i.e.
+!     the function.
+!   · Sub-functions are named by Head objects.
+!   · Frame and Text are used to information of details.
+!*/
+SObject pwrb:Class
+  Object Text $ClassDef 237 
+    Body SysBody
+      Attr Flags |= pwr_mClassDef_DevOnly
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_DevBodyOnly
+    EndBody
+    Object DevBody $ObjBodyDef 2 
+      !/**
+      !  Specifies the text to be shown in the object.
+      !*/
+      Object Text $Intern 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr GraphName = "Text"
+          Attr NiNaAnnot = 1
+        EndBody
+      EndObject
+      !/**
+      !  The attribute influence the appearance of the text. The
+      !  following values are used: 0, 1, 2, 3.
+      !*/
+      Object TextAttribute $Intern 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Enum"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies if the text is to be surrounded by a some
+      !  kind of frame.
+      !*/
+      Object FrameAttribute $Intern 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Enum"
+        EndBody
+      EndObject
+      !/**
+      !  If the object has a frame the attributes will determine
+      !  the size of the frame.
+      !  0, 0 means the size of the frame is accommodated to the
+      !  current text.
+      !  
+      !  If the object is used only to frame other objects the
+      !  attributes have to be increased in suitable way.
+      !*/
+      Object FrameWidth $Intern 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      Object FrameHeight $Intern 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      Object PlcNode $Buffer 6 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 11
+        Attr parameters[0] = 0
+        Attr parameters[1] = 1
+        Attr parameters[2] = 0
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 3
+        Attr graphindex = 1
+        Attr default_mask[0] = 0
+        Attr default_mask[1] = 0
+        Attr segname_annotation = 0
+        Attr devbody_annotation = 1
+        Attr compmethod = 2
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+        Attr objname = "Text"
+        Attr graphname = "Text"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+  EndObject
+EndSObject

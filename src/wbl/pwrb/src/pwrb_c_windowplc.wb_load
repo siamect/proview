@@ -1,0 +1,127 @@
+!  pwrb_c_windowplc.wb_load -- Defines the class WindowPlc.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_macro_div.h
+!  Graphical PLC objects are configured in windows. All
+!  objects in such a window gets a WindowPlc object as
+!  parent object.
+!  
+!  The object is configured automatically, by the
+!  development environment, direct below a,
+!   · PlcPgm object when the PLC Editor creates the
+!     corresponding 'PLC window' at first time.
+!  
+!   · CSub object when the corresponding sub-window is
+!     opened at first time.
+!  
+!      Hints
+!  Notice the possibility at module check to switch the
+!  execution of individual modules off. This may be one
+!  way to locate, for instance, which module among others
+!  that all the time writes a certain value.
+!*/
+SObject pwrb:Class
+  Object WindowPlc $ClassDef 256 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_DevBodyOnly
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "windowplc"
+      EndBody
+      !/**
+      !  Specifies if the PLC objects in the corresponding
+      !  window as well as the underlying windows are allowed to
+      !  execute or not. FALSE means that the actual objects are
+      !  allowed to execute as usual and TRUE that they are not
+      !  allowed to execute at the present.
+      !  
+      !  The attribute is handled manually.
+      !*/
+      Object ScanOff $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object Version $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      !/**
+      !  Current time is received when 'Save' is selected in the
+      !  corresponding window. In this way the attribute will
+      !  specify when the window was saved last time.
+      !  
+      !  The attribute is used internally by the help program
+      !  pwr_plc when the command:
+      !  · ShowModules in 'Utilities...' is used to show when
+      !  the actual windows where saved and compiled. In this
+      !  way it is possible to check if any window is not
+      !  compiled since it has been saved.
+      !  · Compile with the qualifier 'Modified' in
+      !  'Utilities...' is used to compile only windows that
+      !  have been saved after the last compilation.
+      !*/
+      Object Modified $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Time"
+	  Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Time for last successfull compilation
+      !  Time for last successfull compilation of the window.
+      !
+      !  For VMS and ELN errors from the c-compiler are not detected.
+      !  In this case the time can be stored for an erroneus compilation.
+      !*/
+      Object Compiled $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Time"
+	  Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object PlcWindow $Buffer 2 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcWindow
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcWindow $GraphPlcWindow
+      Body SysBody
+        Attr window_type = 0
+        Attr defaultobjects = 1
+        Attr defobj_class[0] = "pwrb:Class-Document"
+        Attr defobj_x[0] = 0.5
+        Attr defobj_y[0] = 0.5
+        Attr width = 1000
+        Attr height = 750
+        Attr x = 0
+        Attr y = 50
+        Attr compmethod = 3
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+	Attr executeordermethod = 1
+        Attr objname = "W"
+        Attr graphname = "WINDOW"
+      EndBody
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,62 @@
+!  pwrb_c_getdgeneric.wb_load -- Defines the class GetDgeneric.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!/**
+!  @Version 1.0
+!  @Summary Temporary object produced by the plc editor.
+!  A GetDgeneric object is a temporary object, created in the plc-editor
+!  when a connection is created from a digital input. The object will
+!  be transformed to its final appearence when it is connected to a
+!  signal or attribute.
+!*/
+!
+SObject pwrb:Class
+  Object GetDgeneric $ClassDef 282 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_DevBodyOnly
+      Attr PopEditor = 2
+    EndBody
+    Object DevBody $ObjBodyDef 2 
+      Object ActualValue $Output 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object PlcNode $Buffer 2 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 137
+        Attr parameters[0] = 0
+        Attr parameters[1] = 0
+        Attr parameters[2] = 1
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 4
+        Attr graphindex = 33
+        Attr default_mask[0] = 0
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 0
+        Attr compmethod = 56
+        Attr compindex = 0
+        Attr tracemethod = 1
+        Attr connectmethod = 15
+        Attr traceindex = 1
+	Attr executeordermethod = 0
+        Attr objname = "GetD"
+        Attr graphname = "GetD"
+      EndBody
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,325 @@
+!  op_evel.uil -- event list
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  This module defines the widget hierarchy for the alarmwindow.
+!
+module op_evel
+names = case_sensitive
+!objects = { 
+!          XmPushButton     = gadget;           
+!          XmLabel           = gadget; 
+!	  }          
+
+! INCLUDE FILES
+ 
+include file 'pwr_lang:inc_standard_txt.uil';
+include file 'pwr_lang:inc_evel_txt.uil';
+
+value
+
+! CONSTANTS, Defining the geometry of the application.
+   ButtonWidth : 70;
+   BigButtonWidth : 140;
+
+   SvnBottomOffset		: 5;
+   SpaceBetweenButtonVert	: 3;
+   SpaceBetweenButtonHoriz	: 25;
+   ButtonBottomOffset		: 5;
+   ButtonLeftOffset		: 10;
+   ButtonRightOffset		: 10;
+   
+! evel INSTANCE IDENTIFIER
+identifier
+   EvelP;
+
+! CALLBACK PROCEDURES
+procedure
+
+! Callbacks from pushbuttons in the menu bar.
+   evel_MenuToggleTime_cb(any);
+   evel_MenuToggleObject_cb(any);
+   evel_MenuToggleEventText_cb(any);
+   evel_MenuClearHighlight_cb(any);
+
+! Callbacks from pushbuttons
+   evel_Select_cb(any);
+   evel_ActionText_cb(any);
+   evel_HistList_cb(any);
+   evel_Quit_cb(any);
+
+! Callbacks from the svn widget.
+   evel_Svn_cr(any);
+   evel_SvnGetEntry_bc(any);
+   evel_SvnSelAndConf_bc(any);
+
+!*************************************************************
+!
+! Event list XmDrawingArea
+!
+!*************************************************************
+
+object main : XmMainWindow 
+{
+   arguments
+   {
+!    XmNwidth = 880;
+!    XmNheight = 292;
+   };
+   controls
+   {
+      XmMenuBar menuBar;
+      XmForm adb;
+   };
+
+};
+object adb : XmForm 
+{
+   arguments
+   {
+   XmNdefaultButton = XmPushButton cancelPb;
+   XmNcancelButton = XmPushButton cancelPb;
+   };
+   controls
+   {
+      XmPushButton	selPb;
+      XmPushButton	actionTextPb;
+      XmPushButton	histListPb;
+      XmPushButton	cancelPb;
+      DXmSvn		svn;
+   };
+};
+
+!*************************************************************
+!
+! Menu bar and its objects
+!
+!*************************************************************
+object menuBar : XmMenuBar
+{
+   arguments
+   {
+      XmNorientation = XmHORIZONTAL;
+      XmNspacing     = 15;                   ! Pixels between XmNlistItems in menu
+   };
+   controls
+   {                              
+      XmCascadeButton customizePulldown;
+!    XmCascadeButton functionsPulldown;
+   };
+   callbacks
+   {
+   };
+};
+
+object customizePulldown : XmCascadeButton
+{
+   arguments
+   {    
+      XmNlabelString = compound_string($options);	
+      XmNmnemonic = keysym($options$);
+   };
+   controls
+   {    
+      XmPulldownMenu customizePulldownMenu;	
+   };
+};
+
+object customizePulldownMenu : XmPulldownMenu
+{
+   arguments
+   {    
+      XmNorientation = XmVERTICAL;	
+   };
+   controls
+   {
+      XmPushButton
+      {
+         arguments
+	 { 
+	    XmNlabelString = compound_string(hideTime); 
+            XmNmnemonic = keysym(hideTime$);
+	 };
+	 callbacks
+	 { 
+	    XmNactivateCallback = procedure evel_MenuToggleTime_cb(EvelP); 
+	 };
+      };
+      XmPushButton
+      {
+         arguments
+	 { 
+	    XmNlabelString = compound_string(hideObject); 
+	    XmNmnemonic = keysym(hideObject$);
+	 };
+	 callbacks
+	 { 
+	    XmNactivateCallback = procedure evel_MenuToggleObject_cb(EvelP); 
+	 };
+      };
+      XmPushButton
+      {
+         arguments
+	 { 
+	    XmNlabelString = compound_string(hideEvent); 
+            XmNmnemonic = keysym(hideEvent$);
+	 };
+	 callbacks
+	 { 
+	    XmNactivateCallback = procedure evel_MenuToggleEventText_cb(EvelP); 
+	 };
+      };
+   };
+};
+object functionsPulldown : XmCascadeButton
+{
+   arguments
+   {    
+      XmNlabelString = compound_string(functions);	
+      XmNmnemonic = keysym(functions$);
+   };
+   controls
+   {    
+      XmPulldownMenu functionsPulldownMenu;	
+   };
+};
+
+object functionsPulldownMenu : XmPulldownMenu
+{
+   arguments
+   {    
+      XmNorientation = XmVERTICAL;	
+   };
+   controls
+   {
+      XmPushButton
+      {
+         arguments
+	 { 
+	    XmNlabelString = compound_string(clearSelections); 
+            XmNmnemonic = keysym(clearSelections$);	
+	 };
+	 callbacks
+	 { 
+	    XmNactivateCallback = procedure evel_MenuClearHighlight_cb(EvelP); 
+	 };
+      };
+   };
+};
+
+!*************************************************************
+!
+! Push buttons
+!
+!*************************************************************
+object selPb : XmPushButton 
+{
+   arguments
+   {
+!    XmNwidth = ButtonWidth;
+      XmNleftAttachment = XmATTACH_FORM;
+      XmNleftOffset = ButtonLeftOffset;
+      XmNbottomAttachment = XmATTACH_FORM;
+      XmNbottomOffset = ButtonBottomOffset;
+      XmNlabelString = compound_string($zSetSelected);
+   };
+   callbacks
+   {
+      XmNactivateCallback = procedure evel_Select_cb(EvelP);
+   };
+};
+object actionTextPb : XmPushButton 
+{
+   arguments
+   {
+      XmNwidth = BigButtonWidth;
+      XmNleftAttachment = XmATTACH_WIDGET;
+      XmNleftWidget = XmPushButton selPb;
+      XmNleftOffset = SpaceBetweenButtonHoriz;
+      XmNbottomAttachment = XmATTACH_FORM;
+      XmNbottomOffset = ButtonBottomOffset;       
+      XmNlabelString = compound_string($zActionText);
+   };
+   callbacks
+   {
+      XmNactivateCallback = procedure evel_ActionText_cb(EvelP);
+   };
+};
+
+object histListPb : XmPushButton 
+{
+   arguments
+   {
+      XmNwidth = BigButtonWidth;
+      XmNleftAttachment = XmATTACH_WIDGET;
+      XmNleftWidget = XmPushButton actionTextPb;
+      XmNleftOffset = SpaceBetweenButtonHoriz;
+      XmNbottomAttachment = XmATTACH_FORM;
+      XmNbottomOffset = ButtonBottomOffset;       
+      XmNlabelString = compound_string(histList);
+   };
+   callbacks
+   {
+      XmNactivateCallback = procedure evel_HistList_cb(EvelP);
+   };
+};
+
+object cancelPb : XmPushButton 
+{
+   arguments
+   {
+      XmNwidth = ButtonWidth;
+      XmNrightAttachment = XmATTACH_FORM;
+      XmNrightOffset = ButtonRightOffset;
+      XmNbottomAttachment = XmATTACH_FORM;
+      XmNbottomOffset = ButtonBottomOffset;
+      XmNlabelString = compound_string($cancel);
+   };
+   callbacks
+   {
+      XmNactivateCallback = procedure evel_Quit_cb(EvelP);
+   };
+};
+
+!*************************************************************
+!
+! Svn widget
+!
+!*************************************************************
+object svn : DXmSvn
+{
+  arguments
+  {
+    XmNtopAttachment = XmATTACH_FORM;
+    XmNbottomAttachment = XmATTACH_WIDGET;
+    XmNbottomWidget = XmPushButton selPb;
+    XmNbottomOffset = SvnBottomOffset;
+    XmNleftAttachment = XmATTACH_FORM;
+    XmNrightAttachment = XmATTACH_FORM;
+    DXmSvnNstartColumnComponent = 3;
+    DXmSvnNexpectHighlighting = false ;
+    DXmSvnNcolumnLines = false;
+    DXmSvnNmultipleSelections = false;
+  };
+
+  controls
+  {
+  };
+
+  callbacks
+  {
+    MrmNcreateCallback			= procedure evel_Svn_cr(EvelP);
+    DXmSvnNgetEntryCallback		= procedure evel_SvnGetEntry_bc(EvelP);
+!  DXmSvnNselectAndConfirmCallback	= procedure evel_SvnSelAndConf_bc(EvelP);
+!  DXmSvnNextendConfirmCallback	= procedure evel_SvnExtendConfirm_bc(EvelP);
+!  DXmSvnNentrySelectedCallback	= procedure evel_SvnSel_bc(EvelP);
+!  DXmSvnNentryUnselectedCallback	= procedure evel_SvnUnsel_bc(EvelP);
+  };
+};
+
+     
+
+
+
+end module;

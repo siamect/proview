@@ -1,0 +1,32 @@
+!  pwrs_c_menucascade.wb_load -- Defines the class MenuCascade.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+SObject pwrs:Class
+  Object $MenuCascade $ClassDef pwr_eCix_MenuCascade
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_SysBody
+      Attr Flags |= pwr_mClassDef_System
+      Attr Flags |= pwr_mClassDef_DevOnly
+    EndBody
+    Object SysBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "MenuCascade"
+      EndBody
+      Object ButtonName $Attribute 1
+        Body SysBody
+	  Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+    EndObject
+    Object Template $MenuCascade
+      Body SysBody
+      EndBody
+    EndObject
+  EndObject
+EndSObject

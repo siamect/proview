@@ -1,0 +1,94 @@
+!  pwrb_c_showplcattr.wb_load -- Defines the class ShowPlcAttr.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  Object to display the value of some important PLC
+!  program attributes.
+!  
+!  ShowPlcAttr object is, for instance, configured in one
+!  of the Document objects in a PLC program.
+!  
+!  The object is not dynamic. If the 'node name' or the
+!  cycle time are changed by the Attribute Editor the new
+!  values will not be shown in an existing ShowPlcAttr
+!  object. To display the new values it is necessary to
+!  delete the ShowPlcAttr object and then create a new
+!  one!
+!  ResetObject may, opposite to the name of the $Node
+!  object and the cycle time, be specified direct in the
+!  ShowPlcAttr object.
+!  
+!         Hints
+!  Create a ShowPlcAttr object in some of the Document
+!  objects in the PLC program, e.g. the first one. Then
+!  will the transcriptions of the PLC program contain
+!  information about 'node name', cycle time and reset
+!  object.
+!*/
+SObject pwrb:Class
+  Object ShowPlcAttr $ClassDef 207 
+    Body SysBody
+      Attr Flags |= pwr_mClassDef_DevOnly
+    EndBody
+    Object DevBody $ObjBodyDef 2 
+      Object Node $Intern 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr GraphName = "Node"
+          Attr NiNaAnnot = 1
+        EndBody
+      EndObject
+      Object ScanTime $Intern 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "ScanTim"
+          Attr NiNaAnnot = 2
+        EndBody
+      EndObject
+      Object ResetObject $Intern 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr GraphName = "ResObj"
+          Attr NiNaAnnot = 3
+        EndBody
+      EndObject
+      Object PlcNode $Buffer 4 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 12
+        Attr parameters[0] = 0
+        Attr parameters[1] = 0
+        Attr parameters[2] = 0
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 4
+        Attr graphindex = 15
+        Attr default_mask[0] = 0
+        Attr default_mask[1] = 0
+        Attr segname_annotation = 0
+        Attr devbody_annotation = 1
+        Attr compmethod = 2
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+        Attr connectmethod = 8
+        Attr objname = "ShowPlcAttr"
+        Attr graphname = "ShowPlcAttr"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+  EndObject
+EndSObject

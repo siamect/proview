@@ -1,0 +1,345 @@
+#include "glow_std.h"
+
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
+#include <float.h>
+#include "glow_ctx.h"
+
+GlowPscript::GlowPscript( char *filename, void *glow_ctx, int page_border) :
+		border(page_border), ctx(glow_ctx)
+{
+  strcpy( fname, filename);
+  file = fopen( fname, "w");
+  if ( !file)
+  {
+    printf( "** Unable to open file\n");
+    return;
+  }
+  fprintf( file, "%%!\n\n");
+
+  // Define ISO Latin fonts
+  {
+    char format[] = "\
+/%s findfont\n\
+dup length dict begin\n\
+  { 1 index /FID ne\n\
+	{def}\n\
+	{pop pop}\n\
+     ifelse\n\
+  } forall\n\
+  /Encoding ISOLatin1Encoding def\n\
+  currentdict\n\
+end\n\
+/%s exch definefont pop\n";
+
+    fprintf( file, format, "Helvetica", "Helvetica-ISOLatin1");
+    fprintf( file, format, "Helvetica-Bold", "Helvetica-Bold-ISOLatin1");
+  }
+  fprintf( file, "%f %f scale\n\n", 1.0, 1.0);
+  fprintf( file, "save\n");
+
+}
+
+GlowPscript::~GlowPscript() 
+{
+  fclose( file);
+}
+
+int GlowPscript::print_page( double ll_x, double ll_y, double ur_x, double ur_y)
+{
+  GlowCtx *cx = (GlowCtx *) ctx;
+
+  if ( ur_x - ll_x > ur_y - ll_y)
+    cx->print_zoom_factor = 730 / (ur_x - ll_x);
+  else
+    cx->print_zoom_factor = 730 / (ur_y - ll_y);
+  cx->print_zoom();
+
+  offset_x = ll_x * cx->print_zoom_factor;
+  offset_y = ur_y * cx->print_zoom_factor;
+
+  if ( ur_x - ll_x > ur_y - ll_y)
+  {
+    /* Landscape orientation */
+    fprintf( file, "%f %f translate\n", (ur_y - ll_y) *
+	cx->print_zoom_factor + 40, 20.0);
+    fprintf( file, "90 rotate\n");
+  }
+  else
+    fprintf( file, "%f %f translate\n", 40.0, 20.0);
+
+  /* Clip the region */
+  fprintf( file, "newpath\n");
+  fprintf( file, "%f %f moveto\n", ll_x * cx->print_zoom_factor - offset_x, 
+		offset_y - ll_y * cx->print_zoom_factor);
+  fprintf( file, "%f %f lineto\n", ll_x * cx->print_zoom_factor - offset_x, 
+		offset_y - ur_y * cx->print_zoom_factor);
+  fprintf( file, "%f %f lineto\n", ur_x * cx->print_zoom_factor - offset_x, 
+		offset_y - ur_y * cx->print_zoom_factor);
+  fprintf( file, "%f %f lineto\n", ur_x * cx->print_zoom_factor - offset_x, 
+		offset_y - ll_y * cx->print_zoom_factor);
+  fprintf( file, "%f %f lineto\n", ll_x * cx->print_zoom_factor - offset_x, 
+		offset_y - ll_y * cx->print_zoom_factor);
+  fprintf( file, "closepath\n");
+  fprintf( file, "clip\n");
+  if ( border)
+    fprintf( file, "stroke\n");
+  fprintf( file, "newpath\n");
+
+  ((GlowCtx *)ctx)->print_ps = this;
+  ((GlowCtx *)ctx)->print( ll_x, ll_y, ur_x, ur_y);
+
+  fprintf( file, "showpage\n\n");
+  return 1;
+}
+
+int GlowPscript::rect( double x, double y, double width, double height, glow_eDrawType type, 
+	int idx)
+{
+  if ( type == glow_eDrawType_LineDashed)
+  {
+    fprintf( file, "gsave\n");
+    fprintf( file, "[%d %d] %d setdash\n", 3 + idx, 3 + idx, 0);    
+  }
+  else if ( type == glow_eDrawType_LineGray)
+  {
+    fprintf( file, "gsave\n");
+    fprintf( file, "0.5 setgray\n");    
+  }
+
+  setlinewidth( idx);
+  fprintf( file, "newpath\n");
+  fprintf( file, "%f %f moveto\n", x-offset_x, offset_y-y);
+  fprintf( file, "%f %f lineto\n", (x+width)-offset_x, offset_y-y);
+  fprintf( file, "%f %f lineto\n", x+width-offset_x, offset_y-(y+height));
+  fprintf( file, "%f %f lineto\n", x-offset_x, offset_y-(y+height));
+  fprintf( file, "%f %f lineto\n", x-offset_x, offset_y-y);
+  fprintf( file, "closepath\n");
+  fprintf( file, "stroke\n");
+
+  if ( type == glow_eDrawType_LineDashed || type == glow_eDrawType_LineGray)
+    fprintf( file, "grestore\n");
+
+  return 1;
+}
+
+int GlowPscript::filled_rect( double x, double y, double width, double height, glow_eDrawType type, 
+	int idx)
+{
+  if ( type == glow_eDrawType_LineGray)
+  {
+    fprintf( file, "gsave\n");
+    fprintf( file, "0.5 setgray\n");    
+  }
+
+  setlinewidth( idx);
+  fprintf( file, "newpath\n");
+  fprintf( file, "%f %f moveto\n", x-offset_x, offset_y-y);
+  fprintf( file, "%f %f lineto\n", (x+width)-offset_x, offset_y-y);
+  fprintf( file, "%f %f lineto\n", x+width-offset_x, offset_y-(y+height));
+  fprintf( file, "%f %f lineto\n", x-offset_x, offset_y-(y+height));
+  fprintf( file, "%f %f lineto\n", x-offset_x, offset_y-y);
+  fprintf( file, "closepath\n");
+  fprintf( file, "fill\n");
+
+  if ( type == glow_eDrawType_LineDashed || type == glow_eDrawType_LineGray)
+    fprintf( file, "grestore\n");
+
+  return 1;
+}
+
+int GlowPscript::arc( double x, double y, double width, double height, int angel1, int angel2,
+		glow_eDrawType type, int idx)
+{
+  double r = 0.5*width;
+  double pi = 3.14159;
+
+  if ( type == glow_eDrawType_LineDashed)
+  {
+    fprintf( file, "gsave\n");
+    fprintf( file, "[%d %d] %d setdash\n", 3 + idx, 3 + idx, 0);    
+  }
+  else if ( type == glow_eDrawType_LineGray)
+  {
+    fprintf( file, "gsave\n");
+    fprintf( file, "0.5 setgray\n");    
+  }
+  setlinewidth( idx);
+
+  fprintf( file, "newpath\n");
+  fprintf( file, "%f %f moveto\n", x+0.5*width+r*cos(pi*angel1/180)-offset_x,
+		offset_y-(y+0.5*height-0.5*height*sin( pi*angel1/180)));
+  if ( fabs( width - height) > 0.05 * width)
+    /* Eclipse, draw a line instead */
+    fprintf( file, "%f %f lineto\n", 
+		x+0.5*width+r*cos(pi*(angel1+angel2)/180)-offset_x,
+		offset_y-(y+0.5*height-0.5*height*sin( pi*(angel1+angel2)/180)));
+  else
+    fprintf( file, "%f %f %f %d %d arc\n", x+0.5*width-offset_x, 
+		offset_y-(y+0.5*height),
+		r, angel1, angel1+angel2);
+  fprintf( file, "%f %f moveto\n", 
+		x+0.5*width+r*cos(pi*(angel1+angel2)/180)-offset_x,
+		offset_y-(y+0.5*height-r*sin( pi*(angel1+angel2)/180)));
+  fprintf( file, "closepath\n");
+  fprintf( file, "stroke\n");
+
+  if ( type == glow_eDrawType_LineDashed || type == glow_eDrawType_LineGray)
+    fprintf( file, "grestore\n");
+  return 1;
+}
+
+int GlowPscript::line( double x1, double y1, double x2, double y2, glow_eDrawType type, 
+	int idx)
+{
+  if ( type == glow_eDrawType_LineDashed)
+  {
+    fprintf( file, "gsave\n");
+    fprintf( file, "[%d %d] %d setdash\n", 3 + idx, 3 + idx, 0);    
+  }
+  else if ( type == glow_eDrawType_LineGray)
+  {
+    fprintf( file, "gsave\n");
+    fprintf( file, "0.5 setgray\n");    
+  }
+
+  setlinewidth( idx);
+  fprintf( file, "newpath\n");
+  fprintf( file, "%f %f moveto\n", x1-offset_x, offset_y-y1);
+  fprintf( file, "%f %f lineto\n", x2-offset_x, offset_y-y2);
+  fprintf( file, "%f %f moveto\n", x2-offset_x, offset_y-y2);
+  fprintf( file, "closepath\n");
+  fprintf( file, "stroke\n");
+
+  if ( type == glow_eDrawType_LineDashed || type == glow_eDrawType_LineGray)
+    fprintf( file, "grestore\n");
+
+  return 1;
+}
+
+int GlowPscript::text( double x, double y, char *text, int len, glow_eDrawType type, 
+	int size)
+{
+  char font[40];
+  char c;
+  char *s;
+
+  switch( type)
+  {
+    case glow_eDrawType_TextHelvetica:
+      strcpy( font, "Helvetica-ISOLatin1");
+      break;
+    case glow_eDrawType_TextHelveticaBold:
+      strcpy( font, "Helvetica-Bold-ISOLatin1");
+      break;
+    default:
+      ;
+  }
+
+  fprintf( file, "/%s findfont\n", font);
+  fprintf( file, "%d scalefont\n", size);
+  fprintf( file, "setfont\n");
+  fprintf( file, "newpath\n");
+  fprintf( file, "%f %f moveto\n", x-offset_x, offset_y-y);
+  c = text[len];
+  text[len] = 0;
+  fprintf( file, "(");
+  for ( s = text; *s; s++)
+  {
+    if ( *s == '(' || *s == ')' || *s == '\\')
+      fprintf( file, "%c", '\\');
+    fprintf( file, "%c", *s);
+  }
+  fprintf( file, ") show\n");
+  text[len] = c;
+  fprintf( file, "closepath\n");
+  fprintf( file, "stroke\n");
+
+  return 1;
+}
+
+int GlowPscript::pixmap( double x, double y, glow_sPixmapDataElem *data,
+	glow_eDrawType type)
+{
+  int i, j;
+  int bit_cnt;
+  char *char_p;
+  double scale_factor = 0.8;
+
+  fprintf( file, "/picstr %d string def\n", data->width);
+  fprintf( file, "%f %f translate\n", x-offset_x, offset_y-y);
+  fprintf( file, "%f %f scale\n", scale_factor * data->width, 
+		scale_factor * data->height);
+  fprintf( file, "%d %d translate\n", 0, -1);
+  fprintf( file, "%d %d 8\n", data->width, data->height);
+  fprintf( file, "[%d 0 0 %d 0 %d]\n", data->width, -data->height,
+	data->height);
+  fprintf( file, "{ currentfile picstr readhexstring pop }\n");
+  fprintf( file, "image\n\n");
+  char_p = data->bits;
+  for ( i = 0; i < data->height; i++)
+  {
+    bit_cnt = 0;
+    for ( j = 0; j < data->width; j++)
+    {
+      if ( bit_cnt == 8)
+      {
+        bit_cnt = 0;
+        char_p++;
+      }
+      if ( *char_p & ( 1 << bit_cnt))
+        fprintf( file , "00");
+      else
+        fprintf( file , "ff");
+      bit_cnt++;
+    }
+    char_p++;
+    fprintf( file, "\n");
+  }
+  fprintf( file, "\n");
+  fprintf( file, "stroke\n");
+  fprintf( file, "%d %d translate\n", 0, 1);
+  fprintf( file, "%f %f scale\n", 1.0 / (scale_factor * data->width), 
+		1.0 / (scale_factor * data->height));
+  fprintf( file, "%f %f translate\n", -(x-offset_x), -(offset_y-y));
+  return 1;
+}
+
+int GlowPscript::arrow( double x1, double y1, double x2, double y2, 
+	double x3, double y3, glow_eDrawType type, int idx)
+{
+
+  if ( type == glow_eDrawType_LineGray)
+  {
+    fprintf( file, "gsave\n");
+    fprintf( file, "0.5 setgray\n");    
+  }
+
+  setlinewidth( idx);
+  fprintf( file, "newpath\n");
+  fprintf( file, "%f %f moveto\n", x1-offset_x, offset_y-y1);
+  fprintf( file, "%f %f lineto\n", x2-offset_x, offset_y-y2);
+  fprintf( file, "%f %f lineto\n", x3-offset_x, offset_y-y3);
+  fprintf( file, "%f %f lineto\n", x1-offset_x, offset_y-y1);
+  fprintf( file, "closepath\n");
+  fprintf( file, "fill\n");
+
+  if ( type == glow_eDrawType_LineGray)
+    fprintf( file, "grestore\n");
+
+  return 1;
+}
+
+void GlowPscript::move( double x, double y)
+{
+  fprintf( file, "%f %f moveto", x, y);
+}
+
+
+void GlowPscript::setlinewidth( int idx)
+{
+  fprintf( file,"%d setlinewidth\n", 1 + idx);
+}
+

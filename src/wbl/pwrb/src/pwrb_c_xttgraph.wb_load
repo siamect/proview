@@ -1,0 +1,221 @@
+!  pwrb_c_xttgraph.wb_load -- Defines the class XttGraph.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!/**
+!  @Version 1.0
+!  The XttGraph object defines a xtt action for an operator, that can be
+!  executed from a pushbutton in the operator window. An action can be
+!  opening a ge graph or a java frame, or executing a xtt-command.
+!
+!  In the attribute Action, a xtt graph, java class or xtt-command can
+!  be entered.
+! 
+!  The XttGraph object is connected to a pushbutton in the
+!  operator window by entering the name of the XttGraph-object in the
+!  FastAvail-array i the User-object for the operator place.
+!
+!  I the action is opening a ge graph, the graph can be opened from the
+!  popup menu for an object by putting the name of the XttGraph in 
+!  the DefGraph attribute for the object (or for an ancestor to the object).
+!  This action i supported for all objects that contains a DefGraph attribute,
+!  for example $PlantHier, Ai, Ao, Di, Do, Av and Dv.
+!
+!  Se also
+!  @classlink OpPlace pwrb_opplace.html
+!  @classlink User pwrb_user.html
+!*/
+!
+SObject pwrb:Class
+  Object XttGraph $ClassDef 299 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "XttGraph"
+      EndBody
+      !/**
+      !  Description of the object.
+      !*/
+      Object Description $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Action to be performed: pwg-file, java class or xtt command.
+      !  Action to be performed. The action can be
+      !  - open a ge graph. The action attribute should contain the
+      !    name of the graph-file, for example "my_graph.pwg"
+      !  - open a java frame. The action attribute should contain the
+      !    name of the class, for example "MyFrame.class". This requires
+      !    that the xtt java process (Jop) is started.
+      !  - execute a xtt command. The action attribute should contain the
+      !    xtt command.
+      !*/
+      Object Action $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr Flags = 0
+        EndBody
+      EndObject
+      !/**
+      ! Title of the window.
+      !*/
+      Object Title $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      !/**
+      ! Text of the pushbutton in the operator window.
+      !*/
+      Object ButtonText $Attribute 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      !/**
+      ! Not implemented.
+      !*/
+      Object UpdateInterval $Attribute 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags = 0
+        EndBody
+      EndObject
+      !/**
+      ! X position in pixel for the window.
+      !*/
+      Object X $Attribute 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr Flags = 0
+        EndBody
+      EndObject
+      !/**
+      ! Y position in pixel for the window.
+      !*/
+      Object Y $Attribute 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr Flags = 0
+        EndBody
+      EndObject
+      !/**
+      ! Width of the window in pixel.
+      !*/
+      Object Width $Attribute 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr Flags = 0
+        EndBody
+      EndObject
+      !/**
+      ! Height of the window in pixel.
+      !*/
+      Object Height $Attribute 9
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr Flags = 0
+        EndBody
+      EndObject
+      !/**
+      ! If action is opening a ge graph, open a navigator window for the graph.
+      !*/
+      Object Navigator $Attribute 10
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags = 0
+        EndBody
+      EndObject
+      !/**
+      ! If action is opening a ge graph, display scrollbars in the graph window.
+      !*/
+      Object Scrollbar $Attribute 11
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags = 0
+        EndBody
+      EndObject
+      !/**
+      ! If action is opening a ge graph, display a menu in the graph window.
+      !*/
+      Object Menu $Attribute 12
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags = 0
+        EndBody
+      EndObject
+      !/**
+      ! Name of an object, if action is opening a class graph for a specific object.
+      !*/
+      Object Object $Attribute 13
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr Flags = 0
+        EndBody
+      EndObject
+    EndObject
+    Object Template XttGraph
+      Body RtBody
+        Attr UpdateInterval = 1.0
+      EndBody
+    EndObject
+    Object NavigatorPosnn $Menu
+      Object Pointed $Menu
+	Object OpenGraph $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open Ge..."
+	    Attr MethodName = "XttGraph-OpenGraph"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object NavigatorPoson $Menu
+      Object Pointed $Menu
+	Object OpenGraph $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open Ge..."
+	    Attr MethodName = "XttGraph-OpenGraph"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object NavigatorPosos $Menu
+      Object Pointed $Menu
+	Object OpenGraph $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open Ge..."
+	    Attr MethodName = "XttGraph-OpenGraph"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object NavigatorPosms $Menu
+      Object Pointed $Menu
+	Object OpenGraph $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open Ge..."
+	    Attr MethodName = "XttGraph-OpenGraph"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object NavigatorPosmn $Menu
+      Object Pointed $Menu
+	Object OpenGraph $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open Ge..."
+	    Attr MethodName = "XttGraph-OpenGraph"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+  EndObject
+EndSObject

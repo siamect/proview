@@ -1,0 +1,40 @@
+!  inc_alaw_txt.uil -- alarm window
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  This module defines swedish texts for the alarmwindow.
+!
+value
+   alaw_AscizTable	: exported asciz_string_table
+	(
+	"VÄRDE : ",
+	"GRÄNS : "
+	);
+
+! Constants used by the co_CvtTimeToAsc function. See pwr_inc:TimeUtil.h
+   Solution : 0;	! second.
+   Format  : 0;		! Swedish.
+   alaw_IntTable :  exported integer_table(Solution,Format);
+
+
+
+   NumString1 : compound_string("0",separate = true);
+   NumString2 : compound_string("0");
+   NumString : NumString1 & NumString2;
+   NumTextString1 : compound_string(" okv.",separate = true);
+   NumTextString2 : compound_string(" råd.");
+   NumTextString : NumTextString1 & NumTextString2;
+   AckText :compound_string("Kvittera");
+   SelText :compound_string("Välj ut");
+     
+   AlarmString1 : compound_string("",separate = true);
+   AlarmString2 : compound_string("");
+   AlarmString : AlarmString1 & AlarmString2;
+
+   BigFont : font('*helvetica-bold-r-*-18-*');
+
+   ButtonWidth : 73;
+   ButtonHeight : 30;
+   AlawTitle  : compound_string("Larmfönster");
+

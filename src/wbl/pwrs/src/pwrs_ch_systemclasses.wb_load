@@ -1,0 +1,11 @@
+!  pwrs_ch_systemclasses.wb_load -- SystemClasses hierarchy.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+SObject pwrs:
+   Object Class pwr_eClass_ClassHier
+   EndObject
+EndSObject

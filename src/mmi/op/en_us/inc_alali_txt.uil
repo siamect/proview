@@ -1,0 +1,42 @@
+!  inc_alali_txt.uil -- alarm limits
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  This module defines englishish texts for the alarm limits window.
+!
+value
+
+! Exported constants
+   alali_OnlyFloatInLimit_text : exported compound_string("Only floating point number allowed in Limit field.");     
+   alali_OnlyFloatInHyst_text  : exported compound_string("Only floating point number allowed in Hysteresis field."); 
+
+   alali_AscizTable : exported asciz_string_table
+        (
+        "Alarm Limits : ", ! AlarmLimitsText
+        "Position:",       ! DigPositionText
+        "Limit:",          ! LimitText
+        "On",              ! OnText
+        "Off"              ! OffText
+        );
+               
+
+   ackMessage		: "Acknowledge msg.:";
+   acousticAlarm	: "Acoustic alarm:";
+   alarmMessage		: "Alarm message:";
+   alarmText		: "Alarm text:";
+   analog		: "Analog";
+   description		: "Description:";
+   digital		: "Digital";
+   hysteresis		: "Hysteresis:";
+   limit		: "Limit:";
+   prio			: "Priority:";
+   returnMessage	: "Return message:";
+   returnText		: "Alarm return text:";
+   selectListObject	: "Please select a list item.";
+   unit			: "Unit:";
+
+
+   Col2LeftOffset	: 80;
+
+

@@ -1,0 +1,27 @@
+!  opcom.idf -- Export Comator OPCOM
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  Defines what to import from Comator OPCOM to platform
+!  os_vms-hw_vax.
+!
+<identification>
+version		= "V1.2.1"
+product		= "OPCOM_V1_2_1"
+description	= "Comator Process AB, OpCom"
+<backup>
+formcstruct.h		pwr_inc:
+formdefines.h		pwr_inc:
+play.h			pwr_inc:
+pwr_operations.h	pwr_inc:operations.h
+!
+fmake.exe_vax_vms	pwr_exe:fmake.exe
+fmake.uid_vax_vms	pwr_exe:fmake.uid
+!
+formlib_pwr.olb_vax_vms	pwr_lib:formlib_pwr.olb
+!
+colordef.def		pwr_exe:opcom_colordef.dat
+pwr_opcom_eng.txt	pwr_exe_en_us:opcom.txt
+pwr_opcom_swe.txt	pwr_exe_sv_se:opcom.txt
+<end>

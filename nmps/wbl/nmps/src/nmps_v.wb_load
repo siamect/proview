@@ -1,0 +1,7 @@
+!  nmps_v.wb_load -- Loads the nmps volume
+!
+!  PROVIEW/R
+!
+!
+Volume NMps pwr_eClass_ClassVolume 0.0.1.1
+EndVolume

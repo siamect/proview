@@ -1,0 +1,114 @@
+!  pwrs_c_classvolume.wb_load -- Defines the class ClassVolume.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+!/**
+!  @Version 1.0
+!  A class volume contains class and type definition hierarchies.
+!  When a class volume is created, also a classvolume object is created.
+!  This object is not displayed in the object hierarchy in the navigator,
+!  though it can be opened from menu.
+!*/
+SObject pwrs:Class
+  Object $ClassVolume $ClassDef pwr_eCix_ClassVolume
+    Body SysBody
+      Attr Flags |= pwr_mClassDef_System
+      Attr Flags |= pwr_mClassDef_TopObject
+    EndBody
+    Object SysBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "ClassVolume"
+      EndBody
+      !/**
+      !  Optional text for description.
+      !*/
+      Object Description $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Next free object index
+      !*/
+      Object NextOix $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ObjectIx"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  Runtime version. Increments when a new load file is created.
+      !*/
+      Object RtVersion $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  Last creation time for load file.
+      !*/
+      Object RtCreTime $Attribute 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Time"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  Not used.
+      !*/
+      Object RtCreator $Attribute 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String16"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  Number of runtime objects.
+      !*/
+      Object RtCardinality $Attribute 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  Total size of runtime object bodies.
+      !*/
+      Object RtBodySize $Attribute 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  Next free class index
+      !*/
+      Object NextCix $Attribute 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ObjectIx"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  Next free type index
+      !*/
+      Object NextTix $Attribute 9
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$ObjectIx"
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Elements = 16
+        EndBody
+      EndObject
+    EndObject
+    Object Template $ClassVolume
+      Body SysBody
+      EndBody
+    EndObject
+  EndObject
+EndSObject

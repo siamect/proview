@@ -1,0 +1,939 @@
+!  pwrb_l_lists.wb_load -- Defines Layout for Lists.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+SObject wb:layout
+  Object Lists $DocHier
+    Object ListConfig ListConfig
+    EndObject
+    Object ChannelList ListDescriptor
+       Body DevBody
+         Attr Title = "CHANNEL LIST"
+         Attr PageHeader = "CHANNEL LIST"
+         Attr Deep = 1
+         Attr NoPrint = 1
+         Attr Landscape = 1
+         Attr TableOfContents = 1
+         Attr Class = "$Node"
+       EndBody
+       Object rack ListDescriptor
+          Body DevBody
+            Attr Deep = 1
+            Attr NoPrint = 1
+            Attr Class = "Rack_SSAB,Rack_RTP"
+          EndBody
+          Object dicard ListDescriptor
+             Body DevBody
+               Attr Deep = 1
+               Attr Landscape = 1
+               Attr PageBreak = 1
+               Attr ClearRowsPre = 2
+               Attr ClearRowsPost = 1
+               Attr TableOfContents = 1
+               Attr Class = "Di_DIX2,Di_7437_37"
+               Attr P1Parameter = "PrintObjName"
+               Attr P1SizeTabs = 3
+               Attr P2Parameter = "Description"
+               Attr P2CarriageRet = 1
+               Attr P2SizeTabs = 5
+               Attr P3Parameter = "RegAddress"
+               Attr P3PrintParName = 1
+               Attr P3SizeTabs = 3
+               Attr P4Parameter = "VectAddress"
+               Attr P4PrintParName = 1
+               Attr P4CarriageRet = 1
+               Attr P4SizeTabs = 3
+             EndBody
+             Object dichan ListDescriptor
+               Body DevBody
+                 Attr Deep = 1
+                 Attr Landscape = 1
+                 Attr ColumnHeader = 1
+                 Attr ColHead_____ = 1
+                 Attr Class = "ChanDi"
+                 Attr P1Parameter = "PrintObjName"
+                 Attr P1ColumnHeader = "Chan"
+                 Attr P1MarginString = "  "
+                 Attr P1SizeTabs = 2
+                 Attr P1Segments = 2
+                 Attr P2Parameter = "Identity"
+                 Attr P2ColumnHeader = "Identity"
+                 Attr P2SizeTabs = 2
+                 Attr P3Parameter = "Description"
+                 Attr P3ColumnHeader = "Description"
+                 Attr P3SizeTabs = 5
+                 Attr P4Parameter = "SigChanCon"
+                 Attr P4ColumnHeader = "Signal connection"
+                 Attr P4CarriageRet = 1
+                 Attr P4SizeTabs = 6
+              EndBody
+            EndObject
+          EndObject
+          Object docard ListDescriptor
+            Body DevBody
+              Attr Deep = 1
+              Attr Landscape = 1
+              Attr PageBreak = 1
+              Attr ClearRowsPre = 2
+              Attr ClearRowsPost = 1
+              Attr TableOfContents = 1
+              Attr Class = "Do_HVDO32,Do_7437_83"
+              Attr P1Parameter = "PrintObjName"
+              Attr P1SizeTabs = 3
+              Attr P2Parameter = "Description"
+              Attr P2CarriageRet = 1
+              Attr P2SizeTabs = 5
+              Attr P3Parameter = "RegAddress"
+              Attr P3PrintParName = 1
+              Attr P3SizeTabs = 3
+              Attr P4Parameter = "VectAddress"
+              Attr P4PrintParName = 1
+              Attr P4CarriageRet = 1
+              Attr P4SizeTabs = 3
+            EndBody
+            Object dochan ListDescriptor
+              Body DevBody
+                Attr Deep = 1
+                Attr Landscape = 1
+                Attr ColumnHeader = 1
+                Attr ColHead_____ = 1
+                Attr Class = "ChanDo"
+                Attr P1Parameter = "PrintObjName"
+                Attr P1ColumnHeader = "Chan"
+                Attr P1SizeTabs = 2
+                Attr P1Segments = 2
+                Attr P2Parameter = "Identity"
+                Attr P2ColumnHeader = "Identity"
+                Attr P2SizeTabs = 2
+                Attr P3Parameter = "Description"
+                Attr P3ColumnHeader = "Description"
+                Attr P3SizeTabs = 5
+                Attr P4Parameter = "SigChanCon"
+                Attr P4ColumnHeader = "Signal connection"
+                Attr P4CarriageRet = 1
+                Attr P4SizeTabs = 6
+              EndBody
+            EndObject
+          EndObject
+          Object aicard ListDescriptor
+            Body DevBody
+              Attr Deep = 1
+              Attr Landscape = 1
+              Attr PageBreak = 1
+              Attr ClearRowsPre = 2
+              Attr ClearRowsPost = 1
+              Attr TableOfContents = 1
+              Attr Class = "Ai_HVAI32,Ai_AI32uP,AAi_7436"
+              Attr P1Parameter = "PrintObjName"
+              Attr P1SizeTabs = 3
+              Attr P2Parameter = "Description"
+              Attr P2CarriageRet = 1
+              Attr P2SizeTabs = 5
+              Attr P3Parameter = "RegAddress"
+              Attr P3PrintParName = 1
+              Attr P3SizeTabs = 3
+              Attr P4Parameter = "VectAddress"
+              Attr P4PrintParName = 1
+              Attr P4CarriageRet = 1
+              Attr P4SizeTabs = 3
+              Attr P5Parameter = "DevpolyCoef0"
+              Attr P5PrintParName = 1
+              Attr P5SizeTabs = 3
+              Attr P6Parameter = "DevpolyCoef1"
+              Attr P6PrintParName = 1
+              Attr P6CarriageRet = 1
+              Attr P6SizeTabs = 3
+            EndBody
+            Object aichan ListDescriptor
+              Body DevBody
+                Attr Deep = 1
+                Attr Landscape = 1
+                Attr ColumnHeader = 1
+                Attr ColHead_____ = 1
+                Attr Class = "ChanAi"
+                Attr P1Parameter = "PrintObjName"
+                Attr P1ColumnHeader = "Chan"
+                Attr P1SizeTabs = 2
+                Attr P1Segments = 2
+                Attr P2Parameter = "SensorPolyCoef0"
+                Attr P2ColumnHeader = "Coef0"
+                Attr P2SizeTabs = 1
+                Attr P3Parameter = "SensorPolyCoef1"
+                Attr P3ColumnHeader = "Coef1"
+                Attr P3SizeTabs = 1
+                Attr P4Parameter = "SensorPolyCoef2"
+                Attr P4ColumnHeader = "Coef2"
+                Attr P4SizeTabs = 1
+                Attr P5Parameter = "Identity"
+                Attr P5ColumnHeader = "Identity"
+                Attr P5SizeTabs = 2
+                Attr P6Parameter = "Description"
+                Attr P6ColumnHeader = "Description"
+                Attr P6SizeTabs = 5
+                Attr P7Parameter = "SigChanCon"
+                Attr P7ColumnHeader = "Signal connection"
+                Attr P7CarriageRet = 1
+                Attr P7SizeTabs = 6
+              EndBody
+            EndObject
+            Object aitchan ListDescriptor
+              Body DevBody
+                Attr Deep = 1
+                Attr Landscape = 1
+                Attr ColumnHeader = 1
+                Attr ColHead_____ = 1
+                Attr Class = "ChanAit"
+                Attr P1Parameter = "PrintObjName"
+                Attr P1ColumnHeader = "Chan"
+                Attr P1SizeTabs = 2
+                Attr P1Segments = 2
+                Attr P2Parameter = "Identity"
+                Attr P2ColumnHeader = "Identity"
+                Attr P2SizeTabs = 2
+                Attr P3ColumnHeader = "Description"
+                Attr P3MarginString = "Description"
+                Attr P3SizeTabs = 5
+                Attr P4Parameter = "SigChanCon"
+                Attr P4ColumnHeader = "Signal connection"
+                Attr P4CarriageRet = 1
+                Attr P4SizeTabs = 6
+              EndBody
+            EndObject
+          EndObject
+          Object aocard ListDescriptor
+            Body DevBody
+              Attr Deep = 1
+              Attr Landscape = 1
+              Attr PageBreak = 1
+              Attr ClearRowsPre = 2
+              Attr ClearRowsPost = 1
+              Attr TableOfContents = 1
+              Attr Class = "Ao_HVAO4,Ao_7455_30,Ao_7455_20"
+              Attr P1Parameter = "PrintObjName"
+              Attr P1SizeTabs = 3
+              Attr P2Parameter = "Description"
+              Attr P2CarriageRet = 1
+              Attr P2SizeTabs = 5
+              Attr P3Parameter = "RegAddress"
+              Attr P3PrintParName = 1
+              Attr P3SizeTabs = 3
+              Attr P4Parameter = "VectAddress"
+              Attr P4PrintParName = 1
+              Attr P4CarriageRet = 1
+              Attr P4SizeTabs = 3
+              Attr P5Parameter = "DevpolyCoef0"
+              Attr P5PrintParName = 1
+              Attr P5SizeTabs = 3
+              Attr P6Parameter = "DevpolyCoef1"
+              Attr P6PrintParName = 1
+              Attr P6CarriageRet = 1
+              Attr P6SizeTabs = 3
+            EndBody
+            Object aochan ListDescriptor
+              Body DevBody
+                Attr Deep = 1
+                Attr Landscape = 1
+                Attr ColumnHeader = 1
+                Attr ColHead_____ = 1
+                Attr Class = "ChanAo"
+                Attr P1Parameter = "PrintObjName"
+                Attr P1ColumnHeader = "Chan"
+                Attr P1SizeTabs = 2
+                Attr P1Segments = 2
+                Attr P2Parameter = "OutMinLimit"
+                Attr P2ColumnHeader = "Min"
+                Attr P2SizeTabs = 1
+                Attr P3Parameter = "OutMaxLimit"
+                Attr P3ColumnHeader = "Max"
+                Attr P3SizeTabs = 1
+                Attr P4Parameter = "SigValueUnit"
+                Attr P4ColumnHeader = "Unit"
+                Attr P4SizeTabs = 1
+                Attr P5Parameter = "Identity"
+                Attr P5ColumnHeader = "Identity"
+                Attr P5SizeTabs = 2
+                Attr P6Parameter = "Description"
+                Attr P6ColumnHeader = "Description"
+                Attr P6SizeTabs = 5
+                Attr P7Parameter = "SigChanCon"
+                Attr P7ColumnHeader = "Signal connection"
+                Attr P7CarriageRet = 1
+                Attr P7SizeTabs = 6
+              EndBody
+            EndObject
+          EndObject
+          Object cocard ListDescriptor
+            Body DevBody
+              Attr Deep = 1
+              Attr Landscape = 1
+              Attr PageBreak = 1
+              Attr ClearRowsPre = 2
+              Attr ClearRowsPost = 1
+              Attr TableOfContents = 1
+              Attr Class = "Co_PI24BO"
+              Attr P1Parameter = "PrintObjName"
+              Attr P1SizeTabs = 3
+              Attr P2Parameter = "Description"
+              Attr P2CarriageRet = 1
+              Attr P2SizeTabs = 5
+              Attr P3Parameter = "RegAddress"
+              Attr P3PrintParName = 1
+              Attr P3SizeTabs = 3
+              Attr P4Parameter = "VectAddress"
+              Attr P4PrintParName = 1
+              Attr P4CarriageRet = 1
+              Attr P4SizeTabs = 3
+              Attr P5Parameter = "MulCount[0]"
+              Attr P5PrintParName = 1
+              Attr P5CarriageRet = 1
+              Attr P5SizeTabs = 3
+            EndBody
+            Object cochan ListDescriptor
+              Body DevBody
+                Attr Deep = 1
+                Attr Landscape = 1
+                Attr ColumnHeader = 1
+                Attr ColHead_____ = 1
+                Attr Class = "ChanCo"
+                Attr P1Parameter = "PrintObjName"
+                Attr P1ColumnHeader = "Chan"
+                Attr P1SizeTabs = 2
+                Attr P1Segments = 2
+                Attr P2Parameter = "Identity"
+                Attr P2ColumnHeader = "Identity"
+                Attr P2SizeTabs = 2
+                Attr P3Parameter = "Description"
+                Attr P3ColumnHeader = "Description"
+                Attr P3SizeTabs = 5
+                Attr P4Parameter = "SigChanCon"
+                Attr P4ColumnHeader = "Signal connection"
+                Attr P4CarriageRet = 1
+                Attr P4SizeTabs = 6
+              EndBody
+            EndObject
+          EndObject
+        EndObject
+      EndObject
+      Object SignalList ListDescriptor
+        Body DevBody
+          Attr Title = "SIGNAL LIST"
+          Attr PageHeader = "SIGNAL LIST"
+          Attr Deep = 1
+          Attr AlphaOrder = 1
+          Attr NoPrintIfNoList = 1
+          Attr RowsToPageBreak = 10
+          Attr ClearRowsPre = 1
+          Attr ClearRowsPost = 1
+          Attr TableOfContents = 1
+          Attr Class = "$NodeHier,$LibHier,$PlantHier"
+          Attr P1Parameter = "PrintObjName"
+          Attr P1CarriageRet = 1
+          Attr P1SizeTabs = 6
+       EndBody
+       Object Signals ListDescriptor
+         Body DevBody
+           Attr AlphaOrder = 2
+           Attr RowsToPageBreak = 5
+           Attr ClearRowsPre = 1
+           Attr Class = "Di,Do,Dv,Ai,Ao,Av,Co,Po"
+           Attr P1Parameter = "PrintObjName"
+           Attr P1MarginString = "    "
+           Attr P1SizeTabs = 5
+           Attr P1Segments = 1
+           Attr P2Parameter = "PrintSigChan"
+           Attr P2SizeTabs = 1
+           Attr P2Segments = 2
+           Attr P3Parameter = "Description"
+           Attr P3MarginString = "  "
+           Attr P3CarriageRet = 1
+           Attr P3SizeTabs = 8
+         EndBody
+         Object CrossRef ListDescriptor
+           Body DevBody
+             Attr Crossreference = 1
+             Attr AlphaOrder = 1
+             Attr P1Parameter = "PrintObjPage"
+             Attr P1MarginString = "        "
+             Attr P1SizeTabs = 2
+             Attr P2Parameter = "PrintObjName"
+             Attr P2SizeTabs = 8
+             Attr P3Parameter = "PrintObjClass"
+             Attr P3CarriageRet = 1
+             Attr P3SizeTabs = 2
+           EndBody
+         EndObject
+       EndObject
+     EndObject
+     Object SignalListShort ListDescriptor
+       Body DevBody
+         Attr Title = "SIGNAL SHORT LIST"
+         Attr PageHeader = "SIGNAL SHORT LIST"
+         Attr Deep = 1
+         Attr AlphaOrder = 2
+         Attr Landscape = 1
+         Attr RowsToPageBreak = 5
+         Attr ClearRowsPre = 1
+         Attr Class = "Di,Do,Dv,Ai,Ao,Av,Co,Po"
+         Attr P1Parameter = "PrintObjName"
+         Attr P1SizeTabs = 3
+         Attr P1Segments = 1
+         Attr P2Parameter = "PrintObjName"
+         Attr P2SizeTabs = 6
+         Attr P3Parameter = "PrintSigChan"
+         Attr P3SizeTabs = 1
+         Attr P3Segments = 2
+         Attr P4Parameter = "Description"
+         Attr P4CarriageRet = 1
+         Attr P4SizeTabs = 8
+       EndBody
+       Object CrossRef ListDescriptor
+         Body DevBody
+           Attr Crossreference = 1
+           Attr AlphaOrder = 1
+           Attr P1Parameter = "PrintObjPage"
+           Attr P1MarginString = "                        "
+           Attr P1SizeTabs = 4
+           Attr P2Parameter = "PrintObjName"
+           Attr P2SizeTabs = 8
+           Attr P3Parameter = "PrintObjClass"
+           Attr P3CarriageRet = 1
+           Attr P3SizeTabs = 2
+         EndBody
+       EndObject
+     EndObject
+     Object PlcPgmList ListDescriptor
+       Body DevBody
+         Attr Title = "PLCPROGRAM LIST"
+         Attr PageHeader = "PLCPROGRAM LIST"
+         Attr Deep = 1
+         Attr RowsToPageBreak = 8
+         Attr ClearRowsPre = 1
+         Attr ColumnHeader = 1
+         Attr ColHead_____ = 1
+         Attr Class = "PlcPgm"
+         Attr P1Parameter = "PrintObjName"
+         Attr P1ColumnHeader = "PlcPgm"
+         Attr P1SizeTabs = 4
+         Attr P2Parameter = "PrintVolume"
+         Attr P2ColumnHeader = "Volume"
+         Attr P2SizeTabs = 2
+         Attr P3Parameter = "ScanTime"
+         Attr P3ColumnHeader = "ScanTim"
+         Attr P3SizeTabs = 1
+         Attr P4Parameter = "ResetObject"
+         Attr P4ColumnHeader = "Resetsignal"
+         Attr P4CarriageRet = 1
+         Attr P4SizeTabs = 6
+       EndBody
+       Object Window ListDescriptor
+         Body DevBody
+           Attr Deep = 1
+           Attr AlphaOrder = 1
+           Attr Class = "WindowPlc,WindowCond,WindowOrderact,WindowSubstep"
+           Attr P1Parameter = "PrintObjName"
+           Attr P1MarginString = "        "
+           Attr P1CarriageRet = 1
+         EndBody
+       EndObject
+     EndObject
+     Object HierList ListDescriptor
+       Body DevBody
+         Attr Title = "HIERARCHY LIST"
+         Attr PageHeader = "HIERARCHY LIST"
+         Attr ColumnHeader = 1
+         Attr ColHead_____ = 1
+         Attr Deep = 1
+         Attr Class = "$NodeHier,$LibHier,$PlantHier"
+         Attr P1Parameter = "PrintObjName"
+         Attr P1ColumnHeader = "Hierarchy"
+         Attr P1SizeTabs = 5
+         Attr P2Parameter = "Description"
+         Attr P2ColumnHeader = "Description"
+         Attr P2CarriageRet = 1
+         Attr P2SizeTabs = 4
+       EndBody
+     EndObject
+     Object PlcModuleList ListDescriptor
+       Body DevBody
+         Attr Title = "PLCMODULE LIST"
+         Attr PageHeader = "PLCMODULE LIST"
+         Attr Deep = 1
+         Attr NoPrint = 1
+         Attr Landscape = 1
+         Attr Class = "PlcPgm"
+       EndBody
+       Object Window ListDescriptor
+          Body DevBody
+            Attr Deep = 1
+            Attr AlphaOrder = 1
+            Attr PageBreak = 2
+            Attr ClearRowsPre = 1
+            Attr ClearRowsPost = 1
+            Attr TCMarginString = "    "
+            Attr Class = "WindowPlc,WindowCond,WindowOrderact,WindowSubstep"
+            Attr P1Parameter = "PrintObjName"
+            Attr P1CarriageRet = 1
+          EndBody
+          Object Signalref ListDescriptor
+            Body DevBody
+              Attr Externreference = 2
+              Attr AlphaOrder = 2
+              Attr Landscape = 1
+              Attr RowsToPageBreak = 5
+              Attr ClearRowsPreList = 1
+              Attr ColumnHeader = 1
+              Attr ColHead_____ = 1
+              Attr P1Parameter = "PrintObjName"
+              Attr P1ColumnHeader = "Signals"
+              Attr P1MarginString = "    "
+              Attr P1SizeTabs = 6
+              Attr P2Parameter = "Description"
+              Attr P2ColumnHeader = "Description"
+              Attr P2SizeTabs = 8
+              Attr P3Parameter = "PrintSigChan"
+              Attr P3ColumnHeader = "Chan"
+              Attr P3CarriageRet = 1
+              Attr P3SizeTabs = 2
+              Attr P3Segments = 2
+           EndBody
+           Object CrossRef ListDescriptor
+             Body DevBody
+               Attr Crossreference = 1
+               Attr AlphaOrder = 1
+               Attr P1Parameter = "PrintObjPage"
+               Attr P1MarginString = "        "
+               Attr P1SizeTabs = 2
+               Attr P2Parameter = "PrintObjName"
+               Attr P2SizeTabs = 7
+               Attr P3Parameter = "PrintObjClass"
+               Attr P3CarriageRet = 1
+               Attr P3SizeTabs = 2
+             EndBody
+           EndObject
+         EndObject
+         Object Externref ListDescriptor
+           Body DevBody
+             Attr Externreference = 1
+             Attr AlphaOrder = 1
+             Attr ClearRowsPreList = 1
+             Attr ColumnHeader = 1
+             Attr ColHead_____ = 1
+             Attr P1Parameter = "PrintObjRefPar"
+             Attr P1ColumnHeader = "Extern plc object"
+             Attr P1MarginString = "    "
+             Attr P1SizeTabs = 6
+             Attr P2Parameter = "PrintObjClass"
+             Attr P2ColumnHeader = "Class"
+             Attr P2SizeTabs = 1
+             Attr P3Parameter = "PrintRefObj"
+             Attr P3ColumnHeader = "Intern ref"
+             Attr P3SizeTabs = 2
+             Attr P3Segments = 1
+             Attr P4Parameter = "PrintRefClass"
+             Attr P4ColumnHeader = "RefType"
+             Attr P4CarriageRet = 1
+             Attr P4SizeTabs = 1
+           EndBody
+         EndObject
+         Object Crossref ListDescriptor
+           Body DevBody
+             Attr Externreference = 3
+             Attr AlphaOrder = 3
+             Attr ClearRowsPreList = 1
+             Attr ColumnHeader = 1
+             Attr ColHead_____ = 1
+             Attr P1Parameter = "PrintRefObjPar"
+             Attr P1ColumnHeader = "Plc object"
+             Attr P1MarginString = "    "
+             Attr P1SizeTabs = 5
+             Attr P1Segments = 1
+             Attr P2Parameter = "PrintRefClass"
+             Attr P2ColumnHeader = "Class"
+             Attr P2SizeTabs = 1
+             Attr P3Parameter = "PrintObjName"
+             Attr P3ColumnHeader = "Extern ref"
+             Attr P3SizeTabs = 8
+             Attr P4Parameter = "PrintObjClass"
+             Attr P4ColumnHeader = "RefTyp"
+             Attr P4CarriageRet = 1
+             Attr P4SizeTabs = 1
+           EndBody
+         EndObject
+         Object Objects ListDescriptor
+           Body DevBody
+             Attr AlphaOrder = 1
+             Attr Full = 74
+             Attr Landscape = 1
+             Attr RowsToPageBreak = 10
+             Attr ClearRowsPreList = 1
+             Attr ColumnHeader = 1
+             Attr ColHead_____ = 1
+             Attr TCMarginString = "    "
+             Attr P1ColumnHeader = "Object data"
+             Attr P1MarginString = "    "
+             Attr P1CarriageRet = 1
+             Attr P1SizeTabs = 4
+           EndBody
+           Object Order ListDescriptor
+             Body DevBody
+               Attr AlphaOrder = 1
+               Attr Full = 10
+               Attr TCMarginString = "    "
+               Attr Class = "DOrder,LOrder"
+             EndBody
+           EndObject
+         EndObject
+       EndObject
+     EndObject
+     Object SystemList ListDescriptor
+       Body DevBody
+         Attr Title = "SYSTEM LIST"
+         Attr PageHeader = "SYSTEM LIST"
+         Attr Deep = 1
+         Attr Full = 1
+         Attr PageBreak = 1
+         Attr Class = "$System,$Node"
+       EndBody
+       Object SubNode ListDescriptor
+         Body DevBody
+           Attr Deep = 1
+           Attr Full = 1
+           Attr RowsToPageBreak = 10
+           Attr ClearRowsPre = 2
+           Attr Class = "Watchdog_Conf,Backup_Conf,MessageHandler"
+         EndBody
+       EndObject
+       Object SubNodeCont ListDescriptor
+         Body DevBody
+           Attr Deep = 1
+           Attr Full = 1
+           Attr RowsToPageBreak = 10
+           Attr ClearRowsPre = 2
+           Attr Class = "User,OpPlace,Graph,PlotGroup"
+         EndBody
+       EndObject
+     EndObject
+     Object DsTrendList ListDescriptor
+       Body DevBody
+         Attr Title = "TRENDCURVE LIST"
+         Attr PageHeader = "TRENDCURVE LIST"
+         Attr Deep = 1
+         Attr AlphaOrder = 1
+         Attr ClearRowsPre = 1
+         Attr Class = "DsTrend"
+         Attr P1Parameter = "PrintObjName"
+         Attr P1CarriageRet = 1
+         Attr P1SizeTabs = 6
+         Attr P2Parameter = "DataName"
+         Attr P2MarginString = "    Signal  : "
+         Attr P2CarriageRet = 1
+         Attr P2SizeTabs = 8
+       EndBody
+     EndObject
+     Object DsFastList ListDescriptor
+       Body DevBody
+         Attr Title = "FASTTREND LIST"
+         Attr PageHeader = "FASTTREND LIST"
+         Attr Deep = 1
+         Attr AlphaOrder = 1
+         Attr ClearRowsPre = 1
+         Attr Class = "DsFast"
+         Attr P1Parameter = "PrintObjName"
+         Attr P1CarriageRet = 1
+         Attr P1SizeTabs = 6
+         Attr P2Parameter = "DataName"
+         Attr P2MarginString = "    Signal :  "
+         Attr P2CarriageRet = 1
+         Attr P2SizeTabs = 8
+         Attr P3Parameter = "TrigName"
+         Attr P3MarginString = "    Trig :    "
+         Attr P3CarriageRet = 1
+         Attr P3SizeTabs = 8
+       EndBody
+     EndObject
+     Object BackupList ListDescriptor
+       Body DevBody
+         Attr Title = "BACKUP OBJECT LIST"
+         Attr PageHeader = "BACKUP OBJECT LIST"
+         Attr Deep = 1
+         Attr ColumnHeader = 1
+         Attr ColHead_____ = 1
+         Attr Class = "Backup"
+         Attr P1Parameter = "Fast"
+         Attr P1ColumnHeader = "Fast"
+         Attr P1SizeTabs = 1
+         Attr P2Parameter = "PrintObjName"
+         Attr P2ColumnHeader = "BackupObject"
+         Attr P2SizeTabs = 5
+         Attr P3Parameter = "DataName"
+         Attr P3ColumnHeader = "Signal"
+         Attr P3CarriageRet = 1
+         Attr P3SizeTabs = 5
+       EndBody
+     EndObject
+     Object PlcPgmFullList ListDescriptor
+       Body DevBody
+         Attr Title = "PLCPGM FULL LIST"
+         Attr PageHeader = "PLCPGM FULL LIST"
+         Attr Deep = 1
+         Attr AlphaOrder = 1
+         Attr NoPrint = 1
+         Attr TableOfContents = 3
+         Attr Class = "$NodeHier,$LibHier,$PlantHier"
+       EndBody
+       Object PlcPgm ListDescriptor
+         Body DevBody
+           Attr AlphaOrder = 1
+           Attr RowsToPageBreak = 6
+           Attr ClearRowsPre = 1
+           Attr TableOfContents = 1
+           Attr Class = "PlcPgm"
+           Attr P1Parameter = "PrintObjName"
+           Attr P1CarriageRet = 1
+           Attr P1SizeTabs = 9
+           Attr P2Parameter = "Description"
+           Attr P2MarginString = "  Description: "
+           Attr P2CarriageRet = 1
+           Attr P2SizeTabs = 10
+           Attr P3Parameter = "PrintVolume"
+           Attr P3MarginString = "  Volume:      "
+           Attr P3CarriageRet = 1
+           Attr P3SizeTabs = 8
+           Attr P4Parameter = "ScanTime"
+           Attr P4MarginString = "  Time:        "
+           Attr P4CarriageRet = 1
+           Attr P4SizeTabs = 5
+           Attr P5Parameter = "ResetObject"
+           Attr P5MarginString = "  Reset:       "
+           Attr P5CarriageRet = 1
+           Attr P5SizeTabs = 9
+           Attr P5Segments = 4
+           Attr P6Parameter = "PrintObjName"
+           Attr P6MarginString = "  Windows:     "
+           Attr P6CarriageRet = 1
+           Attr P6SizeTabs = 2
+         EndBody
+         Object Window ListDescriptor
+           Body DevBody
+             Attr Deep = 1
+             Attr AlphaOrder = 1
+             Attr Class = "WindowPlc,WindowCond,WindowOrderact,WindowSubstep"
+             Attr P1Parameter = "PrintObjName"
+             Attr P1MarginString = "               "
+             Attr P1SizeTabs = 7
+             Attr P2Parameter = "Modified"
+             Attr P2CarriageRet = 1
+           EndBody
+         EndObject
+       EndObject
+     EndObject
+     Object ExternRefList ListDescriptor
+       Body DevBody
+         Attr Title = "APPLICATION REFERENCES"
+         Attr PageHeader = "APPLICATION REFERENCES"
+         Attr Deep = 1
+         Attr AlphaOrder = 1
+         Attr NoPrintIfNoList = 1
+         Attr PageBreak = 2
+         Attr TableOfContents = 1
+         Attr Class = "$NodeHier,$LibHier,$PlantHier,$Appl"
+         Attr P1Parameter = "PrintObjName"
+         Attr P1MarginString = "Application:  "
+         Attr P1CarriageRet = 1
+         Attr P1SizeTabs = 8
+         Attr P1Segments = 1
+       EndBody
+       Object ExternRef ListDescriptor
+         Body DevBody
+           Attr ClearRowsPreList = 1
+           Attr Class = "ExternRef"
+           Attr P1Parameter = "PrintWrite"
+           Attr P2Parameter = "Object"
+           Attr P2SizeTabs = 6
+           Attr P3Parameter = "Description"
+           Attr P3CarriageRet = 1
+           Attr P3SizeTabs = 4
+         EndBody
+       EndObject
+     EndObject
+     Object AlarmTextList ListDescriptor
+       Body DevBody
+         Attr Title = "ALARMTEXT LIST"
+         Attr PageHeader = "ALARMTEXT LIST"
+         Attr AlphaOrder = 1
+         Attr NoPrintIfNoList = 1
+         Attr Landscape = 1
+         Attr RowsToPageBreak = 2
+         Attr ClearRowsPre = 1
+         Attr Class = "$LibHier,$PlantHier,WindowPlc,WindowCond,WindowOrderact,WindowSubstep"
+         Attr P1Parameter = "PrintObjName"
+         Attr P1CarriageRet = 1
+         Attr P1SizeTabs = 10
+       EndBody
+       Object SupList ListDescriptor
+         Body DevBody
+           Attr AlphaOrder = 1
+           Attr Class = "ASup,DSup"
+           Attr P1Parameter = "PrintObjName"
+           Attr P1MarginString = "    "
+           Attr P1SizeTabs = 2
+           Attr P1Segments = 1
+           Attr P2Parameter = "DetectText"
+           Attr P2CarriageRet = 1
+           Attr P2SizeTabs = 10
+         EndBody
+       EndObject
+     EndObject
+     Object RttPlcList ListDescriptor
+       Body DevBody
+         Attr Title = "RTT PLCMODULE LIST"
+         Attr PageHeader = "RTT PLCMODULE LIST"
+          Attr Deep = 1
+         Attr NoPrint = 1
+         Attr Landscape = 1
+         Attr Class = "PlcPgm"
+       EndBody
+       Object Window ListDescriptor
+         Body DevBody
+           Attr Deep = 1
+           Attr AlphaOrder = 1
+           Attr PageBreak = 2
+           Attr ClearRowsPre = 1
+           Attr ClearRowsPost = 1
+           Attr TCMarginString = "    "
+           Attr Class = "WindowPlc,WindowCond,WindowOrderact,WindowSubstep"
+           Attr P1Parameter = "PrintObjName"
+           Attr P1CarriageRet = 1
+         EndBody
+         Object Signalref ListDescriptor
+            Body DevBody
+             Attr Externreference = 2
+             Attr AlphaOrder = 2
+             Attr Landscape = 1
+             Attr ClearRowsPreList = 1
+             Attr ColumnHeader = 1
+             Attr ColHead_____ = 1
+             Attr P1Parameter = "PrintObjName"
+             Attr P1ColumnHeader = "Signals"
+             Attr P1MarginString = "    "
+             Attr P1CarriageRet = 1
+             Attr P1SizeTabs = 10
+           EndBody
+         EndObject
+       EndObject
+     EndObject
+     Object RttSignalList ListDescriptor
+       Body DevBody
+         Attr Title = "RTT SIGNAL LIST"
+         Attr PageHeader = "RTT SIGNAL LIST"
+         Attr Deep = 1
+         Attr AlphaOrder = 1
+         Attr NoPrintIfNoList = 1
+         Attr Landscape = 1
+         Attr RowsToPageBreak = 10
+         Attr ClearRowsPre = 1
+         Attr ClearRowsPost = 1
+         Attr TableOfContents = 1
+         Attr Class = "$NodeHier,$LibHier,$PlantHier"
+         Attr P1Parameter = "PrintObjName"
+         Attr P1CarriageRet = 1
+         Attr P1SizeTabs = 6
+       EndBody
+       Object Signals ListDescriptor
+         Body DevBody
+           Attr AlphaOrder = 2
+           Attr RowsToPageBreak = 5
+           Attr ClearRowsPre = 1
+           Attr Class = "Di,Do,Dv,Ai,Ao,Av,Co,Po"
+           Attr P1Parameter = "PrintObjName"
+           Attr P1MarginString = "    "
+           Attr P1CarriageRet = 1
+           Attr P1SizeTabs = 10
+          Attr P1Segments = 1
+         EndBody
+         Object CrossRef ListDescriptor
+           Body DevBody
+             Attr Crossreference = 1
+             Attr AlphaOrder = 1
+             Attr P1Parameter = "PrintObjName"
+             Attr P1MarginString = "                                 "
+             Attr P1SizeTabs = 13
+             Attr P2Parameter = "PrintObjClass"
+             Attr P2CarriageRet = 1
+             Attr P2SizeTabs = 2
+           EndBody
+         EndObject
+       EndObject
+     EndObject
+     Object RttObjectList ListDescriptor
+       Body DevBody
+         Attr Title = "RTT OBJECT LIST"
+         Attr PageHeader = "RTT OBJECT LIST"
+         Attr Deep = 1
+         Attr AlphaOrder = 1
+         Attr Externreference = 4
+         Attr NoPrintIfNoList = 1
+         Attr Landscape = 1
+         Attr RowsToPageBreak = 10
+         Attr ClearRowsPre = 1
+         Attr ClearRowsPost = 1
+         Attr P1Parameter = "PrintObjName"
+         Attr P1CarriageRet = 1
+         Attr P1SizeTabs = 6
+       EndBody
+       Object CrossRef ListDescriptor
+         Body DevBody
+           Attr Crossreference = 1
+           Attr AlphaOrder = 1
+           Attr P1Parameter = "PrintObjName"
+           Attr P1MarginString = "                                 "
+           Attr P1SizeTabs = 13
+           Attr P2Parameter = "PrintObjClass"
+           Attr P2CarriageRet = 1
+           Attr P2SizeTabs = 2
+         EndBody
+       EndObject
+     EndObject
+     Object RttCodeList ListDescriptor
+       Body DevBody
+         Attr Title = "RTT CODE LIST"
+         Attr PageHeader = "RTT CODE LIST"
+         Attr Class = "WindowPlc,WindowCond,WindowOrderact,WindowSubstep"
+         Attr NoPrint = 1
+         Attr Landscape = 1
+       EndBody
+       Object CodeList ListDescriptor
+         Body DevBody
+           Attr Class = "CArithm,DataArithm"
+           Attr RowsToPageBreak = 10
+           Attr ClearRowsPre = 1
+           Attr ClearRowsPost = 1
+           Attr P1Parameter = "PrintObjName"
+           Attr P1MarginString = "_Obj_ "
+           Attr P1CarriageRet = 1
+           Attr P1SizeTabs = 8
+           Attr P2Parameter = "Code"
+           Attr P2CarriageRet = 1
+         EndBody
+       EndObject
+       Object ExprList ListDescriptor
+         Body DevBody
+           Attr Class = "AArithm,DArithm"
+           Attr RowsToPageBreak = 10
+           Attr ClearRowsPre = 1
+           Attr ClearRowsPost = 1
+           Attr P1Parameter = "PrintObjName"
+           Attr P1MarginString = "_Obj_ "
+           Attr P1CarriageRet = 1
+           Attr P1SizeTabs = 8
+           Attr P2Parameter = "Expr"
+           Attr P2CarriageRet = 1
+         EndBody
+       EndObject
+     EndObject
+  EndObject
+EndSObject

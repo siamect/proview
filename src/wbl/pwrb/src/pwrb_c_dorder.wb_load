@@ -1,0 +1,117 @@
+!  pwrb_c_dorder.wb_load -- Defines the class DOrder.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+SObject pwrb:Class
+  Object DOrder $ClassDef 97 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "dorder"
+      EndBody
+      Object Status $Intern 1 
+        Body SysBody
+          Attr PgmName = "Status"
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Elements = 2
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object Old $Intern 2 
+        Body SysBody
+          Attr PgmName = "Old"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !
+      ! Timer struct
+      ! ++
+      Object TimerFlag $Intern 3 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object TimerNext $Intern 4 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object TimerCount $Intern 5 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object TimerDO $Intern 6 
+        Body SysBody
+          Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object TimerTime $Intern 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object TimerDODum $Intern 8 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object TimerObjDId $Intern 9 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_OBJDIDSELF
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      Object TimerAcc $Intern 10 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object TimerMin $Intern 11 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object TimerMax $Intern 12 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      ! --
+      ! End Timer struct
+      !
+    EndObject
+  EndObject
+EndSObject

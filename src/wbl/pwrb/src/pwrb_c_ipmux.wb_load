@@ -1,0 +1,46 @@
+!  pwrb_c_ipmux.wb_load -- Defines the class IpMux.
+!
+!  PROVIEW/R
+!  Copyright (C) 1997,99 by Mandator AB.
+!
+!  Interay IP-MUX.
+!
+SObject pwrb:Class
+  Object IpMux $ClassDef 265
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_RtAndDevBodies
+      Attr Flags |= pwr_mClassDef_IO
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "IpMux"
+      EndBody
+      Object Description $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      Object Slot $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Char"
+        EndBody
+      EndObject
+      Object Process $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object ThreadObject $Intern 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+    EndObject
+    Object Template IpMux
+      Body RtBody
+        Attr Description = "IpMux from Interay"
+      EndBody
+    EndObject
+  EndObject
+EndSObject

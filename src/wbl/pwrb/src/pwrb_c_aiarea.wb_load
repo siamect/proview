@@ -1,0 +1,43 @@
+!  pwrb_c_aiarea.wb_load -- Defines the class AiArea.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Summary Area object for Ai values
+!  Area object for Ai values.
+!
+!  The values of Ai-signals is stored in the Value attribut. The
+!  index is given by ValueIndex in the Ai-objects which is assigned
+!  at io initiation.
+!
+!  The object is created at runtime in the dynamic system volume pwrNode.
+!*/
+SObject pwrb:Class
+  Object AiArea $ClassDef 8 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "AiArea"
+      EndBody
+      !/**
+      !  
+      Object Value $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Flags |= PWR_MASK_STATE
+          Attr Elements = 1
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject

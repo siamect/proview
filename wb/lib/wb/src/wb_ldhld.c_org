@@ -1,0 +1,1211 @@
+/* wb_ldhld.c -- <short description>
+
+   PROVIEW/R
+   Copyright (C) 1996 by Comator Process AB.
+
+   This module contains functions to create load data files.  */
+
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#ifdef OS_VMS
+#include <descrip.h>
+#include <lib$routines.h>
+#endif
+
+#include <X11/Intrinsic.h>
+
+#include "pwr.h"
+#include "wb_ldhi.h"
+#include "co_cdh.h"
+#include "co_time.h"
+#include "co_dcli.h"
+#include "pwr_class.h"
+#include "wb_ldh_msg.h"
+#include "wb_ldhld.h"
+#include "wb_ldh.h"
+#include "wb_gcg.h"
+#include "rt_load.h"
+#include "rt_dlinux.h"
+
+#ifdef OS_LINUX
+static void lib$signal(int sts) { printf("lib$signal: %x\n", sts);}
+#endif
+
+/*============================================================================*\
+  Function prototypes to local functions.
+\*============================================================================*/
+
+static void ResetErrCount();
+static unsigned long GetErrCount();
+static void IncWrnCount();
+static void ResetWrnCount();
+static unsigned long GetWrnCount();
+
+static pwr_tStatus
+CloseLoadFile (
+  ldhi_sLFCB		*lfcbp,
+  pwr_tBoolean		delete
+);
+static pwr_tStatus
+CloseSect (
+  ldhi_sLFCB		*lfcbp
+);
+static pwr_tBoolean
+CreateLoadFile (
+  ldhi_sLCB		*lcbp
+);
+static pwr_tStatus
+FindSect (
+  ldhi_sLFCB		*lfcbp,
+  load_eSect		SectType,
+  pwr_tVersion		headVersion
+);
+ldhi_sObjHead *
+GetAliased (
+  ldhi_sLCB		*lcbp,
+  ldhi_sObjHead		*ohp
+);
+pwr_sClassDef *
+GetClassDef (
+  ldhi_sLCB		*lcbp,
+  ldhi_sObjHead		*ohp
+);
+static pwr_tStatus
+GetFirstAttribute (
+  ldhi_sLCB		*lcbp,
+  ldhi_sObjHead		*ohp,
+  ldhi_sObjHead		**ahp
+);
+static pwr_tStatus
+GetMountServer (
+  ldhi_sLCB		*lcbp,
+  ldhi_sObjHead		*ohp,
+  load_sObjHead		*iohp
+);  
+static void
+InitLoad (
+  ldhi_sLCB		*lcbp
+);
+static pwr_tStatus
+OpenLoadFile (
+  ldhi_sLFCB		*lfcbp
+);
+static pwr_tStatus
+OpenSect (
+  ldhi_sLFCB		*lfcbp,
+  load_eSect		SectType
+);
+static int
+PrepareHier (
+  ldhi_sObjHead		*ohp,
+  pwr_tUInt32		load
+);
+static void
+ReadOldLoadFile (
+  ldhi_sLCB		*lcbp,
+  ldhi_sLFCB		*lfcbp
+);
+static pwr_tStatus
+ReadSectVolume (
+  ldhi_sLCB		*lcbp,
+  ldhi_sLFCB		*lfcbp,
+  pwr_tBoolean		new
+);
+static pwr_tStatus
+ReadSectFile (
+  ldhi_sLCB		*lcbp,
+  ldhi_sLFCB		*lfcbp,
+  pwr_tBoolean		new
+);
+static pwr_tStatus
+UpdateVolumeVersion (
+  ldhi_sLCB		*lcbp
+);
+static pwr_tStatus
+WriteHeads (
+  ldhi_sLCB		*lcbp,
+  ldhi_sLFCB		*lfcbp,
+  ldhi_sObjHead		*ohp
+);
+static pwr_tStatus
+WriteNewBodies (
+  ldhi_sLCB		*lcbp,
+  ldhi_sLFCB		*lfcbp,
+  ldhi_sObjHead		*ohp
+);
+static pwr_tStatus
+WriteOldBodies (
+  ldhi_sLCB		*lcbp
+);
+static pwr_tStatus
+WriteSectVolume (
+  ldhi_sLCB		*lcbp,
+  ldhi_sLFCB		*lfcbp,
+  pwr_tBoolean		new
+);
+static pwr_tStatus
+WriteSectVolRef (
+  ldhi_sLCB		*lcbp,
+  ldhi_sLFCB		*lfcbp
+);
+static pwr_tStatus
+WriteSectFile (
+  ldhi_sLCB		*lcbp,
+  ldhi_sLFCB		*lfcbp
+);
+/*============================================================================*\
+  Local functions.
+\*============================================================================*/
+
+static unsigned int load_error_count;
+static unsigned int load_warning_count;
+
+static void
+ResetErrCount()
+{
+  load_error_count = 0;
+}
+
+static unsigned long
+GetErrCount()
+{
+  return load_error_count;
+}
+
+static void
+IncWrnCount()
+{
+  load_warning_count++;
+}
+
+static void
+ResetWrnCount()
+{
+  load_warning_count = 0;
+}
+
+static unsigned long
+GetWrnCount()
+{
+  return load_warning_count;
+}
+
+
+static pwr_tStatus
+CloseLoadFile (
+  ldhi_sLFCB		*lfcbp,
+  pwr_tBoolean		delete
+)
+{
+
+  if (lfcbp->fp != NULL)
+    fclose(lfcbp->fp);
+  if (delete && *lfcbp->name != '\0') {
+    if (remove(lfcbp->name) == 0)
+      printf("-- Deleted file: %s\n", lfcbp->name);
+  }
+
+  return LDH__SUCCESS;
+}
+
+static pwr_tStatus
+CloseSect (
+  ldhi_sLFCB		*lfcbp
+)
+{
+  fpos_t		CurPos;
+  load_sHead		head;
+  XDR			xdrs;
+  
+  if (fgetpos(lfcbp->fp, &CurPos)) return LDH__FILEPOS;
+  if (fsetpos(lfcbp->fp, &lfcbp->sectPos)) return LDH__FILEPOS;
+  xdrmem_create(&xdrs, (char *) &head, sizeof(head), XDR_ENCODE);
+  if(!xdr_load_sHead(&xdrs, &lfcbp->head)) return LDH__XDR;
+  if (fwrite(&head, sizeof(head), 1, lfcbp->fp) < 1) return LDH__FILEWRITE;
+  if (fsetpos(lfcbp->fp, &CurPos)) return LDH__FILEPOS;
+
+  return LDH__SUCCESS;
+}
+
+static pwr_tBoolean
+CreateLoadFile (
+  ldhi_sLCB		*lcbp
+)
+{
+  pwr_tStatus		sts;
+
+  printf("\n-- Working with load file version %d of volume '%s'...\n", lcbp->version + 1, lcbp->ohp->db.name.data);
+
+  ReadOldLoadFile(lcbp, &lcbp->oldFile);
+
+  sts = OpenLoadFile(&lcbp->newFile);
+  if (EVEN(sts)) goto error_handler;
+
+  sts = WriteSectFile(lcbp, &lcbp->newFile);
+  if (EVEN(sts)) goto error_handler;
+
+  sts = WriteSectVolume(lcbp, &lcbp->newFile, 1);
+  if (EVEN(sts)) goto error_handler;
+
+  sts = WriteSectVolRef(lcbp, &lcbp->newFile);
+  if (EVEN(sts)) goto error_handler;
+
+  sts = OpenSect(&lcbp->newFile, load_eSect_ObjHead);
+  if (EVEN(sts)) goto error_handler;
+
+  printf("-- Writing object headers...\n");
+
+  sts = WriteHeads(lcbp, &lcbp->newFile, lcbp->ohp);
+  if (EVEN(sts)) goto error_handler;
+
+  sts = CloseSect(&lcbp->newFile);
+  if (EVEN(sts)) goto error_handler;
+
+  sts = OpenSect(&lcbp->newFile, load_eSect_ObjBody);
+  if (EVEN(sts)) goto error_handler;
+
+  if (lcbp->flags.f.UseOldFile) {
+    printf("-- Writing object bodies found in old load file...\n");
+    sts = WriteOldBodies(lcbp);
+    if (EVEN(sts)) goto error_handler;
+  }
+
+  printf("-- Writing object bodies from workbench...\n");
+
+  sts = WriteNewBodies(lcbp, &lcbp->newFile, lcbp->ohp);
+  if (EVEN(sts)) goto error_handler;
+
+  sts = CloseSect(&lcbp->newFile);
+  if (EVEN(sts)) goto error_handler;
+
+  sts = OpenSect(&lcbp->newFile, load_eSect_End);
+  if (EVEN(sts)) goto error_handler;
+  sts = CloseSect(&lcbp->newFile);
+  if (EVEN(sts)) goto error_handler;
+
+  sts = UpdateVolumeVersion (lcbp);
+  if (EVEN(sts)) goto error_handler;
+
+  sts = WriteSectVolume(lcbp, &lcbp->newFile, 0);
+  if (EVEN(sts)) goto error_handler;
+
+  CloseLoadFile(&lcbp->oldFile, 0);
+  sts = CloseLoadFile(&lcbp->newFile, 0);
+  if (EVEN(sts)) goto error_handler;
+
+  printf("-- Successfully created load file for volume '%s'\n", lcbp->ohp->db.name.data);
+  printf("-- %d objects with a total body size of %d bytes were written to new file.\n",
+    lcbp->cardinality, lcbp->bodySize);
+
+  return 1;
+
+error_handler:
+  /* Clean up the mess.  */
+  printf("-- Load file was not created for volume '%s'\n", lcbp->ohp->db.name.data);
+  CloseLoadFile(&lcbp->oldFile, 0);
+  CloseLoadFile(&lcbp->newFile, 1);
+  return 0;
+}
+
+static pwr_tStatus
+FindSect (
+  ldhi_sLFCB		*lfcbp,
+  load_eSect		SectType,
+  pwr_tVersion		SectVersion
+)
+{
+  XDR			xdrs;
+  
+  if (fseek(lfcbp->fp, 0, 0) != 0) return LDH__FILEPOS;
+
+  
+  for (;;) {
+    if (fread(&lfcbp->head, sizeof(lfcbp->head), 1, lfcbp->fp) < 1) return LDH__FILEREAD;
+    xdrmem_create(&xdrs, (char *) &lfcbp->head, sizeof(lfcbp->head), XDR_DECODE);
+    if(!xdr_load_sHead(&xdrs, &lfcbp->head)) return LDH__XDR;
+    if (lfcbp->head.SectType == SectType) {
+      if (lfcbp->head.HeadVersion != load_cVersionHead)
+	return LDH__BADFILE;
+      if (lfcbp->head.SectVersion != SectVersion)
+	return LDH__BADFILE;
+      return LDH__SUCCESS;
+    }
+    if (fseek(lfcbp->fp, lfcbp->head.SectSize, 1) != 0) return LDH__FILEPOS;
+  }
+}
+
+ldhi_sObjHead *
+GetAliased (
+  ldhi_sLCB		*lcbp,
+  ldhi_sObjHead		*ohp
+)
+{
+  pwr_tStatus		sts;
+  pwr_sAlias		*Alias;
+  ldhi_sObjBody		*obp;
+  ldhi_sObjHead		*ahp;
+
+  if (lcbp->ohp->db.classid == pwr_eClass_ClassVolume) {
+    return NULL;
+  }
+
+  sts = ldhi_GetObjectBody(lcbp->sp, ohp, ldhi_eBid_SysBody, &obp);
+  Alias = (pwr_sAlias *) obp->body;
+
+  if (cdh_ObjidIsNull(Alias->Object)) {
+    printf("!! Alias does not refer to any object!\n");
+    printf("   Alias:  %s\n", ldhi_PathName(ohp, 0));
+    printf("   Alias will not be loaded.\n");
+    IncWrnCount();
+    return NULL; 
+  }
+
+  if (Alias->Object.vid != lcbp->ohp->db.objid.vid) {
+    printf("!! Alias refers to object outside own volume!\n");
+    printf("   Alias:  %s\n", ldhi_PathName(ohp, 0));
+    printf("   Object: %s\n", cdh_ObjidToString(NULL, Alias->Object, 1));
+    printf("   Alias will not be loaded.\n");
+    IncWrnCount();
+    return NULL; 
+  }
+  
+  sts = ldhi_ObjidToOh(lcbp->sp->wb, Alias->Object, &ahp);
+  if (EVEN(sts)) {
+    printf("!! Alias refers to a non existing object!\n");
+    printf("   Alias:  %s\n", ldhi_PathName(ohp, 0));
+    printf("   Alias will not be loaded.\n");
+    IncWrnCount();
+    return NULL; 
+  }
+  
+  if (ahp->db.flags.f.DevOnly) {
+    printf("!! An alias may not refer to a non runtime object!\n");
+    printf("   Alias:  %s\n", ldhi_PathName(ohp, 0));
+    printf("   Object: %s\n", ldhi_PathName(ahp, 0));
+    printf("   Alias will not be loaded.\n");
+    IncWrnCount();
+    return NULL;
+  }
+
+  switch (ahp->db.classid) {
+  case pwr_eClass_Alias:
+    printf("!! An alias may not refer to another alias!\n");
+    printf("   Alias:  %s\n", ldhi_PathName(ohp, 0));
+    printf("   Object: %s\n", ldhi_PathName(ahp, 0));
+    printf("   Alias will not be loaded.\n");
+    IncWrnCount();
+    return NULL;
+    break;
+  case pwr_eClass_MountVolume:
+  case pwr_eClass_CreateVolume:
+  case pwr_eClass_MountObject:
+    printf("!! An alias may not refer to a mount object!\n");
+    printf("   Alias:  %s\n", ldhi_PathName(ohp, 0));
+    printf("   Object: %s\n", ldhi_PathName(ahp, 0));
+    printf("   Alias will not be loaded.\n");
+    IncWrnCount();
+    return NULL;
+    break;
+  }
+
+  return ahp;
+}
+
+pwr_sClassDef *
+GetClassDef (
+  ldhi_sLCB		*lcbp,
+  ldhi_sObjHead		*ohp
+)
+{
+  pwr_tStatus		sts;
+  pwr_sClassDef		*ClassDef;
+  ldhi_sObjBody		*obp;
+
+  sts = ldhi_GetObjectBody(lcbp->sp, ohp->chp, ldhi_eBid_SysBody, &obp);
+  ClassDef = (pwr_sClassDef *) obp->body;
+  return ClassDef;
+}
+
+static pwr_tStatus
+GetFirstAttribute (
+  ldhi_sLCB		*lcbp,
+  ldhi_sObjHead		*ohp,
+  ldhi_sObjHead		**ahp
+)
+{
+  pwr_tStatus		sts;
+  ldhi_sObjHead		*obhp;
+  ldhi_sObjName		nn;
+
+
+  if (!ohp->db.flags.f.RtBody) {
+    /* Object has no body. */
+    *ahp = NULL;
+  } else if (ohp->db.flags.f.System) {
+    sts = ldhi_SetNormObjName(&nn, "SysBody");
+    sts = ldhi_FindSiblingByName(lcbp->sp, ohp->chp->chhp, &nn, &obhp);
+    *ahp = obhp->chhp;
+  } else {
+    sts = ldhi_SetNormObjName(&nn, "RtBody");
+    sts = ldhi_FindSiblingByName(lcbp->sp, ohp->chp->chhp, &nn, &obhp);
+    if (EVEN(sts)) {
+      /* No RtBody => Only DevBody. */
+      *ahp = NULL;
+    } else {
+      *ahp = obhp->chhp;
+    }
+  }
+  return LDH__SUCCESS;
+}
+
+static pwr_tStatus
+GetMountServer (
+  ldhi_sLCB		*lcbp,
+  ldhi_sObjHead		*ohp,
+  load_sObjHead		*iohp
+)
+{
+  pwr_tStatus		sts;
+  pwr_sMountObject	*MountObject;
+  pwr_sCreateVolume	*CreateVolume;
+  pwr_sMountVolume	*MountVolume;
+  ldhi_sObjBody		*obp;
+
+  sts = ldhi_GetObjectBody(lcbp->sp, ohp, ldhi_eBid_SysBody, &obp);
+  if (EVEN(sts)) return sts;
+
+  switch (ohp->db.classid) {
+  case pwr_eClass_MountObject:
+    MountObject = (pwr_sMountObject *) obp->body;
+    iohp->Class = ohp->db.classid;  
+    iohp->Server = MountObject->Object;  
+    iohp->Flags.b.MountClient = 1;
+    break;
+  case pwr_eClass_MountVolume:
+    MountVolume = (pwr_sMountVolume *) obp->body;
+    iohp->Class = ohp->db.classid;  
+    iohp->Server = pwr_cNObjid;  
+    iohp->Server.vid = MountVolume->Volume;  
+    iohp->Flags.b.MountClient = 1;
+    break;
+  case pwr_eClass_CreateVolume:
+    CreateVolume = (pwr_sCreateVolume *) obp->body;
+    iohp->Class = ohp->db.classid;  
+    iohp->Server = pwr_cNObjid;  
+    iohp->Server.vid = CreateVolume->Volume;  
+    iohp->Flags.b.MountClient = 1;
+    break;
+  }
+
+  return LDH__SUCCESS;
+}  
+
+static void
+InitLoad (
+  ldhi_sLCB		*lcbp
+)
+{
+  pwr_tStatus		sts;
+  cdh_uVolumeId		vid;
+  ldhi_sObjBody		*obp;
+
+  sts = ldhi_GetObjectBody(lcbp->sp, lcbp->ohp, ldhi_eBid_SysBody, &obp);
+  if (EVEN(sts)) lib$signal(sts);
+  lcbp->Volume = (pwr_uVolume *) obp->body;
+
+  lcbp->vid = lcbp->ohp->db.objid.vid;
+  lcbp->oid = lcbp->ohp->db.objid;
+  lcbp->cid = lcbp->ohp->db.classid;
+  vid.pwr = lcbp->vid;
+  lcbp->version = lcbp->Volume->Root.RtVersion;
+ 
+  lcbp->file = load_eFile_Volume;
+  sprintf(lcbp->oldFile.name, load_cNameVolume, load_cDirectory,
+    vid.v.vid_3, vid.v.vid_2, vid.v.vid_1, vid.v.vid_0, lcbp->version);
+  dcli_translate_filename( lcbp->oldFile.name, lcbp->oldFile.name);
+  sprintf(lcbp->newFile.name, load_cNameVolume, load_cDirectory,
+    vid.v.vid_3, vid.v.vid_2, vid.v.vid_1, vid.v.vid_0, lcbp->version + 1);
+  dcli_translate_filename( lcbp->newFile.name, lcbp->newFile.name);
+  lcbp->oldFile.isNew = 0;
+  lcbp->newFile.isNew = 1;
+}
+
+static pwr_tStatus
+OpenLoadFile (
+  ldhi_sLFCB		*lfcbp
+)
+{
+  char			*fn;
+
+  lfcbp->fp = fopen(lfcbp->name, (lfcbp->isNew ? "w+b" : "rb"));
+  if (lfcbp->fp == NULL) {
+    printf("%s Cannot open %s file: %s\n", (lfcbp->isNew ? "**" : "--"), (lfcbp->isNew ? "new" : "old"), lfcbp->name);
+    perror("   Reason");
+    return LDH__FILEOPEN;
+  }
+  fn = dcli_fgetname(lfcbp->fp, lfcbp->name, lfcbp->name);
+  if (fn != NULL) printf("-- Opened %s load file: %s\n", (lfcbp->isNew ? "new" : "old"), lfcbp->name);
+
+  return LDH__SUCCESS;
+}
+
+static pwr_tStatus
+OpenSect (
+  ldhi_sLFCB		*lfcbp,
+  load_eSect		SectType
+)
+{
+  load_sHead		head;
+  XDR			xdrs;
+  
+  lfcbp->head.SectType = SectType;
+  lfcbp->head.HeadVersion = load_cVersionHead;
+  lfcbp->head.SectSize = 0;
+
+  switch (SectType) {
+  case load_eSect_CreObj:
+    lfcbp->head.SectVersion = load_cVersionCreObj;
+    break;
+  case load_eSect_ChgObj:
+    lfcbp->head.SectVersion = load_cVersionChgObj;
+    break;
+  case load_eSect_DelObj:
+    lfcbp->head.SectVersion = load_cVersionDelObj;
+    break;
+  case load_eSect_Volume:
+    lfcbp->head.SectVersion = load_cVersionVolume;
+    break;
+  case load_eSect_VolRef:
+    lfcbp->head.SectVersion = load_cVersionVolRef;
+    break;
+  case load_eSect_End:
+    lfcbp->head.SectVersion = load_cVersionEnd;
+    break;
+  case load_eSect_File:
+    lfcbp->head.SectVersion = load_cVersionFile;
+    break;
+  case load_eSect_ObjBody:
+    lfcbp->head.SectVersion = load_cVersionObjBody;
+    break;
+  case load_eSect_ObjHead:
+    lfcbp->head.SectVersion = load_cVersionObjHead;
+    break;
+  default:
+    break;
+  }
+
+  if (fgetpos(lfcbp->fp, &lfcbp->sectPos)) return LDH__FILEPOS;
+  xdrmem_create(&xdrs, (char *) &head, sizeof(head), XDR_ENCODE);
+  if(!xdr_load_sHead(&xdrs, &lfcbp->head)) return LDH__XDR;
+  if (fwrite(&head, sizeof(head), 1, lfcbp->fp) < 1) return LDH__FILEWRITE;
+
+  return LDH__SUCCESS;
+}
+
+static int
+PrepareHier (
+  ldhi_sObjHead		*ohp,
+  pwr_tUInt32		load
+)
+{
+  ldhi_sObjHead		*chhp;
+  int			mountServers = 0;
+  
+  ohp->load.m = 0;
+  load = ((load != 0) && !ohp->db.flags.f.DevOnly);
+  ohp->load.f.Load = (load != 0);
+
+
+  for (chhp = ohp->chhp; chhp != NULL; chhp = chhp->silst.fwhp)
+    mountServers += PrepareHier(chhp, load);
+
+  ohp->load.f.MountClean = mountServers == 0;
+
+  return mountServers +
+    (ohp->db.classid == pwr_eClass_MountObject || 
+     ohp->db.classid == pwr_eClass_MountVolume ||
+     ohp->db.classid == pwr_eClass_CreateVolume);
+}
+
+static void
+ReadOldLoadFile (
+  ldhi_sLCB		*lcbp,
+  ldhi_sLFCB		*lfcbp
+)
+{
+  pwr_tStatus		sts;
+  ldhi_sObjHead		*ohp;
+  load_sObjHead		ObjHead;
+  int			i;
+  XDR			xdrs;
+  
+  sts = OpenLoadFile(lfcbp);
+  if (EVEN(sts)) return;
+
+  while (1) {
+    sts = ReadSectFile(lcbp, lfcbp, 0);
+    if (EVEN(sts)) break;
+
+    sts = ReadSectVolume(lcbp, lfcbp, 0);
+    if (EVEN(sts)) break;
+
+    sts = FindSect(lfcbp, load_eSect_ObjHead, load_cVersionObjHead);
+    if (EVEN(sts)) break;
+    if (fseek(lfcbp->fp, lfcbp->head.SectSize, 1) != 0) {
+      sts = LDH__FILEPOS;
+      break;
+    }
+    if (fread(&lfcbp->head, sizeof(lfcbp->head), 1, lfcbp->fp) < 1) {
+      sts = LDH__FILEREAD;
+      break;
+    }
+
+    xdrmem_create(&xdrs, (char *) &lfcbp->head, sizeof(lfcbp->head), XDR_DECODE);
+    if(!xdr_load_sHead(&xdrs, &lfcbp->head)) {
+      sts = LDH__XDR;
+      break;
+    }
+
+    if (lfcbp->head.SectType != load_eSect_ObjBody) {
+      sts = LDH__BADFILE;
+      break;
+    }
+    if (fseek(lfcbp->fp, lfcbp->head.SectSize, 1) != 0) {
+      sts = LDH__FILEPOS;
+      break;
+    }
+    if (fread(&lfcbp->head, sizeof(lfcbp->head), 1, lfcbp->fp) < 1) {
+      sts = LDH__FILEREAD;
+      break;
+    }
+
+    xdrmem_create(&xdrs, (char *) &lfcbp->head, sizeof(lfcbp->head), XDR_DECODE);
+    if(!xdr_load_sHead(&xdrs, &lfcbp->head)) {
+      sts = LDH__XDR;
+      break;
+    }
+
+    if (lfcbp->head.SectType != load_eSect_End) {
+      sts = LDH__BADFILE;
+      break;
+    }
+    sts = FindSect(lfcbp, load_eSect_ObjHead, load_cVersionObjHead);
+    if (EVEN(sts)) break;
+    break;
+  }
+
+  if (EVEN(sts)) {
+    printf("-- Old load file is not valid. New load file will be created from scratch.\n");
+    lcbp->flags.f.CreateNewFile = 1;
+    return;
+  }
+
+  for (i = 0; i < lfcbp->head.SectSize; i+= sizeof(ObjHead)) {
+    if (fread(&ObjHead, sizeof(ObjHead), 1, lfcbp->fp) < 1) return;
+    xdrmem_create(&xdrs, (char *) &ObjHead, sizeof(ObjHead), XDR_DECODE);
+    if(!xdr_load_sObjHead(&xdrs, &ObjHead)) return;
+
+    sts = ldhi_ObjidToOh(lcbp->sp->wb, ObjHead.Objid, &ohp);
+    if (EVEN(sts)) {
+      lcbp->flags.f.CreateNewFile = 1;
+    } else if (ohp->load.f.Load) {
+      ohp->load.f.UseOldBody = (ObjHead.BodyGeneration == ohp->db.b_gen[0]);
+      if (ohp->load.f.UseOldBody) lcbp->flags.f.UseOldFile = 1;
+      ohp->load.f.HeadIsInOldFile =
+	ObjHead.HeadGeneration == ohp->db.rh_gen
+	&& ObjHead.BodyGeneration == ohp->db.b_gen[0];
+    } else {
+      lcbp->flags.f.CreateNewFile = 1;
+    }
+  }
+}
+
+static pwr_tStatus
+ReadSectVolume (
+  ldhi_sLCB		*lcbp,
+  ldhi_sLFCB		*lfcbp,
+  pwr_tBoolean		new
+)
+{
+  pwr_tStatus		sts;
+  load_sVolume		Volume;
+  XDR			xdrs;
+  
+  sts = FindSect(lfcbp, load_eSect_Volume, load_cVersionVolume);
+  if (EVEN(sts)) return sts;
+  if (fread(&Volume, sizeof(Volume), 1, lfcbp->fp) < 1) return LDH__FILEREAD;
+  xdrmem_create(&xdrs, (char *) &Volume, sizeof(Volume), XDR_DECODE);
+  if(!xdr_load_sVolume(&xdrs, &Volume)) return LDH__XDR;
+  if (Volume.Version != lcbp->version) return LDH__BADFILE;
+
+  return LDH__SUCCESS;
+}
+
+static pwr_tStatus
+ReadSectFile (
+  ldhi_sLCB		*lcbp,
+  ldhi_sLFCB		*lfcbp,
+  pwr_tBoolean		new
+)
+{
+  pwr_tStatus		sts;
+  load_sFile		file;
+  XDR			xdrs;
+
+  sts = FindSect(lfcbp, load_eSect_File, load_cVersionFile);
+  if (EVEN(sts)) return sts;
+  if (fread(&file, sizeof(file), 1, lfcbp->fp) < 1) return LDH__FILEREAD;
+  xdrmem_create(&xdrs, (char *) &file, sizeof(file), XDR_DECODE);
+  if(!xdr_load_sFile(&xdrs, &file)) return LDH__XDR;
+  if (file.FormatVersion != load_cVersionFormat) return LDH__BADFILE;
+  if (file.FileType != lcbp->file) return LDH__BADFILE;
+#if 0
+  if (file.PwrVersion != pwr_cVersion)
+    return LDH__BADFILE;
+#endif
+
+  return LDH__SUCCESS;
+}
+
+static pwr_tStatus
+UpdateVolumeVersion (
+  ldhi_sLCB		*lcbp
+)
+{
+
+  lcbp->version++;
+
+  /* Update the volume object body.  */
+
+  lcbp->Volume->Root.RtVersion = lcbp->version;
+  lcbp->Volume->Root.RtCardinality = lcbp->cardinality;
+  lcbp->Volume->Root.RtBodySize = lcbp->bodySize;
+  lcbp->Volume->Root.RtCreTime = lcbp->time;
+  ldhi_MarkObject(lcbp->sp, ldhi_mChange_RBodyIsModified, lcbp->ohp);
+
+
+  return LDH__SUCCESS;
+}
+
+static pwr_tStatus
+WriteHeads (
+  ldhi_sLCB		*lcbp,
+  ldhi_sLFCB		*lfcbp,
+  ldhi_sObjHead		*ohp
+)
+{
+  pwr_tStatus		sts;
+  ldhi_sObjHead		*chhp;
+  ldhi_sObjHead		*ahp = NULL;	    /* alias header pointer */
+  static load_sObjHead	ObjHead;
+  XDR			xdrs;
+
+  if (!ohp->load.f.Load) return LDH__SUCCESS;
+
+  memset(&ObjHead, 0, sizeof(ObjHead));
+
+  switch (ohp->db.classid) {
+  case pwr_eClass_Alias:
+
+    ahp = GetAliased(lcbp, ohp);
+    if (ahp == NULL) {
+      /* do not load this alias */
+      return LDH__SUCCESS;
+    }
+    ObjHead.Class = ahp->db.classid;  
+    ObjHead.Server = ahp->db.objid;  
+    ObjHead.Flags.b.AliasClient = 1;
+    break;
+
+  case pwr_eClass_MountVolume:
+  case pwr_eClass_CreateVolume:
+  case pwr_eClass_MountObject:
+
+    if (lcbp->ohp->db.classid != pwr_eClass_RootVolume) break;
+    sts = GetMountServer(lcbp, ohp, &ObjHead);  
+    break;
+
+  default:
+    ObjHead.Class = ohp->db.classid;  
+    break;    
+  }
+
+  strcpy(ObjHead.Name, ohp->db.name.data);
+  ObjHead.Objid = ohp->db.objid;  
+  ObjHead.Father = ohp->db.father;  
+  ObjHead.Size = ohp->db.b_siz[0];  
+  ObjHead.HeadGeneration = ohp->db.rh_gen;  
+  ObjHead.BodyGeneration = ohp->db.b_gen[0];  
+  ObjHead.Flags.b.MountClean = ohp->load.f.MountClean;
+  ObjHead.Flags.b.IO = ohp->db.flags.f.IO;
+
+  xdrmem_create(&xdrs, (char *) &ObjHead, sizeof(ObjHead), XDR_ENCODE);
+  if(!xdr_load_sObjHead(&xdrs, &ObjHead)) return LDH__XDR;
+  if (fwrite(&ObjHead, sizeof(ObjHead), 1, lfcbp->fp) < 1) return LDH__FILEWRITE;
+  lfcbp->head.SectSize += sizeof(ObjHead);
+  lcbp->bodySize += ohp->db.b_siz[0];
+  lcbp->cardinality++;
+
+  for (chhp = ohp->chhp; chhp != NULL; chhp = chhp->silst.fwhp) {
+    sts = WriteHeads(lcbp, lfcbp, chhp);
+    if (EVEN(sts)) return sts;
+  }
+  return LDH__SUCCESS;
+}
+
+static pwr_tStatus
+WriteNewBodies (
+  ldhi_sLCB		*lcbp,
+  ldhi_sLFCB		*lfcbp,
+  ldhi_sObjHead		*ohp
+)
+{
+  pwr_tStatus		sts;
+  static load_sObjBody	ObjBody;
+  static load_sObjBody	Body;
+  ldhi_sObjHead		*chhp;
+  ldhi_sObjHead		*php;
+  ldhi_sObjBody		*pbp;
+  ldhi_sObjBody		*obp;
+  pwr_tUInt32		size;
+  pwr_tUInt32		offset;
+  pwr_sParam		*Param;
+  XDR			xdrs;
+  char			*body_p;
+
+  if (!ohp->load.f.Load) return LDH__SUCCESS;
+
+  if (ohp->db.classid == pwr_eClass_Alias)
+    return LDH__SUCCESS;   /* do not load alias body */
+
+  if (ohp->db.b_siz[0] > 0 && !ohp->load.f.UseOldBody) {
+    GetFirstAttribute(lcbp, ohp, &php);
+    if (php != NULL) {
+      if (0)
+	/* This body can be freed after load */
+	ohp->load.f.FreeBody = 1;
+      else
+	ohp->load.f.FreeBody = 0;
+
+      ldhi_GetObjectBody(lcbp->sp, ohp, ldhi_eBid_SysBody, &obp);
+#if defined OS_LINUX
+      body_p = malloc( obp->size);
+      memcpy( body_p, obp->body, obp->size);
+#else
+      body_p = obp->body;
+#endif
+
+      ObjBody.Objid = ohp->db.objid;
+
+      for (size = 0, offset = -1;;)  {
+	if (php != NULL) {
+	  /* Get parameter information. */
+	  ldhi_GetObjectBody(lcbp->sp, php, ldhi_eBid_SysBody, &pbp);
+	  Param = (pwr_sParam *) pbp->body;
+	}
+
+	if (
+	  php == NULL						/* Last parameter reached. */
+	  || (Param->Info.Flags & PWR_MASK_STATE) != 0		/* State parameter, write buffer and skip. */
+	  || (Param->Info.Flags & PWR_MASK_RTVIRTUAL) != 0	/* Virtual parameter write buffer and skip. */
+	)	{
+	  if (size > 0) {
+	    ObjBody.Offset = offset;
+	    ObjBody.Size = size;
+	    xdrmem_create(&xdrs, (char *) &Body, sizeof(Body), XDR_ENCODE);
+	    if(!xdr_load_sObjBody(&xdrs, &ObjBody)) return LDH__XDR;
+	    if (fwrite(&Body, sizeof(Body), 1, lfcbp->fp) < 1) return LDH__FILEWRITE;
+	    lfcbp->head.SectSize += sizeof(ObjBody);
+
+	    if (fwrite(body_p + offset, size, 1, lfcbp->fp) < 1) return LDH__FILEWRITE;
+	    lfcbp->head.SectSize += size;
+
+	    size = 0;
+	    offset = -1;			
+	  }
+	  if (php == NULL)
+	      break;
+	} else {
+	  if ((Param->Info.Flags & PWR_MASK_OBJDIDSELF) != 0) {
+	    /* Copy own Objid to parameter. */
+	    memcpy(body_p + Param->Info.Offset, &ohp->db.objid, sizeof(pwr_tObjid));
+	  }
+	  if (php->db.classid == pwr_eClass_Input) {
+#if defined OS_LINUX
+	    /* Convert to VAX-format */
+	    if (dlinux[pwr_Tix(Param->Info.Type)] != NULL) 
+              if (!dlinux[pwr_Tix(Param->Info.Type)](
+			body_p + Param->Info.Offset, 
+			Param->Info.Size)) 
+	        return LDH__XDR;
+#endif
+	    if (offset == ULONG_MAX)
+	      offset = Param->Info.Offset - sizeof(void *);
+	    size += ldhi_dAlign(Param->Info.Size) + sizeof(void *);
+	  } else {
+#if defined OS_LINUX
+	    /* Convert to VAX-format */
+	    if (dlinux[pwr_Tix(Param->Info.Type)] != NULL) 
+              if (!dlinux[pwr_Tix(Param->Info.Type)](
+			body_p + Param->Info.Offset, 
+			Param->Info.Size)) 
+	        return LDH__XDR;
+#endif
+	    if (offset == ULONG_MAX)
+	      offset = Param->Info.Offset;			
+	    size += ldhi_dAlign(Param->Info.Size);
+	  }
+	}
+	php = php->silst.fwhp;
+      }
+#if defined OS_LINUX
+      free( body_p);
+#endif
+
+      if (ohp->load.f.FreeBody)
+	ldhi_FreeObjectBodies(lcbp->sp, ohp);
+    }
+  }
+
+  for (chhp = ohp->chhp; chhp != NULL; chhp = chhp->silst.fwhp) {
+    sts = WriteNewBodies(lcbp, lfcbp, chhp);
+    if (EVEN(sts)) return sts;
+  }
+  return LDH__SUCCESS;
+}
+
+static pwr_tStatus
+WriteOldBodies (
+  ldhi_sLCB		*lcbp
+)
+{
+  pwr_tStatus		sts;
+  ldhi_sObjHead		*ohp;
+  load_sObjBody		ObjBody;
+  load_sObjBody		Body;
+  pwr_tObjid		Objid;
+  static char		Buff[ldhi_cSizBody];
+  ldhi_sLFCB		*ofcbp = &lcbp->oldFile;
+  ldhi_sLFCB		*nfcbp = &lcbp->newFile;
+  int			i;
+  int			Write;
+  XDR			xdrs;
+
+  sts = FindSect(ofcbp, load_eSect_ObjBody, load_cVersionObjBody);
+  if (EVEN(sts)) return sts;
+
+  for (i = 0, Write = 0, Objid = pwr_cNObjid; i < ofcbp->head.SectSize; i += sizeof(ObjBody) + ObjBody.Size) {
+    if (fread(&ObjBody, sizeof(ObjBody), 1, ofcbp->fp) < 1) return LDH__FILEREAD;
+    xdrmem_create(&xdrs, (char *) &ObjBody, sizeof(ObjBody), XDR_DECODE);
+    if(!xdr_load_sObjBody(&xdrs, &ObjBody)) return LDH__XDR;
+    if (!cdh_ObjidIsEqual(ObjBody.Objid, Objid)) {
+      Objid = ObjBody.Objid;
+      sts = ldhi_ObjidToOh(lcbp->sp->wb, ObjBody.Objid, &ohp);
+      Write = ODD(sts) && ohp->load.f.UseOldBody;
+    }
+    if (Write) {
+      xdrmem_create(&xdrs, (char *) &Body, sizeof(Body), XDR_ENCODE);
+      if(!xdr_load_sObjBody(&xdrs, &ObjBody)) return LDH__XDR;
+      if (fwrite(&Body, sizeof(Body), 1, nfcbp->fp) < 1) return LDH__FILEWRITE;
+      if (fread(&Buff, ObjBody.Size, 1, ofcbp->fp) < 1) return LDH__FILEREAD;
+      if (fwrite(&Buff, ObjBody.Size, 1, nfcbp->fp) < 1) return LDH__FILEWRITE;
+      nfcbp->head.SectSize += sizeof(ObjBody) + ObjBody.Size;
+    } else {
+      if (fseek(ofcbp->fp, ObjBody.Size, 1) != 0) return LDH__FILEPOS;
+    }
+  }
+
+  return LDH__SUCCESS;
+}
+
+static pwr_tStatus
+WriteSectVolume (
+  ldhi_sLCB		*lcbp,
+  ldhi_sLFCB		*lfcbp,
+  pwr_tBoolean		new
+)
+{
+  pwr_tStatus		sts;
+  load_sVolume		Volume;
+  fpos_t		CurPos;
+  XDR			xdrs;
+  
+  memset(&Volume, 0, sizeof(Volume));
+
+  if (new) {
+    sts = OpenSect(lfcbp, load_eSect_Volume);
+    if (EVEN(sts)) return sts;
+    if (fgetpos(lfcbp->fp, &lfcbp->identSectPos)) return LDH__FILEPOS;
+  } else {
+    if (fgetpos(lfcbp->fp, &CurPos)) return LDH__FILEPOS;
+    if (fsetpos(lfcbp->fp, &lfcbp->identSectPos)) return LDH__FILEPOS;
+  }
+
+  Volume.Id = lcbp->vid;
+  strcpy(Volume.Name, lcbp->ohp->db.name.data);
+  Volume.Class = lcbp->cid;
+  strcpy(Volume.ClassName, lcbp->ohp->chp->db.name.data);
+  Volume.Version = lcbp->version;
+  Volume.CreTime = lcbp->time;
+  Volume.Cardinality = lcbp->cardinality;
+  Volume.BodySize = lcbp->bodySize;
+#if 0
+  Volume.Volume = *lcbp->Volume;
+#endif
+
+  xdrmem_create(&xdrs, (char *) &Volume, sizeof(Volume), XDR_ENCODE);
+  if(!xdr_load_sVolume(&xdrs, &Volume)) return LDH__XDR;
+  if (fwrite(&Volume, sizeof(Volume), 1, lfcbp->fp) < 1) return LDH__FILEWRITE;
+  lfcbp->head.SectSize = sizeof(Volume);
+
+  if (new) {
+    sts = CloseSect(lfcbp);
+    if (EVEN(sts)) return sts;
+  } else {
+    if (fsetpos(lfcbp->fp, &CurPos)) return LDH__FILEPOS;
+  }
+
+  return LDH__SUCCESS;
+}
+
+static pwr_tStatus
+WriteSectVolRef (
+  ldhi_sLCB		*lcbp,
+  ldhi_sLFCB		*lfcbp
+)
+{
+  pwr_tStatus		sts;
+  load_sVolRef		VolRef;
+  ldhi_sVidEntry	*vtp;
+  ldhi_sObjBody		*obp;
+  pwr_sClassVolume	*ClassVolume;
+  XDR			xdrs;
+  
+  memset(&VolRef, 0, sizeof(VolRef));
+
+  sts = OpenSect(lfcbp, load_eSect_VolRef);
+  if (EVEN(sts)) return sts;
+
+  for (
+    vtp = (ldhi_sVidEntry *) ldh_TreeMinimum(lcbp->sp->wb->vidtab);
+    vtp != NULL;
+    vtp = (ldhi_sVidEntry *) ldh_TreeSuccessor(lcbp->sp->wb->vidtab,
+      (ldh_sTreeNode *) vtp)
+  ) {
+/* +++++++++ A workaround for Claes Sjöfors 1998-03-02 */
+    /* if this is the pwrs-volume then
+       we are not depending on any volume */
+
+   if (lcbp->ohp->db.objid.vid == 1) continue;
+
+     /* if this is a class volume then
+       we depend only on pwrs */
+
+    if (lcbp->ohp->db.classid == pwr_eClass_ClassVolume) {
+      if (vtp->vhp->ohp->db.objid.vid != 1) continue;
+    }
+/* --------- End of workaround */
+
+    if (vtp->vhp->ohp->db.classid == pwr_eClass_ClassVolume) {
+      sts = ldhi_GetObjectBody(lcbp->sp, vtp->vhp->ohp, ldhi_eBid_SysBody, &obp);
+      if (EVEN(sts)) return sts;
+      ClassVolume = (pwr_sClassVolume *) obp->body;
+
+      VolRef.Id	      = vtp->vhp->ohp->db.objid.vid;
+      VolRef.Class    = pwr_eClass_ClassVolume;
+      VolRef.Version  = ClassVolume->RtVersion;
+
+      xdrmem_create(&xdrs, (char *) &VolRef, sizeof(VolRef), XDR_ENCODE);
+      if(!xdr_load_sVolRef(&xdrs, &VolRef)) return LDH__XDR;
+      if (fwrite(&VolRef, sizeof(VolRef), 1, lfcbp->fp) < 1) return LDH__FILEWRITE;
+      lfcbp->head.SectSize += sizeof(VolRef);
+    }
+  }
+
+  sts = CloseSect(lfcbp);
+  if (EVEN(sts)) return sts;
+
+  return LDH__SUCCESS;
+}
+
+static pwr_tStatus
+WriteSectFile (
+  ldhi_sLCB		*lcbp,
+  ldhi_sLFCB		*lfcbp
+)
+{
+  pwr_tStatus		sts;
+  load_sFile		file;
+  XDR			xdrs;
+
+  memset(&file, 0, sizeof(file));
+
+  sts = OpenSect(lfcbp, load_eSect_File);
+  if (EVEN(sts)) return sts;
+
+  file.FormatVersion = load_cVersionFormat;
+  file.FileType = lcbp->file;  
+  file.CreationTime = lcbp->time;
+
+  xdrmem_create(&xdrs, (char *) &file, sizeof(file), XDR_ENCODE);
+  if(!xdr_load_sFile(&xdrs, &file)) return LDH__XDR;
+  if (fwrite(&file, sizeof(file), 1, lfcbp->fp) < 1) return LDH__FILEWRITE;
+  lfcbp->head.SectSize = sizeof(file);
+
+  sts = CloseSect(lfcbp);
+  if (EVEN(sts)) return sts;
+
+  return LDH__SUCCESS;
+}
+
+pwr_tStatus
+ldhld_CreateLoadFile (
+  ldhi_sSession		*isp
+) {
+  pwr_tStatus		sts;
+  ldhi_sSession		*sp;
+  ldhi_sLCB		lcb;
+
+  ResetErrCount();
+  ResetWrnCount();
+
+  memset(&lcb, 0, sizeof(lcb));
+
+  sts = ldh_OpenSession(&sp, isp->volctx, ldh_eAccess_ReadWrite, ldh_eUtility_Loader);
+  if (EVEN(sts)) return sts;
+
+
+  lcb.ohp = sp->volctx->vhp->ohp;
+  lcb.sp = sp;
+
+  PrepareHier(lcb.ohp, 1);
+
+  if (EVEN(sts) || GetErrCount() != 0) {
+    if (GetErrCount() != 0) printf("** Errors: %ld\n", GetErrCount());
+    goto error_handler;
+  }
+
+  clock_gettime(CLOCK_REALTIME, &lcb.time);
+
+  InitLoad(&lcb);
+
+  CreateLoadFile(&lcb);
+
+  if (GetWrnCount() != 0) printf("!! Warnings: %ld\n", GetWrnCount());
+  if (EVEN(sts) || GetErrCount() != 0) {
+    if (GetErrCount() != 0) printf("** Errors: %ld\n", GetErrCount());
+    goto error_handler;
+  }
+
+  ldh_SaveSession(sp);
+  ldh_CloseSession(sp);  
+
+  return LDH__SUCCESS;
+
+error_handler:
+  printf("-- Loadfiles cannot be created!\n");
+  ldh_RevertSession(sp);  
+  ldh_CloseSession(sp);  
+  return LDH__NOTLOAD;
+}

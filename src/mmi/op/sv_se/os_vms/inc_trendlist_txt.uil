@@ -1,0 +1,12 @@
+!  inc_trendlist_txt.uil -- <short description>
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  This module defines swedish texts for the trend and fast list window.
+!
+value
+    titleTrend	    : exported "Trendbilder";
+    iconTrend	    : exported "Trendbilder";
+    titleFast	    : exported "Snabbilder";
+    iconFast	    : exported "Snabbilder";

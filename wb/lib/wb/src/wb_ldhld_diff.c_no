@@ -1,0 +1,922 @@
+/* wb_ldhld_diff.c -- <short description>
+
+   PROVIEW/R
+   Copyright (C) 1996 by Comator Process AB.
+
+   <Description>.  */
+
+#include <stdio.h>
+#include <string.h>
+#include <setjmp.h>
+#ifdef OS_VMS
+#include <descrip.h>
+#include <libdef.h>
+#include <lib$routines.h>
+#endif
+#include <X11/Intrinsic.h>
+#include "pwr.h"
+#include "wb_ldhi.h"
+#include "pwr_class.h"
+#include "wb_ldh_msg.h"
+#include "wb_ldhld.h"
+#include "rt_gdh.h"
+#include "rt_load.h"
+#include "co_cdh.h"
+#include "co_time.h"
+
+#if 0
+typedef struct s_TLink sTLink;
+typedef struct s_TEntry sTEntry;
+typedef struct s_FCB sFCB;
+
+typedef  void (*tCheckCB)(sTEntry *ep, void *udp);
+
+typedef enum {
+  eTOrder__,
+  eTOrder_Pre = 1,
+  eTOrder_In = 2,
+  eTOrder_Post = 3,
+  eTOrder_
+} eTOrder;
+
+typedef enum {
+  eTType__ = -1,
+  eTType_Bin = 0,
+  eTType_Hier = 1,
+  eTType_
+} eTType;
+
+struct s_TLink {
+  sTEntry *lep;	/* Left */
+  sTEntry *rep;	/* Right */
+  pwr_tUInt16 fill;
+};
+
+struct s_TEntry {
+  sTLink Link[eTType_];
+  load_sObjHead ObjHead;
+};
+
+struct s_FCB {
+  FILE *fp;		/* File pointer */
+  char Name[100];	/* Name of load file */
+  load_sHead Head;	/* Section header */
+  load_sFile File;	/* Section File */
+  load_sDno Dno;		/* Section Dno */
+  load_sRco Rco;		/* Section Rco */
+  pwr_tBitMask Change;
+  fpos_t SectPos;	/* Section position in file */
+  sTEntry *ObjTable;	/* Object table */
+  sTEntry *HierRoot;
+  sFCB *rfcbp;		/* Pointer to Rco file */
+};
+
+static jmp_buf env;
+
+
+/*============================================================================*\
+  Local function prototypes.
+\*============================================================================*/
+static void BuildDnoTree (
+  sFCB *fcbp,
+  pwr_tBitMask InitMask
+);
+static void BuildRcoTree (
+  sFCB *fcbp,
+  pwr_tBitMask InitMask
+);
+static void CloseSect (
+  sFCB *fcbp
+);
+static void CheckNew (
+  sTEntry *nep,
+  sFCB *ofcbp
+);
+static void FileGetpos (
+  sFCB *fcbp,
+  fpos_t *SectPos
+);
+static void FileRead (
+  sFCB *fcbp,
+  char *Buff,
+  int Size
+);
+static void FileSeek (
+  sFCB *fcbp,
+  int Size
+);
+static void FileSetpos (
+  sFCB *fcbp,
+  fpos_t *SectPos
+);
+static void FileWrite (
+  sFCB *fcbp,
+  char *Buff,
+  int Size
+);
+static void MatchSectDno (
+  sFCB *ofcbp,
+  sFCB *nfcbp
+);
+static void OpenLoadFile (
+  sFCB *fcbp,
+  char *access
+);
+static void OpenSect (
+  sFCB *fcbp,
+  load_eSect SectType
+);
+static void Print (
+  sTEntry *nep,
+  sFCB *ofcbp
+);
+static void PrintHead (
+);
+static void  ReadRcoFile (
+  pwr_tProjVersion Version,
+  sFCB **fcbp
+);
+static void  ReadDnoFile (
+  pwr_tNodeIndex NodeIndex,
+  pwr_tProjVersion Version,
+  sFCB **fcbp
+);
+static int TEntryAlloc (
+  pwr_tObjid objid,
+  sTEntry **ep,
+  int dummy
+);
+static int TEntryCompare (
+  pwr_tObjid objid,
+  sTEntry *ep,
+  int dummy
+);
+static void TraverseTree (
+  sTEntry *ep,
+  eTType Type,
+  eTOrder TOrder,
+  tCheckCB Check,
+  void *udp
+);
+static void WriteDiffFile (
+  sFCB *nfcbp,
+  sFCB **dfcbp
+);
+static void WriteObjHead (
+  sTEntry *ep,
+  sFCB *fcbp
+);
+
+/*============================================================================*\
+  Local functions.
+\*============================================================================*/
+
+/*----------------------------------------------------------------------------*\
+\*----------------------------------------------------------------------------*/
+
+static void BuildDnoTree (
+  sFCB *fcbp,
+  pwr_tBitMask InitMask
+) {
+  load_sObjHead ObjHead;
+  pwr_tStatus sts = LDH__SUCCESS;
+  extern jmp_buf env;
+  sTEntry *ep;
+  sTEntry *fep;
+  int i;
+
+  /* Read section ObjHead */
+
+  for (i = 0; i < fcbp->Head.SectSize; i+= sizeof(ObjHead)) {
+    FileRead(fcbp, (char *) &ObjHead, sizeof(ObjHead));
+    sts = lib$insert_tree(&fcbp->ObjTable, ObjHead.Objid, &0, TEntryCompare,
+      TEntryAlloc, &ep, 0);
+    if (EVEN(sts)) break;
+    if (sts == LIB$_KEYALRINS) {
+      sts = LDH__BADFILE;
+      break;
+    }
+    ObjHead.Change.m = InitMask;
+    memcpy(&ep->ObjHead, &ObjHead, sizeof(ObjHead));
+    sts = lib$insert_tree(&fcbp->ObjTable, ObjHead.Father, &0, TEntryCompare,
+      TEntryAlloc, &fep, 0);
+    if (EVEN(sts)) break;
+    if (sts == LIB$_NORMAL) {
+      fep->ObjHead.Change.f.RcoObject = 1;
+      fep->Link[eTType_Hier].rep = fcbp->HierRoot;
+      fcbp->HierRoot = fep;
+    }
+    ep->Link[eTType_Hier].rep = fep->Link[eTType_Hier].lep;
+    fep->Link[eTType_Hier].lep = ep;
+  }
+
+  if (EVEN(sts))
+    longjmp(env, sts);
+
+  FileRead(fcbp, (char *) &fcbp->Head, sizeof(fcbp->Head));
+  if (fcbp->Head.SectType != load_eSect_ObjBody)
+    longjmp(env, LDH__BADFILE);
+}
+
+/*----------------------------------------------------------------------------*\
+\*----------------------------------------------------------------------------*/
+
+static void BuildRcoTree (
+  sFCB *fcbp,
+  pwr_tBitMask InitMask
+) {
+  load_sObjHead ObjHead;
+  pwr_tStatus sts = LDH__SUCCESS;
+  extern jmp_buf env;
+  sTEntry *ep;
+  sTEntry *fep;
+  int i;
+
+  /* Init tree with objid 0 */
+
+  sts = lib$insert_tree(&fcbp->ObjTable, pwr_cNObjid, &0, TEntryCompare,
+    TEntryAlloc, &ep, 0);
+  if (EVEN(sts))
+    longjmp(env, sts);
+
+  ep->ObjHead.Change.f.RcoObject = 1;
+  fcbp->HierRoot = ep;
+
+  /* Read section ObjHead */
+
+  for (i = 0; i < fcbp->Head.SectSize; i+= sizeof(ObjHead)) {
+    FileRead(fcbp, (char *) &ObjHead, sizeof(ObjHead));
+    sts = lib$insert_tree(&fcbp->ObjTable, ObjHead.Objid, &0, TEntryCompare,
+      TEntryAlloc, &ep, 0);
+    if (EVEN(sts)) break;
+    if (sts == LIB$_KEYALRINS) {
+      sts = LDH__BADFILE;
+      break;
+    }
+    ObjHead.Change.m = InitMask;
+    memcpy(&ep->ObjHead, &ObjHead, sizeof(ObjHead));
+    sts = lib$insert_tree(&fcbp->ObjTable, ObjHead.Father, &0, TEntryCompare,
+      TEntryAlloc, &fep, 0);
+    if (EVEN(sts)) break;
+    if (sts == LIB$_NORMAL) {
+      fep->ObjHead.Change.f.RcoObject = 1;
+      fep->Link[eTType_Hier].rep = fcbp->HierRoot;
+      fcbp->HierRoot = fep;
+    }
+    ep->Link[eTType_Hier].rep = fep->Link[eTType_Hier].lep;
+    fep->Link[eTType_Hier].lep = ep;
+  }
+
+  if (EVEN(sts))
+    longjmp(env, sts);
+
+  FileRead(fcbp, (char *) &fcbp->Head, sizeof(fcbp->Head));
+  if (fcbp->Head.SectType != load_eSect_ObjBody)
+    longjmp(env, LDH__BADFILE);
+}
+
+/*----------------------------------------------------------------------------*\
+  Callback  function to the traverse function.
+\*----------------------------------------------------------------------------*/
+
+static void CheckNew (
+  sTEntry *nep,
+  sFCB *cfcbp
+) {
+  pwr_tStatus sts;
+  sTEntry *cep;
+  sTEntry *rep;
+  extern jmp_buf env;
+
+  if (nep->ObjHead.Change.f.RcoObject) {
+    sts = lib$lookup_tree(&cfcbp->rfcbp->ObjTable, nep->ObjHead.Objid, TEntryCompare, &rep);
+    if (EVEN(sts)) {
+      printf("** The new DnoVersion needs a new RcoVersion.\n");
+      longjmp(env, LDH__BADFILE);
+    }
+  } else {
+    sts = lib$lookup_tree(&cfcbp->ObjTable, nep->ObjHead.Objid, TEntryCompare, &cep);
+    if (EVEN(sts)) {
+      nep->ObjHead.Change.f.Created = 1;
+    } else {
+      cep->ObjHead.Change.f.Deleted = 0;
+      if (nep->ObjHead.HeadGeneration != cep->ObjHead.HeadGeneration) {
+	if (!cdh_ObjidIsEqual(nep->ObjHead.Father, cep->ObjHead.Father))
+	  nep->ObjHead.Change.f.NewFather = 1;
+	if (strcmp(nep->ObjHead.Name, cep->ObjHead.Name) != 0)
+	  nep->ObjHead.Change.f.NewName = 1;
+      }
+      if (nep->ObjHead.BodyGeneration != cep->ObjHead.BodyGeneration) {
+	if (nep->ObjHead.Flags.f.Alias)
+	  nep->ObjHead.Change.f.NewAlias = 1;
+	else
+	  nep->ObjHead.Change.f.NewBody = 1;
+      }
+    }
+  }
+}
+
+/*----------------------------------------------------------------------------*\
+\*----------------------------------------------------------------------------*/
+
+static void CloseSect (
+  sFCB *fcbp
+) {
+  fpos_t CurPos;
+  
+  FileGetpos(fcbp, &CurPos);
+  FileSetpos(fcbp, &fcbp->SectPos);
+  FileWrite(fcbp, (char *) &fcbp->Head, sizeof(fcbp->Head));
+  FileSetpos(fcbp, &CurPos);
+}
+
+/*----------------------------------------------------------------------------*\
+\*----------------------------------------------------------------------------*/
+
+static void FileGetpos (
+  sFCB *fcbp,
+  fpos_t *SectPos
+) {
+  extern jmp_buf env;
+  
+  if (fgetpos(fcbp->fp, SectPos)) {
+    printf("** Error (fgetpos) file: %s\n", fcbp->Name);
+    perror(">> Reason:");
+    longjmp(env, LDH__FILEPOS);
+  }
+}
+
+/*----------------------------------------------------------------------------*\
+\*----------------------------------------------------------------------------*/
+
+static void FileRead (
+  sFCB *fcbp,
+  char *Buff,
+  int Size
+) {
+  extern jmp_buf env;
+  
+  if (fread(Buff, Size, 1, fcbp->fp) < 1) {
+    printf("** Error reading from file: %s\n", fcbp->Name);
+    perror(">> Reason:");
+    longjmp(env, LDH__FILEREAD);
+  }
+}
+
+/*----------------------------------------------------------------------------*\
+\*----------------------------------------------------------------------------*/
+
+static void FileSeek (
+  sFCB *fcbp,
+  int Size
+) {
+  extern jmp_buf env;
+  
+  if (fseek(fcbp->fp, Size, 1) != 0) {
+    printf("** Error seeking on file: %s\n", fcbp->Name);
+    perror(">> Reason:");
+    longjmp(env, LDH__FILEREAD);
+  }
+}
+
+/*----------------------------------------------------------------------------*\
+\*----------------------------------------------------------------------------*/
+
+static void FileSetpos (
+  sFCB *fcbp,
+  fpos_t *SectPos
+) {
+  extern jmp_buf env;
+  
+  if (fsetpos(fcbp->fp, SectPos)) {
+    printf("** Error (fsetpos) file: %s\n", fcbp->Name);
+    perror(">> Reason:");
+    longjmp(env, LDH__FILEPOS);
+  }
+}
+
+/*----------------------------------------------------------------------------*\
+\*----------------------------------------------------------------------------*/
+
+static void FileWrite (
+  sFCB *fcbp,
+  char *Buff,
+  int Size
+) {
+  extern jmp_buf env;
+  
+  if (fwrite(Buff, Size, 1, fcbp->fp) < 1) {
+    printf("** Error writing to file: %s\n", fcbp->Name);
+    perror(">> Reason:");
+    longjmp(env, LDH__FILEWRITE);
+  }
+}
+
+/*----------------------------------------------------------------------------*\
+\*----------------------------------------------------------------------------*/
+
+static void MatchSectDno (
+  sFCB *ofcbp,
+  sFCB *nfcbp
+) {
+  pwr_tStatus sts;
+  char timbuf[24];
+  extern jmp_buf env;
+  
+  printf("\n-- Checking versions %20s %24s\n" , "Current", "New");
+  printf("-- RsmoVersion.: %24d %24d\n", ofcbp->Dno.RsmoVersion, nfcbp->Dno.RsmoVersion);
+  printf("-- RpmoVersion.: %24d %24d\n", ofcbp->Dno.RpmoVersion, nfcbp->Dno.RpmoVersion);
+  printf("-- RcoVersion..: %24d %24d\n", ofcbp->Dno.RcoVersion, nfcbp->Dno.RcoVersion);
+  printf("-- DnoVersion..: %24d %24d\n", ofcbp->Dno.DnoVersion, nfcbp->Dno.DnoVersion);
+  time_AtoAscii(&ofcbp->Dno.DnoCreTime, time_eFormat_DateAndTime, timbuf, sizeof(timbuf));
+  printf("-- DnoCreTime..: %24.s", timbuf);
+  time_AtoAscii(&nfcbp->Dno.DnoCreTime, time_eFormat_DateAndTime, timbuf, sizeof(timbuf));
+  printf(" %24.s\n", timbuf);
+  printf("-- NodeName....: %24s %24s\n", ofcbp->Dno.NodeName, nfcbp->Dno.NodeName);
+  printf("-- NodeIndex...: %24d %24d\n", ofcbp->Dno.NodeIndex, nfcbp->Dno.NodeIndex);
+  printf("-- NodeObject..: %24x %24x\n", ofcbp->Dno.NodeObject, nfcbp->Dno.NodeObject);
+  printf("-- Cardinality.: %24d %24d\n", ofcbp->Dno.Cardinality, nfcbp->Dno.Cardinality);
+  printf("-- BodySize....: %24d %24d\n", ofcbp->Dno.BodySize, nfcbp->Dno.BodySize);
+  printf("\n");
+
+  while (1) {
+    sts = LDH__SUCCESS;
+    if (ofcbp->Dno.RsmoVersion != nfcbp->Dno.RsmoVersion) {
+      printf("** Load files have different RsmoVersions, difference file can not be created.\n");
+      sts = LDH__BADFILE;
+    }
+    if (ofcbp->Dno.RpmoVersion != nfcbp->Dno.RpmoVersion) {
+      printf("** Load files have different RpmoVersions, difference file can not be created.\n");
+      sts = LDH__BADFILE;
+    }
+    if (ofcbp->Dno.RcoVersion != nfcbp->Dno.RcoVersion) {
+      printf("** Load files have different RcoVersions, difference file can not be created.\n");
+      sts = LDH__BADFILE;
+    }
+    if (!cdh_ObjidIsEqual(ofcbp->Dno.NodeObject, nfcbp->Dno.NodeObject)) {
+      printf("** Load files have different NodeObjects, difference file can not be created.\n");
+      sts = LDH__BADFILE;
+    }
+    break;
+  }
+  
+  if (EVEN(sts))
+    longjmp(env, sts);
+}
+
+/*----------------------------------------------------------------------------+---------------------------------------*\
+\*----------------------------------------------------------------------------+---------------------------------------*/
+
+static void OpenLoadFile (
+  sFCB *fcbp,
+  char *access
+) {
+  char *fn;
+  extern jmp_buf env;
+
+  fcbp->fp = fopen(fcbp->Name, access);
+  if (fcbp->fp == NULL) {
+    printf("** Cannot open file: %s\n", fcbp->Name);
+    perror(">> Reason");
+    longjmp(env, LDH__FILEOPEN);
+  }
+  fn = fgetname(fcbp->fp, fcbp->Name);
+  if (fn != NULL) printf("-- Opened load file: %s\n", fcbp->Name);
+}
+
+/*----------------------------------------------------------------------------+---------------------------------------*\
+\*----------------------------------------------------------------------------+---------------------------------------*/
+
+static void OpenSect (
+  sFCB *fcbp,
+  load_eSect SectType
+) {
+  extern jmp_buf env;
+  
+  fcbp->Head.SectType = SectType;
+  fcbp->Head.HeadVersion = load_cVersionHead;
+  fcbp->Head.SectSize = 0;
+
+  switch (SectType) {
+  case load_eSect_Boot:
+    fcbp->Head.SectVersion = load_cVersionBoot;
+    break;
+  case load_eSect_CreObj:
+    fcbp->Head.SectVersion = load_cVersionCreObj;
+    break;
+  case load_eSect_ChgObj:
+    fcbp->Head.SectVersion = load_cVersionChgObj;
+    break;
+  case load_eSect_DelObj:
+    fcbp->Head.SectVersion = load_cVersionDelObj;
+    break;
+  case load_eSect_Dno:
+    fcbp->Head.SectVersion = load_cVersionDno;
+    break;
+  case load_eSect_End:
+    fcbp->Head.SectVersion = load_cVersionEnd;
+    break;
+  case load_eSect_Eor:
+    fcbp->Head.SectVersion = load_cVersionEor;
+    break;
+  case load_eSect_File:
+    fcbp->Head.SectVersion = load_cVersionFile;
+    break;
+  case load_eSect_Ior:
+    fcbp->Head.SectVersion = load_cVersionIor;
+    break;
+  case load_eSect_ObjBody:
+    fcbp->Head.SectVersion = load_cVersionObjBody;
+    break;
+  case load_eSect_ObjHead:
+    fcbp->Head.SectVersion = load_cVersionObjHead;
+    break;
+  case load_eSect_Rco:
+    fcbp->Head.SectVersion = load_cVersionRco;
+    break;
+  case load_eSect_Rpmo:
+    fcbp->Head.SectVersion = load_cVersionRpmo;
+    break;
+  case load_eSect_Rsmo:
+    fcbp->Head.SectVersion = load_cVersionRsmo;
+    break;
+  default:
+    break;
+  }
+
+  FileGetpos(fcbp, &fcbp->SectPos);
+  FileWrite(fcbp, (char *) &fcbp->Head, sizeof(fcbp->Head));
+}
+
+/*----------------------------------------------------------------------------*\
+  Callback  function to the traverse function.
+\*----------------------------------------------------------------------------*/
+
+static void Print (
+  sTEntry *nep,
+  sFCB *ofcbp
+) {
+  pwr_tStatus sts;
+  sTEntry *oep;
+
+  if (nep->ObjHead.Change.m != 0) {
+    printf("%-32s", nep->ObjHead.Name);
+    printf(" %11d", nep->ObjHead.Objid);
+    printf(" %11d", nep->ObjHead.Class);
+    printf(" %11d", nep->ObjHead.Father);
+    printf(" %11d", nep->ObjHead.Size);
+    printf(" %11d", nep->ObjHead.HeadGeneration);
+    printf(" %11d", nep->ObjHead.BodyGeneration);
+    printf(" %2d",  nep->ObjHead.MemberType);
+    printf(" %08.8x", nep->ObjHead.Change);
+    printf("\n");
+  }
+}
+
+/*----------------------------------------------------------------------------*\
+  Callback  function to the traverse function.
+\*----------------------------------------------------------------------------*/
+
+static void PrintHead (
+) {
+
+  printf("\n%-32s", "ObjectName");
+  printf(" %11s", "Objid");
+  printf(" %11s", "Class");
+  printf(" %11s", "Father");
+  printf(" %11s", "Size");
+  printf(" %11s", "HeadGen");
+  printf(" %11s", "BodyGen");
+  printf(" %2s", "MT");
+  printf(" %8s", "Change");
+  printf("\n");
+}
+
+/*----------------------------------------------------------------------------*\
+  Opens a Dno load file. Reads file sections File and Dno and positions file
+  to section ObjHead.
+\*----------------------------------------------------------------------------*/
+
+static void  ReadDnoFile (
+  pwr_tNodeIndex NodeIndex,
+  pwr_tProjVersion Version,
+  sFCB **ofcbp
+) {
+  pwr_tStatus sts;
+  sFCB *fcbp;
+  extern jmp_buf env;
+  char FileName[256];
+
+  fcbp = (sFCB *) XtCalloc(1, sizeof(sFCB));
+  if (fcbp == NULL) longjmp(env, LDH__INSVIRMEM);
+  *ofcbp = fcbp;
+
+  strcpy(fcbp->Name, load_cDirectory);
+  sprintf(FileName, load_cNameDno, NodeIndex, Version);
+  strcat(fcbp->Name, FileName);
+  
+  OpenLoadFile(fcbp, "rb");
+
+  while (1) {
+    sts = LDH__BADFILE;
+    FileRead(fcbp, (char *) &fcbp->Head, sizeof(fcbp->Head));
+    if (fcbp->Head.SectType != load_eSect_File) break;
+    FileRead(fcbp, (char *) &fcbp->File, sizeof(fcbp->File));
+    if (fcbp->File.FileType != load_eFile_Dno) break;
+    FileRead(fcbp, (char *) &fcbp->Head, sizeof(fcbp->Head));
+    if (fcbp->Head.SectType != load_eSect_Dno) break;
+    FileRead(fcbp, (char *) &fcbp->Dno, sizeof(fcbp->Dno));
+    FileRead(fcbp, (char *) &fcbp->Head, sizeof(fcbp->Head));
+    if (fcbp->Head.SectType != load_eSect_ObjHead) break;
+    sts = LDH__SUCCESS;
+    break;
+  }
+
+  if (EVEN(sts))
+    longjmp(env, sts);
+}
+
+/*----------------------------------------------------------------------------*\
+  Opens a Rco load file. Reads file sections File and Rco and positions file
+  to section ObjHead.
+\*----------------------------------------------------------------------------*/
+
+static void  ReadRcoFile (
+  pwr_tProjVersion Version,
+  sFCB **ofcbp
+) {
+  pwr_tStatus sts;
+  sFCB *fcbp;
+  extern jmp_buf env;
+  char FileName[256];
+
+  fcbp = (sFCB *) XtCalloc(1, sizeof(sFCB));
+  if (fcbp == NULL) longjmp(env, LDH__INSVIRMEM);
+  *ofcbp = fcbp;
+
+  strcpy(fcbp->Name, load_cDirectory);
+  sprintf(FileName, load_cNameRco, Version);
+  strcat(fcbp->Name, FileName);
+  
+  OpenLoadFile(fcbp, "rb");
+
+  while (1) {
+    sts = LDH__BADFILE;
+    FileRead(fcbp, (char *) &fcbp->Head, sizeof(fcbp->Head));
+    if (fcbp->Head.SectType != load_eSect_File) break;
+    FileRead(fcbp, (char *) &fcbp->File, sizeof(fcbp->File));
+    if (fcbp->File.FileType != load_eFile_Rco) break;
+    FileRead(fcbp, (char *) &fcbp->Head, sizeof(fcbp->Head));
+    if (fcbp->Head.SectType != load_eSect_Rco) break;
+    FileRead(fcbp, (char *) &fcbp->Rco, sizeof(fcbp->Rco));
+    FileRead(fcbp, (char *) &fcbp->Head, sizeof(fcbp->Head));
+    if (fcbp->Head.SectType != load_eSect_ObjHead) break;
+    sts = LDH__SUCCESS;
+    break;
+  }
+
+  if (EVEN(sts))
+    longjmp(env, sts);
+}
+
+/*----------------------------------------------------------------------------*\
+  Used by the lib$tree functions, to allocate an object entry.
+\*----------------------------------------------------------------------------*/
+
+static int TEntryAlloc (
+    pwr_tObjid objid,
+    sTEntry **ep,
+    int dummy
+) {
+
+  *ep = (sTEntry *) XtCalloc(1, sizeof(sTEntry));
+  if (*ep == NULL)
+      return 0;
+  (*ep)->ObjHead.Objid = objid;
+
+  return 1;
+}
+
+/*----------------------------------------------------------------------------*\
+  Used by the lib$tree functions, to compare two objids.
+\*----------------------------------------------------------------------------*/
+
+static int TEntryCompare (
+    pwr_tObjid objid,
+    sTEntry *ep,
+    int dummy
+) {
+
+  return cdh_ObjidCompare(objid, ep->ObjHead.Objid);
+}
+
+/*----------------------------------------------------------------------------*\
+\*----------------------------------------------------------------------------*/
+
+static void TraverseTree (
+  sTEntry *ep,
+  eTType TType,
+  eTOrder TOrder,
+  tCheckCB Check,
+  void *udp
+) {
+  
+  if (ep == NULL)
+    return;
+
+  if (TOrder == eTOrder_Pre)
+    Check(ep, udp);
+
+  TraverseTree(ep->Link[TType].lep, TType, TOrder, Check, udp);
+
+  if (TOrder == eTOrder_In)
+    Check(ep, udp);
+
+  TraverseTree(ep->Link[TType].rep, TType, TOrder, Check, udp);
+
+  if (TOrder == eTOrder_Post)
+    Check(ep, udp);
+}
+
+/*----------------------------------------------------------------------------*\
+\*----------------------------------------------------------------------------*/
+
+static void WriteDiffFile (
+  sFCB *nfcbp,
+  sFCB **dfcbp
+) {
+  sFCB *fcbp;
+  extern jmp_buf env;
+
+  fcbp = (sFCB *) XtCalloc(1, sizeof(sFCB));
+  if (fcbp == NULL) longjmp(env, LDH__INSVIRMEM);
+  *dfcbp = fcbp;
+
+  strcpy(fcbp->Name, load_cDirectory);
+  strcat(fcbp->Name, load_cNameDiff);
+  OpenLoadFile(fcbp, "w+b");
+
+  OpenSect(fcbp, load_eSect_File);
+  memcpy(&fcbp->File, &nfcbp->File, sizeof(fcbp->File));
+  fcbp->File.FileType = load_eFile_Diff;
+  clock_gettime(CLOCK_REALTIME, &fcbp->File.CreationTime);
+  FileWrite(fcbp, (char *) &fcbp->File, sizeof(fcbp->File));
+  fcbp->Head.SectSize += sizeof(fcbp->File);
+  CloseSect(fcbp);
+
+  OpenSect(fcbp, load_eSect_Dno);
+  memcpy(&fcbp->Dno, &nfcbp->Dno, sizeof(fcbp->Dno));
+  FileWrite(fcbp, (char *) &fcbp->Dno, sizeof(fcbp->Dno));
+  fcbp->Head.SectSize += sizeof(fcbp->Dno);
+  CloseSect(fcbp);
+}
+
+/*----------------------------------------------------------------------------*\
+\*----------------------------------------------------------------------------*/
+
+static void WriteObjHead (
+  sTEntry *ep,
+  sFCB *fcbp
+) {
+  extern jmp_buf env;
+
+  if ((ep->ObjHead.Change.m & fcbp->Change) != 0 && !ep->ObjHead.Change.f.RcoObject) {
+    FileWrite(fcbp, (char *) &ep->ObjHead, sizeof(ep->ObjHead));
+    fcbp->Head.SectSize += sizeof(ep->ObjHead);
+  }
+}
+
+/*----------------------------------------------------------------------------*\
+\*----------------------------------------------------------------------------*/
+
+static void WriteSectObjBody (
+  sFCB *dfcbp,
+  sFCB *nfcbp
+) {
+  pwr_tStatus sts;
+  extern jmp_buf env;
+  int i;
+  int Write;
+  pwr_tObjid Objid;
+  load_sObjBody ObjBody;
+  static char Buff[LDHI_SIZ_BODY];
+  sTEntry *ep;
+
+  OpenSect(dfcbp, load_eSect_ObjBody);
+
+  for (i = 0, Write = NO, Objid = pwr_cNObjid; i < nfcbp->Head.SectSize; i += sizeof(ObjBody) + ObjBody.Size) {
+    FileRead(nfcbp, (char *) &ObjBody, sizeof(ObjBody));
+    if (!cdh_ObjidIsEqual(ObjBody.Objid, Objid)) {
+      Objid = ObjBody.Objid;
+      sts = lib$lookup_tree(&nfcbp->ObjTable, ObjBody.Objid, TEntryCompare, &ep);
+      Write = ODD(sts) && (ep->ObjHead.Change.m & load_mChange_BodyModified) != 0;
+    }
+    if (Write) {
+      FileWrite(dfcbp, (char *) &ObjBody, sizeof(ObjBody));
+      FileRead(nfcbp, (char *) &Buff, ObjBody.Size);
+      FileWrite(dfcbp, (char *) &Buff, ObjBody.Size);
+      dfcbp->Head.SectSize += sizeof(ObjBody) + ObjBody.Size;
+    } else {
+      FileSeek(nfcbp, ObjBody.Size);
+    }
+  }
+
+  CloseSect(dfcbp);
+}
+
+/*----------------------------------------------------------------------------*\
+\*----------------------------------------------------------------------------*/
+#endif
+pwr_tStatus ldhld_Diff (
+  char *NodeName,
+  pwr_tProjVersion NewDnoVersion,
+  char *DiffFileName,
+  char *DECnetNodeName
+) {
+#if 0
+  pwr_tStatus sts;
+  sFCB *cfcbp = NULL;
+  sFCB *nfcbp = NULL;
+  sFCB *dfcbp = NULL;
+  sFCB *rfcbp = NULL;
+  char AttrName[512];
+  pwr_sNode Node;
+  pwr_tProjVersion CurDnoVersion;
+  pwr_tNodeIndex CurNodeIndex;
+  pwr_tNodeIndex NewNodeIndex;
+  extern jmp_buf env;
+
+  sts = gdh_Init(0, NULL);
+
+  if (EVEN(sts)) return sts;
+  sts = gdh_GetObjectInfo(NodeName, &Node, sizeof(Node));
+  if (EVEN(sts)) return sts;
+
+  strcpy(DECnetNodeName, Node.NodeName);
+  CurDnoVersion = Node.CurDnoVersion;
+  CurNodeIndex = Node.NodeIndex;
+  NewNodeIndex = CurNodeIndex;  
+
+  if ((sts = setjmp(env)) == 0)
+    ;
+  else {
+    printf("** Difference file not created.\n");
+    if (cfcbp != NULL && cfcbp->fp != NULL) fclose(cfcbp->fp);
+    if (nfcbp != NULL && nfcbp->fp != NULL) fclose(nfcbp->fp);
+    if (rfcbp != NULL && rfcbp->fp != NULL) fclose(rfcbp->fp);
+    if (dfcbp != NULL && dfcbp->fp != NULL) fclose(dfcbp->fp);
+    if (dfcbp != NULL && dfcbp->Name != NULL) remove(dfcbp->Name);
+    return sts;
+  }
+
+  ReadDnoFile(CurNodeIndex, CurDnoVersion, &cfcbp);
+  ReadDnoFile(NewNodeIndex, NewDnoVersion, &nfcbp);
+  MatchSectDno(cfcbp, nfcbp);
+  ReadRcoFile(cfcbp->Dno.RcoVersion, &rfcbp);
+  BuildRcoTree(rfcbp, load_mChange_RcoObject);
+  cfcbp->rfcbp = rfcbp;
+  nfcbp->rfcbp = rfcbp;
+  BuildDnoTree(cfcbp, load_mChange_Deleted);
+  BuildDnoTree(nfcbp, 0);
+  TraverseTree(nfcbp->HierRoot, eTType_Hier, eTOrder_Pre, (tCheckCB) CheckNew, cfcbp);
+
+#if 0
+  PrintHead();
+  TraverseTree(rfcbp->HierRoot, eTType_Hier, eTOrder_Pre, Print, cfcbp);
+  PrintHead();
+  TraverseTree(cfcbp->HierRoot, eTType_Hier, eTOrder_Pre, Print, cfcbp);
+  PrintHead();
+  TraverseTree(nfcbp->HierRoot, eTType_Hier, eTOrder_Pre, Print, cfcbp);
+#endif
+
+  WriteDiffFile(nfcbp, &dfcbp);
+  OpenSect(dfcbp, load_eSect_CreObj);
+  dfcbp->Change = load_mChange_Created;
+  TraverseTree(nfcbp->HierRoot, eTType_Hier, eTOrder_Pre, (tCheckCB) WriteObjHead, dfcbp);
+  CloseSect(dfcbp);
+
+  OpenSect(dfcbp, load_eSect_ChgObj);
+  dfcbp->Change = load_mChange_HeadModified;
+  TraverseTree(nfcbp->ObjTable, eTType_Bin, eTOrder_Pre, (tCheckCB) WriteObjHead, dfcbp);
+  CloseSect(dfcbp);
+
+  OpenSect(dfcbp, load_eSect_DelObj);
+  dfcbp->Change = load_mChange_Deleted;
+  TraverseTree(cfcbp->HierRoot, eTType_Hier, eTOrder_In, (tCheckCB) WriteObjHead, dfcbp);
+  CloseSect(dfcbp);
+
+  WriteSectObjBody(dfcbp, nfcbp);
+
+  OpenSect(dfcbp, load_eSect_End);
+  CloseSect(dfcbp);
+
+  strcpy(DiffFileName, dfcbp->Name);
+
+  printf("-- Difference file succesfully created.\n");
+  if (cfcbp != NULL && cfcbp->fp != NULL) fclose(cfcbp->fp);
+  if (nfcbp != NULL && nfcbp->fp != NULL) fclose(nfcbp->fp);
+  if (rfcbp != NULL && rfcbp->fp != NULL) fclose(rfcbp->fp);
+  if (dfcbp != NULL && dfcbp->fp != NULL) fclose(dfcbp->fp);
+#endif
+  return LDH__SUCCESS;
+}

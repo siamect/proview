@@ -1,0 +1,18 @@
+!  pwrs_td_text1024.wb_load -- Defines the type Text1024
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+SObject pwrs:Type
+   Object $Text1024 $TypeDef 9
+    Body SysBody
+      Attr Type = pwr_eType_Text
+      Attr Size = 1024
+      Attr TypeRef = "pwrs:Type-$Text"
+      Attr Elements = 1024
+    EndBody
+  EndObject
+EndSObject

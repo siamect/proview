@@ -1,0 +1,124 @@
+!  pwrb_c_di_dx2.wb_load -- Defines the class Di_DIX2.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996,99 by Mandator AB.
+!
+!  Digital Input card DIX2.
+!
+SObject pwrb:Class
+  Object Di_DIX2 $ClassDef 90 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_RtAndDevBodies
+      Attr Flags |= pwr_mClassDef_IO
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "Di_DIX2"
+      EndBody
+      Object Description $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      Object DevName $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object ErrorCount $Attribute 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object ErrorSoftLimit $Attribute 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object ErrorHardLimit $Attribute 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object ConvMask1 $Attribute 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Mask"
+        EndBody
+      EndObject
+      Object ConvMask2 $Attribute 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Mask"
+        EndBody
+      EndObject
+      Object InvMask1 $Attribute 9
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Mask"
+        EndBody
+      EndObject
+      Object InvMask2 $Attribute 10
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Mask"
+        EndBody
+      EndObject
+      Object MaxNoOfChannels $Attribute 11
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+          Attr Flags |= PWR_MASK_CONST
+        EndBody
+      EndObject
+      Object RegAddress $Attribute 12
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object VectAddress $Attribute 13
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object Process $Attribute 14
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object ThreadObject $Intern 15
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object ChannelAllocation $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+    EndObject
+    Object Template Di_DIX2
+      Body RtBody
+        Attr ConvMask1 = 65535
+        Attr ConvMask2 = 65535
+        Attr MaxNoOfChannels = 32
+        Attr Process = 1
+      EndBody
+    EndObject
+    Object AnteAdopt $DbCallBack
+      Body SysBody
+        Attr MethodName = "Di_DIX2-AnteAdopt"
+      EndBody
+    EndObject
+    Object PostUnadopt $DbCallBack
+      Body SysBody
+        Attr MethodName = "Di_DIX2-PostUnadopt"
+      EndBody
+    EndObject
+    Object PostAdopt $DbCallBack
+      Body SysBody
+        Attr MethodName = "Di_DIX2-PostAdopt"
+      EndBody
+    EndObject
+  EndObject
+EndSObject

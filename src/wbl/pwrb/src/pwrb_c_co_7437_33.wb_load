@@ -1,0 +1,132 @@
+!  pwrb_c_co_7437_33.wb_load -- Defines the class Co_7437_33.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996,99 by Mandator AB.
+!
+!  RTP 4 x 16 Bit counter card.
+!
+SObject pwrb:Class
+  Object Co_7437_33 $ClassDef 71 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_RtAndDevBodies
+      Attr Flags |= pwr_mClassDef_IO
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "Co_7437_33"
+      EndBody
+      Object IOSysType $Attribute 1 
+        Body SysBody
+	  Attr TypeRef = "pwrs:Type-$UInt16"
+	  Attr Flags |= PWR_MASK_CONST
+	EndBody
+      EndObject
+      Object Description $Attribute 2 
+        Body SysBody
+	  Attr TypeRef = "pwrs:Type-$String80"
+	EndBody
+      EndObject
+      Object DevName $Attribute 3 
+        Body SysBody
+	  Attr TypeRef = "pwrs:Type-$String40"
+	EndBody
+      EndObject
+      Object DevNumber $Attribute 4 
+        Body SysBody
+	  Attr TypeRef = "pwrs:Type-$UInt16"
+	  Attr Flags |= PWR_MASK_STATE
+	EndBody
+      EndObject
+      Object ErrorCount $Attribute 5 
+        Body SysBody
+	  Attr TypeRef = "pwrs:Type-$UInt32"
+	EndBody
+      EndObject
+      Object ErrorSoftLimit $Attribute 6 
+        Body SysBody
+	  Attr TypeRef = "pwrs:Type-$UInt32"
+	EndBody
+      EndObject
+      Object ErrorHardLimit $Attribute 7 
+        Body SysBody
+	  Attr TypeRef = "pwrs:Type-$UInt32"
+	EndBody
+      EndObject
+      Object ConvMask $Attribute 8 
+        Body SysBody
+	  Attr TypeRef = "pwrs:Type-$UInt32"
+	EndBody
+      EndObject 
+      Object MaxNoOfCounters $Attribute 9 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+          Attr Flags |= PWR_MASK_CONST
+        EndBody
+      EndObject
+      Object COAbsFlag $Attribute 10 
+        Body SysBody
+	  Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 4
+	EndBody
+      EndObject
+      Object NoOfBits $Attribute 11 
+        Body SysBody
+	  Attr TypeRef = "pwrs:Type-$UInt16"
+	  Attr Flags |= PWR_MASK_CONST
+	EndBody
+      EndObject
+      Object CardAddress $Attribute 12 
+        Body SysBody
+	  Attr TypeRef = "pwrs:Type-$UInt32"
+	EndBody
+      EndObject
+      Object Process $Attribute 13
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object ThreadObject $Intern 14
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object ChannelAllocation $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+    EndObject
+    Object Template Co_7437_33
+      Body RtBody
+        Attr IOSysType = 4
+	Attr ErrorSoftLimit = 20
+	Attr ErrorHardLimit = 100
+	Attr COAbsFlag = 1
+	Attr NoOfBits = 16
+        Attr MaxNoOfCounters = 4
+	Attr ConvMask = 15
+        Attr Process = 1
+      EndBody
+    EndObject
+    Object AnteAdopt $DbCallBack
+      Body SysBody
+        Attr MethodName = "Co_7437_33-AnteAdopt"
+      EndBody
+    EndObject
+    Object PostUnadopt $DbCallBack
+      Body SysBody
+        Attr MethodName = "Co_7437_33-PostUnadopt"
+      EndBody
+    EndObject
+    Object PostAdopt $DbCallBack
+      Body SysBody
+        Attr MethodName = "Co_7437_33-PostAdopt"
+      EndBody
+    EndObject
+  EndObject
+EndSObject

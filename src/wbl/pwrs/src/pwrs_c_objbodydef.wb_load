@@ -1,0 +1,82 @@
+!  pwrs_c_objbodydef.wb_load -- Defines the class ObjBodyDef.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  NOTE !
+!  This class is defined before class definitions are completed,
+!  and is thus loaded with DObject etc.
+!
+!
+!/**
+!  @Version 1.0
+!  Definition of an object body. The object is a part of the class
+!  definition tree for a class, and has a $ClassDef object as parent.
+!*/
+SObject pwrs:Class
+  Object $ObjBodyDef pwr_eClass_ClassDef pwr_eCix_ObjBodyDef
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_SysBody
+      Attr Flags = 6
+      Attr NumOfObjBodies = 1
+      Attr PopEditor = 0
+    EndBody
+    Object SysBody pwr_eClass_ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "ObjBodyDef"
+        Attr NumOfParams = 5
+        Attr Size = 48
+      EndBody
+      !/**
+      !  Name of the c-struct for the body.
+      !*/
+      Object StructName	$Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$PgmName"
+        EndBody
+      EndObject
+      !/**
+      !  Compiled number of parameters.
+      !*/
+      Object NumOfParams $Attribute 2
+        Body SysBody
+          Attr TypeRef = pwr_eType_UInt32
+        EndBody
+      EndObject
+      !/**
+      !  Compiled size.
+      !*/
+      Object Size $Attribute 3
+        Body SysBody
+          Attr TypeRef = pwr_eType_UInt32
+        EndBody
+      EndObject
+      !/**
+      !  Next free attribute index.
+      !*/
+      Object NextAix $Attribute 4
+        Body SysBody
+          Attr TypeRef = pwr_eType_ObjectIx
+        EndBody
+      EndObject
+      !/**
+      !  Flag mask.
+      !*/
+      Object Flags $Attribute 5
+        Body SysBody
+          Attr TypeRef = pwr_eType_Mask
+        EndBody
+      EndObject
+    EndObject
+    Object Template $ObjBodyDef
+      Body SysBody
+        Attr StructName = ""
+        Attr NumOfParams = 0
+        Attr Size = 0
+        Attr NextAix = 0
+        Attr Flags = 0
+      EndBody
+    EndObject
+  EndObject
+EndSObject

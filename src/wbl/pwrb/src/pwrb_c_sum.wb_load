@@ -1,0 +1,248 @@
+!  pwrb_c_sum.wb_load -- Defines the class Sum.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_arithm.c
+!  Summator.
+!  
+!  Weighted summing unit for up to 8 inputs. Used inputs
+!  have to be chosen consecutively with beginning from
+!  In1, which is the upper input.
+!  
+!  Each input has its own weighting factor, FVect0, FVect1
+!  etc.
+!  A constant value, Const, can be added to the sum.
+!*/
+SObject pwrb:Class
+  Object Sum $ClassDef 234 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Connections
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "sum"
+      EndBody
+      !/**
+      !  Value of input signal 1, input signal 2, ..., input
+      !  signal 8.
+      !*/
+      Object In1 $Input 1 
+        Body SysBody
+          Attr PgmName = "In1"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "IN1"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object In2 $Input 2 
+        Body SysBody
+          Attr PgmName = "In2"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "IN2"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object In3 $Input 3 
+        Body SysBody
+          Attr PgmName = "In3"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "IN3"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object In4 $Input 4 
+        Body SysBody
+          Attr PgmName = "In4"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "IN4"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object In5 $Input 5 
+        Body SysBody
+          Attr PgmName = "In5"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "IN5"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object In6 $Input 6 
+        Body SysBody
+          Attr PgmName = "In6"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "IN6"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object In7 $Input 7 
+        Body SysBody
+          Attr PgmName = "In7"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "IN7"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object In8 $Input 8 
+        Body SysBody
+          Attr PgmName = "In8"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "IN8"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  The weighted sum
+      !*/
+      Object ActVal $Output 9 
+        Body SysBody
+          Attr PgmName = "ActVal"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "VAL"
+        EndBody
+      EndObject
+      !/**
+      !  A constant value added to the sum.
+      !*/
+      Object Const $Intern 10 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "Const"
+        EndBody
+      EndObject
+      !/**
+      !  ActVal = Const + ( Fvect[0] * In1 + ... + Fvect[7] * In8)
+      !*/
+      Object FVect $Intern 11 
+        Body SysBody
+          Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 8
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "FVect"
+        EndBody
+      EndObject
+      !/**
+      !  The operator's authorities to change Const.
+      !  
+      !     0   -- Changes not allowed.
+      !     != 0 -- Changes allowed.
+      !*/
+      Object AccConst $Intern 12 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "AccConst"
+        EndBody
+      EndObject
+      !/**
+      !  The minimum and maximum allowed value of Const at
+      !  changes made by an operator.
+      !*/
+      Object MinConst $Intern 13 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MinConst"
+        EndBody
+      EndObject
+      Object MaxConst $Intern 14 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MaxConst"
+        EndBody
+      EndObject
+      !/**
+      !  The operator's authorities to change FVect[]
+      !     0   -- Changes not allowed.
+      !     != 0 -- Changes allowed.
+      !*/
+      Object AccFact $Intern 15 
+        Body SysBody
+          Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 8
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "AccFact"
+        EndBody
+      EndObject
+      !/**
+      !  The minimum and maximum allowed value of the weighting
+      !  factors Fvect[] at changes made by an operator.
+      !*/
+      Object MinFact $Intern 16 
+        Body SysBody
+          Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 8
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MinFact"
+        EndBody
+      EndObject
+      Object MaxFact $Intern 17 
+        Body SysBody
+          Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 8
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MaxFact"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 120
+        Attr parameters[0] = 8
+        Attr parameters[1] = 0
+        Attr parameters[2] = 1
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 1
+        Attr graphindex = 0
+        Attr default_mask[0] = 3
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 1
+        Attr compmethod = 28
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+	Attr executeordermethod = 2
+        Attr objname = "Sum"
+        Attr graphname = "Sum"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    Object Template Sum
+      Body RtBody
+        Attr FVect[0] = 1.0
+        Attr FVect[1] = 1.0
+        Attr FVect[2] = 1.0
+        Attr FVect[3] = 1.0
+        Attr FVect[4] = 1.0
+        Attr FVect[5] = 1.0
+        Attr FVect[6] = 1.0
+        Attr FVect[7] = 1.0
+      EndBody
+    EndObject
+  EndObject
+EndSObject

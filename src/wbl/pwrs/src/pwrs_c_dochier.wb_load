@@ -1,0 +1,57 @@
+!  pwrs_c_dochier.wb_load -- Defines the class DocHier.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+!/**
+!  @Version 1.0
+!  Grouping object used by 'documents'.
+!  
+!  Different types of objects used to make
+!  'documentations' are supposed to be arranged below this
+!  object. Neither $DocHier object nor objects that
+!  includes in the hierarchy will be included in the
+!  target environment.
+!  
+!  The object may not be configured on the top level.
+!  
+!      Hints
+!  
+!  It is suitable, but not necessary, to gather
+!  ListDescriptor objects e.g. below a $DocHier object.
+!  The PROVIEW/R distribution is delivered with
+!  pre-configured ListDescriptor objects (structures) to
+!  perform standard lists. They are found in the Node
+!  Configuration below the hierarchy Layout-Lists and
+!  'Lists' is just by the class $DocHier object.
+!  If a new type of list is to be defined or an existing
+!  list is to be modified this is done by means of
+!  ListDescriptor objects located below an object named
+!  'Lists'. 'Lists' ought to be by the class $DocHier and
+!  be configured in the workbench volume.
+!*/
+SObject pwrs:Class
+  Object $DocHier $ClassDef pwr_eCix_DocHier
+    Body SysBody
+      Attr Flags |= pwr_mClassDef_DevOnly
+      Attr Flags |= pwr_mClassDef_System
+      Attr Flags |= pwr_mClassDef_TopObject
+    EndBody
+    Object SysBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "DocHier"
+      EndBody
+      !/**
+      !  Optional text to describe the use of the object.
+      !*/
+      Object Description $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,183 @@
+!  nmps_c_datasend.wb_load -- Defines the class DataSend.
+!
+!  PROVIEW/R
+!
+!  <Description>.
+!
+SObject NMps:Class
+  Object DataSend $ClassDef 42
+    Body SysBody
+      Attr Editor = pwr_eEditor_PlcEd
+      Attr Method = pwr_eMethod_Connections
+    EndBody
+    !
+    ! DATASEND Runtime Body
+    !
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "DataSend"
+      EndBody
+      Object DataIn $Input 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+          Attr GraphName = "Da"
+        EndBody
+      EndObject
+      Object Trigg $Input 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "trg"
+        EndBody
+      EndObject
+      Object Dummy $Input 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object DataSent $Output 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "sent"
+        EndBody
+      EndObject
+      Object Error $Output 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "err"
+        EndBody
+      EndObject
+      Object Function $Attribute 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      Object TimeoutTime $Attribute 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      Object AlarmText $Attribute 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 5
+        EndBody
+      EndObject
+      Object ReturnStatus $Attribute 9
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 10
+        EndBody
+      EndObject
+      Object ReturnStatusText $Attribute 10
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 10
+        EndBody
+      EndObject
+      Object SendRemTrans $Attribute 11
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      Object RcvRemTrans $Attribute 12
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      Object ToConvdefType $Attribute 13
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      Object ToConvdef $Attribute 14
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      Object ToConvdefFile $Attribute 15
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object FromConvdefType $Attribute 16
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      Object FromConvdef $Attribute 17
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      Object FromConvdefFile $Attribute 18
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object TriggOld $Attribute 19
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object TriggDetected $Attribute 20
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object DataSentDetected $Attribute 21
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object ErrorDetected $Attribute 22
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    !
+    ! DataSend Development Body
+    !
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 11
+        Attr parameters[0] = 3
+        Attr parameters[1] = 14
+        Attr parameters[2] = 2
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 16
+        Attr graphindex = 1
+        Attr default_mask[0] = 1
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 1
+        Attr compmethod = 4
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+	Attr executeordermethod = 2
+        Attr objname = "DataSend"
+        Attr graphname = "DataSend"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    Object DevBody $ObjBodyDef 2
+      Object PlcNode $Buffer 1
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject

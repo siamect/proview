@@ -1,0 +1,193 @@
+!  pwrb_c_limit.wb_load -- Defines the class Limit.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_arithm.c
+!  Limits an analog signal up/downwards and signals if a
+!  limitation has taken place.
+!  
+!  The limits Max and Min may be external signals or
+!  adjustable parameters.
+!  
+!  The input signal may be fixed while one or both limits
+!  are variable.
+!  If one of the limits is not wanted the input signal may
+!  also be connected to that limit.
+!*/
+SObject pwrb:Class
+  Object Limit $ClassDef 140 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Connections
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "limit"
+      EndBody
+      !/**
+      !  Specifies the current value of the high limit.
+      !*/
+      Object Max $Input 1 
+        Body SysBody
+          Attr PgmName = "Max"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MAX"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the current value of the input signal.
+      !*/
+      Object In $Input 2 
+        Body SysBody
+          Attr PgmName = "In"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "IN"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the current value of the low limit.
+      !*/
+      Object Min $Input 3 
+        Body SysBody
+          Attr PgmName = "Min"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MIN"
+        EndBody
+      EndObject
+      !/**
+      !   if In < Min and Min < Max   ActVal = Min
+      !   if In > Max                 ActVal =Max
+      !   else                        ActVal = In
+      !*/
+      Object ActVal $Output 4 
+        Body SysBody
+          Attr PgmName = "ActVal"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "VAL"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies if a limitation upwards has taken place or
+      !  not. FALSE means no limitation upwards at the moment;
+      !  TRUE means that the output signal has been limited
+      !  upwards to the value of Max.
+      !*/
+      Object High $Output 5 
+        Body SysBody
+          Attr PgmName = "High"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "hl"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies if a limitation downwards has taken place or
+      !  not. FALSE means no limitation downwards at the moment;
+      !  TRUE means that the output signal has been limited
+      !  downwards to the value of Min.
+      !*/
+      Object Low $Output 6 
+        Body SysBody
+          Attr PgmName = "Low"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "ll"
+        EndBody
+      EndObject
+      !/**
+      !  The operator's authorities to change Max respectively
+      !  Min. There is no meaning in changing the attributes
+      !  manual, if it is also updated by an external signal.
+      !  0   -- Changes not allowed.
+      !  != 0 -- Changes allowed.
+      !*/
+      Object AccMax $Intern 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "AccMax"
+        EndBody
+      EndObject
+      Object AccMin $Intern 8 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "AccMin"
+        EndBody
+      EndObject
+      !/**
+      !  The minimum and maximum allowed value of Max at changes
+      !  made by an operator.
+      !*/
+      Object MinmaxC $Intern 9 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MinmaxC"
+        EndBody
+      EndObject
+      Object MaxmaxC $Intern 10 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MaxmaxC"
+        EndBody
+      EndObject
+      !/**
+      !  The minimum and maximum allowed value of Min at changes
+      !  made by an operator.
+      !*/
+      Object MinminC $Intern 11 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MinminC"
+        EndBody
+      EndObject
+      Object MaxMinC $Intern 12 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MaxminC"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 122
+        Attr parameters[0] = 3
+        Attr parameters[1] = 0
+        Attr parameters[2] = 3
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 0
+        Attr graphindex = 0
+        Attr default_mask[0] = 7
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 1
+        Attr compmethod = 4
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+	Attr executeordermethod = 2
+        Attr objname = "Limit"
+        Attr graphname = "Limit"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+  EndObject
+EndSObject

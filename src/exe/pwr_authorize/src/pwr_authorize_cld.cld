@@ -1,0 +1,71 @@
+!   pwr_authorize.cld -- <short description>
+!
+!   PROVIEW/R
+!   Copyright (C) 1996 by Comator Process AB.
+!
+!   <Description>.  */
+!
+module pwr_authorize_cld
+
+!  to get help
+define verb help , routine login_cli_help
+
+!  to stop the game
+define verb exit , routine login_cli_exit
+define verb quit , routine login_cli_quit
+
+!  to save
+define verb save , routine login_cli_save
+
+!  to modify                                                        
+define verb modify , routine login_cli_modify
+  qualifier username , nonnegatable , value ( required )
+  qualifier systemgroup , nonnegatable , value ( required )
+  qualifier maskpriv , nonnegatable , value ( required )
+  qualifier password , nonnegatable , value ( required )
+  qualifier allpwr
+  qualifier rtread
+  qualifier rtwrite
+  qualifier devread
+  qualifier devplc
+  qualifier devconfig
+  qualifier devclass
+  disallow not username
+  disallow not systemgroup
+
+!  to add
+define verb add , routine login_cli_add
+  qualifier username , nonnegatable , value ( required )
+  qualifier systemgroup , nonnegatable , value ( required )
+  qualifier maskpriv , nonnegatable , value ( required )
+  qualifier password , nonnegatable , value ( required )
+  qualifier allpwr
+  qualifier rtread
+  qualifier rtwrite
+  qualifier devread
+  qualifier devplc
+  qualifier devconfig
+  qualifier devclass
+  disallow not username
+  disallow not systemgroup
+
+!  to remove
+define verb remove , routine login_cli_remove
+  qualifier username , nonnegatable , value ( required )
+  qualifier systemgroup , nonnegatable , value ( required )
+  disallow not username
+  disallow not systemgroup
+
+!  to show
+define verb show , routine login_cli_show
+  qualifier username , nonnegatable , value ( required )
+  qualifier systemgroup , nonnegatable , value ( required )
+  qualifier all
+  qualifier __password
+  qualifier __passwor
+  disallow username and not systemgroup 
+  disallow systemgroup and not username
+  disallow all and username
+  disallow all and systemgroup
+  disallow not username and not systemgroup and not all
+ 

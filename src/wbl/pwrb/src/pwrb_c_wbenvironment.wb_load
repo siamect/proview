@@ -1,0 +1,48 @@
+!  pwrb_c_wbenvironment.wb_load -- Defines the class WbEnvironment.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  The WbEnviroment configures the workbench environment.
+!  The object resides in the project volume as a top object.
+!  In the path attribute a search path for loadfiles.
+!  The object can have children of type RootVolumeLoad, SharedVolumeLoad
+!  and ClassVolumeLoad that defines which volumes can be loaded into the
+!  workbench environment. 
+!*/
+SObject pwrb:Class
+  Object WbEnvironment $ClassDef 317 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+      Attr Flags |= pwr_mClassDef_TopObject
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "WbEnvironment"
+      EndBody
+      !/**
+      ! @Summary A list of directories where imported loadfiles will reside.
+      ! A list of directories where imported loadfiles will reside.
+      ! Imported loadfiles are configured with ClassVolumeLoad, RootVolumeLoad
+      ! or SharedVolumeLoad objects that has the WbEnvironment object as a
+      ! parent. If the loadfiles is imported from other projects, or from
+      ! other directories then $pwrp_load, the directories where to search for
+      ! loadfils should be configured here.
+      !*/
+      Object Path $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 20
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,31 @@
+!  inc_blkw_txt.uil -- block window
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  This module defines the swedish texts for the block window.
+!
+value
+   title		: exported "Larmblockering";
+
+    blkw_AscizTable	: exported asciz_string_table
+	(
+	"Det finns ingen information om objektet",
+	"Blockeringen kunde ej utföras !",
+	"Länken till meddelandehanteraren är nere",
+	"Du kan inte blockera gemensamma objekt!",
+	"Det finns åtminstone ett monteringsobjekt i hierarkien.\nDessa blockeras ej."
+	);
+
+
+
+
+    AAlarm		: "A-Larm";
+    BAlarm		: "B-Larm";
+    CAlarm		: "C-Larm";
+    DAlarm		: "D-Larm";
+
+    Block		: "Blockera:";
+    List		: "Lista...";
+    NoBlock		: "Ingen Blockering";
+

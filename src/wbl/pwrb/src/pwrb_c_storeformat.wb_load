@@ -1,0 +1,36 @@
+!  pwrb_c_storeformat.wb_load -- Defines the class StoreFormat.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+SObject pwrb:Class
+  Object StoreFormat $ClassDef 229 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "StoreFormat"
+      EndBody
+      Object StoreCommand $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String256"
+        EndBody
+      EndObject
+      Object TableName $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+    EndObject
+    Object Template StoreFormat
+      Body RtBody
+      EndBody
+    EndObject
+  EndObject
+EndSObject

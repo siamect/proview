@@ -1,0 +1,147 @@
+!  pwrb_c_substep.wb_load -- Defines the class SubStep.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_macro_grafcet.h
+!  Grafcet step representing an underlying sequential
+!  chain, a sub-sequential chain.
+!  
+!  From a functional point of view, we can look upon the
+!  object as a sub-sequential chain that has been
+!  substituted by the SubStep object.
+!  
+!  The sub-sequential chain is edited in an underlying
+!  sub-window. The objects in the window get a
+!  WindowSubStep object as parent object.
+!  Such a sub-window,
+!   · starts with a SsBegin object, which becomes active
+!     when the SubStep object becomes active.
+!   · ends with a SsEnd object, which tells when the
+!     SubStep object is finished.
+!  To the right output one or more Order objects can be
+!  connected at the same time as well as one or more Stoxx,
+!  Setxx or Resxx objects. The output can also be left
+!  open or be used as an ordinary binary signal.
+!  
+!  An active status cannot be transferred from a SubStep
+!  object until the SsEnd object in the sub-sequential
+!  chain has signalled ready and the condition following
+!  the SubStep object is satisfied. When so, active status
+!  is transferred from the SubStep object to the next step
+!  in the chain.
+!  
+!  Note! If the visual differences in the SubStep symbol are
+!  small, when there is a subwindow and when there is not,
+!  the consequences are important. A SubStep object
+!  without an underlying sub-window implies that the
+!  execution is caught in the SubStep object.
+!  A condition of structured configuring is the
+!  possibilities to configure in levels. A SubStep can in
+!  its sub-sequential chain contain SubStep objects. Such
+!  a SubStep object can then in its sub-sequential chain
+!  contain further SubStep objects and so on.
+!*/
+SObject pwrb:Class
+  Object SubStep $ClassDef 231 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "substep"
+      EndBody
+      Object Status $Output 1 
+        Body SysBody
+          Attr PgmName = "StatusIn"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_RTVIRTUAL
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "sts1"
+          Attr ConPointNr = 0
+        EndBody
+      EndObject
+      Object Status2 $Output 2 
+        Body SysBody
+          Attr PgmName = "StatusOut"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_RTVIRTUAL
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "sts2"
+          Attr ConPointNr = 2
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the status of the step. FALSE means an
+      !  inactive step, and TRUE means an active step. The value
+      !  may be picked up in another program by means of a GetDp
+      !  object.
+      !  
+      !  Note! In the structure of the object or referenced this
+      !  attribute is named Status[0].
+      !  
+      !  Order[1] specifies the status of the underlying sub-window.
+      !  FALSE means that the execution of the sub-window is not
+      !  finished and TRUE means that it is.
+      !  
+      !  Note! In the structure of the object or referenced this
+      !  attribute is named Status[1].
+      !*/
+      Object Order $Output 3 
+        Body SysBody
+          Attr PgmName = "Status"
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOREMOVE
+          Attr Elements = 2
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "Order"
+          Attr ConPointNr = 1
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 32
+        Attr parameters[0] = 0
+        Attr parameters[1] = 0
+        Attr parameters[2] = 3
+        Attr parameters[3] = 0
+        Attr subwindows = 1
+        Attr subwindow_class[0] = "pwrb:Class-WindowSubstep"
+        Attr graphmethod = 4
+        Attr graphindex = 4
+        Attr default_mask[0] = 0
+        Attr default_mask[1] = 7
+        Attr segname_annotation = 1
+        Attr compmethod = 24
+        Attr compindex = 1
+        Attr tracemethod = 7
+        Attr traceindex = 1
+	Attr executeordermethod = 4
+        Attr objname = "SS"
+        Attr graphname = "SS"
+        Attr debugpar = "Order[0]"
+      EndBody
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,11 @@
+!  tlog_ch_tlogclasses.wb_load -- TLog:Class hierarchy.
+!
+!  PROVIEW/R
+!
+!  <Description>.
+!
+!
+SObject TLog:
+  Object Class $ClassHier
+  EndObject
+EndSObject

@@ -1,0 +1,30 @@
+!  pwrb_c_sharedvolumeload.wb_load -- Defines the class SharedVolumeLoad.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!/**
+!  @Version 1.0
+!  Not yet implemented.
+!*/
+!
+SObject pwrb:Class
+  Object SharedVolumeLoad $ClassDef 206 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "SharedVolumeLoad"
+      EndBody
+      Object Description $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject

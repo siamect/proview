@@ -1,0 +1,39 @@
+!  pwrb_c_doarea.wb_load -- Defines the class DoArea.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!/**
+!  @Version 1.0
+!  @Summary Area object for Do values
+!  Area object for Do values.
+!
+!  The values of Do-signals is stored in the Value attribut. The
+!  index is given by ValueIndex in the Do-objects which is assigned
+!  at io initiation.
+!
+!  The object is created at runtime in the dynamic system volume pwrNode.
+!*/
+SObject pwrb:Class
+  Object DoArea $ClassDef 101 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "DoArea"
+      EndBody
+      Object Value $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Flags |= PWR_MASK_STATE
+          Attr Elements = 1
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject

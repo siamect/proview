@@ -1,0 +1,535 @@
+#  pwr_wb_palette.cnf -- Defines basic layouts.
+#
+#  PROVIEW/R
+#  Copyright (C) 1996 by Comator Process AB.
+#
+#  <Description>.
+#
+#
+#  Navigator
+#
+topobjects NavigatorW1
+{
+  class $PlantHier
+  class $LibHier
+  class $Alias
+  class $MountObject
+}
+topobjects NavigatorW2
+{
+  class $NodeHier
+  class $Node
+  class $Layout
+}
+palette NavigatorPalette
+{
+  menu Plant
+  {
+    class $PlantHier
+    menu Signals
+    {
+      class Di
+      class Do
+      class Dv
+      class Ai
+      class Ao
+      class Av
+      class Co
+      class Po
+    }
+    menu DataStorage
+    {
+      class DsFast
+      class DsHist
+      class DsTrend
+    }
+    menu Supervision
+    {
+      class ASup
+      class DSup
+    }
+    class PlcPgm
+    class Backup
+    class $LibHier
+    class $DocHier
+    class $Mountobject
+    class $Alias
+  }
+  menu Node
+  {
+    class $NodeHier
+    class $Node
+    class $Mountobject
+    class $CreateVolume
+    class $MountVolume
+    menu Servers
+    {
+      class Backup_Conf
+      class DsFastConf
+      class DsHistServer
+      class DsTrendConf
+      class IOHandler
+      class MessageHandler
+      class PlcProcess
+      class PlcThread
+      class WebHandler
+      class IOHandler
+    }
+    menu IO_RTP
+    {
+      class Rack_RTP
+      menu Cards
+      {
+        class Di_7437_37
+        class Do_7437_83
+        class Ai_7436
+        class Ao_7455_20
+        class Ao_7455_30
+      }
+      menu Channels
+      {
+        class ChanDi
+        class ChanDo
+        class ChanAi
+        class ChanAit
+        class ChanAo
+        class ChanCo
+      }
+      menu DIOC
+      {
+        class Line_LAT
+        class RTP_DIOC
+      }
+      class IOHandler
+    }
+    menu IO_SSAB
+    {
+      class Rack_SSAB
+      menu Cards
+      {
+        class Di_DIX2
+        class Do_HVDO32
+        class Ai_HVAI32
+        class Ai_AI32uP
+        class Ao_HVAO4
+        class Co_PI24BO
+        class PID_1uP
+      }
+      menu Channels
+      {
+        class ChanDi
+        class ChanDo
+        class ChanAi
+        class ChanAit
+        class ChanAo
+        class ChanCo
+      }
+      class IOHandler
+    }
+    menu IO_VME
+    {
+      class Rack_VME
+      menu Cards
+      {
+        class Ai_Vmic3113A
+        class Ao_Vmic4800
+        menu IP
+        {
+          class VIPC616
+          class Co_IpQuadrature
+          class IpMux
+          class MuxMod
+        }
+        menu Channels
+        {
+          class ChanDi
+          class ChanDo
+          class ChanAi
+          class ChanAit
+          class ChanAo
+          class ChanCo
+        }
+      }
+    }
+    menu Profibus
+    {
+      menu Masters
+      {
+        class Pb_Profiboard
+      }
+      menu Slaves
+      {
+        class Pb_DP_Slave
+        class Pb_ET200M
+        class Pb_NPBA12
+        class Pb_Euro2500
+      }
+      menu Modules
+      {
+        class Pb_Di
+        class Pb_Do
+        class Pb_Ai
+        class Pb_Ao
+      }
+    }
+    menu Operator
+    {
+      class OpPlace
+      class User
+      class EventPrinter
+      class Form
+      class Graph
+      class XttGraph
+      class OpAppl
+      class OpApplMsg
+      class RttConfig
+      class WebBrowserConfig
+    }
+    class $Appl
+    class PlotGroup
+    class CycleSup
+    class NodeLinkSup
+  }
+  menu AllClasses
+  {
+    classvolume pwrs 
+    classvolume pwrb
+    classvolume NMps NMps
+    classvolume TLog TLog
+    classvolume ssab ssab
+  }
+}
+
+#
+#  ClassNavigator
+#
+topobjects ClassNavigatorW1
+{
+  class $ClassHier
+  class $TypeHier
+}
+
+topobjects ClassNavigatorW2
+{
+  class $System
+}
+
+palette ClassNavigatorPalette
+{
+  menu AllClasses
+  {
+    classvolume pwrs
+    classvolume pwrb
+    classvolume NMps NMps
+    classvolume TLog TLog
+    classvolume ssab ssab
+  }
+}
+
+#
+#  ProjectNavigator
+#
+topobjects ProjectNavigatorW1
+{
+  class RootVolumeConfig
+  class ClassVolumeConfig
+  class SubVolumeConfig
+  class WbEnvironment
+}
+
+topobjects ProjectNavigatorW2
+{
+  class $System
+  class NodeConfig
+  class FriendNodeConfig
+}
+
+palette ProjectNavigatorPalette
+{
+  menu Volume
+  {
+    class ClassVolumeConfig
+    class ClassVolumeLoad
+    class CommonClassDistribute
+    class $PlantHier
+    class RootVolumeConfig
+    class RootVolumeLoad
+    class SubVolumeConfig
+    class SubVolumeLoad
+    class VolumeDistribute
+    class WbEnvironment
+  }
+  menu Node
+  {
+    class ApplDistribute
+    class ClassVolumeLoad
+    class FriendNodeConfig
+    class GraphDistribute
+    class NodeConfig
+    class $NodeHier
+    class RootVolumeLoad
+    class SharedVolumeLoad
+    class SubVolumeLoad
+    class $System
+    class SystemDistribute
+  }
+}
+
+#
+#  PlcEditor
+#
+palette PlcEditorPalette
+{
+  menu Grafcet
+  {
+    class InitStep
+    class Order
+    class OrderAct
+    class Reset_SO
+    class SetCond
+    class SsBegin
+    class SsEnd
+    class Step
+    class SubStep
+    class Trans
+  }
+  menu IO
+  {
+    class ApCollect
+    class ApDistribute
+    class BCDDo
+    class CStoAo
+    class CStoAp
+    class CStoAv
+    class CStoIp
+    class DataCollect
+    class DiBCD
+    class DpCollect
+    class DpDistribute
+    class GetAi
+    class GetAo
+    class GetAp
+    class GetAv
+    class GetData
+    class GetDi
+    class GetDo
+    class GetDp
+    class GetDv
+    class GetIp
+    class GetPi
+    class Gray
+    class PiPos
+    class ResDo
+    class ResDp
+    class ResDv
+    class SetDo
+    class SetDp
+    class SetDv
+    class StoAo
+    class StoAp
+    class StoAv
+    class StoDo
+    class StoDp
+    class StoDv
+    class StoIp
+  }
+  menu Logic
+  {
+    class ASup
+    class And
+    class Count
+    class DSup
+    class Edge
+    class Inv
+    class Or
+    class Pulse
+    class SR_R
+    class SR_S
+    class Timer
+    class Wait
+    class Waith
+    class XOr
+    class CSub
+  }
+  menu Analog
+  {
+    class Adelay
+    class AArithm
+    class CArithm
+    class Comph
+    class Compl
+    class Curve
+    class DArithm
+    class DataArithm
+    class Filter
+    class Limit
+    class Maxmin
+    class PiSpeed
+    class Ramp
+    class Select
+    class ScanTime
+    class Speed
+    class Sum
+    class Table
+    class Timint
+  }
+  menu Control
+  {
+    class Inc3P
+    class Mode
+    class Out2P
+    class PID
+    class PidX
+    class Pos3P
+  }
+  menu Drive
+  {
+    class Drive
+    class MValve
+    class Posit
+    class Valve
+  }
+  menu Backup
+  {
+    class Backup
+  }
+  menu Edit
+  {
+    class BodyText
+    class Document
+    class DocUser1
+    class DocUser2
+    class Frame
+    class Head
+    class Point
+    class ShowPlcAttr
+    class Text
+    class Title
+  }
+  menu Trace
+  {
+    class AAnalyse
+    class DAnalyse
+  }
+  menu NMps NMps
+  {
+    class CellDisp
+    class CellUpdate
+    class CLoop
+    class CurrentData
+    class CurrentIndex
+    class DataCopy
+    class DataCnv
+    class DataRcv
+    class DataRequest
+    class DataReset
+    class DataSelect
+    class DataSend
+    class DispLink
+    class GetDap
+    class GetObjidp
+    class Func
+    class FuncExtend
+    class FuncInput
+    class FuncOutput
+    class NMpsCell
+    class NMpsMirrorCell
+    class NMpsOutCell
+    class NMpsStoreCell
+    class NMpsTrp
+    class NMpsTrpFF
+    class NMpsTrpRR
+    class RemTransRcv
+    class RemTransSend
+    class RunningTime
+  }
+  menu TLog TLog
+  {
+    class AtLog
+    class CAtLog
+    class CDtLog
+    class ChgAtLog
+    class ChgOtLog
+    class COtLog
+    class DtLog
+    class ExecPlcOn
+    class ExecPlcOff
+    class TLogExecAllOn
+    class TLogExecAllOff
+    class TLogOpen
+    class TLogModify
+  }
+  menu String
+  {
+    class AtoStr
+    class CStoSv
+    class CStoSp
+    class DtoStr
+    class GetSp
+    class GetSv
+    class ItoStr
+    class StoSp
+    class StoSv
+    class Strcat
+    class SubStr
+  }
+}
+palette PlcEditorConPalette
+{
+  menu ConPlc
+  {
+    class ConDigital
+    class ConAnalog
+    class ConFeedbackDigital
+    class ConFeedbackAnalog
+    class ConExecuteOrder
+  }
+  menu ConGrafcet
+  {
+    class ConGrafcet
+    class StepConv
+    class StepDiv
+    class TransConv
+    class TransDiv
+  }
+  menu ConDocumentation
+  {
+    menu Solid
+    {
+      class ConThinNoArr
+      class ConThinOneArr
+      class ConThinTwoArr
+      class ConMeNoArr
+      class ConMeOneArr
+      class ConMeTwoArr
+    }
+    menu Dashed
+    {
+      class ConDaThinNoArr
+      class ConDaThinOneArr
+      class ConDaThinTwoArr
+      class ConDaMeNoArr
+      class ConDaMeOneArr
+      class ConDaMeTwoArr
+    }
+    menu SharpCorners
+    {
+      class ConReMeNoArr
+      class ConReMeOneArr
+      class ConReMeTwoArr
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

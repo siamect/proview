@@ -1,0 +1,227 @@
+!  ssab_c_RemNode.wb_load -- Defines the class RemNode.
+!
+!  PROVIEW/R
+!
+!  <Description>.
+!
+SObject SSAB:Class
+  !
+  ! RemNode	-	Remote NODE descripton
+  !
+  Object RemNode $ClassDef 4
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    !
+    ! REMNODE Runtime Body
+    !
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "RemNode"
+      EndBody
+      !
+      ! Parameter Description
+      !
+      Object Description $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !
+      ! Parameter NodeName
+      !
+      Object NodeName $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      !
+      ! Parameter Address	Node-adress depending on transport-type
+      !
+      Object Address $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+          Attr Flags   |= PWR_MASK_ARRAY
+          Attr Elements = 4
+        EndBody
+      EndObject
+      !
+      ! Parameter TransportType (PAMS,VNET,ALCM,SIEMENS,LOCAL...)
+      !
+      Object TransportType $Attribute 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !
+      ! Parameter NumberOfRestarts (Number of restarts of transport the server
+      !                             is allowed to do before giving up)
+      !
+      Object NumberOfRestarts $Attribute 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !
+      ! Parameter CycleTime
+      !
+      Object CycleTime $Attribute 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !
+      ! Parameter ErrTime
+      !
+      Object ErrTime $Attribute 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !
+      ! Parameter IOCycleTime
+      !
+      Object IOCycleTime $Attribute 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !
+      ! Parameter IOStallTime
+      !
+      Object IOStallTime $Attribute 9
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !
+      ! Parameter IOStallAction
+      !
+      Object IOStallAction $Attribute 10
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !
+      ! Parameter IODataArea	Buffer-Object for storing I/O-buffer
+      !
+      Object IODataArea $Attribute 11
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      !
+      ! Parameter NumberOfTrans
+      !
+      Object NumberOfTrans $Attribute 12
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !
+      ! Parameter NumberOfDI
+      !
+      Object NumberOfDI $Attribute 13
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !
+      ! Parameter NumberOfDO
+      !
+      Object NumberOfDO $Attribute 14
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !
+      ! Parameter NumberOfAI
+      !
+      Object NumberOfAI $Attribute 15
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !
+      ! Parameter NumberOfAO
+      !
+      Object NumberOfAO $Attribute 16
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !
+      ! Parameter NumberOfDV
+      !
+      Object NumberOfDV $Attribute 17
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !
+      ! Parameter NumberOfCo
+      !
+      Object NumberOfCo $Attribute 18
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !
+      ! Parameter PollDiff
+      !
+      Object PollDiff $Attribute 19
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !
+      ! Parameter ErrTransCount
+      !
+      Object ErrTransCount $Attribute 20
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !
+      ! Parameter Poll
+      !
+      Object Poll $Attribute 21
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !
+      ! Parameter IOStallFlag
+      !
+      Object IOStallFlag $Attribute 22
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+    EndObject
+    !
+    ! Template för RemNode
+    !
+    Object Template RemNode
+      Body RtBody
+        Attr CycleTime = 0.1
+        Attr IOCycleTime = 1.0
+        Attr IOStallTime = 2.0
+      EndBody
+    EndObject
+  !
+  ! End REMNODE	
+  !
+  EndObject ! $ClassDef
+EndSObject  ! SObject

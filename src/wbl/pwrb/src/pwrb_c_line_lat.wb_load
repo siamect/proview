@@ -1,0 +1,75 @@
+!  pwrb_c_line_lat.wb_load -- Defines the class Line_LAT.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996,99 by Mandator AB.
+!
+!  <Description>.
+!
+SObject pwrb:Class
+  Object Line_LAT $ClassDef 142 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+      Attr Flags |= pwr_mClassDef_IO
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "Line_LAT"
+      EndBody
+      Object Description $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      Object LatDevName $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String16"
+        EndBody
+      EndObject
+      Object ServerName $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object ServerPortName $Attribute 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object DisplayIsScope $Attribute 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object EscapeRec $Attribute 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object Echo $Attribute 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object PassAllBits $Attribute 8 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object EightBit $Attribute 9 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+    EndObject
+    Object Template Line_LAT
+      Body RtBody
+        Attr DisplayIsScope = 0
+        Attr EscapeRec = 0
+        Attr Echo = 0
+        Attr PassAllBits = 1
+        Attr EightBit = 1
+      EndBody
+    EndObject
+  EndObject
+EndSObject

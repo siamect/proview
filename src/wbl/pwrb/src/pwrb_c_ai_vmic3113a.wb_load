@@ -1,0 +1,129 @@
+!  pwrb_c_ai_vmic3113a.wb_load -- Defines the class Ai_vmic3113a.
+!
+!  PROVIEW/R
+!  Copyright (C) 1997 by Comator Process AB.
+!
+!  VMIC: Ai card VMIVME-3113A
+!
+!
+SObject pwrb:Class
+  Object Ai_Vmic3113A $ClassDef 262 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_RtAndDevBodies
+      Attr Flags |= pwr_mClassDef_IO
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "Ai_Vmic3113A"
+      EndBody
+      Object IOSysType $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+          Attr Flags |= PWR_MASK_CONST
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object Description $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      Object DevName $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object DevNumber $Attribute 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object ErrorCount $Attribute 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object ErrorSoftLimit $Attribute 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object ErrorHardLimit $Attribute 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object DevPolyType $Attribute 8 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+        EndBody
+      EndObject
+      Object DevPolyCoef0 $Attribute 9 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      Object DevPolyCoef1 $Attribute 10 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      Object MaxNoOfChannels $Attribute 11 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object CardAddress $Attribute 12 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object TwoComplement $Attribute 13
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object Polling $Attribute 14
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object Process $Attribute 15
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object ThreadObject $Intern 16
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object ChannelAllocation $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+    EndObject
+    Object Template Ai_Vmic3113A
+      Body RtBody
+        Attr IOSysType = 5
+        Attr Description = "AI Card VMIVME-3133A from VMIC"
+        Attr MaxNoOfChannels = 64
+        Attr DevPolyType = 1
+        Attr DevPolyCoef1 = 4.8840049e-3
+        Attr TwoComplement = 1        
+        Attr Process = 2
+      EndBody
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,17 @@
+!  inc_rate_txt.uil -- runtime attribute editor
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  This module defines swedish texts for the attribute  window.
+!
+value
+    set			: "Tilldela:";	
+    errorTitle		: exported "Attribut Editor: Felmeddelande";
+    notValidValueFor	: exported "är ett ogiltigt värde för";
+    notValidAttribute   : exported "är ett ogiltigt attribut";
+    notSetAttrAlloc	: exported "Kan ej tilldela attributet!\nAllokeringsfel\nStorlek:";
+    notSetAttrGdh	: exported "Kan ej tilldela attributet!\nGdh fel:\nStatus:";
+    title		: exported "Attribut Editor";
+
+

@@ -1,0 +1,234 @@
+!  pwrb_c_adelay.wb_load -- Defines the class Adelay.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_arithm.c
+!  Time delay of an analog signal.
+!  
+!  The time delay Tim can vary within the interval:
+!       { 0 - 100 x MaxCount x ScanTime }
+!  The delay is implemented in a 100-step shift register.
+!  The time resolution per step is MaxCount ScanTime and
+!  maximum time delay is 100 MaxCount ScanTime.
+!  
+!  Several Adelay objects can be connected in series when
+!  a higher resolution is needed.
+!  If the time resolution per step is worse than the
+!  program cycle time (i.e. MaxCount >1) a mean value is
+!  formed and stored in shift register 1.
+!  
+!  The very first sample is stored in every shift
+!  register. At sample number 2 a mean value is calculated
+!  from the value in shift register ( position) 1 and the
+!  input signal, thereafter the mean value is restored in
+!  shift register 1. This is repeated up to sample
+!  MaxCount - 1. At sample number MaxCount a shift of the
+!  register contents takes place and the input signal is
+!  stored direct into the shift register 1. During the
+!  time up to the next shift the mean value of the input
+!  signal is stored in shift register position 1.
+!  The output signal is fetched from the register
+!  representing the actual delay.
+!*/
+SObject pwrb:Class
+  Object Adelay $ClassDef 3 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Connections
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "adelay"
+      EndBody
+      !/**
+      !  Value of the input signal.
+      !*/
+      Object In $Input 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "IN"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  Actual time delay ( in seconds ) in the interval 
+      !  { 0, 100 * MaxCount * ScanTime }.
+      !*/
+      Object Tim $Input 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "TIM"
+        EndBody
+      EndObject
+      !/**
+      !  Delayed signal according to Tim.
+      !*/
+      Object ActVal $Output 3 
+        Body SysBody
+          Attr PgmName = "ActVal"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "VAL"
+        EndBody
+      EndObject
+      !/**
+      !  Program cycle period in seconds.
+      !*/
+      Object ScanTime $Intern 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "ScanTime"
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_PRIVATE
+        EndBody
+      EndObject
+      !/**
+      !  A cyclic register.
+      !*/
+      Object TimVect $Intern 5 
+        Body SysBody
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Elements = 100
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "TimVect"
+        EndBody
+      EndObject
+      !/**
+      !  Storage index, which points to the next store location.
+      !*/
+      Object StoInd $Intern 6 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "StoInd"
+        EndBody
+      EndObject
+      !/**
+      !  Number of cycles per shift register step; i.e. register
+      !  shift is done at every MaxCount:e program cycle
+      !  execution.
+      !*/
+      Object MaxCount $Intern 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "MaxCount"
+        EndBody
+      EndObject
+      !/**
+      !  Counter; used at the initial phase.
+      !*/
+      Object StoredNumbers $Intern 8 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "StoredNumbers"
+        EndBody
+      EndObject
+      !/**
+      !  Loop counter for shift.
+      !*/
+      Object Count $Intern 9 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Count"
+        EndBody
+      EndObject
+      !/**
+      !  The operator's authorities regarding to Tim.
+      !     0   -- Changes not allowed.
+      !     !=0 -- Changes allowed.
+      !*/
+      Object AccTim $Intern 10 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "AccTim"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary The minimum allowed value of Tim at changes made by an operator.
+      !  The minimum and maximum allowed value of Tim at changes
+      !  made by an operator.
+      !  
+      !  Example
+      !  
+      !  1  With MaxCount = 1 and ScanTime = 20 milliseconds the
+      !     maximum time delay is 100 * 1 * 1 / 50 = 2 seconds.
+      !     If the delay Tim = 1, ActValt will be = In     ,
+      !     t-50, i.e. the input signal is delayed by 50 execution
+      !     cycles.
+      !  2  If MaxCount = 1 and ScanTime = 1 second represent
+      !     each register the delay of one second. Tim specifies
+      !    from which register to get ActVal.
+      !*/
+      Object MinTim $Intern 11 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MinTim"
+        EndBody
+      EndObject
+      !/**
+      !  The maximum allowed value of Tim at changes made by an operator.
+      !  
+      Object MaxTim $Intern 12 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MaxTim"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 131
+        Attr parameters[0] = 2
+        Attr parameters[1] = 0
+        Attr parameters[2] = 1
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 0
+        Attr graphindex = 0
+        Attr default_mask[0] = 1
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 1
+        Attr compmethod = 4
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+	Attr executeordermethod = 2
+        Attr objname = "Adelay"
+        Attr graphname = "Adelay"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    Object Template Adelay
+      Body RtBody
+        Attr MaxCount = 1
+      EndBody
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,11 @@
+!  ssab_l_base.wb_load -- Defines basic layouts.
+!
+!  PROVIEW/R
+!
+!  <Description>.
+!
+!
+SObject wb:layout-Configurator-w1-AllClasses
+  Object SSAB $GroupRef
+  EndObject
+EndSObject

@@ -1,0 +1,18 @@
+!  pwrs_td_string256.wb_load -- Defines the type String256
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+SObject pwrs:Type
+   Object $String256 $TypeDef 4
+    Body SysBody
+      Attr Type = pwr_eType_String
+      Attr Size = 256
+      Attr TypeRef = "pwrs:Type-$String"
+      Attr Elements = 256
+    EndBody
+  EndObject
+EndSObject

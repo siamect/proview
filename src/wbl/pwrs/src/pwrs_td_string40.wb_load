@@ -1,0 +1,18 @@
+!  pwrs_td_string40.wb_load -- Defines the type String40
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+SObject pwrs:Type
+  Object $String40 $TypeDef 6
+    Body SysBody
+      Attr Type = pwr_eType_String
+      Attr Size = 40
+      Attr TypeRef = "pwrs:Type-$String"
+      Attr Elements = 40
+    EndBody
+  EndObject
+EndSObject

@@ -1,0 +1,104 @@
+!  nmps_c_remtranssend.wb_load -- Defines the class RemTransSend.
+!
+!  PROVIEW/R
+!
+!  <Description>.
+!
+SObject NMps:Class
+  Object RemTransSend $ClassDef 27
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_RtConnectionsAndDevBodies
+      Attr PopEditor = 2
+    EndBody
+    !
+    ! REMTRANSSEND Runtime Body
+    !
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "RemTransSend"
+      EndBody
+      Object RemTrans $Input 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOREMOVE
+          Attr GraphName = "Trs"
+        EndBody
+      EndObject
+      Object Send $Input 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "snd"
+          Attr Flags |= PWR_MASK_NOINVERT
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOREMOVE
+        EndBody
+      EndObject
+      Object Occupied $Output 3
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "occ"
+        EndBody
+      EndObject
+      Object Buffer $Output 4
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "buf"
+        EndBody
+      EndObject
+      Object Error $Output 5
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "err"
+        EndBody
+      EndObject
+    EndObject
+    !
+    ! REMTRANSSEND Development Body
+    !
+    Object DevBody $ObjBodyDef 2
+      Object PlcNode $Buffer 1
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 11
+        Attr parameters[0] = 2
+        Attr parameters[1] = 0
+        Attr parameters[2] = 3
+        Attr parameters[3] = 0
+        Attr subwindow_class[0] = "pwrb:Class-WindowPlc"
+        Attr subwindows = 1
+        Attr graphmethod = 16
+        Attr graphindex = 0
+        Attr default_mask[0] = 3
+        Attr default_mask[1] = 5
+        Attr segname_annotation = 1
+        Attr devbody_annotation = 0
+        Attr compmethod = 50
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+	Attr executeordermethod = 2
+        Attr objname = "RemSend"
+        Attr graphname = "RemSend"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,129 @@
+!  pwrb_c_getip.wb_load -- Defines the class GetIp.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  GET status of any Integer Parameter.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_macro_io.h
+!  Get Integer parameter.
+!  
+!  Fetches the value of a 32-, 16- or 8-bits integer
+!  parameter in arbitrary object.
+!  
+!  The complete name of the parameter has to be supplied.
+!  The GetIp object
+!  · is a pure address reference,
+!  · contains no relevant information (=data) in rtdb,
+!  · is without executable code.
+!*/
+SObject pwrb:Class
+  Object GetIp $ClassDef 128 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_RtAndDevBodies
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "getip"
+      EndBody
+      !/**
+      !  Used by the PLC Editor.
+      !*/
+      Object ActVal $Output 1 
+        Body SysBody
+          Attr PgmName = "ActVal"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "VAL"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      !/**
+      !  Used by the PLC Editor. Specifies the name of the
+      !  actual object.
+      !*/
+      Object IpObject $Intern 1 
+        Body SysBody
+          Attr PgmName = "IpObject"
+          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr GraphName = "VAL"
+          Attr NiNaAnnot = 1
+          Attr NiNaSegments = 1
+        EndBody
+      EndObject
+      !/**
+      !  Used by the PLC Editor. Specifies the name of the
+      !  parameter.
+      !  
+      !  Note! The editor is case-sensitive on this attribute; i.e.
+      !  if the attribute is named ActualValue it has to be
+      !  written ActualValue and not ACTUALVALUE, for example.
+      !*/
+      Object Parameter $Intern 2 
+        Body SysBody
+          Attr PgmName = "Parameter"
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr GraphName = "par"
+          Attr NiNaAnnot = 2
+          Attr ConPointNr = 0
+        EndBody
+      EndObject
+      !/**
+      !  Specifies how many segments of the actual object name
+      !  that is to be displayed in the symbol of the GetDp
+      !  object. The segments are counted from behind.
+      !  
+      !  0 and 1 both result in displaying the last segment of
+      !  the actual object name.
+      !*/
+      Object IpObjectSegments $Intern 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      Object PlcNode $Buffer 4 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 252
+        Attr parameters[0] = 0
+        Attr parameters[1] = 0
+        Attr parameters[2] = 1
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 15
+        Attr graphindex = 0
+        Attr default_mask[0] = 0
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 0
+        Attr devbody_annotation = 1
+        Attr compmethod = 36
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+        Attr connectmethod = 7
+        Attr executeordermethod = 2
+        Attr objname = "GetIp"
+        Attr graphname = "Ip"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    Object Template GetIp
+      Body DevBody
+        Attr IpObjectSegments = 1
+      EndBody
+    EndObject
+  EndObject
+EndSObject

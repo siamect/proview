@@ -1,0 +1,168 @@
+!  pwrb_c_backup.wb_load -- Defines the class Backup.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_macro_logic.h
+!  Points out a data segment in rtdb where the items will
+!  be backed up on a file.
+!  
+!  If the segment pointed out by the Backup object was
+!  created in the development environment the backup may
+!  concern either the whole object or single attributes in
+!  the object pointed out. In the development environment
+!  the Backup object can be configured either by the
+!  Configuration Editor or the PLC Editor.
+!  
+!  Backup objects created by the Configuration Editor is
+!  located below $PlantHier objects. The Backup object and
+!  the object referred to have to reside on the same
+!  target node, else no backup will be done. DataName
+!  specifies what to backup.
+!  The input of a backup object configured by the PLC
+!  Editor, is connected to the output of the object that
+!  will be backed up. It is assumed that this output is
+!  supplied with the output-flag. ObjectBackup specifies
+!  if the whole object or only the connected output
+!  attribute is to be backed up. DataName is filled in at
+!  the initialisation of the PLC job.
+!  
+!  Backup of objects configured and created in run time
+!  always concerns only the whole object, not a single
+!  attribute. The corresponding backup object is also
+!  configured and created in run time.
+!  
+!      Hints
+!  
+!  Note! Whole signal objects, see table 2-4 on p. 2-4, should
+!  not be backed up, as this might cause problems after
+!  booting.
+!  
+!  Every type of signal object has a pointer *ActualValue
+!  and it is not likely that this will be the  same after
+!  booting as before. If backup of a single attribute in a
+!  signal object is required, e.g. ActualValue in an Av
+!  object, backup that attribute and not the whole object.
+!  When the run-time environment of a node is created the
+!  attributes of the instances get default values.
+!  Instances in the backup file which,
+!  
+!  - are to be found in node's rtdb will be updated
+!  according to the back-up
+!  - are missed in rtdb, because they are deleted, or
+!  have got a new name e.g., will be skipped
+!  
+!  One cannot presuppose at change of PROVIEW distribution
+!  that the back-up file will works.
+!  
+!      See Also
+!  Backup_Conf
+!*/
+SObject pwrb:Class
+  Object Backup $ClassDef 22 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "Backup"
+      EndBody
+      Object In $Input 1 
+        Body SysBody
+          Attr PgmName = "In"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_RTVIRTUAL
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "in"
+        EndBody
+      EndObject
+      !/**
+      !  Used by Backup objects configured in the PLC Editor.
+      !  Specifies if the whole object, connected to the Backup
+      !  object, or just the connected output should be backed
+      !  up. FALSE means that only the connected output
+      !  (=parameter) should be backed up. TRUE means that the
+      !  whole object should be backed up.
+      !*/
+      Object ObjectBackup $Intern 2 
+        Body SysBody
+          Attr Flags |= PWR_MASK_RTVIRTUAL
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the name of what to backup. Max. 79
+      !  characters.
+      !  Example:        
+      !    VKV-ProdEnergi  ( the whole object is concerned)
+      !    VKV-TEMP1.ActualValue  (only ActualValue is concerned)
+      !*/
+      Object DataName $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies whether the backup cycle should be fast or
+      !  slow. FALSE means slow and TRUE means fast
+      !  backup-cycle. The meaning of fast and slow will be
+      !  determined by the Backup_Conf object.
+      !*/
+      Object Fast $Attribute 4 
+	Body SysBody
+	  Attr TypeRef = "pwrs:Type-$Boolean"
+	EndBody
+      EndObject
+      !/**
+      !  Status code on OpenVMS-format. Specifies if an error
+      !  occurred in connection with the backup of the object.
+      !  As long as Status = 0 no backup has been done.
+      !*/
+      Object Status $Attribute 5 
+	Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr TypeRef = "pwrs:Type-$UInt32"
+	EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 119
+        Attr parameters[0] = 1
+        Attr parameters[1] = 0
+        Attr parameters[2] = 0
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 7
+        Attr graphindex = 1
+        Attr default_mask[0] = 1
+        Attr default_mask[1] = 0
+        Attr segname_annotation = 1
+        Attr compmethod = 37
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+        Attr connectmethod = 0
+        Attr objname = "Backup"
+        Attr graphname = "Backup"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    Object Template Backup
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,43 @@
+!  ssab_c_RemAi.wb_load -- Defines the class RemAi.
+!
+!  PROVIEW/R
+!
+!  <Description>.
+!
+SObject SSAB:Class
+  !
+  ! RemAi
+  !
+  Object RemAi $ClassDef 10
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    !
+    ! RemAi Runtime Body
+    !
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "RemAi"
+      EndBody
+      !
+      ! Parameter Description
+      !
+      Object Description $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+    EndObject ! $ObjBodyDef
+    !
+    ! Template för RemAi
+    !
+    Object Template RemAi
+      Body RtBody
+      EndBody
+    EndObject
+  !
+  ! End RemAi
+  !
+  EndObject
+EndSObject

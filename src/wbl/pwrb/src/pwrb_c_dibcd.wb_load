@@ -1,0 +1,281 @@
+!  pwrb_c_dibcd.wb_load -- Defines the class DiBCD.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  Convert from BCD.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_io.c
+!  Digital input Binary Coded Decimal.
+!  
+!  Represents four binary coded decimal (BCD) digits (= 16
+!  digital signals) on a decimal floating point number.
+!  
+!  The name of the inputs indicating which dignity every
+!  single input represents.
+!  The inputs could be connected to thumb wheels etc.
+!  
+!  BCD0 - BCD3 represents integers in the interval {0,1,...,9}
+!  BCD4 - BCD7 represents integers in the interval {10,20,...,90}
+!  BCD8 - BCDB represents integers in the interval {100,200,...,900}
+!  
+!         Example
+!  1  BCD1 = BCD4 = BCD7 = TRUE and the rest FALSE.
+!  
+!     VAL gets the value BCD1 * 2 + BCD4 * 10 + BCD7 * 80 = 92
+!     and err becomes FALSE, i.e. zero
+!  2  BCD1 and BCD3 set ( 2 + 8 ). Such a combination is
+!     impossible !
+!  
+!     VAL = last valid value and err is TRUE, i.e. one
+!  
+!         Hints
+!  More DiBCD objects can be connected in parallel to
+!  additional BCD-input signals.
+!  
+!         See Also
+!  BCDDo, which implements the reverse function.
+!*/
+SObject pwrb:Class
+  Object DiBCD $ClassDef 87 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Connections
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "dibcd"
+      EndBody
+      !/**
+      !  BCD0 - BCD3 defines the ones digit.
+      !*/
+      Object BCD0 $Input 1 
+        Body SysBody
+          Attr PgmName = "BCD0"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "1"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object BCD1 $Input 2 
+        Body SysBody
+          Attr PgmName = "BCD1"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "2"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object BCD2 $Input 3 
+        Body SysBody
+          Attr PgmName = "BCD2"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "4"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object BCD3 $Input 4 
+        Body SysBody
+          Attr PgmName = "BCD3"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "8"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  BCD4 - BCD7 defines the tens digit.
+      !*/
+      Object BCD4 $Input 5 
+        Body SysBody
+          Attr PgmName = "BCD4"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "10"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object BCD5 $Input 6 
+        Body SysBody
+          Attr PgmName = "BCD5"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "20"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object BCD6 $Input 7 
+        Body SysBody
+          Attr PgmName = "BCD6"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "40"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object BCD7 $Input 8 
+        Body SysBody
+          Attr PgmName = "BCD7"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "80"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  BCD8 - BCDB defines the hundreds digit.
+      !*/
+      Object BCD8 $Input 9 
+        Body SysBody
+          Attr PgmName = "BCD8"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "100"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object BCD9 $Input 10 
+        Body SysBody
+          Attr PgmName = "BCD9"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "200"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object BCDA $Input 11 
+        Body SysBody
+          Attr PgmName = "BCDA"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "400"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object BCDB $Input 12 
+        Body SysBody
+          Attr PgmName = "BCDB"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "800"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  BCDC - BCDF defines the thousands digit.
+      !*/
+      Object BCDC $Input 13 
+        Body SysBody
+          Attr PgmName = "BCDC"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "1000"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object BCDD $Input 14 
+        Body SysBody
+          Attr PgmName = "BCDD"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "2000"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object BCDE $Input 15 
+        Body SysBody
+          Attr PgmName = "BCDE"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "4000"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object BCDF $Input 16 
+        Body SysBody
+          Attr PgmName = "BCDF"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "8000"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  Last valid value, if Error is FALSE.
+      !*/
+      Object ActVal $Output 17 
+        Body SysBody
+          Attr PgmName = "ActVal"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "VAL"
+        EndBody
+      EndObject
+      !/**
+      !  Error flag. FALSE means that the ActVal is reflecting
+      !  the inputs; TRUE means that some error has occurred in
+      !  the last conversion.
+      !*/
+      Object Error $Output 18 
+        Body SysBody
+          Attr PgmName = "Error"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "err"
+        EndBody
+      EndObject
+      !/**
+      !  TRUE means that all inputs shall be inverted. If, for
+      !  example, only the first 4 bits are used in an
+      !  application, the remaining 12 bits have to be set TRUE
+      !  in the development environment, or else an error is
+      !  introduced.
+      !*/
+      Object Inv $Intern 19 
+        Body SysBody
+          Attr PgmName = "Inv"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "inv"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 80
+        Attr parameters[0] = 16
+        Attr parameters[1] = 0
+        Attr parameters[2] = 2
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 0
+        Attr graphindex = 0
+        Attr default_mask[0] = 65535
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 1
+        Attr compmethod = 4
+        Attr compindex = 0
+	Attr executeordermethod = 2
+        Attr objname = "DiBCD"
+        Attr graphname = "DiBCD"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,113 @@
+!  pwrb_c_getdata.wb_load -- Defines the class GetData.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!/**
+!  @Version 1.0
+!  @Summary Get a data object. 
+!  Fetches a reference to a data object.
+!  The reference is transferred to data inputs of for example
+!  DataArithm-objects by connecting the output of the GetData
+!  in the plc editor.
+!
+!  Se also
+!  @classlink DataArithm pwrb_dataarithm.html
+!*/
+!
+SObject pwrb:Class
+  Object GetData $ClassDef 275
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_DevBodyOnly
+    EndBody
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "GetData"
+      EndBody
+      !/**
+      ! @Summary Data reference output
+      ! Data reference output
+      !*/
+      Object Out $Output 1
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "Out"
+        EndBody
+      EndObject
+      !/**
+      ! Objid of the referenced data object
+      !*/
+      Object DataObjid $Intern 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2
+      !/**
+      ! Referenced data object
+      !*/
+      Object DataObject $Intern 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr NiNaAnnot = 1
+          Attr NiNaSegments = 1
+        EndBody
+      EndObject
+      !/**
+      ! Number of name segments displayed in the symbol
+      !*/
+      Object DataObjectSegments $Intern 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      Object PlcNode $Buffer 3
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 225
+        Attr parameters[0] = 0
+        Attr parameters[1] = 0
+        Attr parameters[2] = 1
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 7
+        Attr graphindex = 0
+        Attr default_mask[0] = 0
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 0
+        Attr devbody_annotation = 1
+        Attr compmethod = 43
+        Attr compindex = 1
+        Attr connectmethod = 13
+        Attr tracemethod = 0
+        Attr traceindex = 1
+        Attr objname = "Data"
+        Attr graphname = "Data"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    !
+    ! Template object 
+    !
+    Object Template GetData
+      Body DevBody
+        Attr DataObjectSegments  = 1
+      EndBody
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,31 @@
+!  pwrb_c_dbdistribute.wb_load -- Defines the class DbDistribute.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!/**
+!  Obsolete from V3.3.
+!*/
+!
+SObject pwrb:Class
+  Object DbDistribute $ClassDef 84 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_RtAndDevBodies
+    EndBody
+    Object DevBody $ObjBodyDef 2 
+      Object TargetNode $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object TargetProject $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject

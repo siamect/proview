@@ -1,0 +1,35 @@
+!  pwrb_c_condametwoarr.wb_load -- Defines the class ConDaMeTwoArr.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+SObject pwrb:Class
+  Object ConDaMeTwoArr $ClassDef 45 
+    Body SysBody
+      Attr Flags |= pwr_mClassDef_DevOnly
+    EndBody
+    Object DevBody $ObjBodyDef 2 
+      Object PlcConnection $Buffer 1 
+        Body SysBody
+	  Attr PgmName = "PlcCon"
+          Attr Class = pwr_eClass_PlcConnection
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcCon $GraphPlcConnection
+      Body SysBody
+        Attr con_type = 11
+        Attr arrows = 2
+        Attr linewidth = 0.005
+        Attr dashes = 0.01
+        Attr fillpattern = 0
+        Attr curvature = 0
+        Attr corners = .01
+      EndBody
+    EndObject
+  EndObject
+EndSObject

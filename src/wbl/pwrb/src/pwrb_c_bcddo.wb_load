@@ -1,0 +1,295 @@
+!  pwrb_c_bcddo.wb_load -- Defines the class BCDDo.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  Convert to BCD.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_io.c
+!  Binary Coded Decimal Digital output.
+!  
+!  Represents a decimal floating point number on 4 binary
+!  coded decimal (BCD) digits (= 16 digital signals).
+!  Overflow is taken into account.
+!  
+!  The input signals are truncated to the next lower
+!  integer.
+!  A negative input signal sets all output signals equal
+!  to 0.
+!  
+!  Several BCDDo objects can be connected in series to
+!  manage numbers >= 10000.
+!  The name of the outputs indicating which dignity every
+!  single output represents.
+!  
+!  Used for example to govern a character display.
+!  
+!      Example
+!  
+!  Suppose the input signal has the value 235 016.7
+!  The BCD-value becomes 5016 because
+!        BCD1 and BCD2 are both set => 6
+!        BCD4 is set                => 10
+!        BCDC and BCDE are both set => 5000
+!  
+!  Rest is equal to 23. It is possible to connect the
+!  output Rest to the input In of a second BCDDo object.
+!  In that case also the the decimal digits are
+!  representing 10 000 and 100 000 binary coded decimal.
+!  
+!      See Also
+!  
+!  DiBCD, which implements the reverse function; see p.
+!*/
+SObject pwrb:Class
+  Object BCDDo $ClassDef 24 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Connections
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "bcddo"
+      EndBody
+      !/**
+      !  Positive analog value that should be binary coded
+      !  decimals. When the input is connected the outer signal
+      !  is regarded, otherwise the attribute In.
+      !*/
+      Object In $Input 1 
+        Body SysBody
+          Attr PgmName = "In"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "IN"
+        EndBody
+      EndObject
+      !/**
+      !  BCD0 - BCD3 define the units digit. The following table
+      !  shows which values the output signals represent as
+      !  FALSE respectively TRUE:
+      !  
+      !           BCD0   BCD1  BCD2   BCD3
+      !  
+      !  FALSE    0      0     0      0
+      !  TRUE     1      2     4      8
+      !*/
+      Object BCD0 $Output 2 
+        Body SysBody
+          Attr PgmName = "BCD0"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "1"
+        EndBody
+      EndObject
+      Object BCD1 $Output 3 
+        Body SysBody
+          Attr PgmName = "BCD1"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "2"
+        EndBody
+      EndObject
+      Object BCD2 $Output 4 
+        Body SysBody
+          Attr PgmName = "BCD2"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "4"
+        EndBody
+      EndObject
+      Object BCD3 $Output 5 
+        Body SysBody
+          Attr PgmName = "BCD3"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "8"
+        EndBody
+      EndObject
+      !/**
+      !  BCD4 - BCD7 define the tens digit. The following table
+      !  shows which values the output signals represent:
+      !  
+      !           BCD4   BCD5  BCD6   BCD7
+      !  
+      !  FALSE    0      0     0      0
+      !  TRUE     10     20    40     80
+      !*/
+      Object BCD4 $Output 6 
+        Body SysBody
+          Attr PgmName = "BCD4"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "10"
+        EndBody
+      EndObject
+      Object BCD5 $Output 7 
+        Body SysBody
+          Attr PgmName = "BCD5"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "20"
+        EndBody
+      EndObject
+      Object BCD6 $Output 8 
+        Body SysBody
+          Attr PgmName = "BCD6"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "40"
+        EndBody
+      EndObject
+      Object BCD7 $Output 9 
+        Body SysBody
+          Attr PgmName = "BCD7"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "80"
+        EndBody
+      EndObject
+      !/**
+      !  BCD8 - BCDB define the hundreds digit. The following
+      !  table shows which values the output signals represent:
+      !  
+      !           BCD8   BCD9  BCDA   BCDB
+      !  FALSE    0      0     0      0
+      !  TRUE     100    200   400    800
+      !*/
+      Object BCD8 $Output 10 
+        Body SysBody
+          Attr PgmName = "BCD8"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "100"
+        EndBody
+      EndObject
+      Object BCD9 $Output 11 
+        Body SysBody
+          Attr PgmName = "BCD9"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "200"
+        EndBody
+      EndObject
+      Object BCDA $Output 12 
+        Body SysBody
+          Attr PgmName = "BCDA"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "400"
+        EndBody
+      EndObject
+      Object BCDB $Output 13 
+        Body SysBody
+          Attr PgmName = "BCDB"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "800"
+        EndBody
+      EndObject
+      !/**
+      !  BCDC - BCDF define the thousands digit. The following
+      !  table shows which values the output signals represent:
+      !  
+      !        BCDC   BCDD   BCDE  BCDF
+      !  FALSE   0      0      0     0
+      !  TRUE    1000   2000   4000  8000
+      !*/
+      Object BCDC $Output 14 
+        Body SysBody
+          Attr PgmName = "BCDC"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "1000"
+        EndBody
+      EndObject
+      Object BCDD $Output 15 
+        Body SysBody
+          Attr PgmName = "BCDD"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "2000"
+        EndBody
+      EndObject
+      Object BCDE $Output 16 
+        Body SysBody
+          Attr PgmName = "BCDE"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "4000"
+        EndBody
+      EndObject
+      Object BCDF $Output 17 
+        Body SysBody
+          Attr PgmName = "BCDF"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "8000"
+        EndBody
+      EndObject
+      !/**
+      !  Input signal divided by 10 000, or the value of the
+      !  IN-signal if this is less than zero (= an impossible
+      !  value).
+      !*/
+      Object Rest $Output 18 
+        Body SysBody
+          Attr PgmName = "Rest"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "RES"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 79
+        Attr parameters[0] = 1
+        Attr parameters[1] = 0
+        Attr parameters[2] = 17
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 0
+        Attr graphindex = 0
+        Attr default_mask[0] = 1
+        Attr default_mask[1] = 65535
+        Attr segname_annotation = 1
+        Attr compmethod = 4
+        Attr compindex = 0
+	Attr executeordermethod = 2
+        Attr objname = "BCDDo"
+        Attr graphname = "BCDDo"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+  EndObject
+EndSObject

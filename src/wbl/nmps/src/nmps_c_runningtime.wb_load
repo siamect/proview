@@ -1,0 +1,226 @@
+! Filename:	NMPS_C_RunningTime.wb_load
+!
+! This file defines user-object for Running Time Measurement
+!
+SObject NMps:Class
+!
+!		RunningTime-objekt
+!
+  Object RunningTime $ClassDef 47
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_RtConnectionsAndDevBodies
+    EndBody
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "RunningTime"
+      EndBody
+!		Running Signal
+      Object Running $Input 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags = PWR_MASK_NOREMOVE
+          Attr Flags |= PWR_MASK_NOINVERT
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_STATE
+          Attr GraphName = "run"
+        EndBody
+      EndObject
+!		Start
+      Object Start $Output 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags = PWR_MASK_NOEDIT
+          Attr GraphName = "sta"
+        EndBody
+      EndObject
+!		Description
+      Object Description $Intern 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+!		TripReset
+      Object TripReset $Intern 4
+        Body SysBody
+          Attr Flags = PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+!		StartTime
+      Object StartTime $Intern 5
+        Body SysBody
+          Attr Flags = PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Time"
+        EndBody
+      EndObject
+!		ResetTime
+      Object ResetTime $Intern 6
+        Body SysBody
+          Attr Flags = PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Time"
+        EndBody
+      EndObject
+!		Total Number of starts
+      Object TotalNOfStarts $Intern 7
+        Body SysBody
+          Attr Flags = PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+!		Total Running Time (Hours)
+      Object TotalRunHours $Intern 8
+        Body SysBody
+          Attr Flags = PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+!		Total Running Time (Up to 1 hour)
+      Object TotalRunSeconds $Intern 9
+        Body SysBody
+          Attr Flags = PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+!		Total Calendar Time (Hours)
+      Object TotalHours $Intern 10
+        Body SysBody
+          Attr Flags = PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+!		Total Calendar Time (Up to 1 hour)
+      Object TotalSeconds $Intern 11
+        Body SysBody
+          Attr Flags = PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+!		Total Usage %
+      Object TotalUsage $Intern 12
+        Body SysBody
+          Attr Flags = PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+!		Trip Number of starts
+      Object TripNOfStarts $Intern 13
+        Body SysBody
+          Attr Flags = PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+!		Trip Running Time (Hours)
+      Object TripRunHours $Intern 14
+        Body SysBody
+          Attr Flags = PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+!		Trip Running Time (Up to 1 hour)
+      Object TripRunSeconds $Intern 15
+        Body SysBody
+          Attr Flags = PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+!		Trip Calendar Time (Hours)
+      Object TripHours $Intern 16
+        Body SysBody
+          Attr Flags = PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+!		Trip Calendar Time (Up to 1 hour)
+      Object TripSeconds $Intern 17
+        Body SysBody
+          Attr Flags = PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+!		Trip Usage %
+      Object TripUsage $Intern 18
+        Body SysBody
+          Attr Flags = PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+!		OldTrip Number of starts
+      Object OldTripNOfStarts $Intern 19
+        Body SysBody
+          Attr Flags = PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+!		OldTrip Running Time (Hours)
+      Object OldTripRunHours $Intern 20
+        Body SysBody
+          Attr Flags = PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+!		OldTrip Running Time (Up to 1 hour)
+      Object OldTripRunSeconds $Intern 21
+        Body SysBody
+          Attr Flags = PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+!		OldTrip Calendar Time (Hours)
+      Object OldTripHours $Intern 22
+        Body SysBody
+          Attr Flags = PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+!		OldTrip Calendar Time (Up to 1 hour)
+      Object OldTripSeconds $Intern 23
+        Body SysBody
+          Attr Flags = PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+!		Old Trip Usage %
+      Object OldTripUsage $Intern 24
+        Body SysBody
+          Attr Flags = PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+!		Scan Time Secs
+      Object ScanTime $Intern 25
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_POINTER
+        EndBody
+      EndObject
+    EndObject
+!
+    Object DevBody $ObjBodyDef 2
+      Object PlcNode $Buffer 1
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+!
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr parameters[0] = 1
+        Attr parameters[1] = 0
+        Attr parameters[2] = 1
+        Attr parameters[3] = 0
+        Attr graphmethod = 0
+        Attr default_mask[0] = 1
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 1
+        Attr compmethod = 4
+        Attr executeordermethod = 2
+        Attr objname = "RunningTime"
+        Attr graphname = "RunningTime"
+      EndBody
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,794 @@
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 82 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 69 
+80 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 84 
+108 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 85 
+99 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 82 
+80 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 78 
+114 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+111 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 100 
+103 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 111 
+114 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 119 
+97 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 110 
+109 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 105 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 110 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 104 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 105 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 101 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 114 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 120 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 80 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 70 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 49 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 115 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 104 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 111 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 119 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 115 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 105 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 103 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 110 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 97 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 108 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 115 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 120 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+68 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 80 
+101 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 70 
+115 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 50 
+99 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+114 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 100 
+105 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 101 
+112 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 98 
+116 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 117 
+105 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 103 
+111 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+110 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 112 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 108 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 99 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 112 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 114 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 111 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 103 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 114 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 97 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 109 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 120 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 80 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 70 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 52 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+80 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 98 
+97 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 97 
+103 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 99 
+101 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 107 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+58 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 3 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 3 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 3 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 3 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 3 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+
+*******************************************************************
+PLCPGM
+*******************************************************************
+Number		1
+Text		"   "
+Type		UPDATE
+Parameter	PLCPGM_LINE1
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	38
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING40
+x,y		0	1
+-------------------------------------------------------------------
+Number		2
+Text		"%"
+Type		UPDATE
+Parameter	PLCPGM_DESC1
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	36
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	STRING
+x,y		43	1
+-------------------------------------------------------------------
+Number		6
+Text		"   "
+Type		UPDATE
+Parameter	PLCPGM_LINE2
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	38
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING40
+x,y		0	2
+-------------------------------------------------------------------
+Number		7
+Text		"%"
+Type		UPDATE
+Parameter	PLCPGM_DESC2
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	36
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	STRING
+x,y		43	2
+-------------------------------------------------------------------
+Number		11
+Text		"   "
+Type		UPDATE
+Parameter	PLCPGM_LINE3
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	38
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING40
+x,y		0	3
+-------------------------------------------------------------------
+Number		12
+Text		"%"
+Type		UPDATE
+Parameter	PLCPGM_DESC3
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	36
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	STRING
+x,y		43	3
+-------------------------------------------------------------------
+Number		16
+Text		"   "
+Type		UPDATE
+Parameter	PLCPGM_LINE4
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	38
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING40
+x,y		0	4
+-------------------------------------------------------------------
+Number		17
+Text		"%"
+Type		UPDATE
+Parameter	PLCPGM_DESC4
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	36
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	STRING
+x,y		43	4
+-------------------------------------------------------------------
+Number		21
+Text		"   "
+Type		UPDATE
+Parameter	PLCPGM_LINE5
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	38
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING40
+x,y		0	5
+-------------------------------------------------------------------
+Number		22
+Text		"%"
+Type		UPDATE
+Parameter	PLCPGM_DESC5
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	36
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	STRING
+x,y		43	5
+-------------------------------------------------------------------
+Number		26
+Text		"   "
+Type		UPDATE
+Parameter	PLCPGM_LINE6
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	38
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING40
+x,y		0	6
+-------------------------------------------------------------------
+Number		27
+Text		"%"
+Type		UPDATE
+Parameter	PLCPGM_DESC6
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	36
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	STRING
+x,y		43	6
+-------------------------------------------------------------------
+Number		31
+Text		"   "
+Type		UPDATE
+Parameter	PLCPGM_LINE7
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	38
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING40
+x,y		0	7
+-------------------------------------------------------------------
+Number		32
+Text		"%"
+Type		UPDATE
+Parameter	PLCPGM_DESC7
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	36
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	STRING
+x,y		43	7
+-------------------------------------------------------------------
+Number		36
+Text		"   "
+Type		UPDATE
+Parameter	PLCPGM_LINE8
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	38
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING40
+x,y		0	8
+-------------------------------------------------------------------
+Number		37
+Text		"%"
+Type		UPDATE
+Parameter	PLCPGM_DESC8
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	36
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	STRING
+x,y		43	8
+-------------------------------------------------------------------
+Number		41
+Text		"   "
+Type		UPDATE
+Parameter	PLCPGM_LINE9
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	38
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING40
+x,y		0	9
+-------------------------------------------------------------------
+Number		42
+Text		"%"
+Type		UPDATE
+Parameter	PLCPGM_DESC9
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	36
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	STRING
+x,y		43	9
+-------------------------------------------------------------------
+Number		46
+Text		"   "
+Type		UPDATE
+Parameter	PLCPGM_LINE10
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	38
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING40
+x,y		0	10
+-------------------------------------------------------------------
+Number		47
+Text		"%"
+Type		UPDATE
+Parameter	PLCPGM_DESC10
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	36
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	STRING
+x,y		43	10
+-------------------------------------------------------------------
+Number		51
+Text		"   "
+Type		UPDATE
+Parameter	PLCPGM_LINE11
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	38
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING40
+x,y		0	11
+-------------------------------------------------------------------
+Number		52
+Text		"%"
+Type		UPDATE
+Parameter	PLCPGM_DESC11
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	36
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	STRING
+x,y		43	11
+-------------------------------------------------------------------
+Number		56
+Text		"   "
+Type		UPDATE
+Parameter	PLCPGM_LINE12
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	38
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING40
+x,y		0	12
+-------------------------------------------------------------------
+Number		57
+Text		"%"
+Type		UPDATE
+Parameter	PLCPGM_DESC12
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	36
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	STRING
+x,y		43	12
+-------------------------------------------------------------------
+Number		61
+Text		"   "
+Type		UPDATE
+Parameter	PLCPGM_LINE13
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	38
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING40
+x,y		0	13
+-------------------------------------------------------------------
+Number		62
+Text		"%"
+Type		UPDATE
+Parameter	PLCPGM_DESC13
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	36
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	STRING
+x,y		43	13
+-------------------------------------------------------------------
+Number		66
+Text		"   "
+Type		UPDATE
+Parameter	PLCPGM_LINE14
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	38
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING40
+x,y		0	14
+-------------------------------------------------------------------
+Number		67
+Text		"%"
+Type		UPDATE
+Parameter	PLCPGM_DESC14
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	36
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	STRING
+x,y		43	14
+-------------------------------------------------------------------
+Number		71
+Text		"   "
+Type		UPDATE
+Parameter	PLCPGM_LINE15
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	38
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING40
+x,y		0	15
+-------------------------------------------------------------------
+Number		72
+Text		"%"
+Type		UPDATE
+Parameter	PLCPGM_DESC15
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	36
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	STRING
+x,y		43	15
+-------------------------------------------------------------------
+Number		76
+Text		"   "
+Type		UPDATE
+Parameter	PLCPGM_LINE16
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	38
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING40
+x,y		0	16
+-------------------------------------------------------------------
+Number		77
+Text		"%"
+Type		UPDATE
+Parameter	PLCPGM_DESC16
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	36
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	STRING
+x,y		43	16
+-------------------------------------------------------------------
+Number		81
+Text		"   "
+Type		UPDATE
+Parameter	PLCPGM_LINE17
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	38
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING40
+x,y		0	17
+-------------------------------------------------------------------
+Number		82
+Text		"%"
+Type		UPDATE
+Parameter	PLCPGM_DESC17
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	36
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	STRING
+x,y		43	17
+-------------------------------------------------------------------
+Number		86
+Text		"   "
+Type		UPDATE
+Parameter	PLCPGM_LINE18
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	38
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING40
+x,y		0	18
+-------------------------------------------------------------------
+Number		87
+Text		"%"
+Type		UPDATE
+Parameter	PLCPGM_DESC18
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	36
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	STRING
+x,y		43	18
+-------------------------------------------------------------------
+Number		91
+Text		"   "
+Type		UPDATE
+Parameter	PLCPGM_LINE19
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	38
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING40
+x,y		0	19
+-------------------------------------------------------------------
+Number		92
+Text		"%"
+Type		UPDATE
+Parameter	PLCPGM_DESC19
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	36
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	STRING
+x,y		43	19
+-------------------------------------------------------------------
+Number		96
+Text		"   "
+Type		UPDATE
+Parameter	PLCPGM_LINE20
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	38
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING40
+x,y		0	20
+-------------------------------------------------------------------
+Number		97
+Text		"%"
+Type		UPDATE
+Parameter	PLCPGM_DESC20
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	36
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	STRING
+x,y		43	20
+-------------------------------------------------------------------
+Number		100
+Text		"%"
+Type		UPDATE
+Parameter	PLCPGM_PAGE
+Text/Dualpar	"!"
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		75	0
+-------------------------------------------------------------------
+Number		101
+Text		"%"
+Type		UPDATE
+Parameter	PLCPGM_MAXPAGE
+Text/Dualpar	"!"
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		78	0
+-------------------------------------------------------------------

@@ -1,0 +1,17 @@
+!  rt_bck.opt -- <short description>
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+pwr_obj:rt_bck.obj
+pwr_lib:libpwr_rt/lib
+pwr_lib:libpwr_co/lib
+pwr_obj:pwr_msg_rt.obj
+pwr_obj:pwr_msg_co.obj
+sys$library:cma$rtl/share		! Posix 1003.4a
+sys$library:cma$open_rtl/share		! Posix 1003.4a
+sys$library:cma$open_lib_shr/share	! Posix 1003.4a
+!@sys$library_posix$g_rtl_option.opt	! Posix 1003.1 & 1003.4
+sys$share:!AS<tcpip>$rpcxdr_shr.exe/share

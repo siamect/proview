@@ -1,0 +1,34 @@
+!  pwrb_c_mpsmodelbackup.wb_load -- Defines the class MpsModelBackup.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+SObject mps:Class
+  Object MpsModelBackup $ClassDef 150 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "mpsModelBackup"
+      EndBody
+      Object FileName $Attribute 1 
+        Body SysBody
+          Attr PgmName = "FileName"
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      Object ModelName $Attribute 2 
+        Body SysBody
+          Attr PgmName = "ModelName"
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject

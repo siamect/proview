@@ -1,0 +1,153 @@
+!  pwrs_c_node.wb_load -- Defines the class Node.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+!/**
+!  @Version 1.0
+!  Configures a node in the Node Configuration.
+!  
+!  The object is placed below a $NodeHier object or in the
+!  top of the node hierarchy. At the same time some
+!  standard objects  ( "ValueBase" objects, IOHandler
+!  object etc. ) will be configured as children to the
+!  $Node by the development environment.
+!  The $Node object is implicitly associated with the node
+!  it is defining. All descendants are implicitly
+!  associated with the same node.
+!*/
+SObject pwrs:Class
+  Object $Node $ClassDef pwr_eCix_Node
+    Body SysBody
+      Attr Flags |= pwr_mClassDef_System
+      Attr Flags |= pwr_mClassDef_TopObject
+    EndBody
+    Object SysBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "Node"
+      EndBody
+      !/**
+      !  Optional text to describe the use of the object.
+      !*/
+      Object Description $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Applied to VAXELN node the system error log, which
+      !  contains system error messages, normally is sent to the
+      !  console. If the error log will be sent to another
+      !  terminal, the ErrLogTerm specifies the name of the
+      !  terminal. This function is not implemented.
+      !*/
+      Object ErrLogTerm $Attribute 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String132"
+        EndBody
+      EndObject
+      !/**
+      !  Applied to VAXELN node the system error log can,
+      !  independently of if it is sent to a terminal or not, be
+      !  sent to a file specified by ErrLogFile.
+      !  Syntax:
+      !  <area number>.<node number>::<device>[<directory>]
+      !  <file name>.<extension>
+      !  
+      !  Examples:    1.30::pwrp_lis:sys_RTPVAX.log
+      !            1.30::sys$login:pwr_VAXELN_RTPVAX.log
+      !  To distinguish system error logs from different VAXELN
+      !  nodes the name of the node can be included in the name
+      !  of the file. In the example above specifies RTPVAX the
+      !  current node.  If <area number>.<node number>:: is
+      !  omitted the file is created on the boot node. In that
+      !  way the attributet do not have to changed even if the
+      !  node would be booted from different boot nodes.
+      !  
+      !  Applied to OpenVMS node the system error log gets
+      !  always the name  PWR_VMS_'XXX'.LOG and the file is put
+      !  on the own node below sys$login. 'XXX' denotes the name
+      !  of the node.
+      !*/
+      Object ErrLogFile $Attribute 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String132"
+        EndBody
+      EndObject
+      Object BootVersion $Attribute 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object BootCreTime $Attribute 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Time"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object CurVersion $Attribute 10
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object CurCreTime $Attribute 11
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Time"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  The emergency break flag, EmergBreakTrue, is set at
+      !  errors regarding the I/O , see ErrorHardLimit in any
+      !  card object. At process slip or when supervised job has
+      !  terminated the flag is set by the Watchdog job. FALSE
+      !  means no action and TRUE means that the action
+      !  specified by EmergBreakSelect is to be carried out.
+      !*/
+      Object EmergBreakTrue $Attribute 24
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the emergency break action. The action is
+      !  carried out when EmergBreakTrue is TRUE. The possible
+      !  values are as follows:
+      !  
+      !   -- 0   No action
+      !  
+      !   -- 1   Re-booting of the node.
+      !   -- 2   The output signals are frozen on defined
+      !          values specified by FixedOutValue in
+      !  
+      !   -- 3   Stops I/O. Reset of output signals. See also
+      !          ErrorHardLimit in card objects.
+      !*/
+      Object EmergBreakSelect $Attribute 25
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Enum"
+        EndBody
+      EndObject
+    EndObject
+    Object Template $Node
+      Body SysBody
+      EndBody
+    EndObject
+    Object PostCreate $DbCallBack
+      Body SysBody
+        Attr MethodName = "$Node-PostCreate"
+      EndBody
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,36 @@
+!  pwrb_c_group.wb_load -- Defines the class Group.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!/**
+!  Obsolete from V3.4
+!*/
+SObject pwrb:Class
+  Object Group $ClassDef 133 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "Group"
+      EndBody
+      Object NoOfObjects $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt8"
+          Attr Flags = 0
+        EndBody
+      EndObject
+      Object GroupObjects $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 8
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject

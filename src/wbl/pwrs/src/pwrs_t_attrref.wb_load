@@ -1,0 +1,15 @@
+!  pwrs_t_attrref.wb_load -- Defines the basic type AttrRef
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+SObject pwrs:Type
+  Object $AttrRef pwr_eClass_Type pwr_eTix_AttrRef
+    Body SysBody
+      Attr Type = pwr_eType_AttrRef
+      Attr Size = 24
+    EndBody
+  EndObject
+EndSObject

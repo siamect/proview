@@ -1,0 +1,202 @@
+!  pwrb_c_plcpgm.wb_load -- Defines the class PlcPgm.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  Configures a PLC program.
+!  
+!  The name of the PlcPgm object is used to identify a
+!  certain editing unit.
+!  
+!  The object represents both data and code.
+!  Put the object below a $PlantHier object in the
+!  development environment by means of the Configuration
+!  Editor. The PLC program will execute in a node
+!  specified by a $PlantHier object.
+!  
+!  Below the PlcPgm object is a WindowPlc object created.
+!  This object becomes the parent object
+!  to the objects in the PLC program.
+!  Different PlcPgm objects with the same ScanTime will
+!  execute in one and the same PLC- subprocess. Up to 15
+!  PLC-subprocesses can be included in a PLC job.
+!  
+!  Note! The PLC subprocess with the shortest ScanTime, i.e.
+!  with the highest frequency, is named the base frequency
+!  subprocess and handles the I/O-software of Di-, Do-,
+!  Dv- and Co- signals on buss-connected cards as well.
+!  The other subprocesses are named partial frequency
+!  subprocesses.
+!  This means, if there is no need for any true PlcPgm,
+!  but Di-, Do-, Dv- and Co-signals have to be handled by
+!  the I/O-software --- that a dummy PlcPgm must be
+!  created.
+!  
+!  If any attribute in the PlcPgm object is changed it is
+!  necessary to 'compile' the PLC program.
+!*/
+SObject pwrb:Class
+  Object PlcPgm $ClassDef 177 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_RtAndDevBodies
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "plc"
+      EndBody
+      !/**
+      !  Optional the text to describe the program.
+      !*/
+      Object Description $Intern 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      Object ThreadObject $Intern 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object ScanTime $Intern 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "ScanTim"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the complete name of a Di, Dv or Do object
+      !  which will be used as the reset signal of the Grafcet
+      !  chains identified by the PlcPgm object. About the use
+      !  of ResetObjects see the InitStep object on p. 3-183.
+      !  If there is no need to reset a Grafcet chain or if the
+      !  PlcPgm object does not contain any Grafcet chain the
+      !  attribute is left blank.
+      !*/
+      Object ResetObject $Intern 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr GraphName = "ResObj"
+        EndBody
+      EndObject
+      !/**
+      !  Control the execution
+      !  order of different PlcPgms in the same thread.
+      !  Lower values of ExecuteOrder will be executed befor
+      !  higher. 
+      !*/
+      Object ExecuteOrder $Intern 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "ExecOrd"
+        EndBody
+      EndObject
+      Object PlcProgram $Buffer 4 
+        Body SysBody
+          Attr PgmName = "PlcPgm"
+          Attr Class = pwr_eClass_PlcProgram
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcPgm $GraphPlcProgram
+      Body SysBody
+        Attr plc_type = 0
+        Attr subwindow_class = "pwrb:Class-WindowPlc"
+      EndBody
+    EndObject
+    Object NavigatorPosnn $Menu
+      Object Pointed $Menu
+	Object OpenProgram $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open Program..."
+	    Attr MethodName = "PlcPgm-OpenProgram"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object NavigatorPoson $Menu
+      Object Pointed $Menu
+	Object OpenProgram $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open Program..."
+	    Attr MethodName = "PlcPgm-OpenProgram"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object NavigatorPosos $Menu
+      Object Pointed $Menu
+	Object OpenProgram $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open Program..."
+	    Attr MethodName = "PlcPgm-OpenProgram"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object NavigatorPosms $Menu
+      Object Pointed $Menu
+	Object OpenProgram $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open Program..."
+	    Attr MethodName = "PlcPgm-OpenProgram"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object NavigatorPosmn $Menu
+      Object Pointed $Menu
+	Object OpenProgram $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open Program..."
+	    Attr MethodName = "PlcPgm-OpenProgram"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object RtXtt $RtMenu
+      Object OpenTrace $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Open Plc"
+	  Attr MethodName = "PlcPgm-OpenTrace"
+	EndBody
+      EndObject
+      Object Scan $MenuCascade
+	Body SysBody
+	  Attr ButtonName = "Scan"
+	  Attr FilterName = "PlcPgm-SimulateOn"
+	EndBody
+        Object ScanEnable $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Enable"
+	    Attr MethodName = "PlcPgm-SetScan"
+	    Attr FilterName = "PlcPgm-SetScanFilter"
+            Attr MethodArguments[0] = "Enable"
+            Attr FilterArguments[0] = "Enable"
+	  EndBody
+        EndObject
+        Object ScanDisable $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Disable"
+	    Attr MethodName = "PlcPgm-SetScan"
+	    Attr FilterName = "PlcPgm-SetScanFilter"
+            Attr MethodArguments[0] = "Disable"
+            Attr FilterArguments[0] = "Disable"
+	  EndBody
+        EndObject
+      EndObject
+    EndObject
+  EndObject
+EndSObject
+
+

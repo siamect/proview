@@ -1,0 +1,76 @@
+!  pwrb_c_externref.wb_load -- Defines the class ExternRef.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  External references.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  Makes it possible to indicate, in cross- and external
+!  reference lists, reading/writing in objects/attributes
+!  made from application programs.
+!  
+!  By means of pwr_plc and ListDescriptor
+!  it is possible to create lists that show the name of
+!  objects referred to below a current object. But it is
+!  not sure that such lists are always complete. A
+!  signal(object) can, for example, also be influenced by
+!  application programs and this will not be shown in any
+!  list. To make it possible to include such manipulations
+!  in cross- and external reference lists ExternRef
+!  objects are used.
+!  The object exists only in the development environment.
+!  
+!      Hints
+!  
+!  Assume a PROVIEW/R system with process graphics, from
+!  which attributes in rtdb are manipulated. The designer
+!  wants to make this manipulations visible in cross- and
+!  reference lists.
+!*/
+SObject pwrb:Class
+  Object ExternRef $ClassDef 116 
+    Body SysBody
+      Attr Flags |= pwr_mClassDef_DevOnly
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_DevBodyOnly
+    EndBody
+    Object DevBody $ObjBodyDef 2 
+      !/**
+      !  Complete name of the manipulated object that the
+      !  ExternRef object will make known; i.e. the object whose
+      !  attribute we are reading from or writing into.
+      !*/
+      Object Object $Attribute 1 
+        Body SysBody
+          Attr PgmName = "Object"
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      !/**
+      !  The following values are possible:
+      !  
+      !   -- 0
+      !   -- 1  A '#' character will precede the name of the
+      !         ExternRef object in lists to indicate that a
+      !*/
+      Object Write $Attribute 2 
+        Body SysBody
+          Attr PgmName = "Write"
+          Attr TypeRef = "pwrs:Type-$UInt8"
+        EndBody
+      EndObject
+      !/**
+      !  Optional text.
+      !*/
+      Object Description $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject

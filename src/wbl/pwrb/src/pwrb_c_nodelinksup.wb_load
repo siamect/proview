@@ -1,0 +1,339 @@
+!  pwrb_c_nodelinksup.wb_load -- Defines the class NodeLinkSup.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  Supervision of links to Node-objects.
+!
+! Range ldh_eDId_Base
+!
+SObject pwrb:Class
+  Object NodeLinkSup $ClassDef 161 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "NodeLinkSup"
+      EndBody
+      Object Node $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      Object TimeoutTime $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object SubscriptionInterval $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      Object LinkUp $Attribute 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object UpTime $Attribute 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Time"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object DownTime $Attribute 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Time"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object UpCount $Attribute 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object SubId $Attribute 8 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$RefId"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object Control $Input 9 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr GraphName = "con"
+        EndBody
+      EndObject
+      Object Action $Output 10 
+        Body SysBody
+          Attr PgmName = "Action"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_STATE 
+          Attr Flags |= PWR_MASK_NOEDIT 
+          Attr GraphName = "act"
+        EndBody
+      EndObject
+      Object Acked $Output 11 
+        Body SysBody
+          Attr PgmName = "Acked"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_STATE 
+          Attr Flags |= PWR_MASK_NOEDIT 
+          Attr GraphName = "ack"
+        EndBody
+      EndObject
+      Object Blocked $Output 12 
+        Body SysBody
+          Attr PgmName = "Blocked"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_STATE 
+          Attr Flags |= PWR_MASK_NOEDIT 
+          Attr GraphName = "blk"
+        EndBody
+      EndObject
+      ! ++
+      ! Sup struct
+      !
+      Object Description $Attribute 13 
+        Body SysBody
+          Attr PgmName = "Description"
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      Object DetectOn $Attribute 14 
+        Body SysBody
+          Attr PgmName = "DetectOn"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object DetectText $Intern 15 
+        Body SysBody
+          Attr PgmName = "DetectText"
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr NiNaAnnot = 2
+          Attr NiNaCond = 1
+        EndBody
+      EndObject
+      Object ReturnText $Attribute 16 
+        Body SysBody
+          Attr PgmName = "ReturnText"
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      Object EventType $Attribute 17 
+        Body SysBody
+          Attr PgmName = "EventType"
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object EventPriority $Attribute 18 
+        Body SysBody
+          Attr PgmName = "EventPriority"
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object EventFlags $Attribute 19 
+        Body SysBody
+          Attr PgmName = "EventFlags"
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object Attribute $Attribute 20 
+        Body SysBody
+          Attr PgmName = "Attribute"
+          Attr TypeRef = "pwrs:Type-$AttrRef"
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object AlarmStatus $Attribute 21 
+        Body SysBody
+          Attr PgmName = "AlarmStatus"
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object AlarmCheck $Attribute 22 
+        Body SysBody
+          Attr PgmName = "AlarmCheck"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object DetectCheck $Attribute 23 
+        Body SysBody
+          Attr PgmName = "DetectCheck"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object DetectSend $Attribute 24 
+        Body SysBody
+          Attr PgmName = "DetectSend"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object DetectTime $Attribute 25 
+        Body SysBody
+          Attr PgmName = "DetectTime"
+          Attr TypeRef = "pwrs:Type-$Time"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object ReturnCheck $Attribute 26 
+        Body SysBody
+          Attr PgmName = "ReturnCheck"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object ReturnSend $Attribute 27 
+        Body SysBody
+          Attr PgmName = "ReturnSend"
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object ReturnTime $Attribute 28 
+        Body SysBody
+          Attr PgmName = "ReturnTime"
+          Attr TypeRef = "pwrs:Type-$Time"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object AckTime $Attribute 29 
+        Body SysBody
+          Attr PgmName = "AckTime"
+          Attr TypeRef = "pwrs:Type-$Time"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object AckOutunit $Attribute 30 
+        Body SysBody
+          Attr PgmName = "AckOutunit"
+          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      ! ++
+      ! Timer struct
+      !
+      Object TimerFlag $Intern 31 
+        Body SysBody
+          Attr PgmName = "TimerFlag"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object TimerNext $Intern 32 
+        Body SysBody
+          Attr PgmName = "TimerNext"
+          Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object TimerCount $Intern 33 
+        Body SysBody
+          Attr PgmName = "TimerCount"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object TimerDO $Intern 34 
+        Body SysBody
+          Attr PgmName = "TimerDO"
+          Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object TimerTime $Intern 35 
+        Body SysBody
+          Attr PgmName = "TimerTime"
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      Object TimerDODum $Intern 36 
+        Body SysBody
+          Attr PgmName = "TimerDODum"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object TimerObjDId $Intern 37 
+        Body SysBody
+          Attr Flags |= PWR_MASK_OBJDIDSELF
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      Object TimerAcc $Intern 38 
+        Body SysBody
+          Attr PgmName = "TimerAcc"
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object TimerMin $Intern 39 
+        Body SysBody
+          Attr PgmName = "TimerMin"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object TimerMax $Intern 40 
+        Body SysBody
+          Attr PgmName = "TimerMax"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !
+      ! End Timer struct
+      ! --
+    EndObject
+    Object Template NodeLinkSup
+      Body RtBody
+        Attr TimeoutTime = 20
+        Attr SubscriptionInterval = 1.0
+        Attr Control = 1
+        Attr EventType = 64
+        Attr EventPriority = 67
+        Attr EventFlags = 7
+        Attr DetectOn = 1
+        Attr DetectText = "Lost contact with node XXX" 
+        Attr ReturnText = "Established contact with node XXX" 
+      EndBody
+    EndObject
+  EndObject
+EndSObject

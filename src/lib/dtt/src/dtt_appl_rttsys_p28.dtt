@@ -1,0 +1,2759 @@
+0 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+0 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+0 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 82 
+78 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 69 
+77 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 84 
+112 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 85 
+115 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 82 
+32 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 78 
+67 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+101 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 83 
+108 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 104 
+108 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 111 
+115 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 119 
+0 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+0 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 99 
+0 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 101 
+0 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 108 
+0 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 108 
+0 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+0 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 120 
+0 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+0 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 80 
+0 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 70 
+0 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 49 
+0 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+0 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 83 
+0 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 104 
+0 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 111 
+0 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 119 
+0 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+0 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 100 
+0 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 97 
+0 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 116 
+0 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 97 
+0 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 111 
+0 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 98 
+0 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 106 
+0 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 101 
+0 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 99 
+0 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 116 
+0 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+0 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 120 
+0 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+0 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 80 
+0 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 70 
+0 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 50 
+0 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+0 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 69 
+0 70 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 120 
+0 117 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 112 
+0 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 97 
+0 83 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 110 
+0 105 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 100 
+0 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 32 
+0 84 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 99 
+0 111 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 101 
+0 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 108 
+0 78 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 108 
+0 117 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+0 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 32 
+0 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 120 
+0 68 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+0 97 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 80 
+0 116 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 70 
+0 97 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 52 
+0 79 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+0 98 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 66 
+0 106 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 97 
+0 101 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 99 
+80 99 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 107 
+97 116 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+103 115 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+101 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+0 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+0 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+0 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+0 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 120 32 
+0 70 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+0 66 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 83 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 3 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 3 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 3 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 3 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 3 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 3 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 3 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 3 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 3 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+
+*******************************************************************
+NMPS CELL
+*******************************************************************
+Number		11
+Text		"  "
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_CELL1
+Text/Dualpar	""
+Privileges	SYS
+Outputflags	
+Characters	44
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		0	2
+-------------------------------------------------------------------
+Number		12
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_FUNC1
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		48	2
+-------------------------------------------------------------------
+Number		13
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_SIZE1
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		51	2
+-------------------------------------------------------------------
+Number		14
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_TOTAL1
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		54	2
+-------------------------------------------------------------------
+Number		15
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_NUMBER1
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		57	2
+-------------------------------------------------------------------
+Number		16
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_DATAOBJ1
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	16
+Decimals	1
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	OBJID
+x,y		60	2
+-------------------------------------------------------------------
+Number		17
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_FRONT1
+Text/Dualpar	"F"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		77	2
+-------------------------------------------------------------------
+Number		18
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_BACK1
+Text/Dualpar	"B"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		78	2
+-------------------------------------------------------------------
+Number		19
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_SELECT1
+Text/Dualpar	"S"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		79	2
+-------------------------------------------------------------------
+Number		21
+Text		"  "
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_CELL2
+Text/Dualpar	""
+Privileges	SYS
+Outputflags	
+Characters	44
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		0	3
+-------------------------------------------------------------------
+Number		22
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_FUNC2
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		48	3
+-------------------------------------------------------------------
+Number		23
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_SIZE2
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		51	3
+-------------------------------------------------------------------
+Number		24
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_TOTAL2
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		54	3
+-------------------------------------------------------------------
+Number		25
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_NUMBER2
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		57	3
+-------------------------------------------------------------------
+Number		26
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_DATAOBJ2
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	16
+Decimals	1
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	OBJID
+x,y		60	3
+-------------------------------------------------------------------
+Number		27
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_FRONT2
+Text/Dualpar	"F"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		77	3
+-------------------------------------------------------------------
+Number		28
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_BACK2
+Text/Dualpar	"B"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		78	3
+-------------------------------------------------------------------
+Number		29
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_SELECT2
+Text/Dualpar	"S"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		79	3
+-------------------------------------------------------------------
+Number		31
+Text		"  "
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_CELL3
+Text/Dualpar	""
+Privileges	SYS
+Outputflags	
+Characters	44
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		0	4
+-------------------------------------------------------------------
+Number		32
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_FUNC3
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		48	4
+-------------------------------------------------------------------
+Number		33
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_SIZE3
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		51	4
+-------------------------------------------------------------------
+Number		34
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_TOTAL3
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		54	4
+-------------------------------------------------------------------
+Number		35
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_NUMBER3
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		57	4
+-------------------------------------------------------------------
+Number		36
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_DATAOBJ3
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	16
+Decimals	1
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	OBJID
+x,y		60	4
+-------------------------------------------------------------------
+Number		37
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_FRONT3
+Text/Dualpar	"F"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		77	4
+-------------------------------------------------------------------
+Number		38
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_BACK3
+Text/Dualpar	"B"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		78	4
+-------------------------------------------------------------------
+Number		39
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_SELECT3
+Text/Dualpar	"S"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		79	4
+-------------------------------------------------------------------
+Number		41
+Text		"  "
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_CELL4
+Text/Dualpar	""
+Privileges	SYS
+Outputflags	
+Characters	44
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		0	5
+-------------------------------------------------------------------
+Number		42
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_FUNC4
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		48	5
+-------------------------------------------------------------------
+Number		43
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_SIZE4
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		51	5
+-------------------------------------------------------------------
+Number		44
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_TOTAL4
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		54	5
+-------------------------------------------------------------------
+Number		45
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_NUMBER4
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		57	5
+-------------------------------------------------------------------
+Number		46
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_DATAOBJ4
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	16
+Decimals	1
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	OBJID
+x,y		60	5
+-------------------------------------------------------------------
+Number		47
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_FRONT4
+Text/Dualpar	"F"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		77	5
+-------------------------------------------------------------------
+Number		48
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_BACK4
+Text/Dualpar	"B"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		78	5
+-------------------------------------------------------------------
+Number		49
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_SELECT4
+Text/Dualpar	"S"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		79	5
+-------------------------------------------------------------------
+Number		51
+Text		"  "
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_CELL5
+Text/Dualpar	""
+Privileges	SYS
+Outputflags	
+Characters	44
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		0	6
+-------------------------------------------------------------------
+Number		52
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_FUNC5
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		48	6
+-------------------------------------------------------------------
+Number		53
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_SIZE5
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		51	6
+-------------------------------------------------------------------
+Number		54
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_TOTAL5
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		54	6
+-------------------------------------------------------------------
+Number		55
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_NUMBER5
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		57	6
+-------------------------------------------------------------------
+Number		56
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_DATAOBJ5
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	16
+Decimals	1
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	OBJID
+x,y		60	6
+-------------------------------------------------------------------
+Number		57
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_FRONT5
+Text/Dualpar	"F"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		77	6
+-------------------------------------------------------------------
+Number		58
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_BACK5
+Text/Dualpar	"B"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		78	6
+-------------------------------------------------------------------
+Number		59
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_SELECT5
+Text/Dualpar	"S"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		79	6
+-------------------------------------------------------------------
+Number		61
+Text		"  "
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_CELL6
+Text/Dualpar	""
+Privileges	SYS
+Outputflags	
+Characters	44
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		0	7
+-------------------------------------------------------------------
+Number		62
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_FUNC6
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		48	7
+-------------------------------------------------------------------
+Number		63
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_SIZE6
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		51	7
+-------------------------------------------------------------------
+Number		64
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_TOTAL6
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		54	7
+-------------------------------------------------------------------
+Number		65
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_NUMBER6
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		57	7
+-------------------------------------------------------------------
+Number		66
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_DATAOBJ6
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	16
+Decimals	1
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	OBJID
+x,y		60	7
+-------------------------------------------------------------------
+Number		67
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_FRONT6
+Text/Dualpar	"F"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		77	7
+-------------------------------------------------------------------
+Number		68
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_BACK6
+Text/Dualpar	"B"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		78	7
+-------------------------------------------------------------------
+Number		69
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_SELECT6
+Text/Dualpar	"S"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		79	7
+-------------------------------------------------------------------
+Number		71
+Text		"  "
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_CELL7
+Text/Dualpar	""
+Privileges	SYS
+Outputflags	
+Characters	44
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		0	8
+-------------------------------------------------------------------
+Number		72
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_FUNC7
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		48	8
+-------------------------------------------------------------------
+Number		73
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_SIZE7
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		51	8
+-------------------------------------------------------------------
+Number		74
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_TOTAL7
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		54	8
+-------------------------------------------------------------------
+Number		75
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_NUMBER7
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		57	8
+-------------------------------------------------------------------
+Number		76
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_DATAOBJ7
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	16
+Decimals	1
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	OBJID
+x,y		60	8
+-------------------------------------------------------------------
+Number		77
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_FRONT7
+Text/Dualpar	"F"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		77	8
+-------------------------------------------------------------------
+Number		78
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_BACK7
+Text/Dualpar	"B"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		78	8
+-------------------------------------------------------------------
+Number		79
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_SELECT7
+Text/Dualpar	"S"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		79	8
+-------------------------------------------------------------------
+Number		81
+Text		"  "
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_CELL8
+Text/Dualpar	""
+Privileges	SYS
+Outputflags	
+Characters	44
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		0	9
+-------------------------------------------------------------------
+Number		82
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_FUNC8
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		48	9
+-------------------------------------------------------------------
+Number		83
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_SIZE8
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		51	9
+-------------------------------------------------------------------
+Number		84
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_TOTAL8
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		54	9
+-------------------------------------------------------------------
+Number		85
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_NUMBER8
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		57	9
+-------------------------------------------------------------------
+Number		86
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_DATAOBJ8
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	16
+Decimals	1
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	OBJID
+x,y		60	9
+-------------------------------------------------------------------
+Number		87
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_FRONT8
+Text/Dualpar	"F"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		77	9
+-------------------------------------------------------------------
+Number		88
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_BACK8
+Text/Dualpar	"B"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		78	9
+-------------------------------------------------------------------
+Number		89
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_SELECT8
+Text/Dualpar	"S"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		79	9
+-------------------------------------------------------------------
+Number		91
+Text		"  "
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_CELL9
+Text/Dualpar	""
+Privileges	SYS
+Outputflags	
+Characters	44
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		0	10
+-------------------------------------------------------------------
+Number		92
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_FUNC9
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		48	10
+-------------------------------------------------------------------
+Number		93
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_SIZE9
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		51	10
+-------------------------------------------------------------------
+Number		94
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_TOTAL9
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		54	10
+-------------------------------------------------------------------
+Number		95
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_NUMBER9
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		57	10
+-------------------------------------------------------------------
+Number		96
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_DATAOBJ9
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	16
+Decimals	1
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	OBJID
+x,y		60	10
+-------------------------------------------------------------------
+Number		97
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_FRONT9
+Text/Dualpar	"F"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		77	10
+-------------------------------------------------------------------
+Number		98
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_BACK9
+Text/Dualpar	"B"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		78	10
+-------------------------------------------------------------------
+Number		99
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_SELECT9
+Text/Dualpar	"S"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		79	10
+-------------------------------------------------------------------
+Number		101
+Text		"  "
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_CELL10
+Text/Dualpar	""
+Privileges	SYS
+Outputflags	
+Characters	44
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		0	11
+-------------------------------------------------------------------
+Number		102
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_FUNC10
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		48	11
+-------------------------------------------------------------------
+Number		103
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_SIZE10
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		51	11
+-------------------------------------------------------------------
+Number		104
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_TOTAL10
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		54	11
+-------------------------------------------------------------------
+Number		105
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_NUMBER10
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		57	11
+-------------------------------------------------------------------
+Number		106
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_DATAOBJ10
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	16
+Decimals	1
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	OBJID
+x,y		60	11
+-------------------------------------------------------------------
+Number		107
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_FRONT10
+Text/Dualpar	"F"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		77	11
+-------------------------------------------------------------------
+Number		108
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_BACK10
+Text/Dualpar	"B"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		78	11
+-------------------------------------------------------------------
+Number		109
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_SELECT10
+Text/Dualpar	"S"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		79	11
+-------------------------------------------------------------------
+Number		111
+Text		"  "
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_CELL11
+Text/Dualpar	""
+Privileges	SYS
+Outputflags	
+Characters	44
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		0	12
+-------------------------------------------------------------------
+Number		112
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_FUNC11
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		48	12
+-------------------------------------------------------------------
+Number		113
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_SIZE11
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		51	12
+-------------------------------------------------------------------
+Number		114
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_TOTAL11
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		54	12
+-------------------------------------------------------------------
+Number		115
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_NUMBER11
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		57	12
+-------------------------------------------------------------------
+Number		116
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_DATAOBJ11
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	16
+Decimals	1
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	OBJID
+x,y		60	12
+-------------------------------------------------------------------
+Number		117
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_FRONT11
+Text/Dualpar	"F"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		77	12
+-------------------------------------------------------------------
+Number		118
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_BACK11
+Text/Dualpar	"B"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		78	12
+-------------------------------------------------------------------
+Number		119
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_SELECT11
+Text/Dualpar	"S"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		79	12
+-------------------------------------------------------------------
+Number		121
+Text		"  "
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_CELL12
+Text/Dualpar	""
+Privileges	SYS
+Outputflags	
+Characters	44
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		0	13
+-------------------------------------------------------------------
+Number		122
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_FUNC12
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		48	13
+-------------------------------------------------------------------
+Number		123
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_SIZE12
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		51	13
+-------------------------------------------------------------------
+Number		124
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_TOTAL12
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		54	13
+-------------------------------------------------------------------
+Number		125
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_NUMBER12
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		57	13
+-------------------------------------------------------------------
+Number		126
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_DATAOBJ12
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	16
+Decimals	1
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	OBJID
+x,y		60	13
+-------------------------------------------------------------------
+Number		127
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_FRONT12
+Text/Dualpar	"F"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		77	13
+-------------------------------------------------------------------
+Number		128
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_BACK12
+Text/Dualpar	"B"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		78	13
+-------------------------------------------------------------------
+Number		129
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_SELECT12
+Text/Dualpar	"S"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		79	13
+-------------------------------------------------------------------
+Number		131
+Text		"  "
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_CELL13
+Text/Dualpar	""
+Privileges	SYS
+Outputflags	
+Characters	44
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		0	14
+-------------------------------------------------------------------
+Number		132
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_FUNC13
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		48	14
+-------------------------------------------------------------------
+Number		133
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_SIZE13
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		51	14
+-------------------------------------------------------------------
+Number		134
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_TOTAL13
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		54	14
+-------------------------------------------------------------------
+Number		135
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_NUMBER13
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		57	14
+-------------------------------------------------------------------
+Number		136
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_DATAOBJ13
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	16
+Decimals	1
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	OBJID
+x,y		60	14
+-------------------------------------------------------------------
+Number		137
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_FRONT13
+Text/Dualpar	"F"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		77	14
+-------------------------------------------------------------------
+Number		138
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_BACK13
+Text/Dualpar	"B"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		78	14
+-------------------------------------------------------------------
+Number		139
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_SELECT13
+Text/Dualpar	"S"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		79	14
+-------------------------------------------------------------------
+Number		141
+Text		"  "
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_CELL14
+Text/Dualpar	""
+Privileges	SYS
+Outputflags	
+Characters	44
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		0	15
+-------------------------------------------------------------------
+Number		142
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_FUNC14
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		48	15
+-------------------------------------------------------------------
+Number		143
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_SIZE14
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		51	15
+-------------------------------------------------------------------
+Number		144
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_TOTAL14
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		54	15
+-------------------------------------------------------------------
+Number		145
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_NUMBER14
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		57	15
+-------------------------------------------------------------------
+Number		146
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_DATAOBJ14
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	16
+Decimals	1
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	OBJID
+x,y		60	15
+-------------------------------------------------------------------
+Number		147
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_FRONT14
+Text/Dualpar	"F"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		77	15
+-------------------------------------------------------------------
+Number		148
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_BACK14
+Text/Dualpar	"B"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		78	15
+-------------------------------------------------------------------
+Number		149
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_SELECT14
+Text/Dualpar	"S"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		79	15
+-------------------------------------------------------------------
+Number		151
+Text		"  "
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_CELL15
+Text/Dualpar	""
+Privileges	SYS
+Outputflags	
+Characters	44
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		0	16
+-------------------------------------------------------------------
+Number		152
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_FUNC15
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		48	16
+-------------------------------------------------------------------
+Number		153
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_SIZE15
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		51	16
+-------------------------------------------------------------------
+Number		154
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_TOTAL15
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		54	16
+-------------------------------------------------------------------
+Number		155
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_NUMBER15
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		57	16
+-------------------------------------------------------------------
+Number		156
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_DATAOBJ15
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	16
+Decimals	1
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	OBJID
+x,y		60	16
+-------------------------------------------------------------------
+Number		157
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_FRONT15
+Text/Dualpar	"F"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		77	16
+-------------------------------------------------------------------
+Number		158
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_BACK15
+Text/Dualpar	"B"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		78	16
+-------------------------------------------------------------------
+Number		159
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_SELECT15
+Text/Dualpar	"S"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		79	16
+-------------------------------------------------------------------
+Number		161
+Text		"  "
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_CELL16
+Text/Dualpar	""
+Privileges	SYS
+Outputflags	
+Characters	44
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		0	17
+-------------------------------------------------------------------
+Number		162
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_FUNC16
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		48	17
+-------------------------------------------------------------------
+Number		163
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_SIZE16
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		51	17
+-------------------------------------------------------------------
+Number		164
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_TOTAL16
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		54	17
+-------------------------------------------------------------------
+Number		165
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_NUMBER16
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		57	17
+-------------------------------------------------------------------
+Number		166
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_DATAOBJ16
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	16
+Decimals	1
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	OBJID
+x,y		60	17
+-------------------------------------------------------------------
+Number		167
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_FRONT16
+Text/Dualpar	"F"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		77	17
+-------------------------------------------------------------------
+Number		168
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_BACK16
+Text/Dualpar	"B"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		78	17
+-------------------------------------------------------------------
+Number		169
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_SELECT16
+Text/Dualpar	"S"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		79	17
+-------------------------------------------------------------------
+Number		171
+Text		"  "
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_CELL17
+Text/Dualpar	""
+Privileges	SYS
+Outputflags	
+Characters	44
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		0	18
+-------------------------------------------------------------------
+Number		172
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_FUNC17
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		48	18
+-------------------------------------------------------------------
+Number		173
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_SIZE17
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		51	18
+-------------------------------------------------------------------
+Number		174
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_TOTAL17
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		54	18
+-------------------------------------------------------------------
+Number		175
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_NUMBER17
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		57	18
+-------------------------------------------------------------------
+Number		176
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_DATAOBJ17
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	16
+Decimals	1
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	OBJID
+x,y		60	18
+-------------------------------------------------------------------
+Number		177
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_FRONT17
+Text/Dualpar	"F"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		77	18
+-------------------------------------------------------------------
+Number		178
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_BACK17
+Text/Dualpar	"B"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		78	18
+-------------------------------------------------------------------
+Number		179
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_SELECT17
+Text/Dualpar	"S"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		79	18
+-------------------------------------------------------------------
+Number		181
+Text		"  "
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_CELL18
+Text/Dualpar	""
+Privileges	SYS
+Outputflags	
+Characters	44
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		0	19
+-------------------------------------------------------------------
+Number		182
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_FUNC18
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		48	19
+-------------------------------------------------------------------
+Number		183
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_SIZE18
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		51	19
+-------------------------------------------------------------------
+Number		184
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_TOTAL18
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		54	19
+-------------------------------------------------------------------
+Number		185
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_NUMBER18
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		57	19
+-------------------------------------------------------------------
+Number		186
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_DATAOBJ18
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	16
+Decimals	1
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	OBJID
+x,y		60	19
+-------------------------------------------------------------------
+Number		187
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_FRONT18
+Text/Dualpar	"F"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		77	19
+-------------------------------------------------------------------
+Number		188
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_BACK18
+Text/Dualpar	"B"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		78	19
+-------------------------------------------------------------------
+Number		189
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_SELECT18
+Text/Dualpar	"S"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		79	19
+-------------------------------------------------------------------
+Number		191
+Text		"  "
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_CELL19
+Text/Dualpar	""
+Privileges	SYS
+Outputflags	
+Characters	44
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		0	20
+-------------------------------------------------------------------
+Number		192
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_FUNC19
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		48	20
+-------------------------------------------------------------------
+Number		193
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_SIZE19
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		51	20
+-------------------------------------------------------------------
+Number		194
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_TOTAL19
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		54	20
+-------------------------------------------------------------------
+Number		195
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_NUMBER19
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		57	20
+-------------------------------------------------------------------
+Number		196
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_DATAOBJ19
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	16
+Decimals	1
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	OBJID
+x,y		60	20
+-------------------------------------------------------------------
+Number		197
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_FRONT19
+Text/Dualpar	"F"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		77	20
+-------------------------------------------------------------------
+Number		198
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_BACK19
+Text/Dualpar	"B"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		78	20
+-------------------------------------------------------------------
+Number		199
+Text		"%"
+Type		UPDATE
+Parameter	RTTSYS_NMPSCELL_SELECT19
+Text/Dualpar	"S"
+Privileges	NO
+Outputflags	TEXT
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		79	20
+-------------------------------------------------------------------
+Number		201
+Text		"%"
+Type		UPDATE
+Parameter	NMPSCELL_PAGE
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		74	0
+-------------------------------------------------------------------
+Number		202
+Text		"%"
+Type		UPDATE
+Parameter	NMPSCELL_MAXPAGE
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		77	0
+-------------------------------------------------------------------

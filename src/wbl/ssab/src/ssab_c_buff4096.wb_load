@@ -1,0 +1,45 @@
+!  ssab_c_Buff4096.wb_load -- Defines the class Buff4096.
+!
+!  PROVIEW/R
+!
+!  <Description>.
+!
+SObject SSAB:Class
+  !
+  ! Buff4096	Transbuffer
+  !
+  Object Buff4096 $ClassDef 21
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    !
+    ! Buff4096 Runtime Body
+    !
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "Buff4096"
+      EndBody
+      !
+      ! Parameter Data
+      !
+      Object Data $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int16"
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Elements = 2048
+        EndBody
+      EndObject
+    EndObject
+    !
+    ! Template för Buff4096
+    !
+    Object Template Buff4096
+      Body RtBody
+      EndBody
+    EndObject
+  !
+  ! End Buff4096
+  !
+  EndObject
+EndSObject

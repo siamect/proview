@@ -1,0 +1,21 @@
+!  op_cont.uil -- <short description>
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+
+module op_cont
+names = case_sensitive
+
+! INCLUDE FILES
+ 
+include file 'pwr_lang:inc_cont_txt.uil'; 
+include file 'pwr_lang:inc_standard_txt.uil'; 
+
+value
+   intTable	: exported integer_table(2, 830, 1270, 167, 1, 53, 176, 76); 
+                         ! X, Y, WIDTH, HEIGHT, gms x1,y1,x2,y2
+
+end module;

@@ -1,0 +1,547 @@
+#ifdef PDR_HDR
+%#ifndef co_dbs_h
+%#define co_dbs_h
+%
+%/* co_dbs.h -- database snapshop files
+%
+%   PROVIEW/R
+%   Copyright (C) 2002 by Cell Network AB.
+%
+%   This file defines the data structures needed to create and read
+%   dbs data files.
+%
+%
+%    +====================================================+
+%    | File Information                                   |
+%    +----------------------------------------------------+
+%    |                                                    |
+%    | Information about the load file.                   |
+%    |                                                    |
+%    +====================================================+
+%
+%    +====================================================+
+%    | Section Directory Section                          |
+%    +----------------------------------------------------+
+%    |                                                    |
+%    | This section contains the section headers of all   |
+%    | sections in the file, including its own. So using  |
+%    | the size of this section it is possible to deduce  |
+%    | the total number of sections in a specific load    |
+%    | file.                                              |
+%    |                                                    |
+%    +====================================================+
+%    | Volume Information Section                         |
+%    +----------------------------------------------------+
+%    |                                                    |
+%    | Information about the volume in this file.         |
+%    |                                                    |
+%    +====================================================+
+%    | Volume Reference Section                           |
+%    +----------------------------------------------------+
+%    |                                                    |
+%    | Information about class volumes containing classes |
+%    | and types used in this volume.                     |
+%    |                                                    |
+%    | Information about volumes mounted in this volume.  |
+%    |                                                    |
+%    +====================================================+
+%    | Oix (Object index) Section                         |
+%    +----------------------------------------------------+
+%    |                                                    |
+%    |                                                    |
+%    +====================================================+
+%    | Object Section                                     |
+%    +----------------------------------------------------+
+%    |                                                    |
+%    |                                                    |
+%    +====================================================+
+%    | Runtime Body Section                               |
+%    +----------------------------------------------------+
+%    |                                                    |
+%    |                                                    |
+%    +====================================================+
+%    | Name Table Section                                 |
+%    +----------------------------------------------------+
+%    |                                                    |
+%    | Used to find an object by name.                    |
+%    |                                                    |
+%    +====================================================+
+%    | Class Reference Table                              |
+%    +----------------------------------------------------+
+%    |                                                    |
+%    |                                                    |
+%    +====================================================+
+%    | Development Body Section.                          |
+%    +----------------------------------------------------+
+%    |                                                    |
+%    |                                                    |
+%    +====================================================+
+%    | Fixup Section.                                     |
+%    +----------------------------------------------------+
+%    |                                                    |
+%    |                                                    |
+%    +====================================================+
+%
+%*/
+%
+%#if defined(OS_ELN)
+%# include stddef
+%#else
+%# include <stddef.h>
+%#endif
+%
+%#include "co_pdr.h"
+%
+%
+%#define dbs_cMagicCookie 0x012a51fb
+%#define dbs_cVersionStr	"V3.4.0"
+%
+%
+%
+%#if defined OS_VMS || defined OS_ELN
+%
+%# define dbs_cNameDirectory	     "pwrp_load:"
+%# define dbs_cDirectory		     "pwrp_load:"
+%# define dbs_cNamePlc		     "%splc_%s_%04d_%05d.exe"
+%
+%# define dbs_cNameBootList	     "pwrp_root:[common.db]pwrp_cnf_bootlist.dat"
+%# define dbs_cNameVolumeList	 "pwrp_root:[common.db]pwrp_cnf_volumelist.dat"
+%# define dbs_cNamePlcVersion	 "pwrp_root:[common.db]pwrp_cnf_plcvers_%s.dat"
+%# define dbs_cNameDistribute	 "pwrp_root:[common.db]pwrp_cnf_distribute.dat"
+%# define dbs_cNameSysObject      "pwrp_root:[common.db]pwrp_cnf_sysobject.dat"
+%# define dbs_cNameGblVolumeList	 "pwra_db:pwr_volumelist.dat"
+%# define dbs_cNameRttCrr         "rtt_crr_%03.3d_%03.3d_%03.3d_%03.3d.dat"
+%# define dbs_cNameRttCrrObj      "rtt_crro_%03.3d_%03.3d_%03.3d_%03.3d.dat"
+%# define dbs_cNameRttCrrCode     "rtt_crrc_%03.3d_%03.3d_%03.3d_%03.3d.dat"
+%# define dbs_cNameRttPlc         "rtt_plc_%03.3d_%03.3d_%03.3d_%03.3d.dat"
+%
+%#elif defined OS_LYNX || defined OS_LINUX
+%
+%# define dbs_cNameDirectory	     "pwrp_load"
+%# define dbs_cDirectory		     "$pwrp_load/"
+%# define dbs_cNamePlc		     "%splc_%s_%04d_%05d"
+%
+%# define dbs_cNameBootList	     "$pwrp_root/common/db/pwrp_cnf_bootlist.dat"
+%# define dbs_cNameVolumeList	 "$pwrp_root/common/db/pwrp_cnf_volumelist.dat"
+%# define dbs_cNamePlcVersion	 "$pwrp_root/common/db/pwrp_cnf_plcvers_%s.dat"
+%# define dbs_cNameDistribute	 "$pwrp_root/common/db/pwrp_cnf_distribute.dat"
+%# define dbs_cNameSysObject	     "$pwrp_root/common/db/pwrp_cnf_sysobject.dat"
+%# define dbs_cNameGblVolumeList	 "$pwra_db/pwr_volumelist.dat"
+%# define dbs_cNameRttCrr         "rtt_crr_%03.3d_%03.3d_%03.3d_%03.3d.dat"
+%# define dbs_cNameRttCrrObj      "rtt_crro_%03.3d_%03.3d_%03.3d_%03.3d.dat"
+%# define dbs_cNameRttCrrCode     "rtt_crrc_%03.3d_%03.3d_%03.3d_%03.3d.dat"
+%# define dbs_cNameRttPlc         "rtt_plc_%03.3d_%03.3d_%03.3d_%03.3d.dat"
+%
+%#endif
+%
+%#define dbs_cNameVolume		     "%s%s.dbs" /* <volume name>.dbs  */
+%#define	dbs_cNameAlias		     "%spwrp_alias.dat"
+%#define	dbs_cNameAppl		     "%sld_appl_%s_%d.txt"
+%#define	dbs_cNameBoot		     "%sld_boot_%s_%04d.dat"
+%#define	dbs_cNameNode		     "%sld_node_%04d.dat"
+%#define	dbs_cNameRc		         "%sld_rc_%s_%04d.dat"
+%
+%/**
+% * A database load file is organised in sections.
+% * There can be 32 sections (2^5) and each section can be 128 MB (2^27 bytes).
+% */
+%#define dbs_cSectBits 5
+%#define dbs_cOffsBits 27
+%
+%typedef ptrdiff_t dbs_tRef;
+%#define pdr_dbs_tRef(PDR, objp) pdr_pwr_tUInt32(PDR, (pwr_tBitMask *)objp)
+%
+%#define dbs_cNref (dbs_tRef)0
+%
+%
+%/* All structs in a file will be aligned on even 8 bytes. */
+%#define dbs_cAlignInc 7
+%#define dbs_dAlign(size) (((size) + dbs_cAlignInc) & ~dbs_cAlignInc)
+%#define dbs_dPadding(size) ((((size) + dbs_cAlignInc) & ~dbs_cAlignInc) - (size))
+%#define dbs_dMakeRef(sect, offset) (0 & ((sect) << dbs_cOffsBits) & (offset))
+%
+%typedef union {
+%    struct {
+%        pwr_Endian_4(pwr_Bits(offs, dbs_cOffsBits),
+%                     pwr_Bits(sect, dbs_cSectBits),,)
+%    }        b;
+%    dbs_tRef m;
+%} dbs_uRefBits;
+%
+%pwr_tBoolean
+%pdr_dbs_uRefBits(PDR *pdrs, dbs_uRefBits *objp);
+%
+#endif
+
+struct dbs_sQlink {
+    dbs_tRef self;    /**< Sectfile reference to this virtual address. */
+    dbs_tRef succ;    /**< Forward link. */
+    dbs_tRef pred;    /**< Backward link. */
+};
+
+
+
+enum dbs_eSect {
+    dbs_eSect_dir     = 0,
+    dbs_eSect_volume  = 1,
+    dbs_eSect_volref  = 2,
+    dbs_eSect_object  = 4,
+    dbs_eSect_rbody   = 5,
+    dbs_eSect_oix     = 3,
+    dbs_eSect_name    = 6,
+    dbs_eSect_dbody   = 8,
+    dbs_eSect_cref    = 20,
+    dbs_eSect_fixup   = 9,
+    dbs_eSect_
+};
+
+#ifdef PDR_HDR
+%#define dbs_mSect_volume   pwr_Bit(dbs_eSect_volume)
+%#define dbs_mSect_volref   pwr_Bit(dbs_eSect_volref)
+%#define dbs_mSect_oix      pwr_Bit(dbs_eSect_oix)
+%#define dbs_mSect_object   pwr_Bit(dbs_eSect_object)
+%#define dbs_mSect_rbody    pwr_Bit(dbs_eSect_rbody)
+%#define dbs_mSect_name     pwr_Bit(dbs_eSect_name)
+%#define dbs_mSect_cref     pwr_Bit(dbs_eSect_cref)
+%#define dbs_mSect_dbody    pwr_Bit(dbs_eSect_dbody)
+%#define dbs_mSect_fixup    pwr_Bit(dbs_eSect_fixup)
+%
+#endif
+
+enum dbs_eFile {
+  dbs_eFile__		= 0,
+  dbs_eFile_volume	= 1,
+  dbs_eFile_
+};
+
+
+#ifdef PDR_HDR
+%
+%typedef union {
+%  pwr_tBitMask m;
+%  pwr_32Bits (
+%    pwr_Bits( isAliasClient , 1),
+%    pwr_Bits( isMountClient , 1),
+%    pwr_Bits( isMountClean  , 1),
+%    pwr_Bits( devOnly       , 1),
+%    pwr_Bits( fill0         , 4),,,,
+%
+%    pwr_Bits( io            , 1),
+%    pwr_Bits( fill1         , 7),,,,,,,
+%
+%    pwr_Bits( fill2         , 8),,,,,,,,
+%    pwr_Bits( fill3         , 8),,,,,,,
+%  ) b;
+%
+%#define dbs_mFlags__             (0)
+%#define dbs_mFlags_isAliasClient pwr_Bit(0)
+%#define dbs_mFlags_isMountClient pwr_Bit(1)
+%#define dbs_mFlags_isMountClean  pwr_Bit(2)
+%#define dbs_mFlags_devOnly       pwr_Bit(3)
+%
+%#define dbs_mFlags_io            pwr_Bit(8)
+%
+%#define dbs_mFlags_isClient      (dbs_mFlags_isAliasClient|dbs_mFlags_isMountClient)
+%#define dbs_mFlags_              (~dbs_mFlags__)
+%} dbs_mFlags;
+%
+%#define pdr_dbs_mFlags(PDR, objp) pdr_pwr_tBitMask(PDR, (pwr_tBitMask *)objp)
+%
+%typedef union {
+%  pwr_tBitMask m;
+%  pwr_32Bits (
+%    pwr_Bits( devOnly       , 1),
+%    pwr_Bits( fill0         , 7),,,,,,,
+%
+%    pwr_Bits( fill1         , 8),,,,,,,,
+%    pwr_Bits( fill2         , 8),,,,,,,,
+%    pwr_Bits( fill3         , 8),,,,,,,
+%  ) b;
+%
+%#define dbs_mBody__             (0)
+%#define dbs_mBody_devOnly       pwr_Bit(0)
+%
+%#define dbs_mBody_              (~dbs_mBody__)
+%} dbs_mBody;
+%
+%#define pdr_dbs_mBody(PDR, objp) pdr_pwr_tBitMask(PDR, (pwr_tBitMask *)objp)
+%
+%/* Nota Bene !!!
+%   The constant dbs_cVersionFormat reflects the version of the load file
+%   structure as a whole. It must be changed every time there is a change
+%   in any of the structures of this file.  */
+%
+%#define dbs_cVersionFormat 3
+%
+%/**
+% * File Information Section.
+% */
+%
+%#define dbs_cVersionFile 2
+%
+#endif
+
+#ifdef PDR_HDR
+%/**
+% * @note You can't use pdr_dbs_sFile directly due to the format member.
+% */
+#endif
+
+struct dbs_sFile {
+    co_mFormat     format;           /**< Data representation format. Always stored in network order */
+    pwr_tUInt32     cookie;           /**< */
+    pwr_tUInt32     size;             /**< total size of load file */
+    pwr_tUInt32     offset;           /**< offset to directory counted from start of file */
+    pwr_tVersion    formatVersion;    /**< version of load file format */
+    pwr_tVersion    version;
+    pwr_tVersion    sectVersion;
+    pwr_tPwrVersion pwrVersion;
+    pwr_tTime       time;             /**< time at which this load file was created */
+    dbs_eFile       fileType;
+    pwr_tObjName    userName;
+    pwr_tString80   comment;
+};
+
+#ifdef PDR_HDR
+%/**
+% * Directory section.
+% */
+%
+%#define dbs_cVersionDirectory  1
+%
+#endif
+
+    
+
+struct dbs_sSect {
+    pwr_tVersion version;    /**< section structure version  */
+    dbs_eSect    type;       /**< section type  */
+    pwr_tUInt32  size;       /**< section size  */
+    pwr_tUInt32  offset;     /**< offset, in bytes, from start of file. */
+    
+};
+
+
+/**
+ * Volume Information Section.
+ */
+#ifdef PDR_HDR
+%#define dbs_cVersionVolume 1
+#endif
+
+struct dbs_sVolume {
+    pwr_tVid     vid;            /**< volume identifier of this volume */
+    pwr_tObjName name;           /**< name of this volume */
+    pwr_tCid     cid;            /**< class of this volume */
+    pwr_tObjName className;      /**< name of class of this volume */
+    
+    pwr_tTime    time;           /**< time at which this load file was created */
+    pwr_tUInt32  cardinality;    /**< number objects in this volume */
+    pwr_tUInt32  rbodySize;
+};
+
+/**
+ * Volume Reference Section.
+ */
+
+#ifdef PDR_HDR
+%#define dbs_cVersionVolRef 1
+#endif
+
+struct dbs_sVolRef {
+    pwr_tVid     vid;     /**< volume identifier of referenced volume */
+    pwr_tObjName name;    /**< name of the referenced volume */
+    pwr_tCid     cid;     /**< class identifier of referenced volume */
+    pwr_tTime    time;    /**< time when referenced volume loadfile was created. */
+
+    pwr_tUInt32  size;    /**< volume load file size  */
+    pwr_tUInt32  offset;  /**< volume offset, in bytes, from start of file. */
+};
+
+
+/**
+ * Object Index (oix) Section.
+ *
+ * Layout of an object index table entry.
+ * Oix entries are stored in oix-sect.
+ * Used to find an object with object index as key.
+ * Table lookup mechanism is binary lookup.
+ */
+#ifdef PDR_HDR
+%#define dbs_cVersionOix 1
+#endif
+
+struct dbs_sOix {
+    pwr_tOix    oix;    /**< Object index */
+    dbs_tRef    ref;    /**< Address, section relative, to object in object section */
+};
+
+/**
+ * Object Section.
+ * Defines the layout of an object stored in a load file
+ * Objects are stored in the dbs_eSect_object section.
+ */
+#ifdef PDR_HDR
+%#define dbs_cVersionObject 1
+#endif
+
+struct dbs_sBodyRef {
+    pwr_tTime       time;
+    pwr_tUInt32     size;
+    dbs_tRef        ref;
+};
+
+struct dbs_sOlink {
+    pwr_tOix        pred;
+    pwr_tOix        succ;
+};
+
+struct dbs_sBintab {
+    dbs_tRef        start;
+    dbs_tRef        end;
+    pwr_tUInt32     rsize;
+};
+
+struct dbs_sObject {
+    pwr_tOid        oid;        /**< object identifier */
+    pwr_tCid        cid;        /**< class identifier */
+    pwr_tOid        poid;       /**< object identifier of parent */
+    pwr_tObjName    name;       /**< name of object */
+    pwr_tObjName    normname;   /**< normalized object name. */
+    pwr_tTime       time;       /**< time of last change in object header */
+    pwr_tOid        soid;       /**< object identifier of server object. */
+        
+    dbs_mFlags      flags;
+    dbs_sBodyRef    rbody;      /**< runtime body */
+    dbs_sBodyRef    dbody;      /**< development body */
+
+    dbs_tRef        pref;       /**< reference to parent */
+
+    dbs_sQlink      sib_lh;     /**< Head of list of siblings.
+                                     Object references are stored as offsets
+                                     in the object section. */
+    dbs_sQlink      sib_ll;     /**< Link in list of siblings.
+                                     Object references are stored as offsets
+                                     in the object section. */
+    dbs_sQlink      o_ll;       /**< Link in list of objects of same class */
+	
+    dbs_sBintab     name_bt;    /**< search for named child  */
+};
+
+/**
+ * Class Reference.
+ */
+
+struct dbs_sCref {
+    pwr_tCid        cid;       /**< class identifier */
+    dbs_sQlink      o_lh;      /**< root of list of all object
+                                    of this class within this volume  */
+};
+
+/**
+ * Body Section.
+ *
+ * The 
+ *
+ */
+
+#ifdef PDR_HDR
+%#define dbs_cVersionRbody 1
+%#define dbs_cVersionDbody 1
+#endif
+
+struct dbs_sBody {
+    pwr_tOid       oid;
+    pwr_tUInt32    size;
+    dbs_mBody      flags;
+        /* here comes the data */
+};
+
+/**
+ * Name table. Used to find a named object.
+ * Entries are sorted in parent, name ascending order.
+ * Table lookup mechanism is binary lookup.
+ */
+
+#ifdef PDR_HDR
+%#define dbs_cVersionName 1
+#endif
+
+struct dbs_sName {
+    pwr_tOix        poix;        /**< object identity of parent. */
+    pwr_tObjName    normname;    /**< normalized object name. */
+    dbs_tRef        ref;         /**< address to object in object section. */
+};
+
+
+#ifdef PDR_HDR
+%#define dbs_cVersionFixup 1
+%
+%typedef union {
+%  pwr_tBitMask m;
+%  pwr_32Bits (
+%      pwr_Bits( isMapped    , 1),
+%      pwr_Bits( fill0       , 7),,,,,,,
+%
+%      pwr_Bits( fill1       , 8),,,,,,,,
+%      pwr_Bits( fill2       , 8),,,,,,,,
+%      pwr_Bits( fill3       , 8),,,,,,,
+%  ) b;
+%
+%#define dbs_mEnv__           (0)
+%#define dbs_mEnv_isMapped    pwr_Bit(0)
+%
+%#define dbs_mEnv_            (~dbs_mEnv__)
+%} dbs_mEnv;
+%
+%typedef struct {
+%    FILE         *f;
+%    dbs_sFile    file;
+%    pwr_tUInt32  nSect;
+%    dbs_sSect    sect[dbs_eSect_];
+%    
+%    /* the rest is used only if mapped */
+%    pwr_tUInt32  size;    /**< size of mapped file */
+%    char         *base;
+%    dbs_mEnv flags;
+%} dbs_sEnv;
+%
+%
+%#define dbs_Qitem(a, b, c) ((b *)((char *)a - offsetof(b, c)))
+%#define dbs_Qlink(a, b, c) ((dbs_sQlink *)((char *)a + offsetof(b, c)))
+%
+%void           *dbs_Address(pwr_tStatus*, dbs_sEnv*, dbs_tRef);
+%void           *dbs_Alloc(pwr_tStatus*, dbs_sEnv*, pwr_tUInt32);
+%pwr_tBoolean    dbs_AllocLookasideSegment(pwr_tStatus*, dbs_sEnv*, pwr_tUInt32, pwr_tUInt32);
+%void           *dbs_AllocNamedSegment(pwr_tStatus*, dbs_sEnv*, pwr_tUInt32, char*);
+%dbs_sEnv       *dbs_Create(pwr_tStatus*, dbs_sEnv*, char*, pwr_tUInt32, pwr_tUInt32);
+%void            dbs_Dump(pwr_tStatus*, dbs_sEnv*);
+%pwr_tBoolean    dbs_Free(pwr_tStatus*, dbs_sEnv*, void*);
+%pwr_tBoolean    dbs_FreeReference(pwr_tStatus*, dbs_sEnv*, dbs_tRef);
+%dbs_tRef        dbs_InDbs(pwr_tStatus*, dbs_sEnv*, void*, pwr_tUInt32);
+%dbs_tRef        dbs_ItemReference(pwr_tStatus*, dbs_sEnv*, void*);
+%dbs_sQlink     *dbs_Qalloc(pwr_tStatus*, dbs_sEnv*);
+%pwr_tBoolean    dbs_QhasOne(pwr_tStatus*, dbs_sEnv*, dbs_sQlink*);
+%dbs_tRef        dbs_Qinit(pwr_tStatus*, dbs_sQlink*, dbs_tRef);
+%dbs_sQlink     *dbs_Qinsert(pwr_tStatus*, dbs_sQlink*, dbs_sQlink*, dbs_sQlink*);
+%dbs_sQlink     *dbs_QinsertPred(pwr_tStatus*, dbs_sEnv*, dbs_sQlink*, dbs_sQlink*);
+%dbs_sQlink     *dbs_QinsertSucc(pwr_tStatus*, dbs_sEnv*, dbs_sQlink*, dbs_sQlink*);
+%pwr_tBoolean    dbs_QisEmpty(pwr_tStatus*, dbs_sEnv*, dbs_sQlink*);
+%pwr_tBoolean    dbs_QisLinked(pwr_tStatus*, dbs_sEnv*, dbs_sQlink*);
+%pwr_tBoolean    dbs_QisNull(pwr_tStatus*, dbs_sEnv*, dbs_sQlink*);
+%dbs_sQlink     *dbs_Qmove(pwr_tStatus*, dbs_sEnv*, dbs_sQlink*, dbs_sQlink*);
+%dbs_sQlink     *dbs_Qpred(pwr_tStatus*, dbs_sEnv*, dbs_sQlink*);
+%dbs_sQlink     *dbs_Qremove(pwr_tStatus*, dbs_sEnv*, dbs_sQlink*);
+%dbs_sQlink     *dbs_QremovePred(pwr_tStatus*, dbs_sEnv*, dbs_sQlink*);
+%dbs_sQlink     *dbs_QremoveSucc(pwr_tStatus*, dbs_sEnv*, dbs_sQlink*);
+%dbs_sQlink     *dbs_Qsucc(pwr_tStatus*, dbs_sEnv*, dbs_sQlink*);
+%dbs_tRef        dbs_RefAlloc(pwr_tStatus*, dbs_sEnv*, pwr_tUInt32);
+%dbs_tRef        dbs_Reference(pwr_tStatus*, dbs_sEnv*, void*);
+%
+%pwr_tBoolean    dbs_AlignedRead(pwr_tStatus *sts, void *buf, pwr_tUInt32 size, dbs_sEnv *ep);
+%pwr_tBoolean    dbs_Close(pwr_tStatus *sts, dbs_sEnv *ep);
+%dbs_sEnv       *dbs_Open(pwr_tStatus *sts, dbs_sEnv *ep, const char *filename);
+%
+%
+%#endif
+#endif

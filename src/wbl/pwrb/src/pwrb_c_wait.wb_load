@@ -1,0 +1,245 @@
+!  pwrb_c_wait.wb_load -- Defines the class Wait.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_macro_logic.h
+!  On-state or set delay.
+!  
+!  The time starts on a leading edge on the input. When
+!  the time TimerTime expires and if the input still
+!  remains TRUE the output is set. It is cleared as soon
+!  as the input becomes FALSE.
+!  
+!  Compare with Waith.
+!*/
+SObject pwrb:Class
+  Object Wait $ClassDef 249 
+    Body SysBody
+      Attr Editor = pwr_eEditor_PlcEd
+      Attr Method = pwr_eMethod_RtConnectionsAndDevBodies
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+         Attr StructName = "wait"
+      EndBody
+      !/**
+      !  The input signal which is to be delayed.
+      !*/
+      Object in $Input 1 
+        Body SysBody
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_RTVIRTUAL
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOREMOVE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "in"
+        EndBody
+      EndObject
+      !/**
+      !  Delayed signal.
+      !*/
+      Object Status $Output 2 
+        Body SysBody
+          Attr PgmName = "Status"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "sts"
+        EndBody
+      EndObject
+      Object StatusOld $Intern 3 
+        Body SysBody
+          Attr PgmName = "StatusOld"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "StatusOld"
+        EndBody
+      EndObject
+      ! ++
+      ! Timer struct
+      !
+      !/**
+      !  Indicates an active timer.
+      !*/
+      Object TimerFlag $Intern 4 
+        Body SysBody
+          Attr PgmName = "TimerFlag"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Points to the next element in the timer queue.
+      !*/
+      Object TimerNext $Intern 5 
+        Body SysBody
+          Attr PgmName = "TimerNext"
+          Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Number of remaining ticks.
+      !*/
+      Object TimerCount $Intern 6 
+        Body SysBody
+          Attr PgmName = "TimerCount"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Points to a Do or Dv object or, if these are not used,
+      !  to TimerDoDum. After a time of TimerTime the signal
+      !  specified by TimerDo is cleared.
+      !*/
+      Object TimerDO $Intern 7 
+        Body SysBody
+          Attr PgmName = "TimerDO"
+          Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the set delay, in seconds. TimerTime has to
+      !  be ³ execution time of the PLC program containing the
+      !  object.
+      !  The effective time can, according to the current
+      !  CPU-load, be longer (e.g. one PLC program cycle in
+      !  slowly running PLC programs ) and shorter ( as
+      !  described for fast running PLC programs) than the time
+      !  specified by TimerTime.
+      !*/
+      Object TimerTime $Intern 8 
+        Body SysBody
+          Attr PgmName = "TimerTime"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr NiNaAnnot = 2
+          Attr NiNaCond = 1
+        EndBody
+      EndObject
+      !/**
+      !  Dummy. If TimerDoDum does not point to a Do or Dv
+      !  object it points to this attribute.
+      !*/
+      Object TimerDODum $Intern 9 
+        Body SysBody
+          Attr PgmName = "TimerDODum"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Identity of this object is set at load file creation.
+      !  Used by the run time system.
+      !*/
+      Object TimerObjDId $Intern 10 
+        Body SysBody
+          Attr Flags |= PWR_MASK_OBJDIDSELF
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      !/**
+      !  The operator's authorities to change TimerTime. Not
+      !  implemented.
+      !  
+      !   0   -- Changes not allowed.
+      !   != 0 -- Changes allowed.
+      !*/
+      Object TimerAcc $Intern 11 
+        Body SysBody
+          Attr PgmName = "TimerAcc"
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies a valid interval at changes made by the
+      !  operator on TimerTime.
+      !  
+      !  TimerMin <= TimerTime <= TimerMax
+      !*/
+      Object TimerMin $Intern 12 
+        Body SysBody
+          Attr PgmName = "TimerMin"
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      Object TimerMax $Intern 13 
+        Body SysBody
+          Attr PgmName = "TimerMax"
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !
+      ! End Timer struct
+      ! --
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      !/**
+      !  Specifies if TimerTime is to be displayed in the symbol
+      !  of the Wait object or not. FALSE means no displaying
+      !  and TRUE displaying. The unit is seconds.
+      !*/
+      Object ShowTimerTime $Intern 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object PlcNode $Buffer 2 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 97
+        Attr parameters[0] = 1
+        Attr parameters[1] = 0
+        Attr parameters[2] = 1
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 1
+        Attr graphindex = 0
+        Attr default_mask[0] = 1
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 1
+        Attr rtbody_annotation = 1
+        Attr compmethod = 5
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+        Attr executeordermethod = 2
+        Attr objname = "Wait"
+        Attr graphname = "Wait"
+        Attr debugpar = ""
+      Endbody
+    EndObject
+    Object Template Wait
+      Body DevBody
+        Attr ShowTimerTime = 1
+      EndBody
+    EndObject
+  EndObject
+EndSObject

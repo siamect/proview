@@ -1,0 +1,37 @@
+! PROVIEW/R  -  Operator environment
+!
+! Filename:
+!   phtre_src:ps_htre_settings.txt
+!
+! Description:
+!   This is the definitionfile to the Historical trend option.
+!   Settings for trend, fetch and print
+!
+!
+#DATABASE
+pwrp_db:rt_hd
+!
+#CURVE_DATABASE
+pwrp_db:op_htre_groups
+!
+#DIRECTORY
+PWRP_LIS:
+!
+#EXTENSION
+TMP
+!
+#DESTINATION
+BOTH
+!
+#COLORPRINT
+YES
+!
+#PRINTER
+LPS17_PS
+!
+#PRINTFILE
+DIAGRAM
+!
+#REALTIMECOUNT
+30
+!

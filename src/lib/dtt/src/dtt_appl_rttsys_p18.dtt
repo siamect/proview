@@ -1,0 +1,584 @@
+32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+32 120 120 120 120 116 120 120 32 120 120 120 120 120 120 120 120 120 120 32 120 32 
+32 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 32 
+32 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 32 
+76 0 0 0 0 113 0 0 76 0 0 0 0 0 0 0 0 0 0 67 0 32 
+111 0 0 0 0 113 0 0 111 0 0 0 0 0 0 0 0 0 0 111 0 32 
+103 0 0 0 0 113 0 0 103 0 0 0 0 0 0 0 0 0 0 110 0 32 
+103 0 0 0 0 113 0 0 103 0 0 0 0 0 0 0 0 0 0 100 0 32 
+105 0 0 0 0 113 0 0 105 0 0 0 0 0 0 0 0 0 0 105 0 80 
+110 0 0 0 0 113 0 0 110 0 0 0 0 0 0 0 0 0 0 116 0 70 
+103 0 0 0 0 113 0 0 103 0 0 0 0 0 0 0 0 0 0 105 0 49 
+32 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 111 0 32 
+32 0 0 0 0 113 0 0 80 0 0 0 0 0 0 0 0 0 0 110 0 115 
+32 0 0 0 0 113 0 0 97 0 0 0 0 0 0 0 0 0 0 32 0 116 
+32 0 0 0 0 113 0 0 114 0 0 0 0 0 0 0 0 0 0 80 0 97 
+32 0 0 0 0 113 0 0 97 0 0 0 0 0 0 0 0 0 0 97 0 114 
+32 0 0 0 0 113 0 0 109 0 0 0 0 0 0 0 0 0 0 114 0 116 
+32 0 0 0 0 113 0 0 101 0 0 0 0 0 0 0 0 0 0 97 0 47 
+32 0 0 0 0 113 0 0 116 0 0 0 0 0 0 0 0 0 0 109 0 115 
+32 0 0 0 0 113 0 0 101 0 0 0 0 0 0 0 0 0 0 101 0 116 
+32 0 0 0 0 113 0 0 114 0 0 0 0 0 0 0 0 0 0 116 0 111 
+32 0 0 0 0 113 0 0 115 0 0 0 0 0 0 0 0 0 0 101 0 112 
+32 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 114 0 47 
+32 0 0 0 0 113 0 0 40 0 0 0 0 0 0 0 0 0 0 32 0 105 
+32 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 110 
+32 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 115 
+32 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 101 
+32 40 0 0 40 113 0 0 41 0 0 0 0 0 0 0 0 0 0 32 0 114 
+32 109 0 0 112 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 116 
+32 115 0 0 97 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 47 
+32 41 0 0 103 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 115 
+32 0 0 0 101 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 104 
+32 0 0 0 115 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 111 
+32 0 0 0 41 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 119 
+32 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 32 
+32 120 0 120 120 118 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 102 
+32 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 105 
+32 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 108 
+32 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 101 
+32 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 32 
+32 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 32 
+32 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 32 
+32 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 32 
+32 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 32 
+32 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 80 
+32 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 70 
+32 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 51 
+32 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 32 
+32 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 99 
+32 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 104 
+32 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 97 
+32 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 110 
+32 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 103 
+32 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 101 
+32 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 32 
+32 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 118 
+32 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 97 
+32 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 108 
+32 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 117 
+32 120 0 120 120 118 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 101 
+32 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 32 
+32 0 0 0 0 119 120 120 32 0 0 0 0 0 0 0 0 0 0 32 0 32 
+32 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 32 
+32 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 32 
+32 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 80 
+32 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 70 
+32 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 52 
+32 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 32 
+69 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 98 
+110 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 97 
+116 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 99 
+114 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 107 
+121 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 32 
+32 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 32 
+32 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 32 
+32 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 32 
+32 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 32 
+58 0 0 0 0 113 0 0 32 0 0 0 0 0 0 0 0 0 0 32 0 32 
+49 120 120 120 120 117 120 120 32 120 120 120 120 120 120 120 120 120 120 32 120 32 
+48 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 32 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+2 1 1 1 1 1 1 1 2 1 1 1 1 1 1 1 1 1 1 2 1 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 1 0 1 1 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 1 0 1 1 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 1 1 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 0 0 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 2 
+2 1 1 1 1 1 1 1 2 1 1 1 1 1 1 1 1 1 1 2 1 2 
+2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 
+
+*******************************************************************
+LOGGING
+*******************************************************************
+Number		2
+Text		"Time       "
+Type		UPDATE
+Parameter	LOGGING_TIME
+Text/Dualpar	""
+Privileges	EL
+Outputflags	
+Characters	8
+Decimals	0
+MaxLimit	10000000000.000000
+MinLimit	10.000000
+Database	USER
+Declaration	INT
+x,y		4	1
+-------------------------------------------------------------------
+Number		3
+Text		"File       "
+Type		UPDATE
+Parameter	LOGGING_FILE
+Text/Dualpar	""
+Privileges	EL
+Outputflags	
+Characters	62
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	STRING
+x,y		4	2
+-------------------------------------------------------------------
+Number		4
+Text		"Type       "
+Type		UPDATE
+Parameter	LOGGING_TYPE
+Text/Dualpar	""
+Privileges	EL
+Outputflags	
+Characters	10
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING20
+x,y		4	3
+-------------------------------------------------------------------
+Number		5
+Text		"Buffer size"
+Type		UPDATE
+Parameter	LOGGING_BUFFSIZE
+Text/Dualpar	""
+Privileges	EL
+Outputflags	
+Characters	8
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	INT
+x,y		4	4
+-------------------------------------------------------------------
+Number		6
+Text		"INSERT"
+Type		SET
+Parameter	LOGGING_INSERT
+Text/Dualpar	""
+Privileges	EL
+Outputflags	NO
+Characters	0
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		4	6
+-------------------------------------------------------------------
+Number		8
+Text		"%"
+Type		UPDATE
+Parameter	LOGGING_ACTIVE
+Text/Dualpar	""
+Privileges	NO
+Outputflags	
+Characters	14
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING20
+x,y		63	6
+-------------------------------------------------------------------
+Number		20
+Text		" "
+Type		UPDATE
+Parameter	LOGGING_ATTR1
+Text/Dualpar	""
+Privileges	EL
+Outputflags	
+Characters	70
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		2	9
+-------------------------------------------------------------------
+Number		21
+Text		" "
+Type		UPDATE
+Parameter	LOGGING_ATTR2
+Text/Dualpar	""
+Privileges	EL
+Outputflags	
+Characters	70
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		2	10
+-------------------------------------------------------------------
+Number		22
+Text		" "
+Type		UPDATE
+Parameter	LOGGING_ATTR3
+Text/Dualpar	""
+Privileges	EL
+Outputflags	
+Characters	70
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		2	11
+-------------------------------------------------------------------
+Number		23
+Text		" "
+Type		UPDATE
+Parameter	LOGGING_ATTR4
+Text/Dualpar	""
+Privileges	EL
+Outputflags	
+Characters	70
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		2	12
+-------------------------------------------------------------------
+Number		24
+Text		" "
+Type		UPDATE
+Parameter	LOGGING_ATTR5
+Text/Dualpar	""
+Privileges	EL
+Outputflags	
+Characters	70
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		2	13
+-------------------------------------------------------------------
+Number		25
+Text		" "
+Type		UPDATE
+Parameter	LOGGING_ATTR6
+Text/Dualpar	""
+Privileges	EL
+Outputflags	
+Characters	70
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		2	14
+-------------------------------------------------------------------
+Number		26
+Text		" "
+Type		UPDATE
+Parameter	LOGGING_ATTR7
+Text/Dualpar	""
+Privileges	EL
+Outputflags	
+Characters	70
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		2	15
+-------------------------------------------------------------------
+Number		27
+Text		" "
+Type		UPDATE
+Parameter	LOGGING_ATTR8
+Text/Dualpar	""
+Privileges	EL
+Outputflags	
+Characters	70
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		2	16
+-------------------------------------------------------------------
+Number		28
+Text		" "
+Type		UPDATE
+Parameter	LOGGING_ATTR9
+Text/Dualpar	""
+Privileges	EL
+Outputflags	
+Characters	70
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		2	17
+-------------------------------------------------------------------
+Number		29
+Text		" "
+Type		UPDATE
+Parameter	LOGGING_ATTR10
+Text/Dualpar	""
+Privileges	EL
+Outputflags	
+Characters	70
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		2	18
+-------------------------------------------------------------------
+Number		30
+Text		" "
+Type		UPDATE
+Parameter	LOGGING_COND
+Text/Dualpar	""
+Privileges	EL
+Outputflags	
+Characters	70
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	STRING
+x,y		2	20
+-------------------------------------------------------------------
+Number		40
+Text		"START"
+Type		SET
+Parameter	LOGGING_START
+Text/Dualpar	""
+Privileges	EL
+Outputflags	NO
+Characters	0
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		24	6
+-------------------------------------------------------------------
+Number		41
+Text		"STOP"
+Type		SET
+Parameter	LOGGING_STOP
+Text/Dualpar	""
+Privileges	EL
+Outputflags	NO
+Characters	0
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		35	6
+-------------------------------------------------------------------
+Number		42
+Text		"Store"
+Type		SET
+Parameter	LOGGING_STORE
+Text/Dualpar	""
+Privileges	EL
+Outputflags	NO
+Characters	0
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		37	1
+-------------------------------------------------------------------
+Number		43
+Text		"Logging priority"
+Type		UPDATE
+Parameter	LOGGING_PRIO
+Text/Dualpar	""
+Privileges	SYS
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	32.000000
+MinLimit	0.000000
+Database	USER
+Declaration	INT
+x,y		37	3
+-------------------------------------------------------------------
+Number		44
+Text		"Full buffer stop"
+Type		UPDATE
+Parameter	LOGGING_INTERN
+Text/Dualpar	""
+Privileges	EL
+Outputflags	
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	BOOLEAN
+x,y		37	4
+-------------------------------------------------------------------
+Number		45
+Text		"SHOW FILE"
+Type		SET
+Parameter	LOGGING_SHOW_FILE
+Text/Dualpar	""
+Privileges	EL
+Outputflags	NO
+Characters	0
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		46	6
+-------------------------------------------------------------------
+Number		46
+Text		"Restore"
+Type		SET
+Parameter	LOGGING_RESTORE
+Text/Dualpar	""
+Privileges	EL
+Outputflags	NO
+Characters	0
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		48	1
+-------------------------------------------------------------------
+Number		47
+Text		"More"
+Type		TOGGLE
+Parameter	LOGGING_MORE
+Text/Dualpar	""
+Privileges	OP
+Outputflags	NO
+Characters	0
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	BOOLEAN
+x,y		61	1
+-------------------------------------------------------------------
+Number		48
+Text		"Short name"
+Type		UPDATE
+Parameter	LOGGING_SHORTNAME
+Text/Dualpar	""
+Privileges	EL
+Outputflags	
+Characters	1
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	BOOLEAN
+x,y		61	3
+-------------------------------------------------------------------
+Number		49
+Text		"%"
+Type		UPDATE
+Parameter	LOGGING_PARNUM
+Text/Dualpar	"!"
+Privileges	NO
+Outputflags	
+Characters	3
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	USER
+Declaration	INT
+x,y		24	8
+-------------------------------------------------------------------
+Number		60
+Text		"%"
+Type		UPDATE
+Parameter	LOGGING_ENTRY
+Text/Dualpar	"!"
+Privileges	NO
+Outputflags	
+Characters	2
+Decimals	0
+MaxLimit	0.000000
+MinLimit	0.000000
+Database	RTTSYS
+Declaration	INT
+x,y		75	0
+-------------------------------------------------------------------

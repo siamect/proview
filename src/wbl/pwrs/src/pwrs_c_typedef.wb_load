@@ -1,0 +1,41 @@
+!  pwrs_c_typedef.wb_load -- Defines the class TypeDef.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+SObject pwrs:Class
+  Object $TypeDef $ClassDef pwr_eCix_TypeDef
+    Body SysBody
+      Attr Flags |= pwr_mClassDef_System
+      Attr Flags |= pwr_mClassDef_Multinode
+    EndBody
+    Object SysBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "TypeDef"
+      EndBody
+      Object Type $Attribute 1
+        Body SysBody
+	  Attr TypeRef = "pwrs:Type-$Int32"
+	EndBody
+      EndObject
+      Object Size $Attribute 2
+        Body SysBody
+	  Attr TypeRef = "pwrs:Type-$Int32"
+	EndBody
+      EndObject
+      Object TypeRef $Attribute 3
+        Body SysBody
+	  Attr TypeRef = "pwrs:Type-$TypeId"
+	EndBody
+      EndObject
+      Object Elements $Attribute 4
+        Body SysBody
+	  Attr TypeRef = "pwrs:Type-$Int32"
+	EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject

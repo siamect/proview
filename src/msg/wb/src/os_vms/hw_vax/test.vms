@@ -1,0 +1,4 @@
+a := /pwrd_disk/tools/exp_new/exe/dir_symbols.mk
+
+all :
+	write sys$$output "a: $(unix2vms $(space), $(a))"

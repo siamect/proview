@@ -1,0 +1,165 @@
+!  co_errno_msg.msg -- errno messages
+!
+!  PROVIEW/R
+!  Copyright (C) 1999 by Mandator AB.
+!
+!  Error messages used to translate UNIX style errno
+!  error codes to Proview status codes.
+!
+.facility       ERRNO,102 /prefix = ERRNO__	
+
+success		<successful>						/success
+2big		<arg list too long>					/error
+acces		<permission denied>					/error
+addrinuse	<address already in use>				/error
+addrnotavail	<can't assign requested address>			/error
+afnosupport	<address family not supported by protocol family>	/error
+again		<resource temporarily unavailable>			/error
+aio		<internal AIO operation complete>			/error
+align		<alignment error>					/error
+already		<operation already in progress>				/error
+badcat		<bad message catalogue format [1]>			/error
+badf		<bad file descriptor>					/error
+badmsg		<bad message>						/error
+badrpc		<RPC struct is bad>					/error
+busy		<resource busy>						/error
+canceled	<operation canceled>					/error
+child		<no child processes>					/error
+cloneme		<tells open to clone the device>			/error
+connaborted	<software caused connection abort>			/error
+connrefused	<connection refused>					/error
+connreset	<connection reset by peer>				/error
+deadlk		<operation would cause deadlock>			/error
+destaddrreq	<destination address required>				/error
+dirty		<mounting a dirty fs w/o force>				/error
+dom		<domain error>						/error
+dquot		<disc quota exceeded>					/error
+duppkg		<duplicate package name on install>			/error
+exist		<file exists>						/error
+fail		<cannot start operation>				/error
+fault		<bad address>						/error
+fbig		<file too large>					/error
+ftype		<inappropriate (operation for) file type or format>	/error
+highb		<high bit in file name (Lynx specific)>			/error
+hostdown	<host is down>						/error
+hostunreach	<no route to host>					/error
+idrm		<identifier removed | msg queue id has been removed>	/error
+ilseq		<illegal byte sequence | invalid wide character>	/error
+inprog		<(asynchronous) operation in progress>			/error
+inprogress	<operation now in progress>				/error
+intr		<interrupted system call>				/error
+inval		<invalid argument>					/error
+io		<I/O error>						/error
+isconn		<socket is already connected>				/error
+isdir		<is a directory>					/error
+libacc		<cannot access a shared library>			/error
+libbad		<shared library corrupted>				/error
+libexec		<trying to execute a shared library>			/error
+libmax		<executable requires too many shared libraries>		/error
+libscn		<executable has corrupted .lib section>			/error
+loop		<too many levels of symbolic links>			/error
+media		<>							/error
+mfile		<too many open files>					/error
+mlink		<too many links>					/error
+msgsize		<message too long>					/error
+mtimers		<too many timers>					/error
+multihop	<reserved>						/error
+nametoolong	<file name too long>					/error
+netdown		<network is down>					/error
+netreset	<network dropped connection on reset>			/error
+netunreach	<network is unreachable>				/error
+nfile		<file table overflow, too many open files in system>	/error
+nobufs		<no buffer space available>				/error
+nodata		<no data | no message on stream head read q>		/error
+nodev		<no such device>					/error
+noent		<no such file or directory>				/error
+noexec		<exec format error>					/error
+nolck		<no locks available>					/error
+nolink		<reserved>						/error
+nomem		<not enough core, not enough memory>			/error
+nomsg		<no message of desired type>				/error
+nopkg		<unresolved package name>				/error
+noprotoopt	<protocol not available>				/error
+nospc		<no space left on device>				/error
+nosr		<out of streams resources>				/error
+nostr		<fd not associated with a stream>			/error
+nosym		<unresolved symbol name>				/error
+nosys		<function not implemented>				/error
+notblk		<block device required>					/error
+notchr		<not a character device>				/error
+notconn		<socket is not connected>				/error
+notdir		<not a directory>					/error
+notempty	<directory not empty>					/error
+notsock		<socket operation on non-socket>			/error
+notsup		<function not implemented>				/error
+notty		<inappropriate I/O control operation>			/error
+nwait		<no waiting processes>					/error
+nxio		<no such device or address>				/error
+opnotsupp	<operation not supported on socket>			/error
+overflow	<value too large to be stored in data type>		/error
+perm		<operation not permitted>				/error
+pfnosupport	<protocol family not supported>				/error
+pipe		<broken pipe>						/error
+proclim		<too many processes>					/error
+procunavail	<bad procedure for program>				/error
+progmismatch	<program version wrong>					/error
+progunavail	<RPC prog. not avail>					/error
+proto		<(streams) protocol error>				/error
+protonosupport	<protocol not supported>				/error
+prototype	<protocol wrong type for socket>			/error
+range		<result too large>					/error
+relocated	<>							/error
+remote		<too many levels of remote in path>			/error
+restartsyscall	<restart TCP/IP syscall (kernel only)>			/error
+rofs		<read-only file system>					/error
+rpcmismatch	<RPC version wrong>					/error
+shutdown	<can't send after socket shutdown>			/error
+socktnosupport	<socket type not supported>				/error
+soft		<>							/error
+spipe		<illegal seek>						/error
+srch		<no such process>					/error
+stale		<stale NFS file handle>					/error
+time		<system call timed out | timer expired>			/error
+timedout	<connection timed out>					/error
+toomanyrefs	<too many references: can't splice>			/error
+txtbsy		<text file busy>					/error
+users		<too many users>					/error
+version		<version number mismatch>				/error
+wouldblock	<I/O stream empty | operation would block>		/error
+xdev		<improper link>						/error
+fatal		<fatal internal error>					/fatal
+
+vmserr		<untranslatable VMS error>				/error
+badcode		<unknown or bad errno code>				/error
+chrng		<channel number out of range>				/error
+l2nsync		<level 2 not synchronized>				/error
+l3hlt		<level 3 halted>					/error
+l3rst		<level 3 reset>						/error
+lnrng		<link number out of range>				/error
+unatch		<protocol driver not attached>				/error
+nocsi		<no CSI structure available>				/error
+l2hlt		<level 2 halted>					/error
+bade		<invalid exchange>					/error
+badr		<invalid request descriptor>				/error
+xfull		<exchange full>						/error
+noano		<no anode>						/error
+badrqc		<invalid request code>					/error
+badslt		<invalid slot>						/error
+bfont		<bad font file format>					/error
+nonet		<machine is not on the network>				/error
+adv		<advertise error>					/error
+srmnt		<srmount error>						/error
+comm		<communication error on send>				/error
+dotdot		<RFS specific error>					/error
+notuniq		<name not unique on network>				/error
+badfd		<file descriptor in bad state>				/error
+remchg		<remote address changed>				/error
+restart		<interrupted system call should be restarted>		/error
+strpipe		<streams pipe error>					/error
+uclean		<structure needs cleaning>				/error
+notnam		<not a XENIX named type file>				/error
+navail		<no XENIX semaphores available>				/error
+isnam		<is a named type file>					/error
+remoteio	<remote I/O error>					/error
+nomedium	<no medium found>					/error
+mediumtype	<wrong medium type>					/error

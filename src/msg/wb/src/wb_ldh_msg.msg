@@ -1,0 +1,102 @@
+!  wb_ldh_msg.msg -- local data handler
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  This module contains the defintion of the error messages used
+!  in ldh modules.
+!
+.facility       LDH,220 /prefix = LDH__	! Local Data Handler
+
+success		<successful completion>					/succ
+keyalrins	<key already exists in tree table>			/succ
+nyi		<not yet implemented>					/fatal
+badname		<bad object name>					/error
+nooh		<no space for object header>				/error
+badobjtype	<bad object type number specified>			/error
+badobjid	<bad object id>						/error
+no_parent	<no parent object exists>				/error
+no_child	<no child object exists>				/error
+no_sibling	<no more siblings exist>				/error
+no_type		<no more objects of same type exists>			/error
+remote		<referenced object is remotely stored>			/error
+nosuchobj	<no such object exists>					/error
+nosuchattr	<no such attribute exists>				/error
+namebuf		<name buffer is too small>				/error
+malloc		<couldn't allocate memory>				/error
+interror	<internal LDH error>					/error
+baddest		<object can't be inserted at requested destination>	/error
+nodest		<used destination code does not exist>			/error
+namalrexi	<the name is already used for an other object>		/error
+noclass		<the class does not exist>				/error
+badparam	<a bad parameter value was used when calling LDH>	/error
+dberror		<database error>					/error
+has_child	<object has child>					/error
+nosuchbody	<a body with that name doesn't exist>			/error
+nosuchclass	<there is no such class>				/error
+bodytobig	<body to big to be stored in data base>			/error
+deferror	<error found in class definition>			/error
+nosuchsess	<there is no such session>				/error
+nosuchwb	<there is no such workbench>				/error
+nosuchbuffer	<there is no such buffer defined>			/error
+dbincon		<data base inconsistency>				/error
+noobjdid	<no free objdid in requested group>			/error
+srcnoxref	<source object has no crossreferences>			/error
+dstnoxref	<destination object has no crossreferences>		/error
+srcalrcon	<source object is already connected to other object>	/error
+dstalrcon	<destination object is already connected to other object>	/error
+notcon		<no connection or disconnection was done>		/error
+notload		<loadfile not created>					/error
+loadtype	<loadtype doesn't exist>				/error
+fileopen	<error open file>					/error
+filepos		<error positioning in file>				/error
+filewrite	<error writing to file>					/error
+fileread	<error reading from file>				/error
+filename	<error in file name>					/error
+nonode		<system contains no nodes>				/error
+nosystem	<system contains no system object>			/error
+syntax		<syntax error>						/error
+sessnotempty	<session has unsaved/unreverted changes>		/error
+wbload		<error loading text file to work bench>			/error
+wbdump		<error dumping work bench to text file> 		/error
+noaccess	<session access mode does not permit this operation>	/error
+insvirmem	<insufficient virtual memory>				/error
+othersess	<operation is denied due to other active sessions>	/error
+obsolete	<obsolete operation>					/error
+bugcheck	<internal bug prohibits further activities>		/fatal
+assert		<an assertion is not accomplished>			/info
+attrindex	<error in attribute index>				/error
+badfile		<bad format of load file>				/error
+noaxref		<not an attribute cross reference>			/error
+nooxref		<not an object cross reference>				/error
+notop		<object can not be top object>				/error
+noadopt		<object can not be adopted>				/error
+badver		<obsolete version of load file>				/error
+errconn		<objects sre incorrectly connected>			/error
+alrconn	<object are already connected>					/warning
+connected	<objects are connected>					/success
+unconn		<objects are unconnected>				/success
+adoptrename	<aopt method will rename object>			/success
+nosuchvol	<no such volume exists>					/error
+othervolume	<target object is in other volume>			/error
+attnotempty	<volume attachment has active sessions>			/error
+volalratt	<volume is already attached>				/error
+noclassvol	<class definitions can only be done in class volumes>	/error
+volidalrexi	<volume identifier does already exist>			/error
+volnamalrexi	<volume name does already exist>			/error
+volnotempty	<volume is not empty, can not be deleted>		/error
+dblocked	<database is locked by another user>			/error
+xdr		<error marshalling data>				/error
+nopaste		<there is nothing to paste>				/info
+noname		<no name exist>						/error
+notype		<no type exist>						/error
+nobase		<no base system>					/error
+projconfig	<project is not configured>				/info
+
+
+
+
+
+
+
+

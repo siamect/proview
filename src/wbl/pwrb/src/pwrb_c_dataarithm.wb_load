@@ -1,0 +1,588 @@
+!  pwrb_c_dataarithm.wb_load -- Defines the class DataArithm.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!/**
+!  @Version 1.0
+!  @Summary User programmable object with data inputs and outputs.
+!  User progammable object with data inputs and outputs. 
+!
+!  The object contains
+!    - four data inputs
+!    - six digital inputs
+!    - six analog inputs
+!    - four data outputs
+!    - six digital outputs
+!    - six analog outputs
+!
+!  The function for digital and analog signals is similar to CArithm, 
+!  DataArithm also has the possibility to handle data object references.
+!
+!  A data object is connected to an input and is handled as a pointer in
+!  the c-code. The class of the data object has to be declared with a
+!  classdef statement in the code. If a dataobject of class MyClass is
+!  connected to the first data input Da1, the classdef declaration is
+!
+!        classdef Da1 MyClass;
+!
+!  Da1 is then used as a pointer to a struct of the MyClass object
+!  (pwr_sClass_MyClass)
+!
+!        Da1->Temperature = 20;
+! 
+!  The classdef statement can also contain an alias name for the pointer
+!
+!        classdef Da1 MyClass MyObject;
+!
+!        MyObject->Temperature = 20;
+!
+!  The analog and digital inputs and outputs can also obtain alias names
+!  with the alias statement
+!
+!        alias d1 EngineStarted, od1 StartEngine;
+!        alias A1 Temperature;
+!
+!        if ( EngineStarted && Temperature < 400)
+!          StartEngine = 1;
+!          
+!  DpDistribute, ApDistribute, DpCollect and ApCollect objects can be used
+!  to expand the number of inputs and outputs to the DataArithm.  
+!
+!  Se also
+!  @classlink GetData pwrb_getdata.html
+!  @classlink DpCollect pwrb_dpcollect.html
+!  @classlink ApCollect pwrb_apcollect.html
+!  @classlink DpDistribute pwrb_dpdistribute.html
+!  @classlink ApDistribute pwrb_apdistribute.html
+!*/
+!
+SObject pwrb:Class
+  Object DataArithm $ClassDef 271
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_RtConnectionsAndDevBodies
+      Attr PopEditor = 2
+    EndBody
+    !
+    ! DATAARITHM Runtime Body
+    !
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "dataarithm"
+      EndBody
+      !/**
+      ! @Summary Data object referens input Da1.
+      ! Data object referens input. The input is connected to
+      ! a data output (for example from a GetData).
+      ! The class of the input is declared with a classdef statement
+      ! and the input is referred to as Da1 in the code. It can also
+      ! be referred to with an alias name supplied in the classdef 
+      ! statement.
+      !*/
+      Object DataIn1 $Input 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+          Attr GraphName = "Da1"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Data object referens input Da2.
+      ! Data object referens input.
+      ! Da2 or the aliasname is used to refer to the input in the code.
+      !*/
+      Object DataIn2 $Input 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+          Attr GraphName = "Da2"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Data object referens input Da3.
+      ! Data object referens input. 
+      ! Da3 or the aliasname is used to refer to the input in the code.
+      !*/
+      Object DataIn3 $Input 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+          Attr GraphName = "Da3"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Data object referens input Da4.
+      ! Data object referens input. 
+      ! Da4 or the aliasname is used to refer to the input in the code.
+      !*/
+      Object DataIn4 $Input 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+          Attr GraphName = "Da4"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Analog input A1.
+      ! Analog input.
+      ! A1 or the aliasname is used to refer to the input in the code.
+      !*/
+      Object AIn1 $Input 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "A1"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Analog input A2.
+      ! Analog input.
+      ! A2 or the aliasname is used to refer to the input in the code.
+      !*/
+      Object AIn2 $Input 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "A2"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Analog input A3.
+      ! Analog input.
+      ! A3 or the aliasname is used to refer to the input in the code.
+      !*/
+      Object AIn3 $Input 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "A3"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Analog input A4.
+      ! Analog input.
+      ! A4 or the aliasname is used to refer to the input in the code.
+      !*/
+      Object AIn4 $Input 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "A4"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Analog input A5.
+      ! Analog input.
+      ! A5 or the aliasname is used to refer to the input in the code.
+      !*/
+      Object AIn5 $Input 9
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "A5"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Analog input A6.
+      ! Analog input.
+      ! A6 or the aliasname is used to refer to the input in the code.
+      !*/
+      Object AIn6 $Input 10
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "A6"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Digital input d1.
+      ! Digital input.
+      ! d1 or the aliasname is used to refer to the input in the code.
+      !*/
+      Object DIn1 $Input 11
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "d1"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Digital input d2.
+      ! Digital input.
+      ! d2 or the aliasname is used to refer to the input in the code.
+      !*/
+      Object DIn2 $Input 12
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "d2"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Digital input d3.
+      ! Digital input.
+      ! d3 or the aliasname is used to refer to the input in the code.
+      !*/
+      Object DIn3 $Input 13
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "d3"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Digital input d4.
+      ! Digital input.
+      ! d4 or the aliasname is used to refer to the input in the code.
+      !*/
+      Object DIn4 $Input 14
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "d4"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Digital input d5.
+      ! Digital input.
+      ! d5 or the aliasname is used to refer to the input in the code.
+      !*/
+      Object DIn5 $Input 15
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "d5"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Digital input d6.
+      ! Digital input.
+      ! d6 or the aliasname is used to refer to the input in the code.
+      !*/
+      Object DIn6 $Input 16
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "d6"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Data object reference output ODa1.
+      ! Data object reference output.
+      ! ODa1 is used to refer to the output in the code.
+      ! The output consists of a pointer and an objid.
+      !*/
+      Object OutData1 $Output 17
+        Body SysBody
+          Attr PgmName = "OutData1"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "ODa1"
+        EndBody
+      EndObject
+      !/**
+      !  Objid of the data object referred to in the output ODa1.
+      !*/
+      Object OutData1ObjId $Intern 18
+        Body SysBody
+          Attr PgmName = "OutData1ObjId"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Data object reference output ODa2.
+      ! Data object reference output.
+      ! ODa2 is used to refer to the output in the code.
+      !*/
+      Object OutData2 $Output 19
+        Body SysBody
+          Attr PgmName = "OutData2"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "ODa2"
+        EndBody
+      EndObject
+      !/**
+      !  Objid of the data object referred to in the output ODa2.
+      !*/
+      Object OutData2ObjId $Intern 20
+        Body SysBody
+          Attr PgmName = "OutData2ObjId"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Data object reference output ODa3.
+      ! Data object reference output.
+      ! ODa3 is used to refer to the output in the code.
+      !*/
+      Object OutData3 $Output 21
+        Body SysBody
+          Attr PgmName = "OutData3"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "ODa3"
+        EndBody
+      EndObject
+      !/**
+      !  Objid of the data object referred to in the output ODa3.
+      !*/
+      Object OutData3ObjId $Intern 22
+        Body SysBody
+          Attr PgmName = "OutData3ObjId"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Data object reference output ODa4.
+      ! Data object reference output.
+      ! ODa4 is used to refer to the output in the code.
+      !*/
+      Object OutData4 $Output 23
+        Body SysBody
+          Attr PgmName = "OutData4"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "ODa4"
+        EndBody
+      EndObject
+      !/**
+      !  Objid of the data object referred to in the output ODa4.
+      !*/
+      Object OutData4ObjId $Intern 24
+        Body SysBody
+          Attr PgmName = "OutData4ObjId"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Analog output OA1.
+      ! Analog output.
+      ! OA1 is used to refer to the output in the code.
+      !*/
+      Object OutA1 $Output 25
+        Body SysBody
+          Attr PgmName = "OutA1"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "OA1"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Analog output OA2.
+      ! Analog output.
+      ! OA2 is used to refer to the output in the code.
+      !*/
+      Object OutA2 $Output 26
+        Body SysBody
+          Attr PgmName = "OutA2"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "OA2"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Analog output OA3.
+      ! Analog output.
+      ! OA3 is used to refer to the output in the code.
+      !*/
+      Object OutA3 $Output 27
+        Body SysBody
+          Attr PgmName = "OutA3"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "OA3"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Analog output OA4.
+      ! Analog output.
+      ! OA4 is used to refer to the output in the code.
+      !*/
+      Object OutA4 $Output 28
+        Body SysBody
+          Attr PgmName = "OutA4"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "OA4"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Analog output OA5.
+      ! Analog output.
+      ! OA5 is used to refer to the output in the code.
+      !*/
+      Object OutA5 $Output 29
+        Body SysBody
+          Attr PgmName = "OutA5"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "OA5"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Analog output OA6.
+      ! Analog output.
+      ! OA6 is used to refer to the output in the code.
+      !*/
+      Object OutA6 $Output 30
+        Body SysBody
+          Attr PgmName = "OutA6"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "OA6"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Digital output od1.
+      ! Digital output.
+      ! od1 is used to refer to the output in the code.
+      !*/
+      Object OutD1 $Output 31
+        Body SysBody
+          Attr PgmName = "OutD1"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "od1"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Digital output od2.
+      ! Digital output.
+      ! od2 is used to refer to the output in the code.
+      !*/
+      Object OutD2 $Output 32
+        Body SysBody
+          Attr PgmName = "OutD2"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "od2"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Digital output od3.
+      ! Digital output.
+      ! od3 is used to refer to the output in the code.
+      !*/
+      Object OutD3 $Output 33
+        Body SysBody
+          Attr PgmName = "OutD3"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "od3"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Digital output od4.
+      ! Digital output.
+      ! od4 is used to refer to the output in the code.
+      !*/
+      Object OutD4 $Output 34
+        Body SysBody
+          Attr PgmName = "OutD4"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "od4"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Digital output od5.
+      ! Digital output.
+      ! od5 is used to refer to the output in the code.
+      !*/
+      Object OutD5 $Output 35
+        Body SysBody
+          Attr PgmName = "OutD5"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "od5"
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Digital output od6.
+      ! Digital output.
+      ! od6 is used to refer to the output in the code.
+      !*/
+      Object OutD6 $Output 36
+        Body SysBody
+          Attr PgmName = "OutD6"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "od6"
+        EndBody
+      EndObject
+    EndObject
+    !
+    ! DATAARITHM Development Body
+    !
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 224
+        Attr parameters[0] = 16
+        Attr parameters[1] = 0
+        Attr parameters[2] = 16
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 14
+        Attr graphindex = 0
+        Attr default_mask[0] = 1
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 3
+        Attr devbody_annotation = 1
+        Attr compmethod = 42
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+	Attr executeordermethod = 2
+        Attr objname = "DataA"
+        Attr graphname = "DataA"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    Object DevBody $ObjBodyDef 2
+      Object PlcNode $Buffer 1
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      ! @Summary Code with c-syntax.
+      ! Code with c-syntax that uses the inputs and outputs of the
+      ! DataArithm object.
+      !*/
+      Object Code $Intern 2
+        Body SysBody
+          Attr PgmName = "Code"
+          Attr TypeRef = "pwrs:Type-$Text1024"
+          Attr GraphName = "code"
+          Attr NiNaAnnot = 1
+          Attr ConPointNr = 0
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,27 @@
+!  pwrb_c_volumeload.wb_load -- Defines the class VolumeLoad.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+SObject pwrb:Class
+  Object VolumeLoad $ClassDef 248
+
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    Object DevBody $ObjBodyDef 2
+
+      Object VolumeId $Attribute 1
+
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject

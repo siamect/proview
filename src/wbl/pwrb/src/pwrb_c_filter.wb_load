@@ -1,0 +1,150 @@
+!  pwrb_c_filter.wb_load -- Defines the class Filter.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_arithm.c
+!  First Order Lag Filter.
+!      Symbol
+!  The input signal gets an exponential smoothing.
+!   VAL = a * In+ (1 - a) * X = X + a ¡(In - X) , where
+!   X =  FeedB, if FeedB is connected, ActValt - 1, otherwise
+!  
+!  a = ScanTime / FiltCon and 0 < a < 1.0. If a >= 1.0
+!  no filtering is done.
+!*/
+SObject pwrb:Class
+  Object Filter $ClassDef 117 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Connections
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "filter"
+      EndBody
+      !/**
+      !  Value of the input signal.
+      !*/
+      Object In $Input 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "IN"
+        EndBody
+      EndObject
+      !/**
+      !  External feedback. If the input is left open the
+      !  VAL-output will be used as an internal input signal.
+      !*/
+      Object FeedB $Input 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "FB"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  Output signal, see above.
+      !*/
+      Object ActVal $Output 3 
+        Body SysBody
+          Attr PgmName = "ActVal"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "VAL"
+        EndBody
+      EndObject
+      !/**
+      !  The program cycle period (= sampling interval), in
+      !  seconds, is stored automatically at the compilation.
+      !*/
+      Object ScanTime $Intern 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "ScanTime"
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_PRIVATE
+        EndBody
+      EndObject
+      !/**
+      !  The filter constant, in seconds, can be fixed or
+      !  adjustable. FiltCon > ScanTime is a valid value.
+      !  FiltCon = ScanTime makes no filtering.
+      !*/
+      Object FiltCon $Intern 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "FiltCon"
+        EndBody
+      EndObject
+      !/**
+      !  The operator's authorities to change FiltCont.
+      !    0   -- Changes not allowed.
+      !    != 0 -- Changes allowed.
+      !*/
+      Object AccCon $Intern 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "AccCon"
+        EndBody
+      EndObject
+      !/**
+      !  The minimum and maximum allowed value of FiltCon at
+      !  changes made by an operator.
+      !*/
+      Object MinCon $Intern 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MinCon"
+        EndBody
+      EndObject
+      Object MaxCon $Intern 8 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MaxCon"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 127
+        Attr parameters[0] = 2
+        Attr parameters[1] = 0
+        Attr parameters[2] = 1
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 0
+        Attr graphindex = 0
+        Attr default_mask[0] = 1
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 1
+        Attr compmethod = 32
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+	Attr executeordermethod = 2
+        Attr objname = "Filter"
+        Attr graphname = "Filter"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,431 @@
+!  pwrb_c_mode.wb_load -- Defines the class Mode.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_pid.c
+!  Used to select control modes (MANUAL / AUTO / CASCADE)
+!  or forced control of Pid objects.
+!  
+!  The control modes are:
+!   · MANUAL -- when the 'operator' sets the output of the
+!     Pid object
+!   · AUTO   -- when the 'operator' chooses the set point
+!     value
+!   · CASCADE -- the output from a Pid object is used to
+!     adjust the set point value in a
+!     secondary Pid object.
+!  
+!  Forced control means that the control signal from the
+!  Pid object is not taken from the PID-algorithm but from
+!  the XForcVal-attribute in the Mode object. See control
+!  examples at the Pid object.
+!*/
+SObject pwrb:Class
+  Object Mode $ClassDef 147 
+    Body SysBody
+       Attr Editor = pwr_eEditor_PlcEd
+       Attr Method = pwr_eMethod_Connections
+       Attr PopEditor = pwr_ePopEditor_GMS
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "mode"
+      EndBody
+      !/**
+      !  External set point value. This value is used only in
+      !  the control mode CASCADE in such a way that SetVal =
+      !  XSetVal.
+      !*/
+      Object XSetVal $Input 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "XSV"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  Process value. Only used to show the process value in
+      !  the object display of the Mode object.
+      !*/
+      Object ProcVal $Input 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "PV"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  External forced control value. This value is used only
+      !  at forced control (i.e. Force1 or Force2 is set) in
+      !  such a way that ForceVal = XForceVal.
+      !*/
+      Object XForcVal $Input 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "XFO"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies whether to enable or disable unconditional
+      !  forced control; see figure 3-29, p. 3-209. FALSE
+      !  disables the unconditional forced control function;
+      !  TRUE means that ForcVal = XForceVal and Force is set.
+      !  In a usual configuration the value of ForcVal is used
+      !  as control signal by the Pid object.
+      !*/
+      Object Forc1 $Input 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "fo1"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      !/**
+      !  Specifies whether to enable or disable forced control
+      !  when OpMod = AUTO or CASCADE.
+      !  FALSE disables the conditional forced control
+      !  function; TRUE means that ForcVal = XForceVal and Force
+      !  is set -- if, and only if, -- OpMod = AUTO or CASCADE.
+      !  In a usual configuration the value of ForcVal is used
+      !  as control signal by the Pid object in this case.
+      !*/
+      Object Forc2 $Input 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "fo2"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      !/**
+      !  The value of the last set control signal. Is usually
+      !  fetched by means of an analog feedback connection to
+      !  the OutVal of the Pid object. When the controlled loop
+      !  is switched to MANUAL control, the process will "bump"
+      !  unless ForcVal is aligned with the present process
+      !  value. To avoid this ForcVal is set equal to OutVal at
+      !  the switching to MANUAL control.
+      !*/
+      Object OutVal $Input 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "OUT"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  Current set point value used in the control modes AUTO
+      !  and CASCADE. The value may be changed in the control
+      !  modes MANUAL and AUTO, e.g. from the object display of
+      !  the Mode object. At CASCADE control SetVal is
+      !  internally assigned the value of XSetVal; i.e. SetVal =
+      !  XSetVal.
+      !*/
+      Object SetVal $Output 7 
+        Body SysBody
+          Attr PgmName = "SetVal"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "SV"
+        EndBody
+      EndObject
+      !/**
+      !  In the usual configuration the value of ForcVal is used
+      !  as control signal by the Pid object in the following
+      !  cases:
+      !  
+      !  1  unconditional forced control, i.e. Forc1 is set.
+      !     ForceVal = XForceVal.
+      !  2  conditional forced control when Force2 is set and
+      !     OpMod = AUTO or CASCADE. ForceVal = XForceVal.
+      !  
+      !  3  OpMod = MANUAL. ForcVal is manipulated by the
+      !     operator, e.g. from the object display of the Mode
+      !     object.
+      !*/
+      Object ForcVal $Output 8 
+        Body SysBody
+          Attr PgmName = "ForcVal"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "FOV"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies, for instance, to a subsequent Pid object,
+      !  whether to use the result of the algorithm or not as a
+      !  control signal. FALSE means AUTO or CASCADE control,
+      !  i.e. the control signal depends on the result of the
+      !  algorithm. TRUE means forced control or MANUAL control.
+      !*/
+      Object Force $Output 9 
+        Body SysBody
+          Attr PgmName = "Force"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "for"
+        EndBody
+      EndObject
+      !/**
+      !  Indicates if the control mode AUTO is selected or not.
+      !  FALSE means that AUTO is not the control mode; TRUE
+      !  means that AUTO is the control mode.
+      !  A subsequent Pid object does not have to make any
+      !  distinction between AUTO or CASCADE, so this attribute
+      !  is often used only as information.
+      !*/
+      Object AutMode $Output 10 
+        Body SysBody
+          Attr PgmName = "AutMode"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "aut"
+        EndBody
+      EndObject
+      !/**
+      !  Indicates if the control mode CASCADE is selected or
+      !  not. FALSE means that CASCADE is not the control mode;
+      !  TRUE means that CASCADE is the control mode.
+      !  A subsequent Pid object does not have to make any
+      !  distinction between AUTO or CASCADE, so this attribute
+      !  is often used only as information.
+      !*/
+      Object CascMod $Output 11 
+        Body SysBody
+          Attr PgmName = "CascMod"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "cas"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the actual control mode. The value is changed
+      !  from the object display of the Mode object.
+      !  
+      !   = 1  MANUAL. The operator selects the control signal
+      !      of the controller. The control signal is forced
+      !      to the value of ForceVal.
+      !  
+      !   = 2  AUTO. The operator selects and sets the set
+      !      point value, SetVal.
+      !      MinSet and MaxSet define the valid interval of
+      !   = 4  CASCADE. The controller uses XSetVal as set
+      !      point value and calculates the control signal.
+      !*/
+      Object OpMod $Intern 12 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Enum"
+          Attr GraphName = "OpMod"
+        EndBody
+      EndObject
+      !/**
+      !  The operator's authorities to change OpMod. The
+      !  possible bit map values allow the following modes:
+      !  
+      !   1 -- Only MANUAL       
+      !   2 -- Only AUTO 
+      !   3 -- MANUAL / AUTO 
+      !   4 -- Only CASCADE
+      !   5 -- CASCADE / MANUAL
+      !   6 -- CASCADE / AUTO
+      !   7 -- MANUAL / AUTO / CASCADE
+      !*/
+      Object AccMod $Intern 13 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Enum"
+          Attr GraphName = "AccMod"
+        EndBody
+      EndObject
+      !/**
+      !  The operator's authorities to change ForcVal.
+      !  
+      !  0   -- Changes not allowed.
+      !  != 0 -- Changes allowed.
+      !*/
+      Object AccOut $Intern 14 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "AccOut"
+        EndBody
+      EndObject
+      !/**
+      !  The choice of the operator of ForcVal is checked
+      !  against the interval { MinOut, MaxOut}. ForcVal may be
+      !  changed in the control mode MANUAL from the display of
+      !  the Mode object.
+      !*/
+      Object MinOut $Intern 15 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MinOut"
+        EndBody
+      EndObject
+      Object MaxOut $Intern 16 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MaxOut"
+        EndBody
+      EndObject
+      !/**
+      !  The operator's authorities to change SetVal.
+      !  
+      !    0   -- Changes not allowed.
+      !    != 0 -- Changes allowed.
+      !*/
+      Object AccSet $Intern 17 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "AccSet"
+        EndBody
+      EndObject
+      !/**
+      !  The choice of the operator of SetVal is checked against
+      !  the interval { MinSet, MaxSet}. The value may be
+      !  changed in the control modes MANUAL and AUTO from the
+      !  display of the Mode object.
+      !*/
+      Object MinSet $Intern 18 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MinSet"
+        EndBody
+      EndObject
+      Object MaxSet $Intern 19 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MaxSet"
+        EndBody
+      EndObject
+      !/**
+      !  The lower respectively upper limits in the bar graphs
+      !  at presentation of process and set point values in the
+      !  Mode object display. The values may be changed in the
+      !  more info form of the Mode object.
+      !*/
+      Object SetMaxShow $Intern 20 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "SetMaxShow"
+        EndBody
+      EndObject
+      Object SetMinShow $Intern 21 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "SetMinShow"
+        EndBody
+      EndObject
+      !/**
+      !  The lower respectively upper limits in the bar graph at
+      !  presentation of the control signal, OutVal, of the Pid
+      !  object in the Mode display. The values may be changed
+      !  in the more info form of the Mode object.
+      !*/
+      Object OutMaxShow $Intern 22 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "OutMaxShow"
+        EndBody
+      EndObject
+      Object OutMinShow $Intern 23 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "OutMinShow"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the engineering unit of SetMinShow /
+      !  SetMaxShow, e.g. kg. Used in the Mode object display.
+      !  OutEngUnit
+      !*/
+      Object SetEngUnit $Intern 24 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String16"
+          Attr GraphName = "SetEngUnit"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the engineering unit of OutMinShow /
+      !  OutMaxShow e.g. %. Used in the Mode object display.
+      !*/
+      Object OutEngUnit $Intern 25 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String16"
+          Attr GraphName = "OutEngUnit"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the complete name of the Pid object
+      !  associated to this Mode object. The attribute makes it
+      !  possible to start the object display of the associated
+      !  Pid from a button in the object display of the Mode
+      !*/
+      Object PidObjDId $Intern 26 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr GraphName = "PidObjDId"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 151
+        Attr parameters[0] = 6
+        Attr parameters[1] = 0
+        Attr parameters[2] = 5
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 0
+        Attr graphindex = 0
+        Attr default_mask[0] = 35
+        Attr default_mask[1] = 7
+        Attr segname_annotation = 1
+        Attr compmethod = 4
+        Attr compindex = 0
+        Attr executeordermethod = 2
+        Attr objname = "Mode"
+        Attr graphname = "Mode"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    Object Template Mode
+      Body RtBody
+        Attr OpMod = 1
+        Attr AccMod = 3
+        Attr AccOut = 15
+        Attr AccSet = 15
+        Attr MaxOut = 100.0
+        Attr MaxSet = 100.0
+        Attr OutMaxShow = 100.0
+        Attr SetMaxShow = 100.0
+        Attr OutEngUnit = "%"
+        Attr SetEngUnit = "%"
+      EndBody
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,1008 @@
+
+__key__ script
+Content
+
+execute script		__link__ execute script
+datatypes		__link__ datatypes
+datatypes		__link__ datatypes
+datatype conversions	__link__ datatype conversions
+variable declarations	__link__ variable declarations
+operators		__link__ operators
+main-endmain		__link__ main-endmain
+function-endfunction	__link__ function-endfunction
+if-else-endif		__link__ if-else-endif
+while-endwhile		__link__ while-endwhile
+for-endfor		__link__ for-endfor
+break			__link__ break
+continue		__link__ continue
+goto			__link__ goto
+include			__link__ include
+printf()		__link__ printf()
+scanf()			__link__ scanf()
+fprintf()		__link__ fprintf()
+fgets()			__link__ fgets()
+fopen()			__link__ fopen()
+fclose()		__link__ fclose()
+exit()			__link__ exit()
+verify()		__link__ verify()
+time()			__link__ time()
+edit()			__link__ edit()
+extract()		__link__ extract()
+element()		__link__ element()
+xtt-commands		__link__ xtt-commands
+GetAttribute()		__link__ GetAttribute()
+GetChild()		__link__ GetChild()
+GetParent()		__link__ GetParent()
+GetNextSibling()	__link__ GetNextSibling()
+GetClassList()		__link__ GetClassList()
+GetNextObject()		__link__ GetNextObject()
+GetObjectClass()	__link__ GetObjectClass()
+GetNodeObject()		__link__ GetNodeObject()
+GetRootList()		__link__ GetRootList()
+CutObjectName()		__link__ CutObjectName()
+MessageError()		__link__ MessageError()
+MessageInfo()		__link__ MessageInfo()
+GetInput()		__link__ GetInput()
+PlaceCursor()		__link__ PlaceCursor()
+LineErase()		__link__ LineErase()
+GetCurrentTitle()	__link__ GetCurrentTitle()
+GetCurrentText()	__link__ GetCurrentText()
+GetCurrentObject()	__link__ GetCurrentObject()
+__end__
+
+__key__ execute script
+Execute a script
+
+A script-file will be executed from the command-line with the command
+
+xtt> @'filename'
+
+__end__
+
+__key__ datatypes
+Datatypes
+
+The datatypes are float, int and string.
+
+int	integer value.
+float	32-bit float value.
+string	80 character string (null terminated).
+
+There are three different tables in which a variable can be declared: local, 
+global and extern. A local variable is known inside a function, a global is 
+known in all functions in a file (with include-files), an external is known 
+for all files executed in a xtt session.
+__end__
+
+__key__ datatypes
+Datatypes
+
+The datatypes are float, int and string.
+
+int	integer value.
+float	32-bit float value.
+string	80 character string (null terminated).
+
+There are three different tables in which a variable can be declared: local, 
+global and extern. A local variable is known inside a function, a global is 
+known in all functions in a file (with include-files), an external is known 
+for all files executed in a rtt session.
+
+__end__
+
+__key__ datatype conversions
+Datatype conversions
+
+If an expression consists of variables and functions of different datatypes
+the variables will be converted with the precedence string, float, int. If
+two operands in an expression is of type int and float, the result will be float
+If two operands is of type float and string, or int and string, the result will
+be string. In an assignment the value of an expression will be converted to the
+type of the assignment variable, even if the result is a string and the
+variable is of type float or int.
+
+Example
+
+string 	str;
+int	i = 35;
+str = "Luthor" + i;
+The value in str will be "Luthor35".
+
+float 	f;
+string 	str = "3.14";
+int	i = 159;
+f = str + i;
+The value in f will be 3.14159.
+__end__
+
+__key__ variable declarations
+Variable declarations
+
+A variable must be declared before it is used.
+A declaration consists of
+- the table (global or extern, if local the table is suppressed)
+- the datatype (int, float or string)
+- the variable name (case sensitive)
+- equal mark followed by an init value, if omitted the init value is zero or
+  null-string
+- semicolon
+
+Example
+
+int		i;
+float		flow = 33.4;
+string		str = "Hello";
+extern	int 	jakob;
+global	float	ferdinand = 1234;
+__end__
+
+__key__ operators
+Operators
+
+The operators have the same function as i c, with some limitations. All
+operators are not implemented. Some operators (+,=,==) can also operate on
+string variables. Precedence of operators is similar to c.
+
+Operator	Description			Datatypes
++		plus				int, float, string
+-		minus				int, float
+*		times				int, float
+/		divide				int, float
+++		increment, postfix only.	int, float
+--		decrement, postfix only		int, float
+>>		bits right-shifted		int
+<<		bits left-shifted		int
+<		less then			int, float
+>		greater then			int, float
+<=		less equal			int, float
+>=		greater equal			int, float
+==		equal				int, float, string
+!=		not equal			int, float, string
+&		bitwise and			int
+|		bitwise or			int
+&&		logical and			int
+||		logical or			int
+!		logical not			int
+=		assign				int, float, string
++=		add and assign			int, float
+-=		minus and assign		int, float
+&=		logical and and assign		int
+|=		logical or and assign		int
+__end__
+
+__key__ main-endmain
+main-endmain
+
+The main and endmain statements controls where the execution starts and stops
+If no main and endmain statements will be found, the execution will start
+att the beginning of the file and stop at the end.
+
+Example
+
+main()
+  int	a;
+
+  a = p1 + 5;
+  printf( "a = %d", a);
+endmain
+__end__
+
+__key__ function-endfunction
+function-endfunction
+
+A function declaration consists of
+- the datatype of the return value for the function
+- the name of the function
+- an argumentlist delimited by comma and surrounded by parenthesis. The
+  argumentlist must include a typedeclaration and a name for eatch argument.
+
+The arguments supplied by the caller will be converted to the type of the
+to the type declared in the argument list. If an argument is changed inside
+the function, the new value will be transferred to the caller. In this way
+it is possible to return other values then the return value of the function.
+A function can contain one or several return statements. The return will hand
+over the execution to the caller and return the supplied value.
+
+Example
+
+function float calculate_flow(float a, float b)
+  float	c;
+  c = a + b;
+  return c;
+endfunction
+
+...
+flow = korr * calculate_flow( v, 35.2);
+__end__
+
+__key__ if-else-endif
+if-else-endif
+
+The lines between a if-endif statment will be executed if the expression
+in the if-statment is true. The expression should be surrounded by parentheses.
+If an else statement is found between the if and endif the lines between else
+and endif will be executed if the if-exepression is false.
+
+Example
+
+if ( i < 10 && i > 5)
+  a = b + c;
+endif
+
+if ( i < 10)
+  a = b + c;
+else
+  a = b - c;
+endif
+__end__
+
+__key__ while-endwhile
+while-endwhile
+
+The lines between a while-endwhile statment will be executed as long as the
+expression in the while-statment is true. The expression should be surrounded
+by parentheses.
+
+Example
+
+while ( i < 10)
+  i++;
+endwhile
+__end__
+
+__key__ for-endfor
+for-endfor
+
+The lines between a for-endfor statment will be executed as long as the
+middle expression in the for-statment is true. The for expression consists
+of three expression, delimited by semicolon and surrounded by parentheses.
+The first expression will be executed the before the first loop, the third
+will be executed after every loop, the middle is executed before every loop
+and if true another loop is done, if false the loop is leaved.
+
+Example
+
+for ( i = 0; i < 10; i++)
+  a += b;
+endfor
+__end__
+
+__key__ break
+break
+
+A break statement will search for the next endwhile or endfor statement
+continue the execution at the line after.
+
+Example
+
+for ( i = 0; i < 10; i++)
+  a += b;
+  if ( a > 100)
+    break;
+endfor
+__end__
+
+__key__ continue
+continue
+
+A continue statement will search for the previous while or for statement
+continue the loop execution.
+
+Example
+
+for ( i = 0; i < 10; i++)
+  b = my_function(i);
+  if ( b > 100)
+    continue;
+  a += b;
+endfor
+__end__
+
+__key__ goto
+goto
+
+A goto will cause the execution to jump to a row defined by label.
+The label line is terminated with colon.
+
+Example
+
+  b = attribute("MOTOR-ON.ActualValue", sts);
+  if (!sts)
+    goto some_error; 
+  ...
+some_error:
+  say("Something went wrong!");
+__end__
+
+__key__ include
+include
+
+An script include-file containing functions can be included with the
+#include statement. The default file extention is '.rtt_com'
+
+Example
+
+#include <my_functions>
+__end__
+
+__key__ printf()
+printf()
+
+int printf( string format [, (arbitrary type) arg1, (arbitrary type) arg2])
+
+Description
+
+Formatted print. C-syntax. Format argument and non, one or two value arguments.
+Returns number of printed characters.
+
+Arguments
+
+string 			format		Format.
+arbitrary type		arg1		Value argument. Optional. Can be int,
+					float or string.
+arbitrary type		arg2		Value argument. Optional. Can be int,
+					float or string.
+
+Example
+
+  printf( "Watch out!");
+  printf( "a = %d", a);
+  printf( "a = %d och str = %s", a, str);
+__end__
+
+__key__ scanf()
+scanf()
+
+int scanf( string format , (arbitrary type) arg1)
+
+Description
+
+Formatted input. C-syntax
+Returns number of read characters.
+
+Arguments
+
+string 			format		Format.
+arbitrary type		arg1		Value argument. Returned. Can be int,
+					float or string.
+
+Example
+
+  scanf( "%d", i);
+__end__
+
+__key__ fprintf()
+fprintf()
+
+int fprintf( int file, string format [, (arbitrary type) arg1,
+	(arbitrary type) arg2])
+
+Description
+
+Formatted print on file. C-syntax. Format argument and non, one or two value
+arguments.
+Returns number of printed characters.
+
+Arguments
+
+int 			file		File id retured by fopen.
+string 			format		Format.
+arbitrary type		arg1		Value argument. Optional. Can be int,
+					float or string.
+arbitrary type		arg2		Value argument. Optional. Can be int,
+					float or string.
+
+Example
+
+  int outfile;
+  outfile = fopen( "my_file.txt", "w");
+  if (!outfile)
+    exit();
+  fprintf( outfile, "Some text");
+  fprintf( outfile, "a = %d", a);
+  fclose( outfile);
+__end__
+
+__key__ fgets()
+fgets()
+
+int fgets( string str, int file)
+
+Description
+
+Reads a line from a specified file.
+Returns zero if end of file.
+
+Arguments
+
+string 		str		Read line. Returned. 
+int		file		file returned by fopen.
+
+Example
+
+  file = fopen("some_file.txt","r");
+  while( fgets( str, file))
+    say( str);
+  endwhile
+  fclose( file);
+__end__
+
+__key__ fopen()
+fopen()
+
+int fopen( string filespec, string mode)
+
+Description
+
+Opens a file for read or write.
+Returns a file identifier. If the file could not be opened, zero is returned.
+
+Arguments
+
+string 		filespec	Name of file. 
+string		mode		Access mode
+
+Example
+
+  int infile;
+  int outfile;
+
+  infile = fopen("some_file.txt","r");
+  outfile = fopen("another_file.txt","w");
+  ...
+  fclose( infile);
+  fclose( outfile);
+__end__
+
+__key__ fclose()
+fclose()
+
+int fclose( int file)
+
+Description
+
+Closes an opened file.
+
+Arguments
+
+int		file		file-id returned by fopen.
+
+Example
+
+  int infile;
+  infile = fopen("some_file.txt","r");
+  ...
+  fclose( infile);
+__end__
+
+__key__ exit()
+exit()
+
+int exit()
+
+Description
+
+Terminates executions of the file.
+
+Example
+
+  exit();
+__end__
+
+__key__ verify()
+verify()
+
+int verify( [int mode])
+
+Description
+
+Sets or shows verification mode. If verification is on all executed lines will
+be displayed on the screen.
+Returns the current verification mode.
+
+Arguments
+
+int		mode		verification on (1) or off (0). Optional.
+
+Example
+
+  verify(1);
+__end__
+
+__key__ time()
+time()
+
+string time()
+
+Description
+
+Returns the current time in string format.
+
+Example
+
+  string t;
+  t = time();
+__end__
+
+__key__ edit()
+edit()
+
+string edit( string str)
+
+Description
+
+Removes leading and trailing spaces and tabs, and replaces multipel tabs and
+spaces with a single space.
+Returns the edited string.
+
+Arguments
+
+string		str		string to be edited.
+
+Example
+
+  collapsed_str = edit(str);
+__end__
+
+__key__ extract()
+extract()
+
+string extract( int start, int length, string str)
+
+Description
+
+Extracts the specified characters from the specified string.
+Returns the extracted characters as a string.
+
+Arguments
+
+int		start		start position of the first character.
+int		length		number of characters to be extracted.
+string		str		string from which characters should be extracted.
+
+Example
+
+  extracted_str = extract( 5, 7, str);
+__end__
+
+__key__ element()
+element()
+
+string element( int number, string delimiter, string str)
+
+Description
+
+Extracts one element from a string of elements.
+Returns the extracted element.
+
+Arguments
+
+int		number		the number of the element.
+string		delimiter	delimiter character.
+string		str		string of elements.
+
+Example
+
+  string str = "mary, lisa, anna, john";
+  string elem1;
+  elem1 = elment( 1, ",", str);
+__end__
+
+__key__ xtt-commands
+Xtt commands
+
+All the xtt-commands is available in the script code. An rtt-command line
+should NOT be ended with a semicolon. Variables can be substituted in the
+command line by surrounding them with apostrophes.
+
+Example
+
+  string 	name = "PUMP-VALVE-Open.ActualValue";
+  float	value = 2.2;
+  set parameter/name='name'/value='value'
+
+Example
+
+  string name;
+  string parname;
+  int j;
+  int i;
+  for ( i = 0; i < 3; i++)
+    parname = "vkv-test-obj" + (i+1);
+    create obj/name='parname'
+    for ( j = 0; j < 3; j++)
+      name = parname + "-obj" + (j+1);
+      create obj/name='name'
+    endfor
+  endfor
+__end__
+
+__key__ GetAttribute()
+GetAttribute()
+
+(variable type) GetAttribute( string name [, int status])
+
+Description
+
+Get the value of the specified attribute. The returned type is dependent
+of the attribute type. The attribute will be converted to int, float or string.
+
+Arguments
+
+string		name		name of the attribute to be fetched.
+int		status		status of operation. Returned. If zero, the
+				attribute could not be fetched. Optional.
+
+Example
+
+  int alarm;
+  int sts;
+
+  alarm = GetAttribute("Roller-Motor-Alarm.ActualValue");
+  on = GetAttribute("Roller-Motor-On.ActualValue", sts);
+  if ( !sts)
+    say("Could not find motor on attribute!");
+__end__
+
+__key__ GetChild()
+GetChild()
+
+string GetChild( string name)
+
+Description
+
+get the first child of an object. The next children can be fetched with
+GetNextSibling().
+Returns the name of the child. If no child exists a null-string is returned
+
+Arguments
+
+string		name		name of object.
+
+Example
+
+  string child;
+
+  child = GetChild("Roller-Motor");
+__end__
+
+__key__ GetParent()
+GetParent()
+
+string GetParent( string name)
+
+Description
+
+Get the parent of an object.
+Returns the name of the child. If no parent exists a null-string is returned.
+
+Arguments
+
+string		name		name of object.
+
+Example
+
+  string parent;
+
+  parent = GetChild("Roller-Motor");
+__end__
+
+__key__ GetNextSibling()
+GetNextSibling()
+
+string GetNextSibling( string name)
+
+Description
+
+Get the next sibling of an object.
+Returns the name of the sibling. If no next sibling exists a null-string is
+returned.
+
+Arguments
+
+string		name		name of object.
+
+Example
+
+ string name;
+ int not_first;
+
+ name = GetChild("Rt");
+ not_first = 0;
+ while ( name != "")
+   if ( !not_first)
+     create menu/title="The Rt objects"/text="'name'"/object="'name'"
+   else
+     add menu/text="'name'"/object="'name'"
+   endif
+   not_first = 1;
+   name = GetNextSibling(nname);
+ endwhile
+ if ( !not_first )
+   MessageError("No objects found");
+__end__
+
+__key__ GetClassList()
+GetClassList()
+
+string GetClassList( string class)
+
+Description
+
+Get the first object of a specified class. The next object of the class
+can be fetched whith GetNextObject().
+Returns the name of the first object. If no instances of the class exists a
+null-string is returned.
+
+Arguments
+
+string		name		name of class.
+
+Example
+
+  string name;
+
+  name = GetClassList("Dv");
+__end__
+
+__key__ GetNextObject()
+GetNextObject()
+
+string GetNextObject( string name)
+
+Description
+
+Get the next object in a classlist.
+Returns the name of the object. If no next object exist a null-string is
+returned.
+
+Arguments
+
+string		name		name of object.
+
+Example
+
+  string name;
+
+  name = GetClassList("Di");
+  while ( name != "")
+    printf("Di object found: %s", name);
+    name = GetNextObject(name);
+  endwhile
+__end__
+
+__key__ GetObjectClass()
+GetObjectClass()
+
+string GetObjectClass( string name)
+
+Description
+
+Get the class of an object.
+Returns the name of the class.
+
+Arguments
+
+string		name		name of object.
+
+Example
+
+  string class;
+
+  class = GetObjectClass("Motor-Enable");
+__end__
+
+__key__ GetNodeObject()
+GetNodeObject()
+
+string GetNodeObject()
+
+Description
+
+Get the node object.
+Returns the name of the node object.
+
+Example
+
+  string node;
+  node = GetNodeObject();
+__end__
+
+__key__ GetRootList()
+GetRootList()
+
+string GetRootList()
+
+Description
+
+Get the first object in the root list.
+Returns the name of the root object. The next object in the root list can be
+fetched with GetNextSibling().
+
+Example
+
+  string name;
+
+  name = GetRootList();
+  while( name != "")
+    printf( "Root object found: %s", name);
+    name = GetNextSibling(name);
+  endwhile
+__end__
+
+__key__ CutObjectName()
+CutObjectName()
+
+string CutObjectName( string name, int segments)
+
+Description
+
+Cut the first segments of an object name.
+Returns the last segments of an object name. The number of segments left is
+specified by the second argument
+
+Arguments
+
+string		name		Path name of object.
+int		segments	Number of segments that should be left.
+
+Example
+
+  string path_name;
+  string object_name;
+
+  path_name = GetChild("Rt-Motor");
+  object_name = CutObjectName( path_name, 1);
+__end__
+
+__key__ MessageError()
+MessageError()
+
+string MessageError( string message)
+
+Description
+
+Print an rtt error message on the screen.
+
+Example
+
+  MessageError("Something went wrong");
+__end__
+
+__key__ MessageInfo()
+MessageInfo()
+
+string MessageInfo( string message)
+
+Description
+
+Print an rtt info message on the screen.
+
+Example
+
+  MessageInfo("Everything is all right so far");
+__end__
+
+__key__ GetInput()
+GetInput()
+
+int GetInput( string format, (arbitrary type) input_variable [, string prompt]
+              [, int terminator])
+
+Description
+
+Formated input of one variable of type string, int or float. GetInput
+will update the current picture and alarmtext during the input sequence
+(scanf and ask will not).
+
+Arguments
+
+string		format		format in c-syntax.
+(arbitrary type) input_variable	variable to receive the input.
+string		prompt		optional, specifies the prompt to be dislayed.
+
+int		terminator	optional, returns the ascii-code for the
+				terminator character. For PF1 to PF4 the code
+				278 to 281 is returned. The code is defined
+				in the file pwr_inc:rt_rtt.h RTT_K_...
+
+Example
+
+  int value;
+  string text;
+
+  PlaceCursor( 1, 23);
+  LineErase();
+  PlaceCursor( 1, 23);
+  GetInput( "%d", value, "Select coolingbed: ");
+  PlaceCursor( 1, 23);
+  LineErase();
+
+  sprintf( text, "You have selected coolingbed %d...", value);
+  MessageInfo( text);
+__end__
+
+__key__ PlaceCursor()
+PlaceCursor()
+
+int PlaceCursor( int x, int y)
+
+Description
+
+Change the cursor position. x is the column and y the row.
+The position of the upper left corner is (1,1).
+
+Arguments
+
+int	x	 column, the range for x is 1-80
+int	y	 row, the range for y is 1-24
+
+Example
+
+  PlaceCursor( 1, 23);
+__end__
+
+__key__ LineErase()
+LineErase()
+
+int LineErase()
+
+Description
+
+Erase the line from the current cursor position.
+
+Example
+
+  PlaceCursor( 1, 23);
+  LineErase();
+__end__
+
+__key__ GetCurrentTitle()
+GetCurrentTitle()
+
+string GetCurrentTitle()
+
+Description
+
+Get the title of the current picture or menu.
+
+Example
+
+  string title;
+
+  title = GetCurrentTitle();
+__end__
+
+__key__ GetCurrentText()
+GetCurrentText()
+
+string GetCurrentText()
+
+Description
+
+Get the text of the current menu item or update field.
+
+Example
+
+  string text;
+
+  text = GetCurrentText();
+__end__
+
+__key__ GetCurrentObject()
+GetCurrentObject()
+
+string GetCurrentObject()
+
+Description
+
+Get the object associated with the current menu item.
+If no object is associated, a null-string i returned.
+
+Example
+
+  string object;
+
+  object = GetCurrentObject();
+__end__
+

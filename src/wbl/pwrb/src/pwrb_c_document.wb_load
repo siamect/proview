@@ -1,0 +1,122 @@
+!  pwrb_c_document.wb_load -- Defines the class Document.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  Configures in the working area of the PLC Editor an
+!  area in A-format.
+!  
+!  By at the time of configuration of a PLC program,
+!  divide the working surface in Document objects and
+!  arrange the PLC objects in such a way that the PLC
+!  object are included in Document objects, it will be
+!  possible to write the whole configuration on a number
+!  of A4-papers.
+!  
+!  The working surface in the PLC Editor may contains an
+!  arbitrary number of Document objects.
+!  Document object is selected by the pointing device
+!  through a click on the border or in the head of the
+!  object.
+!  
+!  By the Attribute Editor the object's orientation,
+!  format, page number and the signature are specified.
+!  The fields in the head of the object are filled in by
+!  the development environment at the time of
+!  transcription.
+!  At transcription one PostScript file per Document
+!  object will be created. The file is default located on
+!  'pwrp_tmp'.
+!  
+!  By the pwr_plc commands:
+!  · document /repage -- the Document objects are page
+!  numbered on the form x.y. The number before point
+!  specifies a PlcPgm within the PROVIEW system and the
+!  number after specifies Document objects in the same
+!  order as they have been created in the PLC program.
+!  If the pages have to be numbered in a certain order
+!  they have to be ordered in the wanted way in the
+!  work-bench database.
+!  
+!   · document /list -- writes an alphabetic list with the
+!     name on all Document objects in the system.
+!     The transcription is default sent to the
+!     same window as from where the development environment
+!     was started.
+!
+!  If there is a need for a larger working surface choose
+!  A3 format in the Document object. The objects in the
+!  transcription will be somewhat reduced in scale
+!  compared with objects in a Document object with A4
+!  format but nevertheless they are fully readable.
+!*/
+SObject pwrb:Class
+  Object Document $ClassDef 94 
+    Body SysBody
+      Attr Flags |= pwr_mClassDef_DevOnly
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_DrawingInfo
+    EndBody
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object Page $Intern 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String8"
+        EndBody
+      EndObject
+      Object Signature $Intern 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String8"
+        EndBody
+      EndObject
+      Object DocumentOrientation $Intern 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Enum"
+        EndBody
+      EndObject
+      Object DocumentSize $Intern 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Enum"
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 2
+        Attr parameters[0] = 0
+        Attr parameters[1] = 0
+        Attr parameters[2] = 0
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 6
+        Attr graphindex = 38
+        Attr default_mask[0] = 4
+        Attr default_mask[1] = 0
+        Attr segname_annotation = 0
+        Attr compmethod = 2
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+        Attr objname = "Document"
+        Attr graphname = "Document"
+        Attr debugpar = "No"
+      EndBody
+    EndObject
+    Object Template Document
+      Body DevBody
+        Attr DocumentSize = 4
+      EndBody
+    EndObject
+  EndObject
+EndSObject

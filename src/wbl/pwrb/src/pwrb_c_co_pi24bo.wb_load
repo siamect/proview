@@ -1,0 +1,190 @@
+!  pwrb_c_co_pi24bo.wb_load -- Defines the class Co_PI24BO.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996,99 by Mandator AB.
+!
+!  Counter card PI24BO.
+!
+SObject pwrb:Class
+  Object Co_PI24BO $ClassDef 72 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_RtAndDevBodies
+      Attr Flags |= pwr_mClassDef_IO
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "Co_PI24BO"
+      EndBody
+      Object Description $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      Object DevName $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      Object ErrorCount $Attribute 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+      Object ErrorSoftLimit $Attribute 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object ErrorHardLimit $Attribute 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object ConvMask $Attribute 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Mask"
+        EndBody
+      EndObject
+      Object MaxNoOfCounters $Attribute 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+!          Attr Flags |= PWR_MASK_CONST
+        EndBody
+      EndObject
+      Object COAbsFlag $Attribute 9
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Elements = 4
+        EndBody
+      EndObject
+      Object NoOfBits $Attribute 10
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Enum"
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Elements = 4
+        EndBody
+      EndObject
+      Object COWrFlag $Attribute 11
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Elements = 4
+        EndBody
+      EndObject
+      Object MulCount $Attribute 12
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Enum"
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Elements = 4
+        EndBody
+      EndObject
+      Object DivCount $Attribute 13
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Enum"
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Elements = 4
+        EndBody
+      EndObject
+      Object CopWrRough $Attribute 14
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Elements = 4
+        EndBody
+      EndObject
+      Object CopWrFine $Attribute 15
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Elements = 4
+        EndBody
+      EndObject
+      Object LoadWrReg $Attribute 16
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Elements = 4
+        EndBody
+      EndObject
+      Object LengthMeasurement $Attribute 17
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Elements = 4
+        EndBody
+      EndObject
+      Object SpeedMeasurement $Attribute 18
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Elements = 4
+        EndBody
+      EndObject
+      Object SyncRawValue $Attribute 19
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Elements = 4
+        EndBody
+      EndObject
+      Object RegAddress $Attribute 20
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object VectAddress $Attribute 21
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object Process $Attribute 22
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object ThreadObject $Intern 23
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object ChannelAllocation $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+    EndObject
+    Object Template Co_PI24BO
+      Body RtBody
+	Attr ConvMask = 65535
+        Attr COAbsFlag = 1
+        Attr NoOfBits = 24
+        Attr MulCount = 4
+        Attr CopWrRough = 1
+        Attr CopWrFine = 1
+        Attr MaxNoOfCounters = 1
+        Attr Process = 1
+      EndBody
+    EndObject
+    Object AnteAdopt $DbCallBack
+      Body SysBody
+        Attr MethodName = "Co_PI24BO-AnteAdopt"
+      EndBody
+    EndObject
+    Object PostUnadopt $DbCallBack
+      Body SysBody
+        Attr MethodName = "Co_PI24BO-PostUnadopt"
+      EndBody
+    EndObject
+    Object PostAdopt $DbCallBack
+      Body SysBody
+        Attr MethodName = "Co_PI24BO-PostAdopt"
+      EndBody
+    EndObject
+  EndObject
+EndSObject

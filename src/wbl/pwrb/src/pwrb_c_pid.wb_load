@@ -1,0 +1,642 @@
+!  pwrb_c_pid.wb_load -- Defines the class PID.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_pid.c
+!  Implements the robust PID control algorithm.
+!  
+!  In the normal case the Pid object is used together with
+!  the Mode object. The Mode object plays the part of an
+!  interface for the Pid object. From the Mode object it
+!  is possible to select:
+!  
+!  · control modes ( MANUAL / AUTO / CASCADE)
+!  · forced control regarding the control signal of the
+!  controller.
+!  
+!  Different PID strategies are implemented for
+!  incremental as well as positional form, see PidAlg
+!  below.
+!  The proportional respectively derivative term can be
+!  based either on process value or control deviation.
+!  
+!  The derivative term can be filtered by a first order
+!  lag filter.
+!  A feed forward signal, Bias, may be included in the
+!  algorithm.
+!  
+!  It is possible to switch the integration on/off.
+!  The control signal OutVal is checked against the limit
+!  values MinOut and MaxOut.
+!  
+!  Bumpless transfer AUTO / MANUAL.
+!  To handle and adjust the controller there are two more
+!  info forms containing e.g. a time diagram with process
+!  value, setpoint value and output signal.
+!*/
+SObject pwrb:Class
+  Object PID $ClassDef 174 
+    Body SysBody
+      Attr Editor = pwr_eEditor_PlcEd
+      Attr Method = pwr_eMethod_Connections
+      Attr PopEditor = pwr_ePopEditor_GMS
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "pid"
+      EndBody
+      !/**
+      !  Specifies the process value.
+      !*/
+      Object ProcVal $Input 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "PV"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the set point value. This input is in general
+      !  connected to the corresponding output of a Mode object.
+      !*/
+      Object SetVal $Input 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "SV"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the feed forward value. The value may be
+      !  changed in the more info form of the Pid object.
+      !*/
+      Object Bias $Input 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "BIS"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies which value is to be used when Force is TRUE.
+      !  When Force is TRUE OutVal is equal to ForcVal. This
+      !  input is in general connected to the corresponding
+      !  output of a Mode object.
+      !*/
+      Object ForcVal $Input 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "FOV"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies whether forced or MANUAL control is selected
+      !  or not. FALSE means none; TRUE means that either forced
+      !  or MANUAL control has been selected. This input is in
+      !  general connected to the corresponding output of a Mode
+      !  object.
+      !*/
+      Object Force $Input 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "for"
+	  Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      !/**
+      !  Specifies whether to enable or disable the integration.
+      !  FALSE means that the integration is on; TRUE switches
+      !  the integration off.
+      !  
+      !  The value may be changed in the more info form of the
+      !  Pid object.
+      !*/
+      Object IntOff $Input 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "iof"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOINVERT
+        EndBody
+      EndObject
+      !/**
+      !  The controller's control signal. The value is based
+      !  either on the algorithm's current result, a value set
+      !  by the operator in MANUAL mode, or a forced value.
+      !*/
+      Object OutVal $Output 7 
+        Body SysBody
+          Attr PgmName = "OutVal"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "OUT"
+        EndBody
+      EndObject
+      !/**
+      !  Changes in the control signal between two consecutive
+      !  scans; i.e. OutVal(t)  - OutVal(t-1).
+      !*/
+      Object OutChange $Output 8 
+        Body SysBody
+          Attr PgmName = "OutChange"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "OC"
+        EndBody
+      EndObject
+      !/**
+      !  Control error (= ProcVal - SetVal).
+      !*/
+      Object ControlDiff $Output 9 
+        Body SysBody
+          Attr PgmName = "ControlDiff"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "DIF"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies if OutVal at this scanning has been limited
+      !  against any of the limit values in the interval {
+      !  MinOut, MaxOut } or not. If a limitation is done
+      !  against
+      !  
+      !  --  MinOut, then EndMin is set TRUE
+      !  --  MaxOut, then EndMax is set TRUE
+      !  else they are FALSE.
+      !  
+      !  EndMin /EndMax can only be set in AUTO or CASCADE
+      !  control mode, i.e. not in MANUAL mode for example. See
+      !  also EndHys below.
+      !*/
+      Object EndMax $Output 10 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "max"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object EndMin $Output 11 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "min"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  There are several variations of the PID control
+      !  algorithm. PidAlg specifies the current choice. The
+      !  possible values are as follows:
+      !  
+      !  1   -- I     Integral controller. Gain is not used.
+      !  3   -- I+P   Integral controller with proportional
+      !               control action. The P-term is based on the
+      !  
+      !  6   -- P     Proportional Controller.
+      !  7   -- PI    Proportional Integral Controller. The
+      !               P-term is based on the control error
+      !  
+      !  11  -- I+PD Integral controller with proportional
+      !              derivative control action. Both the P- and
+      !              D-term are based on the process value
+      !  14  -- P+D  Proportional Controller with derivative
+      !              control action. P is based on the control
+      !  
+      !  15  -- PI+D Proportional Integral Controller with
+      !              derivative control action. P is based on
+      !  30  -- PD   Proportional Derivative Controller. Both
+      !              the P- and D-term are based on the control
+      !  
+      !  31  -- PID  Proportional Integral Derivative
+      !              Controller. Both the P- and D-term are
+      !*/
+      Object PidAlg $Intern 12 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Enum"
+          Attr GraphName = "PidAlg"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the proportional control factor; >= 0.
+      !  The value may be changed in the more info form of the
+      !  Pid object.
+      !*/
+      Object Gain $Intern 13 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "Gain"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the integral action time in seconds.
+      !  The value may be changed in the more info form of the
+      !  Pid object.
+      !*/
+      Object IntTime $Intern 14 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "IntTime"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the derivative time in seconds; see p. 3-258.
+      !  Normally DerTime is greater than ScanTime and
+      !     1.0 <=  DerGain < DerTime/ScanTime
+      !*/
+      Object DerTime $Intern 15 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "DerTime"
+        EndBody
+      EndObject
+      !/**
+      !  Factor to specify the first order lag filter used in
+      !  filtering of the derivative contribution.
+      !     
+      !  1.0 <= DerGain < DerTime/ScanTime, otherwise no filtering
+      !  
+      !  DerGain is normally in the size of 3 to 4.
+      !  The value may be changed in the more info form of the
+      !  Pid object.
+      !*/
+      Object DerGain $Intern 16 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "DerGain"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies whether the control action should be inverted
+      !  or not. FALSE means that a spontaneous increasing
+      !  process value, in a control with fixed set point, is
+      !  met by an increasing control signal, i.e. reverse
+      !  control action. TRUE is the normal case, where a
+      !  spontaneous increasing process value is met by a
+      !  decreasing control signal.
+      !*/
+      Object Inverse $Intern 17 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "Inverse"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the feed forward gain; this factor may be
+      !  negative.
+      !  
+      !  The values may be changed in the more info form of the
+      !  Pid object.
+      !*/
+      Object BiasGain $Intern 18 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "BiasGain"
+        EndBody
+      EndObject
+      !/**
+      !  At AUTO and CASCADE control the control signal OutVal
+      !  is supposed to be in the interval { MinOut, MaxOut }.
+      !  The EndMin /EndMax flags are used to signal if any
+      !  limitation has occurred.
+      !  If OutVal is greater than MaxOut or less than MinOut,
+      !  OutVal is limited to the value at the end of the
+      !  interval.
+      !  
+      !  If MinOut >= MaxOut no limitation will occur.
+      !*/
+      Object MinOut $Intern 19 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MinOut"
+        EndBody
+      EndObject
+      Object MaxOut $Intern 20 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MaxOut"
+        EndBody
+      EndObject
+      !/**
+      !  Program cycle period in seconds, i.e. the sample time.
+      !*/
+      Object ScanTime $Intern 21 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "ScanTime"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_PRIVATE
+        EndBody
+      EndObject
+      !/**
+      !  The operator's authorities to change Gain respectively
+      !  IntTime.
+      !    0   -- Changes not allowed.
+      !    != 0 -- Changes allowed.
+      !*/
+      Object AccGain $Intern 22 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "AccGain"
+        EndBody
+      EndObject
+      Object AccInt $Intern 23 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "AccInt"
+        EndBody
+      EndObject
+      !/**
+      !  The operator's authorities to change DerTime.
+      !    0   -- Changes not allowed.
+      !    != 0 -- Changes allowed.
+      !*/
+      Object AccDer $Intern 24 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "AccDer"
+        EndBody
+      EndObject
+      !/**
+      !  The operator's authorities to change DerGain.
+      !    0   -- Changes not allowed.
+      !    != 0 -- Changes allowed.
+      !*/
+      Object AccDGain $Intern 25 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "AccDGain"
+        EndBody
+      EndObject
+      Object AccBias $Intern 26 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "AccBias"
+        EndBody
+      EndObject
+      Object AccBGain $Intern 27 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "AccBGain"
+        EndBody
+      EndObject
+      !/**
+      !  The minimum and maximum allowed value of Gain at
+      !  changes made by an operator.
+      !*/
+      Object MinGain $Intern 28 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MinGain"
+        EndBody
+      EndObject
+      Object MaxGain $Intern 29 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MaxGain"
+        EndBody
+      EndObject
+      !/**
+      !  The minimum and maximum allowed value of IntTim at
+      !  changes made by an operator.
+      !*/
+      Object MinInt $Intern 30 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MinInt"
+        EndBody
+      EndObject
+      Object MaxInt $Intern 31 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MaxInt"
+        EndBody
+      EndObject
+      !/**
+      !  The minimum and maximum allowed value of DerTim at
+      !  changes made by an operator.
+      !*/
+      Object MinDer $Intern 32 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MinDer"
+        EndBody
+      EndObject
+      Object MaxDer $Intern 33 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MaxDer"
+        EndBody
+      EndObject
+      !/**
+      !  The minimum and maximum allowed value of DerGain at
+      !  changes made by an operator.
+      !*/
+      Object MinDGain $Intern 34 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MinDGain"
+        EndBody
+      EndObject
+      Object MaxDGain $Intern 35 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MaxDGain"
+        EndBody
+      EndObject
+      !/**
+      !  The minimum and maximum allowed value of Gain at
+      !  changes made by an operator.
+      !*/
+      Object MinBias $Intern 36 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MinBias"
+        EndBody
+      EndObject
+      Object MaxBias $Intern 37 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MaxBias"
+        EndBody
+      EndObject
+      !/**
+      !  The minimum and maximum allowed value of BiasGain at
+      !  changes made by an operator.
+      !*/
+      Object MinBGain $Intern 38 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MinBGain"
+        EndBody
+      EndObject
+      Object MaxBGain $Intern 39 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MaxBGain"
+        EndBody
+      EndObject
+      Object SetMaxShow $Intern 40 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "SetMaxShow"
+        EndBody
+      EndObject
+      !/**
+      !  The lower respectively upper limit in the graph at
+      !  presentation of ProcVal and SetVal in the Pid object
+      !  display. The values may be changed in the more info
+      !  form of the Pid object.
+      !*/
+      Object SetMinShow $Intern 41 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "SetMinShow"
+        EndBody
+      EndObject
+      !/**
+      !  The lower respectively upper limit in the graph at
+      !  presentation of the control signal OutVal in the Pid
+      !  object display. The values may be changed in the more
+      !  info form of the Pid object.
+      !*/
+      Object OutMaxShow $Intern 42 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "OutMaxShow"
+        EndBody
+      EndObject
+      Object OutMinShow $Intern 43 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "OutMinShow"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the engineering unit of SetMinShow /
+      !  SetMaxShow, e.g. meter. Used in the Pid object display.
+      !*/
+      Object SetEngUnit $Intern 44 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String16"
+          Attr GraphName = "SetEngUnit"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the engineering unit of OutMinShow /
+      !  OutMaxShow, e.g., %. Used in the in the Pid object
+      !  display.
+      !*/
+      Object OutEngUnit $Intern 45 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String16"
+          Attr GraphName = "OutEngUnit"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the complete name of the Mode object
+      !  associated to this Pid object. The attribute makes it
+      !  possible to start the object display of the associated
+      !  Mode object from a button in the object display of the
+      !  Pid object.
+      !*/
+      Object ModeObjDId $Intern 46 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr GraphName = "ModeObjDId"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the hysteresis on MinOut and MaxOut in
+      !  connection with the handling of EndMin/EndMax.
+      !*/
+      Object EndHys $Intern 47 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "EndHys"
+        EndBody
+      EndObject
+      !/**
+      !  Filtered derivative is saved to the next program cycle.
+      !*/
+      Object FiltDer $Intern 48 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "FiltDer"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 150
+        Attr parameters[0] = 6
+        Attr parameters[1] = 0
+        Attr parameters[2] = 5
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 0
+        Attr graphindex = 0
+        Attr default_mask[0] = 27
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 1
+        Attr compmethod = 4
+        Attr compindex = 0
+	Attr executeordermethod = 2
+        Attr objname = "PID"
+        Attr graphname = "PID"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    Object Template PID
+      Body RtBody
+        Attr PidAlg = 3
+        Attr Gain = 1.0
+        Attr IntTime = 120.0
+        Attr MaxOut = 100
+        Attr DerGain = 3.0
+        Attr BiasGain = 1.0
+        Attr Inverse = 1
+        Attr AccGain = 15
+        Attr AccInt = 15
+        Attr AccDer = 15
+        Attr AccBias = 15
+        Attr AccBGain = 15
+        Attr MinGain = 0.1
+        Attr MaxGain = 10.0
+        Attr MinInt = 10.0
+        Attr MaxInt = 600.0
+        Attr MaxDer = 20.0
+        Attr MaxBias = 100.0
+        Attr MinBGain = -100.0
+        Attr MaxBGain = 100.0
+        Attr OutMaxShow = 100.0
+        Attr SetMaxShow = 100.0
+        Attr SetEngUnit = "%"
+        Attr OutEngUnit = "%"
+      EndBody
+    EndObject
+  EndObject
+EndSObject

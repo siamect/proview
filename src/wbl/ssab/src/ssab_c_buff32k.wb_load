@@ -1,0 +1,45 @@
+!  ssab_c_Buff32k.wb_load -- Defines the class Buff32k.
+!
+!  PROVIEW/R
+!
+!  <Description>.
+!
+SObject SSAB:Class
+  !
+  ! Buff32k	Transbuffer
+  !
+  Object Buff32k $ClassDef 22
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    !
+    ! Buff32k Runtime Body
+    !
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "Buff32k"
+      EndBody
+      !
+      ! Parameter Data
+      !
+      Object Data $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int16"
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Elements = 16384
+        EndBody
+      EndObject
+    EndObject
+    !
+    ! Template för Buff32k
+    !
+    Object Template Buff32k
+      Body RtBody
+      EndBody
+    EndObject
+  !
+  ! End Buff32k
+  !
+  EndObject
+EndSObject

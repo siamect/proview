@@ -1,0 +1,1144 @@
+!  op_alaw.uil -- alarm window
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  This module defines the widget hierarchy for the alarmwindow.
+!
+module op_alaw
+names = case_sensitive
+!objects = { 
+!          XmPushButton     = widget;           
+!          XmLabel           = widget; 
+!	  }          
+
+! include files
+include file 'pwr_lang:inc_alaw_txt.uil';
+
+
+
+value
+   TimeString1 : compound_string("2004-08-01",separate = true);
+   TimeString2 : compound_string("12:00:00");
+   TimeString  : TimeString1 & TimeString2;
+
+
+   Red : color('Red',background);
+   InsensColor : color('Grey', foreground);
+   Insens_colors: color_table (  background color = ' ', InsensColor = '*');
+! Icon size 30x30
+   NethInsenIcon : icon ( color_table=Insens_colors,
+
+'                              ',
+'                              ',
+'                              ',
+'                              ',
+'                              ',
+'   *                          ',
+'  **                          ',
+' ****                         ',
+'*****           *             ',
+' *****         ***            ',
+'  *****        ****           ',
+'   *****       ****           ',
+'    ****      ******          ',
+'     ****     ******          ',
+'      ****    ** ****         ',
+'       ***   ***  ***         ',
+'        ***  ***  ****        ',
+'         *** **    ****       ',
+'          ****      ***       ',
+'           ***       ***      ',
+'            *         **      ',
+'                       ** *   ',
+'                        ***   ',
+'                        ***   ',
+'                       ****   ',
+'                              ',
+'                              ',
+'                              ',
+'                              ',
+'                              ');
+   neth_cross_colors : color_table ( Red = ' ', foreground color = '*');
+! Icon size 30x30
+   NethCrossIcon : icon ( color_table= neth_cross_colors,
+
+
+'                              ',
+'   *                **        ',
+'   **               **        ',
+'    **             **         ',
+'     *             **         ',
+'   * **           **          ',
+'  **  **         ***          ',
+' **** **         **           ',
+'*****  **       **            ',
+' *****  **     ***            ',
+'  *****  *     ****           ',
+'   ***** **   *****           ',
+'    ****  *   ******          ',
+'     **** ** *******          ',
+'      **** ***** ****         ',
+'       ***  ****  ***         ',
+'        ********  ****        ',
+'         *** **    ****       ',
+'          *****     ***       ',
+'         *******     ***      ',
+'        **  * **      **      ',
+'        **     **      ** *   ',
+'       **      ***      ***   ',
+'       *        **      ***   ',
+'      **         **    ****   ',
+'     **           **          ',
+'     **           **          ',
+'    **             **         ',
+'                    **        ',
+'                              ');
+   bitmap_colors : color_table ( background color = ' ', foreground color = '*');
+! Icon size 30x30
+   HornIcon : icon ( color_table=bitmap_colors,
+
+'                              ',
+'                              ',
+'                **            ',
+'               ***            ',
+'              ****     *      ',
+'             ** **    **      ',
+'            *** **    *       ',
+'           ***  **   **       ',
+' ***********    **   *        ',
+' ***********    **   *        ',
+' **      **     **   *  *     ',
+' **      **     **   *  *     ',
+' **      **     **  *  **     ',
+' **      **     **  *  *   *  ',
+' **      **     **  *  *  *   ',
+' **      **     **  *  *  *   ',
+' **      **     **  *  *   *  ',
+' **      **     **  *   *     ',
+' **      **     **   *  *     ',
+' **********     **   *        ',
+' ***********    **   *        ',
+'           ***  **   *        ',
+'            *** **   **       ',
+'             *****    *       ',
+'              ****    **      ',
+'               ***     *      ',
+'                **            ',
+'                              ',
+'                              ',
+'                              ');
+   bitmap_high_colors : color_table ( background color = '*', foreground color = ' ');
+! Icon size 30x30
+   HornHighIcon : icon ( color_table=bitmap_high_colors,
+
+'                              ',
+'                              ',
+'                **            ',
+'               ***            ',
+'              ****     *      ',
+'             ** **    **      ',
+'            *** **    *       ',
+'           ***  **   **       ',
+' ***********    **   *        ',
+' ***********    **   *        ',
+' **      **     **   *  *     ',
+' **      **     **   *  *     ',
+' **      **     **  *  **     ',
+' **      **     **  *  *   *  ',
+' **      **     **  *  *  *   ',
+' **      **     **  *  *  *   ',
+' **      **     **  *  *   *  ',
+' **      **     **  *   *     ',
+' **      **     **   *  *     ',
+' **********     **   *        ',
+' ***********    **   *        ',
+'           ***  **   *        ',
+'            *** **   **       ',
+'             *****    *       ',
+'              ****    **      ',
+'               ***     *      ',
+'                **            ',
+'                              ',
+'                              ',
+'                              ');
+
+! CONSTANTS, Defining the geometry of the application.
+
+value
+   
+   LabelButtonLeftOffset : 4;
+   ButtonButtonLeftOffset : 3;
+   ButtonLabelLeftOffset : 4;
+
+
+   DbHeight : 30; 
+!   DbHeight : 39; 
+   DbCDWidth : 120;
+
+
+
+
+   Space : 1;
+   PbImX : 5;
+!   PbHornY : (AlawHeight/2-button-ButtonHeight)/2;
+   PbHornY : (DbHeight+(2*Space)-ButtonHeight)/2;
+   PbNethY : PbHornY+DbHeight+(2*Space);
+   PbImWidth : 35;
+   PbImHeight : PbImWidth;
+  
+
+   LabSolidX : 5;
+   LabSolidY : 7;
+   LabBlockY : 0;
+!   LabSolidY : 6;
+   LabSolidWidth : 15;
+   LabSolidHeight : 20;
+   LabNumX : LabSolidX+LabSolidWidth+5;
+!   LabNumY : 3;
+   LabNumY : 2;
+   LabNumWidth : 40;
+   LabNumTextX : LabNumX+LabNumWidth;
+   LabNumTextWidth : 40;
+   PbAckX : LabNumTextX+LabNumTextWidth+5;
+!   PbAckY : (DbHeight-ButtonHeight)/2;
+   PbAckY : 4;
+   PbSelX : PbAckX+ButtonWidth+5;
+   LabAlarmTextX : PbSelX+ButtonWidth+5;
+   LabAlarmTextY : LabNumY;
+   
+! ALAW INSTANCE IDENTIFIER
+identifier
+   AlawP;
+   
+! CALLBACK PROCEDURES, In order of occurrence.
+
+procedure
+   alaw_PbHorn_cb(any);
+   alaw_PbNeth_cb(any);
+
+   alaw_LabSystem_cr(any);
+   alaw_LabTime_cr(any);
+
+   alaw_DbA_cr(any);
+   alaw_PbAAck_cr(any);
+   alaw_PbAAck_cb(any);
+   alaw_PbASel_cr(any);
+   alaw_PbASel_cb(any);
+   alaw_LabASolid_cr(any);
+   alaw_LabABlock_cr(any);
+   alaw_LabANumText_cr(any);
+   alaw_LabANum_cr(any);
+   alaw_LabAAlarmText_cr(any);
+
+   alaw_DbB_cr(any);
+   alaw_PbBAck_cr(any);
+   alaw_PbBAck_cb(any);
+   alaw_PbBSel_cr(any);
+   alaw_PbBSel_cb(any);
+   alaw_LabBSolid_cr(any);
+   alaw_LabBBlock_cr(any);
+   alaw_LabBNumText_cr(any);
+   alaw_LabBNum_cr(any);
+   alaw_LabBAlarmText_cr(any);
+
+   alaw_DbC_cr(any);
+   alaw_LabCSolid_cr(any);
+   alaw_LabCBlock_cr(any);
+   alaw_LabCNumText_cr(any);
+   alaw_LabCNum_cr(any);
+
+   alaw_DbD_cr(any);
+   alaw_LabDSolid_cr(any);
+   alaw_LabDBlock_cr(any);
+   alaw_LabDNumText_cr(any);
+   alaw_LabDNum_cr(any);
+
+   alaw_DbMsg_cr(any);
+   alaw_PbMsgAck_cr(any);
+   alaw_PbMsgAck_cb(any);
+   alaw_PbMsgSel_cr(any);
+   alaw_PbMsgSel_cb(any);
+   alaw_LabMsgSolid_cr(any);
+   alaw_LabMsgNumText_cr(any);
+   alaw_LabMsgNum_cr(any);
+   alaw_LabMsgAlarmText_cr(any);
+
+
+/**********************************************************************
+*
+*  Alarmwindows mainwindow
+*
+**********************************************************************/
+object alarmWin : XmMainWindow 
+{
+   arguments
+   {
+!    XmNdialogTitle = AlawTitle;
+   };
+   controls
+   {
+     XmForm adb;
+   };
+
+};
+object adb : XmForm 
+{
+   arguments
+   {
+   };
+   controls
+   {
+!    XmPushButton	PbNeth;
+      XmForm	dbTime;
+      XmPushButton	bellPb;
+      XmForm	DbC;
+      XmForm	DbD;
+      XmForm	DbA;
+      XmForm	DbB;
+      unmanaged XmForm	DbMsg;
+   };
+};
+
+object bellPb : XmPushButton 
+{
+   arguments
+   {
+      XmNleftAttachment = XmATTACH_FORM;
+      XmNleftOffset = PbImX;
+      XmNtopAttachment = XmATTACH_WIDGET;
+      XmNtopWidget = XmForm dbTime; 
+      XmNtopOffset = PbHornY;
+      XmNlabelType = XmPIXMAP;
+      XmNlabelPixmap = HornIcon;
+      XmNhighlightPixmap = HornHighIcon;
+      XmNtraversalOn = true;
+      XmNaccelerator = "Ctrl<Key>E:";
+   };
+   callbacks
+   {
+      XmNactivateCallback = procedure alaw_PbHorn_cb(AlawP);
+   };
+};
+
+
+/**********************************************************************
+*
+*  Dialog box for date and time 
+*
+**********************************************************************/
+object dbTime : XmForm
+{
+   arguments
+   {      
+      XmNleftAttachment = XmATTACH_FORM;
+      XmNleftOffset = Space;
+      XmNrightAttachment = XmATTACH_FORM;
+      XmNrightOffset = Space;
+      XmNtopAttachment = XmATTACH_FORM;
+      XmNtopOffset = Space;
+      XmNshadowThickness = 1;
+      XmNshadowType = XmSHADOW_IN;
+   };
+   controls
+   {
+      XmLabel		LabPwr;
+      XmLabel		systemSolidLabel;
+      XmLabel		systemLabel;
+      XmLabel		timeLabel;
+   };
+   callbacks
+   {
+   };
+};
+object LabPwr : XmLabel
+{
+   arguments
+   {
+!    XmNx = LabSolidX;
+      XmNleftAttachment = XmATTACH_FORM;
+      XmNleftOffset = LabSolidX;
+      XmNtopAttachment = XmATTACH_FORM;
+      XmNtopOffset = 1;
+      XmNbottomAttachment = XmATTACH_FORM;
+      XmNbottomOffset = 1;
+      XmNfontList= BigFont;
+      XmNlabelString = compound_string("PROVIEW/R");
+
+      XmNmarginWidth = 0;
+      XmNmarginHeight = 0;
+
+   };
+};
+
+object systemSolidLabel : XmLabel
+{
+   arguments
+   {
+      XmNleftAttachment = XmATTACH_WIDGET;
+      XmNleftWidget = XmLabel LabPwr;
+      XmNleftOffset = 60;
+      XmNtopAttachment = XmATTACH_FORM;
+      XmNtopOffset = 1;
+      XmNmarginWidth = 0;
+      XmNmarginHeight = 0;
+      XmNlabelString = compound_string("System:  ");
+   };
+   callbacks
+   {
+   };
+};
+
+object systemLabel : XmLabel
+{
+   arguments
+   {
+      XmNleftAttachment = XmATTACH_WIDGET;
+      XmNleftWidget = XmLabel systemSolidLabel;
+      XmNtopAttachment = XmATTACH_FORM;
+      XmNtopOffset = 1;
+      XmNmarginWidth = 0;
+      XmNmarginHeight = 0;
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alaw_LabSystem_cr(AlawP);
+   };
+};
+
+object timeLabel : XmLabel
+{
+   arguments
+   {
+!    XmNleftAttachment = XmATTACH_WIDGET;
+!    XmNleftWidget = XmLabel LabPwr;
+!    XmNleftOffset = 50;
+      XmNrightAttachment = XmATTACH_FORM;
+      XmNrightOffset = 10;
+      XmNtopAttachment = XmATTACH_FORM;
+      XmNtopOffset = 1;
+      XmNbottomOffset = 1;
+      XmNmarginWidth = 0;
+      XmNmarginHeight = 0;
+
+!    XmNrightAttachment = XmATTACH_FORM;
+!    XmNwidth = LabNumWidth;
+!    XmNalignment = XmALIGNMENT_END;
+      XmNrecomputeSize = false;
+!    XmNfontList= font('*menu-medium-r-*-120-*');
+!    XmNlabelString = TimeString;
+      XmNlabelString = compound_string("2002-08-01    12:00");
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alaw_LabTime_cr(AlawP);
+   };
+};
+
+/**********************************************************************
+*
+*  Dialogbox C and it's children 
+*
+**********************************************************************/
+object DbC : XmForm
+{
+   arguments
+   {      
+      XmNrightAttachment = XmATTACH_FORM;
+      XmNrightOffset = Space;
+      XmNtopAttachment = XmATTACH_WIDGET;
+      XmNtopWidget = XmForm dbTime;
+      XmNtopOffset = Space;
+      XmNshadowThickness = 1;
+      XmNshadowType = XmSHADOW_IN;
+   };
+   controls
+   {
+      XmLabel		LabCSolid;
+      XmLabel		LabCBlock;
+      XmLabel		LabCNumText;
+      XmLabel		LabCNum;
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alaw_DbC_cr(AlawP);
+   };
+};
+object LabCSolid : XmLabel
+{
+   arguments
+   {
+      XmNx = LabSolidX;
+      XmNtopAttachment = XmATTACH_FORM;
+      XmNtopOffset = LabSolidY;
+      XmNwidth = LabSolidWidth;
+      XmNheight = LabSolidHeight;
+      XmNfontList= BigFont;
+      XmNlabelString = compound_string("C");
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alaw_LabCSolid_cr(AlawP);
+   };
+};
+
+object LabCBlock : XmLabel
+{
+   arguments
+   {
+      XmNx = LabSolidX;
+      XmNtopAttachment = XmATTACH_WIDGET;
+      XmNtopWidget = XmLabel LabCSolid;
+      XmNtopOffset = LabBlockY;
+      XmNlabelType = XmPIXMAP;
+      XmNwidth = 10;
+      XmNheight = 10;
+      XmNmappedWhenManaged = false;
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alaw_LabCBlock_cr(AlawP);
+   };
+};
+
+object LabCNum : XmLabel
+{
+   arguments
+   {
+      XmNx = LabNumX;
+      XmNtopAttachment = XmATTACH_FORM;
+      XmNtopOffset = LabNumY;
+      XmNbottomAttachment = XmATTACH_FORM;
+      XmNbottomOffset = LabNumY;
+      XmNwidth = LabNumWidth;
+      XmNalignment = XmALIGNMENT_END;
+      XmNrecomputeSize = false;
+      XmNlabelString = NumString;
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alaw_LabCNum_cr(AlawP);
+   };
+};
+object LabCNumText : XmLabel
+{
+   arguments
+   {
+      XmNx = LabNumTextX;
+      XmNtopAttachment = XmATTACH_FORM;
+      XmNtopOffset = LabNumY;
+      XmNbottomAttachment = XmATTACH_FORM;
+      XmNbottomOffset = LabNumY;
+      XmNalignment = XmALIGNMENT_BEGINNING;
+      XmNlabelString = NumTextString;
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alaw_LabCNumText_cr(AlawP);
+   };
+};
+
+/**********************************************************************
+*
+*  Dialogbox D and it's children 
+*
+**********************************************************************/
+object DbD : XmForm
+{
+   arguments
+   {
+      XmNrightAttachment = XmATTACH_FORM;
+      XmNrightOffset = Space;
+      XmNtopAttachment = XmATTACH_WIDGET;
+      XmNtopWidget = XmForm DbC;
+      XmNtopOffset = Space;
+      XmNshadowThickness = 1;
+      XmNshadowType = XmSHADOW_IN;
+   };
+   controls
+   {
+      XmLabel		LabDSolid;
+      XmLabel		LabDBlock;
+      XmLabel		LabDNum;
+      XmLabel		LabDNumText;
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alaw_DbD_cr(AlawP);
+   };
+};
+object LabDSolid : XmLabel
+{
+   arguments
+   {
+      XmNx = LabSolidX;
+      XmNtopAttachment = XmATTACH_FORM;
+      XmNtopOffset = LabSolidY;
+      XmNwidth = LabSolidWidth;
+      XmNheight = LabSolidHeight;
+      XmNfontList= BigFont;
+      XmNlabelString = compound_string("D");
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alaw_LabDSolid_cr(AlawP);
+   };
+};
+
+object LabDBlock : XmLabel
+{
+   arguments
+   {
+      XmNx = LabSolidX;
+      XmNtopAttachment = XmATTACH_WIDGET;
+      XmNtopWidget = XmLabel LabDSolid;
+      XmNtopOffset = LabBlockY;
+      XmNlabelType = XmPIXMAP;
+      XmNwidth = 10;
+      XmNheight = 10;
+      XmNmappedWhenManaged = false;
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alaw_LabDBlock_cr(AlawP);
+   };
+};
+
+object LabDNum : XmLabel
+{
+   arguments
+   {
+      XmNx = LabNumX;
+      XmNtopAttachment = XmATTACH_FORM;
+      XmNtopOffset = LabNumY;
+      XmNbottomAttachment = XmATTACH_FORM;
+      XmNbottomOffset = LabNumY;
+      XmNwidth = LabNumWidth;
+      XmNalignment = XmALIGNMENT_END;
+      XmNrecomputeSize = false;
+      XmNlabelString = NumString;
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alaw_LabDNum_cr(AlawP);
+   };
+};
+object LabDNumText : XmLabel
+{
+   arguments
+   {
+      XmNx = LabNumTextX;
+      XmNtopAttachment = XmATTACH_FORM;
+      XmNtopOffset = LabNumY;
+      XmNbottomAttachment = XmATTACH_FORM;
+      XmNbottomOffset = LabNumY;
+      XmNalignment = XmALIGNMENT_BEGINNING;
+      XmNlabelString = NumTextString;
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alaw_LabDNumText_cr(AlawP);
+   };
+};
+
+/**********************************************************************
+*
+*  Dialogbox A and it's children 
+*
+**********************************************************************/
+object DbA : XmForm
+{
+   arguments
+   {
+      XmNleftAttachment = XmATTACH_WIDGET;
+      XmNleftWidget = XmPushButton bellPb;
+      XmNleftOffset = PbImX;
+      XmNrightAttachment = XmATTACH_WIDGET;
+      XmNrightWidget = XmForm DbC;
+      XmNrightOffset = Space;
+      XmNtopAttachment = XmATTACH_WIDGET;
+      XmNtopWidget = XmForm dbTime;
+      XmNtopOffset = Space;
+      XmNshadowThickness = 1;
+      XmNshadowType = XmSHADOW_IN;
+   };
+   controls
+   {
+      XmLabel		LabASolid;
+      XmLabel		LabABlock;
+      XmLabel		LabANum;
+      XmLabel		LabANumText;
+      XmPushButton	PbAAck;
+      XmPushButton	PbASel;
+      XmLabel		LabAAlarmText;
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alaw_DbA_cr(AlawP);
+   };
+};
+
+object LabASolid : XmLabel
+{
+   arguments
+   {
+      XmNx = LabSolidX;
+      XmNtopAttachment = XmATTACH_FORM;
+      XmNtopOffset = LabSolidY;
+      XmNwidth = LabSolidWidth;
+      XmNheight = LabSolidHeight;
+      XmNfontList= BigFont;
+      XmNlabelString = compound_string("A");
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alaw_LabASolid_cr(AlawP);
+   };
+};
+
+object LabABlock : XmLabel
+{
+   arguments
+   {
+      XmNx = LabSolidX;
+      XmNtopAttachment = XmATTACH_WIDGET;
+      XmNtopWidget = XmLabel LabASolid;
+      XmNtopOffset = LabBlockY;
+      XmNlabelType = XmPIXMAP;
+      XmNwidth = 10;
+      XmNheight = 10;
+      XmNmappedWhenManaged = false;
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alaw_LabABlock_cr(AlawP);
+   };
+};
+
+object LabANum : XmLabel
+{
+   arguments
+   {
+      XmNx = LabNumX;
+      XmNtopAttachment = XmATTACH_FORM;
+      XmNtopOffset = LabNumY;
+      XmNbottomAttachment = XmATTACH_FORM;
+      XmNbottomOffset = LabNumY;
+      XmNwidth = LabNumWidth;
+      XmNalignment = XmALIGNMENT_END;
+      XmNrecomputeSize = false;
+      XmNlabelString = NumString;
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alaw_LabANum_cr(AlawP);
+   };
+};
+object LabANumText : XmLabel
+{
+   arguments
+   {
+      XmNx = LabNumTextX;
+      XmNtopAttachment = XmATTACH_FORM;
+      XmNtopOffset = LabNumY;
+      XmNbottomAttachment = XmATTACH_FORM;
+      XmNbottomOffset = LabNumY;
+      XmNalignment = XmALIGNMENT_BEGINNING;
+      XmNlabelString = NumTextString;
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alaw_LabANumText_cr(AlawP);
+   };
+};
+
+object PbAAck : XmPushButton
+{
+   arguments 
+   {
+      XmNtopAttachment = XmATTACH_FORM;
+      XmNtopOffset = PbAckY;
+      XmNleftAttachment = XmATTACH_WIDGET;
+      XmNleftWidget = XmLabel LabANumText;
+      XmNleftOffset = LabelButtonLeftOffset;
+!    XmNwidth = ButtonWidth;
+      XmNlabelString = AckText;
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alaw_PbAAck_cr(AlawP);
+      XmNactivateCallback = procedure alaw_PbAAck_cb(AlawP);
+   };
+};
+
+object PbASel : XmPushButton
+{
+   arguments 
+   {
+      XmNtopAttachment = XmATTACH_FORM;
+      XmNtopOffset = PbAckY;
+      XmNleftAttachment = XmATTACH_WIDGET;
+      XmNleftWidget = XmPushButton PbAAck;
+      XmNleftOffset = ButtonButtonLeftOffset;
+!    XmNwidth = ButtonWidth;
+      XmNlabelString = SelText;
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alaw_PbASel_cr(AlawP);
+      XmNactivateCallback = procedure alaw_PbASel_cb(AlawP);
+   };
+};
+
+
+object LabAAlarmText : XmLabel
+{
+   arguments
+   {
+      XmNtopAttachment = XmATTACH_FORM;
+      XmNtopOffset = LabAlarmTextY;
+      XmNleftAttachment = XmATTACH_WIDGET;
+      XmNleftWidget = XmPushButton PbASel;
+      XmNleftOffset = ButtonLabelLeftOffset;
+      XmNalignment = XmALIGNMENT_BEGINNING;
+      XmNlabelString = AlarmString;
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alaw_LabAAlarmText_cr(AlawP);
+   };
+};
+
+/**********************************************************************
+*
+*  Dialogbox B and it's children 
+*
+**********************************************************************/
+object DbB : XmForm
+{
+   arguments
+   {
+      XmNleftAttachment = XmATTACH_WIDGET;
+      XmNleftWidget = XmPushButton bellPb;
+      XmNleftOffset = PbImX;
+      XmNrightAttachment = XmATTACH_WIDGET;
+      XmNrightWidget = XmForm DbD;
+      XmNrightOffset = Space;
+      XmNtopAttachment = XmATTACH_WIDGET;
+      XmNtopWidget = XmForm DbA;
+      XmNtopOffset = Space;
+      XmNshadowThickness = 1;
+      XmNshadowType = XmSHADOW_IN;
+   };
+   controls
+   {
+      XmLabel		LabBSolid;
+      XmLabel		LabBBlock;
+      XmLabel		LabBNum;
+      XmLabel		LabBNumText;
+      XmPushButton	PbBAck;
+      XmPushButton	PbBSel;
+      XmLabel		LabBAlarmText;
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alaw_DbB_cr(AlawP);
+   };
+};
+
+object LabBSolid : XmLabel
+{
+   arguments
+   {
+      XmNx = LabSolidX;
+      XmNtopAttachment = XmATTACH_FORM;
+      XmNtopOffset = LabSolidY;
+      XmNwidth = LabSolidWidth;
+      XmNheight = LabSolidHeight;
+      XmNfontList= BigFont;
+      XmNlabelString = compound_string("B");
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alaw_LabBSolid_cr(AlawP);
+   };
+};
+
+object LabBBlock : XmLabel
+{
+   arguments
+   {
+      XmNx = LabSolidX;
+      XmNtopAttachment = XmATTACH_WIDGET;
+      XmNtopWidget = XmLabel LabBSolid;
+      XmNtopOffset = LabBlockY;
+      XmNlabelType = XmPIXMAP;
+      XmNwidth = 10;
+      XmNheight = 10;
+      XmNmappedWhenManaged = false;
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alaw_LabBBlock_cr(AlawP);
+   };
+};
+
+object LabBNum : XmLabel
+{
+   arguments
+   {
+      XmNx = LabNumX;
+      XmNtopAttachment = XmATTACH_FORM;
+      XmNtopOffset = LabNumY;
+      XmNbottomAttachment = XmATTACH_FORM;
+      XmNbottomOffset = LabNumY;
+      XmNwidth = LabNumWidth;
+      XmNalignment = XmALIGNMENT_END;
+      XmNrecomputeSize = false;
+      XmNlabelString = NumString;
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alaw_LabBNum_cr(AlawP);
+   };
+};
+object LabBNumText : XmLabel
+{
+   arguments
+   {
+      XmNx = LabNumTextX;
+      XmNtopAttachment = XmATTACH_FORM;
+      XmNtopOffset = LabNumY;
+      XmNbottomAttachment = XmATTACH_FORM;
+      XmNbottomOffset = LabNumY;
+      XmNalignment = XmALIGNMENT_BEGINNING;
+      XmNlabelString = NumTextString;
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alaw_LabBNumText_cr(AlawP);
+   };
+};
+object PbBAck : XmPushButton
+{
+   arguments 
+   {
+      XmNtopAttachment = XmATTACH_FORM;
+      XmNtopOffset = PbAckY;
+      XmNleftAttachment = XmATTACH_WIDGET;
+      XmNleftWidget = XmLabel LabBNumText;
+      XmNleftOffset = LabelButtonLeftOffset;
+!    XmNwidth = ButtonWidth;
+      XmNlabelString = AckText;
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alaw_PbBAck_cr(AlawP);
+      XmNactivateCallback = procedure alaw_PbBAck_cb(AlawP);
+   };
+};
+
+object PbBSel : XmPushButton
+{
+   arguments 
+   {
+      XmNtopAttachment = XmATTACH_FORM;
+      XmNtopOffset = PbAckY;
+      XmNleftAttachment = XmATTACH_WIDGET;
+      XmNleftWidget = XmPushButton PbBAck;
+      XmNleftOffset = ButtonButtonLeftOffset;
+!    XmNwidth = ButtonWidth;
+      XmNlabelString = SelText;
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alaw_PbBSel_cr(AlawP);
+      XmNactivateCallback = procedure alaw_PbBSel_cb(AlawP);
+   };
+};
+
+object LabBAlarmText : XmLabel
+{
+   arguments
+   {
+      XmNtopAttachment = XmATTACH_FORM;
+      XmNtopOffset = LabAlarmTextY;
+      XmNleftAttachment = XmATTACH_WIDGET;
+      XmNleftWidget = XmPushButton PbBSel;
+      XmNleftOffset = ButtonLabelLeftOffset;
+      XmNalignment = XmALIGNMENT_BEGINNING;
+      XmNlabelString = AlarmString;
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alaw_LabBAlarmText_cr(AlawP);
+   };
+};
+  
+
+
+/**********************************************************************
+*
+*  Dialogbox Msg and it's children 
+*
+**********************************************************************/
+object DbMsg : XmForm
+{
+   arguments
+   {
+      XmNleftAttachment = XmATTACH_WIDGET;
+      XmNleftWidget = XmPushButton bellPb;
+      XmNleftOffset = PbImX;
+      XmNrightAttachment = XmATTACH_FORM;
+      XmNrightOffset = Space;
+      XmNtopAttachment = XmATTACH_WIDGET;
+      XmNtopWidget = XmForm DbB;
+      XmNtopOffset = Space;
+      XmNshadowThickness = 1;
+      XmNshadowType = XmSHADOW_IN;
+   };
+   controls
+   {
+      XmLabel		LabMsgSolid;
+      XmLabel		LabMsgNum;
+      XmLabel		LabMsgNumText;
+      XmPushButton	PbMsgAck;
+      XmPushButton	PbMsgSel;
+      XmLabel		LabMsgAlarmText;
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alaw_DbMsg_cr(AlawP);
+   };
+};
+
+object LabMsgSolid : XmLabel
+{
+   arguments
+   {
+      XmNx = LabSolidX;
+      XmNtopAttachment = XmATTACH_FORM;
+      XmNtopOffset = LabSolidY;
+      XmNwidth = LabSolidWidth;
+      XmNheight = LabSolidHeight;
+      XmNfontList= BigFont;
+      XmNlabelString = compound_string("M");
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alaw_LabMsgSolid_cr(AlawP);
+   };
+};
+
+object LabMsgNum : XmLabel
+{
+   arguments
+   {
+      XmNx = LabNumX;
+      XmNtopAttachment = XmATTACH_FORM;
+      XmNtopOffset = LabNumY;
+!    XmNbottomAttachment = XmATTACH_FORM;
+!    XmNbottomOffset = LabNumY;
+      XmNwidth = LabNumWidth;
+      XmNalignment = XmALIGNMENT_END;
+      XmNrecomputeSize = false;
+      XmNlabelString = compound_string("0");
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alaw_LabMsgNum_cr(AlawP);
+   };
+};
+object LabMsgNumText : XmLabel
+{
+   arguments
+   {
+      XmNx = LabNumTextX;
+      XmNtopAttachment = XmATTACH_FORM;
+      XmNtopOffset = LabNumY;
+      XmNbottomAttachment = XmATTACH_FORM;
+      XmNbottomOffset = LabNumY;
+      XmNalignment = XmALIGNMENT_BEGINNING;
+      XmNlabelString = NumTextString1;
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alaw_LabMsgNumText_cr(AlawP);
+   };
+};
+
+object PbMsgAck : XmPushButton
+{
+   arguments 
+   {
+      XmNtopAttachment = XmATTACH_FORM;
+      XmNtopOffset = PbAckY;
+      XmNleftAttachment = XmATTACH_WIDGET;
+      XmNleftWidget = XmLabel LabMsgNumText;
+      XmNleftOffset = LabelButtonLeftOffset;
+!    XmNwidth = ButtonWidth;
+      XmNlabelString = AckText;
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alaw_PbMsgAck_cr(AlawP);
+      XmNactivateCallback = procedure alaw_PbMsgAck_cb(AlawP);
+   };
+};
+
+object PbMsgSel : XmPushButton
+{
+   arguments 
+   {
+      XmNtopAttachment = XmATTACH_FORM;
+      XmNtopOffset = PbAckY;
+      XmNleftAttachment = XmATTACH_WIDGET;
+      XmNleftWidget = XmPushButton PbMsgAck;
+      XmNleftOffset = ButtonButtonLeftOffset;
+!    XmNwidth = ButtonWidth;
+      XmNlabelString = SelText;
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alaw_PbMsgSel_cr(AlawP);
+      XmNactivateCallback = procedure alaw_PbMsgSel_cb(AlawP);
+   };
+};
+object LabMsgAlarmText : XmLabel
+{
+   arguments
+   {
+      XmNtopAttachment = XmATTACH_FORM;
+      XmNtopOffset = LabAlarmTextY;
+      XmNleftAttachment = XmATTACH_WIDGET;
+      XmNleftWidget = XmPushButton PbMsgSel;
+      XmNleftOffset = ButtonLabelLeftOffset;
+      XmNalignment = XmALIGNMENT_BEGINNING;
+      XmNlabelString = AlarmString;
+   };
+   callbacks
+   {
+      MrmNcreateCallback = procedure alaw_LabMsgAlarmText_cr(AlawP);
+   };
+};
+
+object PbNeth : XmPushButton 
+{
+   arguments
+   {
+      XmNsensitive = false;
+      XmNleftAttachment = XmATTACH_FORM;
+      XmNleftOffset = PbImX;
+      XmNtopAttachment = XmATTACH_WIDGET;
+      XmNtopWidget = XmForm DbA;
+      XmNtopOffset = 3;
+      XmNlabelType = XmPIXMAP;
+      XmNlabelInsensitivePixmap = NethInsenIcon;
+   };
+   callbacks
+   {
+      XmNactivateCallback = procedure alaw_PbNeth_cb(AlawP);
+   };
+};
+ 
+end module;

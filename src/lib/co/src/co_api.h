@@ -1,0 +1,39 @@
+#ifndef co_api_h
+#define co_api_h
+
+#if defined __cplusplus
+extern "C" {
+#endif
+
+#if !defined co_nav_crr_h
+typedef enum {
+	navc_eItemType_Crossref,
+	navc_eItemType_Header,
+	navc_eItemType_Text
+	} navc_eItemType;
+#endif
+
+int user_CheckUser( char *systemgroup, char *user, char *password, 
+	unsigned int *priv);
+int user_CheckSystemGroup( char *systemgroup);
+int user_GetUserPriv( char *systemgroup, char *user, unsigned int *priv);
+void user_PrivToString( unsigned int priv, char *str, int size);
+void user_RtPrivToString( unsigned int priv, char *str, int size);
+void user_DevPrivToString( unsigned int priv, char *str, int size);
+
+void lng_get_uid( char *in, char *out);
+char *lng_translate( char *str);
+
+int crr_signal( void *parent_ctx, char *signalname,
+		void (*insert_cb)( void *, void *, navc_eItemType, char *, char *, int),
+		int (*name_to_objid_cb)( void *, char *, pwr_tObjid *),
+		int (*get_volume_cb)( void *, pwr_tVolumeId *));
+int crr_object( void *parent_ctx, char *objectname,
+		void (*insert_cb)( void *, void *, navc_eItemType, char *, char *, int),
+		int (*name_to_objid_cb)( void *, char *, pwr_tObjid *),
+		int (*get_volume_cb)( void *, pwr_tVolumeId *));
+
+#if defined __cplusplus
+}
+#endif
+#endif

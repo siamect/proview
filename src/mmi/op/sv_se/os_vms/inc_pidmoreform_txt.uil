@@ -1,0 +1,26 @@
+!  inc_pidmoreform_txt.uil -- <short description>
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  This module includes PIDMoreForm's textstrings.
+!
+value
+
+   pid_AscizTable		: exported asciz_string_table 
+	( 
+	"Förstärkning är ej inom tillåtna gränser",		! WrValGain 
+	"Integreringstid är ej inom tillåtna gränser",		! WrValIntTime
+	"Deriveringstid är ej inom tillåtna gränser",		! WrValDerTime
+	"Deriveringsförstärkning är ej inom tillåtna gränser",  ! WrValDerGain 
+	"Biasförstärkning är ej inom tillåtna gränser",         ! WrValBiasGain 
+	"Bias är ej inom tillåtna gränser",                     ! WrValBias 
+ 
+	"Förstärkning är felaktigt",                            ! BadValGain 
+	"Integreringstid är felaktigt",                         ! BadValIntTime
+	"Deriveringstid är felaktigt",                          ! BadValDerGain   
+	"Deriveringsförstärkning är felaktigt",			! BadValDerTime
+	"Biasförstärkning är felaktigt",			! BadValBiasGain
+	"Bias är felaktigt"					! BadValBias 
+	);
+

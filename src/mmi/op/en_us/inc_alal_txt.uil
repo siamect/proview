@@ -1,0 +1,51 @@
+!  inc_alal_txt.uil -- alarm list
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  This module defines english texts for the alarmlist.
+!
+value
+   title		: exported "Alarm List";
+
+   alal_AscizTable	: exported asciz_string_table
+	(
+	"VALUE : ",
+	"LIMIT : "
+	);
+
+
+! Strings for the menu buttons
+   alal_CSTable : exported compound_string_table
+	(
+	"Hide Time",
+	"Show Time",
+	"Hide Object identity",
+	"Show Object identity",
+	"Hide Alarm text",
+	"Show Alarm text"
+	);
+
+
+! Constants used by the co_CvtTimeToAsc function. See pwr_inc:TimeUtil.h
+    Solution : 0;	! second.
+    Format  : 1;	! 0=Swedish, 1=GB
+    alal_IntTable :  exported integer_table(Solution,Format);
+
+    BigButtonWidth	: 200;
+
+    ackSelected		: "Ack. Selected Alarms";
+    clearSelections	: "Clear Selections";
+    functions		: "Functions";
+    functions$		: "F";
+    hideAlarm		: "Hide Alarm Text";
+    hideAlarm$		: "A";
+    hideObject		: "Hide Object Identity";
+    hideObject$		: "O";
+    hideTime		: "Hide Time";
+    hideTime$		: "T";
+    selectList		: "Select List ...";
+    selectList$		: "S";
+    selectUnackAlarm	: "Select Unack. Alarms";
+
+

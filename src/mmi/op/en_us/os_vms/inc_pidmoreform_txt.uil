@@ -1,0 +1,27 @@
+!  inc_pidmoreform_txt.uil -- <short description>
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  This module includes PIDMoreForm's textstrings.
+!
+value
+
+
+   pid_AscizTable               : exported asciz_string_table
+        (
+        "The gain is beyond allowed limits.",                ! WrValGain
+        "The integration time is beyond allowed limits.",    ! WrValIntTime
+        "The derivation time is beyond allowed limits.",     ! WrValDerTime
+        "The derivation gain is beyond allowed limits.",     ! WrValDerGain
+        "The bias gain is beyond allowed limits.",           ! WrValBiasGain
+        "The bias is beyond allowed limits.",                ! WrValBias
+
+        "Incorrect gain value.",                             ! BadValGain
+        "Incorrect integration time value.",                 ! BadValIntTime
+        "Incorrect derivation time value.",                  ! BadValDerTime
+        "Incorrect derivation gain value.",                  ! BadValDerGain
+        "Incorrect bias gain value.",                        ! BadValBiasGain
+        "Incorrect biasvalue."                               ! BadValBias
+         );
+

@@ -1,0 +1,703 @@
+!  pwrb_l_base.wb_load -- Defines basic layouts.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+SObject wb:
+  Object layout $Layout
+  EndObject
+EndSObject
+!
+SObject wb:layout
+  Object Navigator $Group
+    Object w2 $Group
+      Object $PlantHier $Group
+      EndObject
+      Object $LibHier $Group
+      EndObject
+      Object $Alias $Group
+      EndObject
+      Object $MountObject $Group
+      EndObject
+    EndObject
+    Object w3 $Group
+      Object Security $Group
+      EndObject
+      Object $NodeHier $Group
+      EndObject
+      Object $Node $Group
+      EndObject
+      Object $Layout $Group
+      EndObject
+    EndObject
+  EndObject
+  Object Configurator $Group
+    Object w1 $Group
+      Object Plant $Group
+        Object $PlantHier $Group
+        EndObject
+        Object Signals $GroupRef
+        EndObject
+        Object DataStorage $Group
+          Object DsFast $Group
+          EndObject
+          Object DsHist $Group
+          EndObject
+          Object DsTrend $Group
+          EndObject
+        EndObject
+        Object Supervision $Group
+          Object ASup $Group
+          EndObject
+          Object DSup $Group
+          EndObject
+        EndObject
+        Object PlcPgm $Group
+        EndObject
+        Object Backup $Group
+        EndObject
+        Object $LibHier $Group
+        EndObject
+        Object $DocHier $Group
+        EndObject
+	Object $MountObject $Group
+	EndObject
+        Object $Alias $Group
+        EndObject
+      EndObject
+      Object Node $Group
+        Object $NodeHier $Group
+        EndObject
+        Object $Node $Group
+        EndObject
+	Object $MountObject $Group
+	EndObject
+	Object $CreateVolume $Group
+	EndObject
+	Object $MountVolume $Group
+	EndObject
+        Object Servers $Group
+          Object Backup_Conf $Group
+          EndObject
+          Object DsFastConf $Group
+          EndObject
+          Object DsHistServer $Group
+          EndObject
+          Object DsTrendConf $Group
+          EndObject
+          Object IOHandler $Group
+          EndObject
+          Object MessageHandler $Group
+          EndObject
+          Object PlcProcess $Group
+          EndObject
+          Object PlcThread $Group
+          EndObject
+          Object WebHandler $Group
+          EndObject
+        EndObject
+        Object IO_RTP $Group
+          Object Rack_RTP $Group
+          EndObject
+          Object Cards $Group
+            Object Di_7437_37 $Group
+            EndObject
+            Object Do_7437_83 $Group
+            EndObject
+            Object Ai_7436 $Group
+            EndObject
+            Object Ao_7455_20 $Group
+            EndObject
+            Object Ao_7455_30 $Group
+            EndObject
+          EndObject
+          Object Channels $GroupRef
+          EndObject
+          Object DIOC $Group
+            Object Line_LAT $Group
+            EndObject
+            Object RTP_DIOC $Group
+            EndObject
+          EndObject
+          Object IOHandler $Group
+          EndObject
+        EndObject
+        Object IO_SSAB $Group
+          Object Rack_SSAB $Group
+          EndObject
+          Object Cards $Group
+            Object Di_DIX2 $Group
+            EndObject
+            Object Do_HVDO32 $Group
+            EndObject
+            Object Ai_HVAI32 $Group
+            EndObject
+            Object Ai_AI32uP $Group
+            EndObject
+            Object Ao_HVAO4 $Group
+            EndObject
+            Object Co_PI24BO $Group
+            EndObject
+            Object PID_1uP $Group
+            EndObject
+          EndObject
+          Object Channels $GroupRef
+          EndObject
+          Object IOHandler $Group
+          EndObject
+        EndObject
+        Object IO_VME $Group
+          Object Rack_VME $Group
+          EndObject
+          Object Cards $Group
+            Object Ai_Vmic3113A $Group
+            EndObject
+            Object Ao_Vmic4800 $Group
+            EndObject
+            Object IP $Group
+              Object VIPC616 $Group
+              EndObject
+              Object Co_IpQuadrature $Group
+              EndObject
+              Object IpMux $Group
+              EndObject
+              Object MuxMod $Group
+              EndObject
+            EndObject
+          EndObject
+          Object Channels $Group
+          EndObject
+          Object IOHandler $Group
+          EndObject
+        EndObject
+        Object Profibus $Group
+          Object Masters $Group
+            Object Pb_Profiboard $Group
+            EndObject
+          EndObject
+          Object Slaves $Group
+            Object Pb_DP_Slave $Group
+            EndObject
+            Object Pb_ET200M $Group
+            EndObject
+            Object Pb_NPBA12 $Group
+            EndObject
+            Object Pb_Euro2500 $Group
+            EndObject
+          EndObject
+          Object Modules $Group
+            Object Pb_Di $Group
+            EndObject
+            Object Pb_Do $Group
+            EndObject
+            Object Pb_Ai $Group
+            EndObject
+            Object Pb_Ao $Group
+            EndObject
+          EndObject
+        EndObject
+        Object Operator $Group
+          Object OpPlace $Group
+          EndObject
+          Object User $Group
+          EndObject
+          Object EventPrinter $Group
+          EndObject
+          Object Form $Group
+          EndObject
+          Object Graph $Group
+          EndObject
+          Object XttGraph $Group
+          EndObject
+          Object OpAppl $Group
+          EndObject
+          Object OpApplMsg $Group
+          EndObject
+        EndObject
+        Object $Appl $Group
+        EndObject
+        Object PlotGroup $Group
+        EndObject
+        Object CycleSup $Group
+        EndObject
+        Object NodeLinkSup $Group
+        EndObject
+      EndObject
+      Object AllClasses $Group
+        Object pwrs $GroupRef
+        EndObject
+        Object pwrb $GroupRef
+        EndObject
+      EndObject
+    EndObject
+    Object w2 $Group
+      Object $PlantHier $Group
+      EndObject
+      Object $LibHier $Group
+      EndObject
+      Object $Alias $Group
+      EndObject
+      Object $MountObject $Group
+      EndObject
+    EndObject
+    Object w3 $Group
+      Object Security $Group
+      EndObject
+      Object $NodeHier $Group
+      EndObject
+      Object $Node $Group
+      EndObject
+      Object $Layout $Group
+      EndObject
+    EndObject
+  EndObject
+  Object ClassNavigator $Group
+    Object w2 $Group
+      Object $ClassHier $Group
+      EndObject
+      Object $TypeHier $Group
+      EndObject
+    EndObject
+    Object w3 $Group
+      Object $System $Group
+      EndObject
+    EndObject
+  EndObject
+  Object ClassConfigurator $Group
+    Object w1 $Group
+      Object AllClasses $Group
+        Object pwrs $GroupRef
+        EndObject
+        Object pwrb $GroupRef
+        EndObject
+      EndObject
+    EndObject
+    Object w2 $Group
+      Object $ClassHier $Group
+      EndObject
+      Object $TypeHier $Group
+      EndObject
+    EndObject
+    Object w3 $Group
+      Object $System $Group
+      EndObject
+    EndObject
+  EndObject
+  Object ProjectNavigator $Group
+    Object w2 $Group
+      Object DbConfig $Group
+      EndObject
+      Object DirectoryDbConfig $Group
+      EndObject
+      Object TraceDbConfig $Group
+      EndObject
+    EndObject
+    Object w3 $Group
+      Object $System $Group
+      EndObject
+      Object NodeConfig $Group
+      EndObject
+      Object FriendNodeConfig $Group
+      EndObject
+    EndObject
+  EndObject
+  Object ProjectConfigurator $Group
+    Object w1 $Group
+      Object Volume $Group
+        Object ClassVolumeConfig $Group
+        EndObject
+        Object CommonClassDistribute $Group
+        EndObject
+        Object DbConfig $Group
+        EndObject
+        Object DbDistribute $Group
+        EndObject
+        Object TraceDbConfig $Group
+        EndObject
+        Object DirectoryDbConfig $Group
+        EndObject
+        Object $PlantHier $Group
+        EndObject
+        Object RootVolumeConfig $Group
+        EndObject
+        Object SharedVolumeConfig $Group
+        EndObject
+        Object SubVolumeConfig $Group
+        EndObject
+        Object VolumeDistribute $Group
+        EndObject
+      EndObject
+      Object Node $Group
+        Object ApplDistribute $Group
+        EndObject
+        Object ClassVolumeLoad $Group
+        EndObject
+        Object FriendNodeConfig $Group
+        EndObject
+        Object GraphDistribute $Group
+        EndObject
+        Object NodeConfig $Group
+        EndObject
+        Object $NodeHier $Group
+        EndObject
+        Object RootVolumeLoad $Group
+        EndObject
+        Object SharedVolumeLoad $Group
+        EndObject
+        Object SubVolumeLoad $Group
+        EndObject
+        Object $System $Group
+        EndObject
+        Object SystemDistribute $Group
+        EndObject
+      EndObject
+    EndObject
+    Object w2 $Group
+      Object DbConfig $Group
+      EndObject
+      Object DirectoryDbConfig $Group
+      EndObject
+      Object TraceDbConfig $Group
+      EndObject
+    EndObject
+    Object w3 $Group
+      Object $System $Group
+      EndObject
+      Object NodeConfig $Group
+      EndObject
+      Object FriendNodeConfig $Group
+      EndObject
+      Object $Layout $Group
+      EndObject
+    EndObject
+  EndObject
+  Object PlcEditor $Group
+    Object w1 $Group
+      Object Grafcet $Group
+        Object InitStep $Group
+        EndObject
+        Object Order $Group
+        EndObject
+        Object OrderAct $Group
+        EndObject
+        Object Reset_SO $Group
+        EndObject
+        Object SetCond $Group
+        EndObject
+        Object SsBegin $Group
+        EndObject
+        Object SsEnd $Group
+        EndObject
+        Object Step $Group
+        EndObject
+        Object SubStep $Group
+        EndObject
+        Object Trans $Group
+        EndObject
+      EndObject
+      Object IO $Group
+        Object ApCollect $Group
+        EndObject
+        Object ApDistribute $Group
+        EndObject
+        Object BCDDo $Group
+        EndObject
+        Object CStoAo $Group
+        EndObject
+        Object CStoAp $Group
+        EndObject
+        Object CStoAv $Group
+        EndObject
+        Object CStoIp $Group
+        EndObject
+        Object DataCollect $Group
+        EndObject
+        Object DiBCD $Group
+        EndObject
+        Object DpCollect $Group
+        EndObject
+        Object DpDistribute $Group
+        EndObject
+        Object GetAi $Group
+        EndObject
+        Object GetAo $Group
+        EndObject
+        Object GetAp $Group
+        EndObject
+        Object GetAv $Group
+        EndObject
+        Object GetData $Group
+        EndObject
+        Object GetDi $Group
+        EndObject
+        Object GetDo $Group
+        EndObject
+        Object GetDp $Group
+        EndObject
+        Object GetDv $Group
+        EndObject
+        Object GetIp $Group
+        EndObject
+        Object GetPi $Group
+        EndObject
+        Object Gray $Group
+        EndObject
+        Object PiPos $Group
+        EndObject
+        Object ResDo $Group
+        EndObject
+        Object ResDp $Group
+        EndObject
+        Object ResDv $Group
+        EndObject
+        Object SetDo $Group
+        EndObject
+        Object SetDp $Group
+        EndObject
+        Object SetDv $Group
+        EndObject
+        Object StoAo $Group
+        EndObject
+        Object StoAp $Group
+        EndObject
+        Object StoAv $Group
+        EndObject
+        Object StoDo $Group
+        EndObject
+        Object StoDp $Group
+        EndObject
+        Object StoDv $Group
+        EndObject
+        Object StoIp $Group
+        EndObject
+      EndObject
+      Object Logic $Group
+        Object ASup $Group
+        EndObject
+        Object And $Group
+        EndObject
+        Object Count $Group
+        EndObject
+        Object DSup $Group
+        EndObject
+        Object Edge $Group
+        EndObject
+        Object Inv $Group
+        EndObject
+        Object Or $Group
+        EndObject
+        Object Pulse $Group
+        EndObject
+        Object SR_R $Group
+        EndObject
+        Object SR_S $Group
+        EndObject
+        Object Timer $Group
+        EndObject
+        Object Wait $Group
+        EndObject
+        Object Waith $Group
+        EndObject
+        Object XOr $Group
+        EndObject
+        Object CSub $Group
+        EndObject
+      EndObject
+      Object Analog $Group
+        Object Adelay $Group
+        EndObject
+        Object AArithm $Group
+        EndObject
+        Object CArithm $Group
+        EndObject
+        Object Comph $Group
+        EndObject
+        Object Compl $Group
+        EndObject
+        Object Curve $Group
+        EndObject
+        Object DArithm $Group
+        EndObject
+        Object DataArithm $Group
+        EndObject
+        Object Filter $Group
+        EndObject
+        Object Limit $Group
+        EndObject
+        Object Maxmin $Group
+        EndObject
+        Object PiSpeed $Group
+        EndObject
+        Object Ramp $Group
+        EndObject
+        Object Select $Group
+        EndObject
+        Object ScanTime $Group
+        EndObject
+        Object Speed $Group
+        EndObject
+        Object Sum $Group
+        EndObject
+        Object Table $Group
+        EndObject
+        Object Timint $Group
+        EndObject
+      EndObject
+      Object Control $Group
+        Object Inc3P $Group
+        EndObject
+        Object Mode $Group
+        EndObject
+        Object Out2P $Group
+        EndObject
+        Object PID $Group
+        EndObject
+        Object PidX $Group
+        EndObject
+        Object Pos3P $Group
+        EndObject
+      EndObject
+      Object Drive $Group
+        Object Drive $Group
+        EndObject
+        Object MValve $Group
+        EndObject
+        Object Posit $Group
+        EndObject
+        Object Valve $Group
+        EndObject
+      EndObject
+      Object Backup $Group
+        Object Backup $Group
+        EndObject
+      EndObject
+      Object Edit $Group
+        Object BodyText $Group
+        EndObject
+        Object Document $Group
+        EndObject
+        Object DocUser1 $Group
+        EndObject
+        Object DocUser2 $Group
+        EndObject
+        Object Frame $Group
+        EndObject
+        Object Head $Group
+        EndObject
+        Object Point $Group
+        EndObject
+        Object ShowPlcAttr $Group
+        EndObject
+        Object Text $Group
+        EndObject
+        Object Title $Group
+        EndObject
+      EndObject
+      Object Trace $Group
+        Object AAnalyse $Group
+        EndObject
+        Object DAnalyse $Group
+        EndObject
+      EndObject
+    EndObject
+    Object w2 $Group
+      Object ConPlc $Group
+        Object ConDigital $Group
+        EndObject
+        Object ConAnalog $Group
+        EndObject
+        Object ConFeedbackDigital $Group
+        EndObject
+        Object ConFeedbackAnalog $Group
+        EndObject
+        Object ConExecuteOrder $Group
+        EndObject
+      EndObject
+      Object ConGrafcet $Group
+        Object ConGrafcet $Group
+        EndObject
+        Object StepConv $Group
+        EndObject
+        Object StepDiv $Group
+        EndObject
+        Object TransConv $Group
+        EndObject
+        Object TransDiv $Group
+        EndObject
+      EndObject
+      Object ConDocumentation $Group
+        Object Solid $Group
+          Object ConThinNoArr $Group
+          EndObject
+          Object ConThinOneArr $Group
+          EndObject
+          Object ConThinTwoArr $Group
+          EndObject
+          Object ConMeNoArr $Group
+          EndObject
+          Object ConMeOneArr $Group
+          EndObject
+          Object ConMeTwoArr $Group
+          EndObject
+        EndObject
+        Object Dashed $Group
+          Object ConDaThinNoArr $Group
+          EndObject
+          Object ConDaThinOneArr $Group
+          EndObject
+          Object ConDaThinTwoArr $Group
+          EndObject
+          Object ConDaMeNoArr $Group
+          EndObject
+          Object ConDaMeOneArr $Group
+          EndObject
+          Object ConDaMeTwoArr $Group
+          EndObject
+        EndObject
+        Object SharpCorners $Group
+          Object ConReMeNoArr $Group
+          EndObject
+          Object ConReMeOneArr $Group
+          EndObject
+          Object ConReMeTwoArr $Group
+          EndObject
+        EndObject
+      EndObject
+    EndObject
+  EndObject
+  Object Channels $Group
+    Object ChanDi $Group
+    EndObject
+    Object ChanDo $Group
+    EndObject
+    Object ChanAi $Group
+    EndObject
+    Object ChanAit $Group
+    EndObject
+    Object ChanAo $Group
+    EndObject
+    Object ChanCo $Group
+    EndObject
+  EndObject
+  Object Signals $Group
+    Object Di $Group
+    EndObject
+    Object Do $Group
+    EndObject
+    Object Dv $Group
+    EndObject
+    Object Ai $Group
+    EndObject
+    Object Ao $Group
+    EndObject
+    Object Av $Group
+    EndObject
+    Object Co $Group
+    EndObject
+    Object Po $Group
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,93 @@
+!  pwrb_c_cloop.wb_load -- Defines the class CLoop.
+!
+!  PROVIEW/R
+!
+!  <Description>.
+!
+SObject NMps:Class
+  Object CLoop $ClassDef 14
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Connections
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "CLoop"
+      EndBody
+      Object Condition $Input 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "con"
+        EndBody
+      EndObject
+      Object StartIndex $Input 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "Start"
+        EndBody
+      EndObject
+      Object Increment $Input 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "Incr"
+        EndBody
+      EndObject
+      Object StopIndex $Input 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "Stop"
+        EndBody
+      EndObject
+      Object CurrentIndex $Intern 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2
+      Object PlcNode $Buffer 1
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 11
+        Attr parameters[0] = 4
+        Attr parameters[1] = 0
+        Attr parameters[2] = 1
+        Attr parameters[3] = 0
+        Attr subwindow_class[0] = "pwrb:Class-WindowPlc"
+        Attr subwindows = 1
+        Attr graphmethod = 0
+        Attr graphindex = 0
+        Attr default_mask[0] = 1
+        Attr default_mask[1] = 0
+        Attr segname_annotation = 1
+        Attr compmethod = 50
+        Attr compindex = 0
+        Attr tracemethod = 2
+        Attr traceindex = 1
+	Attr executeordermethod = 2
+        Attr objname = "CLoop"
+        Attr graphname = "CLoop"
+        Attr debugpar = "Condition"
+      EndBody
+    EndObject
+    !
+    ! Template object 
+    !
+    Object Template CLoop
+      Body RtBody
+        Attr Condition = 1
+        Attr StartIndex = 1
+        Attr Increment = 1
+        Attr StopIndex = 1
+      EndBody
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,14 @@
+!  op_rnav_block.xbm -- <short description>
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+#define PS_NAV_BLOCK_width 10
+#define PS_NAV_BLOCK_height 10
+#define PS_NAV_BLOCK_x_hot 0
+#define PS_NAV_BLOCK_y_hot 0
+static char PS_NAV_BLOCK_bits[] = {
+   0xff, 0x03, 0x83, 0x03, 0xc7, 0x02, 0x6d, 0x02, 0x39, 0x02, 0x39, 0x02,
+   0x6d, 0x02, 0xc7, 0x02, 0x83, 0x03, 0xff, 0x03};

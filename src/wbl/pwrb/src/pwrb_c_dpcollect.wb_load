@@ -1,0 +1,325 @@
+!  pwrb_c_dpcollect.wb_load -- Defines the class DpCollect.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_data.c
+!  @Summary Expands the number of Boolean attributes that can be handled in a DataArithm.
+!  The DpCollect object expands the number of Boolean attribues that
+!  can be handled in a DataArithm object.
+!
+!  The DpCollect has 24 digital inputs, which values are stored in an array.
+!  By connecting the output of the DpCollect object to a Data input of a
+!  DataArithm object, it is possible to handle the array in the code of the
+!  DataArithm. This expands the number of Digital inputs to the DataArithm
+!  from ordinary 6 to 96, if all four data inputs are connected to DpCollect
+!  objects.
+!
+!  Another advantage of DpCollect is that its sometimes convenient to have
+!  the values arranged in an array, for example to handle in an for or
+!  while loop.
+!
+!  MaxIndex should be assigned the number of used inputs in the DpCollect
+!  object. An input doesn't has to be connected, the value can be set at
+!  runtime or in the configurator.
+!
+!  Example
+!
+!  This is the code in a DataArithm which has a DpCollect object connected
+!  to the Da1 input.
+!
+!  classdef Da1 DpCollect;
+!  int i;
+!
+!  OA1 = 0;
+!  for ( i = 0; i < Da1->MaxIndex; i++)
+!    if ( Da1->Dp[i])
+!      OA1++;
+!
+!  Se also
+!  @classlink DataArithm pwrb_dataarithm.html
+!  @classlink ApCollect pwrb_apcollect.html
+!  @classlink DpDistribute pwrb_dpdistribute.html
+!*/
+
+SObject pwrb:Class
+  Object DpCollect $ClassDef 273
+    Body SysBody
+      Attr Editor = pwr_eEditor_PlcEd
+      Attr Method = pwr_eMethod_Connections
+    EndBody
+    !
+    ! DPCOLLECT Runtime Body
+    !
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "DpCollect"
+      EndBody
+      !/**
+      !  @Summary Digital input
+      !  Digital input
+      !
+      !  An input doesn't has to be connected, the value can be set at
+      !  runtime or in the configurator.
+      !*/
+      Object DpIn1 $Input 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "Dp1"
+        EndBody
+      EndObject
+      Object DpIn2 $Input 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "Dp2"
+        EndBody
+      EndObject
+      Object DpIn3 $Input 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "Dp3"
+        EndBody
+      EndObject
+      Object DpIn4 $Input 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "Dp4"
+        EndBody
+      EndObject
+      Object DpIn5 $Input 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "Dp5"
+        EndBody
+      EndObject
+      Object DpIn6 $Input 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "Dp6"
+        EndBody
+      EndObject
+      Object DpIn7 $Input 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "Dp7"
+        EndBody
+      EndObject
+      Object DpIn8 $Input 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "Dp8"
+        EndBody
+      EndObject
+      Object DpIn9 $Input 9
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "Dp9"
+        EndBody
+      EndObject
+      Object DpIn10 $Input 10
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "Dp10"
+        EndBody
+      EndObject
+      Object DpIn11 $Input 11
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "Dp11"
+        EndBody
+      EndObject
+      Object DpIn12 $Input 12
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "Dp12"
+        EndBody
+      EndObject
+      Object DpIn13 $Input 13
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "Dp13"
+        EndBody
+      EndObject
+      Object DpIn14 $Input 14
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "Dp14"
+        EndBody
+      EndObject
+      Object DpIn15 $Input 15
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "Dp15"
+        EndBody
+      EndObject
+      Object DpIn16 $Input 16
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "Dp16"
+        EndBody
+      EndObject
+      Object DpIn17 $Input 17
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "Dp17"
+        EndBody
+      EndObject
+      Object DpIn18 $Input 18
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "Dp18"
+        EndBody
+      EndObject
+      Object DpIn19 $Input 19
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "Dp19"
+        EndBody
+      EndObject
+      Object DpIn20 $Input 20
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "Dp20"
+        EndBody
+      EndObject
+      Object DpIn21 $Input 21
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "Dp21"
+        EndBody
+      EndObject
+      Object DpIn22 $Input 22
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "Dp22"
+        EndBody
+      EndObject
+      Object DpIn23 $Input 23
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "Dp23"
+        EndBody
+      EndObject
+      Object DpIn24 $Input 24
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr GraphName = "Dp24"
+        EndBody
+      EndObject
+      !/**
+      !  Number of used inputs.
+      !*/
+      Object MaxIndex $Intern 25
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      !/**
+      !  Array that contains the value of the inputs.
+      !*/
+      Object Dp $Intern 26
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 24
+        EndBody
+      EndObject
+      !/**
+      !  Data output that can be connected to a DataArithm (or som other Data input).
+      !*/
+      Object OutDataP $Output 27
+        Body SysBody
+          Attr PgmName = "OutDataP"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "Out"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_PRIVATE
+        EndBody
+      EndObject
+      Object OutData_ObjId $Intern 28
+        Body SysBody
+          Attr PgmName = "OutData_ObjId"
+          Attr TypeRef = "pwrs:Type-$ObjId"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+    EndObject
+    !
+    ! DPCOLLECT Development Body
+    !
+    Object DevBody $ObjBodyDef 2
+      Object PlcNode $Buffer 1
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 11
+        Attr parameters[0] = 24
+        Attr parameters[1] = 2
+        Attr parameters[2] = 1
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 16
+        Attr graphindex = 0
+        Attr default_mask[0] = 3
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 1
+        Attr compmethod = 51
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+	Attr executeordermethod = 2
+        Attr objname = "DpCollect"
+        Attr graphname = "DpCollect"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    !
+    ! Template object 
+    !
+    Object Template DpCollect
+      Body RtBody
+        Attr MaxIndex = 2
+      EndBody
+    EndObject
+  EndObject
+EndSObject

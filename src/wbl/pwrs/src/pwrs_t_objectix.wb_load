@@ -1,0 +1,16 @@
+!  pwrs_t_objectix.wb_load -- Defines the basic type ObjectIx
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+!
+SObject pwrs:Type
+  Object $ObjectIx pwr_eClass_Type pwr_eTix_ObjectIx
+    Body SysBody
+      Attr Type = pwr_eType_ObjectIx
+      Attr Size = 4
+    EndBody
+  EndObject
+EndSObject

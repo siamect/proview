@@ -1,0 +1,55 @@
+!
+! Name: decw$user_defaults:pwr_hel.dat
+!
+! Resource file for historical event list
+! Remove comments for toggle which should be set.
+!
+!
+!
+! Widgets in the historical search form
+! Class: XmFormDialog,  Name: histSearchDialog
+!
+!*hl_dayText.value: 6:00
+!*hl_dayBreakValueLabel.labelString: 6:00
+!*hl_objectName.value: %Tank%
+!*hl_alarmToggle.set: True
+!*hl_ackToggle.set: True
+!*hl_retToggle.set: True
+!*hl_blockToggle.set: True
+!*hl_unblockToggle.set: True
+!*hl_lostToggle.set: True
+!*hl_aAlarmToggle.set: True
+!*hl_bAlarmToggle.set: True
+!*hl_cAlarmToggle.set: True
+!*hl_dAlarmToggle.set: True
+!*hl_msgToggle.set: True
+!*hl_highToggle.set: True
+!*hl_lowToggle.set: True
+!*hl_digitalToggle.set: True
+!*hl_otherToggle.set: True
+!*hl_llimitValue.value: 0 
+!*hl_hlimitValue.value: 150 
+!
+!
+!
+! Widgets in the statistic search form
+! Class: XmFormDialog,  Name: statSearchDialog
+!
+!*hs_dayText.value: 6:00
+!*hs_dayBreakValueLabel.labelString: 6:00
+!*hs_objectName.value: %Tank%
+!*hs_nodeName.value: Nodes-Host
+!*hs_aAlarmToggle.set: True
+!*hs_bAlarmToggle.set: True
+!*hs_cAlarmToggle.set: True
+!*hs_dAlarmToggle.set: True
+!*hs_msgToggle.set: True
+!*hs_highToggle.set: True
+!*hs_lowToggle.set: True
+!*hs_digitalToggle.set: True
+!*hs_otherToggle.set: True
+!*hs_nameToggle.set: True
+!*hs_prioToggle.set: True
+!*hs_valueToggle.set: True
+!*hs_lostToggle.set: True
+

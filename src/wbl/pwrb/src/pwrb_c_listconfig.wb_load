@@ -1,0 +1,36 @@
+!  pwrb_c_listconfig.wb_load -- Defines the class ListConfig.
+!
+!  PROVIEW/R
+!  Copyright (C) 1997 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+SObject pwrb:Class
+  Object ListConfig $ClassDef 260
+    Body SysBody
+      Attr Flags |= pwr_mClassDef_DevOnly
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_DevBodyOnly
+    EndBody
+    Object DevBody $ObjBodyDef 2 
+      Object LandscapePageRows $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      Object PortraitPageRows $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+    EndObject
+    Object Template ListConfig
+      Body DevBody
+        Attr LandscapePageRows = 41
+        Attr PortraitPageRows = 55
+      EndBody
+    EndObject
+  EndObject
+EndSObject

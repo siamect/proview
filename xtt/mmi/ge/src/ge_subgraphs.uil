@@ -1,0 +1,176 @@
+!  ge_subgraphs.uil -- <short description>
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+module ge_subgraphs
+        version = 'v1.0'
+        names = case_sensitive
+        objects = {
+                XmSeparator = gadget ;
+                }
+identifier
+	subgraphs_ctx;
+procedure
+	subgraphs_activate_exit(integer);
+	subgraphs_activate_attr(integer);
+	subgraphs_activate_set_extern(integer);
+	subgraphs_activate_set_intern(integer);
+	subgraphs_activate_help(integer);
+	subgraphs_create_sg_form(integer);
+
+value
+	menu_font : font ('-*-Helvetica-Bold-R-Normal--12-*-*-*-P-*-ISO8859-1');
+
+!----------------------------------------
+! First declare the 'top level' widgets.  These are not controlled by
+! any other widgets.  They are each fetched individually as needed.
+!----------------------------------------
+
+object  subgraphs_window : XmMainWindow
+{
+  arguments
+  {
+    XmNwidth = 250;
+    XmNheight = 500;
+  };
+  controls
+  {
+     XmMenuBar	subgraphs_menu;
+     XmPanedWindow  subgraphs_form;
+  };
+};
+
+
+object subgraphs_form : XmPanedWindow
+{
+   arguments
+   {
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure subgraphs_create_sg_form( subgraphs_ctx);
+   };
+};
+
+object subgraphs_menu : XmMenuBar
+{
+  arguments
+  {
+    XmNorientation 	= XmHORIZONTAL;
+    XmNspacing  	= 15;
+    XmNmenuHelpWidget 	= XmCascadeButton help_entry; 
+  };
+  controls
+  {
+    XmCascadeButton file_entry;
+    XmCascadeButton help_entry;
+  };
+};
+
+object file_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString  = compound_string("File");
+    XmNfontList	    = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Attributes");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure subgraphs_activate_attr(subgraphs_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Set extern");
+            XmNmnemonic = keysym('e');
+	    XmNaccelerator = "Ctrl<Key>E";
+	    XmNacceleratorText = compound_string('Ctrl+E');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure subgraphs_activate_set_extern(subgraphs_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Set intern");
+            XmNmnemonic = keysym('i');
+	    XmNaccelerator = "Ctrl<Key>I";
+	    XmNacceleratorText = compound_string('Ctrl+I');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure subgraphs_activate_set_intern(subgraphs_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Close");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure subgraphs_activate_exit(subgraphs_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+object help_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString = compound_string("Help");
+    XmNfontList	   = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Help");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+	    XmNactivateCallback = procedure subgraphs_activate_help(subgraphs_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+end module;
+

@@ -1,0 +1,176 @@
+!  pwrs_c_attribute.wb_load -- Defines the class Attribute.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  This class is defined before classdefinitions are completed,
+!  and is thus loaded with DObject etc.
+!
+!
+!/**
+!  @Version 1.0
+!  Definition of an attribute.
+!  The Attribute object reside in a class volume as a child of an ObjBodyDef object.
+!*/
+SObject pwrs:Class
+  Object $Attribute pwr_eClass_ClassDef pwr_eCix_Param
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_SysBody
+      Attr Flags = 6
+      Attr NumOfObjBodies = 1
+      Attr PopEditor = 0
+    EndBody
+    Object SysBody pwr_eClass_ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "Attribute"
+        Attr NumOfParams = 8
+        Attr Size = 60
+        Attr NextAix = 9
+      EndBody
+      !/**
+      !  Name for the element the c-struct.
+      !*/
+      Object PgmName pwr_eClass_Param	1
+        Body SysBody
+          Attr PgmName = "PgmName"
+          Attr Type = pwr_eType_String
+          Attr Offset = 0
+          Attr Size = 32
+          Attr Flags = 0
+          Attr Elements = 1
+          Attr ParamIndex = 1
+          Attr TypeRef = "pwrs:Type-$PgmName"
+        EndBody
+      EndObject
+      !/**
+      !  Compiled system type.
+      !*/
+      Object Type pwr_eClass_Param	2
+        Body SysBody
+          Attr PgmName = "Type"
+          Attr Type = pwr_eType_Int32
+          Attr Offset = 32
+          Attr Size = 4
+          Attr Flags = 0
+          Attr Elements = 1
+          Attr ParamIndex = 2
+          Attr TypeRef = pwr_eType_Int32
+        EndBody
+      EndObject
+      !/**
+      !  Compiled offset in body.
+      !*/
+      Object Offset pwr_eClass_Param	3
+        Body SysBody
+          Attr PgmName = "Offset"
+          Attr Type = pwr_eType_UInt32
+          Attr Offset = 36
+          Attr Size = 4
+          Attr Flags = 0
+          Attr Elements = 1
+          Attr ParamIndex = 3
+          Attr TypeRef = pwr_eType_UInt32
+        EndBody
+      EndObject
+      !/**
+      !  Compiled size, number of bytes.
+      !*/
+      Object Size pwr_eClass_Param	4
+        Body SysBody
+          Attr PgmName = "Size"
+          Attr Type = pwr_eType_UInt32
+          Attr Offset = 40
+          Attr Size = 4
+          Attr Flags = 0
+          Attr Elements = 1
+          Attr ParamIndex = 4
+          Attr TypeRef = pwr_eType_UInt32
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Bitmask for attribute properties.
+      !  Bitmask for attribute properties.
+      !
+      !  PWR_MASK_POINTER	Attribute is a pointer.
+      !  PWR_MASK_ARRAY		Attribute is an array.
+      !  PWR_MASK_STATE	        Value will not be loaded from develompent database.
+      !  PWR_MASK_CONST	        Value is a constant.
+      !  PWR_MASK_RTVIRTUAL	Attribute doesn't exist in runtime environment
+      !  PWR_MASK_DEVBODYREF	Used for input and output attributes, where the
+      !                         connection refers another object which is found
+      !                         in the first attribute of type Objid in DevBody.
+      !  PWR_MASK_OBJIDSELF     Contains the objects own objid. Used in timer attributes.
+      !  PWR_MASK_NOEDIT        Value can't be changed in object editor.
+      !  PWR_MASK_INVISIBLE     Attribute will not be displayed in object editor.
+      !  PWR_MASK_REFDIRECT     If an AttrRef, should not give value pointed to.
+      !  PWR_MASK_NOINVERT      Can't be inverted in plc editor.
+      !  PWR_MASK_NOREMOVE      Can't be removed in plc editor.
+      !  PWR_MASK_RTDBREF       Contains an rtdb reference.
+      !  PWR_MASK_PRIVATE       Should not be interpreted by an object editor.
+      !*/
+      Object Flags pwr_eClass_Param	5
+        Body SysBody
+          Attr PgmName = "Flags"
+          Attr Type = pwr_eType_Mask
+          Attr Offset = 44
+          Attr Size = 4
+          Attr Flags = 0
+          Attr Elements = 1
+          Attr ParamIndex = 5
+          Attr TypeRef = pwr_eType_Mask
+        EndBody
+      EndObject
+      !/**
+      !  If array, number of elements..
+      !*/
+      Object Elements pwr_eClass_Param	6
+        Body SysBody
+          Attr PgmName = "Elements"
+          Attr Type = pwr_eType_UInt32
+          Attr Offset = 48
+          Attr Size = 4
+          Attr Flags = 0
+          Attr Elements = 1
+          Attr ParamIndex = 6
+          Attr TypeRef = pwr_eType_UInt32
+        EndBody
+      EndObject
+      !/**
+      !  Index of attribute within a body.
+      !*/
+      Object ParamIndex pwr_eClass_Param	7
+        Body SysBody
+          Attr PgmName = "ParamIndex"
+          Attr Type = pwr_eType_UInt32
+          Attr Offset = 52
+          Attr Size = 4
+          Attr Flags = 0
+          Attr Elements = 1
+          Attr ParamIndex = 7
+          Attr TypeRef = pwr_eType_UInt32
+        EndBody
+      EndObject
+      !/**
+      !  Reference to the object defining the type.
+      !*/
+      Object TypeRef pwr_eClass_Param	8
+        Body SysBody
+          Attr PgmName = "TypeRef"
+          Attr Type = pwr_eType_TypeId
+          Attr Offset = 56
+          Attr Size = 4
+          Attr Flags = 0
+          Attr Elements = 1
+          Attr ParamIndex = 8
+          Attr TypeRef = pwr_eType_TypeId
+        EndBody
+      EndObject
+    EndObject
+    Object Template $Attribute
+      Body SysBody
+        Attr Elements = 1
+      EndBody
+    EndObject
+  EndObject
+EndSObject

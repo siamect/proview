@@ -1,0 +1,342 @@
+!  pwrb_c_inc3p.wb_load -- Defines the class Inc3P.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_pid.c
+!  Incremental 3-point output with dead zone. Incremental
+!  comes from the type of input and the digit 3 of the
+!  output, which can have three distinct values, e.g. open
+!  / close / 0 but also with the meaning of up / down / 0
+!  or right / left / 0 or increase / decrease / 0 etc. The
+!  outputs are time-proportional to the input.
+!  
+!  The input signal OutChange is regarded as a control
+!  error. This error is transformed into a time by
+!  multiplication with Gain. The product is added to
+!  accumulator Acc.
+!  
+!  If the absolute value of Acc > MinTim either the output
+!  Open or Close is set. If Acc > MinTim an incremental
+!  signal is set (= Open) as long as Acc ³ 0 , if, on the
+!  other hand, Acc < - MinTim a decrease signal (= Close)
+!  is set as long as Acc £ 0. The value of Acc is counted
+!  down respectively up with a time amount of ScanTime, at
+!  every scanning when an increment or decrement signal
+!  has been set.
+!  To avoid ripple on the outputs, which may be
+!  destructive to the actuator at small control errors,
+!  the absolute value of the Acc-attribute has to exceed
+!  the adjustable dead zone MinTim, before any control
+!  signal is set. The Acc-attribute is cleared if the
+!  value of Acc does not exceed the dead zone during a
+!  time specified by MaxTim; the integration is turned off
+!  at small control errors.
+!  
+!  So-called timer control, also used by Pos3P objects on
+!  page 3-287, is discussed in the example below.
+!  Exactly as for Pos3P it is possible to govern by means
+!  of the outputs Open / Close and/or the signals named by
+!  DoOpen/DoClose. The outputs and the signals can be set
+!  by a frequency determined by the PlcPgm object. But
+!  only the signals may be reset by the timer control.
+!*/
+SObject pwrb:Class
+  Object Inc3P $ClassDef 135 
+    Body SysBody
+      Attr Editor = pwr_eEditor_PlcEd
+      Attr Method = pwr_eMethod_RtConnectionsAndDevBodies
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "inc3p"
+      EndBody
+      !/**
+      !  Output change. Often connected to the OutChange of a
+      !  Pid object.
+      !*/
+      Object OutChange $Input 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "OC"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  Specifies order to open or not. FALSE means no action;
+      !  TRUE means open ( up, increment, right, or what else
+      !  may be relevant to this output).
+      !*/
+      Object Open $Output 2 
+        Body SysBody
+          Attr PgmName = "Open"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "ope"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies order to close or not. FALSE means no action;
+      !  TRUE means close ( down, decrement, left, or what else
+      !  may be relevant to this output).
+      !*/
+      Object Close $Output 3 
+        Body SysBody
+          Attr PgmName = "Close"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "clo"
+        EndBody
+      EndObject
+      !/**
+      !  Program cycle period in seconds.
+      !*/
+      Object ScanTime $Intern 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "ScanTime"
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_PRIVATE
+        EndBody
+      EndObject
+      !/**
+      !  Gain, in seconds, per control signal unit. Often the
+      !  control signal is in the range 0 - 100 %. Suppose it is
+      !  possible to measure the running time, for example, the
+      !  time to drive a valve from completely open to
+      !  running time / divided by the range; ( here 100 - 0).
+      !*/
+      Object Gain $Intern 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "Gain"
+        EndBody
+      EndObject
+      !/**
+      !  The dead zone in seconds; see the description above. If
+      !  the absolute value of Acc is less than MinTim no output
+      !  at all is set.
+      !*/
+      Object MinTim $Intern 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MinTim"
+        EndBody
+      EndObject
+      !/**
+      !  When the MaxTim, in seconds, has elapsed without any
+      !  output signal Acc is set equal to 0.
+      !*/
+      Object MaxTim $Intern 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "MaxTim"
+        EndBody
+      EndObject
+      Object OpenP $Intern 8 
+        Body SysBody
+          Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      Object CloseP $Intern 9 
+        Body SysBody
+          Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      ! ++
+      ! Timer struct
+      !
+      !/**
+      !  Indicates an active timer.
+      !*/
+      Object TimerFlag $Intern 10 
+        Body SysBody
+          Attr PgmName = "TimerFlag"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Points to the next element in the timer queue.
+      !*/
+      Object TimerNext $Intern 11 
+        Body SysBody
+          Attr PgmName = "TimerNext"
+          Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Number of remaining ticks.
+      !*/
+      Object TimerCount $Intern 12 
+        Body SysBody
+          Attr PgmName = "TimerCount"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Points to a Do, or Dv object or, if these are not used,
+      !  to TimerDoDum. After a time of TimerTime the signal
+      !  specified by TimerDo is cleared.
+      !*/
+      Object TimerDO $Intern 13 
+        Body SysBody
+          Attr PgmName = "TimerDO"
+          Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Delay, in seconds, is set in run time. Specifies when
+      !  the outputs have to be reset.
+      !*/
+      Object TimerTime $Intern 14 
+        Body SysBody
+          Attr PgmName = "TimerTime"
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Dummy. If TimerDoDum does not point to a Do or Dv
+      !  object it points to this attribute.
+      !*/
+      Object TimerDODum $Intern 15 
+        Body SysBody
+          Attr PgmName = "TimerDODum"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Identity of this object is set at load file creation.
+      !  Used by the run time system.
+      !*/
+      Object TimerObjDId $Intern 16 
+        Body SysBody
+          Attr Flags |= PWR_MASK_OBJDIDSELF
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      !
+      ! End Timer struct
+      ! --
+      !/**
+      !  Accumulated control error - in time form.
+      !*/
+      Object Acc $Intern 17 
+        Body SysBody
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "Acc"
+        EndBody
+      EndObject
+      !/**
+      !  Accumulated time without output signals.
+      !*/
+      Object AccTim $Intern 18 
+        Body SysBody
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "AccTim"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      !/**
+      !  Name of an external signal e.g. Do, or Dv (
+      !  corresponding to Open) at timer control.
+      !  Also if DoOpen specifies a signal Open is
+      !  handled by the object.
+      !*/
+      Object DoOpen $Intern 1 
+        Body SysBody
+          Attr PgmName = "DoOpen"
+          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr NiNaAnnot = 1
+        EndBody
+      EndObject
+      !/**
+      !  Name of an external signal e.g. Do, or Dv object (
+      !  corresponding to Close) at timer control.
+      !  Also if DoClose specifies a signal Close is
+      !  handled by the object.
+      !*/
+      Object DoClose $Intern 2 
+        Body SysBody
+          Attr PgmName = "DoClose"
+          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr NiNaAnnot = 2
+        EndBody
+      EndObject
+      Object PlcNode $Buffer 3 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 153
+        Attr parameters[0] = 1
+        Attr parameters[1] = 0
+        Attr parameters[2] = 2
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 2
+        Attr graphindex = 0
+        Attr default_mask[0] = 1
+        Attr default_mask[1] = 3
+        Attr segname_annotation = 3
+        Attr devbody_annotation = 1
+        Attr compmethod = 23
+        Attr compindex = 0
+        Attr connectmethod = 10
+        Attr executeordermethod = 2
+        Attr objname = "Inc3P"
+        Attr graphname = "Inc3P"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    Object Template Inc3P
+      Body RtBody
+        Attr Gain = 1.0
+      EndBody
+    EndObject
+  EndObject
+EndSObject

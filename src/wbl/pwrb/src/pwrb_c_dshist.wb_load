@@ -1,0 +1,92 @@
+!  pwrb_c_dshist.wb_load -- Defines the class DsHist.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  Configures historical data storage for a scalar
+!  quantity or element in a one-dimensional vector. (Datastorage
+!  History).
+!  
+!  Historical data storage is an option in PROVIEW/R.
+!  In a relational database, data resides in
+!  two-dimensional tables known as relations. A relation
+!  consist of rows and columns.
+!  
+!  The DsHist object specifies which quantity is to be
+!  stored and in which relation. Up to three different
+!  relations can be specified.
+!         Hints
+!  
+!  If the storage concern signal values DsHist is
+!  configured in the development environment often direct
+!  below the current signal object.
+!  
+!         See Also
+!  DsHistServer.
+!*/
+SObject pwrb:Class
+  Object DsHist $ClassDef 106 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "DsHist"
+      EndBody
+      Object Description $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the complete name of the attribute whose
+      !  value is to be stored. The attribute has to be any of
+      !  the types: pwr_tBoolean, pwr_tFloat32, pwr_tInt8,
+      !  pwr_tInt16, or pwr_tInt32.
+      !  The value is always stored as pwr_tFloat32.
+      !*/
+      Object Attribute $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$AttrRef"
+        EndBody
+      EndObject
+      Object HistServerObject $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Elements = 3
+        EndBody
+      EndObject
+      !/**
+      !  The attribute is intended for use in the future.
+      !*/
+      Object DeadBand $Attribute 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+    EndObject
+    Object Template DsHist
+      Body RtBody
+        Attr DeadBand = 0.0
+      EndBody
+    EndObject
+    Object PostCreate $DbCallBack
+      Body SysBody
+        Attr MethodName = "DsHist-PostCreate"
+      EndBody
+    EndObject
+    Object PostMove $DbCallBack
+      Body SysBody
+        Attr MethodName = "DsHist-PostMove"
+      EndBody
+    EndObject
+  EndObject
+EndSObject

@@ -1,0 +1,167 @@
+#ifndef ge_subpalette_h
+#define ge_subpalette_h
+
+/* xtt_subpalette.h -- Simple navigator
+
+   PROVIEW/R
+   Copyright (C) 1996 by Comator Process AB.
+
+   <Description>.  */
+
+#if defined __cplusplus
+extern "C" {
+#endif
+
+#ifndef pwr_h
+# include "pwr.h"
+#endif
+#ifndef flow_h
+#include "flow.h"
+#endif
+
+#ifndef flow_browapi_h
+#include "flow_browapi.h"
+#endif
+
+#define subpalette_cVersion	"X3.0b"
+#define SUBP_PIXMAPS_SIZE	40
+
+typedef struct subpalette_s_Menu {
+	char				title[80];
+	int				item_type;
+	char				file[120];
+ 	int				pixmap;
+	struct subpalette_s_Menu	*child_list;
+	struct subpalette_s_Menu	*parent;
+	struct subpalette_s_Menu	*next;
+} subpalette_sMenu;
+
+typedef enum {
+	subpalette_eItemType_LocalSubGraphs,
+	subpalette_eItemType_Menu,
+	subpalette_eItemType_File
+	} subpalette_eItemType;
+
+typedef enum {
+	subpalette_mOpen_All	= ~0,
+	subpalette_mOpen_Children	= 1 << 0,
+	subpalette_mOpen_Attributes = 1 << 1,
+	subpalette_mOpen_Crossref	= 1 << 2
+	} subpalette_mOpen;
+
+class SubPaletteBrow {
+  public:
+    SubPaletteBrow( BrowCtx *brow_ctx, void *xn) : ctx(brow_ctx), 
+	subpalette(xn) { memset( pixmaps, 0, sizeof(pixmaps)); };
+    ~SubPaletteBrow();
+
+    BrowCtx		*ctx;
+    void		*subpalette;
+    brow_tNodeClass 	nc_object;
+    brow_tNodeClass 	nc_attr;
+    brow_tNodeClass 	nc_table;
+    brow_tNodeClass 	nc_header;
+    brow_tNodeClass 	nc_table_header;
+    flow_sAnnotPixmap 	*pixmap_leaf;
+    flow_sAnnotPixmap 	*pixmap_map;
+    flow_sAnnotPixmap 	*pixmap_openmap;
+    flow_sAnnotPixmap 	*pixmaps[SUBP_PIXMAPS_SIZE];
+
+    void free_pixmaps();
+    void allocate_pixmaps();
+    void create_nodeclasses();
+    void brow_setup();
+};
+
+
+class SubPalette {
+  public:
+    SubPalette(
+	void *xn_parent_ctx,
+	Widget	xn_parent_wid,
+	char *xn_name,
+	Widget *w,
+	pwr_tStatus *status);
+    ~SubPalette();
+
+    void 		*parent_ctx;
+    Widget		parent_wid;
+    char 		name[80];
+    Widget		brow_widget;
+    Widget		form_widget;
+    Widget		toplevel;
+    SubPaletteBrow		*brow;
+    XtIntervalId	trace_timerid;
+    int			trace_started;
+    void 		(*message_cb)( void *, char, char *);
+    int 		(*traverse_focus_cb)( void *, void *);
+    int 		(*set_focus_cb)( void *, void *);
+    void		*root_item;
+    subpalette_sMenu	*menu_tree;
+    char		path[10][80];
+    int			path_cnt;
+    int			displayed;
+
+    int get_select( pwr_sAttrRef *attrref, int *is_attr);
+    void message( char sev, char *text);
+    void set_inputfocus();
+    int object_attr();
+    int get_select( char *text, char *filename);
+    void menu_tree_build( char *filename);
+    subpalette_sMenu *menu_tree_build_children( ifstream *fp, int *line_cnt,
+		char *filename, subpalette_sMenu *parent);
+    void menu_tree_free();
+    void menu_tree_free_children( subpalette_sMenu *first_child);
+    void get_path( int *path_count, char **path_vect) 
+		{ *path_count = path_cnt; *path_vect = (char *)path;}; 
+    void set_inputfocus( int focus);
+};
+
+class Item {
+  public:
+    Item( subpalette_eItemType	item_type) :
+	type( item_type) {};
+    subpalette_eItemType	type;
+};
+
+class ItemLocalSubGraphs : public Item {
+  public:
+    ItemLocalSubGraphs( SubPalette *subpalette, char *item_name, 
+	char *item_filename,
+	brow_tNode dest, flow_eDest dest_code);
+    brow_tNode		node;
+    char	 	name[120];
+    char	 	filename[120];
+
+    int			open_children( SubPalette *subpalette, double x, double y);
+    int			close( SubPalette *subpalette, double x, double y);
+};
+
+class ItemFile : public Item {
+  public:
+    ItemFile( SubPalette *subpalette, char *item_name, 
+	char *item_filename, int item_pixmap,
+	brow_tNode dest, flow_eDest dest_code);
+    brow_tNode		node;
+    char	 	name[120];
+    char	 	filename[120];
+    int			pixmap;
+};
+
+class ItemMenu : public Item {
+  public:
+    ItemMenu( SubPalette *subpalette, char *item_name, 
+	brow_tNode dest, flow_eDest dest_code, subpalette_sMenu **item_child_list,
+	int item_is_root);
+    brow_tNode		node;
+    char	 	name[120];
+    subpalette_sMenu	**child_list;
+    int			is_root;
+    int			open_children( SubPalette *subpalette, double x, double y);
+    int     		close( SubPalette *subpalette, double x, double y);
+};
+
+#if defined __cplusplus
+}
+#endif
+#endif

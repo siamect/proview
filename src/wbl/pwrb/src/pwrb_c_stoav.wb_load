@@ -1,0 +1,114 @@
+!  pwrb_c_stoav.wb_load -- Defines the class StoAv.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  STOre Analog Value.
+!
+! Range ldh_eDId_Base
+!
+!/**
+!  @Version 1.0
+!  @Code rt_plc_macro_io.h
+!  Store Analog value.
+!  
+!  Stores an analog value ( e.g. output signal of the type
+!  pwr_tFloat32) on the specified local Av object.
+!  Used e.g. to assign starting values to local Av objects
+!  at initialisation of a PLC program.
+!  
+!  The complete name of the Av object has to be supplied;
+!  its last segment is shown in the right empty part of
+!  the symbol.
+!*/
+SObject pwrb:Class
+  Object StoAv $ClassDef 221 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_RtConnectionsAndDevBodies
+      Attr Flags = pwr_mClassDef_DevOnly
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "stoav"
+      EndBody
+      !/**
+      !  The input is connected to an analog signal or left
+      !  open. In the latter case In is default 0.0 and not
+      !  adjustable in the run time system. The In attribute
+      !  specifies which value should be assigned to the
+      !  Av-signal.
+      !*/
+      Object In $Input 1 
+        Body SysBody
+          Attr PgmName = "ActualValue"
+          Attr Flags |= PWR_MASK_RTVIRTUAL
+          Attr Flags |= PWR_MASK_DEVBODYREF
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "VAL"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      !/**
+      !  Used by the PLC Editor. Specifies the complete name of
+      !  the current Av object.
+      !*/
+      Object AvObject $Intern 1 
+        Body SysBody
+          Attr PgmName = "AvObject"
+          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr GraphName = "In"
+          Attr NiNaAnnot = 1
+          Attr NiNaSegments = 1
+        EndBody
+      EndObject
+      !/**
+      !  Specifies how many segments of the Av object name that
+      !  is to be displayed in the symbol of the StoAv object.
+      !  The segments are counted from behind.
+      !*/
+      Object AvObjectSegments $Intern 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      Object PlcNode $Buffer 3 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 73
+        Attr parameters[0] = 1
+        Attr parameters[1] = 0
+        Attr parameters[2] = 0
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 7
+        Attr graphindex = 1
+        Attr default_mask[0] = 1
+        Attr default_mask[1] = 0
+        Attr segname_annotation = 0
+        Attr devbody_annotation = 1
+        Attr compmethod = 11
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+        Attr connectmethod = 6
+        Attr executeordermethod = 2
+        Attr objname = "StoAv"
+        Attr graphname = "StoAv"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    Object Template StoAv
+      Body DevBody
+        Attr AvObjectSegments = 1
+      EndBody
+    EndObject
+  EndObject
+EndSObject

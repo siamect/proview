@@ -1,0 +1,43 @@
+!  ssab_c_remdi.wb_load -- Defines the class RemDi.
+!
+!  PROVIEW/R
+!
+!  <Description>.
+!
+SObject SSAB:Class
+  !
+  ! RemDi	-	Hierarchy-object for remote Di
+  !
+  Object RemDi $ClassDef 7
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    !
+    ! RemDi Runtime Body
+    !
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "RemDi"
+      EndBody
+      !
+      ! Parameter Description
+      !
+      Object Description $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+    EndObject ! $ObjBodyDef
+    !
+    ! Template för RemDi
+    !
+    Object Template RemDi
+      Body RtBody
+      EndBody
+    EndObject ! Template
+  !
+  ! End RemDi
+  !
+  EndObject ! $ClassDef
+EndSObject

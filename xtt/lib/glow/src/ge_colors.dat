@@ -1,0 +1,103 @@
+# Color definitions for ge
+# red	green	blue
+1 		1 		1		# 4 White 
+0 		0.8714 		0.2857		# 5 SpringGreen3
+1 		1 		0		# 6 Yellow
+0.2879 		0.4945 		0.9067		# 7 SteelBlue3
+0.593 		0 		0.6421		# 8 Magenta3
+0.270 		0.270 		0.270		# 9 Grey
+0.160 		0.160 		0.160		# 10 Grey
+# Grey
+0.950 		0.950 		0.950		# 1 Grey
+0.900 		0.900 		0.900		# 2 Grey
+0.850 		0.850 		0.850		# 3 Grey
+0.700 		0.700 		0.700		# 4 Grey93
+0.500 		0.500 		0.500		# 5 Grey80
+0.935 		0.935 		0.935		# 6 Grey68
+0.880 		0.880 		0.880		# 7 Grey48
+0.750 		0.750 		0.750		# 8 Grey35
+0.550 		0.550 		0.550		# 9 Grey
+0.350 		0.350 		0.350		# 10 Grey
+1		1		0.878		# 1 LightYellow0
+1		1		0.640		# 2 LightYellow1
+0.900		0.900		0.500		# 3 LightYellow2
+0.804		0.804		0.400		# 4 LightYellow3
+0.545		0.545		0.300		# 5 LightYellow4
+1		1		0.300		# 6 yellow0
+1		1		0		# 7 yellow1
+0.933		0.933		0		# 8 yellow2
+0.804		0.804		0		# 9 yellow3
+0.545		0.545		0		# 10 yellow4
+1		0.970		0.800		# 1 Lightgoldenrod0
+1		0.925		0.545		# 2 Lightgoldenrod1
+0.933		0.862		0.510		# 3 Lightgoldenrod2
+0.804		0.745		0.439		# 4 Lightgoldenrod3
+0.545		0.506		0.298		# 5 Lightgoldenrod4
+1		0.930		0.500		# 6 gold00
+1		0.843		0		# 7 gold1
+0.933		0.788		0		# 8 gold2
+0.804		0.678		0		# 9 gold3
+0.545		0.459		0		# 10 gold4
+1		0.941		0.800		# 1 LightOrange (Modified)
+0.950		0.870		0.678		# 2 NavajoWhite
+0.900		0.628		0.478		# 3 LightSalmon1
+0.804		0.506		0.384		# 4 LightSalmon3
+0.545		0.341		0.259		# 5 LightSalmon4
+1		0.850		0.550		# 6 DarkOrange (Modified)
+1		0.650		0.300		# 7 DarkOrange (Modified)
+1		0.498		0		# 8 DarkOrange1
+0.804		0.400		0		# 9 DarkOrange3
+0.545		0.153		0		# 10 DarkOrange4
+1		0.894		0.867		# 1 MistyRose1
+0.933		0.835		0.823		# 2 MistyRose2
+0.933		0.682		0.725		# 3 LightPink (Modified)
+0.804		0.547		0.584		# 4 LightPink3
+0.545		0.357		0.396		# 5 LightPink4
+1		0.733		0.733		# 6 IndianRed0 (Modified)
+1		0.415		0.415		# 7 IndianRed1
+1		0.188		0.188		# 8 firebrick1
+0.804		0.149		0.149		# 9 firebrick3
+0.545		0.102		0.102		# 10 firebrick4
+1		0.890		1		# 1 Plum1 (Modified)
+1		0.733		1		# 2 Plum1
+0.933		0.682		0.933		# 3 Plum2
+0.804		0.588		0.804		# 4 Plum3
+0.545		0.400		0.545		# 5 Plum4
+1		0.800		1		# 6 Magenta00 (Mofified)
+1		0.500		1		# 7 Magenta0 (Modified) 
+1		0		1		# 8 Magenta1
+0.804		0		0.804		# 9 Magenta3
+0.545		0		0.545		# 10 Magenta4
+0.829		0.919		1		# 1 LightSteelBlue1 (Modified)
+0.792		0.882		1		# 2 LightSteelBlue1  
+0.737		0.823		0.933		# 3 LightSteelBlue2  
+0.635		0.710		0.804		# 4 LightSteelBlue3  
+0.431		0.482		0.545		# 5 LightSteelBlue4  
+0.829		0.919		1		# 6 LightCyan 
+0.690		0.878		0902		# 7 Powder blue
+0.388		0.722		1		# 8 SteelBlue1  
+0.275		0.510		0.706		# 9 SteelBlue  
+0		0		0.545		# 10 blue4  
+# Bluegreen
+0.700		0.960		0.900		# 1 aquamarine4 (Modified)
+0.600		0.930		0.850		# 2 aquamarine4  
+0.463		0.900		0.700		# 3 aquamarine4  
+0.400		0.804		0.667		# 4 aquamarine4  
+0.271		0.545		0.455		# 5 aquamarine4  
+0		1		0.950		# 6 turqoise 
+0		0.930		0.930		# 7 turqoise
+0		0.870		0.720		# 8 turqoise  
+0		0.700		0.500		# 9 turqoise  
+0		0.500		0.300		# 10 turqoise
+# 0.729		1		0		# 1 DarkOliveGreen1  
+0.829		1		0.7		# 1 DarkOliveGreen1 (Modified)
+0.737		0.933		0.408		# 2 DarkOliveGreen2  
+0.635		0.804		0.353		# 3 DarkOliveGreen3  
+0.431		0.545		0.239		# 4 DarkOliveGreen4  
+0.333	  	0.420 		0.184		# 5 DarkOliveGreen  
+0.498		1		0		# 6 chartreuse  	
+0.463		0.933		0		# 7 chartreuse2  	
+0.4		0.804		0		# 8 chartreuse3  	
+0.27		0.545		0		# 9 chartreuse4  	
+0		0.392		0		# 10 DarkGreen  	
+# end

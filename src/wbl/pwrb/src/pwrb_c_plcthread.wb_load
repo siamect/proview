@@ -1,0 +1,246 @@
+!  pwrb_c_plcthread.wb_load -- Defines the class PlcThread.
+!
+!  PROVIEW/R
+!  Copyright (C) 1999 by Mandator AB.
+!
+SObject pwrb:Class
+  Object PlcThread $ClassDef 261 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+      Attr PopEditor = 1
+    EndBody
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "PlcThread"
+      EndBody 
+      Object Description $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      Object Prio $Attribute 2
+	Body SysBody
+	  Attr TypeRef = "pwrs:Type-$Int32"
+	EndBody
+      EndObject
+      Object ScanTime $Attribute 3
+	Body SysBody
+	  Attr TypeRef = "pwrs:Type-$Float32"
+	EndBody
+      EndObject
+      Object ScanTimeMin $Attribute 4
+	Body SysBody
+	  Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      Object ScanTimeMean $Attribute 5
+	Body SysBody
+	  Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      Object ScanTimeMax $Attribute 6
+	Body SysBody
+	  Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      Object ScanTimeMeanCount $Attribute 7
+	Body SysBody
+	  Attr TypeRef = "pwrs:Type-$Int32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      Object Count $Attribute 8
+	Body SysBody
+	  Attr TypeRef = "pwrs:Type-$Int32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      Object Last $Attribute 9
+	Body SysBody
+	  Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      Object Sum $Attribute 10
+	Body SysBody
+	  Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      Object Min $Attribute 11
+	Body SysBody
+	  Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      Object Mean $Attribute 12
+	Body SysBody
+	  Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      Object Coverage $Attribute 13
+	Body SysBody
+	  Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      Object Max $Attribute 14
+	Body SysBody
+	  Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      Object Count_1_8 $Attribute 15
+	Body SysBody
+	  Attr TypeRef = "pwrs:Type-$Int32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      Object Count_1_4 $Attribute 16
+	Body SysBody
+	  Attr TypeRef = "pwrs:Type-$Int32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      Object Count_1_2 $Attribute 17
+	Body SysBody
+	  Attr TypeRef = "pwrs:Type-$Int32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      Object Count_1_1 $Attribute 18
+	Body SysBody
+	  Attr TypeRef = "pwrs:Type-$Int32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      Object Count_2_1 $Attribute 19
+	Body SysBody
+	  Attr TypeRef = "pwrs:Type-$Int32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      Object Count_4_1 $Attribute 20
+	Body SysBody
+	  Attr TypeRef = "pwrs:Type-$Int32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      Object Count_8_1 $Attribute 21
+	Body SysBody
+	  Attr TypeRef = "pwrs:Type-$Int32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      Object CountHigh $Attribute 22
+	Body SysBody
+	  Attr TypeRef = "pwrs:Type-$Int32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      Object SlipCount $Attribute 33
+	Body SysBody
+	  Attr TypeRef = "pwrs:Type-$Int32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      Object Limit_1_8 $Attribute 23
+	Body SysBody
+	  Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      Object Limit_1_4 $Attribute 24
+	Body SysBody
+	  Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      Object Limit_1_2 $Attribute 25
+	Body SysBody
+	  Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      Object Limit_1_1 $Attribute 26
+	Body SysBody
+	  Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      Object Limit_2_1 $Attribute 27
+	Body SysBody
+	  Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      Object Limit_4_1 $Attribute 28
+	Body SysBody
+	  Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      Object Limit_8_1 $Attribute 29
+	Body SysBody
+	  Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      Object Dlid $Attribute 30
+	Body SysBody
+	  Attr TypeRef = "pwrs:Type-$RefId"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      Object ScanTimeStart $Attribute 31
+	Body SysBody
+	  Attr TypeRef = "pwrs:Type-$Time"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      Object TimerStart $Attribute 32
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_PRIVATE
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject

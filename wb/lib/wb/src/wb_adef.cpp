@@ -1,0 +1,81 @@
+#include "wb_adef.h"
+
+wb_adef::wb_adef() : wb_status(LDH__NOSUCHATTR), m_adrep(0)
+{
+}
+
+wb_adef::wb_adef(const wb_adef& x)
+{
+    //m_adrep = x.m_adrep->ref();
+}
+
+wb_adef::~wb_adef()
+{
+    //m_adrep->unref();
+}
+
+void wb_adef::check()
+{
+  if ( evenSts()) throw wb_error(m_sts);
+}
+
+// get objects runtime body size
+size_t wb_adef::size() 
+{ 
+  check();
+  return m_adrep->size();
+}
+
+int wb_adef::offset() 
+{ 
+  check();
+  return m_adrep->offset();
+}
+
+int wb_adef::type() 
+{
+  check();
+  return m_adrep->type();
+}
+
+int wb_adef::nElement()
+{
+  check();
+  return m_adrep->nElement();
+}
+
+int wb_adef::index() 
+{
+  check();
+  return m_adrep->index();
+}
+
+pwr_tOid wb_adef::aoid() 
+{
+  check();
+  return m_adrep->aoid();
+}
+
+pwr_tAix wb_adef::aix() 
+{
+  check();
+  return m_adrep->aix();
+}
+
+pwr_tCid wb_adef::cid() 
+{
+  check();
+  return m_adrep->cid();
+}
+
+pwr_tOix wb_adef::bix() 
+{
+  check();
+  return m_adrep->bix();
+}
+
+pwr_tOid wb_adef::boid() 
+{
+  check();
+  return m_adrep->boid();
+}

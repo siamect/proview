@@ -1,0 +1,36 @@
+SObject wb:layout-Configurator-w1-AllClasses
+  Object TLog $GroupRef
+  EndObject
+EndSObject
+!
+!
+SObject wb:layout-PlcEditor-w1-Simulate
+  Object TLog $Group
+    Object AtLog $Group
+    EndObject
+    Object CAtLog $Group
+    EndObject
+    Object CDtLog $Group
+    EndObject
+    Object ChgAtLog $Group
+    EndObject
+    Object ChgOtLog $Group
+    EndObject
+    Object COtLog $Group
+    EndObject
+    Object DtLog $Group
+    EndObject
+    Object ExecPlcOn $Group
+    EndObject
+    Object ExecPlcOff $Group
+    EndObject
+    Object TLogExecAllOn $Group
+    EndObject
+    Object TLogExecAllOff $Group
+    EndObject
+    Object TLogOpen $Group
+    EndObject
+    Object TLogModify $Group
+    EndObject
+  EndObject
+EndSObject

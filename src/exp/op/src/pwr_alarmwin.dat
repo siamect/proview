@@ -1,0 +1,10 @@
+! 
+! Name sys$login:pwr_alarmwin.dat
+!
+! Make OK and Save buttons in the alarm limits window insensitive
+!
+!*alarmLimitsWindow.analogDialog.anaOkPb.sensitive: False
+!*alarmLimitsWindow.analogDialog.anaSavePb.sensitive: False
+!*alarmLimitsWindow.digitalDialog.digOkPb.sensitive: False
+!*alarmLimitsWindow.digitalDialog.digSavePb.sensitive: False
+
