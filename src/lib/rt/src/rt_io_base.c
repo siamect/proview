@@ -114,12 +114,20 @@ pwr_tStatus io_init_ai_signals(
   char				buf[140];
   pwr_tUInt32			sig_count = 0;
   pwr_tClassId			class;
+  pwr_sClass_IvArea		*iarea_op;
 
   /* Get pointer to area-object */
   sts = gdh_NameToObjid( "pwrNode-active-io-ai", &area_objid);
   if (EVEN(sts)) return sts;
 
   sts = gdh_ObjidToPointer( area_objid, (void *) &area_op);
+  if (EVEN(sts)) return sts;
+
+  /* Get pointer to area-object */
+  sts = gdh_NameToObjid( "pwrNode-active-io-ai_init", &area_objid);
+  if (EVEN(sts)) return sts;
+
+  sts = gdh_ObjidToPointer( area_objid, (void *) &iarea_op);
   if (EVEN(sts)) return sts;
 
   // Check SigChanCon and put signal in channels SigChanCon
@@ -152,6 +160,9 @@ pwr_tStatus io_init_ai_signals(
     }
     gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, &area_op->Value[sig_count]);
     sig_op->ValueIndex = sig_count;
+
+    gdh_StoreRtdbPointer( (pwr_tUInt32 *)&iarea_op->Value[sig_count], &sig_op->InitialValue);
+
     sig_count++;
 
     sts = gdh_GetNextObject( sig_objid, &sig_objid);
@@ -180,12 +191,20 @@ pwr_tStatus io_init_ao_signals(
   char				buf[140];
   pwr_tUInt32			sig_count = 0;
   pwr_tClassId			class;
+  pwr_sClass_IvArea		*iarea_op;
 
   /* Get pointer to area-object */
   sts = gdh_NameToObjid( "pwrNode-active-io-ao", &area_objid);
   if (EVEN(sts)) return sts;
 
   sts = gdh_ObjidToPointer( area_objid, (void *) &area_op);
+  if (EVEN(sts)) return sts;
+
+  /* Get pointer to area-object */
+  sts = gdh_NameToObjid( "pwrNode-active-io-ao_init", &area_objid);
+  if (EVEN(sts)) return sts;
+
+  sts = gdh_ObjidToPointer( area_objid, (void *) &iarea_op);
   if (EVEN(sts)) return sts;
 
   // Check SigChanCon and put signal in channels SigChanCon
@@ -218,6 +237,9 @@ pwr_tStatus io_init_ao_signals(
     }
     gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, &area_op->Value[sig_count]);
     sig_op->ValueIndex = sig_count;
+
+    gdh_StoreRtdbPointer( (pwr_tUInt32 *)&iarea_op->Value[sig_count], &sig_op->InitialValue);
+
     sig_count++;
 
     sts = gdh_GetNextObject( sig_objid, &sig_objid);
@@ -245,12 +267,20 @@ pwr_tStatus io_init_di_signals(
   char				buf[140];
   pwr_tUInt32			sig_count = 0;
   pwr_tClassId			class;
+  pwr_sClass_IvArea		*iarea_op;
 
   /* Get pointer to area-object */
   sts = gdh_NameToObjid( "pwrNode-active-io-di", &area_objid);
   if (EVEN(sts)) return sts;
 
   sts = gdh_ObjidToPointer( area_objid, (void *) &area_op);
+  if (EVEN(sts)) return sts;
+
+  /* Get pointer to area-object */
+  sts = gdh_NameToObjid( "pwrNode-active-io-di_init", &area_objid);
+  if (EVEN(sts)) return sts;
+
+  sts = gdh_ObjidToPointer( area_objid, (void *) &iarea_op);
   if (EVEN(sts)) return sts;
 
   // Check SigChanCon and put signal in channels SigChanCon
@@ -283,6 +313,9 @@ pwr_tStatus io_init_di_signals(
     }
     gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, &area_op->Value[sig_count]);
     sig_op->ValueIndex = sig_count;
+
+    gdh_StoreRtdbPointer( (pwr_tUInt32 *)&iarea_op->Value[sig_count], &sig_op->InitialValue);
+
     sig_count++;
 
     sts = gdh_GetNextObject( sig_objid, &sig_objid);
@@ -311,12 +344,20 @@ pwr_tStatus io_init_do_signals(
   char				buf[140];
   pwr_tUInt32			sig_count = 0;
   pwr_tClassId			class;
+  pwr_sClass_IvArea		*iarea_op;
 
   /* Get pointer to area-object */
   sts = gdh_NameToObjid( "pwrNode-active-io-do", &area_objid);
   if (EVEN(sts)) return sts;
 
   sts = gdh_ObjidToPointer( area_objid, (void *) &area_op);
+  if (EVEN(sts)) return sts;
+
+  /* Get pointer to area-object */
+  sts = gdh_NameToObjid( "pwrNode-active-io-do_init", &area_objid);
+  if (EVEN(sts)) return sts;
+
+  sts = gdh_ObjidToPointer( area_objid, (void *) &iarea_op);
   if (EVEN(sts)) return sts;
 
   // Check SigChanCon and put signal in channels SigChanCon
@@ -349,6 +390,9 @@ pwr_tStatus io_init_do_signals(
     }
     gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, &area_op->Value[sig_count]);
     sig_op->ValueIndex = sig_count;
+
+    gdh_StoreRtdbPointer( (pwr_tUInt32 *)&iarea_op->Value[sig_count], &sig_op->InitialValue);
+
     sig_count++;
 
     sts = gdh_GetNextObject( sig_objid, &sig_objid);
@@ -486,6 +530,7 @@ io_init_av_signals (
   pwr_tFloat32			*p;
   pwr_tInt32			av_count = 0;	
   pwr_sClass_IvArea		*iarea_op;
+
  
   /* Get pointer to area-object */
   sts = gdh_NameToObjid( "pwrNode-active-io-av", &area_objid);
@@ -621,12 +666,20 @@ pwr_tStatus io_init_ii_signals(
   char				buf[140];
   pwr_tUInt32			sig_count = 0;
   pwr_tClassId			class;
+  pwr_sClass_IvArea		*iarea_op;
 
   // Get pointer to area-object
   sts = gdh_NameToObjid( "pwrNode-active-io-ii", &area_objid);
   if (EVEN(sts)) return sts;
 
   sts = gdh_ObjidToPointer( area_objid, (void *) &area_op);
+  if (EVEN(sts)) return sts;
+
+  /* Get pointer to area-object */
+  sts = gdh_NameToObjid( "pwrNode-active-io-ii_init", &area_objid);
+  if (EVEN(sts)) return sts;
+
+  sts = gdh_ObjidToPointer( area_objid, (void *) &iarea_op);
   if (EVEN(sts)) return sts;
 
   // Check SigChanCon and put signal in channels SigChanCon
@@ -659,6 +712,9 @@ pwr_tStatus io_init_ii_signals(
     }
     gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, &area_op->Value[sig_count]);
     sig_op->ValueIndex = sig_count;
+
+    gdh_StoreRtdbPointer( (pwr_tUInt32 *)&iarea_op->Value[sig_count], &sig_op->InitialValue);
+
     sig_count++;
 
     sts = gdh_GetNextObject( sig_objid, &sig_objid);
@@ -687,12 +743,20 @@ pwr_tStatus io_init_io_signals(
   char				buf[140];
   pwr_tUInt32			sig_count = 0;
   pwr_tClassId			class;
+  pwr_sClass_IvArea		*iarea_op;
 
   // Get pointer to area-object
   sts = gdh_NameToObjid( "pwrNode-active-io-io", &area_objid);
   if (EVEN(sts)) return sts;
 
   sts = gdh_ObjidToPointer( area_objid, (void *) &area_op);
+  if (EVEN(sts)) return sts;
+
+  /* Get pointer to area-object */
+  sts = gdh_NameToObjid( "pwrNode-active-io-io_init", &area_objid);
+  if (EVEN(sts)) return sts;
+
+  sts = gdh_ObjidToPointer( area_objid, (void *) &iarea_op);
   if (EVEN(sts)) return sts;
 
   // Check SigChanCon and put signal in channels SigChanCon
@@ -725,6 +789,9 @@ pwr_tStatus io_init_io_signals(
     }
     gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, &area_op->Value[sig_count]);
     sig_op->ValueIndex = sig_count;
+
+    gdh_StoreRtdbPointer( (pwr_tUInt32 *)&iarea_op->Value[sig_count], &sig_op->InitialValue);
+
     sig_count++;
 
     sts = gdh_GetNextObject( sig_objid, &sig_objid);
@@ -1284,6 +1351,7 @@ static pwr_tStatus io_init_card(
         cp->chanlist = (io_sChannel *) calloc( maxchan, sizeof(io_sChannel));
 	cp->ChanListSize = maxchan;
 	cp->Class = class;
+	cp->Local = NULL;
 	cp->Objid = objid;
 	strcpy( cp->Name, cname);
 	if ( CardRead != NULL)
@@ -1561,6 +1629,7 @@ static pwr_tStatus io_init_rack(
 
         /* Treat this rack in this process */
         rp = calloc( 1, sizeof(io_sRack));
+	rp->Local = NULL;
 	rp->Class = class;
 	rp->Objid = objid;
 	strcpy( rp->Name, rname);
@@ -1675,6 +1744,7 @@ static pwr_tStatus io_init_agent(
         /* Treat this agent in this process */
         ap = calloc( 1, sizeof(io_sAgent));
 	ap->Class = class;
+	ap->Local = NULL;
 	ap->Objid = objid;
 	strcpy( ap->Name, aname);
 	ap->Process = process;
