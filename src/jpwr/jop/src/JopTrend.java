@@ -93,6 +93,7 @@ public class JopTrend extends JComponent implements GeComponentIfc,
   public void resetColorTone() {}
   public void resetBorderColor() {}
   public void resetTextColor() {}
+  public void setVisibility( int visibility) {}
   public String getAnnot1() { return new String();}
   public void setAnnot1( String s) {}
   public void setLastPage() {}

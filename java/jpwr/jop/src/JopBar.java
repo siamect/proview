@@ -89,6 +89,7 @@ public class JopBar extends JComponent implements GeComponentIfc,
   public void resetBorderColor() {}
   public void resetTextColor() {}
   public String getAnnot1() { return new String();}
+  public void setVisibility( int visibility) {}
   public void setAnnot1( String s) {}
   public void setLastPage() {}
   public void setFirstPage() {}

@@ -108,7 +108,7 @@ public class GeDynOptionMenu extends GeDynElem {
 				       ((GeComponent)dyn.comp).colorIntensity,
 				       ((GeComponent)dyn.comp).colorBrightness,
 				       ((GeComponent)dyn.comp).colorInverse,
-				       ((GeComponent)dyn.comp).fillColor),
+				       ((GeComponent)dyn.comp).fillColor, false),
 		     ((Component)dyn.comp).getWidth() - 4);
       break;
     }
