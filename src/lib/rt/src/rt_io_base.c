@@ -142,9 +142,9 @@ pwr_tStatus io_init_ai_signals(
   pwr_sClass_Ai			*sig_op;
   pwr_sClass_ChanAi		*chan_op;
   pwr_tObjid			sig_objid;
-  pwr_tObjid			chan_objid;
   char				buf[140];
-  pwr_tUInt32			chan_count;
+  pwr_tUInt32			sig_count = 0;
+  pwr_tClassId			class;
 
   /* Get pointer to area-object */
   sts = gdh_NameToObjid( "pwrNode-active-io-ai", &area_objid);
@@ -153,127 +153,43 @@ pwr_tStatus io_init_ai_signals(
   sts = gdh_ObjidToPointer( area_objid, (void *) &area_op);
   if (EVEN(sts)) return sts;
 
-  /* Clear pointers to ValueBase */
-
-  sts = gdh_GetClassList(pwr_cClass_Ai, &sig_objid);
-  while (ODD(sts)) 
-  {
-    sts = gdh_ObjidToPointer( sig_objid, (void *) &sig_op);
-    if (EVEN(sts)) return sts;
-    sig_op->ActualValue = NULL;
-    sts = gdh_GetNextObject(sig_objid, &sig_objid);
-  }
-
-  /* Loop channel objects */
-  chan_count = 0;
-  sts = gdh_GetClassList(pwr_cClass_ChanAi, &chan_objid);
-  while (ODD(sts)) 
-  {
-    sts = gdh_ObjidToPointer( chan_objid, (void *) &chan_op);
-    if (EVEN(sts)) return sts;
-		
-    if ( cdh_ObjidIsNull( chan_op->SigChanCon))
-    {
-      sts = gdh_ObjidToName( chan_objid, buf, sizeof(buf), cdh_mNName);
-      if ( EVEN(sts)) return sts;
-/*
-      errh_Info("IO init: Channel is not connected '%s'", buf);
-*/
-      sts = gdh_GetNextObject( chan_objid, &chan_objid);
-      continue;
-    }
-    sts = gdh_ObjidToPointer( chan_op->SigChanCon, (void *) &sig_op);	
-    if ( EVEN(sts))
-    {
-      sts = gdh_ObjidToName( chan_objid, buf, sizeof(buf), cdh_mNName);
-      if ( EVEN(sts)) return sts;
-      errh_Error("IO init: Channel SigChanCon does not exist '%s'", buf);
-      sts = gdh_GetNextObject( chan_objid, &chan_objid);
-      continue;
-    }
-	
-    /* Check that connection is mutual */
-    if ( cdh_ObjidIsNotEqual( chan_objid, sig_op->SigChanCon))
-    {
-      sts = gdh_ObjidToName( chan_objid, buf, sizeof(buf), cdh_mNName);
-      if ( EVEN(sts)) return sts;
-      errh_Error("IO init: Channel connection is not mutual '%s'", buf);
-      sts = gdh_GetNextObject( chan_objid, &chan_objid);
-      continue;
-    }
-	
-    gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue,
-		&area_op->Value[ chan_count]);
-    sig_op->ValueIndex = chan_count;
-    chan_count++;
-    sts = gdh_GetNextObject( chan_objid, &chan_objid);
-  }
-
-  sts = gdh_GetClassList(pwr_cClass_ChanAit, &chan_objid);
-  while (ODD(sts)) 
-  {
-    sts = gdh_ObjidToPointer( chan_objid, (void *) &chan_op);
-    if (EVEN(sts)) return sts;
-		
-    if ( cdh_ObjidIsNull( chan_op->SigChanCon))
-    {
-      sts = gdh_ObjidToName( chan_objid, buf, sizeof(buf), cdh_mNName);
-      if ( EVEN(sts)) return sts;
-/*
-      errh_Info("IO init: Channel is not connected '%s'", buf);
-*/
-      sts = gdh_GetNextObject( chan_objid, &chan_objid);
-      continue;
-    }
-    sts = gdh_ObjidToPointer( chan_op->SigChanCon, (void *) &sig_op);	
-    if ( EVEN(sts))
-    {
-      sts = gdh_ObjidToName( chan_objid, buf, sizeof(buf), cdh_mNName);
-      if ( EVEN(sts)) return sts;
-      errh_Error("IO init: Channel SigChanCon does not exist '%s'", buf);
-      sts = gdh_GetNextObject( chan_objid, &chan_objid);
-      continue;
-    }
-	
-    /* Check that connection is mutual */
-    if ( cdh_ObjidIsNotEqual( chan_objid, sig_op->SigChanCon))
-    {
-      sts = gdh_ObjidToName( chan_objid, buf, sizeof(buf), cdh_mNName);
-      if ( EVEN(sts)) return sts;
-      errh_Error("IO init: Channel connection is not mutual '%s'", buf);
-      sts = gdh_GetNextObject( chan_objid, &chan_objid);
-      continue;
-    }
-	
-    gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue,
-		&area_op->Value[ chan_count]);
-    sig_op->ValueIndex = chan_count;
-    chan_count++;
-    sts = gdh_GetNextObject( chan_objid, &chan_objid);
-  }
-
-  /* Initiate remaining signals */
+  // Check SigChanCon and put signal in channels SigChanCon
   sts = gdh_GetClassList( pwr_cClass_Ai, &sig_objid);
   while (ODD(sts)) 
   {
+    sts = gdh_ObjidToName( sig_objid, buf, sizeof(buf), cdh_mNName);
+    if ( EVEN(sts)) return sts;
+
     sts = gdh_ObjidToPointer( sig_objid, (void *) &sig_op);
     if (EVEN(sts)) return sts;
-
-    if ( sig_op->ActualValue == NULL) 
-    {
-      sts = gdh_ObjidToName( sig_objid, buf, sizeof(buf), cdh_mNName);
-      if ( EVEN(sts)) return sts;
+    
+    if ( cdh_ObjidIsNull( sig_op->SigChanCon)) {
       errh_Info("IO init: Signal is not connected '%s'", buf);
-      gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, 
-		&area_op->Value[chan_count]);
-      sig_op->ValueIndex = chan_count;
-      chan_count++;
     }
+    else {
+      sts = gdh_GetObjectClass( sig_op->SigChanCon, &class);
+      if (EVEN(sts) || 
+	  !(class == pwr_cClass_ChanAi || class == pwr_cClass_ChanAit)) {
+	errh_Info("IO init: Signal SigChanCon error '%s'", buf);
+      }
+      else {
+	sts = gdh_ObjidToPointer( sig_op->SigChanCon, (void *) &chan_op);
+	if (EVEN(sts)) {
+	  errh_Info("IO init: Signal SigChanCon error '%s'", buf);
+	}	
+	else
+	  chan_op->SigChanCon = sig_objid;
+      }		
+    }
+    gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, &area_op->Value[sig_count]);
+    sig_op->ValueIndex = sig_count;
+    sig_count++;
+
     sts = gdh_GetNextObject( sig_objid, &sig_objid);
   }
 
-  /* Store number of AI in node object  */
-  io_op->AiCount = chan_count;
+  /* Store number of Ai in node object  */
+  io_op->AiCount = sig_count;
 
   return IO__SUCCESS;
 }
@@ -292,9 +208,8 @@ pwr_tStatus io_init_ao_signals(
   pwr_sClass_Ao			*sig_op;
   pwr_sClass_ChanAo		*chan_op;
   pwr_tObjid			sig_objid;
-  pwr_tObjid			chan_objid;
   char				buf[140];
-  pwr_tUInt32			chan_count;
+  pwr_tUInt32			sig_count = 0;
   pwr_tClassId			class;
 
   /* Get pointer to area-object */
@@ -304,87 +219,43 @@ pwr_tStatus io_init_ao_signals(
   sts = gdh_ObjidToPointer( area_objid, (void *) &area_op);
   if (EVEN(sts)) return sts;
 
-  /* Clear pointers to ValueBase */
-
-  sts = gdh_GetClassList(pwr_cClass_Ao, &sig_objid);
-  while (ODD(sts)) 
-  {
-    sts = gdh_ObjidToPointer( sig_objid, (void *) &sig_op);
-    if (EVEN(sts)) return sts;
-    sig_op->ActualValue = NULL;
-    sts = gdh_GetNextObject(sig_objid, &sig_objid);
-  }
-
-  /* Loop channel objects */
-  chan_count = 0;
-  sts = gdh_GetClassList(pwr_cClass_ChanAo, &chan_objid);
-  while (ODD(sts)) 
-  {
-    sts = gdh_GetObjectClass( chan_objid, &class);
-    if (EVEN(sts)) return sts;
-
-    sts = gdh_ObjidToPointer( chan_objid, (void *) &chan_op);
-    if (EVEN(sts)) return sts;
-		
-    if ( cdh_ObjidIsNull( chan_op->SigChanCon))
-    {
-      sts = gdh_ObjidToName( chan_objid, buf, sizeof(buf), cdh_mNName);
-      if ( EVEN(sts)) return sts;
-/*
-      errh_Info("IO init: Channel is not connected '%s'", buf);
-*/
-      sts = gdh_GetNextObject( chan_objid, &chan_objid);
-      continue;
-    }
-    sts = gdh_ObjidToPointer( chan_op->SigChanCon, (void *) &sig_op);	
-    if ( EVEN(sts))
-    {
-      sts = gdh_ObjidToName( chan_objid, buf, sizeof(buf), cdh_mNName);
-      if ( EVEN(sts)) return sts;
-      errh_Error("IO init: Channel SigChanCon does not exist '%s'", buf);
-      sts = gdh_GetNextObject( chan_objid, &chan_objid);
-      continue;
-    }
-	
-    /* Check that connection is mutual */
-    if ( cdh_ObjidIsNotEqual( chan_objid, sig_op->SigChanCon))
-    {
-      sts = gdh_ObjidToName( chan_objid, buf, sizeof(buf), cdh_mNName);
-      if ( EVEN(sts)) return sts;
-      errh_Error("IO init: Channel connection is not mutual '%s'", buf);
-      sts = gdh_GetNextObject( chan_objid, &chan_objid);
-      continue;
-    }
-	
-    gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue,
-		&area_op->Value[ chan_count]);
-    sig_op->ValueIndex = chan_count;
-    chan_count++;
-    sts = gdh_GetNextObject( chan_objid, &chan_objid);
-  }
-
-
-  /* Initiate remaining signals */
+  // Check SigChanCon and put signal in channels SigChanCon
   sts = gdh_GetClassList( pwr_cClass_Ao, &sig_objid);
-  while (ODD(sts))
+  while (ODD(sts)) 
   {
+    sts = gdh_ObjidToName( sig_objid, buf, sizeof(buf), cdh_mNName);
+    if ( EVEN(sts)) return sts;
+
     sts = gdh_ObjidToPointer( sig_objid, (void *) &sig_op);
     if (EVEN(sts)) return sts;
-
-    if ( sig_op->ActualValue == NULL)
-    {
-      sts = gdh_ObjidToName( sig_objid, buf, sizeof(buf), cdh_mNName);
-      if ( EVEN(sts)) return sts;
+    
+    if ( cdh_ObjidIsNull( sig_op->SigChanCon)) {
       errh_Info("IO init: Signal is not connected '%s'", buf);
-      gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, &area_op->Value[chan_count]);
-      sig_op->ValueIndex = chan_count;
-      chan_count++;
     }
+    else {
+      sts = gdh_GetObjectClass( sig_op->SigChanCon, &class);
+      if (EVEN(sts) || 
+	  (class != pwr_cClass_ChanAo)) {
+	errh_Info("IO init: Signal SigChanCon error '%s'", buf);
+      }
+      else {
+	sts = gdh_ObjidToPointer( sig_op->SigChanCon, (void *) &chan_op);
+	if (EVEN(sts)) {
+	  errh_Info("IO init: Signal SigChanCon error '%s'", buf);
+	}	
+	else
+	  chan_op->SigChanCon = sig_objid;
+      }		
+    }
+    gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, &area_op->Value[sig_count]);
+    sig_op->ValueIndex = sig_count;
+    sig_count++;
+
     sts = gdh_GetNextObject( sig_objid, &sig_objid);
   }
 
-  /* Store number of AO in node object  */
-  io_op->AoCount = chan_count;
+  /* Store number of Ao in node object  */
+  io_op->AoCount = sig_count;
   return IO__SUCCESS;
 }
 
@@ -402,9 +273,8 @@ pwr_tStatus io_init_di_signals(
   pwr_sClass_Di			*sig_op;
   pwr_sClass_ChanDi		*chan_op;
   pwr_tObjid			sig_objid;
-  pwr_tObjid			chan_objid;
   char				buf[140];
-  pwr_tUInt32			chan_count;
+  pwr_tUInt32			sig_count = 0;
   pwr_tClassId			class;
 
   /* Get pointer to area-object */
@@ -414,86 +284,43 @@ pwr_tStatus io_init_di_signals(
   sts = gdh_ObjidToPointer( area_objid, (void *) &area_op);
   if (EVEN(sts)) return sts;
 
-  /* Clear pointers to ValueBase */
-
-  sts = gdh_GetClassList(pwr_cClass_Di, &sig_objid);
-  while (ODD(sts)) 
-  {
-    sts = gdh_ObjidToPointer( sig_objid, (void *) &sig_op);
-    if (EVEN(sts)) return sts;
-    sig_op->ActualValue = NULL;
-    sts = gdh_GetNextObject(sig_objid, &sig_objid);
-  }
-
-  /* Loop channel objects */
-  chan_count = 0;
-  sts = gdh_GetClassList(pwr_cClass_ChanDi, &chan_objid);
-  while (ODD(sts)) 
-  {
-    sts = gdh_GetObjectClass( chan_objid, &class);
-    if (EVEN(sts)) return sts;
-
-    sts = gdh_ObjidToPointer( chan_objid, (void *) &chan_op);
-    if (EVEN(sts)) return sts;
-		
-    if ( cdh_ObjidIsNull( chan_op->SigChanCon))
-    {
-      sts = gdh_ObjidToName( chan_objid, buf, sizeof(buf), cdh_mNName);
-      if ( EVEN(sts)) return sts;
-/*
-      errh_Info("IO init: Channel is not connected '%s'", buf);
-*/
-      sts = gdh_GetNextObject( chan_objid, &chan_objid);
-      continue;
-    }
-    sts = gdh_ObjidToPointer( chan_op->SigChanCon, (void *) &sig_op);	
-    if ( EVEN(sts))
-    {
-      sts = gdh_ObjidToName( chan_objid, buf, sizeof(buf), cdh_mNName);
-      if ( EVEN(sts)) return sts;
-      errh_Error("IO init: Channel SigChanCon does not exist '%s'", buf);
-      sts = gdh_GetNextObject( chan_objid, &chan_objid);
-      continue;
-    }
-	
-    /* Check that connection is mutual */
-    if ( cdh_ObjidIsNotEqual( chan_objid, sig_op->SigChanCon))
-    {
-      sts = gdh_ObjidToName( chan_objid, buf, sizeof(buf), cdh_mNName);
-      if ( EVEN(sts)) return sts;
-      errh_Error("IO init: Channel connection is not mutual '%s'", buf);
-      sts = gdh_GetNextObject( chan_objid, &chan_objid);
-      continue;
-    }
-	
-    gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue,
-		&area_op->Value[ chan_count]);
-    sig_op->ValueIndex = chan_count;
-    chan_count++;
-    sts = gdh_GetNextObject( chan_objid, &chan_objid);
-  }
-
-  /* Initiate remaining signals */
+  // Check SigChanCon and put signal in channels SigChanCon
   sts = gdh_GetClassList( pwr_cClass_Di, &sig_objid);
   while (ODD(sts)) 
   {
+    sts = gdh_ObjidToName( sig_objid, buf, sizeof(buf), cdh_mNName);
+    if ( EVEN(sts)) return sts;
+
     sts = gdh_ObjidToPointer( sig_objid, (void *) &sig_op);
     if (EVEN(sts)) return sts;
-
-    if ( sig_op->ActualValue == NULL) 
-    {
-      sts = gdh_ObjidToName( sig_objid, buf, sizeof(buf), cdh_mNName);
-      if ( EVEN(sts)) return sts;
+    
+    if ( cdh_ObjidIsNull( sig_op->SigChanCon)) {
       errh_Info("IO init: Signal is not connected '%s'", buf);
-      gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, &area_op->Value[chan_count]);
-      sig_op->ValueIndex = chan_count;
-      chan_count++;
     }
+    else {
+      sts = gdh_GetObjectClass( sig_op->SigChanCon, &class);
+      if (EVEN(sts) || 
+	  (class != pwr_cClass_ChanDi)) {
+	errh_Info("IO init: Signal SigChanCon error '%s'", buf);
+      }
+      else {
+	sts = gdh_ObjidToPointer( sig_op->SigChanCon, (void *) &chan_op);
+	if (EVEN(sts)) {
+	  errh_Info("IO init: Signal SigChanCon error '%s'", buf);
+	}	
+	else
+	  chan_op->SigChanCon = sig_objid;
+      }		
+    }
+    gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, &area_op->Value[sig_count]);
+    sig_op->ValueIndex = sig_count;
+    sig_count++;
+
     sts = gdh_GetNextObject( sig_objid, &sig_objid);
   }
 
   /* Store number of Di in node object  */
-  io_op->DiCount = chan_count;
+  io_op->DiCount = sig_count;
 
   return IO__SUCCESS;
 }
@@ -512,9 +339,8 @@ pwr_tStatus io_init_do_signals(
   pwr_sClass_Do			*sig_op;
   pwr_sClass_ChanDo		*chan_op;
   pwr_tObjid			sig_objid;
-  pwr_tObjid			chan_objid;
   char				buf[140];
-  pwr_tUInt32			chan_count;
+  pwr_tUInt32			sig_count = 0;
   pwr_tClassId			class;
 
   /* Get pointer to area-object */
@@ -524,114 +350,77 @@ pwr_tStatus io_init_do_signals(
   sts = gdh_ObjidToPointer( area_objid, (void *) &area_op);
   if (EVEN(sts)) return sts;
 
-  /* Clear pointers to ValueBase */
-
-  sts = gdh_GetClassList(pwr_cClass_Do, &sig_objid);
-  while (ODD(sts)) 
-  {
-    sts = gdh_ObjidToPointer( sig_objid, (void *) &sig_op);
-    if (EVEN(sts)) return sts;
-    sig_op->ActualValue = NULL;
-    sts = gdh_GetNextObject(sig_objid, &sig_objid);
-  }
-  sts = gdh_GetClassList(pwr_cClass_Po, &sig_objid);
-  while (ODD(sts)) 
-  {
-    sts = gdh_ObjidToPointer( sig_objid, (void *) &sig_op);
-    if (EVEN(sts)) return sts;
-    sig_op->ActualValue = NULL;
-    sts = gdh_GetNextObject(sig_objid, &sig_objid);
-  }
-
-
-  /* Loop channel objects */
-  chan_count = 0;
-  sts = gdh_GetClassList(pwr_cClass_ChanDo, &chan_objid);
-  while (ODD(sts)) 
-  {
-    sts = gdh_GetObjectClass( chan_objid, &class);
-    if (EVEN(sts)) return sts;
-
-    sts = gdh_ObjidToPointer( chan_objid, (void *) &chan_op);
-    if (EVEN(sts)) return sts;
-		
-    if ( cdh_ObjidIsNull( chan_op->SigChanCon))
-    {
-      sts = gdh_ObjidToName( chan_objid, buf, sizeof(buf), cdh_mNName);
-      if ( EVEN(sts)) return sts;
-/*
-      errh_Info("IO init: Channel is not connected '%s'", buf);
-*/
-      sts = gdh_GetNextObject( chan_objid, &chan_objid);
-      continue;
-    }
-    sts = gdh_ObjidToPointer( chan_op->SigChanCon, (void *) &sig_op);	
-    if ( EVEN(sts))
-    {
-      sts = gdh_ObjidToName( chan_objid, buf, sizeof(buf), cdh_mNName);
-      if ( EVEN(sts)) return sts;
-      errh_Error("IO init: Channel SigChanCon does not exist '%s'", buf);
-      sts = gdh_GetNextObject( chan_objid, &chan_objid);
-      continue;
-    }
-	
-    /* Check that connection is mutual */
-    if ( cdh_ObjidIsNotEqual( chan_objid, sig_op->SigChanCon))
-    {
-      sts = gdh_ObjidToName( chan_objid, buf, sizeof(buf), cdh_mNName);
-      if ( EVEN(sts)) return sts;
-      errh_Error("IO init: Channel connection is not mutual '%s'", buf);
-      sts = gdh_GetNextObject( chan_objid, &chan_objid);
-      continue;
-    }
-
-    gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue,
-		&area_op->Value[ chan_count]);
-    sig_op->ValueIndex = chan_count;
-    chan_count++;
-    sts = gdh_GetNextObject( chan_objid, &chan_objid);
-  }
-	
-  /* Initiate remaining signals */
+  // Check SigChanCon and put signal in channels SigChanCon
   sts = gdh_GetClassList( pwr_cClass_Do, &sig_objid);
   while (ODD(sts)) 
   {
+    sts = gdh_ObjidToName( sig_objid, buf, sizeof(buf), cdh_mNName);
+    if ( EVEN(sts)) return sts;
+
     sts = gdh_ObjidToPointer( sig_objid, (void *) &sig_op);
     if (EVEN(sts)) return sts;
-
-    if ( sig_op->ActualValue == NULL) 
-    {
-      sts = gdh_ObjidToName( sig_objid, buf, sizeof(buf), cdh_mNName);
-      if ( EVEN(sts)) return sts;
+    
+    if ( cdh_ObjidIsNull( sig_op->SigChanCon)) {
       errh_Info("IO init: Signal is not connected '%s'", buf);
-      gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, 
-		&area_op->Value[chan_count]);
-      sig_op->ValueIndex = chan_count;
-      chan_count++;
     }
+    else {
+      sts = gdh_GetObjectClass( sig_op->SigChanCon, &class);
+      if (EVEN(sts) ||
+	  (class != pwr_cClass_ChanDo)) {
+	errh_Info("IO init: Signal SigChanCon error '%s'", buf);
+      }
+      else {
+	sts = gdh_ObjidToPointer( sig_op->SigChanCon, (void *) &chan_op);
+	if (EVEN(sts)) {
+	  errh_Info("IO init: Signal SigChanCon error '%s'", buf);
+	}	
+	else
+	  chan_op->SigChanCon = sig_objid;
+      }		
+    }
+    gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, &area_op->Value[sig_count]);
+    sig_op->ValueIndex = sig_count;
+    sig_count++;
+
     sts = gdh_GetNextObject( sig_objid, &sig_objid);
   }
+
   sts = gdh_GetClassList( pwr_cClass_Po, &sig_objid);
   while (ODD(sts)) 
   {
+    sts = gdh_ObjidToName( sig_objid, buf, sizeof(buf), cdh_mNName);
+    if ( EVEN(sts)) return sts;
+
     sts = gdh_ObjidToPointer( sig_objid, (void *) &sig_op);
     if (EVEN(sts)) return sts;
-
-    if ( sig_op->ActualValue == NULL) 
-    {
-      sts = gdh_ObjidToName( sig_objid, buf, sizeof(buf), cdh_mNName);
-      if ( EVEN(sts)) return sts;
+    
+    if ( cdh_ObjidIsNull( sig_op->SigChanCon)) {
       errh_Info("IO init: Signal is not connected '%s'", buf);
-      gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, 
-		&area_op->Value[chan_count]);
-      sig_op->ValueIndex = chan_count;
-      chan_count++;
     }
+    else {
+      sts = gdh_GetObjectClass( sig_op->SigChanCon, &class);
+      if (EVEN(sts) ||
+	  (class != pwr_cClass_ChanDo)) {
+	errh_Info("IO init: Signal SigChanCon error '%s'", buf);
+      }
+      else {
+	sts = gdh_ObjidToPointer( sig_op->SigChanCon, (void *) &chan_op);
+	if (EVEN(sts)) {
+	  errh_Info("IO init: Signal SigChanCon error '%s'", buf);
+	}	
+	else
+	  chan_op->SigChanCon = sig_objid;
+      }		
+    }
+    gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, &area_op->Value[sig_count]);
+    sig_op->ValueIndex = sig_count;
+    sig_count++;
+
     sts = gdh_GetNextObject( sig_objid, &sig_objid);
   }
 
   /* Store number of Do in node object  */
-  io_op->DoCount = chan_count;
+  io_op->DoCount = sig_count;
 
   return IO__SUCCESS;
 }
@@ -651,9 +440,9 @@ pwr_tStatus io_init_co_signals(
   pwr_sClass_Co			*sig_op;
   pwr_sClass_ChanCo		*chan_op;
   pwr_tObjid			sig_objid;
-  pwr_tObjid			chan_objid;
   char				buf[140];
-  pwr_tUInt32			chan_count;
+  pwr_tUInt32			sig_count = 0;
+  pwr_tClassId			class;
 
   /* Get pointer to area-object */
   sts = gdh_NameToObjid( "pwrNode-active-io-co", &area_objid);
@@ -668,89 +457,44 @@ pwr_tStatus io_init_co_signals(
   sts = gdh_ObjidToPointer( area_objid, (void *) &abs_area_op);
   if (EVEN(sts)) return sts;
 
-  /* Clear pointers to ValueBase */
-
-  sts = gdh_GetClassList(pwr_cClass_Co, &sig_objid);
-  while (ODD(sts)) 
-  {
-    sts = gdh_ObjidToPointer( sig_objid, (void *) &sig_op);
-    if (EVEN(sts)) return sts;
-    sig_op->RawValue = NULL;
-    sig_op->AbsValue = NULL;
-    sts = gdh_GetNextObject(sig_objid, &sig_objid);
-  }
-
-  /* Loop channel objects */
-  chan_count = 0;
-  sts = gdh_GetClassList(pwr_cClass_ChanCo, &chan_objid);
-  while (ODD(sts)) 
-  {
-    sts = gdh_ObjidToPointer( chan_objid, (void *) &chan_op);
-    if (EVEN(sts)) return sts;
-		
-    if ( cdh_ObjidIsNull( chan_op->SigChanCon))
-    {
-      sts = gdh_ObjidToName( chan_objid, buf, sizeof(buf), cdh_mNName);
-      if ( EVEN(sts)) return sts;
-/*
-      errh_Info("IO init: Channel is not connected '%s'", buf);
-*/
-      sts = gdh_GetNextObject( chan_objid, &chan_objid);
-      continue;
-    }
-    sts = gdh_ObjidToPointer( chan_op->SigChanCon, (void *) &sig_op);	
-    if ( EVEN(sts))
-    {
-      sts = gdh_ObjidToName( chan_objid, buf, sizeof(buf), cdh_mNName);
-      if ( EVEN(sts)) return sts;
-      errh_Error("IO init: Channel SigChanCon does not exist '%s'", buf);
-      sts = gdh_GetNextObject( chan_objid, &chan_objid);
-      continue;
-    }
-	
-    /* Check that connection is mutual */
-    if ( cdh_ObjidIsNotEqual( chan_objid, sig_op->SigChanCon))
-    {
-      sts = gdh_ObjidToName( chan_objid, buf, sizeof(buf), cdh_mNName);
-      if ( EVEN(sts)) return sts;
-      errh_Error("IO init: Channel connection is not mutual '%s'", buf);
-      sts = gdh_GetNextObject( chan_objid, &chan_objid);
-      continue;
-    }
-	
-    gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->RawValue,
-		&area_op->Value[ chan_count]);
-    gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->AbsValue,
-		&abs_area_op->Value[ chan_count]);
-    sig_op->ValueIndex = chan_count;
-    chan_count++;
-    sts = gdh_GetNextObject( chan_objid, &chan_objid);
-  }
-
-  /* Initiate remaining signals */
+  // Check SigChanCon and put signal in channels SigChanCon
   sts = gdh_GetClassList( pwr_cClass_Co, &sig_objid);
   while (ODD(sts)) 
   {
+    sts = gdh_ObjidToName( sig_objid, buf, sizeof(buf), cdh_mNName);
+    if ( EVEN(sts)) return sts;
+
     sts = gdh_ObjidToPointer( sig_objid, (void *) &sig_op);
     if (EVEN(sts)) return sts;
-
-    if ( sig_op->RawValue == NULL) 
-    {
-      sts = gdh_ObjidToName( sig_objid, buf, sizeof(buf), cdh_mNName);
-      if ( EVEN(sts)) return sts;
+    
+    if ( cdh_ObjidIsNull( sig_op->SigChanCon)) {
       errh_Info("IO init: Signal is not connected '%s'", buf);
-      gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->RawValue, 
-		&area_op->Value[chan_count]);
-      gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->AbsValue, 
-		&abs_area_op->Value[chan_count]);
-      sig_op->ValueIndex = chan_count;
-      chan_count++;
     }
+    else {
+      sts = gdh_GetObjectClass( sig_op->SigChanCon, &class);
+      if (EVEN(sts) || 
+	  (class != pwr_cClass_ChanCo)) {
+	errh_Info("IO init: Signal SigChanCon error '%s'", buf);
+      }
+      else {
+	sts = gdh_ObjidToPointer( sig_op->SigChanCon, (void *) &chan_op);
+	if (EVEN(sts)) {
+	  errh_Info("IO init: Signal SigChanCon error '%s'", buf);
+	}	
+	else
+	  chan_op->SigChanCon = sig_objid;
+      }		
+    }
+    gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->RawValue, &area_op->Value[sig_count]);
+    gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->AbsValue, &abs_area_op->Value[sig_count]);
+    sig_op->ValueIndex = sig_count;
+    sig_count++;
+
     sts = gdh_GetNextObject( sig_objid, &sig_objid);
   }
 
-  /* Store number of CO in node object  */
-  io_op->CoCount = chan_count;
+  /* Store number of Co in node object  */
+  io_op->CoCount = sig_count;
 
   return IO__SUCCESS;
 }
@@ -893,6 +637,205 @@ io_init_dv_signals (
 
 
 /*----------------------------------------------------------------------------*\
+  Initialization of Ii signals and channels.
+\*----------------------------------------------------------------------------*/
+
+pwr_tStatus io_init_ii_signals(
+  pwr_sClass_IOHandler		*io_op)
+{
+  pwr_tStatus			sts;
+  pwr_tObjid			area_objid;
+  pwr_sClass_IiArea		*area_op;
+  pwr_sClass_Ii			*sig_op;
+  pwr_sClass_ChanIi		*chan_op;
+  pwr_tObjid			sig_objid;
+  char				buf[140];
+  pwr_tUInt32			sig_count = 0;
+  pwr_tClassId			class;
+
+  // Get pointer to area-object
+  sts = gdh_NameToObjid( "pwrNode-active-io-ii", &area_objid);
+  if (EVEN(sts)) return sts;
+
+  sts = gdh_ObjidToPointer( area_objid, (void *) &area_op);
+  if (EVEN(sts)) return sts;
+
+  // Check SigChanCon and put signal in channels SigChanCon
+  sts = gdh_GetClassList( pwr_cClass_Ii, &sig_objid);
+  while (ODD(sts)) 
+  {
+    sts = gdh_ObjidToName( sig_objid, buf, sizeof(buf), cdh_mNName);
+    if ( EVEN(sts)) return sts;
+
+    sts = gdh_ObjidToPointer( sig_objid, (void *) &sig_op);
+    if (EVEN(sts)) return sts;
+    
+    if ( cdh_ObjidIsNull( sig_op->SigChanCon)) {
+      errh_Info("IO init: Signal is not connected '%s'", buf);
+    }
+    else {
+      sts = gdh_GetObjectClass( sig_op->SigChanCon, &class);
+      if (EVEN(sts) || 
+	  (class != pwr_cClass_ChanIi)) {
+	errh_Info("IO init: Signal SigChanCon error '%s'", buf);
+      }
+      else {
+	sts = gdh_ObjidToPointer( sig_op->SigChanCon, (void *) &chan_op);
+	if (EVEN(sts)) {
+	  errh_Info("IO init: Signal SigChanCon error '%s'", buf);
+	}	
+	else
+	  chan_op->SigChanCon = sig_objid;
+      }		
+    }
+    gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, &area_op->Value[sig_count]);
+    sig_op->ValueIndex = sig_count;
+    sig_count++;
+
+    sts = gdh_GetNextObject( sig_objid, &sig_objid);
+  }
+
+  /* Store number of Ii in node object  */
+  io_op->IiCount = sig_count;
+
+  return IO__SUCCESS;
+}
+
+
+/*----------------------------------------------------------------------------*\
+  Initialization of io signals and channels.
+\*----------------------------------------------------------------------------*/
+
+pwr_tStatus io_init_io_signals(
+  pwr_sClass_IOHandler		*io_op)
+{
+  pwr_tStatus			sts;
+  pwr_tObjid			area_objid;
+  pwr_sClass_IoArea		*area_op;
+  pwr_sClass_Io			*sig_op;
+  pwr_sClass_ChanIo		*chan_op;
+  pwr_tObjid			sig_objid;
+  char				buf[140];
+  pwr_tUInt32			sig_count = 0;
+  pwr_tClassId			class;
+
+  // Get pointer to area-object
+  sts = gdh_NameToObjid( "pwrNode-active-io-io", &area_objid);
+  if (EVEN(sts)) return sts;
+
+  sts = gdh_ObjidToPointer( area_objid, (void *) &area_op);
+  if (EVEN(sts)) return sts;
+
+  // Check SigChanCon and put signal in channels SigChanCon
+  sts = gdh_GetClassList( pwr_cClass_Io, &sig_objid);
+  while (ODD(sts)) 
+  {
+    sts = gdh_ObjidToName( sig_objid, buf, sizeof(buf), cdh_mNName);
+    if ( EVEN(sts)) return sts;
+
+    sts = gdh_ObjidToPointer( sig_objid, (void *) &sig_op);
+    if (EVEN(sts)) return sts;
+    
+    if ( cdh_ObjidIsNull( sig_op->SigChanCon)) {
+      errh_Info("IO init: Signal is not connected '%s'", buf);
+    }
+    else {
+      sts = gdh_GetObjectClass( sig_op->SigChanCon, &class);
+      if (EVEN(sts) || 
+	  (class != pwr_cClass_ChanIo)) {
+	errh_Info("IO init: Signal SigChanCon error '%s'", buf);
+      }
+      else {
+	sts = gdh_ObjidToPointer( sig_op->SigChanCon, (void *) &chan_op);
+	if (EVEN(sts)) {
+	  errh_Info("IO init: Signal SigChanCon error '%s'", buf);
+	}	
+	else
+	  chan_op->SigChanCon = sig_objid;
+      }		
+    }
+    gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, &area_op->Value[sig_count]);
+    sig_op->ValueIndex = sig_count;
+    sig_count++;
+
+    sts = gdh_GetNextObject( sig_objid, &sig_objid);
+  }
+
+  /* Store number of Io in node object  */
+  io_op->IoCount = sig_count;
+
+  return IO__SUCCESS;
+}
+
+/*----------------------------------------------------------------------------*\
+  Initialization of iv signals.
+\*----------------------------------------------------------------------------*/
+
+static pwr_tStatus
+io_init_iv_signals (
+  pwr_sClass_IOHandler	    *io_op)
+{
+  pwr_tObjid		    area_objid;
+  pwr_tObjid		    oid;
+  pwr_sClass_IvArea	    *area_op;
+  pwr_sClass_Iv		    *o;
+  pwr_tStatus		    sts;
+  pwr_tBoolean		    *p;
+  pwr_tInt32		    iv_count=0;
+  pwr_sClass_IvArea	    *iarea_op;
+ 
+  /* Get pointer to area-object */
+  sts = gdh_NameToObjid( "pwrNode-active-io-iv", &area_objid);
+  if (EVEN(sts)) return sts;
+
+  sts = gdh_ObjidToPointer( area_objid, (void *) &area_op);
+  if (EVEN(sts)) return sts;
+
+  /* Get pointer to area-object */
+  sts = gdh_NameToObjid( "pwrNode-active-io-iv_init", &area_objid);
+  if (EVEN(sts)) return sts;
+
+  sts = gdh_ObjidToPointer( area_objid, (void *) &iarea_op);
+  if (EVEN(sts)) return sts;
+
+  p = area_op->Value; 
+
+  /* Loop Iv-object */
+
+  sts = gdh_GetClassList(pwr_cClass_Iv, &oid);
+  if (EVEN(sts) && sts != GDH__NOSUCHOBJ && sts != GDH__BADOBJTYPE && sts != GDH__NO_TYPE) {
+    errh_Error("Get class list of Iv\n%m", sts);
+  }
+
+  while (ODD(sts)) {
+    sts = gdh_ObjidToPointer(oid, (void *)&o);
+    if (EVEN(sts) && sts != GDH__NO_TYPE) return sts;
+			    
+    if (sts != GDH__REMOTE)  {
+      gdh_StoreRtdbPointer( (pwr_tUInt32 *)&o->ActualValue, p);
+      o->ValueIndex = iv_count;
+#if 0
+      *p = o->InitialValue;
+#endif
+      gdh_StoreRtdbPointer( (pwr_tInt32 *)&iarea_op->Value[iv_count], &o->InitialValue);
+      iv_count++;
+      p++;
+    }
+
+    sts = gdh_GetNextObject(oid, &oid);
+    if (EVEN(sts) && sts != GDH__NO_TYPE) return sts;
+  }		
+
+  if (sts == GDH__NO_TYPE || sts == GDH__NOSUCHOBJ || sts == GDH__BADOBJTYPE) 
+    sts = IO__SUCCESS;
+
+  io_op->IvCount = iv_count;
+
+  return sts;
+}
+
+
+/*----------------------------------------------------------------------------*\
   Initialize io handler object.
 \*----------------------------------------------------------------------------*/
 
@@ -1005,6 +948,15 @@ pwr_tStatus io_init_signals( void)
   if ( EVEN(sts)) return sts;
 
   sts = io_init_av_signals( io_op);
+  if ( EVEN(sts)) return sts;
+
+  sts = io_init_ii_signals( io_op);
+  if ( EVEN(sts)) return sts;
+
+  sts = io_init_io_signals( io_op);
+  if ( EVEN(sts)) return sts;
+
+  sts = io_init_iv_signals( io_op);
   if ( EVEN(sts)) return sts;
 
   sts = io_init_iohandler_object();
