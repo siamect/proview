@@ -28,7 +28,7 @@ void FlowLine::traverse( int x, int y)
   p2.traverse( x, y);
 }
 
-void FlowLine::print( void *pos, void *node)
+void FlowLine::print( void *pos, void *node, int highlight)
 {
   if ( p1.print_z_x == p2.print_z_x && p1.print_z_y == p2.print_z_y)
     return;
@@ -40,7 +40,7 @@ void FlowLine::print( void *pos, void *node)
 	p1.print_z_y + ((FlowPoint *)pos)->print_z_y, 
 	p2.print_z_x + ((FlowPoint *)pos)->print_z_x, 
 	p2.print_z_y + ((FlowPoint *)pos)->print_z_y,
-	draw_type, idx);
+	draw_type, idx, highlight);
 }
 
 void FlowLine::save( ofstream& fp, flow_eSaveMode mode)

@@ -25,7 +25,7 @@ void FlowText::traverse( int x, int y)
   p.traverse( x, y);
 }
 
-void FlowText::print( void *pos, void *node)
+void FlowText::print( void *pos, void *node, int highlight)
 {
   int idx = int( ctx->print_zoom_factor / ctx->base_zoom_factor * 
 		(text_size +4) - 4);

@@ -24,7 +24,7 @@ class FlowNodeClass : public FlowArrayElem {
     void get_obstacle_borders( double pos_x, double pos_y, double *x_right, 
 		double *x_left, double *y_high, double *y_low, void *node);
     int	event_handler( void *pos, flow_eEvent event, int x, int y, void *node);
-    void print( FlowPoint *pos, void *node);
+    void print( FlowPoint *pos, void *node, int highlight);
     void save( ofstream& fp, flow_eSaveMode mode);
     void open( ifstream& fp);
     void draw( FlowPoint *pos, int highlight, int hot, void *node);

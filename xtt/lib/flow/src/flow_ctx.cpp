@@ -569,8 +569,11 @@ int FlowCtx::print_region( double ll_x, double ll_y, double ur_x,
   int sts;
 
   print_ps = new FlowPscript( filename, this, 0, &sts);
-  if ( ODD(sts))
+  if ( ODD(sts)) {
+    if ( trace_started)
+      print_ps->set_showred(1);
     print_ps->print_page( ll_x, ll_y, ur_x, ur_y);
+  }
   delete print_ps;
 
   return sts;

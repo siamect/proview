@@ -571,13 +571,13 @@ void FlowArray::conpoint_select( void *pos, int x, int y, double *distance,
   }
 }
 
-void FlowArray::print( void *pos, void *node) 
+void FlowArray::print( void *pos, void *node, int highlight) 
 {
   int i;
 
   for ( i = 0; i < a_size; i++)
   {
-    a[i]->print( pos, node);
+    a[i]->print( pos, node, highlight);
   }
 }
 

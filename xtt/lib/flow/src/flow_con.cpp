@@ -778,14 +778,14 @@ void FlowCon::print( double ll_x, double ll_y, double ur_x, double ur_y)
        y_low <= ur_y)
   {
     if ( temporary_ref || cc->con_type == flow_eConType_Reference)
-      ref_a.print( &cc->zero, NULL);
+      ref_a.print( &cc->zero, NULL, highlight);
     else
     {
       for ( i = 0; i < l_num; i++)
-        ((FlowLine *)line_a[i])->print( &cc->zero, NULL);
+        ((FlowLine *)line_a[i])->print( &cc->zero, NULL, highlight);
       for ( i = 0; i < a_num; i++)
-        ((FlowArc *)arc_a[i])->print( &cc->zero, NULL);
-      arrow_a.print( &cc->zero, NULL);
+        ((FlowArc *)arc_a[i])->print( &cc->zero, NULL, highlight);
+      arrow_a.print( &cc->zero, NULL, highlight);
     }
   }
 }

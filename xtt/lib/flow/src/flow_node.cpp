@@ -213,7 +213,7 @@ void FlowNode::print( double ll_x, double ll_y, double ur_x, double ur_y)
        x_left <= ur_x &&
        y_high >= ll_y &&
        y_low <= ur_y)
-    nc->print( &pos, (void *)this);
+    nc->print( &pos, (void *)this, highlight);
 }
 
 void FlowNode::save( ofstream& fp, flow_eSaveMode mode) 
@@ -395,13 +395,25 @@ void FlowNode::draw_inverse()
   else
     x_r = x_right;
 
-  flow_draw_fill_rect( ctx,
+
+  if ( nc->group == flow_eNodeGroup_Document) {
+    flow_draw_fill_rect( ctx,
+       		int( obst_x_left * ctx->zoom_factor - ctx->offset_x),
+       		int( obst_y_low * ctx->zoom_factor - ctx->offset_y),
+		int( obst_x_right * ctx->zoom_factor - obst_x_left * ctx->zoom_factor),
+  	     	int( obst_y_high * ctx->zoom_factor - obst_y_low * ctx->zoom_factor),
+		flow_eDrawType_Line);
+    nc->draw( &pos, highlight, hot, (void *)this);
+  }
+  else {
+    flow_draw_fill_rect( ctx,
        		int( x_left * ctx->zoom_factor - ctx->offset_x),
        		int( y_low * ctx->zoom_factor - ctx->offset_y),
 		int( x_r * ctx->zoom_factor - x_left * ctx->zoom_factor),
   	     	int( y_high * ctx->zoom_factor - y_low * ctx->zoom_factor),
 		flow_eDrawType_Line);
-  nc->draw_inverse( &pos, 0, (void *)this);
+    nc->draw_inverse( &pos, 0, (void *)this);
+  }
 }
 
 void FlowNode::erase() 
@@ -416,12 +428,22 @@ void FlowNode::erase()
     else
       x_r = x_right;
 
-    flow_draw_fill_rect( ctx,
+    if ( nc->group == flow_eNodeGroup_Document) {
+      flow_draw_fill_rect( ctx,
+       	int( obst_x_left * ctx->zoom_factor - ctx->offset_x),
+       	int( obst_y_low * ctx->zoom_factor - ctx->offset_y),
+	int( obst_x_right * ctx->zoom_factor - obst_x_left * ctx->zoom_factor),
+       	int( obst_y_high * ctx->zoom_factor - obst_y_low * ctx->zoom_factor),
+	flow_eDrawType_LineErase);
+    }
+    else {
+      flow_draw_fill_rect( ctx,
        	int( x_left * ctx->zoom_factor - ctx->offset_x),
        	int( y_low * ctx->zoom_factor - ctx->offset_y),
 	int( x_r * ctx->zoom_factor - x_left * ctx->zoom_factor),
        	int( y_high * ctx->zoom_factor - y_low * ctx->zoom_factor),
 	flow_eDrawType_LineErase);
+    }
   }
 }
 
@@ -498,13 +520,24 @@ void FlowNode::set_inverse( int on)
     else
       x_r = x_right;
 
-    flow_draw_fill_rect( ctx,
+    if ( nc->group == flow_eNodeGroup_Document) {
+      flow_draw_fill_rect( ctx,
+       	int( obst_x_left * ctx->zoom_factor - ctx->offset_x),
+       	int( obst_y_low * ctx->zoom_factor - ctx->offset_y),
+	int( obst_x_right * ctx->zoom_factor - obst_x_left * ctx->zoom_factor),
+       	int( obst_y_high * ctx->zoom_factor - obst_y_low * ctx->zoom_factor),
+	flow_eDrawType_LineErase);
+      nc->draw( &pos, highlight, hot, (void *)this);
+    }
+    else {
+      flow_draw_fill_rect( ctx,
        	int( x_left * ctx->zoom_factor - ctx->offset_x),
        	int( y_low * ctx->zoom_factor - ctx->offset_y),
 	int( x_r * ctx->zoom_factor - x_left * ctx->zoom_factor),
        	int( y_high * ctx->zoom_factor - y_low * ctx->zoom_factor + 1),
 	flow_eDrawType_LineErase);
-    nc->draw( &pos, highlight, hot, (void *)this);
+      nc->draw( &pos, highlight, hot, (void *)this);
+    }
   }
   else
   {

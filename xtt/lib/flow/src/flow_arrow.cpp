@@ -90,7 +90,7 @@ void FlowArrow::traverse( int x, int y)
   p2.traverse( x, y);
 }
 
-void FlowArrow::print( void *pos, void *node)
+void FlowArrow::print( void *pos, void *node, int highlight)
 {
   double idx = ctx->print_zoom_factor / ctx->base_zoom_factor * 
 		line_width;

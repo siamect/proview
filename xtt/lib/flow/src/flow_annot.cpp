@@ -30,7 +30,7 @@ void FlowAnnot::traverse( int x, int y)
   p.traverse( x, y);
 }
 
-void FlowAnnot::print( void *pos, void *node)
+void FlowAnnot::print( void *pos, void *node, int highlight)
 {
   if ( !(display_level & ctx->display_level))
     return;

@@ -29,7 +29,7 @@ void FlowArc::traverse( int x, int y)
   ur.traverse( x, y);
 }
 
-void FlowArc::print( void *pos, void *node)
+void FlowArc::print( void *pos, void *node, int highlight)
 {
   double idx = ctx->print_zoom_factor / ctx->base_zoom_factor * 
 		line_width;
@@ -38,7 +38,7 @@ void FlowArc::print( void *pos, void *node)
   ctx->print_ps->arc( ll.print_z_x + ((FlowPoint *)pos)->print_z_x, 
 	ll.print_z_y + ((FlowPoint *)pos)->print_z_y,
 	ur.print_z_x - ll.print_z_x, ur.print_z_y - ll.print_z_y, angel1, angel2,
-	draw_type, idx);
+	draw_type, idx, highlight);
 }
 
 void FlowArc::save( ofstream& fp, flow_eSaveMode mode)

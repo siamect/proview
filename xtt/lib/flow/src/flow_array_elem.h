@@ -23,7 +23,7 @@ class FlowArrayElem {
     virtual void print( double ll_x, double ll_y, double ur_x, double ur_y) {};
     virtual void save( ofstream& fp, flow_eSaveMode mode) {};
     virtual void open( ifstream& fp) {};
-    virtual void print( void *pos, void *node) {};
+    virtual void print( void *pos, void *node, int highlight) {};
     virtual void draw( int ll_x, int ll_y, int ur_x, int ur_y) {};
     virtual void draw( void *pos, int highlight, int hot, void *node) {};
     virtual void erase() {};

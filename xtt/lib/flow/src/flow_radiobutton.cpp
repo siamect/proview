@@ -31,7 +31,7 @@ void FlowRadiobutton::traverse( int x, int y)
   ur.traverse( x, y);
 }
 
-void FlowRadiobutton::print( void *pos, void *node)
+void FlowRadiobutton::print( void *pos, void *node, int highlight)
 {
   int ll_x, ll_y, ur_x, ur_y;
   int idx = 0;
@@ -42,30 +42,30 @@ void FlowRadiobutton::print( void *pos, void *node)
   ur_x = int( ll_x + ur.print_z_x - ll.print_z_x);
   ur_y = int( ll_y + ur.print_z_y - ll.print_z_y);
   ctx->print_ps->rect( ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-	draw_type, idx);
+	draw_type, idx, 0);
   if ( ((FlowNode *)node)->rbuttonv[number])
   {
     ctx->print_ps->line( ll_x + sc*1, ll_y + sc*1, ur_x - sc*1, ll_y + sc*1,
-	flow_eDrawType_LineGray, idx);
+	flow_eDrawType_LineGray, idx, 0);
     ctx->print_ps->line( ll_x + sc*2, ll_y + sc*2, ur_x - sc*2, ll_y + sc*2,
-	flow_eDrawType_LineGray, idx);
+	flow_eDrawType_LineGray, idx, 0);
     ctx->print_ps->line( ll_x + sc*1, ll_y + sc*1, ll_x + sc*1, ur_y - sc*1,
-	flow_eDrawType_LineGray, idx);
+	flow_eDrawType_LineGray, idx, 0);
     ctx->print_ps->line( ll_x + sc*2, ll_y + sc*2, ll_x + sc*2, ur_y - sc*2,
-	flow_eDrawType_LineGray, idx);
+	flow_eDrawType_LineGray, idx, 0);
     ctx->print_ps->filled_rect( ll_x + sc*3, ll_y + sc*3, ur_x - ll_x - sc*5, 
 	ur_y - ll_y - sc*5, flow_eDrawType_Line, idx);
   }
   else
   {
     ctx->print_ps->line( ur_x - sc*1, ur_y - sc*1, ll_x + sc*1, ur_y - sc*1,
-	flow_eDrawType_LineGray, idx);
+	flow_eDrawType_LineGray, idx, 0);
     ctx->print_ps->line( ur_x - sc*2, ur_y - sc*2, ll_x + sc*2, ur_y - sc*2,
-	flow_eDrawType_LineGray, idx);
+	flow_eDrawType_LineGray, idx, 0);
     ctx->print_ps->line( ur_x - sc*1, ur_y - sc*1, ur_x - sc*1, ll_y + sc*1,
-	flow_eDrawType_LineGray, idx);
+	flow_eDrawType_LineGray, idx, 0);
     ctx->print_ps->line( ur_x - sc*2, ur_y - sc*2, ur_x - sc*2, ll_y + sc*2,
-	flow_eDrawType_LineGray, idx);
+	flow_eDrawType_LineGray, idx, 0);
   }
 }
 

@@ -25,7 +25,7 @@ class FlowArray {
     void zoom();
     void nav_zoom();
     void print_zoom();
-    void print( void *pos, void *node);
+    void print( void *pos, void *node, int highlight);
     void save( ofstream& fp, flow_eSaveMode mode);
     void open( void *ctx, ifstream& fp);
     void draw( void *pos, int highlight, int hot, void *node);

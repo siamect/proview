@@ -15,13 +15,13 @@ FlowNodeClass::FlowNodeClass( FlowCtx *flow_ctx, char *name,
   strcpy( nc_name, name);
 }
 
-void FlowNodeClass::print( FlowPoint *pos, void *node)
+void FlowNodeClass::print( FlowPoint *pos, void *node, int highlight)
 {
   int		i;
 
   for ( i = 0; i < a.a_size; i++)
   {
-    a.a[i]->print( pos, node);
+    a.a[i]->print( pos, node, highlight);
   }
 }
 

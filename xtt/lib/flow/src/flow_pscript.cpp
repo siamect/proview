@@ -8,8 +8,8 @@
 #include "flow_ctx.h"
 
 FlowPscript::FlowPscript( char *filename, void *flow_ctx, int page_border,
-		int *sts) :
-		border(page_border), ctx(flow_ctx)
+			  int *sts) :
+  border(page_border), ctx(flow_ctx), show_red(1)
 {
   strcpy( fname, filename);
   file = fopen( fname, "w");
@@ -100,7 +100,7 @@ int FlowPscript::print_page( double ll_x, double ll_y, double ur_x, double ur_y)
 }
 
 int FlowPscript::rect( double x, double y, double width, double height, flow_eDrawType type, 
-	double idx)
+	double idx, int highlight)
 {
   if ( type == flow_eDrawType_LineDashed)
   {
@@ -111,6 +111,10 @@ int FlowPscript::rect( double x, double y, double width, double height, flow_eDr
   {
     fprintf( file, "gsave\n");
     fprintf( file, "0.5 setgray\n");    
+  }
+  if ( highlight && show_red) {
+    fprintf( file, "gsave\n");
+    fprintf( file, "0 1 1 0 setcmykcolor\n");
   }
 
   setlinewidth( idx);
@@ -124,6 +128,8 @@ int FlowPscript::rect( double x, double y, double width, double height, flow_eDr
   fprintf( file, "stroke\n");
 
   if ( type == flow_eDrawType_LineDashed || type == flow_eDrawType_LineGray)
+    fprintf( file, "grestore\n");
+  if ( highlight && show_red)
     fprintf( file, "grestore\n");
 
   return 1;
@@ -155,7 +161,7 @@ int FlowPscript::filled_rect( double x, double y, double width, double height, f
 }
 
 int FlowPscript::arc( double x, double y, double width, double height, int angel1, int angel2,
-		flow_eDrawType type, double idx)
+		flow_eDrawType type, double idx, int highlight)
 {
   double r = 0.5*width;
   double pi = 3.14159;
@@ -169,6 +175,10 @@ int FlowPscript::arc( double x, double y, double width, double height, int angel
   {
     fprintf( file, "gsave\n");
     fprintf( file, "0.5 setgray\n");    
+  }
+  if ( highlight && show_red) {
+    fprintf( file, "gsave\n");
+    fprintf( file, "0 1 1 0 setcmykcolor\n");
   }
   setlinewidth( idx);
 
@@ -192,11 +202,13 @@ int FlowPscript::arc( double x, double y, double width, double height, int angel
 
   if ( type == flow_eDrawType_LineDashed || type == flow_eDrawType_LineGray)
     fprintf( file, "grestore\n");
+  if ( highlight && show_red)
+    fprintf( file, "grestore\n");
   return 1;
 }
 
 int FlowPscript::line( double x1, double y1, double x2, double y2, flow_eDrawType type, 
-	double idx)
+	double idx, int highlight)
 {
   if ( type == flow_eDrawType_LineDashed)
   {
@@ -208,6 +220,10 @@ int FlowPscript::line( double x1, double y1, double x2, double y2, flow_eDrawTyp
     fprintf( file, "gsave\n");
     fprintf( file, "0.5 setgray\n");    
   }
+  if ( highlight && show_red) {
+    fprintf( file, "gsave\n");
+    fprintf( file, "0 1 1 0 setcmykcolor\n");
+  }
 
   setlinewidth( idx);
   fprintf( file, "newpath\n");
@@ -218,6 +234,8 @@ int FlowPscript::line( double x1, double y1, double x2, double y2, flow_eDrawTyp
   fprintf( file, "stroke\n");
 
   if ( type == flow_eDrawType_LineDashed || type == flow_eDrawType_LineGray)
+    fprintf( file, "grestore\n");
+  if ( highlight && show_red)
     fprintf( file, "grestore\n");
 
   return 1;

@@ -46,7 +46,7 @@ void FlowPixmap::traverse( int x, int y)
   p.traverse( x, y);
 }
 
-void FlowPixmap::print( void *pos, void *node)
+void FlowPixmap::print( void *pos, void *node, int highlight)
 {
   int idx = int( ctx->print_zoom_factor / ctx->base_zoom_factor * 
 		(pixmap_size +4) - 4);

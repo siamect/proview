@@ -22,7 +22,7 @@ class FlowText : public FlowArrayElem {
     int	event_handler( void *pos, flow_eEvent event, int x, int y, void *node);
     void conpoint_select( void *pos, int x, int y, double *distance, 
 		void **cp) {};
-    void print( void *pos, void *node);
+    void print( void *pos, void *node, int highlight);
     void save( ofstream& fp, flow_eSaveMode mode);
     void open( ifstream& fp);
     void draw( void *pos, int highlight, int hot, void *node);

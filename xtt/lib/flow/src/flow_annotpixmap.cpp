@@ -43,7 +43,7 @@ void FlowAnnotPixmap::traverse( int x, int y)
   p.traverse( x, y);
 }
 
-void FlowAnnotPixmap::print( void *pos, void *node)
+void FlowAnnotPixmap::print( void *pos, void *node, int highlight)
 {
   if ( !((FlowNode *) node)->annotpixmapv[number])
     return;

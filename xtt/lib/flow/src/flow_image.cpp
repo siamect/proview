@@ -108,7 +108,7 @@ void FlowImage::traverse( int x, int y)
   ur.traverse( x, y);
 }
 
-void FlowImage::print( void *pos, void *node)
+void FlowImage::print( void *pos, void *node, int highlight)
 {
   if ( !(display_level & ctx->display_level))
     return;
@@ -124,7 +124,7 @@ void FlowImage::print( void *pos, void *node)
     ctx->print_ps->rect( ll.print_z_x + ((FlowPoint *)pos)->print_z_x, 
 	ll.print_z_y + ((FlowPoint *)pos)->print_z_y,
 	ur.print_z_x - ll.print_z_x, ur.print_z_y - ll.print_z_y, 
-	draw_type, idx);
+	draw_type, idx, 0);
   else
     ctx->print_ps->filled_rect( ll.print_z_x + ((FlowPoint *)pos)->print_z_x, 
 	ll.print_z_y + ((FlowPoint *)pos)->print_z_y,
