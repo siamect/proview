@@ -13,6 +13,9 @@ SObject pwrb:Class
 ! Object used for supervision of a disk. A maximum occupied size specified
 ! and aswell the action that should be taken when the size exceeds. Several 
 ! objects with different action can be used for one disk.
+!
+! @b Object graph
+!  @image orm_disksup_og.gif
 !*/
   Object DiskSup $ClassDef 417
     Body SysBody
