@@ -299,7 +299,7 @@ dcli_tCmdTable	wnav_command_table[] = {
 			&wnav_help_func,
 			{ "dcli_arg1", "dcli_arg2", "dcli_arg3", "dcli_arg4",
 			"/HELPFILE", "/POPNAVIGATOR", "/BOOKMARK", 
-			"/INDEX", "/BASE", "/PROJECT", "/STRICT", ""}
+			"/INDEX", "/BASE", "/PROJECT", "/STRICT", "/VERSION", ""}
 		},
 		{
 			"LOGOUT",
@@ -433,6 +433,13 @@ static int	wnav_help_func(		void		*client_data,
       else
         sts = CoXHelp::dhelp_index( navh_eHelpFile_Project, NULL);
     }
+    return sts;
+  }
+
+  if ( ODD( dcli_get_qualifier( "/VERSION", 0))) {
+    sts = CoXHelp::dhelp( "version", "", navh_eHelpFile_Other, "$pwr_exe/xtt_version_help.dat", strict);
+    if ( EVEN(sts))
+      wnav->message('E', "No help on this subject");
     return sts;
   }
 
