@@ -20,7 +20,7 @@ GlowNodeClass::GlowNodeClass( GlowCtx *glow_ctx, char *name,
     arg_cnt(0), nc_extern(0), dyn_type(0), dyn_action_type(0),
     no_con_obstacle(0), slider(0), animation_count(1),
     y0(0), y1(0), x0(0), x1(0),
-    next_nc(0), prev_nc(0), cycle(glow_eCycle_Slow)
+    next_nc(0), prev_nc(0), cycle(glow_eCycle_Slow), user_data(0)
 {
   memset( dyn_color, 0, sizeof( dyn_color));
   memset( dyn_attr, 0, sizeof( dyn_attr));
@@ -42,6 +42,8 @@ GlowNodeClass::GlowNodeClass( const GlowNodeClass& nc)
     dynamic = (char *) calloc( 1, dynamicsize);
     memcpy( dynamic, nc.dynamic, dynamicsize);
   }
+  if ( user_data && ctx->userdata_copy_callback)
+    (ctx->userdata_copy_callback)( this, user_data, &user_data, glow_eUserdataCbType_NodeClass);
 }
 
 GlowNodeClass::~GlowNodeClass()
@@ -70,6 +72,7 @@ void GlowNodeClass::save( ofstream& fp, glow_eSaveMode mode)
 
   if ( slider)
     x0 = x1 = y1 = 0;
+
 
   if ( next_nc)
     ((GlowNodeClass *)next_nc)->save( fp, mode);
