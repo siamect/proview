@@ -2468,7 +2468,7 @@ static int ge_get_ldhses_cb( void *ctx, ldh_tSesContext *ldhses, int load)
   else
   {
     // Open workbench and attatch some volume
-    sts = ldh_OpenWB( &wbctx);
+    sts = ldh_OpenWB( &wbctx, 0);
     if ( EVEN(sts)) return sts;
 
     // Attach first rootvolume, or if no rootvolume exist some other volume
