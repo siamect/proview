@@ -317,7 +317,7 @@ JNIEXPORT jobjectArray JNICALL Java_jpwr_rt_Gdh_getObjectRefInfoStringArray
   //create a new String[]
   jobjectArr = (*env)->NewObjectArray(env, elements, strArrCls, NULL);
   
-  printf("size=%d\n", size); 
+
   typeid = (pwr_tTypeId) jtypeid;
   if ( typeid == 0 || typeid == pwr_eType_String)
   {
@@ -1052,7 +1052,7 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getObjectInfoInt
   jobject return_obj;
   jint jsts;
   jint jvalue;
-  pwr_tInt32 value;
+  pwr_tInt32 value = 0;
   char 		*s;
 
   cdhrInt_id = (*env)->FindClass( env, "jpwr/rt/CdhrInt");
@@ -1066,7 +1066,7 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getObjectInfoInt
     *s = 0;
   sts = gdh_GetObjectInfo( cstr, &value, sizeof(value));
   (*env)->ReleaseStringUTFChars( env, name, cstr);
-  
+
   jsts = (jint) sts;
   jvalue = value;
   return_obj = (*env)->NewObject( env, cdhrInt_id,
