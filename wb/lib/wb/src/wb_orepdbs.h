@@ -8,7 +8,7 @@
 class wb_orepdbs : public wb_orep
 {
   dbs_sObject *m_o;
-  wb_vrepdbs *m_vrep;
+  // wb_vrepdbs *m_vrep;
   unsigned int m_refCount;
     
   friend class wb_cdrep;
