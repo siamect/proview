@@ -615,7 +615,8 @@ void EvList::event_clear_alarmlist( pwr_tNodeIndex nix)
 
 void EvList::set_input_focus()
 {
-  XtCallAcceptFocus( brow_widget, CurrentTime);
+  if ( flow_IsViewable( brow_widget))
+    XtCallAcceptFocus( brow_widget, CurrentTime);
 }
 
 //
