@@ -103,6 +103,12 @@ wb_orep *wb_vrepmem::object(pwr_tStatus *sts, pwr_tOid oid)
     return 0;
   }
   
+  if ( oid.oix == 0 && !volume_object) {
+    // Volume object is not created yet...
+    createVolumeObject( volume_name);
+  }
+
+
   mem_object *n = findObject( oid.oix);
   if ( !n) {
     *sts = LDH__NOSUCHOBJ;
@@ -757,6 +763,38 @@ wb_orep *wb_vrepmem::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination
   wb_orepmem *o = new wb_orepmem( this, memo);
   return o;
 }
+
+bool wb_vrepmem::createVolumeObject( char *name)
+{
+  pwr_tStatus sts;
+
+  wb_cdrep *cdrep = m_merep->cdrep( &sts, m_cid);
+  wb_cdef cdef = wb_cdef( cdrep);
+
+  mem_object *memo = new mem_object();
+  strcpy( memo->m_name, name);
+  memo->m_oid.vid = m_vid;
+  memo->m_oid.oix = 0;
+  memo->m_cid = m_cid;
+  memo->m_flags = cdef.flags();
+  memo->rbody_size = cdef.size( pwr_eBix_rt);
+  if ( memo->rbody_size) {
+    memo->rbody = malloc( memo->rbody_size);
+    cdef.templateBody( &sts, pwr_eBix_rt, memo->rbody);
+    if ( EVEN(sts)) return false;
+  }
+  memo->dbody_size = cdef.size( pwr_eBix_dev);
+  if ( memo->dbody_size) {
+    memo->dbody = malloc( memo->dbody_size);
+    cdef.templateBody( &sts, pwr_eBix_dev, memo->dbody);
+    if ( EVEN(sts)) return false;
+  }
+
+  volume_object = memo;
+  registerObject( memo->m_oid.oix, memo);
+  return true;
+}
+
 
 wb_orep *wb_vrepmem::copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_destination &d, wb_name &name)
 {
@@ -1734,8 +1772,10 @@ bool wb_vrepmem::commit(pwr_tStatus *sts)
 bool wb_vrepmem::abort(pwr_tStatus *sts) 
 {
   // Reload
-  clear();
-  loadWbl( m_filename, sts);
+  if ( m_classeditor) {
+    clear();
+    loadWbl( m_filename, sts);
+  }
 
   return true;
 }

@@ -215,7 +215,7 @@ public:
   bool unregisterObject( pwr_tOix oix);
   void registerVolume( const char *name, pwr_tCid cid, pwr_tVid vid, mem_object *node);
   void info();
-
+  bool createVolumeObject( char *name);
 
   virtual pwr_tOid oid(pwr_tStatus *sts, const wb_orep *o) { return pwr_cNOid;}
     
