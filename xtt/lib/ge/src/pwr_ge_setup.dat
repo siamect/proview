@@ -12,48 +12,48 @@ menu Images
 }
 menu Analog
 {
-  subgraph 	Trend	 	pwr_trend.component 		6
-  subgraph 	FastCurve 	pwr_fastcurve.component 	6
-  subgraph 	Bar		pwr_bar.component 		6
-  subgraph 	Axis		pwr_axis.component 		6
+  subgraph 	Trend	 	pwr_trend.component 		25
+  subgraph 	FastCurve 	pwr_fastcurve.component 	25
+  subgraph 	Bar		pwr_bar.component 		26
+  subgraph 	Axis		pwr_axis.component 		27
 }
 menu Process
 {
   subgraph 	Valve	 	pwr_exe:pwr_valve.pwsg 			1
   subgraph 	ValveManuel	pwr_exe:pwr_valvemanuel.pwsg 		4
   subgraph 	ValveControl	pwr_exe:pwr_valvecontrol.pwsg 		2
-  subgraph 	Thermometer	pwr_exe:pwr_thermometer.pwsg 		6
+  subgraph 	Thermometer	pwr_exe:pwr_thermometer.pwsg 		28
 }
 menu Electric
 {
   subgraph 	Motor		pwr_exe:pwr_motor.pwsg 			23
   subgraph 	SpeedSwitch	pwr_exe:pwr_speedswitch.pwsg 		24
-  subgraph 	EmergencyStop	pwr_exe:pwr_emergencystop.pwsg 		5
+  subgraph 	EmergencyStop	pwr_exe:pwr_emergencystop.pwsg 		34
 }
 menu Indicators
 {
-  subgraph 	IndSquare 	pwr_exe:pwr_indsquare.pwsg 		5
-  subgraph 	IndSquareTextFront pwr_exe:pwr_indsquaretextfront.pwsg 	5
-  subgraph 	IndSquareTextRear pwr_exe:pwr_indsquaretextrear.pwsg 	5
+  subgraph 	IndSquare 	pwr_exe:pwr_indsquare.pwsg 		48
+  subgraph 	IndSquareTextFront pwr_exe:pwr_indsquaretextfront.pwsg 	48
+  subgraph 	IndSquareTextRear pwr_exe:pwr_indsquaretextrear.pwsg 	48
   subgraph 	IndSquareLarge 	pwr_exe:pwr_indsquarelarge.pwsg 	5
-  subgraph 	IndRound 	pwr_exe:pwr_indround.pwsg 		6
-  subgraph 	IndRoundTextFront pwr_exe:pwr_indroundtextfront.pwsg 	6
-  subgraph 	IndRoundTextRear pwr_exe:pwr_indroundtextrear.pwsg 	6
+  subgraph 	IndRound 	pwr_exe:pwr_indround.pwsg 		47
+  subgraph 	IndRoundTextFront pwr_exe:pwr_indroundtextfront.pwsg 	47
+  subgraph 	IndRoundTextRear pwr_exe:pwr_indroundtextrear.pwsg 	47
   subgraph 	IndRoundLarge 	pwr_exe:pwr_indroundlarge.pwsg 		6
   subgraph 	IndSoap 	pwr_exe:pwr_indsoap.pwsg 		21
-  subgraph 	TrafficLight 	pwr_exe:pwr_trafficlight.pwsg 		5
+  subgraph 	TrafficLight 	pwr_exe:pwr_trafficlight.pwsg 		36
 }
 menu Values
 {
-  subgraph 	ValueSmall	 pwr_exe:pwr_valuesmall.pwsg 		8
-  subgraph 	ValueMedium	 pwr_exe:pwr_valuemedium.pwsg 		8
-  subgraph 	ValueLarge	 pwr_exe:pwr_valuelarge.pwsg 		8
-  subgraph 	ValueInputSmall	pwr_exe:pwr_valueinputsmall.pwsg 	8
-  subgraph 	ValueInputMedium pwr_exe:pwr_valueinputmedium.pwsg 	8
-  subgraph 	ValueInputLarge	pwr_exe:pwr_valueinputlarge.pwsg 	8
-  subgraph 	ValueLong	pwr_exe:pwr_valuelong.pwsg 		8
-  subgraph 	ValueReliefDown	pwr_exe:pwr_valuereliefdown.pwsg 	8
-  subgraph 	ValueReliefUp	pwr_exe:pwr_valuereliefup.pwsg 		8
+  subgraph 	ValueSmall	 pwr_exe:pwr_valuesmall.pwsg 		50
+  subgraph 	ValueMedium	 pwr_exe:pwr_valuemedium.pwsg 		51
+  subgraph 	ValueLarge	 pwr_exe:pwr_valuelarge.pwsg 		52
+  subgraph 	ValueInputSmall	pwr_exe:pwr_valueinputsmall.pwsg 	50
+  subgraph 	ValueInputMedium pwr_exe:pwr_valueinputmedium.pwsg 	51
+  subgraph 	ValueInputLarge	pwr_exe:pwr_valueinputlarge.pwsg 	52
+  subgraph 	ValueLong	pwr_exe:pwr_valuelong.pwsg 		49
+  subgraph 	ValueReliefDown	pwr_exe:pwr_valuereliefdown.pwsg 	51
+  subgraph 	ValueReliefUp	pwr_exe:pwr_valuereliefup.pwsg 		51
 }
 menu Pushbuttons
 {
@@ -82,11 +82,11 @@ menu Pushbuttons
 }
 menu Sliders
 {
-  subgraph 	SliderArrow 	pwr_exe:pwr_sliderarrow.pwsg		7
-  subgraph 	Slider1 	pwr_exe:pwr_slider1.pwsg		7
-  subgraph 	SliderBackground1 pwr_exe:pwr_sliderbackground1.pwsg	8
-  subgraph 	Slider2 	pwr_exe:pwr_slider2.pwsg		7
-  subgraph 	SliderBackground2 pwr_exe:pwr_sliderbackground2.pwsg	8
+  subgraph 	SliderArrow 	pwr_exe:pwr_sliderarrow.pwsg		37
+  subgraph 	Slider1 	pwr_exe:pwr_slider1.pwsg		37
+  subgraph 	SliderBackground1 pwr_exe:pwr_sliderbackground1.pwsg	38
+  subgraph 	Slider2 	pwr_exe:pwr_slider2.pwsg		37
+  subgraph 	SliderBackground2 pwr_exe:pwr_sliderbackground2.pwsg	38
 }
 menu Hydraulics
 {
@@ -130,30 +130,30 @@ menu Other
   menu Animations
   {
     subgraph 	PumpAnim 	pwr_exe:pwr_pumpanim.pwsg		17
-    subgraph 	PadlockAnim 	pwr_exe:pwr_padlockanim.pwsg		5
+    subgraph 	PadlockAnim 	pwr_exe:pwr_padlockanim.pwsg		39
     subgraph 	ValveAnim 	pwr_exe:pwr_valveanim.pwsg		1
     subgraph 	MotorAnim	pwr_exe:pwr_motoranim.pwsg 		23
-    subgraph 	ScrewAnim	pwr_exe:pwr_screw.pwsg 			5
+    subgraph 	ScrewAnim	pwr_exe:pwr_screw.pwsg 			46
     subgraph 	IndAnimSquare 	pwr_exe:pwr_indanimsquare.pwsg 		5
     subgraph 	IndAnimRound 	pwr_exe:pwr_indanimround.pwsg 		6
     subgraph 	IndPulsarSquare pwr_exe:pwr_indpulsarsquare.pwsg 	5
     subgraph 	IndPulsarRound 	pwr_exe:pwr_indpulsarround.pwsg 	6
     subgraph 	Smile	 	pwr_exe:pwr_smile.pwsg 			6
   }
-  subgraph 	Padlock		pwr_exe:pwr_padlock.pwsg 		5
-  subgraph	Needle		pwr_exe:pwr_needle.pwsg			5
-  subgraph 	Pc		pwr_exe:pwr_pc.pwsg 			5
-  subgraph 	Pulpet		pwr_exe:pwr_pulpet.pwsg 		5
-  subgraph 	Rack		pwr_exe:pwr_rack.pwsg 			5
-  subgraph 	Terminal	pwr_exe:pwr_terminal.pwsg 		5
-  subgraph 	VideoCamera	pwr_exe:pwr_videocamera.pwsg 		5
-  subgraph 	ConGlue		pwr_conglue.component 			6
-  subgraph 	MenuBar		pwr_exe:pwr_menubar.pwsg 		6
-  subgraph 	PulldownMenu	pwr_exe:pwr_pulldownmenu.pwsg 		6
-  subgraph 	OptionMenu	pwr_exe:pwr_optionmenu.pwsg 		6
-  subgraph 	Window		pwr_window.component 			6
-  subgraph 	Table		pwr_table.component 			6
-  subgraph 	TabbedWindow	pwr_folder.component 			6
+  subgraph 	Padlock		pwr_exe:pwr_padlock.pwsg 		39
+  subgraph	Needle		pwr_exe:pwr_needle.pwsg			40
+  subgraph 	Pc		pwr_exe:pwr_pc.pwsg 			44
+  subgraph 	Pulpet		pwr_exe:pwr_pulpet.pwsg 		45
+  subgraph 	Rack		pwr_exe:pwr_rack.pwsg 			43
+  subgraph 	Terminal	pwr_exe:pwr_terminal.pwsg 		42
+  subgraph 	VideoCamera	pwr_exe:pwr_videocamera.pwsg 		14
+  subgraph 	ConGlue		pwr_conglue.component 			10
+  subgraph 	MenuBar		pwr_exe:pwr_menubar.pwsg 		32
+  subgraph 	PulldownMenu	pwr_exe:pwr_pulldownmenu.pwsg 		33
+  subgraph 	OptionMenu	pwr_exe:pwr_optionmenu.pwsg 		31
+  subgraph 	Window		pwr_window.component 			29
+  subgraph 	Table		pwr_table.component 			30
+  subgraph 	TabbedWindow	pwr_folder.component 			35
 }
 localsubgraphs Ssab ssab_exe:*.pwsg
 menu Local

@@ -66,6 +66,34 @@ extern "C" {
 #include "ge_bitmap_pincon22.h"
 #include "ge_bitmap_motor23.h"
 #include "ge_bitmap_speedswitch24.h"
+#include "ge_bitmap_trend25.h"
+#include "ge_bitmap_bar26.h"
+#include "ge_bitmap_axis27.h"
+#include "ge_bitmap_thermometer28.h"
+#include "ge_bitmap_window29.h"
+#include "ge_bitmap_table30.h"
+#include "ge_bitmap_optionsmenu31.h"
+#include "ge_bitmap_menubar32.h"
+#include "ge_bitmap_pulldownmenu33.h"
+#include "ge_bitmap_emergencystop34.h"
+#include "ge_bitmap_tabbedwindow35.h"
+#include "ge_bitmap_trafficlight36.h"
+#include "ge_bitmap_slider37.h"
+#include "ge_bitmap_sliderbg38.h"
+#include "ge_bitmap_padlock39.h"
+#include "ge_bitmap_needle40.h"
+#include "ge_bitmap_videocamera41.h"
+#include "ge_bitmap_terminal42.h"
+#include "ge_bitmap_rack43.h"
+#include "ge_bitmap_pc44.h"
+#include "ge_bitmap_pulpet45.h"
+#include "ge_bitmap_screw46.h"
+#include "ge_bitmap_ind47.h"
+#include "ge_bitmap_ind48.h"
+#include "ge_bitmap_value49.h"
+#include "ge_bitmap_value50.h"
+#include "ge_bitmap_value51.h"
+#include "ge_bitmap_value52.h"
 
 #define SUBPALETTE__INPUT_SYNTAX 2
 #define SUBPALETTE__OBJNOTFOUND 4
@@ -104,6 +132,15 @@ void SubPaletteBrow::free_pixmaps()
 //
 //  Create pixmaps for leaf, closed map and open map
 //
+
+#define ALLOC_PIXMAP( bitmap, idx) \
+  for ( i = 0; i < 9; i++) { \
+    pixmap_data[i].width = ## bitmap ## _width; \
+    pixmap_data[i].height = ## bitmap ## _height; \
+    pixmap_data[i].bits = (char *) ## bitmap ## _bits; \
+  } \
+  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmaps[idx]);
+
 void SubPaletteBrow::allocate_pixmaps()
 {
 	flow_sPixmapData pixmap_data;
@@ -133,180 +170,60 @@ void SubPaletteBrow::allocate_pixmaps()
 	    pixmap_data[i].height =xnav_bitmap_openmap12_height;
 	    pixmap_data[i].bits =xnav_bitmap_openmap12_bits;
           }
-
 	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_openmap);
 
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width = ge_bitmap_valve1_width;
-	    pixmap_data[i].height = ge_bitmap_valve1_height;
-	    pixmap_data[i].bits = ge_bitmap_valve1_bits;
-          }
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmaps[1]);
-
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width = ge_bitmap_valve2_width;
-	    pixmap_data[i].height = ge_bitmap_valve2_height;
-	    pixmap_data[i].bits = ge_bitmap_valve2_bits;
-          }
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmaps[2]);
-
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width = ge_bitmap_pump3_width;
-	    pixmap_data[i].height = ge_bitmap_pump3_height;
-	    pixmap_data[i].bits = ge_bitmap_pump3_bits;
-          }
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmaps[3]);
-
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width = ge_bitmap_valve4_width;
-	    pixmap_data[i].height = ge_bitmap_valve4_height;
-	    pixmap_data[i].bits = ge_bitmap_valve4_bits;
-          }
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmaps[4]);
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width = ge_bitmap_ind5_width;
-	    pixmap_data[i].height = ge_bitmap_ind5_height;
-	    pixmap_data[i].bits = ge_bitmap_ind5_bits;
-          }
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmaps[5]);
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width = ge_bitmap_ind6_width;
-	    pixmap_data[i].height = ge_bitmap_ind6_height;
-	    pixmap_data[i].bits = ge_bitmap_ind6_bits;
-          }
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmaps[6]);
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width = ge_bitmap_pushbutton7_width;
-	    pixmap_data[i].height = ge_bitmap_pushbutton7_height;
-	    pixmap_data[i].bits = ge_bitmap_pushbutton7_bits;
-          }
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmaps[7]);
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width = ge_bitmap_frame8_width;
-	    pixmap_data[i].height = ge_bitmap_frame8_height;
-	    pixmap_data[i].bits = ge_bitmap_frame8_bits;
-          }
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmaps[8]);
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width = ge_bitmap_crosscon9_width;
-	    pixmap_data[i].height = ge_bitmap_crosscon9_height;
-	    pixmap_data[i].bits = ge_bitmap_crosscon9_bits;
-          }
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmaps[9]);
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width = ge_bitmap_threewaycon10_width;
-	    pixmap_data[i].height = ge_bitmap_threewaycon10_height;
-	    pixmap_data[i].bits = ge_bitmap_threewaycon10_bits;
-          }
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmaps[10]);
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width = ge_bitmap_cornercon11_width;
-	    pixmap_data[i].height = ge_bitmap_cornercon11_height;
-	    pixmap_data[i].bits = ge_bitmap_cornercon11_bits;
-          }
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmaps[11]);
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width = ge_bitmap_arrow12_width;
-	    pixmap_data[i].height = ge_bitmap_arrow12_height;
-	    pixmap_data[i].bits = ge_bitmap_arrow12_bits;
-          }
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmaps[12]);
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width = ge_bitmap_checkvalve13_width;
-	    pixmap_data[i].height = ge_bitmap_checkvalve13_height;
-	    pixmap_data[i].bits = ge_bitmap_checkvalve13_bits;
-          }
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmaps[13]);
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width = ge_bitmap_tank14_width;
-	    pixmap_data[i].height = ge_bitmap_tank14_height;
-	    pixmap_data[i].bits = ge_bitmap_tank14_bits;
-          }
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmaps[14]);
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width = ge_bitmap_filter15_width;
-	    pixmap_data[i].height = ge_bitmap_filter15_height;
-	    pixmap_data[i].bits = ge_bitmap_filter15_bits;
-          }
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmaps[15]);
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width = ge_bitmap_pressureswitch16_width;
-	    pixmap_data[i].height = ge_bitmap_pressureswitch16_height;
-	    pixmap_data[i].bits = ge_bitmap_pressureswitch16_bits;
-          }
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmaps[16]);
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width = ge_bitmap_hydrpump17_width;
-	    pixmap_data[i].height = ge_bitmap_hydrpump17_height;
-	    pixmap_data[i].bits = ge_bitmap_hydrpump17_bits;
-          }
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmaps[17]);
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width = ge_bitmap_pressuregauge18_width;
-	    pixmap_data[i].height = ge_bitmap_pressuregauge18_height;
-	    pixmap_data[i].bits = ge_bitmap_pressuregauge18_bits;
-          }
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmaps[18]);
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width = ge_bitmap_releasevalve19_width;
-	    pixmap_data[i].height = ge_bitmap_releasevalve19_height;
-	    pixmap_data[i].bits = ge_bitmap_releasevalve19_bits;
-          }
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmaps[19]);
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width = ge_bitmap_releasevalve20_width;
-	    pixmap_data[i].height = ge_bitmap_releasevalve20_height;
-	    pixmap_data[i].bits = ge_bitmap_releasevalve20_bits;
-          }
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmaps[20]);
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width = ge_bitmap_frame21_width;
-	    pixmap_data[i].height = ge_bitmap_frame21_height;
-	    pixmap_data[i].bits = ge_bitmap_frame21_bits;
-          }
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmaps[21]);
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width = ge_bitmap_pincon22_width;
-	    pixmap_data[i].height = ge_bitmap_pincon22_height;
-	    pixmap_data[i].bits = ge_bitmap_pincon22_bits;
-          }
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmaps[22]);
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width = ge_bitmap_motor23_width;
-	    pixmap_data[i].height = ge_bitmap_motor23_height;
-	    pixmap_data[i].bits = ge_bitmap_motor23_bits;
-          }
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmaps[23]);
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width = ge_bitmap_speedswitch24_width;
-	    pixmap_data[i].height = ge_bitmap_speedswitch24_height;
-	    pixmap_data[i].bits = ge_bitmap_speedswitch24_bits;
-          }
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmaps[24]);
+	  ALLOC_PIXMAP( ge_bitmap_valve1, 1);
+	  ALLOC_PIXMAP( ge_bitmap_valve2, 2);
+	  ALLOC_PIXMAP( ge_bitmap_pump3, 3);
+	  ALLOC_PIXMAP( ge_bitmap_valve4, 4);
+	  ALLOC_PIXMAP( ge_bitmap_ind5, 5);
+	  ALLOC_PIXMAP( ge_bitmap_ind6, 6);
+	  ALLOC_PIXMAP( ge_bitmap_pushbutton7, 7);
+	  ALLOC_PIXMAP( ge_bitmap_frame8, 8);
+	  ALLOC_PIXMAP( ge_bitmap_crosscon9, 9);
+	  ALLOC_PIXMAP( ge_bitmap_threewaycon10, 10);
+	  ALLOC_PIXMAP( ge_bitmap_cornercon11, 11);
+	  ALLOC_PIXMAP( ge_bitmap_arrow12, 12);
+	  ALLOC_PIXMAP( ge_bitmap_checkvalve13, 13);
+	  ALLOC_PIXMAP( ge_bitmap_tank14, 14);
+	  ALLOC_PIXMAP( ge_bitmap_filter15, 15);
+	  ALLOC_PIXMAP( ge_bitmap_pressureswitch16, 16);
+	  ALLOC_PIXMAP( ge_bitmap_hydrpump17, 17);
+	  ALLOC_PIXMAP( ge_bitmap_pressuregauge18, 18);
+	  ALLOC_PIXMAP( ge_bitmap_releasevalve19, 19);
+	  ALLOC_PIXMAP( ge_bitmap_releasevalve20, 20);
+	  ALLOC_PIXMAP( ge_bitmap_frame21, 21);
+	  ALLOC_PIXMAP( ge_bitmap_pincon22, 22);
+	  ALLOC_PIXMAP( ge_bitmap_motor23, 23);
+	  ALLOC_PIXMAP( ge_bitmap_speedswitch24, 24);
+	  ALLOC_PIXMAP( ge_bitmap_trend25, 25);
+	  ALLOC_PIXMAP( ge_bitmap_bar26, 26);
+	  ALLOC_PIXMAP( ge_bitmap_axis27, 27);
+	  ALLOC_PIXMAP( ge_bitmap_thermometer28, 28);
+	  ALLOC_PIXMAP( ge_bitmap_window29, 29);
+	  ALLOC_PIXMAP( ge_bitmap_table30, 30);
+	  ALLOC_PIXMAP( ge_bitmap_optionsmenu31, 31);
+	  ALLOC_PIXMAP( ge_bitmap_menubar32, 32);
+	  ALLOC_PIXMAP( ge_bitmap_pulldownmenu33, 33);
+	  ALLOC_PIXMAP( ge_bitmap_emergencystop34, 34);
+	  ALLOC_PIXMAP( ge_bitmap_tabbedwindow35, 35);
+	  ALLOC_PIXMAP( ge_bitmap_trafficlight36, 36);
+	  ALLOC_PIXMAP( ge_bitmap_slider37, 37);
+	  ALLOC_PIXMAP( ge_bitmap_sliderbg38, 38);
+	  ALLOC_PIXMAP( ge_bitmap_padlock39, 39);
+	  ALLOC_PIXMAP( ge_bitmap_needle40, 40);
+	  ALLOC_PIXMAP( ge_bitmap_videocamera41, 41);
+	  ALLOC_PIXMAP( ge_bitmap_terminal42, 42);
+	  ALLOC_PIXMAP( ge_bitmap_rack43, 43);
+	  ALLOC_PIXMAP( ge_bitmap_pc44, 44);
+	  ALLOC_PIXMAP( ge_bitmap_pulpet45, 45);
+	  ALLOC_PIXMAP( ge_bitmap_screw46, 46);
+	  ALLOC_PIXMAP( ge_bitmap_ind47, 47);
+	  ALLOC_PIXMAP( ge_bitmap_ind48, 48);
+	  ALLOC_PIXMAP( ge_bitmap_value49, 49);
+	  ALLOC_PIXMAP( ge_bitmap_value50, 50);
+	  ALLOC_PIXMAP( ge_bitmap_value51, 51);
+	  ALLOC_PIXMAP( ge_bitmap_value52, 52);
 }
 
 

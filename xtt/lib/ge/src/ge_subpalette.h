@@ -29,7 +29,7 @@ extern "C" {
 /*@{*/
 
 #define subpalette_cVersion	"X3.0b"
-#define SUBP_PIXMAPS_SIZE	40
+#define SUBP_PIXMAPS_SIZE	60
 
 typedef struct subpalette_s_Menu {
 	char				title[80];
