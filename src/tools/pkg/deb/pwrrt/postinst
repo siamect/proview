@@ -161,11 +161,11 @@ fi
 # Add proview web directories to Apache
 #
 if [ -e /etc/apache/httpd.conf ]; then
-  if ! egrep -q "Alias[ ]+/pwr_doc/" /etc/apache/httpd.conf; then
+  if ! egrep -q "Alias[ ]+/pwrp_web/" /etc/apache/httpd.conf; then
     cat >> /etc/apache/httpd.conf <<-EOF
 
 	#
-	# Provew aliases, added by Proview installation
+	# Proview alias pwrp_web, added by Proview installation
 	#
 	Alias /pwrp_web/ /pwrp/common/web/
 
@@ -175,8 +175,16 @@ if [ -e /etc/apache/httpd.conf ]; then
 	    Order allow,deny
 	    Allow from all
 	</Directory>
+EOF
+  fi
 
 
+  if ! egrep -q "Alias[ ]+/pwr_doc/" /etc/apache/httpd.conf; then
+    cat >> /etc/apache/httpd.conf <<-EOF
+
+	#
+	# Proview alias pwr_doc, added by Proview installation
+	#
 	Alias /pwr_doc/ /usr/pwrrt/doc/
 
 	<Directory /usr/pwrrt/doc>
@@ -186,7 +194,7 @@ if [ -e /etc/apache/httpd.conf ]; then
 	    Allow from all
 	</Directory>
 EOF
- fi
+  fi
 fi
 
 changes=0
