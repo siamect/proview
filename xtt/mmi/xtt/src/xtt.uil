@@ -37,6 +37,7 @@ procedure
 	xtt_activate_zoom_reset(integer);
 	xtt_activate_help(integer);
 	xtt_activate_help_project(integer);
+	xtt_activate_help_proview(integer);
 	xtt_create_msg_label(integer);
 	xtt_create_cmd_prompt(integer);
 	xtt_create_cmd_input(integer);
@@ -489,6 +490,18 @@ object help_entry : XmCascadeButton
 	  callbacks
           {
 	    XmNactivateCallback = procedure xtt_activate_help_project(xtt_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_About_Proview;
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+	    XmNactivateCallback = procedure xtt_activate_help_proview(xtt_ctx);
           };
 	};
       };

@@ -63,6 +63,7 @@ procedure
 	wtt_activate_scriptbase(integer);
 	wtt_activate_help(integer);
 	wtt_activate_help_project(integer);
+	wtt_activate_help_proview(integer);
 	wtt_create_menubutton(integer);
 	wtt_create_msg_label(integer);
 	wtt_create_cmd_prompt(integer);
@@ -1076,6 +1077,18 @@ object help_entry : XmCascadeButton
 	  callbacks
           {
 	    XmNactivateCallback = procedure wtt_activate_help_project(wtt_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("About Proview");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+	    XmNactivateCallback = procedure wtt_activate_help_proview(wtt_ctx);
           };
 	};
       };

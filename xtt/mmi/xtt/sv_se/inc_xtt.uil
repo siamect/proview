@@ -33,6 +33,7 @@ c_Zoom_reset   		: compound_string("Återställ zoom");
 c_Help   		: compound_string("Hjälp");
 c_Overview   		: compound_string("Översikt");
 c_Project   		: compound_string("Projekt");
+c_About_Proview   	: compound_string("Om Proview");
 
 ! module xtt_op.uil
 
