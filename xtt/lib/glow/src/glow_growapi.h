@@ -664,6 +664,15 @@ typedef GlowTraceData glow_sTraceData;
   void grow_SetAttributes( grow_tCtx ctx, grow_sAttributes *attr,
 	unsigned long mask);
 
+  //! Get attributes of the grow context.
+  /*! 
+    \param ctx		Grow context.
+    \param attr	        Data structure with attribute values.
+    \param mask		Mask of the attributes to get.
+  */
+  void grow_GetAttributes( grow_tCtx ctx, grow_sAttributes *attr,
+	unsigned long mask);
+
   //! Convert coordinates for a point to pixel.
   /*!
     \param ctx		Grow context.
@@ -1938,6 +1947,13 @@ typedef GlowTraceData glow_sTraceData;
   void grow_SetMoveRestrictions( grow_tCtx ctx, glow_eMoveRestriction restriction,
 				 double max_limit, double min_limit, grow_tObject object);
 
+  //! Get current movement restrictions.
+  /*!
+    \param ctx			Grow context.
+    \return			Type of restriction.
+  */
+  glow_eMoveRestriction grow_GetMoveRestrictions( grow_tCtx ctx);
+
   //! Set or reset scaletype to equal scale.
   /*!
     \param ctx		Grow context.
@@ -1947,6 +1963,13 @@ typedef GlowTraceData glow_sTraceData;
     direction is kept.
   */
   void grow_SetScaleEqual( grow_tCtx ctx, int equal);
+
+  //! Get current scaletype.
+  /*!
+    \param ctx		Grow context.
+    \return		If 1 scaletype is equal.
+  */
+  int grow_GetScaleEqual( grow_tCtx ctx);
 
   //! Get info for a slider object.
   /*!
@@ -2345,6 +2368,13 @@ typedef GlowTraceData glow_sTraceData;
     \param show		1: show the gridpoints, 0: hide.
   */
   void grow_SetShowGrid( grow_tCtx ctx, int show);
+
+  //! Get if gridpoints are displayed.
+  /*!
+    \param ctx		Grow context.
+    \return		1: gridpoints are displayed, 0: hidden.
+  */
+  int grow_GetShowGrid( grow_tCtx ctx);
 
   //! Check if a nodeclass is a next page.
   /*!

@@ -493,14 +493,89 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
       }
       break;
     case glow_eEvent_CursorMotion:
-      cursor_present = 1;
-      cursor_x = x;
-      cursor_y = y;
-      if ( node_movement_paste_active)
-      {
-        set_defered_redraw();
-        switch( move_restriction)
-        {
+      if ( edit_mode == grow_eMode_Scale) {
+	int x0 = select_rect_ll_x;
+	int delta_x = (select_rect_ur_x - select_rect_ll_x) / 3 + 1;
+	int y0 = select_rect_ll_y;
+	int delta_y = (select_rect_ur_y - select_rect_ll_y) / 3 + 1;
+       
+	glow_eScaleType scale_type;
+
+	if ( (x0 <= x && x < x0 + delta_x) && 
+	     (y0 <= y && y < y0 + delta_y))
+	  scale_type = glow_eScaleType_UpperRight; 
+	else if ( (x0 + delta_x <= x && x < x0 + 2 * delta_x) && 
+	        (y0 <= y && y < y0 + delta_y))
+	  scale_type = glow_eScaleType_Up;
+	else if ( (x0 + 2 * delta_x <= x && x < x0 + 3 * delta_x) && 
+	        (y0 <= y && y < y0 + delta_y))
+	  scale_type = glow_eScaleType_UpperLeft;
+	else if ( (x0 <= x && x < x0 + delta_x) && 
+		  (y0 + delta_y <= y && y < y0 + 2 * delta_y))
+	  scale_type = glow_eScaleType_Right; 
+	else if ( (x0 + 2 * delta_x <= x && x < x0 + 3 * delta_x) && 
+	        (y0 + delta_y <= y && y < y0 + 2 * delta_y))
+	  scale_type = glow_eScaleType_Left;
+	else if ( (x0 <= x && x < x0 + delta_x) && 
+		  (y0 + 2 * delta_y <= y && y < y0 + 3 * delta_y))
+	  scale_type = glow_eScaleType_LowerRight; 
+	else if ( (x0 + delta_x <= x && x < x0 + 2 * delta_x) && 
+		  (y0 + 2 * delta_y <= y && y < y0 + 3 * delta_y))
+	  scale_type = glow_eScaleType_Down;
+	else if ( (x0 + 2 * delta_x <= x && x < x0 + 3 * delta_x) && 
+		  (y0 + 2 * delta_y <= y && y < y0 + 3 * delta_y))
+	  scale_type = glow_eScaleType_LowerLeft;
+	else
+	  scale_type = glow_eScaleType_No;
+
+	switch ( scale_type) {
+	case glow_eScaleType_Up:
+          if ( scale_equal)
+	    draw_set_cursor( this, glow_eDrawCursor_Normal);
+	  else
+	    draw_set_cursor( ctx, glow_eDrawCursor_TopSide);
+	  break;
+	case glow_eScaleType_Down:
+          if ( scale_equal)
+	    draw_set_cursor( this, glow_eDrawCursor_Normal);
+	  else
+	    draw_set_cursor( ctx, glow_eDrawCursor_BottomSide);
+	  break;
+	case glow_eScaleType_Right:
+          if ( scale_equal)
+	    draw_set_cursor( this, glow_eDrawCursor_Normal);
+	  else
+	    draw_set_cursor( ctx, glow_eDrawCursor_LeftSide);
+	  break;
+	case glow_eScaleType_Left:
+          if ( scale_equal)
+	    draw_set_cursor( this, glow_eDrawCursor_Normal);
+	  else
+	    draw_set_cursor( this, glow_eDrawCursor_RightSide);
+	  break;
+	case glow_eScaleType_UpperRight:
+	  draw_set_cursor( ctx, glow_eDrawCursor_TopLeftCorner);
+	  break;
+	case glow_eScaleType_LowerLeft:
+	  draw_set_cursor( ctx, glow_eDrawCursor_BottomRightCorner);
+	  break;
+	case glow_eScaleType_UpperLeft:
+	  draw_set_cursor( ctx, glow_eDrawCursor_TopRightCorner);
+	  break;
+	case glow_eScaleType_LowerRight:
+	  draw_set_cursor( this, glow_eDrawCursor_BottomLeftCorner);
+	  break;
+	default:
+	  draw_set_cursor( this, glow_eDrawCursor_Normal);
+	}
+      }
+      else {
+	cursor_present = 1;
+	cursor_x = x;
+	cursor_y = y;
+	if ( node_movement_paste_active) {
+	  set_defered_redraw();
+	  switch( move_restriction) {
           case glow_eMoveRestriction_Vertical:
             a_move.move( 0, y - node_move_last_y, 0);
             break;
@@ -510,16 +585,16 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
           default:
             a_move.move( x - node_move_last_x, y - node_move_last_y, 0);
             break;
-        }
-        node_move_last_x = x;
-        node_move_last_y = y;
-        redraw_defered();
-      }
-      sts = 0;
-      hot_found = ( hot_mode == glow_eHotMode_Disabled);
-      for ( i = 0; i < a.a_size; i++)
-      {
-        sts = a.a[a.a_size-i-1]->event_handler( event, x, y, fx, fy);
+	  }
+	  node_move_last_x = x;
+	  node_move_last_y = y;
+	  redraw_defered();
+	}
+	sts = 0;
+	hot_found = ( hot_mode == glow_eHotMode_Disabled);
+	for ( i = 0; i < a.a_size; i++) {
+	  sts = a.a[a.a_size-i-1]->event_handler( event, x, y, fx, fy);
+	}
       }
       break;
     case glow_eEvent_ButtonMotion:
@@ -971,8 +1046,14 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
       }
       else if ( edit_mode == grow_eMode_EditPolyLine && node_movement_active)
       {
-        ((GrowPolyLine *)a_move[0])->move_current_point(
-		x - node_move_last_x, y - node_move_last_y, 0);
+	int dx = x - node_move_last_x;
+	int dy = y - node_move_last_y;
+        if ( move_restriction == glow_eMoveRestriction_Vertical)
+	  dx = 0;
+        else if ( move_restriction == glow_eMoveRestriction_Horizontal)
+	  dy = 0;
+
+        ((GrowPolyLine *)a_move[0])->move_current_point( dx, dy, 0);
         node_move_last_x = x;
         node_move_last_y = y;
       }
@@ -984,8 +1065,14 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
         scale_active = 0;
       if ( node_movement_active && edit_mode == grow_eMode_EditPolyLine)
       {
-        ((GrowPolyLine *)a_move[0])->move_current_point(
-		x - node_move_last_x, y - node_move_last_y, grid_on);
+	int dx = x - node_move_last_x;
+	int dy = y - node_move_last_y;
+        if ( move_restriction == glow_eMoveRestriction_Vertical)
+	  dx = 0;
+        else if ( move_restriction == glow_eMoveRestriction_Horizontal)
+	  dy = 0;
+
+        ((GrowPolyLine *)a_move[0])->move_current_point( dx, dy, grid_on);
         node_move_last_x = x;
         node_move_last_y = y;
         node_movement_active = 0;
@@ -1327,9 +1414,8 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
           }
         }
       }
-      else if ( select_rect_active && edit_mode != grow_eMode_Scale)
+      else if ( select_rect_active && edit_mode == grow_eMode_Scale)
       {
-
       }
       else if ( con_create_active)
       {
@@ -2500,6 +2586,10 @@ void grow_auto_scrolling( GrowCtx *ctx)
   {
     delta_x = - (ctx->node_move_last_x - ctx->window_width / 2) / 6;
     delta_y = - (ctx->node_move_last_y - ctx->window_height / 2) / 6;
+    if ( ctx->move_restriction == glow_eMoveRestriction_Vertical)
+      delta_x = 0;
+    else if ( ctx->move_restriction == glow_eMoveRestriction_Horizontal)
+      delta_y = 0;
 
     ctx->set_defered_redraw();
     ((GrowPolyLine *)ctx->a_move[0])->move_current_point(

@@ -134,6 +134,30 @@ static int glow_create_cursor( draw_tCtx draw_ctx)
   draw_ctx->cursors[glow_eDrawCursor_Hand] = 
 		XCreateFontCursor( draw_ctx->display, XC_hand2);
 
+  draw_ctx->cursors[glow_eDrawCursor_BottomLeftCorner] = 
+		XCreateFontCursor( draw_ctx->display, XC_bottom_left_corner);
+
+  draw_ctx->cursors[glow_eDrawCursor_BottomRightCorner] = 
+		XCreateFontCursor( draw_ctx->display, XC_bottom_right_corner);
+
+  draw_ctx->cursors[glow_eDrawCursor_BottomSide] = 
+		XCreateFontCursor( draw_ctx->display, XC_bottom_side);
+
+  draw_ctx->cursors[glow_eDrawCursor_TopLeftCorner] = 
+		XCreateFontCursor( draw_ctx->display, XC_top_left_corner);
+
+  draw_ctx->cursors[glow_eDrawCursor_TopRightCorner] = 
+		XCreateFontCursor( draw_ctx->display, XC_top_right_corner);
+
+  draw_ctx->cursors[glow_eDrawCursor_TopSide] = 
+		XCreateFontCursor( draw_ctx->display, XC_top_side);
+
+  draw_ctx->cursors[glow_eDrawCursor_RightSide] = 
+		XCreateFontCursor( draw_ctx->display, XC_right_side);
+
+  draw_ctx->cursors[glow_eDrawCursor_LeftSide] = 
+		XCreateFontCursor( draw_ctx->display, XC_left_side);
+
   return 1;
 }
 

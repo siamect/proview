@@ -780,6 +780,10 @@ class GlowCtx {
   /*! \param show	1 display the grid points, 0 hide. */
   void set_show_grid( int show);
 
+  //! Get show grid.
+  /*! \return		1 grid points are displayed, 0 hidden. */
+  int get_show_grid() { return show_grid;}
+
   //! Draw gridpoints in the specified area.
   /*!
     \param ll_x		x coordinate for lower left corner of area in pixel.

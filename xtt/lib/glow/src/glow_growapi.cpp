@@ -678,6 +678,53 @@ void grow_SetAttributes( grow_tCtx ctx, grow_sAttributes *attr,
     ctx->initial_position = attr->initial_position;
 }
 
+void grow_GetAttributes( grow_tCtx ctx, grow_sAttributes *attr, 
+	unsigned long mask)
+{
+  if ( mask & grow_eAttr_base_zoom_factor)
+    attr->base_zoom_factor = ctx->base_zoom_factor;
+  if ( mask & grow_eAttr_offset_x)
+    attr->offset_x = ctx->offset_x;
+  if ( mask & grow_eAttr_offset_y)
+    attr->offset_y = ctx->offset_y;
+  if ( mask & grow_eAttr_grid_size_x)
+    attr->grid_size_x = ctx->grid_size_x;
+  if ( mask & grow_eAttr_grid_size_y)
+    attr->grid_size_y = ctx->grid_size_y;
+  if ( mask & grow_eAttr_grid_on)
+    attr->grid_on = ctx->grid_on;
+  if ( mask & grow_eAttr_user_highlight)
+    attr->user_highlight = ctx->user_highlight;
+  if ( mask & grow_eAttr_draw_delta)
+    attr->draw_delta = ctx->draw_delta;
+  if ( mask & grow_eAttr_grafcet_con_delta)
+    attr->grafcet_con_delta = ctx->grafcet_con_delta;
+  if ( mask & grow_eAttr_refcon_width)
+    attr->refcon_width = ctx->refcon_width;
+  if ( mask & grow_eAttr_refcon_height)
+    attr->refcon_height = ctx->refcon_height;
+  if ( mask & grow_eAttr_refcon_linewidth)
+    attr->refcon_linewidth = ctx->refcon_linewidth;
+  if ( mask & grow_eAttr_refcon_textsize)
+    attr->refcon_textsize = ctx->refcon_textsize;
+  if ( mask & grow_eAttr_application_paste)
+    attr->application_paste = ctx->application_paste;
+  if ( mask & grow_eAttr_select_policy)
+    attr->select_policy = ctx->select_policy;
+  if ( mask & grow_eAttr_display_level)
+    attr->display_level = ctx->display_level;
+  if ( mask & grow_eAttr_default_hot_mode)
+    attr->default_hot_mode = ctx->default_hot_mode;
+  if ( mask & grow_eAttr_enable_bg_pixmap)
+    attr->enable_bg_pixmap = ctx->enable_bg_pixmap;
+  if ( mask & grow_eAttr_double_buffer_on)
+    attr->double_buffer_on = ctx->double_buffer_on;
+  if ( mask & grow_eAttr_hot_mode)
+    attr->hot_mode = ctx->hot_mode;
+  if ( mask & grow_eAttr_initial_position)
+    attr->initial_position = (glow_eDirection) ctx->initial_position;
+}
+
 void grow_PositionToPixel( grow_tCtx ctx, double x, double y, 
 		int *pix_x, int *pix_y)
 {
@@ -3636,9 +3683,19 @@ void grow_SetMoveRestrictions( grow_tCtx ctx, glow_eMoveRestriction restriction,
 	(GlowArrayElem *)object);
 }
 
+glow_eMoveRestriction grow_GetMoveRestrictions( grow_tCtx ctx)
+{
+  return ctx->move_restriction;
+}
+
 void grow_SetScaleEqual( grow_tCtx ctx, int equal)
 {
   ctx->set_scale_equal( equal);
+}
+
+int grow_GetScaleEqual( grow_tCtx ctx)
+{
+  return ctx->scale_equal;
 }
 
 void grow_GetSliderInfo( grow_tObject object, glow_eDirection *direction,
@@ -3897,6 +3954,11 @@ void grow_GetScanTime( grow_tCtx ctx, double *scantime, double *fast_scantime,
 void grow_SetShowGrid( grow_tCtx ctx, int show) 
 {
   ctx->set_show_grid( show);
+}
+
+int grow_GetShowGrid( grow_tCtx ctx) 
+{
+  return ctx->get_show_grid();
 }
 
 int grow_IsNextNodeClass( grow_tNodeClass nodeclass)

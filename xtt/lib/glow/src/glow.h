@@ -696,6 +696,14 @@ typedef enum {
   glow_eDrawCursor_CrossHair,  		//!< Crosshair cursor
   glow_eDrawCursor_Hand,  		//!< Hand cursor
   glow_eDrawCursor_DiamondCross,	//!< Diamond cross cursor
+  glow_eDrawCursor_BottomLeftCorner,	//!< Bottom left corner cursor
+  glow_eDrawCursor_BottomRightCorner,	//!< Bottom right corner cursor
+  glow_eDrawCursor_BottomSide,		//!< Bottom side cursor
+  glow_eDrawCursor_TopLeftCorner,	//!< Top left corner cursor
+  glow_eDrawCursor_TopRightCorner,	//!< Top right corner cursor
+  glow_eDrawCursor_TopSide,		//!< Top side cursor
+  glow_eDrawCursor_RightSide,		//!< Right side cursor
+  glow_eDrawCursor_LeftSide,		//!< Left side cursor
   glow_eDrawCursor__
 } glow_eDrawCursor;
                               
