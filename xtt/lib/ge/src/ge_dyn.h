@@ -327,6 +327,8 @@ extern "C" {
     ge_eSave_FillLevel_min_value       	= 2703,
     ge_eSave_FillLevel_max_value       	= 2704,
     ge_eSave_FastCurve_fast_object   	= 2800,
+    ge_eSave_FastCurve_curve_index1   	= 2801,
+    ge_eSave_FastCurve_curve_index2   	= 2802,
     ge_eSave_AnalogText_super   	= 2900,
     ge_eSave_Table_attribute1	   	= 3000,
     ge_eSave_Table_format1	   	= 3001,
@@ -1889,6 +1891,8 @@ class GeTrend : public GeDynElem {
 class GeFastCurve : public GeDynElem {
  public:
   char fast_object[120];
+  int curve_index1;
+  int curve_index2;
 
   pwr_tBoolean 	*new_p;			//!< Pointer to New attribute, which indicates new curve data. 
   pwr_tRefId 	subid;			//!< Subid of New attribute in DsFastCurve.
@@ -1909,10 +1913,11 @@ class GeFastCurve : public GeDynElem {
 
   GeFastCurve( GeDyn *e_dyn) : 
     GeDynElem(e_dyn, ge_mDynType_FastCurve, (ge_mActionType) 0, 
-	      ge_eDynPrio_FastCurve)
+	      ge_eDynPrio_FastCurve), curve_index1(0), curve_index2(0)
     { strcpy( fast_object, "");}
   GeFastCurve( const GeFastCurve& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)
+    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), 
+    curve_index1(x.curve_index1), curve_index2(x.curve_index2)
     { strcpy( fast_object, x.fast_object);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);

@@ -8742,6 +8742,16 @@ void GeFastCurve::get_attributes( attr_sItem *attrinfo, int *item_count)
   attrinfo[i].type = glow_eType_String;
   attrinfo[i++].size = sizeof( fast_object);
 
+  strcpy( attrinfo[i].name, "FastCurve.CurveIndex1");
+  attrinfo[i].value = &curve_index1;
+  attrinfo[i].type = glow_eType_Int;
+  attrinfo[i++].size = sizeof( curve_index1);
+
+  strcpy( attrinfo[i].name, "FastCurve.CurveIndex2");
+  attrinfo[i].value = &curve_index2;
+  attrinfo[i].type = glow_eType_Int;
+  attrinfo[i++].size = sizeof( curve_index2);
+
   *item_count = i;
 }
 
@@ -8769,6 +8779,8 @@ void GeFastCurve::save( ofstream& fp)
 {
   fp << int(ge_eSave_FastCurve) << endl;
   fp << int(ge_eSave_FastCurve_fast_object) << FSPACE << fast_object << endl;
+  fp << int(ge_eSave_FastCurve_curve_index1) << FSPACE << curve_index1 << endl;
+  fp << int(ge_eSave_FastCurve_curve_index2) << FSPACE << curve_index2 << endl;
   fp << int(ge_eSave_End) << endl;
 }
 
@@ -8787,6 +8799,8 @@ void GeFastCurve::open( ifstream& fp)
         fp.get();
         fp.getline( fast_object, sizeof(fast_object));
         break;
+      case ge_eSave_FastCurve_curve_index1: fp >> curve_index1; break;
+      case ge_eSave_FastCurve_curve_index2: fp >> curve_index2; break;
       case ge_eSave_End: end_found = 1; break;
       default:
         cout << "GeFastCurve:open syntax error" << endl;
@@ -8839,8 +8853,28 @@ int GeFastCurve::connect( grow_tObject object, glow_sTraceData *trace_data)
   memcpy( &time_buff, &fp.TimeBuffer, sizeof(time_buff));
 
   fast_cnt = 0;
-  for ( i = 0; i < FAST_CURVES; i++) {
-    if ( fp.CurveValid[i]) {
+  if ( curve_index1 == 0 && curve_index2 == 0) {
+    for ( i = 0; i < FAST_CURVES; i++) {
+      if ( fp.CurveValid[i]) {
+	memcpy( &buff[fast_cnt], &fp.Buffers[i], sizeof(buff[0]));
+	type[fast_cnt] = (pwr_eType) fp.AttributeType[i];
+	fast_idx[i] = fast_cnt + 1;
+	curve_idx[fast_cnt + 1] = i;
+	fast_cnt++;
+      }
+    }
+  }
+  else {
+    if ( curve_index1 >= 0 && curve_index1 < FAST_CURVES && fp.CurveValid[curve_index1]) {
+      i = curve_index1;
+      memcpy( &buff[fast_cnt], &fp.Buffers[i], sizeof(buff[0]));
+      type[fast_cnt] = (pwr_eType) fp.AttributeType[i];
+      fast_idx[i] = fast_cnt + 1;
+      curve_idx[fast_cnt + 1] = i;
+      fast_cnt++;
+    }
+    if ( curve_index2 >= 1 && curve_index2 < FAST_CURVES && fp.CurveValid[curve_index2]) {
+      i = curve_index2;
       memcpy( &buff[fast_cnt], &fp.Buffers[i], sizeof(buff[0]));
       type[fast_cnt] = (pwr_eType) fp.AttributeType[i];
       fast_idx[i] = fast_cnt + 1;
