@@ -16,6 +16,7 @@ badconpoint	<connection point out of range>				/error
 objnotfound	<object not found>					/error
 plcnotsaved	<plcprogram object is not saved>			/error
 parentnotsaved	<parent node is  not saved>				/error
+windcorrupt	<Window is corrupt>					/error
 
 
 	.end
