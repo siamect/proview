@@ -187,6 +187,13 @@ typedef enum {
   glow_eDir_Horizontal  //!< Horizontal direction
 } glow_eDir;
 
+//! Visibility enum
+typedef enum {
+  glow_eVis_Visible,   	//!< Object is visible
+  glow_eVis_Invisible, 	//!< Object is invisible
+  glow_eVis_Dimmed  	//!< Object is dimmed insensible
+} glow_eVis;
+
 //! Different kind of alignment functions
 typedef enum {
   glow_eAlignDirection_CenterCenter,

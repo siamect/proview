@@ -1621,7 +1621,7 @@ typedef GlowTraceData glow_sTraceData;
     \param object      	Object.
     \param visible   	1 object is visible, 0 object is invisible.
   */
-  void grow_SetObjectVisibility( grow_tObject object, int visible);
+  void grow_SetObjectVisibility( grow_tObject object, glow_eVis visibility);
 
   //! Rotate selected objects.
   /*!

@@ -175,6 +175,7 @@ class GrowNode : public GlowNode {
   int		color_inverse;	//!< Color inverse.
   int		line_width;	//!< Line width.
   int		invisible;	//!< Object is invisible.
+  int		dimmed;		//!< Object is dimmed.
   GlowTransform trf;		//!< Transformation matrix of object.
   char	*argv[20];		//!< Arguments in dynamic code.
   int		argsize[20];	//!< Size of arguments is dynamic code.
@@ -494,11 +495,7 @@ class GrowNode : public GlowNode {
   /*!
     \param visible 	The visibility of the object.
   */
-  void set_visibility( int visible) 
-	{ if ( invisible == !visible) return;
-          invisible = !visible;
-          if ( !visible) erase();
-          draw();};
+  void set_visibility( glow_eVis visibility);
 
   //! Set position relative last stored transform.
   /*!

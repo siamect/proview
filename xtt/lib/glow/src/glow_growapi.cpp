@@ -3394,9 +3394,9 @@ void grow_SetObjectColorInverse( grow_tObject object, int inverse)
     ((GrowNode *)object)->set_color_inverse( inverse);
 }
 
-void grow_SetObjectVisibility( grow_tObject object, int visible)
+void grow_SetObjectVisibility( grow_tObject object, glow_eVis visibility)
 {
-  ((GlowArrayElem *)object)->set_visibility( visible);
+  ((GlowArrayElem *)object)->set_visibility( visibility);
 }
 
 void grow_RotateSelectedObjects( grow_tCtx ctx, double angel, 

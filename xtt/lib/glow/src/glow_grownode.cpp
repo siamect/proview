@@ -24,7 +24,7 @@ GrowNode::GrowNode( GlowCtx *glow_ctx, char *name, GlowNodeClass *node_class,
 	original_color_lightness(0),
 	color_lightness(0), original_color_intensity(0), color_intensity(0),
 	original_color_shift(0), color_shift(0), color_inverse(0), line_width(0),
-	invisible(0), object_type(glow_eObjectType_GrowNode), root_node(0),
+	invisible(0), dimmed(0), object_type(glow_eObjectType_GrowNode), root_node(0),
 	flip_horizontal(false), flip_vertical(false), fill_level(1),
 	level_direction( glow_eDirection_Right), shadow(0), input_position(0), input_selected(0)
 {  
@@ -415,7 +415,7 @@ int GrowNode::event_handler( glow_eEvent event, double fx, double fy)
   double x, y;
   int sts;
 
-  if ( invisible)
+  if ( invisible || dimmed)
     return 0;
 
   trf.reverse( fx, fy, &x, &y);
@@ -438,7 +438,7 @@ int GrowNode::event_handler( glow_eEvent event, int x, int y, double fx,
 
   double rx, ry;
 
-  if ( invisible)
+  if ( invisible || dimmed)
     return 0;
 
   switch ( event) {
@@ -2118,4 +2118,28 @@ int GrowNode::get_annotation_info( int num, int *t_size, glow_eDrawType *t_drawt
   return sts;
 }
 
+void GrowNode::set_visibility( glow_eVis visibility)
+{
+  switch( visibility) {
+  case glow_eVis_Visible:
+    if ( invisible == 0 && dimmed == 0)
+      return;
+    invisible = 0;
+    dimmed = 0;
+    break;
+  case glow_eVis_Invisible:
+    if ( invisible) 
+      return;
+    invisible = 1;
+    erase();
+    break;
+  case glow_eVis_Dimmed:
+    if ( dimmed && !invisible)
+      return;
+    dimmed = 1;
+    invisible = 0;
+    break;
+  }
+  draw();
+}
 

@@ -287,8 +287,20 @@ glow_eDrawType GlowColor::get_drawtype( glow_eDrawType local_drawtype,
       }
     }
     if ( node && ((GrowNode *)node)->color_inverse) {
-      if ( drawtype >= 10)
-        drawtype = (glow_eDrawType)(drawtype + 10 - 2 * (drawtype % 10) - 1);
+      if ( drawtype >= 30)
+        drawtype = (glow_eDrawType)(drawtype + 10 - 2 * (drawtype % 10) - 1);      
+    }
+    if ( node && ((GrowNode *)node)->dimmed) {
+      if ( drawtype == 0)
+	drawtype = (glow_eDrawType) 25;
+      else if ( 26 <= drawtype && drawtype <= 29)
+	drawtype = (glow_eDrawType) ( drawtype - 4);
+      else if ( 36 <= drawtype && drawtype <= 39)
+	drawtype = (glow_eDrawType) ( drawtype - 4);
+      else if ( 46 <= drawtype && drawtype <= 49)
+	drawtype = (glow_eDrawType) ( drawtype - 4);
+      else if ( 56 <= drawtype && drawtype <= 59)
+	drawtype = (glow_eDrawType) ( drawtype - 4);
     }
   }
   if ( drawtype < 0 || drawtype >= 300) {
