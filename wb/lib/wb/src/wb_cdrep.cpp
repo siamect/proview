@@ -142,7 +142,7 @@ wb_bdrep *wb_cdrep::bdrep( pwr_tStatus *sts, pwr_eBix bix)
 
 wb_adrep *wb_cdrep::adrep( pwr_tStatus *sts, const char *aname)
 {
-  wb_name n = wb_name( aname);
+  wb_attrname n = wb_attrname( aname);
   if ( n.evenSts()) {
     *sts = n.sts();
     return 0;
@@ -153,7 +153,8 @@ wb_adrep *wb_cdrep::adrep( pwr_tStatus *sts, const char *aname)
   while ( ODD(*sts)) {
     orep->ref();
     if ( orep->cid() == pwr_eClass_ObjBodyDef) {
-      orep_attr = orep->vrep()->child( sts, orep, n);
+      wb_name objectname = wb_name( n.attribute());
+      orep_attr = orep->vrep()->child( sts, orep, objectname);
       if ( ODD(*sts) /* && aname.attributeIsEqual( orep_attr->name()) */ ) {
         wb_adrep *adrep = new wb_adrep( *orep_attr);
         orep->unref();
