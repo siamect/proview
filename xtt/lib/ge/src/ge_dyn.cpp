@@ -5134,7 +5134,7 @@ int GeTable::action( grow_tObject object, glow_tEvent event)
       }
       new_row = row + 1;
       new_column = column;
-      if ( new_row > sel_elements[new_column])
+      if ( new_row >= sel_elements[new_column])
 	return GE__NO_PROPAGATE;
       break;
     case glow_eEvent_Key_Left:
@@ -5152,7 +5152,7 @@ int GeTable::action( grow_tObject object, glow_tEvent event)
       }
       new_row = row;
       new_column = column + 1;
-      if ( new_column > columns || !sel_p[new_column])
+      if ( new_column >= columns || !sel_p[new_column])
 	return GE__NO_PROPAGATE;
       break;
     default: ;  
@@ -5174,8 +5174,10 @@ int GeTable::action( grow_tObject object, glow_tEvent event)
       sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
       if ( EVEN(sts)) 
 	printf("Table error: %s\n", parsed_name);
-      else
+      else {
 	grow_SetSelectedCell( object, new_column, new_row);
+	grow_TableMakeCellVisible( object, new_column, new_row);
+      }
     }
     return GE__NO_PROPAGATE;
     break;
