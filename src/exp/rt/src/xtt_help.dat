@@ -256,6 +256,7 @@ Xtt commands
 <b>open operatorwindow<t>Open the operator window 	<LINK> open operatorwindow
 <b>search	<t>Leta efter object eller sträng <LINK> search
 <b>set advanceduser<t>Set advanced user		<LINK> set advanceduser
+<b>set folder	<t>Set a folder in a tabbed window.  <LINK> set folder
 <b>set parameter<t>Set the value of an attribute  <LINK> set parameter
 <b>setup       <t>Xtt setup			<LINK> setup
 <b>show version<t>Show xtt version		<LINK> show version
@@ -341,6 +342,17 @@ Set the value of an attribute.
 /name=		<t>the name of the parameter to be set.
 /value=		<t>value to set.
 /bypass=	<t>Bypass any access restrictions.
+</TOPIC>
+
+<TOPIC> set folder
+Command   set folder
+
+Set a folder in a tabbed window object.
+
+<B>xtt> set folder 'graphname' /name= /index=
+
+/name=		<t>the name of the tabbedwindow object.
+/index=		<t>index of tab to set. Starting from 0.
 </TOPIC>
 
 <TOPIC> add menu
@@ -1929,6 +1941,6 @@ Classes
 
 </TOPIC>
 
-<include> pwr_exe:pwrb_xtthelp.dat
+<include> pwr_lang:pwrb_xtthelp.dat
 <include> pwr_exe:pwrs_xtthelp.dat
 
