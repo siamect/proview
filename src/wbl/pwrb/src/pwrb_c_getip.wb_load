@@ -122,7 +122,7 @@ SObject pwrb:Class
         Attr default_mask[1] = 1
         Attr segname_annotation = 0
         Attr devbody_annotation = 1
-        Attr compmethod = 36
+        Attr compmethod = 10
         Attr compindex = 0
         Attr tracemethod = 0
         Attr traceindex = 0
