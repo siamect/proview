@@ -39,14 +39,14 @@ bool wb_vrepdb::abort(pwr_tStatus *sts)
 wb_orep* wb_vrepdb::object(pwr_tStatus *sts)
 {
 //    m_ohead.get(m_txn, wb_oid(m_vid, 0));
-  m_ohead.get(m_ohead.foid());
+  m_ohead.get(m_txn, m_ohead.foid());
   
   return new (this) wb_orepdb(&m_ohead.m_o);
 }
 
 wb_orep* wb_vrepdb::object(pwr_tStatus *sts, pwr_tOid oid)
 {
-  m_ohead.get(oid);    
+  m_ohead.get(m_txn, oid);
   
   return new (this) wb_orepdb(&m_ohead.m_o);
 }
@@ -54,7 +54,7 @@ wb_orep* wb_vrepdb::object(pwr_tStatus *sts, pwr_tOid oid)
 wb_orep* wb_vrepdb::object(pwr_tStatus *sts, wb_orep *parent, wb_name name)
 {
   wb_db_name n(m_db, m_txn, parent->oid(), name);
-  m_ohead.get(n.oid());
+  m_ohead.get(m_txn, n.oid());
   return new (this) wb_orepdb(&m_ohead.m_o);
 }
 
@@ -67,7 +67,7 @@ wb_orep* wb_vrepdb::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination 
 
     o.put(txn);
         
-    m_db->adopt(txn, o, d);
+    adopt(txn, o, d);
 
 /*
   pwr_tOid        oid;
@@ -110,7 +110,7 @@ bool wb_vrepdb::deleteObject(pwr_tStatus *sts, wb_orep *orp)
   wb_db_txn *txn = m_db->begin(0);
         
   try {
-    m_db->unadopt(txn, o);
+    unadopt(txn, o);
 
     wb_db_class c(m_db, o);
     c.del(txn);
@@ -241,77 +241,77 @@ wb_orep *wb_vrepdb::ancestor(pwr_tStatus *sts, wb_orep *o)
 
 pwr_tCid wb_vrepdb::cid(pwr_tStatus *sts, const wb_orep * const orp)
 {
-  return m_ohead.get(orp->oid()).cid();
+  return m_ohead.get(m_txn, orp->oid()).cid();
 }
 
 pwr_tOid wb_vrepdb::poid(pwr_tStatus *sts, const wb_orep * const orp)
 {
-  return m_ohead.get(orp->oid()).poid();
+  return m_ohead.get(m_txn, orp->oid()).poid();
 }
 
 pwr_tOid wb_vrepdb::foid(pwr_tStatus *sts, const wb_orep * const orp)
 {
-  return m_ohead.get(orp->oid()).foid();
+  return m_ohead.get(m_txn, orp->oid()).foid();
 }
 
 pwr_tOid wb_vrepdb::loid(pwr_tStatus *sts, const wb_orep * const orp)
 {
-  return m_ohead.get(orp->oid()).loid();
+  return m_ohead.get(m_txn, orp->oid()).loid();
 }
 
 pwr_tOid wb_vrepdb::aoid(pwr_tStatus *sts, const wb_orep * const orp)
 {
-  return m_ohead.get(orp->oid()).aoid();
+  return m_ohead.get(m_txn, orp->oid()).aoid();
 }
 
 pwr_tOid wb_vrepdb::boid(pwr_tStatus *sts, const wb_orep * const orp)
 {
-  return m_ohead.get(orp->oid()).boid();
+  return m_ohead.get(m_txn, orp->oid()).boid();
 }
 
 wb_orep *wb_vrepdb::parent(pwr_tStatus *sts, wb_orep *orp)
 {
-  m_ohead.get(m_ohead.get(orp->oid()).poid());
+  m_ohead.get(m_txn, m_ohead.get(m_txn, orp->oid()).poid());
   return new (this) wb_orepdb(&m_ohead.m_o);
 }
 
 wb_orep *wb_vrepdb::after(pwr_tStatus *sts, wb_orep *orp)
 {
-  m_ohead.get(m_ohead.get(orp->oid()).aoid());
+  m_ohead.get(m_txn, m_ohead.get(m_txn, orp->oid()).aoid());
   return new (this) wb_orepdb(&m_ohead.m_o);
 }
 
 wb_orep *wb_vrepdb::before(pwr_tStatus *sts, wb_orep *orp)
 {
-  m_ohead.get(m_ohead.get(orp->oid()).boid());
+  m_ohead.get(m_txn, m_ohead.get(m_txn, orp->oid()).boid());
   return new (this) wb_orepdb(&m_ohead.m_o);
 }
 
 wb_orep *wb_vrepdb::first(pwr_tStatus *sts, wb_orep *orp)
 {
-  m_ohead.get(m_ohead.get(orp->oid()).foid());
+  m_ohead.get(m_txn, m_ohead.get(m_txn, orp->oid()).foid());
   return new (this) wb_orepdb(&m_ohead.m_o);
 }
 
 wb_orep *wb_vrepdb::child(pwr_tStatus *sts, wb_orep *orp, const char *name)
 {
-  wb_db_name n(m_db, orp->oid(), name);
-  m_ohead.get(n.oid());
+  wb_db_name n(m_db, m_txn, orp->oid(), name);
+  m_ohead.get(m_txn, n.oid());
   return new (this) wb_orepdb(&m_ohead.m_o);
 }
 
 wb_orep *wb_vrepdb::last(pwr_tStatus *sts, wb_orep *orp)
 {
-  m_ohead.get(m_ohead.get(orp->oid()).loid());
+  m_ohead.get(m_txn, m_ohead.get(m_txn, orp->oid()).loid());
   return new (this) wb_orepdb(&m_ohead.m_o);
 }
 
 wb_orep *wb_vrepdb::next(pwr_tStatus *sts, wb_orep *orp)
 {
-  m_ohead.get(orp->oid());
+  m_ohead.get(m_txn, orp->oid());
   wb_db_class c(m_db, m_ohead.cid());
   if (c.succ(m_ohead.oid())) {
-    m_ohead.get(c.oid());
+    m_ohead.get(m_txn, c.oid());
     return new (this) wb_orepdb(&m_ohead.m_o);
   } else {
     //*sts = LDH__?;
@@ -321,10 +321,10 @@ wb_orep *wb_vrepdb::next(pwr_tStatus *sts, wb_orep *orp)
 
 wb_orep *wb_vrepdb::previous(pwr_tStatus *sts, wb_orep *orp)
 {
-  m_ohead.get(orp->oid());
+  m_ohead.get(m_txn, orp->oid());
   wb_db_class c(m_db, m_ohead.cid());
   if (c.pred(m_ohead.oid())) {
-    m_ohead.get(c.oid());
+    m_ohead.get(m_txn, c.oid());
     return new (this) wb_orepdb(&m_ohead.m_o);
   } else {
     //*sts = LDH__?;
