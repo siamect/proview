@@ -178,7 +178,10 @@ public class GeTextField extends JTextField implements GeComponentIfc,
   public void setLevelFillColor( int levelFillColor) {}
 
   Font annot1Font = new Font("Helvetica", Font.BOLD, 14);
-  public void setAnnot1Font( Font font) { annot1Font = font; setFont(font);}
+  public Font annotFont = annot1Font;
+  public int annotBackground = 9999;
+  public void setAnnot1Font( Font font) { annot1Font = font; 
+                                          annotFont = font; setFont(font);}
   public Font getAnnot1Font() { return annot1Font;}
   public int fillColor = 9999;
   public int originalFillColor = 9999;
@@ -231,6 +234,7 @@ public class GeTextField extends JTextField implements GeComponentIfc,
   public void setFillColor( int fillColor) {
     this.fillColor = fillColor;
     this.originalFillColor = fillColor;
+    this.annotBackground = fillColor;
   }
   public int getFillColor() {
     return fillColor;
