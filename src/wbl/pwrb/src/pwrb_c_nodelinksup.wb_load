@@ -11,6 +11,12 @@ SObject pwrb:Class
 !  @Group Supervision,NodeConfiguration
 !  @Summary Supervises a link to another node.
 !  Supervises a link to another node.
+!
+!  A NodeLinkSup subscribes to a remote $Node objekt, and checks
+!  the arrival of the subscribed value. If a new value hasn't arrived
+!  whithin the TimeoutTime an alarm message is sent.
+!
+!  The NodeLinkSup objects are handled by the rt_linksup server process.
 !*/
   Object NodeLinkSup $ClassDef 161 
     Body SysBody
@@ -22,21 +28,40 @@ SObject pwrb:Class
       Body SysBody
         Attr StructName = "NodeLinkSup"
       EndBody
+      !/**
+      !  The $Node object on the remote node. Specify the node object 
+      !  with volume and path, e.g. 'RemoteVolume:Nodes-ProcNode'.
+      !
+      !  Note! If the node is mounted, it is easy to mix up the MountObject with
+      !  the remote $Node object. Be sure to specify the remote $Node object.
+      !*/
       Object Node $Attribute 1 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Objid"
         EndBody
       EndObject
+      !/**
+      !  Timout time in seconds. 
+      !  If a subscription value has not arrive whithin the timeout time, 
+      !  an alarm message is sent.
+      !*/
       Object TimeoutTime $Attribute 2 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
+      !/**
+      !  Subscription interval in seconds.
+      !*/
       Object SubscriptionInterval $Attribute 3 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Float32"
         EndBody
       EndObject
+      !/**
+      !  Indicates that the link is up.
+      !  LinkUp is true if the link is up, and false if the link is down.
+      !*/
       Object LinkUp $Attribute 4 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
@@ -44,6 +69,9 @@ SObject pwrb:Class
           Attr Flags |= PWR_MASK_NOEDIT
         EndBody
       EndObject
+      !/**
+      !  The last time the link was established.
+      !*/
       Object UpTime $Attribute 5 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Time"
@@ -51,6 +79,9 @@ SObject pwrb:Class
           Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
+      !/**
+      !  The last time the link was lost.
+      !*/
       Object DownTime $Attribute 6 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Time"
@@ -58,6 +89,9 @@ SObject pwrb:Class
           Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
+      !/**
+      !  Number of link up events.
+      !*/
       Object UpCount $Attribute 7 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
@@ -65,6 +99,9 @@ SObject pwrb:Class
           Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
+      !/**
+      !  Subid for the subscription.
+      !*/
       Object SubId $Attribute 8 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$RefId"
@@ -72,6 +109,14 @@ SObject pwrb:Class
           Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
+      !/**
+      !  Specifies whether to enable or disable the supervision.
+      !  Note that blocking is done when Control is FALSE. The
+      !  input signal can be inverted.
+      !  
+      !  FALSE disables the supervision and TRUE or open input
+      !  enables the supervision.
+      !*/
       Object Control $Input 9 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
@@ -80,6 +125,12 @@ SObject pwrb:Class
           Attr GraphName = "con"
         EndBody
       EndObject
+      !/**
+      !  Specifies the status of supervised quantity. FALSE
+      !  means normal state and TRUE means alarm state.
+      !  The output signal can for instance be used to activate
+      !  an action sequence at alarm state.
+      !*/
       Object Action $Output 10 
         Body SysBody
           Attr PgmName = "Action"
@@ -89,6 +140,12 @@ SObject pwrb:Class
           Attr GraphName = "act"
         EndBody
       EndObject
+      !/**
+      !  Specifies the status of supervised quantity. FALSE
+      !  means normal state and TRUE means alarm state.
+      !  The output signal can for instance be used to activate
+      !  an action sequence at alarm state.
+      !*/
       Object Acked $Output 11 
         Body SysBody
           Attr PgmName = "Acked"
@@ -98,6 +155,18 @@ SObject pwrb:Class
           Attr GraphName = "ack"
         EndBody
       EndObject
+      !/**
+      !  Specifies whether to enable or disable the blocking. No
+      !  messages from the supervision object will be sent away
+      !  as long as the object is blocked. The blocking does not
+      !  influence on the 'act' output of the object.
+      !  
+      !  FALSE disables the the blocking and TRUE enables the
+      !  blocking. When a supervisory object in alarm position
+      !  is blocked current messages will be cancelled.
+      !  Blocking /deblocking is done by means of the 'Alarm
+      !  Blocking Window' in the operator environment.
+      !*/
       Object Blocked $Output 12 
         Body SysBody
           Attr PgmName = "Blocked"
@@ -107,21 +176,37 @@ SObject pwrb:Class
           Attr GraphName = "blk"
         EndBody
       EndObject
-      ! ++
+      !
       ! Sup struct
       !
+      !/**
+      !  Optional text to describe the object. It is used in the
+      !  picture Alarm Limits which is activated from the
+      !  operator window.
+      !*/
       Object Description $Attribute 13 
         Body SysBody
           Attr PgmName = "Description"
           Attr TypeRef = "pwrs:Type-$String80"
         EndBody
       EndObject
+      !/**
+      !  Specifies whether to enable or disable the action,
+      !  which at alarm state implies DetectText to be sent or
+      !  not. FALSE means that no message will be sent at alarm
+      !  state; TRUE means that DetectText is sent at alarm
+      !  state.
+      !*/
       Object DetectOn $Attribute 14 
         Body SysBody
           Attr PgmName = "DetectOn"
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
       EndObject
+      !/**
+      !  Alarm message. Optional text which will be written out
+      !  at alarm state if DetectOn is TRUE.
+      !*/
       Object DetectText $Intern 15 
         Body SysBody
           Attr PgmName = "DetectText"
@@ -130,30 +215,76 @@ SObject pwrb:Class
           Attr NiNaCond = 1
         EndBody
       EndObject
+      !/**
+      !  Return message. Text which will be written in the event
+      !  list at return to normal state.
+      !*/
       Object ReturnText $Attribute 16 
         Body SysBody
           Attr PgmName = "ReturnText"
           Attr TypeRef = "pwrs:Type-$String80"
         EndBody
       EndObject
+      !/**
+      !  Specifies the type of the message (=DetectText ) which
+      !  will be sent at alarm state.
+      !  ALARM -- 64 The message always requires an
+      !              acknowledgement and sent to the alarm
+      !  
+      !  INFO  -- 32 If the message requires acknowledgement is
+      !              it sent to the info part of the alarm
+      !              window and the event list, otherwise only
+      !*/
       Object EventType $Attribute 17 
         Body SysBody
           Attr PgmName = "EventType"
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
+      !/**
+      !  Priorities concerning alarm messages.
+      !  
+      !   -- 67   A-alarm; highest priority. (=43Hex)
+      !   -- 66   B-alarm  (= 42Hex)
+      !   -- 65   C-alarm  (= 41Hex)
+      !   -- 64   D-alarm ; lowest priority. (=40Hex)
+      !*/
       Object EventPriority $Attribute 18 
         Body SysBody
           Attr PgmName = "EventPriority"
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
+      !/**
+      !  Bit map. A flag combination may be attached to the
+      !  message:
+      !  
+      !  1  =   If this flag exists the return message
+      !         ReturnText will be sent to the event lists of
+      !  
+      !  2  =   If this flag exists the acknowledgement message
+      !         will be sent to the event lists of the out
+      !  
+      !  4  =   If the out unit has a peep-function this will
+      !         be activated when the message is received.
+      !  
+      !  8  =   The message is sent to every out unit
+      !  
+      !  16 =   If the message is of the type INFO it will be
+      !         placed in the event list. If this flag exists
+      !         the message is also placed in the INFO square
+      !         of the alarm window where acknowledgement is to
+      !*/
       Object EventFlags $Attribute 19 
         Body SysBody
           Attr PgmName = "EventFlags"
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
+      !/**
+      !  Attribute is filled in by the server process to the 
+      !  NodeLinkSup object itself.
+      !*/
       Object Attribute $Attribute 20 
         Body SysBody
           Attr PgmName = "Attribute"
@@ -161,6 +292,22 @@ SObject pwrb:Class
           Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
+      !/**
+      !  Status value. Bit map containing 16 bits where the 8
+      !  least significant bits denote the state and the 8 most
+      !  significant bits the priority.
+      !  The state is a combination of:
+      !  
+      !     -- 0    Normal state
+      !     -- 1    Alarm state
+      !     -- 2    Unacknowledged alarm
+      !  The priority is one of the priorities EventPriority.
+      !  
+      !  The following status can exist:
+      !     EventPriority + 1 => Priority + alarm state
+      !     EventPriority + 3 => Priority + unacknowledged alarm
+      !  and alarm state
+      !*/
       Object AlarmStatus $Attribute 21 
         Body SysBody
           Attr PgmName = "AlarmStatus"
@@ -169,6 +316,9 @@ SObject pwrb:Class
           Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
+      !/**
+      !  Used internal at the event detection.
+      !*/
       Object AlarmCheck $Attribute 22 
         Body SysBody
           Attr PgmName = "AlarmCheck"
@@ -177,6 +327,11 @@ SObject pwrb:Class
           Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
+      !/**
+      !  Specifies if an alarm state will be detected or not.
+      !  FALSE means that an alarm state will not be detected;
+      !  TRUE means that an alarm state will be detected.
+      !*/
       Object DetectCheck $Attribute 23 
         Body SysBody
           Attr PgmName = "DetectCheck"
@@ -185,6 +340,11 @@ SObject pwrb:Class
           Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
+      !/**
+      !  Specifies if the message has already been sent to the
+      !  out units (or more precisely the message handler) or
+      !  not. TRUE means that the message has been sent.
+      !*/
       Object DetectSend $Attribute 24 
         Body SysBody
           Attr PgmName = "DetectSend"
@@ -193,6 +353,9 @@ SObject pwrb:Class
           Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
+      !/**
+      !  Date and time when alarm state was detected.
+      !*/
       Object DetectTime $Attribute 25 
         Body SysBody
           Attr PgmName = "DetectTime"
@@ -201,6 +364,11 @@ SObject pwrb:Class
           Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
+      !/**
+      !  Specifies if the object has returned to normal state or
+      !  not. TRUE means that the object has returned to normal
+      !  state.
+      !*/
       Object ReturnCheck $Attribute 26 
         Body SysBody
           Attr PgmName = "ReturnCheck"
@@ -209,6 +377,11 @@ SObject pwrb:Class
           Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
+      !/**
+      !  Specifies if the return message, ReturnText, has been
+      !  sent to the out units or not. TRUE means that the
+      !  return message has been sent.
+      !*/
       Object ReturnSend $Attribute 27 
         Body SysBody
           Attr PgmName = "ReturnSend"
@@ -217,6 +390,10 @@ SObject pwrb:Class
           Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
+      !/**
+      !  Date and time when the last return to normal was
+      !  detected.
+      !*/
       Object ReturnTime $Attribute 28 
         Body SysBody
           Attr PgmName = "ReturnTime"
@@ -225,6 +402,10 @@ SObject pwrb:Class
           Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
+      !/**
+      !  Date and time when the last acknowledgement of normal
+      !  state was detected.
+      !*/
       Object AckTime $Attribute 29 
         Body SysBody
           Attr PgmName = "AckTime"
@@ -233,6 +414,10 @@ SObject pwrb:Class
           Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
+      !/**
+      !  Identity of the out unit (operator) which made an
+      !  acknowledgement.
+      !*/
       Object AckOutunit $Attribute 30 
         Body SysBody
           Attr PgmName = "AckOutunit"
@@ -244,6 +429,9 @@ SObject pwrb:Class
       ! ++
       ! Timer struct
       !
+      !/**
+      !  Indicates an active timer.
+      !*/
       Object TimerFlag $Intern 31 
         Body SysBody
           Attr PgmName = "TimerFlag"
@@ -252,6 +440,9 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
       EndObject
+      !/**
+      !  Points to the next element in the timer queue.
+      !*/
       Object TimerNext $Intern 32 
         Body SysBody
           Attr PgmName = "TimerNext"
@@ -262,6 +453,9 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
       EndObject
+      !/**
+      !  Number of remaining ticks.
+      !*/
       Object TimerCount $Intern 33 
         Body SysBody
           Attr PgmName = "TimerCount"
@@ -280,6 +474,13 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
       EndObject
+      !/**
+      !  Delay in seconds. Specifies when, since an alarm state
+      !  has occurred, the message will be sent. If the alarm
+      !  state disappears before the time has elapsed no message
+      !  is generated.
+      !  TimerTime >= the executing period of the PLC program.
+      !*/
       Object TimerTime $Intern 35 
         Body SysBody
           Attr PgmName = "TimerTime"
@@ -294,6 +495,10 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
       EndObject
+      !/**
+      !  Identity of this object is set at load file creation.
+      !  Used by the run time system.
+      !*/
       Object TimerObjDId $Intern 37 
         Body SysBody
           Attr Flags |= PWR_MASK_OBJDIDSELF
@@ -301,6 +506,13 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Objid"
         EndBody
       EndObject
+      !/**
+      !  The operator's authorities to change TimerTime. Not
+      !  implemented.
+      !  
+      !   0   -- Changes not allowed.
+      !   !=0 -- Changes allowed.
+      !*/
       Object TimerAcc $Intern 38 
         Body SysBody
           Attr PgmName = "TimerAcc"
@@ -308,6 +520,12 @@ SObject pwrb:Class
           Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
+      !/**
+      !  Specifies a valid interval at changes made by the
+      !  operator on TimerTime.
+      !  
+      !  TimerMin <= TimerTime <= TimerMax
+      !*/
       Object TimerMin $Intern 39 
         Body SysBody
           Attr PgmName = "TimerMin"

@@ -49,11 +49,6 @@ SObject pwrs:Type
 !  in the struct file for the the classvolume.
 !  For system types, these definitions reside in pwr.h.
 !*/
-!
-!  @image orm_typeid_1.gif
-!  @image orm_typeid_2.gif
-!  @image orm_typeid_3.gif
-!*/
   Object $TypeId pwr_eClass_Type pwr_eTix_TypeId
     Body SysBody
       Attr Type = pwr_eType_TypeId

@@ -54,17 +54,13 @@ SObject pwrs:Class
         EndBody
       EndObject
       !/**
-      ! @Summary Name of the proview error log file.
-      !  Name of the proview error log file.
-      !
-      !  Applied to OpenVMS node the system error log gets
-      !  always the name  PWR_VMS_'XXX'.LOG and the file is put
-      !  on the own node below sys$login. 'XXX' denotes the name
-      !  of the node.
+      ! Obsolete from V4.0.
       !*/
       Object ErrLogFile $Attribute 6
         Body SysBody
           Attr TypeRef = "pwrs:Type-$String132"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE	
         EndBody
       EndObject
       !/**
