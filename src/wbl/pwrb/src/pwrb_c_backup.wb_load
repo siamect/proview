@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_logic.h
+!  @Summary Backup of objects or attributes
 !  Points out a data segment in rtdb where the items will
 !  be backed up on a file.
 !  @image orm_backup_fo.gif
@@ -26,6 +27,7 @@
 !  the object referred to have to reside on the same
 !  target node, else no backup will be done. DataName
 !  specifies what to backup.
+!
 !  The input of a backup object configured by the PLC
 !  Editor, is connected to the output of the object that
 !  will be backed up. It is assumed that this output is
@@ -39,11 +41,9 @@
 !  attribute. The corresponding backup object is also
 !  configured and created in run time.
 !  
-!      Hints
-!  
-!  Note! Whole signal objects, see table 2-4 on p. 2-4, should
-!  not be backed up, as this might cause problems after
-!  booting.
+! @b Hints 
+!  Note! Whole signal objects should not be backed up, as 
+!  this might cause problems after booting.
 !  
 !  Every type of signal object has a pointer *ActualValue
 !  and it is not likely that this will be the  same after
@@ -55,15 +55,15 @@
 !  Instances in the backup file which,
 !  
 !  - are to be found in node's rtdb will be updated
-!  according to the back-up
+!    according to the back-up
 !  - are missed in rtdb, because they are deleted, or
-!  have got a new name e.g., will be skipped
+!    have got a new name e.g., will be skipped
 !  
 !  One cannot presuppose at change of PROVIEW distribution
 !  that the back-up file will works.
 !  
-!      See Also
-!  Backup_Conf
+! @b See Also
+!  @classlink Backup_Conf pwrb_backup_conf.html
 !*/
 SObject pwrb:Class
   Object Backup $ClassDef 22 

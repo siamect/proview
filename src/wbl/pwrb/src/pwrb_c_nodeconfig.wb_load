@@ -26,13 +26,12 @@
 !  Distribution objects (ApplDistribute, GraphDistribute) configures 
 !  application programs and other files that should be copied to the node.
 !
-!  Se also
+! @b See also
 !  @classlink RootVolumeLoad pwrb_rootvolumeload.html
 !  @classlink ClassVolumeLoad pwrb_classvolumeload.html
 !  @classlink FriendNodeConfig pwrb_friendnodeconfig.html
 !  @classlink ApplDistribute pwrb_appldistribute.html
 !  @classlink GraphDistribute pwrb_graphdistribute.html
-!  @classlink SystemDistribute pwrb_systemdistribute.html
 !  
 !*/
 SObject pwrb:Class

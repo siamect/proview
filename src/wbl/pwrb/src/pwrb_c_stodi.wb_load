@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
+!  @Summary Store Di signal
 !  Store Digital input.
 !  @image orm_stodi_fo.gif
 !
@@ -20,9 +21,10 @@
 !  its last segment is shown in the right empty part of
 !  the symbol.
 !  
-!  Note! This object is used for simulation purposes.
-!  IOSimulFlag will be set TRUE and IOReadWriteFlag FALSE
-!  in the $Node object, i.e. any physical I/O-hardware may
+! @b Note!
+!  This object is used for simulation purposes.
+!  SimulFlag will be set TRUE and ReadWriteFlag FALSE
+!  in the IOHandler object, i.e. any physical I/O-hardware may
 !  not be used on the node in connection to this object.
 !*/
 SObject pwrb:Class

@@ -9,12 +9,13 @@
 !
 !/**
 !  @Version 1.0
+!  @Summary Multi-row comment in plc document
 !  Object to create a multi-row text.
 !  
 !  Used when a larger description is to be done; e.g. in a
 !  Document object.
 !
-!  Example
+! @b Example
 !  @image orm_en1-28.gif
 !*/
 SObject pwrb:Class

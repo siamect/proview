@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_grafcet.h
+!  @Summary Conditional execution of plc-objects in a sub-window
 !  Conditional execution of objects located in a
 !  Sub-window.
 !  @image orm_csub_fo.gif

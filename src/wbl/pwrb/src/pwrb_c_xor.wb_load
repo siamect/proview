@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_logic.h
+!  @Summary Exclusive Or Gate
 !  Exclusive Or Gate.
 !  @image orm_xor_fo.gif
 !

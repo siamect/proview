@@ -10,16 +10,18 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_pid.c
+!  @Summary Select control modes or forced control of Pid objects.
 !  Used to select control modes (MANUAL / AUTO / CASCADE)
 !  or forced control of Pid objects.
 !  @image orm_en1-121.gif
 !
 !  The control modes are:
-!   · MANUAL -- when the 'operator' sets the output of the
+!
+!   - MANUAL -- when the 'operator' sets the output of the
 !     Pid object
-!   · AUTO   -- when the 'operator' chooses the set point
+!   - AUTO   -- when the 'operator' chooses the set point
 !     value
-!   · CASCADE -- the output from a Pid object is used to
+!   - CASCADE -- the output from a Pid object is used to
 !     adjust the set point value in a
 !     secondary Pid object.
 !  
@@ -27,6 +29,9 @@
 !  Pid object is not taken from the PID-algorithm but from
 !  the XForcVal-attribute in the Mode object. See control
 !  examples at the Pid object.
+!
+! @b See also
+!  @classlink PID pwrb_pid.html
 !*/
 SObject pwrb:Class
   Object Mode $ClassDef 147 

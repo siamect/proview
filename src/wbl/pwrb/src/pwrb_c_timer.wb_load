@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_logic.h
+!  @Summary Off-state or reset delay
 !  Off-state or reset delay.
 !  @image orm_timer_fo.gif
 !

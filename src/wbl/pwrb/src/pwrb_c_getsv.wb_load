@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Summary Get string value
 !  Get String value.
 !  @image orm_getsv_fo.gif
 !
@@ -17,9 +18,10 @@
 !  The complete name of the Sv-signal has to be supplied;
 !  its last segment name is shown in the right empty part
 !  of the symbol.
+!
 !  The GetSv object
-!  · contains no relevant information (=data) in rtdb,
-!  · is without executable code.
+!  - contains no relevant information (=data) in rtdb,
+!  - is without executable code.
 !*/
 SObject pwrb:Class
   Object GetSv $ClassDef 304 

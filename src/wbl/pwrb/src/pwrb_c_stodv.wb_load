@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
+!  @Summary Store Digital value
 !  Store Digital value.
 !  @image orm_stodv_fo.gif
 !

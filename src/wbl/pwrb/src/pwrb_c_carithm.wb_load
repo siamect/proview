@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_logic.h
+!  @Summary User programmable object in the C programming language
 !  User programmable object in the C programming language.
 !  @image orm_carithm_fo.gif
 !  
@@ -18,26 +19,26 @@
 !  
 !  Up to 8 analog inputs respectively outputs and up to 8
 !  digital inputs respectively outputs.
+!
 !  Digital inputs may be inverted either by means of the
 !  Attribute Editor, or by the logical operator '!' in the
 !  Code attribute.
 !  
-!  Example
-!
+! @b Example
 !  This application starts to declare a variable 'r1'. The r1 is 
 !  assigned the sum of A1 and A2. As A2 is left open it will be
 !  given a value internally. If r1 is greater then 2.7 OA1 will
 !  be increased by one, otherwise cleard.
-!  @image orm_en1-30.gif
+!  @image orm_carithm_1.gif
 !
-!  Hints
-!  
+! @b Hints  
 !  The symbol of the CArithm accommodates to the Code
 !  attribute. To avoid very wide CArithm objects finish
 !  statements with return.
 !  
-!  See Also
-!  AArithm, DArithm.
+! @b See Also
+!  @classlink AArithm pwrb_aarithm.html
+!  @classlink DArithm pwrb_darithm.html
 !*/
 SObject pwrb:Class
   Object CArithm $ClassDef 26 

@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_io.c
+!  @Summary Pulse counter
 !  Pulse counter.
 !  @image orm_count_fo.gif
 !  
@@ -17,8 +18,7 @@
 !  equal to a present value.
 !  The counter is triggered on leading edges.
 !  
-!      Hints
-!  
+! @b Hints  
 !  The object can be used as a 'pulse counter card' in the
 !  software at maximum one pulse every second (edge
 !  detecting) loop , i.e. a maximum of 25 Hz, if the base

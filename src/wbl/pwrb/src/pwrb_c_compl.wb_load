@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_arithm.c
+!  @Summary Compares an analog value with a low limit
 !  Compares an analog value (signal or parameter) with a
 !  low limit.
 !  @image orm_en1-38.gif 
@@ -25,9 +26,8 @@
 !  as the input becomes greater than or equal to the low
 !  limit plus the hysteresis.
 !  
-!  See Also
-!  
-!  Comph.
+! @b See Also  
+!  @classlink Comph pwrb_comph.html
 !*/
 SObject pwrb:Class
   Object Compl $ClassDef 40 

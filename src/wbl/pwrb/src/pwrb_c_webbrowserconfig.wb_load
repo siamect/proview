@@ -6,6 +6,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Summary Configuration of web browser and definition of symbols
 !  The WebBrowser object defines which web browser that will used when
 !  opening an URL.
 !  You can also define symbols used in URL's.

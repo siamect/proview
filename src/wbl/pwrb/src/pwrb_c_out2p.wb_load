@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_pid.c
+!  @Summary Converts an analog signal into a pulsed binary signal
 !  Converts an analog signal into a binary signal which
 !  varies in the time. The binary output has a
 !  pulse-proportional relay action in the dead zone, if

@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_logic.h
+!  @Summary Edge detector
 !  Edge detector.
 !  @image orm_edge_fo.gif
 !  

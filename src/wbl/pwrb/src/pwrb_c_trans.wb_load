@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_grafcet.h
+!  @Summary A Grafcet transition condition
 !  A Grafcet transition condition.
 !  @image orm_en1-236.gif
 !
@@ -54,7 +55,7 @@
 !  InitStep, are neither the Man flag nor the
 !  OpCond flag is cleared.
 !
-!  Example 
+! @b Example 
 !  @image orm_en1-237.gif
 !  Transition Condition with Different Types of Conditions.
 !  Parallel Sequences 

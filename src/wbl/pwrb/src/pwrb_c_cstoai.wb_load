@@ -10,17 +10,20 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
+!  @Summary Conditional storage of Ai signal
 !  Conditional Storage Analog input.
-!  @image orm_cstoai_fo.gif
-!  
+!  @image orm_cstoai_fo.gif  
+!
 !  Conditional storage of an analog value on a specified
 !  local Ai-signal (= Ai object).
 !  
 !  Conditional is aimed at the con-input, which is
 !  supposed to be connected.
-!  Note! This object is used for simulation purposes.
-!  IOSimulFlag will be set TRUE and IOReadWriteFlag FALSE
-!  in the $Node object, i.e. any physical I/O-hardware may
+!
+! @b Note!
+!  This object is used for simulation purposes.
+!  SimulFlag will be set TRUE and ReadWriteFlag FALSE
+!  in the IOHandler object, i.e. any physical I/O-hardware may
 !  not be used on the node in connection to this object.
 !*/
 SObject pwrb:Class

@@ -10,7 +10,8 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_logic.h
-!  Set Reset flip-flops.
+!  @Summary Set Reset flip-flop
+!  Set Reset flip-flop.
 !  @image orm_sr_s_fo.gif
 !
 !  The SR flip-flops hold on a leading edge on the
@@ -24,6 +25,8 @@
 !   - SR_R flip_flop FALSE ( = Reset)
 !
 !  @image orm_en1-204.gif
+! @b See also
+!  @classlink SR_R pwrb_sr_r.html
 !*/
 SObject pwrb:Class
   Object SR_S $ClassDef 212 

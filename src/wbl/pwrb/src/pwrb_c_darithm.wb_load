@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_logic.h
+!  @Summary User-defined logical expression
 !  User-defined logical expression.
 !  @image orm_darithm_fo.gif
 !  
@@ -40,7 +41,7 @@
 !  easier to get access from the object display. Unused
 !  inputs make compilation errors.
 !  
-!  Example
+! @b Example
 !  
 !  1 Combinational circuit. In the following example '&&' means
 !    logical and, '||' means logical or and '!' means not.
@@ -58,8 +59,9 @@
 !  
 !        Expression: (A1 + 3.5 * A2) < A3
 !  
-!   See Also
-!   AArithm that calculates the value of arithmetic
+! @b See Also
+!   @classlink AArithm pwrb_aarithm.html
+!   @classlink CArithm pwrb_carithm.html
 !*/
 SObject pwrb:Class
   Object DArithm $ClassDef 82 

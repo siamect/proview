@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Summary Long time storage of data for a trend graph
 !  Long time storage of data for a trend graph.
 !  
 !  In every node where trend graphs shall be stored there
@@ -54,8 +55,7 @@
 !  - pwr_tInt8, pwr_tInt16, pwr_tInt32
 !  - pwr_tUInt8, pwr_tUInt16, pwr_tUInt32
 !  
-!  Hints
-!  
+! @b Hints
 !  If a signal is associated with an object by the type
 !  DsTrend, DsFast, or DsHist this relation may be marked
 !  by putting the object direct below the current signal

@@ -15,7 +15,7 @@
 !  The FriendNodeConfig object is created in the project volume as a toplevel
 !  object in the node-hierachy.
 !
-!  Se also
+! @b See also
 !  @classlink NodeConfig pwrb_nodeconfig.html
 !  
 !*/

@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_logic.h
+!  @Summary And gate
 !  AND-gate for up to 8 inputs. Used inputs do not have to
 !  be chosen consecutively.
 !  @image orm_and_fo.gif

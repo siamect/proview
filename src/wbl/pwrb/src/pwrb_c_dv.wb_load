@@ -9,13 +9,14 @@
 !
 !/**
 !  @Version 1.0
+!  @Summary Digital value
 !  Digital value.
 !  
 !  Configures a calculated binary value in the Plant
 !  Configuration. The value is used as a binary flag with
 !  the values TRUE or FALSE.
 !  
-!      Hints
+! @b Hints
 !  Put the object below a $PlantHier object in the
 !  development environment.
 !  

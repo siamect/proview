@@ -10,13 +10,15 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_drive.c
+!  @Summary Start/Stop motor control
 !  START/ STOP motor control with supervision of contactor
 !  response and motion guard.
 !  @image orm_en1-58.gif
 !  Three different types of interlockings:
-!   · safety interlocking SafeStop
-!   · production interlocking ProdStop
-!   · 'prevent to start' interlocking, NoStart
+!
+!   - safety interlocking SafeStop
+!   - production interlocking ProdStop
+!   - 'prevent to start' interlocking, NoStart
 !
 !  SafeStop and ProdStop disable, each separately, the
 !  internal alarms (Alarm1, ..., Alarm3), i.e. when
@@ -30,33 +32,33 @@
 !  output signal ManMode in the following way:
 !  @image orm_en1-59.gif
 !  
-!   LOCAL  
-!         · Used at operation from for example an outer
+! @b LOCAL  
+!         - Used at operation from for example an outer
 !           operator's console, switching equipment etc.
-!         · Only safety interlocking SafeStop is taken
+!         - Only safety interlocking SafeStop is taken
 !           into account.
-!         · LocStart has a spring back push button
+!         - LocStart has a spring back push button
 !           function with a closing start function. The
 !           signal has to be set until ConOn is TRUE;
 !           see below.
-!         · LocDrive has a spring back push button
+!         - LocDrive has a spring back push button
 !           function with an opening stop function. STOP
 !           is also done when Local is reset.
 !           @image orm_en1-60.gif
 !  
-!  MANUAL/AUTO
-!         · Both production and safety interlockings are
+! @b MANUAL/AUTO
+!         - Both production and safety interlockings are
 !           concerned.
-!         · In MANUAL mode START/STOP request is handled
+!         - In MANUAL mode START/STOP request is handled
 !           by the operator by means of the attributes
 !           ManSta respectively ManSto.
-!         · In AUTO mode START request is done on a
+!         - In AUTO mode START request is done on a
 !           leading edge on AutoStart; STOP request when
 !           AutoStart is FALSE, i.e. not at any edge but
 !           on the level.
-!         · The changes,
+!         - The changes,
 !           -- AUTO -> MANUAL, do not influence the
-!             operational order, Order.
+!              operational order, Order.
 !           -- MANUAL -> AUTO. If the operational order
 !  
 !  Supervision. If contactor response respectively motion
@@ -66,9 +68,9 @@
 !  value of ProdTim or SpeedTim itself that determines if
 !  these are concerned or not.
 !
-!  Examples
+! @h1 Examples
 !
-!  Worm Conveyer with Motion Guard 
+! @b Worm Conveyer with Motion Guard 
 !
 !  Assumptions:
 !
@@ -85,7 +87,7 @@
 !  @image orm_en1-61.gif
 !  Periodical Control of a Contactor
 !
-!  Forward/Backward operation 
+! @b Forward/Backward operation 
 !
 !  Driving only in the operational mode AUTO. Forward/backward operation 
 !  is controlled by Dv-signals. Response from the contactor exists, but 
@@ -95,7 +97,7 @@
 !  @image orm_en1-62.gif
 !  Configuration of a Forward/Backward Operation
 !
-!  Two Conveyers 
+! @b Two Conveyers 
 !  @image orm_en1-63.gif
 !
 !  The conveyer Trp1 may start only if the conveyer Trp2 is already running 

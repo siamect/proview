@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Summary Digital input signal
 !  Digital input.
 !  
 !  Configures a digital input signal in the Plant
@@ -28,8 +29,7 @@
 !  sampled signal latest become FALSE until it is
 !  allowed to be TRUE again.
 !  
-!         Hints
-!  
+! @b Hints
 !  Put the object below a $PlantHier object in the
 !  development environment in such a way that it belongs
 !  to the same target node as its associated channel

@@ -7,6 +7,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Summary Defines a website on a proview node.
 !  The WebHandler object defines a website on a proview node.
 !
 !  The existence of a WebHandler object in a node will cause a 
@@ -25,7 +26,7 @@
 !  The EnableNavigator, EnableAlarmList and EnableEventList are not yet
 !  implemented.
 !
-!  Se also
+! @b See also
 !  @classlink WebGraph pwrb_webgraph.html
 !  @classlink WebLink pwrb_weblink.html
 !*/

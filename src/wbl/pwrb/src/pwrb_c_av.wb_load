@@ -9,13 +9,13 @@
 !
 !/**
 !  @Version 1.0
+!  @Summary Analog value
 !  Analog value.
 !  
 !  Configures a calculated analog value ( floating point
 !  number) in the Plant Configuration.
 !
-!      Hints
-!  
+! @b Hints 
 !  Put the object below a $PlantHier object in the
 !  development environment.
 !  The object is assigned an initial value (!= 0 ) in the

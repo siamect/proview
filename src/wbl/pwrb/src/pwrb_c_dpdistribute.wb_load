@@ -32,23 +32,22 @@
 !  greater or equal to the value in MaxIndex. Use the type pwr_sDpDistribute
 !  defined in $pwr_inc/rt_plc_data.h.
 !
-!  Example 
-!
+! @b Example 
 !  This is the code in a DataArithm witch has a DpDistribute object connected
 !  to the ODa1 output.
 !
-!    static pwr_sDpDistribute vect;
-!    int i;
+!        static pwr_sDpDistribute vect;
+!        int i;
 !
-!    ODa1 = vect;
-!    for ( i = 0; i < 24; i++) {
-!      if ( d1)
-!        vect[i] = 1;
-!      else
-!        vect[i] = 0;
-!    }
+!        ODa1 = vect;
+!        for ( i = 0; i < 24; i++) {
+!          if ( d1)
+!            vect[i] = 1;
+!          else
+!            vect[i] = 0;
+!        }
 ! 
-!  Se also
+! @b See also
 !  @classlink DataArithm pwrb_dataarithm.html
 !  @classlink DpCollect pwrb_dpcollect.html
 !  @classlink ApDistribute pwrb_apdistribute.html

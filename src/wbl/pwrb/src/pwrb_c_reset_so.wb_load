@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_grafcet.h
+!  @Summary Resets a stored Grafcet order
 !  Resets a stored Grafcet order when the input is TRUE.
 !  @image orm_reset_so_fo.gif
 !
@@ -21,8 +22,7 @@
 !  
 !  Contains no relevant information (=data) in rtdb.
 !
-!  Hints 
-!
+! @b Hints 
 !  One way to specify the complete name of the Order object in the Reset_SO object is to: 
 !
 !  - Selects, in the Navigator, the actual Order object. 

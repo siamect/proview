@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Summary Configuration of the backup process
 !  Configures the backup-function of a node.
 !  
 !  The objects or parts of objects that will be included
@@ -21,9 +22,8 @@
 !  The object has to be configured direct below a $Node
 !  object representing a process node.
 !
-!      See Also
-!
-!  Backup
+! @b See Also
+!  @classlink Backup pwrb_backup.html
 !*/
 SObject pwrb:Class
   Object Backup_Conf $ClassDef 23 

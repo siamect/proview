@@ -12,6 +12,7 @@
 !  The ApDistribute expands the number of analog outputs that can be
 !  handled in a DataArithm object.
 !  @image orm_apdistribute_fo.gif
+!
 !  The DpDistribute has 24 analog outputs, which values can be set from
 !  an array of Float32 declared in the code of a DataArithm. By connecting
 !  the data input of the ApDistribute to an data output of a DataArithm, 
@@ -32,19 +33,19 @@
 !  greater or equal to the value in MaxIndex. Use the type pwr_sApDistribute
 !  defined in $pwr_inc/rt_plc_data.h.
 !
-!  Example 
+! @b Example 
 !
 !  This is the code in a DataArithm witch has a ApDistribute object connected
 !  to the ODa1 output.
 !
-!    static pwr_sApDistribute vect;
-!    int i;
+!        static pwr_sApDistribute vect;
+!        int i;
 !
-!    ODa1 = vect;
-!    for ( i = 0; i < 24; i++)
-!      vect[i] = 0.1 * i;
+!        ODa1 = vect;
+!        for ( i = 0; i < 24; i++)
+!          vect[i] = 0.1 * i;
 ! 
-!  Se also
+! @b See also
 !  @classlink DataArithm pwrb_dataarithm.html
 !  @classlink ApCollect pwrb_apcollect.html
 !  @classlink DpDistribute pwrb_dpdistribute.html

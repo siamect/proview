@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Summary Get analog attribute
 !  Get Analog parameter.
 !  @image orm_getap_fo.gif
 !  
@@ -16,13 +17,12 @@
 !  parameter, in- or output signal) in an arbitrary
 !  object.
 !  
-!  The complete name of quantity has to be supplied; se
-!  hints below.
-!  The GetAp object
-!  
-!   · is a pure address reference,
-!   · contains no relevant information (=data) in rtdb,
-!   · is without executable code.
+!  The complete name of quantity has to be supplied.
+!
+!  The GetAp object  
+!   - is a pure address reference,
+!   - contains no relevant information (=data) in rtdb,
+!   - is without executable code.
 !*/
 SObject pwrb:Class
   Object GetAp $ClassDef 122 

@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Summary Object to display the value of some PLC attributes
 !  Object to display the value of some important PLC
 !  program attributes.
 !  @image orm_en1-200.gif
@@ -26,7 +27,7 @@
 !  object and the cycle time, be specified direct in the
 !  ShowPlcAttr object.
 !  
-!         Hints
+! @b Hints
 !  Create a ShowPlcAttr object in some of the Document
 !  objects in the PLC program, e.g. the first one. Then
 !  will the transcriptions of the PLC program contain

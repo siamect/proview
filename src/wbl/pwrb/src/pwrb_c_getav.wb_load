@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Summary Get analog value
 !  Get Analog value.
 !  @image orm_getav_fo.gif
 !  
@@ -19,11 +20,10 @@
 !  of the symbol.
 !  
 !  The GetAv object
-!   · is a pure address reference to the I/O-copied area
+!   - is a pure address reference to the I/O-copied area
 !     for Av-signals,
-!  
-!   · contains no relevant information (=data) in rtdb,
-!   · is without executable code.
+!   - contains no relevant information (=data) in rtdb,
+!   - is without executable code.
 !*/
 SObject pwrb:Class
   Object GetAv $ClassDef 123 

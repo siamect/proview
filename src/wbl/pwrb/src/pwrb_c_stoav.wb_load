@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
+!  @Summary Store Analog value
 !  Store Analog value.
 !  @image orm_stoav_fo.gif
 !  

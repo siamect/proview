@@ -22,7 +22,7 @@
 !  The distribution is carried out by the distribution window in the
 !  navigator, or by pwr_cmd with the command 'copy graph' or 'copy all'.
 !
-!  Se also
+! @b See also
 !  @classlink NodeConfig pwrb_nodeconfig.html
 !  @classlink ApplDistribute pwrb_appldistribute.html
 !*/

@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Summary Get digital attribute
 !  Get Digital parameter.
 !  @image orm_getdp_fo.gif
 !
@@ -18,11 +19,10 @@
 !  
 !  The complete name of the quantity has to be supplied.
 !
-!  The GetDp object
-!  
-!  · is a pure address reference to a binary quantity,
-!  · contains no relevant information (=data) in rtdb,
-!  · is without executable code.
+!  The GetDp object  
+!  - is a pure address reference to a binary quantity,
+!  - contains no relevant information (=data) in rtdb,
+!  - is without executable code.
 !*/
 SObject pwrb:Class
   Object GetDp $ClassDef 126 

@@ -19,8 +19,8 @@
 !
 !  The name of the object states the volume to load.
 !
+! @b See also
 !  @classlink NodeConfig pwrb_nodeconfig.html
-!  @classlink ClassVolumeLoad pwrb_classvolumeload.html
 !  
 !*/
 !

@@ -10,7 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
-!  
+!  @Summary Store Ao signal
 !  Stores an analog value ( e.g. output signal of the type
 !  pwr_tFloat32) on the specified local Ao object.
 !  @image orm_stoao_fo.gif
@@ -19,7 +19,7 @@
 !  its last segment is shown in the right empty part of
 !  the symbol.
 !
-!  Example
+! @b Example
 !  @image orm_en1-215.gif
 !  The current sum of Ai1 and Ai0 is calculated and stored in Ao0
 !*/

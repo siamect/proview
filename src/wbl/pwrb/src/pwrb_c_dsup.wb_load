@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_sup.h
+!  @Summary Digital supervisory
 !  Digital Supervisory.
 !  @image orm_dsup_fo.gif
 !
@@ -59,13 +60,14 @@
 !  unacknowledged C- resp. D-alarms is shown, while the
 !  text is put into the alarm list, where the
 !  acknowledgement can be done too.
+!
 !  Different types of out units exist:
 !  
-!  · OPERATOR: The select list is defined by an attribute
-!  in a User object.
-!  · PRINTER:    The select list is defined by an
-!  attribute in an EventPrinter
-!  object.
+!  - OPERATOR: The select list is defined by an attribute
+!    in a User object.
+!  - PRINTER:    The select list is defined by an
+!    attribute in an EventPrinter
+!    object.
 !  
 !  Note! A message created by an DSup object gets the same
 !  identity as the supervised object. The attribute
@@ -73,7 +75,7 @@
 !  specifies the hierarchies from which messages are to be
 !  received.
 !  
-!      Hints
+! @b Hints
 !  Supervision of a trailing edge can be done when the In-signal
 !  has been inverted.
 !  
@@ -88,8 +90,8 @@
 !  Editor and the eventmonitor takes care of the
 !  supervision.
 !
-!      See Also
-!  ASup which handles analog supervision.
+! @b See Also
+!  @classlink ASup pwrb_asup.html
 !*/
 SObject pwrb:Class
   Object DSup $ClassDef 110 

@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Summary Configures a PLC program
 !  Configures a PLC program.
 !  
 !  The name of the PlcPgm object is used to identify a

@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_arithm.c
+!  @Summary Time integrator
 !  Time integrator.
 !  @image orm_timint_fo.gif
 !
@@ -28,7 +29,7 @@
 !  integrator.
 !  @image orm_en1-235.gif
 !
-!  Example 
+! @b Example 
 !
 !  Suppose In is in litres / min. If we want ActVal to be
 !  in litres TimFact will be equal to 60 seconds /min. 

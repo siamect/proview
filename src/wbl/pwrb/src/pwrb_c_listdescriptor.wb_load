@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Summary Describes the contents and appearance of a single list.
 !  Describes the contents and appearance of a single list.
 !  
 !  The utility pwr_plc contains functions to handle the
@@ -162,6 +163,18 @@ SObject pwrb:Class
       !  the current signal object? The searching will be
       !  carried out among all the objects in the work-bench
       !  database. The attribute is used in signal lists.
+      !  @image orm_en1-116.gif
+      !  Figure above shows that there are two signal objects below a 
+      !  hierarchy H1-A1. One Dv-signal object named H1-A1-A1_HitTk 
+      !  and one Do-signal object named H1-A1-A1_HitIND_2514. For each 
+      !  signal object three fields are printed; the last segment of the
+      !  signals object name is printed to the left (controlled by
+      !  PrintObjName ), the two last segments of the name of connected
+      !  channel objects in the middle (controlled by PrintSigChan) and
+      !  finally the Description attribute of the signal object. A
+      !  cross-reference list is printed out for each signal object. The
+      ! '#' character precedes the name of objects which write into a signal
+      !  object. 
       !*/
       Object Crossreference $Attribute 3 
         Body SysBody
@@ -191,6 +204,9 @@ SObject pwrb:Class
       !        selected object. Specify "3" to involve the
       !        names of objects ( signal objects excluded) in
       !        other hierarchies with this type of references.
+      !  @image orm_en1-117.gif
+      !  @image orm_en1-118.gif
+      !  Advanced Transcription with External References
       !*/
       Object Externreference $Attribute 4 
         Body SysBody

@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_io.c
+!  @Summary Converts a 16-bits Gray code value into its decimal equivalent
 !  Converts a 16-bits Gray code value into its decimal
 !  equivalent.
 !  @image orm_gray_fo.gif

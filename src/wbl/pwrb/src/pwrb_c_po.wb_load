@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Summary Pulse output signal
 !  Pulse Output. A modified Do object to make specified
 !  pulses on a Do-channel.
 !  
@@ -37,7 +38,7 @@
 !  equal to TestValue when TestOn is TRUE, i.e. no
 !  filtering in this cases.
 !  
-!      Hints
+! @b Hints
 !  Put the object below a $PlantHier object in the
 !  development environment in such a way that it belongs
 !  to the same target node as its associated channel

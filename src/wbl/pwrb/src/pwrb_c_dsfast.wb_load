@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Summary Stores data for a fast graph à la storage oscilloscope.
 !  Stores data for a fast graph à la storage oscilloscope.
 !  
 !  In every node where fast graphs should be stored there

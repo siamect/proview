@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Summary Configures a digital output channel
 !  Configures a digital output channel independent of the
 !  type of physical Do-card.
 !  
@@ -23,8 +24,7 @@
 !  the output is based on FixedOutValue. Otherwise TestOn
 !  will settles which attribute the output is based on.
 !  
-!  Hints
-!  
+! @b Hints
 !  ChanDo objects are configured below a suitable Do-card
 !  object.
 !  Rack and card objects to different I/O systems are

@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Summary Configures a logical operator station for operator
 !  Configures a logical operator station for operator
 !  dialogue. A logical operator station represents a work
 !  station, X-terminal etc.
@@ -35,26 +36,26 @@
 !  continually activating the acoustic signal:
 !  
 !  1 At 'alarm streams' this may be done by demanding a
-!  certain time between acknowledgement ( of acoustic
-!  signal or event ) until an arriving event that
-!  demands acknowledgement once again is allowed to
-!  activate the acoustic signal in the normal way. This
-!  blocking time is specified by means of
-!  TimeBeforeNextBell.
+!    certain time between acknowledgement ( of acoustic
+!    signal or event ) until an arriving event that
+!    demands acknowledgement once again is allowed to
+!    activate the acoustic signal in the normal way. This
+!    blocking time is specified by means of
+!    TimeBeforeNextBell.
 !
 !  2 Reminder of any unacknowledged event. To remind the
-!  operator, after an acknowledgement of acoustic
-!  signal or after an alarm acknowledgement,   about
-!  remaining unacknowledged events a short acoustic
-!  signal sounds with the period of ReactivateBellTime.
-!  After a certain number of such periods (
-!  ReactivateBellCount specifies the numbers) the
-!  reminder time has  expired and the acoustic signal
-!  is activated in the normal way again. If there is no
-!  unacknowledged event at present and
-!  TimeBeforeNextBell > 0 then an arriving event that
-!  demands acknowledgement first will be announced by
-!  the reminder function.
+!    operator, after an acknowledgement of acoustic
+!    signal or after an alarm acknowledgement,   about
+!    remaining unacknowledged events a short acoustic
+!    signal sounds with the period of ReactivateBellTime.
+!    After a certain number of such periods 
+!    (ReactivateBellCount specifies the numbers) the
+!    reminder time has  expired and the acoustic signal
+!    is activated in the normal way again. If there is no
+!    unacknowledged event at present and
+!    TimeBeforeNextBell > 0 then an arriving event that
+!    demands acknowledgement first will be announced by
+!    the reminder function.
 !*/
 SObject pwrb:Class
   Object OpPlace $ClassDef 164 

@@ -7,11 +7,12 @@
 !
 !/**
 !  @Version 1.0
+!  @Summary Defines a web graph in a proview website
 !  The WebGraph object defines a web graph in a proview website.
 !  WebGraph objects should be positioned as children to a WebHandler object.
 !  
 !
-!  Se also
+! @b See also
 !  @classlink WebHandler pwrb_webhandler.html
 !  @classlink WebLink pwrb_weblink.html
 !*/

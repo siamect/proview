@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_pid.c
+!  @Summary Implements the robust PID control algorithm
 !  Implements the robust PID control algorithm.
 !  @image orm_en1-141.gif
 !
@@ -18,9 +19,9 @@
 !  interface for the Pid object. From the Mode object it
 !  is possible to select:
 !  
-!  · control modes ( MANUAL / AUTO / CASCADE)
-!  · forced control regarding the control signal of the
-!  controller.
+!  - control modes ( MANUAL / AUTO / CASCADE)
+!  - forced control regarding the control signal of the
+!    controller.
 !  
 !  Different PID strategies are implemented for
 !  incremental as well as positional form, see PidAlg
@@ -42,9 +43,13 @@
 !  info forms containing e.g. a time diagram with process
 !  value, setpoint value and output signal.
 !
-!  Examples
+! @h1 Function
+!  @image orm_pid_1.gif
+!  @image orm_pid_2.gif
 !
-!  Flow Control 
+! @h1 Examples
+!
+! @b Flow Control 
 !
 !  Flow control by speed control of a pump; see figure See Speed Control of a Pump. 
 !
@@ -97,7 +102,7 @@
 !  forced against ForcVal = XForcVal (=0), i.e. MinOut and MaxOut
 !  represent no limitation at all at forced control.
 !
-!  Alternate Controllers with Tracking 
+! @b Alternate Controllers with Tracking 
 ! 
 !  @image orm_en1-155.gif
 !  Shunt Control 
@@ -144,7 +149,8 @@
 !  TIC2 returns to AUTO when TT2 goes below the limit. 
 !  The flow through the heat exchanger is enough to put the TT1 above the set
 !   point value. Switches to TT1-control, i.e. TIC1 controls the shunt valve. 
-!  Cascade Control 
+!
+! @b Cascade Control 
 !  Temperature control in a furnace with two separate fuel loops, apart from
 !  the control of combustion air for the furnace, is shown in figure See Block
 !  Diagram Temperature Control. TT is the temperature transmitter, FT the flow
@@ -160,7 +166,7 @@
 !  @image orm_en1-158.gif
 !  Traditional Cascade Configuration 
 !
-!  Common or Individual Control of Several Control Loops 
+! @b Common or Individual Control of Several Control Loops 
 !  In figure 3-41 two control loops share a common Mode object to a synchronous
 !  behaviour in AUTO and MANUAL mode. But every single loop can also be controlled
 !  individually from separate Mode objects with an internal set point and its own
@@ -169,7 +175,7 @@
 !  @image orm_en1-159.gif
 !  Two Levels with Mode Objects in a Control Loop 
 !
-!  Ratio Control 
+! @b Ratio Control 
 !  Figure See Addition of a Reagent shows addition of a reagent. The ratio of the
 !  mixing is to be kept constant and independent of the FT2-flow. FT is the flow
 !  transmitter and FIC the flow controller. 
@@ -184,6 +190,9 @@
 !
 !  @image orm_en1-161.gif
 !  Ratio Control 
+!
+! @b See also
+!  @classlink Mode pwrb_mode.html
 !*/
 SObject pwrb:Class
   Object PID $ClassDef 174 

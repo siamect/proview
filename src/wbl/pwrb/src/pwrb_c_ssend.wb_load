@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_grafcet.h
+!  @Summary The last Grafcet step in a sub-sequential chain
 !  The last Grafcet step in a sub-sequential chain.
 !  @image orm_ssend_fo.gif
 !

@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
+!  @Summary Conditional storage of analog attribute
 !  Conditional Storage Analog parameter.
 !  @image orm_cstoap_fo.gif
 !  
@@ -30,7 +31,7 @@
 !  It is not allowed, by means of a function in C or PLC
 !  programs, to write in any of the inputs.
 !  
-!  Example
+! @b Example
 !
 !  At Gain-Scheduling it would be possible to use CStoAp
 !  objects with the analog inputs left open; see below.

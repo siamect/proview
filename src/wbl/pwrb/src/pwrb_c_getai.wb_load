@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Summary Get Ai signal
 !  Get Analog input.
 !  @image orm_getai_fo.gif
 !  
@@ -18,11 +19,12 @@
 !  The complete name of the Ai-signal has to be supplied;
 !  its last segment is shown in the right empty part of
 !  the symbol.
+!
 !  The GetAi object
-!  · is a pure address reference to the I/O-copied area
+!  - is a pure address reference to the I/O-copied area
 !    for Ai-signals,
-!  · contains no relevant information (=data) in rtdb,
-!  · is without executable code.
+!  - contains no relevant information (=data) in rtdb,
+!  - is without executable code.
 !*/
 SObject pwrb:Class
   Object GetAi $ClassDef 120 

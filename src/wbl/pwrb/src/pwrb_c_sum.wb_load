@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_arithm.c
+!  @Summary Summator
 !  Summator.
 !  @image orm_en1-225.gif
 !
@@ -21,7 +22,7 @@
 !  etc.
 !  A constant value, Const, can be added to the sum.
 !
-!  Example 
+! @b Example 
 !
 !  1. To calculate 2.2 + IN1 + 2 IN2 - 1.5 IN3
 !     - Mark the three first inputs Used in a Sum object

@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_io.c
+!  @Summary Digital input binary coded decimal
 !  Digital input Binary Coded Decimal.
 !  @image orm_en1-55.gif
 !  
@@ -24,7 +25,7 @@
 !  BCD4 - BCD7 represents integers in the interval {10,20,...,90}
 !  BCD8 - BCDB represents integers in the interval {100,200,...,900}
 !  
-!         Example
+! @b Example
 !  1  BCD1 = BCD4 = BCD7 = TRUE and the rest FALSE.
 !  
 !     VAL gets the value BCD1 * 2 + BCD4 * 10 + BCD7 * 80 = 92
@@ -34,12 +35,12 @@
 !  
 !     VAL = last valid value and err is TRUE, i.e. one
 !  
-!         Hints
+! @b Hints
 !  More DiBCD objects can be connected in parallel to
 !  additional BCD-input signals.
 !  
-!         See Also
-!  BCDDo, which implements the reverse function.
+! @b See Also
+!  @classlink BCDDo pwrb_bcddo.html
 !*/
 SObject pwrb:Class
   Object DiBCD $ClassDef 87 

@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Summary Configures a user category of an operator station
 !  Configures a user category of an operator station.
 !  
 !  Configures a user category below the OpPlace

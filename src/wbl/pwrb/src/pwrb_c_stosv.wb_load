@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_string.h
+!  @Summary Storage of string value
 !  Storage of string value.
 !  @image orm_cstosv_fo.gif
 !

@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_io.c
+!  @Summary Translates a pulse counter value into an engineering value
 !  Translates a pulse counter value into an engineering
 !  value, e.g. position, volume etc.
 !  @image orm_en1-162.gif

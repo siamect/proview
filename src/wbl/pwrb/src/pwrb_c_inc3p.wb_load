@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_pid.c
+!  @Summary Incremental 3-point output with dead zone
 !  Incremental 3-point output with dead zone. Incremental
 !  comes from the type of input and the digit 3 of the
 !  output, which can have three distinct values, e.g. open
@@ -31,6 +32,7 @@
 !  down respectively up with a time amount of ScanTime, at
 !  every scanning when an increment or decrement signal
 !  has been set.
+!
 !  To avoid ripple on the outputs, which may be
 !  destructive to the actuator at small control errors,
 !  the absolute value of the Acc-attribute has to exceed
@@ -50,9 +52,9 @@
 !  by a frequency determined by the PlcPgm object. But
 !  only the signals may be reset by the timer control.
 !
-!  Example
+! @h1 Example
 !
-!  Timer Control of Outputs 
+! @b Timer Control of Outputs 
 !
 !  Suppose a flow control with an electrically-activated valve 
 !  with increment/decrement control. The flow signal ( here kalle2) 

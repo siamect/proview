@@ -7,12 +7,12 @@
 !
 !/**
 !  @Version 1.0
+!  @Summary Defines a web link in a proview website
 !  The WebGraph object defines a web link in a proview website, and will
 !  be displayed as an entry in the menu frame.
 !  WebLink objects should be positioned as children to a WebHandler object.
 !  
-!
-!  Se also
+! @b See also
 !  @classlink WebHandler pwrb_webhandler.html
 !  @classlink WebGraph pwrb_webgraph.html
 !*/

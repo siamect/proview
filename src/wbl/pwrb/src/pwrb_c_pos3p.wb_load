@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_pid.c
+!  @Summary Positional 3-step controller
 !  Positional 3-step controller with position feedback and
 !  dead zone. Positional is aimed at the input signal and
 !  the digit 3 on the fact that the output signals specify
@@ -47,9 +48,9 @@
 !  It is possible to use the outputs Open / Close and the
 !  signals named by DoOpen/DoClose at the same time.
 !
-!  Example 
+! @h1 Example 
 !
-!  Timer Control of Outputs 
+! @b Timer Control of Outputs 
 !
 !  Suppose a flow control with an electrically-activated valve
 !  with increment/decrement control. The flow signal (here kalle2)

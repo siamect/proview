@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_grafcet.h
+!  @Summary Grafcet step representing a sub-sequential chain
 !  Grafcet step representing an underlying sequential
 !  chain, a sub-sequential chain.
 !  @image orm_substep_fo.gif
@@ -22,10 +23,11 @@
 !  sub-window. The objects in the window get a
 !  WindowSubStep object as parent object.
 !  Such a sub-window,
-!   · starts with a SsBegin object, which becomes active
+!   - starts with a SsBegin object, which becomes active
 !     when the SubStep object becomes active.
-!   · ends with a SsEnd object, which tells when the
+!   - ends with a SsEnd object, which tells when the
 !     SubStep object is finished.
+!
 !  To the right output one or more Order objects can be
 !  connected at the same time as well as one or more Stoxx,
 !  Setxx or Resxx objects. The output can also be left

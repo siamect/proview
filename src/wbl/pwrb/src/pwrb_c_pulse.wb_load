@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_logic.h
+!  @Summary One-shot pulse with variable width
 !  One-shot pulse with variable width.
 !  @image orm_pulse_fo.gif
 !
@@ -22,8 +23,7 @@
 !  leading edge of the input signal.
 !  @image orm_en1-182.gif
 !
-!  Hints
-!  
+! @b Hints
 !  If a reset function is needed instead of a pulse with a
 !  certain period the pulse can be realized by a Wait, And,
 !  Or, Edge, and a SR_R object.

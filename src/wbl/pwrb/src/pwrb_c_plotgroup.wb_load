@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Summary Configures a group of trend or fast graphs
 !  Configures a group of trend or fast graphs.
 !  
 !  The PlotGroup object brings together a number of fast or
@@ -27,8 +28,7 @@
 !  Between samples in a slowly sampled graph interpolation
 !  takes place.
 !  
-!  Hints
-!
+! @b Hints
 !  The buttons 'Trend' and 'Fast' in the operator
 !  environment display both lists of those PlotGroup objects
 !  ( or graphs) that are available on the node independent

@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_drive.c
+!  @Summary Motor valve positioner
 !  Motor valve positioner with three operating states and
 !  supervision of operation time and contactor response.
 !  @image orm_en1-123.gif
@@ -41,9 +42,9 @@
 !  operation. A new order resets the alarms and initiates
 !  a new operation.
 !
-!  Example
+! @h1 Example
 !
-!  Carriage Operation 
+! @b Carriage Operation 
 !  @image orm_en1-126.gif
 !
 !  The carriage is run only in MANUAL mode. 
@@ -53,7 +54,7 @@
 !  @image orm_en1-127.gif
 !  MValve Object Used in Motor Control
 !
-!  Control Valve
+! @b Control Valve
 !  @image orm_en1-127.gif
 !  Motor Valve Control
 !

@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_string.h
+!  @Summary Conditional storage of string attribute.
 !  Conditional Storage of string attribute.
 !  @image orm_cstosp_fo.gif
 !
@@ -26,8 +27,9 @@
 !  It is not allowed, by means of a function in C or PLC
 !  programs, to write in any of the inputs.
 !  
-!      Example
-!  It would be possible to use CStoSp to change the DetectText.
+! @b Example
+!  It is possible to use CStoSp to change the DetectText in
+!  ASup or DSup objects.
 !*/
 SObject pwrb:Class
   Object CStoSp $ClassDef 311 

@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Summary Configures the event monitor
 !  Specifies attributes to a single message handler.
 !  
 !  Every message handler job needs a MessageHandler

@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_grafcet.h
+!  @Summary The first step in a Grafcet-chain
 !  The first step in a Grafcet-chain.
 !  @image orm_initstep_fo.gif
 !
@@ -24,10 +25,10 @@
 !  sequential chains in the PLC program in the following
 !  way. When the reset signal makes the transition:
 !  
-!   · 0 -> 1 each Step, InitStep and Order object in the
+!   - 0 -> 1 each Step, InitStep and Order object in the
 !     PLC program becomes inactive. Stored orders are
 !     aborted.
-!   · 1 -> 0 the InitStep object(s) of the PLC program
+!   - 1 -> 0 the InitStep object(s) of the PLC program
 !     becomes active.
 !  
 !  If individual reset signals are required for every
@@ -42,7 +43,7 @@
 !  on page 3-328. It may also be left open or used as an
 !  ordinary binary signal; see figure 3-22 on page 3-184.
 !
-!  Examples
+! @b Examples
 !
 !  Figure below shows how an InitStep , ISO, may be configured 
 !  in a straight sequential chain. A chain is said to be straight 

@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Summary Configures an analog input channel with table conversion
 !  Configures an analog input channel independent of the
 !  type of physical Ai-card. The conversion from signal
 !  value to actual value is done by means of a table.
@@ -47,10 +48,11 @@
 !  In the target environment the following occurs with the
 !  SigValue:
 !  
-!  · If SigValuemin <= s(SigValue) >= SigValuemax , then
-!     - the index n is calculated as SigValue(n) = s(SigValue) < SigValue(n+1)
-!     ­ t( s(SigValue) ) = Intercept(n) + Slope(n)* s(SigValue)
-!  · otherwise, t( s(SigValue) ) = OutValue for the first
+!  - If SigValuemin <= s(SigValue) >= SigValuemax , then
+!     - the index n is calculated as 
+!               SigValue(n) = s(SigValue) < SigValue(n+1)
+!     - t( s(SigValue) ) = Intercept(n) + Slope(n)* s(SigValue)
+!  - otherwise, t( s(SigValue) ) = OutValue for the first
 !    or the last pair of numbers depending on 
 !    s(SigValue) < s(SigValuemin) or s(SigValuemax) > s(SigValuemax)
 !             
@@ -58,12 +60,12 @@
 !  put in, for each NoOfCoordinates, the corresponding
 !  pair of numbers (InValue, OutValue ) respectively (Intercept, Slope).
 !  
-!  See Also
-!  
-!  ChanAi, whose conversion to ActualValue is based on a
-!  polynomial.
 !  ChanAit objects are configured below a suitable card
 !  object.
+!
+! @b See also
+!  
+! @classlink ChanAi pwrb_chanai.html
 !*/
 SObject pwrb:Class
   Object ChanAit $ClassDef 29 

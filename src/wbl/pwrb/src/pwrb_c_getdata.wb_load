@@ -14,7 +14,7 @@
 !  DataArithm-objects by connecting the output of the GetData
 !  in the plc editor.
 !
-!  Se also
+! @b See also
 !  @classlink DataArithm pwrb_dataarithm.html
 !*/
 !

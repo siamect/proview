@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Summary Configures documents in the PLC editor
 !  Configures in the working area of the PLC Editor an
 !  area in A-format.
 !  @image orm_en1-56.gif
@@ -35,22 +36,6 @@
 !  object will be created. The file is default located on
 !  'pwrp_tmp'.
 !  
-!  By the pwr_plc commands:
-!  · document /repage -- the Document objects are page
-!  numbered on the form x.y. The number before point
-!  specifies a PlcPgm within the PROVIEW system and the
-!  number after specifies Document objects in the same
-!  order as they have been created in the PLC program.
-!  If the pages have to be numbered in a certain order
-!  they have to be ordered in the wanted way in the
-!  work-bench database.
-!  
-!   · document /list -- writes an alphabetic list with the
-!     name on all Document objects in the system.
-!     The transcription is default sent to the
-!     same window as from where the development environment
-!     was started.
-!
 !  If there is a need for a larger working surface choose
 !  A3 format in the Document object. The objects in the
 !  transcription will be somewhat reduced in scale

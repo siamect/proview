@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Summary Configuration of DsTrend process
 !  Specifies attributes of a single DsTrend job.
 !  
 !  In every node where trend graphs shall be stored there
@@ -17,8 +18,7 @@
 !  @image orm_en1-71.gif
 !  DsTrend Job with Matching Objects 
 !  
-!  Hints
-!
+! @b Hints
 !  Because a DsTrend job default is loaded to each OpenVMS
 !  node it is suitable to configure DsTrendConf object on
 !  this nodes. The DsTrendConf objects are placed below
@@ -27,8 +27,8 @@
 !  If a Ds_Trend job is loaded to a node that has no
 !  DsTrendConf object, it will execute with 1 Hz.
 !  
-!         See Also
-!  DsTrend.
+! @b See Also
+!  @classlink DsTrend pwrb_dstrend.html
 !*/
 SObject pwrb:Class
   Object DsTrendConf $ClassDef 109 

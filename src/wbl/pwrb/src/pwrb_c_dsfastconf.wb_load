@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Summary Configuration of DsFast process
 !  Specifies attributes of a single DsFast.
 !  
 !  In every node where fast graphs should be stored there
@@ -16,8 +17,7 @@
 !  DsFast objects.
 !  @image orm_en1-67.gif
 !
-!  Hints
-!  
+! @b Hints
 !  The DsFastConf object is placed below the $Node object.
 !  If a Ds_Fast job is loaded to a node, which has no
 !  DsFastConf object, it will execute with 10 Hz.
@@ -30,8 +30,8 @@
 !  EBUILD-file.
 !  @image orm_en1-68.gif
 !  
-!      See Also
-!  DsFast
+! @b See Also
+!  @classlink DsFast pwrb_dsfast.html
 !*/
 SObject pwrb:Class
   Object DsFastConf $ClassDef 105 

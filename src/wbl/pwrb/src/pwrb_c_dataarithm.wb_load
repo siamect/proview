@@ -52,7 +52,7 @@
 !  DpDistribute, ApDistribute, DpCollect and ApCollect objects can be used
 !  to expand the number of inputs and outputs to the DataArithm.  
 !
-!  Se also
+! @b See also
 !  @classlink GetData pwrb_getdata.html
 !  @classlink DpCollect pwrb_dpcollect.html
 !  @classlink ApCollect pwrb_apcollect.html

@@ -7,6 +7,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Summary Defines the action of a pushbutton in the operator window
 !  The XttGraph object defines a xtt action for an operator, that can be
 !  executed from a pushbutton in the operator window. An action can be
 !  opening a ge graph or a java frame, or executing a xtt-command.
@@ -24,7 +25,7 @@
 !  This action i supported for all objects that contains a DefGraph attribute,
 !  for example $PlantHier, Ai, Ao, Di, Do, Av and Dv.
 !
-!  Se also
+! @b See also
 !  @classlink OpPlace pwrb_opplace.html
 !  @classlink User pwrb_user.html
 !*/

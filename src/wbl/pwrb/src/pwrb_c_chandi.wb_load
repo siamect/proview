@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Summary Configures a digital input channel
 !   Configures a digital input channel independent of the
 !   type of physical Di-card.
 !  
@@ -22,8 +23,7 @@
 !   InvMask1 and ConvMask1 to card object, but InvertOn and
 !   ConversionOn belongs to this object.
 !  
-!  Hints
-!  
+! @b Hints  
 !  ChanDi objects are configured below a suitable Di-card
 !  object.
 !  Rack and card objects to different I/O systems are

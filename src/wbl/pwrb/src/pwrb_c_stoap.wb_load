@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
+!  @Summary Store analog attribute
 !  Store Analog parameter. Used in run time to write in
 !  analog parameters.
 !  @image orm_stoap_fo.gif

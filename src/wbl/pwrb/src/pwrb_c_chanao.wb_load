@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Summary Configures an analog output channel
 !  Configures an analog output channel independent of the
 !  type of physical Ao-card.
 !
@@ -23,8 +24,7 @@
 !  the output is based on FixedOutValue. Otherwise TestOn
 !  will settles which attribute the output is based on.
 !  
-!      Hints
-!  
+! @bHints  
 !  ChanAo objects are configured below a suitable card
 !  object.
 !  

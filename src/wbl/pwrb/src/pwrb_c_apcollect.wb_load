@@ -29,20 +29,20 @@
 !  object. An input doesn't has to be connected, the value can be set at
 !  runtime or in the configurator.
 !
-!  Example
+! @b Example
 !
 !  This is the code in a DataArithm which has a ApCollect object connected
 !  to the Da1 input.
 !
-!  classdef Da1 ApCollect;
-!  int i;
+!      classdef Da1 ApCollect;
+!      int i;
 !
-!  OA1 = 0;
-!  for ( i = 0; i < Da1->MaxIndex; i++)
-!    if ( Da1->Ap[i])
-!      OA1++;
+!      OA1 = 0;
+!      for ( i = 0; i < Da1->MaxIndex; i++)
+!        if ( Da1->Ap[i])
+!          OA1++;
 !
-!  Se also
+! @b See also
 !  @classlink DataArithm pwrb_dataarithm.html
 !  @classlink DpCollect pwrb_dpcollect.html
 !  @classlink ApDistribute pwrb_apdistribute.html

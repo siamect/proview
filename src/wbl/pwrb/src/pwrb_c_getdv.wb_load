@@ -9,7 +9,9 @@
 !
 !/**
 !  @Version 1.0
+!  @Summary Get digital value
 !  Get Digital value.
+!
 !  @image orm_getdv_fo.gif
 !
 !  Fetches the engineering value for specified Dv-signal
@@ -18,11 +20,12 @@
 !  The complete name of the Dv-signal has to be supplied;
 !  its last segment name is shown in the right empty part
 !  of the symbol.
+!
 !  The GetDv object
-!  · is a pure address reference to the I/O-copied area
+!  - is a pure address reference to the I/O-copied area
 !    for Dv-signals,
-!  · contains no relevant information (=data) in rtdb,
-!  · is without executable code.
+!  - contains no relevant information (=data) in rtdb,
+!  - is without executable code.
 !*/
 SObject pwrb:Class
   Object GetDv $ClassDef 127 

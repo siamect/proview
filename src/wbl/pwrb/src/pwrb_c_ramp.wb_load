@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_arithm.c
+!  @Summary Limits a quantity's rate of change
 !  Limits a quantity's rate of change.
 !  @image orm_ramp_fo.gif
 !
@@ -21,8 +22,7 @@
 ! 
 !  An external signal may also be used as feedback. See example below.
 !
-!  Example 
-!
+! @b Example 
 !  In this example an external signal is connected to the FB-input of
 !  the Ramp object. The feedback connection from the Select object to
 !  the Ramp object is of the type analog feedback.

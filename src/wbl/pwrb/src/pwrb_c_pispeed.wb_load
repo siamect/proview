@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_arithm.c
+!  @Summary Derivative a pulse Co-signal
 !  Derivative a pulse Pi-signal.
 !  @image orm_pispeed_fo.gif
 !
@@ -18,7 +19,7 @@
 !  The pulse difference becomes correct even if the input
 !  signal gets overflow.
 !  
-!      Example
+! @b Example
 !  If Gain is in m³/pulse the division gives m³/seconds.
 !  By TimFact = 3600 seconds/h the result will be in m³/h.
 !*/

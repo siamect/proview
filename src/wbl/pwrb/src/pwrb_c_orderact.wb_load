@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_grafcet.h
+!  @Summary Fetches the status of the order object in an order activity window
 !  Fetches from an activity window the status of an
 !  associated Order object.
 !  @image orm_orderact_fo.gif

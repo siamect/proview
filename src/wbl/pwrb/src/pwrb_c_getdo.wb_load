@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Summary Get Do signal
 !  Get Digital output.
 !  @image orm_getdo_fo.gif
 !
@@ -19,10 +20,10 @@
 !  of the symbol.
 !  
 !  The GetDo object
-!   · is a pure address reference to the I/O-copied area
+!   - is a pure address reference to the I/O-copied area
 !     for Do-signals,
-!   · contains no relevant information (=data) in rtdb,
-!   · is without executable code.
+!   - contains no relevant information (=data) in rtdb,
+!   - is without executable code.
 !*/
 SObject pwrb:Class
   Object GetDo $ClassDef 125 

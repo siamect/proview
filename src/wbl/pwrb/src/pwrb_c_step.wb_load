@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_grafcet.h
+!  @Summary An ordinary sequential Grafcet step
 !  An ordinary sequential Grafcet step.
 !  @image orm_step_fo.gif
 !
@@ -24,7 +25,7 @@
 !  common reset signal; for more information see the
 !  InitStep object.
 !
-!  Examples
+! @h1 Examples
 !
 !  @image orm_en1-209.gif
 !  Connections to the Step Objects in a Straight Sequence 

@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_io.c
+!  @Summary Binary coded decimal digital output.
 !  Binary Coded Decimal Digital output.
 !  @image orm_en1-25.gif
 !  
@@ -29,8 +30,7 @@
 !  
 !  Used for example to govern a character display.
 !  
-!      Example
-!  
+! @b Example  
 !  Suppose the input signal has the value 235 016.7
 !  The BCD-value becomes 5016 because
 !        BCD1 and BCD2 are both set => 6
@@ -42,9 +42,8 @@
 !  In that case also the the decimal digits are
 !  representing 10 000 and 100 000 binary coded decimal.
 !  
-!      See Also
-!  
-!  DiBCD, which implements the reverse function; see p.
+! @b See Also  
+!  @classlink DiBCD pwrb_dibcd.html
 !*/
 SObject pwrb:Class
   Object BCDDo $ClassDef 24 

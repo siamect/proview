@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Summary Get String attribute
 !  Get String parameter.
 !  @image orm_getsp_fo.gif
 !
@@ -19,9 +20,9 @@
 !  The complete name of quantity has to be supplied.
 !
 !  The GetSp object  
-!   · is a pure address reference,
-!   · contains no relevant information (=data) in rtdb,
-!   · is without executable code.
+!   - is a pure address reference,
+!   - contains no relevant information (=data) in rtdb,
+!   - is without executable code.
 !*/
 SObject pwrb:Class
   Object GetSp $ClassDef 309 

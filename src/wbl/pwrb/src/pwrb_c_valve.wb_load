@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_drive.c
+!  @Summary Valve positioner with on/off state
 !  Valve positioner with two states, i.e. on-off action
 !  and operation time supervision.
 !  @image orm_en1-238.gif
@@ -27,8 +28,7 @@
 !  output signal ManMode in the following way:  
 !  @image orm_en1-239.gif
 !
-!  LOCAL
-!
+! @b LOCAL
 !  Used at operation from for example an outer
 !  operator's console, switching equipment, etc.
 !  
@@ -47,8 +47,7 @@
 !    -- LOCAL --> AUTO AutoOpen is concerned.
 !    -- LOCAL --> MANUAL OrderOpen remains unaffected.
 !
-!  MANUAL/AUTO
-!
+! @b MANUAL/AUTO
 !  - Both production and safety interlockings are
 !    concerned.
 !  
@@ -78,9 +77,9 @@
 !  highest priority wins; see below.
 !  @image orm_en1-241.gif
 !
-!  Example 
+! @h1 Example 
 !
-!  Pump with a valve 
+! @b Pump with a valve 
 !  @image orm_en1-242.gif
 !  At request to start the pump shall the valve first open
 !  and then the pump start. 

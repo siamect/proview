@@ -27,18 +27,18 @@
 !  MaxIndex should be assigned the number of used inputs in the DataCollect
 !  object.
 !
-!  Example
+! @b Example
 !
 !  This is the code in a DataArithm which has a DataCollect object connected
 !  to the Da1 input.
 !
-!  classdef Da1 DataCollect;
-!  int i;
+!      classdef Da1 DataCollect;
+!      int i;
 !
-!  OA1 = 0;
-!  for ( i = 0; i < Da1->MaxIndex; i++)
-!    if ( ((pwr_sClass_Mtrl *)(Da1->DataP[i]))->Length > 10.0)
-!      OA1++;
+!      OA1 = 0;
+!      for ( i = 0; i < Da1->MaxIndex; i++)
+!        if ( ((pwr_sClass_Mtrl *)(Da1->DataP[i]))->Length > 10.0)
+!          OA1++;
 !
 !*/
 SObject pwrb:Class

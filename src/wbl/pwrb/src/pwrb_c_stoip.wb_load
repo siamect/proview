@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
+!  @Summary Store integer attribute
 !  Store Integer parameter. Used in run time to write in
 !  integer parameters.
 !  @image orm_stoip_fo.gif

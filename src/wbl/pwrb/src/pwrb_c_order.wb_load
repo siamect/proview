@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_grafcet.h
+!  @Summary A Grafcet order
 !  A Grafcet order.
 !  @image orm_en1-131.gif
 !  To every sequential step one or more Order objects can
@@ -60,21 +61,20 @@
 !  
 !  We talk about a C-order when the condition attribute is
 !  set. The condition of a C-order can be defined in one
-!  of the following two ways (see figure 3-55, p. 3-366):
+!  of the following two ways:
 !
 !  1  by direct connecting of a binary condition to the
-!  symbol's vertical input.
+!     symbol's vertical input.
 !
 !  2  by a combinational circuit in a conditional window.
-!  A SetCond object in the conditional window stores
-!  the condition state in the Order object. The objects
-!  in the window get a WindowCond object (see p. 3-394)
-!  as parent object.
-!  Opposite to an activity window a conditional window is
-!  evaluated each time when the PLC program executes.
+!     A SetCond object in the conditional window stores
+!     the condition state in the Order object. The objects
+!     in the window get a WindowCond object (see p. 3-394)
+!     as parent object.
+!     Opposite to an activity window a conditional window is
+!     evaluated each time when the PLC program executes.
 !
-!  Example 
-!
+! @b Example 
 !  Figure below illustrates the use of Order objects: 
 !
 !  - Several orders (Ord0, Ord1, ... ) can be connected to a step, here S0. 

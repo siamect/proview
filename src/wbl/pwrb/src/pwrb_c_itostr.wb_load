@@ -10,7 +10,8 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_string.h
-!  Convert analog value to string.
+!  @Summary Convert integer value to string.
+!  Convert integer value to string.
 !  @image orm_itostr_fo.gif
 !
 !  The ItoStr object converts the value of the integer input to

@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
+!  @Summary Get integer attribute
 !  Get Integer parameter.
 !  @image orm_getip_fo.gif
 !
@@ -18,16 +19,15 @@
 !  
 !  The complete name of the parameter has to be supplied.
 !  The GetIp object
-!  · is a pure address reference,
-!  · contains no relevant information (=data) in rtdb,
-!  · is without executable code.
+!  - is a pure address reference,
+!  - contains no relevant information (=data) in rtdb,
+!  - is without executable code.
 !
-!  Example
-!
+! @b Example
 !  In the example below the value of the integer parameter, AccMod is stored: 
 !
-!  - unconditionally by STOIP 
-!  _ conditionally by CSTOIP 
+!  - unconditionally by StoIp 
+!  - conditionally by CStoIp 
 !
 !  The value is also unconditionally stored as a pwr_tFloat32 on an attribute 
 !  pwr_float32 in the object named TIC2M

@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_drive.c
+!  @Summary Positioner
 !  Positioner.
 !  @image orm_en1-172.gif
 !
@@ -19,7 +20,8 @@
 !  by means of the output signal ManMode in the following
 !  way:
 !  @image orm_en1-173.gif
-!  MANUAL The MANUAL mode is thought to be handled from the object\s display. 
+! @b Manual
+!  The MANUAL mode is thought to be handled from the object\s display. 
 !
 !  * A set point value is set in SetPos. 
 !  * The positioning is started by setting PosOn to TRUE. 
@@ -33,7 +35,7 @@
 !
 !  - (the input signal) Reset becomes TRUE.
 !
-!
+! @b Auto
 !  The positioning starts on a leading edge on the input signal AutoPos. 
 !  It can be finished of different reasons: 
 !  - TimerTime > 0. The process value has been within the dead zone
@@ -46,9 +48,9 @@
 !
 !  - (the input signal) Reset becomes TRUE.
 !
-!  Example
+! @h1 Example
 !
-!  Position Controlled Carriage. 
+! @b Position Controlled Carriage. 
 !  
 !  By means of a push button the positioning starts, and the carriage runs
 !  to a set point value set by a potentiometer. The positioning is to be

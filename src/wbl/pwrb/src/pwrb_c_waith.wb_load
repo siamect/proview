@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_logic.h
+!  @Summary On-state or set delay with hold function
 !  On-state or set delay with hold function.
 !  @image orm_waith_fo.gif
 !
@@ -23,8 +24,7 @@
 !  remains TRUE the output is set. It is cleared as soon
 !  as the input becomes FALSE.
 !
-!  Example 
-!
+! @b Example 
 !  In this example TimerTime is 5 seconds which gives
 !  TimerCount the value 250. 
 !
@@ -32,6 +32,9 @@
 !  As seen in this illustration the function is exactly as
 !  in a Wait object, with the exception of a set hld-signal
 ! freezing the down counting.
+!
+! @b See also
+!  @classlink Wait pwrb_wait.html
 !*/
 SObject pwrb:Class
   Object Waith $ClassDef 250 

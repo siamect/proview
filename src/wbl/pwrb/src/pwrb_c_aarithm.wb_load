@@ -8,7 +8,11 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_logic.h
+!  @Summary Arithmetical expression in the C programming language
+!  Arithmetical expression in the C programming language.
+!
 !  @image orm_aarithm_fo.gif
+!
 !  Optional programmable arithmetical expression in the C
 !  programming language. The expression is edited by means
 !  of the Attribute Editor at the object's Expression
@@ -51,17 +55,17 @@
 !    (d1 && d2) ? A1 + A2 : A3, means that VAL = A1+ A2,
 !    if d1 and d2 are TRUE , otherwise VAL = A3
 !
-!  Example
+! @b Example
 !
 !  This example shows how digital signals can be counted. Some signals
 !  are counted if they are TRUE others if they are FALSE and then the
-!  sum is stored. Node thad Di1 and Di2 are included in the sum if 
+!  sum is stored. Note that Di2 and Di3 are included in the sum if 
 !  they are FALSE.
-!  @image orm_en1-17.gif
+!  @image orm_aarithm_1.gif
 
-!  See Also
-!  DArithm, which calculates the value of logical
-!  expressions.
+! @b See Also
+!  @classlink DArithm pwrb_darithm.html
+!  @classlink CArithm pwrb_carithm.html
 !*/
 SObject pwrb:Class
   Object AArithm $ClassDef 2 
@@ -316,13 +320,6 @@ SObject pwrb:Class
       !  Arithmetic expression in the C programming language.
       !  The expression is edited by means of the Attribute
       !  Editor and cannot be changed in the target environment.
-      !  
-      !  Example
-      !
-      !  This example shows how digital signals can be counted.
-      !  Some signals are counted if they are TRUE others if
-      !  they are FALSE and then the sum is stored. Note that
-      !  Di1 and Di2 are included in the sum if they are FALSE.
       !*/
       Object Expression $Intern 1 
         Body SysBody

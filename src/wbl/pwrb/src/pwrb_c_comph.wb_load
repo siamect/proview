@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_arithm.c
+!  @Summary Compares an analog value to a high limit
 !  Compares an analog value ( signal or parameter) to a high
 !  limit.
 !  @image orm_en1-36.gif
@@ -24,9 +25,8 @@
 !  output becomes FALSE as soon as the input becomes less
 !  than or equal to the high limit minus the hysteresis.
 !  
-!  See Also
-!  
-!  Compl.
+! @b See Also  
+!  @classlink Compl pwrb_compl.html
 !*/
 SObject pwrb:Class
   Object Comph $ClassDef 39 

@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Summary String value
 !  String value.
 !  
 !  Configures a text string value in the Plant

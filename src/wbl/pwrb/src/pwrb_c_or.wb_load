@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_logic.h
+!  @Summary Or gate
 !  OR-gate.
 !  @image orm_or_fo.gif
 !

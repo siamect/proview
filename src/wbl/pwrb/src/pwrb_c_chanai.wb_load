@@ -9,6 +9,7 @@
 !
 !/**
 !  @Version 1.0
+!  @Summary Configures an analog input channel
 !  Configures an analog input channel independent of the
 !  type of physical Ai-card. The conversion from signal
 !  value to actual value is done by polynomials.
@@ -29,13 +30,7 @@
 !          -- sensor polynomial p, is determined by  SensorPolyType
 !          -- filter function f, is determined by FilterType in Ai object
 !  
-!      See Also
-!  
-!  ChanAit, whose conversion to ActualValue is based on a
-!  table.
-!  
-!         Hints
-!  
+! @b Hints
 !  ChanAi objects are configured below a suitable card
 !  object.
 !  
@@ -44,6 +39,9 @@
 !  To create card object with channel objects belonging to
 !  it the function 'Configure Card' in "Utility Window" is
 !  recommended.
+!
+! @b See also  
+!  @classlink ChanAit pwrb_chanait.html
 !*/
 SObject pwrb:Class
   Object ChanAi $ClassDef 28 
