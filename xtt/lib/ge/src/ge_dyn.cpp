@@ -3016,7 +3016,6 @@ void GeAnalogColor::open( ifstream& fp)
 
 int GeAnalogColor::connect( grow_tObject object, glow_sTraceData *trace_data)
 {
-  int		attr_type, attr_size;
   char		parsed_name[120];
   int		inverted;
   int		sts;
@@ -3043,9 +3042,17 @@ int GeAnalogColor::connect( grow_tObject object, glow_sTraceData *trace_data)
   if ( e->p == 0) {
     e->size = 4;
     db = dyn->graph->parse_attr_name( e->attribute, parsed_name,
-				    &inverted, &attr_type, &attr_size);
+				    &inverted, &e->type, &e->size);
     if ( strcmp( parsed_name,"") == 0)
       return 1;
+
+    switch ( e->type) {
+    case pwr_eType_Float32:
+    case pwr_eType_Int32:
+      break;
+    default:
+      return 1;
+    }
 
     sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&e->p,
 				       &e->subid, e->size);
@@ -3054,6 +3061,7 @@ int GeAnalogColor::connect( grow_tObject object, glow_sTraceData *trace_data)
     if ( e->p)
       trace_data->p = e->p;
   }
+  type = e->type;
   size = e->size;
   p = e->p;
 
@@ -3075,11 +3083,22 @@ int GeAnalogColor::scan( grow_tObject object)
     return 1;
   
   if ( !first_scan) {
-    if ( !dyn->reset_color && fabs( old_value - *p) < FLT_EPSILON) {
-      // No change since last time
-      if ( old_state)
-	dyn->ignore_color = true;
-      return 1;
+    switch ( type) {
+    case pwr_eType_Float32:
+      if ( !dyn->reset_color && fabs( old_value - *p) < FLT_EPSILON) {
+	// No change since last time
+	if ( old_state)
+	  dyn->ignore_color = true;
+	return 1;
+      }
+      break;
+    default:
+      if ( !dyn->reset_color && memcmp( &old_value, p, size) == 0) {
+	// No change since last time
+	if ( old_state)
+	  dyn->ignore_color = true;
+	return 1;
+      }
     }
   }
   else
@@ -3089,10 +3108,24 @@ int GeAnalogColor::scan( grow_tObject object)
   bool set_color = false;
   bool reset_color = false;
 
-  if ( limit_type == ge_eLimitType_Gt)
-    state = *p > limit;
-  else
-    state = *p < limit;
+  if ( limit_type == ge_eLimitType_Gt) {
+    switch ( type) {
+    case pwr_eType_Float32:
+      state = *p > limit;
+    case pwr_eType_Int32:
+      state = *(pwr_tInt32 *)p > limit;
+    default: ;
+    }
+  }
+  else {
+    switch ( type) {
+    case pwr_eType_Float32:
+      state = *p < limit;
+    case pwr_eType_Int32:
+      state = *(pwr_tInt32 *)p <= limit;
+    default: ;
+    }
+  }
 
   if ( state != old_state || dyn->reset_color || first_scan) {
     if ( state) {
@@ -3107,7 +3140,8 @@ int GeAnalogColor::scan( grow_tObject object)
   }
   else if ( state)
     dyn->ignore_color = true;
-  old_value = *p;
+
+  memcpy( &old_value, p, size);
 
   if ( !set_color && !reset_color) {
     return 1;
@@ -3726,7 +3760,6 @@ void GeAnalogShift::open( ifstream& fp)
 
 int GeAnalogShift::connect( grow_tObject object, glow_sTraceData *trace_data)
 {
-  int		attr_type, attr_size;
   char		parsed_name[120];
   int		inverted;
   int		sts;
@@ -3734,9 +3767,17 @@ int GeAnalogShift::connect( grow_tObject object, glow_sTraceData *trace_data)
   size = 4;
   p = 0;
   db = dyn->graph->parse_attr_name( attribute, parsed_name,
-				    &inverted, &attr_type, &attr_size);
+				    &inverted, &type, &size);
   if ( strcmp( parsed_name,"") == 0)
     return 1;
+
+  switch ( type) {
+  case pwr_eType_Float32:
+  case pwr_eType_Int32:
+    break;
+  default:
+    return 1;
+  }
 
   sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size);
   if ( EVEN(sts)) return sts;
@@ -3758,15 +3799,28 @@ int GeAnalogShift::disconnect( grow_tObject object)
 int GeAnalogShift::scan( grow_tObject object)
 {
   if ( !first_scan) {
-    if ( fabs( old_value - *p) < FLT_EPSILON) {
-      // No change since last time
-      return 1;
+    switch ( type) {
+    case pwr_eType_Float32:
+      if ( fabs( old_value - *p) < FLT_EPSILON)
+	return 1;
+      break;
+    default:
+      if ( memcmp( &old_value, p, size) == 0)
+	return 1;
     }
   }
   else
     first_scan = false;
 
-  int index = int( *p + 0.5);
+  int index;
+
+  switch ( type) {
+  case pwr_eType_Float32:
+    index = int( *p + 0.5);
+    break;
+  default:
+    index = *(pwr_tInt32 *)p;
+  }
   grow_SetObjectNodeClassByIndex( object, index);
   old_value = *p;
   return 1;

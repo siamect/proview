@@ -1024,6 +1024,7 @@ class GeAnalogColor : public GeDynElem {
   pwr_tFloat32 *p;
   pwr_tSubid subid;
   int size;
+  int type;
   graph_eDatabase db;
   bool first_scan;
   pwr_tFloat32 old_value;
@@ -1160,6 +1161,7 @@ class GeAnalogShift : public GeDynElem {
   pwr_tFloat32 *p;
   pwr_tSubid subid;
   int size;
+  int type;
   graph_eDatabase db;
   bool first_scan;
   pwr_tFloat32 old_value;
