@@ -21,6 +21,7 @@ class wb_vrepwbl : public wb_vrep
   wb_erep *m_erep;
   wb_merep *m_merep;
   unsigned int m_nRef;
+  bool m_ignore_oix;
 
   map<string, ref_wblnode> m_type_list;
   map<pwr_tTid, ref_wblnode> m_tid_list;
@@ -36,7 +37,7 @@ class wb_vrepwbl : public wb_vrep
 
 public:
   wb_vrepwbl( wb_erep *erep) : 
-    m_erep(erep), m_merep(erep->merep()), m_nRef(0), root_object(0), error_cnt(0), file_cnt(0), next_oix(0), volume_node(0) {}
+    m_erep(erep), m_merep(erep->merep()), m_nRef(0), m_ignore_oix(false), root_object(0), error_cnt(0), file_cnt(0), next_oix(0), volume_node(0) {}
 
   wb_vrepwbl( wb_erep *erep, pwr_tVid vid) :
     wb_vrep(vid), m_erep(erep), m_merep(erep->merep()), m_nRef(0), root_object(0),error_cnt(0), file_cnt(0), next_oix(0), volume_node(0) {}
@@ -84,6 +85,7 @@ public:
   ref_wblnode findType( pwr_tTid tid);
   int nameToOid( const char *name, pwr_tOid *oid);
   int nameToAttrRef( const char *name, pwr_sAttrRef *attrref);
+  void ignoreOix() { m_ignore_oix = true;}
 
   int error_cnt;
   int file_cnt;
@@ -206,3 +208,9 @@ public:
 };
 
 #endif
+
+
+
+
+
+
