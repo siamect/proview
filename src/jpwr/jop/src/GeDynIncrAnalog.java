@@ -31,23 +31,51 @@ public class GeDynIncrAnalog extends GeDynElem {
 	break;
 
       String attrName = dyn.getAttrName( attribute);        
-      CdhrFloat ret = dyn.en.gdh.getObjectInfoFloat( attrName);
-      if ( ret.evenSts()) {
-	System.out.println( "IncrAnalog " + attrName);
+      int typeId = dyn.getTypeId( attribute);
+      if ( typeId < 0)
+	typeId = Pwr.eType_Float32;
+      switch ( typeId) {
+      case Pwr.eType_Int32: {
+	CdhrInt ret = dyn.en.gdh.getObjectInfoInt( attrName);
+	if ( ret.evenSts()) {
+	  System.out.println( "IncrAnalog " + attrName);
+	  break;
+	}
+	ret.value += (int)increment;
+	if ( !( min_value == 0 && max_value == 0)) {
+	  if ( ret.value < (int)min_value)
+	    ret.value = (int) min_value;
+	  if ( ret.value > (int)max_value)
+	    ret.value = (int) max_value;
+	}
+	PwrtStatus sts = dyn.en.gdh.setObjectInfo( attrName, ret.value);
+	if ( sts.evenSts())
+	  System.out.println( "IncrAnalog " + attrName);
 	break;
       }
-      ret.value += increment;
-      if ( !( min_value == 0 && max_value == 0)) {
-	if ( ret.value < min_value)
-	  ret.value = (float) min_value;
-	if ( ret.value > max_value)
-	  ret.value = (float) max_value;
+      default: {
+	CdhrFloat ret = dyn.en.gdh.getObjectInfoFloat( attrName);
+	if ( ret.evenSts()) {
+	  System.out.println( "IncrAnalog " + attrName);
+	  break;
+	}
+	ret.value += increment;
+	if ( !( min_value == 0 && max_value == 0)) {
+	  if ( ret.value < min_value)
+	    ret.value = (float) min_value;
+	  if ( ret.value > max_value)
+	    ret.value = (float) max_value;
+	}
+	PwrtStatus sts = dyn.en.gdh.setObjectInfo( attrName, ret.value);
+	if ( sts.evenSts())
+	  System.out.println( "IncrAnalog " + attrName);
+	}
       }
-      PwrtStatus sts = dyn.en.gdh.setObjectInfo( attrName, ret.value);
-      if ( sts.evenSts())
-	System.out.println( "IncrAnalog " + attrName);
       break;
     }
   }
 }
+
+
+
 

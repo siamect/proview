@@ -15,7 +15,9 @@ public class GeDynSlider extends GeDynElem {
   boolean attrFound;
   PwrtRefId subid;
   int p;
-  float oldValue;
+  public int typeId;
+  float oldValueF;
+  int oldValueI;
   boolean firstScan = true;
   boolean moveActive = false;
   Point offset = new Point();
@@ -40,6 +42,7 @@ public class GeDynSlider extends GeDynElem {
 	attrFound = true;
 	p = ret.id;
 	subid = ret.refid;
+	typeId = ret.typeId;
       }
     }
   }
@@ -51,36 +54,48 @@ public class GeDynSlider extends GeDynElem {
     if ( !attrFound || moveActive)
       return;
 
-    float value = dyn.en.gdh.getObjectRefInfoFloat( p);
-    if ( oldValue != value || firstScan) {
-      Point loc = ((JComponent)dyn.comp).getLocation();
-      int pos;
+    float value;
+    switch ( typeId) {
+    case Pwr.eType_Int32:
+      int ivalue = dyn.en.gdh.getObjectRefInfoInt( p);
+      if ( oldValueI == ivalue && !firstScan)
+	return;
+      oldValueI = ivalue;
+      value = (float) ivalue;
+      break;
+    default:
+      value = dyn.en.gdh.getObjectRefInfoFloat( p);
+      if ( oldValueF == value && !firstScan)
+	return;
+      oldValueF = value;
+    }
+
+    Point loc = ((JComponent)dyn.comp).getLocation();
+    int pos;
 	
-      switch ( direction) {
-      case Ge.DIRECTION_RIGHT:
+    switch ( direction) {
+    case Ge.DIRECTION_RIGHT:
 	pos = (int)((maxValue - value)/(maxValue - minValue) *
 		    (maxPos - minPos) + minPos);
 	loc.x = pos;
 	break;
-      case Ge.DIRECTION_LEFT:
+    case Ge.DIRECTION_LEFT:
 	pos = (int)(value /(maxValue - minValue) *
 		    (maxPos - minPos) + minPos);
 	loc.x = pos;
 	break;
-      case Ge.DIRECTION_UP:
+    case Ge.DIRECTION_UP:
 	pos = (int)((value - minValue)/(maxValue - minValue) *
 		    (maxPos - minPos) + minPos);
 	loc.y = pos;
 	break;
-      default:
+    default:
 	pos = (int)((maxValue - value)/(maxValue - minValue) *
 		    (maxPos - minPos) + minPos);
 	loc.y = pos;
-      }
-      ((JComponent)dyn.comp).setLocation( loc);
-      ((JComponent)dyn.comp).repaint();
     }
-    oldValue = value;
+    ((JComponent)dyn.comp).setLocation( loc);
+    ((JComponent)dyn.comp).repaint();
 
     if ( firstScan)
       firstScan = false;
@@ -153,7 +168,13 @@ public class GeDynSlider extends GeDynElem {
       }
       ((JComponent)dyn.comp).setLocation(new_loc);
 	
-      sts = dyn.en.gdh.setObjectInfo( attribute, value);
+      switch ( typeId) {
+        case Pwr.eType_Int32:	 
+	  sts = dyn.en.gdh.setObjectInfo( attribute, (int) value);
+	  break;
+        default:
+	  sts = dyn.en.gdh.setObjectInfo( attribute, value);
+      }
       if ( sts.evenSts())
 	System.out.println( "GeSlider: " + sts);        
       break;
