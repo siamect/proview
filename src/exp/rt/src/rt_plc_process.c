@@ -42,6 +42,7 @@ static plc_sProcess	*init_process ();
 static pwr_tStatus	init_plc (plc_sProcess*);
 static void		init_threads (plc_sProcess*);
 static void		start_threads (plc_sProcess*);
+static void		run_threads (plc_sProcess*);
 static void		stop_threads (plc_sProcess*);
 static void		clean_all (plc_sProcess*);
 static void		link_io_base_areas (plc_sProcess*);
@@ -135,6 +136,7 @@ int main (
 //  proc_SetPriority(pp->PlcProcess->Prio);
   set_values(pp);
   start_threads(pp);
+  run_threads(pp);
   time_Uptime(&sts, &pp->PlcProcess->StartTime, NULL);
 
   qcom_SignalOr(&sts, &qcom_cQini, ini_mEvent_newPlcStartDone);
@@ -324,10 +326,32 @@ start_threads (
 #endif
 
   for (i = 0, tp = pp->thread; i < pp->thread_count ; i++, tp++) {
-    /* Tell thread it is time for phase 3, run.  */
+    /* Tell thread it is time for phase 3, start.  */
     que_Put(&sts, &tp->q_in, &tp->event, (void *)3);
     phase = (int)que_Get(&sts, &tp->q_out, NULL, NULL);
     pwr_Assert(phase == 3);
+  }
+}
+
+static void
+run_threads (
+  plc_sProcess	*pp
+)
+{
+  int i;
+  plc_sThread *tp;
+  pwr_tStatus sts;
+  int phase;
+
+#if defined OS_LYNX && USE_RT_TIMER
+  create_timer(pp);
+#endif
+
+  for (i = 0, tp = pp->thread; i < pp->thread_count ; i++, tp++) {
+    /* Tell thread it is time for phase 4, run.  */
+    que_Put(&sts, &tp->q_in, &tp->event, (void *)4);
+    phase = (int)que_Get(&sts, &tp->q_out, NULL, NULL);
+    pwr_Assert(phase == 4);
   }
 }
 
