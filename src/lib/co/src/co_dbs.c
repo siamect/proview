@@ -156,8 +156,6 @@ void *dbs_Bfind(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sBintab *tp, void *key
     char *end   = dbs_Address(sts, ep, tp->end);
     int   rsize = tp->rsize;
 
-    
-    
     while (start <= end) {
         p = start + ((end - start) / (2*rsize)) * rsize;
         c = comp(key, p);
@@ -823,6 +821,9 @@ dbs_Child(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op, char *name)
 {
     dbs_sName n;
     dbs_sName *np;
+
+    if ( !op->name_bt.start)
+      return NULL;
     
     n.poix = op->oid.oix;
     strcpy(n.normname, name);
