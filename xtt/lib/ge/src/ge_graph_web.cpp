@@ -481,11 +481,11 @@ graph_text << "'," << resize << "," << width+20 << "," << height+20
     "      <param name =\"archive\" value=\"pwr_rt_client.jar,pwr_jop.jar,pwrp_" << sname << "_web.jar\">" << endl <<
 "      <param name=\"type\" value=\"application/x-java-applet;version=1.3\">" << endl <<
 "      <param name=\"scriptable\" value=\"false\">" << endl <<
-"    <embed type=\"application/x-java-applet;version=1.3\" " << endl <<
+"    <embed type=\"application/x-java-applet;version=1.4\" " << endl <<
 "      code = jpwr.jop.JopOpWindowApplet.class " << endl <<
     "      archive=\"pwr_jop.jar,pwr_rt_client.jar,pwrp_" << sname << "_web.jar\" " << endl <<
 "      width = 100% height = 100% scriptable=false " << endl <<
-"      pluginspage=\"http://java.sun.com/products/plugin/1.3/plugin-install.html\">" << endl <<
+"      pluginspage=\"http://java.sun.com/products/plugin/index.html#download\">" << endl <<
 "  </body>" << endl <<
 "</html>" << endl;
   fp_ow.close();
