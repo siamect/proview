@@ -2707,6 +2707,9 @@ initSupListClass(
     ODD(sts);
     sts = gdh_GetNextObject(oid, &oid)
   ) {
+    if ( oid.vid < cdh_cUserVolMin)
+      continue;
+
     sts = initSupActiveCB(oid, cid, &sp, 1, 1);
     if (ODD(sts)) {
       sl = LstIns(sl, sp, sup_l);
@@ -3416,6 +3419,9 @@ reInitSupListClass(
     ODD(sts);
     sts = gdh_GetNextObject(oid, &oid)
   ) {
+    if ( oid.vid < cdh_cUserVolMin)
+      continue;
+
     if ((sp = supListGet(oid)) == NULL) {
       sts = initSupActiveCB(oid, cid, &sp, 1, 1);
       if (ODD(sts)) {
