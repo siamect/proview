@@ -84,8 +84,8 @@ public:
     wb_attribute prev();
     
 
-    wb_name name(); // get attribute name
-    wb_name name(ldh_eName type);
+    const char*  name() const; // get attribute name
+    wb_name longName();
     void name(const char *name);
     void name(wb_name *name);
     

@@ -1,5 +1,8 @@
 #include "wb_name.h"
 
+const char* wb_name::m_emptyString = "";
+
+
 
 wb_name::wb_name( const char *name)
 {

@@ -4,6 +4,9 @@
 #include "wb_attrname.h"
 #include "pwr.h"
 
+static const char* s_emptyString = "";
+
+
 
 wb_attribute::wb_attribute() : wb_status(LDH__NOSUCHATTR), m_orep(0), m_adrep(0), 
 			       m_size(0), m_offset(0), m_tid(0), m_elements(0), 
@@ -48,8 +51,9 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep * const orep, wb_adrep * con
       m_adrep->ref();
       m_size = m_adrep->size();
       m_offset = m_adrep->offset();
-      m_type = m_adrep->type();
       m_tid = m_adrep->tid();
+      m_elements = m_adrep->nElement();
+      m_type = m_adrep->type();
       m_flags = m_adrep->flags();
     }
     else {
@@ -142,6 +146,7 @@ wb_attribute& wb_attribute::operator=(const wb_attribute& x)
   m_size = x.m_size;
   m_offset = x.m_offset;
   m_tid = x.m_tid;
+  m_elements = x.m_elements;
   m_type = x.m_type;
   m_flags = x.m_flags;
   return *this;
@@ -299,16 +304,20 @@ wb_attribute wb_attribute::prev()
     return a;
 }   
 
-wb_name wb_attribute::name()
+const char* wb_attribute::name() const
 {
-    wb_name n;
-    return n;
+  if (m_adrep)
+      return m_adrep->name();
+  else
+      return s_emptyString;
 }
 
-wb_name wb_attribute::name(ldh_eName type)
+wb_name wb_attribute::longName()
 {
-    wb_name n;
-    return n;
+  if (m_adrep)
+      return m_adrep->longName();
+  else
+      return wb_name();
 }
 
 void wb_attribute::name(const char *name)

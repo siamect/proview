@@ -97,7 +97,7 @@ class wb_name : public wb_status
 {
 protected:
     wb_nrep *m_nrep;
-
+    static const char* m_emptyString;
 public:
 
     wb_name() : wb_status(LDH__NONAME), m_nrep(0) {}
@@ -107,7 +107,7 @@ public:
     
     ~wb_name();
 
-    const char* c_str() const { return m_nrep->name();}
+    const char* c_str() const;
 
     wb_name& operator=(const wb_name& n);
 
@@ -157,6 +157,23 @@ public:
   private:
     void check() const { if ( evenSts()) throw wb_error(m_sts);}
 };
+
+
+inline const char* wb_name::c_str() const
+{
+    if (m_nrep == 0)
+        return m_emptyString;
+    else
+        return m_nrep->name();
+}
+
+
+
+inline ostream& operator<< (ostream& os, const wb_name& name)
+{
+    return os << name.c_str();
+}
+
 
 #endif
 
