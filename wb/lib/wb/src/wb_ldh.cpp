@@ -484,6 +484,37 @@ ldh_GetChild(ldh_tSession session, pwr_tOid oid, pwr_tOid *coid)
 }
 
 
+/*  Get first child of an object. If MountObject, get child of mounted object */
+
+pwr_tStatus
+ldh_GetChildMnt(ldh_tSession session, pwr_tOid oid, pwr_tOid *coid)
+{
+  wb_session *sp = (wb_session *)session;
+  wb_object o = sp->object(oid);
+  if (!o) return o.sts();
+
+  if ( o.cid() == pwr_eClass_MountObject) {
+    wb_attribute a(o.sts(), o, "SysBody", "Object");
+    if ( !a) return a.sts();
+
+    pwr_tOid moid;
+    a.value( &moid);
+
+    wb_object mo = sp->object(moid);
+    mo = mo.first();
+    if ( mo) {
+      *coid = mo.oid();
+      return mo.sts();
+    }
+  }
+  o = o.first();
+  if (!o) return o.sts();    
+  *coid = o.oid();
+
+  return o.sts();
+}
+
+
 pwr_tStatus
 ldh_GetClassBody(ldh_tSession session, pwr_tCid cid, char *bname, pwr_tCid *bcid, char **body, int *size)
 {
@@ -494,6 +525,9 @@ ldh_GetClassBody(ldh_tSession session, pwr_tCid cid, char *bname, pwr_tCid *bcid
   wb_object o = c.classBody(bname);
   if ( !o)
     return o.sts();
+
+  if ( ((wb_orep *)o)->vrep()->type() == ldh_eVolRep_Db)
+    return LDH__NYI;
 
   *bcid = o.cid();
   *size = o.rbSize();

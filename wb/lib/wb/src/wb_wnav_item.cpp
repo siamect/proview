@@ -81,7 +81,7 @@ WItemObject::WItemObject( WNav *wnav, pwr_tObjid item_objid,
 		dest, dest_code, (void *) this, 1, &node);
 
     // Set pixmap
-    sts = ldh_GetChild( wnav->ldhses, objid, &child);
+    sts = ldh_GetChildMnt( wnav->ldhses, objid, &child);
     if( ODD(sts))
       brow_SetAnnotPixmap( node, 0, wnav->brow->pixmap_map);
     else
@@ -246,7 +246,7 @@ int WItemBaseObject::open_children( WNav *wnav, double x, double y)
     brow_SetNodraw( wnav->brow->ctx);
 
     child_exist = 0;
-    sts = ldh_GetChild( wnav->ldhses, objid, &child);
+    sts = ldh_GetChildMnt( wnav->ldhses, objid, &child);
     while ( ODD(sts))
     {
       child_exist = 1;

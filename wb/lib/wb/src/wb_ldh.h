@@ -554,6 +554,11 @@ pwr_tStatus ldh_GetChild (
   pwr_tObjid object,
   pwr_tObjid *new_object
 );
+pwr_tStatus ldh_GetChildMnt (
+  ldh_tSession Session,
+  pwr_tObjid object,
+  pwr_tObjid *new_object
+);
 pwr_tStatus ldh_GetClassBody (
   ldh_tSession Session,
   pwr_tClassId Class,
