@@ -62,7 +62,7 @@ public class JopcRemnodeudp extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "Œ-i@€l@œá@Àïÿ¿ˆïÿ¿ß}");
+    JopSpider.setSystemName( "Œ-i@€l@œá@`ïÿ¿(ïÿ¿ß}");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 911, 730);
@@ -479,6 +479,7 @@ class LocalPanel extends JPanel {
   int colorInverse = 0;
   int originalColorInverse = 0;
   int shadow = 0;
+  boolean dimmed = false;
   public void setColorTone( int colorTone) {
     this.colorTone = colorTone;
     originalColorTone = colorTone;
@@ -569,7 +570,7 @@ class LocalPanel extends JPanel {
     AffineTransform save_tmp;
     {
     int fcolor = GeColor.getDrawtype(31, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
     g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
     g.fill( shapes[1]);
     g.setColor(GeColor.shiftColor( fcolor, 2, colorInverse));
@@ -577,50 +578,50 @@ class LocalPanel extends JPanel {
     }
     {
     int fcolor = GeColor.getDrawtype(31, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
     g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
     g.fill( shapes[4]);
     g.setColor(GeColor.shiftColor( fcolor, 2, colorInverse));
     g.fill( shapes[5]);
     }
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
     g.drawString( "Prio",17, 47);
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
     g.drawString( "Description",17, 29);
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
     g.drawString( "DevName",17, 64);
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
     g.drawString( "RemoteHost",17, 82);
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
     g.drawString( "RemoteAddress",17, 100);
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
     g.drawString( "LocalPort",17, 117);
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
     g.drawString( "RemotePort",17, 135);
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
     g.drawString( "LinkUp",331, 64);
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
     g.drawString( "Disable",331, 82);
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
     g.drawString( "ErrCount",331, 100);
     g.setTransform(save);
@@ -652,16 +653,8 @@ protected class pwr_valuelong extends GeComponent {
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;
-    if ( dd.invisible) {
-      if ( !dd.invisibleOld) {
-        dd.invisibleOld = dd.invisible;
-        repaint();
-      }
-      else
-        dd.invisibleOld = dd.invisible;
+    if ( !visible)
       return;
-    }
-    dd.invisibleOld = dd.invisible;
     Graphics2D g = (Graphics2D) g1;
     float width = getWidth();
     float height = getHeight();
@@ -749,7 +742,7 @@ protected class pwr_valuelong extends GeComponent {
       }
     {
     int fcolor = GeColor.getDrawtype(41, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
     g.setColor(GeColor.getColor( fcolor));
     g.fill( shapes[0]);
     if ( shadow != 0) {
@@ -760,11 +753,11 @@ protected class pwr_valuelong extends GeComponent {
     }
     g.setStroke( new BasicStroke(1F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
     g.draw( shapes[0]);
     }
     g.setColor(GeColor.getColor( annot1Color , colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont( annot1Font);
     save_tmp = g.getTransform();
     g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_OFF);
@@ -805,16 +798,8 @@ protected class pwr_valuesmall extends GeComponent {
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;
-    if ( dd.invisible) {
-      if ( !dd.invisibleOld) {
-        dd.invisibleOld = dd.invisible;
-        repaint();
-      }
-      else
-        dd.invisibleOld = dd.invisible;
+    if ( !visible)
       return;
-    }
-    dd.invisibleOld = dd.invisible;
     Graphics2D g = (Graphics2D) g1;
     float width = getWidth();
     float height = getHeight();
@@ -902,7 +887,7 @@ protected class pwr_valuesmall extends GeComponent {
       }
     {
     int fcolor = GeColor.getDrawtype(41, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
     g.setColor(GeColor.getColor( fcolor));
     g.fill( shapes[0]);
     if ( shadow != 0) {
@@ -913,11 +898,11 @@ protected class pwr_valuesmall extends GeComponent {
     }
     g.setStroke( new BasicStroke(1F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
     g.draw( shapes[0]);
     }
     g.setColor(GeColor.getColor( annot1Color , colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont( annot1Font);
     save_tmp = g.getTransform();
     g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_OFF);
@@ -950,16 +935,8 @@ protected class Grp60_ extends GeComponent {
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;
-    if ( dd.invisible) {
-      if ( !dd.invisibleOld) {
-        dd.invisibleOld = dd.invisible;
-        repaint();
-      }
-      else
-        dd.invisibleOld = dd.invisible;
+    if ( !visible)
       return;
-    }
-    dd.invisibleOld = dd.invisible;
     Graphics2D g = (Graphics2D) g1;
     float width = getWidth();
     float height = getHeight();
@@ -1047,14 +1024,14 @@ protected class Grp60_ extends GeComponent {
       }
     {
     int fcolor = GeColor.getDrawtype(32, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
     g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
     g.fill( shapes[1]);
     g.setColor(GeColor.shiftColor( fcolor, 2, colorInverse));
     g.fill( shapes[2]);
     g.setStroke( new BasicStroke(1F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
     g.draw( shapes[0]);
     }
     }
@@ -1081,16 +1058,8 @@ protected class Grp65_ extends GeComponent {
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;
-    if ( dd.invisible) {
-      if ( !dd.invisibleOld) {
-        dd.invisibleOld = dd.invisible;
-        repaint();
-      }
-      else
-        dd.invisibleOld = dd.invisible;
+    if ( !visible)
       return;
-    }
-    dd.invisibleOld = dd.invisible;
     Graphics2D g = (Graphics2D) g1;
     float width = getWidth();
     float height = getHeight();
@@ -1178,14 +1147,14 @@ protected class Grp65_ extends GeComponent {
       }
     {
     int fcolor = GeColor.getDrawtype(32, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
     g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
     g.fill( shapes[1]);
     g.setColor(GeColor.shiftColor( fcolor, 2, colorInverse));
     g.fill( shapes[2]);
     g.setStroke( new BasicStroke(1F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
     g.draw( shapes[0]);
     }
     }
@@ -1212,16 +1181,8 @@ protected class Grp76_ extends GeComponent {
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;
-    if ( dd.invisible) {
-      if ( !dd.invisibleOld) {
-        dd.invisibleOld = dd.invisible;
-        repaint();
-      }
-      else
-        dd.invisibleOld = dd.invisible;
+    if ( !visible)
       return;
-    }
-    dd.invisibleOld = dd.invisible;
     Graphics2D g = (Graphics2D) g1;
     float width = getWidth();
     float height = getHeight();
@@ -1309,14 +1270,14 @@ protected class Grp76_ extends GeComponent {
       }
     {
     int fcolor = GeColor.getDrawtype(32, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
     g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
     g.fill( shapes[1]);
     g.setColor(GeColor.shiftColor( fcolor, 2, colorInverse));
     g.fill( shapes[2]);
     g.setStroke( new BasicStroke(1F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
     g.draw( shapes[0]);
     }
     }
@@ -1343,16 +1304,8 @@ protected class Grp78_ extends GeComponent {
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;
-    if ( dd.invisible) {
-      if ( !dd.invisibleOld) {
-        dd.invisibleOld = dd.invisible;
-        repaint();
-      }
-      else
-        dd.invisibleOld = dd.invisible;
+    if ( !visible)
       return;
-    }
-    dd.invisibleOld = dd.invisible;
     Graphics2D g = (Graphics2D) g1;
     float width = getWidth();
     float height = getHeight();
@@ -1440,14 +1393,14 @@ protected class Grp78_ extends GeComponent {
       }
     {
     int fcolor = GeColor.getDrawtype(32, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
     g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
     g.fill( shapes[1]);
     g.setColor(GeColor.shiftColor( fcolor, 2, colorInverse));
     g.fill( shapes[2]);
     g.setStroke( new BasicStroke(1F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
     g.draw( shapes[0]);
     }
     }
@@ -1474,16 +1427,8 @@ protected class Grp80_ extends GeComponent {
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;
-    if ( dd.invisible) {
-      if ( !dd.invisibleOld) {
-        dd.invisibleOld = dd.invisible;
-        repaint();
-      }
-      else
-        dd.invisibleOld = dd.invisible;
+    if ( !visible)
       return;
-    }
-    dd.invisibleOld = dd.invisible;
     Graphics2D g = (Graphics2D) g1;
     float width = getWidth();
     float height = getHeight();
@@ -1571,14 +1516,14 @@ protected class Grp80_ extends GeComponent {
       }
     {
     int fcolor = GeColor.getDrawtype(32, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
     g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
     g.fill( shapes[1]);
     g.setColor(GeColor.shiftColor( fcolor, 2, colorInverse));
     g.fill( shapes[2]);
     g.setStroke( new BasicStroke(1F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
     g.draw( shapes[0]);
     }
     }
@@ -1605,16 +1550,8 @@ protected class Grp88_ extends GeComponent {
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;
-    if ( dd.invisible) {
-      if ( !dd.invisibleOld) {
-        dd.invisibleOld = dd.invisible;
-        repaint();
-      }
-      else
-        dd.invisibleOld = dd.invisible;
+    if ( !visible)
       return;
-    }
-    dd.invisibleOld = dd.invisible;
     Graphics2D g = (Graphics2D) g1;
     float width = getWidth();
     float height = getHeight();
@@ -1702,14 +1639,14 @@ protected class Grp88_ extends GeComponent {
       }
     {
     int fcolor = GeColor.getDrawtype(32, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
     g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
     g.fill( shapes[1]);
     g.setColor(GeColor.shiftColor( fcolor, 2, colorInverse));
     g.fill( shapes[2]);
     g.setStroke( new BasicStroke(1F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
     g.draw( shapes[0]);
     }
     }
@@ -1736,16 +1673,8 @@ protected class Grp90_ extends GeComponent {
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;
-    if ( dd.invisible) {
-      if ( !dd.invisibleOld) {
-        dd.invisibleOld = dd.invisible;
-        repaint();
-      }
-      else
-        dd.invisibleOld = dd.invisible;
+    if ( !visible)
       return;
-    }
-    dd.invisibleOld = dd.invisible;
     Graphics2D g = (Graphics2D) g1;
     float width = getWidth();
     float height = getHeight();
@@ -1833,14 +1762,14 @@ protected class Grp90_ extends GeComponent {
       }
     {
     int fcolor = GeColor.getDrawtype(32, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
     g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
     g.fill( shapes[1]);
     g.setColor(GeColor.shiftColor( fcolor, 2, colorInverse));
     g.fill( shapes[2]);
     g.setStroke( new BasicStroke(1F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
     g.draw( shapes[0]);
     }
     }
@@ -1867,16 +1796,8 @@ protected class Grp92_ extends GeComponent {
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;
-    if ( dd.invisible) {
-      if ( !dd.invisibleOld) {
-        dd.invisibleOld = dd.invisible;
-        repaint();
-      }
-      else
-        dd.invisibleOld = dd.invisible;
+    if ( !visible)
       return;
-    }
-    dd.invisibleOld = dd.invisible;
     Graphics2D g = (Graphics2D) g1;
     float width = getWidth();
     float height = getHeight();
@@ -1964,14 +1885,14 @@ protected class Grp92_ extends GeComponent {
       }
     {
     int fcolor = GeColor.getDrawtype(32, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
     g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
     g.fill( shapes[1]);
     g.setColor(GeColor.shiftColor( fcolor, 2, colorInverse));
     g.fill( shapes[2]);
     g.setStroke( new BasicStroke(1F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
     g.draw( shapes[0]);
     }
     }
@@ -1998,16 +1919,8 @@ protected class Grp100_ extends GeComponent {
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;
-    if ( dd.invisible) {
-      if ( !dd.invisibleOld) {
-        dd.invisibleOld = dd.invisible;
-        repaint();
-      }
-      else
-        dd.invisibleOld = dd.invisible;
+    if ( !visible)
       return;
-    }
-    dd.invisibleOld = dd.invisible;
     Graphics2D g = (Graphics2D) g1;
     float width = getWidth();
     float height = getHeight();
@@ -2095,14 +2008,14 @@ protected class Grp100_ extends GeComponent {
       }
     {
     int fcolor = GeColor.getDrawtype(32, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
     g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
     g.fill( shapes[1]);
     g.setColor(GeColor.shiftColor( fcolor, 2, colorInverse));
     g.fill( shapes[2]);
     g.setStroke( new BasicStroke(1F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
     g.draw( shapes[0]);
     }
     }
@@ -2129,16 +2042,8 @@ protected class Grp102_ extends GeComponent {
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;
-    if ( dd.invisible) {
-      if ( !dd.invisibleOld) {
-        dd.invisibleOld = dd.invisible;
-        repaint();
-      }
-      else
-        dd.invisibleOld = dd.invisible;
+    if ( !visible)
       return;
-    }
-    dd.invisibleOld = dd.invisible;
     Graphics2D g = (Graphics2D) g1;
     float width = getWidth();
     float height = getHeight();
@@ -2226,14 +2131,14 @@ protected class Grp102_ extends GeComponent {
       }
     {
     int fcolor = GeColor.getDrawtype(32, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
     g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
     g.fill( shapes[1]);
     g.setColor(GeColor.shiftColor( fcolor, 2, colorInverse));
     g.fill( shapes[2]);
     g.setStroke( new BasicStroke(1F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
     g.draw( shapes[0]);
     }
     }
@@ -2260,16 +2165,8 @@ protected class Grp104_ extends GeComponent {
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;
-    if ( dd.invisible) {
-      if ( !dd.invisibleOld) {
-        dd.invisibleOld = dd.invisible;
-        repaint();
-      }
-      else
-        dd.invisibleOld = dd.invisible;
+    if ( !visible)
       return;
-    }
-    dd.invisibleOld = dd.invisible;
     Graphics2D g = (Graphics2D) g1;
     float width = getWidth();
     float height = getHeight();
@@ -2357,14 +2254,14 @@ protected class Grp104_ extends GeComponent {
       }
     {
     int fcolor = GeColor.getDrawtype(32, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
     g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
     g.fill( shapes[1]);
     g.setColor(GeColor.shiftColor( fcolor, 2, colorInverse));
     g.fill( shapes[2]);
     g.setStroke( new BasicStroke(1F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
     g.draw( shapes[0]);
     }
     }
@@ -2391,16 +2288,8 @@ protected class Grp112_ extends GeComponent {
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;
-    if ( dd.invisible) {
-      if ( !dd.invisibleOld) {
-        dd.invisibleOld = dd.invisible;
-        repaint();
-      }
-      else
-        dd.invisibleOld = dd.invisible;
+    if ( !visible)
       return;
-    }
-    dd.invisibleOld = dd.invisible;
     Graphics2D g = (Graphics2D) g1;
     float width = getWidth();
     float height = getHeight();
@@ -2488,14 +2377,14 @@ protected class Grp112_ extends GeComponent {
       }
     {
     int fcolor = GeColor.getDrawtype(32, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
     g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
     g.fill( shapes[1]);
     g.setColor(GeColor.shiftColor( fcolor, 2, colorInverse));
     g.fill( shapes[2]);
     g.setStroke( new BasicStroke(1F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
     g.draw( shapes[0]);
     }
     }
@@ -2522,16 +2411,8 @@ protected class Grp114_ extends GeComponent {
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;
-    if ( dd.invisible) {
-      if ( !dd.invisibleOld) {
-        dd.invisibleOld = dd.invisible;
-        repaint();
-      }
-      else
-        dd.invisibleOld = dd.invisible;
+    if ( !visible)
       return;
-    }
-    dd.invisibleOld = dd.invisible;
     Graphics2D g = (Graphics2D) g1;
     float width = getWidth();
     float height = getHeight();
@@ -2619,14 +2500,14 @@ protected class Grp114_ extends GeComponent {
       }
     {
     int fcolor = GeColor.getDrawtype(32, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
     g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
     g.fill( shapes[1]);
     g.setColor(GeColor.shiftColor( fcolor, 2, colorInverse));
     g.fill( shapes[2]);
     g.setStroke( new BasicStroke(1F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
     g.draw( shapes[0]);
     }
     }
@@ -2653,16 +2534,8 @@ protected class Grp116_ extends GeComponent {
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;
-    if ( dd.invisible) {
-      if ( !dd.invisibleOld) {
-        dd.invisibleOld = dd.invisible;
-        repaint();
-      }
-      else
-        dd.invisibleOld = dd.invisible;
+    if ( !visible)
       return;
-    }
-    dd.invisibleOld = dd.invisible;
     Graphics2D g = (Graphics2D) g1;
     float width = getWidth();
     float height = getHeight();
@@ -2750,14 +2623,14 @@ protected class Grp116_ extends GeComponent {
       }
     {
     int fcolor = GeColor.getDrawtype(32, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
     g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
     g.fill( shapes[1]);
     g.setColor(GeColor.shiftColor( fcolor, 2, colorInverse));
     g.fill( shapes[2]);
     g.setStroke( new BasicStroke(1F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
     g.draw( shapes[0]);
     }
     }
@@ -2784,16 +2657,8 @@ protected class Grp124_ extends GeComponent {
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;
-    if ( dd.invisible) {
-      if ( !dd.invisibleOld) {
-        dd.invisibleOld = dd.invisible;
-        repaint();
-      }
-      else
-        dd.invisibleOld = dd.invisible;
+    if ( !visible)
       return;
-    }
-    dd.invisibleOld = dd.invisible;
     Graphics2D g = (Graphics2D) g1;
     float width = getWidth();
     float height = getHeight();
@@ -2881,14 +2746,14 @@ protected class Grp124_ extends GeComponent {
       }
     {
     int fcolor = GeColor.getDrawtype(32, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
     g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
     g.fill( shapes[1]);
     g.setColor(GeColor.shiftColor( fcolor, 2, colorInverse));
     g.fill( shapes[2]);
     g.setStroke( new BasicStroke(1F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
     g.draw( shapes[0]);
     }
     }
@@ -2915,16 +2780,8 @@ protected class Grp126_ extends GeComponent {
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;
-    if ( dd.invisible) {
-      if ( !dd.invisibleOld) {
-        dd.invisibleOld = dd.invisible;
-        repaint();
-      }
-      else
-        dd.invisibleOld = dd.invisible;
+    if ( !visible)
       return;
-    }
-    dd.invisibleOld = dd.invisible;
     Graphics2D g = (Graphics2D) g1;
     float width = getWidth();
     float height = getHeight();
@@ -3012,14 +2869,14 @@ protected class Grp126_ extends GeComponent {
       }
     {
     int fcolor = GeColor.getDrawtype(32, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
     g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
     g.fill( shapes[1]);
     g.setColor(GeColor.shiftColor( fcolor, 2, colorInverse));
     g.fill( shapes[2]);
     g.setStroke( new BasicStroke(1F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
     g.draw( shapes[0]);
     }
     }
@@ -3046,16 +2903,8 @@ protected class Grp128_ extends GeComponent {
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;
-    if ( dd.invisible) {
-      if ( !dd.invisibleOld) {
-        dd.invisibleOld = dd.invisible;
-        repaint();
-      }
-      else
-        dd.invisibleOld = dd.invisible;
+    if ( !visible)
       return;
-    }
-    dd.invisibleOld = dd.invisible;
     Graphics2D g = (Graphics2D) g1;
     float width = getWidth();
     float height = getHeight();
@@ -3143,14 +2992,14 @@ protected class Grp128_ extends GeComponent {
       }
     {
     int fcolor = GeColor.getDrawtype(32, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
     g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
     g.fill( shapes[1]);
     g.setColor(GeColor.shiftColor( fcolor, 2, colorInverse));
     g.fill( shapes[2]);
     g.setStroke( new BasicStroke(1F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
     g.draw( shapes[0]);
     }
     }
@@ -3177,16 +3026,8 @@ protected class Grp136_ extends GeComponent {
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;
-    if ( dd.invisible) {
-      if ( !dd.invisibleOld) {
-        dd.invisibleOld = dd.invisible;
-        repaint();
-      }
-      else
-        dd.invisibleOld = dd.invisible;
+    if ( !visible)
       return;
-    }
-    dd.invisibleOld = dd.invisible;
     Graphics2D g = (Graphics2D) g1;
     float width = getWidth();
     float height = getHeight();
@@ -3274,14 +3115,14 @@ protected class Grp136_ extends GeComponent {
       }
     {
     int fcolor = GeColor.getDrawtype(32, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
     g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
     g.fill( shapes[1]);
     g.setColor(GeColor.shiftColor( fcolor, 2, colorInverse));
     g.fill( shapes[2]);
     g.setStroke( new BasicStroke(1F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
     g.draw( shapes[0]);
     }
     }
@@ -3308,16 +3149,8 @@ protected class Grp138_ extends GeComponent {
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;
-    if ( dd.invisible) {
-      if ( !dd.invisibleOld) {
-        dd.invisibleOld = dd.invisible;
-        repaint();
-      }
-      else
-        dd.invisibleOld = dd.invisible;
+    if ( !visible)
       return;
-    }
-    dd.invisibleOld = dd.invisible;
     Graphics2D g = (Graphics2D) g1;
     float width = getWidth();
     float height = getHeight();
@@ -3405,14 +3238,14 @@ protected class Grp138_ extends GeComponent {
       }
     {
     int fcolor = GeColor.getDrawtype(32, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
     g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
     g.fill( shapes[1]);
     g.setColor(GeColor.shiftColor( fcolor, 2, colorInverse));
     g.fill( shapes[2]);
     g.setStroke( new BasicStroke(1F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
     g.draw( shapes[0]);
     }
     }
@@ -3439,16 +3272,8 @@ protected class Grp150_ extends GeComponent {
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;
-    if ( dd.invisible) {
-      if ( !dd.invisibleOld) {
-        dd.invisibleOld = dd.invisible;
-        repaint();
-      }
-      else
-        dd.invisibleOld = dd.invisible;
+    if ( !visible)
       return;
-    }
-    dd.invisibleOld = dd.invisible;
     Graphics2D g = (Graphics2D) g1;
     float width = getWidth();
     float height = getHeight();
@@ -3536,14 +3361,14 @@ protected class Grp150_ extends GeComponent {
       }
     {
     int fcolor = GeColor.getDrawtype(32, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
     g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
     g.fill( shapes[1]);
     g.setColor(GeColor.shiftColor( fcolor, 2, colorInverse));
     g.fill( shapes[2]);
     g.setStroke( new BasicStroke(1F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
     g.draw( shapes[0]);
     }
     }
@@ -3570,16 +3395,8 @@ protected class Grp176_ extends GeComponent {
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;
-    if ( dd.invisible) {
-      if ( !dd.invisibleOld) {
-        dd.invisibleOld = dd.invisible;
-        repaint();
-      }
-      else
-        dd.invisibleOld = dd.invisible;
+    if ( !visible)
       return;
-    }
-    dd.invisibleOld = dd.invisible;
     Graphics2D g = (Graphics2D) g1;
     float width = getWidth();
     float height = getHeight();
@@ -3667,14 +3484,14 @@ protected class Grp176_ extends GeComponent {
       }
     {
     int fcolor = GeColor.getDrawtype(32, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
     g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
     g.fill( shapes[1]);
     g.setColor(GeColor.shiftColor( fcolor, 2, colorInverse));
     g.fill( shapes[2]);
     g.setStroke( new BasicStroke(1F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
     g.draw( shapes[0]);
     }
     }
@@ -3701,16 +3518,8 @@ protected class Grp178_ extends GeComponent {
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;
-    if ( dd.invisible) {
-      if ( !dd.invisibleOld) {
-        dd.invisibleOld = dd.invisible;
-        repaint();
-      }
-      else
-        dd.invisibleOld = dd.invisible;
+    if ( !visible)
       return;
-    }
-    dd.invisibleOld = dd.invisible;
     Graphics2D g = (Graphics2D) g1;
     float width = getWidth();
     float height = getHeight();
@@ -3798,14 +3607,14 @@ protected class Grp178_ extends GeComponent {
       }
     {
     int fcolor = GeColor.getDrawtype(32, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
     g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
     g.fill( shapes[1]);
     g.setColor(GeColor.shiftColor( fcolor, 2, colorInverse));
     g.fill( shapes[2]);
     g.setStroke( new BasicStroke(1F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
     g.draw( shapes[0]);
     }
     }
@@ -3832,16 +3641,8 @@ protected class Grp180_ extends GeComponent {
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;
-    if ( dd.invisible) {
-      if ( !dd.invisibleOld) {
-        dd.invisibleOld = dd.invisible;
-        repaint();
-      }
-      else
-        dd.invisibleOld = dd.invisible;
+    if ( !visible)
       return;
-    }
-    dd.invisibleOld = dd.invisible;
     Graphics2D g = (Graphics2D) g1;
     float width = getWidth();
     float height = getHeight();
@@ -3929,14 +3730,14 @@ protected class Grp180_ extends GeComponent {
       }
     {
     int fcolor = GeColor.getDrawtype(32, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
     g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
     g.fill( shapes[1]);
     g.setColor(GeColor.shiftColor( fcolor, 2, colorInverse));
     g.fill( shapes[2]);
     g.setStroke( new BasicStroke(1F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
     g.draw( shapes[0]);
     }
     }
@@ -3963,16 +3764,8 @@ protected class Grp182_ extends GeComponent {
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;
-    if ( dd.invisible) {
-      if ( !dd.invisibleOld) {
-        dd.invisibleOld = dd.invisible;
-        repaint();
-      }
-      else
-        dd.invisibleOld = dd.invisible;
+    if ( !visible)
       return;
-    }
-    dd.invisibleOld = dd.invisible;
     Graphics2D g = (Graphics2D) g1;
     float width = getWidth();
     float height = getHeight();
@@ -4060,14 +3853,14 @@ protected class Grp182_ extends GeComponent {
       }
     {
     int fcolor = GeColor.getDrawtype(32, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
     g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
     g.fill( shapes[1]);
     g.setColor(GeColor.shiftColor( fcolor, 2, colorInverse));
     g.fill( shapes[2]);
     g.setStroke( new BasicStroke(1F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
     g.draw( shapes[0]);
     }
     }
@@ -4094,16 +3887,8 @@ protected class Grp184_ extends GeComponent {
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;
-    if ( dd.invisible) {
-      if ( !dd.invisibleOld) {
-        dd.invisibleOld = dd.invisible;
-        repaint();
-      }
-      else
-        dd.invisibleOld = dd.invisible;
+    if ( !visible)
       return;
-    }
-    dd.invisibleOld = dd.invisible;
     Graphics2D g = (Graphics2D) g1;
     float width = getWidth();
     float height = getHeight();
@@ -4191,14 +3976,14 @@ protected class Grp184_ extends GeComponent {
       }
     {
     int fcolor = GeColor.getDrawtype(32, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
     g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
     g.fill( shapes[1]);
     g.setColor(GeColor.shiftColor( fcolor, 2, colorInverse));
     g.fill( shapes[2]);
     g.setStroke( new BasicStroke(1F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
     g.draw( shapes[0]);
     }
     }

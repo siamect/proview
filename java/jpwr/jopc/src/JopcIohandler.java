@@ -43,7 +43,7 @@ public class JopcIohandler extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "Œ-i@€l@œá@pïÿ¿8ïÿ¿ß}");
+    JopSpider.setSystemName( "Œ-i@€l@œá@`ïÿ¿(ïÿ¿ß}");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 712, 278);
@@ -245,6 +245,7 @@ class LocalPanel extends JPanel {
   int colorInverse = 0;
   int originalColorInverse = 0;
   int shadow = 0;
+  boolean dimmed = false;
   public void setColorTone( int colorTone) {
     this.colorTone = colorTone;
     originalColorTone = colorTone;
@@ -333,78 +334,78 @@ class LocalPanel extends JPanel {
     AffineTransform save_tmp;
     g.setStroke( new BasicStroke(1F, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));
     g.setColor(GeColor.getColor(33, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
     g.draw( shapes[0]);
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
     g.drawString( "Status",17, 89);
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
     g.drawString( "LogMessage",17, 111);
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
     g.drawString( "CycleTime",17, 23);
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
     g.drawString( "IOReadWriteFlag",17, 48);
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
     g.drawString( "IOSimulFlag",17, 68);
     {
     int fcolor = GeColor.getDrawtype(32, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
     g.setColor(GeColor.shiftColor( fcolor, 2, colorInverse));
     g.fill( shapes[2]);
     g.setColor(GeColor.shiftColor( fcolor, -2, colorInverse));
     g.fill( shapes[3]);
     }
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
     g.drawString( "Number of signals",26, 147);
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
     g.drawString( "Di",26, 172);
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
     g.drawString( "Do",26, 193);
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
     g.drawString( "Dv",26, 213);
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
     g.drawString( "Ai",177, 172);
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
     g.drawString( "Ao",177, 193);
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
     g.drawString( "Av",177, 213);
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
     g.drawString( "Ii",333, 172);
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
     g.drawString( "Io",333, 193);
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
     g.drawString( "Iv",333, 213);
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
     g.drawString( "Co",490, 172);
     g.setTransform(save);
@@ -436,16 +437,8 @@ protected class pwr_valuelong extends GeComponent {
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;
-    if ( dd.invisible) {
-      if ( !dd.invisibleOld) {
-        dd.invisibleOld = dd.invisible;
-        repaint();
-      }
-      else
-        dd.invisibleOld = dd.invisible;
+    if ( !visible)
       return;
-    }
-    dd.invisibleOld = dd.invisible;
     Graphics2D g = (Graphics2D) g1;
     float width = getWidth();
     float height = getHeight();
@@ -533,7 +526,7 @@ protected class pwr_valuelong extends GeComponent {
       }
     {
     int fcolor = GeColor.getDrawtype(41, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
     g.setColor(GeColor.getColor( fcolor));
     g.fill( shapes[0]);
     if ( shadow != 0) {
@@ -544,11 +537,11 @@ protected class pwr_valuelong extends GeComponent {
     }
     g.setStroke( new BasicStroke(1F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
     g.draw( shapes[0]);
     }
     g.setColor(GeColor.getColor( annot1Color , colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont( annot1Font);
     save_tmp = g.getTransform();
     g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_OFF);
@@ -581,16 +574,8 @@ protected class pwr_indsquare extends GeComponent {
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;
-    if ( dd.invisible) {
-      if ( !dd.invisibleOld) {
-        dd.invisibleOld = dd.invisible;
-        repaint();
-      }
-      else
-        dd.invisibleOld = dd.invisible;
+    if ( !visible)
       return;
-    }
-    dd.invisibleOld = dd.invisible;
     Graphics2D g = (Graphics2D) g1;
     float width = getWidth();
     float height = getHeight();
@@ -678,7 +663,7 @@ protected class pwr_indsquare extends GeComponent {
       }
     {
     int fcolor = GeColor.getDrawtype(293, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
     g.setColor(GeColor.getColor( fcolor));
     g.fill( shapes[0]);
     if ( shadow != 0) {
@@ -689,7 +674,7 @@ protected class pwr_indsquare extends GeComponent {
     }
     g.setStroke( new BasicStroke(1F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
     g.draw( shapes[0]);
     }
     }
@@ -724,16 +709,8 @@ protected class pwr_valuesmall extends GeComponent {
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;
-    if ( dd.invisible) {
-      if ( !dd.invisibleOld) {
-        dd.invisibleOld = dd.invisible;
-        repaint();
-      }
-      else
-        dd.invisibleOld = dd.invisible;
+    if ( !visible)
       return;
-    }
-    dd.invisibleOld = dd.invisible;
     Graphics2D g = (Graphics2D) g1;
     float width = getWidth();
     float height = getHeight();
@@ -821,7 +798,7 @@ protected class pwr_valuesmall extends GeComponent {
       }
     {
     int fcolor = GeColor.getDrawtype(41, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);
     g.setColor(GeColor.getColor( fcolor));
     g.fill( shapes[0]);
     if ( shadow != 0) {
@@ -832,11 +809,11 @@ protected class pwr_valuesmall extends GeComponent {
     }
     g.setStroke( new BasicStroke(1F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));
     g.draw( shapes[0]);
     }
     g.setColor(GeColor.getColor( annot1Color , colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont( annot1Font);
     save_tmp = g.getTransform();
     g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_OFF);

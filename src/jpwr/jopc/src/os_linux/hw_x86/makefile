@@ -40,7 +40,9 @@ local_java_sources := \
 	JopcPid.java, \
 	JopcPlcthreadGen.java, \
 	JopcPlcthread.java, \
-	JopcPlcprocess.java
+	JopcPlcprocess.java, \
+	JopcSysmonconfig.java, \
+	JopcDisksup.java
 
 -include $(pwre_sroot)/tools/bld/src/$(os_name)/$(hw_name)/$(type_name)_generic.mk
 
