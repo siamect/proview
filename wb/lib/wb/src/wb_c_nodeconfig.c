@@ -17,21 +17,12 @@ static pwr_tStatus PostCreate (
   pwr_tObjid oid, poid;
   pwr_tClassId cid;
   pwr_tStatus sts;
-  char source[80];
 
   sts = ldh_ClassNameToId(Session, &cid, "RootVolumeLoad");
   sts = ldh_CreateObject(Session, &oid, "O1", cid, Object, ldh_eDest_IntoLast);
 
-  sts = ldh_ClassNameToId(Session, &cid, "$NodeHier");
+  sts = ldh_ClassNameToId(Session, &cid, "Distribute");
   sts = ldh_CreateObject(Session, &poid, "Distribute", cid, Object, ldh_eDest_IntoLast);
-
-  sts = ldh_ClassNameToId(Session, &cid, "GraphDistribute");
-  sts = ldh_CreateObject(Session, &oid, "AllPwg", cid, poid, ldh_eDest_IntoLast);
-
-  strcpy( source, "$pwrp_pop/*.pwg");
-  sts = ldh_SetObjectPar(Session, oid, "DevBody", "Source", source,
-			 sizeof(source));
-  if ( EVEN(sts)) return sts;
 
   return PWRS__SUCCESS;
 }
