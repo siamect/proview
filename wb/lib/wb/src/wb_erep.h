@@ -2,6 +2,7 @@
 #define wb_erep_h
 
 #include <map>
+#include <string>
 #include "wb_pwrs.h"
 
 using namespace std;
