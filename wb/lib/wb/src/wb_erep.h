@@ -60,7 +60,7 @@ public:
   void removeDbs( pwr_tStatus *sts, wb_vrep *vrep);
   void removeExtern( pwr_tStatus *sts, wb_vrep *vrep);
   void removeBuffer( pwr_tStatus *sts, wb_vrep *vrep);
-  void load( pwr_tStatus *sts);
+  void load( pwr_tStatus *sts, char *db);
 
   wb_orep *object( pwr_tStatus *sts, pwr_tOid oid);
   wb_orep *object( pwr_tStatus *sts, wb_name &name);
@@ -74,7 +74,7 @@ public:
 private:
   void loadDirList( pwr_tStatus *status);
   void loadCommonMeta( pwr_tStatus *status);
-  void loadMeta( pwr_tStatus *status);
+  void loadMeta( pwr_tStatus *status, char *db);
   void loadLocalWb( pwr_tStatus *sts);
   void bindMethods();
 };

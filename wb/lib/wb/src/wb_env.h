@@ -27,7 +27,7 @@ public:
   operator wb_erep*() const;
   bool operator==(wb_env&);
     
-  void load() { m_erep->load(&m_sts);}
+  void load( char *db) { m_erep->load(&m_sts, db);}
   bool open();
   bool close();
 

@@ -804,7 +804,8 @@ ldh_OpenSession (
 
 pwr_tStatus
 ldh_OpenWB (
-  ldh_tWorkbench	*WorkBench
+  ldh_tWorkbench	*WorkBench,
+  char			*db
 );
 
 pwr_tStatus ldh_Paste (

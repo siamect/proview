@@ -1218,7 +1218,7 @@ static int wtt_get_wbctx( void *ctx, ldh_tWBContext *wbctx)
   else
   {
     wtt->set_clock_cursor();
-    sts = ldh_OpenWB( &wtt->wbctx);
+    sts = ldh_OpenWB( &wtt->wbctx, 0);
     if ( ODD(sts))
       *wbctx = wtt->wbctx;
 

@@ -1143,11 +1143,11 @@ ldh_OpenSession(ldh_tSession *session, ldh_tVolume volume,
    it with objects from database on disk.  */
 
 pwr_tStatus
-ldh_OpenWB(ldh_tWorkbench *workbench)
+ldh_OpenWB(ldh_tWorkbench *workbench, char *db)
 {
   wb_erep *erep = new wb_erep();
   wb_env *env = new wb_env(erep);
-  env->load();
+  env->load( db);
 
   *workbench = (ldh_tWorkbench)env;
   return env->sts();

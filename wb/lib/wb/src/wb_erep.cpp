@@ -182,6 +182,8 @@ wb_vrep *wb_erep::nextVolume(pwr_tStatus *sts, pwr_tVid vid)
   it = m_vrepdbs.find(vid);
   if ( it != m_vrepdbs.end()) {
     it++;
+    if ( it != m_vrepdbs.end() && it->second->duplicateDb())
+      it++;
     if ( it != m_vrepdbs.end()) {
       *sts = LDH__SUCCESS;
       return it->second;
@@ -332,7 +334,7 @@ void wb_erep::removeBuffer(pwr_tStatus *sts, wb_vrep *vrep)
   return;
 }
 
-void wb_erep::load( pwr_tStatus *sts)
+void wb_erep::load( pwr_tStatus *sts, char *db)
 {
   loadDirList( sts);
   if ( EVEN(*sts)) return;
@@ -343,7 +345,7 @@ void wb_erep::load( pwr_tStatus *sts)
       *sts = status;
       return;
     }
-    loadMeta( sts);
+    loadMeta( sts, db);
     bindMethods();
     loadLocalWb( sts);
     return;
@@ -351,7 +353,7 @@ void wb_erep::load( pwr_tStatus *sts)
   loadCommonMeta( sts);
   if ( EVEN(*sts)) return;
 
-  loadMeta( sts);
+  loadMeta( sts, db);
   bindMethods();
   loadLocalWb( sts);
 }
@@ -446,7 +448,7 @@ void wb_erep::loadCommonMeta( pwr_tStatus *status)
   *status = LDH__SUCCESS;
 }
 
-void wb_erep::loadMeta( pwr_tStatus *status)
+void wb_erep::loadMeta( pwr_tStatus *status, char *db)
 {
   // Load local metavolumes
   char found_file[200];
@@ -553,6 +555,11 @@ void wb_erep::loadMeta( pwr_tStatus *status)
     }
     else {
       // Load db for this volume
+      if ( db) {
+	// If db is specified, load only specified db
+	if ( cdh_NoCaseStrcmp( vol_array[0], db) != 0)
+	  continue;
+      }
       strcpy( vname, "$pwrp_db/");
       strcat( vname, vol_array[0]);
       cdh_ToLower( vname, vname);
@@ -574,22 +581,36 @@ void wb_erep::loadMeta( pwr_tStatus *status)
   }
   fpm.close();
 
+  // Identify dbs that also is loaded as db
+  vrep_iterator itdbs, itdb;
+
+  for ( itdbs = m_vrepdbs.begin(); itdbs != m_vrepdbs.end(); itdbs++) {
+    for ( itdb = m_vrepdb.begin(); itdb != m_vrepdb.end(); itdb++) {
+      if ( itdbs->first == itdb->first)
+	itdbs->second->setDuplicateDb( true);
+    }
+  }
+
   // Load directory volume
 
-  strcpy( vname, "$pwrp_db/directory.db");
-  dcli_translate_filename( vname, vname);
+  if ( !db || (db && cdh_NoCaseStrcmp( "directory", db) == 0)) {
+    strcpy( vname, "$pwrp_db/directory.db");
+    dcli_translate_filename( vname, vname);
 
-  sts = dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_INIT);
-  dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_END);
-  if ( ODD(sts)) {
-    wb_vrepdb *vrepdb = new wb_vrepdb( this, vname);
-    vrepdb->name("directory");
-    addDb( &sts, vrepdb);
-    MsgWindow::message( 'I', "Database opened", vname);
+    sts = dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_INIT);
+    dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_END);
+    if ( ODD(sts)) {
+      wb_vrepdb *vrepdb = new wb_vrepdb( this, vname);
+      vrepdb->name("directory");
+      addDb( &sts, vrepdb);
+      MsgWindow::message( 'I', "Database opened", vname);
+    }
+    if ( EVEN(sts)) {
+      *status = LDH__PROJCONFIG;
+      return;
+    }
   }
-  if ( EVEN(sts))
-    *status = LDH__PROJCONFIG;
-  else if ( !vol_cnt)
+  if ( !vol_cnt)
     *status = LDH__PROJCONFIG;
   else
     *status = LDH__SUCCESS;
