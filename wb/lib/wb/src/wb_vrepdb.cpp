@@ -1170,6 +1170,60 @@ bool wb_vrepdb::exportMeta(wb_import &i)
 }
 
 
+bool wb_vrepdb::exportTree(wb_treeimport &i, pwr_tOid oid)
+{
+  return exportTreeHelper(i, oid, true);
+}
+
+bool wb_vrepdb::exportTreeHelper(wb_treeimport &i, pwr_tOid oid, bool isRoot)
+{
+  m_ohead.get(m_db->m_txn, oid);
+
+  void *rbody = 0;
+  void *dbody = 0;
+  int rbSize = m_ohead.rbSize();
+  int dbSize = m_ohead.dbSize();
+  
+  if (rbSize) {
+    rbody = (void *)malloc(rbSize);
+    wb_db_rbody rb(m_db, oid);
+    int rc = rb.get(m_db->m_txn, 0, rbSize, rbody);
+    if (rc)
+      printf("wb_vrepdbs::exportTreeObject, rb.get: %d\n", rc);
+  }
+  
+  if (dbSize) {
+    dbody = (void *)malloc(dbSize);
+    wb_db_dbody db(m_db, oid);
+    int rc = db.get(m_db->m_txn, 0, dbSize, dbody);
+    if (rc)
+      printf("wb_vrepdbs::exportTreeObject, db.get: %d\n", rc);
+  }
+
+  pwr_mClassDef flags; flags.m = 0; // Fix !!!
+  if (isRoot) {
+    i.importTreeObject(m_merep, m_ohead.oid(), m_ohead.cid(), pwr_cNOid, pwr_cNOid, m_ohead.name(), flags,
+                       m_ohead.rbSize(), m_ohead.dbSize(), rbody, dbody);
+  } else {
+    i.importTreeObject(m_merep, m_ohead.oid(), m_ohead.cid(), m_ohead.poid(), m_ohead.boid(), m_ohead.name(), flags,
+                       m_ohead.rbSize(), m_ohead.dbSize(), rbody, dbody);
+  }
+  
+  if (rbSize)
+    free(rbody);
+  if (dbSize)
+    free(dbody);
+    
+  oid = m_ohead.foid();
+  while (cdh_ObjidIsNotNull(oid)) {
+    exportTreeHelper(i, oid, false);
+    m_ohead.get(m_db->m_txn, oid);
+    oid = m_ohead.aoid();
+  }
+  
+  return true;
+}
+
 wb_orepdb *wb_vrepdb::new_wb_orepdb(size_t size)
 {
   wb_orepdb *o = (wb_orepdb *) calloc(1, size);
