@@ -21,7 +21,7 @@ class GlowTransform {
     double y( double x1, double y1);
     double x( GlowTransform *t, double x1, double y1);
     double y( GlowTransform *t, double x1, double y1);
-    void reverse( double x, double y, double *rx, double *ry);
+    bool reverse( double x, double y, double *rx, double *ry);
     void save( ofstream& fp, glow_eSaveMode mode);
     void open( ifstream& fp);
     double rot( GlowTransform *t) { return t->rotation + rotation;};

@@ -142,7 +142,7 @@ double GlowTransform::y( GlowTransform *t, double x1, double y1)
   return tmp.y( x1, y1);
 }
 
-void GlowTransform::reverse( double x, double y, double *rx, double *ry)
+bool GlowTransform::reverse( double x, double y, double *rx, double *ry)
 {
   if ( a11 == 0 || ( a12 * a21 - a11 * a22) == 0)
   {
@@ -150,15 +150,17 @@ void GlowTransform::reverse( double x, double y, double *rx, double *ry)
     {
       *ry = (x - a13) / a12;
       *rx = (y - a23) / a21;
+      return true;
     }
     else
     {
       *ry = *rx = 0;
+      return false;
     }
-    return;
   }
   *ry = ( a11 * ( a23 - y) - a21 * ( a13 - x)) / ( a12 * a21 - a11 * a22);
   *rx = ( x - a12 * *ry - a13) / a11;
+  return true;
 }
 
 double GlowTransform::vertical_scale( GlowTransform *t)
