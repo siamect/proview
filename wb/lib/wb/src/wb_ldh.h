@@ -287,15 +287,16 @@ struct ldh_s_MenuCall {
   void			*EditorContext;
   void			*WindowContext;
   ldh_eMenuSet		PointedSet;
-  ldh_tSession	PointedSession;
+  ldh_tSession		PointedSession;
   pwr_sAttrRef		Pointed;
   ldh_eMenuSet		SelectedSet;
-  ldh_tSession	SelectedSession;
+  ldh_tSession		SelectedSession;
   pwr_sAttrRef		*Selected;
   pwr_tUInt32		SelectCount;
   ldh_sMenuItem		*ItemList;
   pwr_tUInt32		ItemCount;
   pwr_tUInt32		ChosenItem;
+  void			(*message_cb)( void *, char, char *);
 };
 
 struct ldh_s_SessInfo {
@@ -319,6 +320,7 @@ struct ldh_s_VolumeInfo {
   pwr_tVolumeId		Volume;
   pwr_tClassId		Class;
   pwr_tProjVersion	Version;
+  ldh_eVolRep		VolRep;
 };
 
 struct ldh_s_ParDef {
@@ -923,6 +925,13 @@ pwr_tStatus
 ldh_GetVolumeInfo (
   ldh_tVolContext	volContext,
   ldh_sVolumeInfo	*info
+);
+
+pwr_tStatus
+ldh_GetVidInfo( 
+  ldh_tWorkbench 	workbench,
+  pwr_tVid 		vid,
+  ldh_sVolumeInfo 	*info
 );
 
 pwr_tStatus

@@ -798,6 +798,19 @@ ldh_GetSessionInfo(ldh_tSession session, ldh_sSessInfo *ip)
   return LDH__SUCCESS;
 }
 
+pwr_tStatus 
+ldh_GetVidInfo( ldh_tWorkbench workbench, pwr_tVid vid, ldh_sVolumeInfo *ip)
+{
+  wb_env *wb = (wb_env *)workbench;
+  wb_volume v = wb->volume( vid);
+  ip->Volume  = v.vid();
+  ip->Class   = v.cid();
+  ip->VolRep  = v.type();
+  //ip->Version = v.time();
+
+  return LDH__SUCCESS;
+}
+
 pwr_tStatus
 ldh_GetVolumeInfo(ldh_tVolume volume, ldh_sVolumeInfo *ip)
 {
@@ -805,6 +818,7 @@ ldh_GetVolumeInfo(ldh_tVolume volume, ldh_sVolumeInfo *ip)
     
   ip->Volume  = vp->vid();
   ip->Class   = vp->cid();
+  ip->VolRep  = vp->type();
   //ip->Version = vp->time();
 
   return LDH__SUCCESS;
