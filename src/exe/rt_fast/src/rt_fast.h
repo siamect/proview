@@ -1,6 +1,8 @@
 #ifndef rt_dsfast_h
 #define rt_dsfast_h
 
+using namespace std;
+
 #include <string.h>
 #include <vector>
 extern "C" {

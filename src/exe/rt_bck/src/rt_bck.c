@@ -57,6 +57,9 @@
 #include "co_dcli.h"
 #include "rt_pwr_msg.h"
 #include "rt_aproc.h"
+#include "rt_qcom.h"
+#include "rt_qcom_msg.h"
+#include "rt_ini_event.h"
 
 #define	check4a(sts,str) if((sts)==-1)perror(str)
 
@@ -1353,6 +1356,7 @@ int main ()
   pwr_tStatus sts;
   pwr_tInt32 sts4a;
   pwr_tUInt32 c;
+  qcom_sQid	my_q = qcom_cNQid;
 
   errh_Init("pwr_bck", errh_eAnix_bck);
   errh_SetStatus( PWR__SRVSTARTUP);
@@ -1370,6 +1374,18 @@ int main ()
   }
   errh_SetStatus( PWR__SRUN);
 
+  if (!qcom_Init(&sts, NULL, "pwr_bck")) {
+    errh_Fatal("qcom_Init, %m", sts);
+    errh_SetStatus( PWR__SRVTERM);
+    exit(sts);
+  }
+
+  if (!qcom_CreateQ(&sts, &my_q, NULL, "events")) {
+    errh_Fatal("qcom_CreateQ, %m", sts);
+    errh_SetStatus( PWR__SRVTERM);
+    exit(sts);
+  }
+
   for (;;) {
 #ifdef OS_ELN
     ker$clear_event(NULL, bck_forced_activation);
@@ -1380,8 +1396,11 @@ int main ()
     sts = sys$waitfr(BCK_ACTIVATE);
     if (EVEN(sts)) lib$signal(sts);			/* BUG */
 #else
-    while(1)
-      pause();
+    while(1) {
+      qcom_WaitAnd(&sts, &my_q, &qcom_cQini, ini_mEvent_terminate, qcom_cTmoEternal);
+//      pause();
+      exit(0);
+    }
 #endif
 
     /* We were activated from the outer world. Trigger */

@@ -728,6 +728,7 @@ qdb_sBuffer*	qdb_CopyBuffer	(pwr_tStatus*, qdb_sBuffer*);
 void*		qdb_CopyBufferData (pwr_tStatus*, qdb_sBuffer*, qcom_sGet*);
 qdb_sBuffer*	qdb_DetachBuffer (pwr_tStatus*, qdb_sBuffer*);
 qdb_sLocal*	qdb_CreateDb	(pwr_tStatus*, qdb_sInit*);
+void		qdb_UnlinkDb	();
 qdb_sQlock*	qdb_CreateQlock (pwr_tStatus*, qdb_sQue*);
 void		qdb_DeleteQlock (pwr_tStatus*, qdb_sQue*);
 qdb_sBuffer*	qdb_Deque	(pwr_tStatus*, qdb_sQue*, int);

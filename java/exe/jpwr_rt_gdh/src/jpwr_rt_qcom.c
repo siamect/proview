@@ -5,6 +5,12 @@
 #include "co_time.h"
 #include "co_cdh_msg.h"
 #include "rt_qcom_msg.h"
+#include "rt_errh.h"
+
+#include "rt_pwr_msg.h"
+#include "rt_ini_event.h"
+
+
 
 JNIEXPORT jobject JNICALL Java_jpwr_rt_Qcom_createQ
   (JNIEnv *env, jobject object, jint qix, jint nid, jstring jname)
@@ -34,7 +40,7 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Qcom_createQ
   qid.nid = nid;
   qcom_CreateQ( &sts, &qid, &attr, cstr);
   (*env)->ReleaseStringUTFChars( env, jname, cstr);
-  printf( "Create que, qix %d, nid %d, sts %d\n", qid.qix, qid.nid, sts);
+  //printf( "Create que, qix %d, nid %d, sts %d\n", qid.qix, qid.nid, sts);
   jsts = (jint) sts;
   return_obj = (*env)->NewObject( env, qcomrCreateQ_id,
   	qcomrCreateQ_cid, qid.qix, qid.nid, jsts);
@@ -46,6 +52,164 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Qcom_createQ
 
   return return_obj;
 }
+
+
+
+/*
+ * Class:     jpwr_rt_Qcom
+ * Method:    createIniEventQ
+ * Signature: ()Ljpwr/rt/QcomrCreateQ;
+ */
+JNIEXPORT jobject JNICALL Java_jpwr_rt_Qcom_createIniEventQ
+  (JNIEnv *env, jobject object, jstring jname)
+{
+
+  jclass 	qcomrCreateQ_id;
+  jmethodID 	qcomrCreateQ_cid;
+  jobject 	return_obj;
+  jint		jsts;
+  qcom_sQid	qid;
+  qcom_sQattr	qAttr;
+  qcom_sQid     qini;
+  int		sts;
+  char		*cstr;
+  const char 	*name;
+
+  qcomrCreateQ_id = (*env)->FindClass( env, "jpwr/rt/QcomrCreateQ");
+  qcomrCreateQ_cid = (*env)->GetMethodID( env, qcomrCreateQ_id,
+    	"<init>", "(III)V");
+
+  name = (*env)->GetStringUTFChars( env, jname, 0);
+  cstr = (char *)name;
+
+
+  //printf("%s\n", cstr);
+  // Create a queue to receive stop and restart events
+  if (!qcom_Init(&sts, 0, cstr)) {
+    errh_Fatal("qcom_Init, %m", sts); 
+    errh_SetStatus( PWR__APPLTERM);
+    exit(sts);
+  } 
+
+
+
+  qAttr.type = qcom_eQtype_private;
+  qAttr.quota = 100;
+  if (!qcom_CreateQ(&sts, &qid, &qAttr, cstr)) {
+    errh_Fatal("qcom_CreateQ, %m", sts);
+    errh_SetStatus( PWR__APPLTERM);
+    exit(sts);
+  } 
+
+  (*env)->ReleaseStringUTFChars( env, jname, cstr);
+
+
+  //printf( "Create que, qix %d, nid %d, sts %d\n", qid.qix, qid.nid, sts);
+  jsts = (jint) sts;
+  return_obj = (*env)->NewObject( env, qcomrCreateQ_id,
+  	qcomrCreateQ_cid, qid.qix, qid.nid, jsts);
+
+
+  qini = qcom_cQini;
+  if (!qcom_Bind(&sts, &qid, &qini)) {
+    errh_Fatal("qcom_Bind(Qini), %m", sts);
+    errh_SetStatus( PWR__APPLTERM);
+    exit(-1);
+  }
+
+
+  return return_obj;
+
+}
+
+/*
+ * Class:     jpwr_rt_Qcom
+ * Method:    getIniEvent
+ * Signature: (III)Ljpwr/rt/QcomrGetIniEvent;
+ */
+JNIEXPORT jobject JNICALL Java_jpwr_rt_Qcom_getIniEvent
+  (JNIEnv *env, jobject object, jint qix, jint nid, jint timeoutTime)
+{
+  jclass 	qcomrGetIniEvent_id;
+  jmethodID 	qcomrGetIniEvent_cid;
+  jobject 	return_obj;
+  jint		jsts;
+  jboolean jterminate = FALSE;
+  jboolean jswapInit = FALSE;
+  jboolean jswapDone = FALSE;
+  jboolean jtimeout = FALSE;
+  qcom_sQid     qid;
+
+
+  int		sts;
+
+
+
+  int tmo = timeoutTime;
+  pwr_tBoolean terminate = FALSE;
+  pwr_tBoolean swapInit = FALSE;
+  pwr_tBoolean swapDone = FALSE;
+  pwr_tBoolean timeout = FALSE;
+  char mp[2000];
+  qcom_sGet get;
+
+  ini_mEvent  new_event;
+  qcom_sEvent *ep;
+
+
+
+  qcomrGetIniEvent_id = (*env)->FindClass( env, "jpwr/rt/QcomrGetIniEvent");
+  qcomrGetIniEvent_cid = (*env)->GetMethodID( env, qcomrGetIniEvent_id,
+    	"<init>", "(ZZZZI)V");
+
+  qid.qix = qix;
+  qid.nid = nid;
+
+
+
+  get.maxSize = sizeof(mp);
+  get.data = mp;
+  qcom_Get( &sts, &qid, &get, tmo);
+  if (sts == QCOM__TMO || sts == QCOM__QEMPTY) {    
+    timeout = TRUE;
+  } 
+  else {
+    ep = (qcom_sEvent*) get.data;
+
+    new_event.m  = ep->mask;
+    if (new_event.b.swapInit) {
+      errh_SetStatus( PWR__APPLRESTART);
+      swapInit = TRUE;
+    } 
+    else if (new_event.b.swapDone) {
+      swapDone = TRUE;
+      errh_SetStatus( PWR__ARUN);
+    } 
+    else if (new_event.b.terminate) {
+      terminate = TRUE;
+    }
+  }
+
+  jsts        = (jint) 1;
+  jterminate  = (jboolean) terminate;
+  jswapInit   = (jboolean) swapInit;
+  jswapDone   = (jboolean) swapDone;
+  jtimeout    = (jboolean) timeout;
+  
+  return_obj = (*env)->NewObject( env, qcomrGetIniEvent_id,
+  	                          qcomrGetIniEvent_cid, 
+                                  jterminate,
+                                  jswapInit,
+                                  jswapDone,
+                                  jtimeout,
+                                  jsts);
+  return return_obj;
+
+
+}
+
+
+
 
 JNIEXPORT jobject JNICALL Java_jpwr_rt_Qcom_getString
   (JNIEnv *env, jobject object, jint qix, jint nid)
@@ -71,7 +235,7 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Qcom_getString
   qcom_Get( &sts, &qid, &get, 0);
   if ( ODD(sts))
   {
-    printf("Qcom_get: Received data: %s\n", (char *)get.data);
+    //printf("Qcom_get: Received data: %s\n", (char *)get.data);
     jdata = (*env)->NewStringUTF( env, (char *)get.data);
 
 

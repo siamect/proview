@@ -1855,6 +1855,29 @@ ini_ProcStart (
     errh_LogError(&cp->log, "Error starting %s, %m", pp->id, *sts);
 }
 
+void 
+ini_ProcPrio (
+  pwr_tStatus	*status,
+  ini_sContext	*cp,
+  ini_sProc	*pp
+)  
+{
+
+  char    set[100];
+  
+  pwr_dStatus(sts, status, INI__SUCCESS);
+
+  if (pp->flags.b.running) 
+    return;
+  
+  if (pp->flags.b.run) {
+#if defined(OS_LINUX)
+    sprintf(set, "rt_prio -rp %d %d", pp->proc.p_prio, pp->proc.pid);
+    system(set);
+#endif 
+  }
+}
+
 void
 ini_ProcIter (
   pwr_tStatus	*status,

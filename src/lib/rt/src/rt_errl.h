@@ -29,4 +29,8 @@ void		errl_Init	(const char *termname,
 void		errl_SetTerm	(const char *termname);
 void		errl_SetFile	(const char *filename);
 
+#if defined OS_LINUX
+void		errl_Unlink	();
+#endif
+
 #endif

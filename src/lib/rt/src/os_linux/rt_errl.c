@@ -29,6 +29,7 @@ static mqd_t mqid = (mqd_t)-1;
 static int logFile = -1;
 static int newLogFile = 1;
 static int term = -1;
+static pthread_t tid = 0;
 static int yday = -1;
 static pwr_tBoolean logToStdout = FALSE;
 static void (*errl_log_cb)( void *, char *, char, pwr_tStatus, int, int) = 0;
@@ -46,7 +47,6 @@ errl_Init (
 )
 {
   pthread_mutexattr_t mutexattr;
-  pthread_t tid;
   pthread_attr_t pthreadattr;
   struct mq_attr mqattr;
   mode_t mode;
@@ -113,6 +113,19 @@ errl_Init (
   initDone = 1;
   
   return;
+}
+void
+errl_Unlink ()
+{
+  char name[64];
+  char *busid = getenv(pwr_dEnvBusId);
+
+  pthread_cancel(tid);
+
+  sprintf(name, "%s_%s", LOG_QUEUE_NAME, busid ? busid : "");  
+
+  /* We don't care about return status */
+  mq_unlink(name);
 }
 void
 errl_SetFile (

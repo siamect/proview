@@ -575,7 +575,7 @@ thread_SetPrio (
       return ERRNO__SUCCESS;
 
   }
-#elif defined OS_LINUX || defined OS_LYNX
+#elif defined OS_LYNX
   {
     struct sched_param par;
     pthread_t id;
@@ -589,6 +589,29 @@ thread_SetPrio (
       id = *tp;
 
     return errno_Status(pthread_setschedparam(id, SCHED_FIFO, &par));
+  }
+#elif defined OS_LINUX
+  {
+    int pid, policy;
+    pthread_t tid;
+    char set[100];
+    struct sched_param par;
+    pwr_tStatus sts = THREAD__SUCCESS;
+
+    /* Set priority and scheduling mechanism for thread. */
+    /* -f equals SCHED_FIFO */
+    pid = getpid();
+    tid = pthread_self();
+    prio = MIN(sched_get_priority_max(SCHED_FIFO), 
+	       sched_get_priority_min(SCHED_FIFO) + prio);
+//    sprintf(set, "/home/rk8584/sched/nptlrt -fp %i %i", prio, tid);
+//    system(set);
+    par.sched_priority = prio;
+    pthread_setschedparam(tid, SCHED_FIFO, &par);
+    pthread_getschedparam(tid, &policy, &par); 
+    errh_Info("My policy: %s, prio: %d" , policy != SCHED_OTHER ? "RT" : "OTHER", par.sched_priority);
+    return sts;
+
   }
 #else
 # error Not defined for this platform !

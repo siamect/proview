@@ -9,6 +9,9 @@
 #include "twolist.h"
 #include "rt_aproc.h"
 #include "rt_pwr_msg.h"
+#include "rt_ini_event.h"
+#include "rt_qcom.h"
+#include "rt_qcom_msg.h"
 
 #define Log_Error(a, b) errh_Error("%s\n%m",b, a)
 #define Log(b) errh_Info(b)
@@ -46,7 +49,9 @@ int
 main ()
 {
   pwr_tUInt32 sts;
-  pwr_tObjid oid;
+  pwr_tObjid  oid;
+  qcom_sQid   my_q = qcom_cNQid;
+  qcom_sGet   get;
 
   pwr_tBoolean firstTime = TRUE;
   pwr_tUInt32 nrOfEvents = 0;
@@ -62,6 +67,19 @@ main ()
   If_Error_Log_Exit(sts, "gdh_Init");
 
   Init();
+
+  /* Create queue for receival of events */
+  if (!qcom_CreateQ(&sts, &my_q, NULL, "events")) {
+    errh_Fatal("qcom_CreateQ, %m", sts);
+    errh_SetStatus( PWR__APPLTERM);
+    exit(sts);
+  } 
+
+  if (!qcom_Bind(&sts, &my_q, &qcom_cQini)) {
+    errh_Fatal("qcom_Bind(Qini), %m", sts);
+    errh_SetStatus( PWR__APPLTERM);
+    exit(-1);
+  }
   
   oid.vid = lHelCB.Nid;
   oid.oix = pwr_cNVolumeId;
@@ -90,6 +108,23 @@ main ()
     if (EVEN(sts) && sts != MH__TMO)
       Log_Error(sts, "mh_OutunitReceive");
     Store(&firstTime, &nrOfEvents, &nrOfKeys);
+
+    get.data = NULL;
+    qcom_Get(&sts, &my_q, &get, 0);
+    if (sts != QCOM__TMO && sts != QCOM__QEMPTY) {
+      if (get.type.b == qcom_eBtype_event) {
+        qcom_sEvent  *ep = (qcom_sEvent*) get.data;
+        ini_mEvent    new_event;
+        if (get.type.s == qcom_cIini) {
+          new_event.m = ep->mask;
+          if (new_event.b.terminate) {
+            errh_SetStatus( PWR__APPLTERM);
+            exit(0);
+          }
+        }
+      }
+      qcom_Free(&sts, get.data);
+    }
 
     aproc_TimeStamp();
   }

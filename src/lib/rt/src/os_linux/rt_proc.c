@@ -65,18 +65,24 @@ proc_SetPriority (
   int prio
 )
 {
-  struct sched_param param;
-  int rc;
+//  struct sched_param param;
+//  int rc;
+  int  pid;
+  char set[100];
   pwr_tStatus sts = PROC__SUCCESS;
 
-  rc = sched_getparam((pid_t)0, &param);
-  if (rc != 0)
-    return errno_GetStatus();
-  param.sched_priority = prio;
-  rc = sched_setscheduler((pid_t)0, SCHED_RR, &param);
-  if (rc != 0)
-    return errno_GetStatus();
-  return sts;
+  pid = getpid();
+//  rc = sched_getparam((pid_t)0, &param);
+//  if (rc != 0)
+//    return errno_GetStatus();
+//  param.sched_priority = prio;
+//  rc = sched_setscheduler((pid_t)0, SCHED_RR, &param);
+//  if (rc != 0)
+//    return errno_GetStatus();
+
+  sprintf(set, "rt_prio -rp %d %d", prio, pid);
+//  system(set);
+  return sts;  
 }
 
 pwr_tStatus

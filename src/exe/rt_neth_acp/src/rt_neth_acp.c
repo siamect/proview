@@ -29,8 +29,9 @@
 #include "rt_subc.h"
 #include "rt_net.h"
 #include "rt_pwr_msg.h"
+#include "rt_ini_event.h"
 
-
+static void event (qcom_sGet	*get);
 static void init(qcom_sQid *qid);
 static void lockMountServers(gdb_sNode *np);
 static gdb_sNode *node(net_sMessage *mp);
@@ -126,6 +127,12 @@ init (
   } 
   *myQid = qcom_cQnacp;
 
+  if (!qcom_Bind(&sts, myQid, &qcom_cQini)) {
+    errh_Fatal("qcom_Bind, %m", sts);
+    errh_SetStatus( PWR__SRVTERM);
+    exit(-1);
+  }
+
   /* Activate all subscriptions that were requested before we started!  */
 
   gdb_ScopeLock {
@@ -158,13 +165,35 @@ receive (
       continue;
     }
 
-    if (get->type.b != net_cMsgClass) {
+    if (get->type.b == qcom_eBtype_event) {
+        event(get);
+        qcom_Free(&sts, mp);
+    }
+
+    else if (get->type.b != net_cMsgClass) {
       errh_Error("Received bad message, type: <%d>, subtype: <%d>", get->type.b, get->type.s);
       qcom_Free(&sts, mp);
       continue;
     }
 
     return mp;
+  }
+}
+
+static void
+event (
+  qcom_sGet	*get
+)
+{
+  qcom_sEvent  *ep = (qcom_sEvent*) get->data;
+  ini_mEvent            new_event;
+
+  if (get->type.s != qcom_cIini)
+    return;
+
+  new_event.m = ep->mask;
+  if (new_event.b.terminate) {
+    exit(0);
   }
 }
 

@@ -20,6 +20,17 @@
 # include <signal.h>
 #endif
 
+#if defined (OS_LYNX)
+# include <sys/mman.h>
+#elif	defined(OS_LINUX)
+# include <sys/file.h>
+# include <sys/stat.h>
+# include <sys/ipc.h>
+# include <sys/shm.h>
+# include "rt_semaphore.h"
+#endif
+
+
 #include <errno.h>
 #include "pwr.h"
 #include "co_time.h"
@@ -735,6 +746,116 @@ qdb_CreateDb (
     qdb = NULL;
 
   return qdb;
+}
+
+#if defined OS_LYNX || defined OS_LINUX
+/*
+ * A fix which unlinks all segments for the given name.
+ */
+static void
+unlinkPool(
+  const char *name
+){
+  int 	 i;
+  int    fd;                                              
+  int    flags = O_RDWR;              
+  mode_t mode  = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP; 
+  key_t  key;
+  int    shm_id;
+  struct shmid_ds   ds;
+
+  char   *str = getenv(pwr_dEnvBusId);
+  char   segname[128];
+  char	 busid[8];
+
+  strncpy(busid, (str ? str : "XXX"), 3);
+  busid[3] = '\0';
+
+  sprintf(segname, "%s_%.3s", name, busid);
+
+#if defined OS_LYNX
+  fd = shm_open(segname, flags, mode); 
+#else
+  fd = open(segname, flags, mode); 
+#endif
+  if (fd != -1) { 
+    close(fd);
+
+#if defined OS_LYNX
+      shm_unlink(segname);
+#else
+      key    = ftok(segname, 'P');
+      shm_id = shmget(key, 0, 0660);
+      shmctl(shm_id, IPC_RMID, &ds);
+      unlink(segname);
+#endif
+
+    for (i = 1; TRUE; i++) {
+      sprintf(segname, "%.11s%04d_%.3s", name, i, busid);
+#if defined OS_LYNX
+      fd = shm_open(segname, flags, mode); 
+#else
+      fd = open(segname, flags, mode); 
+#endif
+
+      if (fd == -1)
+        break;
+
+      close(fd);
+
+#if defined OS_LYNX
+      shm_unlink(segname);
+#else
+      key    = ftok(segname, 'P');
+      shm_id = shmget(key, 0, 0660);
+      shmctl(shm_id, IPC_RMID, &ds);
+      unlink(segname);
+#endif
+
+    }
+  }
+}
+
+#endif
+
+/* This routine unlinks QCOM database and  
+   removes database lock.
+   It should only be called by the init program.  */
+
+void
+qdb_UnlinkDb ()
+{
+  char   segname[128];
+  char	 busid[8];
+  char   *str = getenv(pwr_dEnvBusId);
+  key_t  key;
+  int    shm_id;
+  struct shmid_ds   ds;
+
+#if defined OS_LYNX || defined OS_LINUX
+
+  /* Unlink pool. */
+
+  unlinkPool(qdb_cNamePool);
+
+  /* Remove database lock. */
+
+  strncpy(busid, (str ? str : "XXX"), 3);
+  busid[3] = '\0';
+
+  sprintf(segname, "%s_%.3s", qdb_cNameDbLock, busid);
+
+#if defined OS_LYNX
+      shm_unlink(segname);
+#else
+      key    = ftok(segname, 'P');
+      shm_id = shmget(key, 0, 0660);
+      shmctl(shm_id, IPC_RMID, &ds);
+      posix_sem_unlink(segname);
+      unlink(segname);
+#endif
+
+#endif
 }
 
 qdb_sLocal *

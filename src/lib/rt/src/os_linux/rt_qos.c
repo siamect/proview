@@ -37,7 +37,6 @@ qos_WaitQue (
 {
   pwr_tDeltaTime	dtime;
   sigset_t		newset;
-  sigset_t		oldset;
   siginfo_t		info;
   int			ok;
   pwr_tBoolean		signal = FALSE;
@@ -52,7 +51,6 @@ qos_WaitQue (
 
   sigemptyset(&newset);
   sigaddset(&newset, qdb_cSigMsg);
-  sigprocmask(SIG_BLOCK, &newset, &oldset);
 
 //  qp->lock.pid = BUILDPID(getpid(), pthread_self());
 // I think that each thread has it's own pid in Linux. ML
@@ -87,7 +85,6 @@ qos_WaitQue (
     signal = TRUE;
   }
 
-  sigprocmask(SIG_SETMASK, &oldset, NULL);
   return signal;
 }
 

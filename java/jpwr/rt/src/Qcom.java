@@ -21,6 +21,8 @@ public class Qcom {
   }
 
   public native QcomrCreateQ createQ( int qix, int nid, String name);
+  public native QcomrCreateQ createIniEventQ(String name);
+  public native QcomrGetIniEvent getIniEvent(int qix, int nid, int timeoutTime);
   private native PwrtStatus putString( int qix, int nid, String data);
   public native CdhrString getString( int qix, int nid);
 }

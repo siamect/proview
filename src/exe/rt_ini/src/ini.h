@@ -182,6 +182,7 @@ void		ini_ProcIter		(pwr_tStatus*, ini_sContext*, int,
 			void	(*func)	(pwr_tStatus*, ini_sContext*, ini_sProc*));
 void		ini_ProcLoad		(pwr_tStatus*, ini_sContext*, ini_sProc*);
 void		ini_ProcStart		(pwr_tStatus*, ini_sContext*, ini_sProc*);
+void		ini_ProcPrio		(pwr_tStatus*, ini_sContext*, ini_sProc*);
 void		ini_ProcTable		(pwr_tStatus*, ini_sContext*);
 void		ini_ProcWait		(pwr_tStatus*, ini_sContext*);
 pwr_tBoolean	ini_RebuildNode		(pwr_tStatus*, ini_sContext*);

@@ -8,6 +8,11 @@
 
    This include file defines the global datastructures and
    data entities in GDH. Also, the GDH entry points are defined.  */
+
+#if defined __cplusplus
+extern "C" {
+#endif
+
 /**
  *@example gdh_examples.c
  */
@@ -619,4 +624,7 @@ gdh_SetCache (
 /** @} */
 /** @} */
 
+#if defined __cplusplus
+}
+#endif
 #endif

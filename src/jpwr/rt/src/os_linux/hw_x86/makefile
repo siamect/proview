@@ -16,6 +16,7 @@ local_java_sources = \
 	CliTable.java \
 	Cli.java \
 	QcomrCreateQ.java \
+	QcomrGetIniEvent.java \
 	Qcom.java \
 	Errh.java \
 	RtUtilities.java \

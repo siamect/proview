@@ -33,7 +33,7 @@ JNIEXPORT void JNICALL Java_jpwr_rt_Mh_initIDs
   Mh_id = (*env)->FindClass( env, "jpwr/rt/Mh");
   if(Mh_id == NULL)
   {
-    printf("null");
+    printf("jpwr_rt_mh.c: couldnt find jpwr/rt/Mh class\n");
   }
   //hämta pekare till staticmetoden messReceived
   Mh_messReceived_id = (*env)->GetStaticMethodID( env, Mh_id, "messReceived",                              
@@ -181,9 +181,6 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Mh_outunitConnect
   user.oix = (*env)->CallIntMethod( env, objid_obj, PwrtObjid_getOix);
   user.vid = (*env)->CallIntMethod( env, objid_obj, PwrtObjid_getVid);
     
-  // Wait for mh has flagged initizated qqq vad är detta 
-  mh_UtilWaitForMh();
-
   //gör connect
   sts = mh_OutunitConnect(
 		user,

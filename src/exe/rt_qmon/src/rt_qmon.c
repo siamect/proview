@@ -316,6 +316,9 @@ main (int argc, char *argv[])
   qcom_sQid	qid = qdb_cQexport;
   qcom_sQid	neth_qid;
   qcom_sQid	my_q = qcom_cNQid;
+
+  /* Vänta en stund ... */
+//  sleep(5);
   
   errh_Init("pwr_qmon", errh_eAnix_qmon);
   errh_SetStatus( PWR__SRVSTARTUP);
@@ -394,9 +397,9 @@ main (int argc, char *argv[])
 
   errh_SetStatus( PWR__SRUN);
 
-  qcom_WaitAnd(&sts, &my_q, &qcom_cQini, ini_mEvent_terminate, qcom_cTmoEternal);
+//  qcom_WaitAnd(&sts, &my_q, &qcom_cQini, ini_mEvent_terminate, qcom_cTmoEternal);
     
-//  sts = thread_Wait(NULL);	/* Wait forever */
+  sts = thread_Wait(NULL);	/* Wait forever */
 
   errh_SetStatus( PWR__SRVTERM);
   errh_Info("pwr_qmon says: I will soon die, %m", sts);

@@ -182,6 +182,7 @@ start (
   ini_ProcTable(&sts, cp);
   ini_ProcIter(&sts, cp, proc_mProcess_system, ini_ProcLoad);
   ini_ProcIter(&sts, cp, proc_mProcess_system, ini_ProcStart);
+  ini_ProcIter(&sts, cp, proc_mProcess_system, ini_ProcPrio);
 
   net_Connect(&sts, &gdbroot->my_aid, &gdbroot->my_qid, NULL, "pwr_ini");
   /*if (!qcom_Init(&sts, 0)) {*/
@@ -435,7 +436,38 @@ terminate (
   qcom_SignalOr(&sts, &qcom_cQini, ini_mEvent_oldPlcStop);
   qcom_WaitAnd(&sts, &cp->eventQ, &qcom_cQini, ini_mEvent_oldPlcStopDone, qcom_cTmoEternal);
 
-  return sts;
+  qcom_Exit(NULL);
+
+  /* Kill programs which until now doesn't handle qcom */
+/*  
+  for (pp = lst_Succ(NULL, &cp->proc_lh, &pl); pp != NULL; pp = lst_Succ(NULL, pl, &pl)) {
+    if (strncmp("pwr_webmonmh", pp->proc.name, 12) == 0) {
+      kill(pp->proc.pid, SIGKILL);
+    }
+    else if (strncmp("pwr_webmon", pp->proc.name, 10) == 0) {
+      kill(pp->proc.pid, SIGKILL);
+    }
+  }
+*/  
+  /* Now sleep for a while */
+  
+  sleep(2);
+  
+  /* Unlink shared memory and semaphores */
+  
+  gdb_UnlinkDb();
+  qdb_UnlinkDb();
+
+  /* Destroy message handler semaphore */
+  
+  mh_UtilDestroyEvent();
+
+  #if defined(OS_LINUX)   
+    /* Unlink errlog mwessage queue */
+    errl_Unlink();
+  #endif
+
+  exit(1);
 }
 
 static int
@@ -904,7 +936,7 @@ static void ini_errl_cb( void *userdata, char *str, char severity, pwr_tStatus s
 
   if ( anix == 0 || !cp->np) return;
   if ( anix >= sizeof(cp->np->ProcStatus)/sizeof(cp->np->ProcStatus[0])) {
-    printf ( "Init: undefind anix %d\n", anix);
+    printf ( "Init: undefined anix %d\n", anix);
     return;
   }
 

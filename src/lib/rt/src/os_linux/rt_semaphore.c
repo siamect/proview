@@ -48,7 +48,7 @@ sem_t *posix_sem_open(const char *name, int oflag, ...)
          return(sem_t*)-1;
       }
       close(fd);
-      key = ftok(name, 0);
+      key = ftok(name, 'P');
       if (key < 0) {
          return(sem_t*)-1;
       }
@@ -198,7 +198,7 @@ int posix_sem_trywait(sem_t *sem)
 int posix_sem_unlink(const char *name)
 {
    int key, semid;
-   key = ftok(name, 0);
+   key = ftok(name, 'P');
    if (key < 0) {
       return -1;
    }

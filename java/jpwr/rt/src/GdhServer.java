@@ -129,6 +129,7 @@ public class GdhServer
     GdhServer gdhServer = new GdhServer();
     gdhServer.openServerSocket();
     System.out.println("GdhServer exiting");
+    System.exit(0);
   }
 
 
@@ -206,11 +207,12 @@ public class GdhServer
     try
     {
       serverSocket = new ServerSocket(PORT);
+      serverSocket.setSoTimeout(1000);
     }
     catch(IOException e)
     {
       errh.fatal("Could not listen on port " + PORT);
-      System.exit(1);
+      return;
     }
 
     gdh = new Gdh((Object)null);
@@ -225,7 +227,16 @@ public class GdhServer
     }
 
     errh.setStatus( Errh.PWR__SRUN);
+    Qcom qcom = new Qcom();
+    QcomrCreateQ qque = qcom.createIniEventQ("GdhServer");
+    if(qque.evenSts())
+    {
+      System.out.println("Gdhser");
+      errh.fatal("GdhSever couldn create EventQue");
+      return;
+    }
 
+    QcomrGetIniEvent qrGetIniEv;
     while(true)
     {
       Socket cliSocket = null;
@@ -235,10 +246,28 @@ public class GdhServer
         cliSocket = serverSocket.accept();
 
       }
+      catch(InterruptedIOException e)
+      {
+	qrGetIniEv = qcom.getIniEvent(qque.qix, qque.nid, 0);
+        if(qrGetIniEv.timeout)
+          continue;
+	else if(qrGetIniEv.terminate)
+	{
+          System.out.println("GdhServer received killmess from QCom");
+	  return;
+	}
+	else 
+        {
+	  //Do nothing for the moment
+	  //But in the future we should reinitialize if swap
+	  continue;
+	}
+
+      }
+
       catch(IOException e)
       {
         errh.error("Accept failed.");
-//        System.exit(1);
         continue;
       }
       if(threadCount <= maxConnections)

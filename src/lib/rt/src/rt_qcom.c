@@ -528,6 +528,7 @@ qcom_Init (
   FUNCTION_DESCRIPTOR   f_dsc;
 #elif defined OS_LINUX || defined OS_LYNX
   struct sigaction sa;
+  sigset_t         ss;
 #endif
   pwr_dStatus	(sts, status, QCOM__SUCCESS);
 
@@ -597,6 +598,9 @@ qcom_Init (
   sigemptyset(&sa.sa_mask);
   sigaction(SIGHUP, &sa, NULL);
   sigaction(SIGINT, &sa, NULL);
+  sigemptyset(&ss);
+  sigaddset(&ss, qdb_cSigMsg);
+  sigprocmask(SIG_BLOCK, &ss, NULL);
 
 #elif defined OS_VMS
   atexit(exitHandler);

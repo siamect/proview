@@ -132,7 +132,7 @@ int main (
   qcom_SignalOr(&sts, &qcom_cQini, ini_mEvent_newPlcInitDone);
   qcom_WaitAnd(&sts, &pp->eventQ, &qcom_cQini, ini_mEvent_newPlcStart, qcom_cTmoEternal);
 
-  proc_SetPriority(pp->PlcProcess->Prio);
+//  proc_SetPriority(pp->PlcProcess->Prio);
   set_values(pp);
   start_threads(pp);
   time_Uptime(&sts, &pp->PlcProcess->StartTime, NULL);

@@ -1190,6 +1190,10 @@ gdb_CreateDb (
   gdb_sInit		*ip
 );
 
+void
+gdb_UnlinkDb (
+);
+
 gdb_sObject *
 gdb_LoadObject (
   pwr_tStatus		*sts,

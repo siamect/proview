@@ -69,7 +69,18 @@ public class MhServer
 
     MhServer mhServer = new MhServer();
     mhServer.openServerSocket();
+    for(int i=0;i < mhServer.mhThread.length;i++)
+    {
+      mhServer.mhThread[i] = null;
+    }
+    try{
+      mhServer.finalize();
+    }
+    catch(Throwable e) {
+    }
+    mhServer = null;
     System.out.println("MhServer exiting");
+    System.exit(0);
     
   }
 
@@ -131,6 +142,7 @@ public class MhServer
     cdhrMaxAlarms = gdh.getObjectInfoInt(maxAlarmsAttr);
     cdhrMaxEvents = gdh.getObjectInfoInt(maxEventsAttr);
     cdhrMaxCon = gdh.getObjectInfoInt(maxConAttr);
+    System.out.println( "MaxNoOfAlarms: " + cdhrStringUser.str + " " + cdhrMaxAlarms.value + " " + cdhrMaxAlarms.evenSts());
     if(cdhrMaxCon.evenSts())
     {
       return cdhrMaxCon.getSts();
@@ -184,7 +196,9 @@ public class MhServer
     try
     {
       serverSocket = new ServerSocket(PORT);
+      serverSocket.setSoTimeout(1000);
     }
+
     catch(IOException e)
     {
       System.out.println("IOException i openServerSocket");
@@ -217,12 +231,24 @@ public class MhServer
       errh.setStatus( Errh.PWR__SRVTERM);
       return;
     }
-     
+
     MhSendThread mhSendThread = new MhSendThread(mh);
 
      
     errh.setStatus( Errh.PWR__SRUN);
      
+
+    Qcom qcom = new Qcom();
+    QcomrCreateQ qque = qcom.createIniEventQ("MhServer");
+    if(qque.evenSts())
+    {
+      System.out.println("MH:Error during qreateque");
+      errh.fatal("MH:Error during qcom.createIniEventQ");
+      return;
+    }
+
+    QcomrGetIniEvent qrGetIniEv;
+
 
     while(keepRunning)
     {
@@ -236,10 +262,32 @@ public class MhServer
 	cliSocket = serverSocket.accept();
 
       }
+      catch(InterruptedIOException e)
+      {
+	qrGetIniEv = qcom.getIniEvent(qque.qix, qque.nid, 0);
+        if(qrGetIniEv.timeout)
+	{
+	  //do nothing
+          continue;
+	}
+	else if(qrGetIniEv.terminate)
+	{
+	  //Time to die
+          System.out.println("MhServer received killmess from QCom");
+	  return;
+	}
+	else 
+        {
+	  //All other messages is qurrently ignored
+	  //But perhaps we should reinitialize when we get
+	  //swapdone
+	  continue;
+	}
+
+      }
       catch(IOException e)
       {
         errh.error("Accept failed.");
-//        System.exit(1);
         continue;
       }
       if(log)
