@@ -13,6 +13,10 @@
 #include "pwr_class.h"
 #endif
 
+#ifndef co_cdh_h
+#include "co_cdh.h"
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -117,6 +121,23 @@ typedef enum {
   ldh_eMenuSet_
 } ldh_eMenuSet;
 
+typedef enum {
+  ldh_eName_Object      = cdh_mName_object,
+  ldh_eName_Default     = cdh_mName_object,
+  ldh_eName_Hierarchy   = cdh_mName_pathStrict,
+  ldh_eName_Path        = cdh_mName_path,
+  ldh_eName_VolPath     = cdh_mName_volumeStrict,
+  ldh_eName_Volume      = cdh_mName_volume,
+  ldh_eName_Objid       = cdh_mName_form_id | cdh_mName_idString | cdh_mName_volume | cdh_mName_object,
+  ldh_eName_ObjectIx    = cdh_mName_form_id | cdh_mName_idString | cdh_mName_object,
+  ldh_eName_OixString   = cdh_mName_form_id | cdh_mName_object,
+  ldh_eName_VolumeId    = cdh_mName_form_id | cdh_mName_idString | cdh_mName_volume,
+  ldh_eName_VidString   = cdh_mName_form_id | cdh_mName_volume,
+  ldh_eName_Aref        = cdh_mName_object | cdh_mName_attribute,
+  ldh_eName_ArefVol     = cdh_mName_volume | cdh_mName_object | cdh_mName_attribute,
+  ldh_eName_ArefExport  = cdh_mName_form_id | cdh_mName_volume | cdh_mName_object | cdh_mName_attribute
+} ldh_eName;
+#if 0
 typedef enum {		/* Object and attribute name types. */
   ldh_eName__ = 0,
   ldh_eName_Object,	/*		   Cobj		*/
@@ -167,6 +188,7 @@ typedef enum {		/* Object and attribute name types. */
   ldh_eName_Default,	/*  Tries to give the most intuitive name.  */
   ldh_eName_
 } ldh_eName;
+#endif
 
 typedef enum {
   ldh_eUtility__ = 0,

@@ -2,42 +2,37 @@
 #define wb_tdrep_h
 
 #include "pwr.h"
-#include "wb_mvrepdbs.h"
-#include "wb_cdrep.h"
-#include "wb_bdrep.h"
+#include "wb_ldh.h"
+#include "wb_name.h"
 
-class wb_tdrep 
+class wb_adrep;
+class wb_mrepdbs;
+class wb_orepdbs;
+class wb_mvrep;
+
+class wb_tdrep
 {
+    int m_nRef;
+    wb_orepdbs *m_orep;
+    int m_sts;
+
 public:
-    wb_mvrepdbs *m_vrep;
-    dbs_sObject *m_ao;    
-    
     wb_tdrep();
-    wb_tdrep(wb_mvrepdbs *vrep, dbs_sObject *ao);    
-    wb_tdrep(const wb_tdrep&);  // x = other_object
-    wb_tdrep& operator=(const wb_tdrep&);
+    wb_tdrep( const wb_adrep& a);
+    wb_tdrep(wb_mvrep *, const wb_adrep&);
+    wb_tdrep(wb_mvrep *, pwr_tTid);
 
-    ~wb_tdrep();
+    void unref();
+    wb_tdrep *ref();
 
-    wb_bdrep *bdef();
-    wb_cdrep *cdef();
+    size_t size() { return 0;} // Fix   // get objects runtime body size
+    pwr_tTid tid() { return 0;} // Fix
+    int nElement() { return 0;} // Fix
 
-    pwr_sAttrRef aref();
-    size_t size();   // get objects runtime body size
-    int offset();
-    int type();
-    int nElement();
-    int index();
-    pwr_tOid aoid();
-    int aix();
-    pwr_tCid cid();
-    int bix();
-    int flags();
-    pwr_tOid boid();
+    wb_name name() { wb_name n; return n;} // Fix // get type name
+    wb_name name(ldh_eName type) { wb_name n; return n;} // Fix
 
-    wb_name name(); // get attribute name
-    wb_name name(ldh_eName type);
-    
+    pwr_tStatus sts() { return m_sts;}    
 };
 
 #endif

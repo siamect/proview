@@ -2,6 +2,7 @@
 #define wb_orep_h
 
 #include "pwr.h"
+#include "wb_name.h"
 #include "wb_orep.h"
 #include "wb_vrep.h"
 #include "wb_ldh.h"
@@ -38,7 +39,7 @@ public:
     virtual pwr_tOid aoid() const = 0;
     
     virtual char * const name() = 0;
-    virtual char * const name( int type) = 0;
+    virtual wb_name longName() = 0;
     virtual pwr_tTime ohTime() const = 0;
     
     virtual bool isOffspringOf(const wb_orep *o) const = 0;

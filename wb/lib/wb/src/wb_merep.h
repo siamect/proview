@@ -7,6 +7,8 @@
 using namespace std;
 
 class wb_vrep;
+class wb_tdrep;
+class wb_adrep;
 
 class wb_merep {
 
@@ -24,6 +26,8 @@ class wb_merep {
 
     wb_cdrep *cdrep( pwr_tStatus *sts, const wb_orep& o);
     wb_cdrep *cdrep( pwr_tStatus *sts, pwr_tCid cid);
+    wb_tdrep *tdrep( pwr_tStatus *sts, const wb_adrep& a);
+    wb_tdrep *tdrep( pwr_tStatus *sts, pwr_tTid tid);
 };
 
 #endif

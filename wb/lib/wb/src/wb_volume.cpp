@@ -110,14 +110,36 @@ wb_object wb_volume::object(pwr_tOid oid) const
     wb_object o;
     
     if (oid.vid == m_vrep->vid())
-        vrep = m_vrep;
+      vrep = m_vrep;
     else
-        vrep = m_vrep->erep()->volume(&sts, oid.vid);
+      vrep = m_vrep->erep()->volume(&sts, oid.vid);
 
     if ( !vrep)
       return o;
     
     orep = vrep->object(&sts, oid);
+    o = wb_object(sts, orep);
+    
+    return o;
+}
+
+wb_object wb_volume::object(char *name) const
+{
+    pwr_tStatus sts;
+    wb_orep *orep;
+    wb_vrep *vrep;
+    wb_object o;
+    
+    wb_name n = wb_name( name);
+    if ( !n.hasVolume() || n.volumeIsEqual( m_vrep->name()))
+      vrep = m_vrep;
+    else
+      vrep = m_vrep->erep()->volume(&sts, n.volume());
+
+    if ( !vrep)
+      return o;
+    
+	 // orep = vrep->object(&sts, name); // Fix
     o = wb_object(sts, orep);
     
     return o;

@@ -6,6 +6,7 @@
 #include "wb_bdrep.h"
 
 class wb_orepdbs;
+class wb_vrep;
 
 class wb_adrep 
 {
@@ -29,7 +30,7 @@ class wb_adrep
     pwr_sAttrRef aref();
     size_t size(); // get objects runtime body size
     int offset() {return 0;}; // Fix
-    int type() {return 0;} // Fix
+    int type() const {return 0;} // Fix
     int nElement() {return 0;} // Fix
     int index() {return 0;} // Fix
     pwr_tOid aoid();
@@ -41,6 +42,8 @@ class wb_adrep
 
     wb_name name() { wb_name n; return n;} // Fix // get attribute name
     wb_name name(ldh_eName type) { wb_name n; return n; } // Fix 
+
+    wb_vrep *vrep() const;
 };
 
 #endif

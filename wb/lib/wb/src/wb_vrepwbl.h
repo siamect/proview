@@ -117,7 +117,7 @@ public:
     wb_merep *merep() const { return m_merep;}
 
     wb_orep *object(pwr_tStatus *sts);
-    wb_orep *object(pwr_tStatus *sts, pwr_tOid oid) {return 0;};
+    wb_orep *object(pwr_tStatus *sts, pwr_tOid oid);
     wb_orep *object(pwr_tStatus *sts, wb_orep *parent, wb_name name) 
       {return 0;};
 
@@ -172,7 +172,7 @@ public:
 
     bool isLocal(wb_orep *o) const {return false;};
 
-    void objectName(pwr_tStatus *sts, wb_orep *o, char *str) const;
+    void objectName(wb_orep *o, char *str) const;
 
 };
 

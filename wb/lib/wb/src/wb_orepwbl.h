@@ -14,7 +14,7 @@ class wb_orepwbl : public wb_orep
 public:
 
 
-    wb_orepwbl(int oid);
+    wb_orepwbl(int oix);
     wb_orepwbl( wb_vrepwbl *v, wb_wblnode *n);
     ~wb_orepwbl();
 
@@ -33,7 +33,7 @@ public:
     virtual pwr_tOid aoid() const;
     
     virtual char * const name();
-    virtual char * const name( int type);
+    virtual wb_name longName();
     virtual pwr_tTime ohTime() const;
     
     virtual bool isOffspringOf(const wb_orep *o) const;

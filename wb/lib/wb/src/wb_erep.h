@@ -10,6 +10,8 @@ class wb_merep;
 class wb_vrep;
 class wb_cdrep;
 class wb_orep;
+class wb_tdrep;
+class wb_adrep;
 
 class wb_erep
 {
@@ -46,6 +48,7 @@ public:
     void load( pwr_tStatus *sts);
 
     wb_cdrep *cdrep( pwr_tStatus *sts, const wb_orep& o);
+    wb_tdrep *tdrep( pwr_tStatus *sts, const wb_adrep& a);
 
 private:
     void loadDirList( pwr_tStatus *status);

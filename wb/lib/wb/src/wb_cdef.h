@@ -16,10 +16,10 @@ class wb_mvrep;
 
 class wb_cdef : public wb_status
 {
-public:
 
     wb_cdrep *m_cdrep;
 
+  public:
     wb_cdef();
     wb_cdef( wb_cdrep *cdrep);
     wb_cdef( wb_adef&);  // x = other_object
@@ -43,6 +43,9 @@ public:
     wb_bdef bdef(pwr_tOix bix);
     wb_bdef bdef(char *bname);
     wb_bdef bdef(wb_name bname);
+
+  private:
+    void check();
     
 };
 

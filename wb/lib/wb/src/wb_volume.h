@@ -50,7 +50,7 @@ public:
     wb_object object() const; // Get root list
     wb_object object(pwr_tOid oid) const;
     wb_object object(pwr_tCid cid) const { wb_object o; return o;} // Fix
-    wb_object object(char *name) const { wb_object o; return o;} // Fix
+    wb_object object(char *name) const;
     
     wb_attribute attribute(pwr_tOid oid, char *bname, char *aname) { wb_attribute a; return a;}; // Fix
     wb_attribute attribute(wb_object o, wb_adef adef) { wb_attribute a; return a;}; // Fix

@@ -1,7 +1,8 @@
 #include "wb_orepwbl.h"
 
 
-wb_orepwbl::wb_orepwbl( wb_vrepwbl *v, wb_wblnode *n): m_vrep(v), m_wblnode(n) {}
+wb_orepwbl::wb_orepwbl( wb_vrepwbl *v, wb_wblnode *n): m_vrep(v), m_wblnode(n)
+{}
 
 wb_orepwbl::~wb_orepwbl()
 {
@@ -72,9 +73,12 @@ char *const wb_orepwbl::name()
     return m_wblnode->name;
 }
 
-char *const wb_orepwbl::name( int type)
+wb_name wb_orepwbl::longName()
 {
-  return m_wblnode->name; // Fix
+  char str[200];
+
+  m_vrep->objectName( this, str);
+  return wb_name( str);
 }
 
 

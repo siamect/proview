@@ -7,10 +7,13 @@
 #include "wb_vrepwbl.h"  // Should be wb_vrepdbs.h ...
 #include "wb_cdrep.h"
 #include "wb_orep.h"
+#include "wb_tdrep.h"
+#include "wb_adrep.h"
 #include "wb_ldh_msg.h"
 
 extern "C" {
 #include "co_dcli.h"
+#include "co_cdh.h"
 #include "rt_load.h"
 }
 
@@ -273,6 +276,9 @@ void wb_erep::loadCommonMeta( pwr_tStatus *status)
       char vol_array[2][80];
       int nr;
 
+      if ( line[0] == '#')
+        continue;
+
       nr = dcli_parse( line, " ", "", (char *)vol_array,
 		       sizeof(vol_array)/sizeof(vol_array[0]),
 		       sizeof(vol_array[0]), 0);
@@ -323,6 +329,9 @@ void wb_erep::loadMeta( pwr_tStatus *status)
   while ( fpm.getline( line, sizeof(line))) {
     char vol_array[5][80];
     int nr;
+
+    if ( line[0] == '#')
+      continue;
 
     cout << line << endl;
     nr = dcli_parse( line, " ", "", (char *)vol_array,
@@ -393,6 +402,15 @@ wb_cdrep *wb_erep::cdrep( pwr_tStatus *sts, const wb_orep& o)
   if ( EVEN(*sts)) return 0;
 
   return vrep->merep()->cdrep( sts, o);
+}
+
+wb_tdrep *wb_erep::tdrep( pwr_tStatus *sts, const wb_adrep& a)
+{
+  pwr_tVid vid = cdh_TidToVid(a.type());
+  wb_vrep *vrep = volume(sts, vid);
+  if ( EVEN(*sts)) return 0;
+
+  return vrep->merep()->tdrep( sts, a);
 }
 
 

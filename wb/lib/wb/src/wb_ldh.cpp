@@ -312,7 +312,7 @@ ldh_CloseSession(ldh_tSession session)
         
         return LDH__SUCCESS;
     }
-    catch (wb_error &e) {
+    catch (wb_error& e) {
         return e.sts();
     }
     return LDH__SUCCESS;
@@ -329,7 +329,7 @@ ldh_CloseWB(ldh_tWorkbench workbench)
 
         return LDH__SUCCESS;
     }
-    catch (wb_error e) {
+    catch (wb_error& e) {
         return e.sts();
     }
 }
@@ -369,7 +369,7 @@ ldh_CreateObject(ldh_tSession session, pwr_tOid *oid, char *name, pwr_tCid cid, 
         *oid = o.oid();
         return o.sts();
     }
-    catch (wb_error &e) {
+    catch (wb_error& e) {
         return e.sts();
     }
 }
@@ -713,7 +713,7 @@ ldh_GetPreviousObject(ldh_tSession session, pwr_tOid oid, pwr_tOid *noid)
     
         return o.sts();
 
-    } catch (wb_error &e) {
+    } catch (wb_error& e) {
 
         return e.sts();
 
@@ -732,7 +732,7 @@ ldh_GetPreviousSibling(ldh_tSession session, pwr_tOid oid, pwr_tOid *noid)
     
         return o.sts();
 
-    } catch (wb_error &e) {
+    } catch (wb_error& e) {
 
         return e.sts();
 
@@ -925,12 +925,50 @@ pwr_tStatus
 ldh_ObjidToName(ldh_tSession session, pwr_tOid oid, ldh_eName type, char *buf, int maxsize, int *size)
 {
     wb_session *sp = (wb_session *)session;
-    wb_object o = sp->object(oid);
-    if (!o) return o.sts();
 
-    //o.name(type, buf, maxsize, size);
+    switch ( type) {
+      case ldh_eName_Object:
+      case ldh_eName_Hierarchy:
+      case ldh_eName_Path:
+      case ldh_eName_VolPath:
+      case ldh_eName_Volume:
+      {
+        wb_object o = sp->object(oid);
+        if (!o) return o.sts();
 
-    return LDH__NYI;
+        try {
+	  char name[200];
+          strcpy( name, o.longName().name( type));
+	  *size = strlen( name);
+	  if ( *size > maxsize - 1)
+	    return LDH__NAMEBUF;
+	  strcpy( buf, name);
+        }
+        catch ( wb_error& e) {
+	  return e.sts();
+        }
+        break;
+      }
+      case ldh_eName_Objid:
+      case ldh_eName_ObjectIx:
+      case ldh_eName_OixString:
+      case ldh_eName_VolumeId:
+      case ldh_eName_VidString:
+      {
+        char str[80];
+
+        wb_name n = wb_name( cdh_ObjidToString( NULL, oid, 1));
+	strcpy( str, n.name( type));
+	*size = strlen(str);
+	if ( *size > maxsize - 1)
+	  return LDH__NAMEBUF;
+	strcpy( buf, str);
+	break;
+      }
+      default:
+        return LDH__NYI;
+    }
+    return LDH__SUCCESS;
 }
 
 /* Returns the name of a type identified by its type identifier.
@@ -972,13 +1010,40 @@ ldh_ClassIdToName(ldh_tSession session, pwr_tCid cid, char *buff, int maxsize, i
 pwr_tStatus
 ldh_AttrRefToName(ldh_tSession session, pwr_sAttrRef *arp, ldh_eName nametype, char **aname, int *size)
 {
+    static char str[512];
     wb_session *sp = (wb_session *)session;
     
-    wb_attribute a = sp->attribute(arp);
-    if (!a) return a.sts();
+    switch ( nametype) {
+      case ldh_eName_Object:
+      case ldh_eName_Hierarchy:
+      case ldh_eName_Path:
+      case ldh_eName_VolPath:
+      case ldh_eName_Volume:
+      case ldh_eName_Aref:
+      case ldh_eName_ArefVol:
+      {
+        wb_attribute a = sp->attribute(arp);
+        if (!a) return a.sts();
     
-    //wb_name n = a.name(nametype);
-
+        //wb_name n = a.name(nametype);
+        break;
+      }
+      case ldh_eName_ArefExport:
+      case ldh_eName_Objid:
+      case ldh_eName_ObjectIx:
+      case ldh_eName_OixString:
+      case ldh_eName_VolumeId:
+      case ldh_eName_VidString:
+      {
+        wb_name n = wb_name( cdh_ArefToString( NULL, arp, 1));
+	strcpy( str, n.name( nametype));
+	*aname = str;
+	*size = strlen(str);
+	break;
+      }
+      default:
+        return LDH__NYI;
+    }
     return LDH__SUCCESS;
 }
 

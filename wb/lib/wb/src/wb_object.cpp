@@ -93,9 +93,9 @@ char *wb_object::name()
   return m_orep->name();
 }
 
-char *wb_object::name( int type)
+wb_name wb_object::longName()
 { 
-  return m_orep->name( type);
+  return m_orep->longName();
 }
 
 //

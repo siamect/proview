@@ -30,18 +30,19 @@ wb_cdrep::wb_cdrep( wb_mvrep *mvrep, pwr_tCid cid) : m_nRef(0)
 {
   pwr_tOid oid = cdh_ClassIdToObjid( cid);
   m_orep = (wb_orepdbs *) mvrep->object( &m_sts, oid);
-  m_orep->ref();
   if ( EVEN(m_sts)) throw wb_error( m_sts);
 
+  m_orep->ref();
   m_sts = LDH__SUCCESS;
 }
 
 wb_cdrep::wb_cdrep( wb_mvrep *mvrep, const wb_orep& o) : m_nRef(0)
 {
-  pwr_tOid oid = cdh_ClassIdToObjid( o.vid());
+  pwr_tOid oid = cdh_ClassIdToObjid( o.cid());
   m_orep = (wb_orepdbs *) mvrep->object( &m_sts, oid);
   if ( EVEN(m_sts)) throw wb_error( m_sts);
 
+  m_orep->ref();
   m_sts = LDH__SUCCESS;
 }
 

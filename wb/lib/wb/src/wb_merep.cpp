@@ -52,8 +52,6 @@ void wb_merep::removeDbs(pwr_tStatus *sts, wb_mvrep *mvrep)
   *sts = LDH__SUCCESS;
 }
 
-#define cdh_CidToVid(cid) ((cid) >> 16)
-
 wb_cdrep *wb_merep::cdrep( pwr_tStatus *sts, const wb_orep& o)
 {
   if ( o.vrep() != m_vrep)
@@ -77,4 +75,28 @@ wb_cdrep *wb_merep::cdrep( pwr_tStatus *sts, pwr_tCid cid)
     return 0;
   }
   return it->second->cdrep( cid);
+}
+wb_tdrep *wb_merep::tdrep( pwr_tStatus *sts, const wb_adrep& a)
+{
+  if ( a.vrep() != m_vrep)
+    // Fetch from other meta environment
+    return m_erep->tdrep( sts, a);
+
+  map<pwr_tVid, wb_mvrep*>::iterator it =  m_mvrepdbs.find( cdh_TidToVid(a.type()));
+  if ( it == m_mvrepdbs.end()) {
+    *sts = LDH__NOSUCHVOL;
+    return 0;
+  }
+  *sts = LDH__SUCCESS;
+  return it->second->tdrep( a);
+}
+
+wb_tdrep *wb_merep::tdrep( pwr_tStatus *sts, pwr_tTid tid)
+{
+  map<pwr_tVid, wb_mvrep*>::iterator it =  m_mvrepdbs.find( cdh_TidToVid( tid));
+  if ( it == m_mvrepdbs.end()) {
+    *sts = LDH__NOSUCHVOL;
+    return 0;
+  }
+  return it->second->tdrep( tid);
 }

@@ -762,6 +762,7 @@ char *wb_nrep::normName( int ntype, char *res)
 char *wb_nrep::nameName( char *n, int ntype, char *res)
 {
   static char result[200];
+  int colon_added = 0;
 
   if ( !res)
     res = result;
@@ -772,17 +773,35 @@ char *wb_nrep::nameName( char *n, int ntype, char *res)
   if ( ntype & cdh_mName_volume && ntype & cdh_mName_attribute)
     ntype = ntype | cdh_mName_path | cdh_mName_object;
   strcpy( res, "");
+
+  if ( ntype & cdh_mName_idString) {
+    if ( ntype & cdh_mName_volume) printf( "wname: volume\n");
+    if ( ntype & cdh_mName_object) printf( "wname: object\n");
+    if ( ntype & cdh_mName_attribute) printf( "wname: attribute\n");
+    if ( !(ntype & cdh_mName_attribute)) {
+      if ( ntype & cdh_mName_volume && !(ntype & cdh_mName_object))
+	strcat( res, "_V");
+      else if ( !(ntype & cdh_mName_volume))
+	strcat( res, "_X");
+      else
+	strcat( res, "_O");
+    }
+    else
+      strcat( res, "_A");
+  }
   if ( ntype & cdh_mName_volume)
-    volumeName( n, res);
+    volumeName( n, res + strlen(res));
   if ( ntype & cdh_mName_path) {
-    if ( ntype & cdh_mName_volume && hasVolume())
+    if ( ntype & cdh_mName_volume && hasVolume()) {
       strcat( res, ":");
+      colon_added = 1;
+    }
     pathName( n, res + strlen(res));
   }
   if ( ntype & cdh_mName_object) {
     if ( ntype & cdh_mName_path && hasPath())
       strcat( res, "-");
-    else if ( ntype & cdh_mName_volume && !hasPath() && hasVolume())
+    else if ( ntype & cdh_mName_volume && !hasPath() && hasVolume() && !colon_added)
       strcat( res, ":");
     objectName( n, res + strlen(res));
   }

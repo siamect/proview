@@ -85,3 +85,9 @@ pwr_tCid wb_adrep::cid()
     
     return cid;
 }
+
+wb_vrep *wb_adrep::vrep() const
+{
+  if (EVEN(m_sts)) throw wb_error(m_sts);
+   return m_orep->m_vrep;
+}

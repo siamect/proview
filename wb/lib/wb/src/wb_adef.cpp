@@ -6,7 +6,10 @@ wb_adef::wb_adef() : wb_status(LDH__NOSUCHATTR), m_adrep(0)
 
 wb_adef::wb_adef( wb_adrep *adrep) : wb_status(LDH__SUCCESS), m_adrep(adrep)
 {
-  m_adrep->ref();
+  if ( adrep == 0)
+    m_sts = LDH__NOSUCHATTR;
+  else
+    m_adrep->ref();
 }
 
 wb_adef::wb_adef(const wb_adef& x) : wb_status(x.m_sts), m_adrep(x.m_adrep)

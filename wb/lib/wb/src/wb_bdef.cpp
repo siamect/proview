@@ -1,14 +1,16 @@
 #include "wb_bdef.h"
 #include "wb_adef.h"
 
-wb_bdef::wb_bdef()
+wb_bdef::wb_bdef() : wb_status(LDH__NOSUCHBODY), m_bdrep(0)
 {
 }
 
-wb_bdef::wb_bdef(wb_bdrep *b) :
-    wb_status(b->sts()), m_bdrep(b)
+wb_bdef::wb_bdef(wb_bdrep *bdrep) : wb_status(LDH__SUCCESS), m_bdrep(bdrep)
 {
-  m_bdrep->ref();
+  if ( bdrep == 0)
+    m_sts = LDH__NOSUCHBODY;
+  else
+    m_bdrep->ref();
 }
 
 wb_bdef::wb_bdef(const wb_bdef& x) : wb_status(x.m_sts), m_bdrep(x.m_bdrep)

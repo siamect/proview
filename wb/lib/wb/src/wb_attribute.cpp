@@ -19,7 +19,10 @@ wb_attribute::wb_attribute(const wb_attribute& x) : wb_status(x.m_sts),m_orep(x.
 wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep * const orep) : wb_status(sts),
 								    m_orep(orep), m_adrep(0)
 {
-  m_orep->ref();
+  if ( orep == 0)
+    m_sts = LDH__NOSUCHATTR;
+  else
+    m_orep->ref();
 }
 
 wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep * const orep, char *name) :

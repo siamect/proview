@@ -12,6 +12,7 @@
 #include "wb_ldh_msg.h"
 #include "wb_dbs.h"
 #include "wb_erep.h"
+#include "wb_ldh_msg.h"
 
 extern "C" {
 #include "co_dcli.h"
@@ -24,6 +25,22 @@ wb_vrepwbl::~wb_vrepwbl()
     delete file[i]->lexer;
     delete file[i];
   }
+}
+
+wb_orep *wb_vrepwbl::object(pwr_tStatus *sts, pwr_tOid oid)
+{
+  if ( oid.vid != m_vid) {
+    *sts = LDH__BADOBJID;
+    return 0;
+  }
+  
+  ref_wblnode n = findObject( oid.oix);
+  if ( !n) {
+    *sts = LDH__NOSUCHOBJ;
+    return 0;
+  }
+  *sts = LDH__SUCCESS;
+  return new wb_orepwbl( this, n);
 }
 
 wb_vrep *wb_vrepwbl::next() const
@@ -78,7 +95,7 @@ wb_vrepwbl::createSnapshot(char *fileName)
         dbs.buildFile();
 
         return true;
-    } catch (wb_error e) {
+    } catch (wb_error& e) {
         return false;
     }
 }
@@ -1010,7 +1027,7 @@ wb_orep *wb_vrepwbl::previous(pwr_tStatus *sts, wb_orep *o) const
     return 0;
 }
 
-void wb_vrepwbl::objectName(pwr_tStatus *sts, wb_orep *o, char *str) const
+void wb_vrepwbl::objectName(wb_orep *o, char *str) const
 {
     *str = 0;
         
