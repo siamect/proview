@@ -77,6 +77,9 @@ public class JopOpWindow extends JPanel {
     button = new OpWindButton( session, "", "Help",
 			       OpWindButton.HELP);
     this.add( button);
+    button = new OpWindButton( session, "", "Proview",
+			       OpWindButton.PROVIEW);
+    this.add( button);
     this.add( new JSeparator());
 
     CdhrString sretName = null;
@@ -143,6 +146,7 @@ public class JopOpWindow extends JPanel {
     public static final int NAVIGATOR = 4;
     public static final int ALARMLIST = 5;
     public static final int HELP = 6;
+    public static final int PROVIEW = 7;
     JopSession session;
     String action;
     int type;
@@ -176,8 +180,11 @@ public class JopOpWindow extends JPanel {
 	    case HELP:
 	      session.executeCommand("help index");
 	      break;
+	    case PROVIEW:
+	      session.executeCommand("open url \"$pwr_doc/index.html\"");
+	      break;
 	    case WEBGRAPH:
-	      session.openGraphFrame( action, instance, scrollbar);
+	      session.openGraphFrame( action, instance, scrollbar, false);
 	      break;
 	    case WEBLINK:
 	      String cmd = "open url \"" + action + "\"";
