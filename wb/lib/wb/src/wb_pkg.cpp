@@ -32,9 +32,6 @@ wb_pkg::wb_pkg( char *nodelist)
 
   readConfig();
 
-  for ( int i = 0; i < (int)m_nodelist.size(); i++)
-    printf( "%d %s\n", i, m_nodelist[i].name());
-  
   fetchFiles();
 }
 
@@ -116,6 +113,123 @@ void wb_pkg::readConfig()
 	continue;
       }
     }
+    else if ( strcmp( cdh_Low(line_item[0]), "load") == 0) {
+      pwr_tVolumeId *vollist;
+      pwr_tString40 *volnamelist;
+      int       volcount;
+      char      plcname[80];
+      char     	systemname[80];
+      char     	systemgroup[80];
+      pwr_tTime date;
+
+      if ( !(num == 2))
+	throw wb_error_str("File corrupt " load_cNameDistribute);
+
+      try {
+        pkg_node &n = getNode( line_item[1]);
+
+	// Add ld_node file
+	sprintf( fname, load_cNameNode, load_cDirectory, n.bus());
+	pkg_pattern pnode( fname);
+	n.push_back( pnode);
+
+	// Add bootfile
+	sprintf( fname, load_cNameBoot, load_cDirectory, n.name(), n.bus());
+	pkg_pattern pboot( fname);
+	n.push_back( pboot);
+
+	// Read bootfile, get plc and volumes
+	sts = lfu_ReadBootFile( fname, &date, systemname, 
+	      systemgroup, &vollist, &volnamelist, &volcount, plcname);
+	if ( EVEN(sts))
+	  throw wb_error_str("Bootfile is corrupt");
+
+	// Add plc
+	if ( plcname[0] != 0) {
+	  char dir[80];
+	
+	  sprintf( dir, "$pwrp_root/%s/exe/", cdh_OpSysToStr( n.opsys()));
+	  sprintf( fname, "%s%s", dir, plcname); 
+	  pkg_pattern pplc( fname);
+	  n.push_back( pplc);
+	}
+
+	// Add volumes
+	for ( int j = 0; j < volcount; j++) {
+	  char dir[80];
+
+	  strcpy( dir, "$pwrp_load/");
+	  sprintf( fname, "%s%s.dbs", dir, cdh_Low( (char *)(volnamelist + j))); 
+	  pkg_pattern pvol( fname);
+	  n.push_back( pvol);
+
+	  // Add referenced class volumes
+#if 0
+	  char vname[80];
+	  pwr_tClassId vclass;
+	  pwr_tTime vtime;
+	  lfu_t_volref *volref;
+	  int volref_cnt;
+	  
+	  sts = lfu_GetVolRef( fname, vname, &vclass, &vtime, &volref, &volref_cnt);
+	  if ( EVEN(sts)) throw wb_error(sts);
+
+	  
+	  for ( int i = 0; i < volref_cnt; i++) {
+	    printf( "%d\n", volref->volid);
+	    volref++;
+	  }
+#endif
+
+
+	  // Check if there are any rtt-files for Root or Sub Volumes
+	  if ( vollist[j] >= ldh_cUserVolMin &&
+	       vollist[j] <= ldh_cUserVolMax) {
+	    cdh_uVolumeId	vid;
+	    vid.pwr = vollist[j];
+
+	    // RttCrr-file
+	    strcpy( dir, "$pwrp_load/");
+	    sprintf( fname, "%s" load_cNameRttCrr,
+		dir, vid.v.vid_3, vid.v.vid_2, vid.v.vid_1, vid.v.vid_0);
+	    pkg_pattern rttcrr( fname);
+	    n.push_back( rttcrr);
+
+	    // RttCrrObj-file
+	    strcpy( dir, "$pwrp_load/");
+	    sprintf( fname, "%s" load_cNameRttCrrObj,
+		dir, vid.v.vid_3, vid.v.vid_2, vid.v.vid_1, vid.v.vid_0);
+	    pkg_pattern rttcrrobj( fname);
+	    n.push_back( rttcrrobj);
+
+	    // RttCrrCode-file
+	    strcpy( dir, "$pwrp_load/");
+	    sprintf( fname, "%s" load_cNameRttCrrCode,
+		dir, vid.v.vid_3, vid.v.vid_2, vid.v.vid_1, vid.v.vid_0);
+	    pkg_pattern rttcrrcode( fname);
+	    n.push_back( rttcrrcode);
+
+	    // RttPlc-file
+	    strcpy( dir, "$pwrp_load/");
+	    sprintf( fname, "%s" load_cNameRttPlc,
+		dir, vid.v.vid_3, vid.v.vid_2, vid.v.vid_1, vid.v.vid_0);
+	    pkg_pattern rttplc( fname);
+	    n.push_back( rttplc);
+
+	  }
+	}
+
+#if 0
+#endif
+	free( volnamelist);
+	free( vollist);
+
+      } catch ( wb_error &e) {
+	if  ( e.what() == string("No such node"))
+	  continue;
+	throw wb_error_str(e.what());
+      }
+    }
   }
 
   is.close();
@@ -176,10 +290,6 @@ void pkg_node::fetchFiles()
     }
   }
 
-  for ( int i = 0; i < (int)m_filelist.size(); i++)
-    printf( "%s %s %s\n", m_filelist[i].m_source, m_filelist[i].m_target,
-	    m_filelist[i].m_arname);
-
   // Read and increment package version
   sprintf( fname, "$pwrp_load/pkg_v_%s.dat", m_name);
   dcli_translate_filename( fname, fname);
@@ -198,7 +308,7 @@ void pkg_node::fetchFiles()
 
   // Create a script that copies files to build directory
   char pkg_name[80];
-  sprintf( pkg_name, "pwrp_pkg_%s_%04d.tgz", m_name, version);
+  sprintf( pkg_name, load_cNamePkg, m_name, version);
 
   dcli_translate_filename( pack_fname, "$pwrp_tmp/pkg_pack.sh");
   ofstream of( pack_fname);
@@ -217,7 +327,8 @@ void pkg_node::fetchFiles()
   of <<
     "#mv $pwrp_tmp/pkg_unpack.sh $pwrp_tmp/pkg_build" << endl <<
     "cd $pwrp_tmp" << endl <<
-    "tar -czf " << pkg_name << " pwr_pkg.dat pkg_unpack.sh pkg_build" << endl <<
+    "tar -czf $pwrp_load/" << pkg_name << " pwr_pkg.dat pkg_unpack.sh pkg_build" << endl <<
+    "cd $pwrp_load" << endl <<
     "ftp -vin " << m_name << " << EOF &>$pwrp_tmp/ftp_" << m_name << ".log" << endl <<
     "user pwrp pwrp" << endl <<
     "binary" << endl <<
@@ -366,6 +477,8 @@ void pkg_pattern::fetchFiles()
     }
     dcli_search_file( m_source, found_file, DCLI_DIR_SEARCH_END);
   }
+  if ( m_filelist.size() == 0)
+    printf( "-- Warning, no file found, %s\n", m_source);
 }
 
 pkg_file::pkg_file( char *source, char *target) 

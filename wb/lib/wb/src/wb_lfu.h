@@ -22,18 +22,19 @@ typedef enum {
 } lfu_eDistrSts;
 
 typedef enum {
-  lfu_mDistrComponents_UserDatabase      = 1 << 0,
-  lfu_mDistrComponents_LoadFiles		= 1 << 1,
+  lfu_mDistrComponents_UserDatabase     = 1 << 0,
+  lfu_mDistrComponents_LoadFiles       	= 1 << 1,
   lfu_mDistrComponents_ApplFile		= 1 << 2,
-  lfu_mDistrComponents_PwrpAliasFile    	= 1 << 3,
-  lfu_mDistrComponents_IncludeFiles     	= 1 << 4,
-  lfu_mDistrComponents_GraphFiles       	= 1 << 5,
-  lfu_mDistrComponents_XttHelpFile      	= 1 << 6,
-  lfu_mDistrComponents_XttResourceFile  	= 1 << 7,
-  lfu_mDistrComponents_XttSetupFile     	= 1 << 8,
-  lfu_mDistrComponents_FlowFiles		= 1 << 9,
-  lfu_mDistrComponents_RHostsFile       	= 1 << 10,
-  lfu_mDistrComponents_WebFiles       		= 1 << 11
+  lfu_mDistrComponents_PwrpAliasFile   	= 1 << 3,
+  lfu_mDistrComponents_IncludeFiles    	= 1 << 4,
+  lfu_mDistrComponents_GraphFiles     	= 1 << 5,
+  lfu_mDistrComponents_XttHelpFile     	= 1 << 6,
+  lfu_mDistrComponents_XttResourceFile 	= 1 << 7,
+  lfu_mDistrComponents_XttSetupFile    	= 1 << 8,
+  lfu_mDistrComponents_FlowFiles        = 1 << 9,
+  lfu_mDistrComponents_RHostsFile      	= 1 << 10,
+  lfu_mDistrComponents_WebFiles        	= 1 << 11,
+  lfu_mDistrComponents_PwrpStop        	= 1 << 12
 } lfu_mDistrComponents;
 
 typedef enum {
@@ -52,6 +53,13 @@ typedef struct {
 	pwr_tString40	p5;
 	pwr_tString40	p6;
 	} lfu_t_volumelist;
+
+typedef struct {
+	pwr_tVolumeId	volid;
+	int		version;
+	pwr_tClassId	classid;
+	int		file_checked;
+	} lfu_t_volref;
 
 pwr_tStatus lfu_volumelist_load( 
 	char *filename,
@@ -73,12 +81,6 @@ pwr_tStatus lfu_create_bootfile(
 pwr_tStatus lfu_GetFileVersion( 
   char *pattern, 
   int number_of_digits,
-  int *version, 
-  pwr_tTime *date
-);
-
-pwr_tStatus lfu_GetLoadFileVersion(
-  pwr_tVolumeId volumeid, 
   int *version, 
   pwr_tTime *date
 );
@@ -111,9 +113,9 @@ pwr_tStatus lfu_ReadBootFile(
   char		*systemname,
   char		*systemgroup,
   pwr_tVolumeId **vollist,
-  int		**volversionlist,
+  pwr_tString40	**volnamelist,
   int		*volcount,
-  int		*plcversion
+  char		*plc_name
 );
 
 pwr_tStatus lfu_ReadSysObjectFile(
@@ -125,8 +127,36 @@ pwr_tStatus lfu_WriteSysObjectFile(
 	ldh_tSesContext	ldhses
 );
 
+pwr_tStatus	lfu_GetVolRef( 		char *filename,
+			       	char *volname,
+				pwr_tClassId *volclass,
+			       	pwr_tTime *createtime,
+			       	lfu_t_volref **volref,
+	       			int *volref_count);
+
 #ifdef __cplusplus
 }
 #endif
 
 #endif
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
