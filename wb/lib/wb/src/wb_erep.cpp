@@ -6,6 +6,7 @@
 #include "wb_merep.h"
 #include "wb_vrepwbl.h"  // Should be wb_vrepdbs.h ...
 #include "wb_vrepdbs.h"
+#include "wb_vrepdb.h"
 #include "wb_cdrep.h"
 #include "wb_orep.h"
 #include "wb_tdrep.h"
@@ -415,10 +416,10 @@ void wb_erep::loadMeta( pwr_tStatus *status)
       // Load db for this volume
       strcpy( vname, "$pwrp_db/");
       strcat( vname, vol_array[0]);
-      strcat( vname, ".dbs");
+      strcat( vname, ".db");
       dcli_translate_filename( vname, vname);
 
-      wb_vrepwbl *vrepdb = new wb_vrepwbl( this, vid); // Should be wb_vrepdb...
+      wb_vrepdb *vrepdb = new wb_vrepdb( this, vname);
       vrepdb->name(vol_array[0]);
       addDbs( &sts, vrepdb);
       vol_cnt++;
