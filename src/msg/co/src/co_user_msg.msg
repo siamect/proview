@@ -16,3 +16,4 @@ notauthorized	<user is not authorized>				/error
 useralrexist	<user already exist>					/error
 systemalrexist	<system already exist>					/error
 fileopen	<unable to open user database>				/error
+systemnotempty	<system is not empty>					/error
