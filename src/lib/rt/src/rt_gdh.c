@@ -1695,7 +1695,7 @@ gdh_ObjidToName (
   else
     lnametype.m = nametype;
 
-  if (oid.oix == pwr_cNObjectIx)
+  if (cdh_ObjidIsNull(oid))
     return GDH__NOSUCHOBJ;
 
   gdh_ScopeLock {
