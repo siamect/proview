@@ -172,6 +172,33 @@ topobjects ClassNavigatorW2
 
 palette ClassNavigatorPalette
 {
+  menu Class
+  {
+    class $Attribute
+    class $AttrXRef
+    class $Buffer
+    class $ClassDef
+    class $ClassHier
+    class $GraphPlcNode
+    class $Input
+    class $Intern
+    class $ObjBodyDef
+    class $ObjXRef
+    class $Output
+    class PlcPgm
+  }
+  menu Type
+  {
+    class $TypeDef
+    class $TypeHier
+  }
+  menu Menu
+  {
+    class $Menu
+    class $MenuButton
+    class $MenuSeparator
+    class $RtMenu
+  }
   menu AllClasses
   {
     classvolume pwrs
@@ -448,6 +475,22 @@ palette PlcEditorPalette
       class StoDi
       class StoIi
       class StoPi
+    }
+    menu Function
+    {
+      class CStoAattr
+      class CStoIattr
+      class CStoSattr
+      class GetAattr
+      class GetDattr
+      class GetIattr
+      class GetSattr
+      class ResDattr
+      class SetDattr
+      class StoAattr
+      class StoDattr
+      class StoIattr
+      class StoSattr
     }
   }
   menu TLog TLog

@@ -1,0 +1,88 @@
+!  pwrb_c_getiattr.wb_load -- Defines the class GetIattr.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  Get integer attribute from class template plc.
+!
+! Range ldh_eDId_Base
+!
+SObject pwrb:Class
+!/**
+!  @Version 1.0
+!  @Group Plc,PlcIO
+!  @Summary Get integer attribute from class template plc.
+!  Get integer attribute from class template plc.
+!
+!  @image orm_getiattr_fo.gif
+!
+!  The object is used in a class template plc, to get
+!  the value of an integer quantity on the specified
+!  attribute in the parent object of the plc.
+!  The attribute should be of type pwr_tInt32.
+!*/
+  Object GetIattr $ClassDef 360 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_DevBodyOnly
+      Attr Flags = pwr_mClassDef_DevOnly
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      !/**
+      !  Used by the PLC Editor.
+      !*/
+      Object Status $Output 1 
+        Body SysBody
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_RTVIRTUAL
+          Attr Flags |= PWR_MASK_DEVBODYREF
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "sts"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      !/**
+      ! The name of the attribute in the host object to get.
+      !*/
+      Object Attribute $Intern 1 
+        Body SysBody
+          Attr PgmName = "attr"
+          Attr TypeRef = "pwrs:Type-$String32"
+          Attr NiNaAnnot = 1
+        EndBody
+      EndObject
+      Object PlcNode $Buffer 3 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 11
+        Attr parameters[0] = 0
+        Attr parameters[1] = 0
+        Attr parameters[2] = 1
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 7
+        Attr graphindex = 1
+        Attr default_mask[0] = 0
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 0
+        Attr devbody_annotation = 1
+        Attr compmethod = 59
+        Attr compindex = 0
+        Attr tracemethod = 1
+        Attr traceindex = 1
+        Attr connectmethod = 0
+        Attr executeordermethod = 0
+        Attr objname = "GetIattr"
+        Attr graphname = "GetIattr"
+        Attr debugpar = "Status"
+      EndBody
+    EndObject
+  EndObject
+EndSObject
