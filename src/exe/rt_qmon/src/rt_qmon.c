@@ -910,7 +910,8 @@ ini_link_info (
   lp->bus     = ntohl(qdb->g->bus);
   lp->os      = ntohl(my_np->os);
   lp->hw      = ntohl(my_np->hw);
-  lp->fm.m    = ntohl(my_np->fm.m);
+  lp->bo      = ntohl(my_np->bo);
+  lp->ft      = ntohl(my_np->ft);
 }
 
 static sIseg *
@@ -1500,7 +1501,8 @@ set_link_info (
   lp->np->link.bus = ntohl(ip->bus);
   np->os      = ntohl(ip->os);
   np->hw      = ntohl(ip->hw);
-  np->fm.m    = ntohl(ip->fm.m);
+  np->bo      = ntohl(ip->bo);
+  np->ft      = ntohl(ip->ft);
 }
 
 static void
