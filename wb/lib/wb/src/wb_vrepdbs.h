@@ -28,7 +28,7 @@ public:
 
     dbs_sEnv *dbsenv();
     bool load();
-    void objectName(wb_orep *o, char *str) const;
+    void objectName(wb_orep *o, char *str);
     
     
     virtual void unref();
@@ -57,13 +57,13 @@ public:
     virtual bool commit(pwr_tStatus *sts);
     virtual bool abort(pwr_tStatus *sts);
 
-    virtual bool writeAttribute();
+    virtual bool writeAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, unsigned int offset, unsigned int size, void *p);
 
-    virtual bool readAttribute(wb_orep *o, pwr_tOix bix, unsigned int offset, unsigned int size);
+    virtual void *readAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, unsigned int offset, unsigned int size, void *p);
 
-    virtual bool readBody();
+    virtual void *readBody(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, void *p);
 
-    virtual bool writeBody();
+    virtual bool writeBody(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, void *p);
 
     virtual wb_orep *ancestor(pwr_tStatus *sts, wb_orep *o);
 

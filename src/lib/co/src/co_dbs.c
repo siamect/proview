@@ -908,10 +908,31 @@ dbs_VolumeObject(pwr_tStatus *sts, const dbs_sEnv *ep)
     return (dbs_sObject *)(ep->base + ep->sect[dbs_eSect_object].offset);
 }
 
-dbs_sObject *dbs_Object(pwr_tStatus *sts, const dbs_sEnv *ep)
+dbs_sObject *
+dbs_Object(pwr_tStatus *sts, const dbs_sEnv *ep)
 {
     dbs_sObject *op = dbs_VolumeObject(sts, ep);
     if (op == NULL)
         return NULL;
     return dbs_First(sts, ep, op);    
+}
+
+void *
+dbs_Body(pwr_tStatus *sts, const dbs_sEnv *ep, dbs_sObject *op, cdh_eBix bix)
+{
+    char *p = NULL;
+    
+    switch (bix) {
+    case cdh_eBix_rt:
+        p = dbs_Address(sts, ep, op->rbody.ref);
+        break;
+    case cdh_eBix_dev:
+        p = dbs_Address(sts, ep, op->dbody.ref);
+        break;
+    default:
+        *sts = DBS__NOSUCHBODY;
+        break;
+    }
+    
+    return p;
 }

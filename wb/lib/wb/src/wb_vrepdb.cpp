@@ -803,7 +803,7 @@ bool wb_vrepdb::renameObject(pwr_tStatus *sts, wb_orep *o, wb_name name)
     return true;
 }
 
-bool wb_vrepdb::writeAttribute()
+bool wb_vrepdb::writeAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, unsigned int offset, unsigned int size, void *p)
 {
     //body.oix = ?;
     //body.bix = ?;
@@ -819,7 +819,8 @@ bool wb_vrepdb::writeAttribute()
     return true;
 }
 
-bool wb_vrepdb::readAttribute(wb_orep *o, pwr_tOix bix, unsigned int offset, unsigned int size)
+void *
+wb_vrepdb::readAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, unsigned int offset, unsigned int size, void *p)
 {
     ob_k obk(o->oix(), bix);
     //ob_d obd;
@@ -852,25 +853,29 @@ bool wb_vrepdb::readAttribute(wb_orep *o, pwr_tOix bix, unsigned int offset, uns
         }
         // ?? How do we reset the Orep ???, the name was changed
     }
-    return true;
+    return 0;
 }
 
-bool wb_vrepdb::readBody()
-{
-    return true;
-}
-
-bool wb_vrepdb::writeBody()
-{
-    return true;
-}
-
-wb_orep *wb_vrepdb::ancestor(pwr_tStatus *sts, wb_orep *o) const
+void *
+wb_vrepdb::readBody(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, void *p)
 {
     return 0;
 }
 
-wb_orep *wb_vrepdb::parent(pwr_tStatus *sts, wb_orep *o) const
+bool
+wb_vrepdb::writeBody(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, void *p)
+{
+    return true;
+}
+
+wb_orep *
+wb_vrepdb::ancestor(pwr_tStatus *sts, wb_orep *o) const
+{
+    return 0;
+}
+
+wb_orep *
+wb_vrepdb::parent(pwr_tStatus *sts, wb_orep *o) const
 {
     wb_orep *orep = 0;
     
@@ -879,7 +884,8 @@ wb_orep *wb_vrepdb::parent(pwr_tStatus *sts, wb_orep *o) const
     return orep;
 }
 
-wb_orep *wb_vrepdb::after(pwr_tStatus *sts, wb_orep *o) const
+wb_orep *
+wb_vrepdb::after(pwr_tStatus *sts, wb_orep *o) const
 {
     wb_orep *orep = 0;
     
@@ -888,7 +894,8 @@ wb_orep *wb_vrepdb::after(pwr_tStatus *sts, wb_orep *o) const
     return orep;
 }
 
-wb_orep *wb_vrepdb::before(pwr_tStatus *sts, wb_orep *o) const
+wb_orep *
+wb_vrepdb::before(pwr_tStatus *sts, wb_orep *o) const
 {
     wb_orep *orep = 0;
     
@@ -897,7 +904,8 @@ wb_orep *wb_vrepdb::before(pwr_tStatus *sts, wb_orep *o) const
     return orep;
 }
 
-wb_orep *wb_vrepdb::first(pwr_tStatus *sts, wb_orep *o) const
+wb_orep *
+wb_vrepdb::first(pwr_tStatus *sts, wb_orep *o) const
 {
     wb_orep *orep = 0;
     

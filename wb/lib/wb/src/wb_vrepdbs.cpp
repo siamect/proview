@@ -176,34 +176,44 @@ wb_vrepdbs::abort(pwr_tStatus *sts)
 
 
 bool
-wb_vrepdbs::writeAttribute()
+wb_vrepdbs::writeAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, unsigned int offset, unsigned int size, void *p)
 {
     //*sts = LDH__NYI;
     return false;
 }
 
 
-bool
-wb_vrepdbs::readAttribute(wb_orep *o, pwr_tOix bix, unsigned int offset, unsigned int size)
+void *
+wb_vrepdbs::readAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, unsigned int offset, unsigned int size, void *p)
 {
     //*sts = LDH__NYI;
-    return true;
+    return 0;
+}
+
+
+void *
+wb_vrepdbs::readBody(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, void *p)
+{
+    dbs_sObject *op = ((wb_orepdbs *)o)->o();
+    void *bp = dbs_Body(sts, dbsenv(), op, bix);
+    
+    if (bp == 0)
+        return 0;
+    
+    if (p) {
+        memcpy(p, bp, op->rbody.size);
+        return p;
+    }
+        
+    return bp;
 }
 
 
 bool
-wb_vrepdbs::readBody()
+wb_vrepdbs::writeBody(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, void *p)
 {
-    //*sts = LDH__NYI;
-    return true;
-}
-
-
-bool
-wb_vrepdbs::writeBody()
-{
-    //*sts = LDH__NYI;
-    return true;
+    *sts = LDH__NYI;
+    return false;
 }
 
 
@@ -437,34 +447,11 @@ wb_vrepdbs::delete_wb_orepdbs(void *p)
 }
 
 void
-wb_vrepdbs::objectName(wb_orep *o, char *str) const
+wb_vrepdbs::objectName(wb_orep *o, char *str)
 {
-#if 0
+    pwr_tStatus sts;
+    
     *str = 0;
-        
-    // Count ancestors
-    int cnt = 0;
-    wb_wblnode *n = ((wb_orepwbl *)o)->wblNode();
-    while ( n) {
-      cnt++;
-      n = n->o_fth;
-    }
 
-    wb_wblnode **vect = (wb_wblnode **) calloc( cnt, sizeof(vect));
-
-    n = ((wb_orepwbl *)o)->wblNode();
-    for ( int i = 0; i < cnt; i++) {
-      vect[i] = n;
-      n = n->o_fth;
-    }
-
-    for ( int i = cnt - 1; i >= 0; i--) {
-      strcat( str, vect[i]->name);
-      if ( i == cnt - 1)
-        strcat( str, ":");
-      else if ( i != 0)
-        strcat( str, "-");
-    }
-    free( vect);
-#endif
+    dbs_ObjectToName(&sts, dbsenv(), ((wb_orepdbs *)o)->o(), str);
 }

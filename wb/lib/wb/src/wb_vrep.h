@@ -2,7 +2,7 @@
 #define wb_vrep_h
 
 #include "pwr.h"
-//#include "wb_erep.h"
+#include "co_cdh.h"
 #include "wb_srep.h"
 #include "wb_orep.h"
 #include "wb_oset.h"
@@ -55,13 +55,13 @@ public:
     virtual bool commit(pwr_tStatus *sts) = 0;
     virtual bool abort(pwr_tStatus *sts) = 0;
 
-    virtual bool writeAttribute() = 0;
+    virtual bool writeAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, unsigned int offset, unsigned int size, void *p) = 0;
 
-    virtual bool readAttribute(wb_orep *o, pwr_tOix bix, unsigned int offset, unsigned int size) = 0;
+    virtual void *readAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, unsigned int offset, unsigned int size, void *p) = 0;
 
-    virtual bool readBody() = 0;
+    virtual void *readBody(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, void *p) = 0;
 
-    virtual bool writeBody() = 0;
+    virtual bool writeBody(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, void *p) = 0;
 
     virtual wb_orep *ancestor(pwr_tStatus *sts, wb_orep *o) = 0;
 
@@ -95,6 +95,7 @@ public:
     virtual void iterObject(wb_dbs *) = 0;
     virtual void iterRbody(wb_dbs *) = 0;
     virtual void iterDbody(wb_dbs *) = 0;
+    virtual void objectName(wb_orep *o, char *str) = 0;
 };
 
 #endif

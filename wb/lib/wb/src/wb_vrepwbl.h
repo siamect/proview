@@ -142,13 +142,13 @@ public:
     bool commit(pwr_tStatus *sts) {return false;};
     bool abort(pwr_tStatus *sts) {return false;};
 
-    bool writeAttribute() {return false;};
+    virtual bool writeAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, unsigned int offset, unsigned int size, void *p) {return false;};
 
-    bool readAttribute(wb_orep *o, pwr_tOix bix, unsigned int offset, unsigned int size) {return false;};
+    virtual void *readAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, unsigned int offset, unsigned int size, void *p) {return 0;};
 
-    bool readBody() {return false;};
+    virtual void *readBody(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, void *p) {return 0;};
 
-    bool writeBody() {return false;};
+    virtual bool writeBody(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, void *p) {return false;};
 
 
     wb_orep *ancestor(pwr_tStatus *sts, wb_orep *o);
@@ -173,7 +173,7 @@ public:
 
     bool isLocal(wb_orep *o) const {return false;};
 
-    void objectName(wb_orep *o, char *str) const;
+    void objectName(wb_orep *o, char *str);
 
 };
 

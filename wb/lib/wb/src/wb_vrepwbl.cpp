@@ -1049,7 +1049,7 @@ wb_orep *wb_vrepwbl::previous(pwr_tStatus *sts, wb_orep *o)
     return 0;
 }
 
-void wb_vrepwbl::objectName(wb_orep *o, char *str) const
+void wb_vrepwbl::objectName(wb_orep *o, char *str)
 {
     *str = 0;
         
