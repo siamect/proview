@@ -403,6 +403,11 @@ ref_wblnode wb_wblnode::get_o_lch()
 void wb_wblnode::build( bool recursive)
 {
   if ( !o->is_built) {
+    // Check name
+    wb_name n = wb_name(name());
+    if (!n)  
+      m_vrep->error( "Object name syntax error", getFileName(), line_number);
+
     o->m_oid.vid = m_vrep->vid();
 
     if ( isClassDef()) {
