@@ -55,6 +55,8 @@ menu Values
   subgraph 	ValueLong	pwr_exe:pwr_valuelong.pwsg 		49
   subgraph 	ValueReliefDown	pwr_exe:pwr_valuereliefdown.pwsg 	51
   subgraph 	ValueReliefUp	pwr_exe:pwr_valuereliefup.pwsg 		51
+  subgraph 	ValueInputReliefDown	pwr_exe:pwr_valueinputreliefdown.pwsg 	51
+  subgraph 	ValueInputReliefUp	pwr_exe:pwr_valueinputreliefup.pwsg 	51
 }
 menu Pushbuttons
 {
