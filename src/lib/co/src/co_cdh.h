@@ -71,6 +71,15 @@ typedef enum {
 //! Get attribute index for object index.
 #define cdh_oixToAix( Oix) (Oix & 0xfff)
 
+//! Smallest value of volume identity for user volumes
+#define cdh_cUserVolMin  (0 + ((pwr_tVolumeId)0 << 24) + (1 << 16) + (1 << 8) + 1)
+//! Largest value of volume identity for user volumes
+#define cdh_cUserVolMax  (0 + ((pwr_tVolumeId)0 << 24) + (254 << 16) + (254 << 8) + 254)
+//! Smallest value of volume identity for user classvolumes
+#define cdh_cUserClassVolMin  (0 + ((pwr_tVolumeId)0 << 24) + (0 << 16) + (2 << 8) + 1)
+//! Largest value of volume identity for user classvolumes
+#define cdh_cUserClassVolMax  (0 + ((pwr_tVolumeId)0 << 24) + (2 << 16) + (254 << 8) + 254)
+
 //! Internal representatin of object identity.
 typedef struct {
   unsigned int	oix		: 32;	//! Object index.
