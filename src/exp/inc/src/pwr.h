@@ -81,7 +81,11 @@
 #define pwr_cSizXRef		31
 #define pwr_cSizAttrName	31
 #define pwr_cSizPathName	63
-#define pwr_cSizFullName	79
+#define pwr_cSizFullName	119
+#define pwr_cSizOName		119
+#define pwr_cSizAName		239
+#define pwr_cSizFileName       	255
+#define pwr_cSizCmd       	255
 
 typedef void            *pwr_tAddress;		//!< Generic pointer type.
 typedef unsigned int    pwr_tBit;		//!< Bit type.
@@ -316,6 +320,11 @@ typedef char		pwr_tStructName	[pwr_cSizStructName + 1]; //!< StructName type.
 typedef char		pwr_tAttrName	[pwr_cSizAttrName + 1];	//!< AttrName type.
 typedef char		pwr_tPathName	[pwr_cSizPathName + 1];	//!< PathName type.
 typedef char		pwr_tFullName	[pwr_cSizFullName + 1];	//!< FullName type.
+typedef char		pwr_tOName	[pwr_cSizOName + 1];	//!< Full Object Name type.
+typedef char		pwr_tAName	[pwr_cSizAName + 1];	//!< Full Aref Name type.
+typedef char		pwr_tFileName	[pwr_cSizFileName + 1];	//!< FileName type.
+typedef char		pwr_tCmd	[pwr_cSizCmd + 1];	//!< Command string type.
+
 /*_*
   @aref string256 String256
 */
@@ -356,6 +365,21 @@ typedef char		pwr_tText1024	[1024];			//!< 1024 byte text type.
   @aref url URL
 */
 typedef char		pwr_tURL	[160];			//!< URL type.
+
+/*_*
+  @aref emergbreakselectenum EmergBreakSelectEnum
+*/
+typedef pwr_tEnum      pwr_tEmergBreakSelectEnum;	       	//!< Node attribute enum.
+
+/*_*
+  @aref opsysenum OpSysEnum
+*/
+typedef pwr_tEnum      pwr_tOpSysEnum;	       	//!< Operating system enum.
+
+/*_*
+  @aref opsysenum OpSysMask
+*/
+typedef pwr_tMask      pwr_tOpSysMask;	       	//!< Operating system Mask.
 
 
 /*_*

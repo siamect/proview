@@ -63,6 +63,7 @@ typedef struct pwr_s_Appl		pwr_sAppl;
 typedef struct pwr_s_System		pwr_sSystem;
 typedef struct pwr_s_MenuCascade	pwr_sMenuCascade;
 typedef struct pwr_s_MenuButton		pwr_sMenuButton;
+typedef struct pwr_s_MenuRef		pwr_sMenuRef;
 typedef struct pwr_s_Object		pwr_sObject;
 typedef struct pwr_s_DbCallBack		pwr_sDbCallBack;
 typedef struct pwr_s_RootVolume		pwr_sRootVolume;
@@ -77,6 +78,8 @@ typedef struct pwr_s_VolatileVolume	pwr_sVolatileVolume;
 typedef struct pwr_s_CreateVolume	pwr_sCreateVolume;
 typedef struct pwr_s_MountVolume	pwr_sMountVolume;
 typedef struct pwr_s_MountObject	pwr_sMountObject;
+typedef struct pwr_s_Bit		pwr_sBit;
+typedef struct pwr_s_Value		pwr_sValue;
 
 typedef union pwr_u_ParDef		pwr_uParDef;
 typedef union pwr_u_Volume		pwr_uVolume;
@@ -165,6 +168,22 @@ typedef enum {
   pwr_eType_		= pwr_TypeId(pwr_eTix_)
 } pwr_eType;
 
+typedef enum {
+  pwr_eTdix__			= 0,
+  pwr_eTdix_AdefFlags		= 15,	/* Derived type */
+  pwr_eTdix_ClassDefFlags	= 16,	/* Derived type */
+  pwr_eTdix_ObjBodyDefFlags	= 18,	/* Derived type */
+  pwr_eTdix_
+} pwr_eTdix;
+
+typedef enum {
+  pwr_eTypeDef__		= pwr_TypeId(pwr_eTix__) | 1 << 11,
+  pwr_eTypeDef_AdefFlags	= pwr_TypeId(pwr_eTdix_AdefFlags) | 1 << 11,
+  pwr_eTypeDef_ClassDefFlags	= pwr_TypeId(pwr_eTdix_ClassDefFlags) | 1 << 11,
+  pwr_eTypeDef_ObjBodyDefFlags	= pwr_TypeId(pwr_eTdix_ObjBodyDefFlags) | 1 << 11,
+  pwr_eTypeDef_			= pwr_TypeId(pwr_eTix_) | 1 << 11
+} pwr_eTypeDef;
+
 /** 
  * Due to compiler warnings in some switch statements, pwr_eType_ObjDId has been
  * removed from pwr_eType.
@@ -237,6 +256,9 @@ typedef enum {
   pwr_eCix_MountObject		=  57,
   pwr_eCix_RtMenu		=  58,
   pwr_eCix_VolatileVolume	=  59,
+  pwr_eCix_MenuRef		=  60,
+  pwr_eCix_Bit			=  61,
+  pwr_eCix_Value		=  62,
   pwr_eCix_
 } pwr_eCix;
     
@@ -300,6 +322,9 @@ typedef enum {
   pwr_eClass_MountObject	= pwr_ClassId(pwr_eCix_MountObject),
   pwr_eClass_RtMenu		= pwr_ClassId(pwr_eCix_RtMenu),
   pwr_eClass_VolatileVolume	= pwr_ClassId(pwr_eCix_VolatileVolume),
+  pwr_eClass_MenuRef		= pwr_ClassId(pwr_eCix_MenuRef),
+  pwr_eClass_Bit		= pwr_ClassId(pwr_eCix_Bit),
+  pwr_eClass_Value		= pwr_ClassId(pwr_eCix_Value),
   pwr_eClass_			
 } pwr_eClass;
     
@@ -365,46 +390,6 @@ typedef enum {
   pwr_ePopEditor_
 } pwr_ePopEditor;
 
-/* Operating system.  */
-#if 1
-
-typedef enum {
-  pwr_mOpSys__ = 0,
-  pwr_mOpSys_VAX_ELN =  1 << 0,
-  pwr_mOpSys_VAX_VMS =  1 << 1,
-  pwr_mOpSys_AXP_VMS =  1 << 2,
-  pwr_mOpSys_PPC_LYNX = 1 << 3,
-  pwr_mOpSys_X86_LYNX = 1 << 4,
-  pwr_mOpSys_PPC_LINUX = 1 << 5,
-  pwr_mOpSys_X86_LINUX = 1 << 6,
-  pwr_mOpSys_AXP_LINUX = 1 << 7,
-  pwr_mOpSys_ = 1 << 8
-} pwr_mOpSys;
-
-#else
-typedef union {
-  pwr_tBitMask m;
-  struct {
-    pwr_tBit  VAX_ELN	: 1;
-    pwr_tBit  VAX_VMS	: 1;
-    pwr_tBit  AXP_VMS	: 1;
-    pwr_tBit  PPC_LYNX	: 1;
-    pwr_tBit  X86_LYNX	: 1;
-
-    pwr_tBit  fill	: 27;
-  } b;
-
-
-#define pwr_mOpSys__	      0
-#define pwr_mOpSys_VAX_ELN    pwr_Bit(0)
-#define pwr_mOpSys_VAX_VMS    pwr_Bit(1)
-#define pwr_mOpSys_AXP_VMS    pwr_Bit(2)
-#define pwr_mOpSys_PPC_LYNX   pwr_Bit(3)
-#define pwr_mOpSys_X86_LYNX   pwr_Bit(4)
-#define pwr_mOpSys_	      (~pwr_mOpSys__)
-} pwr_mOpSys;
-
-#endif
 
 typedef enum {
   pwr_eVolumeAccess__	      = 0,
@@ -449,11 +434,16 @@ struct pwr_s_TypeDef
     pwr_tInt32		Size;			/* Number of bytes. */
     pwr_tTypeId		TypeRef;
     pwr_tInt32		Elements;
+    pwr_tPgmName	PgmName;
     };
 
 /* Class defining classes. 
 
    This section defines the classes to use when defining classes.  */
+/*_*
+  @aref classdefflags ClassDef
+*/
+typedef pwr_tMask pwr_tClassDefFlags;
 
 union pwr_m_ClassDef {
   pwr_tBitMask m;
@@ -558,7 +548,62 @@ struct pwr_s_ParInfo
     pwr_tUInt32		ParamIndex;	/* Index of param within a body. */
     };
 
-/* Bitmask for flags  */
+/* Operating system.  */
+/*_*
+  @aref opsys OpSys
+*/
+typedef pwr_tMask pwr_tOpSys;
+
+#if 1
+typedef enum {
+  pwr_mOpSys__ = 0,
+  pwr_mOpSys_VAX_ELN =  1 << 0,
+  pwr_mOpSys_VAX_VMS =  1 << 1,
+  pwr_mOpSys_AXP_VMS =  1 << 2,
+  pwr_mOpSys_PPC_LYNX = 1 << 3,
+  pwr_mOpSys_X86_LYNX = 1 << 4,
+  pwr_mOpSys_PPC_LINUX = 1 << 5,
+  pwr_mOpSys_X86_LINUX = 1 << 6,
+  pwr_mOpSys_AXP_LINUX = 1 << 7,
+  pwr_mOpSys_ = 1 << 8
+} pwr_mOpSys;
+
+#else
+typedef union {
+  pwr_tBitMask m;
+  struct {
+    pwr_tBit  VAX_ELN	: 1;
+    pwr_tBit  VAX_VMS	: 1;
+    pwr_tBit  AXP_VMS	: 1;
+    pwr_tBit  PPC_LYNX	: 1;
+    pwr_tBit  X86_LYNX	: 1;
+
+    pwr_tBit  fill	: 27;
+  } b;
+
+#define pwr_mOpSys__	      0
+#define pwr_mOpSys_VAX_ELN    pwr_Bit(0)
+#define pwr_mOpSys_VAX_VMS    pwr_Bit(1)
+#define pwr_mOpSys_AXP_VMS    pwr_Bit(2)
+#define pwr_mOpSys_PPC_LYNX   pwr_Bit(3)
+#define pwr_mOpSys_X86_LYNX   pwr_Bit(4)
+#define pwr_mOpSys_	      (~pwr_mOpSys__)
+} pwr_mOpSys;
+#endif
+
+/* Bitmask for body flags  */
+/*_*
+  @aref objbodydefflags ObjBodyDef
+*/
+typedef pwr_tMask pwr_tObjBodyDefFlags;
+
+#define pwr_mObjBodyDef_rtvirtual	pwr_Bit(6)		/*  64	  */
+
+/* Bitmask for attribute flags  */
+/*_*
+  @aref adef Adef
+*/
+typedef pwr_tMask pwr_tAdefFlags;
 
 union pwr_m_Adef {
   pwr_tBitMask m;
@@ -713,6 +758,20 @@ union pwr_u_ParDef
     pwr_sParam		Param;
     };
 
+struct pwr_s_Bit
+    {
+    pwr_tString32 Text;
+    pwr_tString32 PgmName;
+    pwr_tUInt32	Value;
+    };
+
+struct pwr_s_Value
+    {
+    pwr_tString32 Text;
+    pwr_tString32 PgmName;
+    pwr_tInt32	Value;
+    };
+
 /* Method defining classes.
 
    This section defines the classes to use when defining methods.  */
@@ -752,6 +811,15 @@ struct pwr_s_MenuButton
     pwr_tUInt32		Flags;
     };
 
+struct pwr_s_MenuRef
+    {
+    pwr_tString40	ButtonName;
+    pwr_tString40	RefAttribute;
+    pwr_tString80	FilterName;
+    pwr_tString40	FilterArguments[5];
+    pwr_tBoolean	(*Filter)();		/* Address to method
+                                                   visibility function.  */
+    };
 
 /* Classes for PLC editors.
 
