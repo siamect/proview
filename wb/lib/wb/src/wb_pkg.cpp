@@ -273,8 +273,8 @@ void pkg_node::fetchFiles()
       strcat( f.m_arname, type);
 
       // Check that this name is unic
-      bool new_name = false;
       for (;;) {
+	bool new_name = false;
 	for ( int k = 0; k < (int)m_filelist.size(); k++) {
 	  if ( strcmp( m_filelist[k].m_arname, f.m_arname) == 0) {
 	    strcat( f.m_arname, "x");
