@@ -257,7 +257,8 @@ lockMountServers (
       msl = pool_Qsucc(NULL, gdbroot->pool, msl)
     ) {
       msp = pool_Qitem(msl, gdb_sMountServer, volms_ll);
-    
+      errh_Info("!!!!! Found mountserver !!!!!");
+      
       op = hash_Search(&sts, gdbroot->oid_ht, &msp->oid);
       if (op == NULL) {
         op = cvolc_OidToObject(&sts, vp, msp->oid, vol_mTrans_none, cvol_eHint_none);
@@ -271,7 +272,7 @@ lockMountServers (
       op->l.flags.b.isMountServer = 1;
       pool_QinsertPred(NULL, gdbroot->pool, &msp->nodms_ll, &np->nodms_lh);
       
-      if (0) errh_Info("Locking object %s", op->g.f.name.orig);
+      if (1) errh_Info("Locking object %s", op->g.f.name.orig);
       cvolc_LockObject(&sts, op);
 
     }
