@@ -58,6 +58,9 @@
 #include "co_time.h"
 #include "rt_gdh.h"
 #include "rt_errh.h"
+#include "rt_qcom.h"
+#include "rt_ini_event.h"
+#include "rt_qcom_msg.h"
 #include "rt_mh_msg.h"
 #include "rt_mh_net.h"
 #include "rt_mh_appl.h"
@@ -274,6 +277,9 @@ static int	nmpstrans_request_data( trans_ctx	transctx,
 				int			position,
 				translist_t_entry	**translist_list,
 				nmpstrans_t_req_list	*req_ptr);
+static void	nmpstrans_reqlist_close( trans_ctx transctx);
+static void	nmpstrans_rcvlist_close( trans_ctx transctx);
+static void	nmpstrans_sndlist_close( trans_ctx transctx);
 static pwr_tStatus	nmpstrans_reqlist_add(
 			trans_ctx		transctx,
 			pwr_tObjid 		objid,
@@ -298,7 +304,6 @@ static int	nmpstrans_send_datasend( trans_ctx	transctx,
 				translist_t_entry	**translist_list,
 				nmpstrans_t_snd_list	*snd_ptr);
 static pwr_tStatus	nmpstrans_trans_handler( trans_ctx	transctx);
-static pwr_tStatus	nmpstrans_free( trans_ctx transctx);
 static int	nmpstrans_connect_alarm();
 static int	nmpstrans_alarm_send(
 			char	*alarm_text,
@@ -1536,6 +1541,43 @@ static int	nmpstrans_rcv_reset_detected( trans_ctx	transctx,
 
 
 /****************************************************************************
+* Name:		nmpstrans_reqlist_close()
+*
+* Type		void
+*
+* Type		Parameter	IOGF	Description
+*
+* Description:
+*		Unref and free reqlist.
+*
+**************************************************************************/
+static void	nmpstrans_reqlist_close( trans_ctx transctx)
+{
+	nmpstrans_t_req_list	*reqlist_ptr;
+	int i;
+	pwr_tStatus sts;
+
+	reqlist_ptr = transctx->reqlist;
+	for ( i = 0; i < transctx->req_count; i++) {
+	  sts = gdh_DLUnrefObjectInfo( reqlist_ptr->subid);
+	  if ( reqlist_ptr->req->Function & NMPS_REQUESTFUNC_DISPLAYOBJECT)
+	    sts = gdh_DLUnrefObjectInfo( reqlist_ptr->display_object_subid);
+	  sts = gdh_DLUnrefObjectInfo( reqlist_ptr->send_remtrans_subid);
+	  sts = gdh_DLUnrefObjectInfo( reqlist_ptr->send_remtransbuff_subid);
+	  sts = gdh_DLUnrefObjectInfo( reqlist_ptr->rcv_remtrans_subid);
+	  sts = gdh_DLUnrefObjectInfo( reqlist_ptr->rcv_remtransbuff_subid);
+	  if ( reqlist_ptr->req->Function & NMPS_REQUESTFUNC_CELLINSERT)
+	    sts = gdh_DLUnrefObjectInfo( reqlist_ptr->cell_subid);	  
+	  free( reqlist_ptr->conv_table);
+	  reqlist_ptr->conv_table = 0;
+	  reqlist_ptr++;
+	}
+	free( transctx->reqlist);
+	transctx->reqlist = 0;
+	transctx->req_count = 0;
+}
+
+/****************************************************************************
 * Name:		nmpstrans_reqlist_add()
 *
 * Type		pwr_tStatus
@@ -1726,6 +1768,46 @@ static pwr_tStatus	nmpstrans_reqlist_add(
 
 
 /****************************************************************************
+* Name:		nmpstrans_rcvlist_close()
+*
+* Type		pwr_tStatus
+*
+* Type		Parameter	IOGF	Description
+*
+* Description:
+*		Unref and free the rcvlist.
+*
+**************************************************************************/
+static void	nmpstrans_rcvlist_close( trans_ctx transctx)
+{
+	nmpstrans_t_rcv_list	*rcvlist_ptr;
+	int i;
+	pwr_tStatus sts;
+
+	rcvlist_ptr = transctx->rcvlist;
+	for ( i = 0; i < transctx->rcv_count; i++) {
+
+	  sts = gdh_DLUnrefObjectInfo( rcvlist_ptr->subid);
+	  if ( rcvlist_ptr->rcv->Function & NMPS_DATARCVFUNC_DISPLAYOBJECT)
+	    sts = gdh_DLUnrefObjectInfo( rcvlist_ptr->display_object_subid);
+	  if ( rcvlist_ptr->rcv->Function & NMPS_DATARCVFUNC_ACK) {
+	    sts = gdh_DLUnrefObjectInfo( rcvlist_ptr->send_remtrans_subid);
+	    sts = gdh_DLUnrefObjectInfo( rcvlist_ptr->send_remtransbuff_subid);
+	  }
+	  sts = gdh_DLUnrefObjectInfo( rcvlist_ptr->rcv_remtrans_subid);
+	  sts = gdh_DLUnrefObjectInfo( rcvlist_ptr->rcv_remtransbuff_subid);
+	  if ( rcvlist_ptr->rcv->Function & NMPS_DATARCVFUNC_CELLINSERT)
+	    sts = gdh_DLUnrefObjectInfo( rcvlist_ptr->cell_subid);
+	  free( rcvlist_ptr->conv_table);
+	  rcvlist_ptr->conv_table = 0;
+	  rcvlist_ptr++;
+	}
+	free( transctx->rcvlist);
+	transctx->rcvlist = 0;
+	transctx->rcv_count = 0;
+}
+
+/****************************************************************************
 * Name:		nmpstrans_rcvlist_add()
 *
 * Type		pwr_tStatus
@@ -1910,6 +1992,42 @@ static pwr_tStatus	nmpstrans_rcvlist_add(
 
 	(*rcvlist_count)++;
 	return NMPS__SUCCESS;
+}
+
+
+/****************************************************************************
+* Name:		nmpstrans_sndlist_close()
+*
+* Type		void
+*
+* Type		Parameter	IOGF	Description
+*
+* Description:
+*		Unref and free the sndlist.
+*
+**************************************************************************/
+static void	nmpstrans_sndlist_close( trans_ctx		transctx)
+{
+	nmpstrans_t_snd_list	*sndlist_ptr;
+	int i;
+	pwr_tStatus sts;
+
+	sndlist_ptr = transctx->sndlist;
+	for ( i = 0; i < transctx->snd_count; i++) {
+	  sts = gdh_DLUnrefObjectInfo( sndlist_ptr->subid);
+	  sts = gdh_DLUnrefObjectInfo( sndlist_ptr->send_remtrans_subid);
+	  sts = gdh_DLUnrefObjectInfo( sndlist_ptr->send_remtransbuff_subid);
+	  if ( sndlist_ptr->snd->Function & NMPS_DATASENDFUNC_ACK) {
+	    sts = gdh_DLUnrefObjectInfo( sndlist_ptr->rcv_remtrans_subid);
+	    sts = gdh_DLUnrefObjectInfo( sndlist_ptr->rcv_remtransbuff_subid);
+	  }	  
+	  free( sndlist_ptr->conv_table);
+
+	  sndlist_ptr++;
+	}
+	free( transctx->sndlist);
+	transctx->sndlist = 0;
+	transctx->snd_count = 0;
 }
 
 
@@ -2611,83 +2729,97 @@ static pwr_tStatus	nmpstrans_trans_handler( trans_ctx	transctx)
 	return NMPS__SUCCESS;
 }
 
-
-/****************************************************************************
-* Name:		nmpstrans_free()
-*
-* Type		pwr_tStatus
-*
-* Type		Parameter	IOGF	Description
-*
-* Description:
-*		Free the nmpstrans context.
-*
-**************************************************************************/
-static pwr_tStatus	nmpstrans_free( trans_ctx transctx)
-{
-	nmpstrans_t_req_list	*req_ptr;
-	int			i;
-	
-	/* Loop through the req objects */
-	req_ptr = transctx->reqlist;
-	for ( i = 0; i < transctx->req_count; i++)
-	{
-	  free( req_ptr->conv_table);
-	  req_ptr++;
-	}
-
-	free( transctx->reqlist);
-	free( transctx);
-
-	return NMPS__SUCCESS;
-}
 
 int main()
 {
 	trans_ctx		transctx;
 	pwr_tStatus		sts;
-	float			scantime;
+	qcom_sQid 		qini;
+	qcom_sQattr 		qAttr;
+	int 			tmo;
+	char 			mp[2000];
+	qcom_sQid 		qid = qcom_cNQid;
+	qcom_sGet 		get;
+	int 			swap = 0;
 
 	/* Init pams and gdh */
-	sts = gdh_Init("rt_nmps_trans");
-	if (EVEN(sts)) LogAndExit(sts)
+	sts = gdh_Init("rs_nmps_trans");
+	if (EVEN(sts)) LogAndExit(sts);
+
+	/* Init qcom and bind event que */
+	if (!qcom_Init(&sts, 0, "rs_nmps_trans")) {
+	  errh_Fatal("qcom_Init, %m", sts);
+	  exit(sts);
+	} 
+
+	qAttr.type = qcom_eQtype_private;
+	qAttr.quota = 100;
+	if (!qcom_CreateQ(&sts, &qid, &qAttr, "events")) {
+	  errh_Fatal("qcom_CreateQ, %m", sts);
+	  exit(sts);
+	} 
+
+	qini = qcom_cQini;
+	if (!qcom_Bind(&sts, &qid, &qini)) {
+	  errh_Fatal("qcom_Bind(Qini), %m", sts);
+	  exit(-1);
+	}
 
 	/* Wait for the plcpgm has flagged initizated */
 	plc_UtlWaitForPlc();
 
-	for (;;)
-	{
-	  transctx = calloc( 1 , sizeof( *transctx));
-	  if ( transctx == 0 ) LogAndExit( NMPS__NOMEMORY)
+	transctx = calloc( 1 , sizeof( *transctx));
+	if ( transctx == 0 ) LogAndExit( NMPS__NOMEMORY);
 
-	  sts = nmps_get_transconfig( transctx);
-	  if (EVEN(sts)) LogAndExit( sts);
+	sts = nmps_get_transconfig( transctx);
+	if (EVEN(sts)) LogAndExit( sts);
 
-	  sts = nmpstrans_datareq_init( transctx);
-	  if (EVEN(sts)) LogAndExit( sts);
+	sts = nmpstrans_datareq_init( transctx);
+	if (EVEN(sts)) LogAndExit( sts);
 
-	  sts = nmpstrans_datarcv_init( transctx);
-	  if (EVEN(sts)) LogAndExit( sts);
+	sts = nmpstrans_datarcv_init( transctx);
+	if (EVEN(sts)) LogAndExit( sts);
 
-	  sts = nmpstrans_datasend_init( transctx);
-	  if (EVEN(sts)) LogAndExit( sts);
+	sts = nmpstrans_datasend_init( transctx);
+	if (EVEN(sts)) LogAndExit( sts);
 
-	  for (;;)
-	  {
-	    scantime = transctx->transconfig->CycleTime;
-
-	    sts = nmpstrans_trans_handler( transctx);
-	    if (EVEN(sts)) LogAndExit( sts);
-
-	    sutl_sleep( scantime);
-
-	    if ( transctx->transconfig->Initialize)
-	    {
-	      transctx->transconfig->Initialize = 0;
-	      nmpstrans_free( transctx);
-	      break;
+	tmo = 1000 * transctx->transconfig->CycleTime - 1;
+	    
+	for (;;) {
+	  get.maxSize = sizeof(mp);
+	  get.data = mp;
+	  qcom_Get( &sts, &qid, &get, tmo);
+	  if (sts == QCOM__TMO || sts == QCOM__QEMPTY) {
+	    if ( !swap) {
+	      sts = nmpstrans_trans_handler( transctx);
+	      if (EVEN(sts)) LogAndExit( sts);
+	      transctx->transconfig->LoopCount++;
 	    }
-	    transctx->transconfig->LoopCount++;
+	  } 
+	  else {
+	    ini_mEvent  new_event;
+	    qcom_sEvent *ep = (qcom_sEvent*) get.data;
+	    
+	    new_event.m  = ep->mask;
+	    if (new_event.b.oldPlcStop && !swap) {
+	      swap = 1;
+	      nmpstrans_reqlist_close( transctx);
+	      nmpstrans_rcvlist_close( transctx);
+	      nmpstrans_sndlist_close( transctx);
+	    } else if (new_event.b.swapDone && swap) {
+	      swap = 0;
+
+	      sts = nmpstrans_datareq_init( transctx);
+	      if (EVEN(sts)) LogAndExit( sts);
+
+	      sts = nmpstrans_datarcv_init( transctx);
+	      if (EVEN(sts)) LogAndExit( sts);
+
+	      sts = nmpstrans_datasend_init( transctx);
+	      if (EVEN(sts)) LogAndExit( sts);
+
+	      errh_Info("Warm restart completed");
+	    }
 	  }
 	}
 }

@@ -6,18 +6,9 @@
    This file contains the access routines to the datastorage 
    of data to trendplot.   */
 
-#if defined OS_ELN
-# include stdio
-# include stdlib
-# include signal
-# include "rt_plc_loop.h"
-#elif defined OS_VMS
+#if defined OS_VMS
 # include <stdio.h>
 # include <stdlib.h>
-# include <signal.h>
-# include <descrip.h>
-# include <starlet.h>
-# include "rt_plc_loop.h"
 #elif defined OS_LYNX || defined OS_LINUX
 # include <stdio.h>
 # include <stdlib.h>
@@ -37,6 +28,9 @@
 #include "rt_gdh.h"
 #include "rt_ds_msg.h"
 #include "rt_gdh_msg.h"
+#include "rt_qcom_msg.h"
+#include "rt_qcom.h"
+#include "rt_ini_event.h"
 
 #define Log_Error(a, b) errh_CErrLog(DS__ERROR, errh_ErrArgAF(b), errh_ErrArgMsg(a), NULL)
 #define Log(b) errh_CErrLog(DS__LOG, errh_ErrArgAF(b), NULL)
@@ -56,6 +50,7 @@ struct s_LstNode
 static sLstNode	*LstHead = NULL;
 
 static pwr_tStatus InitTrendList();
+static void CloseTrendList();
 static pwr_tBoolean IsValidType(pwr_eTix Type);
 static void StoreData();
 
@@ -66,26 +61,38 @@ int main (int argc, char **argv)
   pwr_tObjid	    ObjId;
   pwr_sClass_DsTrendConf *TConfP;
   pwr_tBoolean    InitOK;
-  pwr_tInt32	    ScanTime = 1;	/* Later it will be fetched from a 
-				       * configuration object.
-				       */
-#ifdef OS_VMS
-  extern int plc_ConvMSToLI(pwr_tUInt32 Time, pwr_tVaxTime *TimeLI);
-  unsigned int    TimerFlag;
-  pwr_tVaxTime    DeltaTime;
-
-#elif defined OS_ELN
-  pwr_tVaxTime NextTime;
-  pwr_tVaxTime DeltaTime;
-
-#elif defined OS_LYNX || defined OS_LINUX
+  pwr_tInt32	    ScanTime = 1;
   pwr_tTime		CurrentTime, LastScan, NextScan;
   pwr_tDeltaTime	ScanDeltaTime, WaitTime;
-#endif
+  qcom_sQid qini;
+  qcom_sQattr qAttr;
+  int tmo;
+  char mp[2000];
+  qcom_sQid qid = qcom_cNQid;
+  qcom_sGet get;
+  int swap = 0;
 
   errh_Init("pwr_trend");
-  sts = gdh_Init("pwr_trend");
+  sts = gdh_Init("ds_trend");
   If_Error_Log_Exit(sts, "gdh_Init");
+
+  if (!qcom_Init(&sts, 0, "pwr_trend")) {
+    errh_Fatal("qcom_Init, %m", sts);
+    exit(sts);
+  } 
+
+  qAttr.type = qcom_eQtype_private;
+  qAttr.quota = 100;
+  if (!qcom_CreateQ(&sts, &qid, &qAttr, "events")) {
+    errh_Fatal("qcom_CreateQ, %m", sts);
+    exit(sts);
+  } 
+
+  qini = qcom_cQini;
+  if (!qcom_Bind(&sts, &qid, &qini)) {
+    errh_Fatal("qcom_Bind(Qini), %m", sts);
+    exit(-1);
+  }
 
   /* Wait until local nethandler has started */
   while(EVEN(gdh_NethandlerRunning()))
@@ -117,53 +124,45 @@ int main (int argc, char **argv)
 
   /* If even sts, just wait for init message */
 
-#if   defined OS_VMS
-  plc_ConvMSToLI(ScanTime * 1000, &DeltaTime);
-  sts = lib$get_ef(&TimerFlag);
-  if (EVEN(sts)) {
-    Log_Error_Exit(sts,"Couldn't allocate event flag for timer");
-  }
-#elif defined OS_ELN
-
-  plc_ConvMSToLI(ScanTime * 1000, &DeltaTime);
-  sts = plc_LoopInit(&NextTime);
-  if (EVEN(sts)) {
-    Log_Error_Exit(sts,"Couldn't initialize timer loop");
-  }
-
-#elif defined OS_LYNX || defined OS_LINUX
   clock_gettime(CLOCK_REALTIME, &LastScan);
   ScanDeltaTime.tv_sec =  ScanTime;
   ScanDeltaTime.tv_nsec = 0;
-#endif
 
-  while (InitOK) {
-
-    /* We cannot do anything if there is a slip */
-
-#if defined OS_VMS
-    sys$clref(TimerFlag);
-    sys$setimr(TimerFlag, &DeltaTime, 0, 2, 0);
-
-    StoreData(LstHead);
-    sys$waitfr(TimerFlag);
-#elif defined OS_ELN
-
-    StoreData(LstHead);
-    sts = plc_LoopWait( NULL, &DeltaTime, &NextTime, NULL);
-
-#else
-    StoreData(LstHead);
+  for (;;) {
 
     clock_gettime(CLOCK_REALTIME, &CurrentTime);
     time_Aadd(&NextScan, &LastScan, &ScanDeltaTime);
     if (time_Acomp(&CurrentTime, &NextScan) < 0) { 
       time_Adiff(&WaitTime, &NextScan, &CurrentTime);
-      nanosleep((struct timespec *)&WaitTime, NULL);
+      tmo = 1000 * time_DToFloat( 0, &WaitTime);
+
+      get.maxSize = sizeof(mp);
+      get.data = mp;
+      qcom_Get( &sts, &qid, &get, tmo);
+      if (sts == QCOM__TMO || sts == QCOM__QEMPTY) {
+	if ( !swap)
+	  StoreData(LstHead);
+      } 
+      else {
+	ini_mEvent  new_event;
+	qcom_sEvent *ep = (qcom_sEvent*) get.data;
+
+	new_event.m  = ep->mask;
+	if (new_event.b.oldPlcStop && !swap) {
+	  swap = 1;
+	  CloseTrendList( &LstHead);
+	} 
+	else if (new_event.b.swapDone && swap) {
+	  swap = 0;
+	  sts = InitTrendList( ScanTime, &LstHead);
+	  errh_Info("Warm restart completed");
+	}
+      }
     }
+    else if ( !swap)
+      StoreData(LstHead);
 
     LastScan = NextScan;
-#endif
   }
 
   return 1;
@@ -172,21 +171,12 @@ int main (int argc, char **argv)
 /* Set up subscriptions for every local DsTrend object and 
    initialize the DsTrend objects.  */
 
-static pwr_tStatus
-InitTrendList (
-  pwr_tInt32 ScanTime,
+static void
+CloseTrendList (
   sLstNode **LstHead
 )
 {
   sLstNode	    *LstNode, *TmpNode;
-  pwr_tStatus	    sts;
-  pwr_tUInt32	    Dummy;
-  pwr_tTypeId	    Type;
-  int		    Tix;
-  pwr_tObjid	    ObjId;
-  char		    Name[81];
-  pwr_sClass_DsTrend  *Trend;
-
 
   /* Free old list */
 
@@ -199,6 +189,22 @@ InitTrendList (
     free(TmpNode);
   }
   *LstHead = NULL;
+}
+
+static pwr_tStatus
+InitTrendList (
+  pwr_tInt32 ScanTime,
+  sLstNode **LstHead
+)
+{
+  sLstNode	    *LstNode;
+  pwr_tStatus	    sts;
+  pwr_tUInt32	    Dummy;
+  pwr_tTypeId	    Type;
+  int		    Tix;
+  pwr_tObjid	    ObjId;
+  char		    Name[81];
+  pwr_sClass_DsTrend  *Trend;
 
   sts = gdh_GetClassList(pwr_cClass_DsTrend, &ObjId);
   if (EVEN(sts)) {
