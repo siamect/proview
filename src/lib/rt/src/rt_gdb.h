@@ -249,8 +249,8 @@ typedef union {
     pwr_Bits( cacheFree	, 1),
 
     pwr_Bits( isParent	, 1),
-    pwr_Bits( classChecked, 1), /* set if we have checked if it has the same class version */
-    pwr_Bits( classEqual, 1), /* set if native and remote class is equal */ 
+    pwr_Bits( classChecked, 1), /**< set if we have checked if it has the same class version */
+    pwr_Bits( classEqual, 1),   /**< set if native and remote class is equal */ 
     pwr_Bits( fill_1	, 5),,,,,
 
     pwr_Bits( sancAdd	, 1),
@@ -271,7 +271,7 @@ typedef union {
 #define gdb_mCo_cachePend	pwr_Bit(6)
 #define gdb_mCo_cacheFree	pwr_Bit(7)
 
-#define gdb_mCo_isParent	pwr_Bit(8)	/* Is probably not needed!  */
+#define gdb_mCo_isParent	pwr_Bit(8) /**< Is probably not needed!  */
 #define gdb_mCo_classChecked	pwr_Bit(9)	
 #define gdb_mCo_classEqual	pwr_Bit(10)	
 
@@ -362,7 +362,7 @@ typedef union {
 } gdb_mNv;
 
 typedef struct {
-  pool_sQlink		volmo_lh;	/* List of 'mounted on' in this volume.  */
+  pool_sQlink		volmo_lh; /**< List of 'mounted on' in this volume.  */
   gdb_mNv		flags;
   pwr_tObjid		next_oid;
   co_mFormat            format;
@@ -441,13 +441,13 @@ typedef union {
 } gdb_mLv;
 
 typedef struct {
-  pool_sQlink		vid_htl;	/* Link in the vid-to-volume hash table.  */
-  pool_sQlink		vn_htl;		/* Link in the name-to-volume hash table.  */
-  pool_sQlink		vol_ll;		/* Link in the list of volumes known in one node.  */
-  pool_sQlink		own_ll;		/* Link in the list of volumes owned by one node.  */
-  pool_sQlink		obj_lh;		/* List of objects in this volume.  */
-  pool_sQlink		volms_lh;	/* List of mount servers in this volume.  */
-  pool_tRef		nr;		/* Reference to node.  */
+  pool_sQlink		vid_htl;  /**< Link in the vid-to-volume hash table.  */
+  pool_sQlink		vn_htl;   /**< Link in the name-to-volume hash table.  */
+  pool_sQlink		vol_ll;   /**< Link in the list of volumes known in one node.  */
+  pool_sQlink		own_ll;   /**< Link in the list of volumes owned by one node.  */
+  pool_sQlink		obj_lh;   /**< List of objects in this volume.  */
+  pool_sQlink		volms_lh; /**< List of mount servers in this volume.  */
+  pool_tRef		nr;       /**< Reference to node.  */
   gdb_mLv		flags;
 } gdb_sLvolume;
   
@@ -569,7 +569,7 @@ typedef struct {
 
   
 
-/* Object.
+/** Object.
 
    An object is represented by different parts.
 
@@ -640,18 +640,18 @@ typedef union {
 } gdb_mLo;
 
 typedef struct {
-  pwr_tUInt32		maxa;		/* maximized remote alarm level */
-  pwr_tUInt32		maxb;		/* maximized remote block level */
-  pwr_tUInt32		idx;		/* Alarm block level index.  */
+  pwr_tUInt32		maxa;           /**< maximized remote alarm level */
+  pwr_tUInt32		maxb;		/**< maximized remote block level */
+  pwr_tUInt32		idx;		/**< Alarm block level index.  */
 } gdb_sRalarm;
   
 typedef struct {
-  pool_sQlink		obj_ll;		/* List of objects in one volume.  */
-  pool_sQlink		oid_htl;	/* Oid hash table entry.  */
-  pool_sQlink		family_htl;	/* Family table entry.  */
-  pool_tRef		por;		/* The parent object.  */
-  pool_tRef		vr;		/* Reference to the volume.  */
-  net_sAlarm		al;		/* Alarm.  */
+  pool_sQlink		obj_ll;		/**< List of objects in one volume.  */
+  pool_sQlink		oid_htl;	/**< Oid hash table entry.  */
+  pool_sQlink		family_htl;	/**< Family table entry.  */
+  pool_tRef		por;		/**< The parent object.  */
+  pool_tRef		vr;		/**< Reference to the volume.  */
+  net_sAlarm		al;		/**< Alarm.  */
   gdb_mLo		flags;
 } gdb_sLobject;
 
@@ -701,150 +701,157 @@ typedef union {
 } gdb_mNo;
 
 typedef struct {
-  pool_sQlink		cid_ll;		/* Next/prv object of same class */
-  pool_sQlink		cli_ll;		/* Mount/Alias client list. */
-  pool_sQlink		sib_lh;		/* Head of children sibling list. */
-  pool_sQlink		sib_ll;		/* Sibling list.  */
-  pool_tRef		body;		/* Address of actual body in rtdbpool.  */
+  pool_sQlink		cid_ll;		/**< Next/prv object of same class */
+  pool_sQlink		cli_ll;		/**< Mount/Alias client list. */
+  pool_sQlink		sib_lh;		/**< Head of children sibling list. */
+  pool_sQlink		sib_ll;		/**< Sibling list.  */
+  pool_tRef		body;		/**< Address of actual body in rtdbpool.  */
   pwr_tTime             time;
   pwr_tUInt32		dlcount;
   pwr_tUInt32		subcount;
   pwr_tUInt32		sancount;
-  gdb_sRalarm		ral;		/* Remote alarm.  */
+  gdb_sRalarm		ral;		/**< Remote alarm.  */
   gdb_mNo		flags;
   dbs_mFlags		lflags;
 } gdb_sNobject;
 
 typedef struct {
-  pool_sQlink		cache_ll;	/* Cache list */
-  pool_sQlink		sanc_ll;	/* Subscribed alarm notification client list.  */
-  pwr_tRefId		sanid;		/* Subscribed alarm notification identity.  */
-  pwr_tUInt32		sanexp;		/* Expiration time for san, san-scan-index format.  */
-  pwr_tUInt32		nChild;		/* Number of children in cache.  */
+  pool_sQlink		cache_ll;	/**< Cache list */
+  pool_sQlink		sanc_ll;	/**< Subscribed alarm notification client list.  */
+  pwr_tRefId		sanid;		/**< Subscribed alarm notification identity.  */
+  pwr_tUInt32		sanexp;		/**< Expiration time for san, san-scan-index format.  */
+  pwr_tUInt32		nChild;		/**< Number of children in cache.  */
   gdb_mCo		flags;
 } gdb_sCobject;
 
 typedef struct {
-  gdb_sLobject		l;		/* Local part.  */
-  net_sGobject		g;		/* Global part.  */
+  gdb_sLobject		l;		/**< Local part.  */
+  net_sGobject		g;		/**< Global part.  */
   union {
-    gdb_sNobject	n;		/* Native part,  */
-    gdb_sCobject	c;		/* Cached part.  */
+    gdb_sNobject	n;		/**< Native part,  */
+    gdb_sCobject	c;		/**< Cached part.  */
   } u;
 } gdb_sObject;
 
 typedef struct {
-  pool_tRef		aor;		/* Attribute object header reference.  */
-  pool_tRef		abr;		/* Attribute object header reference.  */
+  pool_tRef		aor;		/**< Attribute object header reference.  */
+  pool_tRef		abr;		/**< Attribute object header reference.  */
   pwr_mAdef		flags;
   pwr_eType		type;
   pwr_tUInt32		offs;
   pwr_tUInt32		size;
   pwr_tUInt32		elem;
-  pwr_tUInt32		moffset;	/* Attribute maximum offset within body.  */
+  pwr_tUInt32		moffset;	/**< Attribute maximum offset within body.  */
   pwr_tAix		aix;
 } gdb_sAttribute;
 
 typedef struct {
-  pool_sQlink		cid_htl;	/* Entry in class hash table.  */
-  pwr_tClassId		cid;		/* Class identity of class.  */
-  pool_sQlink		class_ll;	/* Entry in list of classes on node.  */
-  pool_sQlink		cid_lh;		/* Head of instance list of this class,
+  pool_sQlink		cid_htl;	/**< Entry in class hash table.  */
+  pwr_tClassId		cid;		/**< Class identity of class.  */
+  pool_sQlink		class_ll;	/**< Entry in list of classes on node.  */
+  pool_sQlink		cid_lh;		/**< Head of instance list of this class,
 					   Template excluded.  */
-  pool_tRef		cor;		/* Class object header reference.  */
-  pool_tRef		cbr;		/* Class object body reference.  */
-  pool_tRef		bor;		/* ObjBodyDef object header reference.  */
-  pool_tRef		bbr;		/* ObjBodyDef object body reference.  */
-  pwr_tUInt32		size;		/* Size of objects body.  */
-  pwr_tUInt32		acount;		/* Number of attributes.  */
+  pool_tRef		cor;		/**< Class object header reference.  */
+  pool_tRef		cbr;		/**< Class object body reference.  */
+  pool_tRef		bor;		/**< ObjBodyDef object header reference.  */
+  pool_tRef		bbr;		/**< ObjBodyDef object body reference.  */
+  pwr_tUInt32		size;		/**< Size of objects body.  */
+  pwr_tUInt32		acount;		/**< Number of attributes.  */
 
 /* Not needed ???
    pool_tRef		ar; */
-		/* Pool reference to first attribute in gdb_sAttribute block.  */
+		/**< Pool reference to first attribute in gdb_sAttribute block.  */
 
   gdb_sAttribute	attr[1];
 } gdb_sClass;
 
 typedef struct {
-  pool_sQlink		volmo_ll;	/* Volume mounted on list.  */
-  pool_sQlink		nodmo_ll;	/* Node mounted on list.  */
+  pool_sQlink		volmo_ll;	/**< Volume mounted on list.  */
+  pool_sQlink		nodmo_ll;	/**< Node mounted on list.  */
   pwr_tNodeId		nid;
   pwr_tVolumeId		vid;
-  pool_tRef		vr;		/* Pool reference of the volume.  */
-  pool_tRef		nr;		/* Pool reference of the node.  */
+  pool_tRef		vr;		/**< Pool reference of the volume.  */
+  pool_tRef		nr;		/**< Pool reference of the node.  */
 } gdb_sMountedOn;
 
 typedef struct {
-  pwr_tObjid		oid;		/* Object identity of server object.  */
-  pool_sQlink		ms_htl;		/* Entry in server hash table.  */
-  pool_sQlink		ms_ll;		/* Entry in list of all mount servers */
-  pool_sQlink		nodms_ll;	/* Entry in server node's mount server list.  */
-  pool_sQlink		volms_ll;	/* Entry in server volume's mount server list.  */
-  pool_tRef		msor;		/* Object head of mount server.  */
-  pool_tRef		vr;		/* Volume.  */
-  pool_sQlink		cli_lh;		/* Header of mount client list.  */
+  pwr_tObjid		oid;		/**< Object identity of server object.  */
+  pool_sQlink		ms_htl;		/**< Entry in server hash table.  */
+  pool_sQlink		ms_ll;		/**< Entry in list of all mount servers */
+  pool_sQlink		nodms_ll;	/**< Entry in server node's mount server list.  */
+  pool_sQlink		volms_ll;	/**< Entry in server volume's mount server list.  */
+  pool_tRef		msor;		/**< Object head of mount server.  */
+  pool_tRef		vr;		/**< Volume.  */
+  pool_sQlink		cli_lh;		/**< Header of mount client list.  */
 } gdb_sMountServer;
 
 typedef struct {
-  pwr_tObjid		oid;		/* Object identity of server object.  */
-  pool_sQlink		as_htl;		/* Entry in Alias server hash table.  */
-  pool_sQlink		as_ll;		/* Entry in list of all alias servers */
-  pool_tRef		asor;		/* Server oh.  */
-  pool_sQlink		cli_lh;		/* Alias client object header list.  */
+  pwr_tObjid		oid;		/**< Object identity of server object.  */
+  pool_sQlink		as_htl;		/**< Entry in Alias server hash table.  */
+  pool_sQlink		as_ll;		/**< Entry in list of all alias servers */
+  pool_tRef		asor;		/**< Server oh.  */
+  pool_sQlink		cli_lh;		/**< Alias client object header list.  */
 } gdb_sAliasServer;
 
 typedef struct {
-  pwr_tNodeId	nid;		/* Node identity (!= qcom nix #) */
-  pool_sQlink	nid_htl;	/* Link in nid-to-node hash table.  */
-  pool_sQlink	nod_ll;		/* Link in list of all nodes.  */
-  pool_sQlink	own_lh;		/* Header of list of volumes owned by this node.  */
-  pwr_tUInt32	own_lc;		/* Number of owned volumes.  */
-  char		name[32];	/* Ascii name of node (nul-terminated)
+  pwr_tNodeId	nid;		/**< Node identity (!= qcom nix #) */
+  pool_sQlink	nid_htl;	/**< Link in nid-to-node hash table.  */
+  pool_sQlink	nod_ll;		/**< Link in list of all nodes.  */
+  pool_sQlink	own_lh;		/**< Header of list of volumes owned by this node.  */
+  pwr_tUInt32	own_lc;		/**< Number of owned volumes.  */
+  char		name[32];	/**< Ascii name of node (nul-terminated)
 					   zero-length means empty slot.  */
-  pwr_tObjid	nod_oid;	/* Node object for this node. */
-  pwr_tObjid	vol_oid;	/* Root volume object of this node.  */
+  pwr_tObjid	nod_oid;	/**< Node object for this node. */
+  pwr_tObjid	vol_oid;	/**< Root volume object of this node.  */
   gdb_mNode	flags;  
-  pwr_tUInt32	upcnt;		/* # of times up */
-  pwr_tTime	timeup;		/* Most recent time link came up */
-  pwr_tTime	timedown;	/* Most recent time link went down */
+  pwr_tUInt32	upcnt;		/**< # of times up */
+  pwr_tTime	timeup;		/**< Most recent time link came up */
+  pwr_tTime	timedown;	/**< Most recent time link went down */
 
   co_eOS	os;
   co_eHW	hw;
   co_mFormat    fm;
     
 
-  pool_sQlink	nodms_lh;	/* Header of list of mountservers for this node.  Client  */
+  pool_sQlink	nodms_lh;	/**< Header of list of mountservers for this node.  Client  */
 
-  pool_sQlink	nodmo_lh;	/* Header of list of 'mounted on' for this node.  Server  */
+  pool_sQlink	nodmo_lh;	/**< Header of list of 'mounted on' for this node.  Server  */
 
   /* Cache.  */
 
-  gdb_sTouchQ	cacheNode;	/* Header of cache list for this node.  */
+  gdb_sTouchQ	cacheNode;	/**< Header of cache list for this node.  */
 
-  pool_sQlink   ccvol_lh;       /* List of cached class volumes */
+  pool_sQlink   ccvol_lh;       /**< List of cached class volumes */
 
   /* Subscriptions.  */
 
-  pool_sQlink	subc_lh;	/* Header of list of clients served by this node.  */
-  pwr_tUInt32	subc_lc;	/* Number of clients in list above.  */
+  pool_sQlink	subc_lh;	/**< Header of list of clients served by this node.  */
+  pwr_tUInt32	subc_lc;	/**< Number of clients in list above.  */
 
-  pool_sQlink	nodsubs_lh;	/* Header of list servers for this node.  */
-  pool_sQlink	nodsubb_lh;	/* Header of list of buffer for this node.  */
+  pool_sQlink	nodsubs_lh;	/**< Header of list servers for this node.  */
+  pool_sQlink	nodsubb_lh;	/**< Header of list of buffer for this node.  */
 
   /* Subscribed alarm and block notification.  */
 
-  pool_sQlink	sansAct_lh;	/* Header of list of servers.  */
-  pwr_tUInt32	sansAct_lc;	/* Number of servers.  */
-  pool_sQlink	sansUpd_lh;	/* Header of list of servers to send to client.  */
-  pwr_tUInt32	sansUpd_lc;	/* Number of servers.  */
-  pwr_tUInt32 	sans_gen;	/* Incremented when a sans is added or removed */
+  pool_sQlink	sansAct_lh;	/**< Header of list of servers.  */
+  pwr_tUInt32	sansAct_lc;	/**< Number of servers.  */
+  pool_sQlink	sansUpd_lh;	/**< Header of list of servers to send to client.  */
+  pwr_tUInt32	sansUpd_lc;	/**< Number of servers.  */
+  pwr_tUInt32 	sans_gen;	/**< Incremented when a sans is added or removed */
 
-  pool_sQlink	sancAdd_lh;	/* Clients to be added.  */
+  pool_sQlink	sancAdd_lh;	/**< Clients to be added.  */
   pwr_tUInt32	sancAdd_lc;
-  pool_sQlink	sancAct_lh;	/* Active clients.  */
+  pool_sQlink	sancAct_lh;	/**< Active clients.  */
   pwr_tUInt32	sancAct_lc;
-  pool_sQlink	sancRem_lh;	/* Clients to be removed.  */
+  pool_sQlink	sancRem_lh;	/**< Clients to be removed.  */
   pwr_tUInt32	sancRem_lc;
+
+
+  /* Supported functionality. Please consider a bitmask if you add more */
+
+  pwr_tUInt32	netver;         /**< Net protocol version */
+  pwr_tBoolean	cclassSupport;  /**< Cached Class Support */
+
 
   /* Receive information counters, Nethandler class */
   
@@ -854,117 +861,118 @@ typedef struct {
 
   pwr_tUInt32	txmsg[net_eMsg_];
 
+
 } gdb_sNode;
 
 typedef struct {
-  pwr_tNodeId		nid;			/* Node index for this node */
-  pwr_tObjid		nod_oid;		/* Object identifier for the node object.  */
-  pwr_tUInt32		objects;		/* Number of  */
-  pwr_tUInt32		volumes;		/* Number of  */
-  pwr_tUInt32		classes;		/* Number of  */
-  pwr_tUInt32		nodes;			/* Number of  */
-  pwr_tUInt32		ccvolumes;		/* Number of cached class volumes */
-  pwr_tUInt32		cclasses;		/* Number of cached classes */
-  pwr_tUInt32		mountServers;		/* Number of  */
-  pwr_tUInt32		aliasServers;		/* Number of  */
-  pwr_tUInt32		subServers;		/* Number of  */
-  pwr_tUInt32		subClients;		/* Number of  */
-  pwr_tUInt32		sanServers;		/* Number of  */
-  pwr_tUInt32		pool_isize;		/* GDHpool initial size */
-  pwr_tUInt32		pool_esize;		/* GDHpool extendsize */
-  pwr_tUInt32		rtdb_isize;		/* rtdb initial size */
-  pwr_tUInt32		rtdb_esize;		/* rtdb extendsize  */
-  pwr_tUInt32		cvol_max;		/* cache trimmer activation level */
-  pwr_tUInt32		cvol_min;		/* cahce trimmer end criteria */
+  pwr_tNodeId		nid;			/**< Node index for this node */
+  pwr_tObjid		nod_oid;		/**< Object identifier for the node object.  */
+  pwr_tUInt32		objects;		/**< Number of  */
+  pwr_tUInt32		volumes;		/**< Number of  */
+  pwr_tUInt32		classes;		/**< Number of  */
+  pwr_tUInt32		nodes;			/**< Number of  */
+  pwr_tUInt32		ccvolumes;		/**< Number of cached class volumes */
+  pwr_tUInt32		cclasses;		/**< Number of cached classes */
+  pwr_tUInt32		mountServers;		/**< Number of  */
+  pwr_tUInt32		aliasServers;		/**< Number of  */
+  pwr_tUInt32		subServers;		/**< Number of  */
+  pwr_tUInt32		subClients;		/**< Number of  */
+  pwr_tUInt32		sanServers;		/**< Number of  */
+  pwr_tUInt32		pool_isize;		/**< GDHpool initial size */
+  pwr_tUInt32		pool_esize;		/**< GDHpool extendsize */
+  pwr_tUInt32		rtdb_isize;		/**< rtdb initial size */
+  pwr_tUInt32		rtdb_esize;		/**< rtdb extendsize  */
+  pwr_tUInt32		cvol_max;		/**< cache trimmer activation level */
+  pwr_tUInt32		cvol_min;		/**< cahce trimmer end criteria */
 } gdb_sInit;
 
 /* The global database header.  */
 
 typedef struct {
-  sect_sMutex		lock;		/* Database lock */
-  pid_t			excl_owner;	/* Owner of the excl lock */
-  pid_t			lock_owner;	/* Owner of db lock */
-  pwr_tUInt32		version;	/* Gdb structure revision.  */
+  sect_sMutex		lock;		/**< Database lock */
+  pid_t			excl_owner;	/**< Owner of the excl lock */
+  pid_t			lock_owner;	/**< Owner of db lock */
+  pwr_tUInt32		version;	/**< Gdb structure revision.  */
 
   struct {
-    hash_sGtable	subc_ht;	/* sid -> client hash table.  */
-    hash_sGtable	subs_ht;	/* sid -> server hash table.  */
-    hash_sGtable	sans_ht;	/* sanid -> server hash table.  */
-    hash_sGtable	oid_ht;		/* oid -> object hash table.  */
-    hash_sGtable	vid_ht;		/* vid -> volume hash table.  */
-    hash_sGtable	vn_ht;		/* volume name -> volume hash table.  */
-    hash_sGtable	cid_ht;		/* cid -> class  hash table.  */
-    hash_sGtable	tid_ht;		/* tid -> type  hash table.  */
-    hash_sGtable	nid_ht;		/* nid -> node   hash table.  */
-    hash_sGtable	family_ht;	/* Family (poid + name) -> object hash table.  */
-    hash_sGtable	ms_ht;		/* mount soid -> mount server hash table.  */
-    hash_sGtable	as_ht;		/* mount soid -> alias server hash table.  */
-    hash_sGtable	ccvol_ht;	/* nid + vid -> cached class volume */
-    hash_sGtable	cclass_ht;	/* cid + cached voltime -> cached class */
+    hash_sGtable	subc_ht;	/**< sid -> client hash table.  */
+    hash_sGtable	subs_ht;	/**< sid -> server hash table.  */
+    hash_sGtable	sans_ht;	/**< sanid -> server hash table.  */
+    hash_sGtable	oid_ht;		/**< oid -> object hash table.  */
+    hash_sGtable	vid_ht;		/**< vid -> volume hash table.  */
+    hash_sGtable	vn_ht;		/**< volume name -> volume hash table.  */
+    hash_sGtable	cid_ht;		/**< cid -> class  hash table.  */
+    hash_sGtable	tid_ht;		/**< tid -> type  hash table.  */
+    hash_sGtable	nid_ht;		/**< nid -> node   hash table.  */
+    hash_sGtable	family_ht;	/**< Family (poid + name) -> object hash table.  */
+    hash_sGtable	ms_ht;		/**< mount soid -> mount server hash table.  */
+    hash_sGtable	as_ht;		/**< mount soid -> alias server hash table.  */
+    hash_sGtable	ccvol_ht;	/**< nid + vid -> cached class volume */
+    hash_sGtable	cclass_ht;	/**< cid + cached voltime -> cached class */
   } h;
 
-  qcom_sQid		nethandler;	/* local nethandler */
-  qcom_sQid		neth_acp;	/* local neth acp */
-  qcom_sQid		tmon;		/* local neth acp */
+  qcom_sQid		nethandler;	/**< local nethandler */
+  qcom_sQid		neth_acp;	/**< local neth acp */
+  qcom_sQid		tmon;		/**< local neth acp */
 
-  gdb_sTouchQ		cacheCom;	/* Root of touched list */
-  gdb_sTouchQ		cacheNew;	/* Root of new list */
-  gdb_sTouchQ		cacheOld;	/* Root of old list */
-  gdb_sTouchQ		cachePend;	/* Root of touched parent list */
-  gdb_sTouchQ		cacheFree;	/* Root of free list */
+  gdb_sTouchQ		cacheCom;	/**< Root of touched list */
+  gdb_sTouchQ		cacheNew;	/**< Root of new list */
+  gdb_sTouchQ		cacheOld;	/**< Root of old list */
+  gdb_sTouchQ		cachePend;	/**< Root of touched parent list */
+  gdb_sTouchQ		cacheFree;	/**< Root of free list */
 
-  gdb_sTouchQ		cacheCclass;	/* Root of cached class list */
+  gdb_sTouchQ		cacheCclass;	/**< Root of cached class list */
 
-  pwr_tUInt32		rqgen;		/* Request generation number */
+  pwr_tUInt32		rqgen;		/**< Request generation number */
 
-  pwr_tVolumeId		vid;		/* Vid of root volume. */
-  pwr_tNodeId		nid;		/* Nid of this node. */
-  pwr_tObjid		vol_oid;	/* Objid of root volume object. */
-  pwr_tObjid		nod_oid;	/* Objid of node object of root volume object. */
+  pwr_tVolumeId		vid;		/**< Vid of root volume. */
+  pwr_tNodeId		nid;		/**< Nid of this node. */
+  pwr_tObjid		vol_oid;	/**< Objid of root volume object. */
+  pwr_tObjid		nod_oid;	/**< Objid of node object of root volume object. */
 
-  pool_sQlink		vol_lh;		/* Root of volume list */
-  pool_sQlink		nod_lh;		/* Root of node list */
-  pool_sQlink		ms_lh;		/* Root of mount server list */
-  pool_sQlink		as_lh;		/* Root of alias server list */
-  pool_sQlink		class_lh;	/* Root of class list */
+  pool_sQlink		vol_lh;		/**< Root of volume list */
+  pool_sQlink		nod_lh;		/**< Root of node list */
+  pool_sQlink		ms_lh;		/**< Root of mount server list */
+  pool_sQlink		as_lh;		/**< Root of alias server list */
+  pool_sQlink		class_lh;	/**< Root of class list */
 
-  gdb_sInit		orig_init;	/* Original initialization parameters */
-  gdb_sInit		eval_init;	/* Evaluated initialization parameters */
+  gdb_sInit		orig_init;	/**< Original initialization parameters */
+  gdb_sInit		eval_init;	/**< Evaluated initialization parameters */
 
-  net_mLog		log;		/* Mask that controls logging */
+  net_mLog		log;		/**< Mask that controls logging */
 
-  pool_sQlink		dl_lh;		/* root of DL list */
-  pwr_tUInt32		dl_lc;		/* length of DL list */
-  pwr_tDlid		dlid;		/* Next direct link id. */
+  pool_sQlink		dl_lh;		/**< root of DL list */
+  pwr_tUInt32		dl_lc;		/**< length of DL list */
+  pwr_tDlid		dlid;		/**< Next direct link id. */
 
-  pwr_tRefId		sancid;		/* Next san client id. */
+  pwr_tRefId		sancid;		/**< Next san client id. */
 
   /* The following items are used by subscriptions */
 
-  pwr_tSubid		subcid;		/* Next subscription client id */
+  pwr_tSubid		subcid;		/**< Next subscription client id */
 
-  pwr_tUInt32		tmocnt;		/* # tmo checks run */
-  pwr_tUInt32		tmotime;	/* tmo chk timer, 0.1s units */
-  pwr_tUInt32		tmolap;		/* time for 1 lap through all remote clients.  */
-  pool_sQlink		subt_lh;	/* List clients watched for timeout */
-  pwr_tUInt32		subt_lc;	/* length of timeout list */
+  pwr_tUInt32		tmocnt;		/**< # tmo checks run */
+  pwr_tUInt32		tmotime;	/**< tmo chk timer, 0.1s units */
+  pwr_tUInt32		tmolap;		/**< time for 1 lap through all remote clients.  */
+  pool_sQlink		subt_lh;	/**< List clients watched for timeout */
+  pwr_tUInt32		subt_lc;	/**< length of timeout list */
 
-  pool_sQlink		subs_lh;	/* List header of subscription servers.  */
-  pwr_tUInt32		subs_lc;	/* Number of subscription servers.  */
-  pool_sQlink		subb_lh;	/* List header of subscription buffers.  */
-  pwr_tUInt32		subb_lc;	/* length of buffer list */
-  pool_sQlink		subm_lh;	/* Root of subscription messages list */
-  pwr_tUInt32		subm_lc;	/* length of message list */
+  pool_sQlink		subs_lh;	/**< List header of subscription servers.  */
+  pwr_tUInt32		subs_lc;	/**< Number of subscription servers.  */
+  pool_sQlink		subb_lh;	/**< List header of subscription buffers.  */
+  pwr_tUInt32		subb_lc;	/**< length of buffer list */
+  pool_sQlink		subm_lh;	/**< Root of subscription messages list */
+  pwr_tUInt32		subm_lc;	/**< length of message list */
 
-  pool_sQlink		tmonq_lh;	/* Root of timer registration list */
+  pool_sQlink		tmonq_lh;	/**< Root of timer registration list */
 
-  pwr_tUInt32		al_idx;		/* Alarm index, set every time alarm or block changes.  */
+  pwr_tUInt32		al_idx;		/**< Alarm index, set every time alarm or block changes.  */
 
-  pwr_tUInt32		cache_trim_int;	/* Cache trim interval, ms */
-  pwr_tUInt32		sanc_add_int;	/* Sanc check add interval, ms */  
-  pwr_tUInt32		sanc_exp_int;	/* Sanc check expired interval, ms */  
-  pwr_tUInt32		sans_chk_int;	/* Sans check interval, ms */  
-  pwr_tUInt32		subc_chk_int;	/* Subc check interval, ms */  
+  pwr_tUInt32		cache_trim_int;	/**< Cache trim interval, ms */
+  pwr_tUInt32		sanc_add_int;	/**< Sanc check add interval, ms */  
+  pwr_tUInt32		sanc_exp_int;	/**< Sanc check expired interval, ms */  
+  pwr_tUInt32		sans_chk_int;	/**< Sans check interval, ms */  
+  pwr_tUInt32		subc_chk_int;	/**< Subc check interval, ms */  
 } gdb_sGlobal;
 
 
@@ -972,68 +980,68 @@ typedef struct {
 
 typedef struct {
 #ifdef	OS_ELN
-  MUTEX			thread_lock;	/* ELN lock only */
+  MUTEX			thread_lock;	/**< ELN lock only */
 #elif defined OS_LYNX || defined OS_LINUX
-  pthread_mutex_t	thread_lock;	/* LYNX and LINUX lock only */
+  pthread_mutex_t	thread_lock;	/**< LYNX and LINUX lock only */
 #endif
   struct {
-    sect_sHead		sect;		/* Section header for global database.  */
-    sect_sHead		lock;		/* Section header for .  */
-    pool_sHead		pool;		/* Pool for database */
-    pool_sHead		rtdb;		/* Pool for object bodies */
-    hash_sTable		subc_ht;	/* sid -> client hash table.  */
-    hash_sTable		subs_ht;	/* sid -> server hash table.  */
-    hash_sTable		sans_ht;	/* sanid -> server hash table.  */
-    hash_sTable		oid_ht;		/* oid -> object hash table.  */
-    hash_sTable		vid_ht;		/* vid -> volume hash table.  */
-    hash_sTable		vn_ht;		/* volume name -> volume hash table.  */
-    hash_sTable		cid_ht;		/* cid -> class  hash table.  */
-    hash_sTable		tid_ht;		/* tid -> type  hash table.  */
-    hash_sTable		nid_ht;		/* nid -> node   hash table.  */
-    hash_sTable		family_ht;	/* Family (poid + name) -> object hash table.  */
-    hash_sTable		ms_ht;		/* mount soid -> mount server hash table.  */
-    hash_sTable		as_ht;		/* mount soid -> alias server hash table.  */
-    hash_sTable		ccvol_ht;	/* nid + vid -> cached class volume */
-    hash_sTable		cclass_ht;	/* cid + cached voltime -> cached class */
+    sect_sHead		sect;		/**< Section header for global database.  */
+    sect_sHead		lock;		/**< Section header for .  */
+    pool_sHead		pool;		/**< Pool for database */
+    pool_sHead		rtdb;		/**< Pool for object bodies */
+    hash_sTable		subc_ht;	/**< sid -> client hash table.  */
+    hash_sTable		subs_ht;	/**< sid -> server hash table.  */
+    hash_sTable		sans_ht;	/**< sanid -> server hash table.  */
+    hash_sTable		oid_ht;		/**< oid -> object hash table.  */
+    hash_sTable		vid_ht;		/**< vid -> volume hash table.  */
+    hash_sTable		vn_ht;		/**< volume name -> volume hash table.  */
+    hash_sTable		cid_ht;		/**< cid -> class  hash table.  */
+    hash_sTable		tid_ht;		/**< tid -> type  hash table.  */
+    hash_sTable		nid_ht;		/**< nid -> node   hash table.  */
+    hash_sTable		family_ht;	/**< Family (poid + name) -> object hash table.  */
+    hash_sTable		ms_ht;		/**< mount soid -> mount server hash table.  */
+    hash_sTable		as_ht;		/**< mount soid -> alias server hash table.  */
+    hash_sTable		ccvol_ht;	/**< nid + vid -> cached class volume */
+    hash_sTable		cclass_ht;	/**< cid + cached voltime -> cached class */
   } h;
-  gdb_sGlobal		*db;		/* Database Root, (in db_lock section) */
-  sect_sHead		*sect;		/* Section header for global database.  */
-  sect_sHead		*lock;		/* Section header for .  */
-  pool_sHead		*pool;		/* Internal pool for database */
-  pool_sHead		*rtdb;		/* Internal pool for object bodies */
-  hash_sTable		*subc_ht;	/* pwr_tSubid to subcli hash table */
-  hash_sTable		*subs_ht;	/* pwr_tSubid to subsrv hash table */
-  hash_sTable		*sans_ht;	/* sanid -> server hash table.  */
-  hash_sTable		*oid_ht;	/* Object identity table.  */
-  hash_sTable		*vid_ht;	/* Volume table.  */
-  hash_sTable		*vn_ht;		/* volume name -> volume hash table.  */
-  hash_sTable		*cid_ht;	/* Class table.  */
-  hash_sTable		*tid_ht;	/* tid -> type  hash table.  */
-  hash_sTable		*nid_ht;	/* Node table.  */
-  hash_sTable		*family_ht;	/* Family table.  */
-  hash_sTable		*ms_ht;		/* mount soid -> mount server hash table.  */
-  hash_sTable		*as_ht;		/* mount soid -> alias server hash table.  */
-  hash_sTable		*ccvol_ht;	/* nid + vid -> cached class volume */
-  hash_sTable		*cclass_ht;	/* cid + cached voltime -> cached class */
+  gdb_sGlobal		*db;		/**< Database Root, (in db_lock section) */
+  sect_sHead		*sect;		/**< Section header for global database.  */
+  sect_sHead		*lock;		/**< Section header for .  */
+  pool_sHead		*pool;		/**< Internal pool for database */
+  pool_sHead		*rtdb;		/**< Internal pool for object bodies */
+  hash_sTable		*subc_ht;	/**< pwr_tSubid to subcli hash table */
+  hash_sTable		*subs_ht;	/**< pwr_tSubid to subsrv hash table */
+  hash_sTable		*sans_ht;	/**< sanid -> server hash table.  */
+  hash_sTable		*oid_ht;	/**< Object identity table.  */
+  hash_sTable		*vid_ht;	/**< Volume table.  */
+  hash_sTable		*vn_ht;		/**< volume name -> volume hash table.  */
+  hash_sTable		*cid_ht;	/**< Class table.  */
+  hash_sTable		*tid_ht;	/**< tid -> type  hash table.  */
+  hash_sTable		*nid_ht;	/**< Node table.  */
+  hash_sTable		*family_ht;	/**< Family table.  */
+  hash_sTable		*ms_ht;		/**< mount soid -> mount server hash table.  */
+  hash_sTable		*as_ht;		/**< mount soid -> alias server hash table.  */
+  hash_sTable		*ccvol_ht;	/**< nid + vid -> cached class volume */
+  hash_sTable		*cclass_ht;	/**< cid + cached voltime -> cached class */
 
-  gdb_sVolume		*my_volume;	/* The local root volume.  */
-  gdb_sVolume		*no_volume;	/* The unknown volume with vid = 0.0.0.0.  */
-  gdb_sNode		*my_node;	/* Pointer to NodeHead of local node.  */
-  gdb_sNode		*no_node;	/* Pointer to NodeHead of the unknown node.  */
+  gdb_sVolume		*my_volume;	/**< The local root volume.  */
+  gdb_sVolume		*no_volume;	/**< The unknown volume with vid = 0.0.0.0.  */
+  gdb_sNode		*my_node;	/**< Pointer to NodeHead of local node.  */
+  gdb_sNode		*no_node;	/**< Pointer to NodeHead of the unknown node.  */
 
-  pwr_tUInt32		lock_count;	/* # of times this job locked the DB */
-  qcom_sQid		my_qid;		/* The QueId of this job */
-  qcom_sAid		my_aid;		/* The QueId of this job */
-  pid_t			my_pid;		/* The process id of this job */
-  pwr_tBoolean		is_tmon;	/* Set if tmon */
+  pwr_tUInt32		lock_count;	/**< # of times this job locked the DB */
+  qcom_sQid		my_qid;		/**< The QueId of this job */
+  qcom_sAid		my_aid;		/**< The QueId of this job */
+  pid_t			my_pid;		/**< The process id of this job */
+  pwr_tBoolean		is_tmon;	/**< Set if tmon */
 } gdb_sLocal;
 
 /* The root of all data, the only `global' variable...  */
 
 #if defined (OS_ELN)
-  extern noshare gdb_sLocal	*gdbroot;	/* root of all data in database */
+  extern noshare gdb_sLocal	*gdbroot;	/**< root of all data in database */
 #else
-  extern gdb_sLocal	*gdbroot;	/* root of all data in database */
+  extern gdb_sLocal	*gdbroot;	/**< root of all data in database */
 #endif
 
 typedef enum {
@@ -1045,7 +1053,7 @@ typedef enum {
 typedef struct {
   pool_sQlink		ll;
   gdb_eTmon		type;
-  pwr_tUInt32		dt;		/* Update time in milli seconds */
+  pwr_tUInt32		dt;		/**< Update time in milli seconds */
 } gdb_sTmonQlink;
 
 /* Function prototypes.  */

@@ -26,10 +26,11 @@
 %#include "co_cdh.h"
 %#endif
 %
-%/* Protocol version. Increase whenever an
-%   incompatible change is done to the protocol */
+%/** Protocol version. Increase whenever an
+%    incompatible change is done to the protocol.
+%    Update supported features in function id() in file rt_neth.c  */
 %
-%#define net_cVersion		7
+%#define net_cVersion		8
 %
 %#define net_cSendRcvTmo	20000	/* Timeout (ms) used in pams_rcv_msgw calls */
 %#define net_cProcHandler	110
@@ -86,7 +87,11 @@ enum net_eMsg {
   net_eMsg_getGclass,		/* The whole class */
   net_eMsg_getGclassR,
 
-  net_eMsg_			/* Not a valid message */
+  net_eMsg_,			/* Not a valid message */
+  
+  net_eMsg_volumes7,            /* Version 7. Internal only */
+
+  net_eMsg_end
 };
 
 
@@ -837,6 +842,8 @@ struct net_sRenameObject {
   cdh_sFamily		f;		/* Used for Rename */
 };
 
+
+/* net_sGvolume for Neth Ver > 7 */
 struct net_sGvolume {
   pwr_tVolumeId		vid;
   pwr_tObjid		oid;		/* Oid of volume object.  */
@@ -844,10 +851,25 @@ struct net_sGvolume {
   pwr_tClassId		cid;		/* Class of volume. */
   pwr_tNodeId		nid;		/* Node id of owner of volume,
 					   pwr_cNNodeId if shared or class volume.  */
-  pwr_tTime		time;
+  pwr_tTime		time;           /* Currently only used for Class volumes. 
+                                         * Added in Neth version 8 */
 };
 
+
+/* net_sGvolume for Neth Ver == 7 */
+struct net_sGvolume7 {
+  pwr_tVolumeId		vid;
+  pwr_tObjid		oid;		/* Oid of volume object.  */
+  cdh_sObjName		name;
+  pwr_tClassId		cid;		/* Class of volume. */
+  pwr_tNodeId		nid;		/* Node id of owner of volume,
+					   pwr_cNNodeId if shared or class volume.  */
+};
+
+
+
 #ifdef RPC_HDR
+%
 %#define net_cVolumeMaxCount	(net_cSizeLarge/sizeof(net_sGvolume))
 %
 %typedef struct {
@@ -858,6 +880,15 @@ struct net_sGvolume {
 %} net_sVolumes;
 %
 %bool_t xdr_net_sVolumes();
+%
+%typedef struct {
+%  net_sMessage		hdr	pwr_dPacked;	/* Header */
+%  pwr_tUInt32		ctx	pwr_dPacked;
+%  pwr_tUInt32		count	pwr_dPacked;	/* # of headers  */
+%  net_sGvolume7	g[1]	pwr_dPacked;	/* Array of volume headers */
+%} net_sVolumes7;
+%
+%bool_t xdr_net_sVolumes7();
 %
 #elif defined RPC_XDR
 %
@@ -883,6 +914,34 @@ struct net_sGvolume {
 %		return (FALSE);
 %	}
 %	if (!xdr_vector(xdrs, (char *)objp->g, count, sizeof(net_sGvolume), (xdrproc_t)xdr_net_sGvolume)) {
+%		return (FALSE);
+%	}
+%	return (TRUE);
+%}
+%
+%
+%bool_t
+%xdr_net_sVolumes7(xdrs, objp)
+%	XDR *xdrs;
+%	net_sVolumes *objp;
+%{
+%	int count;
+%
+%	if (xdrs->x_op == XDR_DECODE) {
+%		count = (int) ntohl(objp->count);
+%	} else {
+%		count = objp->count;
+%	}
+%	if (!xdr_net_sMessage(xdrs, &objp->hdr)) {
+%		return (FALSE);
+%	}
+%	if (!xdr_pwr_tUInt32(xdrs, &objp->ctx)) {
+%		return (FALSE);
+%	}
+%	if (!xdr_pwr_tUInt32(xdrs, &objp->count)) {
+%		return (FALSE);
+%	}
+%	if (!xdr_vector(xdrs, (char *)objp->g, count, sizeof(net_sGvolume7), (xdrproc_t)xdr_net_sGvolume7)) {
 %		return (FALSE);
 %	}
 %	return (TRUE);

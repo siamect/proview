@@ -210,20 +210,35 @@ ConvertPut (
   pwr_tStatus		lsts;
   XDR			xdrs;
   qdb_sNode		*np;
+  tFuncXdr              fXdr;
 
   if (put->type.b != net_cMsgClass)
     pwr_Return(FALSE, sts, NET__XDRFAILED);
   np = hash_Search(&lsts, &qdb->nid_ht, &qid->nid);
   if (np == NULL) pwr_Return(FALSE, sts, lsts);
+
+  /* This is a simple way to fix the net_sGvolume difference between 
+   * Neth version 7 and later. If this is needed for more messages 
+   * then a generic solution must be implemented.
+   */
+  if (put->type.s == net_eMsg_volumes7) {
+    put->type.s = net_eMsg_volumes;
+    fXdr = xdr_net_sVolumes7;
+  }
+  else {
+    if ((int)put->type.s <= (int)net_eMsg__ || (int)put->type.s >= (int)net_eMsg_)
+      pwr_Return(FALSE, sts, NET__NOSUCHQCOMSUBT);
+    fXdr = func_xdr[(int)put->type.s];
+  }
+  
+
   if (np == qdb->my_node || np->bo == qdb->my_node->bo) {
     if (put->data != data) memcpy(put->data, data, put->size);
     pwr_Return(TRUE, sts, NET__SUCCESS);
   }
 
   xdrmem_create(&xdrs, (char *) put->data, put->size, XDR_ENCODE);
-  if ((int)put->type.s <= (int)net_eMsg__ || (int)put->type.s >= (int)net_eMsg_)
-    pwr_Return(FALSE, sts, NET__NOSUCHQCOMSUBT);
-  if(!func_xdr[(int)put->type.s](&xdrs, (char *) data))
+  if(!(fXdr)(&xdrs, (char *) data))
     pwr_Return(FALSE, sts, NET__XDRFAILED);
 
   pwr_Return(TRUE, sts, NET__SUCCESS);
@@ -239,20 +254,44 @@ ConvertGet (
   pwr_tStatus		lsts;
   XDR			xdrs;
   qdb_sNode		*np;
+  tFuncXdr              fXdr;
+  gdb_sNode             *gnp;
+  pwr_tUInt32           netver;
 
   if (get->type.b != net_cMsgClass)
     pwr_Return(FALSE, sts, NET__XDRFAILED);
   np = hash_Search(&lsts, &qdb->nid_ht, &get->sender.nid);
   if (np == NULL) pwr_Return(FALSE, sts, lsts);
+
+  if ((int)get->type.s <= (int)net_eMsg__ || (int)get->type.s >= (int)net_eMsg_)
+    pwr_Return(FALSE, sts, NET__NOSUCHQCOMSUBT);
+
+
+  /* This is a simple way to fix the net_sGvolume difference between 
+   * Neth version 7 and later. If this is needed for more messages 
+   * then a generic solution must be implemented.
+   */
+  fXdr = func_xdr[(int)get->type.s];
+  if (get->type.s == net_eMsg_volumes) {
+    gdb_ScopeLock {
+      gnp = hash_Search(&lsts, gdbroot->nid_ht, &np->nid);
+      netver = gnp->netver;
+    } gdb_ScopeUnlock;
+
+    if (netver == 7) {
+      get->type.s = net_eMsg_volumes7;
+      fXdr = xdr_net_sVolumes7;
+    }
+  }
+
   if (np == qdb->my_node || np->bo == qdb->my_node->bo) {
     if (get->data != data) memcpy(data, get->data, get->size);
     pwr_Return(TRUE, sts, NET__SUCCESS);
   }
 
-  xdrmem_create(&xdrs, (char *) data, get->size, XDR_DECODE);
-  if ((int)get->type.s <= (int)net_eMsg__ || (int)get->type.s >= (int)net_eMsg_)
-    pwr_Return(FALSE, sts, NET__NOSUCHQCOMSUBT);
-  if(!func_xdr[(int)get->type.s](&xdrs, (char *) get->data))
+  xdrmem_create(&xdrs, (char *) data, get->size, XDR_DECODE);    
+  
+  if(!(fXdr)(&xdrs, (char *) get->data))
     pwr_Return(FALSE, sts, NET__XDRFAILED);
 
   pwr_Return(TRUE, sts, NET__SUCCESS);

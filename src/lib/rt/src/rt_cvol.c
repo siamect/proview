@@ -197,7 +197,7 @@ cvol_LinkObject	(
 gdb_sObject *
 cvol_LoadObject (
   pwr_tStatus		*sts,
-  gdb_sNode		*np,
+  gdb_sNode		*np,  
   gdb_sVolume		*vp,
   net_sGobject		*gop
 )
@@ -222,6 +222,12 @@ cvol_LoadObject (
 
   op = cvol_LinkObject(&lsts, vp, op, vol_mLink_load);
   if (op == NULL) errh_Bugcheck(lsts, "cvol_LinkObject");
+
+  if (!np->cclassSupport) {
+    op->u.c.flags.b.classChecked = 1;
+    op->u.c.flags.b.classEqual = 1;
+  }
+  
 
   pwr_Return(op, sts, GDH__SUCCESS);
 }

@@ -100,6 +100,14 @@ cmvolc_GetCachedClass (
   *fetched = 0;
   
 
+  /* Handle nodes that don't support cached classes */
+  if (!np->cclassSupport) {
+    *equal = 1;
+    ap->op->u.c.flags.b.classChecked = 1;
+    ap->op->u.c.flags.b.classEqual = 1;
+    pwr_Return(NULL, sts, GDH__SUCCESS);
+  }
+  
 
   /** @todo Check vp->u.c.equalClasses first (when implemented) */
 
