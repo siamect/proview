@@ -1245,9 +1245,15 @@ int vldh_wind_quit_all (
 )
 {
 	int	sts;
+	ldh_sSessInfo info;
+       
+	sts = ldh_GetSessionInfo( wind->hw.ldhsession, &info);
+	if ( EVEN(sts)) return sts;
 
-	sts = ldh_RevertSession( wind->hw.ldhsession);
-	if( EVEN(sts)) return sts;
+	if ( !info.Empty) {
+	  sts = ldh_RevertSession( wind->hw.ldhsession);
+	  if( EVEN(sts)) return sts;
+	}
 	
 	vldh_wind_quit(wind);
 
@@ -1627,6 +1633,9 @@ int vldh_wind_load_all (
 	char			*nodebuffer;
 	unsigned char		source_found;
 	unsigned char		dest_found;
+	int			rsts;
+
+	rsts = VLDH__SUCCESS;
 
 	/* Get the first child to the window */
 	sts = ldh_GetChild( wind->hw.ldhsession, wind->lw.objdid, &next_objdid);
@@ -1691,10 +1700,13 @@ int vldh_wind_load_all (
 	    }
 	    node++;
 	  }
-#if 0
+
 	  /* LOOK FOR A BUGG!!! */
-	  if ( !(source_found && dest_found ))
-	  {
+	  if ( !(source_found && dest_found )) {
+	    char name[80];
+
+	    rsts = VLDH__WINDCORRUPT;
+
 	    /* Source or destination is missing, delete the connection */
 	    (*con_ptr)->hc.status |= VLDH_DELETE;
 	    if ( source_found)
@@ -1703,20 +1715,31 @@ int vldh_wind_load_all (
 	    if ( dest_found )
 	      vldh_node_con_delete( (*con_ptr)->hc.dest_node_pointer,
 		(*con_ptr)->lc.dest_point, *con_ptr);
-	    printf("LOAD ERROR CON con: %d source: %d pnt: %d dest: %d pnt: %d \n",
-	  	(*con_ptr)->lc.objdid,
-		(*con_ptr)->lc.source_node_did,
-		(*con_ptr)->hc.source_node_pointer,
-		(*con_ptr)->lc.dest_node_did,
-		(*con_ptr)->hc.dest_node_pointer);
+
+	   
+	    sts = ldh_ObjidToName( wind->hw.ldhsession, (*con_ptr)->lc.objdid, ldh_eName_Object,
+		name, sizeof(name), &size);
+	    if( EVEN(sts)) return sts;
+
+	    if ( !source_found)
+	      printf("** Error connection source node is missing: %s soix: %d doix: %d \n",
+	  	name,
+		(*con_ptr)->lc.source_node_did.oix,
+		(*con_ptr)->lc.dest_node_did.oix);
+	    if ( !dest_found)
+	      printf("** Error connection destination node is missing: %s soix: %d doix: %d \n",
+	  	name,
+		(*con_ptr)->lc.source_node_did.oix,
+		(*con_ptr)->lc.dest_node_did.oix);
+
 	  }
 	  /* END LOOK FOR A BUGG!!! */
-#endif
+
 	  con_ptr++;
 	}
 	if ( con_count > 0) XtFree((char *) conlist);
 	if ( node_count > 0) XtFree((char *) nodelist);
-	return VLDH__SUCCESS;
+	return rsts;
 }
 
 

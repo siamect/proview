@@ -1582,7 +1582,8 @@ int foe_new_local(
 	        if ( EVEN(sts)) return sts;
 
 	        sts = vldh_wind_load_all( windowobject);
-	        if ( EVEN(sts)) return sts;
+		if ( sts == VLDH__WINDCORRUPT) {}
+	        else if ( EVEN(sts)) return sts;
 	      }
 	      /* Create the foe context */
 	      /* SG 02.05.91 by default give the view function */
@@ -1740,7 +1741,8 @@ int foe_new_local(
 	        if ( EVEN(sts)) return sts;
 
 	        sts = vldh_wind_load_all( windowobject);
-	        if ( EVEN(sts)) return sts;
+		if ( sts == VLDH__WINDCORRUPT) {}
+	        else if ( EVEN(sts)) return sts;
 	      }
 
 	      function = old_foectx->function;
