@@ -148,7 +148,59 @@ static types_sEnumElement elem_Co_PI24BO_DivCount[] = {
 	{ 16	, "16"},
 	{ 0, ""}};
 
+static types_sEnumElement elem_RemnodeTCP_ConnectionMode[] = {
+	{ 0	, "Client"},
+	{ 1	, "Server"},
+	{ 0, ""}};
 
+static types_sEnumElement elem_Parity[] = {
+	{ 0	, "None"},
+	{ 1	, "Odd"},
+	{ 2	, "Even"},
+	{ 0, ""}};
+
+static types_sEnumElement elem_StopBits[] = {
+	{ 0	, "0"},
+	{ 1	, "1"},
+	{ 2	, "2"},
+	{ 0, ""}};
+
+static types_sEnumElement elem_DataBits[] = {
+	{ 0	, "0"},
+	{ 1	, "1"},
+	{ 2	, "2"},
+	{ 3	, "3"},
+	{ 4	, "4"},
+	{ 5	, "5"},
+	{ 6	, "6"},
+	{ 7	, "7"},
+	{ 8	, "8"},
+	{ 0, ""}};
+
+static types_sEnumElement elem_Orientation[] = {
+	{ 8	, "Byte"},
+	{ 16	, "Word"},
+	{ 32	, "Double Word"},
+	{ 0, ""}};
+
+static types_sEnumElement elem_ByteOrdering[] = {
+	{ 0	, "Little Endian"},
+	{ 1	, "Big Endian"},
+	{ 0, ""}};
+
+static types_sEnumElement elem_NumberRepresentation[] = {
+	{ 0	, "Integer Unsigned"},
+	{ 1	, "Integer Signed"},
+	{ 2	, "Floating Point IEEE"},
+	{ 3	, "Floating Point VAX"},
+	{ 4	, "Floating Point Intel"},
+	{ 0, ""}};
+
+static types_sEnumElement elem_StallAction[] = {
+	{ 0	, "No action"},
+	{ 1	, "Reset inputs"},
+	{ 2	, "Set emergency break"},
+	{ 0, ""}};
 
 /* Masks */
 
@@ -296,6 +348,14 @@ static types_sEnum enum_types[] = {
 { pwr_cClass_Co_PI24BO, "NoOfBits",(types_sEnumElement *) &elem_Co_PI24BO_NoOfBits},
 { pwr_cClass_Co_PI24BO, "MulCount",(types_sEnumElement *) &elem_Co_PI24BO_MulCount},
 { pwr_cClass_Co_PI24BO, "DivCount",(types_sEnumElement *) &elem_Co_PI24BO_DivCount},
+{ pwr_cClass_RemnodeTCP, "ConnectionMode",(types_sEnumElement *) &elem_RemnodeTCP_ConnectionMode},
+{ 0, 		"Orientation", (types_sEnumElement *) &elem_Orientation},
+{ 0, 		"ByteOrdering", (types_sEnumElement *) &elem_ByteOrdering},
+{ 0, 		"NumberRepresentation", (types_sEnumElement *) &elem_NumberRepresentation},
+{ 0, 		"StallAction", (types_sEnumElement *) &elem_StallAction},
+{ 0, 		"Parity", (types_sEnumElement *) &elem_Parity},
+{ 0, 		"StopBits", (types_sEnumElement *) &elem_StopBits},
+{ 0, 		"DataBits", (types_sEnumElement *) &elem_DataBits},
 { 0, 		"OperatingSystem", (types_sEnumElement *) &elem_OperatingSystem},
 { 0, 		"EventType",	(types_sEnumElement *) &elem_EventType},
 { 0, 		"EventPriority",(types_sEnumElement *) &elem_EventPrio},
