@@ -261,27 +261,6 @@ pwr_tBoolean pdr_IsPdrNeeded(co_sPlatform *plat1, co_sPlatform *plat2)
 /*
 * PDR Routines
 */
-#if 0
-pwr_tBoolean 
-pdr_qcom_sAid(PDR *pdrs, qcom_sAid *objp)
-{
-
-  PWR_PDR_INT(pdrs, &objp->aix);
-  PWR_PDR_INT(pdrs, &objp->nid);
-
-  return TRUE;
-}
-
-pwr_tBoolean 
-pdr_qcom_sQid(PDR *pdrs, qcom_sQid *objp)
-{
-  PWR_PDR_INT(pdrs, &objp->qix);
-  PWR_PDR_INT(pdrs, &objp->nid);
-
-  return TRUE;
-}
-
-#endif
 
 pwr_tBoolean 
 pdr_co_sPlatform(PDR *pdrs, co_sPlatform *objp)

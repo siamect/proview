@@ -8,7 +8,6 @@
 #include <string.h>
 
 #include "co_xdr.h"
-#include "rt_qcom.h"
 
 #include <rpc/xdr.h>
 
