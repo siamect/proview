@@ -131,12 +131,6 @@ void
 errl_SetFile (
   const char *logFileName)
 {
-  struct timeval time;
-  struct timezone zone;
-  int retval;
-  struct tm *tmv;
-  char actFileName[256];
-
   pwr_tStatus sts = 1;
   int oflags = O_CREAT | O_APPEND | O_WRONLY;
   int mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH;
@@ -147,20 +141,11 @@ errl_SetFile (
     logFile = -1;
   }
 
-  // Add adte & time to logfile name
-
-  retval = gettimeofday(&time, &zone);
-  tmv = localtime(&time.tv_sec);
-
-  sprintf(actFileName, "%s.%02d%02d%02d%02d%02d%02d",
-	logFileName, tmv->tm_year % 100, tmv->tm_mon + 1, 
-	tmv->tm_mday, tmv->tm_hour, tmv->tm_min, tmv->tm_sec);
-
-  if ((logFile = open(actFileName, oflags, mode)) == -1) {
-    errh_Error("Cannot open log file: %s", actFileName);
+  if ((logFile = open(logFileName, oflags, mode)) == -1) {
+    errh_Error("Cannot open log file: %s", logFileName);
     sts = 2;
   } else {
-    errh_Info("Logging to %s", actFileName);
+//    errh_Info("Logging to %s", logFileName);
     newLogFile = 1;
   }
   pthread_mutex_unlock(&fileMutex);
