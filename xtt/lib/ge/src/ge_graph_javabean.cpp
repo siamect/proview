@@ -1614,7 +1614,7 @@ int Graph::export_javaframe( char *filename, char *bean_name, int applet,
         if ( strcmp( background_image, "") != 0) 
 	{
 	  fp <<
-"  GeImage backgroundImage = new GeImage();" << endl <<
+"  GeImage backgroundImage = new GeImage( session);" << endl <<
 "  public LocalPanel() {" << endl <<
 "    backgroundImage.setSession( session);" << endl;
           if ( background_tiled)
@@ -1834,7 +1834,7 @@ int Graph::export_gejava( char *filename, char *bean_name, int applet, int html)
         if ( strcmp( background_image, "") != 0) 
 	{
 	  fp <<
-"  GeImage backgroundImage = new GeImage();" << endl <<
+"  GeImage backgroundImage = new GeImage( session);" << endl <<
 "  public LocalPanel() {" << endl <<
 "    backgroundImage.setSession(session);" << endl;
           if ( background_tiled)
