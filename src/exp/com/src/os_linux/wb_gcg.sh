@@ -147,8 +147,9 @@ CompileRtNode()
 {
 
 #link option file exists and is not empty
-  if [ -s $pwrp_exe/rt_plc_wb.opt ]; then
-    ld_opt_tmp="`cat $pwrp_exe/rt_plc_wb.opt`"
+  if [ -s $pwrp_exe/$FileName.opt ]; then
+
+    ld_opt_tmp="`cat $pwrp_exe/$FileName.opt`"
     ld_opt="`eval echo $ld_opt_tmp`"
   else
     ld_opt="`eval echo $pwr_obj/rt_io_user.o`"
