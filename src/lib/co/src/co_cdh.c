@@ -2441,7 +2441,9 @@ cdh_NoCaseStrcmp (
   while (*s && *t && !(((*s) ^ (*t)) & ~(1<<5)))
     s++, t++; 
 
-  return ((*s) & ~(1<<5)) - ((*t) & ~(1<<5));
+  // return ((*s) & ~(1<<5)) -  ((*t) & ~(1<<5));
+  return (isalpha(*s) ? ((*s) & ~(1<<5)) : *s) -  
+    (isalpha(*t) ? ((*t) & ~(1<<5)) : *t);
 }
 
 //! Compare the n (at most) first charachters of two strings not regarding their casing.
@@ -2471,7 +2473,9 @@ cdh_NoCaseStrncmp (
 
   if ( n == i)
     return 0;
-  return ((*s) & ~(1<<5)) - ((*t) & ~(1<<5));
+  // return ((*s) & ~(1<<5)) - ((*t) & ~(1<<5));
+  return (isalpha(*s) ? ((*s) & ~(1<<5)) : *s) -  
+    (isalpha(*t) ? ((*t) & ~(1<<5)) : *t);
 }
 
 //! Convert operating system to string
