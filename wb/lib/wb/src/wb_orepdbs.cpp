@@ -121,6 +121,19 @@ char * const wb_orepdbs::name()
     return m_o->name;
 }
 
+wb_name wb_orepdbs::longName()
+{
+  char str[200];
+
+  m_vrep->objectName(this, str);
+  return wb_name(str);
+}
+
+pwr_tTime wb_orepdbs::ohTime() const
+{
+    return m_o->time;
+}
+
 bool wb_orepdbs::isOffspringOf(const wb_orep *o) const
 {
     return false;
@@ -135,6 +148,11 @@ wb_orep *wb_orepdbs::after(pwr_tStatus *sts) const
 wb_orep *wb_orepdbs::before(pwr_tStatus *sts) const
 {
     return m_vrep->before(sts, (wb_orep*)this);
+}
+
+wb_orep *wb_orepdbs::ancestor(pwr_tStatus *sts) const
+{
+    return m_vrep->ancestor(sts, (wb_orep*)this);
 }
 
 wb_orep *wb_orepdbs::parent(pwr_tStatus *sts) const
