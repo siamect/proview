@@ -504,7 +504,7 @@ graph_text << "'," << resize << "," << width+20 << "," << height+20
 "  <head>" << endl <<
 "    <title>" << title << "</title>" << endl <<
 "  </head>" << endl <<
-"  <frameset cols=\"20%,80%\">" << endl <<
+"  <frameset cols=\"242,*\">" << endl <<
 "    <frame name=\"left\" src=\""  << name << "_opwin_menu.html\">" << endl <<
 "    <frame name=\"right\" src=\"xtt_help_index.html\">" << endl <<
 "  </frameset>" << endl <<
