@@ -1960,7 +1960,9 @@ class GeTable : public GeDynElem {
   GeTable( const GeTable& x) : 
     GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)
     { memcpy( attribute, x.attribute,sizeof(attribute)); memcpy( format, x.format, sizeof(format));
-    memcpy( sel_attribute, x.sel_attribute,sizeof(sel_attribute));}
+    memcpy( sel_attribute, x.sel_attribute,sizeof(sel_attribute));
+    memset( is_headerref, 0, sizeof(is_headerref)); memset(headerref_p,0,sizeof(headerref_p));
+    }
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
