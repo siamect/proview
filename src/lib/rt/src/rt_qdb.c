@@ -1313,8 +1313,8 @@ qdb_Platform (
   co_GetOwnPlatform(&platform);
   np->os = platform.os;
   np->hw = platform.hw;
-  np->bo = platform.fm.b.bo;
-  np->ft = platform.fm.b.ft;
+  np->bo = platform.bo;
+  np->ft = platform.ft;
 }
 
 

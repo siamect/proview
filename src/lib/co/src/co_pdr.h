@@ -94,10 +94,6 @@ pwr_tBoolean pdr_float(PDR *pdrs, float *fp);
 pwr_tBoolean pdr_vector(PDR *pdrs, char *arrp, u_int size, u_int elsize, pdrproc_t elproc);
 
 
-pwr_tBoolean pdr_IsPdrNeeded(co_sPlatform *plat1, co_sPlatform *plat2);
-
-
-
 #define pdr_pwr_tChar    pdr_char
 #define pdr_pwr_tFloat32 pdr_float
 
@@ -116,9 +112,6 @@ pdr_cdh_sObjName(PDR *pdrs, cdh_sObjName *objp);
 
 pwr_tBoolean
 pdr_co_mFormat(PDR *pdrs, co_mFormat *objp);
-
-pwr_tBoolean 
-pdr_co_sPlatform(PDR *pdrs, co_sPlatform *objp);
 
 #define pdr_pwr_eType(pdrs, objp) pdr_enum(pdrs, (pdr_tEnum *)objp)
 

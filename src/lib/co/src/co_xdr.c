@@ -69,7 +69,7 @@
 */
 pwr_tBoolean co_IsXdrNeeded(co_sPlatform *plat1, co_sPlatform *plat2)
 {
-  if (plat1->fm.m == plat2->fm.m)
+  if (plat1->bo == plat2->bo && plat1->ft == plat2->ft)
       return FALSE;
 
   return TRUE;
@@ -85,7 +85,8 @@ xdr_co_sPlatform(XDR *xdrs, co_sPlatform *objp)
 {
   if (!xdr_int(xdrs, (int *)&objp->os)) return FALSE;
   if (!xdr_int(xdrs, (int *)&objp->hw)) return FALSE;
-  if (!xdr_int(xdrs, (int *)&objp->fm.m)) return FALSE;
+  if (!xdr_int(xdrs, (int *)&objp->bo)) return FALSE;
+  if (!xdr_int(xdrs, (int *)&objp->ft)) return FALSE;
 
   return TRUE;
 }

@@ -250,33 +250,9 @@ pdr_co_mFormat(PDR *pdrs, co_mFormat *objp)
 
 
 
-
-
-/*
-* pdr_IsPdrNeeded
-*/
-pwr_tBoolean pdr_IsPdrNeeded(co_sPlatform *plat1, co_sPlatform *plat2)
-{
-  if (plat1->fm.m == plat2->fm.m)
-      return FALSE;
-  else
-      return TRUE;
-}
-
-
 /*
 * PDR Routines
 */
-
-pwr_tBoolean 
-pdr_co_sPlatform(PDR *pdrs, co_sPlatform *objp)
-{
-  PWR_PDR_INT(pdrs, &objp->os);
-  PWR_PDR_INT(pdrs, &objp->hw);
-  PWR_PDR_INT(pdrs, &objp->fm.m);
-
-  return TRUE;
-}
 
 pwr_tBoolean
 pdr_cdh_sObjName(PDR *pdrs, cdh_sObjName *objp)

@@ -193,11 +193,11 @@ typedef union {
 
 
 typedef struct {
-    co_eOS     os;
-    co_eHW     hw;
-    co_mFormat fm;
+  co_eOS os;
+  co_eHW hw;
+  co_eBO bo;
+  co_eFT ft;
 } co_sPlatform;
-
 
 co_mFormat*   co_GetOwnFormat(co_mFormat *format);
 co_sPlatform* co_GetOwnPlatform(co_sPlatform *platform);

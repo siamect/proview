@@ -34,7 +34,8 @@ co_sPlatform* co_GetOwnPlatform(co_sPlatform *platform)
 {
     platform->os = co_dHostOS;
     platform->hw = co_dHostHW;
-    co_GetOwnFormat(&platform->fm);
+    platform->bo = co_dHostByteOrder;
+    platform->ft = co_dHostFloatType;
 
     return platform;    
 }
