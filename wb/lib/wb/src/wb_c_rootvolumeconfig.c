@@ -28,90 +28,26 @@ static pwr_tStatus OpenDb (
   ldh_sMenuCall *ip
 )
 {
-#ifdef OS_VMS
   int size;
-  char *db_id;
   int	sts;
   char volume_name[80];
-  char parent_name[80];
-  static char	cmd[100];
-  $DESCRIPTOR(cmd_desc,cmd);
-  unsigned long cli_flag = CLI$M_NOWAIT;
-  pwr_tObjid parent;
-
-  sts = ldh_ObjidToName ( ip->PointedSession, ip->Pointed.Objid,
-		ldh_eName_Object, volume_name, sizeof(volume_name), &size);
-  if ( EVEN(sts)) return sts;
-
-  sts = ldh_GetParent( ip->PointedSession, ip->Pointed.Objid, &parent);
-  if ( EVEN(sts)) return sts;
-
-  /* ???? Check that this is a DbConfig or DbTrace object... */
-
-  sts = ldh_GetObjectPar( ip->PointedSession,
-			parent, "RtBody",
-			"Id", (char **) &db_id, &size);
-  if (EVEN(sts)) return sts;
-
-  sts = ldh_ObjidToName ( ip->PointedSession, parent,
-		ldh_eName_Object, parent_name, sizeof(parent_name), &size);
-  if ( EVEN(sts)) return sts;
-
-  sprintf( cmd, 
-	"@pwr_exe:wb_open_db \"%s\" \"%s\" \"%s\" \"%s\" \"%s\"",
-	db_id, login_prv.username, login_prv.password, volume_name, parent_name);
-
-  free( db_id);
-
-  sts = lib$spawn (&cmd_desc , 0 , 0 , &cli_flag );
-  if (EVEN(sts)) {
-    printf("-- Error when creating subprocess.\n");
-    return sts;
-  }
-#else
-  int size;
-  char *db_id_p;
-  char db_id[80];
-  int	sts;
-  char volume_name[80];
-  char parent_name[80];
   char filename[80];
   char	cmd[100];
-  pwr_tObjid parent;
 
   sts = ldh_ObjidToName ( ip->PointedSession, ip->Pointed.Objid,
 		ldh_eName_Object, volume_name, sizeof(volume_name), &size);
-  if ( EVEN(sts)) return sts;
-
-  sts = ldh_GetParent( ip->PointedSession, ip->Pointed.Objid, &parent);
-  if ( EVEN(sts)) return sts;
-
-  /* ???? Check that this is a DbConfig or DbTrace object... */
-
-  sts = ldh_GetObjectPar( ip->PointedSession,
-			parent, "RtBody",
-			"Id", (char **) &db_id_p, &size);
-  if (EVEN(sts)) return sts;
-
-  sts = ldh_ObjidToName ( ip->PointedSession, parent,
-		ldh_eName_Object, parent_name, sizeof(parent_name), &size);
   if ( EVEN(sts)) return sts;
 
   dcli_translate_filename( filename, "$pwr_exe/wb_open_db.sh");
-  cdh_ToLower( db_id, db_id_p);
   sprintf( cmd,
-	"%s \"%s\" \"%s\" \"%s\" \"%s\" \"%s\" &",
-	filename, db_id, login_prv.username, login_prv.password, volume_name, 
-		parent_name);
-
-  free( db_id_p);
+	"%s \"%s\" \"%s\" \"%s\" \"%s\" &",
+	filename, login_prv.username, login_prv.password, volume_name, volume_name);
 
   sts = system( cmd);
   if ( sts == -1 || sts == 127) {
     printf("-- Error when creating process.\n");
     return sts;
   }
-#endif
   return 1;
 }
 
