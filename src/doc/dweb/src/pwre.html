@@ -1,0 +1,199 @@
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="pcss.css">
+    <title>pwre Guide</title>
+  </head>
+  <body>
+    <table border="0" >
+    <tr><td><a href="#list">pwre list</a></td><td> List configured environments.</td></tr>
+    <tr><td><a href="#init">pwre init 'env'</a></td><td> Initialize a pwre environment.</td></tr>
+    <tr><td><a href="#show">pwre show</a></td><td> Show the current environment.</td></tr>
+    <tr><td><a href="#build">pwre build 'branch' 'subbranch' 'phase'</a></td><td> Build a subbranch.</td></tr>
+    <tr><td><a href="#build_all">pwre build_all</a></td><td> Build everything.</td></tr>
+    <tr><td><a href="#add">pwre add 'env'</a></td><td> List configured environments.</td></tr>
+    <tr><td><a href="#delete">pwre delete 'env'</a></td><td> List configured environments.</td></tr>
+    <tr><td><a href="#modify">pwre modify 'env'</a></td><td> Modify an environment.</td></tr>
+    <tr><td><a href="#create">pwre create</a></td><td> Create the build directory tree.</td></tr>
+    </table>
+    
+    <hr>
+    <a name="list"><!-- --></a>
+    <h2 id="mainmenu">pwre list</h2>
+    <xmp>
+    $ pwre list
+    init
+    -- Defined environments:
+       claesx310x86
+       claesx34ax86
+       claesx34bx86
+       claesx35ax86
+       claesx39ax86
+    --
+    </xmp>
+
+    <hr>
+    <a name="init"><!-- --></a>
+    <h2 id="mainmenu">pwre init</h2>
+    <xmp>
+    pwre init claesx310x86
+    </xmp>
+
+    <hr>
+    <a name="show"><!-- --></a>
+    <h2 id="mainmenu">pwre show</h2>
+    <xmp>
+    $ pwre show
+    init
+    --
+    -- Environment    : claesx310x86
+    -- Source root....: /data1/x3-10/pwr/src
+    -- pwr_inc on VMS.:
+    -- Build root.....: /data1/pwr/x3-10/rls_dbg
+    -- Build type.....: dbg
+    -- OS.............: linux
+    -- Hardware.......: x86
+    -- Description....: claes's environment
+    --
+    </xmp>
+
+    <hr>
+    <a name="build"><!-- --></a>
+    <h2 id="mainmenu">pwre build</h2>
+    <xmp>
+    $ pwre build doc dweb all
+    init
+    --
+    -- Build
+    -- Branch..........: doc
+    -- Sub branch......: dweb
+    -- Args............: all
+    --
+
+    /data1/x3-10/pwr/src/doc/dweb/src/os_linux/hw_x86
+    Exporting ../../pwre_h.html
+    Exporting ../../wbloadstyle_h.html
+
+    </xmp>
+
+    <hr>
+    <a name="build_all"><!-- --></a>
+    <h2 id="mainmenu">pwre build_all</h2>
+    <xmp>
+    claes@newton:~$ pwre build_all
+    init
+    --
+    -- Build all
+    --
+    -- Environment    : claesx310x86
+    -- Source root....: /data1/x3-10/pwr/src
+    -- pwr_inc on VMS.:
+    -- Build root.....: /data1/pwr/x3-10/rls_dbg
+    -- Build type.....: dbg
+    -- OS.............: linux
+    -- Hardware.......: x86
+    -- Description....: claes's environment
+    --
+
+    /data1/x3-10/pwr/src/exp/inc/src/os_linux/hw_x86
+    Exporting ../../pwrp_rules.mk
+
+    /data1/x3-10/pwr/src/exp/com/src/os_linux/hw_x86
+    Exporting ../pwrp_env.sh ...
+    Exporting ../wb_rtt_appl.sh ...
+
+    /data1/x3-10/pwr/src/tools/exe/tools_cmsg2c/src/os_linux/hw_x86
+    make: Nothing to be done for `all'.
+
+    /data1/x3-10/pwr/src/tools/exe/tools_javac/src/os_linux/hw_x86
+    make: Nothing to be done for `all'.
+    ...
+
+    </xmp>
+
+    <hr>
+    <a name="add"><!-- --></a>
+    <h2 id="mainmenu">pwre add</h2>
+    <xmp>
+    $ pwre add claesx40ax86
+    init
+     Source root [/view/claes/vobs/pwr_src/src]? /data1/x4-0a/pwr/src
+     pwr_inc on VMS  []?
+     Build root  [/usr/users/claes/claes_dbg]? /data1/pwr/x4-0a/rls_dbg
+     Build type  [dbg]?
+     OS          [linux]?
+     Hardware    [x86]?
+     Description [claes's environment]?
+    </xmp>
+
+    <hr>
+    <a name="delete"><!-- --></a>
+    <h2 id="mainmenu">pwre delete</h2>
+    <xmp>
+    $ pwre delete claesx40ax86
+    init
+    -- Delete environment "claesx40ax86" [n]? y
+    -- Environment "claesx40ax86" has been deleted
+
+    </xmp>
+
+    <hr>
+    <a name="modify"><!-- --></a>
+    <h2 id="mainmenu">pwre modify</h2>
+    <xmp>
+    $ pwre modify claesx40ax86
+    init
+     Source root [/data1/x4-0a/pwr/src]? /data1/x4-0b/pwr/src
+     pwr_inc on VMS  []?
+     Build root  [/data1/pwr/x4-0a/rls_dbg]? /data1/pwr/x4-0b/rls_dbg
+     Build type  [dbg]?
+     OS          [linux]?
+     Hardware    [x86]?
+     Description [claes's environment]?
+    </xmp>
+
+    <hr>
+    <a name="create"><!-- --></a>
+    <h2 id="mainmenu">pwre create</h2>
+    <xmp>
+    $ pwre create
+    init
+    -- mkdir: /data1/pwr/x4-0b/rls_dbg/os_linux
+    -- mkdir: /data1/pwr/x4-0b/rls_dbg/os_linux/hw_x86
+    -- mkdir: /data1/pwr/x4-0b/rls_dbg/os_linux/hw_x86/bld
+    -- mkdir: /data1/pwr/x4-0b/rls_dbg/os_linux/hw_x86/bld/exe
+    -- mkdir: /data1/pwr/x4-0b/rls_dbg/os_linux/hw_x86/bld/lib
+    -- mkdir: /data1/pwr/x4-0b/rls_dbg/os_linux/hw_x86/bld/msg
+    -- mkdir: /data1/pwr/x4-0b/rls_dbg/os_linux/hw_x86/bld/jpwr
+    -- mkdir: /data1/pwr/x4-0b/rls_dbg/os_linux/hw_x86/exp
+    -- mkdir: /data1/pwr/x4-0b/rls_dbg/os_linux/hw_x86/exp/db
+    -- mkdir: /data1/pwr/x4-0b/rls_dbg/os_linux/hw_x86/exp/exe
+    -- mkdir: /data1/pwr/x4-0b/rls_dbg/os_linux/hw_x86/exp/exe/sv_se
+    -- mkdir: /data1/pwr/x4-0b/rls_dbg/os_linux/hw_x86/exp/exe/en_us
+    -- mkdir: /data1/pwr/x4-0b/rls_dbg/os_linux/hw_x86/exp/inc
+    -- mkdir: /data1/pwr/x4-0b/rls_dbg/os_linux/hw_x86/exp/load
+    -- mkdir: /data1/pwr/x4-0b/rls_dbg/os_linux/hw_x86/exp/lib
+    -- mkdir: /data1/pwr/x4-0b/rls_dbg/os_linux/hw_x86/exp/lis
+    -- mkdir: /data1/pwr/x4-0b/rls_dbg/os_linux/hw_x86/exp/obj
+    -- mkdir: /data1/pwr/x4-0b/rls_dbg/os_linux/hw_x86/exp/src
+    -- mkdir: /data1/pwr/x4-0b/rls_dbg/os_linux/hw_x86/exp/cnf
+    -- mkdir: /data1/pwr/x4-0b/rls_dbg/os_linux/hw_x86/exp/doc
+    -- mkdir: /data1/pwr/x4-0b/rls_dbg/os_linux/hw_x86/exp/doc/dox
+    -- mkdir: /data1/pwr/x4-0b/rls_dbg/os_linux/hw_x86/exp/doc/sv_se
+    -- mkdir: /data1/pwr/x4-0b/rls_dbg/os_linux/hw_x86/exp/doc/prm
+    -- mkdir: /data1/pwr/x4-0b/rls_dbg/os_linux/hw_x86/exp/doc/orm
+    -- mkdir: /data1/pwr/x4-0b/rls_dbg/os_linux/hw_x86/tmp
+
+    </xmp>
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

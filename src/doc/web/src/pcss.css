@@ -1,0 +1,185 @@
+
+a:link          {color: #1f7a0d;
+                font-weight: bold;
+                text-decoration: none}
+a:visited       {color: #1f7a0d;
+                font-weight: bold;
+                text-decoration: none}
+a:active        {color: #CC3300;
+                font-weight: bold;
+                text-decoration: none}
+a:hover         {color: #cc3300
+                }
+                
+body            {background-color: #eeeeee;
+                font-family: Arial, Verdana;
+                font-size: 10t;
+                margin-top: 0px;
+                color: #000000;
+                text-align: left;
+                }
+
+table           {font-family: Arial, Verdana;
+                font-size: 10pt;
+                color: #000000;
+                text-align: left;
+                }
+
+p               {font-family: Arial, Verdana;
+                font-size: 10pt;
+                color: #000000;
+                margin-top: 0px;
+                margin-bottom: 5px}
+
+
+h1              {font-family: 'Arial Black', Arial, Verdana;
+                color: #003399;
+                font-size: 20pt;
+                font-weight: bold;
+                margin-top: 16px;
+                margin-bottom: 0px;
+                text-align: center;
+                }
+
+h2              {font-family: Times New Roman, Times, Sabon;
+                font-size: 130%;
+                font-weight: bold;
+                color: #000000;
+                margin-top: 5px;
+                margin-bottom: 0px}
+
+h3              {font-family: Times New Roman, Times, Sabon;
+                font-size: 110%;
+                font-weight: bold;
+                color: #000000;
+                margin-top: 5px;
+                margin-bottom: 0px}
+
+h4              {font-family: Times New Roman, Times, Sabon;
+                font-size: 100%;
+                font-weight: bold;
+                color: #000000;
+                margin-top: 5px;
+                margin-bottom: 0px}
+
+h5              {font-family: Times New Roman, Times, Sabon;
+                font-size: 100%;
+                font-style: italic;
+                font-weight: bold;
+                color: #000000;
+                margin-top: 5px;
+                margin-bottom: 0px}
+
+h6              {font-family: Times New Roman, Times, Sabon;
+                font-size: 100%;
+                font-weight: normal;
+                font-style: italic;
+                color: #000000;
+                margin-top: 5px;
+                margin-bottom: 0px}
+
+
+li              {font-family: Arial, Verdana;
+                font-size: 100%}
+
+address         {font-family: Arial, Verdana;
+                font-size: 8pt;
+                font-style: normal;
+                margin-top: 0px;
+                margin-bottom: 0px}
+body#mainmenu {
+                background-color: #dddddd;
+}
+h2#mainmenu {
+                font-family: 'Arial Black', Arial, Verdana;
+                font-size: 130%;
+                font-weight: bold;
+                color: #1f7a0d;
+                margin-top: 5px;
+                margin-bottom: 0px
+}
+
+table#mainmenu {
+                font-family: Arial, Verdana;
+                font-size: 10pt;
+                color: #000000;
+                text-align: left;
+		border: 1;
+                }
+
+body#mainmenuhead {
+                background-image: url('bc3.gif');
+}
+
+body#maintitle {
+                background: url('bc5.gif');
+                height:128;
+                top:0px;
+                left:-5px;
+}
+body#mainwindow {
+                /* background: url('bc4.gif') fixed; */
+                background-color: #c0bcd6;
+}
+
+body#pagetitle {
+                background-color: black;
+                font-family: 'Arial Black', Arial, Verdana;
+                font-size: 40;
+                font-weight: bold;
+                color: #d3918b;
+}
+
+h1#pagetitle {
+                font-family: 'Arial Black', Arial, Verdana;
+                font-size: 130%;
+                font-weight: bold;
+                color: #d3918b;
+                margin-top: 5px;
+                margin-bottom: 0px
+}
+
+table#pagetitle {
+                font-family: 'Arial Black', Arial, Verdana;
+                font-size: 40;
+                font-weight: bold;
+                color: #d3918b;
+                text-align: left;
+                }
+
+
+body#menupage   {background-color: silver;
+                font-family: Arial, Verdana;
+                font-size: 10t;
+                margin-top: 0px;
+                color: #000000;
+                text-align: left;
+                }
+
+body#news       {background-color: #e3e3e3;
+                font-family: Arial, Verdana;
+                font-size: 10t;
+                margin-top: 0px;
+                color: #000000;
+                text-align: left;
+                }
+
+div#news        {background: #eeeeee;
+		border: 1px solid #cccccc;
+		left: 100px;
+		width: 100%;
+		}
+
+p#news          {font-family: Arial, Verdana;
+                font-size: 10pt;
+                color: #000000;
+                padding-left: 10pt;
+                padding-right: 10pt;
+   		}
+
+
+
+
+
+
+

@@ -1,0 +1,137 @@
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="pcss.css">
+    <title>Doxygen styleguide</title>
+  </head>
+  <body>
+    
+    <h2 id="mainmenu">wb_load example </h2>
+    <xmp>
+
+!/**
+!  @Version 1.0
+!  @Author Homer Simpson
+!  @Code rs_plc_mycode.c
+!  @Group MyGroup
+!  @Summary Brief description of my class
+!  More desciption of my class
+!  ..
+!  @image orm_myclass_fo.gif
+!
+!  @b See also
+!  @classlink MyOtherClass pwrb_myotherclass.html
+!*/
+SObject pwrb:Class
+  Object MyClass $ClassDef 301 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+      Attr PopEditor = 1
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      !/**
+      !  The First Attribute.
+      !*/
+      Object FirstAttribute $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Brief description.
+      !  More description of the second attribute
+      !  ...
+      !*/
+      Object SecondAttribute $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Enum"
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject
+
+    </xmp>
+
+    <hr>
+    <h2 id="mainmenu">Description of the documentation tags </h2>
+      <hr><h3>!/**</h3>
+      Start of documentation block.
+      <hr><h3>!*/</h3>
+      End of documentation block.
+      <hr><h3>@Author</h3>
+      Author. Is optional.
+      <h4>Syntax</h4>
+      @Author 'name of author'
+
+      <hr><h3>@Version</h3>
+      Version. Optional.
+
+      <h4>Syntax</h4>
+      @Version 'version number'
+
+      <hr><h3>@Code</h3>
+      Name of the c-file where the exec function of the class reside. Optional.
+
+      <h4>Syntax</h4>
+
+      @Code 'filename'
+
+      <hr><h3>@Summary</h3>
+      Short description on one line. Optional
+
+      <h4>Syntax</h4>
+
+      @Summary 'text'
+
+      <hr><h3>@Link</h3>
+      Reference to an URL.
+      The Link tag has to be below the description of the class.
+
+      <h4>Syntax</h4>
+
+      @Link 'URL'
+
+      <hr><h3>@Classlink</h3>
+      Reference to another class.
+      The Link tag has to be below the description of the class.
+
+      <h4>Syntax</h4>
+
+      @Classlink 'html-filename'
+
+      <hr><h3>@Image</h3>
+      A gif or jpg image.
+
+      <h4>Syntax</h4>
+
+      @Image 'image-filename'
+
+      <hr><h3>@b</h3>
+      The line is written with bold text. @b has to be positioned at the beginning of the line.
+
+      <h4>Syntax</h4>
+
+      @b this is a bold text
+
+      <hr><h3>@Group</h3>
+      Defines the groups the objects is a member of.
+      The groups are declared in a setup file.
+
+      <h4>Syntax</h4>
+
+      @Group Grp1,Grp2
+
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

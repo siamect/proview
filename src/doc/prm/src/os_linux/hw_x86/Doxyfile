@@ -1,0 +1,34 @@
+PROJECT_NAME 	= Pwr API
+PROJECT_NUMBER  = V3.9a
+QUIET = YES
+HIDE_UNDOC_MEMBERS = YES
+HIDE_UNDOC_CLASSES = YES
+SOURCE_BROWSER  = YES
+INPUT 		= $(pwre_sroot)/doc/prm/src/doxygen.dx \
+		  $(pwre_sroot)/lib/rt/src/rt_gdh.h \
+		  $(pwre_sroot)/lib/rt/src/rt_mh_appl.h \
+		  $(pwre_sroot)/lib/rt/src/rt_qcom.h \
+		  $(pwre_sroot)/lib/rt/src/rt_gdh.c \
+		  $(pwre_sroot)/lib/rt/src/rt_mh_appl.c \
+		  $(pwre_sroot)/lib/rt/src/rt_qcom.c
+FILE_PATTERNS	= *.cpp *.c *.h
+PREDEFINED	= OS_LINUX=1 \
+		  OS=LINUX
+RECURSIVE       = YES
+EXCLUDE_PATTERNS = *_bitmap_*.h
+ALPHABETICAL_INDEX = YES
+COLS_IN_ALPHA_INDEX = 3
+ENABLE_PREPROCESSING = YES
+MACRO_EXPANSION = YES
+INCLUDE_PATH    = $(pwr_inc)
+PERL_PATH	= /usr/bin/perl
+SEARCHENGINE	= YES
+CGI_URL		= http://www.medres.ch/cgi-bin
+GENERATE_HTML	= YES
+GENERATE_LATEX	= NO
+GENERATE_RTF	= NO
+HTML_OUTPUT	= $(pwr_doc)/prm
+
+
+
+

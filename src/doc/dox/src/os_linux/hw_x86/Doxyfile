@@ -1,0 +1,41 @@
+PROJECT_NAME 	= Pwr Source Code
+PROJECT_NUMBER  = V3.9a
+QUIET = YES
+HIDE_UNDOC_MEMBERS = YES
+HIDE_UNDOC_CLASSES = YES
+SOURCE_BROWSER  = YES
+INPUT 		= $(pwre_sroot)/doc/dox/src/doxygen.dx \
+		  $(pwre_sroot)/exp/inc/src \
+		  $(pwre_sroot)/lib/glow/src \
+		  $(pwre_sroot)/lib/ge/src \
+		  $(pwre_sroot)/lib/rt/src
+		  $(pwre_sroot)/lib/flow/src \
+		  $(pwre_sroot)/lib/co/src \
+		  $(pwre_sroot)/lib/wb/src \
+		  $(pwre_sroot)/exe/rt_xtt/src
+FILE_PATTERNS	= *.cpp *.c *.h
+PREDEFINED	= OS_LINUX=1 \
+		  OS=LINUX \
+		  __cplusplus=1 \
+		  __DOXYGEN=1
+RECURSIVE       = YES
+EXTRACT_ALL	= YES
+EXTRACT_STATIC	= YES
+EXTRACT_PRIVATE	= YES
+EXCLUDE_PATTERNS = *_bitmap_*.h
+ALPHABETICAL_INDEX = YES
+COLS_IN_ALPHA_INDEX = 3
+ENABLE_PREPROCESSING = YES
+MACRO_EXPANSION = YES
+INCLUDE_PATH    = $(pwr_inc)
+PERL_PATH	= /usr/bin/perl
+SEARCHENGINE	= YES
+CGI_URL		= http://www.medres.ch/cgi-bin
+GENERATE_HTML	= YES
+GENERATE_LATEX	= NO
+GENERATE_RTF	= NO
+HTML_OUTPUT	= $(pwr_doc)/dox
+
+
+
+

@@ -1,0 +1,116 @@
+<html>
+
+  <head>
+    <link rel="stylesheet" type="text/css" href="pcss.css">
+    <title>News</title>
+  </head>
+
+  <body id="news">
+
+    <div id="news"><p id="news">
+    <b>2003-11-17</font> VTP /CS</b><br>
+    In the Object Referens Manual, the classes in a volume is divided into groups.
+    The groups are declared in cnv_setup.dat in the wbl directory for the volume,
+    and which group a class is a member if is defined with a @Group tag in the
+    wb_load file for the class. <br>
+    New layout for the 
+    <a href="orm_f.html" target="_top">index page</a> of Object Reference Manual.
+    </p></div><br>
+
+    <div id="news"><p id="news">
+    <b>2003-11-14</font> VTP /CS</b><br>
+    New dynamic type in Ge for displaying different texts in a component, AnalogText. <br>
+    32 texts can be defined for a component, and the text that is displayed is determined
+    by the value of an analog signal.
+    </p></div><br>
+
+    <div id="news"><p id="news">
+    <b>2003-11-11</font> VTP /CS</b><br>
+    New components for menubars, menues and optionmenues (comboboxes) in Ge. <br>
+    The new components, MenuBar, PulldownMenu and OptionMenu is found in the "Other" map
+    in the subgraph palette.
+    </p></div><br>
+
+    <div id="news"><p id="news">
+    <b>2003-10-31</font> VTP /CS</b><br>
+    The handling of fast curves is revised and adapted to Xtt/Ge. <br><br>
+    The fast curve server rt_fast is now written in c++, and handles the new 
+    <a href="orm/pwrb_dsfastcurve.html">DsFastCurve</a> objects.<br><br>
+
+    The curves are displayed in
+    <ul>
+    <li>the Xtt curve window. A DsFastCurve is opened with the command "open fast".
+    <li>as a component i a Ge graph. The new FastCurve component can be found in the Analog map in the subgraph palette.
+    </ul>
+    </p></div><br>
+
+    <div id="news"><p id="news">
+    <b>2003-10-17</font> VTV /RK</b><br>
+    Faster cycle-time - 2 ms on LINUX.
+    <ul>
+    <li>It is now possible to run the PLC-threads and the I/O at a cycletime as fast as 2 ms. This is
+    valid for Linux-systems only.
+
+    <li>To be able to make use of this a new kernel must be installed on your system. Systems generated
+    from scratch will have the new kernel.
+    
+    <li>Fast cycle-times must be used with caution. The system-load and possible slip should be
+    monitored thoroughly.
+
+    <li>Be aware of that the filter-time for a DI-card can be 30 ms.
+
+    <li>As a result of the above, function time_Uptime has a new return-code TIME__CLKCHANGE. This will
+    be returned if clock has changed since last call of function. If this code is returned the
+    resolution of the time returned is 10 ms. Normally the resolution is 1 ms.
+
+    </ul>
+    </p></div><br>
+
+    <div id="news"><p id="news">
+    <b>2003-10-15</font> VTP /CS</b><br>
+    Summary of the work so far in V4.0.
+    <ul>
+    <li>Mysql is replaced by BerkeleyDb.
+
+    <li>Ldh is replaced by dussins of c++ classes (wb environment wb_env).
+
+    <li>Load files are extended and contains all bodies in the objects. They can be read by wb_env and 
+    displayed in the configurator.
+
+    <li>wb_load-files can be read by wb_env and displayed in the configurator.
+
+    <li>Class volumes are never loaded into an databases. They are converted by wb_env directly from wb_load-files
+    to loadfiles.
+
+    <li>Loadfiles for pwrs, pwrb, NMps, ssab and TLog class volumes, reside on pwr_load in the base system and
+    not generated and kept by the project.
+
+    <li>Help texts can contain images from GIF or JPEG files.
+    
+    <li>wb_load documentation can also contain images.
+
+    <li>Help texts are displayed in a separate window.
+
+    <li>New window with error messages from  plc compilation, syntax control etc.
+
+    <li>A new website for a proview version is generated on $pwr_doc. The source code is kept in
+    $pwre_sroot/doc/web/src. A swedish version in doc/web/sv_se. Manuals are stored in doc/man/src.
+
+    <li>Generation of doxygen source code documentation from pwre.
+
+    <li>New revision of Ge.
+
+    <li>Runtime version control of classes.
+    </ul>
+    </p></div><br>
+
+    <div id="news"><p id="news">
+    <b>2003-10-14</font> VTP /CS</b><br>
+    New site for Proview developer.
+    </p></div>
+
+  </body>
+</html>
+
+
+

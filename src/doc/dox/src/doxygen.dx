@@ -1,0 +1,158 @@
+/*! \file doxygen.dx
+  \brief Contains group definitions for doxygen. 
+*/
+
+/*! \mainpage Proview project
+
+  \section intro Introduction
+  This is the part of the souce code that is documented with doxygen format. A large portion of the code still
+  needs to be converted to be a part of this documentation.
+*/
+	
+// Group Wb
+/*! \defgroup Wb Wb Development environment
+  Development environment
+*/
+
+// Group Co
+/*! \defgroup Co Co Common functions
+  Common routines for runtime and development.
+*/
+
+// Group Flow
+/*! \defgroup Flow Flow Flowchart editor and tree component
+  Flowchart-editor and tree-component.
+*/
+
+// Group Glow
+/*! \defgroup Glow Glow Graphical editor toolkit
+  This module contains classes to draw graphical objects and components.
+*/
+
+// Group Ge
+/*! \defgroup Ge Ge Graphical editor
+  Graphical editor.
+*/
+
+// Group Xtt
+/*! \defgroup Xtt Xtt Operator interface
+  Operator interface.
+*/
+
+// Group Op
+/*! \defgroup Op Op Operator interface with GMS
+  Operator interface with GMS.
+*/
+
+// Group Rs
+/*! \defgroup Rs Rs Runtime extentions for SSAB
+  Runtime extensions for ssab.
+*/
+
+// Group Rt
+/*! \defgroup Rt Rt Runtime environment
+  Runtime environment.
+*/
+
+////////////////////
+// Subgroups in Rt
+////////////////////
+
+/*! \defgroup GDH Gdh Global Data Handler
+  \ingroup Rt
+  This module contains the access routines to the Global Data
+  Handler. Those routines are callable from application level.   
+*/
+
+/*! \defgroup MSGH MhAppl MessageHandler API
+  \ingroup Rt
+  This module contains routines for the MessageHandler application interface.
+*/
+
+/*! \defgroup QCOM QCOM Queue Communication
+  \ingroup Rt
+  This module contains routines for the Queue Communication.
+*/
+
+/*! \defgroup Mh Mh
+  \ingroup Rt
+  Message handler.
+*/
+
+/*! \defgroup Rtt Rtt
+  \ingroup Rt
+  Runtime terminal tool.
+*/
+
+////////////////////
+// Subgroups in Wb
+////////////////////
+
+/*! \defgroup Env Env
+  \ingroup Wb
+  Development database environment.
+*/
+
+/*! \defgroup Wtt Wtt
+    \ingroup Wb
+  Workbench navigator.
+*/
+
+/*! \defgroup Foe Foe
+  \ingroup Wb
+  Plc editor.
+*/
+
+////////////////////
+// Subgroups in Glow
+////////////////////
+
+/*! \defgroup GrowApi GrowApi
+  \ingroup Glow
+  Grow API.
+*/
+
+/*! \defgroup GlowColPalApi GlowColPalApi
+  \ingroup Glow
+  Color palette API.
+*/
+
+/*! \defgroup GlowStruct structs
+  \ingroup Glow
+  Glow structs.
+*/
+
+/*! \defgroup GlowEnum enums
+  \ingroup Glow
+  Glow enums.
+*/
+
+////////////////////
+// Subgroups in Ge
+////////////////////
+
+/*! \defgroup GeDyn GeDyn
+  \ingroup Ge
+  Ge dynamics.
+*/
+
+////////////////////
+// Subgroups in Rs
+////////////////////
+
+/*! \defgroup NMps NMps
+  \ingroup Rs
+  Tracking.
+*/
+
+/*! \defgroup Remote Remote
+  \ingroup Rs
+  Tracking.
+*/
+
+
+
+
+
+
+

@@ -1,0 +1,74 @@
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="pcss.css">
+    <title>Doxygen styleguide</title>
+  </head>
+  <body>
+    
+    <h2 id="mainmenu">c++ example </h2>
+    <xmp>
+/*! \file glow_growtext.h
+    \brief Contains the GrowText class. */
+/*! \addtogroup Glow */
+/*@{*/
+
+
+//! Class for drawing a text.
+/*! A text object for drawing a text with specified font, size and color.
+  Detection of event when the object is clicked on, moved etc.
+*/
+class GrowText {
+  public:
+    //! Brief description of the function
+    /*! 
+      \param x	x-coordinate
+      \param y	y-coordinate
+      \return	The returned value from the function
+      More information...
+    */
+    int some_function( double x, double y);
+
+
+    //! A function with one argument can be written like this to save space.
+    /*! \param x  x-coordinate */
+    void x_fuction( double x);
+
+
+    int x0;	//!< Description of the variable
+};
+
+/*@}*/
+    </xmp>
+    <hr>
+    <h2 id="mainmenu">struct example </h2>
+    <xmp>
+//! Default data structure for events
+typedef struct {
+  glow_eEvent		event;  	//!< Event
+  glow_eEventType	type;  		//!< Event type
+  int			x_pixel;  	//!< x-coordinate i pixels
+  int			y_pixel;  	//!< y-coordinate i pixels
+  double		x;  		//!< x-coordinate
+  double	       	y;  		//!< y-coordinate
+} glow_sEventAny, *glow_tEventAny;
+
+    </xmp><hr>
+    <h2 id="mainmenu">enum example </h2>
+    <xmp>
+//! Type of line
+typedef enum {
+  glow_eLineType_Solid,  	//!< Solid line
+  glow_eLineType_Dashed1,  	//!< Dashed line, short dashes
+  glow_eLineType_Dashed2,  	//!< Dashed line, medium dashes
+  glow_eLineType_Dashed3,  	//!< Dashed line, long dashes
+  glow_eLineType_Dotted,  	//!< Dotted line
+  glow_eLineType_DotDashed1,  	//!< DotDashed line, short dashes
+  glow_eLineType_DotDashed2  	//!< DotDashed line, long dashes
+} glow_eLineType;
+    </xmp>
+
+  </body>
+</html>
+
+
+

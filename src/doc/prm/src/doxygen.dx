@@ -1,0 +1,36 @@
+/*! \file doxygen.dx
+  \brief Contains group definitions for doxygen. 
+*/
+
+
+/*! \defgroup PRM Programmer's Reference Manual
+  Programmer's Referens Manual.
+*/
+
+////////////////////
+// Subgroups in PRM
+////////////////////
+
+/*! \defgroup GDH Gdh Global Data Handler
+  \ingroup PRM
+  This module contains the access routines to the Global Data
+  Handler. Those routines are callable from application level.   
+*/
+
+/*! \defgroup MSGH MhAppl MessageHandler API
+  \ingroup PRM
+  This module contains routines for the MessageHandler application interface.
+*/
+
+/*! \defgroup QCOM QCOM Queue Communication
+  \ingroup PRM
+  This module contains routines for the Queue Communication.
+*/
+
+
+
+
+
+
+
+
