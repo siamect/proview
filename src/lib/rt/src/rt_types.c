@@ -263,6 +263,21 @@ static types_sEnumElement mask_NMpsTrp_Function[] = {
 	{ 32	, "LevelTrigg"},
 	{ 0, ""}};
 
+static types_sEnumElement mask_Distribute_Components[] = {
+	{ 1	, "UserDatabase"},
+	{ 2	, "LoadFiles"},
+	{ 4	, "ApplFile"},
+	{ 8	, "PwrpAliasFile"},
+	{ 16	, "IncludeFiles"},
+	{ 32	, "GraphFiles"},
+	{ 64	, "XttHelpFile"},
+	{ 128	, "XttResourceFile"},
+	{ 256	, "XttSetupFile"},
+	{ 512	, "FlowFiles"},
+	{ 1024	, "RHostsFile"},
+	{ 2048	, "WebFiles"},
+	{ 0, ""}};
+
 static types_sEnum enum_types[] = {
 { pwr_cClass_Ai, "FilterType",(types_sEnumElement *) &elem_Ai_FilterType},
 { pwr_cClass_Di, "FilterType",(types_sEnumElement *) &elem_Di_FilterType},
@@ -301,6 +316,7 @@ static types_sEnum mask_types[] = {
 { pwr_cClass_NMpsTrp, "Function",(types_sEnumElement *) &mask_NMpsTrp_Function},
 { pwr_cClass_NMpsTrpFF, "Function",(types_sEnumElement *) &mask_NMpsTrp_Function},
 { pwr_cClass_NMpsTrpRR, "Function",(types_sEnumElement *) &mask_NMpsTrp_Function},
+{ pwr_cClass_Distribute, "Components",(types_sEnumElement *) &mask_Distribute_Components},
 { 0, "OperatingSystem", (types_sEnumElement *) &elem_OperatingSystem},
 { 0, "EventFlags", 	(types_sEnumElement *) &mask_EventFlags},
 { 0, "ConvMask", 	(types_sEnumElement *) &mask_CardMask1},
