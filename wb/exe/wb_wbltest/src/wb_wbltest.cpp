@@ -2,15 +2,47 @@
 #include "pwr.h"
 #include "wb_erep.h"
 #include "wb_env.h"
+#include "wb_vrepdbs.h"
+#include "wb_vrep.h"
+#include "wb_dbs.h"
+#include "wb_db.h"
 #include "wb_vrepwbl.h"
+#include "wb_vrepdbs.h"
+#include "wb_orepdbs.h"
 #include "wb_orepwbl.h"
 #include "wb_volume.h"
 #include "wb_session.h"
 #include "wb_error.h"
-extern "C" {
+#include "co_dbs.h"
 #include "co_time.h"
+
+#if 1
+int main( int argc, char *argv[])
+{
+    pwr_tStatus sts;
+    //dbs_sEnv env;
+    //dbs_sEnv *ep;
+    wb_erep *erep = new wb_erep();
+
+  if (argc <= 1) exit(0);
+//  ep = dbs_Map(&sts, &env, argv[1]);
+  wb_vrepdbs *vdbs = new wb_vrepdbs(erep, argv[1]);
+  vdbs->load();
+
+  wb_dbs dbs(vdbs);
+  dbs.setFileName("/home/lw/lasse.dbs");
+  dbs.importVolume(*vdbs);
+  
+  wb_orepdbs *op = (wb_orepdbs *)vdbs->object(&sts);
+
+  wb_db db(vdbs->vid());
+  db.create(vdbs->vid(), vdbs->cid(), vdbs->name(), "/home/lw/lasse.db");
+  db.importVolume(*vdbs);
+  db.close();
+  
 }
 
+#else
 static pwr_tStatus iterFunc( void *udata, 
 			     pwr_tOid oid, pwr_tCid cid, pwr_tOid poid, pwr_tOid fwsoid,
 			     pwr_tOid bswoid, pwr_tOid fchoid, pwr_tOid lchoid, char *name,
@@ -85,7 +117,7 @@ int main( int argc, char *argv[])
     // Print the resulting tree
     // cout << wbl->rootAST[0]->toStringTree() << endl;
 
-    wbl->iterObject( (void *)22, iterFunc);
+    //wbl->iterObject( (void *)22, iterFunc);
 
     erep->removeExtern( &sts, wbl);
     delete ses;
@@ -111,3 +143,4 @@ static pwr_tStatus iterFunc( void *udata,
 
 
 
+#endif
