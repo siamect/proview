@@ -36,7 +36,12 @@ extern "C" {
 //
 static pwr_tStatus OpenObject( xmenu_sMenuCall *ip)
 {
-  ((XNav *)ip->EditorContext)->open_object( &ip->Pointed);
+  pwr_sAttrRef *objar =
+    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    objar = &ip->Pointed : 
+    objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
+
+  ((XNav *)ip->EditorContext)->open_object( objar);
   return 1;
 }
 
@@ -61,7 +66,12 @@ static pwr_tStatus OpenObjectFilter( xmenu_sMenuCall *ip)
 //
 static pwr_tStatus OpenCrossref( xmenu_sMenuCall *ip)
 {
-  ((XNav *)ip->EditorContext)->open_crossref( &ip->Pointed);
+  pwr_sAttrRef *objar =
+    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    objar = &ip->Pointed : 
+    objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
+
+  ((XNav *)ip->EditorContext)->open_crossref( objar);
   return 1;
 }
 
@@ -72,8 +82,12 @@ static pwr_tStatus OpenCrossrefFilter( xmenu_sMenuCall *ip)
 {
   pwr_tClassId classid;
   pwr_tStatus sts;
+  pwr_sAttrRef *objar =
+    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    objar = &ip->Pointed : 
+    objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
-  sts = gdh_GetObjectClass( ip->Pointed.Objid, &classid);
+  sts = gdh_GetObjectClass( objar->Objid, &classid);
   if ( EVEN(sts)) return sts;
 
   if ( classid == pwr_eClass_PlantHier)
@@ -90,8 +104,12 @@ static pwr_tStatus HistEvent( xmenu_sMenuCall *ip)
   char cmd[200];
   char name[120];
   int sts;
+  pwr_sAttrRef *objar =
+    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    objar = &ip->Pointed : 
+    objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
-  sts = gdh_AttrrefToName( &ip->Pointed, name, sizeof(name),
+  sts = gdh_AttrrefToName( objar, name, sizeof(name),
 			   cdh_mName_volumeStrict);
   if ( EVEN(sts)) return sts;
 
@@ -106,7 +124,12 @@ static pwr_tStatus HistEvent( xmenu_sMenuCall *ip)
 //
 static pwr_tStatus HistEventFilter( xmenu_sMenuCall *ip)
 {
-  if ( ip->Pointed.Flags.b.Object)
+  pwr_sAttrRef *objar =
+    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    objar = &ip->Pointed : 
+    objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
+
+  if ( objar->Flags.b.Object)
     return 1;
   return 0;
 }
@@ -125,21 +148,25 @@ static pwr_tStatus OpenTrace( xmenu_sMenuCall *ip)
   bool in_plc = false;
   pwr_tCid classid;
   pwr_sAttrRef plcconnect;
+  pwr_sAttrRef *objar =
+    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    objar = &ip->Pointed : 
+    objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
   // Check if object reside in plc
-  for ( sts = gdh_GetParent( ip->Pointed.Objid, &parent);
+  for ( sts = gdh_GetParent( objar->Objid, &parent);
 	ODD(sts);
 	sts = gdh_GetParent( parent, &parent)) {
     gdh_GetObjectClass( parent, &classid);
     if ( classid == pwr_cClass_plc) {
       in_plc = true;
-      oid = ip->Pointed.Objid;
+      oid = objar->Objid;
       gdh_GetParent( oid, &parent);
       break;
     }
   }
   if ( !in_plc) {
-    sts = gdh_AttrrefToName( &ip->Pointed, name, sizeof(name),
+    sts = gdh_AttrrefToName( objar, name, sizeof(name),
 			   cdh_mName_volumeStrict);
     if ( EVEN(sts)) return sts;
     strcat( name, ".PlcConnect");
@@ -171,12 +198,16 @@ static pwr_tStatus OpenTraceFilter( xmenu_sMenuCall *ip)
   pwr_tClassId classid;
   pwr_sAttrRef plcconnect;
   char name[240];
+  pwr_sAttrRef *objar =
+    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    objar = &ip->Pointed : 
+    objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
   if ( ip->Caller == xmenu_mUtility_Trace ||
        ip->Caller == xmenu_mUtility_Simulate)
     return XNAV__INVISIBLE;
 
-  for ( sts = gdh_GetParent( ip->Pointed.Objid, &parent);
+  for ( sts = gdh_GetParent( objar->Objid, &parent);
 	ODD(sts);
 	sts = gdh_GetParent( parent, &parent)) {
     gdh_GetObjectClass( parent, &classid);
@@ -185,7 +216,7 @@ static pwr_tStatus OpenTraceFilter( xmenu_sMenuCall *ip)
   }
 
   // Try PlcConnect attribute
-  sts = gdh_AttrrefToName( &ip->Pointed, name, sizeof(name),
+  sts = gdh_AttrrefToName( objar, name, sizeof(name),
 			   cdh_mName_volumeStrict);
   if ( EVEN(sts)) return sts;
   strcat( name, ".PlcConnect");
@@ -215,8 +246,12 @@ static pwr_tStatus OpenTrend( xmenu_sMenuCall *ip)
   pwr_tClassId classid;
   int found;
   pwr_sAttrRef deftrend;
+  pwr_sAttrRef *objar =
+    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    objar = &ip->Pointed : 
+    objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
-  sts = gdh_GetAttrRefTid( &ip->Pointed, &classid);
+  sts = gdh_GetAttrRefTid( objar, &classid);
   if ( EVEN(sts)) return sts;
 
   if ( classid == pwr_cClass_DsTrend || classid == pwr_cClass_PlotGroup) {
@@ -231,7 +266,7 @@ static pwr_tStatus OpenTrend( xmenu_sMenuCall *ip)
   }
 
   // Look for attribute DefTrend
-  sts = gdh_AttrrefToName( &ip->Pointed, name, sizeof(name),
+  sts = gdh_AttrrefToName( objar, name, sizeof(name),
 			cdh_mName_volumeStrict);
   if ( EVEN(sts)) return sts;
 
@@ -259,7 +294,7 @@ static pwr_tStatus OpenTrend( xmenu_sMenuCall *ip)
     return 0;
 
   found = 0;
-  sts = gdh_GetChild( ip->Pointed.Objid, &child);
+  sts = gdh_GetChild( objar->Objid, &child);
   while ( ODD(sts)) {
     sts = gdh_GetObjectClass( child, &classid);
     if ( EVEN(sts)) return sts;
@@ -292,8 +327,12 @@ static pwr_tStatus OpenTrendFilter( xmenu_sMenuCall *ip)
   pwr_tClassId classid;
   pwr_sAttrRef deftrend;
   char name[120];
+  pwr_sAttrRef *objar =
+    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    objar = &ip->Pointed : 
+    objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
-  sts = gdh_GetAttrRefTid( &ip->Pointed, &classid);
+  sts = gdh_GetAttrRefTid( objar, &classid);
   if ( EVEN(sts)) return sts;
 
   if ( classid == pwr_cClass_DsTrend || classid == pwr_cClass_PlotGroup) {
@@ -301,7 +340,7 @@ static pwr_tStatus OpenTrendFilter( xmenu_sMenuCall *ip)
   }
 
   // Check if attribute DefTrend exist
-  sts = gdh_AttrrefToName( &ip->Pointed, name, sizeof(name),
+  sts = gdh_AttrrefToName( objar, name, sizeof(name),
 			cdh_mName_volumeStrict);
   if ( EVEN(sts)) return sts;
 
@@ -316,10 +355,10 @@ static pwr_tStatus OpenTrendFilter( xmenu_sMenuCall *ip)
   }
 
   // Check if object has a DsTrend as child
-  if ( !ip->Pointed.Flags.b.Object)
+  if ( !objar->Flags.b.Object)
     return XNAV__INVISIBLE;
 
-  sts = gdh_GetChild( ip->Pointed.Objid, &child);
+  sts = gdh_GetChild( objar->Objid, &child);
   while ( ODD(sts)) {
     sts = gdh_GetObjectClass( child, &classid);
     if ( EVEN(sts)) return sts;
@@ -344,12 +383,16 @@ static pwr_tStatus OpenFast( xmenu_sMenuCall *ip)
   pwr_tClassId classid;
   int found;
   pwr_sAttrRef deffast;
+  pwr_sAttrRef *objar =
+    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    objar = &ip->Pointed : 
+    objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
-  sts = gdh_GetAttrRefTid( &ip->Pointed, &classid);
+  sts = gdh_GetAttrRefTid( objar, &classid);
   if ( EVEN(sts)) return sts;
 
   if ( classid == pwr_cClass_DsFastCurve) {
-    sts = gdh_AttrrefToName( &ip->Pointed, name, sizeof(name),
+    sts = gdh_AttrrefToName( objar, name, sizeof(name),
 			cdh_mName_volumeStrict);
     if ( EVEN(sts)) return sts;
 
@@ -360,7 +403,7 @@ static pwr_tStatus OpenFast( xmenu_sMenuCall *ip)
   }
 
   // Look for attribute DefFast
-  sts = gdh_AttrrefToName( &ip->Pointed, name, sizeof(name),
+  sts = gdh_AttrrefToName( objar, name, sizeof(name),
 			cdh_mName_volumeStrict);
   if ( EVEN(sts)) return sts;
 
@@ -388,7 +431,7 @@ static pwr_tStatus OpenFast( xmenu_sMenuCall *ip)
     return 0;
 
   found = 0;
-  sts = gdh_GetChild( ip->Pointed.Objid, &child);
+  sts = gdh_GetChild( objar->Objid, &child);
   while ( ODD(sts)) {
     sts = gdh_GetObjectClass( child, &classid);
     if ( EVEN(sts)) return sts;
@@ -421,15 +464,19 @@ static pwr_tStatus OpenFastFilter( xmenu_sMenuCall *ip)
   pwr_tClassId classid;
   pwr_sAttrRef deffast;
   char name[120];
+  pwr_sAttrRef *objar =
+    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    objar = &ip->Pointed : 
+    objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
-  sts = gdh_GetAttrRefTid( &ip->Pointed, &classid);
+  sts = gdh_GetAttrRefTid( objar, &classid);
   if ( EVEN(sts)) return sts;
 
   if ( classid == pwr_cClass_DsFastCurve)
     return XNAV__SUCCESS;
 
   // Check if attribute DefFast exist
-  sts = gdh_AttrrefToName( &ip->Pointed, name, sizeof(name),
+  sts = gdh_AttrrefToName( objar, name, sizeof(name),
 			cdh_mName_volumeStrict);
   if ( EVEN(sts)) return sts;
 
@@ -444,10 +491,10 @@ static pwr_tStatus OpenFastFilter( xmenu_sMenuCall *ip)
   }
 
   // Check if object has a DsFastCurve as child
-  if ( !ip->Pointed.Flags.b.Object)
+  if ( !objar->Flags.b.Object)
     return XNAV__INVISIBLE;
 
-  sts = gdh_GetChild( ip->Pointed.Objid, &child);
+  sts = gdh_GetChild( objar->Objid, &child);
   while ( ODD(sts)) {
     sts = gdh_GetObjectClass( child, &classid);
     if ( EVEN(sts)) return sts;
@@ -463,7 +510,12 @@ static pwr_tStatus OpenFastFilter( xmenu_sMenuCall *ip)
 // Open runtime navigator object
 static pwr_tStatus RtNavigator( xmenu_sMenuCall *ip)
 {
-  ((XNav *)ip->EditorContext)->display_object( &ip->Pointed, 0);
+  pwr_sAttrRef *objar =
+    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    objar = &ip->Pointed : 
+    objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
+
+  ((XNav *)ip->EditorContext)->display_object( objar, 0);
   ((XNav *)ip->EditorContext)->pop();
 
   return 1;
@@ -472,7 +524,10 @@ static pwr_tStatus RtNavigator( xmenu_sMenuCall *ip)
 // Open runtime navigator filter
 static pwr_tStatus RtNavigatorFilter( xmenu_sMenuCall *ip)
 {
-  if ( ip->Caller == xmenu_mUtility_XNav)
+
+  if ( ip->Caller == xmenu_mUtility_XNav &&
+       cdh_ObjidIsEqual( ip->Pointed.Objid,
+			 ip->ItemList[ip->ChosenItem].CurrentObject.Objid))
     return XNAV__INVISIBLE;
   return XNAV__SUCCESS;
 }
@@ -484,15 +539,19 @@ static pwr_tStatus OpenClassGraph( xmenu_sMenuCall *ip)
   char		name[120];
   char		cmd[200];
   pwr_sAttrRef  aref;
+  pwr_sAttrRef *objar =
+    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    objar = &ip->Pointed : 
+    objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
-  sts = gdh_AttrrefToName( &ip->Pointed,
+  sts = gdh_AttrrefToName( objar,
 		  name, sizeof(name), cdh_mNName);
   if ( EVEN(sts)) return sts;
 
   // Check if object is mounted with other name
   sts = gdh_NameToAttrref( pwr_cNObjid, name, &aref);
   if ( EVEN(sts)) {
-    sts = gdh_AttrrefToName( &ip->Pointed,
+    sts = gdh_AttrrefToName( objar,
 		  name, sizeof(name), cdh_mName_volumeStrict);
     if ( EVEN(sts)) return sts;
   }
@@ -511,8 +570,12 @@ static pwr_tStatus OpenClassGraphFilter( xmenu_sMenuCall *ip)
   char		classname[80];
   char		fname[120];
   char		found_file[120];
+  pwr_sAttrRef *objar =
+    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    objar = &ip->Pointed : 
+    objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
-  for ( sts = gdh_GetAttrRefTid( &ip->Pointed, &classid);
+  for ( sts = gdh_GetAttrRefTid( objar, &classid);
 	ODD(sts);
 	sts = gdh_GetSuperClass( classid, &classid)) {
 
@@ -548,8 +611,12 @@ static pwr_tStatus OpenGraph( xmenu_sMenuCall *ip)
   pwr_tObjid objid;
   pwr_tClassId classid;
   char cmd[200];
+  pwr_sAttrRef *objar =
+    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    objar = &ip->Pointed : 
+    objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
-  aref = ip->Pointed;
+  aref = *objar;
   sts = XNAV__SUCCESS;
   while( ODD(sts)) {
     sts = gdh_AttrrefToName( &aref, name, sizeof(name),
@@ -574,7 +641,7 @@ static pwr_tStatus OpenGraph( xmenu_sMenuCall *ip)
       }
     }
 
-    if ( !ip->Pointed.Flags.b.Object)
+    if ( !objar->Flags.b.Object)
       break;
 
     sts = gdh_GetParent( aref.Objid, &objid);
@@ -595,8 +662,12 @@ static pwr_tStatus OpenGraphFilter( xmenu_sMenuCall *ip)
   pwr_tClassId classid;
   char action[80];
   char *s;
+  pwr_sAttrRef *objar =
+    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    objar = &ip->Pointed : 
+    objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
-  aref = ip->Pointed;
+  aref = *objar;
   sts = XNAV__SUCCESS;
   while( ODD(sts)) {
     sts = gdh_AttrrefToName( &aref, name, sizeof(name),
@@ -629,7 +700,7 @@ static pwr_tStatus OpenGraphFilter( xmenu_sMenuCall *ip)
         return XNAV__SUCCESS;
       }
     }
-    if ( !ip->Pointed.Flags.b.Object)
+    if ( !objar->Flags.b.Object)
       break;
 
     sts = gdh_GetParent( aref.Objid, &objid);
@@ -643,8 +714,14 @@ static pwr_tStatus OpenGraphFilter( xmenu_sMenuCall *ip)
 static pwr_tStatus Collect( xmenu_sMenuCall *ip)
 {
   int sts;
+  pwr_sAttrRef aref;
+  pwr_sAttrRef *objar =
+    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    objar = &ip->Pointed : 
+    objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
-  sts = ((XNav *)ip->EditorContext)->collect_insert( &ip->Pointed);
+  aref = *objar;
+  sts = ((XNav *)ip->EditorContext)->collect_insert( &aref);
   if ( EVEN(sts)) {
     wow_DisplayError( (Widget) ip->WindowContext, "Collect error", 
 		      XNav::get_message(sts));
@@ -658,10 +735,17 @@ static pwr_tStatus CollectFilter( xmenu_sMenuCall *ip)
 {
   char attr[80];
   int sts;
+  pwr_sAttrRef aref;
+  pwr_sAttrRef *objar =
+    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    objar = &ip->Pointed : 
+    objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
   if ( ip->ItemType == xmenu_eItemType_Object ||
        ip->ItemType == xmenu_eItemType_AttrObject) {
-    sts = xnav_get_trace_attr( &ip->Pointed, attr);
+    aref = *objar;
+    // Note, get_trace_attr replaces the value in aref for channels
+    sts = xnav_get_trace_attr( &aref, attr);
     if ( EVEN(sts))
       return XNAV__INVISIBLE;
   }
@@ -675,8 +759,12 @@ static pwr_tStatus Help( xmenu_sMenuCall *ip)
   char name[140];
   pwr_tString40 helptopic;
   char cmd[200];
+  pwr_sAttrRef *objar =
+    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    objar = &ip->Pointed : 
+    objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
-  sts = gdh_AttrrefToName( &ip->Pointed, name, sizeof(name),
+  sts = gdh_AttrrefToName( objar, name, sizeof(name),
 			   cdh_mName_volumeStrict);
   if ( EVEN(sts)) return sts;
 
@@ -700,8 +788,12 @@ static pwr_tStatus HelpFilter( xmenu_sMenuCall *ip)
   int sts;
   char name[140];
   pwr_tString40 helptopic;
+  pwr_sAttrRef *objar =
+    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    objar = &ip->Pointed : 
+    objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
-  sts = gdh_AttrrefToName( &ip->Pointed, name, sizeof(name),
+  sts = gdh_AttrrefToName( objar, name, sizeof(name),
 			cdh_mName_volumeStrict);
   if ( EVEN(sts)) return sts;
 
@@ -721,8 +813,12 @@ static pwr_tStatus DataSheet( xmenu_sMenuCall *ip)
   int sts;
   char name[140];
   pwr_tURL datasheet;
+  pwr_sAttrRef *objar =
+    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    objar = &ip->Pointed : 
+    objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
-  sts = gdh_AttrrefToName( &ip->Pointed, name, sizeof(name),
+  sts = gdh_AttrrefToName( objar, name, sizeof(name),
 			cdh_mName_volumeStrict);
   if ( EVEN(sts)) return sts;
 
@@ -743,8 +839,12 @@ static pwr_tStatus DataSheetFilter( xmenu_sMenuCall *ip)
   int sts;
   char name[140];
   pwr_tURL datasheet;
+  pwr_sAttrRef *objar =
+    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    objar = &ip->Pointed : 
+    objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
-  sts = gdh_AttrrefToName( &ip->Pointed, name, sizeof(name),
+  sts = gdh_AttrrefToName( objar, name, sizeof(name),
 			cdh_mName_volumeStrict);
   if ( EVEN(sts)) return sts;
 
@@ -764,8 +864,12 @@ static pwr_tStatus Photo( xmenu_sMenuCall *ip)
   int sts;
   char name[140];
   pwr_tURL photo;
+  pwr_sAttrRef *objar =
+    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    objar = &ip->Pointed : 
+    objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
-  sts = gdh_AttrrefToName( &ip->Pointed, name, sizeof(name),
+  sts = gdh_AttrrefToName( objar, name, sizeof(name),
 			cdh_mName_volumeStrict);
   if ( EVEN(sts)) return sts;
 
@@ -793,8 +897,12 @@ static pwr_tStatus PhotoFilter( xmenu_sMenuCall *ip)
   int sts;
   char name[140];
   pwr_tURL photo;
+  pwr_sAttrRef *objar =
+    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    objar = &ip->Pointed : 
+    objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
-  sts = gdh_AttrrefToName( &ip->Pointed, name, sizeof(name),
+  sts = gdh_AttrrefToName( objar, name, sizeof(name),
 			cdh_mName_volumeStrict);
   if ( EVEN(sts)) return sts;
 
@@ -816,8 +924,12 @@ static pwr_tStatus CircuitDiagram( xmenu_sMenuCall *ip)
   char name[140];
   pwr_tObjid objid;
   bool is_parent = false;
+  pwr_sAttrRef *objar =
+    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    objar = &ip->Pointed : 
+    objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
-  objid = ip->Pointed.Objid;
+  objid = objar->Objid;
   sts = XNAV__SUCCESS;
   while( ODD(sts)) {
     sts = gdh_ObjidToName( objid, name, sizeof(name),
@@ -851,8 +963,12 @@ static pwr_tStatus CircuitDiagramFilter( xmenu_sMenuCall *ip)
   char name[140];
   pwr_tObjid objid;
   bool is_parent = false;
+  pwr_sAttrRef *objar =
+    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    objar = &ip->Pointed : 
+    objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
-  objid = ip->Pointed.Objid;
+  objid = objar->Objid;
   sts = XNAV__SUCCESS;
   while( ODD(sts)) {
     sts = gdh_ObjidToName( objid, name, sizeof(name),
@@ -884,8 +1000,12 @@ static pwr_tStatus HelpClass( xmenu_sMenuCall *ip)
   pwr_tClassId classid;
   char classname[80];
   char cmd[200];
+  pwr_sAttrRef *objar =
+    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    objar = &ip->Pointed : 
+    objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
-  sts = gdh_GetAttrRefTid( &ip->Pointed, &classid);
+  sts = gdh_GetAttrRefTid( objar, &classid);
   if ( EVEN(sts)) return sts;
 
   sts = gdh_ObjidToName( cdh_ClassIdToObjid( classid),
@@ -907,9 +1027,13 @@ static pwr_tStatus HelpClassFilter( xmenu_sMenuCall *ip)
 {
   int sts;
   pwr_tClassId classid;
+  pwr_sAttrRef *objar =
+    cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    objar = &ip->Pointed : 
+    objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
 
   if ( ip->Caller == xmenu_mUtility_Ge) {
-    sts = gdh_GetAttrRefTid( &ip->Pointed, &classid);
+    sts = gdh_GetAttrRefTid( objar, &classid);
     if ( EVEN(sts)) return sts;
 
     if ( classid == pwr_eClass_PlantHier)

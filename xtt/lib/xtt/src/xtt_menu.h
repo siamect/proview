@@ -47,6 +47,7 @@ typedef enum {
   xmenu_eMenuItem_Button,
   xmenu_eMenuItem_Cascade,
   xmenu_eMenuItem_Separator,
+  xmenu_eMenuItem_Ref,
   xmenu_eMenuItem_
 } xmenu_eMenuItem;
 
@@ -76,6 +77,7 @@ struct xmenu_s_MenuItem {
   xmenu_eMenuItem	Item;
   xmenu_mMenuFlags	Flags;
   pwr_tString80		Method;
+  pwr_sAttrRef		CurrentObject;
   pwr_tObjid		MenuObject;
   pwr_tString40         MethodArguments[5];
   pwr_tString40         FilterArguments[5];
