@@ -230,6 +230,25 @@ pwrc_prlist_list()
   echo ""
 }
 
+pwrc_prlist_list_project()
+{  
+  let i=0
+  local blank24="                        "
+  local blank14="              "
+  local blank6="      "
+
+  while [ "${name_array[$i]}" != "" ]; do
+    if [ "${base_array[$i]}" != "" ]; then
+      if [ $1 == ${name_array[$i]} ]; then
+        echo -n ${name_array[$i]} "${blank14:${#name_array[$i]}} "
+        echo -n ${base_array[$i]} "${blank6:${#base_array[$i]}} "
+        echo ${desc_array[$i]}
+      fi
+    fi
+    i=$i+1
+  done
+}
+
 pwrc_prlist_get_index()
 {
   let i=0
@@ -517,6 +536,11 @@ pwrc_create_func()
     mkdir $proot/$platform/obj
     mkdir $proot/$platform/lis
 
+    # Create project info file
+    sysinfo="$proot/login/sysinfo.txt"
+    echo "Revision history" >> $sysinfo
+    echo "`date +%F`	$USER	Project created" >> $sysinfo
+
     # Create local setup script
     cat > $proot/login/login.sh << EOF
 #! /bin/bash
@@ -527,17 +551,28 @@ pwrc_create_func()
 #export pwr_foe_gre_print="lpr -P lp1"
 
 # Mysql server node
-#export pwrp_mysql_server="vtplli"
+#node=`uname -n`
+#if [ $node != "newton" ]; then
+#  export pwrp_mysql_server="newton"
+#fi
 
+if [ -e "$pwrp_login/sysinfo.txt" ]; then
+  echo "-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_"
+  echo "Welcome to"
+  echo "\`$pwr_exe/pwrp_env.sh show project\`"
+  echo ""
+  cat \$pwrp_login/sysinfo.txt
+  echo "-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_"
+fi
 EOF
 
     chmod a+x $proot/login/login.sh
 
     # Set ownership to user and group pwrp
     user_pwrp=`eval cat /etc/passwd | grep "\bpwrp:"`
-    if [ ! -z "$user_pwrp" ]; then
-      chown -R pwrp $proot/
-    fi
+    #if [ ! -z "$user_pwrp" ]; then
+    #  chown -R pwrp $proot/
+    #fi
 
     user_pwrp=`eval cat /etc/group | grep "\bpwrp:"`
     if [ ! -z "$user_pwrp" ]; then
@@ -796,6 +831,7 @@ pwrc_set_func()
     export pwrp_load=$pwrp_root/common/load
     export pwrp_db=$pwrp_root/common/db
     export pwrp_inc=$pwrp_root/common/inc
+    export pwrp_cmn=$pwrp_root
     export pwrp_tmp=$pwrp_root/common/tmp
     export pwrp_web=$pwrp_root/common/web
     export pwrp_exe=$pwrp_root/$platform/exe
@@ -881,8 +917,8 @@ pwrc_show_func()
     if [ -z "$pwrp_root" ]; then
       echo "No project is set"
     else
-      echo "Current project: $projectname"
-
+      pwrc_prlist_read
+      pwrc_prlist_list_project $projectname
       if [ ! -e "$pwrp_root" ]; then
         echo "Project doesn't exist"
       fi
