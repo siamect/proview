@@ -25,6 +25,8 @@ SObject pwrb:Class
       EndBody
       !/**
       !  The webbrowser used when opening an URL.
+      !  Use 'rt_mozilla' instead of mozilla to allow all users to
+      !  open mozilla from xtt.
       !*/
       Object WebBrowser $Attribute 1 
         Body SysBody
@@ -42,11 +44,11 @@ SObject pwrb:Class
       !  Example
       !  The symbol common is defined
       !
-      !  URL_Symbols[0]      common  http://newton:8080/pwr
+      !  URL_Symbols[0] project http://newton/data1/pwrp/vwxnu1/common/web
       !
       !  and used in an URL
       !  
-      !  $common/my_datasheet.html
+      !  $project/my_datasheet.html
       !*/
       Object URL_Symbols $Attribute 2
         Body SysBody
@@ -56,6 +58,12 @@ SObject pwrb:Class
         EndBody
       EndObject
     EndObject
+    Object Template WebBrowserConfig
+      Body RtBody
+        Attr WebBrowser = "rt_mozilla"
+      EndBody
+    EndObject
   EndObject
 EndSObject
+
 
