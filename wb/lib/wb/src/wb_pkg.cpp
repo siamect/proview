@@ -318,27 +318,32 @@ void pkg_node::fetchFiles( bool distribute)
   // Put all files in a single list
   for ( int i = 0; i < (int)m_pattern.size(); i++) {
     for ( int j = 0; j < (int)m_pattern[i].m_filelist.size(); j++) {
-      pkg_file f = m_pattern[i].m_filelist[j];
+      try {
+	pkg_file f = m_pattern[i].m_filelist[j];
 
-      dcli_parse_filename( f.m_source, dev, dir, file, type, &version);
-      strcpy( f.m_arname, file);
-      strcat( f.m_arname, type);
+	dcli_parse_filename( f.m_source, dev, dir, file, type, &version);
+	strcpy( f.m_arname, file);
+	strcat( f.m_arname, type);
 
-      // Check that this name is unic
-      for (;;) {
-	bool new_name = false;
-	for ( int k = 0; k < (int)m_filelist.size(); k++) {
-	  if ( strcmp( m_filelist[k].m_arname, f.m_arname) == 0) {
-	    strcat( f.m_arname, "x");
-	    new_name = true;
-	    break;
+	// Check that this name is unic
+	for (;;) {
+	  bool new_name = false;
+	  for ( int k = 0; k < (int)m_filelist.size(); k++) {
+	    if ( strcmp( m_filelist[k].m_arname, f.m_arname) == 0) {
+	      strcat( f.m_arname, "x");
+	      new_name = true;
+	      break;
+	    }
 	  }
+	  if ( !new_name)
+	    break;
 	}
-	if ( !new_name)
-	  break;
-      }
 
-      m_filelist.push_back( f);
+	m_filelist.push_back( f);
+      } catch ( wb_error &e) {
+	MsgWindow::message( 'W', e.what().c_str(), msgw_ePop_No);
+	m_warnings++;
+      }
     }
   }
 
@@ -425,6 +430,16 @@ void pkg_node::fetchFiles( bool distribute)
   ofu <<
     "mv pwr_pkg.dat $pwrp_load" << endl <<
     "rm -r /tmp/pkg_build" << endl;
+  
+  // Change owner to root of plc, to make modification of thread prio possible
+  ofu <<
+    "nname=`eval uname -n`" << endl <<
+    "tst=`eval sudo -l | grep \" ALL\"`" << endl <<
+    "if [ \"$tst\" != \"\" ]; then" << endl <<
+    "  sudo chown root $pwrp_exe/plc_$nname_*" << endl <<
+    "  sudo chmod g+w $pwrp_exe/plc_$nname_*" << endl <<
+    "  sudo chmod u+s $pwrp_exe/plc_$nname_*" << endl <<
+    "fi" << endl;
   
   ofu.close();
 
@@ -546,8 +561,12 @@ void pkg_pattern::fetchFiles()
 	  strcat( file_target, file);
 	  strcat( file_target, type);
 	}
-	pkg_file file( found_file, file_target);
-	m_filelist.push_back( file);
+	try {
+	  pkg_file file( found_file, file_target);
+	  m_filelist.push_back( file);
+	} catch ( wb_error &e) {
+	  MsgWindow::message( 'W', e.what().c_str(), msgw_ePop_Yes);
+	}
 	break;
       }
     }
@@ -572,8 +591,12 @@ void pkg_pattern::fetchFiles()
 	strcat( file_target, file);
 	strcat( file_target, type);
       }
-      pkg_file file( found_file, file_target);
-      m_filelist.push_back( file);
+      try {
+	pkg_file file( found_file, file_target);
+	m_filelist.push_back( file);
+      } catch ( wb_error &e) {
+	MsgWindow::message( 'W', e.what().c_str(), msgw_ePop_Yes);
+      }
       
       sts = dcli_search_file( m_source, found_file, DCLI_DIR_SEARCH_NEXT);
     }
@@ -598,8 +621,11 @@ pkg_file::pkg_file( char *source, char *target)
   struct stat info;
 
   int sts = stat( source, &info);
-  if ( sts == -1)
-    throw wb_error_str("Source file doesn't exist");
+  if ( sts == -1) {
+    char msg[256];
+    sprintf( msg, "Source file doesn't exist: %s", source);
+    throw wb_error_str(msg);
+  }
 
   m_date.tv_sec = info.st_ctime;
   m_date.tv_nsec = 0;  
