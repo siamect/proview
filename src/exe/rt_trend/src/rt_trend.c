@@ -105,7 +105,7 @@ int main (int argc, char **argv)
   /* Fetch ScanTime (seconds) and initate ScanRate (1/10 second ) */
   sts = gdh_GetClassList(pwr_cClass_DsTrendConf, &ObjId);
   if (EVEN(sts)) {
-    Log_Error(sts,"Couldn't get the DsTrendConf object. Used ScanTime = 1 s");
+    errh_Info("Couldn't get the DsTrendConf object. Used ScanTime = 1 s");
     ScanTime = 1;
   } else {
     gdh_ObjidToPointer(ObjId, (pwr_tAddress *)&TConfP);
@@ -126,7 +126,8 @@ int main (int argc, char **argv)
 
     /* This should be removed when we can wait for init messages. */
     errh_SetStatus(0);
-    Log_Error_Exit(sts, "No valid DsTrend objects");
+    errh_Info("No DsTrend objects configured");
+    exit(0);
   }
 
   /* If even sts, just wait for init message */
