@@ -7,7 +7,7 @@
 
 void wb_vrepdbs::unref()
 {
-  printf("wb_vrepdbs::unref\n");
+  // printf("wb_vrepdbs::unref\n");
   
   if (--m_nRef == 0) {
     pwr_tStatus sts;
