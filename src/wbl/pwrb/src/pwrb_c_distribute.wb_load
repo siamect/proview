@@ -44,12 +44,17 @@ SObject pwrb:Class
 !     1. $pwrp_src/'nodename'/xtt_help.dat
 !     2. $pwrp_exe/xtt_help.dat
 ! @b XttResourceFile
-!  The xtt resource file with fuction key definitions is included. The source
+!  The xtt resource file with function key definitions is included. The source
 !  file is fetched from
 !     1. $pwrp_src/'nodename'/Rt_xtt
 !     2. $pwrp_pop/Rt_xtt
+!  and distributed to /home/b55
 ! @b XttSetupFile
-!  Not implemented.
+!  The xtt setup file with menu configuration and symbol definitions is included.
+!  The source is fetched from
+!     1. $pwrp_src/'nodename'/xtt_setup.rtt_com
+!     2. $pwrp_pop/xtt_setup.rtt_com
+!  and distributed to /home/b55
 ! @b FlowFiles
 !  The plc trace files $pwrp_load/*.flw are included.
 ! @b RHostsFile
@@ -90,6 +95,13 @@ SObject pwrb:Class
     EndObject
   EndObject
 EndSObject
+
+
+
+
+
+
+
 
 
 
