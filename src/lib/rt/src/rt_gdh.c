@@ -127,6 +127,9 @@ gdh_AttrrefToName (
   if (arp  == NULL) return GDH__BADARG;
   if (name == NULL) return GDH__BADARG;
 
+  if ( arp->Flags.b.Object)
+    return gdh_ObjidToName( arp->Objid, name, size, nametype);
+
   memset(&Attribute, 0, sizeof(Attribute));
 
   if (nametype == cdh_mNName)
@@ -3337,20 +3340,18 @@ gdh_GetEnumValueDef( pwr_tTid tid, gdh_sValueDef **vd, int *rows)
 
     vcnt = 0;
     valoid = top->g.soid;    
-    vop = vol_OidToObject(&sts, valoid, gdb_mLo_local, vol_mTrans_none, cvol_eHint_none);
-    if (vop == NULL) goto error_sts;
-
     while (1) {
-      valoid.oix = vop->g.sib.blink;
-
-      if ( valoid.oix == top->g.soid.oix)
-	break;
-
       vop = vol_OidToObject(&sts, valoid, gdb_mLo_local, vol_mTrans_none, cvol_eHint_none);
       if (vop == NULL) goto error_sts;
 
       if ( vop->g.cid == pwr_eClass_Value)
 	vcnt++;
+
+      valoid.oix = vop->g.sib.flink;
+
+      if ( valoid.oix == top->g.soid.oix)
+	break;
+
     }
 	
     /* Allocate buffer */
@@ -3359,15 +3360,8 @@ gdh_GetEnumValueDef( pwr_tTid tid, gdh_sValueDef **vd, int *rows)
 
     vcnt = 0;
     valoid = top->g.soid;    
-    vop = vol_OidToObject(&sts, valoid, gdb_mLo_local, vol_mTrans_none, cvol_eHint_none);
-    if (vop == NULL) goto error_sts;
 
     while (1) {
-      valoid.oix = vop->g.sib.blink;
-
-      if ( valoid.oix == top->g.soid.oix)
-	break;
-
       vop = vol_OidToObject(&sts, valoid, gdb_mLo_local, vol_mTrans_none, cvol_eHint_none);
       if (vop == NULL) goto error_sts;
 
@@ -3379,6 +3373,11 @@ gdh_GetEnumValueDef( pwr_tTid tid, gdh_sValueDef **vd, int *rows)
 	(*vd)[vcnt].Value = valp;
 	vcnt++;
       }
+
+      valoid.oix = vop->g.sib.flink;
+
+      if ( valoid.oix == top->g.soid.oix)
+	break;
     }
   error_sts: {
     }
@@ -3409,20 +3408,18 @@ gdh_GetMaskBitDef( pwr_tTid tid, gdh_sBitDef **bd, int *rows)
 
     bcnt = 0;
     boid = top->g.soid;    
-    bop = vol_OidToObject(&sts, boid, gdb_mLo_local, vol_mTrans_none, cvol_eHint_none);
-    if (bop == NULL) goto error_sts;
 
     while (1) {
-      boid.oix = bop->g.sib.blink;
-
-      if ( boid.oix == top->g.soid.oix)
-	break;
-
       bop = vol_OidToObject(&sts, boid, gdb_mLo_local, vol_mTrans_none, cvol_eHint_none);
       if (bop == NULL) goto error_sts;
 
       if ( bop->g.cid == pwr_eClass_Bit)
 	bcnt++;
+
+      boid.oix = bop->g.sib.flink;
+
+      if ( boid.oix == top->g.soid.oix)
+	break;
     }
 	
     /* Allocate buffer */
@@ -3431,15 +3428,7 @@ gdh_GetMaskBitDef( pwr_tTid tid, gdh_sBitDef **bd, int *rows)
 
     bcnt = 0;
     boid = top->g.soid;    
-    bop = vol_OidToObject(&sts, boid, gdb_mLo_local, vol_mTrans_none, cvol_eHint_none);
-    if (bop == NULL) goto error_sts;
-
     while (1) {
-      boid.oix = bop->g.sib.blink;
-
-      if ( boid.oix == top->g.soid.oix)
-	break;
-
       bop = vol_OidToObject(&sts, boid, gdb_mLo_local, vol_mTrans_none, cvol_eHint_none);
       if (bop == NULL) goto error_sts;
 
@@ -3451,6 +3440,11 @@ gdh_GetMaskBitDef( pwr_tTid tid, gdh_sBitDef **bd, int *rows)
 	(*bd)[bcnt].Bit = bp;
 	bcnt++;
       }
+
+      boid.oix = bop->g.sib.flink;
+
+      if ( boid.oix == top->g.soid.oix)
+	break;
     }
   error_sts: {
     }
