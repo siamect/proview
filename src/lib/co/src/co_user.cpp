@@ -45,6 +45,8 @@ int GeUser::load( char *filename)
   if ( !check_file( filename))
     return USER__FILEOPEN;
 
+  strcpy( fname, filename);
+
   fp.open( filename);
 #ifndef OS_VMS
   if ( !fp)
@@ -103,8 +105,14 @@ int GeUser::load_system( ifstream& fp)
 {
   // Insert
   SystemList *system_list = new SystemList("", 0, 0);
-  system_list->next = root;
-  root = system_list;
+  SystemList *sl = root;
+  if ( !sl)
+    root = system_list;
+  else {
+    while( sl->next)
+      sl = sl->next;
+    sl->next = system_list;
+  }
   system_list->load( fp);
   return 1;
 }
@@ -164,10 +172,13 @@ int GeUser::remove_system( char *name)
   }
 
   SystemList *sl = find_system( sn);
-  if ( !sl)
-  {
+  if ( !sl) {
     delete sn;
     return USER__NOSUCHSYSTEM;
+  }
+  if ( sl->childlist || sl->userlist) {
+    delete sn;
+    return USER__SYSTEMNOTEMPTY;
   }
 
   SystemName *parent = sn->parent();
@@ -529,8 +540,14 @@ int SystemList::load_user( ifstream& fp)
 {
   // Insert
   UserList *user_list = new UserList("", "", 0);
-  user_list->next = (UserList *) userlist;
-  userlist = (void *) user_list;
+  UserList *ul = userlist;
+  if ( !ul)
+    userlist = user_list;
+  else {
+    while( ul->next)
+      ul = ul->next;
+    ul->next = user_list;
+  }
   user_list->load( fp);
   return 1;
 }
@@ -539,8 +556,14 @@ int SystemList::load_system( ifstream& fp)
 {
   // Insert
   SystemList *system_list = new SystemList("", 0, 0);
-  system_list->next = childlist;
-  childlist = system_list;
+  SystemList *sl = childlist;
+  if ( !sl)
+    childlist = system_list;
+  else {
+    while ( sl->next)
+      sl = sl->next;
+    sl->next = system_list;
+  }
   system_list->load( fp);
   return 1;
 }
@@ -640,8 +663,14 @@ int SystemList::add_user( char *user, char *password, unsigned int priv)
   if ( ul) return USER__USERALREXIST;
 
   ul = new UserList( user, password, priv);
-  ul->next = (UserList *) userlist;
-  userlist = (void *) ul;
+  UserList *u = userlist;
+  if ( !u)
+    userlist = ul;
+  else {
+    while( u->next)
+      u = u->next;
+    u->next = ul;
+  }
   return USER__SUCCESS;
 }
 
@@ -654,8 +683,14 @@ int SystemList::add_system( SystemName *name, unsigned int attributes)
   if ( sl) return USER__SYSTEMALREXIST;
 
   sl = new SystemList( name->segment(level+1), level + 1, attributes);
-  sl->next = childlist;
-  childlist = sl;
+  SystemList *s = childlist;
+  if ( !s)
+    childlist = sl;
+  else {
+    while( s->next)
+      s = s->next;
+    s->next = sl;
+  }
   return USER__SUCCESS;
 }
 
@@ -917,6 +952,9 @@ char *GeUser::get_status( int sts)
     case USER__SYSTEMALREXIST :
       strcpy( str, "System already exist");
       break;
+    case USER__SYSTEMNOTEMPTY :
+      strcpy( str, "System is not empty");
+      break;
     default :
       strcpy( str, "Undefined message");
   }
@@ -1002,3 +1040,86 @@ void GeUser::dev_priv_to_string( unsigned int priv, char *str, int size)
   strncpy( str, buff, size);
   str[size-1] = 0;
 }
+ 
+SystemList *GeUser::get_system( UserList *user)
+{
+  SystemList *sl = root;
+  while( sl) {
+    UserList *ul = sl->userlist;
+    while ( ul) {
+      if ( ul == user)
+	return sl;
+      ul = ul->next;
+    }
+    SystemList *found_sl = get_system_child( sl, user);
+    if ( found_sl)
+      return found_sl;
+    sl = sl->next;
+  }
+
+  return 0;
+}
+
+SystemList *GeUser::get_system_child( SystemList *system, UserList *user)
+{
+  SystemList *sl = system->childlist;
+  while( sl) {
+    UserList *ul = sl->userlist;
+    while ( ul) {
+      if ( ul == user)
+	return sl;
+      ul = ul->next;
+    }
+    SystemList *found_sl = get_system_child( sl, user);
+    if ( found_sl)
+      return found_sl;
+    sl = sl->next;
+  }
+
+  return 0;
+}
+
+
+
+bool GeUser::get_system_name( SystemList *system, char *name)
+{
+  SystemList *sl = root;
+  while( sl) {
+    if ( sl == system) {
+      strcpy( name, sl->name);
+      return true;
+    }
+    if ( get_system_name_child( sl, system, name)) {
+      char tmp[256];
+      strcpy( tmp, name);
+      strcpy( name, sl->name);
+      strcat( name, ".");
+      strcat( name, tmp);
+      return true;
+    }
+    sl = sl->next;
+  }
+  return false;
+}
+
+bool GeUser::get_system_name_child( SystemList *s, SystemList *system, char *name)
+{
+  SystemList *sl = s->childlist;
+  while( sl) {
+    if ( sl == system) {
+      strcpy( name, sl->name);
+      return true;
+    }
+    if ( get_system_name_child( sl, system, name)) {
+      char tmp[256];
+      strcpy( tmp, name);
+      strcpy( name, sl->name);
+      strcat( name, ".");
+      strcat( name, tmp);
+      return true;
+    }
+    sl = sl->next;
+  }
+  return false;
+}
+

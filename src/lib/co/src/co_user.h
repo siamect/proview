@@ -56,7 +56,14 @@ class SystemName {
 };
 
 
+class UserList;
+class GeUser;
+
 class SystemList {
+
+  friend class GeUser;
+  friend class UserList;
+
   public:
 	SystemList( char *sl_name, int sl_level, 
 		unsigned int sl_attributes) :
@@ -65,13 +72,17 @@ class SystemList {
 	{
           strcpy( name, sl_name);
 	};
+
+
+  private:
 	char			name[40];
 	int			level;
 	unsigned long		attributes;
 	SystemList		*next;
 	SystemList		*childlist;
-	void			*userlist;
+	UserList		*userlist;
 
+  public:
         int 		load( ifstream& fp);
         void		save( ofstream& fp);
         void 		print();
@@ -86,10 +97,19 @@ class SystemList {
 	int		remove_system( SystemList *sys);
         void		modify( unsigned int attributes);
         void		get_data( unsigned int *attributes);
+	SystemList	*first_system() { return childlist;}
+	SystemList	*next_system() { return next;}	
+	UserList	*first_user() { return userlist;}
+	char		*get_name() { return name;}
+	unsigned long	get_attributes() { return attributes;}
 	~SystemList();
 };
 
 class UserList {
+
+  friend class SystemList;
+  friend class GeUser;
+
   public:
 	UserList( char *ul_name, char *ul_password, unsigned int ul_priv) :
 		priv(ul_priv), next(NULL)
@@ -97,34 +117,54 @@ class UserList {
 	  strcpy( name, ul_name);
 	  strcpy( password, ul_password);
 	};
+
+
+  private:
 	char			name[40];
 	char			password[40];
 	unsigned long		priv;
 	UserList		*next;
 
-        int 		load( ifstream& fp);
-        void 		save( ofstream& fp);
-        void 		print();
-        void 		print_all();
 	char		*crypt( char *str);
 	unsigned long	crypt( unsigned long i);
 	char		*decrypt( char *str);
 	unsigned long	decrypt( unsigned long i);
+
+  public:
+        int 		load( ifstream& fp);
+        void 		save( ofstream& fp);
+        void 		print();
+        void 		print_all();
 	void		modify( char *password, unsigned int priv);
 	int		check_password( char *password);
         void	 	get_data( char *password, unsigned int *priv);
+	UserList	*next_user() { return next;}
+	char		*get_name() { return name;}
+	unsigned long	get_priv() { return priv;}		
 };
 
 class GeUser {
+
+    friend class SystemList;
+    friend class UserList;
+
   public:
-    GeUser() : root(NULL) { strcpy( version, ""); };
+    GeUser() : root(NULL) { strcpy( version, ""); strcpy( fname, "");}
     ~GeUser();
 
+  private:
     SystemList		*root;
     SystemList		*last_system;
     char		version[20];
+    char		fname[256];
 
+    bool 		get_system_name_child( SystemList *s, SystemList *system, char *name);
+    SystemList 		*GeUser::get_system_child( SystemList *system, UserList *user);
+    
+
+  public:
     int 		load( char *filename);
+    int 		save() { return save( fname);}
     int 		save( char *filename);
     int 		load_system( ifstream& fp);
     void 		print();
@@ -146,6 +186,9 @@ class GeUser {
     int 		get_user_priv( char *system, char *user,
 				unsigned int *priv);
     char 		*get_status( int sts);
+    SystemList		*root_system() { return root;}
+    SystemList		*get_system( UserList *user);
+    bool		get_system_name( SystemList *system, char *name);
     static void		priv_to_string( unsigned int priv, char *str, int size);
     static void		rt_priv_to_string( unsigned int priv, char *str, int size);
     static void		dev_priv_to_string( unsigned int priv, char *str, int size);
@@ -156,5 +199,11 @@ class GeUser {
 }
 #endif
 #endif
+
+
+
+
+
+
 
 
