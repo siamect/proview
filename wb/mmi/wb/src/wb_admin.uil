@@ -78,6 +78,7 @@ procedure
 	adminuser_create_system_noedit(integer); 
 	adminuser_create_rtread(integer); 
 	adminuser_create_rtwrite(integer); 
+	adminuser_create_rtevents(integer); 
 	adminuser_create_system(integer); 
 	adminuser_create_maintenance(integer); 
 	adminuser_create_process(integer); 
@@ -1095,6 +1096,7 @@ object adminuser_dia : XmFormDialog {
      XmText		systemvalue;
      XmToggleButton	priv_rtread;
      XmToggleButton	priv_rtwrite;
+     XmToggleButton	priv_rtevents;
      XmToggleButton	priv_system;
      XmToggleButton	priv_maintenance;
      XmToggleButton	priv_process;
@@ -1285,10 +1287,22 @@ object priv_rtwrite : XmToggleButton {
    };
 };
 
-object priv_system : XmToggleButton {
+object priv_rtevents : XmToggleButton {
    arguments {
 	XmNx 		= 170;
 	XmNy 		= 160;
+        XmNlabelString	= "RtEvents";
+        XmNfontList	    = menu_font;
+   };
+   callbacks {
+     MrmNcreateCallback 	= procedure adminuser_create_rtevents(admin_ctx);
+   };
+};
+
+object priv_system : XmToggleButton {
+   arguments {
+	XmNx 		= 170;
+	XmNy 		= 180;
         XmNlabelString	= "System";
         XmNfontList	    = menu_font;
    };
@@ -1300,7 +1314,7 @@ object priv_system : XmToggleButton {
 object priv_maintenance : XmToggleButton {
    arguments {
 	XmNx 		= 170;
-	XmNy 		= 180;
+	XmNy 		= 200;
         XmNlabelString	= "Maintenance";
         XmNfontList	    = menu_font;
    };
@@ -1312,7 +1326,7 @@ object priv_maintenance : XmToggleButton {
 object priv_process : XmToggleButton {
    arguments {
 	XmNx 		= 170;
-	XmNy 		= 200;
+	XmNy 		= 220;
         XmNlabelString	= "Process";
         XmNfontList	    = menu_font;
    };
@@ -1324,7 +1338,7 @@ object priv_process : XmToggleButton {
 object priv_instrument : XmToggleButton {
    arguments {
 	XmNx 		= 170;
-	XmNy 		= 220;
+	XmNy 		= 240;
         XmNlabelString	= "Instrument";
         XmNfontList	    = menu_font;
    };
@@ -1336,7 +1350,7 @@ object priv_instrument : XmToggleButton {
 object priv_operator1 : XmToggleButton {
    arguments {
 	XmNx 		= 170;
-	XmNy 		= 240;
+	XmNy 		= 260;
         XmNlabelString	= "Operator1";
         XmNfontList	    = menu_font;
    };
@@ -1348,7 +1362,7 @@ object priv_operator1 : XmToggleButton {
 object priv_operator2 : XmToggleButton {
    arguments {
 	XmNx 		= 170;
-	XmNy 		= 260;
+	XmNy 		= 280;
         XmNlabelString	= "Operator2";
         XmNfontList	    = menu_font;
    };
@@ -1360,7 +1374,7 @@ object priv_operator2 : XmToggleButton {
 object priv_operator3 : XmToggleButton {
    arguments {
 	XmNx 		= 170;
-	XmNy 		= 280;
+	XmNy 		= 300;
         XmNlabelString	= "Operator3";
         XmNfontList	    = menu_font;
    };
@@ -1372,7 +1386,7 @@ object priv_operator3 : XmToggleButton {
 object priv_operator4 : XmToggleButton {
    arguments {
 	XmNx 		= 170;
-	XmNy 		= 300;
+	XmNy 		= 320;
         XmNlabelString	= "Operator4";
         XmNfontList	    = menu_font;
    };
@@ -1384,7 +1398,7 @@ object priv_operator4 : XmToggleButton {
 object priv_operator5 : XmToggleButton {
    arguments {
 	XmNx 		= 170;
-	XmNy 		= 320;
+	XmNy 		= 340;
         XmNlabelString	= "Operator5";
         XmNfontList	    = menu_font;
    };
@@ -1396,7 +1410,7 @@ object priv_operator5 : XmToggleButton {
 object priv_operator6 : XmToggleButton {
    arguments {
 	XmNx 		= 170;
-	XmNy 		= 340;
+	XmNy 		= 360;
         XmNlabelString	= "Operator6";
         XmNfontList	    = menu_font;
    };
@@ -1408,7 +1422,7 @@ object priv_operator6 : XmToggleButton {
 object priv_operator7 : XmToggleButton {
    arguments {
 	XmNx 		= 170;
-	XmNy 		= 360;
+	XmNy 		= 380;
         XmNlabelString	= "Operator7";
         XmNfontList	    = menu_font;
    };
@@ -1420,7 +1434,7 @@ object priv_operator7 : XmToggleButton {
 object priv_operator8 : XmToggleButton {
    arguments {
 	XmNx 		= 170;
-	XmNy 		= 380;
+	XmNy 		= 400;
         XmNlabelString	= "Operator8";
         XmNfontList	    = menu_font;
    };
@@ -1432,7 +1446,7 @@ object priv_operator8 : XmToggleButton {
 object priv_operator9 : XmToggleButton {
    arguments {
 	XmNx 		= 170;
-	XmNy 		= 400;
+	XmNy 		= 420;
         XmNlabelString	= "Operator9";
         XmNfontList	    = menu_font;
    };
@@ -1444,7 +1458,7 @@ object priv_operator9 : XmToggleButton {
 object priv_operator10 : XmToggleButton {
    arguments {
 	XmNx 		= 170;
-	XmNy 		= 420;
+	XmNy 		= 440;
         XmNlabelString	= "Operator10";
         XmNfontList	    = menu_font;
    };
@@ -1456,7 +1470,7 @@ object priv_operator10 : XmToggleButton {
 object priv_devread : XmToggleButton {
    arguments {
 	XmNx 		= 170;
-	XmNy 		= 440;
+	XmNy 		= 460;
         XmNlabelString	= "DevRead";
         XmNfontList	    = menu_font;
    };
@@ -1468,7 +1482,7 @@ object priv_devread : XmToggleButton {
 object priv_devplc : XmToggleButton {
    arguments {
 	XmNx 		= 170;
-	XmNy 		= 460;
+	XmNy 		= 480;
         XmNlabelString	= "DevPlc";
         XmNfontList	    = menu_font;
    };
@@ -1480,7 +1494,7 @@ object priv_devplc : XmToggleButton {
 object priv_devconfig : XmToggleButton {
    arguments {
 	XmNx 		= 170;
-	XmNy 		= 480;
+	XmNy 		= 500;
         XmNlabelString	= "DevConfig";
         XmNfontList	    = menu_font;
    };
@@ -1492,7 +1506,7 @@ object priv_devconfig : XmToggleButton {
 object priv_devclass : XmToggleButton {
    arguments {
 	XmNx 		= 170;
-	XmNy 		= 500;
+	XmNy 		= 520;
         XmNlabelString	= "DevClass";
         XmNfontList	    = menu_font;
    };
