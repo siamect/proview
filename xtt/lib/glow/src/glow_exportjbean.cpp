@@ -932,9 +932,9 @@ void GlowExportJBean::rectrounded( double x0, double y0, double width, double he
 	  if ( !shadow)
 	    fp <<
 "    }" << endl;
-	  fp <<
-"    }" << endl;
 	}
+	fp <<
+"    }" << endl;
       }
       if (border)
       {
