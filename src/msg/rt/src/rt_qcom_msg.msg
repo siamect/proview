@@ -40,5 +40,9 @@ hightmo		<time out time to high>					/error
 notinited	<Qcom not inited for application>			/error
 allrattached	<queue is already attached>				/error
 notattachable	<queue can not be attached>				/error
-
+down		<Link down>						/warning
 .end
+
+
+
+
