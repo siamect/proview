@@ -50,7 +50,20 @@ public class GeDynTable extends GeDynElem {
 
     for ( int i = 0; i < columns; i++) {
       String attrName = dyn.getAttrName( attribute[i]);
+
       if ( attrName.compareTo("") != 0) {
+	if ( attrName.startsWith("$header.")) {
+	  // NYI TODO !!!
+          // Replace $header with the object in the header column
+          String hName = dyn.getAttrName( attribute[0]);
+          CdhrString cstr = dyn.en.gdh.getObjectInfoString( hName);
+          if (cstr.evenSts()) continue;
+
+	  attrName = cstr.str + attrName.substring(7);
+
+	  continue;
+	}
+
 	GdhrRefObjectInfo ret = dyn.en.gdh.refObjectInfo( attrName);
 	if ( ret.evenSts()) {
 	  System.out.println( "Table: " + attrName);
@@ -80,7 +93,9 @@ public class GeDynTable extends GeDynElem {
 	    oldValueI[i] = new int[rows];
           }
           else if ( typeId[i] == Pwr.eType_String || 
-		    typeId[i] == Pwr.eType_Objid) {
+		    typeId[i] == Pwr.eType_Objid ||
+		    typeId[i] == Pwr.eType_Time ||
+		    typeId[i] == Pwr.eType_DeltaTime) {
 	    oldValueS[i] = new String[rows];
 	  }
 	}
@@ -146,7 +161,9 @@ public class GeDynTable extends GeDynElem {
         }
       }
       else if ( typeId[i] == Pwr.eType_String || 
-		typeId[i] == Pwr.eType_Objid) {
+	        typeId[i] == Pwr.eType_Objid ||
+		typeId[i] == Pwr.eType_Time ||
+		typeId[i] == Pwr.eType_DeltaTime) {
 	String[] value0 = dyn.en.gdh.getObjectRefInfoStringArray( p[i], typeId[i], size[i], elements[i]);
 	for ( int j = 0; j < value0.length; j++) {
 	  if (j >= rows)
