@@ -157,6 +157,37 @@ if [ -e /etc/proview.cnf ]; then
   fi
 fi
 
+#
+# Add proview web directories to Apache
+#
+if [ -e /etc/apache/httpd.conf ]; then
+  if ! egrep -q "Alias[ ]+/pwr_doc/" /etc/apache/httpd.conf; then
+    cat >> /etc/apache/httpd.conf <<-EOF
+
+	#
+	# Provew aliases, added by Proview installation
+	#
+	Alias /pwrp_web/ /pwrp/common/web/
+
+	<Directory /pwrp/common/web>
+	    Options Indexes MultiViews
+	    AllowOverride None
+	    Order allow,deny
+	    Allow from all
+	</Directory>
+
+
+	Alias /pwr_doc/ /usr/pwrrt/doc/
+
+	<Directory /usr/pwrrt/doc>
+	    Options Indexes MultiViews
+	    AllowOverride None
+	    Order allow,deny
+	    Allow from all
+	</Directory>
+EOF
+ fi
+fi
 
 changes=0
 if [ $new_user -eq 1 ]; then
