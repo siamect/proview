@@ -91,6 +91,28 @@ int GeDyn::instance_to_number( int instance)
   return inst;
 }
 
+void GeDyn::replace_attribute( char *attribute, int attr_size, char *from, char *to, int *cnt, int strict)
+{
+  char str[200];
+  char tmp[200];
+  char *s;
+  int offs;
+
+  strncpy( str, attribute, sizeof(str));
+  if ( !strict)
+    cdh_ToLower( str, str);
+  s = strstr( str, from);
+  if ( s) {
+    offs = (int)( s - str);
+    strcpy( tmp, s + strlen(from));
+    strncpy( &attribute[offs], to, attr_size - offs);
+    attribute[attr_size-1] = 0;
+    strncat( attribute, tmp, attr_size-strlen(attribute));
+
+    (*cnt)++;
+  }
+}
+
 GeDyn::GeDyn( const GeDyn& x) : 
   elements(0), graph(x.graph), dyn_type(x.dyn_type), total_dyn_type(x.total_dyn_type),
   action_type(x.action_type), total_action_type(x.total_action_type), access(x.access),
@@ -439,6 +461,12 @@ void GeDyn::set_attribute( grow_tObject object, char *attr_name, int second)
   }
   if ( cnt)
     graph->message( 'E', "Nothing to connect for this object");
+}
+
+void GeDyn::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  for ( GeDynElem *elem = elements; elem; elem = elem->next)
+    elem->replace_attribute( from, to, cnt, strict);
 }
 
 void GeDyn::set_color( grow_tObject object, glow_eDrawType color)
@@ -906,7 +934,7 @@ int GeDyn::connect( grow_tObject object, glow_sTraceData *trace_data)
       cycle = glow_eCycle_Slow;
     if ( dyn_type & ge_mDynType_Inherit)
       dyn_type = ge_mDynType( dyn_type & ~ge_mDynType_Inherit);
-    if ( dyn_type & ge_mDynType_Inherit)
+    if ( action_type & ge_mActionType_Inherit)
       action_type = ge_mActionType( action_type & ~ge_mActionType_Inherit);
   }
 
@@ -974,6 +1002,18 @@ int GeDyn::change_value( grow_tObject object, char *text)
 void GeDyn::export_java( grow_tObject object, ofstream& fp, char *var_name)
 {
   int inherit_dyn_type, inherit_action_type;
+
+  if ( grow_GetObjectType( object) == glow_eObjectType_GrowBar || 
+       grow_GetObjectType( object) == glow_eObjectType_GrowTable ||
+       grow_GetObjectType( object) == glow_eObjectType_GrowWindow ||
+       grow_GetObjectType( object) == glow_eObjectType_GrowTrend) {
+    if ( cycle == glow_eCycle_Inherit)
+      cycle = glow_eCycle_Slow;
+    if ( dyn_type & ge_mDynType_Inherit)
+      dyn_type = ge_mDynType( dyn_type & ~ge_mDynType_Inherit);
+    if ( action_type & ge_mActionType_Inherit)
+      action_type = ge_mActionType( action_type & ~ge_mActionType_Inherit);
+  }
 
   if ( dyn_type & ge_mDynType_Inherit) {
     grow_GetObjectClassDynType( object, &inherit_dyn_type, &inherit_action_type);
@@ -1084,6 +1124,11 @@ void GeDigLowColor::set_attribute( grow_tObject object, char *attr_name, int *cn
       sprintf( msg, "DigLowColor.Attribute = %s", attr_name);
     dyn->graph->message( 'I', msg);
   }
+}
+
+void GeDigLowColor::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( attribute, sizeof(attribute), from, to, cnt, strict);
 }
 
 int GeDigLowColor::set_color( grow_tObject object, glow_eDrawType color)
@@ -1326,6 +1371,11 @@ void GeDigColor::set_attribute( grow_tObject object, char *attr_name, int *cnt)
   }
 }
 
+void GeDigColor::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( attribute, sizeof(attribute), from, to, cnt, strict);
+}
+
 int GeDigColor::set_color( grow_tObject object, glow_eDrawType color)
 {
   char msg[200];
@@ -1505,6 +1555,11 @@ void GeDigWarning::set_attribute( grow_tObject object, char *attr_name, int *cnt
   }
 }
 
+void GeDigWarning::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( attribute, sizeof(attribute), from, to, cnt, strict);
+}
+
 void GeDigWarning::save( ofstream& fp)
 {
   fp << int(ge_eSave_DigWarning) << endl;
@@ -1639,6 +1694,11 @@ void GeDigError::set_attribute( grow_tObject object, char *attr_name, int *cnt)
     sprintf( msg, "DigError.Attribute = %s", attr_name);
     dyn->graph->message( 'I', msg);
   }
+}
+
+void GeDigError::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( attribute, sizeof(attribute), from, to, cnt, strict);
 }
 
 void GeDigError::save( ofstream& fp)
@@ -1792,6 +1852,11 @@ void GeDigFlash::set_attribute( grow_tObject object, char *attr_name, int *cnt)
     sprintf( msg, "DigFlash.Attribute = %s", attr_name);
     dyn->graph->message( 'I', msg);
   }
+}
+
+void GeDigFlash::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( attribute, sizeof(attribute), from, to, cnt, strict);
 }
 
 int GeDigFlash::set_color( grow_tObject object, glow_eDrawType color)
@@ -1977,6 +2042,11 @@ void GeInvisible::set_attribute( grow_tObject object, char *attr_name, int *cnt)
   }
 }
 
+void GeInvisible::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( attribute, sizeof(attribute), from, to, cnt, strict);
+}
+
 void GeInvisible::save( ofstream& fp)
 {
   fp << int(ge_eSave_Invisible) << endl;
@@ -2102,6 +2172,11 @@ void GeDigBorder::set_attribute( grow_tObject object, char *attr_name, int *cnt)
     sprintf( msg, "DigBorder.Attribute = %s", attr_name);
     dyn->graph->message( 'I', msg);
   }
+}
+
+void GeDigBorder::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( attribute, sizeof(attribute), from, to, cnt, strict);
 }
 
 void GeDigBorder::save( ofstream& fp)
@@ -2251,6 +2326,11 @@ void GeDigText::set_attribute( grow_tObject object, char *attr_name, int *cnt)
   }
 }
 
+void GeDigText::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( attribute, sizeof(attribute), from, to, cnt, strict);
+}
+
 void GeDigText::save( ofstream& fp)
 {
   fp << int(ge_eSave_DigText) << endl;
@@ -2391,6 +2471,11 @@ void GeValue::set_attribute( grow_tObject object, char *attr_name, int *cnt)
     sprintf( msg, "Value.Attribute = %s", attr_name);
     dyn->graph->message( 'I', msg);
   }
+}
+
+void GeValue::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( attribute, sizeof(attribute), from, to, cnt, strict);
 }
 
 void GeValue::save( ofstream& fp)
@@ -2956,6 +3041,11 @@ void GeAnalogColor::set_attribute( grow_tObject object, char *attr_name, int *cn
   }
 }
 
+void GeAnalogColor::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( attribute, sizeof(attribute), from, to, cnt, strict);
+}
+
 int GeAnalogColor::set_color( grow_tObject object, glow_eDrawType color)
 {
   char msg[200];
@@ -3234,6 +3324,11 @@ void GeRotate::set_attribute( grow_tObject object, char *attr_name, int *cnt)
   }
 }
 
+void GeRotate::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( attribute, sizeof(attribute), from, to, cnt, strict);
+}
+
 void GeRotate::save( ofstream& fp)
 {
   fp << int(ge_eSave_Rotate) << endl;
@@ -3434,6 +3529,14 @@ void GeMove::set_attribute( grow_tObject object, char *attr_name, int *cnt)
     dyn->graph->message( 'I', msg);
     (*cnt)--;
   }
+}
+
+void GeMove::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( move_x_attribute, sizeof(move_x_attribute), from, to, cnt, strict);
+  GeDyn::replace_attribute( move_y_attribute, sizeof(move_y_attribute), from, to, cnt, strict);
+  GeDyn::replace_attribute( scale_x_attribute, sizeof(scale_x_attribute), from, to, cnt, strict);
+  GeDyn::replace_attribute( scale_y_attribute, sizeof(scale_y_attribute), from, to, cnt, strict);
 }
 
 void GeMove::save( ofstream& fp)
@@ -3735,6 +3838,11 @@ void GeAnalogShift::set_attribute( grow_tObject object, char *attr_name, int *cn
   }
 }
 
+void GeAnalogShift::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( attribute, sizeof(attribute), from, to, cnt, strict);
+}
+
 void GeAnalogShift::save( ofstream& fp)
 {
   fp << int(ge_eSave_AnalogShift) << endl;
@@ -3869,6 +3977,11 @@ void GeDigShift::set_attribute( grow_tObject object, char *attr_name, int *cnt)
   }
 }
 
+void GeDigShift::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( attribute, sizeof(attribute), from, to, cnt, strict);
+}
+
 void GeDigShift::save( ofstream& fp)
 {
   fp << int(ge_eSave_DigShift) << endl;
@@ -3999,6 +4112,11 @@ void GeAnimation::set_attribute( grow_tObject object, char *attr_name, int *cnt)
     sprintf( msg, "Animation.Attribute = %s", attr_name);
     dyn->graph->message( 'I', msg);
   }
+}
+
+void GeAnimation::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( attribute, sizeof(attribute), from, to, cnt, strict);
 }
 
 void GeAnimation::open( ifstream& fp)
@@ -4272,6 +4390,11 @@ void GeBar::set_attribute( grow_tObject object, char *attr_name, int *cnt)
   }
 }
 
+void GeBar::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( attribute, sizeof(attribute), from, to, cnt, strict);
+}
+
 void GeBar::save( ofstream& fp)
 {
   fp << int(ge_eSave_Bar) << endl;
@@ -4414,6 +4537,12 @@ void GeTrend::set_attribute( grow_tObject object, char *attr_name, int *cnt)
     dyn->graph->message( 'I', msg);
     (*cnt)--;
   }
+}
+
+void GeTrend::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( attribute1, sizeof(attribute1), from, to, cnt, strict);
+  GeDyn::replace_attribute( attribute2, sizeof(attribute2), from, to, cnt, strict);
 }
 
 void GeTrend::save( ofstream& fp)
@@ -4776,6 +4905,12 @@ void GeTable::set_attribute( grow_tObject object, char *attr_name, int *cnt)
     sprintf( msg, "Column1.Attribute = %s", attr_name);
     dyn->graph->message( 'I', msg);
   }
+}
+
+void GeTable::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  for ( int i = 0; i < TABLE_MAX_COL; i++)
+    GeDyn::replace_attribute( attribute[i], sizeof(attribute[0]), from, to, cnt, strict);
 }
 
 void GeTable::save( ofstream& fp)
@@ -5228,6 +5363,40 @@ int GeTable::action( grow_tObject object, glow_tEvent event)
   return 1;
 }
 
+int GeTable::export_java( grow_tObject object, ofstream& fp, bool first, char *var_name)
+{
+  glow_sTableInfo info;
+
+  grow_GetTableInfo( object, &info);
+  columns = info.columns;
+  rows = info.rows;
+
+  if ( first)
+    fp << "      ";
+  else
+    fp << "      ,";
+  fp << "new GeDynTable(" << var_name << ".dd, new String[] {";
+  for ( int i = 0; i < columns; i++) {
+    if ( i != 0)
+      fp << ",";
+    fp << "\"" << attribute[i] << "\"";
+  }
+  fp << "}, new String[] {";
+  for ( int i = 0; i < columns; i++) {
+    if ( i != 0)
+      fp << ",";
+    fp << "\"" << format[i] << "\"";
+  }
+  fp << "}, new String[] {";
+  for ( int i = 0; i < columns; i++) {
+    if ( i != 0)
+      fp << ",";
+    fp << "\"" << sel_attribute[i] << "\"";
+  }
+  fp << "}," << rows << "," << columns << ")" << endl;
+  return 1;
+}
+
 void GeFillLevel::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
@@ -5277,6 +5446,11 @@ void GeFillLevel::set_attribute( grow_tObject object, char *attr_name, int *cnt)
     sprintf( msg, "FillLevel.Attribute = %s", attr_name);
     dyn->graph->message( 'I', msg);
   }
+}
+
+void GeFillLevel::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( attribute, sizeof(attribute), from, to, cnt, strict);
 }
 
 void GeFillLevel::save( ofstream& fp)
@@ -5470,6 +5644,11 @@ void GePopupMenu::set_attribute( grow_tObject object, char *attr_name, int *cnt)
     sprintf( msg, "PopupMenu.ReferenceObject = %s", ref_object);
     dyn->graph->message( 'I', msg);
   }
+}
+
+void GePopupMenu::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( ref_object, sizeof(ref_object), from, to, cnt, strict);
 }
 
 void GePopupMenu::save( ofstream& fp)
@@ -5702,6 +5881,11 @@ void GeSetDig::set_attribute( grow_tObject object, char *attr_name, int *cnt)
   }
 }
 
+void GeSetDig::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( attribute, sizeof(attribute), from, to, cnt, strict);
+}
+
 void GeSetDig::save( ofstream& fp)
 {
   fp << int(ge_eSave_SetDig) << endl;
@@ -5856,6 +6040,11 @@ void GeResetDig::set_attribute( grow_tObject object, char *attr_name, int *cnt)
   }
 }
 
+void GeResetDig::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( attribute, sizeof(attribute), from, to, cnt, strict);
+}
+
 void GeResetDig::save( ofstream& fp)
 {
   fp << int(ge_eSave_ResetDig) << endl;
@@ -5971,6 +6160,11 @@ void GeToggleDig::set_attribute( grow_tObject object, char *attr_name, int *cnt)
     sprintf( msg, "ToggleDig.Attribute = %s", attr_name);
     dyn->graph->message( 'I', msg);
   }
+}
+
+void GeToggleDig::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( attribute, sizeof(attribute), from, to, cnt, strict);
 }
 
 void GeToggleDig::save( ofstream& fp)
@@ -6089,6 +6283,11 @@ void GeStoDig::set_attribute( grow_tObject object, char *attr_name, int *cnt)
     sprintf( msg, "StoDig.Attribute = %s", attr_name);
     dyn->graph->message( 'I', msg);
   }
+}
+
+void GeStoDig::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( attribute, sizeof(attribute), from, to, cnt, strict);
 }
 
 void GeStoDig::save( ofstream& fp)
@@ -6466,6 +6665,11 @@ void GeIncrAnalog::set_attribute( grow_tObject object, char *attr_name, int *cnt
   }
 }
 
+void GeIncrAnalog::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( attribute, sizeof(attribute), from, to, cnt, strict);
+}
+
 void GeIncrAnalog::save( ofstream& fp)
 {
   fp << int(ge_eSave_IncrAnalog) << endl;
@@ -6581,6 +6785,11 @@ void GeRadioButton::set_attribute( grow_tObject object, char *attr_name, int *cn
     sprintf( msg, "RadioButton.Attribute = %s", attr_name);
     dyn->graph->message( 'I', msg);
   }
+}
+
+void GeRadioButton::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( attribute, sizeof(attribute), from, to, cnt, strict);
 }
 
 void GeRadioButton::save( ofstream& fp)
@@ -6964,6 +7173,11 @@ void GeOpenGraph::set_attribute( grow_tObject object, char *attr_name, int *cnt)
     sprintf( msg, "OpenGraph.GraphObject = %s", graph_object);
     dyn->graph->message( 'I', msg);
   }
+}
+
+void GeOpenGraph::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( graph_object, sizeof(graph_object), from, to, cnt, strict);
 }
 
 void GeOpenGraph::save( ofstream& fp)
@@ -7571,6 +7785,11 @@ void GeSlider::set_attribute( grow_tObject object, char *attr_name, int *cnt)
   }
 }
 
+void GeSlider::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( attribute, sizeof(attribute), from, to, cnt, strict);
+}
+
 void GeSlider::save( ofstream& fp)
 {
   fp << int(ge_eSave_Slider) << endl;
@@ -7917,6 +8136,11 @@ void GeFastCurve::set_attribute( grow_tObject object, char *attr_name, int *cnt)
     sprintf( msg, "FastCurve.FastObject = %s", fast_object);
     dyn->graph->message( 'I', msg);
   }
+}
+
+void GeFastCurve::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( fast_object, sizeof(fast_object), from, to, cnt, strict);
 }
 
 void GeFastCurve::save( ofstream& fp)
@@ -9073,6 +9297,11 @@ void GeOptionMenu::set_attribute( grow_tObject object, char *attr_name, int *cnt
   }
 }
 
+void GeOptionMenu::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( attribute, sizeof(attribute), from, to, cnt, strict);
+}
+
 void GeOptionMenu::save( ofstream& fp)
 {
   fp << int(ge_eSave_OptionMenu) << endl;  
@@ -9648,6 +9877,11 @@ void GeAnalogText::set_attribute( grow_tObject object, char *attr_name, int *cnt
     sprintf( msg, "AnalogText.Attribute = %s", attr_name);
     dyn->graph->message( 'I', msg);
   }
+}
+
+void GeAnalogText::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( attribute, sizeof(attribute), from, to, cnt, strict);
 }
 
 void GeAnalogText::save( ofstream& fp)

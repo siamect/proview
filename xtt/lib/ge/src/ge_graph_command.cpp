@@ -41,6 +41,7 @@ extern "C" {
 #include "co_dcli_msg.h"
 #include "ge_msg.h"
 #include "ge.h"
+#include "ge_dyn.h"
 
 extern "C" {
 #include "flow_x.h"
@@ -2307,16 +2308,10 @@ static int	graph_replace_func( void	*client_data,
   {
     grow_tObject 	*sel_list;
     int			sel_count;
-    glow_sTraceData	*trace_data;
-    bool		modified;
-    char 		*s;
-    char		tmp[120];
     char		from_str[120];
     char		to_str[120];
-    int			offs;
     int			replace_cnt = 0;
     int			strict;
-    char		str[120];
 
     if ( EVEN( dcli_get_qualifier( "/FROM", from_str))) {
       graph->message('E', "Syntax error");
@@ -2341,46 +2336,16 @@ static int	graph_replace_func( void	*client_data,
       case glow_eObjectType_GrowNode:
       case glow_eObjectType_GrowSlider:
       case glow_eObjectType_GrowTrend:
-      case glow_eObjectType_GrowBar:
-	grow_GetTraceAttr( sel_list[i], &trace_data);
-	modified = false;
-	for ( int j = 0; 
-	      j < (int)(sizeof( trace_data->data)/sizeof(trace_data->data[0]));
-	      j++) {
-	  strncpy( str, trace_data->data[j], sizeof(str));
-	  if ( !strict)
-	    cdh_ToLower( str, str);
-	  s = strstr( str, from_str);
-	  if ( s) {
-	    offs = (int)( s - str);
-	    strcpy( tmp, s + strlen(from_str));
-	    strncpy( &trace_data->data[j][offs], to_str, 
-		     sizeof(trace_data->data[0]) - offs);
-	    trace_data->data[j][sizeof(trace_data->data[0])-1] = 0;
-	    strncat( trace_data->data[j], tmp, 
-		     sizeof(trace_data->data[0])-strlen(trace_data->data[j]));
-	    modified = true;
-	  }
-	}
-	strncpy( str, trace_data->ref_object, sizeof(str));
-	if ( !strict)
-	  cdh_ToLower( str, str);
-	s = strstr( str, from_str);
-	if ( s) {
-	  offs = (int)( s - str);
-	  strcpy( tmp, s + strlen(from_str));
-	  strncpy( &trace_data->ref_object[offs], to_str, 
-		   sizeof(trace_data->ref_object) - offs);
-	  trace_data->ref_object[sizeof(trace_data->ref_object)-1] = 0;
-	  strncat( trace_data->ref_object, tmp, 
-		   sizeof(trace_data->ref_object)-strlen(trace_data->ref_object));
-	  modified = true;
-	}
-	if ( modified) {
-	  grow_SetTraceAttr( sel_list[i], trace_data);
-	  replace_cnt++;
-	}
+      case glow_eObjectType_GrowTable:
+      case glow_eObjectType_GrowWindow:
+      case glow_eObjectType_GrowFolder:
+      case glow_eObjectType_GrowBar: {
+	GeDyn *dyn;
+
+	grow_GetUserData( sel_list[i], (void **)&dyn);
+	dyn->replace_attribute( from_str, to_str, &replace_cnt, strict);
 	break;
+      }
       default:
 	;
       }
@@ -2408,12 +2373,6 @@ static void graph_group_replace_attr( grow_tObject group, char *from_str, char *
 {
   grow_tObject 	*objectlist;
   int 		object_cnt;
-  glow_sTraceData  *trace_data;
-  bool		modified;
-  char 		*s;
-  char		tmp[120];
-  int		offs;
-  char		str[120];
   
   grow_GetGroupObjectList( group, &objectlist, &object_cnt);
   for ( int i = 0; i < object_cnt; i++) {
@@ -2425,47 +2384,16 @@ static void graph_group_replace_attr( grow_tObject group, char *from_str, char *
     case glow_eObjectType_GrowNode:
     case glow_eObjectType_GrowSlider:
     case glow_eObjectType_GrowTrend:
-    case glow_eObjectType_GrowBar:
-      grow_GetTraceAttr( objectlist[i], &trace_data);
-      modified = false;
-      for ( int j = 0; 
-	    j < (int)(sizeof( trace_data->data)/sizeof(trace_data->data[0]));
-	    j++) {
-	strncpy( str, trace_data->data[j], sizeof(str));
-	if ( strict)
-	  cdh_ToLower( str, str);
-	s = strstr( str, from_str);
-	if ( s) {
-	  offs = (int)( s - str);
-	  strcpy( tmp, s + strlen(from_str));
-	  strncpy( &trace_data->data[j][offs], to_str, 
-		   sizeof(trace_data->data[0]) - offs);
-	  trace_data->data[j][sizeof(trace_data->data[0])-1] = 0;
-	  strncat( trace_data->data[j], tmp, 
-		   sizeof(trace_data->data[0])-strlen(trace_data->data[j]));
-	  modified = true;
-	}
-      }
+    case glow_eObjectType_GrowTable:
+    case glow_eObjectType_GrowWindow:
+    case glow_eObjectType_GrowFolder:
+    case glow_eObjectType_GrowBar: {
+      GeDyn *dyn;
 
-      strncpy( str, trace_data->ref_object, sizeof(str));
-      if ( strict)
-	cdh_ToLower( str, str);
-      s = strstr( str, from_str);
-      if ( s) {
-	offs = (int)( s - str);
-	strcpy( tmp, s + strlen(from_str));
-	strncpy( &trace_data->ref_object[offs], to_str, 
-		 sizeof(trace_data->ref_object) - offs);
-	trace_data->ref_object[sizeof(trace_data->ref_object)-1] = 0;
-	strncat( trace_data->ref_object, tmp, 
-		 sizeof(trace_data->ref_object)-strlen(trace_data->ref_object));
-	modified = true;
-      }
-      if ( modified) {
-	grow_SetTraceAttr( objectlist[i], trace_data);
-	(*replace_cnt)++;
-      }
+      grow_GetUserData( objectlist[i], (void **)&dyn);
+      dyn->replace_attribute( from_str, to_str, replace_cnt, strict);
       break;
+    }
     default:
       ;
     }

@@ -617,9 +617,10 @@ class GeDyn {
   void export_java_object( grow_tObject object, ofstream& fp, char *var_name);
   GeDynElem *create_dyn_element( int mask, int instance);
   GeDynElem *create_action_element( int mask, int instance);
-
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
   static char *cmd_cnv( char *instr);
   static int instance_to_number( int instance);
+  static void replace_attribute( char *attribute, int attr_size, char *from, char *to, int *cnt, int strict);
 };
 
 //! Virtual baseclass for dynamic elements.
@@ -728,6 +729,15 @@ class GeDynElem {
   */
   virtual int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name) { return 0;}
 
+  //! Replace an attribute string
+  /*!
+    \param from		Attribute string to replace.
+    \param to		New attribute string.
+    \param cnt		Counter of replaced attributes.
+    \param strict	If 1 the comparation is case sensitive.
+  */
+  virtual void replace_attribute( char *from, char *to, int *cnt, int strict) {}
+
   //! Destructor
   virtual ~GeDynElem() {};
 };
@@ -761,6 +771,7 @@ class GeDigLowColor : public GeDynElem {
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
   int set_color( grow_tObject object, glow_eDrawType color);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
 };
@@ -794,6 +805,7 @@ class GeDigColor : public GeDynElem {
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
   int set_color( grow_tObject object, glow_eDrawType color);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
 };
@@ -824,6 +836,7 @@ class GeDigWarning : public GeDynElem {
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
 
 };
@@ -854,6 +867,7 @@ class GeDigError : public GeDynElem {
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
 
 };
@@ -887,6 +901,7 @@ class GeDigFlash : public GeDynElem {
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
   int set_color( grow_tObject object, glow_eDrawType color);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
 
@@ -918,6 +933,7 @@ class GeInvisible : public GeDynElem {
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
 
 };
@@ -950,6 +966,7 @@ class GeDigBorder : public GeDynElem {
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
 
 };
@@ -983,6 +1000,7 @@ class GeDigText : public GeDynElem {
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
 
 };
@@ -1017,6 +1035,7 @@ class GeValue : public GeDynElem {
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
 
 };
@@ -1085,6 +1104,7 @@ class GeAnalogColor : public GeDynElem {
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
   int set_color( grow_tObject object, glow_eDrawType color);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
 
@@ -1120,6 +1140,7 @@ class GeRotate : public GeDynElem {
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
 
 };
@@ -1189,6 +1210,7 @@ class GeMove : public GeDynElem {
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
 
 };
@@ -1219,6 +1241,7 @@ class GeAnalogShift : public GeDynElem {
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
 
 };
@@ -1249,6 +1272,7 @@ class GeDigShift : public GeDynElem {
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
 
 };
@@ -1283,6 +1307,7 @@ class GeAnimation : public GeDynElem {
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
 
 };
@@ -1339,6 +1364,7 @@ class GeFillLevel : public GeDynElem {
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
 
 };
@@ -1359,6 +1385,7 @@ class GePopupMenu : public GeDynElem {
   void open( ifstream& fp);
   int action( grow_tObject object, glow_tEvent event);
   void set_attribute( grow_tObject object, char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
 
 };
@@ -1381,6 +1408,7 @@ class GeSetDig : public GeDynElem {
   void open( ifstream& fp);
   int action( grow_tObject object, glow_tEvent event);
   void set_attribute( grow_tObject object, char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
 
 };
@@ -1403,6 +1431,7 @@ class GeResetDig : public GeDynElem {
   void open( ifstream& fp);
   int action( grow_tObject object, glow_tEvent event);
   void set_attribute( grow_tObject object, char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
 
 };
@@ -1424,6 +1453,7 @@ class GeToggleDig : public GeDynElem {
   void open( ifstream& fp);
   int action( grow_tObject object, glow_tEvent event);
   void set_attribute( grow_tObject object, char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
 
 };
@@ -1445,6 +1475,7 @@ class GeStoDig : public GeDynElem {
   void open( ifstream& fp);
   int action( grow_tObject object, glow_tEvent event);
   void set_attribute( grow_tObject object, char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
 
 };
@@ -1529,6 +1560,7 @@ class GeIncrAnalog : public GeDynElem {
   void open( ifstream& fp);
   int action( grow_tObject object, glow_tEvent event);
   void set_attribute( grow_tObject object, char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
 
 };
@@ -1561,6 +1593,7 @@ class GeRadioButton : public GeDynElem {
   int scan( grow_tObject object);
   int action( grow_tObject object, glow_tEvent event);
   void set_attribute( grow_tObject object, char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
 
 };
@@ -1622,6 +1655,7 @@ class GeOpenGraph : public GeDynElem {
   void open( ifstream& fp);
   int action( grow_tObject object, glow_tEvent event);
   void set_attribute( grow_tObject object, char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
 };
 
@@ -1716,6 +1750,7 @@ class GeSlider : public GeDynElem {
   int action( grow_tObject object, glow_tEvent event);
   void update() { first_scan = true;}
   void set_attribute( grow_tObject object, char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
 };
 
@@ -1746,6 +1781,7 @@ class GeBar : public GeDynElem {
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
 
 };
 
@@ -1784,6 +1820,7 @@ class GeTrend : public GeDynElem {
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
 };
 
 //! Dynamics for a trend object.
@@ -1822,6 +1859,7 @@ class GeFastCurve : public GeDynElem {
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
 };
 
 //! Dynamics for a table object.
@@ -1865,6 +1903,8 @@ class GeTable : public GeDynElem {
   int scan( grow_tObject object);
   int action( grow_tObject object, glow_tEvent event);
   void set_attribute( grow_tObject object, char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
+  int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
 };
 
 //! Pulldown menu.
@@ -1950,6 +1990,7 @@ class GeOptionMenu : public GeDynElem {
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
   int get_transtab( char **tt);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
 };
@@ -1969,6 +2010,7 @@ class GeAnalogText : public GeOptionMenu {
   void open( ifstream& fp);
   int action( grow_tObject object, glow_tEvent event) { return 1;}
   void set_attribute( grow_tObject object, char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
 };
 

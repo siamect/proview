@@ -926,6 +926,14 @@ class Graph {
   */
   int export_TrendTraceAttr( ofstream& fp, grow_tObject object, int cnt);
 
+  //! Export java code for dynamics of a table object.
+  /*!
+    \param fp		Output file.
+    \param object	Object.
+    \param cnt		Index for javabean name.
+  */
+  int export_TableTraceAttr( ofstream& fp, grow_tObject object, int cnt);
+
   //! Export java code for dynamics of a slider object.
   /*!
     \param fp		Output file.
