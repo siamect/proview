@@ -267,14 +267,20 @@ void GrowPolyLine::calculate_shadow( glow_sShadowInfo **s, int *num, int ish, in
       m12 = sy1 - sx1 * k12 + pos12 * ish / fabs(cos(atan(k12)));
       if ( fabs( k01 - k12) < DBL_EPSILON) {
 	// Identical lines
-	k12 = -k12;
-	m12 = sy2 - k12 * sx2;
+	if ( fabs( k01) < DBL_EPSILON) {
+	  sp[i].x = int( sx1 + 0.5);
+	  sp[i].y = int( m01 + 0.5);
+	}
+	else {
+	  k12 = -k12;
+	  m12 = sy2 - k12 * sx2;
 
-	x = (m12 - m01)/(k01 - k12);
-	sp[i].x = int( x + 0.5);
-	sp[i].y = int( k12 * x + m12 + 0.5);
-	k12 = k01;
-	m12 = m01;
+	  x = (m12 - m01)/(k01 - k12);
+	  sp[i].x = int( x + 0.5);
+	  sp[i].y = int( k12 * x + m12 + 0.5);
+	  k12 = k01;
+	  m12 = m01;
+	}
       }
       else {
 	x = (m12 - m01)/(k01 - k12);
@@ -1566,7 +1572,10 @@ void GrowPolyLine::export_javabean( GlowTransform *t, void *node,
     int ish = int( shadow_width / 100 * trf_scale *
 	  min((x_right - x_left)*ctx->zoom_factor_x, (y_high - y_low)*ctx->zoom_factor_y) + 0.5);
 
-    calculate_shadow( &sp, &p_num, ish, 0, 0, 1);
+    if ( ish)
+      calculate_shadow( &sp, &p_num, ish, 0, 0, 1);
+    else
+      jshadow = 0;
   }
   int jborder =  border || !(fill || (!disable_shadow && shadow_width != 0));
 
