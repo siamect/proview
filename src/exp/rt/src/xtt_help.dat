@@ -207,7 +207,7 @@ Shortcut to a graph:
 Create items in the xtt menu.
 
 <t>create item/text="Maintenance"/menu/destination="DataBase"/before <LINK> create item
-<t>create item/text="My graph"/command="open graph my_graph"/dest=Maintenance/first
+<t>create item/text="My graph"/command="open graph my_graph"/pixmap=graph/dest=Maintenance/first
 
 Remove items from the xtt standard menu.
 
@@ -415,7 +415,7 @@ Create a menu item in the xtt menu hierarchy.
 The action of the item can be either to execute 
 a command, or to open a menu.
 
-<B>xtt> create item /text= /command= /destination= /after /before /firstchild /lastchild
+<B>xtt> create item /text= /command= /pixmap= /destination= /after /before /firstchild /lastchild
 <B>xtt> create item /text= /menu /destination= /after /before /firstchild /lastchild
 
 /text<t>Item text.
@@ -426,6 +426,7 @@ a command, or to open a menu.
 /before	<t>Positions the item before the destination item.
 /firstchild<t>Positions the item as first child of the destination item.
 /lastchild<t>Positions the item as last child of the destination item.
+/pixmap <t>Pixmap for the item: 'map', 'leaf', 'graph', 'list' or 'script'.
 
 Example
 
