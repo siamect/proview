@@ -41,6 +41,7 @@ public:
   virtual const char * name() const = 0;
   virtual wb_name longName() = 0;
   virtual pwr_tTime ohTime() const = 0;
+  virtual pwr_mClassDef flags() const = 0;
     
   virtual bool isOffspringOf(const wb_orep *o) const = 0;
     

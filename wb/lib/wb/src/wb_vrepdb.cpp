@@ -506,6 +506,12 @@ pwr_tTime wb_vrepdb::ohTime(pwr_tStatus *sts, const wb_orep *orp)
   }
 }
 
+pwr_mClassDef wb_vrepdb::flags(pwr_tStatus *sts, const wb_orep *orp)
+{
+  pwr_mClassDef flags; flags.m = 0; // Fix !!
+  return flags;
+}
+
 pwr_tVid wb_vrepdb::vid(pwr_tStatus *sts, const wb_orep *orp)
 {
   *sts = LDH__SUCCESS;

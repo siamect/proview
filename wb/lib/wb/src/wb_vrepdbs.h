@@ -53,7 +53,7 @@ public:
   virtual wb_name longName(pwr_tStatus *sts, const wb_orep *o) { return wb_name();}
     
   virtual pwr_tTime ohTime(pwr_tStatus *sts, const wb_orep *o) { pwr_tTime t = {0, 0}; return t;}
-    
+  virtual pwr_mClassDef flags(pwr_tStatus *sts, const wb_orep *o) { pwr_mClassDef f; f.m = 0; return f;}    
     
   virtual bool isOffspringOf(pwr_tStatus *sts, const wb_orep *child, const wb_orep *parent) { return false;}
     
@@ -135,14 +135,14 @@ public:
   bool wb_vrepdbs::exportTreeObject(wb_treeimport &i, dbs_sObject *op, bool isRoot);
   virtual bool importTree(bool keepref) { return false;}
   virtual bool importTreeObject(wb_merep *merep, pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
-                          pwr_tOid boid, const char *name,
-                          size_t rbSize, size_t dbSize, void *rbody, void *dbody)
+				pwr_tOid boid, const char *name, pwr_mClassDef flags,
+				size_t rbSize, size_t dbSize, void *rbody, void *dbody)
     { return false;}
   virtual bool importPaste() { return false;}
   virtual bool importPasteObject(pwr_tOid destination, ldh_eDest destcode, 
 				 bool keepoid, pwr_tOid oid, 
 				 pwr_tCid cid, pwr_tOid poid,
-				 pwr_tOid boid, const char *name,
+				 pwr_tOid boid, const char *name, pwr_mClassDef flags,
 				 size_t rbSize, size_t dbSize, void *rbody, void *dbody,
 				 pwr_tOid *roid)
     { return false;}

@@ -259,9 +259,10 @@ int wb_vrepwbl::load( const char *fname)
   //  root_object->info_link( 0);
 
   cout << "\n-- Building volume " << volume_name << endl;
-  if ( root_object)
+  if ( root_object) {
     root_object->build( 1);
-
+    root_object->postBuild();
+  }
   // info();
   if ( error_cnt)
     cout << "** Errors when loading volume: " << error_cnt << " errors found" << endl;

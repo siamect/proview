@@ -14,7 +14,7 @@ public:
     
   virtual bool importHead(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
                           pwr_tOid boid, pwr_tOid aoid, pwr_tOid foid, pwr_tOid loid,
-                          const char *name, const char *normname,
+                          const char *name, const char *normname, pwr_mClassDef flags,
                           pwr_tTime ohTime, pwr_tTime rbTime, pwr_tTime dbTime,
                           size_t rbSize, size_t dbSize) = 0;
 

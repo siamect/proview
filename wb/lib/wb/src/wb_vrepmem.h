@@ -45,7 +45,7 @@ class mem_object
     pwr_tOid fthoid = (fth && !isRoot) ? fth->m_oid : pwr_cNOid;
     pwr_tOid bwsoid = (bws && !isRoot) ? bws->m_oid : pwr_cNOid;
 
-    i.importTreeObject( 0, m_oid, m_cid, fthoid, bwsoid, name(), 
+    i.importTreeObject( 0, m_oid, m_cid, fthoid, bwsoid, name(), m_flags, 
 			rbody_size, dbody_size, rbody, dbody);
   
     if ( fch)
@@ -63,7 +63,7 @@ class mem_object
     pwr_tOid oid;
 
     i.importPasteObject( destination, destcode, keepoid, m_oid, m_cid, fthoid, bwsoid, 
-			 name(), rbody_size, dbody_size, rbody, dbody, &oid);
+			 name(), m_flags, rbody_size, dbody_size, rbody, dbody, &oid);
     if ( rootlist)
       *rootlist++ = oid;
   
@@ -190,7 +190,7 @@ public:
   virtual wb_name longName(pwr_tStatus *sts, const wb_orep *o) { return wb_name();}
     
   virtual pwr_tTime ohTime(pwr_tStatus *sts, const wb_orep *o) { pwr_tTime t = {0, 0}; return t;}
-    
+  virtual pwr_mClassDef flags(pwr_tStatus *sts, const wb_orep *o) { pwr_mClassDef f; f.m = 0; return f;}    
     
   virtual bool isOffspringOf(pwr_tStatus *sts, const wb_orep *child, const wb_orep *parent) { return false;}
     
@@ -260,13 +260,13 @@ public:
   bool exportPaste(wb_treeimport &i, pwr_tOid destination, ldh_eDest destcode, bool keepoid,
 		   pwr_tOid **rootlist);
   virtual bool importTreeObject(wb_merep *merep, pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
-                          pwr_tOid boid, const char *name,
-                          size_t rbSize, size_t dbSize, void *rbody, void *dbody);
+				pwr_tOid boid, const char *name, pwr_mClassDef flags,
+				size_t rbSize, size_t dbSize, void *rbody, void *dbody);
   virtual bool importTree( bool keepref);
   virtual bool importPasteObject(pwr_tOid destination, ldh_eDest destcode,
 				 bool keepoid, pwr_tOid oid, 
 				 pwr_tCid cid, pwr_tOid poid,
-				 pwr_tOid boid, const char *name,
+				 pwr_tOid boid, const char *name, pwr_mClassDef flags,
 				 size_t rbSize, size_t dbSize, void *rbody, void *dbody,
 				 pwr_tOid *roid);
   virtual bool importPaste();

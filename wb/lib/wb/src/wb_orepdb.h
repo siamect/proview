@@ -36,6 +36,7 @@ public:
   virtual const char * name() const;
   virtual wb_name longName();
   virtual pwr_tTime ohTime() const;
+  virtual pwr_mClassDef flags() const;
     
   virtual bool isOffspringOf(const wb_orep *o) const;
     

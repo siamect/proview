@@ -137,6 +137,12 @@ pwr_tTime wb_orepdbs::ohTime() const
   return m_o->time;
 }
 
+pwr_mClassDef wb_orepdbs::flags() const
+{
+  pwr_mClassDef flags; flags.m = 0; // Fix !!!
+  return flags;
+}
+
 bool wb_orepdbs::isOffspringOf(const wb_orep *o) const
 {
   return false;

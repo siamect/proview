@@ -13,13 +13,3 @@ wb_destination::wb_destination(wb_object &o, ldh_eDest code) :
 {    
 }
 
-bool wb_destination::canAdopt( pwr_tCid cid)
-{
-  switch ( cid) {
-  case pwr_cClass_MountObject:
-  case pwr_cClass_CreateVolume:
-    return false;
-  default:
-    return true;
-  }
-}

@@ -67,6 +67,8 @@ public:
   pwr_tTime rbTime();  //< time when run time body of this object was last changed
   pwr_tTime dbTime();  //< time when development body of this object was last changed
 
+  pwr_mClassDef flags();
+
   size_t rbSize();  //< size of run time body
   size_t dbSize();  //< size of development body
     

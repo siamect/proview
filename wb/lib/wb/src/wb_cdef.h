@@ -39,6 +39,7 @@ public:
 
   const char *name() const;
   wb_name longName();
+  pwr_mClassDef flags();
 
   wb_bdef bdef(pwr_eBix bix);
   wb_bdef bdef(const char *bname);

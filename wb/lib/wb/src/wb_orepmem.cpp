@@ -88,6 +88,11 @@ pwr_tTime wb_orepmem::ohTime() const
   return t;
 }
 
+pwr_mClassDef wb_orepmem::flags() const
+{
+  return m_memobject->m_flags;
+}
+
 
 bool wb_orepmem::isOffspringOf(const wb_orep *o) const
 {

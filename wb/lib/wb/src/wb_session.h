@@ -89,6 +89,8 @@ public:
   void editorContext( void *ctx) { m_srep->editorContext( ctx);}
   void sendThisSession( ldh_tSessionCb thisSessionCb) { m_srep->sendThisSession( thisSessionCb);}
   void sendOtherSession( ldh_tSessionCb otherSessionCb) { m_srep->sendOtherSession( otherSessionCb);}
+
+  bool wb_session::validateDestination( wb_destination d, pwr_tCid cid);
 };
 
 

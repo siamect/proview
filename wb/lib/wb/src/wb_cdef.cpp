@@ -88,6 +88,12 @@ pwr_tCid wb_cdef::cid()
   return m_cdrep->cid();
 }
 
+pwr_mClassDef wb_cdef::flags()
+{
+  check();
+  return m_cdrep->flags();
+}
+
 const char *wb_cdef::name() const
 {
   check();

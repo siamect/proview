@@ -176,7 +176,7 @@ static void cmd_save_cb( void *ctx)
     return;
   }
 
-  if ( cmd->wb_type == wb_eType_Project)
+  if ( cmd->wb_type == wb_eType_Directory)
   {
     sts = lfu_SaveDirectoryVolume( cmd->ldhses, 0);
     if ( EVEN(sts))

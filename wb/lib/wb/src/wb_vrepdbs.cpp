@@ -445,10 +445,11 @@ bool wb_vrepdbs::exportHead(wb_import &i)
 {
   dbs_sObject *op = 0;
   pwr_tStatus sts;
+  pwr_mClassDef flags; flags.m = 0; // Fix !!!
   
   while ((op = dbs_NextHead(&sts, dbsenv(), op))) {
     i.importHead(op->oid, op->cid, op->poid, op->boid, op->aoid, op->foid, op->loid, op->name, op->normname,
-                 op->time, op->rbody.time, op->dbody.time, op->rbody.size, op->dbody.size);
+                 flags, op->time, op->rbody.time, op->dbody.time, op->rbody.size, op->dbody.size);
   }
 
   return true;
@@ -516,7 +517,8 @@ bool wb_vrepdbs::exportTreeObject(wb_treeimport &i, dbs_sObject *op, bool isRoot
   if ( op->dbody.size)
     dbody = dbs_Body(&sts, dbsenv(), op, pwr_eBix_dev);
 
-  i.importTreeObject( m_merep, op->oid, op->cid, parentoid, beforeoid, op->name, 
+  pwr_mClassDef flags; flags.m = 0; // Fix !!!
+  i.importTreeObject( m_merep, op->oid, op->cid, parentoid, beforeoid, op->name, flags,
 		      op->rbody.size, op->dbody.size, rbody, dbody);
 
   if ( first)

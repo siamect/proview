@@ -68,6 +68,9 @@ wb_object wb_session::createObject(wb_cdef cdef, wb_destination d, wb_name name)
   if (isReadonly())
     throw wb_error_str("ReadOnlySession");
 
+  validateDestination( d, cdef.cid());
+  if ( evenSts()) return wb_object();
+
   wb_object parent;
   switch ( d.code()) {
   case ldh_eDest_IntoFirst:
@@ -105,6 +108,9 @@ wb_object wb_session::copyObject(wb_object o, wb_destination d, wb_name name)
   if (isReadonly())
     throw wb_error_str("ReadOnlySession");
 
+  validateDestination( d, o.cid());
+  if ( evenSts()) return wb_object();
+
   wb_object parent;
   switch ( d.code()) {
   case ldh_eDest_IntoFirst:
@@ -140,6 +146,9 @@ bool wb_session::moveObject(wb_object o, wb_destination d)
 {   
   if (isReadonly())
     throw wb_error_str("ReadOnlySession");
+
+  validateDestination( d, o.cid());
+  if ( evenSts()) return false;
 
   wb_object parent;
   switch ( d.code()) {
@@ -369,6 +378,7 @@ bool wb_session::pasteOset( pwr_tOid doid, ldh_eDest dest,
     throw wb_error_str("ReadOnlySession");
 
   m_sts = LDH__SUCCESS;
+  wb_destination d = wb_destination( doid, dest);
 
   wb_vrepmem *mem;
   // Get last buffer
@@ -394,6 +404,18 @@ bool wb_session::pasteOset( pwr_tOid doid, ldh_eDest dest,
     return false;
   }
 
+  // Check that rootobjects are valid for this destination
+  pwr_tStatus sts;
+  wb_orep *orep = mem->object( &sts);
+  while( ODD(sts)) {
+    orep->ref();
+    validateDestination( d, orep->cid());
+    if ( evenSts()) return false;
+    wb_orep *prev = orep;
+    orep = orep->after( &sts);
+    prev->unref();
+  }
+
   // Trigg ante adopt
   wb_object parent;
   switch ( dest) {
@@ -410,7 +432,6 @@ bool wb_session::pasteOset( pwr_tOid doid, ldh_eDest dest,
   }
 
   if ( parent) {
-    pwr_tStatus sts;
     wb_orep *orep = mem->object( &sts);
     while( ODD(sts)) {
       orep->ref();
@@ -421,6 +442,7 @@ bool wb_session::pasteOset( pwr_tOid doid, ldh_eDest dest,
       prev->unref();
     }
   }
+
   pwr_tOid *olist;
   mem->exportPaste( *m_vrep, doid, dest, keepoid, &olist);
 
@@ -678,19 +700,51 @@ pwr_tStatus wb_session::callMenuMethod( ldh_sMenuCall *mcp, int Index)
 {
   pwr_tStatus sts = LDH__SUCCESS;
   wb_tMethodMenu method = (wb_tMethodMenu) mcp->ItemList[Index].Method;
-  // ldh_sEvent		*ep;
 
-  // ep = eventStart(sp, pwr_cNObjid, ldh_eEvent_MenuMethodCalled);
+  ldh_sEvent *ep = m_srep->eventStart( pwr_cNOid, ldh_eEvent_MenuMethodCalled);
 
   if (method != NULL)
     sts = (*method)(mcp);
 
-  // eventSend(sp, ep);
+  m_srep->eventSend( ep);
 
   return sts;
 }
 
+bool wb_session::validateDestination( wb_destination d, pwr_tCid cid)
+{
+  wb_object o = object( d.oid());
 
+  // Get parent
+  wb_object parent = wb_object();
+  if ( o) {
+    switch( d.code()) {
+    case ldh_eDest_After:
+    case ldh_eDest_Before:
+      parent = o.parent();
+      break;
+    default:
+      parent = o;
+    }
+  }
+  if ( !parent) {
+    // No parent, check if valid top object (for vrepmem all objects are valid topobjects)
+    wb_cdef c = cdef( cid);
+    if ( !c.flags().b.TopObject && type() != ldh_eVolRep_Mem) {
+      m_sts = LDH__NOTOP;
+      return false;
+    }
+  }
+  else {
+    // Check if adoption is legal
+    if ( parent.flags().b.NoAdopt) {
+      m_sts = LDH__NOADOPT;
+      return false;
+    }
+  }
+  m_sts = LDH__SUCCESS;
+  return true;
+}
 
 
 

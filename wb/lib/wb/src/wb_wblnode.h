@@ -219,6 +219,7 @@ public:
     }
     void registerNode( wb_vrepwbl *vol);
     void build( bool recursive);
+    void postBuild();
     void buildObjBodyDef( ref_wblnode classdef);
     void buildAttribute( ref_wblnode classdef, ref_wblnode objbodydef, 
 			 int *bindex, size_t *boffset);

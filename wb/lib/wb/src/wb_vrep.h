@@ -62,6 +62,7 @@ public:
   virtual const char * objectName(pwr_tStatus *sts, const wb_orep *o) = 0;
   virtual wb_name longName(pwr_tStatus *sts, const wb_orep *o) = 0;
   virtual pwr_tTime ohTime(pwr_tStatus *sts, const wb_orep *o) = 0;
+  virtual pwr_mClassDef flags(pwr_tStatus *sts, const wb_orep *o) = 0;
     
   virtual bool isOffspringOf(pwr_tStatus *sts, const wb_orep *child, const wb_orep *parent) = 0;
 

@@ -536,9 +536,9 @@ void wb_wblnode::build( bool recursive)
     else {
       if( !m_vrep->registerObject( o->m_oid.oix, this)) {
         // Print error message
+	pwr_tStatus sts;
         char name[120];
         char msg[180];
-        pwr_tStatus sts;
 
         wb_orep *orep = m_vrep->object( &sts, o->m_oid);
         m_vrep->objectName( orep, name);
@@ -561,6 +561,23 @@ void wb_wblnode::build( bool recursive)
   //  o->fch->build( recursive);
   //if ( recursive && o->fws)
   //  o->fws->build( recursive);
+}
+
+
+void wb_wblnode::postBuild()
+{
+  pwr_tStatus sts;
+  pwr_mClassDef flags;
+  m_vrep->getClassFlags( &sts, o->m_cid, &flags);
+  o->m_flags.m |= flags.m;
+  if ( EVEN(sts))
+    m_vrep->error( "Can't find class flags", getFileName(), line_number);
+  
+  wb_wblnode *ch = o->fch;
+  while ( ch) {
+    ch->postBuild();
+    ch = ch->o->fws;
+  }
 }
 
 void wb_wblnode::buildObjBodyDef( ref_wblnode classdef)
@@ -1490,13 +1507,7 @@ void wb_wblnode::iterO->Rbody( wb_dbs *dbs)
 
 bool wb_wblnode::exportHead(wb_import &i)
 {
-  pwr_tStatus sts;
-  pwr_mClassDef flags;
 
-  m_vrep->getClassFlags( &sts, o->m_cid, &flags);
-  if ( EVEN(sts)) throw wb_error( sts);
-
-  o->m_flags.m |= flags.m;
   ref_wblnode o_lch = get_o_lch();
   pwr_tOid fthoid = o->fth ? o->fth->o->m_oid : pwr_cNOid;
   pwr_tOid fwsoid = o->fws ? o->fws->o->m_oid : pwr_cNOid;
@@ -1505,7 +1516,8 @@ bool wb_wblnode::exportHead(wb_import &i)
   pwr_tOid lchoid = o_lch ? o_lch->o->m_oid : pwr_cNOid;
   wb_name n = wb_name(name());
 
-  i.importHead( o->m_oid, o->m_cid, fthoid, bwsoid, fwsoid, fchoid, lchoid, name(), n.normName(cdh_mName_object),
+  i.importHead( o->m_oid, o->m_cid, fthoid, bwsoid, fwsoid, fchoid, lchoid, name(), 
+		n.normName(cdh_mName_object), o->m_flags,
                 getFileTime(), getFileTime(), getFileTime(), o->rbody_size, o->dbody_size);
   
   if ( o->fch)
@@ -1548,7 +1560,7 @@ bool wb_wblnode::exportTree( wb_treeimport &i, bool isRoot)
   pwr_tOid fthoid = (o->fth && !isRoot) ? o->fth->o->m_oid : pwr_cNOid;
   pwr_tOid bwsoid = (o->bws && !isRoot)  ? o->bws->o->m_oid : pwr_cNOid;
 
-  i.importTreeObject( m_vrep->merep(), o->m_oid, o->m_cid, fthoid, bwsoid, name(), 
+  i.importTreeObject( m_vrep->merep(), o->m_oid, o->m_cid, fthoid, bwsoid, name(), o->m_flags,
 		      o->rbody_size, o->dbody_size, o->rbody, o->dbody);
   
   if ( o->fch)

@@ -271,6 +271,13 @@ pwr_tTime wb_object::ohTime()
   return m_orep->ohTime();
 }
 
+pwr_mClassDef wb_object::flags()
+{
+  check();
+
+  return m_orep->flags();
+}
+
 bool wb_object::operator==(wb_object& x)
 {
   check();

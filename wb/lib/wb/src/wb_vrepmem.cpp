@@ -594,6 +594,7 @@ wb_orep *wb_vrepmem::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination
   memo->m_oid.oix = oix;
   memo->m_oid.vid = m_vid;
   memo->m_cid = cdef.cid();
+  memo->m_flags = cdef.flags();
   memo->rbody_size = cdef.size( pwr_eBix_rt);
   if ( memo->rbody_size) {
     memo->rbody = malloc( memo->rbody_size);
@@ -648,6 +649,8 @@ wb_orep *wb_vrepmem::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination
       else if ( dest->fth)
 	dest->fth->fch = memo;
       dest->bws = memo;
+      if ( dest == root_object)
+	root_object = memo;
       break;
     default:
       *sts = LDH__NODEST;
@@ -753,6 +756,8 @@ wb_orep *wb_vrepmem::copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_destin
       else if ( dest->fth)
 	dest->fth->fch = memo;
       dest->bws = memo;
+      if ( dest == root_object)
+	root_object = memo;
       break;
     default:
       *sts = LDH__NODEST;
@@ -836,6 +841,8 @@ bool wb_vrepmem::moveObject(pwr_tStatus *sts, wb_orep *orep, wb_destination &d)
       memo->fth = dest->fth;
       break;
     case ldh_eDest_Before:
+      if ( dest == root_object)
+	root_object = memo;
       memo->bws = dest->bws;
       memo->fws = dest;
       memo->fth = dest->fth;
@@ -1092,8 +1099,8 @@ bool wb_vrepmem::updateObject( wb_orep *o, bool keepref)
 }
 
 bool wb_vrepmem::importTreeObject(wb_merep *merep, pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
-                          pwr_tOid boid, const char *name,
-                          size_t rbSize, size_t dbSize, void *rbody, void *dbody)
+				  pwr_tOid boid, const char *name, pwr_mClassDef flags,
+				  size_t rbSize, size_t dbSize, void *rbody, void *dbody)
 {
   pwr_tStatus sts;
   mem_object *memo = new mem_object();
@@ -1101,6 +1108,7 @@ bool wb_vrepmem::importTreeObject(wb_merep *merep, pwr_tOid oid, pwr_tCid cid, p
   memo->m_oid.oix = oid.oix;
   memo->m_oid.vid = m_vid;
   memo->m_cid = cid;
+  memo->m_flags = flags;
 
   bool convert = false;
   if ( merep && merep != m_merep) {
@@ -1191,7 +1199,7 @@ bool wb_vrepmem::importTreeObject(wb_merep *merep, pwr_tOid oid, pwr_tCid cid, p
 bool wb_vrepmem::importPasteObject(pwr_tOid destination, ldh_eDest destcode, 
 				   bool keepoid, pwr_tOid oid, 
 				   pwr_tCid cid, pwr_tOid poid,
-				   pwr_tOid boid, const char *name,
+				   pwr_tOid boid, const char *name, pwr_mClassDef flags,
 				   size_t rbSize, size_t dbSize, void *rbody, void *dbody,
 				   pwr_tOid *roid)
 {
@@ -1219,6 +1227,7 @@ bool wb_vrepmem::importPasteObject(pwr_tOid destination, ldh_eDest destcode,
 
   memo->m_oid.vid = m_vid;
   memo->m_cid = cid;
+  memo->m_flags = flags;
   memo->rbody_size = rbSize;
   if ( memo->rbody_size) {
     memo->rbody = malloc( memo->rbody_size);

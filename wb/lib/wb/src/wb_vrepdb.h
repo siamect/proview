@@ -35,6 +35,7 @@ public:
   virtual wb_vrep *next();
 
   virtual pwr_tTime ohTime(pwr_tStatus *sts, const wb_orep *o);
+  virtual pwr_mClassDef flags(pwr_tStatus *sts, const wb_orep *o);
   virtual pwr_tOid oid(pwr_tStatus *sts, const wb_orep *o);
   virtual pwr_tVid vid(pwr_tStatus *sts, const wb_orep *o);
   virtual pwr_tOix oix(pwr_tStatus *sts, const wb_orep *o);
@@ -125,14 +126,14 @@ public:
   virtual bool exportTree(wb_treeimport &i, pwr_tOid oid) { return false;}
   virtual bool importTree(bool keepref) { return false;}
   virtual bool importTreeObject(wb_merep *merep, pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
-                          pwr_tOid boid, const char *name,
-                          size_t rbSize, size_t dbSize, void *rbody, void *dbody)
+				pwr_tOid boid, const char *name, pwr_mClassDef flags,
+				size_t rbSize, size_t dbSize, void *rbody, void *dbody)
     { return false;}
   virtual bool importPaste() { return false;}
   virtual bool importPasteObject(pwr_tOid destination, ldh_eDest destcode, 
 				 bool keepoid, pwr_tOid oid, 
 				 pwr_tCid cid, pwr_tOid poid,
-				 pwr_tOid boid, const char *name,
+				 pwr_tOid boid, const char *name, pwr_mClassDef flags,
 				 size_t rbSize, size_t dbSize, void *rbody, void *dbody,
 				 pwr_tOid *roid)
     { return false;}

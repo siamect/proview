@@ -88,6 +88,11 @@ pwr_tTime wb_orepwbl::ohTime() const
 }
 
 
+pwr_mClassDef wb_orepwbl::flags() const
+{
+  return m_wblnode->o->m_flags;
+}
+
 bool wb_orepwbl::isOffspringOf(const wb_orep *o) const
 {
   return true;

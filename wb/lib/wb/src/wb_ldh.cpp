@@ -851,10 +851,9 @@ ldh_IsOkCreateObject(ldh_tSession session, pwr_tCid cid, pwr_tOid oid, ldh_eDest
   if (!o) return o.sts();
 
   wb_destination d = o.destination(dest);
-  if (!d.canAdopt(cid)) {
-    return LDH__NOADOPT;
-  }
-    
+  if ( !sp->validateDestination( d, cid))
+    return sp->sts();
+
   return LDH__SUCCESS;    
 }
 
@@ -868,9 +867,8 @@ ldh_IsOkCopyObject(ldh_tSession session, pwr_tOid oid, pwr_tOid doid, ldh_eDest 
   if (!o) return o.sts();
 
   wb_destination d = d_o.destination(dest);
-  if (!d.canAdopt(o.cid())) {
-    return LDH__NOADOPT;
-  }
+  if ( !sp->validateDestination( d, o.cid()))
+    return sp->sts();
     
   return LDH__SUCCESS;    
 }
@@ -885,9 +883,8 @@ ldh_IsOkMoveObject(ldh_tSession session, pwr_tOid oid, pwr_tOid doid, ldh_eDest 
   if (!o) return o.sts();
 
   wb_destination d = d_o.destination(dest);
-  if (!d.canAdopt(o)) {
-    return LDH__NOADOPT;
-  }
+  if ( !sp->validateDestination( d, o.cid()))
+    return sp->sts();
     
   return LDH__SUCCESS;    
 }

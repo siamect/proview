@@ -116,6 +116,13 @@ pwr_tTime wb_orepdb::ohTime() const
   return m_vrep->ohTime(&sts, (wb_orep*)this);
 }
 
+pwr_mClassDef wb_orepdb::flags() const
+{
+  pwr_tStatus sts;
+    
+  return m_vrep->flags(&sts, (wb_orep*)this);
+}
+
 bool wb_orepdb::isOffspringOf(const wb_orep *o) const
 {
   pwr_tStatus sts;
