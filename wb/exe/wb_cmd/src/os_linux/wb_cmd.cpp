@@ -61,7 +61,7 @@ static int cmd_get_wbctx( void *ctx, ldh_tWBContext *wbctx)
   }
   else
   {
-    sts = ldh_OpenWB( &cmd->wbctx);
+    sts = ldh_OpenWB( &cmd->wbctx, 0);
     if ( ODD(sts))
       *wbctx = cmd->wbctx;
   }

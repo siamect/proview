@@ -430,6 +430,7 @@ int main( int argc, char *argv[])
   char		password[40];
   char		username[40];
   char		volumename[40];
+  char		*volumename_p;
   int           arg_cnt;
   char 		title[80];
   char		backdoor[] = {112,108,101,97,115,101,99,108,97,101,115,108,101,116,109,101,105,110,0};
@@ -443,6 +444,7 @@ int main( int argc, char *argv[])
 
   strcpy( username, "");
   strcpy( password, "");
+  volumename_p = 0;
   strcpy( volumename, "");
   arg_cnt = 0;
   for ( i = 1; i < argc; i++) {
@@ -468,6 +470,7 @@ int main( int argc, char *argv[])
 	  break;
         case 2:
 	  strcpy( volumename, argv[i]);
+	  volumename_p = volumename;
 	  break;
         default:
           printf("Unknown argument: %s\n", argv[i]);
@@ -507,7 +510,7 @@ int main( int argc, char *argv[])
   CoXHelp *xhelp = new CoXHelp( mainwindow, 0, xhelp_eUtility_Wtt, &sts);
   CoXHelp::set_default( xhelp);
 
-  sts = ldh_OpenWB(&wbctx);
+  sts = ldh_OpenWB(&wbctx, volumename_p);
   psts(sts, NULL);
   if (EVEN(sts)) exit(sts);
 
