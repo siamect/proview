@@ -709,3 +709,7 @@ void brow_SetClickSensitivity( brow_tCtx ctx, int value)
   flow_draw_set_click_sensitivity( (FlowCtx *)ctx, value);
 }
 
+void brow_SetWhiteBackground( brow_tCtx ctx)
+{
+  flow_set_white_background( (FlowCtx *)ctx);
+}

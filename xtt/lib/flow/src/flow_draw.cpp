@@ -1929,4 +1929,33 @@ void flow_reset_image_clip_mask( FlowCtx *ctx)
   XSetClipOrigin( draw_ctx->display, draw_ctx->gcs[flow_eDrawType_Line][0], 0, 0);
 }
 
+void flow_set_white_background( FlowCtx *ctx)
+{
+  XGCValues 		xgcv;
+  draw_tCtx draw_ctx = (draw_tCtx) ctx->draw_ctx;
+  int			i;
+  Arg 			args[5];
+
+  draw_ctx->background = XWhitePixelOfScreen(draw_ctx->screen);
+
+  // Change erase gcs
+  xgcv.foreground =   draw_ctx->background;
+  xgcv.background =   draw_ctx->background;
+  for ( i = 0; i < DRAW_TYPE_SIZE; i++)
+  {
+    XChangeGC( draw_ctx->display, draw_ctx->gcs[flow_eDrawType_LineErase][i],
+	GCForeground | GCBackground, &xgcv);
+    XChangeGC( draw_ctx->display, draw_ctx->gcs[flow_eDrawType_TextHelveticaErase][i],
+	GCForeground | GCBackground, &xgcv);
+    XChangeGC( draw_ctx->display, draw_ctx->gcs[flow_eDrawType_TextHelveticaEraseBold][i],
+      GCForeground | GCBackground, &xgcv);
+  }
+  i = 0;
+  XtSetArg(args[i],XmNbackground, draw_ctx->background); i++;
+  XtSetValues( draw_ctx->toplevel, args, i);
+  if ( !ctx->no_nav)
+    XtSetValues( draw_ctx->nav_toplevel, args, i);
+
+}
+
 

@@ -174,5 +174,6 @@ void flow_set_widget_inputfocus( Widget w);
 void flow_draw_set_click_sensitivity( FlowCtx *ctx, int value);
 void flow_set_image_clip_mask( FlowCtx *ctx, Pixmap pixmap, int x, int y);
 void flow_reset_image_clip_mask( FlowCtx *ctx);
+void flow_set_white_background( FlowCtx *ctx);
 
 #endif

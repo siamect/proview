@@ -205,7 +205,8 @@ void brow_DeleteSecondaryCtx( brow_tCtx ctx);
 int brow_ChangeCtx( Widget w, brow_tCtx from_ctx, brow_tCtx to_ctx);
 void brow_SetInputFocus( brow_tCtx ctx);
 void brow_SetWidgetInputFocus( Widget w);
-  void brow_SetClickSensitivity( brow_tCtx ctx, int value);
+void brow_SetClickSensitivity( brow_tCtx ctx, int value);
+void brow_SetWhiteBackground( brow_tCtx ctx);
 
 #if defined __cplusplus
 }
