@@ -5,6 +5,8 @@
 #include "pwr.h"
 #include "wb_ldh.h"
 
+using namespace std;
+
 class wb_treeexport;
 class wb_adrep;
 class wb_vrep;

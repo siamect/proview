@@ -553,9 +553,13 @@ void wb_erep::loadMeta( pwr_tStatus *status)
   strcpy( vname, "$pwrp_db/directory.db");
   dcli_translate_filename( vname, vname);
 
-  wb_vrepdb *vrepdb = new wb_vrepdb( this, vname);
-  vrepdb->name("directory");
-  addDb( &sts, vrepdb);
+  sts = dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_INIT);
+  dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_END);
+  if ( ODD(sts)) {
+    wb_vrepdb *vrepdb = new wb_vrepdb( this, vname);
+    vrepdb->name("directory");
+    addDb( &sts, vrepdb);
+  }
   if ( EVEN(sts))
     *status = LDH__PROJCONFIG;
   else if ( !vol_cnt)

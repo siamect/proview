@@ -3,6 +3,7 @@
    PROVIEW/R
    Copyright (C) 1994 by Comator Process AB.  */
 
+#include <string.h>
 #include "wb_pwrs.h"
 #include "wb_pwrs_msg.h"
 #include "wb_ldh.h"
