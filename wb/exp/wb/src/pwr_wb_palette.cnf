@@ -79,35 +79,6 @@ palette NavigatorPalette
       class WebHandler
       class IOHandler
     }
-    menu IO_RTP
-    {
-      class Rack_RTP
-      menu Cards
-      {
-        class Di_7437_37
-        class Do_7437_83
-        class Ai_7436
-        class Ao_7455_20
-        class Ao_7455_30
-      }
-      menu Channels
-      {
-        class ChanAi
-        class ChanAit
-        class ChanAo
-        class ChanCo
-        class ChanDi
-        class ChanDo
-        class ChanIi
-        class ChanIo
-      }
-      menu DIOC
-      {
-        class Line_LAT
-        class RTP_DIOC
-      }
-      class IOHandler
-    }
     menu IO_SSAB
     {
       class Rack_SSAB
@@ -135,33 +106,6 @@ palette NavigatorPalette
         class ChanIo
       }
       class IOHandler
-    }
-    menu IO_VME
-    {
-      class Rack_VME
-      menu Cards
-      {
-        class Ai_Vmic3113A
-        class Ao_Vmic4800
-        menu IP
-        {
-          class VIPC616
-          class Co_IpQuadrature
-          class IpMux
-          class MuxMod
-        }
-        menu Channels
-        {
-          class ChanAi
-          class ChanAit
-          class ChanAo
-          class ChanCo
-          class ChanDi
-          class ChanDo
-          class ChanIi
-          class ChanIo
-        }
-      }
     }
     menu Profibus
     {
