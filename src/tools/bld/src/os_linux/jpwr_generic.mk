@@ -125,7 +125,11 @@ $(export_lib) : $(objects)
 		$(rm) $(export_lib); \
 	  fi
 	@ cd $(pwre_broot)/$(pwre_target)/bld; \
-	 jar cf $(export_lib) jpwr/$(comp_name)/*.class jpwr/$(comp_name)/*.gif
+	if [ $(comp_name) = "rt" ] || [ $(comp_name) = "rt_client" ]; then \
+	  jar cf $(export_lib) jpwr/$(comp_name)/*.class; \
+	else \
+	  jar cf $(export_lib) jpwr/$(comp_name)/*.class jpwr/$(comp_name)/*.gif; \
+	fi
 #	@ jar cvfm $(export_lib) ../../manifest.stub jpwr/$(comp_name)/*.class jpwr/$(comp_name)/*.gif
 
 #-include $(source_dependencies)
