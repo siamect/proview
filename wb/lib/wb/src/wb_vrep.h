@@ -133,6 +133,8 @@ public:
   virtual bool isCommonMeta() const { return false;}
   virtual bool isMeta() const { return false;}
   virtual bool accessSupported( ldh_eAccess access) = 0;
+  virtual bool duplicateDb() const { return false;}
+  virtual void setDuplicateDb( bool duplicate) {}
 
   void addSrep( wb_srep *srep);
   void removeSrep( wb_srep *srep);

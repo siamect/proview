@@ -17,7 +17,7 @@ wb_vrep *wb_vrepdbs::ref()
   return this;
 }
 
-wb_vrepdbs::wb_vrepdbs(wb_erep *erep, const char *fileName) : m_erep(erep), m_nRef(0)
+wb_vrepdbs::wb_vrepdbs(wb_erep *erep, const char *fileName) : m_erep(erep), m_nRef(0), m_duplicate(false)
 {
   strcpy(m_fileName, fileName);
   m_isDbsenvLoaded = false;
