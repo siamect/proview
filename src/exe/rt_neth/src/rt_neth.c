@@ -687,7 +687,9 @@ mainLoop (void)
       fromNet(&get);
       break;
     case net_cMsgClass:
-      if ((int)get.type.s > (int)net_eMsg__ && (int)get.type.s < (int)net_eMsg_) {
+      if (((int)get.type.s > (int)net_eMsg__  && (int)get.type.s < (int)net_eMsg_)
+          || (get.type.s == net_eMsg_volumes7)
+      ) {
 	if (gdbroot->db->log.b.messages) {
 	  errh_Info("Received '%s' from %x @ %s, length=%d",
 	    cMsg[get.type.s], get.pid,
