@@ -57,6 +57,7 @@ typedef struct ge_sCtx {
 } *ge_tCtx;
 
 void ge_pop( ge_tCtx gectx);
+void ge_print( ge_tCtx gectx);
 int ge_set_object_focus( ge_tCtx gectx, char *name, int empty);
 int ge_set_folder_index( ge_tCtx gectx, char *name, int idx);
 void ge_swap( ge_tCtx gectx, int mode);

@@ -64,6 +64,8 @@ static void hist_action_inputfocus( Widget w, XmAnyCallbackStruct *data);
 
 static void hist_activate_exit( Widget w, Hist *histOP, XmAnyCallbackStruct *data);
 
+static void hist_activate_print( Widget w, Hist *histOP, XmAnyCallbackStruct *data);
+
 static void hist_activate_zoom_in( Widget w, Hist *histOP, XmAnyCallbackStruct *data);
 
 static void hist_activate_zoom_out( Widget w, Hist *histOP, XmAnyCallbackStruct *data);
@@ -188,6 +190,7 @@ Hist::Hist(
   static MrmRegisterArg	reglist[] = {
         { "hist_ctx", 0 },
 	{"hist_activate_exit",(caddr_t)hist_activate_exit },
+	{"hist_activate_print",(caddr_t)hist_activate_print },
 	{"hist_activate_zoom_in",(caddr_t)hist_activate_zoom_in },
 	{"hist_activate_zoom_out",(caddr_t)hist_activate_zoom_out },
 	{"hist_activate_zoom_reset",(caddr_t)hist_activate_zoom_reset },
@@ -429,6 +432,14 @@ static void hist_activate_exit( Widget w, Hist *histOP, XmAnyCallbackStruct *dat
 {
   histOP->close_cb(histOP);
   //flow_UnmapWidget( histOP->parent_wid_hist);
+}
+
+static void hist_activate_print( Widget w, Hist *histOP, XmAnyCallbackStruct *data)
+{
+  char filename[200];
+  dcli_translate_filename( filename, "$pwrp_tmp/xnav.ps");
+
+  histOP->hist->print( filename);
 }
 
 static void hist_activate_zoom_in( Widget w, Hist *histOP, XmAnyCallbackStruct *data)

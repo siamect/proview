@@ -515,7 +515,14 @@ static void xtt_activate_exit( Widget w, Xtt *xtt, XmAnyCallbackStruct *data)
 
 static void xtt_activate_print( Widget w, Xtt *xtt, XmAnyCallbackStruct *data)
 {
-  xtt->xnav->print( "pwrp_tmp:xnav.ps");
+  pwr_tFileName filename;
+  pwr_tCmd cmd;
+
+  dcli_translate_filename( filename, "$pwrp_tmp/xnav.ps");
+  xtt->xnav->print( filename);
+
+  sprintf( cmd, "$pwr_exe/rt_print.sh %s", filename);
+  system(cmd);
 }
 
 static void xtt_activate_find( Widget w, Xtt *xtt, XmAnyCallbackStruct *data)

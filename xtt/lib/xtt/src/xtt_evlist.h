@@ -177,6 +177,7 @@ class EvList {
     int get_selected_event( char *eventname);
     int get_destination( pwr_tTime time, void **dest);
     void block_remove();
+    void print( char *filename);
 };
 
 class ItemAlarm {

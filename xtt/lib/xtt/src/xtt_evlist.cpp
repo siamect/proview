@@ -769,6 +769,11 @@ void EvList::event_return( mh_sReturn *msg)
   }
 }
 
+void EvList::print( char *filename)
+{
+  brow_Print( brow->ctx, filename);
+}
+
 void EvList::event_clear_alarmlist( pwr_tNodeIndex nix)
 {
   int		i;

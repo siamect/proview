@@ -155,6 +155,8 @@ static int	xnav_call_func(		void		*client_data,
 					void		*client_flag);
 static int	xnav_check_func(       	void		*client_data,
 					void		*client_flag);
+static int	xnav_print_func(       	void		*client_data,
+					void		*client_flag);
 
 dcli_tCmdTable	xnav_command_table[] = {
 		{
@@ -295,6 +297,13 @@ dcli_tCmdTable	xnav_command_table[] = {
 			"CHECK",
 			&xnav_check_func,
 			{ "dcli_arg1", "/METHOD", "/OBJECT", ""}
+		},
+		{
+			"PRINT",
+			&xnav_print_func,
+			{ "dcli_arg1", "dcli_arg2", "/NAME", "/FILE", 
+			  "/OBJECT",
+			  ""}
 		},
 		{"",}};
 
@@ -4234,6 +4243,48 @@ static int	xnav_check_func( void		*client_data,
   return 1;
 }
 
+
+static int	xnav_print_func(void		*client_data,
+				void		*client_flag)
+{
+  XNav *xnav = (XNav *)client_data;
+
+  char	arg1_str[80];
+  int	arg1_sts;
+
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str);
+
+  if ( strncmp( arg1_str, "GRAPH", strlen( arg1_str)) == 0)
+  {
+    char file_str[80];
+    char name_str[80] = "";
+    ge_tCtx gectx;
+    char fname[200];
+
+    if ( ODD( dcli_get_qualifier( "dcli_arg2", file_str))) {
+      if ( file_str[0] == '/') {
+	xnav->message('E', "Syntax error");
+	return XNAV__HOLDCOMMAND;
+      }
+    }
+    else if ( ODD( dcli_get_qualifier( "/FILE", file_str))) {
+      // Get base class graphs on $pwr_exe
+      cdh_ToLower( fname, file_str);
+    }
+
+    if ( xnav->appl.find( applist_eType_Graph, file_str, name_str, 
+		  (void **) &gectx))
+      ge_print( gectx);
+    else {
+      xnav->message('E', "Graph not found");
+      return XNAV__HOLDCOMMAND;
+    }
+  }
+  else
+    xnav->message('E',"Syntax error");
+
+  return XNAV__SUCCESS;	
+}
 
 int XNav::show_database()
 {

@@ -101,6 +101,7 @@ int xnav_get_trace_attr( pwr_sAttrRef *arp, char *attr)
     case pwr_cClass_Ii:
     case pwr_cClass_Io:
     case pwr_cClass_Iv:
+    case pwr_cClass_Sv:
       strcpy( attr, "ActualValue");	
       break;   
     case pwr_cClass_ChanDi:
@@ -158,6 +159,13 @@ int xnav_get_trace_attr( pwr_sAttrRef *arp, char *attr)
     case pwr_cClass_inv :
     case pwr_cClass_waith :
     case pwr_cClass_darithm :
+    case pwr_cClass_Even :
+    case pwr_cClass_Odd :
+    case pwr_cClass_Equal :
+    case pwr_cClass_GreaterEqual :
+    case pwr_cClass_GreaterThan :
+    case pwr_cClass_LessEqual :
+    case pwr_cClass_LessThan :
       strcpy( attr, "Status");
       break;   
     case pwr_cClass_DSup :
@@ -177,6 +185,35 @@ int xnav_get_trace_attr( pwr_sAttrRef *arp, char *attr)
     case pwr_cClass_adelay :
     case pwr_cClass_aarithm :
     case pwr_cClass_timint :
+    case pwr_cClass_IAbs :
+    case pwr_cClass_IAdd :
+    case pwr_cClass_IDiv :
+    case pwr_cClass_ILimit :
+    case pwr_cClass_IMax :
+    case pwr_cClass_IMin :
+    case pwr_cClass_IMul :
+    case pwr_cClass_ISel :
+    case pwr_cClass_ISub :
+    case pwr_cClass_IMux :
+    case pwr_cClass_Add :
+    case pwr_cClass_Div :
+    case pwr_cClass_Mul :
+    case pwr_cClass_Max :
+    case pwr_cClass_Min :
+    case pwr_cClass_Mux :
+    case pwr_cClass_Sub :
+    case pwr_cClass_Sin :
+    case pwr_cClass_Cos :
+    case pwr_cClass_Tan :
+    case pwr_cClass_ASin :
+    case pwr_cClass_ACos :
+    case pwr_cClass_ATan :
+    case pwr_cClass_Exp :
+    case pwr_cClass_Log :
+    case pwr_cClass_Ln :
+    case pwr_cClass_Sqrt :
+    case pwr_cClass_Abs :
+    case pwr_cClass_Mod :
       strcpy( attr, "ActVal");
       break;   
     case pwr_cClass_maxmin :

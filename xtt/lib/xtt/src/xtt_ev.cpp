@@ -13,6 +13,7 @@
 extern "C" {
 #include "co_cdh.h"
 #include "co_time.h"
+#include "co_dcli.h"
 #include "pwr_baseclasses.h"
 #include "rt_gdh.h"
 #include "rt_mh.h"
@@ -53,6 +54,9 @@ static void ev_blk_action_inputfocus( Widget w, XmAnyCallbackStruct *data);
 static void ev_eve_activate_exit( Widget w, Ev *ev, XmAnyCallbackStruct *data);
 static void ev_ala_activate_exit( Widget w, Ev *ev, XmAnyCallbackStruct *data);
 static void ev_blk_activate_exit( Widget w, Ev *ev, XmAnyCallbackStruct *data);
+static void ev_eve_activate_print( Widget w, Ev *ev, XmAnyCallbackStruct *data);
+static void ev_ala_activate_print( Widget w, Ev *ev, XmAnyCallbackStruct *data);
+static void ev_blk_activate_print( Widget w, Ev *ev, XmAnyCallbackStruct *data);
 static void ev_eve_activate_ack_last( Widget w, Ev *ev, XmAnyCallbackStruct *data);
 static void ev_ala_activate_ack_last( Widget w, Ev *ev, XmAnyCallbackStruct *data);
 static void ev_eve_activate_zoom_in( Widget w, Ev *ev, XmAnyCallbackStruct *data);
@@ -151,6 +155,7 @@ Ev::Ev(
   static MrmRegisterArg	reglist[] = {
         { "ev_ctx", 0 },
 	{"ev_eve_activate_exit",(caddr_t)ev_eve_activate_exit },
+	{"ev_eve_activate_print",(caddr_t)ev_eve_activate_print },
 	{"ev_eve_activate_ack_last",(caddr_t)ev_eve_activate_ack_last },
 	{"ev_eve_activate_zoom_in",(caddr_t)ev_eve_activate_zoom_in },
 	{"ev_eve_activate_zoom_out",(caddr_t)ev_eve_activate_zoom_out },
@@ -164,6 +169,7 @@ Ev::Ev(
 	{"ev_eve_activate_helpevent",(caddr_t)ev_eve_activate_helpevent },
 	{"ev_eve_create_form",(caddr_t)ev_eve_create_form },
 	{"ev_ala_activate_exit",(caddr_t)ev_ala_activate_exit },
+	{"ev_ala_activate_print",(caddr_t)ev_ala_activate_print },
 	{"ev_ala_activate_ack_last",(caddr_t)ev_ala_activate_ack_last },
 	{"ev_ala_activate_zoom_in",(caddr_t)ev_ala_activate_zoom_in },
 	{"ev_ala_activate_zoom_out",(caddr_t)ev_ala_activate_zoom_out },
@@ -177,6 +183,7 @@ Ev::Ev(
 	{"ev_ala_activate_helpevent",(caddr_t)ev_ala_activate_helpevent },
 	{"ev_ala_create_form",(caddr_t)ev_ala_create_form },
 	{"ev_blk_activate_exit",(caddr_t)ev_blk_activate_exit },
+	{"ev_blk_activate_print",(caddr_t)ev_blk_activate_print },
 	{"ev_blk_activate_zoom_in",(caddr_t)ev_blk_activate_zoom_in },
 	{"ev_blk_activate_zoom_out",(caddr_t)ev_blk_activate_zoom_out },
 	{"ev_blk_activate_zoom_reset",(caddr_t)ev_blk_activate_zoom_reset },
@@ -555,6 +562,42 @@ static void ev_blk_activate_exit( Widget w, Ev *ev, XmAnyCallbackStruct *data)
 {
   flow_UnmapWidget( ev->parent_wid_blk);
   ev->blk_displayed = 0;
+}
+
+static void ev_eve_activate_print( Widget w, Ev *ev, XmAnyCallbackStruct *data)
+{
+  pwr_tFileName filename;
+  pwr_tCmd cmd;
+
+  dcli_translate_filename( filename, "$pwrp_tmp/xnav.ps");
+  ev->eve->print( filename);
+
+  sprintf( cmd, "$pwr_exe/rt_print.sh %s", filename);
+  system(cmd);
+}
+
+static void ev_ala_activate_print( Widget w, Ev *ev, XmAnyCallbackStruct *data)
+{
+  pwr_tFileName filename;
+  pwr_tCmd cmd;
+
+  dcli_translate_filename( filename, "$pwrp_tmp/xnav.ps");
+  ev->ala->print( filename);
+
+  sprintf( cmd, "$pwr_exe/rt_print.sh %s", filename);
+  system(cmd);
+}
+
+static void ev_blk_activate_print( Widget w, Ev *ev, XmAnyCallbackStruct *data)
+{
+  pwr_tFileName filename;
+  pwr_tCmd cmd;
+
+  dcli_translate_filename( filename, "$pwrp_tmp/xnav.ps");
+  ev->blk->print( filename);
+
+  sprintf( cmd, "$pwr_exe/rt_print.sh %s", filename);
+  system(cmd);
 }
 
 static void ev_eve_activate_ack_last( Widget w, Ev *ev, XmAnyCallbackStruct *data)

@@ -29,6 +29,7 @@ extern "C" {
 #include "rt_gdh.h"
 #include "rt_gdh_msg.h"
 #include "co_cdh.h"
+#include "co_dcli.h"
 #include "co_time.h"
 #include "co_mrm_util.h"
 }
@@ -374,6 +375,18 @@ void ge_pop( ge_tCtx gectx)
 {
   flow_UnmapWidget( gectx->toplevel);
   flow_MapWidget( gectx->toplevel);
+}
+
+void ge_print( ge_tCtx gectx)
+{
+  pwr_tFileName filename;
+  pwr_tCmd cmd;
+
+  dcli_translate_filename( filename, "$pwrp_tmp/graph.ps");
+  ((Graph *)gectx->graph)->print( filename);
+
+  sprintf( cmd, "$pwr_exe/rt_print.sh %s 1", filename);
+  system(cmd);
 }
 
 void ge_swap( ge_tCtx gectx, int mode)

@@ -619,7 +619,7 @@ int ItemBaseAttr::open_children( XNavBrow *brow, double x, double y)
       }
       free( (char *)vd);
     }
-    else {
+    else if ( type_id == pwr_eType_Mask) {
       gdh_sBitDef *bd;
       int rows;
 
@@ -637,6 +637,8 @@ int ItemBaseAttr::open_children( XNavBrow *brow, double x, double y)
       }
       free( (char *)bd);
     }
+    else
+      return 0;
 
     brow_SetOpen( node, xnav_mOpen_Children);
     brow_SetAnnotPixmap( node, 1, brow->pixmap_openmap);
