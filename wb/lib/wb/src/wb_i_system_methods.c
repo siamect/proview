@@ -11,6 +11,7 @@ pwr_dImport pwr_BindMethods($AttrXRef);
 pwr_dImport pwr_BindMethods($Node);
 pwr_dImport pwr_BindMethods($Object);
 pwr_dImport pwr_BindMethods($ObjXRef);
+pwr_dImport pwr_BindMethods($Objid);
 pwr_dImport pwr_BindMethods($RootVolume);
 pwr_dImport pwr_BindMethods($SubVolume);
 
@@ -19,6 +20,7 @@ pwr_dExport pwr_BindClasses(System) = {
   pwr_BindClass($Node),
   pwr_BindClass($Object),
   pwr_BindClass($ObjXRef),
+  pwr_BindClass($Objid),
   pwr_BindClass($RootVolume),
   pwr_BindClass($SubVolume),
   pwr_NullClass
