@@ -250,7 +250,7 @@ endl <<
 "#ifndef pwr_cClass_" << class_name << endl <<
 "#define pwr_cClass_" << class_name << " " << class_id << endl <<
 endl;
-    if ( !common_structfile_only)
+    if ( !common_structfile_only && struct_class_open)
       cstruc->f <<
 endl <<
 "#ifndef pwr_cClass_" << class_name << endl <<
