@@ -23,6 +23,7 @@ menu Process
   subgraph 	ValveManuel	pwr_exe:pwr_valvemanuel.pwsg 		4
   subgraph 	ValveControl	pwr_exe:pwr_valvecontrol.pwsg 		2
   subgraph 	Thermometer	pwr_exe:pwr_thermometer.pwsg 		28
+  subgraph 	Burner		pwr_exe:pwr_burner.pwsg 		6
 }
 menu Electric
 {
