@@ -136,7 +136,9 @@ void GlowExportJBean::growctx( glow_eExportPass pass, ofstream& fp)
 "    Graphics2D g = (Graphics2D) g1;" << endl <<
 "    float width = getWidth();" << endl <<
 "    float height = getHeight();" << endl <<
-"    g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);" << endl;
+"    g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);" << endl <<
+"    double scaleWidth =  (1.0*width/original_width);" << endl <<
+"    double scaleHeight = (1.0*height/original_height);" << endl;
 
       if ( ((GrowCtx *)ctx)->subgraph)
         fp <<
@@ -164,11 +166,11 @@ void GlowExportJBean::growctx( glow_eExportPass pass, ofstream& fp)
 "      		height/original_height));" << endl;
       else
         fp <<
-"//    g.transform( AffineTransform.getScaleInstance( scaleWidth, scaleHeight));" << endl <<
 "    AffineTransform save = g.getTransform();" << endl <<
-"    AffineTransform save_tmp;" << endl <<
 "    g.setColor(getBackground());" << endl <<
-"    g.fill(new Rectangle(0,0,getWidth(),getHeight()));" << endl;
+"    g.fill(new Rectangle(0,0,getWidth(),getHeight()));" << endl <<
+"    // xxx g.transform( AffineTransform.getScaleInstance( scaleWidth, scaleHeight));" << endl <<
+"    AffineTransform save_tmp;" << endl;
       if ( strcmp( ((GrowCtx *)ctx)->background_image, "") != 0)
       {
 	fp <<
@@ -834,7 +836,8 @@ void GlowExportJBean::rectrounded( double x0, double y0, double width, double he
 	y0 - dim_y0 + glow_cJBean_Offset + shadow_width << "F, " << 
 	width - 2*shadow_width << "F, " << height - 2*shadow_width << "F)," << endl;
 	}
-	fp << 
+	if ( border)
+	  fp << 
 "    new RoundRectangle2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset << "F, " << 
 	y0 - dim_y0 + glow_cJBean_Offset << "F, " << 
 	width << "F, " << height << "F, " << 2*roundamount << "F, " << 2*roundamount << "F)," << endl;
@@ -947,6 +950,8 @@ void GlowExportJBean::rectrounded( double x0, double y0, double width, double he
         else
           fp <<
 "    g.draw( shapes_p" << page << "[" << (*shape_cnt)++ << "]);" << endl;
+	if ( shadow_width == 0)
+	  (*shape_cnt)++;
       }
       break;
     }
@@ -1333,7 +1338,8 @@ void GlowExportJBean::annot( int x0, int y0, int number,
         fp <<
 "    g.transform( AffineTransform.getScaleInstance( original_width/width *" << endl <<
 "      		height/original_height * 0.75, 1));" << endl <<
-"    g.drawString( annot" << number << ", " << 
+"    if ( annot" << number << " != null)" << endl <<
+"      g.drawString( annot" << number << ", " << 
 	x0 - int(dim_x0) + glow_cJBean_Offset << 
 	" * original_height / height * width / original_width, " << 
 	y0 - int(dim_y0) + glow_cJBean_Offset << "F);" << endl;
@@ -1342,7 +1348,8 @@ void GlowExportJBean::annot( int x0, int y0, int number,
 "    g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_OFF);" << endl <<
 "    g.transform( AffineTransform.getScaleInstance( original_width/width *" << endl <<
 "      		height/original_height, 1));" << endl <<
-"    g.drawString( annot" << number << ", " << 
+"    if ( annot" << number << " != null)" << endl <<
+"      g.drawString( annot" << number << ", " << 
 	x0 - int(dim_x0) + glow_cJBean_Offset << 
 	" * original_height / height * width / original_width, " << 
 	y0 - int(dim_y0) + glow_cJBean_Offset << "F);" << endl;
@@ -1476,7 +1483,7 @@ void GlowExportJBean::node( double x1, double y1, double x2, double y2,
 "    add(" << var_name << ");" << endl;
       else
         fp <<
-"    localPanel.add(" << var_name << ", null);" << endl;
+"    localPanel.add(" << var_name << ", ScaleTools.getAddString(" << var_name << ".getBounds(),size));" << endl;
 
        break;
     }
@@ -1573,7 +1580,7 @@ void GlowExportJBean::image( double x1, double y1, double x2, double y2,
 "    add(" << var_name << ");" << endl;
       else
         fp <<
-"    localPanel.add(" << var_name << ", null);" << endl;
+"    localPanel.add(" << var_name << ", ScaleTools.getAddString(" << var_name << ".getBounds(),size));" << endl;
 
       break;
     }
@@ -1671,7 +1678,7 @@ void GlowExportJBean::bar( double x1, double y1, double x2, double y2,
 "    add(" << var_name << ");" << endl;
       else
 	fp <<
-"    localPanel.add(" << var_name << ", null);" << endl;
+"    localPanel.add(" << var_name << ", ScaleTools.getAddString(" << var_name << ".getBounds(),size));" << endl;
       break;
     }
     case glow_eExportPass_Draw:
@@ -1775,7 +1782,7 @@ void GlowExportJBean::trend( double x1, double y1, double x2, double y2,
 "    add(" << var_name << ");" << endl;
       else
 	fp <<
-"    localPanel.add(" << var_name << ", null);" << endl;
+"    localPanel.add(" << var_name << ", ScaleTools.getAddString(" << var_name << ".getBounds(),size));" << endl;
       break;
     }
     case glow_eExportPass_Draw:
@@ -1884,7 +1891,7 @@ void GlowExportJBean::axis( double x1, double y1, double x2, double y2,
 "    add(" << var_name << ");" << endl;
       else
 	fp <<
-"    localPanel.add(" << var_name << ", null);" << endl;
+"    localPanel.add(" << var_name << ", ScaleTools.getAddString(" << var_name << ".getBounds(),size));" << endl;
       break;
     }
     case glow_eExportPass_Draw:
@@ -1939,7 +1946,7 @@ void GlowExportJBean::window( double x1, double y1, double x2, double y2,
 	(int)(y1 - dim_y0 /* - glow_cJBean_Offset) */) << "," << 
 	(int)(x2 - x1 + 2 * glow_cJBean_Offset) << "," << 
 	(int)(y2 - y1 + 2 * glow_cJBean_Offset) << "));" << endl <<
-"    localPanel.add(" << var_name << ", null);" << endl;
+"    localPanel.add(" << var_name << ", ScaleTools.getAddString(" << var_name << ".getBounds(),size));" << endl;
       break;
     }
     case glow_eExportPass_Draw:
@@ -2010,7 +2017,7 @@ void GlowExportJBean::folder( double x1, double y1, double x2, double y2,
 	(int)(y1 - dim_y0 /* - glow_cJBean_Offset) */) << "," << 
 	(int)(x2 - x1 + 2 * glow_cJBean_Offset) << "," << 
 	(int)(y2 - y1 + 2 * glow_cJBean_Offset) << "));" << endl <<
-"    localPanel.add(" << var_name << ", null);" << endl;
+"    localPanel.add(" << var_name << ", ScaleTools.getAddString(" << var_name << ".getBounds(),size));" << endl;
       break;
     }
     case glow_eExportPass_Draw:
@@ -2094,7 +2101,7 @@ void GlowExportJBean::table( double x1, double y1, double x2, double y2,
 	(int)(x2 - x1 + 2 * glow_cJBean_Offset) << "," << 
 	(int)(y2 - y1 + 2 * glow_cJBean_Offset) << "));" << endl;
       fp <<
-"    localPanel.add(" << var_name << ", null);" << endl;
+"    localPanel.add(" << var_name << ", ScaleTools.getAddString(" << var_name << ".getBounds(),size));" << endl;
       break;
     }
     case glow_eExportPass_Draw:
