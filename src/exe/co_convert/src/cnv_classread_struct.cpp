@@ -547,17 +547,26 @@ int ClassRead::struct_volname_to_id()
   int sts;
   unsigned int vid_0, vid_1, vid_2, vid_3;
 
+  strcpy( struct_volid, "");
+
   strcpy( fname, source_dir);
   strcat( fname, low(volume_name));
   strcat( fname, "_v.wb_load");
 
-  strcpy( struct_volid, "");
-
   fp = fopen( fname, "r");
-  if ( !fp)
-  {
-    // printf( "** Unable to open volume wb_load file\n");
-    return 0;
+  if ( !fp) {
+    strcpy( fname, source_dir);
+    strcat( fname, "usertypes.wb_load");
+    fp = fopen( fname, "r");
+    if ( !fp) {
+      strcpy( fname, source_dir);
+      strcat( fname, "userclasses.wb_load");
+      fp = fopen( fname, "r");
+      if ( !fp) {
+	printf( "** Unable to open volume wb_load file\n");
+	return 0;
+      }
+    }
   }
 
   while( 1)

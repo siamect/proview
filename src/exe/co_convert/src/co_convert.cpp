@@ -25,6 +25,7 @@ static void usage()
   printf( "      -so: Create one common h file from wb_load-files\n");
   printf( "      -t:  Create html from xtthelp-file\n");
   printf( "      -d:  Output directory\n");
+  printf( "      -g:  Setup file\n");
   printf( "      -h:  Help\n\n");
 
 }
@@ -78,20 +79,16 @@ int main( int argc, char *argv[])
   int   xtthelp_to_html = 0;
 
 
-  if ( argc < 2 || argc > 6)
-  {
+  if ( argc < 2 || argc > 8) {
     usage();
     exit(0);
   }
 
   cr = new ClassRead();
 
-  for ( i = 1; i < argc; i++)
-  {
-    if ( strcmp( argv[i], "-d") == 0)
-    {
-      if ( i+1 >= argc)
-      {
+  for ( i = 1; i < argc; i++) {
+    if ( strcmp( argv[i], "-d") == 0) {
+      if ( i+1 >= argc) {
         usage();
         exit(0);
       }
@@ -107,13 +104,18 @@ int main( int argc, char *argv[])
         strcat( cr->dir , "/");
 #endif
     }
-    else if ( argv[i][0] == '-')
-    {
+    if ( strcmp( argv[i], "-g") == 0) {
+      if ( i+1 >= argc) {
+        usage();
+        exit(0);
+      }
+      strcpy( cr->setup_filename, argv[i+1]);
+      i++;
+    }
+    else if ( argv[i][0] == '-') {
       s = &argv[i][1];
-      while( *s)
-      {
-        switch( *s) 
-        {
+      while( *s) {
+        switch( *s) {
           case 'h':
             help();
             exit(0);
@@ -148,6 +150,9 @@ int main( int argc, char *argv[])
     else
       strcpy( files, argv[i]);
   }
+
+  if ( strcmp( cr->setup_filename, "") != 0)
+    cr->setup();
 
   if ( xtthelp_to_html) {
     XhelpToHtml *xh = new XhelpToHtml( files, cr->dir);
@@ -187,11 +192,9 @@ int main( int argc, char *argv[])
       printf( "Processing file %s\n", file_p[i]);
     if ( cr->generate_src)
       cr->src_read( file_p[i]);
-    else
-    {
+    else {
       sts = cr->read( file_p[i]);
-      if ( EVEN(sts))
-      {
+      if ( EVEN(sts)) {
         exit_sts = sts;
         break;
       }

@@ -487,7 +487,7 @@ int ClassRead::read( char *filename)
           break;
 
         default:
-          printf( "Error, unknown linetype, at line %d\n", line_cnt);
+          printf( "Error, unknown linetype, %s, at line %d\n", filename, line_cnt);
           return sts = CNV__UNKNOWN_LINETYPE;
       }
       if ( EVEN(sts))
@@ -827,8 +827,10 @@ void ClassRead::doc_init()
   memset( doc_clink_text, 0, sizeof(doc_clink_text));
   memset( doc_link_ref, 0, sizeof(doc_link_ref));
   memset( doc_link_text, 0, sizeof(doc_link_text));
+  memset( doc_groups, 0, sizeof(doc_groups));
   doc_clink_cnt = 0;
   doc_link_cnt = 0;
+  doc_group_cnt = 0;
 }
 
 int ClassRead::doc_add( char *line)
@@ -841,32 +843,35 @@ int ClassRead::doc_add( char *line)
                 	sizeof( line_part) / sizeof( line_part[0]), 
 			sizeof( line_part[0]), 0);
 
-  if ( strcmp( low(line_part[1]), "@author") == 0)
-  {
-    for ( i = 2; i < nr; i++)
-    {
+  if ( strcmp( low(line_part[1]), "@author") == 0) {
+    for ( i = 2; i < nr; i++) {
       if ( i != 2)
         strcat( doc_author, " ");
       strcat( doc_author, line_part[i]);
     }
   }
-  else if ( strcmp( low(line_part[1]), "@version") == 0)
-  {
-    for ( i = 2; i < nr; i++)
-    {
+  else if ( strcmp( low(line_part[1]), "@version") == 0) {
+    for ( i = 2; i < nr; i++) {
       if ( i != 2)
         strcat( doc_version, " ");
       strcat( doc_version, line_part[i]);
     }
   }
-  else if ( strcmp( low(line_part[1]), "@link") == 0)
-  {
+  else if ( strcmp( low(line_part[1]), "@group") == 0) {
+    char str[400];
+    
+    remove_spaces( line, str);
+    remove_spaces( &str[6], str);
+    doc_group_cnt = dcli_parse( str, " 	,", "", (char *)doc_groups,
+                	sizeof( doc_groups) / sizeof( doc_groups[0]), 
+			sizeof( doc_groups[0]), 0);
+  }
+  else if ( strcmp( low(line_part[1]), "@link") == 0) {
     if ( doc_link_cnt >= (int) (sizeof(doc_link_ref)/sizeof(doc_link_ref[0]))) {
       printf("Error: max number of links exceeded\n");
       return 1;
     }
-    for ( i = 2; i < nr; i++)
-    {
+    for ( i = 2; i < nr; i++) {
       if ( i == nr - 1)
         strcpy( doc_link_ref[doc_link_cnt], line_part[i]);
       else {
@@ -877,14 +882,12 @@ int ClassRead::doc_add( char *line)
     }
     doc_link_cnt++;
   }
-  else if ( strcmp( low(line_part[1]), "@classlink") == 0)
-  {
+  else if ( strcmp( low(line_part[1]), "@classlink") == 0) {
     if ( doc_clink_cnt >= (int) (sizeof(doc_clink_ref)/sizeof(doc_clink_ref[0]))) {
       printf("Error: max number of classlinks exceeded\n");
       return 1;
     }
-    for ( i = 2; i < nr; i++)
-    {
+    for ( i = 2; i < nr; i++) {
       if ( i == nr - 1)
         strcpy( doc_clink_ref[doc_clink_cnt], line_part[i]);
       else {
@@ -895,13 +898,11 @@ int ClassRead::doc_add( char *line)
     }
     doc_clink_cnt++;
   }
-  else if ( strcmp( low(line_part[1]), "@code") == 0)
-  {
+  else if ( strcmp( low(line_part[1]), "@code") == 0) {
     if ( nr > 2)
       strcpy( doc_code, line_part[2]);
   }
-  else if ( strcmp( low(line_part[1]), "@summary") == 0)
-  {
+  else if ( strcmp( low(line_part[1]), "@summary") == 0) {
     char low_line[400];
     char *s;
 
@@ -912,8 +913,7 @@ int ClassRead::doc_add( char *line)
 
     strcpy( doc_summary, &line[s - low_line + 9]);
   }
-  else
-  {
+  else {
     if ( doc_cnt > int(sizeof(doc_text)/sizeof(doc_text[0]) - 1))
       return 0;
     strcpy( doc_text[doc_cnt], &line[1]);

@@ -18,6 +18,8 @@ extern "C" {
 
 using namespace std;
 
+#define MAX_GROUPS 100
+
 typedef enum {
 	cread_eLine_No,
 	cread_eLine_EOF,
@@ -86,11 +88,11 @@ class CnvFile {
 class ClassRead {
   public:
     ClassRead() : first_class(1), verbose(0), generate_html(0), 
-		html_class_open(0), html_index_open(0), 
+      html_class_open(0), html_index_open(0), 
       generate_xtthelp(0), xtthelp_index_open(0), xtthelp_in_topic(0),
-		generate_src(0), generate_struct(0), struct_class_open(0),
-                common_structfile_only(0)
-		{};
+      generate_src(0), generate_struct(0), struct_class_open(0),
+      common_structfile_only(0), setup_group_cnt(0)
+      { strcpy( setup_filename, "");};
     ~ClassRead() {};
     
     FILE		*fp;
@@ -126,6 +128,8 @@ class ClassRead {
     char		graphplccon_name[20];
     char		doc_author[200];
     char		doc_version[80];
+    char		doc_groups[10][40];
+    int			doc_group_cnt;
     char		doc_code[200];
     char                doc_link_ref[20][80];
     char                doc_link_text[20][200];
@@ -181,6 +185,7 @@ class ClassRead {
     CnvFile     *html_clf;
     ofstream 	fp_html_index;
     ofstream 	fp_tmp;
+    ofstream	fp_html_group[MAX_GROUPS];
     char	html_first[80];
     char	html_tmp_name[80];
     int		html_class_open;
@@ -250,6 +255,12 @@ class ClassRead {
     void struct_get_filename( char *struct_file);
     int struct_check_typename( char *name);
 
+    // Setup
+    char setup_filename[120];
+    int setup_group_cnt;
+    char setup_groups[MAX_GROUPS][40];
+    char setup_groups_startpage[MAX_GROUPS][80];
+    int setup();
 };
 
 #if defined __cplusplus
