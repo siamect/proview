@@ -94,7 +94,7 @@ static pwr_tBoolean	loadSectObject (pwr_tStatus*, ini_sContext*, ivol_sVolume*);
 static pwr_tBoolean	loadSectRbody (pwr_tStatus*, ini_sContext*, ivol_sVolume*);
 static pwr_tBoolean     loadSectScObject (pwr_tStatus*, ini_sContext*, ivol_sVolume*);
 static pwr_tBoolean	loadSectVolume (pwr_tStatus*, ini_sContext*, ivol_sVolume*);
-static pwr_tBoolean	readSectFile (pwr_tStatus*, ini_sContext*);
+static pwr_tBoolean	readSectFile (pwr_tStatus*, ini_sContext*, ivol_sVolume*);
 static pwr_tBoolean	readSectVolRef (pwr_tStatus*, ini_sContext*);
 static pwr_tBoolean	readSectVolume (pwr_tStatus*, ini_sContext*, ivol_sVolume*);
 static gdb_sObject*	reloadObject (pwr_tStatus*, ini_sContext*, ivol_sVolume*, dbs_sObject*);
@@ -245,7 +245,8 @@ oidToObject (
 static pwr_tBoolean
 readSectFile (
   pwr_tStatus		*status,
-  ini_sContext		*cp
+  ini_sContext		*cp, 
+  ivol_sVolume          *vp
 )
 {
   char			timbuf[32];
@@ -265,9 +266,9 @@ readSectFile (
   if ( !cp->node.rtVersion.tv_sec)
     cp->node.rtVersion = cp->dbs.file.time;
 
-#if 1
-  printf("Comment in file is not OK. fix when dbs_File is OK\n");
-#else
+  vp->time = cp->dbs.file.time;
+
+#if 0
   if (strlen (cp->dbs.file.comment) > 0) {
     errh_LogInfo(&cp->log, "%s", cp->dbs.file.comment);
   }
@@ -347,7 +348,7 @@ readSectVolRef (
         time_AtoAscii(&volRef.time, time_eFormat_DateAndTime, timbuf2, sizeof(timbuf2));
 
 	errh_LogWarning(&cp->log, "Version missmatch for volume: %s, %s != %s\n",
-                        vp->volume.name, timbuf1, timbuf2);
+                        vp->name, timbuf1, timbuf2);
 	cp->warnings++;
       }
     }
@@ -423,7 +424,7 @@ loadSectRbody (
 
     bp = ivol_GetBody(sts, ob.oid, NULL);
     if (bp == NULL) {
-      errh_LogError(&cp->log, "Cannot find body of object %s\n%m", cdh_ObjidToString(NULL, ob.oid, 0), *sts);
+      // errh_LogError(&cp->log, "Cannot find body of object %s\n%m", cdh_ObjidToString(NULL, ob.oid, 0), *sts);
     } else {
       if (dbs_dAlign(bp->size) < ob.size) {
         errh_LogError(&cp->log, "Data beyond size of body, Objid %s", cdh_ObjidToString(NULL, ob.oid, 0));
@@ -508,7 +509,7 @@ reloadSectRbody (
     }
 
     if (iop->body == NULL) {
-      errh_LogError(&cp->log, "Cannot find body of object %s\n%m", cdh_ObjidToString(NULL, ob.oid, 0), sts);
+      // errh_LogError(&cp->log, "Cannot find body of object %s\n%m", cdh_ObjidToString(NULL, ob.oid, 0), sts);
     } else {
       if (dbs_dAlign(iop->op->g.size) < ob.size) {
 	errh_LogError(&cp->log, "Data beyond size of body, Objid %s", cdh_ObjidToString(NULL, ob.oid, 0));
@@ -557,14 +558,16 @@ loadSectObject (
       if(!pdr_dbs_sObject(&pdrs, &oh))
         pwr_Return(NO, sts, INI__XDR);
     }
+    if ( cdh_ObjidIsNull( oh.oid))
+      printf( "Load file is corrupt: %s\n", vp->filename);
   
     if (oh.cid == pwr_eClass_Node && oh.oid.vid == cp->node.nid)
       cp->node.nod_oid = oh.oid;  /* This is the node object.  */
 
     if ( oh.flags.b.devOnly) {
-      // continue;
+      continue;
     }
-
+    
     op = ivol_LoadObject(sts, vp, &oh, vol_mLink_load);
     if (op == NULL) {
       errh_LogError(&cp->log, "Loading object %s, %s, parent %s\n%m",
@@ -613,6 +616,9 @@ reloadSectObject (
   
     if (oh.cid == pwr_eClass_Node && oh.oid.vid == cp->node.nid)
       cp->node.nod_oid = oh.oid;  /* This is the node object.  */
+
+    if ( oh.flags.b.devOnly)
+      continue;
 
     op = reloadObject(sts, cp, vp, &oh);
     if (op == NULL) {
@@ -1238,7 +1244,7 @@ ini_CheckVolumeFile (
 
     case dbs_eSect_dir:
       if (checkSect(sts, cp, sects, dbs_cVersionDirectory))
-	readSectFile(sts, cp);
+	readSectFile(sts, cp, vp);
       break;
     case dbs_eSect_volume:
       if (checkSect(sts, cp, sects, dbs_cVersionVolume))
