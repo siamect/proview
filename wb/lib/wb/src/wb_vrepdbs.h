@@ -24,6 +24,8 @@ public:
     wb_vrepdbs(wb_erep *erep, const char *fileName);
     dbs_sEnv *dbsenv();
     bool load();
+    void objectName(wb_orep *o, char *str) const;
+    
     
     virtual void unref();
     virtual wb_vrep *ref();

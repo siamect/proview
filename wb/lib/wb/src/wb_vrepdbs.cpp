@@ -338,3 +338,36 @@ wb_vrepdbs::delete_wb_orepdbs(void *p)
 {
     free(p);
 }
+
+void
+wb_vrepdbs::objectName(wb_orep *o, char *str) const
+{
+#if 0
+    *str = 0;
+        
+    // Count ancestors
+    int cnt = 0;
+    wb_wblnode *n = ((wb_orepwbl *)o)->wblNode();
+    while ( n) {
+      cnt++;
+      n = n->o_fth;
+    }
+
+    wb_wblnode **vect = (wb_wblnode **) calloc( cnt, sizeof(vect));
+
+    n = ((wb_orepwbl *)o)->wblNode();
+    for ( int i = 0; i < cnt; i++) {
+      vect[i] = n;
+      n = n->o_fth;
+    }
+
+    for ( int i = cnt - 1; i >= 0; i--) {
+      strcat( str, vect[i]->name);
+      if ( i == cnt - 1)
+        strcat( str, ":");
+      else if ( i != 0)
+        strcat( str, "-");
+    }
+    free( vect);
+#endif
+}
