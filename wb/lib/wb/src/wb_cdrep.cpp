@@ -90,6 +90,26 @@ wb_bdrep *wb_cdrep::bdrep( pwr_tStatus *sts, char *bname)
   return bdrep;
 }
 
+wb_bdrep *wb_cdrep::bdrep( pwr_tStatus *sts, int bix)
+{
+  wb_orepdbs *orep = (wb_orepdbs *)m_orep->m_vrep->first( sts, m_orep);
+  wb_orepdbs *old;
+  while ( ODD(*sts)) {
+    if ( orep->cid() == pwr_eClass_ObjBodyDef &&
+	 cdh_oixToBix( orep->oid().oix) == (unsigned int) bix) {
+      wb_bdrep *bdrep = new wb_bdrep( *orep);
+      return bdrep;
+    }
+    old = orep;
+    orep = (wb_orepdbs *)m_orep->m_vrep->next( sts, orep);
+
+    // Delete
+    old->ref();
+    old->unref();
+  }
+  return 0;
+}
+
 wb_adrep *wb_cdrep::adrep( pwr_tStatus *sts, char *aname)
 {
   wb_orepdbs *orep_attr;

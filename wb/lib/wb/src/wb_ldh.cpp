@@ -918,6 +918,23 @@ ldh_ObjidToName(ldh_tSession session, pwr_tOid oid, ldh_eName type, char *buf, i
 
     switch ( type) {
       case ldh_eName_Object:
+      {
+        wb_object o = sp->object(oid);
+        if (!o) return o.sts();
+
+        try {
+	  char name[200];
+          strcpy( name, o.name());
+	  *size = strlen( name);
+	  if ( *size > maxsize - 1)
+	    return LDH__NAMEBUF;
+	  strcpy( buf, name);
+        }
+        catch ( wb_error& e) {
+	  return e.sts();
+        }
+        break;
+      }
       case ldh_eName_Hierarchy:
       case ldh_eName_Path:
       case ldh_eName_VolPath:

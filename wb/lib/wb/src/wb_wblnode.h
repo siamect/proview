@@ -15,11 +15,6 @@ class wb_wblnode;
 class wb_vrepwbl;
 class wb_dbs;
 
-#define wbl_cixToCid( Vid, Cix) (0 + (Vid << 16) +  (Cix << 3))
-#define wbl_tixToTid( Vid, Tyg, Tix) (0 + (Vid << 16) + (1 << 15) + (Tyg << 11) +  Tix)
-#define wbl_cixToOix( Cix, Bix, Aix) (0 + (1 << 31) + (Cix << 18) + (Bix << 15) + Aix)
-#define wbl_tixToOix( Tyg, Tix) (0 + (1 << 31) + (1 << 30) + (Tyg << 26) + (Tix << 15))
-
 typedef enum {
   wbl_eNodeType_No,
   wbl_eNodeType_Type,

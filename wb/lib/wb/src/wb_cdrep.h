@@ -41,6 +41,7 @@ class wb_cdrep
     void name(const char *name);
     void name(wb_name *name);
     
+    wb_bdrep *bdrep( pwr_tStatus *sts, int bix);
     wb_bdrep *bdrep( pwr_tStatus *sts, char *bname);
     wb_adrep *adrep( pwr_tStatus *sts, char *aname);
     

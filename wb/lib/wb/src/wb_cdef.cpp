@@ -103,7 +103,7 @@ wb_name wb_cdef::name(ldh_eName type)
   return m_cdrep->name(type);
 }
 
-wb_bdef wb_cdef::bdef( char *bname) // Fix
+wb_bdef wb_cdef::bdef( char *bname)
 {
   check();
   pwr_tStatus sts;
@@ -111,10 +111,20 @@ wb_bdef wb_cdef::bdef( char *bname) // Fix
   wb_bdrep *bdrep = m_cdrep->bdrep( &sts, bname);
   if ( ODD(sts))
     return wb_bdef( bdrep);
-  else {
-    delete bdrep;
+  else
     return wb_bdef();
-  }
+}
+
+wb_bdef wb_cdef::bdef( pwr_tOix bix)
+{
+  check();
+  pwr_tStatus sts;
+
+  wb_bdrep *bdrep = m_cdrep->bdrep( &sts, bix);
+  if ( ODD(sts))
+    return wb_bdef( bdrep);
+  else
+    return wb_bdef();
 }
 
 
