@@ -51,11 +51,12 @@ public class Gdh
   public final static int CRR_OBJECT = 43;
   public final static int GET_PARENT = 44;
   public final static int GET_OBJECT_INFO_OBJID = 45;
-
   public final static int GET_OBJECT_REF_INFO_BOOLEAN_ARRAY = 46;
   public final static int GET_OBJECT_REF_INFO_FLOAT_ARRAY = 47;
   public final static int GET_OBJECT_REF_INFO_INT_ARRAY = 48;
   public final static int GET_OBJECT_REF_INFO_STRING_ARRAY = 49;
+  public final static int GET_MSG = 50;
+  public final static int GET_MSG_TEXT = 51;
 
 
 
@@ -1296,6 +1297,10 @@ public class Gdh
               case Pwr.eType_UInt16:
               case Pwr.eType_Int8:
               case Pwr.eType_UInt8:
+	      case Pwr.eType_Status:
+	      case Pwr.eType_NetStatus:
+	      case Pwr.eType_Enum:
+	      case Pwr.eType_Mask:
                 ((jpwr.rt.Sub)(subscriptions.get(i))).setValue(in.readInt());
 	      break;
               case Pwr.eType_Float32:
@@ -1550,6 +1555,49 @@ public class Gdh
     }
   }
 
+  public CdhrString getMsg(int status)
+  {
+    try
+    {
+      out.writeInt(GET_MSG);
+      out.writeInt(status);
+      out.flush();
+      int sts = in.readInt();
+      if(sts % 2 == 0)
+      {
+        return new CdhrString(null, sts);
+      }
+
+      String str = in.readUTF();
+      return new CdhrString(str, sts);
+    }
+    catch(IOException e)
+    {
+      return new CdhrString("", __IO_EXCEPTION);
+    }
+  }
+
+  public CdhrString getMsgText(int status)
+  {
+    try
+    {
+      out.writeInt(GET_MSG_TEXT);
+      out.writeInt(status);
+      out.flush();
+      int sts = in.readInt();
+      if(sts % 2 == 0)
+      {
+        return new CdhrString(null, sts);
+      }
+
+      String str = in.readUTF();
+      return new CdhrString(str, sts);
+    }
+    catch(IOException e)
+    {
+      return new CdhrString("", __IO_EXCEPTION);
+    }
+  }
 
   public void logString(String str)
   {
