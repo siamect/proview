@@ -303,6 +303,7 @@ palette PlcEditorPalette
   {
     class AArithm
     class Adelay
+    class Add
     class ASup
     class CArithm
     class Comph
@@ -310,17 +311,38 @@ palette PlcEditorPalette
     class Curve
     class DArithm
     class DataArithm
+    class Div
     class Filter
     class Limit
+    class Max
     class Maxmin
+    class Min
+    class Mul
+    class Mux
     class PiSpeed
     class Ramp
     class Select
     class ScanTime
     class Speed
+    class Sub
     class Sum
     class Table
     class Timint
+    menu Math
+    {
+      class ACos
+      class Abs
+      class ASin
+      class ATan
+      class Cos
+      class Exp
+      class Ln
+      class Log
+      class Mod
+      class Sin
+      class Sqrt
+      class Tan
+    }
   }
   menu Control
   {
@@ -364,12 +386,34 @@ palette PlcEditorPalette
     class SubStep
     class Trans
   }
+  menu Integer
+  {
+    class BwAnd
+    class BwOr
+    class Equal
+    class Even
+    class GreaterEqual
+    class GreaterThan
+    class IAbs
+    class IAdd
+    class IDiv
+    class ILimit
+    class IMax
+    class IMin
+    class IMul
+    class IMux
+    class ISub
+    class LessEqual
+    class LessThan
+    class Odd
+  }
   menu Logic
   {
     class And
     class Count
     class DSup
     class Edge
+    class FirstScan
     class Inv
     class Or
     class Pulse
@@ -416,6 +460,7 @@ palette PlcEditorPalette
     class RemTransRcv
     class RemTransSend
     class RunningTime
+    class AntiSway
   }
   menu Signals
   {
@@ -484,6 +529,7 @@ palette PlcEditorPalette
       class ItoA
       class ItoStr
       class MaskToD
+      class NameToStr
     }
     menu Data
     {
