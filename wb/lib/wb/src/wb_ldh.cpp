@@ -255,7 +255,8 @@ ldh_ChangeObjectName(ldh_tSession session, pwr_tOid oid, char *name)
     if (!o) return o.sts();
     if (!sp->isLocal(o)) return LDH__OTHERVOLUME;
 
-    return sp->renameObject(o, n);
+    sp->renameObject(o, n);
+    return sp->sts();
   }
   catch ( wb_error& e) {
     return e.sts();
@@ -365,24 +366,18 @@ ldh_CreateObject(ldh_tSession session, pwr_tOid *oid, char *name, pwr_tCid cid, 
         
     wb_cdef cdef = sp->cdef(cid);
     
-    if ( cdh_ObjidIsNull(doid)) {
-      wb_object d_o = wb_object();
-      wb_destination d = wb_destination( doid, dest);
-      wb_object o = sp->createObject(cdef, d, n);
-      if (!o) return sp->sts();
-    
-      *oid = o.oid();
-      return o.sts();
+    if (cdh_ObjidIsNull(doid)) {
+      doid.vid = sp->vid();
+      dest = ldh_eDest_IntoLast;
     }
-    else {
-      wb_object d_o = sp->object(doid);
-      wb_destination d = d_o.destination(dest);
-      wb_object o = sp->createObject(cdef, d, n);
-      if (!o) return sp->sts();
+      
+    wb_object d_o = sp->object(doid);
+    wb_destination d = d_o.destination(dest);
+    wb_object o = sp->createObject(cdef, d, n);
+    if (!o) return sp->sts();
     
-      *oid = o.oid();
-      return o.sts();
-    }
+    *oid = o.oid();
+    return o.sts();
   }
   catch (wb_error& e) {
     return e.sts();

@@ -8,20 +8,12 @@
 
    <Description>.  */
 
-#if defined __cplusplus
-extern "C" {
-#endif
-
 #ifndef pwr_h
 # include "pwr.h"
 #endif
 
 #ifndef co_nav_help_h
 #include "co_nav_help.h"
-#endif
-
-#if defined __cplusplus
-}
 #endif
 
 #ifndef flow_h

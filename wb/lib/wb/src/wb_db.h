@@ -63,7 +63,7 @@ public:
 
   void close();
   void open(const char *fileName);
-  void openDb();
+  void openDb(bool useTxn);
   
   void create(pwr_tVid vid, pwr_tCid cid, const char *volumeName, const char *fileName);
   
@@ -71,9 +71,9 @@ public:
   
   wb_db_txn *begin(wb_db_txn *txn);
 
-  bool commit(wb_db_txn *txn);
+  bool commit(pwr_tStatus *sts);
   
-  bool abort(wb_db_txn *txn);
+  bool abort(pwr_tStatus *sts);
   
   //void adopt(wb_db_txn *txn, wb_db_ohead &o, wb_destination &dest);
   
@@ -85,9 +85,11 @@ public:
   
   bool importVolume(wb_export &e);
   
-  bool importHead(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid, pwr_tOid boid, pwr_tOid aoid, pwr_tOid foid,
-                  pwr_tOid loid, const char *name, const char *normname, pwr_mClassDef flags, pwr_tTime ohTime,
-                  pwr_tTime rbTime, pwr_tTime dbTime, size_t rbSize, size_t dbSize);
+  bool importHead(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
+                  pwr_tOid boid, pwr_tOid aoid, pwr_tOid foid, pwr_tOid loid,
+                  const char *name, const char *normname, pwr_mClassDef flags,
+                  pwr_tTime ohTime, pwr_tTime rbTime, pwr_tTime dbTime,
+                  size_t rbSize, size_t dbSize);
 
   bool importRbody(pwr_tOid oid, size_t size, void *body);
   
@@ -142,13 +144,15 @@ public:
   Dbt m_key;
   Dbt m_data;
 
+  Dbc *m_dbc;
+
   wb_db_ohead();
   wb_db_ohead(wb_db *db);
   wb_db_ohead(wb_db *db, pwr_tOid oid);
   wb_db_ohead(wb_db *db, wb_db_txn *txn, pwr_tOid oid);
-  wb_db_ohead(wb_db *db, pwr_tOid oid, pwr_tCid cid,
-              pwr_tOid poid, pwr_tOid boid, pwr_tOid aoid, pwr_tOid foid, pwr_tOid loid,
-              const char *name, const char *normname,
+  wb_db_ohead(wb_db *db, pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
+              pwr_tOid boid, pwr_tOid aoid, pwr_tOid foid, pwr_tOid loid,
+              const char *name, const char *normname, pwr_mClassDef flags,
               pwr_tTime ohTime, pwr_tTime rbTime, pwr_tTime dbTime,
               size_t rbSize, size_t dbSize);
 
@@ -157,8 +161,8 @@ public:
 
   void setDb(wb_db *db) { m_db = db;}
       
-  void put(wb_db_txn *txn);
-  void del(wb_db_txn *txn);
+  int put(wb_db_txn *txn);
+  int del(wb_db_txn *txn);
         
   pwr_tOid oid() { return m_o.oid;}
   pwr_tVid vid() { return m_o.oid.vid;}
@@ -181,14 +185,27 @@ public:
   pwr_tTime dbTime() { return m_o.body[1].time;}
   
   void name(wb_name &name);
-        
+  void name(pwr_tOid &oid);
+
+  void oid(pwr_tOid oid)  { m_o.oid = m_oid = oid;}
+
+  void cid(pwr_tCid cid)  { m_o.cid = cid;}
   void poid(pwr_tOid oid) { m_o.poid = oid;}
   void foid(pwr_tOid oid) { m_o.foid = oid;}
   void loid(pwr_tOid oid) { m_o.loid = oid;}
   void boid(pwr_tOid oid) { m_o.boid = oid;}
   void aoid(pwr_tOid oid) { m_o.aoid = oid;}
+  void flags(pwr_mClassDef flags) { m_o.flags = flags;}
+
+  void rbSize(size_t size) { m_o.body[0].size = size;}
+  void dbSize(size_t size) { m_o.body[1].size = size;}
+  void ohTime(pwr_tTime &time) { m_o.time = time;}
+  void rbTime(pwr_tTime &time) { m_o.body[0].time = time;}
+  void dbTime(pwr_tTime &time) { m_o.body[1].time = time;}
 
   void clear();
+
+  void iter(void (*print)(pwr_tOid oid, db_sObject *op));
 };
     
 class wb_db_name
@@ -199,6 +216,7 @@ public:
     pwr_tOid     poid;
     pwr_tObjName normname;
   } m_k;
+
   struct
   {
     pwr_tOid      oid;
@@ -209,6 +227,7 @@ public:
   wb_db *m_db;
   Dbt m_key;
   Dbt m_data;
+  Dbc *m_dbc;
         
   wb_db_name(wb_db *db, wb_db_txn *txn);
   wb_db_name(wb_db *db, wb_db_ohead &o);
@@ -217,11 +236,12 @@ public:
   wb_db_name(wb_db *db, pwr_tOid oid, pwr_tOid poid, const char *name);
   wb_db_name(wb_db *db, wb_db_txn *txn, pwr_tOid poid, wb_name &name);
         
-  void get(wb_db_txn *txn);
-  void put(wb_db_txn *txn);
-  void del(wb_db_txn *txn);
+  int get(wb_db_txn *txn);
+  int put(wb_db_txn *txn);
+  int del(wb_db_txn *txn);
         
   void name(wb_name &name);
+  void iter(void (*print)(pwr_tOid poid, pwr_tObjName name, pwr_tOid oid));
         
   pwr_tOid oid() { return m_d.oid;}
 };
@@ -241,6 +261,7 @@ public:
   Dbt m_data;
   Dbc *m_dbc;
         
+  wb_db_class(wb_db *db);
   wb_db_class(wb_db *db, pwr_tCid cid);
   wb_db_class(wb_db *db, pwr_tCid cid, pwr_tOid oid);
   wb_db_class(wb_db *db, wb_db_ohead &o);
@@ -249,12 +270,13 @@ public:
 
   bool succ(pwr_tOid oid);
   bool pred(pwr_tOid oid);
-  void put(wb_db_txn *txn);
-  void del(wb_db_txn *txn);
+  int put(wb_db_txn *txn);
+  int del(wb_db_txn *txn);
         
   pwr_tCid cid() { return m_k.cid;}
   pwr_tOid oid() { return m_k.oid;}
         
+  void iter(void (*print)(pwr_tOid oid, pwr_tCid cid));
                 
 };
 
@@ -269,13 +291,21 @@ public:
   
   Dbt m_key;
   Dbt m_data;
+  Dbc *m_dbc;
 
+  wb_db_dbody(wb_db *db);
   wb_db_dbody(wb_db *db, pwr_tOid oid);
   wb_db_dbody(wb_db *db, pwr_tOid oid, size_t size, void *p);
    
-  void get(wb_db_txn *txn, size_t offset, size_t size, void *p);
-  void put(wb_db_txn *txn);
-  void put(wb_db_txn *txn, size_t offset, size_t size, void *p);
+  void oid(pwr_tOid oid) {m_oid = oid;}
+  
+  int get(wb_db_txn *txn, size_t offset, size_t size, void *p);
+  int put(wb_db_txn *txn);
+  int put(wb_db_txn *txn, size_t offset, size_t size, void *p);
+
+  int del(wb_db_txn *txn);
+
+  void iter(void (*print)(pwr_tOid oid));
 };
 
 class wb_db_rbody
@@ -289,13 +319,21 @@ public:
   
   Dbt m_key;
   Dbt m_data;
+  Dbc *m_dbc;
 
+  wb_db_rbody(wb_db *db);
   wb_db_rbody(wb_db *db, pwr_tOid oid);
   wb_db_rbody(wb_db *db, pwr_tOid oid, size_t size, void *p);
   
-  void get(wb_db_txn *txn, size_t offset, size_t size, void *p);
-  void put(wb_db_txn *txn);
-  void put(wb_db_txn *txn, size_t offset, size_t size, void *p);
+  void oid(pwr_tOid oid) {m_oid = oid;}
+
+  int get(wb_db_txn *txn, size_t offset, size_t size, void *p);
+  int put(wb_db_txn *txn);
+  int put(wb_db_txn *txn, size_t offset, size_t size, void *p);
+
+  int del(wb_db_txn *txn);
+
+  void iter(void (*print)(pwr_tOid oid));
 };
 
 class wb_db_txn : public DbTxn

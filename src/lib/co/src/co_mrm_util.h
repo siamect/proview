@@ -1,9 +1,16 @@
+#ifndef co_mrm_util_h
+#define co_mrm_util_h
+
 /* co_mrm_util.h -- Motif utitlities
 
    PROVIEW/R  
    Copyright (C) 1996 by Comator Process AB.
 
    <Description>.  */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef enum {
 	mrm_eUtility_Xtt,
@@ -18,7 +25,12 @@ typedef enum {
 
 void mrm_TextInit( Widget w, XtActionProc value_changed_cb, mrm_eUtility utility);
 int mrm_TextInput( Widget w, XEvent *event, char *recall, int line_size, 
-	int recall_size, int *current_recall_line);
+                   int recall_size, int *current_recall_line);
 int mrm_IsIconicState( Widget W);
 void mrm_PositionPopup( Widget popup, Widget parent, int x, int y);
 
+#ifdef __cplusplus
+}
+#endif
+
+#endif

@@ -54,7 +54,7 @@ void FlowPixmap::print( void *pos, void *node)
 
   if ( size <= 0)
     return;
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
 
   ctx->print_ps->pixmap( p.print_z_x + ((FlowPoint *)pos)->print_z_x, 
 	p.print_z_y + ((FlowPoint *)pos)->print_z_y,
@@ -112,7 +112,7 @@ void FlowPixmap::draw( void *pos, int highlight, int hot, void *node)
 		4);
   if ( idx < 0)
     return;
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   flow_draw_pixmap( ctx, p.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, 
 	p.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y, &pixmap_data, pixmaps,
 	draw_type, idx, highlight, 0);
@@ -124,7 +124,7 @@ void FlowPixmap::draw_inverse( void *pos, int hot, void *node)
 	 4);
   if ( idx < 0)
     return;
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   flow_draw_pixmap_inverse( ctx, p.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, 
 	p.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y, &pixmap_data, pixmaps,
 	draw_type, idx, 0);
@@ -136,7 +136,7 @@ void FlowPixmap::erase( void *pos, int hot, void *node)
 	 4);
   if ( idx < 0)
     return;
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   flow_draw_pixmap_erase( ctx, p.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, 
 	p.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y, &pixmap_data, pixmaps,
 	draw_type, idx, 0);
@@ -148,7 +148,7 @@ void FlowPixmap::nav_draw( void *pos, int highlight, void *node)
 		(pixmap_size + 4) - 4);
   if ( idx < 0)
     return;
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   flow_draw_nav_pixmap( ctx, 
 	p.nav_z_x + ((FlowPoint *)pos)->nav_z_x - ctx->nav_offset_x, 
 	p.nav_z_y + ((FlowPoint *)pos)->nav_z_y - ctx->nav_offset_y, 
@@ -161,7 +161,7 @@ void FlowPixmap::nav_erase( void *pos, void *node)
 		(pixmap_size + 4) - 4);
   if ( idx < 0)
     return;
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   flow_draw_nav_pixmap_erase( ctx,
 	p.nav_z_x + ((FlowPoint *)pos)->nav_z_x - ctx->nav_offset_x, 
 	p.nav_z_y + ((FlowPoint *)pos)->nav_z_y - ctx->nav_offset_y, 

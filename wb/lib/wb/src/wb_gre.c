@@ -848,108 +848,108 @@ int	gre_node_annot_message(
 
 	/* Get graphbody for the class */
 	sts = ldh_GetClassBody( (node->hn.window_pointer)->hw.ldhsession, 
-			node->ln.classid, "GraphPlcNode",
-			&bodyclass, (char **)&graphbody, &size);
+                          node->ln.classid, "GraphPlcNode",
+                          &bodyclass, (char **)&graphbody, &size);
 	if( EVEN(sts)) return sts;
 
 	/* Draw the parameters in devbody that has an annotation nr */
 	sts = ldh_GetObjectBodyDef((node->hn.window_pointer)->hw.ldhsession,
-			node->ln.classid, "DevBody", 1, 
-			&bodydef, &rows);
+                             node->ln.classid, "DevBody", 1, 
+                             &bodydef, &rows);
 
 	if ( EVEN(sts) ) return GRE__SUCCESS;
 
 	*message = '\0';
 	annotcount = 0;
 	for ( i = 0; i < rows; i++)
-	{
-	  strcpy( annot_str, "");
-	  annotnr = 0;
-	  switch ( bodydef[i].ParClass )
-	  {
-	    case pwr_eClass_Input:
-	    {
-	      annotnr = bodydef[i].Par->Input.Graph.NiNaAnnot;
-	      type = bodydef[i].Par->Input.Info.Type;
-	      parname = bodydef[i].ParName;
-	      break;
-	    }
-	    case pwr_eClass_Intern:
-	    {
-	      annotnr = bodydef[i].Par->Intern.Graph.NiNaAnnot;
-	      type = bodydef[i].Par->Intern.Info.Type;
-	      parname = bodydef[i].ParName;
-	      break;
-	    }
-	    case pwr_eClass_Output:
-	    {
-	      annotnr = bodydef[i].Par->Output.Graph.NiNaAnnot;
-	      type = bodydef[i].Par->Output.Info.Type;
-	      parname = bodydef[i].ParName;
-	      break;
-	    }
-            default:
-              ;
- 	  }
-          if( annotnr != 0 )
-	  {
-	    /* Get the parameter value */
-	    sts = ldh_GetObjectPar( (node->hn.window_pointer)->hw.ldhsession,  
-			node->ln.object_did, 
-			"DevBody",
-			bodydef[i].ParName,
-			(char **)&parvalue, &size); 
-	    if ( EVEN(sts)) return sts;
+    {
+      strcpy( annot_str, "");
+      annotnr = 0;
+      switch ( bodydef[i].ParClass )
+        {
+        case pwr_eClass_Input:
+        {
+          annotnr = bodydef[i].Par->Input.Graph.NiNaAnnot;
+          type = bodydef[i].Par->Input.Info.Type;
+          parname = bodydef[i].ParName;
+          break;
+        }
+        case pwr_eClass_Intern:
+        {
+          annotnr = bodydef[i].Par->Intern.Graph.NiNaAnnot;
+          type = bodydef[i].Par->Intern.Info.Type;
+          parname = bodydef[i].ParName;
+          break;
+        }
+        case pwr_eClass_Output:
+        {
+          annotnr = bodydef[i].Par->Output.Graph.NiNaAnnot;
+          type = bodydef[i].Par->Output.Info.Type;
+          parname = bodydef[i].ParName;
+          break;
+        }
+        default:
+          ;
+        }
+      if( annotnr != 0 )
+        {
+          /* Get the parameter value */
+          sts = ldh_GetObjectPar( (node->hn.window_pointer)->hw.ldhsession,  
+                                  node->ln.object_did, 
+                                  "DevBody",
+                                  bodydef[i].ParName,
+                                  (char **)&parvalue, &size); 
+          if ( EVEN(sts)) return sts;
 
-	    switch ( type )
-	    {
-	      case pwr_eType_Float32:
-	      {
-	        parfloat = (pwr_tFloat32 *)parvalue;
-	        sprintf( annot_str,"%f", *parfloat);
-	        break;
-	      }
-	      case pwr_eType_String:
-	      case pwr_eType_Text:
-	      {
-	        strncpy( annot_str, parvalue, 
-			min( sizeof(annot_str), annot_max_size));
-	        annot_str[min( sizeof(annot_str), annot_max_size)-1] = 0;
-	        break;
-	      }
-	      case pwr_eType_Char:
-	      {
-		annot_str[0] = *parvalue;
-		annot_str[1] = '\0';		
-	        break;
-	      }
-	      case pwr_eType_ObjDId:
-	      {
- 	        /* Get the object name from ldh */
-		parobjdid = (pwr_tObjid *)parvalue;
-	        if ( cdh_ObjidIsNull(*parobjdid))
-		  annot_str[0] = '\0';
-	        else
-	        {
-	          sts = ldh_ObjidToName( (node->hn.window_pointer)->hw.ldhsession, 
-	         	*parobjdid, ldh_eName_Object,
-		        annot_str, sizeof( annot_str), &size);
-	          if ( EVEN(sts)) annot_str[0] = '\0';
-	        }
-	        break;
-	      }
-	    }
-	    if ( strcmp( annot_str, "") != 0)
-	    {
-	      if (annotcount != 0)
-	        strncat( message, ", ", msg_size-strlen(message));
-	      strncat( message, annot_str, msg_size-strlen(message));
-	      annotcount++;
-	    }
-	    free((char *) parvalue);	
-	    if ( annotcount >= 3 ) break;
-	  }
-	}
+          switch ( type )
+            {
+            case pwr_eType_Float32:
+            {
+              parfloat = (pwr_tFloat32 *)parvalue;
+              sprintf( annot_str,"%f", *parfloat);
+              break;
+            }
+            case pwr_eType_String:
+            case pwr_eType_Text:
+            {
+              strncpy( annot_str, parvalue, 
+                       MIN( sizeof(annot_str), annot_max_size));
+              annot_str[MIN( sizeof(annot_str), annot_max_size)-1] = 0;
+              break;
+            }
+            case pwr_eType_Char:
+            {
+              annot_str[0] = *parvalue;
+              annot_str[1] = '\0';		
+              break;
+            }
+            case pwr_eType_ObjDId:
+            {
+              /* Get the object name from ldh */
+              parobjdid = (pwr_tObjid *)parvalue;
+              if ( cdh_ObjidIsNull(*parobjdid))
+                annot_str[0] = '\0';
+              else
+                {
+                  sts = ldh_ObjidToName( (node->hn.window_pointer)->hw.ldhsession, 
+                                         *parobjdid, ldh_eName_Object,
+                                         annot_str, sizeof( annot_str), &size);
+                  if ( EVEN(sts)) annot_str[0] = '\0';
+                }
+              break;
+            }
+            }
+          if ( strcmp( annot_str, "") != 0)
+            {
+              if (annotcount != 0)
+                strncat( message, ", ", msg_size-strlen(message));
+              strncat( message, annot_str, msg_size-strlen(message));
+              annotcount++;
+            }
+          free((char *) parvalue);	
+          if ( annotcount >= 3 ) break;
+        }
+    }
 	free((char *) bodydef);
 
 	message[msg_size-1] = 0;

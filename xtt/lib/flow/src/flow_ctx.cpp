@@ -537,13 +537,13 @@ void FlowCtx::nav_zoom()
     get_borders();
 //    cout << "Borders : <" << x_left << " > " << x_right << " ^ " << 
 //		y_high << " Y " << y_low << endl;
-    x_nav_left = min( x_left, offset_x / zoom_factor);
-    x_nav_right = max( x_right, (offset_x + window_width) / zoom_factor);
-    y_nav_low = min( y_low, offset_y / zoom_factor);
-    y_nav_high = max( y_high, (offset_y + window_height) / zoom_factor);
+    x_nav_left = MIN( x_left, offset_x / zoom_factor);
+    x_nav_right = MAX( x_right, (offset_x + window_width) / zoom_factor);
+    y_nav_low = MIN( y_low, offset_y / zoom_factor);
+    y_nav_high = MAX( y_high, (offset_y + window_height) / zoom_factor);
     if ( x_nav_right - x_nav_left == 0 || y_nav_high - y_nav_low == 0)
       return;
-    nav_zoom_factor = min( nav_window_width / (x_nav_right - x_nav_left),
+    nav_zoom_factor = MIN( nav_window_width / (x_nav_right - x_nav_left),
 	nav_window_height / (y_nav_high - y_nav_low));
     nav_offset_x = int( x_nav_left * nav_zoom_factor);
     nav_offset_y = int( y_nav_low * nav_zoom_factor);
@@ -883,10 +883,10 @@ int FlowCtx::event_handler( flow_eEvent event, int x, int y, int w, int h)
 	  select_rect_ur_x - select_rect_ll_x,
 	  select_rect_ur_y - select_rect_ll_y, 0);
 
-        select_rect_ll_x = min( x, select_rect_start_x);
-        select_rect_ll_y = min( y, select_rect_start_y); 
-        select_rect_ur_x = max( x, select_rect_start_x);
-        select_rect_ur_y = max( y, select_rect_start_y); 
+        select_rect_ll_x = MIN( x, select_rect_start_x);
+        select_rect_ll_y = MIN( y, select_rect_start_y); 
+        select_rect_ur_x = MAX( x, select_rect_start_x);
+        select_rect_ur_y = MAX( y, select_rect_start_y); 
 
         draw( select_rect_ll_x, select_rect_ll_y,
 	  select_rect_ur_x, select_rect_ur_y);
@@ -933,10 +933,10 @@ int FlowCtx::event_handler( flow_eEvent event, int x, int y, int w, int h)
         select_rect_active = 0;
         select_rect_last_x = x;
         select_rect_last_y = y;
-        select_rect_ll_x = min( x, select_rect_start_x);
-        select_rect_ll_y = min( y, select_rect_start_y); 
-        select_rect_ur_x = max( x, select_rect_start_x);
-        select_rect_ur_y = max( y, select_rect_start_y);
+        select_rect_ll_x = MIN( x, select_rect_start_x);
+        select_rect_ll_y = MIN( y, select_rect_start_y); 
+        select_rect_ur_x = MAX( x, select_rect_start_x);
+        select_rect_ur_y = MAX( y, select_rect_start_y);
 
         flow_draw_rect_erase( this, select_rect_ll_x, select_rect_ll_y,
 	  select_rect_ur_x - select_rect_ll_x,

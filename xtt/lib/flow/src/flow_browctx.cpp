@@ -62,7 +62,7 @@ void BrowCtx::configure( double y_redraw)
   flow_draw_get_window_size( this, &window_width, &window_height);
   a.configure();
   get_borders();
-  frame_x_right = max( x_right, 
+  frame_x_right = MAX( x_right, 
 	1.0 * (window_width + offset_x) / zoom_factor);
   a.zoom();
   redraw( y_redraw);
@@ -129,8 +129,8 @@ void BrowCtx::zoom( double factor)
   if ( offset_y != 0)
     offset_y = int( (offset_y  - window_height / 2.0 * ( 1.0/factor - 1)) 
 		* factor);
-  offset_x = max( offset_x, 0);
-  offset_y = max( offset_y, 0);
+  offset_x = MAX( offset_x, 0);
+  offset_y = MAX( offset_y, 0);
   if ( (x_right - x_left) * zoom_factor <= window_width)
     offset_x = 0;
   if ( (y_high - y_low) * zoom_factor <= window_height)

@@ -1,6 +1,10 @@
 #ifndef co_time_h
 #define co_time_h
 
+#ifndef pwr_h
+# include "pwr.h" 
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -15,10 +19,6 @@ extern "C" {
 
    time_AtoFormAscii replaces co_TimeToAsc and
    time_FormAsciiToA replaces co_AscToTime from Comator Lib. */
-
-#ifndef pwr_h
-# include "pwr.h" 
-#endif
 
 #if defined OS_LINUX
 # include <time.h>

@@ -180,12 +180,12 @@ int goen_create_nodetype_m15(
   f_height  = f_repeat * 2;
 
   if ( !annot3_found)	
-    f_width = max( f_strlength * 2 + max( annot_width[0], annot2_width),
+    f_width = MAX( f_strlength * 2 + MAX( annot_width[0], annot2_width),
 			 f_defwidth) 
 			+ f_classnamewidth;
   else
   {
-    f_width = max( f_strlength * 4 + max( annot_width[0], annot2_width) 
+    f_width = MAX( f_strlength * 4 + MAX( annot_width[0], annot2_width) 
 		+ annot3_width, 
 		f_defwidth + f_strlength * 2) + f_classnamewidth;
     f_width_left = f_strlength * 2 + annot3_width;

@@ -676,6 +676,7 @@ int ClassRead::struct_cixstr_to_classid( char *cix_str, pwr_tClassId *cid)
 	{ "pwr_eCix_MountVolume",	pwr_eCix_MountVolume},
 	{ "pwr_eCix_MountObject",	pwr_eCix_MountObject},
 	{ "pwr_eCix_RtMenu",		pwr_eCix_RtMenu},
+	{ "pwr_eCix_VolatileVolume",		pwr_eCix_VolatileVolume},
 	{ "", 0}};
 
   found = 0;

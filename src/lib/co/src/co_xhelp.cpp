@@ -31,13 +31,13 @@
 #include "flow_browapi.h"
 #include "flow_browwidget.h"
 
-extern "C" {
+//extern "C" {
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "co_time.h"
 #include "flow_x.h"
 #include "co_mrm_util.h"
-}
+//}
 
 #include "co_lng.h"
 #include "co_xhelpnav.h"
@@ -57,12 +57,12 @@ static void xhelp_open_input_dialog( CoXHelp *xhelp, char *text, char *title,
 
   i = 0;
   XtSetArg(args[0], XmNlabelString,
-		cstr=XmStringCreateLtoR( text, "ISO8859-1") ); i++;
+           cstr=XmStringCreateLtoR( text, "ISO8859-1") ); i++;
   XtSetValues( xhelp->india_label, args, i);
   XmStringFree( cstr);
   i = 0;
   XtSetArg(args[0], XmNdialogTitle,
-		cstr=XmStringCreateLtoR( title, "ISO8859-1") ); i++;
+           cstr=XmStringCreateLtoR( title, "ISO8859-1") ); i++;
   XtSetValues( xhelp->india_widget, args, i);
   XmStringFree( cstr);
 
@@ -301,25 +301,25 @@ CoXHelp::CoXHelp(
   static XtTranslations compiled_translations = NULL;
 
   static XtActionsRec actions[] =
-  {
-    {"xhelp_inputfocus",      (XtActionProc) xhelp_action_inputfocus}
-  };
+    {
+      {"xhelp_inputfocus",      (XtActionProc) xhelp_action_inputfocus}
+    };
 
   static MrmRegisterArg	reglist[] = {
-        { "xhelp_ctx", 0 },
-	{"xhelp_activate_exit",(caddr_t)xhelp_activate_exit },
-	{"xhelp_activate_zoom_in",(caddr_t)xhelp_activate_zoom_in },
-	{"xhelp_activate_zoom_out",(caddr_t)xhelp_activate_zoom_out },
-	{"xhelp_activate_zoom_reset",(caddr_t)xhelp_activate_zoom_reset },
-	{"xhelp_activate_search",(caddr_t)xhelp_activate_search },
-	{"xhelp_activate_searchnext",(caddr_t)xhelp_activate_searchnext },
-	{"xhelp_activate_searchprevious",(caddr_t)xhelp_activate_searchprevious },
-	{"xhelp_activate_india_ok",(caddr_t)xhelp_activate_india_ok },
-	{"xhelp_activate_india_cancel",(caddr_t)xhelp_activate_india_cancel },
-	{"xhelp_create_india_label",(caddr_t)xhelp_create_india_label },
-	{"xhelp_create_india_text",(caddr_t)xhelp_create_india_text },
-	{"xhelp_activate_help",(caddr_t)xhelp_activate_help },
-	{"xhelp_create_xhelpnav_form",(caddr_t)xhelp_create_xhelpnav_form }
+    { "xhelp_ctx", 0 },
+    {"xhelp_activate_exit",(caddr_t)xhelp_activate_exit },
+    {"xhelp_activate_zoom_in",(caddr_t)xhelp_activate_zoom_in },
+    {"xhelp_activate_zoom_out",(caddr_t)xhelp_activate_zoom_out },
+    {"xhelp_activate_zoom_reset",(caddr_t)xhelp_activate_zoom_reset },
+    {"xhelp_activate_search",(caddr_t)xhelp_activate_search },
+    {"xhelp_activate_searchnext",(caddr_t)xhelp_activate_searchnext },
+    {"xhelp_activate_searchprevious",(caddr_t)xhelp_activate_searchprevious },
+    {"xhelp_activate_india_ok",(caddr_t)xhelp_activate_india_ok },
+    {"xhelp_activate_india_cancel",(caddr_t)xhelp_activate_india_cancel },
+    {"xhelp_create_india_label",(caddr_t)xhelp_create_india_label },
+    {"xhelp_create_india_text",(caddr_t)xhelp_create_india_text },
+    {"xhelp_activate_help",(caddr_t)xhelp_activate_help },
+    {"xhelp_create_xhelpnav_form",(caddr_t)xhelp_create_xhelpnav_form }
 	};
 
   static int	reglist_num = (sizeof reglist / sizeof reglist[0]);
@@ -343,14 +343,14 @@ CoXHelp::CoXHelp(
   MrmRegisterNames(reglist, reglist_num);
 
   parent_wid = XtCreatePopupShell( title, 
-		topLevelShellWidgetClass, parent_wid, args, i);
+                                   topLevelShellWidgetClass, parent_wid, args, i);
 
   sts = MrmFetchWidgetOverride( s_DRMh, "xhelp_window", parent_wid,
-			name, args, 1, &toplevel, &dclass);
+                                name, args, 1, &toplevel, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch %s\n", name);
 
   sts = MrmFetchWidget(s_DRMh, "input_dialog", toplevel,
-		&india_widget, &dclass);
+                       &india_widget, &dclass);
   if (sts != MrmSUCCESS)  printf("can't fetch input dialog\n");
 
   MrmCloseHierarchy(s_DRMh);
@@ -358,7 +358,7 @@ CoXHelp::CoXHelp(
 
   if (compiled_translations == NULL) 
     XtAppAddActions( XtWidgetToApplicationContext(toplevel), 
-						actions, XtNumber(actions));
+                     actions, XtNumber(actions));
  
   if (compiled_translations == NULL) 
     compiled_translations = XtParseTranslationTable(translations);
@@ -372,7 +372,7 @@ CoXHelp::CoXHelp(
   XtManageChild( toplevel);
 
   xhelpnav = new CoXHelpNav( (void *)this, xhelpnav_form, title, utility, &brow_widget, 
-		       &sts);
+                             &sts);
 
   // XtPopup( parent_wid, XtGrabNone);
   // displayed = 1;
@@ -380,7 +380,7 @@ CoXHelp::CoXHelp(
 
   // Connect the window manager close-button to exit
   flow_AddCloseVMProtocolCb( parent_wid,
-			     (XtCallbackProc)xhelp_activate_exit, this);
+                             (XtCallbackProc)xhelp_activate_exit, this);
 
   *xa_sts = 1;
 }

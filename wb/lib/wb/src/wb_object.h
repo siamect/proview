@@ -6,7 +6,7 @@
 #include "wb_orep.h"
 #include "wb_ldh.h"
 #include "wb_destination.h"
-#include "wb_location.h"
+//#include "wb_location.h"
 #include "wb_attribute.h"
 
 class wb_bdef;

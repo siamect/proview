@@ -1,16 +1,12 @@
-#include "flow_std.h"
-
-#include <float.h>
-
 #include <iostream.h>
+#include "co_dcli.h"
+#include "flow_std.h"
+#include <float.h>
 #include "flow_image.h"
 #include "flow_draw.h"
-extern "C" {
-#include "co_dcli.h"
-}
 
-FlowImage::FlowImage( FlowCtx *flow_ctx, char *imagefile, double x = 0, double y = 0,
-		      flow_mDisplayLevel display_lev = flow_mDisplayLevel_1) : 
+FlowImage::FlowImage( FlowCtx *flow_ctx, char *imagefile, double x, double y,
+		      flow_mDisplayLevel display_lev) : 
 	ctx(flow_ctx), ll(flow_ctx,x,y), ur(flow_ctx,x,y), display_level(display_lev), 
 	image(0), original_image(0), 
 	pixmap(0), nav_pixmap(0), clip_mask(0), nav_clip_mask(0), current_zoom_factor(0)
@@ -122,8 +118,8 @@ void FlowImage::print( void *pos, void *node)
     return;
   int idx = int( ctx->print_zoom_factor / ctx->base_zoom_factor * line_width - 
 		1);
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   if ( !fill)
     ctx->print_ps->rect( ll.print_z_x + ((FlowPoint *)pos)->print_z_x, 
 	ll.print_z_y + ((FlowPoint *)pos)->print_z_y,

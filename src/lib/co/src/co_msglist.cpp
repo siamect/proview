@@ -13,7 +13,7 @@
 extern "C" {
 #include "co_cdh.h"
 #include "co_time.h"
-#include "pwr_baseclasses.h"
+//#include "pwr_baseclasses.h"
 }
 
 #include <Xm/Xm.h>

@@ -6,7 +6,7 @@
 #include "wb_orep.h"
 #include "wb_vrep.h"
 #include "wb_ldh.h"
-#include "wb_position.h"
+//#include "wb_position.h"
 #include "wb_adrep.h"
 
 class wb_vrep;

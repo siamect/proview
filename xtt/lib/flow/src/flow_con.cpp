@@ -1511,20 +1511,20 @@ int FlowCon::con_route( double src_x, double src_y, flow_eDirection src_dir,
   double doc_ll_x, doc_ur_x, doc_ll_y, doc_ur_y;
   FlowNode *doc;
 
-  ll_x = min( source_node->x_left, dest_node->x_left) - 10 * ctx->draw_delta;
-  ur_x = max( source_node->x_right, dest_node->x_right) + 10 * ctx->draw_delta;
-  ll_y = min( source_node->y_low, dest_node->y_low) - 10 * ctx->draw_delta;
-  ur_y = max( source_node->y_high, dest_node->y_high) + 10 * ctx->draw_delta;
+  ll_x = MIN( source_node->x_left, dest_node->x_left) - 10 * ctx->draw_delta;
+  ur_x = MAX( source_node->x_right, dest_node->x_right) + 10 * ctx->draw_delta;
+  ll_y = MIN( source_node->y_low, dest_node->y_low) - 10 * ctx->draw_delta;
+  ur_y = MAX( source_node->y_high, dest_node->y_high) + 10 * ctx->draw_delta;
 
   /* Find the document node */
   doc = (FlowNode *) ctx->get_document( src_x, src_y);
   if ( doc )
   {
     doc->measure( &doc_ll_x, &doc_ll_y, &doc_ur_x, &doc_ur_y);
-    ll_x = max( ll_x, doc_ll_x);
-    ur_x = min( ur_x, doc_ur_x);
-    ll_y = max( ll_y, doc_ll_y);
-    ur_y = min( ur_y, doc_ur_y);
+    ll_x = MAX( ll_x, doc_ll_x);
+    ur_x = MIN( ur_x, doc_ur_x);
+    ll_y = MAX( ll_y, doc_ll_y);
+    ur_y = MIN( ur_y, doc_ur_y);
 
     if ( dest_x < doc_ll_x || dest_x > doc_ur_x ||
          dest_y < doc_ll_y || dest_y > doc_ur_y ||
@@ -1582,8 +1582,8 @@ int FlowCon::con_route_area( double wind_ll_x, double wind_ll_y,
     for ( node_p = nodelist; node_p; node_p = node_p->link)
     {
       if ( node_p->in_horiz_line( dest_y, 
-		min( dest_x, src_x) + ctx->draw_delta + CON_EPSILON,
-		max( dest_x, src_x) - ctx->draw_delta - CON_EPSILON))
+		MIN( dest_x, src_x) + ctx->draw_delta + CON_EPSILON,
+		MAX( dest_x, src_x) - ctx->draw_delta - CON_EPSILON))
       {
         found = 1;
         break;
@@ -1617,8 +1617,8 @@ int FlowCon::con_route_area( double wind_ll_x, double wind_ll_y,
     for ( node_p = nodelist; node_p; node_p = node_p->link)
     {
       if ( node_p->in_vert_line( dest_x, 
-		min( dest_y, src_y) + ctx->draw_delta + CON_EPSILON,
-		max( dest_y, src_y) - ctx->draw_delta - CON_EPSILON))
+		MIN( dest_y, src_y) + ctx->draw_delta + CON_EPSILON,
+		MAX( dest_y, src_y) - ctx->draw_delta - CON_EPSILON))
       {
         found = 1;
         break;
@@ -2462,8 +2462,8 @@ int FlowCon::find_horiz_line_up( double check_y, double check_l_x,
       }
       else
       {
-         check_wind_l_x = max( check_l_x, node_p->obst_x_left);
-         check_wind_u_x = min( check_u_x, node_p->obst_x_right);
+         check_wind_l_x = MAX( check_l_x, node_p->obst_x_left);
+         check_wind_u_x = MIN( check_u_x, node_p->obst_x_right);
       }
       found = 0;
       for ( node_p2 = nodelist; node_p2; node_p2 = node_p2->link)
@@ -2546,8 +2546,8 @@ int FlowCon::find_horiz_line_up( double check_y, double check_l_x,
           }
           else
           {
-             check_wind_l_x = max( check_l_x, l_x);
-             check_wind_u_x = min( check_u_x, u_x);
+             check_wind_l_x = MAX( check_l_x, l_x);
+             check_wind_u_x = MIN( check_u_x, u_x);
           }
           found = 0;
           for ( node_p2 = nodelist; node_p2; node_p2 = node_p2->link)
@@ -2623,8 +2623,8 @@ int FlowCon::find_horiz_line_down( double check_y, double check_l_x,
       }
       else
       {
-         check_wind_l_x = max( check_l_x, node_p->obst_x_left);
-         check_wind_u_x = min( check_u_x, node_p->obst_x_right);
+         check_wind_l_x = MAX( check_l_x, node_p->obst_x_left);
+         check_wind_u_x = MIN( check_u_x, node_p->obst_x_right);
       }
       found = 0;
       for ( node_p2 = nodelist; node_p2; node_p2 = node_p2->link)
@@ -2707,8 +2707,8 @@ int FlowCon::find_horiz_line_down( double check_y, double check_l_x,
           }
           else
           {
-             check_wind_l_x = max( check_l_x, l_x);
-             check_wind_u_x = min( check_u_x, u_x);
+             check_wind_l_x = MAX( check_l_x, l_x);
+             check_wind_u_x = MIN( check_u_x, u_x);
           }
           found = 0;
           for ( node_p2 = nodelist; node_p2; node_p2 = node_p2->link)
@@ -2784,8 +2784,8 @@ int FlowCon::find_vert_line_right( double check_x, double check_l_y,
       }
       else
       {
-         check_wind_l_y = max( check_l_y, node_p->obst_y_low);
-         check_wind_u_y = min( check_u_y, node_p->obst_y_high);
+         check_wind_l_y = MAX( check_l_y, node_p->obst_y_low);
+         check_wind_u_y = MIN( check_u_y, node_p->obst_y_high);
       }
       found = 0;
       for ( node_p2 = nodelist; node_p2; node_p2 = node_p2->link)
@@ -2869,8 +2869,8 @@ int FlowCon::find_vert_line_right( double check_x, double check_l_y,
           }
           else
           {
-            check_wind_l_y = max( check_l_y, l_y);
-            check_wind_u_y = min( check_u_y, u_y);
+            check_wind_l_y = MAX( check_l_y, l_y);
+            check_wind_u_y = MIN( check_u_y, u_y);
           }
           found = 0;
           for ( node_p2 = nodelist; node_p2; node_p2 = node_p2->link)
@@ -2947,8 +2947,8 @@ int FlowCon::find_vert_line_left( double check_x, double check_l_y,
       }
       else
       {
-         check_wind_l_y = max( check_l_y, node_p->obst_y_low);
-         check_wind_u_y = min( check_u_y, node_p->obst_y_high);
+         check_wind_l_y = MAX( check_l_y, node_p->obst_y_low);
+         check_wind_u_y = MIN( check_u_y, node_p->obst_y_high);
       }
       found = 0;
       for ( node_p2 = nodelist; node_p2; node_p2 = node_p2->link)
@@ -3031,8 +3031,8 @@ int FlowCon::find_vert_line_left( double check_x, double check_l_y,
           }
           else
           {
-            check_wind_l_y = max( check_l_y, l_y);
-            check_wind_u_y = min( check_u_y, u_y);
+            check_wind_l_y = MAX( check_l_y, l_y);
+            check_wind_u_y = MIN( check_u_y, u_y);
           }
           found = 0;
           for ( node_p2 = nodelist; node_p2; node_p2 = node_p2->link)

@@ -156,11 +156,11 @@ int goen_create_nodetype_m7(
 		(strlen( graphbody->graphname) + 2);
   f_height  = f_repeat;
   if ( annot_count <= 1)	
-    f_width = max( f_strlength * 2 + annot_width[0], f_defwidth) 
+    f_width = MAX( f_strlength * 2 + annot_width[0], f_defwidth) 
 			+ f_classnamewidth;
   else
   {
-    f_width = max( f_strlength * 4 + annot_width[0] + annot_width[1], 
+    f_width = MAX( f_strlength * 4 + annot_width[0] + annot_width[1], 
 			f_defwidth + f_strlength * 2) + f_classnamewidth;
     f_width_left = f_strlength * 2 + annot_width[1];
   }

@@ -206,7 +206,7 @@ addNode (
     co_SetFormat(&np->fm, node->bo, node->ft);
 
     if (np == gdbroot->my_node)
-      np->flags.m |= net_eState_up;
+      np->flags.m |= net_eState_up;  /* ERROR. ERROR, ERROR !!! */
 
   } gdb_ScopeUnlock;
 

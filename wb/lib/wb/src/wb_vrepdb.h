@@ -8,6 +8,9 @@
 
 class wb_vrepdb : public wb_vrep
 {
+private:
+  bool deleteFamilyMember(pwr_tOid oid, wb_db_txn *txn);
+
 protected:
   wb_erep *m_erep;
   wb_merep *m_merep;
@@ -19,7 +22,6 @@ protected:
 public:
 
   wb_db *m_db;
-  wb_db_txn *m_txn;    
   wb_db_ohead m_ohead;
   
   wb_vrepdb(wb_erep *erep, const char *fileName);
@@ -72,8 +74,9 @@ public:
   virtual bool renameObject(pwr_tStatus *sts, wb_orep *orep, wb_name &name);
 
 
-  virtual bool commit(pwr_tStatus *sts);
-  virtual bool abort(pwr_tStatus *sts);
+  virtual bool commit(pwr_tStatus *sts) {return m_db->commit(sts);}
+  
+  virtual bool abort(pwr_tStatus *sts) {return m_db->abort(sts);}
 
   virtual bool writeAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, size_t offset, size_t size, void *p);
 

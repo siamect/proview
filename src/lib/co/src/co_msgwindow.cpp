@@ -10,12 +10,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-extern "C" {
 #include "co_cdh.h"
-#include "co_dcli.h"
 #include "co_time.h"
-#include "pwr_baseclasses.h"
-}
+#include "co_dcli.h"
 
 #include <Xm/Xm.h>
 #include <Xm/XmP.h>

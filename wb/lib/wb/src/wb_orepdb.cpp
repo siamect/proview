@@ -42,9 +42,7 @@ wb_orepdb::operator delete(void *p)
 //
 
 pwr_tOid wb_orepdb::oid() const
-{
-  pwr_tStatus sts;
-    
+{    
   return m_oid;
 }
 

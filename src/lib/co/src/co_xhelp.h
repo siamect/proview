@@ -8,9 +8,9 @@
 
    <Description>.  */
 
-#if defined __cplusplus
-extern "C" {
-#endif
+//#if defined __cplusplus
+//extern "C" {
+//#endif
 
 #ifndef pwr_h
 # include "pwr.h"
@@ -62,9 +62,9 @@ class CoXHelp {
 };
 
 
-#if defined __cplusplus
-}
-#endif
+//#if defined __cplusplus
+//}
+//#endif
 #endif
 
 

@@ -173,10 +173,10 @@ int goen_create_nodetype_m0(
   }
 	
   f_height  = 3 * f_repeat + 
-	       (max(inputpoints,outputpoints)-1)*f_repeat;
+	       (MAX(inputpoints,outputpoints)-1)*f_repeat;
 
   classname_width = strlen( graphbody->graphname) * f_strlength;
-  f_width = max( f_strlength * 4 + max( classname_width, annot_width),
+  f_width = MAX( f_strlength * 4 + MAX( classname_width, annot_width),
 			 f_defwidth + f_strlength * 2);
   f_namepos = f_width/2.0 - classname_width/2;
 

@@ -94,8 +94,8 @@ void FlowArrow::print( void *pos, void *node)
 {
   int idx = int( ctx->print_zoom_factor / ctx->base_zoom_factor * 
 		line_width - 1);
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   ctx->print_ps->arrow( 
 	p_dest.print_z_x + ((FlowPoint *)pos)->print_z_x, 
 	p_dest.print_z_y + ((FlowPoint *)pos)->print_z_y,
@@ -155,8 +155,8 @@ void FlowArrow::draw( void *pos, int highlight, int hot, void *node)
 {
   int idx = int( ctx->zoom_factor / ctx->base_zoom_factor * line_width - 1);
   idx += hot;
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   flow_draw_arrow( ctx,
 	p_dest.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, 
 	p_dest.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y, 
@@ -171,8 +171,8 @@ void FlowArrow::erase( void *pos, int hot, void *node)
 {
   int idx = int( ctx->zoom_factor / ctx->base_zoom_factor * line_width - 1);
   idx += hot;
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   flow_draw_arrow_erase( ctx,
 	p_dest.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, 
 	p_dest.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y, 
@@ -186,8 +186,8 @@ void FlowArrow::erase( void *pos, int hot, void *node)
 void FlowArrow::nav_draw( void *pos, int highlight, void *node)
 {
   int idx = int( ctx->nav_zoom_factor / ctx->base_zoom_factor * line_width - 1);
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   flow_draw_nav_arrow( ctx,
 	p_dest.nav_z_x + ((FlowPoint *)pos)->nav_z_x - ctx->nav_offset_x, 
 	p_dest.nav_z_y + ((FlowPoint *)pos)->nav_z_y - ctx->nav_offset_y, 
@@ -201,8 +201,8 @@ void FlowArrow::nav_draw( void *pos, int highlight, void *node)
 void FlowArrow::nav_erase( void *pos, void *node)
 {
   int idx = int( ctx->nav_zoom_factor / ctx->base_zoom_factor * line_width - 1);
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   flow_draw_nav_arrow_erase( ctx,
 	p_dest.nav_z_x + ((FlowPoint *)pos)->nav_z_x - ctx->nav_offset_x, 
 	p_dest.nav_z_y + ((FlowPoint *)pos)->nav_z_y - ctx->nav_offset_y, 

@@ -39,8 +39,8 @@ void FlowRect::print( void *pos, void *node)
     return;
   int idx = int( ctx->print_zoom_factor / ctx->base_zoom_factor * line_width - 
 		1);
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   if ( !fill)
     ctx->print_ps->rect( ll.print_z_x + ((FlowPoint *)pos)->print_z_x, 
 	ll.print_z_y + ((FlowPoint *)pos)->print_z_y,
@@ -113,8 +113,8 @@ void FlowRect::draw( void *pos, int highlight, int hot, void *node)
     idx = int( ctx->zoom_factor / ctx->base_zoom_factor * line_width - 1);
     idx += hot;
   }
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   if ( !fill)
     flow_draw_rect( ctx, ll.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, ll.z_y + 
 	((FlowPoint *)pos)->z_y - ctx->offset_y, 
@@ -141,8 +141,8 @@ void FlowRect::erase( void *pos, int hot, void *node)
     idx = int( ctx->zoom_factor / ctx->base_zoom_factor * line_width - 1);
     idx += hot;
   }
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   if ( !fill)
     flow_draw_rect_erase( ctx, ll.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, ll.z_y + 
 	((FlowPoint *)pos)->z_y - ctx->offset_y, 
@@ -167,8 +167,8 @@ void FlowRect::nav_draw( void *pos, int highlight, void *node)
   {
     idx = int( ctx->nav_zoom_factor / ctx->base_zoom_factor * line_width - 1);
   }
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   if ( !fill)
     flow_draw_nav_rect( ctx, ll.nav_z_x + ((FlowPoint *)pos)->nav_z_x - 
 	ctx->nav_offset_x, ll.nav_z_y + 
@@ -191,8 +191,8 @@ void FlowRect::nav_erase( void *pos, void *node)
   {
     idx = int( ctx->nav_zoom_factor / ctx->base_zoom_factor * line_width - 1);
   }
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   if ( !fill)
     flow_draw_nav_rect_erase( ctx, ll.nav_z_x + ((FlowPoint *)pos)->nav_z_x - 
 	ctx->nav_offset_x, ll.nav_z_y + 

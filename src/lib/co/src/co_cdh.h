@@ -1,10 +1,6 @@
 #ifndef co_cdh_h
 #define co_cdh_h
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /* co_cdh.h -- class definition handler
 
    PROVIEW/R
@@ -23,6 +19,10 @@ extern "C" {
 #include "pwr_class.h"
 #endif
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define cdh_cMaxVidGroup	 255
 #define cdh_cMaxCix		4095

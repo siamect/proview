@@ -3,6 +3,8 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <errno.h>
+#include "pwr.h"
+#include "pwr_class.h"
 #include "co_dcli.h"
 #include "db_cxx.h"
 #include "wb_ldh.h"
@@ -10,6 +12,9 @@
 #include "wb_db.h"
 #include "wb_name.h"
 #include "wb_export.h"
+
+
+static void printstat(DbEnv *ep, char *s);
 
 
 wb_db_info::wb_db_info(wb_db *db) :
@@ -43,13 +48,16 @@ void wb_db_info::put(wb_db_txn *txn)
   printf("info put: %d\n", ret);
 }
 
+wb_db_class::wb_db_class(wb_db *db) :
+  m_db(db), m_key(&m_k, sizeof(m_k)), m_data(0, 0), m_dbc(0)
+{
+}
+
 wb_db_class::wb_db_class(wb_db *db, wb_db_txn *txn, pwr_tCid cid) :
   m_db(db), m_key(&m_k, sizeof(m_k)), m_data(0, 0), m_dbc(0)
 {
   m_k.oid = pwr_cNOid;
-  m_k.cid = cid;
-    
-  m_db->m_t_class->cursor(txn, &m_dbc, 0);
+  m_k.cid = cid;    
 }
 
 wb_db_class::wb_db_class(wb_db *db, pwr_tCid cid, pwr_tOid oid) :
@@ -70,9 +78,16 @@ bool wb_db_class::succ(pwr_tOid oid)
 {
   m_k.oid = oid;
   m_k.oid.oix += 1;
-    
+  
+  if (m_dbc)
+    m_dbc->close();
+#if 0
+  m_db->m_t_class->cursor(txn, &m_dbc, 0);
   int ret = m_dbc->get(&m_key, &m_data, DB_SET_RANGE);
+  m_dbc->close();
   return ret == 0;
+#endif
+  return false;
 }
 
 bool wb_db_class::pred(pwr_tOid oid)
@@ -86,14 +101,44 @@ bool wb_db_class::pred(pwr_tOid oid)
   return ret == 0;
 }
 
-void wb_db_class::put(wb_db_txn *txn)
+int wb_db_class::put(wb_db_txn *txn)
 {
-  m_db->m_t_class->put(txn, &m_key, &m_data, 0);
+  return m_db->m_t_class->put(txn, &m_key, &m_data, DB_NOOVERWRITE);
 }
 
-void wb_db_class::del(wb_db_txn *txn)
+int wb_db_class::del(wb_db_txn *txn)
 {
-  m_db->m_t_class->del(txn, &m_key, 0);
+  return m_db->m_t_class->del(txn, &m_key, 0);
+}
+
+void wb_db_class::iter(void (*print)(pwr_tOid oid, pwr_tCid cid))
+{
+  int rc = 0;  
+
+  m_db->m_t_class->cursor(m_db->m_txn, &m_dbc, 0);
+
+	/* Initialize the key/data pair so the flags aren't set. */
+	memset(&m_k, 0, sizeof(m_k));
+
+  printf("sizeof(m_k): %d\n", sizeof(m_k));
+  
+  m_key.set_data(&m_k);
+  m_key.set_ulen(sizeof(m_k));
+  m_key.set_flags(DB_DBT_USERMEM);
+  
+	/* Walk through the database and print out the key/data pairs. */
+  //int rc = m_dbc->get(&m_key, &m_data, DB_FIRST);
+
+  while ((rc = m_dbc->get(&m_key, &m_data, DB_NEXT)) == 0) {
+    //printf("k: %d, d: %d\n", (int)m_key.get_size(), (int)m_data.get_size());
+    //volatile int a = m_key.get_size();
+    //a = m_data.get_size();
+    
+    print(m_k.oid, m_k.cid);
+    
+  }
+  
+  m_dbc->close();
 }
 
 wb_db_class::~wb_db_class()
@@ -105,12 +150,14 @@ wb_db_class::~wb_db_class()
 wb_db_name::wb_db_name(wb_db *db, wb_db_txn *txn) :
   m_db(db), m_key(&m_k, sizeof(m_k)), m_data(&m_d, sizeof(m_d))
 {
+  memset(&m_k, 0, sizeof(m_k));
   m_k.poid = pwr_cNOid;
 }
 
 wb_db_name::wb_db_name(wb_db *db, wb_db_ohead &o) :
   m_db(db), m_key(&m_k, sizeof(m_k)), m_data(&m_d, sizeof(m_d))
 {
+  memset(&m_k, 0, sizeof(m_k));
   m_k.poid = o.poid();
   strcpy(m_k.normname, o.normname());
   m_d.oid = o.oid();
@@ -120,6 +167,8 @@ wb_db_name::wb_db_name(wb_db *db, pwr_tOid oid, pwr_tOid poid, const char *name)
   m_db(db), m_key(&m_k, sizeof(m_k)), m_data(&m_d, sizeof(m_d))
 {
   wb_name n(name);
+
+  memset(&m_k, 0, sizeof(m_k));
   
   m_k.poid = poid;
   strcpy(m_k.normname, n.normName(cdh_mName_object));
@@ -129,6 +178,7 @@ wb_db_name::wb_db_name(wb_db *db, pwr_tOid oid, pwr_tOid poid, const char *name)
 wb_db_name::wb_db_name(wb_db *db, wb_db_txn *txn, pwr_tOid poid, wb_name &name) :
   m_db(db), m_key(&m_k, sizeof(m_k)), m_data(&m_d, sizeof(m_d))
 {
+  memset(&m_k, 0, sizeof(m_k));
   m_k.poid = poid;
   strcpy(m_k.normname, name.normName(cdh_mName_object));
   m_d.oid = pwr_cNOid;
@@ -153,20 +203,59 @@ wb_db_name::wb_db_name(wb_db *db, wb_db_txn *txn, pwr_tOid poid, wb_name &name) 
 //}
 
 
-void wb_db_name::put(wb_db_txn *txn)
+int wb_db_name::put(wb_db_txn *txn)
 {
-  m_db->m_t_name->put(txn, &m_key, &m_data, 0);
+  return m_db->m_t_name->put(txn, &m_key, &m_data, DB_NOOVERWRITE);
 }
 
-void wb_db_name::del(wb_db_txn *txn)
+int wb_db_name::del(wb_db_txn *txn)
 {
-  m_db->m_t_name->del(txn, &m_key, 0);
+  return m_db->m_t_name->del(txn, &m_key, 0);
 }
 
 void wb_db_name::name(wb_name &name)
 {
+  memset(m_k.normname, 0, sizeof(m_k.normname));
   strcpy(m_k.normname, name.normName(cdh_mName_object));
 }
+
+void wb_db_name::iter(void (*print)(pwr_tOid poid, pwr_tObjName name, pwr_tOid oid))
+{
+  int rc = 0;  
+
+  m_db->m_t_name->cursor(m_db->m_txn, &m_dbc, 0);
+
+	/* Initialize the key/data pair so the flags aren't set. */
+	memset(&m_k, 0, sizeof(m_k));
+	memset(&m_d, 0, sizeof(m_d));
+
+  printf("sizeof(m_k): %d\n", sizeof(m_k));
+  printf("sizeof(m_d): %d\n", sizeof(m_d));
+  
+  m_key.set_data(&m_k);
+  m_key.set_ulen(sizeof(m_k));
+  m_key.set_flags(DB_DBT_USERMEM);
+
+  m_data.set_data(&m_d);
+  m_data.set_ulen(sizeof(m_d));
+  m_data.set_flags(DB_DBT_USERMEM);
+  
+  
+	/* Walk through the database and print out the key/data pairs. */
+  //int rc = m_dbc->get(&m_key, &m_data, DB_FIRST);
+
+  while ((rc = m_dbc->get(&m_key, &m_data, DB_NEXT)) == 0) {
+    //printf("k: %d, d: %d\n", (int)m_key.get_size(), (int)m_data.get_size());
+    //volatile int a = m_key.get_size();
+    //a = m_data.get_size();
+    
+    print(m_k.poid, m_k.normname, m_d.oid);
+    
+  }
+  
+  m_dbc->close();
+}
+
 
 wb_db_ohead::wb_db_ohead() :
   m_db(0), m_key(&m_oid, sizeof(m_oid)), m_data(&m_o, sizeof(m_o))
@@ -184,20 +273,20 @@ wb_db_ohead::wb_db_ohead(wb_db *db, pwr_tOid oid) :
   m_db(db), m_key(&m_oid, sizeof(m_oid)), m_data(&m_o, sizeof(m_o))
 {
   memset(&m_o, 0, sizeof(m_o));
-  m_oid = oid;
+  m_oid = m_o.oid = oid;
 }
 
 wb_db_ohead::wb_db_ohead(wb_db *db, wb_db_txn *txn, pwr_tOid oid) :
   m_db(db), m_key(&m_oid, sizeof(m_oid)), m_data(&m_o, sizeof(m_o))
 {
   memset(&m_o, 0, sizeof(m_o));
-  m_oid = oid;
+  m_oid = m_o.oid = oid;
   get(txn);
 }
 
-wb_db_ohead::wb_db_ohead(wb_db *db, pwr_tOid oid, pwr_tCid cid,
-                         pwr_tOid poid, pwr_tOid boid, pwr_tOid aoid, pwr_tOid foid, pwr_tOid loid,
-                         const char *name, const char *normname,
+wb_db_ohead::wb_db_ohead(wb_db *db, pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
+                         pwr_tOid boid, pwr_tOid aoid, pwr_tOid foid, pwr_tOid loid,
+                         const char *name, const char *normname, pwr_mClassDef flags,
                          pwr_tTime ohTime, pwr_tTime rbTime, pwr_tTime dbTime,
                          size_t rbSize, size_t dbSize) :
   m_db(db), m_key(&m_oid, sizeof(m_oid)), m_data(&m_o, sizeof(m_o))
@@ -215,7 +304,7 @@ wb_db_ohead::wb_db_ohead(wb_db *db, pwr_tOid oid, pwr_tCid cid,
   m_o.foid = foid;
   m_o.loid =loid;
     
-  m_o.flags.m = 0;
+  m_o.flags = flags;
 
   m_o.body[0].time = rbTime;
   m_o.body[0].size = rbSize;
@@ -226,37 +315,56 @@ wb_db_ohead::wb_db_ohead(wb_db *db, pwr_tOid oid, pwr_tCid cid,
 
 wb_db_ohead &wb_db_ohead::get(wb_db_txn *txn)
 {
+  int rc = 0;
   m_data.set_ulen(sizeof(m_o));
   m_data.set_flags(DB_DBT_USERMEM);
 
-  m_db->m_t_ohead->get(txn, &m_key, &m_data, 0);
+  rc = m_db->m_t_ohead->get(txn, &m_key, &m_data, 0);
+  if (rc)
+    printf("wb_db_ohead::get(txn), get, rc %d\n", rc);
   return *this;
 }
 
-void wb_db_ohead::put(wb_db_txn *txn)
+int wb_db_ohead::put(wb_db_txn *txn)
 {
-  m_db->m_t_ohead->put(txn, &m_key, &m_data, 0);
+  return m_db->m_t_ohead->put(txn, &m_key, &m_data, 0);
 }
 
 wb_db_ohead &wb_db_ohead::get(wb_db_txn *txn, pwr_tOid oid)
 {
+  int rc = 0;
   m_oid = oid;
   m_data.set_ulen(sizeof(m_o));
   m_data.set_flags(DB_DBT_USERMEM);
 
   m_db->m_t_ohead->get(txn, &m_key, &m_data, 0);
+  if (rc)
+    printf("wb_db_ohead::get(txn, oid = %d.%d), get, rc %d\n", oid.vid, oid.oix, rc);
+  //pwr_Assert(oid.oix == m_o.oid.oix);
+  if (oid.oix != m_o.oid.oix)
+    printf("oid.oix (%d.%d) != m_o.oid.oix (%d.%d), %s\n", oid.vid, oid.oix, m_o.oid.vid, m_o.oid.oix, m_o.name);
   return *this;
 }
 
-void wb_db_ohead::del(wb_db_txn *txn)
+int wb_db_ohead::del(wb_db_txn *txn)
 {
-  m_db->m_t_ohead->del(txn, &m_key, 0);
+  return m_db->m_t_ohead->del(txn, &m_key, 0);
 }
 
 void wb_db_ohead::name(wb_name &name)
 {
+  memset(m_o.name, 0, sizeof(m_o.name));
+  memset(m_o.normname, 0, sizeof(m_o.normname));
   strcpy(m_o.name, name.name(cdh_mName_object));
   strcpy(m_o.normname, name.normName(cdh_mName_object));
+}
+
+void wb_db_ohead::name(pwr_tOid &oid)
+{
+  memset(m_o.name, 0, sizeof(m_o.name));
+  memset(m_o.normname, 0, sizeof(m_o.normname));
+  sprintf(m_o.name, "O%d", oid.oix);
+  strcpy(m_o.normname, m_o.name);
 }
 
 void wb_db_ohead::clear()
@@ -264,8 +372,50 @@ void wb_db_ohead::clear()
   memset(&m_o, 0, sizeof(m_o));
 }
 
+void wb_db_ohead::iter(void (*print)(pwr_tOid oid, db_sObject *op))
+{
+  int rc = 0;  
+
+  m_db->m_t_ohead->cursor(m_db->m_txn, &m_dbc, 0);
+
+	/* Initialize the key/data pair so the flags aren't set. */
+	memset(&m_oid, 0, sizeof(m_oid));
+	memset(&m_o, 0, sizeof(m_o));
+
+  printf("sizeof(m_oid): %d\n", sizeof(m_oid));
+  printf("sizeof(m_o): %d\n", sizeof(m_o));
+  
+  m_key.set_data(&m_oid);
+  m_key.set_ulen(sizeof(m_oid));
+  m_key.set_flags(DB_DBT_USERMEM);
+
+  m_data.set_data(&m_o);
+  m_data.set_ulen(sizeof(m_o));
+  m_data.set_flags(DB_DBT_USERMEM);
+  
+  
+	/* Walk through the database and print out the key/data pairs. */
+  //int rc = m_dbc->get(&m_key, &m_data, DB_FIRST);
+
+  while ((rc = m_dbc->get(&m_key, &m_data, DB_NEXT)) == 0) {
+    //printf("k: %d, d: %d\n", (int)m_key.get_size(), (int)m_data.get_size());
+    //volatile int a = m_key.get_size();
+    //a = m_data.get_size();
+    
+    print(m_oid, &m_o);
+    
+  }
+  
+  m_dbc->close();
+}
+
 wb_db_rbody::wb_db_rbody(wb_db *db, pwr_tOid oid, size_t size, void *p) :
   m_db(db), m_oid(oid), m_size(size), m_p(p), m_key(&m_oid, sizeof(m_oid)), m_data(p, size)
+{
+}
+
+wb_db_rbody::wb_db_rbody(wb_db *db) :
+  m_db(db), m_oid(pwr_cNOid), m_size(0), m_p(0), m_key(&m_oid, sizeof(m_oid)), m_data(0, 0)
 {
 }
 
@@ -274,23 +424,24 @@ wb_db_rbody::wb_db_rbody(wb_db *db, pwr_tOid oid) :
 {
 }
 
-void wb_db_rbody::put(wb_db_txn *txn)
+int wb_db_rbody::put(wb_db_txn *txn)
 {
-  m_db->m_t_rbody->put(txn, &m_key, &m_data, 0);
+  return m_db->m_t_rbody->put(txn, &m_key, &m_data, 0);
 }
 
-void wb_db_rbody::put(wb_db_txn *txn, size_t offset, size_t size, void *p)
+int wb_db_rbody::put(wb_db_txn *txn, size_t offset, size_t size, void *p)
 {
   m_data.set_doff(offset);
   m_data.set_dlen(size);
   m_data.set_data(p);
   m_data.set_ulen(size);
+  m_data.set_size(size);
   m_data.set_flags(DB_DBT_PARTIAL);
   
-  m_db->m_t_rbody->get(txn, &m_key, &m_data, 0);
+  return m_db->m_t_rbody->put(txn, &m_key, &m_data, 0);
 }
 
-void wb_db_rbody::get(wb_db_txn *txn, size_t offset, size_t size, void *p)
+int wb_db_rbody::get(wb_db_txn *txn, size_t offset, size_t size, void *p)
 {
   m_data.set_doff(offset);
   m_data.set_dlen(size);
@@ -298,11 +449,63 @@ void wb_db_rbody::get(wb_db_txn *txn, size_t offset, size_t size, void *p)
   m_data.set_ulen(size);
   m_data.set_flags(DB_DBT_USERMEM|DB_DBT_PARTIAL);
   
-  m_db->m_t_rbody->get(txn, &m_key, &m_data, 0);
+  return m_db->m_t_rbody->get(txn, &m_key, &m_data, 0);
+}
+
+int wb_db_rbody::del(wb_db_txn *txn)
+{
+  return m_db->m_t_rbody->del(txn, &m_key, 0);
+}
+
+void wb_db_rbody::iter(void (*print)(pwr_tOid oid))
+{
+  int rc = 0;
+  //static char b[1];
+  
+
+  m_db->m_t_rbody->cursor(m_db->m_txn, &m_dbc, 0);
+
+	/* Initialize the key/data pair so the flags aren't set. */
+	memset(&m_oid, 0, sizeof(m_oid));
+  m_key.set_data(&m_oid);
+  m_key.set_ulen(sizeof(m_oid));
+  //m_key.set_dlen(sizeof(m_oid));
+  //m_key.set_size(sizeof(m_oid));
+  m_key.set_flags(DB_DBT_USERMEM);
+  //m_data.set_data(b);
+  //m_data.set_ulen(0);
+  //m_data.set_dlen(sizeof(b));
+  //m_data.set_size(sizeof(b));
+  //m_data.set_doff(0);
+  m_data.set_flags(DB_DBT_USERMEM|DB_DBT_PARTIAL);
+  
+	/* Walk through the database and print out the key/data pairs. */
+  //int rc = m_dbc->get(&m_key, &m_data, DB_FIRST);
+
+  while (1) {
+    try {
+      rc = m_dbc->get(&m_key, &m_data, DB_NEXT);
+    }
+    catch (DbException &e) {
+      printf("Exc: %s\n", e.what());
+    }
+  
+    if (rc == DB_NOTFOUND)
+      break;
+    
+    print(m_oid);
+  }
+  
+  m_dbc->close();
 }
 
 wb_db_dbody::wb_db_dbody(wb_db *db, pwr_tOid oid, size_t size, void *p) :
   m_db(db), m_oid(oid), m_size(size), m_p(p), m_key(&m_oid, sizeof(m_oid)), m_data(p, size)
+{
+}
+
+wb_db_dbody::wb_db_dbody(wb_db *db) :
+  m_db(db), m_oid(pwr_cNOid), m_size(0), m_p(0), m_key(&m_oid, sizeof(m_oid)), m_data(0, 0)
 {
 }
 
@@ -311,23 +514,24 @@ wb_db_dbody::wb_db_dbody(wb_db *db, pwr_tOid oid) :
 {
 }
 
-void wb_db_dbody::put(wb_db_txn *txn)
+int wb_db_dbody::put(wb_db_txn *txn)
 {
-  m_db->m_t_dbody->put(txn, &m_key, &m_data, 0);
+  return m_db->m_t_dbody->put(txn, &m_key, &m_data, 0);
 }
 
-void wb_db_dbody::put(wb_db_txn *txn, size_t offset, size_t size, void *p)
+int wb_db_dbody::put(wb_db_txn *txn, size_t offset, size_t size, void *p)
 {
   m_data.set_doff(offset);
   m_data.set_dlen(size);
   m_data.set_data(p);
   m_data.set_ulen(size);
+  m_data.set_size(size);
   m_data.set_flags(DB_DBT_PARTIAL);
   
-  m_db->m_t_dbody->put(txn, &m_key, &m_data, 0);
+  return m_db->m_t_dbody->put(txn, &m_key, &m_data, 0);
 }
 
-void wb_db_dbody::get(wb_db_txn *txn, size_t offset, size_t size, void *p)
+int wb_db_dbody::get(wb_db_txn *txn, size_t offset, size_t size, void *p)
 {
   m_data.set_doff(offset);
   m_data.set_dlen(size);
@@ -335,9 +539,54 @@ void wb_db_dbody::get(wb_db_txn *txn, size_t offset, size_t size, void *p)
   m_data.set_ulen(size);
   m_data.set_flags(DB_DBT_USERMEM|DB_DBT_PARTIAL);
   
-  m_db->m_t_dbody->get(txn, &m_key, &m_data, 0);
+  return m_db->m_t_dbody->get(txn, &m_key, &m_data, 0);
 }
 
+int wb_db_dbody::del(wb_db_txn *txn)
+{
+  return m_db->m_t_dbody->del(txn, &m_key, 0);
+}
+
+void wb_db_dbody::iter(void (*print)(pwr_tOid oid))
+{
+  int rc = 0;
+  //static char b[65000];
+  
+  m_db->m_t_dbody->cursor(m_db->m_txn, &m_dbc, 0);
+
+	/* Initialize the key/data pair so the flags aren't set. */
+	memset(&m_oid, 0, sizeof(m_oid));
+  m_key.set_data(&m_oid);
+  m_key.set_ulen(sizeof(m_oid));
+  m_key.set_flags(DB_DBT_USERMEM);
+  //m_data.set_data(b);
+  //m_data.set_ulen(sizeof(b));
+  //m_data.set_dlen(sizeof(b));
+  //m_data.set_size(sizeof(b));
+  m_data.set_flags(DB_DBT_USERMEM|DB_DBT_PARTIAL);
+
+  //m_data.set_flags(DB_DBT_USERMEM);
+  
+	/* Walk through the database and print out the key/data pairs. */
+  //int rc = m_dbc->get(&m_key, &m_data, DB_FIRST);
+
+  while (1) {
+
+    try {
+      rc = m_dbc->get(&m_key, &m_data, DB_NEXT);
+    }
+    catch (DbException &e) {
+      printf("Exc: %s\n", e.what());
+    }
+  
+    if (rc == DB_NOTFOUND)
+      break;
+    
+    print(m_oid);
+ }
+  
+  m_dbc->close();
+}
 
 wb_db::wb_db()
 {
@@ -357,6 +606,10 @@ void wb_db::close()
   m_t_name->close(0);
   m_t_info->close(0);
   
+  printstat(m_env, "before abort");
+  int rc =  m_txn->abort();
+  printf("int rc =  m_txn->abort(): %d\n", rc);
+  printstat(m_env, "before m_env->close(0)");
   m_env->close(0);
 }
 
@@ -367,12 +620,12 @@ void wb_db::create(pwr_tVid vid, pwr_tCid cid, const char *volumeName, const cha
   strcpy(m_volumeName, volumeName);
   dcli_translate_filename(m_fileName, fileName);
   
-  openDb();
+  openDb(false);
 }
 
 wb_db_txn *wb_db::begin(wb_db_txn *txn)
 {
-  wb_db_txn *new_txn;
+  wb_db_txn *new_txn = 0;
   
   m_env->txn_begin((DbTxn *)txn, (DbTxn **)&new_txn, 0);
   
@@ -382,10 +635,11 @@ wb_db_txn *wb_db::begin(wb_db_txn *txn)
 void  wb_db::open(const char *fileName)
 {
   dcli_translate_filename(m_fileName, fileName);
-  openDb();
+  openDb(true);
   
   m_env->txn_begin(0, (DbTxn **)&m_txn, 0);
-
+  //m_txn = 0;
+  
   wb_db_info i(this);
   i.get(m_txn);
   m_vid = i.vid();
@@ -396,10 +650,13 @@ void  wb_db::open(const char *fileName)
 static void printstat(DbEnv *ep, char *s)
 {
   DB_LOCK_STAT *lp;
+
+  return;
+  
+  printf("DbEnv loc statistics, %s:\n", s);
   
   ep->lock_stat(&lp, 0);
-  printf("DbEnv loc statistics, %s:\n", s);
-  printf("  lastid.......: %d\n", lp->st_lastid);
+  printf("  lastid.......: %d\n", lp->st_id);
   printf("  nmodes.......: %d\n", lp->st_nmodes);
   printf("  maxlocks:....: %d\n", lp->st_maxlocks);
   printf("  maxlockers...: %d\n", lp->st_maxlockers);
@@ -421,10 +678,11 @@ static void printstat(DbEnv *ep, char *s)
   printf("\n");
 }
 
-void wb_db::openDb()
+void wb_db::openDb(bool useTxn)
 {
   struct stat sb;
-
+  int rc;
+  
   /* Create the directory, read/write/access owner only. */
   if (stat(m_fileName, &sb) != 0) {
     if (mkdir(m_fileName, S_IRWXU) != 0) {
@@ -435,20 +693,24 @@ void wb_db::openDb()
   }
 
   m_env = new DbEnv(0/*DB_CXX_NO_EXCEPTIONS*/);
+  printf("%s\n", m_env->version(0, 0, 0));
   m_env->set_errpfx("PWR db");
-	//m_env->set_cachesize(0, 256 * 1024 * 1024, 0);
-  m_env->set_lk_max_locks(200000);
-  m_env->set_lk_max_objects(20000);
-  
-#if 1
-  m_env->open(m_fileName,
-              DB_CREATE | DB_INIT_LOCK | DB_INIT_LOG | DB_INIT_MPOOL | DB_INIT_TXN | DB_RECOVER,
-              S_IRUSR | S_IWUSR);
-#else
-  m_env->open(m_fileName,
-              DB_CREATE | DB_INIT_MPOOL,
-              S_IRUSR | S_IWUSR);
-#endif
+	m_env->set_cachesize(0, 256 * 1024 * 1024, 0);
+  rc = m_env->set_lg_bsize(1024*1024*2);
+  rc = m_env->set_lg_max(1024*1024*8*2);
+  rc = m_env->set_lk_max_locks(500000);
+  rc = m_env->set_lk_max_objects(20000);
+
+  if (useTxn) {
+    m_env->open(m_fileName,
+                DB_CREATE | DB_INIT_LOCK | DB_INIT_LOG | DB_INIT_MPOOL | DB_INIT_TXN | DB_RECOVER,
+                S_IRUSR | S_IWUSR);
+  } else {
+    m_env->open(m_fileName,
+                DB_CREATE | DB_INIT_MPOOL | DB_PRIVATE,
+                S_IRUSR | S_IWUSR);
+  }  
+
   printstat(m_env, "after open env");
   
   m_t_ohead = new Db(m_env, 0);
@@ -458,12 +720,13 @@ void wb_db::openDb()
   m_t_name  = new Db(m_env, 0);
   m_t_info  = new Db(m_env, 0);
     
-  m_t_ohead->open("ohead", NULL, DB_BTREE, DB_CREATE, S_IRUSR | S_IWUSR);
-  m_t_rbody->open("rbody", NULL, DB_BTREE, DB_CREATE, S_IRUSR | S_IWUSR);
-  m_t_dbody->open("dbody", NULL, DB_BTREE, DB_CREATE, S_IRUSR | S_IWUSR);
-  m_t_class->open("class", NULL, DB_BTREE, DB_CREATE, S_IRUSR | S_IWUSR);
-  m_t_name->open("name", NULL, DB_BTREE, DB_CREATE, S_IRUSR | S_IWUSR);
-  m_t_info->open("info", NULL, DB_BTREE, DB_CREATE, S_IRUSR | S_IWUSR);
+  m_t_ohead->open(NULL, "ohead", NULL, DB_BTREE, DB_CREATE, S_IRUSR | S_IWUSR);
+  m_t_rbody->open(NULL, "rbody", NULL, DB_BTREE, DB_CREATE, S_IRUSR | S_IWUSR);
+  m_t_dbody->open(NULL, "dbody", NULL, DB_BTREE, DB_CREATE, S_IRUSR | S_IWUSR);
+//  m_t_dbody->open(NULL, "dbody", NULL, DB_BTREE, DB_CREATE | DB_AUTO_COMMIT, S_IRUSR | S_IWUSR);
+  m_t_class->open(NULL, "class", NULL, DB_BTREE, DB_CREATE, S_IRUSR | S_IWUSR);
+  m_t_name->open(NULL, "name", NULL, DB_BTREE, DB_CREATE, S_IRUSR | S_IWUSR);
+  m_t_info->open(NULL, "info", NULL, DB_BTREE, DB_CREATE, S_IRUSR | S_IWUSR);
   printstat(m_env, "after open databases");
     
 }
@@ -471,17 +734,19 @@ void wb_db::openDb()
 
 pwr_tOid wb_db::new_oid(wb_db_txn *txn)
 {
-  int index = 1;
-  int ret;
+  int rc = 0;
+  pwr_tOid oid = pwr_cNOid;
+  oid.vid = m_vid;
+  wb_db_rbody b(this, oid);
 
-  Dbt key(&index, sizeof(index));
-  pwr_tOid oid;
-  Dbt data(&oid, sizeof(oid));
-    
-  ret = m_t_info->get(txn, &key, &data, 0);
+  rc = b.get(txn, offsetof(pwr_sRootVolume, NextOix), sizeof(pwr_tOix), &oid.oix);
+  if (rc)
+    printf("wb_db::new_oid, b.get, rc %d\n", rc);
   oid.oix++;
-  ret = m_t_info->put(txn, &key, &data, 0);
-
+  rc = b.put(txn, offsetof(pwr_sRootVolume, NextOix), sizeof(pwr_tOix), &oid.oix);
+  if (rc)
+    printf("wb_db::new_oid, b.put, rc %d\n", rc);
+  
   return oid;
 }
 
@@ -521,10 +786,20 @@ int wb_db::del_family(wb_db_txn *txn, Dbc *cp, pwr_tOid poid)
 //
 // Save all changes done in the current transaction.
 //
-bool wb_db::commit(wb_db_txn *txn)
+bool wb_db::commit(pwr_tStatus *sts)
 {
-  txn->commit(0);
-  m_env->txn_checkpoint(0, 0, 0);
+  int rc = 0;
+  
+  printstat(m_env, "before commit");
+  rc = m_txn->commit(0);
+  if (rc)
+    printf("wb_db::commit, rc %d\n", rc);
+  rc = m_env->txn_checkpoint(0, 0, 0);
+  if (rc)
+    printf("wb_db::commit, CHECK, rc %d\n", rc);
+  m_env->txn_begin(0, (DbTxn **)&m_txn, 0);
+  *sts = rc;
+  printstat(m_env, "after commit");
   return true;
 }
 
@@ -532,9 +807,12 @@ bool wb_db::commit(wb_db_txn *txn)
 // Abort the current transactionm, the database is restored to
 // the state it had before the current transaction started.
 //
-bool wb_db::abort(wb_db_txn *txn)
-{    
-  txn->abort();
+bool wb_db::abort(pwr_tStatus *sts)
+{
+  printstat(m_env, "before abort");
+  *sts = m_txn->abort();
+  m_env->txn_begin(0, (DbTxn **)&m_txn, 0);
+  printstat(m_env, "after abort");
   return true;
 }
 
@@ -550,7 +828,7 @@ bool wb_db::deleteFamily(pwr_tStatus *sts, wb_db_ohead *o)
     //del_clist(txn, o);
     //del_body(txn, o);
 
-    txn->commit(0);
+    //txn->commit(0);
     //o->mark(is_deleted);
         
   }
@@ -590,7 +868,7 @@ bool wb_db::deleteOset(pwr_tStatus *sts, wb_oset *o)
 bool wb_db::importVolume(wb_export &e)
 {
   try {
-    m_env->txn_begin(0, (DbTxn **)&m_txn, 0);
+    //m_env->txn_begin(0, (DbTxn **)&m_txn, 0);
 //    m_txn = 0;
     
   printstat(m_env, "importVolume");
@@ -603,15 +881,15 @@ bool wb_db::importVolume(wb_export &e)
     e.exportMeta(*this);
   printstat(m_env, "after meta");
     
-    m_txn->commit(0);
+  //txn->commit(0);
   printstat(m_env, "after commit");
-    m_env->txn_checkpoint(0, 0, 0);
+  //m_env->txn_checkpoint(0, 0, 0);
   printstat(m_env, "after checkpoint");
     return true;
   }
   catch (DbException &e) {
   printstat(m_env, "after exception");
-    m_txn->abort();
+  //txn->abort();
     printf("exeption: %s\n", e.what());
   printstat(m_env, "after abort");
     return false;
@@ -625,7 +903,7 @@ bool wb_db::importHead(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
                        pwr_tTime ohTime, pwr_tTime rbTime, pwr_tTime dbTime,
                        size_t rbSize, size_t dbSize)
 {
-  wb_db_ohead o(this, oid, cid, poid, boid, aoid, foid, loid, name, normname, ohTime, rbTime, dbTime, rbSize, dbSize);
+  wb_db_ohead o(this, oid, cid, poid, boid, aoid, foid, loid, name, normname, flags, ohTime, rbTime, dbTime, rbSize, dbSize);
   o.put(m_txn);
   //printf("head put: %d.%d %s\n", oid.vid, oid.oix, name);
   wb_db_name n(this, oid, poid, normname);

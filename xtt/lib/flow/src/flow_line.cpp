@@ -34,8 +34,8 @@ void FlowLine::print( void *pos, void *node)
     return;
   int idx = int( ctx->print_zoom_factor / ctx->base_zoom_factor * 
 	line_width - 1);
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   ctx->print_ps->line( p1.print_z_x + ((FlowPoint *)pos)->print_z_x, 
 	p1.print_z_y + ((FlowPoint *)pos)->print_z_y, 
 	p2.print_z_x + ((FlowPoint *)pos)->print_z_x, 
@@ -87,8 +87,8 @@ void FlowLine::draw( void *pos, int hightlight, int hot, void *node)
     return;
   int idx = int( ctx->zoom_factor / ctx->base_zoom_factor * line_width - 1);
   idx += hot;
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   flow_draw_line( ctx, p1.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, 
 	p1.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y, 
 	p2.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, 
@@ -102,8 +102,8 @@ void FlowLine::erase( void *pos, int hot, void *node)
     return;
   int idx = int( ctx->zoom_factor / ctx->base_zoom_factor * line_width - 1);
   idx += hot;
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   flow_draw_line_erase( ctx, p1.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, 
 	p1.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y, 
 	p2.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, 
@@ -115,8 +115,8 @@ void FlowLine::nav_draw( void *pos, int highlight, void *node)
   if ( p1.z_x == p2.z_x && p1.z_y == p2.z_y)
     return;
   int idx = int( ctx->nav_zoom_factor / ctx->base_zoom_factor * line_width - 1);
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   flow_draw_nav_line( ctx, 
 	p1.nav_z_x + ((FlowPoint *)pos)->nav_z_x - ctx->nav_offset_x, 
 	p1.nav_z_y + ((FlowPoint *)pos)->nav_z_y - ctx->nav_offset_y, 
@@ -130,8 +130,8 @@ void FlowLine::nav_erase( void *pos, void *node)
   if ( p1.z_x == p2.z_x && p1.z_y == p2.z_y)
     return;
   int idx = int( ctx->nav_zoom_factor / ctx->base_zoom_factor * line_width - 1);
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
+  idx = MAX( 0, idx);
+  idx = MIN( idx, DRAW_TYPE_SIZE-1);
   flow_draw_nav_line_erase( ctx,
 	p1.nav_z_x + ((FlowPoint *)pos)->nav_z_x - ctx->nav_offset_x, 
 	p1.nav_z_y + ((FlowPoint *)pos)->nav_z_y - ctx->nav_offset_y, 
@@ -152,29 +152,29 @@ int FlowLine::event_handler( void *pos, flow_eEvent event, int x, int y,
   int y2 = p2.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y;
 
   if ((x1 == x2 && y1 < y2 && 		// Vertical
-       abs( x1 - x) < 3 && 
+       ABS( x1 - x) < 3 && 
        y1 < y && y < y2)
 	||
       (x1 == x2 && y1 > y2 && 		// Vertical
-       abs( x1 - x) < 3 && 
+       ABS( x1 - x) < 3 && 
        y2 < y && y < y1)
 	||
       (y1 == y2 && x1 < x2 &&		// Horizontal
-       abs( y1 - y) < 3 && 
+       ABS( y1 - y) < 3 && 
        x1 < x && x < x2)
         ||
       (y1 == y2 && x1 > x2 &&		// Horizontal
-       abs( y1 - y) < 3 && 
+       ABS( y1 - y) < 3 && 
        x2 < x && x < x1))
   {
 //    cout << "Event handler: Hit in line" << endl;
     return 1;
   }  
   else if (( !(x1 == x2 || y1 == y2) && x1 < x2 && x1 <= x && x <= x2 &&
-             abs(y - 1.0 * (y2-y1)/(x2-x1) * x - y1 + 1.0 * (y2-y1)/(x2-x1) * x1) < 3)
+             ABS(y - 1.0 * (y2-y1)/(x2-x1) * x - y1 + 1.0 * (y2-y1)/(x2-x1) * x1) < 3)
            ||
            ( !(x1 == x2 || y1 == y2) && x1 > x2 && x2 <= x && x <= x1 &&
-             abs(y - 1.0 * (y2-y1)/(x2-x1) * x - y1 + 1.0 * (y2-y1)/(x2-x1) * x1) < 3))
+             ABS(y - 1.0 * (y2-y1)/(x2-x1) * x - y1 + 1.0 * (y2-y1)/(x2-x1) * x1) < 3))
   {
 //    cout << "Event handler: Hit in line" << endl;
     return 1;

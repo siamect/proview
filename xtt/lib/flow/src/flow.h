@@ -6,12 +6,24 @@ extern "C" {
 #endif
 
 
+#ifndef ODD
 #define ODD(a)	(((int)(a) & 1) != 0)
+#endif
+
+#ifndef EVEN
 #define EVEN(a)	(((int)(a) & 1) == 0)
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
+#endif
+
+#ifndef MAX
+#define MAX(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
+#endif
+
+#ifndef MIN
+#define MIN(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
+#endif
+
 #ifndef __ALPHA
-#define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
+#define ABS(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
 #endif
 
 #define DRAW_TYPE_SIZE 9

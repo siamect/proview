@@ -2922,10 +2922,10 @@ int foe_print_overview (
 	  {
 	    /* Calculate coordinates for an overview */
 	    gre_measure_object( *node_ptr, &ll_x, &ll_y, &width, &height);
-	    ll_x_min = min( ll_x_min, ll_x);
-	    ll_y_min = min( ll_y_min, ll_y);
-	    ur_x_max = max( ur_x_max, ll_x + width);
-	    ur_y_max = max( ur_y_max, ll_y + height);
+	    ll_x_min = MIN( ll_x_min, ll_x);
+	    ll_y_min = MIN( ll_y_min, ll_y);
+	    ur_x_max = MAX( ur_x_max, ll_x + width);
+	    ur_y_max = MAX( ur_y_max, ll_y + height);
 
 	    doc_count++;	  
 	  }
