@@ -2905,51 +2905,63 @@ void WNav::ldh_refresh( pwr_tObjid new_open)
   brow_Redraw( brow->ctx, 0);
 }
 
-void WNav::ldh_event( ldh_sEvent *event)
+void WNav::ldh_event( ldh_sEvent *e)
 {
   WItem	*item;
+  ldh_sEvent *event = e;
 
-  switch (event->Event) 
-  {
-    case ldh_eEvent_ObjectCopied:
-    case ldh_eEvent_ObjectCreated:
-      if ( cdh_ObjidIsNull(event->NewParent) ||
-           find( event->NewParent, (void **) &item))
-        ldh_refresh( event->NewParent);
-      break;
+  if ( e->nep)
+    // Multiple events
+    brow_SetNodraw( brow->ctx);
 
-    case ldh_eEvent_ObjectDeleted:
-      if ( cdh_ObjidIsNull(event->NewParent) ||
-           find( event->OldParent, (void **) &item))
-        ldh_refresh( event->NewParent);
-      break;
+  while ( event) {
+    switch (event->Event) 
+      {
+      case ldh_eEvent_ObjectCopied:
+      case ldh_eEvent_ObjectCreated:
+	if ( cdh_ObjidIsNull(event->NewParent) ||
+	     find( event->NewParent, (void **) &item))
+	  ldh_refresh( event->NewParent);
+	break;
 
-    case ldh_eEvent_ObjectMoved:
-      if ( cdh_ObjidIsNull(event->NewParent) ||
-           cdh_ObjidIsNull(event->OldParent) ||
-           find( event->NewParent, (void **) &item) ||
-           find( event->OldParent, (void **) &item))
-        ldh_refresh( event->NewParent);
-      break;
+      case ldh_eEvent_ObjectDeleted:
+	if ( cdh_ObjidIsNull(event->NewParent) ||
+	     find( event->OldParent, (void **) &item))
+	  ldh_refresh( event->NewParent);
+	break;
 
-    case ldh_eEvent_AttributeModified:
-    case ldh_eEvent_ObjectRenamed:
-    case ldh_eEvent_BodyModified:
-      if ( find( event->Object, (void **) &item))
-        ldh_refresh( pwr_cNObjid);
-      break;
+      case ldh_eEvent_ObjectMoved:
+	if ( cdh_ObjidIsNull(event->NewParent) ||
+	     cdh_ObjidIsNull(event->OldParent) ||
+	     find( event->NewParent, (void **) &item) ||
+	     find( event->OldParent, (void **) &item))
+	  ldh_refresh( event->NewParent);
+	break;
 
-    case ldh_eEvent_ObjectTreeCopied:
-      if ( find( event->Object, (void **) &item))
-        ldh_refresh( event->Object);
-      break;
+      case ldh_eEvent_AttributeModified:
+      case ldh_eEvent_ObjectRenamed:
+      case ldh_eEvent_BodyModified:
+	if ( find( event->Object, (void **) &item))
+	  ldh_refresh( pwr_cNObjid);
+	break;
 
-    case ldh_eEvent_SessionReverted:
-      ldh_refresh( pwr_cNObjid);
-      break;
+      case ldh_eEvent_ObjectTreeCopied:
+	if ( find( event->Object, (void **) &item))
+	  ldh_refresh( event->Object);
+	break;
 
-    default:
-      break;
+      case ldh_eEvent_SessionReverted:
+	ldh_refresh( pwr_cNObjid);
+	break;
+
+      default:
+	break;
+      }
+    event = event->nep;
+  }
+  if ( e->nep) {
+    brow_ResetNodraw( brow->ctx);
+    brow_Redraw( brow->ctx, 0);
   }
 }
 

@@ -124,12 +124,8 @@ static pwr_tStatus wtt_ldh_this_session_cb (
 {
   Wtt *wtt = (Wtt *) ctx;
 
-  while (event) 
-  {
-    wtt->wnav->ldh_event( event);
-    wtt->wnavnode->ldh_event( event);
-    event = event->nep;
-  }
+  wtt->wnav->ldh_event( event);
+  wtt->wnavnode->ldh_event( event);
   return 1;
 }
 

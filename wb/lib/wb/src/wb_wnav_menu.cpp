@@ -216,7 +216,7 @@ Widget wtt_create_popup_menu( Wtt *wtt, pwr_tObjid objid)
   else
     sel2_cnt = 0;
 
-  if (sel1_cnt + sel2_cnt != 0) 
+  if (sel1_cnt + sel2_cnt != 0)
   {
     mcp->SelectedSet = sel1_cnt + sel2_cnt > 1 ? ldh_eMenuSet_Many : ldh_eMenuSet_Object;
   }  
@@ -237,6 +237,20 @@ Widget wtt_create_popup_menu( Wtt *wtt, pwr_tObjid objid)
 
   mcp->Selected[sel1_cnt + sel2_cnt].Objid = pwr_cNObjid;
   mcp->SelectCount = sel1_cnt + sel2_cnt;
+
+  if ( sel1_cnt + sel2_cnt == 0) {
+    pwr_tCid cid;
+
+    sts = wtt->palette->get_select( &cid);
+    if ( ODD(sts)) {
+      XtFree( (char *) mcp->Selected);
+      mcp->Selected = (pwr_sAttrRef *) XtCalloc( 2, sizeof (pwr_sAttrRef));
+      mcp->SelectedSet = ldh_eMenuSet_Class;
+      mcp->Selected[0].Objid = cdh_ClassIdToObjid( cid);
+      mcp->Selected[1].Objid = pwr_cNObjid;
+      mcp->SelectCount = 1;
+    }
+  }
 
   sts = ldh_GetMenu( wtt->ldhses, mcp);  
   if (EVEN(sts) || mcp->ItemList[0].Level == 0) {

@@ -121,6 +121,18 @@ wb_object wb_volume::object(pwr_tOid oid) const
   return o;
 }
 
+wb_object wb_volume::object(pwr_tCid cid) const
+{
+  pwr_tStatus sts;
+  wb_orep *orep;
+  wb_object o;
+    
+  orep = m_vrep->object( &sts, cid);
+  o = wb_object(sts, orep);
+    
+  return o;
+}
+
 wb_object wb_volume::object(const char *name) const
 {
   pwr_tStatus sts;

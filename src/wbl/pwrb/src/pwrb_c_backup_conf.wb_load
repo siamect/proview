@@ -216,6 +216,11 @@ SObject pwrb:Class
     ! Template for Backup_Conf
     !
     Object Template Backup_Conf
+      Body RtBody
+        Attr BackupFile = "$pwrp_load:pwr_console.log"
+        Attr CycleFast = 100
+        Attr CycleSlow = 600
+      EndBody
     EndObject
   EndObject
 EndSObject

@@ -449,5 +449,10 @@ SObject pwrb:Class
         Attr GraphicsUpdateInterval = 0.25
       EndBody
     EndObject
+    Object PostCreate $DbCallBack
+      Body SysBody
+        Attr MethodName = "OpPlace-PostCreate"
+      EndBody
+    EndObject
   EndObject
 EndSObject

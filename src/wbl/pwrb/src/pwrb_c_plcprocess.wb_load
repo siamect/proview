@@ -102,5 +102,10 @@ SObject pwrb:Class
 	Attr SubscriptionInterval = 1.0
       EndBody
     EndObject
+    Object PostCreate $DbCallBack
+      Body SysBody
+        Attr MethodName = "PlcProcess-PostCreate"
+      EndBody
+    EndObject
   EndObject
 EndSObject

@@ -17,7 +17,7 @@ public:
   wb_destination(pwr_tOid oid, ldh_eDest code);
     
 
-  bool canAdopt(pwr_tCid cid) {return true;} // Fix
+  bool canAdopt(pwr_tCid cid);
   bool canAdopt(pwr_tOid oid) {return true;} // Fix
   pwr_tOid oid() { return m_oid;}
   ldh_eDest code() { return m_code;}

@@ -44,6 +44,12 @@ pwr_dImport pwr_BindMethods(Co);
 pwr_dImport pwr_BindMethods(Po);
 pwr_dImport pwr_BindMethods(XttGraph);
 pwr_dImport pwr_BindMethods(WebGraph);
+pwr_dImport pwr_BindMethods(OpPlace);
+pwr_dImport pwr_BindMethods(RttConfig);
+pwr_dImport pwr_BindMethods(WebHandler);
+pwr_dImport pwr_BindMethods(PlcProcess);
+pwr_dImport pwr_BindMethods(PlcThread);
+pwr_dImport pwr_BindMethods(NodeConfig);
 
 pwr_dExport pwr_BindClasses(Base) = {
   pwr_BindClass(ASup),
@@ -85,6 +91,19 @@ pwr_dExport pwr_BindClasses(Base) = {
   pwr_BindClass(Po),
   pwr_BindClass(XttGraph),
   pwr_BindClass(WebGraph),
+  pwr_BindClass(OpPlace),
+  pwr_BindClass(RttConfig),
+  pwr_BindClass(WebHandler),
+  pwr_BindClass(PlcProcess),
+  pwr_BindClass(PlcThread),
+  pwr_BindClass(NodeConfig),
   pwr_NullClass
 };
+
+
+
+
+
+
+
 

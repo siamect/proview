@@ -126,6 +126,7 @@ public:
 
   wb_orep *object(pwr_tStatus *sts);
   wb_orep *object(pwr_tStatus *sts, pwr_tOid oid);
+  wb_orep *object(pwr_tStatus *sts, pwr_tCid cid) { *sts = LDH__NYI; return 0;}
   wb_orep *object(pwr_tStatus *sts, wb_name &name);
   wb_orep *object(pwr_tStatus *sts, const wb_orep *parent, wb_name &name) {return 0;}
 

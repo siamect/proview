@@ -242,5 +242,10 @@ SObject pwrb:Class
         EndBody
       EndObject
     EndObject
+    Object PostCreate $DbCallBack
+      Body SysBody
+        Attr MethodName = "PlcThread-PostCreate"
+      EndBody
+    EndObject
   EndObject
 EndSObject

@@ -524,9 +524,9 @@ pwr_tStatus wb_session::getMenu( ldh_sMenuCall *ip)
       o_menu = cdrep->menuAfter( &sts, o_menu, &o_menu_body);
       prev->unref();
     }
-    delete cdrep;
     o->unref();
   }
+  delete cdrep;
 
   switch (ip->SelectedSet) {
   case ldh_eMenuSet_Attribute:
@@ -552,9 +552,9 @@ pwr_tStatus wb_session::getMenu( ldh_sMenuCall *ip)
         o_menu = cdrep->menuAfter( &sts, o_menu, &o_menu_body);
         prev->unref();
       }
-      delete cdrep;
       o->unref();
     }
+    delete cdrep;
 
     /* Find specific menues for selected object(s) */
     if (ip->PointedSet == ldh_eMenuSet_Class) {
@@ -588,9 +588,9 @@ pwr_tStatus wb_session::getMenu( ldh_sMenuCall *ip)
         o_menu = cdrep->menuAfter( &sts, o_menu, &o_menu_body);
         prev->unref();
       }
-      delete cdrep;
       o->unref();
     }
+    delete cdrep;
 
     break;
   default:

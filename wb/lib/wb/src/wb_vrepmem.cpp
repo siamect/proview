@@ -71,6 +71,25 @@ wb_orep *wb_vrepmem::object(pwr_tStatus *sts, pwr_tOid oid)
   return new wb_orepmem( this, n);
 }
 
+wb_orep *wb_vrepmem::object(pwr_tStatus *sts, pwr_tCid cid)
+{
+  if ( root_object) {
+    mem_object *n;
+    if ( root_object->m_cid == cid)
+      n = root_object;
+    else {
+      pwr_tOix oix = 0;
+      n = root_object->next( cid, &oix);
+    }
+    if ( n) {
+      *sts = LDH__SUCCESS;
+      return new wb_orepmem( this, n);
+    }
+  }
+  *sts = LDH__NOSUCHOBJ;
+  return 0;
+}
+
 wb_orep *wb_vrepmem::object(pwr_tStatus *sts, wb_name &name)
 {
   mem_object *n = find( name.name());
@@ -351,6 +370,16 @@ wb_orep *wb_vrepmem::last(pwr_tStatus *sts, const wb_orep *o)
 
 wb_orep *wb_vrepmem::next(pwr_tStatus *sts, const wb_orep *o)
 {
+  mem_object *mem = findObject( o->oid().oix);
+  if ( mem) {
+    pwr_tOix oix = mem->m_oid.oix;
+    mem_object *next = root_object->next( mem->m_cid, &oix);
+    if ( next) {
+      wb_orepmem *orep = new wb_orepmem( this, next);
+      return orep;
+    }
+  }
+  *sts = LDH__NOSUCHOBJ;
   return 0;
 }
 
@@ -545,6 +574,11 @@ wb_orep *wb_vrepmem::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination
     dest = findObject( d.oid().oix);
     if ( !dest) {
       *sts = LDH__BADDEST;
+      return 0;
+    }
+    // Check that name is unic
+    if ( name && !nameCheck( dest, name.segment(), code)) {
+      *sts = LDH__NAMALREXI;
       return 0;
     }
   }
@@ -743,6 +777,9 @@ bool wb_vrepmem::moveObject(pwr_tStatus *sts, wb_orep *orep, wb_destination &d)
 {
   mem_object *dest;
   ldh_eDest code = d.code();
+
+  if ( cdh_ObjidIsEqual( d.oid(), orep->oid()))
+    return false;
 
   if ( cdh_ObjidIsNull( d.oid())) {
     dest = root_object;
@@ -1319,6 +1356,31 @@ bool wb_vrepmem::nameCheck( mem_object *memo)
 
   while ( o) {
     if ( o != memo && cdh_NoCaseStrcmp( memo->name(), o->name()) == 0)
+      return false;
+    o = o->fws;
+  }
+  return true;
+}
+
+bool wb_vrepmem::nameCheck( mem_object *dest, char *name, ldh_eDest code)
+{
+  mem_object *o;
+  switch ( code) {
+  case ldh_eDest_After:
+  case ldh_eDest_Before:
+    o = dest;
+    while ( o->bws)
+      o = o->bws;
+    break;
+  case ldh_eDest_IntoFirst:
+  case ldh_eDest_IntoLast:
+    o = dest->fch;
+    break;
+  default:
+    return false;
+  }
+  while ( o) {
+    if ( cdh_NoCaseStrcmp( name, o->name()) == 0)
       return false;
     o = o->fws;
   }

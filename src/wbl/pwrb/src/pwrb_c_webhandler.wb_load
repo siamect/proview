@@ -162,5 +162,10 @@ SObject pwrb:Class
         Attr MaxConnections = 50
       EndBody
     EndObject
+    Object PostCreate $DbCallBack
+      Body SysBody
+        Attr MethodName = "WebHandler-PostCreate"
+      EndBody
+    EndObject
   EndObject
 EndSObject

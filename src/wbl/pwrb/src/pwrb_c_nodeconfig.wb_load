@@ -136,6 +136,11 @@ SObject pwrb:Class
         EndBody
       EndObject
     EndObject
+    Object PostCreate $DbCallBack
+      Body SysBody
+        Attr MethodName = "NodeConfig-PostCreate"
+      EndBody
+    EndObject
   EndObject
 EndSObject
 

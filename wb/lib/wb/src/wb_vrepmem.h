@@ -76,6 +76,32 @@ class mem_object
     return true;
   }
 
+  mem_object *next( pwr_tCid cid, pwr_tOix *oix) {
+    // search is turned on when oix = 0
+    if ( *oix == m_oid.oix)
+      *oix = 0;
+    mem_object *n;
+    if ( fch) {
+      if ( !*oix && fch->m_cid == cid)
+	return fch;
+      else {
+	n = fch->next( cid, oix);
+	if ( n)
+	  return n;
+      }
+    }
+    if ( fws) {
+      if ( !*oix && fws->m_cid == cid)
+	return fws;
+      else {
+	n = fws->next( cid, oix);
+	if ( n)
+	  return n;
+      }
+    }
+    return 0;
+  }
+
   mem_object *find( wb_name *oname, int level);
   
   size_t rbody_size;
@@ -171,6 +197,7 @@ public:
 
   wb_orep *object(pwr_tStatus *sts);
   wb_orep *object(pwr_tStatus *sts, pwr_tOid oid);
+  wb_orep *object(pwr_tStatus *sts, pwr_tCid cid);
   wb_orep *object(pwr_tStatus *sts, wb_name &name);
   wb_orep *object(pwr_tStatus *sts, const wb_orep *parent, wb_name &name) {return 0;}
 
@@ -249,6 +276,7 @@ public:
 
  private:
   bool nameCheck( mem_object *memo);
+  bool nameCheck( mem_object *parent, char *name, ldh_eDest code);
   void deleteChildren( mem_object *memo);
 
 };

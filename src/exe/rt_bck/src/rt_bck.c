@@ -54,6 +54,7 @@
 #include "rt_bckdef.h"
 #include "co_cdh.h"
 #include "co_time.h"
+#include "co_dcli.h"
 
 #define	check4a(sts,str) if((sts)==-1)perror(str)
 
@@ -570,6 +571,8 @@ bck_file_process (
   pwr_tUInt32 c;
   pwr_tUInt32 csts;
   pwr_tUInt32 cnt;
+  char fname[200];
+
 
 #if defined OS_VMS || defined OS_ELN
   pwr_tUInt32 sts;
@@ -618,7 +621,8 @@ bck_file_process (
 #else
 
       if (backup_confp->DiskStatus == 0) {
-        bckfile = fopen(backup_confp->BackupFile, "r+" A_MODE);
+	dcli_translate_filename( fname, backup_confp->BackupFile);
+        bckfile = fopen(fname, "r+" A_MODE);
         if (bckfile != NULL) {
           errh_Info("BACKUP opened existing backupfile %s\n",  FGETNAME);
           csts = fread(&filehead, sizeof filehead, 1, bckfile);
@@ -657,7 +661,8 @@ bck_file_process (
       }
 #else
 
-      bckfile = fopen(backup_confp->BackupFile, "w+" A_MODE);
+      dcli_translate_filename( fname, backup_confp->BackupFile);
+      bckfile = fopen(fname, "w+" A_MODE);
       if (bckfile == NULL) 
         perror("BACKUP cannot create backupfile");
       else {

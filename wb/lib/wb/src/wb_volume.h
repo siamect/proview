@@ -49,7 +49,7 @@ public:
 
   wb_object object() const; // Get root list
   wb_object object(pwr_tOid oid) const;
-  wb_object object(pwr_tCid cid) const { wb_object o; return o;} // Fix
+  wb_object object(pwr_tCid cid) const;
   wb_object object(const char *name) const;
     
   wb_attribute attribute(pwr_tOid oid, const char *bname, const char *aname) const;

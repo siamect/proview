@@ -87,5 +87,10 @@ SObject pwrb:Class
         Attr DefaultVMSNode = ""
       EndBody
     EndObject
+    Object PostCreate $DbCallBack
+      Body SysBody
+        Attr MethodName = "RttConfig-PostCreate"
+      EndBody
+    EndObject
   EndObject
 EndSObject
