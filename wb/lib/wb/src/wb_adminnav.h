@@ -8,6 +8,8 @@
 
    <Description>.  */
 
+#include <iostream.h>
+
 #if defined __cplusplus
 extern "C" {
 #endif
@@ -15,6 +17,11 @@ extern "C" {
 #ifndef pwr_h
 # include "pwr.h"
 #endif
+
+#ifndef co_user_h
+# include "co_user.h"
+#endif
+
 #ifndef flow_h
 #include "flow.h"
 #endif
@@ -29,7 +36,14 @@ extern "C" {
 
 #define adminnav_cVersion	"X3.0b"
 
-typedef struct adminnav_s_Menu {
+typedef enum {
+  adminnav_eMode_Projects,
+  adminnav_eMode_Volumes,
+  adminnav_eMode_Users
+} adminnav_eMode;
+	      
+
+typedef struct adminnav_s_ProjMenu {
 	char			name[80];
 	int			item_type;
 	char			project[120];
@@ -38,10 +52,10 @@ typedef struct adminnav_s_Menu {
 	char			hierarchy[120];
 	char			description[120];
  	int			pixmap;
-	struct adminnav_s_Menu	*child_list;
-	struct adminnav_s_Menu	*parent;
-	struct adminnav_s_Menu	*next;
-} adminnav_sMenu;
+	struct adminnav_s_ProjMenu *child_list;
+	struct adminnav_s_ProjMenu *parent;
+	struct adminnav_s_ProjMenu *next;
+} adminnav_sProjMenu;
 
 typedef struct adminnav_s_Base {
 	char			name[80];
@@ -52,8 +66,12 @@ typedef struct adminnav_s_Base {
 typedef enum {
 	adminnav_eItemType_ProjHier,
 	adminnav_eItemType_Project,
-	adminnav_eItemType_Db,
-	adminnav_eItemType_Volume
+	adminnav_eItemType_ProjDb,
+	adminnav_eItemType_ProjVolume,
+	adminnav_eItemType_Volume,
+	adminnav_eItemType_VolComment,
+	adminnav_eItemType_User,
+	adminnav_eItemType_UsersGroup
 	} adminnav_eItemType;
 
 typedef enum {
@@ -84,16 +102,27 @@ class AdminNav {
     int			trace_started;
     void 		(*message_cb)( void *, char, char *);
     int 		(*set_focus_cb)( void *, void *);
-    adminnav_sMenu	*menu_tree;
+    adminnav_sProjMenu	*proj_menu_tree;
     adminnav_sBase	*baselist;
     int			displayed;
+    adminnav_eMode	mode;
+    GeUser		*gu;
 
     void message( char sev, char *text);
-    void tree_build();
-    void tree_load();
-    void tree_free();
+    void proj_tree_build();
+    void proj_tree_load();
+    void proj_tree_free();
+    void volumes_tree_build();
+    void volumes_tree_free();
+    void users_tree_build();
+    void users_tree_free();
+    int volumes_save();
+    int volumes_add( char *volumename, char *volumeid, char *projectname,
+		     brow_tNode node, flow_eDest dest);
+    void volumes_delete( brow_tNode node);
     void set_inputfocus( int focus);
-    void insert_tree( adminnav_sMenu *menu, adminnav_sMenu *parent, char *hierarchy);
+    void insert_tree( adminnav_sProjMenu *menu, adminnav_sProjMenu *parent,
+		      char *hierarchy);
     void enable_events();
     int get_select( void **item);
     int basename_to_baseroot( char *name, char *root);
@@ -102,6 +131,7 @@ class AdminNav {
     void zoom( double zoom_factor);
     void get_zoom( double *zoom_factor);
     void unzoom();
+    void view( adminnav_eMode m);
 
 };
 
@@ -110,20 +140,29 @@ class Item {
     Item( adminnav_eItemType	item_type) :
 	type( item_type) {};
     adminnav_eItemType	type;
+    virtual int	open_children( AdminNav *adminnav, double x, double y) 
+      { return 0;}
+    virtual int	close( AdminNav *adminnav, double x, double y)
+      { return 0;}
+    virtual char *identity() { return "";}
+    virtual brow_tNode get_node() = 0;
+    virtual void print( ofstream& fp) {}
 };
 
 class ItemProjHier : public Item {
   public:
     ItemProjHier( AdminNav *adminnav, char *item_name, char *item_hier,
-	adminnav_sMenu *item_child_list,
+	adminnav_sProjMenu *item_child_list,
 	brow_tNode dest, flow_eDest dest_code);
     brow_tNode		node;
     char	 	name[120];
     char		hierarchy[120];
-    adminnav_sMenu	*child_list;
+    adminnav_sProjMenu	*child_list;
 
     int			open_children( AdminNav *adminnav, double x, double y);
     int			close( AdminNav *adminnav, double x, double y);
+    char		*identity() { return hierarchy;}
+    brow_tNode		get_node() { return node;}
 };
 
 class ItemProject : public Item {
@@ -141,11 +180,13 @@ class ItemProject : public Item {
     char	 	description[120];
     int			open_children( AdminNav *adminnav, double x, double y);
     int     		close( AdminNav *adminnav, double x, double y);
+    char		*identity() { return hierarchy;}
+    brow_tNode		get_node() { return node;}
 };
 
-class ItemDb : public Item {
+class ItemProjDb : public Item {
   public:
-    ItemDb( AdminNav *adminnav, char *item_name,
+    ItemProjDb( AdminNav *adminnav, char *item_name,
 	char *item_project, char *item_db, char *item_root,
 	brow_tNode dest, flow_eDest dest_code);
     brow_tNode		node;
@@ -156,11 +197,13 @@ class ItemDb : public Item {
     char	 	root[120];
     int			open_children( AdminNav *adminnav, double x, double y);
     int     		close( AdminNav *adminnav, double x, double y);
+    char		*identity() { return hierarchy;}
+    brow_tNode		get_node() { return node;}
 };
 
-class ItemVolume : public Item {
+class ItemProjVolume : public Item {
   public:
-    ItemVolume( AdminNav *adminnav, char *item_name,
+    ItemProjVolume( AdminNav *adminnav, char *item_name,
 	char *item_project, char *item_db, char *item_volume, char *item_root,
 	brow_tNode dest, flow_eDest dest_code);
     brow_tNode		node;
@@ -170,9 +213,84 @@ class ItemVolume : public Item {
     char	 	hierarchy[120];
     char	 	volume[120];
     char	 	root[120];
+    char		*identity() { return hierarchy;}
+    brow_tNode		get_node() { return node;}
+};
+
+class ItemVolume : public Item {
+  public:
+    ItemVolume( AdminNav *adminnav,
+	char *item_name, char *item_vid, char *item_project,
+	brow_tNode dest, flow_eDest dest_code);
+    brow_tNode		node;
+    pwr_tVolumeId	vid;
+    char	 	name[120];
+    char	 	project[120];
+
+    char		*identity() { return name;}
+    brow_tNode		get_node() { return node;}
+    void		modify( char *item_name, char *item_vid, char *item_project);
+    void		print( ofstream& fp);
+};
+
+class ItemVolComment : public Item {
+  public:
+    ItemVolComment( AdminNav *adminnav,
+	char *item_text,
+	brow_tNode dest, flow_eDest dest_code);
+    brow_tNode		node;
+    char		text[120];
+
+    char		*identity() { return text;}
+    brow_tNode		get_node() { return node;}
+    void		print( ofstream& fp);
+};
+
+class ItemUsersGroup : public Item {
+  public:
+    ItemUsersGroup( AdminNav *adminnav,
+	SystemList *item_group,
+	brow_tNode dest, flow_eDest dest_code);
+    brow_tNode		node;
+    SystemList		*group;
+    char		name[120];
+
+    int			open_children( AdminNav *adminnav, double x, double y);
+    int     		close( AdminNav *adminnav, double x, double y);
+    char		*identity() { return name;}
+    brow_tNode		get_node() { return node;}
+};
+
+class ItemUser : public Item {
+  public:
+    ItemUser( AdminNav *adminnav,
+	UserList *item_user,
+	brow_tNode dest, flow_eDest dest_code);
+    brow_tNode		node;
+    UserList		*user;
+    char		name[120];
+
+    char		*identity() { return name;}
+    brow_tNode		get_node() { return node;}
 };
 
 #if defined __cplusplus
 }
 #endif
 #endif
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

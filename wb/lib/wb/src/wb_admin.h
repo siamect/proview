@@ -26,6 +26,21 @@ typedef enum {
 	admin_eDiaFunction_Prop
 	} admin_eDiaFunction;
 
+typedef enum {
+	admin_eDiaUserFunction_New,
+	admin_eDiaUserFunction_Prop
+	} admin_eDiaUserFunction;
+
+typedef enum {
+	admin_eDiaSysFunction_New,
+	admin_eDiaSysFunction_Prop
+	} admin_eDiaSysFunction;
+
+typedef enum {
+	admin_eDiaVolFunction_New,
+	admin_eDiaVolFunction_Prop
+	} admin_eDiaVolFunction;
+
 class Admin {
   public:
     Admin( 
@@ -43,6 +58,12 @@ class Admin {
     Widget	cmd_prompt;
     Widget	cmd_input;
     Widget	adminnav_form;
+    Widget	proj_entry;
+    Widget	volume_entry;
+    Widget	user_entry;
+    Widget	menu_project;
+    Widget      menu_edit;
+
     Widget	adminprop_dia;
     Widget	adminprop_projname;
     Widget	adminprop_base;
@@ -54,6 +75,47 @@ class Admin {
     Widget	adminprop_path_noe;
     Widget	adminprop_hier_noe;
     Widget	adminprop_descript_noe;
+
+    Widget	adminuser_dia;
+    Widget	adminuser_username;
+    Widget	adminuser_password;
+    Widget	adminuser_system;
+    Widget	adminuser_username_noe;
+    Widget	adminuser_system_noe;
+    Widget	adminuser_priv_rtread;
+    Widget	adminuser_priv_rtwrite;
+    Widget	adminuser_priv_system;
+    Widget	adminuser_priv_maintenance;
+    Widget	adminuser_priv_process;
+    Widget	adminuser_priv_instrument;
+    Widget	adminuser_priv_operator1;
+    Widget	adminuser_priv_operator2;
+    Widget	adminuser_priv_operator3;
+    Widget	adminuser_priv_operator4;
+    Widget	adminuser_priv_operator5;
+    Widget	adminuser_priv_operator6;
+    Widget	adminuser_priv_operator7;
+    Widget	adminuser_priv_operator8;
+    Widget	adminuser_priv_operator9;
+    Widget	adminuser_priv_operator10;
+    Widget	adminuser_priv_devread;
+    Widget	adminuser_priv_devplc;
+    Widget	adminuser_priv_devconfig;
+    Widget	adminuser_priv_devclass;
+
+    Widget	adminsys_dia;
+    Widget	adminsys_systemname;
+    Widget	adminsys_systemname_noe;
+    Widget	adminsys_attr_userinherit;
+
+    Widget	adminvol_dia;
+    Widget	adminvol_volumename;
+    Widget	adminvol_volumename_noe;
+    Widget	adminvol_volumeid;
+    Widget	adminvol_volumeid_noe;
+    Widget	adminvol_projname;
+    Widget	adminvol_projname_noe;
+
     int		input_open;
     void 	*object;
     void	(*close_cb) ( void *);
@@ -62,6 +124,9 @@ class Admin {
     int		set_focus_disabled;
     XtIntervalId focus_timerid;
     int		dia_function;
+    int		diauser_function;
+    int		diasys_function;
+    int		diavol_function;
     char	copy_from_proj[80];
     char	modify_projname[120];
     char	modify_base[120];
@@ -80,9 +145,12 @@ class Admin {
     int		scriptmode;
     int		edit_mode;
     int		clock_cursor;
+    Item	*adminvol_item;
+    int		loggedin;
 
     void message( char severity, char *message);
     void set_prompt( char *prompt);
+    void set_title( char *title);
     int open_input();
     int open_project();
     int create_project();
@@ -90,10 +158,23 @@ class Admin {
     int copy_project();
     int project_properties(int projname_edit, int base_edit,
 	int path_edit, int hier_edit, int descr_edit);
+    int user_properties( admin_eDiaUserFunction function, int username_edit, int password_edit,
+	int system_edit, int priv_edit);
+    int system_properties( admin_eDiaSysFunction function, int systemname_edit, int attr_edit);
+    int volume_properties( admin_eDiaVolFunction function, int volumename_edit, 
+			   int volumeid_edit, int projectname_edit);
     void adminprop_setup( char *title, int projname_edit, int base_edit, 
 	int path_edit, int hier_edit, int descript_edit,
 	char *projname_value, char *base_value, char *path_value,
 	char *hier_value, char *descript_value);
+    void adminuser_setup( char *title, int username_edit, int password_edit, 
+			  int system_edit, int priv_edit,
+			  char *username_value, char *system_value, unsigned int priv_value);
+    void adminsys_setup( char *title, int systemname_edit, int attr_edit,
+			  char *systemname_value, unsigned int attr_value);
+    void adminvol_setup( char *title, int volumename_edit, int volumeid_edit,
+			 int projectname_edit, char *volumename_value, char *volumeidvalue,
+			 char *projectnamevalue);
     void set_clock_cursor();
     void reset_cursor();
     void set_clock_cursor_dia();

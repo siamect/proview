@@ -119,7 +119,7 @@ static int	admin_login_func(	void		*client_data,
   if ( EVEN(sts))
   {
     // Username and password are not required
-    admin->edit_mode = 1;
+    admin->loggedin = 1;
     admin->message('I', "Administrator logged in");
     return 1;
   }
@@ -142,7 +142,7 @@ static int	admin_login_func(	void		*client_data,
     admin->message('E',"Login failure");
   else
   {
-    admin->edit_mode = 1;
+    admin->loggedin = 1;
     sprintf( msg, "User %s logged in", arg1_str);
     admin->message('I', msg);
   }
@@ -154,10 +154,10 @@ static int	admin_logout_func(	void		*client_data,
 {
   Admin *admin = (Admin *)client_data;
 	
-  if ( admin->edit_mode)
+  if ( admin->loggedin)
   {
     admin->message('I', "Administrator logged out");
-    admin->edit_mode = 0;
+    admin->loggedin = 0;
   }
   else
     admin->message('I', "Not logged in");
