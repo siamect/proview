@@ -445,6 +445,12 @@ link_io_base_areas (
   dlink_area((plc_sDlink *)&pp->base.av_i, "pwrNode-active-io-av_init", pp->IOHandler->AvCount * sizeof(pwr_tInt32));
   dlink_area((plc_sDlink *)&pp->base.dv_i, "pwrNode-active-io-dv_init", pp->IOHandler->DvCount * sizeof(pwr_tInt32));
   dlink_area((plc_sDlink *)&pp->base.iv_i, "pwrNode-active-io-iv_init", pp->IOHandler->DvCount * sizeof(pwr_tInt32));
+  dlink_area((plc_sDlink *)&pp->base.ai_i, "pwrNode-active-io-ai_init", pp->IOHandler->AiCount * sizeof(pwr_tInt32));
+  dlink_area((plc_sDlink *)&pp->base.ao_i, "pwrNode-active-io-ao_init", pp->IOHandler->AoCount * sizeof(pwr_tInt32));
+  dlink_area((plc_sDlink *)&pp->base.di_i, "pwrNode-active-io-di_init", pp->IOHandler->DiCount * sizeof(pwr_tInt32));
+  dlink_area((plc_sDlink *)&pp->base.do_i, "pwrNode-active-io-do_init", pp->IOHandler->DoCount * sizeof(pwr_tInt32));
+  dlink_area((plc_sDlink *)&pp->base.ii_i, "pwrNode-active-io-ii_init", pp->IOHandler->IiCount * sizeof(pwr_tInt32));
+  dlink_area((plc_sDlink *)&pp->base.io_i, "pwrNode-active-io-io_init", pp->IOHandler->IoCount * sizeof(pwr_tInt32));
 }
 
 /* Link to I/O copy areas.
@@ -637,6 +643,36 @@ save_values (
     if (p != NULL)
       *p = pp->base.dv_a.p->Value[i];
   }
+  for (i = 0; i < pp->IOHandler->AiCount; i++) {
+    pwr_tFloat32 *p = gdh_TranslateRtdbPointer(pp->base.ai_i.p->Value[i]);
+    if (p != NULL)
+      *p = pp->base.ai_a.p->Value[i];
+  }
+  for (i = 0; i < pp->IOHandler->AoCount; i++) {
+    pwr_tFloat32 *p = gdh_TranslateRtdbPointer(pp->base.ao_i.p->Value[i]);
+    if (p != NULL)
+      *p = pp->base.ao_a.p->Value[i];
+  }
+  for (i = 0; i < pp->IOHandler->DiCount; i++) {
+    pwr_tBoolean *p = gdh_TranslateRtdbPointer(pp->base.di_i.p->Value[i]);
+    if (p != NULL)
+      *p = pp->base.di_a.p->Value[i];
+  }
+  for (i = 0; i < pp->IOHandler->DoCount; i++) {
+    pwr_tBoolean *p = gdh_TranslateRtdbPointer(pp->base.do_i.p->Value[i]);
+    if (p != NULL)
+      *p = pp->base.do_a.p->Value[i];
+  }
+  for (i = 0; i < pp->IOHandler->IiCount; i++) {
+    pwr_tInt32 *p = gdh_TranslateRtdbPointer(pp->base.ii_i.p->Value[i]);
+    if (p != NULL)
+      *p = pp->base.ii_a.p->Value[i];
+  }
+  for (i = 0; i < pp->IOHandler->IoCount; i++) {
+    pwr_tInt32 *p = gdh_TranslateRtdbPointer(pp->base.io_i.p->Value[i]);
+    if (p != NULL)
+      *p = pp->base.io_a.p->Value[i];
+  }
 }
 
 static void
@@ -660,5 +696,35 @@ set_values (
     pwr_tBoolean *p = gdh_TranslateRtdbPointer(pp->base.dv_i.p->Value[i]);
     if (p != NULL)
       pp->base.dv_a.p->Value[i] = *p;
+  }
+  for (i = 0; i < pp->IOHandler->AiCount; i++) {
+    pwr_tFloat32 *p = gdh_TranslateRtdbPointer(pp->base.ai_i.p->Value[i]);
+    if (p != NULL)
+      pp->base.ai_a.p->Value[i] = *p;
+  }
+  for (i = 0; i < pp->IOHandler->AoCount; i++) {
+    pwr_tFloat32 *p = gdh_TranslateRtdbPointer(pp->base.ao_i.p->Value[i]);
+    if (p != NULL)
+      pp->base.ao_a.p->Value[i] = *p;
+  }
+  for (i = 0; i < pp->IOHandler->DiCount; i++) {
+    pwr_tBoolean *p = gdh_TranslateRtdbPointer(pp->base.di_i.p->Value[i]);
+    if (p != NULL)
+      pp->base.di_a.p->Value[i] = *p;
+  }
+  for (i = 0; i < pp->IOHandler->DoCount; i++) {
+    pwr_tBoolean *p = gdh_TranslateRtdbPointer(pp->base.do_i.p->Value[i]);
+    if (p != NULL)
+      pp->base.do_a.p->Value[i] = *p;
+  }
+  for (i = 0; i < pp->IOHandler->IiCount; i++) {
+    pwr_tInt32 *p = gdh_TranslateRtdbPointer(pp->base.ii_i.p->Value[i]);
+    if (p != NULL)
+      pp->base.ii_a.p->Value[i] = *p;
+  }
+  for (i = 0; i < pp->IOHandler->IoCount; i++) {
+    pwr_tInt32 *p = gdh_TranslateRtdbPointer(pp->base.io_i.p->Value[i]);
+    if (p != NULL)
+      pp->base.io_a.p->Value[i] = *p;
   }
 }
