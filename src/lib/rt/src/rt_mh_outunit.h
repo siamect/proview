@@ -27,6 +27,10 @@
 #include "rt_qcom.h"
 #endif
 
+#if defined __cplusplus
+extern "C" {
+#endif
+
 #define mh_cSelLSize 20
 
 typedef pwr_tUInt32 mh_mOutunitFlags;
@@ -173,4 +177,7 @@ pwr_tStatus mh_OutunitSetTimeout(int Timeout);
 pwr_tStatus mh_OutunitUpdate();
 
 /** @} */
+#if defined __cplusplus
+}
+#endif
 #endif

@@ -178,9 +178,13 @@ mh_OutunitBlock (
   sts = gdh_GetObjectNodeIndex(object, &nix);
   if (EVEN(sts)) return sts;
 
-  for (hl = LstFir(&l.handler_l); hl != LstEnd(&l.handler_l); hl = LstNex(hl))
+  for (hl = LstFir(&l.handler_l); hl != LstEnd(&l.handler_l); hl = LstNex(hl)) {
+    if ( !hl)
+      return MH__HANDLERDOWN;
+
     if (LstObj(hl)->nix == nix)
       break;
+  }
 
   if (hl == LstEnd(&l.handler_l)) {
     return MH__HANDLERDOWN;
