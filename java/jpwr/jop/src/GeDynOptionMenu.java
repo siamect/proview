@@ -122,7 +122,6 @@ public class GeDynOptionMenu extends GeDynElem {
       JMenuItem item;
       JPopupMenu popup = new JPopupMenu();
 
-      popup.setPopupSize( width, popup.getHeight());
       for ( int i = 0; i < 32; i++) {
         if ( itemsText[i] != null) {
 	  popup.add( item = new JMenuItem( itemsText[i]));
@@ -133,6 +132,7 @@ public class GeDynOptionMenu extends GeDynElem {
       popup.setBackground(color);
       popup.addPopupMenuListener( this);
       popup.show( invoker, x, y);
+      popup.setPopupSize( width, popup.getHeight());
     }
 
     public void popupMenuWillBecomeVisible( PopupMenuEvent e) {}
@@ -166,7 +166,7 @@ public class GeDynOptionMenu extends GeDynElem {
 	  }
 	  else
 	    return;
-	  System.out.println("Action " + event.getActionCommand());
+	  // System.out.println("Action " + event.getActionCommand());
 	  break;
         }
       }
