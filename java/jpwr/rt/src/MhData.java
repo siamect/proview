@@ -74,25 +74,20 @@ public class MhData
    */
   public void insertNewMess(MhrEvent ev)
   {
-    //System.out.println(ev.eventTime + " " + ev.eventText + " sts " + ev.eventStatus + " type " + ev.eventType);
-
     switch (ev.eventType)
     {
       case Mh.mh_eEvent_Alarm:
         //addera till larm-listan
         this.addMessToVectorInSortedOrder(alarmVec, ev);
-	//***alarmVec.add(0, ev);
         //addera kopia till händelse-listan
         this.addMessToVectorInSortedOrder(eventVec, ev.getCopy());
-	//***eventVec.add(0, ev.getCopy());
         break;
       case Mh.mh_eEvent_Return:
         //leta reda på objektet i larmlistan och vidta lämplig åtgärd
         for(int i = 0; i < alarmVec.size(); i++)
         {
           MhrEvent alEv = (MhrEvent)alarmVec.get(i);
-          //System.out.println("loopar " + ev.eventId.nix + " " + alEv.eventId.nix + " " + ev.eventId.idx + " " + alEv.eventId.idx);
-          if((ev.object.oix == alEv.object.oix) && (ev.object.oix == alEv.object.oix))
+          if((ev.targetId.nix == alEv.eventId.nix) && (ev.targetId.idx == alEv.eventId.idx))
           {
             //larmet är kvitterat och kan tas bort
             if((alEv.eventStatus & Mh.mh_mEventStatus_NotAck) == 0)
@@ -119,7 +114,7 @@ public class MhData
         for(int i = 0; i < alarmVec.size(); i++)
         {
           MhrEvent alEv = (MhrEvent)alarmVec.get(i);
-          if((ev.object.oix == alEv.object.oix) && (ev.object.oix == alEv.object.oix))
+          if((ev.targetId.nix == alEv.eventId.nix) && (ev.targetId.idx == alEv.eventId.idx))
           {
             if((alEv.eventStatus & Mh.mh_mEventStatus_NotRet) == 0)
             {
@@ -132,7 +127,6 @@ public class MhData
             break;
           }
         }
-        //System.out.println("AckMess eventFlags " + ev.eventFlags);
         //skall det läggas till i händelselistan
         if((ev.eventFlags & Mh.mh_mEventFlags_Ack) != 0)
         {
@@ -142,7 +136,6 @@ public class MhData
         }
         break;
       case Mh.mh_eEvent_Info:
-        //System.out.println("InfoMeddelande: " + ev.eventPrio + " " + ev.eventTime + " " + ev.eventText + " sts " + ev.eventStatus + " type " + ev.eventType);
         //addera till larm-listan
         if((ev.eventFlags & Mh.mh_mEventFlags_InfoWindow) != 0)
         {
@@ -170,9 +163,6 @@ public class MhData
     {
       eventVec.removeElementAt(eventVec.size() - 1);
     }
-    //System.out.println("eventtyp " + ev.eventType + " evestst "+ ev.eventStatus + " NotAck " + Mh.mh_mEventStatus_NotAck + " uttryck " + (ev.eventStatus &
-    //Mh.mh_mEventStatus_NotAck));
-
   }
 }
 

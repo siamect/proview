@@ -274,18 +274,35 @@ public class Mh
 
   }
 
-  public static void messReceived(String messString, String nameString, String
-                                  timeString, int flags, int prio, int status, int eventId_nix, String eventId_birthTime, int
-				  eventId_idx, int eventType, PwrtObjid object)
+  public static void messReceived(String messString, 
+                                  String nameString, 
+				  String timeString, 
+				  int flags, 
+				  int prio, 
+				  int status, 
+				  int eventId_nix, 
+				  String eventId_birthTime, 
+				  int eventId_idx, 
+				  int targetId_nix, 
+				  String targetId_birthTime, 
+				  int targetId_idx, 
+				  int eventType, 
+				  PwrtObjid object)
   {
     //System.out.println("Larm " + timeString + " " + messString + " " + nameString + " flags " + flags + " prio " + prio + " sts " +
     //status +  " nix " + eventId_nix + " birttime " + eventId_birthTime + " idx " + eventId_idx +
     //" typ " + eventType);
     //hantera det mottagna meddelandet
     //System.out.println("messReceived " + eventType);
-    MhrEvent evItem =  new MhrEvent(messString, nameString,
-                                  timeString, flags, prio, status, eventId_nix, eventId_birthTime,
-				  eventId_idx, eventType, object);
+    MhrEvent evItem =  new MhrEvent(messString, 
+                                    nameString,
+                                    timeString, 
+				    flags, 
+				    prio, 
+				    status, 
+				    eventId_nix, eventId_birthTime, eventId_idx, 
+				    targetId_nix, targetId_birthTime, targetId_idx, 
+				    eventType, object);
     lastMhrEvent = evItem;
     newAlarmArrived = true;
     

@@ -15,6 +15,7 @@ public class MhrEvent implements Serializable
   public int eventStatus;
   public int eventPrio;
   public MhrsEventId eventId;
+  public MhrsEventId targetId;
   public int eventType;
   public PwrtObjid object;
 
@@ -27,6 +28,9 @@ public class MhrEvent implements Serializable
 		  int eventId_nix, 
 		  String eventId_birthTime, 
 		  int eventId_idx,
+		  int targetId_nix, 
+		  String targetId_birthTime, 
+		  int targetId_idx,
 		  int eventType,
 		  PwrtObjid object)
   {
@@ -37,6 +41,7 @@ public class MhrEvent implements Serializable
     this.eventPrio = eventPrio;
     this.eventStatus = eventStatus;
     this.eventId = new MhrsEventId(eventId_nix, eventId_birthTime, eventId_idx); 
+    this.targetId = new MhrsEventId(targetId_nix, targetId_birthTime, targetId_idx);
     this.eventType = eventType;
     this.object = object;
   }
@@ -51,6 +56,9 @@ public class MhrEvent implements Serializable
 		        eventId.nix, 
 		        eventId.birthTime, 
 		        eventId.idx,
+		        targetId.nix, 
+		        targetId.birthTime, 
+		        targetId.idx,
 		        eventType,
 		        object);
   }
