@@ -279,18 +279,21 @@ cmvolc_GetNonExistingClass (
   net_sGattribute	*gap;
   net_sGclass		*gcp;  
   pwr_tObjid		poid;
-  
-  
-  
+
 
   gdb_AssumeLocked;
 
   pwr_Assert(op->l.flags.b.isCached);
-  
+
   cid = op->g.cid;
 
   vp = pool_Address(NULL, gdbroot->pool, op->l.vr);
   np = pool_Address(NULL, gdbroot->pool, vp->l.nr);
+  if (!np->cclassSupport) {
+    *sts = GDH__NOCCLASSSUP;
+    return;
+  }    
+  
 
 
   printf("cmvolc_GetNonExistingClass\n");
