@@ -106,28 +106,6 @@ qos_SignalQue (
   return TRUE;
 }
 
-void
-qos_Platform (
-  qdb_sNode	*np
-)
-{
-
-  np->os = qcom_eOS_Lynx;
-
-#if defined (__powerpc__)
-  np->hw = qcom_eHW_PPC;
-  np->bo = qcom_eBO_big;
-  np->ft = qcom_eFT_ieeeS;
-#elif defined(__x86__)
-  np->hw = qcom_eHW_x86;
-  np->bo = qcom_eBO_little;
-  np->ft = qcom_eFT_ieeeS;
-#else
-#error unknown hardware
-#endif
-
-}
-
 qdb_sQlock *
 qos_CreateQlock (
   pwr_tStatus	*sts,

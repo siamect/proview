@@ -709,7 +709,7 @@ qdb_CreateDb (
 
     np = qdb->my_node = qdb_AddNode(sts, qdb->my_nid, qdb_mAdd_failIfAdded);
     if (qdb->my_node == NULL) errh_Bugcheck(*sts, "creating local node");
-    qos_Platform(np);
+    qdb_Platform(np);
 
 #if 0
     gethostname(np->name, sizeof(np->name));
@@ -1302,6 +1302,21 @@ qdb_NodeInfo (
   node->bo = np->bo;
   node->ft = np->ft;
 }
+
+void
+qdb_Platform (
+  qdb_sNode	*np
+)
+{
+  co_sPlatform platform;
+
+  co_GetOwnPlatform(&platform);
+  np->os = platform.os;
+  np->hw = platform.hw;
+  np->bo = platform.fm.b.bo;
+  np->ft = platform.fm.b.ft;
+}
+
 
 qdb_sQue *
 qdb_Que (

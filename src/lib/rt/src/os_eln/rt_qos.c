@@ -104,18 +104,6 @@ qos_SignalQue (
   return *sts;
 }
 
-void
-qos_Platform (
-  qdb_sNode	*np
-)
-{
-
-  np->os = qcom_eOS_ELN;
-  np->hw = qcom_eHW_VAX;
-  np->bo = qcom_eBO_little;
-  np->ft = qcom_eFT_vaxF;
-}
-
 qdb_sQlock *
 qos_CreateQlock (
   pwr_tStatus	*status,

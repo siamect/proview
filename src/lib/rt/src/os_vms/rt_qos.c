@@ -164,28 +164,6 @@ qos_SignalQue (
 
 }
 
-void
-qos_Platform (
-  qdb_sNode	*np
-)
-{
-
-  np->os = qcom_eOS_VMS;
-
-#if defined(vax) || defined(__vax)
-  np->hw = qcom_eHW_VAX;
-  np->bo = qcom_eBO_little;
-  np->ft = qcom_eFT_vaxF;
-#elif defined(__Alpha_AXP) || defined(__ALPHA)
-  np->hw = qcom_eHW_Alpha;
-  np->bo = qcom_eBO_little;
-  np->ft = qcom_eFT_vaxF;
-#else
-# error "Unknown OpenVMS hardware"
-#endif
-
-}
-
 qdb_sQlock *
 qos_CreateQlock (
   pwr_tStatus	*status,

@@ -740,6 +740,7 @@ void		qdb_GetInfo	(qcom_sGet*, qdb_sBuffer*);
 qdb_sLocal *	qdb_MapDb	(pwr_tStatus*);
 void		qdb_NetEvent	(pwr_tStatus*, qdb_sNode*, qcom_eStype);
 void		qdb_NodeInfo	(pwr_tStatus*, qcom_sNode*, qdb_sNode*);
+void		qdb_Platform	(qdb_sNode*);
 void		qdb_Put		(pwr_tStatus*, qdb_sBuffer*, qdb_sQue*);
 void		qdb_RemoveAppl	(pwr_tStatus*, qdb_sAppl*);
 void		qdb_PutInfo	(qdb_sBuffer*, qcom_sPut *, const qcom_sQid*, qcom_tRid);

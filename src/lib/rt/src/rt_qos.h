@@ -42,9 +42,4 @@ qos_SignalQue (
   qdb_sQue	*que
 );
 
-void
-qos_Platform (
-  qdb_sNode	*node
-);
-
 #endif

@@ -117,40 +117,6 @@ qos_SignalQue (
 
   return TRUE;
 }
-
-void
-qos_Platform (
-  qdb_sNode	*np
-)
-{
-    /** @todo This function is now OS independent. Move it to??? */
-#if 1
-  co_sPlatform platform;
-
-  co_GetOwnPlatform(&platform);
-  np->os = platform.os;
-  np->hw = platform.hw;
-  np->bo = platform.fm.b.bo;
-  np->ft = platform.fm.b.ft;
-  
-
-#else
-
-  np->os = qcom_eOS_Linux;
-
-# if defined (HW_PPC)
-  np->hw = qcom_eHW_PPC;
-  np->bo = qcom_eBO_big;
-  np->ft = qcom_eFT_ieeeS;
-# elif defined(HW_X86)
-  np->hw = qcom_eHW_x86;
-  np->bo = qcom_eBO_little;
-  np->ft = qcom_eFT_ieeeS;
-# else
-#   error unknown hardware
-# endif
-#endif
-}
 
 
 qdb_sQlock *
