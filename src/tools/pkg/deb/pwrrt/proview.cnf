@@ -7,7 +7,7 @@ qcomBusId               517
 #
 # Web directory
 #
-webDirectory            /var/www
+webDirectory            /pwrp/common/web
 
 
 
