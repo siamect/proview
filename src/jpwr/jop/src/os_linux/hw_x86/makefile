@@ -5,7 +5,11 @@ local_java_sources := \
 	GeCFormat.java \
 	GeDyndata.java \
 	GeColor.java \
+	Proportion.java\
+	RatioLayout.java \
+	AspectRatioListener.java \
 	JopDynamic.java \
+	LocalDb.java \
 	JopEngine.java \
 	JopSessionIfc.java \
 	JopUtilityIfc.java \
@@ -110,13 +114,25 @@ local_java_sources := \
 	XttTree.java \
 	JopXttApplet.java \
 	JopXttFrame.java \
+        EventTableModel.java \
+	EventTableCellRender.java \
 	MhTable.java \
 	MhClient.java \
         MhFrame.java \
         JopOpWindow.java \
         JopOpWindowFrame.java \
         JopOpWindowApplet.java \
-	JopSessionRep.java
+	JopSessionRep.java \
+	HistDateChooser.java \
+	HistSender.java \
+	HistStatModel1.java \
+	HistStatModel2.java \
+	HistStatistics.java \
+	HistTable.java \
+	HistStatModel1.java \
+	HistStatModel2.java \
+	HistStatistics.java \
+	HistSearch.java
 
 -include $(pwre_sroot)/tools/bld/src/$(os_name)/$(hw_name)/$(type_name)_generic.mk
 
@@ -131,6 +147,7 @@ endif
 -include ../../special.mk
 -include ../special.mk
 -include special.mk
+
 
 
 

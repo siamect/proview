@@ -21,4 +21,5 @@ public interface JopSessionIfc {
   public boolean isApplet();
   public boolean isApplication();
   public boolean isOpWindowApplet();
+  public void openSearch(String object);
 }

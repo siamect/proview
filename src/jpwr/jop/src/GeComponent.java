@@ -16,7 +16,7 @@ public class GeComponent extends JComponent implements GeComponentIfc,
   public JopEngine en;
   public GeDyn dd = new GeDyn( this);
   public int level;
-  Timer timer = new Timer(100, this);
+  public Timer timer = new Timer(100, this);
   StringBuffer sb = new StringBuffer();
   public JopSession session;
   public GeComponent component = this;
@@ -75,6 +75,8 @@ public class GeComponent extends JComponent implements GeComponentIfc,
 	if ( (dd.actionType & GeDyn.mActionType_Slider) != 0) {
 	  this.addMouseMotionListener( new MouseMotionAdapter() {
 	    public void mouseDragged(MouseEvent e) {
+	      if ( actionDisabled)
+	        return;
 	      if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0 &&
 		  en.gdh.isAuthorized( dd.access))
 		dd.action( GeDyn.eEvent_SliderMoved, e);
@@ -110,6 +112,8 @@ public class GeComponent extends JComponent implements GeComponentIfc,
   public void setLevelColorTone( int levelColorTone) { this.levelColorTone = levelColorTone;}
   public void setLevelFillColor( int levelFillColor) { this.levelFillColor = levelFillColor;}
 
+  boolean actionDisabled = false;
+  public void setActionDisabled( boolean actionDisabled) { this.actionDisabled = actionDisabled;}
   public String annot1 = new String();
   public Font annot1Font = new Font("Helvetica", Font.BOLD, 14);
   public void setAnnot1Font( Font font) { annot1Font = font;}

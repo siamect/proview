@@ -24,4 +24,5 @@ public interface GeComponentIfc {
     public int setPreviousPage();
     public Object getDd();
     public void repaintForeground();
+    public Object dynamicGetRoot();
 }

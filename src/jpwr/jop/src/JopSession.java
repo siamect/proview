@@ -96,7 +96,12 @@ public class JopSession {
   public boolean isOpWindowApplet() {
     return ((JopSessionIfc) sessionRep).isOpWindowApplet();
   }
+
+    public void openSearch(String object ){
+	((JopSessionIfc) sessionRep).openSearch(object);
+    }
 }
+
 
 
 

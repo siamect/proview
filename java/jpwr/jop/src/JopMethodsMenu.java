@@ -74,9 +74,18 @@ public class JopMethodsMenu implements ActionListener, PopupMenuListener,
       popup.add( item = new JMenuItem( "Class Help"));
       item.addActionListener( this);
     }
-
+ 
     if ( circuitDiagramFilter()) {
       popup.add( item = new JMenuItem( "Circuit Diagram"));
+      item.addActionListener( this);
+    }
+ 
+    if ( classGraphFilter()) {
+      popup.add( item = new JMenuItem( "ClassGraph"));
+      item.addActionListener( this);
+    }
+    if (openSearchFilter()){
+      popup.add(item= new JMenuItem( "Hist Search"));
       item.addActionListener( this);
     }
     popup.addPopupMenuListener( this);
@@ -113,6 +122,12 @@ public class JopMethodsMenu implements ActionListener, PopupMenuListener,
     }
     else if ( event.getActionCommand().equals("Circuit Diagram")) {
       circuitDiagram();
+    }
+    else if ( event.getActionCommand().equals("ClassGraph")) {
+      classGraph();
+    }
+    else if ( event.getActionCommand().equals("Hist Search")) {
+      openSearch();
     }
   }  
 
@@ -316,6 +331,54 @@ public class JopMethodsMenu implements ActionListener, PopupMenuListener,
     String cmd = "open url \"" + url + "\"";
     session.executeCommand( cmd);
   }
+
+  public boolean classGraphFilter() {
+    if ( classid == Pwrs.cClass_Node)
+      return true;
+
+    CdhrObjid coid = gdh.classIdToObjid( classid);
+    if ( coid.evenSts()) return false;
+
+    CdhrString sret = gdh.objidToName( coid.objid, Cdh.mName_object);
+    if ( sret.evenSts()) return false;
+
+    String name;
+    if ( coid.objid.vid < Cdh.cUserClassVolMin) {
+      // Class is a base class, java classname starts with JopC_
+      if ( coid.objid.vid == 1)
+	name = "jpwr.jopc.Jopc" + sret.str.substring(1,2).toUpperCase() + 
+	  sret.str.substring(2).toLowerCase();
+      else
+	name = "jpwr.jopc.Jopc" + sret.str.substring(0,1).toUpperCase() + 
+	  sret.str.substring(1).toLowerCase();
+    }
+    else
+      // Java name equals class name
+      name = sret.str.substring(0,1).toUpperCase() + sret.str.substring(1).toLowerCase();
+
+    try {
+      Class clazz = Class.forName( name);
+    }
+    catch ( Exception e) {
+      return false;
+    }
+    return true;
+  }
+  public void classGraph() {
+    String cmd = "open graph /class /instance=" + object;
+    System.out.println( "classGraph: " + cmd);
+    session.executeCommand( cmd);
+  }
+
+    public boolean openSearchFilter(){
+	// XXX If needed, this is the place to filter what
+	// objects are searchable.
+	return true;
+    }
+
+    public void openSearch(){
+	session.openSearch(object);    
+    }
 
   public boolean isVisible() {
     return popup.isVisible();

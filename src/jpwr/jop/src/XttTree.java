@@ -24,6 +24,8 @@ import jpwr.rt.*;
 public class XttTree extends JPanel
 {
   boolean findFieldEnable = false;
+    /*Mats förändringar ny boolean för enterComm tillagd (enterFieldEnable)*/
+  boolean enterFieldEnable = false; 
   JPanel userPanel = new JPanel();
   BorderLayout borderLayout1 = new BorderLayout();
   JPanel messagePanel = new JPanel();
@@ -32,7 +34,8 @@ public class XttTree extends JPanel
   /**  Description of the Field */
   JTextField userValue = new JTextField(25);
   /**  Description of the Field */
-  JLabel userValueLabel = new JLabel("Value input: ");
+  JLabel userValueLabel = new JLabel("Value input: ");    
+  JLabel userCommandLabel = new JLabel("Command:");
   JLabel labelMessage = new JLabel("Navigator ver 1.0");
   Dimension size;
   /**  Description of the Field */
@@ -56,7 +59,8 @@ public class XttTree extends JPanel
   private DefaultTreeModel treeModel;
   private URL url;
   
-  final JPopupMenu popup = new JPopupMenu();
+    //Mats förändringar: popup borttagen
+    //final JPopupMenu popup = new JPopupMenu();
   
   InputMap inputMap = new InputMap();
   ActionMap actionMap = new ActionMap();
@@ -124,6 +128,11 @@ public class XttTree extends JPanel
   String find_EN = "find...";
   String find_SW = "sök...";
   String find;
+    //Mats förändringar: strängar för enterComm
+  String enterComm_EN = "enter command";
+  String enterComm_SW = "kommandorad";
+  String enterComm;
+
   
   static final int SWEDISH = 0;
   static final int ENGLISH = 1;
@@ -172,6 +181,7 @@ public class XttTree extends JPanel
 	openPlc = openPlc_SW;
 	showCross = showCross_SW;
 	find = find_SW;
+	enterComm=enterComm_SW;
 	
       break;
       case ENGLISH :
@@ -185,6 +195,7 @@ public class XttTree extends JPanel
 	openPlc = openPlc_EN;
 	showCross = showCross_EN;
 	find = find_EN;
+	enterComm=enterComm_EN;
       break;
     }
     //get all icons that is to be used in the tree
@@ -291,19 +302,34 @@ public class XttTree extends JPanel
       {
         public void actionPerformed(ActionEvent evt)
         {
-	  if(!findFieldEnable)
+
+	    /*Mats förändringar: Omstrukturering av ifsatser + en tillagd ifsats
+	      för enterFieldEnable*/
+	    if(enterFieldEnable)
 	  {
-            Logg.logg("XttTree: innan changeValue(" + userValue.getText() + ");", 6);
-            changeValue(userValue.getText());
-	  }
-	  else
+            Logg.logg("XttTree: innan enterCommand:(" + userValue.getText() + ");", 6);
+            enterComm(userValue.getText());
+	    messagePanel.remove(userValue);
+	    messagePanel.remove(userCommandLabel);
+	    enterFieldEnable=false;
+          }
+	    else if(findFieldEnable)
 	  {
             Logg.logg("XttTree: innan find(" + userValue.getText() + ");", 6);
             find(userValue.getText());
-          }          
+	    messagePanel.remove(userValue);
+	    messagePanel.remove(userValueLabel);
+	    findFieldEnable=false;
+          }
+	  else
+	  {
+            Logg.logg("XttTree: innan changeValue(" + userValue.getText() + ");", 6);
+            changeValue(userValue.getText());
+	    messagePanel.remove(userValue);
+	    messagePanel.remove(userValueLabel);
+	  }         
 	  tree.setRequestFocusEnabled(true);
-          messagePanel.remove(userValue);
-          messagePanel.remove(userValueLabel);
+
           messagePanel.add(labelMessage, BorderLayout.CENTER);
           messagePanel.doLayout();
           repaint();
@@ -974,6 +1000,17 @@ public class XttTree extends JPanel
                                   }
                                 };
 
+    //Mats förändringar: Ny AbstractAction för enterComm
+  AbstractAction COMM =         new AbstractAction("COMM")
+                                {
+                                  public void actionPerformed(ActionEvent evt)
+                                  {
+				    enterComm();
+                                  }
+                                };
+
+
+
   /**
    *  Creates menuitem and keyboardbinding for a "method"
    *
@@ -985,7 +1022,9 @@ public class XttTree extends JPanel
    *@param  keyStroke      A string representing the key-combination that is to be associated with the method
    *@return                Void
    */
-  public void newMethod(String name, Action action, String actionName, boolean toPopup, int toMenu, String keyStroke)
+
+    // Mats förändringar: booelan toPopup borttagen.
+    public void newMethod(String name, Action action, String actionName, /*boolean toPopup,*/ int toMenu, String keyStroke)
   {
     if(action != null)
     {
@@ -995,10 +1034,12 @@ public class XttTree extends JPanel
     {
       inputMap.put(KeyStroke.getKeyStroke(keyStroke), actionName);
     }
+    /*
     if(toPopup)
     {
       popup.add(menuItem(name, action, null));
     }
+    */
     if(toMenu >= 0)
     {
       menubar.getMenu(toMenu).add(menuItem(name, action, keyStroke));
@@ -1023,19 +1064,20 @@ public class XttTree extends JPanel
     
     this.getRootPane().setJMenuBar(menubar);
     
+    //Mats förändringar: boolean  toPopup borttagen ny metod för enterComm
     // Create some keystrokes and bind them to an action
-    this.newMethod(openObject, ADDOBJECTINFO, "ADDOBJECTINFO", true, 0, "ctrl A");
-    this.newMethod(openObject, ADDOBJECTINFO, "ADDOBJECTINFO", false, -1, "shift RIGHT");
-    this.newMethod("COLLAPSENODE", COLLAPSENODE, "COLLAPSENODE", false, -1, "LEFT");
-    this.newMethod(openPlc, OPENPLC, "OPENPLC", true, 0, "ctrl L");
-    this.newMethod(showCross, SHOWCROSS, "SHOWCROSS", true, 0, "ctrl R");
-    this.newMethod(changeValue, CHANGEVALUE, "CHANGEVALUE", true, 0, "ctrl Q");
-    this.newMethod(debug, DEBUG, "DEBUG", true, 0, "ctrl RIGHT");
-    this.newMethod(find, FIND, "FIND", false, 0, "ctrl F");
-    this.newMethod(swedish, LAN_SW, "LAN_SW", false, 1, null);
-    this.newMethod(english, LAN_EN, "LAN_EN", false, 1, null);
-    this.newMethod("INCLOG", INCLOG, "INCLOG", false, -1, "ctrl O");
-    this.newMethod("DECLOG", DECLOG, "DECLOG", false, -1, "ctrl P");
+    this.newMethod(openObject, ADDOBJECTINFO, "ADDOBJECTINFO",/* true,*/ 0, "ctrl A");    this.newMethod(openObject, ADDOBJECTINFO, "ADDOBJECTINFO", /*false,*/ -1, "shift RIGHT");
+    this.newMethod("COLLAPSENODE", COLLAPSENODE, "COLLAPSENODE",/* false,*/ -1, "LEFT");
+    this.newMethod(openPlc, OPENPLC, "OPENPLC", /*true,*/ 0, "ctrl L");
+    this.newMethod(showCross, SHOWCROSS, "SHOWCROSS", /*true,*/ 0, "ctrl R");
+    this.newMethod(changeValue, CHANGEVALUE, "CHANGEVALUE", /*true,*/ 0, "ctrl Q");
+    this.newMethod(debug, DEBUG, "DEBUG", /*true,*/ 0, "ctrl RIGHT");
+    this.newMethod(find, FIND, "FIND",/* false,*/ 0, "ctrl F");
+    this.newMethod(swedish, LAN_SW, "LAN_SW",/* false,*/ 1, null);
+    this.newMethod(english, LAN_EN, "LAN_EN", /*false,*/ 1, null);
+    this.newMethod("INCLOG", INCLOG, "INCLOG", /*false,*/ -1, "ctrl O");
+    this.newMethod("DECLOG", DECLOG, "DECLOG", /*false,*/ -1, "ctrl P");
+    this.newMethod(enterComm, COMM,"COMM",0,"ctrl C");
 
     inputMap.setParent(this.tree.getInputMap(JComponent.WHEN_FOCUSED));
     this.tree.setInputMap(JComponent.WHEN_FOCUSED, inputMap);
@@ -1076,7 +1118,31 @@ public class XttTree extends JPanel
             if(e.isPopupTrigger())
             {
               System.out.println("mouse pressed isPopUpTrigger");
-              popup.show((Component)e.getSource(), e.getX(), e.getY());
+	      //Mats förändringar: popup borttagen, JopMethodsMenu tillagd.
+	      TreePath tp = tree.getSelectionPath();
+	      if(tp == null) return;
+	      DefaultMutableTreeNode tn = (DefaultMutableTreeNode)(tp.getLastPathComponent());
+	      if(tn == null) return;
+	      try
+		  {
+		      TreeObj obj = (TreeObj)tn.getUserObject();
+		      String name = obj.fullName;
+		      if(name == null)
+			  {
+			      return;
+			  }
+		      new JopMethodsMenu( session, 
+					  name, 
+					  JopUtility.TRACE,(Component) tree, 
+					  e.getX(), e.getY());
+		      
+		  }
+	      catch(Exception ex)
+		  {
+		      Logg.logg("Error in showCross() " + ex.toString(),0);
+		  }
+	      Logg.loggToApplet("");
+              //popup.show((Component)e.getSource(), e.getX(), e.getY());
             }
           }
         }
@@ -1090,7 +1156,31 @@ public class XttTree extends JPanel
           if(e.isPopupTrigger())
           {
             System.out.println("isPopUpTrigger");
-            popup.show((Component)e.getSource(), e.getX(), e.getY());
+	    //Mats förändringar: popup borttagen, JopMethodsMenu tillagd.
+	    TreePath tp = tree.getSelectionPath();
+	    if(tp == null) return;
+	    DefaultMutableTreeNode tn = (DefaultMutableTreeNode)(tp.getLastPathComponent());
+	    if(tn == null) return;
+	    try
+		{
+		    TreeObj obj = (TreeObj)tn.getUserObject();
+		    String name = obj.fullName;
+		      if(name == null)
+			  {
+			      return;
+			  }
+		      new JopMethodsMenu( session, 
+					  name, 
+					  JopUtility.TRACE,(Component) tree, 
+					  e.getX(), e.getY());
+		      
+		}
+	    catch(Exception ex)
+		{
+		    Logg.logg("Error in showCross() " + ex.toString(),0);
+		}
+	    Logg.loggToApplet("");
+	    // popup.show((Component)e.getSource(), e.getX(), e.getY());
           }
         }
       });
@@ -1258,6 +1348,7 @@ public class XttTree extends JPanel
     this.openPlc = openPlc_SW;
     this.find = find_SW;
     this.showCross = showCross_SW;
+    this.enterComm = enterComm_SW;
     this.currentLanguage = SWEDISH;
     this.updateMenuLabels();
   }
@@ -1273,6 +1364,7 @@ public class XttTree extends JPanel
     this.openPlc = openPlc_EN;
     this.find = find_EN;
     this.showCross = showCross_EN;
+    this.enterComm = enterComm_EN;
     this.currentLanguage = ENGLISH;
     this.updateMenuLabels();
   }
@@ -1290,16 +1382,18 @@ public class XttTree extends JPanel
     menuFunctions.getItem(3).setText(changeValue);
     menuFunctions.getItem(4).setText(debug);
     menuFunctions.getItem(5).setText(find);
+    menuFunctions.getItem(6).setText(enterComm);
     menuLan.setText(language);
     menuLan.getItem(0).setText(swedish);
     menuLan.getItem(1).setText(english);
-    MenuElement[] menuElements = popup.getSubElements();
+    //Mats förändringar: Uppdatering av popup borttagen
+    /*MenuElement[] menuElements = popup.getSubElements();
 	
     ((JMenuItem)(menuElements[0])).setText(openObject);
     ((JMenuItem)(menuElements[1])).setText(openPlc);
     ((JMenuItem)(menuElements[2])).setText(showCross);
     ((JMenuItem)(menuElements[3])).setText(changeValue);
-    ((JMenuItem)(menuElements[4])).setText(debug);
+    ((JMenuItem)(menuElements[4])).setText(debug);*/
   }
 
 
@@ -1312,7 +1406,11 @@ public class XttTree extends JPanel
       Logg.logg("JopXttApplet: changeValue()", 6);
       userValue.setText(null);
       this.tree.setRequestFocusEnabled(false);
-      this.messagePanel.remove(labelMessage);
+      if (enterFieldEnable){
+	  enterFieldEnable = false;
+	  this.messagePanel.remove(userCommandLabel);
+      }
+      else this.messagePanel.remove(labelMessage);
       this.messagePanel.add(this.userValueLabel, BorderLayout.WEST);
       this.messagePanel.add(this.userValue, BorderLayout.CENTER);
       messagePanel.doLayout();
@@ -1332,7 +1430,12 @@ public class XttTree extends JPanel
       Logg.logg("JopXttApplet: find()", 6);
       userValue.setText(null);
       this.tree.setRequestFocusEnabled(false);
-      this.messagePanel.remove(labelMessage);
+      //Mats förändringar: Hantering av om enterFieldEnable =true
+      if (enterFieldEnable){
+	  enterFieldEnable = false;
+	  this.messagePanel.remove(userCommandLabel);
+      }
+      else this.messagePanel.remove(labelMessage);
       this.messagePanel.add(this.userValueLabel, BorderLayout.WEST);
       this.messagePanel.add(this.userValue, BorderLayout.CENTER);
       messagePanel.doLayout();
@@ -1341,7 +1444,30 @@ public class XttTree extends JPanel
       this.userValue.requestFocus();
       this.findFieldEnable = true;
   }
+    //Mats förändringar: Ny metod enterComm för att hantera manuellt inskrivna kommandon.
+ public void enterComm()
+  {
+      Logg.loggToApplet(" ");
+      Logg.logg("JopXttApplet: enterComm()", 6);
+      userValue.setText(null);
+      this.tree.setRequestFocusEnabled(false);
+      if (userValueLabel.isVisible()){
+	  findFieldEnable = false;
+	  this.messagePanel.remove(userValueLabel);
+      }
+      else this.messagePanel.remove(labelMessage);
+      this.messagePanel.add(this.userCommandLabel, BorderLayout.WEST);
+      this.messagePanel.add(this.userValue, BorderLayout.CENTER);
+      messagePanel.doLayout();
+      messagePanel.repaint();
 
+      this.userValue.requestFocus();
+      this.enterFieldEnable = true;
+  }
+    //Mats förändringar: ny metod som exekverar kommandot com.
+    public void enterComm(String com){
+	session.executeCommand(com);
+    }
 
 
   /**

@@ -5,6 +5,7 @@ local_java_sources = \
 	PwrtObjid.java \
 	PwrtRefId.java \
 	Pwr.java \
+	Pwrs.java \
 	Pwrb.java \
 	CdhrBoolean.java \
 	CdhrClassId.java \
@@ -30,11 +31,14 @@ local_java_sources = \
 	SubElement.java \
 	GdhServer.java \
         GdhServerMonitor.java \
+	HistQuery.java \
 	MhrsEventId.java \
 	MhrEvent.java \
 	Mh.java \
 	MhData.java \
-	MhServer.java
+	MhServer.java \
+	Hist.java \
+	HistServer.java
 
 
 -include $(pwre_sroot)/tools/bld/src/$(os_name)/$(hw_name)/$(type_name)_generic.mk

@@ -114,7 +114,20 @@ public class JopSessionRep implements JopSessionIfc {
 
 	CdhrString sret = engine.gdh.objidToName( coid.objid, Cdh.mName_object);
 	if ( sret.evenSts()) return;
-	name = sret.str.substring(0,1).toUpperCase() + sret.str.substring(1).toLowerCase();
+
+	System.out.println( "open frame: vid " + coid.objid.vid);
+	if ( coid.objid.vid < Cdh.cUserClassVolMin) {
+	  // Class is a base class, java classname starts with JopC_
+	  if ( coid.objid.vid == 1)
+	    name = "jpwr.jopc.Jopc" + sret.str.substring(1,2).toUpperCase() + 
+	      sret.str.substring(2).toLowerCase();
+	  else
+	    name = "jpwr.jopc.Jopc" + sret.str.substring(0,1).toUpperCase() + 
+	      sret.str.substring(1).toLowerCase();
+	}
+	else
+	  // Java name equals class name
+	  name = sret.str.substring(0,1).toUpperCase() + sret.str.substring(1).toLowerCase();
       }
     }
     Object graph;
@@ -207,6 +220,12 @@ public class JopSessionRep implements JopSessionIfc {
   public boolean isOpWindowApplet() {
     return ( root instanceof JopOpWindowApplet);
   }
+
+    public void openSearch(String object){
+	HistSearch HSWindow = new HistSearch(object,session );
+        HSWindow.pack();        
+        HSWindow.show();
+    }
 }
 
 

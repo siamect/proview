@@ -62,6 +62,10 @@ public class MhrEvent implements Serializable
 		        eventType,
 		        object);
   }
+  public String toString()
+  {
+    return new String(eventTime + eventText + eventName + eventFlags + eventPrio + eventType);
+  }
 
 }
 
