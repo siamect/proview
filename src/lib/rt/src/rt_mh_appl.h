@@ -29,6 +29,9 @@
 #include "rt_mh_net.h"
 #endif
 
+#if defined __cplusplus
+extern "C" {
+#endif
 
 
 /** @defgroup MSGH_DS Data Structures
@@ -162,4 +165,7 @@ pwr_tStatus mh_ApplGetMsgInfo (
 /**@}*/
 /**@}*/
 
+#if defined __cplusplus
+}
+#endif
 #endif
