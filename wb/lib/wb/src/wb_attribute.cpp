@@ -34,7 +34,24 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep * orep) :
   else {
     m_orep->ref();
 
-    // m_size == get rtbody size... Fix
+  // m_size == get rtbody size... Fix
+    wb_cdef cdef(*orep);
+    if (EVEN(cdef.sts())) {
+      char msg[256];
+      m_sts = cdef.sts();
+      sprintf(msg, "Can't get cdef for orep: %s", orep->name());  
+      throw wb_error_str(m_sts, msg);
+    }
+    wb_bdef bdef(((wb_cdrep *)cdef)->bdrep(&m_sts, pwr_eBix_rt));
+    if (EVEN(bdef.sts())) {
+      char msg[256];
+      m_sts = bdef.sts();
+      sprintf(msg, "Can't get bdef for orep: %s", orep->name());  
+      throw wb_error_str(m_sts, msg);
+    }
+
+    m_size = bdef.size();
+    m_bix = bdef.bix();
   }
 }
 
@@ -449,9 +466,9 @@ void *wb_attribute::value( void *p)
   check();
 
   if (!p) {
-    if (!m_body) {
+    if (!m_body && m_orep->vrep()->type() == ldh_eVolRep_Db) {
       m_body = (void *)calloc(1, m_size);
-      //printf("a: %8.8x alloc\n", m_body);
+      //printf("a: %8.8x alloc %d\n", m_body, m_size);
     }
     p = m_body;
   }
