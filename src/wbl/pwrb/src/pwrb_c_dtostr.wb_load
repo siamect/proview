@@ -11,7 +11,8 @@
 !  @Version 1.0
 !  @Code rt_plc_macro_string.h
 !  Convert digital value to string.
-!  
+!  @image orm_dtostr_fo.gif
+!
 !  The DtoStr object converts the value of the integer input to
 !  at string stored in ActVal.
 !

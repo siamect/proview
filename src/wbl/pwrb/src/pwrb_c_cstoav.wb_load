@@ -11,6 +11,7 @@
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
 !  Conditional Storage Analog value.
+!  @image orm_cstoav_fo.gif
 !  
 !  Conditional storage of an analog value on a specified
 !  local Av-signal (= Av object).

@@ -12,10 +12,11 @@
 !  @Code rt_plc_arithm.c
 !  Limits an analog signal up/downwards and signals if a
 !  limitation has taken place.
-!  
+!  @image orm_limit_fo.gif
+!
 !  The limits Max and Min may be external signals or
 !  adjustable parameters.
-!  
+!  @image orm_en1-108.gif
 !  The input signal may be fixed while one or both limits
 !  are variable.
 !  If one of the limits is not wanted the input signal may

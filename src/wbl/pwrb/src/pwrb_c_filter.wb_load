@@ -11,13 +11,23 @@
 !  @Version 1.0
 !  @Code rt_plc_arithm.c
 !  First Order Lag Filter.
-!      Symbol
+!  @image orm_filter_fo.gif
+!
 !  The input signal gets an exponential smoothing.
 !   VAL = a * In+ (1 - a) * X = X + a ¡(In - X) , where
 !   X =  FeedB, if FeedB is connected, ActValt - 1, otherwise
 !  
 !  a = ScanTime / FiltCon and 0 < a < 1.0. If a >= 1.0
 !  no filtering is done.
+!
+!  An external signal may also be used as feedback; e.g.
+!  @image orm_en1-77.gif
+!
+!  Example
+!
+!  If a (= ScanTime / FiltCon ) is small, 0.1 - 0.2, the output gets 
+!  a character of a slowly moving average.
+!  @image orm_en1-78.gif
 !*/
 SObject pwrb:Class
   Object Filter $ClassDef 117 

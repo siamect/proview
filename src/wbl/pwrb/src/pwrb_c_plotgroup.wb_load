@@ -27,12 +27,20 @@
 !  Between samples in a slowly sampled graph interpolation
 !  takes place.
 !  
-!         Hints
+!  Hints
+!
 !  The buttons 'Trend' and 'Fast' in the operator
 !  environment display both lists of those PlotGroup objects
 !  ( or graphs) that are available on the node independent
 !  of the user. Which list a specific PlotGroup object
 !  belongs to depends of Trend.
+!
+!  The users 'Host' and 'Process', according to figure below, will
+!  get lists with the same appearance but by grouping the PlotGroup
+!  objects in separate hierarchies is it possible to the designer to
+!  indicate which 'graphs' concern 'Host' respectively 'Process'
+!  @image orm_en1-170.gif
+!  Configuration of PlotGroup Objects 
 !*/
 SObject pwrb:Class
   Object PlotGroup $ClassDef 178 

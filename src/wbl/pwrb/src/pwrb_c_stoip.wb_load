@@ -12,7 +12,8 @@
 !  @Code rt_plc_macro_io.h
 !  Store Integer parameter. Used in run time to write in
 !  integer parameters.
-!  
+!  @image orm_stoip_fo.gif
+!
 !  Stores, after truncation, the value of an analog
 !  quantity ( e.g. output signal of the type pwr_tFloat32)
 !  on the specified 32-, 16-, or 8-bits integer parameter

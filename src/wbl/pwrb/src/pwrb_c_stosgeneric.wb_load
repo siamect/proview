@@ -12,6 +12,7 @@
 !  when a connection is created from a string output. The object will
 !  be transformed to its final appearence when it is connected to a
 !  string value or attribute.
+!  @image orm_stosgeneric_fo.gif
 !*/
 !
 SObject pwrb:Class

@@ -11,6 +11,7 @@
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
 !  Conditional Storage Analog input.
+!  @image orm_cstoai_fo.gif
 !  
 !  Conditional storage of an analog value on a specified
 !  local Ai-signal (= Ai object).

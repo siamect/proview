@@ -12,6 +12,7 @@
 !  @Code rt_plc_drive.c
 !  START/ STOP motor control with supervision of contactor
 !  response and motion guard.
+!  @image orm_en1-58.gif
 !  Three different types of interlockings:
 !   · safety interlocking SafeStop
 !   · production interlocking ProdStop
@@ -27,6 +28,7 @@
 !  One of three operating modes, LOCAL / MANUAL / AUTO, is
 !  selected by means of the input signal Local and the
 !  output signal ManMode in the following way:
+!  @image orm_en1-59.gif
 !  
 !   LOCAL  
 !         · Used at operation from for example an outer
@@ -40,6 +42,7 @@
 !         · LocDrive has a spring back push button
 !           function with an opening stop function. STOP
 !           is also done when Local is reset.
+!           @image orm_en1-60.gif
 !  
 !  MANUAL/AUTO
 !         · Both production and safety interlockings are
@@ -62,6 +65,53 @@
 !  instead of the missed input signal; i.e. it is not the
 !  value of ProdTim or SpeedTim itself that determines if
 !  these are concerned or not.
+!
+!  Examples
+!
+!  Worm Conveyer with Motion Guard 
+!
+!  Assumptions:
+!
+!  - Switching equipment to local drive at the motor etc. 
+!  - Signals from emergency stop ( nödstopp in Swedish) and thermal 
+!    tripping (termisk utlösning in Swedish) exists. 
+!  - The worm conveyer may not be driven if PUMP1 is off. This pump 
+!    is represented and driven by another Drive object. The PUMP1 
+!    restriction is not valid at driving from the switching equipment. 
+!  - The worm conveyer drives in operational mode AUTO with rotation 
+!    in 5 minutes every half hour or on operator request; WAIT0 has 
+!    TimerTime =25 · 60 seconds and WAIT1 TimerTime = 5 · 60 seconds. 
+!  - Message will be sent at alarms. 
+!  @image orm_en1-61.gif
+!  Periodical Control of a Contactor
+!
+!  Forward/Backward operation 
+!
+!  Driving only in the operational mode AUTO. Forward/backward operation 
+!  is controlled by Dv-signals. Response from the contactor exists, but 
+!  no tachometric relay. The both single drives interlock each other, and 
+!  changes between forward/backward are separated in time by TIMER0 
+!  respectively TIMER1. 
+!  @image orm_en1-62.gif
+!  Configuration of a Forward/Backward Operation
+!
+!  Two Conveyers 
+!  @image orm_en1-63.gif
+!
+!  The conveyer Trp1 may start only if the conveyer Trp2 is already running 
+!  (=production interlocking). The conveyers use the same thermal tripping 
+!  signal.
+!  @image orm_en1-64.gif 
+!  Shows the Operational Indicator Used to Control the Order of Starting
+!
+!  The AND-gate to start TRP1 is used to create a leading edge on the start 
+!  signal when TRP2 is running. 
+!
+!  Also in the operational mode MANUAL TRP1 is interlocked by TRP2 and TRP2 
+!  by level guards in the container. If a switching equipment to local drive 
+!  was set up thermal tripping is the only interlocking in the operational 
+!  mode LOCAL. 
+!
 !*/
 SObject pwrb:Class
   Object Drive $ClassDef 103 

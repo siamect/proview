@@ -11,7 +11,8 @@
 !  @Version 1.0
 !  @Code rt_plc_macro_grafcet.h
 !  The first step in a Grafcet-chain.
-!  
+!  @image orm_initstep_fo.gif
+!
 !  At least one InitStep object has to be included in
 !  every sequential chain.
 !  
@@ -40,6 +41,22 @@
 !  or more Stoxx , Setxx or Resxx objects; see figure 3-51
 !  on page 3-328. It may also be left open or used as an
 !  ordinary binary signal; see figure 3-22 on page 3-184.
+!
+!  Examples
+!
+!  Figure below shows how an InitStep , ISO, may be configured 
+!  in a straight sequential chain. A chain is said to be straight 
+!  if it does not contain any branching.
+!  @image orm_en1-104.gif
+!  InitStep Object in a Straight Sequential Chain 
+!
+!  The And object in figure below will be executed every time when 
+!  the PLC program executes. The compilation may result in a warning 
+!  'No Grafcet standard' because of the connections between the And 
+!  object and the Order respectively InitStep object, but the solution 
+!  works
+!  @image orm_en1-105.gif
+!  Example of the Use of Step- and Order Status as an Ordinary Binary Signal 
 !*/
 SObject pwrb:Class
   Object InitStep $ClassDef 136 

@@ -10,7 +10,9 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
-!  
+!  Reset digital value
+!  @image orm_resdv_fo.gif
+!
 !  If the input signal is TRUE, the specified local
 !  Dv-signal is cleared at the execution, otherwise there
 !  will be no effect on the Dv-signal.

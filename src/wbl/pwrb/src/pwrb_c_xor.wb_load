@@ -11,6 +11,7 @@
 !  @Version 1.0
 !  @Code rt_plc_macro_logic.h
 !  Exclusive Or Gate.
+!  @image orm_xor_fo.gif
 !
 !  The output is FALSE when the inputs are equal and TRUE
 !  when the inputs are different.

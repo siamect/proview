@@ -10,7 +10,8 @@
 !/**
 !  @Version 1.0
 !  Get String value.
-!  
+!  @image orm_getsv_fo.gif
+!
 !  Fetches the value for specified Sv object.
 !
 !  The complete name of the Sv-signal has to be supplied;

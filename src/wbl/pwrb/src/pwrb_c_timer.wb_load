@@ -11,13 +11,15 @@
 !  @Version 1.0
 !  @Code rt_plc_macro_logic.h
 !  Off-state or reset delay.
-!  
+!  @image orm_timer_fo.gif
+!
 !  When the input becomes
 !  
-!   · TRUE the output is set.
-!   · FALSE the timer is started. After the time TimerTime
+!   - TRUE the output is set.
+!   - FALSE the timer is started. After the time TimerTime
 !     the output will be reset.
-!  
+!  @image orm_en1-231.gif
+!
 !  Compare with the Wait object.
 !*/
 SObject pwrb:Class

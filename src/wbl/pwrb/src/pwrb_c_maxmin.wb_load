@@ -11,7 +11,8 @@
 !  @Version 1.0
 !  @Code rt_plc_arithm.c
 !  Max/Min selector.
-!  
+!  @image orm_maxmin_fo.gif
+!
 !  The Maxmin object chooses the highest respective lowest
 !  current value among up to 8 input signals where the
 !  first two may be constants.

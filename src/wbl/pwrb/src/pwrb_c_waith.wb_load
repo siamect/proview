@@ -11,7 +11,8 @@
 !  @Version 1.0
 !  @Code rt_plc_macro_logic.h
 !  On-state or set delay with hold function.
-!  
+!  @image orm_waith_fo.gif
+!
 !  The time, TimerTime, starts on a leading edge on the
 !  input and is measured by a counter.
 !  The countdown is disabled as long as the h(o)ld-signal
@@ -21,6 +22,16 @@
 !  When the time TimerTime expires and if the input still
 !  remains TRUE the output is set. It is cleared as soon
 !  as the input becomes FALSE.
+!
+!  Example 
+!
+!  In this example TimerTime is 5 seconds which gives
+!  TimerCount the value 250. 
+!
+!  @image orm_en1-247.gif 
+!  As seen in this illustration the function is exactly as
+!  in a Wait object, with the exception of a set hld-signal
+! freezing the down counting.
 !*/
 SObject pwrb:Class
   Object Waith $ClassDef 250 

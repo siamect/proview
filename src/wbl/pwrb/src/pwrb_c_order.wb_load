@@ -11,7 +11,7 @@
 !  @Version 1.0
 !  @Code rt_plc_macro_grafcet.h
 !  A Grafcet order.
-!  
+!  @image orm_en1-131.gif
 !  To every sequential step one or more Order objects can
 !  be connected.
 !  Activities ( e.g. StoDo, ResDv, And, Or, Wait objects)
@@ -22,7 +22,7 @@
 !  window get a WindowOrderact object (see p. 3-395) as
 !  parent object.
 !  
-!                   Note! The object's order list consists of either an
+!  Note! The object's order list consists of either an
 !  activity window or one or more Stoxx, Setxx, or Resxx
 !  objects directly connected to the output of the Order
 !  object. Remainder objects (e.g. And, Or, Wait, etc.)
@@ -32,7 +32,7 @@
 !  executes independent of the state of step or Order
 !  object.
 !  
-!                   Note! Code in the object's order list (see figure 3-34) is
+!  Note! Code in the object's order list (see figure 3-34) is
 !  executing as long as the step, to which the order
 !  belongs to, is active or the order ( if stored) is
 !  active. The last execution of the order list will be
@@ -72,6 +72,62 @@
 !  as parent object.
 !  Opposite to an activity window a conditional window is
 !  evaluated each time when the PLC program executes.
+!
+!  Example 
+!
+!  Figure below illustrates the use of Order objects: 
+!
+!  - Several orders (Ord0, Ord1, ... ) can be connected to a step, here S0. 
+!  - Single activities can be connected direct to a step without any 
+!    intermediate order, see the signals Do1 and Do2. 
+!  -  Several activities can be connected to an Order object; in this case 
+!     two activities are connected to the Ord0 object e.g. 
+!  @image orm_en1-132.gif
+!  Example in the Use of Order Objects 
+!
+!  - The thick vertical line in Ord5 indicates that the object has an underlying 
+!    sub-window, in this case an activity window . Such a window is shown in the 
+!    PLC Editor by Shift/MB1 and a double clicking in the right part of the Order 
+!    object. 
+!  - Do1 will be set as long as S0 is active. The SetDo function implies latching 
+!    and the Do1-signal remains set even when S0 becomes inactive. The Do1's SetDo 
+!    is not included in any order list. 
+!  - Since StoDo for Do2 is not included in any order list it will execute each 
+!    time when the PLC program executes. Do2 gets status according to the step 
+!  - Do0 will be set when S0 becomes active. Because Ord1 has an S-order attribute
+!    it will remain set even when S0 becomes inactive. Do0 is not cleared before
+!    the ORD1 object is reset by a Reset_SO object; cf. Do2. 
+!  - Dv1 and Dv4 are not set at once when the step S0 becomes active. The Ord0
+!    object is supplied with D and C attributes. In the beginning there is a delay,
+!    the duration is specified by the Attribute Editor, and then a condition Dv3
+!    follows. If S0 is active, the delay has elapsed, and the condition is satisfied
+!    Dv1 is set. Since the Set-function has latching the Dv-signal remains set also
+!    when S0 becomes inactive. When the delay has elapsed the Dv4-signal follows the
+!    condition Dv3 as long as the step is active. 
+!  - The thick vertical line in Ord4 indicates that the order has an underlying 
+!    sub-window, in this case a conditional window . If Ord4 is active, the condition
+!    is satisfied, and DI1 is not set Dv2 will be set, otherwise Dv2 is cleared. And0
+!    is not in the object's order list. A conditional window is opened in the following
+!    way: Specify in the object a C-attribute by means of the Attribute Editor. The
+!    conditional window is opened from the PLC Editor by Shift/MB1 and double clicking
+!    in the left part of the Order object. 
+!  - Figure See Step and Order with Activity Window shows a part of a sequential chain.
+!    ORD0 indicates an activity window, and this is shown to the right. 
+!  @image orm_en1-133.gif
+!  Step and Order with Activity Window 
+!
+!  Suppose that the PLC program executes by the frequency 10 Hz and the signals 
+!  Av1=Av2=0. ORD1 sees that the active status of the step lasts for 5 seconds. Which
+!  value did Av1 and Av2 get then? The order list begins to execute as soon as the
+!  step becomes active. Av1 will be increased and stored 20 times when the status of
+!  Ord0 is FALSE and then 30 times when the status of Ord0 is TRUE. Since the step
+!  becomes inactive the order list is executed one another time with the order status
+!  FALSE. This means that Av1 = 51. Av2 is stored only when order status is TRUE,
+!  which makes Av2 = 30. 
+!
+!  To make use of the delay in a D-order either an OrderAct object as in the case with
+!  ORD0 or the status of the order as with ORD1 is used. Also remember that: as long
+!  as the step is active the order list will execute independent of the order status . 
 !*/
 SObject pwrb:Class
   Object Order $ClassDef 166 

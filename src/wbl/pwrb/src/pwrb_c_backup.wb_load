@@ -12,6 +12,7 @@
 !  @Code rt_plc_macro_logic.h
 !  Points out a data segment in rtdb where the items will
 !  be backed up on a file.
+!  @image orm_backup_fo.gif
 !  
 !  If the segment pointed out by the Backup object was
 !  created in the development environment the backup may

@@ -13,6 +13,12 @@
 !  type of physical Ai-card. The conversion from signal
 !  value to actual value is done by polynomials.
 !  
+!  Figure below shows the steps in Ai-signal conversion and
+!  attributes of interest. The internal filtering concerns local
+!  Ai signals, i.e remote Ai-signals are not affected.
+!  @image orm_en1-31.gif
+!  Quantities of Importance for Handling Ai Signals
+!
 !  SigValue is converted to ActualValue via sensor
 !  function s, sensor polynomial p and filter function f
 !  according to,

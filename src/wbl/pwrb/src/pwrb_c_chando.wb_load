@@ -12,15 +12,18 @@
 !  Configures a digital output channel independent of the
 !  type of physical Do-card.
 !  
+!  Figure below shows the steps in Do-signal conversion.
 !  ActualValue belongs to the Do object. The shadowed
 !  attributes are defined in a card object, the Emerg-attribut
 !  in a $Node object, and the rest in the ChanDo object.
+!  @image orm_en1-35.gif
+!  Attributes Used in Do-signal Conversion
 !  
 !  If EmergBreakTrue = TRUE and EmergBreakSelect = 2 then
 !  the output is based on FixedOutValue. Otherwise TestOn
 !  will settles which attribute the output is based on.
 !  
-!      Hints
+!  Hints
 !  
 !  ChanDo objects are configured below a suitable Do-card
 !  object.

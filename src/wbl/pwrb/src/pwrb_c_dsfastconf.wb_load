@@ -14,8 +14,9 @@
 !  In every node where fast graphs should be stored there
 !  has to be a DsFast job to search through the local
 !  DsFast objects.
-!  
-!      Hints
+!  @image orm_en1-67.gif
+!
+!  Hints
 !  
 !  The DsFastConf object is placed below the $Node object.
 !  If a Ds_Fast job is loaded to a node, which has no
@@ -27,6 +28,7 @@
 !  Appl object and for a VAXELN node either by an Appl
 !  object or is the dsFast module included in the
 !  EBUILD-file.
+!  @image orm_en1-68.gif
 !  
 !      See Also
 !  DsFast

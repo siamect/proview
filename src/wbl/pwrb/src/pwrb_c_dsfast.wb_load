@@ -17,11 +17,13 @@
 !  For every attribute to be plotted there has to be a
 !  data storage object. Attributes in the objects specify
 !  for example the name of the sampled attribute and how
-!  often it is to be stored, see figure 3-11. An attribute
+!  often it is to be stored, see figure below. An attribute
 !  may be referred to by several different data storage
 !  objects, for example to store at different frequencies.
-!  
-!                   Note! Remember that the sampling rate of physical hardware
+!  @image orm_en1-65.gif
+!  DsFast job with data storage objects
+!
+!  Note! Remember that the sampling rate of physical hardware
 !  is finite. At present Ai-signals are sampled at 5 Hz
 !  and Co-, Di-, Do-, and Dv-signals at the base frequency
 !  which is equal to the fastest running PLC program of
@@ -36,8 +38,8 @@
 !  When all elements in the buffer have got values once in
 !  this way, AllDataOK is set.
 !  The Trigged flag can be set by two different events:
-!  1
-!     manually from for example the fast graph by the
+!  
+!  1  manually from for example the fast graph by the
 !     Trigger- button. In this case TrigManTrue is set.
 !  2  via the outer signal named by the TrigName
 !     attribute.
@@ -47,6 +49,7 @@
 !  Trigged flag has been set and stops after that. Test
 !  values in the buffer are frozen and the plotting is
 !  done in the fast graph.
+!  @image orm_en1-65.gif
 !  The sampled attribute has to be a local quantity. So,
 !  DsFast objects have to reside at the same node as the
 !  sampled attribute in the runtime environment.

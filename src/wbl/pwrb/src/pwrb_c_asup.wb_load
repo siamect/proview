@@ -11,6 +11,7 @@
 !  @Version 1.0
 !  @Code rt_plc_macro_sup.h
 !  Analog Supervisory.
+!  @image orm_asup_fo.gif
 !  
 !  Supervises an analog quantity in an arbitrary object in
 !  regard to deviation above or below the alarm limit.
@@ -35,10 +36,10 @@
 !  activities.
 !  
 !  Different types of activities exist; (see EventType )
-!  · ALARM   The message remains as long as the alarm
+!    ALARM   The message remains as long as the alarm
 !            position exists and no acknowledgement is
 !  
-!  · INFO    If the message demands an acknowledgement
+!    INFO    If the message demands an acknowledgement
 !            this is sent to the info part of the alarm
 !            window from, where it can be acknowledged
 !            otherwise only to the event list.
@@ -60,9 +61,9 @@
 !  acknowledgement can be done too.
 !  Different types of out units exist:
 !   
-!   . OPERATOR: The select list is defined by an attribute
+!   - OPERATOR: The select list is defined by an attribute
 !     in a User object.
-!   · PRINTER   : The select list is defined by an
+!   - PRINTER   : The select list is defined by an
 !     attribute in an
 !     EventPrinter object.
 !  
@@ -72,7 +73,8 @@
 !  specifies the hierarchies from which messages are to be
 !  received.
 !  
-!      Hints
+!  Hints
+!
 !  The supervised quantity may belongs to an arbitrary
 !  object. This means not only signal objects but also
 !  other objects may supervised; e.g. attributes in a
@@ -83,6 +85,8 @@
 !  configured outside PLC program, then it is done by the 
 !  Configuration Editor and
 !  the messagehandler (=mh) takes care of the supervision.
+!  @image orm_en1-23.gif
+!  The Supervisory Objects may also be used Outside PLC Programs
 !  
 !  See Also
 !  

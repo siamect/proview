@@ -11,7 +11,8 @@
 !  @Version 1.0
 !  @Code rt_plc_arithm.c
 !  Summator.
-!  
+!  @image orm_en1-225.gif
+!
 !  Weighted summing unit for up to 8 inputs. Used inputs
 !  have to be chosen consecutively with beginning from
 !  In1, which is the upper input.
@@ -19,6 +20,22 @@
 !  Each input has its own weighting factor, FVect0, FVect1
 !  etc.
 !  A constant value, Const, can be added to the sum.
+!
+!  Example 
+!
+!  1. To calculate 2.2 + IN1 + 2 IN2 - 1.5 IN3
+!     - Mark the three first inputs Used in a Sum object
+!     - Connect the three inputs
+!     - Set Const = 2.2
+!     - Set the weighting factors FVect to 1.0, 2.0 and -1.5 
+!
+!  2. To calculate the average of 5 signals
+!     - Mark the five first inputs Used in a Sum object
+!     - Connect the five inputs
+!     - Set the weighting factors FVect to 0.2 
+!
+!  3. The following objects accumulate the value of an analog signal. 
+!  @image orm_en1-226.gif
 !*/
 SObject pwrb:Class
   Object Sum $ClassDef 234 

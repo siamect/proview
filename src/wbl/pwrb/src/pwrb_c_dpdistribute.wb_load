@@ -11,7 +11,7 @@
 !  @Summary Expands the number of boolean outputs that can be handled in a DataArithm.
 !  The DpDistribute expands the number of boolean outputs that can be
 !  handled in a DataArithm object.
-!
+!  @image orm_dpdistribute_fo.gif
 !  The DpDistribute has 24 digital outputs, which values can be set from
 !  an array of Boolean declared in the code of a DataArithm. By connecting
 !  the data input of the DpDistribute to an data output of a DataArithm, 

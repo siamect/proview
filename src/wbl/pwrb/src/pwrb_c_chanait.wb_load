@@ -15,29 +15,29 @@
 !  
 !  SigValue is converted to ActualValue via sensor
 !  function s, table t and filter function f according to,
-!        ActualValue = f ( t( s(SigValue) ) ) , where
-!  the choice of
+!
+!  ActualValue = f ( t( s(SigValue) ) ) , where the choice of
 !  
-!        -- sensor function s, is determined by
-!  SensorTypeCode
-!        -- table t, is determined by SensorPolyType
-!        -- filter function f, is determined by
-!  FilterType in Ai object
+!  -- sensor function s, is determined by SensorTypeCode
+!  -- table t, is determined by SensorPolyType
+!  -- filter function f, is determined by FilterType in Ai object
+!
 !  The table t is defined in one of the following ways:
+!  @image orm_en1-32.gif
 !  
 !  - Direct input of NoOfCoordinates pairs of numbers (InValue,O
-!  arranged in order of increasing InValue. The first
-!  and the last InValue specify the allowed interval of
-!  s(SigValue).
+!    arranged in order of increasing InValue. The first
+!    and the last InValue specify the allowed interval of
+!    s(SigValue).
 !  - By specifying the coefficients PolCoefficients in a
-!  polynomial of maximum degree 7 and the maximum and
-!  minimum values of s(SigValue). By a menu procedure,
-!  not implemented, the interval between the minimum and
-!  maximum values will be divided into 29 equidistant
-!  intervals, which results in 30 s(SigValue)-values.
-!  Thereafter ActualValue of these points is calculated,
-!  and the pairs of numbers (InValue,OutValue) can be
-!  filled-in.
+!    polynomial of maximum degree 7 and the maximum and
+!    minimum values of s(SigValue). By a menu procedure,
+!    not implemented, the interval between the minimum and
+!    maximum values will be divided into 29 equidistant
+!    intervals, which results in 30 s(SigValue)-values.
+!    Thereafter ActualValue of these points is calculated,
+!    and the pairs of numbers (InValue,OutValue) can be
+!    filled-in.
 !  
 !  In practice, the function t ( s(SigValue) ) will be put
 !  in by means of the menu handling. When the transfer
@@ -48,19 +48,17 @@
 !  SigValue:
 !  
 !  · If SigValuemin <= s(SigValue) >= SigValuemax , then
-!  - the index n is calculated as SigValue    s(SigValue)
-!    < SigValue      n £
-!              n+1
-!  ­ t( s(SigValue) ) = Intercept(n) + Slope(n)  s(igValue)
+!     - the index n is calculated as SigValue(n) = s(SigValue) < SigValue(n+1)
+!     ­ t( s(SigValue) ) = Intercept(n) + Slope(n)* s(SigValue)
 !  · otherwise, t( s(SigValue) ) = OutValue for the first
-!  or the last pair of numbers depending on s(SigValue)
-!  < s(SigValuemin) or s(SigValuemax) > s(SigValue   )
+!    or the last pair of numbers depending on 
+!    s(SigValue) < s(SigValuemin) or s(SigValuemax) > s(SigValuemax)
 !             
 !  As the menu handling is not implemented yet we manually
 !  put in, for each NoOfCoordinates, the corresponding
 !  pair of numbers (InValue, OutValue ) respectively (Intercept, Slope).
 !  
-!         See Also
+!  See Also
 !  
 !  ChanAi, whose conversion to ActualValue is based on a
 !  polynomial.

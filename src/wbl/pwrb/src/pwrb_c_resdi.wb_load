@@ -11,7 +11,8 @@
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
 !  Reset Digital input.
-!  
+!  @image orm_resdi_fo.gif
+!
 !  If the input signal is TRUE, the specified local
 !  Di-signal is cleared at the execution, otherwise there
 !  will be no effect on the Di-signal.

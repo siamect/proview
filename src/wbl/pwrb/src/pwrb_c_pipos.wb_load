@@ -12,7 +12,8 @@
 !  @Code rt_plc_io.c
 !  Translates a pulse counter value into an engineering
 !  value, e.g. position, volume etc.
-!  
+!  @image orm_en1-162.gif
+!
 !  Suppose the engineering value is a position. The actual
 !  position is then calculated at every scanning by means
 !  of the straight line equation
@@ -24,6 +25,7 @@
 !  saved position, PosCal1, at calibration point 1. The
 !  Gain factor is either specified or calculated by means
 !  of a second calibration point, calibration point 2.
+!  @image orm_en1-163.gif
 !  How to carry out the calibrations is described below
 !  under Calibration.
 !*/

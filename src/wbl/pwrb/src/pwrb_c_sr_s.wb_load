@@ -11,7 +11,8 @@
 !  @Version 1.0
 !  @Code rt_plc_macro_logic.h
 !  Set Reset flip-flops.
-!  
+!  @image orm_sr_s_fo.gif
+!
 !  The SR flip-flops hold on a leading edge on the
 !  set-signal and reset on a leading edge on the
 !  res(et)-signal.
@@ -19,8 +20,10 @@
 !  If both the set and reset signals are TRUE at the same
 !  time the state of the flip-flops is undefined. At this
 !  condition is a
-!   · SR_S flip_flop TRUE ( = Set)
-!   · SR_R flip_flop FALSE ( = Reset)
+!   - SR_S flip_flop TRUE ( = Set)
+!   - SR_R flip_flop FALSE ( = Reset)
+!
+!  @image orm_en1-204.gif
 !*/
 SObject pwrb:Class
   Object SR_S $ClassDef 212 

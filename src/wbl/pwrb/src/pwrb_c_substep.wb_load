@@ -12,7 +12,8 @@
 !  @Code rt_plc_macro_grafcet.h
 !  Grafcet step representing an underlying sequential
 !  chain, a sub-sequential chain.
-!  
+!  @image orm_substep_fo.gif
+!
 !  From a functional point of view, we can look upon the
 !  object as a sub-sequential chain that has been
 !  substituted by the SubStep object.

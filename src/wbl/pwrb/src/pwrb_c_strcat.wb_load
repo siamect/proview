@@ -12,7 +12,8 @@
 !  @Code rt_plc_macro_string.h
 !  @Summary Concatenate two strings.
 !  Concatenate two strings.
-!  
+!  @image orm_strcat_fo.gif
+!
 !  The Strcat object appends the string of the second input to
 !  the string of the first input.
 !

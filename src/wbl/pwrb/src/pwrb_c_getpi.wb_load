@@ -11,7 +11,8 @@
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
 !  Get Pulse input.
-!  
+!  @image orm_getpi_fo.gif
+!
 !  Fetches the I/O-copied count value from the pulse
 !  counter card, i.e. RawValue from a Co object.
 !  We may use either the RawValue itself (which is a 16 or
@@ -21,6 +22,7 @@
 !  
 !  The name of the object is shown in the button of the
 !  GetPi-symbol.
+!  @image orm_en1-95.gif
 !  The GetPi object
 !  · is a pure address reference,
 !  · contains no relevant information (=data) in rtdb,

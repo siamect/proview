@@ -11,7 +11,8 @@
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
 !  Store Digital output.
-!  
+!  @image orm_stodo_fo.gif
+!
 !  Stores the value of a digital quantity on the specified
 !  local Do object.
 !  The complete name of the Do object has to be supplied;

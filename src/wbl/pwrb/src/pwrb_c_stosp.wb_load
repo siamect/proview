@@ -12,7 +12,8 @@
 !  @Code rt_plc_macro_string.h
 !  Store String parameter. Used in run time to write in
 !  string parameters.
-!  
+!  @image orm_stosp_fo.gif
+!
 !  Stores a string value in specified string
 !  attribute in a local object. The receiving
 !  attribute may not concern a pointer.

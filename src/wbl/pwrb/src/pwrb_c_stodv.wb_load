@@ -11,7 +11,8 @@
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
 !  Store Digital value.
-!  
+!  @image orm_stodv_fo.gif
+!
 !  Stores the value of a digital quantity on the specified
 !  local Dv object.
 !  The complete name of the Dv object has to be supplied;

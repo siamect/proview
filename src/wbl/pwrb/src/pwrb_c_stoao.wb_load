@@ -13,10 +13,15 @@
 !  
 !  Stores an analog value ( e.g. output signal of the type
 !  pwr_tFloat32) on the specified local Ao object.
-!  
+!  @image orm_stoao_fo.gif
+!
 !  The complete name of the Ao object has to be supplied;
 !  its last segment is shown in the right empty part of
 !  the symbol.
+!
+!  Example
+!  @image orm_en1-215.gif
+!  The current sum of Ai1 and Ai0 is calculated and stored in Ao0
 !*/
 SObject pwrb:Class
   Object StoAo $ClassDef 219 

@@ -11,7 +11,8 @@
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
 !  Store counter input.
-!  
+!  @image orm_stopi_fo.gif
+!
 !  Analog input value is stored, after integer
 !  transformation, in RawValue in specified local Co
 !  object.

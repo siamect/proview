@@ -11,12 +11,25 @@
 !  @Version 1.0
 !  @Code rt_plc_arithm.c
 !  Limits a quantity's rate of change.
-!  
+!  @image orm_ramp_fo.gif
+!
 !  Separate limit rates at increase respectively decrease;
 !  RampUp and RampDown.
 !  Sets du = RampUp * ScanTime and dn = RampDown * ScanTime.
+!  An input signal determines the output signal in the following way
+!  @image orm_en1-185.gif
+! 
+!  An external signal may also be used as feedback. See example below.
 !
-!  An external signal may also be used as feedback.
+!  Example 
+!
+!  In this example an external signal is connected to the FB-input of
+!  the Ramp object. The feedback connection from the Select object to
+!  the Ramp object is of the type analog feedback.
+!  As long as Control is FALSE the output of the Select object is
+!  ramped up and down. When Control is TRUE the output gets the constant
+!  value of RampUp ScanTime . 
+!  @image orm_en1-186.gif 
 !*/
 SObject pwrb:Class
   Object Ramp $ClassDef 189 

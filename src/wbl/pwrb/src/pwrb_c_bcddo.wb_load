@@ -11,6 +11,7 @@
 !  @Version 1.0
 !  @Code rt_plc_io.c
 !  Binary Coded Decimal Digital output.
+!  @image orm_en1-25.gif
 !  
 !  Represents a decimal floating point number on 4 binary
 !  coded decimal (BCD) digits (= 16 digital signals).

@@ -12,12 +12,15 @@
 !  @Code rt_plc_macro_grafcet.h
 !  Stores, in the associated object, i.e. an Order or
 !  Trans object, the status of a conditional window.
-!  
+!  @image orm_setcond_fo.gif
+!
 !  A conditional window is used by Trans objects and Order
 !  objects with C-order attribute. For instance, the
 !  result of a combinational circuit is stored by a
-!  SetCond object.
-!  
+!  SetCond object. See figure below.
+!  @image orm_en1-195.gif
+!  SetCond in a Conditional Window 
+!
 !  A conditional window is executing each time when the
 !  PLC program executes.
 !*/

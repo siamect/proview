@@ -8,6 +8,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_logic.h
+!  @image orm_aarithm_fo.gif
 !  Optional programmable arithmetical expression in the C
 !  programming language. The expression is edited by means
 !  of the Attribute Editor at the object's Expression
@@ -15,8 +16,8 @@
 !  is translated at the compilation.
 !  The Expression attribute is shown in the object.
 !  
-!  Up to 8 analog ( A1, ..., A8) and 8 digital ( d1, ...,
-!  d8) inputs.
+!  Up to 8 analog ( A1, ..., A8) and 8 digital ( d1, ...,d8) 
+!  inputs.
 !  Digital inputs may be inverted either by means of the
 !  Attribute Editor, or by the logical operator '!' in the
 !  Expression attribute.
@@ -37,19 +38,27 @@
 !  Mathematical functions in the C programming language
 !  can be used, for instance:
 !  
-!  _ exp(A1)  exponential function
-!  _ log10(A1)             base-10 logarithm of A1
-!  _ sin(A1)  sine of A1
-!  _ (1.2E3 + A1) * ( A2 + 3.7 )   arithmetic, note the constants.
-!  - fabs( A1)             absolute value
-!  - pow(A1, A2)           A1 rasied to the A2-th power.
+!  - exp(A1)       exponential function
+!  - log10(A1)     base-10 logarithm of A1
+!  - sin(A1)       sine of A1
+!  - (1.2E3 + A1) * ( A2 + 3.7 )   arithmetic, note the constants.
+!  - fabs( A1)     absolute value
+!  - pow(A1, A2)   A1 rasied to the A2-th power.
 !  - there is an often used conditional operator, '?', in
-!  the C programming language used to evaluate
-!  alternatives. In the following example '&&' means
-!  logical AND,
-!  (d1 && d2) ? A1 + A2 : A3, means that VAL = A1+ A2,
-!  if d1 and d2 are TRUE , otherwise VAL = A3
+!    the C programming language used to evaluate
+!    alternatives. In the following example '&&' means
+!    logical AND,
+!    (d1 && d2) ? A1 + A2 : A3, means that VAL = A1+ A2,
+!    if d1 and d2 are TRUE , otherwise VAL = A3
 !
+!  Example
+!
+!  This example shows how digital signals can be counted. Some signals
+!  are counted if they are TRUE others if they are FALSE and then the
+!  sum is stored. Node thad Di1 and Di2 are included in the sum if 
+!  they are FALSE.
+!  @image orm_en1-17.gif
+
 !  See Also
 !  DArithm, which calculates the value of logical
 !  expressions.

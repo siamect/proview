@@ -11,7 +11,7 @@
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
 !  Set Digital parameter.
-!  
+!  @image orm_setdp_fo.gif
 !  If the input signal is TRUE, the value of the specified
 !  local digital quantity
 !  ( e.g. internal digital variable in an arbitrary

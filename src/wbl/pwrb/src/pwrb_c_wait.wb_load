@@ -11,12 +11,13 @@
 !  @Version 1.0
 !  @Code rt_plc_macro_logic.h
 !  On-state or set delay.
-!  
+!  @image orm_wait_fo.gif
+!
 !  The time starts on a leading edge on the input. When
 !  the time TimerTime expires and if the input still
 !  remains TRUE the output is set. It is cleared as soon
 !  as the input becomes FALSE.
-!  
+!  @image orm_en1-245.gif
 !  Compare with Waith.
 !*/
 SObject pwrb:Class

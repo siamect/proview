@@ -12,6 +12,7 @@
 !  @Code rt_plc_macro_grafcet.h
 !  Conditional execution of objects located in a
 !  Sub-window.
+!  @image orm_csub_fo.gif
 !  
 !  The code in the sub-window is,
 !  executed if, and only if, the logical input signal is

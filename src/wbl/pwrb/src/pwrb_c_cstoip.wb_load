@@ -11,6 +11,7 @@
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
 !  Conditional Storage Integer parameter.
+!  @image orm_cstoip_fo.gif
 !  
 !  Conditional storage of an analog value ( parameter,
 !  input, or output signal of the type pwr_tFloat32) on a

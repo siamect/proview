@@ -11,16 +11,27 @@
 !  @Version 1.0
 !  @Code rt_plc_arithm.c
 !  Time integrator.
-!  
+!  @image orm_timint_fo.gif
+!
 !  A curve f(t) is supposed to be made up of a large
 !  number of rectangular sections, each with a width
 !  ScanTime and a height Int. The output varies in
 !  accordance with both magnitude and duration of the
 !  input. The output is proportional to the time integral
 !  of the input.
+!
+!  ActVal(t) = ActVal(t-1) + In(t) * ScanTime / TimFact
+!
+!  where 1 / TimFact is the integrating rate.
 !  
 !  With the z-input it is possible to clear the
 !  integrator.
+!  @image orm_en1-235.gif
+!
+!  Example 
+!
+!  Suppose In is in litres / min. If we want ActVal to be
+!  in litres TimFact will be equal to 60 seconds /min. 
 !*/
 SObject pwrb:Class
   Object Timint $ClassDef 239 

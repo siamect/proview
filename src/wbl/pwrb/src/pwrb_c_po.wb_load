@@ -21,7 +21,8 @@
 !  PosFlank specifies which ActualValue transition that
 !  will initiate a pulse. If a positive or negative pulse
 !  is generated depend on PosPulse.
-!  
+!  @image orm_en1-171.gif
+!
 !  ActualValue is handled e.g. from application programs
 !  by the system call: gdh_SetObjectInfo(...)
 !  If ResetActualValue = TRUE, PROVIEW will restore

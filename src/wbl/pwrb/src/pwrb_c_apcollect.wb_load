@@ -13,7 +13,7 @@
 !  @Summary Expands the number of analog attributes that can be handled in a DataArithm.
 !  The ApCollect object expands the number of analog attribues that
 !  can be handled in a DataArithm object.
-!
+!  @image orm_apcollect_fo.gif
 !  The ApCollect has 24 analog inputs, which values are stored in an array.
 !  By connecting the output of the ApCollect object to a Data input of a
 !  DataArithm object, it is possible to handle the array in the code of the

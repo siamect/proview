@@ -12,11 +12,17 @@
 !   Configures a digital input channel independent of the
 !   type of physical Di-card.
 !  
+!   Figure below shows the steps in Di-signal conversion and the 
+!   attributes of interest. The internal filtering concerns local
+!   Di-signals, i.e. remote Di-signals are not affected.
+!   @image orm_en1-34.gif
+!   Attributes Used in Di-signal Conversion
+!
 !   ActualValue and FilterType belongs to Di object.
 !   InvMask1 and ConvMask1 to card object, but InvertOn and
 !   ConversionOn belongs to this object.
 !  
-!         Hints
+!  Hints
 !  
 !  ChanDi objects are configured below a suitable Di-card
 !  object.

@@ -10,6 +10,7 @@
 !  when a connection is created from an analog input. The object will
 !  be transformed to its final appearence when it is connected to a
 !  signal or attribute.
+!  @image orm_getageneric_fo.gif
 !*/
 !
 !

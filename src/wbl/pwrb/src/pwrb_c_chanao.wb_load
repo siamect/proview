@@ -11,6 +11,13 @@
 !  @Version 1.0
 !  Configures an analog output channel independent of the
 !  type of physical Ao-card.
+!
+!  Figure below shows the step in Ao-signal conversion. ActualValue
+!  SigValue and RawValue belong to the Ao object. The card polynomial
+!  is defined in a card object, the Emerg attributes in a $Node object,
+!  and the rest in the ChanAo object
+!  @image orm_en1-33.gif
+!  Attributes Used in Ao-signal Conversion
 !  
 !  If EmergBreakTrue = TRUE and EmergBreakSelect = 2 then
 !  the output is based on FixedOutValue. Otherwise TestOn

@@ -11,7 +11,8 @@
 !  @Version 1.0
 !  @Code rt_plc_macro_string.h
 !  Convert analog value to string.
-!  
+!  @image orm_atostr_fo.gif
+!
 !  The AtoStr object converts the value of the analog input to
 !  at string stored in ActVal.
 !

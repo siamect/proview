@@ -10,7 +10,8 @@
 !/**
 !  @Version 1.0
 !  Get Digital output.
-!  
+!  @image orm_getdo_fo.gif
+!
 !  Fetches the engineering value for a specified Do object
 !  from I/O-copied area. See PROVIEW/R Designer's Guide.
 !  The complete name of the Do-signal has to be supplied;

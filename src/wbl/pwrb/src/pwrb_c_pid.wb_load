@@ -11,7 +11,8 @@
 !  @Version 1.0
 !  @Code rt_plc_pid.c
 !  Implements the robust PID control algorithm.
-!  
+!  @image orm_en1-141.gif
+!
 !  In the normal case the Pid object is used together with
 !  the Mode object. The Mode object plays the part of an
 !  interface for the Pid object. From the Mode object it
@@ -40,6 +41,149 @@
 !  To handle and adjust the controller there are two more
 !  info forms containing e.g. a time diagram with process
 !  value, setpoint value and output signal.
+!
+!  Examples
+!
+!  Flow Control 
+!
+!  Flow control by speed control of a pump; see figure See Speed Control of a Pump. 
+!
+!  The set point value is set from an external optimising program (the Av signal 
+!  OptFlow) once / 10 minutes e.g., or direct by an operator. 
+!  Starts with the control signal 0 at pump start. 
+!
+!  @image orm_en1-151.gif
+!  Speed Control of a Pump 
+!
+!  A solution in principle to control the pump is shown in figure 3-36 
+!
+!  @image orm_en1-152.gif
+!  Configuration of Speed Control of a Pump 
+!
+!  The Mode object is configured as follows: 
+!  @image orm_en1-153.gif
+! 
+!  The Pid object is configured as follows: 
+!  @image orm_en1-154.gif
+!
+!  The input signal Force1 and the parameter OpMod in the Mode object shows the
+!   current operational mode. 
+!
+!  OpMod = MANUAL (=1)
+!  The output signal Force from the Mode object becomes TRUE. The Pid
+!  object is forced to the value of ForcVal.
+!  At the switching time, AUTO --> MANUAL, ForcVal has the value of the
+!  last control signal OutVal. This value is a good initial value to start upon
+!  in a manual increase/decrease session.
+!  In this mode the operator can change ForcVal as well as the set point
+!  value SetVal.
+!  MinOut and MaxOut, in the Pid object, represent no limitation at all in
+!  the MANUAL mode. 
+!
+!  OpMod = AUTO (=2)
+!  The operator sets and changes the flow set point value SetVal. The value
+!  has to be in the interval of MinSet and MaxSet. The optimising set point
+!  value XSetVal is ignored.
+!  The controller's control signal OutVal varies in the interval 10 -100.
+!  The Mode object reads in the Pid object the last value of OutVal and
+!  stores it in the output signal ForcVal as long as this mode continues. 
+!
+!  OpMod = CASCADE (=4)
+!  The optimising external set point value XSetVal is copied into SetVal.
+!  The Pid object controls against this set point value..
+!
+!  Force1 = 1 PUMP STOP
+!  Independent of the value of OpMod the control signal of the controller is
+!  forced against ForcVal = XForcVal (=0), i.e. MinOut and MaxOut
+!  represent no limitation at all at forced control.
+!
+!  Alternate Controllers with Tracking 
+! 
+!  @image orm_en1-155.gif
+!  Shunt Control 
+!
+!  Through shunt control by the heat exchanger, the TT1-temperature in the
+!  secondary loop will be kept constant. The TT2-temperature of the return
+!  flow to the boiler may not be below the dewpoint, which may be the case
+!  at high power consumption. 
+!
+!  At low primary temperature TT2-control is selected. When the operating
+!  conditions allows, the control is focused on TT1 again. 
+!
+!  In MANUAL mode the shunt valve is fed by the TT1-controller. TIC2 may not
+!  be set in MANUAL mode. See figure See PLC program with Alternative Controllers. 
+!
+!  Adjustments 
+!
+!  ... in the Mode object TIC1M have been selected: 
+!
+!  AccMod = 3 , i.e. AUTO / MANUAL are allowed modes. 
+!  OpMod = AUTO means that the operator sets the set point value in SetVal
+!  = MANUAL means that the operator sets the output signal ForcVal 
+!  ... in the Pid object TIC1 has been selected: 
+!
+!  Inverse = TRUE, i.e. low TT1-temperature implies an increasing flow through the heat exchanger. 
+!  ... in the Mode object TIC2M have been selected: 
+!
+!  AccMod = 2 , i.e. only AUTO 
+!  The designer sets the limit value, i.e. the minimum of TT2 in SetVal 
+!  ... in the Pid object TIC2 has been selected: 
+!
+!  Inverse = FALSE, i.e. reverse control action, at low TT2-temperatures the
+!  flow through the heat exchanger decreases, the by-pass increases. 
+!
+!  @image orm_en1-156.gif
+!  PLC program with Alternative Controllers 
+!
+!  Operating conditions: 
+!
+!  Normal operating conditions. TIC1 in AUTO. TIC2 follows in forced control. 
+!  TT2 low. TIC2 is switched to AUTO, and TIC1 follows in forced control. 
+!  TIC1M in MANUAL. TIC1 chooses the value of TICM. ForcVal as output 
+!  TIC2 follows in forced control. 
+!  TIC2 returns to AUTO when TT2 goes below the limit. 
+!  The flow through the heat exchanger is enough to put the TT1 above the set
+!   point value. Switches to TT1-control, i.e. TIC1 controls the shunt valve. 
+!  Cascade Control 
+!  Temperature control in a furnace with two separate fuel loops, apart from
+!  the control of combustion air for the furnace, is shown in figure See Block
+!  Diagram Temperature Control. TT is the temperature transmitter, FT the flow
+!  transmitters, and FIC the flow controllers. TIC is a temperature controller 
+!
+!  @image orm_en1-157.gif
+!  Block Diagram Temperature Control 
+!
+!  All the Pid objects have Inverse set to TRUE. Forced control with average
+!  flow ought to be added to TIC1M, when none of the flow controllers is in
+!  cascade. An implementation is shown in figure See Traditional Cascade Configuration. 
+!
+!  @image orm_en1-158.gif
+!  Traditional Cascade Configuration 
+!
+!  Common or Individual Control of Several Control Loops 
+!  In figure 3-41 two control loops share a common Mode object to a synchronous
+!  behaviour in AUTO and MANUAL mode. But every single loop can also be controlled
+!  individually from separate Mode objects with an internal set point and its own
+!  manual output signal. The individual control overrides the common one. 
+!
+!  @image orm_en1-159.gif
+!  Two Levels with Mode Objects in a Control Loop 
+!
+!  Ratio Control 
+!  Figure See Addition of a Reagent shows addition of a reagent. The ratio of the
+!  mixing is to be kept constant and independent of the FT2-flow. FT is the flow
+!  transmitter and FIC the flow controller. 
+!
+!  @image orm_en1-160.gif
+!  Addition of a Reagent 
+!
+!  An implementation is shown in figure See Ratio Control. The control can be made
+!  in AUTO (= the operator sets the ratio set point value) or MANUAL ( = the
+!  operator sets the control signal to adjust the valve position). The ratio
+!  process value ought to be checked against division by zero. 
+!
+!  @image orm_en1-161.gif
+!  Ratio Control 
 !*/
 SObject pwrb:Class
   Object PID $ClassDef 174 
@@ -561,6 +705,7 @@ SObject pwrb:Class
       !/**
       !  Specifies the hysteresis on MinOut and MaxOut in
       !  connection with the handling of EndMin/EndMax.
+      !  @image orm_en1-144.gif
       !*/
       Object EndHys $Intern 47 
         Body SysBody

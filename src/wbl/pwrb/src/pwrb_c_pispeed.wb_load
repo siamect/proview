@@ -11,7 +11,8 @@
 !  @Version 1.0
 !  @Code rt_plc_arithm.c
 !  Derivative a pulse Pi-signal.
-!  
+!  @image orm_pispeed_fo.gif
+!
 !  Converts a pulse signal, e.g. volume to flow, distance
 !  to velocity, etc.
 !  The pulse difference becomes correct even if the input

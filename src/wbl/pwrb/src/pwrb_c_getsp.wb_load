@@ -10,7 +10,8 @@
 !/**
 !  @Version 1.0
 !  Get String parameter.
-!  
+!  @image orm_getsp_fo.gif
+!
 !  Fetches the value of a string attribute.
 !  The attribute can be an in- or output signal in an arbitrary
 !  object. The size of the attribute has to be 80 bytes or less.

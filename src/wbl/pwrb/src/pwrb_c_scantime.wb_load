@@ -11,6 +11,7 @@
 !  @Version 1.0
 !  @Code rt_plc_macro_div.h
 !  Fetches the scantime of the current thread.
+!  @image orm_scantime_fo.gif
 !*/
 SObject pwrb:Class
   Object ScanTime $ClassDef 278 

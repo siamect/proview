@@ -16,7 +16,7 @@
 !  
 !  The only difference between Frame, Head, Text, and
 !  Title is the default values of the attributes.
-!  
+!  @image orm_en1-79.gif
 !  They are used in Document objects where, for instance,
 !   · Title specifies what the configuration is doing, i.e.
 !     the function.
@@ -34,6 +34,7 @@ SObject pwrb:Class
       !/**
       !  Specifies if the text is to be surrounded by a some
       !  kind of frame.
+      !  @image orm_en1-81.gif
       !*/
       Object FrameAttribute $Intern 1 
         Body SysBody
@@ -72,6 +73,7 @@ SObject pwrb:Class
       !/**
       !  The attribute influence the appearance of the text. The
       !  following values are used: 0, 1, 2, 3.
+      !  @image orm_en1-80.gif
       !*/
       Object TextAttribute $Intern 5 
         Body SysBody

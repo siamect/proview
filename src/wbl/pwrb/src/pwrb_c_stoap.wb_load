@@ -12,7 +12,8 @@
 !  @Code rt_plc_macro_io.h
 !  Store Analog parameter. Used in run time to write in
 !  analog parameters.
-!  
+!  @image orm_stoap_fo.gif
+!
 !  Stores an analog value in specified floating-point
 !  attribute ( scalar or element in 1-dimensional array by
 !  the type pwr_tFloat32) in a local object. The receiving

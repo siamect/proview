@@ -11,6 +11,7 @@
 !  @Version 1.0
 !  Configures in the working area of the PLC Editor an
 !  area in A-format.
+!  @image orm_en1-56.gif
 !  
 !  By at the time of configuration of a PLC program,
 !  divide the working surface in Document objects and

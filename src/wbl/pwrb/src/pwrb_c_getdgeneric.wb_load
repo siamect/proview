@@ -12,6 +12,7 @@
 !  when a connection is created from a digital input. The object will
 !  be transformed to its final appearence when it is connected to a
 !  signal or attribute.
+!  @image orm_getdgeneric_fo.gif
 !*/
 !
 SObject pwrb:Class

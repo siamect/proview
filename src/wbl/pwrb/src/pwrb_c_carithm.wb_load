@@ -11,6 +11,7 @@
 !  @Version 1.0
 !  @Code rt_plc_macro_logic.h
 !  User programmable object in the C programming language.
+!  @image orm_carithm_fo.gif
 !  
 !  The code is edited by means of the Attribute Editor at
 !  the object's Code attribute.
@@ -21,13 +22,21 @@
 !  Attribute Editor, or by the logical operator '!' in the
 !  Code attribute.
 !  
-!      Hints
+!  Example
+!
+!  This application starts to declare a variable 'r1'. The r1 is 
+!  assigned the sum of A1 and A2. As A2 is left open it will be
+!  given a value internally. If r1 is greater then 2.7 OA1 will
+!  be increased by one, otherwise cleard.
+!  @image orm_en1-30.gif
+!
+!  Hints
 !  
 !  The symbol of the CArithm accommodates to the Code
 !  attribute. To avoid very wide CArithm objects finish
 !  statements with return.
 !  
-!      See Also
+!  See Also
 !  AArithm, DArithm.
 !*/
 SObject pwrb:Class

@@ -16,12 +16,21 @@
 !  
 !  The only difference between Frame, Head, Text, and
 !  Title is the default values of the attributes.
-!  
+!  @image orm_en1-79.gif
+!
 !  They are used in Document objects where, for instance,
 !   · Title specifies what the configuration is doing, i.e.
 !     the function.
 !   · Sub-functions are named by Head objects.
 !   · Frame and Text are used to information of details.
+!
+!  Hints
+!
+!  A well-done PLC program ought to contain not only objects necessary 
+!  to the computer execution but also objects whose purpose are to make 
+!  the program more easy to understand to later readers. See figure below. 
+!  @image orm_en1-82.gif
+!  Title, Head and Text Objects Make the Program Easy to Read.
 !*/
 SObject pwrb:Class
   Object Title $ClassDef 240 
@@ -44,6 +53,7 @@ SObject pwrb:Class
       !/**
       !  The attribute influence the appearance of the text. The
       !  following values are used: 0, 1, 2, 3.
+      !  @image orm_en1-80.gif
       !*/
       Object TextAttribute $Intern 2 
         Body SysBody
@@ -53,6 +63,7 @@ SObject pwrb:Class
       !/**
       !  Specifies if the text is to be surrounded by a some
       !  kind of frame.
+      !  @image orm_en1-81.gif
       !*/
       Object FrameAttribute $Intern 3 
         Body SysBody

@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  Get Analog value.
+!  @image orm_getav_fo.gif
 !  
 !  Fetches the engineering value for a specified Av-signal
 !  from I/O-copied area. See PROVIEW/R Designer's Guide.

@@ -20,6 +20,8 @@
 !  to be stored, see figure 3-13. A measurant may be used
 !  by several different data storage objects, for example
 !  to store at different frequencies.
+!  @image orm_en1-69.gif
+!  DsTrend Job with Data Storage Objects
 !
 !  Note! Remember that the sampling rate of physical hardware
 !  is finite. At present Ai-signals are sampled at 5 Hz,
@@ -52,12 +54,14 @@
 !  - pwr_tInt8, pwr_tInt16, pwr_tInt32
 !  - pwr_tUInt8, pwr_tUInt16, pwr_tUInt32
 !  
-!      Hints
+!  Hints
 !  
 !  If a signal is associated with an object by the type
 !  DsTrend, DsFast, or DsHist this relation may be marked
 !  by putting the object direct below the current signal
 !  object.
+!  @image orm_en1-70.gif
+!  Configuration of a DsTrend Object
 !*/
 SObject pwrb:Class
   Object DsTrend $ClassDef 108 

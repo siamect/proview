@@ -11,7 +11,8 @@
 !  @Version 1.0
 !  @Code rt_plc_macro_string.h
 !  Convert analog value to string.
-!  
+!  @image orm_itostr_fo.gif
+!
 !  The ItoStr object converts the value of the integer input to
 !  at string stored in ActVal.
 !

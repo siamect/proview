@@ -13,6 +13,9 @@
 !  
 !  Every message handler job needs a MessageHandler
 !  object.
+!  @image orm_en1-120.gif
+!  Message Handler (Mh) Jobs in Different Nodes with their MessageHandler Objects
+! 
 !  If any MessageHandler object is not explicitly
 !  configured to a node it will likewise be created in the
 !  runtime system. In this case the attributes are

@@ -11,12 +11,14 @@
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
 !  Conditional Storage Analog output.
+!  @image orm_cstoao_fo.gif
 !  
 !  Conditional storage of an analog value on a specified
 !  local Ao-signal (= Ao object).
 !  
 !  Conditional is aimed at the con-input, which is
 !  supposed to be connected.
+!  @image orm_en1-43.gif
 !  The conditional input signal can be inverted by means
 !  of the Attribute Editor.
 !  

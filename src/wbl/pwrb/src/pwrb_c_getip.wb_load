@@ -11,7 +11,8 @@
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
 !  Get Integer parameter.
-!  
+!  @image orm_getip_fo.gif
+!
 !  Fetches the value of a 32-, 16- or 8-bits integer
 !  parameter in arbitrary object.
 !  
@@ -20,6 +21,17 @@
 !  · is a pure address reference,
 !  · contains no relevant information (=data) in rtdb,
 !  · is without executable code.
+!
+!  Example
+!
+!  In the example below the value of the integer parameter, AccMod is stored: 
+!
+!  - unconditionally by STOIP 
+!  _ conditionally by CSTOIP 
+!
+!  The value is also unconditionally stored as a pwr_tFloat32 on an attribute 
+!  pwr_float32 in the object named TIC2M
+!  @image orm_en1-93.gif
 !*/
 SObject pwrb:Class
   Object GetIp $ClassDef 128 

@@ -11,7 +11,7 @@
 !  @Summary Expands the number of analog outputs that can be handled in a DataArithm.
 !  The ApDistribute expands the number of analog outputs that can be
 !  handled in a DataArithm object.
-!
+!  @image orm_apdistribute_fo.gif
 !  The DpDistribute has 24 analog outputs, which values can be set from
 !  an array of Float32 declared in the code of a DataArithm. By connecting
 !  the data input of the ApDistribute to an data output of a DataArithm, 

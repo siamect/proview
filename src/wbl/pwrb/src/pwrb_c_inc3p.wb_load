@@ -16,6 +16,7 @@
 !  / close / 0 but also with the meaning of up / down / 0
 !  or right / left / 0 or increase / decrease / 0 etc. The
 !  outputs are time-proportional to the input.
+!  @image orm_en1-100.gif
 !  
 !  The input signal OutChange is regarded as a control
 !  error. This error is transformed into a time by
@@ -38,6 +39,8 @@
 !  value of Acc does not exceed the dead zone during a
 !  time specified by MaxTim; the integration is turned off
 !  at small control errors.
+!  @image orm_en1-101.gif
+!  Output Signals from an Inc3P 
 !  
 !  So-called timer control, also used by Pos3P objects on
 !  page 3-287, is discussed in the example below.
@@ -46,6 +49,21 @@
 !  DoOpen/DoClose. The outputs and the signals can be set
 !  by a frequency determined by the PlcPgm object. But
 !  only the signals may be reset by the timer control.
+!
+!  Example
+!
+!  Timer Control of Outputs 
+!
+!  Suppose a flow control with an electrically-activated valve 
+!  with increment/decrement control. The flow signal ( here kalle2) 
+!  exists. One solution is shown in figure below. Note, the 
+!  incremental output of the Pid object is used. 
+!  @image orm_en1-102.gif
+!  Three step Control without Position Feedback 
+!
+!  The last segment names of the signals named by DoOpen and DoClose 
+!  are shown in the symbol of INC3P0; here Do2 and Do1.
+!
 !*/
 SObject pwrb:Class
   Object Inc3P $ClassDef 135 

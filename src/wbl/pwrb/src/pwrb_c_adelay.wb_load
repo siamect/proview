@@ -9,6 +9,7 @@
 !  @Version 1.0
 !  @Code rt_plc_arithm.c
 !  Time delay of an analog signal.
+!  @image orm_adelay_fo.gif
 !  
 !  The time delay Tim can vary within the interval:
 !       { 0 - 100 x MaxCount x ScanTime }
@@ -34,6 +35,17 @@
 !  signal is stored in shift register position 1.
 !  The output signal is fetched from the register
 !  representing the actual delay.
+!  
+!  Example
+!
+!  1. With MaxCount = 1 anad ScanTime = 20 ms the maximum delay time
+!     is 100 1 1 / 50 seconds.
+!     if the delay Tim = 1, ActVal(t) will be = In(t-50), i.e. the input
+!     signal is delayed by 50 execution cycles.
+!
+!  2. If MaxCount = 1 and ScanTime = 1 second represent each register the
+!     delay of one second. Tim specifies from which register to get ActVal.
+!  @image orm_en1-19.gif
 !*/
 SObject pwrb:Class
   Object Adelay $ClassDef 3 

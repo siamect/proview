@@ -11,7 +11,8 @@
 !  @Version 1.0
 !  @Code rt_plc_arithm.c
 !  Derivative unit.
-!  
+!  @image orm_speed_fo.gif
+!
 !  Differentiation of the input signal. The output is
 !  proportional to the rate of change (derivative) of the
 !  input.

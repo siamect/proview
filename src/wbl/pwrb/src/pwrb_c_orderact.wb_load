@@ -12,7 +12,8 @@
 !  @Code rt_plc_macro_grafcet.h
 !  Fetches from an activity window the status of an
 !  associated Order object.
-!  
+!  @image orm_orderact_fo.gif
+!
 !  An order list is executing as long as the step, to
 !  which the order belongs to, is active or the order ( if
 !  stored) is active. The last execution of the order list

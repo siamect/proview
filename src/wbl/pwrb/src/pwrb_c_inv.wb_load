@@ -11,7 +11,7 @@
 !  @Version 1.0
 !  @Code rt_plc_macro_logic.h
 !  Logical inverter.
-!  
+!  @image orm_inv_fo.gif
 !  Inverts a logical signal.
 !*/
 SObject pwrb:Class

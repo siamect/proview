@@ -11,6 +11,7 @@
 !  @Version 1.0
 !  @Code rt_plc_io.c
 !  Pulse counter.
+!  @image orm_count_fo.gif
 !  
 !  The counter can be increased, decreased, cleared or set
 !  equal to a present value.

@@ -10,6 +10,7 @@
 !/**
 !  @Version 1.0
 !  Get Analog parameter.
+!  @image orm_getap_fo.gif
 !  
 !  Fetches the value of an analog quantity (= pwr_tFloat32
 !  parameter, in- or output signal) in an arbitrary

@@ -11,7 +11,8 @@
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
 !  Set Digital value.
-!  
+!  @image orm_setdv_fo.gif
+!
 !  If the input signal is TRUE, the specified local
 !  Dv-signal is set at the execution, otherwise there will
 !  be no effect on the Do-signal.

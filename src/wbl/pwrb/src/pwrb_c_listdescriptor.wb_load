@@ -20,6 +20,113 @@
 !  found in PROVIEW/R Designer's Guide. Most standard
 !  lists are a compound of several lists, each controlled
 !  by a ListDescriptor object.
+!  Advise about pwr_plc is found in the Help menu of the utility window, 
+!  which is started from the Navigator. The pwr_plc utility may also be 
+!  invoked direct in response to the DCL prompt: 
+!
+!  > pwrc ... and the utility responds with the prompt: 
+!
+!  pwrc> 
+!
+!  The PROVIEW/R distribution is delivered with some pre-configured ListDescriptor 
+!  objects (structures) to perform standard lists. They are found in the Node 
+!  Configuration below the hierarchy Layout-Lists. Commands in the pwr_plc utility 
+!  or the utility window are used to create lists according tothese pre-configured 
+!  ListDescriptor objects. 
+!
+!  If any pre-configured object is to be changed, please move the object named Lists 
+!  and the whole hierarchy below it so that the $System object becomes the new parent 
+!  object instead of the $Layout object. The pwr_plc utility first looks for an object 
+!  named Lists below the $System object and if none is found the searching continues 
+!  below the $Layout object. If any changed pre- configured ListDescriptor objects are 
+!  not moved the modification will be lost at the next change of PROVIEW/R distribution. 
+!
+!  ListDescriptor objects can be arranged in structures to carry out repeated searching. 
+!  @image orm_en1-110.gif
+!  Several ListDescriptor Objects may be Used to Control a Compound List 
+!
+!  The command
+!  pwrc> list signals 
+!
+!  starts searching in the work-bench database at the first pass according to the parent 
+!  ListDescriptor object named SignalList, see figure 3-23. Suppose some objects are 
+!  found that satisfy the selection criteria specified by SignalList. The names of these 
+!  objects will be put into a 'parent-list'. 
+!
+!  Each of these selected objects will then be checked against the selection criteria 
+!  now specified by the child ListDescriptor object named Signals (see above) in a 
+!  new searching pass. This will result in a sublist for each object found in the first
+!  searching, i.e. for each object in the 'parent-list' there will be a sublist. 
+!
+!  Each of the selected objects in the sublist will then be checked against the selection
+!  criteria specified by the ListDescriptor object named Crossref (see above) in a third
+!  searching pass. This will result in a further sublist for each object found at the
+!  second searching. 
+!
+!  The general appearance of a signal list specified according to figure 3-23, will then be: 
+!  @image orm_en1-111.gif
+!
+!  A (parent) ListDescriptor object may have up to 5 (child) ListDescriptor objects. By 
+!  configuring ListDescriptor objects as children of a ListDescriptor object sublists of 
+!  a sublist are created and so on. 
+!
+!  Searching criteria 
+!
+!  The searching criteria are specified by 
+!
+!  - Hierarchyobject , Name and Class . 
+!  - Deep , Crossreference and Externreference influence the searching. 
+!
+!  The searching is carried out gradually as illustrated below 
+!  @image orm_en1-112.gif
+!
+!  Note! If Crossreference or Externreference is set in the ListDescriptor object the 
+!  searching will be carried out among all the objects in the work-bench database, 
+!  otherwise only in the quantity of already selected objects. 
+!
+!  List appearance 
+!
+!  Some attributes that influence the list appearance are shown in figure See Last 
+!  Page on a Signal List with Table of Contents. A header is put on the first page of 
+!  the (parent)list if no table of contents is required, otherwise on the last page, 
+!  see figure See Last Page on a Signal List with Table of Contents. 'Descriptor' 
+!  specifies the name of the $ListDescriptor object that controlled the (parent)list 
+!  production; cf. with figure See Several ListDescriptor Objects may be Used to Control 
+!  a Compound List. 'Hierarchy' specifies the object in the hierarchy where the searching 
+!  is to be started and 'System' specifies the name of the PROVIEW/R system. 
+!
+!  The circled object names in the table of contents in figure See Last Page on a 
+!  Signal List with Table of Contents are controlled by the 'SignalList' object, 
+!  figure See Several ListDescriptor Objects may be Used to Control a Compound List, 
+!  and the rest of the table of contents by the object named 'Signals'. TableOfContents,
+!  TcSegments and TCMarginString are important in this case. 
+!
+!  @image orm_en1-113.gif
+!  Last Page on a Signal List with Table of Contents 
+!
+!  Different transcriptions 
+!
+!  Two types of transcriptions exist, ordinary and advanced. 
+!
+!  Names of objects that match the search criteria are written in the ordinary 
+!  transcription . Data about the attributes that belong to the listed objects are 
+!  possible to get listed as well. 
+!  Use Parameter to specify individual attributes that are to be written. 
+!
+!  Use Full to get other options. 
+!
+!  An advanced transcription is used to create tables with up to 15 columns. A set 
+!  of attributes is used to define each column; P1ColumnHeader , P1Parameter etc. 
+!  specify column number one. If any PxParameter is specified the advanced 
+!  transcription will be invoked. Some relevant attributes are indicated in 
+!  figure See Example of Advanced Transcription. 
+!  @image orm_en1-114.gif
+!  Example of Advanced Transcription 
+!
+!  The printing of object names satisfying the selection criteria can also be 
+!  controlled by NoPrint and NoPrintIfNoList . 
+!
+!  The ListDescriptor object exists only in the development environment. 
 !*/
 SObject pwrb:Class
   Object ListDescriptor $ClassDef 143 
@@ -94,6 +201,16 @@ SObject pwrb:Class
       !  If the searching is controlled by ListDescriptor
       !  objects arranged in several levels this attribute will
       !  influence the result.
+      !
+      !  Assume that the parent ListDescriptor 'SignalList' in 
+      !  figure 'Several ListDescriptor Objects may be Used to
+      !  Control a Compound List' selects a hierarchy as shown below 
+      !  @image orm_en1-115.gif
+      !  Which of this objects will be selected according to the 
+      !  2:nd ListDescriptor named 'Signals'? Class specifies which 
+      !  class property such objects have to satisfy and Deep if they 
+      !  have to reside on a certain level below the selected 
+      !  hierarchy or not.
       !
       !  Assign to Deep the value TRUE if the searching is to be
       !  done on all levels below the selected hierarchy and

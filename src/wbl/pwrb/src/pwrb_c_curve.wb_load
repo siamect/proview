@@ -11,9 +11,11 @@
 !  @Version 1.0
 !  @Code rt_plc_arithm.c
 !  Interpolates in a table.
+!  @image orm_curve_fo.gif
 !  
 !  The table which is realized in a Table object defines 
 !  a function curve.
+!  @image orm_en1-50.gif
 !  If the input signal is outside the range of the table
 !  the first/last table value is chosen as the function
 !  value; see above.

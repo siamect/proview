@@ -12,6 +12,7 @@
 !  @Code rt_plc_io.c
 !  Converts a 16-bits Gray code value into its decimal
 !  equivalent.
+!  @image orm_gray_fo.gif
 !  
 !  The Gray code has the property that a change of the
 !  output signal one unit can always be accomplished by

@@ -12,6 +12,7 @@
 !  @Code rt_plc_macro_logic.h
 !  AND-gate for up to 8 inputs. Used inputs do not have to
 !  be chosen consecutively.
+!  @image orm_and_fo.gif
 !  The basic symbol has 2 inputs. By means of the
 !  Attribute Editor the number of inputs can be changed
 !  and individual inputs be inverted.

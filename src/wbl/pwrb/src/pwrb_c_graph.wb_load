@@ -85,6 +85,7 @@ SObject pwrb:Class
       !  This means that the latest position of the window will
       !  be used when the window is displayed next time.
       !  -1, -1 specifies a default position.
+      !  @image orm_en1-96.gif
       !*/
       Object X $Attribute 5 
         Body SysBody
@@ -122,6 +123,7 @@ SObject pwrb:Class
       !  Coordinates) which portion of the Model will be
       !  displayed on a monitor. ( A Model are collections of
       !  lines, circles etc.)
+      !  @image orm_en1-97.gif
       !*/
       Object GmsX1 $Attribute 8 
         Body SysBody

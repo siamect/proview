@@ -11,7 +11,8 @@
 !  @Version 1.0
 !  @Code rt_plc_macro_grafcet.h
 !  The first Grafcet step in a sub-sequential chain.
-!  
+!  @image orm_ssbegin_fo.gif
+!
 !  The object is set active when its parent, i.e. the
 !  current SubStep object, becomes active. Compare with
 !  the SsEnd object which is the last step in a
@@ -20,6 +21,9 @@
 !  connected at the same time as well as one or more Stoxx,
 !  Setxx or Resxx objects. The output can also be left
 !  open or be used as an ordinary binary signal.
+!
+!  @image orm_en1-206.gif
+!  Example on a Sub-Sequential Chain
 !*/  
 SObject pwrb:Class
   Object SsBegin $ClassDef 213 

@@ -11,7 +11,8 @@
 !  @Version 1.0
 !  @Code rt_plc_macro_logic.h
 !  OR-gate.
-!  
+!  @image orm_or_fo.gif
+!
 !  OR-gate for up to 8 inputs. Used inputs do not have to
 !  be chosen consecutively.
 !  The basic symbol has 2 inputs. By means of the

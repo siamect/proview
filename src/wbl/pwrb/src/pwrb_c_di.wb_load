@@ -167,6 +167,7 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  @Summary Specifies the selected filter.
       !  The internal filter function concerns only local
       !  Di-signals.
       !  
@@ -175,6 +176,20 @@ SObject pwrb:Class
       !  
       !  0 -- No filtering.
       !  1 -- Set and reset delay.
+      !
+      !  Set operation is only possible when the 'output' of the filter is
+      !  FALSE. The set delay is counted from the latest edge on the
+      !  'input'. When the time FilterAttribute[0] has elapsed becomes
+      !  'output' = 'input'.
+      !  @image orm_en1-54.gif
+      !  Reset operation is only possible when the 'output' of the filter
+      !  is TRUE. The set delay is counted from the latest trailing edget on
+      !  the 'input'. When the time FilerAttribute[1] has elapsed becomes
+      !  'output' = 'input'.
+      !
+      !  'input' denotes the quantity when the sampled signal has passed
+      !   the inverter step, and output denotes the value after the filter
+      !   step (see ChanDi figure Attributes Used in Di-signal Conversion).
       !*/
       Object FilterType $Attribute 10 
         Body SysBody

@@ -11,7 +11,8 @@
 !  @Version 1.0
 !  @Code rt_plc_macro_sup.h
 !  Digital Supervisory.
-!  
+!  @image orm_dsup_fo.gif
+!
 !  Supervises a binary quantity in an arbitrary object in
 !  regard to alarm position. CtrlPosition specifies if
 !  true or false constitutes the alarm position. The alarm
@@ -19,6 +20,7 @@
 !  
 !  The DSup object reacts in two ways when the quantity is
 !  in the alarm position:
+!
 !  1  the act-output is unconditionally set to indicate
 !     alarm state.
 !  
@@ -32,13 +34,14 @@
 !  activities.
 !  Different types of activities exist; (see EventType )
 !  
-!  · ALARM   The message remains as long as the alarm
+!  - ALARM   The message remains as long as the alarm
 !          position exists and no acknowledgement is
 !  
-!  · INFO    If the message demands an acknowledgement
+!  - INFO    If the message demands an acknowledgement
 !          this is sent to the info part of the alarm
 !          window from, where it can be acknowledged,
 !          otherwise only to the event list.
+!
 !          An acknowledgeable info-message disappears
 !          from the info part of the alarm window as
 !          soon as it has been acknowledged without

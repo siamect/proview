@@ -13,6 +13,9 @@
 !  
 !  Used when a larger description is to be done; e.g. in a
 !  Document object.
+!
+!  Example
+!  @image orm_en1-28.gif
 !*/
 SObject pwrb:Class
   Object BodyText $ClassDef 25 
@@ -25,6 +28,7 @@ SObject pwrb:Class
       !/**
       !  The attribute influence the appearance of the text. The
       !  following values are used:
+      !  @image orm_en1-26.gif
       !*/
       Object TextAttribute $Intern 1 
         Body SysBody
@@ -34,6 +38,7 @@ SObject pwrb:Class
       !/**
       !  Specifies if the text is to be surrounded by a some
       !  kind of frame.
+      !  @image orm_en1-27.gif
       !*/
       Object FrameAttribute $Intern 2 
         Body SysBody

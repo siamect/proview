@@ -13,7 +13,7 @@
 !  @Summary Expands the number of Boolean attributes that can be handled in a DataArithm.
 !  The DpCollect object expands the number of Boolean attribues that
 !  can be handled in a DataArithm object.
-!
+!  @image orm_dpcollect_fo.gif
 !  The DpCollect has 24 digital inputs, which values are stored in an array.
 !  By connecting the output of the DpCollect object to a Data input of a
 !  DataArithm object, it is possible to handle the array in the code of the

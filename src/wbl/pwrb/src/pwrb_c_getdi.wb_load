@@ -10,7 +10,8 @@
 !/**
 !  @Version 1.0
 !  Get Digital input.
-!  
+!  @image orm_getdi_fo.gif
+!
 !  Fetches the engineering value for a specified Di-signal
 !  from I/O-copied area. See PROVIEW/R Designer's Guide.
 !  The complete name of the Di-signal has to be supplied;

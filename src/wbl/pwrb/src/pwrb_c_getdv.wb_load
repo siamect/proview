@@ -10,7 +10,8 @@
 !/**
 !  @Version 1.0
 !  Get Digital value.
-!  
+!  @image orm_getdv_fo.gif
+!
 !  Fetches the engineering value for specified Dv-signal
 !  from I/O-copied area. See PROVIEW/R Designer's Guide.
 !  

@@ -12,7 +12,8 @@
 !  @Code rt_plc_drive.c
 !  Motor valve positioner with three operating states and
 !  supervision of operation time and contactor response.
-!  
+!  @image orm_en1-123.gif
+!
 !  This object is similar to the Valve object but can
 !  furthermore be stopped in a continues order, i.e.
 !  three-level action.
@@ -23,19 +24,44 @@
 !  By means of the operation time supervision it is
 !  possible to detect if the final control element is
 !  stopped between the two operating states.
+!
 !  One of three operating modes, LOCAL / MANUAL / AUTO, is
 !  selected by means of the input signal Local and the
 !  output signal ManMode in the following way:
-!  
+!  @image orm_en1-124.gif
+!
 !  In AUTO mode AutoOpen/AutoClose-request remains as long
 !  as the operation has to continue, else the motion stops
 !  in some intermediate position.
 !  If there are conflicting requests the request with the
 !  highest priority wins; see below.
-!  
+!  @image orm_en1-125.gif
+!
 !  Contactor alarm, Alarm5 or Alarm 6, stops current
 !  operation. A new order resets the alarms and initiates
 !  a new operation.
+!
+!  Example
+!
+!  Carriage Operation 
+!  @image orm_en1-126.gif
+!
+!  The carriage is run only in MANUAL mode. 
+!
+!  Contactor response and motion guard have the same supervision time. 
+!  The supervision of the operation response also have to make an alarm.
+!  @image orm_en1-127.gif
+!  MValve Object Used in Motor Control
+!
+!  Control Valve
+!  @image orm_en1-127.gif
+!  Motor Valve Control
+!
+!  At LowLow-level the valve runs to closed position and at emergency 
+!  stop ( 'nödstopp' in Swedish) all control of the valve stops.
+!  
+!  Alarm at error in contactor response or too long operation time. 
+!  Operational order is broken by activated end limit position.
 !*/
 SObject pwrb:Class
   Object MValve $ClassDef 159 

@@ -10,12 +10,13 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_arithm.c
-!  Compares an analog value ( signal or parameter) with a
+!  Compares an analog value (signal or parameter) with a
 !  low limit.
-!  
+!  @image orm_en1-38.gif 
 !  Both the input signal and the limit can be either
 !  constants, defined by the Attribute Editor, or ordinary
 !  analog signals.
+!  @image orm_en1-39.gif
 !  The output is TRUE when the input signal is less than
 !  the low limit, i.e. Lim.
 !  
@@ -24,7 +25,7 @@
 !  as the input becomes greater than or equal to the low
 !  limit plus the hysteresis.
 !  
-!      See Also
+!  See Also
 !  
 !  Comph.
 !*/

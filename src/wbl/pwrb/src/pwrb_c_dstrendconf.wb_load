@@ -14,8 +14,11 @@
 !  In every node where trend graphs shall be stored there
 !  is a need for a DsTrend job which is searching through
 !  the local DsTrend objects.
+!  @image orm_en1-71.gif
+!  DsTrend Job with Matching Objects 
 !  
-!         Hints
+!  Hints
+!
 !  Because a DsTrend job default is loaded to each OpenVMS
 !  node it is suitable to configure DsTrendConf object on
 !  this nodes. The DsTrendConf objects are placed below

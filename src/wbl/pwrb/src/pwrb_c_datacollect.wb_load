@@ -12,7 +12,7 @@
 !  @Summary Expands the number of data attributes that can be handled in a DataArithm.
 !  The DataCollect object expands the number of data attribues that
 !  can be handled in a DataArithm object.
-!
+!  @image orm_datacollect_fo.gif
 !  The DataCollect has 24 data inputs, which values are stored in an array.
 !  By connecting the output of the DataCollect object to a Data input of a
 !  DataArithm object, it is possible to handle the array in the code of the

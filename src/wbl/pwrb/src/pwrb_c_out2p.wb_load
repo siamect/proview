@@ -14,13 +14,36 @@
 !  varies in the time. The binary output has a
 !  pulse-proportional relay action in the dead zone, if
 !  MinOut < MaxOut, else on/off-action with hysteresis.
-!  
+!  @image orm_en1-135.gif
+! 
 !  The digit 2 in the object name comes from the output
 !  which may have two distinct values with a two-step
 !  action; e.g. full on / full off but also with the
 !  meaning of open / closed, forward / backward, or right
 !  / left etc.
 !  
+!  Two cases exist:
+!  1. MinOut < MaxOut
+!
+!    If OutVal < MinOut the Order is always FALSE and if OutVal > MaxOut the Order is always TRUE. 
+!
+!    @image orm_en1-136.gif
+!    When MinOut = OutVal = MaxOut the output, Order, has a pulse-proportional relay action
+!    with the cycle time Period . 
+!
+!    At pulse-proportional relay control the proportion between On/off is the same as the
+!    proportion of (OutVal - MinOut) / (MaxOut - MinOut)
+!
+!    This quotient is updated at every scanning. If a period starts with an on-state it will
+!    remain until,
+!    (OutVal(t) - MinOut) / (MaxOut(t) - MinOut(t) * Period = time from last change of state 
+!
+!    After this it will be off-state until,
+!    1 - (OutVal(t) - MinOut) / (MaxOut(t) - MinOut(t) * Period = time from last change of state 
+!
+!  2. MinOut = MaxOut gives the output an on/off-action with hysteresis, likewise a combined
+!     Compl and Comph object 
+!     @image orm_en1-140.gif
 !*/
 SObject pwrb:Class
   Object Out2P $ClassDef 168 
@@ -129,7 +152,7 @@ SObject pwrb:Class
         Attr graphindex = 0
         Attr default_mask[0] = 1
         Attr default_mask[1] = 1
-        Attr segname_annotation = 0
+        Attr segname_annotation = 1
         Attr compmethod = 4
         Attr compindex = 0
 	Attr executeordermethod = 2
@@ -146,3 +169,12 @@ SObject pwrb:Class
     EndObject
   EndObject
 EndSObject
+
+
+
+
+
+
+
+
+

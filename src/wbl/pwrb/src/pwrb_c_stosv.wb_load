@@ -11,7 +11,8 @@
 !  @Version 1.0
 !  @Code rt_plc_macro_string.h
 !  Storage of string value.
-!  
+!  @image orm_cstosv_fo.gif
+!
 !  Storage of a string value on a specified
 !  local Sv object.
 !

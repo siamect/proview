@@ -11,7 +11,8 @@
 !  @Version 1.0
 !  @Code rt_plc_macro_grafcet.h
 !  The last Grafcet step in a sub-sequential chain.
-!  
+!  @image orm_ssend_fo.gif
+!
 !  The object remains active until its SubStep object
 !  becomes active. See figure 3-50.
 !  The object sets Order[1]= TRUE in its parent, i.e. the

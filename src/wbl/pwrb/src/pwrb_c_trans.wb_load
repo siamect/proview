@@ -11,7 +11,8 @@
 !  @Version 1.0
 !  @Code rt_plc_macro_grafcet.h
 !  A Grafcet transition condition.
-!  
+!  @image orm_en1-236.gif
+!
 !  If the transition condition (see below) is satisfied,
 !  and every step object (i.e. an object by the type Step,
 !  InitStep, or SubStep) directly connected to the input
@@ -27,12 +28,14 @@
 !     parent object. The status of the conditional window
 !     is stored in the Trans object by means of a SetCond
 !     object in the window.
+!
 !  2  directly in a combinational circuit connected to the
 !     left horizontal part of the symbol (see T4 in figure
 !     3-55 on p. 3-366).
-!  3
-!     the condition is set as always TRUE ( Cond = 1 ) or
+!
+!  3  the condition is set as always TRUE ( Cond = 1 ) or
 !     always FALSE ( Cond = 0 ) at the configuring.
+!
 !  To the vertical line of the symbol step objects are
 !  connected. When status is transferred it is always from
 !  the step/s/ that precede the Trans object to the
@@ -50,6 +53,18 @@
 !  At reset of a sequential chain ( see the description of
 !  InitStep, are neither the Man flag nor the
 !  OpCond flag is cleared.
+!
+!  Example 
+!  @image orm_en1-237.gif
+!  Transition Condition with Different Types of Conditions.
+!  Parallel Sequences 
+!
+!  In figure Transition Condition with Different Types of
+!  Conditions. Parallel Sequences the thick vertical lines
+!  indicate that the transition conditions T5, T6, and T7
+!  have underlying conditional windows. The transition
+!  condition T4 has its transition condition directly
+!  accessible. 
 !*/
 SObject pwrb:Class
   Object Trans $ClassDef 242 

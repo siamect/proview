@@ -11,7 +11,8 @@
 !  @Version 1.0
 !  Object to display the value of some important PLC
 !  program attributes.
-!  
+!  @image orm_en1-200.gif
+!
 !  ShowPlcAttr object is, for instance, configured in one
 !  of the Document objects in a PLC program.
 !  

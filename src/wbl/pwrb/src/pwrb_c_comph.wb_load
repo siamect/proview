@@ -12,17 +12,19 @@
 !  @Code rt_plc_arithm.c
 !  Compares an analog value ( signal or parameter) to a high
 !  limit.
+!  @image orm_en1-36.gif
 !  
 !  Both the input signal and the limit can be either
 !  constants, defined by the Attribute Editor, or ordinary
 !  analog signals.
+!  @image orm_en1-37.gif
 !  The output is TRUE when the input signal is greater
 !  than the high limit i.e. Lim. The hysteresis is taken
 !  into account when the output signal is to be FALSE. The
 !  output becomes FALSE as soon as the input becomes less
 !  than or equal to the high limit minus the hysteresis.
 !  
-!         See Also
+!  See Also
 !  
 !  Compl.
 !*/

@@ -11,7 +11,8 @@
 !  @Version 1.0
 !  @Code rt_plc_arithm.c
 !  Selects one out of two analog quantities.
-!  
+!  @image orm_en1-193.gif
+!
 !  The selected value is controlled by a binary quantity
 !  in the following way:
 !   VAL = HIG and NOT = LOW, if con(trol) is TRUE

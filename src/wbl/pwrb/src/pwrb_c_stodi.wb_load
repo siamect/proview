@@ -11,7 +11,8 @@
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
 !  Store Digital input.
-!  
+!  @image orm_stodi_fo.gif
+!
 !  Stores the value of a digital quantity on the specified
 !  local Di object.
 !  

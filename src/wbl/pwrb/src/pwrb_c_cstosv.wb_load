@@ -11,7 +11,8 @@
 !  @Version 1.0
 !  @Code rt_plc_macro_string.h
 !  Conditional storage of string value.
-!  
+!  @image orm_cstosv_fo.gif
+!
 !  Conditional storage of a string value on a specified
 !  local Sv object.
 !  Conditional is aimed at the con-input, which is

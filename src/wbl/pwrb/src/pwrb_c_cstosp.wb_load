@@ -11,7 +11,8 @@
 !  @Version 1.0
 !  @Code rt_plc_macro_string.h
 !  Conditional Storage of string attribute.
-!  
+!  @image orm_cstosp_fo.gif
+!
 !  Conditional storage of an string value ( parameter,
 !  input, or output signal) on a specified attribute in a
 !  local object.

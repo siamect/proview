@@ -9,6 +9,7 @@
 !  @Version 1.0
 !  @Summary Get a data object. 
 !  Fetches a reference to a data object.
+!  @image orm_getdata_fo.gif
 !  The reference is transferred to data inputs of for example
 !  DataArithm-objects by connecting the output of the GetData
 !  in the plc editor.

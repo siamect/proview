@@ -24,12 +24,19 @@
 !  objects are used.
 !  The object exists only in the development environment.
 !  
-!      Hints
+!  Hints
 !  
 !  Assume a PROVIEW/R system with process graphics, from
 !  which attributes in rtdb are manipulated. The designer
 !  wants to make this manipulations visible in cross- and
-!  reference lists.
+!  reference lists. Figure below shows one solution.
+!  @image orm_en1-74.gif
+!  Configuration of ExternRef Objects 
+!
+!  The ExternRef objects of the process graphics are here 
+!  collected below an object named OperatorCom. The ExternRef 
+!  objects of certain process graphics have then been collected 
+!  below its own $PlantHier object. 
 !*/
 SObject pwrb:Class
   Object ExternRef $ClassDef 116 

@@ -11,13 +11,55 @@
 !  @Version 1.0
 !  @Code rt_plc_drive.c
 !  Positioner.
-!  
+!  @image orm_en1-172.gif
+!
 !  The positioning is carried out, without any hysteresis,
 !  by the output signals Order1 and Order2.
 !  One of two operating modes, MANUAL / AUTO, is selected
 !  by means of the output signal ManMode in the following
 !  way:
-!       ...
+!  @image orm_en1-173.gif
+!  MANUAL The MANUAL mode is thought to be handled from the object\s display. 
+!
+!  * A set point value is set in SetPos. 
+!  * The positioning is started by setting PosOn to TRUE. 
+!  * The positioning is finished of different reasons: 
+!  @image orm_en1-174.gif
+!
+!  - the process value has been within the dead-zone intervals,
+!     i.e. the target range, during a time specified by TimerTime.
+!
+!  - PosOn becomes FALSE.
+!
+!  - (the input signal) Reset becomes TRUE.
+!
+!
+!  The positioning starts on a leading edge on the input signal AutoPos. 
+!  It can be finished of different reasons: 
+!  - TimerTime > 0. The process value has been within the dead zone
+!    intervals, i.e. the target range, during a time specified by TimerTime.
+!    A new positioning process is triggered by a leading edge on AutoPos,
+!    i.e. not because PosVal is outside the target range.
+!
+!  - TimerTime = 0. The positioning is never finished but continues to
+!    follow SetPos until Reset becomes TRUE.
+!
+!  - (the input signal) Reset becomes TRUE.
+!
+!  Example
+!
+!  Position Controlled Carriage. 
+!  
+!  By means of a push button the positioning starts, and the carriage runs
+!  to a set point value set by a potentiometer. The positioning is to be
+!  interrupted after 5 seconds in the 'target' range. 
+!  @image orm_en1-176.gif
+!  Position Control 
+!
+!  The direction of the carriage is directed by Order1 or Order2 and the
+!  speed by an analog reference. The speed ought to be slow near the set
+!  point value and this is done by a lower value of the reference. 
+!  @image orm_en1-177.gif
 !*/
 SObject pwrb:Class
   Object Posit $ClassDef 183 
@@ -177,6 +219,7 @@ SObject pwrb:Class
       !/**
       !  The values, which have to be >= 0, specify the lower and
       !  the upper end in the 'target' range.
+      !  @image orm_en1-175.gif
       !*/
       Object DeadZone1 $Intern 11 
         Body SysBody

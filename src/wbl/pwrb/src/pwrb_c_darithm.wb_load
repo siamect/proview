@@ -11,6 +11,7 @@
 !  @Version 1.0
 !  @Code rt_plc_macro_logic.h
 !  User-defined logical expression.
+!  @image orm_darithm_fo.gif
 !  
 !  Optional programmable logical expression in the C
 !  programming language. The expression is edited by means
@@ -39,13 +40,21 @@
 !  easier to get access from the object display. Unused
 !  inputs make compilation errors.
 !  
-!      Example
+!  Example
 !  
-!  1 Maximum one of d1 - d5 is TRUE or d6
+!  1 Combinational circuit. In the following example '&&' means
+!    logical and, '||' means logical or and '!' means not.
+!
+!    Expression: (d1 && d2 || !d3) && d4
+!  @image orm_en1-52.gif
+!    is equivalent with
+!  @image orm_en1-53.gif
+!
+!  2 Maximum one of d1 - d5 is TRUE or d6
 !  
 !        Expression: ((d1 + d2 + d3 + d4 + d5) < 2) || d6
 !  
-!  2 Comparison.
+!  3 Comparison.
 !  
 !        Expression: (A1 + 3.5 * A2) < A3
 !  

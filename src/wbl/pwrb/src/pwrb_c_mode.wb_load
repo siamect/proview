@@ -12,7 +12,8 @@
 !  @Code rt_plc_pid.c
 !  Used to select control modes (MANUAL / AUTO / CASCADE)
 !  or forced control of Pid objects.
-!  
+!  @image orm_en1-121.gif
+!
 !  The control modes are:
 !   · MANUAL -- when the 'operator' sets the output of the
 !     Pid object
@@ -222,13 +223,20 @@ SObject pwrb:Class
       !  
       !   = 1  MANUAL. The operator selects the control signal
       !      of the controller. The control signal is forced
-      !      to the value of ForceVal.
+      !      to the value of ForceVal. MinOut and MaxOut define 
+      !      the valid interval of the control signal.
       !  
       !   = 2  AUTO. The operator selects and sets the set
       !      point value, SetVal.
-      !      MinSet and MaxSet define the valid interval of
+      !      MinSet and MaxSet define the valid interval of SetVal.
+      !      The controller uses SetVal as set point value and 
+      !      calculates the control signal.
+      !
       !   = 4  CASCADE. The controller uses XSetVal as set
       !      point value and calculates the control signal.
+      !  @image orm_en1-122.gif
+      !  Illustrates the Connection between Forced Control and
+      !  Control Modes 
       !*/
       Object OpMod $Intern 12 
         Body SysBody

@@ -11,7 +11,8 @@
 !  @Version 1.0
 !  @Code rt_plc_macro_logic.h
 !  One-shot pulse with variable width.
-!  
+!  @image orm_pulse_fo.gif
+!
 !  The object produces, on a leading edge on the input, a
 !  pulse with the duration specified by TimerTime.
 !  
@@ -19,12 +20,14 @@
 !  propagating a pulse, the pulse is extended, as the
 !  pulse period, TimerTime, is counted from the last
 !  leading edge of the input signal.
-!  
-!         Hints
+!  @image orm_en1-182.gif
+!
+!  Hints
 !  
 !  If a reset function is needed instead of a pulse with a
 !  certain period the pulse can be realized by a Wait, And,
 !  Or, Edge, and a SR_R object.
+!  @image orm_en1-183.gif
 !*/
 SObject pwrb:Class
   Object Pulse $ClassDef 184 

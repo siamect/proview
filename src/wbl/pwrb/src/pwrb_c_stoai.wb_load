@@ -11,7 +11,8 @@
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
 !  Store Analog input.
-!  
+!  @image orm_stoai_fo.gif
+!
 !  Stores an analog value ( e.g. output signal of the type
 !  pwr_tFloat32) on the specified local Ai object.
 !  

@@ -10,7 +10,8 @@
 !/**
 !  @Version 1.0
 !  Get Digital parameter.
-!  
+!  @image orm_getdp_fo.gif
+!
 !  Fetches the value of a digital quantity ( e.g. output
 !  signal from an object or internal digital variable) in
 !  arbitrary object.

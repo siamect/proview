@@ -15,7 +15,8 @@
 !  the digit 3 on the fact that the output signals specify
 !  one of three distinct orders e.g. increase / decrease /
 !  0.
-!  
+!  @image orm_en1-178.gif
+!
 !  Exactly as for Inc3P it is possible to govern by means
 !  of the outputs Open / Close and/or the signals named by
 !  DoOpen/DoClose. The outputs and the signals may be set
@@ -33,6 +34,7 @@
 !  dead zones specified by ErrSo and ErrSta. The dead zone
 !  prevents cycles from repeating to rapidly and becoming
 !  destructive to the equipment.
+!  @image orm_en1-179.gif
 !  The duration of the DoOpen/DoClose signals, the pulse
 !  length, is equal to
 ! 
@@ -44,6 +46,19 @@
 !  
 !  It is possible to use the outputs Open / Close and the
 !  signals named by DoOpen/DoClose at the same time.
+!
+!  Example 
+!
+!  Timer Control of Outputs 
+!
+!  Suppose a flow control with an electrically-activated valve
+!  with increment/decrement control. The flow signal (here kalle2)
+!  and the valve position (Ai1) exist. One solution is shown in
+!  figure below. Note that positional output of the Pid object is
+!  used. The presence of a Curve object can be motivated by a strong
+!  non-linear valve characteristic. 
+!  @image orm_en1-180.gif
+!  Three Step Control with Position Feedback.
 !*/
 SObject pwrb:Class
   Object Pos3P $ClassDef 182 
