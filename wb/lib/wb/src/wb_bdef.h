@@ -3,10 +3,10 @@
 
 #include "pwr.h"
 #include "wb_bdrep.h"
-#include "wb_orep.h"
 #include "wb_object.h"
 #include "wb_name.h"
 
+class wb_orep;
 class wb_bdrep;
 class wb_adef;
 

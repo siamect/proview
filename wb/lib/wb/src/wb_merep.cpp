@@ -1,4 +1,5 @@
 #include "wb_merep.h"
+#include "wb_erep.h"
 #include "wb_ldh_msg.h"
 
 

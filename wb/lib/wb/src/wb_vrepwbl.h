@@ -10,6 +10,7 @@
 #include "wb_wblparser.hpp"
 #include "wb_wblnode.h"
 #include "wb_wblfile.h"
+#include "wb_erep.h"
 
 #define WBL_FILEMAX 500
 #define wbl_eBix_SysBody 1
