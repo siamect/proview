@@ -35,9 +35,11 @@ class Ev {
 	Widget	ev_parent_wid,
 	char *eve_name,
 	char *ala_name,
+	char *blk_name,
 	pwr_tObjid ev_user,
 	int display_ala,
 	int display_eve,
+	int display_blk,
 	int display_return,
 	int display_ack,
 	int ev_beep,
@@ -48,13 +50,17 @@ class Ev {
     Widget		parent_wid;
     Widget		parent_wid_eve;
     Widget		parent_wid_ala;
+    Widget		parent_wid_blk;
     char 		name[80];
     Widget		toplevel_ala;
     Widget		toplevel_eve;
+    Widget		toplevel_blk;
     Widget		form_ala;
     Widget		form_eve;
+    Widget		form_blk;
     Widget		eve_widget;
     Widget		ala_widget;
+    Widget		blk_widget;
     pwr_tObjid		user;
     int			eve_display_ack;
     int			eve_display_return;
@@ -66,23 +72,30 @@ class Ev {
 					  unsigned long, char *, Widget * );
     EvList		*eve;
     EvList		*ala;
+    EvList		*blk;
     int			connected;
     int			ala_displayed;
     int			eve_displayed;
+    int			blk_displayed;
     int			beep;
     int			eve_size;
     int			ala_size;
+    int			blk_size;
     FocusTimer		eve_focustimer;
     FocusTimer		ala_focustimer;
+    FocusTimer		blk_focustimer;
 
     int		outunit_connect( pwr_tObjid	user);
     void	update( double scantime);
     void	map_eve();
     void	map_ala();
+    void	map_blk();
     void	unmap_eve();
     void	unmap_ala();
+    void	unmap_blk();
     int         is_mapped_eve() { return eve_displayed;};
     int         is_mapped_ala() { return ala_displayed;};
+    int         is_mapped_blk() { return blk_displayed;};
     int		get_alarm_info( evlist_sAlarmInfo *info);
     void 	ack_last_prio( unsigned long type, unsigned long prio);
     int		get_last_not_acked_prio( mh_sEventId **id, unsigned long type, 

@@ -40,27 +40,37 @@ static Ev *ev = NULL;
 
 static void ev_eve_display_in_xnav_cb( void *ctx, pwr_sAttrRef *arp);
 static void ev_ala_display_in_xnav_cb( void *ctx, pwr_sAttrRef *arp);
+static void ev_blk_display_in_xnav_cb( void *ctx, pwr_sAttrRef *arp);
 static void ev_eve_start_trace_cb( void *ctx, pwr_tObjid objid, char *name);
 static void ev_ala_start_trace_cb( void *ctx, pwr_tObjid objid, char *name);
+static void ev_blk_start_trace_cb( void *ctx, pwr_tObjid objid, char *name);
 static void ev_popup_menu_cb( void *ctx, pwr_sAttrRef attrref,
 			      unsigned long item_type, unsigned long utility,
 			      char *arg, Widget *popup);
 static void ev_eve_action_inputfocus( Widget w, XmAnyCallbackStruct *data);
 static void ev_ala_action_inputfocus( Widget w, XmAnyCallbackStruct *data);
+static void ev_blk_action_inputfocus( Widget w, XmAnyCallbackStruct *data);
 static void ev_eve_activate_exit( Widget w, Ev *ev, XmAnyCallbackStruct *data);
 static void ev_ala_activate_exit( Widget w, Ev *ev, XmAnyCallbackStruct *data);
+static void ev_blk_activate_exit( Widget w, Ev *ev, XmAnyCallbackStruct *data);
 static void ev_eve_activate_ack_last( Widget w, Ev *ev, XmAnyCallbackStruct *data);
 static void ev_ala_activate_ack_last( Widget w, Ev *ev, XmAnyCallbackStruct *data);
 static void ev_eve_activate_zoom_in( Widget w, Ev *ev, XmAnyCallbackStruct *data);
 static void ev_ala_activate_zoom_in( Widget w, Ev *ev, XmAnyCallbackStruct *data);
+static void ev_blk_activate_zoom_in( Widget w, Ev *ev, XmAnyCallbackStruct *data);
 static void ev_eve_activate_zoom_out( Widget w, Ev *ev, XmAnyCallbackStruct *data);
 static void ev_ala_activate_zoom_out( Widget w, Ev *ev, XmAnyCallbackStruct *data);
+static void ev_blk_activate_zoom_out( Widget w, Ev *ev, XmAnyCallbackStruct *data);
 static void ev_eve_activate_zoom_reset( Widget w, Ev *ev, XmAnyCallbackStruct *data);
 static void ev_ala_activate_zoom_reset( Widget w, Ev *ev, XmAnyCallbackStruct *data);
+static void ev_blk_activate_zoom_reset( Widget w, Ev *ev, XmAnyCallbackStruct *data);
+static void ev_blk_activate_block_remove( Widget w, Ev *ev, XmAnyCallbackStruct *data);
 static void ev_eve_activate_open_plc( Widget w, Ev *ev, XmAnyCallbackStruct *data);
 static void ev_ala_activate_open_plc( Widget w, Ev *ev, XmAnyCallbackStruct *data);
+static void ev_blk_activate_open_plc( Widget w, Ev *ev, XmAnyCallbackStruct *data);
 static void ev_eve_activate_display_in_xnav( Widget w, Ev *ev, XmAnyCallbackStruct *data);
 static void ev_ala_activate_display_in_xnav( Widget w, Ev *ev, XmAnyCallbackStruct *data);
+static void ev_blk_activate_display_in_xnav( Widget w, Ev *ev, XmAnyCallbackStruct *data);
 static void ev_eve_activate_disp_hundredth( Widget w, Ev *ev, XmToggleButtonCallbackStruct *data);
 static void ev_ala_activate_disp_hundredth( Widget w, Ev *ev, XmToggleButtonCallbackStruct *data);
 static void ev_eve_activate_hide_object( Widget w, Ev *ev, XmToggleButtonCallbackStruct *data);
@@ -69,24 +79,31 @@ static void ev_eve_activate_hide_text( Widget w, Ev *ev, XmToggleButtonCallbackS
 static void ev_ala_activate_hide_text( Widget w, Ev *ev, XmToggleButtonCallbackStruct *data);
 static void ev_eve_activate_help( Widget w, Ev *ev, XmAnyCallbackStruct *data);
 static void ev_ala_activate_help( Widget w, Ev *ev, XmAnyCallbackStruct *data);
+static void ev_blk_activate_help( Widget w, Ev *ev, XmAnyCallbackStruct *data);
 static void ev_eve_activate_helpevent( Widget w, Ev *ev, XmAnyCallbackStruct *data);
 static void ev_ala_activate_helpevent( Widget w, Ev *ev, XmAnyCallbackStruct *data);
 static void ev_eve_create_form( Widget w, Ev *ev, XmAnyCallbackStruct *data);
 static void ev_ala_create_form( Widget w, Ev *ev, XmAnyCallbackStruct *data);
+static void ev_blk_create_form( Widget w, Ev *ev, XmAnyCallbackStruct *data);
 static pwr_tStatus ev_mh_ack_bc( mh_sAck *MsgP);
 static pwr_tStatus ev_mh_return_bc( mh_sReturn *MsgP);
 static pwr_tStatus ev_mh_alarm_bc( mh_sMessage *MsgP);
+static pwr_tStatus ev_mh_block_bc( mh_sBlock *MsgP);
+static pwr_tStatus ev_mh_cancel_bc( mh_sReturn *MsgP);
 static pwr_tStatus ev_mh_info_bc( mh_sMessage *MsgP);
 static pwr_tStatus ev_mh_clear_alarmlist_bc( pwr_tNodeIndex nix);
+static pwr_tStatus ev_mh_clear_blocklist_bc( pwr_tNodeIndex nix);
 
 Ev::Ev(
 	void *ev_parent_ctx,
 	Widget	ev_parent_wid,
 	char *eve_name,
 	char *ala_name,
+	char *blk_name,
 	pwr_tObjid ev_user,
 	int display_ala,
 	int display_eve,
+	int display_blk,
 	int display_return,
 	int display_ack,
 	int ev_beep,
@@ -112,8 +129,11 @@ Ev::Ev(
     "<FocusIn>: eve_inputfocus()\n";
   static char ala_translations[] =
     "<FocusIn>: ala_inputfocus()\n";
+  static char blk_translations[] =
+    "<FocusIn>: blk_inputfocus()\n";
   static XtTranslations eve_compiled_translations = NULL;
   static XtTranslations ala_compiled_translations = NULL;
+  static XtTranslations blk_compiled_translations = NULL;
 
   static XtActionsRec eve_actions[] =
   {
@@ -122,6 +142,10 @@ Ev::Ev(
   static XtActionsRec ala_actions[] =
   {
     {"ala_inputfocus",      (XtActionProc) ev_ala_action_inputfocus}
+  };
+  static XtActionsRec blk_actions[] =
+  {
+    {"blk_inputfocus",      (XtActionProc) ev_blk_action_inputfocus}
   };
 
   static MrmRegisterArg	reglist[] = {
@@ -151,7 +175,16 @@ Ev::Ev(
 	{"ev_ala_activate_hide_text",(caddr_t)ev_ala_activate_hide_text },
 	{"ev_ala_activate_help",(caddr_t)ev_ala_activate_help },
 	{"ev_ala_activate_helpevent",(caddr_t)ev_ala_activate_helpevent },
-	{"ev_ala_create_form",(caddr_t)ev_ala_create_form }
+	{"ev_ala_create_form",(caddr_t)ev_ala_create_form },
+	{"ev_blk_activate_exit",(caddr_t)ev_blk_activate_exit },
+	{"ev_blk_activate_zoom_in",(caddr_t)ev_blk_activate_zoom_in },
+	{"ev_blk_activate_zoom_out",(caddr_t)ev_blk_activate_zoom_out },
+	{"ev_blk_activate_zoom_reset",(caddr_t)ev_blk_activate_zoom_reset },
+	{"ev_blk_activate_block_remove",(caddr_t)ev_blk_activate_block_remove },
+	{"ev_blk_activate_open_plc",(caddr_t)ev_blk_activate_open_plc },
+	{"ev_blk_activate_display_in_xnav",(caddr_t)ev_blk_activate_display_in_xnav },
+	{"ev_blk_activate_help",(caddr_t)ev_blk_activate_help },
+	{"ev_blk_create_form",(caddr_t)ev_blk_create_form }
 	};
   static int	reglist_num = (sizeof reglist / sizeof reglist[0]);
 
@@ -174,6 +207,7 @@ Ev::Ev(
   }
   ala_size = userobject_ptr->MaxNoOfAlarms;
   eve_size = userobject_ptr->MaxNoOfEvents;
+  blk_size = 0;
 
   reglist[0].value = (caddr_t) this;
 
@@ -203,7 +237,14 @@ Ev::Ev(
 
   sts = MrmFetchWidgetOverride( s_DRMh, "ala_window", parent_wid_ala,
 			ala_name, args, 1, &toplevel_ala, &dclass);
-  if (sts != MrmSUCCESS)  printf("can't fetch %s\n", eve_name);
+  if (sts != MrmSUCCESS)  printf("can't fetch %s\n", ala_name);
+
+  parent_wid_blk = XtCreatePopupShell( blk_name, 
+		topLevelShellWidgetClass, parent_wid, args, i);
+
+  sts = MrmFetchWidgetOverride( s_DRMh, "blk_window", parent_wid_blk,
+			blk_name, args, 1, &toplevel_blk, &dclass);
+  if (sts != MrmSUCCESS)  printf("can't fetch %s\n", blk_name);
 
   MrmCloseHierarchy(s_DRMh);
 
@@ -223,6 +264,14 @@ Ev::Ev(
   }
   XtOverrideTranslations( toplevel_ala, ala_compiled_translations);
 
+  if ( blk_compiled_translations == NULL) 
+  {
+    XtAppAddActions( XtWidgetToApplicationContext( toplevel_blk), 
+		blk_actions, XtNumber(blk_actions));
+    blk_compiled_translations = XtParseTranslationTable( blk_translations);
+  }
+  XtOverrideTranslations( toplevel_blk, blk_compiled_translations);
+
   i = 0;
   XtSetArg(args[i],XmNwidth,700);i++;
   XtSetArg(args[i],XmNheight,600);i++;
@@ -233,8 +282,14 @@ Ev::Ev(
   XtSetArg(args[i],XmNheight,300);i++;
   XtSetValues( toplevel_ala ,args,i);
     
+  i = 0;
+  XtSetArg(args[i],XmNwidth,700);i++;
+  XtSetArg(args[i],XmNheight,300);i++;
+  XtSetValues( toplevel_blk ,args,i);
+    
   XtManageChild( toplevel_eve);
   XtManageChild( toplevel_ala);
+  XtManageChild( toplevel_blk);
 
   // Create ala and eve...
   eve = new EvList( this, form_eve, ev_eType_EventList, eve_size, &eve_widget);
@@ -245,39 +300,43 @@ Ev::Ev(
   ala->start_trace_cb = &ev_ala_start_trace_cb;
   ala->display_in_xnav_cb = &ev_ala_display_in_xnav_cb;
   ala->popup_menu_cb = &ev_popup_menu_cb;
+  blk = new EvList( this, form_blk, ev_eType_BlockList, blk_size, &blk_widget);
+  blk->start_trace_cb = &ev_blk_start_trace_cb;
+  blk->display_in_xnav_cb = &ev_blk_display_in_xnav_cb;
+  blk->popup_menu_cb = &ev_popup_menu_cb;
+  // blk->hide_text = 1;
 
 //  XtManageChild( form_widget);
 
-  if ( display_eve && display_ala)
-  {
-    XtPopup( parent_wid_eve, XtGrabNone);
-    XtPopup( parent_wid_ala, XtGrabNone);
-    eve_displayed = 1;
-    ala_displayed = 1;
-  }
-  else if ( display_eve)
-  {
-    XtRealizeWidget( parent_wid_ala);
+  if ( display_eve) {
     XtPopup( parent_wid_eve, XtGrabNone);
     eve_displayed = 1;
   }
-  else if ( display_ala)
-  {
+  else
     XtRealizeWidget( parent_wid_eve);
+
+  if ( display_ala) {
     XtPopup( parent_wid_ala, XtGrabNone);
     ala_displayed = 1;
   }
   else
-  {
-    XtRealizeWidget( parent_wid_eve);
     XtRealizeWidget( parent_wid_ala);
+
+  if ( display_blk) {
+    XtPopup( parent_wid_blk, XtGrabNone);
+    blk_displayed = 1;
   }
+  else
+    XtRealizeWidget( parent_wid_blk);
+
 
   // Connect the window manager close-button to exit
   flow_AddCloseVMProtocolCb( parent_wid_eve, 
 	(XtCallbackProc)ev_eve_activate_exit, this);
   flow_AddCloseVMProtocolCb( parent_wid_ala, 
 	(XtCallbackProc)ev_ala_activate_exit, this);
+  flow_AddCloseVMProtocolCb( parent_wid_blk, 
+	(XtCallbackProc)ev_blk_activate_exit, this);
 
   // Store this for the mh callbacks
   ev = this;
@@ -334,6 +393,20 @@ void Ev::map_ala()
   }
 }
 
+void Ev::map_blk()
+{
+  if ( !blk_displayed)
+  {
+    flow_MapWidget( parent_wid_blk);
+    blk_displayed = 1;
+  }
+  else
+  {
+    flow_UnmapWidget( parent_wid_blk);
+    flow_MapWidget( parent_wid_blk);
+  }
+}
+
 void Ev::unmap_eve()
 {
   if ( eve_displayed)
@@ -352,6 +425,15 @@ void Ev::unmap_ala()
   }
 }
 
+void Ev::unmap_blk()
+{
+  if ( blk_displayed)
+  {
+    flow_UnmapWidget( parent_wid_blk);
+    blk_displayed = 0;
+  }
+}
+
 static void ev_eve_start_trace_cb( void *ctx, pwr_tObjid objid, char *name)
 {
   if ( ((Ev *)ctx)->start_trace_cb)
@@ -359,6 +441,12 @@ static void ev_eve_start_trace_cb( void *ctx, pwr_tObjid objid, char *name)
 }
 
 static void ev_ala_start_trace_cb( void *ctx, pwr_tObjid objid, char *name)
+{
+  if ( ((Ev *)ctx)->start_trace_cb)
+    ((Ev *)ctx)->start_trace_cb( ((Ev *)ctx)->parent_ctx, objid, name);
+}
+
+static void ev_blk_start_trace_cb( void *ctx, pwr_tObjid objid, char *name)
 {
   if ( ((Ev *)ctx)->start_trace_cb)
     ((Ev *)ctx)->start_trace_cb( ((Ev *)ctx)->parent_ctx, objid, name);
@@ -380,6 +468,12 @@ static void ev_eve_display_in_xnav_cb( void *ctx, pwr_sAttrRef *arp)
 }
 
 static void ev_ala_display_in_xnav_cb( void *ctx, pwr_sAttrRef *arp)
+{
+  if ( ((Ev *)ctx)->display_in_xnav_cb)
+    ((Ev *)ctx)->display_in_xnav_cb( ((Ev *)ctx)->parent_ctx, arp);
+}
+
+static void ev_blk_display_in_xnav_cb( void *ctx, pwr_sAttrRef *arp)
 {
   if ( ((Ev *)ctx)->display_in_xnav_cb)
     ((Ev *)ctx)->display_in_xnav_cb( ((Ev *)ctx)->parent_ctx, arp);
@@ -425,22 +519,42 @@ static void ev_ala_action_inputfocus( Widget w, XmAnyCallbackStruct *data)
   }
 }
 
+static void ev_blk_action_inputfocus( Widget w, XmAnyCallbackStruct *data)
+{
+  Arg args[1];
+  Ev *ev;
+
+  XtSetArg    (args[0], XmNuserData, &ev);
+  XtGetValues (w, args, 1);
+
+  if ( mrm_IsIconicState(w))
+    return;
+
+  if ( ev && ev->blk_displayed) {
+    if ( ev->blk_focustimer.disabled())
+      return;
+
+    ev->blk->set_input_focus();
+    ev->blk_focustimer.disable( ev->toplevel_blk, 400);
+  }
+}
+
 static void ev_eve_activate_exit( Widget w, Ev *ev, XmAnyCallbackStruct *data)
 {
   flow_UnmapWidget( ev->parent_wid_eve);
-//  XtPopdown( ev->parent_wid_eve);
   ev->eve_displayed = 0;
 }
 
 static void ev_ala_activate_exit( Widget w, Ev *ev, XmAnyCallbackStruct *data)
 {
   flow_UnmapWidget( ev->parent_wid_ala);
-//  XtPopdown( ev->parent_wid_ala);
   ev->ala_displayed = 0;
-//  if ( ev->close_cb)
-//    (ev->close_cb)( ev->parent_ctx);
-//  else
-//    delete ev;
+}
+
+static void ev_blk_activate_exit( Widget w, Ev *ev, XmAnyCallbackStruct *data)
+{
+  flow_UnmapWidget( ev->parent_wid_blk);
+  ev->blk_displayed = 0;
 }
 
 static void ev_eve_activate_ack_last( Widget w, Ev *ev, XmAnyCallbackStruct *data)
@@ -470,6 +584,11 @@ static void ev_ala_activate_zoom_in( Widget w, Ev *ev, XmAnyCallbackStruct *data
   ev->ala->zoom( 1.2);
 }
 
+static void ev_blk_activate_zoom_in( Widget w, Ev *ev, XmAnyCallbackStruct *data)
+{
+  ev->blk->zoom( 1.2);
+}
+
 static void ev_eve_activate_zoom_out( Widget w, Ev *ev, XmAnyCallbackStruct *data)
 {
   ev->eve->zoom( 5.0/6);
@@ -478,6 +597,11 @@ static void ev_eve_activate_zoom_out( Widget w, Ev *ev, XmAnyCallbackStruct *dat
 static void ev_ala_activate_zoom_out( Widget w, Ev *ev, XmAnyCallbackStruct *data)
 {
   ev->ala->zoom( 5.0/6);
+}
+
+static void ev_blk_activate_zoom_out( Widget w, Ev *ev, XmAnyCallbackStruct *data)
+{
+  ev->blk->zoom( 5.0/6);
 }
 
 static void ev_eve_activate_zoom_reset( Widget w, Ev *ev, XmAnyCallbackStruct *data)
@@ -490,6 +614,16 @@ static void ev_ala_activate_zoom_reset( Widget w, Ev *ev, XmAnyCallbackStruct *d
   ev->ala->unzoom();
 }
 
+static void ev_blk_activate_zoom_reset( Widget w, Ev *ev, XmAnyCallbackStruct *data)
+{
+  ev->blk->unzoom();
+}
+
+static void ev_blk_activate_block_remove( Widget w, Ev *ev, XmAnyCallbackStruct *data)
+{
+  ev->blk->block_remove();
+}
+
 static void ev_eve_activate_open_plc( Widget w, Ev *ev, XmAnyCallbackStruct *data)
 {
   ev->eve->start_trace();
@@ -500,6 +634,11 @@ static void ev_ala_activate_open_plc( Widget w, Ev *ev, XmAnyCallbackStruct *dat
   ev->ala->start_trace();
 }
 
+static void ev_blk_activate_open_plc( Widget w, Ev *ev, XmAnyCallbackStruct *data)
+{
+  ev->blk->start_trace();
+}
+
 static void ev_eve_activate_display_in_xnav( Widget w, Ev *ev, XmAnyCallbackStruct *data)
 {
   ev->eve->display_in_xnav();
@@ -508,6 +647,11 @@ static void ev_eve_activate_display_in_xnav( Widget w, Ev *ev, XmAnyCallbackStru
 static void ev_ala_activate_display_in_xnav( Widget w, Ev *ev, XmAnyCallbackStruct *data)
 {
   ev->ala->display_in_xnav();
+}
+
+static void ev_blk_activate_display_in_xnav( Widget w, Ev *ev, XmAnyCallbackStruct *data)
+{
+  ev->blk->display_in_xnav();
 }
 
 static void ev_eve_activate_disp_hundredth( Widget w, Ev *ev, XmToggleButtonCallbackStruct *data)
@@ -578,6 +722,12 @@ static void ev_ala_activate_helpevent( Widget w, Ev *ev, XmAnyCallbackStruct *da
   }
 }
 
+static void ev_blk_activate_help( Widget w, Ev *ev, XmAnyCallbackStruct *data)
+{
+  if ( ev->help_cb)
+    (ev->help_cb)( ev->parent_ctx, "blocklist");
+}
+
 static void ev_eve_create_form( Widget w, Ev *ev, XmAnyCallbackStruct *data)
 {
   ev->form_eve = w;
@@ -586,6 +736,11 @@ static void ev_eve_create_form( Widget w, Ev *ev, XmAnyCallbackStruct *data)
 static void ev_ala_create_form( Widget w, Ev *ev, XmAnyCallbackStruct *data)
 {
   ev->form_ala = w;
+}
+
+static void ev_blk_create_form( Widget w, Ev *ev, XmAnyCallbackStruct *data)
+{
+  ev->form_blk = w;
 }
 
 int	Ev::get_alarm_info( evlist_sAlarmInfo *info)
@@ -606,10 +761,10 @@ int	Ev::outunit_connect( pwr_tObjid	user)
 		0,
 		ev_mh_ack_bc,
 		ev_mh_alarm_bc,
-		NULL,
-		NULL,
+		ev_mh_block_bc,
+		ev_mh_cancel_bc,
 		ev_mh_clear_alarmlist_bc,
-		NULL,
+		ev_mh_clear_blocklist_bc,
 		ev_mh_info_bc,
 		ev_mh_return_bc
 		);
@@ -701,6 +856,23 @@ static pwr_tStatus ev_mh_alarm_bc( mh_sMessage *MsgP)
   return 1;
 }
 
+static pwr_tStatus ev_mh_block_bc( mh_sBlock *MsgP)
+{
+  ev->blk->event_block( MsgP);
+  ev->eve->event_block( MsgP);
+  if ( ev->update_info_cb)
+    ev->update_info_cb( ev->parent_ctx);
+  return 1;
+}
+
+static pwr_tStatus ev_mh_cancel_bc( mh_sReturn *MsgP)
+{
+  ev->ala->event_cancel( MsgP);
+  if ( ev->update_info_cb)
+    ev->update_info_cb( ev->parent_ctx);
+  return 1;
+}
+
 static pwr_tStatus ev_mh_info_bc( mh_sMessage *MsgP)
 {
   ev->eve->event_info( MsgP);
@@ -713,6 +885,12 @@ static pwr_tStatus ev_mh_info_bc( mh_sMessage *MsgP)
 static pwr_tStatus ev_mh_clear_alarmlist_bc( pwr_tNodeIndex nix)
 {
   ev->ala->event_clear_alarmlist( nix);
+  return 1;
+}
+
+static pwr_tStatus ev_mh_clear_blocklist_bc( pwr_tNodeIndex nix)
+{
+  ev->blk->event_clear_alarmlist( nix);
   return 1;
 }
 
