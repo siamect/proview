@@ -246,7 +246,7 @@ dcli_tCmdTable	xnav_command_table[] = {
 			"SET",
 			&xnav_set_func,
 			{ "dcli_arg1", "dcli_arg2", "/NAME", "/VALUE",
-			"/BYPASS", ""}
+			"/BYPASS", "/INDEX", ""}
 		},
 		{
 			"SETUP",
@@ -588,6 +588,42 @@ static int	xnav_set_func(	void		*client_data,
     }
     else
       return sts;
+  }
+  else if ( strncmp( arg1_str, "FOLDER", strlen( arg1_str)) == 0)
+  {    
+    // Command is "SET FOLDER"
+    ge_tCtx gectx;
+    char graph_str[80];
+    char object_str[80];
+    char idx_str[20];
+    int nr;
+    int idx;
+
+    if ( EVEN( dcli_get_qualifier( "dcli_arg2", graph_str))) {
+      xnav->message('E', "Graph name is missing");
+      return XNAV__HOLDCOMMAND;
+    }
+
+    if ( EVEN( dcli_get_qualifier( "/NAME", object_str))) {
+      xnav->message('E', "Object name is missing");
+      return XNAV__HOLDCOMMAND;
+    }
+    if ( EVEN( dcli_get_qualifier( "/INDEX", idx_str))) {
+      xnav->message('E',"Syntax error");
+      return XNAV__HOLDCOMMAND;
+    }
+    nr = sscanf( idx_str, "%d", &idx);
+    if ( nr != 1) {
+      xnav->message('E', "Syntax error");
+      return XNAV__HOLDCOMMAND; 	
+    }
+
+    if ( !xnav->appl.find( applist_eType_Graph, graph_str, 0, 
+		  (void **) &gectx)) {
+      xnav->message('E', "Graph is not open");
+      return XNAV__HOLDCOMMAND; 	
+    }
+    ge_set_folder_index( gectx, object_str, idx);
   }
   else
     xnav->message('E',"Syntax error");

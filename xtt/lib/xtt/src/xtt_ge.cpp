@@ -353,6 +353,10 @@ int ge_set_object_focus( ge_tCtx gectx, char *name, int empty)
   return ((Graph *)gectx->graph)->set_object_focus( name, empty);
 }
 
+int ge_set_folder_index( ge_tCtx gectx, char *name, int idx)
+{
+  return ((Graph *)gectx->graph)->set_folder_index( name, idx);
+}
 
 extern "C" void ge_delete( ge_tCtx gectx)
 {

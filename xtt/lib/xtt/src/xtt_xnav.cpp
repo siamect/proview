@@ -2423,9 +2423,18 @@ int XNav::display_object( pwr_sAttrRef *arp, int open)
       sts = gdh_AttrrefToName( arp, name, sizeof(name), cdh_mName_volumeStrict);
       if ( EVEN(sts)) goto display_error;
 
+      pn = cdh_ParseName( &sts, &parsename, pwr_cNObjid, name, 0);
+      if ( pn->nAttribute == 0) {
+	brow_SetInverse( item->node, 1);
+	brow_SelectInsert( brow->ctx, item->node);
+	brow_ResetNodraw( brow->ctx);
+	brow_Redraw( brow->ctx, 0);
+	brow_CenterObject( brow->ctx, item->node, 0.80);
+	return 1;
+      }
+
       item->open_attributes( brow, 0, 0);
 
-      pn = cdh_ParseName( &sts, &parsename, pwr_cNObjid, name, 0);
       strcpy( name, pn->attribute[0].name.orig);
       for ( i = 0; i < (int) pn->nAttribute; i++) {
 	sts = find( arp->Objid, name, (void **) &aitem);
