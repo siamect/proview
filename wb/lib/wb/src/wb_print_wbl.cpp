@@ -255,7 +255,7 @@ void wb_print_wbl::printObject(wb_volume& v, wb_object& o, bool recursive)
     m_os << "Template not found for class " << cdef.name() << endl;
     return;
   }
-
+ 
   printBody(v, o, templ, cdef, pwr_eBix_rt);
   printBody(v, o, templ, cdef, pwr_eBix_dev);
 
@@ -530,9 +530,22 @@ bool wb_print_wbl::printValue (wb_volume& v,
   }
 #endif
   break;
- case pwr_eType_String:
-   sprintf(sval, "\"%.*s\"", varSize, (char *)val);
+ case pwr_eType_String: {
+   char *s = sval;
+   char *t = (char *)val;
+   *s++ = '"';
+   for ( int i = 0; i < varSize; i++) {
+     if ( *t == 0)
+       break;
+     if ( *t == '"')
+       *s++ = '\\'; 
+     *s++ = *t++;
+   }
+   *s++ = '"';
+   *s = 0;
+   // sprintf(sval, "\"%.*s\"", varSize, (char *)val);
    break;
+ }
  case pwr_eType_Time:
    sts = time_AtoAscii((pwr_tTime *)val, time_eFormat_DateAndTime,
                        timbuf, sizeof(timbuf)); 
@@ -582,6 +595,25 @@ void wb_print_wbl::printVolume(wb_volume& v, bool recursive)
     
   indent(1) << "Volume " << v.name() << " " <<  cname << " "
             << cdh_VolumeIdToString(NULL, v.vid(), 0, 0) << " " << endl;
+
+
+  // Print volume body
+  pwr_tOid oid;
+  oid.vid = v.vid();
+  oid.oix= 0;
+  wb_object vo = v.object( oid);
+  wb_cdef cdef = v.cdef(vo);
+
+  wb_object co = v.object(cdh_ClassIdToObjid(v.cid()));
+  wb_name t("Template");
+  
+  wb_object templ = co.child(t);
+  if (!templ) {
+    m_errCnt++;
+    m_os << "Template not found for class " << cdef.name() << endl;
+    return;
+  }
+  printBody(v, vo, templ, cdef, pwr_eBix_sys);
 
   // Print top objects and their children 
   if (recursive) {
