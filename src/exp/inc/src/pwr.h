@@ -172,11 +172,11 @@ typedef pwr_tOix        pwr_tObjectIx;		//!< Object index type.
 /*_*
   @aref mask Mask
 */
-typedef unsigned int	pwr_tMask;		//!< Mask type.
+typedef pwr_tUInt32	pwr_tMask;		//!< Mask type.
 /*_*
   @aref enum Enum
 */
-typedef unsigned int	pwr_tEnum;		//!< Enumeration type.
+typedef pwr_tInt32	pwr_tEnum;		//!< Enumeration type.
 
 //! Object identity type.
 /*_*

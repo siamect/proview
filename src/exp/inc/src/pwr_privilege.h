@@ -30,7 +30,8 @@ typedef enum {
   pwr_mPrv_DevRead		= 1 << 21,
   pwr_mPrv_DevPlc		= 1 << 22,
   pwr_mPrv_DevConfig		= 1 << 23,
-  pwr_mPrv_DevClass		= 1 << 24
+  pwr_mPrv_DevClass		= 1 << 24,
+  pwr_mPrv_RtEvents		= 1 << 25
 } pwr_mPrv;
 
 typedef enum {
@@ -50,6 +51,7 @@ typedef enum {
   pwr_mAccess_Operator8		= pwr_mPrv_Operator8,
   pwr_mAccess_Operator9		= pwr_mPrv_Operator9,
   pwr_mAccess_Operator10	= pwr_mPrv_Operator10,
+  pwr_mAccess_RtEvents		= pwr_mPrv_RtEvents,
   pwr_mAccess_AllRt		= pwr_mPrv_System |
 				  pwr_mPrv_Maintenance |
 				  pwr_mPrv_Process |
@@ -79,6 +81,8 @@ typedef enum {
 } pwr_mAccess;
 
 #endif
+
+
 
 
 
