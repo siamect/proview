@@ -218,18 +218,9 @@ ldh_OpenVolume(ldh_tWorkbench workbench, ldh_tSession *session, pwr_tVid vid)
 pwr_tStatus
 ldh_CallMenuMethod(ldh_sMenuCall *mcp, int index)
 {
-  pwr_tStatus		sts = LDH__SUCCESS;
-//    pwr_tStatus		(*method)(ldh_sMenuCall*) = mcp->ItemList[index].Method;
-  //ldhi_sSession	*sp = mcp->PointedSession; 
+  wb_session *sp = (wb_session *) mcp->PointedSession; 
 
-  //wb_event e = sp->event(pwr_cNOid, ldh_eEvent_MenuMethodCalled);
-
-  //if (method != NULL)
-  //sts = (*method)(mcp);
-
-  //e.send();
-
-  return sts;
+  return sp->callMenuMethod( mcp, index);
 }
 
 pwr_tStatus
@@ -519,9 +510,11 @@ ldh_GetNextObject(ldh_tSession session, pwr_tOid oid, pwr_tOid *new_oid)
 }
 
 pwr_tStatus
-ldh_GetMenu(ldh_sMenuCall *ip)
+ldh_GetMenu(ldh_tSession session, ldh_sMenuCall *ip)
 {
-  return LDH__NYI;
+  wb_session *sp = (wb_session *)session;
+
+  return sp->getMenu( ip);
 }
 
 pwr_tStatus
@@ -1160,20 +1153,15 @@ ldh_ReadAttribute(ldh_tSession session, pwr_sAttrRef *arp, void *value, int size
 /* Reads a named body of an object into a buffer supplied in the call.  */
 
 pwr_tStatus
-ldh_ReadObjectBody(ldh_tSession *session, pwr_tObjid oid, char *bname, void *value, int size)
+ldh_ReadObjectBody(ldh_tSession session, pwr_tObjid oid, char *bname, void *value, int size)
 {
-#if NOT_YET_IMPLEMENTED
-  wb_session *sp = (wb_session*)session;
-  wb_body b = sp->body(oid, bname);
-  if (!b) return b.sts();
-  wb_value v(value, size);    
-  if (!v) return v.sts();
-    
-  v = b.value();
-  return v.sts();
-#else
-  return LDH__NYI;
-#endif
+  wb_session *sp = (wb_session *)session;
+  wb_object o = sp->object(oid);
+  wb_attribute a = sp->attribute(o, bname);
+
+  a.value( value);
+  
+  return LDH__SUCCESS;
 }
 
 pwr_tStatus
@@ -1339,9 +1327,11 @@ ldh_LocalObject(ldh_tSession session, pwr_tOid oid)
 pwr_tStatus
 ldh_SyntaxCheck(ldh_tSession session, int *errorcount, int *warningcount)
 {
-  //wb_session *sp = (wb_session*)session;
+  wb_session *sp = (wb_session*)session;
+  pwr_tStatus sts;
 
-  return LDH__NYI;
+  sts = sp->syntaxCheck( errorcount, warningcount);
+  return sts;
 }
 
 pwr_tStatus

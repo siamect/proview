@@ -295,7 +295,258 @@ wb_attribute wb_volume::attribute(const pwr_sAttrRef* arp) const
   return wb_attribute();
 }
 
+pwr_tStatus wb_volume::syntaxCheck( int *errorcount, int *warningcount)
+{
+  pwr_tStatus sts;
 
+  wb_orep *orep = m_vrep->object(&sts);
+  if ( ODD(sts)) {
+    orep->ref();
+    sts = syntaxCheckObject( orep, errorcount, warningcount);
+    orep->unref();
+    return sts;
+  }
+  return LDH__SUCCESS;
+}
+
+pwr_tStatus wb_volume::syntaxCheckObject( wb_orep *orep, int *errorcount, int *warningcount)
+{
+  pwr_tStatus sts;
+  wb_orep *first, *after;
+  
+  sts = triggSyntaxCheck( orep, errorcount, warningcount);
+  if ( EVEN(sts)) return sts;
+
+  switch ( orep->cid()) {
+  case pwr_eClass_LibHier:
+    break;
+  default:
+    first = orep->first( &sts);
+    if ( ODD(sts)) {
+      first->ref();
+      sts = syntaxCheckObject( first, errorcount, warningcount);
+      first->unref();
+      if ( EVEN(sts)) return sts;
+    }
+    after = orep->after( &sts);
+    if ( ODD(sts)) {
+      after->ref();
+      sts = syntaxCheckObject( after, errorcount, warningcount);
+      after->unref();
+      if (  EVEN(sts)) return sts;
+    }
+  }
+  return LDH__SUCCESS;
+}
+
+pwr_tStatus wb_volume::triggSyntaxCheck( wb_orep *orep, int *errorcount, int *warningcount)
+{
+  pwr_tStatus sts;
+  char methodName[] = "SyntaxCheck";
+  wb_tMethod method;
+  
+  // wb_cdrep *cdrep = m_vrep->merep()->cdrep( &sts, orep->cid());
+  // if ( EVEN(sts)) return sts;
+
+  // cdrep->dbCallBack( &sts, ldh_eDbCallBack_SyntaxCheck, &methodName, 0);
+  // delete cdrep;
+  // if ( EVEN(sts)) return LDH__SUCCESS;
+
+  m_vrep->erep()->method( &sts, methodName, &method);
+  if ( EVEN(sts)) return LDH__SUCCESS;
+
+  sts = ((wb_tMethodSyntaxCheck) (method))( (ldh_tSesContext)this, orep->oid(), errorcount, warningcount);
+  return sts;
+}
+
+pwr_tStatus wb_volume::triggAnteAdopt( wb_orep *father, pwr_tCid cid)
+{
+  pwr_tStatus sts;
+  char *methodName;
+  wb_tMethod method;
+  
+  wb_cdrep *cdrep = m_vrep->merep()->cdrep( &sts, father->cid());
+  if ( EVEN(sts)) return sts;
+
+  cdrep->dbCallBack( &sts, ldh_eDbCallBack_AnteAdopt, &methodName, 0);
+  delete cdrep;
+  if ( EVEN(sts)) return LDH__SUCCESS;
+
+  m_vrep->erep()->method( &sts, methodName, &method);
+  if ( EVEN(sts)) return LDH__SUCCESS;
+
+  sts = ((wb_tMethodAnteAdopt) (method))( (ldh_tSesContext)this, father->oid(), cid);
+  return sts;
+}
+
+pwr_tStatus wb_volume::triggAnteCreate( wb_orep *father, pwr_tCid cid)
+{
+  pwr_tStatus sts;
+  char *methodName;
+  wb_tMethod method;
+  
+
+  wb_cdrep *cdrep = m_vrep->merep()->cdrep( &sts, cid);
+  if ( EVEN(sts))
+    return sts;
+
+  cdrep->dbCallBack( &sts, ldh_eDbCallBack_AnteCreate, &methodName, 0);
+  delete cdrep;
+  if ( EVEN(sts))
+    return LDH__SUCCESS;
+
+  m_vrep->erep()->method( &sts, methodName, &method);
+  if ( EVEN(sts)) return LDH__SUCCESS;
+
+  sts = ((wb_tMethodAnteCreate) (method))( (ldh_tSesContext)this, father->oid(), cid);
+  return sts;
+}
+
+pwr_tStatus wb_volume::triggAnteMove( wb_orep *orep, wb_orep *father)
+{
+  pwr_tStatus sts;
+  char *methodName;
+  wb_tMethod method;
+  
+  wb_cdrep *cdrep = m_vrep->merep()->cdrep( &sts, orep->cid());
+  if ( EVEN(sts)) return sts;
+
+  cdrep->dbCallBack( &sts, ldh_eDbCallBack_AnteCreate, &methodName, 0);
+  delete cdrep;
+  if ( EVEN(sts)) return LDH__SUCCESS;
+
+  m_vrep->erep()->method( &sts, methodName, &method);
+  if ( EVEN(sts)) return LDH__SUCCESS;
+
+  if ( father)
+    sts = ((wb_tMethodAnteMove) (method))( (ldh_tSesContext)this, orep->oid(), father->oid(),
+					   father->cid());
+  else
+    sts = ((wb_tMethodAnteMove) (method))( (ldh_tSesContext)this, orep->oid(), pwr_cNObjid,
+					   pwr_cNClassId);
+  return sts;
+}
+
+pwr_tStatus wb_volume::triggAnteUnadopt( wb_orep *father, wb_orep *orep)
+{
+  pwr_tStatus sts;
+  char *methodName;
+  wb_tMethod method;
+  
+  wb_cdrep *cdrep = m_vrep->merep()->cdrep( &sts, father->cid());
+  if ( EVEN(sts)) return sts;
+
+  cdrep->dbCallBack( &sts, ldh_eDbCallBack_AnteCreate, &methodName, 0);
+  delete cdrep;
+  if ( EVEN(sts)) return LDH__SUCCESS;
+
+  m_vrep->erep()->method( &sts, methodName, &method);
+  if ( EVEN(sts)) return LDH__SUCCESS;
+
+  sts = ((wb_tMethodAnteUnadopt) (method))( (ldh_tSesContext)this, father->oid(), orep->oid(),
+					   orep->cid());
+  return sts;
+}
+
+pwr_tStatus wb_volume::triggPostAdopt( wb_orep *father, wb_orep *orep)
+{
+  pwr_tStatus sts;
+  char *methodName;
+  wb_tMethod method;
+  
+  wb_cdrep *cdrep = m_vrep->merep()->cdrep( &sts, father->cid());
+  if ( EVEN(sts)) return sts;
+
+  cdrep->dbCallBack( &sts, ldh_eDbCallBack_PostAdopt, &methodName, 0);
+  delete cdrep;
+  if ( EVEN(sts)) return LDH__SUCCESS;
+
+  m_vrep->erep()->method( &sts, methodName, &method);
+  if ( EVEN(sts)) return LDH__SUCCESS;
+
+  sts = ((wb_tMethodPostAdopt) (method))( (ldh_tSesContext)this, father->oid(), orep->oid(),
+					   orep->cid());
+  return sts;
+}
+
+pwr_tStatus wb_volume::triggPostCreate( wb_orep *orep)
+{
+  pwr_tStatus sts;
+  char *methodName;
+  wb_tMethod method;
+  
+  wb_cdrep *cdrep = m_vrep->merep()->cdrep( &sts, orep->cid());
+  if ( EVEN(sts)) return sts;
+
+  cdrep->dbCallBack( &sts, ldh_eDbCallBack_PostCreate, &methodName, 0);
+  delete cdrep;
+  if ( EVEN(sts)) return LDH__SUCCESS;
+
+  m_vrep->erep()->method( &sts, methodName, &method);
+  if ( EVEN(sts)) return LDH__SUCCESS;
+
+  wb_orep *father = orep->parent( &sts);
+  if ( ODD(sts)) {
+    father->ref();
+    sts = ((wb_tMethodPostCreate) (method))( (ldh_tSesContext)this, orep->oid(), father->oid(),
+					   father->cid());
+    father->unref();
+  }
+  else
+    sts = ((wb_tMethodPostCreate) (method))( (ldh_tSesContext)this, orep->oid(), pwr_cNObjid,
+					   pwr_cNClassId);
+  return sts;
+}
+
+pwr_tStatus wb_volume::triggPostMove( wb_orep *orep)
+{
+  pwr_tStatus sts;
+  char *methodName;
+  wb_tMethod method;
+  
+  wb_cdrep *cdrep = m_vrep->merep()->cdrep( &sts, orep->cid());
+  if ( EVEN(sts)) return sts;
+
+  cdrep->dbCallBack( &sts, ldh_eDbCallBack_PostMove, &methodName, 0);
+  delete cdrep;
+  if ( EVEN(sts)) return LDH__SUCCESS;
+
+  m_vrep->erep()->method( &sts, methodName, &method);
+  if ( EVEN(sts)) return LDH__SUCCESS;
+
+  wb_orep *father = orep->parent( &sts);
+  if ( ODD(sts)) {
+    father->ref();
+    sts = ((wb_tMethodPostMove) (method))( (ldh_tSesContext)this, orep->oid(), father->oid(),
+					   father->cid());
+    father->unref();
+  }
+  else
+    sts = ((wb_tMethodPostMove) (method))( (ldh_tSesContext)this, orep->oid(), pwr_cNObjid,
+					   pwr_cNClassId);
+  return sts;
+}
+
+pwr_tStatus wb_volume::triggPostUnadopt( wb_orep *father, wb_orep *orep)
+{
+  pwr_tStatus sts;
+  char *methodName;
+  wb_tMethod method;
+  
+  wb_cdrep *cdrep = m_vrep->merep()->cdrep( &sts, father->cid());
+  if ( EVEN(sts)) return sts;
+
+  cdrep->dbCallBack( &sts, ldh_eDbCallBack_PostUnadopt, &methodName, 0);
+  delete cdrep;
+  if ( EVEN(sts)) return LDH__SUCCESS;
+
+  m_vrep->erep()->method( &sts, methodName, &method);
+  if ( EVEN(sts)) return LDH__SUCCESS;
+
+  sts = ((wb_tMethodPostUnadopt) (method))( (ldh_tSesContext)this, father->oid(), orep->oid(),
+					   orep->cid());
+  return sts;
+}
 
 
 

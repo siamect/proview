@@ -4,6 +4,7 @@
 #include "pwr.h"
 #include "pwr_class.h"
 #include "wb_name.h"
+#include "wb_ldh.h"
 
 class wb_adrep;
 class wb_bdrep;
@@ -47,6 +48,12 @@ public:
   wb_orep *classBody( pwr_tStatus *sts, const char *bname);
 
   void templateBody( pwr_tStatus *sts, pwr_eBix bix, void *p);
+  void dbCallBack( pwr_tStatus *sts, ldh_eDbCallBack cb, char **methodName,
+		   pwr_sDbCallBack **o);
+  wb_orep *menu( pwr_tStatus *sts, void **o);
+  wb_orep *menuAfter( pwr_tStatus *sts, wb_orep *orep, void **o);
+  wb_orep *menuFirst( pwr_tStatus *sts, wb_orep *orep, void **o);
+
 
   pwr_tStatus sts() { return m_sts;}
 };

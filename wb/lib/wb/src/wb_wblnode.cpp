@@ -469,6 +469,11 @@ void wb_wblnode::build( bool recursive)
             attr = attr->o_fws;
           }
         }
+	else if ( cdh_NoCaseStrcmp( child->cname, "$DbCallBack") == 0 &&
+		  !child->isTemplate() ) {
+          ((pwr_sClassDef *)rbody)->Flags.b.HasCallBack = 1;
+	}
+
         child = child->o_fws;
         m_flags = ((pwr_sClassDef *)rbody)->Flags;
 

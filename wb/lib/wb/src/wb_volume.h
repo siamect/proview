@@ -79,6 +79,18 @@ public:
     
   bool createSnapshot(const char *fileName) { return m_vrep->createSnapshot(fileName);}
     
+  pwr_tStatus syntaxCheck( int *errorcount, int *warningcount);
+  pwr_tStatus syntaxCheckObject( wb_orep *orep, int *errorcount, int *warningcount);
+  pwr_tStatus triggSyntaxCheck( wb_orep *orep, int *errorcount, int *warningcount);
+  pwr_tStatus triggAnteAdopt( wb_orep *orep, pwr_tCid cid);
+  pwr_tStatus triggAnteCreate( wb_orep *father, pwr_tCid cid);
+  pwr_tStatus triggAnteMove( wb_orep *orep, wb_orep *father);
+  pwr_tStatus triggAnteUnadopt( wb_orep *father, wb_orep *orep);
+  pwr_tStatus triggPostAdopt( wb_orep *father, wb_orep *orep);
+  pwr_tStatus triggPostCreate( wb_orep *orep);
+  pwr_tStatus triggPostMove( wb_orep *orep);
+  pwr_tStatus triggPostUnadopt( wb_orep *father, wb_orep *orep);
+
 };
 
 #endif

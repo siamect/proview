@@ -93,7 +93,7 @@ notype		<no type exist>						/error
 nobase		<no base system>					/error
 projconfig	<project is not configured>				/info
 wblparse	<error when parsing wb_load file>			/error
-
+nomethod	<no such method>					/error
 
 
 

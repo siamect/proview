@@ -57,6 +57,20 @@ typedef struct {
   Prototypes for DbCallbacks
 \*----------------------------------------------------------------------------*/
 
+typedef pwr_tStatus (* wb_tMethod)();
+typedef pwr_tStatus (* wb_tMethodMenu)( ldh_sMenuCall *);
+typedef pwr_tStatus (* wb_tMethodMenuFilter)( ldh_sMenuCall *, pwr_sMenuButton *);
+typedef pwr_tStatus (* wb_tMethodAnteCreate) (ldh_tSesContext, pwr_tOid, pwr_tCid);
+typedef pwr_tStatus (* wb_tMethodPostCreate) (ldh_tSesContext, pwr_tOid, pwr_tOid, pwr_tCid);
+typedef pwr_tStatus (* wb_tMethodAnteMove)   (ldh_tSesContext, pwr_tOid, pwr_tOid, pwr_tCid);
+typedef pwr_tStatus (* wb_tMethodPostMove)   (ldh_tSesContext, pwr_tOid, pwr_tOid, pwr_tCid);
+typedef pwr_tStatus (* wb_tMethodAnteAdopt)  (ldh_tSesContext, pwr_tOid, pwr_tCid);
+typedef pwr_tStatus (* wb_tMethodPostAdopt)  (ldh_tSesContext, pwr_tOid, pwr_tOid, pwr_tCid);
+typedef pwr_tStatus (* wb_tMethodAnteUnadopt)(ldh_tSesContext, pwr_tOid, pwr_tOid, pwr_tCid);
+typedef pwr_tStatus (* wb_tMethodPostUnadopt)(ldh_tSesContext, pwr_tOid, pwr_tOid, pwr_tCid);
+typedef pwr_tStatus (* wb_tMethodSyntaxCheck)(ldh_tSesContext, pwr_tOid, int *, int *);
+
+
 #if defined OS_VMS
 static pwr_tStatus AnteAdopt (
   ldh_tSesContext   Session,

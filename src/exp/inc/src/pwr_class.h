@@ -474,7 +474,8 @@ union pwr_m_ClassDef {
     pwr_Bits( NoAdopt	  , 1), /* object can not have children  */
     pwr_Bits( Template	  , 1),	/* object is a template object  */
     pwr_Bits( IO	  , 1),	/* object is an IO object  */
-    pwr_Bits( fill_0      , 4),,,,
+    pwr_Bits( HasCallBack , 1),	/* object has DbCallBack  */
+    pwr_Bits( fill_0      , 3),,,
     pwr_Bits( fill_1      , 8),,,,,,,,
     pwr_Bits( fill_2      , 8),,,,,,,
   ) b;
@@ -491,6 +492,7 @@ union pwr_m_ClassDef {
 #define pwr_mClassDef_NoAdopt	  pwr_Bit(9)
 #define pwr_mClassDef_Template    pwr_Bit(10)
 #define pwr_mClassDef_IO	  pwr_Bit(11)
+#define pwr_mClassDef_HasCallBack pwr_Bit(12)
 
 #define pwr_mClassDef_HasRef	  (pwr_mClassDef_ObjXRef|pwr_mClassDef_AttrXRef|\
 				   pwr_mClassDef_ObjRef|pwr_mClassDef_AttrRef)

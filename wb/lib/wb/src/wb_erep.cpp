@@ -18,7 +18,11 @@ extern "C" {
 #include "co_dcli.h"
 #include "co_cdh.h"
 #include "rt_load.h"
+#include "wb_pwrs.h"
 }
+
+pwr_dImport pwr_BindClasses(System);
+pwr_dImport pwr_BindClasses(Base);
 
 wb_erep::wb_erep() : m_dir_cnt(0)
 {
@@ -222,14 +226,18 @@ void wb_erep::load( pwr_tStatus *sts)
   else if ( *sts == LDH__PROJCONFIG) {
     pwr_tStatus status;
     loadCommonMeta( &status);
-    if ( EVEN(status))
+    if ( EVEN(status)) {
       *sts = status;
+      return;
+    }
+    bindMethods();
     return;
   }
   loadCommonMeta( sts);
   if ( EVEN(*sts)) return;
 
   loadMeta( sts);
+  bindMethods();
   loadLocalWb( sts);
 }
 
@@ -516,7 +524,62 @@ wb_orep *wb_erep::object(pwr_tStatus *sts, wb_name &name)
 }
 
 
+void wb_erep::method( pwr_tStatus *sts, char *methodName, wb_tMethod *method)
+{
+  string key = string( methodName);
+  methods_iterator it = m_methods.find( key);
+  if ( it == m_methods.end()) {
+    *sts = LDH__NOMETHOD;
+    return;
+  }
+  *sts = LDH__SUCCESS;
+  *method = it->second;
+}
 
+void wb_erep::bindMethods()
+{
+  int i, j;
+  pwr_tStatus sts;
+  char str[200];
+
+  for (i = 0;; i++) {
+    if (pwr_gSystem_ClassMethods[i].ClassName[0] == '\0')
+      break;
+    for (j = 0;; j++) {
+      if ((*pwr_gSystem_ClassMethods[i].Methods)[j].MethodName[0] == '\0')
+	break;
+      strcpy( str, pwr_gSystem_ClassMethods[i].ClassName);
+      strcat( str, "-");
+      strcat( str, (*pwr_gSystem_ClassMethods[i].Methods)[j].MethodName);
+      string key = string( str);
+      m_methods[ key] = (*pwr_gSystem_ClassMethods[i].Methods)[j].Method;
+    }
+  }
+
+  for (i = 0;; i++) {
+    if (pwr_gBase_ClassMethods[i].ClassName[0] == '\0') break;
+    wb_name cname = wb_name( pwr_gBase_ClassMethods[i].ClassName);
+    wb_cdrep *cdrep = m_merep->cdrep( &sts, cname);
+    if ( EVEN(sts))
+      continue;
+    
+    for (j = 0;; j++) {
+      if ((*pwr_gBase_ClassMethods[i].Methods)[j].MethodName[0] == '\0')
+	break;
+      strcpy( str, pwr_gBase_ClassMethods[i].ClassName);
+      strcat( str, "-");
+      strcat( str, (*pwr_gBase_ClassMethods[i].Methods)[j].MethodName);
+      string key = string( str);
+      m_methods[ key] = (*pwr_gBase_ClassMethods[i].Methods)[j].Method;
+    }
+    delete cdrep;
+  }
+
+  for (  methods_iterator it = m_methods.begin(); it != m_methods.end(); it++) {
+    cout << " Method: " << it->first << endl;
+  }
+
+}
 
 
 

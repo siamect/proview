@@ -493,6 +493,9 @@ static void wtt_create_popup_menu_cb( void *ctx, pwr_tObjid objid,
   XtGetValues( wtt->toplevel, args, 2);
 
   popup = wtt_create_popup_menu( wtt, objid);
+  if ( !popup)
+    return;
+
   i = 0;
   XtSetArg(args[i], XmNx, x + x1 + x2 + x3 + 8);i++;
   XtSetArg(args[i], XmNy, y + y1 + y2 + y3);i++;

@@ -2,6 +2,7 @@
 #define wb_erep_h
 
 #include <map>
+#include "wb_pwrs.h"
 
 using namespace std;
 
@@ -15,16 +16,18 @@ class wb_name;
 
 class wb_erep
 {
+  typedef map<pwr_tVid, wb_vrep*>::iterator vrep_iterator;
+  typedef map< string, wb_tMethod>::iterator methods_iterator;
+
   unsigned int m_nRef;
   wb_merep *m_merep;
   map<pwr_tVid, wb_vrep*> m_vrepdb;
   map<pwr_tVid, wb_vrep*> m_vrepdbs;
   map<pwr_tVid, wb_vrep*> m_vrepextern;
+  map< string, wb_tMethod> m_methods;
 
   char m_dir_list[10][200];
   int m_dir_cnt;
-
-  typedef map<pwr_tVid, wb_vrep*>::iterator vrep_iterator;
 
 public:
   wb_erep();
@@ -53,12 +56,14 @@ public:
 
   wb_cdrep *cdrep( pwr_tStatus *sts, const wb_orep& o);
   wb_tdrep *tdrep( pwr_tStatus *sts, const wb_adrep& a);
+  void method( pwr_tStatus *sts, char *methodName, wb_tMethod *method);
 
 private:
   void loadDirList( pwr_tStatus *status);
   void loadCommonMeta( pwr_tStatus *status);
   void loadMeta( pwr_tStatus *status);
   void loadLocalWb( pwr_tStatus *sts);
+  void bindMethods();
 };
 
 #endif

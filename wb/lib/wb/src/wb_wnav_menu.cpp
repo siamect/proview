@@ -238,7 +238,7 @@ Widget wtt_create_popup_menu( Wtt *wtt, pwr_tObjid objid)
   mcp->Selected[sel1_cnt + sel2_cnt].Objid = pwr_cNObjid;
   mcp->SelectCount = sel1_cnt + sel2_cnt;
 
-  sts = ldh_GetMenu( mcp);  
+  sts = ldh_GetMenu( wtt->ldhses, mcp);  
   if (EVEN(sts) || mcp->ItemList[0].Level == 0) {
     return NULL;
   }

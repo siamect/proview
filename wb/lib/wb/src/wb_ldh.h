@@ -123,6 +123,26 @@ typedef enum {
 } ldh_eMenuSet;
 
 typedef enum {
+  ldh_eDbCallBack__ = 0,
+  ldh_eDbCallBack_AnteCreate,
+  ldh_eDbCallBack_PostCreate,
+  ldh_eDbCallBack_AnteDelete,
+  ldh_eDbCallBack_PostDelete,
+  ldh_eDbCallBack_AnteMove,
+  ldh_eDbCallBack_PostMove,
+  ldh_eDbCallBack_AnteRename,
+  ldh_eDbCallBack_PostRename,
+  ldh_eDbCallBack_AnteAdopt,
+  ldh_eDbCallBack_PostAdopt,
+  ldh_eDbCallBack_AnteUnadopt,
+  ldh_eDbCallBack_PostUnadopt,
+  ldh_eDbCallBack_AnteUpdate,
+  ldh_eDbCallBack_PostUpdate,
+  ldh_eDbCallBack_SyntaxCheck,
+  ldh_eDbCallBack_
+} ldh_eDbCallBack;
+
+typedef enum {
   ldh_eName_Object      = cdh_mName_object,
   ldh_eName_Default     = cdh_mName_object,
   ldh_eName_Hierarchy   = cdh_mName_pathStrict,
@@ -534,6 +554,7 @@ pwr_tStatus ldh_GetClassList (
   pwr_tObjid *objid
 );
 pwr_tStatus ldh_GetMenu (
+  ldh_tSession Session,
   ldh_sMenuCall *CallStruct
 );
 pwr_tStatus ldh_GetNextObject (

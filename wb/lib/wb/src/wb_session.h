@@ -71,8 +71,12 @@ public:
   bool writeAttribute() {return false;} // Fix
   bool writeBody() {return false;} // Fix
 
-  //
+  void getAllMenuItems( ldh_sMenuCall	*ip, ldh_sMenuItem **Item, wb_cdrep *cdrep,
+			wb_orep *o, void *o_body, pwr_tUInt32 Level,
+			int *nItems, int AddSeparator);
 
+  pwr_tStatus getMenu( ldh_sMenuCall *ip);
+  pwr_tStatus callMenuMethod( ldh_sMenuCall *mcp, int Index);
 };
 
 

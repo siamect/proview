@@ -7,6 +7,26 @@
 #include "wb_bdrep.h"
 #include "wb_adrep.h"
 
+static pwr_tString32 callBackName[] = {
+  "__",         // ldh_eDbCallBack__
+  "AnteCreate",	// ldh_eDbCallBack_AnteCreate
+  "PostCreate",	// ldh_eDbCallBack_PostCreate
+  "AnteDelete",	// ldh_eDbCallBack_AnteDelete
+  "PostDelete",	// ldh_eDbCallBack_PostDelete
+  "AnteMove",	// ldh_eDbCallBack_AnteMove
+  "PostMove",	// ldh_eDbCallBack_PostMove
+  "AnteRename",	// ldh_eDbCallBack_AnteRename
+  "PostRename",	// ldh_eDbCallBack_PostRename
+  "AnteAdopt",	// ldh_eDbCallBack_AnteAdopt
+  "PostAdopt",	// ldh_eDbCallBack_PostAdopt
+  "AnteUnadopt",// ldh_eDbCallBack_AnteUnadopt
+  "PostUnadopt",// ldh_eDbCallBack_PostUnadopt
+  "AnteUpdate",	// ldh_eDbCallBack_AnteUpdate
+  "PostUpdate",	// ldh_eDbCallBack_PostUpdate
+  "SyntaxCheck",// ldh_eDbCallBack_SyntaxCheck
+  "-"           // ldh_eDbCallBack_
+};
+
 void wb_cdrep::unref()
 {
   if ( --m_nRef == 0)
@@ -190,4 +210,145 @@ const char *wb_cdrep::name() const
 wb_name wb_cdrep::longName()
 {
   return m_orep->longName();
+}
+
+void wb_cdrep::dbCallBack( pwr_tStatus *sts, ldh_eDbCallBack cb, char **methodName,
+			   pwr_sDbCallBack **o)
+{
+  wb_name cb_name = wb_name( callBackName[cb]);
+  wb_orepdbs *orep = (wb_orepdbs *)m_orep->m_vrep->child( sts, m_orep, cb_name);
+  if ( EVEN(*sts)) return;
+  orep->ref();
+
+  if ( orep->cid() != pwr_eClass_DbCallBack) {
+    *sts = LDH__NOSUCHOBJ;
+    orep->unref();
+    return;
+  }
+
+  pwr_sDbCallBack *dbcallback;
+
+  dbcallback = (pwr_sDbCallBack *) m_orep->m_vrep->readBody( sts, orep, pwr_eBix_sys, 0);
+  if ( EVEN(*sts)) {
+    orep->unref();
+    return;
+  }
+
+  *methodName = dbcallback->MethodName;
+  if ( o)
+    *o = dbcallback;
+}
+
+// Get first menu object
+
+wb_orep *wb_cdrep::menu( pwr_tStatus *sts, void **o)
+{
+  wb_orepdbs *prev;
+  wb_orepdbs *orep = (wb_orepdbs *)m_orep->m_vrep->first( sts, m_orep);
+  while ( ODD(*sts)) {
+    switch ( orep->cid()) {
+    case pwr_eClass_Menu:
+    case pwr_eClass_MenuButton:
+    case pwr_eClass_MenuCascade:
+    case pwr_eClass_MenuSeparator:
+      break;
+    default:
+      ;
+    }
+    prev = orep;
+    orep = (wb_orepdbs *)orep->after( sts);
+    prev->ref();
+    prev->unref();
+  }
+  if ( EVEN(*sts)) {
+    *sts = LDH__NOSUCHOBJ;
+    return 0;
+  }
+
+  void *menubody;
+
+  menubody = m_orep->m_vrep->readBody( sts, orep, pwr_eBix_sys, 0);
+  if ( EVEN(*sts)) {
+    orep->ref();
+    orep->unref();
+    return 0;
+  }
+
+  if ( o)
+    *o = menubody;
+  return orep;
+}
+
+// Get next menu sibling
+
+wb_orep *wb_cdrep::menuAfter( pwr_tStatus *sts, wb_orep *orep, void **o)
+{
+  wb_orepdbs *prev;
+  wb_orepdbs *after = (wb_orepdbs *)orep->after( sts);
+  if ( EVEN(*sts)) return 0;
+
+  while ( ODD(*sts)) {
+    switch ( after->cid()) {
+    case pwr_eClass_Menu:
+    case pwr_eClass_MenuButton:
+    case pwr_eClass_MenuCascade:
+    case pwr_eClass_MenuSeparator:
+      break;
+    default:
+      ;
+    }
+    prev = after;
+    after = (wb_orepdbs *)orep->after( sts);
+    prev->ref();
+    prev->unref();
+  }
+  if ( EVEN(*sts)) {
+    *sts = LDH__NOSUCHOBJ;
+    return 0;
+  }
+
+  void *menubody;
+
+  menubody = m_orep->m_vrep->readBody( sts, after, pwr_eBix_sys, 0);
+  if ( EVEN(*sts)) {
+    after->ref();
+    after->unref();
+    return 0;
+  }
+
+  if ( o)
+    *o = menubody;
+  return after;
+}
+
+// Get first menu child of a menu object
+
+wb_orep *wb_cdrep::menuFirst( pwr_tStatus *sts, wb_orep *orep, void **o)
+{
+  wb_orepdbs *first = (wb_orepdbs *)orep->first( sts);
+  if ( EVEN(*sts)) return 0;
+
+  switch ( first->cid()) {
+  case pwr_eClass_Menu:
+  case pwr_eClass_MenuButton:
+  case pwr_eClass_MenuCascade:
+  case pwr_eClass_MenuSeparator:
+    break;
+  default:
+    *sts = LDH__NOSUCHOBJ;
+    return 0;
+  }
+
+  void *menubody;
+
+  menubody = m_orep->m_vrep->readBody( sts, first, pwr_eBix_sys, 0);
+  if ( EVEN(*sts)) {
+    first->ref();
+    first->unref();
+    return 0;
+  }
+
+  if ( o)
+    *o = menubody;
+  return first;
 }
