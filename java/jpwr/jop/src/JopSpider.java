@@ -86,7 +86,7 @@ System.out.println( "qcom put finished");
     Cli cli = new Cli( cliTable);
     String command = cli.parse( cmd);
     if (cli.oddSts()) {
-
+	System.out.println("JopSpider1 : " + command);
       if ( command.equals("OPEN")) {
         if ( cli.qualifierFound("cli_arg1")) {
 
@@ -333,6 +333,9 @@ System.out.println( "qcom put finished");
         }
       }
     }
+    else
+      System.out.println( "JopSpider: Pasre error " + cli.getStsString());
+
     if ( !local_cmd) {
       // Send to xtt
       if ( qcom != null) {
@@ -465,7 +468,6 @@ System.out.println( "JopSpiderCmd start");
 
     // Replace any URL symbol
     name = replaceUrlSymbol( session, name);
-
     try {
       String url_str;
       if ( name.substring(0,5).equals("http:")) {
