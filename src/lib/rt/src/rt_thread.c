@@ -594,15 +594,13 @@ thread_SetPrio (
   {
     pthread_t tid;
     struct sched_param par;
-    pwr_tStatus sts = THREAD__SUCCESS;
 
     /* Set priority and scheduling mechanism for thread. */
     tid = pthread_self();
     prio = MIN(sched_get_priority_max(SCHED_FIFO), 
 	       sched_get_priority_min(SCHED_FIFO) + prio);
     par.sched_priority = prio;
-    pthread_setschedparam(tid, SCHED_FIFO, &par);
-    return sts;
+    return errno_Status(pthread_setschedparam(tid, SCHED_FIFO, &par));
   }
 #else
 # error Not defined for this platform !
