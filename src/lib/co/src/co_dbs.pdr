@@ -106,6 +106,7 @@
 %
 %# define dbs_cNameDirectory     "pwrp_load:"
 %# define dbs_cDirectory         "pwrp_load:"
+%# define dbs_cBaseDirectory     "pwr_load:"
 %# define dbs_cNamePlc           "%splc_%s_%04d_%05d.exe"
 %
 %# define dbs_cNameBootList      "pwrp_root:[common.db]pwrp_cnf_bootlist.dat"
