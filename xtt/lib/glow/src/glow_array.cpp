@@ -233,6 +233,8 @@ void GlowArray::copy_from( const GlowArray& array)
         GrowConGlue *n = new GrowConGlue(*(GrowConGlue *)array.a[i]);
         n->highlight = 0;
         n->hot = 0;
+	// Fix, This should be done in the copy constructor !!!
+	sprintf(n->n_name, "O%d", ((GrowCtx *)(n->ctx))->get_next_objectname_num());
         insert( n);
         break;
       }
