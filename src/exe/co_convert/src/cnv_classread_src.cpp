@@ -40,7 +40,7 @@ int ClassRead::src_read( char *filename)
       if ( strcmp( line, "") == 0)
         continue;
 
-      if ( strncmp( line, "/**", 3) != 0 &&
+      if ( strncmp( line, "/*_*", 4) != 0 &&
            !(state & cread_mState_Doc))
       {
         src_html_line( orig_line);
@@ -51,7 +51,7 @@ int ClassRead::src_read( char *filename)
                 	sizeof( line_part) / sizeof( line_part[0]), 
 			sizeof( line_part[0]), 0);
 
-      if ( strcmp( low( line_part[0]), "/**") == 0)
+      if ( strcmp( low( line_part[0]), "/*_*") == 0)
         linetype = cread_eLine_Doc;
       else if ( strcmp( low( line_part[0]), "*/") == 0)
         linetype = cread_eLine_DocEnd;

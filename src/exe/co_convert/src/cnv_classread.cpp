@@ -14,7 +14,7 @@ extern "C" {
 
 #define CNV__UNKNOWN_LINETYPE 2
 
-int ClassRead::read( char *filename)
+int ClassRead::read( char *filename) 
 {
   int sts;
   int return_sts = 1;
@@ -22,12 +22,14 @@ int ClassRead::read( char *filename)
   char	line_part[4][80];
   int nr;
   int object_level = 0;
+  int classdef_level = 0;
   char *s;
-  char line_cnt = 0;
+  int line_cnt = 0;
 
   doc_init();
 
   // Get source directory
+  strcpy( current_file, filename);
   strcpy( source_dir, filename);
   if ( (s = strrchr( source_dir, '/')))
     *(s+1) = 0;
@@ -232,6 +234,7 @@ int ClassRead::read( char *filename)
           break;
         case cread_eLine_ClassDef:
           state |= cread_mState_ClassDef;
+	  classdef_level = object_level;
           object_state = cread_mState_ClassDef;
           class_init();
           if ( line_part[1][0] == '$')
@@ -382,9 +385,9 @@ int ClassRead::read( char *filename)
           }
           else if ( state & cread_mState_ClassDef) {
             state &= ~cread_mState_ClassDef;
-            if ( generate_html && html_class_open)
+            if ( generate_html && html_class_open && classdef_level == object_level)
               html_class_close();
-	    if ( generate_struct && struct_class_open)
+	    if ( generate_struct && struct_class_open && classdef_level == object_level)
               struct_class_close();
           }
           else if ( state & cread_mState_TypeDef) {

@@ -180,7 +180,7 @@ endl;
   }
 
   fp_struct <<
-"/** Class: " << class_name << endl <<
+"/*_* Class: " << class_name << endl <<
 "    Body:  " << body_name << endl <<
 "    @Aref " << class_name << " " << struct_name << endl <<
 "*/" << endl;
@@ -571,17 +571,11 @@ int ClassRead::struct_volname_to_id()
 
   fp = fopen( fname, "r");
   if ( !fp) {
-    strcpy( fname, source_dir);
-    strcat( fname, "usertypes.wb_load");
+    strcpy( fname, current_file);
     fp = fopen( fname, "r");
     if ( !fp) {
-      strcpy( fname, source_dir);
-      strcat( fname, "userclasses.wb_load");
-      fp = fopen( fname, "r");
-      if ( !fp) {
-	printf( "** Unable to open volume wb_load file\n");
-	return 0;
-      }
+      printf( "** Unable to find Volume declaration\n");
+      return 0;
     }
   }
 
