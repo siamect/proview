@@ -322,6 +322,8 @@ pwr_sAttrRef *wb_attribute::aref(pwr_sAttrRef *arp) const
   arp->Objid = m_orep->oid();
   arp->Offset = m_offset;
   arp->Size = m_size;
+  if ( m_flags & PWR_MASK_POINTER)
+    arp->Flags.b.Indirect = 1;
 
   if ( m_adrep) {
     wb_bdrep *bd = m_adrep->bdrep();
