@@ -8678,6 +8678,7 @@ int GeSlider::export_java( grow_tObject object, ofstream& fp, bool first, char *
   case glow_eDirection_Right:
     min_pos -= dim_x0;
     max_pos -= dim_x0;
+    break;
   default:
     min_pos -= dim_y0;
     max_pos -= dim_y0;
