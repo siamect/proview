@@ -185,7 +185,7 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Mh_outunitConnect
   sts = mh_OutunitConnect(
 		user,
 		mh_eOutunitType_Operator,
-		0,
+		mh_mOutunitFlags_ReadWait,
 		ev_mh_ack_bc,
 		ev_mh_alarm_bc,
 		NULL,
