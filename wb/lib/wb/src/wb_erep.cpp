@@ -556,9 +556,31 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
     else {
       // Load db for this volume
       if ( db) {
-	// If db is specified, load only specified db
-	if ( cdh_NoCaseStrcmp( vol_array[0], db) != 0)
+	// If db is specified, load only specified db, load as dbs instead
+	if ( cdh_NoCaseStrcmp( vol_array[0], db) != 0) {
+	  cdh_ToLower( vol_array[0], vol_array[0]);
+          strcpy( vname, "$pwrp_load/");
+          strcat( vname, vol_array[0]);
+          strcat( vname, ".dbs");
+          cout << "Try: " << vname << endl;
+          sts = dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_INIT);
+          dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_END);
+          if ( ODD(sts)) {
+            cout << "Found: " << found_file << endl;
+            // Load...
+            try {
+              vrep = new wb_vrepdbs( this, found_file);
+              vrep->load();
+              // vrep->name( vol_array[0]);
+              addDbs( &sts, vrep);
+	      MsgWindow::message( 'I', "Volume loaded", vname);
+            }
+            catch ( wb_error& e) {
+	      MsgWindow::message( 'E', "Unable to open volume", vname, e.what().c_str());
+            }
+          }
 	  continue;
+	}
       }
       strcpy( vname, "$pwrp_db/");
       strcat( vname, vol_array[0]);
