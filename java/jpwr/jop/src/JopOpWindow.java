@@ -180,7 +180,7 @@ public class JopOpWindow extends JPanel {
 	      session.openGraphFrame( action, instance, scrollbar);
 	      break;
 	    case WEBLINK:
-	      String cmd = "open url " + action;
+	      String cmd = "open url \"" + action + "\"";
 	      session.executeCommand( cmd);
 	      break;
 	  }
