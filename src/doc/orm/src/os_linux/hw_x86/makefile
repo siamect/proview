@@ -37,21 +37,23 @@ html_sources := $(sort \
              ) \
            )
 
-export_gif := $(patsubst %.gif,$(doc_dir)/orm/%.gif,$(gif_sources))
-export_html := $(patsubst %.html,$(doc_dir)/orm/%.html,$(html_sources))
+export_gif := $(patsubst %.gif,$(doc_dir)/en_us/orm/%.gif,$(gif_sources))
+export_html := $(patsubst %.html,$(doc_dir)/en_us/orm/%.html,$(html_sources))
 clean_gif := $(patsubst %.gif,clean_%.gif,$(gif_sources))
 clean_html := $(patsubst %.html,clean_%.html,$(html_sources))
 
 .SUFFIXES:
 
-$(doc_dir)/orm/%.gif : %.gif
+$(doc_dir)/en_us/orm/%.gif : %.gif
 	@ $(log_h_h)
 	@ $(cp) $(cpflags) $(source) $(target)
+	@ $(cp) $(cpflags) $(source) $(doc_dir)/sv_se/orm
 	@ $(cp) $(cpflags) $(source) $(doc_dir)/help
 
-$(doc_dir)/orm/%.html : ../../%.html
+$(doc_dir)/en_us/orm/%.html : ../../%.html
 	@ $(log_h_h)
 	@ $(cp) $(cpflags) $(source) $(target)
+	@ $(cp) $(cpflags) $(source) $(doc_dir)/sv_se/orm
 	@ $(cp) $(cpflags) $(source) $(doc_dir)/help
 
 .PHONY : all init copy lib exe clean realclean \
@@ -62,7 +64,7 @@ all : init copy lib exe
 init :
 
 copy : $(export_gif) $(export_html)\
-       $(doc_dir)/orm/orm.css
+       $(doc_dir)/en_us/orm/orm.css
 
 lib :
 
@@ -79,9 +81,10 @@ $(clean_gif) : clean_%.gif : %.gif
 $(clean_html) : clean_%.html : %.html
 	@ $(rm) $(rmflags) $(doc_dir)/orm/$*.html
 
-$(doc_dir)/orm/orm.css : ../../orm.css
+$(doc_dir)/en_us/orm/orm.css : ../../orm.css
 	@ echo "copy $(source) $(target)"
 	@ cp $(source) $(target)
+	@ cp $(source) $(doc_dir)/sv_se/orm
 
 
 
