@@ -215,7 +215,7 @@ ConvertPut (
     pwr_Return(FALSE, sts, NET__XDRFAILED);
   np = hash_Search(&lsts, &qdb->nid_ht, &qid->nid);
   if (np == NULL) pwr_Return(FALSE, sts, lsts);
-  if (np == qdb->my_node || np->fm.b.bo == qdb->my_node->fm.b.bo) {
+  if (np == qdb->my_node || np->bo == qdb->my_node->bo) {
     if (put->data != data) memcpy(put->data, data, put->size);
     pwr_Return(TRUE, sts, NET__SUCCESS);
   }
@@ -244,7 +244,7 @@ ConvertGet (
     pwr_Return(FALSE, sts, NET__XDRFAILED);
   np = hash_Search(&lsts, &qdb->nid_ht, &get->sender.nid);
   if (np == NULL) pwr_Return(FALSE, sts, lsts);
-  if (np == qdb->my_node || np->fm.b.bo == qdb->my_node->fm.b.bo) {
+  if (np == qdb->my_node || np->bo == qdb->my_node->bo) {
     if (get->data != data) memcpy(data, get->data, get->size);
     pwr_Return(TRUE, sts, NET__SUCCESS);
   }
