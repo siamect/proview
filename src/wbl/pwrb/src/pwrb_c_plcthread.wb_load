@@ -361,6 +361,23 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_PRIVATE
         EndBody
       EndObject
+      !/**
+      !  @Summary IO Process number.
+      !  The process number is normally PlcProcess (1) for plc threads.
+      !  In some IO system though, a plc thread should act as a 
+      !  separate IO process. This is done when an Agent, Rack of Card
+      !  should be handled by several plc threads.
+      !*/
+      Object IoProcess $Attribute 35
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Enum"
+        EndBody
+      EndObject
+    EndObject
+    Object Template PlcThread
+      Body RtBody
+        Attr IoProcess = 1
+      EndBody
     EndObject
     Object PostCreate $DbCallBack
       Body SysBody
@@ -369,3 +386,5 @@ SObject pwrb:Class
     EndObject
   EndObject
 EndSObject
+
+
