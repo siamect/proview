@@ -312,7 +312,7 @@ object (pwr_tStatus *)
 
 wb_merep *wb_vrepdbs::merep() const
 {
-    return 0;
+    return m_merep;
 }
 
 bool wb_vrepdbs::createSnapshot(char *)
