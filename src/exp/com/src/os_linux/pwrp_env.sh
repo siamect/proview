@@ -1382,6 +1382,48 @@ pwrc_setdb_func()
   pwrc_status=$pwrc__success
 }
 
+pwrc_save_func()
+{
+  local cmd
+  local pname
+  local broot
+
+  if [ -z $1 ]; then
+    echo "Qualifier is missing"
+    pwrc_status=$pwrc__syntax
+    return
+  fi
+
+  if [ $1 = "file" ]; then
+    pwrc_save_file_func $2
+  else
+    echo "Unknown command"
+  fi
+}  
+
+pwrc_save_file_func()
+{
+  new_file=$1
+  
+  if [ -e $new_file ]; then
+    let version=9
+
+    while [ $version -ge 1 ]
+    do
+      old_file=$new_file.$version
+      old_file_ren=$new_file.$((version+1))
+      if [ -e $old_file ]; then
+        mv $old_file $old_file_ren
+      fi
+      let version=$version-1
+    done
+
+    old_file=$new_file.1
+    echo "-- Saving file $new_file -> $old_file"
+    mv $new_file $old_file
+  fi
+}
+
 pwrc_help_func()
 {
   cat << EOF
@@ -1461,6 +1503,12 @@ pwrc_parse ()
   if [ $1 = $cmd ] || [ ${cmd#$1} != $cmd ]; then
     shift
     pwrc_set_func $@
+    return $pwrc_status
+  fi
+  cmd="save"
+  if [ $1 = $cmd ] || [ ${cmd#$1} != $cmd ]; then
+    shift
+    pwrc_save_func $@
     return $pwrc_status
   fi
   cmd="setdb"
