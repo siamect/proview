@@ -663,18 +663,13 @@ int ClassRead::attribute_attr( char *name, char *value)
       if ( strcmp( attr_flags, "") != 0)
 	strcat( attr_flags, " | ");
       strcat( attr_flags, flags_to_string( flags_value));
-      switch ( flags_value) {
-      case pwr_mAdef_pointer:
+
+      if ( flags_value & pwr_mAdef_pointer)
 	attr_pointer = 1;
-	break;
-      case pwr_mAdef_array:
+      if ( flags_value & pwr_mAdef_array)
 	attr_array = 1;
-	break;
-      case pwr_mAdef_rtvirtual:
+      if ( flags_value & pwr_mAdef_rtvirtual)
 	attr_rtvirtual = 1;
-	break;
-      default: ;
-      }
     }
   }
   else if ( strcmp( low( name), "elements") == 0)
