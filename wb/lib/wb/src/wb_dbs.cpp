@@ -836,7 +836,7 @@ writeTree(wb_dbs::sOentry *oep, FILE *fp)
     return 1;
     
   if (oep->poep)
-    oep->flags.b.devOnly |= oep->poep->flags.b.devOnly;
+    oep->o.flags.b.devOnly |= oep->poep->o.flags.b.devOnly;
   
   if (fwrite(&oep->o, dbs_dAlign(sizeof(oep->o)), 1, fp) < 1)
     return LDH__FILEWRITE;
