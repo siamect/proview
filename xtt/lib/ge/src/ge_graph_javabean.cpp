@@ -1794,7 +1794,7 @@ int Graph::export_gejava( char *filename, char *bean_name, int applet, int html)
     }
     fp <<
 "    contentPane.setOpaque(true);" << endl <<
-"    localPanel.setLayout(null);" << endl <<
+      "    localPanel.setLayout(null /* xxx new RatioLayout()*/);" << endl <<
 "    localPanel.setOpaque(true);" << endl;
     if ( background_color != glow_eDrawType_LineErase)
       fp <<
