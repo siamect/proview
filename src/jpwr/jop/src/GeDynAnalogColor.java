@@ -10,7 +10,9 @@ public class GeDynAnalogColor extends GeDynElem {
   boolean attrFound;
   PwrtRefId subid;
   int p;
-  float oldValue;
+  public int typeId;
+  float oldValueF;
+  int oldValueI;
   boolean firstScan = true;
   boolean oldState;
   boolean isMainInstance = false;
@@ -44,11 +46,13 @@ public class GeDynAnalogColor extends GeDynElem {
 	    mainInstance.attrFound = true;
 	  mainInstance.p = ret.id;
 	  mainInstance.subid = ret.refid;
+	  mainInstance.typeId = ret.typeId;
 	  mainInstance.isMainInstance = true;
         }
       }
       p = mainInstance.p;
       attrFound = mainInstance.attrFound;
+      typeId = mainInstance.typeId;
     }
   }
   public void disconnect() {
@@ -59,26 +63,74 @@ public class GeDynAnalogColor extends GeDynElem {
     if ( !attrFound || dyn.ignoreColor)
       return;
 
-    float value = dyn.en.gdh.getObjectRefInfoFloat( p);
-    int i;
-    if ( !firstScan) {
-      if ( !dyn.resetColor && value == oldValue) {
-	if ( oldState)
-	  dyn.ignoreColor = true;
-	return;
-      }
-    }
-    else
-      firstScan = false;
-  
-    boolean state;
+    boolean state = false;
     boolean set_color = false;
     boolean reset_color = false;
 
-    if ( limitType == GeDyn.eLimitType_Gt)
-      state = value > limit;
-    else
-      state = value < limit;
+    if ( typeId == Pwr.eType_Float32) {
+      float value = dyn.en.gdh.getObjectRefInfoFloat( p);
+      int i;
+      if ( !firstScan) {
+        if ( !dyn.resetColor && value == oldValueF) {
+	  if ( oldState)
+	    dyn.ignoreColor = true;
+	  return;
+        }
+      }
+      else
+        firstScan = false;
+  
+      switch ( limitType) {
+      case GeDyn.eLimitType_Gt:
+        state = value > limit;
+	break;
+      case GeDyn.eLimitType_Lt:
+        state = value < limit;
+	break;
+      case GeDyn.eLimitType_Ge:
+        state = value >= limit;
+	break;
+      case GeDyn.eLimitType_Le:
+        state = value >= limit;
+	break;
+      case GeDyn.eLimitType_Eq:
+        state = value == limit;
+	break;      
+      }
+      oldValueF = value;
+    }
+    else if ( typeId == Pwr.eType_Int32) {
+      int value = dyn.en.gdh.getObjectRefInfoInt( p);
+      int i;
+      if ( !firstScan) {
+        if ( !dyn.resetColor && value == oldValueI) {
+	  if ( oldState)
+	    dyn.ignoreColor = true;
+	  return;
+        }
+      }
+      else
+        firstScan = false;
+  
+      switch ( limitType) {
+      case GeDyn.eLimitType_Gt:
+        state = value > limit;
+	break;
+      case GeDyn.eLimitType_Lt:
+        state = value < limit;
+	break;
+      case GeDyn.eLimitType_Ge:
+        state = value >= limit;
+	break;
+      case GeDyn.eLimitType_Le:
+        state = value >= limit;
+	break;
+      case GeDyn.eLimitType_Eq:
+        state = value == limit;
+	break;      
+      }
+      oldValueI = value;
+    }
 
     if ( state != oldState || dyn.resetColor || firstScan) {
       if ( state) {
@@ -91,10 +143,9 @@ public class GeDynAnalogColor extends GeDynElem {
       }
       oldState = state;
     }
+
     else if ( state)
       dyn.ignoreColor = true;
-
-    oldValue = value;
 
     if ( !set_color && !reset_color)
       return;

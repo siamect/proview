@@ -55,6 +55,9 @@ public class GeDyn {
 
     public static final int eLimitType_Gt		= 0;
     public static final int eLimitType_Lt		= 1;
+    public static final int eLimitType_Ge		= 2;
+    public static final int eLimitType_Le		= 3;
+    public static final int eLimitType_Eq		= 4;
 
     public static final int eEvent_MB1Up		= 0;
     public static final int eEvent_MB1Down		= 1;
