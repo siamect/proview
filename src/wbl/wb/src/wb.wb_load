@@ -29,7 +29,7 @@ SObject wb:
           Body DevBody
             Attr Deep = 1
             Attr NoPrint = 1
-            Attr Class = "Rack_SSAB,Rack_RTP"
+            Attr Class = "Rack_SSAB"
           EndBody
           Object dicard ListDescriptor
              Body DevBody
@@ -39,7 +39,7 @@ SObject wb:
                Attr ClearRowsPre = 2
                Attr ClearRowsPost = 1
                Attr TableOfContents = 1
-               Attr Class = "Di_DIX2,Di_7437_37"
+               Attr Class = "Di_DIX2"
                Attr P1Parameter = "PrintObjName"
                Attr P1SizeTabs = 3
                Attr P2Parameter = "Description"
@@ -86,7 +86,7 @@ SObject wb:
               Attr ClearRowsPre = 2
               Attr ClearRowsPost = 1
               Attr TableOfContents = 1
-              Attr Class = "Do_HVDO32,Do_7437_83"
+              Attr Class = "Do_HVDO32"
               Attr P1Parameter = "PrintObjName"
               Attr P1SizeTabs = 3
               Attr P2Parameter = "Description"
@@ -132,7 +132,7 @@ SObject wb:
               Attr ClearRowsPre = 2
               Attr ClearRowsPost = 1
               Attr TableOfContents = 1
-              Attr Class = "Ai_HVAI32,Ai_AI32uP,AAi_7436"
+              Attr Class = "Ai_HVAI32,Ai_AI32uP"
               Attr P1Parameter = "PrintObjName"
               Attr P1SizeTabs = 3
               Attr P2Parameter = "Description"
@@ -217,7 +217,7 @@ SObject wb:
               Attr ClearRowsPre = 2
               Attr ClearRowsPost = 1
               Attr TableOfContents = 1
-              Attr Class = "Ao_HVAO4,Ao_7455_30,Ao_7455_20"
+              Attr Class = "Ao_HVAO4,Ao_AO8uP"
               Attr P1Parameter = "PrintObjName"
               Attr P1SizeTabs = 3
               Attr P2Parameter = "Description"
@@ -279,7 +279,7 @@ SObject wb:
               Attr ClearRowsPre = 2
               Attr ClearRowsPost = 1
               Attr TableOfContents = 1
-              Attr Class = "Co_PI24BO"
+              Attr Class = "Co_PI24BO,Co_CO4uP"
               Attr P1Parameter = "PrintObjName"
               Attr P1SizeTabs = 3
               Attr P2Parameter = "Description"
