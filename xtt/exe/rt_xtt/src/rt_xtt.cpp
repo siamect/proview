@@ -897,6 +897,8 @@ Xtt::Xtt( int argc, char *argv[], int *return_sts) :
 
   hot_xtt = this;
 
+  errh_Init("rt_xtt", errh_eNAnix);
+
   sts = gdh_Init("rt_xtt");
   if (EVEN(sts)) {
     *return_sts = sts;
