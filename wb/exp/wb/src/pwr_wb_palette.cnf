@@ -117,7 +117,9 @@ palette NavigatorPalette
         class Do_HVDO32
         class Ai_HVAI32
         class Ai_AI32uP
+        class Ao_AO8uP
         class Ao_HVAO4
+        class Co_CO4uP
         class Co_PI24BO
         class PID_1uP
       }
