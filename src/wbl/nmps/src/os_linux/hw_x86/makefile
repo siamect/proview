@@ -49,7 +49,7 @@ $(load_dir)/nmps.dbs :
 
 $(inc_dir)/pwr_nmpsclasses.h :
 	@ echo "Generating struct files for nmps classes..."
-	@ co_convert -sv -d $(inc_dir) "$(pwre_sroot)/wbl/nmps/src/nmps_c_*.wb_load"
+	@ co_convert -s -d $(inc_dir) "$(pwre_sroot)/wbl/nmps/src/nmps_c_*.wb_load"
 
 $(doc_dir)/orm/nmps_allclasses.html :
 	@ echo "Generating html files for nmps classes..."
