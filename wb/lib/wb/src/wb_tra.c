@@ -377,18 +377,15 @@ static pwr_tStatus trace_get_attr_m4( 	gre_ctx		grectx,
 					char		*attr_str,
 					flow_eTraceType	*trace_type)
 {
-  char			hier_name[120];
+  char			aname[240];
   pwr_tStatus		sts;
   int			size;
-  pwr_tObjid		*objdidp;
-  char			*parameter;
-  ldh_sParDef 		*bodydef;
-  int 			i ,rows;
-  int			found;
-  pwr_eType		par_type;
-  pwr_tClassId		class;
-  pwr_tObjid		objdid;
-  char			parname[40];
+  pwr_sAttrRef		*objarp;
+  pwr_sAttrRef		objar;
+  char			parname[120];
+  pwr_sTypeDef 		*tdef;
+  pwr_tTid		tid;
+  char			*np, *s;
 
   /* Get the objdid stored in the parameter Object */
   switch ( node->ln.cid) {
@@ -403,53 +400,37 @@ static pwr_tStatus trace_get_attr_m4( 	gre_ctx		grectx,
   }
   sts = ldh_GetObjectPar( node->hn.wind->hw.ldhses,  
 		node->ln.oid, "DevBody", parname,
-		(char **)&objdidp, &size); 
+		(char **)&objarp, &size); 
   if ( EVEN(sts)) return sts;
 
-  /* Get the name of the node */
-  sts = ldh_ObjidToName( node->hn.wind->hw.ldhses,  
-		*objdidp, ldh_eName_Hierarchy, hier_name, sizeof( hier_name), 
-		&size);
-  if( EVEN(sts)) return sts;
+  objar = *objarp;
+  free((char *) objarp);
 
-  strcpy( object_str, hier_name);
-  objdid = *objdidp;
-  free((char *) objdidp);
-
-  /* Get the parametername stored in the parameter */
-  sts = ldh_GetObjectPar( node->hn.wind->hw.ldhses,  
-		node->ln.oid, "DevBody", "Parameter",
-		&parameter, &size); 
-  if ( EVEN(sts)) return sts;
-
-  strcpy( attr_str, parameter);
-  free((char *) parameter);
-
-  /* Get parameter type */
-  sts = ldh_GetObjectClass( node->hn.wind->hw.ldhses,
-	objdid, &class);
-  sts = ldh_GetObjectBodyDef( node->hn.wind->hw.ldhses,
-	      class, "RtBody", 1, &bodydef, &rows);
+  sts = ldh_GetAttrRefTid( node->hn.wind->hw.ldhses,
+	&objar, &tid);
   if( EVEN(sts) ) return sts;
 
-  found = 0;
-  for ( i = 0; i < rows; i++)
-  {
-    if ( strcmp(bodydef[i].ParName, attr_str) == 0) 
-    {
-      found = 1;
-      break;
-    }
-  }
+  if ( cdh_tidIsCid( tid))
+    return TRA__NOPAR;
 
-  if ( !found )
-  {
-    free((char *) bodydef);
-    return  TRA__NOPAR;
-  }
+  /* Get the name of the node */
+  sts = ldh_AttrRefToName( node->hn.wind->hw.ldhses,  
+			   &objar, cdh_mNName, &np,
+			   &size);
+  if( EVEN(sts)) return sts;
+  strcpy( aname, np);
 
-  par_type = bodydef[i].Par->Param.Info.Type;
-  switch( par_type) {
+  s = strrchr( aname, '.');
+  if ( !s) return TRA__NOPAR;
+  strcpy( attr_str, s + 1);
+  *s = 0;
+  strcpy( object_str, aname);
+
+  sts = ldh_GetObjectBody( node->hn.wind->hw.ldhses,
+			   cdh_TypeIdToObjid(tid), "SysBody", (void **)&tdef, &size);
+  if ( EVEN(sts)) return sts;
+
+  switch( tdef->Type) {
     case pwr_eType_Boolean:
       *trace_type = flow_eTraceType_Boolean;
       break;
@@ -463,6 +444,7 @@ static pwr_tStatus trace_get_attr_m4( 	gre_ctx		grectx,
       *trace_type = flow_eTraceType_Int32;
       break;
   }
+  free((char *) tdef);
   return TRA__SUCCESS;
 }
 

@@ -853,6 +853,13 @@ SObject pwrs:Class
 	  Attr FilterName = "$Object-OpenTrendFilter"
 	EndBody
       EndObject
+      Object OpenFast $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Fast"
+	  Attr MethodName = "$Object-OpenFast"
+	  Attr FilterName = "$Object-OpenFastFilter"
+	EndBody
+      EndObject
       Object HistEvent $MenuButton
 	Body SysBody
 	  Attr ButtonName = "Hist Event..."
@@ -909,6 +916,115 @@ SObject pwrs:Class
 	  Attr ButtonName = "Help Class"
 	  Attr MethodName = "$Object-HelpClass"
 	  Attr FilterName = "$Object-HelpClassFilter"
+	EndBody
+      EndObject
+      Object Photo $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Photo"
+	  Attr MethodName = "$Object-Photo"
+	  Attr FilterName = "$Object-PhotoFilter"
+	EndBody
+      EndObject
+      Object DataSheet $MenuButton
+	Body SysBody
+	  Attr ButtonName = "DataSheet"
+	  Attr MethodName = "$Object-DataSheet"
+	  Attr FilterName = "$Object-DataSheetFilter"
+	EndBody
+      EndObject
+      Object CircuitDiagram $MenuButton
+	Body SysBody
+	  Attr ButtonName = "CircuitDiagram"
+	  Attr MethodName = "$Object-CircuitDiagram"
+	  Attr FilterName = "$Object-CircuitDiagramFilter"
+	EndBody
+      EndObject
+      Object Collect $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Collect"
+	  Attr MethodName = "$Object-Collect"
+	  Attr FilterName = "$Object-CollectFilter"
+	EndBody
+      EndObject
+    EndObject
+    Object RtXttAttrObject $RtMenu
+      Object OpenGraph $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Graph"
+	  Attr MethodName = "$Object-OpenGraph"
+	  Attr FilterName = "$Object-OpenGraphFilter"
+	EndBody
+      EndObject
+      Object OpenTrend $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Trend"
+	  Attr MethodName = "$Object-OpenTrend"
+	  Attr FilterName = "$Object-OpenTrendFilter"
+	EndBody
+      EndObject
+      Object OpenFast $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Fast"
+	  Attr MethodName = "$Object-OpenFast"
+	  Attr FilterName = "$Object-OpenFastFilter"
+	EndBody
+      EndObject
+      Object HistEvent $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Hist Event..."
+	  Attr MethodName = "$Object-HistEvent"
+	  Attr FilterName = "$Object-HistEventFilter"
+	EndBody
+      EndObject
+      Object Help $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Help"
+	  Attr MethodName = "$Object-Help"
+	  Attr FilterName = "$Object-HelpFilter"
+	EndBody
+      EndObject
+      Object Separator1 $MenuSeparator
+      EndObject
+      Object OpenObject $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Open Object"
+	  Attr MethodName = "$Object-OpenObject"
+	  Attr FilterName = "$Object-OpenObjectFilter"
+	EndBody
+      EndObject
+      Object RtNavigator $MenuButton
+	Body SysBody
+	  Attr ButtonName = "RtNavigator"
+	  Attr MethodName = "$Object-RtNavigator"
+	  Attr FilterName = "$Object-RtNavigatorFilter"
+	EndBody
+      EndObject
+      Object OpenClassGraph $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Class Graph"
+	  Attr MethodName = "$Object-OpenClassGraph"
+	  Attr FilterName = "$Object-OpenClassGraphFilter"
+	EndBody
+      EndObject
+      Object OpenCrossref $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Crossreferences"
+	  Attr MethodName = "$Object-OpenCrossref"
+	  Attr FilterName = "$Object-OpenCrossrefFilter"
+	EndBody
+      EndObject
+      Object HelpClass $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Help Class"
+	  Attr MethodName = "$Object-HelpClass"
+	  Attr FilterName = "$Object-HelpClassFilter"
+	EndBody
+      EndObject
+      Object Photo $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Photo"
+	  Attr MethodName = "$Object-Photo"
+	  Attr FilterName = "$Object-PhotoFilter"
 	EndBody
       EndObject
       Object DataSheet $MenuButton

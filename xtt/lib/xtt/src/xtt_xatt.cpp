@@ -193,14 +193,10 @@ static void xatt_activate_display_object( Widget w, XAtt *xatt, XmAnyCallbackStr
 
   if ( xatt->call_method_cb)
   {
-    pwr_sAttrRef attrref;
-              
-    memset( &attrref, 0, sizeof(attrref));
-    attrref.Objid = xatt->objid;
     (xatt->call_method_cb)(xatt->parent_ctx,
 			     "$Object-RtNavigator",
 			     "$Object-RtNavigatorFilter",
-			     attrref, 
+			     xatt->objar, 
 			     xmenu_eItemType_Object,
 			     xmenu_mUtility_AttrEditor, NULL);
   }
@@ -211,14 +207,10 @@ static void xatt_activate_show_cross( Widget w, XAtt *xatt, XmAnyCallbackStruct 
 
   if ( xatt->call_method_cb)
   {
-    pwr_sAttrRef attrref;
-              
-    memset( &attrref, 0, sizeof(attrref));
-    attrref.Objid = xatt->objid;
     (xatt->call_method_cb)(xatt->parent_ctx,
 			     "$Object-OpenCrossref",
 			     "$Object-OpenCrossrefFilter",
-			     attrref, 
+			     xatt->objar,
 			     xmenu_eItemType_Object,
 			     xmenu_mUtility_AttrEditor, NULL);
   }
@@ -229,14 +221,10 @@ static void xatt_activate_open_classgraph( Widget w, XAtt *xatt, XmAnyCallbackSt
 
   if ( xatt->call_method_cb)
   {
-    pwr_sAttrRef attrref;
-              
-    memset( &attrref, 0, sizeof(attrref));
-    attrref.Objid = xatt->objid;
     (xatt->call_method_cb)(xatt->parent_ctx,
 			     "$Object-OpenClassGraph",
 			     "$Object-OpenClassGraphFilter",
-			     attrref, 
+			     xatt->objar, 
 			     xmenu_eItemType_Object,
 			     xmenu_mUtility_AttrEditor, NULL);
   }
@@ -247,14 +235,10 @@ static void xatt_activate_open_plc( Widget w, XAtt *xatt, XmAnyCallbackStruct *d
 
   if ( xatt->call_method_cb)
   {
-    pwr_sAttrRef attrref;
-              
-    memset( &attrref, 0, sizeof(attrref));
-    attrref.Objid = xatt->objid;
     (xatt->call_method_cb)(xatt->parent_ctx,
 			     "$Object-OpenTrace",
 			     "$Object-OpenTraceFilter",
-			     attrref, 
+			     xatt->objar, 
 			     xmenu_eItemType_Object,
 			     xmenu_mUtility_AttrEditor, NULL);
   }
@@ -496,11 +480,11 @@ XAtt::~XAtt()
 XAtt::XAtt( 
 	Widget 		xa_parent_wid,
 	void 		*xa_parent_ctx, 
-	pwr_tObjid 	xa_objid,
+	pwr_sAttrRef 	*xa_objar,
 	int 		xa_advanced_user,
         int             *xa_sts) :
  	parent_wid(xa_parent_wid), parent_ctx(xa_parent_ctx), 
-	objid(xa_objid), 
+	objar(*xa_objar), 
 	input_open(0), input_multiline(0), 
 	close_cb(0), redraw_cb(0), client_data(0),
 	set_focus_disabled(0)
@@ -560,7 +544,7 @@ XAtt::XAtt(
   // Motif
   MrmInitialize();
 
-  *xa_sts = gdh_ObjidToName( objid, title, sizeof(title), cdh_mNName);
+  *xa_sts = gdh_AttrrefToName( &objar, title, sizeof(title), cdh_mNName);
   if ( EVEN(*xa_sts)) return;
 
   reglist[0].value = (caddr_t) this;
@@ -605,7 +589,7 @@ XAtt::XAtt(
   XtUnmanageChild( cmd_scrolled_ca);
 
   xattnav = new XAttNav( (void *)this, xattnav_form, xattnav_eType_Object,
-		"Plant", objid, xa_advanced_user, &brow_widget, &sts);
+		"Plant", &objar, xa_advanced_user, &brow_widget, &sts);
   ((XAttNav *)xattnav)->message_cb = &xatt_message_cb;
   ((XAttNav *)xattnav)->change_value_cb = &xatt_change_value_cb;
   ((XAttNav *)xattnav)->popup_menu_cb = &xatt_popup_menu_cb;

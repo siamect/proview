@@ -1119,8 +1119,10 @@ int wb_vrepwbl::nameToAttrRef( const char *name, pwr_sAttrRef *attrref)
     delete bdrep;
   }
   else {
+    aname.setShadowed(true);
     wb_attrname an = wb_attrname( aname.name( cdh_mName_attribute));
     if ( an.evenSts()) return an.sts();
+    an.setShadowed( true);
 
     // Try rtbody
     bix = pwr_eBix_rt;
@@ -1240,7 +1242,7 @@ int wb_vrepwbl::getTemplateBody( pwr_tCid cid, pwr_eBix bix, size_t *size, void 
          
       if ( *size) {
         *body = calloc( 1, *size);
-        cdrep->templateBody( &sts, (pwr_eBix) bix, *body);
+        cdrep->templateBody( &sts, (pwr_eBix) bix, *body, pwr_cNObjid);
         if ( EVEN(sts)) {
           free( body);
           delete cdrep;

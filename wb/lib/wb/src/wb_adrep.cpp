@@ -163,6 +163,16 @@ wb_adrep *wb_adrep::prev( pwr_tStatus *sts)
     return 0;
 
   wb_adrep *adrep = new wb_adrep( (wb_orep& ) *orep);
+  if ( m_isSubattr) {
+    adrep->m_isSubattr = true;
+    adrep->m_offset = m_offset - (adrep->m_offset - m_suboffset);
+    strcpy( adrep->m_subName, m_subName);
+    char *s;
+    if ( (s = strrchr( adrep->m_subName, '.')))
+      strcpy( s+1, adrep->name());
+    else
+      strcpy( adrep->m_subName, "");
+  }
   return adrep;
 }
 

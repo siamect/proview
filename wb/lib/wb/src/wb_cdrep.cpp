@@ -204,7 +204,7 @@ pwr_tCid wb_cdrep::cid()
   return cdh_ClassObjidToId( m_orep->oid());
 }
 
-void wb_cdrep::templateBody( pwr_tStatus *sts, pwr_eBix bix, void *p)
+void wb_cdrep::templateBody( pwr_tStatus *sts, pwr_eBix bix, void *p, pwr_tOid o)
 {
   pwr_tStatus status;
 
@@ -220,6 +220,8 @@ void wb_cdrep::templateBody( pwr_tStatus *sts, pwr_eBix bix, void *p)
       localwb->readBody( &status, templ, bix, p);
       templ->unref();
       if ( ODD(status)) {
+	if ( cdh_ObjidIsNotNull(o))
+	  updateTemplate( bix, p, o, templ->oid());
 	*sts = LDH__SUCCESS;
 	return;
       }
@@ -236,6 +238,9 @@ void wb_cdrep::templateBody( pwr_tStatus *sts, pwr_eBix bix, void *p)
   if ( EVEN(*sts)) return;
 
   m_orep->vrep()->readBody( sts, orep, bix, p);
+  if ( cdh_ObjidIsNotNull(oid))
+    updateTemplate( bix, p, o, oid);
+
   // Delete
   orep->ref();
   orep->unref();
@@ -634,6 +639,106 @@ void wb_cdrep::convertObject( wb_merep *merep, void *rbody, void *dbody,
 }
 
 
+void wb_cdrep::updateTemplateSubClass( wb_adrep *subattr, char *body, pwr_tOid oid,
+				       pwr_tOid toid)
+{
+  pwr_tStatus sts;
+  pwr_tCid cid = subattr->subClass();
+  wb_cdrep *cdrep = m_orep->vrep()->merep()->cdrep( &sts, cid);
+  if ( EVEN(sts)) throw wb_error(sts);
+  wb_bdrep *bdrep = cdrep->bdrep( &sts, pwr_eBix_rt);
+  if ( EVEN(sts)) throw wb_error(sts);
+
+  int subattr_elements = subattr->isArray() ? subattr->nElement() : 1;
+
+  for ( int i = 0; i < subattr_elements; i++) {
+    wb_adrep *adrep = bdrep->adrep( &sts);
+    while ( ODD(sts)) {
+      int elements = adrep->isArray() ? adrep->nElement() : 1;
+      if ( adrep->isClass()) {
+	updateTemplateSubClass( adrep, body + i * subattr->size() / subattr_elements + adrep->offset(),
+			oid, toid);
+      }
+      else {
+	switch ( adrep->type()) {
+	case pwr_eType_Objid: {
+	  pwr_tOid *oidp = (pwr_tOid *)(body + i * subattr->size() / subattr_elements + 
+					adrep->offset());
+	  for ( int j = 0; j < elements; j++) {
+	    if ( cdh_ObjidIsEqual( *oidp, toid))
+	      *oidp = oid;
+	    oidp++;
+	  }
+	  break;
+	}
+	case pwr_eType_AttrRef: {
+	  pwr_sAttrRef *arp = (pwr_sAttrRef *)(body + i * subattr->size() / subattr_elements + 
+					adrep->offset());
+	  for ( int j = 0; j < elements; j++) {
+	    if ( cdh_ObjidIsEqual( arp->Objid, toid))
+	      arp->Objid = oid;
+	    arp++;
+	  }
+	  break;
+	}
+	default:
+	  ;
+	}
+      }
+      wb_adrep *prev = adrep;
+      adrep = adrep->next( &sts);
+      delete prev;
+    }
+  }
+  delete bdrep;
+  delete cdrep;
+}
+
+void wb_cdrep::updateTemplate( pwr_eBix bix, void *b, pwr_tOid oid, pwr_tOid toid)
+{
+  pwr_tStatus sts;
+  int i;
+  char *body = (char *)b;
+
+  wb_bdrep *bd = bdrep( &sts, bix);
+  if ( EVEN(sts)) throw wb_error(sts);
+
+  wb_adrep *adrep = bd->adrep( &sts);
+  while ( ODD(sts)) {
+    int elements = adrep->isArray() ? adrep->nElement() : 1;
+    if ( adrep->isClass()) {
+      updateTemplateSubClass( adrep, body + adrep->offset(), oid, toid);
+    }
+    else {
+      switch ( adrep->type()) {
+      case pwr_eType_Objid: {
+	pwr_tOid *oidp = (pwr_tOid *)(body + adrep->offset());
+	for ( i = 0; i < elements; i++) {
+	  if ( cdh_ObjidIsEqual( *oidp, toid))
+	    *oidp = oid;
+	  oidp++;
+	}
+	break;
+      }
+      case pwr_eType_AttrRef: {
+	pwr_sAttrRef *arp = (pwr_sAttrRef *)(body + adrep->offset());
+	for ( i = 0; i < elements; i++) {
+	  if ( cdh_ObjidIsEqual( arp->Objid, toid))
+	    arp->Objid = oid;
+	  arp++;
+	}
+	break;
+      }
+      default:
+	;
+      }
+    }
+    wb_adrep *prev = adrep;
+    adrep = adrep->next( &sts);
+    delete prev;
+  }
+  delete bd;
+}
 
 
 

@@ -29,7 +29,7 @@ typedef enum {
 
 class fastobject {
  public:
-  fastobject( pwr_tObjid fast_oid) : oid( fast_oid), p(0), trigg(0), time_buffer(0),
+  fastobject( pwr_sAttrRef *arp) : aref(*arp), p(0), trigg(0), time_buffer(0),
     old_level(0), stop_index(0), scan_div(0), scan_cnt(0)
     { memset( attributes, 0, sizeof(attributes));
     memset( buffers, 0, sizeof(buffers));}
@@ -38,7 +38,7 @@ class fastobject {
   void scan();
 
  private:
-  pwr_tObjid	oid;
+  pwr_sAttrRef	aref;
   pwr_sClass_DsFastCurve *p;
   pwr_tBoolean 	*trigg;
   void		*attributes[FAST_CURVES];

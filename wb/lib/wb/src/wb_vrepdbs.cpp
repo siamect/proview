@@ -427,6 +427,18 @@ wb_orep *wb_vrepdbs::last(pwr_tStatus *sts, const wb_orep *o)
   return new (this) wb_orepdbs(op);
 }
 
+wb_orep *wb_vrepdbs::object(pwr_tStatus *sts, pwr_tCid cid)
+{
+  *sts = LDH__SUCCESS;
+
+  dbs_sObject *op = dbs_ClassToObject(sts, dbsenv(), cid);
+  if (op == 0) {
+    *sts = LDH__NOSUCHOBJ;        
+    return 0;
+  }
+
+  return new (this) wb_orepdbs(op);
+}
 
 wb_orep *wb_vrepdbs::next(pwr_tStatus *sts, const wb_orep *o)
 {

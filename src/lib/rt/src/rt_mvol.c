@@ -175,6 +175,10 @@ mvol_AnameToAttribute (
 )
 {
   cdh_uObjid            coid;
+  gdb_sClass		*acp;
+  gdb_sObject		*abop;
+  int			offset = 0;
+  int			i;
     
   ap->cp = hash_Search(sts, gdbroot->cid_ht, &cid);
   if (ap->cp == NULL) pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
@@ -189,12 +193,43 @@ mvol_AnameToAttribute (
     ap->adef = NULL;
     ap->idx = ULONG_MAX;
   } else {
-    pn->attribute.poid = ap->bop->g.oid;
-    ap->aop = hash_Search(sts, gdbroot->family_ht, &pn->attribute);
-    if (ap->aop == NULL) pwr_Return(NULL, sts, GDH__ATTRIBUTE);
-    ap->adef = pool_Address(NULL, gdbroot->rtdb, ap->aop->u.n.body);
-    if (pn->flags.b.index)
-      ap->idx = pn->index;
+    abop = ap->bop;
+    for ( i = 0; i < pn->nAttribute; i++) {
+      pn->attribute[i].poid = abop->g.oid;
+      acp = ap->cp;
+      ap->aop = hash_Search(sts, gdbroot->family_ht, &pn->attribute[i]);
+      while ( ap->aop == NULL) {
+	/* Try superclass */
+	if ( acp->attr[0].flags.m & PWR_MASK_SUPERCLASS) {
+	  acp = hash_Search(sts, gdbroot->cid_ht, &acp->attr[0].tid);
+	  if ( acp == NULL) pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
+
+	  abop = pool_Address(sts, gdbroot->pool, acp->bor);
+	  if (abop == NULL) pwr_Return(NULL, sts, GDH__ATTRIBUTE);
+
+	  pn->attribute[i].poid = abop->g.oid;
+	  ap->aop = hash_Search(sts, gdbroot->family_ht, &pn->attribute[i]);
+	}
+	else
+	  pwr_Return(NULL, sts, GDH__ATTRIBUTE);
+      }
+      ap->adef = pool_Address(NULL, gdbroot->rtdb, ap->aop->u.n.body);
+      offset += ap->adef->Info.Offset;
+
+      if ( i != pn->nAttribute - 1) {
+	if ( pn->hasIndex[i])
+	  offset += pn->index[i] * ap->adef->Info.Size / ap->adef->Info.Elements;
+	if ( !ap->adef->Info.Flags & PWR_MASK_CLASS) pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
+
+	acp = hash_Search(sts, gdbroot->cid_ht, &ap->adef->TypeRef);
+	if (acp == NULL) pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
+
+	abop = pool_Address(sts, gdbroot->pool, acp->bor);
+	if (abop == NULL) pwr_Return(NULL, sts, GDH__ATTRIBUTE);
+      }
+    }
+    if (pn->hasIndex[pn->nAttribute-1])
+      ap->idx = pn->index[pn->nAttribute-1];
     else
       ap->idx = ULONG_MAX;
   }
@@ -209,7 +244,7 @@ mvol_AnameToAttribute (
     coid.pwr = ap->aop->g.oid;
     ap->aix   = coid.t.aix;
     ap->size  = ap->adef->Info.Size;
-    ap->offs  = ap->adef->Info.Offset;
+    ap->offs  = offset;
     ap->tid   = ap->adef->Info.Type;
     ap->elem  = ap->adef->Info.Elements;
     ap->flags.b.Indirect = ((ap->adef->Info.Flags & PWR_MASK_POINTER) != 0) &&
@@ -221,12 +256,15 @@ mvol_AnameToAttribute (
       ap->offs += ap->size * ap->idx;
       ap->elem = 1;
     }
+    ap->flags.b.ObjectAttr = (cdh_tidIsCid( ap->tid) != 0);
+    ap->flags.b.Array = (ap->idx == ULONG_MAX && ap->adef->Info.Flags & PWR_MASK_ARRAY);
   } else {
     ap->aix   = ULONG_MAX;
     ap->size  = ap->cp->size;
     ap->offs  = 0;
     ap->tid   = cdh_TypeObjidToId(ap->bop->g.oid);
     ap->elem  = 1;
+    ap->flags.b.Object = 1;
   }
 
   pwr_Return(ap, sts, GDH__SUCCESS);
@@ -244,9 +282,12 @@ mvol_ArefToAttribute (
 )
 {
   pwr_sParam		*param;
-  gdb_sClass		*cp;
+  gdb_sClass		*cp, *acp;
   cdh_uObjid            coid;
-  int			i;
+  int			i, j;
+  int			offset = 0;
+  int			idx = ULONG_MAX;
+  char			idxstr[20];
 
 
 #if 0
@@ -261,24 +302,63 @@ mvol_ArefToAttribute (
     pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
   }
 
-  for (i=0; i < cp->acount; i++) {
-    if (arp->Offset <= cp->attr[i].moffset) break;
+  acp = cp;
+  for ( acp = cp;;
+	acp = hash_Search(sts, gdbroot->cid_ht, &acp->attr[i].tid)) {
+    if ( acp == NULL)
+      pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
+    for (i=0; i < acp->acount; i++) {
+      if (arp->Offset <= (offset + acp->attr[i].moffset)) break;
+    }
+    if ( i == acp->acount)
+      pwr_Return(NULL, sts, GDH__ATTRIBUTE);
+    offset += acp->attr[i].offs;
+    if ( idx != ULONG_MAX) {
+      sprintf( idxstr, "[%d]", idx);
+      strcat( ap->name, idxstr);
+    }
+    if ( acp != cp)
+      strcat( ap->name, ".");
+    ap->aop = pool_Address(NULL, gdbroot->pool, acp->attr[i].aor);
+    strcat( ap->name, ap->aop->g.f.name.orig);
+
+    if ( !acp->attr[i].flags.b.isclass) {
+      if ( acp->attr[i].elem > 1)
+	idx = (arp->Offset - offset) / (acp->attr[i].size / acp->attr[i].elem);
+      break;
+    }
+    if ( acp->attr[i].size == arp->Size)
+      break;
+    if ( acp->attr[i].flags.b.array) {
+      for ( j = 0; j < acp->attr[i].elem; j++) {
+	if ( arp->Offset < (offset + acp->attr[i].size / acp->attr[i].elem))
+	  break;
+	offset += acp->attr[i].size / acp->attr[i].elem;
+      }
+      idx = j;
+      if ( acp->attr[i].size / acp->attr[i].elem == arp->Size) {
+	/* Check that attribute reference is on a even boundary */
+	if (arp->Offset > offset &&
+	    ((arp->Offset - offset) % (acp->attr[i].size / acp->attr[i].elem)) != 0)
+	  pwr_Return(NULL, sts, GDH__ATTRIBUTE);
+	break;
+      }
+    }
+    else
+      idx = ULONG_MAX;
+
   }
 
-  if (i >= cp->acount)
+  if (i >= acp->acount)
     pwr_Return(NULL, sts, GDH__ATTRIBUTE);
 
-  /* Check that attribute reference is on a even boundary */
 
-  param = pool_Address(NULL, gdbroot->rtdb, cp->attr[i].abr);
+  param = pool_Address(NULL, gdbroot->rtdb, acp->attr[i].abr);
 
-  if (arp->Offset > param->Info.Offset &&
-      ((arp->Offset - param->Info.Offset) % (param->Info.Size / param->Info.Elements)) != 0)
-    pwr_Return(NULL, sts, GDH__ATTRIBUTE);
 
   /* We now have a match! Figure out the details!  */
 
-  ap->aop   = pool_Address(NULL, gdbroot->pool, cp->attr[i].aor);
+  ap->aop   = pool_Address(NULL, gdbroot->pool, acp->attr[i].aor);
   ap->adef  = param;
   ap->idx   = ULONG_MAX;		/* Guess, no index.  */
 
@@ -295,7 +375,7 @@ mvol_ArefToAttribute (
 
     /* Calculate index.  */
 
-    ap->idx = (arp->Offset - param->Info.Offset) / (param->Info.Size / param->Info.Elements);
+    ap->idx = idx;
   }
 
   ap->cp    = cp;
@@ -308,7 +388,7 @@ mvol_ArefToAttribute (
     coid.pwr  = ap->aop->g.oid;
     ap->aix   = coid.t.aix;
     ap->size  = param->Info.Size;
-    ap->offs  = param->Info.Offset;
+    ap->offs  = offset;
     ap->tid   = param->Info.Type;
     ap->elem  = param->Info.Elements;
 
@@ -326,7 +406,7 @@ mvol_ArefToAttribute (
   }
 
 
-  ap->flags.b.Indirect = arp->Flags.b.Indirect;
+  ap->flags = arp->Flags;
 
 
   pwr_Return(ap, sts, GDH__SUCCESS);
@@ -350,7 +430,7 @@ mvol_AttributeToAref (
   arp->Offset  = ap->offs;
   arp->Size    = ap->size;
 
-  arp->Flags.b.Indirect = ap->flags.b.Indirect;
+  arp->Flags = ap->flags;
 
   pwr_Return(arp, sts, GDH__SUCCESS);
 }
@@ -813,7 +893,7 @@ mvol_ClassListAttrRef (
   pool_sQlink		*ol;
   gdb_sClassAttrKey 	key;
   gdb_sClassAttr 	*item = 0;
-  pwr_tUInt32		first_offset;
+  pwr_tUInt32		first_offset = 0;
   int			i;
 
   if ( iarp != NULL && cdh_ObjidIsNotNull(iarp->Objid)) {

@@ -824,7 +824,7 @@ void FlowNode::trace_scan()
   switch( trace_attr_type)
   {
     case flow_eTraceType_Boolean:
-      on = *(unsigned int *) trace_p;
+      on = *(unsigned int *) trace_p != 0;
       if ( highlight != on)
         set_highlight( on);
       if ( nc->group == flow_eNodeGroup_Trace)

@@ -1840,7 +1840,7 @@ int gcg_get_debug (
 	/* Get the name of the node */
 	sts = ldh_AttrRefToName( 
 		gcgctx.ldhses,
-		&output_attrref, ldh_eName_Hierarchy,
+		&output_attrref, cdh_mNName,
 		&name, &size);
 	if( EVEN(sts)) return sts;
 
@@ -1978,22 +1978,20 @@ static int	gcg_parname_to_pgmname(
 	int			sts, i, par_index, found;
 	char			*s;
 	char			indexstr[10];
-
+	char			superstr[80];
 
 	/* Get the parameter index */
 	sts = ldh_GetObjectBodyDef(
 			ldhses,
 			class, "RtBody", 1, 
 			&bodydef, &rows);
-	if ( EVEN(sts) )
-	{
+	if ( EVEN(sts) ) {
 	  /* This is a development node, get the development body instead */
 	  sts = ldh_GetObjectBodyDef(
 			ldhses,
 			class, "DevBody", 1, 
 			&bodydef, &rows);
-	  if ( EVEN(sts) )
-	  {
+	  if ( EVEN(sts) ) {
 	    /* This is a system node, get the system body instead */
 	    sts = ldh_GetObjectBodyDef(
 			ldhses,
@@ -2004,8 +2002,7 @@ static int	gcg_parname_to_pgmname(
 	}	
 	/* If the pgmname contains an index, store the index */
 	s = strchr( parname, '[');
-	if ( s != 0)
-	{
+	if ( s != 0) {
 	  strcpy( indexstr, s);
 	  *s = 0;
 	}	
@@ -2013,10 +2010,15 @@ static int	gcg_parname_to_pgmname(
 	  strcpy( indexstr, "");
 
 	found = 0;
-	for ( i = 0; i < rows; i++ )
-	{
-	  if ( strcmp( parname, bodydef[i].ParName) == 0)
-	  {
+	for ( i = 0; i < rows; i++ ) {
+	  s = bodydef[i].ParName;
+	  strcpy( superstr, "");
+	  while ( strncmp( s, "Super.", 6) == 0) {
+	    strcat( superstr, "Super.");
+	    s += 6;
+	  }	 
+	  
+	  if ( strcmp( parname, s) == 0) {
 	    found = 1;
 	    par_index = i;
 	    break;
@@ -2026,7 +2028,8 @@ static int	gcg_parname_to_pgmname(
 	  return GSX__REFPAR;  
 
 
-	strcpy( pgmname, bodydef[par_index].Par->Param.Info.PgmName);
+	strcpy( pgmname, superstr);
+	strcat( pgmname, bodydef[par_index].Par->Param.Info.PgmName);
 
 	free((char *) bodydef);
 
@@ -3336,7 +3339,7 @@ static int	gcg_get_outputstring_spec(
 	    return GSX__NEXTPAR;
 	  }
 	  /* Get the attribute name of last segment */
-	  sts = ldh_AttrRefToName( ldhses, attrref, ldh_eName_Aref, 
+	  sts = ldh_AttrRefToName( ldhses, attrref, ldh_eName_ArefVol, 
 				   &name_p, &size);
 	  if ( EVEN(sts)) {
 	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
@@ -3395,7 +3398,7 @@ static int	gcg_get_outputstring_spec(
 	  }
 
 	  /* Get the attribute name of last segment */
-	  sts = ldh_AttrRefToName( ldhses, attrref, ldh_eName_Aref, 
+	  sts = ldh_AttrRefToName( ldhses, attrref, ldh_eName_ArefVol, 
 				   &name_p, &size);
 	  if ( EVEN(sts)) {
 	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
@@ -3486,7 +3489,7 @@ static int	gcg_get_outputstring_spec(
 	  }
 
 	  /* Get the attribute name of last segment */
-	  sts = ldh_AttrRefToName( ldhses, attrref, ldh_eName_Aref, 
+	  sts = ldh_AttrRefToName( ldhses, attrref, ldh_eName_ArefVol, 
 				   &name_p, &size);
 	  if ( EVEN(sts)) {
 	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
@@ -7723,6 +7726,9 @@ vldh_t_node	node;
 	free((char *) refattrref_ptr);
 	free((char *) bodydef);	
 
+	sts = gcg_replace_ref( gcgctx, &refattrref, node);
+	if ( EVEN(sts)) return sts;
+
 	/* If the object is not connected the value in the
 	   parameter should be written in the macro call */
 	sts = ldh_GetObjectPar( ldhses,
@@ -10989,6 +10995,9 @@ vldh_t_node	node;
 	refattrref = *refattrref_ptr;
 	free((char *) refattrref_ptr);
 	free((char *) bodydef);	
+
+	sts = gcg_replace_ref( gcgctx, &refattrref, node);
+	if ( EVEN(sts)) return sts;
 
 	/* If the object is not connected the value in the
 	   parameter should be written in the macro call */
@@ -14685,8 +14694,11 @@ static pwr_tStatus gcg_replace_ref( gcg_ctx gcgctx, pwr_sAttrRef *attrref,
   pwr_tCid host_cid;
   int size;
 
+  if ( node->hn.wind->hw.plc->lp.cid == pwr_cClass_PlcTemplate)
+    return GSX__NEXTNODE;
+
   if ( attrref->Objid.vid == ldh_cPlcConnectVolume) {
-    pwr_tOid *connect_oid;
+    pwr_sAttrRef *connect_arp;
     pwr_tCid connect_cid;
 
     // Replace objid with objid in attribute PlcConnect in host object
@@ -14715,33 +14727,34 @@ static pwr_tStatus gcg_replace_ref( gcg_ctx gcgctx, pwr_sAttrRef *attrref,
     }
 
     sts = ldh_GetObjectPar( gcgctx->ldhses, host_oid, "RtBody", "PlcConnect",
-			    (char **)&connect_oid, &size);
+			    (char **)&connect_arp, &size);
     if ( EVEN(sts)) {
       gcg_error_msg( gcgctx, GSX__BADWIND, node);
       return GSX__NEXTNODE;
     }
 
-    if ( cdh_ObjidIsNull(*connect_oid)) {	
+    if ( cdh_ObjidIsNull(connect_arp->Objid)) {	
       gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
       return GSX__NEXTNODE;
     }
 
     // Check that the class or the connectedobject, or any superclass,
     // matches the symbolic reference
-    sts = ldh_GetObjectClass( gcgctx->ldhses, *connect_oid, &connect_cid);
+    sts = ldh_GetAttrRefTid( gcgctx->ldhses, connect_arp, &connect_cid);
     while ( ODD(sts)) {
       if ( connect_cid == attrref->Objid.oix)
 	break;
 	
-      sts = ldh_GetSuperClass( gcgctx->ldhses, &connect_cid, connect_cid);
+      sts = ldh_GetSuperClass( gcgctx->ldhses, connect_cid, &connect_cid);
     }
     if ( EVEN(sts)) {
       gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
       return GSX__NEXTNODE;
     }
 
-    attrref->Objid = *connect_oid;
-    free( (char *)connect_oid);
+    attrref->Objid = connect_arp->Objid;
+    attrref->Offset += connect_arp->Offset;
+    free( (char *)connect_arp);
     return GSX__SUCCESS;
   }
   else if ( attrref->Objid.vid == ldh_cPlcHostVolume) {

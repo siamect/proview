@@ -383,7 +383,7 @@ class Graph {
   void 		(*command_cb)( void *, char *);
   void 		(*load_graph_cb)( void *, char *);
   int 		(*get_plant_select_cb)( void *, char *attr_name);
-  void 		(*display_in_xnav_cb)( void *, pwr_tObjid);
+  void 		(*display_in_xnav_cb)( void *, pwr_sAttrRef *arp);
   void 		(*message_dialog_cb)( void *, char *);
   int 		(*is_authorized_cb)( void *, unsigned int);
   int 		(*traverse_focus_cb)( void *, void *);

@@ -223,7 +223,7 @@ static types_sEnumElement mask_Attribute_Flags[] = {
 	{ pwr_mAdef_rtdbref	, "RtdbRef"},
 	{ pwr_mAdef_private	, "Private"},
 	{ pwr_mAdef_class	, "IsClass"},
-	{ pwr_mAdef_subclass	, "SubClass"},
+	{ pwr_mAdef_superclass	, "SuperClass"},
 	{ pwr_mAdef_buffer	, "Buffer"},
 	{ pwr_mAdef_nowbl	, "NoWbl"},
 	{ pwr_mAdef_alwayswbl	, "AlwaysWbl"},

@@ -245,6 +245,7 @@ emptyTree(pwr_tStatus *sts, tree_sTable *tp)
         np = successorNode(tp, mp);
         mp = deleteNode(tp, mp);
         freeNode(tp, mp);
+	mp = np;
     }
 }
 

@@ -154,7 +154,7 @@ static int	rtt_objdid_parameter(
 static int	rtt_attribute_elements(
 			menu_ctx	parent_ctx,
 			pwr_tObjid	objid,
-			char		*attribute_str,
+			void		*arg1,
 			void		*arg2,
 			void		*arg3,
 			void		*arg4);
@@ -293,6 +293,8 @@ int	rtt_init_state_table()
 	state_table[5][126] = RTT_TERM + RTT_K_NEXTPAGE;
 	state_table[6][56] = 7;
 	state_table[6][57] = 8;
+	state_table[6][67] = RTT_TERM + RTT_K_SHIFT_ARROW_RIGHT;
+	state_table[6][68] = RTT_TERM + RTT_K_SHIFT_ARROW_LEFT;
 	state_table[7][126] = RTT_TERM + RTT_K_HELP;
 	state_table[8][126] = RTT_TERM + RTT_K_COMMAND;
 	return RTT__SUCCESS;
@@ -1109,6 +1111,7 @@ int	rtt_get_input( 	char		*chn,
 	    }
 	  }	   
  
+
 	  state = RTT_TERM;
 	  while ( state > 0 )
 	  {
@@ -1594,6 +1597,10 @@ int	rtt_get_input_string( 	char		*chn,
 	  if ((terminator == RTT_K_ARROW_LEFT) && ((option & RTT_OPT_NOEDIT) != 0))
 	    break;
 	  if ((terminator == RTT_K_ARROW_RIGHT) && ((option & RTT_OPT_NOEDIT) != 0))
+	    break;
+	  if ((terminator == RTT_K_SHIFT_ARROW_LEFT) && ((option & RTT_OPT_NOEDIT) != 0))
+	    break;
+	  if ((terminator == RTT_K_SHIFT_ARROW_RIGHT) && ((option & RTT_OPT_NOEDIT) != 0))
 	    break;
 	  if ((terminator == RTT_K_DELETE) && ((option & RTT_OPT_NOEDIT) != 0))
 	    break;
@@ -2946,6 +2953,7 @@ int	rtt_menu_new(
 	      rtt_get_next_item_down( ctx);
 	      rtt_menu_select( ctx);
 	      break;
+#if 0
 	    case RTT_K_ARROW_LEFT:
 	      rtt_menu_unselect( ctx);
 	      rtt_get_next_item_left( ctx);
@@ -2956,6 +2964,7 @@ int	rtt_menu_new(
 	      rtt_get_next_item_right( ctx);
 	      rtt_menu_select( ctx);
 	      break;
+#endif
 	    case RTT_K_NEXTPAGE:
 	      /* Next page */
 	      sts = rtt_get_next_page( ctx);	
@@ -2975,6 +2984,7 @@ int	rtt_menu_new(
 	      }
 	      break;
 	    case RTT_K_RETURN:
+	    case RTT_K_ARROW_RIGHT:
 	      if ( (menu_ptr + ctx->current_item)->func != NULL)
 	      {
 	        sts = ((menu_ptr + ctx->current_item)->func) ( ctx,
@@ -3017,6 +3027,7 @@ int	rtt_menu_new(
 	      else 
 	        rtt_message('E', "Function not defined");
 	      break;
+	    case RTT_K_SHIFT_ARROW_RIGHT:
 	    case RTT_K_PF1:
 	      if ( (menu_ptr + ctx->current_item)->func2 != NULL)
 	      {
@@ -3100,6 +3111,8 @@ int	rtt_menu_new(
 	    case RTT_K_PF3:
 	      rtt_message('E', "Function not defined");
 	      break;
+	    case RTT_K_ARROW_LEFT:
+	    case RTT_K_SHIFT_ARROW_LEFT:
 	    case RTT_K_PF4:
 	      if ( ctx->parent_ctx != 0)
 	      {	
@@ -3353,6 +3366,7 @@ int	rtt_menu_upd_new(
 	      rtt_get_next_item_down( ctx);
 	      rtt_menu_select( ctx);
 	      break;
+#if 0
 	    case RTT_K_ARROW_LEFT:
 	      rtt_menu_unselect( ctx);
 	      rtt_get_next_item_left( ctx);
@@ -3363,6 +3377,7 @@ int	rtt_menu_upd_new(
 	      rtt_get_next_item_right( ctx);
 	      rtt_menu_select( ctx);
 	      break;
+#endif
 	    case RTT_K_NEXTPAGE:
 	      /* Next page */
 	      sts = rtt_get_next_page( ctx);	
@@ -3428,6 +3443,7 @@ int	rtt_menu_upd_new(
 	        rtt_message('E', "Function not defined");
 	      break;
 	    case RTT_K_PF1:
+	    case RTT_K_SHIFT_ARROW_RIGHT:
 	      if ( (menu_ptr + ctx->current_item)->func2 != NULL)
 	      {
 	        sts = ((menu_ptr + ctx->current_item)->func2) ( ctx,
@@ -3512,12 +3528,48 @@ int	rtt_menu_upd_new(
 	        rtt_message('E', "Function not defined");
 	      break;
 	    case RTT_K_PF3:
-	      rtt_get_value( ctx, rtt_scantime, &rtt_menu_upd_update,
-		(void *) ctx, 
-	    	"Enter value: ", 0, RTT_ROW_COMMAND);
-	      rtt_menu_upd_update( ctx);
+	    case RTT_K_ARROW_RIGHT:
+	      if ((int) (menu_ptr + ctx->current_item)->value_ptr != RTT_ERASE) {
+		rtt_get_value( ctx, rtt_scantime, &rtt_menu_upd_update,
+			       (void *) ctx, 
+			       "Enter value: ", 0, RTT_ROW_COMMAND);
+		rtt_menu_upd_update( ctx);
+	      }
+	      else if ( (menu_ptr + ctx->current_item)->func2 != NULL) {
+	        sts = ((menu_ptr + ctx->current_item)->func2) ( ctx,
+		  (menu_ptr + ctx->current_item)->argoi,
+		  (menu_ptr + ctx->current_item)->arg1,
+		  (menu_ptr + ctx->current_item)->arg2,
+		  (menu_ptr + ctx->current_item)->arg3,
+		  (menu_ptr + ctx->current_item)->arg4);
+	        if ( EVEN(sts)) return sts;
+	        if ( sts == RTT__FASTBACK) {
+	          if ( ctx->parent_ctx != 0) {	
+	            rtt_menu_delete(ctx);
+	            return RTT__FASTBACK;
+	          }
+	          else {
+	            ctx->current_page = 0;
+	            ctx->current_item = 0;
+	          }
+	        }
+	        if ( sts == RTT__BACKTOCOLLECT) {
+	          if ( ctx != rtt_collectionmenuctx) {	
+	            rtt_menu_delete(ctx);
+	            return RTT__BACKTOCOLLECT;
+	          }
+	        }
+	        if ( sts != RTT__NOPICTURE) {
+	          rtt_menu_draw( ctx);
+	          rtt_menu_select( ctx);
+	          ctx->update_init = 1;
+	          rtt_menu_upd_update( ctx);
+	        }
+	      }
 	      break;
 	    case RTT_K_PF4:
+	    case RTT_K_ARROW_LEFT:
+	    case RTT_K_SHIFT_ARROW_LEFT:
 	      if ( ctx->parent_ctx != 0)
 	      {	
 	        rtt_menu_delete(ctx);
@@ -6045,38 +6097,42 @@ static int	rtt_objdid_parameter(
 static int	rtt_attribute_elements(
 			menu_ctx	parent_ctx,
 			pwr_tObjid	objid,
-			char		*attribute_str,
+			void		*arg1,
 			void		*arg2,
 			void		*arg3,
 			void		*arg4)
 {
 	int		sts;
-	pwr_tObjid	parameter;
-	char		hiername[80];
-	char		parname[80];
+	char		*parname;
 	char		parnameindex[80];
-	char		fullname[80];
-	char		*s;
 	char		title[80];
 	rtt_t_menu_upd	*menulist = 0;
+	rtt_t_menu_upd	*menu_ptr;
 	int		i, j;
-	pwr_tClassId	class;
-	unsigned long	elements;
+	unsigned int	elements;
 	char		nr[10];
 	char 		*parameter_ptr;
 	SUBID 		subid;
-	pwr_sParInfo	parinfo;
 	char		parameter_name[120];
 	char		objname[80];
 	char		classname[80];
 	pwr_tObjid	childobjid;
-	pwr_tObjid	body;
 	int		parameter_count = 0;
-	pwr_tClassId	parameter_class;
-	int		attribute_found;
+	pwr_sAttrRef	objar;
+	pwr_sAttrRef	aref;
+	unsigned int	asize, aoffset;
+	pwr_tTypeId	atype;
+	int		aflags;
+	pwr_tCid	cid;
 
+	objar.Objid = objid;
+	objar.Body = (pwr_tCid) arg1;
+	objar.Offset = (pwr_tUInt32) arg2;
+	objar.Size = (pwr_tUInt32) arg3;
+	objar.Flags.m = (pwr_tBitMask) arg4;
+	
 	/* Get object name */
-	sts = gdh_ObjidToName ( objid, objname, sizeof(objname), cdh_mName_volumeStrict);
+	sts = gdh_AttrrefToName( &objar, objname, sizeof(objname), cdh_mName_volumeStrict);
 	if ( EVEN(sts)) return sts;
 
 	/* Create a title */
@@ -6094,118 +6150,29 @@ static int	rtt_attribute_elements(
 	strcat( title, "   ");
 	strcat( title, classname);
 
-	/* Get objid of rtbody */
-	sts = gdh_GetObjectClass ( objid, &class);
+	sts = gdh_GetAttributeCharAttrref( &objar, &atype, &asize, &aoffset, &elements);
 	if ( EVEN(sts)) return sts;
-	sts = gdh_ObjidToName ( cdh_ClassIdToObjid(class), hiername, 
-			sizeof(hiername), cdh_mName_volumeStrict);
-	if ( EVEN(sts)) return sts;
-	strcat( hiername, "-RtBody");
-	sts = gdh_NameToObjid ( hiername, &body);
-	if ( EVEN(sts)) 
-	{
-	  /* Try with sysbody */
-	  sts = gdh_ObjidToName ( cdh_ClassIdToObjid(class), hiername, 
-			sizeof(hiername), cdh_mName_volumeStrict);
-	  if ( EVEN(sts)) return sts;
-	  strcat( hiername, "-SysBody");
-	  sts = gdh_NameToObjid ( hiername, &body);
-	  if ( EVEN(sts)) 
-	  {
-	    rtt_message('E', "Unable to open object");	  
-	    return RTT__NOPICTURE;
-	  }
-	}
-
-	/* Count the parameters */
-	attribute_found = 0;
-
-	/* Get first parmeter of rtbody */
-	sts = gdh_GetChild( body, &parameter);
-	while ( ODD(sts))
-	{
-	  sts = gdh_ObjidToName ( parameter, hiername, sizeof(hiername),
-			cdh_mName_volumeStrict);
-	  if ( EVEN(sts)) return sts;
-
-	  /* Skip hierarchy */
-	  s = strrchr( hiername, '-');
-	  if ( s == 0)
-	    strcpy( parname, hiername);
-	  else
-	    strcpy( parname, s + 1);
-	
-	  if ( !strcmp( parname, attribute_str))
-	  {
-
-	    /* Get parameter info for this parameter */
-	    strcpy( fullname, hiername);
-	    sts = gdh_GetObjectInfo ( fullname, &parinfo,
-			sizeof(parinfo)); 
-	    if (EVEN(sts)) return sts;
-
-	    if ( parinfo.Flags & PWR_MASK_RTVIRTUAL)
-	    {
-	      /* This parameter does not contain any useful information, take the
-		next one */
-	      sts = gdh_GetNextSibling ( parameter, &parameter);
-	      continue;
-	    }
-
-	    sts = gdh_GetObjectClass ( parameter, &parameter_class);
-	    if ( EVEN(sts)) return sts;
-
-	    elements = 1;
-	    if ( parinfo.Flags & PWR_MASK_ARRAY )
-	      elements = parinfo.Elements;
-	    else
-	      elements = 1;
-	
-	    attribute_found = 1;
-	    break;
-	  }
-	  sts = gdh_GetNextSibling ( parameter, &parameter);
-	}
-
-	if ( !attribute_found)
-	{
-	  rtt_message('E', "Unable to find attribute");	  
-	  return RTT__NOPICTURE;
-	}
+	aflags = 0;
 
 	/* Allocate memory for menu list */
 	sts = rtt_menu_upd_list_add_malloc( &menulist, elements);
 	if ( EVEN(sts)) return sts;
 
-	/* Get the pointer to the parameter */
-	strcpy( parameter_name, objname);
-	strcat( parameter_name, ".");
-	strcat( parameter_name, parname);
 	/* Get rtdb pointer */
-	sts = gdh_RefObjectInfo ( parameter_name, (void *) &parameter_ptr, 
-		&subid, parinfo.Size);
+	sts = gdh_RefObjectInfo ( objname, (void *) &parameter_ptr, 
+		&subid, asize);
 	if ( EVEN(sts)) 
 	  parameter_ptr = 0;
-
-	/* gdh returns the pointer (not a pointer to a pointer) 
-	     remove the pointer bit in Flags */
-	if ( parinfo.Flags & PWR_MASK_POINTER )
-	  parinfo.Flags -= PWR_MASK_POINTER;
-
-	elements = 1;
-	if ( parinfo.Flags & PWR_MASK_ARRAY )
-	  elements = parinfo.Elements;
 
 	i = 0;
 
 	strcpy( title, objname);
-	strcat( title, ".");
-	strcat( title, parname);
+	parname = strchr( objname, '.');
+	if ( parname == 0) return 0;
+	parname++;
 
-	for ( j = 0; j < (int)elements; j++)
-	{
-	  if ( rtt_mode_address)
-	  {
+	for ( j = 0; j < (int)elements; j++) {
+	  if ( rtt_mode_address) {
 	    sprintf( parnameindex,"%8u    ", 
 			(unsigned int)(parameter_ptr + rtt_rtdb_offset));
 	    strcat( parnameindex, parname);
@@ -6214,24 +6181,17 @@ static int	rtt_attribute_elements(
 	    strcpy( parnameindex, parname);
 
 	  strcpy( parameter_name, objname);
-	  strcat( parameter_name, ".");
-	  strcat( parameter_name, parname);
-	  if ( elements > 1)
-	  {
+	  if ( elements > 1) {
 	    if ( parameter_ptr != 0)
 	      if ( j != 0)
-	           parameter_ptr += parinfo.Size / elements;
-	    sprintf( nr, "%d", j);
-	    strcat( parnameindex,"[");
+		parameter_ptr += asize / elements;
+	    sprintf( nr, "[%d]", j);
 	    strcat( parnameindex, nr);
-	    strcat( parnameindex,"]");
-	    strcat( parameter_name,"[");
 	    strcat( parameter_name, nr);
-	    strcat( parameter_name,"]");
 	  }
 
-	  if ( parameter_class == pwr_eClass_Input && rtt_mode_address)
-	  {
+#if 0
+	  if ( parameter_class == pwr_eClass_Input && rtt_mode_address) {
 	    /* Add the content of the pointer */
 	    sprintf( parnameindex,"%8u    ", 
 			(unsigned int)(parameter_ptr - 4 + rtt_rtdb_offset));
@@ -6245,26 +6205,56 @@ static int	rtt_attribute_elements(
 		0, objid, 0, 0, 0, 0, 
 		parameter_name, RTT_PRIV_NOOP, parameter_ptr - 4, 
 		pwr_eType_Int32, 
-		parinfo.Flags, 4, pwr_cNDlid, 0, 0, 0, 0,
+		aflags, 4, pwr_cNDlid, 0, 0, 0, 0,
 		0.0, 0.0, RTT_DATABASE_GDH, 0);
 	      if ( EVEN(sts)) return sts;
 	    i++;
 	  }
+#endif
 
 	  /* store subid only for the first element */
 	  if ( (j > 0) || (parameter_ptr == 0))
 	    subid = pwr_cNDlid;
 
+	  if ( objar.Flags.b.ObjectAttr) {
+	    sts = gdh_NameToAttrref( pwr_cNObjid, parameter_name, &aref);
+	    if ( EVEN(sts)) return sts;
 
-	  sts = rtt_menu_upd_list_add( &menulist, i, parameter_count, 
+	    sts = gdh_GetAttrRefTid( &aref, &cid);
+	    if ( EVEN(sts)) return sts;
+	    
+	    sts = gdh_ObjidToName( cdh_ClassIdToObjid( cid),
+			       classname, sizeof(classname), cdh_mName_object);
+	    if ( EVEN(sts)) return sts;
+	    strcat( parnameindex, " ");
+	    strcat( parnameindex, classname);
+	    strcat( parnameindex, " *");
+
+	    sts = rtt_menu_upd_list_add( &menulist, i, parameter_count, 
+		parnameindex, 
+		0, 
+		&rtt_object_parameters,
+		0, objid, (void *)aref.Body, (void *)aref.Offset, 
+		(void *)aref.Size, (void *)aref.Flags.m,
+		parameter_name, RTT_PRIV_NOOP, parameter_ptr, atype, 
+		aflags, asize / elements, subid, 0, 0, 0, 0,
+		0.0, 0.0, RTT_DATABASE_GDH, 0);
+	    if ( EVEN(sts)) return sts;
+
+            menu_ptr = menulist + i;
+	    menu_ptr->value_ptr = (char *) RTT_ERASE;
+	  }
+	  else {
+	    sts = rtt_menu_upd_list_add( &menulist, i, parameter_count, 
 		parnameindex, 
 		0, 
 		&rtt_objdid_parameter,
 		0, objid, 0, 0, 0, 0,
-		parameter_name, RTT_PRIV_NOOP, parameter_ptr, parinfo.Type, 
-		parinfo.Flags, parinfo.Size / elements, subid, 0, 0, 0, 0,
+		parameter_name, RTT_PRIV_NOOP, parameter_ptr, atype, 
+		aflags, asize / elements, subid, 0, 0, 0, 0,
 		0.0, 0.0, RTT_DATABASE_GDH, 0);
-	  if ( EVEN(sts)) return sts;
+	    if ( EVEN(sts)) return sts;
+	  }
 	  i++;
 	}
 
@@ -6446,11 +6436,8 @@ int	rtt_object_parameters(
 			void		*arg4)
 {
 	int		sts;
-	pwr_tObjid	parameter;
-	char		hiername[80];
-	char		parname[80];
 	char		parnameindex[80];
-	char		fullname[80];
+	char		classname[80];
 	char		*s;
 	char		title[80];
 	rtt_t_menu_upd	*menulist = 0;
@@ -6459,20 +6446,29 @@ int	rtt_object_parameters(
 	unsigned long	elements;
 	char		nr[10];
 	char 		*parameter_ptr;
-	SUBID 		subid;
-	pwr_sParInfo	parinfo;
+	pwr_tOid	childobjid;
+	pwr_tSubid	subid;
 	char		parameter_name[120];
 	char		objname[80];
-	char		classname[80];
-	pwr_tObjid	childobjid;
-	pwr_tObjid	body;
 	int		parameter_count;
-	pwr_tClassId	parameter_class;
 	int		hide_elements;
 	rtt_t_menu_upd	*menu_ptr;
+	int		rows;
+	gdh_sAttrDef	*bd;
+	int		idx;
+	pwr_sAttrRef	objar;
+	pwr_sAttrRef	aref;
+	int		flags;
+	pwr_tCid	cid;
 
+	objar.Objid = objid;
+	objar.Body = (pwr_tCid) arg1;
+	objar.Offset = (pwr_tUInt32) arg2;
+	objar.Size = (pwr_tUInt32) arg3;
+	objar.Flags.m = (pwr_tBitMask) arg4;
+	
 	/* Get object name */
-	sts = gdh_ObjidToName ( objid, objname, sizeof(objname), cdh_mName_volumeStrict);
+	sts = gdh_AttrrefToName( &objar, objname, sizeof(objname), cdh_mName_volumeStrict);
 	if ( EVEN(sts)) return sts;
 
 	/* Create a title with objname without volume and classname */
@@ -6484,91 +6480,50 @@ int	rtt_object_parameters(
 	strcpy( title, s);
 
 	/* Mark if the object has children */
-	sts = gdh_GetChild( objid, &childobjid);
-	if ( ODD(sts))
-	  strcat( title, " *");
+	if ( objar.Flags.b.Object) {
+	  sts = gdh_GetChild( objid, &childobjid);
+	  if ( ODD(sts))
+	    strcat( title, " *");
+	}
 
-	sts = rtt_objidtoclassname( objid, classname);
+	sts = gdh_GetAttrRefTid( &objar, &class);
+	if ( EVEN(sts)) return sts;
+	
+	sts = gdh_ObjidToName( cdh_ClassIdToObjid( class),
+			       classname, sizeof(classname), cdh_mName_object);
 	if ( EVEN(sts)) return sts;
 
 	strcat( title, "   ");
 	strcat( title, classname);
 
-	/* Get objid of rtbody */
-	sts = gdh_GetObjectClass ( objid, &class);
+	sts = gdh_GetObjectBodyDef( class, &bd, &rows);
 	if ( EVEN(sts)) return sts;
-	sts = gdh_ObjidToName ( cdh_ClassIdToObjid(class), hiername, 
-		sizeof(hiername), cdh_mName_volumeStrict);
-	if ( EVEN(sts)) return sts;
-	strcat( hiername, "-RtBody");
-	sts = gdh_NameToObjid ( hiername, &body);
-	if ( EVEN(sts)) 
-	{
-	  /* Try with sysbody */
-	  sts = gdh_ObjidToName ( cdh_ClassIdToObjid(class), hiername, 
-			sizeof(hiername),  cdh_mName_volumeStrict);
-	  if ( EVEN(sts)) return sts;
-	  strcat( hiername, "-SysBody");
-	  sts = gdh_NameToObjid ( hiername, &body);
-	  if ( EVEN(sts)) 
-	  {
-	    rtt_message('E', "Unable to open object");	  
-	    return RTT__NOPICTURE;
-	  }
-	}
 
 	/* Count the parameters */
 	parameter_count = 0;
 
-	/* Get first parmeter of rtbody */
-	sts = gdh_GetChild( body, &parameter);
-	while ( ODD(sts))
-	{
-	  sts = gdh_ObjidToName ( parameter, hiername, sizeof(hiername),
-			cdh_mName_volumeStrict);
-	  if ( EVEN(sts)) return sts;
-
-	  /* Skip hierarchy */
-	  s = strrchr( hiername, '-');
-	  if ( s == 0)
-	    strcpy( parname, hiername);
-	  else
-	    strcpy( parname, s + 1);
-	
-	  /* Get parameter info for this parameter */
-	  strcpy( fullname, hiername);
-	  sts = gdh_GetObjectInfo ( fullname, &parinfo, sizeof(parinfo)); 
-	  if (EVEN(sts)) return sts;
-
-	  if ( parinfo.Flags & PWR_MASK_RTVIRTUAL)
-	  {
-	    /* This parameter does not contain any useful information, take the
-		next one */
-	    sts = gdh_GetNextSibling ( parameter, &parameter);
+	for ( i = 0; i < rows; i++) {
+	  if ( bd[i].attr->Param.Info.Flags & PWR_MASK_RTVIRTUAL || 
+	       bd[i].attr->Param.Info.Flags & PWR_MASK_PRIVATE)
+	    /* This parameter does not contain any useful information */
 	    continue;
-	  }
-
-	  sts = gdh_GetObjectClass ( parameter, &parameter_class);
-	  if ( EVEN(sts)) return sts;
 
 	  elements = 1;
-	  if ( parinfo.Flags & PWR_MASK_ARRAY )
-	    elements = parinfo.Elements;
+	  if ( bd[i].attr->Param.Info.Flags & PWR_MASK_ARRAY )
+	    elements = bd[i].attr->Param.Info.Elements;
 
-	  if ( parinfo.Elements > RTT_HIDE_ELEMENTS)
+	  if ( bd[i].attr->Param.Info.Elements > RTT_HIDE_ELEMENTS ||
+	       bd[i].attr->Param.Info.Flags & PWR_MASK_CLASS)
 	    elements = 1;
 
 	  for ( j = 0; j < (int)elements; j++)
 	    parameter_count++;
 
-	  if ( parameter_class == pwr_eClass_Input && rtt_mode_address)
+	  if ( bd[i].attrClass == pwr_eClass_Input && rtt_mode_address)
 	    parameter_count++;
-
-	  sts = gdh_GetNextSibling ( parameter, &parameter);
 	}
 
-	if ( parameter_count == 0)
-	{
+	if ( parameter_count == 0) {
 	  rtt_message('E', "Unable to open object");	  
 	  return RTT__NOPICTURE;
 	}
@@ -6577,95 +6532,53 @@ int	rtt_object_parameters(
 	sts = rtt_menu_upd_list_add_malloc( &menulist, parameter_count);
 	if ( EVEN(sts)) return sts;
 
-	i = 0;
-
-	/* Get first parmeter of rtbody */
-	sts = gdh_GetChild( body, &parameter);
-	while ( ODD(sts))
-	{
-	  sts = gdh_ObjidToName ( parameter, hiername, sizeof(hiername),
-			cdh_mName_volumeStrict);
-	  if ( EVEN(sts)) return sts;
-
-	  /* Skip hierarchy */
-	  s = strrchr( hiername, '-');
-	  if ( s == 0)
-	    strcpy( parname, hiername);
-	  else
-	    strcpy( parname, s + 1);
-
-	  /* Get parameter info for this parameter */
-	  strcpy( fullname, hiername);
-	  sts = gdh_GetObjectInfo ( fullname, &parinfo, sizeof(parinfo));
-	  if (EVEN(sts)) return sts;
-	  sts = gdh_GetObjectClass ( parameter, &parameter_class);
-	  if ( EVEN(sts)) return sts;
-
-	  if ( parinfo.Flags & PWR_MASK_RTVIRTUAL || 
-	       parinfo.Flags & PWR_MASK_PRIVATE)
-	  {
-	    /* This parameter does not contain any useful information, take the
-		next one */
-	    sts = gdh_GetNextSibling ( parameter, &parameter);
+	idx = 0;
+	for ( i = 0; i < rows; i++) {
+	  if ( bd[i].attr->Param.Info.Flags & PWR_MASK_RTVIRTUAL || 
+	       bd[i].attr->Param.Info.Flags & PWR_MASK_PRIVATE)
+	    /* This parameter does not contain any useful information */
 	    continue;
-	  }
 
 	  /* Get the pointer to the parameter */
 	  strcpy( parameter_name, objname);
 	  strcat( parameter_name, ".");
-	  strcat( parameter_name, parname);
+	  strcat( parameter_name, bd[i].attrName);
 	  /* Get rtdb pointer */
 	  sts = gdh_RefObjectInfo ( parameter_name, 
 		(pwr_tAddress *) &parameter_ptr, 
-		&subid, parinfo.Size);
-/*** NYGDH
- 	  if ( sts == (GDH__NODEDOWN -1)) 
-	  {
-	    rtt_message('E', "Remote node is down");
-	    if ( menulist != 0)
-	      free( menulist);
-	    return RTT__NOPICTURE;
-	  }
-	  else ***/ 
-	  if ( EVEN(sts)) 
-	  {
+		&subid, bd[i].attr->Param.Info.Size);
+	  if ( EVEN(sts))
 	    parameter_ptr = 0;
-	  }
 
 	  /* gdh returns the pointer (not a pointer to a pointer) 
 	     remove the pointer bit in Flags */
-	  if ( parinfo.Flags & PWR_MASK_POINTER )
-	    parinfo.Flags -= PWR_MASK_POINTER;
+	  flags = bd[i].attr->Param.Info.Flags & ~PWR_MASK_POINTER;
 
 	  elements = 1;
-	  if ( parinfo.Flags & PWR_MASK_ARRAY )
-	    elements = parinfo.Elements;
+	  if ( bd[i].attr->Param.Info.Flags & PWR_MASK_ARRAY )
+	    elements = bd[i].attr->Param.Info.Elements;
 
 	  hide_elements = 0;
-	  if ( parinfo.Elements > RTT_HIDE_ELEMENTS)
-	  {
-	    elements = 1;
+	  if ( bd[i].attr->Param.Info.Elements > RTT_HIDE_ELEMENTS) {
+ 	    elements = 1;
 	    hide_elements = 1;
 	  }
 
-	  for ( j = 0; j < (int)elements; j++)
-	  {
-	    if ( rtt_mode_address)
-	    {
+	  for ( j = 0; j < (int)elements; j++) {
+	    if ( rtt_mode_address) {
 	      sprintf( parnameindex,"%8u    ", 
 			(unsigned int)(parameter_ptr + rtt_rtdb_offset));
-	      strcat( parnameindex, parname);
+	      strcat( parnameindex, bd[i].attrName);
 	    }
 	    else
-	      strcpy( parnameindex, parname);
+	      strcpy( parnameindex, bd[i].attrName);
 	    strcpy( parameter_name, objname);
 	    strcat( parameter_name, ".");
-	    strcat( parameter_name, parname);
-	    if ( elements > 1)
-	    {
+	    strcat( parameter_name, bd[i].attrName);
+	    if ( elements > 1) {
 	      if ( parameter_ptr != 0)
 	        if ( j != 0)
-	           parameter_ptr += parinfo.Size / elements;
+	          parameter_ptr += bd[i].attr->Param.Info.Size / elements;
 	      sprintf( nr, "%d", j);
 	      strcat( parnameindex,"[");
 	      strcat( parnameindex, nr);
@@ -6675,68 +6588,98 @@ int	rtt_object_parameters(
 	      strcat( parameter_name,"]");
 	    }
 
-	    if ( parameter_class == pwr_eClass_Input && rtt_mode_address)
-	    {
+	    if ( bd[i].attrClass == pwr_eClass_Input && rtt_mode_address) {
 	      /* Add the content of the pointer */
 	      sprintf( parnameindex,"%8u    ",
 			(unsigned int)(parameter_ptr - 4 + rtt_rtdb_offset));
-	      strcat( parnameindex, parname);
+	      strcat( parnameindex, bd[i].attrName);
 	      strcat( parnameindex, "P");
 
-	      sts = rtt_menu_upd_list_add( &menulist, i, parameter_count,
+	      sts = rtt_menu_upd_list_add( &menulist, idx, parameter_count,
 			parnameindex,
 			0,
 			&rtt_objdid_parameter,
 			0, objid, 0, 0, 0, 0,
 			parameter_name, RTT_PRIV_NOOP, parameter_ptr - 4, 
 			pwr_eType_Int32, 
-			parinfo.Flags, 4, pwr_cNDlid, 0, 0, 0, 0,
+			flags, 4, pwr_cNDlid, 0, 0, 0, 0,
 			0.0, 0.0, RTT_DATABASE_GDH, 0);
 	      if ( EVEN(sts)) return sts;
-	      i++;
+	      idx++;
 	    }
 
 	    /* store subid only for the first element */
 	    if ( (j > 0) || (parameter_ptr == 0))
 	      subid = pwr_cNDlid;
 
-	    if ( !hide_elements)
-	    {
-	      sts = rtt_menu_upd_list_add( &menulist, i, parameter_count, 
+	    if ( bd[i].attr->Param.Info.Flags & PWR_MASK_CLASS &&
+		 !(bd[i].attr->Param.Info.Flags & PWR_MASK_ARRAY)) {
+ 	      sts = gdh_NameToAttrref( pwr_cNObjid, parameter_name, &aref);
+	      if ( EVEN(sts)) return sts;
+
+	      sts = gdh_GetAttrRefTid( &aref, &cid);
+	      if ( EVEN(sts)) return sts;
+	    
+	      sts = gdh_ObjidToName( cdh_ClassIdToObjid( cid),
+				     classname, sizeof(classname), cdh_mName_object);
+	      if ( EVEN(sts)) return sts;
+	      strcat( parnameindex, " ");
+	      strcat( parnameindex, classname);
+	      strcat( parnameindex, " *");
+
+	      sts = rtt_menu_upd_list_add( &menulist, idx, parameter_count,
+			parnameindex,
+			0,
+			&rtt_object_parameters,
+			0, objid, (void *)aref.Body, (void *)aref.Offset, 
+			(void *)aref.Size, (void *)aref.Flags.m,
+			parameter_name, RTT_PRIV_NO, parameter_ptr - 4,
+			pwr_eType_Int32,
+			flags, 4, pwr_cNDlid, 0, 0, 0, 0,
+			0.0, 0.0, RTT_DATABASE_USER, 0);
+	      if ( EVEN(sts)) return sts;
+	      menu_ptr = menulist + idx;
+	      menu_ptr->value_ptr = (char *) RTT_ERASE;
+	    }
+	    else if ( !hide_elements) {
+	      sts = rtt_menu_upd_list_add( &menulist, idx, parameter_count, 
 		parnameindex, 
 		0, 
 		&rtt_objdid_parameter,
 		0, objid, 0, 0, 0, 0,
-		parameter_name, RTT_PRIV_NOOP, parameter_ptr, parinfo.Type, 
-		parinfo.Flags, parinfo.Size / elements, subid, 0, 0, 0, 0,
+		parameter_name, RTT_PRIV_NOOP, parameter_ptr, 
+		bd[i].attr->Param.Info.Type, 
+		flags, 
+		bd[i].attr->Param.Info.Size / elements, subid, 0, 0, 0, 0,
 		0.0, 0.0, RTT_DATABASE_GDH, 0);
 	      if ( EVEN(sts)) return sts;
  	    }
-	    else
+	    else 
 	    {
+ 	      sts = gdh_NameToAttrref( pwr_cNObjid, parameter_name, &aref);
+	      if ( EVEN(sts)) return sts;
+
 	      strcat( parnameindex, " *");
-	      sts = rtt_menu_upd_list_add( &menulist, i, parameter_count,
+	      sts = rtt_menu_upd_list_add( &menulist, idx, parameter_count,
 			parnameindex,
 			0,
 			&rtt_attribute_elements,
-			0, objid, parname, 0, 0, 0,
+			0, objid, (void *)aref.Body, (void *)aref.Offset, 
+			(void *)aref.Size, (void *)aref.Flags.m,
 			parameter_name, RTT_PRIV_NO, parameter_ptr - 4,
 			pwr_eType_Int32,
-			parinfo.Flags, 4, pwr_cNDlid, 0, 0, 0, 0,
+			flags, 4, pwr_cNDlid, 0, 0, 0, 0,
 			0.0, 0.0, RTT_DATABASE_USER, 0);
 	      if ( EVEN(sts)) return sts;
-	      menu_ptr = menulist + i;
-	      if ( (s = strrchr( menu_ptr->parameter_name, '.')))
-	      {
-	        menu_ptr->arg1 = (void *) (s + 1);
+	      menu_ptr = menulist + idx;
+	      if ( (s = strrchr( menu_ptr->parameter_name, '.'))) {
 	        menu_ptr->value_ptr = (char *) RTT_ERASE;
 	      }
 	    }
-	    i++;
-
+	    idx++;
 	  }
-	  sts = gdh_GetNextSibling ( parameter, &parameter);
 	}
+	free( (char *)bd);
 
 	if ( menulist != 0)
 	{
@@ -8785,7 +8728,8 @@ static int	rtt_menu_new_update_add(
 	unsigned long	elements;
 	char 		*parameter_ptr;
 	SUBID 		subid;
-	pwr_sParInfo	parinfo;
+	pwr_sParInfo
+	parinfo;
 	char		objname[80];
 	char		*s;
 	char		name_array[2][80];

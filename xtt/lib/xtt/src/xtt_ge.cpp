@@ -168,12 +168,12 @@ static void ge_command_cb( void *ge_ctx, char *command)
   }
 }
 
-static void ge_display_in_xnav_cb( void *ge_ctx, pwr_tObjid objid)
+static void ge_display_in_xnav_cb( void *ge_ctx, pwr_sAttrRef *arp)
 {
   ge_tCtx	gectx = (ge_tCtx)ge_ctx;
 
   if ( gectx->display_in_xnav_cb)
-    (gectx->display_in_xnav_cb)( gectx->parent_ctx, objid);
+    (gectx->display_in_xnav_cb)( gectx->parent_ctx, arp);
 }
 
 static void ge_popup_menu_cb( void *ge_ctx, pwr_sAttrRef attrref,

@@ -142,10 +142,10 @@ wb_object wb_cdef::classBody( const char *bname)
     return wb_object();
 }
 
-void wb_cdef::templateBody( pwr_tStatus *sts, pwr_eBix bix, void *p)
+void wb_cdef::templateBody( pwr_tStatus *sts, pwr_eBix bix, void *p, pwr_tOid oid)
 {
   check();
-  m_cdrep->templateBody( sts, bix, p);
+  m_cdrep->templateBody( sts, bix, p, oid);
 }
 
 size_t wb_cdef::size( pwr_eBix bix)

@@ -130,11 +130,11 @@ XCrr::~XCrr()
 XCrr::XCrr( 
 	Widget 		xa_parent_wid,
 	void 		*xa_parent_ctx, 
-	pwr_tObjid 	xa_objid,
+	pwr_sAttrRef 	*xa_objar,
 	int 		xa_advanced_user,
         int             *xa_sts) :
  	parent_wid(xa_parent_wid), parent_ctx(xa_parent_ctx), 
-	objid(xa_objid), 
+	objar(*xa_objar), 
 	input_open(0), input_multiline(0), 
 	close_cb(0), redraw_cb(0), popup_menu_cb(0), start_trace_cb(0),
 	client_data(0), set_focus_disabled(0)
@@ -173,7 +173,7 @@ XCrr::XCrr(
   // Motif
   MrmInitialize();
 
-  *xa_sts = gdh_ObjidToName( objid, title, sizeof(title), cdh_mNName);
+  *xa_sts = gdh_AttrrefToName( &objar, title, sizeof(title), cdh_mNName);
   if ( EVEN(*xa_sts)) return;
 
   reglist[0].value = (caddr_t) this;
@@ -214,7 +214,7 @@ XCrr::XCrr(
   XtManageChild( toplevel);
 
   xcrrnav = new XAttNav( (void *)this, xcrrnav_form, xattnav_eType_CrossRef,
-	        "Plant", objid, xa_advanced_user, &brow_widget, &sts);
+	        "Plant", &objar, xa_advanced_user, &brow_widget, &sts);
   ((XAttNav *)xcrrnav)->popup_menu_cb = &xcrr_popup_menu_cb;
   ((XAttNav *)xcrrnav)->start_trace_cb = &xcrr_start_trace_cb;
   ((XAttNav *)xcrrnav)->close_cb = &xcrr_close_cb;

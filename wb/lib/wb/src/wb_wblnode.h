@@ -30,7 +30,8 @@ typedef enum {
   wbl_eNodeType_AttrNode,
   wbl_eNodeType_Template,
   wbl_eNodeType_Volume,
-  wbl_eNodeType_Buffer
+  wbl_eNodeType_Buffer,
+  wbl_eNodeType_Code
 } wbl_eNodeType;
 
 typedef antlr::ASTRefCount<wb_wblnode> ref_wblnode;
@@ -42,10 +43,11 @@ typedef struct {
 
 class wbl_class {
  public:
-  wbl_class() : cid(0), cix(0), templ(0) {};
+  wbl_class() : cid(0), cix(0), templ(0), code(0) {};
     pwr_tCid cid;
     int cix;
     ref_wblnode templ;
+    ref_wblnode code;
 };
 
 class wbl_type {
@@ -209,6 +211,7 @@ public:
     bool isBodyNode() { return (node_type == wbl_eNodeType_BodyNode);}
     bool isAttrNode() { return (node_type == wbl_eNodeType_AttrNode);}
     bool isTemplate() { return (node_type == wbl_eNodeType_Template);}
+    bool isCode() { return (node_type == wbl_eNodeType_Code);}
     bool isVolume() { return (node_type == wbl_eNodeType_Volume);}
     bool isBuffer() { return (node_type == wbl_eNodeType_Buffer);}
 

@@ -62,6 +62,7 @@ public:
   pwr_tOid boid();
   pwr_tCid subClass() { return m_subClass;}
   bool isClass() const {return (m_flags & PWR_MASK_CLASS || m_flags & PWR_MASK_BUFFER);}
+  bool isSuperClass() const {return (m_flags & PWR_MASK_CLASS && m_flags & PWR_MASK_SUPERCLASS);}
   bool isArray() const {return (m_flags & PWR_MASK_ARRAY);}
   void add( wb_adrep *ad, int idx = 0);
   bool isSubattr() { return m_isSubattr;}

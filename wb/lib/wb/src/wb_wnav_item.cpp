@@ -2100,14 +2100,14 @@ int WItemAttrObject::close( double x, double y)
 {
   double	node_x, node_y;
 
-  if ( brow_IsOpen( node) & wnav_mOpen_Attributes)
-  {
-    // Attributes is open, close
+  if ( brow_IsOpen( node)) {
+    // Close
     brow_GetNodePosition( node, &node_x, &node_y);
     brow_SetNodraw( brow->ctx);
     brow_CloseNode( brow->ctx, node);
+    if ( brow_IsOpen( node) & wnav_mOpen_Attributes)
+      brow_RemoveAnnotPixmap( node, 1);
     brow_ResetOpen( node, wnav_mOpen_All);
-    brow_RemoveAnnotPixmap( node, 1);
     brow_ResetNodraw( brow->ctx);
     brow_Redraw( brow->ctx, node_y);
   }
@@ -2123,13 +2123,13 @@ int WItemAttrObject::open_attributes( double x, double y)
 
   brow_GetNodePosition( node, &node_x, &node_y);
 
-  if ( brow_IsOpen( node) & wnav_mOpen_Attributes)
-  {
-    // Attributes is open, close
+  if ( brow_IsOpen( node)) {
+    // Close
     brow_SetNodraw( brow->ctx);
     brow_CloseNode( brow->ctx, node);
-    brow_ResetOpen( node, wnav_mOpen_Attributes);
-    brow_RemoveAnnotPixmap( node, 1);
+    if ( brow_IsOpen( node) & wnav_mOpen_Attributes)
+      brow_RemoveAnnotPixmap( node, 1);
+    brow_ResetOpen( node, wnav_mOpen_All);
     brow_ResetNodraw( brow->ctx);
     brow_Redraw( brow->ctx, node_y);
   }
@@ -2302,6 +2302,71 @@ int WItemAttrObject::open_attributes( double x, double y)
     }
     brow_ResetNodraw( brow->ctx);
     brow_Redraw( brow->ctx, node_y);
+  }
+  return 1;
+}
+
+int WItemAttrObject::open_crossref( WNav *wnav, double x, double y)
+{
+  double	node_x, node_y;
+  int		crossref_exist;
+  int		sts;
+  pwr_tClassId	classid;
+  char		*aname;
+  pwr_sAttrRef  objar;
+
+  if ( cdh_ObjidIsNull( objid))
+    return 1;
+
+  brow_GetNodePosition( node, &node_x, &node_y);
+
+  if ( brow_IsOpen( node)) {
+    // Close
+    brow_SetNodraw( wnav->brow->ctx);
+    brow_CloseNode( wnav->brow->ctx, node);
+    if ( brow_IsOpen( node) & wnav_mOpen_Attributes)
+      brow_RemoveAnnotPixmap( node, 1);
+    brow_ResetOpen( node, wnav_mOpen_All);
+    brow_ResetNodraw( wnav->brow->ctx);
+    brow_Redraw( wnav->brow->ctx, node_y);
+  }
+  else {
+    // Fetch the cross reference list
+    crossref_exist = 0;
+    brow_SetNodraw( wnav->brow->ctx);
+
+    objar = aref();
+
+    sts = ldh_GetAttrRefTid( wnav->ldhses, &objar, &classid);
+    if ( EVEN(sts)) return sts;
+
+    sts = ldh_AttrRefToName( ldhses, &objar, cdh_mNName, &aname, &size);
+    if ( EVEN(sts)) return sts;
+
+    switch ( classid) {
+      case pwr_cClass_Di:
+      case pwr_cClass_Dv:
+      case pwr_cClass_Do:
+      case pwr_cClass_Po:
+      case pwr_cClass_Av:
+      case pwr_cClass_Ai:
+      case pwr_cClass_Ao:
+        sts = wnav->crr_signal( NULL, aname, node);
+        break;
+      default:
+        sts = wnav->crr_object( NULL, aname, node);
+    }
+    if ( sts == NAV__OBJECTNOTFOUND)
+      wnav->message('E', "Object not found in crossreferens file");
+    else if ( sts == NAV__NOCROSSREF)
+      wnav->message('I', "There is no crossreferences for this object");
+    else if ( ODD(sts)) {
+      brow_SetOpen( node, wnav_mOpen_Crossref);
+      crossref_exist = 1;
+    }
+    brow_ResetNodraw( wnav->brow->ctx);
+    if ( crossref_exist)
+      brow_Redraw( wnav->brow->ctx, node_y);
   }
   return 1;
 }

@@ -25,9 +25,10 @@ extern "C" {
 #define ldh_cWBVol  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 254) 
 #define ldh_cWBVolLocal  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 252) 
 #define ldh_cDirectoryVolume  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 253)
-#define ldh_cPlcConnectVolume  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 251)
+#define ldh_cPlcConnectVolume (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 251)
+
 #define ldh_cPlcHostVolume  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 250)
-#define ldh_cIoConnectVolume  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 249)
+#define ldh_cIoConnectVolume  cdh_cIoConnectVolume
 #define ldh_cVolatileVolMin  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 0)
 #define ldh_cVolatileVolMax  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 100)
 
@@ -596,6 +597,18 @@ pwr_tStatus ldh_GetClassList (
   pwr_tClassId Class,
   pwr_tObjid *objid
 );
+pwr_tStatus ldh_GetClassListAttrRef(
+  ldh_tSession session,
+  pwr_tCid cid, 
+  pwr_sAttrRef *arp
+);
+pwr_tStatus
+ldh_GetObjectClassList(
+  ldh_tSession session,
+  pwr_tCid cid, 
+  pwr_tOid oid, 
+  pwr_sAttrRef *arp
+);
 pwr_tStatus ldh_GetMenu (
   ldh_tSession Session,
   ldh_sMenuCall *CallStruct
@@ -604,6 +617,18 @@ pwr_tStatus ldh_GetNextObject (
   ldh_tSession Session,
   pwr_tObjid object,
   pwr_tObjid *new_object
+);
+pwr_tStatus ldh_GetNextAttrRef(
+  ldh_tSession session,
+  pwr_tCid cid,
+  pwr_sAttrRef *arp, 
+  pwr_sAttrRef *new_arp
+);
+pwr_tStatus ldh_GetNextObjectAttrRef(
+  ldh_tSession session,
+  pwr_tCid cid,
+  pwr_sAttrRef *arp, 
+  pwr_sAttrRef *new_arp
 );
 pwr_tStatus ldh_GetNextSibling (
   ldh_tSession Session,
@@ -691,6 +716,14 @@ pwr_tStatus ldh_GetObjectPar (
   char **buff,
   int *size
 );
+pwr_tStatus ldh_GetAttrObjectPar (
+  ldh_tSession Session,
+  pwr_sAttrRef *arp,
+  char *bodyname,
+  char *parname,
+  char **buff,
+  int *size
+);
 pwr_tStatus ldh_GetObjXRefDef (
   ldh_tSession Session,
   pwr_sAttrRef *AttrRef,
@@ -700,6 +733,11 @@ pwr_tStatus ldh_GetParent (
   ldh_tSession Session,
   pwr_tObjid object,
   pwr_tObjid *new_object
+);
+int ldh_IsAncestor(
+  ldh_tSession session,
+  pwr_tOid ancestor,
+  pwr_tOid oid
 );
 pwr_tStatus ldh_GetPreviousObject (
   ldh_tSession Session,
@@ -1067,8 +1105,8 @@ ldh_GetAttrRefInfo(
 pwr_tStatus
 ldh_GetSuperClass(
   ldh_tSession session,
-  pwr_tCid *super,
-  pwr_tCid cid
+  pwr_tCid cid,
+  pwr_tCid *super
 );
 
 #ifdef __cplusplus

@@ -61,6 +61,7 @@ public:
   //wb_object& operator=(const wb_orep&);
 
   bool isClass() const {return (m_flags & PWR_MASK_CLASS || m_flags & PWR_MASK_BUFFER);}
+  bool isSuperClass() const {return (m_flags & PWR_MASK_CLASS && m_flags & PWR_MASK_SUPERCLASS);}
   bool isArray() const {return (m_flags & PWR_MASK_ARRAY);}
     
 

@@ -1126,19 +1126,42 @@ wb_dbs::buildSectClass()
 }
 
 void
+wb_dbs::cidInsert(pwr_tStatus *sts, pwr_tCid cid, sCentry **cep)
+{
+  *cep = (sCentry*)tree_Insert(sts, m_class_th, &cid);
+  if (*sts == TREE__INSERTED) {
+    // Insert depending classes
+    pwr_tCid *lst;
+    sCentry *entry;
+    int cnt;
+    pwr_tStatus lsts;
+
+    m_v->merep()->classDependency( &lsts, cid, &lst, &cnt);
+    for ( int i = 0; i < cnt; i++)
+      cidInsert(&lsts, lst[i], &entry);
+    free(lst);
+  }
+}
+
+void
 wb_dbs::classInsert(sOentry *oep)
 {
   pwr_tStatus  sts;
   sCentry     *cep;
 
-  cep = (sCentry*)tree_Insert(&sts, m_class_th, &oep->o.cid);
+  cidInsert(&sts, oep->o.cid, &cep);
   if (sts == TREE__INSERTED) {
     /* was inserted now */
+
     cep->o_lh = cep->o_lt = oep;
   } else {
     /* was allready present */
-    cep->o_lt->o_ll = oep;
-    cep->o_lt = oep;
+    if ( !cep->o_lt)
+      cep->o_lh = cep->o_lt = oep;
+    else {
+      cep->o_lt->o_ll = oep;
+      cep->o_lt = oep;
+    }
   }    
 }
 

@@ -17,7 +17,7 @@
 #endif
 
 typedef struct utl_s_objidlist {
-	pwr_tObjid  objdid;
+	pwr_tObjid  objid;
 	struct utl_s_objidlist *next;
 	} utl_t_objidlist;
 
@@ -36,7 +36,7 @@ void utl_objidlist_free (
 );
 
 int utl_objidlist_insert (
-  pwr_tObjid  Objdid,
+  pwr_sAttrRef  *arp,
   utl_t_objidlist **list,
   int		*count,
   int		dum1,

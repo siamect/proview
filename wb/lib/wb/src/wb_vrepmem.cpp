@@ -704,13 +704,13 @@ wb_orep *wb_vrepmem::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination
   memo->rbody_size = cdef.size( pwr_eBix_rt);
   if ( memo->rbody_size) {
     memo->rbody = malloc( memo->rbody_size);
-    cdef.templateBody( sts, pwr_eBix_rt, memo->rbody);
+    cdef.templateBody( sts, pwr_eBix_rt, memo->rbody, memo->m_oid);
     if ( EVEN(*sts)) return 0;
   }
   memo->dbody_size = cdef.size( pwr_eBix_dev);
   if ( memo->dbody_size) {
     memo->dbody = malloc( memo->dbody_size);
-    cdef.templateBody( sts, pwr_eBix_dev, memo->dbody);
+    cdef.templateBody( sts, pwr_eBix_dev, memo->dbody, memo->m_oid);
     if ( EVEN(*sts)) return 0;
   }
 
@@ -786,13 +786,13 @@ bool wb_vrepmem::createVolumeObject( char *name)
   memo->rbody_size = cdef.size( pwr_eBix_rt);
   if ( memo->rbody_size) {
     memo->rbody = malloc( memo->rbody_size);
-    cdef.templateBody( &sts, pwr_eBix_rt, memo->rbody);
+    cdef.templateBody( &sts, pwr_eBix_rt, memo->rbody, memo->m_oid);
     if ( EVEN(sts)) return false;
   }
   memo->dbody_size = cdef.size( pwr_eBix_dev);
   if ( memo->dbody_size) {
     memo->dbody = malloc( memo->dbody_size);
-    cdef.templateBody( &sts, pwr_eBix_dev, memo->dbody);
+    cdef.templateBody( &sts, pwr_eBix_dev, memo->dbody, memo->m_oid);
     if ( EVEN(sts)) return false;
   }
 
@@ -1971,7 +1971,7 @@ bool wb_vrepmem::classeditorCheck( ldh_eDest dest_code, mem_object *dest, pwr_tC
       sprintf( name, "O%u", *oix);
     break;
   }
-  case pwr_cClass_plc: {
+  case pwr_cClass_PlcTemplate: {
     // Child to ClassDef, named Code
     if ( !fth || fth->m_cid != pwr_eClass_ClassDef) {
       *sts = LDH__CLASSMISPLACED;
@@ -2059,7 +2059,7 @@ bool wb_vrepmem::classeditorCheckMove( mem_object *memo, ldh_eDest dest_code,
   case pwr_eClass_ObjXRef:
   case pwr_eClass_AttrXRef:
   case pwr_eClass_Buffer:
-  case pwr_cClass_plc:
+  case pwr_cClass_PlcTemplate:
   case pwr_eClass_GraphPlcNode: {
     if ( !fth || fth != memo->fth) {
       *sts = LDH__CLASSMISPLACED;

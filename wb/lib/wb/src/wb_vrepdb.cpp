@@ -381,7 +381,7 @@ wb_orep* wb_vrepdb::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination 
       
       o.rbTime(time);
       p = calloc(1, o.rbSize());
-      cdef.templateBody(&sts, pwr_eBix_rt, p);
+      cdef.templateBody(&sts, pwr_eBix_rt, p, o.oid());
       wb_db_rbody b(m_db, o.oid(), o.rbSize(), p);
       rs = b.put(txn);
       if (rs)
@@ -394,7 +394,7 @@ wb_orep* wb_vrepdb::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination 
       
       o.dbTime(time);
       p = calloc(1, o.dbSize());
-      cdef.templateBody(&sts, pwr_eBix_dev, p);
+      cdef.templateBody(&sts, pwr_eBix_dev, p, o.oid());
       wb_db_dbody b(m_db, o.oid(), o.dbSize(), p);
       rs = b.put(txn);
       if (rs)
@@ -1027,6 +1027,31 @@ wb_orep *wb_vrepdb::last(pwr_tStatus *sts, const wb_orep *orp)
   }
 }
 
+
+wb_orep *wb_vrepdb::object(pwr_tStatus *sts, pwr_tCid cid)
+{
+  *sts = LDH__SUCCESS;
+  try {
+    wb_db_class c(m_db, m_db->m_txn, cid);
+    pwr_tOid oid;
+    oid.vid = m_vid;
+    oid.oix = 0;
+    if (c.succ(oid)) {
+      if ( c.cid() == cid) {
+	m_ohead.get(m_db->m_txn, c.oid());
+	return new (this) wb_orepdb(&m_ohead.m_o);
+      }
+    }
+    *sts =  LDH__NOSUCHOBJ;
+    return 0;
+  }
+  catch (DbException &e) {
+    *sts = LDH__NOSUCHOBJ;
+    printf("vrepdb: %s\n", e.what());
+    return 0;
+  }
+}
+
 wb_orep *wb_vrepdb::next(pwr_tStatus *sts, const wb_orep *orp)
 {
   *sts = LDH__SUCCESS;
@@ -1034,12 +1059,13 @@ wb_orep *wb_vrepdb::next(pwr_tStatus *sts, const wb_orep *orp)
     m_ohead.get(m_db->m_txn, orp->oid());
     wb_db_class c(m_db, m_db->m_txn, m_ohead.cid());
     if (c.succ(m_ohead.oid())) {
-      m_ohead.get(m_db->m_txn, c.oid());
-      return new (this) wb_orepdb(&m_ohead.m_o);
-    } else {
-      //*sts = LDH__?;
-      return 0;
+      if ( c.cid() == m_ohead.cid()) {
+	m_ohead.get(m_db->m_txn, c.oid());
+	return new (this) wb_orepdb(&m_ohead.m_o);
+      }
     }
+    *sts = LDH__NOSUCHOBJ;
+    return 0;
   }
   catch (DbException &e) {
     *sts = LDH__NOSUCHOBJ;

@@ -51,6 +51,7 @@ typedef enum {
   cdh_eVid3_qid   = 130
 } cdh_eVId3;
 
+#define cdh_cIoConnectVolume  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 249)
 
 //! Get volme identity for class identity.
 #define cdh_CidToVid(cid) ((cid) >> 16)
@@ -612,15 +613,17 @@ typedef struct {
   cdh_eId		 eId;
   cdh_uId		 uId;
   pwr_tTid		 bid;
-  pwr_tUInt32    index;
   pwr_tUInt32    offset;
   pwr_tUInt32    size;
   pwr_tUInt32    nObject;
+  pwr_tUInt32    nAttribute;
   pwr_tUInt32    nBody;
   cdh_sFamily    volume;
   cdh_sFamily    object[20];
   cdh_sFamily    body[10];
-  cdh_sFamily    attribute;
+  cdh_sFamily    attribute[20];
+  pwr_tUInt32    index[20];
+  pwr_tBoolean   hasIndex[20];
 } cdh_sParseName;
 
 /*@}*/
@@ -739,6 +742,12 @@ cdh_DlidIsNull (
 int
 cdh_DlidIsNotNull (
   pwr_tDlid DirectLink
+);
+
+int
+cdh_ArefIsEqual (
+  pwr_sAttrRef *arp1,
+  pwr_sAttrRef *arp2
 );
 
 int cdh_IsClassVolume(

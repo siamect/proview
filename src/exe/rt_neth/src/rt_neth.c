@@ -677,6 +677,7 @@ mainLoop (void)
   pwr_tStatus	sts;
   qcom_sGet 	get;
   void		*mp;
+  pwr_tBoolean 	log_alloc_fail = TRUE;
 
   errh_SetStatus( PWR__SRUN);
 
@@ -684,9 +685,12 @@ mainLoop (void)
     memset(&get, 0, sizeof(get));
     mp = net_Receive(&sts, &get, qcom_cTmoEternal);
     if (mp == NULL) {
-      errh_Error("net_Receive %m", sts);
+      if (log_alloc_fail) errh_Error("net_Receive %m", sts);
+      log_alloc_fail = FALSE;
       continue;
     }
+    
+    log_alloc_fail = TRUE;
 
     switch (get.type.b) {
     case qcom_eBtype_qcom:

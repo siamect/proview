@@ -572,6 +572,57 @@ ldh_GetNextObject(ldh_tSession session, pwr_tOid oid, pwr_tOid *new_oid)
 }
 
 pwr_tStatus
+ldh_GetClassListAttrRef(ldh_tSession session, pwr_tCid cid, 
+			pwr_sAttrRef *arp)
+{
+  wb_session *sp = (wb_session *)session;
+
+  sp->aref( cid, arp);
+  return sp->sts();
+}
+
+/* Returns the attrref of the next object of the same class.  */
+
+pwr_tStatus
+ldh_GetNextAttrRef(ldh_tSession session, pwr_tCid cid, pwr_sAttrRef *arp, 
+		   pwr_sAttrRef *new_arp)
+{
+  wb_session *sp = (wb_session *)session;
+
+  sp->nextAref( cid, arp, new_arp);
+  return sp->sts();
+}
+
+/* Returns the first attribute object of the specified class in
+   the specified object. */
+
+pwr_tStatus
+ldh_GetObjectClassList(ldh_tSession session, pwr_tCid cid, 
+			pwr_tOid oid, pwr_sAttrRef *arp)
+{
+  wb_session *sp = (wb_session *)session;
+
+  wb_object o = sp->object( oid);
+  if ( !o) return o.sts();
+
+  sp->aref( cid, o, arp);
+  return sp->sts();
+}
+
+/* Returns the attrref of the next attribute object of the same class in
+   the current object.  */
+
+pwr_tStatus
+ldh_GetNextObjectAttrRef(ldh_tSession session, pwr_tCid cid, pwr_sAttrRef *arp, 
+		   pwr_sAttrRef *new_arp)
+{
+  wb_session *sp = (wb_session *)session;
+
+  sp->nextObjectAref( cid, arp, new_arp);
+  return sp->sts();
+}
+
+pwr_tStatus
 ldh_GetMenu(ldh_tSession session, ldh_sMenuCall *ip)
 {
   wb_session *sp = (wb_session *)session;
@@ -627,10 +678,10 @@ ldh_GetObjectBodyDef(ldh_tSession session, pwr_tCid cid, char *bname,
   wb_adef asuper[20];
   int scnt = 0;
   asuper[scnt++] = b.adef();
-  if ( asuper[scnt-1] && asuper[scnt-1].isClass() && strcmp( asuper[scnt-1].name(), "Super") == 0) {
+  if ( asuper[scnt-1] && asuper[scnt-1].isSuperClass()) {
     // Count rows
     *rows = 0;
-    while ( asuper[scnt-1] && asuper[scnt-1].isClass() && strcmp( asuper[scnt-1].name(), "Super") == 0) {
+    while ( asuper[scnt-1] && asuper[scnt-1].isSuperClass()) {
       wb_cdef subc = sp->cdef( asuper[scnt-1].subClass());
       wb_bdef subb = subc.bdef(pwr_eBix_rt);
       *rows += subb.nAttribute() - 1;
@@ -643,7 +694,7 @@ ldh_GetObjectBodyDef(ldh_tSession session, pwr_tCid cid, char *bname,
     int j = 0;
     for ( int i = scnt - 1; i >= 0; i--) {
       for (wb_adef a = asuper[i]; a; a = a.next()) {
-	if ( a && a.isClass() && strcmp( a.name(), "Super") == 0)
+	if ( a && a.isSuperClass())
 	  continue;
 
 	strcpy((*bdef)[j].ParName, "");
@@ -812,6 +863,58 @@ ldh_GetObjectPar(ldh_tSession session, pwr_tOid oid, char *bname, char *aname, c
 }
 
 pwr_tStatus
+ldh_GetAttrObjectPar(ldh_tSession session, pwr_sAttrRef *arp, char *bname, char *aname, char **buff, int *size)
+{
+  wb_session *sp = (wb_session *)session;
+
+  if ( arp->Flags.b.Object) {
+    wb_attribute a = sp->attribute(arp->Objid, bname, aname);
+    if (!a) return a.sts();    
+    
+    *buff = (char *)calloc(1, a.size());
+    if (*buff == NULL) return LDH__INSVIRMEM;
+    a.value( *buff);
+    if (size != 0)
+      *size = a.size();
+
+    return a.sts();
+  }
+  else if ( arp->Flags.b.ObjectAttr) {
+    char name[240];
+
+    wb_attribute aarp = sp->attribute( arp);
+    if ( !aarp) return aarp.sts();
+
+    strcpy( name, aarp.attrName());
+    strcat( name, ".");
+    strcat( name, aname);
+
+    wb_attribute a = sp->attribute( name);
+    if (!a) return a.sts();    
+    
+    *buff = (char *)calloc(1, a.size());
+    if (*buff == NULL) return LDH__INSVIRMEM;
+    a.value( *buff);
+    if (size != 0)
+      *size = a.size();
+
+    return a.sts();
+  }
+  else {
+    wb_attribute a = sp->attribute( arp);
+    if (!a) return a.sts();    
+    
+    *buff = (char *)calloc(1, a.size());
+    if (*buff == NULL) return LDH__INSVIRMEM;
+    a.value( *buff);
+    if (size != 0)
+      *size = a.size();
+
+    return a.sts();
+  }
+}
+
+pwr_tStatus
 ldh_GetObjXRefDef(ldh_tSession session, pwr_sAttrRef *aref, pwr_sObjXRef *ObjXRef)
 {
   wb_session *sp = (wb_session *)session;
@@ -836,6 +939,20 @@ ldh_GetParent(ldh_tSession session, pwr_tOid oid, pwr_tOid *poid)
   *poid = o.oid();
     
   return o.sts();
+}
+
+int
+ldh_IsAncestor(ldh_tSession session, pwr_tOid ancestor, pwr_tOid oid)
+{
+  wb_session *sp = (wb_session *)session;
+
+  wb_object o = sp->object(oid);
+  if ( !o) return o.sts();
+
+  wb_object ao = sp->object(ancestor);
+  if ( !ao) return ao.sts();
+
+  return (int) sp->isAncestor( ao, o);
 }
 
 /* Get previous object in the list of objects of one class
@@ -1230,6 +1347,21 @@ ldh_AttrRefToName(ldh_tSession session, pwr_sAttrRef *arp, int nametype, char **
     strcpy( str, a.name());
     strcat( str, ".");
     strcat( str, n.attribute());
+    *aname = str;
+    *size = strlen(str);
+    break;
+  }
+  case 0: { // cdh_mNName
+    if ( arp->Objid.vid == sp->vid())
+      nametype = cdh_mName_path | cdh_mName_attribute;
+    else
+      nametype = cdh_mName_volume | cdh_mName_attribute;
+
+    wb_attribute a = sp->attribute(arp);
+    if (!a) return a.sts();
+    
+    wb_name n = a.longName();
+    strcpy( str, n.name( nametype));
     *aname = str;
     *size = strlen(str);
     break;
@@ -1784,7 +1916,7 @@ ldh_GetAttrRefInfo(ldh_tSession session, pwr_sAttrRef *arp, ldh_sAttrRefInfo *in
 }
 
 pwr_tStatus
-ldh_GetSuperClass( ldh_tSession session, pwr_tCid *super, pwr_tCid cid)
+ldh_GetSuperClass( ldh_tSession session, pwr_tCid cid, pwr_tCid *super)
 {
   wb_session *sp = (wb_session *)session;
 

@@ -583,7 +583,7 @@ union pwr_m_Adef {
 
     pwr_Bits( privatepointer , 1),  
     pwr_Bits( isclass   , 1),  /* class is a reserved word */
-    pwr_Bits( subclass  , 1),  
+    pwr_Bits( superclass, 1),  
     pwr_Bits( buffer    , 1),  
     pwr_Bits( nowbl     , 1),  
     pwr_Bits( alwayswbl , 1), 
@@ -610,7 +610,7 @@ union pwr_m_Adef {
 #define pwr_mAdef_rtdbref	pwr_Bit(15)		/*  32768 */
 #define pwr_mAdef_private	pwr_Bit(16)		/*  65536 Private pointer, not to be displayed */
 #define pwr_mAdef_class	        pwr_Bit(17)		
-#define pwr_mAdef_subclass	pwr_Bit(18)		
+#define pwr_mAdef_superclass	pwr_Bit(18)		
 #define pwr_mAdef_buffer	pwr_Bit(19)		
 #define pwr_mAdef_nowbl		pwr_Bit(20)		/* Don't print to wbl file */		
 #define pwr_mAdef_alwayswbl	pwr_Bit(21)		/* Always print to wbl file */		
@@ -635,7 +635,7 @@ union pwr_m_Adef {
 #define PWR_MASK_RTDBREF	pwr_mAdef_rtdbref
 #define PWR_MASK_PRIVATE	pwr_mAdef_private
 #define PWR_MASK_CLASS	        pwr_mAdef_class
-#define PWR_MASK_SUBCLASS	pwr_mAdef_subclass
+#define PWR_MASK_SUPERCLASS	pwr_mAdef_superclass
 #define PWR_MASK_BUFFER	        pwr_mAdef_buffer
 #define PWR_MASK_NOWBL        	pwr_mAdef_nowbl
 #define PWR_MASK_ALWAYSWBL      pwr_mAdef_alwayswbl

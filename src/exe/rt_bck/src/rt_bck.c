@@ -827,7 +827,7 @@ bck_file_process (
 
 struct BCK_LISTENTRY_STRUCT {
   struct BCK_LISTENTRY_STRUCT *next;  /* Next object in list */
-  pwr_tObjid bckobjid;		/* pwr_tObjid for this backup object */
+  pwr_sAttrRef bckaref;		/* pwr_sAttrRef for this backup object */
   BCK_DATAHEAD_STRUCT datahead;	/* Data header for this entry */
 };
 typedef struct BCK_LISTENTRY_STRUCT BCK_LISTENTRY;
@@ -846,8 +846,8 @@ typedef struct {
 * Type: pwr_tUInt32
 *
 * Type		Parameter	IOGF	Description
-* char		*dataname	I	Name of data to be backed up
-* pwr_tObjid		objid		I	Objid of backup object
+* pwr_sAttrRef	*dataname	I	Name of data to be backed up
+* pwr_sAttrRef	*arp		I	AttrRef of backup object
 * BCK_LISTHEAD	*blhp		I	List of objects for selected cycle
 *
 * Description:
@@ -859,15 +859,14 @@ typedef struct {
 
 pwr_tStatus
 bck_list_insert (
-  char			*dataname,	/* Name of data to be backed up */
-  pwr_tObjid		objid,		/* Objid of backup object */
+  pwr_sAttrRef	       	*dataname,	/* Name of data to be backed up */
+  pwr_sAttrRef		*arp,		/* Objid of backup object */
   BCK_LISTHEAD		*blhp
 )
 {
   pwr_tStatus		sts;
   pwr_tStatus		sts1;
   BCK_LISTENTRY		*blep;
-  char			bck_objname[256];
   pwr_tBoolean		tgtdynamic = 0;
   void			*adrs;
   pwr_sAttrRef		attrref;
@@ -875,67 +874,63 @@ bck_list_insert (
   pwr_tClassId		volclass;
 
   /* Build attrref, check location.  */
+  attrref = *dataname;
 
   LOCK;
-  sts = gdh_NameToAttrref(pwr_cNObjid, dataname, &attrref);
+  sts = gdh_AttrRefToPointer( &attrref, &adrs);
   UNLOCK;
-
   if (ODD(sts)) {
+    volobject.vid = attrref.Objid.vid;
+    volobject.oix = pwr_cNObjectIx;
     LOCK;
-    sts = gdh_ObjidToPointer(attrref.Objid, &adrs);
+    if (ODD(gdh_GetObjectClass(volobject, &volclass)))
+      tgtdynamic = volclass == pwr_eClass_DynamicVolume;
     UNLOCK;
-    if (ODD(sts)) {
-      volobject.vid = attrref.Objid.vid;
-      volobject.oix = pwr_cNObjectIx;
-      LOCK;
-      if (ODD(gdh_GetObjectClass(volobject, &volclass)))
-	tgtdynamic = volclass == pwr_eClass_DynamicVolume;
-      UNLOCK;
-      if (tgtdynamic & attrref.Flags.b.Indirect) 
-        sts = GDH__RTDBNULL;
-      else {
-	/* If dynamic, save whole body.  */
+    if (tgtdynamic & attrref.Flags.b.Indirect) 
+      sts = GDH__RTDBNULL;
+    else {
+      /* If dynamic, save whole body.  */
+      
+      if (tgtdynamic) {
+	attrref.Offset = 0;
+	attrref.Flags.b.Indirect = 0;
+	attrref.Flags.b.Object = 1;
 
-        if (tgtdynamic) {
-	  attrref.Offset = 0;
-	  attrref.Flags.b.Indirect = 0;
-
-	  LOCK;
-	  sts = gdh_GetObjectSize(attrref.Objid, (pwr_tUInt32 *)&attrref.Size);
-	  UNLOCK;
-        }
-
-	/* All info is collected, create a list entry.  */
-	blep = malloc(sizeof *blep);
-	memset(blep, 0, sizeof *blep);
-
-	blep->datahead.dynamic = tgtdynamic;
 	LOCK;
-        gdh_GetObjectClass(attrref.Objid, &blep->datahead.class);
+	sts = gdh_GetObjectSize(attrref.Objid, (pwr_tUInt32 *)&attrref.Size);
 	UNLOCK;
-	blep->datahead.valid = TRUE;
-	strcpy(blep->datahead.dataname, dataname);
-	blep->datahead.attrref = attrref;
-	blep->bckobjid = objid;
+      }
 
-	/* Insert list entry first.  */
+      /* All info is collected, create a list entry.  */
+      blep = malloc(sizeof *blep);
+      memset(blep, 0, sizeof *blep);
 
-	blep->next = blhp->first;
-	blhp->first = blep;
-	blhp->cyclehead.length += sizeof(BCK_DATAHEAD_STRUCT) + attrref.Size;
-	blhp->cyclehead.segments++;
+      blep->datahead.dynamic = tgtdynamic;
+      LOCK;
+      gdh_GetObjectClass(attrref.Objid, &blep->datahead.class);
+      UNLOCK;
+      blep->datahead.valid = TRUE;
+      gdh_AttrrefToName(&attrref, blep->datahead.dataname, 
+			sizeof(blep->datahead.dataname), cdh_mNName);
+      blep->datahead.attrref = attrref;
+      blep->bckaref = *arp;
 
-	/* Insert backup object if object to be backed up is dynamic.  */
+      /* Insert list entry first.  */
 
-	if (cdh_ObjidIsNotEqual(objid, pwr_cNObjid) && tgtdynamic) {
-	  LOCK;
-	  sts1 = gdh_ObjidToName(objid, bck_objname, sizeof bck_objname, cdh_mNName);
-	  UNLOCK;
-          sts1 = bck_list_insert(bck_objname, pwr_cNObjid, blhp);
-	}
-      } /* Found all object info */
-    } /* Target object is local to this node */
-  } /* Target object exists */
+      blep->next = blhp->first;
+      blhp->first = blep;
+      blhp->cyclehead.length += sizeof(BCK_DATAHEAD_STRUCT) + attrref.Size;
+      blhp->cyclehead.segments++;
+
+      /* Insert backup object if object to be backed up is dynamic.  */
+
+      if (cdh_ObjidIsNotEqual(attrref.Objid, pwr_cNObjid) && tgtdynamic) {
+	pwr_sAttrRef anull = pwr_cNAttrRef;
+
+	sts1 = bck_list_insert( &attrref, &anull, blhp);
+      }
+    } /* Found all object info */
+  } /* Target object is local to this node */
   return sts;
 }
 
@@ -959,7 +954,7 @@ void bck_list_build (
 		BCK_LISTHEAD **list)
 {
   pwr_tUInt32 sts;
-  pwr_tObjid objid;
+  pwr_sAttrRef aref;
   BCK_LISTHEAD *blhp;
   pwr_sClass_Backup *backup;
 
@@ -977,14 +972,14 @@ void bck_list_build (
   /* Find root of typelist, and walk thru it */
 
   LOCK;
-  sts = gdh_GetClassList(pwr_cClass_Backup, &objid);
+  sts = gdh_GetClassListAttrRef(pwr_cClass_Backup, &aref);
   UNLOCK;
   while (ODD(sts)) {
 
-    if ( objid.vid < cdh_cUserVolMin) {
+    if ( aref.Objid.vid < cdh_cUserVolMin) {
       // In template plc, continue
       LOCK;
-      sts = gdh_GetNextObject(objid, &objid);
+      sts = gdh_GetNextAttrRef(pwr_cClass_Backup, &aref, &aref);
       UNLOCK;
       continue;
     }
@@ -992,17 +987,17 @@ void bck_list_build (
     /* Find body of backup object */
 
     LOCK;
-    sts = gdh_ObjidToPointer(objid, (pwr_tAddress *)&backup);
+    sts = gdh_AttrRefToPointer( &aref, (pwr_tAddress *)&backup);
     UNLOCK;
     if (ODD(sts) && (backup != NULL)) {
 
       /* Is this the correct cycle time? */
 
       if (backup->Fast == (cycle == 0))
-        backup->Status = bck_list_insert(backup->DataName, objid, blhp);
+        backup->Status = bck_list_insert( &backup->DataName, &aref, blhp);
     } /* Backup object is local */
     LOCK;
-    sts = gdh_GetNextObject(objid, &objid);
+    sts = gdh_GetNextAttrRef( pwr_cClass_Backup, &aref, &aref);
     UNLOCK;
   } /* Loop thru the list */
 
@@ -1180,7 +1175,7 @@ void *bck_coll_process (
       /* Record status code in backup object */
 
       LOCK;
-      if (ODD(gdh_ObjidToPointer(blep->bckobjid, (pwr_tAddress *)&bckp))) {
+      if (ODD(gdh_AttrRefToPointer( &blep->bckaref, (pwr_tAddress *)&bckp))) {
 	bckp->Status = sts;
       } /* Backup object is still there */
       UNLOCK;

@@ -344,7 +344,7 @@ SObject wb:
            Attr AlphaOrder = 2
            Attr RowsToPageBreak = 5
            Attr ClearRowsPre = 1
-           Attr Class = "Di,Do,Dv,Ai,Ao,Av,Co,Po"
+           Attr Class = "Di,Do,Dv,Ai,Ao,Av,Co,Po,Ii,Io,Iv"
            Attr P1Parameter = "PrintObjName"
            Attr P1MarginString = "    "
            Attr P1SizeTabs = 5
@@ -382,7 +382,7 @@ SObject wb:
          Attr Landscape = 1
          Attr RowsToPageBreak = 5
          Attr ClearRowsPre = 1
-         Attr Class = "Di,Do,Dv,Ai,Ao,Av,Co,Po"
+         Attr Class = "Di,Do,Dv,Ai,Ao,Av,Co,Po,Ii,Io,Iv"
          Attr P1Parameter = "PrintObjName"
          Attr P1SizeTabs = 3
          Attr P1Segments = 1
@@ -853,7 +853,7 @@ SObject wb:
            Attr AlphaOrder = 2
            Attr RowsToPageBreak = 5
            Attr ClearRowsPre = 1
-           Attr Class = "Di,Do,Dv,Ai,Ao,Av,Co,Po"
+           Attr Class = "Di,Do,Dv,Ai,Ao,Av,Co,Po,Ii,Io,Iv"
            Attr P1Parameter = "PrintObjName"
            Attr P1MarginString = "    "
            Attr P1CarriageRet = 1

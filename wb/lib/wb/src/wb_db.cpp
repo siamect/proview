@@ -93,13 +93,18 @@ bool wb_db_class::succ(pwr_tOid oid)
   
   if (m_dbc)
     m_dbc->close();
-#if 0
-  m_db->m_t_class->cursor(txn, &m_dbc, 0);
+
+  m_db->m_t_class->cursor(m_db->m_txn, &m_dbc, 0);
   int ret = m_dbc->get(&m_key, &m_data, DB_SET_RANGE);
   m_dbc->close();
+  m_dbc = 0;
+  if ( ret == 0) {
+    void **data = (void **) &m_key;  // A trick to get m_key.data which has the new key
+    memcpy( &m_k, *data, sizeof(m_k));
+  }
   return ret == 0;
-#endif
-  return false;
+
+  // return false;
 }
 
 bool wb_db_class::pred(pwr_tOid oid)

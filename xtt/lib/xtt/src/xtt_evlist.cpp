@@ -716,6 +716,7 @@ void EvList::display_in_xnav()
   brow_tNode	*node_list;
   int		node_count;
   ItemAlarm	*item;
+  pwr_sAttrRef	aref;
 
   brow_GetSelectedNodes( brow->ctx, &node_list, &node_count);
   if ( !node_count)
@@ -729,8 +730,10 @@ void EvList::display_in_xnav()
     case evlist_eItemType_Alarm:
       if ( cdh_ObjidIsNull( item->object))
         return;
-      if ( display_in_xnav_cb)
-        (display_in_xnav_cb)( parent_ctx, item->object);
+      if ( display_in_xnav_cb) {
+	aref.Objid = item->object;
+        (display_in_xnav_cb)( parent_ctx, &aref);
+      }
       break;
     default:
       ;

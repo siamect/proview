@@ -154,16 +154,17 @@ typedef enum {
 	applist_eType_Attr,
 	applist_eType_Trend,
 	applist_eType_Crossref,
-	applist_eType_Hist
+	applist_eType_Hist,
+	applist_eType_Fast
 } applist_eType;
 
 class ApplListElem {
   public:
-    ApplListElem( applist_eType al_type, void *al_ctx, pwr_tObjid al_objid,
+    ApplListElem( applist_eType al_type, void *al_ctx, pwr_sAttrRef *al_arp,
 	char *al_name, char *al_instance);
     applist_eType	type;
     void		*ctx;
-    pwr_tObjid		objid;
+    pwr_sAttrRef       	aref;
     char		name[80];
     char                instance[80];
     ApplListElem 	*next;
@@ -176,9 +177,12 @@ class ApplList {
     
     ApplListElem *root;
     void insert( applist_eType type, void *ctx, 
+	pwr_sAttrRef *arp, char *name, char *instance);
+    void insert( applist_eType type, void *ctx, 
 	pwr_tObjid objid, char *name, char *instance);
     void remove( void *ctx);
     int find( applist_eType type, char *name, char *instance, void **ctx);
+    int find( applist_eType type, pwr_sAttrRef *arp, void **ctx);
     int find( applist_eType type, pwr_tObjid objid, void **ctx);
     void swap( int mode);
 };
@@ -317,6 +321,8 @@ class XNav {
     int brow_push_all();
     void set_push_command( char *cmd);
     int find( pwr_tObjid objid, void **item);
+    int find( pwr_tObjid objid, char *attr, void **item);
+    int display_object( pwr_sAttrRef *arp, int open);
     int display_object( pwr_tObjid objid, int open);
     void set_inputfocus();
     int setup();
@@ -342,8 +348,8 @@ class XNav {
 			char		*type_str, 
 			char		*file_str);
     void enable_events( XNavBrow *brow);
-    int open_object( pwr_tObjid objid);
-    int open_crossref( pwr_tObjid objid);
+    int open_object( pwr_sAttrRef *arp);
+    int open_crossref( pwr_sAttrRef *arp);
     void swap( int mode);
 
 
@@ -354,6 +360,11 @@ class XNav {
     int get_current_object(
 			pwr_tObjid	*objid,
 			char		*objectname,
+			int		size,
+			pwr_tBitMask	nametype);
+    int get_current_aref(
+			pwr_sAttrRef	*arp,
+			char		*arname,
 			int		size,
 			pwr_tBitMask	nametype);
     int	show_file(
@@ -437,7 +448,7 @@ int xnav_call_method_cb( void *xnav, char *method, char *filter,
 			 unsigned long item_type,
 			 unsigned long utility, char *arg);
 void xnav_start_trace_cb( void *xnav, pwr_tObjid objid, char *name);
-int xnav_get_trace_attr( pwr_tObjid objid, char *attr);
+int xnav_get_trace_attr( pwr_sAttrRef *arp, char *attr);
 
 #endif
 

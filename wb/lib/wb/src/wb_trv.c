@@ -873,9 +873,11 @@ static int trv_get_child_object (
 )
 {
 	int			sts;
+	pwr_sAttrRef		aref;
 
 	/* call the backcall routine */
-	sts = (backcall) (objdid, arg1, arg2, arg3, arg4, arg5);
+	aref = cdh_ObjidToAref( objdid);
+	sts = (backcall) (&aref, arg1, arg2, arg3, arg4, arg5);
 	if ( EVEN(sts)) return sts;
 
 	/* Get the first child to the object */
@@ -939,7 +941,8 @@ static int trv_get_child_object_class (
 
 	if ( obj_class == class )
 	{
-	  sts = (backcall) (objdid, arg1, arg2, arg3, arg4, arg5);
+	  pwr_sAttrRef aref = cdh_ObjidToAref( objdid);
+	  sts = (backcall) (&aref, arg1, arg2, arg3, arg4, arg5);
 	  if ( EVEN(sts)) return sts;
 	}
 
@@ -1113,7 +1116,9 @@ static int trv_get_child_object_hi_cl_na (
 
 	if ( class_ok && name_ok)
 	{
-	  sts = (backcall) (objdid, arg1, arg2, arg3, arg4, arg5);
+	  pwr_sAttrRef aref = cdh_ObjidToAref( objdid);
+
+	  sts = (backcall) (&aref, arg1, arg2, arg3, arg4, arg5);
 	  if ( EVEN(sts)) return sts;
 	}
 
@@ -1197,6 +1202,144 @@ int trv_get_objects_hcn (
 *	of a specified class under a specific object in the hierarchy.
 *
 **************************************************************************/
+
+
+
+int trv_get_attrobjects (
+  ldh_tSesContext ldhses,
+  pwr_tOid	oid,
+  pwr_tCid	*cid,
+  char		*name,
+  trv_eDepth	depth,
+  trv_tBcFunc   backcall,
+  void		*arg1,
+  void		*arg2,
+  void		*arg3,
+  void		*arg4,
+  void		*arg5
+)
+{
+  int i;
+  pwr_tStatus sts;
+  pwr_sAttrRef aref;
+  char *aname;
+  int size;
+  pwr_tObjid child;
+  pwr_tCid child_cid;
+
+  switch ( depth) {
+  case trv_eDepth_Deep:
+    if ( !cid) {
+      /* TODO */
+    }
+    else {
+      for ( i = 0; cid[i]; i++) {
+	for ( sts = ldh_GetClassListAttrRef( ldhses, cid[i], &aref);
+	      ODD(sts);
+	      sts = ldh_GetNextAttrRef( ldhses, cid[i], &aref, &aref)) {
+	  if ( cdh_ObjidIsNotNull( oid) && 
+	       ! cdh_ObjidIsEqual( oid, aref.Objid) &&
+	       ! ldh_IsAncestor( ldhses, oid, aref.Objid))
+	    continue;
+	  if ( name) {
+	    /* Get the name of the object */
+	    sts = ldh_AttrRefToName( ldhses, &aref, ldh_eName_Hierarchy,
+				     &aname, &size);
+	    if ( EVEN(sts)) return sts;
+	    
+	    if ( trv_wildcard( name, aname) == 1)
+	      continue;
+	  }
+	
+	  sts = (backcall) ( &aref, arg1, arg2, arg3, arg4, arg5);
+	  if ( EVEN(sts)) return sts;
+	}
+      }
+    }
+    break;
+  case trv_eDepth_Self:
+    if ( !cid)
+      return 0;
+    for ( i = 0; cid[i]; i++) {
+      for ( sts = ldh_GetObjectClassList( ldhses, cid[i], oid, &aref);
+	    ODD(sts);
+	    sts = ldh_GetNextObjectAttrRef( ldhses, cid[i], &aref, &aref)) {
+	if ( name) {
+	  /* Get the name of the object */
+	  sts = ldh_AttrRefToName( ldhses, &aref, ldh_eName_Hierarchy,
+				   &aname, &size);
+	  if ( EVEN(sts)) return sts;
+	  
+	  if ( trv_wildcard( name, aname) == 1)
+	    continue;
+	}
+	
+	sts = (backcall) ( &aref, arg1, arg2, arg3, arg4, arg5);
+	if ( EVEN(sts)) return sts;
+      }
+    }
+    break;
+  case trv_eDepth_Children:
+    for ( sts = ldh_GetChild( ldhses, oid, &child);
+	  ODD(sts);
+	  sts = ldh_GetNextSibling( ldhses, child, &child)) {
+
+      if ( cid) {
+	for ( i = 0; cid[i]; i++) {
+	  sts = ldh_GetObjectClass( ldhses, child, &child_cid);
+	  if ( EVEN(sts)) return sts;
+
+	  if ( child_cid == cid[i]) {
+	    aref = cdh_ObjidToAref( child);
+	    
+	    sts = (backcall) ( &aref, arg1, arg2, arg3, arg4, arg5);
+	    if ( EVEN(sts)) return sts;
+	    break;
+	  }
+	  else {
+	    for ( sts = ldh_GetObjectClassList( ldhses, cid[i], child, &aref);
+		  ODD(sts);
+		  sts = ldh_GetNextObjectAttrRef( ldhses, cid[i], &aref, &aref)) {
+	      if ( name) {
+		/* Get the name of the object */
+		sts = ldh_AttrRefToName( ldhses, &aref, ldh_eName_Hierarchy,
+					 &aname, &size);
+		if ( EVEN(sts)) return sts;
+	      
+		if ( trv_wildcard( name, aname) == 1)
+		  continue;
+	      }
+	
+	      sts = (backcall) ( &aref, arg1, arg2, arg3, arg4, arg5);
+	      if ( EVEN(sts)) return sts;
+	    }
+	  }
+	}
+      }
+      else {
+	// No class
+	aref = cdh_ObjidToAref( oid);
+
+	if ( name) {
+	  /* Get the name of the object */
+	  sts = ldh_AttrRefToName( ldhses, &aref, ldh_eName_Hierarchy,
+				   &aname, &size);
+	  if ( EVEN(sts)) return sts;
+	      
+	  if ( trv_wildcard( name, aname) == 1)
+	    continue;
+	}
+	sts = (backcall) ( &aref, arg1, arg2, arg3, arg4, arg5);
+	if ( EVEN(sts)) return sts;
+      }
+    }
+    break;
+  default:
+    ;
+  }
+
+  return GSX__SUCCESS;
+}
 
 int trv_get_objects_hier_class_name (
   ldh_tSesContext ldhses,
@@ -1351,7 +1494,9 @@ int trv_get_children_class_name (
 
 	    if ( class_ok && name_ok)
 	    {
-	      sts = (backcall) (objdid, arg1, arg2, arg3, arg4, arg5);
+	      pwr_sAttrRef aref = cdh_ObjidToAref( objdid);
+
+	      sts = (backcall) (&aref, arg1, arg2, arg3, arg4, arg5);
 	      if ( EVEN(sts)) return sts;
 	    }
 
@@ -1410,7 +1555,9 @@ static int trv_get_child_object_name (
 
 	if ( trv_wildcard( name, obj_name) == 0)
 	{
-	  sts = (backcall) (objdid, arg1, arg2, arg3, arg4, arg5);
+	  pwr_sAttrRef aref = cdh_ObjidToAref( objdid);
+
+	  sts = (backcall) (&aref, arg1, arg2, arg3, arg4, arg5);
 	  if ( EVEN(sts)) return sts;
 	}
 
@@ -1494,7 +1641,9 @@ static int trv_get_child_object_hier_name (
 
 	  if ( trv_wildcard( name, obj_name) == 0)
 	  {
-	    sts = (backcall) (objdid, arg1, arg2, arg3, arg4, arg5);
+	    pwr_sAttrRef aref = cdh_ObjidToAref( objdid);
+	    
+	    sts = (backcall) (&aref, arg1, arg2, arg3, arg4, arg5);
 	    if ( EVEN(sts)) return sts;
 	  }
  	}
@@ -1582,7 +1731,9 @@ static int trv_get_child_object_hier_class (
 
 	  if ( obj_class == class )
 	  {
-	    sts = (backcall) (objdid, arg1, arg2, arg3, arg4, arg5);
+	    pwr_sAttrRef aref = cdh_ObjidToAref( objdid);
+	  
+	    sts = (backcall) (&aref, arg1, arg2, arg3, arg4, arg5);
 	    if ( EVEN(sts)) return sts;
 	  }
  	}
@@ -1736,7 +1887,9 @@ static int trv_get_child_docobject (
 	  /* Check if this is a document object */
 	  if ( vldh_check_document( ldhses, newobjdid))
 	  {
-	    sts = (backcall) (newobjdid, arg1, arg2, arg3, arg4, arg5);
+	    pwr_sAttrRef aref = cdh_ObjidToAref( newobjdid);
+
+	    sts = (backcall) (&aref, arg1, arg2, arg3, arg4, arg5);
 	    if ( EVEN(sts)) return sts;
 	  }
 	  sts = ldh_GetNextSibling( ldhses, newobjdid, &newobjdid);
@@ -1932,6 +2085,7 @@ static int trv_get_child_object_search (
 	int			name_ok, class_ok;
 	char			obj_name[80];
 	int			i;
+	pwr_sAttrRef		aref;
 
 	/* Check class if class is specified */
 	class_ok = 1;
@@ -1968,7 +2122,8 @@ static int trv_get_child_object_search (
 
 	if ( class_ok && name_ok)
 	{
-	  sts = (backcall) (objdid, arg1, arg2, arg3, arg4, arg5);
+	  aref = cdh_ObjidToAref( objdid);
+	  sts = (backcall) (&aref, arg1, arg2, arg3, arg4, arg5);
 	  if ( EVEN(sts)) return sts;
 	}
 
@@ -2112,307 +2267,10 @@ int trv_object_search(
 }
 
 
-/*** Functions not used any more... ******************/
 
-
-/*************************************************************************
-*
-* Name:		trv_get_objects()
-*
-* Type		int
-*
-* Type		Parameter	IOGF	Description
-* ldh_tSesContext ldhses		I	ldh session.
-* int		(*backcall)()	I 	backcallroutine called for every object.
-* void		*arg1		I	argument passed to the backcall routine.
-* void		*arg2		I	argument passed to the backcall routine.
-* void		*arg3		I	argument passed to the backcall routine.
-* void		*arg4		I	argument passed to the backcall routine.
-* void		*arg5		I	argument passed to the backcall routine.
-*
-* Description:
-*	Traverses the objects in the planthierarchy and nodehierarchy.
-*	Calls a backcallroutine with the given arguments for every found 
-*	object. The objdid of the found object and arguments will be 
-*	passed to the backcallroutine. The backcallroutine should be
-*	declared as:
-*
-*	int	'backcallroutine name'( objdid, arg1, arg2, arg3, arg4, arg5)
-*	pwr_tObjid	objdid;
-*	void		*arg1;
-*	void		*arg2;
-*	void		*arg3;
-*	void		*arg4;
-*	void		*arg5;
-*	...
-**************************************************************************/
 
-#if 0
-static int trv_get_objects ( 
-  ldh_tSesContext ldhses,
-  int		(*backcall)(),
-  void		*arg1,
-  void		*arg2,
-  void		*arg3,
-  void		*arg4,
-  void		*arg5
-)
-{
-	int			sts;
-	pwr_tObjid	objdid;
-	pwr_tClassId	class;
 
-	sts = ldh_GetRootList( ldhses, &objdid);
-	while ( ODD(sts) )
-	{
-	  sts = ldh_GetObjectClass( ldhses, objdid, &class);
-	  if ( EVEN(sts)) return sts;
 
-	  /* Check that the class of the node object is correct */
-	  if ( !( class == pwr_eClass_ClassHier ||
-	          class == pwr_eClass_TypeHier))
-	  {
-	    /* Check if the children is a plc */
-	    sts = trv_get_child_object( ldhses, objdid, backcall, 
-		arg1, arg2, arg3, arg4, arg5);
-	    if ( EVEN(sts)) return sts;
-	  }
-	  sts = ldh_GetNextSibling( ldhses, objdid, &objdid);
-	}
-	return GSX__SUCCESS;
-}
-#endif
 
-
-/*************************************************************************
-*
-* Name:		trv_get_objects_name()
-*
-* Type		int
-*
-* Type		Parameter	IOGF	Description
-* ldh_tSesContext ldhses		I	ldh session.
-* unsigned long	name		I	wildcard name of the wanted objects.
-* int		(*backcall)()	I 	backcallroutine called for every object.
-* void		*arg1		I	argument passed to the backcall routine.
-* void		*arg2		I	argument passed to the backcall routine.
-* void		*arg3		I	argument passed to the backcall routine.
-* void		*arg4		I	argument passed to the backcall routine.
-* void		*arg5		I	argument passed to the backcall routine.
-*
-* Description:
-*	Traverses the objects in the plant and nodehierarchy.
-*	Calls a backcallroutine with the given arguments for every found 
-*	object of the specified class. The objdid of the found object 
-*	and arguments will be 
-*	passed to the backcallroutine. The backcallroutine should be
-*	declared as:
-*
-*	int	'backcallroutine name'( objdid, arg1, arg2, arg3, arg4, arg5)
-*	pwr_tObjid	objdid;
-*	void		*arg1;
-*	void		*arg2;
-*	void		*arg3;
-*	void		*arg4;
-*	void		*arg5;
-*	...
-*
-**************************************************************************/
 
-#if 0
-static int trv_get_objects_name (
-  ldh_tSesContext ldhses,
-  char		*name,
-  int		(*backcall)(),
-  void		*arg1,
-  void		*arg2,
-  void		*arg3,
-  void		*arg4,
-  void		*arg5
-)
-{
-	int			sts;
-	pwr_tObjid	objdid;
-	pwr_tClassId	obj_class;
 
-	sts = ldh_GetRootList( ldhses, &objdid);
-	while ( ODD(sts) )
-	{
-	  sts = ldh_GetObjectClass( ldhses, objdid, &obj_class);
-	  if ( EVEN(sts)) return sts;
-
-	  /* Check that the class of the node object is correct */
-	  if ( !( obj_class == pwr_eClass_ClassHier ||
-	          obj_class == pwr_eClass_TypeHier))
-	  {
-	    /* Check if the children is a plc */
-	    sts = trv_get_child_object_name( ldhses, name, objdid, backcall, 
-		arg1, arg2, arg3, arg4, arg5);
-	    if ( EVEN(sts)) return sts;
-	  }
-	  sts = ldh_GetNextSibling( ldhses, objdid, &objdid);
-	}
-	return GSX__SUCCESS;
-}
-#endif
-
-/*************************************************************************
-*
-* Name:		trv_get_objects_hier_name()
-*
-* Type		int
-*
-* Type		Parameter	IOGF	Description
-*
-* Description:
-* ldh_tSesContext ldhses		I	ldh session.
-* pwr_tObjid	hierobjdid	I	ancestor of wanted objects.
-* char		*name		I	wildcard name of the wanted objects.
-* int		(*backcall)()	I 	backcallroutine called for every object.
-* void		*arg1		I	argument passed to the backcall routine.
-* void		*arg2		I	argument passed to the backcall routine.
-* void		*arg3		I	argument passed to the backcall routine.
-* void		*arg4		I	argument passed to the backcall routine.
-* void		*arg5		I	argument passed to the backcall routine.
-*
-* Description:
-*	Traverses the objects in the plant and nodehierarchy.
-*	Calls a backcallroutine with the given arguments for every found 
-*	object that fits in a wildcard descriptiona and 
-*	that is found below the hierobjdid in
-*	the hierarchy. The objdid of the found object and arguments will be 
-*	passed to the backcallroutine. The backcallroutine should be
-*	declared as:
-*
-*	int	'backcallroutine name'( objdid, arg1, arg2, arg3, arg4, arg5)
-*	pwr_tObjid	objdid;
-*	void		*arg1;
-*	void		*arg2;
-*	void		*arg3;
-*	void		*arg4;
-*	void		*arg5;
-*	...
-*	Calls a backcall routine for every object in the plathierarchy
-*	of a specified class under a specific object in the hierarchy.
-*
-**************************************************************************/
-
-#if 0
-static int trv_get_objects_hier_name ( 
-  ldh_tSesContext ldhses,
-  char		*name,
-  pwr_tObjid	hierobjdid,
-  int		(*backcall)(),
-  void		*arg1,
-  void		*arg2,
-  void		*arg3,
-  void		*arg4,
-  void		*arg5
-)
-{
-	int			sts;
-	pwr_tObjid	objdid;
-	pwr_tClassId	obj_class;
-	unsigned long		hierflag = TRV_CROSS_SEARCH;
-
-	sts = ldh_GetRootList( ldhses, &objdid);
-	while ( ODD(sts) )
-	{
-	  sts = ldh_GetObjectClass( ldhses, objdid, &obj_class);
-	  if ( EVEN(sts)) return sts;
-
-	  /* Check that the class of the node object is correct */
-	  if ( !( obj_class == pwr_eClass_ClassHier ||
-	          obj_class == pwr_eClass_TypeHier))
-	  {
-	    /* Check if the children */
-	    sts = trv_get_child_object_hier_name( ldhses, hierobjdid,
-		&hierflag, name, objdid, backcall, arg1, arg2, arg3, arg4, 
-		arg5);
-	    if ( EVEN(sts)) return sts;
-	  }
-	  sts = ldh_GetNextSibling( ldhses, objdid, &objdid);
-	}
-	return GSX__SUCCESS;
-}
-#endif
-
-/*************************************************************************
-*
-* Name:		trv_get_objects_hier_class()
-*
-* Type		int
-*
-* Type		Parameter	IOGF	Description
-*
-* Description:
-* ldh_tSesContext ldhses		I	ldh session.
-* pwr_tObjid	hierobjdid	I	ancestor of wanted objects.
-* pwr_tClassId	class		I	class of the wanded objects.
-* int		(*backcall)()	I 	backcallroutine called for every object.
-* void		*arg1		I	argument passed to the backcall routine.
-* void		*arg2		I	argument passed to the backcall routine.
-* void		*arg3		I	argument passed to the backcall routine.
-* void		*arg4		I	argument passed to the backcall routine.
-* void		*arg5		I	argument passed to the backcall routine.
-*
-* Description:
-*	Traverses the objects in the plant and nodehierarchy.
-*	Calls a backcallroutine with the given arguments for every found 
-*	object of the specified class that is found below the hierobjdid in
-*	the hierarchy. The objdid of the found object and arguments will be 
-*	passed to the backcallroutine. The backcallroutine should be
-*	declared as:
-*
-*	int	'backcallroutine name'( objdid, arg1, arg2, arg3, arg4, arg5)
-*	pwr_tObjid	objdid;
-*	void		*arg1;
-*	void		*arg2;
-*	void		*arg3;
-*	void		*arg4;
-*	void		*arg5;
-*	...
-*	Calls a backcall routine for every object in the plathierarchy
-*	of a specified class under a specific object in the hierarchy.
-*
-**************************************************************************/
-
-#if 0
-static int trv_get_objects_hier_class (
-  ldh_tSesContext ldhses,
-  pwr_tClassId	class,
-  pwr_tObjid	hierobjdid,
-  int		(*backcall)(),
-  void		*arg1,
-  void		*arg2,
-  void		*arg3,
-  void		*arg4,
-  void		*arg5
-)
-{
-	int			sts;
-	pwr_tObjid	objdid;
-	pwr_tClassId	obj_class;
-	unsigned long		hierflag = TRV_CROSS_SEARCH;
-
-	sts = ldh_GetRootList( ldhses, &objdid);
-	while ( ODD(sts) )
-	{
-	  sts = ldh_GetObjectClass( ldhses, objdid, &obj_class);
-	  if ( EVEN(sts)) return sts;
-
-	  /* Check that the class of the node object is correct */
-	  if ( !( obj_class == pwr_eClass_ClassHier ||
-	          obj_class == pwr_eClass_TypeHier))
-	  {
-	    /* Check if the children */
-	    sts = trv_get_child_object_hier_class( ldhses, hierobjdid,
-		&hierflag, class, objdid, backcall, arg1, arg2, arg3, arg4, 
-		arg5);
-	    if ( EVEN(sts)) return sts;
-	  }
-	  sts = ldh_GetNextSibling( ldhses, objdid, &objdid);
-	}
-	return GSX__SUCCESS;
-}
-#endif

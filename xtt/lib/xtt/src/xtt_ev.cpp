@@ -38,8 +38,8 @@ extern "C" {
 
 static Ev *ev = NULL;
 
-static void ev_eve_display_in_xnav_cb( void *ctx, pwr_tObjid objid);
-static void ev_ala_display_in_xnav_cb( void *ctx, pwr_tObjid objid);
+static void ev_eve_display_in_xnav_cb( void *ctx, pwr_sAttrRef *arp);
+static void ev_ala_display_in_xnav_cb( void *ctx, pwr_sAttrRef *arp);
 static void ev_eve_start_trace_cb( void *ctx, pwr_tObjid objid, char *name);
 static void ev_ala_start_trace_cb( void *ctx, pwr_tObjid objid, char *name);
 static void ev_popup_menu_cb( void *ctx, pwr_sAttrRef attrref,
@@ -373,16 +373,16 @@ static void ev_popup_menu_cb( void *ctx, pwr_sAttrRef attrref,
 				   utility, arg, popup);
 }
 
-static void ev_eve_display_in_xnav_cb( void *ctx, pwr_tObjid objid)
+static void ev_eve_display_in_xnav_cb( void *ctx, pwr_sAttrRef *arp)
 {
   if ( ((Ev *)ctx)->display_in_xnav_cb)
-    ((Ev *)ctx)->display_in_xnav_cb( ((Ev *)ctx)->parent_ctx, objid);
+    ((Ev *)ctx)->display_in_xnav_cb( ((Ev *)ctx)->parent_ctx, arp);
 }
 
-static void ev_ala_display_in_xnav_cb( void *ctx, pwr_tObjid objid)
+static void ev_ala_display_in_xnav_cb( void *ctx, pwr_sAttrRef *arp)
 {
   if ( ((Ev *)ctx)->display_in_xnav_cb)
-    ((Ev *)ctx)->display_in_xnav_cb( ((Ev *)ctx)->parent_ctx, objid);
+    ((Ev *)ctx)->display_in_xnav_cb( ((Ev *)ctx)->parent_ctx, arp);
 }
 
 static void ev_eve_action_inputfocus( Widget w, XmAnyCallbackStruct *data)

@@ -30,6 +30,7 @@ extern "C" {
 #include "wb_genstruct.h"
 #include "wb_lfu.h"
 #include "wb_dir.h"
+#include "wb_trv.h"
 }
 
 #include <Xm/Xm.h>
@@ -96,8 +97,8 @@ static int	wnav_edit_func(		void		*client_data,
 					void		*client_flag);
 static int	wnav_noedit_func(	void		*client_data,
 					void		*client_flag);
-static int	wnav_show_func(	void		*client_data,
-				void		*client_flag);
+static int	wnav_show_func(		void		*client_data,
+					void		*client_flag);
 static int	wnav_compile_func(	void		*client_data,
 					void		*client_flag);
 static int	wnav_print_func(	void		*client_data,
@@ -366,8 +367,9 @@ dcli_tCmdTable	wnav_command_table[] = {
 		{
 			"DISPLAY",
 			&wnav_display_func,
-			{ "dcli_arg1", "/CLASS", "/HIERARCHY", "/ATTRIBUTE", 
-			  ""}
+			{ "dcli_arg1", "/NAME", "/CLASS", 
+			"/ROOT", "/DEPTH", "/HIERARCHY", "/ATTRIBUTE", 
+			""}
 		},
 		{
 			"GENERATE",
@@ -633,6 +635,83 @@ static int	wnav_display_func(	void		*client_data,
 	     hier_objid, classid, attributestr, wnav->editmode, 
 	     wnav->gbl.advanced_user, 1);
     
+  }
+  else if ( strncmp( arg1_str, "OBJECTS", strlen( arg1_str)) == 0) {
+    char	class_str[80];
+    char	name_str[80];
+    char	root_str[80];
+    int		sts;
+    pwr_tCid	*cid_p;
+    pwr_tCid 	cidvect[10];
+    pwr_tOid	root;
+    char	*name_p;
+    char 	depth_str[80];
+    int		depth;
+
+    // Command is "DISPLAY OBJECTS" 
+
+    sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
+    if ( EVEN(sts)) return sts;
+
+    if ( ODD( dcli_get_qualifier( "/CLASS", class_str))) {
+      char cvect[10][80];
+      int nr;
+      
+      nr = dcli_parse( class_str, ",", "", (char *)cvect, 
+		sizeof( cvect) / sizeof( cvect[0]), sizeof( cvect[0]), 0);
+      if ( nr == 0) {
+	wnav->message('E',"Syntax error");
+	return WNAV__SYNTAX;
+      }
+
+      for ( int i = 0; i < nr; i++) {
+	sts = ldh_ClassNameToId( wnav->ldhses, &cidvect[i], cvect[i]);
+	if ( EVEN(sts)) {
+	  wnav->message('E',"Class not found");
+	  return WNAV__SYNTAX;
+	}
+      }
+      cidvect[nr] = 0;
+      cid_p = cidvect;
+    }
+    else
+      cid_p = 0;
+
+    if ( ODD( dcli_get_qualifier( "/ROOT", root_str))) {
+      sts = ldh_NameToObjid( wnav->ldhses, &root, root_str);
+      if ( EVEN(sts)) {
+        wnav->message('E', "Object not found");
+        return sts;
+      }
+    }
+    else
+      root = pwr_cNObjid;
+
+    if ( ODD( dcli_get_qualifier( "/NAME", name_str)))
+      name_p = name_str;
+    else
+      name_p = 0;
+    
+    if ( ODD( dcli_get_qualifier( "/DEPTH", depth_str))) {
+      if ( cdh_NoCaseStrcmp( depth_str, "self") == 0)
+	depth = trv_eDepth_Self;
+      else if ( cdh_NoCaseStrcmp( depth_str, "children") == 0)
+	depth = trv_eDepth_Children;
+      else if ( cdh_NoCaseStrcmp( depth_str, "deep") == 0)
+	depth = trv_eDepth_Deep;
+      else {
+        wnav->message('E',"Depth should be Self, Children or Deep");
+        return WNAV__SYNTAX;
+      }
+    }
+    else
+      depth = trv_eDepth_Deep;
+
+    wnav->display_objects( cid_p, name_p, root, depth);
+    if ( EVEN(sts)) {
+      wnav->message(' ', wnav_get_message(sts));
+      return sts;
+    }
   }
   else
   {
@@ -3914,23 +3993,23 @@ static int	wnav_crossref_func(	void		*client_data,
   }
   if ( ODD( dcli_get_qualifier( "/NAME", name_str)))
   {
-    pwr_tObjid objid;
+    pwr_sAttrRef objar;
     pwr_tClassId classid;
-    char name[120];
+    char *namep;
     int size;
 
-    sts = ldh_NameToObjid( wnav->ldhses, &objid, name_str);
+    sts = ldh_NameToAttrRef( wnav->ldhses, name_str, &objar);
     if ( EVEN(sts)) {
       wnav->message(' ', wnav_get_message(sts));
       return WNAV__SUCCESS;
     }
-    sts = ldh_ObjidToName( wnav->ldhses, objid, ldh_eName_Hierarchy, 
-	name, sizeof(name), &size);
+    sts = ldh_AttrRefToName( wnav->ldhses, &objar, ldh_eName_Hierarchy, 
+	&namep, &size);
     if ( EVEN(sts)) return sts;
 
-    printf( "Crossreferences for %s\n\n", name);
+    printf( "Crossreferences for %s\n\n", namep);
 
-    sts = ldh_GetObjectClass( wnav->ldhses, objid, &classid);
+    sts = ldh_GetAttrRefTid( wnav->ldhses, &objar, &classid);
     if ( EVEN(sts)) return sts;
 
     switch ( classid) {
@@ -3949,16 +4028,14 @@ static int	wnav_crossref_func(	void		*client_data,
     if ( EVEN(sts))
       wnav->message(' ', wnav_get_message(sts));
   }
-  else
-  {
+  else {
     /* Get the selected object */
     brow_tNode	*node_list;
     int		node_count;
     WItem		*item;
 
     brow_GetSelectedNodes( wnav->brow->ctx, &node_list, &node_count);
-    if ( !node_count)
-    {
+    if ( !node_count) {
       wnav->message('E', "Enter name or select an object");
       return WNAV__SUCCESS;
     }
@@ -3968,6 +4045,9 @@ static int	wnav_crossref_func(	void		*client_data,
     {
       case wnav_eItemType_Object: 
   	sts = ((WItemBaseObject *)item)->open_crossref( wnav, 0, 0);
+        break;
+      case wnav_eItemType_AttrObject: 
+  	sts = ((WItemAttrObject *)item)->open_crossref( wnav, 0, 0);
         break;
       default:
         ;
@@ -5536,3 +5616,59 @@ static char *wnav_dialog_convert_text( char *text)
   *t = *s;
   return new_text;
 }
+
+static int wnav_display_objects_cb( pwr_sAttrRef *arp, void *a1, void *a2, 
+				    void *a3, void *a4, void *a5)
+{
+  WNav *wnav = (WNav *) a1;
+  pwr_tStatus sts;
+
+  if ( arp->Flags.b.Object)
+    new WItemObject( wnav, arp->Objid, NULL, flow_eDest_IntoLast, 0);
+  else {
+    char *namep;
+    char *s;
+    char body[20] = "RtBody";
+    int size;
+
+    sts = ldh_AttrRefToName( wnav->ldhses, arp, ldh_eName_Aref, &namep,
+			     &size);
+    if ( EVEN(sts)) return sts;
+    s = strchr( namep, '.');
+    if ( s)
+      s++;
+    else
+      s = namep;
+
+    new WItemAttrObject( wnav->brow, wnav->ldhses, arp->Objid, NULL, 
+		flow_eDest_IntoLast, s,
+		arp->Body,
+		arp->Size, false, 0,
+		arp->Flags.m,
+		body, 1);
+  }
+  return WNAV__SUCCESS;
+}
+
+int WNav::display_objects( pwr_tCid *cidp, char *name, pwr_tObjid root,
+			   int depth)
+{
+  pwr_tStatus sts;
+
+  brow_pop( wnav_eBrowType_Other);
+  brow_SetNodraw( brow->ctx);
+
+  sts = trv_get_attrobjects( ldhses, root, cidp, name, (trv_eDepth) depth,
+		       wnav_display_objects_cb, this, 0,0,0,0);
+
+  brow_ResetNodraw( brow->ctx);
+  brow_Redraw( brow->ctx, 0);
+  return sts;
+}
+
+
+
+
+
+
+

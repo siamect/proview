@@ -43,7 +43,7 @@ class XAttNav {
 	Widget		xa_parent_wid,
         xattnav_eType   xa_type,
 	char 		*xa_name,
-	pwr_tObjid 	xa_objid,
+	pwr_sAttrRef 	*xa_objar,
 	int 		xa_advanced_user,
 	Widget 		*w,
 	pwr_tStatus 	*status);
@@ -57,7 +57,7 @@ class XAttNav {
     Widget		form_widget;
     Widget		toplevel;
     XNavBrow		*brow;
-    pwr_tObjid		objid;
+    pwr_sAttrRef       	objar;
     int			advanced_user;
     int			bypass;
     XtIntervalId	trace_timerid;

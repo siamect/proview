@@ -43,7 +43,7 @@ typedef struct ge_sCtx {
   int		(*command_cb)(struct ge_sCtx *, char *);
   void		(*close_cb)(struct ge_sCtx *);
   void		(*help_cb)(struct ge_sCtx *, char *key);
-  void		(*display_in_xnav_cb)(void *, pwr_tObjid);
+  void		(*display_in_xnav_cb)(void *, pwr_sAttrRef *);
   int		(*is_authorized_cb)(void *, unsigned int);
   void          (*popup_menu_cb)(void *, pwr_sAttrRef, unsigned long,
 					 unsigned long, char *, Widget *); 

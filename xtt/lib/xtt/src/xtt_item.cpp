@@ -191,12 +191,16 @@ int ItemBaseObject::open_children( XNavBrow *brow, double x, double y)
   return 1;
 }
 
-int ItemBaseObject::open_trace( XNavBrow *brow, XNav *xnav, double x, double y)
+int ItemBaseObject::open_trace( XNavBrow *brow, double x, double y)
 {
   pwr_tClassId 	classid;
   pwr_tObjid	parent;
   char		name[80];
   int		sts;
+  if ( brow->usertype != brow_eUserType_XNav)
+    return 0;
+
+  XNav *xnav = (XNav *) brow->userdata;
 
   if ( cdh_ObjidIsNull( objid))
     return 1;
@@ -410,13 +414,18 @@ int ItemBaseObject::open_attribute( XNavBrow *brow, double x, double y,
   return 1;
 }
 
-int ItemBaseObject::open_crossref( XNavBrow *brow, XNav *xnav, 
-				   double x, double y)
+int ItemBaseObject::open_crossref( XNavBrow *brow, double x, double y)
 {
   double	node_x, node_y;
   int		crossref_exist;
   int		sts;
   pwr_tClassId	classid;
+  XNav *xnav;
+
+  if ( brow->usertype == brow_eUserType_XNav)
+    xnav = (XNav *) brow->userdata;
+  else
+    xnav = 0;
 
   if ( cdh_ObjidIsNull( objid))
     return 1;
@@ -478,12 +487,12 @@ int ItemBaseObject::open_crossref( XNavBrow *brow, XNav *xnav,
   return 1;
 }
 
-int ItemBaseObject::close( XNavBrow *brow, double x, double y)
+void ItemBaseObject::close( XNavBrow *brow, double x, double y)
 {
   double	node_x, node_y;
 
   if ( cdh_ObjidIsNull( objid))
-    return 1;
+    return;
 
   if ( brow_IsOpen( node))
   {
@@ -499,7 +508,6 @@ int ItemBaseObject::close( XNavBrow *brow, double x, double y)
     brow_ResetNodraw( brow->ctx);
     brow_Redraw( brow->ctx, node_y);
   }
-  return 1;
 }
 
 //
@@ -550,7 +558,7 @@ int ItemAttrArray::open_attributes( XNavBrow *brow, double x, double y)
   return 1;
 }
 
-int ItemAttrArray::close( XNavBrow *brow, double x, double y)
+void ItemAttrArray::close( XNavBrow *brow, double x, double y)
 {
   double	node_x, node_y;
 
@@ -564,7 +572,6 @@ int ItemAttrArray::close( XNavBrow *brow, double x, double y)
     brow_ResetNodraw( brow->ctx);
     brow_Redraw( brow->ctx, node_y);
   }
-  return 1;
 }
 
 ItemAttr::ItemAttr( XNavBrow *brow, pwr_tObjid item_objid,
@@ -699,9 +706,15 @@ ItemAttrObject::ItemAttrObject( XNavBrow *brow, pwr_tObjid item_objid,
 	Item( item_objid, item_is_root),
 	cid(attr_cid), size(attr_size), flags(attr_flags), element(attr_element)
 {
-  char *annot;
+  char 		*annot;
+  char		segname[120];
+  char  	classname[32];
+  pwr_sAttrRef 	aref;
+  char 		descr[80];
+  pwr_tCid 	classid;
+  pwr_tStatus 	sts;
+  
   type = xnav_eItemType_AttrObject;
-
   strcpy( name, attr_name);
   if ( flags & PWR_MASK_ARRAY)
     sprintf( &name[strlen(name)], "[%d]", element);
@@ -716,14 +729,37 @@ ItemAttrObject::ItemAttrObject( XNavBrow *brow, pwr_tObjid item_objid,
       annot = name;	 
     brow_SetAnnotation( node, 0, annot, strlen(annot));
   }
+
+  sts = gdh_ObjidToName( objid, segname, sizeof(segname), cdh_mName_volumeStrict);
+  if ( EVEN(sts)) throw co_error(sts);
+
+  strcat( segname, ".");
+  strcat( segname, name);
+
+  sts = gdh_NameToAttrref( pwr_cNObjid, segname, &aref);
+  if ( EVEN(sts)) throw co_error(sts);
+
+  // Set class annotation
+  sts = gdh_GetAttrRefTid( &aref, &classid);
+  if ( EVEN(sts)) throw co_error(sts);
+  sts = gdh_ObjidToName( cdh_ClassIdToObjid( classid),
+			 classname, sizeof(classname), cdh_mName_object);
+  if ( EVEN(sts)) throw co_error(sts);
+  brow_SetAnnotation( node, 1, classname, strlen(classname));
+
+  // Set description annotation
+  strcat( segname, ".Description");
+  sts = gdh_GetObjectInfo( segname, descr, sizeof(descr));
+  if ( ODD(sts))
+    brow_SetAnnotation( node, 2, descr, strlen(descr));
 }
 
-int ItemAttrObject::close( XNavBrow *brow, double x, double y)
+void ItemAttrObject::close( XNavBrow *brow, double x, double y)
 {
   double	node_x, node_y;
 
   if ( cdh_ObjidIsNull( objid))
-    return 1;
+    return;
 
   if ( brow_IsOpen( node))
   {
@@ -739,7 +775,6 @@ int ItemAttrObject::close( XNavBrow *brow, double x, double y)
     brow_ResetNodraw( brow->ctx);
     brow_Redraw( brow->ctx, node_y);
   }
-  return 1;
 }
 
 int ItemAttrObject::open_attributes( XNavBrow *brow, double x, double y)
@@ -849,6 +884,83 @@ int ItemAttrObject::open_attributes( XNavBrow *brow, double x, double y)
   return 1;
 }
 
+int ItemAttrObject::open_crossref( XNavBrow *brow, double x, double y)
+{
+  double	node_x, node_y;
+  int		crossref_exist;
+  int		sts;
+  XNav 		*xnav;
+  char		aname[240];
+
+  if ( brow->usertype == brow_eUserType_XNav)
+    xnav = (XNav *) brow->userdata;
+  else
+    xnav = 0;
+
+  if ( cdh_ObjidIsNull( objid))
+    return 1;
+
+  if ( !is_root)
+    brow_GetNodePosition( node, &node_x, &node_y);
+  else 
+    node_y = 0;
+
+  if ( !is_root && brow_IsOpen( node))
+  {
+    // Close
+    brow_SetNodraw( brow->ctx);
+    brow_CloseNode( brow->ctx, node);
+    if ( brow_IsOpen( node) & xnav_mOpen_Attributes)
+      brow_RemoveAnnotPixmap( node, 1);
+    if ( brow_IsOpen( node) & xnav_mOpen_Children)
+      brow_SetAnnotPixmap( node, 0, brow->pixmap_map);
+    brow_ResetOpen( node, xnav_mOpen_All);
+    brow_ResetNodraw( brow->ctx);
+    brow_Redraw( brow->ctx, node_y);
+  }
+  else
+  {
+    // Fetch the cross reference list
+    crossref_exist = 0;
+    brow_SetNodraw( brow->ctx);
+
+    sts = gdh_ObjidToName( objid, aname, sizeof(aname), 
+			   cdh_mName_path | cdh_mName_object);
+    if ( EVEN(sts)) return sts;
+
+    strcat( aname, ".");
+    strcat( aname, name);
+
+    switch ( cid)
+    {
+      case pwr_cClass_Di:
+      case pwr_cClass_Dv:
+      case pwr_cClass_Do:
+      case pwr_cClass_Po:
+      case pwr_cClass_Av:
+      case pwr_cClass_Ai:
+      case pwr_cClass_Ao:
+        sts = xnav_crr_signal( brow, NULL, aname, node);
+        break;
+      default:
+        sts = xnav_crr_object( brow, NULL, aname, node);
+    }
+    if ( xnav && sts == NAV__OBJECTNOTFOUND)
+      xnav->message('E', "Object not found in crossreferens file");
+    else if ( xnav && sts == NAV__NOCROSSREF)
+      xnav->message('I', "There is no crossreferences for this object");
+    else if ( ODD(sts))
+    {
+      brow_SetOpen( node, xnav_mOpen_Crossref);
+      crossref_exist = 1;
+    }
+    brow_ResetNodraw( brow->ctx);
+    if ( crossref_exist)
+      brow_Redraw( brow->ctx, node_y);
+  }
+  return 1;
+}
+
 ItemHeader::ItemHeader( XNavBrow *brow, char *item_name, char *title,
 	brow_tNode dest, flow_eDest dest_code) :
 	Item( pwr_cNObjid, 0)
@@ -913,11 +1025,17 @@ ItemHelpHeader::ItemHelpHeader( XNavBrow *brow, char *item_name, char *title,
   brow_SetAnnotPixmap( node, 0, brow->pixmap_closehelp);
 }
 
-int ItemHelpHeader::close( XNavBrow *brow, XNav *xnav, double x, double y)
+void ItemHelpHeader::close( XNavBrow *brow, double x, double y)
 {
+  XNav *xnav;
+
+  if ( brow->usertype == brow_eUserType_XNav)
+    xnav = (XNav *) brow->userdata;
+  else
+    xnav = 0;
+
   if ( xnav)
     xnav->brow_push();
-  return 1;
 }
 
 ItemHelp::ItemHelp( XNavBrow *brow, char *item_name, char *text, char *text2, 
@@ -944,8 +1062,12 @@ ItemHelp::ItemHelp( XNavBrow *brow, char *item_name, char *text, char *text2,
     brow_SetAnnotPixmap( node, 0, brow->pixmap_morehelp);
 }
 
-int ItemHelp::open_children( XNavBrow *brow, XNav *xnav, double x, double y)
+int ItemHelp::open_children( XNavBrow *brow, double x, double y)
 {
+  if ( brow->usertype != brow_eUserType_XNav)
+    return 0;
+
+  XNav *xnav = (XNav *) brow->userdata;
   int sts;
 
   if ( index)
@@ -1001,8 +1123,12 @@ ItemHelpBold::ItemHelpBold( XNavBrow *brow, char *item_name, char *text, char *t
     brow_SetAnnotPixmap( node, 0, brow->pixmap_morehelp);
 }
 
-int ItemHelpBold::open_children( XNavBrow *brow, XNav *xnav, double x, double y)
+int ItemHelpBold::open_children( XNavBrow *brow, double x, double y)
 {
+  if ( brow->usertype != brow_eUserType_XNav)
+    return 0;
+
+  XNav *xnav = (XNav *) brow->userdata;
   int sts;
 
   if ( index)
@@ -1057,8 +1183,12 @@ ItemFile::ItemFile( XNavBrow *brow, char *item_name, char *text,
   brow_SetAnnotation( node, 0, text, strlen(text));
 }
 
-int ItemFile::open_children( XNavBrow *brow, XNav *xnav, double x, double y)
+int ItemFile::open_children( XNavBrow *brow, double x, double y)
 {
+  if ( brow->usertype != brow_eUserType_XNav)
+    return 0;
+
+  XNav *xnav = (XNav *) brow->userdata;
   int sts;
 
   switch ( file_type)
@@ -1156,8 +1286,12 @@ static int add_window( XNav *xnav, pwr_tObjid objid, brow_tNode node, int *child
   return 1;
 }
 
-int ItemPlc::open_children( XNavBrow *brow, XNav *xnav, double x, double y)
+int ItemPlc::open_children( XNavBrow *brow, double x, double y)
 {
+  if ( brow->usertype != brow_eUserType_XNav)
+    return 0;
+
+  XNav *xnav = (XNav *) brow->userdata;
   double	node_x, node_y;
   int		child_exist;
 
@@ -1189,21 +1323,6 @@ int ItemPlc::open_children( XNavBrow *brow, XNav *xnav, double x, double y)
     }
   }
   return 1;
-}
-
-int ItemPlc::close( XNavBrow *brow, double x, double y)
-{
-  return ((ItemObject *)this)->close( brow, x, y);
-}
-
-int ItemPlc::open_attributes( XNavBrow *brow, double x, double y)
-{
-  return ((ItemObject *)this)->open_attributes( brow, x, y);
-}
-
-int ItemPlc::open_trace( XNavBrow *brow, XNav *xnav, double x, double y)
-{
-  return ((ItemObject *)this)->open_trace( brow, xnav, x, y);
 }
 
 
@@ -1299,7 +1418,7 @@ int ItemMenu::open_children( XNavBrow *brow, double x, double y)
   return 1;
 }
 
-int ItemMenu::close( XNavBrow *brow, double x, double y)
+void ItemMenu::close( XNavBrow *brow, double x, double y)
 {
   double	node_x, node_y;
 
@@ -1317,7 +1436,6 @@ int ItemMenu::close( XNavBrow *brow, double x, double y)
     brow_ResetNodraw( brow->ctx);
     brow_Redraw( brow->ctx, node_y);
   }
-  return 1;
 }
 
 ItemCommand::ItemCommand( XNavBrow *brow, char *item_name, char *item_text,
@@ -1343,8 +1461,12 @@ ItemCommand::ItemCommand( XNavBrow *brow, char *item_name, char *item_text,
   }
 }
 
-int ItemCommand::open_children( XNavBrow *brow, XNav *xnav, double x, double y)
+int ItemCommand::open_children( XNavBrow *brow, double x, double y)
 {
+  if ( brow->usertype != brow_eUserType_XNav)
+    return 0;
+
+  XNav *xnav = (XNav *) brow->userdata;
 
   xnav->command( command);
   return 1;
@@ -1396,8 +1518,13 @@ ItemCrossref::ItemCrossref( XNavBrow *brow, char *item_ref_name,
   brow_SetAnnotation( node, 1, ref_class, strlen(ref_class));
 }
 
-int ItemCrossref::open_trace( XNavBrow *brow, XNav *xnav, double x, double y)
+int ItemCrossref::open_trace( XNavBrow *brow, double x, double y)
 {
+  if ( brow->usertype != brow_eUserType_XNav)
+    return 0;
+
+  XNav *xnav = (XNav *) brow->userdata;
+
   xnav->start_trace( objid, ref_name);
   return 1;
 }
@@ -1488,28 +1615,44 @@ ItemTable::ItemTable( XNavBrow *brow, XNav *tab_xnav, pwr_tObjid objid,
 
 }
 
-int ItemDevice::open_children( XNavBrow *brow, XNav *xnav, double x, double y)
+int ItemDevice::open_children( XNavBrow *brow, double x, double y)
 {
+  if ( brow->usertype != brow_eUserType_XNav)
+    return 0;
+
+  XNav *xnav = (XNav *) brow->userdata;
+
   if ( cdh_ObjidIsNull( objid))
     return 1;
 
   return xnav->show_channels( objid);
 }
 
-int ItemChannel::open_children( XNavBrow *brow, XNav *xnav, double x, double y)
+int ItemChannel::open_children( XNavBrow *brow, double x, double y)
 {
+  if ( brow->usertype != brow_eUserType_XNav)
+    return 0;
+
+  XNav *xnav = (XNav *) brow->userdata;
+
   if ( cdh_ObjidIsNull( objid))
     return 1;
 
   return xnav->show_object( signal_objid, node);
 }
 
-int ItemChannel::open_crossref( XNavBrow *brow, XNav *xnav, double x, double y)
+int ItemChannel::open_crossref( XNavBrow *brow, double x, double y)
 {
   double	node_x, node_y;
   int		crossref_exist;
   int		sts;
   char		signal_name[120];
+  XNav *xnav;
+
+  if ( brow->usertype == brow_eUserType_XNav)
+    xnav = (XNav *) brow->userdata;
+  else
+    xnav = 0;
 
   if ( cdh_ObjidIsNull( signal_objid))
     return 1;
@@ -1541,11 +1684,11 @@ int ItemChannel::open_crossref( XNavBrow *brow, XNav *xnav, double x, double y)
     sts = gdh_ObjidToName( signal_objid, signal_name, sizeof(signal_name), 
 		cdh_mNName);
 
-    sts = xnav_crr_signal( xnav->brow, NULL, signal_name, node);
+    sts = xnav_crr_signal( brow, NULL, signal_name, node);
 
-    if ( sts == NAV__OBJECTNOTFOUND)
+    if ( sts == NAV__OBJECTNOTFOUND && xnav)
       xnav->message('E', "Object not found in crossreferens file");
-    else if ( sts == NAV__NOCROSSREF)
+    else if ( sts == NAV__NOCROSSREF && xnav)
       xnav->message('I', "There is no crossreferences for this object");
     else if ( ODD(sts))
     {
@@ -1560,13 +1703,22 @@ int ItemChannel::open_crossref( XNavBrow *brow, XNav *xnav, double x, double y)
 }
 
 
-int ItemRemNode::open_children( XNavBrow *brow, XNav *xnav, double x, double y)
+int ItemRemNode::open_children( XNavBrow *brow, double x, double y)
 {
+  if ( brow->usertype != brow_eUserType_XNav)
+    return 0;
+
+  XNav *xnav = (XNav *) brow->userdata;
+
   return xnav->show_remtrans( objid);
 }
 
-int ItemRemTrans::open_children( XNavBrow *brow, XNav *xnav, double x, double y)
+int ItemRemTrans::open_children( XNavBrow *brow, double x, double y)
 {
+  if ( brow->usertype != brow_eUserType_XNav)
+    return 0;
+
+  XNav *xnav = (XNav *) brow->userdata;
   char          remtrans_name[120];
   char		namebuf[140];
   char		structname[40];

@@ -2868,6 +2868,7 @@ void WNav::ldh_refresh( pwr_tObjid new_open)
         case wnav_eItemType_AttrInputInv:
         case wnav_eItemType_AttrOutput:
         case wnav_eItemType_AttrArray:
+        case wnav_eItemType_AttrObject:
         case wnav_eItemType_AttrArrayOutput:
         case wnav_eItemType_AttrArrayElem:
         case wnav_eItemType_Enum:
@@ -3002,6 +3003,7 @@ void WNav::ldh_refresh( pwr_tObjid new_open)
             case wnav_eItemType_AttrInputInv:
             case wnav_eItemType_AttrOutput:
             case wnav_eItemType_AttrArray:
+            case wnav_eItemType_AttrObject:
             case wnav_eItemType_AttrArrayOutput:
             case wnav_eItemType_AttrArrayElem:
             case wnav_eItemType_Enum:

@@ -80,13 +80,13 @@ static int xnav_init_brow_collect_cb( BrowCtx *ctx, void *client_data);
 //
 //  Get trace attribute
 //
-int xnav_get_trace_attr( pwr_tObjid objid, char *attr)
+int xnav_get_trace_attr( pwr_sAttrRef *arp, char *attr)
 {
   int sts;
   pwr_tClassId classid;
   char objname[100];
 
-  sts = gdh_GetObjectClass( objid, &classid);
+  sts = gdh_GetAttrRefTid( arp, &classid);
   if ( EVEN(sts)) return sts;
 
   switch ( classid)
@@ -109,18 +109,18 @@ int xnav_get_trace_attr( pwr_tObjid objid, char *attr)
     case pwr_cClass_ChanAo:
     case pwr_cClass_ChanIi:
     case pwr_cClass_ChanIo:
-      sts = gdh_ObjidToName ( objid, objname, sizeof(objname), cdh_mName_volumeStrict);
+      sts = gdh_AttrrefToName( arp, objname, sizeof(objname), cdh_mName_volumeStrict);
       if ( EVEN(sts)) return sts;
       strcat( objname, ".SigChanCon");
-      sts = gdh_GetObjectInfo ( objname, &objid, sizeof( objid));
+      sts = gdh_GetObjectInfo ( objname, arp, sizeof( *arp));
       if (EVEN(sts)) return sts;
       strcpy( attr, "ActualValue");
       break;
     case pwr_cClass_ChanCo:
-      sts = gdh_ObjidToName ( objid, objname, sizeof(objname), cdh_mName_volumeStrict);
+      sts = gdh_AttrrefToName ( arp, objname, sizeof(objname), cdh_mName_volumeStrict);
       if ( EVEN(sts)) return sts;
       strcat( objname, ".SigChanCon");
-      sts = gdh_GetObjectInfo ( objname, &objid, sizeof( objid));
+      sts = gdh_GetObjectInfo ( objname, arp, sizeof( *arp));
       if (EVEN(sts)) return sts;
       strcpy( attr, "AbsValue");	
       break;
@@ -626,11 +626,11 @@ void XNav::message( char sev, char *text)
     (message_cb)( parent_ctx, sev, text);
 }
 
-int XNav::collect_insert( pwr_sAttrRef *attrref)
+int XNav::collect_insert( pwr_sAttrRef *arp)
 {
   ItemCollect 	*item;
   int		sts;
-  char		attr[40];
+  char		attr[120];
   char		*s;
   char 		obj_name[120];
   pwr_sAttrRef 	ar;
@@ -639,36 +639,35 @@ int XNav::collect_insert( pwr_sAttrRef *attrref)
   unsigned int 	a_offset;
   unsigned int 	a_dim;
 
-  sts = gdh_AttrrefToName ( attrref, name, sizeof(name), cdh_mNName);
+  sts = gdh_AttrrefToName ( arp, name, sizeof(name), cdh_mNName);
   if ( EVEN(sts)) return sts;
 
-  if ( (s = strrchr( name, '.')) != 0)
-  {
+  if ( !arp->Flags.b.Object && !arp->Flags.b.ObjectAttr) {
+    if ( (s = strchr( name, '.')) == 0)
+      return 0;
     strcpy( attr, s+1);
 
-    sts = gdh_GetAttributeCharAttrref( attrref, &a_type_id, &a_size, &a_offset, 
+    sts = gdh_GetAttributeCharAttrref( arp, &a_type_id, &a_size, &a_offset, 
 	&a_dim);
     if ( EVEN(sts)) return sts;
   }
-  else
-  {
-    sts = xnav_get_trace_attr( attrref->Objid, attr);
-    if ( EVEN(sts))
-      return sts;
-    sts = gdh_ObjidToName ( attrref->Objid, obj_name, sizeof(obj_name), 
-	cdh_mNName);
+  else {
+    sts = xnav_get_trace_attr( arp, attr);
     if ( EVEN(sts)) return sts;
+    strcpy( obj_name, name);
     strcat( obj_name, ".");
     strcat( obj_name, attr);
     sts = gdh_NameToAttrref( pwr_cNObjid, obj_name, &ar);
     if ( EVEN(sts)) return sts;
+
+    strcpy( attr, strchr(obj_name, '.') + 1);
 
     sts = gdh_GetAttributeCharAttrref( &ar, &a_type_id, &a_size, &a_offset, 
 	&a_dim);
     if ( EVEN(sts)) return sts;
   }
 
-  item = new ItemCollect( collect_brow, attrref->Objid, attr, NULL, 
+  item = new ItemCollect( collect_brow, arp->Objid, attr, NULL, 
 		flow_eDest_IntoLast, a_type_id, a_size, 0);
   message( 'I', "Object inserted");
   return 1;
@@ -756,10 +755,13 @@ void XNav::show_crossref()
     switch( item->type) {
     case xnav_eItemType_Object:
     case xnav_eItemType_Table:
-      ((ItemBaseObject *)item)->open_crossref( brow, this, 0, 0);
+      ((ItemBaseObject *)item)->open_crossref( brow, 0, 0);
+      break;
+    case xnav_eItemType_AttrObject:
+      item->open_crossref( brow, 0, 0);
       break;
     case xnav_eItemType_Channel:
-      ((ItemChannel *)item)->open_crossref( brow, this, 0, 0);
+      ((ItemChannel *)item)->open_crossref( brow, 0, 0);
       break;
     default:
       message( 'E', "Can't show crossreferences for this object type");
@@ -794,13 +796,9 @@ void XNav::start_trace_selected()
   try {
     switch( item->type) {
     case xnav_eItemType_Object: 
-      ((ItemObject *)item)->open_trace( brow, this, 0, 0);
-      break;
     case xnav_eItemType_Plc: 
-      ((ItemPlc *)item)->open_trace( brow, this, 0, 0);
-      break;
     case xnav_eItemType_Crossref: 
-      ((ItemCrossref *)item)->open_trace( brow, this, 0, 0);
+      item->open_trace( brow, 0, 0);
       break;
     default:
       message( 'E', "Can't start trace for this object type");
@@ -882,41 +880,41 @@ int XNav::open_help()
 }
 #endif
 
-int XNav::open_object( pwr_tObjid objid)
+int XNav::open_object( pwr_sAttrRef *arp)
 {
   XAtt *xatt;
   int sts;
  
-  if ( appl.find( applist_eType_Attr, objid, (void **) &xatt)) {
+  if ( appl.find( applist_eType_Attr, arp, (void **) &xatt)) {
     xatt->pop();
   }
   else {
-    xatt = new XAtt( form_widget, this, objid, gbl.advanced_user, &sts);
+    xatt = new XAtt( form_widget, this, arp, gbl.advanced_user, &sts);
     if ( ODD(sts))
       xatt->close_cb = xnav_xatt_close_cb;
       xatt->popup_menu_cb = xnav_popup_menu_cb;
       xatt->call_method_cb = xnav_call_method_cb;
       xatt->is_authorized_cb = xnav_is_authorized_cb;
-      appl.insert( applist_eType_Attr, (void *)xatt, objid, "", NULL);
+      appl.insert( applist_eType_Attr, (void *)xatt, arp, "", NULL);
   }
   return XNAV__SUCCESS;
 }
 
-int XNav::open_crossref( pwr_tObjid objid)
+int XNav::open_crossref( pwr_sAttrRef *arp)
 {
   XCrr *xcrr;
   int sts;
  
-  if ( appl.find( applist_eType_Crossref, objid, (void **) &xcrr)) {
+  if ( appl.find( applist_eType_Crossref, arp, (void **) &xcrr)) {
     xcrr->pop();
   }
   else {
-    xcrr = new XCrr( form_widget, this, objid, gbl.advanced_user, &sts);
+    xcrr = new XCrr( form_widget, this, arp, gbl.advanced_user, &sts);
     if ( ODD(sts))
       xcrr->close_cb = xnav_xcrr_close_cb;
       xcrr->popup_menu_cb = xnav_popup_menu_cb;
       xcrr->start_trace_cb = xnav_start_trace_cb;
-      appl.insert( applist_eType_Crossref, (void *)xcrr, objid, "", NULL);
+      appl.insert( applist_eType_Crossref, (void *)xcrr, arp, "", NULL);
   }
   return XNAV__SUCCESS;
 }
@@ -1507,8 +1505,9 @@ static void xnav_trace_subwindow_cb( void *ctx, pwr_tObjid objid)
 static void xnav_trace_display_object_cb( void *ctx, pwr_tObjid objid)
 {
   XNav *xnav = (XNav *) ctx;
+  pwr_sAttrRef aref = cdh_ObjidToAref( objid);
 
-  xnav->display_object( objid, 0);
+  xnav->display_object( &aref, 0);
   xnav->pop();
 }
 
@@ -1685,28 +1684,7 @@ static int xnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
         break;
       brow_GetUserData( node_list[0], (void **)&item);
       free( node_list);
-      switch( item->type)
-      {
-        case xnav_eItemType_Plc: 
-	  ((ItemPlc *)item)->open_attributes( xnav->brow, 0, 0);
-          break;
-        case xnav_eItemType_Object: 
-        case xnav_eItemType_Table:
-        case xnav_eItemType_Device:
-        case xnav_eItemType_Channel:
-        case xnav_eItemType_RemNode:
-        case xnav_eItemType_RemTrans:
-	  ((ItemBaseObject *)item)->open_attributes( xnav->brow, 0, 0);
-          break;
-        case xnav_eItemType_AttrArray: 
-	  ((ItemAttrArray *)item)->open_attributes( xnav->brow, 0, 0);
-          break;
-        case xnav_eItemType_AttrObject: 
-	  ((ItemAttrObject *)item)->open_attributes( xnav->brow, 0, 0);
-          break;
-        default:
-          ;
-      }
+      item->open_attributes( xnav->brow, 0, 0);
       break;
     }
     case flow_eEvent_Key_PF2:
@@ -1719,18 +1697,7 @@ static int xnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
         break;
       brow_GetUserData( node_list[0], (void **)&item);
       free( node_list);
-      switch( item->type)
-      {
-        case xnav_eItemType_Object:
-        case xnav_eItemType_Table:
-	  ((ItemBaseObject *)item)->open_crossref( xnav->brow, xnav, 0, 0);
-          break;
-        case xnav_eItemType_Channel:
-	  ((ItemChannel *)item)->open_crossref( xnav->brow, xnav, 0, 0);
-          break;
-        default:
-          ;
-      }
+      item->open_crossref( xnav->brow, 0, 0);
       break;
     }
     case flow_eEvent_Key_Return:
@@ -1745,59 +1712,19 @@ static int xnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
         break;
       brow_GetUserData( node_list[0], (void **)&item);
       free( node_list);
-      switch( item->type)
-      {
-        case xnav_eItemType_Plc: 
-	  ((ItemPlc *)item)->open_children( xnav->brow, xnav, 0, 0);
-          break;
-        case xnav_eItemType_File: 
-	  ((ItemFile *)item)->open_children( xnav->brow, xnav, 0, 0);
-          break;
-        case xnav_eItemType_Object: 
-	  sts = ((ItemBaseObject *)item)->open_children( xnav->brow, 0, 0);
-          if ( sts == XNAV__NOCHILD && xnav->gbl.advanced_user)
-	    ((ItemBaseObject *)item)->open_attributes( xnav->brow, 0, 0);
-          break;
-        case xnav_eItemType_Table:
-	  ((ItemBaseObject *)item)->open_children( xnav->brow, 0, 0);
-          break;
-        case xnav_eItemType_Device:
-	  ((ItemDevice *)item)->open_children( xnav->brow, xnav, 0, 0);
-          break;
-        case xnav_eItemType_Channel:
-	  ((ItemChannel *)item)->open_children( xnav->brow, xnav, 0, 0);
-          break;
-        case xnav_eItemType_RemNode:
-	  ((ItemRemNode *)item)->open_children( xnav->brow, xnav, 0, 0);
-          break;
-        case xnav_eItemType_RemTrans:
-	  ((ItemRemTrans *)item)->open_children( xnav->brow, xnav, 0, 0);
-          break;
-        case xnav_eItemType_AttrArray: 
-	  ((ItemAttrArray *)item)->open_children( xnav->brow, 0, 0);
-          break;
-        case xnav_eItemType_Menu: 
-	  ((ItemMenu *)item)->open_children( xnav->brow, 0, 0);
-          break;
-        case xnav_eItemType_Command: 
-	  ((ItemCommand *)item)->open_children( xnav->brow, xnav, 0, 0);
-          break;
-        case xnav_eItemType_Help: 
-	  ((ItemHelp *)item)->open_children( xnav->brow, xnav, 0, 0);
-          break;
-        case xnav_eItemType_HelpBold: 
-	  ((ItemHelpBold *)item)->open_children( xnav->brow, xnav, 0, 0);
-          break;
-        case xnav_eItemType_Attr:
-        case xnav_eItemType_AttrArrayElem:
-        case xnav_eItemType_Collect:
-        case xnav_eItemType_Local:
-        case xnav_eItemType_ObjectStruct:
-          if ( xnav->gbl.advanced_user && xnav->change_value_cb)
-            (xnav->change_value_cb)( xnav->parent_ctx);
-          break;
-        default:
-          ;
+      switch( item->type) {
+      case xnav_eItemType_Attr:
+      case xnav_eItemType_AttrArrayElem:
+      case xnav_eItemType_Collect:
+      case xnav_eItemType_Local:
+      case xnav_eItemType_ObjectStruct:
+	if ( xnav->gbl.advanced_user && xnav->change_value_cb)
+	  (xnav->change_value_cb)( xnav->parent_ctx);
+	break;
+      default:
+	sts = item->open_children( xnav->brow, 0, 0);
+	if ( sts == XNAV__NOCHILD && xnav->gbl.advanced_user)
+	  item->open_attributes( xnav->brow, 0, 0);
       }
       break;
     }
@@ -1856,31 +1783,7 @@ static int xnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
         }
       }
       brow_GetUserData( object, (void **)&item);
-      switch( item->type)
-      {
-        case xnav_eItemType_Object: 
-        case xnav_eItemType_Table: 
-        case xnav_eItemType_Device: 
-        case xnav_eItemType_Channel: 
-        case xnav_eItemType_RemNode: 
-        case xnav_eItemType_RemTrans: 
-	  ((ItemBaseObject *)item)->close( xnav->brow, 0, 0);
-          break;
-        case xnav_eItemType_Plc: 
-	  ((ItemPlc *)item)->close( xnav->brow, 0, 0);
-          break;
-        case xnav_eItemType_AttrArray: 
-	  ((ItemAttrArray *)item)->close( xnav->brow, 0, 0);
-          break;
-        case xnav_eItemType_AttrObject: 
-	  ((ItemAttrObject *)item)->close( xnav->brow, 0, 0);
-          break;
-        case xnav_eItemType_Menu: 
-	  ((ItemMenu *)item)->close( xnav->brow, 0, 0);
-          break;
-        default:
-          ;
-      }
+      item->close( xnav->brow, 0, 0);
       brow_SelectClear( xnav->brow->ctx);
       brow_SetInverse( object, 1);
       brow_SelectInsert( xnav->brow->ctx, object);
@@ -1907,63 +1810,11 @@ static int xnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
       {
         case flow_eObjectType_Node:
           brow_GetUserData( event->object.object, (void **)&item);
-          switch( item->type)
-          {
-            case xnav_eItemType_Plc: 
-	      ((ItemPlc *)item)->open_children( xnav->brow, xnav,
-			event->object.x, event->object.y);
-              break;
-            case xnav_eItemType_File: 
-	      ((ItemFile *)item)->open_children( xnav->brow, xnav,
-			event->object.x, event->object.y);
-              break;
-            case xnav_eItemType_Object: 
-            case xnav_eItemType_Table: 
-	      ((ItemObject *)item)->open_children( xnav->brow,
-			event->object.x, event->object.y);
-              break;
-            case xnav_eItemType_Device: 
-	      ((ItemDevice *)item)->open_children( xnav->brow, xnav,
-			event->object.x, event->object.y);
-              break;
-            case xnav_eItemType_Channel: 
-	      ((ItemChannel *)item)->open_children( xnav->brow, xnav,
-			event->object.x, event->object.y);
-              break;
-            case xnav_eItemType_RemNode: 
-	      ((ItemRemNode *)item)->open_children( xnav->brow, xnav,
-			event->object.x, event->object.y);
-              break;
-            case xnav_eItemType_RemTrans: 
-	      ((ItemRemTrans *)item)->open_children( xnav->brow, xnav,
-			event->object.x, event->object.y);
-              break;
-            case xnav_eItemType_AttrArray: 
-	      ((ItemAttrArray *)item)->open_children( xnav->brow,
-			event->object.x, event->object.y);
-              break;
-            case xnav_eItemType_Menu: 
-	      ((ItemMenu *)item)->open_children( xnav->brow,
-			event->object.x, event->object.y);
-              break;
-            case xnav_eItemType_Command: 
-	      ((ItemCommand *)item)->open_children( xnav->brow, xnav,
-			event->object.x, event->object.y);
-              break;
-            case xnav_eItemType_Help: 
-              ((ItemHelp *)item)->open_children( xnav->brow, xnav,
-			event->object.x, event->object.y);
-              break;
-            case xnav_eItemType_HelpBold: 
-              ((ItemHelpBold *)item)->open_children( xnav->brow, xnav,
-			event->object.x, event->object.y);
-              break;
-            case xnav_eItemType_HelpHeader: 
-              ((ItemHelpHeader *)item)->close( xnav->brow, xnav,
-			event->object.x, event->object.y);
-              break;
-            default:
-              ;
+          switch( item->type) {
+	  case xnav_eItemType_HelpHeader: 
+	    item->close( xnav->brow, event->object.x, event->object.y);
+	  default:
+	    item->open_children( xnav->brow, event->object.x, event->object.y);
           }
           break;
         default:
@@ -2004,32 +1855,7 @@ static int xnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
       {
         case flow_eObjectType_Node:
           brow_GetUserData( event->object.object, (void **)&item);
-          switch( item->type)
-          {
-            case xnav_eItemType_Object: 
-            case xnav_eItemType_Table: 
-            case xnav_eItemType_Device: 
-            case xnav_eItemType_Channel: 
-            case xnav_eItemType_RemNode: 
-            case xnav_eItemType_RemTrans: 
-	      ((ItemObject *)item)->open_attributes( xnav->brow,
-			event->object.x, event->object.y);
-              break;
-            case xnav_eItemType_Plc: 
-	      ((ItemPlc *)item)->open_attributes( xnav->brow,
-			event->object.x, event->object.y);
-              break;
-            case xnav_eItemType_AttrArray: 
-	      ((ItemAttrArray *)item)->open_attributes( xnav->brow,
-			event->object.x, event->object.y);
-              break;
-            case xnav_eItemType_AttrObject: 
-	      ((ItemAttrObject *)item)->open_attributes( xnav->brow,
-			event->object.x, event->object.y);
-              break;
-            default:
-              ;
-          }
+	  item->open_attributes( xnav->brow, event->object.x, event->object.y);
           break;
         default:
           ;
@@ -2040,24 +1866,7 @@ static int xnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
       {
         case flow_eObjectType_Node:
           brow_GetUserData( event->object.object, (void **)&item);
-          switch( item->type)
-          {
-            case xnav_eItemType_Object: 
-            case xnav_eItemType_Table: 
-	      ((ItemObject *)item)->open_trace( xnav->brow, xnav,
-			event->object.x, event->object.y);
-              break;
-            case xnav_eItemType_Plc: 
-	      ((ItemPlc *)item)->open_trace( xnav->brow, xnav,
-			event->object.x, event->object.y);
-              break;
-            case xnav_eItemType_Crossref: 
-	      ((ItemCrossref *)item)->open_trace( xnav->brow, xnav,
-			event->object.x, event->object.y);
-              break;
-            default:
-              ;
-          }
+	  item->open_trace( xnav->brow, event->object.x, event->object.y);
           break;
         default:
           ;
@@ -2135,6 +1944,25 @@ static int xnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
 				   xmenu_mUtility_XNav, xnav->priv, NULL);
               break;
             }
+            case xnav_eItemType_AttrObject:
+            {
+              char attr_str[140];
+
+              sts = gdh_ObjidToName( item->objid, 
+	    	attr_str, sizeof(attr_str), cdh_mName_volumeStrict);
+              if ( EVEN(sts)) return sts;
+
+              memset( &attrref, 0, sizeof(attrref));
+              strcat( attr_str, ".");
+              strcat( attr_str, item->name);
+              sts = gdh_NameToAttrref( pwr_cNObjid, attr_str, &attrref);
+              if ( EVEN(sts)) return sts;
+
+              popup = xnav_create_popup_menu( xnav, attrref, 
+				   xmenu_eItemType_AttrObject,
+				   xmenu_mUtility_XNav, xnav->priv, NULL);
+              break;
+            }
             case xnav_eItemType_Collect:
             {
               char attr_str[140];
@@ -2157,8 +1985,7 @@ static int xnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
             case xnav_eItemType_Crossref:
             {
               ItemCrossref *itemc = (ItemCrossref *)item;
-              memset( &attrref, 0, sizeof(attrref));
-              attrref.Objid = itemc->objid;
+              attrref = cdh_ObjidToAref( itemc->objid);
 
               popup = xnav_create_popup_menu( xnav, attrref, 
 			     xmenu_eItemType_Crossref,
@@ -2166,8 +1993,7 @@ static int xnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
               break;
             }
 	    default:
-              memset( &attrref, 0, sizeof(attrref));
-              attrref.Objid = item->objid;
+              attrref = cdh_ObjidToAref( item->objid);
               popup = xnav_create_popup_menu( xnav, attrref, 
 				   xmenu_eItemType_Object,
 				   xmenu_mUtility_XNav, xnav->priv, NULL);
@@ -2505,6 +2331,12 @@ static int xnav_trace_disconnect_bc( brow_tObject object)
 
 int XNav::display_object( pwr_tObjid objid, int open)
 {
+  pwr_sAttrRef aref = cdh_ObjidToAref( objid);
+  return display_object( &aref, open);
+}
+
+int XNav::display_object( pwr_sAttrRef *arp, int open)
+{
 #define PARENTLIST_SIZE 40
 #define MOUNTLIST_SIZE 40
   pwr_tObjid    parent_list[PARENTLIST_SIZE];
@@ -2533,7 +2365,7 @@ int XNav::display_object( pwr_tObjid objid, int open)
                 &mountobject_list[mount_cnt]);
   }
 
-  sts = gdh_GetParent( objid, &parent_list[parent_cnt]);
+  sts = gdh_GetParent( arp->Objid, &parent_list[parent_cnt]);
   while( ODD(sts)) {
     for ( i = 0; i < mount_cnt; i++) {
       if ( cdh_ObjidIsEqual( parent_list[parent_cnt], mounted_list[i])) {
@@ -2564,21 +2396,71 @@ int XNav::display_object( pwr_tObjid objid, int open)
       if ( EVEN(sts)) return sts;
       item->open_children( brow, 0, 0);
     }
-    sts = find( objid, (void **) &item);
+    sts = find( arp->Objid, (void **) &item);
     if ( EVEN(sts)) return sts;
-    brow_SetInverse( item->node, 1);
-    brow_SelectInsert( brow->ctx, item->node);
-    if ( open) {
-      ((ItemBaseObject *)item)->open_children( brow, 0, 0);
+
+    if ( arp->Flags.b.Object) {
+      brow_SetInverse( item->node, 1);
+      brow_SelectInsert( brow->ctx, item->node);
+      if ( open) {
+	item->open_children( brow, 0, 0);
+      }
+      brow_ResetNodraw( brow->ctx);
+      brow_Redraw( brow->ctx, 0);
+
+      if ( open)
+	brow_CenterObject( brow->ctx, item->node, 0.00);
+      else
+	brow_CenterObject( brow->ctx, item->node, 0.80);
+    }
+    else {
+      char name[240];
+      cdh_sParseName parsename;
+      cdh_sParseName *pn;
+      Item *aitem;
+      char idx[20];
+
+      sts = gdh_AttrrefToName( arp, name, sizeof(name), cdh_mName_volumeStrict);
+      if ( EVEN(sts)) goto display_error;
+
+      item->open_attributes( brow, 0, 0);
+
+      pn = cdh_ParseName( &sts, &parsename, pwr_cNObjid, name, 0);
+      strcpy( name, pn->attribute[0].name.orig);
+      for ( i = 0; i < (int) pn->nAttribute; i++) {
+	sts = find( arp->Objid, name, (void **) &aitem);
+	if ( EVEN(sts)) goto display_error;
+
+	switch( aitem->type) {
+	case xnav_eItemType_AttrArray:
+	  if ( pn->hasIndex[i]){
+	    aitem->open_attributes( brow, 0, 0);
+	    sprintf( idx, "[%d]", pn->index[i]);
+	    strcat( name, idx);
+
+	    sts = find( arp->Objid, name, (void **) &aitem);
+	    if ( EVEN(sts)) goto display_error;
+
+	  }
+	  break;
+	default:
+	  ;
+	}
+	if ( i != (int) pn->nAttribute - 1) {
+	  aitem->open_attributes( brow, 0, 0);
+	  strcat( name, ".");
+	  strcat( name, pn->attribute[i+1].name.orig);
+	}
+      }
+      brow_SetInverse( aitem->node, 1);
+      brow_SelectInsert( brow->ctx, aitem->node);
+
+      brow_ResetNodraw( brow->ctx);
+      brow_Redraw( brow->ctx, 0);
+
+      brow_CenterObject( brow->ctx, aitem->node, 0.80);
     }
 
-    brow_ResetNodraw( brow->ctx);
-    brow_Redraw( brow->ctx, 0);
-
-    if ( open)
-      brow_CenterObject( brow->ctx, item->node, 0.00);
-    else
-      brow_CenterObject( brow->ctx, item->node, 0.80);
   }
   catch ( co_error& e) {
     brow_push_all();
@@ -2586,6 +2468,11 @@ int XNav::display_object( pwr_tObjid objid, int open)
     message('E', (char *)e.what().c_str());
   }
   return 1;
+
+ display_error:
+  brow_ResetNodraw( brow->ctx);
+  brow_Redraw( brow->ctx, 0);
+  return sts;
 }
 
 int XNav::find( pwr_tObjid objid, void **item)
@@ -2596,11 +2483,28 @@ int XNav::find( pwr_tObjid objid, void **item)
   int		i;
 
   brow_GetObjectList( brow->ctx, &object_list, &object_cnt);
-  for ( i = 0; i < object_cnt; i++)
-  {
+  for ( i = 0; i < object_cnt; i++) {
     brow_GetUserData( object_list[i], (void **)&object_item);
-    if ( cdh_ObjidIsEqual( object_item->objid, objid))
-    {
+    if ( cdh_ObjidIsEqual( object_item->objid, objid)) {
+      *item = (void *) object_item;
+      return 1;
+    }
+  }
+  return 0;
+}
+
+int XNav::find( pwr_tObjid objid, char *attr, void **item)
+{
+  flow_tObject 	*object_list;
+  int		object_cnt;
+  Item	 	*object_item;
+  int		i;
+
+  brow_GetObjectList( brow->ctx, &object_list, &object_cnt);
+  for ( i = 0; i < object_cnt; i++) {
+    brow_GetUserData( object_list[i], (void **)&object_item);
+    if ( cdh_ObjidIsEqual( object_item->objid, objid) && 
+	 strcmp( attr, object_item->name) == 0) {
       *item = (void *) object_item;
       return 1;
     }
@@ -3413,8 +3317,8 @@ static int xnav_init_brow_cb( BrowCtx *ctx, void *client_data)
 
 
 ApplListElem::ApplListElem( applist_eType al_type, void *al_ctx, 
-	pwr_tObjid al_objid, char *al_name, char *al_instance):
-	type(al_type), ctx(al_ctx), objid(al_objid), next(NULL)
+	pwr_sAttrRef *al_arp, char *al_name, char *al_instance):
+	type(al_type), ctx(al_ctx), aref(*al_arp), next(NULL)
 {
   strcpy( name, al_name);
   if ( al_instance)
@@ -3424,9 +3328,19 @@ ApplListElem::ApplListElem( applist_eType al_type, void *al_ctx,
 }
 
 void ApplList::insert( applist_eType type, void *ctx, 
+	pwr_sAttrRef *arp, char *name, char *instance)
+{
+  ApplListElem *elem = new ApplListElem( type, ctx, arp, name, instance);
+  elem->next = root;
+  root = elem;
+}
+
+void ApplList::insert( applist_eType type, void *ctx, 
 	pwr_tObjid objid, char *name, char *instance)
 {
-  ApplListElem *elem = new ApplListElem( type, ctx, objid, name, instance);
+  pwr_sAttrRef aref = cdh_ObjidToAref( objid);
+
+  ApplListElem *elem = new ApplListElem( type, ctx, &aref, name, instance);
   elem->next = root;
   root = elem;
 }
@@ -3436,10 +3350,8 @@ void ApplList::remove( void *ctx)
   ApplListElem *elem;
   ApplListElem *prev;
 
-  for ( elem = root; elem; elem = elem->next)
-  {
-    if ( elem->ctx == ctx)
-    {
+  for ( elem = root; elem; elem = elem->next) {
+    if ( elem->ctx == ctx) {
       if ( elem == root)
         root = elem->next;
       else
@@ -3451,14 +3363,27 @@ void ApplList::remove( void *ctx)
   }
 }
 
+int ApplList::find( applist_eType type, pwr_sAttrRef *arp, void **ctx)
+{
+  ApplListElem *elem;
+
+  for ( elem = root; elem; elem = elem->next) {
+    if ( elem->type == type && cdh_ObjidIsEqual( elem->aref.Objid, arp->Objid) &&
+	elem->aref.Offset == arp->Offset && elem->aref.Size == arp->Size) {
+      *ctx = elem->ctx;
+      return 1;
+    }
+  }
+  return 0;
+}
+
 int ApplList::find( applist_eType type, pwr_tObjid objid, void **ctx)
 {
   ApplListElem *elem;
 
-  for ( elem = root; elem; elem = elem->next)
-  {
-    if ( elem->type == type && cdh_ObjidIsEqual( elem->objid, objid))
-    {
+  for ( elem = root; elem; elem = elem->next) {
+    if ( elem->type == type && cdh_ObjidIsEqual( elem->aref.Objid, objid) &&
+	 elem->aref.Flags.b.Object) {
       *ctx = elem->ctx;
       return 1;
     }
@@ -3470,10 +3395,8 @@ int ApplList::find( applist_eType type, char *name, char *instance, void **ctx)
 {
   ApplListElem *elem;
 
-  for ( elem = root; elem; elem = elem->next)
-  {
-    if ( elem->type == type && cdh_NoCaseStrcmp( name, elem->name) == 0)
-    {
+  for ( elem = root; elem; elem = elem->next) {
+    if ( elem->type == type && cdh_NoCaseStrcmp( name, elem->name) == 0) {
       if ( instance && strcmp( elem->instance, "") != 0) {
         if ( cdh_NoCaseStrcmp( instance, elem->instance) == 0) {
           *ctx = elem->ctx;

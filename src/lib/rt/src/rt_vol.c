@@ -202,7 +202,7 @@ vol_AttributeToName (
   if (ap->aop != NULL && lnametype.b.attribute) {
     if (*s != '\0' || lnametype.b.separator)
       strcat(s, ".");
-    strcat(s, ap->aop->g.f.name.orig);
+    strcat(s, ap->name);
     if (ap->idx != ULONG_MAX && lnametype.b.index) {
       sprintf(index, "[%d]", ap->idx);
       strcat(s, index);

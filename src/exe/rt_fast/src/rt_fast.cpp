@@ -20,15 +20,12 @@ extern "C" {
 void fastobject::open( double base_scantime)
 {
   pwr_tStatus sts;
-  pwr_sAttrRef attrref;
   pwr_tUInt32 size, offs, elem;
   pwr_tTypeId type_id;
   char name[120];
 
   // Link to object
-  memset( &attrref, 0, sizeof(attrref));
-  attrref.Objid = oid;
-  sts = gdh_DLRefObjectInfoAttrref( &attrref, (void **)&p, &p_dlid); 
+  sts = gdh_DLRefObjectInfoAttrref( &aref, (void **)&p, &p_dlid); 
   if ( EVEN(sts)) throw co_error(sts);
 
   // Link to trigg object
@@ -340,6 +337,7 @@ void fastobject::scan()
 void rt_fast::open()
 {
   pwr_tStatus sts;
+  pwr_sAttrRef aref;
   pwr_tObjid oid;
   pwr_sClass_DsFastConf *conf_p;
 
@@ -360,9 +358,10 @@ void rt_fast::open()
   aproc_RegisterObject( oid);
 
   // Open FastCurve object
-  sts = gdh_GetClassList( pwr_cClass_DsFastCurve, &oid);
-  while ( ODD(sts)) {
-    fastobject *o = new fastobject( oid);
+  for ( sts = gdh_GetClassListAttrRef( pwr_cClass_DsFastCurve, &aref);
+	ODD(sts);
+	sts = gdh_GetNextAttrRef( pwr_cClass_DsFastCurve, &aref, &aref)) {
+    fastobject *o = new fastobject( &aref);
     objects.push_back( o);
     try {
       o->open( scan_time);
@@ -373,7 +372,6 @@ void rt_fast::open()
       objects.pop_back();
       errh_Error( "DsFastCurve configuration error: &s", (char *)e.what().c_str());
     }
-    sts = gdh_GetNextObject( oid, &oid);
   }
 }
 

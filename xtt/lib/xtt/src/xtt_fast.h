@@ -49,7 +49,7 @@ class XttFast {
 	  Widget	xn_parent_wid,
 	  char *xn_name,
 	  Widget *w,
-	  pwr_tObjid fast_object,
+	  pwr_sAttrRef *fast_arp,
 	  int *sts);
 
   void       	*xnav;			//!< Pointer to parent XNav.

@@ -71,12 +71,12 @@ XAttNav::XAttNav(
 	Widget		xa_parent_wid,
 	xattnav_eType   xa_type,
 	char 		*xa_name,
-	pwr_tObjid 	xa_objid,
+	pwr_sAttrRef 	*xa_objar,
 	int 		xa_advanced_user,
 	Widget 		*w,
 	pwr_tStatus 	*status) :
 	parent_ctx(xa_parent_ctx), parent_wid(xa_parent_wid),
-	type(xa_type), objid(xa_objid), 
+	type(xa_type), objar(*xa_objar), 
 	advanced_user(xa_advanced_user), 
 	bypass(0),
 	trace_started(0), message_cb(NULL), close_cb(0), change_value_cb(0),
@@ -663,11 +663,10 @@ int	XAttNav::crossref()
   char name[120];
   pwr_tClassId classid;
 
-  sts = gdh_ObjidToName ( objid, name, sizeof(name), 
-			cdh_mNName);
+  sts = gdh_AttrrefToName ( &objar, name, sizeof(name), cdh_mNName);
   if ( EVEN(sts)) return sts;
 
-  sts = gdh_GetObjectClass( objid, &classid);
+  sts = gdh_GetAttrRefTid( &objar, &classid);
   if ( EVEN(sts)) return sts;
 
   switch ( classid)
@@ -701,12 +700,24 @@ int	XAttNav::object_attr()
   int		i;
   gdh_sAttrDef 	*bd;
   int 		rows;
+  char		aname[120];
+  char		name[240];
+  char		*s;
 
   brow_SetNodraw( brow->ctx);
 
   // Get objid for rtbody or sysbody
 
-  sts = gdh_GetObjectClass ( objid, &classid);
+  sts = gdh_AttrrefToName ( &objar, name, sizeof(name), cdh_mNName);
+  if ( EVEN(sts)) return sts;
+
+  s = strchr( name, '.');
+  if ( s != 0)
+    strcpy( aname, s + 1);
+  else
+    strcpy( aname, "");
+
+  sts = gdh_GetAttrRefTid( &objar, &classid);
   if ( EVEN(sts)) return sts;
 
   sts = gdh_GetObjectBodyDef( classid, &bd, &rows);
@@ -719,12 +730,20 @@ int	XAttNav::object_attr()
 	 bd[i].attr->Param.Info.Flags & PWR_MASK_PRIVATE)
       continue;
 
+    if ( strcmp( aname, "") == 0)
+      strcpy( name, bd[i].attrName);
+    else {
+      strcpy( name, aname);
+      strcat( name, ".");
+      strcat( name, bd[i].attrName);
+    }
+
     elements = 1;
     if ( bd[i].attr->Param.Info.Flags & PWR_MASK_ARRAY ) {
       attr_exist = 1;
-      item = (Item *) new ItemAttrArray( brow, objid, 0, 
+      item = (Item *) new ItemAttrArray( brow, objar.Objid, 0, 
 					 flow_eDest_IntoLast,
-					 bd[i].attrName,
+					 name,
 					 bd[i].attr->Param.Info.Elements, 
 					 bd[i].attr->Param.Info.Type, 
 					 bd[i].attr->Param.Info.Size,
@@ -732,18 +751,18 @@ int	XAttNav::object_attr()
     }
     else if ( bd[i].attr->Param.Info.Flags & PWR_MASK_CLASS ) {
       attr_exist = 1;
-      item = (Item *) new ItemAttrObject( brow, objid, 0, 
+      item = (Item *) new ItemAttrObject( brow, objar.Objid, 0, 
 					  flow_eDest_IntoLast,
-					  bd[i].attrName,
+					  name,
 					  bd[i].attr->Param.TypeRef,
 					  bd[i].attr->Param.Info.Size,
 					  bd[i].attr->Param.Info.Flags, 0, 0);
     }
     else {
       attr_exist = 1;
-      item = (Item *) new ItemAttr( brow, objid, 0, 
+      item = (Item *) new ItemAttr( brow, objar.Objid, 0, 
 				    flow_eDest_IntoLast, 
-				    bd[i].attrName,
+				    name,
 				    bd[i].attr->Param.Info.Type, 
 				    bd[i].attr->Param.Info.Size,
 				    bd[i].attr->Param.Info.Flags, 0, 

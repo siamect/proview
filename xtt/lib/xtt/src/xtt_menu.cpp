@@ -358,6 +358,20 @@ static int xnav_GetMenu( xmenu_sMenuCall *ip)
         }
       }
     }
+    else if ( mcp->ItemType == xmenu_eItemType_AttrObject) {   
+      // Find attribute object methods...
+      // Get the RtXtt common menu-objects
+      strcpy( menu, "pwrs:Class-$Object-RtXttAttrObject");
+      sts = gdh_NameToObjid( menu, &menu_objid);
+      if ( ODD(sts)) {
+        sts = gdh_GetChild( menu_objid, &child);
+        while( ODD(sts)) {
+          sts = getAllMenuItems( ip, &Item, child, 0, &nItems, 0);
+          if ( EVEN(sts)) return sts;
+          sts = gdh_GetNextSibling( child, &child);
+        }
+      }
+    }
     else if ( mcp->ItemType == xmenu_eItemType_Attribute) {   
       // Find attribute methods...
       // Get the RtXttAttribute common menu-objects

@@ -37,6 +37,15 @@ html_sources := $(sort \
              ) \
            )
 
+pdf_sources := $(sort \
+             $(foreach file, \
+               $(foreach dir, \
+                 $(source_dirs), \
+                 $(wildcard $(dir)/*.pdf) \
+               ), $(notdir $(file)) \
+             ) \
+           )
+
 sv_se_html_sources := $(sort \
              $(foreach file, \
                $(foreach dir, \
@@ -49,14 +58,20 @@ sv_se_html_sources := $(sort \
 export_gif := $(addprefix $(doc_dir)/,$(gif_sources))
 export_html := $(addprefix $(doc_dir)/,$(html_sources))
 export_html_sv_se := $(addprefix $(doc_dir)/sv_se/,$(sv_se_html_sources))
+export_pdf := $(addprefix $(doc_dir)/,$(pdf_sources))
 clean_pwg := $(patsubst %.pwg,clean_%.pwg,$(sources))
 clean_html := $(patsubst %.html,clean_%.html,$(sources))
-export_doc := $(export_gif) $(export_html) $(export_html_sv_se)
+export_doc := $(export_gif) $(export_html) $(export_pdf) $(export_html_sv_se)
 clean_ge := $(clean_gif) $(clean_html)
 .SUFFIXES:
 
 
 .PHONY : all init copy lib exe clean realclean
+
+$(doc_dir)/%.pdf : ../../%.pdf
+	@ $(log_h_h)
+	@ $(cp) $(cpflags) $(source) $(target)
+
 
 all : init copy lib exe
 

@@ -838,6 +838,40 @@ gdh_GetObjectClass (
 }
 
 /** 
+ * @brief Get the type or class identifier of an attribute reference. 
+ * @return pwr_tStatus
+ */
+pwr_tStatus
+gdh_GetAttrRefTid (
+  pwr_sAttrRef		*arp,  /**< The attribute reference. */
+  pwr_tTid		*tid   /**< Receives the aref type or class identity. */
+)
+{
+  pwr_tStatus		sts = GDH__SUCCESS;
+  mvol_sAttribute	*ap;
+  mvol_sAttribute	attribute;
+
+  if ( arp->Flags.b.Object && arp->Body) {
+    *tid = arp->Body & ~7;
+    return GDH__SUCCESS;
+  }
+  if ( arp->Body == 0 && arp->Offset == 0)
+    return gdh_GetObjectClass( arp->Objid, tid);
+
+  gdh_ScopeLock {
+
+    ap = vol_ArefToAttribute(&sts, &attribute, arp, gdb_mLo_global, vol_mTrans_all);
+    if (ap != NULL) touchObject(ap->op);
+    
+  } gdh_ScopeUnlock;
+
+  if (ap != NULL)
+    *tid  = ap->tid;
+
+  return sts;
+}
+
+/** 
  * @brief Return the location of an object.
  *
  * The argument 'location' will get the
@@ -1866,6 +1900,36 @@ gdh_ObjidToPointer (
     if (op != NULL) 
       *p = vol_ObjectToAddress(&sts, op);
 
+  } gdh_ScopeUnlock;
+
+  return sts;
+}
+
+/** 
+ * @brief Gets the address of the data of an attribute reference.
+ *  
+ * Nota bene ! Only local objects can be referenced.  
+ *
+ * @return pwr_tStatus
+ */
+pwr_tStatus
+gdh_AttrRefToPointer (
+  pwr_sAttrRef		*arp,   /**< Attribute reference. */
+  void			**p    /**< Reveives a pointer to the object. */
+)
+{
+  pwr_tStatus		sts = GDH__SUCCESS;
+  gdb_sObject		*op;
+
+  if (p == NULL) return GDH__BADARG;
+
+  gdh_ScopeLock {
+
+    op = vol_OidToObject(&sts, arp->Objid, gdb_mLo_native, vol_mTrans_all, cvol_eHint_none);
+    if (op != NULL) {
+      *p = vol_ObjectToAddress(&sts, op);
+      *p = (char *)*p + arp->Offset;
+    }
   } gdh_ScopeUnlock;
 
   return sts;
@@ -3068,7 +3132,7 @@ gdh_GetObjectBodyDef(
     acnt += bdef->NumOfParams;
 
     /* Count attributes */
-    a_super[scnt++] = vol_OidToObject(&sts, bop->g.soid, gdb_mLo_global, vol_mTrans_all, cvol_eHint_none);
+    a_super[scnt++] = vol_OidToObject(&sts, bop->g.soid, gdb_mLo_local, vol_mTrans_none, cvol_eHint_none);
     while ( a_super[scnt-1]) {
       adef = pool_Address(NULL, gdbroot->rtdb, a_super[scnt-1]->u.n.body);
 
@@ -3082,7 +3146,7 @@ gdh_GetObjectBodyDef(
 	bdef = pool_Address(NULL, gdbroot->rtdb, bop->u.n.body);
 	acnt += bdef->NumOfParams - 1;
 	
-	a_super[scnt++] = vol_OidToObject(&sts, bop->g.soid, gdb_mLo_global, vol_mTrans_all, cvol_eHint_none);
+	a_super[scnt++] = vol_OidToObject(&sts, bop->g.soid, gdb_mLo_local, vol_mTrans_none, cvol_eHint_none);
       }
       else
 	break;
@@ -3108,7 +3172,7 @@ gdh_GetObjectBodyDef(
 	}	  
 	noid.vid = aop->g.oid.vid;
 	noid.oix = aop->g.sib.flink;
-	aop = vol_OidToObject(&sts, noid, gdb_mLo_global, vol_mTrans_none, cvol_eHint_next);
+	aop = vol_OidToObject(&sts, noid, gdb_mLo_local, vol_mTrans_none, cvol_eHint_next);
 	if ( aop && aop == a_super[i])
 	  break;
       }
@@ -3176,7 +3240,7 @@ gdh_GetTrueObjectBodyDef(
     bd = (gdh_sAttrDef *)calloc( acnt, sizeof(gdh_sAttrDef));
 
     acnt = 0;
-    aop = vol_OidToObject(&sts, bop->g.soid, gdb_mLo_global, vol_mTrans_all, cvol_eHint_none);
+    aop = vol_OidToObject(&sts, bop->g.soid, gdb_mLo_local, vol_mTrans_none, cvol_eHint_none);
     while ( aop) {
       adef = pool_Address(NULL, gdbroot->rtdb, aop->u.n.body);
       strcpy( bd[acnt].attrName, aop->g.f.name.orig);
@@ -3186,7 +3250,7 @@ gdh_GetTrueObjectBodyDef(
 	  
       noid.vid = aop->g.oid.vid;
       noid.oix = aop->g.sib.flink;
-      aop = vol_OidToObject(&sts, noid, gdb_mLo_global, vol_mTrans_none, cvol_eHint_next);
+      aop = vol_OidToObject(&sts, noid, gdb_mLo_local, vol_mTrans_none, cvol_eHint_next);
       if ( aop->g.oid.oix == bop->g.soid.oix)
 	break;
     }
@@ -3199,23 +3263,57 @@ gdh_GetTrueObjectBodyDef(
   return rsts;
 }
 
-#if 0
-pwr_tStatus 
-gdh_RegisterServer( 
-  errh_eAnix anix,
-  pwr_tOid server_oid
+pwr_tStatus
+gdh_GetAttrRefAdef(
+  pwr_sAttrRef *arp,
+  gdh_sAttrDef *attrdef
 )
 {
-  pwr_sNode *np;
-  pwr_tStatus sts;
+  pwr_sParam 		*adef;
+  mvol_sAttribute	Attribute;
+  mvol_sAttribute	*ap;
+  pwr_tStatus 		sts;
+  pwr_tStatus 		rsts = GDH__SUCCESS;
+  
+  gdh_ScopeLock {
 
-  sts = gdh_ObjidToPointer( gdbroot->my_node->nod_oid, (void **)&np);
-  if ( EVEN(sts)) return sts;
+    ap = vol_ArefToAttribute(&sts, &Attribute, arp, gdb_mLo_global, vol_mTrans_all);
+    if (ap == NULL)
+      rsts = GDH__ATTRIBUTE;
+    else {
+      touchObject(ap->op);
 
-  np->ProcObject[anix-1] = server_oid;
-  return GDH__SUCCESS;
+      adef = pool_Address(NULL, gdbroot->rtdb, ap->aop->u.n.body);
+      strcpy( attrdef->attrName, ap->aop->g.f.name.orig);
+      attrdef->attrClass = ap->aop->g.cid;
+      attrdef->attr = (pwr_uParDef *)adef;
+    }
+  } gdh_ScopeUnlock;
+  return rsts;
 }
-#endif
+
+pwr_tStatus 
+gdh_GetSuperClass( 
+  pwr_tCid cid,
+  pwr_tCid *supercid
+)
+{
+  gdb_sClass *cp;
+  pwr_tStatus sts = GDH__SUCCESS;
+
+  gdh_ScopeLock {
+    /* TODO get cashed class... */
+    cp = hash_Search(&sts, gdbroot->cid_ht, &cid);
+    if ( cp) {
+      if ( !(cp->attr[0].flags.m & PWR_MASK_SUPERCLASS))
+	sts = GDH__NOSUCHCLASS;
+      else
+	*supercid = cp->attr[0].tid;
+    }
+  } gdh_ScopeUnlock;
+
+  return sts;
+}
 
 
 

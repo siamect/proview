@@ -144,6 +144,8 @@
 #define	RTT_K_NEXTPAGE		284
 #define	RTT_K_HELP		285
 #define	RTT_K_COMMAND		286
+#define	RTT_K_SHIFT_ARROW_RIGHT 287
+#define	RTT_K_SHIFT_ARROW_LEFT 	288
 #if defined(OS_LYNX) || defined(OS_LINUX)
 # define RTT_K_RETURN 		10
 #else

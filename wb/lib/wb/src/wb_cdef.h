@@ -45,7 +45,7 @@ public:
   wb_bdef bdef(const char *bname);
   wb_bdef bdef(wb_name bname);
 
-  void templateBody( pwr_tStatus *sts, pwr_eBix bix, void *p);
+  void templateBody( pwr_tStatus *sts, pwr_eBix bix, void *p, pwr_tOid oid);
   wb_object classBody( const char *bname);
   wb_cdef super();
 

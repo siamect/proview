@@ -147,7 +147,8 @@ msToClock (
 
 static void
 waitClock (
-  time_tClock		c
+  time_tClock		c,
+  int			*tmo_ms
 );
 
 
@@ -216,7 +217,7 @@ main (
   time_tClock		wait_clock;
   qcom_sQid	        my_q = qcom_cNQid;
   qcom_sGet	        get;
-  int                   tmo = 0;
+  int                   tmo_ms = 0;
 
   init();
 
@@ -231,17 +232,23 @@ main (
 
   for (wait_clock = 0;;) {
 
+    if (wait_clock != 0) {
+      waitClock(wait_clock, &tmo_ms);
+    }
+    else {
+      tmo_ms = 0;
+    }
+
+#ifdef OS_LINUX
     get.data = NULL;
-    qcom_Get(&sts, &my_q, &get, tmo);
+    qcom_Get(&sts, &my_q, &get, tmo_ms);
     if (sts != QCOM__TMO && sts != QCOM__QEMPTY) {
       if (get.type.b == qcom_eBtype_event) {
         event(&get);
       }
       qcom_Free(&sts, get.data);
-    }
-
-    if (wait_clock != 0)
-      waitClock(wait_clock);
+    }      
+#endif
 
     aproc_TimeStamp();
 
@@ -633,7 +640,8 @@ msToClock (
 
 static void
 waitClock (
-  time_tClock		diff
+  time_tClock		diff,
+  int			*tmo_ms
 )
 {
 #if defined OS_VMS || defined OS_ELN
@@ -656,12 +664,18 @@ waitClock (
 # endif
 
 #elif defined OS_LYNX || defined OS_LINUX
-    pwr_tTime rmt;
-    pwr_tTime wait;
+//    pwr_tTime  rmt;
+//    pwr_tTime  wait;
+    static int tics_per_sec = 0;
 
+    if (tics_per_sec == 0) {
+      tics_per_sec = sysconf(_SC_CLK_TCK);
+    }
 //    printf("waitClock: %d\n", diff);
-    time_ClockToD(NULL, (pwr_tDeltaTime *)&wait, diff);
-    nanosleep(&wait, &rmt);
+//    time_ClockToD(NULL, (pwr_tDeltaTime *)&wait, diff);
+    *tmo_ms = diff * 1000 / tics_per_sec;
+//    *tmo_ms = wait.tv_sec * 1000 + wait.tv_nsec / 1000000;
+//    nanosleep(&wait, &rmt);
 #endif
 }
 
@@ -788,7 +802,6 @@ getWaitClock(
       *wait_clock = 0;
     else
        *wait_clock = diff;
-
   }
 
 }

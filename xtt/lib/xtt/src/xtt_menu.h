@@ -36,9 +36,10 @@ typedef enum {
 } xmenu_mUtility;
 
 typedef enum {
-  xmenu_eItemType_Object = 1,
-  xmenu_eItemType_Attribute = 2,
-  xmenu_eItemType_Crossref = 3
+  xmenu_eItemType_Object 	= 1,
+  xmenu_eItemType_AttrObject 	= 2,
+  xmenu_eItemType_Attribute 	= 3,
+  xmenu_eItemType_Crossref 	= 4
 } xmenu_eItemType;
 
 typedef enum {

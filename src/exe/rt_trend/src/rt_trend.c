@@ -220,20 +220,18 @@ InitTrendList (
   pwr_tUInt32	    Dummy;
   pwr_tTypeId	    Type;
   int		    Tix;
-  pwr_tObjid	    ObjId;
+  pwr_sAttrRef	    Aref;
   char		    Name[81];
   pwr_sClass_DsTrend  *Trend;
 
-  sts = gdh_GetClassList(pwr_cClass_DsTrend, &ObjId);
-  if (EVEN(sts)) {
-    return DS__NOOBJECT;
-  } 
+  sts = gdh_GetClassListAttrRef(pwr_cClass_DsTrend, &Aref);
+  if (EVEN(sts)) return DS__NOOBJECT;
 
   /* Scan through typelist and insert valid objects in list and initiate
      the DsTrend objects.  */
 
-  for (; ODD(sts) ; sts = gdh_GetNextObject(ObjId, &ObjId) ) {
-    sts = gdh_ObjidToName(ObjId, Name, sizeof(Name), cdh_mNName);  
+  for (; ODD(sts) ; sts = gdh_GetNextAttrRef( pwr_cClass_DsTrend, &Aref, &Aref) ) {
+    sts = gdh_AttrrefToName( &Aref, Name, sizeof(Name), cdh_mNName);  
     if (EVEN(sts))
       continue;
 

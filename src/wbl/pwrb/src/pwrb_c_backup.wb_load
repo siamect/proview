@@ -9,7 +9,7 @@
 !
 SObject pwrb:Class
 !/**
-!  @Version 1.0
+!  @Version 2.0
 !  @Code rt_plc_macro_logic.h
 !  @Group Plc,PlantConfiguration
 !  @Summary Backup of objects or attributes
@@ -100,15 +100,14 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Specifies the name of what to backup. Max. 79
-      !  characters.
+      !  Specifies the name of what to backup.
       !  Example:        
       !    VKV-ProdEnergi  ( the whole object is concerned)
       !    VKV-TEMP1.ActualValue  (only ActualValue is concerned)
       !*/
       Object DataName $Attribute 3 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$String80"
+          Attr TypeRef = "pwrs:Type-$AttrRef"
         EndBody
       EndObject
       !/**

@@ -4339,7 +4339,8 @@ int	gre_set_trace_attributes( gre_ctx grectx, char *host)
   vldh_t_node		*node_ptr;
   ldh_sParDef 		*bodydef;
   int 			rows;
-  pwr_tObjid		*objid;
+  pwr_sAttrRef		*objarp;
+  char			*np;
 
   wind = grectx->wind;
   sts = vldh_get_nodes( wind, &node_count, &nodelist);
@@ -4387,21 +4388,21 @@ int	gre_set_trace_attributes( gre_ctx grectx, char *host)
 			&bodydef, &rows);
 	  if ( EVEN(sts) ) return sts;
           strcpy( object_str, "");
-	  for ( j = 0; j < rows; j++ )
-	  {
-	    if ( bodydef[j].Par->Output.Info.Type == pwr_eType_Objid)
-            {
+	  for ( j = 0; j < rows; j++ ) {
+	    if ( bodydef[j].Par->Output.Info.Type == pwr_eType_AttrRef) {
               /* Get the objid stored in the parameter */
 	      sts = ldh_GetObjectPar( wind->hw.ldhses,
 			(*node_ptr)->ln.oid,  "DevBody",
-			bodydef[j].ParName, (char **)&objid, &size);
+			bodydef[j].ParName, (char **)&objarp, &size);
               if ( EVEN(sts)) return sts;
 
-              sts = ldh_ObjidToName( wind->hw.ldhses, *objid,
-	        ldh_eName_Hierarchy, object_str, sizeof(object_str), &size);
+              sts = ldh_AttrRefToName( wind->hw.ldhses, objarp,
+				       cdh_mNName, &np, &size);
               if ( EVEN(sts))
                 strcpy( object_str, "");
-	      free((char *) objid);
+	      else
+		strcpy( object_str, np);
+	      free((char *) objarp);
               
               break;
             }

@@ -439,6 +439,12 @@ gdh_ObjidToPointer (
 );
 
 pwr_tStatus
+gdh_AttrRefToPointer (
+  pwr_sAttrRef		*arp,
+  void			**p
+);
+
+pwr_tStatus
 gdh_NameToObjid (
   char			*objectName,
   pwr_tObjid		*objid
@@ -467,6 +473,12 @@ pwr_tStatus
 gdh_GetObjectClass (
   pwr_tObjid		object,
   pwr_tClassId		*classid
+);
+
+pwr_tStatus
+gdh_GetAttrRefTid (
+  pwr_sAttrRef		*arp,
+  pwr_tTid		*tid
 );
 
 pwr_tStatus
@@ -697,6 +709,18 @@ gdh_GetTrueObjectBodyDef(
   pwr_tCid cid,
   gdh_sAttrDef **bodydef,
   int *rows
+);
+
+pwr_tStatus
+gdh_GetAttrRefAdef(
+  pwr_sAttrRef *arp,
+  gdh_sAttrDef *attrdef
+);
+
+pwr_tStatus 
+gdh_GetSuperClass( 
+  pwr_tCid cid,
+  pwr_tCid *supercid
 );
 
 /* Undocumented routines. For internal use only.  */

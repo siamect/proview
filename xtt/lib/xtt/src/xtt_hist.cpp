@@ -52,7 +52,7 @@ extern "C" {
 /* 24 hours in seconds */
 #define ONEDAY 86400
 
-static void hist_display_in_xnav_cb( void *ctx, pwr_tObjid objid);
+static void hist_display_in_xnav_cb( void *ctx, pwr_sAttrRef *arp);
 
 static void hist_start_trace_cb( void *ctx, pwr_tObjid objid, char *name);
 
@@ -400,10 +400,10 @@ static void hist_popup_menu_cb( void *ctx, pwr_sAttrRef attrref,
 				   utility, arg, popup);
 }
 
-static void hist_display_in_xnav_cb( void *ctx, pwr_tObjid objid)
+static void hist_display_in_xnav_cb( void *ctx, pwr_sAttrRef *arp)
 {
   if ( ((Hist *)ctx)->display_in_xnav_cb)
-    ((Hist *)ctx)->display_in_xnav_cb( ((Hist *)ctx)->parent_ctx, objid);
+    ((Hist *)ctx)->display_in_xnav_cb( ((Hist *)ctx)->parent_ctx, arp);
 }
 
 

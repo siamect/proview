@@ -254,12 +254,13 @@ static int print_attr( char *object_p, pwr_tObjid objid,
   return 1;
 }
 
-int print_data( char *dataname, FILE *fp)
+int print_data( pwr_sAttrRef *arp, FILE *fp)
 {
   int		sts;
   char		*s;
   pwr_tClassId	classid;
   char		*object_p;
+  char		dataname[120];
   char		objectname[120];
   char		attributename[120];
   pwr_tObjid	objid;
@@ -267,6 +268,9 @@ int print_data( char *dataname, FILE *fp)
   int		array_element;
   int		index;
   int		nr;
+
+  sts = gdh_AttrrefToName( arp, dataname, sizeof(dataname), cdh_mNName);
+  if ( EVEN(sts)) return sts;
 
   strcpy( objectname, dataname);
   if ( (s = strchr( objectname, '.'))) {
@@ -335,88 +339,58 @@ int print_attribute( pwr_tObjid objid, pwr_tClassId classid, char *object_p, cha
   return 1;
 }
 
-int print_object( pwr_tObjid objid, pwr_tClassId classid, char *object_p, 
+int print_object( pwr_tOid oid, pwr_tCid cid, char *object_p, 
 		  int offset, char *prefix, FILE *fp)
 {
   int		sts;
-  pwr_tObjid	attr;
-  char		classname[80];
-  char		hiername[80];
-  char		parname[80];
-  char		fullname[80];
-  char		*s;
   unsigned long	elements;
-  pwr_sParInfo	parinfo;
-  pwr_tObjid	body;
-  pwr_tClassId	attr_class;
   int		i, j;
   char		objectname[120];
+  gdh_sAttrDef 	*bd;
+  int 		rows;
+  char		idx[20];
 
-  sts = gdh_ObjidToName( cdh_ClassIdToObjid(classid), classname,
-			  sizeof(classname), cdh_mName_volumeStrict);
+  sts = gdh_GetObjectBodyDef( cid, &bd, &rows);
   if ( EVEN(sts)) return sts;
 
+  for ( i = 0; i < rows; i++) {
 
-  for ( j = 0; j < 2; j++) {
-    strcpy( hiername, classname);
-    if ( j == 0)
-      strcat( hiername, "-RtBody");
-    else
-      strcat( hiername, "-SysBody");
-
-    sts = gdh_NameToObjid( hiername, &body);
-    if ( EVEN(sts)) 
+    if ( bd[i].attr->Param.Info.Flags & PWR_MASK_RTVIRTUAL || 
+	 bd[i].attr->Param.Info.Flags & PWR_MASK_PRIVATE)
       continue;
 
-    /* Get first attribute of the body */
-    i = 0;
-    sts = gdh_GetChild( body, &attr);
-    while ( ODD(sts)) {
-      sts = gdh_ObjidToName( attr, hiername, sizeof(hiername),
-			     cdh_mName_volumeStrict);
-      if ( EVEN(sts)) return sts;
-
-      /* Skip hierarchy */
-      s = strrchr( hiername, '-');
-      if ( s == 0)
-	strcpy( parname, hiername);
-      else
-	strcpy( parname, s + 1);
-
-      /* Get attr info for this attribute */
-      strcpy( fullname, hiername);
-      sts = gdh_GetObjectInfo( fullname, &parinfo, sizeof(parinfo));
-      if (EVEN(sts)) return sts;
-      sts = gdh_GetObjectClass( attr, &attr_class);
-      if ( EVEN(sts)) return sts;
-
-      if ( parinfo.Flags & PWR_MASK_RTVIRTUAL || 
-	   parinfo.Flags & PWR_MASK_PRIVATE) {
-	/* This attribute does not contain any useful information, take the
-	   next one */
-	sts = gdh_GetNextSibling ( attr, &attr);
-	i++;
-	continue;
-      }
-
+    elements = 1;
+    if ( bd[i].attr->Param.Info.Flags & PWR_MASK_ARRAY)
+      elements = bd[i].attr->Param.Info.Elements;
+    else
       elements = 1;
-      if ( parinfo.Flags & PWR_MASK_ARRAY)
- 	elements = parinfo.Elements;
 
-      if ( 0 /* parinfo.Flags & PWR_MASK_SUBCLASS */) {
+    if ( bd[i].attr->Param.Info.Flags & PWR_MASK_CLASS) {
+      if ( elements == 1) {
 	strcpy( objectname, prefix);
 	strcat( objectname, ".");
-	strcat( objectname, parname);
-	/* classid = ... */
-	print_object( objid, classid, object_p, offset + parinfo.Offset, objectname, fp);
+	strcat( objectname, bd[i].attrName);
+	print_object( oid, bd[i].attr->Param.TypeRef, object_p, 
+		      offset + bd[i].attr->Param.Info.Offset, objectname, fp);
       }
-      else
-        print_attr( object_p, objid, prefix, parname, parinfo.Type, parinfo.Size, 
-		  offset + parinfo.Offset, elements, fp);
-
-      sts = gdh_GetNextSibling ( attr, &attr);
-      i++;
+      else {
+	for ( j = 0; j < elements; j++) {
+	  strcpy( objectname, prefix);
+	  strcat( objectname, ".");
+	  strcat( objectname, bd[i].attrName);
+	  sprintf( idx, "[%d]", j);
+	  strcat( objectname, idx);
+	  print_object( oid, bd[i].attr->Param.TypeRef, object_p, 
+			offset + bd[i].attr->Param.Info.Offset + 
+			j * bd[i].attr->Param.Info.Size / elements, objectname, fp);
+	}
+      }
     }
+    else
+      print_attr( object_p, oid, prefix, bd[i].attrName, bd[i].attr->Param.Info.Type, 
+		  bd[i].attr->Param.Info.Size,
+		  offset + bd[i].attr->Param.Info.Offset, elements, fp);
+
   }
   return 1;
 }
@@ -432,10 +406,10 @@ static void error_msg( pwr_tStatus sts, FILE *fp)
 pwr_tStatus bck_print( char *filename)
 {
   char fname[256];
-  pwr_tObjid objid;
+  pwr_sAttrRef aref;
   char objname[120];
   FILE *fp = 0;
-  pwr_tString80 dataname;
+  pwr_sAttrRef dataname;
   int sts;
 
   if ( filename) {
@@ -447,16 +421,16 @@ pwr_tStatus bck_print( char *filename)
   sts = gdh_Init("pwr_bck_print");
   if (EVEN(sts)) return sts;
 
-  sts = gdh_GetClassList( pwr_cClass_Backup, &objid);
+  sts = gdh_GetClassListAttrRef( pwr_cClass_Backup, &aref);
   while ( ODD(sts)) {
-    if ( objid.vid < cdh_cUserVolMin) {
+    if ( aref.Objid.vid < cdh_cUserVolMin) {
       // In template plc, continue
-      sts = gdh_GetNextObject(objid, &objid);
+      sts = gdh_GetNextAttrRef( pwr_cClass_Backup, &aref, &aref);
       continue;
     }
 
 
-    sts = gdh_ObjidToName( objid, objname, sizeof(objname), cdh_mName_volumeStrict); 
+    sts = gdh_AttrrefToName( &aref, objname, sizeof(objname), cdh_mName_volumeStrict); 
     if ( EVEN(sts)) return sts;
 
     if ( fp)
@@ -465,12 +439,12 @@ pwr_tStatus bck_print( char *filename)
       printf( "// %s\n", objname);
 
     strcat( objname, ".DataName");
-    sts = gdh_GetObjectInfo( objname, dataname, sizeof(dataname));
+    sts = gdh_GetObjectInfo( objname, &dataname, sizeof(dataname));
 
-    sts = print_data( dataname, fp);
+    sts = print_data( &dataname, fp);
     if ( EVEN(sts)) error_msg( sts, fp);
     
-    sts = gdh_GetNextObject( objid, &objid);
+    sts = gdh_GetNextAttrRef( pwr_cClass_Backup, &aref, &aref);
   }
 
   if ( fp)

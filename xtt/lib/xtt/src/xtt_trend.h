@@ -29,8 +29,8 @@ class XttTrend {
 	Widget	xn_parent_wid,
 	char *xn_name,
 	Widget *w,
-        pwr_tObjid *objid,
-        pwr_tObjid plotgroup,
+        pwr_sAttrRef *objid,
+        pwr_sAttrRef *plotgroup,
         int *sts);
     void       *xnav;
     Widget     parent_widget;

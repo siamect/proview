@@ -49,7 +49,7 @@ public:
   wb_orep *classBody( pwr_tStatus *sts, const char *bname);
   wb_cdrep* super( pwr_tStatus *sts);
 
-  void templateBody( pwr_tStatus *sts, pwr_eBix bix, void *p);
+  void templateBody( pwr_tStatus *sts, pwr_eBix bix, void *p, pwr_tOid oid);
   void dbCallBack( pwr_tStatus *sts, ldh_eDbCallBack cb, char **methodName,
 		   pwr_sDbCallBack **o);
   wb_orep *menu( pwr_tStatus *sts, void **o);
@@ -63,10 +63,19 @@ public:
 		      size_t *cnv_rbody_size, size_t *cnv_dbody_size,
 		      void **cnv_rbody, void **cnv_dbody);
 
+  void updateTemplateSubClass( wb_adrep *subattr, char *body, pwr_tOid oid,
+			       pwr_tOid toid);
+  void updateTemplate( pwr_eBix bix, void *b, pwr_tOid oid, pwr_tOid toid);
   pwr_tStatus sts() { return m_sts;}
 };
 
 #endif
+
+
+
+
+
+
 
 
 

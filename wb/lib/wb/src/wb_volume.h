@@ -95,6 +95,12 @@ public:
   pwr_tStatus triggPostUnadopt( wb_object& father, wb_object& o);
 
   ldh_sRefInfo *refinfo( wb_object o, ldh_sRefInfo *rp);
+
+  void aref( pwr_tCid cid, pwr_sAttrRef *arp);
+  void nextAref( pwr_tCid cid, pwr_sAttrRef *arp, pwr_sAttrRef *new_arp);
+  void aref( pwr_tCid cid, wb_object o, pwr_sAttrRef *arp);
+  void nextObjectAref( pwr_tCid cid, pwr_sAttrRef *arp, pwr_sAttrRef *oarp);
+  bool isAncestor( wb_object& ancestor, wb_object& o);
 };
 
 #endif

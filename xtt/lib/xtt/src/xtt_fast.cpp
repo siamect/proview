@@ -55,12 +55,12 @@ XttFast::XttFast(
 	Widget	parent_wid,
 	char *name,
 	Widget *w,
-        pwr_tObjid fast_object,
+        pwr_sAttrRef *fast_arp,
         int *sts) :
   xnav(parent_ctx), parent_widget(parent_wid), fast_cnt(0), close_cb(0), first_scan(1),
   axis_configured(false)
 {
-  pwr_tObjid objid = pwr_cNObjid;
+  pwr_sAttrRef aref = pwr_cNAttrRef;
   char fast_name[120];
   char attr_name[120];
   pwr_sClass_DsFastCurve fp;
@@ -71,13 +71,13 @@ XttFast::XttFast(
 
   // Get current status of the fast objects
   i = 0;
-  objid = fast_object;
-  if ( cdh_ObjidIsNull( objid)) {
+  aref = *fast_arp;
+  if ( cdh_ObjidIsNull( aref.Objid)) {
     *sts = XNAV__FASTCONFIG;
     return;
   }
 
-  *sts = gdh_ObjidToName( objid, fast_name, sizeof(fast_name), 
+  *sts = gdh_AttrrefToName( &aref, fast_name, sizeof(fast_name), 
 			  cdh_mNName);
   if (EVEN(*sts)) return;
 

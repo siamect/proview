@@ -12,6 +12,14 @@
 #include "wb_ldh.h"
 #endif
 
+typedef enum {
+  trv_eDepth_Deep,
+  trv_eDepth_Children,
+  trv_eDepth_Self
+} trv_eDepth;
+  
+typedef int (*trv_tBcFunc)( pwr_sAttrRef *, void *, void *, void *, void *, void*);
+
 typedef struct {
 	  ldh_tSesContext	ldhses;
 	  pwr_tObjid		hierobjid;
@@ -164,5 +172,20 @@ int	trv_create_ctx(
 int	trv_delete_ctx( 
   trv_ctx		trvctx
 );
+
+int trv_get_attrobjects (
+  ldh_tSesContext ldhses,
+  pwr_tOid	oid,
+  pwr_tCid	*cid,
+  char		*name,
+  trv_eDepth	depth,
+  trv_tBcFunc	backcall,
+  void		*arg1,
+  void		*arg2,
+  void		*arg3,
+  void		*arg4,
+  void		*arg5
+);
+
 #endif
 

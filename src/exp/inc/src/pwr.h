@@ -403,7 +403,7 @@ typedef union {
 */
 typedef struct {
   pwr_tOid	    Objid;	//!< Object identity.
-  pwr_tCid          Body;	//!< Class identity of body.
+  pwr_tCid          Body;	//!< Typeid of attribute, body or class.
   pwr_tUInt32       Offset;	//!< Offset in body.
   pwr_tUInt32       Size;	//!< Attribute size.
   pwr_mAttrRef      Flags;	//!< Attribute flags.
@@ -590,7 +590,7 @@ static const pwr_tStatus    pwr_cNStatus    = 0;	//!< Zero status constant.
 #endif
 
 #ifndef pwr_ReturnVoid
-# define pwr_ReturnVoid(sts, lsts) (((void*)(sts)?(*sts) = (lsts):lsts), return)
+# define pwr_ReturnVoid(sts, lsts) {((void*)(sts)?(*sts) = (lsts):lsts); return;}
 #endif
 
 #ifdef PWR_NDEBUG

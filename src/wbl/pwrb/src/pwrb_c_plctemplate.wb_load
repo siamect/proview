@@ -1,0 +1,145 @@
+!  pwrb_c_plctemplate.wb_load -- Defines the class PlcTemplate.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+SObject pwrb:Class
+!/**
+!  @Version 1.0
+!  @Group PlantConfiguration,Plc
+!  @Summary Configures a template PLC program
+!  Configures a template PLC program in a class definition.
+!  
+!  A composed functions object contains plc code, and this
+!  code is defined in a PlcTemplate program.
+!  The object is positioned in the class definition hierarchy
+!  below the ClassDef object, and is named 'Code'.
+!*/
+  Object PlcTemplate $ClassDef 375 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_RtAndDevBodies
+      Attr Flags = pwr_mClassDef_DevOnly
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "PlcTemplate"
+      EndBody
+      !/**
+      !  Optional the text to describe the program.
+      !*/
+      Object Description $Intern 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      ! Not used.
+      !*/
+      Object ThreadObject $Intern 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object ScanTime $Intern 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "ScanTim"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      ! Not used.
+      !*/
+      Object ResetObject $Intern 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$AttrRef"
+          Attr GraphName = "ResObj"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Not used.
+      !*/
+      Object ExecuteOrder $Intern 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "ExecOrd"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      Object PlcProgram $Buffer 4 
+        Body SysBody
+          Attr PgmName = "PlcPgm"
+          Attr Class = pwr_eClass_PlcProgram
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcPgm $GraphPlcProgram
+      Body SysBody
+        Attr plc_type = 0
+        Attr subwindow_class = "pwrb:Class-WindowPlc"
+      EndBody
+    EndObject
+    Object NavigatorPosnn $Menu
+      Object Pointed $Menu
+	Object OpenProgram $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open Program..."
+	    Attr MethodName = "PlcPgm-OpenProgram"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object NavigatorPoson $Menu
+      Object Pointed $Menu
+	Object OpenProgram $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open Program..."
+	    Attr MethodName = "PlcPgm-OpenProgram"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object NavigatorPosos $Menu
+      Object Pointed $Menu
+	Object OpenProgram $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open Program..."
+	    Attr MethodName = "PlcPgm-OpenProgram"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object NavigatorPosms $Menu
+      Object Pointed $Menu
+	Object OpenProgram $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open Program..."
+	    Attr MethodName = "PlcPgm-OpenProgram"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object NavigatorPosmn $Menu
+      Object Pointed $Menu
+	Object OpenProgram $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open Program..."
+	    Attr MethodName = "PlcPgm-OpenProgram"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+  EndObject
+EndSObject
+
+

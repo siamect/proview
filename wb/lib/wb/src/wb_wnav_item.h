@@ -67,13 +67,13 @@ class WItem {
 	type( wnav_eItemType_Object), objid(item_objid), is_root(item_is_root),
 	node(NULL)
 	{};
-    int     	open_attributes( WNav *wnav, double x, double y)
+    int open_attributes( WNav *wnav, double x, double y)
 				{ return 1;};
-    int		open_children( WNav *wnav, double x, double y)
+    int	open_children( WNav *wnav, double x, double y)
 				{ return 1;};
-    int		open_trace( WNav *wnav, double x, double y)
+    int open_trace( WNav *wnav, double x, double y)
 				{ return 1;};
-    void     	close( WNav *wnav, double x, double y) {};
+    void close( WNav *wnav, double x, double y) {};
     virtual pwr_sAttrRef aref();
     wnav_eItemType	type;
     pwr_tObjid		objid;
@@ -357,6 +357,7 @@ class WItemAttrObject : public WItemBaseAttr {
 	int attr_flags, char *attr_body, int fullname);
     int     open_children( double x, double y) {return 1;};
     int     open_attributes( double x, double y);
+    int     open_crossref( WNav *wnav, double x, double y);
     int     close( double x, double y);
 };
 

@@ -82,4 +82,9 @@ is_stopped	<IO is stopped>						/info
 timeinvalid	<Invalid scantime>					/error
 classexceed	<Max number of classes exceeded>			/error
 chanrange	<Error in channel range attributes>			/error
+notconnected	<Object is not connected>				/error
+connectedclass	<Incorrect class of connected object>			/error
+replaced	<Symbol is replaced>					/info
 .end
+
+

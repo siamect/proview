@@ -9,7 +9,7 @@
 !
 SObject pwrb:Class
 !/**
-!  @Version 1.0
+!  @Version 2.0
 !  @Group Operator,NodeConfiguration
 !  @Summary Configures a group of trend or fast graphs
 !  Configures a group of trend or fast graphs.
@@ -88,7 +88,7 @@ SObject pwrb:Class
       !*/
       Object YObjectName $Attribute 4 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr TypeRef = "pwrs:Type-$AttrRef"
           Attr Flags |= PWR_MASK_ARRAY
 	  Attr Elements = 20
         EndBody

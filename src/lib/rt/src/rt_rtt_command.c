@@ -231,6 +231,12 @@ static int rtt_get_current_object(
 			char		*objectname,
 			int		size,
 			pwr_tBitMask	nametype);
+static int rtt_get_current_aref(
+			menu_ctx	ctx,
+			pwr_sAttrRef	*arp,
+			char		*objectname,
+			int		size,
+			pwr_tBitMask	nametype);
 static int	rtt_set_plcscan(
 			pwr_tObjid	objid,
 			int		*on,
@@ -1792,7 +1798,7 @@ static int	crossref_func(	menu_ctx	ctx,
 	char		func_str[80];
 	char		*file_ptr;
 	char		*name_ptr;
-	pwr_tObjid	objid;
+	pwr_sAttrRef	objar;
 	pwr_tClassId	class;
 	int		brief;
 	int		case_sens;
@@ -1837,20 +1843,18 @@ static int	crossref_func(	menu_ctx	ctx,
 	    }
 	    else if ( ODD( rtt_get_qualifier( "/NAME", name_str)))
 	      name_ptr = name_str;
-	    else
-	    {
+	    else {
 	      /* Get the selected object */
-	      sts = rtt_get_current_object( ctx, &objid, name_str, 
-		sizeof( name_str), cdh_mName_path | cdh_mName_object);
-	      if ( EVEN(sts))
-	      {
+	      sts = rtt_get_current_aref( ctx, &objar, name_str, 
+		sizeof( name_str), cdh_mName_path | cdh_mName_object | cdh_mName_attribute);
+	      if ( EVEN(sts)) {
 	        rtt_message('E', "Enter name or select an object");
 	        return RTT__HOLDCOMMAND;
 	      }
 	      name_ptr = name_str;
 	    }
 
-	    sts = gdh_GetObjectClass ( objid, &class);
+	    sts = gdh_GetAttrRefTid( &objar, &class);
 	    if ( EVEN(sts)) return sts;
 
 	    switch ( class)
@@ -5331,19 +5335,17 @@ static int	rtt_show_parameter_add(
 	int		j;
 	char		objname[100];
 	int		sts;
-	char		hiername[80];
-	pwr_tClassId	class;
 	int		elements;
 	char 		*parameter_ptr;
 	SUBID 		subid;
-	pwr_sParInfo	parinfo;
 	char		title[120];
 	char		classname[80];
 	pwr_tObjid	childobjid;
-	pwr_tTypeId	attrtype;
-	unsigned int	attrsize, attroffs, attrelem;
 	char		*s;
         int		element;
+	gdh_sAttrDef	ad;
+	pwr_sAttrRef	aref;
+	int		flags;
 
 	element = *elem;
 
@@ -5354,50 +5356,21 @@ static int	rtt_show_parameter_add(
 	strcat( objname, ".");
 	strcat( objname, parname);
 
-	sts = gdh_GetAttributeCharacteristics ( objname,
-		&attrtype, &attrsize, &attroffs, &attrelem);
+	sts = gdh_NameToAttrref( pwr_cNObjid, objname, &aref);
+	if ( EVEN(sts)) return sts;
+
+	sts = gdh_GetAttrRefAdef( &aref, &ad);
 	if ( EVEN(sts)) return sts;
 
 	/* Get rtdb pointer */
 	sts = gdh_RefObjectInfo ( objname, (pwr_tAddress *) &parameter_ptr, 
-			&subid, attrsize);
-	if ( (EVEN(sts))  /****NYGDH || ( sts == (GDH__NODEDOWN -1)) ****/)
-	{
+			&subid, ad.attr->Param.Info.Size);
+	if ( EVEN(sts))
 	  parameter_ptr = 0;
-	}
-
-	/* Get class name */	
-	sts = gdh_GetObjectClass ( objid, &class);
-	if ( EVEN(sts)) return sts;
-	sts = gdh_ObjidToName ( cdh_ClassIdToObjid(class), hiername,
-			sizeof(hiername), cdh_mName_volumeStrict);
-	if ( EVEN(sts)) return sts;
-
-	/* Remove index if element in an array */
-	if ( (s = strrchr( parname, '[')))
-	  *s = 0;
-	strcat( hiername, "-RTBODY-");
-	strcat( hiername, parname);
-
-	sts = gdh_GetObjectInfo ( hiername, &parinfo, sizeof(parinfo)); 
-	if (EVEN(sts))
-	{
-	  /* Try with sysbody */
-	  sts = gdh_ObjidToName ( cdh_ClassIdToObjid(class), hiername, 
-			sizeof(hiername), cdh_mName_volumeStrict);
-	  if ( EVEN(sts)) return sts;
-
-	  strcat( hiername, "-SYSBODY-");
-	  strcat( hiername, parname);
-
-	  sts = gdh_GetObjectInfo ( hiername, &parinfo, sizeof(parinfo)); 
-	  if (EVEN(sts)) return RTT__ITEM_NOCREA;
-	}	
 
 	elements = 1;
-	if ( parinfo.Flags & PWR_MASK_ARRAY )
-	{
-	  elements = parinfo.Elements;
+	if ( ad.attr->Param.Info.Flags & PWR_MASK_ARRAY ) {
+	  elements = ad.attr->Param.Info.Elements;
 	  if ( element > (elements -1))
 	    element = elements -1;
 	  else if ( element < 0)
@@ -5406,14 +5379,16 @@ static int	rtt_show_parameter_add(
 	else
 	  element = -1;
 
+	flags = ad.attr->Param.Info.Flags;
+
 	/* gdh returns the pointer (not a pointer to a pointer) 
 	   remove the pointer bit in Flags */
-	if ( parinfo.Flags & PWR_MASK_POINTER )
-	  parinfo.Flags -= PWR_MASK_POINTER;
+	if ( flags & PWR_MASK_POINTER )
+	  flags -= PWR_MASK_POINTER;
 
 
 	if ( element >= 0)
-	  parameter_ptr += element * parinfo.Size / elements;
+	  parameter_ptr += element * ad.attr->Param.Info.Size / elements;
 
 	/* Get class name */	
 	sts = rtt_objidtoclassname( objid, classname);
@@ -5442,8 +5417,8 @@ static int	rtt_show_parameter_add(
 		&rtt_object_parameters, 
 		&rtt_debug_child,
 		objid,0,0,0,0, objname,
-		RTT_PRIV_NOOP, parameter_ptr, parinfo.Type, parinfo.Flags, 
-		parinfo.Size / elements, subid, 0, 0, 0, 0, 0.0, 0.0, 
+		RTT_PRIV_NOOP, parameter_ptr, ad.attr->Param.Info.Type, flags, 
+		ad.attr->Param.Info.Size / elements, subid, 0, 0, 0, 0, 0.0, 0.0, 
 		RTT_DATABASE_GDH, 0);
 	if ( EVEN(sts)) return sts;
 	(*index)++;
@@ -6822,168 +6797,87 @@ int	rtt_collect_insert(
 			menu_ctx	ctx,
 			char		*full_name)
 {
-	  int 		sts;
-	  rtt_t_menu_upd	*menu_ptr_upd;
-	  rtt_t_menu	*menu_ptr_stat;
-	  char		objname[160];
-	  int		index;
-	  pwr_tObjid	objid;
-	  char		parametername[32];
-	  char		name_array[2][160];
-	  int		names;
-	  char		*s;
+	int 		sts;
+	rtt_t_menu_upd	*menu_ptr_upd;
+	rtt_t_menu	*menu_ptr_stat;
+	int		index;
+	pwr_tObjid	objid;
+	char		*s;
+	char		aname[240];
+	pwr_sAttrRef	aref;
 
 	/* Get next index in the collection picture */
 	menu_ptr_upd = rtt_collectionmenulist;
 	index = 0;
-	if ( menu_ptr_upd != 0)
-  	{
-	  while ( menu_ptr_upd->text[0] != 0)
-	  {
+	if ( menu_ptr_upd != 0) {
+	  while ( menu_ptr_upd->text[0] != 0) {
 	    menu_ptr_upd++;
 	    index++;
 	  }
   	}
 
-	/* Check parametername if there is one */
-	if ( full_name != NULL)
-	{
-	  /* Check if parametername or only objektname */
-	  s = strchr( full_name, '.');
-	  if ( s == 0)
-	  {
-	    /* Only object name, debug object */
-	    sts = gdh_NameToObjid ( full_name, &objid);
-	    if (EVEN(sts))
-	    {
-	      rtt_message('E',"Object not found");
-	      return RTT__HOLDCOMMAND;
-	    }
-	    sts = rtt_debug_object_add( objid, &rtt_collectionmenulist, 
-		&index, &zero, 0, 0);
-	    if ( (EVEN(sts)) || ( sts == RTT__ITEM_NOCREA))
-	    {
-	      rtt_message('E',"No debug on this item");
-	      return RTT__NOPICTURE;
-	    }
-   	  }
-	  else
-	  {
-	    /* Object and parameter in the full_name */
-	    /* Parse the parameter name to get object name and
-	     parameter name */
-	     names = rtt_parse( full_name, ".", "",
-		(char *) name_array, sizeof( name_array)/sizeof( name_array[0]), 
-		sizeof( name_array[0]), 0);
-	    if ( names != 2 )
-	    {
-	      rtt_message('E',"No debug on this item");
-	      return RTT__NOPICTURE;
-	    }
-	    strncpy( objname, name_array[0], sizeof(objname));
-	    strncpy( parametername, name_array[1], sizeof(parametername));
-
-	    sts = gdh_NameToObjid ( objname, &objid);
-	    if ( EVEN(sts))
-	    {
-	      rtt_message('E',"No debug on this item");
-	      return RTT__NOPICTURE;
-	    }
-
-	    sts = rtt_show_parameter_add( objid, &rtt_collectionmenulist, 
-		parametername, &index, &zero, 0);
-	    if ( (EVEN(sts)) || ( sts == RTT__ITEM_NOCREA))
-     	    {
-	      rtt_message('E',"No debug on this item");
-	      return RTT__NOPICTURE;
-	    }
-	  }
+	if ( full_name != 0) {
+	  strcpy( aname, full_name);
+	  sts = gdh_NameToAttrref( pwr_cNObjid, aname, &aref);
+	  if ( EVEN(sts)) return sts;
 	}
-	else
-	{
-	  /* Add current item to the rtt_collectionmenulist */
-	  if ( ctx->menutype & RTT_MENUTYPE_UPD)
-	  {
-	    /* Get objid for the item, assume that it is in the first argument */
-	    menu_ptr_upd = (rtt_t_menu_upd *) ctx->menu;
-	    menu_ptr_upd += ctx->current_item;
-	    objid = menu_ptr_upd->argoi;
-	
-	    /* Parse the parameter name for the item to get object name and
-	       parameter name */
-	    names = rtt_parse( menu_ptr_upd->parameter_name, ".", "",
-		(char *) name_array, sizeof( name_array)/sizeof( name_array[0]), 
-		sizeof( name_array[0]), 0);
-	    if ( names == 2 )
-	    {
-	      strncpy( objname, name_array[0], sizeof(objname));
-	      strncpy( parametername, name_array[1], sizeof(parametername));
+	else if ( ctx->menutype & RTT_MENUTYPE_UPD) {
+	  menu_ptr_upd = (rtt_t_menu_upd *) ctx->menu;
+	  menu_ptr_upd += ctx->current_item;
 
-	      sts = gdh_NameToObjid ( objname, &objid);
-	      if ( EVEN(sts))
-	      {
-	        rtt_message('E',"No debug on this item");
-	        return RTT__NOPICTURE;
-	      }
+	  strcpy( aname, menu_ptr_upd->parameter_name);
+	  sts = gdh_NameToAttrref( pwr_cNObjid, aname, &aref);
+	  if ( EVEN(sts)) return sts;
+	}
+	else if ( ctx->menutype & RTT_MENUTYPE_MENU) {
+	  /* Get objid for the item, assume that it is in the first argument */
+	  menu_ptr_stat = ctx->menu;
+	  menu_ptr_stat += ctx->current_item;
+	  aref = cdh_ObjidToAref( menu_ptr_stat->argoi);
+	}
+	else {
+	  rtt_message('E',"No debug on this item");
+	  return RTT__NOPICTURE;
+	}
 
-	      sts = rtt_show_parameter_add( objid, &rtt_collectionmenulist, 
-		parametername, &index, &zero, 0);
-	      if ( (EVEN(sts)) || ( sts == RTT__ITEM_NOCREA))
-	      {
-	        rtt_message('E',"No debug on this item");
-	        return RTT__NOPICTURE;
-	      }
-	    }
-	    else
-	    {
-	      sts = gdh_ObjidToName ( objid, objname, sizeof(objname), cdh_mNName);
-	      if ( EVEN(sts))
-	      {
-	        rtt_message('E',"No debug on this item");
-	        return RTT__NOPICTURE;
-	      }
-	      sts = rtt_debug_object_add( objid, &rtt_collectionmenulist, 
-		&index, &zero, 0, 0);
-	      if ( (EVEN(sts)) || ( sts == RTT__ITEM_NOCREA))
-	      {
-	        rtt_message('E',"No debug on this item");
-	        return RTT__NOPICTURE;
-	      }
-	    }
+	if ( aref.Flags.b.Object) {
+	  /* Only object name, debug object */
+	  sts = gdh_NameToObjid ( full_name, &objid);
+	  if (EVEN(sts)) {
+	    rtt_message('E',"Object not found");
+	    return RTT__HOLDCOMMAND;
 	  }
-	  else if ( ctx->menutype & RTT_MENUTYPE_MENU)
-	  {
-	    /* Get objid for the item, assume that it is in the first argument */
-	    menu_ptr_stat = ctx->menu;
-	    menu_ptr_stat += ctx->current_item;
-	    objid = menu_ptr_stat->argoi;
-
-	    sts = gdh_ObjidToName ( objid, objname, sizeof(objname), cdh_mNName);
-	    if ( EVEN(sts))
-	    {
-	      rtt_message('E',"No debug on this item");
-	      return RTT__NOPICTURE;
-	    }
-	    sts = rtt_debug_object_add( objid, &rtt_collectionmenulist, 
-		&index, &zero, 0, 0);
-	    if ( (EVEN(sts)) || ( sts == RTT__ITEM_NOCREA))
-	    {
-	      rtt_message('E',"No debug on this item");
-	      return RTT__NOPICTURE;
-	    }
-	  }
-	  else
-	  {
+	  sts = rtt_debug_object_add( objid, &rtt_collectionmenulist, 
+				      &index, &zero, 0, 0);
+	  if ( (EVEN(sts)) || ( sts == RTT__ITEM_NOCREA)) {
 	    rtt_message('E',"No debug on this item");
 	    return RTT__NOPICTURE;
 	  }
-
 	}
+	else if ( aref.Flags.b.ObjectAttr) {
+	  rtt_message('E',"No debug on this item");
+	  return RTT__NOPICTURE;
+	}
+	else {
+	  /* Object and parameter in the full_name */
+	  /* Parse the parameter name to get object name and
+	     parameter name */
+	  s = strchr( aname, '.');
+	  if ( s == 0) return RTT__NOPICTURE;
+	  s++;
+
+	  sts = rtt_show_parameter_add( aref.Objid, &rtt_collectionmenulist, 
+					s, &index, &zero, 0);
+	  if ( (EVEN(sts)) || ( sts == RTT__ITEM_NOCREA)) {
+	    rtt_message('E',"No debug on this item");
+	    return RTT__NOPICTURE;
+	  }
+	}
+
 	rtt_message('I',"Object inserted");
 
 	/* Update the menu in the context, if it exists */
-	if ( rtt_collectionmenuctx != 0)
-	{
+	if ( rtt_collectionmenuctx != 0) {
 	  rtt_collectionmenuctx->menu = (rtt_t_menu *) rtt_collectionmenulist;
 	  sts = rtt_menu_upd_bubblesort( rtt_collectionmenulist);
 	  rtt_menu_upd_configure( rtt_collectionmenuctx);
@@ -9323,6 +9217,49 @@ static int rtt_get_current_object(
 	    *objid = menu_ptr_stat->argoi;
 	  }
 	  sts = gdh_ObjidToName ( *objid, objectname, size, nametype);
+	  if ( EVEN(sts)) return sts;
+
+	  return RTT__SUCCESS;
+}
+
+static int rtt_get_current_aref(
+			menu_ctx	ctx,
+			pwr_sAttrRef	*arp,
+			char		*objectname,
+			int		size,
+			pwr_tBitMask	nametype)
+{
+	  rtt_t_menu_upd	*menu_ptr_upd;
+	  rtt_t_menu		*menu_ptr_stat;
+	  int			sts;
+
+	  if ( ctx->menutype & RTT_MENUTYPE_UPD) {
+	    /* Get objid for the item, 
+			assume that it is in the first argument */
+	    menu_ptr_upd = (rtt_t_menu_upd *) ctx->menu;
+	    menu_ptr_upd += ctx->current_item;
+	    sts = gdh_NameToAttrref( pwr_cNObjid, menu_ptr_upd->parameter_name, arp);
+	    if ( EVEN(sts)) return sts;
+
+	    if ( !(arp->Flags.b.Object || arp->Flags.b.ObjectAttr)) {
+	      char aname[80];
+	      char *s;
+
+	      strcpy( aname, menu_ptr_upd->parameter_name);
+	      s = strrchr( aname, '.');
+	      if ( s)
+		*s = 0;
+	      sts = gdh_NameToAttrref( pwr_cNObjid, aname, arp);
+	      if ( EVEN(sts)) return sts;
+	    }
+	  }
+	  else if ( ctx->menutype & RTT_MENUTYPE_MENU) {
+	    /* Get objid for the item, assume that it is in the first argument */
+	    menu_ptr_stat = ctx->menu;
+	    menu_ptr_stat += ctx->current_item;
+	    *arp = cdh_ObjidToAref( menu_ptr_stat->argoi);
+	  }
+	  sts = gdh_AttrrefToName( arp, objectname, size, nametype);
 	  if ( EVEN(sts)) return sts;
 
 	  return RTT__SUCCESS;

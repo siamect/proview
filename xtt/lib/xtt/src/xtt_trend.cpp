@@ -54,14 +54,14 @@ XttTrend::XttTrend(
 	Widget	parent_wid,
 	char *name,
 	Widget *w,
-        pwr_tObjid *trend_list,
-        pwr_tObjid plotgroup,
+        pwr_sAttrRef *trend_list,
+        pwr_sAttrRef *plotgroup,
         int *sts) :
   xnav(parent_ctx), parent_widget(parent_wid), trend_cnt(0), close_cb(0)
 {
-  pwr_tObjid *objid_list;
-  pwr_tObjid *objid_p;
-  pwr_tObjid plot_trends[XTT_TREND_MAX];
+  pwr_sAttrRef *aref_list;
+  pwr_sAttrRef *aref_p;
+  pwr_sAttrRef plot_trends[XTT_TREND_MAX];
   pwr_sClass_PlotGroup plot;
   char trend_name[XTT_TREND_MAX][120];
   char object_name[XTT_TREND_MAX][120];
@@ -78,11 +78,11 @@ XttTrend::XttTrend(
 
   if ( trend_list) {
     // List of trend objects as input
-    objid_list = trend_list;
+    aref_list = trend_list;
   }
   else {
     // Plotgroup as input
-    *sts = gdh_ObjidToName( plotgroup, plot_name, sizeof(plot_name), 
+    *sts = gdh_AttrrefToName( plotgroup, plot_name, sizeof(plot_name), 
                 cdh_mNName);
     if (EVEN(*sts)) return;
 
@@ -90,19 +90,19 @@ XttTrend::XttTrend(
     if ( EVEN(*sts)) return;
 
     for ( i = 0; i < 20; i++) {
-      if ( cdh_ObjidIsNull( plot.YObjectName[i]))
+      if ( cdh_ObjidIsNull( plot.YObjectName[i].Objid))
         break;
       plot_trends[i] = plot.YObjectName[i];
     }
-    plot_trends[i] = pwr_cNObjid;
-    objid_list = plot_trends;
+    plot_trends[i] = pwr_cNAttrRef;
+    aref_list = plot_trends;
   }
 
   // Get current status of the trend objects
   i = 0;
-  objid_p = objid_list;
-  while ( cdh_ObjidIsNotNull( *objid_p)) {
-    *sts = gdh_ObjidToName( *objid_p, trend_name[i], sizeof(trend_name[0]), 
+  aref_p = aref_list;
+  while ( cdh_ObjidIsNotNull( aref_p->Objid)) {
+    *sts = gdh_AttrrefToName( aref_p, trend_name[i], sizeof(trend_name[0]), 
                 cdh_mNName);
     if (EVEN(*sts)) return;
 
@@ -114,7 +114,7 @@ XttTrend::XttTrend(
     if (EVEN(*sts)) return;
 
     i++;
-    objid_p++;
+    aref_p++;
   }
   trend_cnt = i;
 

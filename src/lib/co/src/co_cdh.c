@@ -288,6 +288,18 @@ cdh_DlidIsNotNull (
   return cdh_ObjidIsNotNull(*(pwr_tObjid*) &DirectLink);
 }
 
+int
+cdh_ArefIsEqual (
+  pwr_sAttrRef *arp1,
+  pwr_sAttrRef *arp2
+)
+{
+  return ( arp1->Objid.vid == arp2->Objid.vid &&
+	   arp1->Objid.oix == arp2->Objid.oix &&
+	   arp1->Offset == arp2->Offset &&
+	   (arp1->Size == 0 || arp2->Size == 0 || arp1->Size == arp2->Size));
+}
+
 
 //! Convert Objid to ClassId.
 /*!
@@ -1511,6 +1523,7 @@ cdh_ParseName (
      ^ : lowercase, subtract 32 if cdh_mParseName_UpperCase
      + : eat
      - : new segment
+     . : new segment
      ~ : end of string
      */
 
@@ -1658,10 +1671,10 @@ cdh_ParseName (
 ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏ!ÑÒÓÔÕÖ×ØÙÚÛÜÝ!!\
 ^^^^^^^^^^^^^^^^!^^^^^^^^^^^^^!!\
 ",
-  /* 13: name.attribute[index], attribute before '['  */
+  /* 13: name.attribute[index], attribute before '[' or '.' */
 "\
 ~!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\
-!!!!$!!!!!!!!!!!0123456789!!!!!!\
+!!!!$!!!!!!!!!.!0123456789!!!!!!\
 !ABCDEFGHIJKLMNOPQRSTUVWXYZ*!!!_\
 !^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!\
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\
@@ -1683,7 +1696,7 @@ cdh_ParseName (
   /* 15: name.attribute[index], after  ']'  */
 "\
 ~!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\
+!!!!!!!!!!!!!!*!!!!!!!!!!!!!!!!!\
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\
@@ -1973,9 +1986,9 @@ aaaaaaaceeeeiiii!nooooooouuuuy!!\
 	  lsts = CDH__SEGLEN;
 	  goto error;
 	}
-	strcpy(pn->attribute.name.orig, segcp);
-	strcpy(pn->attribute.name.norm, segp);
-	pn->attribute.name.pack.key = cdh_PackName(segp);
+	strcpy(pn->attribute[0].name.orig, segcp);
+	strcpy(pn->attribute[0].name.norm, segp);
+	pn->attribute[0].name.pack.key = cdh_PackName(segp);
 	segp = outp;
 	segcp = outcp;
 	seglen = 0;
@@ -1992,9 +2005,9 @@ aaaaaaaceeeeiiii!nooooooouuuuy!!\
 	  lsts = CDH__SEGLEN;
 	  goto error;
 	}
-	strcpy(pn->attribute.name.orig, segcp);
-	strcpy(pn->attribute.name.norm, segp);
-	pn->attribute.name.pack.key = cdh_PackName(segp);
+	strcpy(pn->attribute[0].name.orig, segcp);
+	strcpy(pn->attribute[0].name.norm, segp);
+	pn->attribute[0].name.pack.key = cdh_PackName(segp);
 	segp = outp;
 	segcp = outcp;
 	seglen = 0;
@@ -2181,9 +2194,10 @@ aaaaaaaceeeeiiii!nooooooouuuuy!!\
 	    lsts = CDH__SEGLEN;
 	    goto error;
 	  }
-	strcpy(pn->attribute.name.orig, segcp);
-	strcpy(pn->attribute.name.norm, segp);
-	pn->attribute.name.pack.key = cdh_PackName(segp);
+	strcpy(pn->attribute[pn->nAttribute].name.orig, segcp);
+	strcpy(pn->attribute[pn->nAttribute].name.norm, segp);
+	pn->attribute[pn->nAttribute].name.pack.key = cdh_PackName(segp);
+	pn->nAttribute++;
 	segp = outp;
 	segcp = outcp;
 	seglen = 0;
@@ -2199,13 +2213,33 @@ aaaaaaaceeeeiiii!nooooooouuuuy!!\
 	    lsts = CDH__SEGLEN;
 	    goto error;
 	  }
-	strcpy(pn->attribute.name.orig, segcp);
-	strcpy(pn->attribute.name.norm, segp);
-	pn->attribute.name.pack.key = cdh_PackName(segp);
+	strcpy(pn->attribute[pn->nAttribute].name.orig, segcp);
+	strcpy(pn->attribute[pn->nAttribute].name.norm, segp);
+	pn->attribute[pn->nAttribute].name.pack.key = cdh_PackName(segp);
+	pn->nAttribute++;
 	segp = outp;
 	segcp = outcp;
 	seglen = 0;
 	state++;
+      } else if (c == '.') {
+	if (outp == segp) {
+	  lsts = CDH__INVATTRNAME;
+	  goto error;
+	}
+	*outp++ = '\0';
+	*outcp++ = '\0';
+	pn->flags.b.attribute = 1;
+	  if (seglen >= sizeof(pwr_tObjName)) {
+	    lsts = CDH__SEGLEN;
+	    goto error;
+	  }
+	strcpy(pn->attribute[pn->nAttribute].name.orig, segcp);
+	strcpy(pn->attribute[pn->nAttribute].name.norm, segp);
+	pn->attribute[pn->nAttribute].name.pack.key = cdh_PackName(segp);
+	pn->nAttribute++;
+	segp = outp;
+	segcp = outcp;
+	seglen = 0;
       } else {
 	*outp++ = c;
 	*outcp++ = cc;
@@ -2221,7 +2255,8 @@ aaaaaaaceeeeiiii!nooooooouuuuy!!\
 	switch (state) {
 	case 5:
 	case 14:
-	  pn->index = number;
+	  pn->index[pn->nAttribute - 1] = number;
+	  pn->hasIndex[pn->nAttribute - 1] = 1;
 	  pn->flags.b.index = 1;
 	  break;
 	case 8:
@@ -2248,7 +2283,11 @@ aaaaaaaceeeeiiii!nooooooouuuuy!!\
     case 6:	/* 6:  id(bname)attribute[index], after  ']'  */
     case 10:	/* 10: id(bid)[offset.size], after  ']'  */
     case 15:	/* 15: name.attribute[index], after  ']'  */
-      state = -1;
+      if (c == '*') {
+	state = 13;
+      } else {
+        state = -1;
+      }
       inp++;
       break;
     }

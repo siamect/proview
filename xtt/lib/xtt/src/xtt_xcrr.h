@@ -22,13 +22,13 @@ class XCrr {
     XCrr( 
 	Widget 		xa_parent_wid, 
 	void 		*xa_parent_ctx, 
-	pwr_tObjid 	xa_objid,
+	pwr_sAttrRef 	*xa_objar,
 	int 		xa_advanced_user,
 	int             *xa_sts);
     ~XCrr();
     Widget	parent_wid;
     void 	*parent_ctx;
-    pwr_tObjid	objid;
+    pwr_sAttrRef objar;
     char 	name[80];
     Widget	brow_widget;
     Widget	form_widget;

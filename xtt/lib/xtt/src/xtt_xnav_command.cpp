@@ -26,6 +26,7 @@ extern "C" {
 #include "co_time.h"
 #include "co_dcli.h"
 #include "pwr_baseclasses.h"
+#include "pwr_nmpsclasses.h"
 #include "co_ccm_msg.h"
 #include "co_api.h"
 }
@@ -81,9 +82,9 @@ static char xtt_version[] = "V3.3a";
 static XNav *current_xnav;
 
 static void xnav_ev_help_cb( void *xnav, char *key);
-static void xnav_ev_display_in_xnav_cb( void *xnav, pwr_tObjid objid);
+static void xnav_ev_display_in_xnav_cb( void *xnav, pwr_sAttrRef *arp);
 static void xnav_ev_update_info_cb( void *xnav);
-static void xnav_ge_display_in_xnav_cb( void *xnav, pwr_tObjid objid);
+static void xnav_ge_display_in_xnav_cb( void *xnav, pwr_sAttrRef *arp);
 static int xnav_ge_is_authorized_cb( void *xnav, unsigned int access);
 static int xnav_attribute_func ( 
   char		*name,
@@ -103,6 +104,7 @@ static void xnav_op_map_cb( void *ctx);
 static int xnav_op_get_alarm_info_cb( void *xnav, evlist_sAlarmInfo *info);
 static void xnav_op_ack_last_cb( void *xnav, unsigned long type, unsigned long prio);
 static void xnav_trend_close_cb( void *ctx, XttTrend *trend);
+static void xnav_fast_close_cb( void *ctx, XttFast *fast);
 static void xnav_clog_close_cb( void *ctx);
 
 static int	xnav_help_func(		void		*client_data,
@@ -1988,8 +1990,7 @@ static int	xnav_open_func(	void		*client_data,
     else
       classgraph = 0;
     
-    if ( ODD( dcli_get_qualifier( "/OBJECT", object_str)))
-    {
+    if ( ODD( dcli_get_qualifier( "/OBJECT", object_str))) {
       pwr_tObjid objid;
       pwr_tObjid node_objid;
       char	xttgraph_name[120];
@@ -2000,8 +2001,7 @@ static int	xnav_open_func(	void		*client_data,
 
       IF_NOGDH_RETURN;
       if ( strncmp( object_str, "*-", 2) == 0 || 
-	   strncmp( object_str, "$node-", 6) == 0 || strncmp( object_str, "$NODE-", 6) == 0)
-      {
+	   strncmp( object_str, "$node-", 6) == 0 || strncmp( object_str, "$NODE-", 6) == 0) {
         // Replace * by the node object
         sts = gdh_GetNodeObject( 0, &node_objid);
         if ( EVEN(sts)) return sts;
@@ -2031,8 +2031,7 @@ static int	xnav_open_func(	void		*client_data,
 
       xnav->exec_xttgraph( objid, instance_p, focus_p, inputempty);
     }
-    else
-    {
+    else {
       char file_str[80];
       char name_str[80];
       char focus_str[80];
@@ -2044,9 +2043,10 @@ static int	xnav_open_func(	void		*client_data,
       int  use_default_access;
       unsigned int access;
 
-      // Command is "OPEN GRAPH"
-      if ( ODD( dcli_get_qualifier( "/COLLECT", NULL)))
-      {
+      // Command is "OPEN GRAPH" without graph object
+      scrollbar =  ODD( dcli_get_qualifier( "/SCROLLBAR", NULL));
+
+      if ( ODD( dcli_get_qualifier( "/COLLECT", NULL))) {
         scrollbar =  ODD( dcli_get_qualifier( "/SCROLLBAR", NULL));
         menu =  ODD( dcli_get_qualifier( "/MENU", NULL));
         navigator =  ODD( dcli_get_qualifier( "/NAVIGATOR", NULL));
@@ -2055,65 +2055,119 @@ static int	xnav_open_func(	void		*client_data,
 	  0, 0, 0, 0, "collect", NULL, 0, 0, 0);
         return XNAV__SUCCESS;
       }
-      if ( ODD( dcli_get_qualifier( "dcli_arg2", file_str)))
-      {
-        if ( file_str[0] == '/')
-        {
+      if ( ODD( dcli_get_qualifier( "dcli_arg2", file_str))) {
+        if ( file_str[0] == '/') {
           xnav->message('E', "Syntax error");
           return XNAV__HOLDCOMMAND;
         }
+
+	// Get base class graphs on $pwr_exe
+	cdh_ToLower( fname, file_str);
+	if ( instance_p && 
+	     (strncmp( fname, "pwr_c_", 6) == 0 || 
+	      strncmp( fname, "pwr_c_", 6) == 0)) {
+	  strcpy( fname, "$pwr_exe/");
+	  strcat( fname, file_str);
+	  strcpy( file_str, fname);
+	}  
       }
-      else if ( EVEN( dcli_get_qualifier( "/FILE", file_str)))
-      {
+      else if ( ODD( dcli_get_qualifier( "/FILE", file_str))) {
+	// Get base class graphs on $pwr_exe
+	cdh_ToLower( fname, file_str);
+	if ( instance_p && 
+	     (strncmp( fname, "pwr_c_", 6) == 0 || 
+	      strncmp( fname, "pwr_t_", 6) == 0)) {
+	  strcpy( fname, "$pwr_exe/");
+	  strcat( fname, file_str);
+	  strcpy( file_str, fname);
+	}  
+      }
+      else {
 	if ( classgraph) {
 	  // Get file from class of instance object
-	  pwr_tOid oid;
+	  pwr_sAttrRef aref;
 	  char cname[80];
 	  pwr_tCid cid;
+	  char found_file[200];
 	  
 	  if ( !instance_p) {
 	    xnav->message('E',"Enter instance object");
 	    return XNAV__HOLDCOMMAND;
 	  }
-	  sts = gdh_NameToObjid( instance_p, &oid);
+
+	  sts = gdh_NameToAttrref( pwr_cNObjid, instance_p, &aref);
 	  if ( EVEN(sts)) {
 	    xnav->message('E',"Instance object not found");
 	    return XNAV__HOLDCOMMAND;
 	  }
-	  sts = gdh_GetObjectClass( oid, &cid);
-	  if ( EVEN(sts)) return sts;
+	  sts = gdh_GetAttrRefTid( &aref, &cid);
+	  while ( ODD(sts)) {
+	    // Try all superclasses
+	    sts = gdh_ObjidToName( cdh_ClassIdToObjid( cid), cname, sizeof(cname),
+				   cdh_mName_object);
+	    if ( EVEN(sts)) return sts;
 
-	  sts = gdh_ObjidToName( cdh_ClassIdToObjid( cid), cname, sizeof(cname),
-			   cdh_mName_object);
-	  if ( EVEN(sts)) return sts;
-
-	  cdh_ToLower( cname, cname);
-	  if ( cdh_CidToVid(cid) < cdh_cUserClassVolMin) {
-	    if ( cname[0] == '$')
-	      sprintf( file_str, "pwr_c_%s", &cname[1]);
+	    cdh_ToLower( cname, cname);
+	    if ( cdh_CidToVid(cid) < cdh_cUserClassVolMin) {
+	      if ( cname[0] == '$')
+		sprintf( file_str, "pwr_c_%s", &cname[1]);
+	      else
+		sprintf( file_str, "pwr_c_%s", cname);
+	    }
 	    else
-	      sprintf( file_str, "pwr_c_%s", cname);
+	      strcpy( file_str, cname);
+
+	    // Get base class graphs on $pwr_exe
+	    cdh_ToLower( fname, file_str);
+	    if ( instance_p && 
+		 (strncmp( fname, "pwr_c_", 6) == 0 || 
+		  strncmp( fname, "pwr_c_", 6) == 0)) {
+	      strcpy( fname, "$pwr_exe/");
+	      strcat( fname, file_str);
+	      strcpy( file_str, fname);
+	    }
+	    else {
+	      strcpy( fname, "$pwrp_exe/");
+	      strcat( fname, file_str);
+	      strcpy( file_str, fname);
+	    }
+	    strcat( fname, ".pwg");
+	    sts = dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_INIT);
+	    dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_END);
+	    if ( ODD(sts)) break;
+
+	    sts = gdh_GetSuperClass( cid, &cid);
 	  }
-	  else
-	    strcpy( file_str, cname);
+	  if ( EVEN(sts)) {
+	    xnav->message('E',"No classgraph found");
+	    return XNAV__HOLDCOMMAND;
+	  }
+
+	  switch ( cid) {
+	  case pwr_cClass_NMpsCell:
+	  case pwr_cClass_NMpsStoreCell:
+	    scrollbar = 1;
+	    break;
+	  default:
+	    ;
+	  }
 	}
 	else {
 	  xnav->message('E',"Enter file");
 	  return XNAV__HOLDCOMMAND;
 	}
       }
-      if ( EVEN( dcli_get_qualifier( "/NAME", name_str)))
-      {
+      if ( EVEN( dcli_get_qualifier( "/NAME", name_str))) {
 	if ( instance_p) {
-	  pwr_tOid oid;
+	  pwr_sAttrRef aref;
 
 	  // Use object name as title
-	  sts = gdh_NameToObjid( instance_p, &oid);
+	  sts = gdh_NameToAttrref( pwr_cNObjid, instance_p, &aref);
 	  if ( EVEN(sts)) {
 	    xnav->message('E',"Instance object not found");
 	    return XNAV__HOLDCOMMAND;
 	  }
-	  sts = gdh_ObjidToName( oid, name_str, sizeof(name_str),
+	  sts = gdh_AttrrefToName( &aref, name_str, sizeof(name_str),
 			   cdh_mName_pathStrict);
 	  if ( EVEN(sts)) return sts;
 	}
@@ -2125,16 +2179,13 @@ static int	xnav_open_func(	void		*client_data,
       else
         focus_p = 0;
 
-      scrollbar =  ODD( dcli_get_qualifier( "/SCROLLBAR", NULL));
       menu =  ODD( dcli_get_qualifier( "/MENU", NULL));
       navigator =  ODD( dcli_get_qualifier( "/NAVIGATOR", NULL));
       inputempty = ODD( dcli_get_qualifier( "/INPUTEMPTY", NULL));
 
-      if ( ODD( dcli_get_qualifier( "/WIDTH", tmp_str)))
-      {
+      if ( ODD( dcli_get_qualifier( "/WIDTH", tmp_str))) {
         nr = sscanf( tmp_str, "%d", &width);
-        if ( nr != 1)
-        {
+        if ( nr != 1) {
           xnav->message('E', "Syntax error in width");
           return XNAV__HOLDCOMMAND;
         }
@@ -2142,11 +2193,9 @@ static int	xnav_open_func(	void		*client_data,
       else
         width = 0;
 
-      if ( ODD( dcli_get_qualifier( "/HEIGHT", tmp_str)))
-      {
+      if ( ODD( dcli_get_qualifier( "/HEIGHT", tmp_str))) {
         nr = sscanf( tmp_str, "%d", &height);
-        if ( nr != 1)
-        {
+        if ( nr != 1) {
           xnav->message('E', "Syntax error in height");
           return XNAV__HOLDCOMMAND;
         }
@@ -2154,11 +2203,9 @@ static int	xnav_open_func(	void		*client_data,
       else
         height = 0;
 
-      if ( ODD( dcli_get_qualifier( "/ACCESS", tmp_str)))
-      {
+      if ( ODD( dcli_get_qualifier( "/ACCESS", tmp_str))) {
         nr = sscanf( tmp_str, "%u", &access);
-        if ( nr != 1)
-        {
+        if ( nr != 1) {
           xnav->message('E', "Syntax error in access");
           return XNAV__HOLDCOMMAND;
         }
@@ -2166,16 +2213,6 @@ static int	xnav_open_func(	void		*client_data,
       }
       else
         use_default_access = 0;
-
-      // Get base class graphs on $pwr_exe
-      cdh_ToUpper( fname, file_str);
-      if ( instance_p && 
-           (strncmp( fname, "PWR_C_", 6) == 0 || 
-            strncmp( fname, "PWR_T_", 6) == 0)) {
-	strcpy( fname, "$pwr_exe/");
-        strcat( fname, file_str);
-        strcpy( file_str, fname);
-      }  
 
       xnav->open_graph( name_str, file_str, scrollbar, menu, navigator,
 	width, height, 0, 0, instance_p, focus_p, inputempty,
@@ -2332,13 +2369,13 @@ static int	xnav_open_func(	void		*client_data,
     char name_str[80];
     char *name_ptr;
     char title_str[80];
-    pwr_tObjid objid_vect[11];
+    pwr_sAttrRef aref_vect[11];
     Widget w;
     int sts;
     char name_array[10][120];
     int i, names;
     int plotgroup_found = 0;
-    pwr_tObjid plotgroup = pwr_cNObjid;
+    pwr_sAttrRef plotgroup = pwr_cNAttrRef;
     pwr_tClassId classid;
     pwr_tObjid node_objid;
     char trend_name[120];
@@ -2347,28 +2384,23 @@ static int	xnav_open_func(	void		*client_data,
     // Command is "OPEN TREND"
 
     /* Get the name qualifier */
-    if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str)))
-    {
+    if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str))) {
       if ( name_str[0] != '/')
         /* Assume that this is the namestring */
         name_ptr = name_str;
-      else
-      {
+      else {
         xnav->message('E', "Syntax error");
         return XNAV__HOLDCOMMAND; 	
       } 
     }
-    else
-    {
+    else {
       if ( ODD( dcli_get_qualifier( "/NAME", name_str)))
         name_ptr = name_str;
-      else
-      {
+      else {
         /* Get the selected object */
-        sts = xnav->get_current_object( &objid_vect[0], name_str, 
-	  sizeof( name_str), cdh_mName_path | cdh_mName_object);
-        if ( EVEN(sts))
-        {
+        sts = xnav->get_current_aref( &aref_vect[0], name_str, 
+	  sizeof( name_str), cdh_mName_path | cdh_mName_object | cdh_mName_attribute);
+        if ( EVEN(sts)) {
           xnav->message('E', "Enter name or select an object");
           return XNAV__SUCCESS;
         }
@@ -2382,8 +2414,7 @@ static int	xnav_open_func(	void		*client_data,
 	     sizeof( name_array[0]), 0);
 
     for ( i = 0; i < names; i++) {
-      if ( strncmp( name_array[i], "*-", 2) == 0)
-      {
+      if ( strncmp( name_array[i], "*-", 2) == 0) {
         // Replace * by the node object
         sts = gdh_GetNodeObject( 0, &node_objid);
         if ( EVEN(sts)) return sts;
@@ -2395,19 +2426,19 @@ static int	xnav_open_func(	void		*client_data,
       else
         strcpy( trend_name, name_array[i]);
 
-      sts = gdh_NameToObjid( trend_name, &objid_vect[i]);
+      sts = gdh_NameToAttrref( pwr_cNObjid, trend_name, &aref_vect[i]);
       if (EVEN(sts)) {
         xnav->message('E', "Object not found");
         return XNAV__HOLDCOMMAND;
       }
-      sts = gdh_GetObjectClass( objid_vect[i], &classid);
+      sts = gdh_GetAttrRefTid( &aref_vect[i], &classid);
       if (EVEN(sts)) return sts;
 
       switch ( classid) {
         case pwr_cClass_DsTrend:
           break;
         case pwr_cClass_PlotGroup:
-          plotgroup = objid_vect[i];
+          plotgroup = aref_vect[i];
           plotgroup_found = 1;
           if ( i != 0) {
             xnav->message('E', "Error in object class");
@@ -2421,7 +2452,7 @@ static int	xnav_open_func(	void		*client_data,
       if ( plotgroup_found)
         break;
     }
-    objid_vect[i] = pwr_cNObjid;    
+    aref_vect[i] = pwr_cNAttrRef;    
 
     if ( EVEN( dcli_get_qualifier( "/TITLE", title_str))) {
       if ( plotgroup_found) {
@@ -2438,31 +2469,31 @@ static int	xnav_open_func(	void		*client_data,
     }
 
     if ( plotgroup_found) {
-      if ( xnav->appl.find( applist_eType_Trend, plotgroup, (void **) &trend)) {
+      if ( xnav->appl.find( applist_eType_Trend, &plotgroup, (void **) &trend)) {
         trend->pop();
       }
       else {
         trend = new XttTrend( xnav, xnav->parent_wid, title_str, &w, NULL, 
-		  plotgroup, &sts);
+		  &plotgroup, &sts);
         if ( EVEN(sts))
           xnav->message('E',"Error in trend configuration");
         else {
           trend->close_cb = xnav_trend_close_cb;
-          xnav->appl.insert( applist_eType_Trend, (void *)trend, plotgroup, "",
+          xnav->appl.insert( applist_eType_Trend, (void *)trend, &plotgroup, "",
 		   NULL);
         }
       }
     }
     else
-      new XttTrend( xnav, xnav->parent_wid, title_str, &w, objid_vect, 
-		  pwr_cNObjid, &sts);
+      new XttTrend( xnav, xnav->parent_wid, title_str, &w, aref_vect, 
+		  0, &sts);
   }
   else if ( strncmp( arg1_str, "FAST", strlen( arg1_str)) == 0)
   {
     char name_str[80];
     char *name_ptr;
     char title_str[80];
-    pwr_tObjid objid;
+    pwr_sAttrRef aref;
     Widget w;
     int sts;
     pwr_tClassId classid;
@@ -2488,8 +2519,8 @@ static int	xnav_open_func(	void		*client_data,
       else
       {
         /* Get the selected object */
-        sts = xnav->get_current_object( &objid, name_str, 
-	  sizeof( name_str), cdh_mName_path | cdh_mName_object);
+        sts = xnav->get_current_aref( &aref, name_str, 
+	  sizeof( name_str), cdh_mName_path | cdh_mName_object | cdh_mName_attribute);
         if ( EVEN(sts))
         {
           xnav->message('E', "Enter name or select an object");
@@ -2499,12 +2530,12 @@ static int	xnav_open_func(	void		*client_data,
       }
     }
 
-    sts = gdh_NameToObjid( name_str, &objid);
+    sts = gdh_NameToAttrref( pwr_cNObjid, name_str, &aref);
     if (EVEN(sts)) {
       xnav->message('E', "Object not found");
       return XNAV__HOLDCOMMAND;
     }
-    sts = gdh_GetObjectClass( objid, &classid);
+    sts = gdh_GetAttrRefTid( &aref, &classid);
     if (EVEN(sts)) return sts;
 
     switch ( classid) {
@@ -2519,8 +2550,21 @@ static int	xnav_open_func(	void		*client_data,
       strcpy( title_str, "Fast");
     }
 
-    new XttFast( xnav, xnav->parent_wid, title_str, &w, objid, 
-		 &sts);
+    XttFast *fast;
+    if ( xnav->appl.find( applist_eType_Fast, &aref, (void **) &fast)) {
+      fast->pop();
+    }
+    else {
+      fast = new XttFast( xnav, xnav->parent_wid, title_str, &w, &aref, 
+			  &sts);
+      if ( EVEN(sts))
+	xnav->message('E',"Error in fast configuration");
+      else {
+	fast->close_cb = xnav_fast_close_cb;
+	xnav->appl.insert( applist_eType_Fast, (void *)fast, &aref, "",
+			   NULL);
+      }
+    }
   }
   else if ( strncmp( arg1_str, "URL", strlen( arg1_str)) == 0)
   {
@@ -2805,7 +2849,19 @@ static int	xnav_close_func(	void		*client_data,
       elem = elem->next;
     }
 
-    //new code Jonas Nylund 030131
+    // Close all trends
+    type = applist_eType_Fast;
+    for ( elem = xnav->appl.root; elem;) {
+      if ( elem->type == type) {
+        next_elem = elem->next;
+        delete (XttFast *)elem->ctx;
+        xnav->appl.remove( elem->ctx);
+        elem = next_elem;
+        continue;
+      }
+      elem = elem->next;
+    }
+
     // Close all hists
     type = applist_eType_Hist;
     for ( elem = xnav->appl.root; elem;) {
@@ -2903,6 +2959,14 @@ static void xnav_trend_close_cb( void *ctx, XttTrend *trend)
 
   xnav->appl.remove( (void *)trend);
   delete trend;
+}
+
+static void xnav_fast_close_cb( void *ctx, XttFast *fast)
+{
+  XNav *xnav = (XNav *) ctx;
+
+  xnav->appl.remove( (void *)fast);
+  delete fast;
 }
 
 static int	xnav_create_func( void		*client_data,
@@ -3218,7 +3282,7 @@ static int	xnav_crossref_func(	void		*client_data,
   char		func_str[80];
   char		*file_ptr;
   char		*name_ptr;
-  pwr_tObjid	objid;
+  pwr_sAttrRef	objar;
   pwr_tClassId	classid;
   int		brief;
   int           window;
@@ -3282,7 +3346,7 @@ static int	xnav_crossref_func(	void		*client_data,
     else if ( ODD( dcli_get_qualifier( "/NAME", name_str)))
     {
       name_ptr = name_str;
-      sts = gdh_NameToObjid ( name_str, &objid);
+      sts = gdh_NameToAttrref( pwr_cNObjid, name_str, &objar);
       if (EVEN(sts))
       {
         xnav->message('E', "Object not found");
@@ -3292,7 +3356,7 @@ static int	xnav_crossref_func(	void		*client_data,
     else
     {
       /* Get the selected object */
-      sts = xnav->get_current_object( &objid, name_str, 
+      sts = xnav->get_current_aref( &objar, name_str, 
 	sizeof( name_str), cdh_mName_path | cdh_mName_object);
       if ( EVEN(sts))
       {
@@ -3302,12 +3366,12 @@ static int	xnav_crossref_func(	void		*client_data,
       name_ptr = name_str;
     }
 
-    sts = gdh_GetObjectClass ( objid, &classid);
+    sts = gdh_GetAttrRefTid( &objar, &classid);
     if ( EVEN(sts)) return sts;
 
     window = ODD( dcli_get_qualifier( "/WINDOW", NULL));
     if ( window) {
-      XCrr *xcrr = new XCrr( xnav->form_widget, xnav, objid, 
+      XCrr *xcrr = new XCrr( xnav->form_widget, xnav, &objar, 
 		       xnav->gbl.advanced_user, &sts);
       if ( EVEN(sts))
         xnav->message(' ', XNav::get_message(sts));
@@ -3321,7 +3385,7 @@ static int	xnav_crossref_func(	void		*client_data,
     xnav->brow_pop();
     brow_SetNodraw( xnav->brow->ctx);
 
-    sts = gdh_ObjidToName ( objid, name_str, sizeof(name_str), 
+    sts = gdh_AttrrefToName( &objar, name_str, sizeof(name_str), 
 			cdh_mNName);
     sprintf( title, "Crossreference list %s\n", name_str);
     new ItemHeader( xnav->brow, "Title", title, NULL, flow_eDest_IntoLast);
@@ -4396,8 +4460,8 @@ static int xnav_ccm_deffilename_func( char *outfile, char *infile, void *client_
 {
   char fname[200];
 
-  dcli_get_defaultfilename( infile, fname, ".rtt_com");
-  dcli_translate_filename( outfile, fname);
+  dcli_translate_filename( fname, infile);
+  dcli_get_defaultfilename( fname, outfile, ".rtt_com");
   return 1;
 }
 
@@ -4733,6 +4797,22 @@ int XNav::get_current_object(
     *objid = attrref.Objid;
     sts = gdh_ObjidToName ( attrref.Objid, objectname, size, nametype);
   }
+  return sts;
+}
+
+int XNav::get_current_aref(
+			pwr_sAttrRef	*arp,
+			char		*arname,
+			int		size,
+			pwr_tBitMask	nametype)
+{
+  int			sts;
+  int			is_attr;
+
+  sts = get_select( arp, &is_attr);
+  if ( ODD(sts))
+    sts = gdh_AttrrefToName( arp, arname, size, nametype);
+
   return sts;
 }
 /*************************************************************************
@@ -5214,9 +5294,9 @@ static void xnav_ev_help_cb( void *ctx, char *key)
     xnav->message( ' ', null_str);
 }
 
-static void xnav_ev_display_in_xnav_cb( void *xnav, pwr_tObjid objid)
+static void xnav_ev_display_in_xnav_cb( void *xnav, pwr_sAttrRef *arp)
 {
-  ((XNav *)xnav)->display_object( objid, 0);
+  ((XNav *)xnav)->display_object( arp, 0);
   ((XNav *)xnav)->pop();
 }
 
@@ -5226,9 +5306,9 @@ static void xnav_ev_update_info_cb( void *xnav)
     ((XNav *)xnav)->op->update_alarm_info();
 }
 
-static void xnav_ge_display_in_xnav_cb( void *xnav, pwr_tObjid objid)
+static void xnav_ge_display_in_xnav_cb( void *xnav, pwr_sAttrRef *arp)
 {
-  ((XNav *)xnav)->display_object( objid, 0);
+  ((XNav *)xnav)->display_object( arp, 0);
   ((XNav *)xnav)->pop();
 }
 

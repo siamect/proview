@@ -525,7 +525,7 @@ int Op::configure( char *opplace_str)
     sts = gdh_ClassAttrToAttrref( pwr_cClass_XttGraph, ".ButtonText", &attrref);
     if ( EVEN(sts)) return sts;
 
-    attrref.Objid = user_p->FastAvail[i];
+    attrref = user_p->FastAvail[i];
     sts = gdh_GetObjectInfoAttrref( &attrref, (void *)button_title[i], 
 		sizeof(button_title[0]));
     if ( EVEN(sts)) 

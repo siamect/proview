@@ -88,7 +88,7 @@ class FlowNode : public FlowArrayElem {
     flow_sAnnotPixmap	*annotpixmapv[10];
     int			refcon_cnt[MAX_CONPOINTS];
     char		trace_object[120];
-    char		trace_attribute[32];
+    char		trace_attribute[120];
     flow_eTraceType	trace_attr_type;
     void		*trace_p;
     FlowNode		*link;

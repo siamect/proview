@@ -9,6 +9,7 @@
 #include "wb_attrname.h"
 #include "wb_ldh_msg.h"
 
+static int compCatt( tree_sTable *tp, tree_sNode *x, tree_sNode *y);
 
 wb_merep::wb_merep( const wb_merep& x, wb_vrep *vrep) : 
   m_mvrepdbs(x.m_mvrepdbs), m_erep(x.m_erep), m_vrep(vrep)
@@ -19,8 +20,13 @@ wb_merep::wb_merep( const wb_merep& x, wb_vrep *vrep) :
 
 wb_merep::~wb_merep()
 {
+  pwr_tStatus sts;
+
   for ( mvrep_iterator it = m_mvrepdbs.begin(); it != m_mvrepdbs.end(); it++)
     it->second->unref();
+
+  if ( m_catt_tt)
+    tree_DeleteTable( &sts, m_catt_tt);
 }
 
 // Get first volume
@@ -286,5 +292,235 @@ int wb_merep::getAttrInfoRec( wb_attrname *attr, pwr_eBix bix, pwr_tCid cid, siz
   delete adrep;
   return 1;
 }
+
+void wb_merep::classDependency( pwr_tStatus *sts, pwr_tCid cid, 
+				pwr_tCid **lst, int *cnt)
+{
+  wb_cdrep *cd = cdrep( sts, cid);
+  if ( !cd) return;
+
+  wb_bdrep *bd = cd->bdrep( sts, pwr_eBix_rt);
+  if ( !bd) { 
+    delete cd; 
+    *lst = 0;
+    *cnt = 0;
+    *sts = LDH__SUCCESS;
+    return;
+  }
+
+  *lst = (pwr_tCid *) calloc( bd->nAttribute(), sizeof(pwr_tCid)); 
+
+  *cnt = 0;
+  wb_adrep *ad, *oad;
+  for ( ad = bd->adrep( sts); ad;) {
+    if ( cdh_tidIsCid( ad->tid())) {
+      (*lst)[*cnt] = ad->tid();
+      (*cnt)++;
+    }
+    oad = ad;
+    ad = ad->next( sts);
+    delete oad;
+  }
+  delete cd;
+  delete bd;
+  *sts = LDH__SUCCESS;
+}
+
+void wb_merep::insertCattObject( pwr_tStatus *sts, pwr_tCid cid, 
+			      wb_adrep *adp, int offset)
+{
+  merep_sClassAttrKey 	key;
+  merep_sClassAttr 	*item;
+  int			j;
+
+  wb_cdrep *cd = cdrep( sts, adp->tid());
+  if ( EVEN(*sts)) throw wb_error(*sts);
+
+  // Find a tree node with free offsets
+  key.subCid = adp->tid();
+  key.hostCid = cid;
+  key.idx = 0;
+  item = (merep_sClassAttr *) tree_Find( sts, m_catt_tt, &key);
+
+  while ( ODD(*sts) && item->numOffset == merep_cCattOffsetSize) {
+    key.idx++;
+    item = (merep_sClassAttr *) tree_Find( sts, m_catt_tt, &key);
+  }
+  if ( !adp->flags() & PWR_MASK_ARRAY) {
+    if ( ODD(*sts)) {
+      // Insert in found item
+      item->offset[item->numOffset++] = offset + adp->offset();
+    }
+    else {
+      // Insert a new item
+      item = (merep_sClassAttr *) tree_Insert( sts, m_catt_tt, &key);
+      item->offset[item->numOffset++] = offset + adp->offset();
+    }
+
+    // Look for class attributes in this class
+    wb_bdrep *bd = cd->bdrep( sts, pwr_eBix_rt);
+    if ( EVEN(*sts)) {
+      delete cd;
+      *sts = LDH__SUCCESS;
+      return;
+    }
+
+    wb_adrep *ad, *adnext;
+    for ( ad = bd->adrep( sts);
+	  ODD(*sts);
+	  adnext = ad->next( sts), delete ad, ad = adnext) {
+      if ( ad->flags() & PWR_MASK_CLASS && cdh_tidIsCid( ad->tid())) {
+	insertCattObject( sts, cid, ad, offset + ad->offset());
+	if ( EVEN(*sts)) return;
+      }
+    }
+    delete bd;
+  }
+  else {
+    // Insert all offsets in the array
+    for ( j = 0; j < adp->nElement(); j++) {
+      if ( ODD(*sts) && item->numOffset < merep_cCattOffsetSize) {
+	// Insert in current item
+	item->offset[item->numOffset++] = offset + adp->offset() +
+	  j * adp->size() / adp->nElement();
+      }
+      else {
+	// Insert a new item
+	if ( ODD(*sts))
+	  key.idx++;
+	item = (merep_sClassAttr *) tree_Insert( sts, m_catt_tt, &key);
+	item->offset[item->numOffset++] = offset + adp->offset() +
+	  j * adp->size() / adp->nElement();
+      }
+
+      // Look for class attributes in this class
+      wb_bdrep *bd = cd->bdrep( sts, pwr_eBix_rt);
+      if ( EVEN(*sts)) {
+	delete cd;
+	*sts = LDH__SUCCESS;
+	return;
+      }
+
+      wb_adrep *ad, *adnext;
+      for ( ad = bd->adrep( sts);
+	    ODD(*sts);
+	    adnext = ad->next( sts), delete ad, ad = adnext) {
+	if ( ad->flags() & PWR_MASK_CLASS && cdh_tidIsCid( ad->tid())) {
+	  insertCattObject( sts, cid, ad, offset + adp->offset() + 
+			    j * adp->size() / adp->nElement());
+	  if ( EVEN(*sts)) return;
+	}
+      }
+      delete bd;
+    }
+  }
+  delete cd;
+  *sts = LDH__SUCCESS;
+}
+
+tree_sTable *wb_merep::buildCatt( pwr_tStatus *sts)
+{
+  if ( m_catt_tt) {
+    // Already built
+    *sts = LDH__SUCCESS;
+    return m_catt_tt;
+  }
+    
+  m_catt_tt = tree_CreateTable( sts, sizeof(merep_sClassAttrKey), 
+				offsetof(merep_sClassAttr, key), 
+				sizeof(merep_sClassAttr), 100, compCatt);
+
+  // Loop through all $ClassDef objects
+  for ( mvrep_iterator it = m_mvrepdbs.begin(); 
+	it != m_mvrepdbs.end(); 
+	it++) {
+    wb_vrepdbs *vrep = (wb_vrepdbs *)it->second;
+    wb_orep *o, *onext;
+    wb_adrep *ad, *adnext;
+    pwr_tCid cid;
+
+    for ( o = vrep->object( sts, pwr_eClass_ClassDef);
+	  ODD(*sts);
+	  onext = o->next( sts), o->unref(), o = onext) {
+      o->ref();
+
+      cid = cdh_ClassObjidToId( o->oid());
+      wb_cdrep *cd = cdrep( sts, cid);
+      if ( EVEN(*sts)) throw wb_error(*sts);
+
+      wb_bdrep *bd = cd->bdrep( sts, pwr_eBix_rt);
+      if ( EVEN(*sts)) {
+	delete cd;
+	continue;
+      }
+
+      for ( ad = bd->adrep( sts);
+	    ODD(*sts);
+	    adnext = ad->next( sts), delete ad, ad = adnext) {
+	if ( ad->flags() & PWR_MASK_CLASS && cdh_tidIsCid( ad->tid())) {
+	  insertCattObject( sts, cid, ad, 0);
+	  if ( EVEN(*sts)) throw wb_error(*sts);
+	}
+      }
+      delete bd;
+      delete cd;
+    }
+  }
+
+  merep_sClassAttrKey key;
+  key.subCid = 0;
+  key.hostCid = 0;
+  key.idx = 0;
+  merep_sClassAttr *item;
+  for ( item = (merep_sClassAttr*) tree_FindSuccessor( sts, m_catt_tt, &key);
+	item != 0;
+	item = (merep_sClassAttr*) tree_FindSuccessor( sts, m_catt_tt, &item->key)) {
+    wb_cdrep *cd1 = cdrep( sts, item->key.subCid);
+    wb_cdrep *cd2 = cdrep( sts, item->key.hostCid);
+    printf( "%-20s %-20s %2d offs ", cd1->name(), cd2->name(), 
+	    item->key.idx);
+    for ( int i = 0; i < item->numOffset; i++) 
+      printf( "%d ", item->offset[i]);
+    printf( "\n");
+    delete cd1;
+    delete cd2;
+  }
+
+  *sts = LDH__SUCCESS;
+  return m_catt_tt;
+}
+
+// Compare two keys in class attribute binary tree 
+
+static int compCatt( tree_sTable *tp, tree_sNode *x, tree_sNode *y)
+{
+  merep_sClassAttrKey *xKey = (merep_sClassAttrKey *) (tp->keyOffset + (char *) x);
+  merep_sClassAttrKey *yKey = (merep_sClassAttrKey *) (tp->keyOffset + (char *) y);
+
+  if ( xKey->subCid == yKey->subCid) {
+    if ( xKey->hostCid == yKey->hostCid) {
+      if ( xKey->idx == yKey->idx)
+	return 0;
+      else if ( xKey->idx < yKey->idx)
+	return -1;
+      else
+	return 1;
+    }
+    else if ( xKey->hostCid < yKey->hostCid)
+      return -1;
+    else
+      return 1;
+  }
+  else if ( xKey->subCid < yKey->subCid)
+    return -1;
+  else
+    return 1;
+}
+
+
+
+
+
+
 
 

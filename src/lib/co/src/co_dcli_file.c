@@ -166,7 +166,10 @@ int     dcli_replace_env( char *str, char *newstr)
       size = (int) s - (int) u;
       strncpy( symbol, u, size);
       symbol[size] = 0;
-      cdh_ToLower( lower_symbol, symbol);
+      if ( strcmp( symbol, "HOME") == 0)
+	strcpy( lower_symbol, symbol);
+      else
+	cdh_ToLower( lower_symbol, symbol);
       if ( (value = getenv( lower_symbol)) == NULL)
       {
         /* It was no symbol */

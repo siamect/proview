@@ -380,7 +380,7 @@ if ( argc >= 2 )				\
 }						\
 else						\
 {						\
-  strcpy( login, "");				\
+  strcpy( login, "SYS");	       		\
   strcpy( commandfile, "");			\
 }						\
 sts = rtt_initialize( login, commandfile, mainmenu_title);	\

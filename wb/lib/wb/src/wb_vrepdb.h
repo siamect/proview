@@ -98,7 +98,7 @@ public:
 
   virtual wb_orep *object(pwr_tStatus *sts);
   virtual wb_orep *object(pwr_tStatus *sts, pwr_tOid oid);
-  virtual wb_orep *object(pwr_tStatus *sts, pwr_tCid cid) { *sts = LDH__NYI; return 0;}
+  virtual wb_orep *object(pwr_tStatus *sts, pwr_tCid cid);
   virtual wb_orep *object(pwr_tStatus *sts, wb_name &name);
   virtual wb_orep *object(pwr_tStatus *sts, const wb_orep *parent, wb_name &name);
 

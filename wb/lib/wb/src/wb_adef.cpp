@@ -158,6 +158,12 @@ bool wb_adef::isClass()
   return m_adrep->isClass();
 }
 
+bool wb_adef::isSuperClass()
+{
+  check();
+  return m_adrep->isSuperClass();
+}
+
 pwr_tCid wb_adef::subClass()
 {
   check();

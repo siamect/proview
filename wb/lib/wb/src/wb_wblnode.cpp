@@ -246,7 +246,7 @@ static wbl_sSym attr_flags[] =
   ,{ "PWR_MASK_RTDBREF",	PWR_MASK_RTDBREF }
   ,{ "PWR_MASK_PRIVATE",	PWR_MASK_PRIVATE }
   ,{ "PWR_MASK_CLASS",		PWR_MASK_CLASS }
-  ,{ "PWR_MASK_SUBCLASS",	PWR_MASK_SUBCLASS }
+  ,{ "PWR_MASK_SUPERCLASS",	PWR_MASK_SUPERCLASS }
   ,{ "PWR_MASK_BUFFER",		PWR_MASK_BUFFER }
   ,{ "PWR_MASK_NOWBL",		PWR_MASK_NOWBL }
   ,{ "PWR_MASK_ALWAYSWBL",     	PWR_MASK_ALWAYSWBL }
@@ -418,8 +418,6 @@ void wb_wblnode::build( bool recursive)
     }
     else if ( isTemplate()) {
       // Build later by classdef
-      // if ( recursive && o->fws)
-      //   o->fws->build( recursive);
       return;
     } 
     else {
@@ -435,10 +433,10 @@ void wb_wblnode::build( bool recursive)
     first_child = getFirstChild();
 
     if ( first_child) {
-      if ( node_type == wbl_eNodeType_No)  // Avoid infinite loop
+      if ( node_type == wbl_eNodeType_No || node_type == wbl_eNodeType_Code)  // Avoid infinite loop
         o->is_built = 1;
       first_child->buildBody( this);
-      if ( node_type == wbl_eNodeType_No)
+      if ( node_type == wbl_eNodeType_No || node_type == wbl_eNodeType_Code)
         o->is_built = 0;
     }
 
@@ -448,7 +446,8 @@ void wb_wblnode::build( bool recursive)
       // o->fch->build( 1);
       wb_wblnode *ch = o->fch;
       while ( ch) {
-        ch->build( 1);
+	if ( !(isClassDef() && ch->isCode()))
+	  ch->build( 1);
         ch = ch->o->fws;
       }
       if ( node_type == wbl_eNodeType_No)
@@ -512,8 +511,10 @@ void wb_wblnode::build( bool recursive)
       }
       o->is_built = 1;
 
-      // Build template
+      // Build template and code
       o->c.templ->buildTemplate( this);
+      if ( o->c.code)
+	o->c.code->build(1);
     }
     else if ( isType()) {
       o->m_oid.oix = cdh_tixToOix( 0, o->m_oid.oix);
@@ -767,9 +768,11 @@ void wb_wblnode::buildTemplate( ref_wblnode classdef)
 {
   wb_wblnode *objbodydef = classdef->o->fch;
   o->m_oid.oix = cdh_cixToOix( classdef->o->c.cix, pwr_eBix_template, 0);
-  if ( !m_vrep->registerObject( o->m_oid.oix, this))
+  if ( !m_vrep->registerObject( o->m_oid.oix, this)) {
+    ref_wblnode n = m_vrep->findObject( o->m_oid.oix);
+    printf( "Duplicate: %s\n", n->name());
     m_vrep->error( "Duplicate template oix", getFileName(), line_number);
-
+  }
   while ( objbodydef) {
     if ( objbodydef->isObjBodyDef()) {
       if ( objbodydef->o->b.bix == pwr_eBix_sys || 
@@ -1434,7 +1437,10 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
           if ( strcmp( childname.c_str(), "Template") == 0) {
             o->c.templ = child;
             o->c.templ->node_type = wbl_eNodeType_Template;
-            break;
+          }
+          else if ( strcmp( childname.c_str(), "Code") == 0) {
+            o->c.code = child;
+            o->c.code->node_type = wbl_eNodeType_Code;
           }
         }
         last_child = child;

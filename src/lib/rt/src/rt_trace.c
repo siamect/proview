@@ -93,7 +93,7 @@ static void trace_get_save_filename( pwr_tObjid window_objid, char *filename)
 
 
 static int trace_get_filename( pwr_tObjid window_objid, char *filename,
-			       int *has_host, char *hostname)
+			       int *has_host, char *hostname, char *plcconnect)
 {
   FILE *fp;
   pwr_tOid host;
@@ -102,6 +102,7 @@ static int trace_get_filename( pwr_tObjid window_objid, char *filename,
   char fname[200];
   int sts;
   char name[120];
+  pwr_sAttrRef conar;
 
   sprintf( fname, "$pwrp_load/pwr_%s.flw", trace_IdToStr( window_objid));
   dcli_translate_filename( fname, fname);
@@ -137,6 +138,15 @@ static int trace_get_filename( pwr_tObjid window_objid, char *filename,
     strcpy( hostname, name);
     *has_host = 1;
     
+    strcat( name, ".PlcConnect");
+    strcpy( plcconnect, "");
+    sts = gdh_GetObjectInfo( name, &conar, sizeof(conar));
+    if ( ODD(sts)) {
+      sts = gdh_AttrrefToName( &conar, name, sizeof(name),
+			       cdh_mName_volumeStrict);
+      if ( ODD(sts))
+	strcpy( plcconnect, name);
+    }
   }
   fclose( fp);
   strcpy( filename, fname);
@@ -151,6 +161,7 @@ static int trace_connect_bc( flow_tObject object, char *name, char *attr,
   pwr_tSubid	*subid_p, subid;
   int		sts;
   tra_tCtx	tractx;
+  char 		*s;
 
   flow_GetCtxUserData( flow_GetCtx( object), (void **)&tractx);
 
@@ -179,11 +190,31 @@ static int trace_connect_bc( flow_tObject object, char *name, char *attr,
   }
 
   if ( tractx->has_host) {
-    /* Replace "$host" with hostname */
     if ( strncmp( name, "$host", 5) == 0) {
+      /* Replace "$host" with hostname */
       strcpy( attr_str, tractx->hostname);
       strcat( attr_str, &name[5]);
     }
+    else if ( strncmp( name, "$PlcHost:", 9) == 0) {
+      /* Replace "$PlcHost:" with hostname */
+      s = strchr( name, '.');
+      if ( !s)
+	strcpy( attr_str, tractx->hostname);
+      else {
+	strcpy( attr_str, tractx->hostname);
+	strcat( attr_str, s);
+      }
+    }      
+    else if ( strncmp( name, "$PlcConnect:", 12) == 0) {
+      /* Replace "$PlcConnect:" with plcconnect name */
+      s = strchr( name, '.');
+      if ( !s)
+	strcpy( attr_str, tractx->plcconnect);
+      else {
+	strcpy( attr_str, tractx->plcconnect);
+	strcat( attr_str, s);
+      }
+    }      
     else
       strcpy( attr_str, name);
   }
@@ -560,8 +591,8 @@ static int trace_flow_cb( FlowCtx *ctx, flow_tEvent event)
     if ( tractx->trace_started)
     {
       char			object_str[120];
-      char			attr_str[80];
-      char			con_attr_str[80];
+      char			attr_str[120];
+      char			con_attr_str[120];
       flow_eTraceType		trace_type;
       flow_tNode		n1;
       flow_tCon			c1;
@@ -1312,6 +1343,7 @@ tra_tCtx trace_new( 	void 		*parent_ctx,
   char   	title[100];
   int		has_host;
   char		hostname[120];
+  char		plcconnect[120];
   MrmHierarchy s_DRMh;
   MrmType dclass;
   Widget	trace_widget;
@@ -1378,7 +1410,8 @@ tra_tCtx trace_new( 	void 		*parent_ctx,
          class == pwr_cClass_windowsubstep ))
     return NULL;
 
-  sts = trace_get_filename( window_objid, filename, &has_host, hostname);
+  sts = trace_get_filename( window_objid, filename, &has_host, hostname, 
+			    plcconnect);
   if ( EVEN(sts)) return NULL;
 
   /* Create object context */
@@ -1394,8 +1427,10 @@ tra_tCtx trace_new( 	void 		*parent_ctx,
   tractx->is_authorized_cb = is_authorized_cb;
   tractx->scan_time = 0.5;
   tractx->has_host = has_host;
-  if ( has_host)
+  if ( has_host) {
     strcpy( tractx->hostname, hostname);
+    strcpy( tractx->plcconnect, plcconnect);
+  }
   reglist[0].value = (caddr_t) tractx;
  
   tractx->toplevel = XtCreatePopupShell( name, 

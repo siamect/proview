@@ -144,11 +144,14 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, const char *bname, co
     if ( oddSts()) {
       if ( bname) {
         bd = cd->bdrep( &m_sts, bname);
-        if ( oddSts())
+        if ( oddSts()) {
           m_adrep = bd->adrep( &m_sts, n.attributesAll());
+	  m_bix = bd->bix();
+	}
       }
       else {
         m_adrep = cd->adrep( &m_sts, n.attributesAll());
+	m_bix = pwr_eBix_rt;
       }
       if ( oddSts()) {
         m_adrep->ref();
@@ -254,6 +257,8 @@ wb_attribute::wb_attribute(const wb_attribute& pa, int idx, const char *aname) :
 
   m_orep = pa.m_orep;
   m_orep->ref();
+  m_bix = bd->bix();
+#if 0
   if ( pa.isClass()) {
     m_flags |= PWR_MASK_SUBCLASS;
 
@@ -264,6 +269,7 @@ wb_attribute::wb_attribute(const wb_attribute& pa, int idx, const char *aname) :
   }
   else
     m_bix = pa.m_bix;
+#endif
 
   delete bd;
   delete cd;
@@ -341,37 +347,10 @@ pwr_sAttrRef wb_attribute::aref() const
 {
   check();
 
-  pwr_sAttrRef aref;
-  memset( &aref, 0, sizeof(aref));
-    
+  pwr_sAttrRef ar;
+  aref( &ar);
 
-  aref.Objid = m_orep->oid();
-  aref.Offset = m_offset;
-  aref.Size = m_size;
-
-  if ( m_adrep) {
-    if ( m_adrep->isSubattr()) {
-      // Use rtbody of m_orep
-      pwr_tStatus sts;
-
-      wb_cdrep *cd = m_orep->vrep()->merep()->cdrep(&sts, m_orep->cid());
-      if ( cd) {
-	wb_bdrep* bd = cd->bdrep(&sts, pwr_eBix_rt);
-	if ( bd) {
-	  aref.Body = bd->bcid();
-	  delete bd;
-	}
-	delete cd;
-      }
-    }
-    else {
-      wb_bdrep *bd = m_adrep->bdrep();
-
-      aref.Body = bd->bcid();
-      delete bd;
-    }
-  } 
-  return aref;
+  return ar;
 }
 
 pwr_sAttrRef *wb_attribute::aref(pwr_sAttrRef *arp) const
@@ -383,6 +362,7 @@ pwr_sAttrRef *wb_attribute::aref(pwr_sAttrRef *arp) const
   arp->Objid = m_orep->oid();
   arp->Offset = m_offset;
   arp->Size = m_size;
+  arp->Body = m_orep->cid() | m_bix;
 
   if ( m_flags & PWR_MASK_POINTER)
     arp->Flags.b.Indirect = 1;
@@ -391,20 +371,17 @@ pwr_sAttrRef *wb_attribute::aref(pwr_sAttrRef *arp) const
        m_idx == -1)
     arp->Flags.b.Array = 1;
 
-  if ( m_tid == m_orep->cid())
+  if ( m_tid == m_orep->cid()) {
     arp->Flags.b.Object = 1;
+
+    arp->Body = m_tid;
+  }
   else if ( cdh_tidIsCid( m_tid))
     arp->Flags.b.ObjectAttr = 1;
 
   if ( m_shadowed)
     arp->Flags.b.Shadowed = 1;
 
-  if ( m_adrep) {
-    wb_bdrep *bd = m_adrep->bdrep();
-
-    arp->Body = bd->bcid();
-    delete bd;
-  } 
   return arp;
 }
 
@@ -473,10 +450,10 @@ pwr_eBix wb_attribute::bix() const
 {
   check();
 
-  if (!m_adrep || m_flags & PWR_MASK_SUBCLASS)
+  //if (!m_adrep || m_flags & PWR_MASK_SUBCLASS)
     return m_bix;
 
-  return m_adrep->bix();
+  // return m_adrep->bix();
 }
 
 pwr_tOid wb_attribute::boid() const
@@ -533,10 +510,11 @@ void *wb_attribute::value( void *p)
       return m_orep->vrep()->readBody( &sts, m_orep, pwr_eBix_rt, p);
   }
   
-  if (m_flags & PWR_MASK_SUBCLASS)
-    bix = m_bix;
-  else
-    bix = m_adrep->bix();
+
+  // if (m_flags & PWR_MASK_SUBCLASS)
+  bix = m_bix;
+  //else
+  //  bix = m_adrep->bix();
 
   return m_orep->vrep()->readAttribute( &sts, m_orep, bix, m_offset, m_size, p);
 }
@@ -581,7 +559,9 @@ wb_attribute wb_attribute::after() const
     return wb_attribute();
   
   wb_attribute a(LDH__SUCCESS, m_orep, adrep);
+  a.m_bix = m_bix;
   
+#if 0
   // Fix for sub classes
   if (m_flags & PWR_MASK_SUBCLASS) {
     a.m_flags |= PWR_MASK_SUBCLASS;
@@ -591,7 +571,7 @@ wb_attribute wb_attribute::after() const
     else
       a.m_offset = m_offset + m_size;
   }
-
+#endif
   return a;
 }
 
@@ -608,7 +588,9 @@ wb_attribute wb_attribute::before() const
     return wb_attribute();
   
   wb_attribute a(LDH__SUCCESS, m_orep, adrep);
+  a.m_bix = m_bix;
   
+#if 0
   // Fix for sub classes
   if (m_flags & PWR_MASK_SUBCLASS) {
     a.m_flags |= PWR_MASK_SUBCLASS;
@@ -618,6 +600,7 @@ wb_attribute wb_attribute::before() const
     else
       a.m_offset = m_offset - adrep->size();
   }
+#endif
 
   return a;
 }   

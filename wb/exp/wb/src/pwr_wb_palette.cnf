@@ -219,7 +219,7 @@ palette ClassNavigatorPalette
     class $ObjBodyDef
     class $ObjXRef
     class $Output
-    class PlcPgm
+    class PlcTemplate
   }
   menu Type
   {

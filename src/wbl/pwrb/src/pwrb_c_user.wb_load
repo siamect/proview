@@ -9,7 +9,7 @@
 !
 SObject pwrb:Class
 !/**
-!  @Version 1.0
+!  @Version 2.0
 !  @Group Operator,NodeConfiguration
 !  @Summary Configures a user category of an operator station
 !  Configures a user category of an operator station.
@@ -150,7 +150,7 @@ SObject pwrb:Class
       !*/
       Object FastAvail $Attribute 10 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr TypeRef = "pwrs:Type-$AttrRef"
           Attr Flags |= PWR_MASK_ARRAY
 	  Attr Elements = 15
         EndBody

@@ -53,6 +53,7 @@ public:
   wb_name longName();
   void *body( void *p = 0);
   bool isClass();
+  bool isSuperClass();
   pwr_tCid subClass();
     
 private:

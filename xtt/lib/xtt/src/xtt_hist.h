@@ -71,7 +71,7 @@ class Hist {
     int			hist_display_return;
     void 		(*close_cb)( void *);
     void 		(*start_trace_cb)( void *, pwr_tObjid, char *);
-    void 		(*display_in_xnav_cb)( void *, pwr_tObjid);
+    void 		(*display_in_xnav_cb)( void *, pwr_sAttrRef *);
     void 		(*update_info_cb)( void *);
     void 		(*help_cb)( void *, char *);
     void 		(*popup_menu_cb)( void *, pwr_sAttrRef, unsigned long,

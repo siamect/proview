@@ -27,6 +27,7 @@ extern "C" {
 #include "rt_trace.h"
 #endif
 
+#include "rt_xnav_msg.h"
 
 typedef enum {
 	xnav_eItemType_Object,
@@ -94,14 +95,16 @@ class Item {
     Item( pwr_tObjid item_objid, int item_is_root) :
 	type( xnav_eItemType_Object), objid(item_objid), is_root(item_is_root),
 	node(NULL)
-	{};
-    int     	open_attributes( XNavBrow *brow, double x, double y)
-				{ return 1;};
-    int		open_children( XNavBrow *brow, double x, double y)
-				{ return 1;};
-    int		open_trace( XNavBrow *brow, XNav *xnav, double x, double y)
-				{ return 1;};
-    void     	close( XNavBrow *brow, double x, double y) {};
+	{}
+    virtual int open_attributes( XNavBrow *brow, double x, double y)
+      { return 1;}
+    virtual int	open_children( XNavBrow *brow, double x, double y)
+      { return XNAV__NOCHILD;}
+    virtual int	open_trace( XNavBrow *brow, double x, double y)
+      { return 1;}
+    virtual int open_crossref( XNavBrow *brow, double x, double y)
+      { return 1;}
+    virtual void close( XNavBrow *brow, double x, double y) {}
     xnav_eItemType	type;
     pwr_tObjid		objid;
     int			is_root;
@@ -163,8 +166,7 @@ class ItemHelp : public Item {
     ItemHelp( XNavBrow *brow, char *item_name, char *text, char *text2, 
 	char *text3, char *item_link, char *item_bookmark, 
 	char *item_file_name, navh_eHelpFile help_file_type, int help_index, brow_tNode dest, flow_eDest dest_code);
-    int			open_children( XNavBrow *brow, XNav *xnav,
-				       double x, double y);
+    int			open_children( XNavBrow *brow, double x, double y);
     char link[200];
     char bookmark[80];
     char file_name[80];
@@ -178,8 +180,7 @@ class ItemHelpBold : public Item {
 	char *text3, char *item_link, char *item_bookmark, 
 	char *item_file_name, navh_eHelpFile help_file_type, int help_index, 
 	brow_tNode dest, flow_eDest dest_code);
-    int			open_children( XNavBrow *brow, XNav *xnav, 
-				       double x, double y);
+    int			open_children( XNavBrow *brow, double x, double y);
     char link[200];
     char bookmark[80];
     char file_name[80];
@@ -191,15 +192,14 @@ class ItemHelpHeader : public Item {
   public:
     ItemHelpHeader( XNavBrow *brow, char *item_name, char *title,
 	brow_tNode dest, flow_eDest dest_code);
-    int 		close( XNavBrow *brow, XNav *xnav, double x, double y);
+    void 		close( XNavBrow *brow, double x, double y);
 };
 
 class ItemFile : public Item {
   public:
     ItemFile( XNavBrow *brow, char *item_name, char *text, char *file,
 	item_eFileType item_filetype, brow_tNode dest, flow_eDest dest_code);
-    int			open_children( XNavBrow *brow, XNav *xnav, 
-				       double x, double y);
+    int			open_children( XNavBrow *brow, double x, double y);
     char file_name[120];
     item_eFileType file_type;
 
@@ -210,14 +210,13 @@ class ItemBaseObject : public Item {
   public:
     ItemBaseObject( pwr_tObjid item_objid, int item_is_root):
 	Item( item_objid, item_is_root) {};
-    int			open_children( XNavBrow *brow, double x, double y);
-    int     		open_attributes( XNavBrow *brow, double x, double y);
-    int     		open_trace( XNavBrow *brow, XNav *xnav, 
-				    double x, double y);
-    int     		open_crossref( XNavBrow *brow, XNav *xnav, 
-				       double x, double y);
-    int     		close( XNavBrow *brow, double x, double y);
-    int 		open_attribute( XNavBrow *brow, double x, double y, 
+    virtual int	open_children( XNavBrow *brow, double x, double y);
+    virtual int open_attributes( XNavBrow *brow, double x, double y);
+    virtual int open_trace( XNavBrow *brow, double x, double y);
+    virtual int open_crossref( XNavBrow *brow, double x, double y);
+    virtual void close( XNavBrow *brow, double x, double y);
+    virtual int open_attribute( XNavBrow *brow, double x, double y, 
+
 				char *attr_name, int element);
 };
 
@@ -248,7 +247,7 @@ class ItemAttrArray : public Item {
 	int attr_size, int attr_flags, int item_is_root);
     int     open_children( XNavBrow *brow, double x, double y) {return 1;};
     int     open_attributes( XNavBrow *brow, double x, double y);
-    int     close( XNavBrow *brow, double x, double y);
+    void     close( XNavBrow *brow, double x, double y);
 };
 
 class ItemAttrArrayElem : public ItemBaseAttr {
@@ -270,9 +269,9 @@ class ItemAttrObject : public Item {
 	brow_tNode dest, flow_eDest dest_code,
 	char *attr_name, int attr_cid, 
 	int attr_size, int attr_flags, int attr_element, int item_is_root);
-    int     open_children( XNavBrow *brow, double x, double y) {return 1;};
     int     open_attributes( XNavBrow *brow, double x, double y);
-    int     close( XNavBrow *brow, double x, double y);
+    int     open_crossref( XNavBrow *brow, double x, double y);
+    void    close( XNavBrow *brow, double x, double y);
 };
 
 class ItemCollect : public ItemBaseAttr {
@@ -289,7 +288,7 @@ class ItemMenu : public Item {
 	int item_is_root);
   xnav_sMenu		**child_list;
   int			open_children( XNavBrow *brow, double x, double y);
-  int     		close( XNavBrow *brow, double x, double y);
+  void     		close( XNavBrow *brow, double x, double y);
 };
 
 class ItemCommand : public Item {
@@ -298,8 +297,7 @@ class ItemCommand : public Item {
 	brow_tNode dest, flow_eDest dest_code, char *item_command, 
 	int item_is_root, flow_sAnnotPixmap *pixmap);
     char		command[200];
-    int			open_children( XNavBrow *brow, XNav *xnav, 
-				       double x, double y);
+    int			open_children( XNavBrow *brow, double x, double y);
 };
 
 
@@ -310,8 +308,7 @@ class ItemCrossref : public Item {
     char		ref_name[32];
     char		ref_class[32];
     int			write;
-    int     		open_trace( XNavBrow *brow, XNav *xnav, 
-				    double x, double y);
+    int     		open_trace( XNavBrow *brow, double x, double y);
 };
 
 class ItemLocal : public Item {
@@ -380,8 +377,7 @@ class ItemDevice : public ItemTable {
 	tab_change_value_idx, tab_min_limit, tab_max_limit, 
 	relative_pos, dest, dest_code)
 	{ type = xnav_eItemType_Device;};
-    int			open_children( XNavBrow *brow, XNav *xnav, 
-				       double x, double y);
+    int			open_children( XNavBrow *brow, double x, double y);
 };
 
 class ItemChannel : public ItemTable {
@@ -397,10 +393,8 @@ class ItemChannel : public ItemTable {
 	relative_pos, dest, dest_code)
 	{ type = xnav_eItemType_Channel;};
     pwr_tObjid		signal_objid;
-    int			open_children( XNavBrow *brow, XNav *xnav, 
-				       double x, double y);
-    int     		open_crossref( XNavBrow *brow, XNav *xnav, 
-				       double x, double y);
+    int			open_children( XNavBrow *brow, double x, double y);
+    int     		open_crossref( XNavBrow *brow, double x, double y);
 };
 
 class ItemRemNode : public ItemTable {
@@ -415,8 +409,7 @@ class ItemRemNode : public ItemTable {
 	tab_change_value_idx, tab_min_limit, tab_max_limit, relative_pos, 
 	dest, dest_code)
 	{ type = xnav_eItemType_RemNode;};
-    int			open_children( XNavBrow *brow, XNav *xnav, 
-				       double x, double y);
+    int			open_children( XNavBrow *brow, double x, double y);
 };
 
 class ItemRemTrans : public ItemTable {
@@ -431,8 +424,7 @@ class ItemRemTrans : public ItemTable {
 	tab_change_value_idx, tab_min_limit, tab_max_limit, relative_pos, 
 	dest, dest_code)
 	{ type = xnav_eItemType_RemTrans;};
-    int			open_children( XNavBrow *brow, XNav *xnav, 
-				       double x, double y);
+    int			open_children( XNavBrow *brow, double x, double y);
 };
 
 class ItemPlc : public ItemTable {
@@ -447,12 +439,7 @@ class ItemPlc : public ItemTable {
 	tab_change_value_idx, tab_min_limit, tab_max_limit, relative_pos,
 	dest, dest_code)
 	{ type = xnav_eItemType_Plc;};
-    int			open_children( XNavBrow *brow, XNav *xnav, 
-				       double x, double y);
-    int     		open_attributes( XNavBrow *brow, double x, double y);
-    int     		open_trace( XNavBrow *brow, XNav *xnav, 
-				    double x, double y);
-    int     		close( XNavBrow *brow, double x, double y);
+    int     		open_children( XNavBrow *brow, double x, double y);
 };
 
 #if defined __cplusplus

@@ -67,6 +67,7 @@ struct tra_sCtx{
   int			version;
   int			has_host;
   char			hostname[120];
+  char			plcconnect[120];
 };
 
 

@@ -367,6 +367,8 @@ class WNav {
     int	crr_object( char *filename, char *objectname, brow_tNode parent_node);
     int	crr_code( char *filename, char *str, int brief, int func,
 		  int case_sensitive);
+    int display_objects( pwr_tCid *cidp, char *name, pwr_tObjid root,
+			 int depth);
 };
 
 int wnav_cut_segments (

@@ -41,7 +41,7 @@ class FlowConPoint : public FlowArrayElem {
     int	number;
     FlowPoint p;
     flow_eDirection direction;
-    char trace_attribute[32];
+    char trace_attribute[120];
     flow_eTraceType trace_attr_type;
 };
 

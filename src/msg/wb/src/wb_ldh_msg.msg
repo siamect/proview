@@ -103,9 +103,9 @@ access		<no such access for this configuration>			/error
 attrconv	<attribute conversion error>				/error
 nosuchfile	<no such file>						/error
 classmisplaced	<Misplaced object in class volume>			/error
-
-
-
+nonext		<No next object>					/error
+catt		<Class attribute tree is not built>			/error
+classlist	<No object in classlist>				/error
 
 
 

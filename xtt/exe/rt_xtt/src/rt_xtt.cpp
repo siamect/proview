@@ -551,7 +551,7 @@ static void xtt_activate_openobject( Widget w, Xtt *xtt, XmAnyCallbackStruct *da
 
   sts = xtt->xnav->get_select( &attrref, &is_attr);
   if ( ODD(sts))
-    xtt->xnav->open_object( attrref.Objid);
+    xtt->xnav->open_object( &attrref);
 }
 
 static void xtt_activate_openplc( Widget w, Xtt *xtt, XmAnyCallbackStruct *data)
@@ -568,12 +568,9 @@ static void xtt_activate_opengraph( Widget w, Xtt *xtt, XmAnyCallbackStruct *dat
 {
   int		sts;
   pwr_tClassId	classid;
-  char		name[120];
-  char		vname[120];
-  char		classname[80];
+  char		name[240];
+  char		vname[240];
   char		filename[120];
-  char		fname[120];
-  char		found_file[120];
   int		is_attr;
   pwr_sAttrRef	attrref;
   char		cmd[200];
@@ -589,19 +586,18 @@ static void xtt_activate_opengraph( Widget w, Xtt *xtt, XmAnyCallbackStruct *dat
     }
     return;
   }
-  if ( !is_attr)
-  {
-    sts = gdh_ObjidToName( attrref.Objid,
-		  name, sizeof(name), cdh_mNName);
-    if ( EVEN(sts)) return;
 
-    sts = gdh_ObjidToName( attrref.Objid,
-		  vname, sizeof(vname), cdh_mName_volumeStrict);
-    if ( EVEN(sts)) return;
+  sts = gdh_AttrrefToName( &attrref, name, sizeof(name), cdh_mNName);
+  if ( EVEN(sts)) return;
 
-    sts = gdh_GetObjectClass( attrref.Objid, &classid);
-    if ( EVEN(sts)) return;
+  sts = gdh_AttrrefToName( &attrref, vname, sizeof(vname), 
+			   cdh_mName_volumeStrict);
+  if ( EVEN(sts)) return;
 
+  sts = gdh_GetAttrRefTid( &attrref, &classid);
+  if ( EVEN(sts)) return;
+
+  if ( cdh_tidIsCid( classid)) {
     if ( classid == pwr_cClass_DsTrend || classid == pwr_cClass_PlotGroup) {
       // Open trend
       sprintf( cmd, "open trend /name=%s /title=\"%s\"", vname, name);
@@ -609,84 +605,25 @@ static void xtt_activate_opengraph( Widget w, Xtt *xtt, XmAnyCallbackStruct *dat
 
       return;
     }
-
-    sts = gdh_ObjidToName( cdh_ClassIdToObjid( classid),
-		  classname, sizeof(classname), cdh_mName_object);
-    if ( EVEN(sts)) return;
-    if ( classname[0] == '$')
-      cdh_ToLower( classname, &classname[1]);
-    else
-      cdh_ToLower( classname, classname);
-
-    sprintf( filename, "pwr_exe:pwr_c_%s.pwg", classname);
-    dcli_translate_filename( fname, filename);
-    sts = dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_INIT);
-    dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_END);
-    if ( EVEN(sts))
-    {
-      sprintf( filename, "pwrp_exe:%s.pwg", classname);
-      dcli_translate_filename( fname, filename);
-      sts = dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_INIT);
-      dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_END);
-      if ( EVEN(sts))
-      {
-        xtt_message( xtt, 'E', "Can't find graph for this object");
-        return;
-      }
-    }
-    sprintf( cmd, "open graph %s/inst=%s/name=\"%s\"", 
-           filename, vname, name);
-
-    // Add scrollbars for some classes
-    switch ( classid) {
-      case pwr_cClass_NMpsCell:
-      case pwr_cClass_NMpsStoreCell:
-        strcat( cmd, "/sc");
-        break;
-      default:
-        ;
-    }
+    sprintf( cmd, "open graph /class/inst=%s/name=\"%s\"", vname, name);
     xtt->xnav->command( cmd);
   }
-  else
-  {
-    pwr_tTypeId		attr_type;
-    unsigned int	attr_size;
-    unsigned int	attr_offset;
-    unsigned int	attr_dimension;
-
-    sts = gdh_AttrrefToName( &attrref, name, sizeof(name), cdh_mNName);
-    if ( EVEN(sts)) return;
-
-    sts = gdh_GetAttributeCharacteristics( name, &attr_type, &attr_size,
-		&attr_offset, &attr_dimension);
-    if ( EVEN(sts)) {
-      // Try volume strict name
-      sts = gdh_AttrrefToName( &attrref, name, sizeof(name), 
-          cdh_mName_volumeStrict);
-      if ( EVEN(sts)) return;
-
-      sts = gdh_GetAttributeCharacteristics( name, &attr_type, &attr_size,
-		&attr_offset, &attr_dimension);
-      if ( EVEN(sts)) return;
+  else {
+    switch( classid) {
+    case pwr_eType_Float32:
+      sprintf( filename, "pwr_exe:pwr_t_float32.pwg");
+      break;
+    case pwr_eType_Int32:
+      sprintf( filename, "pwr_exe:pwr_t_int32.pwg");
+      break;
+    case pwr_eType_Boolean:
+      sprintf( filename, "pwr_exe:pwr_t_boolean.pwg");
+      break;
+    default:
+      xtt_message( xtt, 'E', "No graph for this attribute type");
+      return;
     }
-    
-    switch( attr_type)
-    {
-      case pwr_eType_Float32:
-        sprintf( filename, "pwr_exe:pwr_t_float32.pwg");
-        break;
-      case pwr_eType_Int32:
-        sprintf( filename, "pwr_exe:pwr_t_int32.pwg");
-        break;
-      case pwr_eType_Boolean:
-        sprintf( filename, "pwr_exe:pwr_t_boolean.pwg");
-        break;
-      default:
-        xtt_message( xtt, 'E', "No graph for this attribute type");
-        return;
-    }
-    sprintf( cmd, "open graph %s/inst=%s/name=\"%s\"", filename, name, name);
+    sprintf( cmd, "open graph %s/inst=%s/name=\"%s\"", filename, vname, name);
     xtt->xnav->command( cmd);
   }
 }

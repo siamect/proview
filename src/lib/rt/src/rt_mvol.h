@@ -68,6 +68,7 @@ typedef struct {
   pwr_tUInt32		elem;
   pwr_tTypeId		tid;
   pwr_mAttrRef		flags;
+  char			name[120];	/**< Full attribute name */
 } mvol_sAttribute;
 
 /* Function prototypes.  */
