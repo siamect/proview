@@ -2182,7 +2182,7 @@ static foe_ctx	foe_create_window(
 		        foectx->widgets.pane,
 			&foectx->widgets.popupmenu,
 			&dclass) != MrmSUCCESS)
-	printf("can't fetch popup\n");
+    printf("can't fetch popup\n");
 
   MrmCloseHierarchy(s_MrmH);
 
