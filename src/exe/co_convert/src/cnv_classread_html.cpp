@@ -117,7 +117,7 @@ int ClassRead::html_class()
   char struct_file[100];
   char low_volume_name[80];
   char low_class_name[80];
-  char *s;
+  char txt[200];
 
   cdh_ToLower( low_volume_name, volume_name);
   cdh_ToLower( low_class_name, class_name);
@@ -230,11 +230,21 @@ endl <<
 
   if ( doc_fresh) {
     for ( i = 0; i < doc_cnt; i++) {
-      if ( (s = strstr( low(doc_text[i]), "@image")) != 0)  {
+      remove_spaces( doc_text[i], txt);
+      if ( strncmp( low(txt), "@image", 6) == 0)  {
 	char imagefile[80];
 
-	remove_spaces( s + 6, imagefile);
+	remove_spaces( txt + 6, imagefile);
 	html_clf->f << "</XMP><IMG SRC=\"" << imagefile << "\"><XMP>" << endl;
+      }
+      else if ( strncmp( low(txt), "@b", 2) == 0)  {
+	html_clf->f << "</XMP><B><FONT SIZE=\"3\">" << txt + 2 << "</FONT></B><XMP>" << endl;
+      }
+      else if ( strncmp( low(txt), "@h1", 3) == 0)  {
+	html_clf->f << "</XMP><H3>" << txt + 3 << "</H3><XMP>" << endl;
+      }
+      else if ( strncmp( low(txt), "@h2", 3) == 0)  {
+	html_clf->f << "</XMP><H4>" << txt + 3 << "</H4><XMP>" << endl;
       }
       else
 	html_clf->f << doc_text[i] << endl;
@@ -398,7 +408,7 @@ int ClassRead::html_class_close()
 int ClassRead::html_attribute()
 {
   int i;
-  char *s;
+  char txt[200];
 
   // Summary
 
@@ -427,8 +437,19 @@ int ClassRead::html_attribute()
     if ( strcmp( doc_summary, "") == 0) 
     {
       for ( i = 0; i < doc_cnt; i++) {
-        if ( (s = strstr( low(doc_text[i]), "@image")) != 0)
+	remove_spaces( doc_text[i], txt);
+	if ( strncmp( low(txt), "@image", 6) == 0) {
 	  continue;
+	}
+	else if ( strncmp( low(txt), "@b", 2) == 0)  {
+	  html_clf->f << "</XMP><B><FONT SIZE=\"3\">" << txt + 2 << "</FONT></B><XMP>" << endl;
+	}
+	else if ( strncmp( low(txt), "@h1", 3) == 0)  {
+	  html_clf->f << "<H3>" << txt + 3 << "</H3>" << endl;
+	}
+	else if ( strncmp( low(txt), "@h2", 3) == 0)  {
+	  html_clf->f << "<H4>" << txt + 3 << "</H4>" << endl;
+	}
 	else {
 	  html_clf->f << doc_text[i];
 	  if ( i < doc_cnt - 1)
@@ -485,11 +506,21 @@ int ClassRead::html_attribute()
 
   if ( doc_fresh) {
     for ( i = 0; i < doc_cnt; i++) {
-      if ( (s = strstr( low(doc_text[i]), "@image")) != 0)  {
+      remove_spaces( doc_text[i], txt);
+      if ( strncmp( low(txt), "@image", 6) == 0)  {
 	char imagefile[80];
 
-	remove_spaces( s + 6, imagefile);
+	remove_spaces( txt + 6, imagefile);
 	fp_tmp << "</XMP><IMG SRC=\"" << imagefile << "\"><XMP>" << endl;
+      }
+      else if ( strncmp( low(txt), "@b", 2) == 0)  {
+	fp_tmp << "</XMP><B><FONT SIZE=\"3\">" << txt + 2 << "</FONT></B><XMP>" << endl;
+      }
+      else if ( strncmp( low(txt), "@h1", 3) == 0)  {
+	fp_tmp << "</XMP><H3>" << txt + 3 << "</H3><XMP>" << endl;
+      }
+      else if ( strncmp( low(txt), "@h2", 3) == 0)  {
+	fp_tmp << "</XMP><H4>" << txt + 3 << "</H4><XMP>" << endl;
       }
       else
 	fp_tmp << doc_text[i] << endl;
@@ -500,4 +531,11 @@ int ClassRead::html_attribute()
 
   return 1;
 }
+
+
+
+
+
+
+
 

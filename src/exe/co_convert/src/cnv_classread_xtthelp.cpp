@@ -56,6 +56,7 @@ int ClassRead::xtthelp_class()
   char full_class_name[80];
   char link_ref[80];
   char *s;
+  char txt[256];
 
   strcpy( full_class_name, volume_name);
   strcat( full_class_name, ":");
@@ -92,12 +93,23 @@ int ClassRead::xtthelp_class()
 "<H1>Description" << endl;
 
   if ( doc_fresh) {
+
     for ( i = 0; i < doc_cnt; i++) {
-      if ( (s = strstr( low(doc_text[i]), "@image")) != 0)  {
+      remove_spaces( doc_text[i], txt);
+      if ( strncmp( low(txt), "@image", 6) == 0)  {
 	char imagefile[80];
 
-	remove_spaces( s + 6, imagefile);
+	remove_spaces( txt + 6, imagefile);
 	fp_tmp << "<IMAGE> " << imagefile << endl;
+      }
+      else if ( strncmp( low(txt), "@b", 2) == 0)  {
+	fp_tmp << "<B> " << txt + 2 << endl;
+      }
+      else if ( strncmp( low(txt), "@h1", 3) == 0)  {
+	fp_tmp << "<H1> " << txt + 3 << endl;
+      }
+      else if ( strncmp( low(txt), "@h2", 3) == 0)  {
+	fp_tmp << "<H2> " << txt + 3 << endl;
       }
       else
 	fp_tmp << doc_text[i] << endl;
@@ -122,7 +134,7 @@ int ClassRead::xtthelp_class()
 int ClassRead::xtthelp_body()
 {
   fp_tmp <<
-"<H2>" << endl <<
+"<HR>" << endl <<
 "<H1>" << body_name << endl;
 
   return 1;

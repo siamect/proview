@@ -248,6 +248,16 @@ void *wnav_help_insert_cb( void *ctx, navh_eItemType item_type, char *text1,
       xh->fp << "<H2>" << text1 << "</H2><BR>" << endl;
       return NULL;
     }
+    case navh_eItemType_HorizontalLine:
+    {      
+      xh->fp << "<HR>" << endl;
+      return NULL;
+    }
+    case navh_eItemType_Image:
+    {      
+      xh->fp << "<IMG SRC=\"" << text1 << "\"><BR>" << endl;
+      return NULL;
+    }
     default:
       return 0;
   }
