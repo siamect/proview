@@ -1,10 +1,15 @@
 Package: pwrrt
-Version: 4.0.0-0
+Version: 4.0.0-3
 Section: base
 Priority: optional
 Architecture: i386
 Depends: libc6 (>= 2.2.4-4)
 Replaces: pwr34,pwr39,pwr40
 Maintainer: Proview <postmaster@proview.se>
-Description: Proview runtime environment package, beta release
- Proview runtime environment, beta release
+Description:
+ Proview runtime environment, base release
+ Changes in 4.0.0-2:
+   - Soft restart handled in rs_nmps_bck.
+ Changes in 4.0.0-3:
+   - Initital values in input and output signals.
+
