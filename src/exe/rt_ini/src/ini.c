@@ -1182,8 +1182,8 @@ ini_CheckVolumeFile (
       if (checkSect(sts, cp, sects, dbs_cVersionVolRef))
 	readSectVolRef(sts, cp);
       break;
-    case dbs_eSect_oix:
-      checkSect(sts, cp, sects, dbs_cVersionOix);
+    case dbs_eSect_oid:
+      checkSect(sts, cp, sects, dbs_cVersionOid);
       break;
     case dbs_eSect_object:
       checkSect(sts, cp, sects, dbs_cVersionObject);
@@ -1203,7 +1203,7 @@ ini_CheckVolumeFile (
   } while (cp->sect.type != dbs_eSect_rbody);
 
   reqmask = (1<<dbs_eSect_dir) | (1<<dbs_eSect_volume) | (1<<dbs_eSect_volref)
-               | (1<<dbs_eSect_oix) | (1<<dbs_eSect_object) | (1<<dbs_eSect_rbody);
+               | (1<<dbs_eSect_oid) | (1<<dbs_eSect_object) | (1<<dbs_eSect_rbody);
   if ((sects & reqmask) != reqmask) {
     *sts = INI__SECTORDER;
     errh_LogError(&cp->log, "Section order");
@@ -1267,8 +1267,8 @@ ini_LoadVolume (
     case dbs_eSect_volref:
       checkSect(sts, cp, sects, dbs_cVersionVolRef);
       break;
-    case dbs_eSect_oix:
-      checkSect(sts, cp, sects, dbs_cVersionOix);
+    case dbs_eSect_oid:
+      checkSect(sts, cp, sects, dbs_cVersionOid);
       break;
     case dbs_eSect_object:
       if (checkSect(sts, cp, sects, dbs_cVersionObject))
@@ -1290,7 +1290,7 @@ ini_LoadVolume (
   } while (cp->sect.type != dbs_eSect_rbody);
 
   reqmask = (1<<dbs_eSect_dir) | (1<<dbs_eSect_volume) | (1<<dbs_eSect_volref)
-               | (1<<dbs_eSect_oix) | (1<<dbs_eSect_object) | (1<<dbs_eSect_rbody);
+               | (1<<dbs_eSect_oid) | (1<<dbs_eSect_object) | (1<<dbs_eSect_rbody);
 
   if ((sects & reqmask) != reqmask) {
     *sts = INI__SECTORDER;
@@ -1355,8 +1355,8 @@ ini_ReloadVolume (
     case dbs_eSect_volref:
       checkSect(sts, cp, sects, dbs_cVersionVolRef);
       break;
-    case dbs_eSect_oix:
-      checkSect(sts, cp, sects, dbs_cVersionOix);
+    case dbs_eSect_oid:
+      checkSect(sts, cp, sects, dbs_cVersionOid);
       break;
     case dbs_eSect_object:
       if (checkSect(sts, cp, sects, dbs_cVersionObject))
@@ -1378,7 +1378,7 @@ ini_ReloadVolume (
   } while (cp->sect.type != dbs_eSect_rbody);
 
   reqmask = (1<<dbs_eSect_dir) | (1<<dbs_eSect_volume) | (1<<dbs_eSect_volref)
-               | (1<<dbs_eSect_oix) | (1<<dbs_eSect_object) | (1<<dbs_eSect_rbody);
+               | (1<<dbs_eSect_oid) | (1<<dbs_eSect_object) | (1<<dbs_eSect_rbody);
 
   if ((sects & reqmask) != reqmask) {
     *sts = INI__SECTORDER;
