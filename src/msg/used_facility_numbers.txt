@@ -22,6 +22,7 @@
   104	user
   105	dcli
   106	nav
+  107   dbs
   110   gdh
   111   hash
   130   plc
