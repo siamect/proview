@@ -46,7 +46,7 @@ public class GeDynMove extends GeDynElem {
     this.xOffset = xOffset;
     this.yOffset = yOffset;
     this.factor = factor;
-    this.scaleFactor = factor;
+    this.scaleFactor = scaleFactor;
   }
   public void connect() {
     String attrName = dyn.getAttrName( moveXAttribute);
