@@ -29,6 +29,7 @@ public class GeDyn {
     public static final int mDynType_FastCurve		= 1 << 22;
     public static final int mDynType_AnalogText		= 1 << 23;
     public static final int mDynType_Table		= 1 << 24;
+    public static final int mDynType_StatusColor       	= 1 << 25;
 
     public static final int mActionType_No		= 0;
     public static final int mActionType_Inherit		= 1 << 0;
@@ -202,7 +203,51 @@ public class GeDyn {
     static public boolean getAttrInverted( String str) {
 	return str.startsWith("!");
     }
+    static public int getTypeId( String s) {
+        String suffix;
+	int idx1 = s.indexOf("##");
+	if ( idx1 != -1) {
+	    int idx2 = s.indexOf('[');
+	    if ( idx2 != -1)
+		suffix = s.substring( idx1+2, idx2);
+	    else
+	        suffix = s.substring( idx1+2);
+	}
+	else
+	    return -1;
 
+	if ( suffix.equalsIgnoreCase("Float32"))
+	     return Pwr.eType_Float32;
+	else if ( suffix.equalsIgnoreCase("Int32"))
+	     return Pwr.eType_Int32;
+	else if ( suffix.substring(0,6).equalsIgnoreCase("String"))
+	     return Pwr.eType_String;
+	else if ( suffix.equalsIgnoreCase("UInt32"))
+	     return Pwr.eType_UInt32;
+	else if ( suffix.equalsIgnoreCase("Int16"))
+	     return Pwr.eType_Int16;
+	else if ( suffix.equalsIgnoreCase("UInt32"))
+	     return Pwr.eType_UInt16;
+	else if ( suffix.equalsIgnoreCase("Int8"))
+	     return Pwr.eType_Int8;
+	else if ( suffix.equalsIgnoreCase("UInt8"))
+	     return Pwr.eType_UInt8;
+	else if ( suffix.equalsIgnoreCase("Boolean"))
+	     return Pwr.eType_Boolean;
+	else if ( suffix.equalsIgnoreCase("Char"))
+	     return Pwr.eType_Char;
+	else if ( suffix.equalsIgnoreCase("Float64"))
+	     return Pwr.eType_Float64;
+	else if ( suffix.equalsIgnoreCase("Objid"))
+	     return Pwr.eType_Objid;
+	else if ( suffix.equalsIgnoreCase("Time"))
+	     return Pwr.eType_Time;
+	else if ( suffix.equalsIgnoreCase("DeltaTime"))
+	     return Pwr.eType_DeltaTime;
+	else if ( suffix.equalsIgnoreCase("AttrRef"))
+	     return Pwr.eType_AttrRef;
+	return -1;
+    }
 }
 
 
