@@ -106,14 +106,14 @@ map             = $(bld_dir)/$(tname)$(map_ext)
 mkdir		:= mkdir
 
 ifeq ($(pwre_btype),rls)			 
-  cflags	:= -c -O3 -DGNU_SOURCE -DPWR_NDEBUG -D_REENTRANT
+  cflags	:= -c -O3 -D_GNU_SOURCE -DPWR_NDEBUG -D_REENTRANT
   cxxflags	:= $(cflags) 
   linkflags	:= -O3 -L/usr/local/lib -L$(lib_dir) -lm -lrt
   clis		= /lis=$(list)
   dolist	= /lis=$(list)
   domap		= -Xlinker -Map -Xlinker $(map)
 else
-  cflags	:= -c -g -Wall -Wno-deprecated -DGNU_SOURCE -D_REENTRANT
+  cflags	:= -c -g -Wall -Wno-deprecated -D_GNU_SOURCE -D_REENTRANT
   cxxflags	:= $(cflags) -Wno-deprecated
   mmflags	:= -Wno-deprecated
   linkflags	:= -g -L/usr/local/lib -L$(lib_dir) -lrt
