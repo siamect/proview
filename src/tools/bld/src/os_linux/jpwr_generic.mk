@@ -124,10 +124,10 @@ $(export_lib) : $(objects)
 	@ if [ -e $(export_lib) ]; then \
 		$(rm) $(export_lib); \
 	  fi
-	@ cd $(pwre_broot)/$(pwre_target)/bld; \
+	cd $(pwre_broot)/$(pwre_target)/bld; \
 	gifs=`eval ls jpwr/$(comp_name)/*.gif 2>/dev/null`; \
 	if [ "$(gifs)" = "" ]; then \
-	  jar cf $(export_lib) jpwr/$(comp_name)/*.class; \
+	  jar cf $(export_lib) jpwr/$(comp_name)/*.class  jpwr/$(comp_name)/*.gif; \
 	else \
 	  jar cf $(export_lib) jpwr/$(comp_name)/*.class jpwr/$(comp_name)/*.gif; \
 	fi
