@@ -500,7 +500,7 @@ struct dbs_sName {
  */
 
 #ifdef PDR_HDR
-%#define dbs_cVesrionScObject 1
+%#define dbs_cVersionScObject 1
 #endif
 
 struct dbs_sScObject {
@@ -511,7 +511,8 @@ struct dbs_sScObject {
     pwr_tUInt32     offset;      /**< Offset in parent body */
     pwr_tUInt32     size;
     dbs_mFlags      flags;
-    pwr_tUInt32     aidx;        /**< Array index if array element */
+    pwr_tUInt32     aidx;        /**< Attribute index in parent class */
+    pwr_tUInt32     elem;        /**< Array index if array element */
 };
 
 
