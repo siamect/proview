@@ -18,6 +18,8 @@ wb_adm_opendb_func ()
   local password=$3
   local database=$4
   local volume=$5
+
+echo "args: $1 $2 $3 $4 $5"
   
   source pwrp_env.sh set project $project
   
@@ -70,7 +72,7 @@ wb_adm_parse ()
   cmd="opendb"
   if [ -z $1 ] || [ $1 = $cmd ] || [ ${cmd#$1} != $cmd ]; then
     shift
-    wb_adm_opendb_func $@
+    wb_adm_opendb_func $1 $2 $3 $4 $5
     return
   fi
   cmd="create"

@@ -542,9 +542,15 @@ int Admin::open_project()
     case adminnav_eItemType_ProjVolume:
     {
       ItemProjVolume *item = (ItemProjVolume *)base_item;
+      char db[80];
+
+      if ( strcmp( item->db, "") == 0)
+	strcpy( db, "_no_");
+      else
+	strcpy( db, item->db);
 
       sprintf( cmd, "wb_admin.sh opendb %s \"%s\" \"%s\" %s %s", item->project, 
-		login_prv.username, login_prv.password, item->db,
+		login_prv.username, login_prv.password, db,
 		item->volume);
       system( cmd);      
       break;

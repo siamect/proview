@@ -1134,7 +1134,8 @@ int ItemProject::open_children( AdminNav *adminnav, double x, double y)
 		sizeof( item_str) / sizeof( item_str[0]), sizeof( item_str[0]), 0);
 	if ( nr < 4)
 	  continue;
-	if ( !(cdh_NoCaseStrcmp( item_str[2], "RootVolume") == 0 &&
+	if ( !((cdh_NoCaseStrcmp( item_str[2], "RootVolume") == 0 ||
+		cdh_NoCaseStrcmp( item_str[2], "SubVolume") == 0) &&
 	     cdh_NoCaseStrcmp( item_str[3], "cnf") == 0))
 	  continue;
 
