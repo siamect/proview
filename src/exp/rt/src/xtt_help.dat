@@ -23,33 +23,40 @@ Xtt navigator
 
 In the navigator you can look into the realtime database.
 
-You kan navigate with the mouse or	<LINK> navigate mouse
-with the keyboard. 			<LINK> navigate keyboard
+Navigate with the mouse.	<LINK> navigate mouse
+Navigate with the keyboard.     <LINK> navigate keyboard
+Menu				<LINK> xtt_menu
 </TOPIC>
 
 <TOPIC> navigate mouse
 Navigate with the mouse
 
-ClickMB1	<t><t>Select an item.
-DoubleClickMB1	<t><t>Open an item.
-Shift/DoubleClickMB1<t><t>Open an object.
-Ctrl+Shift/DoubleClickMB1<t><t>Open trace for a PlcPgm.
+Select a map or object 	<t><t>ClickMB1
+Open or close a map	<t><t>ClickMB1 on the icon or DoubleClickMB1 on the text.
+Open or close an object	<t><t>Shift/ClickMB1 on the icon or Shift/DoubleClickMB1 on the name.
+Open methods popup menu	<t><t>PressMB3 on an object
+
 </TOPIC>
 
 <TOPIC> navigate keyboard
 Navigate with the keyboard
 
-ArrowUp		<t><t>Select an item.
-ArrowDown 	<t><t>Select an item.
-ArrowRight	<t><t>Open an item.
-		<t><t>If advanced user, change attribute value. <LINK> advanced user
-ArrowLeft	<t><t>Close an item.
-Shift/ArrowRight<t><t>Open an object.
-Ctrl/L		<t><t>Open trace for a plcpgm.
-Ctrl/R		<t><t>Show crossreferences for an object.
-Ctrl/A		<t><t>Change attribute value.
-Ctrl/V		<t><t>Add an object to the collect list.
-Ctrl/N		<t><t>Show collected objects.
+Select a map or object	<t><t>ArrowUp or ArrowDown.
+Open a map		<t><t>ArrowRight.
+Close a map		<t><t>ArrowLeft.
+Open an object		<t><t>Shift/ArrowRight.
+
+Additional features for advanced users. <LINK> advanced user
+Open an object		<t><t>ArrowRight, if the object has no children.
+Change attribute value	<t><t>ArrowRight.
+
+Open an object			<t><t>Ctrl/A
+Open class graph for an object	<t><t>Ctrl/G
+Open trace for a plcpgm.	<t><t>Ctrl/L
+Show crossreferences for an object. <t><t>Ctrl/R
+Change attribute value.		<t><t>Ctrl/Q
+Add an object to the collect list. <t><t>Ctrl/W
+Show collected objects.		<t><t>Ctrl/N
 
 Rtt compatible keys
 
@@ -62,6 +69,43 @@ PF4		<t><t>Close an item.
 The PF-keys are not supported by some window managers.
 </TOPIC>
 
+<TOPIC> xtt_menu
+Navigator menu
+
+<b>File
+Print	<t><t>Print to postscript file, and send to printer.
+Close	<t><t>Close xtt.
+
+<b>Edit
+Search-Find Object 	<t><t>Find the first object with the supplied object name.
+			<t><t>The object name should be given without path.
+Search-Find Regular expression <t><t>Find the first object whose name matches a
+			<t><t>regular expression.
+Search-Find Next	<t><t>Find the next object that matches the current search criteria.
+Collapse	<t><t>Close open maps.
+
+<b>Functions
+Open Object	<t><t>Open the selected object in a separate window.
+Open Plc	<t><t>Open plc trace for the selected PlcPgm or Window object. <LINK> trace
+Open ClassGraph	<t><t>Open the classgraph or for the selected object,
+		<t><t>or the type graph for the selected attribute.
+Show Crossreferences <t><t>Show crossreferences for the selected object, i. e. where i the
+		<t><t>plc code an object is referenced.
+Change Value	<t><t>Change the value of the selected attribute.
+Command		<t><t>Enter a command <LINK> help command
+Collect Insert	<t><t>Insert the selected object or attribute in the collection list.
+Collect Show	<t><t>Display the collection list.
+Advanced User	<t><t>Set advanced user. <LINK> advanced user
+
+<b>View
+ZoomIn		<t><t>Increase the size of fonts and icons.
+ZoomOut		<t><t>Decrease the size of fonts and icons.
+ZoomReset	<t><t>Return to the original size.
+
+<b>Help
+Overview	<t><t>Show this xtt help.
+Project		<t><t>Show the project specific help.
+</TOPIC>
 //
 // Operator window
 //
