@@ -415,6 +415,27 @@ int GrowWindow::trace_init()
   // sts = ctx->trace_connect_func( (void *) this, &trace);
 
   if ( window_ctx) {
+    double dx1, dy1, dx2, dy2;
+
+    ctx->set_nodraw();
+    configure_scrollbars();
+    ctx->reset_nodraw();
+
+    dx1 = trf.x( ll.x, ll.y);
+    dy1 = trf.y( ll.x, ll.y);
+    dx2 = trf.x( ur.x, ur.y);
+    dy2 = trf.y( ur.x, ur.y);
+    dx1 = min( dx1, dx2);
+    dx2 = max( dx1, dx2);
+    dy1 = min( dy1, dy2);
+    dy2 = max( dy1, dy2);
+
+    int ll_x = int( dx1 * ctx->zoom_factor_x) - ctx->offset_x;
+    int ll_y = int( (dy1 + y_low_offs) * ctx->zoom_factor_y) - ctx->offset_y;
+
+    window_ctx->offset_x = - ll_x + int( h_value * ctx->zoom_factor_x);
+    window_ctx->offset_y = - ll_y + int( v_value * ctx->zoom_factor_y);
+
     window_ctx->trace_init( ctx->trace_connect_func, 
 			    ctx->trace_disconnect_func, 
 			    ctx->trace_scan_func);
@@ -516,11 +537,9 @@ void GrowWindow::export_javabean( GlowTransform *t, void *node,
   ll_y = min( y1, y2);
   ur_y = max( y1, y2);
 
-  //  ((GrowCtx *)ctx)->export_jbean->bar( ll_x, ll_y, ur_x, ur_y,
-  //  	draw_type, fill_drawtype, bar_drawtype, bar_bordercolor, fill,
-  //	border, min_value, max_value, bar_borderwidth,
-  //	line_width, rotation,
-  //  	pass, shape_cnt, node_cnt, fp);
+  ((GrowCtx *)ctx)->export_jbean->window( ll_x, ll_y, ur_x, ur_y,
+				       file_name, vertical_scrollbar, horizontal_scrollbar,
+				       pass, shape_cnt, node_cnt, fp);
 }
 
 void GrowWindow::convert( glow_eConvert version) 
@@ -778,31 +797,7 @@ void GrowWindow::new_ctx()
   window_ctx->a.zoom();
 
   if ( ctx->trace_started) {
-    double dx1, dy1, dx2, dy2;
-
-    ctx->set_nodraw();
-    configure_scrollbars();
-    ctx->reset_nodraw();
-
-    dx1 = trf.x( ll.x, ll.y);
-    dy1 = trf.y( ll.x, ll.y);
-    dx2 = trf.x( ur.x, ur.y);
-    dy2 = trf.y( ur.x, ur.y);
-    dx1 = min( dx1, dx2);
-    dx2 = max( dx1, dx2);
-    dy1 = min( dy1, dy2);
-    dy2 = max( dy1, dy2);
-
-    int ll_x = int( dx1 * ctx->zoom_factor_x) - ctx->offset_x;
-    int ll_y = int( (dy1 + y_low_offs) * ctx->zoom_factor_y) - ctx->offset_y;
-
-    window_ctx->offset_x = - ll_x + int( h_value * ctx->zoom_factor_x);
-    window_ctx->offset_y = - ll_y + int( v_value * ctx->zoom_factor_y);
-
-    window_ctx->trace_init( ctx->trace_connect_func, 
-			    ctx->trace_disconnect_func, 
-			    ctx->trace_scan_func);
-    memcpy( window_ctx->event_callback, ctx->event_callback, sizeof( ctx->event_callback));
+    trace_init();
     trace_scan();
   }
 }
@@ -870,4 +865,15 @@ void GrowWindow::zoom()
   GrowRect::zoom();
   if ( window_ctx)
     window_ctx->a.zoom();
+}
+
+int GrowWindow::get_background_object_limits(GlowTransform *t,
+		    glow_eTraceType type,
+		    double x, double y, GlowArrayElem **background,
+		    double *min, double *max, glow_eDirection *direction)
+{
+  if ( window_ctx)
+    return window_ctx->get_background_object_limits( type, x, y,
+					      background, min, max, direction);
+  return 0;
 }

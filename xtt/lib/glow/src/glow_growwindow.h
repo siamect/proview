@@ -253,6 +253,10 @@ class GrowWindow : public GrowRect {
   void draw_background();
   void set_shadow( int shadowval) { shadow = shadowval; configure_scrollbars(); draw();}
   void zoom();
+  int get_background_object_limits(GlowTransform *t,
+				   glow_eTraceType type,
+				   double x, double y, GlowArrayElem **background,
+				   double *min, double *max, glow_eDirection *direction);
 
   static void v_value_changed_cb( void *o, double value);
   static void h_value_changed_cb( void *o, double value);

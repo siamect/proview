@@ -549,11 +549,10 @@ void GrowFolder::export_javabean( GlowTransform *t, void *node,
   ll_y = min( y1, y2);
   ur_y = max( y1, y2);
 
-  //  ((GrowCtx *)ctx)->export_jbean->bar( ll_x, ll_y, ur_x, ur_y,
-  //  	draw_type, fill_drawtype, bar_drawtype, bar_bordercolor, fill,
-  //	border, min_value, max_value, bar_borderwidth,
-  //	line_width, rotation,
-  //  	pass, shape_cnt, node_cnt, fp);
+  ((GrowCtx *)ctx)->export_jbean->folder( ll_x, ll_y, ur_x, ur_y, folders,
+					  (char *)folder_file_names, (char *)folder_text, 
+					  (int *)folder_v_scrollbar, (int *)folder_h_scrollbar,
+					  pass, shape_cnt, node_cnt, fp);
 }
 
 void GrowFolder::convert( glow_eConvert version) 
