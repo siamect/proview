@@ -3444,43 +3444,46 @@ void GeMove::open( ifstream& fp)
 
 int GeMove::connect( grow_tObject object, glow_sTraceData *trace_data)
 {
-  int		attr_type, attr_size;
   char		parsed_name[120];
   int		inverted;
   int		sts;
   double	ur_x, ur_y;
 
   move_x_size = 4;
+  move_x_type = pwr_eType_Float32;
   move_x_p = 0;
   move_x_db = dyn->graph->parse_attr_name( move_x_attribute, parsed_name,
-				    &inverted, &attr_type, &attr_size);
+				    &inverted, &move_x_type, &move_x_size);
   if ( strcmp( parsed_name,"") != 0) {
     sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&move_x_p, 
 				       &move_x_subid, move_x_size);
     if ( EVEN(sts)) return sts;
   }
   move_y_size = 4;
+  move_y_type = pwr_eType_Float32;
   move_y_p = 0;
   move_y_db = dyn->graph->parse_attr_name( move_y_attribute, parsed_name,
-				    &inverted, &attr_type, &attr_size);
+				    &inverted, &move_y_type, &move_y_size);
   if ( strcmp( parsed_name,"") != 0) {
     sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&move_y_p, 
 				       &move_y_subid, move_y_size);
     if ( EVEN(sts)) return sts;
   }
   scale_x_size = 4;
+  scale_x_type = pwr_eType_Float32;
   scale_x_p = 0;
   scale_x_db = dyn->graph->parse_attr_name( scale_x_attribute, parsed_name,
-				    &inverted, &attr_type, &attr_size);
+				    &inverted, &scale_x_type, &scale_x_size);
   if ( strcmp( parsed_name,"") != 0) {
     sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&scale_x_p, 
 				       &scale_x_subid, scale_x_size);
     if ( EVEN(sts)) return sts;
   }
   scale_y_size = 4;
+  scale_y_type = pwr_eType_Float32;
   scale_y_p = 0;
   scale_y_db = dyn->graph->parse_attr_name( scale_y_attribute, parsed_name,
-				    &inverted, &attr_type, &attr_size);
+				    &inverted, &scale_y_type, &scale_y_size);
   if ( strcmp( parsed_name,"") != 0) {
     sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&scale_y_p, 
 				       &scale_y_subid, scale_y_size);
@@ -3521,17 +3524,13 @@ int GeMove::scan( grow_tObject object)
   bool update = false;
   
   if ( !first_scan) {
-    if ( move_x_p && fabs( move_x_old_value - *move_x_p) > FLT_EPSILON)
-      // Change since last time
+    if ( move_x_p && memcmp( &move_x_old_value, move_x_p, move_x_size) != 0)
       update = true;
-    else if ( move_y_p && fabs( move_y_old_value - *move_y_p) > FLT_EPSILON)
-      // Change since last time
+    else if ( move_y_p && memcmp( &move_y_old_value, move_y_p, move_y_size) != 0)
       update = true;
-    else if ( scale_x_p && fabs( scale_x_old_value - *scale_x_p) > FLT_EPSILON)
-      // Change since last time
+    else if ( scale_x_p && memcmp( &scale_x_old_value, scale_x_p, scale_x_size) != 0)
       update = true;
-    else if ( scale_y_p && fabs( scale_y_old_value - *scale_y_p) > FLT_EPSILON)
-      // Change since last time
+    else if ( scale_y_p && memcmp( &scale_y_old_value, scale_y_p, scale_y_size) != 0)
       update = true;
     if ( !update)
       return 1;
@@ -3542,13 +3541,27 @@ int GeMove::scan( grow_tObject object)
   double move_x, move_y, scale_x, scale_y;
 
   if ( scale_x_p || scale_y_p) {
-    if ( scale_x_p)
-      scale_x = *scale_x_p * scale_factor;
+    if ( scale_x_p) {
+      switch ( scale_x_type) {
+      case pwr_eType_Float32: scale_x = *scale_x_p * scale_factor; break;
+      case pwr_eType_Float64: scale_x = *(pwr_tFloat64 *)scale_x_p * scale_factor; break;
+      case pwr_eType_Int32:   scale_x = *(pwr_tInt32 *)scale_x_p * scale_factor; break;
+      case pwr_eType_UInt32:  scale_x = *(pwr_tUInt32 *)scale_x_p * scale_factor; break;
+      default: scale_x = 1;
+      }
+    }
     else
       scale_x = 1;
 
-    if ( scale_y_p)
-      scale_y = *scale_y_p * scale_factor;
+    if ( scale_y_p) {
+      switch ( scale_y_type) {
+      case pwr_eType_Float32: scale_y = *scale_y_p * scale_factor; break;
+      case pwr_eType_Float64: scale_y = *(pwr_tFloat64 *)scale_y_p * scale_factor; break;
+      case pwr_eType_Int32:   scale_y = *(pwr_tInt32 *)scale_y_p * scale_factor; break;
+      case pwr_eType_UInt32:  scale_y = *(pwr_tUInt32 *)scale_y_p * scale_factor; break;
+      default: scale_y = 1;
+      }
+    }
     else
       scale_y = 1;
 
@@ -3557,19 +3570,33 @@ int GeMove::scan( grow_tObject object)
       grow_SetObjectScale( object, scale_x, scale_y, 0, 0,
 			   glow_eScaleType_LowerLeft);
     if ( scale_x_p)
-      scale_x_old_value = *scale_x_p;
+      memcpy( &scale_x_old_value, scale_x_p, scale_x_size);
     if ( scale_y_p)
-      scale_y_old_value = *scale_y_p;
+      memcpy( &scale_y_old_value, scale_y_p, scale_y_size);
 
 
     if ( move_x_p || move_y_p) {
-      if ( move_x_p)
-	move_x = x_orig + (*move_x_p - x_offset) * factor;
+      if ( move_x_p) {
+	switch ( scale_x_type) {
+	case pwr_eType_Float32: move_x = x_orig + (*move_x_p - x_offset) * factor; break;
+	case pwr_eType_Float64: move_x = x_orig + (*(pwr_tFloat64 *) move_x_p - x_offset) * factor; break;
+	case pwr_eType_Int32:   move_x = x_orig + (*(pwr_tInt32 *) move_x_p - x_offset) * factor; break;
+	case pwr_eType_UInt32:  move_x = x_orig + (*(pwr_tUInt32 *) move_x_p - x_offset) * factor; break;
+	default: move_x = x_orig;
+	}
+      }
       else
 	move_x = x_orig;
 
-      if ( move_y_p)
-	move_y = y_orig + (*move_y_p - y_offset) * factor;
+      if ( move_y_p) {
+	switch ( scale_x_type) {
+	case pwr_eType_Float32: move_y = y_orig + (*move_y_p - y_offset) * factor; break;
+	case pwr_eType_Float64: move_y = y_orig + (*(pwr_tFloat64 *) move_y_p - y_offset) * factor; break;
+	case pwr_eType_Int32:   move_y = y_orig + (*(pwr_tInt32 *) move_y_p - y_offset) * factor; break;
+	case pwr_eType_UInt32:  move_y = y_orig + (*(pwr_tUInt32 *) move_y_p - y_offset) * factor; break;
+	default: move_y = y_orig;
+	}
+      }
       else
 	move_y = y_orig;
 
@@ -3577,28 +3604,42 @@ int GeMove::scan( grow_tObject object)
 			      scale_x, scale_y, 0, 0,
 			      glow_eScaleType_LowerLeft);
       if ( move_x_p)
-	move_x_old_value = *move_x_p;
+	memcpy( &move_x_old_value, move_x_p, move_x_size);
       if ( move_y_p)
-	move_y_old_value = *move_y_p;
+	memcpy( &move_y_old_value, move_y_p, move_y_size);
     }
   }
   else {
-    if ( move_x_p)
-      move_x = (*move_x_p - x_offset) * factor;
+    if ( move_x_p) {
+      switch ( scale_x_type) {
+      case pwr_eType_Float32: move_x = (*move_x_p - x_offset) * factor; break;
+      case pwr_eType_Float64: move_x = (*(pwr_tFloat64 *) move_x_p - x_offset) * factor; break;
+      case pwr_eType_Int32:   move_x = (*(pwr_tInt32 *) move_x_p - x_offset) * factor; break;
+      case pwr_eType_UInt32:  move_x = (*(pwr_tUInt32 *) move_x_p - x_offset) * factor; break;
+      default: move_x = 0;
+      }
+    }
     else
       move_x = 0;
 
-    if ( move_y_p)
-      move_y = (*move_y_p - y_offset) * factor;
+    if ( move_y_p) {
+      switch ( scale_x_type) {
+      case pwr_eType_Float32: move_y = (*move_y_p - y_offset) * factor; break;
+      case pwr_eType_Float64: move_y = (*(pwr_tFloat64 *) move_y_p - y_offset) * factor; break;
+      case pwr_eType_Int32:   move_y = (*(pwr_tInt32 *) move_y_p - y_offset) * factor; break;
+      case pwr_eType_UInt32:  move_y = (*(pwr_tUInt32 *) move_y_p - y_offset) * factor; break;
+      default: move_y = 0;
+      }
+    }
     else
       move_y = 0;
   
     grow_SetObjectPosition( object, move_x, move_y);
 
     if ( move_x_p)
-      move_x_old_value = *move_x_p;
+      memcpy( &move_x_old_value, move_x_p, move_x_size);
     if ( move_y_p)
-      move_y_old_value = *move_y_p;
+      memcpy( &move_y_old_value, move_y_p, move_y_size);
   }
   return 1;
 }
