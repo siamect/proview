@@ -10,8 +10,18 @@ extern "C" {
 #include "co_dcli.h"
 #include "co_cdh.h"
 }
-#include "cnv_classread.h"
-#include "cnv_help.h"
+#include "co_lng.h"
+#include "cnv_ctx.h"
+#include "cnv_readwbl.h"
+#include "cnv_readsrc.h"
+#include "cnv_wbltohtml.h"
+#include "cnv_wbltoh.h"
+#include "cnv_wbltoxtthelp.h"
+#include "cnv_wbltops.h"
+#include "cnv_readxtthelp.h"
+#include "cnv_xtthelptohtml.h"
+#include "cnv_xtthelptoxml.h"
+#include "cnv_xtthelptops.h"
 
 typedef char cnv_tName[200];
 
@@ -62,9 +72,11 @@ static void help()
 static int convert_sort_files( const void *file1, const void *file2)
 {
   // Types before classes
-  if ( strstr( (char *)file1, "_td_") && !strstr( (char *)file2, "_td_"))
+  if ( (strstr( (char *)file1, "_td_") || strstr( (char *)file1, "_t_")) && 
+       !(strstr( (char *)file2, "_td_") || strstr( (char *)file2, "_t_")))
     return -1;
-  else if (!strstr( (char *)file1, "_td_") && strstr( (char *)file2, "_td_"))
+  else if ( !(strstr( (char *)file1, "_td_") || strstr( (char *)file1, "_t_")) && 
+	    (strstr( (char *)file2, "_td_") || strstr( (char *)file2, "_t_")))
     return 1;
   return ( strcmp( (char *)file1, (char *)file2));
 }
@@ -73,7 +85,7 @@ static int convert_sort_files( const void *file1, const void *file2)
 int main( int argc, char *argv[])
 {
   int	exit_sts = 1;
-  ClassRead *cr;
+  CnvCtx *ctx;
   int	sts;
   char	found_file[200];
   char  files[200];
@@ -84,14 +96,15 @@ int main( int argc, char *argv[])
   cnv_tName *file_p;
   cnv_tName *old_file_p;
   int   xtthelp_to_html = 0;
-
+  int   xtthelp_to_xml = 0;
+  int   xtthelp_to_ps = 0;
 
   if ( argc < 2 || argc > 8) {
     usage();
     exit(0);
   }
 
-  cr = new ClassRead();
+  ctx = new CnvCtx();
 
   for ( i = 1; i < argc; i++) {
     if ( strcmp( argv[i], "-d") == 0) {
@@ -99,16 +112,16 @@ int main( int argc, char *argv[])
         usage();
         exit(0);
       }
-      strcpy( cr->dir, argv[i+1]);
+      strcpy( ctx->dir, argv[i+1]);
       i++;
 #if defined OS_VMS
-      if ( cr->dir[strlen(cr->dir)-1] != ':' &&
-	   (cr->dir[strlen(cr->dir)-1] != '>' &&
-	    cr->dir[strlen(cr->dir)-1] != ']' ))
-        strcat( cr->dir , ":");
+      if ( ctx->dir[strlen(ctx->dir)-1] != ':' &&
+	   (ctx->dir[strlen(ctx->dir)-1] != '>' &&
+	    ctx->dir[strlen(ctx->dir)-1] != ']' ))
+        strcat( ctx->dir , ":");
 #else
-      if ( cr->dir[strlen(cr->dir)-1] != '/')
-        strcat( cr->dir , "/");
+      if ( ctx->dir[strlen(ctx->dir)-1] != '/')
+        strcat( ctx->dir , "/");
 #endif
     }
     if ( strcmp( argv[i], "-g") == 0) {
@@ -116,7 +129,15 @@ int main( int argc, char *argv[])
         usage();
         exit(0);
       }
-      strcpy( cr->setup_filename, argv[i+1]);
+      strcpy( ctx->setup_filename, argv[i+1]);
+      i++;
+    }
+    if ( strcmp( argv[i], "-l") == 0) {
+      if ( i+1 >= argc) {
+        usage();
+        exit(0);
+      }
+      Lng::set( argv[i+1]);
       i++;
     }
     else if ( argv[i][0] == '-') {
@@ -127,29 +148,39 @@ int main( int argc, char *argv[])
             help();
             exit(0);
           case 'w':
-            cr->generate_html = 1;
+            ctx->generate_html = 1;
             break;
           case 'x':
-            cr->generate_xtthelp = 1;
+            ctx->generate_xtthelp = 1;
             break;
           case 'c':
-            cr->generate_src = 1;
+            ctx->generate_src = 1;
             break;
           case 's':
-            cr->generate_struct = 1;
+            ctx->generate_struct = 1;
+            break;
+          case 'q':
+            ctx->generate_ps = 1;
+            ctx->common_structfile_only = 1;
             break;
           case 'p':
-            cr->generate_struct = 1;
-	    cr->hpp = 1;
+            ctx->generate_struct = 1;
+	    ctx->hpp = 1;
             break;
           case 'o':
-            cr->common_structfile_only = 1;
+            ctx->common_structfile_only = 1;
             break;
           case 'v':
-            cr->verbose = 1;
+            ctx->verbose = 1;
             break;
           case 't':
             xtthelp_to_html = 1;
+            break;
+          case 'm':
+            xtthelp_to_xml = 1;
+            break;
+          case 'n':
+            xtthelp_to_ps = 1;
             break;
           default:
             usage();
@@ -162,12 +193,33 @@ int main( int argc, char *argv[])
       strcpy( files, argv[i]);
   }
 
-  if ( strcmp( cr->setup_filename, "") != 0)
-    cr->setup();
+  ctx->setup = new CnvSetup();
+  if ( strcmp( ctx->setup_filename, "") != 0) {
+    ctx->setup->setup( ctx->setup_filename);
+  }
 
   if ( xtthelp_to_html) {
-    XhelpToHtml *xh = new XhelpToHtml( files, cr->dir);
-    delete xh;
+    CnvXtthelpToHtml *xtthelpto = new CnvXtthelpToHtml( ctx);
+    ctx->rx = new CnvReadXtthelp( files, ctx->dir, xtthelpto);
+    ctx->rx->read_xtthelp();
+    delete ctx->rx;
+    delete xtthelpto;
+    exit(0);
+  }
+  if ( xtthelp_to_xml) {
+    CnvXtthelpToXml *xtthelpto = new CnvXtthelpToXml( ctx);
+    ctx->rx = new CnvReadXtthelp( files, ctx->dir, xtthelpto);
+    ctx->rx->read_xtthelp();
+    delete ctx->rx;
+    delete xtthelpto;
+    exit(0);
+  }
+  if ( xtthelp_to_ps) {
+    CnvXtthelpToPs *xtthelpto = new CnvXtthelpToPs( ctx);
+    ctx->rx = new CnvReadXtthelp( files, ctx->dir, xtthelpto);
+    ctx->rx->read_xtthelp();
+    delete ctx->rx;
+    delete xtthelpto;
     exit(0);
   }
 
@@ -195,16 +247,58 @@ int main( int argc, char *argv[])
     sts = dcli_search_file( files, found_file, DCLI_DIR_SEARCH_NEXT);
   }
   dcli_search_file( files, found_file, DCLI_DIR_SEARCH_END);
-    
+
+  if ( file_cnt == 0) {
+    printf( "No files found\n");
+    exit(0);
+  }
+
   qsort( file_p, file_cnt, sizeof(*file_p), convert_sort_files);
 
+  CnvReadSrc *sr = 0;
+  if ( ctx->generate_src) {
+    sr = new CnvReadSrc( ctx);
+  }
+  else {
+    if ( ctx->generate_html)
+      ctx->wblto = new CnvWblToHtml( ctx);
+    else if ( ctx->generate_struct)
+      ctx->wblto = new CnvWblToH( ctx);
+    else if ( ctx->generate_xtthelp)
+      ctx->wblto = new CnvWblToXtthelp( ctx);
+    else if ( ctx->generate_ps)
+      ctx->wblto = new CnvWblToPs( ctx);
+
+    ctx->rw = new CnvReadWbl( ctx, ctx->wblto);
+  }
+
+  if ( ctx->wblto && ctx->wblto->confpass()) {
+    ctx->wblto->set_confpass( true);
+    for ( i = 0; i < file_cnt; i++) {
+      if ( ctx->verbose)
+	printf( "Configure file %s\n", file_p[i]);
+      if ( ctx->generate_src) {
+	sr->read_src( file_p[i]);
+      }
+      else {
+	sts = ctx->rw->read_wbl( file_p[i]);
+	if ( EVEN(sts)) {
+	  exit_sts = sts;
+	  break;
+	}
+      }
+    }
+    ctx->wblto->set_confpass( false);
+    ctx->first_class = 1;
+  }
   for ( i = 0; i < file_cnt; i++) {
-    if ( cr->verbose)
+    if ( ctx->verbose)
       printf( "Processing file %s\n", file_p[i]);
-    if ( cr->generate_src)
-      cr->src_read( file_p[i]);
+    if ( ctx->generate_src) {
+      sr->read_src( file_p[i]);
+    }
     else {
-      sts = cr->read( file_p[i]);
+      sts = ctx->rw->read_wbl( file_p[i]);
       if ( EVEN(sts)) {
         exit_sts = sts;
         break;
@@ -212,15 +306,21 @@ int main( int argc, char *argv[])
     }
   }
 
-  if ( cr->generate_html && cr->html_index_open)
-    cr->html_close();
-  if ( cr->generate_xtthelp && cr->xtthelp_index_open)
-    cr->xtthelp_close();
-  if ( cr->generate_struct)
-    cr->struct_close();
+  if ( ctx->generate_html && ctx->wblto->index_open())
+    ctx->wblto->close();
+  if ( ctx->generate_xtthelp && ctx->wblto->index_open())
+    ctx->wblto->close();
+  if ( ctx->generate_struct)
+    ctx->wblto->close();
 
   if ( allocated)
     free( file_p);
+  if ( sr)
+    delete sr;
+  if ( ctx->rw)
+    delete ctx->rw;
+  if ( ctx->wblto)
+    delete ctx->wblto;
 
   if ( EVEN(exit_sts))
 #if defined OS_VMS

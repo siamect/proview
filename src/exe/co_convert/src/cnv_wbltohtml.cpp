@@ -6,7 +6,9 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include "cnv_classread.h"
+#include "cnv_wbltohtml.h"
+#include "cnv_wbltoh.h"
+#include "cnv_readsrc.h"
 extern "C" {
 #include "pwr.h"
 #include "co_cdh.h"
@@ -14,7 +16,7 @@ extern "C" {
 }
 
 
-int ClassRead::html_init( char *first)
+int CnvWblToHtml::init( char *first)
 {
   pwr_tFileName fname;
   pwr_tFileName gname;
@@ -22,27 +24,27 @@ int ClassRead::html_init( char *first)
   char timestr[80];
 
   time_AtoAscii( 0, time_eFormat_DateAndTime, timestr, sizeof(timestr));
-  strcpy( html_first, volume_name);
+  strcpy( html_first, ctx->rw->volume_name);
   strcat( html_first, "_");
   strcat( html_first, first);
   cdh_ToLower( html_first, html_first);
 
-  strcpy( allclasses_name, volume_name);
+  strcpy( allclasses_name, ctx->rw->volume_name);
   strcat( allclasses_name, "_allclasses.html");
   cdh_ToLower( allclasses_name, allclasses_name);
 
   // Create index file
   {
-    strcpy( fname, dir);
-    strcat( fname, volume_name);
+    strcpy( fname, ctx->dir);
+    strcat( fname, ctx->rw->volume_name);
     strcat( fname, "_index.html");
     cdh_ToLower( fname, fname);
 
     ofstream fp( fname);
 
     // Get group menu name
-    if ( setup_group_cnt) {
-      strcpy( gname, low(volume_name));
+    if ( ctx->setup->group_cnt) {
+      strcpy( gname, CnvCtx::low(ctx->rw->volume_name));
       strcat( gname, "_menu_group.html");
       cdh_ToLower( fname, fname);
     }
@@ -58,7 +60,7 @@ int ClassRead::html_init( char *first)
 "<link rel=\"stylesheet\" type=\"text/css\" href=\"orm.css\">" << endl <<
 "</HEAD>" << endl <<
 "<FRAMESET cols=\"20%,80%\">" << endl;
-    if ( setup_group_cnt)
+    if ( ctx->setup->group_cnt)
       fp <<
 "<FRAMESET rows=\"20%,80%\">" << endl <<
 "<FRAME src=\"" << gname << "\" name=\"groupFrame\">" << endl <<
@@ -84,21 +86,21 @@ int ClassRead::html_init( char *first)
 
 
   // Create js index file
-  strcpy( fname, dir);
-  strcat( fname, volume_name);
+  strcpy( fname, ctx->dir);
+  strcat( fname, ctx->rw->volume_name);
   strcat( fname, "_allclasses.jsf");
   cdh_ToLower( fname, fname);
 
   fp_js_all.open( fname);
   js_all_first = true;
   fp_js_all <<
-"function " << volume_name << "_AllClasses( parent)" << endl <<
+"function " << ctx->rw->volume_name << "_AllClasses( parent)" << endl <<
 "{" << endl << 
 "parent.addChildren([" << endl;
 
   // Create group menu file 
-  if ( setup_group_cnt) {
-    strcpy( fname, dir);
+  if ( ctx->setup->group_cnt) {
+    strcpy( fname, ctx->dir);
     strcat( fname, gname);
     cdh_ToLower( fname, fname);
 
@@ -125,7 +127,7 @@ int ClassRead::html_init( char *first)
 "<TD NOWRAP><FONT CLASS=\"FrameItemFont\">  " << endl;
 
     // Put index filename in fname
-    strcpy( fname, volume_name);
+    strcpy( fname, ctx->rw->volume_name);
     strcat( fname, "_index.html");
     cdh_ToLower( fname, fname);
 
@@ -133,16 +135,16 @@ int ClassRead::html_init( char *first)
 "<A HREF=\"" << fname << "\" TARGET=\"_parent\">AllClasses</A>" << endl <<
 "<BR>" << endl;
   
-    for ( int i = 0; i < setup_group_cnt; i++) {
+    for ( int i = 0; i < ctx->setup->group_cnt; i++) {
       // Put group index filename in fname
-      strcpy( fname, volume_name);
+      strcpy( fname, ctx->rw->volume_name);
       strcat( fname, "_group_");
-      strcat( fname, setup_groups[i]);
+      strcat( fname, ctx->setup->groups[i]);
       strcat( fname, "_index.html");
       cdh_ToLower( fname, fname);
 
       fp <<
-"<A HREF=\"" << fname << "\" TARGET=\"_parent\">" << setup_groups[i] << "</A>" << endl <<
+"<A HREF=\"" << fname << "\" TARGET=\"_parent\">" << ctx->setup->groups[i] << "</A>" << endl <<
 "<BR>" << endl;
     }
 
@@ -157,7 +159,7 @@ int ClassRead::html_init( char *first)
   }
 
   // Open allclasses file
-  strcpy( fname, dir);
+  strcpy( fname, ctx->dir);
   strcat( fname, allclasses_name);
   cdh_ToLower( fname, fname);
   fp_html_index.open( fname);
@@ -185,22 +187,22 @@ int ClassRead::html_init( char *first)
 "<TD NOWRAP><FONT CLASS=\"FrameItemFont\">  " << endl;
 
   // Open one index file for each configured group
-  for ( int i = 0; i < setup_group_cnt; i++) {
+  for ( int i = 0; i < ctx->setup->group_cnt; i++) {
 
     // Create index page for each group
-    strcpy( fname, dir);
-    strcat( fname, volume_name);
+    strcpy( fname, ctx->dir);
+    strcat( fname, ctx->rw->volume_name);
     strcat( fname, "_group_");
-    strcat( fname, setup_groups[i]);
+    strcat( fname, ctx->setup->groups[i]);
     strcat( fname, "_index.html");
     cdh_ToLower( fname, fname);
     {
       ofstream fp( fname);
 
       // Put menu filename in fname
-      strcpy( fname, volume_name);
+      strcpy( fname, ctx->rw->volume_name);
       strcat( fname, "_group_");
-      strcat( fname, setup_groups[i]);
+      strcat( fname, ctx->setup->groups[i]);
       strcat( fname, ".html");
       cdh_ToLower( fname, fname);
 
@@ -219,12 +221,12 @@ int ClassRead::html_init( char *first)
 "<FRAME src=\"" << gname << "\" name=\"groupFrame\">" << endl <<
 "<FRAME src=\"" << fname << "\" name=\"menuFrame\">" << endl <<
 "</FRAMESET>" << endl;
-      if ( strcmp( setup_groups_startpage[i], "") == 0)
+      if ( strcmp( ctx->setup->groups_startpage[i], "") == 0)
 	fp <<
 "<FRAME name=\"classFrame\">" << endl;
       else
 	fp <<
-"<FRAME src=\"" << setup_groups_startpage[i] << "\" name=\"classFrame\">" << endl;
+"<FRAME src=\"" << ctx->setup->groups_startpage[i] << "\" name=\"classFrame\">" << endl;
 
       fp <<
 "</FRAMESET>" << endl <<
@@ -241,18 +243,18 @@ int ClassRead::html_init( char *first)
     }
 
     // Create menu page
-    strcpy( fname, dir);
-    strcat( fname, volume_name);
+    strcpy( fname, ctx->dir);
+    strcat( fname, ctx->rw->volume_name);
     strcat( fname, "_group_");
-    strcat( fname, setup_groups[i]);
+    strcat( fname, ctx->setup->groups[i]);
     strcat( fname, ".html");
     cdh_ToLower( fname, fname);
     fp_html_group[i].open( fname);
 
-    strcpy( fname, dir);
-    strcat( fname, volume_name);
+    strcpy( fname, ctx->dir);
+    strcat( fname, ctx->rw->volume_name);
     strcat( fname, "_group_");
-    strcat( fname, setup_groups[i]);
+    strcat( fname, ctx->setup->groups[i]);
     strcat( fname, ".jsf");
     cdh_ToLower( fname, fname);
     fp_js_group[i].open( fname);
@@ -263,13 +265,13 @@ int ClassRead::html_init( char *first)
 "<HTML>" << endl <<
 "<HEAD>" << endl <<
 "<TITLE>" << endl <<
-setup_groups[i] << endl <<
+ctx->setup->groups[i] << endl <<
 "</TITLE>" << endl <<
 "<link rel=\"stylesheet\" type=\"text/css\" href=\"orm.css\">" << endl <<
 "</HEAD>" << endl <<
 "<BODY BGCOLOR=\"white\">" << endl <<
 "<FONT size=\"+1\" CLASS=\"FrameHeadingFont\">" << endl <<
-"<B>" << setup_groups[i] << "</B></FONT>" << endl <<
+"<B>" << ctx->setup->groups[i] << "</B></FONT>" << endl <<
 "<BR>" << endl <<
 "" << endl <<
 "<TABLE BORDER=\"0\" WIDTH=\"100%\">" << endl <<
@@ -279,7 +281,7 @@ setup_groups[i] << endl <<
 
     js_group_first[i] = true;
     fp_js_group[i] <<
-      "function " << volume_name << "_" << setup_groups[i] << "(parent)" << endl <<
+      "function " << ctx->rw->volume_name << "_" << ctx->setup->groups[i] << "(parent)" << endl <<
       "{" << endl <<
       "parent.addChildren([" << endl;
 
@@ -287,28 +289,28 @@ setup_groups[i] << endl <<
 
   // Create js map for volume
   {
-    strcpy( fname, dir);
-    strcat( fname, volume_name);
+    strcpy( fname, ctx->dir);
+    strcat( fname, ctx->rw->volume_name);
     strcat( fname, "_groups.jsf");
     cdh_ToLower( fname, fname);
     ofstream fp( fname);
  
    fp <<
-"function " << volume_name << "(parent)" << endl <<
+"function " << ctx->rw->volume_name << "(parent)" << endl <<
 "{" << endl <<
-"  aux = insFld(parent, gFld(\"AllClasses\",\"" << volume_name << "_index.html\"))" << endl <<
-"  " << volume_name << "_AllClasses(aux)" << endl;
+"  aux = insFld(parent, gFld(\"AllClasses\",\"" << ctx->rw->volume_name << "_index.html\"))" << endl <<
+"  " << ctx->rw->volume_name << "_AllClasses(aux)" << endl;
 
-    for ( int i = 0; i < setup_group_cnt; i++) {
-      strcpy( fname, volume_name);
+    for ( int i = 0; i < ctx->setup->group_cnt; i++) {
+      strcpy( fname, ctx->rw->volume_name);
       strcat( fname, "_group_");
-      strcat( fname, setup_groups[i]);
+      strcat( fname, ctx->setup->groups[i]);
       strcat( fname, "_index.html");
       cdh_ToLower( fname, fname);
 
       fp <<
-"  aux = insFld(parent, gFld(\"" << setup_groups[i] << "\",\"" << fname << "\"))" << endl <<
-"  " << volume_name << "_" << setup_groups[i] << "(aux)" << endl;
+"  aux = insFld(parent, gFld(\"" << ctx->setup->groups[i] << "\",\"" << fname << "\"))" << endl <<
+"  " << ctx->rw->volume_name << "_" << ctx->setup->groups[i] << "(aux)" << endl;
     }
     fp << 
 "}" << endl;
@@ -317,7 +319,7 @@ setup_groups[i] << endl <<
   return 1;
 }
 
-int ClassRead::html_close()
+int CnvWblToHtml::close()
 {
 
   fp_html_index <<
@@ -334,7 +336,7 @@ int ClassRead::html_close()
 "}" << endl;
   fp_js_all.close();
 
-  for ( int i = 0; i < setup_group_cnt; i++) {
+  for ( int i = 0; i < ctx->setup->group_cnt; i++) {
     fp_html_group[i] <<
 "</FONT></TD>" << endl <<
 "</TR>" << endl <<
@@ -354,7 +356,7 @@ int ClassRead::html_close()
   {
     char fname[200];
 
-    strcpy( fname, dir);
+    strcpy( fname, ctx->dir);
     strcat( fname, "index.jsm");
     cdh_ToLower( fname, fname);
     ofstream fp( fname);
@@ -376,13 +378,14 @@ int ClassRead::html_close()
 #endif
 
   char cmd[200];
-  sprintf( cmd, "cat %s/*.jsf %s/../orm_menu.js > %s/menu.js", dir, dir, dir);
+  sprintf( cmd, "cat %s/*.jsf %s/../orm_menu.js > %s/menu.js", ctx->dir, 
+	   ctx->dir, ctx->dir);
   system( cmd);
 
   return 1;
 }
 
-int ClassRead::html_class()
+int CnvWblToHtml::class_exec()
 {
   pwr_tFileName fname;
   int i;
@@ -398,20 +401,20 @@ int ClassRead::html_class()
 
   time_AtoAscii( 0, time_eFormat_DateAndTime, timestr, sizeof(timestr));
 
-  cdh_ToLower( low_volume_name, volume_name);
-  cdh_ToLower( low_class_name, class_name);
+  cdh_ToLower( low_volume_name, ctx->rw->volume_name);
+  cdh_ToLower( low_class_name, ctx->rw->class_name);
 
-  struct_get_filename( fname);
-  src_filename_to_html( struct_file, fname);
+  CnvWblToH::get_filename( ctx->rw, fname, 0);
+  CnvReadSrc::filename_to_html( struct_file, fname);
 
-  hpp = 1;
-  struct_get_filename( fname);
-  src_filename_to_html( hpp_file, fname);
-  hpp = 0;
+  ctx->hpp = 1;
+  CnvWblToH::get_filename( ctx->rw, fname, 0);
+  CnvReadSrc::filename_to_html( hpp_file, fname);
+  ctx->hpp = 0;
 
-  strcpy( full_class_name, volume_name);
+  strcpy( full_class_name, ctx->rw->volume_name);
   strcat( full_class_name, ":");
-  strcat( full_class_name, class_name);
+  strcat( full_class_name, ctx->rw->class_name);
 
   strcpy( html_file_name, low_volume_name);
   strcat( html_file_name, "_");
@@ -419,7 +422,7 @@ int ClassRead::html_class()
 
   // Add into index file
   fp_html_index <<
-"<A HREF=\"" << html_file_name << ".html\" TARGET=\"classFrame\">" << class_name << "</A>" << endl <<
+"<A HREF=\"" << html_file_name << ".html\" TARGET=\"classFrame\">" << ctx->rw->class_name << "</A>" << endl <<
 "<BR>" << endl;
 
   // Add into AllClasses js file
@@ -429,14 +432,14 @@ int ClassRead::html_class()
     js_all_first = false;
 
   fp_js_all <<
-    "[\"" << class_name << "\",\"" << html_file_name << ".html\"]" << endl;
+    "[\"" << ctx->rw->class_name << "\",\"" << html_file_name << ".html\"]" << endl;
 
   // Add into group file
-  for ( int i = 0; i < doc_group_cnt; i++) {
-    for ( int j = 0; j < setup_group_cnt; j++) {
-      if ( cdh_NoCaseStrcmp( doc_groups[i], setup_groups[j]) == 0) {
+  for ( int i = 0; i < ctx->rw->doc_group_cnt; i++) {
+    for ( int j = 0; j < ctx->setup->group_cnt; j++) {
+      if ( cdh_NoCaseStrcmp( ctx->rw->doc_groups[i], ctx->setup->groups[j]) == 0) {
 	fp_html_group[j] <<
-"<A HREF=\"" << html_file_name << ".html\" TARGET=\"classFrame\">" << class_name << "</A>" << endl <<
+"<A HREF=\"" << html_file_name << ".html\" TARGET=\"classFrame\">" << ctx->rw->class_name << "</A>" << endl <<
 "<BR>" << endl;
 
  	if ( !js_group_first[j])
@@ -444,14 +447,14 @@ int ClassRead::html_class()
 	else
 	  js_group_first[j] = false;
 	fp_js_group[j] <<
-"[\"" << class_name << "\",\"" << html_file_name << ".html\"]" << endl;
+"[\"" << ctx->rw->class_name << "\",\"" << html_file_name << ".html\"]" << endl;
       }
     }
   }
 
   // Create class html file
 
-  strcpy( fname, dir);
+  strcpy( fname, ctx->dir);
   strcat( fname, html_file_name);
   strcat( fname, ".html");
   cdh_ToLower( fname, fname);
@@ -483,7 +486,7 @@ int ClassRead::html_class()
 "<TABLE BORDER=\"0\" WIDTH=\"100%\" CELLPADDING=\"1\" CELLSPACING=\"0\">" << endl <<
 "<TR>" << endl <<
 "<TD COLSPAN=2 BGCOLOR=\"#EEEEFF\" CLASS=\"NavBarCell1\">" << endl <<
-"<A NAME=\"navbar_top_firstrow\"><FONT  CLASS=\"NavBarFont1Rev\"><B>Volume " << volume_name << "</B></FONT></A>" << endl <<
+"<A NAME=\"navbar_top_firstrow\"><FONT  CLASS=\"NavBarFont1Rev\"><B>Volume " << ctx->rw->volume_name << "</B></FONT></A>" << endl <<
 "</TD>" << endl <<
 "</TR>" << endl <<
 endl <<
@@ -495,11 +498,11 @@ endl <<
 "&nbsp;|&nbsp;<A HREF=\"#template\">Template</A>" << endl <<
 "&nbsp;|&nbsp;<A HREF=\"#detail\">Detail</A>" << endl <<
 "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C Binding: " << endl <<
-"&nbsp;<A HREF=\"" << struct_file << "#" << class_name << "\">Struct</A>" << endl <<
-"&nbsp;|&nbsp<A HREF=\"" << hpp_file << "#" << class_name << "\">Class</A>" << endl;
+"&nbsp;<A HREF=\"" << struct_file << "#" << ctx->rw->class_name << "\">Struct</A>" << endl <<
+"&nbsp;|&nbsp<A HREF=\"" << hpp_file << "#" << ctx->rw->class_name << "\">Class</A>" << endl;
 
-  if ( doc_fresh && strcmp( doc_code, "") != 0) {
-    src_filename_to_html( ref_name, doc_code);
+  if ( ctx->rw->doc_fresh && strcmp( ctx->rw->doc_code, "") != 0) {
+    CnvReadSrc::filename_to_html( ref_name, ctx->rw->doc_code);
     html_clf->f <<
 "&nbsp;|&nbsp;<A HREF=\"" << ref_name << "#" << low_class_name << "\">Code</A>" << endl;
   }
@@ -516,104 +519,104 @@ endl <<
 "<HR>" << endl <<
 "<!-- ======== START OF CLASS DATA ======== -->" << endl <<
 "<H2>" << endl <<
-"Class " << class_name << "</H2>" << endl <<
+"Class " << ctx->rw->class_name << "</H2>" << endl <<
 "<HR>" << endl <<
 "<DL>" << endl;
-  if ( doc_fresh && strcmp( doc_author, "") != 0)
+  if ( ctx->rw->doc_fresh && strcmp( ctx->rw->doc_author, "") != 0)
   {
     html_clf->f <<
-"<DT><B>Author</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" << doc_author << "<DT>" << endl;
+"<DT><B>Author</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" << ctx->rw->doc_author << "<DT>" << endl;
   }
 
-  if ( doc_fresh && strcmp( doc_version, "") != 0)
+  if ( ctx->rw->doc_fresh && strcmp( ctx->rw->doc_version, "") != 0)
   {
     html_clf->f <<
-"<DT><B>Version</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" << doc_version << "<DT>" << endl;
+"<DT><B>Version</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" << ctx->rw->doc_version << "<DT>" << endl;
   }
-  if ( doc_fresh && strcmp( doc_code, "") != 0)
+  if ( ctx->rw->doc_fresh && strcmp( ctx->rw->doc_code, "") != 0)
   {
     html_clf->f <<
-      "<DT><B>Code</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <A HREF=\"" << ref_name << "#" << low_class_name << "\"><FONT size=\"-1\">" << doc_code << "</FONT></A><DT>" << endl;
+      "<DT><B>Code</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <A HREF=\"" << ref_name << "#" << low_class_name << "\"><FONT size=\"-1\">" << ctx->rw->doc_code << "</FONT></A><DT>" << endl;
   }
 
   html_clf->f <<
 "<BR><DT><B>Description</B><DT><BR>" << endl <<
 "</DL><DIV ID=\"description\"><XMP>" << endl;
 
-  if ( doc_fresh) {
-    for ( i = 0; i < doc_cnt; i++) {
-      remove_spaces( doc_text[i], txt);
-      if ( strncmp( low(txt), "@image", 6) == 0)  {
+  if ( ctx->rw->doc_fresh) {
+    for ( i = 0; i < ctx->rw->doc_cnt; i++) {
+      ctx->remove_spaces( ctx->rw->doc_text[i], txt);
+      if ( strncmp( CnvCtx::low(txt), "@image", 6) == 0)  {
 	char imagefile[80];
 
-	remove_spaces( txt + 6, imagefile);
+	ctx->remove_spaces( txt + 6, imagefile);
 	html_clf->f << "</XMP><IMG SRC=\"" << imagefile << "\"><XMP>" << endl;
       }
-      else if ( strncmp( low(txt), "@b", 2) == 0)  {
+      else if ( strncmp( CnvCtx::low(txt), "@b", 2) == 0)  {
 	html_clf->f << "</XMP><B><FONT SIZE=\"3\">" << txt + 2 << "</FONT></B><XMP>" << endl;
       }
-      else if ( strncmp( low(txt), "@h1", 3) == 0)  {
+      else if ( strncmp( CnvCtx::low(txt), "@h1", 3) == 0)  {
 	html_clf->f << "</XMP><H3>" << txt + 3 << "</H3><XMP>" << endl;
       }
-      else if ( strncmp( low(txt), "@h2", 3) == 0)  {
+      else if ( strncmp( CnvCtx::low(txt), "@h2", 3) == 0)  {
 	html_clf->f << "</XMP><H4>" << txt + 3 << "</H4><XMP>" << endl;
       }
       else
-	html_clf->f << doc_text[i] << endl;
+	html_clf->f << ctx->rw->doc_text[i] << endl;
     }
   }
   html_clf->f <<
 "</XMP>" << endl;
 
-  for ( i = 0; i < doc_link_cnt; i++) {
+  for ( i = 0; i < ctx->rw->doc_link_cnt; i++) {
     html_clf->f <<
-"  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF=\"" << doc_link_ref[i] << "\" TARGET=\"_self\"><FONT size=\"-1\"> " << doc_link_text[i] <<"</FONT></A><BR>" << endl;
+"  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF=\"" << ctx->rw->doc_link_ref[i] << "\" TARGET=\"_self\"><FONT size=\"-1\"> " << ctx->rw->doc_link_text[i] <<"</FONT></A><BR>" << endl;
   }
-  for ( i = 0; i < doc_clink_cnt; i++) {
+  for ( i = 0; i < ctx->rw->doc_clink_cnt; i++) {
     html_clf->f <<
-"  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF=\"" << doc_clink_ref[i] << "\" TARGET=\"_self\"><FONT size=\"-1\"> " << doc_clink_text[i] <<"</FONT></A><BR>" << endl;
+"  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF=\"" << ctx->rw->doc_clink_ref[i] << "\" TARGET=\"_self\"><FONT size=\"-1\"> " << ctx->rw->doc_clink_text[i] <<"</FONT></A><BR>" << endl;
   }
   html_clf->f <<
 "</DIV>" << endl;  
   return 1;
 }
 
-int ClassRead::html_body()
+int CnvWblToHtml::body_exec()
 {
   char struct_name[80];
   pwr_tFileName fname;
   pwr_tFileName struct_file;
 
-  struct_get_filename( fname);
-  src_filename_to_html( struct_file, fname);
+  CnvWblToH::get_filename( ctx->rw, fname, 0);
+  CnvReadSrc::filename_to_html( struct_file, fname);
 
-  if ( strcmp( low(body_name), "devbody") == 0)
+  if ( strcmp( CnvCtx::low(ctx->rw->body_name), "devbody") == 0)
     strcpy( struct_name, "");
   else
   {
     strcpy( struct_name, "pwr_sClass_");
-    if ( strcmp( body_structname, "") == 0)
-      strcat( struct_name, class_name);
+    if ( strcmp( ctx->rw->body_structname, "") == 0)
+      strcat( struct_name, ctx->rw->class_name);
     else
-      strcat( struct_name, body_structname);
+      strcat( struct_name, ctx->rw->body_structname);
   }
 
   html_clf->f <<
 "<!-- =========== BODY =========== -->" << endl <<
 endl <<
 "<HR><BR>" << endl <<
-"<A NAME=\"" << body_name << "\"><!-- --></A>" << endl <<
+"<A NAME=\"" << ctx->rw->body_name << "\"><!-- --></A>" << endl <<
 "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\" WIDTH=\"100%\">" << endl <<
 "<TR BGCOLOR=\"#CCCCFF\" CLASS=\"TableHeadingColor\">" << endl <<
 "<TD COLSPAN=3><FONT SIZE=\"+2\">" << endl <<
-"<B>" << body_name << " attributes</B></FONT>" <<
-"<FONT SIZE=\"+1\"<B>&nbsp;&nbsp;&nbsp;&nbsp; <A HREF=\"" << struct_file << "#" << class_name << "\">" << struct_name << "</A></B></FONT></TD>" << endl <<
+"<B>" << ctx->rw->body_name << " attributes</B></FONT>" <<
+"<FONT SIZE=\"+1\"<B>&nbsp;&nbsp;&nbsp;&nbsp; <A HREF=\"" << struct_file << "#" << ctx->rw->class_name << "\">" << struct_name << "</A></B></FONT></TD>" << endl <<
 "</TR>" << endl;
 
   return 1;
 }
 
-int ClassRead::html_body_close()
+int CnvWblToHtml::body_close()
 {
   html_clf->f <<
 "</TABLE>" << endl;
@@ -621,7 +624,7 @@ int ClassRead::html_body_close()
   return 1;
 }
 
-int ClassRead::html_graphplcnode()
+int CnvWblToHtml::graphplcnode()
 {
   int i;
 
@@ -633,22 +636,22 @@ endl <<
 "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\" WIDTH=\"100%\">" << endl <<
 "<TR BGCOLOR=\"#CCCCFF\" CLASS=\"TableHeadingColor\">" << endl <<
 "<TD COLSPAN=2><FONT SIZE=\"+2\">" << endl <<
-"<B>" << graphplcnode_name << "</B></FONT></TD>" << endl <<
+"<B>" << ctx->rw->graphplcnode_name << "</B></FONT></TD>" << endl <<
 "</TR>" << endl;
 
-  for ( i = 0; i < doc_cnt; i += 2)
+  for ( i = 0; i < ctx->rw->doc_cnt; i += 2)
   {
     html_clf->f <<
 "<TR BGCOLOR=\"white\" CLASS=\"TableRowColor\">" << endl <<
-"<TD><CODE><B>" << doc_text[i] << "</B></CODE></TD>" << endl <<
-"<TD><CODE>" << doc_text[i+1] << "</CODE></TD>" << endl;
+"<TD><CODE><B>" << ctx->rw->doc_text[i] << "</B></CODE></TD>" << endl <<
+"<TD><CODE>" << ctx->rw->doc_text[i+1] << "</CODE></TD>" << endl;
   }
   html_clf->f << "</TABLE>" << endl;
 
   return 1;
 }
 
-int ClassRead::html_graphplccon()
+int CnvWblToHtml::graphplccon()
 {
   int i;
 
@@ -659,22 +662,22 @@ endl <<
 "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\" WIDTH=\"100%\">" << endl <<
 "<TR BGCOLOR=\"#CCCCFF\" CLASS=\"TableHeadingColor\">" << endl <<
 "<TD COLSPAN=2><FONT SIZE=\"+2\">" << endl <<
-"<B>" << graphplccon_name << "</B></FONT></TD>" << endl <<
+"<B>" << ctx->rw->graphplccon_name << "</B></FONT></TD>" << endl <<
 "</TR>" << endl;
 
-  for ( i = 0; i < doc_cnt; i += 2)
+  for ( i = 0; i < ctx->rw->doc_cnt; i += 2)
   {
     html_clf->f <<
 "<TR BGCOLOR=\"white\" CLASS=\"TableRowColor\">" << endl <<
-"<TD><CODE><B>" << doc_text[i] << "</B></CODE></TD>" << endl <<
-"<TD><CODE>" << doc_text[i+1] << "</CODE></TD>" << endl;
+"<TD><CODE><B>" << ctx->rw->doc_text[i] << "</B></CODE></TD>" << endl <<
+"<TD><CODE>" << ctx->rw->doc_text[i+1] << "</CODE></TD>" << endl;
   }
   html_clf->f << "</TABLE>" << endl;
 
   return 1;
 }
 
-int ClassRead::html_template()
+int CnvWblToHtml::template_exec()
 {
   int i;
 
@@ -692,24 +695,24 @@ endl <<
 "<B>Template Object</B></FONT></TD>" << endl <<
 "</TR>" << endl;
 
-  for ( i = 0; i < doc_cnt; i += 2)
+  for ( i = 0; i < ctx->rw->doc_cnt; i += 2)
   {
     html_clf->f <<
 "<TR BGCOLOR=\"white\" CLASS=\"TableRowColor\">" << endl <<
-"<TD><CODE><B>" << doc_text[i] << "</B></CODE></TD>" << endl <<
-"<TD><CODE>" << doc_text[i+1] << "</CODE></TD>" << endl;
+"<TD><CODE><B>" << ctx->rw->doc_text[i] << "</B></CODE></TD>" << endl <<
+"<TD><CODE>" << ctx->rw->doc_text[i+1] << "</CODE></TD>" << endl;
   }
   html_clf->f << "</TABLE>" << endl;
 
   return 1;
 }
 
-int ClassRead::html_class_close()
+int CnvWblToHtml::class_close()
 {
   fp_tmp.close();
 
   // Copy temporary file
-  copy_tmp_file( cread_cTmpFile1, html_clf->f);
+  ctx->rw->copy_tmp_file( cread_cTmpFile1, html_clf->f);
 
   html_clf->f <<
 "<!-- ========= END OF CLASS DATA ========= -->" << endl <<
@@ -724,35 +727,35 @@ int ClassRead::html_class_close()
   return 1;
 }
 
-int ClassRead::html_attribute()
+int CnvWblToHtml::attribute_exec()
 {
   int i;
   char txt[200];
   char typeref_href[80];
   char attrtype_href[80];
 
-  if ( strncmp( attr_typeref, "pwr_eClass_", 11)  == 0) {
-    strcpy( typeref_href, &attr_typeref[11]);
-    strcpy( attr_typeref, typeref_href);    
+  if ( strncmp( ctx->rw->attr_typeref, "pwr_eClass_", 11)  == 0) {
+    strcpy( typeref_href, &ctx->rw->attr_typeref[11]);
+    strcpy( ctx->rw->attr_typeref, typeref_href);    
   }
-  else if ( strncmp( attr_typeref, "pwr_eType_", 10)  == 0) {
-    strcpy( typeref_href, &attr_typeref[10]);
-    strcpy( attr_typeref, typeref_href);
+  else if ( strncmp( ctx->rw->attr_typeref, "pwr_eType_", 10)  == 0) {
+    strcpy( typeref_href, &ctx->rw->attr_typeref[10]);
+    strcpy( ctx->rw->attr_typeref, typeref_href);
   }
-  else if ( strncmp( attr_typeref, "pwr_eTypeDef_", 13)  == 0) {
-    strcpy( typeref_href, &attr_typeref[13]);
-    strcpy( attr_typeref, typeref_href);
+  else if ( strncmp( ctx->rw->attr_typeref, "pwr_eTypeDef_", 13)  == 0) {
+    strcpy( typeref_href, &ctx->rw->attr_typeref[13]);
+    strcpy( ctx->rw->attr_typeref, typeref_href);
   }
-  if ( strcmp( attr_typeref_volume, "") != 0) {
+  if ( strcmp( ctx->rw->attr_typeref_volume, "") != 0) {
     char low_volname[80];
-    strcpy( low_volname, low(attr_typeref_volume)); 
+    strcpy( low_volname, CnvCtx::low(ctx->rw->attr_typeref_volume)); 
     sprintf( typeref_href, "%s_%s.html", low_volname,
-	     low(attr_typeref));
+	     CnvCtx::low(ctx->rw->attr_typeref));
   }
   else
-    sprintf( typeref_href, "pwrs_%s.html", low(attr_typeref));
+    sprintf( typeref_href, "pwrs_%s.html", CnvCtx::low(ctx->rw->attr_typeref));
 
-  sprintf( attrtype_href, "pwrs_%s.html", low(attr_type));
+  sprintf( attrtype_href, "pwrs_%s.html", CnvCtx::low(ctx->rw->attr_type));
 
   // Summary
 
@@ -761,49 +764,49 @@ int ClassRead::html_attribute()
 "<TD ALIGN=\"right\" VALIGN=\"top\" WIDTH=\"1%\"><FONT SIZE=\"-1\">" << endl <<
 "<A HREF=\"" << typeref_href << "\">";
   
-  if ( attr_array && attr_pointer)
+  if ( ctx->rw->attr_array && ctx->rw->attr_pointer)
     html_clf->f <<
-"<CODE>Array of pointers to "<< attr_typeref << "</CODE></FONT></A></TD>" << endl;
-  else if ( attr_array)
+"<CODE>Array of pointers to "<< ctx->rw->attr_typeref << "</CODE></FONT></A></TD>" << endl;
+  else if ( ctx->rw->attr_array)
     html_clf->f <<
-"<CODE>Array of "<< attr_typeref << "</CODE></FONT></A></TD>" << endl;
-  else if ( attr_pointer)
+"<CODE>Array of "<< ctx->rw->attr_typeref << "</CODE></FONT></A></TD>" << endl;
+  else if ( ctx->rw->attr_pointer)
     html_clf->f <<
-"<CODE>Pointer to " << attr_typeref << "</CODE></FONT></A></TD>" << endl;
+"<CODE>Pointer to " << ctx->rw->attr_typeref << "</CODE></FONT></A></TD>" << endl;
   else
     html_clf->f <<
-"<CODE>" << attr_typeref << "</CODE></FONT></A></TD>" << endl;
+"<CODE>" << ctx->rw->attr_typeref << "</CODE></FONT></A></TD>" << endl;
 
   html_clf->f <<
-"</A><TD><A HREF=\"#" << attr_name << "\"><CODE><B>" << attr_name << "</B></CODE></A></TD>" << endl <<
+"</A><TD><A HREF=\"#" << ctx->rw->attr_name << "\"><CODE><B>" << ctx->rw->attr_name << "</B></CODE></A></TD>" << endl <<
 "<TD>";
-  if ( doc_fresh)
+  if ( ctx->rw->doc_fresh)
   {
-    if ( strcmp( doc_summary, "") == 0) 
+    if ( strcmp( ctx->rw->doc_summary, "") == 0) 
     {
-      for ( i = 0; i < doc_cnt; i++) {
-	remove_spaces( doc_text[i], txt);
-	if ( strncmp( low(txt), "@image", 6) == 0) {
+      for ( i = 0; i < ctx->rw->doc_cnt; i++) {
+	ctx->remove_spaces( ctx->rw->doc_text[i], txt);
+	if ( strncmp( CnvCtx::low(txt), "@image", 6) == 0) {
 	  continue;
 	}
-	else if ( strncmp( low(txt), "@b", 2) == 0)  {
+	else if ( strncmp( CnvCtx::low(txt), "@b", 2) == 0)  {
 	  html_clf->f << "</XMP><B><FONT SIZE=\"3\">" << txt + 2 << "</FONT></B><XMP>" << endl;
 	}
-	else if ( strncmp( low(txt), "@h1", 3) == 0)  {
+	else if ( strncmp( CnvCtx::low(txt), "@h1", 3) == 0)  {
 	  html_clf->f << "<H3>" << txt + 3 << "</H3>" << endl;
 	}
-	else if ( strncmp( low(txt), "@h2", 3) == 0)  {
+	else if ( strncmp( CnvCtx::low(txt), "@h2", 3) == 0)  {
 	  html_clf->f << "<H4>" << txt + 3 << "</H4>" << endl;
 	}
 	else {
-	  html_clf->f << doc_text[i];
-	  if ( i < doc_cnt - 1)
+	  html_clf->f << ctx->rw->doc_text[i];
+	  if ( i < ctx->rw->doc_cnt - 1)
 	    html_clf->f << "<BR>" << endl;
 	}
       }
     }
     else
-      html_clf->f << doc_summary << endl;
+      html_clf->f << ctx->rw->doc_summary << endl;
   }
   else
     html_clf->f << "<BR>" << endl;
@@ -816,59 +819,59 @@ int ClassRead::html_attribute()
 
   fp_tmp <<
 "<HR>" << endl <<
-"<A NAME=\"" << attr_name << "\"> <H3>" <<
-"<FONT SIZE=\"-1\">" << attr_type << "</FONT> " << attr_name << "</H3></A>" << endl <<
+"<A NAME=\"" << ctx->rw->attr_name << "\"> <H3>" <<
+"<FONT SIZE=\"-1\">" << ctx->rw->attr_type << "</FONT> " << ctx->rw->attr_name << "</H3></A>" << endl <<
     "<DL><DT>" << endl;
 
-  if ( attr_array && attr_pointer)
+  if ( ctx->rw->attr_array && ctx->rw->attr_pointer)
     fp_tmp <<
-"<CODE><B>Type</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Array of pointers to <A HREF=\"" << typeref_href << "\">" << attr_typeref << "</A></CODE><DT>" << endl;
-  else if ( attr_array)
+"<CODE><B>Type</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Array of pointers to <A HREF=\"" << typeref_href << "\">" << ctx->rw->attr_typeref << "</A></CODE><DT>" << endl;
+  else if ( ctx->rw->attr_array)
     fp_tmp <<
-"<CODE><B>Type</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Array of <A HREF=\"" << typeref_href << "\">" << attr_typeref << "</A></CODE><DT>" << endl;
-  else if ( attr_pointer)
+"<CODE><B>Type</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Array of <A HREF=\"" << typeref_href << "\">" << ctx->rw->attr_typeref << "</A></CODE><DT>" << endl;
+  else if ( ctx->rw->attr_pointer)
     fp_tmp <<
-"<CODE><B>Type</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pointer to <A HREF=\"" << typeref_href << "\">" << attr_typeref << "</A></CODE><DT>" << endl;
+"<CODE><B>Type</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pointer to <A HREF=\"" << typeref_href << "\">" << ctx->rw->attr_typeref << "</A></CODE><DT>" << endl;
   else
     fp_tmp <<
-"<CODE><B>Type</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF=\"" << typeref_href << "\">" << attr_typeref << "</A></CODE><DT>" << endl;
+"<CODE><B>Type</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF=\"" << typeref_href << "\">" << ctx->rw->attr_typeref << "</A></CODE><DT>" << endl;
 
   fp_tmp <<
-    "<DT><CODE><B><A HREF=\"" << attrtype_href << "#Flags\">Flags</A></B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" << attr_flags << "</CODE><DT>" << endl;
+    "<DT><CODE><B><A HREF=\"" << attrtype_href << "#Flags\">Flags</A></B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" << ctx->rw->attr_flags << "</CODE><DT>" << endl;
 
-  if ( attr_array)
+  if ( ctx->rw->attr_array)
     fp_tmp <<
-"<DT><CODE><B>Elements</B>&nbsp;&nbsp;" << attr_elements << "</CODE><DT>" << endl;
+"<DT><CODE><B>Elements</B>&nbsp;&nbsp;" << ctx->rw->attr_elements << "</CODE><DT>" << endl;
 
   fp_tmp <<
-"<DT><CODE><B>Body</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" << body_name << "</CODE><DT>" << endl <<
-"<DT><CODE><B>Class</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF=\"" << attrtype_href << "\">$" << attr_type << "</A></CODE><DT>" << endl;
+"<DT><CODE><B>Body</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" << ctx->rw->body_name << "</CODE><DT>" << endl <<
+"<DT><CODE><B>Class</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF=\"" << attrtype_href << "\">$" << ctx->rw->attr_type << "</A></CODE><DT>" << endl;
 
   fp_tmp <<
 "<BR>" << endl <<
 "<CODE><B>Description</B></CODE><DT></DL>" << endl <<
 "<DIV ID=\"description\"><XMP>" << endl;
 
-  if ( doc_fresh) {
-    for ( i = 0; i < doc_cnt; i++) {
-      remove_spaces( doc_text[i], txt);
-      if ( strncmp( low(txt), "@image", 6) == 0)  {
+  if ( ctx->rw->doc_fresh) {
+    for ( i = 0; i < ctx->rw->doc_cnt; i++) {
+      ctx->remove_spaces( ctx->rw->doc_text[i], txt);
+      if ( strncmp( CnvCtx::low(txt), "@image", 6) == 0)  {
 	char imagefile[80];
 
-	remove_spaces( txt + 6, imagefile);
+	ctx->remove_spaces( txt + 6, imagefile);
 	fp_tmp << "</XMP><IMG SRC=\"" << imagefile << "\"><XMP>" << endl;
       }
-      else if ( strncmp( low(txt), "@b", 2) == 0)  {
+      else if ( strncmp( CnvCtx::low(txt), "@b", 2) == 0)  {
 	fp_tmp << "</XMP><B><FONT SIZE=\"3\">" << txt + 2 << "</FONT></B><XMP>" << endl;
       }
-      else if ( strncmp( low(txt), "@h1", 3) == 0)  {
+      else if ( strncmp( CnvCtx::low(txt), "@h1", 3) == 0)  {
 	fp_tmp << "</XMP><H3>" << txt + 3 << "</H3><XMP>" << endl;
       }
-      else if ( strncmp( low(txt), "@h2", 3) == 0)  {
+      else if ( strncmp( CnvCtx::low(txt), "@h2", 3) == 0)  {
 	fp_tmp << "</XMP><H4>" << txt + 3 << "</H4><XMP>" << endl;
       }
       else
-	fp_tmp << doc_text[i] << endl;
+	fp_tmp << ctx->rw->doc_text[i] << endl;
     }
   }
   fp_tmp <<
@@ -878,47 +881,47 @@ int ClassRead::html_attribute()
 }
 
 
-int ClassRead::html_bit()
+int CnvWblToHtml::bit_exec()
 {
   int i;
   char txt[200];
 
   // Summary
-  char bitchar = _tolower(typedef_typeref[0]);
+  char bitchar = _tolower(ctx->rw->typedef_typeref[0]);
 
   html_clf->f <<
 "<TR BGCOLOR=\"white\" CLASS=\"TableRowColor\">" << endl <<
 "<TD>" << endl <<
-"<CODE><FONT SIZE=\"-1\">pwr_" << bitchar << typedef_name << "_" << bit_pgmname << "</FONT></CODE></TD>" << endl <<
-"<TD ALIGN =\"right\" VALIGN=\"top\" WIDTH=\"1%\"><A HREF=\"#" << bit_name << "\"><CODE><B>" << bit_text << "</B></CODE></A></TD>" << endl <<
+"<CODE><FONT SIZE=\"-1\">pwr_" << bitchar << ctx->rw->typedef_name << "_" << ctx->rw->bit_pgmname << "</FONT></CODE></TD>" << endl <<
+"<TD ALIGN =\"right\" VALIGN=\"top\" WIDTH=\"1%\"><A HREF=\"#" << ctx->rw->bit_name << "\"><CODE><B>" << ctx->rw->bit_text << "</B></CODE></A></TD>" << endl <<
 "<TD>";
-  if ( doc_fresh)
+  if ( ctx->rw->doc_fresh)
   {
-    if ( strcmp( doc_summary, "") == 0) 
+    if ( strcmp( ctx->rw->doc_summary, "") == 0) 
     {
-      for ( i = 0; i < doc_cnt; i++) {
-	remove_spaces( doc_text[i], txt);
-	if ( strncmp( low(txt), "@image", 6) == 0) {
+      for ( i = 0; i < ctx->rw->doc_cnt; i++) {
+	ctx->remove_spaces( ctx->rw->doc_text[i], txt);
+	if ( strncmp( CnvCtx::low(txt), "@image", 6) == 0) {
 	  continue;
 	}
-	else if ( strncmp( low(txt), "@b", 2) == 0)  {
+	else if ( strncmp( CnvCtx::low(txt), "@b", 2) == 0)  {
 	  html_clf->f << "</XMP><B><FONT SIZE=\"3\">" << txt + 2 << "</FONT></B><XMP>" << endl;
 	}
-	else if ( strncmp( low(txt), "@h1", 3) == 0)  {
+	else if ( strncmp( CnvCtx::low(txt), "@h1", 3) == 0)  {
 	  html_clf->f << "<H3>" << txt + 3 << "</H3>" << endl;
 	}
-	else if ( strncmp( low(txt), "@h2", 3) == 0)  {
+	else if ( strncmp( CnvCtx::low(txt), "@h2", 3) == 0)  {
 	  html_clf->f << "<H4>" << txt + 3 << "</H4>" << endl;
 	}
 	else {
-	  html_clf->f << doc_text[i];
-	  if ( i < doc_cnt - 1)
+	  html_clf->f << ctx->rw->doc_text[i];
+	  if ( i < ctx->rw->doc_cnt - 1)
 	    html_clf->f << "<BR>" << endl;
 	}
       }
     }
     else
-      html_clf->f << doc_summary << endl;
+      html_clf->f << ctx->rw->doc_summary << endl;
   }
   else
     html_clf->f << "<BR>" << endl;
@@ -931,36 +934,36 @@ int ClassRead::html_bit()
 
   fp_tmp <<
 "<HR>" << endl <<
-"<A NAME=\"" << bit_name << "\"> <H3>" <<
-    "<FONT SIZE=\"-1\">pwr_" << bitchar << typedef_name << "_" << bit_pgmname << "</FONT>&nbsp;&nbsp" << bit_text << "</H3></A>" << endl <<
+"<A NAME=\"" << ctx->rw->bit_name << "\"> <H3>" <<
+    "<FONT SIZE=\"-1\">pwr_" << bitchar << ctx->rw->typedef_name << "_" << ctx->rw->bit_pgmname << "</FONT>&nbsp;&nbsp" << ctx->rw->bit_text << "</H3></A>" << endl <<
 "<DL><DT>" << endl <<
-"<CODE><B>Value</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" << bit_value << "</CODE><DT>" << endl;
+"<CODE><B>Value</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" << ctx->rw->bit_value << "</CODE><DT>" << endl;
 
   fp_tmp <<
 "<BR>" << endl <<
 "<CODE><B>Description</B></CODE><DT></DL>" << endl <<
 "<DIV ID=\"description\"><XMP>" << endl;
 
-  if ( doc_fresh) {
-    for ( i = 0; i < doc_cnt; i++) {
-      remove_spaces( doc_text[i], txt);
-      if ( strncmp( low(txt), "@image", 6) == 0)  {
+  if ( ctx->rw->doc_fresh) {
+    for ( i = 0; i < ctx->rw->doc_cnt; i++) {
+      ctx->remove_spaces( ctx->rw->doc_text[i], txt);
+      if ( strncmp( CnvCtx::low(txt), "@image", 6) == 0)  {
 	char imagefile[80];
 
-	remove_spaces( txt + 6, imagefile);
+	ctx->remove_spaces( txt + 6, imagefile);
 	fp_tmp << "</XMP><IMG SRC=\"" << imagefile << "\"><XMP>" << endl;
       }
-      else if ( strncmp( low(txt), "@b", 2) == 0)  {
+      else if ( strncmp( CnvCtx::low(txt), "@b", 2) == 0)  {
 	fp_tmp << "</XMP><B><FONT SIZE=\"3\">" << txt + 2 << "</FONT></B><XMP>" << endl;
       }
-      else if ( strncmp( low(txt), "@h1", 3) == 0)  {
+      else if ( strncmp( CnvCtx::low(txt), "@h1", 3) == 0)  {
 	fp_tmp << "</XMP><H3>" << txt + 3 << "</H3><XMP>" << endl;
       }
-      else if ( strncmp( low(txt), "@h2", 3) == 0)  {
+      else if ( strncmp( CnvCtx::low(txt), "@h2", 3) == 0)  {
 	fp_tmp << "</XMP><H4>" << txt + 3 << "</H4><XMP>" << endl;
       }
       else
-	fp_tmp << doc_text[i] << endl;
+	fp_tmp << ctx->rw->doc_text[i] << endl;
     }
   }
   fp_tmp <<
@@ -970,7 +973,7 @@ int ClassRead::html_bit()
 }
 
 
-int ClassRead::html_typedef()
+int CnvWblToHtml::typedef_exec()
 {
   pwr_tFileName fname;
   int i;
@@ -983,17 +986,17 @@ int ClassRead::html_typedef()
   char txt[200];
   char code_aref[200];
 
-  strcpy( class_name, typedef_name);
+  strcpy( ctx->rw->class_name, ctx->rw->typedef_name);
 
-  cdh_ToLower( low_volume_name, volume_name);
-  cdh_ToLower( low_class_name, class_name);
+  cdh_ToLower( low_volume_name, ctx->rw->volume_name);
+  cdh_ToLower( low_class_name, ctx->rw->class_name);
 
-  struct_get_filename( fname);
-  src_filename_to_html( struct_file, fname);
+  CnvWblToH::get_filename( ctx->rw, fname, 0);
+  CnvReadSrc::filename_to_html( struct_file, fname);
 
-  strcpy( full_class_name, volume_name);
+  strcpy( full_class_name, ctx->rw->volume_name);
   strcat( full_class_name, ":");
-  strcat( full_class_name, class_name);
+  strcat( full_class_name, ctx->rw->class_name);
 
   strcpy( html_file_name, low_volume_name);
   strcat( html_file_name, "_");
@@ -1001,7 +1004,7 @@ int ClassRead::html_typedef()
 
   // Add into index file
   fp_html_index <<
-"<A HREF=\"" << html_file_name << ".html\" TARGET=\"classFrame\">" << class_name << "</A>" << endl <<
+"<A HREF=\"" << html_file_name << ".html\" TARGET=\"classFrame\">" << ctx->rw->class_name << "</A>" << endl <<
 "<BR>" << endl;
 
   // Add into AllClasses js file
@@ -1011,14 +1014,14 @@ int ClassRead::html_typedef()
     js_all_first = false;
 
   fp_js_all <<
-    "[\"" << class_name << "\",\"" << html_file_name << ".html\"]" << endl;
+    "[\"" << ctx->rw->class_name << "\",\"" << html_file_name << ".html\"]" << endl;
 
   // Add into group file
-  for ( int i = 0; i < doc_group_cnt; i++) {
-    for ( int j = 0; j < setup_group_cnt; j++) {
-      if ( cdh_NoCaseStrcmp( doc_groups[i], setup_groups[j]) == 0) {
+  for ( int i = 0; i < ctx->rw->doc_group_cnt; i++) {
+    for ( int j = 0; j < ctx->setup->group_cnt; j++) {
+      if ( cdh_NoCaseStrcmp( ctx->rw->doc_groups[i], ctx->setup->groups[j]) == 0) {
 	fp_html_group[j] <<
-"<A HREF=\"" << html_file_name << ".html\" TARGET=\"classFrame\">" << class_name << "</A>" << endl <<
+"<A HREF=\"" << html_file_name << ".html\" TARGET=\"classFrame\">" << ctx->rw->class_name << "</A>" << endl <<
 "<BR>" << endl;
 
  	if ( !js_group_first[j])
@@ -1027,14 +1030,14 @@ int ClassRead::html_typedef()
 	  js_group_first[j] = false;
 
 	fp_js_group[j] <<
-"[\"" << class_name << "\",\"" << html_file_name << ".html\"]" << endl;
+"[\"" << ctx->rw->class_name << "\",\"" << html_file_name << ".html\"]" << endl;
       }
     }
   }
 
   // Create class html file
 
-  strcpy( fname, dir);
+  strcpy( fname, ctx->dir);
   strcat( fname, html_file_name);
   strcat( fname, ".html");
   cdh_ToLower( fname, fname);
@@ -1063,23 +1066,23 @@ int ClassRead::html_typedef()
 "<TABLE BORDER=\"0\" WIDTH=\"100%\" CELLPADDING=\"1\" CELLSPACING=\"0\">" << endl <<
 "<TR>" << endl <<
 "<TD COLSPAN=2 BGCOLOR=\"#EEEEFF\" CLASS=\"NavBarCell1\">" << endl <<
-"<A NAME=\"navbar_top_firstrow\"><FONT  CLASS=\"NavBarFont1Rev\"><B>Volume " << volume_name << "</B></FONT></A>" << endl <<
+"<A NAME=\"navbar_top_firstrow\"><FONT  CLASS=\"NavBarFont1Rev\"><B>Volume " << ctx->rw->volume_name << "</B></FONT></A>" << endl <<
 "</TD>" << endl <<
 "</TR>" << endl <<
 endl <<
 "<TR>" << endl <<
 "<TD BGCOLOR=\"white\" CLASS=\"NavBarCell2\"><FONT SIZE=\"-2\">" << endl;
 
-  if ( (strcmp( typedef_typeref, "Mask") == 0 ||
-	strcmp( typedef_typeref, "Enum") == 0) &&
+  if ( (strcmp( ctx->rw->typedef_typeref, "Mask") == 0 ||
+	strcmp( ctx->rw->typedef_typeref, "Enum") == 0) &&
        strcmp( low_volume_name, "pwrs") != 0) {
-    sprintf( code_aref, "%s#%s", struct_file, typedef_name);
+    sprintf( code_aref, "%s#%s", struct_file, ctx->rw->typedef_name);
     html_clf->f <<
 " C Binding: &nbsp;<A HREF=\"" << code_aref << "\">Typedef</A>" << endl;
   }
-  else if ( doc_fresh && strcmp( doc_code, "") != 0)
+  else if ( ctx->rw->doc_fresh && strcmp( ctx->rw->doc_code, "") != 0)
   {
-    src_filename_to_html( ref_name, doc_code);
+    CnvReadSrc::filename_to_html( ref_name, ctx->rw->doc_code);
     sprintf( code_aref, "%s#%s", ref_name, low_class_name);
     html_clf->f <<
 " C Binding: &nbsp;<A HREF=\"" << code_aref << "\">Typedef</A>" << endl;
@@ -1098,88 +1101,88 @@ endl <<
 "<HR>" << endl <<
 "<!-- ======== START OF CLASS DATA ======== -->" << endl <<
 "<H2>" << endl <<
-"Type " << class_name << "</H2>" << endl <<
+"Type " << ctx->rw->class_name << "</H2>" << endl <<
 "<HR>" << endl <<
 "<DL>" << endl;
-  if ( doc_fresh && strcmp( doc_author, "") != 0)
+  if ( ctx->rw->doc_fresh && strcmp( ctx->rw->doc_author, "") != 0)
   {
     html_clf->f <<
-"<DT><B>Author</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" << doc_author << "<DT>" << endl;
+"<DT><B>Author</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" << ctx->rw->doc_author << "<DT>" << endl;
   }
 
-  if ( doc_fresh && strcmp( doc_version, "") != 0)
+  if ( ctx->rw->doc_fresh && strcmp( ctx->rw->doc_version, "") != 0)
   {
     html_clf->f <<
-"<DT><B>Version</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" << doc_version << "<DT>" << endl;
+"<DT><B>Version</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" << ctx->rw->doc_version << "<DT>" << endl;
   }
-  if ( doc_fresh && strcmp( doc_code, "") != 0)
+  if ( ctx->rw->doc_fresh && strcmp( ctx->rw->doc_code, "") != 0)
   {
     html_clf->f <<
-"<DT><B>Code</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" << doc_code << "<DT>" << endl;
+"<DT><B>Code</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" << ctx->rw->doc_code << "<DT>" << endl;
   }
 
   html_clf->f <<
 "<BR><DT><B>Description</B><DT><BR>" << endl <<
 "</DL><DIV ID=\"description\"><XMP>" << endl;
 
-  if ( doc_fresh) {
-    for ( i = 0; i < doc_cnt; i++) {
-      remove_spaces( doc_text[i], txt);
-      if ( strncmp( low(txt), "@image", 6) == 0)  {
+  if ( ctx->rw->doc_fresh) {
+    for ( i = 0; i < ctx->rw->doc_cnt; i++) {
+      ctx->remove_spaces( ctx->rw->doc_text[i], txt);
+      if ( strncmp( CnvCtx::low(txt), "@image", 6) == 0)  {
 	char imagefile[80];
 
-	remove_spaces( txt + 6, imagefile);
+	ctx->remove_spaces( txt + 6, imagefile);
 	html_clf->f << "</XMP><IMG SRC=\"" << imagefile << "\"><XMP>" << endl;
       }
-      else if ( strncmp( low(txt), "@b", 2) == 0)  {
+      else if ( strncmp( CnvCtx::low(txt), "@b", 2) == 0)  {
 	html_clf->f << "</XMP><B><FONT SIZE=\"3\">" << txt + 2 << "</FONT></B><XMP>" << endl;
       }
-      else if ( strncmp( low(txt), "@h1", 3) == 0)  {
+      else if ( strncmp( CnvCtx::low(txt), "@h1", 3) == 0)  {
 	html_clf->f << "</XMP><H3>" << txt + 3 << "</H3><XMP>" << endl;
       }
-      else if ( strncmp( low(txt), "@h2", 3) == 0)  {
+      else if ( strncmp( CnvCtx::low(txt), "@h2", 3) == 0)  {
 	html_clf->f << "</XMP><H4>" << txt + 3 << "</H4><XMP>" << endl;
       }
       else
-	html_clf->f << doc_text[i] << endl;
+	html_clf->f << ctx->rw->doc_text[i] << endl;
     }
   }
   html_clf->f <<
 "</XMP></DIV>" << endl;
 
-  for ( i = 0; i < doc_link_cnt; i++) {
+  for ( i = 0; i < ctx->rw->doc_link_cnt; i++) {
     html_clf->f <<
-"  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF=\"" << doc_link_ref[i] << "\" TARGET=\"_self\"><FONT size=\"-1\"> " << doc_link_text[i] <<"</FONT></A><BR>" << endl;
+"  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF=\"" << ctx->rw->doc_link_ref[i] << "\" TARGET=\"_self\"><FONT size=\"-1\"> " << ctx->rw->doc_link_text[i] <<"</FONT></A><BR>" << endl;
   }
-  for ( i = 0; i < doc_clink_cnt; i++) {
+  for ( i = 0; i < ctx->rw->doc_clink_cnt; i++) {
     html_clf->f <<
-"  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF=\"" << doc_clink_ref[i] << "\" TARGET=\"_self\"><FONT size=\"-1\"> " << doc_clink_text[i] <<"</FONT></A><BR>" << endl;
+"  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF=\"" << ctx->rw->doc_clink_ref[i] << "\" TARGET=\"_self\"><FONT size=\"-1\"> " << ctx->rw->doc_clink_text[i] <<"</FONT></A><BR>" << endl;
   }
   html_clf->f <<
 "</FONT>" << endl;
 
 
-  if ( strcmp( typedef_typeref, "Mask") == 0 ||
-       strcmp( typedef_typeref, "Enum") == 0) {
-    char bitchar = _tolower(typedef_typeref[0]);
+  if ( strcmp( ctx->rw->typedef_typeref, "Mask") == 0 ||
+       strcmp( ctx->rw->typedef_typeref, "Enum") == 0) {
+    char bitchar = _tolower(ctx->rw->typedef_typeref[0]);
 
     html_clf->f <<
 "<HR><BR>" << endl <<
-"<A NAME=\"" << typedef_name << "\"><!-- --></A>" << endl <<
+"<A NAME=\"" << ctx->rw->typedef_name << "\"><!-- --></A>" << endl <<
 "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\" WIDTH=\"100%\">" << endl <<
 "<TR BGCOLOR=\"#CCCCFF\" CLASS=\"TableHeadingColor\">" << endl <<
 "<TD COLSPAN=3><FONT SIZE=\"+2\">" << endl <<
-"<B>" << typedef_name << " elements</B></FONT>" <<
-"<FONT SIZE=\"+1\"<B>&nbsp;&nbsp;&nbsp;&nbsp; <A HREF=\"" << code_aref << "\">pwr_" << bitchar << typedef_name << "</A></B></FONT></TD>" << endl <<
+"<B>" << ctx->rw->typedef_name << " elements</B></FONT>" <<
+"<FONT SIZE=\"+1\"<B>&nbsp;&nbsp;&nbsp;&nbsp; <A HREF=\"" << code_aref << "\">pwr_" << bitchar << ctx->rw->typedef_name << "</A></B></FONT></TD>" << endl <<
 "</TR>" << endl;
   }
   return 1;
 }
 
-int ClassRead::html_typedef_close()
+int CnvWblToHtml::typedef_close()
 {
-  if ( strcmp( typedef_typeref, "Mask") == 0 ||
-       strcmp( typedef_typeref, "Enum") == 0) {
+  if ( strcmp( ctx->rw->typedef_typeref, "Mask") == 0 ||
+       strcmp( ctx->rw->typedef_typeref, "Enum") == 0) {
   html_clf->f <<
 "</TABLE>" << endl;
   }
@@ -1187,7 +1190,7 @@ int ClassRead::html_typedef_close()
   fp_tmp.close();
 
   // Copy temporary file
-  copy_tmp_file( cread_cTmpFile1, html_clf->f);
+  ctx->rw->copy_tmp_file( cread_cTmpFile1, html_clf->f);
 
   html_clf->f <<
 "<!-- ========= END OF CLASS DATA ========= -->" << endl <<

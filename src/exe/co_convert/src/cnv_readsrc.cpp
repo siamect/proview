@@ -10,15 +10,18 @@ extern "C" {
 #include "co_dcli.h"
 #include "co_cdh.h"
 }
-#include "cnv_classread.h"
+#include "cnv_ctx.h"
+#include "cnv_readsrc.h"
+#include "cnv_wblto.h"
 
-int ClassRead::src_read( char *filename)
+int CnvReadSrc::read_src( char *filename)
 {
   int sts;
   char orig_line[400];
   char line[400];
   char	line_part[4][80];
   int nr;
+  FILE *fp;
 
   fp = fopen( filename, "r");
   if ( !fp)
@@ -27,23 +30,23 @@ int ClassRead::src_read( char *filename)
   state = 0;
   doc_fresh = 0;
 
-  src_html_init( filename);
+  html_init( filename);
 
   while( 1)
   {
-    sts = read_line( orig_line, sizeof(orig_line), fp);
+    sts = CnvCtx::read_line( orig_line, sizeof(orig_line), fp);
     if ( !sts)
       linetype = cread_eLine_EOF;
     else
     {
-      remove_spaces( orig_line, line);
+      CnvCtx::remove_spaces( orig_line, line);
       if ( strcmp( line, "") == 0)
         continue;
 
       if ( strncmp( line, "/*_*", 4) != 0 &&
            !(state & cread_mState_Doc))
       {
-        src_html_line( orig_line);
+        html_line( orig_line);
         continue;
       }
 
@@ -81,7 +84,7 @@ int ClassRead::src_read( char *filename)
           strcpy( src_aref, line_part[1]);
         if ( nr > 2)
           strcpy( src_aref_text, line_part[2]);
-        src_html_aref();
+        html_aref();
       }
       if ( strstr( line, "*/"))
         state &= ~cread_mState_Doc;
@@ -91,23 +94,23 @@ int ClassRead::src_read( char *filename)
       break;
   }
 
-  if ( generate_html && html_class_open)
-    html_class_close();
-  if ( generate_xtthelp && xtthelp_index_open)
-    xtthelp_class_close();
+  if ( ctx->generate_html && ctx->wblto && ctx->wblto->class_open())
+    ctx->wblto->class_close();
+  if ( ctx->generate_xtthelp && ctx->wblto && ctx->wblto->index_open())
+    ctx->wblto->class_close();
 
   fclose(fp);
-  src_html_close();
+  html_close();
   return 1;
 }
 
-int ClassRead::src_html_init( char *filename)
+int CnvReadSrc::html_init( char *filename)
 {
   char fname[200];
   char dir_fname[200];
 
-  src_filename_to_html( fname, filename);
-  strcpy( dir_fname, dir);
+  filename_to_html( fname, filename);
+  strcpy( dir_fname, ctx->dir);
   strcat( dir_fname, fname);
 
   // Open html file
@@ -135,7 +138,7 @@ filename << endl <<
   return 1;
 }
 
-int ClassRead::src_html_close()
+int CnvReadSrc::html_close()
 {
   fp_src_html <<
 "</XMP></CODE>" << endl <<
@@ -146,14 +149,14 @@ int ClassRead::src_html_close()
   return 1;
 }
 
-int ClassRead::src_html_line( char *line)
+int CnvReadSrc::html_line( char *line)
 {
   fp_src_html << line << endl;
 
   return 1;
 }
 
-int ClassRead::src_html_aref()
+int CnvReadSrc::html_aref()
 {
   fp_src_html <<
 "</XMP></CODE>" << endl <<
@@ -164,7 +167,7 @@ int ClassRead::src_html_aref()
   return 1;
 }
 
-void ClassRead::src_filename_to_html( char *fname, char *filename)
+void CnvReadSrc::filename_to_html( char *fname, char *filename)
 {
   char *s;
 
@@ -185,4 +188,12 @@ void ClassRead::src_filename_to_html( char *fname, char *filename)
   if ( (s = strrchr( fname, '.')))
     *s = '_';
   strcat( fname, ".html");
+}
+
+char *CnvReadSrc::low( char *in)
+{
+  static char str[400];
+
+  cdh_ToLower( str, in);
+  return str;
 }

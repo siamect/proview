@@ -10,13 +10,16 @@ extern "C" {
 #include "co_dcli.h"
 #include "co_cdh.h"
 }
-#include "cnv_classread.h"
+#include "cnv_ctx.h"
+#include "cnv_readwbl.h"
+#include "cnv_wblto.h"
+#include "cnv_ctx.h"
 
 #define CNV__UNKNOWN_LINETYPE 2
 
 static int tlog = 0;
 
-int ClassRead::read( char *filename) 
+int CnvReadWbl::read_wbl( char *filename) 
 {
   int sts;
   int return_sts = 1;
@@ -50,15 +53,13 @@ int ClassRead::read( char *filename)
   state = 0;
   doc_fresh = 0;
 
-  while( 1)
-  {
-    sts = read_line( line, sizeof(line), fp);
+  while( 1) {
+    sts = CnvCtx::read_line( line, sizeof(line), fp);
     if ( !sts)
       linetype = cread_eLine_EOF;
-    else
-    {
+    else {
       line_cnt++;
-      remove_spaces( line, line);
+      CnvCtx::remove_spaces( line, line);
       if ( strcmp( line, "") == 0)
         continue;
 
@@ -223,8 +224,7 @@ int ClassRead::read( char *filename)
         linetype = cread_eLine_Unknown;
 
       sts = 1;
-      switch( linetype)
-      {
+      switch( linetype) {
         case cread_eLine_Doc:
           state |= cread_mState_Doc;
           sts = object_close();
@@ -385,39 +385,38 @@ int ClassRead::read( char *filename)
             state &= ~cread_mState_ObjXRef;
           else if ( state & cread_mState_Buffer)
             state &= ~cread_mState_Buffer;
-          else if ( state & cread_mState_ObjBodyDef)
-          {
+          else if ( state & cread_mState_ObjBodyDef) {
             state &= ~cread_mState_ObjBodyDef;
-            if ( generate_html)
-              html_body_close();
-            if ( generate_struct)
-              struct_body_close();
+            if ( wblto->type() == Cnv_eWblToType_Html ||
+		 wblto->type() == Cnv_eWblToType_H)
+	      wblto->body_close();
           }
-          else if ( state & cread_mState_GraphPlcNode)
-          {
+          else if ( state & cread_mState_GraphPlcNode) {
             state &= ~cread_mState_GraphPlcNode;
-            if ( generate_html)
-              html_body_close();
+            if ( wblto->type() == Cnv_eWblToType_Html)
+              wblto->body_close();
           }
-          else if ( state & cread_mState_GraphPlcCon)
-          {
+	  else if ( state & cread_mState_GraphPlcCon) {
             state &= ~cread_mState_GraphPlcCon;
-            if ( generate_html)
-              html_body_close();
+            if ( wblto->type() == Cnv_eWblToType_Html)
+              wblto->body_close();
           }
-          else if ( state & cread_mState_Template)
-          {
+          else if ( state & cread_mState_Template) {
             state &= ~cread_mState_Template;
-            if ( generate_html)
-              html_body_close();
+	    if ( wblto->type() == Cnv_eWblToType_Html)
+              wblto->body_close();
           }
           else if ( state & cread_mState_ClassDef && classdef_level == object_level) {
 	    if (tlog) printf( "Cd %7d %3d %s\n", line_cnt, object_level, line);
             state &= ~cread_mState_ClassDef;
-            if ( generate_html && html_class_open && classdef_level == object_level)
-              html_class_close();
-	    if ( generate_struct && struct_class_open && classdef_level == object_level)
-              struct_class_close();
+            if ( wblto->type() == Cnv_eWblToType_Html &&
+		 wblto->class_open() &&
+		 classdef_level == object_level)
+              wblto->class_close();
+            if ( wblto->type() == Cnv_eWblToType_H &&
+		 wblto->class_open() &&
+		 classdef_level == object_level)
+              wblto->class_close();
           }
           else if ( state & cread_mState_Bit) {
             state &= ~cread_mState_Bit;
@@ -429,14 +428,16 @@ int ClassRead::read( char *filename)
 	    // object_state = cread_mState_TypeDef;
 	    object_level--;
           }
-          else if ( state & cread_mState_TypeDef && classdef_level == object_level) {
+	  else if ( state & cread_mState_TypeDef && classdef_level == object_level) {
             state &= ~cread_mState_TypeDef;
-            if ( generate_html && html_class_open)
-              html_typedef_close();
-	    if ( generate_struct && struct_class_open)
-              struct_typedef_close();
+            if ( wblto->type() == Cnv_eWblToType_Html &&
+		 wblto->class_open())
+              wblto->typedef_close();
+            if ( wblto->type() == Cnv_eWblToType_H &&
+		 wblto->class_open())
+              wblto->typedef_close();
           }
-          else if ( state & cread_mState_Type) {
+	  else if ( state & cread_mState_Type) {
             state &= ~cread_mState_Type;
 #if 0
             if ( generate_html && html_class_open)
@@ -445,8 +446,7 @@ int ClassRead::read( char *filename)
               struct_class_close();
 #endif
           }
-          else if ( state & cread_mState_Object)
-          {
+	  else if ( state & cread_mState_Object) {
             object_level--;
             if ( object_level <= 0)
               state &= ~cread_mState_Object;
@@ -456,22 +456,19 @@ int ClassRead::read( char *filename)
             printf( "Error: mismatch in Object-Endobject nesting, at line %d\n",
 			line_cnt);
           break;
-        case cread_eLine_Attr:
-        {
+        case cread_eLine_Attr: {
 	  char attr_name[80];
           char attr_value[100];
           int oreq = 0;
 
-          if ( strcmp( line_part[2], "|") == 0)
-          {
+          if ( strcmp( line_part[2], "|") == 0) {
             strcpy( line_part[2], line_part[3]);
             oreq = 1;
           }
 
           strcpy( attr_name, line_part[1]);
           strcpy( attr_value, line_part[2]);
-          switch ( object_state)
-          {
+          switch ( object_state) {
             case cread_mState_Input:
             case cread_mState_Output:
             case cread_mState_Intern:
@@ -520,22 +517,19 @@ int ClassRead::read( char *filename)
 
           break;
         }
-        case cread_eLine_DAttr:
-        {
+        case cread_eLine_DAttr: {
 	  char attr_name[80];
           char attr_value[100];
           int oreq = 0;
 
-          if ( strcmp( line_part[3], "|") == 0)
-          {
+          if ( strcmp( line_part[3], "|") == 0) {
             strcpy( line_part[3], line_part[4]);
             oreq = 1;
           }
 
           strcpy( attr_name, line_part[1]);
           strcpy( attr_value, line_part[3]);
-          switch ( object_state)
-          {
+          switch ( object_state) {
             case cread_mState_DParam:
             case cread_mState_Input:
             case cread_mState_Output:
@@ -569,8 +563,7 @@ int ClassRead::read( char *filename)
           }
           break;
         }
-        case cread_eLine_Buffer:
-        {
+        case cread_eLine_Buffer: {
           sts = object_close();
           state |= cread_mState_Buffer;
           object_state = cread_mState_Buffer;
@@ -579,8 +572,7 @@ int ClassRead::read( char *filename)
           attribute_init();
           break;
         }
-        case cread_eLine_GraphPlcNode:
-        {
+        case cread_eLine_GraphPlcNode: {
           sts = object_close();
           state |= cread_mState_GraphPlcNode;
           object_state = cread_mState_GraphPlcNode;
@@ -588,8 +580,7 @@ int ClassRead::read( char *filename)
           strcpy( graphplcnode_name, line_part[1]);
           break;
         }
-        case cread_eLine_GraphPlcCon:
-        {
+        case cread_eLine_GraphPlcCon: {
           sts = object_close();
           state |= cread_mState_GraphPlcCon;
           object_state = cread_mState_GraphPlcCon;
@@ -597,8 +588,7 @@ int ClassRead::read( char *filename)
           strcpy( graphplccon_name, line_part[1]);
           break;
         }
-        case cread_eLine_Object:
-        {
+        case cread_eLine_Object: {
           sts = object_close();
           state |= cread_mState_Object;
           object_state = cread_mState_Object;
@@ -606,14 +596,12 @@ int ClassRead::read( char *filename)
 	  if (tlog) printf( "Oo %7d %3d %s\n", line_cnt, object_level, line);
           break;
         }
-        case cread_eLine_Volume:
-        {
+        case cread_eLine_Volume: {
           state |= cread_mState_Volume;
 	  strcpy( volume_name, line_part[1]);
           break;
         }
-        case cread_eLine_EndVolume:
-        {
+        case cread_eLine_EndVolume: {
           if ( state & cread_mState_Volume)
             state &= ~cread_mState_Volume;
           break;
@@ -630,8 +618,7 @@ int ClassRead::read( char *filename)
           printf( "Error, unknown linetype, %s, at line %d\n", filename, line_cnt);
           return sts = CNV__UNKNOWN_LINETYPE;
       }
-      if ( EVEN(sts))
-      {
+      if ( EVEN(sts)) {
         printf( ", at line %d\n", line_cnt);
         return_sts = sts;
       }
@@ -641,19 +628,24 @@ int ClassRead::read( char *filename)
       break;
   }
 
-  if ( generate_html && html_class_open)
-    html_class_close();
-  if ( generate_xtthelp && xtthelp_index_open)
-    xtthelp_class_close();
-  if ( generate_struct && html_class_open)
-    struct_class_close();
+  if ( wblto->type() == Cnv_eWblToType_Html &&
+       wblto->class_open())
+    wblto->class_close();
+  if ( wblto->type() == Cnv_eWblToType_H &&
+       wblto->class_open())
+    wblto->class_close();
+  if ( wblto->type() == Cnv_eWblToType_Xtthelp &&
+       wblto->index_open())
+    wblto->class_close();
+  if ( wblto->type() == Cnv_eWblToType_Ps)
+    wblto->class_close();
 
   fclose(fp);
   return return_sts;
 }
 
 
-void ClassRead::attribute_init()
+void CnvReadWbl::attribute_init()
 {
   strcpy( attr_flags, "");
   strcpy( attr_typeref, "");
@@ -667,15 +659,13 @@ void ClassRead::attribute_init()
   attr_isclass = 0;
 }
 
-int ClassRead::attribute_attr( char *name, char *value)
+int CnvReadWbl::attribute_attr( char *name, char *value)
 {
   char 	*s;
   int	nr;
 
-  if ( strcmp( low( name), "typeref") == 0)
-  {
-    if ((s = strrchr( value, '-')))
-    {
+  if ( strcmp( low( name), "typeref") == 0) {
+    if ((s = strrchr( value, '-'))) {
       s++;
       if ( *s == '$')
         s++;
@@ -689,8 +679,7 @@ int ClassRead::attribute_attr( char *name, char *value)
     else
       strcpy( attr_typeref, value);
   }
-  else if ( strcmp( low( name), "flags") == 0)
-  {
+  else if ( strcmp( low( name), "flags") == 0) {
     if ( strncmp( value, "PWR_MASK_", 9) == 0) {
       if ( strcmp( attr_flags, "") != 0)
 	strcat( attr_flags, " | ");
@@ -726,55 +715,42 @@ int ClassRead::attribute_attr( char *name, char *value)
 	attr_isclass = 1;
     }
   }
-  else if ( strcmp( low( name), "elements") == 0)
-  {
+  else if ( strcmp( low( name), "elements") == 0) {
     strcpy( attr_elements, value);
     nr = sscanf( attr_elements, "%d", &attr_elem);
     if ( nr == 0)
       attr_elem = 0;    
   }
-  else if ( strcmp( low( name), "class") == 0)
-  {
+  else if ( strcmp( low( name), "class") == 0) {
     strcpy( attr_typeref, value);
   }
-  else if ( strcmp( low( name), "pgmname") == 0)
-  {
+  else if ( strcmp( low( name), "pgmname") == 0) {
     strcpy( attr_pgmname, value);
   }
   return 1;
 }
 
-int ClassRead::attribute_close()
+int CnvReadWbl::attribute_close()
 {
   int sts;
 
-  if ( generate_html)
-    sts = html_attribute();
-  if ( generate_xtthelp)
-    sts = xtthelp_attribute();
-  if ( generate_struct)
-    sts = struct_attribute();
+  sts = wblto->attribute_exec();
 
   doc_fresh = 0;
   return sts;
 }
 
-int ClassRead::bit_close()
+int CnvReadWbl::bit_close()
 {
   int sts;
 
-  if ( generate_html)
-    sts = html_bit();
-  if ( generate_xtthelp)
-    sts = xtthelp_bit();
-  if ( generate_struct)
-    sts = struct_bit();
+  sts = wblto->bit_exec();
 
   doc_fresh = 0;
   return sts;
 }
 
-void ClassRead::class_init()
+void CnvReadWbl::class_init()
 {
   strcpy( class_name, "");
   strcpy( class_editor, "");
@@ -784,30 +760,26 @@ void ClassRead::class_init()
   class_devonly = 0;
 }
 
-int ClassRead::class_attr( char *name, char *value)
+int CnvReadWbl::class_attr( char *name, char *value)
 {
-  if ( strcmp( low( name), "editor") == 0)
-  {
+  if ( strcmp( low( name), "editor") == 0) {
     if ( strncmp( value, "pwr_eEditor_", 12) == 0)
       strcpy( class_editor, &value[12]);
     else
       strcpy( class_editor, value);
 
   }
-  else if ( strcmp( low( name), "method") == 0)
-  {
+  else if ( strcmp( low( name), "method") == 0) {
     if ( strncmp( value, "pwr_eMethod_", 12) == 0)
       strcpy( class_method, &value[12]);
     else
       strcpy( class_method, value);
 
   }
-  else if ( strcmp( low( name), "popeditor") == 0)
-  {
+  else if ( strcmp( low( name), "popeditor") == 0) {
     strcpy( class_method, value);
   }
-  else if ( strcmp( low( name), "flags") == 0)
-  {
+  else if ( strcmp( low( name), "flags") == 0) {
     if ( strcmp( class_flags, "") != 0)
       strcat( class_flags, " | ");
     if ( strncmp( value, "pwr_mClassDef_", 14) == 0)
@@ -821,32 +793,21 @@ int ClassRead::class_attr( char *name, char *value)
   return 1;
 }
 
-int ClassRead::class_close()
+int CnvReadWbl::class_close()
 {
-  if ( first_class)
-  {
-    if ( generate_html)
-      html_init( class_name);
-    if ( generate_xtthelp)
-      xtthelp_init();
-    if ( generate_struct)
-      struct_init();
+  if ( ctx->first_class) {
+    wblto->init( class_name);
 
-    first_class = 0;
+    ctx->first_class = 0;
   }
 
-  if ( generate_html)
-    html_class();
-  if ( generate_xtthelp)
-    xtthelp_class();
-  if ( generate_struct)
-    struct_class();
+  wblto->class_exec();
 
   doc_fresh = 0;
   return 1;
 }
 
-void ClassRead::body_init()
+void CnvReadWbl::body_init()
 {
   strcpy( body_name, "");
   strcpy( body_structname, "");
@@ -854,14 +815,12 @@ void ClassRead::body_init()
   body_rtvirtual = 0;
 }
 
-int ClassRead::body_attr( char *name, char *value)
+int CnvReadWbl::body_attr( char *name, char *value)
 {
-  if ( strcmp( low( name), "structname") == 0)
-  {
+  if ( strcmp( low( name), "structname") == 0) {
     strcpy( body_structname, value);
   }
-  else if ( strcmp( low( name), "flags") == 0)
-  {
+  else if ( strcmp( low( name), "flags") == 0) {
     if ( strcmp( body_flags, "") != 0)
       strcat( body_flags, " | ");
     if ( strncmp( value, "pwr_mObjBodyDef_", 16) == 0)
@@ -875,36 +834,33 @@ int ClassRead::body_attr( char *name, char *value)
   return 1;
 }
 
-int ClassRead::body_close()
+int CnvReadWbl::body_close()
 {
   int sts;
 
-  if ( generate_html)
-    html_body();
-  if ( generate_xtthelp)
-    xtthelp_body();
-  if ( generate_struct)
-  {
-    sts = struct_body();
+  if ( wblto->type() == Cnv_eWblToType_H) {
+    sts = wblto->body_exec();
     if ( EVEN(sts)) return sts;
   }
+  else
+    wblto->body_exec();
+
   doc_fresh = 0;
   return 1;
 }
 
-void ClassRead::graphplcnode_init()
+void CnvReadWbl::graphplcnode_init()
 {
   doc_cnt = 0;
 }
 
-int ClassRead::graphplcnode_attr( char *name, char *value)
+int CnvReadWbl::graphplcnode_attr( char *name, char *value)
 {
   strcpy( doc_text[doc_cnt++], name);
   strcpy( doc_text[doc_cnt++], value);
 
   // Description of methods
-  if ( strcmp( low( name), "graphmethod") == 0)
-  {
+  if ( strcmp( low( name), "graphmethod") == 0) {
     if ( strcmp( value, "0") == 0)
       strcat( doc_text[doc_cnt-1], " (standard, individual attributes)");
     else if ( strcmp( value, "1") == 0)
@@ -931,20 +887,19 @@ int ClassRead::graphplcnode_attr( char *name, char *value)
   return 1;
 }
 
-int ClassRead::graphplcnode_close()
+int CnvReadWbl::graphplcnode_close()
 {
-  if ( generate_html)
-    html_graphplcnode();
+  wblto->graphplcnode();
 
   doc_fresh = 0;
   return 1;
 }
-void ClassRead::graphplccon_init()
+void CnvReadWbl::graphplccon_init()
 {
   doc_cnt = 0;
 }
 
-int ClassRead::graphplccon_attr( char *name, char *value)
+int CnvReadWbl::graphplccon_attr( char *name, char *value)
 {
   strcpy( doc_text[doc_cnt++], name);
   strcpy( doc_text[doc_cnt++], value);
@@ -961,35 +916,33 @@ int ClassRead::graphplccon_attr( char *name, char *value)
   return 1;
 }
 
-int ClassRead::graphplccon_close()
+int CnvReadWbl::graphplccon_close()
 {
-  if ( generate_html)
-    html_graphplccon();
+  wblto->graphplccon();
 
   doc_fresh = 0;
   return 1;
 }
-void ClassRead::template_init()
+void CnvReadWbl::template_init()
 {
   doc_cnt = 0;
 }
 
-int ClassRead::template_attr( char *name, char *value)
+int CnvReadWbl::template_attr( char *name, char *value)
 {
   strcpy( doc_text[doc_cnt++], name);
   strcpy( doc_text[doc_cnt++], value);
   return 1;
 }
 
-int ClassRead::template_close()
+int CnvReadWbl::template_close()
 {
-  if ( generate_html)
-    html_template();
+  wblto->template_exec();
   doc_fresh = 0;
   return 1;
 }
 
-void ClassRead::volume_init()
+void CnvReadWbl::volume_init()
 {
   char *s;
 
@@ -999,7 +952,7 @@ void ClassRead::volume_init()
 
 }
 
-void ClassRead::doc_init()
+void CnvReadWbl::doc_init()
 {
   doc_cnt = 0;
   strcpy( doc_author, "");
@@ -1016,7 +969,7 @@ void ClassRead::doc_init()
   doc_group_cnt = 0;
 }
 
-int ClassRead::doc_add( char *line)
+int CnvReadWbl::doc_add( char *line)
 {
   char	line_part[4][80];
   int nr;
@@ -1043,8 +996,8 @@ int ClassRead::doc_add( char *line)
   else if ( strcmp( low(line_part[1]), "@group") == 0) {
     char str[400];
     
-    remove_spaces( line, str);
-    remove_spaces( &str[6], str);
+    CnvCtx::remove_spaces( line, str);
+    CnvCtx::remove_spaces( &str[6], str);
     doc_group_cnt = dcli_parse( str, " 	,", "", (char *)doc_groups,
                 	sizeof( doc_groups) / sizeof( doc_groups[0]), 
 			sizeof( doc_groups[0]), 0);
@@ -1105,18 +1058,17 @@ int ClassRead::doc_add( char *line)
   return 1;
 }
 
-int ClassRead::doc_close()
+int CnvReadWbl::doc_close()
 {
   doc_fresh = 1;
   return 1;
 }
 
-int ClassRead::object_close()
+int CnvReadWbl::object_close()
 {
   int sts;
 
-  switch ( object_state)
-  {
+  switch ( object_state) {
     case 0:
       break;
     case cread_mState_Input:
@@ -1162,7 +1114,7 @@ int ClassRead::object_close()
   return 1;
 }
 
-void ClassRead::typedef_init()
+void CnvReadWbl::typedef_init()
 {
   strcpy( typedef_name, "");
   strcpy( typedef_typeref, "");
@@ -1170,35 +1122,32 @@ void ClassRead::typedef_init()
   typedef_elements = 0;
 }
 
-void ClassRead::bit_init()
+void CnvReadWbl::bit_init()
 {
   strcpy( bit_text, "");
   strcpy( bit_pgmname, "");
   bit_value = 0;
 }
 
-int ClassRead::typedef_attr( char *name, char *value)
+int CnvReadWbl::typedef_attr( char *name, char *value)
 {
-  if ( strcmp( low( name), "typeref") == 0)
-  {
+  if ( strcmp( low( name), "typeref") == 0) {
     if ( strncmp( value, "pwrs:Type-$", 11) == 0)
       strcpy( typedef_typeref, &value[11]);
     else
       strcpy( typedef_typeref, value);
 
   }
-  if ( strcmp( low( name), "pgmname") == 0)
-  {
+  if ( strcmp( low( name), "pgmname") == 0) {
     strcpy( typedef_pgmname, value);
   }
-  else if ( strcmp( low( name), "elements") == 0)
-  {
+  else if ( strcmp( low( name), "elements") == 0) {
     sscanf( value, "%d", &typedef_elements);
   }
   return 1;
 }
 
-int ClassRead::bit_attr( char *name, char *value)
+int CnvReadWbl::bit_attr( char *name, char *value)
 {
   if ( strcmp( low( name), "text") == 0) {
     strcpy( bit_text, value);
@@ -1212,32 +1161,28 @@ int ClassRead::bit_attr( char *name, char *value)
   return 1;
 }
 
-int ClassRead::typedef_close()
+int CnvReadWbl::typedef_close()
 {
 
-  if ( first_class) {
-    if ( generate_html)
-      html_init( typedef_name);
-    if ( generate_struct)
-      struct_init();
-    if ( generate_xtthelp)
-      xtthelp_init();
+  if ( ctx->first_class) {
+    wblto->init( typedef_name);
     
-    first_class = 0;
+    ctx->first_class = 0;
   }
 
-  if ( generate_html)
-    html_typedef();
-  if ( generate_struct &&
+  if ( wblto->type() == Cnv_eWblToType_Html ||
+       wblto->type() == Cnv_eWblToType_Ps)
+    wblto->typedef_exec();
+  if ( wblto->type() == Cnv_eWblToType_H &&
        object_state == cread_mState_TypeDef)
-    struct_typedef();
+    wblto->typedef_exec();
 
   doc_fresh = 0;
   return 1;
 }
 
 
-char *ClassRead::low( char *in)
+char *CnvReadWbl::low( char *in)
 {
   static char str[400];
 
@@ -1245,49 +1190,7 @@ char *ClassRead::low( char *in)
   return str;
 }
 
-int ClassRead::remove_spaces(
-			char	*in,
-			char	*out)
-{
-  char    *s;
-
-  for ( s = in; !((*s == 0) || ((*s != ' ') && (*s != 9))); s++);
-
-  strcpy( out, s);
-        
-  s = out;
-  if ( strlen(s) != 0)
-  {
-    for ( s += strlen(s) - 1; 
-          !((s == out) || ((*s != ' ') && (*s != 9))); s--) ;
-    s++;
-    *s = 0;
-  }
-
-  return 1;
-}
-
-int ClassRead::read_line(
-			char	*line,
-			int	maxsize,
-			FILE	*file)
-{ 
-  char	*s;
-
-  if (fgets( line, maxsize, file) == NULL)
-    return 0;
-  line[maxsize-1] = 0;
-  s = strchr( line, 10);
-  if ( s != 0)
-    *s = 0;
-  s = strchr( line, 13);
-  if ( s != 0)
-    *s = 0;
-
-  return 1;
-}
-
-int ClassRead::copy_tmp_file( char *tmpfilename, ofstream& fp_to)
+int CnvReadWbl::copy_tmp_file( char *tmpfilename, ofstream& fp_to)
 {
   FILE *fp;
   char c;
@@ -1310,7 +1213,7 @@ int ClassRead::copy_tmp_file( char *tmpfilename, ofstream& fp_to)
   return 1;
 }
 
-char *ClassRead::flags_to_string( int value)
+char *CnvReadWbl::flags_to_string( int value)
 {
   static char str[40];
 

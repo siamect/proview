@@ -10,27 +10,29 @@ extern "C" {
 #include "co_dcli.h"
 #include "co_cdh.h"
 }
-#include "cnv_classread.h"
+#include "cnv_ctx.h"
+#include "cnv_setup.h"
 
-int ClassRead::setup()
+int CnvSetup::setup( char *filename)
 {
   int sts;
   char line[400];
   char	line_part[4][80];
   int nr;
   char line_cnt = 0;
+  FILE *fp;
 
-  fp = fopen( setup_filename, "r");
+  fp = fopen( filename, "r");
   if ( !fp)
     return 0;
 
   while( 1) {
-    sts = read_line( line, sizeof(line), fp);
+    sts = CnvCtx::read_line( line, sizeof(line), fp);
     if ( !sts)
       break;
     else {
       line_cnt++;
-      remove_spaces( line, line);
+      CnvCtx::remove_spaces( line, line);
       if ( strcmp( line, "") == 0)
         continue;
 
@@ -41,21 +43,21 @@ int ClassRead::setup()
                 	sizeof( line_part) / sizeof( line_part[0]), 
 			sizeof( line_part[0]), 0);
 
-      if ( strcmp( low( line_part[0]), "group") == 0){
+      if ( strcmp( CnvCtx::low( line_part[0]), "group") == 0){
 	if ( nr < 2) {
-	  printf("** Setup syntax error in file %s, line %d\n", setup_filename, line_cnt);
+	  printf("** Setup syntax error in file %s, line %d\n", filename, line_cnt);
 	  continue;
 	}
-	if ( setup_group_cnt >= (int)(sizeof(setup_groups)/sizeof(setup_groups[0]))) {
-	  printf("** Max number of groups exceeded in file %s, line %d\n", setup_filename, line_cnt);
+	if ( group_cnt >= (int)(sizeof(groups)/sizeof(groups[0]))) {
+	  printf("** Max number of groups exceeded in file %s, line %d\n", filename, line_cnt);
 	  continue;
 	}
-        strcpy( setup_groups[setup_group_cnt], line_part[1]);
+        strcpy( groups[group_cnt], line_part[1]);
 	if ( nr >= 3)
-	  strcpy( setup_groups_startpage[setup_group_cnt], line_part[2]);
+	  strcpy( groups_startpage[group_cnt], line_part[2]);
 	else
-	  strcpy( setup_groups_startpage[setup_group_cnt], "");
-	setup_group_cnt++;
+	  strcpy( groups_startpage[group_cnt], "");
+	group_cnt++;
       }
     }
   }

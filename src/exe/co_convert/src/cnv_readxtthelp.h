@@ -1,7 +1,7 @@
-#ifndef cnv_help_h
-#define cnv_help_h
+#ifndef cnv_xtthelpread_h
+#define cnv_xtthelpread_h
 
-/* cnv_help.h -- Documentation
+/* cnv_xtthelpread.h -- Documentation
 
    PROVIEW/R
    Copyright (C) 1996 by Comator Process AB.
@@ -13,16 +13,19 @@
 extern "C" {
 #endif
 
-class XhelpToHtml {
+class CnvXtthelpTo;
+
+class CnvReadXtthelp {
   public:
-    XhelpToHtml( char *x_name, char *x_directory);
+    CnvReadXtthelp( char *x_name, char *x_directory,
+		    CnvXtthelpTo *to);
     ofstream fp;
     char directory[80];
     char name[80];
     char filename[120];
+    CnvXtthelpTo *xtthelpto;
 
-    void subject_to_fname( char *fname, char *subject, int path);
-    int generate();
+    int read_xtthelp();
 };
 
 
