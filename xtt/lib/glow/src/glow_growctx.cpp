@@ -3160,6 +3160,8 @@ void GrowCtx::export_nodeclass_javabean( GlowArrayElem *nc, ofstream& fp, int co
 
         for ( i = 0; i < ((GlowNodeClass *)next_nc)->a.size(); i++)
         {
+	  if ( ((GlowNodeClass *)next_nc)->a[i]->type() == glow_eObjectType_GrowAnnot)
+	    continue;
           next_nc->a[i]->export_javabean( (GlowTransform *) NULL, NULL, 
 		glow_eExportPass_Declare, &shape_cnt, i, 1, fp);
         }
@@ -3191,6 +3193,8 @@ void GrowCtx::export_nodeclass_javabean( GlowArrayElem *nc, ofstream& fp, int co
 
         for ( i = 0; i < ((GlowNodeClass *)next_nc)->a.size(); i++)
         {
+	  if ( ((GlowNodeClass *)next_nc)->a[i]->type() == glow_eObjectType_GrowAnnot)
+	    continue;
           next_nc->a[i]->export_javabean( (GlowTransform *) NULL, NULL, 
 		glow_eExportPass_Attributes, &shape_cnt, i, 1, fp);
         }
@@ -3241,6 +3245,8 @@ void GrowCtx::export_nodeclass_javabean( GlowArrayElem *nc, ofstream& fp, int co
         shape_cnt = 0;
         for ( i = 0; i < ((GlowNodeClass *)next_nc)->a.size(); i++)
         {
+	  if ( ((GlowNodeClass *)next_nc)->a[i]->type() == glow_eObjectType_GrowAnnot)
+	    continue;
           next_nc->a[i]->export_javabean( (GlowTransform *) NULL, NULL, 
 		glow_eExportPass_Init, &shape_cnt, i, 1, fp);
         }
@@ -3250,6 +3256,8 @@ void GrowCtx::export_nodeclass_javabean( GlowArrayElem *nc, ofstream& fp, int co
         shape_cnt = 0;
         for ( i = 0; i < ((GlowNodeClass *)next_nc)->a.size(); i++)
         {
+	  if ( ((GlowNodeClass *)next_nc)->a[i]->type() == glow_eObjectType_GrowAnnot)
+	    continue;
           next_nc->a[i]->export_javabean( (GlowTransform *) NULL, NULL, 
 		glow_eExportPass_Shape, &shape_cnt, i, 1, fp);
         }
@@ -3293,6 +3301,8 @@ void GrowCtx::export_nodeclass_javabean( GlowArrayElem *nc, ofstream& fp, int co
         shape_cnt = 0;
         for ( i = 0; i < ((GlowNodeClass *)next_nc)->a.size(); i++)
         {
+	  if ( ((GlowNodeClass *)next_nc)->a[i]->type() == glow_eObjectType_GrowAnnot)
+	    continue;
           next_nc->a[i]->export_javabean( (GlowTransform *) NULL, NULL, 
 		glow_eExportPass_Draw, &shape_cnt, i, 1, fp);
         }
