@@ -328,11 +328,18 @@ wb_orep *wb_vrepdb::copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_destina
     txn->commit(0);
     return new (this) wb_orepdb(&o.m_o);
   }
+  catch (wb_error &e) {
+    txn->abort();
+    if (p)
+      free(p);
+    *sts = e.sts();
+    return 0;
+  }
   catch (DbException &e) {
     txn->abort();
     if (p)
       free(p);
-    *sts = 2;//LDH__DB_ERROR;
+    *sts = LDH__DBERROR;
     return 0;
   }    
 }
@@ -409,11 +416,18 @@ wb_orep* wb_vrepdb::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination 
 
     return new (this) wb_orepdb(&o.m_o);
   }
+  catch (wb_error &e) {
+    txn->abort();
+    if (p)
+      free(p);
+    //*sts = e.sts();
+    throw e;
+  }
   catch (DbException &e) {
     txn->abort();
     if (p)
       free(p);
-    *sts = 2;
+    *sts = LDH__DBERROR;
     return 0;
   }    
 }
@@ -443,9 +457,14 @@ bool wb_vrepdb::deleteObject(pwr_tStatus *sts, wb_orep *orp)
     txn->commit(0);
     return true;
   }
+  catch (wb_error &e) {
+    txn->abort();
+    *sts = e.sts();
+    return 0;
+  }
   catch (DbException &e) {
     txn->abort();
-    *sts = 2;// LDH__DB_ERROR
+    *sts = LDH__DBERROR;
     return false;
   }
 }
@@ -512,7 +531,7 @@ bool wb_vrepdb::deleteFamily(pwr_tStatus *sts, wb_orep *orp)
   catch (DbException &e) {
     printf("wb_vrepdb::deleteFamily failure, %s\n", e.what());
     txn->abort();
-    *sts = 2;// LDH__DB_ERROR
+    *sts = LDH__DBERROR;
     return false;
   }
 }
@@ -546,8 +565,14 @@ bool wb_vrepdb::moveObject(pwr_tStatus *sts, wb_orep *orp, wb_destination &d)
         
     txn->commit(0);
   }
+  catch (wb_error &e) {
+    txn->abort();
+    *sts = e.sts();
+    return 0;
+  }
   catch (DbException &e) {
     txn->abort();
+    *sts = LDH__DBERROR;
   }
 
   return true;
@@ -586,7 +611,7 @@ bool wb_vrepdb::renameObject(pwr_tStatus *sts, wb_orep *orp, wb_name &name)
     txn->abort();
     printf("wb_vrepdb::renameObject, exception %s\n", e.what());
     m_ohead.clear();
-    *sts = 2;
+    *sts = LDH__DBERROR;
     return false;
   }
 }
@@ -1103,8 +1128,11 @@ void wb_vrepdb::adopt(wb_db_txn *txn, wb_db_ohead &o, wb_destination &dest)
 
   wb_db_name n(m_db, o.oid(), o.poid(), o.normname());
   rc = n.put(txn);
-  if (rc)
+  if (rc) {
     printf("wb_vrepdb::adopt, n.put rc %d\n", rc);
+    throw wb_error(LDH__NAMALREXI);
+  }
+  
 }
 
 void wb_vrepdb::unadopt(wb_db_txn *txn, wb_db_ohead &o)
