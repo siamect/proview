@@ -343,7 +343,10 @@ void GlowExportJBean::nodeclass( GlowNodeClass *nc, glow_eExportPass pass,
 "	  }" << endl <<
 "	  break;" << endl <<
 "        case 1:" << endl <<
-"	  colorTone = oldColor;" << endl <<
+"	  if ( levelColorTone != GeColor.COLOR_TONE_NO)" << endl <<
+"	    colorTone = oldColor;" << endl <<
+"	  else if ( levelFillColor != GeColor.COLOR_NO)" << endl <<
+"	    fillColor = oldColor;" << endl <<
 "	  break;" << endl <<
 "        }" << endl <<
 "        switch ( levelDirection) {" << endl <<
@@ -497,16 +500,22 @@ void GlowExportJBean::polyline( glow_sPoint *points, int point_cnt, int fill, in
 "	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));" << endl;
 	else if ( fill_eq_light) {
           fp <<
-"    if ( shadow != 0)" << endl <<
-"      g.setColor(GeColor.shiftColor(" << (int)fill_drawtype << "," << -drawtype_incr << ", colorInverse));" << endl <<
+"    if ( shadow != 0) {" << endl <<
+"      int fcolor = GeColor.getDrawtype(" << (int)fill_drawtype << ", colorTone,"  << endl <<
+"                   colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);" << endl <<
+"      g.setColor(GeColor.shiftColor(fcolor," << -drawtype_incr << ", colorInverse));" << endl <<
+"    }" << endl << 
 "    else" << endl <<
 "      g.setColor(GeColor.getColor(" << (int)fill_drawtype << ", colorTone," << endl <<
 "	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor));" << endl;
 	}
 	else if ( fill_eq_shadow) {
           fp <<
-"    if ( shadow != 0)" << endl <<
-"      g.setColor(GeColor.shiftColor(" <<  (int)fill_drawtype << "," << drawtype_incr << ", colorInverse));" << endl <<
+"    if ( shadow != 0) {" << endl <<
+"      int fcolor = GeColor.getDrawtype(" << (int)fill_drawtype << ", colorTone,"  << endl <<
+"                   colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);" << endl <<
+"      g.setColor(GeColor.shiftColor( fcolor," << drawtype_incr << ", colorInverse));" << endl <<
+"    }" << endl <<
 "    else" << endl <<
 "      g.setColor(GeColor.getColor(" << (int)fill_drawtype << ", colorTone," << endl <<
 "	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor));" << endl;
