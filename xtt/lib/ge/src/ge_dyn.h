@@ -29,6 +29,7 @@ extern "C" {
 /*! \addtogroup GeDyn */
 /*@{*/
 
+#define TABLE_MAX_COL 12
 #define DYN_FAST_MAX 10
 #define FAST_CURVES 10
 #define fast_mFunction_BeforeTrigg 4
@@ -86,6 +87,7 @@ extern "C" {
     ge_eDynPrio_Trend,
     ge_eDynPrio_FastCurve,
     ge_eDynPrio_AnalogText,
+    ge_eDynPrio_Table,
     ge_eDynPrio_SliderBackground,
     ge_eDynPrio_Video,
     ge_eDynPrio_PopupMenu,
@@ -137,7 +139,8 @@ extern "C" {
     ge_mDynType_Video		= 1 << 20,
     ge_mDynType_FillLevel	= 1 << 21,
     ge_mDynType_FastCurve	= 1 << 22,
-    ge_mDynType_AnalogText	= 1 << 23
+    ge_mDynType_AnalogText	= 1 << 23,
+    ge_mDynType_Table		= 1 << 24
   } ge_mDynType;
 
   //! Action types.
@@ -230,6 +233,7 @@ extern "C" {
     ge_eSave_FillLevel			= 27,
     ge_eSave_FastCurve	       		= 28,
     ge_eSave_AnalogText	       		= 29,
+    ge_eSave_Table	       		= 30,
     ge_eSave_PopupMenu			= 50,
     ge_eSave_SetDig			= 51,
     ge_eSave_ResetDig			= 52,
@@ -305,6 +309,42 @@ extern "C" {
     ge_eSave_FillLevel_max_value       	= 2704,
     ge_eSave_FastCurve_fast_object   	= 2800,
     ge_eSave_AnalogText_super   	= 2900,
+    ge_eSave_Table_attribute1	   	= 3000,
+    ge_eSave_Table_format1	   	= 3001,
+    ge_eSave_Table_sel_attribute1      	= 3002,
+    ge_eSave_Table_attribute2	   	= 3003,
+    ge_eSave_Table_format2	   	= 3004,
+    ge_eSave_Table_sel_attribute2      	= 3005,
+    ge_eSave_Table_attribute3	   	= 3006,
+    ge_eSave_Table_format3	   	= 3007,
+    ge_eSave_Table_sel_attribute3      	= 3008,
+    ge_eSave_Table_attribute4	   	= 3009,
+    ge_eSave_Table_format4	   	= 3010,
+    ge_eSave_Table_sel_attribute4      	= 3011,
+    ge_eSave_Table_attribute5	   	= 3012,
+    ge_eSave_Table_format5	   	= 3013,
+    ge_eSave_Table_sel_attribute5      	= 3014,
+    ge_eSave_Table_attribute6	   	= 3015,
+    ge_eSave_Table_format6	   	= 3016,
+    ge_eSave_Table_sel_attribute6      	= 3017,
+    ge_eSave_Table_attribute7	   	= 3018,
+    ge_eSave_Table_format7	   	= 3019,
+    ge_eSave_Table_sel_attribute7      	= 3020,
+    ge_eSave_Table_attribute8	   	= 3021,
+    ge_eSave_Table_format8	   	= 3022,
+    ge_eSave_Table_sel_attribute8      	= 3023,
+    ge_eSave_Table_attribute9	   	= 3024,
+    ge_eSave_Table_format9	   	= 3025,
+    ge_eSave_Table_sel_attribute9      	= 3026,
+    ge_eSave_Table_attribute10	   	= 3027,
+    ge_eSave_Table_format10	   	= 3028,
+    ge_eSave_Table_sel_attribute10     	= 3029,
+    ge_eSave_Table_attribute11	   	= 3030,
+    ge_eSave_Table_format11	   	= 3031,
+    ge_eSave_Table_sel_attribute11     	= 3032,
+    ge_eSave_Table_attribute12	   	= 3033,
+    ge_eSave_Table_format12	   	= 3034,
+    ge_eSave_Table_sel_attribute12     	= 3035,
     ge_eSave_PopupMenu_ref_object      	= 5000,
     ge_eSave_SetDig_attribute		= 5100,
     ge_eSave_SetDig_instance		= 5101,
@@ -1781,6 +1821,49 @@ class GeFastCurve : public GeDynElem {
   int connect( grow_tObject object, glow_sTraceData *trace_data);
   int disconnect( grow_tObject object);
   int scan( grow_tObject object);
+  void set_attribute( grow_tObject object, char *attr_name, int *cnt);
+};
+
+//! Dynamics for a table object.
+class GeTable : public GeDynElem {
+ public:
+  char attribute[TABLE_MAX_COL][120];
+  char format[TABLE_MAX_COL][80];
+  char sel_attribute[TABLE_MAX_COL][120];
+
+  int columns;
+  int rows;
+  char *p[TABLE_MAX_COL];
+  pwr_tSubid subid[TABLE_MAX_COL];
+  int size[TABLE_MAX_COL];
+  graph_eDatabase db[TABLE_MAX_COL];
+  bool first_scan;
+  char *old_value[TABLE_MAX_COL];
+  int type_id[TABLE_MAX_COL];
+  int elements[TABLE_MAX_COL];
+
+  pwr_tBoolean *sel_p[TABLE_MAX_COL];
+  pwr_tSubid sel_subid[TABLE_MAX_COL];
+  graph_eDatabase sel_db[TABLE_MAX_COL];
+  int sel_elements[TABLE_MAX_COL];
+
+  GeTable( GeDyn *e_dyn) : 
+    GeDynElem(e_dyn, ge_mDynType_Table, (ge_mActionType) 0, 
+	      ge_eDynPrio_Table)
+    { memset( attribute,0,sizeof(attribute)); memset( format,0,sizeof(format)); 
+    memset( sel_attribute,0,sizeof(sel_attribute)); memset(old_value,0,sizeof(old_value));
+    }
+  GeTable( const GeTable& x) : 
+    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)
+    { memcpy( attribute, x.attribute,sizeof(attribute)); memcpy( format, x.format, sizeof(format));
+    memcpy( sel_attribute, x.sel_attribute,sizeof(sel_attribute));}
+  void get_attributes( attr_sItem *attrinfo, int *item_count);
+  void save( ofstream& fp);
+  void open( ifstream& fp);
+  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int disconnect( grow_tObject object);
+  int scan( grow_tObject object);
+  int action( grow_tObject object, glow_tEvent event);
   void set_attribute( grow_tObject object, char *attr_name, int *cnt);
 };
 

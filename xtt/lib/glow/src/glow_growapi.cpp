@@ -38,6 +38,9 @@
 #include "glow_growtext.h"
 #include "glow_growbar.h"
 #include "glow_growtrend.h"
+#include "glow_growwindow.h"
+#include "glow_growtable.h"
+#include "glow_growfolder.h"
 #include "glow_grownode.h"
 #include "glow_growslider.h"
 #include "glow_growimage.h"
@@ -236,10 +239,7 @@ void grow_CreatePasteNode( grow_tCtx ctx, char *name, grow_tNodeClass nc,
 
 void grow_SetObjectInputFocus( grow_tNode node, int focus)
 {
-  if ( ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowNode ||
-       ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowSlider ||
-       ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowGroup)
-    ((GrowNode *)node)->set_input_focus( focus);
+  ((GlowArrayElem *)node)->set_input_focus( focus);
 }
 
 void grow_SetAnnotation( grow_tNode node, int number, char *text, int size)
@@ -743,6 +743,16 @@ void grow_ResetNodraw( grow_tCtx ctx)
   ctx->reset_nodraw();
 }
 
+void grow_SetDeferedRedraw( grow_tCtx ctx)
+{
+  ctx->set_defered_redraw();
+}
+
+void grow_RedrawDefered( grow_tCtx ctx)
+{
+  ctx->redraw_defered();
+}
+
 void grow_Redraw( grow_tCtx ctx)
 {
   ctx->redraw();
@@ -895,6 +905,53 @@ void grow_CreateGrowCurve( grow_tCtx ctx, char *name, glow_sCurveData *data,
   ctx->insert( r1);
   ctx->nav_zoom();
   *curve = (grow_tObject) r1;
+}
+
+void grow_CreateGrowWindow( grow_tCtx ctx, char *name, 
+	double x, double y, double width, double height,
+	glow_eDrawType draw_type, int line_width,
+	glow_mDisplayLevel display_level, void *user_data,
+	grow_tObject *window)
+{
+  GrowWindow *r1;
+  r1 = new GrowWindow( ctx, name, x, y, width, height, draw_type, line_width,
+	display_level);
+  r1->set_user_data( user_data);
+  ctx->insert( r1);
+  ctx->nav_zoom();
+  *window = (grow_tObject) r1;
+}
+
+void grow_CreateGrowTable( grow_tCtx ctx, char *name, 
+	double x, double y, double width, double height,
+	glow_eDrawType draw_type, int line_width,
+	int fill, glow_eDrawType fillcolor,
+	glow_mDisplayLevel display_level, void *user_data,
+	grow_tObject *window)
+{
+  GrowTable *r1;
+  r1 = new GrowTable( ctx, name, x, y, width, height, draw_type, line_width,
+	fill, fillcolor, display_level);
+  r1->set_user_data( user_data);
+  ctx->insert( r1);
+  ctx->nav_zoom();
+  *window = (grow_tObject) r1;
+}
+
+void grow_CreateGrowFolder( grow_tCtx ctx, char *name, 
+	double x, double y, double width, double height,
+        glow_eDrawType draw_type, int line_width, glow_eDrawType selected_color,
+	glow_eDrawType unselected_color,
+	glow_mDisplayLevel display_level, void *user_data,
+	grow_tObject *window)
+{
+  GrowFolder *r1;
+  r1 = new GrowFolder( ctx, name, x, y, width, height, draw_type, line_width,
+	selected_color, unselected_color, display_level);
+  r1->set_user_data( user_data);
+  ctx->insert( r1);
+  ctx->nav_zoom();
+  *window = (grow_tObject) r1;
 }
 
 void grow_CreateGrowLine( grow_tCtx ctx, char *name, 
@@ -1083,7 +1140,7 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
   grow_sAttrInfo *attrinfo;
   int i, j;
 
-  attrinfo = (grow_sAttrInfo *) calloc( 20, sizeof(grow_sAttrInfo)); 
+  attrinfo = (grow_sAttrInfo *) calloc( 100, sizeof(grow_sAttrInfo)); 
 
   i = 0;
   switch ( ((GrowRect *)object)->type())
@@ -1593,6 +1650,368 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
         attrinfo[i].size = 1024;
         attrinfo[i].multiline = 1;
         attrinfo[i++].info_type = grow_eInfoType_Dynamic;
+      }
+      break;
+    }
+    case glow_eObjectType_GrowWindow:
+    {
+      GrowWindow *op = (GrowWindow *)object;
+      char *name;
+
+      if ( (name = growapi_translate( transtab, "FileName"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->input_file_name;
+        attrinfo[i].type = glow_eType_String;
+        attrinfo[i++].size = sizeof( op->input_file_name);
+      }
+      if ( (name = growapi_translate( transtab, "WindowScale"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->window_scale;
+        attrinfo[i].type = glow_eType_Double;
+        attrinfo[i++].size = sizeof( op->window_scale);
+      }
+      if ( (name = growapi_translate( transtab, "VerticalScrollbar"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->vertical_scrollbar;
+        attrinfo[i].type = glow_eType_Boolean;
+        attrinfo[i++].size = sizeof( op->vertical_scrollbar);
+      }
+      if ( (name = growapi_translate( transtab, "HorizontalScrollbar"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->horizontal_scrollbar;
+        attrinfo[i].type = glow_eType_Boolean;
+        attrinfo[i++].size = sizeof( op->horizontal_scrollbar);
+      }
+      if ( (name = growapi_translate( transtab, "ScrollbarWidth"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->scrollbar_width;
+        attrinfo[i].type = glow_eType_Double;
+        attrinfo[i++].size = sizeof( op->scrollbar_width);
+      }
+      if ( (name = growapi_translate( transtab, "ScrollbarColor"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->scrollbar_color;
+        attrinfo[i].type = glow_eType_Color;
+        attrinfo[i++].size = sizeof( op->scrollbar_color);
+      }
+      if ( (name = growapi_translate( transtab, "ScrollbarBgColor"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->scrollbar_bg_color;
+        attrinfo[i].type = glow_eType_Color;
+        attrinfo[i++].size = sizeof( op->scrollbar_bg_color);
+      }
+
+      break;
+    }
+    case glow_eObjectType_GrowTable:
+    {
+      GrowTable *op = (GrowTable *)object;
+      char *name;
+
+      if ( (name = growapi_translate( transtab, "Rows"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->rows;
+        attrinfo[i].type = glow_eType_Int;
+        attrinfo[i++].size = sizeof( op->rows);
+      }
+      if ( (name = growapi_translate( transtab, "Columns"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->columns;
+        attrinfo[i].type = glow_eType_Int;
+        attrinfo[i++].size = sizeof( op->columns);
+      }
+      if ( (name = growapi_translate( transtab, "HeaderRow"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->header_row;
+        attrinfo[i].type = glow_eType_Boolean;
+        attrinfo[i++].size = sizeof( op->header_row);
+      }
+      if ( (name = growapi_translate( transtab, "HeaderColumn"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->header_column;
+        attrinfo[i].type = glow_eType_Boolean;
+        attrinfo[i++].size = sizeof( op->header_column);
+      }
+      if ( (name = growapi_translate( transtab, "HeaderRowHeight"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->header_row_height;
+        attrinfo[i].type = glow_eType_Double;
+        attrinfo[i++].size = sizeof( op->header_row_height);
+      }
+      if ( (name = growapi_translate( transtab, "RowHeight"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->row_height;
+        attrinfo[i].type = glow_eType_Double;
+        attrinfo[i++].size = sizeof( op->row_height);
+      }
+      if ( (name = growapi_translate( transtab, "HeaderTextSize"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->header_text_size;
+        attrinfo[i].type = glow_eType_TextSize;
+        attrinfo[i++].size = sizeof( op->header_text_size);
+      }
+      if ( (name = growapi_translate( transtab, "HeaderTextBold"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->header_text_bold;
+        attrinfo[i].type = glow_eType_Boolean;
+        attrinfo[i++].size = sizeof( op->header_text_bold);
+      }
+      if ( (name = growapi_translate( transtab, "HeaderTextColor"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->header_text_color;
+        attrinfo[i].type = glow_eType_Color;
+        attrinfo[i++].size = sizeof( op->header_text_color);
+      }
+      if ( (name = growapi_translate( transtab, "Options"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->options;
+        attrinfo[i].type = glow_eType_Int;
+        attrinfo[i++].size = sizeof( op->options);
+      }
+      if ( (name = growapi_translate( transtab, "VerticalScrollbar"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->vertical_scrollbar;
+        attrinfo[i].type = glow_eType_Boolean;
+        attrinfo[i++].size = sizeof( op->vertical_scrollbar);
+      }
+      if ( (name = growapi_translate( transtab, "HorizontalScrollbar"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->horizontal_scrollbar;
+        attrinfo[i].type = glow_eType_Boolean;
+        attrinfo[i++].size = sizeof( op->horizontal_scrollbar);
+      }
+      if ( (name = growapi_translate( transtab, "ScrollbarWidth"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->scrollbar_width;
+        attrinfo[i].type = glow_eType_Double;
+        attrinfo[i++].size = sizeof( op->scrollbar_width);
+      }
+      if ( (name = growapi_translate( transtab, "ScrollbarColor"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->scrollbar_color;
+        attrinfo[i].type = glow_eType_Color;
+        attrinfo[i++].size = sizeof( op->scrollbar_color);
+      }
+      if ( (name = growapi_translate( transtab, "ScrollbarBgColor"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->scrollbar_bg_color;
+        attrinfo[i].type = glow_eType_Color;
+        attrinfo[i++].size = sizeof( op->scrollbar_bg_color);
+      }
+      if ( (name = growapi_translate( transtab, "ColumnWidth1"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->column_width[0];
+        attrinfo[i].type = glow_eType_Double;
+        attrinfo[i++].size = sizeof( op->column_width[0]);
+      }
+      if ( (name = growapi_translate( transtab, "HeaderText1"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = op->header_text[0];
+        attrinfo[i].type = glow_eType_String;
+        attrinfo[i++].size = sizeof( op->header_text[0]);
+      }
+      if ( (name = growapi_translate( transtab, "ColumnWidth2"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->column_width[1];
+        attrinfo[i].type = glow_eType_Double;
+        attrinfo[i++].size = sizeof( op->column_width[0]);
+      }
+      if ( (name = growapi_translate( transtab, "HeaderText2"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = op->header_text[1];
+        attrinfo[i].type = glow_eType_String;
+        attrinfo[i++].size = sizeof( op->header_text[0]);
+      }
+      if ( (name = growapi_translate( transtab, "ColumnWidth3"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->column_width[2];
+        attrinfo[i].type = glow_eType_Double;
+        attrinfo[i++].size = sizeof( op->column_width[0]);
+      }
+      if ( (name = growapi_translate( transtab, "HeaderText3"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = op->header_text[2];
+        attrinfo[i].type = glow_eType_String;
+        attrinfo[i++].size = sizeof( op->header_text[0]);
+      }
+      if ( (name = growapi_translate( transtab, "ColumnWidth4"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->column_width[3];
+        attrinfo[i].type = glow_eType_Double;
+        attrinfo[i++].size = sizeof( op->column_width[0]);
+      }
+      if ( (name = growapi_translate( transtab, "HeaderText4"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = op->header_text[3];
+        attrinfo[i].type = glow_eType_String;
+        attrinfo[i++].size = sizeof( op->header_text[0]);
+      }
+      if ( (name = growapi_translate( transtab, "ColumnWidth5"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->column_width[4];
+        attrinfo[i].type = glow_eType_Double;
+        attrinfo[i++].size = sizeof( op->column_width[0]);
+      }
+      if ( (name = growapi_translate( transtab, "HeaderText5"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = op->header_text[4];
+        attrinfo[i].type = glow_eType_String;
+        attrinfo[i++].size = sizeof( op->header_text[0]);
+      }
+      if ( (name = growapi_translate( transtab, "ColumnWidth6"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->column_width[5];
+        attrinfo[i].type = glow_eType_Double;
+        attrinfo[i++].size = sizeof( op->column_width[0]);
+      }
+      if ( (name = growapi_translate( transtab, "HeaderText6"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = op->header_text[5];
+        attrinfo[i].type = glow_eType_String;
+        attrinfo[i++].size = sizeof( op->header_text[0]);
+      }
+      if ( (name = growapi_translate( transtab, "ColumnWidth7"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->column_width[6];
+        attrinfo[i].type = glow_eType_Double;
+        attrinfo[i++].size = sizeof( op->column_width[0]);
+      }
+      if ( (name = growapi_translate( transtab, "HeaderText7"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = op->header_text[6];
+        attrinfo[i].type = glow_eType_String;
+        attrinfo[i++].size = sizeof( op->header_text[0]);
+      }
+      if ( (name = growapi_translate( transtab, "ColumnWidth8"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->column_width[7];
+        attrinfo[i].type = glow_eType_Double;
+        attrinfo[i++].size = sizeof( op->column_width[0]);
+      }
+      if ( (name = growapi_translate( transtab, "HeaderText8"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = op->header_text[7];
+        attrinfo[i].type = glow_eType_String;
+        attrinfo[i++].size = sizeof( op->header_text[0]);
+      }
+      if ( (name = growapi_translate( transtab, "ColumnWidth9"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->column_width[8];
+        attrinfo[i].type = glow_eType_Double;
+        attrinfo[i++].size = sizeof( op->column_width[0]);
+      }
+      if ( (name = growapi_translate( transtab, "HeaderText9"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = op->header_text[8];
+        attrinfo[i].type = glow_eType_String;
+        attrinfo[i++].size = sizeof( op->header_text[0]);
+      }
+      if ( (name = growapi_translate( transtab, "ColumnWidth10"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->column_width[9];
+        attrinfo[i].type = glow_eType_Double;
+        attrinfo[i++].size = sizeof( op->column_width[0]);
+      }
+      if ( (name = growapi_translate( transtab, "HeaderText10"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = op->header_text[9];
+        attrinfo[i].type = glow_eType_String;
+        attrinfo[i++].size = sizeof( op->header_text[0]);
+      }
+      if ( (name = growapi_translate( transtab, "ColumnWidth11"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->column_width[10];
+        attrinfo[i].type = glow_eType_Double;
+        attrinfo[i++].size = sizeof( op->column_width[0]);
+      }
+      if ( (name = growapi_translate( transtab, "HeaderText11"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = op->header_text[10];
+        attrinfo[i].type = glow_eType_String;
+        attrinfo[i++].size = sizeof( op->header_text[0]);
+      }
+      if ( (name = growapi_translate( transtab, "ColumnWidth12"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->column_width[11];
+        attrinfo[i].type = glow_eType_Double;
+        attrinfo[i++].size = sizeof( op->column_width[0]);
+      }
+      if ( (name = growapi_translate( transtab, "HeaderText12"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = op->header_text[11];
+        attrinfo[i].type = glow_eType_String;
+        attrinfo[i++].size = sizeof( op->header_text[0]);
+      }
+
+      break;
+    }
+    case glow_eObjectType_GrowFolder:
+    {
+      GrowFolder *op = (GrowFolder *)object;
+      char *name;
+
+      if ( (name = growapi_translate( transtab, "Folders"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->folders;
+        attrinfo[i].type = glow_eType_Int;
+        attrinfo[i++].size = sizeof( op->folders);
+      }
+      if ( (name = growapi_translate( transtab, "HeaderHeight"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->header_height;
+        attrinfo[i].type = glow_eType_Double;
+        attrinfo[i++].size = sizeof( op->header_height);
+      }
+      if ( (name = growapi_translate( transtab, "ColorSelected"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->color_selected;
+        attrinfo[i].type = glow_eType_Color;
+        attrinfo[i++].size = sizeof( op->color_selected);
+      }
+      if ( (name = growapi_translate( transtab, "ColorUnselected"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->color_unselected;
+        attrinfo[i].type = glow_eType_Color;
+        attrinfo[i++].size = sizeof( op->color_unselected);
+      }
+      for ( int j = 0; j < 12; j++) {
+	char tname[32];
+
+	sprintf( tname, "FileName%d", j+1);
+	if ( (name = growapi_translate( transtab, tname))) {
+	  strcpy( attrinfo[i].name, name);
+	  attrinfo[i].value_p = op->folder_file_names[j];
+	  attrinfo[i].type = glow_eType_String;
+	  attrinfo[i++].size = sizeof( op->folder_file_names[0]);
+	}
+	sprintf( tname, "Text%d", j+1);
+	if ( (name = growapi_translate( transtab, tname))) {
+	  strcpy( attrinfo[i].name, name);
+	  attrinfo[i].value_p = op->folder_text[j];
+	  attrinfo[i].type = glow_eType_String;
+	  attrinfo[i++].size = sizeof( op->folder_text[0]);
+	}
+	sprintf( tname, "Scale%d", j+1);
+	if ( (name = growapi_translate( transtab, tname))) {
+	  strcpy( attrinfo[i].name, name);
+	  attrinfo[i].value_p = &op->folder_scale[j];
+	  attrinfo[i].type = glow_eType_Double;
+	  attrinfo[i++].size = sizeof( op->folder_scale[0]);
+	}
+	sprintf( tname, "VerticalScrollbar%d", j+1);
+	if ( (name = growapi_translate( transtab, tname))) {
+	  strcpy( attrinfo[i].name, name);
+	  attrinfo[i].value_p = &op->folder_v_scrollbar[j];
+	  attrinfo[i].type = glow_eType_Boolean;
+	  attrinfo[i++].size = sizeof( op->folder_v_scrollbar[0]);
+	}
+	sprintf( tname, "HorizontalScrollbar%d", j+1);
+	if ( (name = growapi_translate( transtab, tname))) {
+	  strcpy( attrinfo[i].name, name);
+	  attrinfo[i].value_p = &op->folder_h_scrollbar[j];
+	  attrinfo[i].type = glow_eType_Boolean;
+	  attrinfo[i++].size = sizeof( op->folder_h_scrollbar[0]);
+	}
       }
       break;
     }
@@ -2493,6 +2912,15 @@ void grow_UpdateObject(  grow_tCtx ctx, grow_tObject object,
       ((GrowTrend *)object)->nav_zoom();
       ((GrowTrend *)object)->get_node_borders();
       ((GrowTrend *)object)->draw( INT_MIN, INT_MIN, INT_MAX, INT_MAX);
+      break;
+    case glow_eObjectType_GrowWindow:
+      ((GrowWindow *)object)->update_attributes();
+      break;
+    case glow_eObjectType_GrowTable:
+      ((GrowTable *)object)->update_attributes();
+      break;
+    case glow_eObjectType_GrowFolder:
+      ((GrowFolder *)object)->update_attributes();
       break;
     case glow_eObjectType_GrowAxis:
       // Set changed dynamic
@@ -3659,9 +4087,35 @@ void grow_SetBarInfo( grow_tObject object, glow_sBarInfo *info)
 {
   ((GrowBar *)object)->set_bar_info( info);
 }
+
 void grow_SetAxisInfo( grow_tObject object, glow_sAxisInfo *info)
 {
   ((GrowAxis *)object)->set_axis_info( info);
+}
+
+void grow_SetTableInfo( grow_tObject object, glow_sTableInfo *info)
+{
+  ((GrowTable *)object)->set_table_info( info);
+}
+
+void grow_GetTableInfo( grow_tObject object, glow_sTableInfo *info)
+{
+  ((GrowTable *)object)->get_table_info( info);
+}
+
+void grow_SetCellValue( grow_tObject object, int column, int row, char *value)
+{
+  ((GrowTable *)object)->set_cell_value( column, row, value);
+}
+
+void grow_SetSelectedCell( grow_tObject object, int column, int row)
+{
+  ((GrowTable *)object)->set_selected_cell( column, row);
+}
+
+int grow_GetSelectedCell( grow_tObject object, int *column, int *row)
+{
+  return ((GrowTable *)object)->get_selected_cell( column, row);
 }
 
 void grow_Convert( grow_tCtx ctx, glow_eConvert version)

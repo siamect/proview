@@ -143,6 +143,8 @@ GeDyn::GeDyn( const GeDyn& x) :
       e = new GeFastCurve((const GeFastCurve&) *elem); break;
     case ge_mDynType_AnalogText:
       e = new GeAnalogText((const GeAnalogText&) *elem); break;
+    case ge_mDynType_Table:
+      e = new GeTable((const GeTable&) *elem); break;
     default: ;
     }
     switch( elem->action_type) {
@@ -249,6 +251,7 @@ void GeDyn::open( ifstream& fp)
       case ge_eSave_FillLevel: e = (GeDynElem *) new GeFillLevel(this); break;
       case ge_eSave_FastCurve: e = (GeDynElem *) new GeFastCurve(this); break;
       case ge_eSave_AnalogText: e = (GeDynElem *) new GeAnalogText(this); break;
+      case ge_eSave_Table: e = (GeDynElem *) new GeTable(this); break;
       case ge_eSave_PopupMenu: e = (GeDynElem *) new GePopupMenu(this); break;
       case ge_eSave_SetDig: e = (GeDynElem *) new GeSetDig(this); break;
       case ge_eSave_ResetDig: e = (GeDynElem *) new GeResetDig(this); break;
@@ -383,10 +386,11 @@ void GeDyn::get_attributes( grow_tObject object, attr_sItem *itemlist, int *item
       attrinfo[i].type = ge_eAttrType_DynType;
     if ( total_dyn_type & ge_mDynType_Bar ||
 	 total_dyn_type & ge_mDynType_Trend ||
+	 total_dyn_type & ge_mDynType_Table ||
 	 total_dyn_type & ge_mDynType_FastCurve)
       attrinfo[i].noedit = 1;
-    attrinfo[i].mask = ~(ge_mDynType_Bar | ge_mDynType_Trend | ge_mDynType_FastCurve | 
-			 ge_mDynType_SliderBackground);
+    attrinfo[i].mask = ~(ge_mDynType_Bar | ge_mDynType_Trend | ge_mDynType_Table | 
+			 ge_mDynType_FastCurve | ge_mDynType_SliderBackground);
     attrinfo[i++].size = sizeof( dyn_type);
   }
   strcpy( attrinfo[i].name, "Action");
@@ -849,6 +853,9 @@ GeDynElem *GeDyn::create_dyn_element( int mask, int instance)
   case ge_mDynType_AnalogText:
     e = (GeDynElem *) new GeAnalogText(this);
     break;
+  case ge_mDynType_Table:
+    e = (GeDynElem *) new GeTable(this);
+    break;
   default: ;
   }
   return e;
@@ -892,6 +899,8 @@ int GeDyn::connect( grow_tObject object, glow_sTraceData *trace_data)
   int inherit_action_type;
 
   if ( grow_GetObjectType( object) == glow_eObjectType_GrowBar || 
+       grow_GetObjectType( object) == glow_eObjectType_GrowTable ||
+       grow_GetObjectType( object) == glow_eObjectType_GrowWindow ||
        grow_GetObjectType( object) == glow_eObjectType_GrowTrend) {
     if ( cycle == glow_eCycle_Inherit)
       cycle = glow_eCycle_Slow;
@@ -2889,7 +2898,7 @@ void GeAnalogColor::get_attributes( attr_sItem *attrinfo, int *item_count)
       attrinfo[i].type = glow_eType_String;
       attrinfo[i++].size = sizeof( attribute);
 
-      strcpy( attrinfo[i].name, "AnalogTone.Instances");
+      strcpy( attrinfo[i].name, "AnalogColor.Instances");
       attrinfo[i].value = &instance_mask;
       attrinfo[i].type = ge_eAttrType_InstanceMask;
       attrinfo[i++].size = sizeof( instance_mask);    
@@ -3122,7 +3131,7 @@ int GeAnalogColor::scan( grow_tObject object)
     case pwr_eType_Float32:
       state = *p < limit;
     case pwr_eType_Int32:
-      state = *(pwr_tInt32 *)p <= limit;
+      state = *(pwr_tInt32 *)p < limit;
     default: ;
     }
   }
@@ -4566,6 +4575,653 @@ int GeTrend::scan( grow_tObject object)
       }
     }
     acc_time = 0;
+  }
+  return 1;
+}
+
+void GeTable::get_attributes( attr_sItem *attrinfo, int *item_count)
+{
+  int i = *item_count;
+
+  strcpy( attrinfo[i].name, "Column1.Attribute");
+  attrinfo[i].value = attribute[0];
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( attribute[0]);
+
+  strcpy( attrinfo[i].name, "Column1.Format");
+  attrinfo[i].value = format[0];
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( format[0]);
+
+  strcpy( attrinfo[i].name, "Column1.SelectAttribute");
+  attrinfo[i].value = sel_attribute[0];
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( sel_attribute[0]);
+
+  strcpy( attrinfo[i].name, "Column2.Attribute");
+  attrinfo[i].value = attribute[1];
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( attribute[0]);
+
+  strcpy( attrinfo[i].name, "Column2.Format");
+  attrinfo[i].value = format[1];
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( format[0]);
+
+  strcpy( attrinfo[i].name, "Column2.SelectAttribute");
+  attrinfo[i].value = sel_attribute[1];
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( sel_attribute[0]);
+
+  strcpy( attrinfo[i].name, "Column3.Attribute");
+  attrinfo[i].value = attribute[2];
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( attribute[0]);
+
+  strcpy( attrinfo[i].name, "Column3.Format");
+  attrinfo[i].value = format[2];
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( format[0]);
+
+  strcpy( attrinfo[i].name, "Column3.SelectAttribute");
+  attrinfo[i].value = sel_attribute[2];
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( sel_attribute[0]);
+
+  strcpy( attrinfo[i].name, "Column4.Attribute");
+  attrinfo[i].value = attribute[3];
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( attribute[0]);
+
+  strcpy( attrinfo[i].name, "Column4.Format");
+  attrinfo[i].value = format[3];
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( format[0]);
+
+  strcpy( attrinfo[i].name, "Column4.SelectAttribute");
+  attrinfo[i].value = sel_attribute[3];
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( sel_attribute[0]);
+
+  strcpy( attrinfo[i].name, "Column5.Attribute");
+  attrinfo[i].value = attribute[4];
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( attribute[0]);
+
+  strcpy( attrinfo[i].name, "Column5.Format");
+  attrinfo[i].value = format[4];
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( format[0]);
+
+  strcpy( attrinfo[i].name, "Column5.SelectAttribute");
+  attrinfo[i].value = sel_attribute[4];
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( sel_attribute[0]);
+
+  strcpy( attrinfo[i].name, "Column6.Attribute");
+  attrinfo[i].value = attribute[5];
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( attribute[0]);
+
+  strcpy( attrinfo[i].name, "Column6.Format");
+  attrinfo[i].value = format[5];
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( format[0]);
+
+  strcpy( attrinfo[i].name, "Column6.SelectAttribute");
+  attrinfo[i].value = sel_attribute[5];
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( sel_attribute[0]);
+
+  strcpy( attrinfo[i].name, "Column7.Attribute");
+  attrinfo[i].value = attribute[6];
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( attribute[0]);
+
+  strcpy( attrinfo[i].name, "Column7.Format");
+  attrinfo[i].value = format[6];
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( format[0]);
+
+  strcpy( attrinfo[i].name, "Column7.SelectAttribute");
+  attrinfo[i].value = sel_attribute[6];
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( sel_attribute[0]);
+
+  strcpy( attrinfo[i].name, "Column8.Attribute");
+  attrinfo[i].value = attribute[7];
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( attribute[0]);
+
+  strcpy( attrinfo[i].name, "Column8.Format");
+  attrinfo[i].value = format[7];
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( format[0]);
+
+  strcpy( attrinfo[i].name, "Column8.SelectAttribute");
+  attrinfo[i].value = sel_attribute[7];
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( sel_attribute[0]);
+
+  strcpy( attrinfo[i].name, "Column9.Attribute");
+  attrinfo[i].value = attribute[8];
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( attribute[0]);
+
+  strcpy( attrinfo[i].name, "Column9.Format");
+  attrinfo[i].value = format[8];
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( format[0]);
+
+  strcpy( attrinfo[i].name, "Column9.SelectAttribute");
+  attrinfo[i].value = sel_attribute[8];
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( sel_attribute[0]);
+
+  strcpy( attrinfo[i].name, "Column10.Attribute");
+  attrinfo[i].value = attribute[9];
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( attribute[0]);
+
+  strcpy( attrinfo[i].name, "Column10.Format");
+  attrinfo[i].value = format[9];
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( format[0]);
+
+  strcpy( attrinfo[i].name, "Column10.SelectAttribute");
+  attrinfo[i].value = sel_attribute[9];
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( sel_attribute[0]);
+
+  strcpy( attrinfo[i].name, "Column11.Attribute");
+  attrinfo[i].value = attribute[10];
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( attribute[0]);
+
+  strcpy( attrinfo[i].name, "Column11.Format");
+  attrinfo[i].value = format[10];
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( format[0]);
+
+  strcpy( attrinfo[i].name, "Column11.SelectAttribute");
+  attrinfo[i].value = sel_attribute[10];
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( sel_attribute[0]);
+
+  strcpy( attrinfo[i].name, "Column12.Attribute");
+  attrinfo[i].value = attribute[11];
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( attribute[0]);
+
+  strcpy( attrinfo[i].name, "Column12.Format");
+  attrinfo[i].value = format[11];
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( format[0]);
+
+  strcpy( attrinfo[i].name, "Column12.SelectAttribute");
+  attrinfo[i].value = sel_attribute[11];
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( sel_attribute[0]);
+
+  *item_count = i;
+}
+
+void GeTable::set_attribute( grow_tObject object, char *attr_name, int *cnt)
+{
+  (*cnt)--;
+  if ( *cnt == 0) {
+    char msg[200];
+
+    strncpy( attribute[0], attr_name, sizeof( attribute));
+    sprintf( msg, "Column1.Attribute = %s", attr_name);
+    dyn->graph->message( 'I', msg);
+  }
+}
+
+void GeTable::save( ofstream& fp)
+{
+  fp << int(ge_eSave_Table) << endl;
+  for ( int i = 0; i < TABLE_MAX_COL; i++) {
+    fp << int(ge_eSave_Table_attribute1)+3*i << FSPACE << attribute[i] << endl;
+    fp << int(ge_eSave_Table_format1)+3*i << FSPACE << format[i] << endl;
+    fp << int(ge_eSave_Table_sel_attribute1)+3*i << FSPACE << sel_attribute[i] << endl;
+  }
+  fp << int(ge_eSave_End) << endl;
+}
+
+void GeTable::open( ifstream& fp)
+{
+  int		type;
+  int 		end_found = 0;
+  char		dummy[40];
+
+  for (;;)
+  {
+    fp >> type;
+    switch( type) {
+      case ge_eSave_Table: break;
+      case ge_eSave_Table_attribute1:
+        fp.get(); fp.getline( attribute[0], sizeof(attribute[0])); break;
+      case ge_eSave_Table_format1:
+        fp.get(); fp.getline( format[0], sizeof(format[0])); break;
+      case ge_eSave_Table_sel_attribute1:
+        fp.get(); fp.getline( sel_attribute[0], sizeof(sel_attribute[0])); break;
+      case ge_eSave_Table_attribute2:
+        fp.get(); fp.getline( attribute[1], sizeof(attribute[0])); break;
+      case ge_eSave_Table_format2:
+        fp.get(); fp.getline( format[1], sizeof(format[0])); break;
+      case ge_eSave_Table_sel_attribute2:
+        fp.get(); fp.getline( sel_attribute[1], sizeof(sel_attribute[0])); break;
+      case ge_eSave_Table_attribute3:
+        fp.get(); fp.getline( attribute[2], sizeof(attribute[0])); break;
+      case ge_eSave_Table_format3:
+        fp.get(); fp.getline( format[2], sizeof(format[0])); break;
+      case ge_eSave_Table_sel_attribute3:
+        fp.get(); fp.getline( sel_attribute[2], sizeof(sel_attribute[0])); break;
+      case ge_eSave_Table_attribute4:
+        fp.get(); fp.getline( attribute[3], sizeof(attribute[0])); break;
+      case ge_eSave_Table_format4:
+        fp.get(); fp.getline( format[3], sizeof(format[0])); break;
+      case ge_eSave_Table_sel_attribute4:
+        fp.get(); fp.getline( sel_attribute[3], sizeof(sel_attribute[0])); break;
+      case ge_eSave_Table_attribute5:
+        fp.get(); fp.getline( attribute[4], sizeof(attribute[0])); break;
+      case ge_eSave_Table_format5:
+        fp.get(); fp.getline( format[4], sizeof(format[0])); break;
+      case ge_eSave_Table_sel_attribute5:
+        fp.get(); fp.getline( sel_attribute[4], sizeof(sel_attribute[0])); break;
+      case ge_eSave_Table_attribute6:
+        fp.get(); fp.getline( attribute[5], sizeof(attribute[0])); break;
+      case ge_eSave_Table_format6:
+        fp.get(); fp.getline( format[5], sizeof(format[0])); break;
+      case ge_eSave_Table_sel_attribute6:
+        fp.get(); fp.getline( sel_attribute[5], sizeof(sel_attribute[0])); break;
+      case ge_eSave_Table_attribute7:
+        fp.get(); fp.getline( attribute[6], sizeof(attribute[0])); break;
+      case ge_eSave_Table_format7:
+        fp.get(); fp.getline( format[6], sizeof(format[0])); break;
+      case ge_eSave_Table_sel_attribute7:
+        fp.get(); fp.getline( sel_attribute[6], sizeof(sel_attribute[0])); break;
+      case ge_eSave_Table_attribute8:
+        fp.get(); fp.getline( attribute[7], sizeof(attribute[0])); break;
+      case ge_eSave_Table_format8:
+        fp.get(); fp.getline( format[7], sizeof(format[0])); break;
+      case ge_eSave_Table_sel_attribute8:
+        fp.get(); fp.getline( sel_attribute[7], sizeof(sel_attribute[0])); break;
+      case ge_eSave_Table_attribute9:
+        fp.get(); fp.getline( attribute[8], sizeof(attribute[0])); break;
+      case ge_eSave_Table_format9:
+        fp.get(); fp.getline( format[8], sizeof(format[0])); break;
+      case ge_eSave_Table_sel_attribute9:
+        fp.get(); fp.getline( sel_attribute[8], sizeof(sel_attribute[0])); break;
+      case ge_eSave_Table_attribute10:
+        fp.get(); fp.getline( attribute[9], sizeof(attribute[0])); break;
+      case ge_eSave_Table_format10:
+        fp.get(); fp.getline( format[9], sizeof(format[0])); break;
+      case ge_eSave_Table_sel_attribute10:
+        fp.get(); fp.getline( sel_attribute[9], sizeof(sel_attribute[0])); break;
+      case ge_eSave_Table_attribute11:
+        fp.get(); fp.getline( attribute[10], sizeof(attribute[0])); break;
+      case ge_eSave_Table_format11:
+        fp.get(); fp.getline( format[10], sizeof(format[0])); break;
+      case ge_eSave_Table_sel_attribute11:
+        fp.get(); fp.getline( sel_attribute[10], sizeof(sel_attribute[0])); break;
+      case ge_eSave_Table_attribute12:
+        fp.get(); fp.getline( attribute[11], sizeof(attribute[0])); break;
+      case ge_eSave_Table_format12:
+        fp.get(); fp.getline( format[11], sizeof(format[0])); break;
+     case ge_eSave_Table_sel_attribute12:
+        fp.get(); fp.getline( sel_attribute[11], sizeof(sel_attribute[0])); break;
+      case ge_eSave_End: end_found = 1; break;
+      default:
+        cout << "GeTable:open syntax error" << endl;
+        fp.getline( dummy, sizeof(dummy));
+    }
+    if ( end_found)
+      break;
+  }
+}
+
+int GeTable::connect( grow_tObject object, glow_sTraceData *trace_data)
+{
+  int		attr_type;
+  int		attr_size;
+  char		parsed_name[120];
+  int		sts;
+  int		inverted;
+  glow_sTableInfo info;
+
+  grow_GetTableInfo( object, &info);
+  columns = info.columns;
+  rows = info.rows;
+
+  for ( int i = 0; i < columns; i++) {
+    p[i] = 0;
+    db[i] = dyn->graph->parse_attr_name( attribute[i], (char *)parsed_name,
+				    &inverted, &attr_type, &size[i], &elements[i]);
+    if ( strcmp( parsed_name,"") == 0)
+      continue;
+
+    if ( !elements[i])
+      continue;
+
+    size[i] = size[i] / elements[i];
+    int col_size = size[i] * MIN(rows, elements[i]);
+
+    switch ( db[i]) {
+    case graph_eDatabase_Gdh:
+      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p[i], 
+				       &subid[i], col_size);
+      if ( EVEN(sts)) return sts;
+      type_id[i] = attr_type;
+      break;
+    default:
+      ;
+    }
+    elements[i] = MIN( elements[i], rows);
+
+    switch ( type_id[i]) {
+    case pwr_eType_String:
+      info.column_size[i] = size[i];
+      break;
+    default:
+      info.column_size[i] = 10;
+    }
+
+    old_value[i] = (char *)calloc( elements[i], size[i]);
+
+
+    // Connect select array
+    sel_p[i] = 0;
+    sel_db[i] = dyn->graph->parse_attr_name( sel_attribute[i], (char *)parsed_name,
+				    &inverted, &attr_type, &attr_size, &sel_elements[i]);
+    if ( strcmp( parsed_name,"") == 0)
+      continue;
+
+    if ( sel_elements[i] > elements[i])
+      sel_elements[i] = elements[i];
+    if ( attr_type != pwr_eType_Boolean ||
+	 !sel_elements[i])
+      continue;
+
+    switch ( sel_db[i]) {
+    case graph_eDatabase_Gdh:
+      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&sel_p[i], 
+				       &sel_subid[i], sel_elements[i] * sizeof(pwr_tBoolean));
+      if ( EVEN(sts)) return sts;
+      break;
+    default:
+      ;
+    }
+  }
+    
+  grow_SetTableInfo( object, &info);
+
+  if ( p[0])
+    trace_data->p = p[0];
+  first_scan = true;
+  return 1;
+}
+
+int GeTable::disconnect( grow_tObject object)
+{
+  for ( int i = 0; i < columns; i++) {
+    if ( p[i] && db[i] == graph_eDatabase_Gdh)
+      gdh_UnrefObjectInfo( subid[i]);
+    p[i] = 0;
+    if ( old_value[i]) {
+      free( old_value[i]);
+      old_value[i] = 0;
+    }
+
+    if ( sel_p[i] && sel_db[i] == graph_eDatabase_Gdh)
+      gdh_UnrefObjectInfo( subid[i]);
+    sel_p[i] = 0;
+  }
+  return 1;
+}
+
+int GeTable::scan( grow_tObject object)
+{
+  if ( !p[0])
+    return 1;
+
+  int i, j, offs;
+  char		buf[120];
+  int		len;
+
+  grow_SetDeferedRedraw( dyn->graph->grow->ctx);
+  for ( i = 0; i < columns; i++) {
+    if ( !p[i])
+      continue;
+    for ( j = 0; j < elements[i]; j++) {
+      offs = j * size[i];
+      if ( !first_scan) {
+	if ( memcmp( old_value[i] + offs, p[i] + offs, size[i]) == 0 )
+	  // No change since last time
+	  continue;
+      }
+
+      switch ( type_id[i]) {
+      case pwr_eType_Float32:
+	len = sprintf( buf, format[i], *(pwr_tFloat32 *) (p[i] + offs));
+	break;
+      case pwr_eType_Int32:
+      case pwr_eType_UInt32:
+	len = sprintf( buf, format[i], *(pwr_tInt32 *) (p[i] + offs));
+	break;
+      case pwr_eType_String:
+	len = sprintf( buf, format[i], (char *)(p[i] + offs));
+	break;
+      case pwr_eType_Objid: {
+	int sts;
+	char name[120];
+	pwr_tObjid objid = *(pwr_tObjid *)(p[i] + offs);
+	sts = gdh_ObjidToName ( objid, name, sizeof(name), 
+			      cdh_mName_object);
+	if ( EVEN(sts))
+	  strcpy( name, "");
+	len = sprintf( buf, "%s", name);
+	break;
+      }
+      default: {
+	int sts;
+	sts = cdh_AttrValueToString( (pwr_eType) type_id[i], 
+				     p + offs, buf, sizeof(buf));
+	if ( EVEN(sts))
+	  sprintf( buf, "Invalid type");
+	len = strlen(buf);
+      }
+      }
+
+      grow_SetCellValue( object, i, j, buf);
+      memcpy( old_value[i] + offs, p[i] + offs, size[i]);
+    }
+  }
+
+  // Examine select array
+  int sel_found = 0;
+  for ( i = 0; i < columns; i++) {
+    if ( !sel_p[i])
+      continue;
+    for ( j = 0; j < sel_elements[i]; j++) {
+      if ( sel_p[i][j]) {
+	sel_found = 1;
+	grow_SetSelectedCell( object, i, j);
+      }
+    }
+  }
+  if ( !sel_found)
+    grow_SetSelectedCell( object, -1, -1);
+  grow_RedrawDefered( dyn->graph->grow->ctx);
+  if ( first_scan)
+    first_scan = false;
+  return 1;
+}
+
+int GeTable::action( grow_tObject object, glow_tEvent event)
+{
+  if ( !dyn->graph->is_authorized( dyn->access))
+    return 1;
+
+  switch ( event->event) {
+  case glow_eEvent_MB1Down:
+    grow_SetClickSensitivity( dyn->graph->grow->ctx, glow_mSensitivity_MB1Click);
+    break;
+  case glow_eEvent_MB1Up:
+    break;
+  case glow_eEvent_MB1Click: {
+    int column, row;
+    pwr_tBoolean	value;
+    int			sts;
+    char       		parsed_name[120];
+    int			inverted;
+    int			attr_type, attr_size;
+    graph_eDatabase 	db;
+
+    if ( event->any.type != glow_eEventType_Table)
+      break;
+
+    sts = grow_GetSelectedCell( object, &column, &row);
+    if ( ODD(sts) && sel_p[column]) {
+      db = dyn->graph->parse_attr_name( sel_attribute[column], parsed_name, &inverted, &attr_type, 
+				      &attr_size);
+      value = 0;
+      sprintf( &parsed_name[strlen(parsed_name)], "[%d]", row);
+      sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
+      if ( EVEN(sts)) printf("Table error: %s\n", parsed_name);
+    }
+    if ( sel_p[event->table.column]) {
+      db = dyn->graph->parse_attr_name( sel_attribute[event->table.column], parsed_name, &inverted, &attr_type, 
+				      &attr_size);
+      value = 1;
+      sprintf( &parsed_name[strlen(parsed_name)], "[%d]", event->table.row);
+      sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
+      if ( EVEN(sts)) 
+	printf("Table error: %s\n", parsed_name);
+      else
+	grow_SetSelectedCell( object, event->table.column, event->table.row);
+    }
+    break;
+  }
+  case glow_eEvent_Key_Up:
+  case glow_eEvent_Key_Down:
+  case glow_eEvent_Key_Left:
+  case glow_eEvent_Key_Right: {
+    int column, row, new_column, new_row;
+    pwr_tBoolean	value;
+    int			sts;
+    char       		parsed_name[120];
+    int			inverted;
+    int			attr_type, attr_size;
+    graph_eDatabase 	db;
+
+    sts = grow_GetSelectedCell( object, &column, &row);
+
+    switch ( event->event) {
+    case glow_eEvent_Key_Up:
+      if ( EVEN(sts))
+	return GE__NO_PROPAGATE;
+      new_row = row - 1;
+      new_column = column;
+      if ( new_row < 0)
+	return GE__NO_PROPAGATE;
+      break;
+    case glow_eEvent_Key_Down:
+      if ( EVEN(sts)) {
+	column = 0;
+	row = -1;
+      }
+      new_row = row + 1;
+      new_column = column;
+      if ( new_row > sel_elements[new_column])
+	return GE__NO_PROPAGATE;
+      break;
+    case glow_eEvent_Key_Left:
+      if ( EVEN(sts))
+	return GE__NO_PROPAGATE;
+      new_row = row;
+      new_column = column - 1;
+      if ( new_column < 0 || !sel_p[new_column])
+	return GE__NO_PROPAGATE;
+      break;
+    case glow_eEvent_Key_Right:
+      if ( EVEN(sts)) {
+	column = -1;
+	row = 0;
+      }
+      new_row = row;
+      new_column = column + 1;
+      if ( new_column > columns || !sel_p[new_column])
+	return GE__NO_PROPAGATE;
+      break;
+    default: ;  
+    }
+
+    if ( ODD(sts) && sel_p[column]) {
+      db = dyn->graph->parse_attr_name( sel_attribute[column], parsed_name, &inverted, &attr_type, 
+				      &attr_size);
+      value = 0;
+      sprintf( &parsed_name[strlen(parsed_name)], "[%d]", row);
+      sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
+      if ( EVEN(sts)) printf("Table error: %s\n", parsed_name);
+    }
+    if ( sel_p[new_column]) {
+      db = dyn->graph->parse_attr_name( sel_attribute[new_column], parsed_name, &inverted, &attr_type, 
+				      &attr_size);
+      value = 1;
+      sprintf( &parsed_name[strlen(parsed_name)], "[%d]", new_row);
+      sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
+      if ( EVEN(sts)) 
+	printf("Table error: %s\n", parsed_name);
+      else
+	grow_SetSelectedCell( object, new_column, new_row);
+    }
+    return GE__NO_PROPAGATE;
+    break;
+  }
+  case glow_eEvent_MB3Press: {
+    int			sts;
+    char       		parsed_name[120];
+    int			inverted;
+    int			attr_type, attr_size;
+    pwr_sAttrRef    	attrref;
+    char            	name[80];
+    Widget          	popup;
+
+    if ( event->any.type != glow_eEventType_Table)
+      break;
+    
+    if ( type_id[event->table.column] == pwr_eType_Objid) {
+      dyn->graph->parse_attr_name( attribute[event->table.column], parsed_name, &inverted,
+				 &attr_type, &attr_size);
+
+      sprintf( &parsed_name[strlen(parsed_name)], "[%d]", event->table.row);
+      memset( &attrref, 0, sizeof(attrref));
+      sts = gdh_GetObjectInfo( parsed_name, &attrref.Objid, 
+				 sizeof(attrref.Objid));
+      if ( EVEN(sts)) break;
+      if ( cdh_ObjidIsNull( attrref.Objid))
+	break;
+
+      if ( dyn->graph->popup_menu_cb) {
+	// Display popup menu
+	grow_GetName( dyn->graph->grow->ctx, name);
+
+	(dyn->graph->popup_menu_cb)( dyn->graph->parent_ctx, attrref, 
+				     xmenu_eItemType_Object,
+				     xmenu_mUtility_Ge, name, &popup);
+	if ( !popup)
+	  break;
+
+	mrm_PositionPopup( popup, dyn->graph->grow_widget, 
+			   event->any.x_pixel + 8, event->any.y_pixel);
+	XtManageChild(popup);
+      }
+    }
+    break;
+  }
+  default: ;    
   }
   return 1;
 }
@@ -7119,6 +7775,9 @@ int GeSlider::scan( grow_tObject object)
 int GeSlider::action( grow_tObject object, glow_tEvent event)
 {
   switch ( event->event) {
+  case glow_eEvent_MB1Down:
+    grow_SetClickSensitivity( dyn->graph->grow->ctx, glow_mSensitivity_MB1Press);
+    break;
   case glow_eEvent_SliderMoveStart: {
     double max_value, min_value, max_pos, min_pos;
     glow_eDirection direction;

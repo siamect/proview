@@ -1198,8 +1198,8 @@ static void ge_activate_group( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *dat
   sts = gectx->graph->group_select( &object, last_group);
   if ( sts == GLOW__NOSELECT)
     ge_message( gectx, 'E', "Select objects to form at group");
-  else if ( sts == GLOW__CONSELECTED)
-    ge_message( gectx, 'E', "A connection can not be included in a group");
+  else if ( sts == GLOW__GROUPCLASS)
+    ge_message( gectx, 'E', "Unable to group this kind of object");
   else if ( sts == GE__RECALLDATA_FOUND) {
     gectx->recover_object =  object;
     strcpy( gectx->recover_name, last_group);

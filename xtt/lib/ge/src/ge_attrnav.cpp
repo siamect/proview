@@ -82,6 +82,7 @@ static attrnav_sEnumElement elem_dyn_type[] = {
 	{ (int) ge_mDynType_FastCurve		, "FastCurve"},
 	{ (int) ge_mDynType_SliderBackground   	, "SliderBackground"},
 	{ (int) ge_mDynType_Video		, "Video"},
+	{ (int) ge_mDynType_Table		, "Table"},
 	{ 0, ""}};
 
 static attrnav_sEnumElement elem_dyn_type_tone[] = {
@@ -109,6 +110,7 @@ static attrnav_sEnumElement elem_dyn_type_tone[] = {
 	{ (int) ge_mDynType_FastCurve		, "FastCurve"},
 	{ (int) ge_mDynType_SliderBackground   	, "SliderBackground"},
 	{ (int) ge_mDynType_Video		, "Video"},
+	{ (int) ge_mDynType_Table		, "Table"},
 	{ 0, ""}};
 
 static attrnav_sEnumElement elem_action_type[] = {
@@ -849,13 +851,22 @@ static attrnav_sEnumElement elem_anim_sequence[] = {
 	{ 0, ""}};
 
 static attrnav_sEnumElement elem_limit_type[] = {
-	{ (int) ge_eLimitType_Gt, 	"GreaterThen"},
-	{ (int) ge_eLimitType_Lt, 	"LessThen"},
+	{ (int) ge_eLimitType_Gt, 	"GreaterThan"},
+	{ (int) ge_eLimitType_Lt, 	"LessThan"},
 	{ 0, ""}};
 
 static attrnav_sEnumElement elem_relief[] = {
 	{ (int) glow_eRelief_Up, 	"Up"},
 	{ (int) glow_eRelief_Down, 	"Down"},
+	{ 0, ""}};
+
+static attrnav_sEnumElement elem_text_size[] = {
+	{ (int) glow_eTextSize_8, 	"8"},
+	{ (int) glow_eTextSize_10, 	"10"},
+	{ (int) glow_eTextSize_12, 	"12"},
+	{ (int) glow_eTextSize_14, 	"14"},
+	{ (int) glow_eTextSize_18, 	"18"},
+	{ (int) glow_eTextSize_24, 	"24"},
 	{ 0, ""}};
 
 static attrnav_sEnum enum_types[] = {
@@ -868,6 +879,7 @@ static attrnav_sEnum enum_types[] = {
 	{ (int) ge_eAttrType_AnimSequence, (attrnav_sEnumElement *) &elem_anim_sequence},
 	{ (int) ge_eAttrType_LimitType, (attrnav_sEnumElement *) &elem_limit_type},
 	{ (int) glow_eType_Relief, 	(attrnav_sEnumElement *) &elem_relief},
+	{ (int) glow_eType_TextSize, 	(attrnav_sEnumElement *) &elem_text_size},
 	{ (int) glow_eType_InputFocusMark, (attrnav_sEnumElement *) &elem_input_focus_mark},
 	{ 0, NULL}};
 
@@ -930,6 +942,7 @@ int  attrnav_attr_string_to_value( int type_id, char *value_str,
     case glow_eType_MB3Action: 
     case glow_eType_InputFocusMark: 
     case glow_eType_Relief: 
+    case glow_eType_TextSize: 
     case ge_eAttrType_DynType:
     case ge_eAttrType_DynTypeTone:
     case ge_eAttrType_ActionType:
@@ -1007,6 +1020,7 @@ void  attrnav_attrvalue_to_string( int type_id, void *value_ptr,
     case glow_eType_MB3Action:
     case glow_eType_InputFocusMark:
     case glow_eType_Relief:
+    case glow_eType_TextSize:
     case ge_eAttrType_AnimSequence:
     case ge_eAttrType_LimitType:
     {
@@ -2062,6 +2076,7 @@ ItemLocal::ItemLocal( AttrNav *attrnav, char *item_name, char *attr,
     case glow_eType_MB3Action:
     case glow_eType_InputFocusMark:
     case glow_eType_Relief:
+    case glow_eType_TextSize:
     case ge_eAttrType_DynType:
     case ge_eAttrType_DynTypeTone:
     case ge_eAttrType_ActionType:

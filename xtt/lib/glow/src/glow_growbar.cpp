@@ -192,7 +192,7 @@ void GrowBar::draw( int *ll_x, int *ll_y, int *ur_x, int *ur_y)
   int 	obj_ur_x = int( x_right * ctx->zoom_factor_x) - ctx->offset_x;
   int	obj_ll_x = int( x_left * ctx->zoom_factor_x) - ctx->offset_x;
   int	obj_ur_y = int( y_high * ctx->zoom_factor_y) - ctx->offset_y;
-  int   obj_ll_y = int( y_low * ctx->zoom_factor_x) - ctx->offset_y;
+  int   obj_ll_y = int( y_low * ctx->zoom_factor_y) - ctx->offset_y;
 
 
   if ( *ll_x > *ur_x)

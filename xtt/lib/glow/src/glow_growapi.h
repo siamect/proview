@@ -750,6 +750,19 @@ typedef GlowTraceData glow_sTraceData;
   /*! \param ctx	Grow context. */
   void grow_ResetNodraw( grow_tCtx ctx);
 
+  //! Set defered redraw.
+  /*! \param ctx	Grow context.
+    The redraw will be deferd until a call to redraw_defered() is made.
+  */
+  void	grow_SetDeferedRedraw( grow_tCtx ctx);
+
+  //! Execute the defered redrawings.
+  /*! \param ctx	Grow context.
+    Execute redrawing the defered redrawing area since the call to set_defered_redraw().
+  */
+  void	grow_RedrawDefered( grow_tCtx ctx);
+
+
   //! Redraw the window.
   /*! \param ctx	Grow context. */
   void grow_Redraw( grow_tCtx ctx);
@@ -908,6 +921,70 @@ typedef GlowTraceData glow_sTraceData;
 	glow_mDisplayLevel display_level, int fill_rect, 
 	int border, glow_eDrawType fill_draw_type, void *user_data,
 	grow_tObject *curve);
+
+  //! Create a window object, i.e an object of class GrowWindow.
+  /*!
+    \param ctx		Grow context.
+    \param name		Object name (max 31 char).
+    \param x		x coordinate for position of lower left corner of the rectangle.
+    \param y		y coordinate for position of lower left corner of the rectangle.
+    \param width	Width of the rectangle.
+    \param height	Height of the rectangle.
+    \param draw_type	Border color.
+    \param line_width	Line width of border.
+    \param display_level Display levels when the object is visible.
+    \param user_data	User data.
+    \param bar		Created GrowWindow object.
+  */
+  void grow_CreateGrowWindow( grow_tCtx ctx, char *name, 
+	double x, double y, double width, double height,
+	glow_eDrawType draw_type, int line_width,
+	glow_mDisplayLevel display_level, void *user_data,
+	grow_tObject *bar);
+
+  //! Create a table object, i.e an object of class GrowTable.
+  /*!
+    \param ctx		Grow context.
+    \param name		Object name (max 31 char).
+    \param x		x coordinate for position of lower left corner of the rectangle.
+    \param y		y coordinate for position of lower left corner of the rectangle.
+    \param width	Width of the rectangle.
+    \param height	Height of the rectangle.
+    \param draw_type	Border color.
+    \param line_width	Line width of border.
+    \param display_level Display levels when the object is visible.
+    \param user_data	User data.
+    \param bar		Created GrowWindow object.
+  */
+  void grow_CreateGrowTable( grow_tCtx ctx, char *name, 
+	double x, double y, double width, double height,
+	glow_eDrawType draw_type, int line_width,
+	int fill, glow_eDrawType fillcolor,
+	glow_mDisplayLevel display_level, void *user_data,
+	grow_tObject *bar);
+
+  //! Create a folder object, i.e an object of class GrowFolder.
+  /*!
+    \param ctx		Grow context.
+    \param name		Object name (max 31 char).
+    \param x		x coordinate for position of lower left corner of the rectangle.
+    \param y		y coordinate for position of lower left corner of the rectangle.
+    \param width	Width of the rectangle.
+    \param height	Height of the rectangle.
+    \param draw_type	Border color.
+    \param line_width	Line width of border.
+    \param selected_color Color of selected folder.
+    \param unselected_color Color of unseleced folder.
+    \param display_level Display levels when the object is visible.
+    \param user_data	User data.
+    \param bar		Created GrowFolder object.
+  */
+  void grow_CreateGrowFolder( grow_tCtx ctx, char *name, 
+	double x, double y, double width, double height,
+	glow_eDrawType draw_type, int line_width,
+	glow_eDrawType selected_color, glow_eDrawType unselected_color,
+	glow_mDisplayLevel display_level, void *user_data,
+	grow_tObject *bar);
 
   //! Create a line, i.e an object of class GrowRect.
   /*!
@@ -2579,6 +2656,46 @@ typedef GlowTraceData glow_sTraceData;
     \param ctx		Grow context.
     \param version	Version to convert to.
   */
+
+  //! Set parameters for a table object.
+  /*!
+    \param object	Table object.
+    \param info		Info struct.
+  */
+  void grow_SetTableInfo( grow_tObject object, glow_sTableInfo *info);
+
+  //! Get parameters for a table object.
+  /*!
+    \param object	Table object.
+    \param info		Info struct.
+  */
+  void grow_GetTableInfo( grow_tObject object, glow_sTableInfo *info);
+
+  //! Set value for a cell in a table object.
+  /*!
+    \param object	Table object.
+    \param column	Cell column.
+    \param row		Cell row.
+    \param value	Cell value.
+  */
+  void grow_SetCellValue( grow_tObject object, int column, int row, char *value);
+
+  //! Set selected cell in a table object.
+  /*!
+    \param object	Table object.
+    \param column	Cell column.
+    \param row		Cell row.
+  */
+  void grow_SetSelectedCell( grow_tObject object, int column, int row);
+
+  //! Get selected cell in a table object.
+  /*!
+    \param object	Table object.
+    \param column	Cell column.
+    \param row		Cell row.
+  */
+  int grow_GetSelectedCell( grow_tObject object, int *column, int *row);
+
   void grow_Convert( grow_tCtx ctx, glow_eConvert version);
 
   //! Check if a nodeclass is extern.

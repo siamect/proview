@@ -59,7 +59,8 @@ class GrowCtx : public GlowCtx {
         initial_position(glow_eDirection_Up), is_javaapplet(0),
         is_javaapplication(0), cycle(glow_eCycle_Slow),
         mb3_action(glow_eMB3Action_Close), scale_equal(0), translate_on(0),
-        input_focus_mark(glow_eInputFocusMark_Relief)
+        input_focus_mark(glow_eInputFocusMark_Relief), background_disabled(0),
+        redraw_callback(0), redraw_data(0)
 	{ ctx_type = glow_eCtxType_Grow;
 	  strcpy( name, "");
 	  strcpy( java_name, ""); 
@@ -592,6 +593,21 @@ class GrowCtx : public GlowCtx {
   int send_menu_callback( GlowArrayElem *object, int item, glow_eEvent event,
 			  double x, double y);
 
+  //! Send a table callback if such a callback is registred.
+  /*!
+    \param object	Menu object.
+    \param item		Activated menu item.
+    \param event	Menu event.
+    \param x		x coordinate.
+    \param y		y coordinate.
+    \param column      	Activated cell column.
+    \param row		Activated cell row.
+
+    Send a table callback.
+  */
+  int send_table_callback( GlowArrayElem *object, glow_eEvent event,
+			  double x, double y, int column, int row);
+
   //! Get configured scantimes.
   /*!
     \param time		Scantime for slow cycle.
@@ -794,15 +810,20 @@ class GrowCtx : public GlowCtx {
   int		is_javaapplication;	//!< Graph is exported as a java frame.
   glow_eCycle 	cycle;			//!< Fast of slow cycle as default for subgraph.
   glow_eMB3Action mb3_action;		//!< Action performed when MB3 is clicked.
-  int         scale_equal;		//!< Scaleing of objects are equal in x and y direction.  
-  int         translate_on;		//!< Send a translate callback to translate all texts of text objects and annotations.
+  int         	scale_equal;		//!< Scaleing of objects are equal in x and y direction.  
+  int         	translate_on;		//!< Send a translate callback to translate all texts of text objects and annotations.
   glow_eInputFocusMark input_focus_mark; //!< How to mark input focus for a subgraph.
+  int		background_disabled;	//!< Disable drawing of background.
+  void 		(*redraw_callback)( void *); //!< Backcall function before drawing (if ctx is window component).
+  void 		*redraw_data;		//!< Data for redraw callback.
 };
 
 void grow_auto_scrolling( GrowCtx *ctx);
 
 /*@}*/
 #endif
+
+
 
 
 

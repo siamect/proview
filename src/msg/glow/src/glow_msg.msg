@@ -14,3 +14,4 @@ no_propagate    <Don't propagate event handling>                /info
 fileopen        <Unable to open file>                           /error
 conselected     <Connection is selected>                        /error
 noselect        <Nothing is selected>                           /error
+groupclass      <Unable to group this kind of object>           /error

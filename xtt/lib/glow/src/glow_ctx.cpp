@@ -64,7 +64,7 @@ GlowCtx::GlowCtx( char *ctx_name, double zoom_fact, int offs_x, int offs_y)
         default_hot_mode(glow_eHotMode_SingleObject), hot_found(0),
         double_buffered(0), double_buffer_on(0), draw_buffer_only(0),
   	userdata_save_callback(0), userdata_open_callback(0), userdata_copy_callback(0),
-        version(GLOW_VERSION), inputfocus_object(0)
+        version(GLOW_VERSION), inputfocus_object(0), is_component(0)
 { 
   strcpy(name, ctx_name);
   memset( (void *)event_callback, 0, sizeof(event_callback));
@@ -517,11 +517,12 @@ void GlowCtx::set_defered_redraw()
 void GlowCtx::redraw_defered()
 {
   defered_redraw_active--;
-  if ( !defered_redraw_active )
-  {
-    draw( defered_x_low, defered_y_low, defered_x_high, defered_y_high);
-    nav_draw( defered_x_low_nav, defered_y_low_nav, defered_x_high_nav, 
-	defered_y_high_nav);
+  if ( !defered_redraw_active ) {
+    if ( defered_x_low < defered_x_high && defered_y_low < defered_y_high) {
+      draw( defered_x_low, defered_y_low, defered_x_high, defered_y_high);
+      nav_draw( defered_x_low_nav, defered_y_low_nav, defered_x_high_nav, 
+		defered_y_high_nav);
+    }
   }
 }
 
@@ -573,7 +574,8 @@ void GlowCtx::draw( int ll_x, int ll_y, int ur_x, int ur_y)
 
 void GlowCtx::clear()
 {
-  glow_draw_clear( this);
+  if ( !is_component)
+    glow_draw_clear( this);
 }
 
 void GlowCtx::cut()
@@ -1819,7 +1821,7 @@ void GlowCtx::register_inputfocus( GlowArrayElem *object, int focus)
       return;
 
     if ( inputfocus_object)
-      ((GrowNode *)inputfocus_object)->set_input_focus( 0);
+      inputfocus_object->set_input_focus( 0);
 
     inputfocus_object = object;
     if ( event_callback[glow_eEvent_InputFocusGained] ) {

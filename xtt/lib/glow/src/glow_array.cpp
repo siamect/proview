@@ -40,6 +40,9 @@
 #include "glow_growgroup.h"
 #include "glow_growaxis.h"
 #include "glow_growconglue.h"
+#include "glow_growwindow.h"
+#include "glow_growfolder.h"
+#include "glow_growtable.h"
 #include "glow_msg.h"
 
 GlowArray::GlowArray( int allocate, int incr) : allocated( allocate),
@@ -305,6 +308,56 @@ void GlowArray::copy_from( const GlowArray& array)
 	if ( n->ctx->userdata_copy_callback)
 	  (n->ctx->userdata_copy_callback)( n, 
 	     ((GrowTrend *)(array.a[i]))->user_data, &n->user_data);
+        insert( n);
+        break;
+      }
+      case glow_eObjectType_GrowWindow:
+      {
+        GrowWindow *n = new GrowWindow(*(GrowWindow *)array.a[i]);
+        n->highlight = 0;
+        n->hot = 0;
+	// Fix, This should be done in the copy constructor !!!
+	if ( n->ctx->userdata_copy_callback)
+	  (n->ctx->userdata_copy_callback)( n, 
+	     ((GrowWindow *)array.a[i])->user_data, &n->user_data);
+	n->window_ctx = 0;
+	n->v_scrollbar = 0;
+	n->h_scrollbar = 0;
+	n->new_ctx();
+	n->configure_scrollbars();
+        insert( n);
+        break;
+      }
+      case glow_eObjectType_GrowFolder:
+      {
+        GrowFolder *n = new GrowFolder(*(GrowFolder *)array.a[i]);
+        n->highlight = 0;
+        n->hot = 0;
+	// Fix, This should be done in the copy constructor !!!
+	if ( n->ctx->userdata_copy_callback)
+	  (n->ctx->userdata_copy_callback)( n, 
+	     ((GrowFolder *)array.a[i])->user_data, &n->user_data);
+	n->window_ctx = 0;
+	n->v_scrollbar = 0;
+	n->h_scrollbar = 0;
+	n->new_ctx();
+	n->configure_scrollbars();
+        insert( n);
+        break;
+      }
+      case glow_eObjectType_GrowTable:
+      {
+        GrowTable *n = new GrowTable(*(GrowTable *)array.a[i]);
+        n->highlight = 0;
+        n->hot = 0;
+	// Fix, This should be done in the copy constructor !!!
+	if ( n->ctx->userdata_copy_callback)
+	  (n->ctx->userdata_copy_callback)( n, 
+	     ((GrowFolder *)array.a[i])->user_data, &n->user_data);
+	n->v_scrollbar = 0;
+	n->h_scrollbar = 0;
+	n->configure();
+	n->configure_scrollbars();
         insert( n);
         break;
       }
@@ -925,6 +978,27 @@ void GlowArray::open( void *ctx, ifstream& fp)
       case glow_eSave_GrowTrend: 
       {
         GrowTrend *n = new GrowTrend( (GlowCtx *) ctx, "");
+	n->open( fp);
+        insert( n);
+        break;
+      }
+      case glow_eSave_GrowWindow: 
+      {
+        GrowWindow *n = new GrowWindow( (GlowCtx *) ctx, "");
+	n->open( fp);
+        insert( n);
+        break;
+      }
+      case glow_eSave_GrowTable: 
+      {
+        GrowTable *n = new GrowTable( (GlowCtx *) ctx, "");
+	n->open( fp);
+        insert( n);
+        break;
+      }
+      case glow_eSave_GrowFolder: 
+      {
+        GrowFolder *n = new GrowFolder( (GlowCtx *) ctx, "");
 	n->open( fp);
         insert( n);
         break;

@@ -28,6 +28,7 @@ extern "C" {
 #define DRAW_FONT_SIZE 9
 #define DRAW_PIXMAP_SIZE 9
 #define TREND_MAX_CURVES 11
+#define TABLE_MAX_COL 12
 
 #define FSPACE " "
 
@@ -51,7 +52,8 @@ typedef enum {
   glow_eType_Cycle,  		//!< Type is glow_eCycle
   glow_eType_MB3Action,  	//!< Type is glow_eMB3Action
   glow_eType_Relief,  		//!< Type is glow_eRelief
-  glow_eType_InputFocusMark  	//!< Type is glow_eInputFocusMark
+  glow_eType_InputFocusMark,  	//!< Type is glow_eInputFocusMark
+  glow_eType_TextSize	  	//!< Type is a text size, glow_eTextSize
 } glow_eType;
 
 //! Type of Ctx class
@@ -79,6 +81,15 @@ typedef enum {
   glow_eMB3Action_PopupMenu, 	//!< Display a popup menu, when this is defined for the object
   glow_eMB3Action_Both 		//!< Close the window, if the click doesn't hit an object, otherwise it will display the popmenu for the object.
 } glow_eMB3Action;
+
+typedef enum {
+  glow_eTextSize_8	= 0,
+  glow_eTextSize_10	= 1,
+  glow_eTextSize_12	= 2,
+  glow_eTextSize_14	= 4,
+  glow_eTextSize_18	= 6,   
+  glow_eTextSize_24	= 8
+} glow_eTextSize;
 
 //! Critera used to decide when an object is hot
 typedef enum {
@@ -145,7 +156,11 @@ typedef enum {
         glow_eObjectType_GrowAxis,
         glow_eObjectType_GrowRectRounded,
         glow_eObjectType_GrowConGlue,
-        glow_eObjectType_GrowMenu
+        glow_eObjectType_GrowMenu,
+        glow_eObjectType_GrowWindow,
+        glow_eObjectType_GrowScrollBar,
+        glow_eObjectType_GrowTable,
+        glow_eObjectType_GrowFolder
 	} glow_eObjectType;
 
 //! Direction of a connection points, sliders etc
@@ -165,6 +180,12 @@ typedef enum {
   glow_eFlipDirection_Vertical,   //!< Mirroring through a vertical line
   glow_eFlipDirection_Horizontal  //!< Mirroring through a horizontal line
 } glow_eFlipDirection;
+
+//! Vertical or horizontal direction
+typedef enum {
+  glow_eDir_Vertical,   //!< Vertical direction
+  glow_eDir_Horizontal  //!< Horizontal direction
+} glow_eDir;
 
 //! Different kind of alignment functions
 typedef enum {
@@ -744,7 +765,8 @@ typedef enum {
   glow_eEventType_ColorTone,
   glow_eEventType_Translate,  		//!< Translation callback. Event structure is glow_sEventTranslate
   glow_eEventType_KeyAscii,  		//!< Ascii key callback.
-  glow_eEventType_Menu  		//!< Menu callback.
+  glow_eEventType_Menu,  		//!< Menu callback.
+  glow_eEventType_Table  		//!< Table callback.
 } glow_eEventType;
 
 //! Glow events
@@ -898,6 +920,9 @@ typedef enum {
 	glow_eSave_GrowAxis		        = 37,
 	glow_eSave_GrowRectRounded	      	= 38,
 	glow_eSave_GrowConGlue		      	= 39,
+	glow_eSave_GrowWindow		      	= 40,
+	glow_eSave_GrowFolder		      	= 41,
+	glow_eSave_GrowTable		      	= 42,
 	glow_eSave_End				= 99,
 	glow_eSave_Ctx_zoom_factor_x		= 100,
 	glow_eSave_Ctx_base_zoom_factor		= 101,
@@ -1372,7 +1397,130 @@ typedef enum {
 	glow_eSave_GrowConGlue_line_width_left 	= 3902,
 	glow_eSave_GrowConGlue_line_width_right = 3903,
 	glow_eSave_GrowConGlue_node_part 	= 3904,
-	glow_eSave_GrowConGlue_border	 	= 3905
+	glow_eSave_GrowConGlue_border	 	= 3905,
+	glow_eSave_GrowWindow_file_name	 	= 4000,
+	glow_eSave_GrowWindow_rect_part	 	= 4001,
+	glow_eSave_GrowWindow_userdata_cb	= 4002,
+	glow_eSave_GrowWindow_scrollbar_width	= 4003,
+	glow_eSave_GrowWindow_vertical_scrollbar = 4004,
+	glow_eSave_GrowWindow_horizontal_scrollbar = 4005,
+	glow_eSave_GrowWindow_scrollbar_color 	= 4006,
+	glow_eSave_GrowWindow_scrollbar_bg_color = 4007,
+	glow_eSave_GrowWindow_window_scale 	= 4008,
+	glow_eSave_GrowFolder_folders 		= 4100,
+	glow_eSave_GrowFolder_text_size        	= 4101,
+	glow_eSave_GrowFolder_text_drawtype    	= 4102,
+	glow_eSave_GrowFolder_text_color_drawtype = 4103,
+	glow_eSave_GrowFolder_header_height 	= 4104,
+	glow_eSave_GrowFolder_window_part 	= 4105,
+	glow_eSave_GrowFolder_color_selected 	= 4106,
+	glow_eSave_GrowFolder_color_unselected	= 4107,
+	glow_eSave_GrowFolder_folder_file_names1 = 4120,
+	glow_eSave_GrowFolder_folder_text1 	= 4121,
+	glow_eSave_GrowFolder_folder_scale1    	= 4122,
+	glow_eSave_GrowFolder_folder_v_scrollbar1 = 4123,
+	glow_eSave_GrowFolder_folder_h_scrollbar1 = 4124,
+	glow_eSave_GrowFolder_folder_file_names2 = 4125,
+	glow_eSave_GrowFolder_folder_text2 	= 4126,
+	glow_eSave_GrowFolder_folder_scale2    	= 4127,
+	glow_eSave_GrowFolder_folder_v_scrollbar2 = 4128,
+	glow_eSave_GrowFolder_folder_h_scrollbar2 = 4129,
+	glow_eSave_GrowFolder_folder_file_names3 = 4130,
+	glow_eSave_GrowFolder_folder_text3 	= 4131,
+	glow_eSave_GrowFolder_folder_scale3    	= 4132,
+	glow_eSave_GrowFolder_folder_v_scrollbar3 = 4133,
+	glow_eSave_GrowFolder_folder_h_scrollbar3 = 4134,
+	glow_eSave_GrowFolder_folder_file_names4 = 4135,
+	glow_eSave_GrowFolder_folder_text4 	= 4136,
+	glow_eSave_GrowFolder_folder_scale4    	= 4137,
+	glow_eSave_GrowFolder_folder_v_scrollbar4 = 4138,
+	glow_eSave_GrowFolder_folder_h_scrollbar4 = 4139,
+	glow_eSave_GrowFolder_folder_file_names5 = 4140,
+	glow_eSave_GrowFolder_folder_text5 	= 4141,
+	glow_eSave_GrowFolder_folder_scale5    	= 4142,
+	glow_eSave_GrowFolder_folder_v_scrollbar5 = 4143,
+	glow_eSave_GrowFolder_folder_h_scrollbar5 = 4144,
+	glow_eSave_GrowFolder_folder_file_names6 = 4145,
+	glow_eSave_GrowFolder_folder_text6 	= 4146,
+	glow_eSave_GrowFolder_folder_scale6    	= 4147,
+	glow_eSave_GrowFolder_folder_v_scrollbar6 = 4148,
+	glow_eSave_GrowFolder_folder_h_scrollbar6 = 4149,
+	glow_eSave_GrowFolder_folder_file_names7 = 4150,
+	glow_eSave_GrowFolder_folder_text7 	= 4151,
+	glow_eSave_GrowFolder_folder_scale7    	= 4152,
+	glow_eSave_GrowFolder_folder_v_scrollbar7 = 4153,
+	glow_eSave_GrowFolder_folder_h_scrollbar7 = 4154,
+	glow_eSave_GrowFolder_folder_file_names8 = 4155,
+	glow_eSave_GrowFolder_folder_text8 	= 4156,
+	glow_eSave_GrowFolder_folder_scale8    	= 4157,
+	glow_eSave_GrowFolder_folder_v_scrollbar8 = 4158,
+	glow_eSave_GrowFolder_folder_h_scrollbar8 = 4159,
+	glow_eSave_GrowFolder_folder_file_names9 = 4160,
+	glow_eSave_GrowFolder_folder_text9 	= 4161,
+	glow_eSave_GrowFolder_folder_scale9    	= 4162,
+	glow_eSave_GrowFolder_folder_v_scrollbar9 = 4163,
+	glow_eSave_GrowFolder_folder_h_scrollbar9 = 4164,
+	glow_eSave_GrowFolder_folder_file_names10 = 4165,
+	glow_eSave_GrowFolder_folder_text10 	= 4166,
+	glow_eSave_GrowFolder_folder_scale10   	= 4167,
+	glow_eSave_GrowFolder_folder_v_scrollbar10 = 4168,
+	glow_eSave_GrowFolder_folder_h_scrollbar10 = 4169,
+	glow_eSave_GrowFolder_folder_file_names11 = 4170,
+	glow_eSave_GrowFolder_folder_text11 	= 4171,
+	glow_eSave_GrowFolder_folder_scale11   	= 4172,
+	glow_eSave_GrowFolder_folder_v_scrollbar11 = 4173,
+	glow_eSave_GrowFolder_folder_h_scrollbar11 = 4174,
+	glow_eSave_GrowFolder_folder_file_names12 = 4175,
+	glow_eSave_GrowFolder_folder_text12 	= 4176,
+	glow_eSave_GrowFolder_folder_scale12   	= 4177,
+	glow_eSave_GrowFolder_folder_v_scrollbar12 = 4178,
+	glow_eSave_GrowFolder_folder_h_scrollbar12 = 4179,
+	glow_eSave_GrowTable_rect_part	 	= 4200,
+	glow_eSave_GrowTable_userdata_cb	= 4202,
+	glow_eSave_GrowTable_scrollbar_width	= 4203,
+	glow_eSave_GrowTable_vertical_scrollbar = 4204,
+	glow_eSave_GrowTable_horizontal_scrollbar = 4205,
+	glow_eSave_GrowTable_scrollbar_color 	= 4206,
+	glow_eSave_GrowTable_scrollbar_bg_color = 4207,
+	glow_eSave_GrowTable_window_scale 	= 4208,
+	glow_eSave_GrowTable_rows 		= 4209,
+	glow_eSave_GrowTable_columns 		= 4210,
+	glow_eSave_GrowTable_header_row		= 4211,
+	glow_eSave_GrowTable_header_column     	= 4212,
+	glow_eSave_GrowTable_text_size        	= 4213,
+	glow_eSave_GrowTable_text_drawtype    	= 4214,
+	glow_eSave_GrowTable_header_row_height 	= 4215,
+	glow_eSave_GrowTable_row_height    	= 4216,
+	glow_eSave_GrowTable_text_color_drawtype = 4217,
+	glow_eSave_GrowTable_header_text_size   = 4218,
+	glow_eSave_GrowTable_header_text_drawtype = 4219,
+	glow_eSave_GrowTable_header_text_color  = 4220,
+	glow_eSave_GrowTable_header_text_bold   = 4221,
+	glow_eSave_GrowTable_options		= 4222,
+	glow_eSave_GrowTable_column_width1    	= 4240,
+	glow_eSave_GrowTable_header_text1    	= 4241,
+	glow_eSave_GrowTable_column_width2    	= 4242,
+	glow_eSave_GrowTable_header_text2    	= 4243,
+	glow_eSave_GrowTable_column_width3    	= 4244,
+	glow_eSave_GrowTable_header_text3    	= 4245,
+	glow_eSave_GrowTable_column_width4    	= 4246,
+	glow_eSave_GrowTable_header_text4    	= 4247,
+	glow_eSave_GrowTable_column_width5    	= 4248,
+	glow_eSave_GrowTable_header_text5    	= 4249,
+	glow_eSave_GrowTable_column_width6    	= 4250,
+	glow_eSave_GrowTable_header_text6    	= 4251,
+	glow_eSave_GrowTable_column_width7    	= 4252,
+	glow_eSave_GrowTable_header_text7    	= 4253,
+	glow_eSave_GrowTable_column_width8    	= 4254,
+	glow_eSave_GrowTable_header_text8    	= 4255,
+	glow_eSave_GrowTable_column_width9    	= 4256,
+	glow_eSave_GrowTable_header_text9    	= 4257,
+	glow_eSave_GrowTable_column_width10    	= 4258,
+	glow_eSave_GrowTable_header_text10    	= 4259,
+	glow_eSave_GrowTable_column_width11    	= 4260,
+	glow_eSave_GrowTable_header_text11    	= 4261,
+	glow_eSave_GrowTable_column_width12    	= 4262,
+	glow_eSave_GrowTable_header_text12    	= 4263
 	} glow_eSave;
 
 //! Relative or absolute position for an annotation
@@ -1568,6 +1716,20 @@ typedef struct {
   int			item;		//!< Activated item
 } glow_sEventMenu, *glow_tEventMenu;
 
+//! Data structure for a table event.
+typedef struct {
+  glow_eEvent		event;  	//!< Event
+  glow_eEventType	type;  		//!< Event type
+  int			x_pixel;  	//!< x-coordinate i pixels
+  int			y_pixel;  	//!< y-coordinate i pixels
+  double		x;  		//!< x-coordinate
+  double	       	y;  		//!< y-coordinate
+  glow_eObjectType	object_type;  	//!< Type of object
+  void			*object;  	//!< Pointer to object
+  int			column;  	//!< Activated cell column
+  int			row;  		//!< Activated cell row
+} glow_sEventTable, *glow_tEventTable;
+
 
 //! Union for event data structures
 typedef union {
@@ -1583,6 +1745,7 @@ typedef union {
 	glow_sEventTranslate	translate;
 	glow_sEventKeyAscii	key;
 	glow_sEventMenu		menu;
+	glow_sEventTable       	table;
 	} glow_sEvent, *glow_tEvent;
 
 //! Pixmap data structure
@@ -1668,6 +1831,13 @@ typedef struct {
 typedef struct {
   glow_sMenuInfoItem item[32];		//!< Array with info for the menu items.
 } glow_sMenuInfo;
+
+//! Data for a GrowTable object
+typedef struct {
+  int			columns;		//!< Number of columns
+  int			rows;			//!< Number of rows
+  int		        column_size[TABLE_MAX_COL]; //!< Number of characters in each column
+} glow_sTableInfo;
 
 /*@}*/
 

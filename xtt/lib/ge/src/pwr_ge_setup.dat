@@ -151,6 +151,9 @@ menu Other
   subgraph 	MenuBar		pwr_exe:pwr_menubar.pwsg 		6
   subgraph 	PulldownMenu	pwr_exe:pwr_pulldownmenu.pwsg 		6
   subgraph 	OptionMenu	pwr_exe:pwr_optionmenu.pwsg 		6
+  subgraph 	Window		pwr_window.component 			6
+  subgraph 	Table		pwr_table.component 			6
+  subgraph 	TabbedWindow	pwr_folder.component 			6
 }
 localsubgraphs Ssab ssab_exe:*.pwsg
 menu Local

@@ -1112,7 +1112,7 @@ int Graph::is_authorized( unsigned int access)
 int Graph::get_attr_items( grow_tObject object, attr_sItem **itemlist,
 	int *item_cnt, void **client_data)
 {
-  static attr_sItem	items[40];
+  static attr_sItem	items[100];
   int			i;
   grow_sAttrInfo	*grow_info, *grow_info_p;
   int			grow_info_cnt;
@@ -1164,6 +1164,161 @@ int Graph::get_attr_items( grow_tObject object, attr_sItem **itemlist,
 					"BarBorderColor",	"Bar.BorderColor",
 					"BarBorderWidth",	"Bar.BorderWidth",
 					"Dynamic",		"Dynamic",
+					""};
+    GeDyn *dyn;
+
+    grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
+		&grow_info_cnt);
+
+    grow_GetUserData( object, (void **)&dyn);
+
+    *item_cnt = 0;
+    dyn->get_attributes( object, items, item_cnt);
+
+    *client_data = 0;
+  }
+  else if ( grow_GetObjectType( object) == glow_eObjectType_GrowWindow)
+  {
+    char transtab[][32] = {	 	"FileName",		"Window.FileName",
+					"WindowScale",   	"Window.Scale",
+					"VerticalScrollbar",   	"Window.VerticalScrollbar",
+					"HorizontalScrollbar",	"Window.HorizontalScrollbar",
+					"ScrollbarWidth", 	"Window.ScrollbarWidth",
+					"ScrollbarColor", 	"Window.ScrollbarColor",
+					"ScrollbarBgColor", 	"Window.ScrollbarBgColor",
+					""};
+    GeDyn *dyn;
+
+    grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
+		&grow_info_cnt);
+
+    grow_GetUserData( object, (void **)&dyn);
+
+    *item_cnt = 0;
+    dyn->get_attributes( object, items, item_cnt);
+
+    *client_data = 0;
+  }
+  else if ( grow_GetObjectType( object) == glow_eObjectType_GrowTable)
+  {
+    char transtab[][32] = {	 	"Rows",			"Table.Rows",
+					"Columns",   		"Table.Columns",
+					"RowHeight", 		"Table.RowHeight",
+					"HeaderRow",   		"Table.HeaderRow",
+					"HeaderColumn",   	"Table.HeaderColumn",
+					"HeaderRowHeight", 	"Table.HeaderRowHeight",
+					"HeaderTextSize", 	"Table.HeaderTextSize",
+					"HeaderTextBold", 	"Table.HeaderTextBold",
+					"HeaderTextColor", 	"Table.HeaderTextColor",
+					"Options", 		"Table.Options",
+					"VerticalScrollbar",   	"Table.VerticalScrollbar",
+					"HorizontalScrollbar",	"Table.HorizontalScrollbar",
+					"ScrollbarWidth", 	"Table.ScrollbarWidth",
+					"ScrollbarColor", 	"Table.ScrollbarColor",
+					"ScrollbarBgColor", 	"Table.ScrollbarBgColor",
+					"ColumnWidth1",        	"Column1.Width",
+					"HeaderText1", 		"Column1.HeaderText",
+					"ColumnWidth2",        	"Column2.Width",
+					"HeaderText2", 		"Column2.HeaderText",
+					"ColumnWidth3",        	"Column3.Width",
+					"HeaderText3", 		"Column3.HeaderText",
+					"ColumnWidth4",        	"Column4.Width",
+					"HeaderText4", 		"Column4.HeaderText",
+					"ColumnWidth5",        	"Column5.Width",
+					"HeaderText5", 		"Column5.HeaderText",
+					"ColumnWidth6",        	"Column6.Width",
+					"HeaderText6", 		"Column6.HeaderText",
+					"ColumnWidth7",        	"Column7.Width",
+					"HeaderText7", 		"Column7.HeaderText",
+					"ColumnWidth8",        	"Column8.Width",
+					"HeaderText8", 		"Column8.HeaderText",
+					"ColumnWidth9",        	"Column9.Width",
+					"HeaderText9", 		"Column9.HeaderText",
+					"ColumnWidth10",       	"Column10.Width",
+					"HeaderText10",        	"Column10.HeaderText",
+					"ColumnWidth11",       	"Column11.Width",
+					"HeaderText11",        	"Column11.HeaderText",
+					"ColumnWidth12",       	"Column12.Width",
+					"HeaderText12",        	"Column12.HeaderText",
+					""};
+    GeDyn *dyn;
+
+    grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
+		&grow_info_cnt);
+
+    grow_GetUserData( object, (void **)&dyn);
+
+    *item_cnt = 0;
+    dyn->get_attributes( object, items, item_cnt);
+
+    *client_data = 0;
+  }
+  else if ( grow_GetObjectType( object) == glow_eObjectType_GrowFolder)
+  {
+    char transtab[][32] = {	 	"Folders",		"Folder.NumberOfFolders",
+					"ColorSelected",   	"Folder.ColorSelected",
+					"ColorUnselected",   	"Folder.ColorUnselected",
+					"HeaderHeight",   	"Folder.HeaderHeight",
+					"FileName1",   		"Folder1.FileName",
+					"Text1",   		"Folder1.Text",
+					"Scale1",		"Folder1.Scale",
+					"VerticalScrollbar1", 	"Folder1.VerticalScrollbar",
+					"HorizontalScrollbar1",	"Folder1.HorizontalScrollbar",
+					"FileName2",   		"Folder2.FileName",
+					"Text2",   		"Folder2.Text",
+					"Scale2",		"Folder2.Scale",
+					"VerticalScrollbar2", 	"Folder2.VerticalScrollbar",
+					"HorizontalScrollbar2",	"Folder2.HorizontalScrollbar",
+					"FileName3",   		"Folder3.FileName",
+					"Text3",   		"Folder3.Text",
+					"Scale3",		"Folder3.Scale",
+					"VerticalScrollbar3", 	"Folder3.VerticalScrollbar",
+					"HorizontalScrollbar3",	"Folder3.HorizontalScrollbar",
+					"FileName4",   		"Folder4.FileName",
+					"Text4",   		"Folder4.Text",
+					"Scale4",		"Folder4.Scale",
+					"VerticalScrollbar4", 	"Folder4.VerticalScrollbar",
+					"HorizontalScrollbar4",	"Folder4.HorizontalScrollbar",
+					"FileName5",   		"Folder5.FileName",
+					"Text5",   		"Folder5.Text",
+					"Scale5",		"Folder5.Scale",
+					"VerticalScrollbar5", 	"Folder5.VerticalScrollbar",
+					"HorizontalScrollbar5",	"Folder5.HorizontalScrollbar",
+					"FileName6",   		"Folder6.FileName",
+					"Text6",   		"Folder6.Text",
+					"Scale6",		"Folder6.Scale",
+					"VerticalScrollbar6", 	"Folder6.VerticalScrollbar",
+					"HorizontalScrollbar6",	"Folder6.HorizontalScrollbar",
+					"FileName7",   		"Folder7.FileName",
+					"Text7",   		"Folder7.Text",
+					"Scale7",		"Folder7.Scale",
+					"VerticalScrollbar7", 	"Folder7.VerticalScrollbar",
+					"HorizontalScrollbar7",	"Folder7.HorizontalScrollbar",
+					"FileName8",   		"Folder8.FileName",
+					"Text8",   		"Folder8.Text",
+					"Scale8",		"Folder8.Scale",
+					"VerticalScrollbar8", 	"Folder8.VerticalScrollbar",
+					"HorizontalScrollbar8",	"Folder8.HorizontalScrollbar",
+					"FileName9",   		"Folder9.FileName",
+					"Text9",   		"Folder9.Text",
+					"Scale9",		"Folder9.Scale",
+					"VerticalScrollbar9", 	"Folder9.VerticalScrollbar",
+					"HorizontalScrollbar9",	"Folder9.HorizontalScrollbar",
+					"FileName10",   	"Folder10.FileName",
+					"Text10",   		"Folder10.Text",
+					"Scale10",		"Folder10.Scale",
+					"VerticalScrollbar10", 	"Folder10.VerticalScrollbar",
+					"HorizontalScrollbar10","Folder10.HorizontalScrollbar",
+					"FileName11",   	"Folder11.FileName",
+					"Text11",   		"Folder11.Text",
+					"Scale11",		"Folder11.Scale",
+					"VerticalScrollbar11", 	"Folder11.VerticalScrollbar",
+					"HorizontalScrollbar11","Folder11.HorizontalScrollbar",
+					"FileName12",   	"Folder12.FileName",
+					"Text12",   		"Folder12.Text",
+					"Scale12",		"Folder12.Scale",
+					"VerticalScrollbar12", 	"Folder12.VerticalScrollbar",
+					"HorizontalScrollbar12","Folder12.HorizontalScrollbar",
 					""};
     GeDyn *dyn;
 
@@ -1384,7 +1539,9 @@ static int graph_attr_recall_cb( void *g, grow_tObject object, int idx,
   if ( grow_GetObjectType( object) == glow_eObjectType_GrowNode ||
        grow_GetObjectType( object) == glow_eObjectType_GrowSlider ||
        grow_GetObjectType( object) == glow_eObjectType_GrowGroup ||
+       grow_GetObjectType( object) == glow_eObjectType_GrowWindow ||
        grow_GetObjectType( object) == glow_eObjectType_GrowTrend ||
+       grow_GetObjectType( object) == glow_eObjectType_GrowTable ||
        grow_GetObjectType( object) == glow_eObjectType_GrowBar) {
     sts = graph->recall.get( &dyn, idx);
     if ( ODD(sts)) {
@@ -1744,7 +1901,9 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
 
       if ( grow_GetObjectType( event->object.object) == glow_eObjectType_GrowNode ||
 	   grow_GetObjectType( event->object.object) == glow_eObjectType_GrowGroup ||
+	   grow_GetObjectType( event->object.object) == glow_eObjectType_GrowWindow ||
 	   grow_GetObjectType( event->object.object) == glow_eObjectType_GrowTrend ||
+	   grow_GetObjectType( event->object.object) == glow_eObjectType_GrowTable ||
 	   grow_GetObjectType( event->object.object) == glow_eObjectType_GrowBar) {
 	GeDyn *dyn;
 
@@ -1884,6 +2043,18 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
 	else if ( strcmp( sub_name, "pwr_bar") == 0) {
 	  grow_tObject t1;
 	  graph->create_bar( &t1, event->create_grow_object.x, event->create_grow_object.y);
+	}
+	else if ( strcmp( sub_name, "pwr_window") == 0) {
+	  grow_tObject t1;
+	  graph->create_window( &t1, event->create_grow_object.x, event->create_grow_object.y);
+	}
+	else if ( strcmp( sub_name, "pwr_table") == 0) {
+	  grow_tObject t1;
+	  graph->create_table( &t1, event->create_grow_object.x, event->create_grow_object.y);
+	}
+	else if ( strcmp( sub_name, "pwr_folder") == 0) {
+	  grow_tObject t1;
+	  graph->create_folder( &t1, event->create_grow_object.x, event->create_grow_object.y);
 	}
 	else if ( strcmp( sub_name, "pwr_axis") == 0) {
 	  grow_tObject t1;
@@ -2470,6 +2641,12 @@ static void graph_graphattr_redraw_cb( Attr *attrctx)
 static void graph_attr_close_cb( Attr *attrctx)
 {
 //  grow_FreeObjectAttrInfo( (grow_sAttrInfo *)attrctx->client_data);
+  Graph *graph = (Graph *) attrctx->parent_ctx;
+
+  if ( attrctx->client_data)
+    grow_UpdateObject( graph->grow->ctx, attrctx->object,
+		       (grow_sAttrInfo *)attrctx->client_data);
+
   ((Graph *)attrctx->parent_ctx)->attr_list.remove( (void *) attrctx);
   delete attrctx;
 }
@@ -2668,7 +2845,9 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
     case glow_eEvent_ObjectDeleted: {
       if ( grow_GetObjectType( event->object.object) == glow_eObjectType_GrowNode ||
 	   grow_GetObjectType( event->object.object) == glow_eObjectType_GrowGroup ||
+	   grow_GetObjectType( event->object.object) == glow_eObjectType_GrowWindow ||
 	   grow_GetObjectType( event->object.object) == glow_eObjectType_GrowTrend ||
+	   grow_GetObjectType( event->object.object) == glow_eObjectType_GrowTable ||
 	   grow_GetObjectType( event->object.object) == glow_eObjectType_GrowBar) {
 	GeDyn *dyn;
 
@@ -2682,7 +2861,10 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
       if ( event->object.object_type != glow_eObjectType_NoObject &&
            (grow_GetObjectType( event->object.object) == glow_eObjectType_GrowNode ||
             grow_GetObjectType( event->object.object) == glow_eObjectType_GrowGroup ||
+            grow_GetObjectType( event->object.object) == glow_eObjectType_GrowSlider ||
+            grow_GetObjectType( event->object.object) == glow_eObjectType_GrowWindow ||
             grow_GetObjectType( event->object.object) == glow_eObjectType_GrowTrend ||
+            grow_GetObjectType( event->object.object) == glow_eObjectType_GrowTable ||
             grow_GetObjectType( event->object.object) == glow_eObjectType_GrowBar))
       {
 	GeDyn *dyn;
@@ -2700,7 +2882,9 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
         break;
       if ( grow_GetObjectType( graph->current_mb1_down) == glow_eObjectType_GrowNode ||
            grow_GetObjectType( graph->current_mb1_down) == glow_eObjectType_GrowGroup ||
+           grow_GetObjectType( graph->current_mb1_down) == glow_eObjectType_GrowWindow ||
            grow_GetObjectType( graph->current_mb1_down) == glow_eObjectType_GrowTrend ||
+           grow_GetObjectType( graph->current_mb1_down) == glow_eObjectType_GrowTable ||
            grow_GetObjectType( graph->current_mb1_down) == glow_eObjectType_GrowBar)
       {
 	GeDyn *dyn;
@@ -2810,35 +2994,54 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
     }
     case glow_eEvent_MB3Press:
     {
+      if ( event->any.type == glow_eEventType_Table) {
+	switch( grow_GetMB3Action( graph->grow->ctx)) {
+	case glow_eMB3Action_PopupMenu:
+	case glow_eMB3Action_Both: {
+	  GeDyn *dyn;
+	  
+	  grow_GetUserData( event->table.object, (void **)&dyn);
+	  dyn->action( event->table.object, event);
+	  break;
+	}
+	default: ;
+	}
+	break;
+      }
+
       if ( event->object.object_type == glow_eObjectType_NoObject)
         break;
-      if ( !( grow_GetObjectType( event->object.object) == 
-	                                   glow_eObjectType_GrowNode ||
-              grow_GetObjectType( event->object.object) == 
-	                                   glow_eObjectType_GrowGroup ||
-              grow_GetObjectType( event->object.object) == 
-	                                   glow_eObjectType_GrowBar ||
-              grow_GetObjectType( event->object.object) == 
-	                                   glow_eObjectType_GrowTrend))
+      if ( !( grow_GetObjectType( event->object.object) == glow_eObjectType_GrowNode ||
+              grow_GetObjectType( event->object.object) == glow_eObjectType_GrowGroup ||
+              grow_GetObjectType( event->object.object) == glow_eObjectType_GrowWindow ||
+              grow_GetObjectType( event->object.object) == glow_eObjectType_GrowBar ||
+              grow_GetObjectType( event->object.object) == glow_eObjectType_GrowTable ||
+              grow_GetObjectType( event->object.object) == glow_eObjectType_GrowTrend))
         break;
       if ( graph->mode != graph_eMode_Runtime)
         break;
 
       switch( grow_GetMB3Action( graph->grow->ctx)) {
-        case glow_eMB3Action_PopupMenu:
-	case glow_eMB3Action_Both:
-	  {
-	    GeDyn *dyn;
+      case glow_eMB3Action_PopupMenu:
+      case glow_eMB3Action_Both: {
+	GeDyn *dyn;
 
-	    grow_GetUserData( event->object.object, (void **)&dyn);
-	    dyn->action( event->object.object, event);
-	  }
+	grow_GetUserData( event->object.object, (void **)&dyn);
+	dyn->action( event->object.object, event);
+	break;
+      }
       default: ;
       }
     }
     case glow_eEvent_MB1Click:
     {
       GeDyn *dyn;
+
+      if ( event->any.type == glow_eEventType_Table) {
+	grow_GetUserData( event->table.object, (void **)&dyn);
+	dyn->action( event->table.object, event);
+	break;
+      }
 
       if ( event->object.object_type == glow_eObjectType_NoObject ||
 	   grow_GetObjectType( event->object.object) != glow_eObjectType_GrowMenu) {
@@ -2872,7 +3075,9 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
         break;
       if ( grow_GetObjectType( event->object.object) == glow_eObjectType_GrowNode ||
            grow_GetObjectType( event->object.object) == glow_eObjectType_GrowGroup ||
+           grow_GetObjectType( event->object.object) == glow_eObjectType_GrowWindow ||
            grow_GetObjectType( event->object.object) == glow_eObjectType_GrowBar ||
+           grow_GetObjectType( event->object.object) == glow_eObjectType_GrowTable ||
            grow_GetObjectType( event->object.object) == glow_eObjectType_GrowTrend)
       {
 
@@ -2982,6 +3187,7 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
 	    break;
 	}
       }
+      break;
     }
 
     case glow_eEvent_Translate: {
@@ -3107,7 +3313,7 @@ void Graph::get_command( char *in, char *out)
 }
 
 graph_eDatabase Graph::parse_attr_name( char *name, char *parsed_name, 
-	int *inverted, int *type, int *size)
+	int *inverted, int *type, int *size, int *elem)
 {
   char str[200];
   char str1[200];
@@ -3198,6 +3404,8 @@ graph_eDatabase Graph::parse_attr_name( char *name, char *parsed_name,
     *inverted = 0;
     strcpy( parsed_name, str);
   }
+  if ( elem)
+    *elem = elements;
   return graph_eDatabase_Gdh;
 }
 
@@ -3354,6 +3562,61 @@ void Graph::create_bar( grow_tObject *object, double x, double y)
   info.max_value = 100;
   info.min_value = 0;
   grow_SetBarInfo( *object, &info);
+  grow_Redraw( grow->ctx);
+}
+
+void Graph::create_window( grow_tObject *object, double x, double y)
+{
+  double width = 8;
+  double height = 6;
+  GeDyn *dyn;
+
+  grow_CreateGrowWindow( grow->ctx, "", 
+			    x, y, width, height,
+			    glow_eDrawType_Line,
+			    1, glow_mDisplayLevel_1, NULL, 
+			    object);
+  dyn = new GeDyn( this);
+  dyn->update_elements();
+  grow_SetUserData( *object, (void *)dyn);
+
+  grow_Redraw( grow->ctx);
+}
+
+void Graph::create_table( grow_tObject *object, double x, double y)
+{
+  double width = 8;
+  double height = 6;
+  GeDyn *dyn;
+
+  grow_CreateGrowTable( grow->ctx, "", 
+			    x, y, width, height,
+			    glow_eDrawType_Line,
+			    1, 1, glow_eDrawType_Color33, glow_mDisplayLevel_1, NULL, 
+			    object);
+  dyn = new GeDyn( this);
+  dyn->dyn_type = dyn->total_dyn_type = ge_mDynType_Table;
+  dyn->update_elements();
+  grow_SetUserData( *object, (void *)dyn);
+
+  grow_Redraw( grow->ctx);
+}
+
+void Graph::create_folder( grow_tObject *object, double x, double y)
+{
+  double width = 8;
+  double height = 6;
+  GeDyn *dyn;
+
+  grow_CreateGrowFolder( grow->ctx, "", 
+			    x, y, width, height,
+			    glow_eDrawType_Line, 1, 
+			    glow_eDrawType_Color22, glow_eDrawType_Color25,
+			    glow_mDisplayLevel_1, NULL, object);
+  dyn = new GeDyn( this);
+  dyn->update_elements();
+  grow_SetUserData( *object, (void *)dyn);
+
   grow_Redraw( grow->ctx);
 }
 

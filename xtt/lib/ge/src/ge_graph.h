@@ -851,7 +851,7 @@ class Graph {
     is inverted (!), of type pwr_eType_String with size 80.
   */
   graph_eDatabase parse_attr_name( char *name, char *parsed_name,
-		int *inverted, int *type, int *size);
+		int *inverted, int *type, int *size, int *elem = 0);
 
   //! Get the default window size
   /*!
@@ -1061,6 +1061,30 @@ class Graph {
     \param y		y coordinate for object.
   */
   void create_bar( grow_tObject *object, double x, double y);
+
+  //! Create a window object.
+  /*!
+    \param object	Created bar object.
+    \param x		x coordinate for object.
+    \param y		y coordinate for object.
+  */
+  void create_window( grow_tObject *object, double x, double y);
+
+  //! Create a table object.
+  /*!
+    \param object	Created bar object.
+    \param x		x coordinate for object.
+    \param y		y coordinate for object.
+  */
+  void create_table( grow_tObject *object, double x, double y);
+
+  //! Create a folder object.
+  /*!
+    \param object	Created bar object.
+    \param x		x coordinate for object.
+    \param y		y coordinate for object.
+  */
+  void create_folder( grow_tObject *object, double x, double y);
 
   //! Create an axis object.
   /*!

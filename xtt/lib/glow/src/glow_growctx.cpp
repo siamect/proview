@@ -30,6 +30,8 @@
 #include "glow_growgroup.h"
 #include "glow_growaxis.h"
 #include "glow_growmenu.h"
+#include "glow_growfolder.h"
+#include "glow_growtable.h"
 #include "glow_draw.h"
 
 #include "glow_msg.h"
@@ -520,6 +522,19 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
       break;
     case glow_eEvent_ButtonMotion:
       tiptext->remove();
+
+      for ( i = 0; i < a.a_size; i++) {
+	if ( a[i]->type() == glow_eObjectType_GrowWindow ||
+	     a[i]->type() == glow_eObjectType_GrowTable ||
+	     a[i]->type() == glow_eObjectType_GrowFolder) {
+	  sts = a[i]->event_handler( glow_eEvent_ButtonMotion, x, y, fx, fy);
+	  if ( sts) {
+	    select_rect_active = 0;
+	    node_movement_active = 0;
+	    break;
+	  }
+	}
+      }
       if ( node_movement_active && edit_mode != grow_eMode_EditPolyLine)
       {
         int move_x, move_y;
@@ -1944,6 +1959,7 @@ void GrowCtx::clear_all( int keep_paste)
   cycle = glow_eCycle_Slow;
   mb3_action = glow_eMB3Action_Close;
   translate_on = 0;
+  inputfocus_object = 0;
 
   nav_clear();
   set_nodraw();
@@ -1996,11 +2012,12 @@ void GrowCtx::clear_all( int keep_paste)
 void GrowCtx::redraw_defered()
 {
   defered_redraw_active--;
-  if ( !defered_redraw_active )
-  {
-    draw( defered_x_low, defered_y_low, defered_x_high, defered_y_high);
-    nav_draw( defered_x_low_nav, defered_y_low_nav, defered_x_high_nav, 
-	defered_y_high_nav);
+  if ( !defered_redraw_active ) {
+    if ( defered_x_low < defered_x_high && defered_y_low < defered_y_high) {
+      draw( defered_x_low, defered_y_low, defered_x_high, defered_y_high);
+      nav_draw( defered_x_low_nav, defered_y_low_nav, defered_x_high_nav, 
+		defered_y_high_nav);
+    }
   }
 }
 
@@ -2033,6 +2050,9 @@ void GrowCtx::draw( int ll_x, int ll_y, int ur_x, int ur_y)
 #endif
   glow_draw_set_clip_rectangle( this, ll_x, ll_y, ur_x, ur_y);
   set_draw_buffer_only();
+
+  if ( redraw_callback)
+    (redraw_callback) ( redraw_data);
   if ( double_buffer_on)
     glow_draw_buffer_background( this);
   for ( i = 0; i < a.a_size; i++) {
@@ -2278,6 +2298,8 @@ void GrowCtx::flip_select( glow_eFlipDirection dir)
 
 void GrowCtx::set_background( glow_eDrawType color)
 {
+  if ( background_disabled)
+    return;
 
   if ( enable_bg_pixmap && strcmp( background_image, "") != 0)
   {
@@ -2537,6 +2559,10 @@ void GrowCtx::set_select_textsize( int size)
       ((GrowText *)a_sel[i])->set_textsize( size);
     else if ( a_sel[i]->type() == glow_eObjectType_GrowAxis)
       ((GrowAxis *)a_sel[i])->set_textsize( size);
+    else if ( a_sel[i]->type() == glow_eObjectType_GrowFolder)
+      ((GrowFolder *)a_sel[i])->set_textsize( size);
+    else if ( a_sel[i]->type() == glow_eObjectType_GrowTable)
+      ((GrowTable *)a_sel[i])->set_textsize( size);
   }
 }
 
@@ -2547,6 +2573,10 @@ void GrowCtx::set_select_textbold( int bold)
       ((GrowText *)a_sel[i])->set_textbold( bold);
     else if ( a_sel[i]->type() == glow_eObjectType_GrowAxis)
       ((GrowAxis *)a_sel[i])->set_textbold( bold);
+    else if ( a_sel[i]->type() == glow_eObjectType_GrowFolder)
+      ((GrowFolder *)a_sel[i])->set_textbold( bold);
+    else if ( a_sel[i]->type() == glow_eObjectType_GrowTable)
+      ((GrowTable *)a_sel[i])->set_textbold( bold);
   }
 }
 
@@ -3282,6 +3312,31 @@ int GrowCtx::send_menu_callback( GlowArrayElem *object, int item, glow_eEvent ev
   return 0;
 }
 
+int GrowCtx::send_table_callback( GlowArrayElem *object, glow_eEvent event,
+				 double x, double y, int column, int row)
+{
+
+  if ( event_callback[event] )
+  {
+    /* Send a table callback */
+    static glow_sEvent e;
+
+    e.event = event;
+    e.any.type = glow_eEventType_Table;
+    e.any.x_pixel = int( x * zoom_factor_x) - offset_x;
+    e.any.y_pixel = int( y * zoom_factor_y) - offset_y;
+    e.any.x = x;
+    e.any.y = y;
+    e.table.object_type = object->type();
+    e.table.object = object;
+    e.table.column = column;
+    e.table.row = row;
+    return event_callback[event]( this, &e);
+  }
+
+  return 0;
+}
+
 void GrowCtx::store_geometry()
 {
   stored_offset_x = offset_x;
@@ -3334,10 +3389,13 @@ int GrowCtx::group_select( GlowArrayElem **group, char *last_group)
   if ( a_sel.size() == 0)
     return GLOW__NOSELECT;
 
-  // Connections in a group are not allowed
+  // Connections, windows and tables in a group are not allowed
   for ( i = 0; i < a_sel.size(); i++) {
-    if ( a_sel[i]->type() == glow_eObjectType_Con)
-      return GLOW__CONSELECTED;
+    if ( a_sel[i]->type() == glow_eObjectType_Con ||
+	 a_sel[i]->type() == glow_eObjectType_GrowWindow ||
+	 a_sel[i]->type() == glow_eObjectType_GrowFolder ||
+	 a_sel[i]->type() == glow_eObjectType_GrowTable)
+      return GLOW__GROUPCLASS;
   }
 
   strcpy( last_group, a_sel.get_last_group());

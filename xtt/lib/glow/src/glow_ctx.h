@@ -473,7 +473,7 @@ class GlowCtx {
   /*! \param node	Node. */
   void	redraw_node_cons( void *node);
 
-  //! Delete the connectsions connected to a specific node.
+  //! Delete the connections connected to a specific node.
   /*! \param node	Node.*/
   void	delete_node_cons( void *node);
 
@@ -748,6 +748,7 @@ class GlowCtx {
   int version;			//!< Current glow version.
   GlowTipText *tiptext;		//!< Tip text object.
   GlowArrayElem *inputfocus_object; //!< Object that has input focus.
+  int is_component;		//!< Ctx is a window component.
 
   //! Register scrollbar callback function
   /*!

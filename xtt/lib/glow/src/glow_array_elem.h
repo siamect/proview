@@ -166,6 +166,7 @@ class GlowArrayElem {
     virtual void convert( glow_eConvert version) {};
     virtual void set_rootnode( void *node) {};
     virtual void set_linetype( glow_eLineType type) {};
+    virtual void set_input_focus( int focus) {};
 
     virtual ~GlowArrayElem() {};
 };

@@ -5,7 +5,7 @@
 #include <fstream.h>
 
 #include "glow.h"
-#include "glow_ctx.h"
+#include "glow_growctx.h"
 
  
 /*! \file glow_colpalctx.h
@@ -22,7 +22,7 @@
   When a color entry is activated, an event is sent to the registred callback routine for the event.
 */
 
-class ColPalCtx : public GlowCtx {
+class ColPalCtx : public GrowCtx {
  public:
   
   //! Constructor.
@@ -31,7 +31,7 @@ class ColPalCtx : public GlowCtx {
     \param zoom_fact	Initial zoomfactor.
   */
   ColPalCtx( char *ctx_name, double zoom_fact = 100) :
-    	GlowCtx( ctx_name, zoom_fact), columns(30), 
+    	GrowCtx( ctx_name, zoom_fact), columns(30), 
 	current_fill( glow_eDrawType_LineGray), current_border( glow_eDrawType_Line),
 	entry_width(0.3), entry_height(1), display_entry_width(3)
 	{ ctx_type = glow_eCtxType_ColPal; grid_on = 0; };

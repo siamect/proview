@@ -677,14 +677,22 @@ int draw_event_handler( GlowCtx *ctx, XEvent event)
             ctx->event_handler( glow_eEvent_MB1Down, event.xbutton.x, event.xbutton.y, 0, 0);
 	    if ( draw_ctx->click_sensitivity & glow_mSensitivity_MB1Click && 
 	         !(draw_ctx->click_sensitivity & glow_mSensitivity_MB1DoubleClick) && 
-	         !(draw_ctx->click_sensitivity & glow_mSensitivity_MB1Press))
-            {
+	         !(draw_ctx->click_sensitivity & glow_mSensitivity_MB1Press)) {
               memcpy( &last_event, &event, sizeof(event));
               button_pressed = 0;
               button_clicked = 1;
 	      last_press_x = event.xbutton.x;
 	      last_press_y = event.xbutton.y;
               return 1;
+	    }
+	    else if ( !(draw_ctx->click_sensitivity & glow_mSensitivity_MB1Click) && 
+	         !(draw_ctx->click_sensitivity & glow_mSensitivity_MB1DoubleClick) && 
+	         draw_ctx->click_sensitivity & glow_mSensitivity_MB1Press) {
+              memcpy( &last_event, &event, sizeof(event));
+              button_pressed = 1;
+              button_clicked = 0;
+	      last_press_x = event.xbutton.x;
+	      last_press_y = event.xbutton.y;
 	    }
             break;
           case Button3:
