@@ -641,19 +641,41 @@ int ClassRead::attribute_attr( char *name, char *value)
   }
   else if ( strcmp( low( name), "flags") == 0)
   {
-    if ( strcmp( attr_flags, "") != 0)
-      strcat( attr_flags, " | ");
-    if ( strncmp( value, "PWR_MASK_", 9) == 0)
+    if ( strncmp( value, "PWR_MASK_", 9) == 0) {
+      if ( strcmp( attr_flags, "") != 0)
+	strcat( attr_flags, " | ");
       strcat( attr_flags, &value[9]);
-    else
-      strcat( attr_flags, value);
 
-    if ( strcmp( value, "PWR_MASK_POINTER") == 0)
-      attr_pointer = 1;
-    else if ( strcmp( value, "PWR_MASK_ARRAY") == 0)
-      attr_array = 1;
-    else if ( strcmp( value, "PWR_MASK_RTVIRTUAL") == 0)
-      attr_rtvirtual = 1;
+      if ( strcmp( value, "PWR_MASK_POINTER") == 0)
+	attr_pointer = 1;
+      else if ( strcmp( value, "PWR_MASK_ARRAY") == 0)
+	attr_array = 1;
+      else if ( strcmp( value, "PWR_MASK_RTVIRTUAL") == 0)
+	attr_rtvirtual = 1;
+    }
+    else {
+      int flags_value;
+
+      nr = sscanf( value, "%d", &flags_value);
+      if ( nr != 1) {
+	return 1;
+      }
+      if ( strcmp( attr_flags, "") != 0)
+	strcat( attr_flags, " | ");
+      strcat( attr_flags, flags_to_string( flags_value));
+      switch ( flags_value) {
+      case pwr_mAdef_pointer:
+	attr_pointer = 1;
+	break;
+      case pwr_mAdef_array:
+	attr_array = 1;
+	break;
+      case pwr_mAdef_rtvirtual:
+	attr_rtvirtual = 1;
+	break;
+      default: ;
+      }
+    }
   }
   else if ( strcmp( low( name), "elements") == 0)
   {
@@ -1193,3 +1215,34 @@ int ClassRead::copy_tmp_file( char *tmpfilename, ofstream& fp_to)
   return 1;
 }
 
+char *ClassRead::flags_to_string( int value)
+{
+  static char str[40];
+
+  switch ( value) {
+  case pwr_mAdef_pointer: 	strcpy( str, "Pointer"); break;
+  case pwr_mAdef_array: 	strcpy( str, "Array"); break;
+  case pwr_mAdef_backup: 	strcpy( str, "Backup"); break;
+  case pwr_mAdef_changelog: 	strcpy( str, "Changelog"); break;
+  case pwr_mAdef_state: 	strcpy( str, "State"); break;
+  case pwr_mAdef_const: 	strcpy( str, "Const"); break;
+  case pwr_mAdef_rtvirtual: 	strcpy( str, "Rtvirtual"); break;
+  case pwr_mAdef_devbodyref: 	strcpy( str, "Devbodyref"); break;
+  case pwr_mAdef_dynamic: 	strcpy( str, "Dynamic"); break;
+  case pwr_mAdef_objidself: 	strcpy( str, "Objidself"); break;
+  case pwr_mAdef_noedit: 	strcpy( str, "Noedit"); break;
+  case pwr_mAdef_invisible: 	strcpy( str, "Invisible"); break;
+  case pwr_mAdef_refdirect: 	strcpy( str, "Refdirect"); break;
+  case pwr_mAdef_noinvert: 	strcpy( str, "Noinvert"); break;
+  case pwr_mAdef_noremove: 	strcpy( str, "Noremove"); break;
+  case pwr_mAdef_rtdbref: 	strcpy( str, "Rtdbref"); break;
+  case pwr_mAdef_private: 	strcpy( str, "Private"); break;
+  case pwr_mAdef_class: 	strcpy( str, "Class"); break;
+  case pwr_mAdef_subclass: 	strcpy( str, "Subclass"); break;
+  case pwr_mAdef_buffer: 	strcpy( str, "Buffer"); break;
+  case pwr_mAdef_nowbl: 	strcpy( str, "Nowbl"); break;
+  case pwr_mAdef_alwayswbl: 	strcpy( str, "Alwayswbl"); break;
+  default: 			strcpy( str, "Unknown");
+  }
+  return str;
+}

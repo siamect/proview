@@ -192,6 +192,7 @@ class ClassRead {
     int object_close();
     char *low( char *in);
     int copy_tmp_file( char *tmpfilename, ofstream& fp_to);
+    char *flags_to_string( int value);
 
     // html
     int		generate_html;
