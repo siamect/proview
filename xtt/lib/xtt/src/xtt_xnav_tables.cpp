@@ -1479,6 +1479,8 @@ int XNav::show_plcpgm()
   pwr_sClass_PlcThread	*object_ptr;
   pwr_tObjid		thread_objid;
   char			namebuf[80];
+  pwr_tObjid		parent;
+  pwr_tCid		cid;
 
   brow_pop();
   brow_SetNodraw( brow->ctx);
@@ -1495,6 +1497,18 @@ int XNav::show_plcpgm()
   sts = gdh_GetClassList ( pwr_cClass_plc, &objid);
   while ( ODD(sts))
   {
+    // Don't display template plcpgm in class volumes
+    sts = gdh_GetParent( objid, &parent);
+    if ( ODD(sts)) {
+      sts = gdh_GetObjectClass( parent, &cid);
+      if ( EVEN(sts)) return sts;
+
+      if ( cid == pwr_eClass_ClassDef) {
+	sts = gdh_GetNextObject ( objid, &objid);
+	continue;
+      }
+    }
+
     sts = gdh_ObjidToPointer( objid, (void **) &object_ptr);
     if ( EVEN(sts)) return sts;
 
