@@ -1,0 +1,15 @@
+!  tools_pdrgen -- link options file
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+pwr_obj:tools_pdrgen
+pwr_obj:pdr_clnt
+pwr_obj:pdr_cout
+pwr_obj:pdr_hout
+pwr_obj:pdr_parse
+pwr_obj:pdr_scan
+pwr_obj:pdr_svco
+pwr_obj:pdr_util
