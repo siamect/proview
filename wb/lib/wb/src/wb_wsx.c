@@ -157,7 +157,7 @@ pwr_tStatus wsx_CheckCard(
 	  if (EVEN(sts)) return sts;
 	  if ( strcmp( buf_ptr, "") == 0)
 	    wsx_error_msg( sesctx, WSX__CARDDEVNAME, objid, errorcount, warningcount);
-	  XtFree((char *) buf_ptr);
+	  free((char *) buf_ptr);
 	}
 	
 	/* Check ErrorSoftLimit */
@@ -169,7 +169,7 @@ pwr_tStatus wsx_CheckCard(
 	if (EVEN(sts)) return sts;
 	if ( *(int *) buf_ptr == 0)
 	  wsx_error_msg( sesctx, WSX__CARDERRSOFTLIM, objid, errorcount, warningcount);
-	XtFree((char *) buf_ptr);
+	free((char *) buf_ptr);
 	
 	/* Check ErrorHardLimit */
 	sts = ldh_GetObjectPar( sesctx,
@@ -180,7 +180,7 @@ pwr_tStatus wsx_CheckCard(
 	if (EVEN(sts)) return sts;
 	if ( *(int *) buf_ptr == 0)
 	  wsx_error_msg( sesctx, WSX__CARDERRHARDLIM, objid, errorcount, warningcount);
-	XtFree((char *) buf_ptr);
+	free((char *) buf_ptr);
 
 	/* Get MaxNoOfChannels */
 	sts = ldh_GetObjectPar( sesctx,
@@ -191,7 +191,7 @@ pwr_tStatus wsx_CheckCard(
 	if (EVEN(sts)) return sts;
 	
 	chan_max = *(pwr_tUInt16 *) buf_ptr;
-	XtFree((char *) buf_ptr);
+	free((char *) buf_ptr);
 
 	if ( chan_max > 256)
 	{
@@ -221,7 +221,7 @@ pwr_tStatus wsx_CheckCard(
 			(char **)&buf_ptr, &size);
 	      if (EVEN(sts)) return sts;
 	      number = * (pwr_tUInt16 *) buf_ptr;
-	      XtFree((char *) buf_ptr);
+	      free((char *) buf_ptr);
 	      /* Check than number is within limits */
 	      if ( number >= chan_max)
 	      {
@@ -283,7 +283,7 @@ pwr_tStatus wsx_CheckCoCard(
 	if (EVEN(sts)) return sts;
 	if ( strcmp( buf_ptr, "") == 0)
 	  wsx_error_msg( sesctx, WSX__CARDDEVNAME, objid, errorcount, warningcount);
-	XtFree((char *) buf_ptr);
+	free((char *) buf_ptr);
 	
 	/* Check ErrorSoftLimit */
 	sts = ldh_GetObjectPar( sesctx,
@@ -294,7 +294,7 @@ pwr_tStatus wsx_CheckCoCard(
 	if (EVEN(sts)) return sts;
 	if ( *(int *) buf_ptr == 0)
 	  wsx_error_msg( sesctx, WSX__CARDERRSOFTLIM, objid, errorcount, warningcount);
-	XtFree((char *) buf_ptr);
+	free((char *) buf_ptr);
 	
 	/* Check ErrorHardLimit */
 	sts = ldh_GetObjectPar( sesctx,
@@ -305,7 +305,7 @@ pwr_tStatus wsx_CheckCoCard(
 	if (EVEN(sts)) return sts;
 	if ( *(int *) buf_ptr == 0)
 	  wsx_error_msg( sesctx, WSX__CARDERRHARDLIM, objid, errorcount, warningcount);
-	XtFree((char *) buf_ptr);
+	free((char *) buf_ptr);
 
 	/* Get MaxNoOfChannels */
 	sts = ldh_GetObjectPar( sesctx,
@@ -316,7 +316,7 @@ pwr_tStatus wsx_CheckCoCard(
 	if (EVEN(sts)) return sts;
 	
 	chan_max = *(pwr_tUInt16 *) buf_ptr;
-	XtFree((char *) buf_ptr);
+	free((char *) buf_ptr);
 
 	chan_count = 0;
 	sts = ldh_GetChild( sesctx, objid, &chan_objid);
@@ -393,7 +393,7 @@ pwr_tStatus wsx_CheckSigChanCon(
 	      return WSX__SUCCESS;
 	    default:
 	      wsx_error_msg( sesctx, WSX__SIGCHANCON, objid, errorcount, warningcount);
-	      XtFree((char *) con_ptr);
+	      free((char *) con_ptr);
 	      return WSX__SUCCESS;
 	  }
 	}
@@ -403,7 +403,7 @@ pwr_tStatus wsx_CheckSigChanCon(
 	if ( EVEN(sts))
 	{
 	  wsx_error_msg( sesctx, WSX__SIGCHANCON, objid, errorcount, warningcount);
-	  XtFree((char *) con_ptr);
+	  free((char *) con_ptr);
 	  return WSX__SUCCESS;
 	}
 	class_error = 0;
@@ -461,7 +461,7 @@ pwr_tStatus wsx_CheckSigChanCon(
 	if ( class_error)
 	{
 	  wsx_error_msg( sesctx, WSX__SIGCHANCONCLASS, objid, errorcount, warningcount);
-	  XtFree((char *) con_ptr);
+	  free((char *) con_ptr);
 	  return WSX__SUCCESS;
 	}
 
@@ -476,13 +476,13 @@ pwr_tStatus wsx_CheckSigChanCon(
 	if ( cdh_ObjidIsNotEqual( *back_ptr, objid))
 	{
 	  wsx_error_msg( sesctx, WSX__SIGCHANCON, objid, errorcount, warningcount);
-	  XtFree((char *) con_ptr);
-	  XtFree((char *) back_ptr);
+	  free((char *) con_ptr);
+	  free((char *) back_ptr);
 	  return WSX__SUCCESS;
 	}
 
-	XtFree((char *) con_ptr);
-	XtFree((char *) back_ptr);
+	free((char *) con_ptr);
+	free((char *) back_ptr);
 	return WSX__SUCCESS;
 }
 /*************************************************************************
@@ -669,7 +669,7 @@ pwr_tStatus wsx_CheckVolume(
   	    if ( *opsys_ptr & ~opsys_sum)
   	      wsx_error_msg( sesctx, WSX__OSINVALID, objid, errorcount, warningcount);
 
-  	    XtFree( (char *) opsys_ptr);
+  	    free( (char *) opsys_ptr);
 	    break;
 
 	  default:

@@ -2118,7 +2118,7 @@ int utl_show_plcpgm (
 	    u_print( utlctx,  " %3.2f s", *scantime_ptr); 
 	    u_row( utlctx);
 
-	    XtFree((char *) scantime_ptr);
+	    free((char *) scantime_ptr);
 	    
 	    plclist_ptr++;
 	  }
@@ -2379,7 +2379,7 @@ int utl_show_modules (
 	      comp_time_str[20] = 0;
 	      strcpy( &comp_time_str[7], &comp_time_str[9]);
 	    }
-	    XtFree((char *) comp_time_ptr);
+	    free((char *) comp_time_ptr);
 	  }
 	  else
 	  {
@@ -2402,7 +2402,7 @@ int utl_show_modules (
 	      mod_time_str[20] = 0;
 	      strcpy( &mod_time_str[7], &mod_time_str[9]);
 	    }
-	    XtFree((char *) mod_time_ptr);
+	    free((char *) mod_time_ptr);
 	  }
 	  else
 	  {
@@ -3813,8 +3813,8 @@ static int utl_object_changed (
 	          *changed = 1;
 	        }
 
-	        XtFree((char *) object_par);
-	        XtFree((char *) template_par);
+	        free((char *) object_par);
+	        free((char *) template_par);
 
 	        break;
 	      }
@@ -3825,7 +3825,7 @@ static int utl_object_changed (
 	    if ( *changed )
 	      break;
 	  }
-	  XtFree((char *) bodydef);	
+	  free((char *) bodydef);	
 	  if ( *changed )
 	    break;
 	}
@@ -4234,10 +4234,10 @@ static int utl_print_object_full (
    	      object_element += parsize / elements;
 	      template_element += parsize / elements;
    	    }
-	    XtFree((char *) object_par);
-	    XtFree((char *) template_par);
+	    free((char *) object_par);
+	    free((char *) template_par);
 	  }
-	  XtFree((char *) bodydef);	
+	  free((char *) bodydef);	
 	}
 
 
@@ -4355,7 +4355,7 @@ static int utl_print_object_par (
 	      }
 	      if ( found )
 	        break;
-	      XtFree((char *) bodydef);	
+	      free((char *) bodydef);	
 	    }
 	    if ( !found)
 	    {
@@ -4374,7 +4374,7 @@ static int utl_print_object_par (
 	      if ( *element + 1 > elements)
 	      {
 	        /* Error in element */
-	        XtFree((char *) bodydef);	
+	        free((char *) bodydef);	
 	        return FOE__ELEMENT;
 	      }
 	  
@@ -4652,7 +4652,8 @@ static int utl_print_object_par (
  	          ;
               }
 	    }
-	    XtFree((char *) bodydef);	
+	    free((char *) object_par);	
+	    free((char *) bodydef);	
 	  }
 	  parameter += 80;
 	  element++;
@@ -4915,7 +4916,7 @@ static int utl_print_class_full (
 	    u_print( utlctx, "%d", bodydef[j].Par->Output.Info.Size);
 	    u_row( utlctx);
 	  }
-	  XtFree((char *) bodydef);	
+	  free((char *) bodydef);	
 	}
 
 	return FOE__SUCCESS;
@@ -5037,7 +5038,7 @@ static 	char		value[200];
 	  }
 	  if ( found )
 	    break;
-	  XtFree((char *) bodydef);	
+	  free((char *) bodydef);	
 	}
 	if ( !found)
 	{
@@ -5314,8 +5315,8 @@ static 	char		value[200];
 	  if ( EVEN(sts)) return sts;
 	}
 
-	XtFree((char *) object_par);
-	XtFree((char *) bodydef);	
+	free((char *) object_par);
+	free((char *) bodydef);	
 
 
 	return FOE__SUCCESS;
@@ -5783,7 +5784,7 @@ int utl_compile (
 	    }
 
 	    /* This is a window */
-	    XtFree((char *) windbuffer);
+	    free((char *) windbuffer);
 
 	    /* Compile the windows */
 	    sts = gcg_wind_comp_all( ldhwb, ldhses, window, 1, modified, debug);
@@ -6186,7 +6187,7 @@ static int utl_externref (
 	          crrlist_ptr = crrlist_ptr->next;
 	        crrlist_ptr->refobjdid = list_ptr->objdid;
 	      }
-	      XtFree((char *) objdid_ptr);
+	      free((char *) objdid_ptr);
 	    }
 	    searchlist_ptr++;
 	  }
@@ -6292,7 +6293,7 @@ static int utl_signalref (
 	          crrlist_ptr = crrlist_ptr->next;
 	        crrlist_ptr->refobjdid = list_ptr->objdid;
 	      }
-	      XtFree((char *) objdid_ptr);
+	      free((char *) objdid_ptr);
 	   }
 	   searchlist_ptr++;
 	  }
@@ -6676,7 +6677,7 @@ int utl_print_document (
 	    if( EVEN(sts)) return sts;
 
 	    windowindex = windbuffer->subwindowindex;
-	    XtFree((char *) windbuffer);
+	    free((char *) windbuffer);
 
 	    new_window = FALSE;
 	    foectx = parentwind->hw.foectx;
@@ -7186,7 +7187,7 @@ int utl_redraw_windows (
 	    if( EVEN(sts)) return sts;
 
 	    windowindex = windbuffer->subwindowindex;
-	    XtFree((char *) windbuffer);
+	    free((char *) windbuffer);
 
 	    new_window = FALSE;
 	    foectx = parentwind->hw.foectx;
@@ -7276,7 +7277,7 @@ static int utl_content (
 
 	u_print( utlctx, "%6s", page);
 	u_row( utlctx);
-	XtFree((char *) page);
+	free((char *) page);
 
 	return FOE__SUCCESS;
 }
@@ -7843,14 +7844,14 @@ int utl_list (
 	  if ( EVEN(sts))
 	  {
 	    utl_objidlist_free( listobject_list);
-	    XtFree((char *) listbody_ptr);
+	    free((char *) listbody_ptr);
 	    utl_ctx_delete( utlctx);
 	    return sts;
 	  }
 	}
 
 	cross_doclist_unload();
-	XtFree((char *) listbody_ptr);
+	free((char *) listbody_ptr);
 	utl_ctx_delete( utlctx);
 
 	return FOE__SUCCESS;
@@ -8042,7 +8043,7 @@ static int utl_list_sublist (
 	  sublist_ptr = sublist_ptr->next;
 	}
 	utl_objidlist_free( listobject_list);
-	XtFree((char *) listbody_ptr);
+	free((char *) listbody_ptr);
 
 	return FOE__SUCCESS;
 }	
@@ -8349,7 +8350,7 @@ static int utl_list_sublist_print (
 	  utlctx->listbody = 0;
 
 	utl_objidlist_free( listobject_list);
-	XtFree((char *) listbody_ptr);
+	free((char *) listbody_ptr);
 	return FOE__SUCCESS;
 }	
 
@@ -8477,7 +8478,7 @@ static int utl_list_print_par (
 	    {
 	      strcat( text, ".");
 	      strcat( text, parameter);
-	      XtFree((char *) parameter);
+	      free((char *) parameter);
 	    }
    	  }
 	}
@@ -8504,7 +8505,7 @@ static int utl_list_print_par (
 	    {
 	      strcat( text, ".");
 	      strcat( text, parameter);
-	      XtFree((char *) parameter);
+	      free((char *) parameter);
 	    }
  	  }
 	}
@@ -8549,7 +8550,7 @@ static int utl_list_print_par (
 	    if ( cdh_ObjidIsNull( *conobjdid_ptr))
    	    {
 	      strcat( text, "-");
-	      XtFree((char *) conobjdid_ptr);
+	      free((char *) conobjdid_ptr);
 	    }
             else
 	    {
@@ -8557,7 +8558,7 @@ static int utl_list_print_par (
 		ldh_eName_Hierarchy, hier_name, sizeof( hier_name), &size);
 	      if ( EVEN(sts))
 	        strcpy( hier_name, "-");
-	      XtFree((char *) conobjdid_ptr);
+	      free((char *) conobjdid_ptr);
 	      if ( list_pardesc->PrintParName)
 	        strcat( text, "SigChanCon = ");
 	      if ( list_pardesc->Segments != 0)
@@ -8586,14 +8587,14 @@ static int utl_list_print_par (
 	  {
 	    sts = ldh_GetObjectPar( utlctx->ldhses, *conobjdid_ptr, "RtBody", 
 			"Identity", (char **)&parameter, &size);
-	    XtFree((char *) conobjdid_ptr);
+	    free((char *) conobjdid_ptr);
 	    if ( ODD(sts))
 	    {
 	      if ( list_pardesc->PrintParName)
 	        strcat( text, "SigChanId = ");
 	
 	      strcat( text, parameter);
-	      XtFree((char *) parameter);
+	      free((char *) parameter);
 	    }
 	  }
 	}
@@ -8753,7 +8754,7 @@ static int utl_list_get_parvalue (
 	    }
 	    if ( found )
 	      break;
-	    XtFree((char *) bodydef);	
+	    free((char *) bodydef);	
 	  }
 	  if ( !found)
 	  {
@@ -8925,7 +8926,7 @@ static int utl_list_get_parvalue (
             default:
               ;
           }
-	  XtFree((char *) bodydef);	
+	  free((char *) bodydef);	
 
 	  return FOE__SUCCESS;
 }
@@ -9230,7 +9231,7 @@ int utl_configure_card (
 	    if ( EVEN(sts)) return sts;
 	  }
 	}
-	XtFree((char *) channels);
+	free((char *) channels);
 
 	return FOE__SUCCESS;
 }
@@ -9441,14 +9442,14 @@ int utl_get_systemobject(
 	if ( EVEN(sts)) return sts;
 
 	strcpy( systemname, sysname_ptr);
-	XtFree((char *) sysname_ptr);
+	free((char *) sysname_ptr);
 
 	sts = ldh_GetObjectPar( ldhses, objid, "SysBody",
 			"SystemGroup", (char **)&sysgroup_ptr, &size); 
 	if ( EVEN(sts)) return sts;
 
 	strcpy( systemgroup, sysgroup_ptr);
-	XtFree((char *) sysgroup_ptr);
+	free((char *) sysgroup_ptr);
 
 	*system_objid = objid;
 	return FOE__SUCCESS;
@@ -9504,7 +9505,7 @@ int utl_get_securityobject(
 	      if ( EVEN(sts)) return sts;
 
 	      strcpy( group, group_ptr);
-	      XtFree((char *) group_ptr);
+	      free((char *) group_ptr);
 	    }
 	    return FOE__SUCCESS;
 	  }
@@ -9550,7 +9551,7 @@ int utl_get_securityobject(
 	    if ( EVEN(sts)) return sts;
 
 	    strcpy( group, group_ptr);
-	    XtFree((char *) group_ptr);
+	    free((char *) group_ptr);
 	  }
 	}
 	if ( ldhses == NULL)
@@ -9809,8 +9810,8 @@ static int utl_get_listconfig_object(
 
 	*landscape_rows = *landscape_rows_p;
 	*portrait_rows = *portrait_rows_p;
-	XtFree((char *) landscape_rows_p);
-	XtFree((char *) portrait_rows_p);
+	free((char *) landscape_rows_p);
+	free((char *) portrait_rows_p);
 
 	return FOE__SUCCESS;
 }
@@ -10319,12 +10320,12 @@ int utl_move_window (
 	  sts = ldh_SetObjectBuffer( ldhses, source_plcobjdid, "DevBody", 
 			"PlcProgram", (char *)source_plcbuffer);
 	  if( EVEN(sts)) return sts;
-	  XtFree((char *) source_plcbuffer);
+	  free((char *) source_plcbuffer);
 
 	  sts = ldh_SetObjectBuffer( ldhses, dest_plcobjdid, "DevBody", 
 			"PlcProgram", (char *)dest_plcbuffer);
 	  if( EVEN(sts)) return sts;
-	  XtFree((char *) dest_plcbuffer);
+	  free((char *) dest_plcbuffer);
 
 
 	  get_sts = ldh_GetChild( ldhses, source, &next_child);
@@ -10350,7 +10351,7 @@ int utl_move_window (
 	      sts = ldh_SetObjectBuffer( ldhses, child, "DevBody", "PlcNode", 
 			(char *)nodebuffer);
 	      if( EVEN(sts)) return sts;
-	      XtFree((char *) nodebuffer);
+	      free((char *) nodebuffer);
 	    }
 	    else
 	    {
@@ -10365,7 +10366,7 @@ int utl_move_window (
 	      sts = ldh_SetObjectBuffer( ldhses, child, "DevBody", 
 			"PlcConnection", (char *)conbuffer);
 	      if( EVEN(sts)) return sts;
-	      XtFree((char *) conbuffer);
+	      free((char *) conbuffer);
 	    }
 	  }
 	}	
@@ -10986,7 +10987,7 @@ int utl_export_object (
                   ;
               }
 	    }
-	    XtFree((char *) bodydef);	
+	    free((char *) bodydef);	
 	  }
 	}
 
@@ -11413,8 +11414,8 @@ static int cross_doclist_object_insert(
 			nodebuffer->y + nodebuffer->height,
 			page);
 	if ( EVEN(sts)) return sts;
-	XtFree((char *) nodebuffer);
-	XtFree((char *) page);
+	free((char *) nodebuffer);
+	free((char *) page);
 
 	return FOE__SUCCESS;
 }
@@ -11720,7 +11721,7 @@ static int	cross_crosslist_object_insert(
 	            write = 1;
 	          else
 	  	    write = 0;
-	          XtFree((char *) write_ptr);
+	          free((char *) write_ptr);
 	        }
 	        else
 	          write = searchlist_ptr->write;
@@ -11758,7 +11759,7 @@ static int	cross_crosslist_object_insert(
 	        if ( EVEN(sts)) return sts;
 	      }
 	    }
-	    XtFree((char *) objid_ptr);
+	    free((char *) objid_ptr);
 	  }
 	  searchlist_ptr++;
 	}

@@ -13,6 +13,7 @@ class wb_bdef;
 class wb_adef;
 class wb_cdrep;
 class wb_mvrep;
+class wb_object;
 
 class wb_cdef : public wb_status
 {
@@ -38,15 +39,17 @@ class wb_cdef : public wb_status
     pwr_tCid cid();
     pwr_tOid oid() { pwr_tOid oid = pwr_cNOid; return oid;} // Fix
 
-    wb_name name(); // get class name
-    wb_name name(ldh_eName type);
+    const char *name() const;
+    wb_name longName();
 
     wb_bdef bdef(pwr_tOix bix);
     wb_bdef bdef(const char *bname);
     wb_bdef bdef(wb_name bname);
 
+    wb_object classBody( const char *bname);
+
   private:
-    void check();
+    void check() const;
     
 };
 

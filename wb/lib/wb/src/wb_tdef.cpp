@@ -62,7 +62,7 @@ wb_tdef& wb_tdef::operator=(const wb_tdef& x)
   return *this;
 }
 
-void wb_tdef::check()
+void wb_tdef::check() const
 {
   if ( !m_tdrep) throw wb_error(m_sts);
 }
@@ -79,15 +79,15 @@ pwr_tTid wb_tdef::tid()
   return m_tdrep->tid();
 }
 
-wb_name wb_tdef::name()
+const char *wb_tdef::name() const
 {
   check();
   return m_tdrep->name();
 }
 
-wb_name wb_tdef::name(ldh_eName type)
+wb_name wb_tdef::longName()
 {
   check();
-  return m_tdrep->name(type);
+  return m_tdrep->longName();
 }
 

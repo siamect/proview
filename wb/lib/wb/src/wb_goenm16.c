@@ -395,7 +395,7 @@ int goen_create_nodetype_m16(
 	 GOEN_DISPLAYNODE_ANNOT, flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE, 
 	flow_eAnnotType_OneLine, flow_mDisplayLevel_2);
 
-  XtFree((char *) bodydef);
+  free((char *) bodydef);
   *node_class = nc_pid;
   return GOEN__SUCCESS;
 }                                                            
@@ -561,7 +561,7 @@ int goen_get_point_info_m16( grectx, graphbody, point_nr, mask, node_width,
 	  info_pointer->type = CON_RIGHT;
 	}
 
-	XtFree( (char *)bodydef);
+	free( (char *)bodydef);
 	return GOEN__SUCCESS;
 }
 
@@ -632,7 +632,7 @@ unsigned long		*par_index;
 	      else
 	        *par_inverted = GOEN_INVERTED;
 	      input_found = 1;
-	      XtFree( (char *)bodydef);
+	      free( (char *)bodydef);
 	      return GOEN__SUCCESS;
 	    }
 	    pointmask <<= 1;
@@ -655,7 +655,7 @@ unsigned long		*par_index;
 	      else
 	        *par_inverted = GOEN_INVERTED;
 	      input_found = 1;
-	      XtFree( (char *)bodydef);
+	      free( (char *)bodydef);
 	      return GOEN__SUCCESS;
 	    }
 	    pointmask <<= 1;
@@ -677,7 +677,7 @@ unsigned long		*par_index;
 	      *par_index = i;
 	      *par_inverted = GOEN_NOT_INVERTED;
 	      output_found = 1;
-	      XtFree( (char *)bodydef);
+	      free( (char *)bodydef);
 	      return GOEN__SUCCESS;
 	    }
 	    pointmask <<= 1;
@@ -697,13 +697,13 @@ unsigned long		*par_index;
 	      *par_index = i;
 	      *par_inverted = GOEN_NOT_INVERTED;
 	      output_found = 1;
-	      XtFree( (char *)bodydef);
+	      free( (char *)bodydef);
 	      return GOEN__SUCCESS;
 	    }
 	    pointmask <<= 1;
 	  }
 	}
-	XtFree( (char *)bodydef);
+	free( (char *)bodydef);
 	return GOEN__NOPOINT;
 }
 

@@ -117,7 +117,7 @@ static pwr_tStatus SyntaxCheck (
 			(char **)&NamePtr, &size);
   if ( EVEN(sts)) return sts;
   strcpy( Name, NamePtr);
-  XtFree( NamePtr);
+  free( NamePtr);
 
   if ( strcmp( Name, "") == 0)
     return PWRB__SUCCESS;

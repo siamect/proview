@@ -473,7 +473,7 @@ int	gsx_check_connection(
           printf ("gsx_check_connection ... error ParClass not tested ");
           return 0;
         };
-        XtFree ((char *) bodydef );
+        free ((char *) bodydef );
 
 	if ( !( dest_class == vldh_class( ldhses, VLDH_CLASS_POINT) ||	
 	        dest_class == vldh_uclass( ldhses, "Backup")))
@@ -734,7 +734,7 @@ int gsx_auto_create(
 	      *destpoint = 0;
               break;
             default: 
-              XtFree((char *) bodydef);
+              free((char *) bodydef);
 	      return 0;
           }
 	  break;
@@ -761,16 +761,16 @@ int gsx_auto_create(
 	      *destpoint = 0;
               break;
             default: 
-              XtFree((char *) bodydef);
+              free((char *) bodydef);
 	      return 0;
           }
 	  break;
         default: 
-          XtFree((char *) bodydef);
+          free((char *) bodydef);
           return 0;
       }
 
-      XtFree((char *) bodydef);
+      free((char *) bodydef);
     }
   }
   return GSX__SUCCESS;

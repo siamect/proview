@@ -780,7 +780,7 @@ static int foe_child_delete (
 			"PlcNode",
 			(char *)nodebuffer);
 	  if( EVEN(sts)) return sts;
-	  XtFree((char *) nodebuffer);
+	  free((char *) nodebuffer);
 	  sts = ldh_SaveSession(ldhsession);
 	  sts = ldh_CloseSession(ldhsession);
 	}
@@ -1505,7 +1505,7 @@ int foe_new_local(
 	    /* This is not a plcprogram object, return */
 	    return FOE__NOPLC;
 
-	  XtFree((char *) plcbuffer);
+	  free((char *) plcbuffer);
 
 	  sts = ldh_GetObjectClass(ldhsesctx, plcprogram, &plcclass);
 	  if ( EVEN(sts)) return sts;
@@ -1554,7 +1554,7 @@ int foe_new_local(
 			&windbuffer, &size);
 	      if ( ODD(sts)) 
 	      {
-	        XtFree((char *) windbuffer);
+	        free((char *) windbuffer);
 	        window_found = 1;	
 		break;
 	      }

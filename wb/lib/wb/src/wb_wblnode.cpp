@@ -708,7 +708,7 @@ void wb_wblnode::buildAttr( ref_wblnode object, int bix)
         second_child = first_child->getNextSibling();
         if ( second_child) {
           strcpy( value, second_child->name);
-          if ( !m_vrep->getAttrInfo( name, bix, object->m_cid, &size, &offset,
+          if ( !m_vrep->getAttrInfo( name, (cdh_eBix) bix, object->m_cid, &size, &offset,
 				     &tid, &elements, &type)) {
             // Attr exception
             m_vrep->error( "Unknown attribute", getFileName(), line_number);
@@ -1306,10 +1306,10 @@ int wb_wblnode::attrStringToValue( int type_id, char *value_str,
     {
       pwr_sAttrRef	attrref;
 
-      // sts = gdh_NameToAttrref ( pwr_cNObjid, value_str, &attrref);
-      sts = 0;
+      sts = m_vrep->nameToAttrRef( value_str, &attrref);
       if (EVEN(sts)) return 0;
       memcpy( buffer_ptr, &attrref, sizeof(attrref));
+
       break;
     }
     case pwr_eType_Time:

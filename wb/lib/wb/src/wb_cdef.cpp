@@ -74,7 +74,7 @@ wb_cdef& wb_cdef::operator=(const wb_cdef& x)
   return *this;
 }
 
-void wb_cdef::check()
+void wb_cdef::check() const
 {
   if ( !m_cdrep) throw wb_error(m_sts);
 }
@@ -91,16 +91,16 @@ pwr_tCid wb_cdef::cid()
   return m_cdrep->cid();
 }
 
-wb_name wb_cdef::name()
+const char *wb_cdef::name() const
 {
   check();
   return m_cdrep->name();
 }
 
-wb_name wb_cdef::name(ldh_eName type)
+wb_name wb_cdef::longName()
 {
   check();
-  return m_cdrep->name(type);
+  return m_cdrep->longName();
 }
 
 wb_bdef wb_cdef::bdef( const char *bname)
@@ -125,6 +125,18 @@ wb_bdef wb_cdef::bdef( pwr_tOix bix)
     return wb_bdef( bdrep);
   else
     return wb_bdef();
+}
+
+wb_object wb_cdef::classBody( const char *bname)
+{
+  check();
+  pwr_tStatus sts;
+
+  wb_orep *orep = m_cdrep->classBody( &sts, bname);
+  if ( ODD(sts))
+    return wb_object( orep);
+  else
+    return wb_object();
 }
 
 

@@ -37,8 +37,8 @@ public:
     pwr_eType type() { return m_type;}
     int nElement() { return m_elements;}
 
-    wb_name name() { wb_name n; return n;} // Fix // get type name
-    wb_name name(ldh_eName type) { wb_name n; return n;} // Fix
+    const char *name() const;
+    wb_name longName();
 
     pwr_tStatus sts() { return m_sts;}    
 

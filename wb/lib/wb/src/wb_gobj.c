@@ -809,7 +809,7 @@ unsigned long	index;
 	    break;
 	  }
 	}
-	XtFree((char *)bodydef);
+	free((char *)bodydef);
 	return FOE__SUCCESS;
 }
 
@@ -1686,7 +1686,7 @@ unsigned long	index;
 	        found = 1;
 	      }
 	    } 
-	    XtFree( (char *)bodydef);
+	    free( (char *)bodydef);
 	  }
 	  if ( !found)
 	  {
@@ -1982,7 +1982,7 @@ unsigned long	index;
 	        found = 1;
 	      }
 	    } 
-	    XtFree( (char *)bodydef);
+	    free( (char *)bodydef);
 	  }
 	  if ( !found)
 	  {
@@ -2286,7 +2286,7 @@ unsigned long	index;
 	        found = 1;
 	      }
 	    } 
-	    XtFree( (char *)bodydef);
+	    free( (char *)bodydef);
 	  }
 	  if ( !found)
 	  {
@@ -2582,7 +2582,7 @@ unsigned long	index;
 	        found = 1;
 	      }
 	    } 
-	    XtFree( (char *)bodydef);
+	    free( (char *)bodydef);
 	  }
 	  if ( !found)
 	  {
@@ -2959,7 +2959,7 @@ unsigned long	index;
 	        found = 1;
 	      }
 	    } 
-	    XtFree( (char *)bodydef);
+	    free( (char *)bodydef);
 	  }
 	  if ( !found)
 	  {
@@ -3241,7 +3241,7 @@ unsigned long	index;
 	        found = 1;
 	      }
 	    } 
-	    XtFree( (char *)bodydef);
+	    free( (char *)bodydef);
 	  }
 	  if ( !found)
 	  {
@@ -3432,8 +3432,8 @@ static int	gobj_expand_m1(	foe_ctx		foectx,
 	if (EVEN(sts)) return sts;
 	  
 	segments = *segments_p;
-	XtFree((char *) bodydef);	
-	XtFree((char *) segments_p);
+	free((char *) bodydef);	
+	free((char *) segments_p);
 	if ( !compress)
 	  segments++;
 	else
@@ -3490,7 +3490,7 @@ static int	gobj_expand_m2(	foe_ctx		foectx,
 	{
 	  if ( i_max == max_input - 1)
 	  {
-	    XtFree((char *) nodebuffer);
+	    free((char *) nodebuffer);
 	    return FOE__SUCCESS;
 	  }
 	  nodebuffer->mask[0] |= 1 << (i_max + 1);
@@ -3499,7 +3499,7 @@ static int	gobj_expand_m2(	foe_ctx		foectx,
 	{
 	  if ( i_max == 0)
 	  {
-	    XtFree((char *) nodebuffer);
+	    free((char *) nodebuffer);
 	    return FOE__SUCCESS;
 	  }
 	  nodebuffer->mask[0] &= ~(1 << (i_max));
@@ -3510,7 +3510,7 @@ static int	gobj_expand_m2(	foe_ctx		foectx,
 		(char *)nodebuffer);
 	if (EVEN(sts)) return sts;
 
-	XtFree((char *) nodebuffer);
+	free((char *) nodebuffer);
 
 	gre_node_update( foectx->grectx, node);
 

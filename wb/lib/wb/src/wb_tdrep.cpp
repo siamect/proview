@@ -112,3 +112,13 @@ void wb_tdrep::init()
   }
 }
 
+const char *wb_tdrep::name() const
+{
+  return m_orep->name();
+}
+
+wb_name wb_tdrep::longName()
+{
+  return m_orep->longName();
+}
+

@@ -116,7 +116,7 @@ int goen_create_nodetype_m3(
 	if ( ODD(sts))
 	{
 	  text_attribute = *text_attribute_ptr;
-	  XtFree((char *) text_attribute_ptr);
+	  free((char *) text_attribute_ptr);
 	}
 	else 
 	  text_attribute = 0;
@@ -130,7 +130,7 @@ int goen_create_nodetype_m3(
 	if ( ODD(sts))
 	{
 	  frame_attribute = *frame_attribute_ptr;
-	  XtFree((char *) frame_attribute_ptr);
+	  free((char *) frame_attribute_ptr);
 	}
 	else 
 	  frame_attribute = 0;
@@ -144,7 +144,7 @@ int goen_create_nodetype_m3(
 	if ( ODD(sts))
 	{
 	  frame_width = *frame_width_ptr;
-	  XtFree((char *) frame_width_ptr);
+	  free((char *) frame_width_ptr);
 	}
 	else 
 	  frame_width = 0.0;
@@ -158,7 +158,7 @@ int goen_create_nodetype_m3(
 	if ( ODD(sts))
 	{
 	  frame_height = *frame_height_ptr;
-	  XtFree((char *) frame_height_ptr);
+	  free((char *) frame_height_ptr);
 	}
 	else 
 	  frame_height = 0.0;
@@ -220,7 +220,7 @@ int goen_create_nodetype_m3(
         flow_MeasureAnnotText( ctx, parvalue,
 	     	text_type, text_size, annot_type,
 		&width, &height, &annot_rows);
-	XtFree((char *) parvalue);	
+	free((char *) parvalue);	
 
 	f_height = (floor( height / GOEN_F_GRID) + 1) * GOEN_F_GRID - f_delta*2;
 	f_width = max( width + f_strlength *2, f_defwidth) - f_delta*2;

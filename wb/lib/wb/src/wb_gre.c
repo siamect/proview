@@ -398,10 +398,10 @@ int gre_get_annotations(
 	          if ( !*condparvalue)
 	          {
 		    /* No, this parameter should node be shown this time */
-		    XtFree((char *) condparvalue);
+		    free((char *) condparvalue);
 	            continue;
 	          }
-		  XtFree((char *) condparvalue);
+		  free((char *) condparvalue);
 	        }
 
 	        if ( !annotsegments)
@@ -424,7 +424,7 @@ int gre_get_annotations(
 		    annot_segments = *segmentsparvalue;
 		    if ( annot_segments < 1)
 		      annot_segments = 1;
-		    XtFree((char *) segmentsparvalue);
+		    free((char *) segmentsparvalue);
 	          }
 	        }
 
@@ -570,10 +570,10 @@ int gre_get_annotations(
 	        if ( *annot_count >= annot_max)
 	          break;
 	        if ( parvalue != (char *) &nullobjid)
-	          XtFree((char *) parvalue);
+	          free((char *) parvalue);
 	      }
 	    }
-	    XtFree((char *) bodydef);	
+	    free((char *) bodydef);	
 	    if ( *annot_count >= annot_max)
 	      break;
 	  }
@@ -600,7 +600,7 @@ int gre_get_annotations(
 			(char **)&condparvalue, &size);
 	  if ( EVEN(sts)) return sts;
 	  showattrtime = *condparvalue;
-	  XtFree((char *) condparvalue);
+	  free((char *) condparvalue);
 
 	  for ( i = 0; i < 6; i++)
 	  {
@@ -630,9 +630,9 @@ int gre_get_annotations(
 
 	      sprintf( annot_str_next + strlen(annot_str_next), "%g", *attrtime_p);
 	      attribute_count++;
-	      XtFree((char *) attrtime_p);
+	      free((char *) attrtime_p);
 	    }
-	    XtFree((char *) parvalue);
+	    free((char *) parvalue);
 	  }
 	  if ( attribute_count == 1)
 	    /* Show only the time, not the attribute type */
@@ -946,11 +946,11 @@ int	gre_node_annot_message(
 	      strncat( message, annot_str, msg_size-strlen(message));
 	      annotcount++;
 	    }
-	    XtFree((char *) parvalue);	
+	    free((char *) parvalue);	
 	    if ( annotcount >= 3 ) break;
 	  }
 	}
-	XtFree((char *) bodydef);
+	free((char *) bodydef);
 
 	message[msg_size-1] = 0;
 	return GRE__SUCCESS;
@@ -3864,7 +3864,7 @@ int gre_node_update (
 
 	  UPDATE_SCREEN
 	}
-	XtFree((char *) nodebuffer);
+	free((char *) nodebuffer);
 
 	/* Set permanent highlight if selected */
 	if ( highlight_flag )
@@ -4249,7 +4249,7 @@ int	gre_init_docobjects(
 	    {
               flow_SetAnnotation( doc_obj->hn.node_id, 3, parvalue, 
 		strlen(parvalue));
-	      XtFree((char *) parvalue);
+	      free((char *) parvalue);
 	    }
 
 	    /* Time in annot 4 */
@@ -4268,7 +4268,7 @@ int	gre_init_docobjects(
 	    {
               flow_SetAnnotation( doc_obj->hn.node_id, 5, parvalue, 
 		strlen(parvalue));
-	      XtFree((char *) parvalue);
+	      free((char *) parvalue);
 	    }
 
 	  }
@@ -4412,7 +4412,7 @@ int	gre_set_trace_attributes( gre_ctx grectx)
 	        ldh_eName_Hierarchy, object_str, sizeof(object_str), &size);
               if ( EVEN(sts))
                 strcpy( object_str, "");
-	      XtFree((char *) objid);
+	      free((char *) objid);
               
               break;
             }

@@ -224,7 +224,7 @@ unsigned long vldh_check_plcpgm (
 	  return 0;
 
 	/* This is a plcpgm */
-	XtFree((char *) plcbuffer);
+	free((char *) plcbuffer);
 	return 1;
 }
 
@@ -265,7 +265,7 @@ static unsigned long vldh_check_window (
 	  return 0;
 
 	/* This is a window */
-	XtFree((char *) windbuffer);
+	free((char *) windbuffer);
 	return 1;
 }
 #endif
@@ -513,7 +513,7 @@ static int vldh_get_object_defname (
 		(char *)plcbuffer);
 	  if ( EVEN(sts)) return sts;
 	
-	  XtFree((char *) plcbuffer);
+	  free((char *) plcbuffer);
 	}
 
 	if ( parent_count > 0)
@@ -781,7 +781,7 @@ static int vldh_node_load (
 	  if( EVEN(sts) ) return sts;
 
 	  memcpy( &(node->ln), nodebuffer, sizeof(*nodebuffer));
-	  XtFree((char *) nodebuffer);
+	  free((char *) nodebuffer);
 
 	  /* Get the object name from ldh */
 	  sts = ldh_ObjidToName( wind->hw.ldhsession, objdid, ldh_eName_Object,
@@ -994,7 +994,7 @@ int vldh_con_load (
 	  if( EVEN(sts) ) return sts;
 
 	  memcpy( &(con->lc), conbuffer, sizeof(*conbuffer));
-	  XtFree((char *) conbuffer);
+	  free((char *) conbuffer);
 
 	  con->hc.vldhtype = VLDH_CON;
 	  con->hc.status = VLDH_LOAD;
@@ -1347,7 +1347,7 @@ int vldh_wind_save (
 			"PlcNode",
 			(char *)nodebuffer);
 	    if( EVEN(sts)) return sts;
-	    XtFree((char *)nodebuffer);
+	    free((char *)nodebuffer);
 	  }
 	}
 
@@ -1642,7 +1642,7 @@ int vldh_wind_load_all (
 	  if ( ODD(sts) )
 	  {
 	    /* This is a node */
-	    XtFree((char *) nodebuffer);
+	    free((char *) nodebuffer);
 	    sts = vldh_node_load( wind, next_objdid);
 	    if( EVEN(sts) ) return sts;
 
@@ -1868,7 +1868,7 @@ int vldh_wind_load (
 	  if( EVEN(sts)) return sts;
 
 	  memcpy( &(*wind)->lw, windbuffer, sizeof(*windbuffer));
-	  XtFree((char *) windbuffer);
+	  free((char *) windbuffer);
 
 	  /* Get the object name from ldh */
 	  sts = ldh_ObjidToName( ldhsession, objdid, ldh_eName_Object,
@@ -2026,7 +2026,7 @@ int vldh_plc_load (
 	  if( EVEN(sts)) return sts;
 
 	  memcpy( &(*plc)->lp, plcbuffer, sizeof(*plcbuffer));
-	  XtFree((char *) plcbuffer);
+	  free((char *) plcbuffer);
 
 	  /* Get the object name from ldh */
 	  sts = ldh_ObjidToName( ldhsesctx, objdid, ldh_eName_Hierarchy,
@@ -4153,7 +4153,7 @@ int vldh_node_update_spec (
 		"ScanTime",
 		(char *)time_ptr, size); 
 	  if ( EVEN(sts)) return sts;
-	  XtFree((char *) time_ptr);
+	  free((char *) time_ptr);
 
 	  sts = ldh_GetObjectPar( ldhses,
 			plc->lp.objdid, 
@@ -4166,7 +4166,7 @@ int vldh_node_update_spec (
 		"ResetObject",
 		(char *)objdid_ptr, size); 
 	  if ( EVEN(sts)) return sts;
-	  XtFree((char *) objdid_ptr);
+	  free((char *) objdid_ptr);
 	}
 
 	return VLDH__SUCCESS;
@@ -4305,7 +4305,7 @@ int vldh_object_update_spec (
 	      newsuborderindex[newsubordercount] = i;
 	      newsubordercount++;
 	    }
-	    XtFree((char *) parvalue);
+	    free((char *) parvalue);
 	  }
 	
 	  /* Compare old  and new suborders */
@@ -4375,7 +4375,7 @@ int vldh_object_update_spec (
 			"TimerTime",
 			(char *)time_ptr, size); 
 	      if ( EVEN(sts)) return sts;
-	      XtFree((char *) time_ptr);
+	      free((char *) time_ptr);
 	    }
 	  }
 	}
@@ -4495,10 +4495,10 @@ int vldh_node_create_spec (
 			"TimerTime",
 			(char *)time_ptr, size); 
 	        if ( EVEN(sts)) return sts;
-	        XtFree((char *) time_ptr);
+	        free((char *) time_ptr);
 	      }
 	    }	
-	    XtFree((char *) parvalue);
+	    free((char *) parvalue);
 	  }
 	}
 
@@ -4561,7 +4561,7 @@ int vldh_node_create_spec (
 		"ScanTime",
 		(char *)time_ptr, size); 
 	  if ( EVEN(sts)) return sts;
-	  XtFree((char *) time_ptr);
+	  free((char *) time_ptr);
 
 	  sts = ldh_GetObjectPar( ldhses,
 			plc->lp.objdid, 
@@ -4574,7 +4574,7 @@ int vldh_node_create_spec (
 		"ResetObject",
 		(char *)objdid_ptr, size); 
 	  if ( EVEN(sts)) return sts;
-	  XtFree((char *) objdid_ptr);
+	  free((char *) objdid_ptr);
 	}
 
 

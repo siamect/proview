@@ -1064,7 +1064,7 @@ static int cmd_attribute_func (
           default:
             ;
         }
-	XtFree((char *) bodydef);	
+	free((char *) bodydef);	
 
 	*return_decl = decl;
 	if ( decl == CCM_DECL_INT)

@@ -297,7 +297,7 @@ int goen_create_nodetype_m1(
 
   *node_class = nc_pid;
 
-  XtFree( (char *)bodydef);
+  free( (char *)bodydef);
   return GOEN__SUCCESS;
 }
 

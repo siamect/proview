@@ -34,7 +34,7 @@ static pwr_tStatus OpenGraph (
   if ( EVEN(sts)) return sts;
 
   cdh_ToLower( graph_name, action);
-  XtFree( (char *)action);
+  free( (char *)action);
   if ( strstr( graph_name, ".pwg"))
   {
  //   ge_new( NULL, ip->WindowContext, ip->PointedSession, 0, graph_name);

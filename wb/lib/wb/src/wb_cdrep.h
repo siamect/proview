@@ -36,15 +36,16 @@ class wb_cdrep
     pwr_tCid cid();
     
 
-    wb_name name(); // get class name
-    wb_name name(ldh_eName type) { wb_name n; return n;} // Fix
+    const char *name() const;
+    wb_name longName();
     void name(const char *name);
     void name(wb_name *name);
     
     wb_bdrep *bdrep( pwr_tStatus *sts, int bix);
     wb_bdrep *bdrep( pwr_tStatus *sts, const char *bname);
-    wb_adrep *adrep( pwr_tStatus *sts, const char *aname);
-    
+    wb_adrep *adrep( pwr_tStatus *sts, const char *aname);    
+    wb_orep *classBody( pwr_tStatus *sts, const char *bname);
+
     void templateBody( pwr_tStatus *sts, cdh_eBix bix, void *p);
 
     pwr_tStatus sts() { return m_sts;}

@@ -297,6 +297,29 @@ wb_attribute wb_object::attribute(const char *bname, const char *aname)
     return a;
 }
 
+size_t wb_object::rbSize()
+{
+  check();
+
+  wb_cdef c = wb_cdef( *m_orep);
+  wb_bdef b = c.bdef( cdh_eBix_rt);
+  if ( !b)
+    return 0;
+
+  return b.size();
+}
+
+size_t wb_object::dbSize()
+{
+  wb_cdef c = wb_cdef( *m_orep);
+  wb_bdef b = c.bdef( cdh_eBix_dev);
+  if ( !b)
+    return 0;
+
+  return b.size();
+}
+
+
 /*      Object SigChanCon $ObjXRef 2
 
         Body SysBody

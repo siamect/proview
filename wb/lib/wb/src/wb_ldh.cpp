@@ -473,18 +473,20 @@ ldh_GetChild(ldh_tSession session, pwr_tOid oid, pwr_tOid *coid)
 pwr_tStatus
 ldh_GetClassBody(ldh_tSession session, pwr_tCid cid, char *bname, pwr_tCid *bcid, char **body, int *size)
 {
-#if NOT_YET_IMPLEMENTED
     wb_session *sp = (wb_session *)session;
     wb_cdef c = sp->cdef(cid);
-    wb_classBody b = c.body(bodyname);
+    if ( !c) 
+      return c.sts();
+    wb_object o = c.classBody(bname);
+    if ( !o)
+      return o.sts();
 
-    *bcid = b.cid();
-    *size = b.size();
-    *body = b.data();
+    *bcid = o.cid();
+    *size = o.rbSize();
+    wb_attribute a = wb_attribute( o.sts(), o);
+    *body = (char *) a.value(0);
 
-    return b.sts();
-#endif
-    return LDH__NYI;
+    return o.sts();
 }
 
 pwr_tStatus

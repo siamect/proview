@@ -131,7 +131,7 @@ int goen_create_nodetype_m14(
   flow_MeasureAnnotText( ctx, parvalue,
 	     	flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE, flow_eAnnotType_MultiLine,
 		&code_width, &code_height, &annot_rows);
-  XtFree( parvalue);	
+  free( parvalue);	
 
   /* Get the runtime paramteers for this class */
   sts = ldh_GetObjectBodyDef(ldhses, class, "RtBody", 1, 
@@ -305,7 +305,7 @@ int goen_create_nodetype_m14(
 	 GOEN_DISPLAYNODE_ANNOT, flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE, 
 	flow_eAnnotType_OneLine, flow_mDisplayLevel_2);
 
-  XtFree( (char *)bodydef);
+  free( (char *)bodydef);
   *node_class = nc_pid;
   return GOEN__SUCCESS;
 }
@@ -401,7 +401,7 @@ int goen_get_point_info_m14( grectx, graphbody, point, mask, node_width,
 		(point + 1.5 - inputpoints) * f_repeat;
 	   info_pointer->type = CON_RIGHT;
 	}
-	XtFree( (char *)bodydef);
+	free( (char *)bodydef);
 	return GOEN__SUCCESS;
 }
 
@@ -499,7 +499,7 @@ unsigned long		*par_index;
 	    }
 	  }
 	}
-	XtFree( (char *)bodydef);
+	free( (char *)bodydef);
 	if ( input_found || output_found ) return GOEN__SUCCESS;
 	else return GOEN__NOPOINT;
 }

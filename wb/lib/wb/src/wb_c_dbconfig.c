@@ -50,7 +50,7 @@ static pwr_tStatus OpenDb (
   sprintf( cmd,
 	"@pwr_exe:wb_open_db \"%s\" \"%s\" \"%s\" \"\" \"%s\"",
 	db_id, login_prv.username, login_prv.password, name);
-  XtFree( db_id);
+  free( db_id);
 
   sts = lib$spawn (&cmd_desc , 0 , 0 , &cli_flag );
   if (EVEN(sts)) {
@@ -80,7 +80,7 @@ static pwr_tStatus OpenDb (
   sprintf( cmd,
 	"%s \"%s\" \"%s\" \"%s\" \"\" \"%s\" &",
 	filename, db_id, login_prv.username, login_prv.password, name);
-  XtFree( db_id_p);
+  free( db_id_p);
 
   sts = system( cmd);
   if ( sts == -1 || sts == 127) {

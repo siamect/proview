@@ -334,7 +334,7 @@ pwr_tStatus exp_plcpgm (
 	  if ( ODD( ldh_GetObjectBuffer(ldhses, window, "DevBody",
 		      "PlcWindow", (pwr_eClass *) &class, &windbuffer, &size) ))
 	  {
-	    XtFree( windbuffer);
+	    free( windbuffer);
 	    sts = ldh_GetObjectClass ( ldhses, window, &class);
 	    if ( EVEN(sts)) return sts;
 	    sts = ldh_ObjidToName ( ldhses, cdh_ClassIdToObjid( class), 
@@ -361,7 +361,7 @@ pwr_tStatus exp_plcpgm (
 		hiername, sizeof(hiername), &size);
 	if ( ODD(sts))
 	  fprintf( file, " /ResetObject=%s.ActualValue", hiername);
-	XtFree( (char *) resobjdid_ptr);
+	free( (char *) resobjdid_ptr);
 
 	/* Print reset object */
 	sts = ldh_GetObjectPar( ldhses,
@@ -371,7 +371,7 @@ pwr_tStatus exp_plcpgm (
 			(char **) &scantime_ptr, &size);
 	if ( EVEN(sts)) return sts;
 	fprintf( file, " /ScanTime=%g", *scantime_ptr);
-	XtFree( (char *) scantime_ptr);
+	free( (char *) scantime_ptr);
 
 	fclose( file);
 
@@ -767,7 +767,7 @@ vldh_t_node	node
 	if ( EVEN(sts)) return sts;
 
 	memcpy( &nocondef[0], nocondef_ptr, size);
-	XtFree( nocondef_ptr);
+	free( nocondef_ptr);
 
 	/* Print the connected inputs */
 	sts = gen_print_inputs( genctx, node, GCG_PRINT_ALLPAR, 
@@ -798,8 +798,8 @@ vldh_t_node	node
 	}
 	if ( !found )
 	{
-	  XtFree((char *) parvalue);	
-	  XtFree((char *) bodydef);	
+	  free((char *) parvalue);	
+	  free((char *) bodydef);	
 	  return FOE__SUCCESS;
 	}
 	
@@ -807,14 +807,14 @@ vldh_t_node	node
 			sizeof( object_name));
 	if( EVEN(sts))
 	{
-	  XtFree((char *) parvalue);
-	  XtFree((char *) bodydef);
+	  free((char *) parvalue);
+	  free((char *) bodydef);
 	  return FOE__SUCCESS;
 	}
-	XtFree((char *) parvalue);
+	free((char *) parvalue);
 
 	fprintf( genctx->file, "/%s=%s\n", (bodydef[i].ParName), object_name);
-	XtFree((char *) bodydef);	
+	free((char *) bodydef);	
 
 	return FOE__SUCCESS;
 }
@@ -878,7 +878,7 @@ static pwr_tStatus gen_m4 (
 	if ( EVEN(sts)) return sts;
 
 	memcpy( &nocondef[0], nocondef_ptr, size);
-	XtFree( nocondef_ptr);
+	free( nocondef_ptr);
 
 	/* Print the connected inputs */
 	sts = gen_print_inputs( genctx, node, GCG_PRINT_ALLPAR, 
@@ -909,7 +909,7 @@ static pwr_tStatus gen_m4 (
 	}
 	if ( !found )
 	{
-	  XtFree((char *) parvalue);	
+	  free((char *) parvalue);	
 	  free((char *) bodydef);	
 	  return FOE__SUCCESS;
 	}
@@ -918,11 +918,11 @@ static pwr_tStatus gen_m4 (
 			sizeof( object_name));
 	if( EVEN(sts))
 	{
-	  XtFree((char *) parvalue);	
+	  free((char *) parvalue);	
 	  free((char *) bodydef);	
 	  return FOE__SUCCESS;
 	}
-	XtFree((char *) parvalue);
+	free((char *) parvalue);
 
 	sts = ldh_GetObjectPar( genctx->ldhses,
 			node->ln.object_did, 
@@ -933,7 +933,7 @@ static pwr_tStatus gen_m4 (
 
 	fprintf( genctx->file, "/%s=%s.%s\n", (bodydef[i].ParName), 
 		object_name, parameter);
-	XtFree((char *) parameter);
+	free((char *) parameter);
 	free((char *) bodydef);	
 
 	return FOE__SUCCESS;
@@ -987,7 +987,7 @@ static pwr_tStatus gen_m5 (
 	fprintf( genctx->file, "/TimerTime=%f", *time_ptr);
 	fprintf( genctx->file, "\n");
 
-	XtFree((char *) time_ptr);
+	free((char *) time_ptr);
 
 	return FOE__SUCCESS;
 }
@@ -1050,7 +1050,7 @@ static pwr_tStatus gen_m6 (
 	sts = ldh_ObjidToName ( ldhses, *resobjdid_ptr, ldh_eName_Hierarchy,
 		hiername, sizeof(hiername), &size);
 	if ( EVEN(sts)) return sts;
-	XtFree((char *) resobjdid_ptr);
+	free((char *) resobjdid_ptr);
 
 	fprintf( genctx->file, " /ResetObject=%s.ActualValue", hiername);
 
@@ -1423,7 +1423,7 @@ static pwr_tStatus gen_m8 (
 			vldh_class( ldhses, VLDH_CLASS_PORDER);
 	    subordercount++;
 	  }
-	  XtFree( parvalue);
+	  free( parvalue);
 
 	}
 	free((char *) bodydef);
@@ -1487,7 +1487,7 @@ static pwr_tStatus gen_m8 (
 	      sts = ldh_ObjidToName ( ldhses, *resobjdid_ptr, ldh_eName_Hierarchy,
 		hiername, sizeof(hiername), &size);
 	      if ( EVEN(sts)) return sts;
-	      XtFree((char *) resobjdid_ptr);
+	      free((char *) resobjdid_ptr);
 
 	      fprintf( genctx->file, " /ResetObject=%s.ActualValue", hiername);
 	    }
@@ -1501,7 +1501,7 @@ static pwr_tStatus gen_m8 (
 			(char **) &timevalue, &size);
 	      if ( EVEN(sts)) return sts;
 	      time = *timevalue;
-	      XtFree((char *) timevalue);
+	      free((char *) timevalue);
 	      fprintf( genctx->file, " /Time=%g", time);
 	    }
 	    else if ( class == vldh_class( ldhses, VLDH_CLASS_DORDER ))
@@ -1514,7 +1514,7 @@ static pwr_tStatus gen_m8 (
 			(char **) &timevalue, &size);
 	      if ( EVEN(sts)) return sts;
 	      time = *timevalue;
-	      XtFree((char *) timevalue);
+	      free((char *) timevalue);
 	      fprintf( genctx->file, " /Time=%g", time);
 	    }
 	    else if ( class == vldh_class( ldhses, VLDH_CLASS_PORDER ))
@@ -1632,7 +1632,7 @@ static pwr_tStatus gen_m9 (
 	if ( EVEN(sts)) return sts;
 
 	refobjdid = *refobjdid_ptr;
-	XtFree((char *) refobjdid_ptr);
+	free((char *) refobjdid_ptr);
 
 	/* Check that this is objdid of an existing object */
 	sts = ldh_GetObjectClass(
@@ -1755,7 +1755,7 @@ static pwr_tStatus gen_m11 (
 	sts = ldh_ObjidToName ( ldhses, *resobjdid_ptr, ldh_eName_Hierarchy,
 		hiername, sizeof(hiername), &size);
 	if ( EVEN(sts)) return sts;
-	XtFree((char *) resobjdid_ptr);
+	free((char *) resobjdid_ptr);
 
 	fprintf( genctx->file, " /ResetObject=%s.ActualValue", hiername);
 
@@ -1999,7 +1999,7 @@ static pwr_tStatus gen_print_inputs (
                 default:
                   ;
 	      }
-	      XtFree( buffer);
+	      free( buffer);
 	    }
 	  }
 	  i++;
@@ -2307,8 +2307,8 @@ static pwr_tStatus gen_print_interns (
    	      object_element += parsize / elements;
 	      template_element += parsize / elements;
    	    }
-	    XtFree( object_par);
-	    XtFree( template_par);
+	    free( object_par);
+	    free( template_par);
 	  }
 	  free((char *) bodydef);	
 	}
@@ -2354,7 +2354,7 @@ static pwr_tStatus gen_print_windows (
 			window, "DevBody", "PlcWindow", (pwr_eClass *) &class,
 			&windbuffer, &size) ))
 	  {
-	    XtFree( windbuffer);
+	    free( windbuffer);
 	    sts = ldh_GetObjectClass ( ldhses, window, &class);
 	    if ( EVEN(sts)) return sts;
 	    sts = ldh_ObjidToName ( ldhses, cdh_ClassIdToObjid( class), 

@@ -306,7 +306,7 @@ int goen_create_nodetype_m0(
 	flow_eAnnotType_OneLine, flow_mDisplayLevel_2);
 
 
-  XtFree( (char *)bodydef);
+  free( (char *)bodydef);
   *node_class = nc_pid;
   return GOEN__SUCCESS;
 }                                                            

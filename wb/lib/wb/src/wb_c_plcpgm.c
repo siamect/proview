@@ -64,7 +64,7 @@ static pwr_tStatus SyntaxCheck (
   else if ( class != pwr_cClass_PlcThread)
     wsx_error_msg( Session, WSX__PLCTHREAD, Object, ErrorCount, WarningCount);
 
-  XtFree( (char *)ThreadObjectPtr);
+  free( (char *)ThreadObjectPtr);
 
   /*
     Check that the child is a plcwindow.

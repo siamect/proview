@@ -535,7 +535,7 @@ int wb_vrepwbl::getClassInfo( pwr_tCid cid, int *rsize, int *dsize)
         *elements = elem; }
 
 
-int wb_vrepwbl::getAttrInfo( const char *attr, int bix, pwr_tCid cid, int *size,
+int wb_vrepwbl::getAttrInfo( const char *attr, cdh_eBix bix, pwr_tCid cid, int *size,
 		     int *offset, pwr_tTid *tid, int *elements, pwr_eType *type)
 {
   int a_size;
@@ -547,7 +547,7 @@ int wb_vrepwbl::getAttrInfo( const char *attr, int bix, pwr_tCid cid, int *size,
   wb_attrname aname( attr);
   if ( aname.evenSts()) return 0;
 
-  if ( getAttrInfoRec( &aname, bix, cid, &a_size, &a_offset, 
+  if ( getAttrInfoRec( &aname, bix, cid, &a_size, &a_offset,
 		       &a_tid, &a_elements, &a_type, 0)) {
     *size = a_size;
     *offset = a_offset;
@@ -559,7 +559,7 @@ int wb_vrepwbl::getAttrInfo( const char *attr, int bix, pwr_tCid cid, int *size,
   return 0;
 }
 
-int wb_vrepwbl::getAttrInfoRec( wb_attrname *attr, int bix, pwr_tCid cid, int *size,
+int wb_vrepwbl::getAttrInfoRec( wb_attrname *attr, cdh_eBix bix, pwr_tCid cid, int *size,
 		     int *offset, pwr_tTid *tid, int *elements, pwr_eType *type,
 		     int level)
 {
@@ -754,6 +754,7 @@ int wb_vrepwbl::getAttrInfoRec( wb_attrname *attr, int bix, pwr_tCid cid, int *s
 						elements, type, &flags, level);
       }
     }
+
   }
   return 0;
 }
@@ -767,6 +768,9 @@ int wb_vrepwbl::nameToOid( const char *name, pwr_tOid *oid)
 
   ref_wblnode n = find( name);
   if ( n) {
+    if ( !n->is_built)
+      n->build( 0);
+
     *oid = n->m_oid;
     return 1;
   }
@@ -785,6 +789,70 @@ int wb_vrepwbl::nameToOid( const char *name, pwr_tOid *oid)
 
     return 1;
   }
+}
+
+int wb_vrepwbl::nameToAttrRef( const char *name, pwr_sAttrRef *attrref)
+{
+  wb_name aname = wb_name( name);
+  pwr_tOid oid;
+  pwr_tStatus sts;
+  int a_size;
+  int a_offset;
+  pwr_tTid a_tid;
+  int a_elements;
+  pwr_eType a_type;
+  cdh_eBix bix;
+  pwr_tCid cid;
+
+  if ( strncmp( name, "_A", 2) == 0) {
+    // Fix
+    return 0;
+  }
+
+  ref_wblnode n = find( aname.name( cdh_mName_volume | cdh_mName_path | cdh_mName_object));
+  if ( n) {
+    if ( !n->is_built)
+      n->build( 0);
+
+    oid = n->m_oid;
+    cid = n->m_cid;
+  }
+  else {
+    // Search in other volume
+    pwr_tStatus sts;
+
+    wb_orep *orep = m_erep->object( &sts, 
+	aname.name( cdh_mName_volume | cdh_mName_path | cdh_mName_object));
+    if ( EVEN(sts))
+      return 0;
+    else {
+      oid = orep->oid();
+      cid = orep->cid();
+      // Delete
+      orep->ref();
+      orep->unref();
+    }
+  }
+
+  wb_attrname an = wb_attrname( aname.name( cdh_mName_attribute));
+
+  // Try rtbody
+  bix = cdh_eBix_rt;
+  sts = getAttrInfo( an.name(), bix, cid, &a_size,
+		     &a_offset, &a_tid, &a_elements, &a_type);
+  if ( EVEN(sts)) {
+    // Try devbody
+    bix = cdh_eBix_dev;
+    sts = getAttrInfo( an.name(), cdh_eBix_dev, cid, &a_size,
+		     &a_offset, &a_tid, &a_elements, &a_type);
+    if ( EVEN(sts)) return sts;
+  }
+  attrref->Objid = oid;
+  attrref->Offset = a_offset;
+  attrref->Size = a_size;
+  attrref->Body = 0; // Fix
+
+  return LDH__SUCCESS;
 }
 
 int wb_vrepwbl::getTemplateBody( pwr_tCid cid, int bix, int *size, void **body)

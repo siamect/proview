@@ -406,11 +406,11 @@ static int genstr_process_classdef (
     break;
   }
   if (objbodydef != NULL) {
-    XtFree((char *) objbodydef);
+    free((char *) objbodydef);
     objbodydef = NULL;
   }
   if (body != NULL) {
-    XtFree((char *) body);
+    free((char *) body);
     body = NULL;
   }
 
@@ -451,9 +451,9 @@ static int genstr_process_classdef (
   }
 
   if (objbodydef != NULL)
-    XtFree((char *) objbodydef);
+    free((char *) objbodydef);
   if (body != NULL)
-    XtFree((char *) body);
+    free((char *) body);
 
   if (IsWrittenClass ) {
     fprintf(fp, "\n#endif\n");

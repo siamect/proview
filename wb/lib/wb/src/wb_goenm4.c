@@ -602,7 +602,7 @@ unsigned long		*par_index;
 	  }
 	}
 
-	XtFree((char *) bodydef);
+	free((char *) bodydef);
 	if ( input_found || output_found ) return GOEN__SUCCESS;
 	else return GOEN__NOPOINT;
 }

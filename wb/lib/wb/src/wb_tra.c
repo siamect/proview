@@ -314,7 +314,7 @@ static pwr_tStatus trace_get_attr_m3( 	gre_ctx		grectx,
 
   if ( !found )
   {
-    XtFree((char *) bodydef);
+    free((char *) bodydef);
     return  TRA__NOPAR;
   }
   strcpy( object_str, name);
@@ -336,7 +336,7 @@ static pwr_tStatus trace_get_attr_m3( 	gre_ctx		grectx,
       break;
   }
 
-  XtFree((char *) bodydef);
+  free((char *) bodydef);
   return TRA__SUCCESS ; 
 }
 
@@ -393,7 +393,7 @@ static pwr_tStatus trace_get_attr_m4( 	gre_ctx		grectx,
   if( EVEN(sts)) return sts;
 
   strcpy( object_str, hier_name);
-  XtFree((char *) objdidp);
+  free((char *) objdidp);
 
   /* Get the parametername stored in the parameter */
   sts = ldh_GetObjectPar( node->hn.window_pointer->hw.ldhsession,  
@@ -402,7 +402,7 @@ static pwr_tStatus trace_get_attr_m4( 	gre_ctx		grectx,
   if ( EVEN(sts)) return sts;
 
   strcpy( attr_str, parameter);
-  XtFree((char *) parameter);
+  free((char *) parameter);
 
   /* Get parameter type */
   sts = ldh_GetObjectClass( node->hn.window_pointer->hw.ldhsession,
@@ -423,7 +423,7 @@ static pwr_tStatus trace_get_attr_m4( 	gre_ctx		grectx,
 
   if ( !found )
   {
-    XtFree((char *) bodydef);
+    free((char *) bodydef);
     return  TRA__NOPAR;
   }
 
@@ -526,7 +526,7 @@ static pwr_tStatus trace_get_attr_m7( 	gre_ctx		grectx,
   }
   if ( !found )
   {
-    XtFree((char *) bodydef);
+    free((char *) bodydef);
     return  TRA__NOPAR;
   }
   strcpy( object_str, name);
@@ -548,7 +548,7 @@ static pwr_tStatus trace_get_attr_m7( 	gre_ctx		grectx,
       break;
   }
 
-  XtFree((char *) bodydef);
+  free((char *) bodydef);
   return TRA__SUCCESS; 
 }
 
@@ -614,7 +614,7 @@ pwr_tStatus trace_get_attr_con( 	gre_ctx		grectx,
 
   if ( !found )
   {
-    XtFree((char *) bodydef);
+    free((char *) bodydef);
     return  TRA__NOPAR;
   }
 

@@ -49,7 +49,7 @@ class wb_adrep
     pwr_tOid aoid();
     int aix();
     pwr_tCid cid();
-    int bix();
+    cdh_eBix bix();
     int flags() {return m_flags;}
     pwr_tOid boid();
     pwr_eClass bufferClass() { return m_bufferClass;}

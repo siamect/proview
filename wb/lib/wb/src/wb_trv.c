@@ -512,7 +512,7 @@ int trv_get_plc_window (
 			&windbuffer, &size);
 	  if ( ODD(sts)) 
 	  {
-	    XtFree( windbuffer);
+	    free( windbuffer);
 	    window_found = 1;	
 	    break;
 	  }
@@ -585,7 +585,7 @@ static int trv_get_window_subwindows (
 			(pwr_eClass *) &class, &windbuffer, &size);
 	    if ( ODD(sts)) 
 	    {
-	      XtFree( windbuffer);
+	      free( windbuffer);
 	      sts = trv_get_window_subwindows( ldhses, subwindow, wind_count,
 			windlist);
 	      if ( EVEN(sts)) return sts;
@@ -687,7 +687,7 @@ int trv_get_window_objects (
 			&nodebuffer, &size);
 	  if ( ODD(sts)) 
 	  {
-	    XtFree( nodebuffer);
+	    free( nodebuffer);
 	    /* insert into object list */
 	    sts = utl_realloc( (char **)objectlist, *object_count * sizeof(pwr_tObjid), 
 		(*object_count + 1) * sizeof(pwr_tObjid));
@@ -749,7 +749,7 @@ int trv_get_window_connections (
 			(pwr_eClass *) &class, &nodebuffer, &size);
 	  if ( ODD(sts)) 
 	  {
-	    XtFree( nodebuffer);
+	    free( nodebuffer);
 	    /* insert into object list */
 	    sts = utl_realloc( (char **)objectlist, *object_count * sizeof(pwr_tObjid), 
 	  	(*object_count + 1) * sizeof(pwr_tObjid));
@@ -813,7 +813,7 @@ int trv_get_parentlist (
 			&plcbuffer, &size) ))
 	  {
 	    plc_found = 1;
-	    XtFree( plcbuffer);
+	    free( plcbuffer);
 	  }
 
 	  /* insert into object list */

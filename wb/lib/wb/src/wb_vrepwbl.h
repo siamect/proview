@@ -92,9 +92,9 @@ public:
     int getTypeInfo( const char *type, pwr_tTid *tid, pwr_eType *type, int *size,
 		     int *elements);
     int getClassInfo( pwr_tCid cid, int *rsize, int *dsize);
-    int getAttrInfo( const char *attr, int bix, pwr_tCid cid, int *size,
+    int getAttrInfo( const char *attr, cdh_eBix bix, pwr_tCid cid, int *size,
 		     int *offset, pwr_tTid *tid, int *elements, pwr_eType *type);
-    int getAttrInfoRec( wb_attrname *attr, int bix, pwr_tCid cid, int *size,
+    int getAttrInfoRec( wb_attrname *attr, cdh_eBix bix, pwr_tCid cid, int *size,
 			int *offset, pwr_tTid *tid, int *elements, 
 			pwr_eType *type, int level);
     ref_wblnode findObject( pwr_tOix oix);
@@ -103,6 +103,7 @@ public:
     ref_wblnode findClass( pwr_tCid cid);
     ref_wblnode findType( pwr_tTid tid);
     int nameToOid( const char *name, pwr_tOid *oid);
+    int nameToAttrRef( const char *name, pwr_sAttrRef *attrref);
 
     int error_cnt;
     int file_cnt;

@@ -30,11 +30,11 @@ public:
     size_t size();
     pwr_tTid tid();
     int nElement();
-    wb_name name();
-    wb_name name(ldh_eName type);
+    const char *name() const;
+    wb_name longName();
     
  private:
-    void check();            
+    void check() const;            
 };
 
 #endif

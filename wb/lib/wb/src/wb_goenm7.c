@@ -270,7 +270,7 @@ int goen_create_nodetype_m7(
 	flow_eAnnotType_OneLine, flow_mDisplayLevel_2);
 
   *node_class = nc_pid;
-  XtFree((char *) bodydef);
+  free((char *) bodydef);
   return GOEN__SUCCESS;
 }
 

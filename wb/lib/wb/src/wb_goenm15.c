@@ -335,7 +335,7 @@ int goen_create_nodetype_m15(
 	 GOEN_DISPLAYNODE_ANNOT, flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE, 
 	flow_eAnnotType_OneLine, flow_mDisplayLevel_2);
 
-  XtFree((char *) bodydef);
+  free((char *) bodydef);
   *node_class = nc_pid;
   return GOEN__SUCCESS;
 }

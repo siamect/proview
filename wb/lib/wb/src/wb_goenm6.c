@@ -111,7 +111,7 @@ int goen_create_nodetype_m6(
   else
   {
     docsize = *docsize_p;
-    XtFree( (char *)docsize_p);
+    free( (char *)docsize_p);
   }
 
   sts = ldh_GetObjectPar(
@@ -125,7 +125,7 @@ int goen_create_nodetype_m6(
   else
   {
     docorientation = *docorientation_p;
-    XtFree( (char *)docorientation_p);
+    free( (char *)docorientation_p);
   }
 
   if ( docorientation == 0 )

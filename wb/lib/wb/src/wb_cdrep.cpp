@@ -127,10 +127,12 @@ wb_adrep *wb_cdrep::adrep( pwr_tStatus *sts, const char *aname)
   return 0;
 }
 
-wb_name wb_cdrep::name()
+wb_orep *wb_cdrep::classBody( pwr_tStatus *sts, const char *bname)
 {
-  wb_name n = wb_name( m_orep->name());
-  return n;
+  wb_orepdbs *orep = (wb_orepdbs *)m_orep->m_vrep->child( sts, m_orep, bname);
+  if ( EVEN(*sts))
+    return 0;
+  return orep;
 }
 
 pwr_tCid wb_cdrep::cid()
@@ -155,3 +157,12 @@ void wb_cdrep::templateBody( pwr_tStatus *sts, cdh_eBix bix, void *p)
   orep->unref();
 }
 
+const char *wb_cdrep::name() const
+{
+  return m_orep->name();
+}
+
+wb_name wb_cdrep::longName()
+{
+  return m_orep->longName();
+}

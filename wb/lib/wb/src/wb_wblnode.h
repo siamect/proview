@@ -37,6 +37,9 @@ typedef struct {
 } wbl_sSym;
 
 class wb_wblnode : public CommonAST {
+
+  friend class wb_vrepwbl;
+
 public:
     wb_wblnode() : 
       node_type(wbl_eNodeType_No), 
@@ -190,6 +193,7 @@ public:
     static int lookup( int *type, const char *keyword, wbl_sSym *table);
     static int convconst( int *val, char *str);
 
+
     wbl_eNodeType node_type;
     int rbody_size;
     int dbody_size;
@@ -199,6 +203,7 @@ public:
     pwr_tTid m_tid;
     pwr_tOid m_oid;
     char name[200];
+    //    char *name() { return getText().c_str();}
     char cname[32];
     wb_vrepwbl *m_vrep;
     wb_wblnode *o_fth;

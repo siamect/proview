@@ -371,7 +371,6 @@ void  wnav_attrvalue_to_string( ldh_tSesContext ldhses, int type_id, void *value
       {
         strcpy( str, "");
         *len = 0;
-        break;
       }
       *buff = str;
       break;
@@ -386,6 +385,7 @@ void  wnav_attrvalue_to_string( ldh_tSesContext ldhses, int type_id, void *value
       {
         strcpy( str, "");
         *len = 0;
+	*buff = str;
         break;
       }
       strcpy( str, name_p);

@@ -165,9 +165,9 @@ int wb_adrep::aix()
   return cdh_oixToAix( m_orep->oid().oix);
 }
 
-int wb_adrep::bix()
+cdh_eBix wb_adrep::bix()
 {
-  return cdh_oixToBix( m_orep->oid().oix);
+  return (cdh_eBix) cdh_oixToBix( m_orep->oid().oix);
 }
 
 pwr_sAttrRef wb_adrep::aref()
