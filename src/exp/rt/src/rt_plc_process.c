@@ -370,7 +370,7 @@ link_io_base_areas (
   dlink_area((plc_sDlink *)&pp->base.di_a, "pwrNode-active-io-di", pp->IOHandler->DiCount * sizeof(pwr_tBoolean));
   dlink_area((plc_sDlink *)&pp->base.do_a, "pwrNode-active-io-do", pp->IOHandler->DoCount * sizeof(pwr_tBoolean));
   dlink_area((plc_sDlink *)&pp->base.dv_a, "pwrNode-active-io-dv", pp->IOHandler->DvCount * sizeof(pwr_tBoolean));
-  dlink_area((plc_sDlink *)&pp->base.av_i, "pwrNode-active-io-av_init", pp->IOHandler->DvCount * sizeof(pwr_tInt32));
+  dlink_area((plc_sDlink *)&pp->base.av_i, "pwrNode-active-io-av_init", pp->IOHandler->AvCount * sizeof(pwr_tFloat32));
   dlink_area((plc_sDlink *)&pp->base.dv_i, "pwrNode-active-io-dv_init", pp->IOHandler->DvCount * sizeof(pwr_tInt32));
 }
 

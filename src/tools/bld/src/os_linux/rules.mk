@@ -195,6 +195,13 @@ $(exe_dir)/%.gif : %.gif
 	@ $(log_h_h)
 	@ $(cp) $(cpflags) $(source) $(target)
 
+$(doc_dir)/orm/%.gif : %.gif
+	@ $(log_h_h)
+	@ $(cp) $(cpflags) $(source) $(target)
+
+$(doc_dir)/%.gif : %.gif
+	@ $(log_h_h)
+	@ $(cp) $(cpflags) $(source) $(target)
 
 $(cnf_dir)/%.wb_vers : %.wb_load
 	@ $(log_wb_load_wb_vers)
@@ -210,6 +217,10 @@ $(exe_dir)/%.pwg : %.pwg
 	@ $(cp) $(cpflags) $(source) $(target)
 
 $(exe_dir)/%.html : ../../%.html
+	@ $(log_h_h)
+	@ $(cp) $(cpflags) $(source) $(target)
+
+$(doc_dir)/%.html : ../../%.html
 	@ $(log_h_h)
 	@ $(cp) $(cpflags) $(source) $(target)
 

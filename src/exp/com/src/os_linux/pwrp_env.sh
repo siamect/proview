@@ -840,6 +840,7 @@ pwrc_set_func()
     export pwrp_lis=$pwrp_root/$platform/lis
 
     export PATH=$PATH:$pwrp_exe
+    export CDPATH=$pwrp_root:$pwrp_root/common:$pwrp_root/x86_linux:$pwrp_src
 
     export pwrp_projectname=$pname
 

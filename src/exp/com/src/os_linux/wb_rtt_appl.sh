@@ -33,6 +33,16 @@ then
       ar rc $pwrp_lib/${arname_pict}
     fi
 
+#link option file exists and is not empty
+  if [ -s $pwrp_exe/ra_rtt.opt ]; then
+    ld_opt_tmp="`cat $pwrp_exe/ra_rtt.opt`"
+    ld_opt="`eval echo $ld_opt_tmp`"
+  else
+    ld_opt=""
+  fi
+
+
+
     cc=gcc
     cinc="-I$pwr_inc -I$pwrp_rttbld -I-"
     cflags="-DOS_LINUX=1 -DOS=linux -DHW_X86=1 -DHW=x86 -O3 -DGNU_SOURCE -DPWR_NDEBUG -D_REENTRANT"
@@ -47,6 +57,7 @@ then
     ${ld} ${linkflags} -o $pwrp_exe/${exename} $pwrp_obj/${menuname}.o \
      $pwr_obj/dtt_rttsys.o $pwr_obj/rt_io_user.o \
      $pwrp_lib/${arname_pict} $pwrp_lib/${arname} \
+     $ld_opt \
      -lpwr_dtt\
      -lpwr_rt -lpwr_co -lpwr_msg_dummy -lrpcsvc -lpthread -lm -lposix1b -lrt 
   fi
