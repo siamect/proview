@@ -142,6 +142,16 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  @Summary A URL to the circuit diagram for the equipment in this hierarchy.
+      !  A URL to the circuit diagram for the equipment in this hierarchy.
+      !  The circuit diagram can be displayed from the popup menu for this object.
+      !*/
+      Object CircuitDiagram $Attribute 16
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$URL"
+        EndBody
+      EndObject
+      !/**
       !  Text associated to ActualValue = FALSE. At presentation
       !  when ActualValue = FALSE TextWhenValIs0 is displayed;
       !  OFF may often be a suitable text.

@@ -141,6 +141,22 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  @Summary A URL to the circuit diagram for the equipment in this hierarchy.
+      !  A URL to the circuit diagram for the equipment in this hierarchy.
+      !  The circuit diagram can be displayed from the popup menu for this object.
+      !
+      !  If the attribute is empty, the CircuitDiagram method will look at the
+      !  closest ancestor that has supplied a value in CircuitDiagram and use this
+      !  URL instead. If this behavior is unwanted, put the string 'Disabled' in the
+      !  attribute. This will disable the CircuitDiagram method for this object, and
+      !  for any child with empty CircuitDiagram attribute.
+      !*/
+      Object CircuitDiagram $Attribute 14
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$URL"
+        EndBody
+      EndObject
+      !/**
       !  Text associated to ActualValue = FALSE. At presentation
       !  when ActualValue = FALSE TextWhenValIs0 is displayed;
       !  OFF may sometimes be a suitable text.

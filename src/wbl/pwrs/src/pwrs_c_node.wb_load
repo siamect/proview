@@ -51,23 +51,9 @@ SObject pwrs:Class
         EndBody
       EndObject
       !/**
-      !  Applied to VAXELN node the system error log can,
-      !  independently of if it is sent to a terminal or not, be
-      !  sent to a file specified by ErrLogFile.
-      !  Syntax:
-      !  <area number>.<node number>::<device>[<directory>]
-      !  <file name>.<extension>
-      !  
-      !  Examples:    1.30::pwrp_lis:sys_RTPVAX.log
-      !            1.30::sys$login:pwr_VAXELN_RTPVAX.log
-      !  To distinguish system error logs from different VAXELN
-      !  nodes the name of the node can be included in the name
-      !  of the file. In the example above specifies RTPVAX the
-      !  current node.  If <area number>.<node number>:: is
-      !  omitted the file is created on the boot node. In that
-      !  way the attributet do not have to changed even if the
-      !  node would be booted from different boot nodes.
-      !  
+      ! @Summary Name of the proview error log file.
+      !  Name of the proview error log file.
+      !
       !  Applied to OpenVMS node the system error log gets
       !  always the name  PWR_VMS_'XXX'.LOG and the file is put
       !  on the own node below sys$login. 'XXX' denotes the name
@@ -78,32 +64,166 @@ SObject pwrs:Class
           Attr TypeRef = "pwrs:Type-$String132"
         EndBody
       EndObject
-      Object BootVersion $Attribute 7
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$UInt32"
-	  Attr Flags |= PWR_MASK_STATE
-	  Attr Flags |= PWR_MASK_INVISIBLE
-        EndBody
-      EndObject
-      Object BootCreTime $Attribute 8
+      !/**
+      !  Proview startup time.
+      !*/
+      Object BootTime $Attribute 7
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Time"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
-      Object CurVersion $Attribute 10
+      !/**
+      !  Version of the root volume at proview startup.
+      !*/
+      Object BootVersion $Attribute 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Time"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Version of the plc program at proview startup.
+      !*/
+      Object BootPlcVersion $Attribute 9
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
-      Object CurCreTime $Attribute 11
+      !/**
+      !  Current version of the root volume.
+      !  This version is updated at proview soft restart.
+      !*/
+      Object CurrentVersion $Attribute 10
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Time"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Current version of the plc program.
+      !  This version is updated at proview soft restart.
+      !*/
+      Object CurrentPlcVersion $Attribute 11
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Number of soft restarts since proview startup.
+      !*/
+      Object Restarts $Attribute 12
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Time for last restart.
+      !*/
+      Object RestartTime $Attribute 13
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Time"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Stall time for last restart.
+      !*/
+      Object RestartStallTime $Attribute 14
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$DeltaTime"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Current time. The time is updated by the last executed plc thread.
+      !*/
+      Object SystemTime $Attribute 15
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Time"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Status of the system.
+      !*/
+      Object SystemStatus $Attribute 16
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$NetStatus"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Status of server processes.
+      !*/
+      Object ProcStatus $Attribute 17
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Status"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 40
+        EndBody
+      EndObject
+      !/**
+      !  Process log message severity.
+      !*/
+      Object ProcMsgSeverity $Attribute 18
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Status"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 40
+        EndBody
+      EndObject
+      !/**
+      !  Process log message.
+      !*/
+      Object ProcMessage $Attribute 19
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 40
+        EndBody
+      EndObject
+      !/**
+      !  Configuration object of server processes.
+      !*/
+      Object ProcObject $Attribute 20
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 40
+        EndBody
+      EndObject
+      !/**
+      !  Server processes time stamp.
+      !*/
+      Object ProcTimeStamp $Attribute 21
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Time"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 40
         EndBody
       EndObject
       !/**

@@ -101,6 +101,15 @@ SObject pwrb:Class
 	  Attr Flags |= PWR_MASK_PRIVATE
 	EndBody
       EndObject
+      Object PlcThreadObjects $Attribute 13
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 20
+	EndBody
+      EndObject
     EndObject
     Object Template PlcProcess
       Body RtBody

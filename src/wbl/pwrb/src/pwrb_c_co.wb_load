@@ -170,6 +170,16 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$URL"
         EndBody
       EndObject
+      !/**
+      !  @Summary A URL to the circuit diagram for the equipment in this hierarchy.
+      !  A URL to the circuit diagram for the equipment in this hierarchy.
+      !  The circuit diagram can be displayed from the popup menu for this object.
+      !*/
+      Object CircuitDiagram $Attribute 15
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$URL"
+        EndBody
+      EndObject
     EndObject
     Object ConfiguratorPoson $Menu
       Object Pointed $Menu

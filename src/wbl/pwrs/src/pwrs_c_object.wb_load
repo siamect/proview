@@ -871,6 +871,13 @@ SObject pwrs:Class
 	  Attr FilterName = "$Object-DataSheetFilter"
 	EndBody
       EndObject
+      Object CircuitDiagram $MenuButton
+	Body SysBody
+	  Attr ButtonName = "CircuitDiagram"
+	  Attr MethodName = "$Object-CircuitDiagram"
+	  Attr FilterName = "$Object-CircuitDiagramFilter"
+	EndBody
+      EndObject
       Object Collect $MenuButton
 	Body SysBody
 	  Attr ButtonName = "Collect"

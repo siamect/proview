@@ -85,6 +85,22 @@ SObject pwrs:Class
           Attr TypeRef = "pwrs:Type-$URL"
         EndBody
       EndObject
+      !/**
+      !  @Summary An URL to the circuit diagram for the equipment in this hierarchy.
+      !  An URL to the circuit diagram for the equipment in this hierarchy.
+      !  The circuit diagram can be displayed from the popup menu for this object.
+      !
+      !  If the attribute is empty, the CircuitDiagram method will look at the
+      !  closest ancestor that has supplied a value in CircuitDiagram and use this
+      !  URL instead. If this behavior is unwanted, put the string 'Disabled' in the
+      !  attribute. This will disable the CircuitDiagram method for this object, and
+      !  for any child with empty CircuitDiagram attribute.
+      !*/
+      Object CircuitDiagram $Attribute 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$URL"
+        EndBody
+      EndObject
     EndObject
     Object ConfiguratorPoson $Menu
       Object Pointed $Menu
@@ -114,3 +130,7 @@ SObject pwrs:Class
     EndObject
   EndObject
 EndSObject
+
+
+
+

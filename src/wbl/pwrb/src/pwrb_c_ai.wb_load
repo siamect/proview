@@ -153,8 +153,8 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  @Summary A URL to the data sheet for the equipment in this hierarchy.
-      !  A URL to the data sheet for the equipment in this hierarchy.
+      !  @Summary An URL to the data sheet for the equipment in this hierarchy.
+      !  An URL to the data sheet for the equipment in this hierarchy.
       !  The data sheet can be displayed from the popup menu for this object.
       !*/
       Object DataSheet $Attribute 16
@@ -163,8 +163,24 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  @Summary An URL to the circuit diagram for the equipment in this hierarchy.
+      !  An URL to the circuit diagram for the equipment in this hierarchy.
+      !  The circuit diagram can be displayed from the popup menu for this object.
+      !
+      !  If the attribute is empty, the CircuitDiagram method will look at the
+      !  closest ancestor that has supplied a value in CircuitDiagram and use this
+      !  URL instead. If this behavior is unwanted, put the string 'Disabled' in the
+      !  attribute. This will disable the CircuitDiagram method for this object, and
+      !  for any child with empty CircuitDiagram attribute.
+      !*/
+      Object CircuitDiagram $Attribute 17
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$URL"
+        EndBody
+      EndObject
+      !/**
       !  The internal filter function concerns only local
-      !  "Ïsignals.
+      !  Ai-signals.
       !  Specifies the selected filter. The possible types of
       !  filters are:
       !  

@@ -81,7 +81,7 @@ SObject pwrb:Class
         Attr devbody_annotation = 1
         Attr compmethod = 57
         Attr compindex = 0
-        Attr tracemethod = 1
+        Attr tracemethod = 9
         Attr traceindex = 1
         Attr connectmethod = 0
         Attr executeordermethod = 6

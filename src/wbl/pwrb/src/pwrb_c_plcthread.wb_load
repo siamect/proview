@@ -47,6 +47,16 @@ SObject pwrb:Class
 	EndBody
       EndObject
       !/**
+      !  Actual scan time for the last scan.
+      !*/
+      Object ActualScanTime $Attribute 34
+	Body SysBody
+	  Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      !/**
       !  Minimum actual scan time since start of thread.
       !*/
       Object ScanTimeMin $Attribute 4

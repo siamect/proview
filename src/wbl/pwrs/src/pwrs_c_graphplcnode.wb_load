@@ -149,6 +149,7 @@ SObject pwrs:Class
       EndObject
       !/**
       !  Annotation in which the object name will be displayed.
+      !  The common graph methods uses annotation 1 to display the object name.
       !*/
       Object segname_annotation $Attribute 10
         Body SysBody
