@@ -409,15 +409,18 @@ dbs_Map(pwr_tStatus *sts, const char *filename)
     struct stat sb;
     int ret;
     int fd;
+    int tfd;
     int i;
     dbs_sSect *sect;
-    dbs_sFile file;
+    //dbs_sFile file;
     void *base = 0;
     int nVolRef;
     dbs_sVolRef *vrp;
     dbs_sMenv *mep = 0;
     dbs_sVenv *vep = 0;
-
+    char buf[512];
+    char tfname[] = "/tmp/loadfile.dbs_XXXXXX";
+    
     *sts = DBS__SUCCESS;
 
     if ((ret = stat(filename, &sb)) != 0) {
@@ -427,21 +430,35 @@ dbs_Map(pwr_tStatus *sts, const char *filename)
     }
 
     fd = open(filename, O_RDWR);
+    tfd = mkstemp(tfname);
+    printf("dbs_Map:: %s -> %s\n", filename, tfname);
+    
+    while (1) {
+      int count;
+      
+      count = read(fd, buf, sizeof(buf));
+      if (count <= 0)
+        break;
+      write(tfd, buf, count);
+    }
+
+    ret = close(fd);
     
     errno = 0;
 
-    ret = read(fd, &file, sizeof(file));
+    //ret = read(fd, &file, sizeof(file));
     // printf("st_size...: %ld\n", sb.st_size);
     // printf("size......: %d\n", file.size);
     
-    base = mmap(NULL, sb.st_size, PROT_READ, MAP_SHARED, fd, 0);
+    base = mmap(NULL, sb.st_size, PROT_READ, MAP_SHARED, tfd, 0);
     if (base == NULL) {
         *sts = errno_GetStatus();
         perror("mmap");
-        ret = close(fd);
+        ret = close(tfd);
         return NULL;
     }
-    ret = close(fd);
+    ret = close(tfd);
+    unlink(tfname);
     
     sect = (dbs_sSect*)(base + dbs_dAlign(sizeof(dbs_sFile)));
     vrp = (dbs_sVolRef*)(base + sect[dbs_eSect_volref].offset);
@@ -568,6 +585,8 @@ dbs_Unmap(pwr_tStatus *sts, dbs_sMenv *mep)
 {
   *sts = DBS__SUCCESS;
   if (mep->flags.b.isMapped) {
+    munmap(mep->base, mep->size);
+    mep->flags.b.isMapped = 0;
     return TRUE;
   } else if (mep->f != NULL) {
     printf("ERROR, dbs_Unmap, trying to unmap a non mapped file\n");

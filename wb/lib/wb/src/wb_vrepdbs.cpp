@@ -7,8 +7,15 @@
 
 void wb_vrepdbs::unref()
 {
-  if (--m_nRef == 0) 
+  printf("wb_vrepdbs::unref\n");
+  
+  if (--m_nRef == 0) {
+    pwr_tStatus sts;
+    printf("wb_vrepdbs::unref::dbs_Unmap\n");
+    
+    dbs_Unmap(&sts, m_dbsmep);
     delete this;
+  }
 }
 
 wb_vrep *wb_vrepdbs::ref()
