@@ -246,6 +246,7 @@ void GeDyn::open( ifstream& fp)
   int		tmp;
   char		dummy[40];
   GeDynElem    	*e;
+  int		errcnt = 0;
 
   for (;;)
   {
@@ -304,6 +305,9 @@ void GeDyn::open( ifstream& fp)
       default:
         cout << "GeDyn:open syntax error" << endl;
         fp.getline( dummy, sizeof(dummy));
+	errcnt++;
+	if ( errcnt > 20)
+	  exit(0);
     }
     if ( e) {
       insert_element( e);
