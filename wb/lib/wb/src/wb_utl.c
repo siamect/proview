@@ -5420,7 +5420,6 @@ int utl_compile (
 	pwr_tVolumeId	volume_vect[UTL_INPUTLIST_MAX + 1];
 	pwr_tVolumeId	*volume_p;
 	trv_ctx		trvctx;
-	pwr_tClassId	vol_class;
 	pwr_tVolumeId	vol_id;
         int             thisvolume;
         pwr_tVolumeId   current_volid;
@@ -5498,13 +5497,10 @@ int utl_compile (
 	      sts = ldh_GetVolumeList( ldh_SessionToWB( ldhses), &vol_id);
 	      while ( ODD(sts) )
 	      {
-	        sts = ldh_GetVolumeClass( ldh_SessionToWB( ldhses), vol_id,
-			&vol_class);
+		sts = ldh_GetVidInfo( ldh_SessionToWB( ldhses), vol_id, &volinfo);
 	        if (EVEN(sts)) return sts;
 
-	        if ( !(vol_class == pwr_eClass_ClassVolume ||
- 	               vol_class == pwr_eClass_WorkBenchVolume ))
-	        {
+	        if ( volinfo.VolRep == ldh_eVolRep_Db) {
 	          volume_vect[i] = vol_id;
 	          i++;
 	          if ( i > UTL_INPUTLIST_MAX)
