@@ -32,6 +32,7 @@ public:
   //wb_object& operator=(const wb_orep&);
 
   size_t size() { return 0;}   // Fix get objects runtime body size
+  pwr_mClassDef flags();
   pwr_tCid cid();
     
 

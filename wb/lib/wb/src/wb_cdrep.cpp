@@ -166,6 +166,18 @@ void wb_cdrep::templateBody( pwr_tStatus *sts, pwr_eBix bix, void *p)
   orep->unref();
 }
 
+pwr_mClassDef wb_cdrep::flags()
+{
+  pwr_sClassDef *classdef;
+  pwr_tStatus sts;
+
+  classdef = (pwr_sClassDef *) m_orep->m_vrep->readBody( &sts, m_orep, pwr_eBix_sys, 0);
+  if ( EVEN(sts))
+    throw wb_error( sts);
+
+  return classdef->Flags;
+}
+
 const char *wb_cdrep::name() const
 {
   return m_orep->name();

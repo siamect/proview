@@ -423,9 +423,13 @@ void wb_wblnode::build( bool recursive)
         is_built = 0;
     }
     if ( isClassDef()) {
+
       m_oid.oix = cdh_cixToOix( m_oid.oix, 0, 0);
       if ( !m_vrep->registerObject( m_oid.oix, this))
         m_vrep->error( "Duplicate class index", getFileName(), line_number);
+
+      if ( m_vrep->vid() == 1)
+        ((pwr_sClassDef *)rbody)->Flags.b.System = 1;
 
       // Calculate offset for attributes
       wb_wblnode *child = o_fch;
@@ -460,10 +464,14 @@ void wb_wblnode::build( bool recursive)
                 ;
               }
             }
+
+
             attr = attr->o_fws;
           }
         }
         child = child->o_fws;
+        m_flags = ((pwr_sClassDef *)rbody)->Flags;
+
       }
       is_built = 1;
 
@@ -540,7 +548,7 @@ void wb_wblnode::buildObjBodyDef( ref_wblnode classdef)
   ((pwr_sObjBodyDef *)rbody)->NumOfParams = index;
 }
 
-void wb_wblnode::buildAttribute( ref_wblnode classdef, ref_wblnode objbodydef, 
+void wb_wblnode::buildAttribute( ref_wblnode classdef, ref_wblnode objbodydef,
                                  int *bindex, size_t *boffset)
 {
   pwr_eType type;
@@ -668,6 +676,8 @@ void wb_wblnode::buildTemplate( ref_wblnode classdef)
     }
     objbodydef = objbodydef->o_fws;
   }
+  m_flags.b.Template = 1;
+
   ref_wblnode first_child;
   first_child = getFirstChild();
   if ( first_child)
@@ -1437,6 +1447,13 @@ void wb_wblnode::iterRbody( wb_dbs *dbs)
 
 bool wb_wblnode::exportHead(wb_import &i)
 {
+  pwr_tStatus sts;
+  pwr_mClassDef flags;
+
+  m_vrep->getClassFlags( &sts, m_cid, &flags);
+  if ( EVEN(sts)) throw wb_error( sts);
+
+  m_flags.m |= flags.m;
   ref_wblnode o_lch = get_o_lch();
   pwr_tOid fthoid = o_fth ? o_fth->m_oid : pwr_cNOid;
   pwr_tOid fwsoid = o_fws ? o_fws->m_oid : pwr_cNOid;

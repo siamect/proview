@@ -50,6 +50,7 @@ public:
       line_number(0), file(0), is_built(0), c_cid(0), c_cix(0), c_template(0), 
       b_bix(pwr_eBix__), a_tid(0),  a_size(0), a_offset(0), a_elements(0), a_flags(0)
     {
+      m_flags.m = 0;
       strcpy( cname, "");
     }
     wb_wblnode(antlr::RefToken t) : 
@@ -59,6 +60,7 @@ public:
       line_number(0), file(0), is_built(0), c_cid(0), c_cix(0), c_template(0), 
       b_bix(pwr_eBix__), a_tid(0),  a_size(0), a_offset(0), a_elements(0), a_flags(0)
     {
+      m_flags.m = 0;
       CommonAST::setType(t->getType());
       CommonAST::setText(t->getText());
     }
@@ -217,6 +219,7 @@ public:
     const char *name() { return getText().c_str();}
     char cname[32];
     wb_vrepwbl *m_vrep;
+    pwr_mClassDef m_flags;
     wb_wblnode *o_fth;
     wb_wblnode *o_bws;
     wb_wblnode *o_fws;

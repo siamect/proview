@@ -81,6 +81,7 @@ public:
   int getAttrInfoRec( wb_attrname *attr, pwr_eBix bix, pwr_tCid cid, size_t *size,
                       size_t *offset, pwr_tTid *tid, int *elements, 
                       pwr_eType *type, int level);
+  void getClassFlags( pwr_tStatus *sts, pwr_tCid cid, pwr_mClassDef *flags);
   ref_wblnode findObject( pwr_tOix oix);
   ref_wblnode findClass( const char *name);
   ref_wblnode findType( const char *name);

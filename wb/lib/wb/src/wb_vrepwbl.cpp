@@ -531,6 +531,29 @@ int wb_vrepwbl::getTypeInfo( pwr_tTid tid, pwr_eType *type, size_t *size,
   return 1;
 }
 
+void wb_vrepwbl::getClassFlags( pwr_tStatus *sts, pwr_tCid cid, pwr_mClassDef *flags)
+{
+  // Search type in this volume
+  ref_wblnode n = findClass( cid);
+  if ( n) {
+    if ( !n->is_built)
+      n->build( 0);
+
+    *flags = n->m_flags;
+    *sts = LDH__SUCCESS;
+  }
+  else {
+    // Search type in other volumes
+    wb_cdrep *cdrep = m_merep->cdrep( sts, cid);
+    if ( EVEN(*sts)) return;
+    
+    *flags = cdrep->flags();
+
+    delete cdrep;
+    *sts = LDH__SUCCESS;
+  }
+}
+
 int wb_vrepwbl::getClassInfo( pwr_tCid cid, size_t *rsize, size_t *dsize)
 {
   // Search type in this volume
