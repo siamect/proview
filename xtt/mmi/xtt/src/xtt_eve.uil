@@ -43,6 +43,15 @@ procedure
 	ev_ala_activate_help(integer);
 	ev_ala_activate_helpevent(integer);
 	ev_ala_create_form(integer);
+	ev_blk_activate_exit(integer);
+	ev_blk_activate_zoom_in(integer);
+	ev_blk_activate_zoom_out(integer);
+	ev_blk_activate_zoom_reset(integer);
+	ev_blk_activate_block_remove(integer);
+	ev_blk_activate_open_plc(integer);
+	ev_blk_activate_display_in_xnav(integer);
+	ev_blk_activate_help(integer);
+	ev_blk_create_form(integer);
 
 value
 	menu_font : font ('-*-Helvetica-Bold-R-Normal--12-*-*-*-P-*-ISO8859-1');
@@ -305,7 +314,7 @@ object eve_help_entry : XmCascadeButton
         {
           arguments
           {
-            XmNlabelString = c_Eventlist;
+            XmNlabelString = c_Help;
             XmNfontList	   = menu_font;
           };
           callbacks
@@ -600,7 +609,7 @@ object ala_help_entry : XmCascadeButton
         {
           arguments
           {
-            XmNlabelString = c_Alarmlist;
+            XmNlabelString = c_Help;
             XmNfontList	   = menu_font;
           };
           callbacks
@@ -640,6 +649,251 @@ object ala_pane : XmPanedWindow
    callbacks
    {
      MrmNcreateCallback = procedure ev_ala_create_form( ev_ctx);
+   };
+};
+
+object  blk_window : XmMainWindow
+{
+  arguments
+  {
+    XmNx = 0;
+    XmNy = 0;
+  };
+  controls
+  {
+     XmMenuBar	blk_menu;
+     XmForm     blk_form;
+  };
+};
+
+
+object blk_form : XmForm
+{
+  arguments
+  {
+     XmNwidth = 200;
+     XmNheight = 200;
+     XmNresizePolicy = XmRESIZE_NONE;
+  };
+  controls
+  {
+     XmPanedWindow blk_pane;
+  };
+};
+
+object blk_menu : XmMenuBar
+{
+  arguments
+  {
+    XmNorientation 	= XmHORIZONTAL;
+    XmNspacing  	= 15;
+    XmNmenuHelpWidget 	= XmCascadeButton blk_help_entry; 
+  };
+  controls
+  {
+    XmCascadeButton blk_file_entry;
+    XmCascadeButton blk_functions_entry;
+    XmCascadeButton blk_view_entry;
+    XmCascadeButton blk_help_entry;
+  };
+};
+
+object blk_file_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString  = c_File;
+    XmNfontList	    = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Close;
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ev_blk_activate_exit(ev_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+object blk_functions_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString  = c_Functions;
+    XmNfontList	    = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_BlockRemove;
+            XmNmnemonic = keysym('B');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ev_blk_activate_block_remove(ev_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Open_Plc;
+            XmNmnemonic = keysym('l');
+	    XmNaccelerator = "Ctrl<Key>L";
+	    XmNacceleratorText = compound_string('Ctrl+L');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ev_blk_activate_open_plc(ev_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Display_object_in_navigator;
+            XmNmnemonic = keysym('D');
+	    XmNaccelerator = "Ctrl<Key>D";
+	    XmNacceleratorText = compound_string('Ctrl+D');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ev_blk_activate_display_in_xnav(ev_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+object blk_view_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString = c_View;
+    XmNfontList	   = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Zoom_in;
+            XmNmnemonic = keysym('I');
+	    XmNaccelerator = "Ctrl<Key>I";
+	    XmNacceleratorText = compound_string('Ctrl+I');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ev_blk_activate_zoom_in(ev_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Zoom_out;
+            XmNmnemonic = keysym('O');
+	    XmNaccelerator = "Ctrl<Key>O";
+	    XmNacceleratorText = compound_string('Ctrl+O');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ev_blk_activate_zoom_out(ev_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Zoom_reset;
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ev_blk_activate_zoom_reset(ev_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+object blk_help_entry : XmCascadeButton      
+{
+  arguments
+  {
+      XmNlabelString = c_Help;
+      XmNfontList    = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = c_Help;
+            XmNfontList	   = menu_font;
+          };
+          callbacks
+          {
+            XmNactivateCallback = procedure ev_blk_activate_help(ev_ctx);
+          };
+        };
+      }; !Controls
+    }; !Pulldown_menu
+  }; !Controls
+}; ! help_entry
+
+object blk_pane : XmPanedWindow
+{
+   arguments
+   {
+     XmNleftAttachment 		= XmATTACH_FORM;
+     XmNrightAttachment 	= XmATTACH_FORM;
+     XmNbottomAttachment    	= XmATTACH_FORM;
+     XmNtopAttachment    	= XmATTACH_FORM;
+   };
+   controls
+   {
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure ev_blk_create_form( ev_ctx);
    };
 };
 

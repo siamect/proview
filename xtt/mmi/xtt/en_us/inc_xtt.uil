@@ -39,6 +39,7 @@ c_About_Proview   	: compound_string("About Proview");
 
 c_Alarmlist		: compound_string("Alarmlist");
 c_Eventlist		: compound_string("Eventlist");
+c_Blocklist		: compound_string("Blocklist");
 c_Eventlog		: compound_string("Eventlog");
 c_Histlist		: compound_string("Historical Eventlist");
 c_Navigator		: compound_string("Navigator");
@@ -49,6 +50,15 @@ c_Close_change_value	: compound_string("Close change value");
 c_Display_object_in_navigator : compound_string("Display object in navigator");
 c_Ok			: compound_string("Ok");
 c_Cancel		: compound_string("Cancel");
+
+! module xtt_block
+c_Apply			: compound_string("Apply");
+c_Aalarm		: compound_string("A Alarm");
+c_Balarm		: compound_string("B Alarm");
+c_Calarm		: compound_string("C Alarm");
+c_Dalarm		: compound_string("D Alarm");
+c_NoBlock		: compound_string("No Blocking");
+c_BlockRemove		: compound_string("Remove Blocking");
 
 ! module xtt_eve.uil
 

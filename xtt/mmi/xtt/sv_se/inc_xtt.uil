@@ -39,6 +39,7 @@ c_About_Proview   	: compound_string("Om Proview");
 
 c_Alarmlist		: compound_string("Larmlista");
 c_Eventlist		: compound_string("Händelselista");
+c_Blocklist		: compound_string("Blockeringslista");
 c_Eventlog		: compound_string("Händelselogg");
 c_Histlist		: compound_string("Historisk Händelselista");
 c_Navigator		: compound_string("Navigatör");
@@ -49,6 +50,15 @@ c_Close_change_value	: compound_string("Stäng ändra värde");
 c_Display_object_in_navigator : compound_string("Visa objekt i navigatören");
 c_Ok			: compound_string("Ok");
 c_Cancel		: compound_string("Avbryt");
+
+! module xtt_block
+c_Apply			: compound_string("Spara");
+c_Aalarm		: compound_string("A-Larm");
+c_Balarm		: compound_string("B-Larm");
+c_Calarm		: compound_string("C-Larm");
+c_Dalarm		: compound_string("D-Larm");
+c_NoBlock		: compound_string("Ingen Blockering");
+c_BlockRemove		: compound_string("Ta bort blockering");
 
 ! module xtt_eve.uil
 
