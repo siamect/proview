@@ -174,7 +174,9 @@ SObject pwrb:Class
     Object Template Ao_AO8uP
       Body RtBody
         Attr MaxNoOfChannels = 8
-        Attr Process = 2
+	Attr ErrorSoftLimit = 15
+	Attr ErrorHardLimit = 50
+        Attr Process = 1
       EndBody
     EndObject
     Object AnteAdopt $DbCallBack
@@ -191,6 +193,21 @@ SObject pwrb:Class
       Body SysBody
         Attr MethodName = "Ao_HVAO4-PostAdopt"
       EndBody
+    EndObject
+    Object ConfiguratorPoson $Menu
+      Object Pointed $Menu
+	Object Connect $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Connect PlcThread"
+	    Attr MethodName = "$Objid-Connect"
+	    Attr MethodArguments[0] = "ThreadObject"
+	    Attr MethodArguments[1] = "PlcThread"
+	    Attr FilterName = "$Objid-IsOkConnect"
+	    Attr FilterArguments[0] = "ThreadObject"
+	    Attr FilterArguments[1] = "PlcThread"
+	  EndBody
+	EndObject
+      EndObject
     EndObject
   EndObject
 EndSObject

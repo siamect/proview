@@ -338,5 +338,20 @@ SObject pwrb:Class
         Attr MethodName = "Co_PI24BO-PostAdopt"
       EndBody
     EndObject
+    Object ConfiguratorPoson $Menu
+      Object Pointed $Menu
+	Object Connect $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Connect PlcThread"
+	    Attr MethodName = "$Objid-Connect"
+	    Attr MethodArguments[0] = "ThreadObject"
+	    Attr MethodArguments[1] = "PlcThread"
+	    Attr FilterName = "$Objid-IsOkConnect"
+	    Attr FilterArguments[0] = "ThreadObject"
+	    Attr FilterArguments[1] = "PlcThread"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
   EndObject
 EndSObject

@@ -86,5 +86,31 @@ SObject pwrs:Class
         EndBody
       EndObject
     EndObject
+    Object ConfiguratorPoson $Menu
+      Object Pointed $Menu
+	Object ConnectGraph $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Connect Graph"
+	    Attr MethodName = "$Objid-Connect"
+	    Attr MethodArguments[0] = "DefGraph"
+	    Attr MethodArguments[1] = "XttGraph"
+	    Attr FilterName = "$Objid-IsOkConnect"
+	    Attr FilterArguments[0] = "DefGraph"
+	    Attr FilterArguments[1] = "XttGraph"
+	  EndBody
+	EndObject
+	Object ConnectTrend $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Connect Trend"
+	    Attr MethodName = "$Objid-Connect"
+	    Attr MethodArguments[0] = "DefTrend"
+	    Attr MethodArguments[1] = "DsTrend,PlotGroup"
+	    Attr FilterName = "$Objid-IsOkConnect"
+	    Attr FilterArguments[0] = "DefTrend"
+	    Attr FilterArguments[1] = "DsTrend,PlotGroup"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
   EndObject
 EndSObject

@@ -166,6 +166,33 @@ SObject pwrb:Class
 	EndObject
       EndObject
     EndObject
+    Object ConfiguratorPoson $Menu
+      Object Pointed $Menu
+	Object Connect $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Connect PlcThread"
+	    Attr MethodName = "$Objid-Connect"
+	    Attr MethodArguments[0] = "ThreadObject"
+	    Attr MethodArguments[1] = "PlcThread"
+	    Attr FilterName = "$Objid-IsOkConnect"
+	    Attr FilterArguments[0] = "ThreadObject"
+	    Attr FilterArguments[1] = "PlcThread"
+	  EndBody
+	EndObject
+	Object Connect $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Connect ResetObject"
+	    Attr MethodName = "$Objid-Connect"
+	    Attr MethodArguments[0] = "ResetObject"
+	    Attr MethodArguments[1] = "Di,Do,Dv"
+	    Attr MethodArguments[2] = "DevBody"
+	    Attr FilterName = "$Objid-IsOkConnect"
+	    Attr FilterArguments[0] = "ResetObject"
+	    Attr FilterArguments[1] = "Di,Do,Dv"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
     Object RtXtt $RtMenu
       Object OpenTrace $MenuButton
 	Body SysBody

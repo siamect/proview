@@ -143,6 +143,7 @@ SObject pwrs:Class
     EndObject
     Object Template $Node
       Body SysBody
+	Attr ErrLogFile = "$pwrp_log/console.log"
       EndBody
     EndObject
     Object PostCreate $DbCallBack

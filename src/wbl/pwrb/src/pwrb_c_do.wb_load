@@ -152,19 +152,6 @@ SObject pwrb:Class
     EndObject
     Object Template Do
     EndObject
-    Object ConfiguratorPosnn $Menu
-      Object Pointed $Menu
-	Object Disconnect $MenuButton
-	  Body SysBody
-	    Attr ButtonName = "Disconnect Channel"
-	    Attr MethodName = "$Objid-Disconnect"
-	    Attr MethodArguments[0] = "SigChanCon"
-	    Attr FilterName = "$Objid-IsOkDisconnect"
-	    Attr FilterArguments[0] = "SigChanCon"
-	  EndBody
-	EndObject
-      EndObject
-    EndObject
     Object ConfiguratorPoson $Menu
       Object Pointed $Menu
 	Object Connect $MenuButton
@@ -172,32 +159,32 @@ SObject pwrb:Class
 	    Attr ButtonName = "Connect Channel"
 	    Attr MethodName = "$Objid-Connect"
 	    Attr MethodArguments[0] = "SigChanCon"
-	    Attr FilterArguments[1] = "ChanIi"
+	    Attr MethodArguments[1] = "ChanDo"
 	    Attr FilterName = "$Objid-IsOkConnect"
 	    Attr FilterArguments[0] = "SigChanCon"
-	    Attr FilterArguments[1] = "ChanIi"
+	    Attr FilterArguments[1] = "ChanDo"
 	  EndBody
 	EndObject
-	Object Disconnect $MenuButton
+	Object ConnectGraph $MenuButton
 	  Body SysBody
-	    Attr ButtonName = "Disconnect Channel"
-	    Attr MethodName = "$Objid-Disconnect"
-	    Attr MethodArguments[0] = "SigChanCon"
-	    Attr FilterName = "$Objid-IsOkDisconnect"
-	    Attr FilterArguments[0] = "SigChanCon"
+	    Attr ButtonName = "Connect Graph"
+	    Attr MethodName = "$Objid-Connect"
+	    Attr MethodArguments[0] = "DefGraph"
+	    Attr MethodArguments[1] = "XttGraph"
+	    Attr FilterName = "$Objid-IsOkConnect"
+	    Attr FilterArguments[0] = "DefGraph"
+	    Attr FilterArguments[1] = "XttGraph"
 	  EndBody
 	EndObject
-      EndObject
-    EndObject
-    Object ConfiguratorPosos $Menu
-      Object Pointed $Menu
-	Object Disconnect $MenuButton
+	Object ConnectTrend $MenuButton
 	  Body SysBody
-	    Attr ButtonName = "Disconnect Channel"
-	    Attr MethodName = "$Objid-Disconnect"
-	    Attr MethodArguments[0] = "SigChanCon"
-	    Attr FilterName = "$Objid-IsOkDisconnect"
-	    Attr FilterArguments[0] = "SigChanCon"
+	    Attr ButtonName = "Connect Trend"
+	    Attr MethodName = "$Objid-Connect"
+	    Attr MethodArguments[0] = "DefTrend"
+	    Attr MethodArguments[1] = "DsTrend,PlotGroup"
+	    Attr FilterName = "$Objid-IsOkConnect"
+	    Attr FilterArguments[0] = "DefTrend"
+	    Attr FilterArguments[1] = "DsTrend,PlotGroup"
 	  EndBody
 	EndObject
       EndObject

@@ -205,6 +205,8 @@ SObject pwrb:Class
       Body RtBody
         Attr ConvMask1 = 65535
         Attr ConvMask2 = 65535
+	Attr ErrorSoftLimit = 15
+	Attr ErrorHardLimit = 50
         Attr MaxNoOfChannels = 32
         Attr Process = 1
       EndBody
@@ -223,6 +225,21 @@ SObject pwrb:Class
       Body SysBody
         Attr MethodName = "Di_DIX2-PostAdopt"
       EndBody
+    EndObject
+    Object ConfiguratorPoson $Menu
+      Object Pointed $Menu
+	Object Connect $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Connect PlcThread"
+	    Attr MethodName = "$Objid-Connect"
+	    Attr MethodArguments[0] = "ThreadObject"
+	    Attr MethodArguments[1] = "PlcThread"
+	    Attr FilterName = "$Objid-IsOkConnect"
+	    Attr FilterArguments[0] = "ThreadObject"
+	    Attr FilterArguments[1] = "PlcThread"
+	  EndBody
+	EndObject
+      EndObject
     EndObject
   EndObject
 EndSObject
