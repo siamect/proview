@@ -5,9 +5,6 @@ local_java_sources := \
 	GeCFormat.java \
 	GeDyndata.java \
 	GeColor.java \
-	Proportion.java\
-	RatioLayout.java \
-	AspectRatioListener.java \
 	JopDynamic.java \
 	LocalDb.java \
 	JopEngine.java \
@@ -67,6 +64,9 @@ local_java_sources := \
 	GeDynOptionMenu.java \
 	GeDynAnalogText.java \
 	GeDynTable.java \
+	Proportion.java\
+	RatioLayout.java \
+	AspectRatioListener.java \
 	JopSpiderFrame.java \
 	JopLoginFrame.java \
 	JopLoginApplet.java \
@@ -122,7 +122,6 @@ local_java_sources := \
         JopOpWindow.java \
         JopOpWindowFrame.java \
         JopOpWindowApplet.java \
-	JopSessionRep.java \
 	HistDateChooser.java \
 	HistSender.java \
 	HistStatModel1.java \
@@ -132,7 +131,8 @@ local_java_sources := \
 	HistStatModel1.java \
 	HistStatModel2.java \
 	HistStatistics.java \
-	HistSearch.java
+	HistSearch.java \
+	JopSessionRep.java
 
 -include $(pwre_sroot)/tools/bld/src/$(os_name)/$(hw_name)/$(type_name)_generic.mk
 

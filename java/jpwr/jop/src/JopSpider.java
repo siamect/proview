@@ -8,7 +8,6 @@ import java.net.*;
 import java.applet.*;
 import java.util.*;
 import jpwr.rt.*;
-import jpwr.jopc.*;
 
 public class JopSpider {
   int qcom_qix;
