@@ -23,9 +23,11 @@ wb_orepdbs::wb_orepdbs(dbs_sObject *o)
     m_refCount = 0;
 }
 
+#if 0
 wb_orepdbs::~wb_orepdbs()
 {
 }
+#endif
 
 /*
 wb_orepdbs *wb_orepdbs::ref()

@@ -21,7 +21,7 @@ public:
     
     dbs_sEnv m_dbsenv;
     
-    wb_vrepdbs(const char *fileName);
+    wb_vrepdbs(wb_erep *erep, const char *fileName);
     dbs_sEnv *dbsenv();
     bool load();
     

@@ -13,7 +13,7 @@ wb_vrep *wb_vrepdbs::ref()
     return this;
 }
 
-wb_vrepdbs::wb_vrepdbs(const char *fileName)
+wb_vrepdbs::wb_vrepdbs(wb_erep *erep, const char *fileName) : m_erep(erep)
 {
     
     strcpy(m_fileName, fileName);
@@ -54,6 +54,12 @@ wb_vrepdbs::object(pwr_tStatus *sts, pwr_tOid oid)
         return 0;
 
     return new (this) wb_orepdbs(op);
+}
+
+wb_orep *
+wb_vrepdbs::object(pwr_tStatus *sts, char *name)
+{
+    return 0;
 }
 
 wb_orep *
@@ -277,6 +283,25 @@ wb_vrepdbs::vid() const
 {
     return 0;
 }
+
+wb_erep *
+wb_vrepdbs::erep() const
+{
+    return 0;
+}
+
+wb_vrep *
+wb_vrepdbs::next () const
+{
+    return 0;
+}
+
+wb_orep *
+object (pwr_tStatus *)
+{
+    return 0;
+}
+
 
 wb_merep *wb_vrepdbs::merep() const
 {
