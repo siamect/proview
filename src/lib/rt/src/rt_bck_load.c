@@ -34,6 +34,7 @@
 #include "rt_gdh_msg.h"
 #include "rt_bckdef.h"
 #include "rt_bck_load.h"
+#include "co_dcli.h"
 
 
 #if defined OS_VMS || defined OS_ELN
@@ -64,6 +65,7 @@ bck_LoadBackup ()
   pwr_tUInt32		d;
   char			*strp;
   char			*datap;
+  char			fname[200];
 
 #if defined OS_VMS || defined OS_ELN
   short			msglen;
@@ -82,8 +84,9 @@ bck_LoadBackup ()
   if (EVEN(sts)) return sts;
 
   /* Open the backup file.  */
+  dcli_translate_filename( fname, backup_confp->BackupFile);
 
-  f = fopen (backup_confp->BackupFile, "r+" A_MODE);
+  f = fopen( fname, "r+" A_MODE);
 
   if (f == NULL) {
     SET_ERRNO_STS;
