@@ -1366,6 +1366,11 @@ static void ge_activate_save( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data
 {
   char name[40];
 
+  if ( gectx->graph->trace_started) {
+    ge_message( gectx, 'I', "Nothing to save");
+    return;
+  }
+
   gectx->graph->get_name( name);
   if ( strcmp( name, "") == 0)
   {
@@ -1383,6 +1388,11 @@ static void ge_activate_save( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data
 static void ge_activate_save_as( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
 {
   char name[40];
+
+  if ( gectx->graph->trace_started) {
+    ge_message( gectx, 'E', "Preview is active");
+    return;
+  }
 
   gectx->graph->get_name( name);
   if ( ! gectx->graph->is_subgraph())
