@@ -9,19 +9,16 @@
 !
 !/**
 !  @Version 1.0
+!  @Group Plc,PlcString,PlcConversion
 !  @Code rt_plc_macro_string.h
-!  @Group Plc,PlcString
-!  @Summary Convert analog value to string
 !  Convert analog value to string.
 !  @image orm_atostr_fo.gif
-!
 !  The AtoStr object converts the value of the analog input to
 !  at string stored in ActVal.
 !
 !  Note that an erroneous format specification may cause the
 !  plcprogram to terminate. The size of the output of the conversion should
 !  not exceed 79 characters.
-
 !*/
 SObject pwrb:Class
   Object AtoStr $ClassDef 308 

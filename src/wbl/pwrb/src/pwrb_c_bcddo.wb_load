@@ -10,7 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_io.c
-!  @Group Plc,PlcIO
+!  @Group Plc,PlcConversion
 !  @Summary Binary coded decimal digital output.
 !  Binary Coded Decimal Digital output.
 !  @image orm_en1-25.gif

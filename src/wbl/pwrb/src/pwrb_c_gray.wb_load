@@ -10,7 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_io.c
-!  @Group Plc,PlcIO
+!  @Group Plc,PlcConversion
 !  @Summary Converts a 16-bits Gray code value into its decimal equivalent
 !  Converts a 16-bits Gray code value into its decimal
 !  equivalent.

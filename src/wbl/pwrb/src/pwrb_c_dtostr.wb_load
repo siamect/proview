@@ -10,7 +10,7 @@
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_string.h
-!  @Group Plc,PlcString
+!  @Group Plc,PlcString,PlcConversion
 !  @Summary Convert digital value to string
 !  Convert digital value to string.
 !  @image orm_dtostr_fo.gif
