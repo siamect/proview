@@ -741,6 +741,7 @@ void GlowArray::open( void *ctx, ifstream& fp)
   int		type;
   int 		end_found = 0;
   char		dummy[40];
+  int 		errcnt = 0;
 
   for (;;)
   {
@@ -1034,6 +1035,9 @@ void GlowArray::open( void *ctx, ifstream& fp)
       default:
         cout << "GlowArray:open syntax error" << endl;
         fp.getline( dummy, sizeof(dummy));
+	errcnt++;
+	if ( errcnt > 20)
+	  exit(0);
     }
     if ( end_found)
       break;
@@ -1705,7 +1709,7 @@ char *GlowArray::get_last_group()
   char *name;
   static char groups[10][32];
   char member_cnt[10];
-  char group_cnt;
+  int group_cnt;
   int found;
   int max_members;
   int max_idx;
