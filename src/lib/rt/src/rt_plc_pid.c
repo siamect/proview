@@ -317,7 +317,7 @@ void mode_exec(
 	}
 }
 
-/*
+/**
   PID
   function:	PID or PD Controller with basic facilities
 		Possible to turn off integration and to force
