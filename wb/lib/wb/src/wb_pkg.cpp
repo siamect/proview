@@ -602,7 +602,7 @@ void pkg_pattern::fetchFiles()
     }
     dcli_search_file( m_source, found_file, DCLI_DIR_SEARCH_END);
   }
-  if ( m_filelist.size() == 0) {
+  if ( m_filelist.size() == 0 && m_severity != 'S') {
     char msg[200];
     sprintf( msg, "No file found: %s", m_source);
     MsgWindow::message( m_severity, msg, msgw_ePop_No);
