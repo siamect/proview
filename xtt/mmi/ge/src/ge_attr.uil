@@ -168,7 +168,7 @@ object functions_entry : XmCascadeButton
         {
           arguments
           {
-  	    XmNlabelString = compound_string("Recall store");
+  	    XmNlabelString = compound_string("Store");
             XmNmnemonic = keysym('s');
             XmNfontList	   = menu_font;
 	  };
@@ -181,7 +181,7 @@ object functions_entry : XmCascadeButton
         {
           arguments
           {
-  	    XmNlabelString = compound_string("Recall next");
+  	    XmNlabelString = compound_string("Recall");
             XmNmnemonic = keysym('n');
 	    XmNaccelerator = "Ctrl<Key>N";
 	    XmNacceleratorText = compound_string('Ctrl+N');

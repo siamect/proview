@@ -34,6 +34,22 @@ value
 ' *               * ',
 ' ***************** ');
 
+    rectrounded_icon : icon ( color_table=bitmap_colors,
+'   *************   ',
+'  *             *  ',
+' *               * ',
+' *               * ',
+' *               * ',
+' *               * ',
+' *               * ',
+' *               * ',
+' *               * ',
+' *               * ',
+' *               * ',
+' *               * ',
+'  *             *  ',
+'   *************   ');
+
     line_icon : icon ( color_table=bitmap_colors,
 '                *  ',
 '               *   ',
@@ -98,51 +114,6 @@ value
 '    ***             ',
 '                    ');
 
-    bar_icon : icon ( color_table=bitmap_colors,
-' ***** ',
-' *   * ',
-' *   * ',
-' *   * ',
-' *   * ',
-' *   * ',
-' *   * ',
-' ***** ',
-' ***** ',
-' ***** ',
-' ***** ',
-' ***** ',
-' ***** ');
-
-    trend_icon : icon ( color_table=bitmap_colors,
-' ******************* ',
-' *        *   **   * ',
-' *   **      *  ** * ',
-' *   * ** *  *    ** ',
-' *  *    ** *      * ',
-' *  *     ***      * ',
-' * * * * * * * * * * ',
-' * *      *        * ',
-' * *               * ',
-' **       *        * ',
-' **                * ',
-' *        *        * ',
-' ******************* ');
-
-    axis_icon : icon ( color_table=bitmap_colors,
-'****',
-'   *',
-'   *',
-' ***',
-'   *',
-'   *',
-' ***',
-'   *',
-'   *',
-' ***',
-'   *',
-'   *',
-'****');
-
     scale_icon : icon ( color_table=bitmap_colors,
 '********************',
 '*                  *',
@@ -182,6 +153,48 @@ value
 '*           *       ',
 '*           *       ',
 '*****************   ');
+
+    flip_horiz_icon : icon ( color_table=bitmap_colors,
+'*                   ',
+'**                  ',
+'* *                 ',
+'*  *                ',
+'*   *               ',
+'*    *    *****     ',
+'*     *        **   ',
+'*      *         *  ',
+'*********         * ',
+'                  * ',
+'**************    * ',
+'                  * ',
+'*********         * ',
+'*      *    *    *  ',
+'*     *   ***  **   ',
+'*    *  *******     ',
+'*   *     ***       ',
+'*  *        *       ',
+'* *                 ',
+'**                  ',
+'*                   ');
+
+    flip_vert_icon : icon ( color_table=bitmap_colors,
+'       *****        ',
+'      *     *       ',
+'     *       *      ',
+'     *       *      ',
+'    *    *    *     ',
+'    *    *    *     ',
+'    *    *  *****   ',
+'    *    *   ***    ',
+'       * * *  *     ',
+'      ** * **       ',
+'     * * * * *      ',
+'    *  * * *  *     ',
+'   *   * * *   *    ',
+'  *    * * *    *   ',
+' *     * * *     *  ',
+'******** * ******** ',
+'                    ');
 
     brightness_icon : icon ( color_table=bitmap_colors,
 '         *         ',
@@ -349,6 +362,41 @@ value
 '  ****     ******************************',
 '           ******************************',
 '                                         ');
+    linetype1_icon : icon ( color_table=bitmap_colors,
+'                              ',
+'******************************',
+'******************************',
+'                              ');
+    linetype2_icon : icon ( color_table=bitmap_colors,
+'                              ',
+'**  **  **  **  **  **  **  **',
+'**  **  **  **  **  **  **  **',
+'                              ');
+    linetype3_icon : icon ( color_table=bitmap_colors,
+'                              ',
+'****    ****    ****    ****  ',
+'****    ****    ****    ****  ',
+'                              ');
+    linetype4_icon : icon ( color_table=bitmap_colors,
+'                              ',
+'*****      ******      ****** ',
+'*****      ******      ****** ',
+'                              ');
+    linetype5_icon : icon ( color_table=bitmap_colors,
+'                              ',
+'**     **     **      **      ',
+'**     **     **      **      ',
+'                              ');
+    linetype6_icon : icon ( color_table=bitmap_colors,
+'                              ',
+'*****  **  ******  **  ****** ',
+'*****  **  ******  **  ****** ',
+'                              ');
+    linetype7_icon : icon ( color_table=bitmap_colors,
+'                              ',
+'*********  **  **********  ** ',
+'*********  **  **********  ** ',
+'                              ');
 
 identifier
 	ge_ctx;
@@ -399,21 +447,22 @@ procedure
 	ge_activate_paste(integer);
 	ge_activate_rotate(integer);
 	ge_activate_rotate90(integer);
+	ge_activate_flip_vert(integer);
+	ge_activate_flip_horiz(integer);
 	ge_activate_change_text(integer);
 	ge_activate_change_name(integer);
 	ge_activate_command(integer);
 	ge_activate_rect(integer);
+	ge_activate_rectrounded(integer);
 	ge_activate_line(integer);
 	ge_activate_polyline(integer);
 	ge_activate_circle(integer);
 	ge_activate_text(integer);
 	ge_activate_annot(integer);
 	ge_activate_conpoint(integer);
-	ge_activate_bar(integer);
-	ge_activate_trend(integer);
-	ge_activate_axis(integer);
 	ge_activate_fill(integer);
 	ge_activate_border(integer);
+	ge_activate_shadow(integer);
 	ge_activate_incr_lightness(integer);
 	ge_activate_decr_lightness(integer);
 	ge_activate_incr_intensity(integer);
@@ -430,6 +479,13 @@ procedure
 	ge_activate_linewidth_6(integer);
 	ge_activate_linewidth_7(integer);
 	ge_activate_linewidth_8(integer);
+	ge_activate_linetype1(integer);
+	ge_activate_linetype2(integer);
+	ge_activate_linetype3(integer);
+	ge_activate_linetype4(integer);		
+	ge_activate_linetype5(integer);
+	ge_activate_linetype6(integer);
+	ge_activate_linetype7(integer);
 	ge_activate_textsize_0(integer);
 	ge_activate_textsize_1(integer);
 	ge_activate_textsize_2(integer);
@@ -1887,6 +1943,22 @@ object palette_row : XmRowColumn
           arguments
           {
 	    XmNlabelType = XmPIXMAP;
+	    XmNlabelPixmap = rectrounded_icon;
+            XmNmnemonic = keysym('L');
+	    XmNaccelerator = "Ctrl<Key>L";
+	    XmNacceleratorText = compound_string('Ctrl+L');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_rectrounded(ge_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+	    XmNlabelType = XmPIXMAP;
 	    XmNlabelPixmap = line_icon;
             XmNmnemonic = keysym('C');
 	    XmNaccelerator = "Ctrl<Key>V";
@@ -1977,45 +2049,6 @@ object palette_row : XmRowColumn
             XmNactivateCallback = procedure ge_activate_conpoint(ge_ctx);
           };
 	};
-        XmPushButton
-        {
-          arguments
-          {
-	    XmNlabelType = XmPIXMAP;
-	    XmNlabelPixmap = bar_icon;
-            XmNfontList	   = menu_font;
-	  };
-	  callbacks
-          {
-            XmNactivateCallback = procedure ge_activate_bar(ge_ctx);
-          };
-	};
-        XmPushButton
-        {
-          arguments
-          {
-	    XmNlabelType = XmPIXMAP;
-	    XmNlabelPixmap = trend_icon;
-            XmNfontList	   = menu_font;
-	  };
-	  callbacks
-          {
-            XmNactivateCallback = procedure ge_activate_trend(ge_ctx);
-          };
-	};
-        XmPushButton
-        {
-          arguments
-          {
-	    XmNlabelType = XmPIXMAP;
-	    XmNlabelPixmap = axis_icon;
-            XmNfontList	   = menu_font;
-	  };
-	  callbacks
-          {
-            XmNactivateCallback = procedure ge_activate_axis(ge_ctx);
-          };
-	};
         XmToggleButton
         {
           arguments
@@ -2044,6 +2077,19 @@ object palette_row : XmRowColumn
 	  callbacks
           {
             XmNvalueChangedCallback = procedure ge_activate_border(ge_ctx);
+          };
+	};
+        XmToggleButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("3D");
+            XmNmnemonic = keysym('s');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNvalueChangedCallback = procedure ge_activate_shadow(ge_ctx);
           };
 	};
         XmPushButton
@@ -2184,6 +2230,34 @@ object palette_row : XmRowColumn
           };
 	};
 
+        XmPushButton
+        {
+          arguments
+          {
+	    XmNlabelType = XmPIXMAP;
+	    XmNlabelPixmap = flip_vert_icon;
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_flip_vert(ge_ctx);
+          };
+	};
+
+        XmPushButton
+        {
+          arguments
+          {
+	    XmNlabelType = XmPIXMAP;
+	    XmNlabelPixmap = flip_horiz_icon;
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_flip_horiz(ge_ctx);
+          };
+	};
+
         XmOptionMenu      
 	{
    	  arguments
@@ -2303,23 +2377,118 @@ object palette_row : XmRowColumn
 	    };
           };
 	};
-        XmToggleButton
-        {
-          arguments
-          {
-  	    XmNlabelString = compound_string("Grid");
-            XmNfontList	   = menu_font;
-	  };
-	  callbacks
-          {
-            XmNvalueChangedCallback = procedure ge_activate_grid(ge_ctx);
+        XmOptionMenu      
+	{
+   	  arguments
+   	  {
+!            XmNlabelString = compound_string("LineType");
+!            XmNmenuHistory = XmPushButton current_session;
+!            XmNfontList	    = menu_font;
+	  };  
+  	  callbacks
+   	  {
+!   	    MrmNcreateCallback = procedure ute_create_batchoptmenu( ute_ctx) ;
+   	  };
+   	  controls
+   	  {
+       	    XmPulldownMenu
+            {
+              controls
+              {
+!	        XmPushButton	current_session;
+                XmPushButton
+                {
+                  arguments
+                  {
+	            XmNlabelType = XmPIXMAP;
+	            XmNlabelPixmap = linetype1_icon;
+	          };
+		  callbacks
+		  {
+                    XmNactivateCallback = procedure ge_activate_linetype1(ge_ctx);
+		  };
+	        };
+                XmPushButton
+                {
+                  arguments
+                  {
+	            XmNlabelType = XmPIXMAP;
+	            XmNlabelPixmap = linetype2_icon;
+	          };
+		  callbacks
+		  {
+                    XmNactivateCallback = procedure ge_activate_linetype2(ge_ctx);
+		  };
+	        };
+                XmPushButton
+                {
+                  arguments
+                  {
+	            XmNlabelType = XmPIXMAP;
+	            XmNlabelPixmap = linetype3_icon;
+	          };
+		  callbacks
+		  {
+                    XmNactivateCallback = procedure ge_activate_linetype3(ge_ctx);
+		  };
+	        };
+                XmPushButton
+                {
+                  arguments
+                  {
+	            XmNlabelType = XmPIXMAP;
+	            XmNlabelPixmap = linetype4_icon;
+	          };
+		  callbacks
+		  {
+                    XmNactivateCallback = procedure ge_activate_linetype4(ge_ctx);
+		  };
+	        };
+                XmPushButton
+                {
+                  arguments
+                  {
+	            XmNlabelType = XmPIXMAP;
+	            XmNlabelPixmap = linetype5_icon;
+	          };
+		  callbacks
+		  {
+                    XmNactivateCallback = procedure ge_activate_linetype5(ge_ctx);
+		  };
+	        };
+                XmPushButton
+                {
+                  arguments
+                  {
+	            XmNlabelType = XmPIXMAP;
+	            XmNlabelPixmap = linetype6_icon;
+	          };
+		  callbacks
+		  {
+                    XmNactivateCallback = procedure ge_activate_linetype6(ge_ctx);
+		  };
+	        };
+                XmPushButton
+                {
+                  arguments
+                  {
+	            XmNlabelType = XmPIXMAP;
+	            XmNlabelPixmap = linetype7_icon;
+	          };
+		  callbacks
+		  {
+                    XmNactivateCallback = procedure ge_activate_linetype7(ge_ctx);
+		  };
+	        };
+	      };
+	    };
           };
 	};
         XmOptionMenu      
 	{
    	  arguments
    	  {
-            XmNlabelString = compound_string("Size");
+            XmNlabelString = compound_string("Grid");
 !            XmNmenuHistory = XmPushButton current_session;
 !            XmNfontList	    = menu_font;
 	  };  
@@ -2384,6 +2553,18 @@ object palette_row : XmRowColumn
 	        };
 	      };
 	    };
+          };
+	};
+        XmToggleButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Snap");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNvalueChangedCallback = procedure ge_activate_grid(ge_ctx);
           };
 	};
         XmOptionMenu      
