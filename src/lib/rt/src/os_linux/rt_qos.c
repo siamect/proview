@@ -176,12 +176,12 @@ qos_SignalQue (
 
   qdb_AssumeLocked;
 
-  if (qp->lock.waiting) {
+  // if (qp->lock.waiting) {
     qp->lock.waiting = FALSE;
 
     ok = futex_wake(&(qp->lock.pid), INT_MAX);
 
-  }
+  // }
 
   return TRUE;
 }
