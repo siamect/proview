@@ -655,6 +655,7 @@ class GeDyn {
   static char *cmd_cnv( char *instr);
   static int instance_to_number( int instance);
   static void replace_attribute( char *attribute, int attr_size, char *from, char *to, int *cnt, int strict);
+  static char *printstr( char *str);
 };
 
 //! Virtual baseclass for dynamic elements.
@@ -1464,6 +1465,7 @@ class GeHostObject : public GeDynElem {
   void open( ifstream& fp);
   void set_attribute( grow_tObject object, char *attr_name, int *cnt);
   void replace_attribute( char *from, char *to, int *cnt, int strict);
+  int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
 };
 
 //! Display the methods popup menu.

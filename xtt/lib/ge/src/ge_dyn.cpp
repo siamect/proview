@@ -546,6 +546,21 @@ void GeDyn::get_hostobject( char *hostobject)
   }
 }
 
+// Replace " by \"
+char *GeDyn::printstr( char *str)
+{
+  char *s, *t;
+  static char res[256];
+
+  for ( s = str, t = res; *s; s++, t++) {
+    if ( *s == '"')
+      *t++ = '\\';
+    *t = *s;
+  }
+  *t = 0;
+  return res;
+}
+
 graph_eDatabase GeDyn::parse_attr_name( char *name, char *parsed_name, 
 					int *inverted, int *type, int *size, int *elem) 
 {
@@ -2457,7 +2472,7 @@ int GeInvisible::export_java( grow_tObject object, ofstream& fp, bool first, cha
     fp << "      ";
   else
     fp << "      ,";
-  fp << "new GeDynInvisible(" << var_name << ".dd, \"" << attribute << "\")" << endl;
+  fp << "new GeDynInvisible(" << var_name << ".dd, \"" << GeDyn::printstr(attribute) << "\"," << dimmed << ")" << endl;
   return 1;
 }
 
@@ -6419,6 +6434,23 @@ void GeHostObject::open( ifstream& fp)
   }  
 }
 
+int GeHostObject::export_java( grow_tObject object, ofstream& fp, bool first, char *var_name)
+{
+  GeDyn *nodeclass_dyn;
+
+  if ( first)
+    fp << "      ";
+  else
+    fp << "      ,";
+  fp << "new GeDynHostObject(" << var_name << ".dd, \"" << hostobject << "\")" << endl;
+
+  grow_GetObjectClassUserData( object, (void **) &nodeclass_dyn);
+  for ( GeDynElem *elem = nodeclass_dyn->elements; elem; elem = elem->next)
+    elem->export_java( object, fp, false, var_name);
+
+  return 1;
+}
+
 void GeFillLevel::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
@@ -8051,18 +8083,15 @@ int GeTipText::action( grow_tObject object, glow_tEvent event)
 {
   switch ( event->event) {
   case glow_eEvent_TipText: {
-    char *s;
-    char text_low[80];
     
-    cdh_ToLower( text_low, text);
-    if ( (s = strstr( text_low, "##string"))) {
+    if ( text[0] == '&') {
       char 	value[80];
       char    	parsed_name[120];
       int       inverted;
       int	attr_type, attr_size;
       int 	sts;
 
-      dyn->parse_attr_name( text, parsed_name,
+      dyn->parse_attr_name( &text[1], parsed_name,
 			    &inverted, &attr_type, &attr_size);
       sts = gdh_GetObjectInfo( parsed_name, value, sizeof(value));
       if ( EVEN(sts)) printf("ToolTip error: %s\n", text);
