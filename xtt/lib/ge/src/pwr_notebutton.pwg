@@ -93,7 +93,7 @@ pwr_exe:
 5500 call method/method="Note"/object=$hostobject
 99
 62
-6200 $hostobject.Note##String80
+6200 &$hostobject.Note##String80
 99
 99
 99
