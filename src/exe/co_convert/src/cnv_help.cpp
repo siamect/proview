@@ -62,7 +62,7 @@ void XhelpToHtml::subject_to_fname( char *fname, char *subject, int path)
   strcat( fname, "_");
   t = fname + strlen(fname);
   for ( s = subject; *s; s++,t++) {
-    if ( *s == ' ')
+    if ( *s == ' ' || *s == '(' || *s == ')')
       *t = '_';
     else
       *t = *s;
