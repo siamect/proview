@@ -596,6 +596,7 @@ typedef enum {
 #define glow_eDrawType_FillHighlight glow_eDrawType_Color174
 #define glow_eDrawType_LineHighlight glow_eDrawType_Color176
 #define glow_eDrawType_ColorYellow glow_eDrawType_Color115
+#define glow_eDrawType_ColorRed glow_eDrawType_Color177
 #define glow_eDrawType_DarkGray glow_eDrawType_Color30
 #define glow_eDrawType_MediumGray glow_eDrawType_Color25
 #define glow_eDrawType_LightGray glow_eDrawType_Color21
