@@ -84,6 +84,70 @@ bool wb_vrepdbs::load()
   return rsts;
 }
 
+pwr_tOid wb_vrepdbs::oid(pwr_tStatus *sts, const wb_orep *o)
+{
+  return o->oid();
+}
+
+pwr_tVid wb_vrepdbs::vid(pwr_tStatus *sts, const wb_orep *o)
+{
+  return o->vid();
+}
+
+pwr_tOix wb_vrepdbs::oix(pwr_tStatus *sts, const wb_orep *o)
+{
+  return o->oix();
+}
+
+pwr_tCid wb_vrepdbs::cid(pwr_tStatus *sts, const wb_orep *o)
+{
+  return o->cid();
+}
+
+pwr_tOid wb_vrepdbs::poid(pwr_tStatus *sts, const wb_orep *o)
+{
+  return o->foid();
+}
+
+pwr_tOid wb_vrepdbs::foid(pwr_tStatus *sts, const wb_orep *o)
+{
+  return o->foid();
+}
+
+pwr_tOid wb_vrepdbs::loid(pwr_tStatus *sts, const wb_orep *o)
+{
+  return o->loid();
+}
+
+pwr_tOid wb_vrepdbs::boid(pwr_tStatus *sts, const wb_orep *o)
+{
+  return o->boid();
+}
+
+pwr_tOid wb_vrepdbs::aoid(pwr_tStatus *sts, const wb_orep *o)
+{
+  return o->aoid();
+}
+
+const char *wb_vrepdbs::objectName(pwr_tStatus *sts, const wb_orep *o)
+{
+  return o->name();
+}
+
+wb_name wb_vrepdbs::longName(pwr_tStatus *sts, const wb_orep *o)
+{
+  return wb_name();
+}
+
+pwr_tTime wb_vrepdbs::ohTime(pwr_tStatus *sts, const wb_orep *o)
+{
+  return o->ohTime();
+}
+
+pwr_mClassDef wb_vrepdbs::flags(pwr_tStatus *sts, const wb_orep *o)
+{
+  return o->flags();
+}    
 
 wb_orep *wb_vrepdbs::object(pwr_tStatus *sts, pwr_tOid oid)
 {
@@ -471,11 +535,10 @@ bool wb_vrepdbs::exportHead(wb_import &i)
 {
   dbs_sObject *op = 0;
   pwr_tStatus sts;
-  pwr_mClassDef flags; flags.m = 0; // Fix !!!
   
   while ((op = dbs_NextHead(&sts, dbsenv(), op))) {
     i.importHead(op->oid, op->cid, op->poid, op->boid, op->aoid, op->foid, op->loid, op->name, op->normname,
-                 flags, op->time, op->rbody.time, op->dbody.time, op->rbody.size, op->dbody.size);
+                 op->ohFlags, op->time, op->rbody.time, op->dbody.time, op->rbody.size, op->dbody.size);
   }
 
   return true;
@@ -551,8 +614,7 @@ bool wb_vrepdbs::exportTreeObject(wb_treeimport &i, dbs_sObject *op, bool isRoot
   if ( op->dbody.size)
     dbody = dbs_Body(&sts, dbsenv(), op, pwr_eBix_dev);
 
-  pwr_mClassDef flags; flags.m = 0; // Fix !!!
-  i.importTreeObject( m_merep, op->oid, op->cid, parentoid, beforeoid, op->name, flags,
+  i.importTreeObject( m_merep, op->oid, op->cid, parentoid, beforeoid, op->name, op->ohFlags,
 		      op->rbody.size, op->dbody.size, rbody, dbody);
 
   if ( first)

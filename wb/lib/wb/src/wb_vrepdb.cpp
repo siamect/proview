@@ -771,8 +771,16 @@ pwr_tTime wb_vrepdb::ohTime(pwr_tStatus *sts, const wb_orep *orp)
 
 pwr_mClassDef wb_vrepdb::flags(pwr_tStatus *sts, const wb_orep *orp)
 {
-  pwr_mClassDef flags; flags.m = 0; // Fix !!
-  return flags;
+  *sts = LDH__SUCCESS;
+  try {
+    return m_ohead.get(m_db->m_txn, orp->oid()).flags();
+  }
+  catch (DbException &e) {
+    *sts = LDH__NOSUCHOBJ;
+    printf("vrepdb: %s\n", e.what());
+    pwr_mClassDef flags; flags.m = 0;
+    return flags;
+  }
 }
 
 pwr_tVid wb_vrepdb::vid(pwr_tStatus *sts, const wb_orep *orp)

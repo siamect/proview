@@ -437,6 +437,7 @@ struct dbs_sObject {
     pwr_tOid        foid;       /**< object identifier of first child object. */
     pwr_tOid        loid;       /**< object identifier of last child object. */
         
+    pwr_mClassDef   ohFlags;    /**< object header flags */
     dbs_mFlags      flags;
     dbs_sBodyRef    rbody;      /**< runtime body */
     dbs_sBodyRef    dbody;      /**< development body */

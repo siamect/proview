@@ -36,27 +36,27 @@ public:
   virtual ldh_eVolRep type() const { return ldh_eVolRep_Dbs;}
   virtual wb_erep *erep() ;
 
-  virtual pwr_tOid oid(pwr_tStatus *sts, const wb_orep *o) { return pwr_cNOid;}
+  virtual pwr_tOid oid(pwr_tStatus *sts, const wb_orep *o);
     
-  virtual pwr_tVid vid(pwr_tStatus *sts, const wb_orep *o) { return pwr_cNVid;}
+  virtual pwr_tVid vid(pwr_tStatus *sts, const wb_orep *o);
     
-  virtual pwr_tOix oix(pwr_tStatus *sts, const wb_orep *o) { return pwr_cNOix;}
+  virtual pwr_tOix oix(pwr_tStatus *sts, const wb_orep *o);
     
 
-  virtual pwr_tCid cid(pwr_tStatus *sts, const wb_orep *o) { return pwr_cNCid;}
+  virtual pwr_tCid cid(pwr_tStatus *sts, const wb_orep *o);
     
-  virtual pwr_tOid poid(pwr_tStatus *sts, const wb_orep *o) { return pwr_cNOid;}
-  virtual pwr_tOid foid(pwr_tStatus *sts, const wb_orep *o) { return pwr_cNOid;}
-  virtual pwr_tOid loid(pwr_tStatus *sts, const wb_orep *o) { return pwr_cNOid;}
-  virtual pwr_tOid boid(pwr_tStatus *sts, const wb_orep *o) { return pwr_cNOid;}
-  virtual pwr_tOid aoid(pwr_tStatus *sts, const wb_orep *o) { return pwr_cNOid;}
+  virtual pwr_tOid poid(pwr_tStatus *sts, const wb_orep *o);
+  virtual pwr_tOid foid(pwr_tStatus *sts, const wb_orep *o);
+  virtual pwr_tOid loid(pwr_tStatus *sts, const wb_orep *o);
+  virtual pwr_tOid boid(pwr_tStatus *sts, const wb_orep *o);
+  virtual pwr_tOid aoid(pwr_tStatus *sts, const wb_orep *o);
     
-  virtual const char * objectName(pwr_tStatus *sts, const wb_orep *o) { return "";}
+  virtual const char * objectName(pwr_tStatus *sts, const wb_orep *o);
     
-  virtual wb_name longName(pwr_tStatus *sts, const wb_orep *o) { return wb_name();}
+  virtual wb_name longName(pwr_tStatus *sts, const wb_orep *o);
     
-  virtual pwr_tTime ohTime(pwr_tStatus *sts, const wb_orep *o) { pwr_tTime t = {0, 0}; return t;}
-  virtual pwr_mClassDef flags(pwr_tStatus *sts, const wb_orep *o) { pwr_mClassDef f; f.m = 0; return f;}    
+  virtual pwr_tTime ohTime(pwr_tStatus *sts, const wb_orep *o);
+  virtual pwr_mClassDef flags(pwr_tStatus *sts, const wb_orep *o);
     
   virtual bool isOffspringOf(pwr_tStatus *sts, const wb_orep *child, const wb_orep *parent) { return false;}
     

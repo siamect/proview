@@ -122,6 +122,9 @@ pwr_tBoolean
 pdr_pwr_tBitMask(PDR *pdrs, pwr_tBitMask *objp);
 
 pwr_tBoolean
+pdr_pwr_mClassDef(PDR *pdrs, pwr_mClassDef *objp);
+
+pwr_tBoolean
 pdr_pwr_tBoolean(PDR *pdrs, pwr_tBoolean *objp);
 
 pwr_tBoolean

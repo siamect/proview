@@ -248,14 +248,8 @@ bool wb_dbs::importHead(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
   m_nObjects++;
   m_volume.cardinality++;    
 
-  if ( flags.b.DevOnly)
+  if (flags.b.DevOnly)
     oep->o.flags.b.devOnly = 1;
-#if 0
-  if (fep == NULL)
-    oep->flags.b.devOnly = o.isDevOnly();
-  else
-    oep->flags.b.devOnly = fep->flags.b.devOnly || o.isDevOnly();
-#endif
 
   oep->o.oid  = oid;
   oep->o.cid  = cid;
@@ -280,6 +274,8 @@ bool wb_dbs::importHead(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
     nep->oep = oep;
   }
     
+  oep->o.ohFlags.m = flags.m;
+  
   classInsert(oep);
 
   oep->o.rbody.time = rbTime;
@@ -839,6 +835,9 @@ writeTree(wb_dbs::sOentry *oep, FILE *fp)
   if (!oep)
     return 1;
     
+  if (oep->poep)
+    oep->flags.b.devOnly |= oep->poep->flags.b.devOnly;
+  
   if (fwrite(&oep->o, dbs_dAlign(sizeof(oep->o)), 1, fp) < 1)
     return LDH__FILEWRITE;
 

@@ -183,6 +183,8 @@ public:
   
   const char *normname() {return m_o.normname;}
 
+  pwr_mClassDef flags() { return m_o.flags;}
+
   size_t rbSize() { return m_o.body[0].size;}
   size_t dbSize() { return m_o.body[1].size;}
   pwr_tTime rbTime() { return m_o.body[0].time;}
