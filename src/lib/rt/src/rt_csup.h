@@ -17,6 +17,7 @@ typedef struct {
   pwr_sClass_CycleSup *o;
   pwr_sAttrRef aref;
   pwr_tDlid dlid;
+  int is_owner;
 } csup_sObject;
 
 void		csup_Exit(pwr_tStatus*, lst_sEntry*);
