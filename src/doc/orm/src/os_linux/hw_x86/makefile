@@ -19,7 +19,7 @@ vpath %.gif $(hw_source):$(os_source):$(co_source)
 
 source_dirs := $(hw_source) $(os_source) $(co_source)
 
-sources := $(sort \
+gif_sources := $(sort \
              $(foreach file, \
                $(foreach dir, \
                  $(source_dirs), \
@@ -28,14 +28,28 @@ sources := $(sort \
              ) \
            )
 
-gif_sources := $(filter %.gif,$(sources))
+html_sources := $(sort \
+             $(foreach file, \
+               $(foreach dir, \
+                 $(source_dirs), \
+                 $(wildcard $(dir)/*.html) \
+               ), $(notdir $(file)) \
+             ) \
+           )
 
 export_gif := $(patsubst %.gif,$(doc_dir)/orm/%.gif,$(gif_sources))
+export_html := $(patsubst %.html,$(doc_dir)/orm/%.html,$(html_sources))
 clean_gif := $(patsubst %.gif,clean_%.gif,$(gif_sources))
+clean_html := $(patsubst %.html,clean_%.html,$(html_sources))
 
 .SUFFIXES:
 
 $(doc_dir)/orm/%.gif : %.gif
+	@ $(log_h_h)
+	@ $(cp) $(cpflags) $(source) $(target)
+	@ $(cp) $(cpflags) $(source) $(doc_dir)/help
+
+$(doc_dir)/orm/%.html : ../../%.html
 	@ $(log_h_h)
 	@ $(cp) $(cpflags) $(source) $(target)
 	@ $(cp) $(cpflags) $(source) $(doc_dir)/help
@@ -47,7 +61,7 @@ all : init copy lib exe
 
 init :
 
-copy : $(export_gif) \
+copy : $(export_gif) $(export_html)\
        $(doc_dir)/orm/orm.css
 
 lib :
@@ -57,12 +71,18 @@ exe :
 
 clean :
 
-realclean : clean $(clean_gif) $(clean_c)
+realclean : clean $(clean_gif) $(clean_html) $(clean_c)
 
 $(clean_gif) : clean_%.gif : %.gif
 	@ $(rm) $(rmflags) $(doc_dir)/orm/$*.gif
 
+$(clean_html) : clean_%.html : %.html
+	@ $(rm) $(rmflags) $(doc_dir)/orm/$*.html
+
 $(doc_dir)/orm/orm.css : ../../orm.css
 	@ echo "copy $(source) $(target)"
 	@ cp $(source) $(target)
+
+
+
 
