@@ -22,6 +22,20 @@ reload_classvolumes()
     return
   fi
 
+  list=`eval ls -1d $pwrp_db/*.wb_load`
+  echo ""
+  for file in $list; do
+    volume=`eval grep pwr_eClass_ClassVolume $file | awk '{ print $2 }'`
+    if [ "$volume" == "" ]; then
+      volume=`eval grep ClassVolume $file | awk '{ print $2 }'`
+      volumelow=`eval grep ClassVolume $file | awk '{ print tolower($2) }'`
+    fi
+    if [ "$volume" != "" ]; then
+      echo $file
+    fi
+  done
+  echo ""
+
   reload_continue "Pass create structfiles and loadfiles for classvolumes"
 
   list=`eval ls -1d $pwrp_db/*.wb_load`
@@ -207,11 +221,9 @@ reload_createload()
   rm $pwrp_load/ld_vol*.dat
 
   for cdb in $databases; do
-    if [ $cdb != "dbdirectory" ]; then
-      source pwrp_env.sh setdb $cdb
-
+    if [ $cdb != "directory" ]; then
       echo "-- Creating loadfiles for database $cdb"
-      wb_cmd create load/class/all
+      wb_cmd -v $cdb create load
     fi
   done
   reload_status=$reload__success
@@ -312,13 +324,12 @@ usage()
 
   Pass
 
-    classvolumes Create structfiles and loadfiles for classvolumes
     dumpdb       Dump database to textfile \$pwrp_db/'volume'.wb_dmp
+    classvolumes Create structfiles and loadfiles for classvolumes
     renamedb     Rename the old database database
     dirvolume    Load directory volume
     loaddb       Load the dump into the new database
     compile      Compile all plcprograms in the database
-    removeload   Remove old loadfiles.
     createload   Create new loadfiles.
     createboot   Create bootfiles for all nodes in the project.
 
@@ -355,7 +366,7 @@ echo ""
 echo "-- Reloading volume $databases"
 echo ""
 
-passes="dumpdb classvolumes renamedb dirvolume loaddb compile removeload createload createboot"
+passes="dumpdb classvolumes renamedb dirvolume loaddb compile createload createboot"
 echo "Pass: $passes"
 echo ""
 echo -n "Enter start pass [dumpdb] > "
