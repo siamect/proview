@@ -98,7 +98,7 @@ if ($amb == 1) {
   help();
   exit 1;
 }
-
+
 #
 # Verb subroutines
 
@@ -109,7 +109,8 @@ if ($amb == 1) {
 sub add ()
 {
 
-  dbmopen(%envdb, $dbname, 0644) || die "++ can't dbmopen $dbname!";
+  use DB_File;
+  tie(%envdb, "DB_File", $dbname, O_CREAT|O_RDWR, 0644) || die "++ can't tie $dbname!";
   $label = $_[0];
   $varstr = $envdb{$label};
   if ($varstr ne "") {
@@ -118,7 +119,7 @@ sub add ()
     get_vars();  
     update_db();
   }
-  dbmclose(%envdb) || die "++ can't dbmclose $dbname!";
+  untie(%envdb)|| die "++ can't untie $dbname!";
 
 }
 
@@ -365,7 +366,8 @@ sub create()
 sub dele ()
 {
 
-  dbmopen(%envdb, $dbname, undef) || die "++ can't dbmopen $dbname!";
+  use DB_File;
+  tie(%envdb, "DB_File", $dbname, O_CREAT|O_RDWR, 0644) || die "++ can't tie $dbname!";
 
   $label = $_[0];
   
@@ -383,7 +385,7 @@ sub dele ()
     printf("++ Environment \"%s\" doesn't exists\n", $label);
   }
 
-  dbmclose(%envdb) || die "++ can't dbmclose $dbname!";
+  untie(%envdb)|| die "++ can't untie $dbname!";
 }
 
 #
@@ -416,8 +418,10 @@ sub help ()
 sub list ()
 {
   my($env);
+  printf("Using Database:%s\n",$dbname);
 
-  dbmopen(%envdb, $dbname, undef) || die "++ can't dbmopen $dbname!";
+  use DB_File;
+  tie(%envdb, "DB_File", $dbname, O_CREAT|O_RDWR, 0644) || die "++ can't tie $dbname!";
 
   print("-- Defined environments:\n");
   foreach $env (sort keys (%envdb)) {
@@ -425,7 +429,7 @@ sub list ()
   }
   print("--\n");
 
-  dbmclose(%envdb) || die "++ can't dbmclose $dbname!";
+  untie(%envdb)|| die "++ can't untie $dbname!";
 
 }
 
@@ -435,7 +439,8 @@ sub list ()
 #
 sub modify ()
 {
-  dbmopen(%envdb, $dbname, undef) || die "++ can't dbmopen $dbname!";
+  use DB_File;
+  tie(%envdb, "DB_File", $dbname, O_CREAT|O_RDWR, 0644) || die "++ can't tie $dbname!";
   $label = $_[0];
   $varstr = $envdb{$label};
   if ($varstr ne "") {
@@ -445,7 +450,7 @@ sub modify ()
   } else {
     printf("Environment %s doesn't exists\n", $label);
   }
-  dbmclose(%envdb) || die "++ can't dbmclose $dbname!";
+  untie(%envdb)|| die "++ can't untie $dbname!";
 }
 
 
@@ -465,7 +470,8 @@ sub show ()
     }
   }
 
-  dbmopen(%envdb, $dbname, undef) || die "++ can't dbmopen $dbname!";
+  use DB_File;
+  tie(%envdb, "DB_File", $dbname, O_CREAT|O_RDWR, 0644) || die "++ can't tie $dbname!";
 
   read_vars();
   if ($varstr ne "") {
@@ -476,7 +482,7 @@ sub show ()
   } else {
     printf("++ Environment %s doesn't exists\n", $label);
   }
-  dbmclose(%envdb) || die "++ can't dbmclose $dbname!";
+  untie(%envdb)|| die "++ can't untie $dbname!";
 }
 
 #
@@ -551,7 +557,8 @@ sub _build () # args: branch, subbranch, phase
 sub _exists ()
 {
   my($ret) = 1;
-  dbmopen(%envdb, $dbname, undef) || die "++ can't dbmopen $dbname!";
+  use DB_File;
+  tie(%envdb, "DB_File", $dbname, O_CREAT|O_RDWR, 0644) || die "++ can't tie $dbname!";
 
   $label = $_[0];
   
@@ -559,7 +566,7 @@ sub _exists ()
     $ret = 0;
   }
 
-  dbmclose(%envdb) || die "++ can't dbmclose $dbname!";
+  untie(%envdb)|| die "++ can't untie $dbname!";
   exit $ret;
 }
 
@@ -569,7 +576,8 @@ sub _exists ()
 sub _print ()
 {
 
-  dbmopen(%envdb, $dbname, undef) || die "++ can't dbmopen $dbname!";
+  use DB_File;
+  tie(%envdb, "DB_File", $dbname, O_CREAT|O_RDWR, 0644) || die "++ can't tie $dbname!";
 
   $label = $_[0];
   read_vars();
@@ -584,10 +592,10 @@ sub _print ()
   } else {
     printf("++ Environment %s doesn't exists\n", $label);
   }
-  dbmclose(%envdb) || die "++ can't dbmclose $dbname!";
+  untie(%envdb)|| die "++ can't untie $dbname!";
 }
 
-
+
 #
 # Misc. subroutines
 # 
