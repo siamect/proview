@@ -3,30 +3,14 @@
 # Startscript för PWR av Ulf Ljungdahl
 #
 
-
-#test -x /sbin/ipchains || exit 0
-#test -x /sbin/ipchains-restore || exit 0
-#test -x /sbin/ipchains-save || exit 0
-
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
 . /etc/pwrp_profile
 
 
-save ()
-  {
-    echo -n "Saving IP chains: "
-    TEMPFILE="`tempfile`"
-    echo "${SAVEFILEHEADER}" >"${TEMPFILE}" && /sbin/ipchains-save >>"${TEMPFILE}" 2>/dev/null
-    cat "${TEMPFILE}" >/etc/ipchains.save
-    rm "${TEMPFILE}"
-  }
-
 pwr_start()
 {
   $pwr_exe/rt_ini &
-  sleep 5 
-  /usr/sbin/setrtprio `ps ax | grep "plc" | grep -v "grep" | awk '{ print $1}'`
 }
 
 pwr_stop()
