@@ -134,6 +134,12 @@ const char *wb_adef::name()
   return m_adrep->name();
 }
 
+const char *wb_adef::subName()
+{
+  check();
+  return m_adrep->subName();
+}
+
 wb_name wb_adef::longName()
 {
   check();
@@ -145,3 +151,16 @@ void *wb_adef::body( void *p)
   check();
   return m_adrep->body( p);
 }
+
+bool wb_adef::isClass()
+{
+  check();
+  return m_adrep->isClass();
+}
+
+pwr_tCid wb_adef::subClass()
+{
+  check();
+  return m_adrep->subClass();
+}
+

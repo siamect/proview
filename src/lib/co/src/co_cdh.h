@@ -70,6 +70,8 @@ typedef enum {
 #define cdh_oixToCix( Oix) ((Oix >> 18) & 0xfff)
 //! Get attribute index for object index.
 #define cdh_oixToAix( Oix) (Oix & 0xfff)
+//! Check if type id is a class id
+#define cdh_tidIsCid( Tid) ((Tid & (1 << 15)) == 0)
 
 //! Smallest value of volume identity for user volumes
 #define cdh_cUserVolMin  (0 + ((pwr_tVolumeId)0 << 24) + (1 << 16) + (1 << 8) + 1)
@@ -79,6 +81,10 @@ typedef enum {
 #define cdh_cUserClassVolMin  (0 + ((pwr_tVolumeId)0 << 24) + (0 << 16) + (2 << 8) + 1)
 //! Largest value of volume identity for user classvolumes
 #define cdh_cUserClassVolMax  (0 + ((pwr_tVolumeId)0 << 24) + (2 << 16) + (254 << 8) + 254)
+//! Smallest value of volume identity for system classvolumes
+#define cdh_cSystemClassVolMin  (0 + ((pwr_tVolumeId)0 << 24) + (0 << 16) + (0 << 8) + 1)
+//! Largest value of volume identity for system classvolumes
+#define cdh_cSystemClassVolMax  (0 + ((pwr_tVolumeId)0 << 24) + (1 << 16) + (254 << 8) + 254)
 
 //! Internal representatin of object identity.
 typedef struct {
@@ -494,7 +500,9 @@ typedef union {
 
     pwr_tBit		form		: 8;
 
-    pwr_tBit		fill		: 5;
+    pwr_tBit		fill		: 3;
+    pwr_tBit		trueAttr       	: 1;
+    pwr_tBit		ref		: 1;
     pwr_tBit		parent		: 1;
     pwr_tBit		idString	: 1;
     pwr_tBit		separator	: 1;
@@ -522,7 +530,9 @@ typedef union {
     pwr_tBit		separator	: 1;
     pwr_tBit		idString	: 1;
     pwr_tBit		parent		: 1;
-    pwr_tBit		fill		: 5;
+    pwr_tBit		ref		: 1;
+    pwr_tBit		trueAttr       	: 1;
+    pwr_tBit		fill		: 3;
 
     pwr_tBit		form		: 8;
 
@@ -560,6 +570,8 @@ typedef union {
 #define cdh_mName_separator		pwr_Bit(8)
 #define cdh_mName_idString		pwr_Bit(9)
 #define cdh_mName_parent		pwr_Bit(10)
+#define cdh_mName_ref			pwr_Bit(11)
+#define cdh_mName_trueAttr     		pwr_Bit(12)
 #define	cdh_mName_			(~cdh_mName__)
 
 #define cdh_mName_eForm_std		1
@@ -729,6 +741,10 @@ cdh_DlidIsNotNull (
   pwr_tDlid DirectLink
 );
 
+int cdh_IsClassVolume(
+  pwr_tVid vid
+);
+
 pwr_tCid
 cdh_ClassObjidToId (
   pwr_tOid Object
@@ -752,6 +768,11 @@ cdh_TypeIdToIndex (
 pwr_tOid
 cdh_TypeIdToObjid (
   pwr_tTid Type
+);
+
+pwr_sAttrRef
+cdh_ObjidToAref (
+  pwr_tObjid Objid
 );
 
 pwr_tStatus
@@ -920,6 +941,13 @@ int
 cdh_NoCaseStrcmp (
   const char		*s,
   const char		*t
+);
+
+int
+cdh_NoCaseStrncmp (
+  const char		*s,
+  const char		*t,
+  size_t 		n
 );
 
 char *cdh_OpSysToStr( pwr_mOpSys opsys);

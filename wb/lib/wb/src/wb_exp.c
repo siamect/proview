@@ -24,6 +24,7 @@
 
 #include "pwr.h"
 #include "pwr_class.h"
+#include "pwr_baseclasses.h"
 #include "co_time.h"
 #include "co_cdh.h"
 
@@ -200,7 +201,7 @@ static pwr_tStatus exp_vldh_load_window (
 	      sts = vldh_wind_load( plc, 0, *(parentlist + i), 0, 0, &wind,
 			access);
 	      if ( EVEN(sts)) return sts;
-	      plc->hp.windowobject = wind;
+	      plc->hp.wind = wind;
 	    }
 	    else
 	    {
@@ -232,7 +233,7 @@ static pwr_tStatus exp_vldh_load_window (
 	    /* This is the child to the plc */
 	    sts = vldh_wind_load( plc, 0, window, 0, 0, &wind, access);
 	    if ( EVEN(sts)) return sts;
-	    plc->hp.windowobject = wind;
+	    plc->hp.wind = wind;
 	  }
 	  else
 	  {
@@ -435,12 +436,12 @@ pwr_tStatus exp_window (
 
 	/* Create a context for the window */
 	genctx = (exp_genctx) XtCalloc( 1, sizeof( exp_t_genctx));
-	genctx->ldhses = wind->hw.ldhsession;
+	genctx->ldhses = wind->hw.ldhses;
 	genctx->wind = wind;
 
 	if ( !output)
 	{
-	  sts = gen_filename( genctx->ldhses, wind->lw.objdid,
+	  sts = gen_filename( genctx->ldhses, wind->lw.oid,
 			filename);
 	  if ( EVEN(sts)) return sts;
 	}
@@ -451,7 +452,7 @@ pwr_tStatus exp_window (
 	if ( genctx->file == 0)
 	  return FOE__NOFILE;
 
-	sts = ldh_ObjidToName ( genctx->ldhses, wind->lw.objdid,
+	sts = ldh_ObjidToName ( genctx->ldhses, wind->lw.oid,
 		ldh_eName_Hierarchy, hiername, sizeof(hiername), &size);
 	if ( EVEN(sts)) return sts;
 
@@ -474,7 +475,7 @@ pwr_tStatus exp_window (
 		ldh_eName_Object, class_name, sizeof(class_name), &size);
 	if ( EVEN(sts)) return sts;
 	sts = ldh_ObjidToName ( ldhses, 
-		((vldh_t_plc)(wind->hw.plcobject_pointer))->lp.objdid,
+		((vldh_t_plc)(wind->hw.plc))->lp.oid,
 		ldh_eName_Hierarchy, 
 		plcpgm_name, sizeof(plcpgm_name), &size);
 	if ( EVEN(sts)) return sts;
@@ -541,112 +542,112 @@ static pwr_tStatus exp_node_gen (
 	int			compmethod;
 
 	/* Get comp method for this node */
-	sts = ldh_GetClassBody( genctx->ldhses, node->ln.classid, 
+	sts = ldh_GetClassBody( genctx->ldhses, node->ln.cid, 
 		"GraphPlcNode", &bodyclass, (char **) &graphbody, &size);
 	if ( EVEN(sts)) return sts;
 
 	compmethod = graphbody->compmethod;
 
 	if ( 
-	     node->ln.classid == vldh_uclass( genctx->ldhses, "And")
-	 ||  node->ln.classid == vldh_uclass( genctx->ldhses, "Or")
-	 ||  node->ln.classid == vldh_uclass( genctx->ldhses, "Or")
-	 ||  node->ln.classid == vldh_uclass(genctx->ldhses, "CSub")
+	     node->ln.cid == pwr_cClass_and
+	 ||  node->ln.cid == pwr_cClass_or
+	 ||  node->ln.cid == pwr_cClass_or
+	 ||  node->ln.cid == pwr_cClass_csub
 	    ) 
 	{
 	  sts = gen_m2( genctx, node);
 	}
 	else if (
-	    node->ln.classid == vldh_uclass( genctx->ldhses, "StoDo")
-	 || node->ln.classid == vldh_uclass( genctx->ldhses, "SetDo")
-	 || node->ln.classid == vldh_uclass( genctx->ldhses, "ResDo")
-	 || node->ln.classid == vldh_uclass( genctx->ldhses, "StoDv")
-	 || node->ln.classid == vldh_uclass( genctx->ldhses, "SetDv")
-	 || node->ln.classid == vldh_uclass( genctx->ldhses, "ResDv")
-	 || node->ln.classid == vldh_uclass( genctx->ldhses, "StoAv")
-	 || node->ln.classid == vldh_uclass( genctx->ldhses, "CStoAv")
-	 || node->ln.classid == vldh_uclass( genctx->ldhses, "StoAo")
-	 || node->ln.classid == vldh_uclass( genctx->ldhses, "CStoAo")
-	 || node->ln.classid == vldh_uclass( genctx->ldhses, "StoAi")
-	 || node->ln.classid == vldh_uclass( genctx->ldhses, "CStoAi")
+	    node->ln.cid == pwr_cClass_stodo
+	 || node->ln.cid == pwr_cClass_setdo
+	 || node->ln.cid == pwr_cClass_resdo
+	 || node->ln.cid == pwr_cClass_stodv
+	 || node->ln.cid == pwr_cClass_setdv
+	 || node->ln.cid == pwr_cClass_resdv
+	 || node->ln.cid == pwr_cClass_stoav
+	 || node->ln.cid == pwr_cClass_cstoav
+	 || node->ln.cid == pwr_cClass_stoao
+	 || node->ln.cid == pwr_cClass_cstoao
+	 || node->ln.cid == pwr_cClass_stoai
+	 || node->ln.cid == pwr_cClass_cstoai
 	    ) 
 	{
 	  sts = gen_m3( genctx, node);
 	}
 	else if (
-	    node->ln.classid == vldh_uclass(genctx->ldhses, "StoDp")
-	 || node->ln.classid == vldh_uclass(genctx->ldhses, "SetDp")
-	 || node->ln.classid == vldh_uclass(genctx->ldhses, "ResDp")
-	 || node->ln.classid == vldh_uclass(genctx->ldhses, "StoAp")
-	 || node->ln.classid == vldh_uclass(genctx->ldhses, "CStoAp")
-	 || node->ln.classid == vldh_uclass(genctx->ldhses, "StoIp")
-	 || node->ln.classid == vldh_uclass(genctx->ldhses, "CStoIp")
-	 || node->ln.classid == vldh_uclass(genctx->ldhses, "StoPi")
+	    node->ln.cid == pwr_cClass_stodp
+	 || node->ln.cid == pwr_cClass_setdp
+	 || node->ln.cid == pwr_cClass_resdp
+	 || node->ln.cid == pwr_cClass_stoap
+	 || node->ln.cid == pwr_cClass_cstoap
+	 || node->ln.cid == pwr_cClass_StoIp
+	 || node->ln.cid == pwr_cClass_CStoIp
+	 || node->ln.cid == pwr_cClass_stopi
 	    ) 
 	{
 	  sts = gen_m4( genctx, node);
 	}
 	else if ( 
-	     node->ln.classid == vldh_uclass( genctx->ldhses, "Timer")
-	 ||  node->ln.classid == vldh_uclass( genctx->ldhses, "Wait")
-	 ||  node->ln.classid == vldh_uclass( genctx->ldhses, "Pulse")
+	     node->ln.cid == pwr_cClass_timer
+	 ||  node->ln.cid == pwr_cClass_wait
+	 ||  node->ln.cid == pwr_cClass_pulse
 	    ) 
 	{
 	  sts = gen_m5( genctx, node);
 	}
 	else if (
-	    node->ln.classid == vldh_uclass( genctx->ldhses,"InitStep")
-	 || node->ln.classid == vldh_uclass( genctx->ldhses,"SubStep")
-	 || node->ln.classid == vldh_uclass( genctx->ldhses,"Step")
+	    node->ln.cid == pwr_cClass_initstep
+	 || node->ln.cid == pwr_cClass_substep
+	 || node->ln.cid == pwr_cClass_step
 	    ) 
 	{
 	  sts = gen_m6( genctx, node);
 	}
 	else if ( 
-	     node->ln.classid == vldh_uclass( genctx->ldhses, "Trans")
+	     node->ln.cid == pwr_cClass_trans
 	    ) 
 	{
 	  sts = gen_m7( genctx, node);
 	}
 	else if ( 
-	     node->ln.classid == vldh_uclass( genctx->ldhses, "Order")
+	     node->ln.cid == pwr_cClass_order
 	    ) 
 	{
 	  sts = gen_m8( genctx, node);
 	}
 	else if ( 
-	     node->ln.classid == vldh_uclass( genctx->ldhses, "Reset_SO")
+	     node->ln.cid == pwr_cClass_reset_so
 	    ) 
 	{
 	  sts = gen_m9( genctx, node);
 	}
 	else if (
-	    node->ln.classid==vldh_uclass(genctx->ldhses,"AArithm")
-	 || node->ln.classid==vldh_uclass(genctx->ldhses,"DArithm")
-	 || node->ln.classid==vldh_uclass(genctx->ldhses,"Filter")
-	 || node->ln.classid==vldh_uclass(genctx->ldhses,"Maxmin")
-	 || node->ln.classid==vldh_uclass(genctx->ldhses,"Ramp")
-	 || node->ln.classid==vldh_uclass(genctx->ldhses,"Inc3P")
-	 || node->ln.classid==vldh_uclass(genctx->ldhses,"Pos3P")
-	 || node->ln.classid==vldh_uclass(genctx->ldhses,"Drive")
-	 || node->ln.classid==vldh_uclass(genctx->ldhses,"MValve")
-	 || node->ln.classid==vldh_uclass(genctx->ldhses,"Backup")
-	 || node->ln.classid==vldh_uclass(genctx->ldhses,"ASup")
-	 || node->ln.classid==vldh_uclass(genctx->ldhses,"DSup")
-	 || node->ln.classid==vldh_uclass(genctx->ldhses,"Backup")
+	    node->ln.cid==pwr_cClass_aarithm
+	 || node->ln.cid==pwr_cClass_darithm
+	 || node->ln.cid==pwr_cClass_filter
+	 || node->ln.cid==pwr_cClass_maxmin
+	 || node->ln.cid==pwr_cClass_ramp
+	 || node->ln.cid==pwr_cClass_inc3p
+	 || node->ln.cid==pwr_cClass_pos3p
+	 || node->ln.cid==pwr_cClass_drive
+	 || node->ln.cid==pwr_cClass_mvalve
+	 || node->ln.cid==pwr_cClass_Backup
+	 || node->ln.cid==pwr_cClass_ASup
+	 || node->ln.cid==pwr_cClass_DSup
+	 || node->ln.cid==pwr_cClass_Backup
 	    )
 	{
 	  sts = gen_m10( genctx, node);
 	}
 	else if (
-	    node->ln.classid == vldh_uclass( genctx->ldhses,"SsEnd")
-	 || node->ln.classid == vldh_uclass( genctx->ldhses,"SsBegin")
+	    node->ln.cid == pwr_cClass_ssend
+	 || node->ln.cid == pwr_cClass_ssbegin
 	    ) 
 	{
 	  sts = gen_m11( genctx, node);
 	}
 	else if (
-	    node->ln.classid == vldh_uclass( genctx->ldhses,"SetCond")
+	    node->ln.cid == pwr_cClass_setcond
 	    ) 
 	{
 	  sts = gen_m12( genctx, node);
@@ -688,7 +689,7 @@ static pwr_tStatus gen_m2 (
 	
 	/* Print class and name */
 	sts = ldh_ObjidToName( 
-		genctx->ldhses, cdh_ClassIdToObjid( node->ln.classid), 
+		genctx->ldhses, cdh_ClassIdToObjid( node->ln.cid), 
 		ldh_eName_Object, class_name, sizeof( class_name), &size);
 	if( EVEN(sts)) return sts;
 
@@ -749,7 +750,7 @@ vldh_t_node	node
 
 	/* Print class and name */
 	sts = ldh_ObjidToName( 
-		genctx->ldhses, cdh_ClassIdToObjid( node->ln.classid), 
+		genctx->ldhses, cdh_ClassIdToObjid( node->ln.cid), 
 		ldh_eName_Object, class_name, sizeof( class_name), &size);
 	if( EVEN(sts)) return sts;
 
@@ -760,7 +761,7 @@ vldh_t_node	node
 	/* If the object is not connected the value in the
 	   parameter should be written in the macro call */
 	sts = ldh_GetObjectPar( genctx->ldhses,
-			node->ln.object_did, 
+			node->ln.oid, 
 			"RtBody",
 			"In",
 			&nocondef_ptr, &size); 
@@ -776,7 +777,7 @@ vldh_t_node	node
 
 	/* Get the first attribute in devbody of type pwr_tObjid */
 	sts = ldh_GetObjectBodyDef( genctx->ldhses,
-			node->ln.classid, "DevBody", 1, 
+			node->ln.cid, "DevBody", 1, 
 			&bodydef, &rows);
 	if ( EVEN(sts) ) return sts;
 
@@ -787,7 +788,7 @@ vldh_t_node	node
 	  {
 	    /* Get the parameter value */
 	    sts = ldh_GetObjectPar( genctx->ldhses,
-			node->ln.object_did, 
+			node->ln.oid, 
 			"DevBody",
 			(bodydef[i].ParName),
 			(char **) &parvalue, &size); 
@@ -860,7 +861,7 @@ static pwr_tStatus gen_m4 (
 
 	/* Print class and name */
 	sts = ldh_ObjidToName( 
-		genctx->ldhses, cdh_ClassIdToObjid( node->ln.classid), 
+		genctx->ldhses, cdh_ClassIdToObjid( node->ln.cid), 
 		ldh_eName_Object, class_name, sizeof( class_name), &size);
 	if( EVEN(sts)) return sts;
 
@@ -871,7 +872,7 @@ static pwr_tStatus gen_m4 (
 	/* If the object is not connected the value in the
 	   parameter should be written in the macro call */
 	sts = ldh_GetObjectPar( genctx->ldhses,
-			node->ln.object_did, 
+			node->ln.oid, 
 			"RtBody",
 			"In",
 			&nocondef_ptr, &size); 
@@ -887,7 +888,7 @@ static pwr_tStatus gen_m4 (
 
 	/* Get the first attribute in devbody of type pwr_tObjid */
 	sts = ldh_GetObjectBodyDef( genctx->ldhses,
-			node->ln.classid, "DevBody", 1, 
+			node->ln.cid, "DevBody", 1, 
 			&bodydef, &rows);
 	if ( EVEN(sts) ) return sts;
 
@@ -898,7 +899,7 @@ static pwr_tStatus gen_m4 (
 	  {
 	    /* Get the parameter value */
 	    sts = ldh_GetObjectPar( genctx->ldhses,
-			node->ln.object_did, 
+			node->ln.oid, 
 			"DevBody",
 			(bodydef[i].ParName),
 			(char **) &parvalue, &size); 
@@ -925,7 +926,7 @@ static pwr_tStatus gen_m4 (
 	free((char *) parvalue);
 
 	sts = ldh_GetObjectPar( genctx->ldhses,
-			node->ln.object_did, 
+			node->ln.oid, 
 			"DevBody",
 			"Parameter",
 			&parameter, &size); 
@@ -966,7 +967,7 @@ static pwr_tStatus gen_m5 (
 
 	/* Print class and name */
 	sts = ldh_ObjidToName( 
-		genctx->ldhses, cdh_ClassIdToObjid( node->ln.classid), 
+		genctx->ldhses, cdh_ClassIdToObjid( node->ln.cid), 
 		ldh_eName_Object, class_name, sizeof( class_name), &size);
 	if( EVEN(sts)) return sts;
 
@@ -980,7 +981,7 @@ static pwr_tStatus gen_m5 (
 	if ( EVEN(sts)) return sts;
 
 	/* Get the Do signal */
-	sts = ldh_GetObjectPar( genctx->ldhses, node->ln.object_did, "RtBody", 
+	sts = ldh_GetObjectPar( genctx->ldhses, node->ln.oid, "RtBody", 
 			"TimerTime", (char **) &time_ptr, &size);
 	if ( EVEN(sts)) return sts;
 
@@ -1026,11 +1027,11 @@ static pwr_tStatus gen_m6 (
 	int			k;
 	unsigned long		par_inverted;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession;
+	ldhses = (node->hn.wind)->hw.ldhses;
 
 	/* Print class and name */
 	sts = ldh_ObjidToName( 
-		genctx->ldhses, cdh_ClassIdToObjid( node->ln.classid), 
+		genctx->ldhses, cdh_ClassIdToObjid( node->ln.cid), 
 		ldh_eName_Object, class_name, sizeof( class_name), &size);
 	if( EVEN(sts)) return sts;
 
@@ -1039,9 +1040,9 @@ static pwr_tStatus gen_m6 (
 		node->hn.name);
 
 	/* Get the reset object from the plcobject */
-	plc = (node->hn.window_pointer)->hw.plcobject_pointer;
+	plc = (node->hn.wind)->hw.plc;
 	sts = ldh_GetObjectPar( ldhses,
-			plc->lp.objdid,
+			plc->lp.oid,
 			"DevBody",
 			"ResetObject",
 			(char **) &resobjdid_ptr, &size);
@@ -1072,10 +1073,10 @@ static pwr_tStatus gen_m6 (
 	    next_node = (pointlist + k)->node;
 	    next_point = (pointlist + k)->conpoint;
 	    /* Check class of connected nodes */
-	    sts = ldh_GetObjectClass( ldhses, next_node->ln.object_did, &class);
+	    sts = ldh_GetObjectClass( ldhses, next_node->ln.oid, &class);
 	    if (EVEN(sts)) return sts;
 
-	    if ((class == vldh_class( ldhses, VLDH_CLASS_ORDER)) && 
+	    if ((class == pwr_cClass_order) && 
 		 ( next_point == 0 ))
 	    {
 	      /* compile this nodes here */
@@ -1121,7 +1122,8 @@ static pwr_tStatus gen_m7 (
 	vldh_t_node		next_node;
 	unsigned long		next_point;
 	int			k;
-	pwr_tObjid		output_objdid;
+	pwr_sAttrRef		output_attrref;
+	int			output_type;
 	char			output_prefix;
 	char			output_par[20];
 	vldh_t_node		output_node;
@@ -1131,11 +1133,11 @@ static pwr_tStatus gen_m7 (
 	int			pincond_found;
 	int			first;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession;  
+	ldhses = (node->hn.wind)->hw.ldhses;  
 
 	/* Print class and name */
 	sts = ldh_ObjidToName( 
-		genctx->ldhses, cdh_ClassIdToObjid( node->ln.classid), 
+		genctx->ldhses, cdh_ClassIdToObjid( node->ln.cid), 
 		ldh_eName_Object, class_name, sizeof( class_name), &size);
 	if( EVEN(sts)) return sts;
 
@@ -1160,21 +1162,21 @@ static pwr_tStatus gen_m7 (
 	    next_node = (pointlist + k)->node;
 	    next_point = (pointlist + k)->conpoint;
 	    /* Check class of connected nodes */
-	    sts = ldh_GetObjectClass( ldhses, next_node->ln.object_did, &class);
+	    sts = ldh_GetObjectClass( ldhses, next_node->ln.oid, &class);
 	    if (EVEN(sts)) return sts;
 
 	    if ( 
-		((class == vldh_class( ldhses, VLDH_CLASS_STEP)) && 
+		((class == pwr_cClass_step) && 
 			( next_point == 2 )) ||
-		((class == vldh_class( ldhses, VLDH_CLASS_INITSTEP)) && 
+		((class == pwr_cClass_initstep) && 
 			( next_point == 2 )) ||
-		((class == vldh_class( ldhses, VLDH_CLASS_SUBSTEP)) && 
+		((class == pwr_cClass_substep) && 
 			( next_point == 2 )) ||
-		((class == vldh_class( ldhses, VLDH_CLASS_SSBEGIN)) && 
+		((class == pwr_cClass_ssbegin) && 
 			( next_point == 1 )) )
 	    {
 	      /* Print in the input list */
-	      sts = exp_ObjdidToName( node, next_node->ln.object_did, hiername,
+	      sts = exp_ObjdidToName( node, next_node->ln.oid, hiername,
 			sizeof( hiername));
 	      if( EVEN(sts)) return sts;
 
@@ -1204,21 +1206,21 @@ static pwr_tStatus gen_m7 (
 	    next_node = (pointlist + k)->node;
 	    next_point = (pointlist + k)->conpoint;
 	    /* Check class of connected nodes */
-	    sts = ldh_GetObjectClass( ldhses, next_node->ln.object_did, &class);
+	    sts = ldh_GetObjectClass( ldhses, next_node->ln.oid, &class);
 	    if (EVEN(sts)) return sts;
 
 	    if ( 
-		((class == vldh_class( ldhses, VLDH_CLASS_STEP)) && 
+		((class == pwr_cClass_step) && 
 			( next_point == 0 )) ||
-		((class == vldh_class( ldhses, VLDH_CLASS_INITSTEP)) && 
+		((class == pwr_cClass_initstep) && 
 			( next_point == 0 )) ||
-		((class == vldh_class( ldhses, VLDH_CLASS_SUBSTEP)) && 
+		((class == pwr_cClass_substep) && 
 			( next_point == 0 )) ||
-		((class == vldh_class( ldhses, VLDH_CLASS_SSEND)) && 
+		((class == pwr_cClass_ssend) && 
 			( next_point == 0 )) )
 	    {
 	      /* Print in the output list */
-	      sts = exp_ObjdidToName( node, next_node->ln.object_did, hiername,
+	      sts = exp_ObjdidToName( node, next_node->ln.oid, hiername,
 			sizeof( hiername));
 	      if( EVEN(sts)) return sts;
 
@@ -1248,12 +1250,12 @@ static pwr_tStatus gen_m7 (
 	    pincond_found = 1;
 
 	    sts = gcg_get_outputstring( &gcgctx_dum, output_node, &output_bodydef, 
-			&output_objdid, &output_prefix, output_par);
+			&output_attrref, &output_type, &output_prefix, output_par);
 	    if ( sts == GSX__NEXTPAR ) return sts;
 	    if ( EVEN(sts)) return sts;
 	    
 	      /* Print the condition input */
-	      sts = exp_ObjdidToName( node, output_objdid, hiername,
+	      sts = exp_ObjdidToName( node, output_attrref.Objid, hiername,
 			sizeof( hiername));
 	      if( EVEN(sts)) return sts;
 
@@ -1302,7 +1304,8 @@ static pwr_tStatus gen_m8 (
 	int			i;
 	int			output_found;
 	int			size;
-	pwr_tObjid		cond_output_objdid;
+	pwr_sAttrRef		cond_output_attrref;
+	int			cond_output_type;
 	char			cond_output_par[20];
 	unsigned long		cond_par_inverted;
 	char			output_prefix;
@@ -1321,7 +1324,7 @@ static pwr_tStatus gen_m8 (
 
 	if ( !genctx->step_gen)
 	  return FOE__SUCCESS;
-	ldhses = (node->hn.window_pointer)->hw.ldhsession;  
+	ldhses = (node->hn.wind)->hw.ldhses;  
 
 	/* Get the step connected to conpoint 0 */
 	sts = gcg_get_output( node, 0, &output_count, &output_node,
@@ -1334,14 +1337,14 @@ static pwr_tStatus gen_m8 (
 	  output_found = 1;
 
 	  /* Check that is it a step */
-	  sts = ldh_GetObjectClass( ldhses, output_node->ln.object_did, &class);
+	  sts = ldh_GetObjectClass( ldhses, output_node->ln.oid, &class);
 	  if (EVEN(sts)) return sts;
 
-	  if ( !((class == vldh_class( ldhses, VLDH_CLASS_STEP )) ||
-	         (class == vldh_class( ldhses, VLDH_CLASS_SUBSTEP )) ||
-	         (class == vldh_class( ldhses, VLDH_CLASS_SSBEGIN )) ||
-	         (class == vldh_class( ldhses, VLDH_CLASS_SSEND )) ||
-	         (class == vldh_class( ldhses, VLDH_CLASS_INITSTEP ))))
+	  if ( !((class == pwr_cClass_step) ||
+	         (class == pwr_cClass_substep) ||
+	         (class == pwr_cClass_ssbegin) ||
+	         (class == pwr_cClass_ssend) ||
+	         (class == pwr_cClass_initstep)))
 	  {
 	    return GSX__NEXTNODE;
 	  }
@@ -1351,7 +1354,7 @@ static pwr_tStatus gen_m8 (
 	  return GSX__NEXTNODE;
 	}
 	
-	step_objdid = output_node->ln.object_did;
+	step_objdid = output_node->ln.oid;
 
 	/* Check if the condition pin is visible */
 	sts = gcg_get_inputpoint( node, 1, &point, &cond_par_inverted);
@@ -1369,15 +1372,15 @@ static pwr_tStatus gen_m8 (
 	    pincond_found = 1;
 
 	    sts = gcg_get_outputstring( &gcgctx_dum, output_node, &output_bodydef, 
-			&cond_output_objdid, &output_prefix, cond_output_par);
+			&cond_output_attrref, &cond_output_type, &output_prefix, cond_output_par);
 	    if ( sts == GSX__NEXTPAR ) return sts;
 	    if ( EVEN(sts)) return sts;
 	  }
 	}
 
 	/* Check the attributes in the parent order node */
-	sts = ldh_GetObjectBodyDef((node->hn.window_pointer)->hw.ldhsession,
-			node->ln.classid, "DevBody", 1, 
+	sts = ldh_GetObjectBodyDef((node->hn.wind)->hw.ldhses,
+			node->ln.cid, "DevBody", 1, 
 			&bodydef, &rows);
 
 	if ( EVEN(sts) ) return sts;
@@ -1386,8 +1389,8 @@ static pwr_tStatus gen_m8 (
 	for ( i = 0; i < rows - 1; i += 2)
 	{
 	  /* Get the parameter value */
-	  sts = ldh_GetObjectPar( (node->hn.window_pointer)->hw.ldhsession,
-			node->ln.object_did,
+	  sts = ldh_GetObjectPar( (node->hn.wind)->hw.ldhses,
+			node->ln.oid,
 			"DevBody",
 			(bodydef[i].ParName),
 			&parvalue, &size);
@@ -1396,31 +1399,31 @@ static pwr_tStatus gen_m8 (
 	  if ( *parvalue == 'S' )
 	  {
 	    suborderclass[subordercount] =
-			vldh_class( ldhses, VLDH_CLASS_SORDER);
+			pwr_cClass_sorder;
 	    subordercount++;
 	  }
 	  else if ( *parvalue == 'L' )
 	  {
 	    suborderclass[subordercount] =
-			vldh_class( ldhses, VLDH_CLASS_LORDER);
+			pwr_cClass_lorder;
 	    subordercount++;
 	  }
 	  else if ( *parvalue == 'C' )
 	  {
 	    suborderclass[subordercount] =
-			vldh_class( ldhses, VLDH_CLASS_CORDER);
+			pwr_cClass_corder;
 	    subordercount++;
 	  }
 	  else if ( *parvalue == 'D' )
 	  {
 	    suborderclass[subordercount] =
-			vldh_class( ldhses, VLDH_CLASS_DORDER);
+			pwr_cClass_dorder;
 	    subordercount++;
 	  }
 	  else if ( *parvalue == 'P' )
 	  {
 	    suborderclass[subordercount] =
-			vldh_class( ldhses, VLDH_CLASS_PORDER);
+			pwr_cClass_porder;
 	    subordercount++;
 	  }
 	  free( parvalue);
@@ -1431,18 +1434,18 @@ static pwr_tStatus gen_m8 (
 	/* Get the objdid for order children of this node */
 	found = 0;
 	ldhsubordercount = 0;
-	sts = ldh_GetChild( ldhses, node->ln.object_did, &next_objdid);
+	sts = ldh_GetChild( ldhses, node->ln.oid, &next_objdid);
 	while ( ODD(sts) )
 	{
 	  /* Find out if this is a suborder */
 	  sts = ldh_GetObjectClass( ldhses, next_objdid, &class);
 	  if (EVEN(sts)) return sts;
 
-	  if ( (class == vldh_class( ldhses, VLDH_CLASS_SORDER )) ||
-	       (class == vldh_class( ldhses, VLDH_CLASS_DORDER )) ||
-	       (class == vldh_class( ldhses, VLDH_CLASS_LORDER )) ||
-	       (class == vldh_class( ldhses, VLDH_CLASS_CORDER )) ||
-	       (class == vldh_class( ldhses, VLDH_CLASS_PORDER )) )
+	  if ( (class == pwr_cClass_sorder) ||
+	       (class == pwr_cClass_dorder) ||
+	       (class == pwr_cClass_lorder) ||
+	       (class == pwr_cClass_corder) ||
+	       (class == pwr_cClass_porder) )
 	  {
 
 	    /* Print class and name */
@@ -1473,12 +1476,12 @@ static pwr_tStatus gen_m8 (
 	    {
 	      return GSX__ORDERMISM;
 	    }
-	    if ( class == vldh_class( ldhses, VLDH_CLASS_SORDER ))
+	    if ( class == pwr_cClass_sorder)
 	    {
 	      /* Get the reset object from the plcobject */
-	      plc = (node->hn.window_pointer)->hw.plcobject_pointer;
+	      plc = (node->hn.wind)->hw.plc;
 	      sts = ldh_GetObjectPar( ldhses,
-			plc->lp.objdid,
+			plc->lp.oid,
 			"DevBody",
 			"ResetObject",
 			(char **) &resobjdid_ptr, &size);
@@ -1491,7 +1494,7 @@ static pwr_tStatus gen_m8 (
 
 	      fprintf( genctx->file, " /ResetObject=%s.ActualValue", hiername);
 	    }
-	    else if ( class == vldh_class( ldhses, VLDH_CLASS_LORDER ))
+	    else if ( class == pwr_cClass_lorder)
 	    {
 	      /* Print the time */
 	      sts = ldh_GetObjectPar( ldhses, 
@@ -1504,7 +1507,7 @@ static pwr_tStatus gen_m8 (
 	      free((char *) timevalue);
 	      fprintf( genctx->file, " /Time=%g", time);
 	    }
-	    else if ( class == vldh_class( ldhses, VLDH_CLASS_DORDER ))
+	    else if ( class == pwr_cClass_dorder)
 	    {
 	      /* Print the time */
 	      sts = ldh_GetObjectPar( ldhses, 
@@ -1517,14 +1520,14 @@ static pwr_tStatus gen_m8 (
 	      free((char *) timevalue);
 	      fprintf( genctx->file, " /Time=%g", time);
 	    }
-	    else if ( class == vldh_class( ldhses, VLDH_CLASS_PORDER ))
+	    else if ( class == pwr_cClass_porder)
 	    {
 	    }
-	    else if ( class == vldh_class( ldhses, VLDH_CLASS_CORDER ))
+	    else if ( class == pwr_cClass_corder)
 	    {
 	      if ( pincond_found)
 	      { 
-	        sts = exp_ObjdidToName( node, cond_output_objdid, hiername,
+	        sts = exp_ObjdidToName( node, cond_output_attrref.Objid, hiername,
 			sizeof( hiername));
 	        if( EVEN(sts)) return sts;
 
@@ -1554,7 +1557,7 @@ static pwr_tStatus gen_m8 (
 	{
 	  /* Print class and name */
 	  sts = ldh_ObjidToName(
-			genctx->ldhses, cdh_ClassIdToObjid( node->ln.classid), 
+			genctx->ldhses, cdh_ClassIdToObjid( node->ln.cid), 
 			ldh_eName_Object, class_name, sizeof( class_name), 
 			&size);
 	  if( EVEN(sts)) return sts;
@@ -1605,10 +1608,10 @@ static pwr_tStatus gen_m9 (
 	pwr_tObjid	refobjdid;
 	pwr_tObjid	*refobjdid_ptr;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession; 
+	ldhses = (node->hn.wind)->hw.ldhses; 
 	/* Print class and name */
 	sts = ldh_ObjidToName( 
-		genctx->ldhses, cdh_ClassIdToObjid( node->ln.classid), 
+		genctx->ldhses, cdh_ClassIdToObjid( node->ln.cid), 
 		ldh_eName_Object, class_name, sizeof( class_name), &size);
 	if( EVEN(sts)) return sts;
 
@@ -1625,7 +1628,7 @@ static pwr_tStatus gen_m9 (
 	  first parameter devbody */
 
 	sts = ldh_GetObjectPar( ldhses,
-			node->ln.object_did, 
+			node->ln.oid, 
 			"DevBody",
 			"OrderObject",
 			(char **) &refobjdid_ptr, &size); 
@@ -1636,7 +1639,7 @@ static pwr_tStatus gen_m9 (
 
 	/* Check that this is objdid of an existing object */
 	sts = ldh_GetObjectClass(
-			(node->hn.window_pointer)->hw.ldhsession, 
+			(node->hn.wind)->hw.ldhses, 
 			refobjdid,
 			&class);
 	if ( EVEN(sts)) 
@@ -1679,11 +1682,11 @@ static pwr_tStatus gen_m10  (
 	char		class_name[80];
 	ldh_tSesContext	ldhses;
 	
-	ldhses = (node->hn.window_pointer)->hw.ldhsession;
+	ldhses = (node->hn.wind)->hw.ldhses;
 
 	/* Print class and name */
 	sts = ldh_ObjidToName( 
-		genctx->ldhses, cdh_ClassIdToObjid( node->ln.classid), 
+		genctx->ldhses, cdh_ClassIdToObjid( node->ln.cid), 
 		ldh_eName_Object, class_name, sizeof( class_name), &size);
 	if( EVEN(sts)) return sts;
 
@@ -1730,12 +1733,12 @@ static pwr_tStatus gen_m11 (
 	char			class_name[80];
 	pwr_tObjid		parent;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession;
-	parent = (node->hn.window_pointer)->lw.parent_node_did;
+	ldhses = (node->hn.wind)->hw.ldhses;
+	parent = (node->hn.wind)->lw.poid;
 
 	/* Print class and name */
 	sts = ldh_ObjidToName( 
-		genctx->ldhses, cdh_ClassIdToObjid( node->ln.classid), 
+		genctx->ldhses, cdh_ClassIdToObjid( node->ln.cid), 
 		ldh_eName_Object, class_name, sizeof( class_name), &size);
 	if( EVEN(sts)) return sts;
 
@@ -1744,9 +1747,9 @@ static pwr_tStatus gen_m11 (
 		node->hn.name);
 
 	/* Get the reset object from the plcobject */
-	plc = (node->hn.window_pointer)->hw.plcobject_pointer;
+	plc = (node->hn.wind)->hw.plc;
 	sts = ldh_GetObjectPar( ldhses,
-			plc->lp.objdid,
+			plc->lp.oid,
 			"DevBody",
 			"ResetObject",
 			(char **) &resobjdid_ptr, &size);
@@ -1794,12 +1797,12 @@ static pwr_tStatus gen_m12 (
 	char			class_name[80];
 	pwr_tObjid		parent;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession;
-	parent = (node->hn.window_pointer)->lw.parent_node_did;
+	ldhses = (node->hn.wind)->hw.ldhses;
+	parent = (node->hn.wind)->lw.poid;
 
 	/* Print class and name */
 	sts = ldh_ObjidToName( 
-		genctx->ldhses, cdh_ClassIdToObjid( node->ln.classid), 
+		genctx->ldhses, cdh_ClassIdToObjid( node->ln.cid), 
 		ldh_eName_Object, class_name, sizeof( class_name), &size);
 	if( EVEN(sts)) return sts;
 
@@ -1869,7 +1872,8 @@ static pwr_tStatus gen_print_inputs (
 	ldh_sParDef 		output_bodydef;
 	int			i;
 	int			output_found;
-	pwr_tObjid		output_objdid;
+	pwr_sAttrRef		output_attrref;
+	int			output_type;
 	char			output_prefix;
 	char			output_par[20];
 	int			input_count, inputscon_count;
@@ -1877,11 +1881,11 @@ static pwr_tStatus gen_print_inputs (
 	char			*buffer;
 	int			nocondef_val;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession;
+	ldhses = (node->hn.wind)->hw.ldhses;
 
 	/* Get the runtime parameters for this class */
-	sts = ldh_GetObjectBodyDef((node->hn.window_pointer)->hw.ldhsession, 
-			node->ln.classid, "RtBody", 1, 
+	sts = ldh_GetObjectBodyDef((node->hn.wind)->hw.ldhses, 
+			node->ln.cid, "RtBody", 1, 
 			&bodydef, &rows);
 	if ( EVEN(sts) ) return sts;
 
@@ -1911,7 +1915,7 @@ static pwr_tStatus gen_print_inputs (
 	   	return GSX__CONOUTPUT;
 
 	      sts = gcg_get_outputstring( &gcgctx_dum, output_node, &output_bodydef, 
-			&output_objdid, &output_prefix, output_par);
+			&output_attrref, &output_type, &output_prefix, output_par);
 	      if ( sts == GSX__NEXTPAR ) 
 	      {
 	        i++;
@@ -1924,7 +1928,7 @@ static pwr_tStatus gen_print_inputs (
 	      if ( par_inverted ) 
 	        fprintf( genctx->file, "\"!\"");
 
-	      sts = exp_ObjdidToName( node, output_objdid, output_name,
+	      sts = exp_ObjdidToName( node, output_attrref.Objid, output_name,
 			sizeof( output_name));
 	      if( EVEN(sts)) return sts;
 
@@ -1973,7 +1977,7 @@ static pwr_tStatus gen_print_inputs (
 	    {
 	      /* Get the parameter value */
 	      sts = ldh_GetObjectPar( ldhses,
-			node->ln.object_did,
+			node->ln.oid,
 			"RtBody",
 			bodydef[i].ParName,
 			&buffer, &size);
@@ -2068,15 +2072,15 @@ static pwr_tStatus exp_ObjdidToName (
 	char		object_name[80];
 	char		*s;
 
-	wind = node->hn.window_pointer;
+	wind = node->hn.wind;
 	sts = ldh_ObjidToName(
-		wind->hw.ldhsession, output_objdid,
+		wind->hw.ldhses, output_objdid,
 		ldh_eName_Hierarchy,
 		object_name, size, &outsize);
 	if ( EVEN(sts)) return sts;
 	
 	sts = ldh_ObjidToName(
-		wind->hw.ldhsession, wind->lw.objdid,
+		wind->hw.ldhses, wind->lw.oid,
 		ldh_eName_Hierarchy,
 		wind_name, sizeof( wind_name), &outsize);
 	if ( EVEN(sts)) return sts;
@@ -2132,10 +2136,10 @@ static pwr_tStatus gen_print_interns (
 	char		hiername[120];
 	char		*hiername_ptr;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession;
+	ldhses = (node->hn.wind)->hw.ldhses;
 
 	/* Get the first child to the object */
-	sts = ldh_GetChild( ldhses, cdh_ClassIdToObjid( node->ln.classid), 
+	sts = ldh_GetChild( ldhses, cdh_ClassIdToObjid( node->ln.cid), 
 		&template);
 	while ( ODD(sts) )
 	{
@@ -2162,7 +2166,7 @@ static pwr_tStatus gen_print_interns (
 	  }
 
     	  /* Get the runtime paramters for this class */
-	  sts = ldh_GetObjectBodyDef(ldhses, node->ln.classid, body, 1, 
+	  sts = ldh_GetObjectBodyDef(ldhses, node->ln.cid, body, 1, 
 	  		&bodydef, &rows);
 	  if ( EVEN(sts) ) continue;
 
@@ -2170,7 +2174,7 @@ static pwr_tStatus gen_print_interns (
 	  {
 	    strcpy( parname, (bodydef[j].ParName));
 	    /* Get the parameter value in the object */
-	    sts = ldh_GetObjectPar( ldhses, node->ln.object_did, body,   
+	    sts = ldh_GetObjectPar( ldhses, node->ln.oid, body,   
 			parname, &object_par, &parsize); 
 	    if ( EVEN(sts)) return sts;
 
@@ -2344,10 +2348,10 @@ static pwr_tStatus gen_print_windows (
 	pwr_tString80	class_name;
 	pwr_tString80	hiername;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession;
+	ldhses = (node->hn.wind)->hw.ldhses;
 
 	/* Get the first child to the object */
-	sts = ldh_GetChild( ldhses, node->ln.object_did, &window);
+	sts = ldh_GetChild( ldhses, node->ln.oid, &window);
 	while ( ODD(sts) )
 	{
 	  if ( ODD( ldh_GetObjectBuffer( ldhses,

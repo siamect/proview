@@ -242,14 +242,38 @@ wb_attribute wb_volume::attribute( wb_name aname)
   if ( !cd)
     return wb_attribute();
 
+  wb_adrep *adrep = ((wb_cdrep *)cd)->adrep( &sts, aname.attributesAll());
+
+  if ( ODD(sts)) {
+    bool shadowed = false;
+    if ( aname.hasSuper()) {
+      // Check if shadowed
+      wb_attrname an(aname.attributesAll());
+      wb_adrep *ad = ((wb_cdrep *)cd)->adrep( &sts, an.name(cdh_mName_attribute));
+      if ( ODD(sts) && ad->offset() != adrep->offset()) {
+	shadowed = true;
+	delete ad;
+      }
+    }
+
+    wb_attribute a;
+    if ( aname.hasAttrIndex(aname.attributes() - 1))
+      a = wb_attribute( sts, (wb_orep *)o, adrep, aname.attrIndex(aname.attributes() - 1));
+    else
+      a = wb_attribute( sts, (wb_orep *)o, adrep);
+    a.setShadowed( shadowed);
+    return a;
+  }
+#if 0
   // This only work on one level attributes... TODO
-  wb_adrep *adrep = ((wb_cdrep *)cd)->adrep( &sts, aname.wholeAttr());
+  wb_adrep *adrep = ((wb_cdrep *)cd)->adrep( &sts, aname.attributesAll());
   if ( ODD(sts)) {
     if ( aname.hasAttrIndex())
       return wb_attribute( sts, (wb_orep *)o, adrep, aname.attrIndex());
     else
       return wb_attribute( sts, (wb_orep *)o, adrep);
   }
+#endif
   return wb_attribute();
 }
 
@@ -264,7 +288,7 @@ wb_attribute wb_volume::attribute( wb_object o, wb_attrname aname)
   if ( !cd)
     return wb_attribute();
 
-  wb_adrep *adrep = ((wb_cdrep *)cd)->adrep( &sts, aname.wholeAttr());
+  wb_adrep *adrep = ((wb_cdrep *)cd)->adrep( &sts, aname.attributesAll());
   if ( ODD(sts))
     return wb_attribute( sts, (wb_orep *)o, adrep);
   return wb_attribute();
@@ -292,6 +316,7 @@ wb_attribute wb_volume::attribute(const pwr_sAttrRef* arp) const
 {
   pwr_tStatus sts;
   int idx;
+  bool subClass = false;
   wb_orep* orep = 0;
   wb_cdrep* cdrep = 0;
   wb_bdrep* bdrep = 0;
@@ -307,57 +332,91 @@ wb_attribute wb_volume::attribute(const pwr_sAttrRef* arp) const
 
   if (EVEN(sts))
     return wb_attribute();
+  orep->ref();
 
   cdrep = new wb_cdrep(*orep);
-  if (EVEN(cdrep->sts()))
-    goto error;
+  if (EVEN(cdrep->sts())) { orep->unref(); return wb_attribute();}
       
   bdrep = cdrep->bdrep(&sts, pwr_eBix_rt);
-  if (bdrep == 0)
-    goto error;
+  delete cdrep;
+  if ( EVEN(sts)) { orep->unref(); return wb_attribute();}
 
   // Check if we shall reference the whole object
   if (arp->Size == 0 || (arp->Offset == 0 && arp->Size == bdrep->size())) {
     wb_attribute a(sts, orep);
+    orep->unref();
     delete bdrep;
-    delete cdrep;
     return a;
   }
   
       
   // We need to find a matching attribute
   adrep = bdrep->adrep(&sts);
-  while (ODD(sts)) {
-    if (arp->Offset < (adrep->offset() + adrep->size())){
-      break;
+  while ( ODD(sts)) {
+    bool newBody = false;
+    while (ODD(sts)) {
+      if (arp->Offset < (adrep->offset() + adrep->size())){
+	if ( arp->Size == 0 || adrep->size() == arp->Size) {
+	  // Attribute found
+	  idx = (adrep->nElement() > 1) ? -1 : 0;
+	  wb_attribute a( LDH__SUCCESS, orep, adrep, idx);
+	  if ( arp->Flags.b.Shadowed)
+	    a.setShadowed(true);
+	  delete bdrep;
+	  orep->unref();
+	  return a;
+	}
+	else if ( adrep->flags() & PWR_MASK_ARRAY &&
+		  adrep->size()/adrep->nElement() == arp->Size) {  
+	  // Attribute element found
+	  idx = (arp->Offset - adrep->offset()) / (adrep->size() / adrep->nElement());
+	  wb_attribute a( LDH__SUCCESS, orep, adrep, idx);
+	  delete bdrep;
+	  orep->unref();
+	  return a;
+        }
+	else if ( adrep->flags() & PWR_MASK_CLASS) {
+	  // Continue to examine object attribute
+	  cdrep = m_vrep->merep()->cdrep(&sts, adrep->subClass());
+	  if ( EVEN(sts)) { orep->unref(); delete bdrep; return wb_attribute();}
+
+	  if ( bdrep) 
+	    delete bdrep;
+	  bdrep = cdrep->bdrep(&sts, pwr_eBix_rt);
+	  if ( EVEN(sts)) { orep->unref(); return wb_attribute();}
+
+	  subClass = true;
+	  delete cdrep;
+	  old = adrep;
+	  adrep = bdrep->adrep(&sts);
+	  if ( EVEN(sts)) { orep->unref(); delete old; delete bdrep; return wb_attribute();}
+	  if ( old->flags() & PWR_MASK_ARRAY) {
+	    idx = (arp->Offset - old->offset()) / (old->size() / old->nElement());
+	    adrep->add( old, idx);
+	  }
+	  else
+	    adrep->add( old);
+	  delete old;
+	  newBody = true;
+	  break;
+	}
+	else {
+	  // Missmatch
+	  delete bdrep;
+	  delete adrep;
+	  return wb_attribute();
+	}
+      }
+      if ( newBody)
+	break;
+      old = adrep;
+      adrep = adrep->next(&sts);
+      delete old;
     }
-    old = adrep;
-    adrep = adrep->next(&sts);
-    delete old;
   }
 
-
-  // We have found a matching attribute
-  if (ODD(sts)) {
-    if (arp->Size == 0 || arp->Size > (adrep->size() / adrep->nElement())) {
-      // Map whole atribute
-      idx = (adrep->nElement() > 1) ? -1 : 0;
-    } else if (adrep->nElement() > 1) {
-      idx = (arp->Offset - adrep->offset()) / (adrep->size() / adrep->nElement());
-    }
-
-    delete cdrep;
-    delete bdrep;
-
-    wb_attribute a(LDH__SUCCESS, orep, adrep, idx);
-    return a;
-  }
-  
-
- error:
-  delete orep;
-  delete cdrep;
   delete bdrep;
+  orep->unref();
   return wb_attribute();
 }
 

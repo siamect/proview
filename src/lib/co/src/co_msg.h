@@ -5,6 +5,9 @@
 # include "pwr.h"
 #endif
 
+#if defined __cplusplus
+extern "C" {
+#endif
 
 char *
 msg_GetMsg (
@@ -28,4 +31,15 @@ msg_GetMessage (
   int			bufSize
 );
 
+#if defined __cplusplus
+}
 #endif
+#endif
+
+
+
+
+
+
+
+

@@ -252,7 +252,7 @@ class Wtt {
     ~Wtt();
 };
 
-Widget wtt_create_popup_menu( Wtt *wtt, pwr_tObjid objid, pwr_tCid cid,
+Widget wtt_create_popup_menu( Wtt *wtt, pwr_sAttrRef aref, pwr_tCid cid,
 			      void (*message_cb)(void *, char, char *));
 
 #if defined __cplusplus

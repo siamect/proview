@@ -122,6 +122,8 @@ public:
   bool hasSegment( int idx = 0) const throw (wb_error) { check(); return m_nrep->hasSegment( idx);}
   bool hasAttribute( int idx = 0) const throw (wb_error) { check(); return m_nrep->hasAttribute( idx);}
   bool hasAttrIndex( int idx = 0) const throw (wb_error) { check(); return m_nrep->hasAttrIndex( idx);}
+  int attributes() { check(); return m_nrep->attributes();}
+  int segments() { check(); return m_nrep->segments();}
   int attrIndex( int idx = 0) const throw (wb_error) { check(); return m_nrep->attrIndex( idx);}
   char *segment( int idx = 0, char *res = 0) const throw (wb_error) { check(); return m_nrep->segment( idx, res);}
   char *path( char *res = 0) const throw (wb_error) { check(); return m_nrep->path( res);}
@@ -141,7 +143,8 @@ public:
   bool objectIsEqual( const char *n) const throw (wb_error) { check(); return m_nrep->objectIsEqual( n);}
   bool segmentIsEqual( const char *n, int idx = 0) const throw (wb_error) { check(); return m_nrep->segmentIsEqual( n, idx);}
   bool attributeIsEqual( const char *n, int idx = 0) const throw (wb_error) { check(); return m_nrep->attributeIsEqual( n, idx);}
-  char *wholeAttr() const throw (wb_error) { check(); return m_nrep->wholeAttr();}
+  char *segmentsAll( int idx = 0) const throw (wb_error) { check(); return m_nrep->segmentsAll(idx);}
+  char *attributesAll( int idx = 0) const throw (wb_error) { check(); return m_nrep->attributesAll(idx);}
 
   // Id representation
   char *vid( char *res = 0) const throw (wb_error) { check(); return m_nrep->volume( res);}
@@ -149,6 +152,8 @@ public:
   char *bodyName( char *res = 0) const throw (wb_error) { check(); return m_nrep->segment( 2, res);}
   int bodyOffset() const throw (wb_error) { check(); return m_nrep->bodyOffset();}
   int bodySize() const throw (wb_error) { check(); return m_nrep->bodySize();}
+  bool hasSuper() const throw (wb_error) { check(); return m_nrep->hasSuper();}
+  void setShadowed( bool shadowed) throw (wb_error) { check(); m_nrep->setShadowed(shadowed);}
 
   // bool bodyId();
   // bool bodyName();

@@ -21,10 +21,13 @@
 extern "C" {
 #endif
 
-#define ldh_cWbdbVersionStr	  "V2.7.0"
+#define ldh_cWbdbVersionStr	  "V4.1.0"
 #define ldh_cWBVol  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 254) 
 #define ldh_cWBVolLocal  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 252) 
 #define ldh_cDirectoryVolume  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 253)
+#define ldh_cPlcConnectVolume  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 251)
+#define ldh_cPlcHostVolume  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 250)
+#define ldh_cIoConnectVolume  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 249)
 #define ldh_cVolatileVolMin  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 0)
 #define ldh_cVolatileVolMax  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 100)
 
@@ -52,6 +55,7 @@ typedef struct ldh_s_MenuItem	ldh_sMenuItem;
 typedef struct ldh_s_MenuCall	ldh_sMenuCall;
 typedef struct ldh_s_ObjContext	ldh_sObjContext;
 typedef struct ldh_s_ObjInfo	ldh_sObjInfo;
+typedef struct ldh_s_AttrRefInfo ldh_sAttrRefInfo;
 typedef struct ldh_s_VolumeInfo	ldh_sVolumeInfo;
 typedef struct ldh_s_ParDef	ldh_sParDef;
 typedef struct ldh_s_RefInfo	ldh_sRefInfo;
@@ -67,7 +71,8 @@ typedef enum {
   ldh_eVolRep_Db,
   ldh_eVolRep_Dbs,
   ldh_eVolRep_Wbl,
-  ldh_eVolRep_Mem
+  ldh_eVolRep_Mem,
+  ldh_eVolRep_Ref
 } ldh_eVolRep;
 
 typedef enum {
@@ -132,6 +137,8 @@ typedef enum {
   ldh_eMenuSet_Many,
   ldh_eMenuSet_None,
   ldh_eMenuSet_Object,
+  ldh_eMenuSet_ObjectAttr,
+  ldh_eMenuSet_Array,
   ldh_eMenuSet_
 } ldh_eMenuSet;
 
@@ -156,6 +163,11 @@ typedef enum {
 } ldh_eDbCallBack;
 
 typedef enum {
+  ldh_mParDef_Shadowed 	= 1 << 0,
+  ldh_mParDef_Super	= 1 << 1
+} ldh_mParDef;
+
+typedef enum {
   ldh_eName_Object      = cdh_mName_object,
   ldh_eName_Default     = cdh_mName_object,
   ldh_eName_Hierarchy   = cdh_mName_pathStrict,
@@ -167,9 +179,11 @@ typedef enum {
   ldh_eName_OixString   = cdh_mName_form_id | cdh_mName_object,
   ldh_eName_VolumeId    = cdh_mName_form_id | cdh_mName_idString | cdh_mName_volume,
   ldh_eName_VidString   = cdh_mName_form_id | cdh_mName_volume,
-  ldh_eName_Aref        = cdh_mName_object | cdh_mName_attribute,
+  ldh_eName_Aref        = cdh_mName_path | cdh_mName_attribute,
+  ldh_eName_ArefObject  = cdh_mName_object | cdh_mName_attribute,
   ldh_eName_ArefVol     = cdh_mName_volume | cdh_mName_object | cdh_mName_attribute,
-  ldh_eName_ArefExport  = cdh_mName_form_id | cdh_mName_volume | cdh_mName_object | cdh_mName_attribute
+  ldh_eName_ArefExport  = cdh_mName_form_id | cdh_mName_volume | cdh_mName_object | cdh_mName_attribute,
+  ldh_eName_Ref  	= cdh_mName_ref | cdh_mName_attribute
 } ldh_eName;
 #if 0
 typedef enum {		/* Object and attribute name types. */
@@ -322,10 +336,20 @@ struct ldh_s_VolumeInfo {
   ldh_eVolRep		VolRep;
 };
 
+struct ldh_s_AttrRefInfo {
+  int			size;
+  int			nElement;
+  int			index;
+  pwr_eType		type;
+  pwr_tTid		tid;
+  int			flags;
+};
+
 struct ldh_s_ParDef {
   pwr_tObjName		ParName;
   unsigned long		ParLevel;
   pwr_eClass		ParClass;
+  unsigned int	       	Flags;
   pwr_uParDef		*Par;
 };
 
@@ -360,7 +384,7 @@ pwr_tStatus
 ldh_AttrRefToName (
   ldh_tSession	Session,
   pwr_sAttrRef		*AttrRef,
-  ldh_eName		NameType,
+  int			NameType,
   char			**Name,
   int			*Size
 );
@@ -455,7 +479,8 @@ pwr_tStatus ldh_CopyObjectTrees (
   pwr_sAttrRef	    *AttrRef,
   pwr_tObjid	    destobject,
   ldh_eDest	    dest,
-  pwr_tBoolean	    Self
+  pwr_tBoolean	    Self,
+  int		    keepref
 );
 
 pwr_tStatus ldh_CreateObject (
@@ -604,6 +629,18 @@ pwr_tStatus ldh_GetObjectBodyDef (
 #endif
   int *rows
 );
+pwr_tStatus ldh_GetTrueObjectBodyDef (
+  ldh_tSession Session,
+  pwr_tClassId Class,
+  char *bodyname,
+  int maxlev,
+#if 0 // def __cplusplus
+  ldh_sParDef (**bodydef)[1],
+#else
+  ldh_sParDef **bodydef,
+#endif
+  int *rows
+);
 pwr_tStatus ldh_GetObjectBuffer (
   ldh_tSession Session,
   pwr_tObjid object,
@@ -617,6 +654,18 @@ pwr_tStatus ldh_GetObjectClass (
   ldh_tSession Session,
   pwr_tObjid object,
   pwr_tClassId *Class
+);
+pwr_tStatus
+ldh_GetAttrRefTid(
+  ldh_tSession session,
+  pwr_sAttrRef *arp,
+  pwr_tTid *tid
+);
+pwr_tStatus
+ldh_GetAttrRefType(
+  ldh_tSession session,
+  pwr_sAttrRef *arp,
+  pwr_eType *type
 );
 pwr_tStatus ldh_GetObjectContext (
   ldh_tSession Session,
@@ -780,7 +829,7 @@ pwr_tStatus
 ldh_ObjidToName (
   ldh_tSession	session,
   pwr_tObjid	objid,
-  ldh_eName	nameType,
+  int		nameType,
   char		*nameBuffer,
   int		maxSize,
   int		*size
@@ -1006,6 +1055,20 @@ ldh_SetDocBlock(
   ldh_tSession session, 
   pwr_tOid oid, 
   char *block
+);
+
+pwr_tStatus
+ldh_GetAttrRefInfo(
+  ldh_tSession session, 
+  pwr_sAttrRef *arp, 
+  ldh_sAttrRefInfo *info
+);
+
+pwr_tStatus
+ldh_GetSuperClass(
+  ldh_tSession session,
+  pwr_tCid *super,
+  pwr_tCid cid
 );
 
 #ifdef __cplusplus

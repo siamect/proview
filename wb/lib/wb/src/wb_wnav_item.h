@@ -40,6 +40,7 @@ typedef enum {
 	wnav_eItemType_AttrArray,
 	wnav_eItemType_AttrArrayOutput,
 	wnav_eItemType_AttrArrayElem,
+	wnav_eItemType_AttrObject,
 	wnav_eItemType_Enum,
 	wnav_eItemType_Mask,
 	wnav_eItemType_ObjectName,
@@ -73,6 +74,7 @@ class WItem {
     int		open_trace( WNav *wnav, double x, double y)
 				{ return 1;};
     void     	close( WNav *wnav, double x, double y) {};
+    virtual pwr_sAttrRef aref();
     wnav_eItemType	type;
     pwr_tObjid		objid;
     int			is_root;
@@ -224,6 +226,7 @@ class WItemBaseAttr : public WItem {
     char body[20];
     pwr_tClassId classid;
 
+    virtual pwr_sAttrRef aref();
     int get_value( char **value);	// The value should be freed with XtFree
     int update() { return 1;};
 };
@@ -338,6 +341,23 @@ class WItemAttrArrayElem : public WItemBaseAttr {
      int close( double x, double y);
      int update();
      int get_value( char **value);
+};
+
+class WItemAttrObject : public WItemBaseAttr {
+  public:
+    bool is_elem;
+    int idx;
+  
+    WItemAttrObject( 
+	WNavBrow *item_brow, ldh_tSesContext item_ldhses, 
+	pwr_tObjid item_objid,
+	brow_tNode dest, flow_eDest dest_code,
+	char *attr_name, int attr_type_id, 
+	int attr_size, bool attr_is_elem, int attr_idx, 
+	int attr_flags, char *attr_body, int fullname);
+    int     open_children( double x, double y) {return 1;};
+    int     open_attributes( double x, double y);
+    int     close( double x, double y);
 };
 
 class WItemEnum : public WItemBaseAttr {

@@ -127,8 +127,8 @@ XmAnyCallbackStruct	*data;
 
 	/* Check that the parent node is saved */
 	
-	wind = foectx->grectx->window_object;
-	plc = wind->hw.plcobject_pointer;
+	wind = foectx->grectx->wind;
+	plc = wind->hw.plc;
 	parent_node = wind->hw.parent_node_pointer;
 	if ( parent_node != 0 )
 	{
@@ -154,14 +154,14 @@ XmAnyCallbackStruct	*data;
 	  sts = gre_undelete_reset( foectx->grectx);
 	}
 	else {
-	  sts = ldh_ObjidToName( wind->hw.ldhsession, plc->lp.objdid,
+	  sts = ldh_ObjidToName( wind->hw.ldhses, plc->lp.oid,
 				 ldh_eName_Hierarchy, name, sizeof( name), &size); 
 	  if ( EVEN(sts)) return;
 
-	  sts = ldh_GetParent( wind->hw.ldhsession, plc->lp.objdid, &classdef);
+	  sts = ldh_GetParent( wind->hw.ldhses, plc->lp.oid, &classdef);
 	  if ( EVEN(sts)) return;
 
-	  sts = ldh_ObjidToName( wind->hw.ldhsession, classdef,
+	  sts = ldh_ObjidToName( wind->hw.ldhses, classdef,
 				 ldh_eName_Object, classname, sizeof( classname), &size); 
 	  if ( EVEN(sts)) return;
 	  cdh_ToLower( classname, classname);
@@ -171,7 +171,7 @@ XmAnyCallbackStruct	*data;
 	  sts = gre_undelete_reset( foectx->grectx);	  
 	}
 	foe_disable_ldh_cb(foectx);
-	sts = vldh_wind_save( foectx->grectx->window_object);
+	sts = vldh_wind_save( foectx->grectx->wind);
 	foe_enable_ldh_cb(foectx);
 	error_msg( sts);
 	NORMAL_CURSOR;
@@ -264,12 +264,12 @@ XmAnyCallbackStruct	*data;
 	/*************************************************/
 	/* BUGGFIX, quit on suborder windows not allowed */
 	/*************************************************/
-	wind = foectx->grectx->window_object;
-	sts = ldh_GetObjectClass( wind->hw.ldhsession,
-			wind->lw.parent_node_did,
+	wind = foectx->grectx->wind;
+	sts = ldh_GetObjectClass( wind->hw.ldhses,
+			wind->lw.poid,
 			&class);
 	error_msg( sts);
-	if (( class == vldh_class( wind->hw.ldhsession, VLDH_CLASS_ORDER)) &&
+	if (( class == pwr_cClass_order) &&
 		((wind->hw.status & VLDH_CREATE) != 0 ))
 	{
 	  foe_message( foectx, 
@@ -279,7 +279,7 @@ XmAnyCallbackStruct	*data;
 	/**************************************************/
 
 	/* Check that there is no subwindows in this window */
-	sts = vldh_get_nodes( foectx->grectx->window_object, 
+	sts = vldh_get_nodes( foectx->grectx->wind, 
 			&node_count, &nodelist);
 	error_msg( sts);
 	node_ptr = nodelist;
@@ -362,11 +362,11 @@ void foe_activate_quit (
 	  return;
 	}
 
-	wind = foectx->grectx->window_object;
+	wind = foectx->grectx->wind;
 
 	/* Check that there is no subwindows created during this session
 	   that is not saved while the node also is not saved */
-	sts = vldh_get_wind_subwindows( foectx->grectx->window_object, 
+	sts = vldh_get_wind_subwindows( foectx->grectx->wind, 
 			&wind_count, &windlist);
 	error_msg( sts);
 	wind_ptr = windlist;
@@ -400,15 +400,15 @@ void foe_activate_quit (
         {
 	  /* If session is not empty revert it first */
 /*
-	  sts = ldh_GetSessionInfo( wind->hw.ldhsession, &info);
+	  sts = ldh_GetSessionInfo( wind->hw.ldhses, &info);
 	  error_msg( sts);
 
 	  if ( !info.Empty )
 	  {
-	    sts = ldh_SetSession( wind->hw.ldhsession,
+	    sts = ldh_SetSession( wind->hw.ldhses,
 			ldh_eAccess_ReadWrite);
 	    error_msg( sts);
-	    sts = ldh_RevertSession( wind->hw.ldhsession);
+	    sts = ldh_RevertSession( wind->hw.ldhses);
 	    error_msg( sts);
 	  }
 */
@@ -419,7 +419,7 @@ void foe_activate_quit (
         }
 
 	/* Check if changes are made */
-	sts = ldh_GetSessionInfo( wind->hw.ldhsession, &info);
+	sts = ldh_GetSessionInfo( wind->hw.ldhses, &info);
 	error_msg( sts);
 	sts = vldh_get_wind_modification( wind, &vldh_mod);
 
@@ -559,7 +559,7 @@ int		sts;
 
 	vldh_t_wind	wind;
 
-	wind = foectx->grectx->window_object;
+	wind = foectx->grectx->wind;
 
 	if ( data->event->type == ButtonRelease 
 	     && data->event->xbutton.state & Mod5Mask 
@@ -649,7 +649,7 @@ XmAnyCallbackStruct	*data;
 	  return;
 	}
 
-	sts = gcg_plcwindow_compile( foectx->grectx->window_object, 0, 
+	sts = gcg_plcwindow_compile( foectx->grectx->wind, 0, 
 		&errcount, &warncount, 0, 0);
 	if ( sts == GSX__AMBIGOUS_EXECUTEORDER )
 	{
@@ -736,7 +736,7 @@ XmAnyCallbackStruct	*data;
 	  return;
 	}
 
-	wind = foectx->grectx->window_object;
+	wind = foectx->grectx->wind;
 
 	sts = vldh_get_wind_modification( wind, &vldh_mod);
 
@@ -781,7 +781,7 @@ XmAnyCallbackStruct	*data;
 	  return;
 	}
 	
-	sts = gcg_plc_compile( wind->hw.plcobject_pointer, 1, 
+	sts = gcg_plc_compile( wind->hw.plc, 1, 
 		&plc_errcount, &plc_warncount, 0, 0);
 	warncount += plc_warncount;
 	errcount += plc_errcount;
@@ -929,7 +929,7 @@ XmAnyCallbackStruct	*data;
 	  BEEP;
 	}
 
-        switch ( nodelist[0]->ln.classid) {
+        switch ( nodelist[0]->ln.cid) {
 	  case pwr_cClass_Text:
           case pwr_cClass_BodyText:
           case pwr_cClass_Head:
@@ -1779,7 +1779,7 @@ XmToggleButtonCallbackStruct     *data;
 
 	if ( foectx->show_executeorder)
 	{
-	  sts = exo_wind_exec( foectx->grectx->window_object);
+	  sts = exo_wind_exec( foectx->grectx->wind);
 	  if ( sts == GSX__AMBIGOUS_EXECUTEORDER )
 	  {
 	    foe_message( foectx, "Execute order error");
@@ -2230,7 +2230,7 @@ XmAnyCallbackStruct	*data;
 	int			size;
 	int			sts;
 
-	wind = foectx->grectx->window_object;
+	wind = foectx->grectx->wind;
 
 	gre_get_selnodes( foectx->grectx, &node_count, &nodelist);
 	if ( node_count != 1 )
@@ -2239,7 +2239,7 @@ XmAnyCallbackStruct	*data;
 	  BEEP;
 	}
 
-	sts = ldh_ClassIdToName( wind->hw.ldhsession, nodelist[0]->ln.classid, cname,
+	sts = ldh_ClassIdToName( wind->hw.ldhses, nodelist[0]->ln.cid, cname,
 				 sizeof(cname), &size);
 	if ( EVEN(sts)) return;
 
@@ -3006,7 +3006,7 @@ static void foe_exit_save(
 	int	sts;
 
 	/* Check that the parent node is saved */
-	wind = foectx->grectx->window_object;
+	wind = foectx->grectx->wind;
 	parent_node = wind->hw.parent_node_pointer;
 	if ( parent_node != 0 )
 	{
@@ -3025,7 +3025,7 @@ static void foe_exit_save(
 	}
 	CLOCK_CURSOR;
 	foe_disable_ldh_cb(foectx);
-	sts = vldh_wind_save( foectx->grectx->window_object);
+	sts = vldh_wind_save( foectx->grectx->wind);
 	error_msg( sts);
 	NORMAL_CURSOR;
 	if ( sts == VLDH__PLCNOTSAVED )
@@ -3061,15 +3061,15 @@ static void foe_exit_nosave(
 	vldh_t_wind		wind;
 	pwr_tClassId		class;
 
-	wind = foectx->grectx->window_object;
+	wind = foectx->grectx->wind;
 
 	/*************************************************/
 	/* BUGGFIX, quit on suborder windows not allowed */
 	/*************************************************/
-	ldh_GetObjectClass( wind->hw.ldhsession,
-			wind->lw.parent_node_did,
+	ldh_GetObjectClass( wind->hw.ldhses,
+			wind->lw.poid,
 			&class);
-	if ( class == vldh_class( wind->hw.ldhsession, VLDH_CLASS_ORDER))
+	if ( class == pwr_cClass_order)
 	{
 	  foe_message( foectx, 
 		"Operationen not allowed, do save !!");

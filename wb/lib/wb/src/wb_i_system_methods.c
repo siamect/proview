@@ -18,6 +18,7 @@ pwr_dImport pwr_BindMethods($ClassDef);
 pwr_dImport pwr_BindMethods($ClassHier);
 pwr_dImport pwr_BindMethods($Attribute);
 pwr_dImport pwr_BindMethods($ObjBodyDef);
+pwr_dImport pwr_BindMethods($AttrRef);
 
 pwr_dExport pwr_BindClasses(System) = {
   pwr_BindClass($AttrXRef),
@@ -31,5 +32,6 @@ pwr_dExport pwr_BindClasses(System) = {
   pwr_BindClass($ClassHier),
   pwr_BindClass($Attribute),
   pwr_BindClass($ObjBodyDef),
+  pwr_BindClass($AttrRef),
   pwr_NullClass
 };

@@ -100,7 +100,7 @@ options {
 		{$setType(OBJECT);}
 	|	("EndObject" WS) => "EndObject" WS!
 		{$setType(ENDOBJECT);}
-	|	("SObject" WS) => "SObject"! WS! soname:('a'..'z'|'A'..'Z'|'0'..'9'|'$'|'_'|':'|SWEC)+
+	|	("SObject" WS) => "SObject"! WS! soname:('a'..'z'|'A'..'Z'|'0'..'9'|'$'|'_'|':'|'-'|SWEC)+
 		{$setType(SOBJECT);}
 	|	("EndSObject" WS) => "EndSObject" WS!
 		{$setType(ENDSOBJECT);}
@@ -120,7 +120,7 @@ options {
 		{$setType(BODY);}
 	|	("EndBody" WS) => "EndBody" WS!
 		{$setType(ENDBODY);}
-	|	("Attr" WS) => "Attr"! WS! aname:('a'..'z'|'A'..'Z'|'0'..'9'|'$'|'_'|SWEC|'['|']')+
+	|	("Attr" WS) => "Attr"! WS! aname:('a'..'z'|'A'..'Z'|'0'..'9'|'$'|'_'|SWEC|'['|']')+ ('.'('a'..'z'|'A'..'Z'|'0'..'9'|'$'|'_'|SWEC|'['|']')+)*
 		{$setType(ATTRIBUTE);}
 	|	(DIGITS '.' DIGITS '.' ) => DIGITS '.' DIGITS '.' DIGITS '.' DIGITS (':' DIGITS)?
 		{$setType(OID);}

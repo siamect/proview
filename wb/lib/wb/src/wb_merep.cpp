@@ -255,57 +255,36 @@ int wb_merep::getAttrInfoRec( wb_attrname *attr, pwr_eBix bix, pwr_tCid cid, siz
   wb_bdrep *bd = 0;
   if ( bix == 0) {
     // Search in all bodies
-    adrep = cd->adrep( &sts, attr->attribute(level));
-    if ( EVEN(sts)) {
-      delete cd;
-      return 0;
-    }
+    adrep = cd->adrep( &sts, attr->attributesAll(level));
+    if ( EVEN(sts)) { delete cd; return 0;}
   }
   else {
     // Search in specified body
     bd = cd->bdrep( &sts, bix);
-    if ( EVEN(sts)) {
-      delete cd;
-      return 0;
-    }
-    adrep = bd->adrep( &sts, attr->attribute(level));
-    if ( EVEN(sts)) {
-      delete cd;
-      delete bd;
-      return 0;
-    }
+    if ( EVEN(sts)) { delete cd; return 0;}
+
+    adrep = bd->adrep( &sts, attr->attributesAll(level));
+    if ( EVEN(sts)) { delete cd; delete bd; return 0;}
   }
 
-  if ( attr->hasAttrIndex( level)) {
-    int index = attr->attrIndex( level);
-    if ( index >= adrep->nElement())
-      return 0;
-
-    *offset += adrep->offset() + index * adrep->size() / adrep->nElement();
+  if ( attr->hasAttrIndex(attr->attributes()-1)) {
     *size = adrep->size() / adrep->nElement();
+    *offset += adrep->offset() + attr->attrIndex(attr->attributes()-1) * *size;
+    *elements = 1;
   }
   else {
     *offset += adrep->offset();
     *size = adrep->size();
-  }
-  if ( attr->hasAttribute( level + 1)) {
-    // Fix , Subclass: get cid from type of attr
-    if ( !getAttrInfoRec( attr, bix, cid, size, offset, tid, elements, type, flags,
-			  level + 1)) {
-      delete cd;
-      if ( bd) delete bd;
-      delete adrep;
-      return 0;
-    }
-  }
-  else {
-    *tid = adrep->tid();
-    *type = adrep->type();
     *elements = adrep->nElement();
-    *flags = adrep->flags();
   }
+  *tid = adrep->tid();
+  *type = adrep->type();
+  *flags = adrep->flags();
+
   delete cd;
   if ( bd) delete bd;
   delete adrep;
   return 1;
 }
+
+

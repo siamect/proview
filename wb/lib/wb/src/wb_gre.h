@@ -87,7 +87,7 @@ struct s_gre_ctx {
   float		grid_size;
   unsigned long	gridobject;
   unsigned long	grid_on;
-  vldh_t_wind	window_object;
+  vldh_t_wind	wind;
   unsigned long	conref_nodetypeid;  
   unsigned long	display_nodetypeid;  
 

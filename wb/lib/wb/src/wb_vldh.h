@@ -21,89 +21,6 @@
 #define	OT_POINT	16
 #define	OT_SUBORDER	200
 
-/* Class index for quick reference */
-#define	VLDH_CLASS_ORDER	0
-#define	VLDH_CLASS_SORDER	1
-#define	VLDH_CLASS_LORDER	2
-#define	VLDH_CLASS_CORDER	3
-#define	VLDH_CLASS_DORDER	4
-#define	VLDH_CLASS_TRANS	5
-#define	VLDH_CLASS_STEP		6
-#define	VLDH_CLASS_INITSTEP	7
-#define	VLDH_CLASS_SUBSTEP	8
-#define VLDH_CLASS_CONANALOG	9
-#define VLDH_CLASS_CONDIGITAL	10
-#define VLDH_CLASS_CONGRAFCET	11
-#define	VLDH_CLASS_SSBEGIN	12
-#define	VLDH_CLASS_SSEND	13
-#define	VLDH_CLASS_POINT	14
-#define	VLDH_CLASS_DI		15
-#define	VLDH_CLASS_DO		16
-#define	VLDH_CLASS_DV		17
-#define	VLDH_CLASS_AI		18
-#define	VLDH_CLASS_AO		19
-#define	VLDH_CLASS_AV		20
-#define	VLDH_CLASS_CO		21
-#define	VLDH_CLASS_GETDP	22
-#define	VLDH_CLASS_GETAP	23
-#define	VLDH_CLASS_ORDERACT	24
-#define	VLDH_CLASS_SHOWPLCATTR	25
-#define	VLDH_CLASS_PORDER	26
-#define	VLDH_CLASS_GETDI	27
-#define	VLDH_CLASS_GETDO	28
-#define	VLDH_CLASS_GETDV	29
-#define	VLDH_CLASS_GETAI	30
-#define	VLDH_CLASS_GETAO	31
-#define	VLDH_CLASS_GETAV	32
-#define	VLDH_CLASS_AND		33
-#define	VLDH_CLASS_STODO	34
-#define	VLDH_CLASS_STODV	35
-#define	VLDH_CLASS_STOAO	36
-#define	VLDH_CLASS_STOAV	37
-#define	VLDH_CLASS_SETDO	38
-#define	VLDH_CLASS_SETDV	39
-#define	VLDH_CLASS_RESDO	40
-#define	VLDH_CLASS_RESDV	41
-#define	VLDH_CLASS_STODP	42
-#define	VLDH_CLASS_STOAP	43
-#define	VLDH_CLASS_GETPI	44
-#define	VLDH_CLASS_SETDP	45
-#define	VLDH_CLASS_RESDP	46
-#define	VLDH_CLASS_RTNODE	47
-#define	VLDH_CLASS_PLCPGM	48
-#define	VLDH_CLASS_PLANTHIER	49
-#define	VLDH_CLASS_WINDOWPLC	50
-#define	VLDH_CLASS_WINDOWCOND	51
-#define	VLDH_CLASS_WINDOWORDERACT 52
-#define	VLDH_CLASS_RESET_SO 	53
-#define	VLDH_CLASS_AANALYSE 	54
-#define	VLDH_CLASS_DANALYSE 	55
-#define	VLDH_CLASS_CONTRACE 	56
-#define	VLDH_CLASS_CSTOAO	57
-#define	VLDH_CLASS_CSTOAV	58
-#define	VLDH_CLASS_CSTOAP	59
-#define	VLDH_CLASS_NODEHIER	60
-#define	VLDH_CLASS_POS3P	61
-#define	VLDH_CLASS_INC3P	62
-#define	VLDH_CLASS_WINDOWSUBSTEP 63
-#define	VLDH_CLASS_STOIP	64
-#define	VLDH_CLASS_CSTOIP	65
-#define	VLDH_CLASS_GETIP	66
-#define	VLDH_CLASS_EXTERNREF	67
-#define	VLDH_CLASS_TEXT		68
-#define	VLDH_CLASS_LIBHIER	69
-#define VLDH_CLASS_CONDATA	70
-#define	VLDH_CLASS_PO		71
-#define	VLDH_CLASS_STODI	72
-#define	VLDH_CLASS_SETDI	73
-#define	VLDH_CLASS_RESDI	74
-#define	VLDH_CLASS_GETDATA	75
-#define	VLDH_CLASS_PLCTHREAD	76
-#define VLDH_CLASS_STEPDIV	77
-#define VLDH_CLASS_STEPCONV	78
-#define VLDH_CLASS_TRANSDIV	79
-#define VLDH_CLASS_TRANSCONV	80
-
 #define MAXNO_NODES	500
 #define MAX_OBJECTTYPES	300
 #define VLDH_NODE_SOURCE	1
@@ -154,9 +71,9 @@ typedef	struct	{
     struct nodetag   	*node_list_pointer;	/* pointer to nodelist */
     struct contag 	*con_list_pointer;	/* pointer to connection list*/
     struct nodetag  	*parent_node_pointer;	/* zero if parent is a plc obj*/
-    struct plc_objtag   *plcobject_pointer;	/* always defined */
+    struct plc_objtag   *plc;			/* always defined */
     void		*foectx;
-    ldh_tSesContext	ldhsession;
+    ldh_tSesContext	ldhses;
   } hw;
 /*  struct	{
     pwr_tObjid		objdid;
@@ -175,9 +92,9 @@ typedef	struct	{
 
 typedef	struct	plc_objtag { 
   struct 	{
-    int			status;		/* deleted , created, loaded etc */
-    struct plc_objtag	*plcobj_pointer;	/* link to next plcobject in vldh */
-    vldh_t_windobject 	*windowobject;		/* if zero wind not loaded */
+    int			status;			/* deleted , created, loaded etc */
+    struct plc_objtag	*next;			/* link to next plcobject in vldh */
+    vldh_t_windobject 	*wind;			/* if zero wind not loaded */
     char		object_name[80];	
     ldh_tSesContext	ldhsesctx;		/* ldh session ctx from hied */
     ldh_tWBContext	ldhwbctx;		/* workbench ctx from hied */
@@ -192,8 +109,8 @@ typedef	struct nodetag	{
     char		name[32];		/* segment name */
     flow_tNode		node_id;		/* flow node id */
     int			status;			/* created, loaded... */
-    vldh_t_windobject 	*window_pointer;
-    struct nodetag	*object_pointer;	/* pointer to next node */
+    vldh_t_windobject 	*wind;
+    struct nodetag	*next;			/* pointer to next node */
     vldh_t_windobject 	*subwindowobject[VLDH_MAX_SUBWINDOWS]; /* pointer to 
 						  subwindow in vldh */
     unsigned long	con_count[VLDH_MAX_CONPOINTS];	/* nr of cons to every
@@ -230,12 +147,12 @@ typedef	struct contag	{
 	struct	{ 
     	  int		vldhtype;		/* node or con, first position!*/
 	  int		status;
-	  vldh_t_node	source_node_pointer;
-	  vldh_t_windobject *window_pointer; 	/* vldh */
+	  vldh_t_node	source_node;
+	  vldh_t_windobject *wind; 		/* vldh */
 	  char		name[32];		/* segment name */
 	  flow_tCon	con_id;			/* flow */
-	  vldh_t_node	dest_node_pointer;	/* vldh */
-	  struct contag	*object_pointer;	/* next connection obj vldh */
+	  vldh_t_node	dest_node;		/* vldh */
+	  struct contag	*next;			/* next connection obj vldh */
 	  int		redrawn;		/* flag for redrawing refcons */
 	  pwr_tSubid	trace_subid;
 		} hc;
@@ -645,6 +562,11 @@ int vldh_get_wind_modification (
 char	*vldh_IdToStr(
   int		idx,
   pwr_tObjid 	objid
+);
+
+char	*vldh_AttrRefToStr(
+  int		idx,
+  pwr_sAttrRef 	ar
 );
 
 char *vldh_VolumeIdToStr( 

@@ -31,7 +31,9 @@ all : init copy exe
 
 init :
 
-copy : $(inc_dir)/pwr_baseclasses.h
+copy : $(inc_dir)/pwr_baseclasses.h \
+       $(inc_dir)/pwr_baseclasses.hpp
+
 
 lib  : $(load_dir)/pwrb.dbs
 
@@ -51,11 +53,16 @@ $(inc_dir)/pwr_baseclasses.h :
 	@ echo "Generating struct files for pwrb classes..."
 	@ co_convert -s -d $(inc_dir) "$(pwre_sroot)/wbl/pwrb/src/pwrb_c_*.wb_load"
 
+$(inc_dir)/pwr_baseclasses.hpp :
+	@ echo "Generating hpp files for pwrb classes..."
+	@ co_convert -po -d $(inc_dir) "$(pwre_sroot)/wbl/pwrb/src/pwrb_c_*.wb_load"
+
 $(doc_dir)/orm/pwrb_allclasses.html :
 	@ echo "Generating html files for pwrb classes..."
 	@ co_convert -w -d $(doc_dir)/orm -g $(pwre_sroot)/wbl/pwrb/src/cnv_setup.dat "$(pwre_sroot)/wbl/pwrb/src/pwrb_c_*.wb_load"
 	@ echo "Generating html files for pwrb structs..."
 	@ co_convert -c -d $(doc_dir)/orm $(inc_dir)/pwr_baseclasses.h
+	@ co_convert -c -d $(doc_dir)/orm $(inc_dir)/pwr_baseclasses.hpp
 	@ echo "Generating html files for pwrb code..."
 	@ co_convert -c -d $(doc_dir)/orm "$(pwre_sroot)/lib/rt/src/rt_plc_macro_*.h"
 	@ co_convert -c -d $(doc_dir)/orm "$(pwre_sroot)/lib/rt/src/rt_plc_*.c"

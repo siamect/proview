@@ -13,6 +13,7 @@
 #endif
 
 #include "pwr_class.h"
+#include "pwr_baseclasses.h"
 #include "wb_foe_msg.h"
 #include "wb_vldh_msg.h"
 #include "wb_foe_macros.h"
@@ -140,7 +141,7 @@ vldh_t_wind	wind;
 
 	(*exoctx)->wind = wind;
 	(*exoctx)->execute_counter = 1;
-	(*exoctx)->ldhses = wind->hw.ldhsession;
+	(*exoctx)->ldhses = wind->hw.ldhses;
 }
 /*************************************************************************
 *
@@ -252,8 +253,8 @@ vldh_t_node	node;
 	  {
 	    /* Get the full hierarchy name for the node */
 	    status = ldh_ObjidToName( 
-		(node->hn.window_pointer)->hw.ldhsession, 
-		node->ln.object_did, ldh_eName_Hierarchy,
+		(node->hn.wind)->hw.ldhses, 
+		node->ln.oid, ldh_eName_Hierarchy,
 		hier_name, sizeof( hier_name), &size);
 	    if( EVEN(status)) return status;
 	    if (logfile != NULL)
@@ -293,7 +294,7 @@ vldh_t_node	node;
 	int			executeordermethod;
 
 	/* Get executeorder method for this node */
-	sts = ldh_GetClassBody( exoctx->ldhses, node->ln.classid, 
+	sts = ldh_GetClassBody( exoctx->ldhses, node->ln.cid, 
 		"GraphPlcNode", &bodyclass, (char **) &graphbody, &size);
 	if ( EVEN(sts)) return sts;
 
@@ -331,7 +332,7 @@ int exo_wind_exec (
 	int			executeordermethod;
 
 	/* Get executeorder method for this node */
-	sts = ldh_GetClassBody(wind->hw.ldhsession, wind->lw.classid, 
+	sts = ldh_GetClassBody(wind->hw.ldhses, wind->lw.cid, 
 		"GraphPlcWindow", &bodyclass, (char **) &graphbody, &size);
 	if ( EVEN(sts)) return sts;
 
@@ -390,7 +391,7 @@ vldh_t_node	node;
 		connectionpoint of the current node */
 
 	/* Get the runtime parameters for this class */
-	sts = ldh_GetObjectBodyDef( exoctx->ldhses, node->ln.classid, 
+	sts = ldh_GetObjectBodyDef( exoctx->ldhses, node->ln.cid, 
 			"RtBody", 1, &bodydef, &rows);
 	if ( ODD(sts) )
 	{
@@ -563,7 +564,7 @@ vldh_t_node	node;
 		connectionpoint of the current node */
 
 	/* Get the runtime parameters for this class */
-	sts = ldh_GetObjectBodyDef( exoctx->ldhses, node->ln.classid, 
+	sts = ldh_GetObjectBodyDef( exoctx->ldhses, node->ln.cid, 
 			"RtBody", 1, &bodydef, &rows);
 	if ( EVEN(sts) ) return sts;
 
@@ -767,9 +768,9 @@ vldh_t_node	node;
 	        next_node = (pointlist + k)->node;
 	        /* Check class of connected nodes */	
 	        sts = ldh_GetObjectClass( exoctx->ldhses, 
-			next_node->ln.object_did, &class);
+			next_node->ln.oid, &class);
 	        if (EVEN(sts)) return sts;
-	        if (class == vldh_class( exoctx->ldhses, VLDH_CLASS_TRANS) )
+	        if (class == pwr_cClass_trans)
 	        {
 	          sts = exo_node_exec( exoctx, next_node);
 	          if ( EVEN(sts)) return sts;
@@ -970,10 +971,10 @@ vldh_t_node	node;
 	      if (EVEN(sts)) return sts;
 	      
 	      sts = ldh_GetObjectClass( exoctx->ldhses, 
-			output_node->ln.object_did, &class);
+			output_node->ln.oid, &class);
 	      if (EVEN(sts)) return sts;
 	      /* Store the order execute order if it is an order */
-	      if (class == vldh_class( exoctx->ldhses, VLDH_CLASS_ORDER) )
+	      if (class == pwr_cClass_order)
 	        order_execute_order = output_node->hn.executeorder;
 	      else
 	        order_execute_order = 0;
@@ -1073,9 +1074,9 @@ vldh_t_node	node;
 	        next_node = (pointlist + k)->node;
 	        /* Check class of connected nodes */	
 	        sts = ldh_GetObjectClass( exoctx->ldhses, 
-			next_node->ln.object_did, &class);
+			next_node->ln.oid, &class);
 	        if (EVEN(sts)) return sts;
-	        if (class == vldh_class( exoctx->ldhses, VLDH_CLASS_TRANS) )
+	        if (class == pwr_cClass_trans)
 	        {
 	          sts = exo_node_exec( exoctx, next_node);
 	          if ( EVEN(sts)) return sts;
@@ -1171,7 +1172,7 @@ vldh_t_node	node;
 	        next_node = (pointlist + k)->node;
 	        /* Check class of connected nodes */	
 	        sts = ldh_GetObjectClass( exoctx->ldhses, 
-			next_node->ln.object_did, &class);
+			next_node->ln.oid, &class);
 	        if (EVEN(sts)) return sts;
 
 	        sts = exo_node_exec( exoctx, next_node);

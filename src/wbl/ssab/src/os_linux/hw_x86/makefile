@@ -30,7 +30,8 @@ all : init copy exe
 
 init :
 
-copy : $(inc_dir)/pwr_ssabclasses.h
+copy : $(inc_dir)/pwr_ssabclasses.h \
+       $(inc_dir)/pwr_ssabclasses.hpp
 
 lib  : $(load_dir)/ssab.dbs
 
@@ -48,7 +49,11 @@ $(load_dir)/ssab.dbs :
 
 $(inc_dir)/pwr_ssabclasses.h :
 	@ echo "Generating struct files for ssab classes..."
-	@ co_convert -sv -d $(inc_dir) "$(pwre_sroot)/wbl/ssab/src/ssab_c_*.wb_load"
+	@ co_convert -s -d $(inc_dir) "$(pwre_sroot)/wbl/ssab/src/ssab_c_*.wb_load"
+
+$(inc_dir)/pwr_ssabclasses.hpp :
+	@ echo "Generating hpp files for ssab classes..."
+	@ co_convert -po -d $(inc_dir) "$(pwre_sroot)/wbl/ssab/src/ssab_c_*.wb_load"
 
 $(doc_dir)/orm/ssab_allclasses.html :
 	@ echo "Generating html files for ssab classes..."

@@ -289,7 +289,7 @@ int gre_get_annotations(
 	int			annotcond;
 	int			annotsegments;
 	char			condparname[36];
-	pwr_tObjid		last_objid;
+	pwr_sAttrRef		last_attrref;
 	pwr_tBoolean		*condparvalue;
 	pwr_tBoolean		*segmentsparvalue;
 	int			annot_segments;
@@ -299,20 +299,19 @@ int gre_get_annotations(
 	ldh_tSesContext		ldhses;
         pwr_tObjid		nullobjid = pwr_cNObjid;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession;
+	ldhses = (node->hn.wind)->hw.ldhses;
 	*annot_count = 0;
-	last_objid = pwr_cNObjid;
+	memset( &last_attrref, 0, sizeof(last_attrref));
 
 	/* Get graphbody for this node to fetch the parameter of the 
 	   first annoation */
 	sts = ldh_GetClassBody( ldhses,
-			node->ln.classid, "GraphPlcNode",
+			node->ln.cid, "GraphPlcNode",
 			&bodyclass, (char **)&graphbody, &size);
 	if( EVEN(sts)) return sts;
 
 	node->ln.nodewidth = 0;
-	if ( graphbody->segname_annotation >= 1 )
-	{
+	if ( graphbody->segname_annotation >= 1 ) {
 	  strncpy( annot_str, node->hn.name, annot_size);
 	  *annot_nr = graphbody->segname_annotation;
 	  annot_str += annot_size;
@@ -320,38 +319,31 @@ int gre_get_annotations(
 	  (*annot_count)++;
 	}
 
-	if (node->ln.classid != vldh_class( ldhses, VLDH_CLASS_ORDER))
-	{
-	  for ( j = 0; j < 2; j++)
-          {
+	if (node->ln.cid != pwr_cClass_order) {
+	  for ( j = 0; j < 2; j++) {
 	    /* Look for annotations in some parameter in devbody or rtbody */
-            if ( j == 0)
-	    {
+            if ( j == 0) {
 	      if ( !graphbody->devbody_annotation)
  	        continue;
 	      strcpy( body, "DevBody");
 	    }
-	    else
-	    {
+	    else {
 	      if ( !graphbody->rtbody_annotation)
  	        continue;
 	      strcpy( body, "RtBody");
 	    }
 
 	    sts = ldh_GetObjectBodyDef( ldhses,
-			node->ln.classid, body, 1, 
+			node->ln.cid, body, 1, 
 			&bodydef, &rows);
 	    if ( EVEN(sts)) continue;
 
 	    if ( EVEN(sts) ) return GRE__SUCCESS;
 
-	    for ( i = 0; i < rows; i++)
-	    {
+	    for ( i = 0; i < rows; i++) {
 	      annotnr = 0;
-	      switch ( bodydef[i].ParClass )
-	      {
-	        case pwr_eClass_Input:
-	        {
+	      switch ( bodydef[i].ParClass ) {
+	        case pwr_eClass_Input: {
 	          annotnr = bodydef[i].Par->Input.Graph.NiNaAnnot;
 	          annotcond = bodydef[i].Par->Input.Graph.NiNaCond;
 	          annotsegments = bodydef[i].Par->Input.Graph.NiNaSegments;
@@ -359,8 +351,7 @@ int gre_get_annotations(
 	          parname = bodydef[i].ParName;
 	          break;
 	        }
-	        case pwr_eClass_Intern:
-	        {
+	        case pwr_eClass_Intern: {
 	          annotnr = bodydef[i].Par->Intern.Graph.NiNaAnnot;
 	          annotcond = bodydef[i].Par->Intern.Graph.NiNaCond;
 	          annotsegments = bodydef[i].Par->Intern.Graph.NiNaSegments;
@@ -368,8 +359,7 @@ int gre_get_annotations(
 	          parname = bodydef[i].ParName;
 	          break;
 	        }
-	        case pwr_eClass_Output:
-	        {
+	        case pwr_eClass_Output: {
 	          annotnr = bodydef[i].Par->Output.Graph.NiNaAnnot;
 	          annotcond = bodydef[i].Par->Output.Graph.NiNaCond;
 	          annotsegments = bodydef[i].Par->Output.Graph.NiNaSegments;
@@ -380,23 +370,20 @@ int gre_get_annotations(
                 default:
                   ;
  	      }
-              if( annotnr != 0 )
-	      {
-	        if ( annotcond)
-	        {
+              if( annotnr != 0 ) {
+	        if ( annotcond) {
 	   	  /* Get the condition if the annotation should be shown from
 		   the parameter Show'parname' in devbody */
 		  strcpy( condparname, "Show");
 		  strcat( condparname, parname);
 	          sts = ldh_GetObjectPar( ldhses,
-			node->ln.object_did,
+			node->ln.oid,
 			"DevBody",
 			condparname,
 			(char **)&condparvalue, &size);
 		  if ( EVEN(sts))
 		    continue;
-	          if ( !*condparvalue)
-	          {
+	          if ( !*condparvalue) {
 		    /* No, this parameter should node be shown this time */
 		    free((char *) condparvalue);
 	            continue;
@@ -406,21 +393,19 @@ int gre_get_annotations(
 
 	        if ( !annotsegments)
 		  annot_segments = 1;
-	        else
-	        {
+	        else {
 	 	  /* Get the segments of the annotation that should be shown from
 		     the parameter 'parname'Segments in devbody */
 		  strcpy( condparname, parname);
 		  strcat( condparname, "Segments");
 	          sts = ldh_GetObjectPar( ldhses,
-			node->ln.object_did,
+			node->ln.oid,
 			"DevBody",
 			condparname,
 			(char **)&segmentsparvalue, &size);
 		  if ( EVEN(sts))
 		    annot_segments = 1;
-	          else
-	          {
+	          else {
 		    annot_segments = *segmentsparvalue;
 		    if ( annot_segments < 1)
 		      annot_segments = 1;
@@ -428,141 +413,125 @@ int gre_get_annotations(
 	          }
 	        }
 
-	        if ( !strcmp( parname, "SigChanCon"))
-	        {
-	          /* Get attribute SigChanCon from previous objid attribute */
-	          if ( cdh_ObjidIsNotNull( last_objid))
-	          {
-	            sts = ldh_GetObjectPar( ldhses,
-			last_objid,
-			"RtBody",
-			bodydef[i].ParName,
+	        if ( strcmp( parname, "SigChanCon") == 0) {
+	          /* Get attribute SigChanCon from previous attrref */
+		  pwr_tObjid oid;
+		  char *s;
+
+	          if ( cdh_ObjidIsNotNull( last_attrref.Objid)) {
+		    sts = ldh_AttrRefToName( ldhses,
+					     &last_attrref, ldh_eName_Hierarchy,
+					     &name, &size);
+		    if ( EVEN(sts)) continue;
+		    
+		    strcat( name, ".SigChanCon");
+		    s = strchr( name, '.');
+		    *s = 0;
+
+		    sts = ldh_NameToObjid( ldhses, &oid, name);
+		    if ( EVEN(sts)) continue;
+
+	            sts = ldh_GetObjectPar( ldhses, oid,
+			"RtBody", s+1,
 			(char **)&parvalue, &size);
-	            if ( EVEN(sts))
-	              parvalue = (char *) &nullobjid;
+	            if ( EVEN(sts)) continue;
 	          }
 	          else
-	            parvalue = (char *) &nullobjid;
+	            continue;
 	        }
-	        else
-	        {
+	        else {
 	          /* Get the parameter value */
 	          sts = ldh_GetObjectPar( ldhses,
-			node->ln.object_did,
+			node->ln.oid,
 			body,
 			bodydef[i].ParName,
 			(char **)&parvalue, &size);
 	          if ( EVEN(sts)) return sts;
 	        }
-	        if ( type == pwr_eType_AttrRef)
-	        {
-	          /* Get the value of the referenced attribute */
-	 	  parattrref = (pwr_sAttrRef *)parvalue;
-		  if ( cdh_ObjidIsNull( parattrref->Objid))
-	            strcpy( annot_str, "");
-	          else
-	          {
-		    sts = ldh_StringGetAttribute( ldhses, parattrref,
-				annot_size, annot_str);
-		    if ( EVEN(sts)) 
-	              strcpy( annot_str, "");
-	          }
-	        }
-	        else
-	        {
-	          switch ( type )
-	          {
-	            case pwr_eType_String:
-	            case pwr_eType_Text:
-	            {
-	              strncpy( annot_str, parvalue, annot_size);
-	              break;
-	            }
-	            case pwr_eType_Char:
-	            {
-	  	      *annot_str = *parvalue;
-		      *(annot_str + 1) = '\0';		
-	              break;
-	            }
-	            case pwr_eType_Float32:
-	            {
-	  	      sprintf( annot_str, "%g", *(float *)parvalue);
-	              break;
-	            }
-	            case pwr_eType_ObjDId:
-	            {
- 	              /* Get the object name from ldh */
-	 	      parobjdid = (pwr_tObjid *)parvalue;
-		      if ( cdh_ObjidIsNull(*parobjdid))
-	                strcpy( objid_str, "");
-		      else if ( (*parobjdid).oix == 0 )
-	              {
-	                /* Get the volume name */
-	                sts = ldh_VolumeIdToName( ldh_SessionToWB(ldhses),
- 			  (*parobjdid).vid, objid_str, sizeof( objid_str),
-			  &size);
-	                if ( EVEN(sts))
-		          objid_str[0] = 0;
-	              }
-	              else
-	              {
-	                if ( annot_segments == 1)
-	                {
-	                  sts = ldh_ObjidToName( ldhses,
-	         		*parobjdid, ldh_eName_Object,
-		        	objid_str, sizeof(objid_str), &size);
-	                  if ( EVEN(sts)) 
-		            objid_str[0] = 0;
-	                }
-		        else
-		        {
-	                  sts = ldh_ObjidToName( ldhses,
-	         		*parobjdid, ldh_eName_Hierarchy,
-		        	objid_str, sizeof(objid_str), &size);
-	                  if ( EVEN(sts)) 
-		            objid_str[0] = 0;
-		          else
-	                    utl_cut_segments( objid_str, objid_str, annot_segments);
-	                }
+
+
+	        switch ( type ) {
+		case pwr_eType_String:
+		case pwr_eType_Text: {
+		  strncpy( annot_str, parvalue, annot_size);
+		  break;
+		}
+		case pwr_eType_Char: {
+		  *annot_str = *parvalue;
+		  *(annot_str + 1) = '\0';		
+		  break;
+		}
+		case pwr_eType_Float32: {
+		  sprintf( annot_str, "%g", *(float *)parvalue);
+		  break;
+		}
+		case pwr_eType_ObjDId: {
+		  /* Get the object name from ldh */
+		  parobjdid = (pwr_tObjid *)parvalue;
+		  if ( cdh_ObjidIsNull(*parobjdid))
+		    strcpy( objid_str, "");
+		  else if ( (*parobjdid).oix == 0 ) {
+		    /* Get the volume name */
+		    sts = ldh_VolumeIdToName( ldh_SessionToWB(ldhses),
+					      (*parobjdid).vid, objid_str, sizeof( objid_str),
+					      &size);
+		    if ( EVEN(sts))
+		      objid_str[0] = 0;
+		  }
+		  else {
+		    if ( annot_segments == 1) {
+		      sts = ldh_ObjidToName( ldhses,
+					     *parobjdid, ldh_eName_Object,
+					     objid_str, sizeof(objid_str), &size);
+		      if ( EVEN(sts)) 
+			objid_str[0] = 0;
+		    }
+		    else {
+		      sts = ldh_ObjidToName( ldhses,
+					     *parobjdid, ldh_eName_Hierarchy,
+					     objid_str, sizeof(objid_str), &size);
+		      if ( EVEN(sts)) 
+			objid_str[0] = 0;
+		      else
+			utl_cut_segments( objid_str, objid_str, annot_segments);
+		    }
+		  }
+		  strncpy( annot_str, objid_str, annot_size);
+		  break;
+		}
+		case pwr_eType_AttrRef: {
+		  /* Get the object name from ldh */
+		  parattrref = (pwr_sAttrRef *)parvalue;
+		  if ( cdh_ObjidIsNull(parattrref->Objid))
+		    strcpy( objid_str, "");
+		  else {
+		    if ( parattrref->Objid.vid == ldh_cPlcConnectVolume ||
+			 parattrref->Objid.vid == ldh_cPlcHostVolume) {
+		      sts = ldh_AttrRefToName( ldhses, parattrref, 
+					       ldh_eName_Ref,
+					       &name, &size);
+		      if ( EVEN(sts)) 
+			objid_str[0] = 0;
+		      else
+			strcpy( objid_str, name);
+		    }
+		    else {
+		      sts = ldh_AttrRefToName( ldhses,
+					     parattrref, ldh_eName_Hierarchy,
+					     &name, &size);
+		      if ( EVEN(sts)) 
+			objid_str[0] = 0;
+		      else {
+			utl_cut_segments( objid_str, name, annot_segments);
+			last_attrref = *parattrref;
 		      }
-		      strncpy( annot_str, objid_str, annot_size);
-		      last_objid = *parobjdid;
-	              break;
-	            }
-	            case pwr_eType_AttrRef:
-	            {
- 	              /* Get the object name from ldh */
-	 	      parattrref = (pwr_sAttrRef *)parvalue;
-		      if ( cdh_ObjidIsNull(parattrref->Objid))
-	                strcpy( objid_str, "");
-	              else
-	              {
-	                if ( annot_segments == 1)
-	                {
-	                  sts = ldh_AttrRefToName( ldhses,
-	         		parattrref, ldh_eName_Object,
-		        	&name, &size);
-	                  if ( EVEN(sts)) 
-		            objid_str[0] = 0;
-	                  else
-	                    strcpy( objid_str, name);
-	                }
-		        else
-		        {
-	                  sts = ldh_AttrRefToName( ldhses,
-	         		parattrref, ldh_eName_Hierarchy,
-		        	&name, &size);
-	                  if ( EVEN(sts)) 
-		            objid_str[0] = 0;
-		          else
-	                    utl_cut_segments( objid_str, name, annot_segments);
-	                }
-		      }
-		      strncpy( annot_str, objid_str, annot_size);
-	              break;
-	            }
-	          }
-	        }
+		    }
+		  }
+		  strncpy( annot_str, objid_str, annot_size);
+		  break;
+		}
+		}
+
 	        *annot_nr = annotnr;
 	        annot_str += annot_size;
 	        annot_nr++;
@@ -578,8 +547,7 @@ int gre_get_annotations(
 	      break;
 	  }
 	}
-	else
-	{
+	else {
 	  char		attribute[80];
 	  int 		attribute_count;
 	  pwr_tFloat32	*attrtime_p;
@@ -594,7 +562,7 @@ int gre_get_annotations(
 	  strcpy( annot_str_next, "");
 	  /* Check if AttrTime's should be shown */
 	  sts = ldh_GetObjectPar( ldhses,
-			node->ln.object_did,
+			node->ln.oid,
 			"DevBody",
 			"ShowAttrTime",
 			(char **)&condparvalue, &size);
@@ -602,11 +570,10 @@ int gre_get_annotations(
 	  showattrtime = *condparvalue;
 	  free((char *) condparvalue);
 
-	  for ( i = 0; i < 6; i++)
-	  {
+	  for ( i = 0; i < 6; i++) {
 	    sprintf( attribute, "Attr%d", i + 1);
 	    sts = ldh_GetObjectPar( ldhses,
-			node->ln.object_did,
+			node->ln.oid,
 			"DevBody",
 			attribute,
 			(char **)&parvalue, &size);
@@ -614,15 +581,14 @@ int gre_get_annotations(
 	    sprintf( annot_str + strlen(annot_str), "%c", *parvalue);
 	    if ( showattrtime && 
 		((*parvalue == 'D' || *parvalue == 'd') ||
-	         (*parvalue == 'L' || *parvalue == 'l')))
-	    {
+	         (*parvalue == 'L' || *parvalue == 'l'))) {
 	      sprintf( attribute, "AttrTime%d", i + 1);
 	      
 	      if ( attribute_count != 0)
 	        strcat( annot_str_next, " ");
 	      sprintf( annot_str_next + strlen(annot_str_next), "%c=", *parvalue);
 	      sts = ldh_GetObjectPar( ldhses,
-			node->ln.object_did,
+			node->ln.oid,
 			"DevBody",
 			attribute,
 			(char **)&attrtime_p, &size);
@@ -847,14 +813,14 @@ int	gre_node_annot_message(
 	int	annotcount;
 
 	/* Get graphbody for the class */
-	sts = ldh_GetClassBody( (node->hn.window_pointer)->hw.ldhsession, 
-                          node->ln.classid, "GraphPlcNode",
+	sts = ldh_GetClassBody( (node->hn.wind)->hw.ldhses, 
+                          node->ln.cid, "GraphPlcNode",
                           &bodyclass, (char **)&graphbody, &size);
 	if( EVEN(sts)) return sts;
 
 	/* Draw the parameters in devbody that has an annotation nr */
-	sts = ldh_GetObjectBodyDef((node->hn.window_pointer)->hw.ldhsession,
-                             node->ln.classid, "DevBody", 1, 
+	sts = ldh_GetObjectBodyDef((node->hn.wind)->hw.ldhses,
+                             node->ln.cid, "DevBody", 1, 
                              &bodydef, &rows);
 
 	if ( EVEN(sts) ) return GRE__SUCCESS;
@@ -894,8 +860,8 @@ int	gre_node_annot_message(
       if( annotnr != 0 )
         {
           /* Get the parameter value */
-          sts = ldh_GetObjectPar( (node->hn.window_pointer)->hw.ldhsession,  
-                                  node->ln.object_did, 
+          sts = ldh_GetObjectPar( (node->hn.wind)->hw.ldhses,  
+                                  node->ln.oid, 
                                   "DevBody",
                                   bodydef[i].ParName,
                                   (char **)&parvalue, &size); 
@@ -931,7 +897,7 @@ int	gre_node_annot_message(
                 annot_str[0] = '\0';
               else
                 {
-                  sts = ldh_ObjidToName( (node->hn.window_pointer)->hw.ldhsession, 
+                  sts = ldh_ObjidToName( (node->hn.wind)->hw.ldhses, 
                                          *parobjdid, ldh_eName_Object,
                                          annot_str, sizeof( annot_str), &size);
                   if ( EVEN(sts)) annot_str[0] = '\0';
@@ -1163,8 +1129,8 @@ int	gre_undelete(
 	for ( i = 0; i < grectx->del_node_count; i++ )
 	{
 	  sts = gre_get_nodeclass( grectx, 
-		(grectx->del_node_list[i])->ln.classid, 
-		((grectx->del_node_list[i])->hn.window_pointer)->hw.ldhsession, 
+		(grectx->del_node_list[i])->ln.cid, 
+		((grectx->del_node_list[i])->hn.wind)->hw.ldhses, 
 		(grectx->del_node_list[i])->ln.object_type, 
 		(grectx->del_node_list[i])->ln.mask, 
 		(grectx->del_node_list[i])->ln.subwindow,
@@ -1556,13 +1522,13 @@ int	gre_cut(
 	for ( i = 0; i < fnode_count; i++ )
 	{
 	  flow_GetUserData( fnode_list[i], (void **)&node);
-	  vldh_paste_node_insert( grectx->window_object, node);
+	  vldh_paste_node_insert( grectx->wind, node);
 	}
 	/* Insert the cons */
 	for ( i = 0; i < fcon_count; i++ )
 	{
 	  flow_GetUserData( fcon_list[i], (void **)&con);
-	  vldh_paste_con_insert( grectx->window_object, con);
+	  vldh_paste_con_insert( grectx->wind, con);
 	}
 	if ( fcon_count > 0)
 	  free( fcon_list);
@@ -1601,7 +1567,7 @@ int  gre_cut_node(
 	/* Insert in vldh_pastelist */
 	vldh_paste_init();
 
-	vldh_paste_node_insert( grectx->window_object, node);
+	vldh_paste_node_insert( grectx->wind, node);
 	
 	gre_delete_node( grectx, node);
 	return GRE__SUCCESS;
@@ -1635,12 +1601,12 @@ int gre_copy_node(
 	vldh_paste_init();
 
 	/* Insert the nodes */
-	vldh_paste_node_insert( grectx->window_object, node);
+	vldh_paste_node_insert( grectx->wind, node);
 	return GRE__SUCCESS;
 #if 0
 	vldh_paste_setmode( VLDH_PASTEMODE_OBJECT);
 
-	sts = vldh_paste_singlenode_insert( grectx->window_object, node);
+	sts = vldh_paste_singlenode_insert( grectx->wind, node);
 	return sts;
 #endif
 }
@@ -1688,13 +1654,13 @@ int	gre_copy(
 	for ( i = 0; i < fnode_count; i++ )
 	{
 	  flow_GetUserData( fnode_list[i], (void **)&node);
-	  vldh_paste_node_insert( grectx->window_object, node);
+	  vldh_paste_node_insert( grectx->wind, node);
 	}
 	/* Insert the cons */
 	for ( i = 0; i < fcon_count; i++ )
 	{
 	  flow_GetUserData( fcon_list[i], (void **)&con);
-	  vldh_paste_con_insert( grectx->window_object, con);
+	  vldh_paste_con_insert( grectx->wind, con);
 	}
 	gre_unselect( grectx);
 
@@ -1739,12 +1705,12 @@ int	gre_window_draw(
 	double		ll_x, ll_y, ur_x, ur_y;
 
 	/* Get all the nodes */
-	sts = vldh_get_nodes( grectx->window_object, &node_count, &node_list);
+	sts = vldh_get_nodes( grectx->wind, &node_count, &node_list);
 	if ( EVEN(sts)) return sts;
 	node_ptr = node_list;
 
 	/* Get all the connections */
-	sts = vldh_get_cons( grectx->window_object, &con_count, &con_list);
+	sts = vldh_get_cons( grectx->wind, &con_count, &con_list);
 	if ( EVEN(sts)) return sts;
 	con_ptr = con_list;
 
@@ -1754,8 +1720,8 @@ int	gre_window_draw(
 	for ( i = 0; i < node_count; i++)
 	{
 	  sts = gre_get_nodeclass( grectx, 
-		(*node_ptr)->ln.classid,
-		((*node_ptr)->hn.window_pointer)->hw.ldhsession, 
+		(*node_ptr)->ln.cid,
+		((*node_ptr)->hn.wind)->hw.ldhses, 
 		(*node_ptr)->ln.object_type,
 		(*node_ptr)->ln.mask, (*node_ptr)->ln.subwindow,
 		(*node_ptr)->ln.nodewidth,
@@ -2333,8 +2299,8 @@ int gre_flow_cb( FlowCtx *ctx, flow_tEvent event)
       {
         flow_GetUserData( event->object.object, (void **)&node);
 	sts = ldh_ObjidToName(
-		(node->hn.window_pointer)->hw.ldhsession,
-	         cdh_ClassIdToObjid( node->ln.classid), ldh_eName_Object,
+		(node->hn.wind)->hw.ldhses,
+	         cdh_ClassIdToObjid( node->ln.cid), ldh_eName_Object,
 		 help_title, sizeof( help_title), &size);
 	error_msg(sts);
 	if ( EVEN(sts)) return 1;
@@ -2344,8 +2310,8 @@ int gre_flow_cb( FlowCtx *ctx, flow_tEvent event)
       {
         flow_GetUserData( event->object.object, (void **)&con);
 	sts = ldh_ObjidToName( 
-			(grectx->window_object)->hw.ldhsession, 
-	         	cdh_ClassIdToObjid( con->lc.classid), ldh_eName_Object,
+			(grectx->wind)->hw.ldhses, 
+	         	cdh_ClassIdToObjid( con->lc.cid), ldh_eName_Object,
 		        help_title, sizeof( help_title), &size);
 	error_msg(sts);
 	if ( EVEN(sts)) return 1;
@@ -3088,12 +3054,12 @@ int	gre_create_node(
 	unsigned long	subwindowmark = 0;
 	int		sts;
 
-	sts = vldh_node_create( grectx->window_object, class, &node_object);
+	sts = vldh_node_create( grectx->wind, class, &node_object);
 	if( EVEN(sts) ) return sts;
 
 	sts = gre_get_nodeclass( grectx, 
 		class,
-		(node_object->hn.window_pointer)->hw.ldhsession, 
+		(node_object->hn.wind)->hw.ldhses, 
 		node_object->ln.object_type, 
 		node_object->ln.mask,
 		subwindowmark, 
@@ -3162,7 +3128,7 @@ int	gre_create_con(
 	vldh_t_con 	con_object;
 	int		sts;
 
-	sts= vldh_con_create(grectx->window_object,class, drawtype, 
+	sts= vldh_con_create(grectx->wind,class, drawtype, 
 		source_obj,source_point,
 		destination_obj,destination_point,&con_object);
 	if ( EVEN(sts)) return sts;
@@ -3209,7 +3175,7 @@ int	gre_print_docobj(
 
 	flow_MeasureNode( doc_obj->hn.node_id, &ll_x, &ll_y, &ur_x, &ur_y);
 	sprintf( filename, "pwrp_tmp:pssdoc%s.ps", 
-		vldh_IdToStr(0, doc_obj->ln.object_did));
+		vldh_IdToStr(0, doc_obj->ln.oid));
 	dcli_translate_filename( filename, filename);
 	flow_PrintRegion( grectx->flow_ctx, ll_x, ll_y, ur_x, ur_y, filename);
 
@@ -3356,7 +3322,7 @@ void gre_paste (
 	flow_PasteClear( grectx->flow_ctx);
 
 	/* Copy objects from vldh paste */
-	sts = vldh_paste_copy( grectx->window_object, 0, 0, 
+	sts = vldh_paste_copy( grectx->wind, 0, 0, 
 		&node_count, &node_list, &con_count, &con_list);
 	if ( EVEN(sts)) return;
 
@@ -3371,8 +3337,8 @@ void gre_paste (
 	for ( i = 0; i < node_count; i++)
 	{
 	  sts = gre_get_nodeclass( grectx, 
-		(*node_ptr)->ln.classid,
-		((*node_ptr)->hn.window_pointer)->hw.ldhsession, 
+		(*node_ptr)->ln.cid,
+		((*node_ptr)->hn.wind)->hw.ldhses, 
 		(*node_ptr)->ln.object_type,
 		(*node_ptr)->ln.mask, (*node_ptr)->ln.subwindow,
 		(*node_ptr)->ln.nodewidth,
@@ -3400,13 +3366,13 @@ void gre_paste (
 	    /* This is a fix for backward compatibility */
 	    sts = gre_get_conclass( grectx,
                         0,
-                        ((*con_ptr)->hc.window_pointer)->hw.ldhsession,
+                        ((*con_ptr)->hc.wind)->hw.ldhses,
                         (*con_ptr)->lc.object_type,
                         &con_class);
 	  else
 	    sts = gre_get_conclass( grectx,
-                        (*con_ptr)->lc.classid,
-                        ((*con_ptr)->hc.window_pointer)->hw.ldhsession,
+                        (*con_ptr)->lc.cid,
+                        ((*con_ptr)->hc.wind)->hw.ldhses,
                         (*con_ptr)->lc.object_type,
                         &con_class);
 
@@ -3416,8 +3382,8 @@ void gre_paste (
 	    y[j] = (*con_ptr)->lc.point[j].y;
 	  }
 	  flow_CreatePasteCon( grectx->flow_ctx, (*con_ptr)->hc.name, con_class, 
-	  	(*con_ptr)->hc.source_node_pointer->hn.node_id,
-		(*con_ptr)->hc.dest_node_pointer->hn.node_id,
+	  	(*con_ptr)->hc.source_node->hn.node_id,
+		(*con_ptr)->hc.dest_node->hn.node_id,
 		(*con_ptr)->lc.source_point, (*con_ptr)->lc.dest_point,
 		*con_ptr, &(*con_ptr)->hc.con_id, (*con_ptr)->lc.point_count,
 		x, y);
@@ -3496,8 +3462,8 @@ int gre_subwindow_mark (
 
 	/* Create a new node with subwindow mark */
 	sts = gre_get_nodeclass( grectx, 
-		object->ln.classid, 
-		(object->hn.window_pointer)->hw.ldhsession, 
+		object->ln.cid, 
+		(object->hn.wind)->hw.ldhses, 
 		object->ln.object_type, 
 		object->ln.mask,
 		object->ln.subwindow,
@@ -3574,8 +3540,8 @@ static pwr_tStatus	gre_node_update_points(
 	int			*point_array_ptr;
 	int			i;
 
-	sts = ldh_GetClassBody( (node->hn.window_pointer)->hw.ldhsession,
-			node->ln.classid, "GraphPlcNode",
+	sts = ldh_GetClassBody( (node->hn.wind)->hw.ldhses,
+			node->ln.cid, "GraphPlcNode",
 			&bodyclass, (char **)&graphbody, &size);
 	if( EVEN(sts)) return sts;
 
@@ -3686,8 +3652,8 @@ int gre_node_update (
 	flow_GetHighlight( object->hn.node_id, &highlight_flag);
 
 	/* Get the object name from ldh */
-	sts = ldh_ObjidToName( (object->hn.window_pointer)->hw.ldhsession, 
-		object->ln.object_did, ldh_eName_Object,
+	sts = ldh_ObjidToName( (object->hn.wind)->hw.ldhses, 
+		object->ln.oid, ldh_eName_Object,
 		object->hn.name, sizeof( object->hn.name), &size);
 	if( EVEN(sts)) return sts;
 
@@ -3695,8 +3661,8 @@ int gre_node_update (
 	nodewidth_changed = TRUE;	  
 
 	/* Get the ldh graphbuffer of the node */
-	sts = ldh_GetObjectBuffer( (object->hn.window_pointer)->hw.ldhsession,
-		object->ln.object_did, "DevBody", "PlcNode", &class,	
+	sts = ldh_GetObjectBuffer( (object->hn.wind)->hw.ldhses,
+		object->ln.oid, "DevBody", "PlcNode", &class,	
 		(char **)&nodebuffer, &size);
 	if( EVEN(sts)) return sts;
 
@@ -3750,8 +3716,8 @@ int gre_node_update (
 
 	  /* Create a new node */
 	  sts = gre_get_nodeclass( grectx, 
-		object->ln.classid, 
-		(object->hn.window_pointer)->hw.ldhsession, 
+		object->ln.cid, 
+		(object->hn.wind)->hw.ldhses, 
 		object->ln.object_type, 
 		object->ln.mask,
 		object->ln.subwindow,
@@ -3804,7 +3770,7 @@ int gre_node_update (
 	    for ( j = 0; j < con_count; j++)
 	    {
 	      /* Convert connection point */
-	      if ( (*con_ptr)->hc.source_node_pointer == object)
+	      if ( (*con_ptr)->hc.source_node == object)
 	      {
 		point = point_conv[(*con_ptr)->lc.source_point];
 	        if ( point != (*con_ptr)->lc.source_point && point != -1)
@@ -4200,8 +4166,8 @@ int	gre_init_docobjects(
 	int			i;
 	char			*parvalue;
 
-	wind = grectx->window_object;
-	plc = wind->hw.plcobject_pointer;
+	wind = grectx->wind;
+	plc = wind->hw.plc;
 
 	/* Get the system name */
 	sts = utl_get_systemname( systemname, systemgroup);
@@ -4213,8 +4179,8 @@ int	gre_init_docobjects(
 	node_ptr = nodelist;
 	for ( i = 0; i < node_count; i++)
   	{
-	  if ( vldh_check_document( wind->hw.ldhsession, 
-			(*node_ptr)->ln.object_did))
+	  if ( vldh_check_document( wind->hw.ldhses, 
+			(*node_ptr)->ln.oid))
 	  {
 	    doc_obj = *node_ptr;
 	    doc_count++;	  
@@ -4224,8 +4190,8 @@ int	gre_init_docobjects(
 		strlen(systemname));
 
 	    /* Plcname in annot 1 */
-	    sts = ldh_ObjidToName( wind->hw.ldhsession, 
-	         	plc->lp.objdid, ldh_eName_Hierarchy,
+	    sts = ldh_ObjidToName( wind->hw.ldhses, 
+	         	plc->lp.oid, ldh_eName_Hierarchy,
 		        plcname, sizeof( plcname), &size);
 	    if ( EVEN(sts)) annot_str[0] = '\0';
 
@@ -4234,8 +4200,8 @@ int	gre_init_docobjects(
 
 	    /* Windowname in annot 2 */
 
-	    sts = ldh_ObjidToName( wind->hw.ldhsession, 
-	         	wind->lw.objdid, ldh_eName_Hierarchy,
+	    sts = ldh_ObjidToName( wind->hw.ldhses, 
+	         	wind->lw.oid, ldh_eName_Hierarchy,
 		        windname, sizeof( windname), &size);
 	    if ( EVEN(sts)) annot_str[0] = '\0';
 
@@ -4248,8 +4214,8 @@ int	gre_init_docobjects(
 		strlen(short_windname));
 
 	    /* Page in annotations nr 3 */
-	    sts = ldh_GetObjectPar( wind->hw.ldhsession,  
-			doc_obj->ln.object_did, 
+	    sts = ldh_GetObjectPar( wind->hw.ldhses,  
+			doc_obj->ln.oid, 
 			"DevBody", "Page",
 			(char **)&parvalue, &size); 
 	    if ( ODD(sts))
@@ -4267,8 +4233,8 @@ int	gre_init_docobjects(
 		strlen(timstr));
 
 	    /* Signature in annotations nr 5 */
-	    sts = ldh_GetObjectPar( wind->hw.ldhsession,  
-			doc_obj->ln.object_did, 
+	    sts = ldh_GetObjectPar( wind->hw.ldhses,  
+			doc_obj->ln.oid, 
 			"DevBody", "Signature",
 			(char **)&parvalue, &size); 
 	    if ( ODD(sts))
@@ -4321,7 +4287,7 @@ int	gre_redraw(
 	  vldh_t_wind		wind;
 	  unsigned long		node_count;
 
-	  wind = grectx->window_object;
+	  wind = grectx->wind;
 	  sts = vldh_get_nodes( wind, &node_count, &nodelist);
 	  if ( EVEN(sts)) return sts;
 
@@ -4375,7 +4341,7 @@ int	gre_set_trace_attributes( gre_ctx grectx, char *host)
   int 			rows;
   pwr_tObjid		*objid;
 
-  wind = grectx->window_object;
+  wind = grectx->wind;
   sts = vldh_get_nodes( wind, &node_count, &nodelist);
   if ( EVEN(sts)) return sts;
 
@@ -4396,7 +4362,7 @@ int	gre_set_trace_attributes( gre_ctx grectx, char *host)
     }
     else
     {
-      switch( (*node_ptr)->ln.classid )
+      switch( (*node_ptr)->ln.cid )
       {
         case pwr_cClass_GetAi:
         case pwr_cClass_GetAo:
@@ -4416,8 +4382,8 @@ int	gre_set_trace_attributes( gre_ctx grectx, char *host)
         case pwr_cClass_cstoii:
         case pwr_cClass_cstoio:
         case pwr_cClass_cstoiv:
-          sts = ldh_GetObjectBodyDef( wind->hw.ldhsession, 
-			(*node_ptr)->ln.classid, "DevBody", 1, 
+          sts = ldh_GetObjectBodyDef( wind->hw.ldhses, 
+			(*node_ptr)->ln.cid, "DevBody", 1, 
 			&bodydef, &rows);
 	  if ( EVEN(sts) ) return sts;
           strcpy( object_str, "");
@@ -4426,12 +4392,12 @@ int	gre_set_trace_attributes( gre_ctx grectx, char *host)
 	    if ( bodydef[j].Par->Output.Info.Type == pwr_eType_Objid)
             {
               /* Get the objid stored in the parameter */
-	      sts = ldh_GetObjectPar( wind->hw.ldhsession,
-			(*node_ptr)->ln.object_did,  "DevBody",
+	      sts = ldh_GetObjectPar( wind->hw.ldhses,
+			(*node_ptr)->ln.oid,  "DevBody",
 			bodydef[j].ParName, (char **)&objid, &size);
               if ( EVEN(sts)) return sts;
 
-              sts = ldh_ObjidToName( wind->hw.ldhsession, *objid,
+              sts = ldh_ObjidToName( wind->hw.ldhses, *objid,
 	        ldh_eName_Hierarchy, object_str, sizeof(object_str), &size);
               if ( EVEN(sts))
                 strcpy( object_str, "");
@@ -4443,7 +4409,7 @@ int	gre_set_trace_attributes( gre_ctx grectx, char *host)
           break;
         default:
           /* Store object name */
-          sts = ldh_ObjidToName( wind->hw.ldhsession, (*node_ptr)->ln.object_did,
+          sts = ldh_ObjidToName( wind->hw.ldhses, (*node_ptr)->ln.oid,
 	         ldh_eName_Hierarchy, object_str, sizeof(object_str), &size);
           if ( EVEN(sts)) return sts;
       }
@@ -4469,7 +4435,7 @@ int	gre_save( gre_ctx grectx, char *filename)
 
   if ( !filename) {
     sprintf( fname, "pwrp_load:pwr_%s.flw",
-		vldh_IdToStr(0, grectx->window_object->lw.objdid));
+		vldh_IdToStr(0, grectx->wind->lw.oid));
     dcli_translate_filename( fname, fname);
   }
   else

@@ -63,7 +63,7 @@ WAttNav::WAttNav(
 	Widget		wa_parent_wid,
 	char 		*wa_name,
 	ldh_tSesContext wa_ldhses,
-	pwr_tObjid 	wa_objid,
+	pwr_sAttrRef 	wa_aref,
 	int 		wa_editmode,
 	int 		wa_advanced_user,
 	int		wa_display_objectname,
@@ -71,7 +71,7 @@ WAttNav::WAttNav(
 	Widget 		*w,
 	pwr_tStatus 	*status) :
 	parent_ctx(wa_parent_ctx), parent_wid(wa_parent_wid),
-	ldhses(wa_ldhses), objid(wa_objid), editmode(wa_editmode), 
+	ldhses(wa_ldhses), aref(wa_aref), editmode(wa_editmode), 
 	advanced_user(wa_advanced_user), 
 	display_objectname(wa_display_objectname), bypass(0),
 	trace_started(0), message_cb(NULL), utility(wa_utility), 
@@ -389,6 +389,9 @@ static int wattnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
         case wnav_eItemType_AttrArrayOutput: 
 	  ((WItemAttrArrayOutput *)item)->close( 0, 0);
           break;
+        case wnav_eItemType_AttrObject: 
+	  ((WItemAttrObject *)item)->close( 0, 0);
+          break;
         default:
           ;
       }
@@ -446,6 +449,9 @@ static int wattnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
           break;
         case wnav_eItemType_AttrArrayOutput: 
 	  ((WItemAttrArrayOutput *)item)->open_attributes( 0, 0);
+          break;
+        case wnav_eItemType_AttrObject: 
+	  ((WItemAttrObject *)item)->open_attributes( 0, 0);
           break;
         case wnav_eItemType_Enum: 
         {
@@ -575,6 +581,10 @@ static int wattnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
               break;
             case wnav_eItemType_AttrArrayOutput:
 	      ((WItemAttrArrayOutput *)item)->open_attributes(
+			event->object.x, event->object.y);
+              break;
+            case wnav_eItemType_AttrObject:
+	      ((WItemAttrObject *)item)->open_attributes(
 			event->object.x, event->object.y);
               break;
             case wnav_eItemType_AttrArrayElem:
@@ -715,21 +725,33 @@ int	WAttNav::object_attr()
   int elements;
   char *block;
   int size;
+  pwr_tObjid objid = aref.Objid;
+  char name[80];
+  char *name_p;
+  char *s;
 
   brow_SetNodraw( brow->ctx);
 
-  sts = ldh_GetObjectClass(ldhses, objid, &classid);
+  sts = ldh_GetAttrRefTid(ldhses, &aref, &classid);
   if ( EVEN(sts)) return sts;
 
+  if ( aref.Flags.b.ObjectAttr) {
+    sts = ldh_AttrRefToName( ldhses, &aref, ldh_eName_Aref, &name_p, &size);
+    if ( EVEN(sts)) return sts;
+
+    if ( (s = strchr( name_p, '.')))
+      strcpy( name, s+1);
+    else
+      strcpy( name, "");
+  }
+
   // Display object name
-  if ( editmode && display_objectname)
-  {
-    new WItemObjectName( brow, ldhses, objid, NULL, flow_eDest_IntoLast);
+  if ( editmode && display_objectname && aref.Flags.b.Object) {
+    new WItemObjectName( brow, ldhses, aref.Objid, NULL, flow_eDest_IntoLast);
     attr_exist = 1;
   }
 
-  for ( i = 0; i < 3; i++)
-  {
+  for ( i = 0; i < 3; i++) {
     if ( i == 0)
       strcpy( body, "RtBody");
     else if ( i == 1)
@@ -741,25 +763,28 @@ int	WAttNav::object_attr()
 		&bodydef, &rows);
     if ( EVEN(sts))
       continue;
-    for ( j = 0; j < rows; j++)
-    {
-      strcpy( parname, bodydef[j].ParName);
-//      sts = ldh_GetObjectPar( ldhses, objid, body, parname,
-//		(char **)&attr_p, &size);
+    for ( j = 0; j < rows; j++) {
+      if ( aref.Flags.b.Object)
+	strcpy( parname, bodydef[j].ParName);
+      else {
+	strcpy( parname, name);
+	strcat( parname, ".");
+	strcat( parname, bodydef[j].ParName);
+      }
 
+      if ( bodydef[j].Flags & ldh_mParDef_Shadowed)
+	continue;
       if ( bodydef[j].Par->Output.Info.Type == pwr_eType_Buffer)
         continue;
 
-      if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_ARRAY )
-      {
+      if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_ARRAY ) {
        if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_INVISIBLE )
           continue;
 
         elements = bodydef[j].Par->Output.Info.Elements;
 
         if ( bodydef[j].ParClass == pwr_eClass_Output &&
-	     !(bodydef[j].Par->Input.Info.Flags & PWR_MASK_NOREMOVE))
-        {
+	     !(bodydef[j].Par->Input.Info.Flags & PWR_MASK_NOREMOVE)) {
           new WItemAttrArrayOutput( brow, ldhses, objid, NULL, 
 		flow_eDest_IntoLast,
 		parname,
@@ -781,15 +806,12 @@ int	WAttNav::object_attr()
 		body, 0);
         attr_exist = 1;
       }
-      else if ( bodydef[j].ParClass == pwr_eClass_Input)
-      {
-        if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_INVISIBLE )
-        {
+      else if ( bodydef[j].ParClass == pwr_eClass_Input) {
+        if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_INVISIBLE ) {
           input_cnt++;
           continue;
         }
-        if ( bodydef[j].Par->Input.Info.Type == pwr_eType_Boolean)
-        {
+        if ( bodydef[j].Par->Input.Info.Type == pwr_eType_Boolean) {
 	  if ( bodydef[j].Par->Input.Info.Flags & PWR_MASK_NOREMOVE &&
 	       bodydef[j].Par->Input.Info.Flags & PWR_MASK_NOINVERT)
             new WItemAttr( brow, ldhses, objid, NULL, 
@@ -820,8 +842,7 @@ int	WAttNav::object_attr()
 		bodydef[j].Par->Input.Info.Flags,
 		body, input_cnt);
         }
-        else
-        {
+        else {
 	  if ( bodydef[j].Par->Input.Info.Flags & PWR_MASK_NOREMOVE)
             new WItemAttr( brow, ldhses, objid, NULL,
 		flow_eDest_IntoLast, parname,
@@ -840,10 +861,8 @@ int	WAttNav::object_attr()
         attr_exist = 1;
         input_cnt++;
       }
-      else if ( bodydef[j].ParClass == pwr_eClass_Output)
-      {
-        if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_INVISIBLE )
-        {
+      else if ( bodydef[j].ParClass == pwr_eClass_Output) {
+        if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_INVISIBLE ) {
           output_cnt++;
           continue;
         }
@@ -865,8 +884,10 @@ int	WAttNav::object_attr()
         attr_exist = 1;
         output_cnt++;
       }
-      else
-      {
+      else {
+	if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_INVISIBLE )
+          continue;
+
         new WItemAttr( brow, ldhses, objid, NULL, 
 		flow_eDest_IntoLast, parname,
 		bodydef[j].Par->Output.Info.Type, 
@@ -878,11 +899,13 @@ int	WAttNav::object_attr()
     }
     free((char *) bodydef);	
 
-    sts = ldh_GetDocBlock( ldhses, objid, &block, &size);
-    if ( ODD(sts)) {
-      new WItemDocBlock( brow, ldhses, objid, block, size,
-			 NULL, flow_eDest_IntoLast);
-      attr_exist = 1;
+    if ( aref.Flags.b.Object) {
+      sts = ldh_GetDocBlock( ldhses, objid, &block, &size);
+      if ( ODD(sts)) {
+	new WItemDocBlock( brow, ldhses, objid, block, size,
+			   NULL, flow_eDest_IntoLast);
+	attr_exist = 1;
+      }
     }
   }
   brow_ResetNodraw( brow->ctx);
@@ -1053,7 +1076,7 @@ int WAttNav::set_attr_value( brow_tObject node, char *name, char *value_str)
       WItemObjectName *item = (WItemObjectName *)base_item;
 
       // Check that objid is still the same
-      if ( ! cdh_ObjidIsEqual( objid, base_item->objid))
+      if ( ! cdh_ObjidIsEqual( aref.Objid, base_item->objid))
         return WATT__DISAPPEARD;
 
       sts = ldh_ChangeObjectName( ldhses, item->objid, value_str);
@@ -1066,7 +1089,7 @@ int WAttNav::set_attr_value( brow_tObject node, char *name, char *value_str)
       WItemDocBlock *item = (WItemDocBlock *)base_item;
 
       // Check that objid is still the same
-      if ( ! cdh_ObjidIsEqual( objid, base_item->objid))
+      if ( ! cdh_ObjidIsEqual( aref.Objid, base_item->objid))
         return WATT__DISAPPEARD;
 
       sts = ldh_SetDocBlock( ldhses, item->objid, value_str);

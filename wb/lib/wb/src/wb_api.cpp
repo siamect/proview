@@ -193,14 +193,14 @@ extern "C" watt_tCtx watt_new(
 	Widget	parent_wid,
 	void *parent_ctx,
 	ldh_tSesContext ldhses,
-	pwr_tObjid objid,
+	pwr_sAttrRef aref,
 	int editmode,
 	int advanced_user,
 	int display_objectname,
 	void (*watt_close_cb)(void *)
 	)
 {
-  WAtt *watt = new WAtt( parent_wid, parent_ctx, ldhses, objid, editmode,
+  WAtt *watt = new WAtt( parent_wid, parent_ctx, ldhses, aref, editmode,
 	advanced_user, display_objectname);
   if ( watt_close_cb)
     watt->close_cb = watt_close_cb;

@@ -52,6 +52,17 @@ extern "C" {
 
 
 //
+// Member functions for WItem
+//
+pwr_sAttrRef WItem::aref()
+{
+  pwr_sAttrRef a = pwr_cNAttrRef;
+  a.Objid = objid;
+  a.Flags.b.Object = 1;
+  return a;
+}
+
+//
 // Member functions for WItemObject
 //
 WItemObject::WItemObject( WNav *wnav, pwr_tObjid item_objid, 
@@ -342,7 +353,11 @@ int WItemBaseObject::open_attributes( WNav *wnav, double x, double y)
       else
         strcpy( body, "SysBody");
 
-      sts = ldh_GetObjectBodyDef( wnav->ldhses, classid, body, 1,
+      if ( wnav->gbl.show_truedb)
+	sts = ldh_GetTrueObjectBodyDef( wnav->ldhses, classid, body, 1,
+		&bodydef, &rows);
+      else
+	sts = ldh_GetObjectBodyDef( wnav->ldhses, classid, body, 1,
 		&bodydef, &rows);
       if ( EVEN(sts))
         continue;
@@ -352,9 +367,12 @@ int WItemBaseObject::open_attributes( WNav *wnav, double x, double y)
 //        sts = ldh_GetObjectPar( ldhses, objid, body, parname,
 //		(char **)&attr_p, &size);
 
+        if ( bodydef[j].Flags & ldh_mParDef_Shadowed)
+          continue;
         if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_POINTER )
           continue;
-        if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_INVISIBLE )
+        if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_INVISIBLE && 
+	     !wnav->gbl.show_truedb)
           continue;
 
         if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_ARRAY )
@@ -459,7 +477,15 @@ int WItemBaseObject::open_attributes( WNav *wnav, double x, double y)
         }
         else
         {
-          new WItemAttr( wnav->brow, wnav->ldhses, objid, node, 
+	  if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_CLASS)
+            new WItemAttrObject( wnav->brow, wnav->ldhses, objid, node, 
+		flow_eDest_IntoLast, parname,
+		bodydef[j].Par->Output.Info.Type, 
+		bodydef[j].Par->Output.Info.Size, false, 0,
+		bodydef[j].Par->Output.Info.Flags,
+		body, 0);
+	  else
+	    new WItemAttr( wnav->brow, wnav->ldhses, objid, node, 
 		flow_eDest_IntoLast, parname,
 		bodydef[j].Par->Output.Info.Type, 
 		bodydef[j].Par->Output.Info.Size,
@@ -974,6 +1000,25 @@ int WItemBaseAttr::get_value( char **value)
 		attr, (char **)value, &psize);
 }
 
+pwr_sAttrRef WItemBaseAttr::aref()
+{
+  char aname[200];
+  pwr_sAttrRef a;
+  pwr_tStatus sts;
+
+  sts = ldh_ObjidToName( ldhses, objid, ldh_eName_VolPath, aname, 
+		   sizeof(aname), &size);
+  if ( EVEN(sts)) return pwr_cNAttrRef;
+
+  strcat( aname, ".");
+  strcat( aname, name);
+
+  sts = ldh_NameToAttrRef( ldhses, aname, &a);
+  if ( EVEN(sts)) return pwr_cNAttrRef;
+
+  return a;
+}
+
 WItemAttr::WItemAttr( 
 	WNavBrow *item_brow, ldh_tSesContext item_ldhses, 
 	pwr_tObjid item_objid,
@@ -994,7 +1039,11 @@ WItemAttr::WItemAttr(
 
   strcpy( name, attr_name);
   strcpy( body, attr_body);
-  strcpy( annot, attr_name);
+  char *s = strrchr( attr_name, '.');
+  if ( s)
+    strcpy( annot, s+1);
+  else
+    strcpy( annot, attr_name);
 
   if ( fullname)
     nc = brow->nc_attr_full;
@@ -1223,7 +1272,11 @@ WItemAttrInput::WItemAttrInput(
 
   strcpy( name, attr_name);
   strcpy( body, attr_body);
-  strcpy( annot, attr_name);
+  char *s = strrchr( attr_name, '.');
+  if ( s)
+    strcpy( annot, s+1);
+  else
+    strcpy( annot, attr_name);
   mask = 1 << attr_input_num;
 
   brow_CreateNode( brow->ctx, attr_name, brow->nc_attr_input, 
@@ -1360,7 +1413,11 @@ WItemAttrInputF::WItemAttrInputF(
 
   strcpy( name, attr_name);
   strcpy( body, attr_body);
-  strcpy( annot, attr_name);
+  char *s = strrchr( attr_name, '.');
+  if ( s)
+    strcpy( annot, s+1);
+  else
+    strcpy( annot, attr_name);
   mask = 1 << attr_input_num;
 
   brow_CreateNode( brow->ctx, attr_name, brow->nc_attr_output, 
@@ -1477,7 +1534,11 @@ WItemAttrInputInv::WItemAttrInputInv(
 
   strcpy( name, attr_name);
   strcpy( body, attr_body);
-  strcpy( annot, attr_name);
+  char *s = strrchr( attr_name, '.');
+  if ( s)
+    strcpy( annot, s+1);
+  else
+    strcpy( annot, attr_name);
   mask = 1 << attr_input_num;
 
   brow_CreateNode( brow->ctx, attr_name, brow->nc_attr_inputinv, 
@@ -1594,7 +1655,12 @@ WItemAttrOutput::WItemAttrOutput(
 
   strcpy( name, attr_name);
   strcpy( body, attr_body);
-  strcpy( annot, attr_name);
+  char *s = strrchr( attr_name, '.');
+  if ( s)
+    strcpy( annot, s+1);
+  else
+    strcpy( annot, attr_name);
+
   mask = 1 << attr_output_num;
 
   brow_CreateNode( brow->ctx, attr_name, brow->nc_attr_output, 
@@ -1724,8 +1790,13 @@ WItemAttrArray::WItemAttrArray(
     strcat( annot, ".");
     strcat( annot, attr_name);
   }
-  else
-    strcpy( annot, attr_name);
+  else {
+    char *s = strrchr( attr_name, '.');
+    if ( s)
+      strcpy( annot, s+1);
+    else
+      strcpy( annot, attr_name);
+  }
 
   brow_SetAnnotation( node, 0, annot, strlen(annot));
 
@@ -1757,11 +1828,15 @@ int WItemAttrArray::open_attributes( double x, double y)
     // Create some elements
     brow_SetNodraw( brow->ctx);
 
-    for ( i = 0; i < elements; i++)
-    {
-      new WItemAttrArrayElem( brow, ldhses, objid, node, 
-		flow_eDest_IntoLast, name, i, type_id, 
-		size / elements, i * size / elements, flags, body);
+    for ( i = 0; i < elements; i++) {
+      if ( flags & PWR_MASK_CLASS)
+	new WItemAttrObject( brow, ldhses, objid, node, 
+				flow_eDest_IntoLast, name, type_id, 
+				size / elements, true, i, flags, body, 0);
+      else
+	new WItemAttrArrayElem( brow, ldhses, objid, node, 
+				flow_eDest_IntoLast, name, i, type_id, 
+				size / elements, i * size / elements, flags, body);
     }
 
     brow_SetOpen( node, wnav_mOpen_Attributes);
@@ -1799,6 +1874,7 @@ WItemAttrArrayOutput::WItemAttrArrayOutput(
 	elements(attr_elements)
 {
   ldh_sSessInfo info;
+  char annot[32];
 
   type = wnav_eItemType_AttrArrayOutput;
 
@@ -1810,7 +1886,13 @@ WItemAttrArrayOutput::WItemAttrArrayOutput(
 		dest, dest_code, (void *) this, 1, &node);
 
   brow_SetAnnotPixmap( node, 0, brow->pixmap_attrarray);
-  brow_SetAnnotation( node, 0, attr_name, strlen(attr_name));
+
+  char *s = strrchr( attr_name, '.');
+  if ( s)
+    strcpy( annot, s+1);
+  else
+    strcpy( annot, attr_name);
+  brow_SetAnnotation( node, 0, annot, strlen(annot));
 
   // Examine access
   ldh_GetSessionInfo( ldhses, &info);
@@ -1933,6 +2015,297 @@ int WItemAttrArrayOutput::close( double x, double y)
   return 1;
 }
 
+WItemAttrObject::WItemAttrObject( 
+	WNavBrow *item_brow, ldh_tSesContext item_ldhses, 
+	pwr_tObjid item_objid,
+	brow_tNode dest, flow_eDest dest_code,
+	char *attr_name, int attr_type_id,
+	int attr_size, bool attr_is_elem, int attr_idx, int attr_flags,
+	char *attr_body, int fullname) :
+	WItemBaseAttr( item_brow, item_ldhses, item_objid, attr_name,
+		       attr_type_id, attr_size, attr_flags, attr_body),
+	is_elem(attr_is_elem), idx(attr_idx)
+{
+  ldh_sSessInfo info;
+  char annot[120];
+  int psize;
+  int sts;
+  char *s;
+  int next_annot = 0;
+
+  type = wnav_eItemType_AttrObject;
+
+  if ( !is_elem)
+    strcpy( name, attr_name);
+  else
+    sprintf( name, "%s[%d]", attr_name, idx);
+  strcpy( body, attr_body);
+  brow_CreateNode( brow->ctx, attr_name, brow->nc_object, 
+		dest, dest_code, (void *) this, 1, &node);
+
+  brow_SetAnnotPixmap( node, 0, brow->pixmap_object);
+
+  if ( fullname) {
+    sts = ldh_ObjidToName( ldhses, objid, ldh_eName_Hierarchy, annot, 
+		sizeof(annot), &psize);
+    strcat( annot, ".");
+    strcat( annot, attr_name);
+  }
+  else {
+    s = strrchr( name, '.');
+    if ( s)
+      strcpy( annot, s+1);
+    else
+      strcpy( annot, name);
+  }
+
+  brow_SetAnnotation( node, next_annot++, annot, strlen(annot));
+
+  // Set class annotation
+  if ( ((WNav *)brow->userdata)->gbl.show_class) {
+    sts = ldh_ObjidToName( ldhses, cdh_ClassIdToObjid( type_id), ldh_eName_Object,
+			   annot, sizeof(annot), &psize);
+    if ( ODD(sts))
+      brow_SetAnnotation( node, next_annot++, annot, strlen(annot));
+  }
+
+  // Set description annotation
+  if ( ((WNav *)brow->userdata)->gbl.show_descrip) {
+    char descr_attr[120];
+    char *descr;
+
+    strcpy( descr_attr, name);
+    strcat( descr_attr, ".Description");
+
+    sts = ldh_GetObjectPar( ldhses, objid, "RtBody", descr_attr,
+			    &descr, &psize);
+    if ( EVEN(sts))
+      sts = ldh_GetObjectPar( ldhses, objid, "SysBody", descr_attr,
+			      &descr, &psize);
+    if ( ODD(sts)) {
+      brow_SetAnnotation( node, next_annot++, descr, strlen(descr));
+      free( descr);
+    }
+  }
+
+
+  // Examine access
+  ldh_GetSessionInfo( ldhses, &info);
+  if ( info.Access == ldh_eAccess_ReadWrite &&
+       !(flags & PWR_MASK_NOEDIT || flags & PWR_MASK_STATE))
+    brow_SetAnnotPixmap( node, 1, brow->pixmap_morehelp);
+}
+
+int WItemAttrObject::close( double x, double y)
+{
+  double	node_x, node_y;
+
+  if ( brow_IsOpen( node) & wnav_mOpen_Attributes)
+  {
+    // Attributes is open, close
+    brow_GetNodePosition( node, &node_x, &node_y);
+    brow_SetNodraw( brow->ctx);
+    brow_CloseNode( brow->ctx, node);
+    brow_ResetOpen( node, wnav_mOpen_All);
+    brow_RemoveAnnotPixmap( node, 1);
+    brow_ResetNodraw( brow->ctx);
+    brow_Redraw( brow->ctx, node_y);
+  }
+  return 1;
+}
+
+int WItemAttrObject::open_attributes( double x, double y)
+{
+  double	node_x, node_y;
+
+  if ( cdh_ObjidIsNull( objid))
+    return 1;
+
+  brow_GetNodePosition( node, &node_x, &node_y);
+
+  if ( brow_IsOpen( node) & wnav_mOpen_Attributes)
+  {
+    // Attributes is open, close
+    brow_SetNodraw( brow->ctx);
+    brow_CloseNode( brow->ctx, node);
+    brow_ResetOpen( node, wnav_mOpen_Attributes);
+    brow_RemoveAnnotPixmap( node, 1);
+    brow_ResetNodraw( brow->ctx);
+    brow_Redraw( brow->ctx, node_y);
+  }
+  else 
+  {
+    int			sts;
+    char		parname[80];
+    pwr_tClassId	classid;
+    unsigned long	elements;
+    ldh_sParDef 	*bodydef;
+    int			rows;
+    int			i, j;
+    char		body[20];
+    int			attr_exist = 0;
+    int			input_cnt = 0;
+    int			output_cnt = 0;
+
+    // Create some attributes
+    brow_SetNodraw( brow->ctx);
+
+    classid = type_id;
+    for ( i = 0; i < 3; i++) {
+      if ( i == 0)
+        strcpy( body, "RtBody");
+      else if ( i == 1)
+        strcpy( body, "DevBody");
+      else
+        strcpy( body, "SysBody");
+
+      if ( ((WNav *)brow->userdata)->gbl.show_truedb)
+	sts = ldh_GetTrueObjectBodyDef( ldhses, classid, body, 1,
+		&bodydef, &rows);
+      else
+	sts = ldh_GetObjectBodyDef( ldhses, classid, body, 1,
+		&bodydef, &rows);
+      if ( EVEN(sts))
+        continue;
+      for ( j = 0; j < rows; j++) {
+	strcpy( parname, name);
+	strcat( parname, ".");
+        strcat( parname, bodydef[j].ParName);
+
+        if ( bodydef[j].Flags & ldh_mParDef_Shadowed)
+          continue;
+        if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_POINTER )
+          continue;
+        if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_INVISIBLE && 
+	     !((WNav *)brow->userdata)->gbl.show_truedb)
+          continue;
+
+        if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_ARRAY ) {
+          elements = bodydef[j].Par->Output.Info.Elements;
+
+          if ( bodydef[j].ParClass == pwr_eClass_Output) {
+            new WItemAttrArrayOutput( brow, ldhses, objid, node, 
+		flow_eDest_IntoLast,
+		parname,
+		bodydef[j].Par->Output.Info.Elements, 
+		bodydef[j].Par->Output.Info.Type, 
+		bodydef[j].Par->Output.Info.Size, 
+		bodydef[j].Par->Output.Info.Flags,
+		body, output_cnt);
+             output_cnt++;
+          }
+          else
+            new WItemAttrArray( brow, ldhses, objid, node, 
+		flow_eDest_IntoLast,
+		parname,
+		bodydef[j].Par->Output.Info.Elements, 
+		bodydef[j].Par->Output.Info.Type, 
+		bodydef[j].Par->Output.Info.Size, 
+		bodydef[j].Par->Output.Info.Flags,
+		body, 0);
+          attr_exist = 1;
+        }
+        else if ( bodydef[j].ParClass == pwr_eClass_Input) {
+          if ( bodydef[j].Par->Input.Info.Type == pwr_eType_Boolean) {
+	    if ( bodydef[j].Par->Input.Info.Flags & PWR_MASK_NOREMOVE &&
+	         bodydef[j].Par->Input.Info.Flags & PWR_MASK_NOINVERT)
+              new WItemAttr( brow, ldhses, objid, node, 
+		flow_eDest_IntoLast, parname,
+		bodydef[j].Par->Input.Info.Type, 
+		bodydef[j].Par->Input.Info.Size,
+		bodydef[j].Par->Input.Info.Flags,
+		body, 0);
+	    else if ( bodydef[j].Par->Input.Info.Flags & PWR_MASK_NOREMOVE)
+              new WItemAttrInputInv( brow, ldhses, objid, node, 
+		flow_eDest_IntoLast, parname,
+		bodydef[j].Par->Input.Info.Type, 
+		bodydef[j].Par->Input.Info.Size,
+		bodydef[j].Par->Input.Info.Flags,
+		body, input_cnt);
+	    else if ( bodydef[j].Par->Input.Info.Flags & PWR_MASK_NOINVERT)
+              new WItemAttrInputF( brow, ldhses, objid, node, 
+		flow_eDest_IntoLast, parname,
+		bodydef[j].Par->Input.Info.Type, 
+		bodydef[j].Par->Input.Info.Size,
+		bodydef[j].Par->Input.Info.Flags,
+		body, input_cnt);
+	   else
+              new WItemAttrInput( brow, ldhses, objid, node,
+		flow_eDest_IntoLast, parname,
+		bodydef[j].Par->Input.Info.Type, 
+		bodydef[j].Par->Input.Info.Size,
+		bodydef[j].Par->Input.Info.Flags,
+		body, input_cnt);
+          }
+          else {
+	    if ( bodydef[j].Par->Input.Info.Flags & PWR_MASK_NOREMOVE)
+              new WItemAttr( brow, ldhses, objid, node,
+		flow_eDest_IntoLast, parname,
+		bodydef[j].Par->Input.Info.Type, 
+		bodydef[j].Par->Input.Info.Size,
+		bodydef[j].Par->Input.Info.Flags,
+		body, 0);
+	    else
+              new WItemAttrInputF( brow, ldhses, objid, node,
+		flow_eDest_IntoLast, parname,
+		bodydef[j].Par->Input.Info.Type, 
+		bodydef[j].Par->Input.Info.Size,
+		bodydef[j].Par->Input.Info.Flags,
+		body, input_cnt);
+          }
+          attr_exist = 1;
+          input_cnt++;
+        }
+        else if ( bodydef[j].ParClass == pwr_eClass_Output) {
+	  if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_NOREMOVE)
+            new WItemAttr( brow, ldhses, objid, node, 
+		flow_eDest_IntoLast, parname,
+		bodydef[j].Par->Output.Info.Type, 
+		bodydef[j].Par->Output.Info.Size,
+		bodydef[j].Par->Output.Info.Flags,
+		body, 0);
+          else
+            new WItemAttrOutput( brow, ldhses, objid, node, 
+		flow_eDest_IntoLast, parname,
+		bodydef[j].Par->Output.Info.Type, 
+		bodydef[j].Par->Output.Info.Size,
+		bodydef[j].Par->Output.Info.Flags,
+		body, output_cnt);
+          attr_exist = 1;
+          output_cnt++;
+        }
+        else {
+	  if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_CLASS)
+            new WItemAttrObject( brow, ldhses, objid, node, 
+		flow_eDest_IntoLast, parname,
+		bodydef[j].Par->Output.Info.Type, 
+		bodydef[j].Par->Output.Info.Size, false, 0,
+		bodydef[j].Par->Output.Info.Flags,
+		body, 0);
+	  else
+	    new WItemAttr( brow, ldhses, objid, node, 
+		flow_eDest_IntoLast, parname,
+		bodydef[j].Par->Output.Info.Type, 
+		bodydef[j].Par->Output.Info.Size,
+		bodydef[j].Par->Output.Info.Flags,
+		body, 0);
+          attr_exist = 1;
+        }
+      }
+      free((char *) bodydef);	
+
+    }
+
+    if ( attr_exist && !is_root) {
+      brow_SetOpen( node, wnav_mOpen_Attributes);
+      brow_SetAnnotPixmap( node, 1, brow->pixmap_openattr);
+    }
+    brow_ResetNodraw( brow->ctx);
+    brow_Redraw( brow->ctx, node_y);
+  }
+  return 1;
+}
+
 WItemAttrArrayElem::WItemAttrArrayElem( 
 	WNavBrow *item_brow, ldh_tSesContext item_ldhses, 
 	pwr_tObjid item_objid,
@@ -1945,11 +2318,16 @@ WItemAttrArrayElem::WItemAttrArrayElem(
 {
   char	annot[120];
   ldh_sSessInfo info;
+  char *s;
 
   type = wnav_eItemType_AttrArrayElem;
 
   sprintf( name, "%s[%d]", attr_name, element);
-  strcpy( annot, name);
+  s = strrchr( name, '.');
+  if ( s)
+    strcpy( annot, s+1);
+  else
+    strcpy( annot, name);
   
   switch( type_id)
   {

@@ -36,6 +36,7 @@ public:
     
   wb_adrep *adrep( pwr_tStatus *sts); // Get first attribute
   wb_adrep *adrep( pwr_tStatus *sts, const char *aname);
+  wb_adrep *super( pwr_tStatus *sts);
 
   pwr_tStatus sts() { return m_sts;}
     

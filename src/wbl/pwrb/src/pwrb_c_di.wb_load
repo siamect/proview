@@ -66,7 +66,7 @@ SObject pwrb:Class
       !*/
       Object SigChanCon $Attribute 2
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr TypeRef = "pwrs:Type-$AttrRef"
         EndBody
       EndObject
       !/**
@@ -77,6 +77,7 @@ SObject pwrb:Class
       Object ValueIndex $Attribute 3 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_INVISIBLE
           Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
@@ -123,7 +124,7 @@ SObject pwrb:Class
       !*/
       Object DefGraph $Attribute 6 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr TypeRef = "pwrs:Type-$AttrRef"
         EndBody
       EndObject
       !/**
@@ -133,7 +134,7 @@ SObject pwrb:Class
       !*/
       Object DefTrend $Attribute 7 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr TypeRef = "pwrs:Type-$AttrRef"
         EndBody
       EndObject
       !/**
@@ -173,29 +174,6 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Text associated to ActualValue = FALSE. At presentation
-      !  when ActualValue = FALSE TextWhenValIs0 is displayed;
-      !  OFF may sometimes be a suitable text.
-      !  
-      !  The attribute is used by the object display.
-      !*/
-      Object TextWhenValIs0 $Attribute 8 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$String16"
-        EndBody
-      EndObject
-      !/**
-      !  Text associated to ActualValue = TRUE. At presentation
-      !  when ActualValue = TRUE TextWhenValIs1 displayed is; ON
-      !  may sometimes be a suitable text.
-      !  The attribute is used by the object display.
-      !*/
-      Object TextWhenValIs1 $Attribute 9 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$String16"
-        EndBody
-      EndObject
-      !/**
       !  The internal filter function concerns only local
       !  Di-signals.
       !  
@@ -232,10 +210,10 @@ SObject pwrb:Class
 	Object Connect $MenuButton
 	  Body SysBody
 	    Attr ButtonName = "Connect Channel"
-	    Attr MethodName = "$Objid-Connect"
+	    Attr MethodName = "$AttrRef-Connect"
 	    Attr MethodArguments[0] = "SigChanCon"
 	    Attr MethodArguments[1] = "ChanDi"
-	    Attr FilterName = "$Objid-IsOkConnect"
+	    Attr FilterName = "$AttrRef-IsOkConnect"
 	    Attr FilterArguments[0] = "SigChanCon"
 	    Attr FilterArguments[1] = "ChanDi"
 	  EndBody
@@ -243,10 +221,10 @@ SObject pwrb:Class
 	Object ConnectGraph $MenuButton
 	  Body SysBody
 	    Attr ButtonName = "Connect Graph"
-	    Attr MethodName = "$Objid-Connect"
+	    Attr MethodName = "$AttrRef-Connect"
 	    Attr MethodArguments[0] = "DefGraph"
 	    Attr MethodArguments[1] = "XttGraph"
-	    Attr FilterName = "$Objid-IsOkConnect"
+	    Attr FilterName = "$AttrRef-IsOkConnect"
 	    Attr FilterArguments[0] = "DefGraph"
 	    Attr FilterArguments[1] = "XttGraph"
 	  EndBody
@@ -254,10 +232,10 @@ SObject pwrb:Class
 	Object ConnectTrend $MenuButton
 	  Body SysBody
 	    Attr ButtonName = "Connect Trend"
-	    Attr MethodName = "$Objid-Connect"
+	    Attr MethodName = "$AttrRef-Connect"
 	    Attr MethodArguments[0] = "DefTrend"
 	    Attr MethodArguments[1] = "DsTrend,PlotGroup"
-	    Attr FilterName = "$Objid-IsOkConnect"
+	    Attr FilterName = "$AttrRef-IsOkConnect"
 	    Attr FilterArguments[0] = "DefTrend"
 	    Attr FilterArguments[1] = "DsTrend,PlotGroup"
 	  EndBody
@@ -266,6 +244,7 @@ SObject pwrb:Class
     EndObject
   EndObject
 EndSObject
+
 
 
 

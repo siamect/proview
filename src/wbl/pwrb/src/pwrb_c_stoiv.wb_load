@@ -58,7 +58,7 @@ SObject pwrb:Class
       Object IvObject $Intern 1 
         Body SysBody
           Attr PgmName = "IvObject"
-          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr TypeRef = "pwrs:Type-$AttrRef"
           Attr GraphName = "In"
           Attr NiNaAnnot = 1
           Attr NiNaSegments = 1

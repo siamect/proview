@@ -44,6 +44,11 @@ protected:
                  wb_cdef& cdef, 
                  pwr_eBix bix);
 
+  void printBuffer(wb_volume& v,
+                  wb_attribute& attr,
+                  wb_attribute& tattr, ///< template attribute
+                  wb_adef& adef);
+    
   void printClass(wb_volume& v,
                   wb_attribute& attr,
                   wb_attribute& tattr, ///< template attribute

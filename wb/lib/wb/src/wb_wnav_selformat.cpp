@@ -58,18 +58,17 @@ pwr_tBoolean wnav_format_selection( ldh_tSesContext ldhses, pwr_sAttrRef attrref
 				   int select_syntax, int select_volume, 
 				   int select_attr, int select_type, char *buff)
 {
-  pwr_sAttrRef attr_ref;
-  int	ret_len, i, j, size, sts;
+  pwr_sAttrRef aref;
+  int	ret_len, size, sts;
   char name[256];
   char attr_name[128], type_buff[80];
   pwr_tClassId	classid, body_class;    
   pwr_sGraphPlcNode *graph_body;
-  ldh_sParDef	    attr_def;
   char    *p1, *p2;
   char    hyphen[8], dot[8], colon[8];
   char	*name_ptr;
   pwr_tObjid object = attrref.Objid;
-  char	*s;
+  char	*name_p;
 
   if ( select_syntax == wnav_eSelectionMode_Extern && !select_attr) {
     sts = ldh_ObjidToName( ldhses, object, ldh_eName_Objid, 
@@ -85,25 +84,31 @@ pwr_tBoolean wnav_format_selection( ldh_tSesContext ldhses, pwr_sAttrRef attrref
     if (EVEN(sts)) return FALSE;
   }
   else if ( select_volume) {
-    sts = ldh_ObjidToName(ldhses, object, ldh_eName_VolPath, 
-					   name, sizeof(name), &ret_len); 
+    sts = ldh_AttrRefToName(ldhses, &attrref, 
+			    cdh_mName_volume | cdh_mName_object | cdh_mName_attribute, 
+			    &name_p, &ret_len); 
     if (EVEN(sts)) return FALSE;
+    strcpy( name, name_p);
   }
   else {
-    sts = ldh_ObjidToName(ldhses, object, ldh_eName_Hierarchy, 
-					   name, sizeof(name), &ret_len); 
+    sts = ldh_AttrRefToName(ldhses, &attrref, 
+			    cdh_mName_path | cdh_mName_object | cdh_mName_attribute, 
+			    &name_p, &ret_len); 
     if (EVEN(sts)) return FALSE;
+    strcpy( name, name_p);
   }
 
+  strcpy( buff, name);
+
+  strcpy(hyphen, "-");
+  strcpy(dot, ".");
+  strcpy(colon, ":");
+
+#if 0
   if (select_syntax == wnav_eSelectionMode_GMS) {
     strcpy(hyphen, "\\-");
     strcpy(dot, "\\.");
     strcpy(colon, "\\:");
-  }
-  else {
-    strcpy(hyphen, "-");
-    strcpy(dot, ".");
-    strcpy(colon, ":");
   }
 
   for (i = 0, j = 0; i < ret_len + 1; i++) {
@@ -120,19 +125,21 @@ pwr_tBoolean wnav_format_selection( ldh_tSesContext ldhses, pwr_sAttrRef attrref
       j++;
     }
   }
-
+#endif
 
   // Fetch and add attribute name if necessary
+
+  aref = attrref;
   if (select_attr && !is_class) {
-    sts = ldh_GetObjectClass(ldhses, object, &classid);
+    sts = ldh_GetAttrRefTid( ldhses, &attrref, &classid);
     if ( EVEN(sts)) return FALSE;
 
-    if ( ! is_attr) {
+    if ( !is_attr || (cdh_tidIsCid(classid) && !attrref.Flags.b.Array)) {
       // Get the debugparameter if there is one, else add ActualValue  
 
       sts = ldh_GetClassBody(ldhses, classid, 
 	    "GraphPlcNode", &body_class, (char **)&graph_body, &size);
-      if ( ODD(sts) )
+      if ( ODD(sts))
         strcpy(attr_name, graph_body->debugpar);
       else
         strcpy(attr_name, "ActualValue");
@@ -141,10 +148,13 @@ pwr_tBoolean wnav_format_selection( ldh_tSesContext ldhses, pwr_sAttrRef attrref
       strcat(name, attr_name);
 
       // Check if attribute exists
-      sts = ldh_NameToAttrRef(ldhses, name, &attr_ref);
+      sts = ldh_NameToAttrRef(ldhses, name, &aref);
       if (ODD(sts)) {
+	sts = ldh_GetAttrRefTid( ldhses, &aref, &classid);
+	if ( EVEN(sts)) return FALSE;
+
         if (select_syntax == wnav_eSelectionMode_Extern && select_attr) {
-           sts = ldh_AttrRefToName(ldhses, &attr_ref, 
+           sts = ldh_AttrRefToName(ldhses, &aref, 
 				ldh_eName_ArefExport,
 				&name_ptr, &ret_len); 
            if (EVEN(sts)) return FALSE;
@@ -152,64 +162,54 @@ pwr_tBoolean wnav_format_selection( ldh_tSesContext ldhses, pwr_sAttrRef attrref
            return TRUE;
         }
       }
+      strcat(buff, dot);
+      strcat(buff, attr_name);
     }
-    else {
-      sts = ldh_AttrRefToName(ldhses, &attrref, 
-				ldh_eName_Aref,
-        			&name_ptr, &ret_len); 
-      if ( EVEN(sts)) return FALSE;
-      if ( (s = strrchr( name_ptr, '.')))
-	strcpy( attr_name, s + 1);
-      else
-	strcpy( attr_name, "");
-    }
-    strcat(buff, dot);
-    strcat(buff, attr_name);
 
-    if (select_type) {
-      // If attribute is an array element 
-      // Get attribute definition for the array.
 
-      if ( (p1 = strstr(attr_name, "[")))
-        *p1 = '\0';
-		
-      sts = ldh_GetAttrDef(ldhses, classid, "RtBody", 
-						     attr_name, &attr_def);
-      if (EVEN(sts))
-        sts = ldh_GetAttrDef(ldhses, classid, "SysBody", 
-						     attr_name, &attr_def);
+    if ( select_type && !cdh_tidIsCid(classid)) {
+      ldh_sAttrRefInfo info;
+      int idx;
+ 
+      ldh_GetAttrRefInfo( ldhses, &aref, &info);
       if ( ODD(sts) && 
-             wnav_type_to_string( attr_def.Par->Input.Info.Type, type_buff, NULL)) {
+	   wnav_type_to_string( info.type, type_buff, NULL)) {
         char num[8];
+	bool hasIndex = false;
 
-        if ( (p2 = strstr(buff, "[")))	
-          *p2 = '\0';
+	
+        if ( buff[strlen(buff)-1] == ']' && 
+	     (p2 = strrchr(buff, '[')) &&
+	     sscanf( p2+1, "%d", &idx) == 1) {
+	  hasIndex = true;
+          *p2 = 0;
 
-        if (attr_def.Par->Input.Info.Type == pwr_eType_String) {
-          sprintf(num, "%d", attr_def.Par->Input.Info.Size/attr_def.Par->Input.Info.Elements);  
+	  // Get attrref info for array
+	  sts = ldh_NameToAttrRef(ldhses, buff, &aref);
+	  if (ODD(sts))
+	    sts = ldh_GetAttrRefInfo( ldhses, &aref, &info);
+	}
+        if ( info.type == pwr_eType_String) {
+          sprintf(num, "%d", info.size/info.nElement);  
           strcat(type_buff, num);
         }
         strcat(buff, "##");
         strcat(buff, type_buff);
 
         // Check if array
-        if (p1) {
-          sprintf(&buff[strlen(buff)], "#%d", 
-		       attr_def.Par->Input.Info.Elements); 
-          *p1 = '[';
-          strcat(buff, p1);
+        if ( hasIndex) {
+          sprintf(&buff[strlen(buff)], "#%d[%d]", info.nElement, idx); 
         }
-	else if ( attr_def.Par->Input.Info.Elements > 1) {
-          sprintf(&buff[strlen(buff)], "#%d", 
-		       attr_def.Par->Input.Info.Elements); 
+	else if ( info.nElement > 1) {
+          sprintf(&buff[strlen(buff)], "#%d", info.nElement); 
 	}
       }
     }
   }
   if ( select_syntax == wnav_eSelectionMode_Extern && select_attr) {
-    sts = ldh_NameToAttrRef(ldhses, buff, &attr_ref);
+    sts = ldh_NameToAttrRef(ldhses, buff, &aref);
     if (EVEN(sts)) return FALSE;
-    sts = ldh_AttrRefToName( ldhses, &attr_ref, 
+    sts = ldh_AttrRefToName( ldhses, &aref, 
 			ldh_eName_ArefExport, &p1, &size);
     if (EVEN(sts)) return FALSE;
     strcpy( buff, p1);

@@ -307,7 +307,7 @@ SObject pwrb:Class
       Object DoOpen $Intern 1 
         Body SysBody
           Attr PgmName = "DoOpen"
-          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr TypeRef = "pwrs:Type-$AttrRef"
           Attr NiNaAnnot = 1
         EndBody
       EndObject
@@ -320,7 +320,7 @@ SObject pwrb:Class
       Object DoClose $Intern 2 
         Body SysBody
           Attr PgmName = "DoClose"
-          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr TypeRef = "pwrs:Type-$AttrRef"
           Attr NiNaAnnot = 2
         EndBody
       EndObject
@@ -347,7 +347,7 @@ SObject pwrb:Class
         Attr devbody_annotation = 1
         Attr compmethod = 23
         Attr compindex = 0
-        Attr connectmethod = 10
+        Attr connectmethod = 0
         Attr executeordermethod = 2
         Attr objname = "Inc3P"
         Attr graphname = "Inc3P"

@@ -40,6 +40,7 @@ class wb_attribute : public wb_status
   
   pwr_eBix m_bix; // Used when sub class
   void *m_body;
+  bool m_shadowed;
   
 public:
   wb_attribute();
@@ -69,6 +70,7 @@ public:
   size_t size() const;
   size_t offset() const;
   pwr_eType type() const;
+  pwr_tTid tid() const;
   int nElement() const;
   int index() const;
   int flags() const;
@@ -93,16 +95,18 @@ public:
   wb_attribute after() const;
   wb_attribute before() const;
 
-  wb_attribute first(int idx) const;
-  wb_attribute child(int idx, const char *name) const;
+  wb_attribute first(int idx = 0) const;
+  wb_attribute child(const char *name, int idx = 0) const;
     
 
   const char *name() const;
   wb_name longName() const;
   void name(const char *name);
   void name(wb_name *name);
-    
-    
+  const char *attrName() const;
+  bool isShadowed() { return m_shadowed;}
+  void setShadowed( bool shadowed) { m_shadowed = shadowed;}
+
   pwr_tStatus sts() const { return m_sts;}
   wb_adrep *adrep() { return m_adrep;}
 

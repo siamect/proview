@@ -22,12 +22,15 @@ class wb_adrep
   size_t m_size;
   pwr_eType m_type;
   int m_offset;
+  int m_suboffset;
   int m_elements;
   int m_paramindex;
   int m_flags;
   pwr_tTid m_tid;
   pwr_tPgmName m_pgmname;
   pwr_tCid m_subClass;
+  char m_subName[120];
+  bool m_isSubattr;
 
   friend class wb_bdrep;
   friend class wb_cdrep;
@@ -60,8 +63,11 @@ public:
   pwr_tCid subClass() { return m_subClass;}
   bool isClass() const {return (m_flags & PWR_MASK_CLASS || m_flags & PWR_MASK_BUFFER);}
   bool isArray() const {return (m_flags & PWR_MASK_ARRAY);}
+  void add( wb_adrep *ad, int idx = 0);
+  bool isSubattr() { return m_isSubattr;}
 
   const char *name() const;
+  const char *subName() const;
   wb_name longName();
   void *body( void *p = 0);
 

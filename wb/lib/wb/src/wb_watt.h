@@ -31,7 +31,7 @@ class WAtt {
 	Widget 		wa_parent_wid, 
 	void 		*wa_parent_ctx, 
 	ldh_tSesContext wa_ldhses,
-	pwr_tObjid 	wa_objid,
+	pwr_sAttrRef 	wa_aref,
 	int 		wa_editmode,
 	int 		wa_advanced_user,
 	int		wa_display_objectname);
@@ -39,7 +39,7 @@ class WAtt {
     Widget	parent_wid;
     void 	*parent_ctx;
     ldh_tSesContext ldhses;
-    pwr_tObjid	objid;
+    pwr_sAttrRef aref;
     int		editmode;
     char 	name[80];
     Widget	brow_widget;

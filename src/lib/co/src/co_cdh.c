@@ -437,6 +437,20 @@ cdh_TypeIdToObjid (
 
   return oid.pwr;
 }
+
+//! Converts an objid to an attrref.
+pwr_sAttrRef
+cdh_ObjidToAref (
+  pwr_tObjid Objid
+)
+{
+  pwr_sAttrRef a = pwr_cNAttrRef;
+  a.Objid = Objid;
+  a.Flags.b.Object = 1;
+
+  return a;
+}
+
 
 //! Converts an attribute given in internal binary format to a text string.
 
@@ -2391,6 +2405,36 @@ cdh_NoCaseStrcmp (
   return ((*s) & ~(1<<5)) - ((*t) & ~(1<<5));
 }
 
+//! Compare the n (at most) first charachters of two strings not regarding their casing.
+/*!
+   This routine works only on alphabetic characters.
+   It works on the standard ascii a-z and on the 
+   DEC multinational extensions.  
+
+   The function exploits the fact that only bit 5 changes
+   when you change the case of a character.
+
+   The function returns the uppercase offset between
+   the two first differing characters.  
+*/
+
+int
+cdh_NoCaseStrncmp (
+  const char		*s,
+  const char		*t,
+  size_t		n
+)
+{
+  int i;
+
+  for (i = 0; i < n && *s && *t && !(((*s) ^ (*t)) & ~(1<<5)); i++)
+    s++, t++; 
+
+  if ( n == i)
+    return 0;
+  return ((*s) & ~(1<<5)) - ((*t) & ~(1<<5));
+}
+
 //! Convert operating system to string
 /*!
   For example pwr_mOpSys_X86_LINUX will be converted to "x86_linux".
@@ -2415,6 +2459,12 @@ char *cdh_OpSysToStr( pwr_mOpSys opsys)
   default: strcpy( str, "");
   }
   return str;
+}
+
+int cdh_IsClassVolume( pwr_tVid vid)
+{
+  return ( ( cdh_cSystemClassVolMin <= vid && vid <= cdh_cSystemClassVolMax) ||
+	   ( cdh_cUserClassVolMin <= vid && vid <= cdh_cUserClassVolMax));
 }
 
 /*@}*/

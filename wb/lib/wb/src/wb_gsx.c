@@ -26,19 +26,20 @@
 #include "wb_gsx.h"
 #include "wb_gcg.h"
 #include "pwr_baseclasses.h"
+#include "pwr_nmpsclasses.h"
 
 /*_define _______________________________________________________*/
 
-#define GRAFCET_CONN  VLDH_CLASS_CONGRAFCET
-#define FLOAT_CONN  VLDH_CLASS_CONANALOG
-#define BOOLEAN_CONN VLDH_CLASS_CONDIGITAL
-#define INT32_CONN  VLDH_CLASS_CONANALOG
-#define DATA_CONN  VLDH_CLASS_CONDATA
-#define DEFAULT_CONN VLDH_CLASS_CONANALOG
-#define STEPDIV_CONN VLDH_CLASS_STEPDIV
-#define STEPCONV_CONN VLDH_CLASS_STEPCONV
-#define TRANSDIV_CONN VLDH_CLASS_TRANSDIV
-#define TRANSCONV_CONN VLDH_CLASS_TRANSCONV
+#define GRAFCET_CONN  pwr_cClass_ConGrafcet
+#define FLOAT_CONN  pwr_cClass_ConAnalog
+#define BOOLEAN_CONN pwr_cClass_ConDigital
+#define INT32_CONN  pwr_cClass_ConAnalog
+#define DATA_CONN  pwr_cClass_ConData
+#define DEFAULT_CONN pwr_cClass_ConAnalog
+#define STEPDIV_CONN pwr_cClass_StepDiv
+#define STEPCONV_CONN pwr_cClass_StepConv
+#define TRANSDIV_CONN pwr_cClass_TransDiv
+#define TRANSCONV_CONN pwr_cClass_TransConv
 
 /*_Local procedues_______________________________________________________*/
 
@@ -99,7 +100,7 @@ int	gsx_check_connection(
 	pwr_tClassId		bodyclass;
 	pwr_sGraphPlcConnection *graphbody;
 
-	ldhses = (sourceobject->hn.window_pointer)->hw.ldhsession; 
+	ldhses = (sourceobject->hn.wind)->hw.ldhses; 
 
 	if ( user_conclass != 0)
 	{
@@ -118,7 +119,7 @@ int	gsx_check_connection(
 	/* Check that the points datatype correspond */
  
 	/* Get parameter info */
-	sts = goen_get_parinfo( foectx->grectx, sourceobject->ln.classid, 
+	sts = goen_get_parinfo( foectx->grectx, sourceobject->ln.cid, 
 			ldhses,
 			sourceobject->ln.mask, 
 			strlen( sourceobject->hn.name),
@@ -126,8 +127,8 @@ int	gsx_check_connection(
 			&graph_pointer,	&par_inverted, &par_type, 
 			&source_par_index, sourceobject);
 	if ( EVEN(sts) ) return( sts);
-	sts = goen_get_parinfo( foectx->grectx, destobject->ln.classid, 
-			(destobject->hn.window_pointer)->hw.ldhsession, 
+	sts = goen_get_parinfo( foectx->grectx, destobject->ln.cid, 
+			(destobject->hn.wind)->hw.ldhses, 
 			destobject->ln.mask, 
 			strlen( destobject->hn.name),
 			destpoint, 
@@ -135,8 +136,8 @@ int	gsx_check_connection(
 			&dest_par_index, destobject);
 	if ( EVEN(sts) ) return( sts);
 
-	source_class = sourceobject->ln.classid;
-	dest_class = destobject->ln.classid;
+	source_class = sourceobject->ln.cid;
+	dest_class = destobject->ln.cid;
 
         /* 
 	SG 08.03.91 
@@ -145,8 +146,8 @@ int	gsx_check_connection(
         */
 
 	/* If one class is a point let the other determine the contype */
-	if ( source_class == vldh_class( ldhses, VLDH_CLASS_POINT) ||
-	     source_class == vldh_uclass( ldhses, "Backup"))
+	if ( source_class == pwr_cClass_Point ||
+	     source_class == pwr_cClass_Backup)
 	{
 	  dummyclass = dest_class;
 	  dest_class = source_class;	
@@ -162,32 +163,29 @@ int	gsx_check_connection(
 	/* Grafcet, if both objects is of grafcet type, connections should
 	  be GRAFCET_CONN */
 
-	if ( 
-	 ((source_class == vldh_class( ldhses, VLDH_CLASS_ORDER)) &&
-	  (dest_class == vldh_class( ldhses, VLDH_CLASS_TRANS))) ||	
-	 ((dest_class == vldh_class( ldhses, VLDH_CLASS_ORDER)) &&
-	  (source_class == vldh_class( ldhses, VLDH_CLASS_TRANS))) )
+	if ( (source_class == pwr_cClass_order && dest_class == pwr_cClass_trans) ||	
+	     (dest_class == pwr_cClass_order && source_class == pwr_cClass_trans) )
 	{
 	  /* Trans and Order -> Logic connection */
-	  *conclass = vldh_class( ldhses, BOOLEAN_CONN);
+	  *conclass = BOOLEAN_CONN;
 	  return GSX__SUCCESS;
 	}
 	else if ( (
-	  (source_class == vldh_class( ldhses, VLDH_CLASS_ORDER)) ||	
-	  (source_class == vldh_class( ldhses, VLDH_CLASS_TRANS)) ||	
-	  (source_class == vldh_class( ldhses, VLDH_CLASS_STEP)) ||	
-	  (source_class == vldh_class( ldhses, VLDH_CLASS_INITSTEP)) ||	
-	  (source_class == vldh_class( ldhses, VLDH_CLASS_SSBEGIN)) ||	
-	  (source_class == vldh_class( ldhses, VLDH_CLASS_SSEND)) ||	
-	  (source_class == vldh_class( ldhses, VLDH_CLASS_SUBSTEP)) 	
+	  (source_class == pwr_cClass_order) ||	
+	  (source_class == pwr_cClass_trans) ||	
+	  (source_class == pwr_cClass_step) ||	
+	  (source_class == pwr_cClass_initstep) ||	
+	  (source_class == pwr_cClass_ssbegin) ||	
+	  (source_class == pwr_cClass_ssend) ||	
+	  (source_class == pwr_cClass_substep) 	
 	  	) && (
-	  (dest_class == vldh_class( ldhses, VLDH_CLASS_ORDER)) ||	
-	  (dest_class == vldh_class( ldhses, VLDH_CLASS_TRANS)) ||	
-	  (dest_class == vldh_class( ldhses, VLDH_CLASS_STEP)) ||	
-	  (dest_class == vldh_class( ldhses, VLDH_CLASS_INITSTEP)) ||	
-	  (dest_class == vldh_class( ldhses, VLDH_CLASS_SSBEGIN)) ||	
-	  (dest_class == vldh_class( ldhses, VLDH_CLASS_SSEND)) ||	
-	  (dest_class == vldh_class( ldhses, VLDH_CLASS_SUBSTEP))  )) 
+	  (dest_class == pwr_cClass_order) ||	
+	  (dest_class == pwr_cClass_trans) ||	
+	  (dest_class == pwr_cClass_step) ||	
+	  (dest_class == pwr_cClass_initstep) ||	
+	  (dest_class == pwr_cClass_ssbegin) ||	
+	  (dest_class == pwr_cClass_ssend) ||	
+	  (dest_class == pwr_cClass_substep)  )) 
 	{
 	  vldh_t_conpoint	*pointlist;
 	  unsigned long		point_count;
@@ -201,10 +199,10 @@ int	gsx_check_connection(
 	  pwr_tClassId		class;
 
 
-	  if ((dest_class == vldh_class( ldhses, VLDH_CLASS_TRANS)) ||
-	      (source_class == vldh_class( ldhses, VLDH_CLASS_TRANS)))
+	  if ((dest_class == pwr_cClass_trans) ||
+	      (source_class == pwr_cClass_trans))
 	  {
-	    if (dest_class == vldh_class( ldhses, VLDH_CLASS_TRANS))
+	    if (dest_class == pwr_cClass_trans)
 	    {
 	      trans_object = destobject;
 	      trans_point = destpoint;	     
@@ -223,11 +221,11 @@ int	gsx_check_connection(
 
 	    if ( trans_point == 0)
 	    {
-	      if ((other_class == vldh_class( ldhses, VLDH_CLASS_STEP)) ||	
-	          (other_class == vldh_class( ldhses, VLDH_CLASS_INITSTEP)) ||	
-	          (other_class == vldh_class( ldhses, VLDH_CLASS_SSBEGIN)) ||	
-	          (other_class == vldh_class( ldhses, VLDH_CLASS_SSEND)) ||	
-	          (other_class == vldh_class( ldhses, VLDH_CLASS_SUBSTEP)))
+	      if ((other_class == pwr_cClass_step) ||	
+	          (other_class == pwr_cClass_initstep) ||	
+	          (other_class == pwr_cClass_ssbegin) ||	
+	          (other_class == pwr_cClass_ssend) ||	
+	          (other_class == pwr_cClass_substep))
 	      {
 	        /* Check if there is more steps connected to the step */
 	        stepcount = 0;
@@ -249,22 +247,22 @@ int	gsx_check_connection(
 	            next_node = (pointlist + k)->node;
 	            next_point = (pointlist + k)->conpoint;
 	            /* Check class of connected nodes */
-	            sts = ldh_GetObjectClass( ldhses, next_node->ln.object_did, &class);
+	            sts = ldh_GetObjectClass( ldhses, next_node->ln.oid, &class);
 	            if (EVEN(sts)) return sts;
 
 	            if ( 
-		      ((class == vldh_class( ldhses, VLDH_CLASS_STEP)) &&
+		      ((class == pwr_cClass_step) &&
 			( next_point == 2 )) ||
-		      ((class == vldh_class( ldhses, VLDH_CLASS_INITSTEP)) && 
+		      ((class == pwr_cClass_initstep) && 
 			( next_point == 2 )) ||
-		      ((class == vldh_class( ldhses, VLDH_CLASS_SUBSTEP)) && 
+		      ((class == pwr_cClass_substep) && 
 			( next_point == 2 )) ||
-		      ((class == vldh_class( ldhses, VLDH_CLASS_SSBEGIN)) && 
+		      ((class == pwr_cClass_ssbegin) && 
 			( next_point == 1 )) )
 	            {
 	              stepcount++;
 	            }
-	            else if (class == vldh_class( ldhses, VLDH_CLASS_TRANS) )
+	            else if (class == pwr_cClass_trans )
 	            {
 	              transcount++;
 	            }
@@ -272,19 +270,19 @@ int	gsx_check_connection(
 	        }
 	      }
 	      if ( stepcount > 0)
-	        *conclass = vldh_class( ldhses, TRANSCONV_CONN);
+	        *conclass = TRANSCONV_CONN;
 	      else if ( transcount > 0)
-	        *conclass = vldh_class( ldhses, STEPDIV_CONN);
+	        *conclass = STEPDIV_CONN;
 	      else
-	        *conclass = vldh_class( ldhses, GRAFCET_CONN);
+	        *conclass = GRAFCET_CONN;
 	    }
 	    else if ( trans_point == 2)
 	    {
-	      if ((other_class == vldh_class( ldhses, VLDH_CLASS_STEP)) ||	
-	          (other_class == vldh_class( ldhses, VLDH_CLASS_INITSTEP)) ||	
-	          (other_class == vldh_class( ldhses, VLDH_CLASS_SSBEGIN)) ||	
-	          (other_class == vldh_class( ldhses, VLDH_CLASS_SSEND)) ||	
-	          (other_class == vldh_class( ldhses, VLDH_CLASS_SUBSTEP)))
+	      if ((other_class == pwr_cClass_step) ||	
+	          (other_class == pwr_cClass_initstep) ||	
+	          (other_class == pwr_cClass_ssbegin) ||	
+	          (other_class == pwr_cClass_ssend) ||	
+	          (other_class == pwr_cClass_substep))
 	      {
 	        /* Check if there is more steps connected to the trans */
 	        stepcount = 0;
@@ -308,22 +306,22 @@ int	gsx_check_connection(
 	            next_node = (pointlist + k)->node;
 	            next_point = (pointlist + k)->conpoint;
 	            /* Check class of connected nodes */
-	            sts = ldh_GetObjectClass( ldhses, next_node->ln.object_did, &class);
+	            sts = ldh_GetObjectClass( ldhses, next_node->ln.oid, &class);
 	            if (EVEN(sts)) return sts;
 
 	            if ( 
-		      ((class == vldh_class( ldhses, VLDH_CLASS_STEP)) &&
+		      ((class == pwr_cClass_step) &&
 			( next_point == 0 )) ||
-		      ((class == vldh_class( ldhses, VLDH_CLASS_INITSTEP)) && 
+		      ((class == pwr_cClass_initstep) && 
 			( next_point == 0 )) ||
-		      ((class == vldh_class( ldhses, VLDH_CLASS_SUBSTEP)) && 
+		      ((class == pwr_cClass_substep) && 
 			( next_point == 0 )) ||
-		      ((class == vldh_class( ldhses, VLDH_CLASS_SSBEGIN)) && 
+		      ((class == pwr_cClass_ssbegin) && 
 			( next_point == 0 )) )
 	            {
 	              stepcount++;
 	            }
-	            else if (class == vldh_class( ldhses, VLDH_CLASS_TRANS) )
+	            else if (class == pwr_cClass_trans)
 	            {
 	              transcount++;
 	            }
@@ -333,17 +331,17 @@ int	gsx_check_connection(
  	          XtFree((char *) pointlist);
 	      }
 	      if ( stepcount > 0)
-	        *conclass = vldh_class( ldhses, TRANSDIV_CONN);
+	        *conclass = TRANSDIV_CONN;
 	      else if ( transcount > 0)
-	        *conclass = vldh_class( ldhses, STEPCONV_CONN);
+	        *conclass = STEPCONV_CONN;
 	      else
-	        *conclass = vldh_class( ldhses, GRAFCET_CONN);
+	        *conclass = GRAFCET_CONN;
 	    }
 	    else 
-	      *conclass = vldh_class( ldhses, GRAFCET_CONN);
+	      *conclass = GRAFCET_CONN;
 
 	    /* Check that all connections are of the same class */
-            if ( *conclass != vldh_class( ldhses, GRAFCET_CONN))
+            if ( *conclass != GRAFCET_CONN)
 	    {
 	      vldh_t_con 	*conlist;
 	      vldh_t_con 	con;
@@ -361,11 +359,11 @@ int	gsx_check_connection(
 	        for ( i = 0; i < con_count; i++)
 	        {
 	          con = *(conlist + i);
-	          if ( con->lc.classid != *conclass)
+	          if ( con->lc.cid != *conclass)
 	          {
 	            /* Exchange this connection */
-	            src = con->hc.source_node_pointer;
-	            dest = con->hc.dest_node_pointer;
+	            src = con->hc.source_node;
+	            dest = con->hc.dest_node;
 	            spoint = con->lc.source_point;
 	            dpoint = con->lc.dest_point;
 	            goec_con_delete( foectx->grectx, con);
@@ -386,11 +384,11 @@ int	gsx_check_connection(
 	        for ( i = 0; i < con_count; i++)
 	        {
 	          con = *(conlist + i);
-	          if ( con->lc.classid != *conclass)
+	          if ( con->lc.cid != *conclass)
 	          {
 	            /* Exchange this connection */
-	            src = con->hc.source_node_pointer;
-	            dest = con->hc.dest_node_pointer;
+	            src = con->hc.source_node;
+	            dest = con->hc.dest_node;
 	            spoint = con->lc.source_point;
 	            dpoint = con->lc.dest_point;
 	            goec_con_delete( foectx->grectx, con);
@@ -404,21 +402,21 @@ int	gsx_check_connection(
 	    }
 	  }
 	  else
-	    *conclass = vldh_class( ldhses, GRAFCET_CONN);
+	    *conclass = GRAFCET_CONN;
 	  return GSX__SUCCESS;
 	}
 	
         /* Get the type of the source attribute */
 	sts = ldh_GetObjectBodyDef (
 			ldhses,
-			sourceobject->ln.classid, "RtBody", 1, 
+			sourceobject->ln.cid, "RtBody", 1, 
 			&bodydef, &rows);
 	if ( EVEN(sts) )
 	{
 	  /* This is a development object */
 	  sts = ldh_GetObjectBodyDef (
 			ldhses,
-			sourceobject->ln.classid, "DevBody", 1, 
+			sourceobject->ln.cid, "DevBody", 1, 
 			&bodydef, &rows);
 	  if ( EVEN(sts) ) return sts;
 	}
@@ -444,14 +442,14 @@ int	gsx_check_connection(
         /* Get the type of the destination attribute */
 	sts = ldh_GetObjectBodyDef (
 			ldhses,
-			destobject->ln.classid, "RtBody", 1, 
+			destobject->ln.cid, "RtBody", 1, 
 			&bodydef, &rows);
 	if ( EVEN(sts) )
 	{
 	  /* This is a development object */
 	  sts = ldh_GetObjectBodyDef (
 			ldhses,
-			destobject->ln.classid, "DevBody", 1, 
+			destobject->ln.cid, "DevBody", 1, 
 			&bodydef, &rows);
 	  if ( EVEN(sts) ) return sts;
 	}
@@ -475,8 +473,8 @@ int	gsx_check_connection(
         };
         free ((char *) bodydef );
 
-	if ( !( dest_class == vldh_class( ldhses, VLDH_CLASS_POINT) ||	
-	        dest_class == vldh_uclass( ldhses, "Backup")))
+	if ( !( dest_class == pwr_cClass_Point ||	
+	        dest_class == pwr_cClass_Backup))
 	{
 	  /* source and destination has to be of the same type */
 	  if ( source_pointer_flag != dest_pointer_flag)
@@ -485,22 +483,22 @@ int	gsx_check_connection(
 	    return GSX__CONTYPE;
 	}
 	if ( source_pointer_flag)
-	  *conclass = vldh_class( ldhses, DATA_CONN);
+	  *conclass = DATA_CONN;
 	else
 	{
 	  switch ( source_type ) 
 	  {
             case pwr_eType_Float32: 
-	      *conclass = vldh_class( ldhses, FLOAT_CONN);
+	      *conclass = FLOAT_CONN;
               break;
             case pwr_eType_Boolean:
-	      *conclass = vldh_class( ldhses, BOOLEAN_CONN);
+	      *conclass = BOOLEAN_CONN;
               break;
             case pwr_eType_Int32:
-	      *conclass = vldh_class( ldhses, INT32_CONN);
+	      *conclass = INT32_CONN;
               break;
             default: 
-	      *conclass = vldh_class( ldhses, DEFAULT_CONN);
+	      *conclass = DEFAULT_CONN;
           }
 	}
 	return GSX__SUCCESS;
@@ -540,22 +538,22 @@ int gsx_check_subwindow(
 	pwr_tClassId		class;
 	int			found, sts;
 
-	ldhses = (object->hn.window_pointer)->hw.ldhsession; 
+	ldhses = (object->hn.wind)->hw.ldhses; 
 
 	/* Order */
-	if ( object->ln.classid == vldh_class( ldhses, VLDH_CLASS_ORDER))
+	if ( object->ln.cid == pwr_cClass_order)
 	{
 	  if ( *subwindow_nr == 2 )
 	  {
 	    /* Check if this order has a COrder as a child */	
 	    found = 0;
-	    sts = ldh_GetChild( ldhses,	object->ln.object_did, &next_objdid);
+	    sts = ldh_GetChild( ldhses,	object->ln.oid, &next_objdid);
 	    while ( ODD(sts) )
 	    {
 	      /* Find out if this is a COrder */
 	      sts = ldh_GetObjectClass( ldhses,	next_objdid, &class);
 
-	      if ( class == vldh_class( ldhses, VLDH_CLASS_CORDER ))
+	      if ( class == pwr_cClass_corder)
 	      {
 	        found = 1;
 	      }
@@ -569,7 +567,7 @@ int gsx_check_subwindow(
 	  }
 	  *function_access = foe_eFuncAccess_Edit;
 	}
-	else if ( object->ln.classid == vldh_uclass( ldhses, "Func"))
+	else if ( object->ln.cid == pwr_cClass_Func)
 	  *function_access = foe_eFuncAccess_View;
 	else
 	  *function_access = foe_eFuncAccess_Edit;
@@ -590,9 +588,9 @@ int gsx_auto_create(
   int sts;
   ldh_tSesContext		ldhses;
 
-  ldhses = (source->hn.window_pointer)->hw.ldhsession; 
+  ldhses = (source->hn.wind)->hw.ldhses; 
 
-  switch( source->ln.classid)
+  switch( source->ln.cid)
   {
     case pwr_cClass_step:
     case pwr_cClass_initstep:
@@ -683,7 +681,7 @@ int gsx_auto_create(
       pwr_tUInt32		source_pointer_flag;
 
       /* Create a generic sto or get */
-      sts = goen_get_parinfo( foectx->grectx, source->ln.classid,
+      sts = goen_get_parinfo( foectx->grectx, source->ln.cid,
 			ldhses,
 			source->ln.mask, 
 			strlen( source->hn.name),
@@ -693,12 +691,12 @@ int gsx_auto_create(
       if ( EVEN(sts) ) return( sts);
 
       /* Get the type of the source attribute */
-      sts = ldh_GetObjectBodyDef( ldhses, source->ln.classid, "RtBody", 1, 
+      sts = ldh_GetObjectBodyDef( ldhses, source->ln.cid, "RtBody", 1, 
 			&bodydef, &rows);
       if ( EVEN(sts) )
       {
          /* This is a development object */
-         sts = ldh_GetObjectBodyDef( ldhses, source->ln.classid, "DevBody", 1, 
+         sts = ldh_GetObjectBodyDef( ldhses, source->ln.cid, "DevBody", 1, 
 			&bodydef, &rows);
           if ( EVEN(sts) ) return sts;
       }

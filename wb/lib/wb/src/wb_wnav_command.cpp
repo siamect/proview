@@ -985,6 +985,34 @@ static int	wnav_set_func(	void		*client_data,
       wnav->ldh_refresh( pwr_cNObjid);
     }
   }
+  else if ( strncmp( arg1_str, "SHOWTRUEDB", strlen( arg1_str)) == 0)
+  {
+    if ( wnav->window_type == wnav_eWindowType_No)
+      return WNAV__CMDMODE;
+
+    if ( EVEN( dcli_get_qualifier( "/LOCAL", arg1_str)))
+      // Global command to all windows
+      (wnav->gbl_command_cb)( wnav->parent_ctx, "SET SHOWTRUEDB");
+    else
+    {
+      wnav->gbl.show_truedb = 1;
+      wnav->ldh_refresh( pwr_cNObjid);
+    }
+  }
+  else if ( strncmp( arg1_str, "NOSHOWTRUEDB", strlen( arg1_str)) == 0)
+  {
+    if ( wnav->window_type == wnav_eWindowType_No)
+      return WNAV__CMDMODE;
+
+    if ( EVEN( dcli_get_qualifier( "/LOCAL", arg1_str)))
+      // Global command to all windows
+      (wnav->gbl_command_cb)( wnav->parent_ctx, "SET NOSHOWTRUEDB");
+    else
+    {
+      wnav->gbl.show_truedb = 0;
+      wnav->ldh_refresh( pwr_cNObjid);
+    }
+  }
   else if ( strncmp( arg1_str, "VERIFY", strlen( arg1_str)) == 0)
   {
     if ( wnav->window_type == wnav_eWindowType_No)

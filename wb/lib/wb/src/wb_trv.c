@@ -9,6 +9,7 @@
 #include <ctype.h>
 
 #include "pwr_class.h"
+#include "pwr_baseclasses.h"
 #include "co_cdh.h"
 #include "wb_foe_msg.h"
 #include "wb_foe_macros.h"
@@ -277,7 +278,7 @@ static int trv_get_child_rtnode (
 
 	/* Check if this is a rtnode */
 	sts = ldh_GetObjectClass( ldhses, objdid, &class);
-	if ( class == vldh_class( ldhses, VLDH_CLASS_RTNODE ))
+	if ( class == pwr_eClass_Node)
 	{
 	  /* Yes, this is a rtnode, insert in list */
 	  sts = utl_realloc( (char **)rtnodelist, 
@@ -344,7 +345,7 @@ int trv_get_rtnodes (
 	  if ( EVEN(sts)) return sts;
 
 	  /* Check that the class of the node object is correct */
-	  if ( class == vldh_class( ldhses, VLDH_CLASS_NODEHIER ))
+	  if ( class == pwr_eClass_NodeHier)
 	  {
 	    /* Check if the children is a rtnode */
 	    sts = trv_get_child_rtnode( ldhses, objdid, rtnode_count,
@@ -397,7 +398,7 @@ static int trv_get_child_plc (
 	{
 	  /* Check if plc */
 	  sts = ldh_GetObjectClass( ldhses, objdid, &class);
-	  if ( class == vldh_class( ldhses, VLDH_CLASS_PLCPGM ))
+	  if ( class == pwr_cClass_plc)
 	  {
 	    sts = utl_realloc( (char **)plclist, *plc_count * sizeof(pwr_tObjid), 
 		(*plc_count + 1) * sizeof(pwr_tObjid));
@@ -460,7 +461,7 @@ int trv_get_plcpgms (
 	  if ( EVEN(sts)) return sts;
 
 	  /* Check that the class of the node object is correct */
-	  if ( class == vldh_class( ldhses, VLDH_CLASS_PLANTHIER ))
+	  if ( class == pwr_eClass_PlantHier)
 	  {
 	    /* Check if the children is a plc */
 	    sts = trv_get_child_plc( ldhses, objdid, plc_count,

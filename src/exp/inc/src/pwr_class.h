@@ -766,20 +766,20 @@ struct pwr_s_Point
 
 struct pwr_s_PlcProgram
     {
-    pwr_tObjid		objdid;
+    pwr_tObjid		oid;
     pwr_tUInt32		object_type;
-    pwr_tClassId	classid;
+    pwr_tClassId	cid;
     pwr_tUInt32		defnamecount[PWR_OBJTYPES_MAX];
     pwr_tObjid		reset_objdid;
     pwr_tUInt32		connamecount;
-    pwr_tObjid		window_did;
+    pwr_tObjid		woid;
     };
 
 struct pwr_s_PlcWindow
     {
-    pwr_tObjid		objdid;
+    pwr_tObjid		oid;
     pwr_tUInt32		object_type;
-    pwr_tClassId	classid;
+    pwr_tClassId	cid;
     pwr_tFloat32	x;
     pwr_tFloat32	y;	
     pwr_tFloat32	width;
@@ -787,7 +787,7 @@ struct pwr_s_PlcWindow
     pwr_tFloat32	zoom;
     pwr_tInt32		x_root;
     pwr_tInt32		y_root;
-    pwr_tObjid		parent_node_did;
+    pwr_tObjid		poid;
     pwr_tUInt32		compobjcount;
     pwr_tUInt32		refconcount;
     pwr_tUInt32		subwindowindex;
@@ -796,14 +796,14 @@ struct pwr_s_PlcWindow
 struct pwr_s_PlcNode
     {
     pwr_tUInt32		object_type;
-    pwr_tClassId	classid;
-    pwr_tObjid		object_did;
+    pwr_tClassId	cid;
+    pwr_tObjid		oid;
     pwr_tFloat32	x;
     pwr_tFloat32	y;
     pwr_tFloat32	width;
     pwr_tFloat32	height;
-    pwr_tObjid		window_did;
-    pwr_tObjid		subwind_objdid[2];
+    pwr_tObjid		woid;
+    pwr_tObjid		subwind_oid[2];
     pwr_tUInt32		subwindow;
     pwr_tUInt32		graphtype;
     pwr_tUInt32		mask[3];
@@ -813,20 +813,20 @@ struct pwr_s_PlcNode
 
 struct pwr_s_PlcConnection
     {
-    pwr_tObjid		objdid;
+    pwr_tObjid		oid;
     pwr_tUInt32		object_type;
-    pwr_tClassId	classid;
+    pwr_tClassId	cid;
     pwr_tUInt32		curvature;
     pwr_tUInt32		drawtype;
     pwr_tUInt32		attributes;
     pwr_tUInt32		refnr;
     pwr_tUInt32		source_point;
-    pwr_tObjid		source_node_did;
+    pwr_tObjid		source_oid;
     pwr_tUInt32		dest_point;
-    pwr_tObjid		dest_node_did;
+    pwr_tObjid		dest_oid;
     pwr_tUInt32		point_count;
     pwr_sPoint		point[PWR_BREAKPOINTS_MAX];
-    pwr_tObjid		window_did;
+    pwr_tObjid		woid;
     };
 
 struct pwr_s_GraphPlcProgram

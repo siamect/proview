@@ -77,7 +77,7 @@ SObject pwrb:Class
       Object AoObject $Intern 1 
         Body SysBody
           Attr PgmName = "AoObject"
-          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr TypeRef = "pwrs:Type-$AttrRef"
           Attr GraphName = "In"
           Attr NiNaAnnot = 1
           Attr NiNaSegments = 1
@@ -88,7 +88,7 @@ SObject pwrb:Class
       !*/
       Object SigChanCon $Intern 2 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr TypeRef = "pwrs:Type-$AttrRef"
           Attr Flags |= PWR_MASK_INVISIBLE
           Attr NiNaAnnot = 3
           Attr NiNaCond = 1

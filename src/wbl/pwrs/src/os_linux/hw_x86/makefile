@@ -30,7 +30,8 @@ all : init copy lib exe
 
 init :
 
-copy : $(inc_dir)/pwr_systemclasses.h
+copy : $(inc_dir)/pwr_systemclasses.h \
+       $(inc_dir)/pwr_systemclasses.hpp
 
 lib  : $(load_dir)/pwrs.dbs
 
@@ -49,6 +50,10 @@ $(load_dir)/pwrs.dbs :
 $(inc_dir)/pwr_systemclasses.h :
 	@ echo "Generating struct files for pwrs classes..."
 	@ co_convert -s -d $(inc_dir) "$(pwre_sroot)/wbl/pwrs/src/pwrs_c_*.wb_load"
+
+$(inc_dir)/pwr_systemclasses.hpp :
+	@ echo "Generating hpp files for pwrs classes..."
+	@ co_convert -po -d $(inc_dir) "$(pwre_sroot)/wbl/pwrs/src/pwrs_c_*.wb_load"
 
 $(doc_dir)/orm/pwrs_allclasses.html :
 	@ echo "Generating html files for pwrs classes..."

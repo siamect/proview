@@ -90,23 +90,10 @@ SObject pwrb:Class
       Object Object $Intern 1 
         Body SysBody
           Attr PgmName = "Object"
-          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr TypeRef = "pwrs:Type-$AttrRef"
           Attr GraphName = "sts"
           Attr NiNaAnnot = 1
           Attr NiNaSegments = 1
-        EndBody
-      EndObject
-      !/**
-      !  Specifies, in an object specified by Object, the name
-      !  of the attribute where to store the value.
-      !*/
-      Object Parameter $Intern 2 
-        Body SysBody
-          Attr PgmName = "Parameter"
-          Attr TypeRef = "pwrs:Type-$String80"
-          Attr GraphName = "par"
-          Attr NiNaAnnot = 2
-          Attr ConPointNr = 0
         EndBody
       EndObject
       !/**

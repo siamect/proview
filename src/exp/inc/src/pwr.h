@@ -369,19 +369,31 @@ typedef union {
 #if (pwr_dHost_byteOrder == pwr_dLittleEndian)
 
     pwr_tBit  Indirect	: 1;
+    pwr_tBit  Object	: 1;
+    pwr_tBit  ObjectAttr: 1;
+    pwr_tBit  Array	: 1;
+    pwr_tBit  Shadowed	: 1;
 
-    pwr_tBit  fill	: 31;
+    pwr_tBit  fill	: 27;
 
 #elif (pwr_dHost_byteOrder == pwr_dBigEndian)
 
-    pwr_tBit  fill	: 31;
+    pwr_tBit  fill	: 27;
 
+    pwr_tBit  Shadowed	: 1;
+    pwr_tBit  Array	: 1;
+    pwr_tBit  ObjectAttr: 1;
+    pwr_tBit  Object	: 1;
     pwr_tBit  Indirect	: 1;
 
 #endif
   } b;
 
 #define pwr_mAttrRef_Indirect	pwr_Bit(0)
+#define pwr_mAttrRef_Object	pwr_Bit(1)
+#define pwr_mAttrRef_ObjectAttr	pwr_Bit(2)
+#define pwr_mAttrRef_Array	pwr_Bit(3)
+#define pwr_mAttrRef_Shadowed	pwr_Bit(4)
 
 } pwr_mAttrRef;
 

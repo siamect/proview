@@ -1,15 +1,8 @@
 #ifndef INC_wb_wblvocabTokenTypes_hpp_
 #define INC_wb_wblvocabTokenTypes_hpp_
 
-/* $ANTLR 2.7.3 (20040413-1): "wb_wbllexer.g" -> "wb_wblvocabTokenTypes.hpp"$ */
-
-#ifndef CUSTOM_API
-# define CUSTOM_API
-#endif
-
-#ifdef __cplusplus
-struct CUSTOM_API wb_wblvocabTokenTypes {
-#endif
+/* $ANTLR 2.7.1: "wb_wbllexer.g" -> "wb_wblvocabTokenTypes.hpp"$ */
+struct wb_wblvocabTokenTypes {
 	enum {
 		EOF_ = 1,
 		OBJECT = 4,
@@ -45,7 +38,5 @@ struct CUSTOM_API wb_wblvocabTokenTypes {
 		SWEC = 34,
 		NULL_TREE_LOOKAHEAD = 3
 	};
-#ifdef __cplusplus
 };
-#endif
 #endif /*INC_wb_wblvocabTokenTypes_hpp_*/

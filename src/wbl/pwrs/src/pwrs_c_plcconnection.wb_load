@@ -16,7 +16,7 @@ SObject pwrs:Class
       Body SysBody
         Attr StructName = "PlcConnection"
       EndBody
-      Object objdid $Attribute 1
+      Object oid $Attribute 1
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Objid"
         EndBody
@@ -26,7 +26,7 @@ SObject pwrs:Class
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
-      Object classid $Attribute 3
+      Object cid $Attribute 3
         Body SysBody
           Attr TypeRef = "pwrs:Type-$ClassId"
         EndBody
@@ -56,7 +56,7 @@ SObject pwrs:Class
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
-      Object source_node_did $Attribute 9
+      Object source_oid $Attribute 9
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Objid"
         EndBody
@@ -66,7 +66,7 @@ SObject pwrs:Class
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
-      Object dest_node_did $Attribute 11
+      Object dest_oid $Attribute 11
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Objid"
         EndBody
@@ -83,7 +83,7 @@ SObject pwrs:Class
           Attr Class = pwr_eClass_Point
         EndBody
       EndObject
-      Object window_did $Attribute 14
+      Object woid $Attribute 14
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Objid"
         EndBody

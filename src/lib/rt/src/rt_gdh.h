@@ -25,6 +25,10 @@ extern "C" {
 #include "pwr.h" 
 #endif
 
+#ifndef pwr_class_h
+#include "pwr_class.h" 
+#endif
+
 #ifndef rt_errh_h
 #include "rt_errh.h"
 #endif
@@ -92,6 +96,27 @@ typedef struct {
   pwr_tNid nid;			/**< Node index */
 
 } gdh_sVolumeInfo;
+
+/**
+ * Attribute flags
+ */
+typedef enum {
+  gdh_mAttrDef_Shadowed 	= 1 << 0,	/**< Attribute is shadowed */
+  gdh_mAttrDef_Super		= 1 << 1	/**< Super class attribute */
+} gdh_mAttrDef;
+
+/**
+ * Attribute info
+ */
+typedef struct {
+
+  pwr_tObjName  attrName;	/**< Attribute name */
+  unsigned long	attrLevel;	/**< Attribute level */
+  pwr_eClass	attrClass;	/**< Attribute class */
+  unsigned long flags;		/**< Attribute flags */
+  pwr_uParDef	*attr;		/**< Pointer to attribute object */
+
+} gdh_sAttrDef;
 
 /* GDH entrypoints (as function prototypes).  */
 
@@ -633,6 +658,20 @@ pwr_tStatus
 gdh_GetVolumeInfo(
   pwr_tVid vid,
   gdh_sVolumeInfo *info
+);
+
+pwr_tStatus
+gdh_GetObjectBodyDef(
+  pwr_tCid cid,
+  gdh_sAttrDef **bodydef,
+  int *rows
+);
+
+pwr_tStatus
+gdh_GetTrueObjectBodyDef(
+  pwr_tCid cid,
+  gdh_sAttrDef **bodydef,
+  int *rows
 );
 
 /* Undocumented routines. For internal use only.  */

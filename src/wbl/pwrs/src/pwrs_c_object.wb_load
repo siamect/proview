@@ -790,6 +790,54 @@ SObject pwrs:Class
         EndObject
       EndObject
     EndObject
+    Object ConfiguratorPxsxx $Menu
+      Object Pointed $Menu
+	Object Open $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open Object..."
+	    Attr MethodName = "$Object-OpenObject"
+	  EndBody
+	EndObject
+        Object Help $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help"
+	    Attr MethodName = "$Object-Help"
+	    Attr FilterName = "$Object-HelpFilter"
+	  EndBody
+        EndObject
+        Object HelpClass $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help Class"
+	    Attr MethodName = "$Object-HelpClass"
+	    Attr FilterName = "$Object-HelpClassFilter"
+	  EndBody
+        EndObject
+      EndObject
+    EndObject
+    Object NavigatorPxsxx $Menu
+      Object Pointed $Menu
+	Object Open $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open Object..."
+	    Attr MethodName = "$Object-OpenObject"
+	  EndBody
+	EndObject
+        Object Help $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help"
+	    Attr MethodName = "$Object-Help"
+	    Attr FilterName = "$Object-HelpFilter"
+	  EndBody
+        EndObject
+        Object HelpClass $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Help Class"
+	    Attr MethodName = "$Object-HelpClass"
+	    Attr FilterName = "$Object-HelpClassFilter"
+	  EndBody
+        EndObject
+      EndObject
+    EndObject
     Object RtXtt $RtMenu
       Object OpenGraph $MenuButton
 	Body SysBody

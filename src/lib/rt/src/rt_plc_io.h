@@ -22,7 +22,7 @@
 typedef struct 
 {
   void		**Pointer;
-  pwr_tObjid	Objid;
+  pwr_sAttrRef	AttrRef;
   pwr_tClassId	ObjType;
   pwr_tUInt32	Size;
   pwr_tUInt32	UseCode;

@@ -437,16 +437,30 @@ int wb_vrepwbl::getTypeInfo( const char *name, pwr_tTid *tid, pwr_eType *type, s
     else if ( strcmp( tname, "DeltaTime") == 0)
       return getTypeInfo( *tid = (pwr_tTid)pwr_eType_DeltaTime, type, size, elements);
     else {
-      ref_wblnode n = findType( tname);
-      if ( n) {
-        *tid = n->o->m_tid;
-        *type = (pwr_eType) n->o->ty.type;
-        *size = n->o->ty.size;
-        *elements = 1;
-        return 1;
+#if 0
+      if ( wname.segmentIsEqual( "Class", 0)) {
+	ref_wblnode n = findClass( tname);
+	if ( n) {
+	  size_t dsize;
+
+	  *elements = 1;
+	  *tid = n->o->c.cid;
+	  return getClassInfo( *tid, size, &dsize);
+	}
       }
-      else
-        type_extern = true;
+      else 
+#endif
+      {
+	ref_wblnode n = findType( tname);
+	if ( n) {
+	  *tid = n->o->m_tid;
+	  *type = (pwr_eType) n->o->ty.type;
+	  *size = n->o->ty.size;
+	  *elements = 1;
+	  return 1;
+	}
+      }
+      type_extern = true;
     }
   }
   if ( type_extern) {
@@ -933,11 +947,21 @@ int wb_vrepwbl::getAttrInfoRec( wb_attrname *attr, pwr_eBix bix, pwr_tCid cid, s
         *size = n_attr->o->a.size;
       }
       if ( attr->hasAttribute( level + 1)) {
-        // Fix , Subclass: get cid from type of attr
-        if ( !getAttrInfoRec( attr, bix, cid, size, offset, tid, elements, type, flags,
-                              level + 1))
-          // Fix , search in other volumes
-          return 0;
+        // Subclass: get cid from type of attr
+        if ( !getAttrInfoRec( attr, bix, n_attr->o->a.tid, size, offset, tid, elements, type, flags,
+                              level + 1)) {
+          // Search in other volumes
+	  size_t l_offset;
+
+          if ( !m_erep->merep()->getAttrInfoRec( attr, bix, n_attr->o->a.tid, size, &l_offset, tid, 
+						 elements, type, flags, level + 1))
+	    return 0;
+	  else {
+	    *offset += l_offset;
+	    return 1;
+	  }
+	}
+	return 1;
       }
       *tid = n_attr->o->a.tid;
       *elements = n_attr->o->a.elements;
@@ -1010,6 +1034,48 @@ int wb_vrepwbl::nameToAttrRef( const char *name, pwr_sAttrRef *attrref)
 
   wb_name aname = wb_name(name);
   if ( aname.evenSts()) return 0;
+
+  if ( strncmp( aname.volume(), "$", 1) == 0 &&
+       aname.segmentIsEqual( volume_name)) {
+    char cname[120];
+    pwr_sAttrRef aref;
+    pwr_tCid cid;
+    pwr_tVid vid;
+
+    if ( aname.volumeIsEqual( "$PlcConnect"))
+      vid = ldh_cPlcConnectVolume;
+    else if ( aname.volumeIsEqual( "$PlcHost"))
+      vid = ldh_cPlcHostVolume;
+    else if ( aname.volumeIsEqual( "$IoConnect"))
+      vid = ldh_cIoConnectVolume;
+
+    strcpy( cname, aname.segmentsAll());
+    char *s = strchr( cname, '-');
+    if ( s)
+      *s = ':';
+    ref_wblnode n = findClass( aname.segment( aname.segments() - 1));
+    if ( !n) return 0;
+
+    cid = n->o->c.cid;
+
+    if ( aname.hasAttribute()) {
+      strcat( cname, "-Template.");
+      strcat( cname, aname.attributesAll());
+      sts = nameToAttrRef( cname, &aref);
+      if ( EVEN(sts)) return sts;
+
+      *attrref = aref;
+      attrref->Objid.vid = vid;
+      attrref->Objid.oix = cid;
+    }
+    else {
+      *attrref = pwr_cNAttrRef;
+      attrref->Objid.vid = vid;
+      attrref->Objid.oix = cid;
+      attrref->Flags.b.Object = 1;
+    }
+    return LDH__SUCCESS;
+  }
 
   ref_wblnode n = find( aname.name( cdh_mName_volume | cdh_mName_path | cdh_mName_object));
   if ( n) {

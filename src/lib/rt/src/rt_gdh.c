@@ -2920,6 +2920,169 @@ gdh_GetVolumeInfo(
   return rsts;
 }
 
+pwr_tStatus
+gdh_GetObjectBodyDef(
+  pwr_tCid cid,
+  gdh_sAttrDef **bodydef,
+  int *rows
+)
+{
+  gdb_sClass *cp;
+  gdb_sObject *bop;
+  gdb_sObject *aop;
+  pwr_sParam *adef;
+  pwr_sObjBodyDef *bdef;
+  int acnt = 0;
+  gdh_sAttrDef *bd;
+  pwr_tStatus sts;
+  pwr_tStatus rsts = GDH__SUCCESS;
+  pwr_tOid noid;
+  gdb_sObject *a_super[20];
+  int scnt = 0;
+  int i, j;
+  
+  gdh_ScopeLock {
+    cp = hash_Search(&sts, gdbroot->cid_ht, &cid);
+    if ( cp == 0) { rsts = GDH__NOSUCHCLASS; goto error_sts;}
+
+    bop = pool_Address(&sts, gdbroot->pool, cp->bor);
+    if (bop == NULL) { rsts = GDH__ATTRIBUTE; goto error_sts;}
+
+    bdef = pool_Address(NULL, gdbroot->rtdb, bop->u.n.body);
+    acnt += bdef->NumOfParams;
+
+    /* Count attributes */
+    a_super[scnt++] = vol_OidToObject(&sts, bop->g.soid, gdb_mLo_global, vol_mTrans_all, cvol_eHint_none);
+    while ( a_super[scnt-1]) {
+      adef = pool_Address(NULL, gdbroot->rtdb, a_super[scnt-1]->u.n.body);
+
+      if ( strcmp( a_super[scnt-1]->g.f.name.orig, "Super") == 0 && cdh_tidIsCid(adef->TypeRef)) {
+	cp = hash_Search(&sts, gdbroot->cid_ht, &adef->TypeRef);
+	if ( cp == 0) { rsts = GDH__NOSUCHCLASS; goto error_sts;}
+	    
+	bop = pool_Address(&sts, gdbroot->pool, cp->bor);
+	if (bop == NULL) { rsts = GDH__ATTRIBUTE; goto error_sts;}
+	
+	bdef = pool_Address(NULL, gdbroot->rtdb, bop->u.n.body);
+	acnt += bdef->NumOfParams - 1;
+	
+	a_super[scnt++] = vol_OidToObject(&sts, bop->g.soid, gdb_mLo_global, vol_mTrans_all, cvol_eHint_none);
+      }
+      else
+	break;
+    }
+	
+    /* Allocate buffer */
+    bd = (gdh_sAttrDef *)calloc( acnt, sizeof(gdh_sAttrDef));
+
+    acnt = 0;
+    for ( i = scnt - 1; i >= 0; i--) {
+      aop = a_super[i];
+      while ( aop) {
+	adef = pool_Address(NULL, gdbroot->rtdb, aop->u.n.body);
+	if ( !(aop == a_super[i] && strcmp( aop->g.f.name.orig, "Super") == 0)) {
+	  for ( j = 0; j < i; j++)
+	    strcat( bd[acnt].attrName, "Super.");
+	  strcat( bd[acnt].attrName, aop->g.f.name.orig);
+	  bd[acnt].attrClass = aop->g.cid;
+	  bd[acnt].attr = (pwr_uParDef *)adef;
+	  if ( i > 0)
+	    bd[acnt].flags = gdh_mAttrDef_Super;
+	  acnt++;
+	}	  
+	noid.vid = aop->g.oid.vid;
+	noid.oix = aop->g.sib.flink;
+	aop = vol_OidToObject(&sts, noid, gdb_mLo_global, vol_mTrans_none, cvol_eHint_next);
+	if ( aop && aop == a_super[i])
+	  break;
+      }
+    }
+
+    if ( scnt > 1) {
+      /* Detect shadowed attributes */
+      for ( j = 0; j < acnt - 1; j++) {
+	char *s1 = strrchr( bd[j].attrName, '.');
+	if ( !s1)
+	  s1 = bd[j].attrName;
+	else
+	  s1++;
+	for ( i = j + 1; i < acnt; i++) {
+	  char *s2 = strrchr( bd[i].attrName, '.');
+	  if ( !s2)
+	    s2 = bd[i].attrName;
+	  else
+	    s2++;
+	  if ( cdh_NoCaseStrcmp( s1, s2) == 0) {
+	    bd[j].flags |= gdh_mAttrDef_Shadowed;
+	    break;
+	  }
+	}
+      }
+    }
+    *bodydef = bd;
+    *rows = acnt;
+
+  error_sts: {
+    }
+  } gdh_ScopeUnlock;
+  return rsts;
+}
+
+pwr_tStatus
+gdh_GetTrueObjectBodyDef(
+  pwr_tCid cid,
+  gdh_sAttrDef **bodydef,
+  int *rows
+)
+{
+  gdb_sClass *cp;
+  gdb_sObject *bop;
+  gdb_sObject *aop;
+  pwr_sParam *adef;
+  pwr_sObjBodyDef *bdef;
+  int acnt = 0;
+  gdh_sAttrDef *bd;
+  pwr_tStatus sts;
+  pwr_tStatus rsts = GDH__SUCCESS;
+  pwr_tOid noid;
+  
+  gdh_ScopeLock {
+    cp = hash_Search(&sts, gdbroot->cid_ht, &cid);
+    if ( cp == 0) { rsts = GDH__NOSUCHCLASS; goto error_sts;}
+
+    bop = pool_Address(&sts, gdbroot->pool, cp->bor);
+    if (bop == NULL) { rsts = GDH__ATTRIBUTE; goto error_sts;}
+
+    bdef = pool_Address(NULL, gdbroot->rtdb, bop->u.n.body);
+    acnt = bdef->NumOfParams;
+
+    /* Allocate buffer */
+    bd = (gdh_sAttrDef *)calloc( acnt, sizeof(gdh_sAttrDef));
+
+    acnt = 0;
+    aop = vol_OidToObject(&sts, bop->g.soid, gdb_mLo_global, vol_mTrans_all, cvol_eHint_none);
+    while ( aop) {
+      adef = pool_Address(NULL, gdbroot->rtdb, aop->u.n.body);
+      strcpy( bd[acnt].attrName, aop->g.f.name.orig);
+      bd[acnt].attrClass = aop->g.cid;
+      bd[acnt].attr = (pwr_uParDef *)adef;
+      acnt++;
+	  
+      noid.vid = aop->g.oid.vid;
+      noid.oix = aop->g.sib.flink;
+      aop = vol_OidToObject(&sts, noid, gdb_mLo_global, vol_mTrans_none, cvol_eHint_next);
+      if ( aop->g.oid.oix == bop->g.soid.oix)
+	break;
+    }
+    *bodydef = bd;
+    *rows = acnt;
+
+  error_sts: {
+    }
+  } gdh_ScopeUnlock;
+  return rsts;
+}
+
 #if 0
 pwr_tStatus 
 gdh_RegisterServer( 

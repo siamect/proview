@@ -16,6 +16,7 @@
 #include "wb_tdrep.h"
 #include "wb_ldh_msg.h"
 #include "wb_vrepwbl.h"
+#include "wb_vrepref.h"
 #include "wb_print_wbl.h"
 #include "wb_volume.h"
 #include "pwr_baseclasses.h"
@@ -48,6 +49,8 @@ wb_vrepmem::wb_vrepmem( wb_erep *erep, pwr_tVid vid) :
 
 wb_vrepmem::~wb_vrepmem()
 {
+  m_erep->resetRefMerep();
+
   clear();
 }
 
@@ -69,6 +72,9 @@ void wb_vrepmem::loadWbl( char *filename, pwr_tStatus *sts)
     m_merep->removeDbs( sts, mvrep);
 
   m_merep->addDbs( sts, (wb_mvrep *)vrep);
+
+  // Change merep in ref volumes
+  m_erep->setRefMerep( m_merep);
 
   vrep->ref();
   m_vid = vrep->vid();
@@ -1190,6 +1196,7 @@ bool wb_vrepmem::updateObject( wb_orep *o, bool keepref)
 {
   pwr_tStatus sts;
   wb_cdrep *cdrep = m_merep->cdrep( &sts, o->cid());
+  if ( EVEN(sts)) return false;
   pwr_mClassDef flags = cdrep->flags();
 
   for ( int i = 0; i < 2; i++) {

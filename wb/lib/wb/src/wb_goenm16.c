@@ -443,8 +443,8 @@ int goen_get_point_info_m16( grectx, graphbody, point_nr, mask, node_width,
         point = point_nr;
 
     	/* Get the runtime paramters for this class */
-	sts = ldh_GetObjectBodyDef( (node->hn.window_pointer)->hw.ldhsession, 
-			node->ln.classid, "RtBody", 1, 
+	sts = ldh_GetObjectBodyDef( (node->hn.wind)->hw.ldhses, 
+			node->ln.cid, "RtBody", 1, 
 			&bodydef, &rows);
 	if ( EVEN(sts) ) return sts;
 

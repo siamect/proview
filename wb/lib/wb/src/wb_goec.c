@@ -93,43 +93,43 @@ int	goec_con_draw(
 	  /* This is a fix for backward compatibility */
 	  sts = gre_get_conclass( grectx,
                         0,
-                        (con->hc.window_pointer)->hw.ldhsession,
+                        (con->hc.wind)->hw.ldhses,
                         con->lc.object_type,
                         &con_class);
 	else
 	  sts = gre_get_conclass( grectx,
-                        con->lc.classid,
-                        (con->hc.window_pointer)->hw.ldhsession,
+                        con->lc.cid,
+                        (con->hc.wind)->hw.ldhses,
                         con->lc.object_type,
                         &con_class);
 
         /* For grafcet-connectins source and destination class has to be right*/
-        if ( (con->lc.classid == pwr_cClass_TransDiv &&
-              con->hc.dest_node_pointer->ln.classid == pwr_cClass_trans) ||
-             (con->lc.classid == pwr_cClass_TransConv &&
-              con->hc.source_node_pointer->ln.classid == pwr_cClass_trans) ||
-             (con->lc.classid == pwr_cClass_StepDiv &&
-              con->hc.source_node_pointer->ln.classid == pwr_cClass_trans) ||
-             (con->lc.classid == pwr_cClass_StepConv &&
-              con->hc.dest_node_pointer->ln.classid == pwr_cClass_trans))
+        if ( (con->lc.cid == pwr_cClass_TransDiv &&
+              con->hc.dest_node->ln.cid == pwr_cClass_trans) ||
+             (con->lc.cid == pwr_cClass_TransConv &&
+              con->hc.source_node->ln.cid == pwr_cClass_trans) ||
+             (con->lc.cid == pwr_cClass_StepDiv &&
+              con->hc.source_node->ln.cid == pwr_cClass_trans) ||
+             (con->lc.cid == pwr_cClass_StepConv &&
+              con->hc.dest_node->ln.cid == pwr_cClass_trans))
         {
           /* Shift */
-          tmp_node_pointer = con->hc.source_node_pointer;
+          tmp_node_pointer = con->hc.source_node;
           tmp_point = con->lc.source_point;
-          tmp_node_did = con->lc.source_node_did;
-          con->hc.source_node_pointer = con->hc.dest_node_pointer;
+          tmp_node_did = con->lc.source_oid;
+          con->hc.source_node = con->hc.dest_node;
           con->lc.source_point = con->lc.dest_point;
-          con->lc.source_node_did = con->lc.dest_node_did;
-          con->hc.dest_node_pointer = tmp_node_pointer;
+          con->lc.source_oid = con->lc.dest_oid;
+          con->hc.dest_node = tmp_node_pointer;
           con->lc.dest_point = tmp_point;
-          con->lc.dest_node_did = tmp_node_did;
+          con->lc.dest_oid = tmp_node_did;
         }
 
 	if ( create_flag != GRE_CON_NONROUTE)
         {
 	  flow_CreateCon( grectx->flow_ctx, con->hc.name, con_class, 
-	  	con->hc.source_node_pointer->hn.node_id,
-		con->hc.dest_node_pointer->hn.node_id,
+	  	con->hc.source_node->hn.node_id,
+		con->hc.dest_node->hn.node_id,
 		con->lc.source_point, con->lc.dest_point,
 		con, &con->hc.con_id, 0, NULL, NULL);
 	  flow_GetConPosition( con->hc.con_id, &x_arr, &y_arr, &num);
@@ -152,8 +152,8 @@ int	goec_con_draw(
 	    y[i] = con->lc.point[i].y;
 	  }
 	  flow_CreateCon( grectx->flow_ctx, con->hc.name, con_class, 
-	  	con->hc.source_node_pointer->hn.node_id,
-		con->hc.dest_node_pointer->hn.node_id,
+	  	con->hc.source_node->hn.node_id,
+		con->hc.dest_node->hn.node_id,
 		con->lc.source_point, con->lc.dest_point,
 		con, &con->hc.con_id, con->lc.point_count,
 		x, y);

@@ -43,7 +43,7 @@ SObject pwrb:Class
       !*/
       Object SigChanCon $Attribute 2
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr TypeRef = "pwrs:Type-$AttrRef"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_INVISIBLE
         EndBody

@@ -78,6 +78,7 @@ class WNavBrow {
     flow_sAnnotPixmap 	*pixmap_morehelp;
     flow_sAnnotPixmap 	*pixmap_closehelp;
     flow_sAnnotPixmap 	*pixmap_objname;
+    flow_sAnnotPixmap 	*pixmap_object;
     flow_sAnnotPixmap 	*pixmap_attrref;
     flow_sAnnotPixmap 	*pixmap_attrxref;
     flow_sAnnotPixmap 	*pixmap_ref_err;

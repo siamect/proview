@@ -16,7 +16,7 @@ SObject pwrs:Class
       Body SysBody
         Attr StructName = "PlcProgram"
       EndBody
-      Object objdid $Attribute 1
+      Object oid $Attribute 1
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Objid"
         EndBody
@@ -26,7 +26,7 @@ SObject pwrs:Class
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
-      Object classid $Attribute 3
+      Object cid $Attribute 3
         Body SysBody
           Attr TypeRef = "pwrs:Type-$ClassId"
         EndBody
@@ -38,7 +38,7 @@ SObject pwrs:Class
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
-      Object reset_objdid $Attribute 5
+      Object reset_oid $Attribute 5
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Objid"
         EndBody
@@ -48,7 +48,7 @@ SObject pwrs:Class
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
-      Object window_did $Attribute 7
+      Object woid $Attribute 7
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Objid"
         EndBody

@@ -30,12 +30,12 @@ SObject pwrs:Class
           Attr TypeRef = "pwrs:Type-$UInt32"
         EndBody
       EndObject
-      Object classid $Attribute 2
+      Object cid $Attribute 2
         Body SysBody
           Attr TypeRef = "pwrs:Type-$ClassId"
         EndBody
       EndObject
-      Object object_did $Attribute 3
+      Object oid $Attribute 3
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Objid"
         EndBody
@@ -60,12 +60,12 @@ SObject pwrs:Class
           Attr TypeRef = "pwrs:Type-$Float32"
         EndBody
       EndObject
-      Object window_did $Attribute 8
+      Object woid $Attribute 8
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Objid"
         EndBody
       EndObject
-      Object subwind_objdid $Attribute 9
+      Object subwind_oid $Attribute 9
         Body SysBody
 	  Attr Flags |= PWR_MASK_ARRAY
 	  Attr Elements = 2

@@ -51,14 +51,16 @@ char wb_nrep::unatname_tab[] = \
 #define nameDiff( s1, s2) ((long)(s1) - (long)(s2))
 
 wb_nrep::wb_nrep() :
-  m_nRef(0), num_seg(0), num_attr(0), vol_len(0), seg(0), attr(0)
+  m_nRef(0), num_seg(0), num_attr(0), vol_len(0), seg(0), attr(0), 
+  m_hasSuper(false), m_shadowed(false)
 {
   strcpy( oname,"");
 }
 
 wb_nrep::wb_nrep( const char *n) throw (wb_error) :
   m_nRef(0), num_seg(0), num_attr(0), vol_len(0),
-  vol_offs(0), b_size(0), b_offset(0), seg(0), attr(0)
+  vol_offs(0), b_size(0), b_offset(0), seg(0), attr(0), m_hasSuper(false),
+  m_shadowed(false)
 { 
   const char *s;
   int seg_cnt = 1;
@@ -404,6 +406,11 @@ void wb_nrep::parse () throw (wb_error)
             throw wb_error(LDH__BADNAME);
           attr[num_attr+1].offs = nameDiff( s+1, oname);
           attr[num_attr].len = attr[num_attr+1].offs - attr[num_attr].offs - 1;
+	  if ( attr[num_attr].len == 5 && 
+	       cdh_NoCaseStrncmp( oname + attr[num_attr].offs, "Super", 5) == 0) {
+	    attr[num_attr].isSuper = true;
+	    m_hasSuper = true;
+	  }
           num_attr++;
         }
         else if ( *s == '[') {
@@ -798,6 +805,8 @@ char *wb_nrep::nameName(const char *n, int ntype, char *res)
   }
   if ( ntype & cdh_mName_volume)
     volumeName( n, res + strlen(res));
+  else if ( ntype & cdh_mName_ref)
+    volumeName( n, res + strlen(res));
   if ( ntype & cdh_mName_path) {
     if ( ntype & cdh_mName_volume && hasVolume()) {
       strcat( res, ":");
@@ -813,8 +822,23 @@ char *wb_nrep::nameName(const char *n, int ntype, char *res)
     objectName( n, res + strlen(res));
   }
   if ( ntype & cdh_mName_attribute && hasAttribute()) {
-    strcat( res + strlen(res), ".");
-    strcat( res + strlen(res), n + attr[0].offs);
+    if ( !m_hasSuper || m_shadowed || ntype & cdh_mName_trueAttr) {
+      strcat( res, ".");
+      strcat( res, n + attr[0].offs);
+    }
+    else {
+      for ( int i = 0; i < num_attr; i++) {
+	if ( !attr[i].isSuper) {
+	  strcat( res, ".");
+	  int l = strlen(res);
+	  strncat( res, n + attr[i].offs, attr[i].len);
+	  if ( attr[i].index != -1)
+	    sprintf( &res[ l + attr[i].len], "[%d]", attr[i].index);
+	  else
+	  res[ l + attr[i].len] = 0;
+	}
+      }
+    }
   }
   return res;
 }
@@ -837,11 +861,11 @@ char *wb_nrep::unatName(const char *name)
   return result;
 }
 
-char *wb_nrep::wholeAttr(char *res)
+char *wb_nrep::segmentsAll(int idx, char *res)
 {
   static char result[256];
 
-  if ( num_attr == 0) {
+  if ( idx >= num_seg || idx < 0) {
     if ( res) {
       strcpy( res, "");
       return res;
@@ -853,11 +877,41 @@ char *wb_nrep::wholeAttr(char *res)
   }
   else {
     if ( res) {
-      strcpy( res, oname + attr[0].offs); 
+      strncpy( res, oname + seg[0].offs, seg[num_seg-1].offs - seg[0].offs +
+               seg[num_seg-1].len); 
+      res[seg[num_seg-1].offs - seg[0].offs +seg[num_seg-1].len] = 0;
       return res;
     }
     else {
-      strcpy( result, oname + attr[0].offs); 
+      strncpy( result, oname + seg[0].offs, seg[num_seg-1].offs - seg[0].offs +
+               seg[num_seg-1].len); 
+      result[seg[num_seg-1].offs - seg[0].offs +seg[num_seg-1].len] = 0;
+      return result;
+    }
+  }
+}
+
+char *wb_nrep::attributesAll(int idx, char *res)
+{
+  static char result[256];
+
+  if ( idx >= num_attr || idx < 0) {
+    if ( res) {
+      strcpy( res, "");
+      return res;
+    }
+    else {
+      strcpy( result, "");
+      return result;
+    }
+  }
+  else {
+    if ( res) {
+      strcpy( res, oname + attr[idx].offs); 
+      return res;
+    }
+    else {
+      strcpy( result, oname + attr[idx].offs); 
       return result;
     }
   }

@@ -13,7 +13,9 @@
 #include <ctype.h>
 
 #include "pwr_class.h"
+#include "pwr_systemclasses.h"
 #include "pwr_baseclasses.h"
+#include "pwr_nmpsclasses.h"
 #include "co_time.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
@@ -330,13 +332,13 @@ static void	gcg_ctx_delete(
 
 static int	gcg_ioread_insert(
     gcg_ctx		gcgctx,
-    pwr_tObjid		objdid,
+    pwr_sAttrRef       	attrref,
     char		prefix
 );
 
 static int	gcg_iowrite_insert( 
     gcg_ctx		gcgctx,
-    pwr_tObjid		objdid,
+    pwr_sAttrRef       	attrref,
     char		prefix
 );
 
@@ -346,7 +348,17 @@ static int	gcg_ref_insert(
     char		prefix
 );
 
+static int	gcg_aref_insert( 
+    gcg_ctx		gcgctx,
+    pwr_sAttrRef       	attrref,
+    char		prefix
+);
+
 static int	gcg_ref_print( 
+    gcg_ctx		gcgctx
+);
+
+static int	gcg_aref_print( 
     gcg_ctx		gcgctx
 );
 
@@ -362,7 +374,8 @@ static int	gcg_get_outputstring_spec(
     gcg_ctx		gcgctx,
     vldh_t_node		output_node,
     ldh_sParDef 	*output_bodydef,
-    pwr_tObjid		*parobjdid,
+    pwr_sAttrRef       	*parattrref,
+    int			*partype,
     char		*parprefix,
     char		*parstring
 );
@@ -371,7 +384,8 @@ static int	gcg_get_inputstring(
     gcg_ctx		gcgctx,
     vldh_t_node		output_node,
     ldh_sParDef 	*output_bodydef,
-    pwr_tObjid		*parobjdid,
+    pwr_sAttrRef       	*parattrref,
+    int			*partype,
     char		*parprefix,
     char		*parstring
 );
@@ -384,9 +398,25 @@ static void gcg_print_decl(
     unsigned long	reftype
 );
 
+static void gcg_print_adecl( 
+    gcg_ctx		gcgctx,
+    char		*objname,
+    pwr_sAttrRef       	attrref,
+    char		prefix,
+    unsigned long	reftype
+);
+
 static void gcg_print_rtdbref( 
     gcg_ctx		gcgctx,
     pwr_tObjid		objdid,
+    char		prefix,
+    pwr_tClassId	class,
+    unsigned long	reftype
+);
+
+static void gcg_print_artdbref( 
+    gcg_ctx		gcgctx,
+    pwr_sAttrRef       	attrref,
     char		prefix,
     pwr_tClassId	class,
     unsigned long	reftype
@@ -473,6 +503,11 @@ static int	gcg_parname_to_pgmname(
     char	*pgmname
 );
 
+static pwr_tStatus gcg_replace_ref( 
+    gcg_ctx gcgctx, 
+    pwr_sAttrRef *attrref, 
+    vldh_t_node output_node
+);
 
 
 
@@ -574,12 +609,9 @@ int gcg_get_conpoint_nodes (
 	if ( EVEN(sts)) return sts;
 
 	nopoint = 0;
-	for ( i = 0; i < p_count; i++)
-	{
+	for ( i = 0; i < p_count; i++) {
 	  next_node = (*pointlist + i)->node;
-	  if ( next_node->ln.classid != vldh_class( 
-	    (next_node->hn.window_pointer)->hw.ldhsession, VLDH_CLASS_POINT)) 
-	  {
+	  if ( next_node->ln.cid != pwr_cClass_Point) {
 	    (*pointlist + nopoint)->node = (*pointlist + i)->node;
 	    (*pointlist + nopoint)->conpoint = (*pointlist + i)->conpoint;
 	    nopoint++;
@@ -994,29 +1026,25 @@ static int gcg_cc(
 *
 **************************************************************************/
 
-static int	gcg_get_structname( 
+static int	gcg_get_structname_from_cid( 
     gcg_ctx		gcgctx,
-    pwr_tObjid		objdid,
+    pwr_tCid		cid,
     char		**structname
 )
 { 
-	pwr_tClassId			class;
 	ldh_tSesContext ldhses;
 	pwr_tClassId			bodyclass;
 	pwr_sObjBodyDef			*bodydef;	
 	int				sts, size;
 
-	ldhses = gcgctx->wind->hw.ldhsession;
+	ldhses = gcgctx->wind->hw.ldhses;
 
- 	sts = ldh_GetObjectClass(ldhses, objdid, &class);
-	if ( EVEN(sts)) return sts;
-
-	sts = ldh_GetClassBody(ldhses, class, "RtBody", &bodyclass,
+	sts = ldh_GetClassBody(ldhses, cid, "RtBody", &bodyclass,
 	  (char **)&bodydef, &size);
    	if ( EVEN(sts))
    	{
    	  /* Try sysbody */
-   	  sts = ldh_GetClassBody(ldhses, class, "SysBody",
+   	  sts = ldh_GetClassBody(ldhses, cid, "SysBody",
    		&bodyclass, (char **)&bodydef, &size);
    	  if( EVEN(sts) ) return sts;
    	}
@@ -1024,6 +1052,24 @@ static int	gcg_get_structname(
 	*structname = bodydef->StructName;
 
 	return GSX__SUCCESS;
+}
+
+static int	gcg_get_structname( 
+    gcg_ctx		gcgctx,
+    pwr_tObjid		objdid,
+    char		**structname
+)
+{ 
+	pwr_tClassId		class;
+	ldh_tSesContext 	ldhses;
+	pwr_tStatus 		sts;
+
+	ldhses = gcgctx->wind->hw.ldhses;
+
+ 	sts = ldh_GetObjectClass(ldhses, objdid, &class);
+	if ( EVEN(sts)) return sts;
+
+	return gcg_get_structname_from_cid( gcgctx, class, structname);
 }
 
 /*************************************************************************
@@ -1065,7 +1111,7 @@ int gcg_plc_compile (
 /***********
 	if ( codetype == 1)
 	{
-	  sts = ldhld_PlcPgmModule(plc->hp.ldhsesctx, plc->lp.objdid);
+	  sts = ldhld_PlcPgmModule(plc->hp.ldhsesctx, plc->lp.oid);
 	  if ( EVEN(sts)) return sts;
 	}
 */
@@ -1116,7 +1162,7 @@ int gcg_plcwindow_compile (
 /************
 	if ( codetype == 1)
 	{
-	  sts = ldhld_PlcWinModule(wind->hw.ldhsession, wind->lw.objdid);
+	  sts = ldhld_PlcWinModule(wind->hw.ldhses, wind->lw.oid);
 	  if ( EVEN(sts)) return sts;
 	}
 */
@@ -1181,16 +1227,17 @@ int	gcg_print_inputs(
 	unsigned long		output_point;
 	ldh_sParDef 		output_bodydef;
 	int			i, output_found, first_par;
-	pwr_tObjid		output_objdid;
+	pwr_sAttrRef		output_attrref;
+	int			output_type;
 	char			output_prefix;
 	char			output_par[32];
 	int			input_count, inputscon_count;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession;
+	ldhses = (node->hn.wind)->hw.ldhses;
 
 	/* Get the runtime parameters for this class */
-	sts = ldh_GetObjectBodyDef((node->hn.window_pointer)->hw.ldhsession, 
-			node->ln.classid, "RtBody", 1, 
+	sts = ldh_GetObjectBodyDef((node->hn.wind)->hw.ldhses, 
+			node->ln.cid, "RtBody", 1, 
 			&bodydef, &rows);
 	if ( EVEN(sts) ) return sts;
 
@@ -1221,7 +1268,7 @@ int	gcg_print_inputs(
 	   	   gcg_error_msg( gcgctx, GSX__CONOUTPUT, output_node);
 
 	      sts = gcg_get_outputstring( gcgctx, output_node, &output_bodydef, 
-			&output_objdid, &output_prefix, output_par);
+			&output_attrref, &output_type, &output_prefix, output_par);
 	      if ( sts == GSX__NEXTPAR ) 
 	      {
 	        i++;
@@ -1242,7 +1289,9 @@ int	gcg_print_inputs(
 	      IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
 			"%c%s->%s", 
 			output_prefix,
-			vldh_IdToStr(0, output_objdid),
+ 			output_type == GCG_OTYPE_OID ? 
+			     vldh_IdToStr(0, output_attrref.Objid) : 
+			     vldh_AttrRefToStr(0, output_attrref),
 			output_par);
 	    }
 	    else
@@ -1367,7 +1416,7 @@ static int	gcg_print_exec(
 	char			*name;
 
 	/* Get name for the exec command for this class */
-	sts = gcg_get_structname( gcgctx, node->ln.object_did, &name);
+	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
 	if ( EVEN(sts)) return sts;	
 
 	/* Print the execute command */
@@ -1410,7 +1459,7 @@ static int	gcg_print_exec_macro(
 	char			*name;
 
 	/* Get name for the exec command for this class */
-	sts = gcg_get_structname( gcgctx, node->ln.object_did, &name);
+	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
 	if ( EVEN(sts)) return sts;	
 
 	/* Print the execute command */
@@ -1454,14 +1503,16 @@ int gcg_get_connected_parameter (
   char		*conn_par
 )
 {
-	gcg_t_ctx	gcgctx;
-	char		hier_name[120];
+	gcg_t_ctx		gcgctx;
+	char			*name;
+	char			hier_name[120];
 	vldh_t_node		output_node;
 	unsigned long		output_count;
 	unsigned long		output_point;
 	ldh_sParDef 		output_bodydef;
 	int			output_found, sts, size;
-	pwr_tObjid		output_objdid;
+	pwr_sAttrRef		output_attrref;
+	int			output_type;
 	char			output_prefix;
 	char			output_par[32];
 	pwr_tClassId		class;
@@ -1471,13 +1522,13 @@ int gcg_get_connected_parameter (
 	ldh_sParDef 		*bodydef;
 	int 			rows;
 
-	gcgctx.ldhses = (node->hn.window_pointer)->hw.ldhsession;
+	gcgctx.ldhses = (node->hn.wind)->hw.ldhses;
 	gcgctx.errorcount = 0;
 	gcgctx.warningcount = 0;
 
 	/* Check if the point is an output */
-	sts = goen_get_parameter( node->ln.classid, 
-		node->hn.window_pointer->hw.ldhsession, 
+	sts = goen_get_parameter( node->ln.cid, 
+		node->hn.wind->hw.ldhses, 
 		node->ln.mask, point, 
 		&par_type, &par_inverted, &par_index);
 	if ( EVEN(sts)) return sts;
@@ -1488,15 +1539,15 @@ int gcg_get_connected_parameter (
 	  output_node = node;
 	  output_point = point;
 	  sts = ldh_GetObjectBodyDef(
-			node->hn.window_pointer->hw.ldhsession, 
-			node->ln.classid, "RtBody", 1, 
+			node->hn.wind->hw.ldhses, 
+			node->ln.cid, "RtBody", 1, 
 			&bodydef, &rows);
 	  if ( EVEN(sts) )
 	  {
 	    /* This is a development node, get the development body instead */
 	    sts = ldh_GetObjectBodyDef(
-			node->hn.window_pointer->hw.ldhsession, 
-			node->ln.classid, "DevBody", 1, 
+			node->hn.wind->hw.ldhses, 
+			node->ln.cid, "DevBody", 1, 
 			&bodydef, &rows);
 	    if ( EVEN(sts) ) return sts;
 	  }
@@ -1516,14 +1567,14 @@ int gcg_get_connected_parameter (
 	if ( output_count > 0 )
 	{
 	  sts = gcg_get_outputstring( &gcgctx, output_node, &output_bodydef, 
-			&output_objdid, &output_prefix, output_par);
+		        &output_attrref, &output_type, &output_prefix, output_par);
 	  if ( sts == GSX__NEXTPAR ) return GSX__SWINDERR;
 	  if ( EVEN(sts)) return sts;
 	  
 	  /* Get the name of the node */
 	  sts = ldh_ObjidToName( 
 		gcgctx.ldhses,
-		output_objdid, ldh_eName_Hierarchy,
+		output_attrref.Objid, ldh_eName_Hierarchy,
 		hier_name, sizeof( hier_name), &size);
 	  if( EVEN(sts)) return sts;
 
@@ -1532,7 +1583,7 @@ int gcg_get_connected_parameter (
 	  /* Get class of the output object */
 	  sts = ldh_GetObjectClass(
 			gcgctx.ldhses,
-			output_objdid,
+			output_attrref.Objid,
 			&class);
 	  if( EVEN(sts)) return sts;
 
@@ -1556,23 +1607,23 @@ int gcg_get_connected_parameter (
 	    output_found = 1;
 
 	    sts = gcg_get_inputstring( &gcgctx, output_node, &output_bodydef, 
-			&output_objdid, &output_prefix, output_par);
+			&output_attrref, &output_type, &output_prefix, output_par);
 	    if ( sts == GSX__NEXTPAR ) return GSX__SWINDERR;
 	    if ( EVEN(sts)) return sts;
 	  
 	    /* Get the name of the node */
-	    sts = ldh_ObjidToName( 
+	    sts = ldh_AttrRefToName( 
 		gcgctx.ldhses,
-		output_objdid, ldh_eName_Hierarchy,
-		hier_name, sizeof( hier_name), &size);
+		&output_attrref, ldh_eName_Hierarchy,
+		&name, &size);
 	    if( EVEN(sts)) return sts;
 
-	    strcpy( conn_obj, hier_name);
+	    strcpy( conn_obj, name);
 
 	    /* Get class of the output object */
-	    sts = ldh_GetObjectClass(
+	    sts = ldh_GetAttrRefTid(
 			gcgctx.ldhses,
-			output_objdid,
+			&output_attrref,
 			&class);
 	    if( EVEN(sts)) return sts;
 
@@ -1621,20 +1672,21 @@ static int	gcg_get_connected_par_close(
     char		*conn_par
 )
 {
-	gcg_t_ctx	gcgctx;
-	char		hier_name[120];
+	gcg_t_ctx		gcgctx;
+	char			*name;
 	vldh_t_node		output_node;
 	unsigned long		output_count;
 	unsigned long		output_point;
 	ldh_sParDef 		output_bodydef;
 	int			sts, size;
-	pwr_tObjid		output_objdid;
+	pwr_sAttrRef		output_attrref;
+	int			output_type;
 	char			output_prefix;
 	char			output_par[32];
 	pwr_tClassId		class;
 	unsigned long		par_type;
 
-	gcgctx.ldhses = (node->hn.window_pointer)->hw.ldhsession;
+	gcgctx.ldhses = (node->hn.wind)->hw.ldhses;
 	gcgctx.errorcount = 0;
 	gcgctx.warningcount = 0;
 
@@ -1644,19 +1696,16 @@ static int	gcg_get_connected_par_close(
 			GOEN_CON_SIGNAL, &par_type);
 	if ( EVEN(sts)) return sts;
 
-	if (output_count > 0) 
-	{
-	  if (par_type == PAR_OUTPUT)
-	  {
+	if (output_count > 0) {
+	  if (par_type == PAR_OUTPUT) {
 	    sts = gcg_get_outputstring( &gcgctx, output_node, &output_bodydef, 
-			&output_objdid, &output_prefix, output_par);
+			&output_attrref, &output_type, &output_prefix, output_par);
 	    if ( sts == GSX__NEXTPAR ) return GSX__SWINDERR;
 	    if ( EVEN(sts)) return sts;
 	  }	  
-	  else if (par_type == PAR_INPUT)
-	  {
+	  else if (par_type == PAR_INPUT) {
 	    sts = gcg_get_inputstring( &gcgctx, output_node, &output_bodydef, 
-			&output_objdid, &output_prefix, output_par);
+			&output_attrref, &output_type, &output_prefix, output_par);
 	    if ( sts == GSX__NEXTPAR ) return GSX__SWINDERR;
 	    if ( EVEN(sts)) return sts;
 	  }	  
@@ -1664,18 +1713,18 @@ static int	gcg_get_connected_par_close(
 	    return GSX__SWINDERR;
 
 	  /* Get the name of the node */
-	  sts = ldh_ObjidToName( 
+	  sts = ldh_AttrRefToName( 
 		gcgctx.ldhses,
-		output_objdid, ldh_eName_Hierarchy,
-		hier_name, sizeof( hier_name), &size);
+		&output_attrref, ldh_eName_Hierarchy,
+		&name, &size);
 	  if( EVEN(sts)) return sts;
 
-	  strcpy( conn_obj, hier_name);
+	  strcpy( conn_obj, name);
 
 	  /* Get class of the output object */
-	  sts = ldh_GetObjectClass(
+	  sts = ldh_GetAttrRefTid(
 			gcgctx.ldhses,
-			output_objdid,
+			&output_attrref,
 			&class);
 	  if( EVEN(sts)) return sts;
 
@@ -1686,8 +1735,7 @@ static int	gcg_get_connected_par_close(
 	
 	  *conn_node = output_node;
 	}
-	else
-	{
+	else {
 	  /* No output and no input found */
 	  return GSX__NOTCON;
 	}
@@ -1726,11 +1774,12 @@ int gcg_get_debug (
 )
 {
 	gcg_t_ctx		gcgctx;
-	char			hier_name[120];
+	char			*name;
 	pwr_tClassId		class;
 	ldh_sParDef 		debug_bodydef;
 	int			i, sts, size;
-	pwr_tObjid		output_objdid;
+	pwr_sAttrRef		output_attrref;
+	int			output_type;
 	char			output_prefix;
 	char			output_par[32];
 	char			debug_par[32];
@@ -1739,7 +1788,7 @@ int gcg_get_debug (
 	int 			rows;
 	int			par_index, found;
 
-	gcgctx.ldhses = (node->hn.window_pointer)->hw.ldhsession;
+	gcgctx.ldhses = (node->hn.wind)->hw.ldhses;
 	gcgctx.errorcount = 0;
 	gcgctx.warningcount = 0;
 
@@ -1751,14 +1800,14 @@ int gcg_get_debug (
 	/* Get the parameter index */
 	sts = ldh_GetObjectBodyDef(
 			gcgctx.ldhses,
-			node->ln.classid, "RtBody", 1, 
+			node->ln.cid, "RtBody", 1, 
 			&bodydef, &rows);
 	if ( EVEN(sts) )
 	{
 	  /* This is a development node, get the development body instead */
 	  sts = ldh_GetObjectBodyDef(
 			gcgctx.ldhses,
-			node->ln.classid, "DevBody", 1, 
+			node->ln.cid, "DevBody", 1, 
 			&bodydef, &rows);
 	  if ( EVEN(sts) ) return sts;
 	}	
@@ -1781,7 +1830,7 @@ int gcg_get_debug (
 	free((char *) bodydef);
 
 	sts = gcg_get_outputstring( &gcgctx, node, &debug_bodydef, 
-			&output_objdid, &output_prefix, output_par);
+			&output_attrref, &output_type, &output_prefix, output_par);
 	if ( sts == GSX__NEXTPAR ) return GSX__SWINDERR;
 	if ( EVEN(sts)) return sts;
 
@@ -1789,18 +1838,18 @@ int gcg_get_debug (
 	output_par[pos] = '\0';
 	  
 	/* Get the name of the node */
-	sts = ldh_ObjidToName( 
+	sts = ldh_AttrRefToName( 
 		gcgctx.ldhses,
-		output_objdid, ldh_eName_Hierarchy,
-		hier_name, sizeof( hier_name), &size);
+		&output_attrref, ldh_eName_Hierarchy,
+		&name, &size);
 	if( EVEN(sts)) return sts;
 
-	strcpy( conn_obj, hier_name);
+	strcpy( conn_obj, name);
 
 	/* Get class of the output object */
-	sts = ldh_GetObjectClass(
+	sts = ldh_GetAttrRefTid(
 			gcgctx.ldhses,
-			output_objdid,
+			&output_attrref,
 			&class);
 	if( EVEN(sts)) return sts;
 
@@ -1857,7 +1906,7 @@ int gcg_get_debug_virtual (
 	unsigned long		par_inverted;
 	vldh_t_node		conn_node;
 
-	gcgctx.ldhses = (node->hn.window_pointer)->hw.ldhsession;
+	gcgctx.ldhses = (node->hn.wind)->hw.ldhses;
 	gcgctx.errorcount = 0;
 	gcgctx.warningcount = 0;
 
@@ -1869,7 +1918,7 @@ int gcg_get_debug_virtual (
 	/* Get the parameter index */
 	sts = ldh_GetObjectBodyDef(
 			gcgctx.ldhses,
-			node->ln.classid, "RtBody", 1, 
+			node->ln.cid, "RtBody", 1, 
 			&bodydef, &rows);
 	if ( EVEN(sts) ) return sts;
 
@@ -2096,7 +2145,7 @@ static pwr_tBoolean IsWindowLoaded (
   int i;
   
   for (i = 0; i < loaded_windcount; i++) {
-    if ( cdh_ObjidIsEqual( loaded_windlist[i]->lw.objdid, object)) {
+    if ( cdh_ObjidIsEqual( loaded_windlist[i]->lw.oid, object)) {
       *wind = loaded_windlist[i];
       return 1;
     }
@@ -2193,7 +2242,7 @@ int	gcg_wind_comp_all(
 		  sts = vldh_wind_load( plc, 0, *(parentlist + i), 0, 0, &wind,
 					ldh_eAccess_SharedReadWrite);
 		  if ( EVEN(sts)) return sts;
-		  plc->hp.windowobject = wind;
+		  plc->hp.wind = wind;
 		}
 		else {
 		  /* Get the parent vldhnode */
@@ -2232,7 +2281,7 @@ int	gcg_wind_comp_all(
 	      sts = vldh_wind_load( plc, 0, *windlist_ptr, 0, 0, &wind, 
 			ldh_eAccess_SharedReadWrite);
 	      if ( EVEN(sts)) return sts;
-	      plc->hp.windowobject = wind;
+	      plc->hp.wind = wind;
 	    }
 	    else
 	    {
@@ -2362,8 +2411,8 @@ int	gcg_get_output (
 	{
 	  next_node = (pointlist + k)->node;
 	  next_point = (pointlist + k)->conpoint;
-	  sts = goen_get_parameter( next_node->ln.classid, 
-		(next_node->hn.window_pointer)->hw.ldhsession, 
+	  sts = goen_get_parameter( next_node->ln.cid, 
+		(next_node->hn.wind)->hw.ldhses, 
 		next_node->ln.mask, next_point, 
 		&next_par_type, &next_par_inverted, &next_par_index);
 	  if ( EVEN(sts)) return sts;
@@ -2374,15 +2423,15 @@ int	gcg_get_output (
 	    *output_node = (pointlist + k)->node;
 	    *output_point = (pointlist + k)->conpoint;
 	    sts = ldh_GetObjectBodyDef(
-			(next_node->hn.window_pointer)->hw.ldhsession, 
-			next_node->ln.classid, "RtBody", 1, 
+			(next_node->hn.wind)->hw.ldhses, 
+			next_node->ln.cid, "RtBody", 1, 
 			&bodydef, &rows);
 	    if ( EVEN(sts) )
 	    {
 	      /* This is a development node, get the development body instead */
 	      sts = ldh_GetObjectBodyDef(
-			(next_node->hn.window_pointer)->hw.ldhsession, 
-			next_node->ln.classid, "DevBody", 1, 
+			(next_node->hn.wind)->hw.ldhses, 
+			next_node->ln.cid, "DevBody", 1, 
 			&bodydef, &rows);
 	      if ( EVEN(sts) ) return sts;
 	    }	
@@ -2462,8 +2511,8 @@ static int	gcg_get_par_close(
 
 	next_node = (pointlist + k)->node;
 	next_point = (pointlist + k)->conpoint;
-	sts = goen_get_parameter( next_node->ln.classid, 
-		(next_node->hn.window_pointer)->hw.ldhsession, 
+	sts = goen_get_parameter( next_node->ln.cid, 
+		(next_node->hn.wind)->hw.ldhses, 
 		next_node->ln.mask, next_point, 
 		&next_par_type, &next_par_inverted, &next_par_index);
 	if ( EVEN(sts)) return sts;
@@ -2472,15 +2521,15 @@ static int	gcg_get_par_close(
 	*output_node = (pointlist + k)->node;
 	*output_point = (pointlist + k)->conpoint;
 	sts = ldh_GetObjectBodyDef(
-			(next_node->hn.window_pointer)->hw.ldhsession, 
-			next_node->ln.classid, "RtBody", 1, 
+			(next_node->hn.wind)->hw.ldhses, 
+			next_node->ln.cid, "RtBody", 1, 
 			&bodydef, &rows);
 	if ( EVEN(sts) )
 	{
 	  /* This is a development node, get the development body instead */
 	  sts = ldh_GetObjectBodyDef(
-			(next_node->hn.window_pointer)->hw.ldhsession, 
-			next_node->ln.classid, "DevBody", 1, 
+			(next_node->hn.wind)->hw.ldhses, 
+			next_node->ln.cid, "DevBody", 1, 
 			&bodydef, &rows);
 	  if ( EVEN(sts) ) return sts;
 	}	
@@ -2549,8 +2598,8 @@ static int	gcg_get_input(
 	{
 	  next_node = (pointlist + k)->node;
 	  next_point = (pointlist + k)->conpoint;
-	  sts = goen_get_parameter( next_node->ln.classid, 
-		(next_node->hn.window_pointer)->hw.ldhsession, 
+	  sts = goen_get_parameter( next_node->ln.cid, 
+		(next_node->hn.wind)->hw.ldhses, 
 		next_node->ln.mask, next_point, 
 		&next_par_type, &next_par_inverted, &next_par_index);
 	  if ( EVEN(sts)) return sts;
@@ -2561,15 +2610,15 @@ static int	gcg_get_input(
 	    *output_node = (pointlist + k)->node;
 	    *output_point = (pointlist + k)->conpoint;
 	    sts = ldh_GetObjectBodyDef(
-			(next_node->hn.window_pointer)->hw.ldhsession, 
-			next_node->ln.classid, "RtBody", 1, 
+			(next_node->hn.wind)->hw.ldhses, 
+			next_node->ln.cid, "RtBody", 1, 
 			&bodydef, &rows);
 	    if ( EVEN(sts) )
 	    {
 	      /* This is a development node, get the development body instead */
 	      sts = ldh_GetObjectBodyDef(
-			(next_node->hn.window_pointer)->hw.ldhsession, 
-			next_node->ln.classid, "DevBody", 1, 
+			(next_node->hn.wind)->hw.ldhses, 
+			next_node->ln.cid, "DevBody", 1, 
 			&bodydef, &rows);
 	      if ( EVEN(sts) ) return sts;
 	    }	
@@ -2665,7 +2714,7 @@ static void	gcg_ctx_delete(
 *
 * Type		Parameter	IOGF	Description
 * gcg_ctx	gcgctx		I	gcg context.
-* pwr_tObjid	objdid		I 	objdid of object.
+* pwr_sAttrRef	attrref		I 	attrref of object.
 * char		prefix		I	prefix in pointer name.
 *
 * Description:
@@ -2676,7 +2725,7 @@ static void	gcg_ctx_delete(
 
 static int	gcg_ioread_insert(
     gcg_ctx		gcgctx,
-    pwr_tObjid		objdid,
+    pwr_sAttrRef       	attrref,
     char		prefix
 )
 {
@@ -2684,25 +2733,24 @@ static int	gcg_ioread_insert(
 	
 	/* Check if the objdid already is inserted */
 	found = 0;
-	for ( i = 0; i < gcgctx->ioreadcount; i++)
-	{
-	  if ( cdh_ObjidIsEqual( (gcgctx->ioread + i )->objdid, objdid) &&
-	       ((gcgctx->ioread + i )->prefix == prefix))
-	  {
+	for ( i = 0; i < gcgctx->ioreadcount; i++) {
+	  if ( cdh_ObjidIsEqual( (gcgctx->ioread + i)->attrref.Objid, attrref.Objid) &&
+	       (gcgctx->ioread + i)->attrref.Offset == attrref.Offset &&
+	       (gcgctx->ioread + i)->attrref.Size == attrref.Size &&
+	       (gcgctx->ioread + i)->prefix == prefix) {
 	    found = 1;
 	    break;
 	  }
 	}
-	if ( !found )
-	{
-	  /* The objdid was not found, insert it */
+	if ( !found ) {
+	  /* The attrref was not found, insert it */
 	  /* Increase size of the iolist */
 	  sts = utl_realloc((char **) &gcgctx->ioread, 
-		gcgctx->ioreadcount * sizeof(gcg_t_reflist), 
-		(gcgctx->ioreadcount + 1) * sizeof(gcg_t_reflist));
+		gcgctx->ioreadcount * sizeof(gcg_t_areflist), 
+		(gcgctx->ioreadcount + 1) * sizeof(gcg_t_areflist));
 	  if (EVEN(sts)) return sts;
 
-	  (gcgctx->ioread + gcgctx->ioreadcount)->objdid = objdid;
+	  (gcgctx->ioread + gcgctx->ioreadcount)->attrref = attrref;
 	  (gcgctx->ioread + gcgctx->ioreadcount)->prefix = prefix;
 	  gcgctx->ioreadcount++;
 	}
@@ -2720,15 +2768,15 @@ static int	gcg_ioread_insert(
 * char		prefix		I	prefix in pointer name.
 *
 * Description:
-*	Insert objdid for a io-node in the iowrite list in gcg context.
-*	Check first that the objdid is not already inserted.
+*	Insert attrref for a io-node in the iowrite list in gcg context.
+*	Check first that the attrref is not already inserted.
 *
 *
 **************************************************************************/
 
 static int	gcg_iowrite_insert( 
     gcg_ctx		gcgctx,
-    pwr_tObjid		objdid,
+    pwr_sAttrRef       	attrref,
     char		prefix
 )
 {
@@ -2736,24 +2784,23 @@ static int	gcg_iowrite_insert(
 	
 	/* Check if the objdid already is inserted */
 	found = 0;
-	for ( i = 0; i < gcgctx->iowritecount; i++)
-	{
-	  if ( cdh_ObjidIsEqual(( gcgctx->iowrite + i )->objdid, objdid) &&
-	       ((gcgctx->iowrite + i )->prefix == prefix))
-	  {
+	for ( i = 0; i < gcgctx->iowritecount; i++) {
+	  if ( cdh_ObjidIsEqual(( gcgctx->iowrite + i)->attrref.Objid, attrref.Objid) &&
+	       (gcgctx->iowrite + i)->attrref.Offset == attrref.Offset &&
+	       (gcgctx->iowrite + i)->attrref.Size == attrref.Size &&
+	       (gcgctx->iowrite + i )->prefix == prefix) {
 	    found = 1;
 	    break;
 	  }
 	}
-	if ( !found )
-	{
+	if ( !found ) {
 	  /* The objdid was not found, insert it */
 	  /* Increase size of the iolist */
 	  sts = utl_realloc((char **) &gcgctx->iowrite, 
-		gcgctx->iowritecount * sizeof(gcg_t_reflist), 
-		(gcgctx->iowritecount + 1) * sizeof(gcg_t_reflist));
+		gcgctx->iowritecount * sizeof(gcg_t_areflist), 
+		(gcgctx->iowritecount + 1) * sizeof(gcg_t_areflist));
 	  if (EVEN(sts)) return sts;
-	  (gcgctx->iowrite + gcgctx->iowritecount)->objdid = objdid;
+	  (gcgctx->iowrite + gcgctx->iowritecount)->attrref = attrref;
 	  (gcgctx->iowrite + gcgctx->iowritecount)->prefix = prefix;
 	  gcgctx->iowritecount++;
 	}
@@ -2812,6 +2859,56 @@ static int	gcg_ref_insert(
 
 /*************************************************************************
 *
+* Name:		gcg_aref_insert()
+*
+* Type		void
+*
+* Type		Parameter	IOGF	Description
+* gcg_ctx	gcgctx		I	gcg context.
+* pwr_sAttrRef	attrref		I 	attrref of object.
+* char		prefix		I	prefix in pointer name.
+*
+* Description:
+*	Insert objdid for a node in the ref list in gcg context.
+*	Check first that the objdid is not already inserted.
+*
+**************************************************************************/
+
+static int	gcg_aref_insert( 
+    gcg_ctx		gcgctx,
+    pwr_sAttrRef       	attrref,
+    char		prefix
+)
+{
+	int	i, found, sts;
+
+	/* Check if the objdid already is inserted */
+	found = 0;
+	for ( i = 0; i < gcgctx->arefcount; i++) {
+	  if ( cdh_ObjidIsEqual( (gcgctx->aref + i)->attrref.Objid, attrref.Objid) &&
+	       (gcgctx->aref + i)->attrref.Offset == attrref.Offset &&
+	       (gcgctx->aref + i)->attrref.Size == attrref.Size) {
+	    found = 1;
+	    break;
+	  }
+	}
+	if ( !found ) {
+	  /* The attrref was not found, 
+	    increase size of the reflist and insert it */
+	  sts = utl_realloc((char **) &gcgctx->aref, 
+		gcgctx->arefcount * sizeof(gcg_t_areflist), 
+		(gcgctx->arefcount + 1) * sizeof(gcg_t_areflist));
+	  if ( EVEN(sts)) return sts;
+	  (gcgctx->aref + gcgctx->arefcount)->attrref = attrref;
+	  (gcgctx->aref + gcgctx->arefcount)->prefix = prefix;
+	  gcgctx->arefcount++;
+	}
+
+	return GSX__SUCCESS;
+}
+
+/*************************************************************************
+*
 * Name:		gcg_ref_print()
 *
 * Type		void
@@ -2842,7 +2939,7 @@ static int	gcg_ref_print(
 	  objdid = (gcgctx->ref + i)->objdid;
 	  prefix = (gcgctx->ref + i)->prefix;
 
-	  sts = ldh_GetObjectClass(gcgctx->wind->hw.ldhsession, objdid, &class);
+	  sts = ldh_GetObjectClass(gcgctx->wind->hw.ldhses, objdid, &class);
 	  if ( EVEN(sts)) return sts;
 
 	  /* Get name for this class */
@@ -2851,6 +2948,51 @@ static int	gcg_ref_print(
 
 	  gcg_print_decl( gcgctx, name, objdid, prefix, GCG_REFTYPE_REF);
 	  gcg_print_rtdbref( gcgctx, objdid, prefix, class, GCG_REFTYPE_REF);
+	}
+
+	return GSX__SUCCESS;
+}
+
+/*************************************************************************
+*
+* Name:		gcg_aref_print()
+*
+* Type		void
+*
+* Type		Parameter	IOGF	Description
+* gcg_ctx	gcgctx		I	gcg context.
+*
+* Description:
+*	Print the aref list.
+*	Prints pointer declarations and rtdb directlink code
+*	for the objects in ref list of gcg context.
+*
+**************************************************************************/
+
+static int	gcg_aref_print( 
+    gcg_ctx		gcgctx
+)
+{
+	int		i, sts;
+	pwr_sAttrRef	attrref;
+	char		prefix;
+	pwr_tClassId	class;
+	char		*name;
+
+	/* Check if the objdid already is inserted */
+	for ( i = 0; i < gcgctx->arefcount; i++) {
+	  attrref = (gcgctx->aref + i)->attrref;
+	  prefix = (gcgctx->aref + i)->prefix;
+
+	  sts = ldh_GetAttrRefTid(gcgctx->wind->hw.ldhses, &attrref, &class);
+	  if ( EVEN(sts)) return sts;
+
+	  /* Get name for this class */
+	  sts = gcg_get_structname_from_cid( gcgctx, class, &name);
+	  if( EVEN(sts)) return sts;
+
+	  gcg_print_adecl( gcgctx, name, attrref, prefix, GCG_REFTYPE_REF);
+	  gcg_print_artdbref( gcgctx, attrref, prefix, class, GCG_REFTYPE_REF);
 	}
 
 	return GSX__SUCCESS;
@@ -2877,28 +3019,28 @@ static int	gcg_ioread_print(
 )
 {
 	int		i, sts;
-	pwr_tObjid	objdid;
+	pwr_sAttrRef	attrref;
 	char		prefix;
 	pwr_tClassId	class;
 	char		*name;
 
 	for ( i = 0; i < gcgctx->ioreadcount; i++)
 	{
-	  objdid = (gcgctx->ioread + i)->objdid;
+	  attrref = (gcgctx->ioread + i)->attrref;
 	  prefix = (gcgctx->ioread + i)->prefix;
 
-	  sts = ldh_GetObjectClass(gcgctx->wind->hw.ldhsession, objdid, &class);
+	  sts = ldh_GetAttrRefTid(gcgctx->wind->hw.ldhses, &attrref, &class);
 	  if ( EVEN(sts)) return sts;
 
 	  /* Get name for this class */
-	  sts = gcg_get_structname( gcgctx, objdid, &name);
+	  sts = gcg_get_structname_from_cid( gcgctx, class, &name);
 	  if( EVEN(sts)) return sts;
 
-	  gcg_print_decl( gcgctx, name, objdid, prefix, GCG_REFTYPE_IOR);
+	  gcg_print_adecl( gcgctx, name, attrref, prefix, GCG_REFTYPE_IOR);
 	  if ( prefix == GCG_PREFIX_IOC )
-	    gcg_print_rtdbref( gcgctx, objdid, prefix, class, GCG_REFTYPE_IOC);
+	    gcg_print_artdbref( gcgctx, attrref, prefix, class, GCG_REFTYPE_IOC);
 	  else
-	    gcg_print_rtdbref( gcgctx, objdid, prefix, class, GCG_REFTYPE_IOR);
+	    gcg_print_artdbref( gcgctx, attrref, prefix, class, GCG_REFTYPE_IOR);
 	}
 
 	return GSX__SUCCESS;
@@ -2925,28 +3067,28 @@ static int	gcg_iowrite_print(
 )
 {
 	int		i, sts;
-	pwr_tObjid	objdid;
+	pwr_sAttrRef	attrref;
 	char		prefix;
 	pwr_tClassId	class;
 	char		*name;
 
 	for ( i = 0; i < gcgctx->iowritecount; i++)
 	{
-	  objdid = (gcgctx->iowrite + i)->objdid;
+	  attrref = (gcgctx->iowrite + i)->attrref;
 	  prefix = (gcgctx->iowrite + i)->prefix;
 
-	  sts = ldh_GetObjectClass(gcgctx->wind->hw.ldhsession, objdid, &class);
+	  sts = ldh_GetAttrRefTid(gcgctx->wind->hw.ldhses, &attrref, &class);
 	  if ( EVEN(sts)) return sts;
 
 	  /* Get name for this class */
-	  sts = gcg_get_structname( gcgctx, objdid, &name);
+	  sts = gcg_get_structname_from_cid( gcgctx, class, &name);
 	  if( EVEN(sts)) return sts;
 
-	  gcg_print_decl( gcgctx, name, objdid, prefix, GCG_REFTYPE_IOW);
+	  gcg_print_adecl( gcgctx, name, attrref, prefix, GCG_REFTYPE_IOW);
 	  if ( prefix == GCG_PREFIX_IOCW )
-	    gcg_print_rtdbref( gcgctx, objdid, prefix, class, GCG_REFTYPE_IOCW);
+	    gcg_print_artdbref( gcgctx, attrref, prefix, class, GCG_REFTYPE_IOCW);
 	  else
-	    gcg_print_rtdbref( gcgctx, objdid, prefix, class, GCG_REFTYPE_IOW);
+	    gcg_print_artdbref( gcgctx, attrref, prefix, class, GCG_REFTYPE_IOW);
 
 	}
 
@@ -2993,7 +3135,8 @@ int gcg_get_outputstring (
   gcg_ctx	gcgctx,
   vldh_t_node	output_node,
   ldh_sParDef 	*output_bodydef,
-  pwr_tObjid	*parobjdid,
+  pwr_sAttrRef	*parattrref,
+  int		*partype,
   char		*parprefix,
   char		*parstring
 )
@@ -3003,11 +3146,12 @@ int gcg_get_outputstring (
 	int 		rows;
 	int		i, found;
 	pwr_tObjid	*objdid;
+	pwr_sAttrRef	*attrref;
 	pwr_tClassId	class;
 
 	    /* Look if this is a specific class with special treatment */
 	    sts = gcg_get_outputstring_spec( gcgctx, output_node, 
-		output_bodydef, parobjdid, parprefix, parstring);
+		output_bodydef, parattrref, partype, parprefix, parstring);
 	    if ( EVEN(sts)) return sts;
 	    if ( sts == GSX__SPECFOUND ) return GSX__SUCCESS;
 	    if ( sts == GSX__NEXTPAR ) return sts;
@@ -3023,20 +3167,18 @@ int gcg_get_outputstring (
 		same name as the name of the parameter in rtbody
 		in the referenceobject */
 	      sts = ldh_GetObjectBodyDef(
-			(output_node->hn.window_pointer)->hw.ldhsession, 
-			output_node->ln.classid, "DevBody", 1, 
+			(output_node->hn.wind)->hw.ldhses, 
+			output_node->ln.cid, "DevBody", 1, 
 			&bodydef, &rows);
 	      if ( EVEN(sts) ) return sts;
 	      found = 0;
-	      for ( i = 0; i < rows; i++ )
-	      {
-	        if ( bodydef[i].Par->Output.Info.Type == pwr_eType_ObjDId)
-		{
+	      for ( i = 0; i < rows; i++ ) {
+	        if ( bodydef[i].Par->Output.Info.Type == pwr_eType_Objid) {
 		  found = 1;
 		  /* Get the objdid stored in the parameter */
 	          sts = ldh_GetObjectPar( 
-			(output_node->hn.window_pointer)->hw.ldhsession,  
-			output_node->ln.object_did, 
+			(output_node->hn.wind)->hw.ldhses,  
+			output_node->ln.oid, 
 			"DevBody",
 			bodydef[i].ParName,
 			(char **)&objdid, &size); 
@@ -3044,11 +3186,10 @@ int gcg_get_outputstring (
 
 		  /* Check that this is objdid of an existing object */
 		  sts = ldh_GetObjectClass(
-			(output_node->hn.window_pointer)->hw.ldhsession, 
+			(output_node->hn.wind)->hw.ldhses, 
 			*objdid,
 			&class);
-		  if ( EVEN(sts)) 
-		  {
+		  if ( EVEN(sts)) {
 		    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
 	  	    free((char *) objdid);
 		    return GSX__NEXTPAR;
@@ -3057,8 +3198,42 @@ int gcg_get_outputstring (
 			(output_bodydef->Par)->Param.Info.PgmName);
 	          if ( output_bodydef->Par->Output.Info.Flags & PWR_MASK_ARRAY)
 	            strncat( parstring, "[0]", 80);
-		  *parobjdid = *objdid;
+		  parattrref->Objid = *objdid;
+		  *partype = GCG_OTYPE_OID;
 		  free((char *) objdid);
+	          break;
+		}
+	        else if ( bodydef[i].Par->Output.Info.Type == pwr_eType_AttrRef) {
+		  found = 1;
+		  /* Get the objdid stored in the parameter */
+	          sts = ldh_GetObjectPar( 
+			(output_node->hn.wind)->hw.ldhses,  
+			output_node->ln.oid, 
+			"DevBody",
+			bodydef[i].ParName,
+			(char **)&attrref, &size); 
+		  if ( EVEN(sts)) return sts;
+
+		  sts = gcg_replace_ref( gcgctx, attrref, output_node);
+		  if ( EVEN(sts)) return sts;
+
+		  /* Check that this is objdid of an existing object */
+		  sts = ldh_GetAttrRefTid(
+			(output_node->hn.wind)->hw.ldhses, 
+			attrref,
+			&class);
+		  if ( EVEN(sts)) {
+		    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
+	  	    free((char *) attrref);
+		    return GSX__NEXTPAR;
+		  }
+	  	  strcpy( parstring, 
+			(output_bodydef->Par)->Param.Info.PgmName);
+	          if ( output_bodydef->Par->Output.Info.Flags & PWR_MASK_ARRAY)
+	            strncat( parstring, "[0]", 80);
+		  *parattrref = *attrref;
+		  *partype = GCG_OTYPE_AREF;
+		  free((char *) attrref);
 	          break;
 		}
 	      }
@@ -3076,7 +3251,8 @@ int gcg_get_outputstring (
 	        strncat( parstring, "[0]", 80);
 
 	      /* Convert objdid to ascii */
-	      *parobjdid = output_node->ln.object_did;
+	      parattrref->Objid = output_node->ln.oid;
+	      *partype = GCG_OTYPE_OID;
 	    }		
 	    *parprefix = GCG_PREFIX_REF;
 	    return GSX__SUCCESS;
@@ -3118,246 +3294,250 @@ static int	gcg_get_outputstring_spec(
     gcg_ctx		gcgctx,
     vldh_t_node		output_node,
     ldh_sParDef 	*output_bodydef,
-    pwr_tObjid		*parobjdid,
+    pwr_sAttrRef       	*parattrref,
+    int			*partype,
     char		*parprefix,
     char		*parstring
 )
 {
 	int		sts, size;
-	pwr_tObjid	*objdid;
+	pwr_sAttrRef	*attrref;
 	pwr_tClassId	class;
 	ldh_tSesContext ldhses;
-	char		*parameter;
+	char *name_p;
+	char aname[120];
+	char *s;
 	
-	ldhses = (output_node->hn.window_pointer)->hw.ldhsession;
+	ldhses = (output_node->hn.wind)->hw.ldhses;
 
 
 	/**********************************************************
 	*  GETDP
 	***********************************************************/	
-	if ( output_node->ln.classid == vldh_class( ldhses, VLDH_CLASS_GETDP))
-	{
+	if ( output_node->ln.cid == pwr_cClass_GetDp) {
+
 	  /* Get the objdid stored in the parameter */
 	  sts = ldh_GetObjectPar( 
-			(output_node->hn.window_pointer)->hw.ldhsession,  
-			output_node->ln.object_did, 
+			ldhses,  
+			output_node->ln.oid, 
 			"DevBody",
 			"DpObject",
-			(char **)&objdid, &size); 
+			(char **)&attrref, &size); 
+	  if ( EVEN(sts)) return sts;
+
+	  sts = gcg_replace_ref( gcgctx, attrref, output_node);
 	  if ( EVEN(sts)) return sts;
 
 	  /* Check that this is objdid of an existing object */
-	  sts = ldh_GetObjectClass(
-			(output_node->hn.window_pointer)->hw.ldhsession, 
-			*objdid,
-			&class);
-	  if ( EVEN(sts)) 
-	  {
+	  sts = ldh_GetAttrRefTid( ldhses, attrref, &class);
+	  if ( EVEN(sts)) {
 	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
-	    free((char *) objdid);
+	    free((char *) attrref);
 	    return GSX__NEXTPAR;
 	  }
-	  /* Get the parametername stored in the parameter */
-	  sts = ldh_GetObjectPar( 
-			(output_node->hn.window_pointer)->hw.ldhsession,  
-			output_node->ln.object_did, 
-			"DevBody",
-			"Parameter",
-			(char **)&parameter, &size); 
+	  /* Get the attribute name of last segment */
+	  sts = ldh_AttrRefToName( ldhses, attrref, ldh_eName_Aref, 
+				   &name_p, &size);
+	  if ( EVEN(sts)) {
+	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
+	    free((char *) attrref);
+	    return GSX__NEXTPAR;
+	  }
+	  free((char *) attrref);
+
+	  strcpy( aname, name_p);
+	  if ( (s = strrchr( aname, '.')) == 0) { 
+	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
+	    return GSX__NEXTPAR;
+	  }
+
+	  *s = 0;
+	  sts = ldh_NameToAttrRef( ldhses, aname, parattrref);
+	  if ( EVEN(sts)) {
+	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
+	    return GSX__NEXTPAR;
+	  }
+	  sts = ldh_GetAttrRefTid( ldhses, parattrref, &class);
+	  if ( EVEN(sts)) {
+	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
+	    return GSX__NEXTPAR;
+	  }
+	  sts = gcg_parname_to_pgmname( ldhses, class, s+1, parstring);
 	  if ( EVEN(sts)) return sts;
 
-	  sts = gcg_parname_to_pgmname(ldhses, class, parameter, parstring);
-	  if ( EVEN(sts)) return sts;
-
-	  *parobjdid = *objdid;
 	  *parprefix = GCG_PREFIX_REF;
-	  free((char *) objdid);
-	  free((char *) parameter);
+	  *partype = GCG_OTYPE_AREF;
 	  return GSX__SPECFOUND;
 	}
 
 	/**********************************************************
 	*  GETAP
 	***********************************************************/	
-	if ( output_node->ln.classid == vldh_class( ldhses, VLDH_CLASS_GETAP))
-	{
+
+	if ( output_node->ln.cid == pwr_cClass_GetAp) {
 	  /* Get the objdid stored in the parameter */
-	  sts = ldh_GetObjectPar( 
-			(output_node->hn.window_pointer)->hw.ldhsession,  
-			output_node->ln.object_did, 
+	  sts = ldh_GetObjectPar( ldhses,  
+			output_node->ln.oid, 
 			"DevBody",
 			"ApObject",
-			(char **)&objdid, &size); 
+			(char **)&attrref, &size); 
+	  if ( EVEN(sts)) return sts;
+
+	  sts = gcg_replace_ref( gcgctx, attrref, output_node);
 	  if ( EVEN(sts)) return sts;
 
 	  /* Check that this is objdid of an existing object */
-	  sts = ldh_GetObjectClass(
-			(output_node->hn.window_pointer)->hw.ldhsession, 
-			*objdid,
-			&class);
-	  if ( EVEN(sts)) 
-	  {
+	  sts = ldh_GetAttrRefTid( ldhses, attrref, &class);
+	  if ( EVEN(sts)) {
 	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
-	    free((char *) objdid);
+	    free((char *) attrref);
 	    return GSX__NEXTPAR;
 	  }
-	  /* Get the parametername stored in the parameter */
-	  sts = ldh_GetObjectPar( 
-			(output_node->hn.window_pointer)->hw.ldhsession,  
-			output_node->ln.object_did, 
-			"DevBody",
-			"Parameter",
-			(char **)&parameter, &size); 
-	  if ( EVEN(sts)) return sts;
 
-	  sts = gcg_parname_to_pgmname(ldhses, class, parameter, parstring);
-	  if ( EVEN(sts)) return sts;
-
-	  *parobjdid = *objdid;
-	  *parprefix = GCG_PREFIX_REF;
-	  free((char *) objdid);
-	  free((char *) parameter);
-	  return GSX__SPECFOUND;
-	}
-#if 0
-	if ( output_node->ln.classid == pwr_cClass_GetIp)
-	{
-	  /* Get the objdid stored in the parameter */
-	  sts = ldh_GetObjectPar( 
-			(output_node->hn.window_pointer)->hw.ldhsession,  
-			output_node->ln.object_did, 
-			"DevBody",
-			"IpObject",
-			(char **)&objdid, &size); 
-	  if ( EVEN(sts)) return sts;
-
-	  /* Check that this is objdid of an existing object */
-	  sts = ldh_GetObjectClass(
-			(output_node->hn.window_pointer)->hw.ldhsession, 
-			*objdid,
-			&class);
-	  if ( EVEN(sts)) 
-	  {
+	  /* Get the attribute name of last segment */
+	  sts = ldh_AttrRefToName( ldhses, attrref, ldh_eName_Aref, 
+				   &name_p, &size);
+	  if ( EVEN(sts)) {
 	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
-	    free((char *) objdid);
+	    free((char *) attrref);
 	    return GSX__NEXTPAR;
 	  }
-	  /* Get the parametername stored in the parameter */
-	  sts = ldh_GetObjectPar( 
-			(output_node->hn.window_pointer)->hw.ldhsession,  
-			output_node->ln.object_did, 
-			"DevBody",
-			"Parameter",
-			(char **)&parameter, &size); 
+	  free((char *) attrref);
+
+	  strcpy( aname, name_p);
+	  if ( (s = strrchr( aname, '.')) == 0) { 
+	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
+	    return GSX__NEXTPAR;
+	  }
+
+	  *s = 0;
+	  sts = ldh_NameToAttrRef( ldhses, aname, parattrref);
+	  if ( EVEN(sts)) {
+	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
+	    return GSX__NEXTPAR;
+	  }
+
+	  sts = ldh_GetAttrRefTid( ldhses, parattrref, &class);
+	  if ( EVEN(sts)) {
+	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
+	    return GSX__NEXTPAR;
+	  }
+
+	  sts = gcg_parname_to_pgmname( ldhses, class, s+1, parstring);
 	  if ( EVEN(sts)) return sts;
 
-	  sts = gcg_parname_to_pgmname(ldhses, class, parameter, parstring);
-	  if ( EVEN(sts)) return sts;
-
-	  *parobjdid = *objdid;
 	  *parprefix = GCG_PREFIX_REF;
-	  free((char *) objdid);
-	  free((char *) parameter);
+	  *partype = GCG_OTYPE_AREF;
 	  return GSX__SPECFOUND;
 	}
-#endif
 	/**********************************************************
 	*  GETPI
 	***********************************************************/	
-	if ( output_node->ln.classid == vldh_class( ldhses, VLDH_CLASS_GETPI))
-	{
+	if ( output_node->ln.cid == pwr_cClass_GetPi) {
 	  /* Get the objdid stored in the parameter */
-	  sts = ldh_GetObjectPar( 
-			(output_node->hn.window_pointer)->hw.ldhsession,  
-			output_node->ln.object_did, 
-			"DevBody",
-			"CoObject",
-			(char **)&objdid, &size); 
+	  sts = ldh_GetObjectPar( ldhses, output_node->ln.oid, 
+				  "DevBody", "CoObject",
+				  (char **)&attrref, &size); 
+	  if ( EVEN(sts)) return sts;
+
+	  sts = gcg_replace_ref( gcgctx, attrref, output_node);
 	  if ( EVEN(sts)) return sts;
 
 	  /* Check that this is objdid of an existing object */
-	  sts = ldh_GetObjectClass(
-			(output_node->hn.window_pointer)->hw.ldhsession, 
-			*objdid,
-			&class);
-	  if ( EVEN(sts)) 
-	  {
+	  sts = ldh_GetAttrRefTid( ldhses, attrref, &class);
+	  if ( EVEN(sts)) {
 	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
-	    free((char *) objdid);
+	    free((char *) attrref);
 	    return GSX__NEXTPAR;
 	  }
 
 	  strcpy( parstring, 
 		(output_bodydef->Par)->Param.Info.PgmName);
-	  *parobjdid = *objdid;
+	  *parattrref = *attrref;
 	  if ( strcmp( "PulsIn", output_bodydef->ParName) == 0)
 	    *parprefix = GCG_PREFIX_IOC;
 	  else
 	    *parprefix = GCG_PREFIX_REF;
 
-	  free((char *) objdid);
+	  *partype = GCG_OTYPE_AREF;
+	  free((char *) attrref);
 	  return GSX__SPECFOUND;
 	}
 	/**********************************************************
 	*  GETSP
 	***********************************************************/	
-	if ( output_node->ln.classid == pwr_cClass_GetSp)
+	if ( output_node->ln.cid == pwr_cClass_GetSp)
 	{
 	  /* Get the objdid stored in the parameter */
-	  sts = ldh_GetObjectPar( 
-			(output_node->hn.window_pointer)->hw.ldhsession,  
-			output_node->ln.object_did, 
-			"DevBody",
-			"SpObject",
-			(char **)&objdid, &size); 
+	  sts = ldh_GetObjectPar( ldhses, output_node->ln.oid, 
+				  "DevBody", "SpObject",
+				  (char **)&attrref, &size); 
+	  if ( EVEN(sts)) return sts;
+
+	  sts = gcg_replace_ref( gcgctx, attrref, output_node);
 	  if ( EVEN(sts)) return sts;
 
 	  /* Check that this is objdid of an existing object */
-	  sts = ldh_GetObjectClass(
-			(output_node->hn.window_pointer)->hw.ldhsession, 
-			*objdid,
-			&class);
-	  if ( EVEN(sts)) 
-	  {
+	  sts = ldh_GetAttrRefTid( ldhses, attrref, &class);
+	  if ( EVEN(sts)) {
 	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
-	    free((char *) objdid);
+	    free((char *) attrref);
 	    return GSX__NEXTPAR;
 	  }
-	  /* Get the parametername stored in the parameter */
-	  sts = ldh_GetObjectPar( 
-			(output_node->hn.window_pointer)->hw.ldhsession,  
-			output_node->ln.object_did, 
-			"DevBody",
-			"Parameter",
-			(char **)&parameter, &size); 
+
+	  /* Get the attribute name of last segment */
+	  sts = ldh_AttrRefToName( ldhses, attrref, ldh_eName_Aref, 
+				   &name_p, &size);
+	  if ( EVEN(sts)) {
+	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
+	    free((char *) attrref);
+	    return GSX__NEXTPAR;
+	  }
+	  free((char *) attrref);
+
+	  strcpy( aname, name_p);
+	  if ( (s = strrchr( aname, '.')) == 0) { 
+	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
+	    return GSX__NEXTPAR;
+	  }
+
+	  *s = 0;
+	  sts = ldh_NameToAttrRef(
+			(output_node->hn.wind)->hw.ldhses, 
+			aname, parattrref);
+	  if ( EVEN(sts)) {
+	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
+	    return GSX__NEXTPAR;
+	  }
+	  sts = ldh_GetAttrRefTid( ldhses, parattrref, &class);
+	  if ( EVEN(sts)) {
+	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
+	    return GSX__NEXTPAR;
+	  }
+	  sts = gcg_parname_to_pgmname(ldhses, class, s+1, parstring);
 	  if ( EVEN(sts)) return sts;
 
-	  sts = gcg_parname_to_pgmname(ldhses, class, parameter, parstring);
-	  if ( EVEN(sts)) return sts;
-
-	  *parobjdid = *objdid;
 	  *parprefix = GCG_PREFIX_REF;
-	  free((char *) objdid);
-	  free((char *) parameter);
+	  *partype = GCG_OTYPE_AREF;
+	  return GSX__SPECFOUND;
 	  return GSX__SPECFOUND;
 	}
 
 	/**********************************************************
 	*  GetDattr
 	***********************************************************/	
-	if ( output_node->ln.classid == pwr_cClass_GetDattr ||
-	     output_node->ln.classid == pwr_cClass_GetAattr ||
-	     output_node->ln.classid == pwr_cClass_GetIattr ||
-	     output_node->ln.classid == pwr_cClass_GetSattr)
+	if ( output_node->ln.cid == pwr_cClass_GetDattr ||
+	     output_node->ln.cid == pwr_cClass_GetAattr ||
+	     output_node->ln.cid == pwr_cClass_GetIattr ||
+	     output_node->ln.cid == pwr_cClass_GetSattr)
 	{
 	  pwr_tObjid host_objid;
+	  char *parameter;
 
 	  /* Get host object */
-	  host_objid = (output_node->hn.window_pointer)->lw.parent_node_did;
+	  host_objid = (output_node->hn.wind)->lw.poid;
 
-	  sts = ldh_GetObjectClass(
-			(output_node->hn.window_pointer)->hw.ldhsession, 
-			host_objid, &class);
+	  sts = ldh_GetObjectClass( ldhses, host_objid, &class);
 
 	  if ( cdh_ObjidIsNull(host_objid)) {	
 	    /* Parent is a plcprogram */
@@ -3366,19 +3546,17 @@ static int	gcg_get_outputstring_spec(
 	  }
 
 	  /* Get the referenced attribute stored in Attribute */
-	  sts = ldh_GetObjectPar( 
-			(output_node->hn.window_pointer)->hw.ldhsession,  
-			output_node->ln.object_did, 
-			"DevBody",
-			"Attribute",
+	  sts = ldh_GetObjectPar( ldhses, output_node->ln.oid, 
+			"DevBody", "Attribute",
 			(char **)&parameter, &size); 
 	  if ( EVEN(sts)) return sts;
 
 	  sts = gcg_parname_to_pgmname(ldhses, class, parameter, parstring);
 	  if ( EVEN(sts)) return sts;
 
-	  *parobjdid = host_objid;
+	  parattrref->Objid = host_objid;
 	  *parprefix = GCG_PREFIX_REF;
+	  *partype = GCG_OTYPE_OID;
 	  free((char *) parameter);
 	  return GSX__SPECFOUND;
 	}
@@ -3426,7 +3604,8 @@ static int	gcg_get_inputstring(
     gcg_ctx		gcgctx,
     vldh_t_node		output_node,
     ldh_sParDef 	*output_bodydef,
-    pwr_tObjid		*parobjdid,
+    pwr_sAttrRef       	*parattrref,
+    int			*partype,
     char		*parprefix,
     char		*parstring
 )
@@ -3436,17 +3615,8 @@ static int	gcg_get_inputstring(
 	int 		rows;
 	int		i, found;
 	pwr_tObjid	*objdid;
+	pwr_sAttrRef	*attrref;
 	pwr_tClassId	class;
-
-	    /* Look if this is a specific class with special treatment */
-/*	    sts = gcg_get_outputstring_spec( gcgctx, output_node, 
-*		output_bodydef, parobjdid, parprefix, parstring);
-*	    if ( EVEN(sts)) return sts;
-*	    if ( sts == GSX__SPECFOUND ) return GSX__SUCCESS;
-*	    if ( sts == GSX__NEXTPAR ) return sts;
-*/	
-	    /* Special output not found, continue to get the outputstring
-	      the default way */
 
 	    if ( output_bodydef->Par->Output.Info.Flags & 
 			PWR_MASK_DEVBODYREF )
@@ -3456,20 +3626,18 @@ static int	gcg_get_inputstring(
 		same name as the name of the parameter in rtbody
 		in the referenceobject */
 	      sts = ldh_GetObjectBodyDef(
-			(output_node->hn.window_pointer)->hw.ldhsession, 
-			output_node->ln.classid, "DevBody", 1, 
+			(output_node->hn.wind)->hw.ldhses, 
+			output_node->ln.cid, "DevBody", 1, 
 			&bodydef, &rows);
 	      if ( EVEN(sts) ) return sts;
 	      found = 0;
-	      for ( i = 0; i < rows; i++ )
-	      {
-	        if ( bodydef[i].Par->Output.Info.Type == pwr_eType_ObjDId)
-		{
+	      for ( i = 0; i < rows; i++ ) {
+	        if ( bodydef[i].Par->Output.Info.Type == pwr_eType_Objid) {
 		  found = 1;
 		  /* Get the objdid stored in the parameter */
 	          sts = ldh_GetObjectPar( 
-			(output_node->hn.window_pointer)->hw.ldhsession,  
-			output_node->ln.object_did, 
+			(output_node->hn.wind)->hw.ldhses,  
+			output_node->ln.oid, 
 			"DevBody",
 			bodydef[i].ParName,
 			(char **)&objdid, &size); 
@@ -3477,7 +3645,7 @@ static int	gcg_get_inputstring(
 
 		  /* Check that this is objdid of an existing object */
 		  sts = ldh_GetObjectClass(
-			(output_node->hn.window_pointer)->hw.ldhsession, 
+			(output_node->hn.wind)->hw.ldhses, 
 			*objdid,
 			&class);
 		  if ( EVEN(sts)) 
@@ -3490,8 +3658,42 @@ static int	gcg_get_inputstring(
 			(output_bodydef->Par)->Param.Info.PgmName);
 	          if ( output_bodydef->Par->Output.Info.Flags & PWR_MASK_ARRAY)
 	            strncat( parstring, "[0]", 80);
-		  *parobjdid = *objdid;
+		  parattrref->Objid = *objdid;
+		  *partype = GCG_OTYPE_OID;
 		  free((char *) objdid);
+	          break;
+		}
+	        else if ( bodydef[i].Par->Output.Info.Type == pwr_eType_AttrRef) {
+		  found = 1;
+		  /* Get the objdid stored in the parameter */
+	          sts = ldh_GetObjectPar( 
+			(output_node->hn.wind)->hw.ldhses,  
+			output_node->ln.oid, 
+			"DevBody",
+			bodydef[i].ParName,
+			(char **)&attrref, &size); 
+		  if ( EVEN(sts)) return sts;
+
+		  sts = gcg_replace_ref( gcgctx, attrref, output_node);
+		  if ( EVEN(sts)) return sts;
+
+		  /* Check that this is objdid of an existing object */
+		  sts = ldh_GetAttrRefTid(
+			(output_node->hn.wind)->hw.ldhses, 
+			attrref,
+			&class);
+		  if ( EVEN(sts)) {
+		    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
+	  	    free((char *) attrref);
+		    return GSX__NEXTPAR;
+		  }
+	  	  strcpy( parstring, 
+			(output_bodydef->Par)->Param.Info.PgmName);
+	          if ( output_bodydef->Par->Output.Info.Flags & PWR_MASK_ARRAY)
+	            strncat( parstring, "[0]", 80);
+		  *parattrref = *attrref;
+		  *partype = GCG_OTYPE_AREF;
+		  free((char *) attrref);
 	          break;
 		}
 	      }
@@ -3515,7 +3717,8 @@ static int	gcg_get_inputstring(
 	        strncat( parstring, "[0]", 80);
 
 	      /* Convert objdid to ascii */
-	      *parobjdid = output_node->ln.object_did;
+	      parattrref->Objid = output_node->ln.oid;
+	      *partype = GCG_OTYPE_OID;
 	    }		
 	    *parprefix = GCG_PREFIX_REF;
 	    return GSX__SUCCESS;
@@ -3575,6 +3778,32 @@ static void gcg_print_decl(
 		vldh_IdToStr(0, objdid));
 	}
 }
+
+static void gcg_print_adecl( 
+    gcg_ctx	gcgctx,
+    char		*objname,
+    pwr_sAttrRef       	attrref,
+    char		prefix,
+    unsigned long	reftype
+)
+{
+	if ( reftype == GCG_REFTYPE_REF ) {
+	  /* Print declaration of the rtdb reference pointer */
+	  IF_PR fprintf( gcgctx->files[GCGM1_DECL_FILE], 
+		"static pwr_sClass_%s *%c%s;\n",
+		objname,
+		prefix,
+		vldh_AttrRefToStr(0, attrref));
+	}
+	else {
+	  /* Print declaration of the valuebase reference pointer */
+	  IF_PR fprintf( gcgctx->files[GCGM1_DECL_FILE], 
+		"static plc_sClass_%s *%c%s;\n",
+		objname,
+		prefix,
+		vldh_AttrRefToStr(0, attrref));
+	}
+}
 /*************************************************************************
 *
 * Name:		gcg_print_rtdbref()
@@ -3614,18 +3843,9 @@ static void gcg_print_rtdbref(
 )
 {
 	/* Print direct link command */
-	if ( reftype == 0)
-	{
-/*	  IF_PR fprintf( gcgctx->files[GCGM1_RTDBREF_FILE], 
-		"{ &%c%lx, %u, %d, %d },\n",
-		prefix,
-		objdid,
-		objdid,
-		class,
-		reftype);
-*/
-	IF_PR fprintf( gcgctx->files[GCGM1_RTDBREF_FILE], 
-		"{ (void **)&%c%s, {%u,%u}, %u,  sizeof(*%c%s), %ld},\n",
+	if ( reftype == 0) {
+	  IF_PR fprintf( gcgctx->files[GCGM1_RTDBREF_FILE], 
+		"{ (void **)&%c%s, {{%u,%u},0,0,0,0}, %u,  sizeof(*%c%s), %ld},\n",
 		prefix,
 		vldh_IdToStr(0, objdid),
 		objdid.oix, objdid.vid,
@@ -3634,25 +3854,51 @@ static void gcg_print_rtdbref(
 		vldh_IdToStr(1, objdid),
 		reftype);
 	}
-	else
-	{
-/*
+	else {
 	  IF_PR fprintf( gcgctx->files[GCGM1_RTDBREF2_FILE], 
-		"{ &%c%lx, %u, %d, %d },\n",
-		prefix,
-		objdid,
-		objdid,
-		class,
-		reftype);
-*/
-	IF_PR fprintf( gcgctx->files[GCGM1_RTDBREF2_FILE], 
-		"{ (void **)&%c%s, {%u,%u}, %u, sizeof(*%c%s), %ld },\n",
+		"{ (void **)&%c%s, {{%u,%u},0,0,0,0}, %u, sizeof(*%c%s), %ld },\n",
 		prefix,
 		vldh_IdToStr(0, objdid),
 		objdid.oix, objdid.vid,
 		class,
 		prefix,
 		vldh_IdToStr(1, objdid),
+		reftype);
+
+	}
+}
+
+static void gcg_print_artdbref( 
+    gcg_ctx		gcgctx,
+    pwr_sAttrRef       	attrref,
+    char		prefix,
+    pwr_tClassId	class,
+    unsigned long	reftype
+)
+{
+	/* Print direct link command */
+	if ( reftype == 0) {
+	  IF_PR fprintf( gcgctx->files[GCGM1_RTDBREF_FILE], 
+		"{ (void **)&%c%s, {{%u,%u},%u,%u,%u,%u}, %u,  sizeof(*%c%s), %ld},\n",
+		prefix,
+		vldh_AttrRefToStr(0, attrref),
+	        attrref.Objid.oix, attrref.Objid.vid, attrref.Body,
+		attrref.Offset, attrref.Size, attrref.Flags.m,
+		class,
+		prefix,
+		vldh_AttrRefToStr(1, attrref),
+		reftype);
+	}
+	else {
+	  IF_PR fprintf( gcgctx->files[GCGM1_RTDBREF2_FILE], 
+		"{ (void **)&%c%s, {{%u,%u},%u,%u,%u,%u}, %u, sizeof(*%c%s), %ld },\n",
+		prefix,
+		vldh_AttrRefToStr(0, attrref),
+	        attrref.Objid.oix, attrref.Objid.vid, attrref.Body,
+		attrref.Offset, attrref.Size, attrref.Flags.m,
+		class,
+		prefix,
+		vldh_AttrRefToStr(1, attrref),
 		reftype);
 
 	}
@@ -3702,15 +3948,15 @@ static int gcg_error_msg(
 	  {
 	    /* Get the full hierarchy name for the node */
 	    status = ldh_ObjidToName( 
-		(node->hn.window_pointer)->hw.ldhsession, 
-		node->ln.object_did, ldh_eName_Hierarchy,
+		(node->hn.wind)->hw.ldhses, 
+		node->ln.oid, ldh_eName_Hierarchy,
 		hier_name, sizeof( hier_name), &size);
 	    if( EVEN(status)) return status;
 	    if (logfile != NULL)
 	      fprintf(logfile, "        in object  %s\n", hier_name);
 	    else
 	      printf("        in object  %s\n", hier_name);
-	    msgw_message_plcobject( sts, "   in object", hier_name, node->ln.object_did);
+	    msgw_message_plcobject( sts, "   in object", hier_name, node->ln.oid);
 	  }
 	  if ( gcgctx) {
 	    if ( (sts & 2) && !(sts & 1))
@@ -3766,8 +4012,8 @@ int gcg_wind_msg(
 
 	  /* Get the full hierarchy name for the wind */
 	  status = ldh_ObjidToName( 
-		wind->hw.ldhsession, 
-		wind->lw.objdid, ldh_eName_Hierarchy,
+		wind->hw.ldhses, 
+		wind->lw.oid, ldh_eName_Hierarchy,
 		hier_name, sizeof( hier_name), &size);
 	  if( EVEN(status)) return status;
 	  if (logfile != NULL)
@@ -3796,7 +4042,7 @@ int gcg_wind_msg(
 	    printf("in window  %s\n", hier_name);
 	  sprintf( &str[strlen(str)], " in window");
 
-	  msgw_message_plcobject( sts, str, hier_name, wind->lw.objdid);
+	  msgw_message_plcobject( sts, str, hier_name, wind->lw.oid);
 	}
 	return GSX__SUCCESS;
 }
@@ -3940,10 +4186,10 @@ static int gcg_node_comp(
 	int			compmethod;
 	vldh_t_wind		wind;
 
-	wind = node->hn.window_pointer;
+	wind = node->hn.wind;
 
 	/* Get comp method for this node */
-	sts = ldh_GetClassBody(wind->hw.ldhsession, node->ln.classid, 
+	sts = ldh_GetClassBody(wind->hw.ldhses, node->ln.cid, 
 		"GraphPlcNode", &bodyclass, (char **)&graphbody, &size);
 	if ( EVEN(sts)) return sts;
 
@@ -3989,8 +4235,8 @@ int gcg_get_inputpoint (
 	  /* Get the point for this parameter if there is one */
 	  point = 0;
 	  par_found = 0;
-	  while ( ODD( goen_get_parameter( node->ln.classid, 
-			(node->hn.window_pointer)->hw.ldhsession, 
+	  while ( ODD( goen_get_parameter( node->ln.cid, 
+			(node->hn.wind)->hw.ldhses, 
 			node->ln.mask, point, 
 			&par_type, &par_inverted, &par_index)) 
 		&& (par_type == PAR_INPUT))
@@ -4050,8 +4296,8 @@ int gcg_get_point (
 	  /* Get the point for this parameter if there is one */
 	  point = 0;
 	  par_found = 0;
-	  while ( ODD(goen_get_parameter( node->ln.classid, 
-			(node->hn.window_pointer)->hw.ldhsession, 
+	  while ( ODD(goen_get_parameter( node->ln.cid, 
+			(node->hn.wind)->hw.ldhses, 
 			node->ln.mask, point, 
 			&par_type, &par_inverted, &par_index)) 
 		&& ((par_type == PAR_INPUT) || (par_type == PAR_OUTPUT)))
@@ -4114,11 +4360,10 @@ static int	gcg_get_child_windows(
 	{
 	  /* Check if plc */
 	  sts = ldh_GetObjectClass( ldhses, objdid, &class);
-	  if (( class == vldh_class( ldhses, VLDH_CLASS_WINDOWPLC )) ||
-	    ( class == vldh_class( ldhses, VLDH_CLASS_WINDOWCOND )) ||
-	    ( class == vldh_class( ldhses, VLDH_CLASS_WINDOWSUBSTEP )) ||
-	    ( class == vldh_class( ldhses, VLDH_CLASS_WINDOWORDERACT )))
-	  {
+	  if ( class == pwr_cClass_windowplc ||
+	       class == pwr_cClass_windowcond ||
+	       class == pwr_cClass_windowsubstep ||
+	       class == pwr_cClass_windoworderact) {
 	    sts = utl_realloc((char **) windlist, 
 		*wind_count * sizeof( *windlist_pointer), 
 		(*wind_count + 1) * sizeof( *windlist_pointer));
@@ -4217,12 +4462,10 @@ static int	gcg_get_child_plcthread(
 
 	/* Get all the children of this  node */
 	sts = ldh_GetChild( gcgctx->ldhses, objdid, &objdid);
-	while ( ODD(sts) )
-	{
+	while ( ODD(sts) ) {
 	  /* Check if plc */
 	  sts = ldh_GetObjectClass( gcgctx->ldhses, objdid, &class);
-	  if ( class == vldh_class( gcgctx->ldhses, VLDH_CLASS_PLCTHREAD ))
-	  {
+	  if ( class == pwr_cClass_PlcThread) {
 	    /* Get the scantime */
 	    sts = ldh_GetObjectPar( gcgctx->ldhses, objdid, "RtBody", 
 			"ScanTime", (char **)&scantime_ptr, &size);
@@ -4322,14 +4565,12 @@ static int	gcg_get_rtnode_plcthread(
 	*thread_count = 0;
 
 	sts = ldh_GetRootList( gcgctx->ldhses, &objdid);
-	while ( ODD(sts) )
-	{
+	while ( ODD(sts) ) {
 	  sts = ldh_GetObjectClass( gcgctx->ldhses, objdid, &class);
 	  if ( EVEN(sts)) return sts;
 
 	  /* Check that the class of the node object is correct */
-	  if ( class == vldh_class( gcgctx->ldhses, VLDH_CLASS_NODEHIER ))
-	  {
+	  if ( class == pwr_cClass_NodeHier) {
 	    /* Check if the children is a thread */
 	    sts = gcg_get_child_plcthread( gcgctx, objdid, rtnode, os,
 	    		thread_count, threadlist);
@@ -4382,20 +4623,17 @@ static int	gcg_get_child_plc(
 	{
 	  /* Check if plc */
 	  sts = ldh_GetObjectClass( gcgctx->ldhses, objdid, &class);
-	  if ( class == vldh_class( gcgctx->ldhses, VLDH_CLASS_PLCPGM ))
-	  {
+	  if ( class == pwr_cClass_plc) {
 	    /* Get the thread */
 	    sts = ldh_GetObjectPar( gcgctx->ldhses, objdid, "RtBody",
 			"ThreadObject",
 			(char **)&threadobject_ptr, &size);
 	    if ( EVEN(sts)) return sts;
 
-	    if ( cdh_ObjidIsNull( *threadobject_ptr))
-	    {
+	    if ( cdh_ObjidIsNull( *threadobject_ptr)) {
 	      gcg_plc_msg( gcgctx, GSX__NOTHREAD, objdid);
 	    }
-	    else
-	    {
+	    else {
 	      /* Get the execute order */
 	      sts = ldh_GetObjectPar( gcgctx->ldhses, objdid, "DevBody", 
 			"ExecuteOrder",
@@ -4478,14 +4716,12 @@ static int	gcg_get_rtnode_plc(
 	*plc_count = 0;
 
 	sts = ldh_GetRootList( gcgctx->ldhses, &objdid);
-	while ( ODD(sts) )
-	{
+	while ( ODD(sts) ) {
 	  sts = ldh_GetObjectClass( gcgctx->ldhses, objdid, &class);
 	  if ( EVEN(sts)) return sts;
 
 	  /* Check that the class of the node object is correct */
-	  if ( class == vldh_class( gcgctx->ldhses, VLDH_CLASS_PLANTHIER ))
-	  {
+	  if ( class == pwr_cClass_PlantHier) {
 	    /* Check if the children is a plc */
 	    sts = gcg_get_child_plc( gcgctx, objdid, rtnode, os,
 	    		plc_count, plclist);
@@ -5283,7 +5519,7 @@ unsigned long	spawn;
 
 
         /* Get operating system */
-        sts = gcg_plcpgm_to_operating_system(plc->hp.ldhsesctx, plc->lp.objdid,
+        sts = gcg_plcpgm_to_operating_system(plc->hp.ldhsesctx, plc->lp.oid,
 	      &operating_system);
 	if ( EVEN(sts)) return sts;
 
@@ -5298,7 +5534,7 @@ unsigned long	spawn;
 	if ( EVEN(sts)) return sts;
 
 	/* Get all the windows in this plc program in ldh */
-	sts = gcg_get_plc_windows( plc->hp.ldhsesctx, plc->lp.objdid,
+	sts = gcg_get_plc_windows( plc->hp.ldhsesctx, plc->lp.oid,
 		&ldhwind_count, &ldhwindlist);
 	if ( EVEN(sts)) return sts;
 
@@ -5309,7 +5545,7 @@ unsigned long	spawn;
 	  for( i = 0; i < GCGM0_MAXFILES; i++)
 	  {
 	    sprintf( filenames[i], "%s%s", gcgm0_filenames[i], 
-		vldh_IdToStr(0, plc->lp.objdid));
+		vldh_IdToStr(0, plc->lp.oid));
 	    sprintf( fullfilename,"%s%s%s", gcdir, filenames[i], GCEXT);
 	    dcli_translate_filename( fullfilename, fullfilename);
 	    if ((files[i] = fopen( fullfilename,"w")) == NULL)
@@ -5323,7 +5559,7 @@ unsigned long	spawn;
 	  }
 
 	  sts = gcg_get_converted_hiername( plc->hp.ldhsesctx, 
-		plc->lp.objdid, module_name);
+		plc->lp.oid, module_name);
 	  if ( EVEN(sts)) return sts;
 /*	  fprintf( files[ GCGM0_MODULE_FILE ],"#module %s\n\n",
 		module_name);
@@ -5333,7 +5569,7 @@ unsigned long	spawn;
 
 	  fprintf( files[ GCGM0_MODULE_FILE ],
 	    "void %c%s_init( int DirectLink, plc_sThread *tp){\n",
-	     GCG_PREFIX_MOD, vldh_IdToStr(0, plc->lp.objdid));
+	     GCG_PREFIX_MOD, vldh_IdToStr(0, plc->lp.oid));
 
 	  /* Print init calls for the windows */
 	  for ( i = 0; i < ldhwind_count; i++)
@@ -5344,7 +5580,7 @@ unsigned long	spawn;
 	  }
 	  fprintf( files[ GCGM0_MODULE_FILE ],
 		"}\nvoid %c%s_exec( plc_sThread *tp){\n",
-		GCG_PREFIX_MOD, vldh_IdToStr(0, plc->lp.objdid));
+		GCG_PREFIX_MOD, vldh_IdToStr(0, plc->lp.oid));
 
 	  /* Print exec calls for the plc window */
 	  fprintf( files[ GCGM0_MODULE_FILE ],
@@ -5367,19 +5603,19 @@ unsigned long	spawn;
 	      {
 	        if ( opsys & pwr_mOpSys_VAX_ELN)
 	          sprintf( plclibrary, "%s%s.olb", PLCLIB_VAX_ELN,
-			vldh_VolumeIdToStr( plc->lp.objdid.vid));
+			vldh_VolumeIdToStr( plc->lp.oid.vid));
 	        else if ( opsys & pwr_mOpSys_VAX_VMS)
 	          sprintf( plclibrary, "%s%s.olb", PLCLIB_VAX_VMS,
-			vldh_VolumeIdToStr( plc->lp.objdid.vid));
+			vldh_VolumeIdToStr( plc->lp.oid.vid));
 	        else if ( opsys & pwr_mOpSys_AXP_VMS)
 	          sprintf( plclibrary, "%s%s.olb", PLCLIB_AXP_VMS,
-			vldh_VolumeIdToStr( plc->lp.objdid.vid));
+			vldh_VolumeIdToStr( plc->lp.oid.vid));
 	        else if ( IS_UNIX(opsys))
 	          sprintf( plclibrary, "%s%s.a", PLCLIB_UNIX,
-			vldh_VolumeIdToStr( plc->lp.objdid.vid));
+			vldh_VolumeIdToStr( plc->lp.oid.vid));
 
-	        sprintf( module_name, "%s", vldh_IdToStr(0, plc->lp.objdid));
-	        sts = ldh_ObjidToName( plc->hp.ldhsesctx, plc->lp.objdid,
+	        sprintf( module_name, "%s", vldh_IdToStr(0, plc->lp.oid));
+	        sts = ldh_ObjidToName( plc->hp.ldhsesctx, plc->lp.oid,
 			ldh_eName_Hierarchy, plc_name, sizeof( plc_name), 
 			&size);
 	        if ( EVEN(sts)) return sts;
@@ -5479,10 +5715,10 @@ unsigned long	spawn;
 	char			plclibrary[80];
 	unsigned long		opsys;
 
-	ldhses = wind->hw.ldhsession;
+	ldhses = wind->hw.ldhses;
 
-	sts = ldh_ObjidToName( wind->hw.ldhsession, 
-		wind->lw.objdid, ldh_eName_Hierarchy,
+	sts = ldh_ObjidToName( wind->hw.ldhses, 
+		wind->lw.oid, ldh_eName_Hierarchy,
 		wind_name, sizeof( wind_name), &size);
 	if( EVEN(sts)) return sts;
 
@@ -5490,7 +5726,7 @@ unsigned long	spawn;
 	if ( codetype)
 	{
 	  /* Check that the session is empty */
-	  sts = ldh_GetSessionInfo( wind->hw.ldhsession, &info);
+	  sts = ldh_GetSessionInfo( wind->hw.ldhses, &info);
 	  if ( EVEN(sts)) return sts;
 	  if ( !info.Empty)
 	    return GSX__NOTSAVED;
@@ -5509,13 +5745,13 @@ unsigned long	spawn;
 
 	/* Create a context for the window */
 	gcg_ctx_new( &gcgctx, wind);
-	gcgctx->ldhses = wind->hw.ldhsession;
+	gcgctx->ldhses = wind->hw.ldhses;
 	gcgctx->print = codetype;
 
         /* Get operating system */
         sts = gcg_wind_to_operating_system(
-            wind->hw.ldhsession,
-            wind->lw.objdid,
+            wind->hw.ldhses,
+            wind->lw.oid,
             &operating_system
             );
 	if ( EVEN(sts)) 
@@ -5550,7 +5786,7 @@ unsigned long	spawn;
 	for( i = 0; i < GCGM1_MAXFILES; i++)
 	{
 	  sprintf( gcgctx->filenames[i], "%s%s", gcgm1_filenames[i], 
-		vldh_IdToStr(0, wind->lw.objdid));
+		vldh_IdToStr(0, wind->lw.oid));
 	  sprintf( fullfilename,"%s%s%s", gcdir, gcgctx->filenames[i], GCEXT);
 	  IF_PR 
 	  {
@@ -5567,8 +5803,8 @@ unsigned long	spawn;
 
 	}
 
-	sts = gcg_get_converted_hiername( wind->hw.ldhsession, 
-		wind->lw.objdid, module_name);
+	sts = gcg_get_converted_hiername( wind->hw.ldhses, 
+		wind->lw.oid, module_name);
 	if ( EVEN(sts)) return sts;
 
 	IF_PR fprintf( gcgctx->files[ GCGM1_MODULE_FILE ],
@@ -5590,7 +5826,7 @@ unsigned long	spawn;
 	IF_PR fprintf( gcgctx->files[ GCGM1_MODULE_FILE ],"{ 0}};\n");
 	IF_PR fprintf( gcgctx->files[ GCGM1_MODULE_FILE ],
 		"void %c%s_init( int DirectLink, plc_sThread *tp){\n",
-		GCG_PREFIX_MOD, vldh_IdToStr(0, wind->lw.objdid));
+		GCG_PREFIX_MOD, vldh_IdToStr(0, wind->lw.oid));
 	IF_PR fprintf( gcgctx->files[ GCGM1_MODULE_FILE ],
 		"if (DirectLink == 1)\n  plc_rtdbref( &rtdbref, tp);\n");
 	IF_PR fprintf( gcgctx->files[ GCGM1_MODULE_FILE ],
@@ -5600,13 +5836,13 @@ unsigned long	spawn;
 		gcgctx->filenames[ GCGM1_REF_FILE ], GCEXT);
 	IF_PR fprintf( gcgctx->files[ GCGM1_MODULE_FILE ],
 		"void %c%s_exec( plc_sThread *tp)\n{\n",
-		GCG_PREFIX_MOD, vldh_IdToStr(0, wind->lw.objdid));
+		GCG_PREFIX_MOD, vldh_IdToStr(0, wind->lw.oid));
 
 	/* Print exec call for the window */
-	sts = gcg_ref_insert( gcgctx, wind->lw.objdid, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, wind->lw.oid, GCG_PREFIX_REF);
 
 	/* Get name for this class */
-	sts = gcg_get_structname( gcgctx, wind->lw.objdid, &name);
+	sts = gcg_get_structname( gcgctx, wind->lw.oid, &name);
 	if( EVEN(sts)) return sts;
 
 	/* Print the execute command */
@@ -5614,7 +5850,7 @@ unsigned long	spawn;
 		"%s_exec( %c%s);\n",
 		name,
 		GCG_PREFIX_REF,
-		vldh_IdToStr(0, wind->lw.objdid));
+		vldh_IdToStr(0, wind->lw.oid));
 
 	IF_PR fprintf( gcgctx->files[ GCGM1_MODULE_FILE ],
 		"#include \"%s%s\"\n}\n",
@@ -5636,6 +5872,8 @@ unsigned long	spawn;
 	  XtFree((char *) nodelist);
 
 	sts = gcg_ref_print( gcgctx);
+	if ( EVEN(sts)) goto classerror; 
+	sts = gcg_aref_print( gcgctx);
 	if ( EVEN(sts)) goto classerror; 
 	sts = gcg_ioread_print( gcgctx);
 	if ( EVEN(sts)) goto classerror; 
@@ -5680,18 +5918,18 @@ unsigned long	spawn;
 	    {
 	      if ( opsys & pwr_mOpSys_VAX_ELN)
 	        sprintf( plclibrary, "%s%s.olb", PLCLIB_VAX_ELN,
-			vldh_VolumeIdToStr( wind->lw.objdid.vid));
+			vldh_VolumeIdToStr( wind->lw.oid.vid));
 	      else if ( opsys & pwr_mOpSys_VAX_VMS)
 	        sprintf( plclibrary, "%s%s.olb", PLCLIB_VAX_VMS,
-			vldh_VolumeIdToStr( wind->lw.objdid.vid));
+			vldh_VolumeIdToStr( wind->lw.oid.vid));
 	      else if ( opsys & pwr_mOpSys_AXP_VMS)
 	        sprintf( plclibrary, "%s%s.olb", PLCLIB_AXP_VMS,
-			vldh_VolumeIdToStr( wind->lw.objdid.vid));
+			vldh_VolumeIdToStr( wind->lw.oid.vid));
 	      else if ( IS_UNIX(opsys))
 	        sprintf( plclibrary, "%s%s.a", PLCLIB_UNIX,
-			vldh_VolumeIdToStr( wind->lw.objdid.vid));
+			vldh_VolumeIdToStr( wind->lw.oid.vid));
 
-	      IF_PR sprintf( module_name, "%s", vldh_IdToStr(0, wind->lw.objdid));
+	      IF_PR sprintf( module_name, "%s", vldh_IdToStr(0, wind->lw.oid));
 	      IF_PR {
                 sts = gcg_cc( GCG_WIND, module_name, plclibrary, wind_name, 
 			opsys, spawn);
@@ -5708,12 +5946,12 @@ unsigned long	spawn;
 	gcg_ctx_delete( gcgctx);
 
 	/* Generate code for the plc module */
-/*	sts = gcg_comp_m[0]( wind->hw.plcobject_pointer, codetype, 0, 0, 0);
+/*	sts = gcg_comp_m[0]( wind->hw.plc, codetype, 0, 0, 0);
 	if ( EVEN(sts)) return sts;
 */
 	/* Generate code for the rtnode */
-/*	sts = gcg_comp_rtnode( wind->hw.ldhsession, 0, 
-			wind->hw.plcobject_pointer, codetype, &node_errorcount,
+/*	sts = gcg_comp_rtnode( wind->hw.ldhses, 0, 
+			wind->hw.plc, codetype, &node_errorcount,
 			&node_warningcount);
 	if ( EVEN(sts)) return sts;
 	(*errorcount) += node_errorcount;
@@ -5725,7 +5963,7 @@ unsigned long	spawn;
 	  if ( codetype)
 	  {
   	    /* Revert the session */
-	    sts = ldh_RevertSession( wind->hw.ldhsession);
+	    sts = ldh_RevertSession( wind->hw.ldhses);
 	    if ( EVEN(sts)) return sts;
 
 
@@ -5747,11 +5985,11 @@ unsigned long	spawn;
 
             /* Store compile time for the window */
 	    clock_gettime(CLOCK_REALTIME, &time);
-	    sts = ldh_SetObjectPar( wind->hw.ldhsession, wind->lw.objdid,
+	    sts = ldh_SetObjectPar( wind->hw.ldhses, wind->lw.oid,
 		"DevBody", "Compiled", (char *)&time, sizeof( time)); 
 
 	    /* Save the session */
-	    sts = ldh_SaveSession( wind->hw.ldhsession);
+	    sts = ldh_SaveSession( wind->hw.ldhses);
 	    if ( EVEN(sts)) return sts;
 
 	    /* Return to previous session access */
@@ -5770,7 +6008,7 @@ classerror:
 	msgw_reset_nodraw();
 
   	/* Revert the session */
-	ldh_RevertSession( wind->hw.ldhsession);
+	ldh_RevertSession( wind->hw.ldhses);
 
 	/* Return to previous session access */
 	if ( session_access != ldh_eAccess_ReadWrite)
@@ -5839,11 +6077,11 @@ vldh_t_node	node;
 	int	sts;
 	ldh_tSesContext ldhses;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession;  
+	ldhses = (node->hn.wind)->hw.ldhses;  
 
-	sts = gcg_ref_insert( gcgctx, node->ln.object_did, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
 
-	sts = gcg_print_exec_macro( gcgctx, node, node->ln.object_did, GCG_PREFIX_REF);
+	sts = gcg_print_exec_macro( gcgctx, node, node->ln.oid, GCG_PREFIX_REF);
 	if (EVEN(sts)) return sts; 
 
 	sts = gcg_print_inputs( gcgctx, node, " && ", GCG_PRINT_CONPAR, NULL,
@@ -5886,11 +6124,11 @@ vldh_t_node	node;
 	int	sts;
 	ldh_tSesContext ldhses;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession;  
+	ldhses = (node->hn.wind)->hw.ldhses;  
 
-	sts = gcg_ref_insert( gcgctx, node->ln.object_did, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
 
-	sts = gcg_print_exec_macro( gcgctx, node, node->ln.object_did, GCG_PREFIX_REF);
+	sts = gcg_print_exec_macro( gcgctx, node, node->ln.oid, GCG_PREFIX_REF);
 	if (EVEN(sts)) return sts; 
 
 	sts = gcg_print_inputs( gcgctx, node, " || ", GCG_PRINT_CONPAR, NULL,
@@ -5934,9 +6172,9 @@ vldh_t_node	node;
 {
 	int 	sts;
 
-	sts = gcg_ref_insert( gcgctx, node->ln.object_did, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
 
-	sts = gcg_print_exec_macro( gcgctx, node, node->ln.object_did, GCG_PREFIX_REF);
+	sts = gcg_print_exec_macro( gcgctx, node, node->ln.oid, GCG_PREFIX_REF);
 	if (EVEN(sts)) return sts; 
 
 	sts = gcg_print_inputs( gcgctx, node, ", ", GCG_PRINT_ALLPAR, NULL,
@@ -5946,8 +6184,8 @@ vldh_t_node	node;
 	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
 	");\n");
 
-	gcg_scantime_print( gcgctx, node->ln.object_did);
-	gcg_timer_print( gcgctx, node->ln.object_did);
+	gcg_scantime_print( gcgctx, node->ln.oid);
+	gcg_timer_print( gcgctx, node->ln.oid);
 	
 	return GSX__SUCCESS;
 }
@@ -5997,15 +6235,16 @@ vldh_t_node	node;
 	ldh_sParDef 		output_bodydef;
 	int 			rows, sts;
 	int			i, output_found, first_par;
-	pwr_tObjid		output_objdid;
+	pwr_sAttrRef		output_attrref;
+	int			output_type;
 	char			output_prefix;
 	char			output_par[32];
 	char			*name;
 
-	sts = gcg_ref_insert( gcgctx, node->ln.object_did, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
 
 	/* Get name for this class */
-	sts = gcg_get_structname( gcgctx, node->ln.object_did, &name);
+	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
 	if( EVEN(sts)) return sts;
 
 	/* Print the execute command */
@@ -6013,11 +6252,11 @@ vldh_t_node	node;
 		"%s_exec( tp, %c%s);\n",
 		name,
 		GCG_PREFIX_REF,
-		vldh_IdToStr(0, node->ln.object_did));
+		vldh_IdToStr(0, node->ln.oid));
 
 	/* Get the runtime parameters for this class */
-	sts = ldh_GetObjectBodyDef((node->hn.window_pointer)->hw.ldhsession, 
-			node->ln.classid, "RtBody", 1, 
+	sts = ldh_GetObjectBodyDef((node->hn.wind)->hw.ldhses, 
+			node->ln.cid, "RtBody", 1, 
 			&bodydef, &rows);
 	if ( EVEN(sts) ) return sts;
 
@@ -6044,7 +6283,7 @@ vldh_t_node	node;
 	      gcg_error_msg( gcgctx, GSX__CONOUTPUT, output_node);
 
 	      sts = gcg_get_outputstring( gcgctx, output_node, &output_bodydef, 
-			&output_objdid, &output_prefix, output_par);
+			&output_attrref, &output_type, &output_prefix, output_par);
 	      if ( sts == GSX__NEXTPAR ) 
 	      {
 	        i++;
@@ -6058,10 +6297,12 @@ vldh_t_node	node;
 	      IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->%sP = &%c%s->%s;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName,
 			output_prefix,
-			vldh_IdToStr(1, output_objdid),
+			output_type == GCG_OTYPE_OID ? 
+			     vldh_IdToStr(1, output_attrref.Objid) : 
+			     vldh_AttrRefToStr(0, output_attrref),
 			output_par);
 	    }
 	    else
@@ -6079,18 +6320,18 @@ vldh_t_node	node;
 	    IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->%sP = &%c%s->%s;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName,
 			GCG_PREFIX_REF,
-			vldh_IdToStr(1, node->ln.object_did),
+			vldh_IdToStr(1, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName);
 	  }
 	  i++;
 	}
 	free((char *) bodydef);
 
-	gcg_timer_print( gcgctx, node->ln.object_did);
-	gcg_scantime_print( gcgctx, node->ln.object_did);
+	gcg_timer_print( gcgctx, node->ln.oid);
+	gcg_scantime_print( gcgctx, node->ln.oid);
 
 	return GSX__SUCCESS;
 }
@@ -6123,132 +6364,111 @@ vldh_t_node	node;
 	ldh_sParDef 		*bodydef;
 	int 			rows, sts;
 	int			size;
-	pwr_tObjid		refobjdid;
-	pwr_tObjid		*refobjdid_ptr;
+	pwr_sAttrRef		attrref;
+	pwr_sAttrRef		*attrref_ptr;
 	ldh_tSesContext 	ldhses;
 	pwr_tClassId		class;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession;  
+	ldhses = (node->hn.wind)->hw.ldhses;  
 	
 	/* Get the objdid of the referenced io object stored in the
 	  first parameter in defbody */
 
 	/* Get the devbody parameters for this class */
 	sts = ldh_GetObjectBodyDef( ldhses,
-			node->ln.classid, "DevBody", 1, 
+			node->ln.cid, "DevBody", 1, 
 			&bodydef, &rows);
 	if ( EVEN(sts) ) return sts;
 
 	sts = ldh_GetObjectPar( ldhses,
-			node->ln.object_did, 
+			node->ln.oid, 
 			"DevBody",
 			bodydef[0].ParName,
-			(char **)&refobjdid_ptr, &size); 
+			(char **)&attrref_ptr, &size); 
 	if ( EVEN(sts)) return sts;
 	free((char *) bodydef);	
-	refobjdid = *refobjdid_ptr;
-	free((char *) refobjdid_ptr);
+	attrref = *attrref_ptr;
+	free((char *) attrref_ptr);
+
+	sts = gcg_replace_ref( gcgctx, &attrref, node);
+	if ( EVEN(sts)) return sts;
 
 	/* Check that this is objdid of an existing object */
-	sts = ldh_GetObjectClass(
-			(node->hn.window_pointer)->hw.ldhsession, 
-			refobjdid,
-			&class);
-	if ( EVEN(sts)) 
-	{
+	sts = ldh_GetAttrRefTid( ldhses, &attrref, &class);
+	if ( EVEN(sts)) {
 	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
 	  return GSX__NEXTNODE;
 	}
 
 	/* Check that the class of the referenced object is correct */
-	if ( node->ln.classid == vldh_class( ldhses, VLDH_CLASS_GETDI ))
-	{
-	  if ( class != vldh_class( ldhses, VLDH_CLASS_DI))
-	  {
+	if ( node->ln.cid == pwr_cClass_GetDi) {
+	  if ( class != pwr_cClass_Di) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
 	}    
-	else if ( node->ln.classid == vldh_class( ldhses, VLDH_CLASS_GETDO ))
-	{
-	  if ( ! ( class == vldh_class( ldhses, VLDH_CLASS_DO) ||
-	           class == vldh_class( ldhses, VLDH_CLASS_PO)))
-	  {
+	else if ( node->ln.cid == pwr_cClass_GetDo) {
+	  if ( ! ( class == pwr_cClass_Do ||
+	           class == pwr_cClass_Po)) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
 	}    
-	else if ( node->ln.classid == vldh_class( ldhses, VLDH_CLASS_GETDV ))
-	{
-	  if ( class != vldh_class( ldhses, VLDH_CLASS_DV))
-	  {
+	else if ( node->ln.cid == pwr_cClass_GetDv) {
+	  if ( class != pwr_cClass_Dv) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
 	}    
-	else if ( node->ln.classid == vldh_class( ldhses, VLDH_CLASS_GETAI ))
-	{
-	  if ( class != vldh_class( ldhses, VLDH_CLASS_AI))
-	  {
+	else if ( node->ln.cid == pwr_cClass_GetAi) {
+	  if ( class != pwr_cClass_Ai) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
 	}    
-	else if ( node->ln.classid == vldh_class( ldhses, VLDH_CLASS_GETAO ))
-	{
-	  if ( class != vldh_class( ldhses, VLDH_CLASS_AO))
-	  {
+	else if ( node->ln.cid == pwr_cClass_GetAo) {
+	  if ( class != pwr_cClass_Ao) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
 	}
-	else if ( node->ln.classid == vldh_class( ldhses, VLDH_CLASS_GETAV ))
-	{
-	  if ( class != vldh_class( ldhses, VLDH_CLASS_AV))
-	  {
+	else if ( node->ln.cid == pwr_cClass_GetAv) {
+	  if ( class != pwr_cClass_Av) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
 	}
-	else if ( node->ln.classid == pwr_cClass_GetIi)
-	{
-	  if ( class != pwr_cClass_Ii)
-	  {
+	else if ( node->ln.cid == pwr_cClass_GetIi) {
+	  if ( class != pwr_cClass_Ii) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
 	}    
-	else if ( node->ln.classid == pwr_cClass_GetIo)
-	{
-	  if ( class != pwr_cClass_Io)
-	  {
+	else if ( node->ln.cid == pwr_cClass_GetIo) {
+	  if ( class != pwr_cClass_Io) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
 	}
-	else if ( node->ln.classid == pwr_cClass_GetIv)
-	{
-	  if ( class != pwr_cClass_Iv)
-	  {
+	else if ( node->ln.cid == pwr_cClass_GetIv) {
+	  if ( class != pwr_cClass_Iv) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
 	}
-	else if ( node->ln.classid == pwr_cClass_GetSv)
-	{
-	  if ( class != pwr_cClass_Sv)
-	  {
+	else if ( node->ln.cid == pwr_cClass_GetSv) {
+	  if ( class != pwr_cClass_Sv) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
 
 	  /* Insert io object in ioread list */
-	  gcg_ref_insert( gcgctx, refobjdid, GCG_PREFIX_REF);
+	  gcg_aref_insert( gcgctx, attrref, GCG_PREFIX_REF);
 	  return GSX__SUCCESS;
 	}
 
 	/* Insert io object in ioread list */
-	gcg_ioread_insert( gcgctx, refobjdid, GCG_PREFIX_REF);
+	gcg_ioread_insert( gcgctx, attrref, GCG_PREFIX_REF);
 
 	return GSX__SUCCESS;
 }
@@ -6279,52 +6499,50 @@ vldh_t_node	node;
 	ldh_sParDef 		*bodydef;
 	int 			rows, sts;
 	int			size;
-	pwr_tObjid		refobjdid;
-	pwr_tObjid		*refobjdid_ptr;
-	ldh_tSesContext ldhses;
+	pwr_sAttrRef		attrref;
+	pwr_sAttrRef		*attrref_ptr;
+	ldh_tSesContext 	ldhses;
 	pwr_tClassId		class;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession;  
+	ldhses = (node->hn.wind)->hw.ldhses;  
 	
 	/* Get the objdid of the referenced io object stored in the
 	  first parameter in defbody */
 
 	/* Get the devbody parameters for this class */
 	sts = ldh_GetObjectBodyDef( ldhses,
-			node->ln.classid, "DevBody", 1, 
+			node->ln.cid, "DevBody", 1, 
 			&bodydef, &rows);
 	if ( EVEN(sts) ) return sts;
 
 	sts = ldh_GetObjectPar( ldhses,
-			node->ln.object_did, 
+			node->ln.oid, 
 			"DevBody",
 			bodydef[0].ParName,
-			(char **)&refobjdid_ptr, &size); 
+			(char **)&attrref_ptr, &size); 
 	if ( EVEN(sts)) return sts;
 	free((char *) bodydef);	
-	refobjdid = *refobjdid_ptr;
-	free((char *) refobjdid_ptr);
+	attrref = *attrref_ptr;
+	free((char *) attrref_ptr);
+
+	sts = gcg_replace_ref( gcgctx, &attrref, node);
+	if ( EVEN(sts)) return sts;
 
 	/* Check that this is objdid of an existing object */
-	sts = ldh_GetObjectClass(
-			(node->hn.window_pointer)->hw.ldhsession, 
-			refobjdid,
-			&class);
-	if ( EVEN(sts)) 
-	{
+	sts = ldh_GetAttrRefTid( ldhses, &attrref, &class);
+	if ( EVEN(sts)) {
 	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
 	  return GSX__NEXTNODE;
 	}
 
-	if ( class != vldh_class( ldhses, VLDH_CLASS_CO))
-	{
+	if ( class != pwr_cClass_Co) {
 	  gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	  return GSX__NEXTNODE;
 	}
 
 	/* Insert io object in ioread list */
-	gcg_ioread_insert( gcgctx, refobjdid, GCG_PREFIX_REF);
-	gcg_ioread_insert( gcgctx, refobjdid, GCG_PREFIX_IOC);
+	gcg_ioread_insert( gcgctx, attrref, GCG_PREFIX_REF);
+	gcg_ioread_insert( gcgctx, attrref, GCG_PREFIX_IOC);
 
 	return GSX__SUCCESS;
 }
@@ -6355,201 +6573,91 @@ vldh_t_node	node;
 	ldh_sParDef 		*bodydef;
 	int 			rows, sts;
 	int			size;
-	pwr_tObjid		refobjdid;
-	pwr_tObjid		*refobjdid_ptr;
-	char			*parameter;
-	unsigned long		info_type;
-	unsigned long		info_size;
-	int			found, i;
-	ldh_tSesContext ldhses;
-	pwr_tClassId		class;
-	int			element;
-	char			*s, *t;
-	char			elementstr[20];
-	int			nr;
-	int			len;
+	pwr_sAttrRef		refattrref;
+	pwr_sAttrRef		*refattrref_ptr;
+	ldh_sAttrRefInfo	info;
+	char			aname[200];
+	char			*name_p;
+	ldh_tSesContext 	ldhses;
+	char			*s;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession;  
+	ldhses = (node->hn.wind)->hw.ldhses;  
 	
 	/* Get the objdid of the referenced io object stored in the
 	  first parameter in defbody */
 
 	/* Get the devbody parameters for this class */
 	sts = ldh_GetObjectBodyDef( ldhses,
-			node->ln.classid, "DevBody", 1, 
+			node->ln.cid, "DevBody", 1, 
 			&bodydef, &rows);
 	if ( EVEN(sts) ) return sts;
 
 	sts = ldh_GetObjectPar( ldhses,
-			node->ln.object_did, 
+			node->ln.oid, 
 			"DevBody",
 			bodydef[0].ParName,
-			(char **)&refobjdid_ptr, &size); 
+			(char **)&refattrref_ptr, &size); 
 	if ( EVEN(sts)) return sts;
 
-	refobjdid = *refobjdid_ptr;
-	free((char *) refobjdid_ptr);
-
-	/* Check that this is objdid of an existing object */
-	sts = ldh_GetObjectClass(
-			(node->hn.window_pointer)->hw.ldhsession, 
-			refobjdid,
-			&class);
-	if ( EVEN(sts)) 
-	{
-	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
-	  free((char *) bodydef);	
-	  return GSX__NEXTNODE;
-	}
-
-	/* Get the parameter of the referenced object
-	  in the second devbody-parameter */
-	sts = ldh_GetObjectPar( ldhses,
-			node->ln.object_did, 
-			"DevBody",
-			bodydef[1].ParName,
-			(char **)&parameter, &size); 
-	if ( EVEN(sts)) return sts;
+	refattrref = *refattrref_ptr;
+	free((char *) refattrref_ptr);
 	free((char *) bodydef);	
 
-	/* Check that the parameter exists in the referenced object */
-	sts = ldh_GetObjectBodyDef( ldhses, class, "RtBody", 1, 
-			&bodydef, &rows);
-	if ( EVEN(sts))
-	{
-	  /* Try SysBody */
-	  sts = ldh_GetObjectBodyDef( ldhses, class, "SysBody", 1,
-		&bodydef, &rows);
-	  if ( EVEN(sts))
-	  {
-	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);
-	    return GSX__NEXTNODE;
-	  }
-	}
+	sts = gcg_replace_ref( gcgctx, &refattrref, node);
+	if ( EVEN(sts)) return sts;
 
-	/* Check if parameter is an array */
-	s = strchr( parameter, '[');
-	if ( s == 0)
-	  element = -1;
-	else
-	{
-	  t = strchr( parameter, ']');
-	  if ( t == 0)
-	  {
-	    gcg_error_msg( gcgctx, GSX__REFPAR, node);
-	    return GSX__NEXTNODE;
-	  }
-	  else
-	  {
-	    len = t - s - 1;
-            if ( len > sizeof(elementstr) - 1)
-            {
-              gcg_error_msg( gcgctx, GSX__REFPAR, node);
-              return GSX__NEXTNODE;
-            }
-	    strncpy( elementstr, s + 1, len);
-	    elementstr[len] = 0;
-	    nr = sscanf( elementstr, "%d", &element);
-  	    if ( nr != 1 )
-	    {
-	      gcg_error_msg( gcgctx, GSX__REFPAR, node);
-	      return GSX__NEXTNODE;
-	    }
-	    *s = '\0';
-	  }
-	}
-
-
-	for ( i = 0, found = 0; i < rows; i++)
-	{
-	  /* ML 961009. Use ParName instead of PgmName */
-	  if ( strcmp( bodydef[i].ParName, parameter) == 0)
-	  {
-	    found = 1;
-	    break;
-	  }
-	}
-	free((char *) parameter);
-	if ( !found )
-	{
-	  gcg_error_msg( gcgctx, GSX__REFPAR, node);  
-	  free((char *) bodydef);	
+	sts = ldh_GetAttrRefInfo( ldhses, &refattrref, &info);
+	if ( EVEN(sts)) {
+	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
 	  return GSX__NEXTNODE;
 	}
-	
-	/* Check type of parameter */
-	switch (bodydef[i].ParClass )  {
-        case pwr_eClass_Input:
-          info_type = bodydef[i].Par->Input.Info.Type ;
-          info_size = bodydef[i].Par->Input.Info.Size ;
-	  if ( bodydef[i].Par->Input.Info.Flags & PWR_MASK_RTVIRTUAL	)
-	  {
-	    /* Parameter is not defined in runtime */
-	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
-	    free((char *) bodydef);	
-	    return GSX__NEXTNODE;
- 	  } 
-	  break;
-        case pwr_eClass_Output:
-          info_type = bodydef[i].Par->Output.Info.Type ;
-          info_size = bodydef[i].Par->Output.Info.Size ;
-	  break;
-        case pwr_eClass_Intern:
-          info_type = bodydef[i].Par->Intern.Info.Type ;
-          info_size = bodydef[i].Par->Intern.Info.Size ;
-	  break;
-        case pwr_eClass_Param:
-          info_type = bodydef[i].Par->Param.Info.Type ;
-          info_size = bodydef[i].Par->Param.Info.Size ;
-	  break;
-	default:
-	  /* Not allowed parameter type */		  
+
+	/* Get rid of last attribute segment of the referenced object */
+	sts = ldh_AttrRefToName( ldhses, &refattrref, ldh_eName_Aref, 
+				 &name_p, &size);
+	if ( EVEN(sts)) return sts;
+
+	strcpy( aname, name_p);
+	if ( (s = strrchr( aname, '.')) == 0) { 
+	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
+	  return GSX__NEXTPAR;
+	}
+
+	*s = 0;
+	sts = ldh_NameToAttrRef( ldhses, aname, &refattrref);
+	if ( EVEN(sts)) {
+	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);
+	  return GSX__NEXTPAR;
+	}
+
+	if ( info.flags & PWR_MASK_RTVIRTUAL) {
+	  /* Attribute is not defined in runtime */
 	  gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
-	  free((char *) bodydef);	
 	  return GSX__NEXTNODE;
-	}
-	/* Check elements */
-	if ( bodydef[i].Par->Param.Info.Flags & PWR_MASK_ARRAY )
-	{
-	  if ( element == -1)
-	  {
-	    /* No elementstring found in parameter */
+	} 
+
+	if ( info.flags & PWR_MASK_ARRAY) {
+	  if ( info.nElement == -1) {
+	    /* No index in attribute */
 	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
-	    free((char *) bodydef);	
 	    return GSX__NEXTNODE;
 	  }
-	  if ( element > (bodydef[i].Par->Param.Info.Elements - 1))
-	  {
+	  if ( info.index > info.nElement - 1) {
 	    /* Element index to large */
 	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
-	    free((char *) bodydef);	
-	    return GSX__NEXTNODE;
-	  }
-	}
-	else
-	{
-	  if ( element != -1)
-	  {
-	    /* Elementstring found in parameter */
-	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
-	    free((char *) bodydef);	
 	    return GSX__NEXTNODE;
 	  }
 	}
 
-        free((char *) bodydef );
-        
-	switch ( info_type ) {
-        case pwr_eType_Float32  : 
-	  if ( node->ln.classid != vldh_class( ldhses, VLDH_CLASS_GETAP))
-	  {
+	switch ( info.type ) {
+        case pwr_eType_Float32: 
+	  if ( node->ln.cid != pwr_cClass_GetAp) {
 	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);
 	    return GSX__NEXTNODE;
 	  }
           break;
-        case pwr_eType_Boolean :
-	  if ( node->ln.classid != vldh_class( ldhses, VLDH_CLASS_GETDP))
-	  {
+        case pwr_eType_Boolean:
+	  if ( node->ln.cid != pwr_cClass_GetDp) {
 	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
 	    return GSX__NEXTNODE;
 	  }
@@ -6564,15 +6672,13 @@ vldh_t_node	node;
         case pwr_eType_Mask: 
         case pwr_eType_Status: 
         case pwr_eType_NetStatus: 
-	  if ( node->ln.classid != pwr_cClass_GetIp)
-	  {
+	  if ( node->ln.cid != pwr_cClass_GetIp) {
 	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
 	    return GSX__NEXTNODE;
 	  }
           break;
         case pwr_eType_String :
-	  if ( node->ln.classid != pwr_cClass_GetSp)
-	  {
+	  if ( node->ln.cid != pwr_cClass_GetSp) {
 	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
 	    return GSX__NEXTNODE;
 	  }
@@ -6584,7 +6690,7 @@ vldh_t_node	node;
 	}
 
 	/* Insert object in ref list */
-	gcg_ref_insert( gcgctx, refobjdid, GCG_PREFIX_REF);
+	gcg_aref_insert( gcgctx, refattrref, GCG_PREFIX_REF);
 
 	return GSX__SUCCESS;
 }
@@ -6634,94 +6740,88 @@ vldh_t_node	node;
 	unsigned long		next_point;
 	int			k;
 	vldh_t_plc		plc;
-	pwr_tObjid		resobjdid;
-	pwr_tObjid		*resobjdid_ptr;
+	pwr_sAttrRef		resattrref;
+	pwr_sAttrRef		*resattrref_ptr;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession;  
+	ldhses = (node->hn.wind)->hw.ldhses;  
 
 	if ( gcgctx->reset_checked == FALSE )
 	{
 	  /* Check the resetobject in the plcobject */
-	  plc = (node->hn.window_pointer)->hw.plcobject_pointer;
+	  plc = (node->hn.wind)->hw.plc;
 	  sts = ldh_GetObjectPar( ldhses,
-			plc->lp.objdid, 
+			plc->lp.oid, 
 			"DevBody",
 			"ResetObject",
-			(char **)&resobjdid_ptr, &size); 
+			(char **)&resattrref_ptr, &size); 
 	  if ( EVEN(sts)) return sts;
 
-	  resobjdid = *resobjdid_ptr;
-	  free((char *) resobjdid_ptr);
+	  resattrref = *resattrref_ptr;
+	  free((char *) resattrref_ptr);
 
 	  /* Indicate that the reset object is checked */
 	  gcgctx->reset_checked = TRUE;
 
+	  sts = gcg_replace_ref( gcgctx, &resattrref, node);
+	  if ( EVEN(sts)) return sts;
+
 	  /* The reset object has to be a di, do or dv */
-	  sts = ldh_GetObjectClass(
-			(node->hn.window_pointer)->hw.ldhsession, 
-			resobjdid,
-			&class);
-	  if ( EVEN(sts)) 
- 	  {
+	  sts = ldh_GetAttrRefTid( ldhses, &resattrref, &class);
+	  if ( EVEN(sts)) {
 	    gcg_error_msg( gcgctx, GSX__NORESET, node);
 	    return GSX__NEXTNODE;
 	  }
 
 	  /* Check that the class of the reset object is correct */
-	  if ( !((class == vldh_class( ldhses, VLDH_CLASS_DI)) ||
-	       (class == vldh_class( ldhses, VLDH_CLASS_DV)) ||
-	       (class == vldh_class( ldhses, VLDH_CLASS_PO)) ||
-	       (class == vldh_class( ldhses, VLDH_CLASS_DO))))
-	  {
+	  if ( !(class == pwr_cClass_Di ||
+		 class == pwr_cClass_Dv ||
+		 class == pwr_cClass_Po ||
+		 class == pwr_cClass_Do)) {
 	    gcg_error_msg( gcgctx, GSX__CLASSRESET, node);
 	    return GSX__NEXTNODE;
 	  }
-	  gcgctx->reset_object = resobjdid;
+	  gcgctx->reset_object = resattrref;
 
 	  /* Insert reset object in ioread list */
-	  gcg_ioread_insert( gcgctx, resobjdid, GCG_PREFIX_REF);
+	  gcg_ioread_insert( gcgctx, resattrref, GCG_PREFIX_REF);
 
 	}
 
 	/* Insert step object in ref list */
-	gcg_ref_insert( gcgctx, node->ln.object_did, GCG_PREFIX_REF);
+	gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
 
 	/* Print the execute command */
-	sts = gcg_print_exec_macro( gcgctx, node, node->ln.object_did, GCG_PREFIX_REF);
+	sts = gcg_print_exec_macro( gcgctx, node, node->ln.oid, GCG_PREFIX_REF);
 	if (EVEN(sts)) return sts;
 
 	/* Print the reset object */
 	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE],
 		"%c%s->ActualValue,\n",
 		GCG_PREFIX_REF,
-		vldh_IdToStr(0, gcgctx->reset_object));
+		vldh_AttrRefToStr(0, gcgctx->reset_object));
 
 	/* Check if there is any order connected to the outputpin */
 	sts = gcg_get_point( node, 2, &point, &par_inverted);
-	if ( ODD( sts))
-	{
+	if ( ODD( sts)) {
 	  gcgctx->step_comp = TRUE;
 	  gcg_get_conpoint_nodes( node, point, 
 			&point_count, &pointlist, 
 			GOEN_CON_SIGNAL | GOEN_CON_OUTPUTTOINPUT);
 
-	  for ( k = 1; k < point_count; k++)
-	  {
+	  for ( k = 1; k < point_count; k++) {
 	    next_node = (pointlist + k)->node;
 	    next_point = (pointlist + k)->conpoint;
 	    /* Check class of connected nodes */
-	    sts = ldh_GetObjectClass( ldhses, next_node->ln.object_did, &class);
+	    sts = ldh_GetObjectClass( ldhses, next_node->ln.oid, &class);
 	    if (EVEN(sts)) return sts;
 
-	    if ((class == vldh_class( ldhses, VLDH_CLASS_ORDER)) && 
-		 ( next_point == 0 ))
-	    {
+	    if ((class == pwr_cClass_order) && 
+		 ( next_point == 0 )) {
 	      /* compile this nodes here */
 	      sts = gcg_node_comp( gcgctx, next_node);
 	      if ( EVEN(sts)) return sts;
 	    }
-	    else
-	    {
+	    else {
 	      /* Bad class */
 /*
 	      gcg_error_msg( gcgctx, GSX__NOORDER, node);
@@ -6796,7 +6896,8 @@ vldh_t_node	node;
 	vldh_t_node		next_node;
 	unsigned long		next_point;
 	int			k;
-	pwr_tObjid		output_objdid;
+	pwr_sAttrRef		output_attrref;
+	int			output_type;
 	char			output_prefix;
 	char			output_par[32];
 	vldh_t_node		output_node;
@@ -6811,14 +6912,14 @@ vldh_t_node	node;
 	int			stepcount;
 
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession;  
+	ldhses = (node->hn.wind)->hw.ldhses;  
 
 
 	/* Insert trans object in ref list */
-	gcg_ref_insert( gcgctx, node->ln.object_did, GCG_PREFIX_REF);
+	gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
 
 	/* Print the execute command */
-	sts = gcg_print_exec_macro( gcgctx, node, node->ln.object_did, GCG_PREFIX_REF);
+	sts = gcg_print_exec_macro( gcgctx, node, node->ln.oid, GCG_PREFIX_REF);
 	if (EVEN(sts)) return sts;
 
 	/* Print the trace condition, the trace parameter in the wind object
@@ -6826,7 +6927,7 @@ vldh_t_node	node;
 	 * IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE],
 	 *	"%c%lx->Trace,",
 	 *	GCG_PREFIX_REF,
-	 *	(node->hn.window_pointer)->lw.objdid);
+	 *	(node->hn.wind)->lw.oid);
 	 */
 
 	/* Print the step input list */	
@@ -6839,48 +6940,37 @@ vldh_t_node	node;
 
 	gcg_get_conpoint_nodes( node, point, &point_count, &pointlist,
 		GOEN_CON_SIGNAL | GOEN_CON_OUTPUTTOINPUT);
-	if ( point_count > 1 )
-	{
+	if ( point_count > 1 ) {
 	  stepcount = 0;
-	  for ( k = 1; k < point_count; k++)
-	  {
+	  for ( k = 1; k < point_count; k++) {
 	    next_node = (pointlist + k)->node;
 	    next_point = (pointlist + k)->conpoint;
 	    /* Check class of connected nodes */
-	    sts = ldh_GetObjectClass( ldhses, next_node->ln.object_did, &class);
+	    sts = ldh_GetObjectClass( ldhses, next_node->ln.oid, &class);
 	    if (EVEN(sts)) return sts;
 
-	    if ( 
-		((class == vldh_class( ldhses, VLDH_CLASS_STEP)) && 
-			( next_point == 2 )) ||
-		((class == vldh_class( ldhses, VLDH_CLASS_INITSTEP)) && 
-			( next_point == 2 )) ||
-		((class == vldh_class( ldhses, VLDH_CLASS_SUBSTEP)) && 
-			( next_point == 2 )) ||
-		((class == vldh_class( ldhses, VLDH_CLASS_SSBEGIN)) && 
-			( next_point == 1 )) )
-	    {
+	    if ( (class == pwr_cClass_step && next_point == 2) ||
+		 (class == pwr_cClass_initstep && next_point == 2) ||
+		 (class == pwr_cClass_substep && next_point == 2) ||
+		 (class == pwr_cClass_ssbegin && next_point == 1) ) {
 	      /* Print in the input list */
 	      stepcount++;
-	      if ( stepcount > 4)
-	      {
+	      if ( stepcount > 4) {
 	        stepcount = 0;
 	        IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], "\n");
 	      }
 	      IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
 			"&%c%s->Status[0]%s", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, next_node->ln.object_did),
+			vldh_IdToStr(0, next_node->ln.oid),
 			delimstr);
 	    }
-	    else if (class == vldh_class( ldhses, VLDH_CLASS_TRANS) )
-	    {
+	    else if (class == pwr_cClass_trans ) {
 	      /* If not parallell (same point nr) */
 	      if ( next_point != point)
 	        gcg_error_msg( gcgctx, GSX__NOSTEP, node);
 	    }
-	    else
-	    {
+	    else {
 	      /* Bad class */
 	      gcg_error_msg( gcgctx, GSX__NOSTEP, node);
 	    }
@@ -6903,54 +6993,42 @@ vldh_t_node	node;
 
 	gcg_get_conpoint_nodes( node, point, &point_count, &pointlist, 
 		GOEN_CON_SIGNAL | GOEN_CON_OUTPUTTOINPUT);
-	if ( point_count > 1 )
-	{
-	  for ( k = 1; k < point_count; k++)
-	  {
+	if ( point_count > 1 ) {
+	  for ( k = 1; k < point_count; k++) {
 	    next_node = (pointlist + k)->node;
 	    next_point = (pointlist + k)->conpoint;
 	    /* Check class of connected nodes */	
-	    sts = ldh_GetObjectClass( ldhses, next_node->ln.object_did, &class);
+	    sts = ldh_GetObjectClass( ldhses, next_node->ln.oid, &class);
 	    if (EVEN(sts)) return sts;
 
-	    if ( 
-		((class == vldh_class( ldhses, VLDH_CLASS_STEP)) && 
-			( next_point == 0 )) ||
-		((class == vldh_class( ldhses, VLDH_CLASS_INITSTEP)) && 
-			( next_point == 0 )) ||
-		((class == vldh_class( ldhses, VLDH_CLASS_SUBSTEP)) && 
-			( next_point == 0 )) ||
-		((class == vldh_class( ldhses, VLDH_CLASS_SSEND)) && 
-			( next_point == 0 )) )
-	    {
+	    if ( (class == pwr_cClass_step && next_point == 0) ||
+		 (class == pwr_cClass_initstep && next_point == 0) ||
+		 (class == pwr_cClass_substep && next_point == 0) ||
+		 (class == pwr_cClass_ssend && next_point == 0)) {
 	      /* Print in the input list */
 	      stepcount++;
-	      if ( stepcount > 4)
-	      {
+	      if ( stepcount > 4) {
 	        stepcount = 0;
 	        IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], "\n");
 	      }
 	      IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
 			"&%c%s->Status[0]%s", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, next_node->ln.object_did),
+			vldh_IdToStr(0, next_node->ln.oid),
 			delimstr);
 	    }
-	    else if (class == vldh_class( ldhses, VLDH_CLASS_TRANS) )
-	    {
+	    else if (class == pwr_cClass_trans) {
 	      /* If not parallell (same point nr) */
 	      if ( next_point != point)
 	        gcg_error_msg( gcgctx, GSX__NOSTEP, node);
 	    }
-	    else
-	    {
+	    else {
 	      /* Bad class */
 	      gcg_error_msg( gcgctx, GSX__NOSTEP, node);
 	    }
 	  }
 	}
-	else
-	{
+	else {
 	  /* Not connected */
 	  gcg_error_msg( gcgctx, GSX__GNOTCON, node);
 	}
@@ -6977,7 +7055,7 @@ vldh_t_node	node;
 	      gcg_error_msg( gcgctx, GSX__CONOUTPUT, node);
 
 	    sts = gcg_get_outputstring( gcgctx, output_node, &output_bodydef, 
-			&output_objdid, &output_prefix, output_par);
+			&output_attrref, &output_type, &output_prefix, output_par);
 	    if ( sts == GSX__NEXTPAR ) return sts;
 	    if ( EVEN(sts)) return sts;
 	    
@@ -6985,22 +7063,24 @@ vldh_t_node	node;
 	    IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
 		"setcond_exec( %c%s, ",
 		GCG_PREFIX_REF,
-		vldh_IdToStr(0, node->ln.object_did));
+		vldh_IdToStr(0, node->ln.oid));
 /*	    if ( par_inverted)
 	      IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
 		"!");
 */
 	    IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
-		"%c%s->%s);\n",
-		output_prefix,
-		vldh_IdToStr(0, output_objdid),
-		output_par);
+			   "%c%s->%s);\n",
+			   output_prefix,
+			   output_type == GCG_OTYPE_OID ? 
+			     vldh_IdToStr(0, output_attrref.Objid) : 
+			     vldh_AttrRefToStr(0, output_attrref),
+			   output_par);
 	  }
 	}
 
 	/* Print the function call to execute the subwindow */
 	/* Check first that there is a subwindow */
-	sts = ldh_GetChild( ldhses, node->ln.object_did, &windowobjdid);
+	sts = ldh_GetChild( ldhses, node->ln.oid, &windowobjdid);
 	wind_found = 0;
 	while ( ODD(sts) )
 	{
@@ -7038,7 +7118,7 @@ vldh_t_node	node;
 *	  IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
 *		"setcond_exec( %c%lx, 1);\n",
 *		GCG_PREFIX_REF,
-*		node->ln.object_did);
+*		node->ln.oid);
 */
 	}
 
@@ -7128,7 +7208,8 @@ vldh_t_node	node;
 	vldh_t_node		next_node;
 	unsigned long		next_point;
 	int			k;
-	pwr_tObjid		output_objdid;
+	pwr_sAttrRef		output_attrref;
+	int			output_type;
 	char			output_prefix;
 	char			output_par[32];
 	pwr_tObjid		step_objdid;
@@ -7142,7 +7223,7 @@ vldh_t_node	node;
 	unsigned long		windowindex;
 	char			*name;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession;  
+	ldhses = (node->hn.wind)->hw.ldhses;  
 
 	if ( !gcgctx->step_comp)
 	{
@@ -7157,34 +7238,31 @@ vldh_t_node	node;
 			GOEN_CON_SIGNAL | GOEN_CON_OUTPUTTOINPUT);
 	if ( EVEN(sts)) return sts;
 
-	if ( output_count > 0 )
-	{
+	if ( output_count > 0 ) {
 	  output_found = 1;
 	  if ( output_count > 1) 
 	    gcg_error_msg( gcgctx, GSX__CONOUTPUT, node);
 
 	  /* Check that is it a step */
-	  sts = ldh_GetObjectClass( ldhses, output_node->ln.object_did, &class);
+	  sts = ldh_GetObjectClass( ldhses, output_node->ln.oid, &class);
 	  if (EVEN(sts)) return sts;
 
-	  if ( !((class == vldh_class( ldhses, VLDH_CLASS_STEP )) ||
-	         (class == vldh_class( ldhses, VLDH_CLASS_SUBSTEP )) ||
-	         (class == vldh_class( ldhses, VLDH_CLASS_SSBEGIN )) ||
-	         (class == vldh_class( ldhses, VLDH_CLASS_SSEND )) ||
-	         (class == vldh_class( ldhses, VLDH_CLASS_INITSTEP ))))
-	  {
+	  if ( !(class == pwr_cClass_step ||
+	         class == pwr_cClass_substep ||
+	         class == pwr_cClass_ssbegin ||
+	         class == pwr_cClass_ssend ||
+	         class == pwr_cClass_initstep)) {
 	    gcg_error_msg( gcgctx, GSX__NOSTEP, node);  
 	    return GSX__NEXTNODE;
 	  }
 	}
-	else
-	{
+	else {
 	  /* Not connected */
 	  gcg_error_msg( gcgctx, GSX__GNOTCON, node);  
 	  return GSX__NEXTNODE;
 	}
 	
-	step_objdid = output_node->ln.object_did;
+	step_objdid = output_node->ln.oid;
 
 	/* Check if the condition pin is visible */
 	sts = gcg_get_inputpoint( node, 1, &point, &par_inverted);
@@ -7204,28 +7282,25 @@ vldh_t_node	node;
 	      gcg_error_msg( gcgctx, GSX__CONOUTPUT, node);
 
 	    sts = gcg_get_outputstring( gcgctx, output_node, &output_bodydef, 
-			&output_objdid, &output_prefix, output_par);
+			&output_attrref, &output_type, &output_prefix, output_par);
 	    if ( sts == GSX__NEXTPAR ) return sts;
 	    if ( EVEN(sts)) return sts;
 	    
 	    /* Get the objdid for the Corder */
 	    found = 0;
-	    sts = ldh_GetChild( ldhses, node->ln.object_did, &next_objdid);
-	    while ( ODD(sts) )
-	    {
+	    sts = ldh_GetChild( ldhses, node->ln.oid, &next_objdid);
+	    while ( ODD(sts) ) {
 	      /* Find out if this is a COrder */
 	      sts = ldh_GetObjectClass( ldhses, next_objdid, &class);
 	      if (EVEN(sts)) return sts;
 
-	      if ( class == vldh_class( ldhses, VLDH_CLASS_CORDER ))
-	      {
+	      if ( class == pwr_cClass_corder) {
 	        found = 1;
 	        break;
 	      }
 	      sts = ldh_GetNextSibling( ldhses, next_objdid, &next_objdid);
   	    }
-	    if ( !found )
-	    {
+	    if ( !found ) {
 	      gcg_error_msg( gcgctx, GSX__NOCORDER, node);  
 	      return GSX__NEXTNODE;
 	    }
@@ -7238,10 +7313,12 @@ vldh_t_node	node;
 	      IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
 		"!");
 	    IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
-		"%c%s->%s);\n",
-		output_prefix,
-		vldh_IdToStr(0, output_objdid),
-		output_par);
+			   "%c%s->%s);\n",
+			   output_prefix,
+			   output_type == GCG_OTYPE_OID ? 
+			     vldh_IdToStr(0, output_attrref.Objid) : 
+			     vldh_AttrRefToStr(0, output_attrref),
+			   output_par);
 	  }
 	  else
 	  {
@@ -7251,8 +7328,8 @@ vldh_t_node	node;
 	}
 
 	/* Check the attributes in the parent order node */
-	sts = ldh_GetObjectBodyDef((node->hn.window_pointer)->hw.ldhsession,
-			node->ln.classid, "DevBody", 1, 
+	sts = ldh_GetObjectBodyDef((node->hn.wind)->hw.ldhses,
+			node->ln.cid, "DevBody", 1, 
 			&bodydef, &rows);
 
 	if ( EVEN(sts) ) return sts;
@@ -7267,48 +7344,36 @@ vldh_t_node	node;
         */ 
 
 	subordercount = 0;
-	for ( i = 0; i < rows - 2; i += 2)
-	{
+	for ( i = 0; i < rows - 2; i += 2) {
 	  /* Get the parameter value */
-	  sts = ldh_GetObjectPar( (node->hn.window_pointer)->hw.ldhsession,  
-			node->ln.object_did, 
+	  sts = ldh_GetObjectPar( (node->hn.wind)->hw.ldhses,  
+			node->ln.oid, 
 			"DevBody",
 			bodydef[i].ParName,
 			(char **)&parvalue, &size); 
 	  if ( EVEN(sts)) return sts;
 
-	  if ( *parvalue == 'S' || *parvalue == 's' )
-	  {
-	    suborderclass[subordercount] =
-			vldh_class( ldhses, VLDH_CLASS_SORDER);
+	  if ( *parvalue == 'S' || *parvalue == 's' ) {
+	    suborderclass[subordercount] = pwr_cClass_sorder;
 	    subordercount++;
 	  }
-	  else if ( *parvalue == 'L' || *parvalue == 'l')
-	  {
-	    suborderclass[subordercount] =
-			vldh_class( ldhses, VLDH_CLASS_LORDER);
+	  else if ( *parvalue == 'L' || *parvalue == 'l') {
+	    suborderclass[subordercount] = pwr_cClass_lorder;
 	    subordercount++;
 	  }
-	  else if ( *parvalue == 'C' || *parvalue == 'c')
-	  {
-	    suborderclass[subordercount] =
-			vldh_class( ldhses, VLDH_CLASS_CORDER);
+	  else if ( *parvalue == 'C' || *parvalue == 'c') {
+	    suborderclass[subordercount] = pwr_cClass_corder;
 	    subordercount++;
 	  }
-	  else if ( *parvalue == 'D' || *parvalue == 'd')
-	  {
-	    suborderclass[subordercount] =
-			vldh_class( ldhses, VLDH_CLASS_DORDER);
+	  else if ( *parvalue == 'D' || *parvalue == 'd') {
+	    suborderclass[subordercount] = pwr_cClass_dorder;
 	    subordercount++;
 	  }
-	  else if ( *parvalue == 'P' || *parvalue == 'p')
-	  {
-	    suborderclass[subordercount] =
-			vldh_class( ldhses, VLDH_CLASS_PORDER);
+	  else if ( *parvalue == 'P' || *parvalue == 'p') {
+	    suborderclass[subordercount] = pwr_cClass_porder;
 	    subordercount++;
 	  }
-	  else if ( *parvalue != 0)
-	  {
+	  else if ( *parvalue != 0) {
 	    /* This orderattribute is not allowed */
 	    gcg_error_msg( gcgctx, GSX__ORDERATTR, node);
 	  }
@@ -7319,25 +7384,21 @@ vldh_t_node	node;
 	/* Get the objdid for order children of this node */
 	found = 0;
 	ldhsubordercount = 0;
-	sts = ldh_GetChild( ldhses, node->ln.object_did, &next_objdid);
-	while ( ODD(sts) )
-	{
+	sts = ldh_GetChild( ldhses, node->ln.oid, &next_objdid);
+	while ( ODD(sts) ) {
 	  /* Find out if this is a suborder */
 	  sts = ldh_GetObjectClass( ldhses, next_objdid, &class);
 	  if (EVEN(sts)) return sts;
 
-	  if ( (class == vldh_class( ldhses, VLDH_CLASS_SORDER )) ||
-	       (class == vldh_class( ldhses, VLDH_CLASS_DORDER )) ||
-	       (class == vldh_class( ldhses, VLDH_CLASS_LORDER )) ||
-	       (class == vldh_class( ldhses, VLDH_CLASS_CORDER )) ||
-	       (class == vldh_class( ldhses, VLDH_CLASS_PORDER )) )
-	  {
-	    if ( class != suborderclass[ldhsubordercount] )
-	    {
+	  if ( class == pwr_cClass_sorder ||
+	       class == pwr_cClass_dorder ||
+	       class == pwr_cClass_lorder ||
+	       class == pwr_cClass_corder ||
+	       class == pwr_cClass_porder ) {
+	    if ( class != suborderclass[ldhsubordercount] ) {
 	      return GSX__ORDERMISM;
 	    }   
-	    if ( class == vldh_class( ldhses, VLDH_CLASS_SORDER ))
-	    {
+	    if ( class == pwr_cClass_sorder) {
 	      sts = gcg_ref_insert( gcgctx, next_objdid, GCG_PREFIX_REF);
 
 	      /* Get name for execute call */
@@ -7353,11 +7414,10 @@ vldh_t_node	node;
 		GCG_PREFIX_REF,
 		vldh_IdToStr(1, step_objdid),
 		GCG_PREFIX_REF,
-		vldh_IdToStr(2, gcgctx->reset_object));
+		vldh_AttrRefToStr(2, gcgctx->reset_object));
 	      step_objdid = next_objdid;
 	    }
-	    else if ( class == vldh_class( ldhses, VLDH_CLASS_LORDER ))
-	    {
+	    else if ( class == pwr_cClass_lorder) {
 	      /* Get the time */
 
 	      sts = gcg_ref_insert( gcgctx, next_objdid, GCG_PREFIX_REF);
@@ -7379,8 +7439,7 @@ vldh_t_node	node;
 		vldh_IdToStr(1, step_objdid));
 	      step_objdid = next_objdid;
 	    }
-	    else if ( class == vldh_class( ldhses, VLDH_CLASS_DORDER ))
-	    {
+	    else if ( class == pwr_cClass_dorder) {
 	      /* Get the time */
 
 	      sts = gcg_ref_insert( gcgctx, next_objdid, GCG_PREFIX_REF);
@@ -7402,8 +7461,7 @@ vldh_t_node	node;
 			vldh_IdToStr(1, step_objdid));
 	      step_objdid = next_objdid;
 	    }
-	    else if ( class == vldh_class( ldhses, VLDH_CLASS_PORDER ))
-	    {
+	    else if ( class == pwr_cClass_porder) {
 	      sts = gcg_ref_insert( gcgctx, next_objdid, GCG_PREFIX_REF);
 
 	      /* Get name for execute call */
@@ -7420,8 +7478,7 @@ vldh_t_node	node;
 			vldh_IdToStr(1, step_objdid));
 	      step_objdid = next_objdid;
 	    }
-	    else if ( class == vldh_class( ldhses, VLDH_CLASS_CORDER ))
-	    {
+	    else if ( class == pwr_cClass_corder) {
 	      sts = gcg_ref_insert( gcgctx, next_objdid, GCG_PREFIX_REF);
 
 	      /* Get name for execute call */
@@ -7443,7 +7500,7 @@ vldh_t_node	node;
 	      if ( node->ln.subwindow & (windowindex + 1) )
 	      {
 	        wind_found = 1;
-		windobjdid = node->ln.subwind_objdid[windowindex];
+		windobjdid = node->ln.subwind_oid[windowindex];
 	      }
 	      if ( wind_found && pincond_found )
 	      {
@@ -7475,10 +7532,10 @@ vldh_t_node	node;
 	if ( ldhsubordercount != subordercount )
 	  return GSX__ORDERMISM;
 
-	sts = gcg_ref_insert( gcgctx, node->ln.object_did, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
 
 	/* Get name for execute call */
-	sts = gcg_get_structname( gcgctx, node->ln.object_did, &name);
+	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
 	if( EVEN(sts)) return sts;
 
 	 /* Print the execute command */
@@ -7486,7 +7543,7 @@ vldh_t_node	node;
 		"%s_exec( %c%s, %c%s,\n",
 		name,
 		GCG_PREFIX_REF,
-		vldh_IdToStr(0, node->ln.object_did),
+		vldh_IdToStr(0, node->ln.oid),
 		GCG_PREFIX_REF,
 		vldh_IdToStr(1, step_objdid));
 
@@ -7501,29 +7558,27 @@ vldh_t_node	node;
 			&point_count, &pointlist, 
 			GOEN_CON_SIGNAL | GOEN_CON_OUTPUTTOINPUT);
 
-	  for ( k = 1; k < point_count; k++)
-	  {
+	  for ( k = 1; k < point_count; k++) {
 	    pinact_found = 1;
 	    next_node = (pointlist + k)->node;
 	    next_point = (pointlist + k)->conpoint;
 	    /* Check class of connected nodes */	
-	    sts = ldh_GetObjectClass( ldhses, next_node->ln.object_did, &class);
+	    sts = ldh_GetObjectClass( ldhses, next_node->ln.oid, &class);
 	    if (EVEN(sts)) return sts;
 
-	    if ( (class == vldh_class( ldhses, VLDH_CLASS_STODO )) ||
-	         (class == vldh_class( ldhses, VLDH_CLASS_SETDO )) ||
-	         (class == vldh_class( ldhses, VLDH_CLASS_RESDO )) ||
-	         (class == vldh_class( ldhses, VLDH_CLASS_STODV )) ||
-	         (class == vldh_class( ldhses, VLDH_CLASS_SETDV )) ||
-	         (class == vldh_class( ldhses, VLDH_CLASS_RESDV )) ||
-	         (class == vldh_class( ldhses, VLDH_CLASS_RESDP )) ||
-	         (class == vldh_class( ldhses, VLDH_CLASS_SETDP )) ||
-	         (class == vldh_class( ldhses, VLDH_CLASS_RESET_SO )) ||
-	         (class == vldh_class( ldhses, VLDH_CLASS_STODP )) ||
-                 (class == vldh_class( ldhses, VLDH_CLASS_STODI )) ||
-                 (class == vldh_class( ldhses, VLDH_CLASS_SETDI )) ||
-                 (class == vldh_class( ldhses, VLDH_CLASS_RESDI )))
-	    {
+	    if ( class == pwr_cClass_stodo ||
+	         class == pwr_cClass_setdo ||
+	         class == pwr_cClass_resdo ||
+	         class == pwr_cClass_stodv ||
+	         class == pwr_cClass_setdv ||
+	         class == pwr_cClass_resdv ||
+	         class == pwr_cClass_setdp ||
+	         class == pwr_cClass_resdp ||
+	         class == pwr_cClass_reset_so ||
+	         class == pwr_cClass_stodp ||
+                 class == pwr_cClass_stodi ||
+                 class == pwr_cClass_setdi ||
+                 class == pwr_cClass_resdi) {
 	      /* compile this nodes here */
 	      sts = gcg_node_comp( gcgctx, next_node);
 	      if ( EVEN(sts)) return sts;
@@ -7539,7 +7594,7 @@ vldh_t_node	node;
 	if ( node->ln.subwindow & (windowindex + 1) )
 	{
 	  wind_found = 1;
-	  windobjdid = node->ln.subwind_objdid[windowindex];
+	  windobjdid = node->ln.subwind_oid[windowindex];
 	}
 	if ( wind_found && pinact_found )
 	{
@@ -7607,9 +7662,9 @@ vldh_t_node	node;
 	ldh_sParDef 		*bodydef;
 	int 			rows, sts;
 	int			size;
-	pwr_tObjid		refobjdid;
-	pwr_tObjid		*refobjdid_ptr;
-	ldh_tSesContext ldhses;
+	pwr_sAttrRef		refattrref;
+	pwr_sAttrRef		*refattrref_ptr;
+	ldh_tSesContext 	ldhses;
 	pwr_tClassId		class;
 	vldh_t_node		output_node;
 	unsigned long		output_count;
@@ -7618,25 +7673,24 @@ vldh_t_node	node;
 	char			*nocondef_ptr;
 	gcg_t_nocondef		nocondef[2];
 	unsigned long		nocontype[2];
+	char			*name;
 
 	nocondef[1].bo = 1;
 	nocontype[1] = GCG_BOOLEAN;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession;  
+	ldhses = (node->hn.wind)->hw.ldhses;  
 	
 	/* Check that this is objdid of an existing object */
-	sts = ldh_GetObjectClass( ldhses, node->ln.object_did, &class);
+	sts = ldh_GetObjectClass( ldhses, node->ln.oid, &class);
 	if ( EVEN(sts)) return sts;
 
-	if ( !gcgctx->order_comp)
-	{
-	  if ( (class == vldh_class( ldhses, VLDH_CLASS_STODO )) ||
-	         (class == vldh_class( ldhses, VLDH_CLASS_SETDO )) ||
-	         (class == vldh_class( ldhses, VLDH_CLASS_RESDO )) ||
-	         (class == vldh_class( ldhses, VLDH_CLASS_STODV )) ||
-	         (class == vldh_class( ldhses, VLDH_CLASS_SETDV )) ||
-	         (class == vldh_class( ldhses, VLDH_CLASS_RESDV )))
-	  {
+	if ( !gcgctx->order_comp) {
+	  if ( class == pwr_cClass_stodo ||
+	       class == pwr_cClass_setdo ||
+	       class == pwr_cClass_resdo ||
+	       class == pwr_cClass_stodv ||
+	       class == pwr_cClass_setdv ||
+	       class == pwr_cClass_resdv) {
 	    /* Check first if the object is connected to an order object,
 	      if it is, it will be compiled when by the ordermethod, when 
 	      gcgctx->order_comp is true */
@@ -7645,7 +7699,7 @@ vldh_t_node	node;
 			GOEN_CON_SIGNAL | GOEN_CON_OUTPUTTOINPUT);
 	    if ( EVEN(sts)) return sts;
 	    if ( output_count == 1)
-	      if ( output_node->ln.classid == vldh_class( ldhses, VLDH_CLASS_ORDER))
+	      if ( output_node->ln.cid == pwr_cClass_order)
 	        return GSX__SUCCESS;
 	  }
 	}
@@ -7655,134 +7709,112 @@ vldh_t_node	node;
 
 	/* Get the devbody parameters for this class */
 	sts = ldh_GetObjectBodyDef( ldhses,
-			node->ln.classid, "DevBody", 1, 
+			node->ln.cid, "DevBody", 1, 
 			&bodydef, &rows);
 	if ( EVEN(sts) ) return sts;
 
 	sts = ldh_GetObjectPar( ldhses,
-			node->ln.object_did, 
+			node->ln.oid, 
 			"DevBody",
 			bodydef[0].ParName,
-			(char **)&refobjdid_ptr, &size); 
+			(char **)&refattrref_ptr, &size); 
 	if ( EVEN(sts)) return sts;
-	refobjdid = *refobjdid_ptr;
-	free((char *) refobjdid_ptr);
+	refattrref = *refattrref_ptr;
+	free((char *) refattrref_ptr);
 	free((char *) bodydef);	
 
 	/* If the object is not connected the value in the
 	   parameter should be written in the macro call */
 	sts = ldh_GetObjectPar( ldhses,
-			node->ln.object_did, 
+			node->ln.oid, 
 			"RtBody",
 			"In",
 			&nocondef_ptr, &size); 
 	if ( EVEN(sts)) return sts;
 
 	/* Check that this is objdid of an existing object */
-	sts = ldh_GetObjectClass(
-			(node->hn.window_pointer)->hw.ldhsession, 
-			refobjdid,
-			&class);
-	if ( EVEN(sts)) 
-	{
+	sts = ldh_GetAttrRefTid( ldhses, &refattrref, &class);
+	if ( EVEN(sts)) {
 	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
 	  return GSX__NEXTNODE;
 	}
 
 	/* Check that the class of the referenced object is correct */
-	if ( ( node->ln.classid == pwr_cClass_setdo) ||	
-	     ( node->ln.classid == pwr_cClass_resdo) )
-	{
+	if ( ( node->ln.cid == pwr_cClass_setdo) ||	
+	     ( node->ln.cid == pwr_cClass_resdo) ) {
 	  if ( !(class == pwr_cClass_Do ||
-	         class == pwr_cClass_Po))
-	  {
+	         class == pwr_cClass_Po)) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
 	  nocondef[0].bo = TRUE;
 	  nocontype[0] = GCG_BOOLEAN;
 	}    
-	else if ( node->ln.classid == pwr_cClass_stodo)
-	{
+	else if ( node->ln.cid == pwr_cClass_stodo) {
 	  if ( !(class == pwr_cClass_Do ||
-	         class == pwr_cClass_Po))
-	  {
+	         class == pwr_cClass_Po)) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
 	  nocondef[0].bo = (int) *nocondef_ptr;
 	  nocontype[0] = GCG_BOOLEAN;
 	}    
-	else if (( node->ln.classid == pwr_cClass_setdv) ||	
-		 ( node->ln.classid == pwr_cClass_resdv) )
-	{
-	  if ( class != pwr_cClass_Dv)
-	  {
+	else if (( node->ln.cid == pwr_cClass_setdv) ||	
+		 ( node->ln.cid == pwr_cClass_resdv)) {
+	  if ( class != pwr_cClass_Dv) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
 	  nocondef[0].bo = TRUE;
 	  nocontype[0] = GCG_BOOLEAN;
 	}    
-	else if ( node->ln.classid == pwr_cClass_stodv)
-	{
-	  if ( class != pwr_cClass_Dv)
-	  {
+	else if ( node->ln.cid == pwr_cClass_stodv) {
+	  if ( class != pwr_cClass_Dv) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
 	  nocondef[0].bo = (int) *nocondef_ptr;
 	  nocontype[0] = GCG_BOOLEAN;
 	}    
-	else if ( (node->ln.classid == pwr_cClass_stoao) ||
-		  (node->ln.classid == pwr_cClass_cstoao)) 
-	{
-	  if ( class != pwr_cClass_Ao)
-	  {
+	else if ( (node->ln.cid == pwr_cClass_stoao) ||
+		  (node->ln.cid == pwr_cClass_cstoao)) {
+	  if ( class != pwr_cClass_Ao) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
 	  nocondef[0].fl = *(float *) nocondef_ptr;
 	  nocontype[0] = GCG_FLOAT;
 	}    
-	else if ( ( node->ln.classid == pwr_cClass_stoav) ||
-		  (node->ln.classid == pwr_cClass_cstoav)) 
-	{
-	  if ( class != pwr_cClass_Av)
-	  {
+	else if ( ( node->ln.cid == pwr_cClass_stoav) ||
+		  (node->ln.cid == pwr_cClass_cstoav)) {
+	  if ( class != pwr_cClass_Av) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
 	  nocondef[0].fl = *(float *) nocondef_ptr;
 	  nocontype[0] = GCG_FLOAT;
 	}    
-	else if ( (node->ln.classid == pwr_cClass_stoio) ||
-		  (node->ln.classid == pwr_cClass_cstoio)) 
-	{
-	  if ( class != pwr_cClass_Io)
-	  {
+	else if ( (node->ln.cid == pwr_cClass_stoio) ||
+		  (node->ln.cid == pwr_cClass_cstoio))  {
+	  if ( class != pwr_cClass_Io) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
 	  nocondef[0].bo = *(int *) nocondef_ptr;
 	  nocontype[0] = GCG_INT32;
 	}    
-	else if ( ( node->ln.classid == pwr_cClass_stoiv) ||
-		  (node->ln.classid == pwr_cClass_cstoiv)) 
-	{
-	  if ( class != pwr_cClass_Iv)
-	  {
+	else if ( ( node->ln.cid == pwr_cClass_stoiv) ||
+		  (node->ln.cid == pwr_cClass_cstoiv)) {
+	  if ( class != pwr_cClass_Iv) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
 	  nocondef[0].bo = *(int *) nocondef_ptr;
 	  nocontype[0] = GCG_INT32;
 	}    
-	else if ( node->ln.classid == pwr_cClass_stosv || 
-	          node->ln.classid == pwr_cClass_cstosv) 
-	{
-	  if ( class != pwr_cClass_Sv)
-	  {
+	else if ( node->ln.cid == pwr_cClass_stosv || 
+	          node->ln.cid == pwr_cClass_cstosv) {
+	  if ( class != pwr_cClass_Sv) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
@@ -7793,18 +7825,31 @@ vldh_t_node	node;
 
         if ( class == pwr_cClass_Sv) {
 	  /* Insert io object in ref list */
-	  gcg_ref_insert( gcgctx, refobjdid, GCG_PREFIX_REF);
+	  gcg_aref_insert( gcgctx, refattrref, GCG_PREFIX_REF);
 
 	  /* Print the execute command */
-	  sts = gcg_print_exec_macro( gcgctx, node, refobjdid, GCG_PREFIX_REF);
-	  if (EVEN(sts)) return sts; 
+	  sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
+	  if ( EVEN(sts)) return sts;	
+
+	  IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
+		"%s_exec( %c%s, ",
+		name,
+	        GCG_PREFIX_REF,
+		vldh_AttrRefToStr(0, refattrref));
         }
         else {
 	  /* Insert io object in iowrite list */
-	  gcg_iowrite_insert( gcgctx, refobjdid, GCG_PREFIX_IOW);
+	  gcg_iowrite_insert( gcgctx, refattrref, GCG_PREFIX_IOW);
 
 	  /* Print the execute command */
-	  sts = gcg_print_exec_macro( gcgctx, node, refobjdid, GCG_PREFIX_IOW);
+	  sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
+	  if ( EVEN(sts)) return sts;	
+
+	  IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
+		"%s_exec( %c%s, ",
+		name,
+	        GCG_PREFIX_IOW,
+		vldh_AttrRefToStr(0, refattrref));
 	  if (EVEN(sts)) return sts; 
         }
 	sts = gcg_print_inputs( gcgctx, node, ", ", GCG_PRINT_ALLPAR, 
@@ -7853,22 +7898,19 @@ vldh_t_node	node;
 	ldh_sParDef 		*bodydef;
 	int 			rows, sts;
 	int			size;
-	pwr_tObjid		refobjdid;
-	pwr_tObjid		*refobjdid_ptr;
-	ldh_tSesContext ldhses;
+	pwr_sAttrRef		refattrref;
+	pwr_sAttrRef		*refattrref_ptr;
+	ldh_tSesContext 	ldhses;
 	pwr_tClassId		class;
+	char			aname[200];
+	char			*name_p;
+	ldh_sAttrRefInfo	info;
 	vldh_t_node		output_node;
 	unsigned long		output_count;
 	unsigned long		output_point;
 	ldh_sParDef 		output_bodydef;
-	int			i;
 	char			*name;
-	char			*parameter;
-	char			parname[80];
-	char			pgmname[40]; /* add space for array index */
-	unsigned long		info_type;
-	unsigned long		info_size;
-	int			found;
+	char			parameter[80];
 	char			*nocondef_ptr;
 	gcg_t_nocondef		nocondef[2];
 	unsigned long		nocontype[2];
@@ -7877,17 +7919,15 @@ vldh_t_node	node;
 	nocondef[1].bo = 1;
 	nocontype[1] = GCG_BOOLEAN;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession;
+	ldhses = (node->hn.wind)->hw.ldhses;
 	
-	if ( !(  (node->ln.classid == pwr_cClass_StoAtoIp) ||
-	         (node->ln.classid == pwr_cClass_CStoAtoIp) ||
-	         (node->ln.classid == pwr_cClass_StoIp) ||
-	         (node->ln.classid == pwr_cClass_CStoIp) ||
-	         (node->ln.classid == vldh_class( ldhses, VLDH_CLASS_STOAP  )) ||
-	         (node->ln.classid == vldh_class( ldhses, VLDH_CLASS_CSTOAP )) ))
-	{
-	  if ( !gcgctx->order_comp )
-	  {
+	if ( !( node->ln.cid == pwr_cClass_StoAtoIp ||
+		node->ln.cid == pwr_cClass_CStoAtoIp ||
+		node->ln.cid == pwr_cClass_StoIp ||
+		node->ln.cid == pwr_cClass_CStoIp ||
+		node->ln.cid == pwr_cClass_stoap ||
+		node->ln.cid == pwr_cClass_cstoap)) {
+	  if ( !gcgctx->order_comp ) {
 	    /* Check first if the object is connected to an order object,
 	      if it is, it will be compiled when by the ordermethod, when 
 	      gcgctx->order_comp is true */
@@ -7896,7 +7936,7 @@ vldh_t_node	node;
 			GOEN_CON_SIGNAL | GOEN_CON_OUTPUTTOINPUT);
 	    if ( EVEN(sts)) return sts;
 	    if ( output_count == 1)
-	      if ( output_node->ln.classid == vldh_class( ldhses, VLDH_CLASS_ORDER))
+	      if ( output_node->ln.cid == pwr_cClass_order)
 	        return GSX__SUCCESS;
 	  }
 	}
@@ -7905,130 +7945,81 @@ vldh_t_node	node;
 
 	/* Get the devbody parameters for this class */
 	sts = ldh_GetObjectBodyDef( ldhses,
-			node->ln.classid, "DevBody", 1, 
+			node->ln.cid, "DevBody", 1, 
 			&bodydef, &rows);
 	if ( EVEN(sts) ) return sts;
 
 	sts = ldh_GetObjectPar( ldhses,
-			node->ln.object_did, 
+			node->ln.oid, 
 			"DevBody",
 			bodydef[0].ParName,
-			(char **)&refobjdid_ptr, &size); 
+			(char **)&refattrref_ptr, &size); 
 	if ( EVEN(sts)) return sts;
-	refobjdid = *refobjdid_ptr;
-	free((char *) refobjdid_ptr);
-
-
-	/* Check that this is objdid of an existing object */
-	sts = ldh_GetObjectClass(
-			(node->hn.window_pointer)->hw.ldhsession, 
-			refobjdid,
-			&class);
-	if ( EVEN(sts)) 
-	{
-	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
-	  free((char *) bodydef);	
-	  return GSX__NEXTNODE;
-	}
-
-	/* Get the parameter of the referenced object
-	  in the second devbody-parameter */
-	sts = ldh_GetObjectPar( ldhses,
-			node->ln.object_did, 
-			"DevBody",
-			bodydef[1].ParName,
-			(char **)&parameter, &size); 
-	if ( EVEN(sts)) return sts;
+	refattrref = *refattrref_ptr;
+	free((char *) refattrref_ptr);
 	free((char *) bodydef);	
 
+	sts = gcg_replace_ref( gcgctx, &refattrref, node);
+	if ( EVEN(sts)) return sts;
 
-	/* Check that the parameter exists in the referenced object */
-	sts = ldh_GetObjectBodyDef( ldhses, class, "RtBody", 1, 
-			&bodydef, &rows);
-	if ( EVEN(sts) )
-	{
-	  gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
+	/* Check that this is objdid of an existing object */
+	sts = ldh_GetAttrRefTid( ldhses, &refattrref, &class);
+	if ( EVEN(sts)) {
+	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
 	  return GSX__NEXTNODE;
 	}
 
-	strcpy( parname, parameter);
-	if ( (s = strchr( parname, '[')))
-	  *s = 0;
-	for ( i = 0, found = 0; i < rows; i++)
-	{
-	  /* ML 961009. Use ParName instead of PgmName */
-	  if ( strcmp( bodydef[i].ParName, parname) == 0)
-	  {
-	    found = 1;
-	    break;
+	sts = ldh_GetAttrRefInfo( ldhses, &refattrref, &info);
+	if ( EVEN(sts)) return sts;
+
+	/* Get rid of last attribute segment of the referenced object */
+	sts = ldh_AttrRefToName( ldhses, &refattrref, ldh_eName_Aref, 
+				 &name_p, &size);
+	if ( EVEN(sts)) return sts;
+
+	strcpy( aname, name_p);
+	if ( (s = strrchr( aname, '.')) == 0) { 
+	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
+	  return GSX__NEXTPAR;
+	}
+
+	*s = 0;
+	sts = ldh_NameToAttrRef( ldhses, aname, &refattrref);
+	if ( EVEN(sts)) {
+	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);
+	  return GSX__NEXTPAR;
+	}
+
+	sts = ldh_GetAttrRefTid( ldhses, &refattrref, &class);
+	if ( EVEN(sts)) return sts;
+	
+	sts = gcg_parname_to_pgmname(ldhses, class, s+1, parameter);
+	if ( EVEN(sts)) return sts;
+
+	if ( info.flags & PWR_MASK_RTVIRTUAL) {
+	  /* Attribute is not defined in runtime */
+	  gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	  return GSX__NEXTNODE;
+	} 
+
+	if ( info.flags & PWR_MASK_ARRAY) {
+	  if ( info.nElement == -1) {
+	    /* No index in attribute */
+	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	    return GSX__NEXTNODE;
+	  }
+	  if ( info.index > info.nElement - 1) {
+	    /* Element index to large */
+	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	    return GSX__NEXTNODE;
 	  }
 	}
-	if ( !found )
-	{
-	  gcg_error_msg( gcgctx, GSX__REFPAR, node);  
-	  free((char *) bodydef);	
-	  free((char *) parameter);
-	  return GSX__NEXTNODE;
-	}
-	
-	/* Check type of parameter */
-	switch (bodydef[i].ParClass )  {
-        case pwr_eClass_Input:
-          info_type = bodydef[i].Par->Input.Info.Type ;
-          if ( bodydef[i].Par->Input.Info.Flags & PWR_MASK_ARRAY)
-            info_size = bodydef[i].Par->Input.Info.Size /
-	      bodydef[i].Par->Input.Info.Elements;
-          else
-            info_size = bodydef[i].Par->Input.Info.Size;
-	  if ( bodydef[i].Par->Input.Info.Flags & PWR_MASK_RTVIRTUAL)
-	  {
-	    /* Parameter is not defined in runtime */
-	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
-	    free((char *) bodydef);	
-	    free((char *) parameter);
-	    return GSX__NEXTNODE;
- 	  } 
-	  break;
-        case pwr_eClass_Output:
-          info_type = bodydef[i].Par->Output.Info.Type ;
-          if ( bodydef[i].Par->Output.Info.Flags & PWR_MASK_ARRAY)
-            info_size = bodydef[i].Par->Output.Info.Size /
-	      bodydef[i].Par->Output.Info.Elements;
-          else
-            info_size = bodydef[i].Par->Output.Info.Size;
-	  break;
-        case pwr_eClass_Intern:
-          info_type = bodydef[i].Par->Intern.Info.Type ;
-          if ( bodydef[i].Par->Intern.Info.Flags & PWR_MASK_ARRAY)
-            info_size = bodydef[i].Par->Intern.Info.Size /
-	      bodydef[i].Par->Intern.Info.Elements;
-          else
-            info_size = bodydef[i].Par->Intern.Info.Size;
-	  break;
-        case pwr_eClass_Param:
-          info_type = bodydef[i].Par->Param.Info.Type ;
-          if ( bodydef[i].Par->Param.Info.Flags & PWR_MASK_ARRAY)
-            info_size = bodydef[i].Par->Param.Info.Size /
-	      bodydef[i].Par->Param.Info.Elements;
-          else
-            info_size = bodydef[i].Par->Param.Info.Size;
-	  break;
-	default:
-	  /* Not allowed parameter type */		  
-	  gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
-	  free((char *) bodydef);	
-	  free((char *) parameter);
-	  return GSX__NEXTNODE;
-	}
-        free((char *) bodydef );
-        
-	switch ( info_type ) {
+
+	switch ( info.type ) {
         case pwr_eType_Float32  : 
-	  if ( !(( node->ln.classid == vldh_class( ldhses, VLDH_CLASS_STOAP)) ||
-	       ( node->ln.classid == vldh_class( ldhses, VLDH_CLASS_CSTOAP )))) 
-	  {
+	  if ( !( node->ln.cid == pwr_cClass_stoap ||
+	          node->ln.cid == pwr_cClass_cstoap)) {
 	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
-	    free((char *) parameter);
 	    return GSX__NEXTNODE;
 	  }
           break;
@@ -8042,97 +8033,82 @@ vldh_t_node	node;
         case pwr_eType_Mask  : 
         case pwr_eType_Status  : 
         case pwr_eType_NetStatus  : 
-	  if ( !(node->ln.classid == pwr_cClass_StoAtoIp ||
-		 node->ln.classid == pwr_cClass_CStoAtoIp ||
-		 node->ln.classid == pwr_cClass_StoIp ||
-		 node->ln.classid == pwr_cClass_CStoIp)) 
-	  {
+	  if ( !(node->ln.cid == pwr_cClass_StoAtoIp ||
+		 node->ln.cid == pwr_cClass_CStoAtoIp ||
+		 node->ln.cid == pwr_cClass_StoIp ||
+		 node->ln.cid == pwr_cClass_CStoIp)) {
 	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
-	    free((char *) parameter);
 	    return GSX__NEXTNODE;
 	  }
           break;
         case pwr_eType_Boolean :
-	  if ( !( ( node->ln.classid == vldh_class( ldhses, VLDH_CLASS_STODP)) ||
-	     ( node->ln.classid == vldh_class( ldhses, VLDH_CLASS_SETDP)) ||
-	     ( node->ln.classid == vldh_class( ldhses, VLDH_CLASS_RESDP))))
-	  {
+	  if ( !( node->ln.cid == pwr_cClass_stodp ||
+		  node->ln.cid == pwr_cClass_setdp ||
+		  node->ln.cid == pwr_cClass_resdp)) {
 	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
-	    free((char *) parameter);
 	    return GSX__NEXTNODE;
 	  }
           break;
         case pwr_eType_String :
-	  if ( !( node->ln.classid == pwr_cClass_stosp ||
-	          node->ln.classid == pwr_cClass_cstosp ||
-	          node->ln.classid == pwr_cClass_stonumsp ||
-	          node->ln.classid == pwr_cClass_cstonumsp ))
-	  {
+	  if ( !( node->ln.cid == pwr_cClass_stosp ||
+	          node->ln.cid == pwr_cClass_cstosp ||
+	          node->ln.cid == pwr_cClass_stonumsp ||
+	          node->ln.cid == pwr_cClass_cstonumsp )) {
 	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
-	    free((char *) parameter);
 	    return GSX__NEXTNODE;
 	  }
           break;
 	default:
 	  /* Not allowed type */
 	  gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
-	  free((char *) parameter);
 	  return GSX__NEXTNODE;
 	}
 
 	/* If the object is not connected the value in the
 	   parameter should be written in the macro call */
 	sts = ldh_GetObjectPar( ldhses,
-			node->ln.object_did, 
+			node->ln.oid, 
 			"RtBody",
 			"In",
 			&nocondef_ptr, &size); 
 	if ( EVEN(sts)) return sts;
 
 	/* Check that the class of the referenced object is correct */
-	if ( ( node->ln.classid == vldh_class( ldhses, VLDH_CLASS_SETDP )) ||	
-	     ( node->ln.classid == vldh_class( ldhses, VLDH_CLASS_RESDP )) )
-	{
+	if ( node->ln.cid == pwr_cClass_setdp ||	
+	     node->ln.cid == pwr_cClass_resdp) {
 	  nocondef[0].bo = TRUE;
 	  nocontype[0] = GCG_BOOLEAN;
 	}    
-	else if ( node->ln.classid == vldh_class( ldhses, VLDH_CLASS_STODP ))
-	{
+	else if ( node->ln.cid == pwr_cClass_stodp) {
 	  nocondef[0].bo = (int)*nocondef_ptr;
 	  nocontype[0] = GCG_BOOLEAN;
 	}    
-	else if ( ( node->ln.classid == vldh_class( ldhses, VLDH_CLASS_STOAP)) ||
-	       ( node->ln.classid == vldh_class( ldhses, VLDH_CLASS_CSTOAP ))) 
-	{
+	else if ( node->ln.cid == pwr_cClass_stoap ||
+		  node->ln.cid == pwr_cClass_cstoap) {
 	  nocondef[0].fl = *(float *) nocondef_ptr;
 	  nocontype[0] = GCG_FLOAT;
 	}    
-	else if ( node->ln.classid == pwr_cClass_StoAtoIp ||
-		  node->ln.classid == pwr_cClass_CStoAtoIp ||
-		  node->ln.classid == pwr_cClass_StoIp ||
-		  node->ln.classid == pwr_cClass_CStoIp) 
-	{
+	else if ( node->ln.cid == pwr_cClass_StoAtoIp ||
+		  node->ln.cid == pwr_cClass_CStoAtoIp ||
+		  node->ln.cid == pwr_cClass_StoIp ||
+		  node->ln.cid == pwr_cClass_CStoIp) {
 	  nocondef[0].bo = *(float *) nocondef_ptr;
 	  nocontype[0] = GCG_INT32;
 	}    
-	else if ( node->ln.classid == pwr_cClass_stosp ||
-	          node->ln.classid == pwr_cClass_cstosp ||
-	          node->ln.classid == pwr_cClass_stonumsp || 
-	          node->ln.classid == pwr_cClass_cstonumsp) 
-	{
+	else if ( node->ln.cid == pwr_cClass_stosp ||
+	          node->ln.cid == pwr_cClass_cstosp ||
+	          node->ln.cid == pwr_cClass_stonumsp || 
+	          node->ln.cid == pwr_cClass_cstonumsp)  {
 	  strcpy( nocondef[0].str, (char *) nocondef_ptr);
 	  nocontype[0] = GCG_STRING;
 	}    
 	free(nocondef_ptr);
 
 	/* Insert object in ref list */
-	gcg_ref_insert( gcgctx, refobjdid, GCG_PREFIX_REF);
+	gcg_aref_insert( gcgctx, refattrref, GCG_PREFIX_REF);
 
 	/* Get name for this class */
-	sts = gcg_get_structname( gcgctx, node->ln.object_did, &name);
-	if( EVEN(sts)) return sts;
-
-	sts = gcg_parname_to_pgmname(ldhses, class, parameter, pgmname);
+	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
 	if( EVEN(sts)) return sts;
 
 	/* Print the execute command */
@@ -8140,32 +8116,30 @@ vldh_t_node	node;
 		"%s_exec( %c%s->%s, ",
 		name,
 		GCG_PREFIX_REF,
-		vldh_IdToStr(0, refobjdid),
-		pgmname);
-
-	free((char *) parameter);
+		vldh_AttrRefToStr(0, refattrref),
+		parameter);
 
 	sts = gcg_print_inputs( gcgctx, node, ", ", GCG_PRINT_ALLPAR, 
 		nocondef, nocontype);
 	if ( EVEN(sts) ) return sts;
 
-	if ( node->ln.classid == pwr_cClass_stosp ||
-	     node->ln.classid == pwr_cClass_cstosp ) {
+	if ( node->ln.cid == pwr_cClass_stosp ||
+	     node->ln.cid == pwr_cClass_cstosp ) {
           // Add size of connected attribute
 	  IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
-		",%ld", info_size);
+		",%d", info.size);
         }
-	else if ( node->ln.classid == pwr_cClass_stonumsp ||
-		  node->ln.classid == pwr_cClass_cstonumsp ) {
+	else if ( node->ln.cid == pwr_cClass_stonumsp ||
+		  node->ln.cid == pwr_cClass_cstonumsp ) {
           // Add size of connected attribute and number of characters
 	  pwr_tInt32 *numberofchar_ptr;
 
-	  sts = ldh_GetObjectPar( ldhses, node->ln.object_did, "DevBody",
+	  sts = ldh_GetObjectPar( ldhses, node->ln.oid, "DevBody",
 			"NumberOfChar", (char **)&numberofchar_ptr, &size); 
 	  if ( EVEN(sts)) return sts;
 
 	  IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
-		",%ld,%d", info_size, *numberofchar_ptr);
+		",%d,%d", info.size, *numberofchar_ptr);
 	  free( (char *)numberofchar_ptr);
         }
 
@@ -8213,12 +8187,12 @@ vldh_t_node	node;
 	unsigned long		nocontype = GCG_BOOLEAN;
 
 	nocondef.bo = TRUE;
-	ldhses = (node->hn.window_pointer)->hw.ldhsession; 
+	ldhses = (node->hn.wind)->hw.ldhses; 
 
-	sts = gcg_ref_insert( gcgctx, node->ln.object_did, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
 
 	/* Get name for this class */
-	sts = gcg_get_structname( gcgctx, node->ln.object_did, &name);
+	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
 	if( EVEN(sts)) return sts;
 
 	/* Print the execute command */
@@ -8233,7 +8207,7 @@ vldh_t_node	node;
 	/* Print the function call to execute the subwindow */
 	/* Check first that there is a subwindow */
 	/* Get the first child to the plc */
-	sts = ldh_GetChild( ldhses, node->ln.object_did, &windowobjdid);
+	sts = ldh_GetChild( ldhses, node->ln.oid, &windowobjdid);
 	found = 0;
 	while ( ODD(sts) )
 	{
@@ -8315,7 +8289,7 @@ vldh_t_node	node;
 	unsigned long		output_point;
 	ldh_sParDef 		output_bodydef;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession; 
+	ldhses = (node->hn.wind)->hw.ldhses; 
 	
 	if ( !gcgctx->order_comp)
 	{
@@ -8327,7 +8301,7 @@ vldh_t_node	node;
 			GOEN_CON_SIGNAL | GOEN_CON_OUTPUTTOINPUT);
 	  if ( EVEN(sts)) return sts;
 	  if ( output_count == 1)
-	    if ( output_node->ln.classid == vldh_class( ldhses, VLDH_CLASS_ORDER))
+	    if ( output_node->ln.cid == pwr_cClass_order)
 	      return GSX__SUCCESS;
 	}
 
@@ -8335,7 +8309,7 @@ vldh_t_node	node;
 	  first parameter devbody */
 
 	sts = ldh_GetObjectPar( ldhses,
-			node->ln.object_did, 
+			node->ln.oid, 
 			"DevBody",
 			"OrderObject",
 			(char **)&refobjdid_ptr, &size); 
@@ -8346,7 +8320,7 @@ vldh_t_node	node;
 
 	/* Check that this is objdid of an existing object */
 	sts = ldh_GetObjectClass(
-			(node->hn.window_pointer)->hw.ldhsession, 
+			(node->hn.wind)->hw.ldhses, 
 			refobjdid,
 			&class);
 	if ( EVEN(sts)) 
@@ -8365,8 +8339,7 @@ vldh_t_node	node;
 	  sts = ldh_GetObjectClass( ldhses, next_objdid, &class);
 	  if (EVEN(sts)) return sts;
 
-	  if ( class == vldh_class( ldhses, VLDH_CLASS_SORDER ))
-	  {
+	  if ( class == pwr_cClass_sorder) {
 	    found = 1;
 	    break;
 	  }
@@ -8426,13 +8399,13 @@ vldh_t_node	node;
 	int 			sts;
 	int			size;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession; 
+	ldhses = (node->hn.wind)->hw.ldhses; 
 	
 	/* Get the objdid of the referenced order object stored in the
 	  first parameter devbody */
 
 	sts = ldh_GetObjectPar( ldhses,
-			node->ln.object_did, 
+			node->ln.oid, 
 			"DevBody",
 			"OrderObject",
 			(char **)&refobjdid_ptr, &size); 
@@ -8450,17 +8423,15 @@ vldh_t_node	node;
 
 	/* Check that parent is an order object */
 	sts = ldh_GetObjectClass(
-			(node->hn.window_pointer)->hw.ldhsession, 
+			(node->hn.wind)->hw.ldhses, 
 			refobjdid,
 			&class);
-	if ( EVEN(sts)) 
-	{
+	if ( EVEN(sts)) {
 	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
 	  return GSX__NEXTNODE;
 	}
 
-	if ( !(class == vldh_class( ldhses, VLDH_CLASS_ORDER)))
-	{
+	if ( class != pwr_cClass_order) {
 	  gcg_error_msg( gcgctx, GSX__BADWIND, node);  
 	  return GSX__NEXTNODE;
 	}
@@ -8468,9 +8439,8 @@ vldh_t_node	node;
 
 
 	/* Check that this is objdid is the same as the parent node */
-	if ( cdh_ObjidIsNotEqual( (node->hn.window_pointer)->lw.parent_node_did,
-		refobjdid))
-	{
+	if ( cdh_ObjidIsNotEqual( (node->hn.wind)->lw.poid,
+		refobjdid)) {
 	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
 	  return GSX__NEXTNODE;
 	}	  
@@ -8517,11 +8487,11 @@ vldh_t_node	node;
 	int			found;
 	char			*name;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession; 
+	ldhses = (node->hn.wind)->hw.ldhses; 
 	
 	/* Get the parent node to this window, it should be either
 	  a trans or a order object */
-	refobjdid = (node->hn.window_pointer)->lw.parent_node_did;
+	refobjdid = (node->hn.wind)->lw.poid;
 
 	if ( cdh_ObjidIsNull( refobjdid))
 	{	
@@ -8532,43 +8502,37 @@ vldh_t_node	node;
 
 	/* Check class of this objdid */
 	sts = ldh_GetObjectClass(
-			(node->hn.window_pointer)->hw.ldhsession, 
+			(node->hn.wind)->hw.ldhses, 
 			refobjdid,
 			&class);
-	if ( EVEN(sts)) 
-	{
+	if ( EVEN(sts)) {
 	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
 	  return GSX__NEXTNODE;
 	}
 
-	if ( !((class == vldh_class( ldhses, VLDH_CLASS_TRANS)) ||
-	      (class == vldh_class( ldhses, VLDH_CLASS_ORDER))))
-	{
+	if ( !(class == pwr_cClass_trans ||
+	       class == pwr_cClass_order)) {
 	  gcg_error_msg( gcgctx, GSX__BADWIND, node);  
 	  return GSX__NEXTNODE;
 	}
 
-	if ( class == vldh_class( ldhses, VLDH_CLASS_ORDER))
-	{
+	if ( class == pwr_cClass_order) {
 	  /* Get the objdid for the Corder witch is a child of the order */
 	   /* Check if this order has a COrder as a child */	
 	  found = 0;
 	  sts = ldh_GetChild( ldhses, refobjdid, &next_objdid);
-	  while ( ODD(sts) )
-	  {
+	  while ( ODD(sts)) {
 	    /* Find out if this is a COrder */
 	    sts = ldh_GetObjectClass( ldhses, next_objdid, &class);
 	    if (EVEN(sts)) return sts;
 
-	    if ( class == vldh_class( ldhses, VLDH_CLASS_CORDER ))
-	    {
+	    if ( class == pwr_cClass_corder) {
 	      found = 1;
 	      break;
 	    }
 	    sts = ldh_GetNextSibling( ldhses, next_objdid, &next_objdid);
   	  }
-	  if ( !found )
-	  {
+	  if ( !found ) {
 	    gcg_error_msg( gcgctx, GSX__NOCORDER, node);  
 	    return GSX__NEXTNODE;
 	  }
@@ -8579,7 +8543,7 @@ vldh_t_node	node;
 	gcg_ref_insert( gcgctx, refobjdid, GCG_PREFIX_REF);
 
 	/* Get name for this class */
-	sts = gcg_get_structname( gcgctx, node->ln.object_did, &name);
+	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
 	if( EVEN(sts)) return sts;
 
 	/* Print the execute command */
@@ -8624,7 +8588,7 @@ vldh_t_node	node;
 {
 	int 	sts;
 
-	sts = gcg_ref_insert( gcgctx, node->ln.object_did, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
 
 	return GSX__SUCCESS;
 }
@@ -8655,27 +8619,26 @@ int	gcg_comp_m25( gcgctx, node)
 gcg_ctx		gcgctx;
 vldh_t_node	node;
 {
-	int 			sts, size;
-	pwr_tObjid		output_objdid;
+	int 			sts;
+	pwr_sAttrRef		output_attrref;
+	int			output_type;
 	char			output_prefix;
 	char			output_par[32];
 	unsigned long		point;
 	unsigned long		par_inverted;
-	char			hier_name[80];
 	vldh_t_node		output_node;
 	unsigned long		output_count;
 	unsigned long		output_point;
 	ldh_sParDef 		output_bodydef;
 	gcg_t_nocondef		nocondef[2];
 	unsigned long		nocontype[2] = { GCG_BOOLEAN, GCG_BOOLEAN };
-	pwr_sAttrRef		attrref;
 
 	nocondef[0].bo = FALSE;
 	nocondef[1].bo = TRUE;
 
-	sts = gcg_ref_insert( gcgctx, node->ln.object_did, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
 
-	sts = gcg_print_exec_macro( gcgctx, node, node->ln.object_did, GCG_PREFIX_REF);
+	sts = gcg_print_exec_macro( gcgctx, node, node->ln.oid, GCG_PREFIX_REF);
 	if (EVEN(sts)) return sts; 
 
 	sts = gcg_print_inputs( gcgctx, node, ", ", GCG_PRINT_ALLPAR, 
@@ -8691,7 +8654,7 @@ vldh_t_node	node;
 	IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 		"Sup_init(%c%s);\n", 
 		GCG_PREFIX_REF,
-		vldh_IdToStr(0, node->ln.object_did));
+		vldh_IdToStr(0, node->ln.oid));
 	/* -- LW 12-MAY-1992 20:44:29.45 */
 
 	/* Print the supervised object and parameter in the object */
@@ -8707,10 +8670,10 @@ vldh_t_node	node;
 	  if ( output_count > 0 )
 	  {
 	    sts = gcg_get_outputstring( gcgctx, output_node, &output_bodydef, 
-			&output_objdid, &output_prefix, output_par);
+			&output_attrref, &output_type, &output_prefix, output_par);
 	    if ( sts == GSX__NEXTPAR ) return sts;
 	    if ( EVEN(sts)) return sts;
-	    
+#if 0	    
 	    /* Get the name of the connected object */
 	    sts = ldh_ObjidToName( 
 		gcgctx->ldhses,
@@ -8718,19 +8681,15 @@ vldh_t_node	node;
 		hier_name, sizeof( hier_name), &size);
 	    if( EVEN(sts)) return sts;
 
-/*** 	If output is a getxx the objdid of the signal is returned
-	and parname of the getxx... 
-	    strcat( hier_name, ".");
-	    strcat( hier_name, output_bodydef.ParName);
-***/
 	    sts = ldh_NameToAttrRef( gcgctx->ldhses, hier_name, &attrref);
 	    if ( EVEN(sts)) return sts;
-
+#endif
+	    
 	    /* Put the attribut reference in the sup object */
 	    IF_PR
 	    {
-	      sts = ldh_SetObjectPar( gcgctx->ldhses, node->ln.object_did,
-		"RtBody", "Attribute", (char *)&attrref, sizeof( attrref)); 
+	      sts = ldh_SetObjectPar( gcgctx->ldhses, node->ln.oid,
+		"RtBody", "Attribute", (char *)&output_attrref, sizeof( output_attrref)); 
 	      if ( EVEN(sts)) return sts;
 	    }
 	  }
@@ -8741,7 +8700,7 @@ vldh_t_node	node;
 	  }
 	}
 
-	gcg_timer_print( gcgctx, node->ln.object_did);
+	gcg_timer_print( gcgctx, node->ln.oid);
 
 	return GSX__SUCCESS;
 }
@@ -8788,18 +8747,19 @@ vldh_t_node	node;
 	int 			rows, sts;
 	int			i, output_found, first_par;
 	int			size;
-	pwr_tObjid		output_objdid;
+	pwr_sAttrRef		output_attrref;
+	int			output_type;
 	char			output_prefix;
 	char			output_par[32];
 	char			*name;
 	ldh_tSesContext ldhses;
 	char			*expression;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession; 
+	ldhses = (node->hn.wind)->hw.ldhses; 
 
 	/* Get c-expression stored in devbody */
 	sts = ldh_GetObjectPar( ldhses,
-			node->ln.object_did, 
+			node->ln.oid, 
 			"DevBody",
 			"Expression",
 			(char **)&expression, &size); 
@@ -8812,16 +8772,16 @@ vldh_t_node	node;
 	/* Print the expression */
 	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
 	  "#define EXPR%s(A1,A2,A3,A4,A5,A6,A7,A8,d1,d2,d3,d4,d5,d6,d7,d8) ",
-	  vldh_IdToStr(0, node->ln.object_did));
+	  vldh_IdToStr(0, node->ln.oid));
 	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
 	  "%s\n\n",
 	  expression);
 	free((char *) expression);
 
-	sts = gcg_ref_insert( gcgctx, node->ln.object_did, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
 
 	/* Get name for this class */
-	sts = gcg_get_structname( gcgctx, node->ln.object_did, &name);
+	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
 	if( EVEN(sts)) return sts;
 
 	/* Print the execute command */
@@ -8829,50 +8789,50 @@ vldh_t_node	node;
 	  "%s_exec( %c%s,EXPR%s(*%c%s->AIn1P,*%c%s->AIn2P,\n*%c%s->AIn3P,*%c%s->AIn4P,\n",
 		name,
 		GCG_PREFIX_REF,
-		vldh_IdToStr(0, node->ln.object_did),
-		vldh_IdToStr(1, node->ln.object_did),
+		vldh_IdToStr(0, node->ln.oid),
+		vldh_IdToStr(1, node->ln.oid),
 		GCG_PREFIX_REF,
-		vldh_IdToStr(2, node->ln.object_did),
+		vldh_IdToStr(2, node->ln.oid),
 		GCG_PREFIX_REF,
-		vldh_IdToStr(3, node->ln.object_did),
+		vldh_IdToStr(3, node->ln.oid),
 		GCG_PREFIX_REF,
-		vldh_IdToStr(4, node->ln.object_did),
+		vldh_IdToStr(4, node->ln.oid),
 		GCG_PREFIX_REF,
-		vldh_IdToStr(5, node->ln.object_did));
+		vldh_IdToStr(5, node->ln.oid));
 	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
 		"*%c%s->AIn5P,*%c%s->AIn6P,\n*%c%s->AIn7P,*%c%s->AIn8P,\n",
 		GCG_PREFIX_REF,
-		vldh_IdToStr(0, node->ln.object_did),
+		vldh_IdToStr(0, node->ln.oid),
 		GCG_PREFIX_REF,
-		vldh_IdToStr(1, node->ln.object_did),
+		vldh_IdToStr(1, node->ln.oid),
 		GCG_PREFIX_REF,
-		vldh_IdToStr(2, node->ln.object_did),
+		vldh_IdToStr(2, node->ln.oid),
 		GCG_PREFIX_REF,
-		vldh_IdToStr(3, node->ln.object_did));
+		vldh_IdToStr(3, node->ln.oid));
 	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
 		"*%c%s->DIn1P,*%c%s->DIn2P,\n*%c%s->DIn3P,*%c%s->DIn4P,\n",
 		GCG_PREFIX_REF,
-		vldh_IdToStr(0, node->ln.object_did),
+		vldh_IdToStr(0, node->ln.oid),
 		GCG_PREFIX_REF,
-		vldh_IdToStr(1, node->ln.object_did),
+		vldh_IdToStr(1, node->ln.oid),
 		GCG_PREFIX_REF,
-		vldh_IdToStr(2, node->ln.object_did),
+		vldh_IdToStr(2, node->ln.oid),
 		GCG_PREFIX_REF,
-		vldh_IdToStr(3, node->ln.object_did));
+		vldh_IdToStr(3, node->ln.oid));
 	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
 		"*%c%s->DIn5P,*%c%s->DIn6P,\n*%c%s->DIn7P,*%c%s->DIn8P));\n",
 		GCG_PREFIX_REF,
-		vldh_IdToStr(0, node->ln.object_did),
+		vldh_IdToStr(0, node->ln.oid),
 		GCG_PREFIX_REF,
-		vldh_IdToStr(1, node->ln.object_did),
+		vldh_IdToStr(1, node->ln.oid),
 		GCG_PREFIX_REF,
-		vldh_IdToStr(2, node->ln.object_did),
+		vldh_IdToStr(2, node->ln.oid),
 		GCG_PREFIX_REF,
-		vldh_IdToStr(3, node->ln.object_did));
+		vldh_IdToStr(3, node->ln.oid));
 
 	/* Get the runtime parameters for this class */
-	sts = ldh_GetObjectBodyDef((node->hn.window_pointer)->hw.ldhsession,
-			node->ln.classid, "RtBody", 1,
+	sts = ldh_GetObjectBodyDef((node->hn.wind)->hw.ldhses,
+			node->ln.cid, "RtBody", 1,
 			&bodydef, &rows);
 	if ( EVEN(sts) ) return sts;
 
@@ -8899,7 +8859,7 @@ vldh_t_node	node;
 	        gcg_error_msg( gcgctx, GSX__CONOUTPUT, output_node);
 
 	      sts = gcg_get_outputstring( gcgctx, output_node, &output_bodydef, 
-			&output_objdid, &output_prefix, output_par);
+			&output_attrref, &output_type, &output_prefix, output_par);
 	      if ( sts == GSX__NEXTPAR )
 	      {
 	        i++;
@@ -8913,10 +8873,12 @@ vldh_t_node	node;
 	      IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->%sP = &%c%s->%s;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName,
 			output_prefix,
-			vldh_IdToStr(1, output_objdid),
+ 			output_type == GCG_OTYPE_OID ? 
+			     vldh_IdToStr(1, output_attrref.Objid) : 
+			     vldh_AttrRefToStr(0, output_attrref),
 			output_par);
 	    }
 	    else
@@ -8934,10 +8896,10 @@ vldh_t_node	node;
 	    IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE],
 			"%c%s->%sP = &%c%s->%s;\n",
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName,
 			GCG_PREFIX_REF,
-			vldh_IdToStr(1, node->ln.object_did),
+			vldh_IdToStr(1, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName);
 	  }
 	  i++;
@@ -8980,12 +8942,12 @@ vldh_t_node	node;
 {
 	int 			sts;
 	int			size;
-	pwr_tObjid		doopen_objdid, doclose_objdid;
-	pwr_tObjid		*refobjdid_ptr;
+	pwr_sAttrRef		doopen_attrref, doclose_attrref;
+	pwr_sAttrRef		*refattrref_ptr;
 	ldh_tSesContext ldhses;
 	pwr_tClassId		class;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession;  
+	ldhses = (node->hn.wind)->hw.ldhses;  
 	
 
 	/* Compile with method 4 */
@@ -8994,95 +8956,89 @@ vldh_t_node	node;
 
 	/* Get objdid of the open do */
 	sts = ldh_GetObjectPar( ldhses,
-			node->ln.object_did, 
+			node->ln.oid, 
 			"DevBody",
 			"DoOpen",
-			(char **)&refobjdid_ptr, &size); 
+			(char **)&refattrref_ptr, &size); 
 	if ( EVEN(sts)) return sts;
 
-	doopen_objdid = *refobjdid_ptr;
-	free((char *) refobjdid_ptr);
+	doopen_attrref = *refattrref_ptr;
+	free((char *) refattrref_ptr);
+
+	sts = gcg_replace_ref( gcgctx, &doopen_attrref, node);
+	if ( EVEN(sts)) return sts;
 
 	/* Get objdid of the close do */
 	sts = ldh_GetObjectPar( ldhses,
-			node->ln.object_did, 
+			node->ln.oid, 
 			"DevBody",
 			"DoClose",
-			(char **)&refobjdid_ptr, &size); 
+			(char **)&refattrref_ptr, &size); 
 	if ( EVEN(sts)) return sts;
 
-	doclose_objdid = *refobjdid_ptr;
-	free((char *) refobjdid_ptr);
+	doclose_attrref = *refattrref_ptr;
+	free((char *) refattrref_ptr);
+
+	sts = gcg_replace_ref( gcgctx, &doclose_attrref, node);
+	if ( EVEN(sts)) return sts;
 
 	/* Check that class of the objdids is ok */
-	sts = ldh_GetObjectClass(
-			(node->hn.window_pointer)->hw.ldhsession, 
-			doopen_objdid,
-			&class);
-	if ( EVEN(sts)) 
-	{
+	sts = ldh_GetAttrRefTid( ldhses, &doopen_attrref, &class);
+	if ( EVEN(sts)) {
 	  /* No doopen object */
 	  IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->OpenP = &%c%s->TimerDODum;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			GCG_PREFIX_REF,
-			vldh_IdToStr(1, node->ln.object_did));
+			vldh_IdToStr(1, node->ln.oid));
 	}
-	else
-	{
+	else {
 	  /* Check that the class of the referenced object is correct */
-	  if ( !(class == vldh_class( ldhses, VLDH_CLASS_DO) ||
-	         class == vldh_class( ldhses, VLDH_CLASS_PO)))
-	  {
+	  if ( !(class == pwr_cClass_Do ||
+	         class == pwr_cClass_Po)) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
 	  /* Insert open do in io write list */
-	  gcg_iowrite_insert( gcgctx, doopen_objdid, GCG_PREFIX_IOW);
+	  gcg_iowrite_insert( gcgctx, doopen_attrref, GCG_PREFIX_IOW);
 	  /* Put the rtdbreferences to the do's in the rtdbobject */
 	  IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->OpenP = &%c%s->ActualValue;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			GCG_PREFIX_IOW,
-			vldh_IdToStr(1, doopen_objdid));
+			vldh_AttrRefToStr(1, doopen_attrref));
 	}
 
 	/* Check the close do */
-	sts = ldh_GetObjectClass(
-			(node->hn.window_pointer)->hw.ldhsession, 
-			doclose_objdid,
-			&class);
-	if ( EVEN(sts)) 
-	{
+	sts = ldh_GetAttrRefTid( ldhses, &doclose_attrref, &class);
+	if ( EVEN(sts)) {
 	  /* No doclose object */
 	  IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->CloseP = &%c%s->TimerDODum;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			GCG_PREFIX_REF,
-			vldh_IdToStr(1, node->ln.object_did));
+			vldh_IdToStr(1, node->ln.oid));
 	}
-	else
-	{
+	else {
 	  /* Check that the class of the referenced object is correct */
-	  if ( !(class == vldh_class( ldhses, VLDH_CLASS_DO) ||
-	         class == vldh_class( ldhses, VLDH_CLASS_PO)))
-	  {
+	  if ( !(class == pwr_cClass_Do ||
+	         class == pwr_cClass_Po)) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
 
-	  gcg_iowrite_insert( gcgctx, doclose_objdid, GCG_PREFIX_IOW);
+	  gcg_iowrite_insert( gcgctx, doclose_attrref, GCG_PREFIX_IOW);
 
 	  /* Put the rtdbreferences to the do's in the rtdbobject */
 	  IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->CloseP = &%c%s->ActualValue;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			GCG_PREFIX_IOW,
-			vldh_IdToStr(1, doclose_objdid));
+			vldh_AttrRefToStr(1, doclose_attrref));
 	}
 
 	return GSX__SUCCESS;
@@ -9127,75 +9083,73 @@ vldh_t_node	node;
 	int			k;
 	int			found;
 	vldh_t_plc		plc;
-	pwr_tObjid		resobjdid;
-	pwr_tObjid		*resobjdid_ptr;
+	pwr_sAttrRef 		resattrref;
+	pwr_sAttrRef		*resattrref_ptr;
 	char			*windbuffer;
 	pwr_tObjid		windowobjdid;
 	pwr_tClassId		windclass;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession;  
+	ldhses = (node->hn.wind)->hw.ldhses;  
 
 	if ( gcgctx->reset_checked == FALSE )
 	{
 	  /* Check the resetobject in the plcobject */
-	  plc = (node->hn.window_pointer)->hw.plcobject_pointer;
+	  plc = (node->hn.wind)->hw.plc;
 	  sts = ldh_GetObjectPar( ldhses,
-			plc->lp.objdid, 
+			plc->lp.oid, 
 			"DevBody",
 			"ResetObject",
-			(char **)&resobjdid_ptr, &size); 
+			(char **)&resattrref_ptr, &size); 
 	  if ( EVEN(sts)) return sts;
 
-	  resobjdid = *resobjdid_ptr;
-	  free((char *) resobjdid_ptr);
+	  resattrref = *resattrref_ptr;
+	  free((char *) resattrref_ptr);
 
 	  /* Indicate that the reset object is checked */
 	  gcgctx->reset_checked = TRUE;
 
+	  sts = gcg_replace_ref( gcgctx, &resattrref, node);
+	  if ( EVEN(sts)) return sts;
+
 	  /* The reset object has to be a di, do or dv */
-	  sts = ldh_GetObjectClass(
-			(node->hn.window_pointer)->hw.ldhsession, 
-			resobjdid,
-			&class);
-	  if ( EVEN(sts)) 
- 	  {
+	  sts = ldh_GetAttrRefTid( ldhses, &resattrref, &class);
+	  if ( EVEN(sts)) {
 	    gcg_error_msg( gcgctx, GSX__NORESET, node);
 	    return GSX__NEXTNODE;
 	  }
 
 	  /* Check that the class of the reset object is correct */
-	  if ( !((class == vldh_class( ldhses, VLDH_CLASS_DI)) ||
-	       (class == vldh_class( ldhses, VLDH_CLASS_DV)) ||
-	       (class == vldh_class( ldhses, VLDH_CLASS_PO)) ||
-	       (class == vldh_class( ldhses, VLDH_CLASS_DO))))
-	  {
+	  if ( !(class == pwr_cClass_Di ||
+		 class == pwr_cClass_Dv ||
+		 class == pwr_cClass_Po ||
+		 class == pwr_cClass_Do)) {
 	    gcg_error_msg( gcgctx, GSX__CLASSRESET, node);
 	    return GSX__NEXTNODE;
 	  }
-	  gcgctx->reset_object = resobjdid;
+	  gcgctx->reset_object = resattrref;
 
 	  /* Insert reset object in ioread list */
-	  gcg_ioread_insert( gcgctx, resobjdid, GCG_PREFIX_REF);
+	  gcg_ioread_insert( gcgctx, resattrref, GCG_PREFIX_REF);
 
 	}
 
 	/* Insert step object in ref list */
-	gcg_ref_insert( gcgctx, node->ln.object_did, GCG_PREFIX_REF);
+	gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
 
 	/* Print the execute command */
-	sts = gcg_print_exec_macro( gcgctx, node, node->ln.object_did, GCG_PREFIX_REF);
+	sts = gcg_print_exec_macro( gcgctx, node, node->ln.oid, GCG_PREFIX_REF);
 	if (EVEN(sts)) return sts;
 
 	/* Print the reset object */
 	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE],
 		"%c%s->ActualValue,",
 		GCG_PREFIX_REF,
-		vldh_IdToStr(0, gcgctx->reset_object));
+		vldh_AttrRefToStr(0, gcgctx->reset_object));
 
 	/* Print the function call to execute the subwindow */
 	/* Check first that there is a subwindow */
 	/* Get the first child to the plc */
-	sts = ldh_GetChild( ldhses, node->ln.object_did, &windowobjdid);
+	sts = ldh_GetChild( ldhses, node->ln.oid, &windowobjdid);
 	found = 0;
 	while ( ODD(sts) )
 	{
@@ -9237,23 +9191,20 @@ vldh_t_node	node;
 			&point_count, &pointlist, 
 			GOEN_CON_SIGNAL | GOEN_CON_OUTPUTTOINPUT);
 
-	  for ( k = 1; k < point_count; k++)
-	  {
+	  for ( k = 1; k < point_count; k++) {
 	    next_node = (pointlist + k)->node;
 	    next_point = (pointlist + k)->conpoint;
 	    /* Check class of connected nodes */	
-	    sts = ldh_GetObjectClass( ldhses, next_node->ln.object_did, &class);
+	    sts = ldh_GetObjectClass( ldhses, next_node->ln.oid, &class);
 	    if (EVEN(sts)) return sts;
 
-	    if ((class == vldh_class( ldhses, VLDH_CLASS_ORDER)) && 
-		 ( next_point == 0 ))
-	    {
+	    if (class == pwr_cClass_order && 
+		next_point == 0) {
 	      /* compile this nodes here */
 	      sts = gcg_node_comp( gcgctx, next_node);
 	      if ( EVEN(sts)) return sts;
 	    }
-	    else
-	    {
+	    else {
 	      /* Bad class */
 /*
 	      gcg_error_msg( gcgctx, GSX__NOORDER, next_node);
@@ -9306,16 +9257,16 @@ vldh_t_node	node;
 	unsigned long		next_point;
 	int			k;
 	vldh_t_plc		plc;
-	pwr_tObjid		resobjdid;
+	pwr_sAttrRef		resattrref;
 	pwr_tObjid		refobjdid;
-	pwr_tObjid		*resobjdid_ptr;
+	pwr_sAttrRef		*resattrref_ptr;
 	unsigned long		orderpar_index = 1;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession;  
+	ldhses = (node->hn.wind)->hw.ldhses;  
 
 	/* Get the parent node to this window, it should be either
 	  a trans or a order object */
-	refobjdid = (node->hn.window_pointer)->lw.parent_node_did;
+	refobjdid = (node->hn.wind)->lw.poid;
 
 	if ( cdh_ObjidIsNull( refobjdid))
 	{	
@@ -9325,18 +9276,13 @@ vldh_t_node	node;
 	}
 
 	/* Check class of this objdid */
-	sts = ldh_GetObjectClass(
-			(node->hn.window_pointer)->hw.ldhsession, 
-			refobjdid,
-			&class);
-	if ( EVEN(sts)) 
-	{
+	sts = ldh_GetObjectClass( ldhses, refobjdid, &class);
+	if ( EVEN(sts)) {
 	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
 	  return GSX__NEXTNODE;
 	}
 
-	if ( !(class == vldh_class( ldhses, VLDH_CLASS_SUBSTEP)))
-	{
+	if ( !(class == pwr_cClass_substep)) {
 	  gcg_error_msg( gcgctx, GSX__BADWIND, node);  
 	  return GSX__NEXTNODE;
 	}
@@ -9347,52 +9293,48 @@ vldh_t_node	node;
 	if ( gcgctx->reset_checked == FALSE )
 	{
 	  /* Check the resetobject in the plcobject */
-	  plc = (node->hn.window_pointer)->hw.plcobject_pointer;
-	  sts = ldh_GetObjectPar( ldhses,
-			plc->lp.objdid, 
-			"DevBody",
-			"ResetObject",
-			(char **)&resobjdid_ptr, &size); 
+	  plc = (node->hn.wind)->hw.plc;
+	  sts = ldh_GetObjectPar( ldhses, plc->lp.oid, 
+				  "DevBody", "ResetObject",
+				  (char **)&resattrref_ptr, &size); 
 	  if ( EVEN(sts)) return sts;
 
-	  resobjdid = *resobjdid_ptr;
-	  free((char *) resobjdid_ptr);
+	  resattrref = *resattrref_ptr;
+	  free((char *) resattrref_ptr);
 
 	  /* Indicate that the reset object is checked */
 	  gcgctx->reset_checked = TRUE;
 
+	  sts = gcg_replace_ref( gcgctx, &resattrref, node);
+	  if ( EVEN(sts)) return sts;
+		  
 	  /* The reset object has to be a di, do or dv */
-	  sts = ldh_GetObjectClass(
-			(node->hn.window_pointer)->hw.ldhsession, 
-			resobjdid,
-			&class);
-	  if ( EVEN(sts)) 
- 	  {
+	  sts = ldh_GetAttrRefTid( ldhses, &resattrref, &class);
+	  if ( EVEN(sts)) {
 	    gcg_error_msg( gcgctx, GSX__NORESET, node);
 	    return GSX__NEXTNODE;
 	  }
 
 	  /* Check that the class of the reset object is correct */
-	  if ( !((class == vldh_class( ldhses, VLDH_CLASS_DI)) ||
-	       (class == vldh_class( ldhses, VLDH_CLASS_DV)) ||
-	       (class == vldh_class( ldhses, VLDH_CLASS_PO)) ||
-	       (class == vldh_class( ldhses, VLDH_CLASS_DO))))
-	  {
+	  if ( !(class == pwr_cClass_Di ||
+		 class == pwr_cClass_Dv ||
+		 class == pwr_cClass_Po ||
+		 class == pwr_cClass_Do)) {
 	    gcg_error_msg( gcgctx, GSX__CLASSRESET, node);
 	    return GSX__NEXTNODE;
 	  }
-	  gcgctx->reset_object = resobjdid;
+	  gcgctx->reset_object = resattrref;
 
 	  /* Insert reset object in ioread list */
-	  gcg_ioread_insert( gcgctx, resobjdid, GCG_PREFIX_REF);
+	  gcg_ioread_insert( gcgctx, resattrref, GCG_PREFIX_REF);
 
 	}
 
 	/* Insert step object in ref list */
-	gcg_ref_insert( gcgctx, node->ln.object_did, GCG_PREFIX_REF);
+	gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
 
 	/* Print the execute command */
-	sts = gcg_print_exec_macro( gcgctx, node, node->ln.object_did, GCG_PREFIX_REF);
+	sts = gcg_print_exec_macro( gcgctx, node, node->ln.oid, GCG_PREFIX_REF);
 	if (EVEN(sts)) return sts;
 
 	/* Print the parent object */
@@ -9405,7 +9347,7 @@ vldh_t_node	node;
 	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE],
 		"%c%s->ActualValue,\n",
 		GCG_PREFIX_REF,
-		vldh_IdToStr(0, gcgctx->reset_object));
+		vldh_AttrRefToStr(0, gcgctx->reset_object));
 
 	/* Check if there is any order connected to the outputpin */
 	sts = gcg_get_point( node, orderpar_index, &point, 
@@ -9417,23 +9359,20 @@ vldh_t_node	node;
 			&point_count, &pointlist, 
 			GOEN_CON_SIGNAL | GOEN_CON_OUTPUTTOINPUT);
 
-	  for ( k = 1; k < point_count; k++)
-	  {
+	  for ( k = 1; k < point_count; k++) {
 	    next_node = (pointlist + k)->node;
 	    next_point = (pointlist + k)->conpoint;
 	    /* Check class of connected nodes */	
-	    sts = ldh_GetObjectClass( ldhses, next_node->ln.object_did, &class);
+	    sts = ldh_GetObjectClass( ldhses, next_node->ln.oid, &class);
 	    if (EVEN(sts)) return sts;
 
-	    if ((class == vldh_class( ldhses, VLDH_CLASS_ORDER)) && 
-		 ( next_point == 0 ))
-	    {
+	    if ( class == pwr_cClass_order && 
+		 next_point == 0) {
 	      /* compile this nodes here */
 	      sts = gcg_node_comp( gcgctx, next_node);
 	      if ( EVEN(sts)) return sts;
 	    }
-	    else
-	    {
+	    else {
 	      /* Bad class */
 /*
 	      gcg_error_msg( gcgctx, GSX__NOORDER, node);
@@ -9481,15 +9420,16 @@ vldh_t_node	node;
 	ldh_sParDef 		output_bodydef;
 	int 			rows, sts;
 	int			i, output_found, first_par;
-	pwr_tObjid		output_objdid;
+	pwr_sAttrRef		output_attrref;
+	int			output_type;
 	char			output_prefix;
 	char			output_par[32];
 	char			*name;
 
-	sts = gcg_ref_insert( gcgctx, node->ln.object_did, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
 
 	/* Get name for this class */
-	sts = gcg_get_structname( gcgctx, node->ln.object_did, &name);
+	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
 	if( EVEN(sts)) return sts;
 
 	/* Print the execute command */
@@ -9497,11 +9437,11 @@ vldh_t_node	node;
 		"%s_exec( tp, %c%s);\n",
 		name,
 		GCG_PREFIX_REF,
-		vldh_IdToStr(0, node->ln.object_did));
+		vldh_IdToStr(0, node->ln.oid));
 
 	/* Get the runtime parameters for this class */
-	sts = ldh_GetObjectBodyDef((node->hn.window_pointer)->hw.ldhsession, 
-			node->ln.classid, "RtBody", 1, 
+	sts = ldh_GetObjectBodyDef((node->hn.wind)->hw.ldhses, 
+			node->ln.cid, "RtBody", 1, 
 			&bodydef, &rows);
 	if ( EVEN(sts) ) return sts;
 
@@ -9528,7 +9468,7 @@ vldh_t_node	node;
 	      gcg_error_msg( gcgctx, GSX__CONOUTPUT, output_node);
 
 	      sts = gcg_get_outputstring( gcgctx, output_node, &output_bodydef, 
-			&output_objdid, &output_prefix, output_par);
+			&output_attrref, &output_type, &output_prefix, output_par);
 	      if ( sts == GSX__NEXTPAR ) 
 	      {
 	        i++;
@@ -9542,10 +9482,12 @@ vldh_t_node	node;
 	      IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->%sP = &%c%s->%s;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName,
 			output_prefix,
-			vldh_IdToStr(1, output_objdid),
+ 			output_type == GCG_OTYPE_OID ? 
+			     vldh_IdToStr(1, output_attrref.Objid) : 
+			     vldh_AttrRefToStr(0, output_attrref),
 			output_par);
 	    }
 	    else
@@ -9561,7 +9503,7 @@ vldh_t_node	node;
 	    IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->%sP = NULL;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName);
 	  }
 	  i++;
@@ -9603,15 +9545,16 @@ vldh_t_node	node;
 	ldh_sParDef 		output_bodydef;
 	int 			rows, sts;
 	int			i, output_found, first_par;
-	pwr_tObjid		output_objdid;
+	pwr_sAttrRef		output_attrref;
+	int			output_type;
 	char			output_prefix;
 	char			output_par[32];
 	char			*name;
 
-	sts = gcg_ref_insert( gcgctx, node->ln.object_did, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
 
 	/* Get name for this class */
-	sts = gcg_get_structname( gcgctx, node->ln.object_did, &name);
+	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
 	if( EVEN(sts)) return sts;
 
 	/* Print the execute command */
@@ -9619,11 +9562,11 @@ vldh_t_node	node;
 		"%s_exec( tp, %c%s);\n",
 		name,
 		GCG_PREFIX_REF,
-		vldh_IdToStr(0, node->ln.object_did));
+		vldh_IdToStr(0, node->ln.oid));
 
 	/* Get the runtime parameters for this class */
-	sts = ldh_GetObjectBodyDef((node->hn.window_pointer)->hw.ldhsession, 
-			node->ln.classid, "RtBody", 1, 
+	sts = ldh_GetObjectBodyDef((node->hn.wind)->hw.ldhses, 
+			node->ln.cid, "RtBody", 1, 
 			&bodydef, &rows);
 	if ( EVEN(sts) ) return sts;
 
@@ -9650,7 +9593,7 @@ vldh_t_node	node;
 	      gcg_error_msg( gcgctx, GSX__CONOUTPUT, output_node);
 
 	      sts = gcg_get_outputstring( gcgctx, output_node, &output_bodydef, 
-			&output_objdid, &output_prefix, output_par);
+			&output_attrref, &output_type, &output_prefix, output_par);
 	      if ( sts == GSX__NEXTPAR )
 	      {
 	        i++;
@@ -9664,10 +9607,12 @@ vldh_t_node	node;
 	      IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->%sP = &%c%s->%s;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName,
 			output_prefix,
-			vldh_IdToStr(1, output_objdid),
+ 			output_type == GCG_OTYPE_OID ? 
+			     vldh_IdToStr(1, output_attrref.Objid) : 
+			     vldh_AttrRefToStr(0, output_attrref),
 			output_par);
 	    }
 	    else
@@ -9684,10 +9629,10 @@ vldh_t_node	node;
 	    IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->%sP = &%c%s->%s;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName,
 			GCG_PREFIX_REF,
-			vldh_IdToStr(1, node->ln.object_did),
+			vldh_IdToStr(1, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName);
 	  }
 	  else if ( !output_found )
@@ -9697,7 +9642,7 @@ vldh_t_node	node;
 	    IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->%sP = NULL;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName);
 	  }
 	  i++;
@@ -9739,15 +9684,16 @@ vldh_t_node	node;
 	ldh_sParDef 		output_bodydef;
 	int 			rows, sts;
 	int			i, output_found, first_par;
-	pwr_tObjid		output_objdid;
+	pwr_sAttrRef		output_attrref;
+	int			output_type;
 	char			output_prefix;
 	char			output_par[32];
 	char			*name;
 
-	sts = gcg_ref_insert( gcgctx, node->ln.object_did, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
 
 	/* Get name for this class */
-	sts = gcg_get_structname( gcgctx, node->ln.object_did, &name);
+	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
 	if( EVEN(sts)) return sts;
 
 	/* Print the execute command */
@@ -9755,11 +9701,11 @@ vldh_t_node	node;
 		"%s_exec( tp, %c%s);\n",
 		name,
 		GCG_PREFIX_REF,
-		vldh_IdToStr(0, node->ln.object_did));
+		vldh_IdToStr(0, node->ln.oid));
 
 	/* Get the runtime parameters for this class */
-	sts = ldh_GetObjectBodyDef((node->hn.window_pointer)->hw.ldhsession, 
-			node->ln.classid, "RtBody", 1, 
+	sts = ldh_GetObjectBodyDef((node->hn.wind)->hw.ldhses, 
+			node->ln.cid, "RtBody", 1, 
 			&bodydef, &rows);
 	if ( EVEN(sts) ) return sts;
 
@@ -9786,7 +9732,7 @@ vldh_t_node	node;
 	      gcg_error_msg( gcgctx, GSX__CONOUTPUT, output_node);
 
 	      sts = gcg_get_outputstring( gcgctx, output_node, &output_bodydef, 
-			&output_objdid, &output_prefix, output_par);
+			&output_attrref, &output_type, &output_prefix, output_par);
 	      if ( sts == GSX__NEXTPAR ) 
 	      {
 	        i++;
@@ -9800,10 +9746,12 @@ vldh_t_node	node;
 	      IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->%sP = &%c%s->%s;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName,
 			output_prefix,
-			vldh_IdToStr(1, output_objdid),
+ 			output_type == GCG_OTYPE_OID ? 
+			     vldh_IdToStr(1, output_attrref.Objid) : 
+			     vldh_AttrRefToStr(0, output_attrref),
 			output_par);
 	    }
 	    else
@@ -9821,10 +9769,10 @@ vldh_t_node	node;
 	    IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->%sP = &%c%s->Order;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName,
 			GCG_PREFIX_REF,
-			vldh_IdToStr(1, node->ln.object_did));
+			vldh_IdToStr(1, node->ln.oid));
 	  }
 	  else if ( !output_found && 
 	    strcmp(bodydef[i].Par->Param.Info.PgmName,"AutoNoStop") == 0)
@@ -9834,10 +9782,10 @@ vldh_t_node	node;
 	    IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->%sP = &%c%s->AutoStart;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName,
 			GCG_PREFIX_REF,
-			vldh_IdToStr(1, node->ln.object_did));
+			vldh_IdToStr(1, node->ln.oid));
 	  }
 	  else if ( !output_found )
 	  {
@@ -9846,17 +9794,17 @@ vldh_t_node	node;
 	    IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->%sP = &%c%s->%s;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName,
 			GCG_PREFIX_REF,
-			vldh_IdToStr(1, node->ln.object_did),
+			vldh_IdToStr(1, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName);
 	  }
 	  i++;
 	}
 	free((char *) bodydef);	
 
-	gcg_timer_print( gcgctx, node->ln.object_did);
+	gcg_timer_print( gcgctx, node->ln.oid);
 	return GSX__SUCCESS;
 }
 
@@ -9892,15 +9840,16 @@ vldh_t_node	node;
 	ldh_sParDef 		output_bodydef;
 	int 			rows, sts;
 	int			i, output_found, first_par;
-	pwr_tObjid		output_objdid;
+	pwr_sAttrRef		output_attrref;
+	int			output_type;
 	char			output_prefix;
 	char			output_par[32];
 	char			*name;
 
-	sts = gcg_ref_insert( gcgctx, node->ln.object_did, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
 
 	/* Get name for this class */
-	sts = gcg_get_structname( gcgctx, node->ln.object_did, &name);
+	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
 	if( EVEN(sts)) return sts;
 
 	/* Print the execute command */
@@ -9908,11 +9857,11 @@ vldh_t_node	node;
 		"%s_exec( tp, %c%s);\n",
 		name,
 		GCG_PREFIX_REF,
-		vldh_IdToStr(0, node->ln.object_did));
+		vldh_IdToStr(0, node->ln.oid));
 
 	/* Get the runtime parameters for this class */
-	sts = ldh_GetObjectBodyDef((node->hn.window_pointer)->hw.ldhsession, 
-			node->ln.classid, "RtBody", 1, 
+	sts = ldh_GetObjectBodyDef((node->hn.wind)->hw.ldhses, 
+			node->ln.cid, "RtBody", 1, 
 			&bodydef, &rows);
 	if ( EVEN(sts) ) return sts;
 
@@ -9939,7 +9888,7 @@ vldh_t_node	node;
 	      gcg_error_msg( gcgctx, GSX__CONOUTPUT, output_node);
 
 	      sts = gcg_get_outputstring( gcgctx, output_node, &output_bodydef, 
-			&output_objdid, &output_prefix, output_par);
+			&output_attrref, &output_type, &output_prefix, output_par);
 	      if ( sts == GSX__NEXTPAR ) 
 	      {
 	        i++;
@@ -9953,10 +9902,12 @@ vldh_t_node	node;
 	      IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->%sP = &%c%s->%s;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName,
 			output_prefix,
-			vldh_IdToStr(1, output_objdid),
+ 			output_type == GCG_OTYPE_OID ? 
+			     vldh_IdToStr(1, output_attrref.Objid) : 
+			     vldh_AttrRefToStr(0, output_attrref),
 			output_par);
 	    }
 	    else
@@ -9974,10 +9925,10 @@ vldh_t_node	node;
 	    IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->%sP = &%c%s->OrderOpen;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName,
 			GCG_PREFIX_REF,
-			vldh_IdToStr(1, node->ln.object_did));
+			vldh_IdToStr(1, node->ln.oid));
 	  }
 	  else if ( !output_found && 
 		(strcmp(bodydef[i].Par->Param.Info.PgmName,"ConClose") == 0))
@@ -9987,10 +9938,10 @@ vldh_t_node	node;
 	    IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->%sP = &%c%s->OrderClose;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName,
 			GCG_PREFIX_REF,
-			vldh_IdToStr(1, node->ln.object_did));
+			vldh_IdToStr(1, node->ln.oid));
 	  }
 	  else if ( !output_found )
 	  {
@@ -10000,10 +9951,10 @@ vldh_t_node	node;
 	    IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->%sP = &%c%s->%s;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName,
 			GCG_PREFIX_REF,
-			vldh_IdToStr(1, node->ln.object_did),
+			vldh_IdToStr(1, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName);
 	  }
 	  i++;
@@ -10011,7 +9962,7 @@ vldh_t_node	node;
 	free((char *) bodydef);	
 
 	/* Print timer code */
-	gcg_timer_print( gcgctx, node->ln.object_did);
+	gcg_timer_print( gcgctx, node->ln.oid);
 
 	return GSX__SUCCESS;
 }
@@ -10049,15 +10000,16 @@ vldh_t_node	node;
 	ldh_sParDef 		output_bodydef;
 	int 			rows, sts;
 	int			i, output_found, first_par;
-	pwr_tObjid		output_objdid;
+	pwr_sAttrRef		output_attrref;
+	int			output_type;
 	char			output_prefix;
 	char			output_par[32];
 	char			*name;
 
-	sts = gcg_ref_insert( gcgctx, node->ln.object_did, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
 
 	/* Get name for this class */
-	sts = gcg_get_structname( gcgctx, node->ln.object_did, &name);
+	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
 	if( EVEN(sts)) return sts;
 
 	/* Print the execute command */
@@ -10065,11 +10017,11 @@ vldh_t_node	node;
 		"%s_exec( tp, %c%s);\n",
 		name,
 		GCG_PREFIX_REF,
-		vldh_IdToStr(0, node->ln.object_did));
+		vldh_IdToStr(0, node->ln.oid));
 
 	/* Get the runtime parameters for this class */
-	sts = ldh_GetObjectBodyDef((node->hn.window_pointer)->hw.ldhsession, 
-			node->ln.classid, "RtBody", 1, 
+	sts = ldh_GetObjectBodyDef((node->hn.wind)->hw.ldhses, 
+			node->ln.cid, "RtBody", 1, 
 			&bodydef, &rows);
 	if ( EVEN(sts) ) return sts;
 
@@ -10096,7 +10048,7 @@ vldh_t_node	node;
 	      gcg_error_msg( gcgctx, GSX__CONOUTPUT, output_node);
 
 	      sts = gcg_get_outputstring( gcgctx, output_node, &output_bodydef, 
-			&output_objdid, &output_prefix, output_par);
+			&output_attrref, &output_type, &output_prefix, output_par);
 	      if ( sts == GSX__NEXTPAR ) 
 	      {
 	        i++;
@@ -10110,10 +10062,12 @@ vldh_t_node	node;
 	      IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->%sP = &%c%s->%s;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName,
 			output_prefix,
-			vldh_IdToStr(1, output_objdid),
+ 			output_type == GCG_OTYPE_OID ? 
+			     vldh_IdToStr(1, output_attrref.Objid) : 
+			     vldh_AttrRefToStr(0, output_attrref),
 			output_par);
 	    }
 	    else
@@ -10131,10 +10085,10 @@ vldh_t_node	node;
 	    IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->%sP = &%c%s->ActVal;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName,
 			GCG_PREFIX_REF,
-			vldh_IdToStr(1, node->ln.object_did));
+			vldh_IdToStr(1, node->ln.oid));
 	  }
 	  else if ( !output_found )
 	  {
@@ -10143,17 +10097,17 @@ vldh_t_node	node;
 	    IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->%sP = &%c%s->%s;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName,
 			GCG_PREFIX_REF,
-			vldh_IdToStr(1, node->ln.object_did),
+			vldh_IdToStr(1, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName);
 	  }
 	  i++;
 	}
 	free((char *) bodydef);	
 
-	gcg_scantime_print( gcgctx, node->ln.object_did);
+	gcg_scantime_print( gcgctx, node->ln.oid);
 
 	return GSX__SUCCESS;
 }
@@ -10192,6 +10146,7 @@ int	gcg_comp_m33( gcgctx, node)
 gcg_ctx		gcgctx;
 vldh_t_node	node;
 {
+#if 0
 	ldh_tSesContext ldhses;
 	pwr_tClassId		class;
 	unsigned long		point;
@@ -10199,7 +10154,8 @@ vldh_t_node	node;
 	int 			sts;
 	int			size;
 	int			k;
-	pwr_tObjid		output_objdid;
+	pwr_sAttrRef		output_attrref;
+	int			output_type;
 	char			output_prefix;
 	char			output_par[32];
 	vldh_t_node		output_node;
@@ -10218,12 +10174,12 @@ vldh_t_node	node;
 	unsigned long		cellcount;
 	char			hier_name[80];
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession; 
+	ldhses = (node->hn.wind)->hw.ldhses; 
 
-	sts = gcg_ref_insert( gcgctx, node->ln.object_did, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
 
 	/* Get name for the exec command for this class */
-	sts = gcg_get_structname( gcgctx, node->ln.object_did, &name);
+	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
 	if ( EVEN(sts)) return sts;	
 
 	/* Check if there is any step connected to the inputpin */
@@ -10240,7 +10196,7 @@ vldh_t_node	node;
 	    next_node = (pointlist + k)->node;
 	    next_point = (pointlist + k)->conpoint;
 	    /* Check class of connected nodes */	
-	    sts = ldh_GetObjectClass( ldhses, next_node->ln.object_did, &class);
+	    sts = ldh_GetObjectClass( ldhses, next_node->ln.oid, &class);
 	    if (EVEN(sts)) return sts;
 
 	    if ( 
@@ -10256,14 +10212,14 @@ vldh_t_node	node;
 	      /* Get the name of the connected object */
 	      sts = ldh_ObjidToName( 
 			gcgctx->ldhses,
-			next_node->ln.object_did, ldh_eName_Hierarchy,
+			next_node->ln.oid, ldh_eName_Hierarchy,
 			hier_name, sizeof( hier_name), &size);
 	      if( EVEN(sts)) return sts;
 
 	      IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"strcpy( &%c%s->NameOfSendCell, \"%s\");\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			hier_name);
 
 	    }
@@ -10300,7 +10256,7 @@ vldh_t_node	node;
 	    next_node = (pointlist + k)->node;
 	    next_point = (pointlist + k)->conpoint;
 	    /* Check class of connected nodes */	
-	    sts = ldh_GetObjectClass( ldhses, next_node->ln.object_did, &class);
+	    sts = ldh_GetObjectClass( ldhses, next_node->ln.oid, &class);
 	    if (EVEN(sts)) return sts;
 
 	    if ( 
@@ -10316,14 +10272,14 @@ vldh_t_node	node;
 	      /* Get the name of the connected object */
 	      sts = ldh_ObjidToName( 
 			gcgctx->ldhses,
-			next_node->ln.object_did, ldh_eName_Hierarchy,
+			next_node->ln.oid, ldh_eName_Hierarchy,
 			hier_name, sizeof( hier_name), &size);
 	      if( EVEN(sts)) return sts;
 
 	      IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"strcpy( &%c%s->NameOfReceivCell, \"%s\");\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			hier_name);
 
 	    }
@@ -10364,7 +10320,7 @@ vldh_t_node	node;
 	      gcg_error_msg( gcgctx, GSX__CONOUTPUT, node);
 
 	    sts = gcg_get_outputstring( gcgctx, output_node, &output_bodydef, 
-			&output_objdid, &output_prefix, output_par);
+			&output_attrref, &output_type, &output_prefix, output_par);
 	    if ( sts == GSX__NEXTPAR ) return sts;
 	    if ( EVEN(sts)) return sts;
 	    
@@ -10372,22 +10328,24 @@ vldh_t_node	node;
 	    IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
 		"mpsTriggtrp_exec( %c%s, ",
 		GCG_PREFIX_REF,
-		vldh_IdToStr(0, node->ln.object_did));
+		vldh_IdToStr(0, node->ln.oid));
 /*	    if ( par_inverted)
 	      IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
 		"!");
 */
 	    IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
-		"%c%s->%s);\n",
-		output_prefix,
-		vldh_IdToStr(0, output_objdid),
-		output_par);
+			   "%c%s->%s);\n",
+			   output_prefix,
+			   output_type == GCG_OTYPE_OID ? 
+			     vldh_IdToStr(0, output_attrref.Objid) : 
+			     vldh_AttrRefToStr(0, output_attrref),
+			   output_par);
 	  }
 	}
 
 	/* Print the function call to execute the subwindow */
 	/* Check first that there is a subwindow */
-	sts = ldh_GetChild( ldhses, node->ln.object_did, &windowobjdid);
+	sts = ldh_GetChild( ldhses, node->ln.oid, &windowobjdid);
 	wind_found = 0;
 	while ( ODD(sts) )
 	{
@@ -10423,8 +10381,8 @@ vldh_t_node	node;
 		"%s_exec( %c%s);\n",
 		name,
 		GCG_PREFIX_REF,
-		vldh_IdToStr(0, node->ln.object_did));
-
+		vldh_IdToStr(0, node->ln.oid));
+#endif
 	return GSX__SUCCESS;
 }
 
@@ -10459,11 +10417,11 @@ vldh_t_node	node;
 	pwr_tClassId		class;
 	char			*name;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession; 
+	ldhses = (node->hn.wind)->hw.ldhses; 
 	
 	/* Get the parent node to this window, it should be either
 	  a trans or a order object */
-	refobjdid = (node->hn.window_pointer)->lw.parent_node_did;
+	refobjdid = (node->hn.wind)->lw.poid;
 
 	if ( cdh_ObjidIsNull( refobjdid))
 	{	
@@ -10474,7 +10432,7 @@ vldh_t_node	node;
 
 	/* Check class of this objdid */
 	sts = ldh_GetObjectClass(
-			(node->hn.window_pointer)->hw.ldhsession, 
+			(node->hn.wind)->hw.ldhses, 
 			refobjdid,
 			&class);
 	if ( EVEN(sts)) 
@@ -10493,7 +10451,7 @@ vldh_t_node	node;
 	gcg_ref_insert( gcgctx, refobjdid, GCG_PREFIX_REF);
 
 	/* Get name for this class */
-	sts = gcg_get_structname( gcgctx, node->ln.object_did, &name);
+	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
 	if( EVEN(sts)) return sts;
 
 	/* Print the execute command */
@@ -10563,15 +10521,16 @@ vldh_t_node	node;
 	ldh_sParDef 		output_bodydef;
 	int 			rows, sts;
 	int			i, output_found, first_par;
-	pwr_tObjid		output_objdid;
+	pwr_sAttrRef		output_attrref;
+	int			output_type;
 	char			output_prefix;
 	char			output_par[32];
 	char			*name;
 
-	sts = gcg_ref_insert( gcgctx, node->ln.object_did, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
 
 	/* Get name for this class */
-	sts = gcg_get_structname( gcgctx, node->ln.object_did, &name);
+	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
 	if( EVEN(sts)) return sts;
 
 	/* Print the execute command */
@@ -10579,11 +10538,11 @@ vldh_t_node	node;
 		"%s_exec( tp, %c%s);\n",
 		name,
 		GCG_PREFIX_REF,
-		vldh_IdToStr(0, node->ln.object_did));
+		vldh_IdToStr(0, node->ln.oid));
 
 	/* Get the runtime parameters for this class */
-	sts = ldh_GetObjectBodyDef((node->hn.window_pointer)->hw.ldhsession, 
-			node->ln.classid, "RtBody", 1, 
+	sts = ldh_GetObjectBodyDef((node->hn.wind)->hw.ldhses, 
+			node->ln.cid, "RtBody", 1, 
 			&bodydef, &rows);
 	if ( EVEN(sts) ) return sts;
 
@@ -10610,7 +10569,7 @@ vldh_t_node	node;
 	      gcg_error_msg( gcgctx, GSX__CONOUTPUT, output_node);
 
 	      sts = gcg_get_outputstring( gcgctx, output_node, &output_bodydef, 
-			&output_objdid, &output_prefix, output_par);
+			&output_attrref, &output_type, &output_prefix, output_par);
 	      if ( sts == GSX__NEXTPAR ) 
 	      {
 	        i++;
@@ -10624,10 +10583,12 @@ vldh_t_node	node;
 	      IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->%sP = &%c%s->%s;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName,
 			output_prefix,
-			vldh_IdToStr(1, output_objdid),
+ 			output_type == GCG_OTYPE_OID ? 
+			     vldh_IdToStr(1, output_attrref.Objid) : 
+			     vldh_AttrRefToStr(0, output_attrref),
 			output_par);
 	    }
 	    else
@@ -10645,25 +10606,25 @@ vldh_t_node	node;
 	    IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->%sP = &%c%s->%s;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName,
 			GCG_PREFIX_REF,
-			vldh_IdToStr(1, node->ln.object_did),
+			vldh_IdToStr(1, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName);
 	  }
 	  i++;
 	}
 	free((char *) bodydef);	
 
-	gcg_timer_print( gcgctx, node->ln.object_did);
-	gcg_scantime_print( gcgctx, node->ln.object_did);
+	gcg_timer_print( gcgctx, node->ln.oid);
+	gcg_scantime_print( gcgctx, node->ln.oid);
 
 	/* Print the init command */
 	IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 		"%s_init( %c%s);\n",
 		name,
 		GCG_PREFIX_REF,
-		vldh_IdToStr(0, node->ln.object_did));
+		vldh_IdToStr(0, node->ln.oid));
 
 	return GSX__SUCCESS;
 }
@@ -10699,118 +10660,98 @@ vldh_t_node	node;
 	ldh_sParDef 		*bodydef;
 	int 			rows, sts;
 	int			size;
-	pwr_tObjid		refobjdid;
-	pwr_tObjid		*refobjdid_ptr;
-	char			*parameter;
-	unsigned long		info_type;
-	int			found, i;
-	ldh_tSesContext ldhses;
+	pwr_sAttrRef		refattrref;
+	pwr_sAttrRef		*refattrref_ptr;
+	char			aname[200];
+	char			*name_p;
+	char			*s;
+	ldh_sAttrRefInfo	info;
+	ldh_tSesContext 	ldhses;
 	pwr_tClassId		class;
+	char			parameter[80];
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession;  
+	ldhses = (node->hn.wind)->hw.ldhses;  
 
-	sts = gcg_ref_insert( gcgctx, node->ln.object_did, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
 
 	/* Get the objdid of the referenced io object stored in the
 	  first parameter in defbody */
 
 	/* Get the devbody parameters for this class */
 	sts = ldh_GetObjectBodyDef( ldhses,
-			node->ln.classid, "DevBody", 1, 
+			node->ln.cid, "DevBody", 1, 
 			&bodydef, &rows);
 	if ( EVEN(sts) ) return sts;
 
 	sts = ldh_GetObjectPar( ldhses,
-			node->ln.object_did, 
+			node->ln.oid, 
 			"DevBody",
 			bodydef[0].ParName,
-			(char **)&refobjdid_ptr, &size); 
+			(char **)&refattrref_ptr, &size); 
 	if ( EVEN(sts)) return sts;
 
-	refobjdid = *refobjdid_ptr;
-	free((char *) refobjdid_ptr);
-
-	/* Check that this is objdid of an existing object */
-	sts = ldh_GetObjectClass(
-			(node->hn.window_pointer)->hw.ldhsession, 
-			refobjdid,
-			&class);
-	if ( EVEN(sts)) 
-	{
-	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
-	  free((char *) bodydef);	
-	  return GSX__NEXTNODE;
-	}
-
-	/* Get the parameter of the referenced object
-	  in the second devbody-parameter */
-	sts = ldh_GetObjectPar( ldhses,
-			node->ln.object_did, 
-			"DevBody",
-			bodydef[1].ParName,
-			(char **)&parameter, &size); 
-	if ( EVEN(sts)) return sts;
+	refattrref = *refattrref_ptr;
+	free((char *) refattrref_ptr);
 	free((char *) bodydef);	
 
-	/* Check that the parameter exists in the referenced object */
-	sts = ldh_GetObjectBodyDef( ldhses, class, "RtBody", 1, 
-			&bodydef, &rows);
-	if ( EVEN(sts) ) {
-	  sts = ldh_GetObjectBodyDef( ldhses, class, "SysBody", 1, 
-			&bodydef, &rows);
-	  if ( EVEN(sts)) {
-	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
+	sts = gcg_replace_ref( gcgctx, &refattrref, node);
+	if ( EVEN(sts)) return sts;
+
+	/* Check that this is objdid of an existing object */
+	sts = ldh_GetAttrRefTid( ldhses, &refattrref, &class);
+	if ( EVEN(sts)) {
+	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
+	  return GSX__NEXTNODE;
+	}
+
+	sts = ldh_GetAttrRefInfo( ldhses, &refattrref, &info);
+	if ( EVEN(sts)) return sts;
+
+	/* Get rid of last attribute segment of the referenced object */
+	sts = ldh_AttrRefToName( ldhses, &refattrref, ldh_eName_Aref, 
+				 &name_p, &size);
+	if ( EVEN(sts)) return sts;
+
+	strcpy( aname, name_p);
+	if ( (s = strrchr( aname, '.')) == 0) { 
+	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
+	  return GSX__NEXTPAR;
+	}
+
+	*s = 0;
+	sts = ldh_NameToAttrRef( ldhses, aname, &refattrref);
+	if ( EVEN(sts)) {
+	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);
+	  return GSX__NEXTPAR;
+	}
+
+	sts = ldh_GetAttrRefTid( ldhses, &refattrref, &class);
+	if ( EVEN(sts)) return sts;
+	
+	sts = gcg_parname_to_pgmname(ldhses, class, s+1, parameter);
+	if ( EVEN(sts)) return sts;
+
+	if ( info.flags & PWR_MASK_RTVIRTUAL) {
+	  /* Attribute is not defined in runtime */
+	  gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	  return GSX__NEXTNODE;
+	} 
+
+	if ( info.flags & PWR_MASK_ARRAY) {
+	  if ( info.nElement == -1) {
+	    /* No index in attribute */
+	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	    return GSX__NEXTNODE;
+	  }
+	  if ( info.index > info.nElement - 1) {
+	    /* Element index to large */
+	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
 	    return GSX__NEXTNODE;
 	  }
 	}
 
-	for ( i = 0, found = 0; i < rows; i++)
-	{
-	  /* ML 961009. Use ParName instead of PgmName */
-	  if ( strcmp( bodydef[i].ParName, parameter) == 0)
-	  {
-	    found = 1;
-	    break;
-	  }
-	}
-	if ( !found )
-	{
-	  free((char *) parameter);
-	  gcg_error_msg( gcgctx, GSX__REFPAR, node);  
-	  free((char *) bodydef);	
-	  return GSX__NEXTNODE;
-	}
-	
-	/* Check type of parameter */
-	switch (bodydef[i].ParClass )  {
-        case pwr_eClass_Input:
-          info_type = bodydef[i].Par->Input.Info.Type ;
-	  if ( bodydef[i].Par->Input.Info.Flags & PWR_MASK_RTVIRTUAL	)
-	  {
-	    /* Parameter is not defined in runtime */
-	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
-	    free((char *) bodydef);	
-	    return GSX__NEXTNODE;
- 	  } 
-	  break;
-        case pwr_eClass_Output:
-          info_type = bodydef[i].Par->Output.Info.Type ;
-	  break;
-        case pwr_eClass_Intern:
-          info_type = bodydef[i].Par->Intern.Info.Type ;
-	  break;
-        case pwr_eClass_Param:
-          info_type = bodydef[i].Par->Param.Info.Type ;
-	  break;
-	default:
-	  /* Not allowed parameter type */		  
-	  gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
-	  free((char *) bodydef);	
-	  return GSX__NEXTNODE;
-	}
-        free((char *) bodydef );
-        
-	switch ( info_type ) {
+
+	switch ( info.type ) {
         case pwr_eType_Int32: 
         case pwr_eType_UInt32: 
         case pwr_eType_Int16: 
@@ -10821,8 +10762,8 @@ vldh_t_node	node;
         case pwr_eType_Mask: 
         case pwr_eType_Status: 
         case pwr_eType_NetStatus: 
-	  if ( !(node->ln.classid != pwr_cClass_GetIpToA ||
-		 node->ln.classid != pwr_cClass_GetIp)) {
+	  if ( !(node->ln.cid != pwr_cClass_GetIpToA ||
+		 node->ln.cid != pwr_cClass_GetIp)) {
 	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
 	    return GSX__NEXTNODE;
 	  }
@@ -10833,20 +10774,18 @@ vldh_t_node	node;
 	  return GSX__NEXTNODE;
 	}
 
-	sts = gcg_print_exec_macro( gcgctx, node, node->ln.object_did, GCG_PREFIX_REF);
+	sts = gcg_print_exec_macro( gcgctx, node, node->ln.oid, GCG_PREFIX_REF);
 	if (EVEN(sts)) return sts; 
 
 	/* Print the parent object */
 	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE],
 		"%c%s->%s);\n",
 		GCG_PREFIX_REF,
-		vldh_IdToStr(0, refobjdid),
+		vldh_AttrRefToStr(0, refattrref),
 		parameter);
 
-	free((char *) parameter);
-
 	/* Insert object in ref list */
-	gcg_ref_insert( gcgctx, refobjdid, GCG_PREFIX_REF);
+	gcg_aref_insert( gcgctx, refattrref, GCG_PREFIX_REF);
 
 	return GSX__SUCCESS;
 }
@@ -10890,10 +10829,10 @@ vldh_t_node	node;
 	char			*name;
 
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession;  
+	ldhses = (node->hn.wind)->hw.ldhses;  
 
 	/* Look if the whole object should be backed up */
-	sts = ldh_GetObjectPar( ldhses, node->ln.object_did, 
+	sts = ldh_GetObjectPar( ldhses, node->ln.oid, 
 			"RtBody", "ObjectBackup", (char **)&wholeobject, &size); 
 	if ( EVEN(sts)) return sts;
 
@@ -10930,15 +10869,15 @@ vldh_t_node	node;
 	/* Put the object and parameter in the backup object */
         IF_PR
 	{
-	  sts = ldh_SetObjectPar( ldhses, node->ln.object_did,
+	  sts = ldh_SetObjectPar( ldhses, node->ln.oid,
 		"RtBody", "DataName", parname, sizeof( parname)); 
 	  if ( EVEN(sts)) return sts;
 	}
 
-	sts = gcg_ref_insert( gcgctx, node->ln.object_did, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
 
 	/* Get name for this class */
-	sts = gcg_get_structname( gcgctx, node->ln.object_did, &name);
+	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
 	if( EVEN(sts)) return sts;
 
 	/* Print the init command */
@@ -10946,7 +10885,7 @@ vldh_t_node	node;
 		"%s_init( %c%s,\"%s\");\n",
 		name,
 		GCG_PREFIX_REF,
-		vldh_IdToStr(0, node->ln.object_did),
+		vldh_IdToStr(0, node->ln.oid),
 		parname);
 
 
@@ -10993,8 +10932,8 @@ vldh_t_node	node;
 	ldh_sParDef 		*bodydef;
 	int 			rows, sts;
 	int			size;
-	pwr_tObjid		refobjdid;
-	pwr_tObjid		*refobjdid_ptr;
+	pwr_sAttrRef		refattrref;
+	pwr_sAttrRef		*refattrref_ptr;
 	ldh_tSesContext ldhses;
 	pwr_tClassId		class;
 	vldh_t_node		output_node;
@@ -11004,22 +10943,21 @@ vldh_t_node	node;
 	char			*nocondef_ptr;
 	gcg_t_nocondef		nocondef[2];
 	unsigned long		nocontype[2];
+	char			*name;
 
 	nocondef[1].bo = 1;
 	nocontype[1] = GCG_BOOLEAN;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession;  
+	ldhses = (node->hn.wind)->hw.ldhses;  
 	
 	/* Check that this is objdid of an existing object */
-	sts = ldh_GetObjectClass( ldhses, node->ln.object_did, &class);
+	sts = ldh_GetObjectClass( ldhses, node->ln.oid, &class);
 	if ( EVEN(sts)) return sts;
 
-        if ( !gcgctx->order_comp)
-        {
-          if ( (class == vldh_class( ldhses, VLDH_CLASS_STODI )) ||
-                 (class == vldh_class( ldhses, VLDH_CLASS_SETDI )) ||
-                 (class == vldh_class( ldhses, VLDH_CLASS_RESDI )))
-          {
+        if ( !gcgctx->order_comp) {
+          if ( class == pwr_cClass_stodi ||
+	       class == pwr_cClass_setdi ||
+	       class == pwr_cClass_resdi) {
             /* Check first if the object is connected to an order object,
               if it is, it will be compiled when by the ordermethod, when
               gcgctx->order_comp is true */
@@ -11028,7 +10966,7 @@ vldh_t_node	node;
                         GOEN_CON_SIGNAL | GOEN_CON_OUTPUTTOINPUT);
             if ( EVEN(sts)) return sts;
             if ( output_count == 1)
-              if ( output_node->ln.classid == vldh_class( ldhses, VLDH_CLASS_ORDER))
+              if ( output_node->ln.cid == pwr_cClass_order)
                 return GSX__SUCCESS;
           }
         }
@@ -11038,78 +10976,63 @@ vldh_t_node	node;
 
 	/* Get the devbody parameters for this class */
 	sts = ldh_GetObjectBodyDef( ldhses,
-			node->ln.classid, "DevBody", 1, 
+			node->ln.cid, "DevBody", 1, 
 			&bodydef, &rows);
 	if ( EVEN(sts) ) return sts;
 
 	sts = ldh_GetObjectPar( ldhses,
-			node->ln.object_did, 
+			node->ln.oid, 
 			"DevBody",
 			bodydef[0].ParName,
-			(char **)&refobjdid_ptr, &size); 
+			(char **)&refattrref_ptr, &size); 
 	if ( EVEN(sts)) return sts;
-	refobjdid = *refobjdid_ptr;
-	free((char *) refobjdid_ptr);
+	refattrref = *refattrref_ptr;
+	free((char *) refattrref_ptr);
 	free((char *) bodydef);	
 
 	/* If the object is not connected the value in the
 	   parameter should be written in the macro call */
-	sts = ldh_GetObjectPar( ldhses,
-			node->ln.object_did, 
-			"RtBody",
-			"In",
-			&nocondef_ptr, &size); 
+	sts = ldh_GetObjectPar( ldhses, node->ln.oid, 
+				"RtBody", "In", &nocondef_ptr, &size); 
 	if ( EVEN(sts)) return sts;
 
 	/* Check that this is objdid of an existing object */
-	sts = ldh_GetObjectClass(
-			(node->hn.window_pointer)->hw.ldhsession, 
-			refobjdid,
-			&class);
-	if ( EVEN(sts)) 
-	{
+	sts = ldh_GetAttrRefTid( ldhses, &refattrref, &class);
+	if ( EVEN(sts)) {
 	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
 	  return GSX__NEXTNODE;
 	}
 
 	/* Check that the class of the referenced object is correct */
-	if ( ( node->ln.classid == pwr_cClass_setdi) ||	
-	     ( node->ln.classid == pwr_cClass_resdi) )
-	{
-	  if ( class != pwr_cClass_Di)
-	  {
+	if ( node->ln.cid == pwr_cClass_setdi ||	
+	     node->ln.cid == pwr_cClass_resdi) {
+	  if ( class != pwr_cClass_Di) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
 	  nocondef[0].bo = TRUE;
 	  nocontype[0] = GCG_BOOLEAN;
 	}    
-	else if ( node->ln.classid == pwr_cClass_stodi)
-	{
-	  if ( class != pwr_cClass_Di)
-	  {
+	else if ( node->ln.cid == pwr_cClass_stodi) {
+	  if ( class != pwr_cClass_Di) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
 	  nocondef[0].bo = (int)*nocondef_ptr;
 	  nocontype[0] = GCG_BOOLEAN;
 	}
-	else if ( (node->ln.classid == pwr_cClass_stoai) ||
-		  (node->ln.classid == pwr_cClass_cstoai)) 
-	{
-	  if ( class != pwr_cClass_Ai)
-	  {
+	else if ( (node->ln.cid == pwr_cClass_stoai) ||
+		  (node->ln.cid == pwr_cClass_cstoai)) {
+	  if ( class != pwr_cClass_Ai) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
 	  nocondef[0].fl = *(float *) nocondef_ptr;
 	  nocontype[0] = GCG_FLOAT;
 	}    
-	else if ( (node->ln.classid == pwr_cClass_stoii) ||
-		  (node->ln.classid == pwr_cClass_cstoii)) 
-	{
-	  if ( class != pwr_cClass_Ii)
-	  {
+	else if ( (node->ln.cid == pwr_cClass_stoii) ||
+		  (node->ln.cid == pwr_cClass_cstoii)) {
+	  if ( class != pwr_cClass_Ii) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
@@ -11119,11 +11042,18 @@ vldh_t_node	node;
 	free(nocondef_ptr);
 
 	/* Insert io object in iowrite list */
-	gcg_iowrite_insert( gcgctx, refobjdid, GCG_PREFIX_IOW);
+	gcg_iowrite_insert( gcgctx, refattrref, GCG_PREFIX_IOW);
 
 	/* Print the execute command */
-	sts = gcg_print_exec_macro( gcgctx, node, refobjdid, GCG_PREFIX_IOW);
-	if (EVEN(sts)) return sts; 
+	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
+	if ( EVEN(sts)) return sts;
+
+	/* Print the execute command */
+	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
+		"%s_exec( %c%s, ",
+		name,
+		GCG_PREFIX_IOW,
+		vldh_AttrRefToStr(0, refattrref));
 
 	sts = gcg_print_inputs( gcgctx, node, ", ", GCG_PRINT_ALLPAR, 
 		nocondef, nocontype);
@@ -11171,21 +11101,22 @@ vldh_t_node	node;
 	ldh_sParDef 		*bodydef;
 	int 			rows, sts;
 	int			size;
-	pwr_tObjid		refobjdid;
-	pwr_tObjid		*refobjdid_ptr;
+	pwr_sAttrRef		refattrref;
+	pwr_sAttrRef		*refattrref_ptr;
 	ldh_tSesContext 	ldhses;
 	pwr_tClassId		class;
 	char			*nocondef_ptr;
 	gcg_t_nocondef		nocondef[2];
 	unsigned long		nocontype[2];
+	char			*name;
 
 	nocondef[1].bo = 1;
 	nocontype[1] = GCG_BOOLEAN;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession;  
+	ldhses = (node->hn.wind)->hw.ldhses;  
 	
 	/* Check that this is objdid of an existing object */
-	sts = ldh_GetObjectClass( ldhses, node->ln.object_did, &class);
+	sts = ldh_GetObjectClass( ldhses, node->ln.oid, &class);
 	if ( EVEN(sts)) return sts;
 
 	/* Get the objdid of the referenced io object stored in the
@@ -11193,42 +11124,37 @@ vldh_t_node	node;
 
 	/* Get the devbody parameters for this class */
 	sts = ldh_GetObjectBodyDef( ldhses,
-			node->ln.classid, "DevBody", 1, 
+			node->ln.cid, "DevBody", 1, 
 			&bodydef, &rows);
 	if ( EVEN(sts) ) return sts;
 
 	sts = ldh_GetObjectPar( ldhses,
-			node->ln.object_did, 
+			node->ln.oid, 
 			"DevBody",
 			bodydef[0].ParName,
-			(char **)&refobjdid_ptr, &size); 
+			(char **)&refattrref_ptr, &size); 
 	if ( EVEN(sts)) return sts;
-	refobjdid = *refobjdid_ptr;
-	free((char *) refobjdid_ptr);
+	refattrref = *refattrref_ptr;
+	free((char *) refattrref_ptr);
 	free((char *) bodydef);	
 
 	/* If the object is not connected the value in the
 	   parameter should be written in the macro call */
 	sts = ldh_GetObjectPar( ldhses,
-			node->ln.object_did, 
+			node->ln.oid, 
 			"RtBody",
 			"In",
 			&nocondef_ptr, &size); 
 	if ( EVEN(sts)) return sts;
 
 	/* Check that this is objdid of an existing object */
-	sts = ldh_GetObjectClass(
-			(node->hn.window_pointer)->hw.ldhsession, 
-			refobjdid,
-			&class);
-	if ( EVEN(sts)) 
-	{
+	sts = ldh_GetAttrRefTid( ldhses, &refattrref, &class);
+	if ( EVEN(sts)) {
 	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
 	  return GSX__NEXTNODE;
 	}
 
-	if ( class != vldh_class( ldhses, VLDH_CLASS_CO))
-	{
+	if ( class != pwr_cClass_Co) {
 	  gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	  return GSX__NEXTNODE;
 	}
@@ -11238,17 +11164,23 @@ vldh_t_node	node;
 	free(nocondef_ptr);
 
 	/* Insert io object in iowrite list */
-	gcg_iowrite_insert( gcgctx, refobjdid, GCG_PREFIX_IOW);
-	gcg_iowrite_insert( gcgctx, refobjdid, GCG_PREFIX_IOCW);
+	gcg_iowrite_insert( gcgctx, refattrref, GCG_PREFIX_IOW);
+	gcg_iowrite_insert( gcgctx, refattrref, GCG_PREFIX_IOCW);
 
 	/* Print the execute command */
-	sts = gcg_print_exec_macro( gcgctx, node, refobjdid, GCG_PREFIX_IOW);
-	if (EVEN(sts)) return sts; 
+	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
+	if ( EVEN(sts)) return sts;	
+
+	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
+		"%s_exec( %c%s, ",
+		name,
+		GCG_PREFIX_IOW,
+		vldh_AttrRefToStr(0, refattrref));
 
 	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE],
 		"%c%s, ",
 		GCG_PREFIX_IOCW,
-		vldh_IdToStr(0, refobjdid));
+		vldh_AttrRefToStr(0, refattrref));
 
 	sts = gcg_print_inputs( gcgctx, node, ", ", GCG_PRINT_ALLPAR, 
 		nocondef, nocontype);
@@ -11302,7 +11234,8 @@ vldh_t_node	node;
 	int 			rows, sts;
 	int			i, output_found, first_par;
 	int			size;
-	pwr_tObjid		output_objdid;
+	pwr_sAttrRef		output_attrref;
+	int			output_type;
 	char			output_prefix;
 	char			output_par[32];
 	char			*name;
@@ -11314,11 +11247,11 @@ vldh_t_node	node;
 	sts = gcg_comp_m42( gcgctx, node);
 	return sts;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession; 
+	ldhses = (node->hn.wind)->hw.ldhses; 
 
 	/* Get c-expression stored in devbody */
 	sts = ldh_GetObjectPar( ldhses,
-			node->ln.object_did, 
+			node->ln.oid, 
 			"DevBody",
 			"Code",
 			(char **)&expression, &size); 
@@ -11332,7 +11265,7 @@ vldh_t_node	node;
 	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
 	  "#define EXPR%s(A1,A2,A3,A4,A5,A6,A7,A8,d1,d2,d3,d4,d5,d6,d7,d8,\
 OA1,OA2,OA3,OA4,OA5,OA6,OA7,OA8,od1,od2,od3,od4,od5,od6,od7,od8) ", 
-	  vldh_IdToStr(0, node->ln.object_did));
+	  vldh_IdToStr(0, node->ln.oid));
 	IF_PR
 	{
 	  s = expression;
@@ -11348,10 +11281,10 @@ OA1,OA2,OA3,OA4,OA5,OA6,OA7,OA8,od1,od2,od3,od4,od5,od6,od7,od8) ",
 
 	free((char *) expression);
 
-	sts = gcg_ref_insert( gcgctx, node->ln.object_did, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
 
 	/* Get name for this class */
-	sts = gcg_get_structname( gcgctx, node->ln.object_did, &name);
+	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
 	if( EVEN(sts)) return sts;
 
 	/* Print the execute command */
@@ -11360,90 +11293,90 @@ OA1,OA2,OA3,OA4,OA5,OA6,OA7,OA8,od1,od2,od3,od4,od5,od6,od7,od8) ",
 EXPR%s((*%c%s->AIn1P),(*%c%s->AIn2P),(*%c%s->AIn3P),(*%c%s->AIn4P),\n",
 		name,
 		GCG_PREFIX_REF,
-		vldh_IdToStr(0, node->ln.object_did),
-		vldh_IdToStr(1, node->ln.object_did),
+		vldh_IdToStr(0, node->ln.oid),
+		vldh_IdToStr(1, node->ln.oid),
 		GCG_PREFIX_REF,
-		vldh_IdToStr(2, node->ln.object_did),
+		vldh_IdToStr(2, node->ln.oid),
 		GCG_PREFIX_REF,
-		vldh_IdToStr(3, node->ln.object_did),
+		vldh_IdToStr(3, node->ln.oid),
 		GCG_PREFIX_REF,
-		vldh_IdToStr(4, node->ln.object_did),
+		vldh_IdToStr(4, node->ln.oid),
 		GCG_PREFIX_REF,
-		vldh_IdToStr(5, node->ln.object_did));
+		vldh_IdToStr(5, node->ln.oid));
 	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
 		"(*%c%s->AIn5P),(*%c%s->AIn6P),(*%c%s->AIn7P),(*%c%s->AIn8P),\n",
 		GCG_PREFIX_REF,
-		vldh_IdToStr(0, node->ln.object_did),
+		vldh_IdToStr(0, node->ln.oid),
 		GCG_PREFIX_REF,
-		vldh_IdToStr(1, node->ln.object_did),
+		vldh_IdToStr(1, node->ln.oid),
 		GCG_PREFIX_REF,
-		vldh_IdToStr(2, node->ln.object_did),
+		vldh_IdToStr(2, node->ln.oid),
 		GCG_PREFIX_REF,
-		vldh_IdToStr(3, node->ln.object_did));
+		vldh_IdToStr(3, node->ln.oid));
 	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
 		"(*%c%s->DIn1P),(*%c%s->DIn2P),(*%c%s->DIn3P),(*%c%s->DIn4P),\n",
 		GCG_PREFIX_REF,
-		vldh_IdToStr(0, node->ln.object_did),
+		vldh_IdToStr(0, node->ln.oid),
 		GCG_PREFIX_REF,
-		vldh_IdToStr(1, node->ln.object_did),
+		vldh_IdToStr(1, node->ln.oid),
 		GCG_PREFIX_REF,
-		vldh_IdToStr(2, node->ln.object_did),
+		vldh_IdToStr(2, node->ln.oid),
 		GCG_PREFIX_REF,
-		vldh_IdToStr(3, node->ln.object_did));
+		vldh_IdToStr(3, node->ln.oid));
 	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
 		"(*%c%s->DIn5P),(*%c%s->DIn6P),(*%c%s->DIn7P),(*%c%s->DIn8P),\n",
 		GCG_PREFIX_REF,
-		vldh_IdToStr(0, node->ln.object_did),
+		vldh_IdToStr(0, node->ln.oid),
 		GCG_PREFIX_REF,
-		vldh_IdToStr(1, node->ln.object_did),
+		vldh_IdToStr(1, node->ln.oid),
 		GCG_PREFIX_REF,
-		vldh_IdToStr(2, node->ln.object_did),
+		vldh_IdToStr(2, node->ln.oid),
 		GCG_PREFIX_REF,
-		vldh_IdToStr(3, node->ln.object_did));
+		vldh_IdToStr(3, node->ln.oid));
 	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
 	  "(%c%s->OutA1),(%c%s->OutA2),(%c%s->OutA3),(%c%s->OutA4),\n",
 		GCG_PREFIX_REF,
-		vldh_IdToStr(0, node->ln.object_did),
+		vldh_IdToStr(0, node->ln.oid),
 		GCG_PREFIX_REF,
-		vldh_IdToStr(1, node->ln.object_did),
+		vldh_IdToStr(1, node->ln.oid),
 		GCG_PREFIX_REF,
-		vldh_IdToStr(3, node->ln.object_did),
+		vldh_IdToStr(3, node->ln.oid),
 		GCG_PREFIX_REF,
-		vldh_IdToStr(4, node->ln.object_did));
+		vldh_IdToStr(4, node->ln.oid));
 	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
 		"(%c%s->OutA5),(%c%s->OutA6),(%c%s->OutA7),(%c%s->OutA8),\n",
 		GCG_PREFIX_REF,
-		vldh_IdToStr(0, node->ln.object_did),
+		vldh_IdToStr(0, node->ln.oid),
 		GCG_PREFIX_REF,
-		vldh_IdToStr(1, node->ln.object_did),
+		vldh_IdToStr(1, node->ln.oid),
 		GCG_PREFIX_REF,
-		vldh_IdToStr(2, node->ln.object_did),
+		vldh_IdToStr(2, node->ln.oid),
 		GCG_PREFIX_REF,
-		vldh_IdToStr(3, node->ln.object_did));
+		vldh_IdToStr(3, node->ln.oid));
 	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
 		"(%c%s->OutD1),(%c%s->OutD2),(%c%s->OutD3),(%c%s->OutD4),\n",
 		GCG_PREFIX_REF,
-		vldh_IdToStr(0, node->ln.object_did),
+		vldh_IdToStr(0, node->ln.oid),
 		GCG_PREFIX_REF,
-		vldh_IdToStr(1, node->ln.object_did),
+		vldh_IdToStr(1, node->ln.oid),
 		GCG_PREFIX_REF,
-		vldh_IdToStr(2, node->ln.object_did),
+		vldh_IdToStr(2, node->ln.oid),
 		GCG_PREFIX_REF,
-		vldh_IdToStr(3, node->ln.object_did));
+		vldh_IdToStr(3, node->ln.oid));
 	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
 		"(%c%s->OutD5),(%c%s->OutD6),(%c%s->OutD7),(%c%s->OutD8)));\n",
 		GCG_PREFIX_REF,
-		vldh_IdToStr(0, node->ln.object_did),
+		vldh_IdToStr(0, node->ln.oid),
 		GCG_PREFIX_REF,
-		vldh_IdToStr(1, node->ln.object_did),
+		vldh_IdToStr(1, node->ln.oid),
 		GCG_PREFIX_REF,
-		vldh_IdToStr(2, node->ln.object_did),
+		vldh_IdToStr(2, node->ln.oid),
 		GCG_PREFIX_REF,
-		vldh_IdToStr(3, node->ln.object_did));
+		vldh_IdToStr(3, node->ln.oid));
 
 	/* Get the runtime parameters for this class */
-	sts = ldh_GetObjectBodyDef((node->hn.window_pointer)->hw.ldhsession, 
-			node->ln.classid, "RtBody", 1, 
+	sts = ldh_GetObjectBodyDef((node->hn.wind)->hw.ldhses, 
+			node->ln.cid, "RtBody", 1, 
 			&bodydef, &rows);
 	if ( EVEN(sts) ) return sts;
 
@@ -11470,7 +11403,7 @@ EXPR%s((*%c%s->AIn1P),(*%c%s->AIn2P),(*%c%s->AIn3P),(*%c%s->AIn4P),\n",
 	        gcg_error_msg( gcgctx, GSX__CONOUTPUT, output_node);
 
 	      sts = gcg_get_outputstring( gcgctx, output_node, &output_bodydef, 
-			&output_objdid, &output_prefix, output_par);
+			&output_attrref, &output_type, &output_prefix, output_par);
 	      if ( sts == GSX__NEXTPAR ) 
 	      {
 	        i++;
@@ -11484,10 +11417,12 @@ EXPR%s((*%c%s->AIn1P),(*%c%s->AIn2P),(*%c%s->AIn3P),(*%c%s->AIn4P),\n",
 	      IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->%sP = &%c%s->%s;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName,
 			output_prefix,
-			vldh_IdToStr(1, output_objdid),
+ 			output_type == GCG_OTYPE_OID ? 
+			     vldh_IdToStr(1, output_attrref.Objid) : 
+			     vldh_AttrRefToStr(0, output_attrref),
 			output_par);
 	    }
 	    else
@@ -11505,10 +11440,10 @@ EXPR%s((*%c%s->AIn1P),(*%c%s->AIn2P),(*%c%s->AIn3P),(*%c%s->AIn4P),\n",
 	    IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->%sP = &%c%s->%s;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName,
 			GCG_PREFIX_REF,
-			vldh_IdToStr(1, node->ln.object_did),
+			vldh_IdToStr(1, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName);
 	  }
 	  i++;
@@ -11568,15 +11503,16 @@ vldh_t_node	node;
 	ldh_sParDef 		output_bodydef;
 	int 			rows, sts;
 	int			i, output_found, first_par;
-	pwr_tObjid		output_objdid;
+	pwr_sAttrRef		output_attrref;
+	int			output_type;
 	char			output_prefix;
 	char			output_par[32];
 	char			*name;
 
-	sts = gcg_ref_insert( gcgctx, node->ln.object_did, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
 
 	/* Get name for this class */
-	sts = gcg_get_structname( gcgctx, node->ln.object_did, &name);
+	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
 	if( EVEN(sts)) return sts;
 
 	/* Print the execute command */
@@ -11584,11 +11520,11 @@ vldh_t_node	node;
 		"%s_exec( tp, %c%s);\n",
 		name,
 		GCG_PREFIX_REF,
-		vldh_IdToStr(0, node->ln.object_did));
+		vldh_IdToStr(0, node->ln.oid));
 
 	/* Get the runtime parameters for this class */
-	sts = ldh_GetObjectBodyDef((node->hn.window_pointer)->hw.ldhsession, 
-			node->ln.classid, "RtBody", 1, 
+	sts = ldh_GetObjectBodyDef((node->hn.wind)->hw.ldhses, 
+			node->ln.cid, "RtBody", 1, 
 			&bodydef, &rows);
 	if ( EVEN(sts) ) return sts;
 
@@ -11615,7 +11551,7 @@ vldh_t_node	node;
 	      gcg_error_msg( gcgctx, GSX__CONOUTPUT, output_node);
 
 	      sts = gcg_get_outputstring( gcgctx, output_node, &output_bodydef, 
-			&output_objdid, &output_prefix, output_par);
+			&output_attrref, &output_type, &output_prefix, output_par);
 	      if ( sts == GSX__NEXTPAR ) 
 	      {
 	        i++;
@@ -11631,10 +11567,12 @@ vldh_t_node	node;
 	        IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->%sP = &%c%s->%s;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName,
 			output_prefix,
-			vldh_IdToStr(1, output_objdid),
+ 			output_type == GCG_OTYPE_OID ? 
+			     vldh_IdToStr(1, output_attrref.Objid) : 
+			     vldh_AttrRefToStr(0, output_attrref),
 			output_par);
 	      }
 	      else
@@ -11642,10 +11580,12 @@ vldh_t_node	node;
 	        IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->%sP = %c%s;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName,
 			output_prefix,
-			vldh_IdToStr(1, output_objdid));
+ 			output_type == GCG_OTYPE_OID ? 
+			     vldh_IdToStr(1, output_attrref.Objid) : 
+			     vldh_AttrRefToStr(0, output_attrref));
 	      }
 	    }
 	    else
@@ -11663,18 +11603,18 @@ vldh_t_node	node;
 	    IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->%sP = &%c%s->%s;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName,
 			GCG_PREFIX_REF,
-			vldh_IdToStr(1, node->ln.object_did),
+			vldh_IdToStr(1, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName);
 	  }
 	  i++;
 	}
 	free((char *) bodydef);	
 
-	gcg_timer_print( gcgctx, node->ln.object_did);
-	gcg_scantime_print( gcgctx, node->ln.object_did);
+	gcg_timer_print( gcgctx, node->ln.oid);
+	gcg_scantime_print( gcgctx, node->ln.oid);
 
 	return GSX__SUCCESS;
 }
@@ -11724,7 +11664,8 @@ vldh_t_node	node;
 	int 			rows, sts;
 	int			i, output_found, first_par;
 	int			size;
-	pwr_tObjid		output_objdid;
+	pwr_sAttrRef		output_attrref;
+	int			output_type;
 	char			output_prefix;
 	char			output_par[32];
 	ldh_tSesContext ldhses;
@@ -11738,11 +11679,11 @@ vldh_t_node	node;
 
 #define DATAA_BUFF_SIZE 16000
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession; 
+	ldhses = (node->hn.wind)->hw.ldhses; 
 
 	/* Get c-expression stored in devbody */
 	sts = ldh_GetObjectPar( ldhses,
-			node->ln.object_did, 
+			node->ln.oid, 
 			"DevBody",
 			"Code",
 			(char **)&expression, &size); 
@@ -11753,7 +11694,7 @@ vldh_t_node	node;
 	  gcg_error_msg( gcgctx, GSX__NOEXPR, node);
 
 	sprintf( pointer_name, "%c%s", GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did));
+			vldh_IdToStr(0, node->ln.oid));
 
 	newstr = XtCalloc( 1, DATAA_BUFF_SIZE);
 	if ( !newstr) 
@@ -11775,11 +11716,11 @@ vldh_t_node	node;
 	free((char *) expression);
 	XtFree( newstr);
 
-	sts = gcg_ref_insert( gcgctx, node->ln.object_did, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
 
 	/* Get the runtime parameters for this class */
-	sts = ldh_GetObjectBodyDef((node->hn.window_pointer)->hw.ldhsession, 
-			node->ln.classid, "RtBody", 1, 
+	sts = ldh_GetObjectBodyDef((node->hn.wind)->hw.ldhses, 
+			node->ln.cid, "RtBody", 1, 
 			&bodydef, &rows);
 	if ( EVEN(sts) ) return sts;
 
@@ -11806,7 +11747,7 @@ vldh_t_node	node;
 	        gcg_error_msg( gcgctx, GSX__CONOUTPUT, output_node);
 
 	      sts = gcg_get_outputstring( gcgctx, output_node, &output_bodydef, 
-			&output_objdid, &output_prefix, output_par);
+			&output_attrref, &output_type, &output_prefix, output_par);
 	      if ( sts == GSX__NEXTPAR ) 
 	      {
 	        i++;
@@ -11820,10 +11761,12 @@ vldh_t_node	node;
 	      IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->%sP = &%c%s->%s;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName,
 			output_prefix,
-			vldh_IdToStr(1, output_objdid),
+ 			output_type == GCG_OTYPE_OID ? 
+			     vldh_IdToStr(1, output_attrref.Objid) : 
+			     vldh_AttrRefToStr(0, output_attrref),
 			output_par);
 	    }
 	    else
@@ -11841,10 +11784,10 @@ vldh_t_node	node;
 	    IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->%sP = &%c%s->%s;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName,
 			GCG_PREFIX_REF,
-			vldh_IdToStr(1, node->ln.object_did),
+			vldh_IdToStr(1, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName);
 	  }
 	  i++;
@@ -11887,63 +11830,59 @@ vldh_t_node	node;
 	ldh_sParDef 		*bodydef;
 	int 			rows, sts;
 	int			size;
-	pwr_tObjid		refobjdid;
-	pwr_tObjid		*refobjdid_ptr;
+	pwr_sAttrRef		refattrref;
+	pwr_sAttrRef		*refattrref_ptr;
 	ldh_tSesContext ldhses;
 	pwr_tClassId		class;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession;  
+	ldhses = (node->hn.wind)->hw.ldhses;  
 
-	sts = gcg_ref_insert( gcgctx, node->ln.object_did, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
 
 	/* Get the objdid of the referenced io object stored in the
 	  first parameter in defbody */
 
 	/* Get the devbody parameters for this class */
 	sts = ldh_GetObjectBodyDef( ldhses,
-			node->ln.classid, "DevBody", 1, 
+			node->ln.cid, "DevBody", 1, 
 			&bodydef, &rows);
 	if ( EVEN(sts) ) return sts;
 
-	sts = ldh_GetObjectPar( ldhses,
-			node->ln.object_did, 
-			"DevBody",
-			bodydef[0].ParName,
-			(char **)&refobjdid_ptr, &size); 
+	sts = ldh_GetObjectPar( ldhses, node->ln.oid, 
+			"DevBody", bodydef[0].ParName,
+			(char **)&refattrref_ptr, &size); 
 	if ( EVEN(sts)) return sts;
 
-	refobjdid = *refobjdid_ptr;
+	refattrref = *refattrref_ptr;
 	free((char *) bodydef);	
-	free((char *) refobjdid_ptr);
+	free((char *) refattrref_ptr);
+
+	sts = gcg_replace_ref( gcgctx, &refattrref, node);
+	if ( EVEN(sts)) return sts;
 
 	/* Check that this is objdid of an existing object */
-	sts = ldh_GetObjectClass(
-			(node->hn.window_pointer)->hw.ldhsession, 
-			refobjdid,
-			&class);
-	if ( EVEN(sts)) 
-	{
+	sts = ldh_GetAttrRefTid( ldhses, &refattrref, &class);
+	if ( EVEN(sts)) {
 	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
 	  return GSX__NEXTNODE;
 	}
 
 	/* Insert object in ref list */
-	gcg_ref_insert( gcgctx, refobjdid, GCG_PREFIX_REF);
+	gcg_aref_insert( gcgctx, refattrref, GCG_PREFIX_REF);
 
 	/* The Out parameter will contain the pointer to the
 	   referenced object */
 	IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->Out = %c%s;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			GCG_PREFIX_REF,
-			vldh_IdToStr(1, refobjdid));
+			vldh_AttrRefToStr(0, refattrref));
 
 	/* Put referenced object in rt body */
-        IF_PR
-	{
-	  sts = ldh_SetObjectPar( ldhses, node->ln.object_did,
-		"RtBody", "DataObjid", (char *)&refobjdid, sizeof( refobjdid)); 
+        IF_PR {
+	  sts = ldh_SetObjectPar( ldhses, node->ln.oid,
+		"RtBody", "DataObjid", (char *)&refattrref.Objid, sizeof( refattrref.Objid)); 
 	  if ( EVEN(sts)) return sts;
 	}
 
@@ -11979,12 +11918,12 @@ vldh_t_node	node;
 	pwr_tClassId		class;
 	int 			sts;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession; 
+	ldhses = (node->hn.wind)->hw.ldhses; 
 	
 	/* Check that parent is an order object */
-	refobjdid =  node->hn.window_pointer->lw.parent_node_did;
+	refobjdid =  node->hn.wind->lw.poid;
 	sts = ldh_GetObjectClass(
-			(node->hn.window_pointer)->hw.ldhsession, 
+			(node->hn.wind)->hw.ldhses, 
 			refobjdid,
 			&class);
 	if ( EVEN(sts)) 
@@ -12052,7 +11991,8 @@ vldh_t_node	node;
 	int 			rows, sts;
 	int			i, output_found, first_par;
 	int			size;
-	pwr_tObjid		output_objdid;
+	pwr_sAttrRef		output_attrref;
+	int			output_type;
 	char			output_par[32];
 	char			output_prefix;
 	char			*name;
@@ -12063,16 +12003,16 @@ vldh_t_node	node;
 	pwr_tClassId		class;
 	int			dataclass_found;	
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession;
-	sts = gcg_ref_insert( gcgctx, node->ln.object_did, GCG_PREFIX_REF);
+	ldhses = (node->hn.wind)->hw.ldhses;
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
 
 	/* Get name for this class */
-	sts = gcg_get_structname( gcgctx, node->ln.object_did, &name);
+	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
 	if( EVEN(sts)) return sts;
 
 	/* Get the runtime parameters for this class */
-	sts = ldh_GetObjectBodyDef((node->hn.window_pointer)->hw.ldhsession, 
-			node->ln.classid, "RtBody", 1, 
+	sts = ldh_GetObjectBodyDef((node->hn.wind)->hw.ldhses, 
+			node->ln.cid, "RtBody", 1, 
 			&bodydef, &rows);
 	if ( EVEN(sts) ) return sts;
 
@@ -12098,16 +12038,16 @@ vldh_t_node	node;
 	      if ( (i <= 1) && !dataclass_found)
 	      {
 	        /* Check if this is a GetData object */
-	        sts = ldh_GetObjectClass( (node->hn.window_pointer)->hw.ldhsession,
-			output_node->ln.object_did,
+	        sts = ldh_GetObjectClass( (node->hn.wind)->hw.ldhses,
+			output_node->ln.oid,
 			&class);
 	        if( EVEN(sts)) return sts;
-	        if ( class == vldh_uclass( ldhses, "GetData"))
+	        if ( class == pwr_cClass_GetData)
 	        {
 
 	          /* Get the class of the data in the connected GetData */
-	          sts = ldh_GetObjectPar( (node->hn.window_pointer)->hw.ldhsession,
-			output_node->ln.object_did, 
+	          sts = ldh_GetObjectPar( (node->hn.wind)->hw.ldhses,
+			output_node->ln.oid, 
 			"DevBody",
 			"DataObject",
 			(char **)&refobjdid_ptr, &size); 
@@ -12128,7 +12068,7 @@ vldh_t_node	node;
 	      gcg_error_msg( gcgctx, GSX__CONOUTPUT, output_node);
 
 	      sts = gcg_get_outputstring( gcgctx, output_node, &output_bodydef, 
-			&output_objdid, &output_prefix, output_par);
+			&output_attrref, &output_type, &output_prefix, output_par);
 	      if ( sts == GSX__NEXTPAR ) 
 	      {
 	        i++;
@@ -12142,10 +12082,12 @@ vldh_t_node	node;
 	      IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->%sP = &%c%s->%s;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName,
 			output_prefix,
-			vldh_IdToStr(1, output_objdid),
+ 			output_type == GCG_OTYPE_OID ? 
+			     vldh_IdToStr(1, output_attrref.Objid) : 
+			     vldh_AttrRefToStr(0, output_attrref),
 			output_par);
 	    }
 	    else
@@ -12163,10 +12105,10 @@ vldh_t_node	node;
 	    IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->%sP = &%c%s->%s;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName,
 			GCG_PREFIX_REF,
-			vldh_IdToStr(1, node->ln.object_did),
+			vldh_IdToStr(1, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName);
 	  }
 	  i++;
@@ -12178,7 +12120,7 @@ vldh_t_node	node;
 */
 
 	/* Get name for this class */
-	sts = gcg_get_structname( gcgctx, node->ln.object_did, &name);
+	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
 	if( EVEN(sts)) return sts;
 
 	/* Print the execute command */
@@ -12186,7 +12128,7 @@ vldh_t_node	node;
 		"%s_exec( %c%s, sizeof(pwr_sClass_%s));\n",
 		name,
 		GCG_PREFIX_REF,
-		vldh_IdToStr(0, node->ln.object_did),
+		vldh_IdToStr(0, node->ln.oid),
 		refstructname);
 
 	return GSX__SUCCESS;
@@ -12224,17 +12166,17 @@ vldh_t_node	node;
 	pwr_tClassId		windclass;
 	ldh_tSesContext ldhses;
 	char			*name;
-	pwr_tObjid		*resobjdid_ptr;
-	pwr_tObjid		resobjdid;
+	pwr_sAttrRef		*resattrref_ptr;
+	pwr_sAttrRef		resattrref;
 	pwr_tClassId		class;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession; 
+	ldhses = (node->hn.wind)->hw.ldhses; 
 
 	sts = gcg_comp_m4( gcgctx, node);
 	if ( EVEN(sts)) return sts;
 
 	/* Get name for this class */
-	sts = gcg_get_structname( gcgctx, node->ln.object_did, &name);
+	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
 	if( EVEN(sts)) return sts;
 
 	/* Print the init command */
@@ -12242,66 +12184,64 @@ vldh_t_node	node;
 		"%s_init( %c%s);\n",
 		name,
 		GCG_PREFIX_REF,
-		vldh_IdToStr(0, node->ln.object_did));
+		vldh_IdToStr(0, node->ln.oid));
 
 	/* Get the resetobject if there is one */
 	sts = ldh_GetObjectPar( ldhses,
-			node->ln.object_did,
+			node->ln.oid,
 			"RtBody",
 			"ResetObject",
-			(char **)&resobjdid_ptr, &size);
+			(char **)&resattrref_ptr, &size);
 	if ( EVEN(sts)) return sts;
 
-	resobjdid = *resobjdid_ptr;
-	free((char *) resobjdid_ptr);
+	resattrref = *resattrref_ptr;
+	free((char *) resattrref_ptr);
 
-	if ( cdh_ObjidIsNotNull( resobjdid))
-	{
+	if ( cdh_ObjidIsNotNull( resattrref.Objid)) {
+	  sts = gcg_replace_ref( gcgctx, &resattrref, node);
+	  if ( EVEN(sts)) return sts;
+
 	  /* The reset object has to be a di, do or dv */
-	  sts = ldh_GetObjectClass(
-			(node->hn.window_pointer)->hw.ldhsession, 
-			resobjdid,
+	  sts = ldh_GetAttrRefTid( ldhses, &resattrref,
 			&class);
-	  if ( EVEN(sts)) 
- 	  {
+	  if ( EVEN(sts)) {
 	    gcg_error_msg( gcgctx, GSX__NORESET, node);
 	    return GSX__NEXTNODE;
 	  }
 
 	  /* Check that the class of the reset object is correct */
-	  if ( !((class == vldh_class( ldhses, VLDH_CLASS_DI)) ||
-	       (class == vldh_class( ldhses, VLDH_CLASS_DV)) ||
-	       (class == vldh_class( ldhses, VLDH_CLASS_PO)) ||
-	       (class == vldh_class( ldhses, VLDH_CLASS_DO))))
-	  {
+	  if ( !(class == pwr_cClass_Di ||
+		 class == pwr_cClass_Dv ||
+		 class == pwr_cClass_Po ||
+		 class == pwr_cClass_Do)) {
 	    gcg_error_msg( gcgctx, GSX__CLASSRESET, node);
 	    return GSX__NEXTNODE;
 	  }
 
 	  /* Insert reset object in ioread list */
-	  gcg_ioread_insert( gcgctx, resobjdid, GCG_PREFIX_REF);
+	  gcg_ioread_insert( gcgctx, resattrref, GCG_PREFIX_REF);
 
 	  /* Place the pointer to the resetobject in the cell */
 	  IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->ResetObjectP = &%c%s->ActualValue;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			GCG_PREFIX_REF,
-			vldh_IdToStr(1, resobjdid));
+			vldh_AttrRefToStr(1, resattrref));
 	}
 	else
 	{
-	  /* Inget resertobjekt för cellen */
+	  /* Inget resetobjekt för cellen */
 	  IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->ResetObjectP = 0;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did));
+			vldh_IdToStr(0, node->ln.oid));
 	}
 
 	/* Print the function call to execute the subwindow */
 	/* Check first that there is a subwindow */
 	/* Get the first child to the plc */
-	sts = ldh_GetChild( ldhses, node->ln.object_did, &windowobjdid);
+	sts = ldh_GetChild( ldhses, node->ln.oid, &windowobjdid);
 	found = 0;
 	while ( ODD(sts) )
 	{
@@ -12322,7 +12262,7 @@ vldh_t_node	node;
 	{
 
 	  /* Get name for this class */
-	  sts = gcg_get_structname( gcgctx, node->ln.object_did, &name);
+	  sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
 	  if( EVEN(sts)) return sts;
 
 	  /* Print the execute command */
@@ -12330,7 +12270,7 @@ vldh_t_node	node;
 		"%sSubWind_exec( %c%s, ",
 		name,
 		GCG_PREFIX_REF,
-		vldh_IdToStr(0, node->ln.object_did));
+		vldh_IdToStr(0, node->ln.oid));
 
 
 	  /* Print the window execute command */
@@ -12371,26 +12311,25 @@ int	gcg_comp_m47( gcgctx, node)
 gcg_ctx		gcgctx;
 vldh_t_node	node;
 {
-	int 			sts, size;
-	pwr_tObjid		output_objdid;
+	int 			sts;
+	pwr_sAttrRef		output_attrref;
+	int			output_type;
 	char			output_prefix;
 	char			output_par[32];
 	unsigned long		point;
 	unsigned long		par_inverted;
-	char			hier_name[80];
 	vldh_t_node		output_node;
 	unsigned long		output_count;
 	unsigned long		output_point;
 	ldh_sParDef 		output_bodydef;
 	gcg_t_nocondef		nocondef;
 	unsigned long		nocontype = GCG_BOOLEAN;
-	pwr_sAttrRef		attrref;
 
 	nocondef.bo = FALSE;
 
-	sts = gcg_ref_insert( gcgctx, node->ln.object_did, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
 
-	sts = gcg_print_exec_macro( gcgctx, node, node->ln.object_did, GCG_PREFIX_REF);
+	sts = gcg_print_exec_macro( gcgctx, node, node->ln.oid, GCG_PREFIX_REF);
 	if (EVEN(sts)) return sts; 
 
 	sts = gcg_print_inputs( gcgctx, node, ", ", GCG_PRINT_ALLPAR, 
@@ -12413,10 +12352,11 @@ vldh_t_node	node;
 	  if ( output_count > 0 )
 	  {
 	    sts = gcg_get_outputstring( gcgctx, output_node, &output_bodydef, 
-			&output_objdid, &output_prefix, output_par);
+			&output_attrref, &output_type, &output_prefix, output_par);
 	    if ( sts == GSX__NEXTPAR ) return sts;
 	    if ( EVEN(sts)) return sts;
 	    
+#if 0
 	    /* Get the name of the connected object */
 	    sts = ldh_ObjidToName( 
 		gcgctx->ldhses,
@@ -12424,19 +12364,14 @@ vldh_t_node	node;
 		hier_name, sizeof( hier_name), &size);
 	    if( EVEN(sts)) return sts;
 
-/*** 	If output is a getxx the objdid of the signal is returned
-	and parname of the getxx... 
-	    strcat( hier_name, ".");
-	    strcat( hier_name, output_bodydef.ParName);
-***/
 	    sts = ldh_NameToAttrRef( gcgctx->ldhses, hier_name, &attrref);
 	    if ( EVEN(sts)) return sts;
-
+#endif
 	    /* Put the attribut reference in the sup object */
 	    IF_PR
 	    {
-	      sts = ldh_SetObjectPar( gcgctx->ldhses, node->ln.object_did,
-		"RtBody", "Attribute", (char *)&attrref, sizeof( attrref)); 
+	      sts = ldh_SetObjectPar( gcgctx->ldhses, node->ln.oid,
+		"RtBody", "Attribute", (char *)&output_attrref, sizeof( output_attrref)); 
 	      if ( EVEN(sts)) return sts;
 	    }
 	  }
@@ -12447,7 +12382,7 @@ vldh_t_node	node;
 	  }
 	}
 
-	gcg_timer_print( gcgctx, node->ln.object_did);
+	gcg_timer_print( gcgctx, node->ln.oid);
 
 	return GSX__SUCCESS;
 }
@@ -12494,11 +12429,11 @@ vldh_t_node	node;
     
 	nocondef.bo = TRUE;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession; 
+	ldhses = (node->hn.wind)->hw.ldhses; 
 
 	/* Get the plcpgm in attribute plcpgmobject */
 	sts = ldh_GetObjectPar( ldhses,
-			node->ln.object_did, 
+			node->ln.oid, 
 			"DevBody",
 			"PlcPgmObject",
 			(char **)&parvalue, &size); 
@@ -12535,11 +12470,11 @@ vldh_t_node	node;
 	  return GSX__NEXTNODE;
 	}
 
-	sts = gcg_ref_insert( gcgctx, node->ln.object_did, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
 	sts = gcg_ref_insert( gcgctx, window, GCG_PREFIX_REF);
 
 	/* Get name for this class */
-	sts = gcg_get_structname( gcgctx, node->ln.object_did, &name);
+	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
 	if( EVEN(sts)) return sts;
 
 	/* Print the execute command */
@@ -12547,7 +12482,7 @@ vldh_t_node	node;
 		"%s_exec( %c%s,",
 		name,
 		GCG_PREFIX_REF,
-		vldh_IdToStr(0, node->ln.object_did));
+		vldh_IdToStr(0, node->ln.oid));
 
 	sts = gcg_print_inputs( gcgctx, node, ", ", GCG_PRINT_ALLPAR,
 		&nocondef, &nocontype);
@@ -12593,13 +12528,13 @@ vldh_t_node	node;
 	pwr_tObjid		*parvalue;
 	pwr_tClassId		class;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession;  
+	ldhses = (node->hn.wind)->hw.ldhses;  
 
-	sts = gcg_ref_insert( gcgctx, node->ln.object_did, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
 
 	/* Check the attributes in the parent order node */
 	sts = ldh_GetObjectBodyDef( ldhses,
-			node->ln.classid, "DevBody", 1, 
+			node->ln.cid, "DevBody", 1, 
 			&bodydef, &rows);
 
 	if ( EVEN(sts) ) return sts;
@@ -12610,8 +12545,8 @@ vldh_t_node	node;
 	  if ( bodydef[i].Par->Param.Info.Type == pwr_eType_Objid)
 	  {
 	    /* Get the parameter value */
-	    sts = ldh_GetObjectPar( (node->hn.window_pointer)->hw.ldhsession,  
-			node->ln.object_did, 
+	    sts = ldh_GetObjectPar( (node->hn.wind)->hw.ldhses,  
+			node->ln.oid, 
 			"DevBody",
 			bodydef[i].ParName,
 			(char **)&parvalue, &size); 
@@ -12637,7 +12572,7 @@ vldh_t_node	node;
 	
 	/* Store value in RtBody */
 	sts = ldh_GetObjectBodyDef( ldhses,
-			node->ln.classid, "RtBody", 1, 
+			node->ln.cid, "RtBody", 1, 
 			&bodydef, &rows);
 	if ( EVEN(sts) ) return sts;
 
@@ -12648,7 +12583,7 @@ vldh_t_node	node;
 	  {
 	    /* Get the parameter value */
 	    sts = ldh_SetObjectPar( ldhses,
-			node->ln.object_did, 
+			node->ln.oid, 
 			"RtBody",
 			bodydef[i].ParName,
 			(char *)parvalue, size); 
@@ -12709,7 +12644,8 @@ vldh_t_node	node;
 	int 			rows, sts;
 	int			i, output_found, first_par;
 	int			size;
-	pwr_tObjid		output_objdid;
+	pwr_sAttrRef		output_attrref;
+	int			output_type;
 	char			output_prefix;
 	char			output_par[32];
 	char			*name;
@@ -12719,14 +12655,14 @@ vldh_t_node	node;
 	pwr_tClassId		windclass;
 	ldh_tSesContext ldhses;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession;  
+	ldhses = (node->hn.wind)->hw.ldhses;  
 
-	sts = gcg_ref_insert( gcgctx, node->ln.object_did, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
 
 	/* Print the function call to execute the subwindow */
 	/* Check first that there is a subwindow */
 	/* Get the first child to the plc */
-	sts = ldh_GetChild( ldhses, node->ln.object_did, &windowobjdid);
+	sts = ldh_GetChild( ldhses, node->ln.oid, &windowobjdid);
 	wind_found = 0;
 	while ( ODD(sts) )
 	{
@@ -12750,7 +12686,7 @@ vldh_t_node	node;
 	}
 
   	/* Get name for this class */
-	sts = gcg_get_structname( gcgctx, node->ln.object_did, &name);
+	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
 	if( EVEN(sts)) return sts;
 
 	/* Print the execute command */
@@ -12758,7 +12694,7 @@ vldh_t_node	node;
 		"%s_exec( %c%s,\n",
 		name,
 		GCG_PREFIX_REF,
-		vldh_IdToStr(0, node->ln.object_did));
+		vldh_IdToStr(0, node->ln.oid));
 
 
 	/* Print the window execute command */
@@ -12773,8 +12709,8 @@ vldh_t_node	node;
 	");\n");
 
 	/* Get the runtime parameters for this class */
-	sts = ldh_GetObjectBodyDef((node->hn.window_pointer)->hw.ldhsession, 
-			node->ln.classid, "RtBody", 1, 
+	sts = ldh_GetObjectBodyDef((node->hn.wind)->hw.ldhses, 
+			node->ln.cid, "RtBody", 1, 
 			&bodydef, &rows);
 	if ( EVEN(sts) ) return sts;
 
@@ -12801,7 +12737,7 @@ vldh_t_node	node;
 	      gcg_error_msg( gcgctx, GSX__CONOUTPUT, output_node);
 
 	      sts = gcg_get_outputstring( gcgctx, output_node, &output_bodydef, 
-			&output_objdid, &output_prefix, output_par);
+			&output_attrref, &output_type, &output_prefix, output_par);
 	      if ( sts == GSX__NEXTPAR ) 
 	      {
 	        i++;
@@ -12815,10 +12751,12 @@ vldh_t_node	node;
 	      IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->%sP = &%c%s->%s;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName,
 			output_prefix,
-			vldh_IdToStr(1, output_objdid),
+ 			output_type == GCG_OTYPE_OID ? 
+			     vldh_IdToStr(1, output_attrref.Objid) : 
+			     vldh_AttrRefToStr(0, output_attrref),
 			output_par);
 	    }
 	    else
@@ -12836,18 +12774,18 @@ vldh_t_node	node;
 	    IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->%sP = &%c%s->%s;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName,
 			GCG_PREFIX_REF,
-			vldh_IdToStr(1, node->ln.object_did),
+			vldh_IdToStr(1, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName);
 	  }
 	  i++;
 	}
 	free((char *) bodydef);
 
-	gcg_timer_print( gcgctx, node->ln.object_did);
-	gcg_scantime_print( gcgctx, node->ln.object_did);
+	gcg_timer_print( gcgctx, node->ln.oid);
+	gcg_scantime_print( gcgctx, node->ln.oid);
 
 	return GSX__SUCCESS;
 }
@@ -12879,7 +12817,7 @@ vldh_t_node	node;
 	int 			sts;
 	ldh_tSesContext 	ldhses;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession; 
+	ldhses = (node->hn.wind)->hw.ldhses; 
 
 	sts = gcg_comp_m4( gcgctx, node);
 	if ( EVEN(sts)) return sts;
@@ -12888,21 +12826,21 @@ vldh_t_node	node;
 	IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->OutDataP = %c%s;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			GCG_PREFIX_REF,
-			vldh_IdToStr(1, node->ln.object_did));
+			vldh_IdToStr(1, node->ln.oid));
 
 	/* Place the objid of the object in the output */
 	IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->OutData_ObjId.oix = %u;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
-			node->ln.object_did.oix);
+			vldh_IdToStr(0, node->ln.oid),
+			node->ln.oid.oix);
 	IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->OutData_ObjId.vid = %u;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
-			node->ln.object_did.vid);
+			vldh_IdToStr(0, node->ln.oid),
+			node->ln.oid.vid);
 
 	return GSX__SUCCESS;
 }
@@ -12947,21 +12885,21 @@ vldh_t_node	node;
 	pwr_tClassId		class;
 	int			info_pointer_flag;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession;  
+	ldhses = (node->hn.wind)->hw.ldhses;  
 
-	sts = gcg_ref_insert( gcgctx, node->ln.object_did, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
 
 	/* Get the objdid of the referenced io object stored in the
 	  first parameter in defbody */
 
 	/* Get the devbody parameters for this class */
 	sts = ldh_GetObjectBodyDef( ldhses,
-			node->ln.classid, "DevBody", 1, 
+			node->ln.cid, "DevBody", 1, 
 			&bodydef, &rows);
 	if ( EVEN(sts) ) return sts;
 
 	sts = ldh_GetObjectPar( ldhses,
-			node->ln.object_did, 
+			node->ln.oid, 
 			"DevBody",
 			bodydef[0].ParName,
 			(char **)&refobjdid_ptr, &size); 
@@ -12972,7 +12910,7 @@ vldh_t_node	node;
 
 	/* Check that this is objdid of an existing object */
 	sts = ldh_GetObjectClass(
-			(node->hn.window_pointer)->hw.ldhsession, 
+			(node->hn.wind)->hw.ldhses, 
 			refobjdid,
 			&class);
 	if ( EVEN(sts)) 
@@ -12985,7 +12923,7 @@ vldh_t_node	node;
 	/* Get the parameter of the referenced object
 	  in the second devbody-parameter */
 	sts = ldh_GetObjectPar( ldhses,
-			node->ln.object_did, 
+			node->ln.oid, 
 			"DevBody",
 			bodydef[1].ParName,
 			(char **)&parameter, &size); 
@@ -13053,7 +12991,7 @@ vldh_t_node	node;
 	}
         free((char *) bodydef );
         
-	if (node->ln.classid == vldh_uclass( ldhses, "GetDap"))
+	if (node->ln.cid == pwr_cClass_GetDap)
 	{
 	  if ( !info_pointer_flag)
 	  {
@@ -13061,7 +12999,7 @@ vldh_t_node	node;
 	    return GSX__NEXTNODE;
 	  }
 	}
-	else if (node->ln.classid == vldh_uclass( ldhses, "GetObjidp"))
+	else if (node->ln.cid == pwr_cClass_GetObjidp)
 	{
 	  if (info_type != pwr_eType_Objid)
 	  {
@@ -13070,7 +13008,7 @@ vldh_t_node	node;
 	  }
 	}
 
-	sts = gcg_print_exec_macro( gcgctx, node, node->ln.object_did, GCG_PREFIX_REF);
+	sts = gcg_print_exec_macro( gcgctx, node, node->ln.oid, GCG_PREFIX_REF);
 	if (EVEN(sts)) return sts; 
 
 	/* Print the referenced attribute */
@@ -13125,19 +13063,20 @@ vldh_t_node	node;
 	ldh_sParDef 		output_bodydef;
 	int 			rows;
 	int			i, output_found, first_par;
-	pwr_tObjid		output_objdid;
+	pwr_sAttrRef		output_attrref;
+	int			output_type;
 	char			output_prefix;
 	char			output_par[32];
 	char			*name;
 	pwr_tClassId		class;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession; 
+	ldhses = (node->hn.wind)->hw.ldhses; 
 
-	if ( node->ln.classid == vldh_uclass( ldhses, "FuncExtend"))
+	if ( node->ln.cid == pwr_cClass_FuncExtend)
 	{
 	  /* Check that the Func object exist */
 	  sts = ldh_GetObjectPar( ldhses,
-			node->ln.object_did, 
+			node->ln.oid, 
 			"DevBody",
 			"FuncObject",
 			(char **)&function_objid, &size);
@@ -13151,17 +13090,17 @@ vldh_t_node	node;
 	    gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
 	    return GSX__NEXTNODE;
 	  }
-	  if ( class != vldh_uclass( ldhses, "Func"))
+	  if ( class != pwr_cClass_Func)
 	  {
 	    /* Class of referenced object is not correct */
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	    return GSX__NEXTNODE;
 	  }
 	}
-	else if ( node->ln.classid == vldh_uclass( ldhses, "Func"))
+	else if ( node->ln.cid == pwr_cClass_Func)
 	{
 	  /* Check first if there is a subwindow */
-	  sts = ldh_GetChild( ldhses, node->ln.object_did, &window_objid);
+	  sts = ldh_GetChild( ldhses, node->ln.oid, &window_objid);
 	  found = 0;
 	  while ( ODD(sts) )
 	  {
@@ -13187,7 +13126,7 @@ vldh_t_node	node;
 
 	  /* Copy a new subwindow from the content of "Function" */
 	  sts = ldh_GetObjectPar( ldhses,
-			node->ln.object_did, 
+			node->ln.oid, 
 			"DevBody",
 			"Function",
 			(char **)&function_objid, &size); 
@@ -13195,16 +13134,14 @@ vldh_t_node	node;
 
 	  /* Check existence and class of Function object */
 	  sts = ldh_GetObjectClass( ldhses, *function_objid, &class);
-	  if ( EVEN(sts))
-	  {
+	  if ( EVEN(sts)) {
 	    /* Function not found */
 	    free((char *) function_objid);	
 	    gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
 	    return GSX__NEXTNODE;
 	  }
 
-	  if ( class != vldh_class( gcgctx->ldhses, VLDH_CLASS_PLCPGM ))
-	  {
+	  if ( class != pwr_cClass_plc) {
 	    /* Class of referenced object is not correct */
 	    free((char *) function_objid);	
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
@@ -13224,8 +13161,8 @@ vldh_t_node	node;
 	  attrref[1].Objid = pwr_cNObjid;
 	  free((char *) function_objid);
 
-	  sts = ldh_CopyObjectTrees( ldhses, attrref, node->ln.object_did,
-		ldh_eDest_IntoFirst,  0);
+	  sts = ldh_CopyObjectTrees( ldhses, attrref, node->ln.oid,
+		ldh_eDest_IntoFirst,  0, 0);
 	  if ( EVEN(sts))
 	  {
 	    /* Function not found */
@@ -13233,13 +13170,13 @@ vldh_t_node	node;
 	    return GSX__NEXTNODE;
 	  }
 	  /* Remove the plcpgm object */
-	  sts = ldh_GetChild( ldhses, node->ln.object_did, &plcpgm_objid);
+	  sts = ldh_GetChild( ldhses, node->ln.oid, &plcpgm_objid);
 	  if ( EVEN(sts)) return sts;
 
 	  sts = ldh_GetChild( ldhses, plcpgm_objid, &window_objid);
 	  if ( EVEN(sts)) return sts;
 
-	  sts  = ldh_MoveObject( ldhses, window_objid, node->ln.object_did,
+	  sts  = ldh_MoveObject( ldhses, window_objid, node->ln.oid,
 			ldh_eDest_IntoFirst);
 	  if ( EVEN(sts)) return sts;
 
@@ -13247,10 +13184,10 @@ vldh_t_node	node;
 	  if ( EVEN(sts)) return sts;
 
 	  node->ln.subwindow = 1;
- 	  node->ln.subwind_objdid[0] = window_objid;
+ 	  node->ln.subwind_oid[0] = window_objid;
 	  sts = ldh_SetObjectBuffer(
 			ldhses,
-			node->ln.object_did,
+			node->ln.oid,
 			"DevBody",
 			"PlcNode",
 			(char *)&node->ln);
@@ -13261,7 +13198,7 @@ vldh_t_node	node;
 			(pwr_eClass *) &windclass, (char **)&windbuffer, &size);
 	  if ( EVEN(sts)) return sts;
 
-	  windbuffer->parent_node_did = node->ln.object_did;
+	  windbuffer->poid = node->ln.oid;
 	  sts = ldh_SetObjectBuffer( 
 			ldhses,
 			window_objid,
@@ -13279,10 +13216,10 @@ vldh_t_node	node;
 	}
 
 	/* Print the code */
-	sts = gcg_ref_insert( gcgctx, node->ln.object_did, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
 
 	/* Get name for this class */
-	sts = gcg_get_structname( gcgctx, node->ln.object_did, &name);
+	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
 	if( EVEN(sts)) return sts;
 
 	/* Print the execute command */
@@ -13290,9 +13227,9 @@ vldh_t_node	node;
 		"%s_exec( %c%s",
 		name,
 		GCG_PREFIX_REF,
-		vldh_IdToStr(0, node->ln.object_did));
+		vldh_IdToStr(0, node->ln.oid));
 
-	if ( node->ln.classid == vldh_uclass( ldhses, "Func"))
+	if ( node->ln.cid == pwr_cClass_Func)
 	{
 	  /* Print the window execute command */
 	  IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE],
@@ -13304,8 +13241,8 @@ vldh_t_node	node;
 		");\n");
 
 	/* Get the runtime parameters for this class */
-	sts = ldh_GetObjectBodyDef((node->hn.window_pointer)->hw.ldhsession, 
-			node->ln.classid, "RtBody", 1, 
+	sts = ldh_GetObjectBodyDef((node->hn.wind)->hw.ldhses, 
+			node->ln.cid, "RtBody", 1, 
 			&bodydef, &rows);
 	if ( EVEN(sts) ) return sts;
 
@@ -13332,7 +13269,7 @@ vldh_t_node	node;
 	        gcg_error_msg( gcgctx, GSX__CONOUTPUT, output_node);
 
 	      sts = gcg_get_outputstring( gcgctx, output_node, &output_bodydef, 
-			&output_objdid, &output_prefix, output_par);
+			&output_attrref, &output_type, &output_prefix, output_par);
 	      if ( sts == GSX__NEXTPAR )
 	      {
 	        i++;
@@ -13346,10 +13283,12 @@ vldh_t_node	node;
 	      IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE],
 			"%c%s->%sP = &%c%s->%s;\n",
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName,
 			output_prefix,
-			vldh_IdToStr(1, output_objdid),
+ 			output_type == GCG_OTYPE_OID ? 
+			     vldh_IdToStr(1, output_attrref.Objid) : 
+			     vldh_AttrRefToStr(0, output_attrref),
 			output_par);
 	    }
 	    else
@@ -13366,7 +13305,7 @@ vldh_t_node	node;
 	    IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE],
 			"%c%s->%sP = 0;\n",
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName);
 	  }
 	  i++;
@@ -13412,7 +13351,8 @@ vldh_t_node	node;
 	int 			rows, sts;
 	int			i, output_found, first_par;
 	int			size;
-	pwr_tObjid		output_objdid;
+	pwr_sAttrRef		output_attrref;
+	int			output_type;
 	char			output_prefix;
 	char			output_par[32];
 	pwr_tObjid		parent;
@@ -13422,11 +13362,11 @@ vldh_t_node	node;
 	pwr_tUInt32		*index_ptr;
 	pwr_tUInt32		*funcextend_index_ptr;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession;  
+	ldhses = (node->hn.wind)->hw.ldhses;  
 
 	/* Get the parent node to this window, it should be either
 	  a trans or a order object */
-	refobjdid = (node->hn.window_pointer)->lw.parent_node_did;
+	refobjdid = (node->hn.wind)->lw.poid;
 
 	if ( cdh_ObjidIsNull(refobjdid))
 	{	
@@ -13443,7 +13383,7 @@ vldh_t_node	node;
 	  return GSX__NEXTNODE;
 	}
 
-	if ( !(class == vldh_uclass( ldhses, "Func")))
+	if ( !(class == pwr_cClass_Func))
 	{
 	  gcg_error_msg( gcgctx, GSX__BADWIND, node);
 	  return GSX__NEXTNODE;
@@ -13451,7 +13391,7 @@ vldh_t_node	node;
 
 	/* Get the Index */
 	sts = ldh_GetObjectPar( ldhses,
-			node->ln.object_did,
+			node->ln.oid,
 			"DevBody",
 			"Index",
 			(char **)&index_ptr, &size);
@@ -13472,7 +13412,7 @@ vldh_t_node	node;
 	    sts = ldh_GetObjectClass( ldhses, funcextend_objid, &class);
 	    if ( EVEN(sts)) return sts;
 
-	    if ( class == vldh_uclass( ldhses, "FuncExtend"))
+	    if ( class == pwr_cClass_FuncExtend)
 	    {
 	      sts = ldh_GetObjectPar( ldhses,
 			funcextend_objid,
@@ -13521,10 +13461,10 @@ vldh_t_node	node;
 	gcg_ref_insert( gcgctx, refobjdid, GCG_PREFIX_REF);
 
 	/* Insert object in ref list */
-	gcg_ref_insert( gcgctx, node->ln.object_did, GCG_PREFIX_REF);
+	gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
 
 	/* Print the execute command */
-	sts = gcg_print_exec_macro( gcgctx, node, node->ln.object_did, GCG_PREFIX_REF);
+	sts = gcg_print_exec_macro( gcgctx, node, node->ln.oid, GCG_PREFIX_REF);
 	if (EVEN(sts)) return sts;
 
 	/* Print the parent object */
@@ -13534,8 +13474,8 @@ vldh_t_node	node;
 		vldh_IdToStr(0, refobjdid));
 
 	/* Get the runtime parameters for this class */
-	sts = ldh_GetObjectBodyDef((node->hn.window_pointer)->hw.ldhsession, 
-			node->ln.classid, "RtBody", 1, 
+	sts = ldh_GetObjectBodyDef((node->hn.wind)->hw.ldhses, 
+			node->ln.cid, "RtBody", 1, 
 			&bodydef, &rows);
 	if ( EVEN(sts) ) return sts;
 
@@ -13562,7 +13502,7 @@ vldh_t_node	node;
 	      gcg_error_msg( gcgctx, GSX__CONOUTPUT, output_node);
 
 	      sts = gcg_get_outputstring( gcgctx, output_node, &output_bodydef, 
-			&output_objdid, &output_prefix, output_par);
+			&output_attrref, &output_type, &output_prefix, output_par);
 	      if ( sts == GSX__NEXTPAR ) 
 	      {
 	        i++;
@@ -13576,10 +13516,12 @@ vldh_t_node	node;
 	      IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->%sP = &%c%s->%s;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName,
 			output_prefix,
-			vldh_IdToStr(1, output_objdid),
+ 			output_type == GCG_OTYPE_OID ? 
+			     vldh_IdToStr(1, output_attrref.Objid) : 
+			     vldh_AttrRefToStr(0, output_attrref),
 			output_par);
 	    }
 	    else
@@ -13597,10 +13539,10 @@ vldh_t_node	node;
 	    IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
 			"%c%s->%sP = &%c%s->%s;\n", 
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName,
 			GCG_PREFIX_REF,
-			vldh_IdToStr(1, node->ln.object_did),
+			vldh_IdToStr(1, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName);
 	  }
 	  i++;
@@ -13638,10 +13580,10 @@ vldh_t_node	node;
 	int			sts;
 	char			*name;
 
-	sts = gcg_ref_insert( gcgctx, node->ln.object_did, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
 
 	/* Get name for the exec command for this class */
-	sts = gcg_get_structname( gcgctx, node->ln.object_did, &name);
+	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
 	if ( EVEN(sts)) return sts;	
 
 	/* Print the execute command */
@@ -13649,10 +13591,10 @@ vldh_t_node	node;
 		"%s_exec( %c%s);",
 		name,
 		GCG_PREFIX_REF,
-		vldh_IdToStr(0, node->ln.object_did));
+		vldh_IdToStr(0, node->ln.oid));
 
-	gcg_scantime_print( gcgctx, node->ln.object_did);
-	gcg_timer_print( gcgctx, node->ln.object_did);
+	gcg_scantime_print( gcgctx, node->ln.oid);
+	gcg_timer_print( gcgctx, node->ln.oid);
 	
 	return GSX__SUCCESS;
 }
@@ -13739,10 +13681,10 @@ vldh_t_node	node;
 	nocondef[1].bo = 1;
 	nocontype[1] = GCG_BOOLEAN;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession;  
+	ldhses = (node->hn.wind)->hw.ldhses;  
 	
 	if ( !gcgctx->order_comp) {
-	  if ( (node->ln.classid == pwr_cClass_StoDattr)) {
+	  if ( (node->ln.cid == pwr_cClass_StoDattr)) {
 	    /* Check first if the object is connected to an order object,
 	      if it is, it will be compiled when by the ordermethod, when 
 	      gcgctx->order_comp is true */
@@ -13751,7 +13693,7 @@ vldh_t_node	node;
 			GOEN_CON_SIGNAL | GOEN_CON_OUTPUTTOINPUT);
 	    if ( EVEN(sts)) return sts;
 	    if ( output_count == 1)
-	      if ( output_node->ln.classid == pwr_cClass_order)
+	      if ( output_node->ln.cid == pwr_cClass_order)
 	        return GSX__SUCCESS;
 	  }
 	}
@@ -13761,12 +13703,12 @@ vldh_t_node	node;
 
 	/* Get the devbody parameters for this class */
 	sts = ldh_GetObjectBodyDef( ldhses,
-			node->ln.classid, "DevBody", 1, 
+			node->ln.cid, "DevBody", 1, 
 			&bodydef, &rows);
 	if ( EVEN(sts) ) return sts;
 
 	sts = ldh_GetObjectPar( ldhses,
-			node->ln.object_did, 
+			node->ln.oid, 
 			"DevBody",
 			bodydef[0].ParName,
 			(char **)&refattr_ptr, &size); 
@@ -13778,14 +13720,14 @@ vldh_t_node	node;
 	/* If the object is not connected the value in the
 	   parameter should be written in the macro call */
 	sts = ldh_GetObjectPar( ldhses,
-			node->ln.object_did, 
+			node->ln.oid, 
 			"RtBody",
 			"In",
 			&nocondef_ptr, &size); 
 	if ( EVEN(sts)) return sts;
 
 	/* Get the parent node to this window */
-	host_objid = (node->hn.window_pointer)->lw.parent_node_did;
+	host_objid = (node->hn.wind)->lw.poid;
 
 	if ( cdh_ObjidIsNull(host_objid)) {	
 	  /* Parent is a plcprogram */
@@ -13884,8 +13826,8 @@ vldh_t_node	node;
         free((char *) bodydef );
 	
 	/* Check that the type of the referenced attribute is correct */
-	if ( node->ln.classid == pwr_cClass_SetDattr ||
-	     node->ln.classid == pwr_cClass_ResDattr) {
+	if ( node->ln.cid == pwr_cClass_SetDattr ||
+	     node->ln.cid == pwr_cClass_ResDattr) {
 	  if ( info_type != pwr_eType_Boolean) {
 	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
 	    return GSX__NEXTNODE;
@@ -13893,7 +13835,7 @@ vldh_t_node	node;
 	  nocondef[0].bo = TRUE;
 	  nocontype[0] = GCG_BOOLEAN;
 	}    
-	else if ( node->ln.classid == pwr_cClass_StoDattr) {
+	else if ( node->ln.cid == pwr_cClass_StoDattr) {
 	  if ( info_type != pwr_eType_Boolean) {
 	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
 	    return GSX__NEXTNODE;
@@ -13901,8 +13843,8 @@ vldh_t_node	node;
 	  nocondef[0].bo = (int)*nocondef_ptr;
 	  nocontype[0] = GCG_BOOLEAN;
 	}
-	else if ( node->ln.classid == pwr_cClass_StoAattr ||
-		  node->ln.classid == pwr_cClass_CStoAattr) {
+	else if ( node->ln.cid == pwr_cClass_StoAattr ||
+		  node->ln.cid == pwr_cClass_CStoAattr) {
 	  if ( info_type != pwr_eType_Float32) {
 	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
 	    return GSX__NEXTNODE;
@@ -13910,8 +13852,8 @@ vldh_t_node	node;
 	  nocondef[0].fl = *(float *) nocondef_ptr;
 	  nocontype[0] = GCG_FLOAT;
 	}    
-	else if ( node->ln.classid == pwr_cClass_StoIattr ||
-		  node->ln.classid == pwr_cClass_CStoIattr) {
+	else if ( node->ln.cid == pwr_cClass_StoIattr ||
+		  node->ln.cid == pwr_cClass_CStoIattr) {
 	  if ( !(info_type == pwr_eType_Int32 ||
 		 info_type == pwr_eType_UInt32 ||
 		 info_type == pwr_eType_Int16 ||
@@ -13928,8 +13870,8 @@ vldh_t_node	node;
 	  nocondef[0].bo = *(int *) nocondef_ptr;
 	  nocontype[0] = GCG_FLOAT;
 	}    
-	else if ( node->ln.classid == pwr_cClass_StoSattr ||
-		  node->ln.classid == pwr_cClass_CStoSattr) {
+	else if ( node->ln.cid == pwr_cClass_StoSattr ||
+		  node->ln.cid == pwr_cClass_CStoSattr) {
 	  if ( info_type != pwr_eType_String) {
 	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
 	    return GSX__NEXTNODE;
@@ -13945,7 +13887,7 @@ vldh_t_node	node;
 	/* Print the execute command */
 
 	/* Get name for this class */
-	sts = gcg_get_structname( gcgctx, node->ln.object_did, &name);
+	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
 	if( EVEN(sts)) return sts;
 
 	sts = gcg_parname_to_pgmname(ldhses, class, refattr, pgmname);
@@ -13963,8 +13905,8 @@ vldh_t_node	node;
 		nocondef, nocontype);
 	if ( EVEN(sts) ) return sts;
 
-	if ( node->ln.classid == pwr_cClass_StoSattr ||
-	     node->ln.classid == pwr_cClass_CStoSattr ) {
+	if ( node->ln.cid == pwr_cClass_StoSattr ||
+	     node->ln.cid == pwr_cClass_CStoSattr ) {
           // Add size of connected attribute
 	  IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
 		",%ld", info_size);
@@ -14013,7 +13955,8 @@ vldh_t_node	node;
 	ldh_sParDef 		output_bodydef;
 	int 			rows;
 	int			i, output_found, first_par;
-	pwr_tObjid		output_objdid;
+	pwr_sAttrRef		output_attrref;
+	int			output_type;
 	char			output_prefix;
 	char			output_par[32];
 	char			*name;
@@ -14023,11 +13966,28 @@ vldh_t_node	node;
 	pwr_tTime		*template_time;
 	pwr_tObjid		template_plc;
 	pwr_tObjid		template_window;
+	pwr_tObjid		*connect_oid;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession; 
+	ldhses = (node->hn.wind)->hw.ldhses; 
+
+	/* Check if there is a PlcConnected */
+	sts = ldh_GetObjectPar( gcgctx->ldhses, node->ln.oid, "RtBody", 
+				"PlcConnect", (char **)&connect_oid, &size);
+	if ( ODD(sts)) {
+	  pwr_sAttrRef aref = pwr_cNAttrRef;
+	  aref.Objid = *connect_oid;
+	  free( (char *)connect_oid);
+ 
+	  if ( cdh_ObjidIsNull( aref.Objid)) {
+	    gcg_error_msg( gcgctx, GSX__NOCONNECT, node);
+	    return GSX__NEXTNODE;
+	  }
+	  
+	  gcg_aref_insert( gcgctx, aref, GCG_PREFIX_REF);
+	}
 
 	/* Check first if there is a subwindow */
-	sts = ldh_GetChild( ldhses, node->ln.object_did, &window_objid);
+	sts = ldh_GetChild( ldhses, node->ln.oid, &window_objid);
 	found = 0;
 	while ( ODD(sts) ) {
 	  /* Check if window */
@@ -14048,7 +14008,7 @@ vldh_t_node	node;
 	}
 
 	// Find the template plc
-	sts = ldh_ObjidToName( ldhses, cdh_ClassIdToObjid( node->ln.classid), 
+	sts = ldh_ObjidToName( ldhses, cdh_ClassIdToObjid( node->ln.cid), 
 		ldh_eName_VolPath, oname, sizeof( oname), &size);
 	if( EVEN(sts)) return sts;
 
@@ -14088,8 +14048,8 @@ vldh_t_node	node;
 	  attrref[0].Objid = template_plc;
 	  attrref[1].Objid = pwr_cNObjid;
 
-	  sts = ldh_CopyObjectTrees( ldhses, attrref, node->ln.object_did,
-		ldh_eDest_IntoFirst,  0);
+	  sts = ldh_CopyObjectTrees( ldhses, attrref, node->ln.oid,
+		ldh_eDest_IntoFirst, 0, 1);
 	  if ( EVEN(sts)) {
 	    /* Function not found */
 	    gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
@@ -14097,13 +14057,13 @@ vldh_t_node	node;
 	  }
 
 	  /* Remove the plcpgm object */
-	  sts = ldh_GetChild( ldhses, node->ln.object_did, &plcpgm_objid);
+	  sts = ldh_GetChild( ldhses, node->ln.oid, &plcpgm_objid);
 	  if ( EVEN(sts)) return sts;
 
 	  sts = ldh_GetChild( ldhses, plcpgm_objid, &window_objid);
 	  if ( EVEN(sts)) return sts;
 
-	  sts  = ldh_MoveObject( ldhses, window_objid, node->ln.object_did,
+	  sts  = ldh_MoveObject( ldhses, window_objid, node->ln.oid,
 			ldh_eDest_IntoFirst);
 	  if ( EVEN(sts)) return sts;
 
@@ -14111,15 +14071,15 @@ vldh_t_node	node;
 	  if ( EVEN(sts)) return sts;
 
 	  node->ln.subwindow = 1;
- 	  node->ln.subwind_objdid[0] = window_objid;
+ 	  node->ln.subwind_oid[0] = window_objid;
 
-	  sts = ldh_GetObjectBuffer( ldhses, node->ln.object_did,
+	  sts = ldh_GetObjectBuffer( ldhses, node->ln.oid,
 			"DevBody", "PlcNode", (pwr_eClass *) &windclass, 
 				     (char **)&nodebuffer, &size);
 	  if( EVEN(sts)) return sts;
 	  nodebuffer->subwindow = 1;
- 	  nodebuffer->subwind_objdid[0] = window_objid;
-	  sts = ldh_SetObjectBuffer( ldhses, node->ln.object_did, 
+ 	  nodebuffer->subwind_oid[0] = window_objid;
+	  sts = ldh_SetObjectBuffer( ldhses, node->ln.oid, 
 				     "DevBody", "PlcNode", (char *)nodebuffer);
 	  if( EVEN(sts)) return sts;
 
@@ -14128,7 +14088,7 @@ vldh_t_node	node;
 			(pwr_eClass *) &windclass, (char **)&windbuffer, &size);
 	  if ( EVEN(sts)) return sts;
 
-	  windbuffer->parent_node_did = node->ln.object_did;
+	  windbuffer->poid = node->ln.oid;
 	  sts = ldh_SetObjectBuffer( 
 			ldhses,
 			window_objid,
@@ -14178,15 +14138,15 @@ vldh_t_node	node;
 	free( (char *)template_time);
 
 	/* Print the code */
-	sts = gcg_ref_insert( gcgctx, node->ln.object_did, GCG_PREFIX_REF);
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
 
 	/* Get name for this class */
-	sts = gcg_get_structname( gcgctx, node->ln.object_did, &name);
+	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
 	if( EVEN(sts)) return sts;
 
 	/* Get the runtime parameters for this class */
-	sts = ldh_GetObjectBodyDef((node->hn.window_pointer)->hw.ldhsession, 
-			node->ln.classid, "RtBody", 1, 
+	sts = ldh_GetObjectBodyDef((node->hn.wind)->hw.ldhses, 
+			node->ln.cid, "RtBody", 1, 
 			&bodydef, &rows);
 	if ( EVEN(sts) ) return sts;
 
@@ -14213,7 +14173,7 @@ vldh_t_node	node;
 	        gcg_error_msg( gcgctx, GSX__CONOUTPUT, output_node);
 
 	      sts = gcg_get_outputstring( gcgctx, output_node, &output_bodydef, 
-			&output_objdid, &output_prefix, output_par);
+			&output_attrref, &output_type, &output_prefix, output_par);
 	      if ( sts == GSX__NEXTPAR )
 	      {
 	        i++;
@@ -14227,10 +14187,12 @@ vldh_t_node	node;
 	      IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE],
 			"%c%s->%sP = &%c%s->%s;\n",
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName,
 			output_prefix,
-			vldh_IdToStr(1, output_objdid),
+ 			output_type == GCG_OTYPE_OID ? 
+			     vldh_IdToStr(1, output_attrref.Objid) : 
+			     vldh_AttrRefToStr(0, output_attrref),
 			output_par);
 
 	      switch ( bodydef[i].Par->Param.Info.Type) {
@@ -14238,10 +14200,10 @@ vldh_t_node	node;
 		IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE],
 			       "strncpy( %c%s->%s, %c%s->%sP, %d);\n",
 			       GCG_PREFIX_REF,
-			       vldh_IdToStr(0, node->ln.object_did),
+			       vldh_IdToStr(0, node->ln.oid),
 			       bodydef[i].Par->Param.Info.PgmName,
 			       GCG_PREFIX_REF,
-			       vldh_IdToStr(0, node->ln.object_did),
+			       vldh_IdToStr(0, node->ln.oid),
 			       bodydef[i].Par->Param.Info.PgmName,
 			       bodydef[i].Par->Param.Info.Size);
 		break;
@@ -14249,10 +14211,10 @@ vldh_t_node	node;
 		IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE],
 			       "%c%s->%s = *%c%s->%sP;\n",
 			       GCG_PREFIX_REF,
-			       vldh_IdToStr(0, node->ln.object_did),
+			       vldh_IdToStr(0, node->ln.oid),
 			       bodydef[i].Par->Param.Info.PgmName,
 			       GCG_PREFIX_REF,
-			       vldh_IdToStr(0, node->ln.object_did),
+			       vldh_IdToStr(0, node->ln.oid),
 			       bodydef[i].Par->Param.Info.PgmName);
 	      }
 	      }
@@ -14270,7 +14232,7 @@ vldh_t_node	node;
 	    IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE],
 			"%c%s->%sP = 0;\n",
 			GCG_PREFIX_REF,
-			vldh_IdToStr(0, node->ln.object_did),
+			vldh_IdToStr(0, node->ln.oid),
 			bodydef[i].Par->Param.Info.PgmName);
 	  }
 	  i++;
@@ -14325,12 +14287,12 @@ vldh_t_node	node;
 	int			len;
 	pwr_tObjid		host_objid;
 
-	ldhses = (node->hn.window_pointer)->hw.ldhsession;  
+	ldhses = (node->hn.wind)->hw.ldhses;  
 	
 	/* Get the referenced attribute stored in 'Attribute' */
 
 	sts = ldh_GetObjectPar( ldhses,
-			node->ln.object_did, 
+			node->ln.oid, 
 			"DevBody",
 			"Attribute",
 			(char **)&refattr_ptr, &size); 
@@ -14339,7 +14301,7 @@ vldh_t_node	node;
 	free((char *) refattr_ptr);
 
 	/* Get the parent node to this window */
-	host_objid = (node->hn.window_pointer)->lw.parent_node_did;
+	host_objid = (node->hn.wind)->lw.poid;
 
 	if ( cdh_ObjidIsNull(host_objid)) {	
 	  /* Parent is a plcprogram */
@@ -14437,19 +14399,19 @@ vldh_t_node	node;
 	}
 	
 	/* Check that the type of the referenced attribute is correct */
-	if ( node->ln.classid == pwr_cClass_GetDattr) {
+	if ( node->ln.cid == pwr_cClass_GetDattr) {
 	  if ( info_type != pwr_eType_Boolean) {
 	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
 	    return GSX__NEXTNODE;
 	  }
 	}    
-	else if ( node->ln.classid == pwr_cClass_GetAattr) {
+	else if ( node->ln.cid == pwr_cClass_GetAattr) {
 	  if ( info_type != pwr_eType_Float32) {
 	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
 	    return GSX__NEXTNODE;
 	  }
 	}    
-	else if ( node->ln.classid == pwr_cClass_GetIattr) {
+	else if ( node->ln.cid == pwr_cClass_GetIattr) {
 	  if ( !(info_type == pwr_eType_Int32 ||
 		 info_type == pwr_eType_UInt32 ||
 		 info_type == pwr_eType_Int16 ||
@@ -14464,7 +14426,7 @@ vldh_t_node	node;
 	    return GSX__NEXTNODE;
 	  }
 	}    
-	else if ( node->ln.classid == pwr_cClass_GetSattr) {
+	else if ( node->ln.cid == pwr_cClass_GetSattr) {
 	  if ( info_type != pwr_eType_String) {
 	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
 	    return GSX__NEXTNODE;
@@ -14714,3 +14676,108 @@ static int	gcg_file_check(
 	}
 	return GSX__SUCCESS;
 }
+
+static pwr_tStatus gcg_replace_ref( gcg_ctx gcgctx, pwr_sAttrRef *attrref, 
+				    vldh_t_node node)
+{
+  pwr_tStatus sts;
+  pwr_tOid host_oid;
+  pwr_tCid host_cid;
+  int size;
+
+  if ( attrref->Objid.vid == ldh_cPlcConnectVolume) {
+    pwr_tOid *connect_oid;
+    pwr_tCid connect_cid;
+
+    // Replace objid with objid in attribute PlcConnect in host object
+
+    /* Get the parent node to this window */
+    host_oid = (node->hn.wind)->lw.poid;
+
+    if ( cdh_ObjidIsNull(host_oid)) {	
+      /* Parent is a plcprogram */
+      gcg_error_msg( gcgctx, GSX__BADWIND, node);  
+      return GSX__NEXTNODE;
+    }
+
+    /* Check class of this objid */
+    sts = ldh_GetObjectClass( gcgctx->ldhses, host_oid, &host_cid);
+    if ( EVEN(sts))  {
+      gcg_error_msg( gcgctx, GSX__REFOBJ, node);
+      return GSX__NEXTNODE;
+    }
+
+    if ( host_cid == pwr_cClass_order ||
+	 host_cid == pwr_cClass_csub ||
+	 host_cid == pwr_cClass_substep) {
+      gcg_error_msg( gcgctx, GSX__BADWIND, node);
+      return GSX__NEXTNODE;
+    }
+
+    sts = ldh_GetObjectPar( gcgctx->ldhses, host_oid, "RtBody", "PlcConnect",
+			    (char **)&connect_oid, &size);
+    if ( EVEN(sts)) {
+      gcg_error_msg( gcgctx, GSX__BADWIND, node);
+      return GSX__NEXTNODE;
+    }
+
+    if ( cdh_ObjidIsNull(*connect_oid)) {	
+      gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
+      return GSX__NEXTNODE;
+    }
+
+    // Check that the class or the connectedobject, or any superclass,
+    // matches the symbolic reference
+    sts = ldh_GetObjectClass( gcgctx->ldhses, *connect_oid, &connect_cid);
+    while ( ODD(sts)) {
+      if ( connect_cid == attrref->Objid.oix)
+	break;
+	
+      sts = ldh_GetSuperClass( gcgctx->ldhses, &connect_cid, connect_cid);
+    }
+    if ( EVEN(sts)) {
+      gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
+      return GSX__NEXTNODE;
+    }
+
+    attrref->Objid = *connect_oid;
+    free( (char *)connect_oid);
+    return GSX__SUCCESS;
+  }
+  else if ( attrref->Objid.vid == ldh_cPlcHostVolume) {
+    // Replace objid with host object
+
+    /* Get the parent node to this window */
+    host_oid = (node->hn.wind)->lw.poid;
+
+    if ( cdh_ObjidIsNull(host_oid)) {	
+      /* Parent is a plcprogram */
+      gcg_error_msg( gcgctx, GSX__BADWIND, node);  
+      return GSX__NEXTNODE;
+    }
+
+    /* Check class of this objdid */
+    sts = ldh_GetObjectClass( gcgctx->ldhses, host_oid, &host_cid);
+    if ( EVEN(sts))  {
+      gcg_error_msg( gcgctx, GSX__REFOBJ, node);
+      return GSX__NEXTNODE;
+    }
+
+    if ( host_cid == pwr_cClass_order ||
+	 host_cid == pwr_cClass_csub ||
+	 host_cid == pwr_cClass_substep) {
+      gcg_error_msg( gcgctx, GSX__BADWIND, node);
+      return GSX__NEXTNODE;
+    }
+
+    attrref->Objid = host_oid;
+    return GSX__SUCCESS;
+  }
+  return GSX__SUCCESS;
+}
+
+
+
+
+
+

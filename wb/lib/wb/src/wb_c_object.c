@@ -153,7 +153,7 @@ static pwr_tStatus CopyObjectTree (
   }
 
   sts = ldh_CopyObjectTrees(ip->PointedSession, ip->Selected,
-    ip->Pointed.Objid, Dest, Self); 
+    ip->Pointed.Objid, Dest, Self, 0); 
   return sts;
 }
 
@@ -460,7 +460,7 @@ static pwr_tStatus OpenObject (
 
 
   watt_new( ip->WindowContext, ip->EditorContext, ip->PointedSession,
-		ip->Pointed.Objid, WritePriv, 1,  WritePriv, NULL);
+		ip->Pointed, WritePriv, 1,  WritePriv, NULL);
   return 1;
 }
 
@@ -472,6 +472,7 @@ static pwr_tStatus OpenTemplate (
   ldh_sSessInfo Info;
   pwr_tFullName Name;
   pwr_tObjid Template;  
+  pwr_sAttrRef Aref;
   int size;
 
   sts = ldh_ObjidToName(ip->PointedSession, ip->Pointed.Objid, 
@@ -488,8 +489,9 @@ static pwr_tStatus OpenTemplate (
   WritePriv = (ODD(sts) && Info.Access == ldh_eAccess_ReadWrite) &&
 		ldh_LocalObject( ip->PointedSession, Template);
 
+  Aref = cdh_ObjidToAref( Template);
   watt_new( ip->WindowContext, ip->EditorContext, ip->PointedSession,
-		Template, WritePriv, 1,  WritePriv, NULL);
+		Aref, WritePriv, 1,  WritePriv, NULL);
 
   return sts;
 }
@@ -518,7 +520,7 @@ static pwr_tStatus SetDefaults (
   WritePriv = (ODD(sts) && Info.Access == ldh_eAccess_ReadWrite) &&
 		ldh_LocalObject( ip->PointedSession, Object);
   watt_new( ip->WindowContext, ip->EditorContext, ip->PointedSession,
-		ip->Pointed.Objid, WritePriv, 1,  WritePriv, NULL);
+		ip->Pointed, WritePriv, 1,  WritePriv, NULL);
 
   return sts;
 }
@@ -559,7 +561,7 @@ static pwr_tStatus HelpClass( ldh_sMenuCall *ip)
   char cmd[200];
   pwr_tCid cid;
 
-  sts = ldh_GetObjectClass( ip->PointedSession, ip->Pointed.Objid, &cid);
+  sts = ldh_GetAttrRefTid( ip->PointedSession, &ip->Pointed, &cid);
   if ( EVEN(sts)) return sts;
 
   sts = ldh_ClassIdToName( ip->PointedSession, cid, cname, sizeof(cname), &size);

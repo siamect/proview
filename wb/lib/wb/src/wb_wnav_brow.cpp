@@ -89,7 +89,14 @@ extern "C" {
 #include "xnav_bitmap_crossref18.h"
 #include "xnav_bitmap_crossref20.h"
 #include "xnav_bitmap_crossref24.h"
+#include "xnav_bitmap_openattr8.h"
+#include "xnav_bitmap_openattr10.h"
 #include "xnav_bitmap_openattr12.h"
+#include "xnav_bitmap_openattr14.h"
+#include "xnav_bitmap_openattr16.h"
+#include "xnav_bitmap_openattr18.h"
+#include "xnav_bitmap_openattr20.h"
+#include "xnav_bitmap_openattr24.h"
 #include "xnav_bitmap_attr8.h"
 #include "xnav_bitmap_attr10.h"
 #include "xnav_bitmap_attr12.h"
@@ -122,9 +129,31 @@ extern "C" {
 #include "xnav_bitmap_graph12.h"
 #include "xnav_bitmap_file12.h"
 #include "xnav_bitmap_symbol12.h"
+#include "xnav_bitmap_morehelp8.h"
+#include "xnav_bitmap_morehelp10.h"
 #include "xnav_bitmap_morehelp12.h"
+#include "xnav_bitmap_morehelp14.h"
+#include "xnav_bitmap_morehelp16.h"
+#include "xnav_bitmap_morehelp18.h"
+#include "xnav_bitmap_morehelp20.h"
+#include "xnav_bitmap_morehelp24.h"
 #include "xnav_bitmap_closehelp12.h"
+#include "xnav_bitmap_objname8.h"
+#include "xnav_bitmap_objname10.h"
 #include "xnav_bitmap_objname12.h"
+#include "xnav_bitmap_objname14.h"
+#include "xnav_bitmap_objname16.h"
+#include "xnav_bitmap_objname18.h"
+#include "xnav_bitmap_objname20.h"
+#include "xnav_bitmap_objname24.h"
+#include "xnav_bitmap_object8.h"
+#include "xnav_bitmap_object10.h"
+#include "xnav_bitmap_object12.h"
+#include "xnav_bitmap_object14.h"
+#include "xnav_bitmap_object16.h"
+#include "xnav_bitmap_object18.h"
+#include "xnav_bitmap_object20.h"
+#include "xnav_bitmap_object24.h"
 #include "xnav_bitmap_attrref12.h"
 #include "xnav_bitmap_attrxref12.h"
 #include "xnav_bitmap_ref_err12.h"
@@ -207,6 +236,7 @@ void WNavBrow::free_pixmaps()
   brow_FreeAnnotPixmap( ctx, pixmap_morehelp);
   brow_FreeAnnotPixmap( ctx, pixmap_closehelp);
   brow_FreeAnnotPixmap( ctx, pixmap_objname);
+  brow_FreeAnnotPixmap( ctx, pixmap_object);
   brow_FreeAnnotPixmap( ctx, pixmap_attrref);
   brow_FreeAnnotPixmap( ctx, pixmap_attrxref);
   brow_FreeAnnotPixmap( ctx, pixmap_ref_err);
@@ -383,33 +413,33 @@ void WNavBrow::allocate_pixmaps()
 	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_crossref);
 
           i = 0;
+	  pixmap_data[i].width =xnav_bitmap_openattr8_width;
+	  pixmap_data[i].height =xnav_bitmap_openattr8_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_openattr8_bits;
+	  pixmap_data[i].width =xnav_bitmap_openattr10_width;
+	  pixmap_data[i].height =xnav_bitmap_openattr10_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_openattr10_bits;
 	  pixmap_data[i].width =xnav_bitmap_openattr12_width;
 	  pixmap_data[i].height =xnav_bitmap_openattr12_height;
 	  pixmap_data[i++].bits = (char *)xnav_bitmap_openattr12_bits;
-	  pixmap_data[i].width =xnav_bitmap_openattr12_width;
-	  pixmap_data[i].height =xnav_bitmap_openattr12_height;
-	  pixmap_data[i++].bits = (char *)xnav_bitmap_openattr12_bits;
-	  pixmap_data[i].width =xnav_bitmap_openattr12_width;
-	  pixmap_data[i].height =xnav_bitmap_openattr12_height;
-	  pixmap_data[i++].bits = (char *)xnav_bitmap_openattr12_bits;
-	  pixmap_data[i].width =xnav_bitmap_openattr12_width;
-	  pixmap_data[i].height =xnav_bitmap_openattr12_height;
-	  pixmap_data[i++].bits = (char *)xnav_bitmap_openattr12_bits;
-	  pixmap_data[i].width =xnav_bitmap_openattr12_width;
-	  pixmap_data[i].height =xnav_bitmap_openattr12_height;
-	  pixmap_data[i++].bits = (char *)xnav_bitmap_openattr12_bits;
-	  pixmap_data[i].width =xnav_bitmap_openattr12_width;
-	  pixmap_data[i].height =xnav_bitmap_openattr12_height;
-	  pixmap_data[i++].bits = (char *)xnav_bitmap_openattr12_bits;
-	  pixmap_data[i].width =xnav_bitmap_openattr12_width;
-	  pixmap_data[i].height =xnav_bitmap_openattr12_height;
-	  pixmap_data[i++].bits = (char *)xnav_bitmap_openattr12_bits;
-	  pixmap_data[i].width =xnav_bitmap_openattr12_width;
-	  pixmap_data[i].height =xnav_bitmap_openattr12_height;
-	  pixmap_data[i++].bits = (char *)xnav_bitmap_openattr12_bits;
-	  pixmap_data[i].width =xnav_bitmap_openattr12_width;
-	  pixmap_data[i].height =xnav_bitmap_openattr12_height;
-	  pixmap_data[i++].bits = (char *)xnav_bitmap_openattr12_bits;
+	  pixmap_data[i].width =xnav_bitmap_openattr14_width;
+	  pixmap_data[i].height =xnav_bitmap_openattr14_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_openattr14_bits;
+	  pixmap_data[i].width =xnav_bitmap_openattr16_width;
+	  pixmap_data[i].height =xnav_bitmap_openattr16_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_openattr16_bits;
+	  pixmap_data[i].width =xnav_bitmap_openattr18_width;
+	  pixmap_data[i].height =xnav_bitmap_openattr18_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_openattr18_bits;
+	  pixmap_data[i].width =xnav_bitmap_openattr20_width;
+	  pixmap_data[i].height =xnav_bitmap_openattr20_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_openattr20_bits;
+	  pixmap_data[i].width =xnav_bitmap_openattr20_width;
+	  pixmap_data[i].height =xnav_bitmap_openattr20_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_openattr20_bits;
+	  pixmap_data[i].width =xnav_bitmap_openattr24_width;
+	  pixmap_data[i].height =xnav_bitmap_openattr24_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_openattr24_bits;
 
 	  brow_AllocAnnotPixmap( ctx, &pixmap_data, 
 		&pixmap_openattr);
@@ -578,12 +608,34 @@ void WNavBrow::allocate_pixmaps()
 
 	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_symbol);
 
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width =xnav_bitmap_morehelp12_width;
-	    pixmap_data[i].height =xnav_bitmap_morehelp12_height;
-	    pixmap_data[i].bits = (char *)xnav_bitmap_morehelp12_bits;
-          }
+          i = 0;
+	  pixmap_data[i].width =xnav_bitmap_morehelp8_width;
+	  pixmap_data[i].height =xnav_bitmap_morehelp8_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_morehelp8_bits;
+	  pixmap_data[i].width =xnav_bitmap_morehelp10_width;
+	  pixmap_data[i].height =xnav_bitmap_morehelp10_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_morehelp10_bits;
+	  pixmap_data[i].width =xnav_bitmap_morehelp12_width;
+	  pixmap_data[i].height =xnav_bitmap_morehelp12_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_morehelp12_bits;
+	  pixmap_data[i].width =xnav_bitmap_morehelp14_width;
+	  pixmap_data[i].height =xnav_bitmap_morehelp14_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_morehelp14_bits;
+	  pixmap_data[i].width =xnav_bitmap_morehelp16_width;
+	  pixmap_data[i].height =xnav_bitmap_morehelp16_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_morehelp16_bits;
+	  pixmap_data[i].width =xnav_bitmap_morehelp18_width;
+	  pixmap_data[i].height =xnav_bitmap_morehelp18_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_morehelp18_bits;
+	  pixmap_data[i].width =xnav_bitmap_morehelp20_width;
+	  pixmap_data[i].height =xnav_bitmap_morehelp20_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_morehelp20_bits;
+	  pixmap_data[i].width =xnav_bitmap_morehelp20_width;
+	  pixmap_data[i].height =xnav_bitmap_morehelp20_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_morehelp20_bits;
+	  pixmap_data[i].width =xnav_bitmap_morehelp24_width;
+	  pixmap_data[i].height =xnav_bitmap_morehelp24_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_morehelp24_bits;
 
 	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_morehelp);
 
@@ -596,14 +648,67 @@ void WNavBrow::allocate_pixmaps()
 
 	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_closehelp);
 
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width =xnav_bitmap_objname12_width;
-	    pixmap_data[i].height =xnav_bitmap_objname12_height;
-	    pixmap_data[i].bits = (char *)xnav_bitmap_objname12_bits;
-          }
+          i = 0;
+	  pixmap_data[i].width =xnav_bitmap_objname8_width;
+	  pixmap_data[i].height =xnav_bitmap_objname8_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_objname8_bits;
+	  pixmap_data[i].width =xnav_bitmap_objname10_width;
+	  pixmap_data[i].height =xnav_bitmap_objname10_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_objname10_bits;
+	  pixmap_data[i].width =xnav_bitmap_objname12_width;
+	  pixmap_data[i].height =xnav_bitmap_objname12_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_objname12_bits;
+	  pixmap_data[i].width =xnav_bitmap_objname14_width;
+	  pixmap_data[i].height =xnav_bitmap_objname14_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_objname14_bits;
+	  pixmap_data[i].width =xnav_bitmap_objname16_width;
+	  pixmap_data[i].height =xnav_bitmap_objname16_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_objname16_bits;
+	  pixmap_data[i].width =xnav_bitmap_objname18_width;
+	  pixmap_data[i].height =xnav_bitmap_objname18_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_objname18_bits;
+	  pixmap_data[i].width =xnav_bitmap_objname20_width;
+	  pixmap_data[i].height =xnav_bitmap_objname20_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_objname20_bits;
+	  pixmap_data[i].width =xnav_bitmap_objname20_width;
+	  pixmap_data[i].height =xnav_bitmap_objname20_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_objname20_bits;
+	  pixmap_data[i].width =xnav_bitmap_objname24_width;
+	  pixmap_data[i].height =xnav_bitmap_objname24_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_objname24_bits;
 
 	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_objname);
+
+          i = 0;
+	  pixmap_data[i].width =xnav_bitmap_object8_width;
+	  pixmap_data[i].height =xnav_bitmap_object8_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_object8_bits;
+	  pixmap_data[i].width =xnav_bitmap_object10_width;
+	  pixmap_data[i].height =xnav_bitmap_object10_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_object10_bits;
+	  pixmap_data[i].width =xnav_bitmap_object12_width;
+	  pixmap_data[i].height =xnav_bitmap_object12_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_object12_bits;
+	  pixmap_data[i].width =xnav_bitmap_object14_width;
+	  pixmap_data[i].height =xnav_bitmap_object14_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_object14_bits;
+	  pixmap_data[i].width =xnav_bitmap_object16_width;
+	  pixmap_data[i].height =xnav_bitmap_object16_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_object16_bits;
+	  pixmap_data[i].width =xnav_bitmap_object18_width;
+	  pixmap_data[i].height =xnav_bitmap_object18_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_object18_bits;
+	  pixmap_data[i].width =xnav_bitmap_object20_width;
+	  pixmap_data[i].height =xnav_bitmap_object20_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_object20_bits;
+	  pixmap_data[i].width =xnav_bitmap_object20_width;
+	  pixmap_data[i].height =xnav_bitmap_object20_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_object20_bits;
+	  pixmap_data[i].width =xnav_bitmap_object24_width;
+	  pixmap_data[i].height =xnav_bitmap_object24_height;
+	  pixmap_data[i++].bits = (char *)xnav_bitmap_object24_bits;
+
+	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_object);
 
           for ( i = 0; i < 9; i++)
           {

@@ -1261,6 +1261,7 @@ int XNav::get_select( pwr_sAttrRef *attrref, int *is_attr)
   {
     case xnav_eItemType_Attr:
     case xnav_eItemType_AttrArray:
+    case xnav_eItemType_AttrObject:
     case xnav_eItemType_AttrArrayElem:
       strcat( attr_str, ".");
       strcat( attr_str, item->name);
@@ -1313,6 +1314,7 @@ int XNav::get_select_all( pwr_sAttrRef **attrref, int **is_attr)
     {
       case xnav_eItemType_Attr:
       case xnav_eItemType_AttrArray:
+      case xnav_eItemType_AttrObject:
       case xnav_eItemType_AttrArrayElem:
         strcat( attr_str, ".");
         strcat( attr_str, item->name);
@@ -1369,6 +1371,7 @@ int XNav::get_all_objects( pwr_sAttrRef **attrref, int **is_attr)
     {
       case xnav_eItemType_Attr:
       case xnav_eItemType_AttrArray:
+      case xnav_eItemType_AttrObject:
       case xnav_eItemType_AttrArrayElem:
         strcat( attr_str, ".");
         strcat( attr_str, item->name);
@@ -1424,6 +1427,7 @@ int XNav::get_all_collect_objects( pwr_sAttrRef **attrref, int **is_attr)
     {
       case xnav_eItemType_Attr:
       case xnav_eItemType_AttrArray:
+      case xnav_eItemType_AttrObject:
       case xnav_eItemType_AttrArrayElem:
         strcat( attr_str, ".");
         strcat( attr_str, item->name);
@@ -1697,6 +1701,9 @@ static int xnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
         case xnav_eItemType_AttrArray: 
 	  ((ItemAttrArray *)item)->open_attributes( xnav->brow, 0, 0);
           break;
+        case xnav_eItemType_AttrObject: 
+	  ((ItemAttrObject *)item)->open_attributes( xnav->brow, 0, 0);
+          break;
         default:
           ;
       }
@@ -1865,6 +1872,9 @@ static int xnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
         case xnav_eItemType_AttrArray: 
 	  ((ItemAttrArray *)item)->close( xnav->brow, 0, 0);
           break;
+        case xnav_eItemType_AttrObject: 
+	  ((ItemAttrObject *)item)->close( xnav->brow, 0, 0);
+          break;
         case xnav_eItemType_Menu: 
 	  ((ItemMenu *)item)->close( xnav->brow, 0, 0);
           break;
@@ -2011,6 +2021,10 @@ static int xnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
               break;
             case xnav_eItemType_AttrArray: 
 	      ((ItemAttrArray *)item)->open_attributes( xnav->brow,
+			event->object.x, event->object.y);
+              break;
+            case xnav_eItemType_AttrObject: 
+	      ((ItemAttrObject *)item)->open_attributes( xnav->brow,
 			event->object.x, event->object.y);
               break;
             default:
@@ -2630,6 +2644,9 @@ int	XNav::setup()
   new ItemLocal( brow, "AdvancedUser", "setup_advanceduser", 
 	pwr_eType_Int32, sizeof( gbl.advanced_user), 0, 1, 0,
 	(void *) &gbl.advanced_user, NULL, flow_eDest_IntoLast);
+  new ItemLocal( brow, "ShowTrueDb", "setup_truedb", 
+	pwr_eType_Int32, sizeof( gbl.show_truedb), 0, 1, 0,
+	(void *) &gbl.show_truedb, NULL, flow_eDest_IntoLast);
 
   brow_ResetNodraw( brow->ctx);
   brow_Redraw( brow->ctx, 0);
@@ -3259,8 +3276,8 @@ static int xnav_init_brow_base_cb( FlowCtx *fctx, void *client_data)
   BrowCtx *secondary_ctx;
   int		sts;
 
-  xnav->brow = new XNavBrow( ctx, (void *)xnav);
-  xnav->brow_stack[0] = new XNavBrow( ctx, (void *)xnav);
+  xnav->brow = new XNavBrow( ctx, (void *)xnav, brow_eUserType_XNav);
+  xnav->brow_stack[0] = new XNavBrow( ctx, (void *)xnav, brow_eUserType_XNav);
   xnav->brow_cnt++;
 
   xnav->brow->brow_setup();
@@ -3372,7 +3389,7 @@ static int xnav_init_brow_collect_cb( BrowCtx *ctx, void *client_data)
 {
   XNav *xnav = (XNav *) client_data;
 
-  xnav->collect_brow = new XNavBrow( ctx, (void *)xnav);
+  xnav->collect_brow = new XNavBrow( ctx, (void *)xnav, brow_eUserType_XNav);
 
   xnav->collect_brow->brow_setup();
   xnav->collect_brow->create_nodeclasses();
@@ -3385,7 +3402,7 @@ static int xnav_init_brow_cb( BrowCtx *ctx, void *client_data)
 {
   XNav *xnav = (XNav *) client_data;
 
-  xnav->brow_stack[xnav->brow_cnt] = new XNavBrow( ctx, (void *)xnav);
+  xnav->brow_stack[xnav->brow_cnt] = new XNavBrow( ctx, (void *)xnav, brow_eUserType_XNav);
 
   xnav->brow_stack[xnav->brow_cnt]->brow_setup();
   xnav->brow_stack[xnav->brow_cnt]->create_nodeclasses();

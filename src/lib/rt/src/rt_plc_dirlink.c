@@ -62,31 +62,31 @@ static char *xDLp = NULL;
  	        la I	Direct link array from the plc-code
  	   aname I	Attribute name string 
 
-  */
+*/
 
 static pwr_tStatus
 plc_RefObjidAttr (
   pwr_tBoolean  local_object,
   pwr_tClassId  class,
-  pwr_tObjid    objid,
+  pwr_sAttrRef  ar,
   plc_t_rtdbref *la,
-  char		*aname
-)
+  char		*aname)
 {
   pwr_tStatus	sts;
-  pwr_sAttrRef	ar;
   pwr_tDlid	dlid;
   pwr_tSubid	subid;
+  pwr_sAttrRef	car;
 
-  sts = gdh_ClassAttrToAttrref( class, aname, &ar );
-  if (EVEN(sts)) return sts;
+  if ( strcmp( aname, "") != 0) {
+    sts = gdh_ClassAttrToAttrref( class, aname, &car);
+    if (EVEN(sts)) return sts;
 
-  ar.Objid = objid;
-
-  /* Should be same */
+    ar.Offset += car.Offset;
+    ar.Size = car.Size;
+    ar.Flags.m = car.Flags.m;
+  }
   if (ar.Size < la->Size)
     ar.Size = la->Size;
-
 
   if (local_object) {
     sts = gdh_DLRefObjectInfoAttrref( &ar, la->Pointer, &dlid );
@@ -110,7 +110,7 @@ plc_RefObjidAttr (
 static pwr_tStatus
 plc_GetObjectAttrValue (
   pwr_tClassId	class,
-  pwr_tObjid	objid,
+  pwr_sAttrRef	attrref,
   char		*aname,
   void		*buffer,
   pwr_tInt32	size
@@ -121,17 +121,17 @@ plc_GetObjectAttrValue (
   char		*p;
 
   if (class == 0) {
-    sts = gdh_GetObjectClass(objid, &class);
+    sts = gdh_GetObjectClass( attrref.Objid, &class);
     if (EVEN(sts)) return sts;
-  }  
+  }
 
   sts = gdh_ClassAttrToAttrref( class, aname, &ar );
   if (EVEN(sts)) return sts;
 
-  sts = gdh_ObjidToPointer(objid, (pwr_tAddress *)&p );
+  sts = gdh_ObjidToPointer(attrref.Objid, (pwr_tAddress *)&p );
   if (EVEN(sts)) return sts;
 
-  memcpy( buffer, p + ar.Offset, size);
+  memcpy( buffer, p + attrref.Offset + ar.Offset, size);
 
   return PLC__SUCCESS;
 }
@@ -158,16 +158,14 @@ plc_rtdbref (
   pwr_tInt32	Index;
   char		aname[255];
   plc_t_rtdbref *la;
-  pwr_tObjid	objid;
   pwr_tClassId	class;
   pwr_tBoolean	local_object;
 
   for (la = *LinkArray; la->Pointer != NULL; ++la) {
     /* NULL pointer terminates the list */
-    objid = la->Objid;
     *la->Pointer = NULL;
 
-    sts = gdh_GetObjectLocation(objid, &local_object);
+    sts = gdh_GetObjectLocation(la->AttrRef.Objid, &local_object);
     if (EVEN(sts)) {
       local_object = FALSE;
     }
@@ -176,9 +174,9 @@ plc_rtdbref (
       /* If we got here, we can link directly to the object without having
 	 to append an index to the entered name.  */
 
-      sts = plc_RefObjidAttr(local_object, la->ObjType, objid, la, "");
+      sts = plc_RefObjidAttr(local_object, la->ObjType, la->AttrRef, la, "");
       if (EVEN(sts)) {
-	errh_Error("plc_RefObjidAttr object %s, %m", cdh_ObjidToString(NULL, objid, 0), sts);
+	errh_Error("plc_RefObjidAttr object %s, %m", cdh_ObjidToString(NULL, la->AttrRef.Objid, 0), sts);
 	GUARD_DL( la->Pointer, la->Size );
  	continue;
       }
@@ -189,9 +187,9 @@ plc_rtdbref (
          index is stored in the object itself.  */
 
       if (local_object) {
-        sts = plc_GetObjectAttrValue(la->ObjType, objid, ".ValueIndex", &Index, sizeof(pwr_tInt32));
+        sts = plc_GetObjectAttrValue(la->ObjType, la->AttrRef, ".ValueIndex", &Index, sizeof(pwr_tInt32));
         if (EVEN(sts)) {
-	  errh_Error("plc_GetObjectAttrValue object %s.ValueIndex\n%m", cdh_ObjidToString(NULL, objid, 0), sts);
+	  errh_Error("plc_GetObjectAttrValue object %s.ValueIndex\n%m", cdh_ObjidToString(NULL, la->AttrRef.Objid, 0), sts);
 	  GUARD_DL( la->Pointer, la->Size );
 	  continue;
         }
@@ -214,6 +212,11 @@ plc_rtdbref (
 	  *la->Pointer = &tp->copy.ai_a.p->Value[Index];
 	break;
 
+      case pwr_cClass_Ii:
+	if (la->UseCode == UC_READ && local_object)
+	  *la->Pointer = &tp->copy.ii_a.p->Value[Index];
+	break;
+
       case pwr_cClass_Do:
 	if (la->UseCode == UC_READ && local_object)
 	  *la->Pointer = &tp->copy.do_a.p->Value[Index];
@@ -224,6 +227,11 @@ plc_rtdbref (
 	  *la->Pointer = &tp->copy.ao_a.p->Value[Index];
 	break;
 
+      case pwr_cClass_Io:
+	if (la->UseCode == UC_READ && local_object)
+	  *la->Pointer = &tp->copy.io_a.p->Value[Index];
+	break;
+
       case pwr_cClass_Dv:
 	if (la->UseCode == UC_READ && local_object)
 	  *la->Pointer = &tp->copy.dv_a.p->Value[Index];
@@ -232,6 +240,11 @@ plc_rtdbref (
       case pwr_cClass_Av:
 	if (la->UseCode == UC_READ && local_object)
 	  *la->Pointer = &tp->copy.av_a.p->Value[Index];
+	break;
+
+      case pwr_cClass_Iv:
+	if (la->UseCode == UC_READ && local_object)
+	  *la->Pointer = &tp->copy.iv_a.p->Value[Index];
 	break;
 
       /* Special: UC_READ => AbsValue, UC_READ2 => RawValue */
@@ -258,9 +271,9 @@ plc_rtdbref (
       if (*la->Pointer != NULL)
 	continue;
 
-      sts = plc_RefObjidAttr(local_object, class, objid, la, aname);
+      sts = plc_RefObjidAttr(local_object, class, la->AttrRef, la, aname);
       if (EVEN(sts)) {
-        errh_Error("plc_RefObjidAttr(%s), %m", cdh_ObjidToString(NULL, objid, 0), sts);
+        errh_Error("plc_RefObjidAttr(%s), %m", cdh_ObjidToString(NULL, la->AttrRef.Objid, 0), sts);
 	GUARD_DL( la->Pointer, la->Size );
  	continue;
       }
@@ -319,3 +332,8 @@ plc_GetPointerToObject (
       errh_Error("Direct link to object (%s), %m", Name, sts);
   }
 }
+
+
+
+
+

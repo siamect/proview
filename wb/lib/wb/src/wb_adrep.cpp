@@ -18,9 +18,10 @@ wb_adrep *wb_adrep::ref()
 }
 
 wb_adrep::wb_adrep( wb_orep& o): m_nRef(0), m_orep(&o), m_sts(LDH__SUCCESS),
-                                    m_subClass(pwr_eClass__)
+				 m_subClass(pwr_eClass__), m_isSubattr(false)
 {
   m_orep->ref();
+  strcpy( m_subName, "");
 
   pwr_tStatus sts;
   switch ( m_orep->cid()) {
@@ -34,11 +35,15 @@ wb_adrep::wb_adrep( wb_orep& o): m_nRef(0), m_orep(&o), m_sts(LDH__SUCCESS),
     strcpy( m_pgmname, attr.Info.PgmName);
     m_size = attr.Info.Size;
     m_type = attr.Info.Type;
-    m_offset = attr.Info.Offset;
+    m_offset = m_suboffset = attr.Info.Offset;
     m_elements = attr.Info.Elements;
     m_paramindex = attr.Info.ParamIndex;
     m_flags = attr.Info.Flags;
     m_tid = attr.TypeRef;
+    if ( m_flags & PWR_MASK_CLASS)
+      m_subClass = attr.TypeRef;
+    else
+      m_subClass = 0;
     break;
   }
   case pwr_eClass_Intern:
@@ -53,12 +58,15 @@ wb_adrep::wb_adrep( wb_orep& o): m_nRef(0), m_orep(&o), m_sts(LDH__SUCCESS),
     strcpy( m_pgmname, attr.Info.PgmName);
     m_size = attr.Info.Size;
     m_type = attr.Info.Type;
-    m_offset = attr.Info.Offset;
+    m_offset = m_suboffset = attr.Info.Offset;
     m_elements = attr.Info.Elements;
     m_paramindex = attr.Info.ParamIndex;
     m_flags = attr.Info.Flags;
     m_tid = attr.TypeRef;
-
+    if ( m_flags & PWR_MASK_CLASS)
+      m_subClass = attr.TypeRef;
+    else
+      m_subClass = 0;
 
     break;
   }
@@ -72,7 +80,7 @@ wb_adrep::wb_adrep( wb_orep& o): m_nRef(0), m_orep(&o), m_sts(LDH__SUCCESS),
     strcpy( m_pgmname, attr.Info.PgmName);
     m_size = attr.Info.Size;
     m_type = attr.Info.Type;
-    m_offset = attr.Info.Offset;
+    m_offset = m_suboffset = attr.Info.Offset;
     m_elements = attr.Info.Elements;
     m_paramindex = attr.Info.ParamIndex;
     m_flags = attr.Info.Flags;
@@ -90,7 +98,7 @@ wb_adrep::wb_adrep( wb_orep& o): m_nRef(0), m_orep(&o), m_sts(LDH__SUCCESS),
     strcpy( m_pgmname, attr.Info.PgmName);
     m_size = attr.Info.Size;
     m_type = attr.Info.Type;
-    m_offset = attr.Info.Offset;
+    m_offset = m_suboffset = attr.Info.Offset;
     m_elements = attr.Info.Elements;
     m_paramindex = attr.Info.ParamIndex;
     m_flags = attr.Info.Flags;
@@ -108,7 +116,7 @@ wb_adrep::wb_adrep( wb_orep& o): m_nRef(0), m_orep(&o), m_sts(LDH__SUCCESS),
     strcpy( m_pgmname, attr.Info.PgmName);
     m_size = attr.Info.Size;
     m_type = attr.Info.Type;
-    m_offset = attr.Info.Offset;
+    m_offset = m_suboffset = attr.Info.Offset;
     m_elements = attr.Info.Elements;
     m_paramindex = attr.Info.ParamIndex;
     m_flags = attr.Info.Flags;
@@ -135,6 +143,16 @@ wb_adrep *wb_adrep::next( pwr_tStatus *sts)
     return 0;
 
   wb_adrep *adrep = new wb_adrep( (wb_orep& ) *orep);
+  if ( m_isSubattr) {
+    adrep->m_isSubattr = true;
+    adrep->m_offset = m_offset + adrep->m_offset - m_suboffset;
+    strcpy( adrep->m_subName, m_subName);
+    char *s;
+    if ( (s = strrchr( adrep->m_subName, '.')))
+      strcpy( s+1, adrep->name());
+    else
+      strcpy( adrep->m_subName, "");
+  }
   return adrep;
 }
 
@@ -216,6 +234,34 @@ wb_vrep *wb_adrep::vrep() const
 const char *wb_adrep::name() const
 {
   return m_orep->name();
+}
+
+void wb_adrep::add( wb_adrep *ad, int idx)
+{
+  m_isSubattr = true;
+
+  if ( ad->m_flags & PWR_MASK_ARRAY)
+    m_offset += ad->m_offset + idx * ad->m_size / ad->m_elements;
+  else
+    m_offset += ad->m_offset;
+
+  if ( !ad->m_isSubattr)
+    strcpy( m_subName, ad->name());
+  else
+    strcpy( m_subName, ad->m_subName);
+
+  if ( ad->m_flags & PWR_MASK_ARRAY)
+    sprintf( &m_subName[strlen(m_subName)], "[%d]", idx);
+  strcat( m_subName, ".");
+  strcat( m_subName, m_orep->name());
+}
+
+const char *wb_adrep::subName() const
+{
+  if ( strcmp( m_subName, "") == 0)
+    return m_orep->name();
+  else
+    return m_subName;
 }
 
 wb_name wb_adrep::longName()

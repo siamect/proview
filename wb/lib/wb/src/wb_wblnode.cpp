@@ -679,11 +679,25 @@ void wb_wblnode::buildAttribute( ref_wblnode classdef, ref_wblnode objbodydef,
     (*bindex)++;
     return;
   }
-  if ( !m_vrep->getTypeInfo( o->a.tid, &type, &size, &elements)) {
-    m_vrep->error( "Can't find attribute type", getFileName(), line_number);
-    ((pwr_sParam *)o->rbody)->Info.ParamIndex = *bindex;
-    (*bindex)++;
-    return;
+  if ( cdh_tidIsCid( o->a.tid)) {
+    size_t dsize;
+
+    if ( !m_vrep->getClassInfo( o->a.tid, &size, &dsize)) {
+      m_vrep->error( "Can't find attribute type", getFileName(), line_number);
+      ((pwr_sParam *)o->rbody)->Info.ParamIndex = *bindex;
+      (*bindex)++;
+      return;
+    }
+    elements = 1;
+    type = (pwr_eType) o->a.tid;
+  }
+  else {
+    if ( !m_vrep->getTypeInfo( o->a.tid, &type, &size, &elements)) {
+      m_vrep->error( "Can't find attribute type", getFileName(), line_number);
+      ((pwr_sParam *)o->rbody)->Info.ParamIndex = *bindex;
+      (*bindex)++;
+      return;
+    }
   }
   if ( o->a.type == 0)
     o->a.type = ((pwr_sParam *)o->rbody)->Info.Type = type;
@@ -1064,17 +1078,61 @@ void wb_wblnode::buildBuffAttr( ref_wblnode object, pwr_eBix bix, pwr_tCid buffe
 
     aname = wb_attrname( name());
 
-    // Backward compability with V3.4 : classid was named class
+    // Backward compability with V4.0 : classid was named class
     // This section can be removed in later versions
-    if ( strcmp( name(), "class") == 0 &&  
-         (strcmp( cdrep->name(), "$PlcProgram") == 0 ||
-          strcmp( cdrep->name(), "$PlcWindow") == 0 ||
-          strcmp( cdrep->name(), "$PlcNode") == 0 ||
-          strcmp( cdrep->name(), "$PlcConnection") == 0))
-      adrep = cdrep->adrep( &sts, "classid");
-    else
+    switch ( cdrep->cid()) {
+    case pwr_eClass_PlcProgram:
+      if ( strcmp( name(), "objdid") == 0)
+	adrep = cdrep->adrep( &sts, "oid");
+      else if ( strcmp( name(), "classid") == 0)
+	adrep = cdrep->adrep( &sts, "cid");
+      else if ( strcmp( name(), "window_did") == 0)
+	adrep = cdrep->adrep( &sts, "woid");
+      else
+	adrep = cdrep->adrep( &sts, aname.attribute());
+      break;
+    case pwr_eClass_PlcWindow:
+      if ( strcmp( name(), "objdid") == 0)
+	adrep = cdrep->adrep( &sts, "oid");
+      else if ( strcmp( name(), "classid") == 0)
+	adrep = cdrep->adrep( &sts, "cid");
+      else if ( strcmp( name(), "parent_node_did") == 0)
+	adrep = cdrep->adrep( &sts, "poid");
+      else
+	adrep = cdrep->adrep( &sts, aname.attribute());
+      break;
+    case pwr_eClass_PlcNode:
+      if ( strcmp( name(), "classid") == 0)
+	adrep = cdrep->adrep( &sts, "cid");
+      else if ( strcmp( name(), "object_did") == 0)
+	adrep = cdrep->adrep( &sts, "oid");
+      else if ( strcmp( name(), "window_did") == 0)
+	adrep = cdrep->adrep( &sts, "woid");
+      else if ( strcmp( name(), "subwindow_objdid[0]") == 0)
+	adrep = cdrep->adrep( &sts, "subwind_oid[0]");
+      else if ( strcmp( name(), "subwindow_objdid[1]") == 0)
+	adrep = cdrep->adrep( &sts, "subwind_oid[1]");
+      else
+	adrep = cdrep->adrep( &sts, aname.attribute());
+      break;
+    case pwr_eClass_PlcConnection:
+      if ( strcmp( name(), "objdid") == 0)
+	adrep = cdrep->adrep( &sts, "oid");
+      else if ( strcmp( name(), "classid") == 0)
+	adrep = cdrep->adrep( &sts, "cid");
+      else if ( strcmp( name(), "source_node_did") == 0)
+	adrep = cdrep->adrep( &sts, "source_oid");
+      else if ( strcmp( name(), "dest_node_did") == 0)
+	adrep = cdrep->adrep( &sts, "dest_oid");
+      else if ( strcmp( name(), "window_did") == 0)
+	adrep = cdrep->adrep( &sts, "woid");
+      else
+	adrep = cdrep->adrep( &sts, aname.attribute());
+      break;
+    default:
       // end of compability section
       adrep = cdrep->adrep( &sts, aname.attribute());
+    }
     if ( EVEN(sts)) {
       m_vrep->error( "Unknown buffer attribute", getFileName(), line_number);
       delete cdrep;

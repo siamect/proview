@@ -10,14 +10,14 @@
 wb_attribute::wb_attribute() : 
   wb_status(LDH__NOSUCHATTR), m_orep(0), m_adrep(0), 
   m_size(0), m_offset(0), m_idx(0), m_tid(0), m_elements(0),
-  m_type(pwr_eType_), m_flags(0), m_bix(pwr_eBix__), m_body(0)
+  m_type(pwr_eType_), m_flags(0), m_bix(pwr_eBix__), m_body(0), m_shadowed(false)
 {
 }
 
 wb_attribute::wb_attribute(const wb_attribute& x) : 
   wb_status(x.m_sts),m_orep(x.m_orep), m_adrep( x.m_adrep), m_size(x.m_size), 
   m_offset(x.m_offset) , m_idx(x.m_idx), m_tid(x.m_tid), m_elements(x.m_elements), m_type(x.m_type), 
-  m_flags(x.m_flags), m_bix(x.m_bix), m_body(0)
+  m_flags(x.m_flags), m_bix(x.m_bix), m_body(0), m_shadowed(x.m_shadowed)
 {
   if ( m_orep)
     m_orep->ref();
@@ -27,7 +27,7 @@ wb_attribute::wb_attribute(const wb_attribute& x) :
 
 wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep * orep) : 
   wb_status(sts), m_orep(orep), m_adrep(0), m_size(0), m_offset(0), m_idx(0), m_tid(0),
-  m_elements(0), m_type(pwr_eType_), m_flags(0), m_bix(pwr_eBix__), m_body(0)
+  m_elements(1), m_type(pwr_eType_), m_flags(0), m_bix(pwr_eBix__), m_body(0), m_shadowed(false)
 {
   if ( orep == 0)
     m_sts = LDH__NOSUCHATTR;
@@ -47,12 +47,13 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep * orep) :
 
     m_size = bdef.size();
     m_bix = bdef.bix();
+    m_tid = orep->cid();
   }
 }
 
 wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, wb_adrep* adrep, int idx) : 
   wb_status(sts), m_orep(orep), m_adrep(adrep), m_size(0), m_offset(0), m_idx(0), m_tid(0),
-  m_elements(0), m_type(pwr_eType_), m_flags(0), m_bix(pwr_eBix__), m_body(0)
+  m_elements(1), m_type(pwr_eType_), m_flags(0), m_bix(pwr_eBix__), m_body(0), m_shadowed(false)
 {
   if ( orep == 0)
     m_sts = LDH__NOSUCHATTR;
@@ -107,7 +108,7 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, wb_adrep* adrep, int 
 
 wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, const char *bname) :
   wb_status(sts), m_orep(orep), m_adrep(0), m_size(0), m_offset(0),  m_idx(0), m_tid(0),
-  m_elements(0), m_type(pwr_eType_), m_flags(0), m_bix(pwr_eBix__), m_body(0)
+  m_elements(1), m_type(pwr_eType_), m_flags(0), m_bix(pwr_eBix__), m_body(0), m_shadowed(false)
 {
   if ( orep == 0)
     m_sts = LDH__NOSUCHATTR;
@@ -130,7 +131,7 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, const char *bname) :
 
 wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, const char *bname, const char *aname) :
   wb_status(sts), m_orep(orep), m_adrep(0), m_size(0), m_offset(0), m_idx(0), m_tid(0),
-  m_elements(0), m_type(pwr_eType_), m_flags(0), m_bix(pwr_eBix__), m_body(0)
+  m_elements(1), m_type(pwr_eType_), m_flags(0), m_bix(pwr_eBix__), m_body(0), m_shadowed(false)
 {
   if ( orep == 0)
     m_sts = LDH__NOSUCHATTR;
@@ -144,23 +145,20 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, const char *bname, co
       if ( bname) {
         bd = cd->bdrep( &m_sts, bname);
         if ( oddSts())
-          m_adrep = bd->adrep( &m_sts, n.attribute(0));
+          m_adrep = bd->adrep( &m_sts, n.attributesAll());
       }
       else {
-        m_adrep = cd->adrep( &m_sts, n.attribute(0));
+        m_adrep = cd->adrep( &m_sts, n.attributesAll());
       }
       if ( oddSts()) {
         m_adrep->ref();
 
-        if ( !m_orep->vrep()->merep()->getAttrInfoRec( &n, m_adrep->bix(),
-                                                       m_orep->cid(), &m_size,
-                                                       &m_offset, &m_tid, &m_elements, 
-                                                       &m_type,
-                                                       &m_flags, 0)) {
-          m_adrep->unref();
-          m_adrep = 0;
-          m_sts = LDH__NOSUCHATTR;
-        }
+	m_size = m_adrep->size();
+	m_offset = m_adrep->offset();
+	m_tid = m_adrep->tid();
+	m_elements = m_adrep->nElement();
+	m_flags = m_adrep->flags();
+	m_type = m_adrep->type();
       } else
         m_adrep = 0;
       
@@ -168,71 +166,95 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, const char *bname, co
       if ( bd) 
         delete bd;
     }
-    // if ( oddSts())
-    //  m_orep->ref();
-    // else
-    //  m_orep = 0;
   }
 }
 
 wb_attribute::wb_attribute(const wb_attribute& pa, int idx, const char *aname) :
   wb_status(LDH__NOSUCHATTR), m_orep(0), m_adrep(0), m_size(0), m_offset(0), m_tid(0),
-  m_elements(0), m_type(pwr_eType_), m_flags(0), m_bix(pwr_eBix__), m_body(0)
+  m_elements(1), m_type(pwr_eType_), m_flags(0), m_bix(pwr_eBix__), m_body(0), m_shadowed(false)
 {
   pwr_tCid cid;
   wb_attrname n;
+  char attrname[120];
   
-  if (!pa.isClass() || pa.m_orep == 0)
+  if ( !cdh_tidIsCid( pa.tid()) || pa.m_orep == 0)
     return;
 
-  if (idx < 0 || idx >= pa.m_elements)
+  if ( pa.m_flags & PWR_MASK_ARRAY && 
+       (idx < 0 || idx >= pa.m_elements))
     throw wb_error_str("Invalid subscript");
     
-
-  if (!(pa.m_flags & PWR_MASK_BUFFER))
-    throw wb_error_str("Only $Buffer is supported as sub class");
-
-  cid = pa.subClass();
-  m_orep = pa.m_orep;
-
-  wb_cdrep *cd = m_orep->vrep()->merep()->cdrep(&m_sts, cid);
-  if (oddSts()) {
-    wb_bdrep* bd = cd->bdrep(&m_sts, pwr_eBix_sys);
-    if (oddSts()) {
-      if (aname != 0){
-        n = aname;
-        m_adrep = bd->adrep(&m_sts, n.attribute(0));
-      } else {
-        m_adrep = bd->adrep(&m_sts);
-        if (oddSts())
-          n = m_adrep->name();
-      }
-
-      if (oddSts()) {
-        m_adrep->ref();
-
-        if (!m_orep->vrep()->merep()->getAttrInfoRec( &n, m_adrep->bix(),
-                                                      cid, &m_size,
-                                                      &m_offset, &m_tid, &m_elements,
-                                                      &m_type,
-                                                      &m_flags, 0)) {
-          m_adrep->unref();
-          m_adrep = 0;
-          m_sts = LDH__NOSUCHATTR;
-        } else {
-          m_offset = pa.m_offset + idx * pa.m_size/pa.m_elements;
-        }
-      } else
-        m_adrep = 0;
+  strcpy( attrname, pa.attrName());
+  if ( pa.m_flags & PWR_MASK_ARRAY) {
+    if ( attrname[strlen(attrname)-1] == ']') {
+      // Replace the index
+      char *s = strchr( attrname, '[');
+      if ( s)
+	sprintf( s, "[%d]", idx);
     }
-    if (bd) 
-      delete bd;
+    else
+      // Add index
+      sprintf( &attrname[strlen(attrname)], "[%d]", idx);
+  }
+  strcat( attrname, ".");
+  if ( aname != 0)
+    strcat( attrname, aname);
+  else {
+    // First attribute
+    if ( pa.isClass())
+      cid = pa.subClass();
+    else
+      cid = pa.tid();
+    wb_cdrep *cd = pa.m_orep->vrep()->merep()->cdrep(&m_sts, cid);
+    if ( evenSts()) return;
+    
+    wb_bdrep* bd = cd->bdrep(&m_sts, pwr_eBix_sys);
+    if ( evenSts()) { delete cd; return;}
+
+    wb_adrep *adrep = bd->adrep(&m_sts);
+    if ( evenSts()) { delete cd; delete bd; return;}
+
+    strcat( attrname, adrep->name());
+    delete adrep;
+    delete bd;
     delete cd;
   }
 
+  n = attrname;
 
-  if (oddSts()) {    
-    m_orep->ref();
+  cid = pa.cid();
+
+  wb_cdrep *cd = pa.m_orep->vrep()->merep()->cdrep(&m_sts, cid);
+  if (evenSts()) return;
+
+  wb_bdrep* bd = cd->bdrep(&m_sts, pwr_eBix_sys);
+  if (evenSts()) {
+    // Try devbody
+    bd = cd->bdrep(&m_sts, pwr_eBix_dev);
+    if (evenSts()) { delete cd; return;}
+  }
+
+  m_adrep = bd->adrep(&m_sts, n.attributesAll());
+  if (evenSts()) {
+    // Try devbody
+    bd = cd->bdrep(&m_sts, pwr_eBix_dev);
+    if (evenSts()) { delete cd; return;}
+
+    m_adrep = bd->adrep(&m_sts, n.attributesAll());
+    if (evenSts()) { delete cd; delete bd; return;}
+  }
+  m_adrep->ref();
+  m_size = m_adrep->size();
+  m_offset = m_adrep->offset();
+  m_tid = m_adrep->tid();
+  m_elements = m_adrep->nElement();
+  m_flags = m_adrep->flags();
+  m_type = m_adrep->type();  
+  m_idx = idx;
+
+  m_orep = pa.m_orep;
+  m_orep->ref();
+  if ( pa.isClass()) {
     m_flags |= PWR_MASK_SUBCLASS;
 
     if (pa.m_flags & PWR_MASK_SUBCLASS)
@@ -240,12 +262,12 @@ wb_attribute::wb_attribute(const wb_attribute& pa, int idx, const char *aname) :
     else
       m_bix = pa.m_adrep->bix();
   }
-  else {
-    m_adrep = 0;
-    m_orep = 0;
-  }
-}
+  else
+    m_bix = pa.m_bix;
 
+  delete bd;
+  delete cd;
+}
 
 wb_attribute::~wb_attribute()
 {
@@ -328,10 +350,26 @@ pwr_sAttrRef wb_attribute::aref() const
   aref.Size = m_size;
 
   if ( m_adrep) {
-    wb_bdrep *bd = m_adrep->bdrep();
+    if ( m_adrep->isSubattr()) {
+      // Use rtbody of m_orep
+      pwr_tStatus sts;
 
-    aref.Body = bd->bcid();
-    delete bd;
+      wb_cdrep *cd = m_orep->vrep()->merep()->cdrep(&sts, m_orep->cid());
+      if ( cd) {
+	wb_bdrep* bd = cd->bdrep(&sts, pwr_eBix_rt);
+	if ( bd) {
+	  aref.Body = bd->bcid();
+	  delete bd;
+	}
+	delete cd;
+      }
+    }
+    else {
+      wb_bdrep *bd = m_adrep->bdrep();
+
+      aref.Body = bd->bcid();
+      delete bd;
+    }
   } 
   return aref;
 }
@@ -345,8 +383,21 @@ pwr_sAttrRef *wb_attribute::aref(pwr_sAttrRef *arp) const
   arp->Objid = m_orep->oid();
   arp->Offset = m_offset;
   arp->Size = m_size;
+
   if ( m_flags & PWR_MASK_POINTER)
     arp->Flags.b.Indirect = 1;
+
+  if ( m_flags & PWR_MASK_ARRAY &&
+       m_idx == -1)
+    arp->Flags.b.Array = 1;
+
+  if ( m_tid == m_orep->cid())
+    arp->Flags.b.Object = 1;
+  else if ( cdh_tidIsCid( m_tid))
+    arp->Flags.b.ObjectAttr = 1;
+
+  if ( m_shadowed)
+    arp->Flags.b.Shadowed = 1;
 
   if ( m_adrep) {
     wb_bdrep *bd = m_adrep->bdrep();
@@ -379,6 +430,12 @@ pwr_eType wb_attribute::type() const
 {
   check();
   return m_type;
+}
+
+pwr_tTid wb_attribute::tid() const
+{
+  check();
+  return m_tid;
 }
 
 int wb_attribute::nElement() const
@@ -568,7 +625,7 @@ wb_attribute wb_attribute::before() const
 
 wb_attribute wb_attribute::first(int idx) const
 {
-  if (!isClass())
+  if (!cdh_tidIsCid( m_tid))
     return wb_attribute();    
 
   return wb_attribute(*this, idx, NULL);
@@ -576,9 +633,9 @@ wb_attribute wb_attribute::first(int idx) const
 }
 
 
-wb_attribute wb_attribute::child(int idx, const char* name) const
+wb_attribute wb_attribute::child(const char* name, int idx) const
 {
-  if (!isClass())
+  if (!cdh_tidIsCid( m_tid))
     return wb_attribute();    
 
   return wb_attribute(*this, idx, name);
@@ -593,7 +650,24 @@ const char *wb_attribute::name() const
   return m_orep->name();
 }
 
-// Fix, no no subclass !!!
+const char *wb_attribute::attrName() const
+{
+  check();
+
+  static char str[200];
+  
+  if ( m_adrep) {
+    strcpy( str, m_adrep->subName());
+    if (m_flags & PWR_MASK_ARRAY && m_idx != -1)
+      sprintf(&str[strlen(str)], "[%d]", m_idx);
+  }
+  else
+    strcpy( str, "");
+
+  return str;
+}
+
+
 wb_name wb_attribute::longName()  const
 {
   check();
@@ -601,14 +675,17 @@ wb_name wb_attribute::longName()  const
   if ( !m_adrep)
     return m_orep->longName();
 
-    char str[512];
-    int len;
-    len = sprintf( str, "%s.%s", m_orep->longName().c_str(), m_adrep->name());
-    if (m_flags & PWR_MASK_ARRAY && m_idx != -1)
-      sprintf(&str[len], "[%d]", m_idx);
+  char str[512];
+  int len;
 
-    wb_name n( str);
-    return n;
+  len = sprintf( str, "%s.%s", m_orep->longName().c_str(), m_adrep->subName());
+  if (m_flags & PWR_MASK_ARRAY && m_idx != -1)
+    sprintf(&str[len], "[%d]", m_idx);
+  
+  wb_name n( str);
+  if ( m_shadowed)
+    n.setShadowed( true);
+  return n;
 }
 
 void wb_attribute::name(const char *name)

@@ -140,8 +140,8 @@ int trace_get_attributes( 	gre_ctx		grectx,
   pwr_tClassId		bodyclass;
   pwr_sGraphPlcNode 	*graphbody;
 
-  sts = ldh_GetClassBody( node->hn.window_pointer->hw.ldhsession,
-		node->ln.classid, "GraphPlcNode", 
+  sts = ldh_GetClassBody( node->hn.wind->hw.ldhses,
+		node->ln.cid, "GraphPlcNode", 
 		&bodyclass, (char **)&graphbody, &size);
   if (EVEN(sts)) return sts;
 
@@ -302,13 +302,13 @@ static pwr_tStatus trace_get_attr_m3( 	gre_ctx		grectx,
   pwr_eType		par_type;
   
   /* Get the name of the object */
-  sts = ldh_ObjidToName( node->hn.window_pointer->hw.ldhsession, 
-		node->ln.object_did, ldh_eName_Hierarchy, name, sizeof(name), 
+  sts = ldh_ObjidToName( node->hn.wind->hw.ldhses, 
+		node->ln.oid, ldh_eName_Hierarchy, name, sizeof(name), 
 		&size); 
   if( EVEN(sts) ) return sts;
 
-  sts = ldh_GetObjectBodyDef( node->hn.window_pointer->hw.ldhsession,
-	      node->ln.classid, "RtBody", 1, &bodydef, &rows);
+  sts = ldh_GetObjectBodyDef( node->hn.wind->hw.ldhses,
+	      node->ln.cid, "RtBody", 1, &bodydef, &rows);
   if( EVEN(sts) ) return sts;
 
   found = 0;
@@ -391,7 +391,7 @@ static pwr_tStatus trace_get_attr_m4( 	gre_ctx		grectx,
   char			parname[40];
 
   /* Get the objdid stored in the parameter Object */
-  switch ( node->ln.classid) {
+  switch ( node->ln.cid) {
   case pwr_cClass_GetAp:
     strcpy( parname, "ApObject");
     break;
@@ -401,13 +401,13 @@ static pwr_tStatus trace_get_attr_m4( 	gre_ctx		grectx,
   default:
     strcpy( parname, "Object");
   }
-  sts = ldh_GetObjectPar( node->hn.window_pointer->hw.ldhsession,  
-		node->ln.object_did, "DevBody", parname,
+  sts = ldh_GetObjectPar( node->hn.wind->hw.ldhses,  
+		node->ln.oid, "DevBody", parname,
 		(char **)&objdidp, &size); 
   if ( EVEN(sts)) return sts;
 
   /* Get the name of the node */
-  sts = ldh_ObjidToName( node->hn.window_pointer->hw.ldhsession,  
+  sts = ldh_ObjidToName( node->hn.wind->hw.ldhses,  
 		*objdidp, ldh_eName_Hierarchy, hier_name, sizeof( hier_name), 
 		&size);
   if( EVEN(sts)) return sts;
@@ -417,8 +417,8 @@ static pwr_tStatus trace_get_attr_m4( 	gre_ctx		grectx,
   free((char *) objdidp);
 
   /* Get the parametername stored in the parameter */
-  sts = ldh_GetObjectPar( node->hn.window_pointer->hw.ldhsession,  
-		node->ln.object_did, "DevBody", "Parameter",
+  sts = ldh_GetObjectPar( node->hn.wind->hw.ldhses,  
+		node->ln.oid, "DevBody", "Parameter",
 		&parameter, &size); 
   if ( EVEN(sts)) return sts;
 
@@ -426,9 +426,9 @@ static pwr_tStatus trace_get_attr_m4( 	gre_ctx		grectx,
   free((char *) parameter);
 
   /* Get parameter type */
-  sts = ldh_GetObjectClass( node->hn.window_pointer->hw.ldhsession,
+  sts = ldh_GetObjectClass( node->hn.wind->hw.ldhses,
 	objdid, &class);
-  sts = ldh_GetObjectBodyDef( node->hn.window_pointer->hw.ldhsession,
+  sts = ldh_GetObjectBodyDef( node->hn.wind->hw.ldhses,
 	      class, "RtBody", 1, &bodydef, &rows);
   if( EVEN(sts) ) return sts;
 
@@ -512,13 +512,13 @@ static pwr_tStatus trace_get_attr_m7( 	gre_ctx		grectx,
   /* The size of the parameter is in the runtime body of the object */
 
   /* get the name of the object */
-  sts = ldh_ObjidToName( node->hn.window_pointer->hw.ldhsession, 
-    	node->ln.object_did, ldh_eName_Hierarchy,
+  sts = ldh_ObjidToName( node->hn.wind->hw.ldhses, 
+    	node->ln.oid, ldh_eName_Hierarchy,
     	name, sizeof(name), &size); 
   if( EVEN(sts) ) return sts;
 
-  sts = ldh_GetObjectBodyDef( node->hn.window_pointer->hw.ldhsession,
-    	node->ln.classid, "RtBody", 1, &bodydef, &rows);
+  sts = ldh_GetObjectBodyDef( node->hn.wind->hw.ldhses,
+    	node->ln.cid, "RtBody", 1, &bodydef, &rows);
   if( EVEN(sts) ) return sts;
 
   /* take away the brackets and get the offset */
@@ -609,17 +609,17 @@ pwr_tStatus trace_get_attr_con( 	gre_ctx		grectx,
   pwr_tObjid	objdid;
 
   /* Get the object and parameter that is connected to the source object */
-  sts = gcg_get_connected_parameter( con->hc.source_node_pointer, 
+  sts = gcg_get_connected_parameter( con->hc.source_node, 
 		con->lc.source_point, &conn_node,
 		object_str, attr_str);
   if ( EVEN(sts)) return sts;
 
   /* Get the trace type */
-  sts = ldh_NameToObjid( conn_node->hn.window_pointer->hw.ldhsession,
+  sts = ldh_NameToObjid( conn_node->hn.wind->hw.ldhses,
 		&objdid, object_str);
-  sts = ldh_GetObjectClass( conn_node->hn.window_pointer->hw.ldhsession,
+  sts = ldh_GetObjectClass( conn_node->hn.wind->hw.ldhses,
 		objdid, &class);
-  sts = ldh_GetObjectBodyDef( conn_node->hn.window_pointer->hw.ldhsession,
+  sts = ldh_GetObjectBodyDef( conn_node->hn.wind->hw.ldhses,
 	      class, "RtBody", 1, &bodydef, &rows);
   if( EVEN(sts) ) return sts;
 
@@ -685,15 +685,15 @@ static pwr_tStatus trace_get_attr_m9( 	gre_ctx		grectx,
   strcpy( object_str, "$host");
 
   /* Get attribute from Attribute */
-  sts = ldh_GetObjectPar( node->hn.window_pointer->hw.ldhsession,  
-		node->ln.object_did, "DevBody", "Attribute",
+  sts = ldh_GetObjectPar( node->hn.wind->hw.ldhses,  
+		node->ln.oid, "DevBody", "Attribute",
 		&attribute, &size); 
   if ( EVEN(sts)) return sts;
 
   strcpy( attr_str, attribute);
   free((char *) attribute);
 
-  switch( node->ln.classid) {
+  switch( node->ln.cid) {
   case pwr_cClass_GetAattr:
     *trace_type = flow_eTraceType_Float32;
     break;
@@ -951,7 +951,7 @@ int trace_create_analyse( 	gre_ctx grectx,
     /* Create a trace object */
     sprintf( name, "Trace%d", idx++);
 
-    dummy_con.hc.source_node_pointer = source;
+    dummy_con.hc.source_node = source;
     dummy_con.lc.source_point = source_conpoint;
     sts = trace_get_attr_con( grectx, &dummy_con, "", object_str, attr_str, 
 		&trace_type);
@@ -1197,8 +1197,8 @@ static int trace_flow_cb( FlowCtx *ctx, flow_tEvent event)
 	  break;
         flow_GetUserData( event->object.object, (void **)&node);
 	sts = ldh_ObjidToName(
-		(node->hn.window_pointer)->hw.ldhsession,
-	         cdh_ClassIdToObjid( node->ln.classid), ldh_eName_Object,
+		(node->hn.wind)->hw.ldhses,
+	         cdh_ClassIdToObjid( node->ln.cid), ldh_eName_Object,
 		 help_title, sizeof( help_title), &size);
 	error_msg(sts);
 	if ( EVEN(sts)) return 1;
@@ -1211,8 +1211,8 @@ static int trace_flow_cb( FlowCtx *ctx, flow_tEvent event)
 	  break;
         flow_GetUserData( event->object.object, (void **)&con);
 	sts = ldh_ObjidToName( 
-			(grectx->window_object)->hw.ldhsession, 
-	         	cdh_ClassIdToObjid( con->lc.classid), ldh_eName_Object,
+			(grectx->wind)->hw.ldhses, 
+	         	cdh_ClassIdToObjid( con->lc.cid), ldh_eName_Object,
 		        help_title, sizeof( help_title), &size);
 	error_msg(sts);
 	if ( EVEN(sts)) return 1;
@@ -1239,7 +1239,7 @@ int	trace_save( gre_ctx grectx)
   if (!grectx->trace_started)
     return 0;
   sprintf( filename, "pwrp_exe:pwr_%s.trc",
-		vldh_IdToStr(0, grectx->window_object->lw.objdid));
+		vldh_IdToStr(0, grectx->wind->lw.oid));
   sts = flow_SaveTrace( grectx->flow_ctx, filename);  
   return sts;
 }
@@ -1252,7 +1252,7 @@ int	trace_restore( gre_ctx grectx)
   if (!grectx->trace_started)
     return 0;
   sprintf( filename, "pwrp_exe:pwr_%s.trc",
-		vldh_IdToStr(0, grectx->window_object->lw.objdid));
+		vldh_IdToStr(0, grectx->wind->lw.oid));
   sts = flow_OpenTrace( grectx->flow_ctx, filename);
   return sts;
 }
@@ -1273,7 +1273,7 @@ static void trace_changevalue (
   flow_eTraceType	trace_type;
 
   foectx = (foe_ctx)grectx->cp.parent_ctx;
-  ldhses = (grectx->window_object)->hw.ldhsession ;
+  ldhses = (grectx->wind)->hw.ldhses ;
 
   /* take away the old messages */
   if ( foectx->msg_label_id != 0 ) foe_message( foectx, "");
@@ -1349,7 +1349,7 @@ static pwr_tStatus	trace_aanalyse_set_value(
   char			attr_str[80];
   flow_eTraceType	trace_type;
 
-  ldhses = ((foectx->grectx)->window_object)->hw.ldhsession ;
+  ldhses = ((foectx->grectx)->wind)->hw.ldhses ;
 
   flow_GetTraceAttr( foectx->grectx->trace_changenode, object_str, attr_str, &trace_type);
   strcpy( name, object_str);

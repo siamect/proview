@@ -67,6 +67,9 @@
 #define GCG_REFTYPE_IOC 3
 #define GCG_REFTYPE_IOCW 4
 
+#define GCG_OTYPE_OID 0
+#define GCG_OTYPE_AREF 1
+
 #define GCG_PROC 0
 #define GCG_PLC 1
 #define GCG_WIND 2 
@@ -103,18 +106,25 @@ typedef struct {
 	} gcg_t_reflist;
 
 typedef struct {
+	pwr_sAttrRef	attrref;
+	char		prefix;
+	} gcg_t_areflist;
+
+typedef struct {
 	vldh_t_wind	wind;
 	vldh_t_node	node;
 	char		filenames[ GCG_MAXFILES ][80];
 	gcg_t_files	files;
-	gcg_t_reflist 	*ioread;
+	gcg_t_areflist 	*ioread;
 	unsigned long	ioreadcount;
-	gcg_t_reflist	*iowrite;
+	gcg_t_areflist	*iowrite;
 	unsigned long	iowritecount;
 	gcg_t_reflist	*ref;
 	unsigned long	refcount;
+	gcg_t_areflist	*aref;
+	unsigned long	arefcount;
 	unsigned long	compobjcount;
-	pwr_tObjid	reset_object;
+	pwr_sAttrRef	reset_object;
 	unsigned long	reset_checked;
 	unsigned long	errorcount;
 	unsigned long	warningcount;
@@ -196,7 +206,8 @@ int gcg_get_outputstring (
   gcg_ctx	gcgctx,
   vldh_t_node	output_node,
   ldh_sParDef 	*output_bodydef,
-  pwr_tObjid	*parobjdid,
+  pwr_sAttrRef	*parattrref,
+  int		*partype,
   char		*parprefix,
   char		*parstring
 );

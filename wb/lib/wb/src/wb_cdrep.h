@@ -47,6 +47,7 @@ public:
   wb_bdrep *bdrep( pwr_tStatus *sts, const char *bname);
   wb_adrep *adrep( pwr_tStatus *sts, const char *aname);    
   wb_orep *classBody( pwr_tStatus *sts, const char *bname);
+  wb_cdrep* super( pwr_tStatus *sts);
 
   void templateBody( pwr_tStatus *sts, pwr_eBix bix, void *p);
   void dbCallBack( pwr_tStatus *sts, ldh_eDbCallBack cb, char **methodName,

@@ -101,8 +101,8 @@ int goen_create_nodetype_m6(
 
   /* Get size and orientation attribute */
   sts = ldh_GetObjectPar(
-			(node->hn.window_pointer)->hw.ldhsession,  
-			node->ln.object_did, 
+			(node->hn.wind)->hw.ldhses,  
+			node->ln.oid, 
 			"DevBody",
 			"DocumentSize",
 			(char **)&docsize_p, &size); 
@@ -115,8 +115,8 @@ int goen_create_nodetype_m6(
   }
 
   sts = ldh_GetObjectPar(
-			(node->hn.window_pointer)->hw.ldhsession,  
-			node->ln.object_did, 
+			(node->hn.wind)->hw.ldhses,  
+			node->ln.oid, 
 			"DevBody",
 			"DocumentOrientation",
 			(char **)&docorientation_p, &size); 

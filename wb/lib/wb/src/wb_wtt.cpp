@@ -587,7 +587,7 @@ int Wtt::set_focus( void *component)
   return 1;
 }
 
-static void wtt_create_popup_menu_cb( void *ctx, pwr_tObjid objid,
+static void wtt_create_popup_menu_cb( void *ctx, pwr_sAttrRef aref,
 		int x, int y)
 {
   Wtt *wtt = (Wtt *) ctx;
@@ -614,7 +614,7 @@ static void wtt_create_popup_menu_cb( void *ctx, pwr_tObjid objid,
 
   menu_x = x + x1 + x2 + x3 + 8;
   menu_y = y + y1 + y2 + y3;
-  popup = wtt_create_popup_menu( wtt, objid, pwr_cNCid, wtt_message_cb);
+  popup = wtt_create_popup_menu( wtt, aref, pwr_cNCid, wtt_message_cb);
   if ( !popup)
     return;
 
@@ -654,7 +654,7 @@ static void wtt_create_pal_popup_menu_cb( void *ctx, pwr_tCid cid,
 
   menu_x = x + x1 + x2 + x3 + 8;
   menu_y = y + y1 + y2 + y3;
-  popup = wtt_create_popup_menu( wtt, pwr_cNObjid, cid, wtt_message_cb);
+  popup = wtt_create_popup_menu( wtt, pwr_cNAttrRef, cid, wtt_message_cb);
   if ( !popup)
     return;
 
@@ -1901,7 +1901,7 @@ static void wtt_activate_openobject( Widget w, Wtt *wtt, XmAnyCallbackStruct *da
     for ( i = 0; i < sel_cnt1; i++)
     {
       new WAtt( wtt->toplevel, wtt, wtt->ldhses,
-		sel_list[i].Objid, wtt->editmode, wtt->wnav->gbl.advanced_user, 1);
+		sel_list[i], wtt->editmode, wtt->wnav->gbl.advanced_user, 1);
     }
     free( (char *)sel_list);
     free( (char *)sel_is_attr);
@@ -1912,7 +1912,7 @@ static void wtt_activate_openobject( Widget w, Wtt *wtt, XmAnyCallbackStruct *da
   {
     for ( i = 0; i < sel_cnt2; i++)
       new WAtt( wtt->toplevel, wtt, wtt->ldhses,
-		sel_list[i].Objid, wtt->editmode,
+		sel_list[i], wtt->editmode,
 		wtt->wnavnode->gbl.advanced_user, 1);
     free( (char *)sel_list);
     free( (char *)sel_is_attr);
@@ -1928,6 +1928,7 @@ static void wtt_activate_openobject( Widget w, Wtt *wtt, XmAnyCallbackStruct *da
 static void wtt_activate_openvolobject( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
 {
   pwr_tObjid objid;
+  pwr_sAttrRef aref;
   int sts;
   ldh_sVolumeInfo info;
 
@@ -1939,11 +1940,12 @@ static void wtt_activate_openvolobject( Widget w, Wtt *wtt, XmAnyCallbackStruct 
 
   objid = pwr_cNObjid;
   objid.vid = info.Volume;
+  aref = cdh_ObjidToAref( objid);
 
   // Wake object editor
   wtt->set_clock_cursor();
   new WAtt( wtt->toplevel, wtt, wtt->ldhses,
-		objid, wtt->editmode, wtt->wnav->gbl.advanced_user, 0);
+		aref, wtt->editmode, wtt->wnav->gbl.advanced_user, 0);
   wtt->reset_cursor();
 }
 

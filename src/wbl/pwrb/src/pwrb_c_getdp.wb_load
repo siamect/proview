@@ -50,31 +50,15 @@ SObject pwrb:Class
     Object DevBody $ObjBodyDef 2 
       !/**
       !  Used by the PLC Editor. Specifies the complete name of
-      !  the actual object.
+      !  the actual attribute.
       !*/
       Object DpObject $Intern 1 
         Body SysBody
           Attr PgmName = "DpObject"
-          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr TypeRef = "pwrs:Type-$AttrRef"
           Attr GraphName = "sts"
           Attr NiNaAnnot = 1
           Attr NiNaSegments = 1
-          Attr ConPointNr = 0
-        EndBody
-      EndObject
-      !/**
-      !  Used by the PLC Editor. Specifies the name of the
-      !  parameter. The editor is case-sensitive on this
-      !  attribute; i.e. if the attribute is named ActualValue
-      !  it has to be written ActualValue and not ACTUALVALUE,
-      !  for example.
-      !*/
-      Object Parameter $Intern 2 
-        Body SysBody
-          Attr PgmName = "Parameter"
-          Attr TypeRef = "pwrs:Type-$String80"
-          Attr GraphName = "par"
-          Attr NiNaAnnot = 2
           Attr ConPointNr = 0
         EndBody
       EndObject
@@ -103,7 +87,7 @@ SObject pwrb:Class
         Attr parameters[2] = 1
         Attr parameters[3] = 0
         Attr subwindows = 0
-        Attr graphmethod = 15
+        Attr graphmethod = 7
         Attr graphindex = 0
         Attr default_mask[0] = 0
         Attr default_mask[1] = 1

@@ -52,7 +52,8 @@ typedef enum {
 	xnav_eItemType_Help,
 	xnav_eItemType_HelpBold,
 	xnav_eItemType_HelpHeader,
-	xnav_eItemType_ObjectStruct
+	xnav_eItemType_ObjectStruct,
+	xnav_eItemType_AttrObject
 	} xnav_eItemType;
 
 typedef enum {
@@ -111,15 +112,16 @@ class Item {
 class ItemBaseAttr : public Item {
   public:
     ItemBaseAttr( pwr_tObjid item_objid,
-	char *attr_name, int attr_type_id, int attr_size, 
+	char *attr_name, int attr_type_id, int attr_size, int attr_flags,
 	int item_is_root, item_eDisplayType item_display_type) :
 	Item( item_objid, item_is_root),
-	type_id(attr_type_id), size(attr_size),
+        type_id(attr_type_id), size(attr_size), flags(attr_flags),
 	subid(pwr_cNSubid), first_scan(1), display_type(item_display_type)
 		{ strcpy( attr, attr_name);
 		  memset( old_value, 0, sizeof(old_value));};
     int type_id;
     int size;
+    int flags;
     pwr_tSubid subid;
     char old_value[80];
     int first_scan;
@@ -230,7 +232,7 @@ class ItemAttr : public ItemBaseAttr {
   public:
     ItemAttr( XNavBrow *brow, pwr_tObjid item_objid,
 	brow_tNode dest, flow_eDest dest_code,
-	char *attr_name, int attr_type_id, int attr_size, 
+        char *attr_name, int attr_type_id, int attr_size, int attr_flags,
 	int item_is_root, item_eDisplayType item_display_type);
 };
 
@@ -239,10 +241,11 @@ class ItemAttrArray : public Item {
     int elements;
     int type_id;
     int size;
+    int flags;
     ItemAttrArray( XNavBrow *brow, pwr_tObjid item_objid,
 	brow_tNode dest, flow_eDest dest_code,
 	char *attr_name, int attr_elements, int attr_type_id, 
-	int attr_size, int item_is_root);
+	int attr_size, int attr_flags, int item_is_root);
     int     open_children( XNavBrow *brow, double x, double y) {return 1;};
     int     open_attributes( XNavBrow *brow, double x, double y);
     int     close( XNavBrow *brow, double x, double y);
@@ -254,7 +257,22 @@ class ItemAttrArrayElem : public ItemBaseAttr {
     ItemAttrArrayElem( XNavBrow *brow, pwr_tObjid item_objid,
 	brow_tNode dest, flow_eDest dest_code,
 	char *attr_name, int attr_element, int attr_type_id,
-	int attr_size, int item_is_root, item_eDisplayType item_display_type);
+	int attr_size, int attr_flags, int item_is_root, item_eDisplayType item_display_type);
+};
+
+class ItemAttrObject : public Item {
+  public:
+    pwr_tCid cid;
+    int size;
+    int flags;
+    int element;
+    ItemAttrObject( XNavBrow *brow, pwr_tObjid item_objid,
+	brow_tNode dest, flow_eDest dest_code,
+	char *attr_name, int attr_cid, 
+	int attr_size, int attr_flags, int attr_element, int item_is_root);
+    int     open_children( XNavBrow *brow, double x, double y) {return 1;};
+    int     open_attributes( XNavBrow *brow, double x, double y);
+    int     close( XNavBrow *brow, double x, double y);
 };
 
 class ItemCollect : public ItemBaseAttr {

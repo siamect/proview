@@ -121,8 +121,8 @@ int goen_create_nodetype_m14(
 
   /* Get the text in the parameter Code */
   sts = ldh_GetObjectPar(
-			(node->hn.window_pointer)->hw.ldhsession,  
-			node->ln.object_did, 
+			(node->hn.wind)->hw.ldhses,  
+			node->ln.oid, 
 			"DevBody",
 			"Code",
 			&parvalue, &size); 
@@ -352,8 +352,8 @@ int goen_get_point_info_m14( grectx, graphbody, point, mask, node_width,
     ldh_sParDef 	*bodydef;
 
     	/* Get the runtime paramters for this class */
-	sts = ldh_GetObjectBodyDef( (node->hn.window_pointer)->hw.ldhsession, 
-			node->ln.classid, "RtBody", 1, 
+	sts = ldh_GetObjectBodyDef( (node->hn.wind)->hw.ldhses, 
+			node->ln.cid, "RtBody", 1, 
 			&bodydef, &rows);
 	if ( EVEN(sts) ) return sts;
 

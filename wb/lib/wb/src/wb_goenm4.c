@@ -516,7 +516,7 @@ vldh_t_node		 node;
 			- ( goe_point_info.loc.y - root_ll_y));
 	  info_pointer->type = goe_point_info.direction;
 
-	  if ( node->ln.classid == vldh_class( ldhses, VLDH_CLASS_TRANS))
+	  if ( node->ln.classid == pwr_cClass_trans)
 	    info_pointer->x = goe_point_info.loc.x - root_ll_x + delta * 3.0/2
 			- f_width / 2;
 
@@ -704,7 +704,7 @@ int goen_get_location_point_m4( grectx, graphbody, mask, node_width,
 	info_pointer->y = f_height / 2  - ( delta + root_height 
 			- ( y_max - root_ll_y));
 
-	if ( node->ln.classid == vldh_class( ldhses, VLDH_CLASS_TRANS))
+	if ( node->ln.classid == pwr_cClass_trans)
 	  info_pointer->x = f_width / 2 - ( x_min - root_ll_x + delta * 3.0/2);
 
 #endif	

@@ -12,10 +12,15 @@
 extern "C" {
 #endif
 
+typedef enum {
+  brow_eUserType_XNav,
+  brow_eUserType_XAttNav
+} brow_eUserType;
+
 class XNavBrow {
   public:
-    XNavBrow( BrowCtx *brow_ctx, void *brow_userdata) : 
-      ctx(brow_ctx), userdata(brow_userdata) 
+    XNavBrow( BrowCtx *brow_ctx, void *brow_userdata, brow_eUserType brow_usertype) : 
+      ctx(brow_ctx), userdata(brow_userdata), usertype(brow_usertype)
       { strcpy( push_command, "");};
 #if 0
     ~XNavBrow();
@@ -23,6 +28,7 @@ class XNavBrow {
 
     BrowCtx		*ctx;
     void		*userdata;
+    brow_eUserType	usertype;
     brow_tNodeClass 	nc_object;
     brow_tNodeClass 	nc_attr;
     brow_tNodeClass 	nc_table;
@@ -50,6 +56,7 @@ class XNavBrow {
     flow_sAnnotPixmap 	*pixmap_symbol;
     flow_sAnnotPixmap 	*pixmap_morehelp;
     flow_sAnnotPixmap 	*pixmap_closehelp;
+    flow_sAnnotPixmap 	*pixmap_object;
     char                push_command[200];
 
     void free_pixmaps();

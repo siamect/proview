@@ -144,22 +144,22 @@ pwr_tStatus io_init_ai_signals(
     sts = gdh_ObjidToPointer( sig_objid, (void *) &sig_op);
     if (EVEN(sts)) return sts;
     
-    if ( cdh_ObjidIsNull( sig_op->SigChanCon)) {
+    if ( cdh_ObjidIsNull( sig_op->SigChanCon.Objid)) {
       errh_Info("IO init: Signal is not connected '%s'", buf);
     }
     else {
-      sts = gdh_GetObjectClass( sig_op->SigChanCon, &class);
+      sts = gdh_GetObjectClass( sig_op->SigChanCon.Objid, &class);
       if (EVEN(sts) || 
 	  !(class == pwr_cClass_ChanAi || class == pwr_cClass_ChanAit)) {
 	errh_Info("IO init: Signal SigChanCon error '%s'", buf);
       }
       else {
-	sts = gdh_ObjidToPointer( sig_op->SigChanCon, (void *) &chan_op);
+	sts = gdh_ObjidToPointer( sig_op->SigChanCon.Objid, (void *) &chan_op);
 	if (EVEN(sts)) {
 	  errh_Info("IO init: Signal SigChanCon error '%s'", buf);
 	}	
 	else
-	  chan_op->SigChanCon = sig_objid;
+	  chan_op->SigChanCon.Objid = sig_objid;
       }		
     }
     gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, &area_op->Value[sig_count]);
@@ -221,22 +221,22 @@ pwr_tStatus io_init_ao_signals(
     sts = gdh_ObjidToPointer( sig_objid, (void *) &sig_op);
     if (EVEN(sts)) return sts;
     
-    if ( cdh_ObjidIsNull( sig_op->SigChanCon)) {
+    if ( cdh_ObjidIsNull( sig_op->SigChanCon.Objid)) {
       errh_Info("IO init: Signal is not connected '%s'", buf);
     }
     else {
-      sts = gdh_GetObjectClass( sig_op->SigChanCon, &class);
+      sts = gdh_GetObjectClass( sig_op->SigChanCon.Objid, &class);
       if (EVEN(sts) || 
 	  (class != pwr_cClass_ChanAo)) {
 	errh_Info("IO init: Signal SigChanCon error '%s'", buf);
       }
       else {
-	sts = gdh_ObjidToPointer( sig_op->SigChanCon, (void *) &chan_op);
+	sts = gdh_ObjidToPointer( sig_op->SigChanCon.Objid, (void *) &chan_op);
 	if (EVEN(sts)) {
 	  errh_Info("IO init: Signal SigChanCon error '%s'", buf);
 	}	
 	else
-	  chan_op->SigChanCon = sig_objid;
+	  chan_op->SigChanCon.Objid = sig_objid;
       }		
     }
     gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, &area_op->Value[sig_count]);
@@ -297,22 +297,22 @@ pwr_tStatus io_init_di_signals(
     sts = gdh_ObjidToPointer( sig_objid, (void *) &sig_op);
     if (EVEN(sts)) return sts;
     
-    if ( cdh_ObjidIsNull( sig_op->SigChanCon)) {
+    if ( cdh_ObjidIsNull( sig_op->SigChanCon.Objid)) {
       errh_Info("IO init: Signal is not connected '%s'", buf);
     }
     else {
-      sts = gdh_GetObjectClass( sig_op->SigChanCon, &class);
+      sts = gdh_GetObjectClass( sig_op->SigChanCon.Objid, &class);
       if (EVEN(sts) || 
 	  (class != pwr_cClass_ChanDi)) {
 	errh_Info("IO init: Signal SigChanCon error '%s'", buf);
       }
       else {
-	sts = gdh_ObjidToPointer( sig_op->SigChanCon, (void *) &chan_op);
+	sts = gdh_ObjidToPointer( sig_op->SigChanCon.Objid, (void *) &chan_op);
 	if (EVEN(sts)) {
 	  errh_Info("IO init: Signal SigChanCon error '%s'", buf);
 	}	
 	else
-	  chan_op->SigChanCon = sig_objid;
+	  chan_op->SigChanCon.Objid = sig_objid;
       }		
     }
     gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, &area_op->Value[sig_count]);
@@ -374,22 +374,22 @@ pwr_tStatus io_init_do_signals(
     sts = gdh_ObjidToPointer( sig_objid, (void *) &sig_op);
     if (EVEN(sts)) return sts;
     
-    if ( cdh_ObjidIsNull( sig_op->SigChanCon)) {
+    if ( cdh_ObjidIsNull( sig_op->SigChanCon.Objid)) {
       errh_Info("IO init: Signal is not connected '%s'", buf);
     }
     else {
-      sts = gdh_GetObjectClass( sig_op->SigChanCon, &class);
+      sts = gdh_GetObjectClass( sig_op->SigChanCon.Objid, &class);
       if (EVEN(sts) ||
 	  (class != pwr_cClass_ChanDo)) {
 	errh_Info("IO init: Signal SigChanCon error '%s'", buf);
       }
       else {
-	sts = gdh_ObjidToPointer( sig_op->SigChanCon, (void *) &chan_op);
+	sts = gdh_ObjidToPointer( sig_op->SigChanCon.Objid, (void *) &chan_op);
 	if (EVEN(sts)) {
 	  errh_Info("IO init: Signal SigChanCon error '%s'", buf);
 	}	
 	else
-	  chan_op->SigChanCon = sig_objid;
+	  chan_op->SigChanCon.Objid = sig_objid;
       }		
     }
     gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, &area_op->Value[sig_count]);
@@ -411,22 +411,22 @@ pwr_tStatus io_init_do_signals(
     sts = gdh_ObjidToPointer( sig_objid, (void *) &sig_op);
     if (EVEN(sts)) return sts;
     
-    if ( cdh_ObjidIsNull( sig_op->SigChanCon)) {
+    if ( cdh_ObjidIsNull( sig_op->SigChanCon.Objid)) {
       errh_Info("IO init: Signal is not connected '%s'", buf);
     }
     else {
-      sts = gdh_GetObjectClass( sig_op->SigChanCon, &class);
+      sts = gdh_GetObjectClass( sig_op->SigChanCon.Objid, &class);
       if (EVEN(sts) ||
 	  (class != pwr_cClass_ChanDo)) {
 	errh_Info("IO init: Signal SigChanCon error '%s'", buf);
       }
       else {
-	sts = gdh_ObjidToPointer( sig_op->SigChanCon, (void *) &chan_op);
+	sts = gdh_ObjidToPointer( sig_op->SigChanCon.Objid, (void *) &chan_op);
 	if (EVEN(sts)) {
 	  errh_Info("IO init: Signal SigChanCon error '%s'", buf);
 	}	
 	else
-	  chan_op->SigChanCon = sig_objid;
+	  chan_op->SigChanCon.Objid = sig_objid;
       }		
     }
     gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, &area_op->Value[sig_count]);
@@ -484,22 +484,22 @@ pwr_tStatus io_init_co_signals(
     sts = gdh_ObjidToPointer( sig_objid, (void *) &sig_op);
     if (EVEN(sts)) return sts;
     
-    if ( cdh_ObjidIsNull( sig_op->SigChanCon)) {
+    if ( cdh_ObjidIsNull( sig_op->SigChanCon.Objid)) {
       errh_Info("IO init: Signal is not connected '%s'", buf);
     }
     else {
-      sts = gdh_GetObjectClass( sig_op->SigChanCon, &class);
+      sts = gdh_GetObjectClass( sig_op->SigChanCon.Objid, &class);
       if (EVEN(sts) || 
 	  (class != pwr_cClass_ChanCo)) {
 	errh_Info("IO init: Signal SigChanCon error '%s'", buf);
       }
       else {
-	sts = gdh_ObjidToPointer( sig_op->SigChanCon, (void *) &chan_op);
+	sts = gdh_ObjidToPointer( sig_op->SigChanCon.Objid, (void *) &chan_op);
 	if (EVEN(sts)) {
 	  errh_Info("IO init: Signal SigChanCon error '%s'", buf);
 	}	
 	else
-	  chan_op->SigChanCon = sig_objid;
+	  chan_op->SigChanCon.Objid = sig_objid;
       }		
     }
     gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->RawValue, &area_op->Value[sig_count]);
@@ -696,23 +696,23 @@ pwr_tStatus io_init_ii_signals(
     sts = gdh_ObjidToPointer( sig_objid, (void *) &sig_op);
     if (EVEN(sts)) return sts;
     
-    if ( cdh_ObjidIsNull( sig_op->SigChanCon)) {
+    if ( cdh_ObjidIsNull( sig_op->SigChanCon.Objid)) {
       errh_Info("IO init: Signal is not connected '%s'", buf);
     }
     else {
-      sts = gdh_GetObjectClass( sig_op->SigChanCon, &class);
+      sts = gdh_GetObjectClass( sig_op->SigChanCon.Objid, &class);
       if (EVEN(sts) || 
 	  (class != pwr_cClass_ChanIi)) {
 	errh_Info("IO init: Signal SigChanCon error '%s'", buf);
       }
       else {
-	sts = gdh_ObjidToPointer( sig_op->SigChanCon, (void *) &chan_op);
+	sts = gdh_ObjidToPointer( sig_op->SigChanCon.Objid, (void *) &chan_op);
 	if (EVEN(sts)) {
 	  errh_Info("IO init: Signal SigChanCon error '%s'", buf);
 	}	
 	else
-	  chan_op->SigChanCon = sig_objid;
-      }		
+	  chan_op->SigChanCon.Objid = sig_objid;
+      }
     }
     gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, &area_op->Value[sig_count]);
     sig_op->ValueIndex = sig_count;
@@ -773,22 +773,22 @@ pwr_tStatus io_init_io_signals(
     sts = gdh_ObjidToPointer( sig_objid, (void *) &sig_op);
     if (EVEN(sts)) return sts;
     
-    if ( cdh_ObjidIsNull( sig_op->SigChanCon)) {
+    if ( cdh_ObjidIsNull( sig_op->SigChanCon.Objid)) {
       errh_Info("IO init: Signal is not connected '%s'", buf);
     }
     else {
-      sts = gdh_GetObjectClass( sig_op->SigChanCon, &class);
+      sts = gdh_GetObjectClass( sig_op->SigChanCon.Objid, &class);
       if (EVEN(sts) || 
 	  (class != pwr_cClass_ChanIo)) {
 	errh_Info("IO init: Signal SigChanCon error '%s'", buf);
       }
       else {
-	sts = gdh_ObjidToPointer( sig_op->SigChanCon, (void *) &chan_op);
+	sts = gdh_ObjidToPointer( sig_op->SigChanCon.Objid, (void *) &chan_op);
 	if (EVEN(sts)) {
 	  errh_Info("IO init: Signal SigChanCon error '%s'", buf);
 	}	
 	else
-	  chan_op->SigChanCon = sig_objid;
+	  chan_op->SigChanCon.Objid = sig_objid;
       }		
     }
     gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, &area_op->Value[sig_count]);
@@ -1405,35 +1405,35 @@ static pwr_tStatus io_init_card(
 	  switch ( class)
 	  {
 	    case pwr_cClass_ChanAi:
-	      sigchancon = ((pwr_sClass_ChanAi *) chan_op)->SigChanCon;
+	      sigchancon = ((pwr_sClass_ChanAi *) chan_op)->SigChanCon.Objid;
 	      number = ((pwr_sClass_ChanAi *) chan_op)->Number;
 	      break;
 	    case pwr_cClass_ChanAit:
-	      sigchancon = ((pwr_sClass_ChanAit *) chan_op)->SigChanCon;
+	      sigchancon = ((pwr_sClass_ChanAit *) chan_op)->SigChanCon.Objid;
 	      number = ((pwr_sClass_ChanAit *) chan_op)->Number;
 	      break;
 	    case pwr_cClass_ChanAo:
-	      sigchancon = ((pwr_sClass_ChanAo *) chan_op)->SigChanCon;
+	      sigchancon = ((pwr_sClass_ChanAo *) chan_op)->SigChanCon.Objid;
 	      number = ((pwr_sClass_ChanAo *) chan_op)->Number;
 	      break;
 	    case pwr_cClass_ChanDo:
-	      sigchancon = ((pwr_sClass_ChanDo *) chan_op)->SigChanCon;
+	      sigchancon = ((pwr_sClass_ChanDo *) chan_op)->SigChanCon.Objid;
 	      number = ((pwr_sClass_ChanDo *) chan_op)->Number;
 	      break;
 	    case pwr_cClass_ChanDi:
-	      sigchancon = ((pwr_sClass_ChanDi *) chan_op)->SigChanCon;
+	      sigchancon = ((pwr_sClass_ChanDi *) chan_op)->SigChanCon.Objid;
 	      number = ((pwr_sClass_ChanDi *) chan_op)->Number;
 	      break;
 	    case pwr_cClass_ChanIi:
-	      sigchancon = ((pwr_sClass_ChanIi *) chan_op)->SigChanCon;
+	      sigchancon = ((pwr_sClass_ChanIi *) chan_op)->SigChanCon.Objid;
 	      number = ((pwr_sClass_ChanIi *) chan_op)->Number;
 	      break;
 	    case pwr_cClass_ChanIo:
-	      sigchancon = ((pwr_sClass_ChanIo *) chan_op)->SigChanCon;
+	      sigchancon = ((pwr_sClass_ChanIo *) chan_op)->SigChanCon.Objid;
 	      number = ((pwr_sClass_ChanIo *) chan_op)->Number;
 	      break;
 	    case pwr_cClass_ChanCo:
-	      sigchancon = ((pwr_sClass_ChanCo *) chan_op)->SigChanCon;
+	      sigchancon = ((pwr_sClass_ChanCo *) chan_op)->SigChanCon.Objid;
 	      number = ((pwr_sClass_ChanCo *) chan_op)->Number;
 	      break;
 	    default:

@@ -92,9 +92,11 @@ wb_cdrep::wb_cdrep( const wb_orep& o) : m_nRef(0)
   
   wb_cdrep *cdrep = o.vrep()->merep()->cdrep( &sts, o);
   m_sts = sts;
-  m_orep = cdrep->m_orep;
-  m_orep->ref();
-  delete cdrep;
+  if ( ODD(m_sts)) {
+    m_orep = cdrep->m_orep;
+    m_orep->ref();
+    delete cdrep;
+  }
 }
 
 wb_cdrep::wb_cdrep( wb_adrep *adrep) : m_nRef(0)
@@ -147,6 +149,23 @@ wb_adrep *wb_cdrep::adrep( pwr_tStatus *sts, const char *aname)
     *sts = n.sts();
     return 0;
   }
+
+  wb_bdrep *bd = bdrep( sts, pwr_eBix_rt);
+  if ( ODD(*sts)) {
+    wb_adrep *adrep = bd->adrep( sts, aname);
+    delete bd;
+    if ( ODD(*sts))
+      return adrep;
+  }
+  bd = bdrep( sts, pwr_eBix_dev);
+  if ( ODD(*sts)) {
+    wb_adrep *adrep = bd->adrep( sts, aname);
+    delete bd;
+    if ( ODD(*sts))
+      return adrep;
+  }
+
+#if 0
   wb_orep *orep_attr;
   wb_orep *old;
   wb_orep *orep = m_orep->first( sts);
@@ -165,6 +184,7 @@ wb_adrep *wb_cdrep::adrep( pwr_tStatus *sts, const char *aname)
     orep = orep->after( sts);
     old->unref();
   }
+#endif
   *sts = LDH__NOSUCHATTR;
   return 0;
 }
@@ -404,6 +424,22 @@ wb_orep *wb_cdrep::menuFirst( pwr_tStatus *sts, wb_orep *orep, void **o)
 pwr_tTime wb_cdrep::ohTime()
 {
   return m_orep->ohTime();
+}
+
+wb_cdrep* wb_cdrep::super( pwr_tStatus *sts)
+{
+  wb_bdrep *bd = bdrep( sts, pwr_eBix_rt);
+  if ( EVEN(*sts)) return 0;
+
+  wb_adrep *adrep = bd->super(sts);
+  if ( EVEN(*sts)) { delete bd; return 0;}
+
+  wb_cdrep *cdrep = m_orep->vrep()->merep()->cdrep(sts, adrep->subClass());
+  if ( EVEN(*sts)) { delete adrep; delete bd; return 0;}
+
+  delete bd;
+  delete adrep;
+  return cdrep;
 }
 
 void wb_cdrep::convertSubClass( pwr_tCid cid, wb_merep *merep,

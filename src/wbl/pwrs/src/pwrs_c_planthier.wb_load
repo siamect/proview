@@ -52,7 +52,7 @@ SObject pwrs:Class
       !*/
       Object DefGraph $Attribute 2
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr TypeRef = "pwrs:Type-$AttrRef"
         EndBody
       EndObject
       !/**
@@ -62,7 +62,7 @@ SObject pwrs:Class
       !*/
       Object DefTrend $Attribute 3
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr TypeRef = "pwrs:Type-$AttrRef"
         EndBody
       EndObject
       !/**
@@ -107,10 +107,10 @@ SObject pwrs:Class
 	Object ConnectGraph $MenuButton
 	  Body SysBody
 	    Attr ButtonName = "Connect Graph"
-	    Attr MethodName = "$Objid-Connect"
+	    Attr MethodName = "$AttrRef-Connect"
 	    Attr MethodArguments[0] = "DefGraph"
 	    Attr MethodArguments[1] = "XttGraph"
-	    Attr FilterName = "$Objid-IsOkConnect"
+	    Attr FilterName = "$AttrRef-IsOkConnect"
 	    Attr FilterArguments[0] = "DefGraph"
 	    Attr FilterArguments[1] = "XttGraph"
 	  EndBody
@@ -118,10 +118,10 @@ SObject pwrs:Class
 	Object ConnectTrend $MenuButton
 	  Body SysBody
 	    Attr ButtonName = "Connect Trend"
-	    Attr MethodName = "$Objid-Connect"
+	    Attr MethodName = "$AttrRef-Connect"
 	    Attr MethodArguments[0] = "DefTrend"
 	    Attr MethodArguments[1] = "DsTrend,PlotGroup"
-	    Attr FilterName = "$Objid-IsOkConnect"
+	    Attr FilterName = "$AttrRef-IsOkConnect"
 	    Attr FilterArguments[0] = "DefTrend"
 	    Attr FilterArguments[1] = "DsTrend,PlotGroup"
 	  EndBody

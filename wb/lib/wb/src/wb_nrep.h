@@ -26,6 +26,7 @@ public:
   int offs;
   int len;
   int index;
+  bool isSuper;
 };
 
 class wb_nrep
@@ -52,6 +53,8 @@ private:
   char oname[200];
   char norm_name[200];
   pwr_tStatus status;
+  bool m_hasSuper;
+  bool m_shadowed;
 
   void parse() throw (wb_error);
   char *objectName( const char *n, char *res = 0);
@@ -88,6 +91,8 @@ public:
       return attr[idx].index;
     return 0;
   }
+  int attributes() { return num_attr;}
+  int segments() { return num_seg;}
   char *segment( int idx = 0, char *res = 0);
   char *path( char *res = 0);
   char *volume( char *res = 0);
@@ -108,8 +113,10 @@ public:
   bool attributeIsEqual( const char *n, int idx = 0);
   int bodyOffset() const { return b_offset;}
   int bodySize() const { return b_size;}
-  char *wholeAttr( char *res = 0);
-
+  char *attributesAll( int idx = 0, char *res = 0);
+  char *segmentsAll( int idx = 0, char *res = 0);
+  bool hasSuper() { return m_hasSuper;}
+  void setShadowed( bool shadowed) { m_shadowed = shadowed;}
   static char *unatName( const char *name);
   static bool checkObjectName( const char *name);
 };

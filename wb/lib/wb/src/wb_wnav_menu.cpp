@@ -182,7 +182,7 @@ static Widget wnav_build_menu(
   return MenuType == MENU_POPUP ? Menu : Cascade;
 }
 
-Widget wtt_create_popup_menu( Wtt *wtt, pwr_tObjid objid, pwr_tCid cid, 
+Widget wtt_create_popup_menu( Wtt *wtt, pwr_sAttrRef aref, pwr_tCid cid, 
 			      void (*message_cb)(void *, char, char *))
 {
   pwr_tStatus 	sts;
@@ -219,14 +219,19 @@ Widget wtt_create_popup_menu( Wtt *wtt, pwr_tObjid objid, pwr_tCid cid,
     // Popup in wnav
     mcp->EditorContext = (void *)wtt;
     mcp->WindowContext = (void *)wtt->wnav_form;
-    mcp->PointedSet = ldh_eMenuSet_Object;
 
-    mcp->Pointed.Objid = objid;
+    mcp->Pointed = aref;
+
+    if ( mcp->Pointed.Flags.b.Object)
+      mcp->PointedSet = ldh_eMenuSet_Object;
+    else if ( mcp->Pointed.Flags.b.ObjectAttr)
+      mcp->PointedSet = ldh_eMenuSet_ObjectAttr;
+    else if ( mcp->Pointed.Flags.b.Array)
+      mcp->PointedSet = ldh_eMenuSet_Array;
+    else
+      mcp->PointedSet = ldh_eMenuSet_Attribute;
 
     mcp->PointedSession = wtt->ldhses;
-    mcp->Pointed.Size = 0;
-    mcp->Pointed.Offset = 0;
-    mcp->Pointed.Flags.m = 0;
     mcp->SelectedSet = ldh_eMenuSet_None;
     mcp->SelectedSession = wtt->ldhses;
 
@@ -240,10 +245,6 @@ Widget wtt_create_popup_menu( Wtt *wtt, pwr_tObjid objid, pwr_tCid cid,
       wtt->wnavnode->get_select( &sel2_list, &sel2_is_attr, &sel2_cnt);
     else
       sel2_cnt = 0;
-
-    if (sel1_cnt + sel2_cnt != 0) {
-      mcp->SelectedSet = sel1_cnt + sel2_cnt > 1 ? ldh_eMenuSet_Many : ldh_eMenuSet_Object;
-    }  
 
     mcp->Selected = (pwr_sAttrRef *) XtCalloc( sel1_cnt + sel2_cnt + 1, sizeof (pwr_sAttrRef));
     if ( sel1_cnt)
@@ -261,6 +262,21 @@ Widget wtt_create_popup_menu( Wtt *wtt, pwr_tObjid objid, pwr_tCid cid,
 
     mcp->Selected[sel1_cnt + sel2_cnt].Objid = pwr_cNObjid;
     mcp->SelectCount = sel1_cnt + sel2_cnt;
+
+    if ( mcp->SelectCount == 0)      
+      mcp->SelectedSet = ldh_eMenuSet_None;
+    else if ( mcp->SelectCount > 1)      
+      mcp->SelectedSet = ldh_eMenuSet_Many;
+    else {
+      if ( mcp->Selected[0].Flags.b.Object)
+	mcp->SelectedSet = ldh_eMenuSet_Object;
+      else if ( mcp->Selected[0].Flags.b.ObjectAttr)
+	mcp->SelectedSet = ldh_eMenuSet_ObjectAttr;
+      else if ( mcp->Selected[0].Flags.b.Array)
+	mcp->SelectedSet = ldh_eMenuSet_Array;
+      else
+	mcp->SelectedSet = ldh_eMenuSet_Attribute;
+    }	
 
     if ( sel1_cnt + sel2_cnt == 0) {
       pwr_tCid cid;
@@ -282,14 +298,21 @@ Widget wtt_create_popup_menu( Wtt *wtt, pwr_tObjid objid, pwr_tCid cid,
 	if ( EVEN(sts))
 	  sts = wow_GetSelection( wtt->wnav_form, str, sizeof(str), XA_STRING);
 	if ( ODD(sts)) {
-	  sts = ldh_NameToObjid( mcp->PointedSession, &objid, str);
+	  sts = ldh_NameToAttrRef( mcp->PointedSession, str, &aref);
 	  if ( ODD(sts)) {
 	    XtFree( (char *) mcp->Selected);
 	    mcp->Selected = (pwr_sAttrRef *) XtCalloc( 2, sizeof (pwr_sAttrRef));
-	    mcp->SelectedSet = ldh_eMenuSet_Object;
-	    mcp->Selected[0].Objid = objid;
+	    mcp->Selected[0] = aref;
 	    mcp->Selected[1].Objid = pwr_cNObjid;
 	    mcp->SelectCount = 1;
+	    if ( mcp->Selected[0].Flags.b.Object)
+	      mcp->SelectedSet = ldh_eMenuSet_Object;
+	    else if ( mcp->Selected[0].Flags.b.ObjectAttr)
+	      mcp->SelectedSet = ldh_eMenuSet_ObjectAttr;
+	    else if ( mcp->Selected[0].Flags.b.Array)
+	      mcp->SelectedSet = ldh_eMenuSet_Array;
+	    else
+	      mcp->SelectedSet = ldh_eMenuSet_Attribute;
 	  }
 	}
       }

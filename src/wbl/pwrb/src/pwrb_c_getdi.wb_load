@@ -56,7 +56,7 @@ SObject pwrb:Class
       Object DiObject $Intern 1 
         Body SysBody
           Attr PgmName = "DiObject"
-          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr TypeRef = "pwrs:Type-$AttrRef"
           Attr NiNaAnnot = 1
           Attr NiNaSegments = 1
         EndBody
@@ -66,7 +66,7 @@ SObject pwrb:Class
       !*/
       Object SigChanCon $Intern 2 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr TypeRef = "pwrs:Type-$AttrRef"
           Attr Flags |= PWR_MASK_INVISIBLE
           Attr NiNaAnnot = 2
           Attr NiNaCond = 1

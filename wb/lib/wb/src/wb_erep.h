@@ -70,6 +70,8 @@ public:
   wb_tdrep *tdrep( pwr_tStatus *sts, const wb_adrep& a);
   void method( pwr_tStatus *sts, char *methodName, wb_tMethod *method);
   int nextVolatileVid( pwr_tStatus *sts, char *name);
+  void setRefMerep( wb_merep *merep);
+  void resetRefMerep();
 
   static void volumeNameToFilename( pwr_tStatus *sts, char *name, char *filename);
 

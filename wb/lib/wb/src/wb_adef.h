@@ -49,8 +49,11 @@ public:
   wb_adef prev();
 
   const char *name();
+  const char *subName();
   wb_name longName();
   void *body( void *p = 0);
+  bool isClass();
+  pwr_tCid subClass();
     
 private:
   void check();

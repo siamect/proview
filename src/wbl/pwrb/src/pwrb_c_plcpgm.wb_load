@@ -78,15 +78,14 @@ SObject pwrb:Class
       !/**
       !  Specifies the complete name of a Di, Dv or Do object
       !  which will be used as the reset signal of the Grafcet
-      !  chains identified by the PlcPgm object. About the use
-      !  of ResetObjects see the InitStep object on p. 3-183.
+      !  chains identified by the PlcPgm object.
       !  If there is no need to reset a Grafcet chain or if the
       !  PlcPgm object does not contain any Grafcet chain the
       !  attribute is left blank.
       !*/
       Object ResetObject $Intern 2 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr TypeRef = "pwrs:Type-$AttrRef"
           Attr GraphName = "ResObj"
         EndBody
       EndObject

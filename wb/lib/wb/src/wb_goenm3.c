@@ -100,16 +100,16 @@ int goen_create_nodetype_m3(
 
 	/* Get the text in the parameter Text */
 	sts = ldh_GetObjectPar(
-			(node->hn.window_pointer)->hw.ldhsession,  
-			node->ln.object_did, 
+			(node->hn.wind)->hw.ldhses,  
+			node->ln.oid, 
 			"DevBody",
 			"Text",
 			(char **)&parvalue, &parvalue_size); 
 	if ( EVEN(sts)) return sts;
 
 	sts = ldh_GetObjectPar(
-			(node->hn.window_pointer)->hw.ldhsession,  
-			node->ln.object_did, 
+			(node->hn.wind)->hw.ldhses,  
+			node->ln.oid, 
 			"DevBody",
 			"TextAttribute",
 			(char **)&text_attribute_ptr, &size); 
@@ -122,8 +122,8 @@ int goen_create_nodetype_m3(
 	  text_attribute = 0;
 
 	sts = ldh_GetObjectPar(
-			(node->hn.window_pointer)->hw.ldhsession,  
-			node->ln.object_did, 
+			(node->hn.wind)->hw.ldhses,  
+			node->ln.oid, 
 			"DevBody",
 			"FrameAttribute",
 			(char **)&frame_attribute_ptr, &size); 
@@ -136,8 +136,8 @@ int goen_create_nodetype_m3(
 	  frame_attribute = 0;
 
 	sts = ldh_GetObjectPar(
-			(node->hn.window_pointer)->hw.ldhsession,  
-			node->ln.object_did, 
+			(node->hn.wind)->hw.ldhses,  
+			node->ln.oid, 
 			"DevBody",
 			"FrameWidth",
 			(char **)&frame_width_ptr, &size); 
@@ -150,8 +150,8 @@ int goen_create_nodetype_m3(
 	  frame_width = 0.0;
 
 	sts = ldh_GetObjectPar(
-			(node->hn.window_pointer)->hw.ldhsession,  
-			node->ln.object_did, 
+			(node->hn.wind)->hw.ldhses,  
+			node->ln.oid, 
 			"DevBody",
 			"FrameHeight",
 			(char **)&frame_height_ptr, &size); 

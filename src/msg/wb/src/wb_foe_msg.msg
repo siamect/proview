@@ -88,6 +88,7 @@ invthread	<Invalid thread object, plc will not be executed>	/warning
 generic		<Generic object is not connected>			/error
 templateplc	<Template plc not found>				/error
 ccerror		<Error from c compilator, see terminal window>		/fatal
+noconnect	<PlcConnect object is missing>				/error
 
         .facility       FOE,280 /prefix = FOE__ ! Function object editor
 
@@ -130,6 +131,7 @@ volumeclass	<error in volume class>					/error
 volumeid	<error in volume id>					/error
 nodb		<no such database>					/error
 sh		<error from shell>					/error
+replaced	<object is replaced>					/info
 
         .facility       ROU,290 /prefix = ROU__ ! Routed connections
 

@@ -1,11 +1,11 @@
-Package: pwr40
-Version: 4.0.0-1
+Package: pwr41
+Version: 4.1.0-1
 Section: base
 Priority: optional
 Architecture: i386
 Depends: libc6 (>= 2.2.4-4)
-Replaces: pwrrt,pwr34,pwr39
+Replaces: pwrrt,pwr34,pwr39,pwr40
 Maintainer: Proview <postmaster@proview.se>
 Description: Proview development and runtime environment package
  Proview development and runtime environment
- 4.0.0-1 Base release
+ 4.1.0-1 Base release

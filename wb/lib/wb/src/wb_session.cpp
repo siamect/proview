@@ -30,6 +30,8 @@ static struct {
   {"Many",		'm',  ldh_eMenuSet_Many},
   {"None",		'n',  ldh_eMenuSet_None},
   {"Object",		'o',  ldh_eMenuSet_Object},
+  {"ObjectAttr",       	'o',  ldh_eMenuSet_ObjectAttr},
+  {"Array",       	'y',  ldh_eMenuSet_Array},
   {"-",			'\0', ldh_eMenuSet_}
 };
 
@@ -532,7 +534,9 @@ pwr_tStatus wb_session::getMenu( ldh_sMenuCall *ip)
   wb_name               cn;
 
   for (i = 0; i < ip->SelectCount; i++) {
-    if (cdh_ObjidIsEqual(ip->Pointed.Objid, ip->Selected[i].Objid)) {
+    if (cdh_ObjidIsEqual(ip->Pointed.Objid, ip->Selected[i].Objid) &&
+	ip->Pointed.Offset == ip->Selected[i].Offset &&
+	ip->Pointed.Flags.m == ip->Selected[i].Flags.m) {
       isSame = TRUE;
       break;
     }
@@ -545,60 +549,21 @@ pwr_tStatus wb_session::getMenu( ldh_sMenuCall *ip)
     (isSame ? 's' : 'n')
   );
   /* Find generic menues of pointed object */
+  switch ( ip->PointedSet) {
+  case ldh_eMenuSet_Object: {
+    sprintf(Menu, "pwrs:Class-$Object-%s-Pointed", MenuFolder);
 
-  sprintf(Menu, "pwrs:Class-$Object-%s-Pointed", MenuFolder);
-
-  wb_cdrep *cdrep = m_vrep->merep()->cdrep( &sts, pwr_eClass_Object);
-  if ( EVEN(sts)) return sts;
-
-  wb_orep *o = m_vrep->erep()->object( &sts, Menu);
-  if ( EVEN(sts)) return sts;
-  o->ref();
-
-  Object = o->oid();
-  void *o_menu_body;
-
-  wb_orep *o_menu = cdrep->menuFirst( &sts, o, &o_menu_body);
-  while ( ODD(sts)) {
-    o_menu->ref();
-    getAllMenuItems( ip, &Item, cdrep, o_menu, o_menu_body, 0, &nItems, 0);
-    wb_orep *prev = o_menu; 
-    o_menu = cdrep->menuAfter( &sts, o_menu, &o_menu_body);
-    prev->unref();
-  }
-  delete cdrep;
-  o->unref();
-
-  /* Find specific menues of pointed object */
-
-  if (ip->PointedSet == ldh_eMenuSet_Class) {
-    Class = cdh_ClassObjidToId(ip->Pointed.Objid);
-  }
-  else {
-    if ( m_vrep->vid() == ip->Pointed.Objid.vid)
-      o = m_vrep->object( &sts, ip->Pointed.Objid);
-    else
-      // Other volume
-      o = m_vrep->erep()->object( &sts, ip->Pointed.Objid);
+    wb_cdrep *cdrep = m_vrep->merep()->cdrep( &sts, pwr_eClass_Object);
     if ( EVEN(sts)) return sts;
-    o->ref();
-    Class = o->cid();
-    o->unref();
-  }
 
-  cdrep = m_vrep->merep()->cdrep( &sts, Class);
-  if ( EVEN(sts)) return sts;
-
-  cn = cdrep->longName();
-  sprintf(Menu, "%s-%s-Pointed", cn.name(), MenuFolder);
-
-  o = m_vrep->erep()->object( &sts, Menu);
-  if ( ODD(sts)) {
+    wb_orep *o = m_vrep->erep()->object( &sts, Menu);
+    if ( EVEN(sts)) return sts;
     o->ref();
 
     Object = o->oid();
+    void *o_menu_body;
 
-    o_menu = cdrep->menuFirst( &sts, o, &o_menu_body);
+    wb_orep *o_menu = cdrep->menuFirst( &sts, o, &o_menu_body);
     while ( ODD(sts)) {
       o_menu->ref();
       getAllMenuItems( ip, &Item, cdrep, o_menu, o_menu_body, 0, &nItems, 0);
@@ -606,27 +571,118 @@ pwr_tStatus wb_session::getMenu( ldh_sMenuCall *ip)
       o_menu = cdrep->menuAfter( &sts, o_menu, &o_menu_body);
       prev->unref();
     }
+    delete cdrep;
     o->unref();
+    break;
   }
-  delete cdrep;
+  case ldh_eMenuSet_ObjectAttr: {
+    pwr_tObjName OMenuFolder;
+
+    sprintf(OMenuFolder, "%sP%cs%c%c",
+	    ldh_lUtility[((wb_session *)ip->PointedSession)->utility()].Name,
+	    'x', 'x', 'x');
+    sprintf(Menu, "pwrs:Class-$Object-%s-Pointed", OMenuFolder);
+
+    wb_cdrep *cdrep = m_vrep->merep()->cdrep( &sts, pwr_eClass_Object);
+    if ( EVEN(sts)) return sts;
+
+    wb_orep *o = m_vrep->erep()->object( &sts, Menu);
+    if ( EVEN(sts)) return sts;
+    o->ref();
+
+    Object = o->oid();
+    void *o_menu_body;
+
+    wb_orep *o_menu = cdrep->menuFirst( &sts, o, &o_menu_body);
+    while ( ODD(sts)) {
+      o_menu->ref();
+      getAllMenuItems( ip, &Item, cdrep, o_menu, o_menu_body, 0, &nItems, 0);
+      wb_orep *prev = o_menu; 
+      o_menu = cdrep->menuAfter( &sts, o_menu, &o_menu_body);
+      prev->unref();
+    }
+    delete cdrep;
+    o->unref();
+    break;
+  }
+  default:
+    ;
+  }
+  /* Find specific menues of pointed object */
+
+  switch ( ip->PointedSet) {
+  case ldh_eMenuSet_Object:
+  case ldh_eMenuSet_ObjectAttr: {
+    if (ip->PointedSet == ldh_eMenuSet_Class) {
+      Class = cdh_ClassObjidToId(ip->Pointed.Objid);
+    }
+    else {
+      wb_attribute a = attribute( &ip->Pointed);
+      if ( !a) return sts;
+      Class = a.tid();
+    }
+
+    wb_cdrep *cdrep = m_vrep->merep()->cdrep( &sts, Class);
+    while ( ODD(sts)) {
+
+      cn = cdrep->longName();
+      sprintf(Menu, "%s-%s-Pointed", cn.name(), MenuFolder);
+
+      wb_orep *o = m_vrep->erep()->object( &sts, Menu);
+      if ( ODD(sts)) {
+	o->ref();
+      
+	Object = o->oid();
+
+	void *o_menu_body;
+	wb_orep *o_menu = cdrep->menuFirst( &sts, o, &o_menu_body);
+	while ( ODD(sts)) {
+	  o_menu->ref();
+	  getAllMenuItems( ip, &Item, cdrep, o_menu, o_menu_body, 0, &nItems, 0);
+	  wb_orep *prev = o_menu; 
+	  o_menu = cdrep->menuAfter( &sts, o_menu, &o_menu_body);
+	  prev->unref();
+	}
+	o->unref();
+      }
+      // Get menuitems for superclass
+      wb_cdrep *super_cdrep = cdrep->super( &sts);
+      if ( super_cdrep) {
+	delete cdrep;
+	cdrep = super_cdrep;      
+      }
+    }
+    delete cdrep;
+    break;
+  }
+  default:
+    ;
+  }
 
   switch (ip->SelectedSet) {
   case ldh_eMenuSet_Attribute:
+  case ldh_eMenuSet_Array:
+  case ldh_eMenuSet_ObjectAttr:
+    break;
   case ldh_eMenuSet_Class:
   case ldh_eMenuSet_Many:
-  case ldh_eMenuSet_Object:
+  case ldh_eMenuSet_Object: {
+    if ( ip->PointedSet != ldh_eMenuSet_Object)
+      break;
+
     /* Find generic menues for selected object(s) */
     sprintf(Menu, "pwrs:Class-$Object-%s-Selected", MenuFolder);
-    cdrep = m_vrep->merep()->cdrep( &sts, pwr_eClass_Object);
+    wb_cdrep *cdrep = m_vrep->merep()->cdrep( &sts, pwr_eClass_Object);
     if ( EVEN(sts)) return sts;
 
-    o = m_vrep->erep()->object( &sts, Menu);
+    wb_orep *o = m_vrep->erep()->object( &sts, Menu);
     if ( ODD(sts)) {
       o->ref();
 
       Object = o->oid();
 
-      o_menu = cdrep->menuFirst( &sts, o, &o_menu_body);
+      void *o_menu_body;
+      wb_orep *o_menu = cdrep->menuFirst( &sts, o, &o_menu_body);
       while ( ODD(sts)) {
         o_menu->ref();
         getAllMenuItems( ip, &Item, cdrep, o_menu, o_menu_body, 0, &nItems, 0);
@@ -655,30 +711,40 @@ pwr_tStatus wb_session::getMenu( ldh_sMenuCall *ip)
     }
 
     cdrep = m_vrep->merep()->cdrep( &sts, Class);
-    if ( EVEN(sts)) return sts;
+    while ( ODD(sts)) {
 
-    cn = cdrep->longName();
-    sprintf(Menu, "%s-%s-Selected", cn.name(), MenuFolder);
+      cn = cdrep->longName();
+      sprintf(Menu, "%s-%s-Selected", cn.name(), MenuFolder);
+    
+      o = m_vrep->erep()->object( &sts, Menu);
+      if ( ODD(sts)) {
+	o->ref();
 
-    o = m_vrep->erep()->object( &sts, Menu);
-    if ( ODD(sts)) {
-      o->ref();
+	Object = o->oid();
 
-      Object = o->oid();
-
-      o_menu = cdrep->menuFirst( &sts, o, &o_menu_body);
-      while ( ODD(sts)) {
-        o_menu->ref();
-        getAllMenuItems( ip, &Item, cdrep, o_menu, o_menu_body, 0, &nItems, 0);
-	wb_orep *prev = o_menu; 
-        o_menu = cdrep->menuAfter( &sts, o_menu, &o_menu_body);
-        prev->unref();
+	void *o_menu_body;
+	wb_orep *o_menu = cdrep->menuFirst( &sts, o, &o_menu_body);
+	while ( ODD(sts)) {
+	  o_menu->ref();
+	  getAllMenuItems( ip, &Item, cdrep, o_menu, o_menu_body, 0, &nItems, 0);
+	  wb_orep *prev = o_menu; 
+	  o_menu = cdrep->menuAfter( &sts, o_menu, &o_menu_body);
+	  prev->unref();
+	}
+	o->unref();
       }
-      o->unref();
+
+      // Get menuitems for superclass
+      wb_cdrep *super_cdrep = cdrep->super( &sts);
+      if ( super_cdrep) {
+	delete cdrep;
+	cdrep = super_cdrep;      
+      }
     }
     delete cdrep;
 
     break;
+  }
   default:
     break;
   }

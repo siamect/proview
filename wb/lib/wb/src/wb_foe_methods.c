@@ -16,6 +16,7 @@
 #endif
 #include "wb_foe_macros.h"
 #include "pwr.h"
+#include "pwr_baseclasses.h"
 #include "wb_foe_api.h"
 
 #include <Xm/Xm.h>
@@ -205,7 +206,7 @@ static pwr_tStatus foe_ldh_this_session_cb (
       case ldh_eEvent_ObjectRenamed:
       case ldh_eEvent_BodyModified:
         sts = vldh_get_node_objdid( event->Object, 
-		foectx->grectx->window_object, &node);
+		foectx->grectx->wind, &node);
         if ( EVEN(sts)) return 1;
 
 	sts = gre_node_update( foectx->grectx, node);
@@ -342,11 +343,11 @@ int foe_attr_create (
 	if ( node == 0 )
 	{	
 	  /* This is a plc object calling */
-	  wind = foectx->grectx->window_object;
-	  plc = wind->hw.plcobject_pointer;
+	  wind = foectx->grectx->wind;
+	  plc = wind->hw.plc;
 
 	  a_ctx = ate_edit( foectx, foectx->widgets.foe_window,
-	      	"Attribute Editor", 0, plc->lp.objdid, 
+	      	"Attribute Editor", 0, plc->lp.oid, 
 	      	plc->hp.ldhsesctx,
 	       	NULL, NULL, NULL, NULL, 
 		0, TRUE);
@@ -355,8 +356,8 @@ int foe_attr_create (
 	else
 	{
 	  a_ctx = ate_edit( foectx, foectx->widgets.foe_window,
-	      "Attribute Editor", 0, node->ln.object_did, 
-	      (node->hn.window_pointer)->hw.ldhsession,
+	      "Attribute Editor", 0, node->ln.oid, 
+	      (node->hn.wind)->hw.ldhses,
 	       foe_attr_ok, foe_attr_save, foe_attr_quit, NULL, ate_mode,
 	       TRUE);
 	  /* Store in the array */
@@ -368,17 +369,19 @@ int foe_attr_create (
 	vldh_t_plc	plc;
 	int		ate_mode;
 	int		sts;
+	pwr_sAttrRef	aref;
 
 	ate_mode = ( foectx->function == EDIT );
 
 	if ( node == 0 )
 	{	
 	  /* This is a plc object calling */
-	  wind = foectx->grectx->window_object;
-	  plc = wind->hw.plcobject_pointer;
+	  wind = foectx->grectx->wind;
+	  plc = wind->hw.plc;
 
+	  aref = cdh_ObjidToAref( plc->lp.oid);
 	  watt = watt_new( foectx->widgets.foe_window, foectx, 
-	      	plc->hp.ldhsesctx, plc->lp.objdid, 0, 
+	      	plc->hp.ldhsesctx, aref, 0, 
 		foectx->advanced_user, 0, NULL);
 
 	}
@@ -388,9 +391,10 @@ int foe_attr_create (
           if ( ODD(sts))
             watt_pop( watt);
           else {
+	    aref = cdh_ObjidToAref( node->ln.oid); 
 	    watt = watt_new( foectx->widgets.foe_window, foectx, 
-	      	(node->hn.window_pointer)->hw.ldhsession,
-	      	node->ln.object_did, ate_mode, foectx->advanced_user, 1, 
+	      	(node->hn.wind)->hw.ldhses,
+	      	aref, ate_mode, foectx->advanced_user, 1, 
 		foe_attr_quit);
 
 	    /* Store in the array */
@@ -628,7 +632,7 @@ static int foe_parent_quit (
 	foe_ctx			subw_foectx;
 
 	/* Get all the subwindows and reset parentctx */
-	sts = vldh_get_wind_subwindows( foectx->grectx->window_object, 
+	sts = vldh_get_wind_subwindows( foectx->grectx->wind, 
 			&wind_count, &windlist);
 	if( EVEN(sts)) return sts;
 	wind_ptr = windlist;
@@ -687,7 +691,7 @@ static int foe_child_quit (
 
 	  if ( node->ln.subwindow & ( windowindex + 1 ) )
 	    node->ln.subwindow -= ( windowindex + 1 );
-	  node->ln.subwind_objdid[ windowindex ] = pwr_cNObjid;
+	  node->ln.subwind_oid[ windowindex ] = pwr_cNObjid;
 
 	  /* Redraw without subwindowmark */
 	  sts = gre_subwindow_mark( foectx->grectx, node);
@@ -743,7 +747,7 @@ static int foe_child_delete (
 	  node->hn.subwindowobject[ windowindex ] = 0;
 	  if ( (node->ln.subwindow & (1 << windowindex)) != 0 )
 	    node->ln.subwindow -= ( 1 << windowindex );
-	  node->ln.subwind_objdid[ windowindex ] = pwr_cNObjid;
+	  node->ln.subwind_oid[ windowindex ] = pwr_cNObjid;
 
 	  /* Redraw without subwindowmark */
 	  gre_subwindow_mark( foectx->grectx, node);
@@ -758,13 +762,13 @@ static int foe_child_delete (
 	{
 	  /* The subwindow should be taken away in ldh,
 	     open a new session for this purpos */ 
-	  plc = subwind->hw.plcobject_pointer;
+	  plc = subwind->hw.plc;
 	  sts = ldh_OpenSession(&ldhsession, 
 		ldh_SessionToVol( plc->hp.ldhsesctx),
 		ldh_eAccess_SharedReadWrite, ldh_eUtility_PlcEditor);
 	  if( EVEN(sts)) return sts;
 	  sts = ldh_GetObjectBuffer( ldhsession,
-			subwind->lw.parent_node_did, "DevBody", "PlcNode", 
+			subwind->lw.poid, "DevBody", "PlcNode", 
 			(pwr_eClass *) &class,	
 			(char **)&nodebuffer, &size);
 	  if( EVEN(sts)) return sts;
@@ -772,10 +776,10 @@ static int foe_child_delete (
 	      nodebuffer->subwindow -= (windowindex + 1);
 	  if ( (nodebuffer->subwindow & (1 << windowindex)) != 0 )
 	    nodebuffer->subwindow -= ( 1 << windowindex );
-	  nodebuffer->subwind_objdid[ windowindex ] = pwr_cNObjid;
+	  nodebuffer->subwind_oid[ windowindex ] = pwr_cNObjid;
 	  sts = ldh_SetObjectBuffer(
 			ldhsession,
-			subwind->lw.parent_node_did,
+			subwind->lw.poid,
 			"DevBody",
 			"PlcNode",
 			(char *)nodebuffer);
@@ -811,7 +815,7 @@ static void	foe_destroy(
         if ( foectx->set_focus_disabled)
           XtRemoveTimeOut( foectx->focus_timerid);
 
-	foectx->grectx->window_object->hw.foectx = 0;
+	foectx->grectx->wind->hw.foectx = 0;
 
 	/* Delete controled modules */
 	gre_del( foectx->grectx);
@@ -854,7 +858,7 @@ void	foe_quit(
 	int		sts;
 
 	/* Tell my parent that his child is quitting, if parent is a node */
-	wind = foectx->grectx->window_object;
+	wind = foectx->grectx->wind;
 	if ( wind->hw.parent_node_pointer != 0 )
 	  foe_child_quit ( foectx->cp.parent_ctx, wind->hw.parent_node_pointer, 
 			wind->lw.subwindowindex);
@@ -867,7 +871,7 @@ void	foe_quit(
 	foe_attr_delete(foectx);
 
 	/* Delete window in vldh */
-	sts = vldh_wind_quit_all( foectx->grectx->window_object );
+	sts = vldh_wind_quit_all( foectx->grectx->wind );
 	error_msg(sts);
 
 	/* Destroy the widget and controlled modules */
@@ -901,7 +905,7 @@ void	foe_exit(
 
 
 	/* Tell my parent that his child is quitting, if parent is a node */
-	wind = foectx->grectx->window_object;
+	wind = foectx->grectx->wind;
 	windowindex = wind->lw.subwindowindex;
 	parent_node = wind->hw.parent_node_pointer;
 	if ( parent_node != 0 )
@@ -916,7 +920,7 @@ void	foe_exit(
 	foe_attr_delete(foectx);
 
 	/* Delete window in vldh */
-	vldh_wind_quit( foectx->grectx->window_object );
+	vldh_wind_quit( foectx->grectx->wind );
 
 	/* Destroy the widget and controlled modules */
 	foe_destroy( foectx);
@@ -969,9 +973,9 @@ void	foe_delete(
 	int		sts;
 
 	/* Tell my parent that his child is deleted, if parent is a node */
-	wind = foectx->grectx->window_object;
+	wind = foectx->grectx->wind;
 
-	sts = ldh_SaveSession( wind->hw.ldhsession);
+	sts = ldh_SaveSession( wind->hw.ldhses);
 	if ( EVEN(sts)) return;
 
 	if ( wind->hw.parent_node_pointer != 0 )
@@ -1030,9 +1034,9 @@ static int foe_init_window (
 
  	/* Create the nodes in the window class object */
 	/* Get the classinformation for this window */
-	wind = foectx->grectx->window_object;
+	wind = foectx->grectx->wind;
 
-	sts = ldh_GetClassBody( wind->hw.ldhsession, wind->lw.classid, 
+	sts = ldh_GetClassBody( wind->hw.ldhses, wind->lw.cid, 
 		"GraphPlcWindow", &bodyclass, (char **)&graphbody, &size);
 	if ( EVEN(sts)) return sts;
 
@@ -1101,8 +1105,8 @@ int foe_subwindow_create (
 	}
 
 	/* Get graphbody for the class */
-	sts = ldh_GetClassBody( (object->hn.window_pointer)->hw.ldhsession, 
-		object->ln.classid, "GraphPlcNode", 
+	sts = ldh_GetClassBody( (object->hn.wind)->hw.ldhses, 
+		object->ln.cid, "GraphPlcNode", 
 		&bodyclass, (char **)&graphbody, &size);
 	if (EVEN(sts)) return sts;
 
@@ -1128,7 +1132,7 @@ int foe_subwindow_create (
 	    new_window = FALSE;
 
 	  /* Create subwindow */
-	  plcobject = (object->hn.window_pointer)->hw.plcobject_pointer;
+	  plcobject = (object->hn.wind)->hw.plc;
 	  sts = foe_new_local( foectx, foectx->widgets.foe_window,
 		object->hn.name, pwr_cNObjid, 0, plcobject->hp.ldhsesctx,
 		object, 0, new_window,
@@ -1154,7 +1158,7 @@ int foe_subwindow_create (
 	    new_window = FALSE;
 
 	  /* Create subwindow */
-	  plcobject = (object->hn.window_pointer)->hw.plcobject_pointer;
+	  plcobject = (object->hn.wind)->hw.plc;
 	  sts = foe_new_local( foectx, foectx->widgets.foe_window,
 		object->hn.name, pwr_cNObjid, 0, plcobject->hp.ldhsesctx, 
 		object, (subwindow_nr - 1),
@@ -1558,7 +1562,7 @@ int foe_new_local(
 	  if ( ODD(sts) )
 	  {
 	    /* Loaded in vldh, do nothing */
-	    foectx = (foe_ctx)(plcobject->hp.windowobject)->hw.foectx;
+	    foectx = (foe_ctx)(plcobject->hp.wind)->hw.foectx;
 	    if ( foectx != 0)
 	    {
               /* GS 11.04.91 Little trick to put the window	
@@ -1615,17 +1619,17 @@ int foe_new_local(
 	      /* Create the foe context */
 	      /* SG 02.05.91 by default give the view function */
 	      foectx = foe_create_window(parent_ctx, parent_wid, name,
-		0, 50, 920, 750, windowobject->hw.ldhsession, VIEW, map_window,
+		0, 50, 920, 750, windowobject->hw.ldhses, VIEW, map_window,
 		function_access);
 	      if ( foectx == 0) return 0;
 
-	      foectx->grectx->window_object = windowobject;
+	      foectx->grectx->wind = windowobject;
 	      windowobject->hw.foectx = foectx;
 	      windowobject->hw.widget_id = foectx->grectx->flow_widget;
 	      gre_window_draw( foectx->grectx);
 
-	      foectx->grectx->window_object = windowobject;
-	      plcobject->hp.windowobject = windowobject;
+	      foectx->grectx->wind = windowobject;
+	      plcobject->hp.wind = windowobject;
 	      plcobject->hp.hinactx = parent_ctx;
 	      foectx->plcobject = plcobject;
 	      windowobject->hw.foectx = foectx;	    	    
@@ -1658,17 +1662,17 @@ int foe_new_local(
 	      foectx = foe_create_window(parent_ctx, parent_wid, name,
 		windgraphbody->x, windgraphbody->y, 
 		windgraphbody->width, windgraphbody->height, 
-		windowobject->hw.ldhsession, EDIT, map_window, function_access);
+		windowobject->hw.ldhses, EDIT, map_window, function_access);
 	      if ( foectx == 0) return 0;
 
-	      foectx->grectx->window_object = windowobject;
+	      foectx->grectx->wind = windowobject;
 	      windowobject->hw.foectx = foectx;
 	      windowobject->hw.widget_id = foectx->grectx->flow_widget;
 	      windowobject->lw.x = windgraphbody->x;
 	      windowobject->lw.y = windgraphbody->y;
 	      windowobject->lw.width = windgraphbody->width;
 	      windowobject->lw.height = windgraphbody->height;
-	      plcobject->hp.windowobject = windowobject;
+	      plcobject->hp.wind = windowobject;
 	      plcobject->hp.hinactx = parent_ctx;
 	      foectx->plcobject = plcobject;
 	      windowobject->hw.foectx = foectx;	    	    
@@ -1681,10 +1685,10 @@ int foe_new_local(
 	else
 	{
 	  /* This is a subwindow to a node in gre */
-	  plcobject = (nodeobject->hn.window_pointer)->hw.plcobject_pointer;
+	  plcobject = (nodeobject->hn.wind)->hw.plc;
 	  /* Get the windowtype for this plcprogram */
 	  sts = ldh_GetClassBody(plcobject->hp.ldhsesctx, 
-			nodeobject->ln.classid, 
+			nodeobject->ln.cid, 
 			"GraphPlcNode", &bodyclass, (char **)&nodegraphbody, &size);
 	  if ( EVEN(sts)) return sts;
 	  wind_class = nodegraphbody->subwindow_class[windowindex];
@@ -1702,7 +1706,7 @@ int foe_new_local(
 	    if ( access == ldh_eAccess_ReadOnly ||
 		 function_access == foe_eFuncAccess_View ||
 		 !ldh_LocalObject( plcobject->hp.ldhsesctx, 
-			nodeobject->ln.object_did))
+			nodeobject->ln.oid))
 	      /* A subwindow can not be created */
 	      return FOE__WINDNOTFOUND;
 
@@ -1723,7 +1727,7 @@ int foe_new_local(
 
 	    /* Create window object in vldh */
 	    sts = vldh_wind_create(
-			(nodeobject->hn.window_pointer)->hw.plcobject_pointer,
+			(nodeobject->hn.wind)->hw.plc,
 			nodeobject, 0, wind_class,
 			0, windowindex,
 			&windowobject, access);
@@ -1733,12 +1737,12 @@ int foe_new_local(
 		subwind_name,
 		windgraphbody->x, windgraphbody->y, 
 		windgraphbody->width, windgraphbody->height, 
-		windowobject->hw.ldhsession , function , map_window, 
+		windowobject->hw.ldhses , function , map_window, 
 		function_access );
 	    if ( foectx == 0) return 0;
 
 	    vldh_node_subwindow_created( nodeobject, windowobject, windowindex);
-	    foectx->grectx->window_object = windowobject;
+	    foectx->grectx->wind = windowobject;
 	    windowobject->hw.foectx = foectx;
 	    windowobject->hw.widget_id = foectx->grectx->flow_widget;
 	    foectx->plcobject = 0;
@@ -1751,7 +1755,7 @@ int foe_new_local(
 	    sts = foe_init_window( foectx);
 	    if ( EVEN(sts)) return sts;
 
-	    sts = ldh_SetSession( windowobject->hw.ldhsession, ldh_eAccess_ReadOnly);
+	    sts = ldh_SetSession( windowobject->hw.ldhses, ldh_eAccess_ReadOnly);
 	    if ( EVEN(sts)) return sts;
 	  }
 	  else
@@ -1765,13 +1769,13 @@ int foe_new_local(
 	      access = ldh_eAccess_ReadOnly;
 
 	      sts = vldh_get_wind_objdid( 
-		nodeobject->ln.subwind_objdid[windowindex], &windowobject); 
+		nodeobject->ln.subwind_oid[windowindex], &windowobject); 
 	      if ( sts == VLDH__OBJNOTFOUND )
 	      {
 	        sts = vldh_wind_load( 
-			(nodeobject->hn.window_pointer)->hw.plcobject_pointer, 
+			(nodeobject->hn.wind)->hw.plc, 
 			nodeobject, 
-			nodeobject->ln.subwind_objdid[windowindex], 0,
+			nodeobject->ln.subwind_oid[windowindex], 0,
 			0, &windowobject, access);
 	        if ( EVEN(sts)) return sts;
 
@@ -1795,11 +1799,11 @@ int foe_new_local(
 			subwind_name,
 			windgraphbody->x, windgraphbody->y, 
 			windgraphbody->width, windgraphbody->height, 
-			windowobject->hw.ldhsession , function, map_window,
+			windowobject->hw.ldhses , function, map_window,
 			function_access);
 	      if ( foectx == 0) return 0;
 
-	      foectx->grectx->window_object = windowobject;
+	      foectx->grectx->wind = windowobject;
 	      gre_window_draw( foectx->grectx);
 
 	      foectx->plcobject = 0;
@@ -1814,7 +1818,7 @@ int foe_new_local(
 	    } 
 	  }
 	}
-        ldh_AddThisSessionCallback( windowobject->hw.ldhsession,
+        ldh_AddThisSessionCallback( windowobject->hw.ldhses,
 		foectx, foe_ldh_this_session_cb);
 	foe_enable_ldh_cb( foectx);
 
@@ -1833,11 +1837,11 @@ int foe_new_local(
 	}
 
 	// Check if class editor
-	sts = ldh_GetVolumeClass( ldh_SessionToWB(windowobject->hw.ldhsession),
-				  windowobject->lw.objdid.vid, &classid);
+	sts = ldh_GetVolumeClass( ldh_SessionToWB(windowobject->hw.ldhses),
+				  windowobject->lw.oid.vid, &classid);
 	if ( EVEN(sts)) return sts;
   
-	if ( ldh_VolRepType( windowobject->hw.ldhsession) == ldh_eVolRep_Mem &&
+	if ( ldh_VolRepType( windowobject->hw.ldhses) == ldh_eVolRep_Mem &&
 	     classid == pwr_eClass_ClassVolume)
 	  foectx->classeditor = 1;
 	if ( foectx->access == foe_eFuncAccess_Edit)
@@ -2445,7 +2449,7 @@ int	foe_show_executeorder (
 	char		text[10];
 
 	/* Get all nodes */
-	sts = vldh_get_nodes( foectx->grectx->window_object, 
+	sts = vldh_get_nodes( foectx->grectx->wind, 
 		&node_count, &node_list);
 	if ( EVEN(sts)) return sts;
 	node_ptr = node_list;
@@ -2536,7 +2540,7 @@ int	foe_search_string_next (
 	pwr_tClassId	class;
 	pwr_tObjid	class_objid;
 
-	wind = foectx->grectx->window_object; 
+	wind = foectx->grectx->wind; 
 	strcpy( searchstr, foectx->searchstring);
 
 	if( searchstr[0] == 0)
@@ -2559,11 +2563,11 @@ int	foe_search_string_next (
 	  strcat( annotations, " ");
 	  strcat( annotations, (*node_ptr)->hn.name);
 	  strcat( annotations, " ");
-	  sts = ldh_GetObjectClass( wind->hw.ldhsession,
-		(*node_ptr)->ln.object_did,  &class);
+	  sts = ldh_GetObjectClass( wind->hw.ldhses,
+		(*node_ptr)->ln.oid,  &class);
 	  if ( EVEN(sts)) return sts;
 	  class_objid = cdh_ClassIdToObjid( class);
-	  sts = ldh_ObjidToName( wind->hw.ldhsession, class_objid, 
+	  sts = ldh_ObjidToName( wind->hw.ldhses, class_objid, 
 		ldh_eName_Object, class_name, sizeof( class_name), &size);
 	  if ( EVEN(sts)) return sts;
 	  strcat( annotations, class_name);
@@ -2675,15 +2679,15 @@ int	foe_search_object (
 	pwr_tObjid	objdid;
 	vldh_t_node	node;
 
-	wind = foectx->grectx->window_object;
-	sts = ldh_ObjidToName( wind->hw.ldhsession, wind->lw.objdid, 
+	wind = foectx->grectx->wind;
+	sts = ldh_ObjidToName( wind->hw.ldhses, wind->lw.oid, 
 		ldh_eName_Hierarchy,
 		hiername, sizeof( hiername), &size); 
 	if ( EVEN(sts)) return sts;
 
 	strcat( hiername, "-");
 	strcat( hiername, searchstr);
-	sts = ldh_NameToObjid( wind->hw.ldhsession, &objdid, hiername);
+	sts = ldh_NameToObjid( wind->hw.ldhses, &objdid, hiername);
 	if ( EVEN(sts))
 	{
 	  foe_message( foectx, "Object does not exist");
@@ -2734,7 +2738,7 @@ int	foe_center_object (
 	vldh_t_wind	wind;
 	vldh_t_node	node;
 
-	wind = foectx->grectx->window_object;
+	wind = foectx->grectx->wind;
 	sts = vldh_get_node_objdid( oid, wind, &node);
 	if ( EVEN(sts)) return sts;
 
@@ -2997,7 +3001,7 @@ int foe_print_overview (
 	ur_x_max = -10000.;
 	ur_y_max = -10000.;
 
-	wind = foectx->grectx->window_object;
+	wind = foectx->grectx->wind;
 
 	sts = vldh_get_nodes( wind, &node_count, &nodelist);
 	if ( EVEN(sts)) return sts;
@@ -3009,8 +3013,8 @@ int foe_print_overview (
 	node_ptr = nodelist;
 	for ( i = 0; i < node_count; i++)
   	{
-	  if ( vldh_check_document( wind->hw.ldhsession, 
-			(*node_ptr)->ln.object_did))
+	  if ( vldh_check_document( wind->hw.ldhses, 
+			(*node_ptr)->ln.oid))
 	  {
 	    /* Calculate coordinates for an overview */
 	    gre_measure_object( *node_ptr, &ll_x, &ll_y, &width, &height);
@@ -3027,7 +3031,7 @@ int foe_print_overview (
 	if ( doc_count > 1)
 	{
 	  /* Print the overview */
-	  strcpy( file_id, vldh_IdToStr(0, wind->lw.objdid)); 
+	  strcpy( file_id, vldh_IdToStr(0, wind->lw.oid)); 
 	  gre_print_rectangle( foectx->grectx , ll_x_min, ll_y_min, ur_x_max, 
 		ur_y_max, file_id);
 	}
@@ -3064,7 +3068,7 @@ int foe_print_document(
 	vldh_t_wind	wind;
 	int		doc_count;
 
-	wind = foectx->grectx->window_object;
+	wind = foectx->grectx->wind;
 
 	sts = vldh_get_nodes( wind, &node_count, &nodelist);
 	if ( EVEN(sts)) return sts;
@@ -3075,8 +3079,8 @@ int foe_print_document(
 	node_ptr = nodelist;
 	for ( i = 0; i < node_count; i++)
   	{
-	  if ( vldh_check_document( wind->hw.ldhsession, 
-			(*node_ptr)->ln.object_did))
+	  if ( vldh_check_document( wind->hw.ldhses, 
+			(*node_ptr)->ln.oid))
 	  {
 	    gre_print_docobj( foectx->grectx , *node_ptr);
 	    doc_count++;	  
@@ -3117,7 +3121,7 @@ int foe_print_selected_document(
 	vldh_t_wind	wind;
 	int		doc_count;
 
-	wind = foectx->grectx->window_object;
+	wind = foectx->grectx->wind;
 
 	sts = gre_get_selnodes( foectx->grectx, &node_count, &nodelist);
 	if ( EVEN(sts)) return sts;
@@ -3129,8 +3133,8 @@ int foe_print_selected_document(
 	node_ptr = nodelist;
 	for ( i = 0; i < node_count; i++)
   	{
-	  if ( vldh_check_document( wind->hw.ldhsession, 
-			(*node_ptr)->ln.object_did))
+	  if ( vldh_check_document( wind->hw.ldhses, 
+			(*node_ptr)->ln.oid))
 	  {
 	    gre_print_docobj( foectx->grectx , *node_ptr);
 	    doc_count++;	  
@@ -3169,7 +3173,7 @@ int foe_change_mode(
 	int		sts, vldh_mod;
 	ldh_sSessInfo	info;
 
-	wind = foectx->grectx->window_object;
+	wind = foectx->grectx->wind;
 
 	switch( new_mode)
 	{
@@ -3182,10 +3186,10 @@ int foe_change_mode(
 	        break;
 	      case EDIT:
 	        /* Save changes... */
-		wind = foectx->grectx->window_object;
+		wind = foectx->grectx->wind;
 
 		/* Check if changes are made */
-		sts = ldh_GetSessionInfo( wind->hw.ldhsession, &info);
+		sts = ldh_GetSessionInfo( wind->hw.ldhses, &info);
 	        if ( EVEN(sts)) return sts;
 		sts = vldh_get_wind_modification( wind, &vldh_mod);
 
@@ -3207,7 +3211,7 @@ int foe_change_mode(
 	  	  foectx->function = VIEW;
 	  	  gre_disable_button_events( foectx->grectx);
 	  	  foe_view_setup( foectx);
-	          sts = ldh_SetSession( wind->hw.ldhsession, 
+	          sts = ldh_SetSession( wind->hw.ldhses, 
 			ldh_eAccess_ReadOnly);
 	          if ( EVEN(sts)) return sts;
 	          foectx->access = ldh_eAccess_ReadOnly;
@@ -3221,7 +3225,7 @@ int foe_change_mode(
 		foectx->function = VIEW ;
 	  	gre_disable_button_events ( foectx->grectx ) ;
 	  	foe_view_setup ( foectx );
-	        sts = ldh_SetSession( wind->hw.ldhsession, 
+	        sts = ldh_SetSession( wind->hw.ldhses, 
 			ldh_eAccess_ReadOnly);
 	        if ( EVEN(sts)) return sts;
 	        foectx->access = ldh_eAccess_ReadOnly;
@@ -3234,7 +3238,7 @@ int foe_change_mode(
 		foectx->function = VIEW ;
 	  	gre_disable_button_events ( foectx->grectx ) ;
 	  	foe_view_setup ( foectx ) ;
-	        sts = ldh_SetSession( wind->hw.ldhsession, 
+	        sts = ldh_SetSession( wind->hw.ldhses, 
 			ldh_eAccess_ReadOnly);
 	        if ( EVEN(sts)) return sts;
 	        foectx->access = ldh_eAccess_ReadOnly;
@@ -3253,7 +3257,7 @@ int foe_change_mode(
 	    switch( foectx->function)
 	    {
 	      case VIEW:
-	        sts = ldh_SetSession( wind->hw.ldhsession, 
+	        sts = ldh_SetSession( wind->hw.ldhses, 
 			ldh_eAccess_ReadWrite);
 	        if( EVEN(sts))
 	        {
@@ -3261,12 +3265,12 @@ int foe_change_mode(
 	          BEEP;
 	          XmToggleButtonSetState( foectx->widgets.view_togg, 1, 0);
 	          XmToggleButtonSetState( foectx->widgets.edit_togg, 0, 0);
-	          ldh_SetSession( wind->hw.ldhsession, 
+	          ldh_SetSession( wind->hw.ldhses, 
 			ldh_eAccess_ReadOnly);
 	          foectx->access = ldh_eAccess_ReadOnly;
 	          return FOE__SUCCESS;
 	        }
-                ldh_AddThisSessionCallback( wind->hw.ldhsession,
+                ldh_AddThisSessionCallback( wind->hw.ldhses,
 		    foectx, foe_ldh_this_session_cb);
 	        foe_enable_ldh_cb( foectx);
 	        foectx->access = ldh_eAccess_ReadWrite;
@@ -3303,7 +3307,7 @@ int foe_change_mode(
 	    {
 	      case VIEW:
 		/* Change funktion */
-	        sts = ldh_SetSession( wind->hw.ldhsession, 
+	        sts = ldh_SetSession( wind->hw.ldhses, 
 			ldh_eAccess_ReadWrite);
 	        if( EVEN(sts))
 	        {
@@ -3313,7 +3317,7 @@ int foe_change_mode(
 	          XmToggleButtonSetState( foectx->widgets.trace_togg, 0, 0);
 	          return FOE__SUCCESS;
 	        }
-                ldh_AddThisSessionCallback( wind->hw.ldhsession,
+                ldh_AddThisSessionCallback( wind->hw.ldhses,
 		    foectx, foe_ldh_this_session_cb);
 	        foe_enable_ldh_cb( foectx);
 	        foectx->access = ldh_eAccess_ReadWrite;
@@ -3325,7 +3329,7 @@ int foe_change_mode(
 	          foe_view_setup( foectx);
 	          XmToggleButtonSetState( foectx->widgets.view_togg, 1, 0);
 	          XmToggleButtonSetState( foectx->widgets.trace_togg, 0, 0);
-	          ldh_SetSession( wind->hw.ldhsession, 
+	          ldh_SetSession( wind->hw.ldhses, 
 			ldh_eAccess_ReadOnly);
 	          foectx->access = ldh_eAccess_ReadOnly;
 	          return sts;
@@ -3335,10 +3339,10 @@ int foe_change_mode(
 	        break;
 	      case EDIT:
 	        /* Save changes... */
-		wind = foectx->grectx->window_object;
+		wind = foectx->grectx->wind;
 
 		/* Check if changes are made */
-		sts = ldh_GetSessionInfo( wind->hw.ldhsession, &info);
+		sts = ldh_GetSessionInfo( wind->hw.ldhses, &info);
 	        if ( EVEN(sts)) return sts;
 		sts = vldh_get_wind_modification( wind, &vldh_mod);
 
@@ -3394,7 +3398,7 @@ int foe_change_mode(
 	    {
 	      case VIEW:
 		/* Change funktion */
-	        sts = ldh_SetSession( wind->hw.ldhsession, 
+	        sts = ldh_SetSession( wind->hw.ldhses, 
 			ldh_eAccess_ReadWrite);
 	        if( EVEN(sts))
 	        {
@@ -3404,7 +3408,7 @@ int foe_change_mode(
 	          XmToggleButtonSetState( foectx->widgets.simulate_togg, 0, 0);
 	          return FOE__SUCCESS;
 	        }
-                ldh_AddThisSessionCallback( wind->hw.ldhsession,
+                ldh_AddThisSessionCallback( wind->hw.ldhses,
 		    foectx, foe_ldh_this_session_cb);
 	        foe_enable_ldh_cb( foectx);
 	        foectx->access = ldh_eAccess_ReadWrite;
@@ -3426,10 +3430,10 @@ int foe_change_mode(
 	        break;
 	      case EDIT:
 	        /* Save changes... */
-		wind = foectx->grectx->window_object;
+		wind = foectx->grectx->wind;
 
 		/* Check if changes are made */
-		sts = ldh_GetSessionInfo( wind->hw.ldhsession, &info);
+		sts = ldh_GetSessionInfo( wind->hw.ldhses, &info);
 	        if ( EVEN(sts)) return sts;
 		sts = vldh_get_wind_modification( wind, &vldh_mod);
 
@@ -3502,7 +3506,7 @@ static void foe_edit_exit_save(
 
 
 	/* Check that the parent node is saved */
-	wind = foectx->grectx->window_object;
+	wind = foectx->grectx->wind;
 	parent_node = wind->hw.parent_node_pointer;
 	if ( parent_node != 0 )
 	{
@@ -3520,7 +3524,7 @@ static void foe_edit_exit_save(
 	  }
 	}
 	foe_disable_ldh_cb(foectx);
-	sts = vldh_wind_save( foectx->grectx->window_object);
+	sts = vldh_wind_save( foectx->grectx->wind);
 	error_msg( sts);
 	if ( sts == VLDH__PLCNOTSAVED )
 	{
@@ -3573,7 +3577,7 @@ static void foe_edit_exit_save(
 	    foectx->function = VIEW;
 	    gre_disable_button_events( foectx->grectx);
 	    foe_view_setup( foectx);
-	    sts = ldh_SetSession( wind->hw.ldhsession, 
+	    sts = ldh_SetSession( wind->hw.ldhses, 
 			ldh_eAccess_ReadOnly);
 	    error_msg(sts);
 	    foectx->access = ldh_eAccess_ReadOnly;
@@ -3600,7 +3604,7 @@ static void foe_edit_exit_nosave(
 	vldh_t_wind		wind;
 	pwr_tClassId		class;
 
-	wind = foectx->grectx->window_object;
+	wind = foectx->grectx->wind;
 
 	foe_message( foectx, "Mode is still Edit, revert by exiting the PlcEditor");
 	BEEP;
@@ -3609,10 +3613,10 @@ static void foe_edit_exit_nosave(
 	/*************************************************/
 	/* BUGGFIX, quit on suborder windows not allowed */
 	/*************************************************/
-	ldh_GetObjectClass( wind->hw.ldhsession,
-			wind->lw.parent_node_did,
+	ldh_GetObjectClass( wind->hw.ldhses,
+			wind->lw.poid,
 			&class);
-	if ( class == vldh_class( wind->hw.ldhsession, VLDH_CLASS_ORDER))
+	if ( class == pwr_cClass_order)
 	{
 	  foe_message( foectx, 
 		"Operation is not allowed, do save !!");
@@ -3656,7 +3660,7 @@ static void foe_edit_exit_nosave(
 	    foectx->function = VIEW;
 	    gre_disable_button_events( foectx->grectx);
 	    foe_view_setup( foectx);
-	    sts = ldh_SetSession( wind->hw.ldhsession,
+	    sts = ldh_SetSession( wind->hw.ldhses,
 			ldh_eAccess_ReadOnly);
 	    error_msg(sts);
 	    foectx->access = ldh_eAccess_ReadOnly;
@@ -3684,8 +3688,8 @@ void foe_get_hinactx(
 	vldh_t_wind	wind;
 	vldh_t_plc	plc;
 
-	  wind = foectx->grectx->window_object;
-	  plc = wind->hw.plcobject_pointer;
+	  wind = foectx->grectx->wind;
+	  plc = wind->hw.plc;
 	  *hinactx = plc->hp.hinactx;
 }
 
@@ -3715,7 +3719,7 @@ int foe_redraw_and_save ( foe_ctx foectx
 	if ( EVEN(sts)) return sts;
 
 	foe_disable_ldh_cb(foectx);
-	sts = vldh_wind_save( foectx->grectx->window_object);
+	sts = vldh_wind_save( foectx->grectx->wind);
 	foe_enable_ldh_cb(foectx);
 	if ( EVEN(sts)) return sts;
 

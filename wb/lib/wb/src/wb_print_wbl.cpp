@@ -51,7 +51,9 @@ void wb_print_wbl::printAttribute(wb_volume& v,
       adef.flags() & PWR_MASK_NOWBL)
     return;
 
-  if (attr.isClass())
+  if (attr.isClass() && adef.cid() == pwr_eClass_Buffer)
+    printBuffer(v, attr, tattr, adef);
+  else if (attr.isClass())
     printClass(v, attr, tattr, adef);
   else {
     switch (adef.cid()) {
@@ -116,10 +118,11 @@ void wb_print_wbl::printBody(wb_volume& v,
   return;
 }
 
+
 //
-// printClass
+// printBuffer
 //
-void wb_print_wbl::printClass(wb_volume& v,
+void wb_print_wbl::printBuffer(wb_volume& v,
                               wb_attribute& attr,
                               wb_attribute& tattr,
                               wb_adef& adef) 
@@ -191,6 +194,141 @@ void wb_print_wbl::printClass(wb_volume& v,
 
     indent(-1) << "EndBuffer" << endl;
   }
+}
+
+//
+// printClass
+//
+void wb_print_wbl::printClass(wb_volume& v,
+                              wb_attribute& attr,
+                              wb_attribute& tattr,
+                              wb_adef& adef) 
+{
+  pwr_tCid subClass = attr.subClass();
+  wb_object templ;
+  wb_object sysbo;
+  wb_attribute tattr2;
+  wb_attribute attr2;
+  wb_adef adef2;
+
+  //  if ( strcmp( attr.name(), "Template") == 0 && v.cid() == pwr_eClass_ClassVolume)
+    // The parser can't handle subclasses in template objects yet...
+  //  return;
+
+  wb_cdef cdef = v.cdef(attr.cid());
+  if (!cdef) {
+    m_os << "! %WBDUMP-E-Error Unknown sub class: " << subClass << endl;
+    m_errCnt++;
+    return;
+  }
+
+  wb_bdef bdef = cdef.bdef(pwr_eBix_sys);
+  if (!bdef) {
+    m_os << "! %WBDUMP-E-Error sub class: " << subClass 
+         << " not defined" << endl;
+    m_errCnt++;
+    return;
+  }    
+
+  for (int i = 0; i < adef.nElement(); i++) {
+    attr2 = attr.first(i);
+    tattr2 = tattr.first(i);
+  
+    while ( attr2.oddSts()) {
+
+      adef2 = bdef.adef( attr2.attrName()); 
+      
+      printAttribute(v, attr2, tattr2, adef2);
+    
+      attr2 = attr2.after();
+      tattr2 = tattr2.after();
+    }
+  }
+
+#if 0
+  wb_object co = v.object(cdh_ClassIdToObjid(subClass));
+  if (!co) {
+    m_os << "! %WBDUMP-E-Error Unknown sub class: " << subClass << endl;
+    m_errCnt++;
+    return;
+  }
+
+  wb_cdef cdef = v.cdef(subClass);
+  if (!cdef) {
+    m_os << "! %WBDUMP-E-Error Unknown sub class: " << subClass << endl;
+    m_errCnt++;
+    return;
+  }
+
+  wb_name t("Template");
+  
+  templ = co.child(t);
+  if (!templ) {
+    m_errCnt++;
+    m_os << "! %WBDUMP-E-Error Template not found for class " << cdef.longName() << endl;
+    return;
+  }
+
+  wb_bdef bdef = cdef.bdef(pwr_eBix_sys);
+  if (!bdef) {
+    m_os << "! %WBDUMP-E-Error sub class: " << subClass 
+         << " not defined" << endl;
+    m_errCnt++;
+    return;
+  }    
+  bname = bdef.name();
+
+  for (int i = 0; i < adef.nElement(); i++) {
+
+    if (adef.flags() & PWR_MASK_ARRAY)
+      indent(1) << "Buffer " << adef.name() << "[" << i << "]" << endl;
+    else
+      indent(1) << "Buffer " << adef.name() << endl;
+
+
+    adef2 = bdef.adef(); 
+    attr2 = attr.first(i);
+    
+    while (1) {
+      tattr2 = templ.attribute(bname, adef2.name());
+      printAttribute(v, attr2, tattr2, adef2);
+
+      if (!(adef2 = adef2.next()))
+        break;
+      
+      if (!(attr2 = attr2.after()))
+        break;
+    }                   
+
+    indent(-1) << "EndBuffer" << endl;
+
+    if (adef.flags() & PWR_MASK_ARRAY)
+      indent(1) << "Buffer " << adef.name() << "[" << i << "]" << endl;
+    else
+      indent(1) << "Buffer " << adef.name() << endl;
+
+
+    adef2 = bdef.adef(); 
+    attr2 = attr.first(i);
+    
+    while (1) {
+      strcpy( aname, adef.subName());
+      strcat( aname, ".");
+      strcat( aname, attr2.name());
+
+      attr2
+      tattr2 = templ.attribute(bname, adef2.name());
+      printAttribute(v, attr2, tattr2, adef2);
+
+      if (!(adef2 = adef2.next()))
+        break;
+      
+      if (!(attr2 = attr2.after()))
+        break;
+    }                   
+
+  }
+#endif
 }
 
 //
@@ -309,7 +447,7 @@ void wb_print_wbl::printParameter(wb_volume& v,
   char* svalp;
   int varOffset;
   bool parValOk;
-  const char* name = adef.name();   
+  const char* name = adef.subName();   
 
   if (valueb == NULL) {
     m_os << "! %WBDUMP-E-Error Failed to get attribute address for " 

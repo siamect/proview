@@ -59,7 +59,7 @@ SObject pwrb:Class
       !*/
       Object DataObject $Intern 1
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr TypeRef = "pwrs:Type-$AttrRef"
           Attr NiNaAnnot = 1
           Attr NiNaSegments = 1
         EndBody

@@ -154,6 +154,14 @@ size_t wb_cdef::size( pwr_eBix bix)
   return m_cdrep->size( bix);
 }
 
+wb_cdef wb_cdef::super()
+{
+  pwr_tStatus sts;
+
+  check();
+  return wb_cdef( m_cdrep->super( &sts));
+}
+
 
 
 

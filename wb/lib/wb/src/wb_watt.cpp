@@ -421,12 +421,12 @@ WAtt::WAtt(
 	Widget 		wa_parent_wid,
 	void 		*wa_parent_ctx, 
 	ldh_tSesContext wa_ldhses, 
-	pwr_tObjid 	wa_objid,
+	pwr_sAttrRef 	wa_aref,
 	int 		wa_editmode,
 	int 		wa_advanced_user,
 	int		wa_display_objectname) :
  	parent_wid(wa_parent_wid), parent_ctx(wa_parent_ctx), 
-	ldhses(wa_ldhses), objid(wa_objid), editmode(wa_editmode), 
+	ldhses(wa_ldhses), aref(wa_aref), editmode(wa_editmode), 
 	input_open(0), input_multiline(0), 
 	close_cb(0), redraw_cb(0), client_data(0),
 	set_focus_disabled(0), value_current_recall(0)
@@ -527,7 +527,7 @@ WAtt::WAtt(
 
   utility = *(wb_eUtility *)parent_ctx;
   wattnav = new WAttNav( (void *)this, wattnav_form, "Plant",
-		ldhses, objid, wa_editmode, wa_advanced_user,
+		ldhses, aref, wa_editmode, wa_advanced_user,
 		wa_display_objectname, utility, &brow_widget, &sts);
   ((WAttNav *)wattnav)->message_cb = &watt_message_cb;
   ((WAttNav *)wattnav)->change_value_cb = &watt_change_value_cb;

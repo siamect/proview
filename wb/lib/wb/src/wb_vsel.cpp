@@ -572,6 +572,9 @@ pwr_tStatus WVsel::load_volumelist()
 	  case ldh_eVolRep_Mem: 
 	    strcat( str, "Mem    ");
 	    break;
+	  case ldh_eVolRep_Ref: 
+	    strcat( str, "Ref    ");
+	    break;
 	  }
 
 	  switch (classid)

@@ -1182,14 +1182,14 @@ int XNav::show_object( pwr_tObjid objid, brow_tNode node)
 		flow_eDest_IntoLast,
 		parname,
 		parinfo.Elements, 
-		parinfo.Type, parinfo.Size, 0);
+		parinfo.Type, parinfo.Size, parinfo.Flags, 0);
         }
         else
         {
           attr_exist = 1;
           item = (Item *) new ItemAttr( brow, objid, node, 
 		flow_eDest_IntoLast, parname,
-		parinfo.Type, parinfo.Size, 0, item_eDisplayType_Attr);
+		parinfo.Type, parinfo.Size, parinfo.Flags, 0, item_eDisplayType_Attr);
         } 
         sts = gdh_GetNextSibling ( parameter, &parameter);
 	i++;

@@ -96,7 +96,7 @@ watt_tCtx watt_new(
 	Widget	parent_wid,
 	void *parent_ctx,
 	ldh_tSesContext ldhses,
-	pwr_tObjid objid,
+	pwr_sAttrRef aref,
 	int editmode,
 	int advanced_user,
 	int display_objectname,

@@ -42,7 +42,7 @@ class WAttNav {
 	Widget		wa_parent_wid,
 	char 		*wa_name,
 	ldh_tSesContext wa_ldhses,
-	pwr_tObjid 	wa_objid,
+	pwr_sAttrRef 	wa_aref,
 	int 		wa_editmode,
 	int 		wa_advanced_user,
 	int		wa_display_objectname,
@@ -59,7 +59,7 @@ class WAttNav {
     Widget		toplevel;
     WNavBrow		*brow;
     ldh_tSesContext	ldhses;
-    pwr_tObjid		objid;
+    pwr_sAttrRef       	aref;
     int			editmode;
     int			advanced_user;
     int			display_objectname;

@@ -7,6 +7,7 @@
 #include "wb_vrepwbl.h"
 #include "wb_vrepdbs.h"
 #include "wb_vrepdb.h"
+#include "wb_vrepref.h"
 #include "wb_cdrep.h"
 #include "wb_orep.h"
 #include "wb_tdrep.h"
@@ -357,6 +358,13 @@ void wb_erep::load( pwr_tStatus *sts, char *db)
   loadMeta( sts, db);
   bindMethods();
   loadLocalWb( sts);
+
+  wb_vrepref *vrep = new wb_vrepref( this, ldh_cPlcConnectVolume);
+  addExtern( sts, vrep);
+  vrep = new wb_vrepref( this, ldh_cPlcHostVolume);
+  addExtern( sts, vrep);
+  vrep = new wb_vrepref( this, ldh_cIoConnectVolume);
+  addExtern( sts, vrep);
 }
 
 void wb_erep::loadDirList( pwr_tStatus *status)
@@ -855,4 +863,33 @@ void wb_erep::volumeNameToFilename( pwr_tStatus *sts, char *name, char *filename
 }
 
 
+void wb_erep::setRefMerep( wb_merep *merep)
+{
+  pwr_tStatus sts;
+
+  wb_vrepref *vrepref = (wb_vrepref *) volume( &sts, ldh_cPlcConnectVolume);
+  if ( ODD(sts))
+    vrepref->setMerep( merep);
+  vrepref = (wb_vrepref *) volume( &sts, ldh_cPlcHostVolume);
+  if ( ODD(sts))
+    vrepref->setMerep( merep);
+  vrepref = (wb_vrepref *) volume( &sts, ldh_cIoConnectVolume);
+  if ( ODD(sts))
+    vrepref->setMerep( merep);
+}
+
+void wb_erep::resetRefMerep()
+{
+  pwr_tStatus sts;
+
+  wb_vrepref *vrepref = (wb_vrepref *) volume( &sts, ldh_cPlcConnectVolume);
+  if ( ODD(sts))
+    vrepref->setMerep( m_merep);
+  vrepref = (wb_vrepref *) volume( &sts, ldh_cPlcHostVolume);
+  if ( ODD(sts))
+    vrepref->setMerep( m_merep);
+  vrepref = (wb_vrepref *) volume( &sts, ldh_cIoConnectVolume);
+  if ( ODD(sts))
+    vrepref->setMerep( m_merep);
+}
 

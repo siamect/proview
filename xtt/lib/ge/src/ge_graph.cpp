@@ -3289,10 +3289,21 @@ void Graph::confirm_ok( grow_tObject object)
 void Graph::connect( grow_tObject object, char *attr_name, int second)
 {
   GeDyn *dyn;
+  char *s;
+  char name[200];
+
+  if ( (s = strstr( attr_name,  "-Template.")) != 0) {
+    // This is a class graph, replace the template object with '$object'
+
+    strcpy( name, "$object.");
+    strcat( name, s + strlen("-Template."));
+  }
+  else
+    strcpy( name, attr_name);
 
   grow_GetUserData( object, (void **)&dyn);
   if ( dyn)
-    dyn->set_attribute( object, attr_name, second);
+    dyn->set_attribute( object, name, second);
   else
     message( 'E', "No dynamics for this object");
 

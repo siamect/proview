@@ -1015,6 +1015,7 @@ int WNav::get_select( pwr_sAttrRef **attrref, int **is_attr, int *cnt)
       case wnav_eItemType_AttrArray:
       case wnav_eItemType_AttrArrayOutput:
       case wnav_eItemType_AttrArrayElem:
+      case wnav_eItemType_AttrObject:
         strcat( attr_str, ".");
         strcat( attr_str, item->name);
         sts = ldh_NameToAttrRef( ldhses, attr_str, ap);
@@ -1358,6 +1359,9 @@ static int wnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
         case wnav_eItemType_AttrArrayOutput: 
 	  ((WItemAttrArrayOutput *)item)->open_attributes( 0, 0);
           break;
+        case wnav_eItemType_AttrObject: 
+	  ((WItemAttrObject *)item)->open_attributes( 0, 0);
+          break;
         default:
           ;
       }
@@ -1422,6 +1426,9 @@ static int wnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
           break;
         case wnav_eItemType_AttrArrayOutput: 
 	  ((WItemAttrArrayOutput *)item)->open_attributes( 0, 0);
+          break;
+        case wnav_eItemType_AttrObject: 
+	  ((WItemAttrObject *)item)->open_attributes( 0, 0);
           break;
         case wnav_eItemType_File: 
 	  ((WItemFile *)item)->open_children( wnav, 0, 0);
@@ -1504,6 +1511,9 @@ static int wnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
         case wnav_eItemType_AttrArrayOutput: 
 	  ((WItemAttrArrayOutput *)item)->close( 0, 0);
           break;
+        case wnav_eItemType_AttrObject: 
+	  ((WItemAttrObject *)item)->close( 0, 0);
+          break;
         case wnav_eItemType_Menu: 
 	  ((WItemMenu *)item)->close( wnav, 0, 0);
           break;
@@ -1567,6 +1577,10 @@ static int wnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
 	      ((WItemAttrArrayOutput *)item)->open_attributes( 
 			event->object.x, event->object.y);
               break;
+            case wnav_eItemType_AttrObject: 
+	      ((WItemAttrObject *)item)->open_attributes(
+			event->object.x, event->object.y);
+              break;
             case wnav_eItemType_Attr: 
 	      ((WItemAttr *)item)->open_children( 
 			event->object.x, event->object.y);
@@ -1608,6 +1622,10 @@ static int wnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
               break;
             case wnav_eItemType_AttrArrayElem: 
 	      ((WItemAttrArrayElem *)item)->open_children( 
+			event->object.x, event->object.y);
+              break;
+            case wnav_eItemType_AttrObject: 
+	      ((WItemAttrObject *)item)->open_children( 
 			event->object.x, event->object.y);
               break;
             default:
@@ -1780,7 +1798,7 @@ static int wnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
     case flow_eEvent_MB3Press:
     {
       // Popup menu
-      pwr_tObjid objid;
+      pwr_sAttrRef aref;
       Arg arg[4];
       short x, y;
 
@@ -1791,17 +1809,17 @@ static int wnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
       {
         case flow_eObjectType_Node:
           brow_GetUserData( event->object.object, (void **)&item);
-          objid = item->objid;
+          aref = item->aref();
           break;
         default:
-          objid = pwr_cNObjid;
+          aref = pwr_cNAttrRef;
       }
 
       XtSetArg( arg[0], XmNx, &x);
       XtSetArg( arg[1], XmNy, &y);
       XtGetValues( XtParent(wnav->brow_widget), arg, 2);
 
-      (wnav->create_popup_menu_cb)( wnav->parent_ctx, objid,
+      (wnav->create_popup_menu_cb)( wnav->parent_ctx, aref,
 		event->any.x_pixel + x, event->any.y_pixel + y);
       wnav_set_avoid_deadlock( wnav, 2000);
 
@@ -2220,6 +2238,9 @@ int	WNav::setup()
   new WItemLocal( this, "ShowObjXRef", "setup_show_objxref", 
 	pwr_eType_Int32, sizeof( gbl.show_objxref), 0, 1,
 	(void *) &gbl.show_objxref, NULL, flow_eDest_IntoLast);
+  new WItemLocal( this, "ShowTrueDb", "setup_show_truedb", 
+	pwr_eType_Int32, sizeof( gbl.show_truedb), 0, 1,
+	(void *) &gbl.show_truedb, NULL, flow_eDest_IntoLast);
 
   brow_ResetNodraw( brow->ctx);
   brow_Redraw( brow->ctx, 0);
@@ -2812,6 +2833,9 @@ void WNav::ldh_refresh( pwr_tObjid new_open)
         case wnav_eItemType_AttrArrayElem:
           strcpy( open_attr[open_cnt], object_item->name);
           break;
+        case wnav_eItemType_AttrObject:
+          strcpy( open_attr[open_cnt], object_item->name);
+          break;
         default:
           ;
       }
@@ -2937,6 +2961,15 @@ void WNav::ldh_refresh( pwr_tObjid new_open)
           {
             if ( open_type[i] & wnav_mOpen_Children)
               ((WItemAttrArrayElem *)object_item)->open_children( 0, 0);
+            found = 1;
+          }
+          break;
+        case wnav_eItemType_AttrObject:
+          if ( cdh_ObjidIsEqual( open_objid[i], object_item->objid) &&
+	       strcmp( object_item->name, open_attr[i]) == 0)
+          {
+            if ( open_type[i] & wnav_mOpen_Attributes)
+              ((WItemAttrObject *)object_item)->open_attributes( 0, 0);
             found = 1;
           }
           break;
@@ -3255,43 +3288,46 @@ static Boolean wnav_sel_convert_cb(
 
     brow_GetUserData( node_list[0], (void **)&item);
 
-    switch( item->type)
-    {
-      case wnav_eItemType_Attr:
-      case wnav_eItemType_AttrInput:
-      case wnav_eItemType_AttrInputInv:
-      case wnav_eItemType_AttrInputF:
-      case wnav_eItemType_AttrOutput:
-      case wnav_eItemType_AttrArray:
-      case wnav_eItemType_AttrArrayOutput:
-      case wnav_eItemType_AttrArrayElem:
-        sts = ldh_ObjidToName( wnav->ldhses, item->objid, ldh_eName_Hierarchy,
-	    	attr_str, sizeof(attr_str), &size);
-        if ( EVEN(sts)) return FALSE;
+    switch( item->type) {
+    case wnav_eItemType_Attr:
+    case wnav_eItemType_AttrInput:
+    case wnav_eItemType_AttrInputInv:
+    case wnav_eItemType_AttrInputF:
+    case wnav_eItemType_AttrOutput:
+    case wnav_eItemType_AttrArray:
+    case wnav_eItemType_AttrArrayOutput:
+    case wnav_eItemType_AttrArrayElem:
+    case wnav_eItemType_AttrObject: {
+      WItemBaseAttr *aitem = (WItemBaseAttr *)item;
 
-        strcat( attr_str, ".");
-        strcat( attr_str, item->name);
-        sts = ldh_NameToAttrRef( wnav->ldhses, attr_str, &attrref);
-        if ( EVEN(sts)) return FALSE;
-        sts = (wnav->format_selection_cb)( wnav->parent_ctx, attrref, 
-		value_return, length_return, 0, 1, format);
-        if ( !sts) return FALSE;
+      sts = ldh_ObjidToName( wnav->ldhses, item->objid, ldh_eName_Hierarchy,
+	    	attr_str, sizeof(attr_str), &size);
+      if ( EVEN(sts)) return FALSE;
+
+      strcat( attr_str, ".");
+      strcat( attr_str, aitem->name);
+      sts = ldh_NameToAttrRef( wnav->ldhses, attr_str, &attrref);
+      if ( EVEN(sts)) return FALSE;
+      sts = (wnav->format_selection_cb)( wnav->parent_ctx, attrref, 
+					 value_return, length_return, 0, 1, format);
+      if ( !sts) return FALSE;
 //        sts = ldh_AttrRefToName( wnav->ldhses, &attrref, ldh_eName_Aref, 
 //		&name_p, &size);
 //        if ( EVEN(sts)) return FALSE;
 //        strcpy( name, name_p);
+      break;
+    }
+    case wnav_eItemType_Object:
+      memset( &attrref, 0, sizeof(attrref));
+      attrref.Objid = item->objid;
+      sts = (wnav->format_selection_cb)( wnav->parent_ctx, attrref, 
+					 value_return, length_return, 0, 0, format);
+      if ( !sts) return FALSE;
         break;
-      case wnav_eItemType_Object:
-        memset( &attrref, 0, sizeof(attrref));
-        attrref.Objid = item->objid;
-        sts = (wnav->format_selection_cb)( wnav->parent_ctx, attrref, 
-		value_return, length_return, 0, 0, format);
-        if ( !sts) return FALSE;
-        break;
-      default:
-        brow_GetAnnotation( node_list[0], 0, name, sizeof(name));
-        *value_return = XtNewString(name);      
-        *length_return = strlen(name) + 1;
+    default:
+      brow_GetAnnotation( node_list[0], 0, name, sizeof(name));
+      *value_return = XtNewString(name);      
+      *length_return = strlen(name) + 1;
     }
     free( node_list);
 

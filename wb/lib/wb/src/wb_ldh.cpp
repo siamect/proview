@@ -623,7 +623,87 @@ ldh_GetObjectBodyDef(ldh_tSession session, pwr_tCid cid, char *bname,
   if (!c) return c.sts();
   wb_bdef b = c.bdef(bname);
   if (!b) return b.sts();
-    
+
+  wb_adef asuper[20];
+  int scnt = 0;
+  asuper[scnt++] = b.adef();
+  if ( asuper[scnt-1] && asuper[scnt-1].isClass() && strcmp( asuper[scnt-1].name(), "Super") == 0) {
+    // Count rows
+    *rows = 0;
+    while ( asuper[scnt-1] && asuper[scnt-1].isClass() && strcmp( asuper[scnt-1].name(), "Super") == 0) {
+      wb_cdef subc = sp->cdef( asuper[scnt-1].subClass());
+      wb_bdef subb = subc.bdef(pwr_eBix_rt);
+      *rows += subb.nAttribute() - 1;
+      asuper[scnt++] = subb.adef();
+    }
+    *rows += b.nAttribute();
+
+    *bdef = (ldh_sParDef *) calloc(1, sizeof(ldh_sParDef) * *rows);
+
+    int j = 0;
+    for ( int i = scnt - 1; i >= 0; i--) {
+      for (wb_adef a = asuper[i]; a; a = a.next()) {
+	if ( a && a.isClass() && strcmp( a.name(), "Super") == 0)
+	  continue;
+
+	strcpy((*bdef)[j].ParName, "");
+	for ( int ii = i; ii > 0; ii--)
+	  strcat( (*bdef)[j].ParName, "Super.");
+	strcat((*bdef)[j].ParName, a.name());
+	(*bdef)[j].ParLevel = 1;
+	(*bdef)[j].ParClass = (pwr_eClass)a.cid();
+	(*bdef)[j].Flags = ldh_mParDef_Super;
+	(*bdef)[j++].Par = (pwr_uParDef *) a.body();
+      }
+      if ( j > *rows)
+	// Something is wrong
+	break;
+    }
+    // Detect shadowed attributes
+    for ( j = 0; j < *rows - 1; j++) {
+      char *s1 = strrchr( (*bdef)[j].ParName, '.');
+      if ( !s1)
+	s1 = (*bdef)[j].ParName;
+      else
+	s1++;
+      for ( int i = j + 1; i < *rows; i++) {
+	char *s2 = strrchr( (*bdef)[i].ParName, '.');
+	if ( !s2)
+	  s2 = (*bdef)[i].ParName;
+	else
+	  s2++;
+	if ( cdh_NoCaseStrcmp( s1, s2) == 0) {
+	  (*bdef)[j].Flags |= ldh_mParDef_Shadowed;
+	  break;
+	}
+      }
+    }
+  }
+  else {  
+    *rows = b.nAttribute();
+    *bdef = (ldh_sParDef *) calloc(1, sizeof(ldh_sParDef) * *rows);
+    if (*bdef == NULL) return LDH__INSVIRMEM;
+
+    for (wb_adef a = b.adef(); a; a = a.next()) {
+      strcpy((*bdef)[a.index()].ParName, a.name());
+      (*bdef)[a.index()].ParLevel = 1;
+      (*bdef)[a.index()].ParClass = (pwr_eClass)a.cid();
+      (*bdef)[a.index()].Par = (pwr_uParDef *) a.body();
+    }
+  }    
+  return LDH__SUCCESS;
+}
+
+pwr_tStatus
+ldh_GetTrueObjectBodyDef(ldh_tSession session, pwr_tCid cid, char *bname,
+                     int maxlev, ldh_sParDef **bdef, int *rows)
+{
+  wb_session *sp = (wb_session *)session;
+  wb_cdef c = sp->cdef(cid);
+  if (!c) return c.sts();
+  wb_bdef b = c.bdef(bname);
+  if (!b) return b.sts();
+
   *rows = b.nAttribute();
   *bdef = (ldh_sParDef *) calloc(1, sizeof(ldh_sParDef) * *rows);
   if (*bdef == NULL) return LDH__INSVIRMEM;
@@ -633,8 +713,7 @@ ldh_GetObjectBodyDef(ldh_tSession session, pwr_tCid cid, char *bname,
     (*bdef)[a.index()].ParLevel = 1;
     (*bdef)[a.index()].ParClass = (pwr_eClass)a.cid();
     (*bdef)[a.index()].Par = (pwr_uParDef *) a.body();
-  }
-    
+  }    
   return LDH__SUCCESS;
 }
 
@@ -665,6 +744,31 @@ ldh_GetObjectClass(ldh_tSession session, pwr_tOid oid, pwr_tCid *cid)
     
   return o.sts();
 }
+
+pwr_tStatus
+ldh_GetAttrRefTid(ldh_tSession session, pwr_sAttrRef *arp, pwr_tTid *tid)
+{
+  wb_session *sp = (wb_session *)session;
+
+  wb_attribute a = sp->attribute(arp);
+  if (!a) return a.sts();
+  *tid = a.tid();
+    
+  return a.sts();
+}
+
+pwr_tStatus
+ldh_GetAttrRefType(ldh_tSession session, pwr_sAttrRef *arp, pwr_eType *type)
+{
+  wb_session *sp = (wb_session *)session;
+
+  wb_attribute a = sp->attribute(arp);
+  if (!a) return a.sts();
+  *type = a.type();
+    
+  return a.sts();
+}
+
 
 pwr_tStatus
 ldh_GetObjectContext(ldh_tSession session, pwr_tOid oid, ldh_sObjContext **octx)
@@ -955,9 +1059,10 @@ pwr_tStatus
 ldh_NameToAttrRef(ldh_tSession session, char *name, pwr_sAttrRef *arp)
 {
   wb_session *sp = (wb_session *)session;
+
   wb_attribute a = sp->attribute(name);
   if (!a) return a.sts();
-    
+  
   a.aref(arp);
 
   return a.sts();
@@ -989,7 +1094,7 @@ ldh_NameToObjid(ldh_tSession session, pwr_tOid *oid, char *name)
    least as big as maxsize.  */
 
 pwr_tStatus
-ldh_ObjidToName(ldh_tSession session, pwr_tOid oid, ldh_eName type, char *buf, int maxsize, int *size)
+ldh_ObjidToName(ldh_tSession session, pwr_tOid oid, int type, char *buf, int maxsize, int *size)
 {
   wb_session *sp = (wb_session *)session;
 
@@ -1018,10 +1123,24 @@ ldh_ObjidToName(ldh_tSession session, pwr_tOid oid, ldh_eName type, char *buf, i
     }
     break;
   }
-  case ldh_eName_Hierarchy:
-  case ldh_eName_Path:
-  case ldh_eName_VolPath:
-  case ldh_eName_Volume:
+  case ldh_eName_Objid:
+  case ldh_eName_ObjectIx:
+  case ldh_eName_OixString:
+  case ldh_eName_VolumeId:
+  case ldh_eName_VidString:
+  {
+    char str[80];
+
+    wb_name n = wb_name( cdh_ObjidToString( NULL, oid, 1));
+    strcpy( str, n.name( type));
+    *size = strlen(str);
+    if ( *size > maxsize - 1) {
+      return LDH__NAMEBUF;
+    }
+    strcpy( buf, str);
+    break;
+  }
+  default:
   {
     wb_object o = sp->object(oid);
     if (!o) { /* return o.sts(); */
@@ -1043,25 +1162,6 @@ ldh_ObjidToName(ldh_tSession session, pwr_tOid oid, ldh_eName type, char *buf, i
     }
     break;
   }
-  case ldh_eName_Objid:
-  case ldh_eName_ObjectIx:
-  case ldh_eName_OixString:
-  case ldh_eName_VolumeId:
-  case ldh_eName_VidString:
-  {
-    char str[80];
-
-    wb_name n = wb_name( cdh_ObjidToString( NULL, oid, 1));
-    strcpy( str, n.name( type));
-    *size = strlen(str);
-    if ( *size > maxsize - 1) {
-      return LDH__NAMEBUF;
-    }
-    strcpy( buf, str);
-    break;
-  }
-  default:
-    return LDH__NYI;
   }
   return LDH__SUCCESS;
 }
@@ -1104,20 +1204,37 @@ ldh_ClassIdToName(ldh_tSession session, pwr_tCid cid, char *buff, int maxsize, i
     of it is returned.  */
 
 pwr_tStatus
-ldh_AttrRefToName(ldh_tSession session, pwr_sAttrRef *arp, ldh_eName nametype, char **aname, int *size)
+ldh_AttrRefToName(ldh_tSession session, pwr_sAttrRef *arp, int nametype, char **aname, int *size)
 {
   static char str[512];
   wb_session *sp = (wb_session *)session;
     
   switch ( nametype) {
-  case ldh_eName_Object:
-  case ldh_eName_Hierarchy:
-  case ldh_eName_Path:
-  case ldh_eName_VolPath:
-  case ldh_eName_Volume:
-  case ldh_eName_Aref:
-  case ldh_eName_ArefVol:
-  {
+  case ldh_eName_ArefExport:
+  case ldh_eName_Objid:
+  case ldh_eName_ObjectIx:
+  case ldh_eName_OixString:
+  case ldh_eName_VolumeId:
+  case ldh_eName_VidString: {
+    wb_name n = wb_name( cdh_ArefToString( NULL, arp, 1));
+    strcpy( str, n.name( nametype));
+    *aname = str;
+    *size = strlen(str);
+    break;
+  }
+  case ldh_eName_Ref: {
+    wb_attribute a = sp->attribute(arp);
+    if (!a) return a.sts();
+    
+    wb_name n = a.longName();
+    strcpy( str, a.name());
+    strcat( str, ".");
+    strcat( str, n.attribute());
+    *aname = str;
+    *size = strlen(str);
+    break;
+  }
+  default: {
     wb_attribute a = sp->attribute(arp);
     if (!a) return a.sts();
     
@@ -1127,21 +1244,6 @@ ldh_AttrRefToName(ldh_tSession session, pwr_sAttrRef *arp, ldh_eName nametype, c
     *size = strlen(str);
     break;
   }
-  case ldh_eName_ArefExport:
-  case ldh_eName_Objid:
-  case ldh_eName_ObjectIx:
-  case ldh_eName_OixString:
-  case ldh_eName_VolumeId:
-  case ldh_eName_VidString:
-  {
-    wb_name n = wb_name( cdh_ArefToString( NULL, arp, 1));
-    strcpy( str, n.name( nametype));
-    *aname = str;
-    *size = strlen(str);
-    break;
-  }
-  default:
-    return LDH__NYI;
   }
   return LDH__SUCCESS;
 }
@@ -1388,8 +1490,10 @@ ldh_StringGetAttribute(ldh_tSession session, pwr_sAttrRef *arp, pwr_tUInt32 maxs
   wb_attribute a = sp->attribute(arp);
   if (!a) return a.sts();
     
-  //return a.valueToString(string, size);
-  return LDH__NYI;
+  if ( strlen(a.longName().c_str()) >= maxsize)
+    return LDH__NAMEBUF;
+  strncpy( string, a.longName().c_str(), maxsize);
+  return LDH__SUCCESS;
 }
 
 /* If write is false this routine only checks the string.  */
@@ -1447,11 +1551,11 @@ ldh_SyntaxCheck(ldh_tSession session, int *errorcount, int *warningcount)
 }
 
 pwr_tStatus
-ldh_CopyObjectTrees(ldh_tSession session, pwr_sAttrRef *arp, pwr_tOid doid, ldh_eDest dest, pwr_tBoolean self)
+ldh_CopyObjectTrees(ldh_tSession session, pwr_sAttrRef *arp, pwr_tOid doid, ldh_eDest dest, pwr_tBoolean self, int keepref)
 {
   pwr_tStatus sts;
 
-  sts = ldh_Copy( session, arp, 0);
+  sts = ldh_Copy( session, arp, keepref);
   if (EVEN(sts)) return sts;
 
   sts = ldh_Paste( session, doid, dest, 0, 0);  
@@ -1659,6 +1763,39 @@ ldh_SetDocBlock(ldh_tSession session, pwr_tOid oid, char *block)
     return LDH__SUCCESS;
 
   return LDH__NOSUCHBUFFER;
+}
+
+pwr_tStatus
+ldh_GetAttrRefInfo(ldh_tSession session, pwr_sAttrRef *arp, ldh_sAttrRefInfo *info)
+{
+  wb_session *sp = (wb_session *)session;
+    
+  wb_attribute a = sp->attribute(arp);
+  if (!a) return a.sts();
+    
+  info->size = a.size();
+  info->nElement = a.nElement();
+  info->index = a.index();
+  info->flags = a.flags();
+  info->type = a.type();
+  info->tid = a.tid();
+
+  return LDH__SUCCESS;
+}
+
+pwr_tStatus
+ldh_GetSuperClass( ldh_tSession session, pwr_tCid *super, pwr_tCid cid)
+{
+  wb_session *sp = (wb_session *)session;
+
+  wb_cdef c = sp->cdef(cid);
+  if (!c) return c.sts();
+
+  wb_cdef csuper = c.super();
+  if (!csuper) return csuper.sts();
+
+  *super = csuper.cid();
+  return LDH__SUCCESS;
 }
 
 #endif

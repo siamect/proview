@@ -2278,11 +2278,11 @@ int utl_show_modules (
 	  name = hier_name;
 	}
 
-	class_vect[0] = vldh_uclass( ldhses, "WindowPlc");
-	class_vect[1] = vldh_uclass( ldhses, "WindowCond");
-	class_vect[2] = vldh_uclass( ldhses, "WindowOrderact");
-	class_vect[3] = vldh_uclass( ldhses, "WindowSubstep");
-/*	class_vect[4] = vldh_uclass( ldhses, "PlcPgm");*/
+	class_vect[0] = pwr_cClass_windowplc;
+	class_vect[1] = pwr_cClass_windowcond;
+	class_vect[2] = pwr_cClass_windoworderact;
+	class_vect[3] = pwr_cClass_windowsubstep;
+/*	class_vect[4] = pwr_cClass_plc;*/
 	class_vect[4] = 0;
 	class = class_vect;
 
@@ -3233,6 +3233,9 @@ pwr_tStatus	utl_show_volumes(
 	  case ldh_eVolRep_Mem:
 	    u_print( utlctx, " Mem");
 	    break;
+	  case ldh_eVolRep_Ref:
+	    u_print( utlctx, " Ref");
+	    break;
 	  }
 	  u_print( utlctx, " %s", class_name);
 	  u_posit( utlctx, 2, strlen(class_name) + 2);
@@ -3426,7 +3429,7 @@ pwr_tStatus utl_show_class_classhier (
 	  classclass_ptr = NULL;
 	else
 	{
-	  classclass[0] = vldh_uclass( ldhses, "$ClassDef"); 
+	  classclass[0] = pwr_eClass_ClassDef; 
 	  classclass_ptr = classclass;
 	}
 
@@ -5544,7 +5547,7 @@ int utl_compile (
 
 
 	    /* Get class */
-	    class_vect[0] = vldh_class( ldhses, VLDH_CLASS_PLCPGM);
+	    class_vect[0] = pwr_cClass_plc;
 	    class_vect[1] = 0;
 	    class_ptr = class_vect;
 
@@ -5651,7 +5654,7 @@ int utl_compile (
 	    /* Find out which typ of object it is  */
 	    sts = ldh_GetObjectClass( ldhses, plcobjdid, &class);
 
-	    if ( class != vldh_class( ldhses, VLDH_CLASS_PLCPGM ))
+	    if ( class != pwr_cClass_plc)
 	    {
 	      status = FOE__CLASS;
 	      goto error_return;
@@ -6046,16 +6049,16 @@ static int utl_externref (
 	pwr_tObjid	*objdid_ptr;
 
 	static crr_t_searchlist	searchlist[] = {
-		{ VLDH_CLASS_STODP, "DevBody", "Object", CRR_WRITE },
-		{ VLDH_CLASS_SETDP, "DevBody", "Object", CRR_WRITE },
-		{ VLDH_CLASS_RESDP, "DevBody", "Object", CRR_WRITE },
-		{ VLDH_CLASS_GETDP, "DevBody", "DpObject", CRR_READ },
-		{ VLDH_CLASS_CSTOAP, "DevBody", "Object", CRR_WRITE },
- 		{ VLDH_CLASS_GETAP, "DevBody", "ApObject", CRR_READ },
-		{ VLDH_CLASS_STOAP, "DevBody", "Object", CRR_WRITE },
-		{ VLDH_CLASS_CSTOIP, "DevBody", "Object", CRR_WRITE },
- 		{ VLDH_CLASS_GETIP, "DevBody", "IpObject", CRR_READ },
-		{ VLDH_CLASS_STOIP, "DevBody", "Object", CRR_WRITE },
+		{ pwr_cClass_stodp, "DevBody", "Object", CRR_WRITE },
+		{ pwr_cClass_setdp, "DevBody", "Object", CRR_WRITE },
+		{ pwr_cClass_resdp, "DevBody", "Object", CRR_WRITE },
+		{ pwr_cClass_GetDp, "DevBody", "DpObject", CRR_READ },
+		{ pwr_cClass_cstoap, "DevBody", "Object", CRR_WRITE },
+ 		{ pwr_cClass_GetAp, "DevBody", "ApObject", CRR_READ },
+		{ pwr_cClass_stoap, "DevBody", "Object", CRR_WRITE },
+		{ pwr_cClass_CStoIp, "DevBody", "Object", CRR_WRITE },
+ 		{ pwr_cClass_GetIp, "DevBody", "IpObject", CRR_READ },
+		{ pwr_cClass_StoIp, "DevBody", "Object", CRR_WRITE },
  		{ 0, }};
 
 	/* get all the children to the object */
@@ -6076,7 +6079,7 @@ static int utl_externref (
 	  searchlist_ptr = searchlist;
 	  while ( searchlist_ptr->class != 0 )
 	  {
-	    if ( class == vldh_class( utlctx->ldhses, searchlist_ptr->class ))
+	    if ( class == searchlist_ptr->class)
 	    {
 	      /* Check if the objdid in the parameter is correct */
 	      sts = ldh_GetObjectPar( utlctx->ldhses, list_ptr->objdid, 
@@ -6140,26 +6143,26 @@ static int utl_signalref (
 	pwr_tObjid	*objdid_ptr;
 
 	static crr_t_searchlist	searchlist[] = {
-		{ VLDH_CLASS_RESDV, "DevBody", "DvObject", CRR_WRITE },
-		{ VLDH_CLASS_SETDV, "DevBody", "DvObject", CRR_WRITE },
-		{ VLDH_CLASS_STODV, "DevBody", "DvObject", CRR_WRITE },
-		{ VLDH_CLASS_GETDV, "DevBody", "DvObject", CRR_READ },
-		{ VLDH_CLASS_GETDO, "DevBody", "DoObject", CRR_READ },
-		{ VLDH_CLASS_RESDO, "DevBody", "DoObject", CRR_WRITE },
-		{ VLDH_CLASS_SETDO, "DevBody", "DoObject", CRR_WRITE },
-		{ VLDH_CLASS_STODO, "DevBody", "DoObject", CRR_WRITE },
-		{ VLDH_CLASS_GETDI, "DevBody", "DiObject", CRR_READ },
-		{ VLDH_CLASS_CSTOAV, "DevBody", "AvObject", CRR_WRITE },
-		{ VLDH_CLASS_GETAV, "DevBody", "AvObject", CRR_READ },
-		{ VLDH_CLASS_STOAV, "DevBody", "AvObject", CRR_WRITE },
-		{ VLDH_CLASS_CSTOAO, "DevBody", "AoObject", CRR_WRITE },
-		{ VLDH_CLASS_GETAO, "DevBody", "AoObject", CRR_READ },
-		{ VLDH_CLASS_STOAO, "DevBody", "AoObject", CRR_WRITE },
-		{ VLDH_CLASS_GETAI, "DevBody", "AiObject", CRR_READ },
-		{ VLDH_CLASS_POS3P, "DevBody", "DoOpen", CRR_WRITE },
-		{ VLDH_CLASS_POS3P, "DevBody", "DoClose", CRR_WRITE },
-		{ VLDH_CLASS_INC3P, "DevBody", "DoOpen", CRR_WRITE },
-		{ VLDH_CLASS_INC3P, "DevBody", "DoClose", CRR_WRITE },
+		{ pwr_cClass_resdv, "DevBody", "DvObject", CRR_WRITE },
+		{ pwr_cClass_setdv, "DevBody", "DvObject", CRR_WRITE },
+		{ pwr_cClass_stodv, "DevBody", "DvObject", CRR_WRITE },
+		{ pwr_cClass_GetDv, "DevBody", "DvObject", CRR_READ },
+		{ pwr_cClass_GetDo, "DevBody", "DoObject", CRR_READ },
+		{ pwr_cClass_resdo, "DevBody", "DoObject", CRR_WRITE },
+		{ pwr_cClass_setdo, "DevBody", "DoObject", CRR_WRITE },
+		{ pwr_cClass_stodo, "DevBody", "DoObject", CRR_WRITE },
+		{ pwr_cClass_GetDi, "DevBody", "DiObject", CRR_READ },
+		{ pwr_cClass_cstoav, "DevBody", "AvObject", CRR_WRITE },
+		{ pwr_cClass_GetAv, "DevBody", "AvObject", CRR_READ },
+		{ pwr_cClass_stoav, "DevBody", "AvObject", CRR_WRITE },
+		{ pwr_cClass_cstoao, "DevBody", "AoObject", CRR_WRITE },
+		{ pwr_cClass_GetAo, "DevBody", "AoObject", CRR_READ },
+		{ pwr_cClass_stoao, "DevBody", "AoObject", CRR_WRITE },
+		{ pwr_cClass_GetAi, "DevBody", "AiObject", CRR_READ },
+		{ pwr_cClass_pos3p, "DevBody", "DoOpen", CRR_WRITE },
+		{ pwr_cClass_pos3p, "DevBody", "DoClose", CRR_WRITE },
+		{ pwr_cClass_inc3p, "DevBody", "DoOpen", CRR_WRITE },
+		{ pwr_cClass_inc3p, "DevBody", "DoClose", CRR_WRITE },
  		{ 0, }};
 
 	/* get all the children to the object */
@@ -6182,7 +6185,7 @@ static int utl_signalref (
 	  searchlist_ptr = searchlist;
 	  while ( searchlist_ptr->class != 0 )
 	  {
-	    if ( class == vldh_class( utlctx->ldhses, searchlist_ptr->class ))
+	    if ( class == searchlist_ptr->class)
 	    {
 	      /* Check if the objdid in the parameter is correct */
 	      sts = ldh_GetObjectPar( utlctx->ldhses, list_ptr->objdid, 
@@ -6410,7 +6413,7 @@ int utl_print_plc_hier (
 	int		from_found;
 
 	/* Get class */
-	class_vect[0] = vldh_class( ldhses, VLDH_CLASS_PLCPGM);
+	class_vect[0] = pwr_cClass_plc;
 	class_vect[1] = 0;
 	class = class_vect;
 
@@ -6594,7 +6597,7 @@ int utl_print_document (
 
 	    /* Create subwindow */
 	    sts = foe_new_local( foectx, foectx->widgets.foe_window,
-		node->hn.name, pwr_cNObjid, 0, parentwind->hw.ldhsession,
+		node->hn.name, pwr_cNObjid, 0, parentwind->hw.ldhses,
 		node, windowindex, new_window, &foectx, 0, 
 		ldh_eAccess_ReadOnly, foe_eFuncAccess_Edit);
 
@@ -6661,7 +6664,7 @@ int utl_print_repage (
 	int		plcpgmcount;
 
 	/* Get class document objects */
-	class_vect[0] = vldh_class( ldhses, VLDH_CLASS_PLCPGM);
+	class_vect[0] = pwr_cClass_plc;
 	class_vect[1] = 0;
 	class = class_vect;
 
@@ -6905,7 +6908,7 @@ int utl_redraw_plc_hier (
 	char		plc_objid_str[80];
 
 	/* Get class */
-	class_vect[0] = vldh_class( ldhses, VLDH_CLASS_PLCPGM);
+	class_vect[0] = pwr_cClass_plc;
 	class_vect[1] = 0;
 	class = class_vect;
 
@@ -7104,7 +7107,7 @@ int utl_redraw_windows (
 
 	    /* Create subwindow */
 	    sts = foe_new_local( foectx, foectx->widgets.foe_window,
-		node->hn.name, pwr_cNObjid, 0, parentwind->hw.ldhsession,
+		node->hn.name, pwr_cNObjid, 0, parentwind->hw.ldhses,
 		node, windowindex, new_window, &foectx, 0, 
 		ldh_eAccess_ReadWrite, foe_eFuncAccess_Edit);
 
@@ -9848,7 +9851,7 @@ int utl_copy_objects (
 	  attrref[1].Objid = pwr_cNObjid;
 
 	  sts = ldh_CopyObjectTrees( ldhses, &attrref, destination,
-		code,  0);
+		code,  0, 0);
 	  if ( EVEN(sts)) return sts;
 
 	  /* Fetch the created root object, and change the name */
@@ -9985,7 +9988,7 @@ int utl_move_window (
 		(char **)&nodebuffer, &size);
 	    if( ODD(sts))
 	    {
-	      nodebuffer->window_did = source;
+	      nodebuffer->woid = source;
 
 	      sts = ldh_SetObjectBuffer( ldhses, child, "DevBody", "PlcNode", 
 			(char *)nodebuffer);
@@ -10000,7 +10003,7 @@ int utl_move_window (
 		(char **)&conbuffer, &size);
 	      if( EVEN(sts)) return sts;
 
-	      conbuffer->window_did = source;
+	      conbuffer->woid = source;
 
 	      sts = ldh_SetObjectBuffer( ldhses, child, "DevBody", 
 			"PlcConnection", (char *)conbuffer);
@@ -11001,7 +11004,7 @@ static int cross_doclist_object_insert(
 	sts = cross_doclist_add( &cross_doclist,
 			&cross_doclist_count, 
 			objid,
-			nodebuffer->window_did,
+			nodebuffer->woid,
 			nodebuffer->x,
 			nodebuffer->y,
 			nodebuffer->x + nodebuffer->width,
@@ -11243,40 +11246,40 @@ static int	cross_crosslist_object_insert(
 		int		dum4)
 {
 	static crr_t_searchlist	searchlist[] = {
-		{ VLDH_CLASS_PLCPGM, "DevBody", "ResetObject", CRR_READ },
-		{ VLDH_CLASS_RESDV, "DevBody", "DvObject", CRR_WRITE },
-		{ VLDH_CLASS_SETDV, "DevBody", "DvObject", CRR_WRITE },
-		{ VLDH_CLASS_STODV, "DevBody", "DvObject", CRR_WRITE },
-		{ VLDH_CLASS_GETDV, "DevBody", "DvObject", CRR_READ },
-		{ VLDH_CLASS_GETDO, "DevBody", "DoObject", CRR_READ },
-		{ VLDH_CLASS_RESDO, "DevBody", "DoObject", CRR_WRITE },
-		{ VLDH_CLASS_SETDO, "DevBody", "DoObject", CRR_WRITE },
-		{ VLDH_CLASS_STODO, "DevBody", "DoObject", CRR_WRITE },
-		{ VLDH_CLASS_GETDI, "DevBody", "DiObject", CRR_READ },
-		{ VLDH_CLASS_CSTOAV, "DevBody", "AvObject", CRR_WRITE },
-		{ VLDH_CLASS_GETAV, "DevBody", "AvObject", CRR_READ },
-		{ VLDH_CLASS_STOAV, "DevBody", "AvObject", CRR_WRITE },
-		{ VLDH_CLASS_CSTOAO, "DevBody", "AoObject", CRR_WRITE },
-		{ VLDH_CLASS_GETAO, "DevBody", "AoObject", CRR_READ },
-		{ VLDH_CLASS_STOAO, "DevBody", "AoObject", CRR_WRITE },
-		{ VLDH_CLASS_GETAI, "DevBody", "AiObject", CRR_READ },
-		{ VLDH_CLASS_POS3P, "DevBody", "DoOpen", CRR_WRITE },
-		{ VLDH_CLASS_POS3P, "DevBody", "DoClose", CRR_WRITE },
-		{ VLDH_CLASS_INC3P, "DevBody", "DoOpen", CRR_WRITE },
-		{ VLDH_CLASS_INC3P, "DevBody", "DoClose", CRR_WRITE },
-		{ VLDH_CLASS_STODP, "DevBody", "Object", CRR_WRITE },
-		{ VLDH_CLASS_SETDP, "DevBody", "Object", CRR_WRITE },
-		{ VLDH_CLASS_RESDP, "DevBody", "Object", CRR_WRITE },
-		{ VLDH_CLASS_GETDP, "DevBody", "DpObject", CRR_READ },
-		{ VLDH_CLASS_CSTOAP, "DevBody", "Object", CRR_WRITE },
- 		{ VLDH_CLASS_GETAP, "DevBody", "ApObject", CRR_READ },
-		{ VLDH_CLASS_STOAP, "DevBody", "Object", CRR_WRITE },
-		{ VLDH_CLASS_CSTOIP, "DevBody", "Object", CRR_WRITE },
- 		{ VLDH_CLASS_GETIP, "DevBody", "IpObject", CRR_READ },
-		{ VLDH_CLASS_STOIP, "DevBody", "Object", CRR_WRITE },
-		{ VLDH_CLASS_EXTERNREF, "DevBody", "Object", CRR_GETFROMOBJECT },
-		{ VLDH_CLASS_RESET_SO, "DevBody", "OrderObject", CRR_READ },
-		{ VLDH_CLASS_GETDATA, "DevBody", "DataObject", CRR_REF },
+		{ pwr_cClass_plc, "DevBody", "ResetObject", CRR_READ },
+		{ pwr_cClass_resdv, "DevBody", "DvObject", CRR_WRITE },
+		{ pwr_cClass_setdv, "DevBody", "DvObject", CRR_WRITE },
+		{ pwr_cClass_stodv, "DevBody", "DvObject", CRR_WRITE },
+		{ pwr_cClass_GetDv, "DevBody", "DvObject", CRR_READ },
+		{ pwr_cClass_GetDo, "DevBody", "DoObject", CRR_READ },
+		{ pwr_cClass_resdo, "DevBody", "DoObject", CRR_WRITE },
+		{ pwr_cClass_setdo, "DevBody", "DoObject", CRR_WRITE },
+		{ pwr_cClass_stodo, "DevBody", "DoObject", CRR_WRITE },
+		{ pwr_cClass_GetDi, "DevBody", "DiObject", CRR_READ },
+		{ pwr_cClass_cstoav, "DevBody", "AvObject", CRR_WRITE },
+		{ pwr_cClass_GetAv, "DevBody", "AvObject", CRR_READ },
+		{ pwr_cClass_stoav, "DevBody", "AvObject", CRR_WRITE },
+		{ pwr_cClass_cstoao, "DevBody", "AoObject", CRR_WRITE },
+		{ pwr_cClass_GetAo, "DevBody", "AoObject", CRR_READ },
+		{ pwr_cClass_stoao, "DevBody", "AoObject", CRR_WRITE },
+		{ pwr_cClass_GetAi, "DevBody", "AiObject", CRR_READ },
+		{ pwr_cClass_pos3p, "DevBody", "DoOpen", CRR_WRITE },
+		{ pwr_cClass_pos3p, "DevBody", "DoClose", CRR_WRITE },
+		{ pwr_cClass_inc3p, "DevBody", "DoOpen", CRR_WRITE },
+		{ pwr_cClass_inc3p, "DevBody", "DoClose", CRR_WRITE },
+		{ pwr_cClass_stodp, "DevBody", "Object", CRR_WRITE },
+		{ pwr_cClass_setdp, "DevBody", "Object", CRR_WRITE },
+		{ pwr_cClass_resdp, "DevBody", "Object", CRR_WRITE },
+		{ pwr_cClass_GetDp, "DevBody", "DpObject", CRR_READ },
+		{ pwr_cClass_cstoap, "DevBody", "Object", CRR_WRITE },
+ 		{ pwr_cClass_GetAp, "DevBody", "ApObject", CRR_READ },
+		{ pwr_cClass_stoap, "DevBody", "Object", CRR_WRITE },
+		{ pwr_cClass_CStoIp, "DevBody", "Object", CRR_WRITE },
+ 		{ pwr_cClass_GetIp, "DevBody", "IpObject", CRR_READ },
+		{ pwr_cClass_StoIp, "DevBody", "Object", CRR_WRITE },
+		{ pwr_cClass_ExternRef, "DevBody", "Object", CRR_GETFROMOBJECT },
+		{ pwr_cClass_reset_so, "DevBody", "OrderObject", CRR_READ },
+		{ pwr_cClass_GetData, "DevBody", "DataObject", CRR_REF },
 		{ 0, }};
 
 	int		sts, size;
@@ -11293,7 +11296,7 @@ static int	cross_crosslist_object_insert(
 	searchlist_ptr = searchlist;
 	while ( searchlist_ptr->class != 0 )
 	{
-	  if ( class == vldh_class( ldhses, searchlist_ptr->class ))
+	  if ( class == searchlist_ptr->class)
 	  {
 	    /* Check if the objdid in the parameter is correct */
 	    sts = ldh_GetObjectPar( ldhses, objid, searchlist_ptr->body, 
@@ -11321,28 +11324,28 @@ static int	cross_crosslist_object_insert(
 	          write = searchlist_ptr->write;
 
 	        /* Store in crosslist */
-	        if ( refobjid_class == vldh_class( ldhses, VLDH_CLASS_DI))
+	        if ( refobjid_class == pwr_cClass_Di)
 	          sts = cross_crosslist_add( &cross_crosslist[CROSSLIST_DI], 
 			&cross_crosslist_count[CROSSLIST_DI], 0,
 			*objid_ptr, objid, write); 
-	        else if ( refobjid_class == vldh_class( ldhses, VLDH_CLASS_DO)||
-	                  refobjid_class == vldh_class( ldhses, VLDH_CLASS_PO))
+	        else if ( refobjid_class == pwr_cClass_Do ||
+	                  refobjid_class == pwr_cClass_Po)
 	          sts = cross_crosslist_add( &cross_crosslist[CROSSLIST_DO], 
 			&cross_crosslist_count[CROSSLIST_DO], 0,
 			*objid_ptr, objid, write); 
-	        else if ( refobjid_class == vldh_class( ldhses, VLDH_CLASS_DV))
+	        else if ( refobjid_class == pwr_cClass_Dv)
 	          sts = cross_crosslist_add( &cross_crosslist[CROSSLIST_DV], 
 			&cross_crosslist_count[CROSSLIST_DV], 0,
 			*objid_ptr, objid, write); 
-	        else if ( refobjid_class == vldh_class( ldhses, VLDH_CLASS_AI))
+	        else if ( refobjid_class == pwr_cClass_Ai)
 	          sts = cross_crosslist_add( &cross_crosslist[CROSSLIST_AI], 
 			&cross_crosslist_count[CROSSLIST_AI], 0,
 			*objid_ptr, objid, write); 
-	        else if ( refobjid_class == vldh_class( ldhses, VLDH_CLASS_AO))
+	        else if ( refobjid_class == pwr_cClass_Ao)
 	          sts = cross_crosslist_add( &cross_crosslist[CROSSLIST_AO], 
 			&cross_crosslist_count[CROSSLIST_AO], 0,
 			*objid_ptr, objid, write); 
-	        else if ( refobjid_class == vldh_class( ldhses, VLDH_CLASS_AV))
+	        else if ( refobjid_class == pwr_cClass_Av)
 	          sts = cross_crosslist_add( &cross_crosslist[CROSSLIST_AV], 
 			&cross_crosslist_count[CROSSLIST_AV], 0,
 			*objid_ptr, objid, write); 
@@ -11637,18 +11640,18 @@ static int	crr_crossref(
 	if ( EVEN(sts)) return sts;
 
 	/* Select crosslist */
-	if ( class == vldh_class( ldhses, VLDH_CLASS_DI))
+	if ( class == pwr_cClass_Di)
 	  cr_index = CROSSLIST_DI;
-	else if ( class == vldh_class( ldhses, VLDH_CLASS_DO) ||
-	          class == vldh_class( ldhses, VLDH_CLASS_PO))
+	else if ( class == pwr_cClass_Do ||
+	          class == pwr_cClass_Po)
 	  cr_index = CROSSLIST_DO;
-	else if ( class == vldh_class( ldhses, VLDH_CLASS_DV))
+	else if ( class == pwr_cClass_Dv)
 	  cr_index = CROSSLIST_DV;
-	else if ( class == vldh_class( ldhses, VLDH_CLASS_AI))
+	else if ( class == pwr_cClass_Ai)
 	  cr_index = CROSSLIST_AI;
-	else if ( class == vldh_class( ldhses, VLDH_CLASS_AO))
+	else if ( class == pwr_cClass_Ao)
 	  cr_index = CROSSLIST_AO;
-	else if ( class == vldh_class( ldhses, VLDH_CLASS_AV))
+	else if ( class == pwr_cClass_Av)
 	  cr_index = CROSSLIST_AV;
 	else
 	  cr_index = CROSSLIST_OBJ;

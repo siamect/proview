@@ -55,6 +55,7 @@ SObject pwrb:Class
       Object ValueIndex $Attribute 2 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_INVISIBLE
           Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
@@ -90,7 +91,7 @@ SObject pwrb:Class
       !*/
       Object DefGraph $Attribute 5 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr TypeRef = "pwrs:Type-$AttrRef"
         EndBody
       EndObject
       !/**
@@ -100,7 +101,7 @@ SObject pwrb:Class
       !*/
       Object DefTrend $Attribute 6 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr TypeRef = "pwrs:Type-$AttrRef"
         EndBody
       EndObject
       !/**
@@ -139,47 +140,16 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$URL"
         EndBody
       EndObject
-      !/**
-      !  Text associated to ActualValue = FALSE. At presentation
-      !  when ActualValue = FALSE TextWhenValIs0 is displayed;
-      !  OFF may often be a suitable text.
-      !  The attribute is used by the object display.
-      !*/
-      Object TextWhenValIs0 $Attribute 7 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$String16"
-        EndBody
-      EndObject
-      !/**
-      !  Text associated to ActualValue = TRUE. At presentation
-      !  when ActualValue = TRUE TextWhenValIs1 is displayed; ON
-      !  may often be a suitable text.
-      !  
-      !  The attribute is used by the object display.
-      !*/
-      Object TextWhenValIs1 $Attribute 8 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$String16"
-        EndBody
-      EndObject
-      !/**
-      !  Not used.
-      !*/
-      Object OwnedByPLC $Attribute 9 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$Boolean"
-        EndBody
-      EndObject
     EndObject
     Object ConfiguratorPoson $Menu
       Object Pointed $Menu
 	Object ConnectGraph $MenuButton
 	  Body SysBody
 	    Attr ButtonName = "Connect Graph"
-	    Attr MethodName = "$Objid-Connect"
+	    Attr MethodName = "$AttrRef-Connect"
 	    Attr MethodArguments[0] = "DefGraph"
 	    Attr MethodArguments[1] = "XttGraph"
-	    Attr FilterName = "$Objid-IsOkConnect"
+	    Attr FilterName = "$AttrRef-IsOkConnect"
 	    Attr FilterArguments[0] = "DefGraph"
 	    Attr FilterArguments[1] = "XttGraph"
 	  EndBody
@@ -187,10 +157,10 @@ SObject pwrb:Class
 	Object ConnectTrend $MenuButton
 	  Body SysBody
 	    Attr ButtonName = "Connect Trend"
-	    Attr MethodName = "$Objid-Connect"
+	    Attr MethodName = "$AttrRef-Connect"
 	    Attr MethodArguments[0] = "DefTrend"
 	    Attr MethodArguments[1] = "DsTrend,PlotGroup"
-	    Attr FilterName = "$Objid-IsOkConnect"
+	    Attr FilterName = "$AttrRef-IsOkConnect"
 	    Attr FilterArguments[0] = "DefTrend"
 	    Attr FilterArguments[1] = "DsTrend,PlotGroup"
 	  EndBody

@@ -45,22 +45,22 @@
 # define SET_VERSION(a, b, c, d)  ((pwr_tVersion)((a << 24) + (a << 16) + (a << 8) + a))		  
 #endif
 
-#define pwrv_cBuildTimeStr       "24 Nov 2003"
+#define pwrv_cBuildTimeStr       "14 Oct 2004"
 
-#define pwrv_cPwrVersionStr      "V4.0.0"
-#define pwrv_cPwrVersion         SET_VERSION('V', 4, 0, 0)
+#define pwrv_cPwrVersionStr      "V4.1.0"
+#define pwrv_cPwrVersion         SET_VERSION('V', 4, 1, 0)
 
-#define pwrv_cSmdVersion         SET_VERSION('V', 4, 0, 0)
-#define pwrv_cSmdVersionStr      "V3.9.0"
+#define pwrv_cSmdVersion         SET_VERSION('V', 4, 1, 0)
+#define pwrv_cSmdVersionStr      "V4.1.0"
 
-#define pwrv_cBmdVersion         SET_VERSION('V', 4, 0, 0)
-#define pwrv_cBmdVersionStr      "V4.0.0"
+#define pwrv_cBmdVersion         SET_VERSION('V', 4, 1, 0)
+#define pwrv_cBmdVersionStr      "V4.1.0"
 
-#define pwrv_cWbdbVersion        SET_VERSION('V', 4, 0, 0)
-#define pwrv_cWbdbVersionStr     "V4.0.0"
-#define pwrv_cWbdbVersionShortStr "V40"
+#define pwrv_cWbdbVersion        SET_VERSION('V', 4, 1, 0)
+#define pwrv_cWbdbVersionStr     "V4.1.0"
+#define pwrv_cWbdbVersionShortStr "V41"
 
-#define pwrv_cLffVersion         SET_VERSION('V', 4, 0, 0)
-#define pwrv_cLffVersionStr      "V4.0.0"
+#define pwrv_cLffVersion         SET_VERSION('V', 4, 1, 0)
+#define pwrv_cLffVersionStr      "V4.1.0"
 
 #endif

@@ -47,6 +47,7 @@ public:
 
   void templateBody( pwr_tStatus *sts, pwr_eBix bix, void *p);
   wb_object classBody( const char *bname);
+  wb_cdef super();
 
 private:
   void check() const;
