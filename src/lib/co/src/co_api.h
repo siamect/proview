@@ -58,6 +58,14 @@ void msgw_set_nodraw();
 void msgw_reset_nodraw();
 int xhelp_help( char *key, char *help_bookmark, navh_eHelpFile file_type,
 		char *file_name, int strict);
+int crr_signal( void *parent_ctx, char *signalname,
+		void (*insert_cb)( void *, void *, navc_eItemType, char *, char *, int),
+		int (*name_to_objid_cb)( void *, char *, pwr_tObjid *),
+		int (*get_volume_cb)( void *, pwr_tVolumeId *));
+int crr_object( void *parent_ctx, char *objectname,
+		void (*insert_cb)( void *, void *, navc_eItemType, char *, char *, int),
+		int (*name_to_objid_cb)( void *, char *, pwr_tObjid *),
+		int (*get_volume_cb)( void *, pwr_tVolumeId *));
 #if defined __cplusplus
 }
 #endif

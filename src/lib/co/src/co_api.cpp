@@ -30,6 +30,7 @@ extern "C" {
 
 #include "co_msgwindow.h"
 #include "co_xhelp.h"
+#include "co_nav_crr.h"
 
 extern "C" {
 #include "co_api.h"
@@ -160,6 +161,43 @@ int xhelp_help( char *key, char *help_bookmark, navh_eHelpFile file_type,
 		char *file_name, int strict)
 {
   return CoXHelp::dhelp( key, help_bookmark, file_type, file_name, strict != 0);
+}
+
+//
+//  c api to co_crr
+//
+
+int crr_signal( void *parent_ctx, char *signalname,
+	     void (*insert_cb)( void *, void *, navc_eItemType, char *, char *, int),
+	     int (*name_to_objid_cb)( void *, char *, pwr_tObjid *),
+	     int (*get_volume_cb)( void *, pwr_tVolumeId *))
+{
+  int sts;
+  NavCrr *navcrr = new NavCrr( parent_ctx, 0);
+  navcrr->insert_cb = insert_cb;
+  navcrr->name_to_objid_cb = name_to_objid_cb;
+  navcrr->get_volume_cb = get_volume_cb;
+  sts = navcrr->crr_signal( 0, signalname);
+
+  delete navcrr;
+  return sts;
+}
+
+int crr_object( void *parent_ctx, char *objectname,
+	     void (*insert_cb)( void *, void *, navc_eItemType, char *, char *, int),
+	     int (*name_to_objid_cb)( void *, char *, pwr_tObjid *),
+	     int (*get_volume_cb)( void *, pwr_tVolumeId *))
+{
+  int sts;
+  NavCrr *navcrr = new NavCrr( parent_ctx, 0);
+  navcrr->insert_cb = insert_cb;
+  navcrr->name_to_objid_cb = name_to_objid_cb;
+  navcrr->get_volume_cb = get_volume_cb;
+
+  sts = navcrr->crr_object( 0, objectname);
+
+  delete navcrr;
+  return sts;
 }
 
 
