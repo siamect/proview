@@ -29,7 +29,8 @@ public:
 
   wb_cdef& operator=(const wb_cdef&);
   operator bool() const { return (m_cdrep != 0);}
-  operator wb_cdrep*() const;
+  operator wb_cdrep*() const {return m_cdrep;}
+  
   bool operator==(wb_cdef&);
     
   size_t size();   // get objects runtime body size
