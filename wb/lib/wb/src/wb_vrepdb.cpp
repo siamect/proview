@@ -42,7 +42,9 @@ wb_erep *wb_vrepdb::erep()
 
 wb_vrep *wb_vrepdb::next()
 {
-  return 0;
+  pwr_tStatus sts;
+
+  return m_erep->nextVolume( &sts, m_db->vid());
 }
 
 wb_merep *wb_vrepdb::merep() const

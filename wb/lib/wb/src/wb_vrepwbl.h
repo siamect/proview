@@ -42,6 +42,7 @@ public:
     wb_vrep(vid), m_erep(erep), m_merep(erep->merep()), m_nRef(0), root_object(0),error_cnt(0), file_cnt(0), next_oix(0), volume_node(0) {}
   ~wb_vrepwbl();
 
+  virtual ldh_eVolRep type() const { return ldh_eVolRep_Wbl;}
   pwr_tVid vid() const { return m_vid;}
   pwr_tCid cid() const { return m_cid;}
 

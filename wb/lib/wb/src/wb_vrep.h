@@ -43,6 +43,7 @@ public:
   virtual void unref() = 0;
   virtual wb_vrep *ref() = 0;
 
+  virtual ldh_eVolRep type() const = 0;
   virtual wb_erep *erep() = 0;
     
   virtual wb_vrep *next() = 0;

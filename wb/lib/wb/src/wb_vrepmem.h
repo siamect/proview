@@ -117,6 +117,7 @@ public:
   wb_vrepmem( wb_erep *erep, pwr_tVid vid);
   ~wb_vrepmem();
 
+  virtual ldh_eVolRep type() const { return ldh_eVolRep_Mem;}
   pwr_tVid vid() const { return m_vid;}
   pwr_tCid cid() const { return m_cid;}
 

@@ -30,6 +30,7 @@ public:
   virtual void unref();
   virtual wb_vrep *ref();
 
+  virtual ldh_eVolRep type() const { return ldh_eVolRep_Dbs;}
   virtual wb_erep *erep() ;
 
   virtual pwr_tOid oid(pwr_tStatus *sts, const wb_orep *o) { return pwr_cNOid;}

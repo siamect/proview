@@ -1761,7 +1761,7 @@ static int wnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
 			0, classid, ((WItemObject *)item)->objid, 
 			destcode);
 		if (EVEN(sts))
-		  wnav->message('E', wnav_get_message(sts));
+		  wnav->message(' ', wnav_get_message(sts));
                 break;
 	      default:
                 ;
@@ -1772,7 +1772,7 @@ static int wnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
            sts = ldh_CreateObject( wnav->ldhses, &objid,
 		0, classid, pwr_cNObjid, ldh_eDest_IntoLast);
 	   if (EVEN(sts))
-	     wnav->message('E', wnav_get_message(sts));
+	     wnav->message(' ', wnav_get_message(sts));
         }
       }
       else
@@ -1794,7 +1794,7 @@ static int wnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
             sts = ldh_MoveObject( wnav->ldhses, sel_list->Objid, 
 		item->objid, destcode);
             if ( EVEN(sts)) {
-	      wnav->message('E', wnav_get_message(sts));
+	      wnav->message(' ', wnav_get_message(sts));
 	      return sts;
 	    }
             // Unselect moved object

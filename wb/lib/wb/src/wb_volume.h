@@ -43,6 +43,7 @@ public:
   pwr_tVid vid() const { return m_vrep->vid();}
   pwr_tCid cid() const { return m_vrep->cid();}
   const char *name() const { return m_vrep->name();}
+  ldh_eVolRep type() const { return m_vrep->type();}
 
   wb_volume next() const;
 

@@ -27,6 +27,7 @@ public:
   virtual void unref();
   virtual wb_vrep *ref();
 
+  virtual ldh_eVolRep type() const { return ldh_eVolRep_Db;}
   virtual wb_erep *erep();
 
   virtual wb_merep *merep() const;

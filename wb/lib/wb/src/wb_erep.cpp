@@ -536,12 +536,13 @@ void wb_erep::loadMeta( pwr_tStatus *status)
       // Load db for this volume
       strcpy( vname, "$pwrp_db/");
       strcat( vname, vol_array[0]);
+      cdh_ToLower( vname, vname);
       strcat( vname, ".db");
       dcli_translate_filename( vname, vname);
 
       wb_vrepdb *vrepdb = new wb_vrepdb( this, vname);
       vrepdb->name(vol_array[0]);
-      addDbs( &sts, vrepdb);
+      addDb( &sts, vrepdb);
       vol_cnt++;
     }
   }

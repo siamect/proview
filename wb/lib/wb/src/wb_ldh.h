@@ -64,6 +64,13 @@ typedef pwr_tStatus (*ldh_tSessionCb) (void *, ldh_sEvent *);
 typedef union ldh_m_MenuFlags	ldh_mMenuFlags;
 
 typedef enum {
+  ldh_eVolRep_Db,
+  ldh_eVolRep_Dbs,
+  ldh_eVolRep_Wbl,
+  ldh_eVolRep_Mem
+} ldh_eVolRep;
+
+typedef enum {
   ldh_eAccess__ = 0,
   ldh_eAccess_ReadOnly,
   ldh_eAccess_ReadWrite,
@@ -442,11 +449,7 @@ pwr_tStatus ldh_CopyObject (
 
 pwr_tStatus ldh_CopyObjectTrees (
   ldh_tSession   Session,
-#if 0 // def __cplusplus
-  pwr_sAttrRef	    (*AttrRef)[1],
-#else
   pwr_sAttrRef	    *AttrRef,
-#endif
   pwr_tObjid	    destobject,
   ldh_eDest	    dest,
   pwr_tBoolean	    Self
@@ -956,9 +959,20 @@ ldh_CreateLoadFile(
 
 pwr_tStatus 
 ldh_WbDump(
-  ldh_tSesContext ldhses,
+  ldh_tSession session,
   char *objname,
   char *dumpfile
+);
+
+pwr_tStatus 
+ldh_WbLoad(
+  ldh_tSession session,
+  char *loadfile
+);
+
+ldh_eVolRep
+ldh_VolRepType(
+  ldh_tSession session
 );
 
 #ifdef __cplusplus

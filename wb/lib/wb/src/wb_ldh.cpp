@@ -39,6 +39,9 @@ This module contains the API-routines to the Local Data Handler, LDH.  */
 #include "wb_volume.h"
 #include "wb_error.h"
 #include "wb_vrepmem.h"
+#include "wb_vrepwbl.h"
+#include "wb_vrepdbs.h"
+#include "wb_db.h"
 #include "wb_print_wbl.h"
 #include "pwr_baseclasses.h"
 #include <X11/Intrinsic.h>
@@ -1383,9 +1386,13 @@ ldh_SyntaxCheck(ldh_tSession session, int *errorcount, int *warningcount)
 pwr_tStatus
 ldh_CopyObjectTrees(ldh_tSession session, pwr_sAttrRef *arp, pwr_tOid doid, ldh_eDest dest, pwr_tBoolean self)
 {
-  //wb_session *sp = (wb_session*)session;
+  pwr_tStatus sts;
 
-  return LDH__NYI;
+  sts = ldh_Copy( session, arp, 0);
+  if (EVEN(sts)) return sts;
+
+  sts = ldh_Paste( session, doid, dest, 0, 0);  
+  return sts;
 }
 
 
@@ -1456,14 +1463,14 @@ ldh_CreateLoadFile(ldh_tSession session)
 }
 
 pwr_tStatus 
-ldh_WbDump (
-  ldh_tSession session,
-  char *objname,
-  char *dumpfile
-) 
+ldh_WbDump( ldh_tSession session, char *objname, char *dumpfile) 
 {
   wb_session *sp = (wb_session*)session;
   char fname[200];
+
+  if ( sp->type() == ldh_eVolRep_Wbl ||
+       sp->cid() == pwr_eClass_ClassVolume)
+    return LDH__NYI;
 
   dcli_translate_filename( fname, dumpfile);
   ofstream fp( fname);
@@ -1484,7 +1491,74 @@ ldh_WbDump (
   return LDH__SUCCESS;
 }
 
+pwr_tStatus 
+ldh_WbLoad( ldh_tSession session, char *loadfile) 
+{
+  wb_session *sp = (wb_session*)session;
+  wb_erep *erep = sp->env();
+  char fname[200];
+  char db_name[200];
+  char vname[32];
 
+  if ( strstr( loadfile, ".dbs")) {
+    // Load vrepdbs
+    try {
+      dcli_translate_filename( fname, loadfile);
+      wb_vrepdbs *vdbs = new wb_vrepdbs( erep, fname);
+      vdbs->load();
+
+      wb_db db( vdbs->vid());
+      cdh_ToLower( vname, vdbs->name());
+      strcpy( db_name, "$pwrp_db/");
+      strcat( db_name, vname);
+      strcat( db_name, ".db");
+      dcli_translate_filename( db_name, db_name);
+	  
+      db.create( vdbs->vid(), vdbs->cid(), vdbs->name(), db_name);
+      db.importVolume( *vdbs);
+      db.close();
+
+      delete vdbs;      
+    }
+    catch ( wb_error& e) {
+      return e.sts();
+    }
+  }
+  else if ( strstr( loadfile, ".wb_load") || strstr( loadfile, ".wb_dmp")) {
+    // load vrepwbl
+    try {
+      dcli_translate_filename( fname, loadfile);
+      wb_vrepwbl *vwbl = new wb_vrepwbl( erep);
+      vwbl->load( fname);
+
+      wb_db db( vwbl->vid());
+      cdh_ToLower( vname, vwbl->name());
+      strcpy( db_name, "$pwrp_db/");
+      strcat( db_name, vname);
+      strcat( db_name, ".db");
+      dcli_translate_filename( db_name, db_name);
+	  
+      db.create( vwbl->vid(), vwbl->cid(), vwbl->name(), db_name);
+      db.importVolume( *vwbl);
+      db.close();
+
+      delete vwbl;      
+    }
+    catch ( wb_error& e) {
+      return e.sts();
+    }
+  }
+  else
+    return LDH__NYI;
+  return LDH__SUCCESS;
+}
+
+ldh_eVolRep
+ldh_VolRepType( ldh_tSession session)
+{
+  return ((wb_session*)session)->type();
+}
+	      
 
 #endif
 

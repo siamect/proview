@@ -273,7 +273,7 @@ dcli_tCmdTable	wnav_command_table[] = {
 		{
 			"WB",
 			&wnav_wb_func,
-			{ "dcli_arg1", "/OUTPUT", "/HIERARCHY",
+			{ "dcli_arg1", "/OUTPUT", "/HIERARCHY", "/LOADFILE",
 			""}
 		},
 		{
@@ -3916,8 +3916,19 @@ static int	wnav_wb_func( 	void		*client_data,
   }
   else if ( strncmp( arg1_str, "LOAD", strlen( arg1_str)) == 0)
   {
-    wnav->message('E', "Not yet implemented");
-    return LDH__NYI;
+    pwr_tStatus sts;
+    char loadfilestr[80];
+
+    if ( EVEN( dcli_get_qualifier( "/LOADFILE" , loadfilestr)))
+    {
+      wnav->message('E', "Qualifer required");
+      return WNAV__QUAL;
+    }
+
+    sts = ldh_WbLoad( wnav->ldhses, loadfilestr);
+    if ( EVEN(sts))
+      wnav->message(' ', wnav_get_message(sts));
+    return sts;
   }
   else
   {
