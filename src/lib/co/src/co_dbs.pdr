@@ -104,6 +104,7 @@
 %
 %#if defined OS_VMS || defined OS_ELN
 %
+%# define dbs_cNameBaseDirectory "pwr_load:"
 %# define dbs_cNameDirectory     "pwrp_load:"
 %# define dbs_cDirectory         "pwrp_load:"
 %# define dbs_cBaseDirectory     "pwr_load:"
@@ -122,6 +123,7 @@
 %
 %#elif defined OS_LYNX || defined OS_LINUX
 %
+%# define dbs_cNameBaseDirectory "pwr_load"
 %# define dbs_cNameDirectory     "pwrp_load"
 %# define dbs_cDirectory         "$pwrp_load/"
 %# define dbs_cNamePlc           "%splc_%s_%04d_%05d"
