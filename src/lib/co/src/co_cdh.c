@@ -2256,6 +2256,15 @@ cdh_ToUpper (
 
   return rs;
 }
+
+char *cdh_Low( char *in)
+{
+  static char str[400];
+
+  cdh_ToLower( str, in);
+  return str;
+}
+
 
 /* Compare two strings not regarding their casing.
 
@@ -2280,4 +2289,30 @@ cdh_NoCaseStrcmp (
     s++, t++; 
 
   return ((*s) & ~(1<<5)) - ((*t) & ~(1<<5));
+}
+
+//! Convert operating system to string
+/*!
+  For example pwr_mOpSys_X86_LINUX will be converted to "x86_linux".
+  A pointer to a static string is returned.
+
+  \param opsys	Operating system.
+  \return 	String
+*/
+char *cdh_OpSysToStr( pwr_mOpSys opsys)
+{
+  static char str[32];
+
+  switch( opsys) {
+  case pwr_mOpSys_VAX_ELN: strcpy( str, "vax_eln"); break;
+  case pwr_mOpSys_VAX_VMS: strcpy( str, "vax_vms"); break;
+  case pwr_mOpSys_AXP_VMS: strcpy( str, "axp_vms"); break;
+  case pwr_mOpSys_PPC_LYNX: strcpy( str, "ppc_lynx"); break;
+  case pwr_mOpSys_X86_LYNX: strcpy( str, "x86_lynx"); break;
+  case pwr_mOpSys_PPC_LINUX: strcpy( str, "ppc_linux"); break;
+  case pwr_mOpSys_X86_LINUX: strcpy( str, "x86_linux"); break;
+  case pwr_mOpSys_AXP_LINUX: strcpy( str, "axp_linux"); break;
+  default: strcpy( str, "");
+  }
+  return str;
 }

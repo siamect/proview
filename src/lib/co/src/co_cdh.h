@@ -851,6 +851,8 @@ cdh_ToLower (
   const char		*s
 );
 
+char *cdh_Low( char *in);
+
 char *
 cdh_ToUpper (
   char			*t,
@@ -862,6 +864,8 @@ cdh_NoCaseStrcmp (
   const char		*s,
   const char		*t
 );
+
+char *cdh_OpSysToStr( pwr_mOpSys opsys);
 
 #ifdef __cplusplus
 }
