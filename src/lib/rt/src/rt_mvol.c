@@ -56,11 +56,8 @@ static pwr_tBoolean
     co_eBO              bo)
   {
     pwr_sParam		*p;
-    co_mFormat          fm;
-    
-    co_GetOwnFormat(&fm);
 
-    if (bo == fm.b.bo)
+    if (co_dHostByteOrder == bo)
       return YES;
 
 
@@ -90,11 +87,8 @@ static pwr_tBoolean
   )
   {
     pwr_sClassDef	*p;
-    co_mFormat          fm;
-    
-    co_GetOwnFormat(&fm);
 
-    if (bo == fm.b.bo)
+    if (co_dHostByteOrder == bo)
       return YES;
 
     p = pool_Address(sts, gdbroot->rtdb, op->u.n.body);
@@ -120,11 +114,8 @@ static pwr_tBoolean
   )
   {
     pwr_sObjBodyDef	*p;
-    co_mFormat          fm;
-    
-    co_GetOwnFormat(&fm);
 
-    if (bo == fm.b.bo)
+    if (co_dHostByteOrder == bo)
       return YES;
 
     p = pool_Address(sts, gdbroot->rtdb, op->u.n.body);
