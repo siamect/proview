@@ -516,7 +516,7 @@ void GrowAnnot::get_annotation_info( void *node, int *t_size, glow_eDrawType *t_
   double trf_scale = trf.vertical_scale( &((GrowNode *)node)->trf);
   int idx = int( trf_scale * ctx->zoom_factor_y / ctx->base_zoom_factor * (text_size +4) - 4);
   if ( idx < 0)
-    return;
+    idx = 0;
   idx = min( idx, DRAW_TYPE_SIZE-1);
 
   *t_color = ((GrowCtx *)ctx)->get_drawtype( color_drawtype, glow_eDrawType_LineHighlight,
