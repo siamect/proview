@@ -2193,38 +2193,33 @@ int	gcg_wind_comp_all(
 	  for ( i = parent_count - 2; i >= 0; i -= 2)
 	  {
 	    /* Check if this window is loaded */
-#if 0
-	    sts = vldh_get_wind_objdid( *(parentlist + i), &wind); 
-	    if ( sts == VLDH__OBJNOTFOUND )
-#else
-	    if (!IsWindowLoaded(loaded_windlist, loaded_windcount, *(parentlist + i),  &wind))
-#endif
-	    {
-	      /* Load the window */
-	      if ( i == ( parent_count - 2))
-	      {
-	        /* This is the child to the plc */
-	        sts = vldh_wind_load( plc, 0, *(parentlist + i), 0, 0, &wind,
-			ldh_eAccess_ReadWrite);
-	        if ( EVEN(sts)) return sts;
-	        plc->hp.windowobject = wind;
-	      }
-	      else
-	      {
-	        /* Get the parent vldhnode */
-	        sts = vldh_get_node_objdid( *(parentlist + i + 1), parentwind, 
-			&node);
-	        if ( EVEN(sts)) return sts;
-	       
-	        sts = vldh_wind_load( plc, node, *(parentlist + i), 0, 0,
-			&wind, ldh_eAccess_ReadWrite);
-	        if ( EVEN(sts)) return sts;
-	      }
-	      sts = vldh_wind_load_all( wind);
-	      if ( EVEN(sts)) return sts;
+	    if (!IsWindowLoaded(loaded_windlist, loaded_windcount, *(parentlist + i),  &wind)) {
+	      sts = vldh_get_wind_objdid( *(parentlist + i), &wind); 
+	      if ( sts == VLDH__OBJNOTFOUND ) {
+		/* Load the window */
+		if ( i == ( parent_count - 2)) {
+		  /* This is the child to the plc */
+		  sts = vldh_wind_load( plc, 0, *(parentlist + i), 0, 0, &wind,
+					ldh_eAccess_ReadWrite);
+		  if ( EVEN(sts)) return sts;
+		  plc->hp.windowobject = wind;
+		}
+		else {
+		  /* Get the parent vldhnode */
+		  sts = vldh_get_node_objdid( *(parentlist + i + 1), parentwind, 
+					      &node);
+		  if ( EVEN(sts)) return sts;
+		  
+		  sts = vldh_wind_load( plc, node, *(parentlist + i), 0, 0,
+					&wind, ldh_eAccess_ReadWrite);
+		  if ( EVEN(sts)) return sts;
+		}
+		sts = vldh_wind_load_all( wind);
+		if ( EVEN(sts)) return sts;
 
-	      *(loaded_windlist + loaded_windcount) = wind;
-	      loaded_windcount++;
+		*(loaded_windlist + loaded_windcount) = wind;
+		loaded_windcount++;
+	      }
 	    }
 	    else
 	      if ( EVEN(sts)) return sts;
@@ -8026,6 +8021,8 @@ vldh_t_node	node;
         case pwr_eType_UInt16  : 
         case pwr_eType_Int8  : 
         case pwr_eType_UInt8  : 
+        case pwr_eType_Enum  : 
+        case pwr_eType_Mask  : 
 	  if ( !(node->ln.classid == pwr_cClass_StoAtoIp ||
 		 node->ln.classid == pwr_cClass_CStoAtoIp ||
 		 node->ln.classid == pwr_cClass_StoIp ||
@@ -10781,6 +10778,8 @@ vldh_t_node	node;
         case pwr_eType_UInt16  : 
         case pwr_eType_Int8  : 
         case pwr_eType_UInt8  : 
+        case pwr_eType_Enum  : 
+        case pwr_eType_Mask  : 
 	  if ( !(node->ln.classid != pwr_cClass_GetIpToA ||
 		 node->ln.classid != pwr_cClass_GetIp)) {
 	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
@@ -13877,7 +13876,9 @@ vldh_t_node	node;
 		 info_type == pwr_eType_Int16 ||
 		 info_type == pwr_eType_UInt16 ||
 		 info_type == pwr_eType_Int8 ||
-		 info_type == pwr_eType_UInt8)) {
+		 info_type == pwr_eType_UInt8 ||
+		 info_type == pwr_eType_Enum ||
+		 info_type == pwr_eType_Mask)) {
 	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
 	    return GSX__NEXTNODE;
 	  }
@@ -13974,8 +13975,8 @@ vldh_t_node	node;
 	char			*name;
         char			oname[120];
 	pwr_tClassId		class;
-	pwr_tTime		instance_time;
-	pwr_tTime		template_time;
+	pwr_tTime		*instance_time;
+	pwr_tTime		*template_time;
 	pwr_tObjid		template_plc;
 	pwr_tObjid		template_window;
 
@@ -13997,7 +13998,7 @@ vldh_t_node	node;
 
 	if ( found ) {
 	  // Get modification time
-	  sts = ldh_GetObjectPar( ldhses, node->ln.object_did, 
+	  sts = ldh_GetObjectPar( ldhses, window_objid, 
 			"DevBody", "Modified", (char **)&instance_time, &size); 
 	  if ( EVEN(sts)) return sts;
 	}
@@ -14032,7 +14033,7 @@ vldh_t_node	node;
 			(char **)&template_time, &size); 
 	if ( EVEN(sts)) return sts;
 
-	if ( !found || template_time.tv_sec != instance_time.tv_sec) {
+	if ( !found || template_time->tv_sec != instance_time->tv_sec) {
 	  // Replace the code
 	  if ( found) {
 	    /* Delete the window */
@@ -14096,6 +14097,8 @@ vldh_t_node	node;
 		gcgctx->print, 0, gcg_debug);
 	  node->hn.subwindowobject[0] = 0;
 	}
+	free( (char *)instance_time);
+	free( (char *)template_time);
 
 	/* Print the code */
 	sts = gcg_ref_insert( gcgctx, node->ln.object_did, GCG_PREFIX_REF);
@@ -14361,7 +14364,9 @@ vldh_t_node	node;
 		 info_type == pwr_eType_Int16 ||
 		 info_type == pwr_eType_UInt16 ||
 		 info_type == pwr_eType_Int8 ||
-		 info_type == pwr_eType_UInt8)) {
+		 info_type == pwr_eType_UInt8 ||
+		 info_type == pwr_eType_Enum ||
+		 info_type == pwr_eType_Mask)) {
 	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
 	    return GSX__NEXTNODE;
 	  }
