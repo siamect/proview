@@ -24,6 +24,7 @@
 #include "rt_ndc.h"
 #include "rt_ndc_msg.h"
 
+
 /* Vax f-float on a little endian machine.
 
 
@@ -1044,11 +1045,12 @@ ndc_ConvertRemoteToNativeTable (
     } else {
       cap = &ccp->attr[raidx];
 
-      /* Pointers are only handled correctly for a single pointer, not arrays.
-       * See, vol_AttributeToAddress. Set private for all other cases. 
+      /** @note Pointers are only handled correctly for a single pointer, 
+       * not arrays. See, vol_AttributeToAddress. Set private for all other
+       * cases. 
        * It's quite tricky to find out if it's a single array element. Let's 
        * hope that the size has the exact size of one element. Maybe we should
-       * add a flag to the attribute reference.
+       * add a flag to the attribute reference that indicates single array element.
        */
       adef = cap->flags;
       if (!first || (adef.b.array && size > ap->size/ap->elem))
@@ -1068,7 +1070,7 @@ ndc_ConvertRemoteToNativeTable (
           idx = (narp->Offset - ap->offs) / (ap->size/ap->elem);
 
           /* Calm down, the convert routine will only use the source if relem > 0 */
-          relem = cap->elem  - (idx + 1); 
+          relem = cap->elem  - idx; 
         } else
           relem = cap->elem;
 
