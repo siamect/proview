@@ -24,6 +24,8 @@ public class JopAxis extends JComponent {
   }
   int fillColor = 9999;
   int borderColor = 9999;
+  public int originalTextColor = 9999;
+  public int textColor = 9999;
   int lineWidth = 1;
   float lineLength;
   int lines = 11;
@@ -42,6 +44,13 @@ public class JopAxis extends JComponent {
   }
   public int getBorderColor() {
     return borderColor;
+  }
+  public void setTextColor( int textColor) {
+    this.textColor = textColor;
+    this.originalTextColor = textColor;
+  }
+  public int getTextColor() {
+    return textColor;
   }
   public void setLineWidth( int lineWidth) {
     this.lineWidth = lineWidth;
