@@ -975,7 +975,10 @@ static int	nmpstrans_req_receive_data( trans_ctx	transctx,
 	char		alarm_text[80];
 	char		alarm_name[80];
 	int		data_valid;
+	int		i;
+	int		return_status_ok;
 
+	
 	if ( req_ptr->rcv_remtrans_type == NMPS_TRANSTYPE_REM)
 	  data_valid = req_ptr->rcv_remtrans_ptr->DataValid;
 	else
@@ -1001,8 +1004,25 @@ static int	nmpstrans_req_receive_data( trans_ctx	transctx,
 	  sts = ((nmpstrans_t_header *) msg)->Status;
 	  if ( EVEN(sts))
 	  {
-	    /* Error message received... */
+	    req_ptr->req->ErrorDetected = 1;
+
+	    /* Error message received */
+	    return_status_ok = 0;
+	    for ( i = 0; i < 10; i++)
+	    {
+	      if ( req_ptr->req->ReturnStatus[i] != 0 &&
+	           sts == req_ptr->req->ReturnStatus[i])
+	      {
+	        sprintf( alarm_text, "%s %s", req_ptr->req->ReturnStatusText[i], key);
+	        strcpy( alarm_name, "NMpsTrans");
+	        sts2 = nmpstrans_alarm_send( alarm_text, 
+				alarm_name, 'B');
+	        break;
+              }
+            }
 	  }
+	  else
+	    return_status_ok = 1;
 
 	  sts = translist_find( *translist_list, key, &translist_ptr);
 	  if ( EVEN(sts))
@@ -1017,71 +1037,79 @@ static int	nmpstrans_req_receive_data( trans_ctx	transctx,
 
 	  if ( req_ptr->function & NMPS_REQUESTFUNC_DISPLAYOBJECT)
 	  {
-	    /* Copy data to display object */
-	    sts = cnv_ConvertData(
+	    if ( return_status_ok)
+	    {
+	      /* Copy data to display object */
+	      sts = cnv_ConvertData(
 	  		req_ptr->conv_table,
 			req_ptr->conv_table_count,
 			(char *) msg + sizeof( nmpstrans_t_header),
 			(char *) req_ptr->display_object_ptr);
-	    if ( req_ptr->function & NMPS_REQUESTFUNC_ACCEPT)
-	    {
-	      req_ptr->wait_for_accept = 1;
-	      strcpy( req_ptr->display_object_key, key);
+	      if ( req_ptr->function & NMPS_REQUESTFUNC_ACCEPT)
+	      {
+	        req_ptr->wait_for_accept = 1;
+	        strcpy( req_ptr->display_object_key, key);
+	      }
+	      req_ptr->req->DataRcvDetected = 1;
 	    }
-	    req_ptr->req->DataRcvDetected = 1;
+            else
+	      memset( req_ptr->display_object_ptr, 0,
+			req_ptr->display_object_size);
 	  }
 	  else
 	  {
-	    /* Create an object and copy data into the object */
-	    sts = nmpstrans_req_create_data( key, req_ptr, &objid, &objectp);
-	    if ( sts == GDH__DUPLNAME)
+	    if ( return_status_ok)
 	    {
-	      /* Object already exists */
-	      /* Send an alarm, alarmtext idx 4, object already exists */
-	      if ( req_ptr->req->AlarmText[4][0] != 0)
+	      /* Create an object and copy data into the object */
+	      sts = nmpstrans_req_create_data( key, req_ptr, &objid, &objectp);
+	      if ( sts == GDH__DUPLNAME)
 	      {
-	        sprintf( alarm_text, "%s %s", req_ptr->req->AlarmText[4], key);
-	        strcpy( alarm_name, "NMpsTrans");
-	        sts2 = nmpstrans_alarm_send( alarm_text, 
+		/* Object already exists */
+		/* Send an alarm, alarmtext idx 4, object already exists */
+		if ( req_ptr->req->AlarmText[4][0] != 0)
+	        {
+		  sprintf( alarm_text, "%s %s", req_ptr->req->AlarmText[4], key);
+		  strcpy( alarm_name, "NMpsTrans");
+		  sts2 = nmpstrans_alarm_send( alarm_text, 
 				alarm_name, 'B');
-	      }
-	      req_ptr->req->ErrorDetected = 1;
+	        }
+	        req_ptr->req->ErrorDetected = 1;
 
-	      if ( req_ptr->rcv_remtrans_type == NMPS_TRANSTYPE_REM)
-	        req_ptr->rcv_remtrans_ptr->DataValid = 0;
-	      else
-	        req_ptr->rcv_loctrans_ptr->DataValid = 0;
-/*...	      transctx->transconfig->RequestReceived++;*/
-	      LogAndReturn(NMPS__TRANSCREAOBJ, sts);
-	    }
-	    else if ( EVEN(sts))
-	    {
-	      if ( req_ptr->rcv_remtrans_type == NMPS_TRANSTYPE_REM)
-	        req_ptr->rcv_remtrans_ptr->DataValid = 0;
-	      else
-	        req_ptr->rcv_loctrans_ptr->DataValid = 0;
-/*...	      transctx->transconfig->RequestReceived++;*/
-	      req_ptr->fatal_error = 1;
-	      LogAndReturn(NMPS__TRANSCREAOBJ, sts);
-	    }
-	    /* Copy data with cnv */
-	    sts = cnv_ConvertData(
+		if ( req_ptr->rcv_remtrans_type == NMPS_TRANSTYPE_REM)
+		  req_ptr->rcv_remtrans_ptr->DataValid = 0;
+		else
+		  req_ptr->rcv_loctrans_ptr->DataValid = 0;
+/*...	        transctx->transconfig->RequestReceived++;*/
+	        LogAndReturn(NMPS__TRANSCREAOBJ, sts);
+	      }
+	      else if ( EVEN(sts))
+	      {
+		if ( req_ptr->rcv_remtrans_type == NMPS_TRANSTYPE_REM)
+		  req_ptr->rcv_remtrans_ptr->DataValid = 0;
+		else
+		  req_ptr->rcv_loctrans_ptr->DataValid = 0;
+/*...	        transctx->transconfig->RequestReceived++;*/
+	        req_ptr->fatal_error = 1;
+	        LogAndReturn(NMPS__TRANSCREAOBJ, sts);
+	      }
+	      /* Copy data with cnv */
+	      sts = cnv_ConvertData(
 	  		req_ptr->conv_table,
 			req_ptr->conv_table_count,
 			(char *) msg + sizeof( nmpstrans_t_header),
 			(char *) objectp);
 
-	    /* Put the data object into the cell */
-	    if ( req_ptr->function & NMPS_REQUESTFUNC_CELLINSERT)
-	    {
-	      /* Check that the cell is not busy... */
-	      req_ptr->cell_ptr->ExternObjId = objid;
-	      req_ptr->cell_ptr->ExternOpType = 0;
-	      req_ptr->cell_ptr->ExternFlag = 1;
+	      /* Put the data object into the cell */
+	      if ( req_ptr->function & NMPS_REQUESTFUNC_CELLINSERT)
+	      {
+		/* Check that the cell is not busy... */
+		req_ptr->cell_ptr->ExternObjId = objid;
+		req_ptr->cell_ptr->ExternOpType = 0;
+		req_ptr->cell_ptr->ExternFlag = 1;
+	      }
+	      req_ptr->req->DataRcvDetected = 1;
 	    }
-	    req_ptr->req->DataRcvDetected = 1;
 	  }
-
 	  translist_delete( translist_list, translist_ptr);
 	  if ( req_ptr->rcv_remtrans_type == NMPS_TRANSTYPE_REM)
 	    req_ptr->rcv_remtrans_ptr->DataValid = 0;
