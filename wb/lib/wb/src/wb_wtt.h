@@ -16,6 +16,7 @@ extern "C" {
 # include "pwr.h"
 #endif
 
+
 #ifndef flow_std_h
 #include "flow_std.h"
 #endif
@@ -69,13 +70,6 @@ typedef enum {
   	wtt_eInputMode_ObjectName
 	} wtt_eInputMode;
 
-
-// Defines for primary selection mode
-typedef enum {
-  	wtt_eSelectionMode_GMS,
-  	wtt_eSelectionMode_Normal,
-  	wtt_eSelectionMode_Extern
-	} wtt_eSelectionMode;
 
 class WttApplListElem {
   public:
