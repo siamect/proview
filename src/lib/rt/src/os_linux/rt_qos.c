@@ -26,10 +26,11 @@
 #include "rt_qdb.h"
 #include "rt_pool.h"
 #include "rt_hash.h"
+#include "rt_futex.h"
 
 
 pwr_tBoolean
-qos_WaitQue (
+qos_WaitQueOld (
   pwr_tStatus		*status,
   qdb_sQue		*qp,
   int			tmo
@@ -88,8 +89,57 @@ qos_WaitQue (
   return signal;
 }
 
+pwr_tBoolean
+qos_WaitQue (
+  pwr_tStatus		*status,
+  qdb_sQue		*qp,
+  int			tmo
+)
+{
+  pwr_tDeltaTime	dtime;
+  int			ok;
+  pwr_tBoolean		signal = FALSE;
+  pwr_dStatus		(sts, status, QCOM__SUCCESS);
+
+  qdb_AssumeLocked;
+
+  if (tmo == qcom_cTmoNone)
+    return FALSE;
+
+  qp->lock.waiting = TRUE;
+  qp->lock.pid     = 0;
+
+  qdb_Unlock;
+
+    if (tmo != qcom_cTmoEternal) {
+      ok = futex_timed_wait(&(qp->lock.pid), 0, (struct timespec *) time_MsToD(&dtime, tmo));
+    } else {
+      for (;;) {
+        ok = futex_wait(&(qp->lock.pid), 0);
+        if (ok == EINTR)
+          continue;
+        break;
+      }
+    }
+    
+    if (ok == EWOULDBLOCK) {
+      errh_Error("waitQue - Deadlock would occur");
+    }
+
+  qdb_Lock;
+
+  if ((qp->lock.waiting) || (ok == ETIMEDOUT)) {
+    *sts = QCOM__TMO;
+    qp->lock.waiting = FALSE;
+  } else {
+    signal = TRUE;
+  }
+
+  return signal;
+}
+
 pwr_tStatus
-qos_SignalQue (
+qos_SignalQueOld (
   pwr_tStatus	*status,
   qdb_sQue	*qp
 )
@@ -114,7 +164,27 @@ qos_SignalQue (
 
   return TRUE;
 }
+
+pwr_tStatus
+qos_SignalQue (
+  pwr_tStatus	*status,
+  qdb_sQue	*qp
+)
+{
+  int		ok;
+  pwr_dStatus	(sts, status, QCOM__SUCCESS);
 
+  qdb_AssumeLocked;
+
+  if (qp->lock.waiting) {
+    qp->lock.waiting = FALSE;
+
+    ok = futex_wake(&(qp->lock.pid), INT_MAX);
+
+  }
+
+  return TRUE;
+}
 
 qdb_sQlock *
 qos_CreateQlock (
