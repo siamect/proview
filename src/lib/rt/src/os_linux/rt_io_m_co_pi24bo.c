@@ -360,3 +360,11 @@ pwr_dExport pwr_BindIoMethods(Co_PI24BO) = {
   pwr_BindIoMethod(IoCardRead),
   pwr_NullMethod
 };
+
+pwr_dExport pwr_BindIoMethods(Co_CO4uP) = {
+  pwr_BindIoMethod(IoCardInit),
+  pwr_BindIoMethod(IoCardClose),
+  pwr_BindIoMethod(IoCardRead),
+  pwr_NullMethod
+};
+
