@@ -377,14 +377,12 @@ static int rttsys_runningtimelist_add( pwr_tObjid		runningtime_objid,
 				int			*objectlist_count,
 				int			*alloc);
 
-#if 0
 static int rttsys_node_start( 	menu_ctx	ctx, 
 				pwr_tObjid	objid,
 				void		*arg1,
 				void		*arg2,
 				void		*arg3,
 				void		*arg4);
-#endif
 
 int RTTSYS_REMTRANS( 	menu_ctx	ctx,
 			int		event,
@@ -1049,7 +1047,10 @@ int RTTSYS_SHOW_NODES( 	menu_ctx	ctx,
 
             /* Name */
             menu_ptr->value_ptr = (char *) &np->name;
+            menu_ptr->func = &rttsys_node_start;
+            menu_ptr->arg1 = (void *) np;
             menu_ptr++;
+
             /* Os */
 	    switch ( np->os) {
 	      case co_eOS_Lynx: strcpy( menu_ptr->value_ptr, "Lynx"); break;
@@ -1210,7 +1211,10 @@ int RTTSYS_SHOW_NODES( 	menu_ctx	ctx,
 
             /* Name */
             menu_ptr->value_ptr = (char *) &np->name;
+            menu_ptr->func = &rttsys_node_start;
+            menu_ptr->arg1 = (void *) np;
             menu_ptr++;
+
             /* Os */
 	    switch ( np->os) {
 	      case co_eOS_Lynx: strcpy( menu_ptr->value_ptr, "Lynx"); break;
@@ -1346,7 +1350,7 @@ int RTTSYS_SHOW_NODES( 	menu_ctx	ctx,
 *	Show node info.
 *
 **************************************************************************/
-#if 0
+
 static int rttsys_node_start( 	menu_ctx	ctx, 
 				pwr_tObjid	objid,
 				void		*arg1,
@@ -1361,19 +1365,17 @@ static int rttsys_node_start( 	menu_ctx	ctx,
 		0, &RTTSYS_NODE);
 	return sts;
 }
-#endif
 
 int RTTSYS_NODE( 	menu_ctx	ctx,
 			int		event,
 			char		*parameter_ptr,
 			char		*objectname,
 			char		**picture)
-{ 
-#if 0
-  int			sts;
+{
   rtt_t_menu_upd	*menu_ptr;
   rtt_t_menu_upd	*menulist;
-  NODE_STRUCT 		*nodep = (NODE_STRUCT *) objectname;
+  gdb_sNode		*nodep = (gdb_sNode *) objectname;
+  int i;
 
   IF_NOGDH_RETURN;
 
@@ -1410,16 +1412,40 @@ int RTTSYS_NODE( 	menu_ctx	ctx,
       menu_ptr = menulist;
 
       /* Name */
-      menu_ptr->value_ptr = (char *) &nodep->nodename;
+      menu_ptr->value_ptr = (char *) &nodep->name;
       menu_ptr++;
 
-      /* CF_Name receive*/
-      menu_ptr->value_ptr = (char *) &nodep->rxmsg[NETH_TYPE_CFNAME];
+      /* CacheNode */
+      menu_ptr->value_ptr = (char *) &nodep->cacheNode.lc;
       menu_ptr++;
 
-      /* CF_Name transmit */
-      menu_ptr->value_ptr = (char *) &nodep->txmsg[NETH_TYPE_CFNAME];
+      menu_ptr->value_ptr = (char *) &nodep->cacheNode.lc_min;
       menu_ptr++;
+
+      menu_ptr->value_ptr = (char *) &nodep->cacheNode.lc_max;
+      menu_ptr++;
+
+      /* Counters */
+      menu_ptr->value_ptr = (char *) &nodep->subc_lc;
+      menu_ptr++;
+
+      menu_ptr->value_ptr = (char *) &nodep->sansAct_lc;
+      menu_ptr++;
+
+      menu_ptr->value_ptr = (char *) &nodep->sancAct_lc;
+      menu_ptr++;
+
+      /* rxmsg */
+      for ( i = net_eMsg_error; i < net_eMsg_; i++) {
+        menu_ptr->value_ptr = (char *) &nodep->rxmsg[i];
+        menu_ptr++;
+      }
+
+      /* txmsg */
+      for ( i = net_eMsg_error; i < net_eMsg_; i++) {
+        menu_ptr->value_ptr = (char *) &nodep->txmsg[i];
+        menu_ptr++;
+      }
       break;
 
     /**********************************************************
@@ -1429,7 +1455,126 @@ int RTTSYS_NODE( 	menu_ctx	ctx,
       break;
   }
 
-#endif
+  return RTT__SUCCESS;
+}
+
+/*************************************************************************
+*
+* Name:		RTTSYS_CACHE()
+*
+* Type		int
+*
+* Type		Parameter	IOGF	Description
+* menu_ctx	ctx		I	context of the picture.
+* int		event		I 	type of event.
+* char		*parameter_ptr	I	pointer to the parameter which value
+*					has been changed.
+*
+* Description:
+*	Show cache info.
+*
+**************************************************************************/
+
+int RTTSYS_CACHE( 	menu_ctx	ctx,
+			int		event,
+			char		*parameter_ptr,
+			char		*objectname,
+			char		**picture)
+{
+  rtt_t_menu_upd	*menu_ptr;
+  rtt_t_menu_upd	*menulist;
+
+  IF_NOGDH_RETURN;
+
+  /**********************************************************
+  *	The value of a parameter is changed.
+  ***********************************************************/
+  switch ( event)
+  {
+    case RTT_APPL_UPDATE:
+
+      return RTT__SUCCESS;
+
+    /**********************************************************
+    *	Return address of menu
+    ***********************************************************/
+    case RTT_APPL_PICTURE:
+      *picture = (char *) &dtt_systempicture_p50_bg;
+      return RTT__SUCCESS;
+
+  /**********************************************************
+  *	Previous page
+  ***********************************************************/
+    case RTT_APPL_MENU:
+      *picture = (char *) &dtt_systempicture_p50_eu;
+      return RTT__SUCCESS;
+
+
+    /**********************************************************
+    *	Initialization of the picture
+    ***********************************************************/
+    case RTT_APPL_INIT:
+
+      menulist = (rtt_t_menu_upd *) ctx->menu;
+      menu_ptr = menulist;
+
+      /* cacheNew */
+      menu_ptr->value_ptr = (char *) &gdbroot->db->cacheNew.lc;
+      menu_ptr++;
+      menu_ptr->value_ptr = (char *) &gdbroot->db->cacheNew.lc_min;
+      menu_ptr++;
+      menu_ptr->value_ptr = (char *) &gdbroot->db->cacheNew.lc_max;
+      menu_ptr++;
+
+      /* cacheCom */
+      menu_ptr->value_ptr = (char *) &gdbroot->db->cacheCom.lc;
+      menu_ptr++;
+      menu_ptr->value_ptr = (char *) &gdbroot->db->cacheCom.lc_min;
+      menu_ptr++;
+      menu_ptr->value_ptr = (char *) &gdbroot->db->cacheCom.lc_max;
+      menu_ptr++;
+
+      /* cacheOld */
+      menu_ptr->value_ptr = (char *) &gdbroot->db->cacheOld.lc;
+      menu_ptr++;
+      menu_ptr->value_ptr = (char *) &gdbroot->db->cacheOld.lc_min;
+      menu_ptr++;
+      menu_ptr->value_ptr = (char *) &gdbroot->db->cacheOld.lc_max;
+      menu_ptr++;
+
+      /* cachePend */
+      menu_ptr->value_ptr = (char *) &gdbroot->db->cachePend.lc;
+      menu_ptr++;
+      menu_ptr->value_ptr = (char *) &gdbroot->db->cachePend.lc_min;
+      menu_ptr++;
+      menu_ptr->value_ptr = (char *) &gdbroot->db->cachePend.lc_max;
+      menu_ptr++;
+
+      /* cacheCom */
+      menu_ptr->value_ptr = (char *) &gdbroot->db->cacheFree.lc;
+      menu_ptr++;
+      menu_ptr->value_ptr = (char *) &gdbroot->db->cacheFree.lc_min;
+      menu_ptr++;
+      menu_ptr->value_ptr = (char *) &gdbroot->db->cacheFree.lc_max;
+      menu_ptr++;
+
+      /* cacheCom */
+      menu_ptr->value_ptr = (char *) &gdbroot->db->cacheCclass.lc;
+      menu_ptr++;
+      menu_ptr->value_ptr = (char *) &gdbroot->db->cacheCclass.lc_min;
+      menu_ptr++;
+      menu_ptr->value_ptr = (char *) &gdbroot->db->cacheCclass.lc_max;
+      menu_ptr++;
+
+      break;
+
+    /**********************************************************
+    *	Exit of the picture
+    ***********************************************************/
+    case RTT_APPL_EXIT:
+      break;
+  }
+
   return RTT__SUCCESS;
 }
 
@@ -5384,6 +5529,12 @@ int rttsys_start_system_picture(
   {
     sts = rtt_menu_new_sysedit( ctx, pwr_cNObjid, "POOLS", 
 		"POOLS", 0, &RTTSYS_POOLS);
+    return sts;
+  }
+  else if ( strncmp( picture_name, "CACHE", strlen( picture_name)) == 0)
+  {
+    sts = rtt_menu_new_sysedit( ctx, pwr_cNObjid, "CACHE", 
+		"CACHE", 0, &RTTSYS_CACHE);
     return sts;
   }
   else if ( strncmp( picture_name, "ERROR", strlen( picture_name)) == 0)
