@@ -352,8 +352,10 @@ typedef struct {
   qcom_tBus		bus		pwr_dPacked;	/* buss number */
   co_eOS		os		pwr_dPacked;	/* operating system */
   co_eHW		hw		pwr_dPacked;	/* hardware */
-  co_mFormat		fm		pwr_dPacked;	/* data representation format */
+  co_eBO		bo		pwr_dPacked;	/* big/little endian */
+  co_eFT		ft		pwr_dPacked;	/* float type */
 } qdb_sLinkInfo;
+
 
 typedef union {
   pwr_tBitMask m;
@@ -580,7 +582,8 @@ typedef struct {
 
   co_eOS		os;		/* operating system */
   co_eHW		hw;		/* hardware */
-  co_mFormat            fm;             /* data representation format */
+  co_eBO                bo;             /* byte order */
+  co_eFT                ft;             /* float type */
 
   qdb_sLink		link;		/* Qmon link information. */
   pwr_tBoolean		up;		/* communication is up/down */

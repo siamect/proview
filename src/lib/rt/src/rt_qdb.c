@@ -1297,9 +1297,10 @@ qdb_NodeInfo (
   node->flags.b.active = np->flags.b.active;
   node->nid = np->nid;
   strncpy(node->name, np->name, sizeof(np->name));
-  node->os = np->os;;
+  node->os = np->os;
   node->hw = np->hw;
-  node->fm = np->fm;
+  node->bo = np->bo;
+  node->ft = np->ft;
 }
 
 qdb_sQue *

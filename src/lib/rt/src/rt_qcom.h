@@ -110,59 +110,6 @@ typedef enum {
   qcom_eQtype_
 } qcom_eQtype;
 
-#if 0
-typedef enum {
-  qcom_eOS__ = 0,
-  qcom_eOS_Lynx,
-  qcom_eOS_VMS,
-  qcom_eOS_ELN,
-  qcom_eOS_WNT,
-  qcom_eOS_W95,
-  qcom_eOS_Amiga,
-  qcom_eOS_Linux,
-  qcom_eOS_
-} qcom_eOS;
-
-typedef enum {
-  qcom_eHW__ = 0,
-  qcom_eHW_x86,
-  qcom_eHW_68k,
-  qcom_eHW_VAX,
-  qcom_eHW_Alpha,
-  qcom_eHW_PPC,
-  qcom_eHW_
-} qcom_eHW;
-
-/* Byte order.
-
-   Network is big    endian
-   68k     is big    endian
-   x86     is little endian
-   PPC     is both   endian
-   VAX     is little endian
-
-*/
-
-typedef enum {
-  qcom_eBO__ = 0,
-  qcom_eBO_big,
-  qcom_eBO_little,
-  qcom_eBO_middle,
-  qcom_eBO_
-} qcom_eBO;
-
-typedef enum {
-  qcom_eFT__ = 0,
-  qcom_eFT_ieeeS,
-  qcom_eFT_ieeeT,
-  qcom_eFT_ieeeK,
-  qcom_eFT_vaxF,
-  qcom_eFT_vaxD,
-  qcom_eFT_vaxG,
-  qcom_eFT_vaxH,
-  qcom_eFT_
-} qcom_eFT;
-#endif
 
 /**
  * @brief ZZZ Text that appers when the Data structure is listed.
@@ -267,7 +214,8 @@ typedef struct {
   char		name[80];       /**< node name */
   co_eOS	os;		/**< operating system */
   co_eHW	hw;		/**< hardware */ 
-  co_mFormat    fm;             /**< data type representation format */  
+  co_eBO	bo;		/**< big/little endian */
+  co_eFT	ft;		/**< float type */
 } qcom_sNode;
 
 
