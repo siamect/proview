@@ -89,6 +89,12 @@ wb_vrep *wb_erep::volume(pwr_tStatus *sts, const char *name) // Fix
       return it->second;
     }
   }
+  for ( it = m_vrepextern.begin(); it != m_vrepextern.end(); it++) {
+    if ( cdh_NoCaseStrcmp( it->second->name(), name) == 0) {
+      *sts = LDH__SUCCESS;
+      return it->second;
+    }
+  }
   *sts = LDH__NOSUCHVOL;
   return 0;
 }
@@ -223,6 +229,7 @@ void wb_erep::load( pwr_tStatus *sts)
   if ( EVEN(*sts)) return;
 
   loadMeta( sts);
+  loadLocalWb( sts);
 }
 
 void wb_erep::loadDirList( pwr_tStatus *status)
@@ -423,6 +430,35 @@ void wb_erep::loadMeta( pwr_tStatus *status)
     *status = LDH__PROJCONFIG;
   else
     *status = LDH__SUCCESS;
+}
+
+void wb_erep::loadLocalWb( pwr_tStatus *rsts)
+{
+  pwr_tStatus sts;
+  char found_file[200];
+
+  sts = dcli_search_file( load_cNameLocalWb, found_file, DCLI_DIR_SEARCH_INIT);
+  dcli_search_file( load_cNameLocalWb, found_file, DCLI_DIR_SEARCH_END);
+  if ( ODD(sts)) {
+    try {
+      wb_vrepwbl *vrep = new wb_vrepwbl( this);
+      sts = vrep->load( found_file);
+      if ( ODD(sts))
+        addExtern( &sts, vrep);
+      else {
+	*rsts = sts;
+        cout << "** Failiure loading local workbench volume" << endl;
+        return;
+      }
+    }
+    catch ( wb_error& e) {
+      *rsts = e.sts();
+      cout << "** Failiure loading local workbench volume" << endl;
+      return ;
+    }
+    cout << "-- Local workbench volume loaded" << endl;
+  }
+  *rsts = LDH__SUCCESS;
 }
 
 wb_cdrep *wb_erep::cdrep( pwr_tStatus *sts, const wb_orep& o)

@@ -518,6 +518,7 @@ pwr_tStatus WVsel::load_volumelist()
 	XmString 	cstr;  
 	pwr_tStatus	sts;
 	int		i;
+	bool            local_wbvolume = false;
 
 	XmListDeleteAllItems( widgets.volumelist);
 	volume_count = 0;
@@ -575,8 +576,17 @@ pwr_tStatus WVsel::load_volumelist()
 	  volume_count++;
 	  if ( volume_count >= VSEL_MAX_VOLUMES)
 	    break;
+	  if ( local_wbvolume)
+	    break;
 
 	  sts = ldh_GetNextVolume( wbctx, volume, &volume);
+	  if ( EVEN(sts) && all) {
+	    // Look for local workbench volume
+	    volume = ldh_cWBVolLocal;
+	    sts = ldh_VolumeIdToName( wbctx, volume, name, sizeof(name),
+				      &size);
+	    local_wbvolume = true;
+	  }
 	}
 	return 1;
 }

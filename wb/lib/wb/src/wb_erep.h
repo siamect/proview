@@ -57,6 +57,7 @@ private:
     void loadDirList( pwr_tStatus *status);
     void loadCommonMeta( pwr_tStatus *status);
     void loadMeta( pwr_tStatus *status);
+    void loadLocalWb( pwr_tStatus *sts);
 };
 
 #endif

@@ -44,6 +44,7 @@
 %# define	load_cNameDistribute	"$pwrp_root/common/db/pwrp_cnf_distribute.dat"
 %# define	load_cNameSysObject	"$pwrp_root/common/db/pwrp_cnf_sysobject.dat"
 %# define	load_cNameFilePath	"$pwrp_root/common/db/pwrp_cnf_dirlist.dat"
+%# define	load_cNameLocalWb	 "$pwrp_root/common/db/wb.wb_load"
 %# define	load_cNameGblVolumeList	"$pwra_db/pwr_volumelist.dat"
 %# define	load_cNameCmnVolumeList	"pwr_volumelist.dat"
 %# define       load_cNameRttCrr         "rtt_crr_%3.3d_%3.3d_%3.3d_%3.3d.dat"
