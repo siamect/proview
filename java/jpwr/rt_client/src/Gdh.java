@@ -1345,11 +1345,12 @@ public class Gdh
   }
 
 
-  public CdhrObjid getNodeObject()
+  public CdhrObjid getNodeObject( int nodeIdx)
   {
     try
     {
       out.writeInt(GET_NODE_OBJECT);
+      out.writeInt(nodeIdx);
       out.flush();
       int sts = in.readInt();
       if(sts % 2 == 0)

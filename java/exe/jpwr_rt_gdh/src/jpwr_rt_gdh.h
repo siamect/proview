@@ -266,7 +266,7 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_classIdToObjid
  * Signature: ()Ljpwr/rt/CdhrObjid;
  */
 JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getNodeObject
-  (JNIEnv *, jobject);
+  (JNIEnv *, jobject, jint);
 
 /*
  * Class:     jpwr_rt_Gdh

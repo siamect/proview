@@ -1201,7 +1201,9 @@ public class GdhServer
             case GET_NODE_OBJECT:
               try
               {
-                CdhrObjid ret = gdh.getNodeObject();
+                int nix = in.readInt();
+                CdhrObjid ret = gdh.getNodeObject( nix);
+
                 out.writeInt(ret.getSts());
                 out.flush();
                 if(ret.oddSts())

@@ -296,7 +296,7 @@ public class Gdh {
   public native CdhrClassId getObjectClass( PwrtObjid objid);
   public native CdhrObjid getClassList( int classid);
   public native CdhrObjid classIdToObjid( int classid);
-  public native CdhrObjid getNodeObject();
+  public native CdhrObjid getNodeObject( int nodeIdx);
   public native GdhrGetAttributeChar getAttributeChar( String attributeName);
   public native CdhrObjAttr getClassAttribute( int classid, PwrtObjid objid_obj );
   public static native String translateFilename( String filename);

@@ -1183,7 +1183,7 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getObjectInfoObjid
 }
 
 JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getNodeObject
-  (JNIEnv *env, jclass obj)
+  (JNIEnv *env, jclass obj, jint jnix)
 {
   int		sts;
   jclass 	PwrtObjid_id;
@@ -1195,6 +1195,7 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getNodeObject
   jint 		oix, vid;
   jobject 	return_obj;
   jint 		jsts;
+  int           nix;
 
   cdhrObjid_id = (*env)->FindClass( env, "jpwr/rt/CdhrObjid");
   cdhrObjid_cid = (*env)->GetMethodID( env, cdhrObjid_id,
@@ -1204,7 +1205,8 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getNodeObject
   PwrtObjid_cid = (*env)->GetMethodID( env, PwrtObjid_id,
     	"<init>", "(II)V");
 
-  sts = gdh_GetNodeObject( 0, &objid);
+  nix = jnix;
+  sts = gdh_GetNodeObject( nix, &objid);
   if ( ODD(sts))
   {
     oix = (jint) objid.oix;
