@@ -203,6 +203,10 @@ $(doc_dir)/%.gif : %.gif
 	@ $(log_h_h)
 	@ $(cp) $(cpflags) $(source) $(target)
 
+$(doc_dir)/sv_se/%.gif : %.gif
+	@ $(log_h_h)
+	@ $(cp) $(cpflags) $(source) $(target)
+
 $(cnf_dir)/%.wb_vers : %.wb_load
 	@ $(log_wb_load_wb_vers)
 	@ wb_load $(source) $(lis_dir)/$(tname).wb_list
