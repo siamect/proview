@@ -10,6 +10,8 @@
 #else
 #  include <stdio.h>
 #endif
+#include <limits.h>
+#include <math.h>
 
 #include "pwr.h"
 #include "pwr_baseclasses.h"
@@ -661,6 +663,388 @@ void EnumToD_exec(
       *d = FALSE;
     d++;
   }
+}
+
+/*_*
+  @aref fmod Mod
+*/
+void Mod_exec(
+  plc_sThread		*tp,
+  pwr_sClass_Mod 	*o)
+{
+  o->In1 = *o->In1P;
+  o->In2 = *o->In2P;
+  o->ActVal = fmodf( o->In1, o->In2);
+}
+
+/*_*
+  @aref equal Equal
+*/
+void Equal_exec(
+  plc_sThread		*tp,
+  pwr_sClass_Equal 	*o)
+{
+  o->In1 = *o->In1P;
+  o->In2 = *o->In2P;
+  o->Status = (o->In1 == o->In2);
+}
+
+/*_*
+  @aref greaterequal GreaterEqual
+*/
+void GreaterEqual_exec(
+  plc_sThread		*tp,
+  pwr_sClass_GreaterEqual *o)
+{
+  o->In1 = *o->In1P;
+  o->In2 = *o->In2P;
+  o->Status = (o->In1 >= o->In2);
+}
+
+/*_*
+  @aref greaterthan GreaterThan
+*/
+void GreaterThan_exec(
+  plc_sThread		*tp,
+  pwr_sClass_GreaterThan *o)
+{
+  o->In1 = *o->In1P;
+  o->In2 = *o->In2P;
+  o->Status = (o->In1 > o->In2);
+}
+
+/*_*
+  @aref lessequal LessEqual
+*/
+void LessEqual_exec(
+  plc_sThread		*tp,
+  pwr_sClass_LessEqual  *o)
+{
+  o->In1 = *o->In1P;
+  o->In2 = *o->In2P;
+  o->Status = (o->In1 <= o->In2);
+}
+
+/*_*
+  @aref lessthan LessThan
+*/
+void LessThan_exec(
+  plc_sThread		*tp,
+  pwr_sClass_LessThan   *o)
+{
+  o->In1 = *o->In1P;
+  o->In2 = *o->In2P;
+  o->Status = (o->In1 < o->In2);
+}
+
+
+/*_*
+  IAdd Integer addition.
+  @aref iadd IAdd
+*/
+void IAdd_exec(
+  plc_sThread		*tp,
+  pwr_sClass_IAdd	*o)
+{
+#define IADD_SIZE 8
+  static int 	offset = sizeof(o->In1) + sizeof(o->In1P);
+  int     	i;
+  pwr_tInt32	**inp = &o->In1P;
+  pwr_tInt32   	sum = 0;
+
+  for ( i = 0; i < IADD_SIZE; i++) {
+    sum += **inp;
+    
+    inp = (pwr_tInt32 **)((char *)inp + offset);
+  }
+  o->ActVal = sum;
+}
+
+/*_*
+  IMul Integer multiplication.
+  @aref imul IMul
+*/
+void IMul_exec(
+  plc_sThread		*tp,
+  pwr_sClass_IMul	*o)
+{
+#define IMUL_SIZE 8
+  static int 	offset = sizeof(o->In1) + sizeof(o->In1P);
+  int     	i;
+  pwr_tInt32	**inp = &o->In1P;
+  pwr_tInt32   	result = **inp;
+
+  for ( i = 1; i < IMUL_SIZE; i++) {
+    inp = (pwr_tInt32 **)((char *)inp + offset);
+    result *= **inp;    
+  }
+  o->ActVal = result;
+}
+
+/*_*
+  ISub Integer subtraction.
+  @aref isub ISub
+*/
+void ISub_exec(
+  plc_sThread		*tp,
+  pwr_sClass_ISub	*o)
+{
+  o->ActVal = *o->In1P - *o->In2P;
+}
+
+/*_*
+  IDiv Integer division.
+  @aref idiv IDiv
+*/
+void IDiv_exec(
+  plc_sThread		*tp,
+  pwr_sClass_IDiv	*o)
+{
+  if ( *o->In2P == 0)
+    o->ActVal = 0;
+  else
+    o->ActVal = *o->In1P / *o->In2P;
+}
+
+/*_*
+  IMax Maximum function.
+  @aref imax IMax
+*/
+void IMax_exec(
+  plc_sThread		*tp,
+  pwr_sClass_IMax	*o)
+{
+#define IMAX_SIZE 8
+  static int 	offset = sizeof(o->In1) + sizeof(o->In1P);
+  int     	i;
+  pwr_tInt32	**inp = &o->In1P;
+  pwr_tInt32   	result = INT_MIN;
+
+  for ( i = 0; i < IMAX_SIZE; i++) {
+    if ( **inp > result)
+      result = **inp;    
+    inp = (pwr_tInt32 **)((char *)inp + offset);
+  }
+  o->ActVal = result;
+}
+
+/*_*
+  IMin Minimum function.
+  @aref imin IMin
+*/
+void IMin_exec(
+  plc_sThread		*tp,
+  pwr_sClass_IMin	*o)
+{
+#define IMIN_SIZE 8
+  static int 	offset = sizeof(o->In1) + sizeof(o->In1P);
+  int     	i;
+  pwr_tInt32	**inp = &o->In1P;
+  pwr_tInt32   	result = INT_MAX;
+
+  for ( i = 0; i < IMIN_SIZE; i++) {
+    if ( **inp < result)
+      result = **inp;
+    inp = (pwr_tInt32 **)((char *)inp + offset);
+  }
+  o->ActVal = result;
+}
+
+/*_*
+  ISel Select function.
+  @aref isel ISel
+*/
+void ISel_exec(
+  plc_sThread		*tp,
+  pwr_sClass_ISel	*o)
+{
+  o->Control = *o->ControlP;
+  if ( o->Control)
+    o->ActVal = *o->In1P;
+  else
+    o->ActVal = *o->In2P;
+}
+
+/*_*
+  ILimit Integer limiter.
+  @aref ilimit ILimit
+*/
+void ILimit_exec(
+  plc_sThread		*tp,
+  pwr_sClass_ILimit	*o)
+{
+  o->Max = *o->MaxP;
+  o->Min = *o->MinP;
+  o->In = *o->InP;
+
+  if (o->In > o->Max) {
+    o->ActVal = o->Max;
+    o->High = TRUE;
+    o->Low = FALSE;
+  }
+  else if (o->In < o->Min) {
+    o->Low = TRUE;
+    if ( o->Min <= o->Max) {
+      o->ActVal = o->Min;
+      o->High = FALSE;
+    }
+    else {
+      o->ActVal = o->Max;
+      o->High = TRUE;
+    }
+  }
+  else {
+    o->ActVal = o->In;
+    o->High = FALSE;
+    o->Low = FALSE;
+  }
+}
+
+/*_*
+  IMux Integer multiplexer.
+  @aref imux IMux
+*/
+void IMux_exec(
+  plc_sThread		*tp,
+  pwr_sClass_IMux	*o)
+{
+#define IMUX_SIZE 24
+  static int 	offset = sizeof(o->In0) + sizeof(o->In0P);
+  int     	idx;
+  pwr_tInt32	**inp = &o->In0P;
+
+  idx = o->Index = *o->IndexP;
+  idx = idx < 0 ? 0 : ( idx > IMUX_SIZE - 1 ? IMUX_SIZE - 1 : idx);
+  inp = (pwr_tInt32 **)((char *)inp + idx * offset);
+  o->ActVal = **inp;
+}
+
+/*_*
+  Mux Analog multiplexer.
+  @aref mux Mux
+*/
+void Mux_exec(
+  plc_sThread		*tp,
+  pwr_sClass_Mux	*o)
+{
+#define MUX_SIZE 24
+  static int 	offset = sizeof(o->In0) + sizeof(o->In0P);
+  int     	idx;
+  pwr_tFloat32	**inp = &o->In0P;
+
+  idx = o->Index = *o->IndexP;
+  idx = idx < 0 ? 0 : ( idx > IMUX_SIZE - 1 ? IMUX_SIZE - 1 : idx);
+  inp = (pwr_tFloat32 **)((char *)inp + idx * offset);
+  o->ActVal = **inp;
+}
+
+/*_*
+  Add Analog addition.
+  @aref add Add
+*/
+void Add_exec(
+  plc_sThread		*tp,
+  pwr_sClass_Add	*o)
+{
+#define ADD_SIZE 8
+  static int 	offset = sizeof(o->In1) + sizeof(o->In1P);
+  int     	i;
+  pwr_tFloat32	**inp = &o->In1P;
+  pwr_tFloat32  sum = 0;
+
+  for ( i = 0; i < ADD_SIZE; i++) {
+    sum += **inp;
+    
+    inp = (pwr_tFloat32 **)((char *)inp + offset);
+  }
+  o->ActVal = sum;
+}
+
+/*_*
+  Mul Analog multiplication.
+  @aref mul Mul
+*/
+void Mul_exec(
+  plc_sThread		*tp,
+  pwr_sClass_Mul	*o)
+{
+#define MUL_SIZE 8
+  static int 	offset = sizeof(o->In1) + sizeof(o->In1P);
+  int     	i;
+  pwr_tFloat32	**inp = &o->In1P;
+  pwr_tFloat32  result = **inp;
+
+  for ( i = 1; i < MUL_SIZE; i++) {
+    inp = (pwr_tFloat32 **)((char *)inp + offset);
+    result *= **inp;
+  }
+  o->ActVal = result;
+}
+
+/*_*
+  Sub Analog subtraction.
+  @aref sub Sub
+*/
+void Sub_exec(
+  plc_sThread		*tp,
+  pwr_sClass_Sub	*o)
+{
+  o->ActVal = *o->In1P - *o->In2P;
+}
+
+/*_*
+  Div Analog division.
+  @aref div Div
+*/
+void Div_exec(
+  plc_sThread		*tp,
+  pwr_sClass_Div	*o)
+{
+  o->ActVal = *o->In1P / *o->In2P;
+}
+
+/*_*
+  Max Maximum function.
+  @aref max Max
+*/
+void Max_exec(
+  plc_sThread		*tp,
+  pwr_sClass_Max	*o)
+{
+#define AMAX_SIZE 8
+  static int 	offset = sizeof(o->In1) + sizeof(o->In1P);
+  int     	i;
+  pwr_tFloat32	**inp = &o->In1P;
+  pwr_tFloat32  result = -1E37;
+
+  for ( i = 0; i < AMAX_SIZE; i++) {
+    if ( **inp > result)
+      result = **inp;    
+    inp = (pwr_tFloat32 **)((char *)inp + offset);
+  }
+  o->ActVal = result;
+}
+
+/*_*
+  Min Minimum function.
+  @aref min Min
+*/
+void Min_exec(
+  plc_sThread		*tp,
+  pwr_sClass_Min	*o)
+{
+#define AMIN_SIZE 8
+  static int 	offset = sizeof(o->In1) + sizeof(o->In1P);
+  int     	i;
+  pwr_tFloat32	**inp = &o->In1P;
+  pwr_tFloat32  result = 1E37;
+
+  for ( i = 0; i < AMIN_SIZE; i++) {
+    if ( **inp < result)
+      result = **inp;
+    inp = (pwr_tFloat32 **)((char *)inp + offset);
+  }
+  o->ActVal = result;
 }
 
 
