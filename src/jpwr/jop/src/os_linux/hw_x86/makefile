@@ -55,6 +55,7 @@ local_java_sources := \
 	GeDynSlider.java \
 	GeDynValueInput.java \
 	GeDynAnalogColor.java \
+	GeDynStatusColor.java \
 	GeDynTipText.java \
 	GeDynFillLevel.java \
 	GeDynCloseGraph.java \
