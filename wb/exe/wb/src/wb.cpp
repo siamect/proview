@@ -365,6 +365,8 @@ void	pwr_wtt_open_volume( void *wttctx, wb_eType type, char *filename, wow_eFile
 	mem->loadWbl( filename, &sts);
 	if ( EVEN(sts)) {
 	  delete mem;
+	  if ( sts == LDH__OTHERSESS)
+	    MsgWindow::message( 'E', "Other class volume is open", msgw_ePop_Yes);
 	  return;
 	}
 	erep->addExtern( &sts, mem);
