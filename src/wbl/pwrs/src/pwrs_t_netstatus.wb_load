@@ -10,8 +10,20 @@ SObject pwrs:Type
 !  @Version 1.0
 !  @Code pwr.h
 !  @Group BasicTypes,Types
-!  Status value. Basic type.
+!  Status value with network supervision. Basic type.
 !  
+!  A NetStatus has the same properties as a common status type, but one
+!  property regarding the link to the onwer of the status object is added.
+!  When a netstatus reside on a remote node, the status 'Network timeout' 
+!  with fatal severity is displayed, when the connection to the remote
+!  node is down. 
+!  For example, the SystemStatus in the $Node object is a NetStatus. 
+!  When the SystemStatus of a process station is displayed on an operator 
+!  station, 'Network timeout' is displayed when the link to the process 
+!  station is lost.
+!
+! @b See also
+!  @classlink Status pwrs_status.html
 !*/
   Object $NetStatus pwr_eClass_Type pwr_eTix_NetStatus
     Body SysBody

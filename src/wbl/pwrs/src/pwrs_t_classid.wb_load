@@ -14,6 +14,41 @@ SObject pwrs:Type
 !
 !  Every class has a unic identity, derived from the classvolume
 !  identity and the class index.
+!
+!  A class is described by classdefinition objects in a class volume. These
+!  objects has specific object identities, which is specified by the vid, cix,
+!  bix and aix.
+!  @image orm_classid_1.gif
+!  The figure above describes an objid for classdefinition objects. The black fields
+!  must have the values specified in the figure, the gray fields are reserved
+!  for future use.
+! @b vid
+!  The volume identity of the class volume where the class i defined. Only the
+!  two lower entities of the volume identity can be used.
+! @b cix
+!  The index of the class within the class volume. The cix consists of 12 bits
+!  which implies that the a class can have an index in the interval [1,4095].
+! @b bix
+!  The index of a body within a class.
+!    0     The class itself, i.e. the ClassDef object).
+!    1     RtBody or SysBody.
+!    2     DevBody.
+!    3-6   Reserved for future use.
+!    7     Template object.
+! @b aix
+!  Index for an attribute within a body. The aix consists of 12 bits, which
+!  implies that each body in a class can have attributes with index in the 
+!  interval [1,4095]
+!
+! @b ClassId
+!  The classid is a 32-bit reduction of the 64-bit object identity of the 
+!  ClassDef object for the class. It contains the vid and the cix of the class.
+!  @image orm_classid_2.gif
+!
+! @b c-binding
+!  The classid is defined with a #define statement of type pwr_cClass_<class name>
+!  in the struct file for the class and the classvolume.
+!  System classes also has an enum pwr_eClass_<class name> declared in pwr_class.h
 !*/
   Object $ClassId pwr_eClass_Type pwr_eTix_ClassId
     Body SysBody

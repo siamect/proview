@@ -13,9 +13,13 @@ SObject pwrs:Type
 !  @Group BasicTypes,Types
 !  Object index. Basic type.
 !
-!  Every object has an unic index within a volume.
+!  Every object has an unic index within a volume. The index is a 32-bit word.
 !  Together with the volume identity it constitutes the object identity.
 !
+!  Object index 
+!    0                     is used for the volume object.
+!    1-2147483647          (bit 31 = 0) are used for user created objects.
+!    2147483648-4294967295 (bit 31 = 1) are reserved by the system.
 ! @b See also
 !  @classlink Objid pwrs_objid.html
 !*/

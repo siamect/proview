@@ -24,6 +24,17 @@ SObject pwrs:Type
 !     WorkbenchVolume:          254.  254.  254.  254
 !     Local WorkbenchVolume:    254.  254.  254.  252
 !     VolatileVolume:           254.  254.  254.0-100
+!
+!     Runtime:                1-253.     .     .
+!
+!  In runtime 1-127 are used for system volumes
+!     1    pwrNode    Volume used by Proview.
+!
+!  128-253 are used to create unic identities:
+!     128  Subid
+!     129  Dlid
+!
+!  The string notation for a volumeid is _Vv1.v2.v3.v4, e.g. _V0.0.1.4
 !*/
   Object $VolumeId pwr_eClass_Type pwr_eTix_VolumeId
     Body SysBody

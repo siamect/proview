@@ -16,6 +16,9 @@ SObject pwrs:Type
 !  The object identity consists of the volume identity and
 !  the object index.
 !
+!  The string notation for an objid is _O<vid>:<oix>, e.g. _O1.23.4.2:126
+!  where vid is the volume identity and oix the object index.
+!  @image orm_objid_1.gif
 ! @b See also
 !  @classlink VolumeId pwrs_volumeid.html
 !  @classlink ObjectIx pwrs_objectix.html

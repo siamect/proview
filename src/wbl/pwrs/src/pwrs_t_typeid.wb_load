@@ -15,6 +15,44 @@ SObject pwrs:Type
 !
 !  Every type has a unic identity, derived from the classvolume
 !  identity and the type index.
+!
+!  A type is described by a typedefinition object in a class volume. This
+!  objects has a specific object identity, which is specified by the vid, tyg
+!  and tix.
+!  @image orm_typeid_1.gif
+!  The figure above describes an objid for typedefinition objects. The black fields
+!  must have the values specified in the figure, the gray fields are reserved
+!  for future use.
+! @b vid
+!  The volume identity of the class volume where the class i defined. Only the
+!  two lower entities of the volume identity can be used.
+! @b tyg
+!  The type group. The groups of typedefinition objects are:
+!    0     Basic types, i.e. types defined with a $Type object.
+!    1     Derived types, i.e. types defined with a $TypeDef object.
+!    2-15  Reserved for future use.
+! @b tix
+!  The index of a type within a classvolume. The tix consists of 11 bits, which
+!  implies that each group in a class volume can have types with index in the 
+!  interval [1,2047]
+!
+! @b TypeId
+!  The typeid is a 32-bit reduction of the 64-bit object identity of the 
+!  Type or TypeDef object for the type. It contains the vid, tyg and tix of the type.
+!  @image orm_typeid_2.gif
+!  If the type is a class, the typeid contains the vid, cix and bix for the class.
+!  So far the bix is always 1, only an RtBody or SysBody can be a type.
+!  @image orm_typeid_3.gif
+!
+! @b c-binding
+!  The classid is defined with a #define statement of type pwr_t<type name>
+!  in the struct file for the the classvolume.
+!  For system types, these definitions reside in pwr.h.
+!*/
+!
+!  @image orm_typeid_1.gif
+!  @image orm_typeid_2.gif
+!  @image orm_typeid_3.gif
 !*/
   Object $TypeId pwr_eClass_Type pwr_eTix_TypeId
     Body SysBody
