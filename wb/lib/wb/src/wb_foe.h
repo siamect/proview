@@ -116,15 +116,6 @@ struct s_widgets
                                      of the menu */
   Widget	edit_togg;        /* togg under the function entry
                                      of the menu */
-  Widget	pop_attribute;
-  Widget	pop_subwindow;
-  Widget	pop_getobj ;
-  Widget	pop_delete;
-  Widget	pop_paste;
-  Widget	pop_copy;
-  Widget	pop_cut;
-  Widget	pop_printselect;
-  Widget	pop_helpclass;
   Widget	con_palette;
   Widget	node_palette;
   Widget	nav_palette;

@@ -2272,18 +2272,16 @@ int gre_flow_cb( FlowCtx *ctx, flow_tEvent event)
 
       current_node = 0;
 
-      /* If there is no selected object, select current object */
-      if ( grectx->popupmenu_mode == GRE_POPUPMENUMODE_OBJECT)
-      {
-        flow_GetSelectList( ctx, &select_list, &select_cnt);
-        if ( !select_cnt)
-        {
-          if ( event->object.object_type == flow_eObjectType_Node)
-            /* Get the current object */
-            flow_GetUserData( event->object.object, (void **)&current_node);
-        }	
-      }
-
+      flow_GetSelectList( ctx, &select_list, &select_cnt);
+      if ( !select_cnt) {
+	if ( event->object.object_type == flow_eObjectType_Node)
+	  /* Get the current object */
+	  flow_GetUserData( event->object.object, (void **)&current_node);
+      }	
+      if ( current_node || select_cnt == 1)
+	grectx->popupmenu_mode = GRE_POPUPMENUMODE_OBJECT;
+      else
+	grectx->popupmenu_mode = GRE_POPUPMENUMODE_AREA;
       (grectx->gre_popupmenu) (grectx, x_pix, y_pix, 
 			grectx->popupmenu_mode, current_node);
       break;

@@ -2219,16 +2219,6 @@ static foe_ctx	foe_create_window(
 
   foe_function_setup ( foectx ) ;
 
-/* SG 10.02.91 popup : Ask DRM to fetch the popup */
-
-  if (MrmFetchWidget (s_MrmH, 
-			"edit_popup", 
-		      //  foectx->grectx->flow_widget,
-		        foectx->widgets.pane,
-			&foectx->widgets.popupmenu,
-			&dclass) != MrmSUCCESS)
-    printf("can't fetch popup\n");
-
   MrmCloseHierarchy(s_MrmH);
 
   if (compiled_translations == NULL) 
@@ -2875,93 +2865,6 @@ static int foe_view_set_entries (
   return FOE__SUCCESS ;
 }
 
-
-/*************************************************************************
-*
-* Name:		foe_modify_popup()
-*
-* Type		void
-*
-* Type		Parameter	IOGF	Description
-* foe_ctx	foectx		I	foe context
-*
-* Description:
-*  Modifies the popupmenu.
-**************************************************************************/
-
-int foe_modify_popup (
-	foe_ctx foectx,
-	unsigned long	popupmenu_mask
-)
-{
-
-	if ( (foectx->popupmenu_mask & foe_e_popupmenu_attribute) &&
-		     !(popupmenu_mask & foe_e_popupmenu_attribute) )
-	  XtUnmanageChild(foectx->widgets.pop_attribute);
-	else if ( !(foectx->popupmenu_mask & foe_e_popupmenu_attribute) &&
-		     (popupmenu_mask & foe_e_popupmenu_attribute) )
-	  XtManageChild(foectx->widgets.pop_attribute);
-
-	if ( (foectx->popupmenu_mask & foe_e_popupmenu_subwindow) &&
-		     !(popupmenu_mask & foe_e_popupmenu_subwindow) )
-	  XtUnmanageChild(foectx->widgets.pop_subwindow);
-	else if ( !(foectx->popupmenu_mask & foe_e_popupmenu_subwindow) &&
-		     (popupmenu_mask & foe_e_popupmenu_subwindow) )
-	  XtManageChild(foectx->widgets.pop_subwindow);
-
-	if ( (foectx->popupmenu_mask & foe_e_popupmenu_connect) &&
-		     !(popupmenu_mask & foe_e_popupmenu_connect) )
-	  XtUnmanageChild(foectx->widgets.pop_getobj);
-	else if ( !(foectx->popupmenu_mask & foe_e_popupmenu_connect) &&
-		     (popupmenu_mask & foe_e_popupmenu_connect) )
-	  XtManageChild(foectx->widgets.pop_getobj);
-
-	if ( (foectx->popupmenu_mask & foe_e_popupmenu_delete) &&
-		     !(popupmenu_mask & foe_e_popupmenu_delete) )
-	  XtUnmanageChild(foectx->widgets.pop_delete);
-	else if ( !(foectx->popupmenu_mask & foe_e_popupmenu_delete) &&
-		     (popupmenu_mask & foe_e_popupmenu_delete) )
-	  XtManageChild(foectx->widgets.pop_delete);
-
-	if ( (foectx->popupmenu_mask & foe_e_popupmenu_paste) &&
-		     !(popupmenu_mask & foe_e_popupmenu_paste) )
-	  XtUnmanageChild(foectx->widgets.pop_paste);
-	else if ( !(foectx->popupmenu_mask & foe_e_popupmenu_paste) &&
-		     (popupmenu_mask & foe_e_popupmenu_paste) )
-	  XtManageChild(foectx->widgets.pop_paste);
-
-	if ( (foectx->popupmenu_mask & foe_e_popupmenu_copy) &&
-		     !(popupmenu_mask & foe_e_popupmenu_copy) )
-	  XtUnmanageChild(foectx->widgets.pop_copy);
-	else if ( !(foectx->popupmenu_mask & foe_e_popupmenu_copy) &&
-		     (popupmenu_mask & foe_e_popupmenu_copy) )
-	  XtManageChild(foectx->widgets.pop_copy);
-
-	if ( (foectx->popupmenu_mask & foe_e_popupmenu_cut) &&
-		     !(popupmenu_mask & foe_e_popupmenu_cut) )
-	  XtUnmanageChild(foectx->widgets.pop_cut);
-	else if ( !(foectx->popupmenu_mask & foe_e_popupmenu_cut) &&
-		     (popupmenu_mask & foe_e_popupmenu_cut) )
-	  XtManageChild(foectx->widgets.pop_cut);
-
-	if ( (foectx->popupmenu_mask & foe_e_popupmenu_printselect ) &&
-		     !(popupmenu_mask & foe_e_popupmenu_printselect ) )
-	  XtUnmanageChild(foectx->widgets.pop_printselect );
-	else if ( !(foectx->popupmenu_mask & foe_e_popupmenu_printselect ) &&
-		     (popupmenu_mask & foe_e_popupmenu_printselect ) )
-	  XtManageChild(foectx->widgets.pop_printselect );
-
-	if ( (foectx->popupmenu_mask & foe_e_popupmenu_helpclass ) &&
-		     !(popupmenu_mask & foe_e_popupmenu_helpclass ) )
-	  XtUnmanageChild(foectx->widgets.pop_helpclass );
-	else if ( !(foectx->popupmenu_mask & foe_e_popupmenu_helpclass ) &&
-		     (popupmenu_mask & foe_e_popupmenu_helpclass ) )
-	  XtManageChild(foectx->widgets.pop_helpclass );
-
-	foectx->popupmenu_mask = popupmenu_mask;
-	
-	return FOE__SUCCESS ;
-}
 
 
 /*************************************************************************

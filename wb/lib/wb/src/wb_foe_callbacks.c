@@ -20,6 +20,11 @@
 #include <Xm/Text.h>
 #include <Xm/ToggleB.h>
 #include <Mrm/MrmPublic.h>
+#include <X11/Intrinsic.h>
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
+#include <Xm/RowColumn.h>
+#include <Xm/PushBG.h>
 
 #include "wb_ldh.h"
 #include "wb_foe_msg.h"
@@ -35,6 +40,7 @@
 #include "wb_foe_api.h"
 #include "co_api.h"
 #include "pwr_baseclasses.h"
+#include "flow_x.h"
 
 #define	BEEP	    putchar( '\7' );
 
@@ -2602,78 +2608,6 @@ foectx->widgets.subpane = w ;
 XtUninstallTranslations( w);
 }
 
-static void foe_create_pop_attribute ( w , foectx, data)
-Widget	w;
-foe_ctx	foectx;
-XmAnyCallbackStruct	*data;
-{
-	foectx->widgets.pop_attribute = w ;
-}
-
-static void foe_create_pop_subwindow ( w , foectx, data)
-Widget	w;
-foe_ctx	foectx;
-XmAnyCallbackStruct	*data;
-{
-	foectx->widgets.pop_subwindow = w ;
-}
-
-static void foe_create_pop_getobj  ( w , foectx, data)
-Widget	w;
-foe_ctx	foectx;
-XmAnyCallbackStruct	*data;
-{
-	foectx->widgets.pop_getobj  = w ;
-}
-
-static void foe_create_pop_delete ( w , foectx, data)
-Widget	w;
-foe_ctx	foectx;
-XmAnyCallbackStruct	*data;
-{
-	foectx->widgets.pop_delete = w ;
-}
-
-static void foe_create_pop_paste ( w , foectx, data)
-Widget	w;
-foe_ctx	foectx;
-XmAnyCallbackStruct	*data;
-{
-	foectx->widgets.pop_paste = w ;
-}
-
-static void foe_create_pop_copy ( w , foectx, data)
-Widget	w;
-foe_ctx	foectx;
-XmAnyCallbackStruct	*data;
-{
-	foectx->widgets.pop_copy = w ;
-}
-
-static void foe_create_pop_cut ( w , foectx, data)
-Widget	w;
-foe_ctx	foectx;
-XmAnyCallbackStruct	*data;
-{
-	foectx->widgets.pop_cut = w ;
-}
-
-static void foe_create_pop_printselect ( w , foectx, data)
-Widget	w;
-foe_ctx	foectx;
-XmAnyCallbackStruct	*data;
-{
-	foectx->widgets.pop_printselect = w ;
-}
-
-static void foe_create_pop_helpclass ( w , foectx, data)
-Widget	w;
-foe_ctx	foectx;
-XmAnyCallbackStruct	*data;
-{
-	foectx->widgets.pop_helpclass = w ;
-}
-
 static void foe_create_palette_object ( w , foectx, data)
 Widget	w;
 foe_ctx	foectx;
@@ -2963,15 +2897,6 @@ int foe_register_callbacks (
 	{"foe_yes_popupmsg",(XtPointer)foe_yes_popupmsg},
 	{"foe_no_popupmsg",(XtPointer)foe_no_popupmsg},
 	{"foe_cancel_popupmsg",(XtPointer)foe_cancel_popupmsg},  
-	{"foe_create_pop_attribute",(XtPointer)foe_create_pop_attribute},
-	{"foe_create_pop_subwindow",(XtPointer)foe_create_pop_subwindow},
-	{"foe_create_pop_getobj",(XtPointer)foe_create_pop_getobj},
-	{"foe_create_pop_paste",(XtPointer)foe_create_pop_paste},
-	{"foe_create_pop_copy",(XtPointer)foe_create_pop_copy},
-	{"foe_create_pop_cut",(XtPointer)foe_create_pop_cut},
-	{"foe_create_pop_delete",(XtPointer)foe_create_pop_delete},
-	{"foe_create_pop_printselect",(XtPointer)foe_create_pop_printselect},
-	{"foe_create_pop_helpclass",(XtPointer)foe_create_pop_helpclass},
 	{"foe_popdown_pop",(XtPointer)foe_popdown_pop}
 	};
 
@@ -3079,3 +3004,76 @@ static void foe_exit_nosave(
 	foe_quit( foectx);
 }
 
+static void foe_popup_unmap_cb(Widget w, foe_ctx foectx)
+{
+  XtDestroyWidget(w);
+}
+
+
+/*************************************************************************
+*
+* Name:		foe_modify_popup()
+*
+* Type		void
+*
+* Type		Parameter	IOGF	Description
+* foe_ctx	foectx		I	foe context
+*
+* Description:
+*  Modifies the popupmenu.
+**************************************************************************/
+
+int foe_modify_popup (
+	foe_ctx foectx,
+	unsigned long	popupmenu_mask
+)
+{
+  static char buttontext[][40] = { "ObjectEditor", "SubWindow", "Connect", "Delete",
+			    "Paste", "Copy", "Cut", "PrintSelect", "HelpClass"};
+  static XtCallbackProc callback[] = { foe_activate_attribute,
+				       foe_activate_subwindow,
+				       foe_activate_getobj,
+				       foe_activate_delete,
+				       foe_activate_paste,
+				       foe_activate_copy,
+				       foe_activate_cut,
+				       foe_activate_printselect,
+				       foe_activate_helpclass};
+
+  Widget Menu, w;
+  int i;
+  Arg ArgList[5]; 
+  XmFontList fontlist;
+  XFontStruct *font;
+  XmFontListEntry fontentry;
+
+  foectx->popupmenu_mask = popupmenu_mask;
+
+  // Set default fontlist
+  font = XLoadQueryFont( flow_Display(foectx->widgets.pane),
+			 "-*-Helvetica-Bold-R-Normal--12-*-*-*-P-*-ISO8859-1");
+  fontentry = XmFontListEntryCreate( "tag1", XmFONT_IS_FONT, font);
+  fontlist = XmFontListAppendEntry( NULL, fontentry);
+  XtFree( (char *)fontentry);
+
+  i = 0;
+  XtSetArg(ArgList[i], XmNbuttonFontList, fontlist); i++;
+  XtSetArg(ArgList[i], XmNlabelFontList, fontlist); i++;
+  Menu = XmCreatePopupMenu( foectx->widgets.pane, "_popup", ArgList, i);  
+  XtAddCallback( Menu, XmNunmapCallback, 
+		 (XtCallbackProc)foe_popup_unmap_cb, foectx);
+
+  XmFontListFree( fontlist);
+
+  for ( i = 0; i < 9; i++) {
+    if ( foectx->popupmenu_mask & (1 << i)) {
+      w = XtVaCreateManagedWidget( buttontext[i], xmPushButtonGadgetClass, 
+			       Menu, NULL);
+
+      XtAddCallback( w, XmNactivateCallback, (XtCallbackProc) callback[i], 
+		    (XtPointer) foectx);
+    }
+  }
+  foectx->widgets.popupmenu = Menu;
+  return FOE__SUCCESS ;
+}
