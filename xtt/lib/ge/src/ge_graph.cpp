@@ -513,6 +513,16 @@ void Graph::open( char *filename)
     // Needs to be converted
     message( 'E', "Old version, graph needs conversion");
   }
+
+  // Update grid
+  grow_sAttributes grow_attr;
+  unsigned long mask;
+
+  mask = grow_eAttr_grid_size_x | grow_eAttr_grid_size_y | grow_eAttr_grid_on;
+  grow_GetAttributes( grow->ctx, &grow_attr, mask); 
+  grid_size_y = grow_attr.grid_size_y;
+  grid_size_x = grow_attr.grid_size_x;
+  grid = grow_attr.grid_on;
 }
 
 //
@@ -1006,6 +1016,11 @@ void Graph::set_nav_background_color()
 void Graph::set_show_grid( int show)
 {
   grow_SetShowGrid( grow->ctx, show);
+}
+
+int Graph::get_show_grid()
+{
+  return grow_GetShowGrid( grow->ctx);
 }
 
 glow_eDrawType Graph::get_border_drawtype()
@@ -1929,6 +1944,9 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
       grow_SetMoveRestrictions( graph->grow->ctx, glow_eMoveRestriction_No, 0, 0, NULL);
       grow_SetScaleEqual( graph->grow->ctx, 0);
       graph->keep_mode = false;
+      if ( graph->cursor_motion_cb)
+        (graph->cursor_motion_cb) (graph->parent_ctx, event->any.x, 
+		event->any.y);
       break;
     case glow_eEvent_MB1DoubleClick:
       if ( event->object.object_type != glow_eObjectType_NoObject &&
@@ -2174,7 +2192,12 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
               grow_SelectInsert( graph->grow->ctx, event->object.object);
             }
           }
+	  break;
         }
+        case grow_eMode_Scale:
+	  grow_SetMode( graph->grow->ctx, grow_eMode_Edit);
+	  grow_SelectClear( graph->grow->ctx);
+	  break;
         default:
           ;
       }

@@ -465,6 +465,13 @@ class Graph {
   */
   void set_mode( grow_eMode mode, bool keep);
 
+  //! Get edit mode.
+  /*!
+    \return	Edit mode.
+  */
+  grow_eMode get_mode()
+    { return grow->ctx->mode();}
+
   //! Print a message
   /*!
     \param sev	Severity. 'E' for error, 'I' for information, 'W' for warning.
@@ -594,6 +601,9 @@ class Graph {
   /*! \param show	1 gridpoints are displayed, 0 gridpoints are hidden. */
   void set_show_grid( int show);
 
+  //! Checi if gridpoints are displayed.
+  /*! \return	1 gridpoints are displayed, 0 gridpoints are hidden. */
+  int get_show_grid();
 
   //! Set backgound color in the navigation window.
   /*! Background color is set to the currently selected fill color. */
@@ -792,6 +802,11 @@ class Graph {
   /*! \param restriction	Type of restriction. */
   void set_move_restriction( glow_eMoveRestriction restriction);
 
+  //! Get current movement restrictions.
+  /*! \return	Type of restriction. */
+  glow_eMoveRestriction get_move_restriction()
+    { return grow_GetMoveRestrictions( grow->ctx);}
+
 
   //! Set or reset scaletype to equal scale.
   /*!
@@ -801,6 +816,13 @@ class Graph {
     direction is kept.
   */
   void set_scale_equal( int equal);
+
+  //! Get current scaletype.
+  /*!
+    \return	If 1, scaleing of objects are equal in x and y direction.
+  */
+  int get_scale_equal()
+    { return grow_GetScaleEqual( grow->ctx);}
 
   //! Check if object is a subgraph.
   /*! \return 		Returns 1 if object is a subgraph, else 0. */

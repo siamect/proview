@@ -16,6 +16,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <float.h>
 #include <Xm/Xm.h>
 #include <Xm/XmP.h>
 #include <Xm/Text.h>
@@ -23,6 +24,7 @@
 #include <X11/Intrinsic.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
+#include <Xm/ToggleB.h>
 
 extern "C" {
 #include "rt_gdh.h"
@@ -95,6 +97,13 @@ typedef struct ge_sCtx {
   Widget	graph_form;
   Widget	confirm_widget;
   Widget	yesnodia_widget;
+  Widget	grid_on_w;
+  Widget	grid_size_w;
+  Widget	grid_size_10_w;
+  Widget	grid_size_05_w;
+  Widget	grid_size_02_w;
+  Widget	grid_size_01_w;
+  Widget	show_grid_w;
   int		text_input_open;
   int		name_input_open;
   int		value_input_open;
@@ -129,6 +138,7 @@ typedef struct ge_sCtx {
 // Static variables
 static int ge_subpalette_get_select( void *gectx, char *text, char *filename);
 static void ge_message( void *ctx, char severity, char *message);
+static void ge_update( ge_tCtx gectx);
 static void ge_set_prompt( ge_tCtx gectx, char *prompt);
 static void ge_export_javabean( ge_tCtx gectx, char *name);
 static void ge_export_gejava( ge_tCtx gectx, char *name);
@@ -315,8 +325,10 @@ static void ge_load_graph_cb( void *ge_ctx, char *name)
   gectx->graph->set_name( graphname);
 
   gectx->graph->clear_all();
+  gectx->graph->set_show_grid( 0);
   strcat( graphname, ".pwg");
   gectx->graph->open( graphname);
+  ge_update( gectx);
 }
 
 
@@ -399,10 +411,15 @@ static void ge_clear_all( ge_tCtx gectx)
   int		path_cnt;
   char		*path;
 
+  gectx->graph->set_show_grid( 0);
+  gectx->graph->set_gridsize( 1);
+  gectx->graph->set_grid( 0);
   gectx->graph->clear_all();
   gectx->subpalette->get_path( &path_cnt, &path);
   gectx->graph->set_subgraph_path( path_cnt, path);
+  ge_update( gectx);
   ge_set_title( gectx);
+
 }
 
 void ge_clear( void *ge_ctx)
@@ -644,6 +661,7 @@ static void ge_open_graph( ge_tCtx gectx, char *name)
   char		*s;
  
   gectx->graph->clear_all();
+  gectx->graph->set_show_grid( 0);
 
   cdh_ToLower( filename, name);
   strcpy( graphname, filename);
@@ -657,6 +675,7 @@ static void ge_open_graph( ge_tCtx gectx, char *name)
   gectx->subpalette->get_path( &path_cnt, &path);
   gectx->graph->set_subgraph_path( path_cnt, path);
 
+  ge_update( gectx);
   ge_set_title( gectx);
 }
 
@@ -686,14 +705,17 @@ static void ge_message( void *ctx, char severity, char *message)
   Arg 		args[3];
   XmString	cstr;
 
-  if ( strcmp( message, "") == 0)
-    cstr=XmStringCreateLtoR( " ", "ISO8859-1");
-  else
+  if ( strcmp( message, "") == 0) {
+    XtUnmanageChild( gectx->msg_label);
+  }
+  else {
+    XtManageChild( gectx->msg_label);
     cstr=XmStringCreateLtoR( message, "ISO8859-1");
-  XtSetArg(args[0],XmNlabelString, cstr);
-  XtSetArg(args[1],XmNheight,30);
-  XtSetValues( gectx->msg_label, args, 2);
-  XmStringFree( cstr);
+    XtSetArg(args[0],XmNlabelString, cstr);
+    XtSetArg(args[1],XmNheight,30);
+    XtSetValues( gectx->msg_label, args, 2);
+    XmStringFree( cstr);
+  }
 }
 
 static int ge_subpalette_get_select( void *gectx, char *text, char *filename)
@@ -721,17 +743,93 @@ static void ge_subgraphs_close_cb( SubGraphs *subgraphs)
   delete subgraphs;
 }
 
-static void ge_cursor_motion_cb( void *gectx, double x, double y)
+static void ge_status_msg( void *ge_ctx, double x, double y)
 {
-  Arg 		args[1];
-  char		pos_str[20];
+  Arg 		args[2];
+  char		pos_str[200];
   XmString	cstr;
+  ge_tCtx       gectx = (ge_tCtx) ge_ctx;
+  glow_eMoveRestriction move_restriction = gectx->graph->get_move_restriction();
+  int           equal_scale = gectx->graph->get_scale_equal();
+  char		mr_str[20];
+  char		es_str[20];
+  char		em_str[20];
+  static double old_x = 0;
+  static double old_y = 0;
 
-  sprintf( pos_str, "%5.2f, %5.2f", x, y);
+  if ( x == 0 && y == 0) {
+    x = old_x;
+    y = old_y;
+  }
+  old_x = x;
+  old_y = y;
+
+  switch( move_restriction) {
+  case glow_eMoveRestriction_Vertical:
+    strcpy( mr_str, "MoveVert");
+    break;
+  case glow_eMoveRestriction_Horizontal:
+    strcpy( mr_str, "MoveHoriz");
+    break;
+  default:
+    strcpy( mr_str, "         ");
+  }
+
+  if ( equal_scale)
+    strcpy( es_str, "EqualScale");
+  else
+    strcpy( es_str, "          ");
+
+
+  switch ( gectx->graph->get_mode()) {
+  case grow_eMode_Rect:
+    strcpy( em_str, "Rect     ");
+    break;
+  case grow_eMode_Line:
+    strcpy( em_str, "Line     ");
+    break;
+  case grow_eMode_PolyLine:
+    strcpy( em_str, "PolyLine ");
+    break;
+  case grow_eMode_Text:
+    strcpy( em_str, "Text     ");
+    break;
+  case grow_eMode_Circle:
+    strcpy( em_str, "Circle   ");
+    break;
+  case grow_eMode_Annot:
+    strcpy( em_str, "Annot    ");
+    break;
+  case grow_eMode_ConPoint:
+    strcpy( em_str, "ConPoint ");
+    break;
+  case grow_eMode_EditPolyLine:
+    strcpy( em_str, "EditPolyL");
+    break;
+  case grow_eMode_RectRounded:
+    strcpy( em_str, "RectRound");
+    break;
+  case grow_eMode_Scale:
+    strcpy( em_str, "Scale    ");
+    break;
+  default:
+    strcpy( em_str, "         ");
+  }
+
+  sprintf( pos_str, "%s %s %s %5.2f, %5.2f", em_str, mr_str, es_str, x, y);
   cstr=XmStringCreateLtoR( pos_str, "ISO8859-1");
   XtSetArg(args[0],XmNlabelString, cstr);
-  XtSetValues( ((ge_tCtx) gectx)->cursor_position, args, 1);
+  // XtSetArg(args[1],XmNwidth, 280);
+  XtSetValues( gectx->cursor_position, args, 1);
   XmStringFree( cstr);
+
+  int width = 0;
+  int height = 0;
+  XtSetArg(args[0],XmNwidth, &width);
+  XtSetArg(args[1],XmNheight, &height);
+  XtGetValues( gectx->cursor_position, args, 2);
+  if ( width != 320)
+    XtResizeWidget( gectx->cursor_position, 320, height, 0);
 }
 
 static void ge_change_text_cb( void *ge_ctx, void *text_object, char *text)
@@ -741,6 +839,7 @@ static void ge_change_text_cb( void *ge_ctx, void *text_object, char *text)
   if ( gectx->text_input_open || gectx->value_input_open) 
   {
     XtUnmanageChild( gectx->cmd_input);
+    XtManageChild( gectx->msg_label);
     ge_set_prompt( gectx, "");
     gectx->text_input_open = 0;
     return;
@@ -748,9 +847,10 @@ static void ge_change_text_cb( void *ge_ctx, void *text_object, char *text)
 
   if ( gectx->command_open)
     gectx->command_open = 0;
-  else
+  else {
+    XtUnmanageChild( gectx->msg_label);
     XtManageChild( gectx->cmd_input);
-
+  }
   ge_message( gectx, ' ', "");
   XtSetKeyboardFocus( gectx->toplevel, gectx->cmd_input);
 
@@ -779,9 +879,10 @@ static void ge_change_name_cb( void *ge_ctx, void *text_object, char *text)
 
   if ( gectx->command_open)
     gectx->command_open = 0;
-  else
+  else {
     XtManageChild( gectx->cmd_input);
-
+    XtUnmanageChild( gectx->msg_label);
+  }
   ge_message( gectx, ' ', "");
   XtSetKeyboardFocus( gectx->toplevel, gectx->cmd_input);
 //  XtCallAcceptFocus( gectx->cmd_input, CurrentTime);
@@ -812,9 +913,10 @@ static void ge_change_value_cb( void *ge_ctx, void *value_object, char *text)
 
   if ( gectx->command_open)
     gectx->command_open = 0;
-  else
+  else {
+    XtUnmanageChild( gectx->msg_label);
     XtManageChild( gectx->cmd_input);
-
+  }
   ge_message( gectx, ' ', "");
   XtSetKeyboardFocus( gectx->toplevel, gectx->cmd_input);
 
@@ -942,10 +1044,15 @@ static void ge_set_prompt( ge_tCtx gectx, char *prompt)
   Arg 		args[1];
   XmString	cstr;
 
-  cstr=XmStringCreateLtoR( prompt, "ISO8859-1");
-  XtSetArg(args[0],XmNlabelString, cstr);
-  XtSetValues( gectx->cmd_prompt, args, 1);
-  XmStringFree( cstr);
+  if ( strcmp( prompt, "") == 0)
+    XtUnmanageChild( gectx->cmd_prompt);
+  else {
+    XtManageChild( gectx->cmd_prompt);
+    cstr=XmStringCreateLtoR( prompt, "ISO8859-1");
+    XtSetArg(args[0],XmNlabelString, cstr);
+    XtSetValues( gectx->cmd_prompt, args, 1);
+    XmStringFree( cstr);
+  }
 }
 
 //
@@ -1017,26 +1124,31 @@ static void ge_activate_push( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data
 static void ge_activate_edit_polyline( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
 {
   gectx->graph->set_mode( grow_eMode_EditPolyLine, false);
+  ge_status_msg( gectx, 0, 0);
 }
 
 static void ge_activate_scale_equal( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
 {
   gectx->graph->set_scale_equal( 1);
+  ge_status_msg( gectx, 0, 0);
 }
 
 static void ge_activate_move_horizontal( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
 {
   gectx->graph->set_move_restriction( glow_eMoveRestriction_Horizontal);
+  ge_status_msg( gectx, 0, 0);
 }
 
 static void ge_activate_move_vertical( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
 {
   gectx->graph->set_move_restriction( glow_eMoveRestriction_Vertical);
+  ge_status_msg( gectx, 0, 0);
 }
 
 static void ge_activate_move_reset( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
 {
   gectx->graph->set_move_restriction( glow_eMoveRestriction_No);
+  ge_status_msg( gectx, 0, 0);
 }
 
 static void ge_activate_align_horiz_up( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
@@ -1248,8 +1360,10 @@ static void ge_activate_command( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *d
     gectx->name_input_open = 0;
   else if ( gectx->value_input_open)
     gectx->text_input_open = 0;
-  else
+  else {
+    XtUnmanageChild( gectx->msg_label);
     XtManageChild( gectx->cmd_input);
+  }
   ge_message( gectx, ' ', "");
   // XmProcessTraversal( gectx->cmd_input, XmTRAVERSE_CURRENT);
   // XtSetKeyboardFocus( gectx->toplevel, gectx->cmd_input);
@@ -1257,7 +1371,7 @@ static void ge_activate_command( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *d
 
   XtSetArg(args[0],XmNvalue, "");
   XtSetValues( gectx->cmd_input, args, 1);
-  ge_set_prompt( gectx, "ge >");
+  ge_set_prompt( gectx, "ge >        ");
   gectx->command_open = 1;
 }
 
@@ -1723,6 +1837,7 @@ static void ge_activate_rect( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data
     keep = true;
 
   gectx->graph->set_mode( grow_eMode_Rect, keep);
+  ge_status_msg( gectx, 0, 0);
 }
 
 static void ge_activate_rectrounded( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
@@ -1734,6 +1849,7 @@ static void ge_activate_rectrounded( Widget w, ge_tCtx gectx, XmAnyCallbackStruc
     keep = true;
 
   gectx->graph->set_mode( grow_eMode_RectRounded, keep);
+  ge_status_msg( gectx, 0, 0);
 }
 
 static void ge_activate_line( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
@@ -1745,6 +1861,7 @@ static void ge_activate_line( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data
     keep = true;
 
   gectx->graph->set_mode( grow_eMode_Line, keep);
+  ge_status_msg( gectx, 0, 0);
 }
 
 static void ge_activate_polyline( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
@@ -1756,6 +1873,7 @@ static void ge_activate_polyline( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *
     keep = true;
 
   gectx->graph->set_mode( grow_eMode_PolyLine, keep);
+  ge_status_msg( gectx, 0, 0);
 }
 
 static void ge_activate_circle( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
@@ -1767,6 +1885,7 @@ static void ge_activate_circle( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *da
     keep = true;
 
   gectx->graph->set_mode( grow_eMode_Circle, keep);
+  ge_status_msg( gectx, 0, 0);
 }
 
 static void ge_activate_text( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
@@ -1778,6 +1897,7 @@ static void ge_activate_text( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data
     keep = true;
 
   gectx->graph->set_mode( grow_eMode_Text, keep);
+  ge_status_msg( gectx, 0, 0);
 }
 
 static void ge_activate_annot( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
@@ -1789,6 +1909,7 @@ static void ge_activate_annot( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *dat
     keep = true;
 
   gectx->graph->set_mode( grow_eMode_Annot, keep);
+  ge_status_msg( gectx, 0, 0);
 }
 
 static void ge_activate_conpoint( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
@@ -1800,6 +1921,7 @@ static void ge_activate_conpoint( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *
     keep = true;
 
   gectx->graph->set_mode( grow_eMode_ConPoint, keep);
+  ge_status_msg( gectx, 0, 0);
 }
 
 static void ge_activate_fill( Widget w, ge_tCtx gectx, XmToggleButtonCallbackStruct *data)
@@ -1853,6 +1975,7 @@ static void ge_activate_decr_shift( Widget w, ge_tCtx gectx, XmAnyCallbackStruct
 static void ge_activate_scale( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
 {
   gectx->graph->set_mode( grow_eMode_Scale, false);
+  ge_status_msg( gectx, 0, 0);
 }
 
 static void ge_activate_grid( Widget w, ge_tCtx gectx, XmToggleButtonCallbackStruct *data)
@@ -2236,6 +2359,35 @@ static void ge_create_palette_pane( Widget w, ge_tCtx gectx, XmAnyCallbackStruct
 {
   gectx->palette_pane = w;
 }
+static void ge_create_widget_cb( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
+{
+  int key;
+
+  XtVaGetValues (w, XmNuserData, &key, NULL);
+  switch ( key) {
+    case 1:
+      gectx->grid_on_w = w;
+      break;
+    case 2:
+      gectx->grid_size_w = w;
+      break;
+    case 3:
+      gectx->grid_size_10_w = w;
+      break;
+    case 4:
+      gectx->grid_size_05_w = w;
+      break;
+    case 5:
+      gectx->grid_size_02_w = w;
+      break;
+    case 6:
+      gectx->grid_size_01_w = w;
+      break;
+    case 7:
+      gectx->show_grid_w = w;
+      break;
+  }
+}
 static void ge_create_india_label( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
 {
   gectx->india_label = w;
@@ -2517,6 +2669,24 @@ void ge_message( void *ge_ctx, pwr_tStatus sts)
   gectx->graph->message( sts);
 }
 
+static void ge_update( ge_tCtx gectx)
+{
+  Arg 	args[2];
+
+  XmToggleButtonSetState(gectx->grid_on_w, gectx->graph->grid, 0);
+  XmToggleButtonSetState(gectx->show_grid_w, gectx->graph->get_show_grid(), 0);
+
+  if ( fabs( gectx->graph->grid_size_x - 0.1) < DBL_EPSILON)
+    XtSetArg(args[0], XmNmenuHistory, gectx->grid_size_01_w);
+  else if ( fabs( gectx->graph->grid_size_x - 0.2) < DBL_EPSILON)
+    XtSetArg(args[0], XmNmenuHistory, gectx->grid_size_02_w);
+  else if ( fabs( gectx->graph->grid_size_x - 0.5) < DBL_EPSILON)
+    XtSetArg(args[0], XmNmenuHistory, gectx->grid_size_05_w);
+  else
+    XtSetArg(args[0], XmNmenuHistory, gectx->grid_size_10_w);
+  XtSetValues( gectx->grid_size_w, args, 1);
+}
+
 void ge_del( void *ge_ctx)
 {
   ge_tCtx gectx = (ge_tCtx) ge_ctx;
@@ -2673,6 +2843,7 @@ void *ge_new( 	void 	*parent_ctx,
 	{"ge_activate_zoom_out",(caddr_t)ge_activate_zoom_out },
 	{"ge_activate_zoom_reset",(caddr_t)ge_activate_zoom_reset },
 	{"ge_activate_help",(caddr_t)ge_activate_help },
+	{"ge_create_widget_cb",(caddr_t)ge_create_widget_cb },
 	{"ge_create_cursor_position",(caddr_t)ge_create_cursor_position },
 	{"ge_create_msg_label",(caddr_t)ge_create_msg_label },
 	{"ge_create_cmd_prompt",(caddr_t)ge_create_cmd_prompt },
@@ -2808,7 +2979,7 @@ void *ge_new( 	void 	*parent_ctx,
   gectx->graph->get_current_subgraph_cb = &ge_subpalette_get_select;
   gectx->graph->get_current_colors_cb = &ge_colorpalette_get_current;
   gectx->graph->set_current_colors_cb = &ge_colorpalette_set_current;
-  gectx->graph->cursor_motion_cb = &ge_cursor_motion_cb;
+  gectx->graph->cursor_motion_cb = &ge_status_msg;
   gectx->graph->change_text_cb = &ge_change_text_cb;
   gectx->graph->change_name_cb = &ge_change_name_cb;
   gectx->graph->change_value_cb = &ge_change_value_cb;
