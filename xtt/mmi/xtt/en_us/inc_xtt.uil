@@ -80,6 +80,7 @@ c_Help_on_selected_msg  : compound_string("Help on selected message");
 
 ! module xtt_trace.uil
 
+c_PrintSelect   	: compound_string("PrintSelected");
 c_SaveTrace		: compound_string("SaveTrace");
 c_RestoreTrace		: compound_string("RestoreTrace");
 c_ClearTrace		: compound_string("ClearTrace");

@@ -18,6 +18,7 @@ identifier
 	ev_ctx;
 procedure
 	ev_eve_activate_exit(integer);
+	ev_eve_activate_print(integer);
 	ev_eve_activate_ack_last(integer);
 	ev_eve_activate_zoom_in(integer);
 	ev_eve_activate_zoom_out(integer);
@@ -31,6 +32,7 @@ procedure
 	ev_eve_activate_helpevent(integer);
 	ev_eve_create_form(integer);
 	ev_ala_activate_exit(integer);
+	ev_ala_activate_print(integer);
 	ev_ala_activate_ack_last(integer);
 	ev_ala_activate_zoom_in(integer);
 	ev_ala_activate_zoom_out(integer);
@@ -44,6 +46,7 @@ procedure
 	ev_ala_activate_helpevent(integer);
 	ev_ala_create_form(integer);
 	ev_blk_activate_exit(integer);
+	ev_blk_activate_print(integer);
 	ev_blk_activate_zoom_in(integer);
 	ev_blk_activate_zoom_out(integer);
 	ev_blk_activate_zoom_reset(integer);
@@ -120,6 +123,18 @@ object eve_file_entry : XmCascadeButton
     {
       controls
       {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Print;
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ev_eve_activate_print(ev_ctx);
+          };
+	};
         XmPushButton
         {
           arguments
@@ -420,6 +435,18 @@ object ala_file_entry : XmCascadeButton
         {
           arguments
           {
+  	    XmNlabelString = c_Print;
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ev_ala_activate_print(ev_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
   	    XmNlabelString = c_Close;
             XmNfontList	   = menu_font;
 	  };
@@ -711,6 +738,18 @@ object blk_file_entry : XmCascadeButton
     {
       controls
       {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Print;
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ev_blk_activate_print(ev_ctx);
+          };
+	};
         XmPushButton
         {
           arguments

@@ -18,6 +18,7 @@ identifier
 	hist_ctx;
 procedure
 	hist_activate_exit(integer);
+	hist_activate_print(integer);
 	hist_activate_zoom_in(integer);
 	hist_activate_zoom_out(integer);
 	hist_activate_zoom_reset(integer);
@@ -254,6 +255,18 @@ object hist_file_entry : XmCascadeButton
     {
       controls
       {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Print;
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure hist_activate_print(hist_ctx);
+          };
+	};
         XmPushButton
         {
           arguments

@@ -80,6 +80,7 @@ c_Help_on_selected_msg  : compound_string("Hjälp för utvalt meddelande");
 
 ! module xtt_trace.uil
 
+c_PrintSelect   	: compound_string("Skriv Utvald");
 c_SaveTrace		: compound_string("Spara Trace");
 c_RestoreTrace		: compound_string("Återskapa Trace");
 c_ClearTrace		: compound_string("Rensa Trace");

@@ -19,6 +19,7 @@ identifier
 procedure
 	gec_activate_exit(integer);
 	gec_activate_configure(integer);
+	gec_activate_print(integer);
 	gec_activate_zoomin(integer);
 	gec_activate_zoomout(integer);
 	gec_activate_zoomreset(integer);
@@ -161,6 +162,21 @@ object file_entry : XmCascadeButton
 	  callbacks
           {
             XmNactivateCallback = procedure gec_activate_configure(gec_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Print;
+            XmNmnemonic = keysym('P');
+	    XmNaccelerator = "Ctrl<Key>P";
+	    XmNacceleratorText = compound_string('Ctrl+P');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure gec_activate_print(gec_ctx);
           };
 	};
         XmPushButton

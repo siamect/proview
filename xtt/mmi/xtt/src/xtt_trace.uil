@@ -22,6 +22,7 @@ identifier
 procedure
 	tra_activate_close(integer);
 	tra_activate_print(integer);
+	tra_activate_printselect(integer);
 	tra_activate_savetrace(integer);
 	tra_activate_restoretrace(integer);
 	tra_activate_cleartrace(integer);
@@ -140,6 +141,18 @@ object file_entry : XmCascadeButton
           callbacks
           {
             XmNactivateCallback = procedure tra_activate_print(tra_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_PrintSelect;
+            XmNfontList	   = menu_font;
+	  }; 
+          callbacks
+          {
+            XmNactivateCallback = procedure tra_activate_printselect(tra_ctx);
           };
         };
         XmPushButton

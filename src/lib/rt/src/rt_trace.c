@@ -301,15 +301,56 @@ static void tra_activate_print( Widget w, tra_tCtx tractx, XmAnyCallbackStruct *
   flow_tObject 	*list;
   int		cnt;
   double	ll_x, ll_y, ur_x, ur_y;
-  flow_tNode	n;
+  flow_tNode	*np;
+  int		j;
+  int		i = 0;
+  char		filename[200];
+  char		cmd[200];
 
   /* Get selected object */
+  flow_GetObjectList( ctx, &list, &cnt);
+  np = list;
+  for ( j = 0; j < cnt; j++) {
+    if ( cnt > 0 && flow_GetObjectType( *np) == flow_eObjectType_Node &&
+	 flow_GetNodeGroup( *np) == flow_eNodeGroup_Document) {
+      sprintf( filename, "$pwrp_tmp/trace%d.ps", ++i);
+      dcli_translate_filename( filename, filename);
+
+      flow_MeasureNode( *np, &ll_x, &ll_y, &ur_x, &ur_y);
+      flow_PrintRegion( ctx, ll_x, ll_y, ur_x, ur_y, filename);
+
+      sprintf( cmd, "$pwr_exe/rt_print.sh %s 1", filename);
+      system( cmd);
+    }
+    np++;
+  }
+}
+
+static void tra_activate_printselect( Widget w, tra_tCtx tractx, XmAnyCallbackStruct *data)
+{
+  flow_tCtx ctx = (flow_tCtx)tractx->flow_ctx;
+  flow_tObject 	*list;
+  int		cnt;
+  double	ll_x, ll_y, ur_x, ur_y;
+  flow_tNode	n;
+  char		filename[200];
+  int 		i = 0;
+  char		cmd[200];
+  
+  /* Get selected object */
   flow_GetSelectList( ctx, &list, &cnt);
-  if ( cnt > 0 && flow_GetObjectType( *list) == flow_eObjectType_Node)  
+  if ( cnt > 0 && flow_GetObjectType( *list) == flow_eObjectType_Node &&
+       flow_GetNodeGroup( *list) == flow_eNodeGroup_Document)  
   {
+    sprintf( filename, "$pwrp_tmp/trace%d.ps", ++i);
+    dcli_translate_filename( filename, filename);
+
     n = *list;
     flow_MeasureNode( n, &ll_x, &ll_y, &ur_x, &ur_y);
-    flow_PrintRegion( ctx, ll_x, ll_y, ur_x, ur_y, "test.ps");
+    flow_PrintRegion( ctx, ll_x, ll_y, ur_x, ur_y, filename);
+
+    sprintf( cmd, "$pwr_exe/rt_print.sh %s 1", filename);
+    system( cmd);
   }
   else
     printf("No such node\n");
@@ -662,8 +703,8 @@ static int trace_flow_cb( FlowCtx *ctx, flow_tEvent event)
           }
           else
           {
-	    if ( flow_GetNodeGroup( event->object.object) == flow_eNodeGroup_Document)
-              break;
+	    // if ( flow_GetNodeGroup( event->object.object) == flow_eNodeGroup_Document)
+            //  break;
             flow_SelectClear( ctx);
             flow_SetInverse( event->object.object, 1);
             flow_SelectInsert( ctx, event->object.object);
@@ -1351,6 +1392,7 @@ tra_tCtx trace_new( 	void 		*parent_ctx,
         { "tra_ctx", 0 },
 	{"tra_activate_close",(caddr_t)tra_activate_close },
 	{"tra_activate_print",(caddr_t)tra_activate_print },
+	{"tra_activate_printselect",(caddr_t)tra_activate_printselect },
 	{"tra_activate_savetrace",(caddr_t)tra_activate_savetrace },
 	{"tra_activate_restoretrace",(caddr_t)tra_activate_restoretrace },
 	{"tra_activate_cleartrace",(caddr_t)tra_activate_cleartrace },
