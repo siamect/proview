@@ -15,6 +15,7 @@
 # include <netinet/in.h>
 # include <arpa/inet.h>
 # include <errno.h>
+# include <unistd.h>
 # if defined OS_LINUX
 #   include <sys/uio.h>
 #   include <sys/socket.h>
@@ -54,8 +55,8 @@
 #else
 # define MAX_SEGSIZE	(1472 - sizeof(sHead))
 #endif
-#define RTT_RXMIN	50
-#define RTT_RXMAX	1000
+#define RTT_RXMIN	500   /* ms */
+#define RTT_RXMAX	10000 /* ms */
 #define RACK_TMO	1
 
 typedef enum {
@@ -260,7 +261,10 @@ struct {
   int			send_ef;
   int			import_ef;
 #endif
+  pwr_tStatus		sts;
 } l;
+
+static pwr_tStatus qcom_sts = PWR__SRVSTARTUP;
 
 static void		cancel_links();
 static sEseg*		create_connect (sLink*);
@@ -306,7 +310,8 @@ static void		update_rtt(sLink*, sIseg*);
 static void		window_insert (sLink*, sEseg*);
 static void		window_remove (sLink*, sEseg*);
 static sEseg*		window_tmo (sLink*);
-
+static void		check_link_status ();
+static void		set_status (pwr_tStatus);
 
 
 int
@@ -395,13 +400,14 @@ main (int argc, char *argv[])
 
   } while (0);
 
-  errh_SetStatus( PWR__SRUN);
+  check_link_status();
+  set_status( PWR__SRUN);
 
-//  qcom_WaitAnd(&sts, &my_q, &qcom_cQini, ini_mEvent_terminate, qcom_cTmoEternal);
+  qcom_WaitAnd(&sts, &my_q, &qcom_cQini, ini_mEvent_terminate, qcom_cTmoEternal);
     
-  sts = thread_Wait(NULL);	/* Wait forever */
+//  sts = thread_Wait(NULL);	/* Wait forever */
 
-  errh_SetStatus( PWR__SRVTERM);
+  set_status( PWR__SRVTERM);
   errh_Info("pwr_qmon says: I will soon die, %m", sts);
   cancel_links();
   thread_Cancel(&l.import.thread);
@@ -1076,6 +1082,7 @@ link_active (
     lp->np->flags.b.connected = 1;
     qdb_NetEvent(&sts, lp->np, qcom_eStype_linkActive);
   } qdb_ScopeUnlock;
+  check_link_status();
 }
 
 static void
@@ -1104,6 +1111,7 @@ link_connect (
     qdb_NetEvent(&sts, lp->np, qcom_eStype_linkConnect);
   } qdb_ScopeUnlock;
 
+  check_link_status();
 }
 
 static void
@@ -1166,6 +1174,8 @@ link_disconnect (
   lp->p = NULL;
   sp = create_connect(lp);
   lst_InsertSucc(NULL, &lp->lh_send, &sp->c.le, sp);
+
+  check_link_status();
 }
 
 static void
@@ -1265,6 +1275,7 @@ link_stalled (
     lp->np->flags.b.active = 0;
     qdb_NetEvent(&sts, lp->np, qcom_eStype_linkStalled);
   } qdb_ScopeUnlock;
+  check_link_status();
 }
 
 static void *
@@ -1346,12 +1357,16 @@ new_link (
   pwr_tStatus sts;
   sLink *lp;
   sEseg *sp;
+  static int tics_per_sec = 0;
 
   if (nid == qdb->my_node->nid) return NULL;
   if (nid == qdb->no_node->nid) return NULL;
 
   lp = tree_Insert(&sts, l.links.table, &nid);
   pwr_Assert(lp != NULL);
+
+  if (!tics_per_sec)
+    tics_per_sec = sysconf(_SC_CLK_TCK);
 
   l.links.count++;
 
@@ -1365,8 +1380,8 @@ new_link (
   lst_Init(NULL, &lp->lh_send, NULL);
   lst_Init(NULL, &lp->lh_win, NULL);
   lp->np->link.win_max = 1;
-  lp->np->link.rtt_rxmax = RTT_RXMAX;
-  lp->np->link.rtt_rxmin = RTT_RXMIN;
+  lp->np->link.rtt_rxmax = (RTT_RXMAX * tics_per_sec) / 1000;
+  lp->np->link.rtt_rxmin = (RTT_RXMIN * tics_per_sec) / 1000;
   lp->tmo.c.action = eAction_tmo;
                                     
   if (mp != NULL) {
@@ -1836,3 +1851,40 @@ window_tmo (
 
   return sp;
 }
+
+static void
+check_link_status(
+)
+{
+  pwr_tStatus sts;
+  pwr_tStatus linksts = PWR__SRUN;
+  sLink *lp;
+
+  for (lp = tree_Minimum(&sts, l.links.table); lp != NULL; lp = tree_Successor(&sts, l.links.table, lp)) {
+    if ( !lp->np->link.flags.b.active)
+      linksts = QCOM__DOWN;
+  }
+  if ( linksts != l.sts) {
+    if ( errh_Severity(linksts) >= errh_Severity(qcom_sts))
+      errh_SetStatus( linksts);
+    else if ( errh_Severity(l.sts) >= errh_Severity(qcom_sts) &&
+	      errh_Severity(linksts) < errh_Severity(qcom_sts))
+      errh_SetStatus( qcom_sts);
+    l.sts = linksts;    
+  }
+}
+
+static void set_status( 
+pwr_tStatus sts
+)
+{
+  if ( sts != qcom_sts) {
+    if ( errh_Severity(sts) >= errh_Severity(l.sts))
+      errh_SetStatus( sts);
+    else if ( errh_Severity(qcom_sts) >= errh_Severity(l.sts) &&
+	      errh_Severity(sts) < errh_Severity(l.sts))
+      errh_SetStatus( l.sts);
+    qcom_sts = sts;    
+  }
+}
+
