@@ -51,9 +51,11 @@ pwr_dImport pwr_BindIoMethods(Rack_SSAB);
 pwr_dImport pwr_BindIoMethods(Di_DIX2);
 pwr_dImport pwr_BindIoMethods(Do_HVDO32);
 pwr_dImport pwr_BindIoMethods(Ao_HVAO4);
+pwr_dImport pwr_BindIoMethods(Ao_AO8uP);  // Share methods with HVAO4
 pwr_dImport pwr_BindIoMethods(Ai_HVAI32);
 pwr_dImport pwr_BindIoMethods(Ai_AI32uP);
 pwr_dImport pwr_BindIoMethods(Co_PI24BO);
+pwr_dImport pwr_BindIoMethods(Co_CO4uP);  // Share methods with PI24BO
 pwr_dImport pwr_BindIoMethods(Pb_Profiboard);
 pwr_dImport pwr_BindIoMethods(Pb_DP_Slave);
 pwr_dImport pwr_BindIoMethods(Pb_Di);
@@ -69,9 +71,11 @@ pwr_BindIoClasses(Base) = {
   pwr_BindIoClass(Di_DIX2),
   pwr_BindIoClass(Do_HVDO32),
   pwr_BindIoClass(Ao_HVAO4),
+  pwr_BindIoClass(Ao_AO8uP),
   pwr_BindIoClass(Ai_HVAI32),
   pwr_BindIoClass(Ai_AI32uP),
   pwr_BindIoClass(Co_PI24BO),
+  pwr_BindIoClass(Co_CO4uP),
   pwr_BindIoClass(Pb_Profiboard),
   pwr_BindIoClass(Pb_DP_Slave),
   pwr_BindIoClass(Pb_Di),
