@@ -10,7 +10,9 @@
 #include "wb_ldh.h"
 #include "wb_dutl.h"
 #include "wb_pwrs_msg.h"
+#include "co_dcli.h"
 #include "co_cdh.h"
+#include "co_msg.h"
 
 
 /*----------------------------------------------------------------------------*\
@@ -22,19 +24,34 @@ static int IsOkConnect (
   pwr_sMenuButton *mbp
 ) {
   pwr_tStatus	sts;
-  pwr_tCid	cid;
-  pwr_tCid	arg_cid;
 
   if ( strcmp( mbp->FilterArguments[1], "") != 0) {
+    char arg_cid_str[20][32];
+    int arg_cid_cnt;
+    int i;
+    int cid_ok = 0;
+    pwr_tCid	cid;
+    pwr_tCid	arg_cid;
 
-    // arg 1 holds the allowed class to connect to
-    sts = ldh_ClassNameToId( ip->PointedSession, &arg_cid, mbp->FilterArguments[1]);
-    if ( EVEN(sts)) return 0;
+    // arg 1 holds the allowed class or classes to connect to
+    arg_cid_cnt = dcli_parse( mbp->FilterArguments[1], ",", "", (char *) arg_cid_str, 
+		sizeof( arg_cid_str) / sizeof( arg_cid_str[0]),
+		sizeof( arg_cid_str[0]), 0);
+
 
     sts = ldh_GetObjectClass( ip->PointedSession, ip->Selected[0].Objid, &cid);
     if ( EVEN(sts)) return 0;
 
-    if ( cid != arg_cid) 
+    for ( i = 0; i < arg_cid_cnt; i++) {
+      sts = ldh_ClassNameToId( ip->PointedSession, &arg_cid, arg_cid_str[i]);
+      if ( EVEN(sts)) return 0;
+
+      if ( cid == arg_cid) {
+	cid_ok = 1;
+	break;
+      }
+    }
+    if ( !cid_ok)
       return 0;
   }
 
@@ -51,8 +68,6 @@ static pwr_tStatus Connect (
   pwr_tStatus	    	sts;
   pwr_sMenuButton   	mb;
   pwr_sAttrRef	    	PattrRef;
-  pwr_tCid		cid;
-  pwr_tCid		arg_cid;
 
 
   sts = ldh_ReadObjectBody(ip->PointedSession,
@@ -61,25 +76,66 @@ static pwr_tStatus Connect (
   if (EVEN(sts)) return sts;
 
   if ( strcmp( mb.MethodArguments[1], "") != 0) {
+    char arg_cid_str[20][32];
+    int arg_cid_cnt;
+    int i;
+    int cid_ok = 0;
+    pwr_tCid		cid;
+    pwr_tCid		arg_cid;
 
-    // arg 1 holds the allowed class to connect to
-    sts = ldh_ClassNameToId( ip->PointedSession, &arg_cid, mb.MethodArguments[1]);
-    if ( EVEN(sts)) return 0;
+    // arg 1 holds the allowed class or classes to connect to
+    arg_cid_cnt = dcli_parse( mb.MethodArguments[1], ",", "", (char *) arg_cid_str, 
+		sizeof( arg_cid_str) / sizeof( arg_cid_str[0]),
+		sizeof( arg_cid_str[0]), 0);
+
 
     sts = ldh_GetObjectClass( ip->PointedSession, ip->Selected[0].Objid, &cid);
     if ( EVEN(sts)) return 0;
 
-    if ( cid != arg_cid) 
+    for ( i = 0; i < arg_cid_cnt; i++) {
+      sts = ldh_ClassNameToId( ip->PointedSession, &arg_cid, arg_cid_str[i]);
+      if ( EVEN(sts)) return 0;
+
+      if ( cid == arg_cid) {
+	cid_ok = 1;
+	break;
+      }
+    }
+    if ( !cid_ok)
       return 0;
   }
 
-  sts = ldh_GetAttrRef(ip->PointedSession, ip->Pointed.Objid,
-    mb.MethodArguments[0], &PattrRef);
-  if (EVEN(sts)) return sts;
+  if ( strcmp( mb.MethodArguments[2], "") != 0)
+    // Body in MethodArguments 2, probably DevBody
+    sts = ldh_SetObjectPar( ip->PointedSession, ip->Pointed.Objid, mb.MethodArguments[2],
+		mb.MethodArguments[0], (char *) &ip->Selected[0].Objid, sizeof(ip->Selected[0].Objid));
+  else {
+    // Assume RtBody or SysBody
+    sts = ldh_GetAttrRef(ip->PointedSession, ip->Pointed.Objid,
+			 mb.MethodArguments[0], &PattrRef);
+    if (ODD(sts))
+      sts = ldh_WriteAttribute(ip->PointedSession, &PattrRef, &ip->Selected[0].Objid,
+			     sizeof(pwr_tObjid));
+  }
+  if ( ip->message_cb) {
+    char msg[200];
+    
+    if ( ODD(sts)) {
+      char name[120];
+      int len;
 
-  sts = ldh_WriteAttribute(ip->PointedSession, &PattrRef, &ip->Selected[0].Objid,
-    sizeof(pwr_tObjid));
-
+      sts = ldh_ObjidToName( ip->PointedSession, ip->Selected[0].Objid, ldh_eName_Hierarchy, 
+			     name, sizeof(name), &len);
+      if ( EVEN(sts))
+	cdh_ObjidToString( name, ip->Selected[0].Objid, 1);
+      sprintf( msg, "%s connected to:   %s", mb.MethodArguments[0], name);
+      (ip->message_cb)( ip->EditorContext, 'I', msg);
+    }
+    else {
+      msg_GetMsg( sts, msg, sizeof(msg));
+      (ip->message_cb)( ip->EditorContext, 'E', msg);
+    }
+  }
   return PWRS__SUCCESS;
 }
 
