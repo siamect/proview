@@ -194,6 +194,7 @@ class Wtt {
     Widget	menu_cut_w;
     Widget	menu_copy_w;
     Widget	menu_paste_w;
+    Widget	menu_pasteinto_w;
     Widget	menu_rename_w;
     Widget	menu_utilities_w;
     Widget	menu_openplc_w;
@@ -202,6 +203,7 @@ class Wtt {
     Widget	menu_createboot_w;
     Widget	menu_distribute_w;
     Widget	menu_change_value_w;
+    Widget	menu_edit_w;
     uted_ctx	utedctx;
     void	*distrwctx;
     WNav	*input_wnav;

@@ -29,12 +29,14 @@ procedure
 	wtt_activate_cut(integer);
 	wtt_activate_copy(integer);
 	wtt_activate_paste(integer);
+	wtt_activate_pasteinto(integer);
 	wtt_activate_rename(integer);
 	wtt_activate_configure(integer);
 	wtt_activate_utilities(integer);
 	wtt_activate_openobject(integer);
 	wtt_activate_openvolobject(integer);
 	wtt_activate_openvolume(integer);
+	wtt_activate_openbuffer(integer);
 	wtt_activate_openfile_dbs(integer);
 	wtt_activate_openfile_wbl(integer);
 	wtt_activate_spreadsheet(integer);
@@ -211,6 +213,19 @@ object file_entry : XmCascadeButton
         {
           arguments
           {
+  	    XmNlabelString = compound_string("Open Buffer...");
+            XmNmnemonic = keysym('b');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_openbuffer(wtt_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
   	    XmNlabelString = compound_string("Volume Attributes...");
             XmNmnemonic = keysym('V');
             XmNfontList	   = menu_font;
@@ -319,9 +334,11 @@ object edit_entry : XmCascadeButton
 	    XmNaccelerator = "Ctrl<Key>E";
 	    XmNacceleratorText = compound_string('Ctrl+E');
             XmNfontList	   = menu_font;
+	    XmNuserData = 15;
 	  };
 	  callbacks
           {
+	    MrmNcreateCallback = procedure wtt_create_menubutton(wtt_ctx);
             XmNactivateCallback = procedure wtt_activate_configure(wtt_ctx);
           };
 	};
@@ -549,6 +566,23 @@ object edit_entry : XmCascadeButton
 	  callbacks
           {
             XmNactivateCallback = procedure wtt_activate_paste(wtt_ctx);
+	    MrmNcreateCallback = procedure wtt_create_menubutton(wtt_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Paste Into");
+            XmNmnemonic = keysym('P');
+	    XmNaccelerator = "Shift Ctrl<Key>V";
+	    XmNacceleratorText = compound_string('Ctrl+Shift+V');
+            XmNfontList	   = menu_font;
+	    XmNuserData = 14;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_pasteinto(wtt_ctx);
 	    MrmNcreateCallback = procedure wtt_create_menubutton(wtt_ctx);
           };
 	};

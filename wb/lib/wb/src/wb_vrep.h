@@ -13,6 +13,7 @@
 #include "wb_treeexport.h"
 #include "wb_treeimport.h"
 #include <map>
+#include <vector>
 
 class wb_erep;
 class wb_merep;
@@ -24,9 +25,13 @@ class wb_dbs;
 class wb_vrep : public wb_export, public wb_treeexport, public wb_treeimport
 {
 protected:
+  typedef vector<wb_srep*>::iterator srep_iterator;
+
   char m_name[80];
   pwr_tVid m_vid;
   pwr_tCid m_cid;
+  vector<wb_srep*> m_srep;
+
 public:
 
   virtual ~wb_vrep() {};
@@ -124,6 +129,12 @@ public:
   virtual void objectName(const wb_orep *o, char *str) = 0;
   virtual bool isCommonMeta() const { return false;}
   virtual bool isMeta() const { return false;}
+  virtual bool accessSupported( ldh_eAccess access) = 0;
+
+  void addSrep( wb_srep *srep);
+  void removeSrep( wb_srep *srep);
+  wb_srep *srep( pwr_tStatus *sts);
+  wb_srep *nextSrep( pwr_tStatus *sts, wb_srep* srep);
 };
 
 #endif

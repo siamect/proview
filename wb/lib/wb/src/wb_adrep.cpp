@@ -3,7 +3,7 @@
 #include "wb_vrep.h"
 #include "wb_cdef.h"
 #include "wb_cdrep.h"
-#include "wb_orepdbs.h"
+#include "wb_orep.h"
 
 void wb_adrep::unref()
 {
@@ -17,7 +17,7 @@ wb_adrep *wb_adrep::ref()
   return this;
 }
 
-wb_adrep::wb_adrep( wb_orepdbs& o): m_nRef(0), m_orep(&o), m_sts(LDH__SUCCESS),
+wb_adrep::wb_adrep( wb_orep& o): m_nRef(0), m_orep(&o), m_sts(LDH__SUCCESS),
                                     m_subClass(pwr_eClass__)
 {
   m_orep->ref();
@@ -28,7 +28,7 @@ wb_adrep::wb_adrep( wb_orepdbs& o): m_nRef(0), m_orep(&o), m_sts(LDH__SUCCESS),
   {
     pwr_sParam attr;
 
-    m_orep->m_vrep->readBody( &sts, m_orep, pwr_eBix_sys, (void *) &attr);
+    m_orep->vrep()->readBody( &sts, m_orep, pwr_eBix_sys, (void *) &attr);
     if ( EVEN(sts)) throw wb_error(sts);
 
     strcpy( m_pgmname, attr.Info.PgmName);
@@ -47,7 +47,7 @@ wb_adrep::wb_adrep( wb_orepdbs& o): m_nRef(0), m_orep(&o), m_sts(LDH__SUCCESS),
   {
     pwr_sIntern attr;
 
-    m_orep->m_vrep->readBody( &sts, m_orep, pwr_eBix_sys, (void *) &attr);
+    m_orep->vrep()->readBody( &sts, m_orep, pwr_eBix_sys, (void *) &attr);
     if ( EVEN(sts)) throw wb_error(sts);
 
     strcpy( m_pgmname, attr.Info.PgmName);
@@ -66,7 +66,7 @@ wb_adrep::wb_adrep( wb_orepdbs& o): m_nRef(0), m_orep(&o), m_sts(LDH__SUCCESS),
   {
     pwr_sObjXRef attr;
 
-    m_orep->m_vrep->readBody( &sts, m_orep, pwr_eBix_sys, (void *) &attr);
+    m_orep->vrep()->readBody( &sts, m_orep, pwr_eBix_sys, (void *) &attr);
     if ( EVEN(sts)) throw wb_error(sts);
 
     strcpy( m_pgmname, attr.Info.PgmName);
@@ -84,7 +84,7 @@ wb_adrep::wb_adrep( wb_orepdbs& o): m_nRef(0), m_orep(&o), m_sts(LDH__SUCCESS),
   {
     pwr_sAttrXRef attr;
 
-    m_orep->m_vrep->readBody( &sts, m_orep, pwr_eBix_sys, (void *) &attr);
+    m_orep->vrep()->readBody( &sts, m_orep, pwr_eBix_sys, (void *) &attr);
     if ( EVEN(sts)) throw wb_error(sts);
 
     strcpy( m_pgmname, attr.Info.PgmName);
@@ -102,7 +102,7 @@ wb_adrep::wb_adrep( wb_orepdbs& o): m_nRef(0), m_orep(&o), m_sts(LDH__SUCCESS),
   {
     pwr_sBuffer attr;
 
-    m_orep->m_vrep->readBody( &sts, m_orep, pwr_eBix_sys, (void *) &attr);
+    m_orep->vrep()->readBody( &sts, m_orep, pwr_eBix_sys, (void *) &attr);
     if ( EVEN(sts)) throw wb_error(sts);
 
     strcpy( m_pgmname, attr.Info.PgmName);
@@ -134,7 +134,7 @@ wb_adrep *wb_adrep::next( pwr_tStatus *sts)
   if ( EVEN(*sts))
     return 0;
 
-  wb_adrep *adrep = new wb_adrep( (wb_orepdbs& ) *orep);
+  wb_adrep *adrep = new wb_adrep( (wb_orep& ) *orep);
   return adrep;
 }
 
@@ -144,7 +144,7 @@ wb_adrep *wb_adrep::prev( pwr_tStatus *sts)
   if ( EVEN(*sts))
     return 0;
 
-  wb_adrep *adrep = new wb_adrep( (wb_orepdbs& ) *orep);
+  wb_adrep *adrep = new wb_adrep( (wb_orep& ) *orep);
   return adrep;
 }
 
@@ -210,7 +210,7 @@ pwr_tCid wb_adrep::cid()
 wb_vrep *wb_adrep::vrep() const
 {
   if (EVEN(m_sts)) throw wb_error(m_sts);
-  return m_orep->m_vrep;
+  return m_orep->vrep();
 }
 
 const char *wb_adrep::name() const
@@ -250,5 +250,5 @@ void *wb_adrep::body( void *p)
     throw wb_error(LDH__NYI);
   }
 
-  return m_orep->m_vrep->readBody( &sts, m_orep, pwr_eBix_sys, p);
+  return m_orep->vrep()->readBody( &sts, m_orep, pwr_eBix_sys, p);
 }

@@ -9,13 +9,9 @@
 class wb_vrepdb : public wb_vrep
 {
 protected:
-  map<int, wb_srep*> m_srep;
-  //wb_session m_wsession;
-
   wb_erep *m_erep;
   wb_merep *m_merep;
 
-  unsigned int m_nSession;
   unsigned int m_nRef;
 
   char m_fileName[512];
@@ -125,16 +121,17 @@ public:
   virtual bool exportMeta(wb_import &e);
 
   virtual bool exportTree(wb_treeimport &i, pwr_tOid oid) { return false;}
-  virtual bool importTree() { return false;}
-  virtual bool importTreeObject(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
+  virtual bool importTree(bool keepref) { return false;}
+  virtual bool importTreeObject(wb_merep *merep, pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
                           pwr_tOid boid, const char *name,
                           size_t rbSize, size_t dbSize, void *rbody, void *dbody)
     { return false;}
   virtual bool importPaste() { return false;}
-  virtual bool importPasteObject(pwr_tOid destination, pwr_tOid oid, 
-			  pwr_tCid cid, pwr_tOid poid,
-                          pwr_tOid boid, const char *name,
-			  size_t rbSize, size_t dbSize, void *rbody, void *dbody)
+  virtual bool importPasteObject(pwr_tOid destination, ldh_eDest destcode, 
+				 bool keepoid, pwr_tOid oid, 
+				 pwr_tCid cid, pwr_tOid poid,
+				 pwr_tOid boid, const char *name,
+				 size_t rbSize, size_t dbSize, void *rbody, void *dbody)
     { return false;}
 
 #if 0
@@ -145,6 +142,7 @@ public:
 
   wb_orepdb *new_wb_orepdb(size_t size);
   void delete_wb_orepdb(void *p);
+  virtual bool accessSupported( ldh_eAccess access) { return true;}
 
 };
 

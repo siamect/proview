@@ -11,12 +11,12 @@ class wb_bdrep;
 class wb_mvrep;
 class wb_orep;
 class wb_orepdbs;
-
+class wb_merep;
 
 class wb_cdrep 
 {
   int m_nRef;
-  wb_orepdbs *m_orep;
+  wb_orep *m_orep;
   pwr_tStatus m_sts;
 
 public:
@@ -55,8 +55,17 @@ public:
   wb_orep *menuAfter( pwr_tStatus *sts, wb_orep *orep, void **o);
   wb_orep *menuFirst( pwr_tStatus *sts, wb_orep *orep, void **o);
 
+  pwr_tTime ohTime();
+  void convertSubClass( pwr_tCid cid, wb_merep *merep,
+			void *body_source, void *body_target);
+  void convertObject( wb_merep *merep, void *rbody, void *dbody,
+		      size_t *cnv_rbody_size, size_t *cnv_dbody_size,
+		      void **cnv_rbody, void **cnv_dbody);
 
   pwr_tStatus sts() { return m_sts;}
 };
 
 #endif
+
+
+

@@ -8,6 +8,7 @@ Copyright (C) 2002 by Stiftelsen Proview.
 #ifndef wb_session_h
 #define wb_session_h
 
+
 #include "pwr.h"
 //#include "wb_vrep.h"
 #include "wb_object.h"
@@ -42,6 +43,7 @@ public:
   wb_session(wb_volume &v);
   wb_session(wb_session &s);
   ~wb_session();
+  wb_session& operator=(const wb_session& x);
     
   // Calls redirected to srep.
     
@@ -61,7 +63,6 @@ public:
 
   wb_object createObject(wb_cdef cdef, wb_destination d, wb_name name);
   wb_object copyObject(wb_object o, wb_destination d, wb_name name);
-  bool copyOset(wb_oset *oset, wb_destination d);
 
   bool moveObject(wb_object o, wb_destination d);
   bool renameObject(wb_object o, wb_name name);
@@ -72,12 +73,22 @@ public:
   bool writeAttribute(wb_attribute &a, void *p);
   bool writeBody() {return false;} // Fix
 
+  bool copyOset( pwr_sAttrRef *arp, bool keepref);
+  bool cutOset( pwr_sAttrRef *arp, bool keepref);
+  bool pasteOset( pwr_tOid doid, ldh_eDest dest, 
+		  bool keepoid, char *buffer);
+
+
   void getAllMenuItems( ldh_sMenuCall	*ip, ldh_sMenuItem **Item, wb_cdrep *cdrep,
 			wb_orep *o, void *o_body, pwr_tUInt32 Level,
 			int *nItems, int AddSeparator);
 
   pwr_tStatus getMenu( ldh_sMenuCall *ip);
   pwr_tStatus callMenuMethod( ldh_sMenuCall *mcp, int Index);
+
+  void editorContext( void *ctx) { m_srep->editorContext( ctx);}
+  void sendThisSession( ldh_tSessionCb thisSessionCb) { m_srep->sendThisSession( thisSessionCb);}
+  void sendOtherSession( ldh_tSessionCb otherSessionCb) { m_srep->sendOtherSession( otherSessionCb);}
 };
 
 

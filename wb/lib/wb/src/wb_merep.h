@@ -22,6 +22,8 @@ class wb_merep {
 
 public:
   wb_merep( wb_erep *erep, wb_vrep *vrep = 0) : m_erep(erep), m_vrep(vrep) {}
+  ~wb_merep();
+  wb_merep( const wb_merep& x, wb_vrep *vrep);
   wb_mvrep *volume(pwr_tStatus *sts);
   wb_mvrep *volume(pwr_tStatus *sts, pwr_tVid vid);
   wb_mvrep *volume(pwr_tStatus *sts, const char *name);

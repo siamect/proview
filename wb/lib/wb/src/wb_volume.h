@@ -91,7 +91,6 @@ public:
   pwr_tStatus triggPostCreate( wb_orep *orep);
   pwr_tStatus triggPostMove( wb_orep *orep);
   pwr_tStatus triggPostUnadopt( wb_orep *father, wb_orep *orep);
-
 };
 
 #endif

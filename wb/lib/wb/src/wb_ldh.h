@@ -59,6 +59,8 @@ typedef struct ldh_s_RefUsage	ldh_sRefUsage;
 typedef struct ldh_s_SessInfo	ldh_sSessInfo;
 typedef struct ldh_s_LCB	ldh_sLCB;
 
+typedef pwr_tStatus (*ldh_tSessionCb) (void *, ldh_sEvent *);
+
 typedef union ldh_m_MenuFlags	ldh_mMenuFlags;
 
 typedef enum {
@@ -102,6 +104,7 @@ typedef enum {
 
   ldh_eEvent_MenuMethodCalled,
   ldh_eEvent_ObjectTreeCopied,
+  ldh_eEvent_ObjectTreeDeleted,
 
   ldh_eEvent_
 } ldh_eEvent;
@@ -424,7 +427,8 @@ pwr_tStatus ldh_ConnectObjectByXRef (
 
 pwr_tStatus ldh_Copy (
   ldh_tSession	Session,
-  pwr_sAttrRef		*aref
+  pwr_sAttrRef	*aref,
+  int           keepref
 );
 
 pwr_tStatus ldh_CopyObject (
@@ -468,7 +472,8 @@ ldh_CreateVolume (
 
 pwr_tStatus ldh_Cut (
   ldh_tSession	session,
-  pwr_sAttrRef		*aref
+  pwr_sAttrRef	*aref,
+  int		keepref
 );
 
 pwr_tStatus
@@ -774,20 +779,14 @@ void
 ldh_AddThisSessionCallback (
   ldh_tSession	session,
   void		*editorContext,
-  pwr_tStatus	(*receiveThisSession)(
-		  void *editorContext,
-		  ldh_sEvent *event
-		)
+  ldh_tSessionCb receiveThisSession
 );
 
 void
 ldh_AddOtherSessionCallback (
   ldh_tSession	session,
   void		*editorContext,
-  pwr_tStatus	(*receiveOtherSession)(
-		  void *editorContext,
-		  ldh_sEvent *event
-		)
+  ldh_tSessionCb receiveOtherSession
 );
 
 pwr_tStatus
@@ -806,7 +805,9 @@ ldh_OpenWB (
 pwr_tStatus ldh_Paste (
   ldh_tSession   	Session,
   pwr_tObjid	    	dstoid,
-  ldh_eDest	    	dest
+  ldh_eDest	    	dest,
+  int			keepoid,
+  char			*buffer
 );
 
 pwr_tStatus

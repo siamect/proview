@@ -294,6 +294,12 @@ pwr_sAttrRef *wb_attribute::aref(pwr_sAttrRef *arp) const
   return arp;
 }
 
+pwr_tOid wb_attribute::aoid() const
+{
+  check();
+  return m_orep->oid();
+}
+
 size_t wb_attribute::size() const
 {
   check();

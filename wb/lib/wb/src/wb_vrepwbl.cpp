@@ -30,6 +30,9 @@ wb_vrepwbl::~wb_vrepwbl()
     delete file[i]->lexer;
     delete file[i];
   }
+
+  if ( m_merep != m_erep->merep())
+    delete m_merep;
 }
 
 wb_orep *wb_vrepwbl::object(pwr_tStatus *sts, pwr_tOid oid)
@@ -184,7 +187,7 @@ bool wb_vrepwbl::exportTree(wb_treeimport &i, pwr_tOid oid)
 {
   ref_wblnode n = findObject( oid.oix);
   if ( !n)
-    return false;
+    throw wb_error(LDH__NOSUCHOBJ);
 
   n->exportTree( i, true);
   return true;
@@ -250,6 +253,16 @@ int wb_vrepwbl::load( const char *fname)
     cout << "** Errors when loading volume: " << error_cnt << " errors found" << endl;
   else
     cout << "-- Volume " << volume_name << " loaded" << endl;
+
+  // If classvolume, insert itself into its merep
+  if ( cid() == pwr_eClass_ClassVolume ) {
+    m_merep = new wb_merep( *m_erep->merep(), this);
+    wb_mvrep *mvrep = m_merep->volume( &sts, vid());
+    if ( ODD(sts))
+      m_merep->removeDbs( &sts, mvrep);
+    m_merep->addDbs( &sts, (wb_mvrep *)this);
+    m_nRef--;
+  }
   return rsts;
 }
 
@@ -1288,6 +1301,18 @@ wb_orep *wb_vrepwbl::first(pwr_tStatus *sts, const wb_orep *o)
 
 wb_orep *wb_vrepwbl::child(pwr_tStatus *sts, const wb_orep *o, wb_name &name)
 {
+  wb_orep *child = first( sts, o);
+  while( ODD(*sts)) {
+    if ( name.segmentIsEqual( child->name())) {
+      *sts = LDH__SUCCESS;
+      return child;
+    }
+    child->ref();
+    wb_orep *prev = child;
+    child = after( sts, child);
+    prev->unref();
+  }
+  *sts = LDH__NOSUCHOBJ;
   return 0;
 }
 

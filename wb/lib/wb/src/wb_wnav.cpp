@@ -1124,15 +1124,17 @@ static int wnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
   switch ( event->event)
   {
     case flow_eEvent_Key_Up:
+    case flow_eEvent_Key_ShiftUp:
     {
       brow_tNode	*node_list;
       int		node_count;
-      brow_tObject	object;
+      brow_tObject	object, current;
       int		sts;
 
       brow_GetSelectedNodes( wnav->brow->ctx, &node_list, &node_count);
       if ( !node_count)
       {
+	current = 0;
         if ( wnav->last_selected && wnav->object_exist( wnav->last_selected))
           object = wnav->last_selected;
         else
@@ -1143,9 +1145,22 @@ static int wnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
       }
       else
       {
-        sts = brow_GetPrevious( wnav->brow->ctx, node_list[0], &object);
-        if ( EVEN(sts))
-        {
+	if ( node_count == 1)
+	  current = node_list[0];
+	else {
+	  bool found = false;
+          for ( int i = 0; i < node_count; i++) {
+	    if ( node_list[i] == wnav->last_selected)
+	      found = true;
+	  }
+	  if ( found)
+	    current = wnav->last_selected;
+	  else
+	    current = node_list[0];
+	}
+	sts = brow_GetPrevious( wnav->brow->ctx, current, &object);
+        if ( EVEN(sts)) {
+	  current = 0;
           sts = brow_GetLast( wnav->brow->ctx, &object);
           if ( EVEN(sts))
 	  {
@@ -1155,9 +1170,30 @@ static int wnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
  	  }
         }
       }
-      brow_SelectClear( wnav->brow->ctx);
-      brow_SetInverse( object, 1);
-      brow_SelectInsert( wnav->brow->ctx, object);
+
+      if ( event->event ==  flow_eEvent_Key_ShiftUp) {
+	bool found = false;
+	for ( int i = 0; i < node_count; i++) {
+	  if ( node_list[i] == object)
+	    found = true;
+	}
+	if ( found) {
+	  // Previous object is already selected, unselect current
+	  if ( current) {
+	    brow_SetInverse( current, 0);
+	    brow_SelectRemove( wnav->brow->ctx, current);
+	  }
+	}
+	else {
+	  brow_SetInverse( object, 1);
+	  brow_SelectInsert( wnav->brow->ctx, object);
+	}
+      }
+      else {
+        brow_SelectClear( wnav->brow->ctx);
+        brow_SetInverse( object, 1);
+        brow_SelectInsert( wnav->brow->ctx, object);
+      }
       if ( !brow_IsVisible( wnav->brow->ctx, object))
         brow_CenterObject( wnav->brow->ctx, object, 0.25);
       if ( node_count)
@@ -1166,15 +1202,17 @@ static int wnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
       break;
     }
     case flow_eEvent_Key_Down:
+    case flow_eEvent_Key_ShiftDown:
     {
       brow_tNode	*node_list;
       int		node_count;
-      brow_tObject	object;
+      brow_tObject	object, current;
       int		sts;
 
       brow_GetSelectedNodes( wnav->brow->ctx, &node_list, &node_count);
       if ( !node_count)
       {
+	current = 0;
         if ( wnav->last_selected && wnav->object_exist( wnav->last_selected))
           object = wnav->last_selected;
         else
@@ -1185,9 +1223,22 @@ static int wnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
       }
       else
       {
-        sts = brow_GetNext( wnav->brow->ctx, node_list[0], &object);
-        if ( EVEN(sts))
-        {
+	if ( node_count == 1)
+	  current = node_list[0];
+	else {
+	  bool found = false;
+          for ( int i = 0; i < node_count; i++) {
+	    if ( node_list[i] == wnav->last_selected)
+	      found = true;
+	  }
+	  if ( found)
+	    current = wnav->last_selected;
+	  else
+	    current = node_list[0];
+	}
+	sts = brow_GetNext( wnav->brow->ctx, current, &object);
+        if ( EVEN(sts)) {
+	  current = 0;
           sts = brow_GetFirst( wnav->brow->ctx, &object);
           if ( EVEN(sts))
 	  {
@@ -1197,9 +1248,29 @@ static int wnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
  	  }
         }
       }
-      brow_SelectClear( wnav->brow->ctx);
-      brow_SetInverse( object, 1);
-      brow_SelectInsert( wnav->brow->ctx, object);
+      if ( event->event ==  flow_eEvent_Key_ShiftDown) {
+	bool found = false;
+	for ( int i = 0; i < node_count; i++) {
+	  if ( node_list[i] == object)
+	    found = true;
+	}
+	if ( found) {
+	  // Previous object is already selected, unselect current
+	  if ( current) {
+	    brow_SetInverse( current, 0);
+	    brow_SelectRemove( wnav->brow->ctx, current);
+	  }
+	}
+	else {
+	  brow_SetInverse( object, 1);
+	  brow_SelectInsert( wnav->brow->ctx, object);
+	}
+      }
+      else {
+        brow_SelectClear( wnav->brow->ctx);
+	brow_SetInverse( object, 1);
+	brow_SelectInsert( wnav->brow->ctx, object);
+      }
       if ( !brow_IsVisible( wnav->brow->ctx, object))
         brow_CenterObject( wnav->brow->ctx, object, 0.75);
       if ( node_count)
@@ -2862,6 +2933,11 @@ void WNav::ldh_event( ldh_sEvent *event)
         ldh_refresh( pwr_cNObjid);
       break;
 
+    case ldh_eEvent_ObjectTreeCopied:
+      if ( find( event->Object, (void **) &item))
+        ldh_refresh( event->Object);
+      break;
+
     case ldh_eEvent_SessionReverted:
       ldh_refresh( pwr_cNObjid);
       break;
@@ -2922,6 +2998,10 @@ void WNav::enable_events( WNavBrow *brow)
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_Up, flow_eEventType_CallBack, 
 	wnav_brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_Down, flow_eEventType_CallBack, 
+	wnav_brow_cb);
+  brow_EnableEvent( brow->ctx, flow_eEvent_Key_ShiftUp, flow_eEventType_CallBack, 
+	wnav_brow_cb);
+  brow_EnableEvent( brow->ctx, flow_eEvent_Key_ShiftDown, flow_eEventType_CallBack, 
 	wnav_brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_PF1, flow_eEventType_CallBack, 
 	wnav_brow_cb);

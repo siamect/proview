@@ -7,7 +7,7 @@
 
 void wb_vrepdbs::unref()
 {
-  if (--m_nRef == 0)
+  if (--m_nRef == 0) 
     delete this;
 }
 
@@ -17,7 +17,7 @@ wb_vrep *wb_vrepdbs::ref()
   return this;
 }
 
-wb_vrepdbs::wb_vrepdbs(wb_erep *erep, const char *fileName) : m_erep(erep)
+wb_vrepdbs::wb_vrepdbs(wb_erep *erep, const char *fileName) : m_erep(erep), m_nRef(0)
 {
   strcpy(m_fileName, fileName);
   m_isDbsenvLoaded = false;
@@ -489,7 +489,7 @@ bool wb_vrepdbs::exportTree(wb_treeimport &i, pwr_tOid oid)
 
   dbs_sObject *op = dbs_OidToObject( &sts, dbsenv(), oid);
   if (op == 0)
-    return false;
+    throw wb_error(LDH__NOSUCHOBJ);
 
   exportTreeObject( i, op, true);
   return true;
@@ -516,7 +516,7 @@ bool wb_vrepdbs::exportTreeObject(wb_treeimport &i, dbs_sObject *op, bool isRoot
   if ( op->dbody.size)
     dbody = dbs_Body(&sts, dbsenv(), op, pwr_eBix_dev);
 
-  i.importTreeObject( op->oid, op->cid, parentoid, beforeoid, op->name, 
+  i.importTreeObject( m_merep, op->oid, op->cid, parentoid, beforeoid, op->name, 
 		      op->rbody.size, op->dbody.size, rbody, dbody);
 
   if ( first)

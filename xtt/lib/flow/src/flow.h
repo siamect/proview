@@ -195,6 +195,8 @@ typedef enum {
 	flow_eEvent_Key_PF4,
 	flow_eEvent_Key_ShiftRight,
 	flow_eEvent_Key_ShiftLeft,
+	flow_eEvent_Key_ShiftUp,
+	flow_eEvent_Key_ShiftDown,
 	flow_eEvent_MB1Down,
 	flow_eEvent_MB1Up,
 	flow_eEvent_MB2Down,

@@ -406,10 +406,19 @@ palette PlcEditorPalette
     class Text
     class Title
   }
-  menu Trace
+  menu String
   {
-    class AAnalyse
-    class DAnalyse
+    class AtoStr
+    class CStoSv
+    class CStoSp
+    class DtoStr
+    class GetSp
+    class GetSv
+    class ItoStr
+    class StoSp
+    class StoSv
+    class Strcat
+    class SubStr
   }
   menu NMps NMps
   {
@@ -459,19 +468,14 @@ palette PlcEditorPalette
     class TLogOpen
     class TLogModify
   }
-  menu String
+  menu Simulate
   {
-    class AtoStr
-    class CStoSv
-    class CStoSp
-    class DtoStr
-    class GetSp
-    class GetSv
-    class ItoStr
-    class StoSp
-    class StoSv
-    class Strcat
-    class SubStr
+    class CStoAi
+    class ResDi
+    class SetDi
+    class StoAi
+    class StoDi
+    class StoPi
   }
 }
 palette PlcEditorConPalette

@@ -3,11 +3,14 @@
 
 #include <map>
 #include "pwr.h"
+#include "wb_ldh.h"
 
 class wb_treeexport;
 class wb_adrep;
 class wb_vrep;
 class wb_orep;
+
+class wb_merep;
 
 class wb_treeimport
 {
@@ -23,12 +26,13 @@ class wb_treeimport
 
 public:
   virtual ~wb_treeimport() {}
-  virtual bool importTree() = 0;
-  virtual bool importTreeObject(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
+  virtual bool importTree( bool keepref) = 0;
+  virtual bool importTreeObject(wb_merep *merep, pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
                           pwr_tOid boid, const char *name,
                           size_t rbSize, size_t dbSize, void *rbody, void *dbody) = 0;
-  virtual bool importPaste() = 0; 
-  virtual bool importPasteObject(pwr_tOid destination, pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
+  virtual bool importPaste() = 0;
+  virtual bool importPasteObject(pwr_tOid destination, ldh_eDest destcode, bool keepoid,
+			  pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
                           pwr_tOid boid, const char *name,
                           size_t rbSize, size_t dbSize, void *rbody, void *dbody) = 0;
   bool importTranslationTableInsert( pwr_tOix from, pwr_tOix to);
@@ -39,6 +43,9 @@ public:
 };
 
 #endif
+
+
+
 
 
 

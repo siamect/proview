@@ -63,6 +63,8 @@ extern "C" {
 #include "wb_wda.h"
 #include "wb_wtt.h"
 #include "wb_wnav_msg.h"
+#include "wb_volume.h"
+#include "wb_env.h"
 
 
 #define MESSAGE_RETURN_STS(sts)\
@@ -232,6 +234,7 @@ void Wtt::menu_setup()
         XtSetValues( menu_cut_w, sensitive, 1);
         XtSetValues( menu_copy_w, sensitive, 1);
         XtSetValues( menu_paste_w, sensitive, 1);
+        XtSetValues( menu_pasteinto_w, sensitive, 1);
         XtSetValues( menu_rename_w, sensitive, 1);
         XtSetValues( menu_utilities_w, sensitive, 1);
         XtSetValues( menu_openplc_w, nosensitive, 1);
@@ -240,14 +243,16 @@ void Wtt::menu_setup()
         XtSetValues( menu_createboot_w, nosensitive, 1);
         XtSetValues( menu_distribute_w, nosensitive, 1);
         XtSetValues( menu_change_value_w, sensitive, 1);
+        XtSetValues( menu_edit_w, sensitive, 1);
       }
       else
       {
         XtSetValues( menu_save_w, nosensitive, 1);
         XtSetValues( menu_revert_w, nosensitive, 1);
         XtSetValues( menu_cut_w, nosensitive, 1);
-        XtSetValues( menu_copy_w, nosensitive, 1);
+        XtSetValues( menu_copy_w, sensitive, 1);
         XtSetValues( menu_paste_w, nosensitive, 1);
+        XtSetValues( menu_pasteinto_w, nosensitive, 1);
         XtSetValues( menu_rename_w, nosensitive, 1);
         XtSetValues( menu_utilities_w, sensitive, 1);
         XtSetValues( menu_openplc_w, nosensitive, 1);
@@ -256,6 +261,7 @@ void Wtt::menu_setup()
         XtSetValues( menu_createboot_w, sensitive, 1);
         XtSetValues( menu_distribute_w, sensitive, 1);
         XtSetValues( menu_change_value_w, nosensitive, 1);
+        XtSetValues( menu_edit_w, sensitive, 1);
       }
       break;
     case wb_eType_Volume:
@@ -266,6 +272,7 @@ void Wtt::menu_setup()
         XtSetValues( menu_cut_w, sensitive, 1);
         XtSetValues( menu_copy_w, sensitive, 1);
         XtSetValues( menu_paste_w, sensitive, 1);
+        XtSetValues( menu_pasteinto_w, sensitive, 1);
         XtSetValues( menu_rename_w, sensitive, 1);
         XtSetValues( menu_utilities_w, sensitive, 1);
         XtSetValues( menu_openplc_w, nosensitive, 1);
@@ -274,14 +281,16 @@ void Wtt::menu_setup()
         XtSetValues( menu_createboot_w, nosensitive, 1);
         XtSetValues( menu_distribute_w, nosensitive, 1);
         XtSetValues( menu_change_value_w, sensitive, 1);
+        XtSetValues( menu_edit_w, sensitive, 1);
       }
       else
       {
         XtSetValues( menu_save_w, nosensitive, 1);
         XtSetValues( menu_revert_w, nosensitive, 1);
         XtSetValues( menu_cut_w, nosensitive, 1);
-        XtSetValues( menu_copy_w, nosensitive, 1);
+        XtSetValues( menu_copy_w, sensitive, 1);
         XtSetValues( menu_paste_w, nosensitive, 1);
+        XtSetValues( menu_pasteinto_w, nosensitive, 1);
         XtSetValues( menu_rename_w, nosensitive, 1);
         XtSetValues( menu_utilities_w, sensitive, 1);
         XtSetValues( menu_openplc_w, sensitive, 1);
@@ -290,6 +299,7 @@ void Wtt::menu_setup()
         XtSetValues( menu_createboot_w, sensitive, 1);
         XtSetValues( menu_distribute_w, sensitive, 1);
         XtSetValues( menu_change_value_w, nosensitive, 1);
+        XtSetValues( menu_edit_w, sensitive, 1);
       }
       break; 
    case wb_eType_Class:
@@ -300,6 +310,7 @@ void Wtt::menu_setup()
         XtSetValues( menu_cut_w, sensitive, 1);
         XtSetValues( menu_copy_w, sensitive, 1);
         XtSetValues( menu_paste_w, sensitive, 1);
+        XtSetValues( menu_pasteinto_w, sensitive, 1);
         XtSetValues( menu_rename_w, sensitive, 1);
         XtSetValues( menu_utilities_w, sensitive, 1);
         XtSetValues( menu_openplc_w, nosensitive, 1);
@@ -308,14 +319,16 @@ void Wtt::menu_setup()
         XtSetValues( menu_createboot_w, nosensitive, 1);
         XtSetValues( menu_distribute_w, nosensitive, 1);
         XtSetValues( menu_change_value_w, sensitive, 1);
+        XtSetValues( menu_edit_w, nosensitive, 1);
       }
       else
       {
         XtSetValues( menu_save_w, nosensitive, 1);
         XtSetValues( menu_revert_w, nosensitive, 1);
         XtSetValues( menu_cut_w, nosensitive, 1);
-        XtSetValues( menu_copy_w, nosensitive, 1);
+        XtSetValues( menu_copy_w, sensitive, 1);
         XtSetValues( menu_paste_w, nosensitive, 1);
+        XtSetValues( menu_pasteinto_w, nosensitive, 1);
         XtSetValues( menu_rename_w, nosensitive, 1);
         XtSetValues( menu_utilities_w, sensitive, 1);
         XtSetValues( menu_openplc_w, nosensitive, 1);
@@ -324,16 +337,18 @@ void Wtt::menu_setup()
         XtSetValues( menu_createboot_w, sensitive, 1);
         XtSetValues( menu_distribute_w, sensitive, 1);
         XtSetValues( menu_change_value_w, nosensitive, 1);
+        XtSetValues( menu_edit_w, nosensitive, 1);
       }
       break;
     case wb_eType_Buffer:
       if ( editmode)
       {
-        XtSetValues( menu_save_w, sensitive, 1);
+        XtSetValues( menu_save_w, nosensitive, 1);
         XtSetValues( menu_revert_w, nosensitive, 1);
         XtSetValues( menu_cut_w, sensitive, 1);
         XtSetValues( menu_copy_w, sensitive, 1);
         XtSetValues( menu_paste_w, sensitive, 1);
+        XtSetValues( menu_pasteinto_w, sensitive, 1);
         XtSetValues( menu_rename_w, sensitive, 1);
         XtSetValues( menu_utilities_w, sensitive, 1);
         XtSetValues( menu_openplc_w, nosensitive, 1);
@@ -342,14 +357,16 @@ void Wtt::menu_setup()
         XtSetValues( menu_createboot_w, nosensitive, 1);
         XtSetValues( menu_distribute_w, nosensitive, 1);
         XtSetValues( menu_change_value_w, sensitive, 1);
+        XtSetValues( menu_edit_w, sensitive, 1);
       }
       else
       {
         XtSetValues( menu_save_w, nosensitive, 1);
         XtSetValues( menu_revert_w, nosensitive, 1);
         XtSetValues( menu_cut_w, nosensitive, 1);
-        XtSetValues( menu_copy_w, nosensitive, 1);
+        XtSetValues( menu_copy_w, sensitive, 1);
         XtSetValues( menu_paste_w, nosensitive, 1);
+        XtSetValues( menu_pasteinto_w, nosensitive, 1);
         XtSetValues( menu_rename_w, nosensitive, 1);
         XtSetValues( menu_utilities_w, sensitive, 1);
         XtSetValues( menu_openplc_w, sensitive, 1);
@@ -358,6 +375,7 @@ void Wtt::menu_setup()
         XtSetValues( menu_createboot_w, nosensitive, 1);
         XtSetValues( menu_distribute_w, nosensitive, 1);
         XtSetValues( menu_change_value_w, nosensitive, 1);
+        XtSetValues( menu_edit_w, sensitive, 1);
       }
       break; 
     default:
@@ -844,12 +862,18 @@ int Wtt::detach_volume()
     return 0;
   }
 
+  wb_volume *v = (wb_volume *) volctx;
+  wb_erep *erep = (wb_erep *)(*(wb_env *)wbctx);
+  if ( v->vid() != ldh_cWBVolLocal)
+    erep->removeExtern( &sts, (wb_vrep *) *v);  
+
   sts = ldh_DetachVolume( wbctx, volctx);
   if ( EVEN(sts))
   {
     message( 'E', wnav_get_message( sts));
     return 0;
   }
+
   volid = 0;
   volctx = 0;
   ldhses = 0;
@@ -975,6 +999,8 @@ int Wtt::set_edit()
     ldh_AddOtherSessionCallback( ldhses, (void *)this,
 		wtt_ldh_other_session_cb);
     message( 'E', wnav_get_message( sts));
+    wnav->ldhses = ldhses;
+    wnavnode->ldhses = ldhses;
     return sts;
   }
   ldh_AddThisSessionCallback( ldhses, (void *)this,
@@ -1511,7 +1537,7 @@ static void wtt_activate_copy( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
     return;
   }
 
-  sts = ldh_Copy( wtt->ldhses, sel_list);
+  sts = ldh_Copy( wtt->ldhses, sel_list, 0);
   if (EVEN(sts))
     MESSAGE_RETURN_STS( sts);
   if ( sel_cnt == 1)
@@ -1544,7 +1570,7 @@ static void wtt_activate_cut( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
     return;
   }
 
-  sts = ldh_Cut( wtt->ldhses, sel_list);
+  sts = ldh_Cut( wtt->ldhses, sel_list, false);
   if (EVEN(sts))
     MESSAGE_RETURN_STS( sts);
 
@@ -1565,7 +1591,7 @@ static void wtt_activate_paste( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
 
   // I window is empty, paste on root level
   if ( wtt->wnav->is_empty() && wtt->wnavnode->is_empty()) {
-    sts = ldh_Paste( wtt->ldhses, pwr_cNObjid, ldh_eDest_IntoLast); 
+    sts = ldh_Paste( wtt->ldhses, pwr_cNObjid, ldh_eDest_After, 0, 0);
     if (EVEN(sts))
       MESSAGE_RETURN_STS( sts);
     return;
@@ -1593,9 +1619,59 @@ static void wtt_activate_paste( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
 
   wtt->set_clock_cursor();
   if ( sel_cnt1)
-    sts = ldh_Paste( wtt->ldhses, sel_list1->Objid, ldh_eDest_After);
+    sts = ldh_Paste( wtt->ldhses, sel_list1->Objid, ldh_eDest_After, 0, 0);
   else
-    sts = ldh_Paste( wtt->ldhses, sel_list2->Objid, ldh_eDest_After);
+    sts = ldh_Paste( wtt->ldhses, sel_list2->Objid, ldh_eDest_After, 0, 0);
+  wtt->reset_cursor();
+  if ( sel_cnt1 > 0)
+    free( (char *)sel_list1);
+  if ( sel_cnt2 > 0)
+    free( (char *)sel_list2);
+  if (EVEN(sts))
+    MESSAGE_RETURN_STS( sts);
+}
+static void wtt_activate_pasteinto( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
+{
+  pwr_sAttrRef	*sel_list1, *sel_list2;
+  int           *sel_is_attr1, *sel_is_attr2;
+  int 		sel_cnt1, sel_cnt2;
+  int           sts;
+
+  wtt->message( ' ', "");
+
+  // I window is empty, paste on root level
+  if ( wtt->wnav->is_empty() && wtt->wnavnode->is_empty()) {
+    sts = ldh_Paste( wtt->ldhses, pwr_cNObjid, ldh_eDest_After, 0, 0);
+    if (EVEN(sts))
+      MESSAGE_RETURN_STS( sts);
+    return;
+  }    
+
+  // Get selections in w1 or w2
+  sts = wtt->wnav->get_select( &sel_list1, &sel_is_attr1, &sel_cnt1);
+  sts = wtt->wnavnode->get_select( &sel_list2, &sel_is_attr2, &sel_cnt2);
+  if ( !sel_cnt1 && !sel_cnt2) {
+    wtt->message( 'I', "Select destination object");
+    return;
+  }
+  if ( (sel_cnt1 + sel_cnt2) != 1) {
+    wtt->message( 'I', "Select one destination object");
+    if ( sel_cnt1 > 0) {
+      free( (char *)sel_list1);
+      free( (char *)sel_is_attr1);
+    }
+    if ( sel_cnt2 > 0) {
+      free( (char *)sel_list2);
+      free( (char *)sel_is_attr2);
+    }
+    return;
+  }
+
+  wtt->set_clock_cursor();
+  if ( sel_cnt1)
+    sts = ldh_Paste( wtt->ldhses, sel_list1->Objid, ldh_eDest_IntoFirst, 0, 0);
+  else
+    sts = ldh_Paste( wtt->ldhses, sel_list2->Objid, ldh_eDest_IntoFirst, 0, 0);
   wtt->reset_cursor();
   if ( sel_cnt1 > 0)
     free( (char *)sel_list1);
@@ -1838,6 +1914,14 @@ static void wtt_activate_openvolume( Widget w, Wtt *wtt, XmAnyCallbackStruct *da
   wtt->set_clock_cursor();
   if ( wtt->open_volume_cb)
     (wtt->open_volume_cb) ( wtt, wb_eType_Volume, NULL, wow_eFileSelType_All);
+  wtt->reset_cursor();
+}
+ 
+static void wtt_activate_openbuffer( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
+{
+  wtt->set_clock_cursor();
+  if ( wtt->open_volume_cb)
+    (wtt->open_volume_cb) ( wtt, wb_eType_Buffer, NULL, wow_eFileSelType_All);
   wtt->reset_cursor();
 }
  
@@ -2128,6 +2212,8 @@ void wtt_create_menubutton( Widget w, Wtt *wtt)
     case 11: wtt->menu_copy_w = w; break;
     case 12: wtt->menu_paste_w = w; break;
     case 13: wtt->menu_compile_w = w; break;
+    case 14: wtt->menu_pasteinto_w = w; break;
+    case 15: wtt->menu_edit_w = w; break;
     default:
       ;
   }
@@ -3162,6 +3248,7 @@ Wtt::Wtt(
 	{"wtt_activate_cut",(caddr_t)wtt_activate_cut },
 	{"wtt_activate_copy",(caddr_t)wtt_activate_copy },
 	{"wtt_activate_paste",(caddr_t)wtt_activate_paste },
+	{"wtt_activate_pasteinto",(caddr_t)wtt_activate_pasteinto },
 	{"wtt_activate_rename",(caddr_t)wtt_activate_rename },
 	{"wtt_activate_configure",(caddr_t)wtt_activate_configure },
 	{"wtt_activate_utilities",(caddr_t)wtt_activate_utilities },
@@ -3171,6 +3258,7 @@ Wtt::Wtt(
 	{"wtt_activate_openvolobject",(caddr_t)wtt_activate_openvolobject },
 	{"wtt_activate_confproject",(caddr_t)wtt_activate_confproject },
 	{"wtt_activate_openvolume",(caddr_t)wtt_activate_openvolume },
+	{"wtt_activate_openbuffer",(caddr_t)wtt_activate_openbuffer },
 	{"wtt_activate_openfile_dbs",(caddr_t)wtt_activate_openfile_dbs },
 	{"wtt_activate_openfile_wbl",(caddr_t)wtt_activate_openfile_wbl },
 	{"wtt_activate_spreadsheet",(caddr_t)wtt_activate_spreadsheet },

@@ -21,7 +21,7 @@ wb_vrep *wb_vrepdb::ref()
 
 
 wb_vrepdb::wb_vrepdb(wb_erep *erep, const char *fileName) :
-  m_erep(erep), m_ohead()
+  m_erep(erep), m_nRef(0), m_ohead()
 {  
   strcpy(m_fileName, fileName);
 

@@ -9,6 +9,19 @@
 #include "wb_ldh_msg.h"
 
 
+wb_merep::wb_merep( const wb_merep& x, wb_vrep *vrep) : 
+  m_mvrepdbs(x.m_mvrepdbs), m_erep(x.m_erep), m_vrep(vrep)
+{
+  for ( mvrep_iterator it = m_mvrepdbs.begin(); it != m_mvrepdbs.end(); it++)
+    it->second->ref();
+}
+
+wb_merep::~wb_merep()
+{
+  for ( mvrep_iterator it = m_mvrepdbs.begin(); it != m_mvrepdbs.end(); it++)
+    it->second->unref();
+}
+
 // Get first volume
 wb_mvrep *wb_merep::volume( pwr_tStatus *sts)
 {

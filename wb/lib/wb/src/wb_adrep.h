@@ -8,7 +8,7 @@
 
 class wb_bdrep;
 class wb_cdrep;
-class wb_orepdbs;
+class wb_orep;
 class wb_vrep;
 class wb_bdrep;
 class wb_name;
@@ -16,7 +16,7 @@ class wb_name;
 class wb_adrep 
 {
   int m_nRef;
-  wb_orepdbs *m_orep; 
+  wb_orep *m_orep; 
   pwr_tStatus m_sts;
    
   size_t m_size;
@@ -33,7 +33,7 @@ class wb_adrep
   friend class wb_cdrep;
 
 public:
-  wb_adrep(wb_orepdbs& );
+  wb_adrep(wb_orep& );
   ~wb_adrep();
 
   void unref();

@@ -6,17 +6,17 @@
 #include "wb_name.h"
 
 class wb_adrep;
-class wb_orepdbs;
+class wb_orep;
 
 class wb_bdrep
 {
   int m_nRef;
-  wb_orepdbs *m_orep;
+  wb_orep *m_orep;
   pwr_tStatus m_sts;
     
 public:
   wb_bdrep();
-  wb_bdrep(wb_orepdbs& o); // own orep
+  wb_bdrep(wb_orep& o); // own orep
   wb_bdrep( wb_adrep *adrep);
   ~wb_bdrep();
 

@@ -110,6 +110,10 @@ static int	wnav_sort_func(		void		*client_data,
 					void		*client_flag);
 static int	wnav_copy_func(		void		*client_data,
 					void		*client_flag);
+static int	wnav_cut_func(		void		*client_data,
+					void		*client_flag);
+static int	wnav_paste_func(	void		*client_data,
+					void		*client_flag);
 static int	wnav_move_func(		void		*client_data,
 					void		*client_flag);
 static int	wnav_open_func(	void		*client_data,
@@ -206,7 +210,17 @@ dcli_tCmdTable	wnav_command_table[] = {
 			&wnav_copy_func,
 			{ "dcli_arg1", "/FIRST", "/LAST", "/AFTER", "/BEFORE",
 			"/HIERARCHY", "/SOURCE", "/DESTINATION", "/NAME",
-			"/NODE", "/BUSNUMBER", "/NOCONFIRM", "/VERBOSE", ""}
+			"/NODE", "/BUSNUMBER", "/NOCONFIRM", "/VERBOSE", "/KEEPREFERENCES", ""}
+		},
+		{
+			"CUT",
+			&wnav_cut_func,
+			{ "/KEEPREFERENCES", ""}
+		},
+		{
+			"PASTE",
+			&wnav_paste_func,
+			{ "dcli_arg1", "/INTO", "/BUFFER", "/KEEPOID", ""}
 		},
 		{
 			"MOVE",
@@ -2890,8 +2904,35 @@ static int	wnav_copy_func(	void		*client_data,
   int	arg1_sts;
 
   arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str);
+  if ( EVEN(arg1_sts)) {
+    pwr_sAttrRef	*sel_list;
+    int                 *sel_is_attr;
+    int			sel_cnt;
+    int                 keepref;
+    pwr_tStatus         sts;
 
-  if ( strncmp( arg1_str, "OBJECT", strlen( arg1_str)) == 0)
+    if ( wnav->window_type == wnav_eWindowType_No)
+      return WNAV__CMDMODE;
+
+    sts = wnav->get_select( &sel_list, &sel_is_attr, &sel_cnt);
+    if ( EVEN(sts)) {
+      wnav->message('E', "Nothing is selected in the current window");
+      return sts;
+    }
+
+    keepref = ODD( dcli_get_qualifier( "/KEEPREFERENCES", NULL));
+
+    sts = ldh_Copy( wnav->ldhses, sel_list, keepref);
+    if ( sel_cnt > 0) {
+      free( sel_list);
+      free( sel_is_attr);
+    }
+    if ( EVEN(sts)) {
+      wnav->message(' ', wnav_get_message(sts));
+      return sts;
+    }
+  }
+  else if ( strncmp( arg1_str, "OBJECT", strlen( arg1_str)) == 0)
   {
     char	sourcestr[80];
     char	destinationstr[80];
@@ -3094,6 +3135,92 @@ static int	wnav_copy_func(	void		*client_data,
   return WNAV__SUCCESS;
 }
 
+static int	wnav_cut_func(	void		*client_data,
+				void		*client_flag)
+{
+  WNav *wnav = (WNav *)client_data;
+
+  pwr_sAttrRef	*sel_list;
+  int                 *sel_is_attr;
+  int			sel_cnt;
+  int                 keepref;
+  pwr_tStatus         sts;
+
+  if ( wnav->window_type == wnav_eWindowType_No)
+    return WNAV__CMDMODE;
+
+  sts = wnav->get_select( &sel_list, &sel_is_attr, &sel_cnt);
+  if ( EVEN(sts)) {
+    wnav->message('E', "Nothing is selected in the current window");
+    return sts;
+  }
+
+  keepref = ODD( dcli_get_qualifier( "/KEEPREFERENCES", NULL));
+
+  sts = ldh_Cut( wnav->ldhses, sel_list, keepref);
+  if ( sel_cnt > 0) {
+    free( sel_list);
+    free( sel_is_attr);
+  }
+  if ( EVEN(sts)) {
+    wnav->message(' ', wnav_get_message(sts));
+    return sts;
+  }
+  return WNAV__SUCCESS;
+}
+
+static int	wnav_paste_func(	void		*client_data,
+					void		*client_flag)
+{
+  WNav *wnav = (WNav *)client_data;
+
+  char	buffer_str[80];
+  char *buffer_ptr;
+
+  pwr_sAttrRef	*sel_list;
+  int                 *sel_is_attr;
+  int		      sel_cnt;
+  pwr_tStatus         sts;
+  ldh_eDest	      dest;
+
+  if ( ODD( dcli_get_qualifier( "/BUFFER", buffer_str)))
+    buffer_ptr = buffer_str;
+  else if ( ODD( dcli_get_qualifier( "dcli_arg1", buffer_str)))
+    buffer_ptr = buffer_str;
+  else
+    buffer_ptr = 0;
+
+  if ( wnav->window_type == wnav_eWindowType_No)
+    return WNAV__CMDMODE;
+
+  sts = wnav->get_select( &sel_list, &sel_is_attr, &sel_cnt);
+  if ( EVEN(sts)) {
+    wnav->message('E', "Nothing is selected in the current window");
+    return sts;
+  }
+  else if ( sel_cnt > 1) {
+    wnav->message('E', "More than one object is selected in the current window");
+    return WNAV__SELTOMANY;
+  }
+
+  int keepoid = ODD( dcli_get_qualifier( "/KEEPOID", NULL));
+  if ( ODD( dcli_get_qualifier( "/INTO", NULL)))
+    dest = ldh_eDest_IntoFirst;
+  else
+    dest = ldh_eDest_After;
+
+  sts = ldh_Paste( wnav->ldhses, sel_list->Objid, dest, keepoid, buffer_ptr);
+  if ( sel_cnt > 0) {
+    free( sel_list);
+    free( sel_is_attr);
+  }
+  if ( EVEN(sts)) {
+    wnav->message(' ', wnav_get_message(sts));
+    return sts;
+  }
+  return WNAV__SUCCESS;
+}
+
 static int	wnav_move_func(	void		*client_data,
 				void		*client_flag)
 {
@@ -3179,6 +3306,9 @@ static int	wnav_open_func(	void		*client_data,
 
   if ( strncmp( arg1_str, "BUFFERS", strlen( arg1_str)) == 0)
   {
+    if ( wnav->window_type == wnav_eWindowType_No)
+      return WNAV__CMDMODE;
+
     if ( wnav->open_vsel_cb)
       (wnav->open_vsel_cb)( wnav->parent_ctx, wb_eType_Buffer, NULL, wow_eFileSelType_All);
   }
@@ -3505,7 +3635,7 @@ static int	wnav_new_func( void		*client_data,
 
   arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str);
 
-  if ( strncmp( arg1_str, "VOLUME", strlen( arg1_str)) == 0)
+  if ( strncmp( arg1_str, "BUFFER", strlen( arg1_str)) == 0)
   {
     char name_str[80];
     char *name_ptr = 0;
@@ -3513,7 +3643,7 @@ static int	wnav_new_func( void		*client_data,
     sts = wnav_wccm_get_wbctx_cb( wnav, &wnav->wbctx);
     if ( EVEN(sts)) return sts;
 
-    // Command is "NEW VOLUME"
+    // Command is "NEW BUFFER"
     if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str)))
     {
       if ( name_str[0] == '/')
@@ -3536,7 +3666,7 @@ static int	wnav_new_func( void		*client_data,
     }
     wb_vrepmem *mem = new wb_vrepmem(erep, vid);
     mem->name( name_str);
-    erep->addDbs( &sts, mem);
+    erep->addBuffer( &sts, mem);
 
     return sts;	
   }
@@ -4439,7 +4569,7 @@ static int wnav_getcurrentobject_func(
   char			name[80];
   int			sts;
   pwr_sAttrRef		*sel_list;
-    int                 *sel_is_attr;
+  int                   *sel_is_attr;
   int			sel_cnt;
   int			size;
 

@@ -3,6 +3,7 @@
 
 #include <map>
 #include <string>
+#include <vector>
 #include "wb_pwrs.h"
 
 using namespace std;
@@ -19,18 +20,20 @@ class wb_erep
 {
   typedef map<pwr_tVid, wb_vrep*>::iterator vrep_iterator;
   typedef map< string, wb_tMethod>::iterator methods_iterator;
+  typedef vector<wb_vrep*>::iterator buffer_iterator;
 
   unsigned int m_nRef;
   wb_merep *m_merep;
   map<pwr_tVid, wb_vrep*> m_vrepdb;
   map<pwr_tVid, wb_vrep*> m_vrepdbs;
   map<pwr_tVid, wb_vrep*> m_vrepextern;
-  map<pwr_tVid, wb_vrep*> m_vrepbuffer;
+  vector<wb_vrep*> m_vrepbuffer;
   map< string, wb_tMethod> m_methods;
 
   char m_dir_list[10][200];
   int m_dir_cnt;
   int m_volatile_idx;
+  int m_buffer_max;
 
 public:
   wb_erep();
@@ -46,6 +49,8 @@ public:
   wb_vrep *nextVolume(pwr_tStatus *sts, pwr_tVid vid);
   wb_vrep *externVolume(pwr_tStatus *sts, pwr_tVid vid);
   wb_vrep *bufferVolume(pwr_tStatus *sts);
+  wb_vrep *bufferVolume(pwr_tStatus *sts, char *name);
+  wb_vrep *findBuffer( pwr_tVid vid);
   void addDb( pwr_tStatus *sts, wb_vrep *vrep);
   void addDbs( pwr_tStatus *sts, wb_vrep *vrep);
   void addExtern( pwr_tStatus *sts, wb_vrep *vrep);

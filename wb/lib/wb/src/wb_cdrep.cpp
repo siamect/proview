@@ -7,6 +7,9 @@
 #include "wb_orepdbs.h"
 #include "wb_bdrep.h"
 #include "wb_adrep.h"
+extern "C" {
+#include "rt_conv.h"
+}
 
 static pwr_tString32 callBackName[] = {
   "__",         // ldh_eDbCallBack__
@@ -53,7 +56,7 @@ wb_cdrep::~wb_cdrep()
 wb_cdrep::wb_cdrep( wb_mvrep *mvrep, pwr_tCid cid) : m_nRef(0)
 {
   pwr_tOid oid = cdh_ClassIdToObjid( cid);
-  m_orep = (wb_orepdbs *) mvrep->object( &m_sts, oid);
+  m_orep = mvrep->object( &m_sts, oid);
   if ( EVEN(m_sts)) throw wb_error( m_sts);
 
   m_orep->ref();
@@ -66,7 +69,7 @@ wb_cdrep::wb_cdrep( wb_mvrep *mvrep, wb_name name) : m_nRef(0)
   strcpy( str, "Class-");
   strcat( str, name.object());
   wb_name n = wb_name( str);
-  m_orep = (wb_orepdbs *) mvrep->object( &m_sts, n);
+  m_orep = mvrep->object( &m_sts, n);
   if ( EVEN(m_sts)) throw wb_error( m_sts);
 
   m_orep->ref();
@@ -76,7 +79,7 @@ wb_cdrep::wb_cdrep( wb_mvrep *mvrep, wb_name name) : m_nRef(0)
 wb_cdrep::wb_cdrep( wb_mvrep *mvrep, const wb_orep& o) : m_nRef(0)
 {
   pwr_tOid oid = cdh_ClassIdToObjid( o.cid());
-  m_orep = (wb_orepdbs *) mvrep->object( &m_sts, oid);
+  m_orep = mvrep->object( &m_sts, oid);
   if ( EVEN(m_sts)) throw wb_error( m_sts);
 
   m_orep->ref();
@@ -97,10 +100,10 @@ wb_cdrep::wb_cdrep( const wb_orep& o) : m_nRef(0)
 wb_cdrep::wb_cdrep( wb_adrep *adrep) : m_nRef(0)
 {
   pwr_tStatus sts;
-  wb_orepdbs *orep = (wb_orepdbs *) adrep->m_orep->parent( &sts);
+  wb_orep *orep = adrep->m_orep->parent( &sts);
   if ( EVEN(sts)) throw wb_error(sts);
   orep->ref();
-  m_orep = (wb_orepdbs *)orep->parent( &sts);
+  m_orep = orep->parent( &sts);
   if ( EVEN(sts)) throw wb_error(sts);
   m_sts = LDH__SUCCESS;
   orep->unref();
@@ -110,7 +113,7 @@ wb_bdrep *wb_cdrep::bdrep( pwr_tStatus *sts, const char *bname)
 {
   wb_name n(bname);
   
-  wb_orepdbs *orep = (wb_orepdbs *)m_orep->m_vrep->child( sts, m_orep, n);
+  wb_orep *orep = m_orep->vrep()->child( sts, m_orep, n);
   if ( EVEN(*sts))
     return 0;
   wb_bdrep *bdrep = new wb_bdrep( *orep);
@@ -119,8 +122,8 @@ wb_bdrep *wb_cdrep::bdrep( pwr_tStatus *sts, const char *bname)
 
 wb_bdrep *wb_cdrep::bdrep( pwr_tStatus *sts, pwr_eBix bix)
 {
-  wb_orepdbs *orep = (wb_orepdbs *)m_orep->m_vrep->first( sts, m_orep);
-  wb_orepdbs *old;
+  wb_orep *orep = m_orep->vrep()->first( sts, m_orep);
+  wb_orep *old;
   while ( ODD(*sts)) {
     if ( orep->cid() == pwr_eClass_ObjBodyDef &&
          cdh_oixToBix( orep->oid().oix) ==  bix) {
@@ -128,7 +131,7 @@ wb_bdrep *wb_cdrep::bdrep( pwr_tStatus *sts, pwr_eBix bix)
       return bdrep;
     }
     old = orep;
-    orep = (wb_orepdbs *)m_orep->m_vrep->after( sts, orep);
+    orep = m_orep->vrep()->after( sts, orep);
 
     // Delete
     old->ref();
@@ -144,13 +147,13 @@ wb_adrep *wb_cdrep::adrep( pwr_tStatus *sts, const char *aname)
     *sts = n.sts();
     return 0;
   }
-  wb_orepdbs *orep_attr;
-  wb_orepdbs *old;
-  wb_orepdbs *orep = (wb_orepdbs *)m_orep->first( sts);
+  wb_orep *orep_attr;
+  wb_orep *old;
+  wb_orep *orep = m_orep->first( sts);
   while ( ODD(*sts)) {
     orep->ref();
     if ( orep->cid() == pwr_eClass_ObjBodyDef) {
-      orep_attr = (wb_orepdbs *)orep->m_vrep->child( sts, orep, n);
+      orep_attr = orep->vrep()->child( sts, orep, n);
       if ( ODD(*sts)) {
         wb_adrep *adrep = new wb_adrep( *orep_attr);
         orep->unref();
@@ -158,7 +161,7 @@ wb_adrep *wb_cdrep::adrep( pwr_tStatus *sts, const char *aname)
       }
     }
     old = orep;
-    orep = (wb_orepdbs *)orep->after( sts);
+    orep = orep->after( sts);
     old->unref();
   }
   *sts = LDH__NOSUCHATTR;
@@ -169,7 +172,7 @@ wb_orep *wb_cdrep::classBody( pwr_tStatus *sts, const char *bname)
 {
   wb_name n(bname);
   
-  wb_orepdbs *orep = (wb_orepdbs *)m_orep->m_vrep->child( sts, m_orep, n);
+  wb_orep *orep = m_orep->vrep()->child( sts, m_orep, n);
   if ( EVEN(*sts))
     return 0;
   return orep;
@@ -208,10 +211,10 @@ void wb_cdrep::templateBody( pwr_tStatus *sts, pwr_eBix bix, void *p)
   oid.vid = m_orep->oid().vid;
   oid.oix = cdh_cixToOix( cix, pwr_eBix_template, 0);
 
-  wb_orepdbs *orep = (wb_orepdbs *)m_orep->m_vrep->object( sts, oid);
+  wb_orep *orep = m_orep->vrep()->object( sts, oid);
   if ( EVEN(*sts)) return;
 
-  m_orep->m_vrep->readBody( sts, orep, bix, p);
+  m_orep->vrep()->readBody( sts, orep, bix, p);
   // Delete
   orep->ref();
   orep->unref();
@@ -222,7 +225,7 @@ pwr_mClassDef wb_cdrep::flags()
   pwr_sClassDef *classdef;
   pwr_tStatus sts;
 
-  classdef = (pwr_sClassDef *) m_orep->m_vrep->readBody( &sts, m_orep, pwr_eBix_sys, 0);
+  classdef = (pwr_sClassDef *) m_orep->vrep()->readBody( &sts, m_orep, pwr_eBix_sys, 0);
   if ( EVEN(sts))
     throw wb_error( sts);
 
@@ -256,7 +259,7 @@ void wb_cdrep::dbCallBack( pwr_tStatus *sts, ldh_eDbCallBack cb, char **methodNa
 			   pwr_sDbCallBack **o)
 {
   wb_name cb_name = wb_name( callBackName[cb]);
-  wb_orepdbs *orep = (wb_orepdbs *)m_orep->m_vrep->child( sts, m_orep, cb_name);
+  wb_orep *orep = m_orep->vrep()->child( sts, m_orep, cb_name);
   if ( EVEN(*sts)) return;
   orep->ref();
 
@@ -268,7 +271,7 @@ void wb_cdrep::dbCallBack( pwr_tStatus *sts, ldh_eDbCallBack cb, char **methodNa
 
   pwr_sDbCallBack *dbcallback;
 
-  dbcallback = (pwr_sDbCallBack *) m_orep->m_vrep->readBody( sts, orep, pwr_eBix_sys, 0);
+  dbcallback = (pwr_sDbCallBack *) m_orep->vrep()->readBody( sts, orep, pwr_eBix_sys, 0);
   if ( EVEN(*sts)) {
     orep->unref();
     return;
@@ -283,8 +286,8 @@ void wb_cdrep::dbCallBack( pwr_tStatus *sts, ldh_eDbCallBack cb, char **methodNa
 
 wb_orep *wb_cdrep::menu( pwr_tStatus *sts, void **o)
 {
-  wb_orepdbs *prev;
-  wb_orepdbs *orep = (wb_orepdbs *)m_orep->m_vrep->first( sts, m_orep);
+  wb_orep *prev;
+  wb_orep *orep = m_orep->vrep()->first( sts, m_orep);
   while ( ODD(*sts)) {
     switch ( orep->cid()) {
     case pwr_eClass_Menu:
@@ -296,7 +299,7 @@ wb_orep *wb_cdrep::menu( pwr_tStatus *sts, void **o)
       ;
     }
     prev = orep;
-    orep = (wb_orepdbs *)orep->after( sts);
+    orep = orep->after( sts);
     prev->ref();
     prev->unref();
   }
@@ -307,7 +310,7 @@ wb_orep *wb_cdrep::menu( pwr_tStatus *sts, void **o)
 
   void *menubody;
 
-  menubody = m_orep->m_vrep->readBody( sts, orep, pwr_eBix_sys, 0);
+  menubody = m_orep->vrep()->readBody( sts, orep, pwr_eBix_sys, 0);
   if ( EVEN(*sts)) {
     orep->ref();
     orep->unref();
@@ -323,33 +326,37 @@ wb_orep *wb_cdrep::menu( pwr_tStatus *sts, void **o)
 
 wb_orep *wb_cdrep::menuAfter( pwr_tStatus *sts, wb_orep *orep, void **o)
 {
-  wb_orepdbs *prev;
-  wb_orepdbs *after = (wb_orepdbs *)orep->after( sts);
+  wb_orep *prev;
+  wb_orep *after = orep->after( sts);
   if ( EVEN(*sts)) return 0;
 
+  bool found = false;
   while ( ODD(*sts)) {
     switch ( after->cid()) {
     case pwr_eClass_Menu:
     case pwr_eClass_MenuButton:
     case pwr_eClass_MenuCascade:
     case pwr_eClass_MenuSeparator:
+      found = true;
       break;
     default:
       ;
     }
+    if ( found)
+      break;
     prev = after;
-    after = (wb_orepdbs *)orep->after( sts);
+    after = after->after( sts);
     prev->ref();
     prev->unref();
   }
-  if ( EVEN(*sts)) {
+  if ( !found) {
     *sts = LDH__NOSUCHOBJ;
     return 0;
   }
 
   void *menubody;
 
-  menubody = m_orep->m_vrep->readBody( sts, after, pwr_eBix_sys, 0);
+  menubody = m_orep->vrep()->readBody( sts, after, pwr_eBix_sys, 0);
   if ( EVEN(*sts)) {
     after->ref();
     after->unref();
@@ -365,7 +372,7 @@ wb_orep *wb_cdrep::menuAfter( pwr_tStatus *sts, wb_orep *orep, void **o)
 
 wb_orep *wb_cdrep::menuFirst( pwr_tStatus *sts, wb_orep *orep, void **o)
 {
-  wb_orepdbs *first = (wb_orepdbs *)orep->first( sts);
+  wb_orep *first = orep->first( sts);
   if ( EVEN(*sts)) return 0;
 
   switch ( first->cid()) {
@@ -381,7 +388,7 @@ wb_orep *wb_cdrep::menuFirst( pwr_tStatus *sts, wb_orep *orep, void **o)
 
   void *menubody;
 
-  menubody = m_orep->m_vrep->readBody( sts, first, pwr_eBix_sys, 0);
+  menubody = m_orep->vrep()->readBody( sts, first, pwr_eBix_sys, 0);
   if ( EVEN(*sts)) {
     first->ref();
     first->unref();
@@ -392,3 +399,204 @@ wb_orep *wb_cdrep::menuFirst( pwr_tStatus *sts, wb_orep *orep, void **o)
     *o = menubody;
   return first;
 }
+
+pwr_tTime wb_cdrep::ohTime()
+{
+  return m_orep->ohTime();
+}
+
+void wb_cdrep::convertSubClass( pwr_tCid cid, wb_merep *merep,
+				void *body_source, void *body_target)
+{
+  pwr_tStatus sts;
+  wb_cdrep *cdrep_source = merep->cdrep( &sts, cid);
+  if ( EVEN(sts)) throw wb_error(sts);
+  wb_cdrep *cdrep_target = m_orep->vrep()->merep()->cdrep( &sts, cid);
+  if ( EVEN(sts)) return;
+
+  pwr_eBix bix = pwr_eBix_rt;
+
+  wb_bdrep *bdrep_target = cdrep_target->bdrep( &sts, bix);
+  if ( EVEN(sts)) return;
+
+  wb_bdrep *bdrep_source = cdrep_source->bdrep( &sts, bix);
+  if ( EVEN(sts)) return;
+
+  wb_adrep *adrep_source = bdrep_source->adrep( &sts);
+
+  // Indentify attribute with the same aix
+  while ( ODD(sts)) {
+    bool found = false;
+    wb_adrep *adrep_target = bdrep_target->adrep( &sts);
+    while ( ODD(sts)) {
+      if ( adrep_source->index() == adrep_target->index()) {
+	found = true;
+	break;
+      }
+      wb_adrep *prev = adrep_target;
+      adrep_target = adrep_target->next( &sts);
+      delete prev;
+    }
+    if ( found) {	      
+      if ( adrep_source->isClass()) {
+	if ( adrep_source->subClass() != adrep_target->subClass())
+	  return;
+
+	// Convert subclass
+	convertSubClass( adrep_target->subClass(), merep, 
+			(char *)body_source + adrep_source->offset(),
+			(char *)body_target + adrep_target->offset());
+      }
+      else {
+	// Convert attribute
+	if ( adrep_source->type() == adrep_target->type()) {
+	  memcpy( (char *)body_target + adrep_target->offset(), 
+		  (char *)body_source + adrep_source->offset(),
+		  min( adrep_target->size(), adrep_source->size()));
+	}
+	else {
+	  int cidx = conv_GetIdx(adrep_source->type(), adrep_target->type());
+	  if (cidx == conv_eIdx_invalid)
+	    cidx = conv_eIdx_zero; /* Zero the attribute */
+
+	  int size;
+	  pwr_mAdef flags;
+	  flags.m = adrep_target->flags();
+
+	  if (!conv_Fctn[cidx](adrep_target->nElement(), 
+			       adrep_target->size() / adrep_target->nElement(), 
+			       (char *)body_target + adrep_target->offset(), 
+			       &size,
+			       adrep_source->nElement(), 
+			       adrep_source->size() / adrep_source->nElement(), 
+			       (char *)body_source + adrep_source->offset(),
+			       flags))
+	    throw wb_error(LDH__ATTRCONV);
+	}
+      }
+      delete adrep_target;
+    }
+    wb_adrep *prev = adrep_source;
+    adrep_source = adrep_source->next( &sts);
+    delete prev;
+  }
+  delete bdrep_target;
+  delete bdrep_source;
+  delete cdrep_target;
+  delete cdrep_source;
+}
+
+void wb_cdrep::convertObject( wb_merep *merep, void *rbody, void *dbody,
+			      size_t *cnv_rbody_size, size_t *cnv_dbody_size,
+			      void **cnv_rbody, void **cnv_dbody)
+{
+  pwr_tStatus sts;
+  wb_cdrep *cdrep_source = merep->cdrep( &sts, cid());
+  if ( EVEN(sts)) throw wb_error(sts);
+
+  for ( int i = 0; i < 2; i++) {
+    int size_target, size_source;
+    void *body_target, *body_source;
+    pwr_eBix bix = i ? pwr_eBix_dev: pwr_eBix_rt;
+
+    wb_bdrep *bdrep_target = bdrep( &sts, bix);
+    if ( EVEN(sts)) {
+      size_target = 0;
+      body_target = 0;
+    }
+    else {
+      wb_bdrep *bdrep_source = cdrep_source->bdrep( &sts, bix);
+      if ( EVEN(sts)) {
+	// New body, return empty body
+	size_target = bdrep_target->size();
+	body_target = calloc( 1, size_target);
+      }
+      else {
+	// Convert body
+	size_source = bdrep_source->size();
+	body_source = (bix == pwr_eBix_rt) ? rbody : dbody;
+	size_target = bdrep_target->size();
+	body_target = calloc( 1, size_target);
+
+	// memcpy( body_target, body_source, size_target);
+	wb_adrep *adrep_source = bdrep_source->adrep( &sts);
+
+	// Indentify attribute with the same aix
+	while ( ODD(sts)) {
+	  bool found = false;
+	  wb_adrep *adrep_target = bdrep_target->adrep( &sts);
+	  while ( ODD(sts)) {
+	    if ( adrep_source->index() == adrep_target->index()) {
+	      found = true;
+	      break;
+	    }
+	    wb_adrep *prev = adrep_target;
+	    adrep_target = adrep_target->next( &sts);
+	    delete prev;
+	  }
+	  if ( found) {	      
+	    if ( adrep_source->isClass()) {
+	      if ( adrep_source->subClass() != adrep_target->subClass()) {
+		wb_adrep *prev = adrep_source;
+		adrep_source = adrep_source->next( &sts);
+		delete prev;
+		continue;
+	      }
+	      // Convert subclass
+	      convertSubClass( adrep_target->subClass(), merep, 
+			(char *)body_source + adrep_source->offset(),
+			(char *)body_target + adrep_target->offset());
+	    }
+	    else {
+	      // Convert attribute
+	      if ( adrep_source->type() == adrep_target->type()) {
+		memcpy( (char *)body_target + adrep_target->offset(), 
+			(char *)body_source + adrep_source->offset(),
+			min( adrep_target->size(), adrep_source->size()));
+	      }
+	      else {
+		int cidx = conv_GetIdx(adrep_source->type(), adrep_target->type());
+		if (cidx == conv_eIdx_invalid)
+		  cidx = conv_eIdx_zero; /* Zero the attribute */
+
+		int size;
+		pwr_mAdef flags;
+		flags.m = adrep_target->flags();
+
+		if (!conv_Fctn[cidx](adrep_target->nElement(), 
+				     adrep_target->size() / adrep_target->nElement(), 
+				     (char *)body_target + adrep_target->offset(), 
+				     &size,
+				     adrep_source->nElement(), 
+				     adrep_source->size() / adrep_source->nElement(), 
+				     (char *)body_source + adrep_source->offset(),
+				     flags))
+		  throw wb_error(LDH__ATTRCONV);
+	      }
+	    }
+	    delete adrep_target;
+	  }
+	  wb_adrep *prev = adrep_source;
+	  adrep_source = adrep_source->next( &sts);
+	  delete prev;
+	}
+	delete bdrep_source;
+      }
+      delete bdrep_target;
+    }
+    if ( bix == pwr_eBix_rt) {
+      *cnv_rbody_size = size_target;
+      *cnv_rbody = body_target;
+    }
+    else {
+      *cnv_dbody_size = size_target;
+      *cnv_dbody = body_target;
+    }
+  }
+  delete cdrep_source;
+}
+
+
+
+
+

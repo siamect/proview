@@ -18,8 +18,9 @@ bool wb_treeimport::importTranslationTableInsert( pwr_tOix from, pwr_tOix to)
 
 void wb_treeimport::importTranslationTableClear()
 {
-  while( ! m_translation_table.empty())
-    m_translation_table.erase( m_translation_table.begin());
+  // while( ! m_translation_table.empty())
+  //   m_translation_table.erase( m_translation_table.begin());
+  m_translation_table.clear();
 }
 
 pwr_tOix wb_treeimport::importTranslate( pwr_tOix oix)
@@ -57,8 +58,9 @@ bool wb_treeimport::importUpdateSubClass( wb_adrep *subattr, char *body, wb_vrep
   pwr_tOix oix;
   pwr_tCid cid = subattr->subClass();
   wb_cdrep *cdrep = vrep->merep()->cdrep( &sts, cid);
+  if ( EVEN(sts)) throw wb_error(sts);
   wb_bdrep *bdrep = cdrep->bdrep( &sts, pwr_eBix_rt);
-  if ( EVEN(sts)) return false;
+  if ( EVEN(sts)) throw wb_error(sts);
 
   int subattr_elements = subattr->isArray() ? subattr->nElement() : 1;
 
@@ -118,6 +120,7 @@ bool wb_treeimport::importUpdateObject( wb_orep *o, wb_vrep *vrep)
   pwr_tOix oix;
   pwr_tStatus sts;
   wb_cdrep *cdrep = vrep->merep()->cdrep( &sts, o->cid());
+  if ( EVEN(sts)) throw wb_error(sts);
   pwr_mClassDef flags = cdrep->flags();
 
   for ( int i = 0; i < 2; i++) {
@@ -129,6 +132,8 @@ bool wb_treeimport::importUpdateObject( wb_orep *o, wb_vrep *vrep)
     
     char *body = (char *)malloc( bdrep->size());
     vrep->readBody( &sts, o, bix, body);
+    if ( EVEN(sts)) throw wb_error(sts);
+
     bool modified = false;
 
     wb_adrep *adrep = bdrep->adrep( &sts);
@@ -171,8 +176,10 @@ bool wb_treeimport::importUpdateObject( wb_orep *o, wb_vrep *vrep)
       adrep = adrep->next( &sts);
       delete prev;
     }
-    if ( modified)
+    if ( modified) {
       vrep->writeBody( &sts, o, bix, body);
+      if ( EVEN(sts)) throw wb_error(sts);
+    }
     free( body);
     delete bdrep;
   }

@@ -573,10 +573,16 @@ int draw_event_handler( FlowCtx *ctx, XEvent event)
 //            printf( "-- Return key event\n");
 	    break;
           case XK_Up:
-            sts = ctx->event_handler( flow_eEvent_Key_Up, 0, 0, 0, 0);
+	    if ( event.xkey.state & ShiftMask)
+              sts = ctx->event_handler( flow_eEvent_Key_ShiftUp, 0, 0, 0, 0);
+            else
+              sts = ctx->event_handler( flow_eEvent_Key_Up, 0, 0, 0, 0);
 	    break;
           case XK_Down:
-            sts = ctx->event_handler( flow_eEvent_Key_Down, 0, 0, 0, 0);
+	    if ( event.xkey.state & ShiftMask)
+              sts = ctx->event_handler( flow_eEvent_Key_ShiftDown, 0, 0, 0, 0);
+            else
+	      sts = ctx->event_handler( flow_eEvent_Key_Down, 0, 0, 0, 0);
 	    break;
           case XK_Right:
 	    if ( event.xkey.state & ShiftMask)

@@ -18,13 +18,8 @@ class wb_orepwbl;
 
 class wb_vrepwbl : public wb_vrep
 {
-
-  map<int, wb_srep*> m_srep;
-  //wb_session m_wsession;
-
   wb_erep *m_erep;
   wb_merep *m_merep;
-  unsigned int m_nSession;
   unsigned int m_nRef;
 
   map<string, ref_wblnode> m_type_list;
@@ -41,10 +36,10 @@ class wb_vrepwbl : public wb_vrep
 
 public:
   wb_vrepwbl( wb_erep *erep) : 
-    m_erep(erep), m_merep(erep->merep()), root_object(0), error_cnt(0), file_cnt(0), next_oix(0), volume_node(0) {}
+    m_erep(erep), m_merep(erep->merep()), m_nRef(0), root_object(0), error_cnt(0), file_cnt(0), next_oix(0), volume_node(0) {}
 
   wb_vrepwbl( wb_erep *erep, pwr_tVid vid) :
-    wb_vrep(vid), m_erep(erep), m_merep(erep->merep()), root_object(0),error_cnt(0), file_cnt(0), next_oix(0), volume_node(0) {}
+    wb_vrep(vid), m_erep(erep), m_merep(erep->merep()), m_nRef(0), root_object(0),error_cnt(0), file_cnt(0), next_oix(0), volume_node(0) {}
   ~wb_vrepwbl();
 
   pwr_tVid vid() const { return m_vid;}
@@ -189,17 +184,19 @@ public:
   virtual bool exportDbody(wb_import &i);
   virtual bool exportMeta(wb_import &i);
   virtual bool exportTree(wb_treeimport &i, pwr_tOid oid);
-  virtual bool importTree() { return false;}
-  virtual bool importTreeObject(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
+  virtual bool importTree(bool keepref) { return false;}
+  virtual bool importTreeObject(wb_merep *merep, pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
                           pwr_tOid boid, const char *name,
                           size_t rbSize, size_t dbSize, void *rbody, void *dbody)
     { return false;}
   virtual bool importPaste() { return false;}
-  virtual bool importPasteObject(pwr_tOid destination, pwr_tOid oid, 
-			  pwr_tCid cid, pwr_tOid poid,
-                          pwr_tOid boid, const char *name,
-			  size_t rbSize, size_t dbSize, void *rbody, void *dbody)
+  virtual bool importPasteObject(pwr_tOid destination, ldh_eDest destcode, 
+				 bool keepoid, pwr_tOid oid, 
+				 pwr_tCid cid, pwr_tOid poid,
+				 pwr_tOid boid, const char *name,
+				 size_t rbSize, size_t dbSize, void *rbody, void *dbody)
     { return false;}
+  virtual bool accessSupported( ldh_eAccess access) { return access == ldh_eAccess_ReadOnly;}
 };
 
 #endif

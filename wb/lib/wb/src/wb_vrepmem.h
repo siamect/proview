@@ -45,7 +45,7 @@ class mem_object
     pwr_tOid fthoid = (fth && !isRoot) ? fth->m_oid : pwr_cNOid;
     pwr_tOid bwsoid = (bws && !isRoot) ? bws->m_oid : pwr_cNOid;
 
-    i.importTreeObject( m_oid, m_cid, fthoid, bwsoid, name(), 
+    i.importTreeObject( 0, m_oid, m_cid, fthoid, bwsoid, name(), 
 			rbody_size, dbody_size, rbody, dbody);
   
     if ( fch)
@@ -56,35 +56,25 @@ class mem_object
 
     return true;
   }
-  bool exportPaste( wb_treeimport &i, pwr_tOid destination, bool isRoot) {
+  bool exportPaste( wb_treeimport &i, pwr_tOid destination, bool isRoot, ldh_eDest destcode,
+		    bool keepoid) {
     pwr_tOid fthoid = (fth && !isRoot) ? fth->m_oid : pwr_cNOid;
     pwr_tOid bwsoid = (bws && !isRoot) ? bws->m_oid : pwr_cNOid;
 
-    i.importPasteObject( destination, m_oid, m_cid, fthoid, bwsoid, name(),
-			rbody_size, dbody_size, rbody, dbody);
+    i.importPasteObject( destination, destcode, keepoid, m_oid, m_cid, fthoid, bwsoid, 
+			 name(), rbody_size, dbody_size, rbody, dbody);
   
     if ( fch)
-      fch->exportPaste( i, destination, false);
+      fch->exportPaste( i, destination, false, destcode, keepoid);
 
     if ( fws)
-      fws->exportPaste( i, destination, false);
+      fws->exportPaste( i, destination, false, destcode, keepoid);
 
     return true;
   }
 
   mem_object *find( wb_name *oname, int level);
   
-  void deleteChildren() {
-    mem_object *o;
-    mem_object *ch = fch;
-    while ( ch) {
-      o = ch;
-      ch = ch->fws;
-      o->deleteChildren();
-      delete o;
-    }
-  }
-
   size_t rbody_size;
   size_t dbody_size;
   void *rbody;
@@ -106,13 +96,8 @@ class wb_orepmem;
 
 class wb_vrepmem : public wb_vrep
 {
-
-  map<int, wb_srep*> m_srep;
-  //wb_session m_wsession;
-
   wb_erep *m_erep;
   wb_merep *m_merep;
-  unsigned int m_nSession;
   unsigned int m_nRef;
   mem_object *root_object;
   int m_nextOix;
@@ -124,7 +109,7 @@ class wb_vrepmem : public wb_vrep
 
 public:
   wb_vrepmem( wb_erep *erep) : 
-    m_erep(erep), m_merep(erep->merep()), root_object(0), m_nextOix(0) {}
+    m_erep(erep), m_merep(erep->merep()), m_nRef(0), root_object(0), m_nextOix(0) {}
 
   wb_vrepmem( wb_erep *erep, pwr_tVid vid);
   ~wb_vrepmem();
@@ -150,6 +135,7 @@ public:
   mem_object *find( const char *name);
   int nameToOid( const char *name, pwr_tOid *oid);
   bool registerObject( pwr_tOix oix, mem_object *node);
+  bool unregisterObject( pwr_tOix oix);
   void registerVolume( const char *name, pwr_tCid cid, pwr_tVid vid, mem_object *node);
   void info();
 
@@ -186,16 +172,16 @@ public:
 
   wb_orep *createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination &d, wb_name &name);
 
-  wb_orep *copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_destination &d, wb_name &name) {return 0;}
+  wb_orep *copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_destination &d, wb_name &name);
   bool copyOset(pwr_tStatus *sts, wb_oset *oset, wb_destination &d) {return false;}
 
-  bool moveObject(pwr_tStatus *sts, wb_orep *orep, wb_destination &d) {return false;}
+  bool moveObject(pwr_tStatus *sts, wb_orep *orep, wb_destination &d);
 
   bool deleteObject(pwr_tStatus *sts, wb_orep *orep);
   bool deleteFamily(pwr_tStatus *sts, wb_orep *orep);
   bool deleteOset(pwr_tStatus *sts, wb_oset *oset) {return false;}
 
-  bool renameObject(pwr_tStatus *sts, wb_orep *orep, wb_name &name) { return false;}
+  bool renameObject(pwr_tStatus *sts, wb_orep *orep, wb_name &name);
 
 
   bool commit(pwr_tStatus *sts) {return true;}
@@ -240,21 +226,34 @@ public:
   virtual bool exportDbody(wb_import &i);
   virtual bool exportMeta(wb_import &i);
   virtual bool exportTree(wb_treeimport &i, pwr_tOid oid);
-  bool exportPaste(wb_treeimport &i, pwr_tOid destination);
-  virtual bool importTreeObject(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
+  bool exportPaste(wb_treeimport &i, pwr_tOid destination, ldh_eDest destcode, bool keepoid);
+  virtual bool importTreeObject(wb_merep *merep, pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
                           pwr_tOid boid, const char *name,
                           size_t rbSize, size_t dbSize, void *rbody, void *dbody);
-  virtual bool importTree();
-  virtual bool importPasteObject(pwr_tOid destination, pwr_tOid oid, 
-			  pwr_tCid cid, pwr_tOid poid,
-                          pwr_tOid boid, const char *name,
-			  size_t rbSize, size_t dbSize, void *rbody, void *dbody);
+  virtual bool importTree( bool keepref);
+  virtual bool importPasteObject(pwr_tOid destination, ldh_eDest destcode,
+				 bool keepoid, pwr_tOid oid, 
+				 pwr_tCid cid, pwr_tOid poid,
+				 pwr_tOid boid, const char *name,
+				 size_t rbSize, size_t dbSize, void *rbody, void *dbody);
   virtual bool importPaste();
-  bool updateObject( wb_orep *o);
-  bool updateSubClass( wb_adrep *subattr, char *body);
+  bool updateObject( wb_orep *o, bool keepref);
+  bool updateSubClass( wb_adrep *subattr, char *body, bool keepref);
+  virtual bool accessSupported( ldh_eAccess access) { return true;}
+
+ private:
+  bool nameCheck( mem_object *memo);
+  void deleteChildren( mem_object *memo);
+
 };
 
 #endif
+
+
+
+
+
+
 
 
 

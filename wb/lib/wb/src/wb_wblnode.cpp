@@ -1548,7 +1548,7 @@ bool wb_wblnode::exportTree( wb_treeimport &i, bool isRoot)
   pwr_tOid fthoid = (o->fth && !isRoot) ? o->fth->o->m_oid : pwr_cNOid;
   pwr_tOid bwsoid = (o->bws && !isRoot)  ? o->bws->o->m_oid : pwr_cNOid;
 
-  i.importTreeObject( o->m_oid, o->m_cid, fthoid, bwsoid, name(), 
+  i.importTreeObject( m_vrep->merep(), o->m_oid, o->m_cid, fthoid, bwsoid, name(), 
 		      o->rbody_size, o->dbody_size, o->rbody, o->dbody);
   
   if ( o->fch)

@@ -96,6 +96,16 @@ wblparse	<error when parsing wb_load file>			/error
 nomethod	<no such method>					/error
 volvolatilemax	<max number of volatile volumes exceeded>		/error
 copyplcobject	<plcobjects cannot be copied in navigator>		/error
+pasteself       <unable to paste buffer into itself>                    /error
+pasteincon	<paste inconsistency>					/error
+memincon	<buffer inconsistency>					/error
+access		<no such access for this configuration>			/error
+attrconv	<attribute conversion error>				/error
+
+
+
+
+
 
 
 

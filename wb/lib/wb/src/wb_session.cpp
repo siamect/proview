@@ -4,6 +4,8 @@
 #include "wb_cdrep.h"
 #include "wb_merep.h"
 #include "wb_ldh.h"
+#include "wb_vrepmem.h"
+#include "pwr_baseclasses.h"
 
 static ldh_sMenuItem ldh_lMenuItem[100];
 
@@ -33,7 +35,7 @@ static struct {
 
 wb_session::wb_session(wb_volume &v) : wb_volume(v)
 {
-  m_srep = new wb_srep(v);
+  m_srep = new wb_srep( v);
   m_srep->ref();
 }
 
@@ -48,6 +50,17 @@ wb_session::~wb_session()
   m_srep->unref();
 }
 
+wb_session& wb_session::operator=(const wb_session& x)
+{
+  if ( x.m_srep)
+    x.m_srep->ref();
+  if ( m_srep)
+    m_srep->unref();
+  m_srep = x.m_srep;
+  m_sts = x.sts();
+  return *this;
+}
+
 wb_object wb_session::createObject(wb_cdef cdef, wb_destination d, wb_name name)
 {
   wb_orep *orep = 0;
@@ -56,7 +69,14 @@ wb_object wb_session::createObject(wb_cdef cdef, wb_destination d, wb_name name)
     throw wb_error_str("ReadOnlySession");
 
   orep = m_vrep->createObject(&m_sts, cdef, d, name);
-  return wb_object(m_sts, orep);
+
+  wb_object o = wb_object(m_sts, orep);
+  ldh_sEvent *ep = m_srep->eventStart( o.oid(), ldh_eEvent_ObjectCreated);
+  m_srep->eventNewFamily( ep, o);
+  // sts = triggPostCreate( orep);
+  // sts = triggPostAdopt( father, orep);
+  m_srep->eventSend( ep);
+  return o;
 }
 
 wb_object wb_session::copyObject(wb_object o, wb_destination d, wb_name name)
@@ -67,15 +87,12 @@ wb_object wb_session::copyObject(wb_object o, wb_destination d, wb_name name)
     throw wb_error_str("ReadOnlySession");
 
   orep = m_vrep->copyObject(&m_sts, (wb_orep*)o, d, name);
+
+  ldh_sEvent *ep = m_srep->eventStart( orep->oid(), ldh_eEvent_ObjectCreated);
+  m_srep->eventNewFamily( ep, o);
+  m_srep->eventSend( ep);
+
   return wb_object(m_sts, orep);
-}
-
-bool wb_session::copyOset(wb_oset *o, wb_destination d)
-{
-  if (isReadonly())
-    throw wb_error_str("ReadOnlySession");
-
-  return m_vrep->copyOset(&m_sts, o, d);
 }
 
 bool wb_session::moveObject(wb_object o, wb_destination d)
@@ -83,7 +100,15 @@ bool wb_session::moveObject(wb_object o, wb_destination d)
   if (isReadonly())
     throw wb_error_str("ReadOnlySession");
 
-  return m_vrep->moveObject(&m_sts, (wb_orep*)o, d);
+  ldh_sEvent *ep = m_srep->eventStart( o.oid(), ldh_eEvent_ObjectMoved);
+  m_srep->eventOldFamily( ep, o);
+
+  bool sts = m_vrep->moveObject(&m_sts, (wb_orep*)o, d);
+
+  m_srep->eventNewFamily( ep, o);
+  m_srep->eventSend( ep);
+
+  return sts;
 }
 
 
@@ -92,7 +117,11 @@ bool wb_session::renameObject(wb_object o, wb_name name)
   if (isReadonly())
     throw wb_error_str("ReadOnlySession");
 
-  return m_vrep->renameObject(&m_sts, (wb_orep*)o, name);
+  bool sts = m_vrep->renameObject(&m_sts, (wb_orep*)o, name);
+
+  ldh_sEvent *ep = m_srep->eventStart( o.oid(), ldh_eEvent_ObjectRenamed);
+  m_srep->eventSend( ep);
+  return sts;
 }
 
 bool wb_session::deleteObject(wb_object o)
@@ -128,7 +157,10 @@ bool wb_session::writeAttribute(wb_attribute &a, void *p, size_t size)
   if (isReadonly())
     throw wb_error_str("ReadOnlySession");
 
-  return m_vrep->writeAttribute(&m_sts, (wb_orep*)a, a.bix(), a.offset(), a.size(), p);
+  bool sts =  m_vrep->writeAttribute(&m_sts, (wb_orep*)a, a.bix(), a.offset(), a.size(), p);
+  ldh_sEvent *ep = m_srep->eventStart( a.aoid(), ldh_eEvent_AttributeModified);
+  m_srep->eventSend( ep);
+  return sts;
 }
 
 bool wb_session::writeAttribute(wb_attribute &a, void *p)
@@ -136,7 +168,148 @@ bool wb_session::writeAttribute(wb_attribute &a, void *p)
   if (isReadonly())
     throw wb_error_str("ReadOnlySession");
 
-  return m_vrep->writeAttribute(&m_sts, (wb_orep*)a, a.bix(), a.offset(), a.size(), p);
+  bool sts =  m_vrep->writeAttribute(&m_sts, (wb_orep*)a, a.bix(), a.offset(), a.size(), p);
+
+  ldh_sEvent *ep = m_srep->eventStart( a.aoid(), ldh_eEvent_AttributeModified);
+  m_srep->eventSend( ep);
+  return sts;
+}
+
+bool wb_session::copyOset( pwr_sAttrRef *arp, bool keepref)
+{
+  char name[32];
+  pwr_tStatus sts;
+  m_sts = LDH__SUCCESS;
+
+  // Avoid copying objects in plcprograms
+  pwr_sAttrRef *ap = arp;
+  while ( cdh_ObjidIsNotNull( ap->Objid)) {
+    wb_object o = object( ap->Objid);
+    if ( !o) return o.sts();
+    o = o.parent();
+    while ( o) {
+      pwr_sAttrRef *ap2 = arp;
+      while ( cdh_ObjidIsNotNull( ap2->Objid)) {
+	if ( o.cid() == pwr_cClass_plc) {
+	  m_sts = LDH__COPYPLCOBJECT;
+	  return false;
+	}
+	ap2++;
+      }
+      o = o.parent();
+    }
+    ap++;
+  }
+
+  pwr_tVid vid = m_vrep->erep()->nextVolatileVid( &m_sts, name);
+  if ( EVEN(m_sts)) return false;
+
+  wb_vrepmem *mem = new wb_vrepmem( m_vrep->erep(), vid);
+  mem->name( name);
+  m_vrep->erep()->addBuffer( &sts, mem);
+
+  ap = arp;
+  while ( cdh_ObjidIsNotNull( ap->Objid)) {
+
+    // Check selected object is not child to another selected object
+    bool found = false;
+    wb_object o = object( ap->Objid);
+    if ( !o) return o.sts();
+    o = o.parent();
+    while ( o) {
+      pwr_sAttrRef *ap2 = arp;
+      while ( cdh_ObjidIsNotNull( ap2->Objid)) {
+	if ( cdh_ObjidIsEqual( ap2->Objid, o.oid())) {
+	  found = true;
+	  break;
+	}
+	ap2++;
+      }
+      if ( found)
+	break;
+      o = o.parent();
+    }
+    if ( found) {
+      ap++;
+      continue;
+    }
+
+    m_vrep->exportTree( *mem, ap->Objid);  
+    ap++;
+  }
+  return mem->importTree( keepref);  
+}
+
+bool wb_session::cutOset( pwr_sAttrRef *arp, bool keepref)
+{
+  if (isReadonly())
+    throw wb_error_str("ReadOnlySession");
+
+  m_sts = LDH__SUCCESS;
+
+  copyOset( arp, keepref);
+  if ( EVEN(m_sts)) return false;
+
+  ldh_sEvent *ep = m_srep->eventStart( pwr_cNOid, ldh_eEvent_ObjectTreeDeleted);
+
+  pwr_sAttrRef *ap = arp;
+  while ( cdh_ObjidIsNotNull( ap->Objid)) {
+    wb_object o = object( ap->Objid);
+    if ( !o) {
+      ap++;
+      continue;
+    }
+
+    deleteFamily( o);
+    ldh_sEvent *e = m_srep->eventStart( pwr_cNOid, ldh_eEvent_ObjectDeleted);
+    m_srep->eventOldFamily( e, o);
+
+    ap++;
+  }
+  m_srep->eventSend( ep);
+
+  return true;
+}
+
+bool wb_session::pasteOset( pwr_tOid doid, ldh_eDest dest, 
+				   bool keepoid, char *buffer)
+{
+  if (isReadonly())
+    throw wb_error_str("ReadOnlySession");
+
+  m_sts = LDH__SUCCESS;
+
+  wb_vrepmem *mem;
+  // Get last buffer
+  if ( !buffer) {
+    mem = (wb_vrepmem *) m_vrep->erep()->bufferVolume( &m_sts);
+    if ( EVEN(m_sts)) return false;
+
+    wb_vrepmem *prev;
+    while ( mem) {
+      prev = mem;
+      mem = (wb_vrepmem *)mem->next();
+    }
+    mem = prev;
+  }
+  else {
+    // Get specified buffer
+    mem = (wb_vrepmem *) m_vrep->erep()->bufferVolume( &m_sts, buffer);
+    if ( EVEN(m_sts)) return false;
+  }
+
+  if ( mem == m_vrep) {
+    m_sts = LDH__PASTESELF;
+    return false;
+  }
+  mem->exportPaste( *m_vrep, doid, dest, keepoid);
+
+  if ( dest == ldh_eDest_After || dest == ldh_eDest_Before)
+    doid = pwr_cNOid;
+  ldh_sEvent *ep = m_srep->eventStart( doid, ldh_eEvent_ObjectTreeCopied);
+  m_srep->eventSend( ep);
+
+  return true;
 }
 
 pwr_tStatus wb_session::getMenu( ldh_sMenuCall *ip)
@@ -180,10 +353,12 @@ pwr_tStatus wb_session::getMenu( ldh_sMenuCall *ip)
   void *o_menu_body;
 
   wb_orep *o_menu = cdrep->menuFirst( &sts, o, &o_menu_body);
-  if ( ODD(sts)) {
+  while ( ODD(sts)) {
     o_menu->ref();
     getAllMenuItems( ip, &Item, cdrep, o_menu, o_menu_body, 0, &nItems, 0);
-    o_menu->unref();
+    wb_orep *prev = o_menu; 
+    o_menu = cdrep->menuAfter( &sts, o_menu, &o_menu_body);
+    prev->unref();
   }
   delete cdrep;
   o->unref();
@@ -214,10 +389,12 @@ pwr_tStatus wb_session::getMenu( ldh_sMenuCall *ip)
     Object = o->oid();
 
     o_menu = cdrep->menuFirst( &sts, o, &o_menu_body);
-    if ( ODD(sts)) {
+    while ( ODD(sts)) {
       o_menu->ref();
       getAllMenuItems( ip, &Item, cdrep, o_menu, o_menu_body, 0, &nItems, 0);
-      o_menu->unref();
+      wb_orep *prev = o_menu; 
+      o_menu = cdrep->menuAfter( &sts, o_menu, &o_menu_body);
+      prev->unref();
     }
     delete cdrep;
     o->unref();
@@ -240,10 +417,12 @@ pwr_tStatus wb_session::getMenu( ldh_sMenuCall *ip)
       Object = o->oid();
 
       o_menu = cdrep->menuFirst( &sts, o, &o_menu_body);
-      if ( ODD(sts)) {
+      while ( ODD(sts)) {
         o_menu->ref();
         getAllMenuItems( ip, &Item, cdrep, o_menu, o_menu_body, 0, &nItems, 0);
-        o_menu->unref();
+	wb_orep *prev = o_menu; 
+        o_menu = cdrep->menuAfter( &sts, o_menu, &o_menu_body);
+        prev->unref();
       }
       delete cdrep;
       o->unref();
@@ -274,10 +453,12 @@ pwr_tStatus wb_session::getMenu( ldh_sMenuCall *ip)
       Object = o->oid();
 
       o_menu = cdrep->menuFirst( &sts, o, &o_menu_body);
-      if ( ODD(sts)) {
+      while ( ODD(sts)) {
         o_menu->ref();
         getAllMenuItems( ip, &Item, cdrep, o_menu, o_menu_body, 0, &nItems, 0);
-        o_menu->unref();
+	wb_orep *prev = o_menu; 
+        o_menu = cdrep->menuAfter( &sts, o_menu, &o_menu_body);
+        prev->unref();
       }
       delete cdrep;
       o->unref();
@@ -355,18 +536,12 @@ void wb_session::getAllMenuItems( ldh_sMenuCall	*ip, ldh_sMenuItem **Item, wb_cd
     
     void *child_body;
     wb_orep *child = cdrep->menuFirst( &sts, o, &child_body);
-    if ( ODD(sts)) {
+    while ( ODD(sts)) {
       child->ref();
       getAllMenuItems(ip, Item, cdrep, child, child_body, Level, nItems, 0);
-      child->unref();
-    }
-
-    void *next_body;
-    wb_orep *next = cdrep->menuAfter( &sts, o, &next_body);
-    if ( ODD(sts)) {
-      next->ref();
-      getAllMenuItems(ip, Item, cdrep, next, next_body, Level, nItems, 0);
-      next->unref();
+      wb_orep *prev = child;
+      child = cdrep->menuAfter( &sts, child, &child_body);
+      prev->unref();
     }
   }
 }
@@ -386,4 +561,11 @@ pwr_tStatus wb_session::callMenuMethod( ldh_sMenuCall *mcp, int Index)
 
   return sts;
 }
+
+
+
+
+
+
+
 
