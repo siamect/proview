@@ -215,7 +215,7 @@ int wb_vrepwbl::load( const char *fname)
 
   MsgWindow::dset_nodraw();
 
-  if ( strstr( fname, ".wb_load") != 0) {
+  if ( strstr( fname, ".wb_load") != 0 || strstr( fname, ".wb_dmp") != 0) {
     sts = load_files( fname);
     if ( EVEN(sts)) {
       MsgWindow::dreset_nodraw();
