@@ -26,6 +26,8 @@
 #include "co_dcli.h"
 #include "co_wow.h"
 
+#define WOW_MAXNAMES 400
+
 typedef struct
 {
   void			*ctx;
@@ -494,7 +496,7 @@ void wow_file_cancel_cb( Widget widget, XtPointer udata, XtPointer data)
 void wow_file_search_cb( Widget widget, XtPointer data)
 {
   XmFileSelectionBoxCallbackStruct *cbs = (XmFileSelectionBoxCallbackStruct *) data;
-  XmString names[256];
+  XmString names[WOW_MAXNAMES];
   char *mask;
   char found_file[200];
   int sts;
@@ -507,6 +509,8 @@ void wow_file_search_cb( Widget widget, XtPointer data)
   file_cnt = 0;
   sts = dcli_search_file( mask, found_file, DCLI_DIR_SEARCH_INIT);
   while( ODD(sts)) {
+    if ( file_cnt >= WOW_MAXNAMES)
+      break;
     names[file_cnt++] = XmStringCreateLocalized( found_file);
     sts = dcli_search_file( mask, found_file, DCLI_DIR_SEARCH_NEXT);
   }
