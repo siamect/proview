@@ -135,9 +135,9 @@ void SubPaletteBrow::free_pixmaps()
 
 #define ALLOC_PIXMAP( bitmap, idx) \
   for ( i = 0; i < 9; i++) { \
-    pixmap_data[i].width = ## bitmap ## _width; \
-    pixmap_data[i].height = ## bitmap ## _height; \
-    pixmap_data[i].bits = (char *) ## bitmap ## _bits; \
+    pixmap_data[i].width = bitmap ## _width; \
+    pixmap_data[i].height = bitmap ## _height; \
+    pixmap_data[i].bits = (char *) bitmap ## _bits; \
   } \
   brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmaps[idx]);
 
