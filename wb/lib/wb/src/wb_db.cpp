@@ -1196,7 +1196,14 @@ bool wb_db::importDbody(pwr_tOid oid, size_t size, void *body)
   return true;
 }
 
-bool  wb_db::importMeta(dbs_sEnv *ep)
+bool  wb_db::importMeta(dbs_sMenv *mep)
 {
+  pwr_tStatus sts = 1;
+  
+  printf("Import meta, my filename: %s\n", m_fileName);
+  
+  if (mep != 0)
+    dbs_Split(&sts, mep, m_fileName);
+  
   return true;
 }

@@ -758,13 +758,19 @@ ldh_GetReferenceInfo(ldh_tSession session, pwr_tOid oid, ldh_sRefInfo *rip)
 pwr_tStatus
 ldh_GetRootList(ldh_tSession session, pwr_tOid *oid)
 {
-  wb_session *sp = (wb_session *)session;
-  wb_object o = sp->object();
-  if (!o) return o.sts();
+  try {
+    wb_session *sp = (wb_session *)session;
+    wb_object o = sp->object();
+    if (!o) return o.sts();
 
-  *oid = o.oid();
+    *oid = o.oid();
 
-  return o.sts();
+    return o.sts();
+  } catch (wb_error& e) {
+
+    return e.sts();
+
+  }    
 }
 
 /* Get first object in root list of volume with volume id 'vid'.  */

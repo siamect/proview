@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stdlib.h>
 
 #include "wb_merep.h"
 #include "wb_cdrep.h"
@@ -56,6 +57,18 @@ wb_mvrep *wb_merep::volume(pwr_tStatus *sts, const char *name)
   }
   *sts = LDH__NOSUCHVOL;
   return 0;
+}
+
+void wb_merep:: copyFiles(const char *dirName)
+{
+  mvrep_iterator it;
+  for ( it = m_mvrepdbs.begin(); it != m_mvrepdbs.end(); it++) {
+    wb_vrepdbs *dp = (wb_vrepdbs *)it->second;
+    char cmd[512];
+    sprintf(cmd, "cp %s %s", dp->fileName(), dirName);
+    printf("%s\n", cmd);
+    system(cmd);
+  }
 }
 
 wb_orep *wb_merep::object(pwr_tStatus *sts, pwr_tOid oid)

@@ -484,7 +484,7 @@ static dbs_sVolRef *findVolref(dbs_sMenv *mep, pwr_tVid vid)
 }
 
 void
-dbs_Split(pwr_tStatus *sts, dbs_sMenv *mep)
+dbs_Split(pwr_tStatus *sts, dbs_sMenv *mep, char *dirName)
 {
   int i;
   
@@ -497,7 +497,7 @@ dbs_Split(pwr_tStatus *sts, dbs_sMenv *mep)
     size_t bytes;
     size_t size;
     FILE *fp;
-    char fileName[256];
+    char fileName[512];
     char *p;
     
     vep = &mep->venv[i + 1];
@@ -508,7 +508,7 @@ dbs_Split(pwr_tStatus *sts, dbs_sMenv *mep)
     printf("  size %d, index %d, nSect %d\n", vep->size, vep->index, vep->nSect);
     size = offset = vep->size;
 
-    sprintf(fileName, "%s.dbs", vep->vp->name);
+    sprintf(fileName, "%s/%s.dbs", dirName, vep->vp->name);
     cdh_ToLower(fileName, fileName);
     
     fp = fopen(fileName, "w+b");

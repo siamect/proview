@@ -99,7 +99,7 @@ public:
   
   bool importDocBlock(pwr_tOid oid, size_t size, char *block) { return true;}
   
-  bool importMeta(dbs_sEnv *ep);
+  bool importMeta(dbs_sMenv *mep);
   
 
 };

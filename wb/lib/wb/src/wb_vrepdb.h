@@ -2,6 +2,7 @@
 #define wb_vrepdb_h
 
 #include "wb_vrep.h"
+#include "wb_vrepdbs.h"
 #include "wb_orepdb.h"
 #include "wb_db.h"
 #include "db_cxx.h"

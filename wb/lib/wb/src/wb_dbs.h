@@ -155,7 +155,7 @@ public:
     
   virtual bool importDocBlock(pwr_tOid oid, size_t size, char *block) { return true;}
     
-  virtual bool importMeta(dbs_sEnv *ep);
+  virtual bool importMeta(dbs_sMenv *mep);
 
 private:
     

@@ -1,5 +1,6 @@
 
 #include "pwr.h"
+#include "wb_merep.h"
 #include "wb_erep.h"
 #include "wb_env.h"
 #include "wb_vrepdbs.h"
@@ -17,7 +18,7 @@
 #include "co_dbs.h"
 #include "co_time.h"
 
-#if 1
+#if 0
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -125,10 +126,10 @@ int main( int argc, char *argv[])
   printf("\nDitt namn baklänges är: %s\n", bnamn);
   
 }
-#elif 0
+#elif 1
 int main( int argc, char *argv[])
 {
-  pwr_tStatus sts;
+  //pwr_tStatus sts;
   //dbs_sEnv env;
   //dbs_sEnv *ep;
   wb_erep *erep = new wb_erep();
@@ -150,13 +151,14 @@ int main( int argc, char *argv[])
   //db.importVolume(*vdbs);
   db.close();
 
-  wb_vrepdb vdb(erep, argv[2]);
-  wb_name n("VHX-NU4-KOM-EVELINA-Transar-W-cn254");
-  wb_orepdb *op = (wb_orepdb *)vdb.object(&sts, n);
+  wb_vrepdb vdb(erep, 1000, pwr_eClass_RootVolume, "Kalle", "/home/lw/kalle");
+  //wb_vrepdb vdb(erep, argv[2]);
+  //wb_name n("VHX-NU4-KOM-EVELINA-Transar-W-cn254");
+  //wb_orepdb *op = (wb_orepdb *)vdb.object(&sts, n);
   
-  wb_dbs adbs(vdbs);
-  adbs.setFileName("alasse.dbs");
-  adbs.importVolume(vdb);
+  //wb_dbs adbs(vdbs);
+  //adbs.setFileName("alasse.dbs");
+  //adbs.importVolume(vdb);
 }
 
 #elif 0

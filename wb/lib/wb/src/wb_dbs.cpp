@@ -1142,7 +1142,7 @@ wb_dbs::classInsert(sOentry *oep)
 }
 
 bool
-wb_dbs::importMeta(dbs_sEnv *ep)
+wb_dbs::importMeta(dbs_sMenv *mep)
 {
   return true;
 }

@@ -332,7 +332,7 @@ public:
   virtual bool importRbody(pwr_tOid oid, size_t size, void *body);    
   virtual bool importDbody(pwr_tOid oid, size_t size, void *body);
   virtual bool importDocBlock(pwr_tOid oid, size_t size, char *block);
-  virtual bool importMeta(dbs_sEnv *ep) { return true;}
+  virtual bool importMeta(dbs_sMenv *mep) { return true;}
   bool importBuildObject( mem_object *memo);
   void loadWbl( char *filename, pwr_tStatus *sts);
   void freeObject( mem_object *mem);

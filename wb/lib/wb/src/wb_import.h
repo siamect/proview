@@ -24,7 +24,7 @@ public:
     
   virtual bool importDocBlock(pwr_tOid oid, size_t size, char *block) = 0;
     
-  virtual bool importMeta(dbs_sEnv *ep) = 0;
+  virtual bool importMeta(dbs_sMenv *mep) = 0;
     
 };
 

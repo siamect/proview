@@ -1,7 +1,7 @@
 #include "wb_vrepdbs.h"
 #include "wb_orepdbs.h"
-#include "wb_erep.h"
 #include "wb_merep.h"
+#include "wb_erep.h"
 #include "wb_import.h"
 #include "wb_treeimport.h"
 
@@ -507,11 +507,14 @@ bool wb_vrepdbs::exportDbody(wb_import &i)
 
 bool wb_vrepdbs::exportDocBlock(wb_import &i)
 {
+  
   return false;
 }
 
 bool wb_vrepdbs::exportMeta(wb_import &i)
 {
+  i.importMeta(dbsenv()->mp);
+
   return false;
 }
 

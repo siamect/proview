@@ -616,7 +616,7 @@ struct dbs_sScObject {
 %
 %dbs_sMenv       *dbs_Map(pwr_tStatus*, const char*);
 %dbs_sVenv       *dbs_Vmap(pwr_tStatus*, int index, dbs_sMenv *);
-%void            dbs_Split(pwr_tStatus *sts, dbs_sMenv *mep);
+%void            dbs_Split(pwr_tStatus *sts, dbs_sMenv *mep, char *dirName);
 %pwr_tBoolean    dbs_Unmap(pwr_tStatus *sts, dbs_sMenv *);
 %int             dbs_nVolRef(pwr_tStatus *sts, const dbs_sMenv *mep);
 %

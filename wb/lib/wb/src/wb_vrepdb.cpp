@@ -9,7 +9,7 @@
 #include "wb_dbs.h"
 #include "db_cxx.h"
 #include "wb_ldh.h"
-
+#include "wb_merep.h"
 
 void wb_vrepdb::unref()
 {
@@ -52,6 +52,8 @@ wb_vrepdb::wb_vrepdb(wb_erep *erep, pwr_tVid vid, pwr_tCid cid, const char *volu
   m_cid = m_db->cid();
 
   m_merep = m_erep->merep();
+
+  m_merep->copyFiles(fileName);
 }
 
 wb_erep *wb_vrepdb::erep()
@@ -399,6 +401,7 @@ wb_orep* wb_vrepdb::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination 
       printf("wb_vrepdb::createObject, c.put rs %d\n", rs);
         
     rs = txn->commit(0);
+
     return new (this) wb_orepdb(&o.m_o);
   }
   catch (DbException &e) {
@@ -451,8 +454,6 @@ bool wb_vrepdb::deleteFamilyMember(pwr_tOid oid, wb_db_txn *txn)
   
   wb_db_ohead o(m_db, oid);
   o.get(txn);
-  //if (rs)
-  //printf("wb_vrepdb::deleteFamilyMember, o.get rs %d\n", rs);
 
   deleteFamilyMember(o.foid(), txn);
   
@@ -472,15 +473,15 @@ bool wb_vrepdb::deleteFamilyMember(pwr_tOid oid, wb_db_txn *txn)
  // if (rs)
     //printf("wb_vrepdb::deleteFamilyMember, rb.get rs %d\n", rs);
   
-  rs = o.del(txn);
-  if (rs)
-    printf("wb_vrepdb::deleteFamilyMember, o.del rs %d\n", rs);
-  
   wb_db_name n(m_db, o.oid(), o.poid(), o.normname());
   rs = n.del(txn);
   if (rs)
     printf("wb_vrepdb::deleteFamilyMember, n.del rs %d\n", rs);
 
+  rs = o.del(txn);
+  if (rs)
+    printf("wb_vrepdb::deleteFamilyMember, o.del rs %d\n", rs);
+  
   return true;
 }
 
@@ -1114,7 +1115,7 @@ void wb_vrepdb::unadopt(wb_db_txn *txn, wb_db_ohead &o)
   }
 
   wb_db_name n(m_db, o.oid(), o.poid(), o.normname());
-  n.del(txn);
+  rc = n.del(txn);
   if (rc)
     printf("wb_vrepdb::unadopt, n.del rc %d\n", rc);
 
@@ -1122,9 +1123,13 @@ void wb_vrepdb::unadopt(wb_db_txn *txn, wb_db_ohead &o)
   o.aoid(pwr_cNOid);
   o.boid(pwr_cNOid);
     
-  p.put(txn);    
+  rc = p.put(txn);    
   if (rc)
     printf("wb_vrepdb::unadopt, p.put rc %d\n", rc);
+
+  rc = o.put(txn);    
+  if (rc)
+    printf("wb_vrepdb::unadopt, o.put rc %d\n", rc);
 }
 
 bool wb_vrepdb::exportVolume(wb_import &i)
