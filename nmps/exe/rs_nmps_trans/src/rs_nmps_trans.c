@@ -1040,6 +1040,8 @@ static int	nmpstrans_req_receive_data( trans_ctx	transctx,
 	        sts2 = nmpstrans_alarm_send( alarm_text, 
 				alarm_name, 'B');
 	      }
+	      req_ptr->req->ErrorDetected = 1;
+
 	      if ( req_ptr->rcv_remtrans_type == NMPS_TRANSTYPE_REM)
 	        req_ptr->rcv_remtrans_ptr->DataValid = 0;
 	      else
@@ -1169,6 +1171,8 @@ static int	nmpstrans_rcv_receive_data( trans_ctx	transctx,
 	        sts2 = nmpstrans_alarm_send( alarm_text, 
 				alarm_name, 'B');
 	      }
+	      rcv_ptr->rcv->ErrorDetected = 1;
+
 	      if ( rcv_ptr->rcv_remtrans_type == NMPS_TRANSTYPE_REM)
 	        rcv_ptr->rcv_remtrans_ptr->DataValid = 0;
 	      else
@@ -1331,6 +1335,7 @@ static int	nmpstrans_req_accept_detected( trans_ctx	transctx,
 	        sts = nmpstrans_alarm_send( alarm_text, 
 				alarm_name, 'B');
 	      }
+	      req_ptr->req->ErrorDetected = 1;
 	    }
 	    return NMPS__TRANSCELLFULL;
 	  }
@@ -1359,6 +1364,8 @@ static int	nmpstrans_req_accept_detected( trans_ctx	transctx,
 	    sts2 = nmpstrans_alarm_send( alarm_text, 
 			alarm_name, 'B');
 	  }
+	  req_ptr->req->ErrorDetected = 1;
+
 	  if ( req_ptr->rcv_remtrans_type == NMPS_TRANSTYPE_REM)
 	    req_ptr->rcv_remtrans_ptr->DataValid = 0;
 	  else
@@ -1430,6 +1437,7 @@ static int	nmpstrans_rcv_accept_detected( trans_ctx	transctx,
 	        sts = nmpstrans_alarm_send( alarm_text, 
 				alarm_name, 'B');
 	      }
+	      rcv_ptr->rcv->ErrorDetected = 1;
 	    }
 	    return NMPS__TRANSCELLFULL;
 	  }
@@ -1458,6 +1466,8 @@ static int	nmpstrans_rcv_accept_detected( trans_ctx	transctx,
 	    sts2 = nmpstrans_alarm_send( alarm_text, 
 			alarm_name, 'B');
 	  }
+	  rcv_ptr->rcv->ErrorDetected = 1;
+
 	  if ( rcv_ptr->rcv_remtrans_type == NMPS_TRANSTYPE_REM)
 	    rcv_ptr->rcv_remtrans_ptr->DataValid = 0;
 	  else
@@ -2347,6 +2357,7 @@ static pwr_tStatus	nmpstrans_trans_handler( trans_ctx	transctx)
 				alarm_name, 'B');
 
 	      }
+	      req_ptr->req->ErrorDetected = 1;
               reset_trigg = 1;
               keep_key = 0;
             }
@@ -2449,6 +2460,7 @@ static pwr_tStatus	nmpstrans_trans_handler( trans_ctx	transctx)
 	        sts = nmpstrans_alarm_send( alarm_text, 
 				alarm_name, 'B');
 	      }
+	      req_ptr->req->ErrorDetected = 1;
 	    }
 	    else 
 	      req_ptr->cell_full_msg_sent = 0;
@@ -2517,6 +2529,7 @@ static pwr_tStatus	nmpstrans_trans_handler( trans_ctx	transctx)
 	        sts = nmpstrans_alarm_send( alarm_text, 
 				alarm_name, 'B');
 	      }
+	      rcv_ptr->rcv->ErrorDetected = 1;
 	    }
 	    else 
 	      rcv_ptr->cell_full_msg_sent = 0;
