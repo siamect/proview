@@ -1,0 +1,285 @@
+
+#
+# Class $DocHier
+#
+<class> $DocHier
+@Summary Grupperingsobjekt för 'dokument'. 
+Grupperingsobjekt för 'dokument'. 
+
+Olika typer av objekt för 'dokumentation' är tänkt att placeras under $DocHier 
+objekt. Varken $DocHier objekt eller objekt därunder ingår i det aktuella 
+målsystemet. 
+
+Objektet kan inte placeras på översta nivån. 
+
+@b Tips 
+
+Det är lämpligt, men inte nödvändigt, att samla t.ex. ListDescriptor objekt 
+under ett $DocHier objekt. De ListDescriptor objekt som levereras med 
+PROVIEW/R distributionen finns under hierarkin Layout-Lists, där 'Lists' just 
+är ett $DocHier objekt. 
+
+Ska en ny typ av lista definieras eller en redan definierad lista modifieras görs 
+detta med hjälp av ListDescriptor objekt placerade under ett objekt med 
+namnet 'Lists'. 'Lists' bör vara av klassen $DocHier och konfigureras direkt 
+under $System objektet.  
+
+<attr>Description 
+Fri text för att beskriva objektets användning. 
+</attr>
+</class>
+
+#
+# Class $LibHier
+#
+<class> $LibHier
+@Summary Undanlagrings hierarki
+Genom att placera enskilda objekt eller vanligare hela hierarki strukturer under 
+$LibHier -objekt kan man i utvecklingsmiljön spara undan både 
+anläggningsdelar och delar av nodsystemet som av någon anledning inte ska 
+ingå i realtidsdatabasen just nu. 
+
+
+$LibHier objekt skapas i utvecklingsmiljön med hjälp av Configuration Editor. 
+De placeras alltid under 'Plant Configuration'. 
+
+Ett PROVIEW-system kan innehålla flera $LibHier ( Lib rary Hier archy ) 
+objekt placerade på den högsta nivån eller under andra $LibHier objekt. 
+
+Objekt placerade under $LibHier objekt ingår inte i det aktuella målsystemet. 
+Så kan vara fallet när en ny struktur är under utveckling i ett existerande 
+PROVIEW-system, när ett givet PLC program inte ska användas för tillfället 
+men kanske senare etc. 
+
+Också hierarki strukturer från 'Node Configuration' kan placeras under 
+$LibHier objekt. Men om målet är att hindra en ny nod medlem från att laddas 
+till målmiljön, noden kanske är under utveckling, är det bara att avstå från 
+'Create Load Files ...' för den aktuella noden 
+
+Objektet innehåller ingen relevant information (=data) i rtdb. 
+
+
+- 
+
+- 
+@b Tips 
+
+För att flytta en hel hierarki struktur väljs i Cofiguration Editor aktuellt 
+toppobjekt. Klicka därefter med MB2 där strukturen ska placeras. 
+
+<attr>Description 
+Fri text för att beskriva objektets användning. 
+</attr>
+</class>
+
+#
+# Class $Node
+#
+<class> $Node
+@Summary Konfigurerar en nod. 
+Konfigurerar nod i 'Node Configuration'. 
+
+
+Konfigureras i utvecklingsmiljön direkt under $NodeHier-objekt eller i nod 
+hierarkins topp. Samtidigt skapar utvecklingsmiljön vissa standardobjekt ( 
+"ValueBase"-objekt, IOHandler-objekt m. fl. ) som barn till $Node objektet. 
+
+$Node-objektet och alla dess ättlingar kommer att ägas av den nod som 
+NodeName och NodeIndex anger. 
+
+
+<attr>Description
+Fri text för att beskriva objektets användning. 
+</attr>
+
+<attr>NodeName 
+Anger nodens namn.
+</attr>
+
+<attr>ErrLogTerm
+För VAXELN nod gäller att systemfelloggen, som innehåller 
+systemfelmeddelanden, default skickas till konsolen. Ska felloggen skickas till 
+annan terminal anges dess namn här. Funktionen ej implementerad. 
+
+Attributet ej aktuellt för OpenVMS nod. 
+</attr>
+
+<attr>ErrLogFile
+För VAXELN nod gäller att systemfelloggen, oberoende av om den skickas till 
+terminal eller ej, också kan skickas till här angiven fil. 
+
+Syntax:
+<area number>.<node number>::<device>[<directory>] <file 
+name>.<extension> 
+
+Exempel: 1.30::pwrp_lis:sys_RTPVAX.log
+1.30::sys$login:pwr_VAXELN_RTPVAX.log 
+
+För att särskilja loggar från olika VAXELN noder kan nodnamnet ingå i filens 
+namn. I exemplet ovan anger RTPVAX den aktuella noden. Om <area 
+number>.<node number>:: utelämnas hamnar filen på bootnoden. Därigenom 
+behöver attributet inte ändras även om noden skulle bootas från skilda 
+bootnoder.
+För OpenVMS nod gäller att systemfelloggen alltid får namnet 
+pwr_VMS_'xxx'.log och placeras på den egna nodens sys$login. 'xxx ' 
+betecknar nodnamnet. 
+</attr>
+
+<attr>EmergBreakTrue 
+Nödbromsflagga. Flaggan sätts vid 
+
+- upptäckt av hårdvarufel i kortobjekt; ErrorCount > ErrorHardLimit 
+
+- process-eftersläpning eller då övervakat jobb terminerat. Detta görs av
+Watchdog -objekt. 
+
+FALSE betyder ingen åtgärd och TRUE att åtgärd enligt EmergBreakSelect 
+ska vidtagas. 
+</attr>
+
+<attr>EmergBreakSelect 
+Nödbromsåtgärd. Anger åtgärd som skall vidtagas om EmergBreakTrue blir 
+TRUE. Följande värden finns: 
+
+-- 0 Ingen åtgärd.
+-- 1 Omstart av målnoden.
+-- 2 Utsignaerna sätts till FixedOutValue för resp kanalojekt och
+fryses där.
+-- 3 Stoppa I/O. Reset av alla utsignaler. Se också ErrorHardLimit i
+kortobjekt.
+</attr>
+
+<attr>StartPlcWithDebug 
+För VAXELN nod anger attributet om PLC-jobbet ska laddas med eller utan 
+debugger. FALSE innebär att debuggern inte får kontroll över jobbet, dvs det 
+kommer att exekvera fullt ut; TRUE betyder att debuggern får kontroll över 
+jobbet sedan det startats förutsatt att det är kompilerat och länkat med 
+debugger. 
+
+Attributet används ej i fallet OpenVMS nod 
+</attr>
+</class>
+
+#
+# Class $NodeHier
+#
+<class> $NodeHier
+@Summary Grupperingsobjekt i Nodhiearkin. 
+Grupperingsobjekt i 'Node Configuration'. 
+
+
+Konfigureras i utvecklingsmiljön för att bygga upp nod hierarkin ( 'the Node 
+Hier archy' ) till önskad struktur, dvs dess funktion motsvarar $ PlantHier - 
+objektets roll i 'Plant Configuration'. Ett PROVIEW-system innehåller vanligen 
+många $ NodeHier -objekt. 
+
+Objektet placeras vanligen i nod hierarkins topp eller direkt under annat $ 
+NodeHier -objekt. 
+
+Innehåller ingen relevant information (=data) i rtdb. 
+
+Om det vid 'Create Load Files ...' för den aktuella noden saknas en instans med 
+namnet $Orphange av klassen $NodeHier kommer den att skapas. Bakgrunden 
+är följande: 
+
+I målmiljön kan man dynamiskt skapa objekt. Detta kan ske från 
+applikationsprogram genom anrop till systemrutinen gdh_CrateObject(...). 
+Skapade objekt måste alltid placeras under förälder objekt, dvs de kan inte 
+placeras på rotnivån. Om ett sådant förälder objekt tas bort i samband med 
+programbyte skulle de dynamiskt skapade objekten därunder inte längre vara 
+tillgängliga. Därför ser PROVIEW till att placera sådana objekt under 
+$Orphange. 
+
+
+@b Tips 
+
+Objektets användbarhet för att förbättra nod strukturen kan kräva eftertanke. I 
+ett PROVIEW-system med många noder kan t.ex operatörs- resp process-noder 
+samlas under separata $ NodeHier -objekt. 
+
+En nyckeln till att konfigurera överskådliga strukturer ligger i användningen av 
+grupperingsobjekt. 
+
+<attr>Description 
+Fri text för att beskriva objektets användning. 
+</attr>
+</class>
+
+#
+# Class $PlantHier
+#
+<class> $PlantHier
+@Summary Grupperingsobjekt i anläggningshierarkin. 
+Grupperingsobjekt i 'Plant Configuration'. 
+
+
+Konfigureras i utvecklingsmiljön för att på anläggningssidan bygga upp hela 
+hierarkier ( 'the Plant Hier archy' ) eller delar av hierarkier till en överskådlig 
+struktur; funktion motsvarar $ NodeHier -objektets roll i 'Node Configuration'. 
+Ett PROVIEW-system innehåller vanligen många $ PlantHier -objekt. 
+
+Objektet används dels i anläggningens topp för att representera en särskild 
+anläggning i PROVIEW-systemet, dels direkt under annat $ PlantHier -objekt 
+för att representera en viss del av anläggningen etc. 
+
+ 
+Schematic Plant Configuration Showing Two Plants 
+
+Innehåller ingen relevant information (=data) i rtdb.
+Objektet konfigureras med hjälp av 'Configuration Editor'. 
+
+
+<attr>Description 
+Fri text för att beskriva objektets användning. 
+</attr>
+</class>
+
+#
+# Class $System
+#
+<class> $System
+@Summary PROVIEW-systemets projekt-gemensamma objekt.
+PROVIEW-systemets projekt-gemensamma objekt.
+
+Objektet placeras i utvecklingsmiljön på den högsta nivån i 'Node 
+Configuration' i projektvolymen.
+SystemName används för att identifiera ett givet PROVIEW-system bland 
+andra PROVIEW-system. 
+
+<attr>Description 
+Fri text för att beskriva objektets användning. 
+</attr>
+
+<attr>SystemName 
+Anger PROVIEW-systemets namn eller beteckning. Max. 7 ASCII-tecken.
+SystemName används i ladd-datafiler och i utvecklingsmiljön i samband med 
+behörigheter. 
+</attr>
+</class>
+
+<type> AttrRef
+Bas typ attribut referens.
+Refererar ett attribut i ett objekt.
+
+Referensen innehåller
+- objid för det refererade objektet
+- classid för kroppen
+- attributets offset
+- attributets storlek
+- ett flaggord. Om biten Indirect är satt, är attributet en pekare.
+
+Sträng notationen för ett attrref är
+_A<vid>:<oix>(<classvolume>:<class>).<attribute>[index], t ex
+_A0.123.34.63:1234567890(pwrb:Ai).FilterAttribute[2]
+
+eller om klassen är okänd, är notationen
+_A<vid>:<oix>(<cid>).(<bix>)<offset>.<size>, t ex
+_A0.123.34.63:1234567890(_C0.1:34).(_B1)60.34
+
+där
+ vid är volyms id för objektet.
+ oix är objekt index för objektet.
+ cid är classid för objektets klass.
+ bix är body index för den kropp attributet tillhör.
+</type>
+
