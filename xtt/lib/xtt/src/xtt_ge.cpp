@@ -156,7 +156,7 @@ static void ge_change_value_cb( void *ge_ctx, void *value_object, char *text)
   gectx->current_value_object = value_object;
 }
 
-static void ge_command_cb( void *ge_ctx, char *command)
+static int ge_command_cb( void *ge_ctx, char *command)
 {
   ge_tCtx	gectx = (ge_tCtx)ge_ctx;
   int		sts;
@@ -164,8 +164,9 @@ static void ge_command_cb( void *ge_ctx, char *command)
   if ( gectx->command_cb)
   {
     sts = (gectx->command_cb)( gectx, command);
-    if (EVEN(sts)) printf("** Error in command\n");
+    return sts;
   }
+  return 0;
 }
 
 static void ge_display_in_xnav_cb( void *ge_ctx, pwr_sAttrRef *arp)
