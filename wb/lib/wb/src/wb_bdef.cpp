@@ -20,6 +20,12 @@ wb_bdef::wb_bdef(const wb_bdef& x) : wb_status(x.m_sts), m_bdrep(x.m_bdrep)
     m_bdrep->ref();
 }
 
+wb_bdef::~wb_bdef()
+{
+  if ( m_bdrep)
+    m_bdrep->unref();
+}
+
 wb_bdef& wb_bdef::operator=(const wb_bdef &x)
 {
   if ( x.m_bdrep)

@@ -24,7 +24,7 @@ public:
   wb_bdef(const wb_adef *a);
   wb_bdef(const wb_orep *o, pwr_eBix bix);
 
-  ~wb_bdef() {}; // Fix
+  ~wb_bdef();
 
   operator bool() const { return (m_bdrep != 0);}
   operator wb_bdrep*() const;
