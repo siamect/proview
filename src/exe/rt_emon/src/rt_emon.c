@@ -479,8 +479,22 @@ int main ()
   qAttr.type = qcom_eQtype_private;
   qAttr.quota = 100;
   if (!qcom_CreateQ(&sts, &myQid, &qAttr, "pwr_emon")) {
-    errh_Fatal("qcom_CreateQ, %m", sts);
-    exit(sts);
+    if (sts == QCOM__QALLREXIST) {
+      if (!qcom_AttachQ(&sts, &myQid)) {
+        if (!qcom_DeleteQ(&sts, &myQid)) {
+          errh_Fatal("qcom_DeleteQ, %m", sts);
+          exit(sts);
+        }
+        if (!qcom_CreateQ(&sts, &myQid, &qAttr, "pwr_emon")) {
+          errh_Fatal("qcom_CreateQ, %m", sts);
+          exit(sts);
+	}
+      }
+    }
+    else {
+      errh_Fatal("qcom_CreateQ, %m", sts);
+      exit(sts);
+    }
   } 
   l.head.qid = myQid;
 
