@@ -1458,6 +1458,8 @@ int Graph::export_gejava_nodeclass( ofstream& fp, grow_tNodeClass nodeclass)
         export_BarTraceAttr( fp, *object_p, i);
       else if ( grow_GetObjectType( *object_p) == glow_eObjectType_GrowTrend)
         export_TrendTraceAttr( fp, *object_p, i);
+      else if ( grow_GetObjectType( *object_p) == glow_eObjectType_GrowTable)
+        export_TableTraceAttr( fp, *object_p, i);
       else if ( grow_GetObjectType( *object_p) == glow_eObjectType_GrowSlider)
 	// export_SliderTraceAttr( fp, *object_p, i);
         export_GejavaObjectTraceAttr( fp, *object_p, i);
@@ -1597,6 +1599,8 @@ int Graph::export_javaframe( char *filename, char *bean_name, int applet,
             export_BarTraceAttr( fp, *object_p, i);
           else if ( grow_GetObjectType( *object_p) == glow_eObjectType_GrowTrend)
             export_TrendTraceAttr( fp, *object_p, i);
+          else if ( grow_GetObjectType( *object_p) == glow_eObjectType_GrowTable)
+            export_TableTraceAttr( fp, *object_p, i);
           else if ( grow_GetObjectType( *object_p) == glow_eObjectType_GrowSlider)
             export_SliderTraceAttr( fp, *object_p, i);
           object_p++;
@@ -1814,6 +1818,8 @@ int Graph::export_gejava( char *filename, char *bean_name, int applet, int html)
         export_BarTraceAttr( fp, *object_p, i);
       else if ( grow_GetObjectType( *object_p) == glow_eObjectType_GrowTrend)
         export_TrendTraceAttr( fp, *object_p, i);
+      else if ( grow_GetObjectType( *object_p) == glow_eObjectType_GrowTable)
+        export_TableTraceAttr( fp, *object_p, i);
       else if ( grow_GetObjectType( *object_p) == glow_eObjectType_GrowSlider)
         // export_SliderTraceAttr( fp, *object_p, i);
         export_GejavaObjectTraceAttr( fp, *object_p, i);
@@ -2131,6 +2137,22 @@ int Graph::export_GejavaObjectTraceAttr( ofstream& fp, grow_tObject object, int 
   return 1;
 }
 
+int Graph::export_TableTraceAttr( ofstream& fp, grow_tObject object, int cnt)
+{
+  GeDyn			*dyn;
+  char			class_name[] = "GeTable";
+  char 			var_name[40];
+
+  grow_GetUserData( object, (void **)&dyn);
+
+  strcpy( var_name, class_name);
+  var_name[0] = _tolower(var_name[0]);
+  sprintf( &var_name[strlen(var_name)], "%d", cnt);
+
+  dyn->export_java( object, fp, var_name);
+  return 1;
+}
+
 int Graph::export_BarTraceAttr( ofstream& fp, grow_tObject object, int cnt)
 {
   GeDyn			*dyn;
@@ -2262,6 +2284,7 @@ int Graph::export_ObjectTraceAttr( ofstream& fp, grow_tObject object, int cnt) {
 int Graph::export_GejavaObjectTraceAttr( ofstream& fp, grow_tObject object, int cnt) { return 1;}
 int Graph::export_BarTraceAttr( ofstream& fp, grow_tObject object, int cnt){ return 1;}
 int Graph::export_TrendTraceAttr( ofstream& fp, grow_tObject object, int cnt) { return 1;}
+int Graph::export_TableTraceAttr( ofstream& fp, grow_tObject object, int cnt) { return 1;}
 int Graph::export_SliderTraceAttr( ofstream& fp, grow_tObject object, int cnt) { return 1;}
 
 #endif
