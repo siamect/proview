@@ -5,6 +5,10 @@
 #include <float.h>
 #include <math.h>
 #include <stdlib.h>
+#if defined OS_LINUX || defined OS_LYNX
+#include <sys/types.h>
+#include <sys/stat.h>
+#endif
 #include "glow_transform.h"
 #include "glow_growimage.h"
 #include "glow_grownode.h"
@@ -41,6 +45,7 @@ GrowImage::GrowImage( GlowCtx *glow_ctx, char *name, double x, double y,
 {
   strcpy( n_name, name);
   strcpy( image_filename, "");
+  strcpy( filename, "");
   strcpy( last_group, "");
   imlib = ((draw_tCtx)ctx->draw_ctx)->imlib;
   if ( imagefile)
@@ -112,8 +117,9 @@ int GrowImage::insert_image( char *imagefile)
 {
   int found = 0;
   char imagename[80];
-  char filename[120];
   char *s;
+  struct stat info;
+  int sts;
 
   strcpy( image_filename, imagefile);
 
@@ -150,6 +156,12 @@ int GrowImage::insert_image( char *imagefile)
   }
 
 #if defined IMLIB
+  sts = stat( filename, &info);
+  if ( sts == -1)
+    return 0;
+
+  date = info.st_ctime;
+
   if ( pixmap) {
     Imlib_free_pixmap( imlib, pixmap);
     pixmap = 0;
@@ -204,6 +216,53 @@ int GrowImage::insert_image( char *imagefile)
 #endif
   get_node_borders();
   return 1;
+}
+
+int GrowImage::update()
+{
+
+#if defined IMLIB
+  struct stat info;
+  int sts;
+
+  sts = stat( filename, &info);
+  if ( sts == -1)
+    return 0;
+
+  if ( date == info.st_ctime)
+    return 0;
+  date = info.st_ctime;
+
+  if ( original_image)
+    Imlib_kill_image( imlib, original_image);
+
+  original_image = Imlib_load_image( imlib, filename);
+  if ( !original_image) 
+    return 0;
+
+  if ( pixmap) {
+    Imlib_free_pixmap( imlib, pixmap);
+    pixmap = 0;
+  }
+  if ( nav_pixmap) {
+    Imlib_free_pixmap( imlib, nav_pixmap);  
+    nav_pixmap = 0;
+  }
+
+  // Make a copy
+  if ( image)
+    Imlib_kill_image( imlib, image);
+  image = Imlib_clone_image( imlib, original_image);
+
+  set_image_color( image, NULL);
+  Imlib_render( imlib, image, current_width, current_height);
+  pixmap = Imlib_move_image( imlib, image);
+
+  draw();
+  return 1;
+
+#endif
+  return 0;
 }
 
 void GrowImage::zoom()

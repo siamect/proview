@@ -51,6 +51,7 @@ class GrowImage : public GlowArrayElem {
     void get_object_name( char *name) { strcpy( name, n_name);};
     void set_object_name( char *name) { strcpy( n_name, name);};
     void align( double x, double y, glow_eAlignDirection direction);
+    int update();
 
     GlowPoint ll;
     GlowPoint ur;
@@ -100,6 +101,8 @@ class GrowImage : public GlowArrayElem {
     int		current_nav_color_inverse;
     int         current_nav_direction;
     char        last_group[32];
+    int		date;
+    char	filename[256];
  
     int insert_image( char *imagefile);
     void zoom();

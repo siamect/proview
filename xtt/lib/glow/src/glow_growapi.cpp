@@ -3491,6 +3491,10 @@ void grow_GetNodeClassOrigo( grow_tObject object, double *x, double *y)
   ((GrowNode *)object)->get_nodeclass_origo((GlowTransform *)NULL, x, y);
 }
 
+int grow_ImageUpdate( grow_tObject object)
+{
+  return ((GrowImage *)object)->update();
+}
 
 
 

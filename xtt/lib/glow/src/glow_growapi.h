@@ -539,6 +539,7 @@ int grow_GetBackgroundObjectLimits( grow_tCtx ctx, glow_eTraceType type,
 int grow_GetTranslate( grow_tCtx ctx);
 glow_eMB3Action grow_GetMB3Action( grow_tCtx ctx);
 void grow_GetNodeClassOrigo( grow_tObject object, double *x, double *y);
+int grow_ImageUpdate( grow_tObject object);
 
 #if defined __cplusplus
 }
