@@ -1,6 +1,7 @@
 #include "wb_attribute.h"
 #include "wb_cdrep.h"
 #include "wb_bdrep.h"
+#include "wb_bdef.h"
 #include "wb_merep.h"
 #include "wb_attrname.h"
 #include "pwr.h"
@@ -54,16 +55,39 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, wb_adrep* adrep, int 
       m_elements = m_adrep->nElement();
       m_type = m_adrep->type();
       m_flags = m_adrep->flags();
+
       if (m_flags & PWR_MASK_ARRAY) {
         if (idx >= m_elements)
           throw wb_error_str("wb_attribute() subscript out of range");
         m_idx = idx;
+        if (idx != -1) { // element
+          m_size = m_adrep->size() / m_adrep->nElement();
+          m_offset = m_adrep->offset() + m_idx * m_size;
+          m_elements = 1;
+        }
       } else
         m_idx = 0;
 
     }
     else {
       // m_size == get rtbody size... Fix
+      wb_cdef cdef(*orep);
+      if (EVEN(cdef.sts())) {
+        char msg[256];
+        m_sts = cdef.sts();
+        sprintf(msg, "Can't get cdef for orep: %s", orep->name());  
+        throw wb_error_str(m_sts, msg);
+      }
+      wb_bdef bdef(((wb_cdrep *)cdef)->bdrep(&m_sts, pwr_eBix_rt));
+      if (EVEN(bdef.sts())) {
+        char msg[256];
+        m_sts = bdef.sts();
+        sprintf(msg, "Can't get bdef for orep: %s", orep->name());  
+        throw wb_error_str(m_sts, msg);
+      }
+
+      m_size = bdef.size();
+      
     }
   }
 }
@@ -420,7 +444,10 @@ wb_attribute wb_attribute::after() const
   if (m_flags & PWR_MASK_SUBCLASS) {
     a.m_flags |= PWR_MASK_SUBCLASS;
     a.m_bix = m_bix;
-    a.m_offset = m_offset + m_size;
+    if ((m_flags & PWR_MASK_ARRAY) && m_idx != -1) // array element
+      a.m_offset = (m_offset - m_size * m_idx) + m_adrep->size();
+    else
+      a.m_offset = m_offset + m_size;
   }
 
   return a;
@@ -428,7 +455,28 @@ wb_attribute wb_attribute::after() const
 
 wb_attribute wb_attribute::before() const
 {
-  wb_attribute a;
+  pwr_tStatus sts;
+
+  check();
+  if (m_adrep == 0)
+    return wb_attribute();
+
+  wb_adrep* adrep = m_adrep->prev(&sts);
+  if (evenSts())
+    return wb_attribute();
+  
+  wb_attribute a(LDH__SUCCESS, m_orep, adrep);
+  
+  // Fix for sub classes
+  if (m_flags & PWR_MASK_SUBCLASS) {
+    a.m_flags |= PWR_MASK_SUBCLASS;
+    a.m_bix = m_bix;
+    if ((m_flags & PWR_MASK_ARRAY) && m_idx != -1) // array element
+      a.m_offset = (m_offset - m_size * m_idx) - adrep->size();
+    else
+      a.m_offset = m_offset - adrep->size();
+  }
+
   return a;
 }   
 

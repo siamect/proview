@@ -53,7 +53,7 @@ public:
   wb_attribute& operator=(const wb_attribute&);
   operator bool() const { return oddSts();}
   operator wb_orep*() const;
-  bool operator==( const wb_attribute&);
+  bool operator==(const wb_attribute&) const;
     
   //wb_object& operator=(const wb_orep&);
 
