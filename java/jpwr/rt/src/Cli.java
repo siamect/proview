@@ -264,10 +264,10 @@ public class Cli {
       return "";
     }
     
-//    for ( i = 0; i < verbCount; i++)
-//      System.out.println("verb: \"" + verb[i] + "\"");
-//    for ( i = 0; i < qualifierCount; i++)
-//      System.out.println("qual: \"" + qualifier[i] + "\" , \"" + qualValue[i] + "\"");
+    // for ( i = 0; i < verbCount; i++)
+    //   System.out.println("verb: \"" + verb[i] + "\"");
+    // for ( i = 0; i < qualifierCount; i++)
+    //  System.out.println("qual: \"" + qualifier[i] + "\" , \"" + qualValue[i] + "\"");
 
     // Identify verbs and qualifiers
     boolean found = false;
