@@ -61,6 +61,10 @@ extern "C" {
 #include "ge.h"
 #include "wb_wda.h"
 
+#include "wb_env.h"
+#include "wb_erep.h"
+#include "wb_vrepwbl.h"
+
 #define	WNAV_MENU_CREATE	0
 #define	WNAV_MENU_ADD		1
 
@@ -223,7 +227,7 @@ dcli_tCmdTable	wnav_command_table[] = {
 			"/COMMAND", "/AFTER", "/BEFORE", "/FIRSTCHILD", 
 			"/LASTCHILD", "/VOLUME", "/ALL", 
 			"/CLASS", "/DEBUG", "/NODECONFIG",
-			"/NAME", "/IDENTITY", "/FILES",
+			"/NAME", "/IDENTITY", "/FILES", "/OUT",
 			""}
 		},
 		{
@@ -3419,6 +3423,43 @@ static int	wnav_create_func( void		*client_data,
     char cmd[80] = "LIST RTTLISTS";
     sts = wnav->command( cmd);
     if ( EVEN(sts)) return sts;
+  }
+  else if ( strncmp( arg1_str, "SNAPSHOT", strlen( arg1_str)) == 0)
+  {
+    char	filestr[80];
+    char	outstr[80];
+    pwr_tStatus	sts;
+
+    // Command is "CREATE SNAPSHOT"
+
+    if ( EVEN( dcli_get_qualifier( "/FILES", filestr)))
+    {
+      wnav->message('E', "Qualifer required");
+      return WNAV__QUAL;
+    }
+
+    if ( EVEN( dcli_get_qualifier( "/OUT", outstr)))
+    {
+      wnav->message('E', "Qualifer required");
+      return WNAV__QUAL;
+    }
+
+    sts = wnav_wccm_get_wbctx_cb( wnav, &wnav->wbctx);
+    if ( EVEN(sts)) return sts;
+
+    sts = WNAV__SUCCESS;
+    try {
+      wb_erep *erep = *(wb_env *)wnav->wbctx;
+      wb_vrepwbl *wbl = new wb_vrepwbl(erep);
+      wbl->load( filestr);
+      wbl->createSnapshot( outstr);
+    }
+    catch ( wb_error &e) {
+      sts = e.sts();
+    }
+    if ( EVEN(sts))
+      wnav->message(' ', wnav_get_message(sts));
+    return sts;
   }
   else
   {
