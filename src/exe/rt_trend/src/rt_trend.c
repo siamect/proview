@@ -125,6 +125,7 @@ int main (int argc, char **argv)
     InitOK = FALSE;
 
     /* This should be removed when we can wait for init messages. */
+    errh_SetStatus(0);
     Log_Error_Exit(sts, "No valid DsTrend objects");
   }
 
