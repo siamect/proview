@@ -509,7 +509,7 @@ reload_continue()
     return
   fi
 
-  echo -n "Do you wan't to continue ? [y/n/go] "
+  echo -n "Do you want to continue ? [y/n/go] "
   read repl
   case $repl in
     go ) go=1; return ;;
@@ -583,6 +583,10 @@ usage()
     createload   Create new loadfiles.
     createboot   Create bootfiles for all nodes in the project.
     convertge    Convert ge graphs.
+
+  Note!
+  The first pass (dumpdb) must be executed on NEWTON and then you must move to
+  PWR40 and run the following passes beginning with userclasses.
 EOF
 }
 

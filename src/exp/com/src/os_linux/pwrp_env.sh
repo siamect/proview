@@ -593,7 +593,7 @@ EOF
 
     # Create an empty directory database
     echo "Creating directory database"
-    wb_cmd create volume/name=\"directory\"/class=\$DirectoryVolume/ident=254.254.254.253
+    wb_cmd create volume/directory
     return
   fi
   
@@ -710,9 +710,14 @@ pwrc_delete_func()
       then
         echo "Project root deleted"
       else
-        echo "Unable to delete project root"
-	pwrc_status=$pwrc__rootdelete
+        if rmdir $proot
+        then
+          echo "Project root deleted"
+        else
+          echo "Unable to delete project root"
+	  pwrc_status=$pwrc__rootdelete
         return
+	fi
       fi
 
     fi

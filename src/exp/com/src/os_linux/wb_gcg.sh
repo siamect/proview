@@ -155,7 +155,7 @@ CompileRtNode()
     ld_opt="`eval echo $pwr_obj/rt_io_user.o`"
   fi
 
-  if g++ $link_debug -L/lib/thread -L$pwrp_lib -L$pwr_lib \
+  if g++ $link_debug -L/lib/thread -L$pwrp_lib -L$pwrp_cmn/x86_linux/lib -L$pwr_lib \
     -o $pwrp_exe/$OutFile \
     $pwr_obj/rt_plc_process.o \
     $pwrp_obj/${FileName}.o \
@@ -292,7 +292,7 @@ then
   pwrp_gc="$pwrp_tmp"
 
 # Suppress all warnings, -x
-  cc_cmd="gcc -c -x c -w $cc_debug -D_REENTRANT -DOS_LINUX -I$pwr_inc -I$pwrp_inc -I$pwrp_tmp"
+  cc_cmd="gcc -c -x c -w $cc_debug -D_REENTRANT -DOS_LINUX -I$pwr_inc -I$pwrp_inc -I$pwrp_tmp -I$pwrp_cmn/common/inc"
 
   FileTypeStr="`echo $vFileType| cut -f $FileTypeIdx -d ,`"
 
