@@ -91,6 +91,10 @@ static pwr_tStatus rtt_mh_info_bc( mh_sMessage *MsgP);
 static pwr_tStatus rtt_mh_alarm_bc( mh_sMessage *MsgP);
 static pwr_tStatus rtt_mh_ack_bc( mh_sAck *MsgP);
 static pwr_tStatus rtt_mh_return_bc( mh_sReturn *MsgP);
+static pwr_tStatus rtt_mh_block_bc( mh_sBlock *MsgP);
+static pwr_tStatus rtt_mh_cancel_bc( mh_sReturn *MsgP);
+static pwr_tStatus rtt_mh_clear_alarmlist_bc( pwr_tNodeIndex nix);
+static pwr_tStatus rtt_mh_clear_blocklist_bc( pwr_tNodeIndex nix);
 static int	rtt_appl_connect_alarm();
 static int	rtt_menu_alarm_configure(
 			menu_ctx	ctx,
@@ -516,6 +520,60 @@ static pwr_tStatus rtt_mh_return_bc( mh_sReturn *MsgP)
 
 
 /****************************************************************************
+* Name:		rtt_mh_cancel_bc()
+*
+* Type		int
+*
+* Type		Parameter	IOGF	Description
+*
+* Description:
+*	Backcall from mh.
+*
+**************************************************************************/
+static pwr_tStatus rtt_mh_cancel_bc( mh_sReturn *MsgP)
+{
+	int		sts;
+	ala_uEvent	*EventP;
+	int		alarm_item;
+	rtt_t_menu_alarm	*menu_ptr;
+
+	EventP = (ala_uEvent *) MsgP ; 
+
+	sts = rtt_alarm_get_index( &MsgP->TargetId, &alarm_item);
+	if ( ODD(sts))
+	{
+	  menu_ptr = (rtt_t_menu_alarm *) rtt_alarm_ctx->menu;
+	  menu_ptr += alarm_item;
+	  sts = rtt_menu_item_alarm_delete( 
+		(rtt_t_menu_alarm *) rtt_alarm_ctx->menu, alarm_item, 
+		&rtt_alarmlist_index);
+	  if ( rtt_alarm_ctx != 0)
+	    rtt_alarm_ctx->update_init = 1;
+	}
+	rtt_alarm_last_message();
+
+	return RTT__SUCCESS;
+}
+static pwr_tStatus rtt_mh_block_bc( mh_sBlock *MsgP)
+{
+        /* NYI */
+	return RTT__SUCCESS;
+}
+
+static pwr_tStatus rtt_mh_clear_alarmlist_bc( pwr_tNodeIndex nix)
+{
+         /* NYI */
+         return 1;
+}
+
+static pwr_tStatus rtt_mh_clear_blocklist_bc( pwr_tNodeIndex nix)
+{
+         /* NYI */
+         return 1;
+}
+
+
+/****************************************************************************
 * Name:		rtt_alarm_connect()
 *
 * Type		int
@@ -612,10 +670,10 @@ int	rtt_alarm_connect (
 		0,
 		rtt_mh_ack_bc,
 		rtt_mh_alarm_bc,
-		NULL,
-		NULL,
-		NULL,
-		NULL,
+		rtt_mh_block_bc,
+		rtt_mh_cancel_bc,
+		rtt_mh_clear_alarmlist_bc,
+		rtt_mh_clear_blocklist_bc,
 		rtt_mh_info_bc,
 		rtt_mh_return_bc
 		);
