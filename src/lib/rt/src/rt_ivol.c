@@ -230,7 +230,8 @@ mountClients (
     if (op->g.flags.b.isMountClient && op->g.oid.vid == gdbroot->db->vid) {
       /* Only root volumes can mount.  */
       mountVolume(sts, op);
-      pwr_Assert(ODD(*sts));
+      if ( *sts != GDH__NOMOUNTOBJECT)
+	pwr_Assert(ODD(*sts));
     }
   }
   return YES;
@@ -263,6 +264,10 @@ mountVolume (
   switch (op->g.cid) {
   case pwr_eClass_MountObject:
     soid = ((pwr_sMountObject *)p)->Object;
+    if ( cdh_ObjidIsNull(soid)) {
+      *sts = GDH__NOMOUNTOBJECT;
+      return NULL;
+    }
     vp = vol_MountVolume(sts, soid.vid);
     break;
   case pwr_eClass_MountVolume:

@@ -403,7 +403,8 @@ gdb_AddMountServer (
 
   gdb_AssumeLocked;
 
-  pwr_Assert(cdh_ObjidIsNotNull(soid));
+  // pwr_Assert(cdh_ObjidIsNotNull(soid));
+  if (cdh_ObjidIsNull(soid)) return NULL;
 
   msp = hash_Search(sts, gdbroot->ms_ht, &soid);
   if (msp != NULL) {
