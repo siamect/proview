@@ -1,34 +1,13 @@
 Package: pwrrt
-Version: 4.0.0-7
+Version: 4.1.0-0
 Section: base
 Priority: optional
 Architecture: i386
 Depends: libc6 (>= 2.2.4-4)
-Replaces: pwr34,pwr39,pwr40
+Replaces: pwr34,pwr39,pwr40,pwr41
 Maintainer: Proview <postmaster@proview.se>
 Description:
  Proview runtime environment, base release
- Changes in 4.0.0-2:
-   - Soft restart handled in rs_nmps_bck.
- Changes in 4.0.0-3:
-   - Initital values in input and output signals.
- Changes in 4.0.0-4:
-   - Java class ScaleTools replace by Proportion
-   - Objecttype for GetIp and GetIpToA changed.
-   - Bugfix in qmon (qos_Signal).
-   - Java ClassGraphs implemented.
- Changes in 4.0.0-5:
-   - Java classgraphs for signals and other objects.
-   - Improved xtt preformance.
-   - Xtt window to display system messages.
- Changes in 4.0.0-6:
-   - All users has access to start mozilla from xtt.
-   - PageDown and PageUp in xtt.
-   - Ctrl replacments of PF keys in rtt
- Changes in 4.0.0-7:
-   - QCOM bugfix.
-   - Menu entries to display volumes and nodes in xtt.
-   - Possibility to choose pixmap of menu entries in xtt.
 
 
 
