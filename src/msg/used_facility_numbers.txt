@@ -31,6 +31,7 @@
   180   ini
   190   mh
   191   ph
+  192   smon
   210   ds
   211   csup
   220   ldh
