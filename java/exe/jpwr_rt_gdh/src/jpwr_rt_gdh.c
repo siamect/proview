@@ -2159,7 +2159,10 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getMsgText
 
   status = (pwr_tStatus) sts;
 
-  msg_GetText( status, buf, sizeof(buf));
+  if ( status == 0)
+    strcpy( buf, "");
+  else
+    msg_GetText( status, buf, sizeof(buf));
 
   jbuf = (*env)->NewStringUTF( env, buf);
   jsts = (jint) GDH__SUCCESS;
