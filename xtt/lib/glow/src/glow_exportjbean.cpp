@@ -44,6 +44,7 @@ void GlowExportJBean::growctx( glow_eExportPass pass, ofstream& fp)
 "  int colorInverse = 0;" << endl <<
 "  int originalColorInverse = 0;" << endl <<
 "  int shadow = 0;" << endl <<
+"  boolean dimmed = false;" << endl <<
 "  public void setColorTone( int colorTone) {" << endl <<
 "    this.colorTone = colorTone;" << endl <<
 "    originalColorTone = colorTone;" << endl <<
@@ -284,16 +285,8 @@ void GlowExportJBean::nodeclass( GlowNodeClass *nc, glow_eExportPass pass,
       }
       fp <<
 "    animationCount = " << nc->animation_count << ";" << endl <<
-"    if ( dd.invisible) {" << endl <<
-"      if ( !dd.invisibleOld) {" << endl <<
-"        dd.invisibleOld = dd.invisible;" << endl <<
-"        repaint();" << endl <<
-"      }" << endl <<
-"      else" << endl <<
-"        dd.invisibleOld = dd.invisible;" << endl <<
+"    if ( !visible)" << endl <<
 "      return;" << endl <<
-"    }" << endl <<
-"    dd.invisibleOld = dd.invisible;" << endl <<
 "    Graphics2D g = (Graphics2D) g1;" << endl <<
 "    float width = getWidth();" << endl <<
 "    float height = getHeight();" << endl <<
@@ -499,33 +492,33 @@ void GlowExportJBean::polyline( glow_sPoint *points, int point_cnt, int fill, in
         if ( fill_eq_border)
           fp <<
 "    g.setColor(GeColor.getColor(" << (int)border_drawtype << ", colorTone," << endl <<
-"	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));" << endl;
+"	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));" << endl;
 	else if ( fill_eq_light) {
           fp <<
 "    if ( shadow != 0) {" << endl <<
 "      int fcolor = GeColor.getDrawtype(" << (int)fill_drawtype << ", colorTone,"  << endl <<
-"                   colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);" << endl <<
+"                   colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);" << endl <<
 "      g.setColor(GeColor.shiftColor(fcolor," << -drawtype_incr << ", colorInverse));" << endl <<
 "    }" << endl << 
 "    else" << endl <<
 "      g.setColor(GeColor.getColor(" << (int)fill_drawtype << ", colorTone," << endl <<
-"	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor));" << endl;
+"	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed));" << endl;
 	}
 	else if ( fill_eq_shadow) {
           fp <<
 "    if ( shadow != 0) {" << endl <<
 "      int fcolor = GeColor.getDrawtype(" << (int)fill_drawtype << ", colorTone,"  << endl <<
-"                   colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);" << endl <<
+"                   colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);" << endl <<
 "      g.setColor(GeColor.shiftColor( fcolor," << drawtype_incr << ", colorInverse));" << endl <<
 "    }" << endl <<
 "    else" << endl <<
 "      g.setColor(GeColor.getColor(" << (int)fill_drawtype << ", colorTone," << endl <<
-"	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor));" << endl;
+"	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed));" << endl;
 	}
 	else
           fp <<
 "    g.setColor(GeColor.getColor(" << (int)fill_drawtype << ", colorTone," << endl <<
-"	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor));" << endl;
+"	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed));" << endl;
 
         if ( page <= 1)
           fp <<
@@ -540,7 +533,7 @@ void GlowExportJBean::polyline( glow_sPoint *points, int point_cnt, int fill, in
 	fp <<
 "    {" << endl <<  // Avoid multiple declarations of fcolor
 "    int fcolor = GeColor.getDrawtype(" << (int)fill_drawtype << ", colorTone," << endl <<
-"	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);" << endl;
+"	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);" << endl;
 
 	if ( !shadow)
 	  // Shadow is choosable at runtime
@@ -568,7 +561,7 @@ void GlowExportJBean::polyline( glow_sPoint *points, int point_cnt, int fill, in
         fp <<
 "    g.setStroke( new BasicStroke(" << line_width+1 << "F));" << endl <<
 "    g.setColor(GeColor.getColor(" << (int)border_drawtype << ", colorTone," << endl <<
-"	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));" << endl;
+"	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));" << endl;
         if ( page <= 1)
           fp <<
 "    g.draw( shapes[" << base_shape << "]);" << endl;
@@ -614,7 +607,7 @@ void GlowExportJBean::line( double x1, double y1, double x2, double y2,
       fp <<
 "    g.setStroke( new BasicStroke(" << line_width+1 << "F, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));" << endl <<
 "    g.setColor(GeColor.getColor(" << (int)border_drawtype << ", colorTone," << endl <<
-"	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));" << endl;
+"	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));" << endl;
       if ( page <= 1)
         fp <<
 "    g.draw( shapes[" << *shape_cnt << "]);" << endl;
@@ -702,7 +695,7 @@ void GlowExportJBean::rect( double x0, double y0, double width, double height,
       fp <<
 "    {" << endl <<  // Avoid multiple declarations of fcolor
 "    int fcolor = GeColor.getDrawtype(" << (int)fill_drawtype << ", colorTone," << endl <<
-"	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);" << endl;
+"	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);" << endl;
       if ( fill)
       {
         fp <<
@@ -744,7 +737,7 @@ void GlowExportJBean::rect( double x0, double y0, double width, double height,
         fp <<
 "    g.setStroke( new BasicStroke(" << line_width+1 << "F));" << endl <<
 "    g.setColor(GeColor.getColor(" << (int)border_drawtype << ", colorTone," << endl <<
-"	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));" << endl;
+"	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));" << endl;
         if ( page <= 1)
           fp <<
 "    g.draw( shapes[" << base_shape << "]);" << endl;
@@ -854,7 +847,7 @@ void GlowExportJBean::rectrounded( double x0, double y0, double width, double he
 	fp <<
 "    {" << endl <<  // Avoid multiple declarations of fcolor
 "    int fcolor = GeColor.getDrawtype(" << (int)fill_drawtype << ", colorTone," << endl <<
-"	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);" << endl;
+"	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);" << endl;
 	if ( shadow_width == 0) {
 
 	  // Print noshadow shape only
@@ -943,7 +936,7 @@ void GlowExportJBean::rectrounded( double x0, double y0, double width, double he
         fp <<
 "    g.setStroke( new BasicStroke(" << line_width+1 << "F));" << endl <<
 "    g.setColor(GeColor.getColor(" << (int)border_drawtype << ", colorTone," << endl <<
-"	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));" << endl;
+"	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));" << endl;
         if ( page <= 1)
           fp <<
 "    g.draw( shapes[" << (*shape_cnt)++ << "]);" << endl;
@@ -1037,7 +1030,7 @@ void GlowExportJBean::arc( double x0, double y0, double width, double height,
 	  }
 	  fp <<
 "    g.setColor(GeColor.getColor(" << (int)fill_drawtype << ", colorTone," << endl <<
-"	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor));" << endl;
+"	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed));" << endl;
 	  if ( page <= 1)
 	    fp <<
 "    g.fill( shapes[" << *shape_cnt << "]);" << endl;
@@ -1057,7 +1050,7 @@ void GlowExportJBean::arc( double x0, double y0, double width, double height,
 	  fp <<
 "    g.setStroke( new BasicStroke(" << line_width+1 << "F));" << endl <<
 "    g.setColor(GeColor.getColor(" << (int)border_drawtype << ", colorTone," << endl <<
-"	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));" << endl;
+"	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));" << endl;
 	  if ( page <= 1)
 	    fp <<
 "    g.draw( shapes[" << *shape_cnt << "]);" << endl;
@@ -1084,7 +1077,7 @@ void GlowExportJBean::arc( double x0, double y0, double width, double height,
 	    }
 	    fp <<
 "    g.setColor(GeColor.getColor(" << (int)fill_drawtype << ", colorTone," << endl <<
-"	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor));" << endl;
+"	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed));" << endl;
 	    if ( page <= 1)
 	      fp <<
 "    g.fill( shapes[" << *shape_cnt << "]);" << endl;
@@ -1104,7 +1097,7 @@ void GlowExportJBean::arc( double x0, double y0, double width, double height,
 	    fp <<
 "    g.setStroke( new BasicStroke(" << line_width+1 << "F));" << endl <<
 "    g.setColor(GeColor.getColor(" << (int)border_drawtype << ", colorTone," << endl <<
-"	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));" << endl;
+"	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));" << endl;
 	    if ( page <= 1)
 	      fp <<
 "    g.draw( shapes[" << *shape_cnt << "]);" << endl;
@@ -1141,7 +1134,7 @@ void GlowExportJBean::arc( double x0, double y0, double width, double height,
 	  fp <<
 "    {" << endl <<  // Avoid multiple declarations of fcolor
 "    int fcolor = GeColor.getDrawtype(" << (int)fill_drawtype << ", colorTone," << endl <<
-"	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);" << endl;
+"	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, dimmed);" << endl;
 
 
 	  // Light shadow
@@ -1192,7 +1185,7 @@ void GlowExportJBean::arc( double x0, double y0, double width, double height,
 	  fp <<
 "    g.setStroke( new BasicStroke(" << line_width+1 << "F));" << endl <<
 "    g.setColor(GeColor.getColor(" << (int)border_drawtype << ", colorTone," << endl <<
-"	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));" << endl;
+"	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, dimmed));" << endl;
 	  if ( page <= 1)
 	    fp <<
 "    g.draw( shapes[" << *shape_cnt+5 << "]);" << endl;
@@ -1256,7 +1249,7 @@ void GlowExportJBean::text( int x0, int y0, char *text,
         strcpy(bold_str, "PLAIN");
       fp <<
 "    g.setColor(GeColor.getColor(" << (int)color_drawtype << ", colorTone," << endl <<
-"	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor));" << endl <<
+"	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));" << endl <<
       // "    g.setColor(Color.black);" << endl <<
 "    g.setFont(new Font(\"Helvetica\", Font." << bold_str << ", " << 
 	text_size << "));" << endl <<
@@ -1330,7 +1323,7 @@ void GlowExportJBean::annot( int x0, int y0, int number,
         ((GrowCtx *)ctx)->measure_javabean( &dim_x1, &dim_x0, &dim_y1, &dim_y0);
       fp <<
 "    g.setColor(GeColor.getColor( annot" << number << "Color , colorTone," << endl <<
-"	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor));" << endl <<
+"	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));" << endl <<
 	//"    g.setColor(Color.black);" << endl <<
 "    g.setFont( annot" << number << "Font);" << endl <<
 "    save_tmp = g.getTransform();" << endl;
