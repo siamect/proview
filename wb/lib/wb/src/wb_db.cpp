@@ -902,9 +902,9 @@ void wb_db::openDb(bool useTxn)
   int rc;
   //DbTxn *txn = 0;
   
-  /* Create the directory, read/write/access owner only. */
+  /* Create the directory, read/write/access owner and group. */
   if (stat(m_fileName, &sb) != 0) {
-    if (mkdir(m_fileName, S_IRWXU) != 0) {
+    if (mkdir(m_fileName, S_IRWXU | S_IRWXG) != 0) {
       fprintf(stderr, "txnapp: mkdir: %s, %s\n", m_fileName, strerror(errno));
       //exit(1);
     }
@@ -932,11 +932,11 @@ void wb_db::openDb(bool useTxn)
     if (useTxn) {
       m_env->open(m_fileName,
 		  DB_CREATE | DB_INIT_LOCK | DB_INIT_LOG | DB_INIT_MPOOL | DB_INIT_TXN | DB_RECOVER,
-		  S_IRUSR | S_IWUSR);
+		  0 /* S_IRUSR | S_IWUSR */);
     } else {
       m_env->open(m_fileName,
                 DB_CREATE | DB_INIT_MPOOL | DB_PRIVATE,
-		  S_IRUSR | S_IWUSR);
+		  0 /*S_IRUSR | S_IWUSR */);
     }  
   } catch (DbException &e) {
     printf("m_env->open, %s\n", e.what());
@@ -950,13 +950,13 @@ void wb_db::openDb(bool useTxn)
   m_t_name  = new Db(m_env, 0);
   m_t_info  = new Db(m_env, 0);
     
-  m_t_ohead->open("ohead", NULL, DB_BTREE, DB_CREATE, S_IRUSR | S_IWUSR);
-  m_t_rbody->open("rbody", NULL, DB_BTREE, DB_CREATE, S_IRUSR | S_IWUSR);
-  m_t_dbody->open("dbody", NULL, DB_BTREE, DB_CREATE, S_IRUSR | S_IWUSR);
-//  m_t_dbody->open(NULL, "dbody", NULL, DB_BTREE, DB_CREATE | DB_AUTO_COMMIT, S_IRUSR | S_IWUSR);
-  m_t_class->open("class", NULL, DB_BTREE, DB_CREATE, S_IRUSR | S_IWUSR);
-  m_t_name->open("name", NULL, DB_BTREE, DB_CREATE, S_IRUSR | S_IWUSR);
-  m_t_info->open("info", NULL, DB_BTREE, DB_CREATE, S_IRUSR | S_IWUSR);
+  m_t_ohead->open("ohead", NULL, DB_BTREE, DB_CREATE, 0 /* S_IRUSR | S_IWUSR */);
+  m_t_rbody->open("rbody", NULL, DB_BTREE, DB_CREATE, 0 /* S_IRUSR | S_IWUSR */);
+  m_t_dbody->open("dbody", NULL, DB_BTREE, DB_CREATE, 0 /* S_IRUSR | S_IWUSR */);
+  //  m_t_dbody->open(NULL, "dbody", NULL, DB_BTREE, DB_CREATE | DB_AUTO_COMMIT, 0 /* S_IRUSR | S_IWUSR */);
+  m_t_class->open("class", NULL, DB_BTREE, DB_CREATE, 0 /* S_IRUSR | S_IWUSR */);
+  m_t_name->open("name", NULL, DB_BTREE, DB_CREATE, 0 /* S_IRUSR | S_IWUSR */);
+  m_t_info->open("info", NULL, DB_BTREE, DB_CREATE, 0 /* S_IRUSR | S_IWUSR */);
   printstat(m_env, "after open databases");
     
 }
