@@ -461,6 +461,8 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
         sts = a.a[i]->event_handler( event, x, y, fx, fy);
         if ( sts == GLOW__NO_PROPAGATE)
           break;
+	else if ( sts == GLOW__TERMINATED)
+	  return sts;
       }
       break;
 
@@ -1988,7 +1990,8 @@ void GrowCtx::clear_all( int keep_paste)
       for ( j = 0; j < a_paste.a_size; j++)
       {
         if ( a_paste[j]->type() == glow_eObjectType_GrowNode ||
-             a_paste[j]->type() == glow_eObjectType_GrowSlider)
+             a_paste[j]->type() == glow_eObjectType_GrowSlider ||
+             a_paste[j]->type() == glow_eObjectType_GrowGroup)
 	{
           found = ((GrowNode *) a_paste[j])->find_nc( a_nc[i]);
           if ( found)
