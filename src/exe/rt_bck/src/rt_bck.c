@@ -61,6 +61,8 @@
 #include "rt_qcom_msg.h"
 #include "rt_ini_event.h"
 
+pwr_tStatus bck_print( char *);
+
 #define	check4a(sts,str) if((sts)==-1)perror(str)
 
 #if defined OS_VMS || defined OS_ELN
@@ -1355,12 +1357,24 @@ pwr_tUInt32 bck_init ()
 /* This is the main program of backup. It initializes backup
    and then waits for forced activation... */
 
-int main ()
+int main( int argc, char *argv[])
 {
   pwr_tStatus sts;
   pwr_tInt32 sts4a;
   pwr_tUInt32 c;
+  int i;
   qcom_sQid	my_q = qcom_cNQid;
+
+  for ( i = 1; i < argc; i++) {
+    if ( strcmp( argv[i], "-p") == 0) {
+      bck_print( "$pwrp_load/bck.txt");
+      exit(1);
+    }
+    else if ( strcmp( argv[i], "-h") == 0) {
+      printf( "Usage:\nrt_bck -p\nPrint content of backuped objects to $pwrp_load/bck.txt\n");
+      exit(1);
+    }
+  }
 
   errh_Init("pwr_bck", errh_eAnix_bck);
   errh_SetStatus( PWR__SRVSTARTUP);
@@ -1422,9 +1436,3 @@ int main ()
   }
 
 }
-
-
-
-
-
-
