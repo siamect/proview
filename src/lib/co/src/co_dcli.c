@@ -146,7 +146,7 @@ int	dcli_parse( 	char	*string,
 	      {
 	        parsechar_found = 1;
 	        /* Next token */
-	        if ( col > 0)	
+	        if ( col > 0 || nullstr)	
 	        {
 	          *(outstr + row * max_cols + col) = '\0';
 	          row++;
