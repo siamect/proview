@@ -1,0 +1,174 @@
+!  pwrb_c_cstonumsp.wb_load -- Defines the class CStoNumSp.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  Conditional Store Analog parameter.
+!
+! Range ldh_eDId_Base
+!
+SObject pwrb:Class
+!/**
+!  @Version 1.0
+!  @Code rt_plc_macro_string.h
+!  @Group Plc,PlcString
+!  @Summary Conditional storage of a number of characters in a string attribute.
+!  Conditional Storage of number of characters in a string attribute.
+!  @image orm_cstonumsp_fo.gif
+!
+!  Conditional storage of an string value ( parameter,
+!  input, or output signal) on a specified attribute in a
+!  local object.
+!  Conditional is aimed at the con-input, which is
+!  supposed to be connected.
+!  
+!  The last name segment of the object and the name of the
+!  parameter will be shown in the right part of the
+!  CStoNumSp symbol.
+!  
+!  It is not allowed, by means of a function in C or PLC
+!  programs, to write in any of the inputs.
+!  
+! @b Example
+!  It is possible to use CStoNumSp to change the DetectText in
+!  ASup or DSup objects.
+!*/
+  Object CStoNumSp $ClassDef 374
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_RtConnectionsAndDevBodies
+      Attr Flags = pwr_mClassDef_DevOnly
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "cstonumsp"
+      EndBody
+      !/**
+      !  The input is connected to an analog signal or left
+      !  open. In the latter case the In is considered to be
+      !  stored.
+      !*/
+      Object In $Input 1 
+        Body SysBody
+          Attr PgmName = "In"
+          Attr Flags |= PWR_MASK_RTVIRTUAL
+          Attr Flags |= PWR_MASK_DEVBODYREF
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr GraphName = "VAL"
+          Attr ConPointNr = 0
+        EndBody
+      EndObject
+      !/**
+      !  Specifies whether a storage will be done or not. FALSE
+      !  means no storage and TRUE means storage of an analog
+      !  value.
+      !*/
+      Object Cond $Input 2 
+        Body SysBody
+          Attr PgmName = "Cond"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_RTVIRTUAL
+          Attr Flags |= PWR_MASK_DEVBODYREF
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "con"
+          Attr ConPointNr = 1
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      !/**
+      !  Specifies the name of the object where to store the
+      !  value.
+      !*/
+      Object Object $Intern 1 
+        Body SysBody
+          Attr PgmName = "Object"
+          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr GraphName = "sts"
+          Attr NiNaAnnot = 1
+          Attr NiNaSegments = 1
+        EndBody
+      EndObject
+      !/**
+      !  Specifies, in an object specified by Object, the name
+      !  of the attribute where to store the value.
+      !*/
+      Object Parameter $Intern 2 
+        Body SysBody
+          Attr PgmName = "Parameter"
+          Attr TypeRef = "pwrs:Type-$String80"
+          Attr GraphName = "par"
+          Attr NiNaAnnot = 2
+          Attr ConPointNr = 0
+        EndBody
+      EndObject
+      !/**
+      !  Specifies how many segments of the actual object name
+      !  that is to be displayed in the symbol of the CStoNumSp
+      !  object. The segments are counted from behind.
+      !  0 and 1 both result in displaying the last segment of
+      !  the actual object name.
+      !*/
+      Object ObjectSegments $Intern 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies number of character to copy.
+      !  If the string is shorter than NumberOfChar the string
+      !  and the NULL termination is copied. If the lengh of the
+      !  string is equal or greater than NumberOfChar, the NULL 
+      !  termination is not copied. In this case the previous string
+      !  in the target attribut should be larger than NumberOfChar. If not,
+      !  the NULL termination is lost and the result is undefined.
+      !*/
+      Object NumberOfChar $Intern 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      Object PlcNode $Buffer 5 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 265
+        Attr parameters[0] = 2
+        Attr parameters[1] = 0
+        Attr parameters[2] = 0
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 15
+        Attr graphindex = 0
+        Attr default_mask[0] = 3
+        Attr default_mask[1] = 0
+        Attr segname_annotation = 0
+        Attr devbody_annotation = 1
+        Attr compmethod = 12
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 1
+        Attr connectmethod = 7
+        Attr executeordermethod = 2
+        Attr objname = "CStoNumSp"
+        Attr graphname = "CStoNumSp"
+        Attr debugpar = "Cond"
+      EndBody
+    EndObject
+    Object Template CStoNumSp
+      Body RtBody
+        Attr Cond = 1
+      EndBody
+      Body DevBody
+        Attr ObjectSegments = 1
+        Attr NumberOfChar = 79
+      EndBody
+    EndObject
+  EndObject
+EndSObject
