@@ -138,15 +138,15 @@ public class JopCheckvalve extends JComponent {
       		height/original_height));
     g.setStroke( new BasicStroke(2F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, false));
     g.draw( shapes[0]);
     g.setStroke( new BasicStroke(2F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, false));
     g.draw( shapes[1]);
     g.setStroke( new BasicStroke(2F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, false));
     g.draw( shapes[2]);
     g.setTransform(save);
   }

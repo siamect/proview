@@ -139,19 +139,19 @@ public class JopFramethin extends JComponent {
       		height/original_height));
     g.setStroke( new BasicStroke(1F));
     g.setColor(GeColor.getColor(24, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, false));
     g.draw( shapes[0]);
     g.setStroke( new BasicStroke(1F));
     g.setColor(GeColor.getColor(24, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, false));
     g.draw( shapes[1]);
     g.setStroke( new BasicStroke(1F));
     g.setColor(GeColor.getColor(10, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, false));
     g.draw( shapes[2]);
     g.setStroke( new BasicStroke(1F));
     g.setColor(GeColor.getColor(10, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, false));
     g.draw( shapes[3]);
     g.setTransform(save);
   }

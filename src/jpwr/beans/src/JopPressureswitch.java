@@ -135,11 +135,11 @@ public class JopPressureswitch extends JComponent {
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
     g.setColor(GeColor.getColor(21, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, false));
     g.fill( shapes[0]);
     g.setStroke( new BasicStroke(1F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, false));
     g.draw( shapes[0]);
     g.setTransform(save);
   }

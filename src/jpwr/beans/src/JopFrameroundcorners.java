@@ -147,51 +147,51 @@ public class JopFrameroundcorners extends JComponent {
       		height/original_height));
     g.setStroke( new BasicStroke(2F));
     g.setColor(GeColor.getColor(30, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, false));
     g.draw( shapes[0]);
     g.setStroke( new BasicStroke(2F));
     g.setColor(GeColor.getColor(32, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, false));
     g.draw( shapes[1]);
     g.setStroke( new BasicStroke(2F));
     g.setColor(GeColor.getColor(32, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, false));
     g.draw( shapes[2]);
     g.setStroke( new BasicStroke(2F));
     g.setColor(GeColor.getColor(33, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, false));
     g.draw( shapes[3]);
     g.setStroke( new BasicStroke(2F));
     g.setColor(GeColor.getColor(33, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, false));
     g.draw( shapes[4]);
     g.setStroke( new BasicStroke(2F));
     g.setColor(GeColor.getColor(32, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, false));
     g.draw( shapes[5]);
     g.setStroke( new BasicStroke(2F));
     g.setColor(GeColor.getColor(30, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, false));
     g.draw( shapes[6]);
     g.setStroke( new BasicStroke(2F));
     g.setColor(GeColor.getColor(33, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, false));
     g.draw( shapes[7]);
     g.setStroke( new BasicStroke(2F));
     g.setColor(GeColor.getColor(32, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, false));
     g.draw( shapes[8]);
     g.setStroke( new BasicStroke(2F));
     g.setColor(GeColor.getColor(30, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, false));
     g.draw( shapes[9]);
     g.setStroke( new BasicStroke(2F));
     g.setColor(GeColor.getColor(32, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, false));
     g.draw( shapes[10]);
     g.setStroke( new BasicStroke(2F));
     g.setColor(GeColor.getColor(32, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, false));
     g.draw( shapes[11]);
     g.setTransform(save);
   }

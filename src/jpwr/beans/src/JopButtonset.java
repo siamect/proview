@@ -263,17 +263,17 @@ public class JopButtonset extends JComponent implements JopDynamic, JopConfirm, 
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
     g.setColor(GeColor.getColor(22, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, false));
     g.fill( shapes[0]);
     g.setColor(GeColor.getColor(20, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, false));
     g.fill( shapes[1]);
     g.setColor(GeColor.getColor(23, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, false));
     g.fill( shapes[2]);
     g.setStroke( new BasicStroke(1F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, false));
     g.draw( shapes[3]);
     g.setColor(Color.black);
     g.setFont( annot1Font);

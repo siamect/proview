@@ -139,33 +139,33 @@ public class JopTank extends JComponent {
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
     g.setColor(GeColor.getColor(72, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, false));
     g.fill( shapes[0]);
     ((Arc2D)shapes[1]).setArcType(Arc2D.PIE);
     g.setColor(GeColor.getColor(72, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, false));
     g.fill( shapes[1]);
     ((Arc2D)shapes[1]).setArcType(Arc2D.OPEN);
     g.setStroke( new BasicStroke(2F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, false));
     g.draw( shapes[1]);
     ((Arc2D)shapes[2]).setArcType(Arc2D.PIE);
     g.setColor(GeColor.getColor(72, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, false));
     g.fill( shapes[2]);
     ((Arc2D)shapes[2]).setArcType(Arc2D.OPEN);
     g.setStroke( new BasicStroke(2F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, false));
     g.draw( shapes[2]);
     g.setStroke( new BasicStroke(2F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, false));
     g.draw( shapes[3]);
     g.setStroke( new BasicStroke(2F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, false));
     g.draw( shapes[4]);
     g.setTransform(save);
   }

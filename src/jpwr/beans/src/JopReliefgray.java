@@ -144,34 +144,34 @@ public class JopReliefgray extends JComponent {
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
     g.setColor(GeColor.getColor(15, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, false));
     g.fill( shapes[0]);
     g.setColor(GeColor.getColor(11, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, false));
     g.fill( shapes[1]);
     g.setColor(GeColor.getColor(16, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, false));
     g.fill( shapes[2]);
     g.setColor(GeColor.getColor(12, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, false));
     g.fill( shapes[3]);
     g.setColor(GeColor.getColor(11, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, false));
     g.fill( shapes[4]);
     g.setColor(GeColor.getColor(10, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, false));
     g.fill( shapes[5]);
     g.setColor(GeColor.getColor(17, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, false));
     g.fill( shapes[6]);
     g.setColor(GeColor.getColor(17, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, false));
     g.fill( shapes[7]);
     g.setColor(GeColor.getColor(14, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, false));
     g.fill( shapes[8]);
     g.setColor(GeColor.getColor(12, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, false));
     g.fill( shapes[9]);
     g.setTransform(save);
   }

@@ -192,48 +192,48 @@ public class JopIndsoap extends JComponent implements JopDynamic, ActionListener
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
     g.setColor(GeColor.getColor(13, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, false));
     g.fill( shapes[0]);
     g.setColor(GeColor.getColor(13, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, false));
     g.fill( shapes[1]);
     g.setColor(GeColor.getColor(13, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, false));
     g.fill( shapes[2]);
     g.setColor(GeColor.getColor(96, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, false));
     g.fill( shapes[3]);
     ((Arc2D)shapes[4]).setArcType(Arc2D.PIE);
     g.setColor(GeColor.getColor(96, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, false));
     g.fill( shapes[4]);
     ((Arc2D)shapes[4]).setArcType(Arc2D.OPEN);
     g.setStroke( new BasicStroke(1F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, false));
     g.draw( shapes[4]);
     ((Arc2D)shapes[5]).setArcType(Arc2D.PIE);
     g.setColor(GeColor.getColor(96, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, false));
     g.fill( shapes[5]);
     ((Arc2D)shapes[5]).setArcType(Arc2D.OPEN);
     g.setStroke( new BasicStroke(1F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, false));
     g.draw( shapes[5]);
     g.setStroke( new BasicStroke(1F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, false));
     g.draw( shapes[6]);
     g.setStroke( new BasicStroke(1F));
     g.setColor(GeColor.getColor(0, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor, false));
     g.draw( shapes[7]);
     g.setColor(GeColor.getColor(97, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, false));
     g.fill( shapes[8]);
     g.setColor(GeColor.getColor(90, colorTone,
-	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor));
+	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor, false));
     g.fill( shapes[9]);
     g.setColor(Color.black);
     g.setFont( annot1Font);
