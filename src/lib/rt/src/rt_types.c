@@ -299,6 +299,7 @@ static types_sEnumElement mask_EventFlags[] = {
 static types_sEnumElement mask_NMpsCell_Function[] = {
 	{ 1 << 2	, "DeleteWhenRemove"},
 	{ 1 << 3	, "DeteteWhenReset"},
+	{ 1 << 4	, "Backup"},
 	{ 0, ""}};
 static types_sEnumElement mask_NMpsOutCell_Function[] = {
 	{ 1 << 2	, "DeleteWhenRemove"},
@@ -308,6 +309,7 @@ static types_sEnumElement mask_NMpsStoreCell_Function[] = {
 	{ 1 << 2	, "AlwaysOneSelected"},
 	{ 1 << 2	, "DeleteWhenRemove"},
 	{ 1 << 3	, "DeteteWhenReset"},
+	{ 1 << 4	, "Backup"},
 	{ 0, ""}};
 
 static types_sEnumElement mask_NMpsTrp_Function[] = {
@@ -418,7 +420,7 @@ int types_translate_enum( pwr_tClassId classid, char *name, unsigned int num,
 {
   types_sEnum		*enum_p;
   types_sEnumElement	*elem_p;
-  int			found;
+  int			found = 0;
 
   for ( enum_p = enum_types; enum_p->elements; enum_p++)
   {
