@@ -1334,14 +1334,12 @@ static void ge_activate_export_javabean( Widget w, ge_tCtx gectx, XmAnyCallbackS
     gectx->graph->get_name( name);
     if ( strcmp( name, "") != 0)
     {
-      if ( strncmp( name, "pwr_", 4) == 0)
-      {
+      if ( strncmp( name, "pwr_", 4) == 0) {
         strcpy( default_name, "Jop");
         strcat( default_name, &name[4]);
         default_name[3] = _toupper( default_name[3]);
       }
-      else
-      {
+      else {
         strcpy( default_name, name);
         default_name[0] = _toupper( default_name[0]);
       }
@@ -1370,14 +1368,12 @@ static void ge_activate_export_javabean_as( Widget w, ge_tCtx gectx, XmAnyCallba
     gectx->graph->get_name( name);
     if ( strcmp( name, "") != 0)
     {
-      if ( strncmp( name, "pwr_", 4) == 0)
-      {
+      if ( strncmp( name, "pwr_", 4) == 0) {
         strcpy( default_name, "Jop");
         strcat( default_name, &name[4]);
         default_name[3] = _toupper( default_name[3]);
       }
-      else
-      {
+      else {
         strcpy( default_name, name);
         default_name[0] = _toupper( default_name[0]);
       }
@@ -1406,7 +1402,12 @@ static void ge_activate_export_gejava( Widget w, ge_tCtx gectx, XmAnyCallbackStr
     gectx->graph->get_name( name);
     if ( strcmp( name, "") != 0)
     {
-      if ( strncmp( name, "pwr_", 4) == 0)
+      if ( strncmp( name, "pwr_c_", 6) == 0) {
+        strcpy( default_name, "Jopc");
+        strcat( default_name, &name[6]);
+        default_name[4] = _toupper( default_name[4]);
+      }
+      else if ( strncmp( name, "pwr_", 4) == 0)
       {
         strcpy( default_name, "Jop");
         strcat( default_name, &name[4]);
@@ -1437,7 +1438,12 @@ static void ge_activate_export_gejava_as( Widget w, ge_tCtx gectx, XmAnyCallback
     gectx->graph->get_name( name);
     if ( strcmp( name, "") != 0)
     {
-      if ( strncmp( name, "pwr_", 4) == 0)
+      if ( strncmp( name, "pwr_c_", 6) == 0) {
+        strcpy( default_name, "Jopc");
+        strcat( default_name, &name[6]);
+        default_name[4] = _toupper( default_name[4]);
+      }
+      else if ( strncmp( name, "pwr_", 4) == 0)
       {
         strcpy( default_name, "Jop");
         strcat( default_name, &name[4]);

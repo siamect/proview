@@ -2089,6 +2089,9 @@ void GrowCtx::draw( int ll_x, int ll_y, int ur_x, int ur_y)
 
 void GrowCtx::nav_draw( int ll_x, int ll_y, int ur_x, int ur_y)
 {
+  if ( no_nav)
+    return;
+
   int		i;
   int		loc_ll_x = ll_x;
   int		loc_ll_y = ll_y;

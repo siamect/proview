@@ -88,8 +88,8 @@ void GlowExportJBean::growctx( glow_eExportPass pass, ofstream& fp)
 "  public int getBorderColor() {" << endl <<
 "    return borderColor;" << endl <<
 "  }" << endl <<
-"  int original_width = " << int( dim_x1 - dim_x0) + 2 * glow_cJBean_Offset << ";" << endl <<
-"  int original_height = " << int( dim_y1 - dim_y0) + 2 * glow_cJBean_Offset<< ";" << endl <<
+"  public int original_width = " << int( dim_x1 - dim_x0) + 2 * glow_cJBean_Offset << ";" << endl <<
+"  public int original_height = " << int( dim_y1 - dim_y0) + 2 * glow_cJBean_Offset<< ";" << endl <<
 "  double rotate;" << endl <<
 "  public void setRotate( double rotate) {" << endl <<
 "    if ( rotate < 0)" << endl <<
@@ -169,7 +169,7 @@ void GlowExportJBean::growctx( glow_eExportPass pass, ofstream& fp)
 "    AffineTransform save = g.getTransform();" << endl <<
 "    g.setColor(getBackground());" << endl <<
 "    g.fill(new Rectangle(0,0,getWidth(),getHeight()));" << endl <<
-"    // xxx g.transform( AffineTransform.getScaleInstance( scaleWidth, scaleHeight));" << endl <<
+"    g.transform( AffineTransform.getScaleInstance( scaleWidth, scaleHeight)); // scaletest" << endl <<
 "    AffineTransform save_tmp;" << endl;
       if ( strcmp( ((GrowCtx *)ctx)->background_image, "") != 0)
       {
@@ -214,8 +214,8 @@ void GlowExportJBean::nodeclass( GlowNodeClass *nc, glow_eExportPass pass,
       {
         fp <<
 
-"  int original_width = " << int( dim_x1 - dim_x0) + 2 * glow_cJBean_Offset << ";" << endl <<
-"  int original_height = " << int( dim_y1 - dim_y0) + 2 * glow_cJBean_Offset << ";" << endl <<
+"  public int original_width = " << int( dim_x1 - dim_x0) + 2 * glow_cJBean_Offset << ";" << endl <<
+"  public int original_height = " << int( dim_y1 - dim_y0) + 2 * glow_cJBean_Offset << ";" << endl <<
 "  Shape[] shapes = new Shape[] { " << endl;
       }
       else
@@ -1483,7 +1483,7 @@ void GlowExportJBean::node( double x1, double y1, double x2, double y2,
 "    add(" << var_name << ");" << endl;
       else
         fp <<
-"    localPanel.add(" << var_name << ", ScaleTools.getAddString(" << var_name << ".getBounds(),size));" << endl;
+"    localPanel.add(" << var_name << ", new Proportion(" << var_name << ".getBounds(), dsize));" << endl;
 
        break;
     }
@@ -1580,7 +1580,7 @@ void GlowExportJBean::image( double x1, double y1, double x2, double y2,
 "    add(" << var_name << ");" << endl;
       else
         fp <<
-"    localPanel.add(" << var_name << ", ScaleTools.getAddString(" << var_name << ".getBounds(),size));" << endl;
+"    localPanel.add(" << var_name << ", new Proportion(" << var_name << ".getBounds(), dsize));" << endl;
 
       break;
     }
@@ -1678,7 +1678,7 @@ void GlowExportJBean::bar( double x1, double y1, double x2, double y2,
 "    add(" << var_name << ");" << endl;
       else
 	fp <<
-"    localPanel.add(" << var_name << ", ScaleTools.getAddString(" << var_name << ".getBounds(),size));" << endl;
+"    localPanel.add(" << var_name << ", new Proportion(" << var_name << ".getBounds(), dsize));" << endl;
       break;
     }
     case glow_eExportPass_Draw:
@@ -1782,7 +1782,7 @@ void GlowExportJBean::trend( double x1, double y1, double x2, double y2,
 "    add(" << var_name << ");" << endl;
       else
 	fp <<
-"    localPanel.add(" << var_name << ", ScaleTools.getAddString(" << var_name << ".getBounds(),size));" << endl;
+"    localPanel.add(" << var_name << ", new Proportion(" << var_name << ".getBounds(), dsize));" << endl;
       break;
     }
     case glow_eExportPass_Draw:
@@ -1891,7 +1891,7 @@ void GlowExportJBean::axis( double x1, double y1, double x2, double y2,
 "    add(" << var_name << ");" << endl;
       else
 	fp <<
-"    localPanel.add(" << var_name << ", ScaleTools.getAddString(" << var_name << ".getBounds(),size));" << endl;
+"    localPanel.add(" << var_name << ", new Proportion(" << var_name << ".getBounds(), dsize));" << endl;
       break;
     }
     case glow_eExportPass_Draw:
@@ -1946,7 +1946,7 @@ void GlowExportJBean::window( double x1, double y1, double x2, double y2,
 	(int)(y1 - dim_y0 /* - glow_cJBean_Offset) */) << "," << 
 	(int)(x2 - x1 + 2 * glow_cJBean_Offset) << "," << 
 	(int)(y2 - y1 + 2 * glow_cJBean_Offset) << "));" << endl <<
-"    localPanel.add(" << var_name << ", ScaleTools.getAddString(" << var_name << ".getBounds(),size));" << endl;
+"    localPanel.add(" << var_name << ", new Proportion(" << var_name << ".getBounds(), dsize));" << endl;
       break;
     }
     case glow_eExportPass_Draw:
@@ -2017,7 +2017,7 @@ void GlowExportJBean::folder( double x1, double y1, double x2, double y2,
 	(int)(y1 - dim_y0 /* - glow_cJBean_Offset) */) << "," << 
 	(int)(x2 - x1 + 2 * glow_cJBean_Offset) << "," << 
 	(int)(y2 - y1 + 2 * glow_cJBean_Offset) << "));" << endl <<
-"    localPanel.add(" << var_name << ", ScaleTools.getAddString(" << var_name << ".getBounds(),size));" << endl;
+"    localPanel.add(" << var_name << ", new Proportion(" << var_name << ".getBounds(), dsize));" << endl;
       break;
     }
     case glow_eExportPass_Draw:
@@ -2030,7 +2030,7 @@ void GlowExportJBean::folder( double x1, double y1, double x2, double y2,
 void GlowExportJBean::table( double x1, double y1, double x2, double y2,
     	glow_eDrawType	fill_drawtype, int fill,
 	int rows, int columns, int header_row, int header_column,
-	int text_idx, glow_eDrawType text_drawtype,
+	int text_idx, glow_eDrawType text_drawtype, double header_row_height,
 	double row_height, double *column_width, char *header_text,
 	glow_eExportPass pass, int *shape_cnt, int node_cnt, ofstream& fp)
 {
@@ -2079,6 +2079,7 @@ void GlowExportJBean::table( double x1, double y1, double x2, double y2,
       fp <<
 "    " << var_name << " = new " << class_name << "(session, " << 
 	rows << "," << columns << "," << header_row << "," << header_column << ");" << endl <<
+"    " << var_name << ".setHeaderRowHeight(" << int(header_row_height) << ");" << endl <<
 "    " << var_name << ".setRowHeight(" << int(row_height) << ");" << endl;
       char *text_p = header_text;
       for ( int i = 0; i < columns; i++) {
@@ -2101,7 +2102,7 @@ void GlowExportJBean::table( double x1, double y1, double x2, double y2,
 	(int)(x2 - x1 + 2 * glow_cJBean_Offset) << "," << 
 	(int)(y2 - y1 + 2 * glow_cJBean_Offset) << "));" << endl;
       fp <<
-"    localPanel.add(" << var_name << ", ScaleTools.getAddString(" << var_name << ".getBounds(),size));" << endl;
+"    localPanel.add(" << var_name << ", new Proportion(" << var_name << ".getBounds(), dsize));" << endl;
       break;
     }
     case glow_eExportPass_Draw:

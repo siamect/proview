@@ -749,6 +749,9 @@ void GlowCtx::nav_draw( int ll_x, int ll_y, int ur_x, int ur_y)
 {
   int		i;
 
+  if ( no_nav) 
+    return;
+
   if ( ll_x == ur_x)
      return;
 

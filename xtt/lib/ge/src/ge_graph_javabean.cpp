@@ -1380,7 +1380,7 @@ int Graph::export_gejava_nodeclass( ofstream& fp, grow_tNodeClass nodeclass)
 
   if ( dyn_action_type & ge_mActionType_ValueInput) {
     fp <<
-"private class " << bean_name << " extends GeTextField {" << endl <<
+"protected class " << bean_name << " extends GeTextField {" << endl <<
 "  public " << bean_name << "( JopSession session)" << endl <<
 "  {" << endl <<
 "    super( session);" << endl <<
@@ -1413,7 +1413,7 @@ int Graph::export_gejava_nodeclass( ofstream& fp, grow_tNodeClass nodeclass)
   {
     // Use prefabricated class GeFrameThin
     fp <<
-"private class " << bean_name << " extends GeFrameThin {" << endl <<
+"protected class " << bean_name << " extends GeFrameThin {" << endl <<
 "  public " << bean_name << "( JopSession session)" << endl <<
 "  {" << endl <<
 "     super(session);" << endl <<
@@ -1425,10 +1425,10 @@ int Graph::export_gejava_nodeclass( ofstream& fp, grow_tNodeClass nodeclass)
   {
       //    if ( grow_IsSliderClass( nodeclass))
       //      fp <<
-      //"private class " << bean_name << " extends GeSlider {" << endl;
+      //"protected class " << bean_name << " extends GeSlider {" << endl;
       //    else
       fp <<
-"private class " << bean_name << " extends GeComponent {" << endl;
+"protected class " << bean_name << " extends GeComponent {" << endl;
 
     fp <<
 "  Dimension size;" << endl;
@@ -1668,13 +1668,13 @@ int Graph::export_javaframe( char *filename, char *bean_name, int applet,
 "      codebase=\"" << codebase << "\">" << endl <<
 "      <PARAM NAME = CODE VALUE = " << bean_name << "_A.class >" << endl <<
 "      <PARAM NAME =\"archive\" VALUE =\"pwrp_" << systemname << "_web.jar," <<
-"pwr_rt_client.jar,pwr_jop.jar\">" << endl <<
+"pwr_rt_client.jar,pwr_jop.jar,pwr_jopc.jar\">" << endl <<
 "      <PARAM NAME=\"type\" VALUE=\"application/x-java-applet;version=1.3\">" << endl <<
 "      <PARAM NAME=\"scriptable\" VALUE=\"false\">" << endl <<
 "      <PARAM NAME=\"instance\" VALUE=\"\">" << endl <<
 "    <embed type=\"application/x-java-applet;version=1.3\"" << endl <<
 "      code = " << bean_name << "_A.class" << endl <<
-"      archive =\"pwrp_" << systemname << "_web.jar," <<"pwr_rt_client.jar,pwr_jop.jar\"" << endl <<
+"      archive =\"pwrp_" << systemname << "_web.jar," <<"pwr_rt_client.jar,pwr_jop.jar,pwr_jopc.jar\"" << endl <<
 "      width=" << int(x1-x0) + 2*glow_cJBean_Offset << endl <<
 "      height=" << int(y1-y0) + 2*glow_cJBean_Offset << ">" << endl <<
 "      height=" << int(y1-y0) + 2*glow_cJBean_Offset << endl <<
@@ -1705,6 +1705,9 @@ int Graph::export_gejava( char *filename, char *bean_name, int applet, int html)
   int           bg_image_width;
   int           bg_image_height;
   int           sts;
+  int		baseclass;
+
+  baseclass = (strncmp( filename, "Jopc", 4) == 0);
 
   grow_GetBackgroundImage( grow->ctx, background_image, &background_tiled);
   if ( strcmp( background_image, "") != 0)
@@ -1714,7 +1717,11 @@ int Graph::export_gejava( char *filename, char *bean_name, int applet, int html)
         strcpy( background_image, "");
   }
 
-  if ( !strchr( filename, ':') && !strchr( filename, '/'))
+  if ( baseclass) {
+    strcpy( fname, "$pwre_sroot/jpwr/jopc/src/");
+    strcat( fname, filename);
+  }
+  else if ( !strchr( filename, ':') && !strchr( filename, '/'))
   {
     strcpy( fname, default_path);
     strcat( fname, filename);
@@ -1736,6 +1743,9 @@ int Graph::export_gejava( char *filename, char *bean_name, int applet, int html)
 
     fp.open( fname);
 
+    if ( baseclass)
+      fp << "package jpwr.jopc;" << endl;
+
     fp << 
 "import jpwr.rt.*;" << endl <<
 "import jpwr.jop.*;" << endl <<
@@ -1755,6 +1765,7 @@ int Graph::export_gejava( char *filename, char *bean_name, int applet, int html)
 "  JPanel contentPane;" << endl <<
 "  BorderLayout borderLayout1 = new BorderLayout();" << endl <<
 "  LocalPanel localPanel = new LocalPanel();" << endl <<
+"  boolean scrollbar = false;" << endl <<
 "  Dimension size;" << endl;
 
     // Declarations of components
@@ -1765,20 +1776,34 @@ int Graph::export_gejava( char *filename, char *bean_name, int applet, int html)
       fp <<
 "  public " << bean_name << "() {}" << endl <<
 "  public void init() {" << endl <<
-"    super.init();" << endl;
+"    super.init();" << endl <<
+"    geInit();" << endl <<
+"  }" << endl;
     }
     else
     {
       fp <<
 "  public " << bean_name << "( JopSession session, String instance, boolean scrollbar) {" << endl <<
-"    super( session, instance);" << endl;
+"    super( session, instance);" << endl <<
+"    this.scrollbar = scrollbar;" << endl <<
+"    geInit();" << endl <<
+"  }" << endl <<
+"  public " << bean_name << "( JopSession session, String instance, boolean scrollbar, boolean noinit) {" << endl <<
+"    super( session, instance);" << endl <<
+"    this.scrollbar = scrollbar;" << endl <<
+"    if ( !noinit)" << endl <<
+"      geInit();" << endl <<
+"  }" << endl;
     }
 
     fp <<
+"  public void geInit() {" << endl <<
 "    JopSpider.setSystemName( \"" << systemname << "\");" << endl <<
 "    engine.setAnimationScanTime( " << int(animation_scan_time * 1000) << ");" << endl <<
 "    engine.setScanTime( " << int(scan_time * 1000) << ");" << endl <<
 "    size = new Dimension( " << int(x1-x0) + 2*glow_cJBean_Offset + cFrameBorderX << ", " << int(y1-y0) + 2*glow_cJBean_Offset + cFrameBorderY << ");" << endl <<
+"    Dimension dsize = new Dimension(localPanel.original_width,localPanel.original_height);" << endl <<
+"    this.addComponentListener(new AspectRatioListener(this,size));" << endl <<
 "    contentPane = (JPanel) this.getContentPane();" << endl <<
 "    contentPane.setLayout(borderLayout1);" << endl;
     if ( applet) {
@@ -1794,7 +1819,7 @@ int Graph::export_gejava( char *filename, char *bean_name, int applet, int html)
     }
     fp <<
 "    contentPane.setOpaque(true);" << endl <<
-      "    localPanel.setLayout(null /* xxx new RatioLayout()*/);" << endl <<
+      "    localPanel.setLayout( new RatioLayout()); // scaletest" << endl <<
 "    localPanel.setOpaque(true);" << endl;
     if ( background_color != glow_eDrawType_LineErase)
       fp <<
@@ -1803,7 +1828,10 @@ int Graph::export_gejava( char *filename, char *bean_name, int applet, int html)
     if ( !applet)
       fp <<
 "    this.setSize(size);" << endl <<
-"    this.setTitle(\"" << bean_name << "\");" << endl;
+"    if ( engine.isInstance())" << endl <<
+"      setTitle( engine.getInstance());" << endl <<
+"    else" << endl <<
+"      this.setTitle(\"" << bean_name << "\");" << endl;
 
     // Set drawing attributes of components
     grow_ExportJavaBean( grow->ctx, fp, 2);
@@ -1916,13 +1944,13 @@ int Graph::export_gejava( char *filename, char *bean_name, int applet, int html)
 "      codebase=\"" << codebase << "\">" << endl <<
 "      <PARAM NAME = CODE VALUE = " << bean_name << "_A.class >" << endl <<
 "      <PARAM NAME =\"archive\" VALUE =\"pwrp_" << systemname << "_web.jar," <<
-"pwr_rt_client.jar,pwr_jop.jar\">" << endl <<
+"pwr_rt_client.jar,pwr_jop.jar,pwr_jopc.jar\">" << endl <<
 "      <PARAM NAME=\"type\" VALUE=\"application/x-java-applet;version=1.3\">" << endl <<
 "      <PARAM NAME=\"scriptable\" VALUE=\"false\">" << endl <<
 "      <PARAM NAME=\"instance\" VALUE=\"\">" << endl <<
 "    <embed type=\"application/x-java-applet;version=1.3\"" << endl <<
 "      code = " << bean_name << "_A.class" << endl <<
-"      archive =\"pwrp_" << systemname << "_web.jar," <<"pwr_rt_client.jar,pwr_jop.jar\"" << endl <<
+"      archive =\"pwrp_" << systemname << "_web.jar," <<"pwr_rt_client.jar,pwr_jop.jar,pwr_jopc.jar\"" << endl <<
 "      width=" << int(x1-x0) + 2*glow_cJBean_Offset << endl <<
 "      height=" << int(y1-y0) + 2*glow_cJBean_Offset << endl <<
 "      instance=\"\">" << endl <<

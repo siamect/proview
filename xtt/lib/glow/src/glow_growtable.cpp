@@ -809,6 +809,7 @@ void GrowTable::export_javabean( GlowTransform *t, void *node,
   ((GrowCtx *)ctx)->export_jbean->table( ll_x, ll_y, ur_x, ur_y,
 				       fill_drawtype, fill, rows, columns, header_row,
 				       header_column, text_size, text_drawtype,
+				       header_row_height * ctx->zoom_factor_y,
 				       row_height * ctx->zoom_factor_y, (double *)cwidth,
 				       (char *)header_text,
 				       pass, shape_cnt, node_cnt, fp);

@@ -253,7 +253,7 @@ int Graph::generate_web( ldh_tSesContext ldhses)
 "    <object classid=\"clsid:8AD9C840-044E-11D1-B3E9-00805F499D93\"" << endl <<
 "      width=300 height=120  codebase=\"" << codebase << "\">" << endl <<
 "      <param name = code value=jpwr.jop.JopLoginApplet.class >" << endl <<
-"      <param name =\"archive\" value=\"pwr_rt_client.jar,pwr_jop.jar\">" << endl <<
+"      <param name =\"archive\" value=\"pwr_rt_client.jar,pwr_jop.jar,pwr_jopc.jar\">" << endl <<
 "      <param name=\"type\" value=\"application/x-java-applet;version=1.3\">" << endl <<
 "      <param name=\"scriptable\" value=\"false\">" << endl <<
 "  </body>" << endl <<
@@ -478,12 +478,12 @@ graph_text << "'," << resize << "," << width+20 << "," << height+20
 "    <object classid=\"clsid:8AD9C840-044E-11D1-B3E9-00805F499D93\"" << endl <<
 "      width=100% height=100%  codebase=\"" << codebase << "\">" << endl <<
 "      <param name = code value=jpwr.jop.JopOpWindowApplet.class >" << endl <<
-    "      <param name =\"archive\" value=\"pwr_rt_client.jar,pwr_jop.jar,pwrp_" << sname << "_web.jar\">" << endl <<
+    "      <param name =\"archive\" value=\"pwr_rt_client.jar,pwr_jop.jar,pwr_jopc.jar,pwrp_" << sname << "_web.jar\">" << endl <<
 "      <param name=\"type\" value=\"application/x-java-applet;version=1.3\">" << endl <<
 "      <param name=\"scriptable\" value=\"false\">" << endl <<
 "    <embed type=\"application/x-java-applet;version=1.4\" " << endl <<
 "      code = jpwr.jop.JopOpWindowApplet.class " << endl <<
-    "      archive=\"pwr_jop.jar,pwr_rt_client.jar,pwrp_" << sname << "_web.jar\" " << endl <<
+    "      archive=\"pwr_jop.jar,pwr_jopc.jar,pwr_rt_client.jar,pwrp_" << sname << "_web.jar\" " << endl <<
 "      width = 100% height = 100% scriptable=false " << endl <<
 "      pluginspage=\"http://java.sun.com/products/plugin/index.html#download\">" << endl <<
 "  </body>" << endl <<
