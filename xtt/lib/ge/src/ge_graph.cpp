@@ -3460,7 +3460,7 @@ graph_eDatabase Graph::parse_attr_name( char *name, char *parsed_name,
     strcat( str, str1);
   }
 
-  if ( (s = strstr( str, "$node"))) {
+  if ( (s = strstr( str, "$node")) || (s = strstr( str, "$NODE"))) {
     char nodename[80];
     pwr_tOid oid;
     pwr_tStatus sts;
