@@ -7,6 +7,8 @@
    <Description>.  */
 #if defined OS_LINUX
 
+using namespace std;
+
 #include "glow_std.h"
 
 #include <stdio.h>

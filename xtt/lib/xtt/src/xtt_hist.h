@@ -13,6 +13,7 @@
 #if defined __cplusplus
 extern "C" {
 #include "rt_elog.h"
+}
 #endif
 
 #ifndef pwr_h
@@ -109,10 +110,6 @@ class Hist {
     void		printSearchStr_en_us();
     void		printSearchStr_sv_se();
 };
-
-#if defined __cplusplus
-}
-#endif
 
 #else
 // Dummy for other platforms then OS_LINUX
