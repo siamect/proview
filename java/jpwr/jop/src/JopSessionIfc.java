@@ -14,7 +14,7 @@ public interface JopSessionIfc {
   public void openNavigator( PwrtObjid oid);
   public void openAlarmList();
   public void openLogin();
-  public void openGraphFrame( String name, String instance, boolean scrollbar);
+  public void openGraphFrame( String name, String instance, boolean scrollbar, boolean classGraph);
   public void openFlowFrame( PwrtObjid oid, String center);
   public void openCrrFrame( String name);
   public void executeCommand( String command);

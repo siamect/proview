@@ -69,8 +69,8 @@ public class JopSession {
     ((JopSessionIfc) sessionRep).openLogin();
   }
 
-  public void openGraphFrame( String name, String instance, boolean scrollbar) {
-    ((JopSessionIfc) sessionRep).openGraphFrame( name, instance, scrollbar);
+  public void openGraphFrame( String name, String instance, boolean scrollbar, boolean classGraph) {
+    ((JopSessionIfc) sessionRep).openGraphFrame( name, instance, scrollbar, classGraph);
   }
 
   public void openFlowFrame( PwrtObjid oid, String center) {

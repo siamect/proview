@@ -91,11 +91,31 @@ public class JopSessionRep implements JopSessionIfc {
     }
   }
 
-  public void openGraphFrame( String name, String instance, boolean scrollbar) {
+  public void openGraphFrame( String name, String instance, boolean scrollbar, boolean classGraph) {
     CdhrObjid oid = null;
     if ( instance != null) {
+      if ( instance.startsWith("&")) {
+	// Objid pointer attribute
+        CdhrString cstr = engine.gdh.getObjectInfoString( instance.substring(1));
+        if ( cstr.evenSts()) return;	  
+
+	instance = cstr.str;
+      }
+
       oid = engine.gdh.nameToObjid( instance);
       if ( oid.evenSts()) return;
+
+      if ( classGraph) {
+	CdhrClassId cid = engine.gdh.getObjectClass( oid.objid);
+	if ( cid.evenSts()) return;
+
+        CdhrObjid coid = engine.gdh.classIdToObjid( cid.classId);
+	if ( coid.evenSts()) return;
+
+	CdhrString sret = engine.gdh.objidToName( coid.objid, Cdh.mName_object);
+	if ( sret.evenSts()) return;
+	name = sret.str.substring(0,1).toUpperCase() + sret.str.substring(1).toLowerCase();
+      }
     }
     Object graph;
     if ( oid == null)
