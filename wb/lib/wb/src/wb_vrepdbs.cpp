@@ -164,13 +164,13 @@ bool wb_vrepdbs::abort(pwr_tStatus *sts)
   return true;
 }
 
-bool wb_vrepdbs::writeAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, unsigned int offset, unsigned int size, void *p)
+bool wb_vrepdbs::writeAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, unsigned int offset, unsigned int size, void *p)
 {
   *sts = LDH__NYI;
   return false;
 }
 
-void *wb_vrepdbs::readAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, unsigned int offset, unsigned int size, void *p)
+void *wb_vrepdbs::readAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, unsigned int offset, unsigned int size, void *p)
 {// note! must be compensated for offset !
   *sts = LDH__SUCCESS;
 
@@ -200,7 +200,7 @@ void *wb_vrepdbs::readAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, unsi
   return (void *)((char *)bp + offset);
 }
 
-void *wb_vrepdbs::readBody(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, void *p)
+void *wb_vrepdbs::readBody(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, void *p)
 {
   *sts = LDH__SUCCESS;
     
@@ -230,7 +230,7 @@ void *wb_vrepdbs::readBody(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, void *p)
   return bp;
 }
 
-bool wb_vrepdbs::writeBody(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, void *p)
+bool wb_vrepdbs::writeBody(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, void *p)
 {
   *sts = LDH__NYI;
   return false;

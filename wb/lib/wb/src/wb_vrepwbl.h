@@ -162,7 +162,6 @@ public:
 
   virtual void *readAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, unsigned int offset, unsigned int size, void *p);
 
-  virtual void *readBody(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, void *p) {return 0;}
   virtual void *readBody(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, void *p);
 
   virtual bool writeBody(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, void *p) {return false;};

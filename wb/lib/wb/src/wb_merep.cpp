@@ -1,6 +1,8 @@
 #include <iostream>
 
 #include "wb_merep.h"
+#include "wb_cdrep.h"
+#include "wb_bdrep.h"
 #include "wb_erep.h"
 #include "wb_tdrep.h"
 #include "wb_attrname.h"

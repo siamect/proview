@@ -201,7 +201,7 @@ bool wb_vrepdb::writeAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, unsig
   return true;
 }
 
-void *wb_vrepdb::readAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, unsigned int offset, unsigned int size, void *p)
+void *wb_vrepdb::readAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, unsigned int offset, unsigned int size, void *p)
 {
 //    ob_k obk(o->oid(), bix);
   //ob_d obd;
@@ -224,12 +224,12 @@ void *wb_vrepdb::readAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, unsig
   return 0;
 }
 
-void *wb_vrepdb::readBody(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, void *p)
+void *wb_vrepdb::readBody(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, void *p)
 {
   return 0;
 }
 
-bool wb_vrepdb::writeBody(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, void *p)
+bool wb_vrepdb::writeBody(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, void *p)
 {
   return true;
 }
