@@ -479,15 +479,20 @@ void FlowCon::set_hot( int on)
 void FlowCon::select_region_insert( double ll_x, double ll_y, double ur_x, 
 		double ur_y)
 {
-  if ( ctx->select_policy == flow_eSelectPolicy_Surround)
-  {
+  if ( temporary_ref || cc->con_type == flow_eConType_Reference) {
+    // Allways surround
     if ( x_left > ll_x && x_right < ur_x && y_high < ur_y && y_low > ll_y)
       ctx->select_insert( this);
   }
-  else
-  {
-    if ( x_right > ll_x && x_left < ur_x && y_low < ur_y && y_high > ll_y)
-      ctx->select_insert( this);
+  else {
+    if ( ctx->select_policy == flow_eSelectPolicy_Surround) {
+      if ( x_left > ll_x && x_right < ur_x && y_high < ur_y && y_low > ll_y)
+	ctx->select_insert( this);
+    }
+    else {
+      if ( x_right > ll_x && x_left < ur_x && y_low < ur_y && y_high > ll_y)
+	ctx->select_insert( this);
+    }
   }
 }
 
@@ -3311,7 +3316,7 @@ int FlowCon::event_handler( flow_eEvent event, int x, int y)
   {
     case flow_eEvent_CursorMotion:
       if ( temporary_ref || cc->con_type == flow_eConType_Reference)
-        sts = ref_a.event_handler( &cc->zero, event, x, y, 0);
+        sts = ref_a.event_handler( &cc->zero, event, x, y, ref_a.size());
       else
         sts = line_a.event_handler( &cc->zero, event, x, y, l_num);
       if ( sts && !hot &&
@@ -3358,7 +3363,7 @@ int FlowCon::event_handler( flow_eEvent event, int x, int y)
       break;
     default:
       if ( temporary_ref || cc->con_type == flow_eConType_Reference)
-        sts = ref_a.event_handler( &cc->zero, event, x, y, 0);
+        sts = ref_a.event_handler( &cc->zero, event, x, y, ref_a.size());
       else
         sts = line_a.event_handler( &cc->zero, event, x, y, l_num);
   }
