@@ -64,6 +64,10 @@ extern "C" {
 #include "xtt_ev.h"
 #endif
 
+#ifndef xtt_hist_h
+#include "xtt_hist.h"
+#endif
+
 #ifndef xtt_op_h
 #include "xtt_op.h"
 #endif
@@ -139,7 +143,8 @@ typedef enum {
 	applist_eType_Graph,
 	applist_eType_Attr,
 	applist_eType_Trend,
-	applist_eType_Crossref
+	applist_eType_Crossref,
+	applist_eType_Hist
 } applist_eType;
 
 class ApplListElem {

@@ -14,6 +14,8 @@
 # include <stdlib.h>
 # include <ctype.h>
 
+#include "co_nav_help.h"
+
 extern "C" {
 #include "rt_gdh.h"
 #include "pwr_privilege.h"
@@ -87,6 +89,9 @@ static int xnav_attribute_func (
   char		*return_string);
 static int xnav_ge_command_cb( ge_tCtx gectx, char *command);
 static void xnav_ge_close_cb( ge_tCtx gectx);
+//new code by Jonas Nylund 030131
+static void xnav_hist_close_cb( void *ctx);
+//end new code by Jonas Nylund 030131
 static void xnav_op_command_cb( void *xnav, char *command);
 static void xnav_op_close_cb( void *ctx);
 static void xnav_op_help_cb( void *ctx, char *key);
@@ -1424,6 +1429,42 @@ static int	xnav_show_func(	void		*client_data,
     else
       xnav->ev->map_eve();
   }
+  /*new code by Jonas Nylund 030122*/
+  else if ( strncmp( arg1_str, "HISTLIST", strlen( arg1_str)) == 0)
+  {
+    char hist_title[40];
+    char name_str[80];
+    pwr_tObjid objid = pwr_cNObjid;
+
+    if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str)))
+    {
+      sts = gdh_NameToObjid ( name_str, &objid);
+      if (EVEN(sts))
+      {
+        xnav->message('E', "Object not found");
+        return XNAV__HOLDCOMMAND;
+      }
+    }
+
+    strcpy( hist_title, Lng::translate( "Hist list"));
+    Hist *hist;
+    hist = new Hist( xnav, xnav->parent_wid, hist_title, objid, &sts);
+    if ( EVEN(sts))
+    {
+      delete hist;
+      hist = NULL;
+      xnav->message('E', "Unable to load histlist");
+      return XNAV__SUCCESS;
+    }
+    xnav->appl.insert( applist_eType_Hist, (void *)hist, pwr_cNObjid, "", "");
+    hist->close_cb = xnav_hist_close_cb;
+    hist->start_trace_cb = xnav_start_trace_cb;
+    hist->help_cb = xnav_ev_help_cb;
+    hist->display_in_xnav_cb = xnav_ev_display_in_xnav_cb;
+    hist->update_info_cb = xnav_ev_update_info_cb;
+    hist->popup_menu_cb = xnav_popup_menu_cb;
+  }
+  /*end new code by Jonas Nylund 030122*/
   else if ( strncmp( arg1_str, "ALARMLIST", strlen( arg1_str)) == 0)
   {
 
@@ -2462,6 +2503,21 @@ static int	xnav_close_func(	void		*client_data,
       elem = elem->next;
     }
 
+    //new code Jonas Nylund 030131
+    // Close all hists
+    type = applist_eType_Hist;
+    for ( elem = xnav->appl.root; elem;) {
+      if ( elem->type == type) {
+        next_elem = elem->next;
+        delete (Hist *)elem->ctx;
+        xnav->appl.remove( elem->ctx);
+        elem = next_elem;
+        continue;
+      }
+      elem = elem->next;
+    }
+
+
     // Close navigator
     keep = 0;
     for ( i = 0; i < names; i++) {
@@ -2532,6 +2588,14 @@ static void xnav_ge_close_cb( ge_tCtx gectx)
 {
   ((XNav *)gectx->parent_ctx)->appl.remove( (void *)gectx);
 }
+
+//new code Jonas Nylund 030131
+static void xnav_hist_close_cb( void *ctx)
+{
+  ((XNav *)((Hist *)ctx)->parent_ctx)->appl.remove( (void *)ctx);
+  delete (Hist *)ctx;
+}
+//end new code Jonas Nylund 030131
 
 static void xnav_trend_close_cb( void *ctx, XttTrend *trend)
 {

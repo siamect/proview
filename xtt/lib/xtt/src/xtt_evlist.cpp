@@ -378,16 +378,24 @@ void EvList::event_info( mh_sMessage *msg)
           msg->Status & mh_mEventStatus_NotRet))
     return;
 
-  sts = get_destination( event->Info.EventTime, (void **)&dest);
-  if ( EVEN(sts))
+  if ( type != ev_eType_HistList )
   {
-    dest_code = flow_eDest_IntoLast;
-    dest_node = NULL;
+    sts = get_destination( event->Info.EventTime, (void **)&dest);
+    if ( EVEN(sts))
+    {
+      dest_code = flow_eDest_IntoLast;
+      dest_node = NULL;
+    }
+    else
+    {
+      dest_code = flow_eDest_Before;
+      dest_node = dest->node;
+    }
   }
   else
   {
-    dest_code = flow_eDest_Before;
-    dest_node = dest->node;
+    dest_code = flow_eDest_IntoLast;
+    dest_node = NULL;
   }
 
   new ItemAlarm( this, "Alarm",
@@ -412,16 +420,24 @@ void EvList::event_alarm( mh_sMessage *msg)
           msg->Status & mh_mEventStatus_NotRet))
     return;
 
-  sts = get_destination( event->Info.EventTime, (void **)&dest);
-  if ( EVEN(sts))
+  if ( type != ev_eType_HistList )
   {
-    dest_code = flow_eDest_IntoLast;
-    dest_node = NULL;
+    sts = get_destination( event->Info.EventTime, (void **)&dest);
+    if ( EVEN(sts))
+    {
+      dest_code = flow_eDest_IntoLast;
+      dest_node = NULL;
+    }
+    else
+    {
+      dest_code = flow_eDest_Before;
+      dest_node = dest->node;
+    }
   }
   else
   {
-    dest_code = flow_eDest_Before;
-    dest_node = dest->node;
+    dest_code = flow_eDest_IntoLast;
+    dest_node = NULL;
   }
 
   new ItemAlarm( this, "Alarm",
@@ -441,20 +457,27 @@ void EvList::event_ack( mh_sAck *msg)
   flow_eDest	dest_code;
   brow_tNode	dest_node;
 
-  if ( type == ev_eType_EventList)
+  if ( type == ev_eType_EventList || type == ev_eType_HistList)
   {
-    sts = get_destination( event->Info.EventTime, (void **)&dest);
-    if ( EVEN(sts))
+    if(type == ev_eType_EventList)
     {
+      sts = get_destination( event->Info.EventTime, (void **)&dest);
+      if ( EVEN(sts))
+      {
+        dest_code = flow_eDest_IntoLast;
+        dest_node = NULL;
+      }
+      else
+      {
+        dest_code = flow_eDest_Before;
+        dest_node = dest->node;
+      }
+    }
+    else
+    {   
       dest_code = flow_eDest_IntoLast;
       dest_node = NULL;
     }
-    else
-    {
-      dest_code = flow_eDest_Before;
-      dest_node = dest->node;
-    }
-
     new ItemAlarm( this, "Alarm",
 	event->Info.EventTime, "",
 	event->Info.EventName, event->Info.EventFlags,
@@ -463,6 +486,7 @@ void EvList::event_ack( mh_sAck *msg)
 	dest_node, dest_code);
     size++;
   }
+  
   else
   {
     // Alarmlist
@@ -506,20 +530,27 @@ void EvList::event_return( mh_sReturn *msg)
   flow_eDest	dest_code;
   brow_tNode	dest_node;
 
-  if ( type == ev_eType_EventList)
+  if ( type == ev_eType_EventList || type == ev_eType_HistList)
   {
-    sts = get_destination( event->Info.EventTime, (void **)&dest);
-    if ( EVEN(sts))
+    if(type == ev_eType_EventList)
+    {
+      sts = get_destination( event->Info.EventTime, (void **)&dest);
+      if ( EVEN(sts))
+      {
+        dest_code = flow_eDest_IntoLast;
+        dest_node = NULL;
+      }
+      else
+      {
+        dest_code = flow_eDest_Before;
+        dest_node = dest->node;
+      }
+    }
+    else
     {
       dest_code = flow_eDest_IntoLast;
       dest_node = NULL;
     }
-    else
-    {
-      dest_code = flow_eDest_Before;
-      dest_node = dest->node;
-    }
-
     new ItemAlarm( this, "Alarm",
 	event->Info.EventTime, event->Msg.EventText,
 	event->Info.EventName, event->Info.EventFlags,
@@ -528,6 +559,7 @@ void EvList::event_return( mh_sReturn *msg)
 	dest_node, dest_code);
     size++;
   }
+
   else
   {
     // Alarmlist

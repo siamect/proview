@@ -75,6 +75,33 @@ static pwr_tStatus OpenCrossrefFilter( xmenu_sMenuCall *ip)
 }
 
 //
+// Hist event
+//
+static pwr_tStatus HistEvent( xmenu_sMenuCall *ip)
+{
+  char cmd[200];
+  char name[120];
+  int sts;
+
+  sts = gdh_ObjidToName( ip->Pointed.Objid, name, sizeof(name),
+			cdh_mName_volumeStrict);
+  if ( EVEN(sts)) return sts;
+
+  strcpy( cmd, "show hist ");
+  strcat( cmd, name);
+  ((XNav *)ip->EditorContext)->command( cmd);
+  return 1;
+}
+
+//
+// Open crossref filter
+//
+static pwr_tStatus HistEventFilter( xmenu_sMenuCall *ip)
+{
+  return 1;
+}
+
+//
 // Open trace
 //
 static pwr_tStatus OpenTrace( xmenu_sMenuCall *ip)
@@ -987,6 +1014,8 @@ pwr_dExport pwr_BindXttMethods($Object) = {
   pwr_BindXttMethod(OpenObjectFilter),
   pwr_BindXttMethod(OpenCrossref),
   pwr_BindXttMethod(OpenCrossrefFilter),
+  pwr_BindXttMethod(HistEvent),
+  pwr_BindXttMethod(HistEventFilter),
   pwr_BindXttMethod(OpenTrace),
   pwr_BindXttMethod(OpenTraceFilter),
   pwr_BindXttMethod(OpenTrend),

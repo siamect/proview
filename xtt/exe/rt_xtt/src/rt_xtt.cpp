@@ -70,6 +70,7 @@ static XtActionsRec HotkeyActions[] = {
 static xnav_sStartMenu alarm_menu[] = {
 	{ "Alarm list", xnav_eItemType_Command,	(void *) "show alarm"},
 	{ "Event list", xnav_eItemType_Command,	(void *) "show event"},
+	{ "Historical list", xnav_eItemType_Command,	(void *) "show hist"},
 	{ "", 0, NULL}};
 static xnav_sStartMenu nethandler_menu[] = {
 	{ "Link", xnav_eItemType_Command, (void *) "show link"},

@@ -10,6 +10,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "co_nav_help.h"
+
 extern "C" {
 #include "pwr_privilege.h"
 #include "rt_gdh.h"

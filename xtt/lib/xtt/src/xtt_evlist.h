@@ -71,7 +71,8 @@ typedef struct {
 
 typedef enum {
 	ev_eType_AlarmList,
-	ev_eType_EventList
+	ev_eType_EventList,
+	ev_eType_HistList
 	} ev_eType;
 
 typedef enum {

@@ -48,6 +48,7 @@ static void op_activate_aalarm_incr( Widget w, Op *op, XmAnyCallbackStruct *data
 static void op_activate_aalarm_decr( Widget w, Op *op, XmAnyCallbackStruct *data);
 static void op_activate_alarmlist( Widget w, Op *op, XmAnyCallbackStruct *data);
 static void op_activate_eventlist( Widget w, Op *op, XmAnyCallbackStruct *data);
+static void op_activate_eventlog( Widget w, Op *op, XmAnyCallbackStruct *data);
 static void op_activate_navigator( Widget w, Op *op, XmAnyCallbackStruct *data);
 static void op_activate_help( Widget w, Op *op, XmAnyCallbackStruct *data);
 static void op_activate_appl1( Widget w, Op *op, XmAnyCallbackStruct *data);
@@ -123,6 +124,7 @@ Op::Op(
 	{"op_activate_balarm_ack",(caddr_t)op_activate_balarm_ack },
 	{"op_activate_alarmlist",(caddr_t)op_activate_alarmlist },
 	{"op_activate_eventlist",(caddr_t)op_activate_eventlist },
+	{"op_activate_eventlog",(caddr_t)op_activate_eventlog },
 	{"op_activate_navigator",(caddr_t)op_activate_navigator },
 	{"op_activate_help",(caddr_t)op_activate_help },
 	{"op_create_balarm_label",(caddr_t)op_create_balarm_label },
@@ -760,6 +762,13 @@ static void op_activate_alarmlist( Widget w, Op *op, XmAnyCallbackStruct *data)
 static void op_activate_eventlist( Widget w, Op *op, XmAnyCallbackStruct *data)
 {
   char cmd[20] = "show event";
+  if ( op->command_cb)
+    op->command_cb( op->parent_ctx, cmd);
+}
+
+static void op_activate_eventlog( Widget w, Op *op, XmAnyCallbackStruct *data)
+{
+  char cmd[20] = "show histlist";
   if ( op->command_cb)
     op->command_cb( op->parent_ctx, cmd);
 }
