@@ -4149,7 +4149,7 @@ int WNav::get_rootlist()
   pwr_tClassId	valid_class[100];
   int		i;
   pwr_tClassId	classid;
-  pal_sMenu     *menu_p;
+  PalFileMenu     *menu_p;
 
   if ( gbl.all_toplevel || strcmp( layout, "") == 0)
   {
@@ -4165,7 +4165,7 @@ int WNav::get_rootlist()
   {
     // Get valid toplevel classes from config file
     if ( !menu) {
-      menu = Pal::config_tree_build( ldhses, pal_cPaletteFile,
+      menu = PalFile::config_tree_build( ldhses, pal_cPaletteFile,
 	  pal_eNameType_TopObjects, layout, NULL); 
       if ( !menu) {
         printf( 
@@ -4173,7 +4173,7 @@ int WNav::get_rootlist()
 	  layout);
         return 0;
       }
-      Pal::config_tree_build( ldhses, pal_cLocalPaletteFile,
+      PalFile::config_tree_build( ldhses, pal_cLocalPaletteFile,
 	  pal_eNameType_TopObjects, layout, menu);
     }
 
@@ -5063,7 +5063,7 @@ int WNav::search_root( char *search_str, pwr_tObjid *found_objid, int next)
   pwr_tClassId	valid_class[100];
   int		i;
   pwr_tClassId	classid;
-  pal_sMenu     *menu_p;
+  PalFileMenu     *menu_p;
 
   search_sts = 0;
   if ( gbl.all_toplevel || strcmp( layout, "") == 0)

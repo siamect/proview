@@ -67,7 +67,7 @@ class Nav {
   int 		(*set_focus_cb)( void *, void *);
   int 		(*traverse_focus_cb)( void *, void *);
   int		displayed;
-  pal_sMenu     *menu;
+  PalFileMenu   *menu;
 
   void zoom( double zoom_factor);
   void unzoom();

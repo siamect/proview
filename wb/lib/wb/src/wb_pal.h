@@ -23,29 +23,9 @@ extern "C" {
 #include "flow_browapi.h"
 #endif
 
-#define pal_cPaletteFile "$pwr_exe/pwr_wb_palette.cnf"
-#define pal_cLocalPaletteFile "$pwrp_login/pwrp_wb_palette.cnf"
-
-typedef enum {
-  pal_eNameType_TopObjects,
-  pal_eNameType_Palette
-} pal_eNameType;
-
-typedef enum {
-  pal_eMenuType_Menu,
-  pal_eMenuType_Class,
-  pal_eMenuType_ClassVolume
-} pal_eMenuType;
-
-typedef struct pal_s_Menu {
-	char				title[80];
-	int				item_type;
-	char				file[120];
- 	int				pixmap;
-	struct pal_s_Menu	*child_list;
-	struct pal_s_Menu	*parent;
-	struct pal_s_Menu	*next;
-} pal_sMenu;
+#ifndef wb_palfile_h
+#include "wb_palfile.h"
+#endif
 
 
 class Pal {
@@ -72,16 +52,16 @@ class Pal {
     ldh_tWBContext wbctx;
     ldh_tSesContext ldhses;
     pwr_tObjid	root_objid;
-    void		*root_item;
-    brow_tObject	last_selected;
-    int			selection_owner;
-    int 		(*set_focus_cb)( void *, void *);
-    int 		(*traverse_focus_cb)( void *, void *);
-    void 		(*create_popup_menu_cb)( void *, pwr_tCid, int, int);
+    void       	*root_item;
+    brow_tObject last_selected;
+    int	       	selection_owner;
+    int        	(*set_focus_cb)( void *, void *);
+    int        	(*traverse_focus_cb)( void *, void *);
+    void       	(*create_popup_menu_cb)( void *, pwr_tCid, int, int);
     int		displayed;
-    pal_sMenu   *menu;
-    int		        avoid_deadlock;
-    XtIntervalId        deadlock_timerid;
+    PalFileMenu *menu;
+    int	        avoid_deadlock;
+    XtIntervalId deadlock_timerid;
 
     brow_tNodeClass nc;
     flow_sAnnotPixmap *pixmap_leaf;
@@ -140,14 +120,6 @@ class Pal {
     void set_selection_owner();
     int session_opened( ldh_tSesContext pal_ldhses, char *pal_root_name);
     int session_closed();
-
-    static pal_sMenu *config_tree_build( ldh_tSession ldhses, char *filename, 
-	       pal_eNameType keytype, char *keyname, pal_sMenu *menu);
-    static pal_sMenu *config_tree_build_children( ldh_tSession ldhses, 
-               ifstream *fp, int *line_cnt, char *filename, pal_sMenu *parent);
-    static void config_tree_free( pal_sMenu *menu_tree);
-    static void config_tree_free_children( pal_sMenu *first_child);
-    static int check_volume( ldh_tSession ldhses, char *name);
 };
 
 #if defined __cplusplus

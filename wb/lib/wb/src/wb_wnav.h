@@ -268,7 +268,7 @@ class WNav {
     int			dialog_height;
     int			dialog_x;
     int			dialog_y;
-    pal_sMenu           *menu;
+    PalFileMenu         *menu;
     int                 init_help;
     int		        avoid_deadlock;
     XtIntervalId        deadlock_timerid;

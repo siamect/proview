@@ -346,6 +346,7 @@ public:
   bool nameCheck( mem_object *memo);
   bool nameCheck( mem_object *parent, char *name, ldh_eDest code);
   void deleteChildren( mem_object *memo);
+  void printPaletteFile();
 
 };
 

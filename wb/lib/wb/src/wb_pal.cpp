@@ -200,10 +200,10 @@ class PalItemObject : public PalItem {
 class PalItemMenu : public PalItem {
   public:
     PalItemMenu( Pal *pal, char *item_name, 
-	brow_tNode dest, flow_eDest dest_code, pal_sMenu **item_child_list,
+	brow_tNode dest, flow_eDest dest_code, PalFileMenu **item_child_list,
 	int item_is_root);
     char	 	name[120];
-    pal_sMenu	        **child_list;
+    PalFileMenu	        **child_list;
     int			open( Pal *pal, double x, double y);
     int     		close( Pal *pal, double x, double y);
 };
@@ -431,6 +431,7 @@ PalItemClass::PalItemClass( Pal *pal, char *item_name,
 	        pixmap = pal->pixmap_arithm; 
 		break;
               case 1:
+              case 10:
 	        pixmap = pal->pixmap_logic2_;
 		break;
               case 2:
@@ -496,7 +497,7 @@ PalItemObject::PalItemObject( Pal *pal, pwr_tObjid item_objid,
 }
 
 PalItemMenu::PalItemMenu( Pal *pal, char *item_name, 
-	brow_tNode dest, flow_eDest dest_code, pal_sMenu **item_child_list,
+	brow_tNode dest, flow_eDest dest_code, PalFileMenu **item_child_list,
 	int item_is_root) :
 	PalItem( pwr_cNObjid, item_is_root),
         child_list(item_child_list)
@@ -534,7 +535,7 @@ int PalItemMenu::open( Pal *pal, double x, double y)
     // Display childlist
     double	node_x, node_y;
     PalItem 	*item;
-    pal_sMenu	*menu;
+    PalFileMenu	*menu;
 
     if ( !is_root)
       brow_GetNodePosition( node, &node_x, &node_y);
@@ -1519,14 +1520,14 @@ int Pal::session_opened( ldh_tSesContext pal_ldhses, char *pal_root_name)
   wbctx = ldh_SessionToWB( ldhses);
 
   if ( !menu) {
-    menu = config_tree_build( ldhses, pal_cPaletteFile,
+    menu = PalFile::config_tree_build( ldhses, pal_cPaletteFile,
 	  pal_eNameType_Palette, root_name, NULL); 
     if ( !menu) {
       printf( "** Pal: palette entry \"%s\" not found in configuration file\n",
 	    root_name);
       return 0;
     }
-    config_tree_build( ldhses, pal_cLocalPaletteFile,
+    PalFile::config_tree_build( ldhses, pal_cLocalPaletteFile,
 	  pal_eNameType_Palette, root_name, menu); 
   }
 
@@ -1607,7 +1608,7 @@ Pal::~Pal()
   if ( avoid_deadlock)
     XtRemoveTimeOut( deadlock_timerid);
 
-  config_tree_free( menu);
+  PalFile::config_tree_free( menu);
   free_pixmaps();
   XtDestroyWidget( form_widget);
 }
@@ -1808,267 +1809,6 @@ int Pal::get_select( pwr_tClassId *classid)
 }
 
 
-
-pal_sMenu *Pal::config_tree_build( ldh_tSession ldhses, char *filename, 
-		  pal_eNameType keytype, char *keyname, pal_sMenu *menu)
-{
-  ifstream	fp;
-  int		line_cnt = 0;
-  char		line[140];
-  char		type[120];
-  char		name[120];
-  int           nr;
-  pal_sMenu     *menu_tree = NULL;
-  pal_sMenu     *menu_p;
-  char          fname[120];
-
-  dcli_translate_filename( fname, filename);
-  if ( !check_file( fname))
-    return menu_tree;
-
-  fp.open( fname);
-#ifndef OS_VMS
-  if ( !fp)
-    return menu_tree;
-#endif
-
-  line_cnt = 0;
-  while ( 1)
-  {
-    if ( !fp.getline( line, sizeof( line)))
-      break;
-    dcli_remove_blank( line, line);
-    line_cnt++;
-    if ( line[0] == 0)
-      continue;
-    if ( line[0] == '!' || line[0] == '#')
-      continue;
-    nr = sscanf( line, "%s %s", type, name);
-    if ( nr < 1 )
-      printf( "** Syntax error in file %s, line %d\n", filename, line_cnt);
-
-    if ( (keytype == pal_eNameType_TopObjects && 
-	  cdh_NoCaseStrcmp( type, "topobjects") == 0 && 
-          cdh_NoCaseStrcmp( name, keyname) == 0) ||
-         (keytype == pal_eNameType_Palette && 
-	  cdh_NoCaseStrcmp( type, "palette") == 0 && 
-          cdh_NoCaseStrcmp( name, keyname) == 0))
-    {
-      if ( nr != 2)
-        printf( "** Syntax error in file %s, line %d\n", filename, line_cnt);
-
-      if ( !menu) {
-        menu_tree = (pal_sMenu *) calloc( 1, sizeof(pal_sMenu));        
-        menu_tree->parent = NULL;
-        menu_tree->item_type = pal_eMenuType_Menu;
-        strcpy( menu_tree->title, name);
-      }
-      else
-        menu_tree = menu;
-
-      if ( !fp.getline( line, sizeof( line)))
-        break;
-      line_cnt++;
-      if ( strcmp( line, "{") != 0)
-        printf( "** Syntax error in file %s, line %d\n", filename, line_cnt);
-
-      menu_p = config_tree_build_children( ldhses, &fp, &line_cnt, filename,
-					 menu_tree);
-      if ( !menu_tree->child_list)
-        menu_tree->child_list = menu_p;
-      break;
-    }
-  }
-  fp.close();
-  return menu_tree;
-}
-
-pal_sMenu *Pal::config_tree_build_children( ldh_tSession ldhses, ifstream *fp, 
-	       int *line_cnt, char *filename, pal_sMenu *parent)
-{
-  pal_sMenu	        *menu_p, *prev, *mp;
-  pal_sMenu	        *return_menu = NULL;
-  int			first = 1;
-  int			nr;
-  char			line[140];
-  char			type[120];
-  char			name[120];
-  char			p1[120];
-  char			p2[120];
-  int                   found;
-  int                   hide_children = 0;
-
-    // Children might already exist
-  if ( parent) {
-    for ( menu_p = parent->child_list; menu_p; menu_p = menu_p->next) {
-      prev = menu_p;
-      first = 0;
-    }
-  }
-  menu_p = 0;
-
-  while ( 1)
-  {
-    if ( !fp->getline( line, sizeof( line)))
-      break;
-    dcli_remove_blank( line, line);
-    (*line_cnt)++;
-    if ( line[0] == 0)
-      continue;
-    if ( line[0] == '!' || line[0] == '#')
-      continue;
-    nr = sscanf( line, "%s %s %s %s", type, name, p1, p2);
-    if ( nr < 1 )
-      printf( "** Syntax error in file %s, line %d\n", filename, *line_cnt);
-
-    if ( strcmp( type, "{") == 0)
-    {
-      if ( !hide_children) {
-        if ( nr != 1 || !menu_p)
-          printf( "** Syntax error in file %s, line %d\n", filename, *line_cnt);
-        else
-          mp = config_tree_build_children( ldhses, fp, line_cnt, filename,
-		menu_p);
-        if ( !menu_p->child_list)
-          menu_p->child_list = mp;
-      }
-      else
-	hide_children = 0;
-    }
-    else if ( strcmp( type, "}") == 0)
-    {
-      if ( nr != 1 )
-        printf( "** Syntax error in file %s, line %d\n", filename, *line_cnt);
-      return return_menu;
-    }
-    else if ( cdh_NoCaseStrcmp( type, "menu") == 0)
-    {
-      if ( !(nr == 2 || nr == 3))
-        printf( "** Syntax error in file %s, line %d\n", filename, *line_cnt);
-
-      if ( nr == 3 && !check_volume( ldhses, p1)) {
-        hide_children = 1;
-        break;
-      }
-
-      // Check if it already exist
-      found = 0;
-      for ( menu_p = parent->child_list; menu_p; menu_p = menu_p->next) {
-        if ( strcmp( menu_p->title, name) == 0) {
-          found = 1;
-          break;
-        }
-      } 
-
-      if ( !found) {
-        menu_p = (pal_sMenu *) calloc( 1, sizeof(pal_sMenu));        
-        menu_p->parent = parent;
-        menu_p->item_type = pal_eMenuType_Menu;
-        strcpy( menu_p->title, name);
-        if ( first)
-        {
-          return_menu = menu_p;
-          first = 0;
-        }
-        else
-          prev->next = menu_p;
-        prev = menu_p;
-      }
-    }
-    else if ( cdh_NoCaseStrcmp( type, "class") == 0)
-    {
-      if ( !( nr == 2 || nr == 3))
-        printf( "** Syntax error in file %s, line %d\n", filename, *line_cnt);
-
-      if ( nr == 2 || ( nr == 3 && check_volume( ldhses, p1))) {
-        menu_p = (pal_sMenu *) calloc( 1, sizeof(pal_sMenu));        
-        menu_p->parent = parent;
-        menu_p->item_type = pal_eMenuType_Class;
-        strcpy( menu_p->title, name);
-        if ( first)
-        {
-          return_menu = menu_p;
-          first = 0;
-        }
-        else
-          prev->next = menu_p;
-        prev = menu_p;
-      }
-    }
-    else if ( cdh_NoCaseStrcmp( type, "classvolume") == 0)
-    {
-      if ( !(nr == 2 || nr == 3))
-        printf( "** Syntax error in file %s, line %d\n", filename, *line_cnt);
-
-      if ( nr == 2 || ( nr == 3 && check_volume( ldhses, p1))) {
-        menu_p = (pal_sMenu *) calloc( 1, sizeof(pal_sMenu));
-        menu_p->parent = parent;
-        menu_p->item_type = pal_eMenuType_ClassVolume;
-        strcpy( menu_p->title, name);
-        if ( first)
-        {
-          return_menu = menu_p;
-          first = 0;
-        }
-        else
-          prev->next = menu_p;
-        prev = menu_p;
-      }
-    }
-  }
-
-  return return_menu;
-}
-
-int Pal::check_volume( ldh_tSession ldhses, char *name)
-{
-  pwr_tClassId classid;
-  pwr_tVolumeId volume;
-  int sts;
-  int size;
-  char volume_name[80];
-
-  // Find a class volume with this name
-  sts = ldh_GetVolumeList( ldh_SessionToWB(ldhses), &volume);
-  while ( ODD(sts))
-  {
-    sts = ldh_GetVolumeClass( ldh_SessionToWB(ldhses), volume, &classid);
-    if ( EVEN(sts)) return 0;
-
-    if ( classid == pwr_eClass_ClassVolume)
-    {
-      sts = ldh_VolumeIdToName( ldh_SessionToWB(ldhses),
-		volume, volume_name, sizeof(volume_name), &size);
-      if ( EVEN(sts)) return 0;
-
-      if ( !cdh_NoCaseStrcmp( volume_name, name))
-        return 1;
-    }
-    sts = ldh_GetNextVolume( ldh_SessionToWB(ldhses), volume, &volume);
-  }
-  return 0;
-}
-
-void Pal::config_tree_free( pal_sMenu *menu_tree)
-{
-  if ( menu_tree)
-    config_tree_free_children( menu_tree);
-}
-
-void Pal::config_tree_free_children( pal_sMenu *first_child)
-{
-  pal_sMenu *menu_p, *next;
-
-  menu_p = first_child;
-  while( menu_p)
-  {
-    next = menu_p->next;
-    if ( menu_p->child_list)
-      config_tree_free_children( menu_p->child_list);
-    free( (char *) menu_p);
-    menu_p = next;
-  }
-}
 
 static void  pal_reset_avoid_deadlock( Pal *pal)
 {

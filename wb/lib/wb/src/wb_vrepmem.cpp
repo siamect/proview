@@ -19,6 +19,7 @@
 #include "wb_vrepref.h"
 #include "wb_print_wbl.h"
 #include "wb_volume.h"
+#include "wb_palfile.h"
 #include "pwr_baseclasses.h"
 
 extern "C" {
@@ -56,6 +57,10 @@ wb_vrepmem::~wb_vrepmem()
 
 void wb_vrepmem::loadWbl( char *filename, pwr_tStatus *sts)
 {
+  if ( m_erep->refMerepOccupied()) {
+    *sts = LDH__OTHERSESS;
+    return;
+  }
   wb_vrepwbl *vrep = new wb_vrepwbl( m_erep);
   *sts = vrep->load( filename);
   if ( vrep->vid() == 0) {
@@ -797,6 +802,7 @@ bool wb_vrepmem::createVolumeObject( char *name)
   }
 
   volume_object = memo;
+  strcpy( volume_name, name);
   registerObject( memo->m_oid.oix, memo);
   return true;
 }
@@ -1706,6 +1712,7 @@ bool wb_vrepmem::importHead(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
   if (oid.oix == pwr_cNOix) {
     // this is the volume object
     volume_object = memo;
+    strcpy( volume_name, name);
     m_cid = cid;
   }
   registerObject( memo->m_oid.oix, memo);
@@ -1762,6 +1769,12 @@ bool wb_vrepmem::importDocBlock(pwr_tOid oid, size_t size, char *block)
 
 bool wb_vrepmem::commit(pwr_tStatus *sts) 
 {
+  pwr_tCmd cmd;
+
+  // Play safe and save the previous file...
+  sprintf( cmd, "pwrp_env.sh save file %s", m_filename);
+  system( cmd);
+
   ofstream fp( m_filename);
   if ( !fp) {
     *sts = LDH__FILEOPEN;
@@ -1778,6 +1791,8 @@ bool wb_vrepmem::commit(pwr_tStatus *sts)
     *sts = e.sts();
     return false;
   }
+
+  printPaletteFile();
 
   // Reload to get new template objects
   clear();
@@ -2073,10 +2088,114 @@ bool wb_vrepmem::classeditorCheckMove( mem_object *memo, ldh_eDest dest_code,
   return true;
 }
 
+void wb_vrepmem::printPaletteFile()
+{
+  // Print new palette file
+  pwr_tStatus psts;
+  int menu_found = 0;
+  int allclasses_found = 0;
+  int palette_found = 0;
+  PalFileMenu *menu = PalFile::config_tree_build( 0, pal_cLocalPaletteFile, 
+					     pal_eNameType_All, "", 0);
+  PalFileMenu *mp, *mp2, *mp3, *mp4;
+  mem_object *memch, *memcd, *memgn;
+
+  // Add menu "NavigatorPalette-AllClasses-'volumename' if not found
+  for ( mp = menu; mp; mp = mp->next) {
+    if ( mp->item_type == pal_eMenuType_Palette &&
+	 cdh_NoCaseStrcmp( mp->title, "NavigatorPalette") == 0) {
+      for ( mp2 = mp->child_list; mp2; mp2 = mp2->next) {
+	if ( mp2->item_type == pal_eMenuType_Menu &&
+	     cdh_NoCaseStrcmp( mp2->title, "AllClasses") == 0) {
+	  for ( mp3 = mp2->child_list; mp3; mp3 = mp3->next) {
+	    if ( mp3->item_type == pal_eMenuType_ClassVolume &&
+		 cdh_NoCaseStrcmp( mp3->title, volume_name) == 0) {
+	      menu_found = 1;
+	      break;
+	    }
+	  }
+	  allclasses_found = 1;
+	  break;
+	}
+      }
+      palette_found = 1;
+      break;
+    }
+  }
+
+  if ( !palette_found) {
+    // Create palette
+    mp = new PalFileMenu( "NavigatorPalette", pal_eMenuType_Palette, 0);
+    mp->next = menu;
+    menu = mp;
+  }
+  if ( !allclasses_found) {
+    // Create volume menu
+    mp2 = new PalFileMenu( "AllClasses", pal_eMenuType_Menu, mp);
+    mp2->next = mp->child_list;
+    mp->child_list = mp2;
+  }
+  if ( !menu_found) {
+    // Create volume menu
+    mp3 = new PalFileMenu( volume_name, pal_eMenuType_ClassVolume, mp2);
+    mp3->next = mp2->child_list;
+    mp2->child_list = mp3;
+  }
 
 
+  // Replace menu "PlcEditorPalette-'volumename'-* with function object classes
+  menu_found = 0;
+  palette_found = 0;
+  for ( mp = menu; mp; mp = mp->next) {
+    if ( mp->item_type == pal_eMenuType_Palette &&
+	 cdh_NoCaseStrcmp( mp->title, "PlcEditorPalette") == 0) {
+      for ( mp2 = mp->child_list; mp2; mp2 = mp2->next) {
+	if ( mp2->item_type == pal_eMenuType_Menu &&
+	     cdh_NoCaseStrcmp( mp2->title, volume_name) == 0) {
+	  // Remove
+	  PalFile::config_tree_free( mp2->child_list);
+	  mp2->child_list = 0;
+	  menu_found = 1;
+	  break;
+	}
+      }
+      palette_found = 1;
+      break;
+    }
+  }
 
+  if ( !palette_found) {
+    // Create palette
+    mp = new PalFileMenu( "PlcEditorPalette", pal_eMenuType_Palette, 0);
+    mp->next = menu;
+    menu = mp;
+  }
+  if ( !menu_found) {
+    // Create volume menu
+    mp2 = new PalFileMenu( volume_name, pal_eMenuType_Menu, mp);
+    mp2->next = mp->child_list;
+    mp->child_list = mp2;
+  }
 
+  for ( memch = root_object; memch; memch = memch->fws) {
+    if ( memch->m_cid == pwr_eClass_ClassHier) {
+      for ( memcd = memch->fch; memcd; memcd = memcd->fws) {
+	for ( memgn = memcd->fch; memgn; memgn = memgn->fws) {
+	  if ( memgn->m_cid == pwr_eClass_GraphPlcNode) {
+	    // Add to menu
+	    mp4 = mp3;
+	    mp3 = new PalFileMenu( memcd->m_name, pal_eMenuType_Class, mp2);
+	    if ( !mp2->child_list)
+	      mp2->child_list = mp3;
+	    else
+	      mp4->next = mp3;
+	    break;
+	  }
+	}
+      }
+      break;
+    }
+  }
 
-
-
+  PalFile::config_tree_print( pal_cLocalPaletteFile, menu, &psts);
+}

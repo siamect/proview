@@ -630,7 +630,7 @@ WNav::~WNav()
     XtRemoveTimeOut( deadlock_timerid);
 
   menu_tree_free();
-  Pal::config_tree_free( menu);
+  PalFile::config_tree_free( menu);
   for ( int i = 1; i < brow_cnt; i++)
   {
     brow_DeleteSecondaryCtx( brow_stack[brow_cnt]->ctx);

@@ -1301,7 +1301,7 @@ static int nav_init_brow_cb( FlowCtx *fctx, void *client_data)
 #endif
 
   if ( !nav->menu) {
-    nav->menu = Pal::config_tree_build( nav->ldhses, pal_cPaletteFile,
+    nav->menu = PalFile::config_tree_build( nav->ldhses, pal_cPaletteFile,
 	  pal_eNameType_TopObjects, nav->root_name, NULL); 
     if ( !nav->menu) {
       printf( 
@@ -1309,7 +1309,7 @@ static int nav_init_brow_cb( FlowCtx *fctx, void *client_data)
 	  nav->root_name);
       return 0;
     }
-    Pal::config_tree_build( nav->ldhses, pal_cLocalPaletteFile,
+    PalFile::config_tree_build( nav->ldhses, pal_cLocalPaletteFile,
 	  pal_eNameType_TopObjects, nav->root_name, nav->menu); 
   }
 
@@ -1364,7 +1364,7 @@ Nav::Nav(
 //
 Nav::~Nav()
 {
-  Pal::config_tree_free( menu);
+  PalFile::config_tree_free( menu);
   free_pixmaps();
   XtDestroyWidget( form_widget);
 }
@@ -1556,7 +1556,7 @@ int Nav::open_top()
   pwr_tObjid 	root;
   pwr_tClassId	classid;
   Item 		*item;
-  pal_sMenu         *menu_p;
+  PalFileMenu   *menu_p;
 
   if (!menu)
     return 0;
