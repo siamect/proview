@@ -71,6 +71,8 @@ public:
   void method( pwr_tStatus *sts, char *methodName, wb_tMethod *method);
   int nextVolatileVid( pwr_tStatus *sts, char *name);
 
+  static void volumeNameToFilename( pwr_tStatus *sts, char *name, char *filename);
+
 private:
   void loadDirList( pwr_tStatus *status);
   void loadCommonMeta( pwr_tStatus *status);

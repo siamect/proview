@@ -3,11 +3,13 @@
 #include <sys/stat.h>
 #include "wb_pkg.h"
 #include "wb_error.h"
+#include "wb_erep.h"
 
 #include "co_msgwindow.h"
 #include "co_dcli.h"
 #include "co_cdh.h"
 #include "co_time.h"
+#include "co_msgwindow.h"
 #include "rt_load.h"
 
 wb_pkg::wb_pkg( char *nodelist, bool distribute)
@@ -96,17 +98,18 @@ void wb_pkg::readConfig()
       }
     }
     else if ( strcmp( cdh_Low(line_item[0]), "appl") == 0) {
-      if ( !(num == 3 || num == 4))
+      if ( !(num == 4 || num == 5))
 	throw wb_error_str("File corrupt " load_cNameDistribute);
 
+      char severity = line_item[2][0];
       try {
 	pkg_node& n = getNode( line_item[1]);
-	if ( num == 3) {
-	  pkg_pattern p( line_item[2]);
+	if ( num == 4) {
+	  pkg_pattern p( line_item[3], "", severity);
 	  n.push_back( p);
 	}
 	else {
-	  pkg_pattern p( line_item[2], line_item[3]);
+	  pkg_pattern p( line_item[3], line_item[4], severity);
 	  n.push_back( p);
 	}
       } catch ( wb_error &e) {
@@ -130,12 +133,12 @@ void wb_pkg::readConfig()
 
 	// Add ld_node file
 	sprintf( fname, load_cNameNode, load_cDirectory, n.bus());
-	pkg_pattern pnode( fname);
+	pkg_pattern pnode( fname, "", 'E');
 	n.push_back( pnode);
 
 	// Add bootfile
 	sprintf( fname, load_cNameBoot, load_cDirectory, n.name(), n.bus());
-	pkg_pattern pboot( fname);
+	pkg_pattern pboot( fname, "", 'E');
 	n.push_back( pboot);
 
 	// Read bootfile, get plc and volumes
@@ -150,7 +153,7 @@ void wb_pkg::readConfig()
 	
 	  sprintf( dir, "$pwrp_root/%s/exe/", cdh_OpSysToStr( n.opsys()));
 	  sprintf( fname, "%s%s", dir, plcname); 
-	  pkg_pattern pplc( fname);
+	  pkg_pattern pplc( fname, "", 'E');
 	  n.push_back( pplc);
 	}
 
@@ -160,27 +163,7 @@ void wb_pkg::readConfig()
 
 	  strcpy( dir, "$pwrp_load/");
 	  sprintf( fname, "%s%s.dbs", dir, cdh_Low( (char *)(volnamelist + j))); 
-	  pkg_pattern pvol( fname);
-	  n.push_back( pvol);
-
-	  // Add referenced class volumes
-#if 0
-	  char vname[80];
-	  pwr_tClassId vclass;
-	  pwr_tTime vtime;
-	  lfu_t_volref *volref;
-	  int volref_cnt;
-	  
-	  sts = lfu_GetVolRef( fname, vname, &vclass, &vtime, &volref, &volref_cnt);
-	  if ( EVEN(sts)) throw wb_error(sts);
-
-	  
-	  for ( int i = 0; i < volref_cnt; i++) {
-	    printf( "%d\n", volref->volid);
-	    volref++;
-	  }
-#endif
-
+	  n.checkVolume( fname);
 
 	  // Check if there are any rtt-files for Root or Sub Volumes
 	  if ( vollist[j] >= ldh_cUserVolMin &&
@@ -219,8 +202,6 @@ void wb_pkg::readConfig()
 	  }
 	}
 
-#if 0
-#endif
 	free( volnamelist);
 	free( vollist);
 
@@ -250,6 +231,69 @@ pkg_node& wb_pkg::getNode( char *name)
   throw wb_error_str("No such node");
 }
 
+void pkg_node::checkVolume( char *filename)
+{
+  lfu_t_volref *volref;
+  int volref_cnt;
+  pwr_tVid vol_vid;
+  pwr_tCid vol_cid;
+  pwr_tTime vol_time;
+  char vol_name[80];
+  bool found;
+  pwr_tStatus sts;
+  char fname[200];
+	  
+  sts = lfu_GetVolume( filename, vol_name, &vol_vid, &vol_cid, &vol_time);
+  if ( EVEN(sts)) throw wb_error(sts);
+
+  found = false;
+  for ( int i = 0; i < (int)m_volumelist.size(); i++) {
+    if ( m_volumelist[i].m_vid == vol_vid) {
+      found = true;
+      if ( m_volumelist[i].m_time.tv_sec != vol_time.tv_sec) {
+	char msg[200];
+	sprintf( msg, "Version mismatch volume %s in %s", (volref+i)->name, filename);
+	MsgWindow::message( 'E', msg, msgw_ePop_No);
+	m_errors++;
+      }
+      break;
+    }
+  }
+  if ( !found) {
+    pkg_volume vol( vol_name, filename, vol_vid, vol_time);
+    m_volumelist.push_back( vol);
+  }
+
+  sts = lfu_GetVolRef( filename, &volref, &volref_cnt);
+  if ( EVEN(sts)) throw wb_error(sts);
+	  
+  for ( int i = 0; i < volref_cnt; i++) {
+    wb_erep::volumeNameToFilename( &sts, (volref+i)->name, fname);
+    if ( EVEN(sts)) {
+      char msg[200];
+      sprintf( msg, "Loadfile not found: %s", (volref+i)->name);
+      MsgWindow::message( 'E', msg, msgw_ePop_No);
+      m_errors++;
+      continue;
+    }
+
+    checkVolume( fname);
+
+    for ( int j = 0; j < (int)m_volumelist.size(); j++) {
+      if ( m_volumelist[j].m_vid == (volref+i)->vid) {
+	if ( m_volumelist[j].m_time.tv_sec != (volref+i)->version.tv_sec) {
+	  char msg[200];
+	  sprintf( msg, "Version mismatch volume %s in %s", (volref+i)->name, filename);
+	  MsgWindow::message( 'E', msg, msgw_ePop_No);
+	  m_errors++;
+	}
+	break;
+      }
+    }
+  }
+  free( (char *)volref);
+}
+
 void pkg_node::fetchFiles( bool distribute) 
 {
   char	dev[80];
@@ -259,6 +303,14 @@ void pkg_node::fetchFiles( bool distribute)
   int 	version;
   char  pack_fname[200];
   char  fname[200];
+
+  // Add volumes to pattern
+  for ( int i = 0; i < (int)m_volumelist.size(); i++) {
+    if ( !m_volumelist[i].m_isSystem) {
+      pkg_pattern vol( m_volumelist[i].m_filename, "$pwrp_load/", 'E');
+      push_back( vol);
+    }
+  }
 
   for ( int i = 0; i < (int)m_pattern.size(); i++) 
     m_pattern[i].fetchFiles();
@@ -288,6 +340,18 @@ void pkg_node::fetchFiles( bool distribute)
 
       m_filelist.push_back( f);
     }
+  }
+
+  if ( m_errors) {
+    char msg[200];
+    sprintf( msg, "Distribute errors node %s: %d errors, %d warnings", m_name, m_errors, m_warnings);
+    MsgWindow::message( 'E', msg, msgw_ePop_Yes);
+    throw wb_error_str( msg);
+  }
+  else if ( m_warnings) {
+    char msg[200];
+    sprintf( msg, "Distribute warnings node %s: %d warnings", m_name, m_warnings);
+    MsgWindow::message( 'W', msg, msgw_ePop_Yes);
   }
 
   // Read and increment package version
@@ -404,6 +468,10 @@ void pkg_node::fetchFiles( bool distribute)
   sprintf( cmd, "source %s", pack_fname);
   system( cmd);
 
+  char msg[200];
+  sprintf( msg, "Distribute to node %s", m_name);
+  MsgWindow::message( 'I', msg, msgw_ePop_No);
+
 }
 
 void wb_pkg::copyPackage( char *pkg_name)
@@ -511,8 +579,18 @@ void pkg_pattern::fetchFiles()
     }
     dcli_search_file( m_source, found_file, DCLI_DIR_SEARCH_END);
   }
-  if ( m_filelist.size() == 0)
-    printf( "-- Warning, no file found, %s\n", m_source);
+  if ( m_filelist.size() == 0) {
+    char msg[200];
+    sprintf( msg, "No file found: %s", m_source);
+    MsgWindow::message( m_severity, msg, msgw_ePop_No);
+    
+    if ( m_node) {
+      if ( m_severity == 'E')
+	m_node->incrErrors();
+      else
+	m_node->incrWarnings();
+    }
+  }
 }
 
 pkg_file::pkg_file( char *source, char *target) 

@@ -501,7 +501,8 @@ ldh_GetChildMnt(ldh_tSession session, pwr_tOid oid, pwr_tOid *coid)
     a.value( &moid);
 
     wb_object mo = sp->object(moid);
-    mo = mo.first();
+    if ( mo)
+      mo = mo.first();
     if ( mo) {
       *coid = mo.oid();
       return mo.sts();

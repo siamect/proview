@@ -35,17 +35,21 @@ class pkg_pattern {
   char m_source[200];
   char m_target[200];  
   vector<pkg_file> m_filelist;
+  pkg_node *m_node;
+  char m_severity;
 
  public:
-  pkg_pattern( char *source, char *target) {
+  pkg_pattern( char *source, char *target, char severity = 'W') 
+    : m_node(0), m_severity(severity) {
     strcpy( m_source, source);
     strcpy( m_target, target);
   }
-  pkg_pattern( char *source) {
+  pkg_pattern( char *source) : m_node(0), m_severity('W') {
     strcpy( m_source, source);
     strcpy( m_target, "");
   }
-  pkg_pattern( const pkg_pattern& x) : m_filelist(x.m_filelist) {
+  pkg_pattern( const pkg_pattern& x) : m_filelist(x.m_filelist), m_node(x.m_node),
+    m_severity(x.m_severity) {
     strcpy( m_source, x.m_source);
     strcpy( m_target, x.m_target);
   }
@@ -53,24 +57,51 @@ class pkg_pattern {
   char *target() { return m_target;}
   bool hasTarget() { return m_target[0] != 0;}
   void fetchFiles();
+  void node( pkg_node *node) { m_node = node;}
+};
+
+class pkg_volume {
+  friend class pkg_node;
+
+ private:
+  char m_name[80];
+  char m_filename[200];  
+  pwr_tVid m_vid;
+  pwr_tTime m_time;
+  bool m_isSystem;
+
+ public:
+  pkg_volume( char *name, char *filename, pwr_tVid vid, pwr_tTime time) :
+    m_vid(vid), m_time(time), m_isSystem(false)
+  {
+    strcpy( m_name, name);
+    strcpy( m_filename, filename);
+    if ( strncmp( m_filename, "$pwr_load/", 10) == 0)
+      m_isSystem = true;
+  }
 };
 
 class pkg_node {
  private:
   vector<pkg_pattern> m_pattern;
   vector<pkg_file> m_filelist;
+  vector<pkg_volume> m_volumelist;
   char m_name[80];
   pwr_mOpSys m_opsys;
   int m_bus;
   lfu_eDistrSts m_dstatus;
   bool m_valid;
+  int m_errors;
+  int m_warnings;
 
  public:
   pkg_node( char *name): m_opsys(pwr_mOpSys__), m_bus(0), 
-    m_dstatus(lfu_eDistrSts_Normal), m_valid(false) { strcpy( m_name, name);}
+    m_dstatus(lfu_eDistrSts_Normal), m_valid(false), m_errors(0), m_warnings(0) 
+    { strcpy( m_name, name);}
   pkg_node( char *name, pwr_mOpSys opsys, int bus, lfu_eDistrSts dstatus) :
     m_opsys(opsys), m_bus(bus), m_dstatus(dstatus),
-    m_valid(true) { strcpy( m_name, name); }
+    m_valid(true), m_errors(0), m_warnings(0)
+    { strcpy( m_name, name); }
   char *name() { return m_name;}
   pwr_mOpSys opsys() { return m_opsys;}
   int bus() { return m_bus;}
@@ -81,9 +112,13 @@ class pkg_node {
   void setDStatus( lfu_eDistrSts dstatus) { m_dstatus = dstatus;} 
   void setValid() { m_valid = true;}
   void push_back( pkg_pattern& pattern) { 
+    pattern.node( this);
     m_pattern.push_back( pattern);
   }
+  void checkVolume( char *filename);
   void fetchFiles( bool distribute);
+  void incrWarnings() { m_warnings++;}
+  void incrErrors() { m_errors++;}
 };
 
 class wb_pkg {

@@ -807,7 +807,52 @@ wb_vrep *wb_erep::createVolume(pwr_tStatus *sts, pwr_tVid vid, pwr_tCid cid,
   return vrepdb;
 }
 
+void wb_erep::volumeNameToFilename( pwr_tStatus *sts, char *name, char *filename)
+{
+  char found_file[200];
+  char vname[200];
+  char line[200];
+  char fname[200];
+  char dir_list[11][200];
+  int dir_cnt;
+  int fsts;
 
+  // Read directory file
+  strcpy( dir_list[0], "$pwr_load/");
+  strcpy( dir_list[1], "$pwrp_load/");
+  dir_cnt = 2;
+
+  dcli_translate_filename( fname, load_cNameFilePath);
+  ifstream fp( fname, ios::in);
+  if ( !fp) {
+    *sts = LDH__PROJCONFIG;
+    return;
+  }
+  
+  while ( fp.getline( line, sizeof(line))) {
+    if ( dir_cnt > (int) (sizeof(dir_list)/sizeof(dir_list[0]) - 1))
+      break;
+    strcpy( dir_list[dir_cnt], line);
+    if ( dir_list[dir_cnt][strlen(dir_list[dir_cnt])-1] != '/')
+      strcat( dir_list[dir_cnt], "/");
+    dir_cnt++;
+  }
+  fp.close();
+
+  for ( int i = 0; i < dir_cnt; i++) {
+    strcpy( vname, dir_list[i]);
+    cdh_ToLower( &vname[strlen(vname)], name);
+    strcat( vname, ".dbs");
+    fsts = dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_INIT);
+    dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_END);
+    if ( ODD(fsts)) {
+      strcpy( filename, vname);
+      *sts = LDH__SUCCESS;
+      return;
+    }
+  }
+  *sts = LDH__NOSUCHFILE;
+}
 
 
 

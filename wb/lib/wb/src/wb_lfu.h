@@ -55,10 +55,9 @@ typedef struct {
 	} lfu_t_volumelist;
 
 typedef struct {
-	pwr_tVolumeId	volid;
-	int		version;
-	pwr_tClassId	classid;
-	int		file_checked;
+	pwr_tVid	vid;
+	pwr_tTime      	version;
+        char		name[80];
 	} lfu_t_volref;
 
 pwr_tStatus lfu_volumelist_load( 
@@ -127,12 +126,14 @@ pwr_tStatus lfu_WriteSysObjectFile(
 	ldh_tSesContext	ldhses
 );
 
-pwr_tStatus	lfu_GetVolRef( 		char *filename,
-			       	char *volname,
-				pwr_tClassId *volclass,
-			       	pwr_tTime *createtime,
+pwr_tStatus	lfu_GetVolRef( 	char *filename,
 			       	lfu_t_volref **volref,
 	       			int *volref_count);
+pwr_tStatus 	lfu_GetVolume(  char *filename,
+			       	char *name,
+				pwr_tVid *vid,
+				pwr_tCid *cid,
+				pwr_tTime *time);
 
 #ifdef __cplusplus
 }
