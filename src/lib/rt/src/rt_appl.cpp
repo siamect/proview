@@ -55,14 +55,13 @@ void rt_appl::init()
 
 void rt_appl::register_appl( char *name)
 {
-  pwr_tOid oid;
   pwr_tStatus sts;
 
   // Get configuration object
-  sts = gdh_NameToObjid( name, &oid);
+  sts = gdh_NameToObjid( name, &m_apploid);
   if ( EVEN(sts)) throw co_error(sts);
 
-  aproc_RegisterObject( oid);
+  aproc_RegisterObject( m_apploid);
 }
 
 void rt_appl::mainloop()

@@ -30,11 +30,15 @@ class rt_appl {
   void mainloop();
   double scantime() { return m_scantime;}
   void set_scantime( double time) { m_scantime = time;}
+  pwr_tOid& apploid() { return m_apploid;}
+
  private:
   errh_eAnix m_anix;
   double m_scantime;
   qcom_sQid m_qid;
   char m_name[80];
+  pwr_tOid m_apploid;
 };
 
 #endif
+
