@@ -49,6 +49,7 @@ pwr_dImport pwr_BindMethods(WebHandler);
 pwr_dImport pwr_BindMethods(PlcProcess);
 pwr_dImport pwr_BindMethods(PlcThread);
 pwr_dImport pwr_BindMethods(NodeConfig);
+pwr_dImport pwr_BindMethods(Pb_DP_Slave);
 
 pwr_dExport pwr_BindClasses(Base) = {
   pwr_BindClass(ASup),
@@ -95,8 +96,18 @@ pwr_dExport pwr_BindClasses(Base) = {
   pwr_BindClass(PlcProcess),
   pwr_BindClass(PlcThread),
   pwr_BindClass(NodeConfig),
+  pwr_BindClass(Pb_DP_Slave),
   pwr_NullClass
 };
+
+
+
+
+
+
+
+
+
 
 
 
