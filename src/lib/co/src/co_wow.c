@@ -592,6 +592,51 @@ void wow_CreateFileSelDia( Widget parent_wid,
   XmStringFree( cpattern);
 }
 
+void wow_GetLabel( Widget w, char *label)
+{
+  Arg			arg[1];
+  XmString 		latinstr;
+
+  XtSetArg(arg[0], XmNlabelString, &latinstr);
+  XtGetValues( w, arg, 1);
+  wow_GetCSText( latinstr, label);
+  XmStringFree( latinstr);
+}
+
+void wow_GetCSText( XmString ar_value, char *t_buffer)
+{
+    char			*first_seg;
+    XmStringContext		context;
+    XmStringCharSet 		charset;
+    XmStringDirection 		dir_r_to_l;
+    Boolean 			sep;
+
+    if (ar_value == 0)
+    {
+	strcpy(t_buffer,"");
+	return;
+    }
+    
+    
+    XmStringInitContext( &context, ar_value);
+    
+    if ( XmStringGetNextSegment( context, &first_seg, &charset, &dir_r_to_l,
+			&sep) != TRUE )
+    {
+      *first_seg = 0;
+    }
+    else
+    {
+      strcpy(t_buffer,first_seg);
+      XtFree(first_seg);
+#if 0
+    /* I don't think that this should be freed, ML 950120 */
+      XtFree (charset);
+#endif
+    }
+    XmStringFreeContext (context);
+
+}
 #endif
 
 

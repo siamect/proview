@@ -8,6 +8,8 @@
 
    <Description>.  */
 
+#include <Xm/Xm.h>
+
 typedef enum {
   wow_eFileSelType_All,
   wow_eFileSelType_Dbs,
@@ -66,6 +68,9 @@ void wow_CreateFileSelDia( Widget parent_wid,
 			   void *parent_ctx,
 			   void (*file_selected_cb)(void *, char *, wow_eFileSelType),
 			   wow_eFileSelType file_type);
+
+void wow_GetLabel( Widget w, char *label);
+void wow_GetCSText( XmString ar_value, char *t_buffer);
 
 #endif
 
