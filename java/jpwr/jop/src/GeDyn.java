@@ -49,9 +49,9 @@ public class GeDyn {
     public static final int mActionType_PulldownMenu    = 1 << 19;
     public static final int mActionType_OptionMenu     	= 1 << 20;
 
-    public static final int eAnimSequence_Cycle		= 0;
-    public static final int eAnimSequence_Dig		= 1;
-    public static final int eAnimSequence_ForwBack	= 2;
+    public static final int eAnimSequence_Cycle		= 1;
+    public static final int eAnimSequence_Dig		= 2;
+    public static final int eAnimSequence_ForwBack	= 3;
 
     public static final int eLimitType_Gt		= 0;
     public static final int eLimitType_Lt		= 1;
