@@ -21,6 +21,7 @@
 /* Return delta time since system start.
    Add delta time 'add'.  */
 
+#if 0
 pwr_tDeltaTime *
 time_Uptime (
   pwr_tStatus *status,
@@ -72,7 +73,81 @@ time_Uptime (
   else
     return tp;
 }
+#endif
 
+/* Modified to keep uptime tics as a 64-bit unsigned.
+ * This way uptime tics won't wrap around for another 8000 years or so 
+ * when HZ is at a 1000.
+ * RK 031112
+ */
+
+pwr_tDeltaTime *
+time_Uptime (
+  pwr_tStatus *status,
+  pwr_tDeltaTime *tp,
+  pwr_tDeltaTime *ap
+)
+{
+  pwr_tDeltaTime time;
+  unsigned long tics;
+  static unsigned long long tics_64;
+  struct tms buff;
+  static int tics_per_sec = 0;
+  static pwr_tTime boot_time = {0,0};
+  static pwr_tDeltaTime max_diff = {0, 20000000};
+  pwr_tDeltaTime uptime_tics;
+  pwr_tTime current_time;
+  pwr_tDeltaTime diff;
+  static pwr_tUInt16 msb_flips = 0;
+  static pwr_tBoolean old_high_bit = 0;
+  pwr_tBoolean high_bit;
+  lldiv_t uptime_s;
+  pwr_dStatus(sts, status, TIME__SUCCESS);
+ 
+  if ( !tics_per_sec)
+    tics_per_sec = sysconf(_SC_CLK_TCK);
+
+  if (tp == NULL)
+    tp = &time;
+
+  tics = times(&buff);
+
+  high_bit = tics >> (32 - 1);
+  if (!high_bit && old_high_bit)
+    msb_flips++;
+  old_high_bit = high_bit;
+
+  tics_64  = ((unsigned long long) msb_flips << 32) | tics;
+  uptime_s = lldiv(tics_64, (long long) tics_per_sec);
+  
+  uptime_tics.tv_sec  = (unsigned long) uptime_s.quot;
+  uptime_tics.tv_nsec = ((unsigned long) uptime_s.rem) * (1000000000 / tics_per_sec);
+
+  // pwr_Assert(tp->tv_sec >= 0 && tp->tv_nsec >= 0);
+
+  clock_gettime( CLOCK_REALTIME, &current_time);
+  if ( !boot_time.tv_sec) {
+    time_Asub( &boot_time, &current_time, &uptime_tics);
+    *tp = uptime_tics;
+  }
+  else {
+    time_Adiff( tp, &current_time, &boot_time);
+    time_Dsub( &diff, tp, &uptime_tics);
+    time_Dabs(NULL, &diff);
+    if ( time_Dcomp(&diff, &max_diff) > 0) {
+      time_Asub( &boot_time, &current_time, &uptime_tics);
+      *tp = uptime_tics;
+      if (status != NULL) {
+        *status = TIME__CLKCHANGE;
+      }
+    }
+  }
+
+  if (ap != NULL)
+    return time_Dadd(tp, tp, ap);
+  else
+    return tp;
+}
 
 /* Return number of clock ticks since system start.
    Add number of tics corresponding to delta time 'add'.  */
@@ -85,12 +160,16 @@ time_Clock (
 {
   long		tics;
   struct tms	buff;
+  static int    tics_per_sec = 0;
   pwr_dStatus(sts, status, TIME__SUCCESS);
+
+  if ( !tics_per_sec)
+    tics_per_sec = sysconf(_SC_CLK_TCK);
 
   tics = times(&buff);
 
   if (ap != NULL) {
-    tics += (ap->tv_sec * CLK_TCK) + (ap->tv_nsec / (1000000000 / CLK_TCK));
+    tics += (ap->tv_sec * tics_per_sec) + (ap->tv_nsec / (1000000000 / tics_per_sec));
   }
 
   return tics;
