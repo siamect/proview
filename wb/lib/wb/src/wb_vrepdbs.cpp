@@ -32,7 +32,8 @@ wb_vrepdbs::dbsenv()
             throw wb_error(sts);
         }
         m_isDbsenvLoaded = true;
-        dbs_GetVolumeName(&sts, &m_dbsenv, m_name);
+        strcpy(m_name, m_dbsenv.vp->name);
+        m_vid = m_dbsenv.vp->vid;
     } else {
         ep = &m_dbsenv;
     }

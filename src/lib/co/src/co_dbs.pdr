@@ -518,6 +518,11 @@ struct dbs_sName {
 %    pwr_tUInt32  size;    /**< size of mapped file */
 %    char         *base;
 %    dbs_mEnv flags;
+%    dbs_sVolume  *vp;
+%    dbs_sVolRef  *vrp;
+%    dbs_sBintab  *name_bt;        /**< search for object with parent and name  */
+%    dbs_sBintab  *oid_bt;         /**< search for object with identity  */
+%    dbs_sBintab  *class_bt;       /**< search for object with class  */
 %} dbs_sEnv;
 %
 %
