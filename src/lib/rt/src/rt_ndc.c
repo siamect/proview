@@ -620,7 +620,10 @@ static pwr_tBoolean (*encode[pwr_eTix_])() = {
 };
 #endif
 
-/* .  */
+/**
+ * @note There is now support for double and it's a little tricky to fix
+ *       if we want backward compatibility..  
+ */
 
 pwr_tBoolean
 ndc_ConvertData (
@@ -639,11 +642,18 @@ ndc_ConvertData (
   int			base;
   gdb_sAttribute	*ap;
 
-  if (np->fm.m == gdbroot->my_node->fm.m) {
-    if (tp != sp)
-      memcpy(tp, sp, size);
-    return TRUE;
+ /* The new way, convert if different co_mFormat
+  * The old way, always convert if different OS 
+  */
+
+  if ((np->netver >= net_cFirstCclassVersion && np->fm.m == gdbroot->my_node->fm.m) 
+      || (np->netver < net_cFirstCclassVersion && 
+          np->os == gdbroot->my_node->os && np->fm.b.bo == gdbroot->my_node->fm.b.bo)) {
+      if (tp != sp)
+        memcpy(tp, sp, size);
+      return TRUE;
   }
+
 
   cid.pwr = arp->Body;
   cid.c.bix = 0;	/* To get the class id.  */

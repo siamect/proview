@@ -32,6 +32,9 @@
 %
 %#define net_cVersion		8
 %
+% /** @note DO NOT change this number */
+%#define net_cFirstCclassVersion 8
+%
 %#define net_cSendRcvTmo	20000	/* Timeout (ms) used in pams_rcv_msgw calls */
 %#define net_cProcHandler	110
 %#define net_cMsgClass		200
