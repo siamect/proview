@@ -2415,7 +2415,7 @@ int GeDigText::disconnect( grow_tObject object)
 
 int GeDigText::scan( grow_tObject object)
 {
-  if ( !p || dyn->ignore_color)
+  if ( !p)
     return 1;
 
   if ( !first_scan) {
@@ -2624,6 +2624,16 @@ int GeValue::scan( grow_tObject object)
   if ( !p)
     return 1;
 
+  if ( db == graph_eDatabase_Gdh && annot_typeid == pwr_eType_NetStatus) {
+    pwr_tTime t;
+    pwr_tStatus sts;
+    pwr_tBoolean old;
+
+    gdh_GetSubscriptionOldness( subid, &old, &t, &sts);
+    if ( old)
+      *(pwr_tNetStatus *)p = PWR__NETTIMEOUT;
+  }
+
   if ( !first_scan) {
     if ( memcmp( &old_value, p, size) == 0 )
       // No change since last time
@@ -2653,6 +2663,11 @@ int GeValue::scan( grow_tObject object)
     }
     // No break
   case pwr_eType_Status:
+    if ( *(pwr_tStatus *)p == 0) {
+      strcpy( buf, "");
+      len = 0;
+      break;
+    }
     switch ( format[1]) {
     case '1':
       // Format %1m: Write only the text
