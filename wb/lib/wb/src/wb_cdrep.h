@@ -26,13 +26,14 @@ public:
   wb_cdrep(wb_mvrep *, const wb_orep&);
   wb_cdrep(wb_mvrep *, pwr_tCid);
   wb_cdrep(wb_mvrep *, wb_name);
+  ~wb_cdrep();
 
   void unref();
   wb_cdrep *ref();
 
   //wb_object& operator=(const wb_orep&);
 
-  size_t size() { return 0;}   // Fix get objects runtime body size
+  size_t size( pwr_eBix bix);
   pwr_mClassDef flags();
   pwr_tCid cid();
     

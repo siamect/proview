@@ -119,7 +119,7 @@ CHAR_LITERAL
 	;
 
 STRING_LITERAL
-	:	'"' (ESC|~'"')* '"'
+	:	'"' (ESC|'\n' {newline();} |~'"')* '"'
 	;
 
 protected

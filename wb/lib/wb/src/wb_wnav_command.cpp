@@ -64,6 +64,7 @@ extern "C" {
 #include "wb_env.h"
 #include "wb_erep.h"
 #include "wb_vrepwbl.h"
+#include "wb_vrepmem.h"
 
 #define	WNAV_MENU_CREATE	0
 #define	WNAV_MENU_ADD		1
@@ -114,6 +115,8 @@ static int	wnav_move_func(		void		*client_data,
 static int	wnav_open_func(	void		*client_data,
 				void		*client_flag);
 static int	wnav_create_func( void		*client_data,
+				void		*client_flag);
+static int	wnav_new_func( void		*client_data,
 				void		*client_flag);
 static int	wnav_delete_func( void		*client_data,
 				void		*client_flag);
@@ -229,6 +232,11 @@ dcli_tCmdTable	wnav_command_table[] = {
 			"/CLASS", "/DEBUG", "/NODECONFIG",
 			"/NAME", "/IDENTITY", "/FILES", "/OUT", "/IGNORE",
 			""}
+		},
+		{
+			"NEW",
+			&wnav_new_func,
+			{ "dcli_arg1", "/NAME",  ""}
 		},
 		{
 			"DELETE",
@@ -3428,6 +3436,7 @@ static int	wnav_create_func( void		*client_data,
   {
     char	filestr[80];
     char	outstr[80];
+    char        *outstr_p;
     int         ignore;
     pwr_tStatus	sts;
 
@@ -3439,11 +3448,10 @@ static int	wnav_create_func( void		*client_data,
       return WNAV__QUAL;
     }
 
-    if ( EVEN( dcli_get_qualifier( "/OUT", outstr)))
-    {
-      wnav->message('E', "Qualifer required");
-      return WNAV__QUAL;
-    }
+    if ( ODD( dcli_get_qualifier( "/OUT", outstr)))
+      outstr_p = outstr;
+    else
+      outstr_p = 0;
 
     ignore = ODD( dcli_get_qualifier( "/IGNORE", NULL));
 
@@ -3456,7 +3464,7 @@ static int	wnav_create_func( void		*client_data,
       wb_vrepwbl *wbl = new wb_vrepwbl(erep);
       sts = wbl->load( filestr);
       if ( ODD(sts) || ignore)
-	wbl->createSnapshot( outstr);
+	wbl->createSnapshot( outstr_p);
       delete wbl;
     }
     catch ( wb_error &e) {
@@ -3465,6 +3473,60 @@ static int	wnav_create_func( void		*client_data,
     if ( EVEN(sts))
       wnav->message(' ', wnav_get_message(sts));
     return sts;
+  }
+  else
+  {
+    wnav->message('E',"Syntax error");
+    return WNAV__SYNTAX;
+  }
+
+  return WNAV__SUCCESS;	
+}
+
+static int	wnav_new_func( void		*client_data,
+				void		*client_flag)
+{
+  WNav *wnav = (WNav *)client_data;
+
+  int	sts;
+  char	arg1_str[80];
+  int	arg1_sts;
+
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str);
+
+  if ( strncmp( arg1_str, "VOLUME", strlen( arg1_str)) == 0)
+  {
+    char name_str[80];
+
+    sts = wnav_wccm_get_wbctx_cb( wnav, &wnav->wbctx);
+    if ( EVEN(sts)) return sts;
+
+    // Command is "NEW VOLUME"
+    if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str)))
+    {
+      if ( name_str[0] == '/')
+      {
+        wnav->message('E', "Syntax error");
+        return WNAV__SYNTAX;
+      }
+    }
+    else if ( EVEN( dcli_get_qualifier( "/NAME", name_str)))
+    {
+      wnav->message('E',"Enter name");
+      return WNAV__QUAL;
+    }
+
+    wb_erep *erep = *(wb_env *)wnav->wbctx;
+    pwr_tVid vid = erep->nextVolatileVid( &sts);
+    if ( EVEN(sts)) {
+      wnav->message(' ', wnav_get_message(sts));
+      return sts;
+    }
+    wb_vrepmem *mem = new wb_vrepmem(erep, vid);
+    mem->name( name_str);
+    erep->addDbs( &sts, mem);
+
+    return sts;	
   }
   else
   {

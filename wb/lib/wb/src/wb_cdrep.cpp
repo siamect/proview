@@ -44,6 +44,12 @@ wb_cdrep::wb_cdrep() : m_nRef(0), m_orep(0), m_sts(LDH__NOCLASS)
 {
 }
 
+wb_cdrep::~wb_cdrep()
+{
+  if ( m_orep)
+    m_orep->unref();
+}
+
 wb_cdrep::wb_cdrep( wb_mvrep *mvrep, pwr_tCid cid) : m_nRef(0)
 {
   pwr_tOid oid = cdh_ClassIdToObjid( cid);
@@ -221,6 +227,19 @@ pwr_mClassDef wb_cdrep::flags()
     throw wb_error( sts);
 
   return classdef->Flags;
+}
+
+size_t wb_cdrep::size( pwr_eBix bix)
+{
+  size_t size;
+  pwr_tStatus sts;
+
+  wb_bdrep *bd = bdrep( &sts, bix);
+  if ( EVEN(sts)) return 0;
+
+  size = bd->size();
+  delete bd;
+  return size;
 }
 
 const char *wb_cdrep::name() const

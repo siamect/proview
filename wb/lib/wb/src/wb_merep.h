@@ -24,6 +24,7 @@ public:
   wb_merep( wb_erep *erep, wb_vrep *vrep = 0) : m_erep(erep), m_vrep(vrep) {}
   wb_mvrep *volume(pwr_tStatus *sts);
   wb_mvrep *volume(pwr_tStatus *sts, pwr_tVid vid);
+  wb_mvrep *volume(pwr_tStatus *sts, const char *name);
 
   void addDbs( pwr_tStatus *sts, wb_mvrep *mvrep);
   void removeDbs( pwr_tStatus *sts, wb_mvrep *mvrep);

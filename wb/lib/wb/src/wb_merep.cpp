@@ -32,6 +32,19 @@ wb_mvrep *wb_merep::volume(pwr_tStatus *sts, pwr_tVid vid)
   return it->second;
 }
 
+wb_mvrep *wb_merep::volume(pwr_tStatus *sts, const char *name)
+{
+  mvrep_iterator it;
+  for ( it = m_mvrepdbs.begin(); it != m_mvrepdbs.end(); it++) {
+    if ( cdh_NoCaseStrcmp( it->second->name(), name) == 0) {
+      *sts = LDH__SUCCESS;
+      return it->second;
+    }
+  }
+  *sts = LDH__NOSUCHVOL;
+  return 0;
+}
+
 void wb_merep::addDbs( pwr_tStatus *sts, wb_mvrep *mvrep)
 {
   mvrep_iterator it = m_mvrepdbs.find( mvrep->vid());
@@ -96,18 +109,32 @@ wb_cdrep *wb_merep::cdrep( pwr_tStatus *sts, wb_name name)
 {
   wb_cdrep *cdrep;
 
-  for ( mvrep_iterator it = m_mvrepdbs.begin(); it != m_mvrepdbs.end(); it++) {
+  if ( name.hasVolume()) {
+    wb_mvrep *mvrep = volume( sts, name.volume());
+    if ( EVEN( *sts)) return 0;
     try {
-      cdrep = new wb_cdrep( it->second, name);
+      cdrep = new wb_cdrep( mvrep, name);
       *sts = LDH__SUCCESS;
       return cdrep;
     }
     catch ( wb_error& e) {
-      // Not found in this volume, try next
-      continue;
+      *sts = e.sts();
+      return 0;
     }
   }
-
+  else {
+    for ( mvrep_iterator it = m_mvrepdbs.begin(); it != m_mvrepdbs.end(); it++) {
+      try {
+	cdrep = new wb_cdrep( it->second, name);
+	*sts = LDH__SUCCESS;
+	return cdrep;
+      }
+      catch ( wb_error& e) {
+	// Not found in this volume, try next
+	continue;
+      }
+    }
+  }
   // Not found
   *sts = LDH__NOCLASS;
   return 0;
@@ -143,14 +170,30 @@ wb_tdrep *wb_merep::tdrep( pwr_tStatus *sts, wb_name name)
 {
   wb_tdrep *tdrep;
 
-  for ( mvrep_iterator it = m_mvrepdbs.begin(); it != m_mvrepdbs.end(); it++) {
+  if ( name.hasVolume()) {
+    wb_mvrep *mvrep = volume( sts, name.volume());
+    if ( EVEN( *sts)) return 0;
+
     try {
-      tdrep = new wb_tdrep( it->second, name);
+      tdrep = new wb_tdrep( mvrep, name);
       *sts = LDH__SUCCESS;
       return tdrep;
     }
     catch ( wb_error& e) {
-      // Not found in this volume, try next
+      *sts = e.sts();
+      return 0;
+    }
+  }
+  else {
+    for ( mvrep_iterator it = m_mvrepdbs.begin(); it != m_mvrepdbs.end(); it++) {
+      try {
+        tdrep = new wb_tdrep( it->second, name);
+        *sts = LDH__SUCCESS;
+        return tdrep;
+      }
+      catch ( wb_error& e) {
+	// Not found in this volume, try next
+      }
     }
   }
 

@@ -2278,16 +2278,30 @@ void wb_wbllexer::mSTRING_LITERAL(bool _createToken) {
 	match(static_cast<unsigned char>('"'));
 	{
 	for (;;) {
-		if ((LA(1)==static_cast<unsigned char>('\\'))) {
+		switch ( LA(1)) {
+		case static_cast<unsigned char>('\\'):
+		{
 			mESC(false);
+			break;
 		}
-		else if ((_tokenSet_4.member(LA(1)))) {
-			matchNot(static_cast<unsigned char>('"'));
+		case static_cast<unsigned char>('\n'):
+		{
+			match(static_cast<unsigned char>('\n'));
+			if ( inputState->guessing==0 ) {
+#line 122 "wb_wbllexer.g"
+				newline();
+#line 2294 "wb_wbllexer.cpp"
+			}
+			break;
 		}
+		default:
+			if ((_tokenSet_4.member(LA(1)))) {
+				matchNot(static_cast<unsigned char>('"'));
+			}
 		else {
 			goto _loop89;
 		}
-		
+		}
 	}
 	_loop89:;
 	}
@@ -2309,6 +2323,6 @@ const unsigned long wb_wbllexer::_tokenSet_2_data_[] = { 0UL, 16UL, 2281701374UL
 const ANTLR_USE_NAMESPACE(antlr)BitSet wb_wbllexer::_tokenSet_2(_tokenSet_2_data_,16);
 const unsigned long wb_wbllexer::_tokenSet_3_data_[] = { 4294967288UL, 4294967167UL, 4026531839UL, 4294967295UL, 4294967295UL, 4294967295UL, 4294967295UL, 4294967295UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL };
 const ANTLR_USE_NAMESPACE(antlr)BitSet wb_wbllexer::_tokenSet_3(_tokenSet_3_data_,16);
-const unsigned long wb_wbllexer::_tokenSet_4_data_[] = { 4294967288UL, 4294967291UL, 4026531839UL, 4294967295UL, 4294967295UL, 4294967295UL, 4294967295UL, 4294967295UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL };
+const unsigned long wb_wbllexer::_tokenSet_4_data_[] = { 4294966264UL, 4294967291UL, 4026531839UL, 4294967295UL, 4294967295UL, 4294967295UL, 4294967295UL, 4294967295UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL };
 const ANTLR_USE_NAMESPACE(antlr)BitSet wb_wbllexer::_tokenSet_4(_tokenSet_4_data_,16);
 

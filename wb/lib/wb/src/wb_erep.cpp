@@ -24,7 +24,7 @@ extern "C" {
 pwr_dImport pwr_BindClasses(System);
 pwr_dImport pwr_BindClasses(Base);
 
-wb_erep::wb_erep() : m_dir_cnt(0)
+wb_erep::wb_erep() : m_dir_cnt(0), m_volatile_idx(0)
 {
   m_merep = new wb_merep(0);
 }
@@ -79,7 +79,7 @@ wb_vrep *wb_erep::volume(pwr_tStatus *sts, pwr_tVid vid)
   return it->second;
 }
 
-wb_vrep *wb_erep::volume(pwr_tStatus *sts, const char *name) // Fix
+wb_vrep *wb_erep::volume(pwr_tStatus *sts, const char *name)
 {
   vrep_iterator it;
   for ( it = m_vrepdb.begin(); it != m_vrepdb.end(); it++) {
@@ -582,6 +582,15 @@ void wb_erep::bindMethods()
 #endif
 }
 
+int wb_erep::nextVolatileVid( pwr_tStatus *sts)
+{
+  pwr_tVid vid = ldh_cVolatileVolMin + m_volatile_idx++;
+  if ( vid > ldh_cVolatileVolMax) {
+    *sts = LDH__VOLVOLATILEMAX;
+    return 0;
+  }
+  return vid;
+}
 
 
 

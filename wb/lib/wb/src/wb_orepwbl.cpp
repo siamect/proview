@@ -14,35 +14,35 @@ wb_orepwbl::~wb_orepwbl()
 
 pwr_tOid wb_orepwbl::oid() const
 {
-  return m_wblnode->m_oid;
+  return m_wblnode->o->m_oid;
 }
 
 pwr_tVid wb_orepwbl::vid() const
 {
-  return m_wblnode->m_oid.vid;
+  return m_wblnode->o->m_oid.vid;
 }
 
 pwr_tOix wb_orepwbl::oix() const
 {
-  return m_wblnode->m_oid.oix;
+  return m_wblnode->o->m_oid.oix;
 }
 
 pwr_tOix wb_orepwbl::cid() const
 {
-  return m_wblnode->m_cid;
+  return m_wblnode->o->m_cid;
 }
 
 pwr_tOid wb_orepwbl::poid() const
 {
-  if ( m_wblnode->o_fth)
-    return m_wblnode->o_fth->m_oid;
+  if ( m_wblnode->o->fth)
+    return m_wblnode->o->fth->o->m_oid;
   return pwr_cNOid;
 }
 
 pwr_tOid wb_orepwbl::foid() const
 {
-  if ( m_wblnode->o_fch)
-    return m_wblnode->o_fch->m_oid;
+  if ( m_wblnode->o->fch)
+    return m_wblnode->o->fch->o->m_oid;
   return pwr_cNOid;
 }
 
@@ -50,21 +50,21 @@ pwr_tOid wb_orepwbl::loid() const
 {
   ref_wblnode n = m_wblnode->get_o_lch();
   if ( n)
-    return n->m_oid;
+    return n->o->m_oid;
   return pwr_cNOid;
 }
 
 pwr_tOid wb_orepwbl::boid() const
 {
-  if ( m_wblnode->o_bws)
-    return m_wblnode->o_bws->m_oid;
+  if ( m_wblnode->o->bws)
+    return m_wblnode->o->bws->o->m_oid;
   return pwr_cNOid;
 }
 
 pwr_tOid wb_orepwbl::aoid() const
 {
-  if ( m_wblnode->o_fws)
-    return m_wblnode->o_fws->m_oid;
+  if ( m_wblnode->o->fws)
+    return m_wblnode->o->fws->o->m_oid;
   return pwr_cNOid;
 }
 

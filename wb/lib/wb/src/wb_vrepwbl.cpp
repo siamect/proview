@@ -86,7 +86,7 @@ void wb_vrepwbl::info()
   for ( iterator_tid_list it = m_tid_list.begin(); 
         it != m_tid_list.end(); it++)
     cout << "Tid_list : " << it->first << " " << it->second->name() << 
-      "    size: " << it->second->ty_size << " elem: " << it->second->ty_elements <<  endl;
+      "    size: " << it->second->o->ty.size << " elem: " << it->second->o->ty.elements <<  endl;
 
   for ( iterator_class_list it = m_class_list.begin(); 
         it != m_class_list.end(); it++)
@@ -108,6 +108,9 @@ wb_vrepwbl::createSnapshot(const char *fileName)
   try {
     wb_dbs dbs(this);
         
+    if ( fileName)
+      dbs.setFileName( fileName);
+
     dbs.importVolume(*this);
 
     return true;
@@ -218,9 +221,10 @@ int wb_vrepwbl::load( const char *fname)
     if ( EVEN(sts)) rsts = sts;
 
   }
-  for ( i = 0; i < file_cnt; i++)
-    file[i]->rootAST->registerNode( this);
-
+  for ( i = 0; i < file_cnt; i++) {
+    for ( ref_wblnode n = file[i]->rootAST; n; n = n->getNextSibling())
+      n->registerNode( this);
+  }
   for ( i = 0; i < file_cnt; i++) {
     file[i]->rootAST->link( this, 0);
   }
@@ -280,7 +284,7 @@ ref_wblnode wb_vrepwbl::findType( const char *name)
   iterator_type_list it = m_type_list.find( sname); 
   if ( it == m_type_list.end())
     return 0;
-  if ( !it->second->is_built)
+  if ( !it->second->o->is_built)
     it->second->build( 0);
   return it->second;
 }
@@ -364,9 +368,9 @@ int wb_vrepwbl::getTypeInfo( const char *name, pwr_tTid *tid, pwr_eType *type, s
     else {
       ref_wblnode n = findType( tname);
       if ( n) {
-        *tid = n->m_tid;
-        *type = (pwr_eType) n->ty_type;
-        *size = n->ty_size;
+        *tid = n->o->m_tid;
+        *type = (pwr_eType) n->o->ty.type;
+        *size = n->o->ty.size;
         *elements = 1;
         return 1;
       }
@@ -509,10 +513,10 @@ int wb_vrepwbl::getTypeInfo( pwr_tTid tid, pwr_eType *type, size_t *size,
     // Search type in this volume
     ref_wblnode n = findType( tid);
     if ( n) {
-      if ( !n->is_built)
+      if ( !n->o->is_built)
         n->build( 0);
-      *type = (pwr_eType) n->ty_type;
-      *size = n->ty_size;
+      *type = (pwr_eType) n->o->ty.type;
+      *size = n->o->ty.size;
       *elements = 1;
     }
     else {
@@ -537,10 +541,10 @@ void wb_vrepwbl::getClassFlags( pwr_tStatus *sts, pwr_tCid cid, pwr_mClassDef *f
   // Search type in this volume
   ref_wblnode n = findClass( cid);
   if ( n) {
-    if ( !n->is_built)
+    if ( !n->o->is_built)
       n->build( 0);
 
-    *flags = n->m_flags;
+    *flags = n->o->m_flags;
     *sts = LDH__SUCCESS;
   }
   else {
@@ -560,20 +564,20 @@ int wb_vrepwbl::getClassInfo( pwr_tCid cid, size_t *rsize, size_t *dsize)
   // Search type in this volume
   ref_wblnode n = findClass( cid);
   if ( n) {
-    if ( !n->is_built)
+    if ( !n->o->is_built)
       n->build( 0);
 
     // Get body object
     *rsize = 0;
     *dsize = 0;
-    wb_wblnode *n_body = n->o_fch;
+    wb_wblnode *n_body = n->o->fch;
     while( n_body) {
       if ( n_body->isObjBodyDef() && 
-           (n_body->b_bix == pwr_eBix_sys || n_body->b_bix == pwr_eBix_rt)) 
-        *rsize = n_body->b_size;
-      else if ( n_body->isObjBodyDef() && n_body->b_bix == pwr_eBix_dev) 
-        *dsize = n_body->b_size;
-      n_body = n_body->o_fws;
+           (n_body->o->b.bix == pwr_eBix_sys || n_body->o->b.bix == pwr_eBix_rt)) 
+        *rsize = n_body->o->b.size;
+      else if ( n_body->isObjBodyDef() && n_body->o->b.bix == pwr_eBix_dev) 
+        *dsize = n_body->o->b.size;
+      n_body = n_body->o->fws;
     }
     return 1;
   }
@@ -781,40 +785,40 @@ int wb_vrepwbl::getAttrInfoRec( wb_attrname *attr, pwr_eBix bix, pwr_tCid cid, s
     // Search type in this volume
     ref_wblnode n = findClass( cid);
     if ( n) {
-      if ( !n->is_built)
+      if ( !n->o->is_built)
         n->build( 0);
 
       // Get body object
-      wb_wblnode *n_body = n->o_fch;
+      wb_wblnode *n_body = n->o->fch;
       while( n_body) {
-        if ( n_body->isObjBodyDef() && n_body->b_bix == bix) 
+        if ( n_body->isObjBodyDef() && n_body->o->b.bix == bix) 
           break;
-        n_body = n_body->o_fws;
+        n_body = n_body->o->fws;
       }
       if ( !n_body)
         break;
 
       // Find attribute
-      wb_wblnode *n_attr = n_body->o_fch;
+      wb_wblnode *n_attr = n_body->o->fch;
       while( n_attr) {
         if ( n_attr->isAttribute() && attr->attributeIsEqual( n_attr->name(), level))
           break;
-        n_attr = n_attr->o_fws;
+        n_attr = n_attr->o->fws;
       }
       if ( !n_attr)
         break;
 
       if ( attr->hasAttrIndex( level)) {
         int index = attr->attrIndex( level);
-        if ( index >= n_attr->a_elements)
+        if ( index >= n_attr->o->a.elements)
           return 0;
 
-        *offset += n_attr->a_offset + index * n_attr->a_size / n_attr->a_elements;
-        *size = n_attr->a_size / n_attr->a_elements;
+        *offset += n_attr->o->a.offset + index * n_attr->o->a.size / n_attr->o->a.elements;
+        *size = n_attr->o->a.size / n_attr->o->a.elements;
       }
       else {
-        *offset += n_attr->a_offset;
-        *size = n_attr->a_size;
+        *offset += n_attr->o->a.offset;
+        *size = n_attr->o->a.size;
       }
       if ( attr->hasAttribute( level + 1)) {
         // Fix , Subclass: get cid from type of attr
@@ -823,9 +827,9 @@ int wb_vrepwbl::getAttrInfoRec( wb_attrname *attr, pwr_eBix bix, pwr_tCid cid, s
           // Fix , search in other volumes
           return 0;
       }
-      *tid = n_attr->a_tid;
-      *elements = n_attr->a_elements;
-      *type = n_attr->a_type;
+      *tid = n_attr->o->a.tid;
+      *elements = n_attr->o->a.elements;
+      *type = n_attr->o->a.type;
       return 1;
     }
     else {
@@ -849,10 +853,10 @@ int wb_vrepwbl::nameToOid( const char *name, pwr_tOid *oid)
 
   ref_wblnode n = find( name);
   if ( n) {
-    if ( !n->is_built)
+    if ( !n->o->is_built)
       n->build( 0);
 
-    *oid = n->m_oid;
+    *oid = n->o->m_oid;
     return 1;
   }
 
@@ -896,11 +900,11 @@ int wb_vrepwbl::nameToAttrRef( const char *name, pwr_sAttrRef *attrref)
 
   ref_wblnode n = find( aname.name( cdh_mName_volume | cdh_mName_path | cdh_mName_object));
   if ( n) {
-    if ( !n->is_built)
+    if ( !n->o->is_built)
       n->build( 0);
 
-    oid = n->m_oid;
-    cid = n->m_cid;
+    oid = n->o->m_oid;
+    cid = n->o->m_cid;
   }
   else {
     // Search in other volume
@@ -1014,24 +1018,24 @@ int wb_vrepwbl::getTemplateBody( pwr_tCid cid, pwr_eBix bix, size_t *size, void 
     // Search class in this volume
     ref_wblnode n = findClass( cid);
     if ( n) {
-      if ( !n->is_built)
+      if ( !n->o->is_built)
         n->build( 0);
 
-      if ( !n->c_template)
+      if ( !n->o->c.templ)
         return 0;
 
       if ( bix == pwr_eBix_sys || bix == pwr_eBix_rt) {
-        *size = n->c_template->rbody_size;
+        *size = n->o->c.templ->o->rbody_size;
         if ( *size) {
           *body = calloc( 1, *size);
-          memcpy( *body, n->c_template->rbody, *size);
+          memcpy( *body, n->o->c.templ->o->rbody, *size);
         }
       }
       else if ( bix == pwr_eBix_dev) {
-        *size = n->c_template->dbody_size;
+        *size = n->o->c.templ->o->dbody_size;
         if ( *size) {
           *body = calloc( 1, *size);
-          memcpy( *body, n->c_template->dbody, *size);
+          memcpy( *body, n->o->c.templ->o->dbody, *size);
         }
       }
       return 1;
@@ -1192,8 +1196,8 @@ wb_orep *wb_vrepwbl::object(pwr_tStatus *sts)
 {
   wb_orepwbl *orep = 0;
 
-  if ( volume_node && volume_node->o_fch) {
-    orep = new wb_orepwbl( (wb_vrepwbl *)this, volume_node->o_fch);
+  if ( volume_node && volume_node->o->fch) {
+    orep = new wb_orepwbl( (wb_vrepwbl *)this, volume_node->o->fch);
     *sts = LDH__SUCCESS;
   }
   else
@@ -1207,7 +1211,7 @@ wb_orep *wb_vrepwbl::ancestor(pwr_tStatus *sts, const wb_orep *o)
   wb_orepwbl *orep = 0;
 
   wb_wblnode *n = ((wb_orepwbl *)o)->wblNode();
-  while ( n->o_fth)
+  while ( n->o->fth)
     ;
 
   orep = new wb_orepwbl( (wb_vrepwbl *)this, n);
@@ -1220,8 +1224,8 @@ wb_orep *wb_vrepwbl::parent(pwr_tStatus *sts, const wb_orep *o)
 {
   wb_orepwbl *orep = 0;
         
-  if ( ((wb_orepwbl *)o)->wblNode()->o_fth) {
-    orep = new wb_orepwbl( (wb_vrepwbl *)this, ((wb_orepwbl *)o)->wblNode()->o_fth);
+  if ( ((wb_orepwbl *)o)->wblNode()->o->fth) {
+    orep = new wb_orepwbl( (wb_vrepwbl *)this, ((wb_orepwbl *)o)->wblNode()->o->fth);
     *sts = LDH__SUCCESS;
   }
   else
@@ -1234,8 +1238,8 @@ wb_orep *wb_vrepwbl::after(pwr_tStatus *sts, const wb_orep *o)
 {
   wb_orepwbl *orep = 0;
     
-  if ( ((wb_orepwbl *)o)->wblNode()->o_fws) {
-    orep = new wb_orepwbl( (wb_vrepwbl *)this, ((wb_orepwbl *)o)->wblNode()->o_fws);
+  if ( ((wb_orepwbl *)o)->wblNode()->o->fws) {
+    orep = new wb_orepwbl( (wb_vrepwbl *)this, ((wb_orepwbl *)o)->wblNode()->o->fws);
     *sts = LDH__SUCCESS;
   }
   else
@@ -1247,8 +1251,8 @@ wb_orep *wb_vrepwbl::before(pwr_tStatus *sts, const wb_orep *o)
 {
   wb_orepwbl *orep = 0;
     
-  if ( ((wb_orepwbl *)o)->wblNode()->o_bws) {
-    orep = new wb_orepwbl( (wb_vrepwbl *)this, ((wb_orepwbl *)o)->wblNode()->o_bws);
+  if ( ((wb_orepwbl *)o)->wblNode()->o->bws) {
+    orep = new wb_orepwbl( (wb_vrepwbl *)this, ((wb_orepwbl *)o)->wblNode()->o->bws);
     *sts = LDH__SUCCESS;
   }
   else
@@ -1261,8 +1265,8 @@ wb_orep *wb_vrepwbl::first(pwr_tStatus *sts, const wb_orep *o)
 {
   wb_orepwbl *orep = 0;
     
-  if ( ((wb_orepwbl *)o)->wblNode()->o_fch) {
-    orep = new wb_orepwbl( (wb_vrepwbl *)this, ((wb_orepwbl *)o)->wblNode()->o_fch);
+  if ( ((wb_orepwbl *)o)->wblNode()->o->fch) {
+    orep = new wb_orepwbl( (wb_vrepwbl *)this, ((wb_orepwbl *)o)->wblNode()->o->fch);
     *sts = LDH__SUCCESS;
   }
   else
@@ -1311,7 +1315,7 @@ void wb_vrepwbl::objectName(const wb_orep *o, char *str)
   wb_wblnode *n = ((wb_orepwbl *)o)->wblNode();
   while ( n) {
     cnt++;
-    n = n->o_fth;
+    n = n->o->fth;
   }
 
   wb_wblnode **vect = (wb_wblnode **) calloc( cnt, sizeof(vect));
@@ -1319,7 +1323,7 @@ void wb_vrepwbl::objectName(const wb_orep *o, char *str)
   n = ((wb_orepwbl *)o)->wblNode();
   for ( int i = 0; i < cnt; i++) {
     vect[i] = n;
-    n = n->o_fth;
+    n = n->o->fth;
   }
 
   for ( int i = cnt - 1; i >= 0; i--) {
@@ -1340,25 +1344,25 @@ void *wb_vrepwbl::readAttribute(pwr_tStatus *sts, const wb_orep *o, pwr_eBix bix
 
   switch ( bix) {
   case pwr_eBix_rt:
-    if ( n->rbody_size == 0) {
+    if ( n->o->rbody_size == 0) {
       *sts = LDH__NOSUCHBODY;
       return 0;
     }
     if ( p) {
-      memcpy( p, (char *)n->rbody + offset, MIN(n->rbody_size - offset, size));
+      memcpy( p, (char *)n->o->rbody + offset, MIN(n->o->rbody_size - offset, size));
       return p;
     }
-    return (void *)((char *)n->rbody + offset);
+    return (void *)((char *)n->o->rbody + offset);
   case pwr_eBix_dev:
-    if ( n->dbody_size == 0) {
+    if ( n->o->dbody_size == 0) {
       *sts = LDH__NOSUCHBODY;
       return 0;
     }
     if ( p) {
-      memcpy( p, (char *)n->dbody + offset, MIN(n->dbody_size - offset, size));
+      memcpy( p, (char *)n->o->dbody + offset, MIN(n->o->dbody_size - offset, size));
       return p;
     }
-    return (void *)((char *)n->dbody + offset);
+    return (void *)((char *)n->o->dbody + offset);
   default:
     *sts = LDH__NOSUCHBODY;
     return 0;
@@ -1373,25 +1377,25 @@ void *wb_vrepwbl::readBody(pwr_tStatus *sts, const wb_orep *o, pwr_eBix bix, voi
 
   switch ( bix) {
   case pwr_eBix_rt:
-    if ( n->rbody_size == 0) {
+    if ( n->o->rbody_size == 0) {
       *sts = LDH__NOSUCHBODY;
       return 0;
     }
     if ( p) {
-      memcpy( p, n->rbody, n->rbody_size);
+      memcpy( p, n->o->rbody, n->o->rbody_size);
       return p;
     }
-    return n->rbody;
+    return n->o->rbody;
   case pwr_eBix_dev:
-    if ( n->dbody_size == 0) {
+    if ( n->o->dbody_size == 0) {
       *sts = LDH__NOSUCHBODY;
       return 0;
     }
     if ( p) {
-      memcpy( p, n->dbody, n->dbody_size);
+      memcpy( p, n->o->dbody, n->o->dbody_size);
       return p;
     }
-    return n->dbody;
+    return n->o->dbody;
   default:
     *sts = LDH__NOSUCHBODY;
     return 0;

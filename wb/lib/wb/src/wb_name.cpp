@@ -6,6 +6,12 @@ const char* wb_name::m_emptyString = "";
 
 wb_name::wb_name( const char *name)
 {
+  if ( name == 0) {
+    m_sts = LDH__NONAME;
+    m_nrep = 0;
+    return;
+  }
+
   try {
     m_nrep = new wb_nrep( name);
     m_sts = LDH__SUCCESS;

@@ -339,13 +339,24 @@ ldh_CreateObject(ldh_tSession session, pwr_tOid *oid, char *name, pwr_tCid cid, 
         
     wb_cdef cdef = sp->cdef(cid);
     
-    wb_object d_o = sp->object(doid);
-    wb_destination d = d_o.destination(dest);
-    wb_object o = sp->createObject(cdef, d, n);
-    if (!o) return o.sts();
+    if ( cdh_ObjidIsNull(doid)) {
+      wb_object d_o = wb_object();
+      wb_destination d = wb_destination( doid, dest);
+      wb_object o = sp->createObject(cdef, d, n);
+      if (!o) return o.sts();
     
-    *oid = o.oid();
-    return o.sts();
+      *oid = o.oid();
+      return o.sts();
+    }
+    else {
+      wb_object d_o = sp->object(doid);
+      wb_destination d = d_o.destination(dest);
+      wb_object o = sp->createObject(cdef, d, n);
+      if (!o) return o.sts();
+    
+      *oid = o.oid();
+      return o.sts();
+    }
   }
   catch (wb_error& e) {
     return e.sts();
@@ -1002,7 +1013,8 @@ ldh_ClassIdToName(ldh_tSession session, pwr_tCid cid, char *buff, int maxsize, i
   wb_cdef c = sp->cdef(cid);
   if (!c) return c.sts();
     
-  //buff = c.name();
+  strncpy( buff, c.name(), maxsize);
+  *size = strlen( buff);
     
   return c.sts();
 }

@@ -82,12 +82,6 @@ void wb_cdef::check() const
     throw wb_error(m_sts);
 }
 
-size_t wb_cdef::size()
-{
-  check();
-  return m_cdrep->size();
-}
-
 pwr_tCid wb_cdef::cid()
 {
   check();
@@ -142,7 +136,17 @@ wb_object wb_cdef::classBody( const char *bname)
     return wb_object();
 }
 
+void wb_cdef::templateBody( pwr_tStatus *sts, pwr_eBix bix, void *p)
+{
+  check();
+  m_cdrep->templateBody( sts, bix, p);
+}
 
+size_t wb_cdef::size( pwr_eBix bix)
+{
+  check();
+  return m_cdrep->size( bix);
+}
 
 
 

@@ -258,6 +258,20 @@ static wbl_sSym attr_flags[] =
   ,{ 0, 0 }
 };
 
+void wb_wblnode::initialize( antlr::RefToken t )
+{
+  CommonAST::initialize(t);
+  line_number = t->getLine();
+  
+  // Test 
+  static int last = 0;
+  if ( (line_number % 1000) == 0 && line_number != last) {
+    printf( "-- Processing line: %d\r", line_number); 
+    fflush(stdout);
+    last = line_number;
+  }
+}
+
 int wb_wblnode::classNameToCid( char *class_name, pwr_tCid *cid)
 {
   pwr_tStatus sts;
@@ -332,20 +346,20 @@ ref_wblnode wb_wblnode::find( wb_name *oname, int level)
     if ( oname->segmentIsEqual( name(), level)) {
       if ( !oname->hasSegment(level+1))
         return this;
-      else if ( o_fch)
-        return o_fch->find( oname, level+1);
+      else if ( o->fch)
+        return o->fch->find( oname, level+1);
       else
         return 0;
     }
-    else if ( o_fws)
-      return o_fws->find( oname, level);
+    else if ( o->fws)
+      return o->fws->find( oname, level);
     else
       return 0;
   case tokens.VOLUME:
     if ( oname->volumeIsEqual( name()) && !oname->hasSegment(0))
       return this;
-    else if ( o_fch)
-      return o_fch->find( oname, 0);
+    else if ( o->fch)
+      return o->fch->find( oname, 0);
     else
       return 0;
   default:
@@ -358,50 +372,50 @@ void wb_wblnode::info_link( int level)
 {
   for ( int i = 0; i < level; i++)
     cout << "  ";
-  cout << name() << "  " << cname << "  " << m_oid.oix << " " << m_oid.vid << endl; 
-  if ( o_fch)
-    o_fch->info_link( level + 1);
-  if ( o_fws)
-    o_fws->info_link( level);
+  cout << name() << "  " << o->cname << "  " << o->m_oid.oix << " " << o->m_oid.vid << endl; 
+  if ( o->fch)
+    o->fch->info_link( level + 1);
+  if ( o->fws)
+    o->fws->info_link( level);
 }
 
 ref_wblnode wb_wblnode::get_o_lch()
 {
-  ref_wblnode child = o_fch;
+  ref_wblnode child = o->fch;
 
   if ( !child)
     return 0;
 
-  while ( child->o_fws)
-    child = child->o_fws;
+  while ( child->o->fws)
+    child = child->o->fws;
 
   return child;
 }
 
 void wb_wblnode::build( bool recursive)
 {
-  if ( !is_built) {
-    m_oid.vid = m_vrep->vid();
+  if ( !o->is_built) {
+    o->m_oid.vid = m_vrep->vid();
 
     if ( isClassDef()) {
-      m_vrep->getTemplateBody( m_cid, pwr_eBix_sys, &rbody_size, &rbody);
+      m_vrep->getTemplateBody( o->m_cid, pwr_eBix_sys, &o->rbody_size, &o->rbody);
     }
     else if ( isType() || isTypeDef()) {
-      m_vrep->getTemplateBody( m_cid, pwr_eBix_sys, &rbody_size, &rbody);
+      m_vrep->getTemplateBody( o->m_cid, pwr_eBix_sys, &o->rbody_size, &o->rbody);
     }
     else if ( isTemplate()) {
       // Build later by classdef
-      if ( recursive && o_fws)
-        o_fws->build( recursive);
+      // if ( recursive && o->fws)
+      //   o->fws->build( recursive);
       return;
     } 
     else {
       static int tot_size = 0;
-      tot_size += rbody_size + dbody_size;
+      tot_size += o->rbody_size + o->dbody_size;
 
-      // cout << name() << ": " << tot_size << " " << rbody_size << " " << dbody_size << endl;
-      m_vrep->getTemplateBody( m_cid, pwr_eBix_rt, &rbody_size, &rbody);
-      m_vrep->getTemplateBody( m_cid, pwr_eBix_dev, &dbody_size, &dbody);
+      // cout << name() << ": " << tot_size << " " << o->rbody_size << " " << o->dbody_size << endl;
+      m_vrep->getTemplateBody( o->m_cid, pwr_eBix_rt, &o->rbody_size, &o->rbody);
+      m_vrep->getTemplateBody( o->m_cid, pwr_eBix_dev, &o->dbody_size, &o->dbody);
     }
 
     ref_wblnode first_child;
@@ -409,56 +423,61 @@ void wb_wblnode::build( bool recursive)
 
     if ( first_child) {
       if ( node_type == wbl_eNodeType_No)  // Avoid infinite loop
-        is_built = 1;
+        o->is_built = 1;
       first_child->buildBody( this);
       if ( node_type == wbl_eNodeType_No)
-        is_built = 0;
+        o->is_built = 0;
     }
 
-    if ( o_fch && ( recursive || isClassDef())) {
+    if ( o->fch && ( recursive || isClassDef())) {
       if ( node_type == wbl_eNodeType_No)
-        is_built = 1;
-      o_fch->build( 1);
+        o->is_built = 1;
+      // o->fch->build( 1);
+      wb_wblnode *ch = o->fch;
+      while ( ch) {
+        ch->build( 1);
+        ch = ch->o->fws;
+      }
       if ( node_type == wbl_eNodeType_No)
-        is_built = 0;
+        o->is_built = 0;
     }
     if ( isClassDef()) {
 
-      m_oid.oix = cdh_cixToOix( m_oid.oix, 0, 0);
-      if ( !m_vrep->registerObject( m_oid.oix, this))
+      o->m_oid.oix = cdh_cixToOix( o->m_oid.oix, 0, 0);
+      if ( !m_vrep->registerObject( o->m_oid.oix, this))
         m_vrep->error( "Duplicate class index", getFileName(), line_number);
 
       if ( m_vrep->vid() == 1)
-        ((pwr_sClassDef *)rbody)->Flags.b.System = 1;
+        ((pwr_sClassDef *)o->rbody)->Flags.b.System = 1;
 
       // Calculate offset for attributes
-      wb_wblnode *child = o_fch;
+      wb_wblnode *child = o->fch;
       while ( child) {
         if ( child->isObjBodyDef()) {
           child->buildObjBodyDef( this);
 
-          ((pwr_sClassDef *)rbody)->NumOfObjBodies++;
-          if ( cdh_oixToBix( child->m_oid.oix) == pwr_eBix_rt)
-            ((pwr_sClassDef *)rbody)->Flags.b.RtBody = 1;
+          ((pwr_sClassDef *)o->rbody)->NumOfObjBodies++;
+          if ( cdh_oixToBix( child->o->m_oid.oix) == pwr_eBix_rt)
+            ((pwr_sClassDef *)o->rbody)->Flags.b.RtBody = 1;
 
-          wb_wblnode *attr = child->o_fch;
+          wb_wblnode *attr = child->o->fch;
           while( attr) {
             if ( attr->isAttribute()) {
-              switch ( attr->m_cid) {
+              switch ( attr->o->m_cid) {
               case pwr_eClass_ObjXRef:
-                ((pwr_sClassDef *)rbody)->Flags.b.ObjXRef = 1;
+                ((pwr_sClassDef *)o->rbody)->Flags.b.ObjXRef = 1;
                 break;
               case pwr_eClass_AttrXRef:
-                ((pwr_sClassDef *)rbody)->Flags.b.AttrXRef = 1;
+                ((pwr_sClassDef *)o->rbody)->Flags.b.AttrXRef = 1;
                 break;
               case pwr_eClass_Input:
               case pwr_eClass_Output:
               case pwr_eClass_Intern:
               case pwr_eClass_Param:
-                if ( attr->a_type == pwr_eType_AttrRef)
-                  ((pwr_sClassDef *)rbody)->Flags.b.AttrRef = 1;
-                else if ( attr->a_type == pwr_eType_AttrRef)
-                  ((pwr_sClassDef *)rbody)->Flags.b.ObjRef = 1;
+                if ( attr->o->a.type == pwr_eType_AttrRef)
+                  ((pwr_sClassDef *)o->rbody)->Flags.b.AttrRef = 1;
+                else if ( attr->o->a.type == pwr_eType_AttrRef)
+                  ((pwr_sClassDef *)o->rbody)->Flags.b.ObjRef = 1;
                 break;
               default:
                 ;
@@ -466,42 +485,42 @@ void wb_wblnode::build( bool recursive)
             }
 
 
-            attr = attr->o_fws;
+            attr = attr->o->fws;
           }
         }
-	else if ( cdh_NoCaseStrcmp( child->cname, "$DbCallBack") == 0 &&
+	else if ( cdh_NoCaseStrcmp( child->o->cname, "$DbCallBack") == 0 &&
 		  !child->isTemplate() ) {
-          ((pwr_sClassDef *)rbody)->Flags.b.HasCallBack = 1;
+          ((pwr_sClassDef *)o->rbody)->Flags.b.HasCallBack = 1;
 	}
 
-        child = child->o_fws;
-        m_flags = ((pwr_sClassDef *)rbody)->Flags;
+        child = child->o->fws;
+        o->m_flags = ((pwr_sClassDef *)o->rbody)->Flags;
 
       }
-      is_built = 1;
+      o->is_built = 1;
 
       // Build template
-      c_template->buildTemplate( this);
+      o->c.templ->buildTemplate( this);
     }
     else if ( isType()) {
-      m_oid.oix = cdh_tixToOix( 0, m_oid.oix);
-      if ( !m_vrep->registerObject( m_oid.oix, this))
+      o->m_oid.oix = cdh_tixToOix( 0, o->m_oid.oix);
+      if ( !m_vrep->registerObject( o->m_oid.oix, this))
         m_vrep->error( "Duplicate type index", getFileName(), line_number);
 
-      ty_tid = ty_type = ((pwr_sType *)rbody)->Type;
-      ty_size = ((pwr_sType *)rbody)->Size;
-      ty_elements = 1;
+      o->ty.tid = o->ty.type = ((pwr_sType *)o->rbody)->Type;
+      o->ty.size = ((pwr_sType *)o->rbody)->Size;
+      o->ty.elements = 1;
 
     }
     else if ( isTypeDef()) {
-      m_oid.oix = cdh_tixToOix( 1, m_oid.oix);
-      if ( !m_vrep->registerObject( m_oid.oix, this))
+      o->m_oid.oix = cdh_tixToOix( 1, o->m_oid.oix);
+      if ( !m_vrep->registerObject( o->m_oid.oix, this))
         m_vrep->error( "Duplicate type index", getFileName(), line_number);
 
-      ty_tid = ((pwr_sTypeDef *)rbody)->TypeRef;
-      ty_type = ((pwr_sTypeDef *)rbody)->Type;
-      ty_size = ((pwr_sTypeDef *)rbody)->Size;
-      ty_elements = ((pwr_sTypeDef *)rbody)->Elements;
+      o->ty.tid = ((pwr_sTypeDef *)o->rbody)->TypeRef;
+      o->ty.type = ((pwr_sTypeDef *)o->rbody)->Type;
+      o->ty.size = ((pwr_sTypeDef *)o->rbody)->Size;
+      o->ty.elements = ((pwr_sTypeDef *)o->rbody)->Elements;
     }
     else if ( isObjBodyDef()) {
     }
@@ -512,45 +531,53 @@ void wb_wblnode::build( bool recursive)
     else if ( isVolume()) {
     }
     else {
-      if( !m_vrep->registerObject( m_oid.oix, this)) {
+      if( !m_vrep->registerObject( o->m_oid.oix, this)) {
         // Print error message
         char name[120];
         char msg[180];
         pwr_tStatus sts;
 
-        wb_orep *o = m_vrep->object( &sts, m_oid);
-        m_vrep->objectName( o, name);
-        sprintf( msg, "Duplicate object index %d (%s)", m_oid.oix, name);
+        wb_orep *orep = m_vrep->object( &sts, o->m_oid);
+        m_vrep->objectName( orep, name);
+        sprintf( msg, "Duplicate object index %d (%s)", o->m_oid.oix, name);
         m_vrep->error( msg, getFileName(), line_number);
       }
     }
-    is_built = 1;
+    o->is_built = 1;
   }
 
-  if ( recursive && o_fch)
-    o_fch->build( recursive);
-  if ( recursive && o_fws)
-    o_fws->build( recursive);
+  if ( recursive) {
+    wb_wblnode *ch = o->fch;
+    while ( ch) {
+      ch->build( recursive);
+      ch = ch->o->fws;
+    }
+  }
+
+  //if ( recursive && o->fch)
+  //  o->fch->build( recursive);
+  //if ( recursive && o->fws)
+  //  o->fws->build( recursive);
 }
 
 void wb_wblnode::buildObjBodyDef( ref_wblnode classdef)
 {
-  m_oid.oix = cdh_cixToOix( classdef->c_cix, m_oid.oix, 0);
-  if ( !m_vrep->registerObject( m_oid.oix, this))
+  o->m_oid.oix = cdh_cixToOix( classdef->o->c.cix, o->m_oid.oix, 0);
+  if ( !m_vrep->registerObject( o->m_oid.oix, this))
     m_vrep->error( "Duplicate objbodydef index", getFileName(), line_number);
 
   int index = 0;
-  b_size = 0;
-  wb_wblnode *child = o_fch;
+  o->b.size = 0;
+  wb_wblnode *child = o->fch;
   while ( child) {
     if ( child->isAttribute())
-      child->buildAttribute( classdef, this, &index, &b_size);
+      child->buildAttribute( classdef, this, &index, &o->b.size);
     if ( child->isBuffer())
-      child->buildBuffer( classdef, this, &index, &b_size);
-    child = child->o_fws;
+      child->buildBuffer( classdef, this, &index, &o->b.size);
+    child = child->o->fws;
   }
-  ((pwr_sObjBodyDef *)rbody)->Size = b_size;
-  ((pwr_sObjBodyDef *)rbody)->NumOfParams = index;
+  ((pwr_sObjBodyDef *)o->rbody)->Size = o->b.size;
+  ((pwr_sObjBodyDef *)o->rbody)->NumOfParams = index;
 }
 
 void wb_wblnode::buildAttribute( ref_wblnode classdef, ref_wblnode objbodydef,
@@ -560,63 +587,63 @@ void wb_wblnode::buildAttribute( ref_wblnode classdef, ref_wblnode objbodydef,
   size_t size;
   int elements;
 
-  m_oid.oix = cdh_cixToOix( classdef->c_cix, objbodydef->b_bix, m_oid.oix);
-  if ( !m_vrep->registerObject( m_oid.oix, this))
+  o->m_oid.oix = cdh_cixToOix( classdef->o->c.cix, objbodydef->o->b.bix, o->m_oid.oix);
+  if ( !m_vrep->registerObject( o->m_oid.oix, this))
     m_vrep->error( "Duplicate attribute index", getFileName(), line_number);
 
-  if ( ((pwr_sParam *)rbody)->Info.Elements == 0)
-    ((pwr_sParam *)rbody)->Info.Elements = 1;
-  // if ( ((pwr_sParam *)rbody)->Info.Type == 0)
-  //  ((pwr_sParam *)rbody)->Info.Type = (pwr_eType)((pwr_sParam *)rbody)->TypeRef;
+  if ( ((pwr_sParam *)o->rbody)->Info.Elements == 0)
+    ((pwr_sParam *)o->rbody)->Info.Elements = 1;
+  // if ( ((pwr_sParam *)o->rbody)->Info.Type == 0)
+  //  ((pwr_sParam *)o->rbody)->Info->Type = (pwr_eType)((pwr_sParam *)o->rbody)->TypeRef;
 
-  if ( cdh_NoCaseStrcmp( cname, "$ObjXRef") == 0 )
-    a_tid = pwr_eType_Objid;
-  else if ( cdh_NoCaseStrcmp( cname, "$AttrXRef") == 0)
-    a_tid = pwr_eType_AttrRef;
+  if ( cdh_NoCaseStrcmp( o->cname, "$ObjXRef") == 0 )
+    o->a.tid = pwr_eType_Objid;
+  else if ( cdh_NoCaseStrcmp( o->cname, "$AttrXRef") == 0)
+    o->a.tid = pwr_eType_AttrRef;
   else
-    a_tid = ((pwr_sParam *)rbody)->TypeRef;
+    o->a.tid = ((pwr_sParam *)o->rbody)->TypeRef;
 
-  a_type = ((pwr_sParam *)rbody)->Info.Type;
-  a_size = ((pwr_sParam *)rbody)->Info.Size;
-  a_offset = ((pwr_sParam *)rbody)->Info.Offset;
-  a_elements = ((pwr_sParam *)rbody)->Info.Elements;
-  a_flags = ((pwr_sParam *)rbody)->Info.Flags;
+  o->a.type = ((pwr_sParam *)o->rbody)->Info.Type;
+  o->a.size = ((pwr_sParam *)o->rbody)->Info.Size;
+  o->a.offset = ((pwr_sParam *)o->rbody)->Info.Offset;
+  o->a.elements = ((pwr_sParam *)o->rbody)->Info.Elements;
+  o->a.flags = ((pwr_sParam *)o->rbody)->Info.Flags;
 
-  if ( a_elements == 0)
-    a_elements = 1;
+  if ( o->a.elements == 0)
+    o->a.elements = 1;
 
-  if ( !a_tid) {
+  if ( !o->a.tid) {
     m_vrep->error( "Unknown attribute type", getFileName(), line_number);
     return;
   }
-  if ( !m_vrep->getTypeInfo( a_tid, &type, &size, &elements)) {
+  if ( !m_vrep->getTypeInfo( o->a.tid, &type, &size, &elements)) {
     m_vrep->error( "Can't find attribute type", getFileName(), line_number);
     return;
   }
-  if ( a_type == 0)
-    a_type = ((pwr_sParam *)rbody)->Info.Type = type;
+  if ( o->a.type == 0)
+    o->a.type = ((pwr_sParam *)o->rbody)->Info.Type = type;
 
-  if ( a_flags & pwr_mAdef_pointer) {
+  if ( o->a.flags & pwr_mAdef_pointer) {
     size = sizeof( void *);
   }
-  if ( a_flags & pwr_mAdef_array) {
-    size *= a_elements;
+  if ( o->a.flags & pwr_mAdef_array) {
+    size *= o->a.elements;
   }
-  if ( ((pwr_sParam *)rbody)->Info.PgmName[0] == 0) {
-    strncpy( ((pwr_sParam *)rbody)->Info.PgmName, wb_name::unatName( name()),
-	     sizeof( ((pwr_sParam *)rbody)->Info.PgmName));
+  if ( ((pwr_sParam *)o->rbody)->Info.PgmName[0] == 0) {
+    strncpy( ((pwr_sParam *)o->rbody)->Info.PgmName, wb_name::unatName( name()),
+	     sizeof( ((pwr_sParam *)o->rbody)->Info.PgmName));
   }
-  if ( cdh_NoCaseStrcmp( cname, "$Input") == 0) {
-    a_size = ((pwr_sParam *)rbody)->Info.Size = size;
-    a_offset = ((pwr_sParam *)rbody)->Info.Offset = *boffset + sizeof( void *);
-    *boffset += sizeof( void *) + wblAlign( a_size);
+  if ( cdh_NoCaseStrcmp( o->cname, "$Input") == 0) {
+    o->a.size = ((pwr_sParam *)o->rbody)->Info.Size = size;
+    o->a.offset = ((pwr_sParam *)o->rbody)->Info.Offset = *boffset + sizeof( void *);
+    *boffset += sizeof( void *) + wblAlign( o->a.size);
   }
   else {
-    a_size = ((pwr_sParam *)rbody)->Info.Size = size;
-    a_offset = ((pwr_sParam *)rbody)->Info.Offset = *boffset;
-    *boffset += wblAlign( a_size);
+    o->a.size = ((pwr_sParam *)o->rbody)->Info.Size = size;
+    o->a.offset = ((pwr_sParam *)o->rbody)->Info.Offset = *boffset;
+    *boffset += wblAlign( o->a.size);
   }
-  ((pwr_sParam *)rbody)->Info.ParamIndex = *bindex;
+  ((pwr_sParam *)o->rbody)->Info.ParamIndex = *bindex;
   (*bindex)++;
 }
 
@@ -625,66 +652,65 @@ void wb_wblnode::buildBuffer( ref_wblnode classdef, ref_wblnode objbodydef,
 {
   size_t rsize, dsize;
 
-  m_oid.oix = cdh_cixToOix( classdef->c_cix, objbodydef->b_bix, m_oid.oix);
-  if ( !m_vrep->registerObject( m_oid.oix, this))
+  o->m_oid.oix = cdh_cixToOix( classdef->o->c.cix, objbodydef->o->b.bix, o->m_oid.oix);
+  if ( !m_vrep->registerObject( o->m_oid.oix, this))
     m_vrep->error( "Duplicate buffer index", getFileName(), line_number);
 
-  if ( ((pwr_sBuffer *)rbody)->Info.Elements == 0)
-    ((pwr_sBuffer *)rbody)->Info.Elements = 1;
-  if ( ((pwr_sBuffer *)rbody)->Info.Type == 0)
-    ((pwr_sParam *)rbody)->Info.Type = (pwr_eType)((pwr_sBuffer *)rbody)->Class;
+  if ( ((pwr_sBuffer *)o->rbody)->Info.Elements == 0)
+    ((pwr_sBuffer *)o->rbody)->Info.Elements = 1;
+  if ( ((pwr_sBuffer *)o->rbody)->Info.Type == 0)
+    ((pwr_sParam *)o->rbody)->Info.Type = (pwr_eType)((pwr_sBuffer *)o->rbody)->Class;
 
-  a_tid = ((pwr_sBuffer *)rbody)->Class;
-  a_type = ((pwr_sParam *)rbody)->Info.Type;
-  a_size = ((pwr_sBuffer *)rbody)->Info.Size;
-  a_offset = ((pwr_sBuffer *)rbody)->Info.Offset;
-  a_elements = ((pwr_sBuffer *)rbody)->Info.Elements;
-  a_flags = ((pwr_sBuffer *)rbody)->Info.Flags;
+  o->a.tid = ((pwr_sBuffer *)o->rbody)->Class;
+  o->a.type = ((pwr_sParam *)o->rbody)->Info.Type;
+  o->a.size = ((pwr_sBuffer *)o->rbody)->Info.Size;
+  o->a.offset = ((pwr_sBuffer *)o->rbody)->Info.Offset;
+  o->a.elements = ((pwr_sBuffer *)o->rbody)->Info.Elements;
+  o->a.flags = ((pwr_sBuffer *)o->rbody)->Info.Flags;
 
-  if ( !a_tid) {
+  if ( !o->a.tid) {
     m_vrep->error( "Unknown buffer type", getFileName(), line_number);
     return;
   }
-  if ( !m_vrep->getClassInfo( a_tid, &rsize, &dsize)) {
+  if ( !m_vrep->getClassInfo( o->a.tid, &rsize, &dsize)) {
     m_vrep->error( "Can't find buffer class", getFileName(), line_number);
     return;
   }
 
-  a_size = ((pwr_sBuffer *)rbody)->Info.Size = a_elements * rsize;
-  a_offset = ((pwr_sBuffer *)rbody)->Info.Offset = *boffset;
-  ((pwr_sBuffer *)rbody)->Info.ParamIndex = *bindex;
-  *boffset += a_size;
+  o->a.size = ((pwr_sBuffer *)o->rbody)->Info.Size = o->a.elements * rsize;
+  o->a.offset = ((pwr_sBuffer *)o->rbody)->Info.Offset = *boffset;
+  ((pwr_sBuffer *)o->rbody)->Info.ParamIndex = *bindex;
+  *boffset += o->a.size;
   (*bindex)++;
 }
 
 void wb_wblnode::buildTemplate( ref_wblnode classdef)
 {
-  wb_wblnode *objbodydef = classdef->o_fch;
-  m_oid.oix = cdh_cixToOix( classdef->c_cix, pwr_eBix_template, 0);
-  if ( !m_vrep->registerObject( m_oid.oix, this))
+  wb_wblnode *objbodydef = classdef->o->fch;
+  o->m_oid.oix = cdh_cixToOix( classdef->o->c.cix, pwr_eBix_template, 0);
+  if ( !m_vrep->registerObject( o->m_oid.oix, this))
     m_vrep->error( "Duplicate template oix", getFileName(), line_number);
 
   while ( objbodydef) {
     if ( objbodydef->isObjBodyDef()) {
-      if ( objbodydef->b_bix == pwr_eBix_sys || 
-           objbodydef->b_bix == pwr_eBix_rt) {  
-        rbody_size = objbodydef->b_size;
-        if ( rbody_size) {
-          rbody = calloc( 1, rbody_size);
+      if ( objbodydef->o->b.bix == pwr_eBix_sys || 
+           objbodydef->o->b.bix == pwr_eBix_rt) {  
+        o->rbody_size = objbodydef->o->b.size;
+        if ( o->rbody_size) {
+          o->rbody = calloc( 1, o->rbody_size);
         }
       }
-      if ( objbodydef->b_bix == pwr_eBix_dev) {
-        dbody_size = objbodydef->b_size;
-        if ( dbody_size)
-          dbody = calloc( 1, dbody_size);
+      if ( objbodydef->o->b.bix == pwr_eBix_dev) {
+        o->dbody_size = objbodydef->o->b.size;
+        if ( o->dbody_size)
+          o->dbody = calloc( 1, o->dbody_size);
       }
     }
-    objbodydef = objbodydef->o_fws;
+    objbodydef = objbodydef->o->fws;
   }
-  m_flags.b.Template = 1;
+  o->m_flags.b.Template = 1;
 
-  ref_wblnode first_child;
-  first_child = getFirstChild();
+  ref_wblnode first_child = getFirstChild();
   if ( first_child)
     first_child->buildBody( this);
 }
@@ -759,12 +785,12 @@ void wb_wblnode::buildAttr( ref_wblnode object, pwr_eBix bix)
     }
 
 
-    if ( !m_vrep->getAttrInfo( name(), (pwr_eBix) bix, object->m_cid, &size, &offset,
+    if ( !m_vrep->getAttrInfo( name(), (pwr_eBix) bix, object->o->m_cid, &size, &offset,
                                &tid, &elements, &type)) {
       // This might be string special syntax
       wb_attrname n = wb_attrname( name());
       if ( n.hasAttrIndex() && 
-           m_vrep->getAttrInfo( n.attribute(), (pwr_eBix) bix, object->m_cid, &size, 
+           m_vrep->getAttrInfo( n.attribute(), (pwr_eBix) bix, object->o->m_cid, &size, 
                                 &offset, &tid, &elements, &type) &&
            elements == 1 && 
            (type == pwr_eType_String || type == pwr_eType_Text)) {
@@ -792,16 +818,16 @@ void wb_wblnode::buildAttr( ref_wblnode object, pwr_eBix bix)
     }
 
     if ( ((bix == pwr_eBix_rt || bix == pwr_eBix_sys) && 
-          object->rbody_size == 0) ||
-         (bix == pwr_eBix_dev && object->dbody_size == 0)) {
+          object->o->rbody_size == 0) ||
+         (bix == pwr_eBix_dev && object->o->dbody_size == 0)) {
       m_vrep->error( "Attribute body", getFileName(), line_number);
       return;
     }
 
     if ( ((bix == pwr_eBix_rt || bix == pwr_eBix_sys) &&
-          offset + size > object->rbody_size) ||
+          offset + size > object->o->rbody_size) ||
          ( bix == pwr_eBix_rt &&
-           offset + size > object->rbody_size)) {
+           offset + size > object->o->rbody_size)) {
       m_vrep->error( "Mismatch in attribute offset", getFileName(), line_number);
       return;
     }
@@ -817,33 +843,33 @@ void wb_wblnode::buildAttr( ref_wblnode object, pwr_eBix bix)
     if ( size == sizeof(int_val) && convconst( &int_val, value)) {
       if ( oper == tokens.EQ) {
         if ( bix == pwr_eBix_rt || bix == pwr_eBix_sys) 
-          memcpy( (char *)((unsigned int) object->rbody + offset), 
+          memcpy( (char *)((unsigned int) object->o->rbody + offset), 
                   &int_val, size);
         else if ( bix == pwr_eBix_dev)
-          memcpy( (char *)((unsigned int) object->dbody + offset), 
+          memcpy( (char *)((unsigned int) object->o->dbody + offset), 
                   &int_val, size);
       }
       else if ( oper == tokens.OREQ) {
         if ( bix == pwr_eBix_rt || bix == pwr_eBix_sys) {
-          current_int_val = *(int *) ((unsigned int) object->rbody + offset);
+          current_int_val = *(int *) ((unsigned int) object->o->rbody + offset);
           int_val |= current_int_val;
-          memcpy( (char *)((unsigned int) object->rbody + offset),
+          memcpy( (char *)((unsigned int) object->o->rbody + offset),
                   &int_val, size);
         }
         else if ( bix == pwr_eBix_dev) {
-          current_int_val = *(int *) ((unsigned int) object->dbody + offset);
+          current_int_val = *(int *) ((unsigned int) object->o->dbody + offset);
           int_val |= current_int_val;
-          memcpy( (char *)((unsigned int) object->dbody + offset),            
+          memcpy( (char *)((unsigned int) object->o->dbody + offset),            
                   &int_val, size);
         }
       }
     }
     else if ( attrStringToValue( type, value, buf, sizeof( buf), size)) {
       if ( bix == pwr_eBix_rt || bix == pwr_eBix_sys)
-        memcpy( (char *)((unsigned int) object->rbody + offset), 
+        memcpy( (char *)((unsigned int) object->o->rbody + offset), 
                 buf, size);
       else if ( bix == pwr_eBix_dev)
-        memcpy( (char *)((unsigned int) object->dbody + offset), 
+        memcpy( (char *)((unsigned int) object->o->dbody + offset), 
                 buf, size);
     }
     else {
@@ -879,7 +905,7 @@ void wb_wblnode::buildBuff( ref_wblnode object, pwr_eBix bix, pwr_tCid buffer_ci
     host_cid = buffer_cid;
   }
   else
-    host_cid = object->m_cid;
+    host_cid = object->o->m_cid;
 
   wb_cdrep *cdrep = m_vrep->merep()->cdrep( &sts, host_cid);
   if ( EVEN(sts)) {
@@ -1013,16 +1039,16 @@ void wb_wblnode::buildBuffAttr( ref_wblnode object, pwr_eBix bix, pwr_tCid buffe
     }
 
     if ( ((bix == pwr_eBix_rt || bix == pwr_eBix_sys) && 
-          object->rbody_size == 0) ||
-         (bix == pwr_eBix_dev && object->dbody_size == 0)) {
+          object->o->rbody_size == 0) ||
+         (bix == pwr_eBix_dev && object->o->dbody_size == 0)) {
       m_vrep->error( "Attribute body", getFileName(), line_number);
       return;
     }
 
     if ( ((bix == pwr_eBix_rt || bix == pwr_eBix_sys) &&
-          offset + size/elements > object->rbody_size) ||
+          offset + size/elements > object->o->rbody_size) ||
          ( bix == pwr_eBix_rt &&
-           offset + size/elements > object->rbody_size)) {
+           offset + size/elements > object->o->rbody_size)) {
       m_vrep->error( "Mismatch in attribute offset", getFileName(), line_number);
       return;
     }
@@ -1033,33 +1059,33 @@ void wb_wblnode::buildBuffAttr( ref_wblnode object, pwr_eBix bix, pwr_tCid buffe
     if ( size/elements == sizeof(int_val) && convconst( &int_val, value)) {
       if ( oper == tokens.EQ) {
         if ( bix == pwr_eBix_rt || bix == pwr_eBix_sys) 
-          memcpy( (char *)((unsigned int) object->rbody + offset), 
+          memcpy( (char *)((unsigned int) object->o->rbody + offset), 
                   &int_val, size/elements);
         else if ( bix == pwr_eBix_dev)
-          memcpy( (char *)((unsigned int) object->dbody + offset), 
+          memcpy( (char *)((unsigned int) object->o->dbody + offset), 
                   &int_val, size/elements);
       }
       else if ( oper == tokens.OREQ) {
         if ( bix == pwr_eBix_rt || bix == pwr_eBix_sys) {
-          current_int_val = *(int *) ((unsigned int) object->rbody + offset);
+          current_int_val = *(int *) ((unsigned int) object->o->rbody + offset);
           int_val |= current_int_val;
-          memcpy( (char *)((unsigned int) object->rbody + offset),
+          memcpy( (char *)((unsigned int) object->o->rbody + offset),
                   &int_val, size/elements);
         }
         else if ( bix == pwr_eBix_dev) {
-          current_int_val = *(int *) ((unsigned int) object->dbody + offset);
+          current_int_val = *(int *) ((unsigned int) object->o->dbody + offset);
           int_val |= current_int_val;
-          memcpy( (char *)((unsigned int) object->dbody + offset),            
+          memcpy( (char *)((unsigned int) object->o->dbody + offset),            
                   &int_val, size/elements);
         }
       }
     }
     else if ( attrStringToValue( type, value, buf, sizeof( buf), size)) {
       if ( bix == pwr_eBix_rt || bix == pwr_eBix_sys)
-        memcpy( (char *)((unsigned int) object->rbody + offset), 
+        memcpy( (char *)((unsigned int) object->o->rbody + offset), 
                 buf, size/elements);
       else if ( bix == pwr_eBix_dev)
-        memcpy( (char *)((unsigned int) object->dbody + offset), 
+        memcpy( (char *)((unsigned int) object->o->dbody + offset), 
                 buf, size/elements);
     }
     else {
@@ -1094,13 +1120,13 @@ void wb_wblnode::link( wb_vrepwbl *vol, ref_wblnode father)
       // Volume root
       vol->root_object = this;
     }
-    o_fth = father;
-    if ( o_fth) {
-      o_bws = o_fth->get_o_lch();
-      if ( o_bws)
-        o_bws->o_fws = this;
+    o->fth = father;
+    if ( o->fth) {
+      o->bws = o->fth->get_o_lch();
+      if ( o->bws)
+        o->bws->o->fws = this;
       else
-        o_fth->o_fch = this;
+        o->fth->o->fch = this;
     }
     first_child = getFirstChild();
     if ( first_child)
@@ -1148,6 +1174,10 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
   switch ( getType()) {
   case tokens.OBJECT:
   {
+
+    if ( !o)
+      o = new wbl_object();
+
     if ( !wb_name::checkObjectName( name())) {
       m_vrep->error( "Bad object name", getFileName(), line_number);
     }
@@ -1155,50 +1185,50 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
     // Get class
     if ( first_child) {
       string class_name = first_child->getText();
-      strcpy( cname, class_name.c_str());
+      strcpy( o->cname, class_name.c_str());
  
-      if ( !classNameToCid( cname, &m_cid)) {
+      if ( !classNameToCid( o->cname, &o->m_cid)) {
         m_vrep->error( "Unknown class", getFileName(), line_number);
       }
 
       // If $ClassDef, register class in classlist
       if ( !isTemplate()) {
         if ( first_child->getType() == tokens.VALUE &&
-             (strcmp( cname, "$ClassDef") == 0 ||
-              strcmp( cname, "pwr_eClass_ClassDef") == 0)) {
+             (strcmp( o->cname, "$ClassDef") == 0 ||
+              strcmp( o->cname, "pwr_eClass_ClassDef") == 0)) {
           node_type = wbl_eNodeType_ClassDef;
         }
         else if ( first_child->getType() == tokens.VALUE &&
-                  ( strcmp( cname, "$Type") == 0 ||
-                    strcmp( cname, "pwr_eClass_Type") == 0)) {
+                  ( strcmp( o->cname, "$Type") == 0 ||
+                    strcmp( o->cname, "pwr_eClass_Type") == 0)) {
           node_type = wbl_eNodeType_Type;
         }
         else if ( first_child->getType() == tokens.VALUE &&
-                  ( strcmp( cname, "$TypeDef") == 0 ||
-                    strcmp( cname, "pwr_eClass_TypeDef") == 0)) {
+                  ( strcmp( o->cname, "$TypeDef") == 0 ||
+                    strcmp( o->cname, "pwr_eClass_TypeDef") == 0)) {
           node_type = wbl_eNodeType_TypeDef;
         }
         else if ( first_child->getType() == tokens.VALUE &&
-                  ( strcmp( cname, "$ObjBodyDef") == 0 ||
-                    strcmp( cname, "pwr_eClass_ObjBodyDef") == 0)) {
+                  ( strcmp( o->cname, "$ObjBodyDef") == 0 ||
+                    strcmp( o->cname, "pwr_eClass_ObjBodyDef") == 0)) {
           node_type = wbl_eNodeType_ObjBodyDef;
         }
         else if ( first_child->getType() == tokens.VALUE &&
-                  ( strcmp( cname, "$Attribute") == 0 ||
-                    strcmp( cname, "$Input") == 0 ||
-                    strcmp( cname, "$Output") == 0 ||
-                    strcmp( cname, "$Intern") == 0 ||
-                    strcmp( cname, "$ObjXRef") == 0 ||
-                    strcmp( cname, "$AttrXRef") == 0 ||
-                    strcmp( cname, "pwr_eClass_Param") == 0)) {
+                  ( strcmp( o->cname, "$Attribute") == 0 ||
+                    strcmp( o->cname, "$Input") == 0 ||
+                    strcmp( o->cname, "$Output") == 0 ||
+                    strcmp( o->cname, "$Intern") == 0 ||
+                    strcmp( o->cname, "$ObjXRef") == 0 ||
+                    strcmp( o->cname, "$AttrXRef") == 0 ||
+                    strcmp( o->cname, "pwr_eClass_Param") == 0)) {
           node_type = wbl_eNodeType_Attribute;
         }
         else if ( first_child->getType() == tokens.VALUE &&
-                  ( strcmp( cname, "$Buffer") == 0)) {
+                  ( strcmp( o->cname, "$Buffer") == 0)) {
           node_type = wbl_eNodeType_Buffer;
         }
         else if ( first_child->getType() == tokens.VALUE &&
-                  ( strcmp( cname, "$Param") == 0)) {
+                  ( strcmp( o->cname, "$Param") == 0)) {
           m_vrep->error( "Obsolete attribute class, use $Attribute instead",
                          getFileName(), line_number);
         }
@@ -1212,15 +1242,15 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
         case tokens.INT:
         {
           string oixstr = second_child->getText();
-          if ( !stringToOix( oixstr.c_str(), &m_oid.oix)) {
-            m_oid.oix = m_vrep->nextOix();
+          if ( !stringToOix( oixstr.c_str(), &o->m_oid.oix)) {
+            o->m_oid.oix = m_vrep->nextOix();
           }
           break;
         }
         case tokens.ENDOBJECT:
         case tokens.OBJECT:
         case tokens.BODY:
-          m_oid.oix = m_vrep->nextOix();
+          o->m_oid.oix = m_vrep->nextOix();
           break;
         default:
           ; // Syntax exception -- oix
@@ -1234,11 +1264,11 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
         }
         else {
           if ( !isTemplate())
-            m_oid.oix = m_vrep->nextOix();
+            o->m_oid.oix = m_vrep->nextOix();
         }
       }
     }
-    else if ( isTemplate() && strcmp( cname, "") != 0) {
+    else if ( isTemplate() && strcmp( o->cname, "") != 0) {
       // Created template object
     }
     else {
@@ -1247,9 +1277,9 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
     }
 
     if ( isClassDef()) {
-      c_cid = cdh_cixToCid( m_vrep->vid(), m_oid.oix);
-      c_cix = m_oid.oix;
-      m_vrep->registerClass( name(), c_cid, this);
+      o->c.cid = cdh_cixToCid( m_vrep->vid(), o->m_oid.oix);
+      o->c.cix = o->m_oid.oix;
+      m_vrep->registerClass( name(), o->c.cid, this);
 
       // Find Template object
       ref_wblnode child = first_child;
@@ -1259,41 +1289,45 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
         if ( child->getType() == tokens.OBJECT) {
           childname = child->getText();
           if ( strcmp( childname.c_str(), "Template") == 0) {
-            c_template = child;
-            c_template->node_type = wbl_eNodeType_Template;
+            o->c.templ = child;
+            o->c.templ->node_type = wbl_eNodeType_Template;
             break;
           }
         }
         last_child = child;
         child = child->getNextSibling();
       }
-      if ( !c_template) {
+      if ( !o->c.templ) {
         // Create a template node
-        c_template = new wb_wblnode();
-        c_template->setType( tokens.OBJECT);
+
+	wb_wblnode *templ = new wb_wblnode();
+	// ref_wblnode reftempl(templ);
+        o->c.templ = templ;
+        o->c.templ->setType( tokens.OBJECT);
         string tname("Template");
-        c_template->setText( tname);
+        o->c.templ->setText( tname);
         if ( last_child)
-          last_child->setNextSibling( (RefAST)c_template);
+          last_child->setNextSibling( (RefAST)o->c.templ);
         else
-          setFirstChild( (RefAST)c_template);
-        strcpy( c_template->cname, name());
-        // c_template->m_oid.oix = m_vrep->nextOix();
-        c_template->m_cid = c_cid;
-        c_template->node_type = wbl_eNodeType_Template;
+          setFirstChild( (RefAST)o->c.templ);
+        o->c.templ->o = new wbl_object();
+        strcpy( o->c.templ->o->cname, name());
+        // o->c.templ->o->m_oid.oix = m_vrep->nextOix();
+        o->c.templ->o->m_cid = o->c.cid;
+        o->c.templ->node_type = wbl_eNodeType_Template;
       }
     }
     else if ( isType()) {
-      m_tid = cdh_tixToTid( m_vrep->vid(), 0, m_oid.oix);
-      m_vrep->registerType( name(), m_tid, this);
+      o->m_tid = cdh_tixToTid( m_vrep->vid(), 0, o->m_oid.oix);
+      m_vrep->registerType( name(), o->m_tid, this);
     }
     else if ( isTypeDef()) {
-      m_tid = cdh_tixToTid( m_vrep->vid(), 1, m_oid.oix);
-      m_vrep->registerType( name(), m_tid, this);
+      o->m_tid = cdh_tixToTid( m_vrep->vid(), 1, o->m_oid.oix);
+      m_vrep->registerType( name(), o->m_tid, this);
     }
     else if ( isObjBodyDef()) {
-      b_bix = (pwr_eBix)m_oid.oix;
-      if ( !(b_bix == pwr_eBix_rt || b_bix == pwr_eBix_sys || b_bix == pwr_eBix_dev))
+      o->b.bix = (pwr_eBix)o->m_oid.oix;
+      if ( !(o->b.bix == pwr_eBix_rt || o->b.bix == pwr_eBix_sys || o->b.bix == pwr_eBix_dev))
         m_vrep->error( "Bad body index", getFileName(), line_number);
     }
     break;
@@ -1303,12 +1337,14 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
     pwr_tVid vid;
     int sts;
 
+    o = new wbl_object();
+
     // Get class
     if ( first_child) {
       string class_name = first_child->getText();
-      strcpy( cname, class_name.c_str());
+      strcpy( o->cname, class_name.c_str());
 
-      if ( !classNameToCid( cname, &m_cid)) {
+      if ( !classNameToCid( o->cname, &o->m_cid)) {
         // Syntax exception -- vid
         m_vrep->error( "Unkowon class", getFileName(), line_number);
       }
@@ -1343,7 +1379,7 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
       m_vrep->error( "Volume class is missing", getFileName(), line_number);
     } 
     // Register volume
-    m_vrep->registerVolume( name(), m_cid, vid, this);
+    m_vrep->registerVolume( name(), o->m_cid, vid, this);
 
     break;
   }
@@ -1396,12 +1432,11 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
     ;
   }
 
-  if ( first_child)
-    first_child->registerNode( vol);
-
-  ref_wblnode next_sibling = getNextSibling();
-  if ( next_sibling)
-    next_sibling->registerNode( vol);
+  ref_wblnode child = first_child;
+  while ( child) {
+    child->registerNode( vol);
+    child = child->getNextSibling();
+  }
 
 }
 
@@ -1409,44 +1444,44 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
 void wb_wblnode::iterObject( wb_dbs *dbs)
 {
   ref_wblnode o_lch = get_o_lch();
-  pwr_tOid fthoid = o_fth ? o_fth->m_oid : pwr_cNOid;
-  pwr_tOid fwsoid = o_fws ? o_fws->m_oid : pwr_cNOid;
-  pwr_tOid bwsoid = o_bws ? o_bws->m_oid : pwr_cNOid;
-  pwr_tOid fchoid = o_fch ? o_fch->m_oid : pwr_cNOid;
-  pwr_tOid lchoid = o_lch ? o_lch->m_oid : pwr_cNOid;
+  pwr_tOid fthoid = o->fth ? o->fth->o->m_oid : pwr_cNOid;
+  pwr_tOid fwsoid = o->fws ? o->fws->o->m_oid : pwr_cNOid;
+  pwr_tOid bwsoid = o->bws ? o->bws->o->m_oid : pwr_cNOid;
+  pwr_tOid fchoid = o->fch ? o->fch->o->m_oid : pwr_cNOid;
+  pwr_tOid lchoid = o_lch ? o_lch->o->m_oid : pwr_cNOid;
   wb_name n = wb_name(name());
 
-  dbs->installObject( m_oid, m_cid, fthoid, fwsoid, bwsoid, fchoid, lchoid, 
+  dbs->installObject( o->m_oid, o->m_cid, fthoid, fwsoid, bwsoid, fchoid, lchoid, 
                       (char *)name(), n.normName(cdh_mName_object),
-                      getFileTime(), getFileTime(), getFileTime(), rbody_size, dbody_size);
+                      getFileTime(), getFileTime(), getFileTime(), o->rbody_size, o->dbody_size);
   
-  if ( o_fch)
-    o_fch->iterObject( dbs);
+  if ( o->fch)
+    o->fch->iterObject( dbs);
 
-  if ( o_fws)
-    o_fws->iterObject( dbs);
+  if ( o->fws)
+    o->fws->iterObject( dbs);
 }
 
-void wb_wblnode::iterDbody( wb_dbs *dbs)
+void wb_wblnode::iterO->Dbody( wb_dbs *dbs)
 {
-  dbs->installDbody( m_oid, dbody);
+  dbs->installO->Dbody( o->m_oid, o->dbody);
   
-  if ( o_fch)
-    o_fch->iterDbody( dbs);
+  if ( o->fch)
+    o->fch->iterO->Dbody( dbs);
 
-  if ( o_fws)
-    o_fws->iterDbody( dbs);
+  if ( o->fws)
+    o->fws->iterO->Dbody( dbs);
 }
 
-void wb_wblnode::iterRbody( wb_dbs *dbs)
+void wb_wblnode::iterO->Rbody( wb_dbs *dbs)
 {
-  dbs->installRbody( m_oid, rbody);
+  dbs->installO->Rbody( o->m_oid, o->rbody);
   
-  if ( o_fch)
-    o_fch->iterRbody( dbs);
+  if ( o->fch)
+    o->fch->iterO->Rbody( dbs);
 
-  if ( o_fws)
-    o_fws->iterRbody( dbs);
+  if ( o->fws)
+    o->fws->iterO->Rbody( dbs);
 }
 #endif
 
@@ -1455,52 +1490,52 @@ bool wb_wblnode::exportHead(wb_import &i)
   pwr_tStatus sts;
   pwr_mClassDef flags;
 
-  m_vrep->getClassFlags( &sts, m_cid, &flags);
+  m_vrep->getClassFlags( &sts, o->m_cid, &flags);
   if ( EVEN(sts)) throw wb_error( sts);
 
-  m_flags.m |= flags.m;
+  o->m_flags.m |= flags.m;
   ref_wblnode o_lch = get_o_lch();
-  pwr_tOid fthoid = o_fth ? o_fth->m_oid : pwr_cNOid;
-  pwr_tOid fwsoid = o_fws ? o_fws->m_oid : pwr_cNOid;
-  pwr_tOid bwsoid = o_bws ? o_bws->m_oid : pwr_cNOid;
-  pwr_tOid fchoid = o_fch ? o_fch->m_oid : pwr_cNOid;
-  pwr_tOid lchoid = o_lch ? o_lch->m_oid : pwr_cNOid;
+  pwr_tOid fthoid = o->fth ? o->fth->o->m_oid : pwr_cNOid;
+  pwr_tOid fwsoid = o->fws ? o->fws->o->m_oid : pwr_cNOid;
+  pwr_tOid bwsoid = o->bws ? o->bws->o->m_oid : pwr_cNOid;
+  pwr_tOid fchoid = o->fch ? o->fch->o->m_oid : pwr_cNOid;
+  pwr_tOid lchoid = o_lch ? o_lch->o->m_oid : pwr_cNOid;
   wb_name n = wb_name(name());
 
-  i.importHead( m_oid, m_cid, fthoid, bwsoid, fwsoid, fchoid, lchoid, name(), n.normName(cdh_mName_object),
-                getFileTime(), getFileTime(), getFileTime(), rbody_size, dbody_size);
+  i.importHead( o->m_oid, o->m_cid, fthoid, bwsoid, fwsoid, fchoid, lchoid, name(), n.normName(cdh_mName_object),
+                getFileTime(), getFileTime(), getFileTime(), o->rbody_size, o->dbody_size);
   
-  if ( o_fch)
-    o_fch->exportHead( i);
+  if ( o->fch)
+    o->fch->exportHead( i);
 
-  if ( o_fws)
-    o_fws->exportHead( i);
+  if ( o->fws)
+    o->fws->exportHead( i);
 
   return true;
 }
 
 bool wb_wblnode::exportDbody( wb_import &i)
 {
-  i.importDbody( m_oid, dbody_size, dbody);
+  i.importDbody( o->m_oid, o->dbody_size, o->dbody);
   
-  if ( o_fch)
-    o_fch->exportDbody( i);
+  if ( o->fch)
+    o->fch->exportDbody( i);
 
-  if ( o_fws)
-    o_fws->exportDbody( i);
+  if ( o->fws)
+    o->fws->exportDbody( i);
 
   return true;
 }
 
 bool wb_wblnode::exportRbody( wb_import &i)
 {
-  i.importRbody( m_oid, rbody_size, rbody);
+  i.importRbody( o->m_oid, o->rbody_size, o->rbody);
   
-  if ( o_fch)
-    o_fch->exportRbody( i);
+  if ( o->fch)
+    o->fch->exportRbody( i);
 
-  if ( o_fws)
-    o_fws->exportRbody( i);
+  if ( o->fws)
+    o->fws->exportRbody( i);
 
   return true;
 }

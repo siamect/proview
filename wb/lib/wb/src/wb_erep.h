@@ -29,6 +29,7 @@ class wb_erep
 
   char m_dir_list[10][200];
   int m_dir_cnt;
+  int m_volatile_idx;
 
 public:
   wb_erep();
@@ -58,6 +59,7 @@ public:
   wb_cdrep *cdrep( pwr_tStatus *sts, const wb_orep& o);
   wb_tdrep *tdrep( pwr_tStatus *sts, const wb_adrep& a);
   void method( pwr_tStatus *sts, char *methodName, wb_tMethod *method);
+  int nextVolatileVid( pwr_tStatus *sts);
 
 private:
   void loadDirList( pwr_tStatus *status);
@@ -68,6 +70,7 @@ private:
 };
 
 #endif
+
 
 
 

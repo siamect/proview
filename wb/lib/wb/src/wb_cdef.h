@@ -33,7 +33,7 @@ public:
   
   bool operator==(wb_cdef&);
     
-  size_t size();   // get objects runtime body size
+  size_t size( pwr_eBix bix);
   pwr_tCid cid();
   pwr_tOid oid() { pwr_tOid oid = pwr_cNOid; return oid;} // Fix
 
@@ -44,6 +44,7 @@ public:
   wb_bdef bdef(const char *bname);
   wb_bdef bdef(wb_name bname);
 
+  void templateBody( pwr_tStatus *sts, pwr_eBix bix, void *p);
   wb_object classBody( const char *bname);
 
 private:
