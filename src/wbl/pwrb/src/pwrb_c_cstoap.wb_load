@@ -158,7 +158,7 @@ SObject pwrb:Class
         Attr Cond = 1
       EndBody
       Body DevBody
-        Attr ObjectSegments = 1
+        Attr ObjectSegments = 2
       EndBody
     EndObject
   EndObject

@@ -103,7 +103,7 @@ SObject pwrb:Class
     EndObject
     Object Template GetSv
       Body DevBody
-        Attr SvObjectSegments = 1
+        Attr SvObjectSegments = 2
       EndBody
     EndObject
   EndObject

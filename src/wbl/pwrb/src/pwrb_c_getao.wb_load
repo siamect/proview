@@ -148,9 +148,9 @@ SObject pwrb:Class
     EndObject
     Object Template GetAo
       Body DevBody
-        Attr AoObjectSegments = 1
-        Attr SigChanConSegments = 1
-        Attr ShowSigChanCon = 0
+        Attr AoObjectSegments = 2
+        Attr SigChanConSegments = 2
+        Attr ShowSigChanCon = 1
       EndBody
     EndObject
   EndObject

@@ -152,9 +152,9 @@ SObject pwrb:Class
     EndObject
     Object Template StoAi
       Body DevBody
-        Attr AiObjectSegments = 1
-        Attr ShowSigChanCon = 0
-        Attr SigChanConSegments = 1
+        Attr AiObjectSegments = 2
+        Attr ShowSigChanCon = 1
+        Attr SigChanConSegments = 2
       EndBody
     EndObject
   EndObject

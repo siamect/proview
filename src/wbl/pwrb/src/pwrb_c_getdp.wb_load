@@ -122,7 +122,7 @@ SObject pwrb:Class
     EndObject
     Object Template GetDp
       Body DevBody
-        Attr DpObjectSegments = 1
+        Attr DpObjectSegments = 2
       EndBody
     EndObject
   EndObject

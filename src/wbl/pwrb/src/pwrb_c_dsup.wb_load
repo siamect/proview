@@ -646,7 +646,7 @@ SObject pwrb:Class
         Attr CtrlPosition = 1
       EndBody
       Body DevBody
-        Attr ShowDetectText = 0
+        Attr ShowDetectText = 1
       EndBody
     EndObject
     Object PostCreate $DbCallBack

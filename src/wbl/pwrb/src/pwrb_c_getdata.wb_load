@@ -108,7 +108,7 @@ SObject pwrb:Class
     !
     Object Template GetData
       Body DevBody
-        Attr DataObjectSegments  = 1
+        Attr DataObjectSegments  = 2
       EndBody
     EndObject
   EndObject

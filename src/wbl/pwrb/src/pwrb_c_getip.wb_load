@@ -135,7 +135,7 @@ SObject pwrb:Class
     EndObject
     Object Template GetIp
       Body DevBody
-        Attr IpObjectSegments = 1
+        Attr IpObjectSegments = 2
       EndBody
     EndObject
   EndObject

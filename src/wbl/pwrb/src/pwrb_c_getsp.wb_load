@@ -126,7 +126,7 @@ SObject pwrb:Class
     EndObject
     Object Template GetSp
       Body DevBody
-        Attr SpObjectSegments = 1
+        Attr SpObjectSegments = 2
       EndBody
     EndObject
   EndObject

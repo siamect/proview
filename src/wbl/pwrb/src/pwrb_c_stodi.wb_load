@@ -153,9 +153,9 @@ SObject pwrb:Class
     EndObject
     Object Template StoDi
       Body DevBody
-        Attr DiObjectSegments = 1
-        Attr ShowSigChanCon = 0
-        Attr SigChanConSegments = 1
+        Attr DiObjectSegments = 2
+        Attr ShowSigChanCon = 1
+        Attr SigChanConSegments = 2
       EndBody
     EndObject
   EndObject

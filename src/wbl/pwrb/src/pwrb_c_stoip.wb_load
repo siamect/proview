@@ -130,7 +130,7 @@ SObject pwrb:Class
     EndObject
     Object Template StoIp
       Body DevBody
-        Attr ObjectSegments = 1
+        Attr ObjectSegments = 2
       EndBody
     EndObject
   EndObject

@@ -25,7 +25,7 @@
 !
 ! @b See also
 !  @classlink NodeConfig pwrb_nodeconfig.html
-!  @classlink GraphDistribute pwrb_graphdistribute.html
+!  @classlink Distribute pwrb_distribute.html
 !*/
 SObject pwrb:Class
   Object ApplDistribute $ClassDef 17 

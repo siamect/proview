@@ -13,8 +13,53 @@
 !  operator stations.
 !
 !  The object reside in the project volume beneath a NodeConfig object.
-!  The specified file will be copied to the node configured by the 
-!  NodeConfig object.
+!  The specified file(s) will be included in the distribution package and
+!  copied to the node configured by the NodeConfig object.
+!
+!  The files are specified in the Components attribute, which is a bitmask.
+!  Description of the bits in Compontents:
+!
+! @b UserDatabase
+!  The Proview user database $pwra_db/pwr_user.dat is included.
+!  The source is fetched from
+!      1. $pwrp_src/'nodename'/pwr_user.dat
+!      2. $pwra_db/pwr_user.dat
+! @b LoadFiles
+!  Loadfiles are included, i.e. 
+!    - loadfiles for volumes configured with RootVolumeLoad, SubVolumeLoad 
+!      and ClassVolumeLoad objects, and volumes referenced by these volumes, 
+!    - plc file.
+!    - rtt crossreference files.
+! @b ApplFile
+!  The startup file $pwrp_load/ld_appl_'nodename'_'busnumber'.dat is included.
+! @b PwrpAliasFile
+!  $pwrp_load/pwrp_alias.dat is included.
+! @b IncludeFiles
+!  All includefiles in $pwrp_inc is included.
+! @b GraphFiles
+!  All Ge graph files $pwrp_pop/*.pwg are included.
+! @b XttHelpFile
+!  The xtt help file is included. The source file is fetched from
+!     1. $pwrp_src/'nodename'/xtt_help.dat
+!     2. $pwrp_exe/xtt_help.dat
+! @b XttResourceFile
+!  The xtt resource file with fuction key definitions is included. The source
+!  file is fetched from
+!     1. $pwrp_src/'nodename'/Rt_xtt
+!     2. $pwrp_pop/Rt_xtt
+! @b XttSetupFile
+!  Not implemented.
+! @b FlowFiles
+!  The plc trace files $pwrp_load/*.flw are included.
+! @b RHostsFile
+!  The .rhost file used by rsh is included. The source is fetched from
+!     1. $pwrp_src/'nodename'/.rhosts
+!     2. $pwra_db/.rhosts
+! @b WebFiles
+!  All web-files in $pwrp_web are included.
+!
+!  Other files can be included with an ApplDistribute object.
+!  The GraphDistribute and SystemDistribute objects are obsolete.
 !
 ! @b See also
 !  @classlink NodeConfig pwrb_nodeconfig.html
@@ -38,5 +83,15 @@ SObject pwrb:Class
         EndBody
       EndObject
     EndObject
+    Object Template Distribute
+      Body DevBody
+        Attr Components = 4095
+      EndBody
+    EndObject
   EndObject
 EndSObject
+
+
+
+
+

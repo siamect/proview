@@ -9,10 +9,12 @@
 !
 !/**
 !  @Version 1.0
+!  @Group ProjectConfiguration
+!  @Summary Configuration of workbench environment.
 !  The WbEnviroment configures the workbench environment.
 !  The object resides in the project volume as a top object.
 !  In the path attribute a search path for loadfiles.
-!  The object can have children of type RootVolumeLoad, SharedVolumeLoad
+!  The object can have children of type RootVolumeLoad, SubVolumeLoad
 !  and ClassVolumeLoad that defines which volumes can be loaded into the
 !  workbench environment. 
 !*/

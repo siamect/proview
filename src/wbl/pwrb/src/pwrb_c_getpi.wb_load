@@ -168,9 +168,9 @@ SObject pwrb:Class
     EndObject
     Object Template GetPi
       Body DevBody
-        Attr CoObjectSegments = 1
-        Attr SigChanConSegments = 1
-        Attr ShowSigChanCon = 0
+        Attr CoObjectSegments = 2
+        Attr SigChanConSegments = 2
+        Attr ShowSigChanCon = 1
       EndBody
     EndObject
   EndObject
