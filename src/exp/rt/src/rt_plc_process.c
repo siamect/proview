@@ -14,6 +14,11 @@
 #elif defined(OS_LYNX)
 #endif
 
+#include <stdio.h>
+#include <sys/time.h>
+#include <sys/resource.h>
+#include <unistd.h>
+
 #include <pwd.h>
 #include "pwr.h"
 #include "pwr_class.h"
@@ -124,7 +129,19 @@ int main (
   plc_sProcess	*pp;
   uid_t         ruid;
   struct passwd *pwd;
-  
+/*
+  struct rlimit rlim;
+  int i;
+*/  
+  /* Set core dump file size limit to infinite */
+/*
+  rlim.rlim_cur =  RLIM_INFINITY;
+  rlim.rlim_max =  RLIM_INFINITY;
+  sts = setrlimit(RLIMIT_CORE, &rlim);
+  printf("%d\n", sts);
+  i = 1/0;
+  printf("%d\n", i);
+*/
   pp = init_process();
 
   qcom_WaitAnd(&sts, &pp->eventQ, &qcom_cQini, ini_mEvent_newPlcInit, qcom_cTmoEternal);
