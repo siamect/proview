@@ -1,3 +1,4 @@
+
 <TOPIC> overview
 Xtt overview
 
@@ -255,6 +256,7 @@ Xtt commands
 <b>open operatorwindow<t>Open the operator window 	<LINK> open operatorwindow
 <b>search	<t>Leta efter object eller sträng <LINK> search
 <b>set advanceduser<t>Set advanced user		<LINK> set advanceduser
+<b>set parameter<t>Set the value of an attribute  <LINK> set parameter
 <b>setup       <t>Xtt setup			<LINK> setup
 <b>show version<t>Show xtt version		<LINK> show version
 <b>show symbol <t>Show a symbol			<LINK> show symbol
@@ -327,6 +329,18 @@ on the screen.
 
 <H2>related subjects
 add parameter <LINK> add parameter
+</TOPIC>
+
+<TOPIC> set parameter
+Command   set parameter
+
+Set the value of an attribute.
+
+<B>xtt> set parameter /name= /value=
+
+/name=		<t>the name of the parameter to be set.
+/value=		<t>value to set.
+/bypass=	<t>Bypass any access restrictions.
 </TOPIC>
 
 <TOPIC> add menu
