@@ -16,7 +16,6 @@
 
 static void printstat(DbEnv *ep, char *s);
 
-
 wb_db_info::wb_db_info(wb_db *db) :
   m_db(db), m_data(&m_volume, sizeof(m_volume))
 {
@@ -24,21 +23,33 @@ wb_db_info::wb_db_info(wb_db *db) :
 
 void wb_db_info::get(wb_db_txn *txn)
 {
-  int index = 0;
+  int index = 1;
   int ret;
-  
+#if 0  
   m_key.set_data(&index);
   m_key.set_size(sizeof(index));
+  m_data.set_data(&m_volume);
   m_data.set_ulen(sizeof(m_volume));
   m_data.set_flags(DB_DBT_USERMEM);
+#endif
+  Dbt key(&index, sizeof(index));
+  Dbt data(&m_volume, sizeof(m_volume));
+  data.set_ulen(sizeof(m_volume));
+  data.set_flags(DB_DBT_USERMEM);
   
-  ret = m_db->m_t_info->get(txn, &m_key, &m_data, 0);
-  printf("info get: %d\n", ret);
+  try {
+    ret = m_db->m_t_info->get(txn, &key, &data, 0);
+    printf("info get: %d\n", ret);
+  } catch (DbException &e) {
+    printf("Fel, %d\n", ret);
+    m_db->m_t_info->err(ret, "m_db->m_t_info->get(txn, &key, &data, 0)");
+    cout << e.what();
+  }
 }
 
 void wb_db_info::put(wb_db_txn *txn)
 {
-  int index = 0;
+  int index = 1;
   int ret;
   
   m_key.set_data(&index);
@@ -337,7 +348,7 @@ wb_db_ohead &wb_db_ohead::get(wb_db_txn *txn, pwr_tOid oid)
   m_data.set_ulen(sizeof(m_o));
   m_data.set_flags(DB_DBT_USERMEM);
 
-  m_db->m_t_ohead->get(txn, &m_key, &m_data, 0);
+  rc = m_db->m_t_ohead->get(txn, &m_key, &m_data, 0);
   if (rc)
     printf("wb_db_ohead::get(txn, oid = %d.%d), get, rc %d\n", oid.vid, oid.oix, rc);
   //pwr_Assert(oid.oix == m_o.oid.oix);
@@ -375,8 +386,9 @@ void wb_db_ohead::clear()
 void wb_db_ohead::iter(void (*print)(pwr_tOid oid, db_sObject *op))
 {
   int rc = 0;  
-
-  m_db->m_t_ohead->cursor(m_db->m_txn, &m_dbc, 0);
+  //Dbc *cp;
+  
+  rc = m_db->m_t_ohead->cursor(m_db->m_txn, &m_dbc, 0);
 
 	/* Initialize the key/data pair so the flags aren't set. */
 	memset(&m_oid, 0, sizeof(m_oid));
@@ -606,9 +618,12 @@ void wb_db::close()
   m_t_name->close(0);
   m_t_info->close(0);
   
-  printstat(m_env, "before abort");
-  int rc =  m_txn->abort();
-  printf("int rc =  m_txn->abort(): %d\n", rc);
+  if (m_txn) {
+    printstat(m_env, "before abort");
+    int rc =  m_txn->abort();
+    printf("int rc =  m_txn->abort(): %d\n", rc);
+  }
+  
   printstat(m_env, "before m_env->close(0)");
   m_env->close(0);
 }
@@ -619,6 +634,7 @@ void wb_db::create(pwr_tVid vid, pwr_tCid cid, const char *volumeName, const cha
   m_cid = cid;
   strcpy(m_volumeName, volumeName);
   dcli_translate_filename(m_fileName, fileName);
+  //int rc = m_env->txn_begin(0, (DbTxn **)&m_txn, 0);
   
   openDb(false);
 }
@@ -635,16 +651,25 @@ wb_db_txn *wb_db::begin(wb_db_txn *txn)
 void  wb_db::open(const char *fileName)
 {
   dcli_translate_filename(m_fileName, fileName);
+
   openDb(true);
   
-  m_env->txn_begin(0, (DbTxn **)&m_txn, 0);
+  //m_env->txn_begin(0, (DbTxn **)&m_txn, 0);
   //m_txn = 0;
-  
-  wb_db_info i(this);
-  i.get(m_txn);
-  m_vid = i.vid();
-  m_cid = i.cid();
-  strcpy(m_volumeName, i.name());
+
+  try {
+    m_env->txn_begin(0, (DbTxn **)&m_txn, 0);
+    
+    wb_db_info i(this);
+    i.get(m_txn);
+    m_vid = i.vid();
+    m_cid = i.cid();
+    strcpy(m_volumeName, i.name());
+  }
+  catch (DbException &e) {
+    //txn->abort();
+    printf("exeption: %s\n", e.what());
+  }
 }
 
 static void printstat(DbEnv *ep, char *s)
@@ -656,7 +681,7 @@ static void printstat(DbEnv *ep, char *s)
   printf("DbEnv loc statistics, %s:\n", s);
   
   ep->lock_stat(&lp, 0);
-  printf("  lastid.......: %d\n", lp->st_id);
+  printf("  lastid.......: %d\n", lp->st_lastid);
   printf("  nmodes.......: %d\n", lp->st_nmodes);
   printf("  maxlocks:....: %d\n", lp->st_maxlocks);
   printf("  maxlockers...: %d\n", lp->st_maxlockers);
@@ -682,6 +707,7 @@ void wb_db::openDb(bool useTxn)
 {
   struct stat sb;
   int rc;
+  //DbTxn *txn = 0;
   
   /* Create the directory, read/write/access owner only. */
   if (stat(m_fileName, &sb) != 0) {
@@ -700,6 +726,14 @@ void wb_db::openDb(bool useTxn)
   rc = m_env->set_lg_max(1024*1024*8*2);
   rc = m_env->set_lk_max_locks(500000);
   rc = m_env->set_lk_max_objects(20000);
+
+#if 0
+  try {
+    rc = m_env->txn_begin(0, &txn, 0);
+  } catch (DbException &e) {
+    printf("m_env->txn_begin, %s\n", e.what());
+  }
+#endif
 
   if (useTxn) {
     m_env->open(m_fileName,
@@ -720,13 +754,13 @@ void wb_db::openDb(bool useTxn)
   m_t_name  = new Db(m_env, 0);
   m_t_info  = new Db(m_env, 0);
     
-  m_t_ohead->open(NULL, "ohead", NULL, DB_BTREE, DB_CREATE, S_IRUSR | S_IWUSR);
-  m_t_rbody->open(NULL, "rbody", NULL, DB_BTREE, DB_CREATE, S_IRUSR | S_IWUSR);
-  m_t_dbody->open(NULL, "dbody", NULL, DB_BTREE, DB_CREATE, S_IRUSR | S_IWUSR);
+  m_t_ohead->open("ohead", NULL, DB_BTREE, DB_CREATE, S_IRUSR | S_IWUSR);
+  m_t_rbody->open("rbody", NULL, DB_BTREE, DB_CREATE, S_IRUSR | S_IWUSR);
+  m_t_dbody->open("dbody", NULL, DB_BTREE, DB_CREATE, S_IRUSR | S_IWUSR);
 //  m_t_dbody->open(NULL, "dbody", NULL, DB_BTREE, DB_CREATE | DB_AUTO_COMMIT, S_IRUSR | S_IWUSR);
-  m_t_class->open(NULL, "class", NULL, DB_BTREE, DB_CREATE, S_IRUSR | S_IWUSR);
-  m_t_name->open(NULL, "name", NULL, DB_BTREE, DB_CREATE, S_IRUSR | S_IWUSR);
-  m_t_info->open(NULL, "info", NULL, DB_BTREE, DB_CREATE, S_IRUSR | S_IWUSR);
+  m_t_class->open("class", NULL, DB_BTREE, DB_CREATE, S_IRUSR | S_IWUSR);
+  m_t_name->open("name", NULL, DB_BTREE, DB_CREATE, S_IRUSR | S_IWUSR);
+  m_t_info->open("info", NULL, DB_BTREE, DB_CREATE, S_IRUSR | S_IWUSR);
   printstat(m_env, "after open databases");
     
 }
