@@ -48,7 +48,7 @@ fi
 	echo "All Rights Reserved."
         echo ""
         echo "E-mail postmaster@proview.se"
-        echo "Internet www.proview.se"
+        echo "Internet www.proview.se <link> http://www.proview.se/index.html"
 	echo ""
 	echo ""
 	echo "<b>Package"

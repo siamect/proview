@@ -1,5 +1,5 @@
 Package: pwrrt
-Version: 4.0.0-5
+Version: 4.0.0-6
 Section: base
 Priority: optional
 Architecture: i386
@@ -21,6 +21,7 @@ Description:
    - Java classgraphs for signals and other objects.
    - Improved xtt preformance.
    - Xtt window to display system messages.
-
-
-
+ Changes in 4.0.0-6:
+   - All users has access to start mozilla from xtt.
+   - PageDown and PageUp in xtt.
+   - Ctrl replacments of PF keys in rtt
