@@ -2233,6 +2233,9 @@ static int	graph_create_func( void		*client_data,
       grow_CreateGrowSlider( graph->grow->ctx, name, nc, x1, y1, 
 		NULL, &n1);
 
+    GeDyn *dyn = new GeDyn( graph);
+    grow_SetUserData( n1, (void *)dyn);
+
     grow_MoveNode( n1, x1, y1);
     if ( scale_x || scale_y)
     {
