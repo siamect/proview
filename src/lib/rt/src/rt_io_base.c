@@ -54,18 +54,14 @@ pwr_dImport pwr_BindIoMethods(Ao_HVAO4);
 pwr_dImport pwr_BindIoMethods(Ai_HVAI32);
 pwr_dImport pwr_BindIoMethods(Ai_AI32uP);
 pwr_dImport pwr_BindIoMethods(Co_PI24BO);
-
-#if defined(OS_LYNX)
 pwr_dImport pwr_BindIoMethods(Pb_Profiboard);
 pwr_dImport pwr_BindIoMethods(Pb_DP_Slave);
-pwr_dImport pwr_BindIoMethods(Pb_ET200M);
-pwr_dImport pwr_BindIoMethods(Pb_NPBA12);
-pwr_dImport pwr_BindIoMethods(Pb_Euro2500);
 pwr_dImport pwr_BindIoMethods(Pb_Di);
 pwr_dImport pwr_BindIoMethods(Pb_Do);
 pwr_dImport pwr_BindIoMethods(Pb_Ai);
 pwr_dImport pwr_BindIoMethods(Pb_Ao);
-#endif
+pwr_dImport pwr_BindIoMethods(Pb_Ii);
+pwr_dImport pwr_BindIoMethods(Pb_Io);
 
 pwr_BindIoClasses(Base) = {
   pwr_BindIoClass(Node),
@@ -76,17 +72,14 @@ pwr_BindIoClasses(Base) = {
   pwr_BindIoClass(Ai_HVAI32),
   pwr_BindIoClass(Ai_AI32uP),
   pwr_BindIoClass(Co_PI24BO),
-#if defined(OS_LYNX)
   pwr_BindIoClass(Pb_Profiboard),
   pwr_BindIoClass(Pb_DP_Slave),
-  pwr_BindIoClass(Pb_ET200M),
-  pwr_BindIoClass(Pb_NPBA12),
-  pwr_BindIoClass(Pb_Euro2500),
   pwr_BindIoClass(Pb_Di),
   pwr_BindIoClass(Pb_Do),
   pwr_BindIoClass(Pb_Ai),
   pwr_BindIoClass(Pb_Ao),
-#endif
+  pwr_BindIoClass(Pb_Ii),
+  pwr_BindIoClass(Pb_Io),
   pwr_NullClass
 };
 
@@ -1218,7 +1211,7 @@ static pwr_tStatus io_init_card(
   pwr_tStatus 	(* CardWrite) ();
   char		cname[140];
   char		attrname[140];
-  pwr_tUInt32	process;
+  pwr_tUInt32	process = 0;
   io_sCard	*cp;
   io_sCard	*clp;
   pwr_sAttrRef	attrref;
@@ -1359,6 +1352,14 @@ static pwr_tStatus io_init_card(
 	      sigchancon = ((pwr_sClass_ChanDi *) chan_op)->SigChanCon;
 	      number = ((pwr_sClass_ChanDi *) chan_op)->Number;
 	      break;
+	    case pwr_cClass_ChanIi:
+	      sigchancon = ((pwr_sClass_ChanIi *) chan_op)->SigChanCon;
+	      number = ((pwr_sClass_ChanIi *) chan_op)->Number;
+	      break;
+	    case pwr_cClass_ChanIo:
+	      sigchancon = ((pwr_sClass_ChanIo *) chan_op)->SigChanCon;
+	      number = ((pwr_sClass_ChanIo *) chan_op)->Number;
+	      break;
 	    case pwr_cClass_ChanCo:
 	      sigchancon = ((pwr_sClass_ChanCo *) chan_op)->SigChanCon;
 	      number = ((pwr_sClass_ChanCo *) chan_op)->Number;
@@ -1438,6 +1439,14 @@ static pwr_tStatus io_init_card(
 	      chanp->vbp = gdh_TranslateRtdbPointer( 
 		(pwr_tUInt32) ((pwr_sClass_Ao *)sig_op)->ActualValue);
 	      break;
+	    case pwr_cClass_Ii:
+	      chanp->vbp = gdh_TranslateRtdbPointer( 
+		(pwr_tUInt32) ((pwr_sClass_Ii *)sig_op)->ActualValue);
+	      break;
+	    case pwr_cClass_Io:
+	      chanp->vbp = gdh_TranslateRtdbPointer( 
+		(pwr_tUInt32) ((pwr_sClass_Io *)sig_op)->ActualValue);
+	      break;
 	    case pwr_cClass_Co:
 	      chanp->vbp = gdh_TranslateRtdbPointer( 
 		(pwr_tUInt32) ((pwr_sClass_Co *)sig_op)->RawValue);
@@ -1488,7 +1497,7 @@ static pwr_tStatus io_init_rack(
   pwr_tStatus 	(* AgentWrite) ();
   char		rname[140];
   char		attrname[140];
-  pwr_tUInt32	process;
+  pwr_tUInt32	process = 0;
   io_sRack	*rp;
   io_sRack	*rlp;
   pwr_sAttrRef	attrref;
@@ -1613,7 +1622,7 @@ static pwr_tStatus io_init_agent(
   pwr_tStatus 	(* AgentWrite) ();
   char		aname[140];
   char		attrname[140];
-  pwr_tUInt32	process;
+  pwr_tUInt32	process = 0;
   io_sAgent	*ap;
   io_sAgent	*alp;
   pwr_sAttrRef	attrref;
