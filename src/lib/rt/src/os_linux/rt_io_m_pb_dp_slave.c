@@ -17,6 +17,7 @@
 #include "rt_io_pb_locals.h"
 
 #include "pwr.h"
+#include "co_cdh.h"
 #include "pwr_baseclasses.h"
 #include "rt_gdh.h"
 #include "rt_io_base.h"
@@ -35,82 +36,25 @@ static pwr_tStatus IoRackInit (
   io_sRack	*rp
 ) 
 {
-
-/*
-  io_sAgentLocal *local_agent;
   io_sCardLocal *local_card;
-
-  pwr_sClass_Pb_DP_Slave *op;
-
-  int i;
-  pwr_tUInt16 sts;
-  int fp;
-  struct timespec rqtp, rmtp;
   io_sCard *cardp;
   short input_counter;
   short output_counter;
+  pwr_sClass_Pb_DP_Slave *op;
   pwr_sClass_Pb_Di *dip;
   pwr_sClass_Pb_Do *dop;
   pwr_sClass_Pb_Ai *aip;
   pwr_sClass_Pb_Ao *aop;
   pwr_sClass_Pb_Ii *iip;
   pwr_sClass_Pb_Io *iop;
+  char name[196];
+  pwr_tStatus sts;
 
-  local_agent = (io_sAgentLocal *) (ap->Local);
-
-  fp = local_agent->Pb_fp;
+  sts = gdh_ObjidToName(rp->Objid, (char *) &name, sizeof(name), cdh_mNName);
+  errh_Info( "Init of Profibus DP Slave and modules %s", name);
 
   op = (pwr_sClass_Pb_DP_Slave *) rp->op;
-
-  rqtp.tv_sec = 1;
-  rqtp.tv_nsec = 0;
-
-  // Try to initialize slave.
-
-  if (op->Status < 1) {
-
-    // Three attempts
-
-    for(i=0; i<3; i++) {
-      if (op->AutoConfigure == 1) {
-        sts = pb_get_slave_cfg(fp,
-			       op->SlaveAddress,
-			       &op->ConfigDataLen,
-			       &op->ConfigData);
-      }
-      else {
-        sts = PB_OK;
-      }
-      if (sts == PB_OK) {
-        sts = pb_download_all(fp,
-			      op->SlaveAddress,
-			      op->WdFact1,
-			      op->WdFact2,
-			      0,
-			      op->PNOIdent,
-			      op->GroupIdent,
-			      op->PrmUserDataLen,
-			      &op->PrmUserData,
-			      op->ConfigDataLen,
-			      &op->ConfigData);
-      }
-      if (sts == PB_OK) {
-        sts = pb_get_slave_info(fp, 
-				op->SlaveAddress, 
-				&op->OffsetInputs,
-				&op->OffsetOutputs,
-				&op->BytesOfInput,
-				&op->BytesOfOutput);
-      }
-      if (sts == PB_OK) break;
-      nanosleep(&rqtp, &rmtp);
-    }
-    if (sts != PB_OK) {
-      errh_Info( "ERROR Init DP slave %s", rp->Name );
-      return IO__ERRINIDEVICE;
-    }
-  }
-
+  
   // Do configuration check and initialize modules.
 
   cardp = rp->cardlist;
@@ -119,18 +63,11 @@ static pwr_tStatus IoRackInit (
   op->NumberModules = 0;
 
   while(cardp) {
-    if (!cardp->Local) {
-      local_card = calloc(1, sizeof(*local_card));
-      cardp->Local = local_card;
-    }
-    else
-      local_card = cardp->Local;
-      
+    local_card = calloc(1, sizeof(*local_card));
+    cardp->Local = local_card;
     local_card->input_area = (void *) &(op->Inputs);
     local_card->output_area = (void *) &(op->Outputs);
-    local_card->initialized = 0;
-    errh_Info("Init module %s", cardp->Name);
-    
+
     switch (cardp->Class) {
 
       case pwr_cClass_Pb_Di:
@@ -138,8 +75,7 @@ static pwr_tStatus IoRackInit (
         dip->OffsetInputs = input_counter;
         dip->BytesOfInput = dip->NumberOfChannels / 8;
         input_counter += dip->BytesOfInput;
-        dip->Status = 1;
-	local_card->initialized = 1;
+        dip->Status = PB_MODULE_STATE_OPERATE;
         break;
 
       case pwr_cClass_Pb_Do:
@@ -147,8 +83,7 @@ static pwr_tStatus IoRackInit (
         dop->OffsetOutputs = output_counter;
         dop->BytesOfOutput = dop->NumberOfChannels / 8;
         output_counter += dop->BytesOfOutput;
-        dop->Status = 1;
-	local_card->initialized = 1;
+        dop->Status = PB_MODULE_STATE_OPERATE;
         break;
 
       case pwr_cClass_Pb_Ai:
@@ -156,8 +91,7 @@ static pwr_tStatus IoRackInit (
         aip->OffsetInputs = input_counter;
         aip->BytesOfInput = aip->NumberOfChannels * aip->BytesPerChannel;
         input_counter += aip->BytesOfInput;
-        aip->Status = 1;
-	local_card->initialized = 1;
+        aip->Status = PB_MODULE_STATE_OPERATE;
         break;
 
       case pwr_cClass_Pb_Ao:
@@ -165,8 +99,7 @@ static pwr_tStatus IoRackInit (
         aop->OffsetOutputs = output_counter;
         aop->BytesOfOutput = aop->NumberOfChannels * aop->BytesPerChannel;
         output_counter += aop->BytesOfOutput;
-        aop->Status = 1;
-	local_card->initialized = 1;
+        aop->Status = PB_MODULE_STATE_OPERATE;
         break;
 
       case pwr_cClass_Pb_Ii:
@@ -174,8 +107,7 @@ static pwr_tStatus IoRackInit (
         iip->OffsetInputs = input_counter;
         iip->BytesOfInput = iip->NumberOfChannels * iip->BytesPerChannel;
         input_counter += iip->BytesOfInput;
-        iip->Status = 1;
-	local_card->initialized = 1;
+        iip->Status = PB_MODULE_STATE_OPERATE;
         break;
 
       case pwr_cClass_Pb_Io:
@@ -183,24 +115,13 @@ static pwr_tStatus IoRackInit (
         iop->OffsetOutputs = output_counter;
         iop->BytesOfOutput = iop->NumberOfChannels * iop->BytesPerChannel;
         output_counter += iop->BytesOfOutput;
-        iop->Status = 1;
-	local_card->initialized = 1;
+        iop->Status = PB_MODULE_STATE_OPERATE;
         break;
     }
 
     op->NumberModules++;
     cardp = cardp->next;
   }
-
-  if (op->BytesOfInput != input_counter || op->BytesOfOutput != output_counter) {
-    errh_Info( "Configuration mismatch in DP slave %s", rp->Name);
-//    op->Status = 0;
-//    return IO__SUCCESS;
-  }
-
-  op->Status = PB_SLAVE_STATE_STOPPED;
-*/
-  errh_Info( "Init DP slave %s", rp->Name );
 
   return IO__SUCCESS;
 }
@@ -215,53 +136,50 @@ static pwr_tStatus IoRackRead (
   io_sRack	*rp
 ) 
 {
-  io_sAgentLocal *agent_local;
-  pwr_sClass_Pb_DP_Slave *op;
+  pwr_sClass_Pb_Profiboard *mp;
+  pwr_sClass_Pb_DP_Slave *sp;
   int fp;
   unsigned char diag;
   pwr_tUInt16 sts;
-
-  agent_local = (io_sAgentLocal *) (ap->Local);
-  fp = agent_local->Pb_fp;
   
-  op = (pwr_sClass_Pb_DP_Slave *) rp->op;
+  fp = ((io_sAgentLocal *) (ap->Local))->Pb_fp;
+  
+  sp = (pwr_sClass_Pb_DP_Slave *) rp->op;
+  mp = (pwr_sClass_Pb_Profiboard *) ap->op;
 
-  if (op->Status > PB_SLAVE_STATE_NOTINIT && op->DisableSlave == 0) {
+  if (sp->Status > PB_SLAVE_STATE_NOTINIT && mp->Status == PB_MASTER_STATE_OPERATE && sp->DisableSlave != 1 && mp->DisableBus != 1) {
 
-    sts = pb_cmi_get_data(fp, ID_DP_STATUS_IMAGE, op->SlaveAddress, 1, &diag);
+    sts = pb_cmi_get_data(fp, ID_DP_STATUS_IMAGE, sp->SlaveAddress, 1, &diag);
 
     if ((sts != PB_OK) || (diag & 1)) {
-      op->Status = PB_SLAVE_STATE_STOPPED;
-      op->ErrorCount++;
-      if (op->ErrorCount > op->ErrorSoftLimit && op->StallAction >= PB_STALLACTION_RESET) {
-        memset(&op->Inputs, 0, op->BytesOfInput);
+      sp->Status = PB_SLAVE_STATE_STOPPED;
+      sp->ErrorCount++;
+      if (sp->ErrorCount > sp->ErrorSoftLimit && sp->StallAction >= PB_STALLACTION_RESET) {
+        memset(&sp->Inputs, 0, sp->BytesOfInput);
       }
     }
     else {
-      op->Status = PB_SLAVE_STATE_OPERATE;
+      sp->Status = PB_SLAVE_STATE_OPERATE;
     }
 
-    if ((op->Status > PB_SLAVE_STATE_STOPPED) && op->BytesOfInput > 0) {
+    if ((sp->Status > PB_SLAVE_STATE_STOPPED) && sp->BytesOfInput > 0) {
 
       sts = pb_cmi_get_data(fp, 
 			ID_DP_SLAVE_IO_IMAGE, 
-			op->OffsetInputs, 
-			op->BytesOfInput, 
-			&op->Inputs);
+			sp->OffsetInputs, 
+			sp->BytesOfInput, 
+			&sp->Inputs);
 
       if (sts != PB_OK) 
-        op->ErrorCount++;
+        sp->ErrorCount++;
       else
-        op->ErrorCount = 0;
+        sp->ErrorCount = 0;
     }
 
-    if (op->ErrorCount > op->ErrorHardLimit && op->StallAction >= PB_STALLACTION_BREAK)
+    if (sp->ErrorCount > sp->ErrorHardLimit && sp->StallAction >= PB_STALLACTION_BREAK)
       ctx->Node->EmergBreakTrue = 1;
   }
-/*  
-  else if (op->Status == PB_SLAVE_STATE_NOTINIT)
-    IoRackInit(ctx, ap, rp);
-*/
+
   return IO__SUCCESS;
 }
 
@@ -275,28 +193,29 @@ static pwr_tStatus IoRackWrite (
   io_sRack	*rp
 ) 
 {
-  io_sAgentLocal *agent_local;
-  pwr_sClass_Pb_DP_Slave *op;
+  pwr_sClass_Pb_Profiboard *mp;
+  pwr_sClass_Pb_DP_Slave *sp;
   int fp;
   pwr_tUInt16 sts;
 
-  agent_local = (io_sAgentLocal *) (ap->Local);
-  fp = agent_local->Pb_fp;
-  op = (pwr_sClass_Pb_DP_Slave *) rp->op;
+  fp = ((io_sAgentLocal *) (ap->Local))->Pb_fp;
+  
+  sp = (pwr_sClass_Pb_DP_Slave *) rp->op;
+  mp = (pwr_sClass_Pb_Profiboard *) ap->op;
 
   // Write the whole I/O output area from local area
 
-  if (op->Status > PB_SLAVE_STATE_NOTINIT && op->DisableSlave == 0) {
+  if (sp->Status > PB_SLAVE_STATE_NOTINIT && mp->Status == PB_MASTER_STATE_OPERATE && sp->DisableSlave != 1 && mp->DisableBus != 1) {
 
-    if (op->BytesOfOutput > 0) {
+    if (sp->BytesOfOutput > 0) {
 
       sts = pb_cmi_set_data(fp, 
 			ID_DP_SLAVE_IO_IMAGE, 
-			op->OffsetOutputs, 
-			op->BytesOfOutput, 
-			&op->Outputs);
+			sp->OffsetOutputs, 
+			sp->BytesOfOutput, 
+			&sp->Outputs);
 
-      if (sts != PB_OK) op->ErrorCount++;
+      if (sts != PB_OK) sp->ErrorCount++;
     }
   }
 
@@ -313,9 +232,8 @@ static pwr_tStatus IoRackClose (
   io_sRack	*rp
 ) 
 {
-  return 1;
+  return IO__SUCCESS;
 }
-
 
 
 /*----------------------------------------------------------------------------*\

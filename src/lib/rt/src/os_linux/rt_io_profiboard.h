@@ -24,6 +24,9 @@ pwr_tUInt16 pb_cmi_write(int fp,
 		         pwr_tUInt16 data_len); 
 
 extern
+pwr_tUInt16 pb_set_stalltime(int fp, unsigned short t);
+
+extern
 pwr_tUInt16 pb_cmi_read(int fp,
 		        T_PROFI_SERVICE_DESCR *sdb_ptr,
 		        void *data_ptr,

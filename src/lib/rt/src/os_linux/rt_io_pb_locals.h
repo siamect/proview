@@ -1,5 +1,8 @@
 #define IO_MAXCHAN 32
 
+#define PB_MODULE_STATE_NOTINIT 0
+#define PB_MODULE_STATE_OPERATE 1
+
 #define PB_SLAVE_STATE_NOTINIT 0
 #define PB_SLAVE_STATE_STOPPED 1
 #define PB_SLAVE_STATE_OPERATE 2
@@ -35,7 +38,6 @@ typedef struct {
 } io_sRackLocal;
 
 typedef struct {
-  int initialized;
   void *input_area;
   void *output_area;
   int scancount[IO_MAXCHAN];

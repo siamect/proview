@@ -43,10 +43,10 @@ static pwr_tStatus IoCardInit (
 
   if (rp->Class != pwr_cClass_Pb_DP_Slave) {
     errh_Info( "Illegal object type %s", cp->Name );
-    return 1;
+    return IO__SUCCESS;
   }
 
-  if (op->Status >= 1) {
+  if (op->Status >= PB_MODULE_STATE_OPERATE) {
 
     // Calculate polycoeff
     for (i=0; i<cp->ChanListSize; i++) {
@@ -58,7 +58,7 @@ static pwr_tStatus IoCardInit (
   else
     errh_Info( "Error initializing Pb module Ao %s", cp->Name );
 
-  return 1;
+  return IO__SUCCESS;
 }
 
 
@@ -79,6 +79,9 @@ static pwr_tStatus IoCardWrite (
   pwr_tInt8 data8 = 0;
   pwr_tInt16 data16 = 0;
   pwr_tInt32 data32 = 0;
+  pwr_tUInt8 udata8 = 0;
+  pwr_tUInt16 udata16 = 0;
+  pwr_tUInt32 udata32 = 0;
   pwr_sClass_ChanAo *cop;
   pwr_sClass_Ao *sop;
   io_sChannel *chanp;
@@ -90,7 +93,7 @@ static pwr_tStatus IoCardWrite (
   op = (pwr_sClass_Pb_Ao *) cp->op;
   slave = (pwr_sClass_Pb_DP_Slave *) rp->op;
   
-  if (op->Status >= 1) {
+  if (op->Status >= PB_MODULE_STATE_OPERATE && slave->DisableSlave != 1) {
 
     fixout = ctx->Node->EmergBreakTrue && ctx->Node->EmergBreakSelect == FIXOUT;
 
@@ -122,45 +125,74 @@ static pwr_tStatus IoCardWrite (
 
       rawvalue = cop->OutPolyCoef1 * value + cop->OutPolyCoef0;
 
+      if ( rawvalue > 0)
+        rawvalue = rawvalue + 0.5;
+      else
+        rawvalue = rawvalue - 0.5;
+
+      // We don´t use RawValue in Profibus I/O
+      sop->RawValue = 0;
+
+      // Calculate signal value
+      sop->SigValue = cop->SigValPolyCoef1 * value + cop->SigValPolyCoef0;
+
       if (op->BytesPerChannel == 4) {
 
-        if ( rawvalue > 0)
-          rawvalue = rawvalue + 0.5;
-        else
-          rawvalue = rawvalue - 0.5;
+	if (op->NumberRepresentation == PB_NUMREP_UNSIGNEDINT) {
+          udata32 = (pwr_tUInt32) rawvalue;
+          if (slave->ByteOrdering == PB_BYTEORDERING_BE) udata32 = swap32(udata32);
+          memcpy(local->output_area + op->OffsetOutputs + 4*i, &udata32, 4);
+	}
+	else if (op->NumberRepresentation == PB_NUMREP_SIGNEDINT) {
+          data32 = (pwr_tInt32) rawvalue;
+          if (slave->ByteOrdering == PB_BYTEORDERING_BE) data32 = swap32(data32);
+          memcpy(local->output_area + op->OffsetOutputs + 4*i, &data32, 4);
+	}
 
-	sop->RawValue = 0;
+      }
+      else if (op->BytesPerChannel == 3) {
 
-        data32 = (pwr_tInt32) rawvalue;
-        if (slave->ByteOrdering == PB_BYTEORDERING_BE) data32 = swap32(data32);
+	if (op->NumberRepresentation == PB_NUMREP_UNSIGNEDINT) {
+          udata32 = (pwr_tUInt32) rawvalue;
+          if (slave->ByteOrdering == PB_BYTEORDERING_BE) udata32 = swap32(udata32);
+          memcpy(local->output_area + op->OffsetOutputs + 3*i, &udata32, 3);
+	}
+	else if (op->NumberRepresentation == PB_NUMREP_SIGNEDINT) {
+          data32 = (pwr_tInt32) rawvalue;
+          if (slave->ByteOrdering == PB_BYTEORDERING_BE) data32 = swap32(data32);
+          memcpy(local->output_area + op->OffsetOutputs + 3*i, &data32, 3);
+	}
 
-        memcpy(local->output_area + op->OffsetOutputs + 4*i, &data32, 4);
       }
       else if (op->BytesPerChannel == 2) {
-        if ( rawvalue > 0)
-          sop->RawValue = rawvalue + 0.5;
-        else
-          sop->RawValue = rawvalue - 0.5;
 
-        data16 = (pwr_tInt16) sop->RawValue;
-        if (slave->ByteOrdering == PB_BYTEORDERING_BE) data16 = swap16(data16);
-
-        memcpy(local->output_area + op->OffsetOutputs + 2*i, &data16, 2);
+	if (op->NumberRepresentation == PB_NUMREP_UNSIGNEDINT) {
+          udata16 = (pwr_tUInt16) rawvalue;
+          if (slave->ByteOrdering == PB_BYTEORDERING_BE) udata16 = swap16(udata16);
+          memcpy(local->output_area + op->OffsetOutputs + 2*i, &udata16, 2);
+        }
+	else if (op->NumberRepresentation == PB_NUMREP_SIGNEDINT) {
+          data16 = (pwr_tInt16) rawvalue;
+          if (slave->ByteOrdering == PB_BYTEORDERING_BE) data16 = swap16(data16);
+          memcpy(local->output_area + op->OffsetOutputs + 2*i, &data16, 2);
+        }
+	
       }
       else if (op->BytesPerChannel == 1) {
-        if ( rawvalue > 0)
-          sop->RawValue = rawvalue + 0.5;
-        else
-          sop->RawValue = rawvalue - 0.5;
 
-        data8 = (pwr_tInt8) sop->RawValue;
-
-        memcpy(local->output_area + op->OffsetOutputs + i, &data8, 1);
+	if (op->NumberRepresentation == PB_NUMREP_UNSIGNEDINT) {
+          udata8 = (pwr_tUInt8) rawvalue;
+          memcpy(local->output_area + op->OffsetOutputs + i, &udata8, 1);
+        }	
+	else if (op->NumberRepresentation == PB_NUMREP_SIGNEDINT) {
+          data8 = (pwr_tInt8) rawvalue;
+          memcpy(local->output_area + op->OffsetOutputs + i, &data8, 1);
+        }
       }
     }
   }
 
-  return 1;
+  return IO__SUCCESS;
 }
 
 
@@ -175,11 +207,11 @@ static pwr_tStatus IoCardClose (
 ) 
 {
   io_sCardLocal *local;
-  local = rp->Local;
+  local = cp->Local;
 
   free ((char *) local);
 
-  return 1;
+  return IO__SUCCESS;
 }
 
 

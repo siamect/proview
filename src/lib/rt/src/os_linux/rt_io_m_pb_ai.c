@@ -186,7 +186,7 @@ static pwr_tStatus IoCardInit (
     return 1;
   }
 
-  if (op->Status >= 1) {
+  if (op->Status >= PB_MODULE_STATE_OPERATE) {
 
     for (i=0; i<IO_MAXCHAN; i++) {
       local->scancount[i] = 0;
@@ -201,7 +201,7 @@ static pwr_tStatus IoCardInit (
   else
     errh_Info( "Error initializing Pb module Ai %s", cp->Name );
 
-  return 1;
+  return IO__SUCCESS;
 }
 
 
@@ -234,7 +234,7 @@ static pwr_tStatus IoCardRead (
   op = (pwr_sClass_Pb_Ai *) cp->op;
   slave = (pwr_sClass_Pb_DP_Slave *) rp->op;
   
-  if (op->Status >= 1) {
+  if (op->Status >= PB_MODULE_STATE_OPERATE && slave->DisableSlave != 1) {
     
     for (i=0; i<cp->ChanListSize; i++) {
 
@@ -251,6 +251,25 @@ static pwr_tStatus IoCardRead (
 	
           if (op->BytesPerChannel == 4) {
 	    memcpy(&udata32, local->input_area + op->OffsetInputs + 4*i, 4);
+	    if (slave->ByteOrdering == PB_BYTEORDERING_BE) udata32 = swap32(udata32);
+	    data32 = (pwr_tInt32) udata32;
+	    sop->RawValue = 0;		
+            if (op->NumberRepresentation == PB_NUMREP_UNSIGNEDINT)
+     	      sop->SigValue = udata32 * cop->SigValPolyCoef1 + cop->SigValPolyCoef0;
+            else
+     	      sop->SigValue = data32 * cop->SigValPolyCoef1 + cop->SigValPolyCoef0;
+            switch(chanp->ChanClass) {
+              case pwr_cClass_ChanAi:
+                ConvertAi(cop, 32, 0, 0, udata32, &actvalue, op->NumberRepresentation);
+                break;
+              case pwr_cClass_ChanAit:
+  	        ConvertAit((pwr_sClass_ChanAit *) cop, 32, 0, 0, udata32, &actvalue, op->NumberRepresentation);
+	        break;
+            }
+          }
+          else if (op->BytesPerChannel == 3) {
+	    udata32 = 0;
+	    memcpy(&udata32, local->input_area + op->OffsetInputs + 3*i, 3);
 	    if (slave->ByteOrdering == PB_BYTEORDERING_BE) udata32 = swap32(udata32);
 	    data32 = (pwr_tInt32) udata32;
 	    sop->RawValue = 0;		
@@ -322,7 +341,7 @@ static pwr_tStatus IoCardRead (
     }  // for
   }  // if ...op->Status
 
-  return 1;
+  return IO__SUCCESS;
 }
 
 
@@ -337,11 +356,11 @@ static pwr_tStatus IoCardClose (
 ) 
 {
   io_sCardLocal *local;
-  local = rp->Local;
+  local = cp->Local;
 
   free ((char *) local);
 
-  return 1;
+  return IO__SUCCESS;
 }
 
 

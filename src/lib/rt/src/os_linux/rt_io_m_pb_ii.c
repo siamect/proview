@@ -43,12 +43,12 @@ static pwr_tStatus IoCardInit (
 
   if (rp->Class != pwr_cClass_Pb_DP_Slave) {
     errh_Info( "Illegal object type %s", cp->Name );
-    return 1;
+    return IO__SUCCESS;
   }
 
-  if (op->Status < 1) errh_Info( "Error initializing Pb module Ii %s", cp->Name );
+  if (op->Status < PB_MODULE_STATE_OPERATE) errh_Info( "Error initializing Pb module Ii %s", cp->Name );
 
-  return 1;
+  return IO__SUCCESS;
 }
 
 
@@ -81,7 +81,7 @@ static pwr_tStatus IoCardRead (
   op = (pwr_sClass_Pb_Ii *) cp->op;
   slave = (pwr_sClass_Pb_DP_Slave *) rp->op;
   
-  if (op->Status >= 1) {
+  if (op->Status >= PB_MODULE_STATE_OPERATE && slave->DisableSlave != 1) {
     
     for (i=0; i<cp->ChanListSize; i++) {
 
@@ -101,6 +101,20 @@ static pwr_tStatus IoCardRead (
 	  }
 	  else if (op->NumberRepresentation == PB_NUMREP_SIGNEDINT) {
 	    memcpy(&data32, local->input_area + op->OffsetInputs + 4*i, 4);
+	    if (slave->ByteOrdering == PB_BYTEORDERING_BE) data32 = swap32(data32);
+            *(pwr_tInt32 *) chanp->vbp = data32;
+	  }
+        }
+        else if (op->BytesPerChannel == 3) {
+	  if (op->NumberRepresentation == PB_NUMREP_UNSIGNEDINT) {
+	    udata32 = 0;
+	    memcpy(&udata32, local->input_area + op->OffsetInputs + 3*i, 3);
+	    if (slave->ByteOrdering == PB_BYTEORDERING_BE) udata32 = swap32(udata32);
+            *(pwr_tInt32 *) chanp->vbp = (pwr_tInt32) udata32;
+	  }
+	  else if (op->NumberRepresentation == PB_NUMREP_SIGNEDINT) {
+	    data32 = 0;
+	    memcpy(&data32, local->input_area + op->OffsetInputs + 3*i, 3);
 	    if (slave->ByteOrdering == PB_BYTEORDERING_BE) data32 = swap32(data32);
             *(pwr_tInt32 *) chanp->vbp = data32;
 	  }
@@ -131,7 +145,7 @@ static pwr_tStatus IoCardRead (
     }
   }
 
-  return 1;
+  return IO__SUCCESS;
 }
 
 
@@ -146,11 +160,11 @@ static pwr_tStatus IoCardClose (
 ) 
 {
   io_sCardLocal *local;
-  local = rp->Local;
+  local = cp->Local;
 
   free ((char *) local);
 
-  return 1;
+  return IO__SUCCESS;
 }
 
 

@@ -71,6 +71,19 @@ pwr_tUInt16 pb_cmi_write(int fp,
 }
 
 
+pwr_tUInt16 pb_set_stalltime(int fp, unsigned short t)
+{
+  int sts;
+  
+  sts = ioctl(fp, PB_IOCTL_SET_STALLTIME, (char *) &t);
+
+  if (sts == 0)
+    return PB_OK;
+  else
+    return PB_DEVICE_ERROR;
+}
+
+
 pwr_tUInt16 pb_cmi_read(int fp,
 		        T_PROFI_SERVICE_DESCR *sdb_ptr,
 		        void *data_ptr,

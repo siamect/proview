@@ -28,6 +28,8 @@
 
 #include "rt_io_profiboard.h"
 
+static int count;
+
 static pwr_tStatus IoAgentInit (
   io_tCtx	ctx,
   io_sAgent	*ap
@@ -265,7 +267,7 @@ static pwr_tStatus init_dp_slave (
 
   op->Status = PB_SLAVE_STATE_NOTINIT;
  
-  errh_Info( "Config of Profibus DP slave %s", name );
+  errh_Info( "Config of Profibus DP Slave %s", name );
  
   // Try to initialize slave, make three attempts before we give up
 
@@ -328,13 +330,14 @@ static pwr_tStatus IoAgentInit (
   pwr_tStatus status;
   io_sAgentLocal *local;
   unsigned char devname[25];
-  
+  struct timespec rqtp, rmtp;
+  int i;
+  char ok;
+
   pwr_tObjid slave_objid;
   pwr_tClassId slave_class;
-
-  op = (pwr_sClass_Pb_Profiboard *) ap->op;
-
-  errh_Info( "Config of Profibus DP Master %s", ap->Name );
+  
+  count=0;
 
   /* Allocate area for local data structure */
   ap->Local = calloc(1, sizeof(io_sAgentLocal));
@@ -344,93 +347,131 @@ static pwr_tStatus IoAgentInit (
   }
     
   local = (io_sAgentLocal *) ap->Local;
+  op = (pwr_sClass_Pb_Profiboard *) ap->op;
+
+  /* Open Pb driver */
+  sprintf(devname, "/dev/pbus%1d", op->BusNumber);
+  local->Pb_fp = open(devname, O_RDWR);
+
+  if (local->Pb_fp == -1)
+  {
+    /* Can't open driver */
+    errh_Info( "ERROR config Profibus DP Master %s - %s", ap->Name, "open device");
+    ctx->Node->EmergBreakTrue = 1;
+    return IO__ERRDEVICE;
+  }
+
+  /* If this is not the Profibus I/O process, return */
+  
+  if ((op->Process & io_mProcess_Profibus) && (ctx->Process != io_mProcess_Profibus)) {
+    errh_Info( "Init template I/O agent for Profibus DP Master %s, %d", ap->Name, ctx->Process );
+    return IO__SUCCESS;
+  }
+  
+  errh_Info( "Config of Profibus DP Master %s", ap->Name);
       
   if (op->DisableBus != 1) {
   
-    /* Open Pb driver */
-    sprintf(devname, "/dev/pbus%1d", op->BusNumber);
-    local->Pb_fp = open(devname, O_RDWR);
+    ok = FALSE;
+    
+    while (!ok) {
+    
+      /* Initialize CMI */
 
-    if (local->Pb_fp == -1)
-    {
-      /* Can't open driver */
-      errh_Info( "ERROR config Profibus DP Master %s - %s", ap->Name, "open device");
-      ctx->Node->EmergBreakTrue = 1;
-      return IO__ERRDEVICE;
-    }
-
-    /* Initialize CMI */
-
-    sts = pb_cmi_init(local->Pb_fp);
-    if (sts != PB_OK) {
-      errh_Info( "ERROR config Profibus DP Master %s - %s", ap->Name, "cmi init");
-      return IO__ERRINIDEVICE;
-    }
-
-    /* Set FMB configuration */
-
-    sts = fmb_set_configuration(local->Pb_fp,  op); 
-    if (sts != PB_OK) {
-      errh_Info( "ERROR config Profibus DP  Master %s - %s", ap->Name, "fmb set configuration");
-      return IO__ERRINIDEVICE;
-    }
-
-    /* Set DP master parameters */
-
-    sts = dp_init_master(local->Pb_fp,  op); 
-    if (sts != PB_OK) {
-      errh_Info( "ERROR config Profibus DP Master %s - %s", ap->Name, "dp init master");
-      return IO__ERRINIDEVICE;
-    }
-
-    /* Set DP bus parameters */
-    sts = dp_init_bus(local->Pb_fp,  op); 
-    if (sts != PB_OK) {
-      errh_Info( "ERROR config Profibus DP Master %s - %s", ap->Name, "dp init bus");
-      return IO__ERRINIDEVICE;
-    }
-
-    /* Move to STOP mode */
-    sts = act_param_loc(local->Pb_fp, op, DP_OP_MODE_STOP);
-    if (sts != PB_OK) {
-      errh_Info( "ERROR config Profibus DP Master %s - %s", ap->Name, "act param loc to STOPPED");
-      return IO__ERRINIDEVICE;
-    }
-
-    op->Status = PB_MASTER_STATE_STOPPED;
-
-    /* Loop through all slaves (traverse agent's children) and initialize them */
-
-    op->NumberSlaves = 0;
-    status = gdh_GetChild(ap->Objid, &slave_objid);
-  
-    while (ODD(status)) {
-      status = gdh_GetObjectClass(slave_objid, &slave_class);
-      if (slave_class == pwr_cClass_Pb_DP_Slave) {
-        status = init_dp_slave(ap, slave_objid);
-        op->NumberSlaves++;
+      sts = pb_cmi_init(local->Pb_fp);
+      if (sts != PB_OK) {
+        errh_Info( "ERROR config Profibus DP Master %s - %s", ap->Name, "cmi init");
+        return IO__ERRINIDEVICE;
       }
-      status = gdh_GetNextSibling(slave_objid, &slave_objid);
-    }
 
-    /* Move to CLEAR and OPERATE mode */
+      /* Set FMB configuration */
+
+      sts = fmb_set_configuration(local->Pb_fp,  op); 
+      if (sts != PB_OK) {
+        errh_Info( "ERROR config Profibus DP  Master %s - %s", ap->Name, "fmb set configuration");
+        return IO__ERRINIDEVICE;
+      }
+
+      /* Set DP master parameters */
+
+      sts = dp_init_master(local->Pb_fp,  op); 
+      if (sts != PB_OK) {
+        errh_Info( "ERROR config Profibus DP Master %s - %s", ap->Name, "dp init master");
+        return IO__ERRINIDEVICE;
+      }
+
+      /* Set DP bus parameters */
+      sts = dp_init_bus(local->Pb_fp,  op); 
+      if (sts != PB_OK) {
+        errh_Info( "ERROR config Profibus DP Master %s - %s", ap->Name, "dp init bus");
+        return IO__ERRINIDEVICE;
+      }
+      
+      /* Set stalltime */
+      
+      sts = pb_set_stalltime(local->Pb_fp, op->StallTime);
+      if (sts != PB_OK) {
+        errh_Info( "ERROR config Profibus DP Master %s - %s", ap->Name, "set stalltime");
+        return IO__ERRINIDEVICE;
+      }
+
+      /* Move to STOP mode */
+      sts = act_param_loc(local->Pb_fp, op, DP_OP_MODE_STOP);
+      if (sts != PB_OK) {
+        errh_Info( "ERROR config Profibus DP Master %s - %s", ap->Name, "act param loc to STOPPED");
+        return IO__ERRINIDEVICE;
+      }
+
+      op->Status = PB_MASTER_STATE_STOPPED;
+
+      /* Loop through all slaves (traverse agent's children) and initialize them */
+
+      op->NumberSlaves = 0;
+      status = gdh_GetChild(ap->Objid, &slave_objid);
   
-    sts = act_param_loc(local->Pb_fp, op, DP_OP_MODE_CLEAR);
-    if (sts == PB_OK) {
-      op->Status = PB_MASTER_STATE_CLEARED;
-      sts = act_param_loc(local->Pb_fp, op, DP_OP_MODE_OPERATE);
+      while (ODD(status)) {
+        status = gdh_GetObjectClass(slave_objid, &slave_class);
+        if (slave_class == pwr_cClass_Pb_DP_Slave) {
+          status = init_dp_slave(ap, slave_objid);
+          op->NumberSlaves++;
+        }
+        status = gdh_GetNextSibling(slave_objid, &slave_objid);
+      }
+
+      /* Move to CLEAR and OPERATE mode */
+  
+      sts = act_param_loc(local->Pb_fp, op, DP_OP_MODE_CLEAR);
       if (sts == PB_OK) {
-        op->Status = PB_MASTER_STATE_OPERATE;
-        errh_Info( "Profibus DP Master %s to state OPERATE", ap->Name);
+        op->Status = PB_MASTER_STATE_CLEARED;
+        sts = act_param_loc(local->Pb_fp, op, DP_OP_MODE_OPERATE);
+        if (sts == PB_OK) {
+          op->Status = PB_MASTER_STATE_OPERATE;
+          errh_Info( "Profibus DP Master %s to state OPERATE", ap->Name);
+        }
+        else {
+          errh_Info( "ERROR config Profibus DP Master %s - %s", ap->Name, "act param loc to OPERATE");
+          return IO__ERRINIDEVICE;
+        }    
       }
       else {
-        errh_Info( "ERROR config Profibus DP Master %s - %s", ap->Name, "act param loc to OPERATE");
+        errh_Info( "ERROR config Profibus DP Master %s - %s", ap->Name, "act param loc to CLEAR");
         return IO__ERRINIDEVICE;
-      }    
-    }
-    else {
-      errh_Info( "ERROR config Profibus DP Master %s - %s", ap->Name, "act param loc to CLEAR");
-      return IO__ERRINIDEVICE;
+      }
+      
+      ok = TRUE;
+      for (i=0; i<4; i++) {  
+        if (ok) {
+          sts = pb_cmi_poll(local->Pb_fp, NULL, NULL, NULL);
+          if (sts == PB_DEVICE_ERROR) {
+	    errh_Info("Init problems, Reconfig - %d", i);
+	    ok = FALSE;
+	  }
+          rqtp.tv_sec = 0;
+          rqtp.tv_nsec = 200000000;
+          nanosleep(&rqtp, &rmtp);
+	}
+      }
+    
     }
     
   }    
@@ -450,6 +491,7 @@ static pwr_tStatus IoAgentRead (
   io_sAgentLocal *local;
   pwr_sClass_Pb_Profiboard *op;
   pwr_tUInt16 sts;
+  static int count;
 
   local = (io_sAgentLocal *) ap->Local;
   op = (pwr_sClass_Pb_Profiboard *) ap->op;
@@ -458,6 +500,11 @@ static pwr_tStatus IoAgentRead (
      Make a poll to see if there are diagnostics, the answer also tell us
      if there are any hardware faults. In that case, make a reset and a new init. */
 
+  count++;
+  
+  if ((op->Process & io_mProcess_Profibus) && (ctx->Process != io_mProcess_Profibus))
+    return IO__SUCCESS;
+    
   if (op->DisableBus != 1) {
   
     switch (op->Status) {
@@ -478,7 +525,7 @@ static pwr_tStatus IoAgentRead (
 
       default:
         op->Status = PB_MASTER_STATE_NOTINIT;
-        errh_Info( "Reconfig of Profibus DP Master %s", ap->Name );      
+        errh_Info( "Reconfig of Profibus DP Master %s - %d", ap->Name, count );      
         IoAgentClose(ctx, ap);
         IoAgentInit(ctx, ap);
         break;

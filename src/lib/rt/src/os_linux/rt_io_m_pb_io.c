@@ -41,14 +41,14 @@ static pwr_tStatus IoCardInit (
 
   if (rp->Class != pwr_cClass_Pb_DP_Slave) {
     errh_Info( "Illegal object type %s", cp->Name );
-    return 1;
+    return IO__SUCCESS;
   }
 
-  if (op->Status < 1) {
+  if (op->Status < PB_MODULE_STATE_OPERATE) {
     errh_Info( "Error initializing Pb module Io %s", cp->Name );
   }
 
-  return 1;
+  return IO__SUCCESS;
 }
 
 
@@ -78,7 +78,7 @@ static pwr_tStatus IoCardWrite (
   op = (pwr_sClass_Pb_Io *) cp->op;
   slave = (pwr_sClass_Pb_DP_Slave *) rp->op;
 
-  if (op->Status >= 1) {
+  if (op->Status >= PB_MODULE_STATE_OPERATE && slave->DisableSlave != 1) {
 
     for (i=0; i<cp->ChanListSize; i++) {
 
@@ -96,6 +96,10 @@ static pwr_tStatus IoCardWrite (
         if (slave->ByteOrdering == PB_BYTEORDERING_BE) data32 = swap32(data32);
         memcpy(local->output_area + op->OffsetOutputs + 4*i, &data32, 4);
       }
+      else if (op->BytesPerChannel == 3) {
+        if (slave->ByteOrdering == PB_BYTEORDERING_BE) data32 = swap32(data32);
+        memcpy(local->output_area + op->OffsetOutputs + 3*i, &data32, 3);
+      }
       else if (op->BytesPerChannel == 2) {
         data16 = (pwr_tInt16) data32;
         if (slave->ByteOrdering == PB_BYTEORDERING_BE) data16 = swap16(data16);
@@ -107,7 +111,7 @@ static pwr_tStatus IoCardWrite (
       }
     }
   }
-  return 1;
+  return IO__SUCCESS;
 }
 
 
@@ -122,11 +126,11 @@ static pwr_tStatus IoCardClose (
 ) 
 {
   io_sCardLocal *local;
-  local = rp->Local;
+  local = cp->Local;
 
   free ((char *) local);
 
-  return 1;
+  return IO__SUCCESS;
 }
 
 

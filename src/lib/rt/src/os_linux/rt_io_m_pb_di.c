@@ -42,14 +42,14 @@ static pwr_tStatus IoCardInit (
   // Check configuration 
   
   if (op->NumberOfChannels != 8 && op->NumberOfChannels != 16 && op->NumberOfChannels != 32)
-    op->Status = 0;
+    op->Status = PB_MODULE_STATE_NOTINIT;
     
   if (op->Orientation > op->NumberOfChannels)
-    op->Status = 0;  
+    op->Status = PB_MODULE_STATE_NOTINIT;  
 
-  if (op->Status < 1) errh_Info( "Error initializing Pb module Di %s", cp->Name );
+  if (op->Status < PB_MODULE_STATE_OPERATE) errh_Info( "Error initializing Pb module Di %s", cp->Name );
 
-  return 1;
+  return IO__SUCCESS;
 }
 
 
@@ -74,7 +74,7 @@ static pwr_tStatus IoCardRead (
   op = (pwr_sClass_Pb_Di *) cp->op;
   slave = (pwr_sClass_Pb_DP_Slave *) rp->op;
 
-  if (op->Status >= 1) {
+  if (op->Status >= PB_MODULE_STATE_OPERATE && slave->DisableSlave != 1) {
 
     memcpy(&data, local->input_area + op->OffsetInputs, op->BytesOfInput);
 
@@ -100,7 +100,7 @@ static pwr_tStatus IoCardRead (
     }
 
   }
-  return 1;
+  return IO__SUCCESS;
 }
 
 
@@ -115,11 +115,11 @@ static pwr_tStatus IoCardClose (
 ) 
 {
   io_sCardLocal *local;
-  local = rp->Local;
+  local = cp->Local;
 
   free ((char *) local);
 
-  return 1;
+  return IO__SUCCESS;
 }
 
 

@@ -40,14 +40,14 @@ static pwr_tStatus IoCardInit (
   local = (io_sCardLocal *) cp->Local;
 
   if (op->NumberOfChannels != 8 && op->NumberOfChannels != 16 && op->NumberOfChannels != 32)
-    op->Status = 0;
+    op->Status = PB_MODULE_STATE_NOTINIT;
     
   if (op->Orientation > op->NumberOfChannels)
-    op->Status = 0;  
+    op->Status = PB_MODULE_STATE_NOTINIT;  
 
-  if (op->Status < 1) errh_Info( "Error initializing Pb module Do %s", cp->Name );
+  if (op->Status < PB_MODULE_STATE_OPERATE) errh_Info( "Error initializing Pb module Do %s", cp->Name );
 
-  return 1;
+  return IO__SUCCESS;
 }
 
 
@@ -72,7 +72,7 @@ static pwr_tStatus IoCardWrite (
   op = (pwr_sClass_Pb_Do *) cp->op;
   slave = (pwr_sClass_Pb_DP_Slave *) rp->op;
 
-  if (op->Status >= 1) {
+  if (op->Status >= PB_MODULE_STATE_OPERATE && slave->DisableSlave != 1) {
 
     io_DoPackWord(cp, &data[0], 0);
     if (op->NumberOfChannels > 16) io_DoPackWord(cp, &data[1], 1);
@@ -90,7 +90,7 @@ static pwr_tStatus IoCardWrite (
 
     memcpy(local->output_area + op->OffsetOutputs, &data, op->BytesOfOutput);
   }
-  return 1;
+  return IO__SUCCESS;
 }
 
 
@@ -105,11 +105,11 @@ static pwr_tStatus IoCardClose (
 ) 
 {
   io_sCardLocal *local;
-  local = rp->Local;
+  local = cp->Local;
 
   free ((char *) local);
 
-  return 1;
+  return IO__SUCCESS;
 }
 
 
