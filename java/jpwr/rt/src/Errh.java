@@ -25,7 +25,6 @@ public class Errh {
   private static boolean initDone = false;
 
   public Errh( String programName, int anix) {
-
     if ( !initDone) {
       init( programName, anix);
       initDone = true;

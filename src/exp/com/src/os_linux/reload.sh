@@ -13,31 +13,39 @@ let reload__loaddb=4
 let pass__continue=1
 let pass__execute=2
 
-reload_createstruct()
+reload_classvolumes()
 {
-  reload_checkpass "createstruct" $start_pass
+  reload_checkpass "classvolumes" $start_pass
 
   if [ $pass_status -ne $pass__execute ]; then
     reload_status=$reload__success
     return
   fi
 
-  reload_continue "Pass create structfiles"
+  reload_continue "Pass create structfiles and loadfiles for classvolumes"
 
-  fname="$pwrp_db/userclasses.wb_load"
-  if [ -e $fname ]; then
-    echo "-- Creating structfile for $fname"
-    co_convert -sv -d $pwrp_inc $fname
-  fi
-
-  for cdb in $databases; do
-    if [ $cdb != "dbdirectory" ]; then
-      fname="$pwrp_db/$cdb/userclasses.wb_load"
-      if [ -e $fname ]; then
-        echo "-- Creating structfile for $fname"
-        co_convert -sv -d $pwrp_inc $fname
+  list=`eval ls -1d $pwrp_db/*.wb_load`
+  for file in $list; do
+    volume=`eval grep pwr_eClass_ClassVolume $file | awk '{ print $2 }'`
+    volumelow=`eval grep pwr_eClass_ClassVolume $file | awk '{ print tolower($2) }'`
+    if [ "$volume" != "" ]; then
+      echo "-- Creating structfile and loadfile for $volume"
+      if co_convert -sv -d $pwrp_inc $file
+      then
+        reload_status=$reload__success
+      else
+        reload_status=$reload__userclasses
+        return
       fi
-    fi         
+
+      if wb_cmd create snapshot/file=\"$file\"/out=\"$pwrp_load/$volumelow.dbs\"
+      then
+        reload_status=$reload__success
+      else
+        reload_status=$reload__userclasses
+        return
+      fi
+    fi
   done
 }
 
@@ -51,145 +59,52 @@ reload_dumpdb()
 
   reload_continue "Pass dump database"
 
+  # Rename old dumpfiles
+  dmpfiles=`eval ls -1 $pwrp_db/*.wb_dmp`
+  for dmpfile in $dmpfiles; do
+    reload_save_file $dmpfile
+  done
+
   for cdb in $databases; do
-    echo "Dumping database $cdb"
      
-    source pwrp_env.sh setdb $cdb
-
-    if [ $cdb != "dbdirectory" ]; then
-      #Store versions of classvolumes
-      wb_cmd @$pwr_exe/reload_vol_versions $cdb
-    fi
-
     dump_file=$pwrp_db/$cdb.wb_dmp
-    reload_save_file $dump_file
-    wb_cmd wb dump/out=\"$dump_file\"
+
+    echo "Dumping volume $cdb in $dump_file"
+    wb_cmd -v $cdb wb dump/out=\"$dump_file\"
   done
 }
 
-reload_templatedb()
+reload_renamedb()
 {
-  reload_checkpass "templatedb" $start_pass
+  reload_checkpass "renamedb" $start_pass
   if [ $pass_status -ne $pass__execute ]; then
     reload_status=$reload__success
     return
   fi
 
-  reload_continue "Pass copy template database"
+  reload_continue "Pass copy rename old database"
 
   for cdb in $databases; do
-    echo "-- Copy template database to $cdb"
-     
-    source pwrp_env.sh copy template $cdb noconfirm
+    reload_save_file $pwrp_db/$cdb.db
   done
 }
 
-reload_userclasses()
+reload_dirvolume()
 {
-  reload_checkpass "userclasses" $start_pass
+  if [ -e "$pwrp_db/directory.db" ]; then
+    return
+  fi
+
+  reload_checkpass "dirvolume" $start_pass
   if [ $pass_status -ne $pass__execute ]; then
     reload_status=$reload__success
     return
   fi
 
-  reload_continue "Pass load userclasses"
+  reload_continue "Pass dirvolume"
 
-  for cdb in $databases; do
-    if [ $cdb != "dbdirectory" ]; then
-      source pwrp_env.sh setdb $cdb
-
-      # Load usertypes
-      fname="$pwrp_db/$cdb/usertypes.wb_load"
-      list_file="$pwrp_db/"$cdb"_usertypes.lis"
-      if [ -e $fname ]; then
-        echo "-- Loading usertypes in $cdb $fname"
-        if wb_cmd wb load/load=\"$fname\"/out=\"$list_file\"
-        then
-          reload_status=$reload__success
-        else
-          reload_status=$reload__usertypes
-          cat $list_file
-          return
-        fi
-      else
-        fname="$pwrp_db/usertypes.wb_load"
-        list_file="$pwrp_db/"$cdb"_usertypes.lis"
-        if [ -e $fname ]; then
-          echo "-- Loading usertypes in $cdb $fname"
-          if wb_cmd wb load/load=\"$fname\"/out=\"$list_file\"
-          then
-            reload_status=$reload__success
-          else
-            reload_status=$reload__usertypes
-            cat $list_file
-            return
-          fi
-        fi
-      fi
-
-      # Load userclasses
-      fname="$pwrp_db/$cdb/userclasses.wb_load"
-      list_file="$pwrp_db/"$cdb"_userclasses.lis"
-      if [ -e $fname ]; then
-        echo "-- Loading userclasses in $cdb $fname"
-        if wb_cmd wb load/load=\"$fname\"/out=\"$list_file\"
-        then
-          reload_status=$reload__success
-        else
-          reload_status=$reload__userclasses
-          cat $list_file
-          return
-        fi
-      else
-        fname="$pwrp_db/userclasses.wb_load"
-        list_file="$pwrp_db/"$cdb"_userclasses.lis"
-        if [ -e $fname ]; then
-          echo "-- Loading userclasses in $cdb $fname"
-          if wb_cmd wb load/load=\"$fname\"/out=\"$list_file\"
-          then
-            reload_status=$reload__success
-          else
-            reload_status=$reload__userclasses
-            cat $list_file
-            return
-          fi
-        fi
-      fi
-    fi
-         
-  done
-}
-
-reload_settemplate()
-{
-  reload_checkpass "settemplate" $start_pass
-  if [ $pass_status -ne $pass__execute ]; then
-    reload_status=$reload__success
-    return
-  fi
-
-  reload_continue "Pass set template values"
-
-  fname="$pwrp_db/set_template.pwr_com"
-  if [ -e $fname ]; then
-    for cdb in $databases; do
-      if [ $cdb != "dbdirectory" ]; then
-        source pwrp_env.sh setdb $cdb
-
-        echo "-- Setting template values in $cdb $fname"
-        if wb_cmd @$fname
-        then
-          reload_status=$reload__success
-        else
-          reload_status=$reload__settemplate
-          return
-        fi
-      fi
-    done
-  else
-    echo "-- No set_template file found"
-    reload_status=$reload__success
-  fi
+  wb_cmd create volume/directory
+  wb_cmd wb load /load=\"$pwrp_db/directory.wb_dmp\"
 }
 
 reload_loaddb()
@@ -202,26 +117,33 @@ reload_loaddb()
 
   reload_continue "Pass load database"
 
-  for cdb in $databases; do
-    echo "-- Loading database $cdb"
-     
-    source pwrp_env.sh setdb $cdb
-
-    if [ $cdb != "dbdirectory" ]; then
-      #Restore versions of classvolumes
-      if [ -e $pwrp_db/reload_vol_versions_$cdb.pwr_com ]; then
-        wb_cmd @$pwrp_db/reload_vol_versions_$cdb
+  if [ -z "$1" ]; then
+    tmp=`eval ls -1 $pwrp_db/*.wb_dmp`
+    databases=""
+    for db in $tmp; do
+      db=${db##/*/}
+      db="${db%.*}"
+      if [ "$db" != "directory" ]; then
+        databases="$databases $db"
       fi
-    fi
+    done
+  else
+    databases=$@
+  fi
 
-    dump_file=$pwrp_db/$cdb.wb_dmp
-    list_file=$pwrp_db/$cdb.lis
-    if wb_cmd wb load/load=\"$dump_file\"/out=\"$list_file\"/ignore
-    then
-      reload_status=$reload__success
-    else
-      cat $list_file
-      reload_status=$reload__loaddb
+  for cdb in $databases; do
+    if [ $cdb != "directory" ]; then
+      echo "-- Loading volume $cdb"
+     
+      dump_file=$pwrp_db/$cdb.wb_dmp
+      list_file=$pwrp_db/$cdb.lis
+      if wb_cmd wb load/load=\"$dump_file\"/out=\"$list_file\"
+      then
+        reload_status=$reload__success
+      else
+        cat $list_file
+        reload_status=$reload__loaddb
+      fi
     fi
   done
 }
@@ -383,14 +305,10 @@ usage()
 
   Pass
 
-    createstruct Create structfiles
-    dumpdb       Dump database to textfile \$pwrp_load/'dbid'.wb_dmp
-    templatedb   Replace the database with a template database
-    userclasses  Load userclasses.wb_load (and usertypes.wb_load)
-                 reload will first the load_files in  \$pwrp_db/'dbid'/
-                 and then in \$pwrp_db/
-    settemplate  Set template values. \$pwrp_db/set_template.pwr_com is
-                 executed
+    classvolumes Create structfiles and loadfiles for classvolumes
+    dumpdb       Dump database to textfile \$pwrp_db/'volume'.wb_dmp
+    renamedb     Rename the old database database
+    dirvolume    Load directory volume
     loaddb       Load the dump into the new database
     compile      Compile all plcprograms in the database
     removeload   Remove old loadfiles.
@@ -400,7 +318,7 @@ usage()
 EOF
 }
 
-if [ $1 = "help" ] || [ $1 = "-h" ]; then
+if [ "$1" = "help" ] || [ "$1" = "-h" ]; then
   usage
   exit
 fi
@@ -411,8 +329,15 @@ let check_status=0
 let go=0
 
 if [ -z "$1" ]; then
-  databases=`eval source pwrp_env.sh show db -a`
-  databases=$databases" dbdirectory"
+  tmp=`eval ls -1d $pwrp_db/*.db`
+  databases=""
+  for db in $tmp; do
+    db=${db##/*/}
+    db="${db%.*}"
+    if [ "$db" != "rt_eventlog" ]; then
+      databases="$databases $db"
+    fi
+  done
 else
   databases=$@
 fi
@@ -420,17 +345,17 @@ fi
 usage
 
 echo ""
-echo "-- Reloading database $databases"
+echo "-- Reloading volume $databases"
 echo ""
 
-passes="createstruct dumpdb templatedb userclasses settemplate loaddb compile removeload createload createboot"
+passes="dumpdb classvolumes renamedb dirvolume loaddb compile removeload createload createboot"
 echo "Pass: $passes"
 echo ""
-echo -n "Enter start pass [createstruct] > "
+echo -n "Enter start pass [dumpdb] > "
 read start_pass
 
 if [ -z $start_pass ]; then
-  start_pass="createstruct"
+  start_pass="dumpdb"
 fi
 
 for cpass in $passes; do

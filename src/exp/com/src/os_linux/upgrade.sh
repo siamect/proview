@@ -35,6 +35,61 @@ reload_dumpdb()
     source $v34_root/os_linux/hw_x86/exp/exe/pwrp_env.sh setdb $cdb
     export pwr_inc=$pwrb_root/os_linux/hw_x86/exp/inc
 
+    # Create a script that removes NoderVersion and $Orphanage objects
+    tmpfile=$pwrp_tmp/del.sh
+    cat > $tmpfile <<-EOF
+	main()
+	  string v;
+	  string class;
+	  string node;
+	  string name;
+
+	  verify(0);
+
+	  v = GetVolumeList();
+	  while( v != "")
+	    class = GetVolumeClass( v);
+	    if ( class != "\$ClassVolume")
+	      set volume/volume='v'
+	      node = GetNodeObject();
+	      if ( node == "")
+	        v = GetNextVolume( v);
+	        continue;
+              endif
+
+	      name = node + "-NodeVersion";
+	      class = GetObjectClass( name);
+	      if ( class != "")
+	        delete object/name='name'/noconfirm
+	      endif
+
+	      name = node + "-\$Orphanage";
+	      class = GetObjectClass( name);
+	      if ( class != "")
+	        delete object/name='name'/noconfirm
+	      endif
+
+	      name = "System-SystemVersion";
+	      class = GetObjectClass( name);
+	      if ( class != "")
+	        delete object/name='name'/noconfirm
+	      endif
+
+	      name = "System-BootVersion";
+	      class = GetObjectClass( name);
+	      if ( class != "")
+	        delete object/name='name'/noconfirm
+	      endif
+	      save
+
+	    endif
+	    v = GetNextVolume( v);
+	  endwhile
+  	endmain
+EOF
+    chmod a+x $tmpfile
+    $v34_root/os_linux/hw_x86/exp/exe/wb_cmd @$tmpfile
+
     # Create a script that dumps each volume
     tmpfile=$pwrp_tmp/dump.sh
     cat > $tmpfile <<-EOF
@@ -69,7 +124,12 @@ reload_userclasses()
     return
   fi
 
-  reload_continue "Pass load userclasses"
+  echo ""
+  echo "The classvolume should be defined in one file only: userclasses.wb_load !"
+  echo ""
+
+  reload_continue "Pass create loadfiles for userclasses"
+
 
  # Load userclasses
   fname="$pwrp_db/userclasses.wb_load"
@@ -80,6 +140,8 @@ reload_userclasses()
     if wb_cmd create snapshot/file=\"$fname\"/out=\"$pwrp_load/$volume.dbs\"
     then
       reload_status=$reload__success
+      echo "-- Renaming userclasses.wb_load to $volume.wb_load"
+      mv $fname $pwrp_db/$volume.wb_load
     else
       reload_status=$reload__userclasses
       return
@@ -108,6 +170,7 @@ reload_dirvolume()
       l1="Volume $volume \$DirectoryVolume"
       l2="Volume Directory \$DirectoryVolume"
       sed 's/ '$volume' / Directory /' $dmpfile > $pwrp_db/directory.wb_dmp
+      wb_cmd create volume/directory
       wb_cmd wb load /load=\"$pwrp_db/directory.wb_dmp\"
       mv $dmpfile $dmpfile"_old"
       mv $pwrp_db/directory.wb_dmp $pwrp_db/directory.wb_dmp_old
@@ -308,7 +371,17 @@ reload_compile()
 
   reload_continue "Pass compile plcprograms"
 
-  wb_cmd compile /all
+  list=`eval ls -1d $pwrp_db/*.db`
+  for file in $list; do
+    file=${file##/*/}
+    file=${file%%.*}
+
+    if [ $file != "directory" ] && [ $file != "rt_eventlog" ]; then
+      wb_cmd -v $file compile /all
+    fi
+  done
+
+#  wb_cmd compile /all
   reload_status=$reload__success
 }
 
@@ -342,7 +415,17 @@ reload_createload()
   echo "-- Removing old loadfiles"
   rm $pwrp_load/ld_vol*.dat
 
-  wb_cmd create load/all
+  list=`eval ls -1d $pwrp_db/*.db`
+  for file in $list; do
+    file=${file##/*/}
+    file=${file%%.*}
+
+    if [ $file != "directory" ] && [ $file != "rt_eventlog" ]; then
+      wb_cmd -v $file create load/volume=$file
+    fi
+  done
+
+  # wb_cmd create load/all
   reload_status=$reload__success
 }
 
@@ -353,6 +436,10 @@ reload_createboot()
     reload_status=$reload__success
     return
   fi
+
+  echo ""
+  echo "Before this pass you should compile the modules included by ra_plc_user."
+  echo ""
 
   reload_continue "Pass create bootfiles"
 
@@ -369,14 +456,21 @@ reload_convertge()
     return
   fi
 
+  echo ""
+  echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+  echo "!                                                                   !"
+  echo "! Note ! This pass should not be executed when upgrading from V3.9 !!"
+  echo "!                                                                   !"
+  echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+
   reload_continue "Pass convert ge graphs"
 
   # Create a script that dumps each volume
   tmpfile=$pwrp_tmp/convertv40.ge_com
   cat > $tmpfile << EOF
 function int process( string graph)
-  open 'graph'
   printf( "Converting %s...\n", graph);
+  open 'graph'
   convert v40
   save
 endfunction
@@ -472,20 +566,14 @@ usage()
 {
   cat << EOF
 
-  upgrade.sh  Upgrade from V3.3 to V3.4.
-
-  The upgrade procedure will be done in three steps:
-
-  - Create project on linux (Pass 1)
-  - Execute upgrade.com on V3.3
-  - Continue with pass copyfile
+  upgrade.sh  Upgrade from V3.4 or V3.9 to V4.0.
 
   Arguments   Project name.
 
   Pass
 
     dumpdb	 Dump database to textfile \$pwrp_db/'volume'.wb_dmp
-    userclasses  Load userclasses.wb_load
+    userclasses  Create loadfiles and rename userclasses.wb_load
     dirvolume    Create directory volume.
     cnvdirvolume Convert the directory volume.
     cnvdump      Convert dumpfiles.
@@ -508,12 +596,12 @@ let reload_status=$reload__success
 let check_status=0
 let go=0
 
-if [ -z "$1" ]; then
-  usage
-  exit
-fi
+#if [ -z "$1" ]; then
+#  usage
+#  exit
+#fi
 
-project=$1
+project=${pwrp_root##/*/}
 
 usage
 
@@ -522,7 +610,7 @@ echo "-- Upgrade $project"
 echo ""
 
 export pwr_inc=$v34_root/os_linux/hw_x86/exp/inc
-echo $pwr_inc
+#echo $pwr_inc
 databases=`eval source $v34_root/os_linux/hw_x86/exp/exe/pwrp_env.sh show db -a`
 databases=$databases" dbdirectory"
 export pwr_inc=$pwrb_root/os_linux/hw_x86/exp/inc
@@ -546,9 +634,13 @@ for cpass in $passes; do
 done
 
 echo ""
-echo "-- The reload is now accomplished."
+echo "-- The upgrade procedure is now accomplished."
 echo "   Please remove the dumpfiles: \$pwrp_db/*.wb_dmp*"
-echo "   when you are satisfied with the reload."
+echo "   when you are satisfied with the upgrade."
+echo ""
+echo "-- Remaining tasks:"
+echo "   Build the applications"
+echo "   Create packages from the distributor"
 echo ""
 
 reload_exit
