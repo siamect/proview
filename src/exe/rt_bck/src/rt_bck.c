@@ -1276,8 +1276,12 @@ pwr_tUInt32 bck_init ()
     sts = gdh_GetNextObject(objid, &objid);
   }
   UNLOCK;
-  if (EVEN(sts)) return sts;		/* Something wrong, quit */
-
+  if (EVEN(sts)) {
+    errh_Info("No BackupConfig object found, rt_bck will not run");
+    errh_SetStatus(0);
+    exit(1);
+  }
+  
   aproc_RegisterObject( objid);
 
   LOCK;
