@@ -85,8 +85,35 @@ plc_thread (
   }
 
   tp->init(0, tp);
+  
+  if (tp->pp->IOHandler->IOReadWriteFlag) {
+    sts = io_read(tp->plc_io_ctx);
+    if (EVEN(sts)) {
+      tp->pp->IOHandler->IOReadWriteFlag = FALSE;
+      errh_Error("IO read, %m", sts);
+    }
+  }
 
+  thread_MutexLock(&tp->pp->io_copy_mutex);
+
+  memcpy(tp->copy.ai_a.p, tp->pp->base.ai_a.p, tp->copy.ai_a.size);
+  memcpy(tp->copy.ao_a.p, tp->pp->base.ao_a.p, tp->copy.ao_a.size);
+  memcpy(tp->copy.av_a.p, tp->pp->base.av_a.p, tp->copy.av_a.size);
+  memcpy(tp->copy.ca_a.p, tp->pp->base.ca_a.p, tp->copy.ca_a.size);
+  memcpy(tp->copy.co_a.p, tp->pp->base.co_a.p, tp->copy.co_a.size);
+  memcpy(tp->copy.di_a.p, tp->pp->base.di_a.p, tp->copy.di_a.size);
+  memcpy(tp->copy.do_a.p, tp->pp->base.do_a.p, tp->copy.do_a.size);
+  memcpy(tp->copy.dv_a.p, tp->pp->base.dv_a.p, tp->copy.dv_a.size);
+
+  thread_MutexUnlock(&tp->pp->io_copy_mutex);
+  
   que_Put(&sts, &tp->q_out, &tp->event, (void *)3);
+  phase = (int)que_Get(&sts, &tp->q_in, NULL, NULL);
+  pwr_Assert(phase == 4);
+
+  /* Phase 4.  */
+
+  que_Put(&sts, &tp->q_out, &tp->event, (void *)4);
 
   pwrb_PlcThread_Zero(tp);
 
