@@ -435,7 +435,6 @@ int main( int argc, char *argv[])
   char 		title[80];
   char		backdoor[] = {112,108,101,97,115,101,99,108,97,101,115,108,101,116,109,101,105,110,0};
   XtAppContext  app_ctx;
-  int           sw_ignore_errors = 0;
   int           sw_projectvolume = 0;
   int           i;
 
@@ -444,17 +443,19 @@ int main( int argc, char *argv[])
 
   strcpy( username, "");
   strcpy( password, "");
-  volumename_p = 0;
-  strcpy( volumename, "");
+
+  // Open directory volume as default
+  volumename_p = volumename;
+  strcpy( volumename, "directory");
+  sw_projectvolume = 1;
   arg_cnt = 0;
   for ( i = 1; i < argc; i++) {
     if ( argv[i][0] == '-') {
       switch ( argv[i][1]) {
-        case 'i':
-	  sw_ignore_errors = 1;
-	  break;
-        case 'p':
-	  sw_projectvolume = 1;
+        case 'a':
+	  // Load all volumes
+	  sw_projectvolume = 0;
+	  volumename_p = 0;
 	  break;
         default:
 	  printf("Unknown argument: %s\n", argv[i]);
@@ -470,7 +471,7 @@ int main( int argc, char *argv[])
 	  break;
         case 2:
 	  strcpy( volumename, argv[i]);
-	  volumename_p = volumename;
+	  sw_projectvolume = 0;
 	  break;
         default:
           printf("Unknown argument: %s\n", argv[i]);
