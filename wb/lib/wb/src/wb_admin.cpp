@@ -283,6 +283,7 @@ void Admin::adminuser_setup( char *title, int username_edit, int password_edit,
 
   XmToggleButtonSetState( adminuser_priv_rtread, (priv_value & pwr_mPrv_RtRead) != 0, 0);
   XmToggleButtonSetState( adminuser_priv_rtwrite, (priv_value & pwr_mPrv_RtWrite) != 0, 0);
+  XmToggleButtonSetState( adminuser_priv_rtevents, (priv_value & pwr_mPrv_RtEvents) != 0, 0);
   XmToggleButtonSetState( adminuser_priv_system, (priv_value & pwr_mPrv_System) != 0, 0);
   XmToggleButtonSetState( adminuser_priv_maintenance, (priv_value & pwr_mPrv_Maintenance) != 0, 0);
   XmToggleButtonSetState( adminuser_priv_process, (priv_value & pwr_mPrv_Process) != 0, 0);
@@ -309,6 +310,7 @@ void Admin::adminuser_setup( char *title, int username_edit, int password_edit,
 
   XtSetValues( adminuser_priv_rtread, sensitive, 1);
   XtSetValues( adminuser_priv_rtwrite, sensitive, 1);
+  XtSetValues( adminuser_priv_rtevents, sensitive, 1);
   XtSetValues( adminuser_priv_system, sensitive, 1);
   XtSetValues( adminuser_priv_maintenance, sensitive, 1);
   XtSetValues( adminuser_priv_process, sensitive, 1);
@@ -1625,6 +1627,10 @@ static void adminuser_create_rtwrite( Widget w, Admin *admin, XmAnyCallbackStruc
 {
   admin->adminuser_priv_rtwrite = w;
 }
+static void adminuser_create_rtevents( Widget w, Admin *admin, XmAnyCallbackStruct *data)
+{
+  admin->adminuser_priv_rtevents = w;
+}
 static void adminuser_create_system( Widget w, Admin *admin, XmAnyCallbackStruct *data)
 {
   admin->adminuser_priv_system = w;
@@ -1716,6 +1722,8 @@ static void adminuser_activate_ok( Widget w, Admin *admin, XmAnyCallbackStruct *
     priv |= pwr_mPrv_RtRead;
   if ( XmToggleButtonGetState( admin->adminuser_priv_rtwrite))
     priv |= pwr_mPrv_RtWrite;
+  if ( XmToggleButtonGetState( admin->adminuser_priv_rtevents))
+    priv |= pwr_mPrv_RtEvents;
   if ( XmToggleButtonGetState( admin->adminuser_priv_system))
     priv |= pwr_mPrv_System;
   if ( XmToggleButtonGetState( admin->adminuser_priv_maintenance))
@@ -2190,6 +2198,7 @@ Admin::Admin(
 	{"adminuser_create_system_noedit",(caddr_t)adminuser_create_system_noedit },
 	{"adminuser_create_rtread",(caddr_t)adminuser_create_rtread },
 	{"adminuser_create_rtwrite",(caddr_t)adminuser_create_rtwrite },
+	{"adminuser_create_rtevents",(caddr_t)adminuser_create_rtevents },
 	{"adminuser_create_system",(caddr_t)adminuser_create_system },
 	{"adminuser_create_maintenance",(caddr_t)adminuser_create_maintenance },
 	{"adminuser_create_process",(caddr_t)adminuser_create_process },

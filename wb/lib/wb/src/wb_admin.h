@@ -84,6 +84,7 @@ class Admin {
     Widget	adminuser_system_noe;
     Widget	adminuser_priv_rtread;
     Widget	adminuser_priv_rtwrite;
+    Widget	adminuser_priv_rtevents;
     Widget	adminuser_priv_system;
     Widget	adminuser_priv_maintenance;
     Widget	adminuser_priv_process;
