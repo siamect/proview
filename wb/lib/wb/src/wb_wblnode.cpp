@@ -1023,8 +1023,9 @@ void wb_wblnode::iterObject( wb_dbs *dbs)
   pwr_tOid bwsoid = o_bws ? o_bws->m_oid : pwr_cNOid;
   pwr_tOid fchoid = o_fch ? o_fch->m_oid : pwr_cNOid;
   pwr_tOid lchoid = o_lch ? o_lch->m_oid : pwr_cNOid;
+  wb_name n = wb_name(name);
 
-  dbs->installObject( m_oid, m_cid, fthoid, fwsoid, bwsoid, fchoid, lchoid, name, 0,
+  dbs->installObject( m_oid, m_cid, fthoid, fwsoid, bwsoid, fchoid, lchoid, name, n.normName(cdh_mName_object),
 	getFileTime(), getFileTime(), getFileTime(), rbody_size, dbody_size);
   
   if ( o_fch)
