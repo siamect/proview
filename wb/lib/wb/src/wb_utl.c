@@ -4874,10 +4874,6 @@ static int utl_set_parameter (
 	char		*object_element;
 	int		elements;
 	int		found;
-	char		*t;
-	char		*u;
-	char		upper_name[80];
-	char		namechar;
 	char		logstr[200];
 static 	char		value[200];
 	char		*logstrptr = logstr;
@@ -4931,17 +4927,7 @@ static 	char		value[200];
 
 	  for ( j = 0; j < rows; j++)
 	  {
-	    /* Convert parname to upper case */
-	    u = bodydef[j].ParName;
-	    t = upper_name;
-	    while ( *u != '\0')
-	    {
-	      namechar = *(u++);
-	      *(t++) = _toupper( namechar);
-	    }
-	    *t = '\0';
-
-	    if (strcmp( parameter, upper_name) == 0)
+	    if ( cdh_NoCaseStrcmp( parameter, bodydef[j].ParName) == 0)
 	    {
 	      found = 1;
 	      break;
