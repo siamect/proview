@@ -45,7 +45,10 @@ extern "C" {
   //! Values for a limit type.
   typedef enum {
     ge_eLimitType_Gt, 	//!< Greater then.
-    ge_eLimitType_Lt	//!< Less then.
+    ge_eLimitType_Lt,	//!< Less then.
+    ge_eLimitType_Ge, 	//!< Greater then or equal.
+    ge_eLimitType_Le,	//!< Less then or equal.
+    ge_eLimitType_Eq	//!< Equal.
   } ge_eLimitType;
 
   //! Mask for initial and first input focus.
@@ -275,6 +278,8 @@ extern "C" {
     ge_eSave_DigText_low_text		= 1101,
     ge_eSave_Value_attribute		= 1200,
     ge_eSave_Value_format	       	= 1201,
+    ge_eSave_Value_instance      	= 1202,
+    ge_eSave_Value_instance_mask 	= 1203,
     ge_eSave_ValueInput_attribute      	= 1300,
     ge_eSave_ValueInput_format		= 1301,
     ge_eSave_ValueInput_min_value      	= 1302,
@@ -293,6 +298,7 @@ extern "C" {
     ge_eSave_Move_scale_x_attribute     = 1505,
     ge_eSave_Move_scale_y_attribute    	= 1506,
     ge_eSave_Move_scale_factor      	= 1507,
+    ge_eSave_Move_scale_type      	= 1508,
     ge_eSave_AnalogShift_attribute     	= 1700,
     ge_eSave_DigShift_attribute		= 1800,
     ge_eSave_Animation_attribute       	= 1900,
@@ -1020,13 +1026,14 @@ class GeValue : public GeDynElem {
   int annot_typeid;
   int annot_size;
 
-  GeValue( GeDyn *e_dyn) : 
+  GeValue( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
     GeDynElem(e_dyn, ge_mDynType_Value, (ge_mActionType) 0, ge_eDynPrio_Value),
     annot_typeid(0), annot_size(0)
-    { strcpy( attribute, ""); strcpy( format, "");}
+    { strcpy( attribute, ""); strcpy( format, ""); instance = e_instance;}
   GeValue( const GeValue& x) : 
     GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)
-    { strcpy( attribute, x.attribute); strcpy( format, x.format);}
+    { strcpy( attribute, x.attribute); strcpy( format, x.format);
+    instance = x.instance; instance_mask = x.instance_mask;}
   void get_attributes( attr_sItem *attrinfo, int *item_count); 
   int get_transtab( char **tt);
   void save( ofstream& fp);
@@ -1156,6 +1163,7 @@ class GeMove : public GeDynElem {
   double y_offset;
   double factor;
   double scale_factor;
+  glow_eScaleType scale_type;
 
   pwr_tFloat32 *move_x_p;
   pwr_tSubid move_x_subid;
@@ -1184,10 +1192,13 @@ class GeMove : public GeDynElem {
   bool first_scan;
   double x_orig;
   double y_orig;
+  double width_orig;
+  double height_orig;
 
   GeMove( GeDyn *e_dyn) : 
     GeDynElem(e_dyn, ge_mDynType_Move, (ge_mActionType) 0, ge_eDynPrio_Move),
-    x_offset(0), y_offset(0), factor(1), scale_factor(1)
+    x_offset(0), y_offset(0), factor(1), scale_factor(1), 
+    scale_type(glow_eScaleType_LowerLeft)
     {
       strcpy( move_x_attribute, "");
       strcpy( move_y_attribute, "");
@@ -1196,7 +1207,8 @@ class GeMove : public GeDynElem {
     }
   GeMove( const GeMove& x) : 
     GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), x_offset(x.x_offset), 
-    y_offset(x.y_offset), factor(x.factor), scale_factor(x.scale_factor)
+    y_offset(x.y_offset), factor(x.factor), scale_factor(x.scale_factor), 
+    scale_type(x.scale_type)
     { 
       strcpy( move_x_attribute, x.move_x_attribute); 
       strcpy( move_y_attribute, x.move_y_attribute);

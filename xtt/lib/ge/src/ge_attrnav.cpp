@@ -853,6 +853,9 @@ static attrnav_sEnumElement elem_anim_sequence[] = {
 static attrnav_sEnumElement elem_limit_type[] = {
 	{ (int) ge_eLimitType_Gt, 	"GreaterThan"},
 	{ (int) ge_eLimitType_Lt, 	"LessThan"},
+	{ (int) ge_eLimitType_Ge, 	"GreaterEqual"},
+	{ (int) ge_eLimitType_Le, 	"LessEqual"},
+	{ (int) ge_eLimitType_Eq, 	"Equal"},
 	{ 0, ""}};
 
 static attrnav_sEnumElement elem_relief[] = {
@@ -869,6 +872,14 @@ static attrnav_sEnumElement elem_text_size[] = {
 	{ (int) glow_eTextSize_24, 	"24"},
 	{ 0, ""}};
 
+static attrnav_sEnumElement elem_scale_type[] = {
+	{ (int) glow_eScaleType_LowerLeft, 	"UpperLeft"},
+	{ (int) glow_eScaleType_LowerRight, 	"UpperRight"},
+	{ (int) glow_eScaleType_UpperLeft, 	"LowerLeft"},
+	{ (int) glow_eScaleType_UpperRight, 	"LowerRight"},
+	{ (int) glow_eScaleType_Center, 	"Center"},
+	{ 0, ""}};
+
 static attrnav_sEnum enum_types[] = {
 	{ (int) glow_eType_Direction, 	(attrnav_sEnumElement *) &elem_direction},
 	{ (int) glow_eType_Color, 	(attrnav_sEnumElement *) &elem_color},
@@ -881,6 +892,7 @@ static attrnav_sEnum enum_types[] = {
 	{ (int) glow_eType_Relief, 	(attrnav_sEnumElement *) &elem_relief},
 	{ (int) glow_eType_TextSize, 	(attrnav_sEnumElement *) &elem_text_size},
 	{ (int) glow_eType_InputFocusMark, (attrnav_sEnumElement *) &elem_input_focus_mark},
+	{ (int) ge_eAttrType_ScaleType, (attrnav_sEnumElement *) &elem_scale_type},
 	{ 0, NULL}};
 
 static attrnav_sEnum mask_types[] = {
@@ -950,6 +962,7 @@ int  attrnav_attr_string_to_value( int type_id, char *value_str,
     case ge_eAttrType_LimitType:
     case ge_eAttrType_InstanceMask:
     case ge_eAttrType_InputFocus:
+    case ge_eAttrType_ScaleType:
     {
       if ( sscanf( value_str, "%u", (int *)buffer_ptr) != 1)
         return ATTRNAV__INPUT_SYNTAX;
@@ -1023,6 +1036,7 @@ void  attrnav_attrvalue_to_string( int type_id, void *value_ptr,
     case glow_eType_TextSize:
     case ge_eAttrType_AnimSequence:
     case ge_eAttrType_LimitType:
+    case ge_eAttrType_ScaleType:
     {
       attrnav_sEnumElement	*elem_p;
       attrnav_sEnum		*enum_p;
@@ -2084,6 +2098,7 @@ ItemLocal::ItemLocal( AttrNav *attrnav, char *item_name, char *attr,
     case ge_eAttrType_LimitType:
     case ge_eAttrType_InstanceMask:
     case ge_eAttrType_InputFocus:
+    case ge_eAttrType_ScaleType:
       if ( !noedit)
       {
         brow_SetAnnotPixmap( node, 0, attrnav->brow->pixmap_attrarray);

@@ -64,7 +64,8 @@ typedef enum {
   ge_eAttrType_LimitType    	= 1004,				//!< Limit type (Gt or Lt).
   ge_eAttrType_InstanceMask    	= 1005,				//!< Instance mask.
   ge_eAttrType_InputFocus 	= 1006,				//!< Initial input focus mask.
-  ge_eAttrType_Dyn	 	= 1007				//!< Dynamic data.
+  ge_eAttrType_Dyn	 	= 1007,				//!< Dynamic data.
+  ge_eAttrType_ScaleType      	= 1008				//!< Scale type.
 } ge_eAttrType;
 
 //! Graph mode.

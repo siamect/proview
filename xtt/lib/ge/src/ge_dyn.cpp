@@ -843,7 +843,7 @@ GeDynElem *GeDyn::create_dyn_element( int mask, int instance)
     e = (GeDynElem *) new GeDigText(this);
     break;
   case ge_mDynType_Value:
-    e = (GeDynElem *) new GeValue(this);
+    e = (GeDynElem *) new GeValue(this, (ge_mInstance)instance);
     break;
   case ge_mDynType_AnalogColor:
     e = (GeDynElem *) new GeAnalogColor(this, (ge_mInstance)instance);
@@ -2437,16 +2437,41 @@ void GeValue::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
 
-  strcpy( attrinfo[i].name, "Value.Attribute");
-  attrinfo[i].value = attribute;
-  attrinfo[i].type = glow_eType_String;
-  attrinfo[i++].size = sizeof( attribute);
+  if ( instance == ge_mInstance_1) {
+    strcpy( attrinfo[i].name, "Value.Attribute");
+    attrinfo[i].value = attribute;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( attribute);
 
-  strcpy( attrinfo[i].name, "Value.Format");
-  attrinfo[i].value = format;
-  attrinfo[i].type = glow_eType_String;
-  attrinfo[i++].size = sizeof( format);
+    strcpy( attrinfo[i].name, "Value.Format");
+    attrinfo[i].value = format;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( format);
 
+    strcpy( attrinfo[i].name, "Value.Instances");
+    attrinfo[i].value = &instance_mask;
+    attrinfo[i].type = ge_eAttrType_InstanceMask;
+    attrinfo[i++].size = sizeof( instance_mask);    
+  }
+  else {
+    // Get instance number
+    int inst = 1;
+    int m = instance;
+    while( m > 1) {
+      m = m >> 1;
+      inst++;
+    }
+
+    sprintf( attrinfo[i].name, "Value[%d].Attribute", inst);
+    attrinfo[i].value = attribute;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( attribute);
+
+    sprintf( attrinfo[i].name, "Value[%d].Format", inst);
+    attrinfo[i].value = format;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( format);
+  }
   *item_count = i;
 }
 
@@ -2467,9 +2492,11 @@ void GeValue::set_attribute( grow_tObject object, char *attr_name, int *cnt)
   if ( *cnt == 0) {
     char msg[200];
 
-    strncpy( attribute, attr_name, sizeof( attribute));
-    sprintf( msg, "Value.Attribute = %s", attr_name);
-    dyn->graph->message( 'I', msg);
+    if ( instance == ge_mInstance_1) {
+      strncpy( attribute, attr_name, sizeof( attribute));
+      sprintf( msg, "Value.Attribute = %s", attr_name);
+      dyn->graph->message( 'I', msg);
+    }
   }
 }
 
@@ -2483,6 +2510,8 @@ void GeValue::save( ofstream& fp)
   fp << int(ge_eSave_Value) << endl;
   fp << int(ge_eSave_Value_attribute) << FSPACE << attribute << endl;
   fp << int(ge_eSave_Value_format) << FSPACE << format << endl;
+  fp << int(ge_eSave_Value_instance) << FSPACE << int(instance) << endl;
+  fp << int(ge_eSave_Value_instance_mask) << FSPACE << int(instance_mask) << endl;
   fp << int(ge_eSave_End) << endl;
 }
 
@@ -2491,6 +2520,7 @@ void GeValue::open( ifstream& fp)
   int		type;
   int 		end_found = 0;
   char		dummy[40];
+  int		tmp;
 
   for (;;)
   {
@@ -2505,6 +2535,8 @@ void GeValue::open( ifstream& fp)
         fp.get();
         fp.getline( format, sizeof(format));
         break;
+      case ge_eSave_Value_instance: fp >> tmp; instance = (ge_mInstance)tmp; break;
+      case ge_eSave_Value_instance_mask: fp >> tmp; instance_mask = (ge_mInstance)tmp; break;
       case ge_eSave_End: end_found = 1; break;
       default:
         cout << "GeValue:open syntax error" << endl;
@@ -2620,7 +2652,11 @@ int GeValue::scan( grow_tObject object)
       len = strlen(buf);
     }
   }
-  grow_SetAnnotationBrief( object, 1, buf, len);
+  int annot_num = GeDyn::instance_to_number( instance);
+  if ( annot_num == 1)
+    grow_SetAnnotationBrief( object, annot_num, buf, len);
+  else
+    grow_SetAnnotation( object, annot_num, buf, len);
   memcpy( &old_value, p, MIN(size, (int) sizeof(old_value)));
   return 1;
 }
@@ -3207,23 +3243,67 @@ int GeAnalogColor::scan( grow_tObject object)
   bool set_color = false;
   bool reset_color = false;
 
-  if ( limit_type == ge_eLimitType_Gt) {
+  switch ( limit_type) {
+  case ge_eLimitType_Gt: {
     switch ( type) {
     case pwr_eType_Float32:
       state = *p > limit;
+      break;
     case pwr_eType_Int32:
       state = *(pwr_tInt32 *)p > limit;
+      break;
     default: ;
     }
+    break;
   }
-  else {
+  case ge_eLimitType_Ge: {
+    switch ( type) {
+    case pwr_eType_Float32:
+      state = *p >= (limit - FLT_EPSILON);
+      break;
+    case pwr_eType_Int32:
+      state = *(pwr_tInt32 *)p >= limit;
+      break;
+    default: ;
+    }
+    break;
+  }
+  case ge_eLimitType_Lt: {
     switch ( type) {
     case pwr_eType_Float32:
       state = *p < limit;
+      break;
     case pwr_eType_Int32:
       state = *(pwr_tInt32 *)p < limit;
+      break;
     default: ;
     }
+    break;
+  }
+  case ge_eLimitType_Le: {
+    switch ( type) {
+    case pwr_eType_Float32:
+      state = *p <= (limit + FLT_EPSILON);
+      break;
+    case pwr_eType_Int32:
+      state = *(pwr_tInt32 *)p <= limit;
+      break;
+    default: ;
+    }
+    break;
+  }
+  case ge_eLimitType_Eq: {
+    switch ( type) {
+    case pwr_eType_Float32:
+      state = fabs(*p - limit) < FLT_EPSILON;
+      break;
+    case pwr_eType_Int32:
+      state = *(pwr_tInt32 *)p == limit;
+      break;
+    default: ;
+    }
+    break;
+  }
   }
 
   if ( state != old_state || dyn->reset_color || first_scan) {
@@ -3508,6 +3588,11 @@ void GeMove::get_attributes( attr_sItem *attrinfo, int *item_count)
   attrinfo[i].type = glow_eType_Double;
   attrinfo[i++].size = sizeof( scale_factor);
 
+  strcpy( attrinfo[i].name, "Move.ScaleType");
+  attrinfo[i].value = &scale_type;
+  attrinfo[i].type = ge_eAttrType_ScaleType;
+  attrinfo[i++].size = sizeof( scale_type);
+
   *item_count = i;
 }
 
@@ -3550,6 +3635,7 @@ void GeMove::save( ofstream& fp)
   fp << int(ge_eSave_Move_y_offset) << FSPACE << y_offset << endl;
   fp << int(ge_eSave_Move_factor) << FSPACE << factor << endl;
   fp << int(ge_eSave_Move_scale_factor) << FSPACE << scale_factor << endl;
+  fp << int(ge_eSave_Move_scale_type) << FSPACE << scale_type << endl;
   fp << int(ge_eSave_End) << endl;
 }
 
@@ -3558,6 +3644,7 @@ void GeMove::open( ifstream& fp)
   int		type;
   int 		end_found = 0;
   char		dummy[40];
+  int		tmp;
 
   for (;;)
   {
@@ -3584,6 +3671,7 @@ void GeMove::open( ifstream& fp)
       case ge_eSave_Move_y_offset: fp >> y_offset; break;
       case ge_eSave_Move_factor: fp >> factor; break;
       case ge_eSave_Move_scale_factor: fp >> scale_factor; break;
+      case ge_eSave_Move_scale_type: fp >> tmp; scale_type = (glow_eScaleType)tmp; break;
       case ge_eSave_End: end_found = 1; break;
       default:
         cout << "GeMove:open syntax error" << endl;
@@ -3653,6 +3741,8 @@ int GeMove::connect( grow_tObject object, glow_sTraceData *trace_data)
   first_scan = true;
   grow_StoreTransform( object);
   grow_MeasureNode( object, &x_orig, &y_orig, &ur_x, &ur_y);
+  width_orig = ur_x - x_orig;
+  height_orig = ur_y - y_orig;
 
   return 1;
 }
@@ -3720,7 +3810,7 @@ int GeMove::scan( grow_tObject object)
       
     if ( !(move_x_p || move_y_p))
       grow_SetObjectScale( object, scale_x, scale_y, 0, 0,
-			   glow_eScaleType_LowerLeft);
+			   scale_type);
     if ( scale_x_p)
       memcpy( &scale_x_old_value, scale_x_p, scale_x_size);
     if ( scale_y_p)
@@ -3729,24 +3819,49 @@ int GeMove::scan( grow_tObject object)
 
     if ( move_x_p || move_y_p) {
       if ( move_x_p) {
+	double scale_offs = 0;
+	// Adjust position for different scaletypes
+	switch ( scale_type) {
+	case glow_eScaleType_LowerRight:
+	case glow_eScaleType_UpperRight:
+	  scale_offs = width_orig * ( 1 - scale_x);
+	  break;
+	case glow_eScaleType_Center:
+	  scale_offs = width_orig * ( 1 - scale_x) / 2;
+	  break;
+	default: ;
+	}
 	switch ( move_x_type) {
-	case pwr_eType_Float32: move_x = x_orig + (*move_x_p - x_offset) * factor; break;
-	case pwr_eType_Float64: move_x = x_orig + (*(pwr_tFloat64 *) move_x_p - x_offset) * factor; break;
-	case pwr_eType_Int32:   move_x = x_orig + (*(pwr_tInt32 *) move_x_p - x_offset) * factor; break;
-	case pwr_eType_UInt32:  move_x = x_orig + (*(pwr_tUInt32 *) move_x_p - x_offset) * factor; break;
-	default: move_x = x_orig;
+	case pwr_eType_Float32: move_x = x_orig + scale_offs + (*move_x_p - x_offset) * factor; break;
+	case pwr_eType_Float64: move_x = x_orig + scale_offs + (*(pwr_tFloat64 *) move_x_p - x_offset) * factor; break;
+	case pwr_eType_Int32:   move_x = x_orig + scale_offs + (*(pwr_tInt32 *) move_x_p - x_offset) * factor; break;
+	case pwr_eType_UInt32:  move_x = x_orig + scale_offs + (*(pwr_tUInt32 *) move_x_p - x_offset) * factor; break;
+	default: move_x = x_orig + scale_offs;
 	}
       }
       else
 	move_x = x_orig;
 
       if ( move_y_p) {
+	double scale_offs = 0;
+	// Adjust position for different scaletypes
+	switch ( scale_type) {
+	case glow_eScaleType_LowerRight:
+	case glow_eScaleType_UpperRight:
+	  scale_offs = height_orig * ( 1 - scale_y);
+	  break;
+	case glow_eScaleType_Center:
+	  scale_offs = height_orig * ( 1 - scale_y) / 2;
+	  break;
+	default: ;
+	}
+
 	switch ( move_y_type) {
-	case pwr_eType_Float32: move_y = y_orig + (*move_y_p - y_offset) * factor; break;
-	case pwr_eType_Float64: move_y = y_orig + (*(pwr_tFloat64 *) move_y_p - y_offset) * factor; break;
-	case pwr_eType_Int32:   move_y = y_orig + (*(pwr_tInt32 *) move_y_p - y_offset) * factor; break;
-	case pwr_eType_UInt32:  move_y = y_orig + (*(pwr_tUInt32 *) move_y_p - y_offset) * factor; break;
-	default: move_y = y_orig;
+	case pwr_eType_Float32: move_y = y_orig + scale_offs + (*move_y_p - y_offset) * factor; break;
+	case pwr_eType_Float64: move_y = y_orig + scale_offs + (*(pwr_tFloat64 *) move_y_p - y_offset) * factor; break;
+	case pwr_eType_Int32:   move_y = y_orig + scale_offs + (*(pwr_tInt32 *) move_y_p - y_offset) * factor; break;
+	case pwr_eType_UInt32:  move_y = y_orig + scale_offs + (*(pwr_tUInt32 *) move_y_p - y_offset) * factor; break;
+	default: move_y = y_orig + scale_offs;
 	}
       }
       else
@@ -3754,7 +3869,7 @@ int GeMove::scan( grow_tObject object)
 
       grow_SetObjectScalePos( object, move_x, move_y, 
 			      scale_x, scale_y, 0, 0,
-			      glow_eScaleType_LowerLeft);
+			      scale_type);
       if ( move_x_p)
 	memcpy( &move_x_old_value, move_x_p, move_x_size);
       if ( move_y_p)
