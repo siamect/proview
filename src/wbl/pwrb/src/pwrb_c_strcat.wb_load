@@ -48,7 +48,7 @@ SObject pwrb:Class
       EndObject
       !/**
       !  @Summary The second string that is appended to the first string.
-      !  The second string that is appende to the first string.
+      !  The second string that is appended to the first string.
       !  The input has to be connected to an output of type String.
       !*/
       Object Str2 $Input 2 

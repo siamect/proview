@@ -14,9 +14,10 @@ SObject pwrb:Class
 ! and aswell the action that should be taken when a delay occurs. Several 
 ! objects with different action can be used for one plc thread.
 ! 
-! Delay is detected by both the thread to be monitored iself and rt_emon.
-! If thread itself is hanging in execution delay could anyway be detected by
-! rt_emon. This depends of course on at what priorities the processes are running.
+! Delay is detected by every thread and rt_emon.
+! If thread itself is hanging in execution, delay could anyway be detected by
+! another thread or by rt_emon. This depends of course on at what priorities 
+! the processes are running.
 !*/
   Object CycleSup $ClassDef 281
     Body SysBody

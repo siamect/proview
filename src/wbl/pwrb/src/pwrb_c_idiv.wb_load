@@ -1,0 +1,100 @@
+!  pwrb_c_idiv.wb_load -- Defines the class IDiv.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+SObject pwrb:Class
+!/**
+!  @Version 1.0
+!  @Code rt_plc_arithm.c
+!  @Group Plc,PlcInteger
+!  @Summary Integer division
+!  Integer division.
+!  @image orm_idiv_fo.gif
+!
+!  Integer division In1 / In2.
+!  The divisor In2 should not be 0. If this occurs, ActVal is set to 0.
+!  
+!*/
+  Object IDiv $ClassDef 399
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Connections
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "IDiv"
+      EndBody
+      !/**
+      !  Dividend.
+      !*/
+      Object In1 $Input 1 
+        Body SysBody
+          Attr PgmName = "In1"
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "In1"
+        EndBody
+      EndObject
+      !/**
+      !  Divisor.
+      !*/
+      Object In2 $Input 2 
+        Body SysBody
+          Attr PgmName = "In2"
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "In2"
+        EndBody
+      EndObject
+      !/**
+      !  The resulting quotient.
+      !*/
+      Object ActVal $Output 3
+        Body SysBody
+          Attr PgmName = "ActVal"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Val"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 11
+        Attr parameters[0] = 2
+        Attr parameters[1] = 0
+        Attr parameters[2] = 1
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 10
+        Attr graphindex = 0
+        Attr default_mask[0] = 3
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 1
+        Attr compmethod = 4
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+	Attr executeordermethod = 2
+        Attr objname = "IDiv"
+        Attr graphname = "IDiv"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    Object Template IDiv
+    EndObject
+  EndObject
+EndSObject

@@ -153,25 +153,14 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Text associated to ActualValue = FALSE. At presentation
-      !  when ActualValue = FALSE TextWhenValIs0 is displayed;
-      !  OFF may often be a suitable text.
-      !  The attribute is used by the object display.
+      !  @Summary A note of the current status of the object.
+      !  A note of the current status of the object.
+      !  Notes are used to exchange information between operators. It is handled 
+      !  by the Note method.
       !*/
-      Object TextWhenValIs0 $Attribute 8 
+      Object Note $Attribute 17
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$String16"
-        EndBody
-      EndObject
-      !/**
-      !  Text associated to ActualValue = TRUE. At presentation
-      !  when ActualValue = TRUE TextWhenValIs1 is displayed; ON
-      !  may often be a suitable text.
-      !  The attribute is used by the object display.
-      !*/
-      Object TextWhenValIs1 $Attribute 9 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$String16"
+          Attr TypeRef = "pwrs:Type-$String80"
         EndBody
       EndObject
       !/**

@@ -96,7 +96,7 @@ SObject pwrb:Class
         Attr parameters[2] = 0
         Attr parameters[3] = 0
         Attr subwindows = 0
-        Attr graphmethod = 15
+        Attr graphmethod = 7
         Attr graphindex = 0
         Attr default_mask[0] = 1
         Attr default_mask[1] = 0

@@ -19,8 +19,7 @@ SObject pwrb:Class
 !  The name of the object states the volume to load.
 !
 !  @classlink NodeConfig pwrb_nodeconfig.html
-!  @classlink ClassVolumeLoad pwrb_classvolumeload.html
-!  
+!  @classlink ClassVolumeLoad pwrb_classvolumeload.html  
 !*/
   Object RootVolumeLoad $ClassDef 196 
     Body SysBody

@@ -1,0 +1,61 @@
+!  pwrb_c_sysmonconfig.wb_load -- Defines the class SysMonConfig.
+!
+!  PROVIEW/R
+!  Copyright (C) 1999 by Mandator AB.
+!
+!  System monitor configuration.
+!
+SObject pwrb:Class
+!/**
+! @Code rt_disksup.c
+! @Group Supervision,NodeConfiguration
+! @Summary System monitor configuration
+! Configuration object for the system monitor.
+!*/
+  Object SysMonConfig $ClassDef 418
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "SysMonConfig"
+      EndBody
+      !/**
+      ! Optional description.
+      !*/
+      Object Description $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Scantime in seconds.
+      !*/
+      Object ScanTime $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Contains the objid for the DiskSup objects.
+      !  The objid's are inserted by the rt_sysmon server process.
+      !*/
+      Object DiskSupObjects $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 25
+	EndBody
+      EndObject
+    EndObject
+    Object Template SysMonConfig
+      Body RtBody
+	Attr ScanTime = 60
+      EndBody
+    EndObject
+  EndObject
+EndSObject

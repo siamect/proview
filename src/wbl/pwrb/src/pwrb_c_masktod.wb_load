@@ -42,7 +42,7 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Digital input representing bit number 1.
+      !  Digital output representing bit number 1.
       !*/
       Object od1 $Output 2 
         Body SysBody

@@ -19,6 +19,7 @@ group PlcGrafcet pwrb_initstep.html
 group PlcIO pwrb_apcollect.html
 group PlcLogic pwrb_and.html
 group PlcAnalog pwrb_aarithm.html
+group PlcInteger pwrb_abs.html
 group PlcControl pwrb_inc3p.html
 group PlcDrive pwrb_drive.html
 group PlcEdit pwrb_bodytext.html

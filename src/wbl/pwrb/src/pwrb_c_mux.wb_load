@@ -1,0 +1,238 @@
+!  pwrb_c_mux.wb_load -- Defines the class Mux.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+SObject pwrb:Class
+!/**
+!  @Version 1.0
+!  @Code rt_plc_arithm.c
+!  @Group Plc,PlcAnalog
+!  @Summary Analog multiplexer
+!  Analog multiplexer.
+!  @image orm_mux_fo.gif
+!
+!  Select one of 24 analog inputs, depending on Idx.
+!  
+!*/
+  Object Mux $ClassDef 405
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Connections
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "Mux"
+      EndBody
+      !/**
+      !  Index for selected value.
+      !  First input has index 0.
+      !*/
+      Object Index $Input 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Idx"
+        EndBody
+      EndObject
+      !/**
+      !  Value of input signal 0, input signal 1, ...
+      !*/
+      Object In0 $Input 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "In0"
+        EndBody
+      EndObject
+      Object In1 $Input 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "In1"
+        EndBody
+      EndObject
+      Object In2 $Input 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "In2"
+        EndBody
+      EndObject
+      Object In3 $Input 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "In3"
+        EndBody
+      EndObject
+      Object In4 $Input 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "In4"
+        EndBody
+      EndObject
+      Object In5 $Input 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "In5"
+        EndBody
+      EndObject
+      Object In6 $Input 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "In6"
+        EndBody
+      EndObject
+      Object In7 $Input 9
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "In7"
+        EndBody
+      EndObject
+      Object In8 $Input 10
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "In8"
+        EndBody
+      EndObject
+      Object In9 $Input 11
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "In9"
+        EndBody
+      EndObject
+      Object In10 $Input 12
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "In10"
+        EndBody
+      EndObject
+      Object In11 $Input 13
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "In11"
+        EndBody
+      EndObject
+      Object In12 $Input 14
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "In12"
+        EndBody
+      EndObject
+      Object In13 $Input 15
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "In13"
+        EndBody
+      EndObject
+      Object In14 $Input 16
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "In14"
+        EndBody
+      EndObject
+      Object In15 $Input 17
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "In15"
+        EndBody
+      EndObject
+      Object In16 $Input 18
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "In16"
+        EndBody
+      EndObject
+      Object In17 $Input 19
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "In17"
+        EndBody
+      EndObject
+      Object In18 $Input 20
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "In18"
+        EndBody
+      EndObject
+      Object In19 $Input 21
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "In19"
+        EndBody
+      EndObject
+      Object In20 $Input 22
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "In20"
+        EndBody
+      EndObject
+      Object In21 $Input 23
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "In21"
+        EndBody
+      EndObject
+      Object In22 $Input 24
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "In22"
+        EndBody
+      EndObject
+      Object In23 $Input 25
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "In23"
+        EndBody
+      EndObject
+      !/**
+      !  Selected value.
+      !*/
+      Object ActVal $Output 26
+        Body SysBody
+          Attr PgmName = "ActVal"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "Val"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 11
+        Attr parameters[0] = 25
+        Attr parameters[1] = 0
+        Attr parameters[2] = 1
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 0
+        Attr graphindex = 0
+        Attr default_mask[0] = 7
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 1
+        Attr compmethod = 4
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+	Attr executeordermethod = 2
+        Attr objname = "Mux"
+        Attr graphname = "Mux"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    Object Template Mux
+      Body RtBody
+      EndBody
+    EndObject
+  EndObject
+EndSObject

@@ -16,7 +16,7 @@ SObject pwrb:Class
 !  Extract a substring from a string.
 !  @image orm_substr_fo.gif
 !
-!  The SubStr extracts a substring from at string at the specified
+!  The SubStr extracts a substring from a string at the specified
 !  offset and with the specified length.
 !
 !*/

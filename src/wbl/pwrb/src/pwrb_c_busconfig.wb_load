@@ -10,14 +10,14 @@ SObject pwrb:Class
 !  @Version 1.0
 !  @Group ProjectConfiguration
 !  @Summary Configures a Qcom bus.
-!  The Bus object configures a qcom that nodes in the project will
+!  The Bus object configures a qcom bus that nodes in the project will
 !  communicate on.
 !
 !  The object should be configured in the  project volume as a top object,
 !  and have the NodeConfig object of the nodes in the bus as children.
 !
+!  @b See also
 !  @classlink NodeConfig pwrb_nodeconfig.html
-!  
 !*/
   Object BusConfig $ClassDef 362
     Body SysBody

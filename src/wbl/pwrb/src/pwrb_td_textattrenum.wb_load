@@ -13,7 +13,7 @@ SObject pwrb:Type
 !  in the plc editor.
 !
 ! @b See also
-!  @classlink Mode pwrb_text.html
+!  @classlink Text pwrb_text.html
 !*/
   Object TextAttrEnum $TypeDef 6
     Body SysBody

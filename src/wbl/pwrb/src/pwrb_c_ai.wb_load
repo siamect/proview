@@ -196,6 +196,17 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  @Summary A note of the current status of the object.
+      !  A note of the current status of the object.
+      !  Notes are used to exchange information between operators. It is handled 
+      !  by the Note method.
+      !*/
+      Object Note $Attribute 19
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
       !  The internal filter function concerns only local
       !  Ai-signals.
       !  Specifies the selected filter. The possible types of
@@ -231,7 +242,7 @@ SObject pwrb:Class
       !  Defines filter constants in selected function, see
       !  FilterType. The constants are specified in seconds.
       !  Only if FilterType = 1 and FilterAttribute[0] >
-      !  ScanInterval CycleTimeBus (= the updating period of
+      !  ScanInterval * CycleTimeBus (= the updating period of
       !  the signal) is filtering done.
       !*/
       Object FilterAttribute $Attribute 14 

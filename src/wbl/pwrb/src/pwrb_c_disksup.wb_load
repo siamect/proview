@@ -1,0 +1,157 @@
+!  pwrb_c_disksup.wb_load -- Defines the class DiskSup.
+!
+!  PROVIEW/R
+!  Copyright (C) 1999 by Mandator AB.
+!
+!  Supervision of a disk.
+!
+SObject pwrb:Class
+!/**
+! @Code rt_disksup.c
+! @Group Supervision,NodeConfiguration
+! @Summary Object used for supervision of a disk
+! Object used for supervision of a disk. A maximum occupied size specified
+! and aswell the action that should be taken when the size exceeds. Several 
+! objects with different action can be used for one disk.
+!*/
+  Object DiskSup $ClassDef 417
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "DiskSup"
+      EndBody
+      !/**
+      ! Optional description.
+      !*/
+      Object Description $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Maximum used space in percentages. 
+      !*/
+      Object UsedMaxLimit $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Name of file system.
+      !*/
+      Object DiskName $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Scantime in seconds. 
+      !  This should be a multiple of the scantime of the SysMonConf object.
+      !*/
+      Object ScanTime $Attribute 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Action to be taken if a delay occurs. 1 = Alarm, 2 = Command.
+      !*/
+      Object Action $Attribute 5
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-DiskSupActionMask"
+        EndBody
+      EndObject
+      !/**
+      !  Detect text. If alarm action is specified, this is the alarmtext.
+      !*/
+      Object DetectText $Attribute 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  A shell command executed if command action is specified.
+      !  Use this to purge files.
+      !*/
+      Object Command $Attribute 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Current use in percentages.
+      !*/
+      Object CurrentUse $Attribute 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  The last time the limit was exceeded.
+      !*/
+      Object DetectTime $Attribute 9
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Time"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+      !/**
+      !  Specifies the type of the message (=DetectText ) which
+      !  will be sent at alarm state.
+      !  ALARM -- 64 The message always requires an
+      !              acknowledgement and sent to the alarm
+      !  
+      !  INFO  -- 32 If the message requires acknowledgement is
+      !              it sent to the info part of the alarm
+      !              window and the event list, otherwise only
+      !*/
+      Object EventType $Attribute 10
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-EventTypeEnum"
+        EndBody
+      EndObject
+      !/**
+      !  Priorities concerning alarm messages.
+      !  
+      !   -- 67   A-alarm; highest priority. (=43Hex)
+      !   -- 66   B-alarm  (= 42Hex)
+      !   -- 65   C-alarm  (= 41Hex)
+      !   -- 64   D-alarm ; lowest priority. (=40Hex)
+      !*/
+      Object EventPriority $Attribute 11
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-EventPrioEnum"
+        EndBody
+      EndObject
+      !/**
+      !  Current disk status.
+      !  High limit exceeded is indicated with SMON__DISKHIGHLIMIT.
+      !  Any get statistics failiure is indicated with errno.
+      !*/
+      Object Status $Attribute 12
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Status"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object Template DiskSup
+      Body RtBody
+	Attr UsedMaxLimit = 90
+	Attr ScanTime = 60
+        Attr Action = 1
+	Attr DetectText = "Disk usage limit exceeded"
+        Attr EventType = 64
+        Attr EventPriority = 67
+      EndBody
+    EndObject
+  EndObject
+EndSObject

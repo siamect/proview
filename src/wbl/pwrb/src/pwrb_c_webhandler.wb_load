@@ -44,8 +44,8 @@ SObject pwrb:Class
       EndBody
       !/**
       !  @Summary Max number of web connections to the GdhServer process
-      !  Max number of connections to the GdhServer process.
-      !  Every graph-applet that is displayed, opens a link to the GdhSever
+      !  Max number of concurrent connections to the GdhServer process.
+      !  Every graph-applet that is displayed, opens a link to the GdhServer
       !  process. If MaxConnections is exceeded, the connect request will
       !  be rejected.
       !*/

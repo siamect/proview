@@ -13,10 +13,10 @@ SObject pwrb:Class
 !  The NodeConfig object configures a node in the current project
 !  on which the proview runtime environment should be started.
 !
-!  The NodeConfig object is created in the project volume as a toplevel
-!  object in the node-hierachy. Is is the root of an object tree of 
-!  voluemload and distribution object, which together configures QCOM,
-!  nethandler and the distributor. The following objects can be a part
+!  The NodeConfig object is created in the project volume as a child to
+!  a BusConfig-object in the node-hierachy. Is is the root of an object 
+!  tree of  volumeload and distribution object, which together configures 
+!  QCOM, nethandler and the distributor. The following objects can be a part
 !  of the tree.
 !
 !  The NodeConfig object should have a RootVolumeLoad object as
@@ -25,15 +25,14 @@ SObject pwrb:Class
 !  Any additional classvolumes that belongs to a mounted volume can
 !  be loaded with a ClassVolumeLoad object.
 !
-!  Distribution objects (ApplDistribute, GraphDistribute) configures 
+!  Distribution objects (Distribute, ApplDistribute) configures 
 !  application programs and other files that should be copied to the node.
 !
 ! @b See also
 !  @classlink RootVolumeLoad pwrb_rootvolumeload.html
 !  @classlink ClassVolumeLoad pwrb_classvolumeload.html
 !  @classlink FriendNodeConfig pwrb_friendnodeconfig.html
-!  @classlink Distribute pwrb_distribute.html
-!  
+!  @classlink Distribute pwrb_distribute.html  
 !*/
   Object NodeConfig $ClassDef 160 
     Body SysBody

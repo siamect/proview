@@ -1,0 +1,169 @@
+!  pwrb_c_mul.wb_load -- Defines the class Mul.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+SObject pwrb:Class
+!/**
+!  @Version 1.0
+!  @Code rt_plc_arithm.c
+!  @Group Plc,PlcAnalog
+!  @Summary Analog multiplication
+!  Analog multiplication.
+!  @image orm_mul_fo.gif
+!
+!  Multiplication of up to 8 analog inputs.
+!  
+!*/
+  Object Mul $ClassDef 406
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Connections
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "Mul"
+      EndBody
+      !/**
+      !  Analog factor.
+      !*/
+      Object In1 $Input 1 
+        Body SysBody
+          Attr PgmName = "In1"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "In1"
+        EndBody
+      EndObject
+      !/**
+      !  Analog factor.
+      !*/
+      Object In2 $Input 2 
+        Body SysBody
+          Attr PgmName = "In2"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "In2"
+        EndBody
+      EndObject
+      !/**
+      !  Analog factor.
+      !*/
+      Object In3 $Input 3 
+        Body SysBody
+          Attr PgmName = "In3"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "In3"
+        EndBody
+      EndObject
+      !/**
+      !  Analog factor.
+      !*/
+      Object In4 $Input 4 
+        Body SysBody
+          Attr PgmName = "In4"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "In4"
+        EndBody
+      EndObject
+      !/**
+      !  Analog factor.
+      !*/
+      Object In5 $Input 5 
+        Body SysBody
+          Attr PgmName = "In5"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "In5"
+        EndBody
+      EndObject
+      !/**
+      !  Analog factor.
+      !*/
+      Object In6 $Input 6 
+        Body SysBody
+          Attr PgmName = "In6"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "In6"
+        EndBody
+      EndObject
+      !/**
+      !  Analog factor.
+      !*/
+      Object In7 $Input 7 
+        Body SysBody
+          Attr PgmName = "In7"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "In7"
+        EndBody
+      EndObject
+      !/**
+      !  Analog factor.
+      !*/
+      Object In8 $Input 8 
+        Body SysBody
+          Attr PgmName = "In8"
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "In8"
+        EndBody
+      EndObject
+      !/**
+      !  The result of the multiplication.
+      !*/
+      Object ActVal $Output 9 
+        Body SysBody
+          Attr PgmName = "ActVal"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "Val"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 11
+        Attr parameters[0] = 8
+        Attr parameters[1] = 0
+        Attr parameters[2] = 1
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 1
+        Attr graphindex = 0
+        Attr default_mask[0] = 3
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 1
+        Attr compmethod = 4
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+	Attr executeordermethod = 2
+        Attr objname = "Mul"
+        Attr graphname = "Mul"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    Object Template Mul
+      Body RtBody
+	Attr In1 = 1
+	Attr In2 = 1
+	Attr In3 = 1
+	Attr In4 = 1
+	Attr In5 = 1
+	Attr In6 = 1
+	Attr In7 = 1
+	Attr In8 = 1
+      EndBody
+    EndObject
+  EndObject
+EndSObject

@@ -16,7 +16,7 @@ SObject pwrb:Class
 !  Convert digital value to string.
 !  @image orm_dtostr_fo.gif
 !
-!  The DtoStr object converts the value of the integer input to
+!  The DtoStr object converts the value of the digital input to
 !  at string stored in ActVal.
 !
 !  Note that an erroneous format specification may cause the
@@ -34,7 +34,7 @@ SObject pwrb:Class
          Attr StructName = "DtoStr"
       EndBody
       !/**
-      !  Integer input that will be converted to string.
+      !  Digital input that will be converted to string.
       !*/
       Object In $Input 1 
         Body SysBody

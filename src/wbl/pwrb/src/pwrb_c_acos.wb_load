@@ -1,0 +1,112 @@
+!  pwrb_c_acos.wb_load -- Defines the class ACos.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+! Range ldh_eDId_Base
+!
+SObject pwrb:Class
+!/**
+!  @Version 1.0
+!  @Code rt_plc_macro_div.h
+!  @Group Plc,PlcArithm
+!  @Summary Arc cosine function.
+!  ACos calculates the arc cosine of the input.
+!  @image orm_acos_fo.gif
+!  The input should be in the range  -1 / FactorIn to 1 / FactorIn, otherwise 
+!  the output is undefined. 
+!  The result is in radians between -PI / 2 * FactorVal and PI / 2 * FactorVal.
+!*/
+  Object ACos $ClassDef 385
+    Body SysBody
+      Attr Editor = pwr_eEditor_PlcEd
+      Attr Method = pwr_eMethod_Connections
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+         Attr StructName = "ACos"
+      EndBody
+      !/**
+      !  Input in radians. Should be in the range -1 / FactorIn to 1 / FactorIn.
+      !*/
+      Object in $Input 1 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_RTVIRTUAL
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOREMOVE
+	  Attr Flags |= PWR_MASK_NOINVERT
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "in"
+        EndBody
+      EndObject
+      !/**
+      !  Factor multiplied with the input before calculating the arc cosine
+      !  value.
+      !*/
+      Object FactorIn $Intern 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Factor multiplied with the calculated arc cosine value.
+      !*/
+      Object FactorVal $Intern 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Arc cosine of the input.
+      !*/
+      Object ActVal $Output 4
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr GraphName = "Val"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 11
+        Attr parameters[0] = 1
+        Attr parameters[1] = 2
+        Attr parameters[2] = 1
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 1
+        Attr graphindex = 0
+        Attr default_mask[0] = 1
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 1
+        Attr compmethod = 5
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+	Attr executeordermethod = 2
+        Attr objname = "ACos"
+        Attr graphname = "ACos"
+      EndBody
+    EndObject
+    Object Template ACos
+      Body RtBody
+        Attr FactorIn = 1
+        Attr FactorVal = 1
+      EndBody
+    EndObject
+  EndObject
+EndSObject

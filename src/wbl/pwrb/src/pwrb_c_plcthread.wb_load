@@ -365,7 +365,7 @@ SObject pwrb:Class
       !  @Summary IO Process number.
       !  The process number is normally PlcProcess (1) for plc threads.
       !  In some IO system though, a plc thread should act as a 
-      !  separate IO process. This is done when an Agent, Rack of Card
+      !  separate IO process. This is done when an Agent, Rack or Card
       !  should be handled by several plc threads.
       !*/
       Object IoProcess $Attribute 35

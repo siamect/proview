@@ -131,6 +131,17 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$URL"
         EndBody
       EndObject
+      !/**
+      !  @Summary A note of the current status of the object.
+      !  A note of the current status of the object.
+      !  Notes are used to exchange information between operators. It is handled 
+      !  by the Note method.
+      !*/
+      Object Note $Attribute 10
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
     EndObject
     Object ConfiguratorPoson $Menu
       Object Pointed $Menu

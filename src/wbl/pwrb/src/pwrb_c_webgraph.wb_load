@@ -49,12 +49,17 @@ SObject pwrb:Class
       EndObject
       !/**
       !  @Summary Destination window for the graph.
-      !  Destination window for the graph.
+      !  Destination window for an applet graph.
+      !  If the graph is exporter as an java applet, you kan specify in
+      !  which frame the applet is displayed.
       !  The window contains two frames, the menu frame to the left
-      !  and the applet frame to the right.
-      !  By default the applet is displayed in the applet, but it is also
+      !  and the main frame to the right.
+      !  By default the applet is displayed in the main frame, but it is also
       !  possible to display it in a separate window, or to also cover the menu
       !  frame.
+      !
+      !  If the graph is exported as a java frame it is always opened in a 
+      !  separate window.
       !
       !  0: Right frame
       !  1: Parent 

@@ -14,7 +14,7 @@ SObject pwrb:Class
 !  @Summary Configuration of workbench environment.
 !  The WbEnviroment configures the workbench environment.
 !  The object resides in the project volume as a top object.
-!  In the path attribute a search path for loadfiles.
+!  In the path attribute a search path for loadfiles can be supplied.
 !  The object can have children of type RootVolumeLoad, SubVolumeLoad
 !  and ClassVolumeLoad that defines which volumes can be loaded into the
 !  workbench environment. 

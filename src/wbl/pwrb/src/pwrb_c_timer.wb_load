@@ -234,12 +234,12 @@ SObject pwrb:Class
         Attr rtbody_annotation = 1
         Attr compmethod = 5
         Attr compindex = 0
-        Attr tracemethod = 0
-        Attr traceindex = 0
+        Attr tracemethod = 3
+        Attr traceindex = 1
         Attr executeordermethod = 2
         Attr objname = "Timer"
         Attr graphname = "Timer"
-        Attr debugpar = ""
+        Attr debugpar = "Status"
       EndBody
     EndObject
     Object Template Timer

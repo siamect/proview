@@ -11,11 +11,11 @@ SObject pwrb:Class
 !  @Group ProjectConfiguration
 !  @Summary Configures a proview node that belongs to another project.
 !  The FriendNodeConfig object configures a proview node that belong to
-!  another project, that is the owner a volume mounted by some node in 
+!  another project, that is the owner of a volume mounted by some node in 
 !  the current project.
 !
-!  The FriendNodeConfig object is created in the project volume as a toplevel
-!  object in the node-hierachy.
+!  The FriendNodeConfig object is created in the project volume as a child to
+!  a BusConfig-object in the node-hierachy.
 !
 ! @b See also
 !  @classlink NodeConfig pwrb_nodeconfig.html

@@ -12,7 +12,7 @@ SObject pwrb:Type
 !  Target for web pages.
 !
 ! @b See also
-!  @classlink Mode pwrb_weblink.html
+!  @classlink WebLink pwrb_weblink.html
 !*/
   Object WebTargetEnum $TypeDef 4
     Body SysBody
