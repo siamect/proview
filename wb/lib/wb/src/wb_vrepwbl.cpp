@@ -135,40 +135,42 @@ int wb_vrepwbl::load( const char *fname)
 {
   int i;
   char file_spec[200];
+  pwr_tStatus sts, rsts;
+
+  rsts = LDH__SUCCESS;
 
   if ( strstr( fname, ".wb_load") != 0) {
-    load_files( fname);
+    sts = load_files( fname);
+    if ( EVEN(sts)) return sts;
   }
   else {
     // Load all wb_load files in directory
 
     // Load volume
     sprintf( file_spec, "%s/*_v.wb_load", fname);
-    load_files( file_spec);
+    sts = load_files( file_spec);
+    if ( EVEN(sts)) rsts = sts;
 
     // Load class hierarchies
     sprintf( file_spec, "%s/*_ch_*.wb_load", fname);
-    load_files( file_spec);
+    sts = load_files( file_spec);
+    if ( EVEN(sts)) rsts = sts;
 
     // Load types
     sprintf( file_spec, "%s/*_t_*.wb_load", fname);
-    load_files( file_spec);
+    sts = load_files( file_spec);
+    if ( EVEN(sts)) rsts = sts;
 
     // Load types
     sprintf( file_spec, "%s/*_td_*.wb_load", fname);
-    load_files( file_spec);
+    sts = load_files( file_spec);
+    if ( EVEN(sts)) rsts = sts;
 
     // Load classes
     sprintf( file_spec, "%s/*_c_*.wb_load", fname);
-    load_files( file_spec);
+    sts = load_files( file_spec);
+    if ( EVEN(sts)) rsts = sts;
 
-    // Load some baseclasses...
-    // sprintf( file_spec, "%s/pwrb_c_*.wb_load", fname);
-    // load_files( file_spec);
-
-    // Load classes
-    // sprintf( file_spec, "%s/*_c*.wb_load", fname);
-    // load_files( file_spec);
   }
   for ( i = 0; i < file_cnt; i++)
     file[i]->rootAST->registerNode( this);
@@ -179,12 +181,16 @@ int wb_vrepwbl::load( const char *fname)
   // if ( root_object)
   //  root_object->info_link( 0);
 
-  cout << "-- Starting build pass" << endl;
+  cout << "\n-- Building volume " << volume_name << endl;
   if ( root_object)
     root_object->build( 1);
 
   // info();
-  return 1;
+  if ( error_cnt)
+    cout << "** Errors when loading volume: " << error_cnt << " errors found" << endl;
+  else
+    cout << "-- Volume " << volume_name << " loaded" << endl;
+  return rsts;
 }
 
 int wb_vrepwbl::classNameToCid( const char *name, pwr_tCid *cid)
@@ -1032,7 +1038,8 @@ int wb_vrepwbl::load_files( const char *file_spec)
     catch(exception& e) {
       cerr << "exception: " << e.what() << " " << found_file << " line: " << 
 	file[file_cnt]->lexer->getLine() << endl;
-      return 0;
+      error_cnt++;
+      return LDH__WBLPARSE;
     }
     file_cnt++;
     sts = dcli_search_file( (char *)file_spec, found_file, DCLI_DIR_SEARCH_NEXT);
@@ -1254,3 +1261,69 @@ void wb_vrepwbl::objectName(wb_orep *o, char *str)
     free( vect);
 }
 
+void *wb_vrepwbl::readAttribute(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, 
+				unsigned int offset, unsigned int size, void *p)
+{
+  *sts = LDH__SUCCESS;
+    
+  wb_wblnode *n = ((wb_orepwbl *) o)->wblNode();
+
+  switch ( bix) {
+  case cdh_eBix_rt:
+    if ( n->rbody_size == 0) {
+      *sts = LDH__NOSUCHBODY;
+      return 0;
+    }
+    if ( p) {
+      memcpy( p, (char *)n->rbody + offset, MIN(n->rbody_size - offset, size));
+      return p;
+    }
+    return (void *)((char *)n->rbody + offset);
+  case cdh_eBix_dev:
+    if ( n->dbody_size == 0) {
+      *sts = LDH__NOSUCHBODY;
+      return 0;
+    }
+    if ( p) {
+      memcpy( p, (char *)n->dbody + offset, MIN(n->dbody_size - offset, size));
+      return p;
+    }
+    return (void *)((char *)n->dbody + offset);
+  default:
+    *sts = LDH__NOSUCHBODY;
+    return 0;
+  }
+}
+
+void *wb_vrepwbl::readBody(pwr_tStatus *sts, wb_orep *o, cdh_eBix bix, void *p)
+{
+  *sts = LDH__SUCCESS;
+    
+  wb_wblnode *n = ((wb_orepwbl *) o)->wblNode();
+
+  switch ( bix) {
+  case cdh_eBix_rt:
+    if ( n->rbody_size == 0) {
+      *sts = LDH__NOSUCHBODY;
+      return 0;
+    }
+    if ( p) {
+      memcpy( p, n->rbody, n->rbody_size);
+      return p;
+    }
+    return n->rbody;
+  case cdh_eBix_dev:
+    if ( n->dbody_size == 0) {
+      *sts = LDH__NOSUCHBODY;
+      return 0;
+    }
+    if ( p) {
+      memcpy( p, n->dbody, n->dbody_size);
+      return p;
+    }
+    return n->dbody;
+  default:
+    *sts = LDH__NOSUCHBODY;
+    return 0;
+  }
+}

@@ -152,7 +152,8 @@ init :
 
 copy : $(inc_dir)/pwr_systemclasses.h
 
-lib : $(export_wbl)
+#lib : $(export_wbl)
+lib  : $(load_dir)/pwrs.dbs
 
 exe : $(doc_dir)/pwrs_allclasses.html \
       $(exe_dir)/pwrs_xtthelp.dat
@@ -160,6 +161,10 @@ exe : $(doc_dir)/pwrs_allclasses.html \
 clean : $(clean_wbl)
 
 realclean : clean clean_pwrs_xtthelp clean_pwrs_html clean_systemclasses
+
+$(load_dir)/pwrs.dbs :
+	@ echo "Generating snapshot for pwrs"
+	@ wb_cmd create snapshot /file=\"$(pwre_sroot)/wbl/pwrs/src/\"/out=\"$(target)\"
 
 $(inc_dir)/pwr_systemclasses.h :
 	@ echo "Generating struct files for pwrs classes..."

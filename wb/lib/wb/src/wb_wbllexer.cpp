@@ -2241,6 +2241,11 @@ void wb_wbllexer::mESC(bool _createToken) {
 		match(static_cast<unsigned char>('"'));
 		break;
 	}
+	case static_cast<unsigned char>('0'):
+	{
+		match(static_cast<unsigned char>('0'));
+		break;
+	}
 	case static_cast<unsigned char>('\''):
 	{
 		match(static_cast<unsigned char>('\''));

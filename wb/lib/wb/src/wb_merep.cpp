@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "wb_merep.h"
 #include "wb_erep.h"
 #include "wb_attrname.h"
@@ -35,6 +37,7 @@ void wb_merep::addDbs( pwr_tStatus *sts, wb_mvrep *mvrep)
     
     m_mvrepdbs[mvrep->vid()] = mvrep;
     mvrep->ref();
+    cout << "Metavolume " << mvrep->vid() << " inserted\n";
     *sts = LDH__SUCCESS;
   }
   else

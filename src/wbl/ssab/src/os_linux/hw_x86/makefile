@@ -77,7 +77,8 @@ init :
 
 copy : $(inc_dir)/pwr_ssabclasses.h
 
-lib : $(export_wbl)
+#lib : $(export_wbl)
+lib  : $(load_dir)/ssab.dbs
 
 exe : $(doc_dir)/ssab_allclasses.html \
       $(exe_dir)/ssab_xtthelp.dat
@@ -85,6 +86,10 @@ exe : $(doc_dir)/ssab_allclasses.html \
 clean : 
 
 realclean : clean $(clean_wbl)
+
+$(load_dir)/ssab.dbs :
+	@ echo "Generating snapshot for ssab"
+	@ wb_cmd create snapshot /file=\"$(pwre_sroot)/wbl/ssab/src/\"/out=\"$(target)\"
 
 $(inc_dir)/pwr_ssabclasses.h :
 	@ echo "Generating struct files for ssab classes..."

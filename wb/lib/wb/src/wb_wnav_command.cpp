@@ -227,7 +227,7 @@ dcli_tCmdTable	wnav_command_table[] = {
 			"/COMMAND", "/AFTER", "/BEFORE", "/FIRSTCHILD", 
 			"/LASTCHILD", "/VOLUME", "/ALL", 
 			"/CLASS", "/DEBUG", "/NODECONFIG",
-			"/NAME", "/IDENTITY", "/FILES", "/OUT",
+			"/NAME", "/IDENTITY", "/FILES", "/OUT", "/IGNORE",
 			""}
 		},
 		{
@@ -3428,6 +3428,7 @@ static int	wnav_create_func( void		*client_data,
   {
     char	filestr[80];
     char	outstr[80];
+    int         ignore;
     pwr_tStatus	sts;
 
     // Command is "CREATE SNAPSHOT"
@@ -3444,6 +3445,8 @@ static int	wnav_create_func( void		*client_data,
       return WNAV__QUAL;
     }
 
+    ignore = ODD( dcli_get_qualifier( "/IGNORE", NULL));
+
     sts = wnav_wccm_get_wbctx_cb( wnav, &wnav->wbctx);
     if ( EVEN(sts)) return sts;
 
@@ -3451,9 +3454,9 @@ static int	wnav_create_func( void		*client_data,
     try {
       wb_erep *erep = *(wb_env *)wnav->wbctx;
       wb_vrepwbl *wbl = new wb_vrepwbl(erep);
-      wbl->load( filestr);
-      printf( "-- Loadfile loaded, snapshot creation started...\n");
-      wbl->createSnapshot( outstr);
+      sts = wbl->load( filestr);
+      if ( ODD(sts) || ignore)
+	wbl->createSnapshot( outstr);
       delete wbl;
     }
     catch ( wb_error &e) {

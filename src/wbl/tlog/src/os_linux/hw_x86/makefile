@@ -70,7 +70,8 @@ init :
 
 copy : $(inc_dir)/pwr_tlogclasses.h
 
-lib : $(export_wbl)
+#lib : $(export_wbl)
+lib  : $(load_dir)/tlog.dbs
 
 exe : $(doc_dir)/tlog_allclasses.html \
       $(exe_dir)/tlog_xtthelp.dat
@@ -78,6 +79,10 @@ exe : $(doc_dir)/tlog_allclasses.html \
 clean : 
 
 realclean : clean $(clean_wbl)
+
+$(load_dir)/tlog.dbs :
+	@ echo "Generating snapshot for tlog"
+	@ wb_cmd create snapshot /file=\"$(pwre_sroot)/wbl/tlog/src/\"/out=\"$(target)\"
 
 $(inc_dir)/pwr_tlogclasses.h :
 	@ echo "Generating struct files for tlog classes..."

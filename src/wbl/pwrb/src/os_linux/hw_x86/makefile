@@ -346,7 +346,8 @@ init :
 
 copy : $(inc_dir)/pwr_baseclasses.h
 
-lib : $(export_wbl)
+#lib : $(export_wbl)
+lib  : $(load_dir)/pwrb.dbs
 
 exe : $(doc_dir)/pwrb_allclasses.html \
       $(exe_dir)/pwrb_xtthelp.dat
@@ -354,6 +355,10 @@ exe : $(doc_dir)/pwrb_allclasses.html \
 clean : 
 
 realclean : clean clean_pwrb_xtthelp clean_pwrb_html clean_baseclasses
+
+$(load_dir)/pwrb.dbs :
+	@ echo "Generating snapshot for pwrb"
+	@ wb_cmd create snapshot /file=\"$(pwre_sroot)/wbl/pwrb/src/\"/out=\"$(target)\"
 
 $(inc_dir)/pwr_baseclasses.h :
 	@ echo "Generating struct files for pwrb classes..."

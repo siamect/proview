@@ -91,7 +91,8 @@ init :
 
 copy : $(inc_dir)/pwr_nmpsclasses.h
 
-lib : $(export_wbl)
+#lib : $(export_wbl)
+lib  : $(load_dir)/nmps.dbs
 
 exe : $(doc_dir)/nmps_allclasses.html \
       $(exe_dir)/nmps_xtthelp.dat
@@ -99,6 +100,10 @@ exe : $(doc_dir)/nmps_allclasses.html \
 clean : 
 
 realclean : clean $(clean_wbl)
+
+$(load_dir)/nmps.dbs :
+	@ echo "Generating snapshot for nmps"
+	@ wb_cmd create snapshot /file=\"$(pwre_sroot)/wbl/nmps/src/\"/out=\"$(target)\"
 
 $(inc_dir)/pwr_nmpsclasses.h :
 	@ echo "Generating struct files for nmps classes..."

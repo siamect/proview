@@ -366,7 +366,17 @@ void wb_erep::loadMeta( pwr_tStatus *status)
         strcat( vname, vol_array[0]);
 	strcat( vname, ".dbs");
         dcli_translate_filename( vname, vname);
-        vol_cnt++;
+	cout << "Found: " << found_file << endl;
+	// Load...
+	try {
+          vrep = new wb_vrepdbs( this, vname);
+	  vrep->load();
+          addDbs( &sts, vrep);
+          vol_cnt++;
+	}
+	catch ( wb_error& e) {
+	  cout << "** Unable to open volume " << vname << " " << e.what() << endl;
+	}
       }
       else {
 	// Imported loadfile

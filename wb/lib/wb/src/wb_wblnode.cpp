@@ -1325,15 +1325,38 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
     {
       break;
     }
-    case tokens.STRING_LITERAL:
     case tokens.CHAR_LITERAL:
     {
       // Remove quotes
-      char str[1032];
+      char str[10];
       string text = getText();
       const char *text_p = text.c_str();
       strncpy( str, &text_p[1], sizeof(str));
       str[strlen(str)-1] = 0;
+      string new_text(str);
+      setText(new_text);
+      break;
+    }
+    case tokens.STRING_LITERAL:
+    {
+      // Remove quotes and replace \" with "
+      char str[2048];
+      const char *s;
+      char *t;
+      bool first = true;
+      t = str;
+      for ( s = getText().c_str(); *s; s++) {
+	if ( first) {
+	  first = false;
+	  continue;
+	}
+	if ( *s == '"' && *(s-1) == '\\')
+	  t--;
+	*t = *s;
+	t++;
+      }
+      t--;
+      *t = 0;
       string new_text(str);
       setText(new_text);
       break;
