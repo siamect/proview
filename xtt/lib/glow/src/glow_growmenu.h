@@ -22,7 +22,7 @@ class GrowMenu : public GrowRect {
   /*!
     \param glow_ctx 	The glow context.
     \param name		Name (max 31 char).
-    \param info		Menu info.
+    \param menu_info		Menu info.
     \param x		x coordinate for position.
     \param y		y coordinate for position.
     \param min_w	Minimum width.

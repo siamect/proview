@@ -579,11 +579,13 @@ class GrowCtx : public GlowCtx {
   */
   int send_hot_request( GlowArrayElem *object);
 
-  //! Send a hot request callback if such a callback is registred.
+  //! Send a menu callback if such a callback is registred.
   /*!
     \param object	Menu object.
     \param item		Activated menu item.
     \param event	Menu event.
+    \param x		x coordinate.
+    \param y		y coordinate.
 
     Send a menu callback.
   */

@@ -498,7 +498,9 @@ class GeDyn {
   ge_eDynAttr	attr_editor;		//!< Controls attributes displayed in attribute editor.
 
   //! Constructor.
-  /*! \param d_graph	Graph. */
+  /*! \param d_graph	Graph. 
+      \param d_attr_editor Controls attributes displayed in attribute editor.
+  */
   GeDyn( Graph *d_graph, ge_eDynAttr d_attr_editor = ge_eDynAttr_All) : 
     elements(0), graph(d_graph), ignore_color(false), 
     reset_color(false),

@@ -885,7 +885,7 @@ class GrowNode : public GlowNode {
     \param event	Key event. 
     \param keycode	Key code for pressed key.
   */
-  void annot_input_event( glow_eEvent event, int keykode);
+  void annot_input_event( glow_eEvent event, int keycode);
 
   //! Get text size and color for an annotation.
   /*!
