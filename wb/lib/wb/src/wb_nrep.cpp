@@ -147,7 +147,8 @@ void wb_nrep::parse () throw (wb_error)
 
   snn = norm_name;
 
-  if (oname[0] == '_') {  // This is an identity name.
+  if (oname[0] == '_') { 
+    // This is an identity name.
     for ( s = oname; *s; s++, snn++) {
       if (idname_tab[*(unsigned char *)s] == '!')
         throw wb_error(LDH__BADNAME);
@@ -441,6 +442,8 @@ void wb_nrep::parse () throw (wb_error)
         throw wb_error(LDH__BADNAME);  // No segment name
       seg[0].offs = 0;
       seg[0].len = nameDiff( s, oname);
+      if ( seg[0].len > pwr_cSizObjName)
+	throw wb_error(LDH__BADNAME);
       num_seg++;
       break;
     case 1:
@@ -449,6 +452,8 @@ void wb_nrep::parse () throw (wb_error)
       if ( nameDiff( s, oname)  - (vol_len + 1) == 0)
         break;
       seg[num_seg].len = nameDiff( s, oname) - seg[num_seg].offs;
+      if ( seg[num_seg].len > pwr_cSizObjName)
+	throw wb_error(LDH__BADNAME);
       if ( seg[num_seg].len)
         num_seg++;
       break;
