@@ -2,6 +2,7 @@
 #include "wb_wblnode.h"
 #include "wb_vrepwbl.h"
 #include "wb_wblvocabTokenTypes.hpp"
+#include "wb_dbs.h"
 
 extern "C" {
 #include "pwr_class.h"
@@ -1014,11 +1015,7 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
 
 }
 
-void wb_wblnode::iterObject( void *udata, 
-			     pwr_tStatus (*bc)(void *, 
-					       pwr_tOid, pwr_tCid, pwr_tOid, pwr_tOid,
-					       pwr_tOid, pwr_tOid, pwr_tOid, char *,
-					       pwr_tTime, int, int))
+void wb_wblnode::iterObject( wb_dbs *dbs)
 {
   ref_wblnode o_lch = get_o_lch();
   pwr_tOid fthoid = o_fth ? o_fth->m_oid : pwr_cNOid;
@@ -1027,26 +1024,36 @@ void wb_wblnode::iterObject( void *udata,
   pwr_tOid fchoid = o_fch ? o_fch->m_oid : pwr_cNOid;
   pwr_tOid lchoid = o_lch ? o_lch->m_oid : pwr_cNOid;
 
-  (bc)( udata, m_oid, m_cid, fthoid, fwsoid, bwsoid, fchoid, lchoid, name, 
-	getFileTime(), rbody_size, dbody_size);
+  dbs->installObject( m_oid, m_cid, fthoid, fwsoid, bwsoid, fchoid, lchoid, name, 0,
+	getFileTime(), getFileTime(), getFileTime(), rbody_size, dbody_size);
   
   if ( o_fch)
-    o_fch->iterObject( udata, bc);
+    o_fch->iterObject( dbs);
 
   if ( o_fws)
-    o_fws->iterObject( udata, bc);
+    o_fws->iterObject( dbs);
 }
 
-void wb_wblnode::iterBody( void *udata, 
-			   pwr_tStatus (*bc)(void *, pwr_tOid, void *, void *))
+void wb_wblnode::iterDbody( wb_dbs *dbs)
 {
-  (bc)( udata, m_oid, rbody, dbody);
+  dbs->installDbody( m_oid, dbody);
   
   if ( o_fch)
-    o_fch->iterBody( udata, bc);
+    o_fch->iterDbody( dbs);
 
   if ( o_fws)
-    o_fws->iterBody( udata, bc);
+    o_fws->iterDbody( dbs);
+}
+
+void wb_wblnode::iterRbody( wb_dbs *dbs)
+{
+  dbs->installRbody( m_oid, rbody);
+  
+  if ( o_fch)
+    o_fch->iterRbody( dbs);
+
+  if ( o_fws)
+    o_fws->iterRbody( dbs);
 }
 
 void wb_wblnode::setFile( wb_wblfile *f)

@@ -1,6 +1,10 @@
 #ifndef co_dcli_input_h
 #define co_dcli_input_h
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* co_dcli_input.h -- <short description>
 
    PROVIEW/R
@@ -53,5 +57,8 @@ int dcli_qio_writew( dcli_sChannel *chn, char *buf, int len);
 int dcli_qio_write( dcli_sChannel *chn, int tmo, char *buf, int len);
 
 
+#ifdef __cplusplus
+}
 #endif
 
+#endif

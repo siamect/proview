@@ -2,6 +2,10 @@
 %#ifndef co_dbs_h
 %#define co_dbs_h
 %
+%#ifdef __cplusplus
+%extern "C" {
+%#endif
+%
 %/* co_dbs.h -- database snapshop files
 %
 %   PROVIEW/R
@@ -190,8 +194,8 @@ enum dbs_eSect {
     dbs_eSect_oix     = 3,
     dbs_eSect_name    = 6,
     dbs_eSect_dbody   = 8,
-    dbs_eSect_cref    = 20,
-    dbs_eSect_fixup   = 9,
+    dbs_eSect_class   = 10,
+    dbs_eSect_fixup   = 14,
     dbs_eSect_
 };
 
@@ -202,7 +206,7 @@ enum dbs_eSect {
 %#define dbs_mSect_object   pwr_Bit(dbs_eSect_object)
 %#define dbs_mSect_rbody    pwr_Bit(dbs_eSect_rbody)
 %#define dbs_mSect_name     pwr_Bit(dbs_eSect_name)
-%#define dbs_mSect_cref     pwr_Bit(dbs_eSect_cref)
+%#define dbs_mSect_class    pwr_Bit(dbs_eSect_class)
 %#define dbs_mSect_dbody    pwr_Bit(dbs_eSect_dbody)
 %#define dbs_mSect_fixup    pwr_Bit(dbs_eSect_fixup)
 %
@@ -432,7 +436,11 @@ struct dbs_sObject {
  * Class Reference.
  */
 
-struct dbs_sCref {
+#ifdef PDR_HDR
+%#define dbs_cVersionClass 1
+#endif
+
+struct dbs_sClass {
     pwr_tCid        cid;       /**< class identifier */
     dbs_sQlink      o_lh;      /**< root of list of all object
                                     of this class within this volume  */
@@ -542,6 +550,10 @@ struct dbs_sName {
 %pwr_tBoolean    dbs_Close(pwr_tStatus *sts, dbs_sEnv *ep);
 %dbs_sEnv       *dbs_Open(pwr_tStatus *sts, dbs_sEnv *ep, const char *filename);
 %
+%
+%#ifdef __cplusplus
+%}
+%#endif
 %
 %#endif
 #endif

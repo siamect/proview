@@ -1,5 +1,10 @@
 #ifndef co_errno_h
 #define co_errno_h
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* co_errno.h -- Translate UNIX errno error codes.
 
    PROVIEW/R
@@ -26,5 +31,9 @@ int		errno_ExitErrno(int);
 pwr_tStatus	errno_Pstatus(int);
 pwr_tStatus	errno_Status(int);
 pwr_tStatus	errno_GetStatus();
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

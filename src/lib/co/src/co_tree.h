@@ -1,6 +1,10 @@
 #ifndef co_tree_h
 #define co_tree_h
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* co_tree.h -- <short description>
 
    PROVIEW/R
@@ -155,5 +159,9 @@ tree_Comp_strncmp(tree_sTable *tp, tree_sNode *x, tree_sNode *y);
 
 int
 tree_Comp_int32(tree_sTable *tp, tree_sNode *x, tree_sNode *y);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

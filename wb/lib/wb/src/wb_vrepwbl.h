@@ -55,12 +55,19 @@ public:
 
     wb_vrep *next() const;
 
+    virtual bool createSnapshot(char *fileName);
+
+    virtual void iterObject(wb_dbs *);
+    virtual void iterRbody(wb_dbs *);
+    virtual void iterDbody(wb_dbs *);
+#if 0
     void iterObject( void *udata,
 		     pwr_tStatus (*bc)(void *,pwr_tOid, pwr_tCid, pwr_tOid, pwr_tOid,
 				       pwr_tOid, pwr_tOid, pwr_tOid, char *,
 				       pwr_tTime, int, int));
     void iterBody( void *udata,
 		   pwr_tStatus (*bc)(void *,pwr_tOid, void *, void *));
+#endif
     int load( char *fname);
     int load_files( char *file_spec);
     void info();

@@ -2,7 +2,7 @@
 #define wb_vrep_h
 
 #include "pwr.h"
-#include "wb_erep.h"
+//#include "wb_erep.h"
 #include "wb_srep.h"
 #include "wb_orep.h"
 #include "wb_oset.h"
@@ -15,6 +15,7 @@ class wb_erep;
 class wb_srep;
 class wb_cdef;
 class wb_destination;
+class wb_dbs;
 
 class wb_vrep
 {
@@ -85,6 +86,12 @@ public:
     virtual pwr_tCid cid() const = 0;
     virtual void name( char *n) { strcpy( m_name, n);}
     virtual char *name() { return m_name;}
+
+    virtual bool createSnapshot(char *fileName) = 0;
+    
+    virtual void iterObject(wb_dbs *) = 0;
+    virtual void iterRbody(wb_dbs *) = 0;
+    virtual void iterDbody(wb_dbs *) = 0;
 };
 
 #endif

@@ -1,5 +1,10 @@
 #ifndef co_xdr_h
 #define co_xdr_h
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* co_xdr.h -- xdr routines
 
    PROVIEW/R
@@ -212,5 +217,9 @@ xdr_pwr_mAttrRef(XDR *xdrs, pwr_mAttrRef *objp);
 
 bool_t 
 xdr_pwr_sAttrRef(XDR *xdrs, pwr_sAttrRef *objp);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

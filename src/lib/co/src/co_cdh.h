@@ -1,6 +1,10 @@
 #ifndef co_cdh_h
 #define co_cdh_h
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* co_cdh.h -- class definition handler
 
    PROVIEW/R
@@ -844,5 +848,9 @@ cdh_NoCaseStrcmp (
   const char		*s,
   const char		*t
 );
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

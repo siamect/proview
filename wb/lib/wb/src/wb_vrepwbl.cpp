@@ -10,6 +10,8 @@
 #include "wb_vrepwbl.h"
 #include "wb_orepwbl.h"
 #include "wb_ldh_msg.h"
+#include "wb_dbs.h"
+#include "wb_erep.h"
 
 extern "C" {
 #include "co_dcli.h"
@@ -67,21 +69,36 @@ void wb_vrepwbl::info()
   //   rootAST[i]->info(0);
 }
 
-void wb_vrepwbl::iterObject( void *udata,
-			     pwr_tStatus (*bc)( void *,
-						pwr_tOid, pwr_tCid, pwr_tOid, pwr_tOid,
-						pwr_tOid, pwr_tOid, pwr_tOid, char *,
-						pwr_tTime, int, int))
+bool
+wb_vrepwbl::createSnapshot(char *fileName)
 {
-  if ( root_object)
-    root_object->iterObject( udata, bc);
+    try {
+        wb_dbs dbs(this);
+        
+        dbs.buildFile();
+
+        return true;
+    } catch (wb_error e) {
+        return false;
+    }
 }
 
-void wb_vrepwbl::iterBody( void *udata,
-			   pwr_tStatus (*bc)( void *, pwr_tOid, void *, void *))
+void wb_vrepwbl::iterObject( wb_dbs *dbs)
 {
   if ( root_object)
-    root_object->iterBody( udata, bc);
+    root_object->iterObject( dbs);
+}
+
+void wb_vrepwbl::iterDbody( wb_dbs *dbs)
+{
+  if ( root_object)
+    root_object->iterDbody( dbs);
+}
+
+void wb_vrepwbl::iterRbody( wb_dbs *dbs)
+{
+  if ( root_object)
+    root_object->iterRbody( dbs);
 }
 
 int wb_vrepwbl::load( char *fname)

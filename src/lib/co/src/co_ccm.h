@@ -1,6 +1,10 @@
 #ifndef co_ccm_h
 #define co_ccm_h
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* co_ccm.h -- script interpreter
 
    PROVIEW/R
@@ -66,5 +70,9 @@ int ccm_set_external_var(
   int			value_int,
   char			*value_string
 );
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

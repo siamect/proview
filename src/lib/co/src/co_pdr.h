@@ -1,5 +1,10 @@
 #ifndef co_pdr_h
 #define co_pdr_h
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* co_pdr.h -- pdr routines
 
    PROVIEW/R
@@ -277,5 +282,9 @@ pdr_pwr_mAttrRef(PDR *pdrs, pwr_mAttrRef *objp);
 
 pwr_tBoolean 
 pdr_pwr_sAttrRef(PDR *pdrs, pwr_sAttrRef *objp);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

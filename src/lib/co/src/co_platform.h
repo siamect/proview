@@ -1,6 +1,10 @@
 #ifndef co_platform_h
 #define co_platform_h
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* co_platform.h -- platform routines
 
    PROVIEW/R
@@ -190,5 +194,9 @@ co_mFormat *co_GetOwnFormat(co_mFormat *format);
 
 
 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

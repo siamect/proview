@@ -80,7 +80,7 @@ public:
     
     bool isLocal(wb_object &o) const;
     
-    bool createSnapshot(char *fileName) { return false;} // Fix
+    bool createSnapshot(char *fileName) { return m_vrep->createSnapshot(fileName);}
     
 };
 

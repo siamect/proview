@@ -1,11 +1,15 @@
+#ifndef co_float_h
+#define co_float_h
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
   @file co_float.h
 
   Converts an IEEE float to a VAX float and vice verca.
  */
-#ifndef co_float_h
-#define co_float_h
-
 
 #include "co_pdr.h"
 
@@ -21,5 +25,9 @@ void co_ieee2vaxf(co_eBO sbo,     /**< Source byte order, IEEE float */
                   const char *sp, /**< Address to the source, IEEE float */
                   char *tp);      /**< Address to the target, VAX float */
 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -13,6 +13,7 @@ ANTLR_USING_NAMESPACE(antlr)
 
 class wb_wblnode;
 class wb_vrepwbl;
+class wb_dbs;
 
 #define wbl_cixToCid( Vid, Cix) (0 + (Vid << 16) +  (Cix << 3))
 #define wbl_tixToTid( Vid, Tyg, Tix) (0 + (Vid << 16) + (1 << 15) + (Tyg << 11) +  Tix)
@@ -172,12 +173,17 @@ public:
     pwr_tCid Cid() { return c_cid;}
     int attrStringToValue( int type_id, char *value_str, 
 			   void *buffer_ptr, int buff_size, int attr_size);
+    void iterObject(wb_dbs *);
+    void iterRbody(wb_dbs *);
+    void iterDbody(wb_dbs *);
+#if 0
     void iterObject( void *udata, 
 		     pwr_tStatus (*bc)(void *, pwr_tOid, pwr_tCid, pwr_tOid, pwr_tOid,
 				       pwr_tOid, pwr_tOid, pwr_tOid, char *,
 				       pwr_tTime, int, int));
     void iterBody( void *udata, 
 		   pwr_tStatus (*bc)(void *, pwr_tOid, void *, void *));
+#endif
 
     static int lookup( int *type, const char *keyword, wbl_sSym *table);
     static int convconst( int *val, char *str);

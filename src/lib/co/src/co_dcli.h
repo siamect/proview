@@ -1,6 +1,10 @@
 #ifndef co_dcli_h
 #define co_dcli_h
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* co_dcli.c -- <short description>
 
    PROVIEW/R
@@ -102,5 +106,8 @@ void	dcli_readstruct_free(	dcli_sStructElement *e_list);
 int dcli_readstruct_get_message( char **message);
 
 
+#ifdef __cplusplus
+}
 #endif
 
+#endif

@@ -1,5 +1,10 @@
 #ifndef co_time_h
 #define co_time_h
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* co_time.h -- Time utilities
 
    PROVIEW/R
@@ -116,6 +121,10 @@ int			eln_clock_getres (clockid_t, struct timespec*);
 #define localtime eln_localtime
 #define mktime eln_mktime
 #define clock_getres eln_clock_getres
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif
