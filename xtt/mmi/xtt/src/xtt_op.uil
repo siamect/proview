@@ -87,6 +87,7 @@ procedure
 	op_create_appl_form(integer);
 	op_activate_alarmlist(integer);
 	op_activate_eventlist(integer);
+	op_activate_eventlog(integer);
 	op_activate_navigator(integer);
 	op_activate_help(integer);
 
@@ -569,6 +570,7 @@ object base_form : XmForm
   {
      XmPushButton 	alarm_list;
      XmPushButton 	event_list;
+     XmPushButton 	event_log;
      XmPushButton 	navigator;
      XmPushButton 	help;
   };
@@ -631,6 +633,25 @@ object navigator : XmPushButton
   };
 };
 
+object event_log : XmPushButton
+{
+  arguments
+  {
+    XmNlabelString		= c_Eventlog;
+    XmNleftAttachment 		= XmATTACH_FORM;
+    XmNtopAttachment    	= XmATTACH_WIDGET;
+    XmNtopWidget    		= XmPushButton navigator;
+    XmNrightAttachment    	= XmATTACH_FORM;
+!    XmNwidth			= 50;
+    XmNheight			= 25;
+    XmNfontList	   		= menu_font;
+  };
+  callbacks
+  {
+    XmNactivateCallback = procedure op_activate_eventlog(op_ctx);
+  };
+};
+
 object help : XmPushButton
 {
   arguments
@@ -638,7 +659,7 @@ object help : XmPushButton
     XmNlabelString 		= c_Help;
     XmNleftAttachment 		= XmATTACH_FORM;
     XmNtopAttachment    	= XmATTACH_WIDGET;
-    XmNtopWidget    		= XmPushButton navigator;
+    XmNtopWidget    		= XmPushButton event_log;
     XmNrightAttachment    	= XmATTACH_FORM;
     XmNbottomAttachment    	= XmATTACH_FORM;
 !    XmNwidth			= 50;

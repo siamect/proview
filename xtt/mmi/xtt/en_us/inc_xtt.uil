@@ -28,7 +28,7 @@ c_Collect_show   	: compound_string("Collect show");
 c_Advanced_user  	: compound_string("Advanced user");
 c_View   		: compound_string("View");
 c_Zoom_in   		: compound_string("Zoom in");
-c_Zoom_out   		: compound_string("Zoom ut");
+c_Zoom_out   		: compound_string("Zoom out");
 c_Zoom_reset   		: compound_string("Zoom reset");
 c_Help   		: compound_string("Help");
 c_Overview   		: compound_string("Overview");
@@ -38,6 +38,8 @@ c_Project   		: compound_string("Project");
 
 c_Alarmlist		: compound_string("Alarmlist");
 c_Eventlist		: compound_string("Eventlist");
+c_Eventlog		: compound_string("Eventlog");
+c_Histlist		: compound_string("Historical Eventlist");
 c_Navigator		: compound_string("Navigator");
 
 ! module xtt_xatt.uil
@@ -91,3 +93,35 @@ k_Value_input		: "Value input";
 
 c_SearchNext		: "SearchNext";
 c_SearchPrevious	: "SearchPrevious";
+
+! module xtt_hist.uil
+    histformtitle	: "Historical Event List: Search Condition";
+    Search		: "Search";
+    Exit		: "Exit";
+    starttime		: "Start time";
+    priority		: "Priority";
+    stoptime		: "Stop time";
+    eventtype		: "Event type";
+    eventtext		: "Event text";
+    eventname		: "Event name";
+    a_alarm		: "A-Alarm";
+    b_alarm		: "B-Alarm";
+    c_alarm		: "C-Alarm";
+    d_alarm		: "D-Alarm";
+    message		: "Message";
+    active		: "Active";
+    acknowledge		: "Ack";
+    return		: "Return";
+    nrOfEvents		: "Number of events:";
+    
+    today		: "Today";
+    yesterday		: "Yesterday";
+    thisweek		: "This Week";
+    lastweek		: "Last Week";
+    thismonth		: "This Month";
+    lastmonth		: "Last Month";
+    all			: "All";
+    time		: "Time";
+    searchcondition     : "Searchcondition:";
+    mnemonic_FILE       : 'F';
+

@@ -38,6 +38,8 @@ c_Project   		: compound_string("Projekt");
 
 c_Alarmlist		: compound_string("Larmlista");
 c_Eventlist		: compound_string("Händelselista");
+c_Eventlog		: compound_string("Händelselogg");
+c_Histlist		: compound_string("Historisk Händelselista");
 c_Navigator		: compound_string("Navigatör");
 
 ! module xtt_xatt.uil
@@ -91,6 +93,52 @@ k_Value_input		: "Värde inmatning";
 
 c_SearchNext		: "SökNästa";
 c_SearchPrevious	: "SökFöregående";
+
+
+
+
+
+! module xtt_hist.uil
+    histformtitle	: "Historisk händelselista: Sökvillkor";
+    Search		: "Sök";
+    Exit		: "Avsluta";
+    starttime		: "Start tid";
+    priority		: "Prioritet";
+    stoptime		: "Stopp tid";
+    eventtype		: "Händelsetyp";
+    eventtext		: "Händelsetext";
+    eventname		: "Händelsenamn";
+    a_alarm		: "A-Larm";
+    b_alarm		: "B-Larm";
+    c_alarm		: "C-Larm";
+    d_alarm		: "D-Larm";
+    message		: "Meddel.";
+    active		: "Aktiv";
+    acknowledge		: "Kvittens";
+    return		: "Retur";
+    nrOfEvents		: "Antal händelser:";
+
+    today               : "Idag";
+    yesterday           : "Igår";
+    thisweek            : "Denna vecka";
+    lastweek            : "Förra veckan";
+    thismonth           : "Denna månad";
+    lastmonth           : "Förra månaden";
+    all			: "Allt";
+    time		: "Tid";
+    searchcondition     : "Sökvillkor:";
+    mnemonic_FILE       : 'A';
+
+
+
+
+
+
+
+
+
+
+
 
 
 
