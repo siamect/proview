@@ -78,6 +78,7 @@ if ! grep -q "\bb55:" /etc/passwd; then
 
     chown -R b55 /home/b55
     chgrp -R pwrp /home/b55
+    chmod a+rwx /home/b55
   fi
 fi
 
@@ -153,7 +154,11 @@ if [ -e /etc/proview.cnf ]; then
 
   if [ -e "$web_dir" ]; then
     cp /usr/pwrrt/lib/pwr_rt_client.jar $web_dir
+    chown pwrp $web_dir/pwr_rt_client.jar
     cp /usr/pwrrt/lib/pwr_jop.jar $web_dir
+    chown pwrp $web_dir/pwr_jop.jar
+    cp /usr/pwrrt/lib/pwr_jopc.jar $web_dir
+    chown pwrp $web_dir/pwr_jopc.jar
   fi
 fi
 
