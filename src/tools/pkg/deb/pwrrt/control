@@ -1,0 +1,10 @@
+Package: pwrrt
+Version: 4.0.1-0
+Section: base
+Priority: optional
+Architecture: i386
+Depends: libc6 (>= 2.2.4-4)
+Replaces: pwr34,pwr39,pwr40
+Maintainer: Proview <postmaster@proview.se>
+Description: Proview runtime environment package, beta release
+ Proview runtime environment, beta release

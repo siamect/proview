@@ -1,0 +1,33 @@
+!
+! pwr_volumelist.dat
+!
+! Description:	This file contains all volumes, with identity,
+!		name and project.
+!
+!
+! Baseclasses 0.0.1.1-254
+!
+!	Volumename	Identity	Project
+!	----------	--------	-------
+	NMps            0.0.1.1         SSAB
+	TLog            0.0.1.2         SSAB
+	SSAB            0.0.1.3         SSAB
+!
+!
+! Userclass volumes 0.0.2-254.1-254
+!
+!	Volymename	Identity	Project
+!	----------	--------	-------
+
+!
+! User volumes 0.1-254.1-254.1-254
+!
+!	Volumename	Identity	Project
+!	----------	________	_______
+
+
+
+
+
+
+

@@ -1,0 +1,95 @@
+#!/bin/sh
+set -e
+
+# ver=""
+# pwre_target=""
+
+echo "Here in postinst..."
+# Automatically added by dh_installdocs
+if [ "$1" = "configure" ]; then
+        if [ -d /usr/doc -a ! -e /usr/doc/pwrtest -a -d /usr/share/doc/pwrtest ]; then
+                ln -sf ../share/doc/pwrtest /usr/doc/pwrtest
+        fi
+fi
+# End automatically added section
+
+aroot="/pwrp/adm"
+
+# Create group pwrp
+if ! grep -q "\bpwrp:" /etc/group; then
+  echo "-- Add group pwrp"
+  groupadd pwrp
+fi
+
+if ! grep -q "\bpwrp:" /etc/passwd; then
+  echo "-- Add user pwrp"
+  new_user=1
+  useradd -s /bin/bash -p aaupl/kQs1p3U -g pwrp -d /home/pwrp pwrp
+  if [ ! -e /home/pwrp ]; then
+    mkdir /home/pwrp
+    cp /usr/pwr$ver/$pwre_target/exp/cnf/user/.bashrc /home/pwrp
+    cp /usr/pwr$ver/$pwre_target/exp/cnf/user/.bash_profile /home/pwrp
+    cp /usr/pwr$ver/$pwre_target/exp/cnf/user/.mwmrc /home/pwrp
+    cp /usr/pwr$ver/$pwre_target/exp/cnf/user/.rtt_start /home/pwrp
+    cp /usr/pwr$ver/$pwre_target/exp/cnf/user/.xtt_start /home/pwrp
+    cp /usr/pwr$ver/$pwre_target/exp/cnf/user/.xsession /home/pwrp
+
+    chown -R pwrp /home/pwrp
+    chgrp -R pwrp /home/pwrp
+  fi
+fi
+
+echo "Change owner of files to pwrp"
+chown -R pwrp /usr/pwr$ver
+chgrp -R pwrp /usr/pwr$ver
+
+chmod u+s /usr/pwr$ver/$pwre_target/exp/exe/rt_ini
+chmod u+s /usr/pwr$ver/$pwre_target/exp/exe/rt_rtt
+chmod u+s /usr/pwr$ver/$pwre_target/exp/exe/rt_xtt
+chmod u+s /usr/pwr$ver/$pwre_target/exp/exe/rt_bck
+chmod u+s /usr/pwr$ver/$pwre_target/exp/exe/wb_adm
+
+# Copy configuration files
+new_cnf=0
+if [ ! -e /etc/proview.cnf ]; then
+  cp /usr/pwr$ver/$pwre_target/exp/cnf/proview.cnf /etc
+  new_cnf=1
+fi
+
+# Add pwrp_profile to profile
+if ! grep -q "/etc/pwrp_profile\b" /etc/profile; then
+  cat >> /etc/profile <<-EOF
+	if [ -e /etc/pwrp_profile ]; then
+	  source /etc/pwrp_profile
+	fi
+EOF
+fi
+
+if [ ! -e $aroot/db ]; then
+  mkdir -p $aroot/db
+fi
+
+cp /usr/pwr$ver/$pwre_target/exp/cnf/pwra_env.sh $aroot/db
+cp /usr/pwr$ver/$pwre_target/exp/cnf/pwr_setup.sh $aroot/db
+if [ ! -e $aroot/db/pwr_volumelist.dat ]; then
+  cp /usr/pwr$ver/$pwre_target/exp/cnf/pwr_volumelist.dat $aroot/db
+fi
+if [ ! -e $aroot/db/pwr_projectlist.dat ]; then
+  echo "%base V${ver:0:1}.${ver:1:1} /usr/pwr$ver" > $aroot/db/pwr_projectlist.dat
+fi
+if ! grep -q "^%base\b" $aroot/db/pwr_projectlist.dat | grep "\bV${ver:0:1}.${ver:1:1}\b" ; then
+  echo "%base V${ver:0:1}.${ver:1:1} /usr/pwr$ver" >> $aroot/db/pwr_projectlist.dat
+fi
+
+chgrp pwrp $pwra_db
+chmod g+w $pwra_db
+chgrp pwrp $pwra_db/*
+chmod g+w $pwra_db/*
+chgrp pwrp /pwrp
+chmod g+w /pwrp
+chmod a+w /usr/pwr$ver/$pwre_target/exp/load/*.dbs
+
+
+
+
+
