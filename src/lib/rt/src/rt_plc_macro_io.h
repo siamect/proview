@@ -168,6 +168,14 @@
   object->ActVal = in;
 
 /*_*
+  GetIp                                                           
+  Get Integer parameter             
+  @aref getip GetIp
+*/
+#define GetIp_exec(object,in)                                           \
+  object->ActVal = in;
+
+/*_*
   STODI								
   store digital input (Simulate)			
   @aref stodi StoDi
