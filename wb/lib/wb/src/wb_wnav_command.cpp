@@ -4740,6 +4740,8 @@ int WNav::readcmdfile( 	char		*incommand)
   wnav_store_wnav( this);
   if ( ldhses)
     wccm_store_ldhses( this, ldhses);
+  else
+    wccm_store_client( this);
 
   // Read and execute the command file
   sts = ccm_file_exec( input_str, wnav_externcmd_func,
