@@ -817,11 +817,21 @@ wb_orep *wb_vrepmem::copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_destin
     }
   }
 
-  pwr_tOix oix = nextOix();
-  if ( name.evenSts())
-    strcpy( name_str, orep->name());
-  else
-    strcpy( name_str, name.object());
+  pwr_tOix oix;
+  if ( !m_classeditor) {
+    oix = nextOix();
+    if ( name.evenSts())
+      strcpy( name_str, orep->name());
+    else
+      strcpy( name_str, name.object());
+  }
+  else {
+    if ( !classeditorCheck( code, dest, orep->cid(), &oix, name_str, sts, false))
+      return 0;
+
+    if ( name.oddSts())
+      strcpy( name_str, name.object());
+  }
 
   mem_object *memo = new mem_object();
   strcpy( memo->m_name, name_str);

@@ -2336,9 +2336,9 @@ XmToggleButtonCallbackStruct	*data;
 	}
 
         if ( data->set == 1 ) 
-	{
 	  sts = foe_change_mode( foectx, SIMULATE);
-	}
+	else
+	  sts = foe_change_mode( foectx, TRACE);
 
 }
 
@@ -2439,10 +2439,10 @@ XmToggleButtonCallbackStruct	*data;
 	  return;
 	}
 
-        if ( data->set == 1 ) 
-	{
+        if ( data->set == 1 )
 	  sts = foe_change_mode( foectx, EDIT);
-	}
+	else 
+	  sts = foe_change_mode( foectx, VIEW);
 	
 }
 
@@ -2465,58 +2465,6 @@ XmToggleButtonCallbackStruct	*data;
 *
 **************************************************************************/
 
-static void foe_create_save 
-	( Widget w , foe_ctx foectx, XmAnyCallbackStruct *data) 
-		{ foectx->widgets.save= w ; }
-
-static void foe_create_exit 
-	( Widget w , foe_ctx foectx, XmAnyCallbackStruct *data) 
-		{ foectx->widgets.exit= w ; }
-
-static void foe_create_print 
-	( Widget w , foe_ctx foectx, XmAnyCallbackStruct *data) 
-		{ foectx->widgets.print= w ; }
-
-static void foe_create_printselect 
-	( Widget w , foe_ctx foectx, XmAnyCallbackStruct *data) 
-		{ }
-
-static void foe_create_printoverv 
-	( Widget w , foe_ctx foectx, XmAnyCallbackStruct *data) 
-		{ }
-
-static void foe_create_syntax 
-	( Widget w , foe_ctx foectx, XmAnyCallbackStruct *data) 
-		{ foectx->widgets.syntax= w ; }
-
-static void foe_create_compile 
-	( Widget w , foe_ctx foectx, XmAnyCallbackStruct *data) 
-		{ foectx->widgets.compile= w ; }
-
-static void foe_create_redraw 
-	( Widget w , foe_ctx foectx, XmAnyCallbackStruct *data) 
-		{ foectx->widgets.redraw= w ; }
-
-static void foe_create_plcattribute 
-	( Widget w , foe_ctx foectx, XmAnyCallbackStruct *data) 
-		{ foectx->widgets.plcattribute= w ; }
-
-static void foe_create_winddelete 
-	( Widget w , foe_ctx foectx, XmAnyCallbackStruct *data) 
-		{ foectx->widgets.winddelete= w ; }
-
-static void foe_create_savetrace 
-	( Widget w , foe_ctx foectx, XmAnyCallbackStruct *data) 
-		{ foectx->widgets.savetrace= w ; }
-
-static void foe_create_restoretrace
-	( Widget w , foe_ctx foectx, XmAnyCallbackStruct *data) 
-		{ foectx->widgets.restoretrace= w ; }
-
-static void foe_create_quit 
-	( Widget w , foe_ctx foectx, XmAnyCallbackStruct *data) 
-		{ foectx->widgets.quit= w ; }
-
 static void foe_create_label 
 	( Widget w , foe_ctx foectx, XmAnyCallbackStruct *data) 
 		{ foectx->widgets.label= w ; }
@@ -2525,85 +2473,101 @@ static void foe_create_textinput
 	( Widget w , foe_ctx foectx, XmAnyCallbackStruct *data) 
 		{ foectx->widgets.textinput = w ; }
 
-static void foe_create_file_entry ( w , foectx, data)
-Widget	w;
-foe_ctx	foectx;
-XmAnyCallbackStruct	*data;
+static void foe_create_widget_cb( Widget w, foe_ctx foectx, XmAnyCallbackStruct	*data)
 {
-/* save the identity of the created widget */
-foectx->widgets.file_entry  = w ;
-}
+  int key;
 
-static void foe_create_edit_entry ( w , foectx, data)
-Widget	w;
-foe_ctx	foectx;
-XmAnyCallbackStruct	*data;
-{
-/* save the identity of the created widget */
-foectx->widgets.edit_entry  = w ;
-}
+  XtVaGetValues (w, XmNuserData, &key, NULL);
 
-static void foe_create_search_entry ( w , foectx, data)
-Widget	w;
-foe_ctx	foectx;
-XmAnyCallbackStruct	*data;
-{
-/* save the identity of the created widget */
-foectx->widgets.search_entry  = w ;
-}
-
-static void foe_create_customize_entry ( w , foectx, data)
-Widget	w;
-foe_ctx	foectx;
-XmAnyCallbackStruct	*data;
-{
-/* save the identity of the created widget */
-foectx->widgets.customize_entry  = w ;
-}
-
-static void foe_create_function_entry ( w , foectx, data)
-Widget	w;
-foe_ctx	foectx;
-XmAnyCallbackStruct	*data;
-{
-/* save the identity of the created widget */
-foectx->widgets.function_entry  = w ;
-}
-
-static void foe_create_trace_togg ( w , foectx, data)
-Widget	w;
-foe_ctx	foectx;
-XmAnyCallbackStruct	*data;
-{
-/* save the identity of the created widget */
-foectx->widgets.trace_togg  = w ;
-}
-
-static void foe_create_simulate_togg ( w , foectx, data)
-Widget	w;
-foe_ctx	foectx;
-XmAnyCallbackStruct	*data;
-{
-/* save the identity of the created widget */
-foectx->widgets.simulate_togg  = w ;
-}
-
-static void foe_create_view_togg ( w , foectx, data)
-Widget	w;
-foe_ctx	foectx;
- XmAnyCallbackStruct	*data;
-{
-/* save the identity of the created widget */
-foectx->widgets.view_togg  = w ;
-}
-
-static void foe_create_edit_togg ( w , foectx, data)
-Widget	w;
-foe_ctx	foectx;
-XmAnyCallbackStruct	*data;
-{
-/* save the identity of the created widget */
-foectx->widgets.edit_togg  = w ;
+  switch ( key) {
+  case 1:
+    foectx->widgets.file_entry = w;
+    break;
+  case 2:
+    foectx->widgets.save = w;
+    break;
+  case 3:
+    foectx->widgets.print = w;
+    break;
+  case 6:
+    foectx->widgets.syntax = w;
+    break;
+  case 7:
+    foectx->widgets.compile = w;
+    break;
+  case 8:
+    foectx->widgets.plcattribute = w;
+    break;
+  case 9:
+    foectx->widgets.winddelete = w;
+    break;
+  case 10:
+    foectx->widgets.savetrace = w;
+    break;
+  case 11:
+    foectx->widgets.restoretrace = w;
+    break;
+  case 12:
+    foectx->widgets.quit = w;
+    break;
+  case 13:
+    foectx->widgets.exit = w;
+    break;
+  case 14:
+    foectx->widgets.edit_entry = w;
+    break;
+  case 15:
+    foectx->widgets.cut = w;
+    break;
+  case 16:
+    foectx->widgets.copy = w;
+    break;
+  case 17:
+    foectx->widgets.paste = w;
+    break;
+  case 18:
+    foectx->widgets.undelete = w;
+    break;
+  case 19:
+    foectx->widgets.unselect = w;
+    break;
+  case 20:
+    foectx->widgets.connect = w;
+    break;
+  case 21:
+    foectx->widgets.del = w;
+    break;
+  case 22:
+    foectx->widgets.changetext = w;
+    break;
+  case 23:
+    foectx->widgets.expand = w;
+    break;
+  case 24:
+    foectx->widgets.compress = w;
+    break;
+  case 25:
+    foectx->widgets.search_entry = w;
+    break;
+  case 26:
+    foectx->widgets.customize_entry = w;
+    break;
+  case 28:
+    foectx->widgets.redraw = w;
+    break;
+  case 30:
+    foectx->widgets.view_togg = w;
+    break;
+  case 31:
+    foectx->widgets.edit_togg = w;
+    break;
+  case 32:
+    foectx->widgets.trace_togg = w;
+    break;
+  case 33:
+    foectx->widgets.simulate_togg = w;
+    break;
+  }
 }
 
 static void foe_create_adb ( w , foectx, data)
@@ -2989,28 +2953,7 @@ int foe_register_callbacks (
 	{"foe_activate_view_togg",(XtPointer)foe_activate_view_togg},  
 	{"foe_activate_edit_togg",(XtPointer)foe_activate_edit_togg},  
 	{"foe_create_adb",(XtPointer)foe_create_adb},  /* SG 24.02.91 */
-	{"foe_create_file_entry",(XtPointer)foe_create_file_entry},  
-	{"foe_create_edit_entry",(XtPointer)foe_create_edit_entry},  
-	{"foe_create_search_entry",(XtPointer)foe_create_search_entry},  
-	{"foe_create_customize_entry",(XtPointer)foe_create_customize_entry},  
-	{"foe_create_function_entry",(XtPointer)foe_create_function_entry},  
-	{"foe_create_trace_togg",(XtPointer)foe_create_trace_togg},  
-	{"foe_create_simulate_togg",(XtPointer)foe_create_simulate_togg},  
-	{"foe_create_view_togg",(XtPointer)foe_create_view_togg},  
-	{"foe_create_edit_togg",(XtPointer)foe_create_edit_togg},  
-	{"foe_create_save",(XtPointer)foe_create_save},  
-	{"foe_create_exit",(XtPointer)foe_create_exit},  
-	{"foe_create_print",(XtPointer)foe_create_print},
-	{"foe_create_printselect",(XtPointer)foe_create_printselect},
-	{"foe_create_printoverv",(XtPointer)foe_create_printoverv},
-	{"foe_create_syntax",(XtPointer)foe_create_syntax},
-	{"foe_create_compile",(XtPointer)foe_create_compile},
-	{"foe_create_redraw",(XtPointer)foe_create_redraw},
-	{"foe_create_plcattribute",(XtPointer)foe_create_plcattribute},
-	{"foe_create_winddelete",(XtPointer)foe_create_winddelete}, 
-	{"foe_create_savetrace",(XtPointer)foe_create_savetrace},  
-	{"foe_create_restoretrace",(XtPointer)foe_create_restoretrace},  
-	{"foe_create_quit",(XtPointer)foe_create_quit},  
+	{"foe_create_widget_cb",(XtPointer)foe_create_widget_cb},  
 	{"foe_create_label",(XtPointer)foe_create_label},  
 	{"foe_create_textinput",(XtPointer)foe_create_textinput},  
 	{"foe_create_edit_form",(XtPointer)foe_create_edit_form},  

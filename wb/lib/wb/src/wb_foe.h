@@ -95,10 +95,19 @@ struct s_widgets
   Widget	plcattribute;
   Widget	winddelete;
   Widget	quit;
+  Widget	cut;
+  Widget	copy;
+  Widget	paste;
+  Widget	undelete;
+  Widget	unselect;
+  Widget	connect;
+  Widget	del;
+  Widget	changetext;
+  Widget	expand;
+  Widget	compress;
   Widget	edit_entry;       /* entry of the menu */
   Widget	search_entry;     /* entry of the menu */
   Widget	customize_entry;  /* entry of the menu */
-  Widget	function_entry;   /* entry of the menu */
   Widget	trace_togg;       /* togg under the function
                                      entry of the menu */
   Widget	simulate_togg;    /* togg under the function entry
@@ -126,6 +135,7 @@ struct s_foe_ctx
   wb_eUtility	ctx_type;
   t_commonpart	cp;
 
+  char		name[80];
   pal_tCtx	node_palctx;
   pal_tCtx	con_palctx;
   nav_tCtx	navctx;

@@ -74,6 +74,7 @@ typedef enum {
   ldh_eAccess__ = 0,
   ldh_eAccess_ReadOnly,
   ldh_eAccess_ReadWrite,
+  ldh_eAccess_SharedReadWrite,
   ldh_eAccess_
 } ldh_eAccess;
 

@@ -633,7 +633,7 @@ int WItemMenu::open_children( WNav *wnav, double x, double y)
         case wnav_eItemType_Command:
           item = (WItem *) new WItemCommand( wnav, menu->title, node, 
 		flow_eDest_IntoLast, menu->command, 0,
-		wnav->brow->pixmap_map);
+		wnav->brow->pixmap_graph);
           break;
         default:
           ;

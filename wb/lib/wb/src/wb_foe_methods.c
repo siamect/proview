@@ -761,7 +761,7 @@ static int foe_child_delete (
 	  plc = subwind->hw.plcobject_pointer;
 	  sts = ldh_OpenSession(&ldhsession, 
 		ldh_SessionToVol( plc->hp.ldhsesctx),
-		ldh_eAccess_ReadWrite, ldh_eUtility_PlcEditor);
+		ldh_eAccess_SharedReadWrite, ldh_eUtility_PlcEditor);
 	  if( EVEN(sts)) return sts;
 	  sts = ldh_GetObjectBuffer( ldhsession,
 			subwind->lw.parent_node_did, "DevBody", "PlcNode", 
@@ -921,6 +921,29 @@ void	foe_exit(
 	/* Destroy the widget and controlled modules */
 	foe_destroy( foectx);
 }
+
+void foe_set_title( foe_ctx foectx)
+{
+  Arg 		args[2];
+  if ( foectx->function == EDIT) {
+    char new_title[80];
+    
+    strcpy( new_title, "*** ");
+    strcat( new_title, foectx->name);
+
+    XtSetArg(args[0],XmNtitle, new_title);
+    XtSetValues( foectx->cp.parent_wid, args, 1);
+  }
+  else if ( foectx->function == VIEW) {
+    char new_title[80];
+
+    strcpy( new_title, foectx->name);
+
+    XtSetArg(args[0],XmNtitle, new_title);
+    XtSetValues( foectx->cp.parent_wid, args, 1);
+  }
+}
+
 
 /*************************************************************************
 *
@@ -947,6 +970,10 @@ void	foe_delete(
 
 	/* Tell my parent that his child is deleted, if parent is a node */
 	wind = foectx->grectx->window_object;
+
+	sts = ldh_SaveSession( wind->hw.ldhsession);
+	if ( EVEN(sts)) return;
+
 	if ( wind->hw.parent_node_pointer != 0 )
 	{
 	  sts = foe_child_delete ( foectx->cp.parent_ctx, 
@@ -1613,7 +1640,6 @@ int foe_new_local(
 		return LOGIN__USERNOTAU;
 	      }
 	      access = ldh_eAccess_ReadWrite;
-
 	      sts = vldh_plc_create( plcprogram, ldhwbctx, ldhsesctx,
 				&plcobject);
 	      if ( EVEN(sts)) return sts;
@@ -1649,7 +1675,6 @@ int foe_new_local(
 
 	      sts = foe_init_window( foectx);
 	      if ( EVEN(sts)) return sts;
-
 	    }
 	  }
 	}
@@ -1681,6 +1706,8 @@ int foe_new_local(
 	      /* A subwindow can not be created */
 	      return FOE__WINDNOTFOUND;
 
+	    access = ldh_eAccess_SharedReadWrite;
+
 	    /* Create the foe module */
 	    old_foectx = parent_ctx ;
 	    function = old_foectx->function;
@@ -1691,6 +1718,9 @@ int foe_new_local(
 	      if ( function == SIMULATE)
 	         function = TRACE;
 	    }
+	    else
+	      function = VIEW;
+
 	    /* Create window object in vldh */
 	    sts = vldh_wind_create(
 			(nodeobject->hn.window_pointer)->hw.plcobject_pointer,
@@ -1720,6 +1750,9 @@ int foe_new_local(
 
 	    sts = foe_init_window( foectx);
 	    if ( EVEN(sts)) return sts;
+
+	    sts = ldh_SetSession( windowobject->hw.ldhsession, ldh_eAccess_ReadOnly);
+	    if ( EVEN(sts)) return sts;
 	  }
 	  else
 	  {
@@ -1728,6 +1761,8 @@ int foe_new_local(
 	    {
 	      /* No, create new foe window and load the window */	
 	      old_foectx = parent_ctx ;
+
+	      access = ldh_eAccess_ReadOnly;
 
 	      sts = vldh_get_wind_objdid( 
 		nodeobject->ln.subwind_objdid[windowindex], &windowobject); 
@@ -1753,6 +1788,9 @@ int foe_new_local(
 	        if ( function == SIMULATE)
 	           function = TRACE;
 	      }
+	      else
+		function = VIEW;
+
 	      foectx = foe_create_window(parent_ctx, parent_wid,
 			subwind_name,
 			windgraphbody->x, windgraphbody->y, 
@@ -1990,7 +2028,7 @@ static foe_ctx	foe_create_window(
  foectx->ctx_type = wb_eUtility_PlcEditor;
  foectx->function = function ;
  foectx->cp.parent_ctx = parent_ctx;
- foectx->cp.name = XtNewString( name );
+ strncpy( foectx->name, name, sizeof(foectx->name));
  foectx->popupmenu_mask = ~0;
  foectx->advanced_user = 1;
 
@@ -2728,9 +2766,10 @@ static int foe_edit_set_entries (
 	foe_ctx foectx
 )
 {
-  
   Arg	sensitive[1];
   Arg	insensitive[1];
+  
+  foe_set_title( foectx);
 
   XtSetArg(sensitive[0],XmNsensitive, 1);
   XtSetArg(insensitive[0],XmNsensitive, 0);
@@ -2746,6 +2785,16 @@ static int foe_edit_set_entries (
     XtSetValues( foectx->widgets.plcattribute,sensitive,1);
     XtSetValues( foectx->widgets.winddelete,sensitive,1);
     XtSetValues( foectx->widgets.edit_entry,sensitive,1);
+    XtSetValues( foectx->widgets.cut,sensitive,1);
+    XtSetValues( foectx->widgets.copy,sensitive,1);
+    XtSetValues( foectx->widgets.paste,sensitive,1);
+    XtSetValues( foectx->widgets.undelete,sensitive,1);
+    XtSetValues( foectx->widgets.unselect,sensitive,1);
+    XtSetValues( foectx->widgets.connect,sensitive,1);
+    XtSetValues( foectx->widgets.del,sensitive,1);
+    XtSetValues( foectx->widgets.changetext,sensitive,1);
+    XtSetValues( foectx->widgets.expand,sensitive,1);
+    XtSetValues( foectx->widgets.compress,sensitive,1);
   }
   else {
     XtSetValues( foectx->widgets.save,sensitive,1);
@@ -2758,6 +2807,16 @@ static int foe_edit_set_entries (
     XtSetValues( foectx->widgets.plcattribute,sensitive,1);
     XtSetValues( foectx->widgets.winddelete,sensitive,1);
     XtSetValues( foectx->widgets.edit_entry,sensitive,1);
+    XtSetValues( foectx->widgets.cut,sensitive,1);
+    XtSetValues( foectx->widgets.copy,sensitive,1);
+    XtSetValues( foectx->widgets.paste,sensitive,1);
+    XtSetValues( foectx->widgets.undelete,sensitive,1);
+    XtSetValues( foectx->widgets.unselect,sensitive,1);
+    XtSetValues( foectx->widgets.connect,sensitive,1);
+    XtSetValues( foectx->widgets.del,sensitive,1);
+    XtSetValues( foectx->widgets.changetext,sensitive,1);
+    XtSetValues( foectx->widgets.expand,sensitive,1);
+    XtSetValues( foectx->widgets.compress,sensitive,1);
   }
 
   return FOE__SUCCESS ;
@@ -2784,27 +2843,31 @@ static int foe_edit_set_entries (
 static int foe_view_set_entries (
 	foe_ctx foectx
 )
-{
-  
+{  
   Arg	args[20];
-  int i;
 
-  i=0;
-  XtSetArg(args[i],XmNsensitive,0 ); i++;
+  foe_set_title( foectx);
 
-  XtSetValues( foectx->widgets.save,args,i);
-  XtSetValues( foectx->widgets.exit,args,i);
-  XtSetValues( foectx->widgets.syntax,args,i);
-  XtSetValues( foectx->widgets.compile,args,i);
-  XtSetValues( foectx->widgets.redraw,args,i);
-  XtSetValues( foectx->widgets.plcattribute,args,i);
-  XtSetValues( foectx->widgets.winddelete,args,i);
-  XtSetValues( foectx->widgets.edit_entry,args,i);
+  XtSetArg(args[0],XmNsensitive,0 );
+
+  XtSetValues( foectx->widgets.save,args,1);
+  XtSetValues( foectx->widgets.exit,args,1);
+  XtSetValues( foectx->widgets.syntax,args,1);
+  XtSetValues( foectx->widgets.compile,args,1);
+  XtSetValues( foectx->widgets.redraw,args,1);
+  XtSetValues( foectx->widgets.plcattribute,args,1);
+  XtSetValues( foectx->widgets.winddelete,args,1);
+  XtSetValues( foectx->widgets.cut,args,1);
+  XtSetValues( foectx->widgets.paste,args,1);
+  XtSetValues( foectx->widgets.undelete,args,1);
+  XtSetValues( foectx->widgets.unselect,args,1);
+  XtSetValues( foectx->widgets.connect,args,1);
+  XtSetValues( foectx->widgets.del,args,1);
+  XtSetValues( foectx->widgets.changetext,args,1);
+  XtSetValues( foectx->widgets.expand,args,1);
+  XtSetValues( foectx->widgets.compress,args,1);
 
   return FOE__SUCCESS ;
-
-/*  XtSetValues( foectx->widgets.print,args,i); */
-
 }
 
 

@@ -1304,26 +1304,23 @@ int vldh_wind_save (
 
 	/* Save the plc in its own session */
 	/* Plc session may well be readonly, set readwrite */
-	sts = ldh_SetSession( plc->hp.ldhsesctx, 
-			ldh_eAccess_ReadWrite);
-	if ( EVEN(sts)) return sts;
+	// sts = ldh_SetSession( plc->hp.ldhsesctx, 
+	// 		ldh_eAccess_ReadWrite);
+	// if ( EVEN(sts)) return sts;
 
-	sts = ldh_SetObjectBuffer(
-		plc->hp.ldhsesctx,
-		plc->lp.objdid,
-		"DevBody",
-		"PlcProgram",
-		(char *)&(plc->lp));
+	sts = ldh_SetObjectBuffer( wind->hw.ldhsession,
+				  plc->lp.objdid, "DevBody", "PlcProgram",
+				  (char *)&(plc->lp));
 	if( sts == LDH__NOSUCHOBJ ) return VLDH__PLCNOTSAVED;
 	if( EVEN(sts)) return sts;
 
 	/* Save the plc session */
-	sts = ldh_SaveSession( plc->hp.ldhsesctx);
-	if( EVEN(sts)) return sts;
+	// sts = ldh_SaveSession( plc->hp.ldhsesctx);
+	// if( EVEN(sts)) return sts;
 
-	sts = ldh_SetSession( plc->hp.ldhsesctx,
-			ldh_eAccess_ReadOnly);
-	if ( EVEN(sts)) return sts;
+	// sts = ldh_SetSession( plc->hp.ldhsesctx,
+	//		ldh_eAccess_ReadOnly);
+	// if ( EVEN(sts)) return sts;
 
 	/* If window is created, save the subwindowmark in the parent node */
 	if ( wind->hw.parent_node_pointer != 0)

@@ -58,11 +58,33 @@ ldh_eAccess wb_srep::access(pwr_tStatus *sts) const
 
 bool wb_srep::access(pwr_tStatus *sts, ldh_eAccess access) // Fix
 {
+  pwr_tStatus lsts;
 
   if ( ldh_eAccess__ < access && access < ldh_eAccess_) { 
     if ( !m_vrep->accessSupported( access)) {
       *sts = LDH__ACCESS;
       return false;
+    }
+
+    if ( access == ldh_eAccess_ReadWrite) {
+      // Check that no other session is ReadWrite
+      for ( wb_srep *srep = m_vrep->srep(&lsts); srep; srep = m_vrep->nextSrep( &lsts, srep)) {
+	if ( srep != this && srep->access(&lsts) == ldh_eAccess_ReadWrite) {
+	  *sts = LDH__OTHERSESS;
+	  return false;
+	}
+      }
+    }
+    else if ( access == ldh_eAccess_SharedReadWrite) {
+      // Check that any ReadWrite session is empty
+      for ( wb_srep *srep = m_vrep->srep(&lsts); srep; srep = m_vrep->nextSrep( &lsts, srep)) {
+	if ( srep != this && srep->access(&lsts) == ldh_eAccess_ReadWrite) {
+	  if ( !srep->isEmpty( &lsts)) {
+	    *sts = LDH__SESSNOTEMPTY;
+	    return false;
+	  }
+	}
+      }
     }
     m_access = access;
     *sts = LDH__SUCCESS;

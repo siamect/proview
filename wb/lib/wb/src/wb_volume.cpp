@@ -648,6 +648,8 @@ ldh_sRefInfo *wb_volume::refinfo( wb_object o, ldh_sRefInfo *rp)
 
   wb_cdef cd = cdef( o);
   wb_bdef bd = cd.bdef( pwr_eBix_rt);
+  if (!bd) return rp;
+
   wb_attribute body = wb_attribute( bd.sts(), (wb_orep *)o, bd.name());
   char *bp = (char *)body.value(0);
   pwr_tOid oid;

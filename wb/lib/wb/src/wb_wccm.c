@@ -909,6 +909,8 @@ static int wccm_attribute_func (
             break;
           }
           case pwr_eType_UInt32:
+          case pwr_eType_Enum:
+          case pwr_eType_Mask:
 	  case pwr_eType_ClassId:
 	  case pwr_eType_TypeId:
 	  case pwr_eType_VolumeId:

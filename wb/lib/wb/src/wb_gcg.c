@@ -2191,7 +2191,7 @@ int	gcg_wind_comp_all(
 		if ( i == ( parent_count - 2)) {
 		  /* This is the child to the plc */
 		  sts = vldh_wind_load( plc, 0, *(parentlist + i), 0, 0, &wind,
-					ldh_eAccess_ReadWrite);
+					ldh_eAccess_SharedReadWrite);
 		  if ( EVEN(sts)) return sts;
 		  plc->hp.windowobject = wind;
 		}
@@ -2202,7 +2202,7 @@ int	gcg_wind_comp_all(
 		  if ( EVEN(sts)) return sts;
 		  
 		  sts = vldh_wind_load( plc, node, *(parentlist + i), 0, 0,
-					&wind, ldh_eAccess_ReadWrite);
+					&wind, ldh_eAccess_SharedReadWrite);
 		  if ( EVEN(sts)) return sts;
 		}
 		sts = vldh_wind_load_all( wind);
@@ -2230,7 +2230,7 @@ int	gcg_wind_comp_all(
 	    {
 	      /* This is the child to the plc */
 	      sts = vldh_wind_load( plc, 0, *windlist_ptr, 0, 0, &wind, 
-			ldh_eAccess_ReadWrite);
+			ldh_eAccess_SharedReadWrite);
 	      if ( EVEN(sts)) return sts;
 	      plc->hp.windowobject = wind;
 	    }
@@ -2242,7 +2242,7 @@ int	gcg_wind_comp_all(
 	      if ( EVEN(sts)) return sts;
 	       
 	      sts = vldh_wind_load( plc, node, *windlist_ptr, 0, 0, &wind,
-			ldh_eAccess_ReadWrite);
+			ldh_eAccess_SharedReadWrite);
 	      if ( EVEN(sts)) return sts;
 	    }
 	    sts = vldh_wind_load_all( wind);
