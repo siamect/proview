@@ -404,7 +404,6 @@ void wb_erep::loadCommonMeta( pwr_tStatus *status)
     strcpy( fname, fdir);
     strcat( fname, load_cNameCmnVolumeList);
 
-    cout << "File : " << fname << endl;
     ifstream fpm( fname, ios::in);
     if ( !fpm) {
       if ( i == 0) {
@@ -465,8 +464,6 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
   strcpy( fname, load_cNameVolumeList);
   dcli_translate_filename( fname, fname);
 
-  cout << "File : " << fname << endl;
-
   ifstream fpm( fname, ios::in);
   if ( !fpm) {
     *status = LDH__PROJCONFIG;
@@ -494,7 +491,6 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
     if ( line[0] == '#')
       continue;
 
-    cout << line << endl;
     nr = dcli_parse( line, " ", "", (char *)vol_array,
                      sizeof(vol_array)/sizeof(vol_array[0]),
                      sizeof(vol_array[0]), 0);
@@ -514,7 +510,7 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
         strcat( vname, vol_array[0]);
         strcat( vname, ".dbs");
         dcli_translate_filename( vname, vname);
-        cout << "Found: " << found_file << endl;
+
         // Load...
         try {
           vrep = new wb_vrepdbs( this, vname);
@@ -533,11 +529,9 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
           strcpy( vname, m_dir_list[i]);
           strcat( vname, vol_array[0]);
           strcat( vname, ".dbs");
-          cout << "Try: " << vname << endl;
           sts = dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_INIT);
           dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_END);
           if ( ODD(sts)) {
-            cout << "Found: " << found_file << endl;
             // Load...
             try {
               vrep = new wb_vrepdbs( this, vname);
@@ -563,11 +557,9 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
           strcpy( vname, "$pwrp_load/");
           strcat( vname, vol_array[0]);
           strcat( vname, ".dbs");
-          cout << "Try: " << vname << endl;
           sts = dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_INIT);
           dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_END);
           if ( ODD(sts)) {
-            cout << "Found: " << found_file << endl;
             // Load...
             try {
               vrep = new wb_vrepdbs( this, found_file);

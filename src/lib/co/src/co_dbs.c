@@ -409,8 +409,8 @@ dbs_Map(pwr_tStatus *sts, const char *filename)
     errno = 0;
 
     ret = read(fd, &file, sizeof(file));
-    printf("st_size...: %ld\n", sb.st_size);
-    printf("size......: %d\n", file.size);
+    // printf("st_size...: %ld\n", sb.st_size);
+    // printf("size......: %d\n", file.size);
     
     base = mmap(NULL, sb.st_size, PROT_READ, MAP_SHARED, fd, 0);
     if (base == NULL) {

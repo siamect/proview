@@ -66,7 +66,7 @@ void wb_merep:: copyFiles(const char *dirName)
     wb_vrepdbs *dp = (wb_vrepdbs *)it->second;
     char cmd[512];
     sprintf(cmd, "cp %s %s", dp->fileName(), dirName);
-    printf("%s\n", cmd);
+    // printf("%s\n", cmd);
     system(cmd);
   }
 }
@@ -81,18 +81,17 @@ wb_orep *wb_merep::object(pwr_tStatus *sts, pwr_tOid oid)
 
 void wb_merep::addDbs( pwr_tStatus *sts, wb_mvrep *mvrep)
 {
-  printf("wb_merep::addDbs: %d, %s\n", mvrep->vid(), mvrep->name());
+  // printf("wb_merep::addDbs: %d, %s\n", mvrep->vid(), mvrep->name());
   mvrep_iterator it = m_mvrepdbs.find( mvrep->vid());
   if ( it == m_mvrepdbs.end()) {
     // Look for vrep in erep list... TODO
     
     m_mvrepdbs[mvrep->vid()] = mvrep;
     mvrep->ref();
-    cout << "merep Metavolume " << mvrep->vid() << ": " << mvrep->name() << " inserted\n";
     *sts = LDH__SUCCESS;
   }
   else {
-    printf("wb_merep::addDbs, existed: %d, %s\n", mvrep->vid(), mvrep->name());
+    // printf("wb_merep::addDbs, existed: %d, %s\n", mvrep->vid(), mvrep->name());
     *sts = LDH__VOLIDALREXI;
   }
   
