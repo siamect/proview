@@ -200,6 +200,7 @@ public class Pwrb {
   public static final int cClass_Rack_RTP = 132568;
   public static final int cClass_Rack_SSAB = 132576;
   public static final int cClass_Rack_VME = 133216;
+  public static final int cClass_RemoteConfig = 133984;
   public static final int cClass_ramp = 132584;
   public static final int cClass_resdi = 132592;
   public static final int cClass_resdo = 132600;

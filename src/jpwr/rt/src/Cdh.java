@@ -14,6 +14,11 @@ package jpwr.rt;
  */
 
 public class Cdh {
+  public static final int cUserVolMin    	= (0 + (0 << 24) + (1 << 16) + (1 << 8) + 1);
+  public static final int cUserVolMax  		= (0 + (0 << 24) + (254 << 16) + (254 << 8) + 254);
+  public static final int cUserClassVolMin  	= (0 + (0 << 24) + (0 << 16) + (2 << 8) + 1);
+  public static final int cUserClassVolMax  	= (0 + (0 << 24) + (2 << 16) + (254 << 8) + 254);
+
   public static final int mName_volume 		= 1 << 0;
   public static final int mName_path 		= 1 << 1;
   public static final int mName_object 		= 1 << 2;
@@ -46,3 +51,9 @@ public class Cdh {
 	mName_index | mName_form_std | mName_fallback_strict;
   
 }
+
+
+
+
+
+
