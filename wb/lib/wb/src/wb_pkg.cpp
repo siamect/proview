@@ -10,7 +10,7 @@
 #include "co_time.h"
 #include "rt_load.h"
 
-wb_pkg::wb_pkg( char *nodelist)
+wb_pkg::wb_pkg( char *nodelist, bool distribute)
 {
   if ( nodelist) {
     char node_str[32][20];
@@ -32,7 +32,7 @@ wb_pkg::wb_pkg( char *nodelist)
 
   readConfig();
 
-  fetchFiles();
+  fetchFiles( distribute);
 }
 
 void wb_pkg::readConfig()
@@ -250,7 +250,7 @@ pkg_node& wb_pkg::getNode( char *name)
   throw wb_error_str("No such node");
 }
 
-void pkg_node::fetchFiles() 
+void pkg_node::fetchFiles( bool distribute) 
 {
   char	dev[80];
   char	dir[80];
@@ -327,16 +327,19 @@ void pkg_node::fetchFiles()
   of <<
     "#mv $pwrp_tmp/pkg_unpack.sh $pwrp_tmp/pkg_build" << endl <<
     "cd $pwrp_tmp" << endl <<
-    "tar -czf $pwrp_load/" << pkg_name << " pwr_pkg.dat pkg_unpack.sh pkg_build" << endl <<
-    "cd $pwrp_load" << endl <<
-    "ftp -vin " << m_name << " << EOF &>$pwrp_tmp/ftp_" << m_name << ".log" << endl <<
-    "user pwrp pwrp" << endl <<
-    "binary" << endl <<
-    "put " << pkg_name << endl <<
-    "quit" << endl <<
-    "EOF" << endl <<
-    "rsh -l pwrp " << m_name << " \\$pwr_exe/pwr_pkg.sh -i " << pkg_name << endl;
-    
+    "tar -czf $pwrp_load/" << pkg_name << " pwr_pkg.dat pkg_unpack.sh pkg_build" << endl;
+
+  if ( distribute)
+    of <<
+      "cd $pwrp_load" << endl <<
+      "ftp -vin " << m_name << " << EOF &>$pwrp_tmp/ftp_" << m_name << ".log" << endl <<
+      "user pwrp pwrp" << endl <<
+      "binary" << endl <<
+      "put " << pkg_name << endl <<
+      "quit" << endl <<
+      "EOF" << endl <<
+      "rsh -l pwrp " << m_name << " \\$pwr_exe/pwr_pkg.sh -i " << pkg_name << endl;
+  
   of.close();
 
   // Create a script that unpackes the archive and moves files to the target directories
@@ -401,6 +404,37 @@ void pkg_node::fetchFiles()
   sprintf( cmd, "source %s", pack_fname);
   system( cmd);
 
+}
+
+void wb_pkg::copyPackage( char *pkg_name)
+{
+  char pack_fname[200];
+  char node_name[80];
+  char *s;
+
+  // Extract node name from package name
+  strcpy( node_name, &pkg_name[9]);
+  if ( (s = strrchr( node_name, '_')))
+    *s = 0;
+
+  dcli_translate_filename( pack_fname, "$pwrp_tmp/pkg_pack.sh");
+  ofstream of( pack_fname);
+  of <<
+    "cd $pwrp_load" << endl <<
+    "ftp -vin " << node_name << " << EOF &>$pwrp_tmp/ftp_" << node_name << ".log" << endl <<
+    "user pwrp pwrp" << endl <<
+    "binary" << endl <<
+    "put " << pkg_name << endl <<
+    "quit" << endl <<
+    "EOF" << endl <<
+    "rsh -l pwrp " << node_name << " \\$pwr_exe/pwr_pkg.sh -i " << pkg_name << endl;
+    
+  of.close();
+
+  // Execute the pack file
+  char cmd[200];
+  sprintf( cmd, "source %s", pack_fname);
+  system( cmd);
 }
 
 void pkg_pattern::fetchFiles()

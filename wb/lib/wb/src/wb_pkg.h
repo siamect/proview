@@ -25,6 +25,7 @@ class pkg_file {
   char *source() { return m_source;}
   char *target() { return m_target;}
   pwr_tTime date() { return m_date;}
+
 };
 
 class pkg_pattern {
@@ -82,7 +83,7 @@ class pkg_node {
   void push_back( pkg_pattern& pattern) { 
     m_pattern.push_back( pattern);
   }
-  void fetchFiles();
+  void fetchFiles( bool distribute);
 };
 
 class wb_pkg {
@@ -93,11 +94,13 @@ class wb_pkg {
   void readConfig();
 
  public:
-  wb_pkg( char *nodelist);
+  wb_pkg( char *nodelist, bool distribute = true);
   pkg_node& getNode( char *name);
-  void fetchFiles() {
-    for ( int i = 0; i < (int)m_nodelist.size(); i++) m_nodelist[i].fetchFiles();
+  void fetchFiles( bool distribute) {
+    for ( int i = 0; i < (int)m_nodelist.size(); i++) m_nodelist[i].fetchFiles( distribute);
   }
+
+  static void copyPackage( char *pkg_name);
 };
 
 #endif
