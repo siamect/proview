@@ -272,27 +272,29 @@ wb_attribute wb_object::attribute()
     check();
     
     pwr_tStatus sts = LDH__SUCCESS;
-    wb_adrep *adrep = m_orep->attribute(&sts);
-    wb_attribute a(sts, m_orep, adrep);
+    wb_attribute a(sts, m_orep);
 
     return a;
 }
 
-wb_attribute wb_object::attribute(const char *name)
+wb_attribute wb_object::attribute(const char *aname)
 {
     check();
 
     pwr_tStatus sts = LDH__SUCCESS;
-    wb_adrep *adrep = m_orep->attribute(&sts, name);
-    wb_attribute a(sts, m_orep, adrep);
+    wb_attribute a(sts, m_orep, aname);
 
     return a;
 }
 
-wb_attribute wb_object::attribute(const char *bname, const char *aname) // Fix
+wb_attribute wb_object::attribute(const char *bname, const char *aname)
 {
-  wb_attribute a;
-  return a;
+    check();
+
+    pwr_tStatus sts = LDH__SUCCESS;
+    wb_attribute a(sts, m_orep, bname, aname);
+
+    return a;
 }
 
 /*      Object SigChanCon $ObjXRef 2

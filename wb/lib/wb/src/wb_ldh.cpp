@@ -592,7 +592,7 @@ ldh_GetObjectBuffer(ldh_tSession session, pwr_tOid oid, char *bname,
     *value = (char *)calloc(1, a.size());
     *size = a.size();
 
-    a.value( value);
+    a.value( *value);
     *bufferclass = a.bufferClass();
     return LDH__SUCCESS;
 }

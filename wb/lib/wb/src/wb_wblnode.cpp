@@ -608,7 +608,7 @@ void wb_wblnode::buildBuffer( ref_wblnode classdef, ref_wblnode objbodydef,
     return;
   }
 
-  a_size = ((pwr_sBuffer *)rbody)->Info.Offset = a_elements * rsize;
+  a_size = ((pwr_sBuffer *)rbody)->Info.Size = a_elements * rsize;
   a_offset = ((pwr_sBuffer *)rbody)->Info.Offset = *boffset;
   ((pwr_sBuffer *)rbody)->Info.ParamIndex = *bindex;
   *boffset += a_size;
