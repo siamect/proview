@@ -10,7 +10,7 @@ ld		:= gcc
 ldxx		:= g++
 linkflags	:= -g -L/usr/local/lib -L$(pwr_obj) -L$(pwrp_obj) -lm -lrt
 cflags		:= -c -g -Wall -DGNU_SOURCE -D_REENTRANT
-cxxflags 	:= $(cflags) 
+cxxflags 	:= $(cflags) -Wno-deprecated
 linkflags	:= -g -L/usr/local/lib -L$(pwr_lib) -L$(pwrp_lib) -lrt
 csetos		:= -DOS_LINUX=1 -DOS=linux -DHW_X86=1 -DHW=x86
 cinc		:= -I$(pwr_inc) -I$(pwrp_inc) -I$(pwrp_cmn)/common/inc -I/usr/local/include -I/usr/X11R6/include -I$(jdk)/include -I$(jdk)/include/linux
@@ -18,7 +18,7 @@ cinc		:= -I$(pwr_inc) -I$(pwrp_inc) -I$(pwrp_cmn)/common/inc -I/usr/local/includ
 
 .SUFFIXES:
 
-$(pwrp_inc)/%.h : $(pwrp_db)/userclasses.wb_load
+$(pwrp_inc)/pwr_%classes.h : $(pwrp_db)/%.wb_load
 	@ echo "Create struct $(notdir $(source))"
 	@ wb_cmd create struct
 	@ co_convert -x -d $(pwrp_exe) $(source)
@@ -34,6 +34,15 @@ $(pwrp_obj)/%.o : %.c
 ($(pwrp_obj)/%.o) : %.c
 	@ echo "cc ar $(notdir $(source))"
 	@ $(cc) $(cflags) $(csetos) $(cinc) -c -o $% $(source)
+	@ ar r $(target) $%
+
+$(pwrp_obj)/%.o : %.cpp
+	@ echo "cc   $(notdir $(source))"
+	@ $(cxx) $(cxxflags) $(csetos) $(cinc) -c -o $(target) $(source)
+
+($(pwrp_obj)/%.o) : %.cpp
+	@ echo "cc ar $(notdir $(source))"
+	@ $(cxx) $(cxxflags) $(csetos) $(cinc) -c -o $% $(source)
 	@ ar r $(target) $%
 
 $(pwrp_inc)/%.h: %.msg
