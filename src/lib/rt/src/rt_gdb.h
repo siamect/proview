@@ -498,19 +498,19 @@ typedef struct {
 } gdb_sCclassVolume;
 
 
-
+#if 0
 /** Cached Attribute
  */
 typedef struct {
 
 } ndc_sAttribute;
-
+#endif
 
 
 
 typedef struct {
   net_sCattribute g;
-  ndc_sAttribute conv;
+  //  ndc_sAttribute conv;
 } gdb_sCattribute;
 
 

@@ -33,6 +33,7 @@ vpath %.hpp $(hw_source):$(os_source):$(co_source)
 vpath %.c $(hw_source):$(os_source):$(co_source)
 vpath %.cpp $(hw_source):$(os_source):$(co_source)
 vpath %.x $(hw_source):$(os_source):$(co_source)
+vpath %.pdr $(hw_source):$(os_source):$(co_source)
 
 source_dirs = $(hw_source) $(os_source) $(co_source)
 
@@ -72,12 +73,23 @@ xdr_sources := $(sort \
              ) \
            )
 
+pdr_sources := $(sort \
+             $(foreach file, \
+               $(foreach dir, \
+                 $(source_dirs), \
+                 $(wildcard $(dir)/$(comp_name)*.pdr) \
+               ), $(notdir $(file)) \
+             ) \
+           )
+
 xdr_includes := $(addprefix $(inc_dir)/,$(patsubst %.x, %.h, $(xdr_sources)))
 xdr_objects := $(patsubst %.x, %_xdr.o, $(xdr_sources))
 
+pdr_includes := $(addprefix $(inc_dir)/,$(patsubst %.pdr, %.h, $(pdr_sources)))
+pdr_objects := $(patsubst %.pdr, %_pdr.o, $(pdr_sources))
 
 export_includes := $(addprefix $(inc_dir)/,$(h_includes) $(hpp_includes))
-export_includes += $(xdr_includes)
+export_includes += $(xdr_includes) $(pdr_includes)
 
 clean_h_includes := $(patsubst %.h,clean_%.h, $(h_includes))
 clean_hpp_includes := $(patsubst %.hpp,clean_%.hpp, $(hpp_includes))
@@ -87,10 +99,10 @@ lib_name   := libpwr_$(comp_name)
 export_lib := $(lib_dir)/$(lib_name)$(lib_ext)
 
 objects := $(addsuffix $(obj_ext), $(basename $(sources)))
-objects += $(xdr_objects)
+objects += $(xdr_objects) $(pdr_objects)
 objects	:= $(addprefix $(bld_dir)/, $(objects))
 
-source_dependencies := $(notdir $(basename $(sources)))
+source_dependencies := $(notdir $(basename $(sources) $(pdr_objects) $(xdr_objects)))
 source_dependencies := $(addprefix $(bld_dir)/, $(source_dependencies))
 source_dependencies := $(addsuffix $(d_ext), $(source_dependencies))
 

@@ -124,15 +124,45 @@ endif
 
 $(inc_dir)/%.h : %.x
 	@ $(log_x_h)
+	@ if [ -e $(target) ]; then \
+		$(rm) $(target); \
+	fi
 	@ rpcgen -h -o $(target) $(source)
 
 
 $(bld_dir)/%_xdr.o : %.x
 	@ $(log_x_lib)
 	@ rpcgen -c -o $(bld_dir)/$(sname)_xdr.t $(source)
-	@ sed 's/\(#include "\)\(.*$(sname)[^"]*\)/\1$(sname).h/' $(bld_dir)/$(sname)_xdr.t > $(bld_dir)/$(sname)_xdr.c
+	@ sed 's/\(#include "\)\(.*$(sname)[^"]*\)/\1$(sname).h/' $(bld_dir)/$(sname)_xdr.t \
+	  | grep -v "register int32_t \*buf\;"> $(bld_dir)/$(sname)_xdr.c
 	@ rm $(bld_dir)/$(sname)_xdr.t
+ifeq ($(nodep),)
+	@ $(SHELL) -ec '$(cc) -MM $(cinc) $(csetos) $(bld_dir)/$(sname)_xdr.c \
+	  | sed '\''s|$*_xdr\.o[ ]*|$(bld_dir)/&|g'\'' \
+	  | sed '\''s|$(bld_dir)/$(sname)_xdr.c||'\'' > $(bld_dir)/$(sname)_xdr.d'
+endif
 	@ $(cc) $(cflags) $(csetos) $(cinc) -c -o $(bld_dir)/$(sname)_xdr.o $(bld_dir)/$(sname)_xdr.c
+	@ mv $(bld_dir)/$(sname)_xdr.c $(bld_dir)/$(sname)_xdr_compiled.c
+
+
+$(inc_dir)/%.h : %.pdr
+	@ $(log_x_h)
+	@ if [ -e $(target) ]; then \
+		$(rm) $(target); \
+	fi
+	@ tools_pdrgen -h -o $(target) $(source)
+
+
+$(bld_dir)/%_pdr.o : %.pdr
+	@ $(log_x_lib)
+	@ tools_pdrgen -c -o $(bld_dir)/$(sname)_pdr.c $(source)
+ifeq ($(nodep),)
+	@ $(SHELL) -ec '$(cc) -MM $(cinc) $(csetos) $(bld_dir)/$(sname)_pdr.c \
+	  | sed '\''s|$*_pdr\.o[ ]*|$(bld_dir)/&|g'\'' \
+	  | sed '\''s|$(bld_dir)/$(sname)_pdr.c||'\'' > $(bld_dir)/$(sname)_pdr.d'
+endif
+	@ $(cc) $(cflags) $(csetos) $(cinc) -c -o $(bld_dir)/$(sname)_pdr.o $(bld_dir)/$(sname)_pdr.c
+	@ mv $(bld_dir)/$(sname)_pdr.c $(bld_dir)/$(sname)_pdr_compiled.c
 
 
 (%.o) : %.o
