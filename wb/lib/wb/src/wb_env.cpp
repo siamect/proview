@@ -2,8 +2,10 @@
 #include "wb_error.h"
 #include "wb_ldh_msg.h"
 
-wb_env::wb_env() : wb_status(LDH__NOSUCHWB), m_erep(0)
+wb_env::wb_env() : wb_status(LDH__SUCCESS)
 {
+    m_erep = new wb_erep();
+    m_erep->ref();
 }
 
 wb_env::wb_env(wb_erep *e) : wb_status(LDH__SUCCESS), m_erep(e)
