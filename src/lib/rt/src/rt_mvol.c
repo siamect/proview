@@ -56,13 +56,16 @@ static pwr_tBoolean
     co_eBO              bo)
   {
     pwr_sParam		*p;
+    pwr_uParDef         *up;
 
-    if (co_dHostByteOrder == bo)
-      return YES;
 
 
     p = pool_Address(sts, gdbroot->rtdb, op->u.n.body);
     if (p == NULL) return NO;
+
+
+    if (co_dHostByteOrder == bo)
+      return YES;
 
     ENDIAN_SWAP_INTP(&p->Info.Type);
     ENDIAN_SWAP_INTP(&p->Info.Offset);
@@ -70,7 +73,33 @@ static pwr_tBoolean
     ENDIAN_SWAP_INTP(&p->Info.Flags);
     ENDIAN_SWAP_INTP(&p->Info.Elements);
     ENDIAN_SWAP_INTP(&p->Info.ParamIndex);
-    ENDIAN_SWAP_INTP(&p->TypeRef);
+
+    up = (pwr_uParDef *)p;
+
+
+    switch(op->g.cid) {
+    case pwr_eClass_Param:
+      ENDIAN_SWAP_INTP(&p->TypeRef);
+      break;
+    case pwr_eClass_Input:
+    case pwr_eClass_Output:
+    case pwr_eClass_Intern:
+      ENDIAN_SWAP_INTP(&up->Input.TypeRef);
+      /* Skip the pwr_sGraph member for the moment */
+      break;
+    case pwr_eClass_ObjXRef:
+      ENDIAN_SWAP_INTP(&up->ObjXRef.XRefType);
+      break;
+    case pwr_eClass_AttrXRef:
+      ENDIAN_SWAP_INTP(&up->AttrXRef.XRefType);
+      break;
+    case pwr_eClass_Buffer:
+      ENDIAN_SWAP_INTP(&up->Buffer.Class);
+      break;
+    default:
+      break;
+    }
+
 
     op->u.n.flags.b.bodyDecoded = 1;
 
