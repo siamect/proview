@@ -200,19 +200,29 @@ wb_db_name::wb_db_name(wb_db *db, wb_db_txn *txn, pwr_tOid poid, wb_name &name) 
 //{
 //}
 
-//wb_db_name::wb_db_name(wb_db *db, pwr_tOid poid, const char *name) :
-//  m_db(db), m_key(&m_k, sizeof(m_k)), m_data(&m_d, sizeof(m_d))
-//{
-//  m_k.poid = poid();
-//  strcpy(m_k.normname, name);
-//  m_d.oid = ?;
-//}
+wb_db_name::wb_db_name(wb_db *db, pwr_tOid poid, const char *name) :
+  m_db(db), m_key(&m_k, sizeof(m_k)), m_data(&m_d, sizeof(m_d))
+{
+  memset(&m_k, 0, sizeof(m_k));
+  memset(&m_d, 0, sizeof(m_d));
+  
+  m_k.poid = poid;
+  strcpy(m_k.normname, name);
+}
 
 //wb_db_name::wb_db_name(wb_db *db, wb_db_txn *txn, pwr_tOid poid, wb_name name) :
 //  m_db(db), m_key(&m_k, sizeof(m_k)), m_data(&m_d, sizeof(m_d))
 //{
 //}
 
+
+int wb_db_name::get(wb_db_txn *txn)
+{
+  m_data.set_ulen(sizeof(m_d));
+  m_data.set_flags(DB_DBT_USERMEM);
+  int rc = m_db->m_t_name->get(txn, &m_key, &m_data, 0);
+  return rc;
+}
 
 int wb_db_name::put(wb_db_txn *txn)
 {

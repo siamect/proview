@@ -233,7 +233,7 @@ public:
         
   wb_db_name(wb_db *db, wb_db_txn *txn);
   wb_db_name(wb_db *db, wb_db_ohead &o);
-  wb_db_name(wb_db *db, pwr_tOid, char *name);
+  //wb_db_name(wb_db *db, pwr_tOid, char *name);
   wb_db_name(wb_db *db, pwr_tOid poid, const char *name);
   wb_db_name(wb_db *db, pwr_tOid oid, pwr_tOid poid, const char *name);
   wb_db_name(wb_db *db, wb_db_txn *txn, pwr_tOid poid, wb_name &name);

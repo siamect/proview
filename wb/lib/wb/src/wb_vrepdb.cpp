@@ -1,6 +1,7 @@
 #include <sys/stat.h>
 #include <errno.h>
 #include "co_cdh.h"
+#include "wb_db.h"
 #include "wb_vrepdb.h"
 #include "wb_orepdb.h"
 #include "wb_erep.h"
@@ -76,20 +77,20 @@ wb_srep *wb_vrepdb::newSession()
 
 void wb_vrepdb::objectName(pwr_tOid oid, char *name, int level)
 {
-    if (cdh_ObjidIsNull(oid))
-        return;
-
-    wb_db_ohead o(m_db, m_db->m_txn, oid);
-    
-    if (o.oix() == pwr_cNOix) {
-        strcpy(name, o.name());
-        strcat(name, ":");
-    } else {
-        objectName(o.poid(), name, level+1);
-        strcat(name, o.name());
-        if (level > 0)
-            strcat(name, "-");
-    }
+  if (cdh_ObjidIsNull(oid))
+    return;
+  
+  wb_db_ohead o(m_db, m_db->m_txn, oid);
+  
+  if (o.oix() == pwr_cNOix) {
+    strcpy(name, o.name());
+    strcat(name, ":");
+  } else {
+    objectName(o.poid(), name, level+1);
+    strcat(name, o.name());
+    if (level > 0)
+      strcat(name, "-");
+  }
 }
 
 wb_name wb_vrepdb::longName(pwr_tStatus *sts, const wb_orep *o)
@@ -202,8 +203,29 @@ wb_orep* wb_vrepdb::object(pwr_tStatus *sts, pwr_tOid oid)
 
 wb_orep* wb_vrepdb::object(pwr_tStatus *sts, wb_name &name)
 {
-  *sts = LDH__NYI;
-  return 0;
+  *sts = LDH__SUCCESS;
+  //*sts = LDH__NYI;
+  // return 0;
+  pwr_tOid poid;
+  poid.vid = m_db->m_vid;
+  poid.oix = pwr_cNOix;
+
+  try {
+    for (int i = 0; name.hasSegment(i); i++) {
+      wb_db_name n(m_db, poid, name.normSegment(i));
+      int rc = n.get(m_db->m_txn);
+      poid = n.oid();
+      
+    }
+
+    m_ohead.get(m_db->m_txn, poid);
+    return new (this) wb_orepdb(&m_ohead.m_o);
+  }
+  catch (DbException &e) {
+    *sts = LDH__NOSUCHOBJ;
+    printf("vrepdb: %s\n", e.what());
+    return 0;
+  }
 }
 
 wb_orep* wb_vrepdb::object(pwr_tStatus *sts, const wb_orep *parent, wb_name &name)

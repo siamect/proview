@@ -20,7 +20,7 @@
 #if 1
 int main( int argc, char *argv[])
 {
-  //pwr_tStatus sts;
+  pwr_tStatus sts;
   //dbs_sEnv env;
   //dbs_sEnv *ep;
   wb_erep *erep = new wb_erep();
@@ -43,6 +43,8 @@ int main( int argc, char *argv[])
   db.close();
 
   wb_vrepdb vdb(erep, argv[2]);
+  wb_name n("VHX-NU4-KOM-EVELINA-Transar-W-cn254");
+  wb_orepdb *op = (wb_orepdb *)vdb.object(&sts, n);
   
   wb_dbs adbs(vdbs);
   adbs.setFileName("alasse.dbs");
