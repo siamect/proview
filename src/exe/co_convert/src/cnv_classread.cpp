@@ -14,6 +14,8 @@ extern "C" {
 
 #define CNV__UNKNOWN_LINETYPE 2
 
+static int tlog = 0;
+
 int ClassRead::read( char *filename) 
 {
   int sts;
@@ -243,6 +245,7 @@ int ClassRead::read( char *filename)
             strcpy( class_name, line_part[1]);
           if ( nr > 3)
             strcpy( class_id, line_part[3]);
+	  if (tlog) printf( "Cd %7d %3d %s\n", line_cnt, object_level, line);
           break;
         case cread_eLine_TypeDef:
           state |= cread_mState_TypeDef;
@@ -383,7 +386,8 @@ int ClassRead::read( char *filename)
             if ( generate_html)
               html_body_close();
           }
-          else if ( state & cread_mState_ClassDef) {
+          else if ( state & cread_mState_ClassDef && classdef_level == object_level) {
+	    if (tlog) printf( "Cd %7d %3d %s\n", line_cnt, object_level, line);
             state &= ~cread_mState_ClassDef;
             if ( generate_html && html_class_open && classdef_level == object_level)
               html_class_close();
@@ -413,6 +417,7 @@ int ClassRead::read( char *filename)
             object_level--;
             if ( object_level <= 0)
               state &= ~cread_mState_Object;
+	    if (tlog) printf( "Oo %7d %3d %s\n", line_cnt, object_level, line);
           }
           else
             printf( "Error: mismatch in Object-Endobject nesting, at line %d\n",
@@ -561,6 +566,7 @@ int ClassRead::read( char *filename)
           state |= cread_mState_Object;
           object_state = cread_mState_Object;
           object_level++;
+	  if (tlog) printf( "Oo %7d %3d %s\n", line_cnt, object_level, line);
           break;
         }
         case cread_eLine_Volume:
