@@ -851,8 +851,6 @@ cdh_ToLower (
   const char		*s
 );
 
-char *cdh_Low( char *in);
-
 char *
 cdh_ToUpper (
   char			*t,

@@ -2257,14 +2257,6 @@ cdh_ToUpper (
   return rs;
 }
 
-char *cdh_Low( char *in)
-{
-  static char str[400];
-
-  cdh_ToLower( str, in);
-  return str;
-}
-
 
 /* Compare two strings not regarding their casing.
 
