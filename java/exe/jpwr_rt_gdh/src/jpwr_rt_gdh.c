@@ -8,6 +8,7 @@
 #include "co_dcli.h"
 #include "co_time.h"
 #include "co_api.h"
+#include "co_msg.h"
 #include "co_cdh_msg.h"
 #include "rt_gdh_msg.h"
 
@@ -1297,7 +1298,9 @@ static void  gdh_TranslateSuffixToClassData (
 //    {"STRING" ,pwr_eType_String,  sizeof(void *)},
     {"TIME"   ,pwr_eType_Time,    sizeof(pwr_tTime)},
     {"DELTATIME" ,pwr_eType_DeltaTime, sizeof(pwr_tDeltaTime)},
-    {"ATTRREF" ,pwr_eType_AttrRef, sizeof(pwr_sAttrRef)}
+    {"ATTRREF" ,pwr_eType_AttrRef, sizeof(pwr_sAttrRef)},
+    {"STATUS" ,pwr_eType_Status, sizeof(pwr_tStatus)},
+    {"NETSTATUS" ,pwr_eType_NetStatus, sizeof(pwr_tNetStatus)}
   };
 
   static const int    XlationTblLen = sizeof(XlationTbl)/sizeof(XlationTbl[0]);
@@ -1437,6 +1440,10 @@ static int gdh_StringToAttr( char *str_value, char *buffer_p, int buffer_size,
         return GDH__BADARG;
       break;
     case pwr_eType_UInt32:
+    case pwr_eType_Enum:
+    case pwr_eType_Mask:
+    case pwr_eType_Status:
+    case pwr_eType_NetStatus:
       if ( sscanf( str_value, "%u", (pwr_tUInt32 *)buffer_p) != 1)
         return GDH__BADARG;
       break;
@@ -1621,6 +1628,10 @@ static void gdh_AttrToString( int type_id, void *value_ptr,
       break;
     }
     case pwr_eType_UInt32:
+    case pwr_eType_Enum:
+    case pwr_eType_Mask:
+    case pwr_eType_Status:
+    case pwr_eType_NetStatus:
     {
       if ( !format)
         *len = sprintf( str, "%d", *(unsigned int *)value_ptr);
@@ -2096,4 +2107,71 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_crrSignal
   	cdhrString_cid, jbuf, jsts);
   return return_obj;
 }
+
+JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getMsg
+  (JNIEnv *env, jclass obj, jint sts)
+{
+  int status;
+  jobject return_obj;
+  jint jsts;
+  jstring	jbuf = NULL;
+  char          buf[200];
+  jclass cdhrString_id;
+  static jmethodID cdhrString_cid = NULL;
+
+  cdhrString_id = (*env)->FindClass( env, "jpwr/rt/CdhrString");
+  if(cdhrString_cid == NULL)
+  {
+    cdhrString_cid = (*env)->GetMethodID( env, cdhrString_id,
+    	  "<init>", "(Ljava/lang/String;I)V");
+    //printf("cdhrString_cid initierad\n");
+  }
+
+  status = (pwr_tStatus) sts;
+
+  msg_GetMsg( status, buf, sizeof(buf));
+
+  jbuf = (*env)->NewStringUTF( env, buf);
+  jsts = (jint) GDH__SUCCESS;
+  return_obj = (*env)->NewObject( env, cdhrString_id,
+  	cdhrString_cid, jbuf, jsts);
+  return return_obj;
+}
+
+JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getMsgText
+  (JNIEnv *env, jclass obj, jint sts)
+{
+  int status;
+  jobject return_obj;
+  jint jsts;
+  jstring	jbuf = NULL;
+  char          buf[200];
+  jclass cdhrString_id;
+  static jmethodID cdhrString_cid = NULL;
+
+  cdhrString_id = (*env)->FindClass( env, "jpwr/rt/CdhrString");
+  if(cdhrString_cid == NULL)
+  {
+    cdhrString_cid = (*env)->GetMethodID( env, cdhrString_id,
+    	  "<init>", "(Ljava/lang/String;I)V");
+    //printf("cdhrString_cid initierad\n");
+  }
+
+  status = (pwr_tStatus) sts;
+
+  msg_GetText( status, buf, sizeof(buf));
+
+  jbuf = (*env)->NewStringUTF( env, buf);
+  jsts = (jint) GDH__SUCCESS;
+  return_obj = (*env)->NewObject( env, cdhrString_id,
+  	cdhrString_cid, jbuf, jsts);
+  return return_obj;
+}
+
+
+
+
+
+
+
 

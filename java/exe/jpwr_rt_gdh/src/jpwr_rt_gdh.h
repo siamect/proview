@@ -308,6 +308,22 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_crrSignal
 JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_crrObject
   (JNIEnv *, jobject, jstring);
 
+/*
+ * Class:     jpwr_rt_Gdh
+ * Method:    getMsg
+ * Signature: (I)Ljpwr/rt/CdhrString;
+ */
+JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getMsg
+  (JNIEnv *, jobject, jint);
+
+/*
+ * Class:     jpwr_rt_Gdh
+ * Method:    getMsgText
+ * Signature: (I)Ljpwr/rt/CdhrString;
+ */
+JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getMsgText
+  (JNIEnv *, jobject, jint);
+
 #ifdef __cplusplus
 }
 #endif
