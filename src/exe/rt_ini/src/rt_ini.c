@@ -195,6 +195,7 @@ start (
 
   ini_ProcIter(&sts, cp, proc_mProcess_user, ini_ProcLoad);
   ini_ProcIter(&sts, cp, proc_mProcess_user, ini_ProcStart);
+  ini_ProcIter(&sts, cp, proc_mProcess_user, ini_ProcPrio);
 
   qcom_CreateQ(&sts, &cp->eventQ, NULL, "iniEvent");
   if (EVEN(sts)) {
@@ -451,7 +452,7 @@ terminate (
 */  
   /* Now sleep for a while */
   
-  sleep(2);
+  sleep(3);
   
   /* Unlink shared memory and semaphores */
   

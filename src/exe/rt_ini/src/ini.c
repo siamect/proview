@@ -6,6 +6,8 @@
 #elif defined OS_LINUX
 # include <sys/wait.h>
 # include <sys/types.h>
+# include <sys/stat.h>
+# include <unistd.h>
 #endif
 
 #include "pwr.h"
@@ -556,6 +558,10 @@ loadSectObject (
   
     if (oh.cid == pwr_eClass_Node && oh.oid.vid == cp->node.nid)
       cp->node.nod_oid = oh.oid;  /* This is the node object.  */
+
+    if ( oh.flags.b.devOnly) {
+      // continue;
+    }
 
     op = ivol_LoadObject(sts, vp, &oh, vol_mLink_load);
     if (op == NULL) {
@@ -1771,6 +1777,9 @@ ini_ProcInsert (
 {
   ini_sProc	*pp;
   char		buf[255];
+  char          *s;
+  int           ret;
+  struct stat   f_stat;
 
   pwr_dStatus(sts, status, INI__SUCCESS);
 
@@ -1786,7 +1795,23 @@ ini_ProcInsert (
   if (run != -1) pp->flags.b.run = run != 0;
   if (file != NULL && file[0] != '\0' && strcmp(file, "\"\"")) {
     if (pp->proc.file != NULL) free(pp->proc.file);
-    pp->proc.file = strsav(file);
+      pp->proc.file = strsav(file);
+#if defined(OS_LINUX)
+      s = getenv("pwr_exe");
+      sprintf(buf, "%s/%s", s, file);
+      ret = stat(buf, &f_stat);
+      if (ret == -1)
+      {
+        s = getenv("pwrp_exe");
+	sprintf(buf, "%s/%s", s, file);
+	ret = stat(buf, &f_stat);
+	if (ret == -1)
+	{
+	  pp->flags.b.run  = 0;
+	  pp->proc.flags.b.load = 0;
+	}
+      }
+#endif
   }
   if (arg != NULL && arg[0] != '\0' && strcmp(arg, "\"\"")) {
     if (pp->proc.arg != NULL) free(pp->proc.arg);
@@ -1872,8 +1897,10 @@ ini_ProcPrio (
   
   if (pp->flags.b.run) {
 #if defined(OS_LINUX)
-    sprintf(set, "rt_prio -rp %d %d", pp->proc.p_prio, pp->proc.pid);
-    system(set);
+    if (!(pp->flags.b.plc)) {
+      sprintf(set, "rt_prio -rp %d %d", pp->proc.p_prio, pp->proc.pid);
+      system(set);
+    }
 #endif 
   }
 }
