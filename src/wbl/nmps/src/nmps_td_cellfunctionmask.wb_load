@@ -1,0 +1,59 @@
+!  nmps_td_cellfunctionmask.wb_load -- Defines the mask type CellFunctionMask
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+SObject NMps:Type
+!/**
+!  @Version 1.0
+!  @Group Types
+!  Defines mask for a NMpsCell function
+!*/
+  Object CellFunctionMask $TypeDef 1
+    Body SysBody
+      Attr TypeRef = "pwrs:Type-$Mask"
+      Attr PgmName = "CellFunction"
+    EndBody
+    !/**
+    !  If an data object is removed from the cell by the extern function
+    !  (ExternOpType=2,3 or 4) the data object is also remove from the rtdb 
+    !  database.
+    !*/
+    Object DeleteWhenRemove $Bit
+     Body SysBody
+       Attr PgmName = "DeleteWhenRemove"
+       Attr Text = "DeleteWhenRemove"
+       Attr Value = 4
+     EndBody
+    EndObject
+    !/**
+    !  When the cell is reseted by the ResetObject, the dataobject is also
+    !  removed from the database rtdb.
+    !*/
+    Object DeleteWhenReset $Bit
+     Body SysBody
+       Attr PgmName = "DeleteWhenReset"
+       Attr Text = "DeleteWhenReset"
+       Attr Value = 8
+     EndBody
+    EndObject
+    !/**
+    !  Backup. The cell and data objects in the cell, is backed up by 
+    !  the nmps backup process.
+    !*/
+    Object Backup $Bit
+     Body SysBody
+       Attr PgmName = "Backup"
+       Attr Text = "Backup"
+       Attr Value = 16
+     EndBody
+    EndObject
+  EndObject
+EndSObject
+
+
+
+
+

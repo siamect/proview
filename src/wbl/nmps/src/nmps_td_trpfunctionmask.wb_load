@@ -1,0 +1,112 @@
+!  nmps_td_trpfunctionmask.wb_load -- Defines the mask type TrpFunctionMask
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+SObject NMps:Type
+!/**
+!  @Version 1.0
+!  @Group Types
+!  Defines mask for a NMpsTrp function
+!*/
+  Object TrpFunctionMask $TypeDef 4
+    Body SysBody
+      Attr TypeRef = "pwrs:Type-$Mask"
+      Attr PgmName = "TrpFunction"
+    EndBody
+    !/**
+    !     An object is transported in two part, front and back.
+    !     - When a trigg on TriggForwFront is detected, the front of an object is
+    !       moved from the cell connected to In, to the cell connected to Out.
+    !     - When a trigg on TriggForwBack is detected, the back of an object is moved
+    !       from the In cell to the Out cell.
+    !     - When a trigg on TriggReverseFront is detected, the front of an object is moved
+    !       from the Out cell to the In cell.
+    !     - When a trigg on TriggReverseBack is detected, the back of an object is moved
+    !       from the Out cell to the In cell.
+    !*/
+    Object MoveFrontRear $Bit
+     Body SysBody
+       Attr PgmName = "MoveFrontRear"
+       Attr Text = "MoveFront/Rear"
+       Attr Value = 0
+     EndBody
+    EndObject
+    !/**
+    !     An object is transported between the cells.
+    !     Only the TriggForwFront and TriggReverseFront inputs should be used to move an object.
+    !     - When a trigg on TriggForwFront is detected, the object is moved from the In
+    !       cell to the Out cell.
+    !     - When a trigg on TriggReverseFront is detected, the object is moved from the
+    !       Out cell to the In cell.
+    !*/
+    Object MoveWholeObject $Bit
+     Body SysBody
+       Attr PgmName = "MoveWholeObject"
+       Attr Text = "MoveWholeObject"
+       Attr Value = 1
+     EndBody
+    EndObject
+    !/**
+    !     All the objects in the source cell are transported.
+    !     - When a trigg on TriggForwFront is detected, all the objects in the In cell are moved 
+    !       to the Out cell.
+    !     - When a trigg on TriggReverseFront is detected, all the objects in the Out cell are 
+    !       moved to the In cell.
+    !*/
+    Object MoveAllObjects $Bit
+     Body SysBody
+       Attr PgmName = "MoveAllObjects"
+       Attr Text = "MoveAllObjects"
+       Attr Value = 2
+     EndBody
+    EndObject
+    !/**
+    !     The same function as 2, with the differece that the transport is executed only
+    !     if the target cell is empty.
+    !*/
+    Object MoveAllObjectsIfEmpty $Bit
+     Body SysBody
+       Attr PgmName = "MoveAllObjectsIfEmpty"
+       Attr Text = "MoveAllObjectsIfEmpty"
+       Attr Value = 4
+     EndBody
+    EndObject
+    !/**
+    !     The trigg inputs are reseted, if they are not connected.
+    !*/
+    Object ResetTrigg $Bit
+     Body SysBody
+       Attr PgmName = "ResetTrigg"
+       Attr Text = "ResetTrigg"
+       Attr Value = 8
+     EndBody
+    EndObject
+    !/**
+    !     Trigg is detected on level instead of edge.
+    !*/
+    Object Slow $Bit
+     Body SysBody
+       Attr PgmName = "Slow"
+       Attr Text = "Slow"
+       Attr Value = 16
+     EndBody
+    EndObject
+    !/**
+    !*/
+    Object LevelTrigg $Bit
+     Body SysBody
+       Attr PgmName = "LevelTrigg"
+       Attr Text = "LevelTrigg"
+       Attr Value = 32
+     EndBody
+    EndObject
+  EndObject
+EndSObject
+
+
+
+
+

@@ -130,7 +130,7 @@ SObject NMps:Class
       !*/
       Object Function $Intern 4
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Mask"
+          Attr TypeRef = "NMps:Type-CellFunctionMask"
         EndBody
       EndObject
       !/**

@@ -1,0 +1,83 @@
+!  nmps_td_storecellfunctionmask.wb_load -- Defines the mask type StoreCellFunctionMask
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+SObject NMps:Type
+!/**
+!  @Version 1.0
+!  @Group Types
+!  Defines mask for a NMpsStoreCell function
+!*/
+  Object StoreCellFunctionMask $TypeDef 3
+    Body SysBody
+      Attr TypeRef = "pwrs:Type-$Mask"
+      Attr PgmName = "StoreCellFunction"
+    EndBody
+    !/**
+    !  At most one selected object. 
+    !  If a new object is selected, the previously selected 
+    !  object will be unselected.
+    !*/
+    Object MaxOneSelected $Bit
+     Body SysBody
+       Attr PgmName = "MaxOneSelected"
+       Attr Text = "MaxOneSelected"
+       Attr Value = 1
+     EndBody
+    EndObject
+    !/**
+    !  Exactly one selected object. 
+    !  If a new object is selected, the previously selected object will be unselected.
+    !  If the currently selected object is removed from the cell, the
+    !  object with highest index will be selected.
+    !*/
+    Object AlwaysOneSelected $Bit
+     Body SysBody
+       Attr PgmName = "AlwaysOneSelected"
+       Attr Text = "AlwaysOneSelected"
+       Attr Value = 2
+     EndBody
+    EndObject
+    !/**
+    !  If an data object is removed from the cell by the extern function
+    !  (ExternOpType=2,3 or 4) the data object is also remove from the rtdb 
+    !  database.
+    !*/
+    Object DeleteWhenRemove $Bit
+     Body SysBody
+       Attr PgmName = "DeleteWhenRemove"
+       Attr Text = "DeleteWhenRemove"
+       Attr Value = 4
+     EndBody
+    EndObject
+    !/**
+    !  When the cell is reseted by the ResetObject, the dataobject is also
+    !  removed from the database rtdb.
+    !*/
+    Object DeleteWhenReset $Bit
+     Body SysBody
+       Attr PgmName = "DeleteWhenReset"
+       Attr Text = "DeleteWhenReset"
+       Attr Value = 8
+     EndBody
+    EndObject
+    !/**
+    !  Backup. The cell and data objects in the cell, is backed up by 
+    !  the nmps backup process.
+    !*/
+    Object Backup $Bit
+     Body SysBody
+       Attr PgmName = "Backup"
+       Attr Text = "Backup"
+       Attr Value = 16
+     EndBody
+    EndObject
+  EndObject
+EndSObject
+
+
+
+

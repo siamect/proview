@@ -1,0 +1,11 @@
+!  nmps_ch_nmpstypes.wb_load -- NMps:Type hierarchy.
+!
+!  PROVIEW/R
+!
+!  <Description>.
+!
+!
+SObject NMps:
+  Object Type $TypeHier
+  EndObject
+EndSObject

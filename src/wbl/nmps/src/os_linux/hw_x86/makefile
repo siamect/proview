@@ -50,15 +50,15 @@ $(load_dir)/nmps.dbs :
 
 $(inc_dir)/pwr_nmpsclasses.h :
 	@ echo "Generating struct files for nmps classes..."
-	@ co_convert -s -d $(inc_dir) "$(pwre_sroot)/wbl/nmps/src/nmps_c_*.wb_load"
+	@ co_convert -s -d $(inc_dir) "$(pwre_sroot)/wbl/nmps/src/nmps_*.wb_load"
 
 $(inc_dir)/pwr_nmpsclasses.hpp :
 	@ echo "Generating hpp files for nmps classes..."
-	@ co_convert -po -d $(inc_dir) "$(pwre_sroot)/wbl/nmps/src/nmps_c_*.wb_load"
+	@ co_convert -po -d $(inc_dir) "$(pwre_sroot)/wbl/nmps/src/nmps_*.wb_load"
 
 $(doc_dir)/orm/nmps_allclasses.html :
 	@ echo "Generating html files for nmps classes..."
-	@ co_convert -w -d $(doc_dir)/orm -g $(pwre_sroot)/wbl/nmps/src/cnv_setup.dat "$(pwre_sroot)/wbl/nmps/src/nmps_c_*.wb_load"
+	@ co_convert -w -d $(doc_dir)/orm -g $(pwre_sroot)/wbl/nmps/src/cnv_setup.dat "$(pwre_sroot)/wbl/nmps/src/nmps_*.wb_load"
 	@ echo "Generating html files for nmps structs..."
 	@ co_convert -c -d $(doc_dir)/orm $(inc_dir)/pwr_nmpsclasses.h
 	@ echo "Generating html files for nmps code..."
