@@ -14,12 +14,12 @@
 #endif
 
 
-typedef struct s_commonpart
+typedef struct
 {
   void          *parent_ctx;
   Widget        parent_wid;
   char          *name;
-} trace_t_commonpart, *commonpart;
+} trace_t_commonpart;
 
 typedef struct tra_sCtx *tra_tCtx;
 typedef struct trace_s_node trace_t_node;

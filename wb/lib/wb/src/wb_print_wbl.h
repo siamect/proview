@@ -8,7 +8,7 @@
 #ifndef wb_print_wbl_h
 #define wb_print_wbl_h
 
-#include <iostream>
+#include <iostream.h>
 
 #include "pwr_class.h"
 

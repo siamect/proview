@@ -52,7 +52,7 @@ class Lng {
     static char *translate( char *str);
     static int translate( char *in, char *out);
     static char *get_language_str();
-    static void Lng::get_uid( char *in, char *out);
+    static void get_uid( char *in, char *out);
 };
 
 #if defined __cplusplus

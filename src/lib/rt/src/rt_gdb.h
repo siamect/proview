@@ -494,13 +494,14 @@ typedef struct {
   gdb_sCcVolKey		key;       /**< Hash table key */
   pwr_tTime             time;      /**< Time for the class volume */ 
   pwr_tBoolean          equalClasses; /**< True if the cached volume has the same versions as the local */
-    //  gdb_sTouchQ           ccache;     /**< The cache of classes */
+  /*  gdb_sTouchQ           ccache; */    /**< The cache of classes */
 } gdb_sCclassVolume;
 
 
 #if 0
 /** Cached Attribute
  */
+#if 0
 typedef struct {
 
 } ndc_sAttribute;
@@ -510,7 +511,7 @@ typedef struct {
 
 typedef struct {
   net_sCattribute g;
-  //  ndc_sAttribute conv;
+  /*  ndc_sAttribute conv; */
 } gdb_sCattribute;
 
 

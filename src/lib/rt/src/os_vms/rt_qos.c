@@ -24,6 +24,7 @@
 #include "rt_qdb_msg.h"
 #include "rt_qcom_msg.h"
 #include "rt_qdb.h"
+#include "rt_errh.h"
 
 typedef struct {
   qdb_sQue	*qp;

@@ -212,7 +212,7 @@ main ()
 static void
 Init ()
 {
-  pwr_tUInt32 sts;
+  pwr_tStatus sts;
   sStore *sp;
   LstHead(sStore) *sl;
   sNode *np;
@@ -263,8 +263,8 @@ Init ()
   LstIni(&lHelCB.StoreL);
 
 
-  lHelCB.Tree = tree_CreateTable(sizeof(pwr_tNodeId), offsetof(sNode, Nid),
-    sizeof(sNode), 10, tree_eComp_nid, NULL);
+  lHelCB.Tree = tree_CreateTable(&sts, sizeof(pwr_tNodeId), offsetof(sNode, Nid),
+    sizeof(sNode), 10, tree_Comp_nid);
 
   if (lHelCB.Tree == NULL)
     Log_Error_Exit(MH__NOSPACE, "Couldn't allocate tree.");
@@ -314,9 +314,10 @@ Insert (
   LstLink(sStore) *sl;
   int ctime;
   pwr_tVaxTime BirthVaxTime;
+  pwr_tStatus sts;
 
 
-  np = tree_Find(lHelCB.Tree, &ip->Id.Nix);
+  np = tree_Find(&sts, lHelCB.Tree, &ip->Id.Nix);
   if (np == NULL)
     np = InsertNode((pwr_tNodeId)ip->Id.Nix);
   
@@ -348,11 +349,12 @@ static sNode *
 InsertNode (
   pwr_tNodeId Nid
 ) {
+  pwr_tStatus sts;
   sNode *np;
   pwr_tVaxTime BirthVaxTime;
   struct SQLCA	sqlca;
 
-  np = tree_Insert(lHelCB.Tree, &Nid);
+  np = tree_Insert(&sts, lHelCB.Tree, &Nid);
   np->Nid = Nid;
      
   mh_HeldbSetTxro(&sqlca);

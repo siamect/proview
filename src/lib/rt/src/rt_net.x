@@ -1070,7 +1070,7 @@ struct net_sGetGclass {
 %
 %	if (EVEN(sts)) {
 %		acntmsg = 0;
-%		if (!xdr_pwr_tUInt32(xdrs, &acntmsg)) {
+%		if (!xdr_pwr_tUInt32(xdrs, (unsigned int *)&acntmsg)) {
 %				return (FALSE);
 %		}
 %		return (TRUE); 
@@ -1191,7 +1191,7 @@ struct net_sGetCclass {
 %
 %	if (EVEN(sts) || equal) {
 %		acntmsg = 0;
-%		if (!xdr_pwr_tUInt32(xdrs, &acntmsg)) {
+%		if (!xdr_pwr_tUInt32(xdrs, (unsigned int *)&acntmsg)) {
 %				return (FALSE);
 %		}
 %		return (TRUE); 

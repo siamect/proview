@@ -26,6 +26,7 @@
 #include "rt_lst.h"
 #include "rt_errh.h"
 #include "rt_syi.h"
+#include "rt_load.h"
 
 #if defined OS_VMS
 # define cPrio_neth		8

@@ -99,7 +99,7 @@ xdr_includes := $(addprefix $(inc_dir)/,$(patsubst %.x, %.h, $(xdr_sources)))
 xdr_objects := $(patsubst %.x, %_xdr.obj, $(xdr_sources))
 
 pdr_includes := $(addprefix $(inc_dir)/,$(patsubst %.pdr, %.h, $(pdr_sources)))
-pdr_objects := $(patsubst %.pdr, %_pdr.o, $(pdr_sources))
+pdr_objects := $(patsubst %.pdr, %_pdr.obj, $(pdr_sources))
 
 export_includes := $(addprefix $(inc_dir)/, $(includes))
 export_includes += $(xdr_includes) $(pdr_includes)

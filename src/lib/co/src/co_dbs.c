@@ -6,6 +6,12 @@
    . */
 
 
+#if defined OS_ELN
+#include string
+#include unistd
+#include types
+#include errno
+#else
 #include <string.h>
 #include <unistd.h>
 #include <sys/mman.h>
@@ -13,6 +19,7 @@
 #include <sys/stat.h>
 #include <errno.h>
 #include <fcntl.h>
+#endif
 
 #include "pwr.h"
 #include "co_dbs.h"

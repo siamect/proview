@@ -86,7 +86,7 @@ static char CPP[] = "cl";
 static char CPPFLAGS[] = "/C /EP /nologo";
 #elif defined OS_VMS
 static char CPP[] = "cc";
-static char CPPFLAGS[] = "/prep=";
+static char CPPFLAGS[] = "/decc/prep=";
 #else
 static char CPP[] = "/lib/cpp";
 static char CPPFLAGS[] = "-C";
@@ -205,7 +205,11 @@ int main(int argc,
 	}
 #endif
         
+#ifdef OS_VMS
+	exit(1);
+#else
 	exit(0);
+#endif
 }
 
 /*

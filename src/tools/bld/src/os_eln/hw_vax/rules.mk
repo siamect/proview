@@ -142,6 +142,19 @@ $(inc_dir)/%.h : %.x
 	@ if f$$search("$(to-vms $(tmp_dir)/$(tname).h)") .nes. "" then $(rm) $(rmflags) $(to-vms $(tmp_dir)/$(tname).h);*
 	@ set def 'saved_def
 
+$(inc_dir)/%.h : %.pdr
+	@ $(log_x_h)
+	tools_pdrgen -h -o $(target) $(source)
+
+(%_pdr.obj) : %.pdr
+	@ $(log_x_lib)
+	@ tools_pdrgen -c -o $(to-vms $(bld_dir)/$(sname)_pdr.c) $(source)
+	@ \@pwrb_root:[os_vms.hw_vax.exp.exe]pwr_repl $(to-vms $(bld_dir)/$(sname)_pdr.c) "[.-.-]$(sname)" "$(sname)"
+	@ $(cc) $(cflags) $(csetos) $(cinc) $(clibobj) $(clis) $(to-vms $(bld_dir)/$(sname)_pdr.c)
+	@ $(pur) $(purflags) $(to-vms $(bld_dir)/$(sname)_pdr.c)
+	@ $(ar) $(arflags) $(to-vms $(export_lib)) $(libobj)
+	@ if f$$search("$(libobj)") .nes. "" then $(rm) $(rmflags) $(libobj);*
+
 (%_xdr.obj) : %.x
 	@ $(log_x_lib)
 	@ saved_def = f$$environment("default")
@@ -182,8 +195,8 @@ $(inc_dir)/%.h : %.msg
 	@ $(ar) $(arflags) $(to-vms $(export_lib)) 'objname'
 	@ mc pwr_exe:pwr_msggen 'objname' $(target)
 	@ if f$$search(objname) .nes. "" then $(rm) 'objname';*
-		
-		
+
+
 #.msg.h
 #	@ $(msghlog)
 #	@ objname = "pwr_inc:"+f$$parse("$(target_name)",,,"NAME")+".obj"

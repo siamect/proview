@@ -173,7 +173,7 @@ cvolc_GetObjectInfo (
               if (tbl == NULL)
                 errh_Bugcheck(*sts, "failed getting address for conversion table");
             }
-            ndc_ConvertRemoteToNativeDataTable(sts, ccp, tbl, rarp,
+            ndc_ConvertRemoteToNativeTable(sts, ccp, tbl, rarp,
                                                arp, p, rmp->info, size);
 
           } else {

@@ -601,7 +601,7 @@ qcom_Init (
 #elif defined OS_VMS
   atexit(exitHandler);
   *sts = lib$get_ef(&qdb->ap->ef);
-  if (EVEN(*sts)) pwr_Bugcheck(sts, "lib$get_ef()");
+  if (EVEN(*sts)) errh_Bugcheck(sts, "lib$get_ef()");
 #endif
 
   qdb_ScopeLock {

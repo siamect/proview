@@ -357,6 +357,8 @@ void wb_vrepdb::adopt(wb_db_txn *txn, wb_db_ohead &o, wb_destination &dest)
     o.boid(d.boid());
     o.aoid(d.oid());
     break;
+  default:
+    ;
   }
     
   if (o.boid().vid != pwr_cNVid) {

@@ -10,4 +10,5 @@ pwr_lib:libpwr_rt/lib
 pwr_lib:libpwr_co/lib
 pwr_obj:pwr_msg_co.obj
 pwr_obj:pwr_msg_rt.obj
+ucx$rpc:ucx$rpcxdr/lib
 sys$library:decc$shr/share

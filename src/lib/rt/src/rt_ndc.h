@@ -39,7 +39,7 @@ typedef enum {
 typedef struct {
   conv_eIdx	cidx;	/**< Index in the conversion routine table */
   pwr_tUInt32	raidx; 	/**< Native attribute index */
-  //  pwr_tBoolean  private;/**< Set if attribute is a private pointer */
+  /*  pwr_tBoolean  private; */ /**< Set if attribute is a private pointer */
 } ndc_sRemoteToNative;
 
 
@@ -113,7 +113,7 @@ ndc_ConvertRemoteToNativeData (
  * The data has already been converted to native data format
  */
 pwr_tBoolean
-ndc_ConvertRemoteToNativeDataTable (
+ndc_ConvertRemoteToNativeTable (
   pwr_tStatus			*sts,
   const gdb_sCclass		*ccp,	/**< Cached class */
   const ndc_sRemoteToNative	*tbl,

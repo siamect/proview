@@ -22,7 +22,6 @@
 #define EVEN(a) (((int)(a) & 1) == 0)
 #define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
 #define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
-#define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
 
 typedef struct {
         pwr_tFloat32    *DataP;

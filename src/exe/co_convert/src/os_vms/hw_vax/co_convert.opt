@@ -11,5 +11,6 @@ pwr_obj:cnv_classread_html.obj
 pwr_obj:cnv_classread_xtthelp.obj
 pwr_obj:cnv_classread_src.obj
 pwr_obj:cnv_classread_struct.obj
+pwr_obj:cnv_help.obj
 pwr_lib:libpwr_co/lib
 pwr_obj:pwr_msg_co.obj

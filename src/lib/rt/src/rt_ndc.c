@@ -743,7 +743,7 @@ ndc_ConvertNativeToRemoteData (
           adef.b.privatepointer = 1; 
           
 
-          if (!conv_Fctn[cidx](cap->elem, tasize, tp + cap->offs, &size, ap->elem, sasize, sp + ap->offs, adef)) {
+          if (!conv_Fctn[cidx](cap->elem, tasize, (char *)tp + cap->offs, (int *)&size, ap->elem, sasize, (const char *)sp + ap->offs, adef)) {
             pwr_Return(NO, sts, NDC__CONVERT);
           }
           break;
@@ -751,7 +751,7 @@ ndc_ConvertNativeToRemoteData (
       }
 
       if (j >= cp->acount) {/* the remote attribute doesn't exist locally */
-        if (!conv_Fctn[conv_eIdx_zero](cap->elem, tasize, tp + cap->offs, &size, 0, 0, 0, adef)) {
+        if (!conv_Fctn[conv_eIdx_zero](cap->elem, tasize, (char *)tp + cap->offs, (int *)&size, 0, 0, 0, adef)) {
           pwr_Return(NO, sts, NDC__CONVERT);
         }
       }
@@ -781,7 +781,7 @@ ndc_ConvertNativeToRemoteData (
       adef.b.privatepointer = 1; 
 
 
-    if (!conv_Fctn[cidx](cap->elem, tasize, tp, &size, 
+    if (!conv_Fctn[cidx](cap->elem, tasize, tp, (int *)&size, 
                        nap->elem, sasize, sp, adef)
     ) {
       pwr_Return(NO, sts, NDC__CONVERT);
@@ -915,14 +915,14 @@ ndc_ConvertRemoteToNativeData (
           adef.m = cap->flags.m;
           adef.b.privatepointer = 1;          
 
-          if (!conv_Fctn[cidx](ap->elem, tasize, tp, &size, cap->elem, sasize, sp, adef)) {
+          if (!conv_Fctn[cidx](ap->elem, tasize, tp, (int *)&size, cap->elem, sasize, sp, adef)) {
             pwr_Return(NO, sts, NDC__CONVERT);
           }
         }
       }
 
       if (j >= ccp->acount) {/* the native attribute doesn't exist remotely */
-        if (!conv_Fctn[cidx](ap->elem, tasize, tp, &size, 0, 0, 0, adef)) {
+        if (!conv_Fctn[cidx](ap->elem, tasize, tp, (int *)&size, 0, 0, 0, adef)) {
           pwr_Return(NO, sts, NDC__CONVERT);
         }
       }
@@ -953,7 +953,7 @@ ndc_ConvertRemoteToNativeData (
       adef.b.privatepointer = 1;
 
 
-    if (!conv_Fctn[cidx](nap->elem, tasize, tp, &size, 
+    if (!conv_Fctn[cidx](nap->elem, tasize, tp, (int *)&size, 
                        cap->elem, sasize, sp, adef)
     ) {
       pwr_Return(NO, sts, NDC__CONVERT);
@@ -969,7 +969,7 @@ ndc_ConvertRemoteToNativeData (
  * The data has already been converted to native data format
  */
 pwr_tBoolean
-ndc_ConvertRemoteToNativeDataTable (
+ndc_ConvertRemoteToNativeTable (
   pwr_tStatus			*sts,
   const gdb_sCclass		*ccp,	/**< Cached class */
   const ndc_sRemoteToNative	*tbl,
@@ -1067,7 +1067,7 @@ ndc_ConvertRemoteToNativeDataTable (
       
 
 
-      if(!conv_Fctn[cidx](ap->elem, ap->size/ap->elem, (char *)tp + (ap->offs - base), &size,
+      if(!conv_Fctn[cidx](ap->elem, ap->size/ap->elem, (char *)tp + (ap->offs - base), (int *)&size,
                         relem, cap->size/cap->elem, (const char *)sp + roffs, adef))
         pwr_Return(NO, sts, NDC__CONVERT);      
       

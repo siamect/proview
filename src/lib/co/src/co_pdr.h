@@ -1,6 +1,12 @@
 #ifndef co_pdr_h
 #define co_pdr_h
 
+#if defined OS_VMS
+#include <types.h>
+#elif defined OS_ELN
+#include <rpc/rpc.h>
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif

@@ -45,7 +45,9 @@
 # endif
 #endif
 
-
+#if defined OS_VMS && defined __cplusplus
+  namespace std {};
+#endif 
 
 #define pwr_dLittleEndian 1
 #define pwr_dBigEndian	  2
@@ -156,7 +158,7 @@ typedef struct {
   int high;
 } pwr_tVaxTime;
 
-#if defined OS_VMS && ! defined _TIMESPEC_T_
+#if (defined OS_VMS || defined OS_ELN) && (! defined _TIMESPEC_T_ && !defined TIMERS_INCLUDED)
 # define _TIMESPEC_T_
   typedef struct timespec {
     unsigned long tv_sec;

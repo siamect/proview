@@ -116,7 +116,7 @@ static char *get_name (char*, int);
 static char get_severity (pwr_tStatus);
 static void openLog ();
 static void set_name (char*);
-static void send (char*);
+static void errh_send (char*);
 static void log_message (errh_sLog*, char, char*, va_list);
 static int msg_vsprintf (char *, const char *, aa_list, va_list);
 
@@ -204,7 +204,7 @@ errh_Log (
   if (interactive)
     printf("%s\n", buff);
   else
-    send(buff);
+    errh_send(buff);
 
   return buff;
 }
@@ -434,7 +434,7 @@ errh_CErrLog (
 
   s = get_header(get_severity(sts), string);
   msg_vsprintf(s, msg, args, NULL);
-  send(string);
+  errh_send(string);
 }
 
 /* Format a string.  */
@@ -669,7 +669,7 @@ log_message (errh_sLog *lp, char severity, char *msg, va_list ap)
   if (interactive)
     printf("%s\n", string);
   else
-    send(string);
+    errh_send(string);
 
   if (lp != NULL && lp->send) {
     lp->put.data = string;
@@ -1026,7 +1026,7 @@ number (
 }
 
 static void
-send (char *s)
+errh_send (char *s)
 {
   int len = strlen(s);
 

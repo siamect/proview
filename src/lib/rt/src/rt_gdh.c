@@ -2319,7 +2319,7 @@ gdh_SubData (
         tbl = pool_Address(NULL, gdbroot->pool, ccp->rnConv);
         if (tbl == NULL)errh_Bugcheck(GDH__WEIRD, "gdh_SubData, get cached class address");
 
-        ndc_ConvertRemoteToNativeDataTable(&sts, ccp, tbl, &cp->raref, &cp->aref, bp, p, MIN(bsize, cp->aref.Size));
+        ndc_ConvertRemoteToNativeTable(&sts, ccp, tbl, &cp->raref, &cp->aref, bp, p, MIN(bsize, cp->aref.Size));
 
       } else    
         memcpy(bp, p, MIN(bsize, cp->aref.Size));

@@ -207,7 +207,7 @@ subcm_Data (
             if (cp->cclass == pool_cNRef)
               memcpy(adrs, dp->data, MIN(dp->size, cp->usersize));
             else if (!cp->old) {
-              ndc_ConvertRemoteToNativeDataTable(&cp->sts, ccp, tbl, &cp->raref, &cp->aref, adrs, dp->data, cp->usersize);
+              ndc_ConvertRemoteToNativeTable(&cp->sts, ccp, tbl, &cp->raref, &cp->aref, adrs, dp->data, cp->usersize);
               if (EVEN(cp->sts))
                 cp->old = TRUE;
             }

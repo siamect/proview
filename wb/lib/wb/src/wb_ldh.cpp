@@ -917,7 +917,11 @@ ldh_ObjidToName(ldh_tSession session, pwr_tOid oid, ldh_eName type, char *buf, i
   case ldh_eName_Object:
   {
     wb_object o = sp->object(oid);
-    if (!o) return o.sts();
+    if (!o) { /* return o.sts(); */
+      strncpy( buf, cdh_ObjidToString( NULL, oid, 1), maxsize);
+      *size = strlen( buf);
+      return LDH__SUCCESS;
+    }
 
     try {
       char name[200];
@@ -938,8 +942,11 @@ ldh_ObjidToName(ldh_tSession session, pwr_tOid oid, ldh_eName type, char *buf, i
   case ldh_eName_Volume:
   {
     wb_object o = sp->object(oid);
-    if (!o) return o.sts();
-
+    if (!o) { /* return o.sts(); */
+      strncpy( buf, cdh_ObjidToString( NULL, oid, 1), maxsize);
+      *size = strlen( buf);
+      return LDH__SUCCESS;
+    }
     try {
       char name[200];
       strcpy( name, o.longName().name( type));

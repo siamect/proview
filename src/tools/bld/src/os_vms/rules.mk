@@ -185,12 +185,13 @@ $(inc_dir)/%.hpp : %.hpp
 
 $(inc_dir)/%.h : %.pdr
 	@ $(log_x_h)
-	@ tools_pdrgen -h -o $(target) $(source)
+	tools_pdrgen -h -o $(target) $(source)
 
 (%_pdr.obj) : %.pdr
 	@ $(log_x_lib)
-	@ tools_pdrgen -c -o $(bld_dir)/$(sname)_pdr.c $(source)
-	@ $(cc)/warn=dis=TRAILCOMMA $(cflags) $(csetos) $(cinc) $(clibobj) $(clis) $(to-vms $(bld_dir)/$(sname)_pdr.c)
+	tools_pdrgen -c -o $(to-vms $(bld_dir)/$(sname)_pdr.c) $(source)
+	\@pwr_exe:pwr_repl $(to-vms $(bld_dir)/$(sname)_pdr.c) "[.-.-]$(sname)" "$(sname)"
+	$(cc)/warn=dis=TRAILCOMMA $(cflags) $(csetos) $(cinc) $(clibobj) $(clis) $(to-vms $(bld_dir)/$(sname)_pdr.c)
 	@ $(pur) $(purflags) $(to-vms $(bld_dir)/$(sname)_pdr.c)
 	@ $(ar) $(arflags) $(to-vms $(export_lib)) $(libobj)
 	@ if f$$search("$(libobj)") .nes. "" then $(rm) $(rmflags) $(libobj);*

@@ -30,6 +30,7 @@
 #include "rt_net.h"
 #include "rt_sub.h"
 #include "rt_dvms.h"
+#include "co_time.h"
 
 
 static dvmsFctn *convFctn = NULL;
@@ -288,7 +289,7 @@ updateObject (
   }
     
   op->u.n.flags.b.isMountClean = o->flags.b.isMountClean;
-  //  op->u.n.rbTime = o->rbody.time;
+  /*  op->u.n.rbTime = o->rbody.time; */
   op->u.n.time = o->time;
   op->u.n.lflags.m = o->flags.m;
 
@@ -575,7 +576,7 @@ ivol_LoadObject (
   if (vol_LinkObject(sts, lv->vp, op, ilink) == NULL)
     return NULL;
   op->u.n.flags.b.isMountClean = o->flags.b.isMountClean;
-  //  op->u.n.rbTime = o->rbody.time;
+  /*  op->u.n.rbTime = o->rbody.time; */
   op->u.n.time = o->time;
   op->u.n.lflags.m = o->flags.m;
   return op;

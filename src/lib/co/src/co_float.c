@@ -154,8 +154,11 @@ co_vaxf2ieee(co_eBO sbo,
     else
         v.i = *(int *)sp;
 
-    (char *)i3ep = tp;
-
+#if (pwr_dHost_byteOrder == pwr_dLittleEndian)
+    i3ep = (union i3e_s_le *) tp;
+#else
+    i3ep = (union i3e_s_be *) tp;
+#endif
 
     if (v.b.f22_16 == 0x7f && v.b.exp == 0xff && v.b.f15_0 == 0xffff) {  /* High value.  */
         i3ep->i = 0, i3ep->v.exp = 0xff;
@@ -196,7 +199,11 @@ co_ieee2vaxf(co_eBO sbo,
     else
         i3e.i = *(int *)sp;
 
-    (int *)vp = tp;
+#if (pwr_dHost_byteOrder == pwr_dLittleEndian)
+    vp = (union vax_f_le *) tp;
+#else
+    vp = (union vax_f_be *) tp;
+#endif
     
     if (i3e.b.f22_0 == 0x0 && i3e.b.exp == 0xff) {  /* High value.  */
         vp->b.f22_16 = 0x7f;
