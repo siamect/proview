@@ -504,8 +504,8 @@ int main( int argc, char *argv[])
   MsgWindow::message( 'I', "Development environment started");
 
   // Create help window
-  XHelp *xhelp = new XHelp( mainwindow, 0, xhelp_eUtility_Wtt, &sts);
-  XHelp::set_default( xhelp);
+  CoXHelp *xhelp = new CoXHelp( mainwindow, 0, xhelp_eUtility_Wtt, &sts);
+  CoXHelp::set_default( xhelp);
 
   sts = ldh_OpenWB(&wbctx);
   psts(sts, NULL);
