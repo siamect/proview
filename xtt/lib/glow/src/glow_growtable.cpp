@@ -1122,3 +1122,66 @@ void GrowTable::set_input_focus( int focus)
     ctx->register_inputfocus( this, 0);
   }
 }
+
+int GrowTable::make_cell_visible( int column, int row)
+{
+  int i;
+  double cell_x_left, cell_x_right, cell_y_low, cell_y_high;
+  double scroll_y, scroll_x;
+
+  if ( column >= columns || row >= rows || column < 0 || row < 0)
+    return 0;
+
+  // Calculate the current position of the cell
+
+  // Find out which cell
+  double o_ll_x = x_left + x_left_offs;
+  double o_ll_y = y_low + y_low_offs;
+  double o_ur_x = x_right - vertical_scrollbar * scrollbar_width;
+  double o_ur_y = y_high - horizontal_scrollbar * scrollbar_width;
+
+  double t_ll_x = o_ll_x - h_value;
+  double t_ll_y = o_ll_y - v_value;
+
+  scroll_x = 0;
+  if ( !(header_column && column == 0)) {
+    cell_x_left = t_ll_x;
+    for ( i = header_column; i < column; i++)
+      cell_x_left += column_width[i];
+    cell_x_right = cell_x_left + column_width[i+1];
+
+    if ( cell_x_left < o_ll_x)
+      scroll_x = cell_x_left - o_ll_x;
+    else if ( cell_x_right > o_ur_x) {
+      scroll_x = cell_x_right - o_ur_x;
+      if ( scroll_x > cell_x_left - o_ll_x)
+	scroll_x = cell_x_left - o_ll_x;
+    }
+  }
+  cell_y_low = t_ll_y + row * row_height;
+  cell_y_high = cell_y_low + row_height;
+
+  scroll_y = 0;
+  int table_size = int((o_ur_y - o_ll_y) / row_height);
+  if ( cell_y_low < o_ll_y - row_height/20)
+    // scroll_y = cell_y_low - o_ll_y;
+    scroll_y = min( cell_y_low - o_ll_y, - int( table_size/3) * row_height);
+  else if ( cell_y_high > o_ur_y + row_height/20)
+    // scroll_y = cell_y_high - o_ur_y;
+    scroll_y = max( cell_y_high - o_ur_y, int( table_size/3) * row_height); 
+  
+  if ( scroll_x != 0 && horizontal_scrollbar) {
+    h_value += scroll_x;
+    h_value = h_scrollbar->set_value( h_value);
+  }
+  if ( scroll_y != 0 && vertical_scrollbar) {
+    v_value += scroll_y;
+    v_value = v_scrollbar->set_value( v_value);
+  }
+  if ( (scroll_x != 0 && horizontal_scrollbar) ||
+       (scroll_y != 0 && vertical_scrollbar)) {
+    draw();
+    return 1;
+  }
+  return 0;
+}
