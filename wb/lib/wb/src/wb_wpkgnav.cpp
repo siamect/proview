@@ -701,6 +701,7 @@ int WItemPkgPackage::open_children( WNavBrow *brow, double x, double y, int disp
     if ( display_mode & wpkg_mDisplayMode_FileOrderTime) {
       // Order in time
       sts = brow_GetChild( brow->ctx, node, &child);
+      inserted = 0;
       while ( ODD(sts)) {
 	brow_GetUserData( child, (void **)&item);
 	if ( item->time.tv_sec < time.tv_sec) {
