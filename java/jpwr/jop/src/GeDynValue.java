@@ -42,8 +42,9 @@ public class GeDynValue extends GeDynElem {
   public void scan() {
     if ( !attrFound)
       return;
-
-    if ( typeId == Pwr.eType_Float32) {
+    
+    switch ( typeId) {
+    case Pwr.eType_Float32: {
       float value0 = dyn.en.gdh.getObjectRefInfoFloat( p);
       if ( value0 != oldValueF  || firstScan) {
         sb = cFormat.format( value0, sb);
@@ -51,13 +52,14 @@ public class GeDynValue extends GeDynElem {
         dyn.repaintNow = true;
         oldValueF = value0;
       }
+      break;
     }
-    else if ( typeId == Pwr.eType_Int32 ||
-	      typeId == Pwr.eType_UInt32 ||
-              typeId == Pwr.eType_Int16 ||
-	      typeId == Pwr.eType_UInt16 ||
-              typeId == Pwr.eType_Int8 ||
-	      typeId == Pwr.eType_UInt8) {
+    case Pwr.eType_Int32:
+    case Pwr.eType_UInt32:
+    case Pwr.eType_Int16:
+    case Pwr.eType_UInt16:
+    case Pwr.eType_Int8:
+    case Pwr.eType_UInt8: {
       int value0 = dyn.en.gdh.getObjectRefInfoInt( p);
       if ( value0 != oldValueI || firstScan) {
 	sb = cFormat.format( value0, sb);
@@ -65,9 +67,12 @@ public class GeDynValue extends GeDynElem {
         dyn.repaintNow = true;
         oldValueI = value0;
       }
+      break;
     }
-    else if ( typeId == Pwr.eType_String || 
-              typeId == Pwr.eType_Objid) {
+    case Pwr.eType_String:
+    case Pwr.eType_Objid:
+    case Pwr.eType_Time:
+    case Pwr.eType_DeltaTime: {
       String value0 = dyn.en.gdh.getObjectRefInfoString( p, typeId);
       if ( firstScan || value0.compareTo( oldValueS) != 0) {
         sb = cFormat.format( value0, sb);
@@ -75,6 +80,30 @@ public class GeDynValue extends GeDynElem {
         dyn.repaintNow = true;
 	oldValueS = value0;
       }
+      break;
+    }
+    case Pwr.eType_Status:
+    case Pwr.eType_NetStatus: {
+      int value0 = dyn.en.gdh.getObjectRefInfoInt( p);
+      if ( value0 != oldValueI || firstScan) {
+	switch ( cFormat.type()) {
+	case GeCFormat.FRM_M: {
+	  CdhrString cstr = dyn.en.gdh.getMsg( value0);
+	  dyn.comp.setAnnot1( cstr.str);
+          dyn.repaintNow = true;
+	  break;
+	}
+	case GeCFormat.FRM_1M: {
+	  CdhrString cstr = dyn.en.gdh.getMsgText( value0);
+	  dyn.comp.setAnnot1( cstr.str);
+          dyn.repaintNow = true;
+	  break;
+	}
+	}
+      }
+      oldValueI = value0;
+      break;
+    }
     }
     if ( firstScan)
       firstScan = false;
