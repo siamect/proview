@@ -7,17 +7,9 @@ import java.awt.font.*;
 import javax.swing.*;
 public class GeFrameThin extends GeComponent {
   Dimension size;
-  public GeFrameThin()
+  public GeFrameThin( JopSession session)
   {
-    try {
-      jbInit();
-    }
-    catch(Exception e) {
-      e.printStackTrace();
-    }
-  }
-
-  private void jbInit() throws Exception {
+    super( session);
     size = new Dimension( 144, 84);
   }
   Shape[] shapes = new Shape[] { null, null, null, null};  
@@ -69,19 +61,19 @@ public class GeFrameThin extends GeComponent {
     }
 
     g.setStroke( new BasicStroke(1F));
-    g.setColor(GeColor.getColor(24, colorTone,
+    g.setColor(GeColor.getColor(78, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
     g.draw( shapes[0]);
     g.setStroke( new BasicStroke(1F));
-    g.setColor(GeColor.getColor(24, colorTone,
+    g.setColor(GeColor.getColor(78, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
     g.draw( shapes[1]);
     g.setStroke( new BasicStroke(1F));
-    g.setColor(GeColor.getColor(10, colorTone,
+    g.setColor(GeColor.getColor(40, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
     g.draw( shapes[2]);
     g.setStroke( new BasicStroke(1F));
-    g.setColor(GeColor.getColor(10, colorTone,
+    g.setColor(GeColor.getColor(40, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));
     g.draw( shapes[3]);
     g.setTransform(save);

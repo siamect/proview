@@ -13,17 +13,9 @@ public class GeImage extends JComponent implements ActionListener {
   Object root;
   JopSession session;
   Timer timer = new Timer(500, this);
-  public GeImage()
+  public GeImage( JopSession session)
   {
-    try {
-      jbInit();
-    }
-    catch(Exception e) {
-      e.printStackTrace();
-    }
-  }
-
-  private void jbInit() throws Exception {
+    this.session = session;
     size = new Dimension( 60, 30);
     timer.start();
   }
@@ -369,12 +361,12 @@ public class GeImage extends JComponent implements ActionListener {
         p[1] = m;
         p[2] = m;
         break;      
-      case GeColor.COLOR_TONE_YELLOW:
+      case GeColor.COLOR_TONE_YELLOWGREEN:
         p[0] = a1;
         p[1] = a1;
         p[2] = b2;
         break;
-      case GeColor.COLOR_TONE_GOLD:
+      case GeColor.COLOR_TONE_YELLOW:
         tmp = (int)( 1.2 * a1);
         if  (tmp <= 255)
           p[0] = tmp;

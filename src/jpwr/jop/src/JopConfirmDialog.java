@@ -34,6 +34,7 @@ public class JopConfirmDialog {
         public void actionPerformed( ActionEvent ev) {
 //          dia.hide();
 //          dia.setVisible( false);
+          ((JopConfirm) par).confirmNo();
           dia.dispose();
 //          dia = null;
         }
@@ -43,6 +44,7 @@ public class JopConfirmDialog {
         public void actionPerformed( ActionEvent ev) {
 //          dia.hide();
 //          dia.setVisible( false);
+          ((JopConfirm) par).confirmNo();
           dia.dispose();
 //          dia = null;
         }
@@ -64,3 +66,4 @@ public class JopConfirmDialog {
     }
   }
 }
+

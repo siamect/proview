@@ -18,12 +18,48 @@ local_java_sources := \
 	JopApplet.java \
 	JopSpider.java \
 	Jop.java \
+	GeComponentIfc.java \
+	GeDynElemIfc.java \
+	GeDyn.java \
 	GeComponent.java \
 	GeTextField.java \
 	GeSlider.java \
 	JopBar.java \
 	JopTrend.java \
 	JopAxis.java \
+	GeDynElem.java \
+	GeDynDigLowColor.java \
+	GeDynDigColor.java \
+	GeDynDigError.java \
+	GeDynDigWarning.java \
+	GeDynDigFlash.java \
+	GeDynInvisible.java \
+	GeDynDigBorder.java \
+	GeDynDigText.java \
+	GeDynValue.java \
+	GeDynRotate.java \
+	GeDynMove.java \
+	GeDynAnalogShift.java \
+	GeDynDigShift.java \
+	GeDynAnimation.java \
+	GeDynSetDig.java \
+	GeDynResetDig.java \
+	GeDynToggleDig.java \
+	GeDynStoDig.java \
+	GeDynCommand.java \
+	GeDynConfirm.java \
+	GeDynIncrAnalog.java \
+	GeDynRadioButton.java \
+	GeDynPopupMenu.java \
+	GeDynSlider.java \
+	GeDynValueInput.java \
+	GeDynAnalogColor.java \
+	GeDynTipText.java \
+	GeDynFillLevel.java \
+	GeDynCloseGraph.java \
+	GeDynPulldownMenu.java \
+	GeDynOptionMenu.java \
+	GeDynAnalogText.java \
 	JopSpiderFrame.java \
 	JopLoginFrame.java \
 	JopLoginApplet.java \

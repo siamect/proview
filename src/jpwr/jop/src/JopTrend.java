@@ -8,25 +8,20 @@ import javax.swing.Timer;
 import java.awt.event.*;
 import jpwr.rt.*;
 
-public class JopTrend extends JComponent implements JopDynamic, ActionListener{
+public class JopTrend extends JComponent implements GeComponentIfc, 
+	  JopDynamic, JopConfirm, ActionListener{
   Dimension size;
   Timer timer = new Timer(500, this);
   Object root;
   JopSession session;
   JopEngine en;
-  public JopTrend()
+  public GeDyn dd = new GeDyn( this);
+  public JopTrend( JopSession session)
   {
-    try {
-      jbInit();
-    }
-    catch(Exception e) {
-      e.printStackTrace();
-    }
-  }
-
-  private void jbInit() throws Exception {
+   this.session = session;
     size = new Dimension( 102, 36);
     timer.start();
+    dd.setSession( session);
 
   }
   public void actionPerformed(ActionEvent e) {
@@ -48,8 +43,63 @@ public class JopTrend extends JComponent implements JopDynamic, ActionListener{
     if ( engine_found) {
       timer.stop();
       timer = null;
+      if ( dd.actionType != 0 && en.gdh.isAuthorized( dd.access)) {
+        this.addMouseListener(new MouseAdapter() {
+          public void mouseReleased(MouseEvent e) {
+	    if ( e.isPopupTrigger())
+	      dd.action( GeDyn.eEvent_MB3Press, e);
+	    else if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0 &&
+		     en.gdh.isAuthorized( dd.access))
+	      dd.action( GeDyn.eEvent_MB1Up, e);
+	  }
+
+          public void mousePressed(MouseEvent e) {
+	    if ( e.isPopupTrigger())
+	      dd.action( GeDyn.eEvent_MB3Press, e);
+	    else if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0 &&
+		     en.gdh.isAuthorized( dd.access))
+	      dd.action( GeDyn.eEvent_MB1Down, e);
+	  }
+          public void mouseClicked(MouseEvent e) {
+	    if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0 &&
+		en.gdh.isAuthorized( dd.access))
+	      dd.action( GeDyn.eEvent_MB1Click, e);
+	  }
+        });
+      }
     }
   }
+  public void confirmNo() {}
+  public void confirmYes() {
+    PwrtStatus sts;
+    String attrName;
+
+    dd.confirmedAction( GeDyn.eEvent_MB1Click, null);
+  }
+
+  // GeComponents Ifc
+  public void tsetFillColor( int fillColor) {}
+  public void tsetColorTone( int colorTone) {}
+  public void tsetBorderColor( int borderColor) {}
+  public void tsetTextColor( int textColor) {}
+  public void setColorInverse( int colorInverse) {} 
+  public void resetFillColor() {}
+  public void resetColorTone() {}
+  public void resetBorderColor() {}
+  public void resetTextColor() {}
+  public String getAnnot1() { return new String();}
+  public void setAnnot1( String s) {}
+  public void setLastPage() {}
+  public void setFirstPage() {}
+  public void setPage( int page) {}
+  public int setNextPage() { return 1;}
+  public int setPreviousPage() { return 1;}
+  public Object getDd() { return dd;}
+  public void setFillLevel( float fillLevel) {}
+  public void setLevelDirection( int levelDirection) {}
+  public void setLevelColorTone( int levelColorTone) {}
+  public void setLevelFillColor( int levelFillColor) {}
+
   int fillColor = 9999;
   int borderColor = 9999;
   int[] fillColorTrend = {9999, 9999};
@@ -361,8 +411,17 @@ public class JopTrend extends JComponent implements JopDynamic, ActionListener{
       }
     }
     repaint();
-
+    // paintForeground();
     if ( firstScan)
       firstScan = false;
+  }
+  public void repaintForeground() {
+    Graphics g = getGraphics();
+    if ( g == null) {
+      System.out.println("repaintForeground: can't get Graphic object");
+      return;
+    }
+    paintComponent(g);
+    paintChildren(g);
   }
 }

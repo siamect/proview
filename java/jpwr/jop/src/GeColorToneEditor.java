@@ -16,106 +16,82 @@ public class GeColorToneEditor extends PropertyEditorSupport {
   public GeColorToneEditor() {
   }
   private static String[] tagStrings = {
-	"NoTone",
-	"ToneGray",
-	"ToneYellow",
-	"ToneGold",
-	"ToneOrange",
-	"ToneRed",
-	"ToneMagenta",
-	"ToneBlue",
-	"ToneSeablue",
-	"ToneGreen",
-	"Grey5",
-	"Grey10",
-	"Grey15",
-	"Grey30",
-	"Grey50",
-	"Grey7",
-	"Grey12",
-	"Grey25",
-	"Grey45",
-	"Grey65",
-	"LightYellow0",
-	"LightYellow1",
-	"LightYellow2",
-	"LightYellow3",
-	"LightYellow4",
-	"yellow0",
-	"yellow1",
-	"yellow2",
-	"yellow3",
-	"yellow4",
-	"Lightgoldenrod0",
-	"Lightgoldenrod1",
-	"Lightgoldenrod2",
-	"Lightgoldenrod3",
-	"Lightgoldenrod4",
-	"gold00",
-	"gold1",
-	"gold2",
-	"gold3",
-	"gold4",
-	"LightOrange",
-	"NavajoWhite",
-	"LightSalmon1",
-	"LightSalmon3",
-	"LightSalmon4",
-	"DarkOrange",
-	"DarkOrange0",
-	"DarkOrange1",
-	"DarkOrange3",
-	"DarkOrange4",
-	"MistyRose1",
-	"MistyRose2",
-	"LightPink",
-	"LightPink3",
-	"LightPink4",
-	"IndianRed0",
-	"IndianRed1",
-	"firebrick1",
-	"firebrick3",
-	"firebrick4",
-	"Plum1 ",
-	"Plum1",
-	"Plum2",
-	"Plum3",
-	"Plum4",
-	"Magenta00",
-	"Magenta0",
-	"Magenta1",
-	"Magenta3",
-	"Magenta4",
-	"LightSteelBlue1",
-	"LightSteelBlue1",
-	"LightSteelBlue2",
-	"LightSteelBlue3",
-	"LightSteelBlue4",
-	"LightCyan",
-	"PowderBlue",
-	"SteelBlue1",
-	"SteelBlue",
-	"blue4",
-	"aquamarine0",
-	"aquamarine1",
-	"aquamarine2",
-	"aquamarine3",
-	"aquamarine4",
-	"turqoise0",
-	"turqoise1",
-	"turqoise2",
-	"turqoise3",
-	"turqoise4",
-	"DarkOliveGreen1",
-	"DarkOliveGreen2",
-	"DarkOliveGreen3",
-	"DarkOliveGreen4",
-	"DarkOliveGreen5",
-	"chartreuse",
-	"chartreuse2",
-	"chartreuse3",
-	"chartreuse4",
-	"DarkGreen",
+	/* glow_eDrawTone_No */ 				"NoTone",
+	/* glow_eDrawTone_Gray */ 				"ToneGray",
+	/* glow_eDrawTone_YellowGreen */    		        "ToneYellowGreen",
+	/* glow_eDrawTone_Yellow */ 				"ToneYellow",
+	/* glow_eDrawTone_Orange */ 				"ToneOrange",
+	/* glow_eDrawTone_Red */ 				"ToneRed",
+	/* glow_eDrawTone_Magenta */ 				"ToneMagenta",
+	/* glow_eDrawTone_Blue */ 				"ToneBlue",
+	/* glow_eDrawTone_Seablue */ 				"ToneSeablue",
+	/* glow_eDrawTone_Green */ 				"ToneGreen",
+	/* glow_eDrawTone_DarkGray */				"ToneDarkGray",
+	/* glow_eDrawTone_LightGray */				"ToneLightGray",
+	/* glow_eDrawTone_DarkYellowGreen */			"ToneDarkYellowGreen",
+	/* glow_eDrawTone_LightYellowGreen */	       		"ToneLightYellowGreen",
+	/* glow_eDrawTone_YellowGreenHighSaturation */      	"ToneYellowGreenHighSaturation",
+	/* glow_eDrawTone_YellowGreenLowSaturation */       	"ToneYellowGreenLowSaturation",
+	/* glow_eDrawTone_DarkYellowGreenHighSaturation */	"ToneDarkYellowGreenHighSaturation",
+	/* glow_eDrawTone_DarkYellowGreenLowSaturation */   	"ToneDarkYellowGreenLowSaturation",
+	/* glow_eDrawTone_LightYellowGreenHighSaturation */	"ToneLightYellowGreenHighSaturation",
+	/* glow_eDrawTone_LightYellowGreenLowSaturation */	"ToneLightYellowGreenLowSaturation",
+	/* glow_eDrawTone_DarkYellow */				"ToneDarkYellow",
+	/* glow_eDrawTone_LightYellow */			"ToneLightYellow",
+	/* glow_eDrawTone_YellowHighSaturation */		"ToneYellowHighSaturation",
+	/* glow_eDrawTone_YellowLowSaturation */		"ToneYellowLowSaturation",
+	/* glow_eDrawTone_DarkYellowHighSaturation */       	"ToneDarkYellowHighSaturation",
+	/* glow_eDrawTone_DarkYellowLowSaturation */		"ToneDarkYellowLowSaturation",
+	/* glow_eDrawTone_LightYellowHighSaturation */      	"ToneLightYellowHighSaturation",
+	/* glow_eDrawTone_LightYellowLowSaturation */       	"ToneLightYellowLowSaturation",
+	/* glow_eDrawTone_DarkOrange */				"ToneDarkOrange",
+	/* glow_eDrawTone_LightOrange */			"ToneLightOrange",
+	/* glow_eDrawTone_OrangeHighSaturation */		"ToneOrangeHighSaturation",
+	/* glow_eDrawTone_OrangeLowSaturation */		"ToneOrangeLowSaturation",
+	/* glow_eDrawTone_DarkOrangeHighSaturation */		"ToneDarkOrangeHighSaturation",
+	/* glow_eDrawTone_DarkOrangeLowSaturation */		"ToneDarkOrangeLowSaturation",
+	/* glow_eDrawTone_LightOrangeHighSaturation */		"ToneLightOrangeHighSaturation",
+	/* glow_eDrawTone_LightOrangeLowSaturation */		"ToneLightOrangeLowSaturation",
+	/* glow_eDrawTone_DarkRed */				"ToneDarkRed",
+	/* glow_eDrawTone_LightRed */				"ToneLightRed",
+	/* glow_eDrawTone_RedHighSaturation */			"ToneRedHighSaturation",
+	/* glow_eDrawTone_RedLowSaturation */			"ToneRedLowSaturation",
+	/* glow_eDrawTone_DarkRedHighSaturation */		"ToneDarkRedHighSaturation",
+	/* glow_eDrawTone_DarkRedLowSaturation */		"ToneDarkRedLowSaturation",
+	/* glow_eDrawTone_LightRedHighSaturation */		"ToneLightRedHighSaturation",
+	/* glow_eDrawTone_LightRedLowSaturation */		"ToneLightRedLowSaturation",
+	/* glow_eDrawTone_DarkMagenta */			"ToneDarkMagenta",
+	/* glow_eDrawTone_LightMagenta */			"ToneLightMagenta",
+	/* glow_eDrawTone_MagentaHighSaturation */		"ToneMagentaHighSaturation",
+	/* glow_eDrawTone_MagentaLowSaturation */		"ToneMagentaLowSaturation",
+	/* glow_eDrawTone_DarkMagentaHighSaturation */		"ToneDarkMagentaHighSaturation",
+	/* glow_eDrawTone_DarkMagentaLowSaturation */		"ToneDarkMagentaLowSaturation",
+	/* glow_eDrawTone_LightMagentaHighSaturation */		"ToneLightMagentaHighSaturation",
+	/* glow_eDrawTone_LightMagentaLowSaturation */		"ToneLightMagentaLowSaturation",
+	/* glow_eDrawTone_DarkBlue */				"ToneDarkBlue",
+	/* glow_eDrawTone_LightBlue */				"ToneLightBlue",
+	/* glow_eDrawTone_BlueHighSaturation */			"ToneBlueHighSaturation",
+	/* glow_eDrawTone_BlueLowSaturation */			"ToneBlueLowSaturation",
+	/* glow_eDrawTone_DarkBlueHighSaturation */		"ToneDarkBlueHighSaturation",
+	/* glow_eDrawTone_DarkBlueLowSaturation */		"ToneDarkBlueLowSaturation",
+	/* glow_eDrawTone_LightBlueHighSaturation */		"ToneLightBlueHighSaturation",
+	/* glow_eDrawTone_LightBlueLowSaturation */		"ToneLightBlueLowSaturation",
+	/* glow_eDrawTone_DarkSeablue */			"ToneDarkSeablue",
+	/* glow_eDrawTone_LightSeablue */			"ToneLightSeablue",
+	/* glow_eDrawTone_SeablueHighSaturation */		"ToneSeablueHighSaturation",
+	/* glow_eDrawTone_SeablueLowSaturation */		"ToneSeablueLowSaturation",
+	/* glow_eDrawTone_DarkSeablueHighSaturation */		"ToneDarkSeablueHighSaturation",
+	/* glow_eDrawTone_DarkSeablueLowSaturation */	 	"ToneDarkSeablueLowSaturation",
+	/* glow_eDrawTone_LightSeablueHighSaturation */		"ToneLightSeablueHighSaturation",
+	/* glow_eDrawTone_LightSeablueLowSaturation */		"ToneLightSeablueLowSaturation",
+	/* glow_eDrawTone_DarkGreen */				"ToneDarkGreen",
+	/* glow_eDrawTone_LightGreen */				"ToneLightGreen",
+	/* glow_eDrawTone_GreenHighSaturation */		"ToneGreenHighSaturation",
+	/* glow_eDrawTone_GreenLowSaturation */			"ToneGreenLowSaturation",
+	/* glow_eDrawTone_DarkGreenHighSaturation */		"ToneDarkGreenHighSaturation",
+	/* glow_eDrawTone_DarkGreenLowSaturation */		"ToneDarkGreenLowSaturation",
+	/* glow_eDrawTone_LightGreenHighSaturation */		"ToneLightGreenHighSaturation",
+	/* glow_eDrawTone_LightGreenLowSaturation */		"ToneLightGreenLowSaturation",
 	};
   public String[] getTags() {
     return tagStrings;
@@ -125,105 +101,83 @@ public class GeColorToneEditor extends PropertyEditorSupport {
   }
   public void setAsText(String s) throws IllegalArgumentException {
     if (s.equals("NoTone")) setValue( new Integer(GeColor.COLOR_TONE_NO));
-    else if (s.equals("ToneGray")) setValue( new Integer(GeColor.COLOR_TONE_GRAY));
-    else if (s.equals("ToneYellow")) setValue( new Integer(GeColor.COLOR_TONE_YELLOW));
-    else if (s.equals("ToneGold")) setValue( new Integer(GeColor.COLOR_TONE_GOLD));
-    else if (s.equals("ToneOrange")) setValue( new Integer(GeColor.COLOR_TONE_ORANGE));
-    else if (s.equals("ToneRed")) setValue( new Integer(GeColor.COLOR_TONE_RED));
-    else if (s.equals("ToneMagenta")) setValue( new Integer(GeColor.COLOR_TONE_MAGENTA));
-    else if (s.equals("ToneBlue")) setValue( new Integer(GeColor.COLOR_TONE_BLUE));
-    else if (s.equals("ToneSeablue")) setValue( new Integer(GeColor.COLOR_TONE_SEABLUE));
-    else if (s.equals("ToneGreen")) setValue( new Integer(GeColor.COLOR_TONE_GREEN));
-    else if (s.equals("Grey5")) setValue( new Integer(GeColor.COLOR_11));
-    else if (s.equals("Grey10")) setValue( new Integer(GeColor.COLOR_12));
-    else if (s.equals("Grey15")) setValue( new Integer(GeColor.COLOR_13));
-    else if (s.equals("Grey30")) setValue( new Integer(GeColor.COLOR_14));
-    else if (s.equals("Grey50")) setValue( new Integer(GeColor.COLOR_15));
-    else if (s.equals("Grey7")) setValue( new Integer(GeColor.COLOR_16));
-    else if (s.equals("Grey12")) setValue( new Integer(GeColor.COLOR_17));
-    else if (s.equals("Grey25")) setValue( new Integer(GeColor.COLOR_18));
-    else if (s.equals("Grey45")) setValue( new Integer(GeColor.COLOR_19));
-    else if (s.equals("Grey65")) setValue( new Integer(GeColor.COLOR_20));
-    else if (s.equals("LightYellow0")) setValue( new Integer(GeColor.COLOR_21));
-    else if (s.equals("LightYellow1")) setValue( new Integer(GeColor.COLOR_22));
-    else if (s.equals("LightYellow2")) setValue( new Integer(GeColor.COLOR_23));
-    else if (s.equals("LightYellow3")) setValue( new Integer(GeColor.COLOR_24));
-    else if (s.equals("LightYellow4")) setValue( new Integer(GeColor.COLOR_25));
-    else if (s.equals("yellow0")) setValue( new Integer(GeColor.COLOR_26));
-    else if (s.equals("yellow1")) setValue( new Integer(GeColor.COLOR_27));
-    else if (s.equals("yellow2")) setValue( new Integer(GeColor.COLOR_28));
-    else if (s.equals("yellow3")) setValue( new Integer(GeColor.COLOR_29));
-    else if (s.equals("yellow4")) setValue( new Integer(GeColor.COLOR_30));
-    else if (s.equals("Lightgoldenrod0")) setValue( new Integer(GeColor.COLOR_31));
-    else if (s.equals("Lightgoldenrod1")) setValue( new Integer(GeColor.COLOR_32));
-    else if (s.equals("Lightgoldenrod2")) setValue( new Integer(GeColor.COLOR_33));
-    else if (s.equals("Lightgoldenrod3")) setValue( new Integer(GeColor.COLOR_34));
-    else if (s.equals("Lightgoldenrod4")) setValue( new Integer(GeColor.COLOR_35));
-    else if (s.equals("gold00")) setValue( new Integer(GeColor.COLOR_36));
-    else if (s.equals("gold1")) setValue( new Integer(GeColor.COLOR_37));
-    else if (s.equals("gold2")) setValue( new Integer(GeColor.COLOR_38));
-    else if (s.equals("gold3")) setValue( new Integer(GeColor.COLOR_39));
-    else if (s.equals("gold4")) setValue( new Integer(GeColor.COLOR_40));
-    else if (s.equals("LightOrange")) setValue( new Integer(GeColor.COLOR_41));
-    else if (s.equals("NavajoWhite")) setValue( new Integer(GeColor.COLOR_42));
-    else if (s.equals("LightSalmon1")) setValue( new Integer(GeColor.COLOR_43));
-    else if (s.equals("LightSalmon3")) setValue( new Integer(GeColor.COLOR_44));
-    else if (s.equals("LightSalmon4")) setValue( new Integer(GeColor.COLOR_45));
-    else if (s.equals("DarkOrange")) setValue( new Integer(GeColor.COLOR_46));
-    else if (s.equals("DarkOrange0")) setValue( new Integer(GeColor.COLOR_47));
-    else if (s.equals("DarkOrange1")) setValue( new Integer(GeColor.COLOR_48));
-    else if (s.equals("DarkOrange3")) setValue( new Integer(GeColor.COLOR_49));
-    else if (s.equals("DarkOrange4")) setValue( new Integer(GeColor.COLOR_50));
-    else if (s.equals("MistyRose1")) setValue( new Integer(GeColor.COLOR_51));
-    else if (s.equals("MistyRose2")) setValue( new Integer(GeColor.COLOR_52));
-    else if (s.equals("LightPink")) setValue( new Integer(GeColor.COLOR_53));
-    else if (s.equals("LightPink3")) setValue( new Integer(GeColor.COLOR_54));
-    else if (s.equals("LightPink4")) setValue( new Integer(GeColor.COLOR_55));
-    else if (s.equals("IndianRed0")) setValue( new Integer(GeColor.COLOR_56));
-    else if (s.equals("IndianRed1")) setValue( new Integer(GeColor.COLOR_57));
-    else if (s.equals("firebrick1")) setValue( new Integer(GeColor.COLOR_58));
-    else if (s.equals("firebrick3")) setValue( new Integer(GeColor.COLOR_59));
-    else if (s.equals("firebrick4")) setValue( new Integer(GeColor.COLOR_60));
-    else if (s.equals("Plum1")) setValue( new Integer(GeColor.COLOR_61));
-    else if (s.equals("Plum1")) setValue( new Integer(GeColor.COLOR_62));
-    else if (s.equals("Plum2")) setValue( new Integer(GeColor.COLOR_63));
-    else if (s.equals("Plum3")) setValue( new Integer(GeColor.COLOR_64));
-    else if (s.equals("Plum4")) setValue( new Integer(GeColor.COLOR_65));
-    else if (s.equals("Magenta00")) setValue( new Integer(GeColor.COLOR_66));
-    else if (s.equals("Magenta0")) setValue( new Integer(GeColor.COLOR_67));
-    else if (s.equals("Magenta1")) setValue( new Integer(GeColor.COLOR_68));
-    else if (s.equals("Magenta3")) setValue( new Integer(GeColor.COLOR_69));
-    else if (s.equals("Magenta4")) setValue( new Integer(GeColor.COLOR_70));
-    else if (s.equals("LightSteelBlue1")) setValue( new Integer(GeColor.COLOR_71));
-    else if (s.equals("LightSteelBlue1")) setValue( new Integer(GeColor.COLOR_72));
-    else if (s.equals("LightSteelBlue2")) setValue( new Integer(GeColor.COLOR_73));
-    else if (s.equals("LightSteelBlue3")) setValue( new Integer(GeColor.COLOR_74));
-    else if (s.equals("LightSteelBlue4")) setValue( new Integer(GeColor.COLOR_75));
-    else if (s.equals("LightCyan")) setValue( new Integer(GeColor.COLOR_76));
-    else if (s.equals("PowderBlue")) setValue( new Integer(GeColor.COLOR_77));
-    else if (s.equals("SteelBlue1")) setValue( new Integer(GeColor.COLOR_78));
-    else if (s.equals("SteelBlue")) setValue( new Integer(GeColor.COLOR_79));
-    else if (s.equals("blue4")) setValue( new Integer(GeColor.COLOR_80));
-    else if (s.equals("aquamarine0")) setValue( new Integer(GeColor.COLOR_81));
-    else if (s.equals("aquamarine1")) setValue( new Integer(GeColor.COLOR_82));
-    else if (s.equals("aquamarine2")) setValue( new Integer(GeColor.COLOR_83));
-    else if (s.equals("aquamarine3")) setValue( new Integer(GeColor.COLOR_84));
-    else if (s.equals("aquamarine4")) setValue( new Integer(GeColor.COLOR_85));
-    else if (s.equals("turqoise0")) setValue( new Integer(GeColor.COLOR_86));
-    else if (s.equals("turqoise1")) setValue( new Integer(GeColor.COLOR_87));
-    else if (s.equals("turqoise2")) setValue( new Integer(GeColor.COLOR_88));
-    else if (s.equals("turqoise3")) setValue( new Integer(GeColor.COLOR_89));
-    else if (s.equals("turqoise4")) setValue( new Integer(GeColor.COLOR_90));
-    else if (s.equals("DarkOliveGreen1")) setValue( new Integer(GeColor.COLOR_91));
-    else if (s.equals("DarkOliveGreen2")) setValue( new Integer(GeColor.COLOR_92));
-    else if (s.equals("DarkOliveGreen3")) setValue( new Integer(GeColor.COLOR_93));
-    else if (s.equals("DarkOliveGreen4")) setValue( new Integer(GeColor.COLOR_94));
-    else if (s.equals("DarkOliveGreen5")) setValue( new Integer(GeColor.COLOR_95));
-    else if (s.equals("chartreuse")) setValue( new Integer(GeColor.COLOR_96));
-    else if (s.equals("chartreuse2")) setValue( new Integer(GeColor.COLOR_97));
-    else if (s.equals("chartreuse3")) setValue( new Integer(GeColor.COLOR_98));
-    else if (s.equals("chartreuse4")) setValue( new Integer(GeColor.COLOR_99));
-    else if (s.equals("DarkGreen")) setValue( new Integer(GeColor.COLOR_100));
+/* glow_eDrawTone_Gray */ 				else if (s.equals("ToneGray")) setValue( new Integer(GeColor.COLOR_TONE_GRAY));
+/* glow_eDrawTone_YellowGreen */    		        else if (s.equals("ToneYellowGreen")) setValue( new Integer(GeColor.COLOR_TONE_YELLOWGREEN));
+/* glow_eDrawTone_Yellow */ 				else if (s.equals("ToneYellow")) setValue( new Integer(GeColor.COLOR_TONE_YELLOW));
+/* glow_eDrawTone_Orange */ 				else if (s.equals("ToneOrange")) setValue( new Integer(GeColor.COLOR_TONE_ORANGE));
+/* glow_eDrawTone_Red */ 				else if (s.equals("ToneRed")) setValue( new Integer(GeColor.COLOR_TONE_RED));
+/* glow_eDrawTone_Magenta */ 				else if (s.equals("ToneMagenta")) setValue( new Integer(GeColor.COLOR_TONE_MAGENTA));
+/* glow_eDrawTone_Blue */ 				else if (s.equals("ToneBlue")) setValue( new Integer(GeColor.COLOR_TONE_BLUE));
+/* glow_eDrawTone_Seablue */ 				else if (s.equals("ToneSeablue")) setValue( new Integer(GeColor.COLOR_TONE_SEABLUE));
+/* glow_eDrawTone_Green */ 				else if (s.equals("ToneGreen")) setValue( new Integer(GeColor.COLOR_TONE_GREEN));
+/* glow_eDrawTone_DarkGray */				else if (s.equals("ToneDarkGray")) setValue( new Integer(GeColor.COLOR_TONE_DARKGRAY));
+/* glow_eDrawTone_LightGray */				else if (s.equals("ToneLightGray")) setValue( new Integer(GeColor.COLOR_TONE_LIGHTGRAY));
+/* glow_eDrawTone_DarkYellowGreen */			else if (s.equals("ToneDarkYellowGreen")) setValue( new Integer(GeColor.COLOR_TONE_DARKYELLOWGREEN));
+/* glow_eDrawTone_LightYellowGreen */	       		else if (s.equals("ToneLightYellowGreen")) setValue( new Integer(GeColor.COLOR_TONE_LIGHTYELLOWGREEN));
+/* glow_eDrawTone_YellowGreenHighSaturation */      	else if (s.equals("ToneYellowGreenHighSaturation")) setValue( new Integer(GeColor.COLOR_TONE_YELLOWGREEN));
+/* glow_eDrawTone_YellowGreenLowSaturation */       	else if (s.equals("ToneYellowGreenLowSaturation")) setValue( new Integer(GeColor.COLOR_TONE_YELLOWGREENLOWSATURATION));
+/* glow_eDrawTone_DarkYellowGreenHighSaturation */	else if (s.equals("ToneDarkYellowGreenHighSaturation")) setValue( new Integer(GeColor.COLOR_TONE_DARKYELLOWGREENHIGHSATURATION));
+/* glow_eDrawTone_DarkYellowGreenLowSaturation */   	else if (s.equals("ToneDarkYellowGreenLowSaturation")) setValue( new Integer(GeColor.COLOR_TONE_DARKYELLOWGREENLOWSATURATION));
+/* glow_eDrawTone_LightYellowGreenHighSaturation */	else if (s.equals("ToneLightYellowGreenHighSaturation")) setValue( new Integer(GeColor.COLOR_TONE_LIGHTYELLOWGREENHIGHSATURATION));
+/* glow_eDrawTone_LightYellowGreenLowSaturation */	else if (s.equals("ToneLightYellowGreenLowSaturation")) setValue( new Integer(GeColor.COLOR_TONE_LIGHTYELLOWGREENLOWSATURATION));
+/* glow_eDrawTone_DarkYellow */				else if (s.equals("ToneDarkYellow")) setValue( new Integer(GeColor.COLOR_TONE_DARKYELLOW));
+/* glow_eDrawTone_LightYellow */			else if (s.equals("ToneLightYellow")) setValue( new Integer(GeColor.COLOR_TONE_LIGHTYELLOW));
+/* glow_eDrawTone_YellowHighSaturation */		else if (s.equals("ToneYellowHighSaturation")) setValue( new Integer(GeColor.COLOR_TONE_YELLOWHIGHSATURATION));
+/* glow_eDrawTone_YellowLowSaturation */		else if (s.equals("ToneYellowLowSaturation")) setValue( new Integer(GeColor.COLOR_TONE_YELLOWLOWSATURATION));
+/* glow_eDrawTone_DarkYellowHighSaturation */       	else if (s.equals("ToneDarkYellowHighSaturation")) setValue( new Integer(GeColor.COLOR_TONE_DARKYELLOWHIGHSATURATION));
+/* glow_eDrawTone_DarkYellowLowSaturation */		else if (s.equals("ToneDarkYellowLowSaturation")) setValue( new Integer(GeColor.COLOR_TONE_DARKYELLOWLOWSATURATION));
+/* glow_eDrawTone_LightYellowHighSaturation */      	else if (s.equals("ToneLightYellowHighSaturation")) setValue( new Integer(GeColor.COLOR_TONE_LIGHTYELLOWHIGHSATURATION));
+/* glow_eDrawTone_LightYellowLowSaturation */       	else if (s.equals("ToneLightYellowLowSaturation")) setValue( new Integer(GeColor.COLOR_TONE_LIGHTYELLOWLOWSATURATION));
+/* glow_eDrawTone_DarkOrange */				else if (s.equals("ToneDarkOrange")) setValue( new Integer(GeColor.COLOR_TONE_DARKORANGE));
+/* glow_eDrawTone_LightOrange */			else if (s.equals("ToneLightOrange")) setValue( new Integer(GeColor.COLOR_TONE_LIGHTORANGE));
+/* glow_eDrawTone_OrangeHighSaturation */		else if (s.equals("ToneOrangeHighSaturation")) setValue( new Integer(GeColor.COLOR_TONE_ORANGEHIGHSATURATION));
+/* glow_eDrawTone_OrangeLowSaturation */		else if (s.equals("ToneOrangeLowSaturation")) setValue( new Integer(GeColor.COLOR_TONE_ORANGELOWSATURATION));
+/* glow_eDrawTone_DarkOrangeHighSaturation */		else if (s.equals("ToneDarkOrangeHighSaturation")) setValue( new Integer(GeColor.COLOR_TONE_DARKORANGEHIGHSATURATION));
+/* glow_eDrawTone_DarkOrangeLowSaturation */		else if (s.equals("ToneDarkOrangeLowSaturation")) setValue( new Integer(GeColor.COLOR_TONE_DARKORANGELOWSATURATION));
+/* glow_eDrawTone_LightOrangeHighSaturation */		else if (s.equals("ToneLightOrangeHighSaturation")) setValue( new Integer(GeColor.COLOR_TONE_LIGHTORANGEHIGHSATURATION));
+/* glow_eDrawTone_LightOrangeLowSaturation */		else if (s.equals("ToneLightOrangeLowSaturation")) setValue( new Integer(GeColor.COLOR_TONE_LIGHTORANGELOWSATURATION));
+/* glow_eDrawTone_DarkRed */				else if (s.equals("ToneDarkRed")) setValue( new Integer(GeColor.COLOR_TONE_DARKRED));
+/* glow_eDrawTone_LightRed */				else if (s.equals("ToneLightRed")) setValue( new Integer(GeColor.COLOR_TONE_LIGHTRED));
+/* glow_eDrawTone_RedHighSaturation */			else if (s.equals("ToneRedHighSaturation")) setValue( new Integer(GeColor.COLOR_TONE_REDHIGHSATURATION));
+/* glow_eDrawTone_RedLowSaturation */			else if (s.equals("ToneRedLowSaturation")) setValue( new Integer(GeColor.COLOR_TONE_REDLOWSATURATION));
+/* glow_eDrawTone_DarkRedHighSaturation */		else if (s.equals("ToneDarkRedHighSaturation")) setValue( new Integer(GeColor.COLOR_TONE_DARKREDHIGHSATURATION));
+/* glow_eDrawTone_DarkRedLowSaturation */		else if (s.equals("ToneDarkRedLowSaturation")) setValue( new Integer(GeColor.COLOR_TONE_DARKREDLOWSATURATION));
+/* glow_eDrawTone_LightRedHighSaturation */		else if (s.equals("ToneLightRedHighSaturation")) setValue( new Integer(GeColor.COLOR_TONE_LIGHTREDHIGHSATURATION));
+/* glow_eDrawTone_LightRedLowSaturation */		else if (s.equals("ToneLightRedLowSaturation")) setValue( new Integer(GeColor.COLOR_TONE_LIGHTREDLOWSATURATION));
+/* glow_eDrawTone_DarkMagenta */			else if (s.equals("ToneDarkMagenta")) setValue( new Integer(GeColor.COLOR_TONE_DARKMAGENTA));
+/* glow_eDrawTone_LightMagenta */			else if (s.equals("ToneLightMagenta")) setValue( new Integer(GeColor.COLOR_TONE_LIGHTMAGENTA));
+/* glow_eDrawTone_MagentaHighSaturation */		else if (s.equals("ToneMagentaHighSaturation")) setValue( new Integer(GeColor.COLOR_TONE_MAGENTAHIGHSATURATION));
+/* glow_eDrawTone_MagentaLowSaturation */		else if (s.equals("ToneMagentaLowSaturation")) setValue( new Integer(GeColor.COLOR_TONE_MAGENTALOWSATURATION));
+/* glow_eDrawTone_DarkMagentaHighSaturation */		else if (s.equals("ToneDarkMagentaHighSaturation")) setValue( new Integer(GeColor.COLOR_TONE_DARKMAGENTAHIGHSATURATION));
+/* glow_eDrawTone_DarkMagentaLowSaturation */		else if (s.equals("ToneDarkMagentaLowSaturation")) setValue( new Integer(GeColor.COLOR_TONE_DARKMAGENTALOWSATURATION));
+/* glow_eDrawTone_LightMagentaHighSaturation */		else if (s.equals("ToneLightMagentaHighSaturation")) setValue( new Integer(GeColor.COLOR_TONE_LIGHTMAGENTAHIGHSATURATION));
+/* glow_eDrawTone_LightMagentaLowSaturation */		else if (s.equals("ToneLightMagentaLowSaturation")) setValue( new Integer(GeColor.COLOR_TONE_LIGHTMAGENTALOWSATURATION));
+/* glow_eDrawTone_DarkBlue */				else if (s.equals("ToneDarkBlue")) setValue( new Integer(GeColor.COLOR_TONE_DARKBLUE));
+/* glow_eDrawTone_LightBlue */				else if (s.equals("ToneLightBlue")) setValue( new Integer(GeColor.COLOR_TONE_LIGHTBLUE));
+/* glow_eDrawTone_BlueHighSaturation */			else if (s.equals("ToneBlueHighSaturation")) setValue( new Integer(GeColor.COLOR_TONE_BLUEHIGHSATURATION));
+/* glow_eDrawTone_BlueLowSaturation */			else if (s.equals("ToneBlueLowSaturation")) setValue( new Integer(GeColor.COLOR_TONE_BLUELOWSATURATION));
+/* glow_eDrawTone_DarkBlueHighSaturation */		else if (s.equals("ToneDarkBlueHighSaturation")) setValue( new Integer(GeColor.COLOR_TONE_DARKBLUEHIGHSATURATION));
+/* glow_eDrawTone_DarkBlueLowSaturation */		else if (s.equals("ToneDarkBlueLowSaturation")) setValue( new Integer(GeColor.COLOR_TONE_DARKBLUELOWSATURATION));
+/* glow_eDrawTone_LightBlueHighSaturation */		else if (s.equals("ToneLightBlueHighSaturation")) setValue( new Integer(GeColor.COLOR_TONE_LIGHTBLUEHIGHSATURATION));
+/* glow_eDrawTone_LightBlueLowSaturation */		else if (s.equals("ToneLightBlueLowSaturation")) setValue( new Integer(GeColor.COLOR_TONE_LIGHTBLUELOWSATURATION));
+/* glow_eDrawTone_DarkSeablue */			else if (s.equals("ToneDarkSeablue")) setValue( new Integer(GeColor.COLOR_TONE_DARKSEABLUE));
+/* glow_eDrawTone_LightSeablue */			else if (s.equals("ToneLightSeablue")) setValue( new Integer(GeColor.COLOR_TONE_LIGHTSEABLUE));
+/* glow_eDrawTone_SeablueHighSaturation */		else if (s.equals("ToneSeablueHighSaturation")) setValue( new Integer(GeColor.COLOR_TONE_SEABLUEHIGHSATURATION));
+/* glow_eDrawTone_SeablueLowSaturation */		else if (s.equals("ToneSeablueLowSaturation")) setValue( new Integer(GeColor.COLOR_TONE_SEABLUELOWSATURATION));
+/* glow_eDrawTone_DarkSeablueHighSaturation */		else if (s.equals("ToneDarkSeablueHighSaturation")) setValue( new Integer(GeColor.COLOR_TONE_DARKSEABLUEHIGHSATURATION));
+/* glow_eDrawTone_DarkSeablueLowSaturation */	 	else if (s.equals("ToneDarkSeablueLowSaturation")) setValue( new Integer(GeColor.COLOR_TONE_DARKSEABLUELOWSATURATION));
+/* glow_eDrawTone_LightSeablueHighSaturation */		else if (s.equals("ToneLightSeablueHighSaturation")) setValue( new Integer(GeColor.COLOR_TONE_LIGHTSEABLUEHIGHSATURATION));
+/* glow_eDrawTone_LightSeablueLowSaturation */		else if (s.equals("ToneLightSeablueLowSaturation")) setValue( new Integer(GeColor.COLOR_TONE_LIGHTSEABLUELOWSATURATION));
+/* glow_eDrawTone_DarkGreen */				else if (s.equals("ToneDarkGreen")) setValue( new Integer(GeColor.COLOR_TONE_DARKGREEN));
+/* glow_eDrawTone_LightGreen */				else if (s.equals("ToneLightGreen")) setValue( new Integer(GeColor.COLOR_TONE_LIGHTGREEN));
+/* glow_eDrawTone_GreenHighSaturation */		else if (s.equals("ToneGreenHighSaturation")) setValue( new Integer(GeColor.COLOR_TONE_GREENHIGHSATURATION));
+/* glow_eDrawTone_GreenLowSaturation */			else if (s.equals("ToneGreenLowSaturation")) setValue( new Integer(GeColor.COLOR_TONE_GREENLOWSATURATION));
+/* glow_eDrawTone_DarkGreenHighSaturation */		else if (s.equals("ToneDarkGreenHighSaturation")) setValue( new Integer(GeColor.COLOR_TONE_DARKGREENHIGHSATURATION));
+/* glow_eDrawTone_DarkGreenLowSaturation */		else if (s.equals("ToneDarkGreenLowSaturation")) setValue( new Integer(GeColor.COLOR_TONE_DARKGREENLOWSATURATION));
+/* glow_eDrawTone_LightGreenHighSaturation */		else if (s.equals("ToneLightGreenHighSaturation")) setValue( new Integer(GeColor.COLOR_TONE_LIGHTGREENHIGHSATURATION));
+/* glow_eDrawTone_LightGreenLowSaturation */		else if (s.equals("ToneLightGreenLowSaturation")) setValue( new Integer(GeColor.COLOR_TONE_LIGHTGREENLOWSATURATION));
     else throw new IllegalArgumentException(s);
   }
 }
+
+
