@@ -139,6 +139,9 @@ plc_thread (
   memcpy(tp->copy.di_a.p, tp->pp->base.di_a.p, tp->copy.di_a.size);
   memcpy(tp->copy.do_a.p, tp->pp->base.do_a.p, tp->copy.do_a.size);
   memcpy(tp->copy.dv_a.p, tp->pp->base.dv_a.p, tp->copy.dv_a.size);
+  memcpy(tp->copy.ii_a.p, tp->pp->base.ii_a.p, tp->copy.ii_a.size);
+  memcpy(tp->copy.io_a.p, tp->pp->base.io_a.p, tp->copy.io_a.size);
+  memcpy(tp->copy.iv_a.p, tp->pp->base.iv_a.p, tp->copy.iv_a.size);
 
   thread_MutexUnlock(&tp->pp->io_copy_mutex);
   
@@ -213,6 +216,9 @@ scan (
   memcpy(tp->copy.di_a.p, pp->base.di_a.p, tp->copy.di_a.size);
   memcpy(tp->copy.do_a.p, pp->base.do_a.p, tp->copy.do_a.size);
   memcpy(tp->copy.dv_a.p, pp->base.dv_a.p, tp->copy.dv_a.size);
+  memcpy(tp->copy.ii_a.p, pp->base.ii_a.p, tp->copy.ii_a.size);
+  memcpy(tp->copy.io_a.p, pp->base.io_a.p, tp->copy.io_a.size);
+  memcpy(tp->copy.iv_a.p, pp->base.iv_a.p, tp->copy.iv_a.size);
 
   thread_MutexUnlock(&pp->io_copy_mutex);
 
