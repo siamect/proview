@@ -144,16 +144,6 @@ procedure
   foe_no_popupmsg(integer);
   foe_cancel_popupmsg(integer);
 
-  foe_create_pop_attribute(integer);
-  foe_create_pop_subwindow(integer);
-  foe_create_pop_getobj (integer);
-  foe_create_pop_paste(integer);
-  foe_create_pop_copy(integer);
-  foe_create_pop_cut(integer);
-  foe_create_pop_moveregion(integer);
-  foe_create_pop_delete(integer);
-  foe_create_pop_printselect(integer);
-  foe_create_pop_helpclass(integer);
   foe_popdown_pop(integer);
 
 value
@@ -1161,119 +1151,6 @@ object help_entry : XmCascadeButton {
 	};
       };
     };
-  };
-};
-
-! SG 10.02.91 This is a popup widget so it is an orphean
-
-object   edit_popup: XmPopupMenu {
-  arguments{
-    XmNbuttonFontList	   	= menu_font;
-    XmNlabelFontList	   	= menu_font;
-  };
-  controls {
-    XmPushButton {
-      arguments {
-	XmNlabelString = compound_string("Cut");
-	XmNfontList	    = menu_font;
-      };
-      callbacks {
-	XmNactivateCallback = procedure foe_activate_cut(foe_ctx);
-	MrmNcreateCallback = procedure foe_create_pop_cut(foe_ctx);
-      };
-    };
-
-    XmPushButton {
-      arguments {
-	XmNlabelString = compound_string("Copy");
-	XmNfontList	    = menu_font;
-      };
-      callbacks {
-	XmNactivateCallback = procedure foe_activate_copy(foe_ctx);
-	MrmNcreateCallback = procedure foe_create_pop_copy(foe_ctx);
-      };
-    };
-
-    XmPushButton {
-      arguments {
-	XmNlabelString = compound_string("Paste");
-	XmNfontList	    = menu_font;
-      };
-      callbacks {
-	XmNactivateCallback = procedure foe_activate_paste(foe_ctx);
-	MrmNcreateCallback = procedure foe_create_pop_paste(foe_ctx);
-      };
-    };
-
-    XmPushButton {
-      arguments {
-	XmNlabelString = compound_string("Print Select");
-	XmNfontList	    = menu_font;
-      };
-      callbacks {
-	XmNactivateCallback = procedure foe_activate_printselect(foe_ctx);
-	MrmNcreateCallback = procedure foe_create_pop_printselect(foe_ctx);
-      };
-    };
-
-    XmPushButton {
-      arguments {
-	XmNlabelString = compound_string("Open Object...");
-	XmNfontList	    = menu_font;
-      };
-      callbacks {
-	XmNactivateCallback = procedure foe_activate_attribute(foe_ctx);
-	MrmNcreateCallback = procedure foe_create_pop_attribute(foe_ctx);
-      };
-    };
-
-    XmPushButton {
-      arguments {
-	XmNlabelString = compound_string("Subwindow...");
-	XmNfontList	    = menu_font;
-      };
-      callbacks {
-	XmNactivateCallback = procedure foe_activate_subwindow(foe_ctx);
-	MrmNcreateCallback = procedure foe_create_pop_subwindow(foe_ctx);
-      };
-    };
-
-    XmPushButton {
-      arguments {
-	XmNlabelString = compound_string("Connect");
-	XmNfontList	    = menu_font;
-      };
-      callbacks {
-	XmNactivateCallback = procedure foe_activate_getobj (foe_ctx);
-	MrmNcreateCallback = procedure foe_create_pop_getobj (foe_ctx);
-      };
-    };
-
-    XmPushButton {
-      arguments {
-	XmNlabelString = compound_string("Delete");
-	XmNfontList	    = menu_font;
-      };
-      callbacks {
-	XmNactivateCallback = procedure foe_activate_delete(foe_ctx);
-	MrmNcreateCallback = procedure foe_create_pop_delete(foe_ctx);
-      };
-    };
-
-    XmPushButton {
-      arguments {
-	XmNlabelString = compound_string("Help Class");
-	XmNfontList	    = menu_font;
-      };
-      callbacks {
-	XmNactivateCallback = procedure foe_activate_helpclass(foe_ctx);
-	MrmNcreateCallback = procedure foe_create_pop_helpclass(foe_ctx);
-      };
-    };    
-  };
-  callbacks {
-    XmNunmapCallback = procedure foe_popdown_pop(foe_ctx);
-    !	XmNpopdownCallback = procedure foe_popdown_pop(foe_ctx);
   };
 };
 
