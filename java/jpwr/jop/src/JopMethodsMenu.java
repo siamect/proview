@@ -74,6 +74,11 @@ public class JopMethodsMenu implements ActionListener, PopupMenuListener,
       popup.add( item = new JMenuItem( "Class Help"));
       item.addActionListener( this);
     }
+
+    if ( circuitDiagramFilter()) {
+      popup.add( item = new JMenuItem( "Circuit Diagram"));
+      item.addActionListener( this);
+    }
     popup.addPopupMenuListener( this);
     popup.show( invoker, x,  y);
     session.getEngine().add(this);
@@ -105,6 +110,9 @@ public class JopMethodsMenu implements ActionListener, PopupMenuListener,
     }
     else if ( event.getActionCommand().equals("Class Help")) {
       classHelp();
+    }
+    else if ( event.getActionCommand().equals("Circuit Diagram")) {
+      circuitDiagram();
     }
   }  
 
@@ -229,7 +237,7 @@ public class JopMethodsMenu implements ActionListener, PopupMenuListener,
     if ( instanceRet.oddSts() && ! instanceRet.str.equals(""))
       instance = instanceRet.str;      
 
-    session.openGraphFrame( action, instance, false);
+    session.openGraphFrame( action, instance, false, false);
   }
 
   public boolean helpFilter() {
@@ -264,6 +272,24 @@ public class JopMethodsMenu implements ActionListener, PopupMenuListener,
 
     String cmd = "open url \"" + sret.str + "\"";
     System.out.println( "dataSheet: " + cmd);
+    session.executeCommand( cmd);
+  }
+
+  public boolean circuitDiagramFilter() {
+    String attr = object + ".CircuitDiagram";
+    CdhrString sret = gdh.getObjectInfoString( attr);
+    if ( sret.evenSts() || sret.str.equals(""))
+      return false;
+
+    return true;
+  }
+  public void circuitDiagram() {
+    String attr = object + ".CircuitDiagram";
+    CdhrString sret = gdh.getObjectInfoString( attr);
+    if ( sret.evenSts()) return;
+
+    String cmd = "open url \"" + sret.str + "\"";
+    System.out.println( "circuitDiagram: " + cmd);
     session.executeCommand( cmd);
   }
 
