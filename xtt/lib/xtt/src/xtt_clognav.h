@@ -157,6 +157,7 @@ class CLogNav {
     void get_files();
     int next_file();
     int prev_file();
+    int update();
 };
 
 class ItemMsgBase {

@@ -41,6 +41,7 @@ static void clog_activate_exit( Widget w, CLog *clog, XmAnyCallbackStruct *data)
 static void clog_activate_select_file( Widget w, CLog *clog, XmAnyCallbackStruct *data);
 static void clog_activate_next_file( Widget w, CLog *clog, XmAnyCallbackStruct *data);
 static void clog_activate_prev_file( Widget w, CLog *clog, XmAnyCallbackStruct *data);
+static void clog_activate_update( Widget w, CLog *clog, XmAnyCallbackStruct *data);
 static void clog_activate_zoom_in( Widget w, CLog *clog, XmAnyCallbackStruct *data);
 static void clog_activate_zoom_out( Widget w, CLog *clog, XmAnyCallbackStruct *data);
 static void clog_activate_zoom_reset( Widget w, CLog *clog, XmAnyCallbackStruct *data);
@@ -86,6 +87,7 @@ CLog::CLog(
 	{"clog_activate_select_file",(caddr_t)clog_activate_select_file },
 	{"clog_activate_next_file",(caddr_t)clog_activate_next_file },
 	{"clog_activate_prev_file",(caddr_t)clog_activate_prev_file },
+	{"clog_activate_update",(caddr_t)clog_activate_update },
 	{"clog_activate_zoom_in",(caddr_t)clog_activate_zoom_in },
 	{"clog_activate_zoom_out",(caddr_t)clog_activate_zoom_out },
 	{"clog_activate_zoom_reset",(caddr_t)clog_activate_zoom_reset },
@@ -293,6 +295,13 @@ static void clog_activate_prev_file( Widget w, CLog *clog, XmAnyCallbackStruct *
   clog->set_clock_cursor();
   if ( !clog->clognav->prev_file())
     wow_DisplayError( clog->toplevel, "File error", "No previous file found");
+  clog->reset_cursor();
+}
+
+static void clog_activate_update( Widget w, CLog *clog, XmAnyCallbackStruct *data)
+{
+  clog->set_clock_cursor();
+  clog->clognav->update();
   clog->reset_cursor();
 }
 

@@ -399,6 +399,13 @@ void CLogNav::get_files()
 
 }
 
+int CLogNav::update()
+{
+  int pos[2] = {current_pos_low, current_pos_high};
+  read( pos, 2);
+  return 1;
+}
+
 int CLogNav::next_file()
 {
   if ( current_pos_low <= 1)
