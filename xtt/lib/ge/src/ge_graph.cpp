@@ -3326,16 +3326,26 @@ graph_eDatabase Graph::parse_attr_name( char *name, char *parsed_name,
   
   if ( (s = strstr( str, "$user"))) {
     if ( (s = strchr( str, '#'))) {
-      if ( strcmp( s, "##Float32") == 0)
+      if ( strcmp( s, "##Float32") == 0) {
         *type = pwr_eType_Float32;
-      else if ( strcmp( s, "##Float64") == 0)
+	*size = sizeof(pwr_tFloat32);
+      }
+      else if ( strcmp( s, "##Float64") == 0) {
         *type = pwr_eType_Float64;
-      else if ( strcmp( s, "##Int32") == 0)
+	*size = sizeof(pwr_tFloat64);
+      }
+      else if ( strcmp( s, "##Int32") == 0) {
         *type = pwr_eType_Int32;
-      else if ( strcmp( s, "##Boolean") == 0)
+	*size = sizeof(pwr_tInt32);
+      }
+      else if ( strcmp( s, "##Boolean") == 0) {
         *type = pwr_eType_Boolean;
-      else
+	*size = sizeof(pwr_tBoolean);
+      }
+      else {
         *type = pwr_eType_String;
+	*size = 80;
+      }
       *s = 0;
     }
     if ( str[0] == '!') {
@@ -3351,16 +3361,26 @@ graph_eDatabase Graph::parse_attr_name( char *name, char *parsed_name,
   if ( (s = strstr( str, "$local."))) {
     strcpy( parsed_name, s + strlen("$local."));
     if ( (s = strchr( parsed_name, '#'))) {
-      if ( strcmp( s, "##Float32") == 0)
+      if ( strcmp( s, "##Float32") == 0) {
         *type = pwr_eType_Float32;
-      else if ( strcmp( s, "##Float64") == 0)
+	*size = sizeof(pwr_tFloat32);
+      }
+      else if ( strcmp( s, "##Float64") == 0) {
         *type = pwr_eType_Float64;
-      else if ( strcmp( s, "##Int32") == 0)
+	*size = sizeof(pwr_tFloat64);
+      }
+      else if ( strcmp( s, "##Int32") == 0) {
         *type = pwr_eType_Int32;
-      else if ( strcmp( s, "##Boolean") == 0)
+	*size = sizeof(pwr_tInt32);
+      }
+      else if ( strcmp( s, "##Boolean") == 0) {
         *type = pwr_eType_Boolean;
-      else
+	*size = sizeof(pwr_tBoolean);
+      }
+      else {
         *type = pwr_eType_String;
+	*size = 80;
+      }
       *s = 0;
     }
     if ( str[0] == '!') {
