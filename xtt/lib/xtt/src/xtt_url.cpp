@@ -74,7 +74,7 @@ static int replace_symbol( pwr_tURL in, pwr_tURL out,
     if ( *s == '$' && !skip_sym) {
       if ( sym_start) {
         strncpy( sym_name, sym_start+1, s - (sym_start + 1));
-        sym_name[s - sym_start] = 0;
+        sym_name[s - sym_start - 1] = 0;
         if ( find_symbol( sym_name, sym_value, config)) {
           strcpy( t, sym_value);
           t += strlen(sym_value);
@@ -94,7 +94,7 @@ static int replace_symbol( pwr_tURL in, pwr_tURL out,
       if ( !(isdigit(*s) || isalpha(*s) || *s == '_')) {
         // End of symbol
         strncpy( sym_name, sym_start+1, s - (sym_start + 1));
-        sym_name[s - sym_start] = 0;
+        sym_name[s - sym_start - 1] = 0;
         if ( find_symbol( sym_name, sym_value, config)) {
           strcpy( t, sym_value);
           t += strlen(sym_value);
