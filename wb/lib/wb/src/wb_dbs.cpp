@@ -143,15 +143,12 @@ wb_dbs::checkObject(sOentry *oep)
 
   switch (oep->o.cid) {
   case pwr_eClass_LibHier:
-    if (m_volume.cid == pwr_eClass_ClassVolume)
-      break;
-    oep->o.flags.b.devOnly = 1;
+    if (m_volume.cid != pwr_eClass_ClassVolume)
+      oep->o.flags.b.devOnly = 1;
     break;
   case pwr_eClass_Alias:
-    if (m_volume.cid == pwr_eClass_ClassVolume)
-      break;
-        
-    oep->o.flags.b.isAliasClient = 1;
+    if (m_volume.cid != pwr_eClass_ClassVolume)
+      oep->o.flags.b.isAliasClient = 1;
     break;
   case pwr_eClass_MountVolume:
   case pwr_eClass_CreateVolume:

@@ -54,6 +54,11 @@ public:
   wb_db(pwr_tVid vid);
   //~wb_db();
 
+  pwr_tCid cid() { return m_cid;}
+  pwr_tVid vid() { return m_vid;}
+  //pwr_tTime time() { return m_volume.time;}
+  char *volumeName() { return m_volumeName;}
+
   pwr_tOid new_oid(wb_db_txn *txn);
 
   void close();
@@ -131,7 +136,8 @@ class wb_db_ohead
 {
 public:
   db_sObject m_o;
-
+  pwr_tOid m_oid;
+  
   wb_db *m_db;
   Dbt m_key;
   Dbt m_data;
@@ -149,6 +155,8 @@ public:
   wb_db_ohead &get(wb_db_txn *txn);
   wb_db_ohead &get(wb_db_txn *txn, pwr_tOid oid);
 
+  void setDb(wb_db *db) { m_db = db;}
+      
   void put(wb_db_txn *txn);
   void del(wb_db_txn *txn);
         
@@ -163,9 +171,9 @@ public:
   pwr_tOid aoid() { return m_o.aoid;}
   pwr_tTime ohTime() { return m_o.time;}
 
-  char *name() { return m_o.name;}
+  const char *name() { return m_o.name;}
   
-  char *normname() {return m_o.normname;}
+  const char *normname() {return m_o.normname;}
 
   size_t rbSize() { return m_o.body[0].size;}
   size_t dbSize() { return m_o.body[1].size;}

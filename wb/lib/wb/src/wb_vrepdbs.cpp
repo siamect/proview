@@ -39,6 +39,7 @@ dbs_sEnv *wb_vrepdbs::dbsenv()
     m_isDbsenvLoaded = true;
     strcpy(m_name, m_dbsenv.vp->name);
     m_vid = m_dbsenv.vp->vid;
+    m_cid = m_dbsenv.vp->cid;
   } else {
     ep = &m_dbsenv;
   }

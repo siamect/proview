@@ -20,19 +20,27 @@ wb_db_info::wb_db_info(wb_db *db) :
 void wb_db_info::get(wb_db_txn *txn)
 {
   int index = 0;
+  int ret;
+  
   m_key.set_data(&index);
   m_key.set_size(sizeof(index));
+  m_data.set_ulen(sizeof(m_volume));
+  m_data.set_flags(DB_DBT_USERMEM);
   
-  m_db->m_t_info->get(txn, &m_key, &m_data, 0);
+  ret = m_db->m_t_info->get(txn, &m_key, &m_data, 0);
+  printf("info get: %d\n", ret);
 }
 
 void wb_db_info::put(wb_db_txn *txn)
 {
   int index = 0;
+  int ret;
+  
   m_key.set_data(&index);
   m_key.set_size(sizeof(index));
   
-  m_db->m_t_info->put(txn, &m_key, &m_data, 0);
+  ret = m_db->m_t_info->put(txn, &m_key, &m_data, 0);
+  printf("info put: %d\n", ret);
 }
 
 wb_db_class::wb_db_class(wb_db *db, wb_db_txn *txn, pwr_tCid cid) :
@@ -161,24 +169,29 @@ void wb_db_name::name(wb_name &name)
 }
 
 wb_db_ohead::wb_db_ohead() :
-  m_db(0), m_key(&m_o.oid, sizeof(m_o.oid)), m_data(&m_o, sizeof(m_o))
+  m_db(0), m_key(&m_oid, sizeof(m_oid)), m_data(&m_o, sizeof(m_o))
 {
+  memset(&m_o, 0, sizeof(m_o));
 }
+
 wb_db_ohead::wb_db_ohead(wb_db *db) :
-  m_db(db), m_key(&m_o.oid, sizeof(m_o.oid)), m_data(&m_o, sizeof(m_o))
+  m_db(db), m_key(&m_oid, sizeof(m_oid)), m_data(&m_o, sizeof(m_o))
 {
+  memset(&m_o, 0, sizeof(m_o));
 }
 
 wb_db_ohead::wb_db_ohead(wb_db *db, pwr_tOid oid) :
-  m_db(db), m_key(&m_o.oid, sizeof(m_o.oid)), m_data(&m_o, sizeof(m_o))
+  m_db(db), m_key(&m_oid, sizeof(m_oid)), m_data(&m_o, sizeof(m_o))
 {
-  m_o.oid = oid;
+  memset(&m_o, 0, sizeof(m_o));
+  m_oid = oid;
 }
 
 wb_db_ohead::wb_db_ohead(wb_db *db, wb_db_txn *txn, pwr_tOid oid) :
-  m_db(db), m_key(&m_o.oid, sizeof(m_o.oid)), m_data(&m_o, sizeof(m_o))
+  m_db(db), m_key(&m_oid, sizeof(m_oid)), m_data(&m_o, sizeof(m_o))
 {
-  m_o.oid = oid;
+  memset(&m_o, 0, sizeof(m_o));
+  m_oid = oid;
   get(txn);
 }
 
@@ -187,10 +200,11 @@ wb_db_ohead::wb_db_ohead(wb_db *db, pwr_tOid oid, pwr_tCid cid,
                          const char *name, const char *normname,
                          pwr_tTime ohTime, pwr_tTime rbTime, pwr_tTime dbTime,
                          size_t rbSize, size_t dbSize) :
-  m_db(db), m_key(&m_o.oid, sizeof(m_o.oid)), m_data(&m_o, sizeof(m_o))
+  m_db(db), m_key(&m_oid, sizeof(m_oid)), m_data(&m_o, sizeof(m_o))
 {
   
-  m_o.oid = oid;
+  memset(&m_o, 0, sizeof(m_o));
+  m_oid = m_o.oid = oid;
   m_o.cid = cid;
   m_o.poid = poid;
   strcpy(m_o.name, name);
@@ -212,7 +226,10 @@ wb_db_ohead::wb_db_ohead(wb_db *db, pwr_tOid oid, pwr_tCid cid,
 
 wb_db_ohead &wb_db_ohead::get(wb_db_txn *txn)
 {
-  m_db->m_t_ohead->get(txn, &m_key, &m_data, 0);
+  m_data.set_ulen(sizeof(m_o));
+  m_data.set_flags(DB_DBT_USERMEM);
+
+  int ret = m_db->m_t_ohead->get(txn, &m_key, &m_data, 0);
   return *this;
 }
 
@@ -223,8 +240,11 @@ void wb_db_ohead::put(wb_db_txn *txn)
 
 wb_db_ohead &wb_db_ohead::get(wb_db_txn *txn, pwr_tOid oid)
 {
-  m_o.oid = oid;
-  m_db->m_t_ohead->get(txn, &m_key, &m_data, 0);
+  m_oid = oid;
+  m_data.set_ulen(sizeof(m_o));
+  m_data.set_flags(DB_DBT_USERMEM);
+
+  int ret = m_db->m_t_ohead->get(txn, &m_key, &m_data, 0);
   return *this;
 }
 
@@ -524,6 +544,7 @@ bool wb_db::importVolume(wb_export &e)
   }
 }
 
+
 bool wb_db::importHead(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
                        pwr_tOid boid, pwr_tOid aoid, pwr_tOid foid, pwr_tOid loid,
                        const char *name, const char *normname,
@@ -536,6 +557,14 @@ bool wb_db::importHead(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
   n.put(m_txn);
   wb_db_class c(this, cid, oid);
   c.put(m_txn);
+  if (oid.oix == pwr_cNOix) { // This is the volume object
+    wb_db_info i(this);
+    i.cid(cid);
+    i.vid(oid.vid);
+    i.name(name);
+    i.put(m_txn);
+  }
+  
   return true;
 }
 

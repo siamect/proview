@@ -419,9 +419,9 @@ void wb_erep::loadMeta( pwr_tStatus *status)
       strcat( vname, ".db");
       dcli_translate_filename( vname, vname);
 
-      // wb_vrepdb *vrepdb = new wb_vrepdb( this, vname);
-      // vrepdb->name(vol_array[0]);
-      // addDbs( &sts, vrepdb);
+      wb_vrepdb *vrepdb = new wb_vrepdb( this, vname);
+      vrepdb->name(vol_array[0]);
+      addDbs( &sts, vrepdb);
       vol_cnt++;
     }
   }

@@ -13,6 +13,8 @@ protected:
   //wb_session m_wsession;
 
   wb_erep *m_erep;
+  wb_merep *m_merep;
+
   unsigned int m_nSession;
   unsigned int m_nRef;
 
@@ -125,6 +127,10 @@ public:
 #endif
   void unadopt(wb_db_txn *txn, wb_db_ohead &o);
   void adopt(wb_db_txn *txn, wb_db_ohead &o, wb_destination &dest);
+
+  wb_orepdb *new_wb_orepdb(size_t size);
+  void delete_wb_orepdb(void *p);
+
 };
 
 #endif

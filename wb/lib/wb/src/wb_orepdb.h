@@ -19,6 +19,9 @@ public:
   wb_orepdb(db_sObject *o);
   ~wb_orepdb();
 
+  void* operator new(size_t size, wb_vrepdb *v);
+  void operator delete(void *p);
+
   virtual pwr_tOid oid() const;
   virtual pwr_tVid vid() const;
   virtual pwr_tOix oix() const;

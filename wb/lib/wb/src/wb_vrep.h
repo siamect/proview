@@ -110,8 +110,8 @@ public:
   virtual bool isLocal(const wb_orep *o) = 0;
   pwr_tVid vid() const { return m_vid;}
   pwr_tCid cid() const { return m_cid;}
-  pwr_tVid vid(pwr_tVid vid) { m_vid = vid;}
-  pwr_tCid cid(pwr_tCid cid) { m_cid = cid;}
+  void vid(pwr_tVid vid) { m_vid = vid;}
+  void cid(pwr_tCid cid) { m_cid = cid;}
   
   virtual void name( const char *n) { strcpy( m_name, n);}
   virtual const char *name() { return m_name;}

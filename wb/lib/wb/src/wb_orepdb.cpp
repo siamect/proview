@@ -21,6 +21,22 @@ wb_orepdb::~wb_orepdb()
 {
 }
 
+void *
+wb_orepdb::operator new(size_t size, wb_vrepdb *v)
+{
+  return (void *)v->new_wb_orepdb(size);
+}
+
+#if 1
+void
+wb_orepdb::operator delete(void *p)
+{
+  wb_orepdb *o = (wb_orepdb *)p;
+  
+  ((wb_vrepdb *)o->m_vrep)->delete_wb_orepdb(p);
+}
+#endif
+
 //
 //  Operations declared in wb_orep
 //
@@ -29,7 +45,13 @@ pwr_tOid wb_orepdb::oid() const
 {
   pwr_tStatus sts;
     
-  return m_vrep->oid(&sts, (wb_orep*)this);
+  return m_oid;
+}
+
+pwr_tVid wb_orepdb::cid() const
+{
+  pwr_tStatus sts;
+  return m_vrep->cid(&sts, (wb_orep*)this);
 }
 
 pwr_tVid wb_orepdb::vid() const
@@ -72,6 +94,11 @@ pwr_tOid wb_orepdb::aoid() const
 {
   pwr_tStatus sts;
   return m_vrep->aoid(&sts, (wb_orep*)this);
+}
+
+wb_name wb_orepdb::longName()
+{
+  return wb_name();
 }
 
 const char * wb_orepdb::name() const
