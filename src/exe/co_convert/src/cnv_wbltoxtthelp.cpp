@@ -58,6 +58,7 @@ int CnvWblToXtthelp::class_exec()
   char link_ref[80];
   char *s;
   char txt[256];
+  char prefix[80];
   int lng_sts = 1;
 
   if ( Lng::current() != lng_eLanguage_en_us)
@@ -125,14 +126,12 @@ Lng::translate("Class") << " " << full_class_name << endl <<
     }
   }
   for ( i = 0; i < ctx->rw->doc_clink_cnt; i++) {
-    if ( strncmp( ctx->rw->doc_clink_ref[i], "pwrb_", 5) == 0)
-      strcpy( link_ref, &ctx->rw->doc_clink_ref[i][5]);
-    else if ( strncmp( ctx->rw->doc_clink_ref[i], "pwrs_", 5) == 0)
-      strcpy( link_ref, &ctx->rw->doc_clink_ref[i][5]);
-    else if ( strncmp( ctx->rw->doc_clink_ref[i], "nmps_", 5) == 0)
-      strcpy( link_ref, &ctx->rw->doc_clink_ref[i][5]);
-    else if ( strncmp( ctx->rw->doc_clink_ref[i], "ssab_", 5) == 0)
-      strcpy( link_ref, &ctx->rw->doc_clink_ref[i][5]);
+    strcpy( prefix, CnvCtx::low(ctx->rw->volume_name));
+    strcat( prefix, "_");
+    if ( strncmp( ctx->rw->doc_clink_ref[i], prefix, strlen(prefix)) == 0)
+      strcpy( link_ref, &ctx->rw->doc_clink_ref[i][strlen(prefix)]);
+    else
+      strcpy( link_ref, ctx->rw->doc_clink_ref[i]);
     if ( (s = strrchr( link_ref, '.')))
       *s = 0;
     fp_tmp << "      " << ctx->rw->doc_clink_text[i] << " <LINK>" << link_ref << endl;
