@@ -11,6 +11,11 @@
 // Subgroups in PRM
 ////////////////////
 
+/*! \defgroup Pwr Pwr Proview Data definitions.
+  \ingroup PRM
+  This module contains Proview basic data definitions.
+*/
+
 /*! \defgroup GDH Gdh Global Data Handler
   \ingroup PRM
   This module contains the access routines to the Global Data
@@ -30,6 +35,11 @@
 /*! \defgroup Time Time functions
   \ingroup PRM
   This module contains utilites for time management.
+*/
+
+/*! \defgroup Cdh Class definition handler
+  \ingroup PRM
+  This module contains functions for class definitions.
 */
 
 

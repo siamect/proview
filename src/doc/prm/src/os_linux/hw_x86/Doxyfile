@@ -5,17 +5,21 @@ HIDE_UNDOC_MEMBERS = YES
 HIDE_UNDOC_CLASSES = YES
 SOURCE_BROWSER  = YES
 INPUT 		= $(pwre_sroot)/doc/prm/src/doxygen.dx \
+		  $(pwre_sroot)/exp/inc/src/pwr.h \
 		  $(pwre_sroot)/lib/co/src/co_time.h \
+		  $(pwre_sroot)/lib/co/src/co_cdh.h \
 		  $(pwre_sroot)/lib/rt/src/rt_gdh.h \
 		  $(pwre_sroot)/lib/rt/src/rt_mh_appl.h \
 		  $(pwre_sroot)/lib/rt/src/rt_qcom.h \
 		  $(pwre_sroot)/lib/co/src/co_time.c \
+		  $(pwre_sroot)/lib/co/src/co_cdh.c \
 		  $(pwre_sroot)/lib/rt/src/rt_gdh.c \
 		  $(pwre_sroot)/lib/rt/src/rt_mh_appl.c \
 		  $(pwre_sroot)/lib/rt/src/rt_qcom.c
 FILE_PATTERNS	= *.cpp *.c *.h
 PREDEFINED	= OS_LINUX=1 \
-		  OS=LINUX
+		  OS=LINUX \
+		  pwr_dHost_byteOrder=2
 RECURSIVE       = YES
 EXCLUDE_PATTERNS = *_bitmap_*.h
 ALPHABETICAL_INDEX = YES
