@@ -93,27 +93,27 @@ ini_RcReadAndSet(
 
   cdh_ToLower(filename, filename);
   fp = fopen(filename, "r");
-  if (fp == NULL) {
-    printf("** Could not read '%s'\n%s", filename, strerror(errno));
-  } else {    
-    printf("-- Reading rc file %s\n", filename);
-    for (
-      s = fgets(buf, sizeof(buf) - 1, fp);
-      s != NULL;
-      s = fgets(buf, sizeof(buf) - 1, fp)
-    ) {
-      printf("-- %s", buf);
-      if (buf[0] == '#') continue;
-      name[0] = '\0';
-      sscanf(buf, "%s %d\n", name, &interval);
-      if (name[0] == '\0') continue;
-      setRcValue(def_rc, name, interval);
-    }
-    fclose(fp);
+  if (fp == NULL)
+    return 1;
+
+  printf("-- Reading rc file %s\n", filename);
+  for (
+       s = fgets(buf, sizeof(buf) - 1, fp);
+       s != NULL;
+       s = fgets(buf, sizeof(buf) - 1, fp)
+       ) {
+    if (buf[0] == '#' || buf[0] == 0) continue;
+    printf("-- %s", buf);
+    name[0] = '\0';
+    sscanf(buf, "%s %d\n", name, &interval);
+    if (name[0] == '\0') continue;
+    setRcValue(def_rc, name, interval);
   }
+  fclose(fp);
 
   return 1;
 }
+
 
 
 
