@@ -26,9 +26,10 @@ applerror	<Application reported error>				/error
 applfatal	<Application reported fatal error>			/fatal
 applwarning	<Application reported warning>				/warning
 applinfo	<Application reported info>				/info
-applstartup     <Application starting up>				/info
+applstartup     <Application starting up>				/warning
 arun		<Application running>					/info
 applrestart	<Application restarting>				/info
+applterm	<Application terminated>				/fatal
 ptimeout	<Process timeout>					/fatal
 
 .end
