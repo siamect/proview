@@ -25,6 +25,7 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 
+#include "rt_load.h"
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
@@ -39,7 +40,6 @@
 
 extern "C" {
 #include "rt_gdh.h"
-#include "rt_load.h"
 #include "rt_gdh_msg.h"
 #include "co_cdh.h"
 #include "co_time.h"
@@ -96,6 +96,8 @@ static void gec_activate_background( Widget w, GeCurve *curve, XmAnyCallbackStru
   }
   grow_SetObjectFillColor( curve->curve_object, curve->curve_color);
   grow_SetObjectBorderColor( curve->curve_object, curve->curve_border);
+  curve->cd->select_color( curve->curve_color == curve->background_dark);
+  curve->configure_curves();
 }
 
 static void gec_activate_showname( Widget w, GeCurve *curve, 
@@ -491,7 +493,7 @@ static int ge_init_grownames_cb( GlowCtx *fctx, void *client_data)
 
   for ( int i = 1; i < curve->cd->cols; i++) {
     grow_CreateGrowRect( curve->grownames_ctx, "", 0, (i-1), 1, 1,
-			 glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 1, 1,
+			 glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 1, 1, 1,
 			 curve->cd->color[i], NULL, &curve->name_rect[i]);
 
     if ( curve->hide[i])
@@ -500,11 +502,11 @@ static int ge_init_grownames_cb( GlowCtx *fctx, void *client_data)
       color = glow_eDrawType_Line;
 
     grow_CreateGrowRect( curve->grownames_ctx, "", 0.25, (i-1)+0.25, 0.5, 0.5,
-			 glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 1, 0,
+			 glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 1, 0, 0,
 			 color, NULL, &curve->hide_rect[i]);
     grow_CreateGrowText( curve->grownames_ctx, "", curve->cd->name[i],
-		       1.3, (i-1) + 0.85, glow_eDrawType_TextHelveticaBold, 2, 
-                       glow_mDisplayLevel_1, NULL, &t1);
+		       1.3, (i-1) + 0.85, glow_eDrawType_TextHelveticaBold, 
+		       glow_eDrawType_Line, 2, glow_mDisplayLevel_1, NULL, &t1);
   }
 
   return 1;
@@ -524,8 +526,8 @@ int GeCurve::configure_axes()
          !hide[i]) {
       grow_CreateGrowRect( growaxis_ctx, "", x, 0,
 			 cd->axis_width[i], 30,
-			 glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 1, 0,
-			 cd->color[i], NULL, 
+			   glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 1, 0, 0,
+			 cd->axiscolor[i], NULL, 
 			 &axis_rect[i]);
       x += cd->axis_width[i];
     }
@@ -805,6 +807,31 @@ void GeCurve::pop()
   flow_MapWidget( toplevel);
 }
 
+void GeCurve::set_time( pwr_tTime time)
+{
+  char time_str[40];
+  char full_title[200];
+
+  time_AtoAscii( &time, time_eFormat_DateAndTime, time_str, sizeof(time_str));
+
+  sprintf( full_title, "%s   %s", title, time_str);
+  write_title( full_title);
+}
+
+void GeCurve::set_title( char *str)
+{
+  strcpy( title, str);
+  write_title( str);
+}
+
+void GeCurve::write_title( char *str)
+{
+  Arg args[1];
+
+  XtSetArg(args[0],XmNtitle, str);
+  XtSetValues( toplevel, args, 1);
+}
+
 GeCurve::~GeCurve()
 {
   XtDestroyWidget( toplevel);
@@ -816,10 +843,10 @@ GeCurve::GeCurve( void 	*gc_parent_ctx,
 		  char  *filename,
                   GeCurveData *curve_data,
                   int   pos_right) :
-  parent_ctx(gc_parent_ctx), background_dark(glow_eDrawType_Color9),
-  background_bright(glow_eDrawType_Color11),
-  border_dark(glow_eDrawType_Color15),
-  border_bright(glow_eDrawType_Color12),
+  parent_ctx(gc_parent_ctx), background_dark(glow_eDrawType_Color29),
+  background_bright(glow_eDrawType_Color21),
+  border_dark(glow_eDrawType_Color28),
+  border_bright(glow_eDrawType_Color22),
   cd(0), axis_window_width(0), auto_refresh(1), axis_displayed(1),
   minmax_idx(0), close_cb(0), initial_right_position(pos_right)
 {
@@ -827,7 +854,6 @@ GeCurve::GeCurve( void 	*gc_parent_ctx,
   char		*uid_filename_p = uid_filename;
   Arg 		args[20];
   pwr_tStatus	sts;
-  char 		title[80];
   int		i;
   MrmHierarchy s_DRMh;
   MrmType dclass;
@@ -872,10 +898,11 @@ GeCurve::GeCurve( void 	*gc_parent_ctx,
 
     cd->get_borders();
     cd->get_default_axis();
-    cd->select_color();
+    cd->select_color( curve_color == background_dark);
   }
   else if ( curve_data) {
     cd = curve_data;
+    cd->select_color( curve_color == background_dark);
   }
 
   // Motif
@@ -967,6 +994,8 @@ GeCurveData::GeCurveData( curve_eDataType datatype) :
     min_value[i] = 0;
     min_value_axis[i] = 0;
     max_value_axis[i] = 0;
+    lines[i] = 0;
+    axis_width[i] = 0;
   }
 }
 
@@ -1009,13 +1038,106 @@ void GeCurveData::get_default_axis()
   }
 }
 
-void GeCurveData::select_color()
+void GeCurveData::select_color( bool dark_bg)
 {
   int j;
 
   for ( int i = 0; i < cols; i++) {
-    j = i % 16;
+    j = i % 9;
+    switch( j) {
+    case 0:
+      // Seablue
+      color[i] = glow_eDrawType_Color265;
+      axiscolor[i] = glow_eDrawType_Color255;
+      if ( dark_bg)
+	fillcolor[i] = glow_eDrawType_Color257;
+      else
+	fillcolor[i] = glow_eDrawType_Color254;
+      break;
+    case 1:
+      // Orange
+      if ( dark_bg)
+	color[i] = glow_eDrawType_Color144;
+      else
+	color[i] = glow_eDrawType_Color146;
+      axiscolor[i] = glow_eDrawType_Color135;
+      if ( dark_bg)
+	fillcolor[i] = glow_eDrawType_Color137;
+      else
+	fillcolor[i] = glow_eDrawType_Color133;
+      break;
+    case 2:
+      // YellowGreen
+      if ( dark_bg)
+	color[i] = glow_eDrawType_Color85;
+      else
+	color[i] = glow_eDrawType_Color87;
+      axiscolor[i] = glow_eDrawType_Color75;
+      if ( dark_bg)
+	fillcolor[i] = glow_eDrawType_Color67;
+      else
+	fillcolor[i] = glow_eDrawType_Color64;
+      break;
+    case 3:
+      // Yellow
+      if ( dark_bg)
+	color[i] = glow_eDrawType_Color115;
+      else
+	color[i] = glow_eDrawType_Color117;
+      axiscolor[i] = glow_eDrawType_Color105;
+      if ( dark_bg)
+	fillcolor[i] = glow_eDrawType_Color107;
+      else
+	fillcolor[i] = glow_eDrawType_Color104;
+      break;
+    case 4:
+      // Blue
+      color[i] = glow_eDrawType_Color235;
+      axiscolor[i] = glow_eDrawType_Color225;
+      if ( dark_bg)
+	fillcolor[i] = glow_eDrawType_Color227;
+      else
+	fillcolor[i] = glow_eDrawType_Color214;
+      break;
+    case 5:
+      // Violet
+      color[i] = glow_eDrawType_Color205;
+      axiscolor[i] = glow_eDrawType_Color195;
+      if ( dark_bg)
+	fillcolor[i] = glow_eDrawType_Color197;
+      else
+	fillcolor[i] = glow_eDrawType_Color184;
+      break;
+    case 6:
+      // Red
+      color[i] = glow_eDrawType_Color175;
+      axiscolor[i] = glow_eDrawType_Color165;
+      if ( dark_bg)
+	fillcolor[i] = glow_eDrawType_Color167;
+      else
+	fillcolor[i] = glow_eDrawType_Color154;
+      break;
+    case 7:
+      // Green
+      color[i] = glow_eDrawType_Color295;
+      axiscolor[i] = glow_eDrawType_Color285;
+      if ( dark_bg)
+	fillcolor[i] = glow_eDrawType_Color287;
+      else
+	fillcolor[i] = glow_eDrawType_Color274;
+      break;
+    case 8:
+      // Gray
+      color[i] = glow_eDrawType_Color35;
+      axiscolor[i] = glow_eDrawType_Color35;
+      if ( dark_bg)
+	fillcolor[i] = glow_eDrawType_Color37;
+      else
+	fillcolor[i] = glow_eDrawType_Color34;
+      break;
 
+    }
+#if 0
     if ( j < 4)
       color[i] = (glow_eDrawType) (j * 20 + 27);
     else if ( j >= 4 && j < 8)
@@ -1026,6 +1148,7 @@ void GeCurveData::select_color()
       color[i] = (glow_eDrawType) ((j - 12) * 20 + 32);
 
     fillcolor[i] = (glow_eDrawType)(color[i] + 1);
+#endif
   }
 }
 

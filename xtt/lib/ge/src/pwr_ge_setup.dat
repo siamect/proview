@@ -10,11 +10,19 @@ menu Images
   subgraph	GrayInd		jpwr/jop/jop_grayind.gif 	6
   subgraph	GreenInd	jpwr/jop/jop_greenind.gif 	6
 }
+menu Analog
+{
+  subgraph 	Trend	 	pwr_trend.component 		6
+  subgraph 	FastCurve 	pwr_fastcurve.component 	6
+  subgraph 	Bar		pwr_bar.component 		6
+  subgraph 	Axis		pwr_axis.component 		6
+}
 menu Process
 {
   subgraph 	Valve	 	pwr_exe:pwr_valve.pwsg 			1
   subgraph 	ValveManuel	pwr_exe:pwr_valvemanuel.pwsg 		4
   subgraph 	ValveControl	pwr_exe:pwr_valvecontrol.pwsg 		2
+  subgraph 	Thermometer	pwr_exe:pwr_thermometer.pwsg 		6
 }
 menu Electric
 {
@@ -138,6 +146,11 @@ menu Other
   subgraph 	Pulpet		pwr_exe:pwr_pulpet.pwsg 		5
   subgraph 	Rack		pwr_exe:pwr_rack.pwsg 			5
   subgraph 	Terminal	pwr_exe:pwr_terminal.pwsg 		5
+  subgraph 	VideoCamera	pwr_exe:pwr_videocamera.pwsg 		5
+  subgraph 	ConGlue		pwr_conglue.component 			6
+  subgraph 	MenuBar		pwr_exe:pwr_menubar.pwsg 		6
+  subgraph 	PulldownMenu	pwr_exe:pwr_pulldownmenu.pwsg 		6
+  subgraph 	OptionMenu	pwr_exe:pwr_optionmenu.pwsg 		6
 }
 localsubgraphs Ssab ssab_exe:*.pwsg
 menu Local

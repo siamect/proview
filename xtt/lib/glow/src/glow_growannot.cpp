@@ -64,6 +64,7 @@ void GrowAnnot::draw( GlowTransform *t, int highlight, int hot, void *node,
   if ( !((GlowNode *) node)->annotv[number])
     return;
 
+  glow_eDrawType color;
   double trf_scale = trf.vertical_scale( t);
   int idx = int( trf_scale * ctx->zoom_factor_y / ctx->base_zoom_factor * (text_size +4) - 4);
   if ( idx < 0)
@@ -83,15 +84,35 @@ void GrowAnnot::draw( GlowTransform *t, int highlight, int hot, void *node,
 
   switch ( annot_type) {
     case glow_eAnnotType_OneLine:
+      color = ((GrowCtx *)ctx)->get_drawtype( color_drawtype, glow_eDrawType_LineHighlight,
+		 highlight, (GrowNode *)colornode, 2);
+
+      if ( ((GlowNode *) node)->annotv_inputmode[number] &&
+	   ((GrowNode *) node)->input_selected) {
+	int width, height, descent;
+	draw_get_text_extent( ctx, ((GlowNode *) node)->annotv[number],
+			      strlen(((GlowNode *) node)->annotv[number]),
+			      draw_type, idx,
+			      &width, &height, &descent);
+	glow_draw_fill_rect( ctx, x1, y1 - height + descent, width, height, glow_eDrawType_MediumGray);
+      }
+
       glow_draw_text( ctx, x1, y1,
 	((GlowNode *) node)->annotv[number], 
-	strlen(((GlowNode *) node)->annotv[number]), draw_type, idx, 
+	strlen(((GlowNode *) node)->annotv[number]), draw_type, color, idx, 
 	highlight, 0);
       if ( ((GlowNode *) node)->annotv_inputmode[number])
+	glow_draw_text_cursor( ctx, x1, y1,
+			((GlowNode *) node)->annotv[number],
+			strlen(((GlowNode *) node)->annotv[number]),
+			draw_type, color, idx, highlight, 
+			((GrowNode *)node)->input_position);
+#if 0
         glow_draw_move_input( ctx, 
 	  ((GlowNode *) node)->annotv_input[number],
 	  x1, y1,
 	  glow_ePosition_Absolute);
+#endif
       break;
     case glow_eAnnotType_MultiLine:
     {
@@ -100,6 +121,9 @@ void GrowAnnot::draw( GlowTransform *t, int highlight, int hot, void *node,
       int line_cnt = 0;
       char *line = ((GlowNode *) node)->annotv[number];
       char *s;
+      color = ((GrowCtx *)ctx)->get_drawtype( color_drawtype, glow_eDrawType_LineHighlight,
+		 highlight, (GrowNode *)colornode, 2);
+
       draw_get_text_extent( ctx, "", 0, draw_type, idx, &z_width, &z_height,
 		&z_descent);
       for ( s = ((GlowNode *) node)->annotv[number]; *s; s++)
@@ -108,7 +132,7 @@ void GrowAnnot::draw( GlowTransform *t, int highlight, int hot, void *node,
 	{
 	  if ( len)
             glow_draw_text( ctx, x1, y1 + line_cnt * z_height, line, 
-	  	len, draw_type, idx, highlight, 0);
+	  	len, draw_type, color, idx, highlight, 0);
 	  len = 0;
 	  line = s+1;
 	  line_cnt++;
@@ -118,7 +142,7 @@ void GrowAnnot::draw( GlowTransform *t, int highlight, int hot, void *node,
       }
       if ( len)
         glow_draw_text( ctx, x1, y1 + line_cnt * z_height, line, 
-	  	len, draw_type, idx, highlight, 0);
+	  	len, draw_type, color, idx, highlight, 0);
       break;
     }
   }
@@ -152,6 +176,15 @@ void GrowAnnot::erase( GlowTransform *t, int hot, void *node)
   switch ( annot_type) {
     case glow_eAnnotType_OneLine:
     {
+      if ( ((GlowNode *) node)->annotv_inputmode[number] &&
+	   ((GrowNode *) node)->input_selected) {
+	int width, height, descent;
+	draw_get_text_extent( ctx, ((GlowNode *) node)->annotv[number],
+			      strlen(((GlowNode *) node)->annotv[number]),
+			      draw_type, idx,
+			      &width, &height, &descent);
+	glow_draw_fill_rect( ctx, x1, y1 - height + descent, width, height, glow_eDrawType_LineErase);
+      }
       glow_draw_text_erase( ctx, x1, y1,
 		((GlowNode *) node)->annotv[number], 
 		strlen(((GlowNode *) node)->annotv[number]), draw_type, idx, 0);
@@ -197,7 +230,8 @@ void GrowAnnot::erase_background( GlowTransform *t, int hot, void *node)
 
   if ( !((GlowNode *) node)->annotv[number])
     return;
-  int idx = int( ctx->zoom_factor_y / ctx->base_zoom_factor * (text_size +4) - 4);
+  double trf_scale = trf.vertical_scale( t);
+  int idx = int( trf_scale * ctx->zoom_factor_y / ctx->base_zoom_factor * (text_size +4) - 4);
   if ( idx < 0)
     return;
   idx = min( idx, DRAW_TYPE_SIZE-1);
@@ -439,7 +473,7 @@ void GrowAnnot::export_javabean( GlowTransform *t, void *node,
   bold = (draw_type == glow_eDrawType_TextHelveticaBold);
 
   ((GrowCtx *)ctx)->export_jbean->annot( x1, y1, number,
-	draw_type, bold, idx, pass, shape_cnt, node_cnt, fp);
+	draw_type, color_drawtype, bold, idx, pass, shape_cnt, node_cnt, fp);
 //  (*shape_cnt)++;
 }
 
@@ -462,4 +496,31 @@ void GrowAnnot::export_javabean_font( GlowTransform *t, void *node,
 
   ((GrowCtx *)ctx)->export_jbean->annot_font( number,
 	draw_type, background, bold, idx, pass, fp);
+}
+
+void GrowAnnot::convert( glow_eConvert version) 
+{
+  switch ( version) {
+  case glow_eConvert_V34: {
+    // Conversion of colors
+    draw_type = GlowColor::convert( version, draw_type);
+
+    break;
+  }
+  }  
+}
+
+void GrowAnnot::get_annotation_info( void *node, int *t_size, glow_eDrawType *t_drawtype,
+				    glow_eDrawType *t_color)
+{
+  double trf_scale = trf.vertical_scale( &((GrowNode *)node)->trf);
+  int idx = int( trf_scale * ctx->zoom_factor_y / ctx->base_zoom_factor * (text_size +4) - 4);
+  if ( idx < 0)
+    return;
+  idx = min( idx, DRAW_TYPE_SIZE-1);
+
+  *t_color = ((GrowCtx *)ctx)->get_drawtype( color_drawtype, glow_eDrawType_LineHighlight,
+		 0, (GrowNode *)node, 2);
+  *t_size = idx;
+  *t_drawtype = draw_type;
 }

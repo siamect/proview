@@ -23,6 +23,11 @@ extern "C" {
 #include "flow_browapi.h"
 #endif
 
+/*! \file ge_subpalette.h
+    \brief Contains the SubPalette class and related classes. */
+/*! \addtogroup Ge */
+/*@{*/
+
 #define subpalette_cVersion	"X3.0b"
 #define SUBP_PIXMAPS_SIZE	40
 
@@ -74,6 +79,7 @@ class SubPaletteBrow {
 };
 
 
+//! Display the subgraph palette.
 class SubPalette {
   public:
     SubPalette(
@@ -165,3 +171,9 @@ class ItemMenu : public Item {
 }
 #endif
 #endif
+
+
+
+
+
+

@@ -16,6 +16,10 @@ extern "C" {
 #include "glow_growapi.h"
 #endif
 
+/*! \file ge_curve.h
+    \brief Contains the GeCurve class. */
+/*! \addtogroup Ge */
+/*@{*/
 
 #define CURVE_MAX_COLS 101
 
@@ -31,6 +35,7 @@ typedef enum {
   curve_eAxis_y
   } curve_eAxis;
 
+//! Contains data for the curves.
 class GeCurveData {
   public:
     GeCurveData( curve_eDataType datatype);
@@ -46,6 +51,7 @@ class GeCurveData {
     int     lines[CURVE_MAX_COLS];
     glow_eDrawType color[CURVE_MAX_COLS];
     glow_eDrawType fillcolor[CURVE_MAX_COLS];
+    glow_eDrawType axiscolor[CURVE_MAX_COLS];
     pwr_eType value_type[CURVE_MAX_COLS];
     curve_eAxis axis_type[CURVE_MAX_COLS];
     double  axis_width[CURVE_MAX_COLS];
@@ -53,7 +59,7 @@ class GeCurveData {
     int     x_reverse;
     void get_borders();
     void get_default_axis();
-    void select_color();
+    void select_color( bool dark_bg);
     void scale( int axis_type, int value_type, 
                 double min_value, double max_value, 
                 double *min_value_axis, double *max_value_axis, 
@@ -62,7 +68,11 @@ class GeCurveData {
     ~GeCurveData();
 };
 
+//! A curve window used for trends and logging curves.
 class GeCurve {
+  private:
+    void	write_title( char *str);
+
   public:
     GeCurve( void *gc_parent_ctx, Widget parent_widget, char *curve_name,
          char *filename, GeCurveData *curve_data, int pos_right);
@@ -106,15 +116,19 @@ class GeCurve {
     int          minmax_idx;
     void 	 (*close_cb)( void *);
     int          initial_right_position;
+    char	 title[120];
 
     int read_file( char *filename);
     int configure_curves();
     int configure_axes();
     void points_added();
     void pop();
+    void set_title( char *str);
+    void set_time( pwr_tTime time);
     ~GeCurve();
 };
 
+/*@}*/
 #if defined __cplusplus
 }
 #endif

@@ -252,7 +252,7 @@ void glow_CreateArc( glow_tCtx ctx, double x1, double y1,
 void glow_CreateText( glow_tCtx ctx, char *text_str, double x, double y, 
 	glow_eDrawType draw_type, int text_size, glow_tObject *text)
 {
-  *text = (glow_tObject) new GlowText( ctx, text_str, x, y, draw_type,
+  *text = (glow_tObject) new GlowText( ctx, text_str, x, y, draw_type, glow_eDrawType_Line,
 	text_size);
 }
 
@@ -267,7 +267,7 @@ void glow_CreatePixmap( glow_tCtx ctx, glow_sPixmapData *pixmap_data,
 void glow_CreateAnnot( glow_tCtx ctx, double x, double y, int number,
 	glow_eDrawType draw_type, int text_size, glow_tObject *annot)
 {
-  *annot = (glow_tObject) new GlowAnnot( ctx, x, y, number, draw_type,
+  *annot = (glow_tObject) new GlowAnnot( ctx, x, y, number, draw_type, glow_eDrawType_Line,
 	text_size);
 }
 
@@ -318,7 +318,7 @@ void glow_AddText( glow_tNodeClass nc, char *text_str, double x, double y,
 	glow_eDrawType draw_type, int text_size)
 {
   GlowText *text = new GlowText( ((GlowNodeClass *)nc)->ctx, 
-	text_str, x, y, draw_type, text_size);
+	text_str, x, y, draw_type, glow_eDrawType_Line, text_size);
   ((GlowNodeClass *)nc)->insert( text);
 }
 
@@ -327,7 +327,7 @@ void glow_AddAnnot( glow_tNodeClass nc, double x, double y, int number,
 	glow_mDisplayLevel display_level)
 {
   GlowAnnot *annot = new GlowAnnot( ((GlowNodeClass *)nc)->ctx, 
-	x, y, number, draw_type, text_size, annot_type, 0, display_level);
+	x, y, number, draw_type, glow_eDrawType_Line, text_size, annot_type, 0, display_level);
   ((GlowNodeClass *)nc)->insert( annot);
 }
 

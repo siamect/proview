@@ -56,7 +56,8 @@ typedef struct {
 	unsigned long original_background;
 	XtIntervalId	timer_id;
 	int	clip_on;
-	XRectangle clip_rectangle;
+  	int	clip_cnt;
+	XRectangle clip_rectangle[2];
 	int	click_sensitivity;
         ImlibData *imlib;
         Pixmap  background_pixmap;
@@ -124,6 +125,8 @@ int glow_draw_nav_arc_erase( GlowCtx *ctx, int x, int y, int width, int height,
 	int idx);
 int glow_draw_line( GlowCtx *ctx, int x1, int y1, int x2, int y2,
 	glow_eDrawType gc_type, int idx, int highlight);
+int glow_draw_line_dashed( GlowCtx *ctx, int x1, int y1, int x2, int y2,
+	glow_eDrawType gc_type, int idx, int highlight, glow_eLineType line_type);
 int glow_draw_line_erase( GlowCtx *ctx, int x1, int y1, int x2, int y2,
 	int idx);
 int glow_draw_nav_line( GlowCtx *ctx, int x1, int y1, int x2, int y2,
@@ -143,7 +146,9 @@ int glow_draw_nav_polyline( GlowCtx *ctx, XPoint *points, int point_cnt,
 int glow_draw_nav_polyline_erase( GlowCtx *ctx, XPoint *points, int point_cnt,
 	int idx);
 int glow_draw_text( GlowCtx *ctx, int x, int y, char *text, int len,
-	glow_eDrawType gc_type, int idx, int highlight, int line);
+	glow_eDrawType gc_type, glow_eDrawType color, int idx, int highlight, int line);
+int glow_draw_text_cursor( GlowCtx *ctx, int x, int y, char *text, int len,
+	glow_eDrawType gc_type, glow_eDrawType color, int idx, int highlight, int pos);
 int glow_draw_text_erase( GlowCtx *ctx, int x, int y, char *text, int len,
 	glow_eDrawType gc_type, int idx, int line);
 int glow_draw_nav_text( GlowCtx *ctx, int x, int y, char *text, int len,
@@ -206,7 +211,7 @@ void glow_set_background( GlowCtx *ctx, glow_eDrawType drawtype, Pixmap pixmap,
 void glow_reset_background( GlowCtx *ctx);
 void glow_set_image_clip_mask( GlowCtx *ctx, Pixmap pixmap, int x, int y);
 void glow_reset_image_clip_mask( GlowCtx *ctx);
-void glow_draw_set_clip_rectangle( GlowCtx *ctx,
+int glow_draw_set_clip_rectangle( GlowCtx *ctx,
 		int ll_x, int ll_y, int ur_x, int ur_y);
 void glow_draw_reset_clip_rectangle( GlowCtx *ctx);
 char *glow_color_to_name( glow_eDrawType drawtype);

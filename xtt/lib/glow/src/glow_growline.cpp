@@ -16,7 +16,7 @@ GrowLine::GrowLine( GlowCtx *glow_ctx, char *name, double x1, double y1,
 		GlowLine(glow_ctx,x1,y1,x2,y2,d_type,line_w,fix_line_w), 
     		hot(0), pzero(ctx), highlight(0), inverse(0), 
 		original_border_drawtype(d_type), user_data(NULL),
-		dynamic(0), dynamicsize(0)
+		dynamic(0), dynamicsize(0), line_type(glow_eLineType_Solid)
 { 
   strcpy( n_name, name);
   pzero.nav_zoom();
@@ -56,7 +56,7 @@ GrowLine::~GrowLine()
     draw_set_cursor( ctx, glow_eDrawCursor_Normal);
 }
 
-void GrowLine::move( int delta_x, int delta_y, int grid)
+void GrowLine::move( double delta_x, double delta_y, int grid)
 {
   ctx->set_defered_redraw();
   ((GrowCtx *)ctx)->draw( x_left * ctx->zoom_factor_x - ctx->offset_x - DRAW_MP,
@@ -70,8 +70,8 @@ void GrowLine::move( int delta_x, int delta_y, int grid)
     /* Move to closest grid point */
     erase();
     nav_erase();
-    ctx->find_grid( x_left + double( delta_x) / ctx->zoom_factor_x,
-	y_low + double( delta_y) / ctx->zoom_factor_y, &x_grid, &y_grid);
+    ctx->find_grid( x_left + delta_x / ctx->zoom_factor_x,
+	y_low + delta_y / ctx->zoom_factor_y, &x_grid, &y_grid);
     trf.move( x_grid - x_left, y_grid - y_low);
     get_node_borders();
   }
@@ -81,8 +81,8 @@ void GrowLine::move( int delta_x, int delta_y, int grid)
 
     erase();
     nav_erase();
-    dx = double( delta_x) / ctx->zoom_factor_x;
-    dy = double( delta_y) / ctx->zoom_factor_y;
+    dx = delta_x / ctx->zoom_factor_x;
+    dy = delta_y / ctx->zoom_factor_y;
     trf.move( dx, dy);
     x_right += dx;
     x_left += dx;
@@ -273,6 +273,7 @@ void GrowLine::save( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_GrowLine_y_low) << FSPACE << y_low << endl;
   fp << int(glow_eSave_GrowLine_original_border_drawtype) << FSPACE 
 		<< int(original_border_drawtype) << endl;
+  fp << int(glow_eSave_GrowLine_line_type) << FSPACE << line_type << endl;
   fp << int(glow_eSave_GrowLine_line_part) << endl;
   GlowLine::save( fp, mode);
   fp << int(glow_eSave_GrowLine_trf) << endl;
@@ -300,8 +301,10 @@ void GrowLine::open( ifstream& fp)
       case glow_eSave_GrowLine_x_left: fp >> x_left; break;
       case glow_eSave_GrowLine_y_high: fp >> y_high; break;
       case glow_eSave_GrowLine_y_low: fp >> y_low; break;
-      case glow_eSave_GrowLine_original_border_drawtype: fp >> 
-		tmp; original_border_drawtype = (glow_eDrawType)tmp; break;
+      case glow_eSave_GrowLine_original_border_drawtype: fp >> tmp; 
+	original_border_drawtype = (glow_eDrawType)tmp; break;
+      case glow_eSave_GrowLine_line_type: fp >> tmp; 
+	line_type = (glow_eLineType)tmp; break;
       case glow_eSave_GrowLine_line_part: 
         GlowLine::open( fp);
         break;
@@ -703,23 +706,27 @@ void GrowLine::draw( GlowTransform *t, int highlight, int hot, void *node, void 
 
   if (!t)
   {
-    x1 = int( trf.x( p1.x, p1.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y1 = int( trf.y( p1.x, p1.y) * ctx->zoom_factor_y) - ctx->offset_y;
-    x2 = int( trf.x( p2.x, p2.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y2 = int( trf.y( p2.x, p2.y) * ctx->zoom_factor_y) - ctx->offset_y;
+    x1 = int( trf.x( p1.x, p1.y) * ctx->zoom_factor_x + 0.5) - ctx->offset_x;
+    y1 = int( trf.y( p1.x, p1.y) * ctx->zoom_factor_y + 0.5) - ctx->offset_y;
+    x2 = int( trf.x( p2.x, p2.y) * ctx->zoom_factor_x + 0.5) - ctx->offset_x;
+    y2 = int( trf.y( p2.x, p2.y) * ctx->zoom_factor_y + 0.5) - ctx->offset_y;
   }
   else
   {
-    x1 = int( trf.x( t, p1.x, p1.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y1 = int( trf.y( t, p1.x, p1.y) * ctx->zoom_factor_y) - ctx->offset_y;
-    x2 = int( trf.x( t, p2.x, p2.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y2 = int( trf.y( t, p2.x, p2.y) * ctx->zoom_factor_y) - ctx->offset_y;
+    x1 = int( trf.x( t, p1.x, p1.y) * ctx->zoom_factor_x + 0.5) - ctx->offset_x;
+    y1 = int( trf.y( t, p1.x, p1.y) * ctx->zoom_factor_y + 0.5) - ctx->offset_y;
+    x2 = int( trf.x( t, p2.x, p2.y) * ctx->zoom_factor_x + 0.5) - ctx->offset_x;
+    y2 = int( trf.y( t, p2.x, p2.y) * ctx->zoom_factor_y + 0.5) - ctx->offset_y;
   }
   if ( x1 == x2 && y1 == y2)
     return;
-  drawtype = ((GrowCtx *)ctx)->get_drawtype( draw_type, glow_eDrawType_Color59,
+  drawtype = ((GrowCtx *)ctx)->get_drawtype( draw_type, glow_eDrawType_LineHighlight,
 		 highlight, (GrowNode *)colornode, 0);
-  glow_draw_line( ctx, x1, y1, x2, y2, drawtype, idx, 0);
+
+  if ( line_type == glow_eLineType_Solid)
+    glow_draw_line( ctx, x1, y1, x2, y2, drawtype, idx, 0);
+  else
+    glow_draw_line_dashed( ctx, x1, y1, x2, y2, drawtype, idx, 0, line_type);
 }
 
 void GrowLine::draw()
@@ -751,17 +758,17 @@ void GrowLine::erase( GlowTransform *t, int hot, void *node)
 
   if (!t)
   {
-    x1 = int( trf.x( p1.x, p1.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y1 = int( trf.y( p1.x, p1.y) * ctx->zoom_factor_y) - ctx->offset_y;
-    x2 = int( trf.x( p2.x, p2.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y2 = int( trf.y( p2.x, p2.y) * ctx->zoom_factor_y) - ctx->offset_y;
+    x1 = int( trf.x( p1.x, p1.y) * ctx->zoom_factor_x + 0.5) - ctx->offset_x;
+    y1 = int( trf.y( p1.x, p1.y) * ctx->zoom_factor_y + 0.5) - ctx->offset_y;
+    x2 = int( trf.x( p2.x, p2.y) * ctx->zoom_factor_x + 0.5) - ctx->offset_x;
+    y2 = int( trf.y( p2.x, p2.y) * ctx->zoom_factor_y + 0.5) - ctx->offset_y;
   }
   else
   {
-    x1 = int( trf.x( t, p1.x, p1.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y1 = int( trf.y( t, p1.x, p1.y) * ctx->zoom_factor_y) - ctx->offset_y;
-    x2 = int( trf.x( t, p2.x, p2.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y2 = int( trf.y( t, p2.x, p2.y) * ctx->zoom_factor_y) - ctx->offset_y;
+    x1 = int( trf.x( t, p1.x, p1.y) * ctx->zoom_factor_x + 0.5) - ctx->offset_x;
+    y1 = int( trf.y( t, p1.x, p1.y) * ctx->zoom_factor_y + 0.5) - ctx->offset_y;
+    x2 = int( trf.x( t, p2.x, p2.y) * ctx->zoom_factor_x + 0.5) - ctx->offset_x;
+    y2 = int( trf.y( t, p2.x, p2.y) * ctx->zoom_factor_y + 0.5) - ctx->offset_y;
   }
   ctx->set_draw_buffer_only();
   glow_draw_line_erase( ctx, x1, y1, x2, y2, idx);
@@ -786,20 +793,20 @@ void GrowLine::nav_draw( GlowTransform *t, int highlight, void *node, void *colo
 
   if (!t)
   {
-    x1 = int( trf.x( p1.x, p1.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y1 = int( trf.y( p1.x, p1.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-    x2 = int( trf.x( p2.x, p2.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y2 = int( trf.y( p2.x, p2.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
+    x1 = int( trf.x( p1.x, p1.y) * ctx->nav_zoom_factor_x + 0.5) - ctx->nav_offset_x;
+    y1 = int( trf.y( p1.x, p1.y) * ctx->nav_zoom_factor_y + 0.5) - ctx->nav_offset_y;
+    x2 = int( trf.x( p2.x, p2.y) * ctx->nav_zoom_factor_x + 0.5) - ctx->nav_offset_x;
+    y2 = int( trf.y( p2.x, p2.y) * ctx->nav_zoom_factor_y + 0.5) - ctx->nav_offset_y;
   }
   else
   {
-    x1 = int( trf.x( t, p1.x, p1.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y1 = int( trf.y( t, p1.x, p1.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-    x2 = int( trf.x( t, p2.x, p2.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y2 = int( trf.y( t, p2.x, p2.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
+    x1 = int( trf.x( t, p1.x, p1.y) * ctx->nav_zoom_factor_x + 0.5) - ctx->nav_offset_x;
+    y1 = int( trf.y( t, p1.x, p1.y) * ctx->nav_zoom_factor_y + 0.5) - ctx->nav_offset_y;
+    x2 = int( trf.x( t, p2.x, p2.y) * ctx->nav_zoom_factor_x + 0.5) - ctx->nav_offset_x;
+    y2 = int( trf.y( t, p2.x, p2.y) * ctx->nav_zoom_factor_y + 0.5) - ctx->nav_offset_y;
   }
 
-  drawtype = ((GrowCtx *)ctx)->get_drawtype( draw_type, glow_eDrawType_Color59,
+  drawtype = ((GrowCtx *)ctx)->get_drawtype( draw_type, glow_eDrawType_LineHighlight,
 		0, (GrowNode *)colornode, 0);
   glow_draw_nav_line( ctx, x1, y1, x2, y2, drawtype, idx, 0);
 }
@@ -820,17 +827,17 @@ void GrowLine::nav_erase( GlowTransform *t, void *node)
 
   if (!t)
   {
-    x1 = int( trf.x( p1.x, p1.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y1 = int( trf.y( p1.x, p1.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-    x2 = int( trf.x( p2.x, p2.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y2 = int( trf.y( p2.x, p2.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
+    x1 = int( trf.x( p1.x, p1.y) * ctx->nav_zoom_factor_x + 0.5) - ctx->nav_offset_x;
+    y1 = int( trf.y( p1.x, p1.y) * ctx->nav_zoom_factor_y + 0.5) - ctx->nav_offset_y;
+    x2 = int( trf.x( p2.x, p2.y) * ctx->nav_zoom_factor_x + 0.5) - ctx->nav_offset_x;
+    y2 = int( trf.y( p2.x, p2.y) * ctx->nav_zoom_factor_y + 0.5) - ctx->nav_offset_y;
   }
   else
   {
-    x1 = int( trf.x( t, p1.x, p1.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y1 = int( trf.y( t, p1.x, p1.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-    x2 = int( trf.x( t, p2.x, p2.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y2 = int( trf.y( t, p2.x, p2.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
+    x1 = int( trf.x( t, p1.x, p1.y) * ctx->nav_zoom_factor_x + 0.5) - ctx->nav_offset_x;
+    y1 = int( trf.y( t, p1.x, p1.y) * ctx->nav_zoom_factor_y + 0.5) - ctx->nav_offset_y;
+    x2 = int( trf.x( t, p2.x, p2.y) * ctx->nav_zoom_factor_x + 0.5) - ctx->nav_offset_x;
+    y2 = int( trf.y( t, p2.x, p2.y) * ctx->nav_zoom_factor_y + 0.5) - ctx->nav_offset_y;
   }
 
   glow_draw_nav_line_erase( ctx, x1, y1, x2, y2, idx);
@@ -922,4 +929,31 @@ void GrowLine::export_javabean( GlowTransform *t, void *node,
   ((GrowCtx *)ctx)->export_jbean->line( x1, y1, x2, y2,
 	draw_type, idx, pass, shape_cnt, node_cnt, fp);
   (*shape_cnt)++;
+}
+
+void GrowLine::flip( double x0, double y0, glow_eFlipDirection dir)
+{
+  switch ( dir) {
+  case glow_eFlipDirection_Horizontal:
+    trf.store();
+    set_scale( 1, -1, x0, y0, glow_eScaleType_FixPoint);
+    break;
+  case glow_eFlipDirection_Vertical:
+    trf.store();
+    set_scale( -1, 1, x0, y0, glow_eScaleType_FixPoint);
+    break;
+  }
+}
+
+void GrowLine::convert( glow_eConvert version) 
+{
+  switch ( version) {
+  case glow_eConvert_V34: {
+    // Conversion of colors
+    draw_type = GlowColor::convert( version, draw_type);
+    original_border_drawtype = GlowColor::convert( version, original_border_drawtype);
+
+    break;
+  }
+  }  
 }

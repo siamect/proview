@@ -10,10 +10,11 @@
 #include "glow_growctx.h"
 #include "glow_grownode.h"
 
+
 GrowPolyLine::GrowPolyLine( GlowCtx *glow_ctx, char *name, 
 		glow_sPoint *pointarray, int point_cnt,
 		glow_eDrawType border_d_type, int line_w, 
-		int fix_line_w, int fill, int display_border, 
+		int fix_line_w, int fill, int display_border, int display_shadow,
 		glow_eDrawType fill_d_type, int closed, int nodraw) :
 		GlowPolyLine(glow_ctx,pointarray,point_cnt,border_d_type,line_w,
 		fix_line_w,fill,closed), 
@@ -21,7 +22,9 @@ GrowPolyLine::GrowPolyLine( GlowCtx *glow_ctx, char *name,
 		dynamic(0), dynamicsize(0),
 		original_border_drawtype(border_d_type),
 		original_fill_drawtype(fill_d_type), fill_drawtype(fill_d_type),
-		border(display_border), fill_eq_border(0), current_point(0)
+		border(display_border), fill_eq_border(0), current_point(0),
+		shadow(display_shadow), shadow_width(5), relief(glow_eRelief_Up),
+		shadow_contrast(2), disable_shadow(0), fill_eq_light(0), fill_eq_shadow(0)
 { 
   strcpy( n_name, name);
   pzero.nav_zoom();
@@ -61,6 +64,239 @@ GrowPolyLine::GrowPolyLine( GlowCtx *glow_ctx, char *name,
   get_node_borders();
 }
 
+int GrowPolyLine::shadow_direction()
+{
+  double a1, a2, a1_old, a0_old;
+  double a_sum1 = 0;
+  double a_sum2 = 0;
+  int p_num = a_points.a_size;
+  if ( (points[p_num - 1].x == points[0].x && points[p_num - 1].y == points[0].y))
+    p_num--;
+
+  for ( int i = 0; i < p_num; i++) {
+    if ( i == p_num - 1) {
+      if ( points[0].x == points[i].x) {
+	a1 = 90;
+	if ( points[0].y < points[i].y)
+	  a1 += 180;
+      }
+      else
+	a1 = atan(double(points[0].y - points[i].y)/(points[0].x - points[i].x)) * 180 / M_PI;
+      if ( points[0].x < points[i].x)
+	a1 += 180;
+    }
+    else {
+      if ( points[i+1].x == points[i].x) {
+	a1 = 90;
+	if ( points[i+1].y < points[i].y)
+	  a1 += 180;
+      }
+      else
+	a1 = atan(double(points[i+1].y - points[i].y)/(points[i+1].x - points[i].x)) * 180 / M_PI;
+      if ( points[i+1].x < points[i].x)
+	a1 += 180;
+    }
+    if ( i == 0) {
+      a0_old = a1;
+      // printf( "a1: %d %f\n", i, a1);
+    }
+    else if ( i > 0) {
+      a2 = a1 - (a1_old - 180);
+      if ( a2 < 0)
+	a2 += 360;
+      else if ( a2 >= 360)
+	a2 -= 360;
+      a_sum1 += a2;
+      a_sum2 += 360 - a2;
+
+      // printf( "a1: %d %f %f %f\n", i, a1, a2, 360 - a2);
+    }
+    if ( i == p_num - 1) {
+      a2 = a0_old - (a1 - 180);
+      if ( a2 < 0)
+	a2 += 360;
+      else if ( a2 >= 360)
+	a2 -= 360;
+      a_sum1 += a2;
+      a_sum2 += 360 - a2;
+      // printf( "a1: %d %f %f %f sum: %f %f diff: %f\n", i, a1, a2, 360 - a2, a_sum1, a_sum2, a_sum2 - a_sum1);
+    }
+    a1_old = a1;
+  }
+  int dir;
+  XPoint last_point;
+  if ( points[0].x == points[a_points.a_size-1].x && points[0].y == points[a_points.a_size-1].y)
+    last_point = points[a_points.a_size-2];
+  else
+    last_point = points[a_points.a_size-1];
+
+  if ( a_sum2 - a_sum1 < 0) {
+    if ( points[0].x == last_point.x) {
+      if ( points[0].x < points[1].x)
+	dir = 1;
+      else
+	dir = -1;
+    }
+    else if ( points[0].x > last_point.x)
+      dir = 1;
+    else
+      dir = -1;
+  }
+  else {
+    if ( points[0].x == last_point.x) {
+      if ( points[0].x < points[1].x)
+	dir = 1;
+      else
+	dir = -1;
+    }
+    else if ( points[0].x < last_point.x)
+      dir = 1;
+    else
+      dir = -1;
+  }
+  return dir;
+}
+
+void GrowPolyLine::calculate_shadow( glow_sShadowInfo **s, int *num, int ish, int highlight, 
+			 void *colornode, int javaexport)
+{
+  glow_sShadowInfo *sp;
+  double x;
+  int pos01;
+  int pos12;
+  int i;
+  glow_eDrawType light_drawtype;
+  glow_eDrawType dark_drawtype;
+    
+  int p_num = a_points.a_size;
+  if ( points[0].x == points[p_num-1].x && points[0].y == points[p_num-1].y)
+    p_num--;
+  sp = (glow_sShadowInfo *) calloc( p_num + 1, sizeof(glow_sShadowInfo));
+
+  glow_eDrawType fillcolor = ((GrowCtx *)ctx)->get_drawtype( fill_drawtype, glow_eDrawType_FillHighlight,
+		 highlight, (GrowNode *)colornode, 1);
+
+  int drawtype_incr = shadow_contrast;
+  if ( relief == glow_eRelief_Down)
+    drawtype_incr = -shadow_contrast;
+  if ( javaexport) {
+    light_drawtype = (glow_eDrawType) -drawtype_incr;
+    dark_drawtype = (glow_eDrawType) drawtype_incr;
+  }
+  else {
+    light_drawtype = ((GrowCtx *)ctx)->shift_drawtype( fillcolor, -drawtype_incr, 
+								      (GrowNode *)colornode);
+    dark_drawtype = ((GrowCtx *)ctx)->shift_drawtype( fillcolor, drawtype_incr, 
+								     (GrowNode *)colornode);
+  }
+
+  pos01 = shadow_direction();
+
+  for ( i = 0; i < p_num; i++) {
+    double sx0, sx1, sx2, sy0, sy1, sy2;
+    double k01, m01, k12, m12;
+
+    if ( i == 0) {
+      sx0 = points[p_num - 1].x;
+      sy0 = points[p_num - 1].y;
+    }
+    else {
+      sx0 = points[i-1].x;
+      sy0 = points[i-1].y;
+    }
+    sx1 = points[i].x;
+    sy1 = points[i].y;
+    if ( i == p_num - 1) {
+      sx2 = points[0].x;
+      sy2 = points[0].y;
+    }
+    else {
+      sx2 = points[i+1].x;
+      sy2 = points[i+1].y;
+    }
+
+    pos12 = pos01;
+    if ( i == -1) {
+    }
+    else {
+      if ( fabs( sx0 - sx1) < DBL_EPSILON) {
+	if (sx1 > sx2 && sy1 < sy0)
+	  pos12 = - pos01;
+	else if ( sx1 < sx2 && sy1 > sy0)
+	  pos12 = - pos01;
+      }
+      else if ( fabs( sx1 - sx2) < DBL_EPSILON) {
+	if ( sx0 < sx1 && sy2 > sy1)
+	  pos12 = - pos01;
+	else if (  sx0 > sx1 && sy2 < sy1)
+	  pos12 = - pos01;
+      }
+      else if ( sx1 > sx0 && sx2 < sx1)
+	pos12 = -pos01;
+      else if ( sx1 < sx0 && sx2 > sx1)
+	pos12 = -pos01;
+    }
+    
+    if ( fabs( sx0 - sx1) < DBL_EPSILON)  {
+      if ( fabs( sx1 - sx2) < DBL_EPSILON) {
+	x = sx1 + pos01 * ish;
+	sp[i].x = int( x + 0.5);
+	sp[i].y = int( sy1 + 0.5);
+      }
+      else {
+	k12 = (sy2 - sy1)/(sx2 - sx1);
+	m12 = sy1 - sx1 * k12 + pos12 * ish / fabs(cos(atan(k12)));
+      
+	x = sx1 + pos01 * ish;
+	sp[i].x = int( x + 0.5);
+	sp[i].y = int( k12 * x + m12 + 0.5);
+      }
+    }
+    else if ( fabs( sx1 - sx2) < DBL_EPSILON) {
+      k01 = (sy1 - sy0)/(sx1 - sx0);
+      m01 = sy0 - sx0 * k01 + pos01 * ish / fabs(cos(atan(k01)));
+
+      x = sx1 + pos12 * ish;
+      sp[i].x = int(  x + 0.5);
+      sp[i].y = int( k01 * x + m01 + 0.5);
+    }
+    else {
+      k01 = (sy1 - sy0)/(sx1 - sx0);
+      k12 = (sy2 - sy1)/(sx2 - sx1);
+      m01 = sy0 - sx0 * k01 + pos01 * ish / fabs(cos(atan(k01)));
+      m12 = sy1 - sx1 * k12 + pos12 * ish / fabs(cos(atan(k12)));
+      if ( fabs( k01 - k12) < DBL_EPSILON) {
+	// Identical lines
+	k12 = -k12;
+	m12 = sy2 - k12 * sx2;
+
+	x = (m12 - m01)/(k01 - k12);
+	sp[i].x = int( x + 0.5);
+	sp[i].y = int( k12 * x + m12 + 0.5);
+	k12 = k01;
+	m12 = m01;
+      }
+      else {
+	x = (m12 - m01)/(k01 - k12);
+	sp[i].x = int( x + 0.5);
+	sp[i].y = int( k12 * x + m12 + 0.5);
+      }
+    }
+    if ( pos12 == 1)
+      sp[i].drawtype = light_drawtype;
+    else
+      sp[i].drawtype = dark_drawtype;
+    pos01 = pos12;
+  }
+  sp[p_num].x = sp[0].x;
+  sp[p_num].y = sp[0].y;
+  if ( points[0].x == points[a_points.a_size-1].x && points[0].y == points[a_points.a_size-1].y)
+    p_num++;
+
+  *s = sp;
+  *num = p_num;
+}
+
 void GrowPolyLine::draw( GlowTransform *t, int highlight, int hot, void *node, 
 			 void *colornode)
 {
@@ -91,23 +327,59 @@ void GrowPolyLine::draw( GlowTransform *t, int highlight, int hot, void *node,
       y1 = trf.y( t, ((GlowPoint *)a_points[i])->x, ((GlowPoint *)a_points[i])->y);
     }
 
-    point_p->x = int( x1 * ctx->zoom_factor_x) - ctx->offset_x;
-    point_p->y = int( y1 * ctx->zoom_factor_y) - ctx->offset_y;
+    point_p->x = int( x1 * ctx->zoom_factor_x + 0.5) - ctx->offset_x;
+    point_p->y = int( y1 * ctx->zoom_factor_y + 0.5) - ctx->offset_y;
     point_p++;
   }
   if ( fill)
   {
     if ( fill_eq_border)
-      drawtype = ((GrowCtx *)ctx)->get_drawtype( draw_type, glow_eDrawType_Color59,
+      drawtype = ((GrowCtx *)ctx)->get_drawtype( draw_type, glow_eDrawType_LineHighlight,
 		 highlight, (GrowNode *)colornode, 0);
     else      
-      drawtype = ((GrowCtx *)ctx)->get_drawtype( fill_drawtype, glow_eDrawType_Color57,
+      drawtype = ((GrowCtx *)ctx)->get_drawtype( fill_drawtype, glow_eDrawType_FillHighlight,
 		 highlight, (GrowNode *)colornode, 1);
+    if ( fill_eq_light && node && ((GrowNode *)node)->shadow)
+      drawtype = ((GrowCtx *)ctx)->shift_drawtype( drawtype, -shadow_contrast, 
+						   (GrowNode *)colornode);
+    else if ( fill_eq_shadow && node && ((GrowNode *)node)->shadow)
+      drawtype = ((GrowCtx *)ctx)->shift_drawtype( drawtype, shadow_contrast, 
+						   (GrowNode *)colornode);
     glow_draw_fill_polyline( ctx, points, a_points.a_size, drawtype, 0);
   }
-  if ( border || !fill)
-  {
-    drawtype = ((GrowCtx *)ctx)->get_drawtype( draw_type, glow_eDrawType_Color59,
+
+  int display_shadow = ((node && ((GrowNode *)node)->shadow) || shadow) && !disable_shadow &&
+    !fill_eq_light && !fill_eq_shadow;
+
+  if ( display_shadow && shadow_width != 0) {
+    glow_sShadowInfo *sp;
+    int p_num;
+
+    double trf_scale = trf.vertical_scale( t);
+    int ish = int( shadow_width / 100 * trf_scale * 
+      min((x_right - x_left)*ctx->zoom_factor_x, (y_high - y_low)*ctx->zoom_factor_y) + 0.5);
+
+    if ( ish >= 1) {
+      calculate_shadow( &sp, &p_num, ish, highlight, colornode, 0);
+
+      XPoint p[4];
+      for ( i = 0; i < p_num - 1; i++) {
+	p[0].x = points[i].x;
+	p[0].y = points[i].y;
+	p[1].x = sp[i].x;
+	p[1].y = sp[i].y;
+	p[3].x = points[i+1].x;
+	p[3].y = points[i+1].y;
+	p[2].x = sp[i+1].x;
+	p[2].y = sp[i+1].y;
+
+	glow_draw_fill_polyline( ctx, p, 4, sp[i].drawtype, 0);
+      }
+      free( sp);
+    }
+  }
+  if ( border || !(fill || (display_shadow && shadow_width != 0))) {
+    drawtype = ((GrowCtx *)ctx)->get_drawtype( draw_type, glow_eDrawType_LineHighlight,
 		 highlight, (GrowNode *)colornode, 0);
     glow_draw_polyline( ctx, points, a_points.a_size, drawtype, idx, 0);
   }
@@ -141,20 +413,23 @@ void GrowPolyLine::erase( GlowTransform *t, int hot, void *node)
       y1 = trf.y( t, ((GlowPoint *)a_points[i])->x, ((GlowPoint *)a_points[i])->y);
     }
 
-    point_p->x = int( x1 * ctx->zoom_factor_x) - ctx->offset_x;
-    point_p->y = int( y1 * ctx->zoom_factor_y) - ctx->offset_y;
+    point_p->x = int( x1 * ctx->zoom_factor_x + 0.5) - ctx->offset_x;
+    point_p->y = int( y1 * ctx->zoom_factor_y + 0.5) - ctx->offset_y;
     point_p++;
   }
+  int display_shadow = ((node && ((GrowNode *)node)->shadow) || shadow) && !disable_shadow &&
+    !fill_eq_light && !fill_eq_shadow;
+
   ctx->set_draw_buffer_only();
-  if ( border || !fill)
+  if ( border || !(fill || (display_shadow && shadow_width != 0)))
     glow_draw_polyline_erase( ctx, points, a_points.a_size, idx);
-  if ( fill)
+  if ( fill || (display_shadow && shadow_width != 0))
     glow_draw_fill_polyline( ctx, points, a_points.a_size, 
 		glow_eDrawType_LineErase, 0);
   ctx->reset_draw_buffer_only();
 }
 
-void GrowPolyLine::move( int delta_x, int delta_y, int grid)
+void GrowPolyLine::move( double delta_x, double delta_y, int grid)
 {
   ctx->set_defered_redraw();
   ((GrowCtx *)ctx)->draw( x_left * ctx->zoom_factor_x - ctx->offset_x - 2*DRAW_MP,
@@ -168,8 +443,8 @@ void GrowPolyLine::move( int delta_x, int delta_y, int grid)
     /* Move to closest grid point */
     erase();
     nav_erase();
-    ctx->find_grid( x_left + double( delta_x) / ctx->zoom_factor_x,
-	y_low + double( delta_y) / ctx->zoom_factor_y, &x_grid, &y_grid);
+    ctx->find_grid( x_left + delta_x / ctx->zoom_factor_x,
+	y_low + delta_y / ctx->zoom_factor_y, &x_grid, &y_grid);
     trf.move( x_grid - x_left, y_grid - y_low);
     get_node_borders();
   }
@@ -179,8 +454,8 @@ void GrowPolyLine::move( int delta_x, int delta_y, int grid)
 
     erase();
     nav_erase();
-    dx = double( delta_x) / ctx->zoom_factor_x;
-    dy = double( delta_y) / ctx->zoom_factor_y;
+    dx = delta_x / ctx->zoom_factor_x;
+    dy = delta_y / ctx->zoom_factor_y;
     trf.move( dx, dy);
     x_right += dx;
     x_left += dx;
@@ -492,6 +767,11 @@ void GrowPolyLine::save( ofstream& fp, glow_eSaveMode mode)
 		<< int(original_fill_drawtype) << endl;
   fp << int(glow_eSave_GrowPolyLine_fill_drawtype) << FSPACE << int(fill_drawtype) << endl;
   fp << int(glow_eSave_GrowPolyLine_border) << FSPACE << border << endl;
+  fp << int(glow_eSave_GrowPolyLine_shadow) << FSPACE << shadow << endl;
+  fp << int(glow_eSave_GrowPolyLine_shadow_width) << FSPACE << shadow_width << endl;
+  fp << int(glow_eSave_GrowPolyLine_shadow_contrast) << FSPACE << shadow_contrast << endl;
+  fp << int(glow_eSave_GrowPolyLine_relief) << FSPACE << int(relief) << endl;
+  fp << int(glow_eSave_GrowPolyLine_disable_shadow) << FSPACE << disable_shadow << endl;
   fp << int(glow_eSave_GrowPolyLine_dynamicsize) << FSPACE << dynamicsize << endl;
   fp << int(glow_eSave_GrowPolyLine_dynamic) << endl;
   if( dynamic)
@@ -508,6 +788,8 @@ void GrowPolyLine::save( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_GrowPolyLine_trf) << endl;
   trf.save( fp, mode);
   fp << int(glow_eSave_GrowPolyLine_fill_eq_border) << FSPACE << fill_eq_border << endl;
+  fp << int(glow_eSave_GrowPolyLine_fill_eq_light) << FSPACE << fill_eq_light << endl;
+  fp << int(glow_eSave_GrowPolyLine_fill_eq_shadow) << FSPACE << fill_eq_shadow << endl;
   fp << int(glow_eSave_End) << endl;
 }
 
@@ -540,6 +822,11 @@ void GrowPolyLine::open( ifstream& fp)
       case glow_eSave_GrowPolyLine_fill_drawtype: fp >> 
 		tmp; fill_drawtype = (glow_eDrawType)tmp; break;
       case glow_eSave_GrowPolyLine_border: fp >> border; break;
+      case glow_eSave_GrowPolyLine_shadow_width: fp >> shadow_width; break;
+      case glow_eSave_GrowPolyLine_shadow_contrast: fp >> shadow_contrast; break;
+      case glow_eSave_GrowPolyLine_shadow: fp >> shadow; break;
+      case glow_eSave_GrowPolyLine_relief: fp >> tmp; relief = (glow_eRelief)tmp; break;
+      case glow_eSave_GrowPolyLine_disable_shadow: fp >> disable_shadow; break;
       case glow_eSave_GrowPolyLine_dynamicsize: fp >> dynamicsize; break;
       case glow_eSave_GrowPolyLine_dynamic:
         fp.getline( dummy, sizeof(dummy));
@@ -570,6 +857,8 @@ void GrowPolyLine::open( ifstream& fp)
 
       case glow_eSave_GrowPolyLine_trf: trf.open( fp); break;
       case glow_eSave_GrowPolyLine_fill_eq_border: fp >> fill_eq_border; break;
+      case glow_eSave_GrowPolyLine_fill_eq_light: fp >> fill_eq_light; break;
+      case glow_eSave_GrowPolyLine_fill_eq_shadow: fp >> fill_eq_shadow; break;
       case glow_eSave_End: end_found = 1; break;
       default:
         cout << "GrowPolyLine:open syntax error" << endl;
@@ -1045,19 +1334,57 @@ void GrowPolyLine::nav_draw(  GlowTransform *t, int highlight, void *node, void 
       y1 = trf.y( t, ((GlowPoint *)a_points[i])->x, ((GlowPoint *)a_points[i])->y);
     }
 
-    point_p->x = int( x1 * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    point_p->y = int( y1 * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
+    point_p->x = int( x1 * ctx->nav_zoom_factor_x + 0.5) - ctx->nav_offset_x;
+    point_p->y = int( y1 * ctx->nav_zoom_factor_y + 0.5) - ctx->nav_offset_y;
     point_p++;
   }
   if ( fill)
   {
-    drawtype = ((GrowCtx *)ctx)->get_drawtype( fill_drawtype, glow_eDrawType_Color57,
-		 0, (GrowNode *)colornode, 1);
+    if ( fill_eq_border)
+      drawtype = ((GrowCtx *)ctx)->get_drawtype( draw_type, glow_eDrawType_LineHighlight,
+						 0, (GrowNode *)colornode, 0);
+    else      
+      drawtype = ((GrowCtx *)ctx)->get_drawtype( fill_drawtype, glow_eDrawType_FillHighlight,
+						 0, (GrowNode *)colornode, 1);
+    if ( fill_eq_light && node && ((GrowNode *)node)->shadow)
+      drawtype = ((GrowCtx *)ctx)->shift_drawtype( drawtype, -shadow_contrast, 
+						   (GrowNode *)colornode);
+    else if ( fill_eq_shadow && node && ((GrowNode *)node)->shadow)
+      drawtype = ((GrowCtx *)ctx)->shift_drawtype( drawtype, shadow_contrast, 
+						   (GrowNode *)colornode);
     glow_draw_nav_fill_polyline( ctx, points, a_points.a_size, drawtype);
   }
-  if ( border || !fill)
-  {
-    drawtype = ((GrowCtx *)ctx)->get_drawtype( draw_type, glow_eDrawType_Color59,
+  int display_shadow = ((node && ((GrowNode *)node)->shadow) || shadow) && !disable_shadow &&
+    !fill_eq_light && !fill_eq_shadow;
+
+  if ( display_shadow && shadow_width != 0) {
+    glow_sShadowInfo *sp;
+    int p_num;
+    double trf_scale = trf.vertical_scale( t);
+    int ish = int( shadow_width / 100 * trf_scale *
+	  min((x_right - x_left)*ctx->nav_zoom_factor_x, (y_high - y_low)*ctx->nav_zoom_factor_y) + 0.5);
+
+    if ( ish >= 1) {
+      calculate_shadow( &sp, &p_num, ish, 0, colornode, 0);
+
+      XPoint p[4];
+      for ( i = 0; i < p_num - 1; i++) {
+	p[0].x = points[i].x;
+	p[0].y = points[i].y;
+	p[1].x = sp[i].x;
+	p[1].y = sp[i].y;
+	p[3].x = points[i+1].x;
+	p[3].y = points[i+1].y;
+	p[2].x = sp[i+1].x;
+	p[2].y = sp[i+1].y;
+
+	glow_draw_nav_fill_polyline( ctx, p, 4, sp[i].drawtype);
+      }
+      free( sp);
+    }
+  }
+  if ( border || !(fill || (display_shadow && shadow_width != 0))) {
+    drawtype = ((GrowCtx *)ctx)->get_drawtype( draw_type, glow_eDrawType_LineHighlight,
 		 0, (GrowNode *)colornode, 0);
     glow_draw_nav_polyline( ctx, points, a_points.a_size, drawtype, idx, 0);
   }
@@ -1090,13 +1417,16 @@ void GrowPolyLine::nav_erase(  GlowTransform *t, void *node)
       y1 = trf.y( t, ((GlowPoint *)a_points[i])->x, ((GlowPoint *)a_points[i])->y);
     }
 
-    point_p->x = int( x1 * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    point_p->y = int( y1 * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
+    point_p->x = int( x1 * ctx->nav_zoom_factor_x + 0.5) - ctx->nav_offset_x;
+    point_p->y = int( y1 * ctx->nav_zoom_factor_y + 0.5) - ctx->nav_offset_y;
     point_p++;
   }
-  if ( border || !fill)
+  int display_shadow = ((node && ((GrowNode *)node)->shadow) || shadow) && !disable_shadow &&
+    !fill_eq_light && !fill_eq_border;
+
+  if ( border || !(fill || (display_shadow && shadow_width != 0)))
     glow_draw_nav_polyline_erase( ctx, points, a_points.a_size, idx);
-  if ( fill)
+  if ( fill || (display_shadow && shadow_width != 0))
     glow_draw_nav_fill_polyline( ctx, points, a_points.a_size, 
 	glow_eDrawType_LineErase);
 }
@@ -1204,6 +1534,7 @@ void GrowPolyLine::export_javabean( GlowTransform *t, void *node,
   idx = max( 0, idx);
   idx = min( idx, DRAW_TYPE_SIZE-1);
   double x1, y1;
+  int jshadow = !disable_shadow && shadow_width != 0 && !fill_eq_light && !fill_eq_shadow;
 
   glow_sPoint *p = (glow_sPoint *)malloc(a_points.a_size * sizeof(glow_sPoint));
 
@@ -1220,17 +1551,61 @@ void GrowPolyLine::export_javabean( GlowTransform *t, void *node,
       y1 = trf.y( t, ((GlowPoint *)a_points[i])->x, ((GlowPoint *)a_points[i])->y);
     }
 
-    p[i].x = x1;
-    p[i].y = y1;
+    p[i].x = x1 * ctx->zoom_factor_x - ctx->offset_x;
+    p[i].y = y1 * ctx->zoom_factor_y - ctx->offset_y;
+    if ( jshadow) {
+      points[i].x = int( p[i].x + 0.5);
+      points[i].y = int( p[i].y + 0.5);
+    }
   }
-  ((GrowCtx *)ctx)->export_jbean->polyline( p, a_points.a_size, fill, border || !fill,
-	fill_drawtype, draw_type, fill_eq_border, idx, pass, shape_cnt, 
-	node_cnt, fp);
-  (*shape_cnt)++;
+
+  int p_num;
+  glow_sShadowInfo *sp = 0;
+  if ( jshadow) {
+    double trf_scale = trf.vertical_scale( t);
+    int ish = int( shadow_width / 100 * trf_scale *
+	  min((x_right - x_left)*ctx->zoom_factor_x, (y_high - y_low)*ctx->zoom_factor_y) + 0.5);
+
+    calculate_shadow( &sp, &p_num, ish, 0, 0, 1);
+  }
+  int jborder =  border || !(fill || (!disable_shadow && shadow_width != 0));
+
+  ((GrowCtx *)ctx)->export_jbean->polyline( p, a_points.a_size, fill, jborder,
+		 fill_drawtype, draw_type, fill_eq_border, 
+		 fill_eq_light, fill_eq_shadow, 
+		 idx, jshadow, shadow, shadow_contrast, sp, p_num, pass, shape_cnt, node_cnt, fp);
   free( (char *) p);
+  free( sp);
 }
 
+void GrowPolyLine::flip( double x0, double y0, glow_eFlipDirection dir)
+{
+  switch ( dir) {
+  case glow_eFlipDirection_Horizontal:
+    trf.store();
+    set_scale( 1, -1, x0, y0, glow_eScaleType_FixPoint);
+    break;
+  case glow_eFlipDirection_Vertical:
+    trf.store();
+    set_scale( -1, 1, x0, y0, glow_eScaleType_FixPoint);
+    break;
+  }
+}
 
+void GrowPolyLine::convert( glow_eConvert version) 
+{
+  switch ( version) {
+  case glow_eConvert_V34: {
+    // Conversion of colors
+    draw_type = GlowColor::convert( version, draw_type);
+    original_border_drawtype = GlowColor::convert( version, original_border_drawtype);
+    original_fill_drawtype = GlowColor::convert( version, original_fill_drawtype);
+    fill_drawtype = GlowColor::convert( version, fill_drawtype);
+
+    break;
+  }
+  }  
+}
 
 
 

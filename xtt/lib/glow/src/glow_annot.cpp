@@ -6,6 +6,7 @@
 
 #include "glow_annot.h"
 #include "glow_node.h"
+#include "glow_grownode.h"
 #include "glow_draw.h"
 #include "glow_browctx.h"
 
@@ -97,6 +98,7 @@ void GlowAnnot::save( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_Annot) << endl;
   fp << int(glow_eSave_Annot_number) << FSPACE << number << endl;
   fp << int(glow_eSave_Annot_draw_type) << FSPACE << int(draw_type) << endl;
+  fp << int(glow_eSave_Annot_color_drawtype) << FSPACE << int(color_drawtype) << endl;
   fp << int(glow_eSave_Annot_text_size) << FSPACE << text_size << endl;
   fp << int(glow_eSave_Annot_display_level) << FSPACE << int(display_level) << endl;
   fp << int(glow_eSave_Annot_p) << endl;
@@ -119,6 +121,7 @@ void GlowAnnot::open( ifstream& fp)
       case glow_eSave_Annot: break;
       case glow_eSave_Annot_number: fp >> number; break;
       case glow_eSave_Annot_draw_type: fp >> tmp; draw_type = (glow_eDrawType)tmp; break;
+      case glow_eSave_Annot_color_drawtype: fp >> tmp; color_drawtype = (glow_eDrawType)tmp; break;
       case glow_eSave_Annot_text_size: fp >> text_size; break;
       case glow_eSave_Annot_display_level: fp >> tmp; display_level = (glow_mDisplayLevel)tmp; break;
       case glow_eSave_Annot_p: p.open( fp); break;
@@ -156,16 +159,25 @@ void GlowAnnot::draw( void *pos, int highlight, int hot, void *node)
       }
       else
         x = p.z_x + ((GlowPoint *)pos)->z_x - ctx->offset_x;
+
       glow_draw_text( ctx, x, 
 	p.z_y + ((GlowPoint *)pos)->z_y - ctx->offset_y, 
 	((GlowNode *) node)->annotv[number], 
-	strlen(((GlowNode *) node)->annotv[number]), draw_type, idx, 
+	strlen(((GlowNode *) node)->annotv[number]), draw_type, glow_eDrawType_Line, idx, 
 	highlight, 0);
       if ( ((GlowNode *) node)->annotv_inputmode[number])
+	glow_draw_text_cursor( ctx, x, 
+			p.z_y + ((GlowPoint *)pos)->z_y - ctx->offset_y,
+			((GlowNode *) node)->annotv[number],
+			strlen(((GlowNode *) node)->annotv[number]),
+			draw_type, glow_eDrawType_Line, idx, highlight, 
+			((GrowNode *)node)->input_position);
+#if 0
         glow_draw_move_input( ctx, 
 	  ((GlowNode *) node)->annotv_input[number],
 	  x, p.z_y + ((GlowPoint *)pos)->z_y - ctx->offset_y,
 	  glow_ePosition_Absolute);
+#endif
       break;
     case glow_eAnnotType_MultiLine:
     {
@@ -183,7 +195,7 @@ void GlowAnnot::draw( void *pos, int highlight, int hot, void *node)
 	{
 	  if ( len)
             glow_draw_text( ctx, z_x, z_y + line_cnt * z_height, line, 
-	  	len, draw_type, idx, highlight, 0);
+	  	len, draw_type, glow_eDrawType_Line, idx, highlight, 0);
 	  len = 0;
 	  line = s+1;
 	  line_cnt++;
@@ -193,7 +205,7 @@ void GlowAnnot::draw( void *pos, int highlight, int hot, void *node)
       }
       if ( len)
         glow_draw_text( ctx, z_x, z_y + line_cnt * z_height, line, 
-	  	len, draw_type, idx, highlight, 0);
+	  	len, draw_type, glow_eDrawType_Line, idx, highlight, 0);
       break;
     }
   }
@@ -485,7 +497,7 @@ void GlowAnnot::configure_annotations( void *pos, void *node)
 
 void GlowAnnot::open_annotation_input( void *pos, void *node)
 {
-
+#if 0
   if ( !((GlowNode *) node)->annotv[number])
     return;
 
@@ -517,34 +529,40 @@ void GlowAnnot::open_annotation_input( void *pos, void *node)
         // Not yet implemented...
       break;
   }
+#endif
 }
 
 void GlowAnnot::close_annotation_input( void *node)
 {
-
+#if 0
   if ( !((GlowNode *) node)->annotv_inputmode[number])
     return;
 
   glow_draw_close_input( ctx, ((GlowNode *) node)->annotv_input[number]);
+#endif
 }
 
 int GlowAnnot::get_annotation_input( void *node, char **text)
 {
-
+#if 0
   if ( !((GlowNode *) node)->annotv_inputmode[number])
     return 0;
 
   return glow_draw_get_input( ctx, ((GlowNode *) node)->annotv_input[number], 
 	text);
+#endif
+  return 0;
 }
 
 void GlowAnnot::move_widgets( void *node, int x, int y)
 {
+#if 0
   if ( !((GlowNode *) node)->annotv_inputmode[number])
     return;
 
   glow_draw_move_input( ctx,  ((GlowNode *) node)->annotv_input[number], 
 	x, y, glow_ePosition_Relative);
+#endif
 }
 
 ostream& operator<< ( ostream& o, const GlowAnnot a)

@@ -45,6 +45,7 @@ void GlowText::save( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_Text) << endl;
   fp << int(glow_eSave_Text_text_size) << FSPACE << text_size << endl;
   fp << int(glow_eSave_Text_draw_type) << FSPACE << int(draw_type) << endl;
+  fp << int(glow_eSave_Text_color_drawtype) << FSPACE << int(color_drawtype) << endl;
   fp << int(glow_eSave_Text_text) << FSPACE << text << endl;
   fp << int(glow_eSave_Text_p) << endl;
   p.save( fp, mode);
@@ -65,6 +66,7 @@ void GlowText::open( ifstream& fp)
       case glow_eSave_Text: break;
       case glow_eSave_Text_text_size: fp >> text_size; break;
       case glow_eSave_Text_draw_type: fp >> tmp; draw_type = (glow_eDrawType)tmp; break;
+      case glow_eSave_Text_color_drawtype: fp >> tmp; color_drawtype = (glow_eDrawType)tmp; break;
       case glow_eSave_Text_text: 
         fp.get();
         fp.getline( text, sizeof(text));
@@ -88,7 +90,7 @@ void GlowText::draw( void *pos, int highlight, int hot, void *node)
   idx = min( idx, DRAW_TYPE_SIZE-1);
   glow_draw_text( ctx, p.z_x + ((GlowPoint *)pos)->z_x - ctx->offset_x, 
 	p.z_y + ((GlowPoint *)pos)->z_y - ctx->offset_y, text, strlen(text),
-	draw_type, idx, highlight, 0);
+	draw_type, color_drawtype, idx, highlight, 0);
 }
 
 void GlowText::erase( void *pos, int hot, void *node)

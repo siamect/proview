@@ -37,16 +37,18 @@ void colpal_SetCtxUserData( colpal_tCtx ctx, void *user_data)
 }
 
 void colpal_GetCurrentColors( colpal_tCtx ctx, glow_eDrawType *fill_color, 
-	glow_eDrawType *border_color)
+	glow_eDrawType *border_color, glow_eDrawType *text_color)
 {
   *fill_color = ctx->current_fill;
   *border_color = ctx->current_border;
+  *text_color = ctx->current_text;
 }
 
 void colpal_SetCurrentColors( colpal_tCtx ctx, glow_eDrawType fill_color, 
-	glow_eDrawType border_color)
+	glow_eDrawType border_color, glow_eDrawType text_color)
 {
   ctx->current_fill = fill_color;
   ctx->current_border = border_color;
+  ctx->current_text = text_color;
 }
 

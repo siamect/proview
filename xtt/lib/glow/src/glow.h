@@ -5,6 +5,12 @@
 extern "C" {
 #endif
 
+/*! \file glow.h
+  \brief Common includefile for glow.
+
+  glow.h contains common declarations of enum an structs
+*/
+
 
 #define ODD(a)	(((int)(a) & 1) != 0)
 #define EVEN(a)	(((int)(a) & 1) == 0)
@@ -14,6 +20,8 @@ extern "C" {
 #define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
 #endif
 
+
+#define GLOW_VERSION 4001
 #define DRAW_MP 6
 
 #define DRAW_TYPE_SIZE 9
@@ -23,43 +31,56 @@ extern "C" {
 
 #define FSPACE " "
 
-typedef enum {
-	glow_eType_Boolean,
-	glow_eType_Int,
-	glow_eType_Double,
-	glow_eType_String,
-	glow_eType_TraceType,
-	glow_eType_Direction,
-	glow_eType_Color,
-	glow_eType_Tone,
-	glow_eType_ToneOrColor,
-	glow_eType_TraceColor,
-	glow_eType_Access,
-	glow_eType_Cycle,
-	glow_eType_MB3Action
-	} glow_eType;
+/** \addtogroup GlowEnum */
+/*@{*/
 
+//!  Types of glow variables, used when displaying varables in attribute editors.
+typedef enum {
+  glow_eType_Boolean,  		//!< Type is a boolean
+  glow_eType_Int,  		//!< Type is an integer
+  glow_eType_Double,  		//!< Type is a double
+  glow_eType_String,  		//!< Type is a string
+  glow_eType_DynType, 		//!< Type of dynamics
+  glow_eType_ActionType,  	//!< Type of action
+  glow_eType_Direction,  	//!< Type is glow_eDirection
+  glow_eType_Color,  		//!< Type is a drawtype (glow_eDrawType)
+  glow_eType_Tone,  		//!< Type is a colortone ( glow_eDrawTone)
+  glow_eType_ToneOrColor,  	//!< Type is a tone or, if the value is greater then glow_eDrawTone__, a drawtype
+  glow_eType_TraceColor,
+  glow_eType_Access,  		//!< Type is glow_mAccess
+  glow_eType_Cycle,  		//!< Type is glow_eCycle
+  glow_eType_MB3Action,  	//!< Type is glow_eMB3Action
+  glow_eType_Relief,  		//!< Type is glow_eRelief
+  glow_eType_InputFocusMark  	//!< Type is glow_eInputFocusMark
+} glow_eType;
+
+//! Type of Ctx class
+/*! The type is returned bye type() function for the Ctx. */
 typedef enum {
 	glow_eCtxType_Glow,
 	glow_eCtxType_Brow,
-	glow_eCtxType_Grow,
+	glow_eCtxType_Grow,	//!< Type is grow context
 	glow_eCtxType_ColPal,
-	glow_eCtxType_Curve
+	glow_eCtxType_Curve	//!< Type is a curve context
 	} glow_eCtxType;
 
+//! Policy when selecting an area with the select rectangle
 typedef enum {
-	glow_eSelectPolicy_Surround,
-	glow_eSelectPolicy_Partial,
-	glow_eSelectPolicy_Both
+	glow_eSelectPolicy_Surround,    //!< All parts of an object has to be inside the select rectangle
+	glow_eSelectPolicy_Partial,	//!< If only a part of the object is inside the select rectangle, it will be selected
+	glow_eSelectPolicy_Both		//!< the policy will be Partial when the select rectangle is dragged from right to left, and Surround when dragged from left to right
+
 	} glow_eSelectPolicy;
 
+//! Action when MB3 is clicked
 typedef enum {
-	glow_eMB3Action_No,
-	glow_eMB3Action_Close,
-	glow_eMB3Action_PopupMenu,
-	glow_eMB3Action_Both
-	} glow_eMB3Action;
+  glow_eMB3Action_No,  		//!< No action on MB3 click  
+  glow_eMB3Action_Close,  	//!< Close the window
+  glow_eMB3Action_PopupMenu, 	//!< Display a popup menu, when this is defined for the object
+  glow_eMB3Action_Both 		//!< Close the window, if the click doesn't hit an object, otherwise it will display the popmenu for the object.
+} glow_eMB3Action;
 
+//! Critera used to decide when an object is hot
 typedef enum {
 	glow_eHotMode_Default,
 	glow_eHotMode_Disabled,
@@ -67,6 +88,26 @@ typedef enum {
 	glow_eHotMode_TraceAction
 	} glow_eHotMode;
 
+//! Type of cursor when an object is hot
+typedef enum {
+  glow_mHotType_CursorCrossHair 	= 1 << 0,	//!< Hot cursor is a crosshair
+  glow_mHotType_CursorHand 		= 1 << 1  	//!< Hot cursor is a hand
+} glow_mHotType;
+
+//! Type of line
+typedef enum {
+  glow_eLineType_Solid,  	//!< Solid line
+  glow_eLineType_Dashed1,  	//!< Dashed line, short dashes
+  glow_eLineType_Dashed2,  	//!< Dashed line, medium dashes
+  glow_eLineType_Dashed3,  	//!< Dashed line, long dashes
+  glow_eLineType_Dotted,  	//!< Dotted line
+  glow_eLineType_DotDashed1,  	//!< DotDashed line, short dashes
+  glow_eLineType_DotDashed2  	//!< DotDashed line, long dashes
+} glow_eLineType;
+
+
+//! Type of object
+/*! The class an object is an instance of. Returned by the type() function. */
 typedef enum {
 	glow_eObjectType_NoObject,
 	glow_eObjectType_Node,
@@ -101,58 +142,79 @@ typedef enum {
 	glow_eObjectType_GrowImage,
 	glow_eObjectType_NodeGroup,
 	glow_eObjectType_GrowGroup,
-        glow_eObjectType_GrowAxis
+        glow_eObjectType_GrowAxis,
+        glow_eObjectType_GrowRectRounded,
+        glow_eObjectType_GrowConGlue,
+        glow_eObjectType_GrowMenu
 	} glow_eObjectType;
 
+//! Direction of a connection points, sliders etc
+/*! The Up and Down direction might cause some confusion, because Up is increasing y-coordinate,
+  and Down is decreasing, which is the opposite directions on the screen 
+*/
 typedef enum {
-	glow_eDirection_Center,
-	glow_eDirection_Right,
-	glow_eDirection_Left,
-	glow_eDirection_Up,
-	glow_eDirection_Down
-	} glow_eDirection;
+  glow_eDirection_Center,  	//!< No specific direction
+  glow_eDirection_Right,  	//!< Direction right
+  glow_eDirection_Left,  	//!< Direction left
+  glow_eDirection_Up,  		//!< Direction Up
+  glow_eDirection_Down  	//!< Direction down
+} glow_eDirection;
 
+//! Type of mirror
 typedef enum {
-	glow_eAlignDirection_CenterCenter,
-	glow_eAlignDirection_Right,
-	glow_eAlignDirection_Left,
-	glow_eAlignDirection_Up,
-	glow_eAlignDirection_Down,
-	glow_eAlignDirection_CenterVert,
-	glow_eAlignDirection_CenterHoriz
-	} glow_eAlignDirection;
+  glow_eFlipDirection_Vertical,   //!< Mirroring through a vertical line
+  glow_eFlipDirection_Horizontal  //!< Mirroring through a horizontal line
+} glow_eFlipDirection;
 
+//! Different kind of alignment functions
 typedef enum {
-	glow_eNodeGroup_Common,
-	glow_eNodeGroup_Document,
-	glow_eNodeGroup_Trace
-	} glow_eNodeGroup;
+  glow_eAlignDirection_CenterCenter,
+  glow_eAlignDirection_Right,  	//!< Align the right side of the objects vertically
+  glow_eAlignDirection_Left, 	//!< Align the left side of the objects vertically
+  glow_eAlignDirection_Up, 	//!< Align the upper side of the objects horizontally
+  glow_eAlignDirection_Down,  	//!< Align the lower side of the object horizontally
+  glow_eAlignDirection_CenterVert,  //!< Align the center position of the object vertically
+  glow_eAlignDirection_CenterHoriz  //!< Align the center position of the objects horizontally
+} glow_eAlignDirection;
 
+//! Groups a node can belong to, only Common is used in glow
 typedef enum {
-	glow_eConGroup_Common,
-	glow_eConGroup_Trace
-	} glow_eConGroup;
+  glow_eNodeGroup_Common,
+  glow_eNodeGroup_Document,
+  glow_eNodeGroup_Trace
+} glow_eNodeGroup;
 
+//! Groups a connection can belong to, only Common is used in glow
 typedef enum {
-	glow_eMoveRestriction_No,
-	glow_eMoveRestriction_Disable,
-	glow_eMoveRestriction_Vertical,
-	glow_eMoveRestriction_Horizontal,
-	glow_eMoveRestriction_VerticalSlider,
-	glow_eMoveRestriction_HorizontalSlider
-	} glow_eMoveRestriction;
-
+  glow_eConGroup_Common,
+  glow_eConGroup_Trace
+} glow_eConGroup;
+  
+//! Restrictions in movement when moving objects, creating lines etc
 typedef enum {
-	glow_eAnnotType_OneLine,
-	glow_eAnnotType_MultiLine
-	} glow_eAnnotType;
+  glow_eMoveRestriction_No,  		//!< No restrictions
+  glow_eMoveRestriction_Disable,  	//!< Movement is disabled
+  glow_eMoveRestriction_Vertical, 	//!< Only vertical movement
+  glow_eMoveRestriction_Horizontal,  	//!< Only horizontal movement
+  glow_eMoveRestriction_VerticalSlider, //!< Restrictions used for a vertical slider
+  glow_eMoveRestriction_HorizontalSlider //!< Restrictions user for a horizontal slider
+} glow_eMoveRestriction;
 
+//! Type of annotation
 typedef enum {
-	glow_eCycle_Inherit,
-	glow_eCycle_Slow,
-	glow_eCycle_Fast
-	} glow_eCycle;
+  glow_eAnnotType_OneLine,   	//!< Annotation with a single line
+  glow_eAnnotType_MultiLine  	//!< Annotation with several lines
+} glow_eAnnotType;
 
+//! Cycle used, for update scan
+typedef enum {
+  glow_eCycle_Inherit,  	//!< Inherit the cycle from the subgraph
+  glow_eCycle_Slow,  		//!< Slow cycle
+  glow_eCycle_Fast  		//!< Fast cycle
+
+} glow_eCycle;
+
+//! Pass for java export
 typedef enum {
 	glow_eExportPass_Init,
 	glow_eExportPass_Shape,
@@ -162,23 +224,25 @@ typedef enum {
 	glow_eExportPass_End
 	} glow_eExportPass;
 
+//! Connection types
 typedef enum {
-	glow_eConType_Straight,
-	glow_eConType_Fixed,
-	glow_eConType_AllFixed,
-	glow_eConType_Routed,
-	glow_eConType_StepDiv,
-	glow_eConType_StepConv,
-	glow_eConType_TransDiv,
-	glow_eConType_TransConv,
-	glow_eConType_StraightOneArrow,
-	glow_eConType_Reference
-	} glow_eConType;
+  glow_eConType_Straight,  	//!< A straigh line
+  glow_eConType_Fixed,  	//!< A line with fix coordinates
+  glow_eConType_AllFixed,
+  glow_eConType_Routed,  	//!< A routed connection. The breakpoints are calculated dependent on the position other objects.
+  glow_eConType_StepDiv,   	//!< A Grafcet step divergence connection
+  glow_eConType_StepConv,  	//!< A Grafcet step convergence connection
+  glow_eConType_TransDiv,  	//!< A Grafcet trans divergence connection
+  glow_eConType_TransConv,  	//!< A Grafcet trans convergence connection
+  glow_eConType_StraightOneArrow, //!< A stright line with one arrow
+  glow_eConType_Reference  	//!< A reference connection
+} glow_eConType;
 
+//! Type of corners in a connection
 typedef enum {
-	glow_eCorner_Rounded,
-	glow_eCorner_Right
-	} glow_eCorner;
+  glow_eCorner_Rounded,  	//!< Rounded corners
+  glow_eCorner_Right  		//!< Right corners
+} glow_eCorner;
 
 typedef enum {
 	glow_eDynamicType_Object,
@@ -186,6 +250,15 @@ typedef enum {
 	glow_eDynamicType_SubGraphEnd
 	} glow_eDynamicType;
 
+//! Type of shadow drawn for an object
+typedef enum {
+  glow_eRelief_Up,   //!< The shadow is lighter on the left-upper side, and darker on the right-lower side  
+  glow_eRelief_Down  //!< The shadow is darker on the left-upper side, and lighter on the left-lower side
+} glow_eRelief;
+
+//! Color index for a color
+/*! The drawtype is index in an array that contains the gc for colors in the color palette. 
+ The 300 first are the colors in the color palette, the seven last are used for erase, and texts. */
 typedef enum {
 	glow_eDrawType_Line,
 	glow_eDrawType_LineRed,
@@ -287,23 +360,233 @@ typedef enum {
 	glow_eDrawType_Color98,
 	glow_eDrawType_Color99,
 	glow_eDrawType_Color100,
-	glow_eDrawType_LineErase,
-	glow_eDrawType_LineDashed,
-	glow_eDrawType_LineDashedRed,
-	glow_eDrawType_TextHelvetica,
-	glow_eDrawType_TextHelveticaBold,
-	glow_eDrawType_TextHelveticaErase,
-	glow_eDrawType_TextHelveticaEraseBold,
-	glow_eDrawType__,
+	glow_eDrawType_Color101,
+	glow_eDrawType_Color102,
+	glow_eDrawType_Color103,
+	glow_eDrawType_Color104,
+	glow_eDrawType_Color105,
+	glow_eDrawType_Color106,
+	glow_eDrawType_Color107,
+	glow_eDrawType_Color108,
+	glow_eDrawType_Color109,
+	glow_eDrawType_Color110,
+	glow_eDrawType_Color111,
+	glow_eDrawType_Color112,
+	glow_eDrawType_Color113,
+	glow_eDrawType_Color114,
+	glow_eDrawType_Color115,
+	glow_eDrawType_Color116,
+	glow_eDrawType_Color117,
+	glow_eDrawType_Color118,
+	glow_eDrawType_Color119,
+	glow_eDrawType_Color120,
+	glow_eDrawType_Color121,
+	glow_eDrawType_Color122,
+	glow_eDrawType_Color123,
+	glow_eDrawType_Color124,
+	glow_eDrawType_Color125,
+	glow_eDrawType_Color126,
+	glow_eDrawType_Color127,
+	glow_eDrawType_Color128,
+	glow_eDrawType_Color129,
+	glow_eDrawType_Color130,
+	glow_eDrawType_Color131,
+	glow_eDrawType_Color132,
+	glow_eDrawType_Color133,
+	glow_eDrawType_Color134,
+	glow_eDrawType_Color135,
+	glow_eDrawType_Color136,
+	glow_eDrawType_Color137,
+	glow_eDrawType_Color138,
+	glow_eDrawType_Color139,
+	glow_eDrawType_Color140,
+	glow_eDrawType_Color141,
+	glow_eDrawType_Color142,
+	glow_eDrawType_Color143,
+	glow_eDrawType_Color144,
+	glow_eDrawType_Color145,
+	glow_eDrawType_Color146,
+	glow_eDrawType_Color147,
+	glow_eDrawType_Color148,
+	glow_eDrawType_Color149,
+	glow_eDrawType_Color150,
+	glow_eDrawType_Color151,
+	glow_eDrawType_Color152,
+	glow_eDrawType_Color153,
+	glow_eDrawType_Color154,
+	glow_eDrawType_Color155,
+	glow_eDrawType_Color156,
+	glow_eDrawType_Color157,
+	glow_eDrawType_Color158,
+	glow_eDrawType_Color159,
+	glow_eDrawType_Color160,
+	glow_eDrawType_Color161,
+	glow_eDrawType_Color162,
+	glow_eDrawType_Color163,
+	glow_eDrawType_Color164,
+	glow_eDrawType_Color165,
+	glow_eDrawType_Color166,
+	glow_eDrawType_Color167,
+	glow_eDrawType_Color168,
+	glow_eDrawType_Color169,
+	glow_eDrawType_Color170,
+	glow_eDrawType_Color171,
+	glow_eDrawType_Color172,
+	glow_eDrawType_Color173,
+	glow_eDrawType_Color174,
+	glow_eDrawType_Color175,
+	glow_eDrawType_Color176,
+	glow_eDrawType_Color177,
+	glow_eDrawType_Color178,
+	glow_eDrawType_Color179,
+	glow_eDrawType_Color180,
+	glow_eDrawType_Color181,
+	glow_eDrawType_Color182,
+	glow_eDrawType_Color183,
+	glow_eDrawType_Color184,
+	glow_eDrawType_Color185,
+	glow_eDrawType_Color186,
+	glow_eDrawType_Color187,
+	glow_eDrawType_Color188,
+	glow_eDrawType_Color189,
+	glow_eDrawType_Color190,
+	glow_eDrawType_Color191,
+	glow_eDrawType_Color192,
+	glow_eDrawType_Color193,
+	glow_eDrawType_Color194,
+	glow_eDrawType_Color195,
+	glow_eDrawType_Color196,
+	glow_eDrawType_Color197,
+	glow_eDrawType_Color198,
+	glow_eDrawType_Color199,
+	glow_eDrawType_Color200,
+	glow_eDrawType_Color201,
+	glow_eDrawType_Color202,
+	glow_eDrawType_Color203,
+	glow_eDrawType_Color204,
+	glow_eDrawType_Color205,
+	glow_eDrawType_Color206,
+	glow_eDrawType_Color207,
+	glow_eDrawType_Color208,
+	glow_eDrawType_Color209,
+	glow_eDrawType_Color210,
+	glow_eDrawType_Color211,
+	glow_eDrawType_Color212,
+	glow_eDrawType_Color213,
+	glow_eDrawType_Color214,
+	glow_eDrawType_Color215,
+	glow_eDrawType_Color216,
+	glow_eDrawType_Color217,
+	glow_eDrawType_Color218,
+	glow_eDrawType_Color219,
+	glow_eDrawType_Color220,
+	glow_eDrawType_Color221,
+	glow_eDrawType_Color222,
+	glow_eDrawType_Color223,
+	glow_eDrawType_Color224,
+	glow_eDrawType_Color225,
+	glow_eDrawType_Color226,
+	glow_eDrawType_Color227,
+	glow_eDrawType_Color228,
+	glow_eDrawType_Color229,
+	glow_eDrawType_Color230,
+	glow_eDrawType_Color231,
+	glow_eDrawType_Color232,
+	glow_eDrawType_Color233,
+	glow_eDrawType_Color234,
+	glow_eDrawType_Color235,
+	glow_eDrawType_Color236,
+	glow_eDrawType_Color237,
+	glow_eDrawType_Color238,
+	glow_eDrawType_Color239,
+	glow_eDrawType_Color240,
+	glow_eDrawType_Color241,
+	glow_eDrawType_Color242,
+	glow_eDrawType_Color243,
+	glow_eDrawType_Color244,
+	glow_eDrawType_Color245,
+	glow_eDrawType_Color246,
+	glow_eDrawType_Color247,
+	glow_eDrawType_Color248,
+	glow_eDrawType_Color249,
+	glow_eDrawType_Color250,
+	glow_eDrawType_Color251,
+	glow_eDrawType_Color252,
+	glow_eDrawType_Color253,
+	glow_eDrawType_Color254,
+	glow_eDrawType_Color255,
+	glow_eDrawType_Color256,
+	glow_eDrawType_Color257,
+	glow_eDrawType_Color258,
+	glow_eDrawType_Color259,
+	glow_eDrawType_Color260,
+	glow_eDrawType_Color261,
+	glow_eDrawType_Color262,
+	glow_eDrawType_Color263,
+	glow_eDrawType_Color264,
+	glow_eDrawType_Color265,
+	glow_eDrawType_Color266,
+	glow_eDrawType_Color267,
+	glow_eDrawType_Color268,
+	glow_eDrawType_Color269,
+	glow_eDrawType_Color270,
+	glow_eDrawType_Color271,
+	glow_eDrawType_Color272,
+	glow_eDrawType_Color273,
+	glow_eDrawType_Color274,
+	glow_eDrawType_Color275,
+	glow_eDrawType_Color276,
+	glow_eDrawType_Color277,
+	glow_eDrawType_Color278,
+	glow_eDrawType_Color279,
+	glow_eDrawType_Color280,
+	glow_eDrawType_Color281,
+	glow_eDrawType_Color282,
+	glow_eDrawType_Color283,
+	glow_eDrawType_Color284,
+	glow_eDrawType_Color285,
+	glow_eDrawType_Color286,
+	glow_eDrawType_Color287,
+	glow_eDrawType_Color288,
+	glow_eDrawType_Color289,
+	glow_eDrawType_Color290,
+	glow_eDrawType_Color291,
+	glow_eDrawType_Color292,
+	glow_eDrawType_Color293,
+	glow_eDrawType_Color294,
+	glow_eDrawType_Color295,
+	glow_eDrawType_Color296,
+	glow_eDrawType_Color297,
+	glow_eDrawType_Color298,
+	glow_eDrawType_Color299,
+	glow_eDrawType_Color300 = 299,
+	glow_eDrawType_LineErase = 300,
+	glow_eDrawType_LineDashed = 301,
+	glow_eDrawType_LineDashedRed = 302,
+	glow_eDrawType_TextHelvetica = 303,
+	glow_eDrawType_TextHelveticaBold = 304,
+	glow_eDrawType_TextHelveticaErase = 305,
+	glow_eDrawType_TextHelveticaEraseBold = 306,
+	glow_eDrawType__ = 307,
 	glow_eDrawType_Inherit = 9999,
 	glow_eDrawType_No = 10000
 	} glow_eDrawType;
 
+#define glow_eDrawType_FillHighlight glow_eDrawType_Color174
+#define glow_eDrawType_LineHighlight glow_eDrawType_Color176
+#define glow_eDrawType_ColorYellow glow_eDrawType_Color115
+#define glow_eDrawType_DarkGray glow_eDrawType_Color30
+#define glow_eDrawType_MediumGray glow_eDrawType_Color25
+#define glow_eDrawType_LightGray glow_eDrawType_Color21
+
+//! Draw tone is a set of colors with the same color tone, displayed on the same row in the color palette.
+/*! The first nine are pure color tones, the following are shifted to lighter, darker, 
+  more or less saturated appearance */
 typedef enum {
 	glow_eDrawTone_No,
 	glow_eDrawTone_Gray,
+	glow_eDrawTone_YellowGreen,
 	glow_eDrawTone_Yellow,
-	glow_eDrawTone_Gold,
 	glow_eDrawTone_Orange,
 	glow_eDrawTone_Red,
 	glow_eDrawTone_Magenta,
@@ -311,262 +594,244 @@ typedef enum {
 	glow_eDrawTone_Seablue,
 	glow_eDrawTone_Green,
 	glow_eDrawTone_DarkGray,
+	glow_eDrawTone_DarkYellowGreen,
+	glow_eDrawTone_DarkYellow,
+	glow_eDrawTone_DarkOrange,
+	glow_eDrawTone_DarkRed,
+	glow_eDrawTone_DarkMagenta,
+	glow_eDrawTone_DarkBlue,
+	glow_eDrawTone_DarkSeablue,
+	glow_eDrawTone_DarkGreen,
+	glow_eDrawTone_LightGray,
+	glow_eDrawTone_LightYellowGreen,
+	glow_eDrawTone_LightYellow,
+	glow_eDrawTone_LightOrange,
+	glow_eDrawTone_LightRed,
+	glow_eDrawTone_LightMagenta,
+	glow_eDrawTone_LightBlue,
+	glow_eDrawTone_LightSeablue,
+	glow_eDrawTone_LightGreen,
+	glow_eDrawTone_GrayHighSaturation,
+	glow_eDrawTone_YellowGreenHighSaturation,
+	glow_eDrawTone_YellowHighSaturation,
+	glow_eDrawTone_OrangeHighSaturation,
+	glow_eDrawTone_RedHighSaturation,
+	glow_eDrawTone_MagentaHighSaturation,
+	glow_eDrawTone_BlueHighSaturation,
+	glow_eDrawTone_SeablueHighSaturation,
+	glow_eDrawTone_GreenHighSaturation,
+	glow_eDrawTone_DarkGrayHighSaturation,
+	glow_eDrawTone_DarkYellowGreenHighSaturation,
+	glow_eDrawTone_DarkYellowHighSaturation,
+	glow_eDrawTone_DarkOrangeHighSaturation,
+	glow_eDrawTone_DarkRedHighSaturation,
+	glow_eDrawTone_DarkMagentaHighSaturation,
+	glow_eDrawTone_DarkBlueHighSaturation,
+	glow_eDrawTone_DarkSeablueHighSaturation,
+	glow_eDrawTone_DarkGreenHighSaturation,
+	glow_eDrawTone_LightGrayHighSaturation,
+	glow_eDrawTone_LightYellowGreenHighSaturation,
+	glow_eDrawTone_LightYellowHighSaturation,
+	glow_eDrawTone_LightOrangeHighSaturation,
+	glow_eDrawTone_LightRedHighSaturation,
+	glow_eDrawTone_LightMagentaHighSaturation,
+	glow_eDrawTone_LightBlueHighSaturation,
+	glow_eDrawTone_LightSeablueHighSaturation,
+	glow_eDrawTone_LightGreenHighSaturation,
+	glow_eDrawTone_GrayLowSaturation,
+	glow_eDrawTone_YellowGreenLowSaturation,
+	glow_eDrawTone_YellowLowSaturation,
+	glow_eDrawTone_OrangeLowSaturation,
+	glow_eDrawTone_RedLowSaturation,
+	glow_eDrawTone_MagentaLowSaturation,
+	glow_eDrawTone_BlueLowSaturation,
+	glow_eDrawTone_SeablueLowSaturation,
+	glow_eDrawTone_GreenLowSaturation,
+	glow_eDrawTone_DarkGrayLowSaturation,
+	glow_eDrawTone_DarkYellowGreenLowSaturation,
+	glow_eDrawTone_DarkYellowLowSaturation,
+	glow_eDrawTone_DarkOrangeLowSaturation,
+	glow_eDrawTone_DarkRedLowSaturation,
+	glow_eDrawTone_DarkMagentaLowSaturation,
+	glow_eDrawTone_DarkBlueLowSaturation,
+	glow_eDrawTone_DarkSeablueLowSaturation,
+	glow_eDrawTone_DarkGreenLowSaturation,
+	glow_eDrawTone_LightGrayLowSaturation,
+	glow_eDrawTone_LightYellowGreenLowSaturation,
+	glow_eDrawTone_LightYellowLowSaturation,
+	glow_eDrawTone_LightOrangeLowSaturation,
+	glow_eDrawTone_LightRedLowSaturation,
+	glow_eDrawTone_LightMagentaLowSaturation,
+	glow_eDrawTone_LightBlueLowSaturation,
+	glow_eDrawTone_LightSeablueLowSaturation,
+	glow_eDrawTone_LightGreenLowSaturation,
 	glow_eDrawTone__
 	} glow_eDrawTone;
 
+//! Cursors used
 typedef enum {
-        glow_eDrawCursor_Normal,
-        glow_eDrawCursor_CrossHair,
-        glow_eDrawCursor_Hand,
-        glow_eDrawCursor_DiamondCross,
-        glow_eDrawCursor__
-        } glow_eDrawCursor;
+  glow_eDrawCursor_Normal,  		//!< The original cursor
+  glow_eDrawCursor_CrossHair,  		//!< Crosshair cursor
+  glow_eDrawCursor_Hand,  		//!< Hand cursor
+  glow_eDrawCursor_DiamondCross,	//!< Diamond cross cursor
+  glow_eDrawCursor__
+} glow_eDrawCursor;
                               
+//! Types of fonts
 typedef enum {
-	glow_eDrawFont_HelveticaBold,
-	glow_eDrawFont_Helvetica,
-	glow_eDrawFont__
-	} glow_eDrawFont;
+  glow_eDrawFont_HelveticaBold,  	//!< Helvetica bold
+  glow_eDrawFont_Helvetica,  		//!< Helvetica normal
+  glow_eDrawFont__
+} glow_eDrawFont;
 
+//! How to move a routed connection
 typedef enum {
 	glow_eMoveType_Frozen,
 	glow_eMoveType_Route
 	} glow_eMoveType;
 
+//! How to mark input focus
 typedef enum {
-	glow_eScaleType_LowerLeft,
-	glow_eScaleType_LowerRight,
-	glow_eScaleType_UpperRight,
-	glow_eScaleType_UpperLeft,
-	glow_eScaleType_Left,
-	glow_eScaleType_Up,
-	glow_eScaleType_Right,
-	glow_eScaleType_Down,
-	glow_eScaleType_Center,
-	glow_eScaleType_FixPoint,
-	glow_eScaleType_No
-	} glow_eScaleType;
+  glow_eInputFocusMark_Relief,		//!< Draw a relief around the object.
+  glow_eInputFocusMark_No		//!< Don't mark at all.
+} glow_eInputFocusMark;
 
+//! Position of scale point when scaling an object
 typedef enum {
-	glow_eRotationPoint_LowerLeft,
-	glow_eRotationPoint_LowerRight,
-	glow_eRotationPoint_UpperRight,
-	glow_eRotationPoint_UpperLeft,
-	glow_eRotationPoint_Center,
-	glow_eRotationPoint_FixPoint,
-	glow_eRotationPoint_Zero
-	} glow_eRotationPoint;
+  glow_eScaleType_LowerLeft,  		//!< Scale from lower left point  
+  glow_eScaleType_LowerRight,  		//!< Scale from lower right point  
+  glow_eScaleType_UpperRight,  		//!< Scale from upper right point  
+  glow_eScaleType_UpperLeft,  		//!< Scale from upper left point  
+  glow_eScaleType_Left,  		//!< Scale in x direction from left side  
+  glow_eScaleType_Up,  			//!< Scale in y direction from upper side
+  glow_eScaleType_Right,  		//!< Scale in x direction from right side  
+  glow_eScaleType_Down, 		//!< Scale in y direction from lower side  
+  glow_eScaleType_Center,  		//!< Scale point is center of object
+  glow_eScaleType_FixPoint,  		//!< Scalepoint is supplied by user
+  glow_eScaleType_No  			//!< Scale is disabled
+} glow_eScaleType;
 
+//! Position of rotation point when rotating an object
 typedef enum {
-	glow_eEventType_CallBack,
-	glow_eEventType_RegionSelect,
-	glow_eEventType_RegionAddSelect,
-	glow_eEventType_CreateCon,
-	glow_eEventType_CreateNode,
-	glow_eEventType_MoveNode,
-	glow_eEventType_Object,
-	glow_eEventType_AnnotationInput,
-	glow_eEventType_Radiobutton,
-	glow_eEventType_CreateGrowObject,
-	glow_eEventType_Dynamics,
-	glow_eEventType_ColorTone,
-	glow_eEventType_Translate
-	} glow_eEventType;
+  glow_eRotationPoint_LowerLeft,  	//!< Rotationpoint is lower left  
+  glow_eRotationPoint_LowerRight,  	//!< Rotationpoint is lower right 
+  glow_eRotationPoint_UpperRight,  	//!< Rotationpoint is upper right 
+  glow_eRotationPoint_UpperLeft,  	//!< Rotationpoint is upper left 
+  glow_eRotationPoint_Center,  		//!< Rotationpoint is the center of the object  
+  glow_eRotationPoint_FixPoint,  	//!< Rotationpoint is supplied by the user
+  glow_eRotationPoint_Zero  		//!< Rotationpoint is origo
+} glow_eRotationPoint;
 
+//! Type of event
+/*! Glow has a number of event that is enabled with the enble_event() function. With this
+  function you enable an event type and connect it to a specific mouse klick action. 
+  The event has data structure glow_sEventAny as default, but some of the event types
+  has extended data structures.
+*/
 typedef enum {
-	glow_eEvent_Null,
-	glow_eEvent_MB1Click,
-	glow_eEvent_MB1DoubleClick,
-	glow_eEvent_MB1Press,
-	glow_eEvent_MB2Click,
-	glow_eEvent_MB2DoubleClick,
-	glow_eEvent_MB2Press,
-	glow_eEvent_MB1ClickShift,
-	glow_eEvent_MB1DoubleClickShift,
-	glow_eEvent_MB1PressShift,
-	glow_eEvent_MB2ClickShift,
-	glow_eEvent_MB2DoubleClickShift,
-	glow_eEvent_MB2PressShift,
-	glow_eEvent_MB1ClickCtrl,
-	glow_eEvent_MB1DoubleClickCtrl,
-	glow_eEvent_MB1PressCtrl,
-	glow_eEvent_MB2ClickCtrl,
-	glow_eEvent_MB2DoubleClickCtrl,
-	glow_eEvent_MB2PressCtrl,
-	glow_eEvent_MB1ClickShiftCtrl,
-	glow_eEvent_MB1DoubleClickShiftCtrl,
-	glow_eEvent_MB1PressShiftCtrl,
-	glow_eEvent_MB2ClickShiftCtrl,
-	glow_eEvent_MB2DoubleClickShiftCtrl,
-	glow_eEvent_MB2PressShiftCtrl,
-	glow_eEvent_MB3Click,
-	glow_eEvent_MB3Press,
-	glow_eEvent_ButtonRelease,
-	glow_eEvent_ButtonMotion,
-	glow_eEvent_Exposure,
-	glow_eEvent_Enter,
-	glow_eEvent_Leave,
-	glow_eEvent_CursorMotion,
-	glow_eEvent_Init,
-	glow_eEvent_PasteSequenceStart,
-	glow_eEvent_VisibilityUnobscured,
-	glow_eEvent_VisibilityObscured,
-	glow_eEvent_SelectClear,
-	glow_eEvent_ObjectMoved,
-	glow_eEvent_ObjectDeleted,
-	glow_eEvent_AnnotationInput,
-	glow_eEvent_Radiobutton,
-	glow_eEvent_Key_Return,
-	glow_eEvent_Key_Up,
-	glow_eEvent_Key_Down,
-	glow_eEvent_Key_Right,
-	glow_eEvent_Key_Left,
-	glow_eEvent_Key_PageUp,
-	glow_eEvent_Key_PageDown,
-	glow_eEvent_Key_BackSpace,
-	glow_eEvent_Key_PF1,
-	glow_eEvent_Key_PF2,
-	glow_eEvent_Key_PF3,
-	glow_eEvent_Key_PF4,
-	glow_eEvent_CreateGrowObject,
-	glow_eEvent_GrowDynamics,
-	glow_eEvent_SliderMoveStart,
-	glow_eEvent_SliderMoved,
-	glow_eEvent_HotRequest,
-	glow_eEvent_MB1Down,
-	glow_eEvent_MB1Up,
-	glow_eEvent_MB2Down,
-	glow_eEvent_MB2Up,
-	glow_eEvent_MB3Down,
-	glow_eEvent_MB3Up,
-	glow_eEvent_Key_Tab,
-	glow_eEvent_Map,
-	glow_eEvent_Unmap,
-	glow_eEvent_Resized,
-	glow_eEvent_Translate,
-	glow_eEvent__
-	} glow_eEvent;
+  glow_eEventType_CallBack,  		//!< An ordinary callback. Event structure is glow_sEventAny
+  glow_eEventType_RegionSelect,  	//!< Region selected callback. Event structure is glow_sEventAny
+  glow_eEventType_RegionAddSelect,  	//!< Region add selected callback. Event structure is  glow_sEventAny
+  glow_eEventType_CreateCon,  		//!< Create connection callback. Event structure is  glow_sEventConCreate
+  glow_eEventType_CreateNode,  		//!< Create node callback. Event structure is glow_sEventAny
+  glow_eEventType_MoveNode,  		//!< Node moved callback. Event structure is glow_sEventAny
+  glow_eEventType_Object,  		//!< Callback with a specified object. Event structure is glow_sEventObject
+  glow_eEventType_AnnotationInput,  	//!< Annotation input callback. Event structure is glow_sEventAnnotInput
+  glow_eEventType_Radiobutton,  	//!< Radiobutton clicked callback. Event structure is glow_sEventRadiobutton
+  glow_eEventType_CreateGrowObject, 	//!< Create grow object callback. Event structure is glow_sEventCreateGrowObject
+  glow_eEventType_Dynamics,  		//!< Execute dynamics callback. Event structure is glow_sEventDynamics
 
-typedef struct {
-	glow_eEvent		event;
-	glow_eEventType		type;
-	int			x_pixel;
-	int			y_pixel;
-	double			x;
-	double			y;
-	} glow_sEventAny, *glow_tEventAny;
+  glow_eEventType_ColorTone,
+  glow_eEventType_Translate,  		//!< Translation callback. Event structure is glow_sEventTranslate
+  glow_eEventType_KeyAscii,  		//!< Ascii key callback.
+  glow_eEventType_Menu  		//!< Menu callback.
+} glow_eEventType;
 
-typedef struct {
-	glow_eEvent		event;
-	glow_eEventType		type;
-	int			x_pixel;
-	int			y_pixel;
-	double			x;
-	double			y;
-	glow_eObjectType	object_type;
-	void			*object;
-	} glow_sEventObject, *glow_tEventObject;
-
-typedef struct {
-	glow_eEvent		event;
-	glow_eEventType		type;
-	int			x_pixel;
-	int			y_pixel;
-	double			x;
-	double			y;
-	void			*source_object;
-	void			*dest_object;
-	int			source_conpoint;
-	int			dest_conpoint;
-	} glow_sEventConCreate, *glow_tEventConCreate;
-
-typedef struct {
-	glow_eEvent		event;
-	glow_eEventType		type;
-	int			x_pixel;
-	int			y_pixel;
-	double			x;
-	double			y;
-	glow_eObjectType	object_type;
-	void			*object;
-	int			number;
-	char			*text;
-	} glow_sEventAnnotInput, *glow_tEventAnnotInput;
-
-typedef struct {
-	glow_eEvent		event;
-	glow_eEventType		type;
-	int			x_pixel;
-	int			y_pixel;
-	double			x;
-	double			y;
-	glow_eObjectType	object_type;
-	void			*object;
-	int			number;
-	int			value;
-	} glow_sEventRadiobutton, *glow_tEventRadiobutton;
-
-typedef struct {
-	glow_eEvent		event;
-	glow_eEventType		type;
-	int			x_pixel;
-	int			y_pixel;
-	double			x;
-	double			y;
-	double			x2;
-	double			y2;
-	int			mode;
-	int			first_line;
-	} glow_sEventCreateGrowObject, *glow_tEventCreateGrowObject;
-
-typedef struct {
-	glow_eEvent		event;
-	glow_eEventType		type;
-	int			x_pixel;
-	int			y_pixel;
-	double			x;
-	double			y;
-	glow_eObjectType	object_type;
-	void			*object;
-	char			*code;
-	glow_eDynamicType	dynamic_type;
-	} glow_sEventDynamics, *glow_tEventDynamics;
-
-typedef struct {
-	glow_eEvent		event;
-	glow_eEventType		type;
-	int			x_pixel;
-	int			y_pixel;
-	double			x;
-	double			y;
-	glow_eDrawTone		tone;
-	} glow_sEventColorTone, *glow_tEventColorTone;
-
-typedef struct {
-	glow_eEvent		event;
-	glow_eEventType		type;
-	int			x_pixel;
-	int			y_pixel;
-	double			x;
-	double			y;
-	glow_eObjectType	object_type;
-	void			*object;
-        char		        *text;
-        char		        *new_text;
-	} glow_sEventTranslate, *glow_tEventTranslate;
-
-typedef union {
-	glow_eEvent		event;
-	glow_sEventAny		any;
-	glow_sEventObject	object;
-	glow_sEventConCreate	con_create;
-	glow_sEventAnnotInput	annot_input;
-	glow_sEventRadiobutton	radiobutton;
-	glow_sEventCreateGrowObject create_grow_object;
-	glow_sEventDynamics	dynamics;
-	glow_sEventColorTone	colortone;
-	glow_sEventTranslate	translate;
-	} glow_sEvent, *glow_tEvent;
+//! Glow events
+typedef enum {
+  glow_eEvent_Null,  			//!< Event is disabled
+  glow_eEvent_MB1Click,			//!< MB1 click event
+  glow_eEvent_MB1DoubleClick,		//!< MB1 double click event
+  glow_eEvent_MB1Press,			//!< MB1 press event
+  glow_eEvent_MB2Click,			//!< MB2 click event
+  glow_eEvent_MB2DoubleClick,		//!< MB2 double click event
+  glow_eEvent_MB2Press,			//!< MB2 press event
+  glow_eEvent_MB1ClickShift,		//!< MB1 click shift event
+  glow_eEvent_MB1DoubleClickShift,	//!< MB1 double click shift event
+  glow_eEvent_MB1PressShift,		//!< MB1 press shift event
+  glow_eEvent_MB2ClickShift,		//!< MB2 click shift event
+  glow_eEvent_MB2DoubleClickShift,	//!< MB2 double click shift event
+  glow_eEvent_MB2PressShift,		//!< MB2 press shift event
+  glow_eEvent_MB1ClickCtrl,		//!< MB1 click ctrl event
+  glow_eEvent_MB1DoubleClickCtrl,	//!< MB1 double click ctrl event
+  glow_eEvent_MB1PressCtrl,		//!< MB1 press ctrl event
+  glow_eEvent_MB2ClickCtrl,		//!< MB2 click ctrl event
+  glow_eEvent_MB2DoubleClickCtrl,	//!< MB2 double click ctrl event
+  glow_eEvent_MB2PressCtrl,		//!< MB2 press ctrl event
+  glow_eEvent_MB1ClickShiftCtrl,	//!< MB1 click shift ctrl event
+  glow_eEvent_MB1DoubleClickShiftCtrl,	//!< MB1 double click shift ctrl event
+  glow_eEvent_MB1PressShiftCtrl,	//!< MB1 press shift ctrl event
+  glow_eEvent_MB2ClickShiftCtrl,	//!< MB2 click shift ctrl event
+  glow_eEvent_MB2DoubleClickShiftCtrl,	//!< MB2 double click shift ctrl event
+  glow_eEvent_MB2PressShiftCtrl,	//!< MB2 press shift ctrl event
+  glow_eEvent_MB3Click,			//!< MB3 click event
+  glow_eEvent_MB3Press,			//!< MB3 press event
+  glow_eEvent_ButtonRelease,		//!< Button released event
+  glow_eEvent_ButtonMotion,		//!< Button motion event  
+  glow_eEvent_Exposure,			//!< Exposure event
+  glow_eEvent_Enter,			//!< Cursor entered window event
+  glow_eEvent_Leave,			//!< Cursor left window event
+  glow_eEvent_CursorMotion,		//!< Cursor motion event
+  glow_eEvent_Init,			//!< Initialize event
+  glow_eEvent_PasteSequenceStart,	//!< Start of paste sequence event
+  glow_eEvent_VisibilityUnobscured,	//!< Visibility unobscured event
+  glow_eEvent_VisibilityObscured,	//!< Visibility obscured event
+  glow_eEvent_SelectClear,		//!< Select list is cleared event
+  glow_eEvent_ObjectMoved,		//!< Object is moved event
+  glow_eEvent_ObjectDeleted,		//!< Object is deleted event
+  glow_eEvent_AnnotationInput,		//!< Annotation input event
+  glow_eEvent_Radiobutton,		//!< Radionbutton is clicked event
+  glow_eEvent_Key_Return,		//!< Key Return event
+  glow_eEvent_Key_Up,			//!< Key Up event
+  glow_eEvent_Key_Down,			//!< Key Down event
+  glow_eEvent_Key_Right,		//!< Key Right event
+  glow_eEvent_Key_Left,			//!< Key Left event
+  glow_eEvent_Key_PageUp,		//!< Key PageUp event
+  glow_eEvent_Key_PageDown,		//!< Key PageDown event
+  glow_eEvent_Key_BackSpace,		//!< Key BackSpace event
+  glow_eEvent_Key_PF1,			//!< Key PF1 event
+  glow_eEvent_Key_PF2,			//!< Key PF2 event
+  glow_eEvent_Key_PF3,			//!< Key PF3 event
+  glow_eEvent_Key_PF4,			//!< Key PF4 event
+  glow_eEvent_CreateGrowObject,		//!< Create grow object event
+  glow_eEvent_GrowDynamics,		//!< Execute dynamics event
+  glow_eEvent_SliderMoveStart,		//!< Start of slider motion sequence event
+  glow_eEvent_SliderMoved,		//!< Slider move event
+  glow_eEvent_HotRequest,		//!< Hot request on object event
+  glow_eEvent_MB1Down,			//!< MB1 down event
+  glow_eEvent_MB1Up,			//!< MB1 up event
+  glow_eEvent_MB2Down,			//!< MB2 down event
+  glow_eEvent_MB2Up,			//!< MB2 up event
+  glow_eEvent_MB3Down,			//!< MB3 down event
+  glow_eEvent_MB3Up,			//!< MB3 up event
+  glow_eEvent_Key_Tab,			//!< Key Tab event
+  glow_eEvent_Map,			//!< Window mapped event
+  glow_eEvent_Unmap,			//!< Window unmapped event
+  glow_eEvent_Resized,			//!< Window resized event
+  glow_eEvent_Translate,		//!< String translation event
+  glow_eEvent_TipText,			//!< ToolTip event
+  glow_eEvent_Key_Ascii,       		//!< Key ascii
+  glow_eEvent_InputFocusLost,          	//!< Input focus lost
+  glow_eEvent_InputFocusGained,        	//!< Input focus gained
+  glow_eEvent_InputFocusInit,        	//!< Inititalize input focus.
+  glow_eEvent_Key_CtrlAscii,        	//!< Key ctrl ascii.
+  glow_eEvent_Key_ShiftTab,        	//!< Key Shift Tab event.
+  glow_eEvent_Key_Escape,        	//!< Key Escape event.
+  glow_eEvent_MenuActivated,        	//!< Menu is activated.
+  glow_eEvent_MenuCreate,        	//!< Create pulldown menu.
+  glow_eEvent_MenuDelete,        	//!< Delete pulldown menu.
+  glow_eEvent__
+} glow_eEvent;
 
 typedef enum {
 	glow_eTraceType_Boolean,
@@ -575,12 +840,24 @@ typedef enum {
 	glow_eTraceType_User
 	} glow_eTraceType;
 
+//! Type of item in a pulldown menu
 typedef enum {
-	glow_eSaveMode_Edit,
-	glow_eSaveMode_Trace,
-	glow_eSaveMode_SubGraph
-	} glow_eSaveMode;
+  glow_eMenuItem_Button,		//!< Item is a button
+  glow_eMenuItem_ButtonDisabled,	//!< Item is disabled.
+  glow_eMenuItem_PulldownMenu		//!< Item is a pulldown menu.
+} glow_eMenuItem;
 
+//! Save mode
+typedef enum {
+  glow_eSaveMode_Edit,		//!< Save as graph.
+  glow_eSaveMode_Trace,		//!< Not used.
+  glow_eSaveMode_SubGraph	//!< Save as subgraph.
+} glow_eSaveMode;
+
+//! Tags used when writing objects to a .pwg fil.
+/*! Every data written is preceeded by a tag to identify the data. 
+  All tags for all classes are defined here.
+*/
 typedef enum {
 	glow_eSave_Ctx				= 1,
 	glow_eSave_Array			= 2,
@@ -619,6 +896,8 @@ typedef enum {
 	glow_eSave_GrowGroup			= 35,
 	glow_eSave_NodeGroup		        = 36,
 	glow_eSave_GrowAxis		        = 37,
+	glow_eSave_GrowRectRounded	      	= 38,
+	glow_eSave_GrowConGlue		      	= 39,
 	glow_eSave_End				= 99,
 	glow_eSave_Ctx_zoom_factor_x		= 100,
 	glow_eSave_Ctx_base_zoom_factor		= 101,
@@ -657,6 +936,7 @@ typedef enum {
 	glow_eSave_Ctx_grow		        = 134,
 	glow_eSave_Ctx_zoom_factor_y	        = 135,
 	glow_eSave_Ctx_nav_zoom_factor_y	= 136,
+	glow_eSave_Ctx_version			= 137,
 	glow_eSave_Array_a			= 200,
 	glow_eSave_NodeClass_nc_name		= 300,
 	glow_eSave_NodeClass_a			= 301,
@@ -666,12 +946,12 @@ typedef enum {
 	glow_eSave_NodeClass_arg_cnt		= 305,
 	glow_eSave_NodeClass_argname		= 306,
 	glow_eSave_NodeClass_argtype		= 307,
-	glow_eSave_NodeClass_trace_attr_type	= 308,
-	glow_eSave_NodeClass_trace_color	= 309,
+	glow_eSave_NodeClass_dyn_type		= 308,
+	glow_eSave_NodeClass_dyn_color1		= 309,
 	glow_eSave_NodeClass_no_con_obstacle	= 310,
 	glow_eSave_NodeClass_slider		= 311,
 	glow_eSave_NodeClass_java_name		= 312,
-	glow_eSave_NodeClass_trace_color2	= 313,
+	glow_eSave_NodeClass_dyn_color2		= 313,
 	glow_eSave_NodeClass_next_nodeclass	= 314,
 	glow_eSave_NodeClass_animation_count	= 315,
 	glow_eSave_NodeClass_cycle	        = 316,
@@ -679,6 +959,14 @@ typedef enum {
 	glow_eSave_NodeClass_y1	                = 318,
 	glow_eSave_NodeClass_x0	                = 319,
 	glow_eSave_NodeClass_x1	                = 320,
+	glow_eSave_NodeClass_dyn_action_type    = 321,
+	glow_eSave_NodeClass_dyn_color3	        = 322,
+	glow_eSave_NodeClass_dyn_color4	        = 323,
+	glow_eSave_NodeClass_dyn_attr1	        = 324,
+	glow_eSave_NodeClass_dyn_attr2	        = 325,
+	glow_eSave_NodeClass_dyn_attr3	        = 326,
+	glow_eSave_NodeClass_dyn_attr4	        = 327,
+	glow_eSave_NodeClass_input_focus_mark   = 328,
 	glow_eSave_ConClass_cc_name		= 400,
 	glow_eSave_ConClass_con_type		= 401,
 	glow_eSave_ConClass_corner		= 402,
@@ -711,6 +999,7 @@ typedef enum {
 	glow_eSave_Text_draw_type		= 901,
 	glow_eSave_Text_text			= 902,
 	glow_eSave_Text_p			= 903,
+	glow_eSave_Text_color_drawtype	       	= 904,
 	glow_eSave_Node_nc			= 1000,
 	glow_eSave_Node_pos			= 1001,
 	glow_eSave_Node_n_name			= 1002,
@@ -770,6 +1059,8 @@ typedef enum {
 	glow_eSave_Con_trace_attribute		= 1126,
 	glow_eSave_Con_trace_attr_type		= 1127,
 	glow_eSave_Con_temporary_ref		= 1128,
+	glow_eSave_Con_border			= 1129,
+	glow_eSave_Con_shadow			= 1130,
 	glow_eSave_ConPoint_number		= 1200,
 	glow_eSave_ConPoint_direction		= 1201,
 	glow_eSave_ConPoint_p			= 1202,
@@ -782,6 +1073,7 @@ typedef enum {
 	glow_eSave_Annot_p			= 1303,
 	glow_eSave_Annot_annot_type		= 1304,
 	glow_eSave_Annot_display_level		= 1305,
+	glow_eSave_Annot_color_drawtype		= 1306,
 	glow_eSave_Arrow_arrow_width		= 1400,
 	glow_eSave_Arrow_arrow_length		= 1401,
 	glow_eSave_Arrow_draw_type		= 1402,
@@ -802,6 +1094,11 @@ typedef enum {
 	glow_eSave_GrowRect_fill_drawtype 	= 1910,
 	glow_eSave_GrowRect_border 		= 1911,
 	glow_eSave_GrowRect_trf 		= 1912,
+	glow_eSave_GrowRect_shadow_width      	= 1913,
+	glow_eSave_GrowRect_relief             	= 1914,
+	glow_eSave_GrowRect_shadow             	= 1915,
+	glow_eSave_GrowRect_shadow_contrast     = 1916,
+	glow_eSave_GrowRect_disable_shadow      = 1917,
 	glow_eSave_GrowLine_x_right		= 2000,
 	glow_eSave_GrowLine_x_left		= 2001,
 	glow_eSave_GrowLine_y_high		= 2002,
@@ -812,6 +1109,7 @@ typedef enum {
 	glow_eSave_GrowLine_dynamicsize		= 2007,
 	glow_eSave_GrowLine_trf			= 2008,
 	glow_eSave_GrowLine_original_border_drawtype = 2009,
+	glow_eSave_GrowLine_line_type 		= 2010,
 	glow_eSave_GrowConPoint_x_right		= 2100,
 	glow_eSave_GrowConPoint_x_left		= 2101,
 	glow_eSave_GrowConPoint_y_high		= 2102,
@@ -834,13 +1132,13 @@ typedef enum {
 	glow_eSave_GrowCtx_y1			= 2212,
 	glow_eSave_GrowCtx_path_cnt		= 2213,
 	glow_eSave_GrowCtx_path			= 2214,
-	glow_eSave_GrowCtx_trace_attr_type	= 2215,
-	glow_eSave_GrowCtx_trace_color		= 2216,
+	glow_eSave_GrowCtx_dyn_type		= 2215,
+	glow_eSave_GrowCtx_dyn_color1		= 2216,
 	glow_eSave_GrowCtx_no_con_obstacle	= 2217,
 	glow_eSave_GrowCtx_slider		= 2218,
 	glow_eSave_GrowCtx_subgraph		= 2219,
 	glow_eSave_GrowCtx_java_name		= 2220,
-	glow_eSave_GrowCtx_trace_color2		= 2221,
+	glow_eSave_GrowCtx_dyn_color2		= 2221,
 	glow_eSave_GrowCtx_next_subgraph	= 2222,
 	glow_eSave_GrowCtx_animation_count	= 2223,
 	glow_eSave_GrowCtx_scantime		= 2224,
@@ -855,6 +1153,14 @@ typedef enum {
 	glow_eSave_GrowCtx_cycle	        = 2233,
 	glow_eSave_GrowCtx_mb3_action	        = 2234,
 	glow_eSave_GrowCtx_translate_on	        = 2235,
+	glow_eSave_GrowCtx_dyn_action_type    	= 2236,
+	glow_eSave_GrowCtx_dyn_color3	        = 2237,
+	glow_eSave_GrowCtx_dyn_color4	        = 2238,
+	glow_eSave_GrowCtx_dyn_attr1	        = 2239,
+	glow_eSave_GrowCtx_dyn_attr2	        = 2240,
+	glow_eSave_GrowCtx_dyn_attr3	        = 2241,
+	glow_eSave_GrowCtx_dyn_attr4	        = 2242,
+	glow_eSave_GrowCtx_input_focus_mark     = 2243,
 	glow_eSave_GrowSubAnnot_x_right		= 2300,
 	glow_eSave_GrowSubAnnot_x_left		= 2301,
 	glow_eSave_GrowSubAnnot_y_high		= 2302,
@@ -877,6 +1183,11 @@ typedef enum {
 	glow_eSave_GrowArc_fill_drawtype 	= 2410,
 	glow_eSave_GrowArc_border 		= 2411,
 	glow_eSave_GrowArc_trf 			= 2412,
+	glow_eSave_GrowArc_shadow_width      	= 2413,
+	glow_eSave_GrowArc_relief      		= 2414,
+	glow_eSave_GrowArc_shadow      		= 2415,
+	glow_eSave_GrowArc_shadow_contrast      = 2416,
+	glow_eSave_GrowArc_disable_shadow       = 2417,
 	glow_eSave_PolyLine_draw_type		= 2500,
 	glow_eSave_PolyLine_line_width		= 2501,
 	glow_eSave_PolyLine_a_points		= 2502,
@@ -896,6 +1207,13 @@ typedef enum {
 	glow_eSave_GrowPolyLine_border 		= 2611,
 	glow_eSave_GrowPolyLine_trf 		= 2612,
 	glow_eSave_GrowPolyLine_fill_eq_border 	= 2613,
+	glow_eSave_GrowPolyLine_shadow_width    = 2614,
+	glow_eSave_GrowPolyLine_relief         	= 2615,
+	glow_eSave_GrowPolyLine_shadow        	= 2616,
+	glow_eSave_GrowPolyLine_shadow_contrast = 2617,
+	glow_eSave_GrowPolyLine_disable_shadow  = 2618,
+	glow_eSave_GrowPolyLine_fill_eq_light   = 2619,
+	glow_eSave_GrowPolyLine_fill_eq_shadow  = 2620,
 	glow_eSave_GrowNode_node_part		= 2700,
 	glow_eSave_GrowNode_dynamic		= 2701,
 	glow_eSave_GrowNode_dynamicsize		= 2702,
@@ -917,6 +1235,10 @@ typedef enum {
 	glow_eSave_GrowNode_argsize		= 2718,
 	glow_eSave_GrowNode_line_width		= 2719,
 	glow_eSave_GrowNode_invisible		= 2720,
+	glow_eSave_GrowNode_userdata_cb		= 2721,
+	glow_eSave_GrowNode_original_text_drawtype = 2722,
+	glow_eSave_GrowNode_text_drawtype 	= 2723,
+	glow_eSave_GrowNode_shadow 		= 2724,
 	glow_eSave_Transform_a11		= 2800,
 	glow_eSave_Transform_a12		= 2801,
 	glow_eSave_Transform_a13		= 2802,
@@ -934,7 +1256,7 @@ typedef enum {
 	glow_eSave_GrowText_text_part		= 3005,
 	glow_eSave_GrowText_dynamic		= 3006,
 	glow_eSave_GrowText_dynamicsize		= 3007,
-	glow_eSave_GrowText_original_border_drawtype = 3008,
+	glow_eSave_GrowText_original_color_drawtype = 3008,
 	glow_eSave_GrowText_trf 		= 3009,
 	glow_eSave_GrowBar_max_value 		= 3100,
 	glow_eSave_GrowBar_min_value 		= 3101,
@@ -959,6 +1281,7 @@ typedef enum {
 	glow_eSave_GrowBar_access		= 3120,
 	glow_eSave_GrowBar_cycle		= 3121,
 	glow_eSave_GrowBar_ref_object		= 3122,
+	glow_eSave_GrowBar_userdata_cb		= 3123,
 	glow_eSave_GrowTrend_max_value_0 	= 3200,
 	glow_eSave_GrowTrend_min_value_0 	= 3201,
 	glow_eSave_GrowTrend_curve_drawtype_0 	= 3202,
@@ -989,6 +1312,7 @@ typedef enum {
 	glow_eSave_GrowTrend_access		= 3227,
 	glow_eSave_GrowTrend_cycle		= 3228,
 	glow_eSave_GrowTrend_ref_object		= 3229,
+	glow_eSave_GrowTrend_userdata_cb	= 3230,
 	glow_eSave_GrowSlider_grownode_part	= 3300,
 	glow_eSave_GrowSlider_direction		= 3301,
 	glow_eSave_GrowSlider_max_value		= 3302,
@@ -1022,73 +1346,330 @@ typedef enum {
 	glow_eSave_GrowAxis_valuequotient 	= 3705,
 	glow_eSave_GrowAxis_format 		= 3706,
 	glow_eSave_GrowAxis_text_size 		= 3707,
-	glow_eSave_GrowAxis_text_drawtype 	= 3708
+	glow_eSave_GrowAxis_text_drawtype 	= 3708,
+	glow_eSave_GrowAxis_text_color_drawtype	= 3709,
+	glow_eSave_GrowRectRounded_x_right	= 3800,
+	glow_eSave_GrowRectRounded_x_left      	= 3801,
+	glow_eSave_GrowRectRounded_y_high      	= 3802,
+	glow_eSave_GrowRectRounded_y_low       	= 3803,
+	glow_eSave_GrowRectRounded_n_name      	= 3804,
+	glow_eSave_GrowRectRounded_rect_part   	= 3805,
+	glow_eSave_GrowRectRounded_dynamic     	= 3806,
+	glow_eSave_GrowRectRounded_dynamicsize 	= 3807,
+	glow_eSave_GrowRectRounded_original_border_drawtype = 3808,
+	glow_eSave_GrowRectRounded_original_fill_drawtype = 3809,
+	glow_eSave_GrowRectRounded_fill_drawtype = 3810,
+	glow_eSave_GrowRectRounded_border 	= 3811,
+	glow_eSave_GrowRectRounded_trf 		= 3812,
+	glow_eSave_GrowRectRounded_round_amount	= 3813,
+	glow_eSave_GrowRectRounded_shadow_width = 3814,
+	glow_eSave_GrowRectRounded_relief      	= 3815,
+	glow_eSave_GrowRectRounded_shadow      	= 3816,
+	glow_eSave_GrowRectRounded_shadow_contrast = 3817,
+	glow_eSave_GrowRectRounded_disable_shadow = 3818,
+	glow_eSave_GrowConGlue_line_width_up 	= 3900,
+	glow_eSave_GrowConGlue_line_width_down 	= 3901,
+	glow_eSave_GrowConGlue_line_width_left 	= 3902,
+	glow_eSave_GrowConGlue_line_width_right = 3903,
+	glow_eSave_GrowConGlue_node_part 	= 3904,
+	glow_eSave_GrowConGlue_border	 	= 3905
 	} glow_eSave;
 
+//! Relative or absolute position for an annotation
 typedef enum {
-	glow_ePosition_Absolute,
-	glow_ePosition_Relative
-	} glow_ePosition;
-
-typedef struct {
-	int			width;
-	int			height;
-	char			*bits;
-	} glow_sPixmapDataElem;
-
-typedef glow_sPixmapDataElem glow_sPixmapData[DRAW_PIXMAP_SIZE];
-
-typedef struct {
-	glow_sPixmapData	pixmap_data;
-	void			*pixmaps;
-	} glow_sAnnotPixmap;
-
-typedef struct {
-	double	x;
-	double	y;
-	} glow_sPoint;
+  glow_ePosition_Absolute,		//!< Absolute position
+  glow_ePosition_Relative		//!< Relative position
+} glow_ePosition;
 
 typedef enum {
   glow_eDest__ = 0,
-  glow_eDest_IntoFirst,  /* Object inserted as first son. */
-  glow_eDest_IntoLast,   /* Object inserted as last son. */
-  glow_eDest_After,      /* Object inserted after destination object.*/
-  glow_eDest_Before,     /* Object inserted before destination object. */
+  glow_eDest_IntoFirst,  //!< Object inserted as first son.
+  glow_eDest_IntoLast,   //!< Object inserted as last son.
+  glow_eDest_After,      //!< Object inserted after destination object.
+  glow_eDest_Before,     //!< Object inserted before destination object.
   glow_eDest_
 } glow_eDest;
 
 
 typedef enum {
-	glow_mDisplayLevel_1		= 1 << 0,
-	glow_mDisplayLevel_2		= 1 << 2,
-	glow_mDisplayLevel_3		= 1 << 3,
-	glow_mDisplayLevel_4		= 1 << 4,
-	glow_mDisplayLevel_5		= 1 << 5,
-	glow_mDisplayLevel_6		= 1 << 6
-	} glow_mDisplayLevel;
+  glow_mDisplayLevel_1		= 1 << 0,
+  glow_mDisplayLevel_2		= 1 << 2,
+  glow_mDisplayLevel_3		= 1 << 3,
+  glow_mDisplayLevel_4		= 1 << 4,
+  glow_mDisplayLevel_5		= 1 << 5,
+  glow_mDisplayLevel_6		= 1 << 6
+} glow_mDisplayLevel;
 
+//! Bitmap for mouse click and press sensitivity
 typedef enum {
-	glow_mSensitivity_MB1Click	= 1 << 0,
-	glow_mSensitivity_MB1DoubleClick = 1 << 1,
-	glow_mSensitivity_MB1Press	= 1 << 2,
-	glow_mSensitivity_MB2Click	= 1 << 3,
-	glow_mSensitivity_MB2DoubleClick = 1 << 4,
-	glow_mSensitivity_MB2Press	= 1 << 5,
-	glow_mSensitivity_MB3Click	= 1 << 6,
-	glow_mSensitivity_MB3DoubleClick = 1 << 7,
-	glow_mSensitivity_MB3Press	= 1 << 8
-	} glow_mSensitivity;
+  glow_mSensitivity_MB1Click		= 1 << 0,	//!< Sensitive for MB1 click
+  glow_mSensitivity_MB1DoubleClick 	= 1 << 1,	//!< Sensivive for MB1 double click
+  glow_mSensitivity_MB1Press		= 1 << 2,	//!< Sensitive for MB1 press
+  glow_mSensitivity_MB2Click		= 1 << 3,	//!< Sensitive for MB2 click
+  glow_mSensitivity_MB2DoubleClick 	= 1 << 4,	//!< Sensitive for MB2 double click
+  glow_mSensitivity_MB2Press		= 1 << 5,	//!< Sensitive for MB2 press
+  glow_mSensitivity_MB3Click		= 1 << 6,	//!< Sensitive for MB3 click
+  glow_mSensitivity_MB3DoubleClick 	= 1 << 7,	//!< Sensitive for MB3 double click
+  glow_mSensitivity_MB3Press		= 1 << 8	//!< Sensitive for MB3 press
+} glow_mSensitivity;
+
+//! Conversion version
+typedef enum {
+  glow_eConvert_V34
+} glow_eConvert;
+
+
+/*@}*/
+/** \addtogroup GlowStruct */
+/*@{*/
+
+//! Default data structure for events
+typedef struct {
+  glow_eEvent		event;  	//!< Event
+  glow_eEventType	type;  		//!< Event type
+  int			x_pixel;  	//!< x-coordinate i pixels
+  int			y_pixel;  	//!< y-coordinate i pixels
+  double		x;  		//!< x-coordinate
+  double	       	y;  		//!< y-coordinate
+} glow_sEventAny, *glow_tEventAny;
+
+//! Data structure for an object event
+typedef struct {
+  glow_eEvent		event;  	//!< Event
+  glow_eEventType	type;  		//!< Event type
+  int			x_pixel;  	//!< x-coordinate i pixels
+  int			y_pixel;  	//!< y-coordinate i pixels
+  double		x;  		//!< x-coordinate
+  double	       	y;  		//!< y-coordinate
+  glow_eObjectType	object_type;  	//!< Type of object
+  void			*object;  	//!< Ponter to the object
+} glow_sEventObject, *glow_tEventObject;
+
+//! Data stucture for a connection created event
+typedef struct {
+  glow_eEvent		event;  	//!< Event
+  glow_eEventType	type;  		//!< Event type
+  int			x_pixel;  	//!< x-coordinate i pixels
+  int			y_pixel;  	//!< y-coordinate i pixels
+  double		x;  		//!< x-coordinate
+  double		y;  		//!< y-coordinate
+  void			*source_object;	//!< Pointer to source object
+  void			*dest_object;  	//!< Pointer to destination object
+  int			source_conpoint;//!< Connection point number at source
+  int			dest_conpoint;  //!< Connection point number at destination
+} glow_sEventConCreate, *glow_tEventConCreate;
+
+//! Data structure for a annotation input event
+typedef struct {
+  glow_eEvent		event;  	//!< Event
+  glow_eEventType	type;  		//!< Event type
+  int			x_pixel;  	//!< x-coordinate i pixels
+  int			y_pixel;  	//!< y-coordinate i pixels
+  double		x;  		//!< x-coordinate
+  double	       	y;  		//!< y-coordinate
+  glow_eObjectType	object_type;  	//!< Type of object
+  void			*object;  	//!< Pointer to object
+  int			number;  	//!< Number of annotation
+  char			*text;  	//!< Input text
+} glow_sEventAnnotInput, *glow_tEventAnnotInput;
+
+//! Data structure for a radiobutton event
+typedef struct {
+  glow_eEvent		event;  	//!< Event
+  glow_eEventType	type;  		//!< Event type
+  int			x_pixel;  	//!< x-coordinate i pixels
+  int			y_pixel;  	//!< y-coordinate i pixels
+  double		x;  		//!< x-coordinate
+  glow_eObjectType	object_type;  	//!< Type of object
+  void			*object;  	//!< Pointer to object
+  int			number;  	//!< Radiobutton number
+  int			value;		//!< Radiobutton value
+} glow_sEventRadiobutton, *glow_tEventRadiobutton;
+
+//! Data stucture for a create grow object event
+typedef struct {
+  glow_eEvent		event;  	//!< Event
+  glow_eEventType	type;  		//!< Event type
+  int			x_pixel;  	//!< x-coordinate i pixels
+  int			y_pixel;  	//!< y-coordinate i pixels
+  double		x;  		//!< x-coordinate for first point
+  double	       	y;  		//!< y-coordinate for first point
+  double	       	x2;		//!< x-coordinate for second point
+  double	       	y2;		//!< y-coordinate for second point
+  int			mode;		//!< Current context mode (grow_eMode)
+  int			first_line;	//!< First line of a polyline
+} glow_sEventCreateGrowObject, *glow_tEventCreateGrowObject;
+
+//! Data structure for a dynamics event. Not yet fully implemented.
+typedef struct {
+  glow_eEvent		event;  	//!< Event
+  glow_eEventType	type;  		//!< Event type
+  int			x_pixel;  	//!< x-coordinate i pixels
+  int			y_pixel;  	//!< y-coordinate i pixels
+  double		x;  		//!< x-coordinate
+  double	       	y;  		//!< y-coordinate
+  glow_eObjectType	object_type;	//!< Type of object
+  void			*object;	//!< Pointer to object
+  char			*code;		//!< Code
+  glow_eDynamicType	dynamic_type;	//!< Dynamic type
+} glow_sEventDynamics, *glow_tEventDynamics;
+
+//! Data structure for color tone callback, when a color tone is selected in the color palette.
+typedef struct {
+  glow_eEvent		event;  	//!< Event
+  glow_eEventType	type;  		//!< Event type
+  int			x_pixel;  	//!< x-coordinate i pixels
+  int			y_pixel;  	//!< y-coordinate i pixels
+  double		x;  		//!< x-coordinate
+  double	       	y;  		//!< y-coordinate
+  glow_eDrawTone	tone;		//!< Selected color tone
+} glow_sEventColorTone, *glow_tEventColorTone;
+
+//! Data structure for a translate event
+/*! If translate on is set before opening a .pwg file, all annotations and text objects
+  will cause en translation callback, and the text will be replaced by the translated text.
+*/
+typedef struct {
+  glow_eEvent		event;  	//!< Event
+  glow_eEventType	type;  		//!< Event type
+  int			x_pixel;  	//!< x-coordinate i pixels
+  int			y_pixel;  	//!< y-coordinate i pixels
+  double		x;  		//!< x-coordinate
+  double	       	y;  		//!< y-coordinate
+  glow_eObjectType	object_type;	//!< Type of object
+  void			*object;        //!< Pointer to object
+  char		        *text;		//!< Text to translate
+  char		        *new_text;	//!< Translated text
+} glow_sEventTranslate, *glow_tEventTranslate;
+
+//! Data structure for an ascii key event.
+typedef struct {
+  glow_eEvent		event;  	//!< Event
+  glow_eEventType	type;  		//!< Event type
+  int			x_pixel;  	//!< x-coordinate i pixels
+  int			y_pixel;  	//!< y-coordinate i pixels
+  double		x;  		//!< x-coordinate
+  double	       	y;  		//!< y-coordinate
+  glow_eObjectType	object_type;  	//!< Type of object that has input focus
+  void			*object;  	//!< Pointer to object that has input focus
+  int			ascii;		//!< Ascii key
+} glow_sEventKeyAscii, *glow_tEventKeyAscii;
+
+//! Data structure for a menu event.
+typedef struct {
+  glow_eEvent		event;  	//!< Event
+  glow_eEventType	type;  		//!< Event type
+  int			x_pixel;  	//!< x-coordinate i pixels
+  int			y_pixel;  	//!< y-coordinate i pixels
+  double		x;  		//!< x-coordinate
+  double	       	y;  		//!< y-coordinate
+  glow_eObjectType	object_type;  	//!< Type of object that has input focus
+  void			*object;  	//!< Pointer to object that has input focus
+  int			item;		//!< Activated item
+} glow_sEventMenu, *glow_tEventMenu;
+
+
+//! Union for event data structures
+typedef union {
+	glow_eEvent		event;
+	glow_sEventAny		any;
+	glow_sEventObject	object;
+	glow_sEventConCreate	con_create;
+	glow_sEventAnnotInput	annot_input;
+	glow_sEventRadiobutton	radiobutton;
+	glow_sEventCreateGrowObject create_grow_object;
+	glow_sEventDynamics	dynamics;
+	glow_sEventColorTone	colortone;
+	glow_sEventTranslate	translate;
+	glow_sEventKeyAscii	key;
+	glow_sEventMenu		menu;
+	} glow_sEvent, *glow_tEvent;
+
+//! Pixmap data structure
+typedef struct {
+  int			width;
+  int			height;
+  char			*bits;
+} glow_sPixmapDataElem;
+
+typedef glow_sPixmapDataElem glow_sPixmapData[DRAW_PIXMAP_SIZE];
 
 typedef struct {
-       int curves;
-       int rows;
-       int x_reverse;
-       double  max_value[TREND_MAX_CURVES + 1];
-       double  min_value[TREND_MAX_CURVES + 1];
-       double  *data[TREND_MAX_CURVES + 1];
-       glow_eDrawType color[TREND_MAX_CURVES + 1];
-       glow_eDrawType fillcolor[TREND_MAX_CURVES + 1];
-       } glow_sCurveData;
+  glow_sPixmapData	pixmap_data;
+  void			*pixmaps;
+} glow_sAnnotPixmap;
+
+//! A point with x and y coordinate
+typedef struct {
+  double	x;		//!< x coordinate
+  double	y;		//!< y coordinate
+} glow_sPoint;
+
+//! Configuration of curves
+typedef struct {
+  int curves;						//!< Number of curves
+  int rows;						//!< Number of points
+  int x_reverse;					//!< Reverse the curves when drawing them
+  double  max_value[TREND_MAX_CURVES + 1];		//!< Max value for every curve
+  double  min_value[TREND_MAX_CURVES + 1];		//!< Min value for every curve
+  double  *data[TREND_MAX_CURVES + 1];			//!< Data for every curve
+  glow_eDrawType color[TREND_MAX_CURVES + 1];		//!< Color of every curve
+  glow_eDrawType fillcolor[TREND_MAX_CURVES + 1];	//!< Fill color for every curve
+} glow_sCurveData;
+
+//! Data for a GrowTrend object
+typedef struct {
+  double		max_value[TREND_MAX_CURVES];
+  double		min_value[TREND_MAX_CURVES];
+  double		scan_time;
+  int			horizontal_lines;
+  int			vertical_lines;
+  int			fill_curve;
+  int			no_of_points;
+  int			curve_width;
+  glow_eDrawType	curve_drawtype[TREND_MAX_CURVES];
+  glow_eDrawType	curve_fill_drawtype[TREND_MAX_CURVES];
+} glow_sTrendInfo;
+
+//! Data for a GrowBar object
+typedef struct {
+  double		max_value;		//!< Min value
+  double		min_value;		//!< Max value
+  glow_eDrawType	bar_drawtype;		//!< Color of the bar
+  glow_eDrawType	bar_bordercolor;	//!< Color of the border of the bar
+  int			bar_borderwidth;	//!< Width of the border
+} glow_sBarInfo;
+
+//! Data for a GrowAxis object
+typedef struct {
+  double		max_value;		//!< Min value
+  double		min_value;		//!< Max value
+  int			lines;			//!< Number of perpendicular lines
+  int                 	longquotient;		//!< Quotient of lines that is a bit longer
+  int                 	valuequotient;		//!< Quotient of lines where av value is displayed
+  char                	format[20];		//!< Format in c-syntax of the displayed values
+} glow_sAxisInfo;
+
+//! Shadow information calculated for a segment in a polyline
+typedef struct {
+  glow_eDrawType drawtype;		//!< Color for shadow in segment
+  int x;			        //!< x-coordinate for shadow polygon for the corresponding polyline point
+  int y;				//!< y-coordinate for shadow polygon for the corresponding polyline point
+} glow_sShadowInfo;
+
+//! Info for a pulldown menu item
+typedef struct {
+  char text[80];		//!< Text of menu item.
+  glow_eMenuItem type;		//!< Type of menu item.
+  bool occupied;		//!< Menu item is configured.
+} glow_sMenuInfoItem;
+
+//! Info for pulldown menu
+typedef struct {
+  glow_sMenuInfoItem item[32];		//!< Array with info for the menu items.
+} glow_sMenuInfo;
+
+/*@}*/
 
 #if defined __cplusplus
 }

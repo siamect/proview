@@ -17,12 +17,13 @@
 GlowNodeClass::GlowNodeClass( GlowCtx *glow_ctx, char *name, 
 	glow_eNodeGroup grp)
   : ctx(glow_ctx), a(10,10), group(grp), dynamic(0), dynamicsize(0),
-    arg_cnt(0), nc_extern(0), trace_attr_type( glow_eTraceType_Boolean),
-    trace_color( glow_eDrawType_Line), trace_color2( glow_eDrawType_Line), 
+    arg_cnt(0), nc_extern(0), dyn_type(0), dyn_action_type(0),
     no_con_obstacle(0), slider(0), animation_count(1),
     y0(0), y1(0), x0(0), x1(0),
     next_nc(0), prev_nc(0), cycle(glow_eCycle_Slow)
 {
+  memset( dyn_color, 0, sizeof( dyn_color));
+  memset( dyn_attr, 0, sizeof( dyn_attr));
   strcpy( nc_name, name);
   strcpy( java_name, "");
   strcpy( next_nodeclass, "");
@@ -98,9 +99,16 @@ void GlowNodeClass::save( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_NodeClass_argtype) << endl;  
   for ( i = 0; i < arg_cnt; i++)
     fp << argtype[i] << endl;
-  fp << int(glow_eSave_NodeClass_trace_attr_type) << FSPACE << int(trace_attr_type) << endl;
-  fp << int(glow_eSave_NodeClass_trace_color) << FSPACE << int(trace_color) << endl;
-  fp << int(glow_eSave_NodeClass_trace_color2) << FSPACE << int(trace_color2) << endl;
+  fp << int(glow_eSave_NodeClass_dyn_type) << FSPACE << dyn_type << endl;
+  fp << int(glow_eSave_NodeClass_dyn_action_type) << FSPACE << dyn_action_type << endl;
+  fp << int(glow_eSave_NodeClass_dyn_color1) << FSPACE << int(dyn_color[0]) << endl;
+  fp << int(glow_eSave_NodeClass_dyn_color2) << FSPACE << int(dyn_color[1]) << endl;
+  fp << int(glow_eSave_NodeClass_dyn_color3) << FSPACE << int(dyn_color[2]) << endl;
+  fp << int(glow_eSave_NodeClass_dyn_color4) << FSPACE << int(dyn_color[3]) << endl;
+  fp << int(glow_eSave_NodeClass_dyn_attr1) << FSPACE << dyn_attr[0] << endl;
+  fp << int(glow_eSave_NodeClass_dyn_attr2) << FSPACE << dyn_attr[1] << endl;
+  fp << int(glow_eSave_NodeClass_dyn_attr3) << FSPACE << dyn_attr[2] << endl;
+  fp << int(glow_eSave_NodeClass_dyn_attr4) << FSPACE << dyn_attr[3] << endl;
   fp << int(glow_eSave_NodeClass_no_con_obstacle) << FSPACE << no_con_obstacle << endl;
   fp << int(glow_eSave_NodeClass_slider) << FSPACE << slider << endl;
   fp <<	int(glow_eSave_NodeClass_java_name) << FSPACE << java_name << endl;
@@ -111,6 +119,7 @@ void GlowNodeClass::save( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_NodeClass_y1) << FSPACE << y1 << endl;
   fp << int(glow_eSave_NodeClass_x0) << FSPACE << x0 << endl;
   fp << int(glow_eSave_NodeClass_x1) << FSPACE << x1 << endl;
+  fp << int(glow_eSave_NodeClass_input_focus_mark) << FSPACE << input_focus_mark << endl;
   fp <<	int(glow_eSave_End) << endl;
 }
 
@@ -171,18 +180,28 @@ void GlowNodeClass::open( ifstream& fp)
         for ( i = 0; i < arg_cnt; i++)
           fp >> argtype[i];
         break;
-      case glow_eSave_NodeClass_trace_attr_type:
+      case glow_eSave_NodeClass_dyn_type: fp >> dyn_type; break; 
+      case glow_eSave_NodeClass_dyn_action_type: fp >> dyn_action_type; break; 
+      case glow_eSave_NodeClass_dyn_color1:
         fp >> tmp;
-	trace_attr_type = (glow_eTraceType)tmp;
+	dyn_color[0] = (glow_eDrawType)tmp;
         break;
-      case glow_eSave_NodeClass_trace_color:
+      case glow_eSave_NodeClass_dyn_color2:
         fp >> tmp;
-	trace_color = (glow_eDrawType)tmp;
+	dyn_color[1] = (glow_eDrawType)tmp;
         break;
-      case glow_eSave_NodeClass_trace_color2:
+      case glow_eSave_NodeClass_dyn_color3:
         fp >> tmp;
-	trace_color2 = (glow_eDrawType)tmp;
+	dyn_color[2] = (glow_eDrawType)tmp;
         break;
+      case glow_eSave_NodeClass_dyn_color4:
+        fp >> tmp;
+	dyn_color[3] = (glow_eDrawType)tmp;
+        break;
+      case glow_eSave_NodeClass_dyn_attr1: fp >> dyn_attr[0]; break;
+      case glow_eSave_NodeClass_dyn_attr2: fp >> dyn_attr[1]; break;
+      case glow_eSave_NodeClass_dyn_attr3: fp >> dyn_attr[2]; break;
+      case glow_eSave_NodeClass_dyn_attr4: fp >> dyn_attr[3]; break;
       case glow_eSave_NodeClass_no_con_obstacle: fp >> no_con_obstacle; break;
       case glow_eSave_NodeClass_slider: fp >> slider; break;
       case glow_eSave_NodeClass_java_name:
@@ -202,6 +221,10 @@ void GlowNodeClass::open( ifstream& fp)
       case glow_eSave_NodeClass_y1: fp >> y1; break;
       case glow_eSave_NodeClass_x0: fp >> x0; break;
       case glow_eSave_NodeClass_x1: fp >> x1; break;
+      case glow_eSave_NodeClass_input_focus_mark:
+        fp >> tmp;
+	input_focus_mark = (glow_eInputFocusMark)tmp;
+        break;
       case glow_eSave_End: end_found = 1; break;
       default:
         cout << "GlowNodeClass:open syntax error" << endl;
@@ -352,14 +375,15 @@ int GlowNodeClass::get_conpoint( int num, double *x, double *y,
   return GLOW__NOCONPOINT;
 }
 
-int GlowNodeClass::get_conpoint( GlowTransform *t, int num, double *x, double *y, 
+int GlowNodeClass::get_conpoint( GlowTransform *t, int num, bool flip_horizontal,
+				 bool flip_vertical, double *x, double *y, 
 	glow_eDirection *dir)
 {
   int		i, sts;
 
   for ( i = 0; i < a.a_size; i++)
   {
-    sts = a.a[i]->get_conpoint( t, num, x, y, dir);
+    sts = a.a[i]->get_conpoint( t, num, flip_horizontal, flip_vertical, x, y, dir);
     if ( sts)
       return sts;
   }
@@ -740,7 +764,7 @@ void GlowNodeClass::get_borders( GlowTransform *t, double *x_right,
 {
   GlowNodeClass *base = get_base_nc();
 
-  if ( fabs( t->rotation/90 - int(t->rotation/90)) < DBL_EPSILON &&
+  if ( (!t || ( t && fabs( t->rotation/90 - int(t->rotation/90)) < DBL_EPSILON)) &&
        /* (next_nc || prev_nc) && */
        !(fabs( base->x0 - base->x1) < DBL_EPSILON || 
 	 fabs( base->y0 - base->y1) < DBL_EPSILON)) {
@@ -818,7 +842,42 @@ void GlowNodeClass::get_origo( GlowTransform *t, double *x,
   }
 }
 
+void GlowNodeClass::convert( glow_eConvert version) 
+{
+  a.convert( version);
+  if ( dyn_type == 3 || dyn_type == 4 || dyn_type == 12) {
+    if ( (glow_eDrawTone) dyn_color[0] == glow_eDrawTone_YellowGreen)
+      (glow_eDrawTone) dyn_color[0] = glow_eDrawTone_Yellow;
+    if ( (glow_eDrawTone) dyn_color[1] == glow_eDrawTone_YellowGreen)
+      (glow_eDrawTone) dyn_color[1] = glow_eDrawTone_Yellow;
+  }
+  else {
+    dyn_color[0] = GlowColor::convert( version, dyn_color[0]);
+    dyn_color[1] = GlowColor::convert( version, dyn_color[1]);
+  }
+}
 
+int GlowNodeClass::find_nc( GlowArrayElem *nodeclass)
+{
+  return a.find_nc( nodeclass);
+}
+
+int GlowNodeClass::get_annotation_info( void *node, int num, int *t_size, glow_eDrawType *t_drawtype,
+					glow_eDrawType *t_color)
+{
+  int		i;
+
+  for ( i = 0; i < a.a_size; i++)
+  {
+    if ( a.a[i]->type() == glow_eObjectType_GrowAnnot &&
+         ((GrowAnnot *)a.a[i])->number == num)
+    {
+      ((GrowAnnot *)a.a[i])->get_annotation_info( node, t_size, t_drawtype, t_color);
+      return 1;
+    }
+  }
+  return 0;
+}
 
 
 

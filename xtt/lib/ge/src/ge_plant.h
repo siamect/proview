@@ -12,6 +12,11 @@
 extern "C" {
 #endif
 
+/*! \file ge_plant.h
+    \brief API to the Nav class which displayes the plant hierarchy. */
+/*! \addtogroup Ge */
+/*@{*/
+
 void *plant_new(
 	void *parent_ctx,
 	Widget	parent_wid,
@@ -25,6 +30,7 @@ void *plant_new(
 void plant_del( void *plantctx);
 int plant_get_select( void *plantctx, pwr_sAttrRef *attrref, int *is_attr);
 
+/*@}*/
 #if defined __cplusplus
 }
 #endif

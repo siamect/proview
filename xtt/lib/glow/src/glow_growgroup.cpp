@@ -60,6 +60,9 @@ void GrowGroup::copy_from( const GrowGroup& n)
   sprintf( n_name, "Grp%d_", ((GrowCtx *)ctx)->objectname_cnt++); 
 
   nc = new GlowNodeGroup( (GlowNodeGroup &)*n.nc);
+
+  if ( ctx->userdata_copy_callback)
+    (ctx->userdata_copy_callback)( this, user_data, &user_data);
 }
 
 void GrowGroup::ungroup()
@@ -137,6 +140,8 @@ void GrowGroup::trace_close()
 void GrowGroup::get_nodegroups( void *a)
 {
   ((GlowArray *)a)->insert( nc);
+
+  // To do, this isn't implemented yet
   nc->a.get_nodegroups( a);
 }
 
@@ -176,9 +181,63 @@ int GrowGroup::get_background_object_limits(GlowTransform *t,
   return sts;
 }
 
+GlowArrayElem *GrowGroup::get_node_from_name( char *name)
+{
+  int i;
+        
+  for ( i = 0; i < nc->a.a_size; i++) {
+    if ( (nc->a.a[i]->type() == glow_eObjectType_Node ||
+          nc->a.a[i]->type() == glow_eObjectType_GrowNode ||
+          nc->a.a[i]->type() == glow_eObjectType_GrowConGlue) &&
+	 strcmp( ((GlowNode *) nc->a.a[i])->n_name, name) == 0)
+      return nc->a.a[i];
+    else if ( nc->a.a[i]->type() == glow_eObjectType_GrowGroup) {
+      GlowArrayElem *n = ((GrowGroup *)nc->a.a[i])->get_node_from_name( name);
+      if ( n)
+	return n;
+    }
+  }
+  return 0;
+}
 
+void GrowGroup::call_redraw_node_cons()
+{
+  ctx->redraw_node_cons( this);
+        
+  for ( int i = 0; i < nc->a.a_size; i++) {
+    nc->a.a[i]->call_redraw_node_cons();
+  }
+}
 
+void GrowGroup::link_insert( void **start)
+{
+  for ( int i = 0; i < nc->a.a_size; i++) {
+    if ( nc->a[i]->type() == glow_eObjectType_Node ||
+	 nc->a[i]->type() == glow_eObjectType_GrowNode ||
+	 nc->a[i]->type() == glow_eObjectType_GrowGroup) 
+    nc->a.a[i]->link_insert( start);
+  }
+}
 
+void GrowGroup::convert( glow_eConvert version) 
+{
+  switch ( version) {
+  case glow_eConvert_V34: {
+    // Conversion of colors
+    GrowNode::convert( version);
+    for ( int i = 0; i < nc->a.a_size; i++) {
+      nc->a.a[i]->convert( version);
+    }
+
+    break;
+  }
+  }  
+}
+
+void GrowGroup::set_rootnode( void *node)
+{
+  nc->a.set_rootnode( node);
+}
 
 
 

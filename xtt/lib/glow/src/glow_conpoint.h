@@ -36,7 +36,8 @@ class GlowConPoint : public GlowArrayElem {
     void get_borders( double pos_x, double pos_y, double *x_right, 
 	double *x_left, double *y_high, double *y_low, void *node) {};
     int get_conpoint( int num, double *x, double *y, glow_eDirection *dir);
-    int get_conpoint( GlowTransform *t, int num, double *x, double *y, glow_eDirection *dir);
+    int get_conpoint( GlowTransform *t, int num, bool flip_horizontal, 
+		      bool flip_vertical, double *x, double *y, glow_eDirection *dir);
     glow_eObjectType type() { return glow_eObjectType_ConPoint;};
     GlowCtx *ctx;
     int	number;

@@ -17,8 +17,8 @@ void GlowPoint::posit( double x1, double y1)
   y = y1;
   z_x = int( x * ctx->zoom_factor_x + 0.5);
   z_y = int( y * ctx->zoom_factor_y + 0.5);
-  nav_z_x = int( x * ctx->nav_zoom_factor_x);
-  nav_z_y = int( y * ctx->nav_zoom_factor_y);
+  nav_z_x = int( x * ctx->nav_zoom_factor_x + 0.5);
+  nav_z_y = int( y * ctx->nav_zoom_factor_y + 0.5);
 }
 
 void GlowPoint::posit_z( int x1, int y1)
@@ -40,8 +40,8 @@ void GlowPoint::zoom()
 
 void GlowPoint::nav_zoom()
 {
-  nav_z_x = int( x * ctx->nav_zoom_factor_x);
-  nav_z_y = int( y * ctx->nav_zoom_factor_y);
+  nav_z_x = int( x * ctx->nav_zoom_factor_x + 0.5);
+  nav_z_y = int( y * ctx->nav_zoom_factor_y + 0.5);
 }
 
 void GlowPoint::print_zoom()

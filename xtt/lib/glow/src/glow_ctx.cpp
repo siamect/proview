@@ -24,6 +24,7 @@
 #include "glow_growctx.h"
 #include "glow_colpalctx.h"
 #include "glow_curvectx.h"
+#include "glow_growgroup.h"
 
 #include "glow_msg.h"
 
@@ -61,10 +62,13 @@ GlowCtx::GlowCtx( char *ctx_name, double zoom_fact, int offs_x, int offs_y)
 	scroll_callback(0), scroll_data(NULL),
 	hot_mode(glow_eHotMode_Default), 
         default_hot_mode(glow_eHotMode_SingleObject), hot_found(0),
-        double_buffered(0), double_buffer_on(0), draw_buffer_only(0)
+        double_buffered(0), double_buffer_on(0), draw_buffer_only(0),
+  	userdata_save_callback(0), userdata_open_callback(0), userdata_copy_callback(0),
+        version(GLOW_VERSION), inputfocus_object(0)
 { 
   strcpy(name, ctx_name);
   memset( (void *)event_callback, 0, sizeof(event_callback));
+  tiptext = new GlowTipText( this);
 }
 
 GlowCtx::~GlowCtx()
@@ -72,6 +76,7 @@ GlowCtx::~GlowCtx()
   int		i;
   GlowArrayElem	*element;
 
+  delete tiptext;
   set_nodraw();
   a_sel.clear();
   move_clear();
@@ -127,6 +132,8 @@ int GlowCtx::save( char *filename, glow_eSaveMode mode)
     return GLOW__FILEOPEN;
 #endif
 
+  version = GLOW_VERSION;
+
   fp << int(glow_eSave_Ctx) << endl;
 
   fp <<	int(glow_eSave_Ctx_zoom_factor_x) << FSPACE << zoom_factor_x << endl;
@@ -162,6 +169,7 @@ int GlowCtx::save( char *filename, glow_eSaveMode mode)
   fp <<	int(glow_eSave_Ctx_refcon_height) << FSPACE << refcon_height << endl;
   fp <<	int(glow_eSave_Ctx_refcon_textsize) << FSPACE << refcon_textsize << endl;
   fp <<	int(glow_eSave_Ctx_refcon_linewidth) << FSPACE << refcon_linewidth << endl;
+  fp <<	int(glow_eSave_Ctx_version) << FSPACE << version << endl;
   if ( ctx_type == glow_eCtxType_Grow)
   {
     fp << int(glow_eSave_Ctx_grow) << endl;
@@ -200,6 +208,8 @@ int GlowCtx::open( char *filename, glow_eSaveMode mode)
   if ( !fp)
     return GLOW__FILEOPEN;
 #endif
+
+  version = 0;
 
   set_nodraw();
   for (;;)
@@ -244,7 +254,8 @@ int GlowCtx::open( char *filename, glow_eSaveMode mode)
       case glow_eSave_Ctx_refcon_height: fp >> refcon_height; break;
       case glow_eSave_Ctx_refcon_textsize: fp >> refcon_textsize; break;
       case glow_eSave_Ctx_refcon_linewidth: fp >> refcon_linewidth; break;
-      case glow_eSave_Ctx_grow: 
+      case glow_eSave_Ctx_version: fp >> version; break;
+      case glow_eSave_Ctx_grow:
         ((GrowCtx *)this)->open_grow( fp);
         grow_loaded = 1;
         break;
@@ -1466,9 +1477,15 @@ GlowArrayElem *GlowCtx::get_node_from_name( char *name)
   for ( i = 0; i < a.a_size; i++)
   {
     if ( (a.a[i]->type() == glow_eObjectType_Node ||
-          a.a[i]->type() == glow_eObjectType_GrowNode) &&
+          a.a[i]->type() == glow_eObjectType_GrowNode ||
+          a.a[i]->type() == glow_eObjectType_GrowConGlue) &&
 	 strcmp( ((GlowNode *) a.a[i])->n_name, name) == 0)
       return a.a[i];
+    else if ( a.a[i]->type() == glow_eObjectType_GrowGroup) {
+      GlowArrayElem *n = ((GrowGroup *)a.a[i])->get_node_from_name( name);
+      if ( n)
+	return n;
+    }
   }
   return 0;
 }
@@ -1734,10 +1751,29 @@ void GlowCtx::object_deleted( GlowArrayElem *object)
   }
 }
 
-void GlowCtx::annotation_input_cb( GlowArrayElem *object, int number, 
-	char *text)
+void GlowCtx::tiptext_event( GlowArrayElem *object, int x, int y)
 {
   
+  if ( event_callback[glow_eEvent_TipText] )
+  {
+    /* Send an tiptext callback */
+    static glow_sEvent e;
+
+    e.event = glow_eEvent_TipText;
+    e.any.type = glow_eEventType_Object;
+    e.any.x_pixel = x;
+    e.any.y_pixel = y;
+    e.any.x = 0;
+    e.any.y = 0;
+    e.object.object_type = object->type();
+    e.object.object = object;
+    event_callback[glow_eEvent_TipText]( this, &e);
+  }
+}
+
+void GlowCtx::annotation_input_cb( GlowArrayElem *object, int number, 
+	char *text)
+{  
   if ( event_callback[glow_eEvent_AnnotationInput] )
   {
     /* Send an annotation input callback */
@@ -1754,6 +1790,52 @@ void GlowCtx::annotation_input_cb( GlowArrayElem *object, int number,
     e.annot_input.number = number;
     e.annot_input.text = text;
     event_callback[glow_eEvent_AnnotationInput]( this, &e);
+  }
+}
+
+void GlowCtx::register_inputfocus( GlowArrayElem *object, int focus)
+{  
+  if ( !focus) {
+    if ( event_callback[glow_eEvent_InputFocusLost] ) {
+      // Send a input focus lost callback
+      static glow_sEvent e;
+
+      e.event = glow_eEvent_InputFocusLost;
+      e.any.type = glow_eEventType_Object;
+      e.any.x_pixel = 0;
+      e.any.y_pixel = 0;
+      e.any.x = 0;
+      e.any.y = 0;
+      e.object.object_type = object->type();
+      e.object.object = object;
+      event_callback[glow_eEvent_InputFocusLost]( this, &e);
+    }
+
+    if ( object == inputfocus_object)
+      inputfocus_object = 0;
+  }
+  else {
+    if ( inputfocus_object == object)
+      return;
+
+    if ( inputfocus_object)
+      ((GrowNode *)inputfocus_object)->set_input_focus( 0);
+
+    inputfocus_object = object;
+    if ( event_callback[glow_eEvent_InputFocusGained] ) {
+      // Send a input focus gained callback
+      static glow_sEvent e;
+
+      e.event = glow_eEvent_InputFocusGained;
+      e.any.type = glow_eEventType_Object;
+      e.any.x_pixel = 0;
+      e.any.y_pixel = 0;
+      e.any.x = 0;
+      e.any.y = 0;
+      e.object.object_type = object->type();
+      e.object.object = object;
+      event_callback[glow_eEvent_InputFocusGained]( this, &e);
+    }
   }
 }
 

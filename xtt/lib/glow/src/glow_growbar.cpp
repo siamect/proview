@@ -16,11 +16,11 @@ GrowBar::GrowBar( GlowCtx *glow_ctx, char *name, double x, double y,
 		int fill_rect, int display_border, 
 		glow_eDrawType fill_d_type, int nodraw) : 
 		GrowRect(glow_ctx,name,x,y,w,h,border_d_type,line_w,0,
-		display_lev,fill_rect,display_border,fill_d_type,nodraw),
+		display_lev,fill_rect,display_border,0,fill_d_type,nodraw),
 		max_value(100),min_value(0),bar_value(35),
 		bar_drawtype(glow_eDrawType_Inherit),
 		bar_bordercolor(glow_eDrawType_Inherit),
-		bar_borderwidth(1)
+		bar_borderwidth(1), user_data(0)
 {
 
   if ( !nodraw)
@@ -62,6 +62,10 @@ void GrowBar::save( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_GrowBar_ref_object) << FSPACE << trace.ref_object << endl;
   fp << int(glow_eSave_GrowBar_rect_part) << endl;
   GrowRect::save( fp, mode);
+  if ( user_data && ctx->userdata_save_callback) {
+    fp << int(glow_eSave_GrowBar_userdata_cb) << endl;
+    (ctx->userdata_save_callback)(&fp, this);
+  }
   fp << int(glow_eSave_End) << endl;
 }
 
@@ -137,6 +141,10 @@ void GrowBar::open( ifstream& fp)
         fp.get();
         fp.getline( trace.ref_object, sizeof(trace.ref_object));
         break;
+      case glow_eSave_GrowBar_userdata_cb:
+	if ( ctx->userdata_open_callback)
+	  (ctx->userdata_open_callback)(&fp, this);
+	break;
       case glow_eSave_End: end_found = 1; break;
       default:
         cout << "GrowBar:open syntax error" << endl;
@@ -301,11 +309,11 @@ void GrowBar::draw( GlowTransform *t, int highlight, int hot, void *node, void *
   ur_y = max( y1, y2);
   if ( fill)
   {
-    drawtype = ((GrowCtx *)ctx)->get_drawtype( fill_drawtype, glow_eDrawType_Color57,
+    drawtype = ((GrowCtx *)ctx)->get_drawtype( fill_drawtype, glow_eDrawType_FillHighlight,
 		 highlight, (GrowNode *)colornode, 1);
     glow_draw_fill_rect( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype);
   }
-  drawtype = ((GrowCtx *)ctx)->get_drawtype( draw_type, glow_eDrawType_Color59,
+  drawtype = ((GrowCtx *)ctx)->get_drawtype( draw_type, glow_eDrawType_LineHighlight,
 		 highlight, (GrowNode *)colornode, 0);
 
   if ( max_value != min_value)
@@ -481,12 +489,12 @@ void GrowBar::nav_draw( GlowTransform *t, int highlight, void *node, void *color
 
   if ( fill)
   {
-    drawtype = ((GrowCtx *)ctx)->get_drawtype( fill_drawtype, glow_eDrawType_Color57,
+    drawtype = ((GrowCtx *)ctx)->get_drawtype( fill_drawtype, glow_eDrawType_FillHighlight,
 		 0, (GrowNode *)colornode, 1);
     glow_draw_nav_fill_rect( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
 	drawtype);
   }
-  drawtype = ((GrowCtx *)ctx)->get_drawtype( draw_type, glow_eDrawType_Color59,
+  drawtype = ((GrowCtx *)ctx)->get_drawtype( draw_type, glow_eDrawType_LineHighlight,
 		 0, (GrowNode *)colornode, 0);
 
   if ( max_value != min_value)
@@ -611,18 +619,12 @@ int GrowBar::trace_init()
 {
   int sts;
 
-  if ( strcmp( trace.data[0], "") == 0)
-    return 1;
-
   sts = ctx->trace_connect_func( (void *) this, &trace);
   return sts;
 }
 
 void GrowBar::trace_close()
 {
-  if ( strcmp( trace.data[0], "") == 0)
-    return;
-
   if ( trace.p)
     ctx->trace_disconnect_func( (void *) this);
 }
@@ -738,4 +740,29 @@ void GrowBar::export_javabean( GlowTransform *t, void *node,
 	border, min_value, max_value, bar_borderwidth,
     	line_width, rotation,
     	pass, shape_cnt, node_cnt, fp);
+}
+
+void GrowBar::set_bar_info( glow_sBarInfo *info)
+{
+  max_value = info->max_value;
+  min_value = info->min_value;
+  bar_drawtype = info->bar_drawtype;
+  bar_bordercolor = info->bar_bordercolor;
+  bar_borderwidth = info->bar_borderwidth;
+}
+
+void GrowBar::convert( glow_eConvert version) 
+{
+  switch ( version) {
+  case glow_eConvert_V34: {
+    // Conversion of colors
+    GrowRect::convert( version);
+    bar_drawtype = GlowColor::convert( version, bar_drawtype);
+    bar_bordercolor = GlowColor::convert( version, bar_bordercolor);
+    original_fill_drawtype = GlowColor::convert( version, original_fill_drawtype);
+    fill_drawtype = GlowColor::convert( version, fill_drawtype);
+
+    break;
+  }
+  }  
 }

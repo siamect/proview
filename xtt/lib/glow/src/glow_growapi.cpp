@@ -29,6 +29,7 @@
 #include "glow_growcurve.h"
 #include "glow_growapi.h"
 #include "glow_growrect.h"
+#include "glow_growrectrounded.h"
 #include "glow_growline.h"
 #include "glow_growarc.h"
 #include "glow_growconpoint.h"
@@ -42,6 +43,13 @@
 #include "glow_growimage.h"
 #include "glow_growaxis.h"
 #include "glow_growgroup.h"
+#include "glow_growconglue.h"
+#include "glow_growmenu.h"
+
+/*! \file glow_growapi.cpp
+    \brief Contains c API for grow. */
+/*! \addtogroup GrowApi */
+/*@{*/
 
 static char *growapi_translate( char *transtab, char *name);
 
@@ -204,12 +212,12 @@ void grow_CreateGrowSlider( grow_tCtx ctx, char *name, grow_tNodeClass nc,
 void grow_CreateCon( grow_tCtx ctx, char *name, grow_tConClass cc,
 	grow_tNode source, grow_tNode dest, int source_conpoint, 
 	int dest_conpoint, void *user_data, grow_tCon *con, 
-	int point_num, double *x_vect, double *y_vect)
+	int point_num, double *x_vect, double *y_vect, int border, int shadow)
 {
   GlowCon *c1;
   c1 = new GlowCon( ctx, name, (GlowConClass *)cc, (GlowNode *)source,
 	(GlowNode *)dest, source_conpoint, dest_conpoint, 0, point_num,
-	x_vect, y_vect);
+	x_vect, y_vect, border, shadow);
   c1->set_user_data( user_data);
   ctx->insert( c1);
   ctx->nav_zoom();
@@ -226,24 +234,53 @@ void grow_CreatePasteNode( grow_tCtx ctx, char *name, grow_tNodeClass nc,
   *node = (grow_tNode) n1;
 }
 
+void grow_SetObjectInputFocus( grow_tNode node, int focus)
+{
+  if ( ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowNode ||
+       ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowSlider ||
+       ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowGroup)
+    ((GrowNode *)node)->set_input_focus( focus);
+}
+
 void grow_SetAnnotation( grow_tNode node, int number, char *text, int size)
 {
-  ((GrowNode *)node)->set_annotation( number, text, size, 0);
+  if ( ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowNode ||
+       ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowSlider ||
+       ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowGroup)
+    ((GrowNode *)node)->set_annotation( number, text, size, 0);
+}
+
+void grow_SetAnnotationBrief( grow_tNode node, int number, char *text, int size)
+{
+  if ( ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowNode ||
+       ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowSlider ||
+       ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowGroup)
+    ((GrowNode *)node)->set_annotation( number, text, size, 0, 1);
 }
 
 void grow_GetAnnotation( grow_tNode node, int number, char *text, int size)
 {
-  ((GrowNode *)node)->get_annotation( number, text, size);
+  if ( ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowNode ||
+       ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowSlider ||
+       ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowGroup)
+    ((GrowNode *)node)->get_annotation( number, text, size);
 }
 
 void grow_OpenAnnotationInput( grow_tNode node, int number)
 {
-  ((GrowNode *)node)->open_annotation_input( number);
+  if ( ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowNode)
+    ((GrowNode *)node)->open_annotation_input( number);
 }
 
 void grow_CloseAnnotationInput( grow_tNode node, int number)
 {
-  ((GrowNode *)node)->close_annotation_input( number);
+  if ( ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowNode)
+    ((GrowNode *)node)->close_annotation_input( number);
+}
+
+void grow_CloseAnnotationInputAll( GrowCtx *ctx)
+{
+  ctx->close_annotation_input_all();
 }
 
 int grow_GetAnnotationInput( grow_tNode node, int number, char **text)
@@ -253,12 +290,16 @@ int grow_GetAnnotationInput( grow_tNode node, int number, char **text)
 
 int grow_AnnotationInputIsOpen( grow_tNode node, int number)
 {
-  return ((GrowNode *)node)->annotation_input_is_open( number);
+  if ( ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowNode)
+    return ((GrowNode *)node)->annotation_input_is_open( number);
+  else
+    return 0;
 }
 
 void grow_SetPasteNodeAnnotation( grow_tNode node, int number, char *text, int size)
 {
-  ((GrowNode *)node)->set_annotation( number, text, size, 1);
+  if ( ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowNode)
+    ((GrowNode *)node)->set_annotation( number, text, size, 1);
 }
 
 extern "C" void	grow_EnableEvent( GrowCtx *ctx, glow_eEvent event, 
@@ -327,7 +368,7 @@ void grow_CreateArc( grow_tCtx ctx, double x1, double y1,
 void grow_CreateText( grow_tCtx ctx, char *text_str, double x, double y, 
 	glow_eDrawType draw_type, int text_size, grow_tObject *text)
 {
-  *text = (grow_tObject) new GlowText( ctx, text_str, x, y, draw_type,
+  *text = (grow_tObject) new GlowText( ctx, text_str, x, y, draw_type, glow_eDrawType_Line,
 	text_size);
 }
 
@@ -350,7 +391,7 @@ void grow_CreateAnnotPixmap( grow_tCtx ctx, int number,
 void grow_CreateAnnot( grow_tCtx ctx, double x, double y, int number,
 	glow_eDrawType draw_type, int text_size, grow_tObject *annot)
 {
-  *annot = (grow_tObject) new GlowAnnot( ctx, x, y, number, draw_type,
+  *annot = (grow_tObject) new GlowAnnot( ctx, x, y, number, draw_type, glow_eDrawType_Line,
 	text_size);
 }
 
@@ -397,7 +438,7 @@ void grow_AddText( grow_tNodeClass nc, char *text_str, double x, double y,
 	glow_eDrawType draw_type, int text_size)
 {
   GlowText *text = new GlowText( ((GlowNodeClass *)nc)->ctx, 
-	text_str, x, y, draw_type, text_size);
+	text_str, x, y, draw_type, glow_eDrawType_Line, text_size);
   ((GlowNodeClass *)nc)->insert( text);
 }
 
@@ -406,7 +447,7 @@ void grow_AddAnnot( grow_tNodeClass nc, double x, double y, int number,
 	int relative_pos)
 {
   GlowAnnot *annot = new GlowAnnot( ((GlowNodeClass *)nc)->ctx, 
-	x, y, number, draw_type, text_size, annot_type, relative_pos);
+	x, y, number, draw_type, glow_eDrawType_Line, text_size, annot_type, relative_pos);
   ((GlowNodeClass *)nc)->insert( annot);
 }
 
@@ -780,12 +821,28 @@ void grow_CreateGrowRect( grow_tCtx ctx, char *name,
 	double x, double y, double width, double height,
 	glow_eDrawType draw_type, int line_width, int fix_line_width, 
 	glow_mDisplayLevel display_level, int fill_rect, 
-	int border, glow_eDrawType fill_draw_type, void *user_data,
+	int border, int shadow, glow_eDrawType fill_draw_type, void *user_data,
 	grow_tObject *rect)
 {
   GrowRect *r1;
   r1 = new GrowRect( ctx, name, x, y, width, height, draw_type, line_width,
-	fix_line_width, display_level, fill_rect, border, fill_draw_type);
+	fix_line_width, display_level, fill_rect, border, shadow, fill_draw_type);
+  r1->set_user_data( user_data);
+  ctx->insert( r1);
+  ctx->nav_zoom();
+  *rect = (grow_tObject) r1;
+}
+
+void grow_CreateGrowRectRounded( grow_tCtx ctx, char *name, 
+	double x, double y, double width, double height,
+	glow_eDrawType draw_type, int line_width, int fix_line_width, 
+	glow_mDisplayLevel display_level, int fill_rect, 
+	int border, int shadow, glow_eDrawType fill_draw_type, void *user_data,
+	grow_tObject *rect)
+{
+  GrowRectRounded *r1;
+  r1 = new GrowRectRounded( ctx, name, x, y, width, height, draw_type, line_width,
+	fix_line_width, display_level, fill_rect, border, shadow, fill_draw_type);
   r1->set_user_data( user_data);
   ctx->insert( r1);
   ctx->nav_zoom();
@@ -858,13 +915,13 @@ void grow_CreateGrowLine( grow_tCtx ctx, char *name,
 void grow_CreateGrowPolyLine( grow_tCtx ctx, char *name, 
 	glow_sPoint *pointarray, int point_cnt,
 	glow_eDrawType draw_type, int line_width, int fix_line_width,
-	int fill, int border, glow_eDrawType fill_draw_type, 
+	int fill, int border, int shadow, glow_eDrawType fill_draw_type, 
 	int closed, void *user_data,
 	grow_tObject *polyline)
 {
   GrowPolyLine *l1;
   l1 = new GrowPolyLine( ctx, name, pointarray, point_cnt, draw_type, 
-	line_width, fix_line_width, fill, border, fill_draw_type, closed);
+	line_width, fix_line_width, fill, border, shadow, fill_draw_type, closed);
   l1->set_user_data( user_data);
   ctx->insert( l1);
   ctx->nav_zoom();
@@ -874,13 +931,13 @@ void grow_CreateGrowPolyLine( grow_tCtx ctx, char *name,
 void grow_CreateGrowArc( grow_tCtx ctx, char *name, 
 	double x1, double y1, double x2, double y2,
 	int angel1, int angel2, glow_eDrawType draw_type, 
-	int line_width, int fill_arc, int border, glow_eDrawType fill_draw_type,
+	int line_width, int fill_arc, int border, int shadow, glow_eDrawType fill_draw_type,
 	void *user_data,
 	grow_tObject *arc)
 {
   GrowArc *a1;
   a1 = new GrowArc( ctx, name, x1, y1, x2, y2, angel1, angel2, draw_type, 
-	line_width, fill_arc, border, fill_draw_type);
+	line_width, fill_arc, border, shadow, fill_draw_type);
   a1->set_user_data( user_data);
   ctx->insert( a1);
   ctx->nav_zoom();
@@ -900,13 +957,13 @@ void grow_CreateGrowConPoint( grow_tCtx ctx, char *name,
 }
 
 void grow_CreateGrowAnnot( grow_tCtx ctx, char *name, 
-	double x, double y, int annot_num, glow_eDrawType d_type,
+	double x, double y, int annot_num, glow_eDrawType d_type, glow_eDrawType color_d_type,
 	int t_size, glow_eAnnotType a_type,
 	int rel_pos, glow_mDisplayLevel display_lev,
 	void *user_data, grow_tObject *annot)
 {
   GrowSubAnnot *a1;
-  a1 = new GrowSubAnnot( ctx, name, x, y, annot_num, d_type, t_size,
+  a1 = new GrowSubAnnot( ctx, name, x, y, annot_num, d_type, color_d_type, t_size,
 	a_type, rel_pos, display_lev);
   a1->set_user_data( user_data);
   ctx->insert( a1);
@@ -916,12 +973,12 @@ void grow_CreateGrowAnnot( grow_tCtx ctx, char *name,
 
 void grow_CreateGrowText( grow_tCtx ctx, char *name, 
 	char *text, double x, double y,
-	glow_eDrawType draw_type, int t_size, 
+	glow_eDrawType draw_type, glow_eDrawType color, int t_size, 
 	glow_mDisplayLevel display_level, void *user_data,
 	grow_tObject *text_object)
 {
   GrowText *t1;
-  t1 = new GrowText( ctx, name, text, x, y, draw_type, t_size, display_level);
+  t1 = new GrowText( ctx, name, text, x, y, draw_type, color, t_size, display_level);
   t1->set_user_data( user_data);
   ctx->insert( t1);
   ctx->nav_zoom();
@@ -952,6 +1009,32 @@ void grow_CreateGrowAxis( grow_tCtx ctx, char *name,
   ctx->insert( l1);
   ctx->nav_zoom();
   *axis = (grow_tObject) l1;
+}
+
+void grow_CreateGrowConGlue( grow_tCtx ctx, char *name, 
+	double x, double y, grow_tObject *conglue)
+{
+  GrowConGlue *r1;
+  r1 = new GrowConGlue( ctx, name, x, y);
+  ctx->insert( r1);
+  ctx->nav_zoom();
+  *conglue = (grow_tObject) r1;
+}
+
+void grow_CreateGrowMenu( grow_tCtx ctx, char *name, glow_sMenuInfo *info,
+			  double x, double y, double min_width,
+			  glow_eDrawType draw_type, int line_width,
+			  int fill_rect, int border, glow_eDrawType fill_draw_type,
+			  int text_size, glow_eDrawType text_drawtype,
+			  glow_eDrawType text_color, glow_eDrawType disabled_text_color,
+			  grow_tObject parent, grow_tObject *menu)
+{
+  GrowMenu *r1;
+  r1 = new GrowMenu( ctx, name, info, x, y, min_width, draw_type, line_width,
+		     fill_rect, border, fill_draw_type, text_size, text_drawtype, 
+		     text_color, disabled_text_color, (GlowArrayElem *)parent);
+  ctx->insert( r1);
+  *menu = (grow_tObject) r1;
 }
 
 int grow_SaveSubGraph( grow_tCtx ctx, char *filename)
@@ -1011,6 +1094,78 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       char *dynamic;
       int  dynsize;
 
+      strcpy( attrinfo[i].name, "shadow_width");
+      attrinfo[i].value_p = &op->shadow_width;
+      attrinfo[i].type = glow_eType_Double;
+      attrinfo[i].minlimit = 0;
+      attrinfo[i].maxlimit = 50;
+      attrinfo[i++].size = sizeof( op->shadow_width);
+      
+      strcpy( attrinfo[i].name, "shadow_contrast");
+      attrinfo[i].value_p = &op->shadow_contrast;
+      attrinfo[i].type = glow_eType_Int;
+      attrinfo[i].minlimit = 1;
+      attrinfo[i].maxlimit = 3;
+      attrinfo[i++].size = sizeof( op->shadow_contrast);
+      
+      strcpy( attrinfo[i].name, "relief");
+      attrinfo[i].value_p = &op->relief;
+      attrinfo[i].type = glow_eType_Relief;
+      attrinfo[i++].size = sizeof( op->relief);
+      
+      strcpy( attrinfo[i].name, "disable_shadow");
+      attrinfo[i].value_p = &op->disable_shadow;
+      attrinfo[i].type = glow_eType_Boolean;
+      attrinfo[i++].size = sizeof( op->disable_shadow);
+      
+      strcpy( attrinfo[i].name, "Dynamic");
+      op->get_dynamic( &dynamic, &dynsize);
+      attrinfo[i].value_p = malloc( 1024);
+      if ( dynsize)
+        strncpy( (char *) attrinfo[i].value_p, dynamic, 1024);
+      else
+        strcpy( (char *) attrinfo[i].value_p, "");
+      attrinfo[i].type = glow_eType_String;
+      attrinfo[i].size = 1024;
+      attrinfo[i].multiline = 1;
+      attrinfo[i++].info_type = grow_eInfoType_Dynamic;
+      break;
+    }
+    case glow_eObjectType_GrowRectRounded:
+    {
+      GrowRectRounded *op = (GrowRectRounded *)object;
+      char *dynamic;
+      int  dynsize;
+
+      strcpy( attrinfo[i].name, "round_amount");
+      attrinfo[i].value_p = &op->round_amount;
+      attrinfo[i].type = glow_eType_Double;
+      attrinfo[i++].size = sizeof( op->round_amount);
+      
+      strcpy( attrinfo[i].name, "shadow_width");
+      attrinfo[i].value_p = &op->shadow_width;
+      attrinfo[i].type = glow_eType_Double;
+      attrinfo[i].minlimit = 0;
+      attrinfo[i].maxlimit = 50;
+      attrinfo[i++].size = sizeof( op->shadow_width);
+      
+      strcpy( attrinfo[i].name, "shadow_contrast");
+      attrinfo[i].value_p = &op->shadow_contrast;
+      attrinfo[i].type = glow_eType_Int;
+      attrinfo[i].minlimit = 1;
+      attrinfo[i].maxlimit = 3;
+      attrinfo[i++].size = sizeof( op->shadow_contrast);
+      
+      strcpy( attrinfo[i].name, "relief");
+      attrinfo[i].value_p = &op->relief;
+      attrinfo[i].type = glow_eType_Relief;
+      attrinfo[i++].size = sizeof( op->relief);
+      
+      strcpy( attrinfo[i].name, "disable_shadow");
+      attrinfo[i].value_p = &op->disable_shadow;
+      attrinfo[i].type = glow_eType_Boolean;
+      attrinfo[i++].size = sizeof( op->disable_shadow);
+      
       strcpy( attrinfo[i].name, "Dynamic");
       op->get_dynamic( &dynamic, &dynsize);
       attrinfo[i].value_p = malloc( 1024);
@@ -1030,10 +1185,44 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       char *dynamic;
       int  dynsize;
 
+      strcpy( attrinfo[i].name, "shadow_width");
+      attrinfo[i].value_p = &op->shadow_width;
+      attrinfo[i].type = glow_eType_Double;
+      attrinfo[i].minlimit = 0;
+      attrinfo[i].maxlimit = 50;
+      attrinfo[i++].size = sizeof( op->shadow_width);
+      
+      strcpy( attrinfo[i].name, "shadow_contrast");
+      attrinfo[i].value_p = &op->shadow_contrast;
+      attrinfo[i].type = glow_eType_Int;
+      attrinfo[i].minlimit = 1;
+      attrinfo[i].maxlimit = 3;
+      attrinfo[i++].size = sizeof( op->shadow_contrast);
+      
+      strcpy( attrinfo[i].name, "relief");
+      attrinfo[i].value_p = &op->relief;
+      attrinfo[i].type = glow_eType_Relief;
+      attrinfo[i++].size = sizeof( op->relief);
+      
+      strcpy( attrinfo[i].name, "disable_shadow");
+      attrinfo[i].value_p = &op->disable_shadow;
+      attrinfo[i].type = glow_eType_Boolean;
+      attrinfo[i++].size = sizeof( op->disable_shadow);
+      
       strcpy( attrinfo[i].name, "fill_eq_border");
       attrinfo[i].value_p = &op->fill_eq_border;
       attrinfo[i].type = glow_eType_Boolean;
       attrinfo[i++].size = sizeof( op->fill_eq_border);
+      
+      strcpy( attrinfo[i].name, "fill_eq_light");
+      attrinfo[i].value_p = &op->fill_eq_light;
+      attrinfo[i].type = glow_eType_Boolean;
+      attrinfo[i++].size = sizeof( op->fill_eq_light);
+      
+      strcpy( attrinfo[i].name, "fill_eq_shadow");
+      attrinfo[i].value_p = &op->fill_eq_shadow;
+      attrinfo[i].type = glow_eType_Boolean;
+      attrinfo[i++].size = sizeof( op->fill_eq_shadow);
       
       strcpy( attrinfo[i].name, "Dynamic");
       op->get_dynamic( &dynamic, &dynsize);
@@ -1082,6 +1271,30 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       attrinfo[i].value_p = &op->angel2;
       attrinfo[i].type = glow_eType_Int;
       attrinfo[i++].size = sizeof( op->angel2);
+      
+      strcpy( attrinfo[i].name, "shadow_width");
+      attrinfo[i].value_p = &op->shadow_width;
+      attrinfo[i].type = glow_eType_Double;
+      attrinfo[i].minlimit = 0;
+      attrinfo[i].maxlimit = 50;
+      attrinfo[i++].size = sizeof( op->shadow_width);
+      
+      strcpy( attrinfo[i].name, "shadow_contrast");
+      attrinfo[i].value_p = &op->shadow_contrast;
+      attrinfo[i].type = glow_eType_Int;
+      attrinfo[i].minlimit = 1;
+      attrinfo[i].maxlimit = 3;
+      attrinfo[i++].size = sizeof( op->shadow_contrast);
+      
+      strcpy( attrinfo[i].name, "relief");
+      attrinfo[i].value_p = &op->relief;
+      attrinfo[i].type = glow_eType_Relief;
+      attrinfo[i++].size = sizeof( op->relief);
+      
+      strcpy( attrinfo[i].name, "disable_shadow");
+      attrinfo[i].value_p = &op->disable_shadow;
+      attrinfo[i].type = glow_eType_Boolean;
+      attrinfo[i++].size = sizeof( op->disable_shadow);
       
       strcpy( attrinfo[i].name, "Dynamic");
       op->get_dynamic( &dynamic, &dynsize);
@@ -1184,54 +1397,6 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       char *dynamic;
       int  dynsize;
 
-      if ( (name = growapi_translate( transtab, "TraceData1")))
-      {
-        strcpy( attrinfo[i].name, name);
-        attrinfo[i].value_p = &op->trace.data[0];
-        attrinfo[i].type = glow_eType_String;
-        attrinfo[i++].size = sizeof( op->trace.data[0]);
-      }
-      
-      if ( (name = growapi_translate( transtab, "TraceData2")))
-      {
-        strcpy( attrinfo[i].name, name);
-        attrinfo[i].value_p = &op->trace.data[1];
-        attrinfo[i].type = glow_eType_String;
-        attrinfo[i++].size = sizeof( op->trace.data[1]);
-      }
-      
-      if ( (name = growapi_translate( transtab, "TraceColor")))
-      {
-        strcpy( attrinfo[i].name, name);
-        attrinfo[i].value_p = &op->trace.color;
-        attrinfo[i].type = glow_eType_TraceColor;
-        attrinfo[i++].size = sizeof( op->trace.color);
-      }
-      
-      if ( (name = growapi_translate( transtab, "TraceAttrType")))
-      {
-        strcpy( attrinfo[i].name, name);
-        attrinfo[i].value_p = &op->trace.attr_type;
-        attrinfo[i].type = glow_eType_Int;
-        attrinfo[i++].size = sizeof( op->trace.attr_type);
-      }
-      
-      if ( (name = growapi_translate( transtab, "TraceCycle")))
-      {
-        strcpy( attrinfo[i].name, name);
-        attrinfo[i].value_p = &op->trace.cycle;
-        attrinfo[i].type = glow_eType_Cycle;
-        attrinfo[i++].size = sizeof( op->trace.cycle);
-      }
-      
-      if ( (name = growapi_translate( transtab, "TraceRefObject")))
-      {
-        strcpy( attrinfo[i].name, name);
-        attrinfo[i].value_p = &op->trace.ref_object;
-        attrinfo[i].type = glow_eType_String;
-        attrinfo[i++].size = sizeof( op->trace.ref_object);
-      }
-      
       if ( (name = growapi_translate( transtab, "MaxValue")))
       {
         strcpy( attrinfo[i].name, name);
@@ -1303,54 +1468,6 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       char *dynamic;
       int  dynsize;
 
-      if ( (name = growapi_translate( transtab, "TraceData1")))
-      {
-        strcpy( attrinfo[i].name, name);
-        attrinfo[i].value_p = &op->trace.data[0];
-        attrinfo[i].type = glow_eType_String;
-        attrinfo[i++].size = sizeof( op->trace.data[0]);
-      }
-      
-      if ( (name = growapi_translate( transtab, "TraceData2")))
-      {
-        strcpy( attrinfo[i].name, name);
-        attrinfo[i].value_p = &op->trace.data[1];
-        attrinfo[i].type = glow_eType_String;
-        attrinfo[i++].size = sizeof( op->trace.data[1]);
-      }
-      
-      if ( (name = growapi_translate( transtab, "TraceColor")))
-      {
-        strcpy( attrinfo[i].name, name);
-        attrinfo[i].value_p = &op->trace.color;
-        attrinfo[i].type = glow_eType_TraceColor;
-        attrinfo[i++].size = sizeof( op->trace.color);
-      }
-      
-      if ( (name = growapi_translate( transtab, "TraceAttrType")))
-      {
-        strcpy( attrinfo[i].name, name);
-        attrinfo[i].value_p = &op->trace.attr_type;
-        attrinfo[i].type = glow_eType_TraceType;
-        attrinfo[i++].size = sizeof( op->trace.attr_type);
-      }
-      
-      if ( (name = growapi_translate( transtab, "TraceCycle")))
-      {
-        strcpy( attrinfo[i].name, name);
-        attrinfo[i].value_p = &op->trace.cycle;
-        attrinfo[i].type = glow_eType_Cycle;
-        attrinfo[i++].size = sizeof( op->trace.cycle);
-      }
-      
-      if ( (name = growapi_translate( transtab, "TraceRefObject")))
-      {
-        strcpy( attrinfo[i].name, name);
-        attrinfo[i].value_p = &op->trace.ref_object;
-        attrinfo[i].type = glow_eType_String;
-        attrinfo[i++].size = sizeof( op->trace.ref_object);
-      }
-      
       if ( (name = growapi_translate( transtab, "NoOfPoints")))
       {
         strcpy( attrinfo[i].name, name);
@@ -1561,7 +1678,7 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
 
       if ( (name = growapi_translate( transtab, "SubGraph")))
       {
-        if ( ((GrowRect *)object)->type() == glow_eObjectType_GrowGroup)
+        if ( ((GrowNode *)object)->type() == glow_eObjectType_GrowGroup)
           strcpy( attrinfo[i].name, "Group");
         else
           strcpy( attrinfo[i].name, name);
@@ -1569,118 +1686,6 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
         attrinfo[i].type = glow_eType_String;
         attrinfo[i].no_edit = 1;
         attrinfo[i++].size = sizeof( op->nc->nc_name);
-      }
-      
-      if ( (name = growapi_translate( transtab, "TraceData1")))
-      {
-        strcpy( attrinfo[i].name, name);
-        attrinfo[i].value_p = &op->trace.data[0];
-        attrinfo[i].type = glow_eType_String;
-        attrinfo[i++].size = sizeof( op->trace.data[0]);
-      }
-      
-      if ( (name = growapi_translate( transtab, "TraceData2")))
-      {
-        strcpy( attrinfo[i].name, name);
-        attrinfo[i].value_p = &op->trace.data[1];
-        attrinfo[i].type = glow_eType_String;
-        attrinfo[i++].size = sizeof( op->trace.data[1]);
-      }
-      
-      if ( (name = growapi_translate( transtab, "TraceData3")))
-      {
-        strcpy( attrinfo[i].name, name);
-        attrinfo[i].value_p = &op->trace.data[2];
-        attrinfo[i].type = glow_eType_String;
-        attrinfo[i++].size = sizeof( op->trace.data[2]);
-      }
-      
-      if ( (name = growapi_translate( transtab, "TraceData4")))
-      {
-        strcpy( attrinfo[i].name, name);
-        attrinfo[i].value_p = &op->trace.data[3];
-        attrinfo[i].type = glow_eType_String;
-        attrinfo[i++].size = sizeof( op->trace.data[3]);
-      }
-      
-      if ( (name = growapi_translate( transtab, "TraceData5")))
-      {
-        strcpy( attrinfo[i].name, name);
-        attrinfo[i].value_p = &op->trace.data[4];
-        attrinfo[i].type = glow_eType_String;
-        attrinfo[i++].size = sizeof( op->trace.data[4]);
-      }
-      
-      if ( (name = growapi_translate( transtab, "TraceData6")))
-      {
-        strcpy( attrinfo[i].name, name);
-        attrinfo[i].value_p = &op->trace.data[5];
-        attrinfo[i].type = glow_eType_String;
-        attrinfo[i++].size = sizeof( op->trace.data[5]);
-      }
-      
-      if ( (name = growapi_translate( transtab, "TraceData7")))
-      {
-        strcpy( attrinfo[i].name, name);
-        attrinfo[i].value_p = &op->trace.data[6];
-        attrinfo[i].type = glow_eType_String;
-        attrinfo[i++].size = sizeof( op->trace.data[6]);
-      }
-      
-      if ( (name = growapi_translate( transtab, "TraceData8")))
-      {
-        strcpy( attrinfo[i].name, name);
-        attrinfo[i].value_p = &op->trace.data[7];
-        attrinfo[i].type = glow_eType_String;
-        attrinfo[i++].size = sizeof( op->trace.data[7]);
-      }
-      
-      if ( (name = growapi_translate( transtab, "TraceData9")))
-      {
-        strcpy( attrinfo[i].name, name);
-        attrinfo[i].value_p = &op->trace.data[8];
-        attrinfo[i].type = glow_eType_String;
-        attrinfo[i++].size = sizeof( op->trace.data[8]);
-      }
-      
-      if ( (name = growapi_translate( transtab, "TraceColor")))
-      {
-        strcpy( attrinfo[i].name, name);
-        attrinfo[i].value_p = &op->trace.color;
-        attrinfo[i].type = glow_eType_TraceColor;
-        attrinfo[i++].size = sizeof( op->trace.color);
-      }
-
-      if ( (name = growapi_translate( transtab, "TraceColor2")))
-      {
-        strcpy( attrinfo[i].name, name);
-        attrinfo[i].value_p = &op->trace.color2;
-        attrinfo[i].type = glow_eType_TraceColor;
-        attrinfo[i++].size = sizeof( op->trace.color2);
-      }
-      
-      if ( (name = growapi_translate( transtab, "TraceAccess")))
-      {
-        strcpy( attrinfo[i].name, name);
-        attrinfo[i].value_p = &op->trace.access;
-        attrinfo[i].type = glow_eType_Access;
-        attrinfo[i++].size = sizeof( op->trace.access);
-      }
-      
-      if ( (name = growapi_translate( transtab, "TraceCycle")))
-      {
-        strcpy( attrinfo[i].name, name);
-        attrinfo[i].value_p = &op->trace.cycle;
-        attrinfo[i].type = glow_eType_Cycle;
-        attrinfo[i++].size = sizeof( op->trace.cycle);
-      }
-      
-      if ( (name = growapi_translate( transtab, "TraceRefObject")))
-      {
-        strcpy( attrinfo[i].name, name);
-        attrinfo[i].value_p = &op->trace.ref_object;
-        attrinfo[i].type = glow_eType_String;
-        attrinfo[i++].size = sizeof( op->trace.ref_object);
       }
       
       for ( j = 0; j < 10; j++)
@@ -1714,14 +1719,6 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
         i++;
       }
 
-      if ( (name = growapi_translate( transtab, "TraceAttrType")))
-      {
-        strcpy( attrinfo[i].name, name);
-        attrinfo[i].value_p = &op->trace.attr_type;
-        attrinfo[i].type = glow_eType_TraceType;
-        attrinfo[i++].size = sizeof( op->trace.attr_type);
-      }
-      
       if ( (name = growapi_translate( transtab, "Dynamic")))
       {
         strcpy( attrinfo[i].name, name);
@@ -1753,46 +1750,6 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
         attrinfo[i].type = glow_eType_String;
         attrinfo[i].no_edit = 1;
         attrinfo[i++].size = sizeof( op->nc->nc_name);
-      }
-      
-      if ( (name = growapi_translate( transtab, "TraceData1")))
-      {
-        strcpy( attrinfo[i].name, name);
-        attrinfo[i].value_p = &op->trace.data[0];
-        attrinfo[i].type = glow_eType_String;
-        attrinfo[i++].size = sizeof( op->trace.data[0]);
-      }
-      
-      if ( (name = growapi_translate( transtab, "TraceData2")))
-      {
-        strcpy( attrinfo[i].name, name);
-        attrinfo[i].value_p = &op->trace.data[1];
-        attrinfo[i].type = glow_eType_String;
-        attrinfo[i++].size = sizeof( op->trace.data[2]);
-      }
-      
-      if ( (name = growapi_translate( transtab, "TraceColor")))
-      {
-        strcpy( attrinfo[i].name, name);
-        attrinfo[i].value_p = &op->trace.color;
-        attrinfo[i].type = glow_eType_TraceColor;
-        attrinfo[i++].size = sizeof( op->trace.color);
-      }
-      
-      if ( (name = growapi_translate( transtab, "TraceAccess")))
-      {
-        strcpy( attrinfo[i].name, name);
-        attrinfo[i].value_p = &op->trace.access;
-        attrinfo[i].type = glow_eType_Access;
-        attrinfo[i++].size = sizeof( op->trace.access);
-      }
-      
-      if ( (name = growapi_translate( transtab, "TraceCycle")))
-      {
-        strcpy( attrinfo[i].name, name);
-        attrinfo[i].value_p = &op->trace.cycle;
-        attrinfo[i].type = glow_eType_Cycle;
-        attrinfo[i++].size = sizeof( op->trace.cycle);
       }
       
       if ( (name = growapi_translate( transtab, "Direction")))
@@ -1866,14 +1823,6 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
         i++;
       }
 
-      if ( (name = growapi_translate( transtab, "TraceAttrType")))
-      {
-        strcpy( attrinfo[i].name, name);
-        attrinfo[i].value_p = &op->trace.attr_type;
-        attrinfo[i].type = glow_eType_TraceType;
-        attrinfo[i++].size = sizeof( op->trace.attr_type);
-      }
-      
       if ( (name = growapi_translate( transtab, "Dynamic")))
       {
         strcpy( attrinfo[i].name, name);
@@ -1909,20 +1858,30 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       attrinfo[i].type = glow_eType_Int;
       attrinfo[i++].size = sizeof( op->no_con_obstacle);
 
-      strcpy( attrinfo[i].name, "Color");
-      attrinfo[i].value_p = &op->trace_color;
+      strcpy( attrinfo[i].name, "Color1");
+      attrinfo[i].value_p = &op->dyn_color[0];
       attrinfo[i].type = glow_eType_TraceColor;
-      attrinfo[i++].size = sizeof( op->trace_color);
+      attrinfo[i++].size = sizeof( op->dyn_color[0]);
 
       strcpy( attrinfo[i].name, "Color2");
-      attrinfo[i].value_p = &op->trace_color2;
+      attrinfo[i].value_p = &op->dyn_color[1];
       attrinfo[i].type = glow_eType_TraceColor;
-      attrinfo[i++].size = sizeof( op->trace_color2);
+      attrinfo[i++].size = sizeof( op->dyn_color[0]);
 
-      strcpy( attrinfo[i].name, "Type");
-      attrinfo[i].value_p = &op->trace_attr_type;
-      attrinfo[i].type = glow_eType_TraceType;
-      attrinfo[i++].size = sizeof( op->trace_attr_type);
+      strcpy( attrinfo[i].name, "Attr1");
+      attrinfo[i].value_p = &op->dyn_attr[0];
+      attrinfo[i].type = glow_eType_Int;
+      attrinfo[i++].size = sizeof( op->dyn_attr[0]);
+
+      strcpy( attrinfo[i].name, "DynType");
+      attrinfo[i].value_p = &op->dyn_type;
+      attrinfo[i].type = glow_eType_DynType;
+      attrinfo[i++].size = sizeof( op->dyn_type);
+
+      strcpy( attrinfo[i].name, "Action");
+      attrinfo[i].value_p = &op->dyn_action_type;
+      attrinfo[i].type = glow_eType_ActionType;
+      attrinfo[i++].size = sizeof( op->dyn_action_type);
 
       strcpy( attrinfo[i].name, "Cycle");
       attrinfo[i].value_p = &op->cycle;
@@ -1947,33 +1906,80 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
   return 1;
 }
 
-int grow_GetSubGraphAttrInfo( grow_tCtx ctx, grow_sAttrInfo **info,
+int grow_GetSubGraphAttrInfo( grow_tCtx ctx, char *transtab, grow_sAttrInfo **info,
 	int *attr_cnt)
 {
   grow_sAttrInfo *attrinfo;
   int i;
   char *dynamic;
   int  dynsize;
+  char *name;
 
   attrinfo = (grow_sAttrInfo *) calloc( 20, sizeof(grow_sAttrInfo)); 
 
   i = 0;
 
-  strcpy( attrinfo[i].name, "DynamicType");
-  attrinfo[i].value_p = &ctx->trace_attr_type;
-  attrinfo[i].type = glow_eType_TraceType;
-  attrinfo[i++].size = sizeof( ctx->trace_attr_type);
-      
-  strcpy( attrinfo[i].name, "DynamicColor");
-  attrinfo[i].value_p = &ctx->trace_color;
-  attrinfo[i].type = glow_eType_TraceColor;
-  attrinfo[i++].size = sizeof( ctx->trace_color);
-      
-  strcpy( attrinfo[i].name, "DynamicColor2");
-  attrinfo[i].value_p = &ctx->trace_color2;
-  attrinfo[i].type = glow_eType_TraceColor;
-  attrinfo[i++].size = sizeof( ctx->trace_color2);
-      
+  if ( (name = growapi_translate( transtab, "DynType"))) {
+    strcpy( attrinfo[i].name, name);
+    attrinfo[i].value_p = &ctx->dyn_type;
+    attrinfo[i].type = glow_eType_DynType;
+    attrinfo[i++].size = sizeof( ctx->dyn_type);
+  }
+  if ( (name = growapi_translate( transtab, "DynActionType"))) {
+    strcpy( attrinfo[i].name, name);
+    attrinfo[i].value_p = &ctx->dyn_action_type;
+    attrinfo[i].type = glow_eType_ActionType;
+    attrinfo[i++].size = sizeof( ctx->dyn_action_type);
+  }
+  if ( (name = growapi_translate( transtab, "DynColor1"))) {
+    strcpy( attrinfo[i].name, name);
+    attrinfo[i].value_p = &ctx->dyn_color[0];
+    attrinfo[i].type = glow_eType_TraceColor;
+    attrinfo[i++].size = sizeof( ctx->dyn_color[0]);      
+  }
+  if ( (name = growapi_translate( transtab, "DynColor2"))) {
+    strcpy( attrinfo[i].name, name);
+    attrinfo[i].value_p = &ctx->dyn_color[1];
+    attrinfo[i].type = glow_eType_TraceColor;
+    attrinfo[i++].size = sizeof( ctx->dyn_color[0]);      
+  }
+  if ( (name = growapi_translate( transtab, "DynColor3"))) {
+    strcpy( attrinfo[i].name, name);
+    attrinfo[i].value_p = &ctx->dyn_color[2];
+    attrinfo[i].type = glow_eType_TraceColor;
+    attrinfo[i++].size = sizeof( ctx->dyn_color[0]);      
+  }
+  if ( (name = growapi_translate( transtab, "DynColor4"))) {
+    strcpy( attrinfo[i].name, name);
+    attrinfo[i].value_p = &ctx->dyn_color[3];
+    attrinfo[i].type = glow_eType_TraceColor;
+    attrinfo[i++].size = sizeof( ctx->dyn_color[0]);      
+  }
+  if ( (name = growapi_translate( transtab, "DynAttr1"))) {
+    strcpy( attrinfo[i].name, name);
+    attrinfo[i].value_p = &ctx->dyn_attr[0];
+    attrinfo[i].type = glow_eType_Int;
+    attrinfo[i++].size = sizeof( ctx->dyn_attr[0]);      
+  }
+  if ( (name = growapi_translate( transtab, "DynAttr2"))) {
+    strcpy( attrinfo[i].name, name);
+    attrinfo[i].value_p = &ctx->dyn_attr[1];
+    attrinfo[i].type = glow_eType_Int;
+    attrinfo[i++].size = sizeof( ctx->dyn_attr[0]);      
+  }
+  if ( (name = growapi_translate( transtab, "DynAttr3"))) {
+    strcpy( attrinfo[i].name, name);
+    attrinfo[i].value_p = &ctx->dyn_attr[2];
+    attrinfo[i].type = glow_eType_Int;
+    attrinfo[i++].size = sizeof( ctx->dyn_attr[0]);
+  }
+  if ( (name = growapi_translate( transtab, "DynAttr4"))) {
+    strcpy( attrinfo[i].name, name);
+    attrinfo[i].value_p = &ctx->dyn_attr[3];
+    attrinfo[i].type = glow_eType_Int;
+    attrinfo[i++].size = sizeof( ctx->dyn_attr[0]);
+  }
+
   strcpy( attrinfo[i].name, "NoConObstacle");
   attrinfo[i].value_p = &ctx->no_con_obstacle;
   attrinfo[i].type = glow_eType_Int;
@@ -2028,6 +2034,11 @@ int grow_GetSubGraphAttrInfo( grow_tCtx ctx, grow_sAttrInfo **info,
   attrinfo[i].value_p = &ctx->y1;
   attrinfo[i].type = glow_eType_Double;
   attrinfo[i++].size = sizeof( ctx->y1);
+      
+  strcpy( attrinfo[i].name, "InputFocusMark");
+  attrinfo[i].value_p = &ctx->input_focus_mark;
+  attrinfo[i].type = glow_eType_InputFocusMark;
+  attrinfo[i++].size = sizeof( ctx->input_focus_mark);
       
   strcpy( attrinfo[i].name, "Dynamic");
   ctx->get_dynamic( &dynamic, &dynsize);
@@ -2184,6 +2195,7 @@ void grow_UpdateObject(  grow_tCtx ctx, grow_tObject object,
   switch ( ((GrowRect *)object)->type())
   {
     case glow_eObjectType_GrowRect:
+    case glow_eObjectType_GrowRectRounded:
       // Set changed dynamic
       info_p = info;
       while ( info_p->info_type != grow_eInfoType_End)
@@ -2719,6 +2731,11 @@ void grow_SetObjectFill( grow_tObject object, int fill)
   ((GlowArrayElem *)object)->set_fill( fill);
 }
 
+void grow_SetObjectShadow( grow_tObject object, int shadow)
+{
+  ((GlowArrayElem *)object)->set_shadow( shadow);
+}
+
 void grow_SetObjectDrawtype( grow_tObject object, glow_eDrawType drawtype)
 {
   ((GlowArrayElem *)object)->set_drawtype( drawtype);
@@ -2727,6 +2744,11 @@ void grow_SetObjectDrawtype( grow_tObject object, glow_eDrawType drawtype)
 void grow_SetObjectLinewidth( grow_tObject object, int linewidth)
 {
   ((GlowArrayElem *)object)->set_linewidth( linewidth);
+}
+
+void grow_SetObjectLinetype( grow_tObject object, glow_eLineType type)
+{
+  ((GlowArrayElem *)object)->set_linetype( type);
 }
 
 void grow_ExecDynamic( grow_tCtx ctx)
@@ -2779,9 +2801,24 @@ void grow_ResetObjectBorderColor( grow_tObject object)
   ((GlowArrayElem *)object)->reset_border_color();
 }
 
+void grow_SetObjectTextColor( grow_tObject object, glow_eDrawType drawtype)
+{
+  ((GlowArrayElem *)object)->set_text_color( drawtype);
+}
+
+void grow_ResetObjectTextColor( grow_tObject object)
+{
+  ((GlowArrayElem *)object)->reset_text_color();
+}
+
 void grow_SetSelectOrigBorderColor( grow_tCtx ctx, glow_eDrawType drawtype)
 {
   ctx->set_select_original_border_color( drawtype);
+}
+
+void grow_SetSelectOrigTextColor( grow_tCtx ctx, glow_eDrawType drawtype)
+{
+  ctx->set_select_original_text_color( drawtype);
 }
 
 void grow_SetSelectOrigFillColor( grow_tCtx ctx, glow_eDrawType drawtype)
@@ -2871,7 +2908,10 @@ void grow_ResetObjectColorShift( grow_tObject object)
 
 void grow_SetObjectColorInverse( grow_tObject object, int inverse)
 {
-  ((GrowNode *)object)->set_color_inverse( inverse);
+  if ( ((GlowArrayElem *)object)->type() == glow_eObjectType_GrowNode ||
+       ((GlowArrayElem *)object)->type() == glow_eObjectType_GrowSlider ||
+       ((GlowArrayElem *)object)->type() == glow_eObjectType_GrowGroup)
+    ((GrowNode *)object)->set_color_inverse( inverse);
 }
 
 void grow_SetObjectVisibility( grow_tObject object, int visible)
@@ -2883,6 +2923,11 @@ void grow_RotateSelectedObjects( grow_tCtx ctx, double angel,
 	glow_eRotationPoint type)
 {
   ctx->rotate_select( angel, type);
+}
+
+void grow_FlipSelectedObjects( grow_tCtx ctx, glow_eFlipDirection dir)
+{
+  ctx->flip_select( dir);
 }
 
 void grow_SetBackgroundColor( grow_tCtx ctx, glow_eDrawType color)
@@ -2975,10 +3020,21 @@ void grow_SetPath( grow_tCtx ctx, int path_cnt, char *path)
   ctx->set_path( path_cnt, path);
 }
 
-void grow_GetObjectClassTraceType( grow_tObject object, glow_eTraceType *type)
+void grow_GetObjectClassDynType( grow_tObject object, int *dyn_type,
+				   int *dyn_action_type)
 {
-  GlowNodeClass *base_nc = ((GrowNode *)object)->nc->get_base_nc();
-  *type = base_nc->trace_attr_type;
+  if ( ((GlowArrayElem *)object)->type() == glow_eObjectType_GrowNode ||
+       ((GlowArrayElem *)object)->type() == glow_eObjectType_GrowSlider ||
+       ((GlowArrayElem *)object)->type() == glow_eObjectType_GrowGroup) {
+
+    GlowNodeClass *base_nc = ((GrowNode *)object)->nc->get_base_nc();
+    *dyn_type = base_nc->dyn_type;
+    *dyn_action_type = base_nc->dyn_action_type;
+  }
+  else {
+    *dyn_type = 0;
+    *dyn_action_type = 0;
+  }
 }
 
 void grow_GetObjectClassCycle( grow_tObject object, glow_eCycle *cycle)
@@ -2987,29 +3043,39 @@ void grow_GetObjectClassCycle( grow_tObject object, glow_eCycle *cycle)
   *cycle = base_nc->cycle;
 }
 
-void grow_GetNodeClassTraceType( grow_tNodeClass nodeclass, glow_eTraceType *type)
+void grow_GetNodeClassDynType( grow_tNodeClass nodeclass, int *dyn_type,
+				 int *dyn_action_type)
 {
   GlowNodeClass *base_nc = ((GlowNodeClass *)nodeclass)->get_base_nc();
-  *type = base_nc->trace_attr_type;
+  *dyn_type = base_nc->dyn_type;
+  *dyn_action_type = base_nc->dyn_action_type;
 }
 
-void grow_GetSubGraphTraceType( grow_tCtx ctx, glow_eTraceType *type)
+void grow_GetSubGraphDynType( grow_tCtx ctx, int *dyn_type, int *dyn_action_type)
 {
-  *type = ctx->trace_attr_type;
+  *dyn_type = ctx->dyn_type;
+  *dyn_action_type = ctx->dyn_action_type;
 }
 
 void grow_GetSubGraphTraceColor( grow_tCtx ctx, glow_eDrawType *color,
 	glow_eDrawType *color2)
 {
-  *color = ctx->trace_color;
-  *color2 = ctx->trace_color2;
+  *color = ctx->dyn_color[0];
+  *color2 = ctx->dyn_color[1];
 }
 
 void grow_GetObjectClassTraceColor( grow_tObject object, glow_eDrawType *color,
 	glow_eDrawType *color2)
 {
-  *color = ((GrowNode *)object)->nc->trace_color;
-  *color2 = ((GrowNode *)object)->nc->trace_color2;
+  *color = ((GrowNode *)object)->nc->dyn_color[0];
+  *color2 = ((GrowNode *)object)->nc->dyn_color[1];
+}
+
+void grow_GetObjectClassDynAttr( grow_tObject object, int *attr1,
+	int *attr2)
+{
+  *attr1 = ((GrowNode *)object)->nc->dyn_attr[0];
+  *attr2 = ((GrowNode *)object)->nc->dyn_attr[1];
 }
 
 void grow_SetSelectLineWidth( grow_tCtx ctx, int linewidth)
@@ -3025,6 +3091,16 @@ void grow_SetSelectFill( grow_tCtx ctx, int fill)
 void grow_SetSelectBorder( grow_tCtx ctx, int border)
 {
   ctx->set_select_border( border);
+}
+
+void grow_SetSelectShadow( grow_tCtx ctx, int shadow)
+{
+  ctx->set_select_shadow( shadow);
+}
+
+void grow_SetSelectLineType( grow_tCtx ctx, glow_eLineType type)
+{
+  ctx->set_select_linetype( type);
 }
 
 int grow_AnySelectIsCon( grow_tCtx ctx)
@@ -3142,6 +3218,12 @@ void grow_GetSliderInfo( grow_tObject object, glow_eDirection *direction,
 {
   ((GrowSlider *)object)->get_info( direction, max_value, min_value, 
 	max_pos, min_pos);
+}
+
+void grow_GetSliderInfoPixel( grow_tObject object, glow_eDirection *direction,
+	double *max_pos, double *min_pos, int bg_dyntype)
+{
+  ((GrowSlider *)object)->get_info_pixel( direction, max_pos, min_pos, bg_dyntype);
 }
 
 void grow_GetSliderOrigo( grow_tObject object, glow_eDirection direction,
@@ -3310,7 +3392,14 @@ int grow_GetNodeClassJavaName( grow_tNodeClass nodeclass, char *name)
 void grow_GetObjectAnnotationNumbers( grow_tObject object, int **numbers,
 	int *cnt)
 {
-  ((GrowNode *)object)->nc->get_annotation_numbers( numbers, cnt);
+  if ( ((GlowArrayElem *)object)->type() == glow_eObjectType_GrowNode ||
+       ((GlowArrayElem *)object)->type() == glow_eObjectType_GrowSlider ||
+       ((GlowArrayElem *)object)->type() == glow_eObjectType_GrowGroup)
+    ((GrowNode *)object)->nc->get_annotation_numbers( numbers, cnt);
+  else {
+    *cnt = 0;
+    *numbers = 0;
+  }
 }
 
 void grow_GetSubgraphAnnotNumbers( grow_tCtx ctx, int **numbers,
@@ -3326,12 +3415,12 @@ int grow_IsSlider( grow_tCtx ctx)
 
 char *grow_ColorToName( glow_eDrawType drawtype)
 {
-  return glow_color_to_name( drawtype);
+  return GlowColor::color_to_name( drawtype);
 }
 
 char *grow_ColorToneToName( glow_eDrawType drawtype)
 {
-  return glow_colortone_to_name( drawtype);
+  return GlowColor::colortone_to_name( drawtype);
 }
 
 int grow_SetObjectNextNodeClass( grow_tObject object)
@@ -3414,7 +3503,10 @@ void grow_SetClickSensitivity( grow_tCtx ctx, int value)
 
 void grow_MoveNode( grow_tNode node, double x, double y)
 {
-  ((GrowNode *)node)->move_to( x, y);
+  if ( ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowNode ||
+       ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowSlider ||
+       ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowGroup)
+    ((GrowNode *)node)->move_to( x, y);
 }
 
 void grow_GetTextExtent( grow_tCtx ctx, char *text, int len, 
@@ -3496,12 +3588,152 @@ int grow_ImageUpdate( grow_tObject object)
   return ((GrowImage *)object)->update();
 }
 
+void grow_RegisterUserDataCallbacks( grow_tCtx ctx,
+				     void (*save)( void *, grow_tObject),
+				     void (*open)( void *, grow_tObject),
+				     void (*copy)( grow_tObject, void *, void **))
+{
+  ((GrowCtx *)ctx)->register_userdata_callbacks( 
+	   (glow_tUserDataSaveCb) save,
+	   (glow_tUserDataOpenCb) open,
+	   (glow_tUserDataCopyCb) copy);
+}
 
+void grow_GetVersion( grow_tCtx ctx, int *grow_version, int *graph_version)
+{
+  *graph_version = ctx->version;
+  *grow_version = GLOW_VERSION;
+}
 
+void grow_UpdateVersion( grow_tCtx ctx)
+{
+  ctx->version = GLOW_VERSION;
+}
 
+void grow_SetTipText( grow_tCtx ctx, grow_tObject object, char *text, int x, int y)
+{
+  ctx->tiptext->draw_text( (GlowArrayElem *)object, text, x, y);
+}
 
+void grow_SetObjectLevelFillColor( grow_tObject object, glow_eDrawType color)
+{
+  ((GrowNode *)object)->set_level_fill_color( color);
+}
 
+void grow_SetObjectLevelColorTone( grow_tObject object, glow_eDrawTone tone)
+{
+  ((GrowNode *)object)->set_level_color_tone( tone);
+}
 
+void grow_SetObjectLevelDirection( grow_tObject object, glow_eDirection direction)
+{
+  ((GrowNode *)object)->set_level_direction( direction);
+}
+
+void grow_SetObjectFillLevel( grow_tObject object, double level)
+{
+  ((GrowNode *)object)->set_fill_level( level);
+}
+
+int grow_GetObjectLimits( grow_tObject object, double *min, double *max, 
+			   glow_eDirection *direction)
+{
+  return ((GrowNode *)object)->get_limits( min, max, direction);
+}
+
+int grow_GetObjectLimitsPixel( grow_tObject object, double *min, double *max,
+			       glow_eDirection *direction)
+{
+  return ((GrowNode *)object)->get_limits_pixel( min, max, direction);
+}
+
+void grow_SetTrendInfo( grow_tObject object, glow_sTrendInfo *info)
+{
+  ((GrowTrend *)object)->set_trend_info( info);
+}
+
+void grow_SetBarInfo( grow_tObject object, glow_sBarInfo *info)
+{
+  ((GrowBar *)object)->set_bar_info( info);
+}
+void grow_SetAxisInfo( grow_tObject object, glow_sAxisInfo *info)
+{
+  ((GrowAxis *)object)->set_axis_info( info);
+}
+
+void grow_Convert( grow_tCtx ctx, glow_eConvert version)
+{
+  ((GrowCtx *)ctx)->convert( version);
+}
+
+int grow_NodeClassIsExtern( grow_tNodeClass nodeclass)
+{
+  GlowNodeClass *base_nc = ((GlowNodeClass *)nodeclass)->get_base_nc();
+  return base_nc->nc_extern;
+}
+
+int grow_GetNodeConPoint( grow_tNode node, int num, double *x, double *y, glow_eDirection *dir)
+{
+  if ( ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowNode ||
+       ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowSlider ||
+       ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowConGlue ||
+       ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowGroup)
+    return ((GrowNode *)node)->get_conpoint( num, x, y, dir);
+  return 0;
+}
+
+void grow_InputFocusInitEvent( grow_tCtx ctx)
+{
+  ((GrowCtx *)ctx)->inputfocus_init_event();
+}
+
+void grow_SetTrendData( grow_tObject object, double *data[3], int data_curves, int data_points)
+{
+ ((GrowTrend *)object)->set_data( data, data_curves, data_points);
+}
+
+int grow_GetObjectAnnotInfo( grow_tObject object, int num, int *text_size, glow_eDrawType *text_drawtype,
+			glow_eDrawType *text_color, glow_eDrawType *bg_color)
+{
+  return ((GrowNode *)object)->get_annotation_info( num, text_size, text_drawtype, text_color, bg_color);
+}
+
+void grow_GetMenuChar( grow_tObject menu, int *t_size, glow_eDrawType *fill_color, glow_eDrawType *t_drawtype,
+		       glow_eDrawType *t_color, glow_eDrawType *t_color_disabled)
+{
+  ((GrowMenu *)menu)->get_menu_char( t_size, fill_color, t_drawtype, t_color, t_color_disabled);
+}
+
+void grow_MenuShiftCurrentItem( grow_tObject menu, int shift)
+{
+  ((GrowMenu *)menu)->shift_current_item( shift);
+}
+
+int grow_MenuGetCurrentItem( grow_tObject menu, int *item)
+{
+  return ((GrowMenu *)menu)->get_current_item( item);
+}
+
+void grow_SetMenuInputFocus( grow_tObject menu, int focus)
+{
+  ((GrowMenu *)menu)->set_input_focus( focus);
+}
+
+int grow_GetMenuInputFocus( grow_tObject menu)
+{
+  return ((GrowMenu *)menu)->get_input_focus();
+}
+
+void grow_GetSubmenuPosition( grow_tObject menu, int item, double *x, double *y)
+{
+  ((GrowMenu *)menu)->get_submenu_position( item, x, y);
+}
+
+int grow_GetMenuParent( grow_tObject menu, grow_tObject *parent)
+{
+  return ((GrowMenu *)menu)->get_parent( (GlowArrayElem **)parent);
+}
+/*@}*/
 
 
 

@@ -40,6 +40,11 @@ extern "C" {
 #include "ge_graph.h"
 #endif
 
+/*! \file ge_attrnav.h
+    \brief Contains the AttrNav class and related classes. */
+/*! \addtogroup Ge */
+/*@{*/
+
 #define attrnav_cVersion	"X3.0b"
 #define ATTRNAV_BROW_MAX	25
 
@@ -74,6 +79,7 @@ typedef struct {
 	} attrnav_sEnum;
 
 
+//! Class for handling of brow.
 class AttrNavBrow {
   public:
     AttrNavBrow( BrowCtx *brow_ctx, void *xn) : ctx(brow_ctx), attrnav(xn) {};
@@ -101,6 +107,7 @@ class AttrNavBrow {
 };
 
 
+//! The navigation area of the attribute editor.
 class AttrNav {
   public:
     AttrNav(
@@ -127,7 +134,11 @@ class AttrNav {
     void 		(*message_cb)( void *, char, char *);
     void 		(*change_value_cb)( void *);
     int			(*get_subgraph_info_cb)( void *, char *, attr_sItem  **, int *);
+    int			(*get_dyn_info_cb)( void *, GeDyn *, attr_sItem  **, int *);
     int 		(*reconfigure_attr_cb)( void *);
+    int 		(*get_plant_select_cb)( void *, char *);
+    int 		(*get_current_colors_cb)( void *, glow_eDrawType *, glow_eDrawType *,
+						  glow_eDrawType *);
 
     void start_trace( pwr_tObjid Objid, char *object_str);
     int set_attr_value( char *value_str);
@@ -140,12 +151,13 @@ class AttrNav {
 
 };
 
+//! Item for a normal attribute.
 class ItemLocal {
   public:
     ItemLocal( AttrNav *attrnav, char *item_name, char *attr,
 	int attr_type, int attr_size, double attr_min_limit,
 	double attr_max_limit, void *attr_value_p, int attr_multiline, 
-	int attr_noedit,
+        int attr_noedit, int attr_mask,
 	brow_tNode dest, flow_eDest dest_code);
     attrnav_eItemType	type;
     brow_tNode		node;
@@ -159,6 +171,7 @@ class ItemLocal {
     double		max_limit;
     int			multiline;
     int			noedit;
+    int			mask;
     int			parent;
     int			subgraph;
 
@@ -166,6 +179,7 @@ class ItemLocal {
     int			close( AttrNav *attrnav, double x, double y);
 };
 
+//! Item for an enum attribute.
 class ItemEnum {
   public:
     ItemEnum( AttrNav *attrnav, char *item_name, int item_num, 
@@ -181,6 +195,7 @@ class ItemEnum {
     int 		first_scan;
 };
 
+//! Item for a mask attribute.
 class ItemMask {
   public:
     ItemMask( AttrNav *attrnav, char *item_name, unsigned int item_mask, 
@@ -196,6 +211,7 @@ class ItemMask {
     int 		first_scan;
 };
 
+/*@}*/
 #if defined __cplusplus
 }
 #endif

@@ -10,14 +10,14 @@
 #include "glow_growctx.h"
 
 GrowSubAnnot::GrowSubAnnot( GlowCtx *glow_ctx, char *name, double x, double y,
-	int annot_num, glow_eDrawType d_type,
+	int annot_num, glow_eDrawType d_type, glow_eDrawType color_d_type,
 	int t_size, glow_eAnnotType a_type,
 	int rel_pos, glow_mDisplayLevel display_lev,
 	int nodraw) :
-	GlowAnnot(glow_ctx,x,y,annot_num,d_type,t_size,a_type,
+	GlowAnnot(glow_ctx,x,y,annot_num,d_type,color_d_type,t_size,a_type,
 	rel_pos,display_lev),
     	hot(0), pzero(ctx), highlight(0), inverse(0), 
-	text( ctx, "", x, y, d_type, t_size),
+	text( ctx, "", x, y, d_type, color_d_type, t_size),
 	rect( ctx, x, y - ctx->draw_delta, ctx->draw_delta, ctx->draw_delta,
 	glow_eDrawType_LineGray),
 	user_data(NULL)
@@ -64,7 +64,7 @@ GrowSubAnnot::~GrowSubAnnot()
     draw_set_cursor( ctx, glow_eDrawCursor_Normal);
 }
 
-void GrowSubAnnot::move( int delta_x, int delta_y, int grid)
+void GrowSubAnnot::move( double delta_x, double delta_y, int grid)
 {
   double x1, y1;
 
@@ -91,8 +91,8 @@ void GrowSubAnnot::move( int delta_x, int delta_y, int grid)
 
     erase();
     nav_erase();
-    dx = double( delta_x) / ctx->zoom_factor_x;
-    dy = double( delta_y) / ctx->zoom_factor_y;
+    dx = delta_x / ctx->zoom_factor_x;
+    dy = delta_y / ctx->zoom_factor_y;
     trf.move( dx, dy);
     x_right += dx;
     x_left += dx;
@@ -607,7 +607,30 @@ void GrowSubAnnot::export_javabean( GlowTransform *t, void *node,
   bold = (draw_type == glow_eDrawType_TextHelveticaBold);
 
   ((GrowCtx *)ctx)->export_jbean->annot( x1, y1, number,
-	draw_type, bold, idx, pass, shape_cnt, node_cnt, fp);
+	draw_type, color_drawtype, bold, idx, pass, shape_cnt, node_cnt, fp);
   (*shape_cnt)++;
 }
 
+void GrowSubAnnot::convert( glow_eConvert version) 
+{
+  switch ( version) {
+  case glow_eConvert_V34: {
+    // Conversion of colors
+    draw_type = GlowColor::convert( version, draw_type);
+    text.draw_type = GlowColor::convert( version, text.draw_type);
+    break;
+  }
+  }  
+}
+
+void GrowSubAnnot::draw()
+{
+  ((GrowCtx *)ctx)->draw( x_left * ctx->zoom_factor_x - ctx->offset_x - DRAW_MP,
+	     y_low * ctx->zoom_factor_y - ctx->offset_y - DRAW_MP,
+  	     x_right * ctx->zoom_factor_x - ctx->offset_x + DRAW_MP,
+	     y_high * ctx->zoom_factor_y - ctx->offset_y + DRAW_MP);
+  ((GrowCtx *)ctx)->nav_draw(  x_left * ctx->nav_zoom_factor_x - ctx->nav_offset_x - 1,
+	     y_low * ctx->nav_zoom_factor_y - ctx->nav_offset_y - 1,
+  	     x_right * ctx->nav_zoom_factor_x - ctx->nav_offset_x + 1,
+	     y_high * ctx->nav_zoom_factor_y - ctx->nav_offset_y + 1);
+}

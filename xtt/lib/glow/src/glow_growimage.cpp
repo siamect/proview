@@ -289,7 +289,7 @@ void GrowImage::traverse( int x, int y)
   ur.traverse( x, y);
 }
 
-void GrowImage::move( int delta_x, int delta_y, int grid)
+void GrowImage::move( double delta_x, double delta_y, int grid)
 {
   ctx->set_defered_redraw();
   ((GrowCtx *)ctx)->draw( x_left * ctx->zoom_factor_x - ctx->offset_x - DRAW_MP,
@@ -303,8 +303,8 @@ void GrowImage::move( int delta_x, int delta_y, int grid)
     /* Move to closest grid point */
     erase();
     nav_erase();
-    ctx->find_grid( x_left + double( delta_x) / ctx->zoom_factor_x,
-	y_low + double( delta_y) / ctx->zoom_factor_y, &x_grid, &y_grid);
+    ctx->find_grid( x_left + delta_x / ctx->zoom_factor_x,
+	y_low + delta_y / ctx->zoom_factor_y, &x_grid, &y_grid);
     trf.move( x_grid - x_left, y_grid - y_low);
     get_node_borders();
   }
@@ -314,8 +314,8 @@ void GrowImage::move( int delta_x, int delta_y, int grid)
 
     erase();
     nav_erase();
-    dx = double( delta_x) / ctx->zoom_factor_x;
-    dy = double( delta_y) / ctx->zoom_factor_y;
+    dx = delta_x / ctx->zoom_factor_x;
+    dy = delta_y / ctx->zoom_factor_y;
     trf.move( dx, dy);
     x_right += dx;
     x_left += dx;
@@ -1393,7 +1393,7 @@ int GrowImage::set_image_color( ImlibImage *im, void *n)
   if ( !(c_color_tone == glow_eDrawTone_No || c_color_tone == glow_eDrawTone_Gray ||
        c_color_tone >= glow_eDrawTone__)) {
     switch ( c_color_tone) {
-      case glow_eDrawTone_Yellow:
+      case glow_eDrawTone_YellowGreen:
         red_k   = 0.4;
         red_m   = 174;
         blue_k  = 1.2;
@@ -1401,7 +1401,7 @@ int GrowImage::set_image_color( ImlibImage *im, void *n)
         green_k = 0.5;
 	green_m = 148;
         break;
-      case glow_eDrawTone_Gold:
+      case glow_eDrawTone_Yellow:
         red_k   = 0.4;
         red_m   = 154;
         blue_k  = 1.2;
@@ -1719,12 +1719,12 @@ static int rgb_tone( unsigned char *x0, unsigned char *y0, unsigned char *z0, in
       *y0 = m;
       *z0 = m;
       break;      
-    case glow_eDrawTone_Yellow:
+    case glow_eDrawTone_YellowGreen:
       *x0 = a1;
       *y0 = a1;
       *z0 = b2;
        break;
-    case glow_eDrawTone_Gold:
+    case glow_eDrawTone_Yellow:
       tmp = int( 1.2 * a1);
       if  (tmp <= 255)
         *x0 = tmp;

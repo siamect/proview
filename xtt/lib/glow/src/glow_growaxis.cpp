@@ -15,8 +15,8 @@ GrowAxis::GrowAxis( GlowCtx *glow_ctx, char *name, double x1, double y1,
 		int line_w, int t_size, glow_eDrawType t_drawtype, 
 	        int nodraw) : 
 		GrowRect(glow_ctx,name,x1,y1,x2-x1,y2-y1,border_d_type,line_w,
-		0,glow_mDisplayLevel_1,0,1,glow_eDrawType_Line,1),
-		text_size(t_size), text_drawtype(t_drawtype),
+		0,glow_mDisplayLevel_1,0,1,0, glow_eDrawType_Line,1),
+		text_size(t_size), text_drawtype(t_drawtype), text_color_drawtype(glow_eDrawType_Line),
                 max_value(100), min_value(0), lines(11),
 		longquotient(1),
                 valuequotient(1), increment(0)
@@ -61,6 +61,7 @@ void GrowAxis::save( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_GrowAxis_format) << FSPACE << format << endl;
   fp << int(glow_eSave_GrowAxis_text_size) << FSPACE << text_size << endl;
   fp << int(glow_eSave_GrowAxis_text_drawtype) << FSPACE << int(text_drawtype) << endl;
+  fp << int(glow_eSave_GrowAxis_text_color_drawtype) << FSPACE << int(text_color_drawtype) << endl;
   fp << int(glow_eSave_End) << endl;
 }
 
@@ -90,6 +91,7 @@ void GrowAxis::open( ifstream& fp)
         break;
       case glow_eSave_GrowAxis_text_size: fp >> text_size; break;
       case glow_eSave_GrowAxis_text_drawtype: fp >> tmp; text_drawtype = (glow_eDrawType)tmp; break;
+      case glow_eSave_GrowAxis_text_color_drawtype: fp >> tmp; text_color_drawtype = (glow_eDrawType)tmp; break;
       case glow_eSave_End: end_found = 1; break;
       default:
         cout << "GrowAxis:open syntax error" << endl;
@@ -262,7 +264,7 @@ void GrowAxis::draw( GlowTransform *t, int highlight, int hot, void *node,
   ur_x = max( x1, x2);
   ll_y = min( y1, y2);
   ur_y = max( y1, y2);
-  drawtype = ((GrowCtx *)ctx)->get_drawtype( draw_type, glow_eDrawType_Color59,
+  drawtype = ((GrowCtx *)ctx)->get_drawtype( draw_type, glow_eDrawType_LineHighlight,
 		 highlight, (GrowNode *)colornode, 0);
 
 
@@ -308,7 +310,7 @@ void GrowAxis::draw( GlowTransform *t, int highlight, int hot, void *node,
         else
           y_text = y + (z_height-z_descent)/2;
         glow_draw_text( ctx, ll_x, y_text,
-		    text, strlen(text), text_drawtype, text_idx, highlight, 0);
+		    text, strlen(text), text_drawtype, text_color_drawtype, text_idx, highlight, 0);
       }
     }
   }
@@ -349,7 +351,7 @@ void GrowAxis::draw( GlowTransform *t, int highlight, int hot, void *node,
           else
             x_text = x - (z_width)/2;
           glow_draw_text( ctx, x_text, ll_y + z_height - z_descent,
-		    text, strlen(text), text_drawtype, text_idx, highlight, 0);
+		    text, strlen(text), text_drawtype, text_color_drawtype, text_idx, highlight, 0);
         }
       }
     }
@@ -396,7 +398,7 @@ void GrowAxis::draw( GlowTransform *t, int highlight, int hot, void *node,
         else
           y_text = y + (z_height-z_descent)/2;
         glow_draw_text( ctx, x_text, y_text,
-		    text, strlen(text), text_drawtype, text_idx, highlight, 0);
+		    text, strlen(text), text_drawtype, text_color_drawtype, text_idx, highlight, 0);
       }
     }
   }
@@ -436,7 +438,7 @@ void GrowAxis::draw( GlowTransform *t, int highlight, int hot, void *node,
           else
             x_text = x - (z_width)/2;
           glow_draw_text( ctx, x_text, ur_y,
-		    text, strlen(text), text_drawtype, text_idx, highlight, 0);
+		    text, strlen(text), text_drawtype, text_color_drawtype, text_idx, highlight, 0);
         }
       }
     }
@@ -491,8 +493,9 @@ void GrowAxis::nav_draw( GlowTransform *t, int highlight, void *node, void *colo
   ur_x = max( x1, x2);
   ll_y = min( y1, y2);
   ur_y = max( y1, y2);
+  ctx->set_draw_buffer_only();
 
-  drawtype = ((GrowCtx *)ctx)->get_drawtype( draw_type, glow_eDrawType_Color59,
+  drawtype = ((GrowCtx *)ctx)->get_drawtype( draw_type, glow_eDrawType_LineHighlight,
 		 0, (GrowNode *)colornode, 0);
 
   if ( 45 >= rotation || rotation > 315)
@@ -571,11 +574,38 @@ void GrowAxis::nav_draw( GlowTransform *t, int highlight, void *node, void *colo
           ll_y  +  int( 2.0 / 3 * line_length), drawtype, idx, 0);
     }
   }
+  ctx->reset_draw_buffer_only();
 }
 
 void GrowAxis::erase( GlowTransform *t, int hot, void *node)
 {
-  GrowRect::erase( t, hot, node);
+  if ( ctx->nodraw)
+    return;
+  int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
+
+  if (!t)
+  {
+    x1 = int( trf.x( ll.x, ll.y) * ctx->zoom_factor_x) - ctx->offset_x;
+    y1 = int( trf.y( ll.x, ll.y) * ctx->zoom_factor_y) - ctx->offset_y;
+    x2 = int( trf.x( ur.x, ur.y) * ctx->zoom_factor_x) - ctx->offset_x;
+    y2 = int( trf.y( ur.x, ur.y) * ctx->zoom_factor_y) - ctx->offset_y;
+  }
+  else
+  {
+    x1 = int( trf.x( t, ll.x, ll.y) * ctx->zoom_factor_x) - ctx->offset_x;
+    y1 = int( trf.y( t, ll.x, ll.y) * ctx->zoom_factor_y) - ctx->offset_y;
+    x2 = int( trf.x( t, ur.x, ur.y) * ctx->zoom_factor_x) - ctx->offset_x;
+    y2 = int( trf.y( t, ur.x, ur.y) * ctx->zoom_factor_y) - ctx->offset_y;
+  }
+
+  ll_x = min( x1, x2);
+  ur_x = max( x1, x2);
+  ll_y = min( y1, y2);
+  ur_y = max( y1, y2);
+
+  ctx->set_draw_buffer_only();
+  glow_draw_fill_rect( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, glow_eDrawType_LineErase);
+  ctx->reset_draw_buffer_only();
 }
 
 void GrowAxis::nav_erase( GlowTransform *t, void *node)
@@ -882,7 +912,7 @@ void GrowAxis::export_javabean( GlowTransform *t, void *node,
 
 
   ((GrowCtx *)ctx)->export_jbean->axis( ll_x, ll_y, ur_x, ur_y,
-     draw_type, min_value, max_value, lines, longquotient, valuequotient,
+     draw_type, text_color_drawtype, min_value, max_value, lines, longquotient, valuequotient,
      line_length, line_width, rotation, bold, idx, format,
      pass, shape_cnt, node_cnt, fp);
 }
@@ -890,6 +920,7 @@ void GrowAxis::export_javabean( GlowTransform *t, void *node,
 void GrowAxis::set_conf( double max_val, double min_val, int no_of_lines, 
      int long_quot, int value_quot, double rot, char *value_format)
 {
+  erase();
   max_value = max_val;
   min_value = min_val;
   lines = no_of_lines;
@@ -900,7 +931,40 @@ void GrowAxis::set_conf( double max_val, double min_val, int no_of_lines,
     strcpy( format, value_format);
 
   configure();
+  draw();
 }
+
+void GrowAxis::set_axis_info( glow_sAxisInfo *info)
+{
+  max_value = info->max_value;
+  min_value = info->min_value;
+  lines = info->lines;
+  longquotient = info->longquotient;
+  valuequotient = info->valuequotient;
+  strcpy( format, info->format);
+}
+
+void GrowAxis::convert( glow_eConvert version) 
+{
+  switch ( version) {
+  case glow_eConvert_V34: {
+    // Conversion of colors
+    GrowRect::convert( version);
+    text_drawtype = GlowColor::convert( version, text_drawtype);
+
+    break;
+  }
+  }  
+}
+
+
+
+
+
+
+
+
+
 
 
 

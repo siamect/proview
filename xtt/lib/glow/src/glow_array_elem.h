@@ -7,6 +7,15 @@
 #include "glow_transform.h"
 #include "glow_tracedata.h"
 
+/*! \file glow_array_elem.h
+    \brief Contains the GrowArrayElem class. */
+/*! \addtogroup Glow */
+/*@{*/
+
+//! Virtual base class for all drawing objects and components.
+/*! A GlowArrayElem object can be inserted in a GlowArray vector, which contains all the
+  object in a window, in a group, or in a subgraph component.
+*/
 class GlowArrayElem {
   public:
     virtual void zoom() {};
@@ -40,7 +49,7 @@ class GlowArrayElem {
     virtual void erase( void *pos, int hot, void *node) {};
     virtual void erase( GlowTransform *t, int hot, void *node) {};
     virtual void draw_inverse( void *pos, int hot, void *node) {};
-    virtual void move( int delta_x, int delta_y, int grid) {};
+    virtual void move( double delta_x, double delta_y, int grid) {};
     virtual void move_noerase( int delta_x, int delta_y, int grid) {};
     virtual void shift( void *pos, double delta_x, double delta_y,
 		int highlight, int hot) {};
@@ -58,7 +67,8 @@ class GlowArrayElem {
 		double *distance, void **cp, int *pix_x, int *pix_y) {};
     virtual int get_conpoint( int num, double *x, double *y,
 		glow_eDirection *dir) { return 0;};
-    virtual int get_conpoint( GlowTransform *t, int num, double *x, double *y,
+    virtual int get_conpoint( GlowTransform *t, int num, bool flip_horizontal,
+			      bool flip_vertical, double *x, double *y,
 		glow_eDirection *dir) { return 0;};
     virtual void redraw_node_cons( void *node) {};
     virtual int delete_node_cons( void *node) {return 0;};
@@ -93,6 +103,7 @@ class GlowArrayElem {
     virtual void set_object_name( char *name) {};
     virtual void set_fill( int fill) {};
     virtual void set_border( int border) {};
+    virtual void set_shadow( int shadow) {};
     virtual void set_drawtype( glow_eDrawType draw_type) {};
     virtual void set_linewidth( int linewidth) {};
     virtual void set_position( double x, double y) {};
@@ -110,6 +121,9 @@ class GlowArrayElem {
     virtual void set_border_color( glow_eDrawType drawtype) {};
     virtual void set_original_border_color( glow_eDrawType drawtype) {};
     virtual void reset_border_color() {};
+    virtual void set_text_color( glow_eDrawType drawtype) {};
+    virtual void set_original_text_color( glow_eDrawType drawtype) {};
+    virtual void reset_text_color() {};
     virtual void set_color_tone( glow_eDrawTone tone) {};
     virtual void set_original_color_tone( glow_eDrawTone tone) {};
     virtual void reset_color_tone() {};
@@ -138,6 +152,7 @@ class GlowArrayElem {
     virtual void export_javabean( GlowTransform *t, void *node,
 	glow_eExportPass pass, int *shape_cnt, int node_cnt, int in_nc, ofstream& fp) {};
     virtual int find_nc( GlowArrayElem *nc) { return 0;};
+    virtual int find_cc( GlowArrayElem *cc) { return 0;};
     virtual void get_nodegroups( void *a) {};
     virtual void set_last_group( char *name) {};
     virtual char *get_last_group() { return ""; };
@@ -146,9 +161,16 @@ class GlowArrayElem {
 		    double x, double y, GlowArrayElem **background,
 		    double *min, double *max, glow_eDirection *direction)
                     { return 0;};
+    virtual void call_redraw_node_cons() {};
+    virtual void flip( double x0, double y0, glow_eFlipDirection dir) {};
+    virtual void convert( glow_eConvert version) {};
+    virtual void set_rootnode( void *node) {};
+    virtual void set_linetype( glow_eLineType type) {};
+
     virtual ~GlowArrayElem() {};
 };
 
+/*@}*/
 #endif
 
 

@@ -27,6 +27,11 @@ extern "C" {
 #include "ge_attr.h"
 #endif
 
+/*! \file ge_subgraphs.h
+    \brief Contains the SubGraphs class and related classes. */
+/*! \addtogroup Ge */
+/*@{*/
+
 #define subgraphs_cVersion	"X3.0b"
 
 typedef enum {
@@ -69,6 +74,7 @@ class SubGraphsBrow {
 };
 
 
+//! Display loaded subgraphs.
 class SubGraphs {
   public:
     SubGraphs(
@@ -104,6 +110,7 @@ class SubGraphs {
     ~SubGraphs();
 };
 
+//! Base item class.
 class SubGraphBaseItem {
   public:
     SubGraphBaseItem( subgraphs_eItemType	item_type) :
@@ -111,6 +118,7 @@ class SubGraphBaseItem {
     subgraphs_eItemType	type;
 };
 
+//! Item for a subgraph.
 class ItemSubGraph : public SubGraphBaseItem {
   public:
     ItemSubGraph( SubGraphs *subgraphs, char *item_name, int *item_extern_p,
@@ -126,6 +134,7 @@ class ItemSubGraph : public SubGraphBaseItem {
     void		set_extern( int value) { *extern_p = value;};
 };
 
+/*@}*/
 #if defined __cplusplus
 }
 #endif

@@ -19,8 +19,9 @@ GlowNode::GlowNode( GlowCtx *glow_ctx, char *name, GlowNodeClass *node_class,
 	obst_x_right(x1), obst_x_left(x1), obst_y_high(y1), obst_y_low(y1),
 	hot(0), ctx(glow_ctx), nc(node_class), nc_root(node_class), 
 	pos(glow_ctx, x1,y1), stored_pos(glow_ctx, x1, y1),
-	highlight(0), inverse(0), level(0), node_open(0),
-	relative_annot_pos(rel_annot_pos), relative_annot_x(0)
+	highlight(0), inverse(0), user_data(0), level(0), node_open(0),
+	relative_annot_pos(rel_annot_pos), relative_annot_x(0), input_active(0),
+	input_focus(0)
 {
   double x_grid, y_grid;
   strncpy( n_name, name, sizeof(n_name));
@@ -653,7 +654,7 @@ void GlowNode::select_region_insert( double ll_x, double ll_y, double ur_x,
   }
 }
 
-void GlowNode::set_annotation( int num, char *text, int size, int nodraw)
+void GlowNode::set_annotation( int num, char *text, int size, int nodraw, int brief)
 {
 
   if ( !nodraw)
@@ -689,8 +690,9 @@ void GlowNode::set_annotation( int num, char *text, int size, int nodraw)
   }
   else
   {
-    nc->draw_annotation( &pos, highlight, hot, (void *) this, num);
-    if ( inverse)
+    if (!inverse)
+      nc->draw_annotation( &pos, highlight, hot, (void *) this, num);
+    else
       draw_inverse();
   }
 

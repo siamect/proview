@@ -34,10 +34,12 @@ extern "C" {
 
 #include "ge_graph.h"
 #include "ge_attr.h"
+#include "ge_dyn.h"
 #include "ge_msg.h"
 
 extern "C" {
 #include "co_mrm_util.h"
+#include "flow_x.h"
 }
 #include "co_lng.h"
 
@@ -46,10 +48,6 @@ extern "C" {
 #endif
 #define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
 #define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
-
-// Until xtt_menu.h i unavailable...
-#define xmenu_mUtility_Ge        (1 << 5)
-#define xmenu_eItemType_Object   1
 
 typedef	struct {
 	char		TypeStr[20];
@@ -83,9 +81,9 @@ static void graph_attr_redraw_cb( Attr *attrctx);
 static void graph_attr_close_cb( Attr *attrctx);
 static void graph_attr_store_cb( void *g, grow_tObject object);
 static int graph_attr_recall_cb( void *g, grow_tObject object, int idx, 
-				 glow_sTraceData **old);
+				 GeDyn **old);
 static int graph_attr_set_data_cb( void *g, grow_tObject object, 
-				 glow_sTraceData *data);
+				 GeDyn *data);
 static void graph_subgraphattr_redraw_cb( Attr *attrctx);
 static void graph_subgraphattr_close_cb( Attr *attrctx);
 static void graph_graphattr_redraw_cb( Attr *attrctx);
@@ -98,11 +96,13 @@ static void graph_trace_scan( Graph *graph);
 static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event);
 static int graph_get_subgraph_info_cb( void *g, char *name, 
 	attr_sItem **itemlist, int *itemlist_cnt);
+static int graph_get_dyn_info_cb( void *g, GeDyn *dyn, 
+	attr_sItem **itemlist, int *itemlist_cnt);
 static int graph_reconfigure_attr_cb( void *g, grow_tObject object,
 	attr_sItem **itemlist, int *itemlist_cnt, void **client_data);
-static int  graph_attr_string_to_value( int type_id, char *value_str, 
-	void *buffer_ptr, int buff_size, int attr_size);
-static int graph_get_typeid( graph_sTraceData *data);
+static int graph_get_plant_select_cb( void *g, char *value);
+static int graph_get_current_colors_cb( void *g, glow_eDrawType *fill_color, 
+					glow_eDrawType *border_color, glow_eDrawType *text_color);
 static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event);
 
 
@@ -140,11 +140,11 @@ Graph::Graph(
 	get_plant_select_cb(NULL), display_in_xnav_cb(NULL), 
 	message_dialog_cb(NULL), is_authorized_cb(NULL), 
 	traverse_focus_cb(NULL), set_focus_cb(NULL), get_ldhses_cb(NULL),
-	get_current_objects_cb(NULL), popup_menu_cb(NULL),
-	linewidth(1), textsize(0), textbold(0), border_color(1), fill_color(1),
-	fill(0), border(1),
-	grid_size_x(1), grid_size_y(1), con_type(glow_eConType_Straight),
-	con_corner(glow_eCorner_Right),
+	get_current_objects_cb(NULL), popup_menu_cb(NULL), call_method_cb(NULL),
+	linewidth(1), linetype(glow_eLineType_Solid), textsize(0), textbold(0), 
+	border_color(1), fill_color(1), fill(0), border(1), shadow(0),
+	grid_size_x(1), grid_size_y(1), con_type(glow_eConType_Routed),
+	con_corner(glow_eCorner_Rounded),
 	conpoint_direction(glow_eDirection_Center),
 	trace_started(0), gdh_init_done(xn_gdh_init_done), arglist_cnt(0),
 	corner_round_amount(0.5), mode(graph_mode), scan_time(0.5),
@@ -155,7 +155,7 @@ Graph::Graph(
 	scriptmode(0), current_cmd_object(0), graph_object_data(0),
 	graph_object_scan(0), graph_object_close(0), local_db(0),
 	use_default_access(xn_use_default_access), 
-	default_access(xn_default_access)
+	default_access(xn_default_access), keep_mode(false)
 {
   strcpy( name, xn_name);
   strcpy( default_path, xn_default_path);
@@ -428,24 +428,43 @@ void Graph::get_filename( char *inname, char *outname)
 //
 //  Save
 //
-void Graph::save( char *filename)
+int Graph::save( char *filename)
 {
   char fname[120];
+  int grow_version, graph_version;
+
+  grow_GetVersion( grow->ctx, &grow_version, &graph_version);
+  if ( graph_version < 4000) {
+    // Needs to be converted
+    message( 'E', "Unable to save, graph needs conversion");
+    return 0;
+  }
 
   get_filename( filename, fname);
   grow_Save( grow->ctx, fname);
   grow_SetModified( grow->ctx, 0);
+
+  return 1;
 }
 
 //
 //  Save as subgraph
 //
-void Graph::save_subgraph( char *filename)
+int Graph::save_subgraph( char *filename)
 {
   char fname[120];
+  int grow_version, graph_version;
+
+  grow_GetVersion( grow->ctx, &grow_version, &graph_version);
+  if ( graph_version < 4000) {
+    // Needs to be converted
+    message( 'E', "Unable to save, graph needs conversion");
+    return 0;
+  }
 
   get_filename( filename, fname);
   grow_SaveSubGraph( grow->ctx, fname);
+  return 1;
 }
 
 //
@@ -455,6 +474,7 @@ void Graph::open( char *filename)
 {
   int sts;
   char fname[120];
+  int grow_version, graph_version;
 
   if ( trace_started)
     close_trace( 0);
@@ -475,6 +495,12 @@ void Graph::open( char *filename)
 
   grow_SetModified( grow->ctx, 0);
   strcpy( this->filename, filename);
+
+  grow_GetVersion( grow->ctx, &grow_version, &graph_version);
+  if ( graph_version < 4000) {
+    // Needs to be converted
+    message( 'E', "Old version, graph needs conversion");
+  }
 }
 
 //
@@ -515,7 +541,7 @@ void Graph::unzoom()
 //
 //  Return to base zoom factor
 //
-void Graph::set_mode( grow_eMode mode)
+void Graph::set_mode( grow_eMode mode, bool keep)
 {
   if ( mode == grow_eMode_EditPolyLine)
   {
@@ -531,6 +557,12 @@ void Graph::set_mode( grow_eMode mode)
     }
   }
   grow_SetMode( grow->ctx, mode);
+  keep_mode = keep;
+}
+
+void Graph::flip( glow_eFlipDirection dir)
+{
+  grow_FlipSelectedObjects( grow->ctx, dir);
 }
 
 int Graph::get_default_size( int *width, int *height)
@@ -543,10 +575,13 @@ int Graph::group_select( grow_tObject *object, char *last_group)
   grow_tObject group;
   char last_group_name[80];
   int sts;
-  glow_sTraceData data;
+  GeDyn *data;
 
   sts = grow_GroupSelect( grow->ctx, &group, last_group_name);
   if ( EVEN(sts)) return sts;
+
+  GeDyn *dyn = new GeDyn( this);
+  grow_SetUserData( group, (void *)dyn);
 
   grow_SetModified( grow->ctx, 1);
 
@@ -554,6 +589,7 @@ int Graph::group_select( grow_tObject *object, char *last_group)
     // Try to recover dynamics
     sts = recall.get( &data, last_group_name);
     if ( ODD(sts)) {
+      delete data;
       *object = group;
       strcpy( last_group, last_group_name);
       return GE__RECALLDATA_FOUND;
@@ -566,12 +602,12 @@ int Graph::group_select( grow_tObject *object, char *last_group)
 int Graph::set_recall_data( grow_tObject object, char *name)
 {
   int sts;
-  glow_sTraceData data;
+  GeDyn *data;
 
   sts = recall.get( &data, name);
   if ( EVEN(sts)) return sts;
 
-  grow_SetTraceAttr( object, &data);
+  grow_SetUserData( object, (void *)data);
   return 1;
 }
 
@@ -580,31 +616,27 @@ int Graph::ungroup_select( int force)
   grow_tObject 	*sel_list;
   int		sel_count;
   int           i;
-  glow_sTraceData *trace_data;
+  GeDyn 	*dyn;
   char          name[80];
 
   if ( !force) {
     grow_GetSelectList( grow->ctx, &sel_list, &sel_count);
     for ( i = 0; i < sel_count; i++) {
-      if ( grow_GetObjectType( sel_list[i]) == glow_eObjectType_GrowGroup)
-      {
-        grow_GetTraceAttr( sel_list[i], &trace_data);
-        if ( trace_data->attr_type != 0) {
+      if ( grow_GetObjectType( sel_list[i]) == glow_eObjectType_GrowGroup) {
+	grow_GetUserData( sel_list[i], (void **)&dyn);
+	if ( dyn->get_dyntype( sel_list[i]) || dyn->get_actiontype( sel_list[i]))
           return GE__GROUPDYNDATA;
-        }
       }
     }
   }
   else {
     grow_GetSelectList( grow->ctx, &sel_list, &sel_count);
     for ( i = 0; i < sel_count; i++) {
-      if ( grow_GetObjectType( sel_list[i]) == glow_eObjectType_GrowGroup)
-      {
-        grow_GetObjectName( sel_list[i], name);
-        grow_GetTraceAttr( sel_list[i], &trace_data);
-        if ( trace_data->attr_type != 0) {
-          recall.insert( trace_data, name);
-        }
+      if ( grow_GetObjectType( sel_list[i]) == glow_eObjectType_GrowGroup) {
+        grow_GetObjectName( sel_list[i], name);	
+	grow_GetUserData( sel_list[i], (void **)&dyn);
+	if ( dyn->get_dyntype( sel_list[i]) || dyn->get_actiontype( sel_list[i]))
+          recall.insert( dyn, name, sel_list[i]);
       }
     }
   }
@@ -615,24 +647,25 @@ int Graph::ungroup_select( int force)
 
 void Graph::set_inputfocus( int focus)
 {
-//  grow_SetInputFocus( grow->ctx);
-  Arg 		args[2];
+  // Arg 		args[2];
   Pixel 	bg, fg;
 
-  if ( !displayed)
-    return;
+  // if ( !displayed)
+  //  return;
 
   XtVaGetValues( form_widget, XmNbackground, &bg, XmNforeground, &fg, NULL);
   if ( !focus)
   {
-    XtSetArg(args[0], XmNborderColor, bg);
-    XtSetValues( form_widget, args, 1);
+    // XtSetArg(args[0], XmNborderColor, bg);
+    // XtSetValues( form_widget, args, 1);
   }
   else
   {
-    XtCallAcceptFocus( grow_widget, CurrentTime);
-    XtSetArg(args[0], XmNborderColor, fg);
-    XtSetValues( form_widget, args, 1);
+    if ( flow_IsViewable( grow_widget)) {
+      XtCallAcceptFocus( grow_widget, CurrentTime);
+      // XtSetArg(args[0], XmNborderColor, fg);
+      // XtSetValues( form_widget, args, 1);
+    }
   }
 }
 
@@ -755,150 +788,49 @@ void Graph::change_select_name()
 
 void Graph::change_value( grow_tObject object, char *text)
 {
-  glow_sTraceData *trace_data;
-  char		buf[200];
-  int		sts;
-  graph_sTraceData *data;
-  char		parsed_name[120];
-  int		inverted;
-  int		attr_type, attr_size;
-
   // Check that object exist
   if ( !grow_FindObject( grow->ctx, object))
     return;
 
-  grow_GetTraceAttr( object, &trace_data);
-  parse_attr_name( trace_data->data[0], parsed_name, &inverted, &attr_type, &attr_size);
+  GeDyn *dyn;
 
-  grow_GetUserData( object, (void **)&data);
-  if ( !data)
-    return;
-  if ( !data->annot_size )
-  {
-    pwr_sAttrRef 	ar;
-    pwr_tTypeId 	a_type_id;
-    unsigned int 	a_size;
-    unsigned int 	a_offset;
-    unsigned int 	a_dim;
+  grow_GetUserData( object, (void **)&dyn);
+  if ( dyn->action_type & ge_mActionType_Confirm) {
+    glow_sEvent event;
 
-    sts = gdh_NameToAttrref ( pwr_cNObjid, parsed_name, &ar);
-    if ( EVEN(sts)) return;
-    sts = gdh_GetAttributeCharAttrref( &ar, &a_type_id, &a_size,
-		&a_offset, &a_dim);
-    if ( EVEN(sts)) return;
-    data->annot_typeid = a_type_id;
-    data->annot_size = a_size;
+    event.event = glow_eEvent_MB1Click;
+
+    // Trigger the confirm action
+    (int)dyn->total_action_type = dyn->total_action_type & ~ge_mActionType_ValueInput;
+    strncpy( confirm_text, text, sizeof(confirm_text));
+    dyn->action( object, &event);
+    (int)dyn->total_action_type = dyn->total_action_type | ge_mActionType_ValueInput;
   }
-  sts = graph_attr_string_to_value( data->annot_typeid, text,
-	(void *)&buf, sizeof( buf), sizeof(buf));
-  if ( EVEN(sts)) return;
+  else {
+    dyn->change_value( object, text);
 
-  if ( strcmp( trace_data->data[4], "") != 0)
-  {
-    // Max value is supplied
-    float	maxvalue;
-    int 	max_exceeded = 0;
-    sts = sscanf( trace_data->data[4], "%f", &maxvalue);
-    if ( sts == 1)
-    {
-      switch ( data->annot_typeid) 
-      {
-        case pwr_eType_Float32:
-          if ( float( *(pwr_tFloat32 *) buf) > maxvalue) max_exceeded = 1;
-          break;
-        case pwr_eType_Float64:
-          if ( float( *(pwr_tFloat64 *) buf) > maxvalue) max_exceeded = 1;
-          break;
-        case pwr_eType_Int32:
-          if ( float( *(pwr_tInt32 *) buf) > maxvalue) max_exceeded = 1;
-          break;
-        case pwr_eType_UInt32:
-          if ( float( *(pwr_tUInt32 *) buf) > maxvalue) max_exceeded = 1;
-          break;
-        case pwr_eType_Int16:
-          if ( float( *(pwr_tInt16 *) buf) > maxvalue) max_exceeded = 1;
-          break;
-        case pwr_eType_UInt16:
-          if ( float( *(pwr_tUInt16 *) buf) > maxvalue) max_exceeded = 1;
-          break;
-        case pwr_eType_Int8:
-          if ( float( *(pwr_tInt8 *) buf) > maxvalue) max_exceeded = 1;
-          break;
-        case pwr_eType_UInt8:
-          if ( float( *(pwr_tUInt8 *) buf) > maxvalue) max_exceeded = 1;
-          break;
-      }
-    }    
-    if ( max_exceeded)
-    {
-      if ( message_dialog_cb)
-        (message_dialog_cb)( parent_ctx, "Maxvalue exceeded");
-      return;
-    }
-  }
-  if ( strcmp( trace_data->data[3], "") != 0)
-  {
-    // Min value is supplied
-    float	minvalue;
-    int 	min_exceeded = 0;
-    sts = sscanf( trace_data->data[3], "%f", &minvalue);
-    if ( sts == 1)
-    {
-      switch ( data->annot_typeid) 
-      {
-        case pwr_eType_Float32:
-          if ( float( *(pwr_tFloat32 *) buf) < minvalue) min_exceeded = 1;
-          break;
-        case pwr_eType_Float64:
-          if ( float( *(pwr_tFloat64 *) buf) < minvalue) min_exceeded = 1;
-          break;
-        case pwr_eType_Int32:
-          if ( float( *(pwr_tInt32 *) buf) < minvalue) min_exceeded = 1;
-          break;
-        case pwr_eType_UInt32:
-          if ( float( *(pwr_tUInt32 *) buf) < minvalue) min_exceeded = 1;
-          break;
-        case pwr_eType_Int16:
-          if ( float( *(pwr_tInt16 *) buf) < minvalue) min_exceeded = 1;
-          break;
-        case pwr_eType_UInt16:
-          if ( float( *(pwr_tUInt16 *) buf) < minvalue) min_exceeded = 1;
-          break;
-        case pwr_eType_Int8:
-          if ( float( *(pwr_tInt8 *) buf) < minvalue) min_exceeded = 1;
-          break;
-        case pwr_eType_UInt8:
-          if ( float( *(pwr_tUInt8 *) buf) < minvalue) min_exceeded = 1;
-          break;
-      }
-    }    
-    if ( min_exceeded)
-    {
-      if ( message_dialog_cb)
-        (message_dialog_cb)( parent_ctx, "Value below minvalue");
-      return;
-    }
-  }
+    // Send a Key_Tab event
+    glow_sEvent event;
 
-  if ( data->db[0] == graph_eDatabase_Local)
-    sts = localdb_set_value( parsed_name, &buf, data->annot_size);
-  else
-    sts = gdh_SetObjectInfo( parsed_name, &buf, data->annot_size);
-  if ( EVEN(sts)) printf("AnnotationInput error: %s\n", trace_data->data[0]);
+    event.event = glow_eEvent_Key_Tab;
+    event.object.object = object;
+    event.object.object_type = grow_GetObjectType( object);
+    dyn->action( object, &event);
+  }
+}
+
+void Graph::set_select_text_color()
+{
+  grow_DisableHighlight( grow->ctx);
+  grow_SetSelectOrigTextColor( grow->ctx, get_text_drawtype());
 }
 
 void Graph::set_select_fill_color()
 {
-  grow_DisableHighlight( grow->ctx);
-  grow_SetSelectOrigFillColor( grow->ctx, get_fill_drawtype());
-}
-
-void Graph::set_select_border_color()
-{
-  glow_eDrawType drawtype = get_border_drawtype();
+  glow_eDrawType drawtype = get_fill_drawtype();
 
   grow_DisableHighlight( grow->ctx);
-  grow_SetSelectOrigBorderColor( grow->ctx, drawtype);
+  grow_SetSelectOrigFillColor( grow->ctx, drawtype);
 
   if ( grow_AnySelectIsCon( grow->ctx))
   {
@@ -928,10 +860,21 @@ void Graph::set_select_border_color()
   }
 }
 
+void Graph::set_select_border_color()
+{
+  glow_eDrawType drawtype = get_border_drawtype();
+
+  grow_DisableHighlight( grow->ctx);
+  grow_SetSelectOrigBorderColor( grow->ctx, drawtype);
+}
+
 void Graph::set_select_color_tone( glow_eDrawTone tone)
 {
   grow_DisableHighlight( grow->ctx);
   grow_SetSelectOrigColorTone( grow->ctx, tone);
+  if ( tone == glow_eDrawTone_No)
+    // Reset the fillcolor also
+    grow_SetSelectOrigFillColor( grow->ctx, glow_eDrawType_No);
 }
 
 void Graph::incr_select_color_lightness( int lightness)
@@ -987,6 +930,14 @@ void Graph::set_select_linewidth( int width)
   }
 }
 
+void Graph::set_select_linetype( glow_eLineType type)
+{
+  linetype = type;
+
+  grow_DisableHighlight( grow->ctx);
+  grow_SetSelectLineType( grow->ctx, type);
+}
+
 void Graph::set_select_fill( int fill)
 {
   grow_SetSelectFill( grow->ctx, fill);
@@ -995,6 +946,11 @@ void Graph::set_select_fill( int fill)
 void Graph::set_select_border( int border)
 {
   grow_SetSelectBorder( grow->ctx, border);
+}
+
+void Graph::set_select_shadow( int border)
+{
+  grow_SetSelectShadow( grow->ctx, shadow);
 }
 
 void Graph::set_select_textsize( int size)
@@ -1021,9 +977,9 @@ void Graph::set_select_textbold( int bold)
 
 void Graph::set_background_color()
 {
-  glow_eDrawType fill_color, border_color;
+  glow_eDrawType fill_color, border_color, text_color;
 
-  (get_current_colors_cb)( parent_ctx, &fill_color, &border_color);
+  (get_current_colors_cb)( parent_ctx, &fill_color, &border_color, &text_color);
   grow_SetBackgroundColor( grow->ctx, fill_color);
 }
 
@@ -1042,20 +998,29 @@ void Graph::set_show_grid( int show)
 
 glow_eDrawType Graph::get_border_drawtype()
 {
-  glow_eDrawType fill_color, border_color;
+  glow_eDrawType fill_color, border_color, text_color;
 
-  (get_current_colors_cb)( parent_ctx, &fill_color, &border_color);
+  (get_current_colors_cb)( parent_ctx, &fill_color, &border_color, &text_color);
 
   return border_color;
 }
 
 glow_eDrawType Graph::get_fill_drawtype()
 {
-  glow_eDrawType fill_color, border_color;
+  glow_eDrawType fill_color, border_color, text_color;
 
-  (get_current_colors_cb)( parent_ctx, &fill_color, &border_color);
+  (get_current_colors_cb)( parent_ctx, &fill_color, &border_color, &text_color);
 
   return fill_color;
+}
+
+glow_eDrawType Graph::get_text_drawtype()
+{
+  glow_eDrawType fill_color, border_color, text_color;
+
+  (get_current_colors_cb)( parent_ctx, &fill_color, &border_color, &text_color);
+
+  return text_color;
 }
 
 void Graph::select_all_cons()
@@ -1069,8 +1034,8 @@ void Graph::select_all_cons()
   object_p = objectlist;
   for ( i = 0; i < object_cnt; i++)
   {
-    if ( grow_GetObjectType( *object_p) == glow_eObjectType_Con)
-    {
+   if ( grow_GetObjectType( *object_p) == glow_eObjectType_Con)
+   {
       grow_SetHighlight( *object_p, 1);
       grow_SelectInsert( grow->ctx, *object_p);
     }
@@ -1138,907 +1103,124 @@ int Graph::is_authorized( unsigned int access)
 int Graph::get_attr_items( grow_tObject object, attr_sItem **itemlist,
 	int *item_cnt, void **client_data)
 {
-  static attr_sItem	items[20];
+  static attr_sItem	items[40];
   int			i;
   grow_sAttrInfo	*grow_info, *grow_info_p;
   int			grow_info_cnt;
-  graph_eTrace		trace_type;
-  glow_sTraceData	*trace_data;
 
+  memset( items, 0, sizeof(items));
   if ( grow_GetObjectType( object) == glow_eObjectType_GrowNode ||
        grow_GetObjectType( object) == glow_eObjectType_GrowGroup)
   {
-    grow_GetTraceAttr( object, &trace_data);
-    trace_type = (graph_eTrace) trace_data->attr_type;
+    GeDyn *dyn;
+    char *transtab;
+    grow_GetUserData( object, (void **)&dyn);
 
-    if ( trace_type == graph_eTrace_Inherit)
-      grow_GetObjectClassTraceType( object, (glow_eTraceType *) &trace_type);
-    switch ( trace_type)
-    {
-      case graph_eTrace_No:
-      case graph_eTrace_Inherit:
-      {
-        char transtab[][32] = {	 	"SubGraph",		"SubGraph",
-					"TraceData1", 		"",
-					"TraceData2",		"",
-					"TraceData3",		"",
-					"TraceData4",		"",
-					"TraceData5",		"",
-					"TraceData6",		"",
-					"TraceData7",		"",
-					"TraceData8",		"",
-					"TraceData9",		"",
-					"TraceAttrType",	"Type",
-					"TraceColor",		"",
-					"TraceColor2",		"",
-					"TraceAccess",		"",
-					"TraceCycle",		"",
-					"TraceRefObject",	"",
-					"Dynamic",		"",
-					""};
-        grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
-		&grow_info_cnt);
-        break;
-      }
-      case graph_eTrace_Dig:
-      case graph_eTrace_DigBorder:
-      {
-        char transtab[][32] = {	 	"SubGraph",		"SubGraph",
-					"TraceData1", 		"Attribute",
-					"TraceData2",		"InvisAttr",
-					"TraceData3",		"",
-					"TraceData4",		"",
-					"TraceData5",		"",
-					"TraceData6",		"",
-					"TraceData7",		"",
-					"TraceData8",		"",
-					"TraceData9",		"",
-					"TraceAttrType",	"Type",
-					"TraceColor",		"LowColor",
-					"TraceColor2",		"",
-					"TraceAccess",		"",
-					"TraceCycle",		"Cycle",
-					"TraceRefObject",	"RefObject",
-					"Dynamic",		"",
-					""};
-        grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
-		&grow_info_cnt);
-        break;
-      }
-      case graph_eTrace_Invisible:
-      {
-        char transtab[][32] = {	 	"SubGraph",		"SubGraph",
-					"TraceData1", 		"Attribute",
-					"TraceData2",		"",
-					"TraceData3",		"",
-					"TraceData4",		"",
-					"TraceData5",		"",
-					"TraceData6",		"",
-					"TraceData7",		"",
-					"TraceData8",		"",
-					"TraceData9",		"",
-					"TraceAttrType",	"Type",
-					"TraceColor",		"",
-					"TraceColor2",		"",
-					"TraceAccess",		"",
-					"TraceCycle",		"Cycle",
-					"TraceRefObject",	"RefObject",
-					"Dynamic",		"",
-					""};
-        grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
-		&grow_info_cnt);
-        break;
-      }
-      case graph_eTrace_DigWithCommand:
-      {
-        char transtab[][32] = {	 	"SubGraph",		"SubGraph",
-					"TraceData1", 		"Attribute",
-					"TraceData2",		"InvisAttr",
-					"TraceData3",		"",
-					"TraceData4",		"CmdClick",
-					"TraceData5",		"CmdDoubleClick",
-					"TraceData6",		"",
-					"TraceData7",		"",
-					"TraceData8",		"",
-					"TraceData9",		"",
-					"TraceAttrType",	"Type",
-					"TraceColor",		"LowColor",
-					"TraceColor2",		"",
-					"TraceAccess",		"Access",
-					"TraceCycle",		"Cycle",
-					"TraceRefObject",	"RefObject",
-					"Dynamic",		"",
-					""};
-        grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
-		&grow_info_cnt);
-        break;
-      }
-      case graph_eTrace_DigWithText:
-      {
-        char transtab[][32] = {	 	"SubGraph",		"SubGraph",
-					"TraceData1", 		"Attribute",
-					"TraceData2",		"LowText",
-					"TraceData3",		"",
-					"TraceData4",		"",
-					"TraceData5",		"",
-					"TraceData6",		"",
-					"TraceData7",		"",
-					"TraceData8",		"",
-					"TraceData9",		"",
-					"TraceAttrType",	"Type",
-					"TraceColor",		"LowTone",
-					"TraceColor2",		"",
-					"TraceAccess",		"",
-					"A1",			"Text",
-					"TraceCycle",		"Cycle",
-					"TraceRefObject",	"RefObject",
-					"Dynamic",		"",
-					""};
-        grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
-		&grow_info_cnt);
-        break;
-      }
-      case graph_eTrace_DigWithError:
-      {
-        char transtab[][32] = {		"SubGraph",		"SubGraph",
-					"TraceData1", 		"Attribute",
-					"TraceData2",		"ErrorAttr",
-					"TraceData3",		"WarningAttr",
-					"TraceData4",		"",
-					"TraceData5",		"",
-					"TraceData6",		"",
-					"TraceData7",		"",
-					"TraceData8",		"",
-					"TraceData9",		"",
-					"TraceAttrType",	"Type",
-					"TraceColor",		"LowColor",
-					"TraceColor2",		"",
-					"TraceAccess",		"",
-					"TraceCycle",		"Cycle",
-					"TraceRefObject",	"RefObject",
-					"Dynamic",		"",
-					""};
-        grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
-		&grow_info_cnt);
-        break;
-      }
-      case graph_eTrace_DigTwo:
-      {
-        char transtab[][32] = {		"SubGraph",		"SubGraph",
-					"TraceData1", 		"Attribute",
-					"TraceData2",		"ErrorAttr",
-					"TraceData3",		"Attr2",
-					"TraceData4",		"",
-					"TraceData5",		"",
-					"TraceData6",		"",
-					"TraceData7",		"",
-					"TraceData8",		"",
-					"TraceData9",		"",
-					"TraceAttrType",	"Type",
-					"TraceColor",		"LowColor",
-					"TraceColor2",		"Color2",
-					"TraceAccess",		"",
-					"TraceCycle",		"Cycle",
-					"TraceRefObject",	"RefObject",
-					"Dynamic",		"",
-					""};
-        grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
-		&grow_info_cnt);
-        break;
-      }
-      case graph_eTrace_DigTwoWithCommand:
-      {
-        char transtab[][32] = {		"SubGraph",		"SubGraph",
-					"TraceData1", 		"Attribute",
-					"TraceData2",		"ErrorAttr",
-					"TraceData3",		"Attr2",
-					"TraceData4",		"CmdClick",
-					"TraceData5",		"CmdDoubleClick",
-					"TraceData6",		"",
-					"TraceData7",		"",
-					"TraceData8",		"",
-					"TraceData9",		"",
-					"TraceAttrType",	"Type",
-					"TraceColor",		"LowColor",
-					"TraceColor2",		"Color2",
-					"TraceAccess",		"Access",
-					"TraceCycle",		"Cycle",
-					"TraceRefObject",	"RefObject",
-					"Dynamic",		"",
-					""};
-        grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
-		&grow_info_cnt);
-        break;
-      }
-      case graph_eTrace_DigWithErrorAndCommand:
-      {
-        char transtab[][32] = {		"SubGraph",		"SubGraph",
-					"TraceData1", 		"Attribute",
-					"TraceData2",		"ErrorAttr",
-					"TraceData3",		"WarningAttr",
-					"TraceData4",		"CmdClick",
-					"TraceData5",		"CmdDoubleClick",
-					"TraceData6",		"",
-					"TraceData7",		"",
-					"TraceData8",		"",
-					"TraceData9",		"",
-					"TraceAttrType",	"Type",
-					"TraceColor",		"LowColor",
-					"TraceColor2",		"",
-					"TraceAccess",		"Access",
-					"TraceCycle",		"Cycle",
-					"TraceRefObject",	"RefObject",
-					"Dynamic",		"",
-					""};
-        grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
-		&grow_info_cnt);
-        break;
-      }
-      case graph_eTrace_DigTone:
-      {
-        char transtab[][32] = {	 	"SubGraph",		"SubGraph",
-					"TraceData1", 		"Attribute",
-					"TraceData2",		"InvisAttr",
-					"TraceData3",		"",
-					"TraceData4",		"",
-					"TraceData5",		"",
-					"TraceData6",		"",
-					"TraceData7",		"",
-					"TraceData8",		"",
-					"TraceData9",		"",
-					"TraceAttrType",	"Type",
-					"TraceColor",		"LowTone",
-					"TraceColor2",		"",
-					"TraceAccess",		"",
-					"TraceCycle",		"Cycle",
-					"TraceRefObject",	"RefObject",
-					"Dynamic",		"",
-					""};
-        grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
-		&grow_info_cnt);
-        break;
-      }
-      case graph_eTrace_DigToneWithCommand:
-      {
-        char transtab[][32] = {	 	"SubGraph",		"SubGraph",
-					"TraceData1", 		"Attribute",
-					"TraceData2",		"InvisAttr",
-					"TraceData3",		"",
-					"TraceData4",		"CmdClick",
-					"TraceData5",		"CmdDoubleClick",
-					"TraceData6",		"",
-					"TraceData7",		"",
-					"TraceData8",		"",
-					"TraceData9",		"",
-					"TraceAttrType",	"Type",
-					"TraceColor",		"LowTone",
-					"TraceColor2",		"",
-					"TraceAccess",		"Access",
-					"TraceCycle",		"Cycle",
-					"TraceRefObject",	"RefObject",
-					"Dynamic",		"",
-					""};
-        grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
-		&grow_info_cnt);
-        break;
-      }
-      case graph_eTrace_DigToneWithError:
-      {
-        char transtab[][32] = {		"SubGraph",		"SubGraph",
-					"TraceData1", 		"Attribute",
-					"TraceData2",		"ErrorAttr",
-					"TraceData3",		"WarnAttr",
-					"TraceData4",		"",
-					"TraceData5",		"",
-					"TraceData6",		"",
-					"TraceData7",		"",
-					"TraceData8",		"",
-					"TraceData9",		"",
-					"TraceAttrType",	"Type",
-					"TraceColor",		"LowTone",
-					"TraceColor2",		"",
-					"TraceAccess",		"",
-					"TraceCycle",		"Cycle",
-					"TraceRefObject",	"RefObject",
-					"Dynamic",		"",
-					""};
-        grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
-		&grow_info_cnt);
-        break;
-      }
-      case graph_eTrace_DigToneWithErrorAndCommand:
-      {
-        char transtab[][32] = {		"SubGraph",		"SubGraph",
-					"TraceData1", 		"Attribute",
-					"TraceData2",		"ErrorAttr",
-					"TraceData3",		"WarnAttr",
-					"TraceData4",		"CmdClick",
-					"TraceData5",		"CmdDoubleClick",
-					"TraceData6",		"",
-					"TraceData7",		"",
-					"TraceData8",		"",
-					"TraceData9",		"",
-					"TraceAttrType",	"Type",
-					"TraceColor",		"LowTone",
-					"TraceColor2",		"",
-					"TraceAccess",		"Access",
-					"TraceCycle",		"Cycle",
-					"TraceRefObject",	"RefObject",
-					"Dynamic",		"",
-					""};
-        grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
-		&grow_info_cnt);
-        break;
-      }
-      case graph_eTrace_DigToneTwo:
-      {
-        char transtab[][32] = {		"SubGraph",		"SubGraph",
-					"TraceData1", 		"Attribute",
-					"TraceData2",		"ErrorAttr",
-					"TraceData3",		"Attr2",
-					"TraceData4",		"",
-					"TraceData5",		"",
-					"TraceData6",		"",
-					"TraceData7",		"",
-					"TraceData8",		"",
-					"TraceData9",		"",
-					"TraceAttrType",	"Type",
-					"TraceColor",		"LowTone",
-					"TraceColor2",		"Tone2",
-					"TraceAccess",		"",
-					"TraceCycle",		"Cycle",
-					"TraceRefObject",	"RefObject",
-					"Dynamic",		"",
-					""};
-        grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
-		&grow_info_cnt);
-        break;
-      }
-      case graph_eTrace_DigToneTwoWithCommand:
-      {
-        char transtab[][32] = {		"SubGraph",		"SubGraph",
-					"TraceData1", 		"Attribute",
-					"TraceData2",		"ErrorAttr",
-					"TraceData3",		"Attr2",
-					"TraceData4",		"CmdClick",
-					"TraceData5",		"CmdDoubleClick",
-					"TraceData6",		"",
-					"TraceData7",		"",
-					"TraceData8",		"",
-					"TraceData9",		"",
-					"TraceAttrType",	"Type",
-					"TraceColor",		"LowTone",
-					"TraceColor2",		"Tone2",
-					"TraceAccess",		"Access",
-					"TraceCycle",		"Cycle",
-					"TraceRefObject",	"RefObject",
-					"Dynamic",		"",
-					""};
-        grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
-		&grow_info_cnt);
-        break;
-      }
-      case graph_eTrace_Annot:
-      {
-        char transtab[][32] = {	 	"SubGraph",		"SubGraph",
-					"TraceData1", 		"Attribute",
-					"TraceData2",		"Format",
-					"TraceData3",		"",
-					"TraceData4",		"",
-					"TraceData5",		"",
-					"TraceData6",		"",
-					"TraceData7",		"",
-					"TraceData8",		"",
-					"TraceData9",		"",
-					"TraceAttrType",	"Type",
-					"TraceColor",		"",
-					"TraceColor2",		"",
-					"TraceAccess",		"",
-					"TraceCycle",		"Cycle",
-					"TraceRefObject",	"RefObject",
-					"A1",			"",
-					"Dynamic",		"",
-					""};
-        grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
-		&grow_info_cnt);
-        break;
-      }
-      case graph_eTrace_AnnotInput:
-      {
-        char transtab[][32] = {	 	"SubGraph",		"SubGraph",
-					"TraceData1", 		"Attribute",
-					"TraceData2",		"Format",
-					"TraceData3",		"",
-					"TraceData4",		"MinValue",
-					"TraceData5",		"MaxValue",
-					"TraceData6",		"",
-					"TraceData7",		"",
-					"TraceData8",		"",
-					"TraceData9",		"",
-					"TraceAttrType",	"Type",
-					"TraceColor",		"",
-					"TraceColor2",		"",
-					"TraceAccess",		"Access",
-					"TraceCycle",		"Cycle",
-					"TraceRefObject",	"RefObject",
-					"A1",			"",
-					"Dynamic",		"",
-					""};
-        grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
-		&grow_info_cnt);
-        break;
-      }
-      case graph_eTrace_AnnotWithTone:
-      {
-        char transtab[][32] = {	 	"SubGraph",		"SubGraph",
-					"TraceData1", 		"Attribute",
-					"TraceData2",		"Format",
-					"TraceData3",		"ToneAttr",
-					"TraceData4",		"InvisAttr",
-					"TraceData5",		"",
-					"TraceData6",		"",
-					"TraceData7",		"",
-					"TraceData8",		"",
-					"TraceData9",		"",
-					"TraceAttrType",	"Type",
-					"TraceColor",		"LowTone",
-					"TraceColor2",		"",
-					"TraceAccess",		"",
-					"TraceCycle",		"Cycle",
-					"TraceRefObject",	"RefObject",
-					"A1",			"",
-					"Dynamic",		"",
-					""};
-        grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
-		&grow_info_cnt);
-        break;
-      }
-      case graph_eTrace_AnnotInputWithTone:
-      {
-        char transtab[][32] = {	 	"SubGraph",		"SubGraph",
-					"TraceData1", 		"Attribute",
-					"TraceData2",		"Format",
-					"TraceData3",		"ToneAttr",
-					"TraceData4",		"MinValue",
-					"TraceData5",		"MaxValue",
-					"TraceData6",		"",
-					"TraceData7",		"",
-					"TraceData8",		"",
-					"TraceData9",		"",
-					"TraceAttrType",	"Type",
-					"TraceColor",		"LowTone",
-					"TraceColor2",		"",
-					"TraceAccess",		"Access",
-					"TraceCycle",		"Cycle",
-					"TraceRefObject",	"RefObject",
-					"A1",			"",
-					"Dynamic",		"",
-					""};
-        grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
-		&grow_info_cnt);
-        break;
-      }
-      case graph_eTrace_Rotate:
-      {
-        char transtab[][32] = {	 	"SubGraph",		"SubGraph",
-					"TraceData1", 		"Attribute",
-					"TraceData2",		"x0",
-					"TraceData3",		"y0",
-					"TraceData4",		"ToneAttr",
-					"TraceData5",		"InvisAttr",
-					"TraceData6",		"Factor",
-					"TraceData7",		"",
-					"TraceData8",		"",
-					"TraceData9",		"",
-					"TraceAttrType",	"Type",
-					"TraceColor",		"LowTone",
-					"TraceColor2",		"",
-					"TraceAccess",		"",
-					"TraceCycle",		"Cycle",
-					"TraceRefObject",	"RefObject",
-					"A1",			"",
-					"Dynamic",		"",
-					""};
-        grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
-		&grow_info_cnt);
-        break;
-      }
-      case graph_eTrace_Move:
-      {
-        char transtab[][32] = {	 	"SubGraph",		"SubGraph",
-					"TraceData1", 		"XAttr",
-					"TraceData2",		"YAttr",
-					"TraceData3",		"ToneAttr",
-					"TraceData4",		"InvisAttr",
-					"TraceData5",		"Factor",
-					"TraceData6",		"XOffset",
-					"TraceData7",		"YOffset",
-					"TraceData8",		"ScaleXAttr",
-					"TraceData9",		"ScaleYAttr",
-					"TraceAttrType",	"Type",
-					"TraceColor",		"LowTone",
-					"TraceColor2",		"",
-					"TraceAccess",		"",
-					"TraceCycle",		"Cycle",
-					"TraceRefObject",	"RefObject",
-					"Dynamic",		"",
-					""};
-        grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
-		&grow_info_cnt);
-        break;
-      }
-      case graph_eTrace_AnalogShift:
-      case graph_eTrace_DigShift:
-      {
-        char transtab[][32] = {	 	"SubGraph",		"SubGraph",
-					"TraceData1", 		"ShiftAttr",
-					"TraceData2",		"ToneAttr",
-					"TraceData3",		"InvisAttr",
-					"TraceData4",		"",
-					"TraceData5",		"",
-					"TraceData6",		"",
-					"TraceData7",		"",
-					"TraceData8",		"",
-					"TraceData9",		"",
-					"TraceAttrType",	"Type",
-					"TraceColor",		"LowTone",
-					"TraceColor2",		"",
-					"TraceAccess",		"",
-					"TraceCycle",		"Cycle",
-					"TraceRefObject",	"RefObject",
-					"Dynamic",		"",
-					""};
-        grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
-		&grow_info_cnt);
-        break;
-      }
-      case graph_eTrace_Animation:
-      case graph_eTrace_AnimationForwBack:
-      case graph_eTrace_DigAnimation:
-      {
-        char transtab[][32] = {	 	"SubGraph",		"SubGraph",
-					"TraceData1", 		"AnimationAttr",
-					"TraceData2",		"ToneAttr",
-					"TraceData3",		"InvisAttr",
-					"TraceData4",		"",
-					"TraceData5",		"",
-					"TraceData6",		"",
-					"TraceData7",		"",
-					"TraceData8",		"",
-					"TraceData9",		"",
-					"TraceAttrType",	"Type",
-					"TraceColor",		"LowTone",
-					"TraceColor2",		"",
-					"TraceAccess",		"",
-					"TraceCycle",		"Cycle",
-					"TraceRefObject",	"RefObject",
-					"Dynamic",		"",
-					""};
-        grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
-		&grow_info_cnt);
-        break;
-      }
-      case graph_eTrace_Video:
-      {
-        char transtab[][32] = {	 	"SubGraph",		"SubGraph",
-					"TraceData1", 		"",
-					"TraceData2",		"",
-					"TraceData3",		"",
-					"TraceData4",		"",
-					"TraceData5",		"",
-					"TraceData6",		"",
-					"TraceData7",		"",
-					"TraceData8",		"",
-					"TraceData9",		"",
-					"TraceAttrType",	"Type",
-					"TraceColor",		"",
-					"TraceColor2",		"",
-					"TraceAccess",		"",
-					"TraceCycle",		"Cycle",
-					"TraceRefObject",	"RefObject",
-					"Dynamic",		"",
-					""};
-        grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
-		&grow_info_cnt);
-        break;
-      }
-      case graph_eTrace_SetDig:
-      case graph_eTrace_ResetDig:
-      case graph_eTrace_ToggleDig:
-      {
-        char transtab[][32] = {	 	"SubGraph",		"SubGraph",
-					"TraceData1", 		"Attribute",
-					"TraceData2",		"",
-					"TraceData3",		"",
-					"TraceData4",		"",
-					"TraceData5",		"",
-					"TraceData6",		"",
-					"TraceData7",		"",
-					"TraceData8",		"",
-					"TraceData9",		"",
-					"TraceAttrType",	"Type",
-					"TraceColor",		"",
-					"TraceColor2",		"",
-					"TraceAccess",		"Access",
-					"TraceCycle",		"",
-					"TraceRefObject",	"RefObject",
-					"A1",			"Text",
-					"Dynamic",		"",
-					""};
-        grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
-		&grow_info_cnt);
-        break;
-      }
-      case graph_eTrace_RadioButton:
-      {
-        char transtab[][32] = {	 	"SubGraph",		"SubGraph",
-					"TraceData1", 		"Attribute",
-					"TraceData2",		"",
-					"TraceData3",		"",
-					"TraceData4",		"",
-					"TraceData5",		"",
-					"TraceData6",		"",
-					"TraceData7",		"",
-					"TraceData8",		"",
-					"TraceData9",		"",
-					"TraceAttrType",	"Type",
-					"TraceColor",		"",
-					"TraceColor2",		"",
-					"TraceAccess",		"Access",
-					"TraceCycle",		"Cycle",
-					"TraceRefObject",	"RefObject",
-					"A1",			"Text",
-					"Dynamic",		"",
-					""};
-        grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
-		&grow_info_cnt);
-        break;
-      }
-      case graph_eTrace_DigShiftWithToggleDig:
-      {
-        char transtab[][32] = {	 	"SubGraph",		"SubGraph",
-					"TraceData1", 		"ToggleAttr",
-					"TraceData2",		"ShiftAttr",
-					"TraceData3",		"",
-					"TraceData4",		"",
-					"TraceData5",		"",
-					"TraceData6",		"",
-					"TraceData7",		"",
-					"TraceData8",		"",
-					"TraceData9",		"",
-					"TraceAttrType",	"Type",
-					"TraceColor",		"",
-					"TraceColor2",		"",
-					"TraceAccess",		"Access",
-					"TraceCycle",		"Cycle",
-					"TraceRefObject",	"RefObject",
-					"A1",			"Text",
-					"Dynamic",		"",
-					""};
-        grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
-		&grow_info_cnt);
-        break;
-      }
-      case graph_eTrace_Command:
-      {
-        char transtab[][32] = {	 	"SubGraph",		"SubGraph",
-					"TraceData1", 		"Command",
-					"TraceData2",		"",
-					"TraceData3",		"",
-					"TraceData4",		"",
-					"TraceData5",		"",
-					"TraceData6",		"",
-					"TraceData7",		"",
-					"TraceData8",		"",
-					"TraceData9",		"",
-					"TraceAttrType",	"Type",
-					"TraceColor",		"",
-					"TraceColor2",		"",
-					"TraceAccess",		"Access",
-					"TraceCycle",		"",
-					"TraceRefObject",	"RefObject",
-					"A1",			"Text",
-					"Dynamic",		"",
-					""};
-        grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
-		&grow_info_cnt);
-        break;
-      }
-      case graph_eTrace_SetDigConfirm:
-      case graph_eTrace_ResetDigConfirm:
-      case graph_eTrace_ToggleDigConfirm:
-      {
-        char transtab[][32] = {	 	"SubGraph",		"SubGraph",
-					"TraceData1", 		"Attribute",
-					"TraceData2",		"ConfirmText",
-					"TraceData3",		"",
-					"TraceData4",		"",
-					"TraceData5",		"",
-					"TraceData6",		"",
-					"TraceData7",		"",
-					"TraceData8",		"",
-					"TraceData9",		"",
-					"TraceAttrType",	"Type",
-					"TraceColor",		"",
-					"TraceColor2",		"",
-					"TraceAccess",		"Access",
-					"TraceCycle",		"",
-					"TraceRefObject",	"RefObject",
-					"A1",			"Text",
-					"Dynamic",		"",
-					""};
-        grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
-		&grow_info_cnt);
-        break;
-      }
-      case graph_eTrace_SetDigConfirmWithTone:
-      case graph_eTrace_ResetDigConfirmWithTone:
-      case graph_eTrace_ToggleDigConfirmWithTone:
-      {
-        char transtab[][32] = {	 	"SubGraph",		"SubGraph",
-					"TraceData1", 		"Attribute",
-					"TraceData2",		"ConfirmText",
-					"TraceData3",		"ToneAttr",
-					"TraceData4",		"InvisAttr",
-					"TraceData5",		"LowText",
-					"TraceData6",		"",
-					"TraceData7",		"",
-					"TraceData8",		"",
-					"TraceData9",		"",
-					"TraceAttrType",	"Type",
-					"TraceColor",		"LowTone",
-					"TraceColor2",		"",
-					"TraceAccess",		"Access",
-					"TraceCycle",		"Cycle",
-					"TraceRefObject",	"RefObject",
-					"A1",			"Text",
-					"Dynamic",		"",
-					""};
-        grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
-		&grow_info_cnt);
-        break;
-      }
-      case graph_eTrace_SetDigWithTone:
-      case graph_eTrace_ResetDigWithTone:
-      case graph_eTrace_ToggleDigWithTone:
-      case graph_eTrace_StoDigWithTone:
-      {
-        char transtab[][32] = {	 	"SubGraph",		"SubGraph",
-					"TraceData1", 		"Attribute",
-					"TraceData2",		"",
-					"TraceData3",		"ToneAttr",
-					"TraceData4",		"InvisAttr",
-					"TraceData5",		"LowText",
-					"TraceData6",		"",
-					"TraceData7",		"",
-					"TraceData8",		"",
-					"TraceData9",		"",
-					"TraceAttrType",	"Type",
-					"TraceColor",		"LowTone",
-					"TraceColor2",		"",
-					"TraceAccess",		"Access",
-					"TraceCycle",		"Cycle",
-					"TraceRefObject",	"RefObject",
-					"A1",			"Text",
-					"Dynamic",		"",
-					""};
-        grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
-		&grow_info_cnt);
-        break;
-      }
-      case graph_eTrace_CommandConfirm:
-      {
-        char transtab[][32] = {	 	"SubGraph",		"SubGraph",
-					"TraceData1", 		"Command",
-					"TraceData2",		"ConfirmText",
-					"TraceData3",		"",
-					"TraceData4",		"",
-					"TraceData5",		"",
-					"TraceData6",		"",
-					"TraceData7",		"",
-					"TraceData8",		"",
-					"TraceData9",		"",
-					"TraceAttrType",	"Type",
-					"TraceColor",		"",
-					"TraceColor2",		"",
-					"TraceAccess",		"Access",
-					"TraceCycle",		"",
-					"TraceRefObject",	"RefObject",
-					"A1",			"Text",
-					"Dynamic",		"",
-					""};
-        grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
-		&grow_info_cnt);
-        break;
-      }
-      case graph_eTrace_IncrAnalog:
-      {
-        char transtab[][32] = {	 	"SubGraph",		"SubGraph",
-					"TraceData1", 		"Attribute",
-					"TraceData2",		"Increment",
-					"TraceData3",		"MinValue",
-					"TraceData4",		"MaxValue",
-					"TraceData5",		"",
-					"TraceData6",		"",
-					"TraceData7",		"",
-					"TraceData8",		"",
-					"TraceData9",		"",
-					"TraceAttrType",	"Type",
-					"TraceColor",		"",
-					"TraceColor2",		"",
-					"TraceAccess",		"Access",
-					"TraceCycle",		"",
-					"TraceRefObject",	"RefObject",
-					"A1",			"Text",
-					"Dynamic",		"",
-					""};
-        grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
-		&grow_info_cnt);
-        break;
-      }
-      default:
-        grow_GetObjectAttrInfo( object, NULL, &grow_info, &grow_info_cnt);
+    dyn->get_transtab( object, &transtab);
+    if ( transtab)
+      grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info,
+			      &grow_info_cnt);
+
+
+    *itemlist = items; 
+    *item_cnt = 0;
+
+    grow_info_p = grow_info;
+    for ( i = *item_cnt; i < grow_info_cnt + *item_cnt; i++) {
+      items[i].value = grow_info_p->value_p;
+      strcpy( items[i].name, grow_info_p->name);
+      items[i].type = grow_info_p->type;
+      items[i].size = grow_info_p->size;
+      items[i].minlimit = 0;
+      items[i].maxlimit = 0;
+      items[i].noedit = grow_info_p->no_edit;
+      items[i].multiline = grow_info_p->multiline;
+      grow_info_p++;
     }
+
+    *client_data = (void *)grow_info;
+
+    *item_cnt = grow_info_cnt;
+    dyn->get_attributes( object, items, item_cnt);
+
+    return 1;
+
   }
   else if ( grow_GetObjectType( object) == glow_eObjectType_GrowBar)
   {
-    char transtab[][32] = {	 	"TraceData1", 		"Attribute",
-					"TraceData2",		"",
-					"TraceData3",		"",
-					"TraceData4",		"",
-					"TraceData5",		"",
-					"TraceData6",		"",
-					"TraceData7",		"",
-					"TraceData8",		"",
-					"TraceData9",		"",
-					"TraceAttrType",	"",
-					"TraceColor",		"",
-					"TraceCycle",		"Cycle",
-					"TraceRefObject",	"RefObject",
-					"MaxValue",		"MaxValue",
-					"MinValue",		"MinValue",
-					"BarValue",		"BarValue",
-					"BarColor",		"BarColor",
-					"BarBorderColor",	"BarBorderColor",
-					"BarBorderWidth",	"BarBorderWidth",
+    char transtab[][32] = {	 	"MaxValue",		"Bar.MaxValue",
+					"MinValue",		"Bar.MinValue",
+					"BarValue",		"Bar.Value",
+					"BarColor",		"Bar.BarColor",
+					"BarBorderColor",	"Bar.BorderColor",
+					"BarBorderWidth",	"Bar.BorderWidth",
 					"Dynamic",		"Dynamic",
 					""};
+    GeDyn *dyn;
+
     grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
 		&grow_info_cnt);
+
+    grow_GetUserData( object, (void **)&dyn);
+
+    *item_cnt = 0;
+    dyn->get_attributes( object, items, item_cnt);
+
+    *client_data = 0;
   }
   else if ( grow_GetObjectType( object) == glow_eObjectType_GrowTrend)
   {
-    char transtab[][32] = {	 	"TraceData1", 		"Attribute1",
-					"TraceData2",		"Attribute2",
-					"TraceData3",		"",
-					"TraceData4",		"",
-					"TraceData5",		"",
-					"TraceData6",		"",
-					"TraceData7",		"",
-					"TraceData8",		"",
-					"TraceData9",		"",
-					"TraceAttrType",	"",
-					"TraceColor",		"",
-					"TraceCycle",		"Cycle",
-					"TraceRefObject",	"RefObject",
-					"NoOfPoints",		"NoOfPoints",
-					"ScanTime",		"ScanTime",
-					"CurveWidth",		"CurveLineWidth",
-					"FillCurve",		"FillCurve",
-					"HorizontalLines",	"HorizontalLines",
-					"VerticalLines",	"VerticalLines",
-					"MaxValue1",		"MaxValue1",
-					"MinValue1",		"MinValue1",
-					"CurveColor1",		"CurveColor1",
-					"CurveFillColor1",	"CurveFillColor1",
-					"MaxValue2",		"MaxValue2",
-					"MinValue2",		"MinValue2",
-					"CurveColor2",		"CurveColor2",
-					"CurveFillColor2",	"CurveFillColor2",
-					"Dynamic",		"Dynamic",
+    GeDyn *dyn;
+
+    grow_GetUserData( object, (void **)&dyn);
+
+    if ( dyn->dyn_type & ge_mDynType_FastCurve) {
+      char transtab[][32] = {	 	"NoOfPoints",		"FastCurve.NoOfPoints",
+					"ScanTime",		"",
+					"CurveWidth",		"FastCurve.CurveLineWidth",
+					"FillCurve",		"FastCurve.FillCurve",
+					"HorizontalLines",	"FastCurve.HorizontalLines",
+					"VerticalLines",	"FastCurve.VerticalLines",
+					"MaxValue1",		"FastCurve.MaxValue1",
+					"MinValue1",		"FastCurve.MinValue1",
+					"CurveColor1",		"FastCurve.CurveColor1",
+					"CurveFillColor1",	"FastCurve.CurveFillColor1",
+					"MaxValue2",		"FastCurve.MaxValue2",
+					"MinValue2",		"FastCurve.MinValue2",
+					"CurveColor2",		"FastCurve.CurveColor2",
+					"CurveFillColor2",	"FastCurve.CurveFillColor2",
+					"Dynamic",		"",
 					""};
-    grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
+      grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
 		&grow_info_cnt);
+
+      *item_cnt = 0;
+      dyn->get_attributes( object, items, item_cnt);
+    }
+    else {
+      char transtab[][32] = {	 	"NoOfPoints",		"Trend.NoOfPoints",
+					"ScanTime",		"Trend.ScanTime",
+					"CurveWidth",		"Trend.CurveLineWidth",
+					"FillCurve",		"Trend.FillCurve",
+					"HorizontalLines",	"Trend.HorizontalLines",
+					"VerticalLines",	"Trend.VerticalLines",
+					"MaxValue1",		"Trend.MaxValue1",
+					"MinValue1",		"Trend.MinValue1",
+					"CurveColor1",		"Trend.CurveColor1",
+					"CurveFillColor1",	"Trend.CurveFillColor1",
+					"MaxValue2",		"Trend.MaxValue2",
+					"MinValue2",		"Trend.MinValue2",
+					"CurveColor2",		"Trend.CurveColor2",
+					"CurveFillColor2",	"Trend.CurveFillColor2",
+					"Dynamic",		"",
+					""};
+      grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
+		&grow_info_cnt);
+
+      *item_cnt = 0;
+      dyn->get_attributes( object, items, item_cnt);
+    }
+    *client_data = 0;
   }
   else if ( grow_GetObjectType( object) == glow_eObjectType_GrowAxis)
   {
@@ -2051,88 +1233,70 @@ int Graph::get_attr_items( grow_tObject object, attr_sItem **itemlist,
 					""};
     grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
 		&grow_info_cnt);
+    *item_cnt = 0;
   }
   else if ( grow_GetObjectType( object) == glow_eObjectType_GrowSlider)
   {
     char transtab[][32] = {	 	"SubGraph",		"SubGraph",
-					"TraceData1", 		"Attribute",
-					"TraceData2",		"",
-					"TraceData3",		"",
-					"TraceData4",		"",
-					"TraceData5",		"",
-					"TraceData6",		"",
-					"TraceData7",		"",
-					"TraceData8",		"",
-					"TraceData9",		"",
-					"TraceAttrType",	"",
-					"TraceColor",		"",
-					"TraceAccess",		"Access",
-					"TraceCycle",		"Cycle",
-					"TraceRefObject",	"RefObject",
-					"Direction",		"Direction",
-					"MaxValue",		"MaxValue",
-					"MinValue",		"MinValue",
-					"MaxPos",		"MaxPosition",
-					"MinPos",		"MinPosition",
+					"Direction",		"Slider.Direction",
+					"MaxValue",		"Slider.MaxValue",
+					"MinValue",		"Slider.MinValue",
+					"MaxPos",		"Slider.MaxPosition",
+					"MinPos",		"Slider.MinPosition",
 					"Dynamic",		"",
 					""};
-    grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
+    GeDyn *dyn;
+
+    grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info,
 		&grow_info_cnt);
+
+    grow_GetUserData( object, (void **)&dyn);
+
+    grow_info_p = grow_info;
+    *item_cnt = 0;
+    for ( i = *item_cnt; i < grow_info_cnt + *item_cnt; i++) {
+      items[i].value = grow_info_p->value_p;
+      strcpy( items[i].name, grow_info_p->name);
+      items[i].type = grow_info_p->type;
+      items[i].size = grow_info_p->size;
+      items[i].minlimit = 0;
+      items[i].maxlimit = 0;
+      items[i].noedit = grow_info_p->no_edit;
+      items[i].multiline = grow_info_p->multiline;
+      grow_info_p++;
+    }
+
+    *item_cnt = grow_info_cnt;
+    dyn->get_attributes( object, items, item_cnt);
+
+    *itemlist = items;
+    *client_data = (void *)grow_info;
+    
+    return 1;
   }
-  else
+  else {
     grow_GetObjectAttrInfo( object, NULL, &grow_info, &grow_info_cnt);
+    *item_cnt = 0;
+  }
 
   grow_info_p = grow_info;
-  for ( i = 0; i < grow_info_cnt; i++)
+  for ( i = *item_cnt; i < grow_info_cnt + *item_cnt; i++)
   {
     items[i].value = grow_info_p->value_p;
     strcpy( items[i].name, grow_info_p->name);
-    if ( grow_info_p->type == glow_eType_TraceColor)
-    {
-      switch ( trace_type)
-      {
-        case graph_eTrace_DigTone:
-        case graph_eTrace_DigToneWithError:
-        case graph_eTrace_DigToneWithCommand:
-        case graph_eTrace_DigToneWithErrorAndCommand:
-        case graph_eTrace_SetDigConfirmWithTone:
-        case graph_eTrace_ResetDigConfirmWithTone:
-        case graph_eTrace_ToggleDigConfirmWithTone:
-        case graph_eTrace_SetDigWithTone:
-        case graph_eTrace_ResetDigWithTone:
-        case graph_eTrace_ToggleDigWithTone:
-        case graph_eTrace_AnnotInputWithTone:
-        case graph_eTrace_AnnotWithTone:
-        case graph_eTrace_DigToneTwo:
-        case graph_eTrace_DigToneTwoWithCommand:
-        case graph_eTrace_StoDigWithTone:
-        case graph_eTrace_Rotate:
-        case graph_eTrace_Move:
-        case graph_eTrace_AnalogShift:
-        case graph_eTrace_Animation:
-        case graph_eTrace_AnimationForwBack:
-        case graph_eTrace_DigAnimation:
-        case graph_eTrace_DigShift:
-        case graph_eTrace_DigWithText:
-          items[i].type = glow_eType_ToneOrColor;
-          break;
-        default:
-          items[i].type = glow_eType_Color;
-      }
-    }
-    else
-      items[i].type = grow_info_p->type;
+    items[i].type = grow_info_p->type;
     items[i].size = grow_info_p->size;
-    items[i].minlimit = 0;
-    items[i].maxlimit = 0;
+    items[i].minlimit = grow_info_p->minlimit;
+    items[i].maxlimit = grow_info_p->maxlimit;
     items[i].noedit = grow_info_p->no_edit;
     items[i].multiline = grow_info_p->multiline;
     grow_info_p++;
   }
 
   *itemlist = items;
-  *item_cnt = grow_info_cnt;
+  *item_cnt += grow_info_cnt;
   *client_data = (void *)grow_info;
+
   return 1;
 }
 
@@ -2150,13 +1314,37 @@ int Graph::edit_attributes( grow_tObject object)
   attr->close_cb = graph_attr_close_cb;
   attr->redraw_cb = graph_attr_redraw_cb;
   attr->get_subgraph_info_cb = &graph_get_subgraph_info_cb;
+  attr->get_dyn_info_cb = &graph_get_dyn_info_cb;
   attr->reconfigure_attr_cb = &graph_reconfigure_attr_cb;
   attr->store_cb = &graph_attr_store_cb;
   attr->recall_cb = &graph_attr_recall_cb;
   attr->set_data_cb = &graph_attr_set_data_cb;
+  attr->get_plant_select_cb = &graph_get_plant_select_cb;
+  attr->get_current_colors_cb = &graph_get_current_colors_cb;
   attr_list.insert( (void *) attr);
   grow_SetModified( grow->ctx, 1);
   return 1;
+}
+
+
+static int graph_get_plant_select_cb( void *g, char *value)
+{
+  Graph	*graph = (Graph *)g;
+  if ( graph->get_plant_select_cb)
+    return (graph->get_plant_select_cb) (graph->parent_ctx, value);
+  return 0;
+}
+
+static int graph_get_current_colors_cb( void *g, glow_eDrawType *fill_color, 
+					glow_eDrawType *border_color, glow_eDrawType *text_color)
+{
+  Graph	*graph = (Graph *)g;
+
+  if ( graph->get_current_colors_cb) {
+    (graph->get_current_colors_cb) (graph->parent_ctx, fill_color, border_color, text_color);
+    return 1;
+  }
+  return 0;
 }
 
 static int graph_reconfigure_attr_cb( void *g, grow_tObject object,
@@ -2171,37 +1359,51 @@ static int graph_reconfigure_attr_cb( void *g, grow_tObject object,
 static void graph_attr_store_cb( void *g, grow_tObject object)
 {
   Graph	*graph = (Graph *)g;
-  glow_sTraceData *trace_data;
+  GeDyn *dyn;
 
-  grow_GetTraceAttr( object, &trace_data);
-
-  graph->recall.insert( trace_data, "");
+  grow_GetUserData( object, (void **)&dyn);
+  graph->recall.insert( dyn, "", object);
 }
 
 static int graph_attr_recall_cb( void *g, grow_tObject object, int idx, 
-				 glow_sTraceData **old)
+				 GeDyn **old_dyn)
 {
   Graph	*graph = (Graph *)g;
-  glow_sTraceData trace_data;
-  glow_sTraceData *old_p;
-  static glow_sTraceData old_trace_data;
+  GeDyn *dyn;
   int sts;
 
-  sts = graph->recall.get( &trace_data, idx);
-  if ( ODD(sts)) {
-    grow_GetTraceAttr( object, &old_p);
-    old_trace_data = *old_p;
-    grow_SetTraceAttr( object, &trace_data);
-    *old = &old_trace_data;
+  if ( grow_GetObjectType( object) == glow_eObjectType_GrowNode ||
+       grow_GetObjectType( object) == glow_eObjectType_GrowSlider ||
+       grow_GetObjectType( object) == glow_eObjectType_GrowGroup ||
+       grow_GetObjectType( object) == glow_eObjectType_GrowTrend ||
+       grow_GetObjectType( object) == glow_eObjectType_GrowBar) {
+    sts = graph->recall.get( &dyn, idx);
+    if ( ODD(sts)) {
+      grow_GetUserData( object, (void **)old_dyn);
+      grow_SetUserData( object, (void *)dyn);
+    }
+    return sts;
   }
-  return sts;
+  else
+    return 0;
 }
 
 static int graph_attr_set_data_cb( void *g, grow_tObject object,
-				 glow_sTraceData *data)
+				 GeDyn *data)
 {
+  grow_SetUserData( object, (void *)data);
+  return 1;
+}
 
-  grow_SetTraceAttr( object, data);
+static int graph_get_dyn_info_cb( void *g, GeDyn *dyn,
+	attr_sItem **itemlist, int *itemlist_cnt)
+{
+  static attr_sItem	items[40];
+
+  *itemlist = items; 
+  *itemlist_cnt = 0;
+
+  dyn->get_attributes( 0, items, itemlist_cnt);
   return 1;
 }
 
@@ -2215,51 +1417,25 @@ static int graph_get_subgraph_info_cb( void *g, char *name,
   int			grow_info_cnt;
   int			sts;
   grow_tObject		object;
-  graph_eTrace		trace_type;
+  int			dyn_type;
+  int			dyn_action_type;
 
   sts = grow_FindNodeClassByName( graph->grow->ctx, name, &object);
   if ( EVEN(sts)) return sts;
 
   grow_GetObjectAttrInfo( object, NULL, &grow_info, &grow_info_cnt);
-  grow_GetNodeClassTraceType( object, (glow_eTraceType *) &trace_type);
+  grow_GetNodeClassDynType( object, &dyn_type, &dyn_action_type);
 
   grow_info_p = grow_info;
   for ( i = 0; i < grow_info_cnt; i++)
   {
     items[i].value = grow_info_p->value_p;
     strcpy( items[i].name, grow_info_p->name);
-    if ( grow_info_p->type == glow_eType_TraceColor)
-    {
-      switch ( trace_type)
-      {
-        case graph_eTrace_DigTone:
-        case graph_eTrace_DigToneWithError:
-        case graph_eTrace_DigToneWithCommand:
-        case graph_eTrace_DigToneWithErrorAndCommand:
-        case graph_eTrace_SetDigConfirmWithTone:
-        case graph_eTrace_ResetDigConfirmWithTone:
-        case graph_eTrace_ToggleDigConfirmWithTone:
-        case graph_eTrace_SetDigWithTone:
-        case graph_eTrace_ResetDigWithTone:
-        case graph_eTrace_ToggleDigWithTone:
-        case graph_eTrace_AnnotInputWithTone:
-        case graph_eTrace_AnnotWithTone:
-        case graph_eTrace_DigToneTwo:
-        case graph_eTrace_DigToneTwoWithCommand:
-        case graph_eTrace_StoDigWithTone:
-        case graph_eTrace_Rotate:
-        case graph_eTrace_Move:
-        case graph_eTrace_AnalogShift:
-        case graph_eTrace_Animation:
-        case graph_eTrace_AnimationForwBack:
-        case graph_eTrace_DigAnimation:
-        case graph_eTrace_DigShift:
-        case graph_eTrace_DigWithText:
-          items[i].type = glow_eType_ToneOrColor;
-          break;
-        default:
-          items[i].type = glow_eType_Color;
-      }
+    if ( grow_info_p->type == glow_eType_TraceColor) {
+      if ( dyn_type & ge_mDynType_Tone)
+	items[i].type = glow_eType_ToneOrColor;
+      else
+	items[i].type = glow_eType_Color;
     }
     else
       items[i].type = grow_info_p->type;
@@ -2277,56 +1453,49 @@ static int graph_get_subgraph_info_cb( void *g, char *name,
 
 int Graph::edit_subgraph_attributes()
 {
-  attr_sItem	items[20];
+  attr_sItem	items[40];
   int		i;
   grow_sAttrInfo	*grow_info, *grow_info_p;
   int			grow_info_cnt;
   Attr   		*attr;
-  graph_eTrace		trace_type;
+  int			dyn_type;
+  int			dyn_action_type;
+  char transtab[][32] = {	 	"DynType",		"DynType",
+					"DynActionType",	"Action",
+					"DynColor1",		"Color1",
+					"DynColor2",		"Color2",
+					"DynColor3",		"Color3",
+					"DynColor4",		"Color4",
+					"DynAttr1",		"AnimSequence",	
+					"DynAttr2",		"",
+					"DynAttr3",		"",
+					"DynAttr4",		"",
+					"Dynamic",		"",
+					""};
 
-  grow_GetSubGraphAttrInfo( grow->ctx, &grow_info, &grow_info_cnt);
-  grow_GetSubGraphTraceType( grow->ctx, (glow_eTraceType *) &trace_type);
+  grow_GetSubGraphAttrInfo( grow->ctx, (char *)transtab, &grow_info, &grow_info_cnt);
+  grow_GetSubGraphDynType( grow->ctx, &dyn_type, &dyn_action_type);
 
   grow_info_p = grow_info;
-  for ( i = 0; i < grow_info_cnt; i++)
-  {
+  memset( items, 0, sizeof(items));
+  for ( i = 0; i < grow_info_cnt; i++) {
     items[i].value = grow_info_p->value_p;
     strcpy( items[i].name, grow_info_p->name);
-    if ( grow_info_p->type == glow_eType_TraceColor)
-    {
-      switch ( trace_type)
-      {
-        case graph_eTrace_DigTone:
-        case graph_eTrace_DigToneWithError:
-        case graph_eTrace_DigToneWithCommand:
-        case graph_eTrace_DigToneWithErrorAndCommand:
-        case graph_eTrace_SetDigConfirmWithTone:
-        case graph_eTrace_ResetDigConfirmWithTone:
-        case graph_eTrace_ToggleDigConfirmWithTone:
-        case graph_eTrace_SetDigWithTone:
-        case graph_eTrace_ResetDigWithTone:
-        case graph_eTrace_ToggleDigWithTone:
-        case graph_eTrace_AnnotInputWithTone:
-        case graph_eTrace_AnnotWithTone:
-        case graph_eTrace_DigToneTwo:
-        case graph_eTrace_DigToneTwoWithCommand:
-        case graph_eTrace_StoDigWithTone:
-        case graph_eTrace_Rotate:
-        case graph_eTrace_Move:
-        case graph_eTrace_AnalogShift:
-        case graph_eTrace_Animation:
-        case graph_eTrace_AnimationForwBack:
-        case graph_eTrace_DigAnimation:
-        case graph_eTrace_DigShift:
-        case graph_eTrace_DigWithText:
-          items[i].type = glow_eType_ToneOrColor;
-          break;
-        default:
-          items[i].type = glow_eType_Color;
-      }
+
+    if ( grow_info_p->type == glow_eType_TraceColor) {
+      if ( dyn_type & ge_mDynType_Tone)
+	items[i].type = glow_eType_ToneOrColor;
+      else
+	items[i].type = glow_eType_Color;
     }
+    else if ( grow_info_p->type == glow_eType_DynType)
+      items[i].type = ge_eAttrType_DynType;
+    else if ( grow_info_p->type == glow_eType_ActionType)
+      items[i].type = ge_eAttrType_ActionType;
     else
       items[i].type = grow_info_p->type;
+    if ( strcmp( grow_info_p->name, "AnimSequence") == 0)
+      items[i].type = ge_eAttrType_AnimSequence;
     items[i].size = grow_info_p->size;
     items[i].minlimit = 0;
     items[i].maxlimit = 0;
@@ -2401,16 +1570,55 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
     grow_tCon		con;
     char		name[80];
 
-    if ( !event->con_create.dest_object)
-      return 1;
-    graph->get_conclass( graph->get_border_drawtype(), 
+    if ( !event->con_create.dest_object) {
+      // Create a ConGlue object
+      grow_tObject t1;
+      double x, y;
+      glow_eDirection dir;
+      double margin = 1;
+
+      // Select direction
+      grow_GetNodeConPoint( event->con_create.source_object, 
+			    event->con_create.source_conpoint,
+			    &x, &y, &dir);
+      if ( event->con_create.y < y + margin) {
+	if ( event->con_create.x > x + margin)
+	  event->con_create.dest_conpoint = 3;
+	else if ( event->con_create.x < x - margin)
+	  event->con_create.dest_conpoint = 1;
+	else
+	  event->con_create.dest_conpoint = 2;
+      }
+      else if ( event->con_create.y > y + margin) {
+	if ( event->con_create.x > x + margin)
+	  event->con_create.dest_conpoint = 3;
+	else if ( event->con_create.x < x - margin)
+	  event->con_create.dest_conpoint = 1;
+	else
+	  event->con_create.dest_conpoint = 0;
+      }
+      else {
+	if ( event->con_create.x > x + margin)
+	  event->con_create.dest_conpoint = 3;
+	else if ( event->con_create.x < x - margin)
+	  event->con_create.dest_conpoint = 1;
+	else
+	  event->con_create.dest_conpoint = 0;
+      }
+      sprintf( name, "O%d", grow_GetNextObjectNameNumber( graph->grow->ctx));
+      grow_CreateGrowConGlue( graph->grow->ctx, name, 
+			      event->con_create.x, event->con_create.y, &t1);
+      event->con_create.dest_object = t1;
+    }
+
+    graph->get_conclass( graph->get_fill_drawtype(), 
 		graph->linewidth, graph->con_type, graph->con_corner,
 		graph->corner_round_amount, &cc);
     sprintf( name, "C%d", grow_GetNextObjectNameNumber( graph->grow->ctx));
     grow_CreateCon( graph->grow->ctx, "", cc,
 	event->con_create.source_object, event->con_create.dest_object, 
 	event->con_create.source_conpoint, event->con_create.dest_conpoint,
-	NULL, &con, 0, NULL, NULL);
+	NULL, &con, 0, NULL, NULL, graph->border, graph->shadow);
     grow_SetModified( graph->grow->ctx, 1);
     return 1;
   }
@@ -2429,10 +1637,27 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
 	    event->create_grow_object.x2 - event->create_grow_object.x, 
 	    event->create_grow_object.y2 - event->create_grow_object.y,
 	    graph->get_border_drawtype(), graph->linewidth, 0, 
-	    glow_mDisplayLevel_1, graph->fill, graph->border,
+	    glow_mDisplayLevel_1, graph->fill, graph->border, graph->shadow,
 	    graph->get_fill_drawtype(), NULL, &r1);
           grow_SetModified( graph->grow->ctx, 1);
-          grow_SetMode( graph->grow->ctx, grow_eMode_Edit);
+	  if ( !graph->keep_mode)
+	    grow_SetMode( graph->grow->ctx, grow_eMode_Edit);
+          break;
+        }
+        case grow_eMode_RectRounded:
+        {
+	  grow_tObject r1;
+
+          grow_CreateGrowRectRounded( graph->grow->ctx, "", 
+	    event->create_grow_object.x, event->create_grow_object.y, 
+	    event->create_grow_object.x2 - event->create_grow_object.x, 
+	    event->create_grow_object.y2 - event->create_grow_object.y,
+	    graph->get_border_drawtype(), graph->linewidth, 0, 
+	    glow_mDisplayLevel_1, graph->fill, graph->border, graph->shadow,
+	    graph->get_fill_drawtype(), NULL, &r1);
+          grow_SetModified( graph->grow->ctx, 1);
+	  if ( !graph->keep_mode)
+	    grow_SetMode( graph->grow->ctx, grow_eMode_Edit);
           break;
         }
         case grow_eMode_Line:
@@ -2444,37 +1669,11 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
 	    event->create_grow_object.x2, event->create_grow_object.y2,
 	    graph->get_border_drawtype(), graph->linewidth, 0, NULL, &l1);
           grow_SetModified( graph->grow->ctx, 1);
-          grow_SetMode( graph->grow->ctx, grow_eMode_Edit);
-          break;
-        }
-        case grow_eMode_Axis:
-        {
-	  grow_tObject l1;
-	  glow_eDrawType drawtype;
-	  int textsize;
+	  if ( graph->linetype != glow_eLineType_Solid)
+	    grow_SetObjectLinetype( l1, graph->linetype);
 
-          if ( graph->textbold)
-            drawtype = glow_eDrawType_TextHelveticaBold;
-          else
-            drawtype = glow_eDrawType_TextHelvetica;
-
-          switch( graph->textsize)
-          {
-            case 0: textsize = 0; break;
-            case 1: textsize = 1; break;
-            case 2: textsize = 2; break;
-            case 3: textsize = 4; break;
-            case 4: textsize = 6; break;
-            case 5: textsize = 8; break;
-          }
-
-          grow_CreateGrowAxis( graph->grow->ctx, "", 
-	    event->create_grow_object.x, event->create_grow_object.y, 
-	    event->create_grow_object.x2, event->create_grow_object.y2,
-	    graph->get_border_drawtype(), graph->linewidth, 
-            textsize, drawtype, NULL, &l1);
-          grow_SetModified( graph->grow->ctx, 1);
-          grow_SetMode( graph->grow->ctx, grow_eMode_Edit);
+	  if ( !graph->keep_mode)
+	    grow_SetMode( graph->grow->ctx, grow_eMode_Edit);
           break;
         }
         case grow_eMode_PolyLine:
@@ -2489,18 +1688,10 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
 	    points[1].x = event->create_grow_object.x;
 	    points[1].y = event->create_grow_object.y;
 	    point_cnt = 2;
-            if ( graph->fill)
-              grow_CreateGrowPolyLine( graph->grow->ctx, "", 
+	    grow_CreateGrowPolyLine( graph->grow->ctx, "", 
 		(glow_sPoint *)&points, point_cnt,
 	      	graph->get_border_drawtype(), graph->linewidth, 0, 
-		0, graph->border, 
-		graph->get_fill_drawtype(), 0, NULL, 
-		&graph->current_polyline);
-            else
-              grow_CreateGrowPolyLine( graph->grow->ctx, "", 
-		(glow_sPoint *)&points, point_cnt,
-	      	graph->get_border_drawtype(), graph->linewidth, 0, 
-		graph->fill, graph->border, 
+		0, graph->border, 0,
 		graph->get_fill_drawtype(), 0, NULL, 
 		&graph->current_polyline);
           }
@@ -2523,39 +1714,10 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
 	    event->create_grow_object.x, event->create_grow_object.y, 
 	    event->create_grow_object.x2, event->create_grow_object.y2,
 	    0, 360, graph->get_border_drawtype(), graph->linewidth,
-	    graph->fill, graph->border, graph->get_fill_drawtype(), NULL, &a1);
+	    graph->fill, graph->border, graph->shadow, graph->get_fill_drawtype(), NULL, &a1);
           grow_SetModified( graph->grow->ctx, 1);
-          grow_SetMode( graph->grow->ctx, grow_eMode_Edit);
-          break;
-        }
-        case grow_eMode_Bar:
-        {
-	  grow_tObject r1;
-
-          grow_CreateGrowBar( graph->grow->ctx, "", 
-	    event->create_grow_object.x, event->create_grow_object.y, 
-	    event->create_grow_object.x2 - event->create_grow_object.x, 
-	    event->create_grow_object.y2 - event->create_grow_object.y,
-	    graph->get_border_drawtype(), graph->linewidth,
-	    glow_mDisplayLevel_1, graph->fill, graph->border,
-	    graph->get_fill_drawtype(), NULL, &r1);
-          grow_SetModified( graph->grow->ctx, 1);
-          grow_SetMode( graph->grow->ctx, grow_eMode_Edit);
-          break;
-        }
-        case grow_eMode_Trend:
-        {
-	  grow_tObject r1;
-
-          grow_CreateGrowTrend( graph->grow->ctx, "", 
-	    event->create_grow_object.x, event->create_grow_object.y, 
-	    event->create_grow_object.x2 - event->create_grow_object.x, 
-	    event->create_grow_object.y2 - event->create_grow_object.y,
-	    graph->get_border_drawtype(), graph->linewidth,
-	    glow_mDisplayLevel_1, graph->fill, graph->border,
-	    graph->get_fill_drawtype(), NULL, &r1);
-          grow_SetModified( graph->grow->ctx, 1);
-          grow_SetMode( graph->grow->ctx, grow_eMode_Edit);
+	  if ( !graph->keep_mode)
+	    grow_SetMode( graph->grow->ctx, grow_eMode_Edit);
           break;
         }
       }
@@ -2570,13 +1732,23 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
         graph->current_polyline = 0;
       }
       grow_SetModified( graph->grow->ctx, 1);
+
+      if ( grow_GetObjectType( event->object.object) == glow_eObjectType_GrowNode ||
+	   grow_GetObjectType( event->object.object) == glow_eObjectType_GrowGroup ||
+	   grow_GetObjectType( event->object.object) == glow_eObjectType_GrowTrend ||
+	   grow_GetObjectType( event->object.object) == glow_eObjectType_GrowBar) {
+	GeDyn *dyn;
+
+        grow_GetUserData( event->object.object, (void **)&dyn);
+        delete dyn;
+      }
       break;
     case glow_eEvent_MB3Click:
-      if ( graph->fill && graph->current_polyline &&
-	   grow_Mode( graph->grow->ctx) == grow_eMode_PolyLine)
-      {
-        grow_SetObjectFill( graph->current_polyline, 1);
-//        grow_SetObjectDrawtype( graph->current_polyline, graph->get_border_drawtype());
+      if ( grow_Mode( graph->grow->ctx) == grow_eMode_PolyLine && graph->current_polyline) {
+	if ( graph->fill)
+	  grow_SetObjectFill( graph->current_polyline, 1);
+	if ( graph->shadow)
+	  grow_SetObjectShadow( graph->current_polyline, 1);
       }
       grow_PolylineEnd( graph->grow->ctx);
       graph->current_polyline = 0;
@@ -2585,6 +1757,7 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
       grow_SelectClear( graph->grow->ctx);
       grow_SetMoveRestrictions( graph->grow->ctx, glow_eMoveRestriction_No, 0, 0, NULL);
       grow_SetScaleEqual( graph->grow->ctx, 0);
+      graph->keep_mode = false;
       break;
     case glow_eEvent_MB1DoubleClick:
       if ( event->object.object_type != glow_eObjectType_NoObject &&
@@ -2659,6 +1832,15 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
         else
           grow_CreateGrowSlider( graph->grow->ctx, name, nc, event->any.x, event->any.y, 
 		NULL, &n1);
+
+	if ( graph->shadow)
+	  grow_SetObjectShadow( n1, 1);
+
+	GeDyn *dyn = new GeDyn( graph);
+        grow_SetUserData( n1, (void *)dyn);
+        if ( grow_IsSliderClass( nc))
+	  (int)dyn->action_type |= ge_mActionType_Slider;
+
       }
       else if ( strcmp( type, ".gif") == 0 || strcmp( type, ".jpg") == 0)
       {
@@ -2676,6 +1858,35 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
         grow_CreateGrowImage( graph->grow->ctx, "", filename, 
 	    event->create_grow_object.x, event->create_grow_object.y,
             NULL, &i1);
+      }
+      else if ( strcmp( type, ".component") == 0) {
+	if ( strcmp( sub_name, "pwr_trend") == 0) {
+	  grow_tObject t1;
+	  graph->create_trend( &t1, event->create_grow_object.x, 
+			       event->create_grow_object.y, 
+			       (unsigned int)ge_mDynType_Trend);
+	}
+	if ( strcmp( sub_name, "pwr_fastcurve") == 0) {
+	  grow_tObject t1;
+	  graph->create_trend( &t1, event->create_grow_object.x, 
+			       event->create_grow_object.y, 
+			       (unsigned int)ge_mDynType_FastCurve);
+	}
+	else if ( strcmp( sub_name, "pwr_bar") == 0) {
+	  grow_tObject t1;
+	  graph->create_bar( &t1, event->create_grow_object.x, event->create_grow_object.y);
+	}
+	else if ( strcmp( sub_name, "pwr_axis") == 0) {
+	  grow_tObject t1;
+	  graph->create_axis( &t1, event->create_grow_object.x, event->create_grow_object.y);
+	}
+	else if ( strcmp( sub_name, "pwr_conglue") == 0) {
+	  grow_tObject t1;
+
+	  sprintf( name, "O%d", grow_GetNextObjectNameNumber( graph->grow->ctx));
+	  grow_CreateGrowConGlue( graph->grow->ctx, name, 
+				  event->create_grow_object.x, event->create_grow_object.y, &t1);
+	}
       }
       grow_SetModified( graph->grow->ctx, 1);
       break;
@@ -2697,7 +1908,8 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
 	    grow_GetNextConPointNumber( graph->grow->ctx),
 	    graph->conpoint_direction, NULL, &cp1);
           grow_SetModified( graph->grow->ctx, 1);
-          grow_SetMode( graph->grow->ctx, grow_eMode_Edit);
+	  if ( !graph->keep_mode)
+	    grow_SetMode( graph->grow->ctx, grow_eMode_Edit);
           break;
         }
         case grow_eMode_Annot:
@@ -2706,10 +1918,12 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
 
           grow_CreateGrowAnnot( graph->grow->ctx, "", 
 	    event->create_grow_object.x, event->create_grow_object.y, 
-	    1, glow_eDrawType_TextHelveticaBold, 3, glow_eAnnotType_OneLine,
+	    1, glow_eDrawType_TextHelveticaBold, graph->get_text_drawtype(),
+	    3, glow_eAnnotType_OneLine,
 	    0, glow_mDisplayLevel_1, NULL, &a1);
           grow_SetModified( graph->grow->ctx, 1);
-          grow_SetMode( graph->grow->ctx, grow_eMode_Edit);
+	  if ( !graph->keep_mode)
+	    grow_SetMode( graph->grow->ctx, grow_eMode_Edit);
           break;
         }
         case grow_eMode_Text:
@@ -2734,12 +1948,13 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
           }
           grow_CreateGrowText( graph->grow->ctx, "", "",
 	    event->create_grow_object.x, event->create_grow_object.y, 
-	    drawtype, textsize, glow_mDisplayLevel_1,
+	    drawtype, graph->get_text_drawtype(), textsize, glow_mDisplayLevel_1,
 	    NULL, &t1);
           if ( graph->change_text_cb)
             (graph->change_text_cb)( graph->parent_ctx, t1, "");
           grow_SetModified( graph->grow->ctx, 1);
-          grow_SetMode( graph->grow->ctx, grow_eMode_Edit);
+	  if ( !graph->keep_mode)
+	    grow_SetMode( graph->grow->ctx, grow_eMode_Edit);
           break;
         }
         case grow_eMode_Edit:
@@ -2856,44 +2071,18 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
     }
     case glow_eEvent_MB1DoubleClickShift:
     {
+
       if ( event->object.object_type != glow_eObjectType_NoObject &&
            (grow_GetObjectType( event->object.object) == glow_eObjectType_GrowNode ||
-            grow_GetObjectType( event->object.object) == glow_eObjectType_GrowGroup))
-      {
-        glow_sTraceData 	*trace_data;
-	char			msg[80];
-        glow_eDrawType		color;
-        char			*color_name;
-        graph_eTrace		trace_type;
+            grow_GetObjectType( event->object.object) == glow_eObjectType_GrowGroup)) {
 
-        grow_GetTraceAttr( event->object.object, &trace_data);
-        trace_type = (graph_eTrace) trace_data->attr_type;
-        if ( trace_type == graph_eTrace_Inherit)
-          grow_GetObjectClassTraceType( event->object.object, (glow_eTraceType *) &trace_type);
+        glow_eDrawType		color;
+	GeDyn *dyn;
+
+	grow_GetUserData( event->object.object, (void **)&dyn);
 
         color = graph->get_fill_drawtype();
-        trace_data->color = color;
-
-        switch( trace_type)
-        {
-          case graph_eTrace_DigTone:
-          case graph_eTrace_DigToneWithCommand:
-          case graph_eTrace_DigToneWithError:
-          case graph_eTrace_DigToneWithErrorAndCommand:
-          case graph_eTrace_DigToneTwo:
-          case graph_eTrace_DigToneTwoWithCommand:
-          case graph_eTrace_DigWithText:
-            color_name = grow_ColorToneToName( color);
-            if ( strcmp( color_name, "") == 0)
-              color_name = grow_ColorToName( color);
-            sprintf( msg, "LowTone set to %s", color_name);
-            graph->message( 'E', msg);
-            break;
-          default:
-            sprintf( msg, "LowColor set to %s", grow_ColorToName( color));
-            graph->message( 'E', msg);
-        }
-        grow_SetModified( graph->grow->ctx, 1);
+	dyn->set_color( event->object.object, color);
       }
       break;
     }
@@ -2922,6 +2111,37 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
       ;
   }
   return 1;
+}
+
+void graph_userdata_save_cb( void *f, grow_tObject object)
+{
+  ofstream *fp = (ofstream *)f;
+  GeDyn *dyn;
+
+
+  grow_GetUserData( object, (void **)&dyn);
+
+  dyn->save( *fp);
+}
+
+void graph_userdata_open_cb( void *f, grow_tObject object)
+{
+  ifstream *fp = (ifstream *)f;
+  Graph *graph;
+
+  grow_GetCtxUserData( grow_GetCtx( object), (void **) &graph);
+  GeDyn *dyn = new GeDyn( graph);
+  grow_SetUserData( object, (void *)dyn);
+
+  dyn->open( *fp);
+}
+
+void graph_userdata_copy_cb( grow_tObject object, void *old_data, void **new_data)
+{
+  GeDyn *dyn = (GeDyn *)old_data;
+  GeDyn *new_dyn = new GeDyn( *dyn);
+
+  *new_data = (void *) new_dyn;
 }
 
 int	GraphGbl::load_config( void *graph)
@@ -3043,6 +2263,9 @@ void GraphGrow::grow_setup()
 	graph_grow_cb);
   grow_EnableEvent( ctx, glow_eEvent_Key_Tab, glow_eEventType_CallBack,
 	graph_grow_cb);
+
+  grow_RegisterUserDataCallbacks( ctx, graph_userdata_save_cb, graph_userdata_open_cb,
+				  graph_userdata_copy_cb);
 }
 
 void GraphGrow::grow_trace_setup()
@@ -3117,6 +2340,12 @@ void GraphGrow::grow_trace_setup()
 	graph_grow_cb);
   grow_EnableEvent( ctx, glow_eEvent_AnnotationInput, glow_eEventType_CallBack,
 	graph_grow_cb);
+  grow_EnableEvent( ctx, glow_eEvent_InputFocusLost, glow_eEventType_CallBack,
+	graph_grow_cb);
+  grow_EnableEvent( ctx, glow_eEvent_InputFocusGained, glow_eEventType_CallBack,
+	graph_grow_cb);
+  grow_EnableEvent( ctx, glow_eEvent_InputFocusInit, glow_eEventType_CallBack,
+	graph_grow_cb);
   grow_EnableEvent( ctx, glow_eEvent_HotRequest, glow_eEventType_CallBack,
 	graph_grow_cb);
   grow_EnableEvent( ctx, glow_eEvent_MB1Down, glow_eEventType_CallBack,
@@ -3124,6 +2353,32 @@ void GraphGrow::grow_trace_setup()
   grow_EnableEvent( ctx, glow_eEvent_MB1Up, glow_eEventType_CallBack,
 	graph_grow_cb);
   grow_EnableEvent( ctx, glow_eEvent_MB3Down, glow_eEventType_CallBack,
+	graph_grow_cb);
+  grow_EnableEvent( ctx, glow_eEvent_TipText, glow_eEventType_CallBack,
+	graph_grow_cb);
+  grow_EnableEvent( ctx, glow_eEvent_Key_Tab, glow_eEventType_CallBack,
+	graph_grow_cb);
+  grow_EnableEvent( ctx, glow_eEvent_Key_ShiftTab, glow_eEventType_CallBack,
+	graph_grow_cb);
+  grow_EnableEvent( ctx, glow_eEvent_Key_Escape, glow_eEventType_CallBack,
+	graph_grow_cb);
+  grow_EnableEvent( ctx, glow_eEvent_Key_Return, glow_eEventType_CallBack,
+	graph_grow_cb);
+  grow_EnableEvent( ctx, glow_eEvent_Key_Left, glow_eEventType_CallBack,
+	graph_grow_cb);
+  grow_EnableEvent( ctx, glow_eEvent_Key_Right, glow_eEventType_CallBack,
+	graph_grow_cb);
+  grow_EnableEvent( ctx, glow_eEvent_Key_Up, glow_eEventType_CallBack,
+	graph_grow_cb);
+  grow_EnableEvent( ctx, glow_eEvent_Key_Down, glow_eEventType_CallBack,
+	graph_grow_cb);
+  grow_EnableEvent( ctx, glow_eEvent_Key_CtrlAscii, glow_eEventType_CallBack,
+	graph_grow_cb);
+  grow_EnableEvent( ctx, glow_eEvent_MenuActivated, glow_eEventType_CallBack,
+	graph_grow_cb);
+  grow_EnableEvent( ctx, glow_eEvent_MenuCreate, glow_eEventType_CallBack,
+	graph_grow_cb);
+  grow_EnableEvent( ctx, glow_eEvent_MenuDelete, glow_eEventType_CallBack,
 	graph_grow_cb);
 
 }
@@ -3170,8 +2425,9 @@ static void graph_attr_redraw_cb( Attr *attrctx)
 {
   Graph *graph = (Graph *) attrctx->parent_ctx;
 
-  grow_UpdateObject( graph->grow->ctx, attrctx->object,
-	(grow_sAttrInfo *)attrctx->client_data);
+  if ( attrctx->client_data)
+    grow_UpdateObject( graph->grow->ctx, attrctx->object,
+		       (grow_sAttrInfo *)attrctx->client_data);
 }
 
 static void graph_subgraphattr_redraw_cb( Attr *attrctx)
@@ -3276,6 +2532,7 @@ int Graph::init_trace()
     current_mb1_down = 0;
 
     graph_trace_scan( this);
+    grow_InputFocusInitEvent( grow->ctx);
   }
   return 1;
 }
@@ -3340,2693 +2597,50 @@ static void graph_trace_scan( Graph *graph)
 static int graph_trace_connect_bc( grow_tObject object, 
 	glow_sTraceData *trace_data)
 {
-  int		sts;
-  graph_sTraceData *data;
-  pwr_tSubid	subid1, subid2;
-  int		size1, size2;
-  int		inverted1, inverted2;
-  graph_eTrace	trace_type = (graph_eTrace) trace_data->attr_type;
-  glow_eDrawType trace_color = trace_data->color;
-  glow_eDrawType trace_color2 = trace_data->color2;
-  glow_eDrawType color;
-  glow_eCycle   cycle = trace_data->cycle;
-  void		*p1, *p2;
-  char		parsed_name[120];
-  static int 	dummy = 0;
-  GrowCtx 	*ctx;
-  Graph 	*graph;
-  graph_eDatabase db;
-  int		attr_type, attr_size;
+  GeDyn *dyn;
 
-  grow_ObjectToCtx( object, &ctx);
-  grow_GetCtxUserData( (GrowCtx *)ctx, (void **) &graph);
+  grow_GetUserData( object, (void **)&dyn);
+  if ( !dyn)
+    return 1;
 
-  if ( grow_GetObjectType( object) == glow_eObjectType_GrowNode ||
-       grow_GetObjectType( object) == glow_eObjectType_GrowGroup)
-  {
-    if ( trace_type == graph_eTrace_Inherit)
-      grow_GetObjectClassTraceType( object, (glow_eTraceType *) &trace_type);
-    if ( trace_color == glow_eDrawType_Inherit)
-      grow_GetObjectClassTraceColor( object, &trace_color, &color);
-    if ( trace_color2 == glow_eDrawType_Inherit)
-      grow_GetObjectClassTraceColor( object, &color, &trace_color2);
-    if ( cycle == glow_eCycle_Inherit)
-      grow_GetObjectClassCycle( object, &cycle);
-    switch ( trace_type)
-    {
-      case graph_eTrace_No:
-        break;
-      case graph_eTrace_Dig:
-      case graph_eTrace_DigWithCommand:
-      case graph_eTrace_DigBorder:
-      {
-//        printf( "Connecting %s (Dig)\n", trace_data->data[0]);
-        if ( trace_color < 0 || trace_color >= glow_eDrawType__)
-        {
-          printf( "** Color out of range, %s\n", trace_data->data[0]);
-          return 0;
-        }
+  dyn->connect( object, trace_data);
 
-        data = (graph_sTraceData *) calloc( 1, sizeof( *data));
-
-        size1 = 4;
-	db = graph->parse_attr_name( trace_data->data[0], parsed_name, 
-		&inverted1, &attr_type, &attr_size);
-        if ( strcmp( parsed_name,"") == 0)
-          data->p[0] = 0;
-        else
-        {
-          sts = graph->ref_object_info( cycle, parsed_name, &p1, &subid1, size1);
-          if ( EVEN(sts)) return sts;
-
-          data->access = trace_data->access;
-          data->p[0] = p1;
-          data->db[0] = db;
-          data->subid[0] = subid1;
-          data->type = trace_type;
-          data->size[0] = size1;
-          data->inverted[0] = inverted1;
-        }
-        size2 = 4;
-	db = graph->parse_attr_name( trace_data->data[1], parsed_name, &inverted2, &attr_type, &attr_size);
-        if ( strcmp( parsed_name,"") == 0)
-          data->p[1] = 0;
-        else
-        {
-          sts = graph->ref_object_info( cycle, parsed_name, &p2, &subid2, size2);
-          if ( EVEN(sts)) return sts;
-
-          data->p[1] = p2;
-          data->subid[1] = subid2;
-          data->size[1] = size2;
-          data->inverted[1] = inverted2;
-        }
-
-        data->color = trace_color;
-        data->cycle = cycle;
-        data->first_scan = 1;
-        grow_SetUserData( object, (void *)data);
-        if ( data->p[0] || data->p[1])
-          trace_data->p = (void *)&dummy;
-        break;
-      }
-      case graph_eTrace_Invisible:
-      case graph_eTrace_RadioButton:
-      {
-//        printf( "Connecting %s (Invis)\n", trace_data->data[0]);
-
-        data = (graph_sTraceData *) calloc( 1, sizeof( *data));
-
-        size1 = 4;
-	db = graph->parse_attr_name( trace_data->data[0], parsed_name, &inverted1, &attr_type, &attr_size);
-        if ( strcmp( parsed_name,"") == 0)
-          break;
-
-        sts = graph->ref_object_info( cycle, parsed_name, &p1, &subid1, size1);
-        if ( EVEN(sts)) return sts;
-
-        data->access = trace_data->access;
-        data->p[0] = p1;
-        data->db[0] = db;
-        data->subid[0] = subid1;
-        data->type = trace_type;
-        data->size[0] = size1;
-        data->inverted[0] = inverted1;
-        data->color = trace_color;
-        data->cycle = cycle;
-        data->first_scan = 1;
-        grow_SetUserData( object, (void *)data);
-        trace_data->p = (void *)&dummy;
-        break;
-      }
-      case graph_eTrace_DigShiftWithToggleDig:
-      {
-//        printf( "Connecting %s (Invis)\n", trace_data->data[1]);
-
-        data = (graph_sTraceData *) calloc( 1, sizeof( *data));
-
-        size1 = 4;
-	db = graph->parse_attr_name( trace_data->data[1], parsed_name, &inverted1, &attr_type, &attr_size);
-        if ( strcmp( parsed_name,"") == 0) {
-          // Use data[0] instead
-	  db = graph->parse_attr_name( trace_data->data[0], parsed_name, &inverted1, &attr_type, &attr_size);
-	  if ( strcmp( parsed_name,"") == 0) break;
-        }
-        sts = graph->ref_object_info( cycle, parsed_name, &p1, &subid1, size1);
-        if ( EVEN(sts)) return sts;
-
-        data->access = trace_data->access;
-        data->p[0] = p1;
-        data->db[0] = db;
-        data->subid[0] = subid1;
-        data->type = trace_type;
-        data->size[0] = size1;
-        data->inverted[0] = inverted1;
-        data->color = trace_color;
-        data->cycle = cycle;
-        data->first_scan = 1;
-        grow_SetUserData( object, (void *)data);
-        trace_data->p = (void *)&dummy;
-        break;
-      }
-      case graph_eTrace_DigWithText:
-      {
-//        printf( "Connecting %s (Dig)\n", trace_data->data[0]);
-        if ( trace_color < 0 || trace_color >= glow_eDrawType__)
-        {
-          printf( "** Color out of range, %s\n", trace_data->data[0]);
-          return 0;
-        }
-        size1 = 4;
-	db = graph->parse_attr_name( trace_data->data[0], parsed_name, &inverted1, &attr_type, &attr_size);
-        if ( strcmp( parsed_name,"") == 0)
-          return 1;
-        sts = graph->ref_object_info( cycle, parsed_name, &p1, &subid1, size1);
-        if ( EVEN(sts)) return sts;
-
-        data = (graph_sTraceData *) calloc( 1, sizeof( *data));
-        data->access = trace_data->access;
-        data->p[0] = p1;
-        data->db[0] = db;
-        data->p[1] = 0;
-        data->subid[0] = subid1;
-        data->type = trace_type;
-        data->size[0] = size1;
-        data->inverted[0] = inverted1;
-        data->color = trace_color;
-        data->cycle = cycle;
-        data->first_scan = 1;
-        grow_SetUserData( object, (void *)data);
-        trace_data->p = (void *)&dummy;
-
-        if ( strcmp( trace_data->data[1], "") != 0)
-        {
-          strcpy( data->low_text, trace_data->data[1]);
-          grow_GetAnnotation( object, 1, data->high_text, sizeof(data->high_text));
-        }
-        break;
-      }
-      case graph_eTrace_DigWithError:
-      case graph_eTrace_DigTwo:
-      case graph_eTrace_DigTwoWithCommand:
-      case graph_eTrace_DigWithErrorAndCommand:
-      {
-//        printf( "Connecting %s %s (DigWithError)\n", trace_data->data[0], 
-//		trace_data->data[1]);
-        if ( trace_color < 0 || trace_color >= glow_eDrawType__)
-        {
-          printf( "** Color out of range, %s\n", trace_data->data[0]);
-          return 0;
-        }
-
-        size1 = 4;
-	db = graph->parse_attr_name( trace_data->data[0], parsed_name, &inverted1, &attr_type, &attr_size);
-        if ( strcmp( parsed_name,"") == 0)
-          return 1;
-        sts = graph->ref_object_info( cycle, parsed_name, &p1, &subid1, size1);
-        if ( EVEN(sts)) return sts;
-
-        data = (graph_sTraceData *) calloc( 1, sizeof( *data));
-        data->access = trace_data->access;
-        data->p[0] = p1;
-        data->db[0] = db;
-        data->subid[0] = subid1;
-        data->type = trace_type;
-        data->size[0] = size1;
-        data->inverted[0] = inverted1;
-        data->color = trace_color;
-        data->color2 = trace_color2;
-        data->cycle = cycle;
-
-        size2 = 4;
-	db = graph->parse_attr_name( trace_data->data[1], parsed_name, &inverted2, &attr_type, &attr_size);
-        if ( strcmp( parsed_name,"") == 0)
-          data->p[1] = 0;
-        else
-        {
-          sts = graph->ref_object_info( cycle, parsed_name, &p2, &subid2, size2);
-          if ( EVEN(sts)) return sts;
-
-          data->p[1] = p2;
-          data->subid[1] = subid2;
-          data->size[1] = size2;
-          data->inverted[1] = inverted2;
-        }
-
-        size2 = 4;
-	db = graph->parse_attr_name( trace_data->data[2], parsed_name, &inverted2, &attr_type, &attr_size);
-        if ( strcmp( parsed_name,"") == 0)
-          data->p[2] = 0;
-        else
-        {
-          sts = graph->ref_object_info( cycle, parsed_name, &p2, &subid2, size2);
-          if ( EVEN(sts)) return sts;
-
-          data->p[2] = p2;
-          data->subid[2] = subid2;
-          data->size[2] = size2;
-          data->inverted[2] = inverted2;
-        }
-        data->first_scan = 1;
-        grow_SetUserData( object, (void *)data);
-        trace_data->p = (void *)&dummy;
-        break;
-      }
-      case graph_eTrace_DigTone:
-      case graph_eTrace_DigToneWithCommand:
-      {
-//        printf( "Connecting %s (DigTone)\n", trace_data->data[0]);
-        if ( trace_color < 0 || trace_color >= glow_eDrawType__)
-        {
-          printf( "** Tone out of range, %s\n", trace_data->data[0]);
-          return 0;
-        }
-        data = (graph_sTraceData *) calloc( 1, sizeof( *data));
-        size1 = 4;
-	db = graph->parse_attr_name( trace_data->data[0], parsed_name, &inverted1, &attr_type, &attr_size);
-        if ( strcmp( parsed_name,"") == 0)
-          data->p[0] = 0;
-        else
-        {
-          sts = graph->ref_object_info( cycle, parsed_name, &p1, &subid1, size1);
-          if ( EVEN(sts)) return sts;
-
-          data->access = trace_data->access;
-          data->p[0] = p1;
-          data->db[0] = db;
-          data->subid[0] = subid1;
-          data->type = trace_type;
-          data->size[0] = size1;
-          data->inverted[0] = inverted1;
-        }
-        size2 = 4;
-	db = graph->parse_attr_name( trace_data->data[1], parsed_name, &inverted2, &attr_type, &attr_size);
-        if ( strcmp( parsed_name,"") == 0)
-          data->p[1] = 0;
-        else
-        {
-          sts = graph->ref_object_info( cycle, parsed_name, &p2, &subid2, size2);
-          if ( EVEN(sts)) return sts;
-
-          data->p[1] = p2;
-          data->subid[1] = subid2;
-          data->size[1] = size2;
-          data->inverted[1] = inverted2;
-        }
-
-        data->color = trace_color;
-        data->cycle = cycle;
-        data->first_scan = 1;
-        grow_SetUserData( object, (void *)data);
-        if ( data->p[0] || data->p[1])
-          trace_data->p = (void *)&dummy;
-        break;
-      }
-      case graph_eTrace_DigToneWithError:
-      case graph_eTrace_DigToneWithErrorAndCommand:
-      case graph_eTrace_DigToneTwo:
-      case graph_eTrace_DigToneTwoWithCommand:
-      {
-//        printf( "Connecting %s %s (DigToneWithError)\n", trace_data->data[0], 
-//		trace_data->data[1]);
-        if ( trace_color < 0 || trace_color >= glow_eDrawType__)
-        {
-          printf( "** Tone out of range, %s\n", trace_data->data[0]);
-          return 0;
-        }
-
-        size1 = 4;
-	db = graph->parse_attr_name( trace_data->data[0], parsed_name, &inverted1, &attr_type, &attr_size);
-        if ( strcmp( parsed_name,"") == 0)
-          return 1;
-        sts = graph->ref_object_info( cycle, parsed_name, &p1, &subid1, size1);
-        if ( EVEN(sts)) return sts;
-
-        data = (graph_sTraceData *) calloc( 1, sizeof( *data));
-        data->access = trace_data->access;
-        data->p[0] = p1;
-        data->db[0] = db;
-        data->subid[0] = subid1;
-        data->type = trace_type;
-        data->size[0] = size1;
-        data->inverted[0] = inverted1;
-        data->color = trace_color;
-        data->color2 = trace_color2;
-        data->cycle = cycle;
-
-        size2 = 4;
-	db = graph->parse_attr_name( trace_data->data[1], parsed_name, &inverted2, &attr_type, &attr_size);
-        if ( strcmp( parsed_name,"") == 0)
-          data->p[1] = 0;
-        else
-        {
-          sts = graph->ref_object_info( cycle, parsed_name, &p2, &subid2, size2);
-          if ( EVEN(sts)) return sts;
-
-          data->p[1] = p2;
-          data->subid[1] = subid2;
-          data->size[1] = size2;
-          data->inverted[1] = inverted2;
-        }
-
-        size2 = 4;
-	db = graph->parse_attr_name( trace_data->data[2], parsed_name, &inverted2, &attr_type, &attr_size);
-        if ( strcmp( parsed_name,"") == 0)
-          data->p[2] = 0;
-        else
-        {
-          sts = graph->ref_object_info( cycle, parsed_name, &p2, &subid2, size2);
-          if ( EVEN(sts)) return sts;
-
-          data->p[2] = p2;
-          data->subid[2] = subid2;
-          data->size[2] = size2;
-          data->inverted[2] = inverted2;
-        }
-        data->first_scan = 1;
-        grow_SetUserData( object, (void *)data);
-        trace_data->p = (void *)&dummy;
-        break;
-      }
-      case graph_eTrace_Annot:
-      case graph_eTrace_AnnotInput:
-      {
-
-//        printf( "Connecting %s (Annot)\n", trace_data->data[0]);
-
-        size1 = 4;
-	db = graph->parse_attr_name( trace_data->data[0], parsed_name, 
-		&inverted1, &attr_type, &attr_size);
-        if ( strcmp( parsed_name,"") == 0)
-          return 1;
-
-        data = (graph_sTraceData *) calloc( 1, sizeof( *data));
-        switch ( db) {
-          case graph_eDatabase_Gdh:
-            sts = graph->ref_object_info( cycle, parsed_name, &p1, &subid1, attr_size);
-            if ( EVEN(sts)) return sts;
-            if ( attr_type != 0)
-              data->annot_typeid = attr_type;
-            else
-              data->annot_typeid = graph_get_typeid( data);
-            break;
-          case graph_eDatabase_Local:
-            p1 = graph->localdb_ref_or_create( parsed_name, attr_type);
-	    data->annot_typeid = attr_type;
-	    if ( attr_type == pwr_eType_String)
-	      data->annot_size = 80;
-	    else
-	      data->annot_size = 4;
-          case graph_eDatabase_User:
-	    data->annot_typeid = attr_type;
-	    if ( attr_type == pwr_eType_String)
-	      data->annot_size = 80;
-	    else
-	      data->annot_size = 4;
-            break;
-          default:
-            ;
-        }
-        data->access = trace_data->access;
-        data->p[0] = p1;
-        data->db[0] = db;
-        data->p[1] = 0;
-        data->subid[0] = subid1;
-        data->type = trace_type;
-        data->size[0] = attr_size;
-        data->cycle = cycle;
-        data->first_scan = 1;
-        strcpy( data->format, trace_data->data[1]);
-        grow_SetUserData( object, (void *)data);
-        trace_data->p = (void *)&dummy;
-        break;
-      }
-      case graph_eTrace_AnnotWithTone:
-      case graph_eTrace_AnnotInputWithTone:
-      {
-//        printf( "Connecting %s (Annot)\n", trace_data->data[0]);
-
-        size1 = 4;
-	db = graph->parse_attr_name( trace_data->data[0], parsed_name, 
-		&inverted1, &attr_type, &attr_size);
-        if ( strcmp( parsed_name,"") == 0)
-          return 1;
-
-        data = (graph_sTraceData *) calloc( 1, sizeof( *data));
-        switch ( db) {
-          case graph_eDatabase_Gdh:
-            sts = graph->ref_object_info( cycle, parsed_name, &p1, &subid1, attr_size);
-            if ( EVEN(sts)) return sts;
-            if ( attr_type != 0)
-              data->annot_typeid = attr_type;
-            else
-              data->annot_typeid = graph_get_typeid( data);
-            break;
-          case graph_eDatabase_Local:
-            p1 = graph->localdb_ref_or_create( parsed_name, attr_type);
-	    data->annot_typeid = attr_type;
-	    if ( attr_type == pwr_eType_String)
-	      data->annot_size = 80;
-	    else
-	      data->annot_size = 4;
-          case graph_eDatabase_User:
-	    data->annot_typeid = attr_type;
-	    if ( attr_type == pwr_eType_String)
-	      data->annot_size = 80;
-	    else
-	      data->annot_size = 4;
-            break;
-          default:
-            ;
-        }
-        data->access = trace_data->access;
-        data->p[0] = p1;
-        data->db[0] = db;
-        data->p[1] = 0;
-        data->subid[0] = subid1;
-        data->type = trace_type;
-        data->size[0] = attr_size;
-
-        size2 = 4;
-	db = graph->parse_attr_name( trace_data->data[2], parsed_name, &inverted2, &attr_type, &attr_size);
-        if ( strcmp( parsed_name,"") == 0)
-          data->p[1] = 0;
-        else
-        {
-          sts = graph->ref_object_info( cycle, parsed_name, &p2, &subid2, size2);
-          if ( EVEN(sts)) return sts;
-
-          data->p[1] = p2;
-          data->subid[1] = subid2;
-          data->size[1] = size2;
-          data->inverted[1] = inverted2;
-        }
-
-        size2 = 4;
-	db = graph->parse_attr_name( trace_data->data[3], parsed_name, &inverted2, &attr_type, &attr_size);
-        if ( strcmp( parsed_name,"") == 0)
-          data->p[2] = 0;
-        else
-        {
-          sts = graph->ref_object_info( cycle, parsed_name, &p2, &subid2, size2);
-          if ( EVEN(sts)) return sts;
-
-          data->p[2] = p2;
-          data->subid[2] = subid2;
-          data->size[2] = size2;
-          data->inverted[2] = inverted2;
-        }
-
-        data->color = trace_color;
-        data->cycle = cycle;
-        data->first_scan = 1;
-        strcpy( data->format, trace_data->data[1]);
-        grow_SetUserData( object, (void *)data);
-        trace_data->p = (void *)&dummy;
-        break;
-      }
-      case graph_eTrace_Rotate:
-      {
-//        printf( "Connecting %s (Rotate)\n", trace_data->data[0]);
-        float f;
-
-        size1 = 4;
-	db = graph->parse_attr_name( trace_data->data[0], parsed_name, &inverted1, &attr_type, &attr_size);
-        if ( strcmp( parsed_name,"") == 0)
-          return 1;
-        sts = graph->ref_object_info( cycle, parsed_name, &p1, &subid1, size1);
-        if ( EVEN(sts)) return sts;
-
-        data = (graph_sTraceData *) calloc( 1, sizeof( *data));
-        data->access = trace_data->access;
-        data->p[0] = p1;
-        data->db[0] = db;
-        data->p[1] = 0;
-        data->subid[0] = subid1;
-        data->type = trace_type;
-        data->size[0] = size1;
-        data->cycle = cycle;
-
-        size2 = 4;
-	db = graph->parse_attr_name( trace_data->data[3], parsed_name, &inverted2, &attr_type, &attr_size);
-        if ( strcmp( parsed_name,"") == 0)
-          data->p[1] = 0;
-        else
-        {
-          sts = graph->ref_object_info( cycle, parsed_name, &p2, &subid2, size2);
-          if ( EVEN(sts)) return sts;
-
-          data->p[1] = p2;
-          data->subid[1] = subid2;
-          data->size[1] = size2;
-          data->inverted[1] = inverted2;
-        }
-
-        size2 = 4;
-	db = graph->parse_attr_name( trace_data->data[4], parsed_name, &inverted2, &attr_type, &attr_size);
-        if ( strcmp( parsed_name,"") == 0)
-          data->p[2] = 0;
-        else
-        {
-          sts = graph->ref_object_info( cycle, parsed_name, &p2, &subid2, size2);
-          if ( EVEN(sts)) return sts;
-
-          data->p[2] = p2;
-          data->subid[2] = subid2;
-          data->size[2] = size2;
-          data->inverted[2] = inverted2;
-        }
-
-        data->color = trace_color;
-        data->first_scan = 1;
-        grow_SetUserData( object, (void *)data);
-        trace_data->p = (void *)&dummy;
-        grow_StoreTransform( object);
-        if ( strcmp( trace_data->data[5], "") != 0)
-        {
-          sts = sscanf( trace_data->data[5], "%f", &f);
-          if ( sts == 0)
-            data->factor = 1.0;
-          else
-            data->factor = f;
-        }
-        else
-          data->factor = 1.0;
-        if ( strcmp( trace_data->data[1], "") != 0 && 
-	     strcmp( trace_data->data[2], "") != 0)
-        {
-          sts = sscanf( trace_data->data[1], "%f", &f);
-          if ( sts != 0)
-          {
-            data->x0 = f;
-            sts = sscanf( trace_data->data[2], "%f", &f);
-            if ( sts != 0)
-              data->y0 = f;
-          }
-          if ( sts != 0)
-            data->rotation_point = glow_eRotationPoint_FixPoint;
-          else
-            data->rotation_point = glow_eRotationPoint_Zero;
-        }
-        else
-          data->rotation_point = glow_eRotationPoint_Zero;
-        break;
-      }
-      case graph_eTrace_Move:
-      {
-//        printf( "Connecting %s (Move)\n", trace_data->data[0]);
-        float f;
-        double ur_x, ur_y;
-
-        data = (graph_sTraceData *) calloc( 1, sizeof( *data));
-        data->access = trace_data->access;
-        data->type = trace_type;
-        data->cycle = cycle;
-
-        size2 = 4;
-	db = graph->parse_attr_name( trace_data->data[0], parsed_name, &inverted2, &attr_type, &attr_size);
-        if ( strcmp( parsed_name,"") == 0)
-          data->p[0] = 0;
-        else
-        {
-          sts = graph->ref_object_info( cycle, parsed_name, &p2, &subid2, size2);
-          if ( EVEN(sts)) return sts;
-
-          data->p[0] = p2;
-          data->db[0] = db;
-          data->subid[0] = subid2;
-          data->size[0] = size2;
-          data->inverted[0] = inverted2;
-        }
-
-        size2 = 4;
-	db = graph->parse_attr_name( trace_data->data[1], parsed_name, &inverted2, &attr_type, &attr_size);
-        if ( strcmp( parsed_name,"") == 0)
-          data->p[1] = 0;
-        else
-        {
-          sts = graph->ref_object_info( cycle, parsed_name, &p2, &subid2, size2);
-          if ( EVEN(sts)) return sts;
-
-          data->p[1] = p2;
-          data->subid[1] = subid2;
-          data->size[1] = size2;
-          data->inverted[1] = inverted2;
-        }
-
-        size2 = 4;
-	db = graph->parse_attr_name( trace_data->data[2], parsed_name, &inverted2, &attr_type, &attr_size);
-        if ( strcmp( parsed_name,"") == 0)
-          data->p[2] = 0;
-        else
-        {
-          sts = graph->ref_object_info( cycle, parsed_name, &p2, &subid2, size2);
-          if ( EVEN(sts)) return sts;
-
-          data->p[2] = p2;
-          data->subid[2] = subid2;
-          data->size[2] = size2;
-          data->inverted[2] = inverted2;
-        }
-
-        size2 = 4;
-	db = graph->parse_attr_name( trace_data->data[3], parsed_name, &inverted2, &attr_type, &attr_size);
-        if ( strcmp( parsed_name,"") == 0)
-          data->p[3] = 0;
-        else
-        {
-          sts = graph->ref_object_info( cycle, parsed_name, &p2, &subid2, size2);
-          if ( EVEN(sts)) return sts;
-
-          data->p[3] = p2;
-          data->subid[3] = subid2;
-          data->size[3] = size2;
-          data->inverted[3] = inverted2;
-        }
-
-        size2 = 4;
-	db = graph->parse_attr_name( trace_data->data[7], parsed_name, &inverted2, &attr_type, &attr_size);
-        if ( strcmp( parsed_name,"") == 0)
-          data->p[4] = 0;
-        else
-        {
-          sts = graph->ref_object_info( cycle, parsed_name, &p2, &subid2, size2);
-          if ( EVEN(sts)) return sts;
-
-          data->p[4] = p2;
-          data->subid[4] = subid2;
-          data->size[4] = size2;
-          data->inverted[4] = inverted2;
-        }
-
-        size2 = 4;
-	db = graph->parse_attr_name( trace_data->data[8], parsed_name, &inverted2, &attr_type, &attr_size);
-        if ( strcmp( parsed_name,"") == 0)
-          data->p[5] = 0;
-        else
-        {
-          sts = graph->ref_object_info( cycle, parsed_name, &p2, &subid2, size2);
-          if ( EVEN(sts)) return sts;
-
-          data->p[5] = p2;
-          data->subid[5] = subid2;
-          data->size[5] = size2;
-          data->inverted[5] = inverted2;
-        }
-
-        data->color = trace_color;
-        data->first_scan = 1;
-        grow_SetUserData( object, (void *)data);
-        trace_data->p = (void *)&dummy;
-        grow_StoreTransform( object);
-        if ( strcmp( trace_data->data[4], "") != 0)
-        {
-          sts = sscanf( trace_data->data[4], "%f", &f);
-          if ( sts == 0)
-            data->factor = 1.0;
-          else
-            data->factor = f;
-        }
-        else
-          data->factor = 1.0;
-
-        if ( strcmp( trace_data->data[5], "") != 0)
-        {
-          sts = sscanf( trace_data->data[5], "%f", &f);
-          if ( sts == 0)
-            data->x0 = 0;
-          else
-            data->x0 = f;
-        }
-        else
-          data->x0 = 0;
-
-        if ( strcmp( trace_data->data[6], "") != 0)
-        {
-          sts = sscanf( trace_data->data[6], "%f", &f);
-          if ( sts == 0)
-            data->y0 = 0;
-          else
-            data->y0 = f;
-        }
-        else
-          data->y0 = 0;
-
-        grow_MeasureNode( object, &data->x_orig, &data->y_orig, &ur_x, &ur_y);
-        if ( data->p[0] || data->p[1] || data->p[4] || data->p[5])
-          trace_data->p = (void *)&dummy;
-
-        break;
-      }
-      case graph_eTrace_AnalogShift:
-      {
-//        printf( "Connecting %s (AnalogShift)\n", trace_data->data[0]);
-
-        size1 = 4;
-	db = graph->parse_attr_name( trace_data->data[0], parsed_name, &inverted1, &attr_type, &attr_size);
-        if ( strcmp( parsed_name,"") == 0)
-          return 1;
-        sts = graph->ref_object_info( cycle, parsed_name, &p1, &subid1, size1);
-        if ( EVEN(sts)) return sts;
-
-        data = (graph_sTraceData *) calloc( 1, sizeof( *data));
-        data->access = trace_data->access;
-        data->p[0] = p1;
-        data->db[0] = db;
-        data->p[1] = 0;
-        data->subid[0] = subid1;
-        data->type = trace_type;
-        data->size[0] = size1;
-
-        size2 = 4;
-	db = graph->parse_attr_name( trace_data->data[1], parsed_name, &inverted2, &attr_type, &attr_size);
-        if ( strcmp( parsed_name,"") == 0)
-          data->p[1] = 0;
-        else
-        {
-          sts = graph->ref_object_info( cycle, parsed_name, &p2, &subid2, size2);
-          if ( EVEN(sts)) return sts;
-
-          data->p[1] = p2;
-          data->subid[1] = subid2;
-          data->size[1] = size2;
-          data->inverted[1] = inverted2;
-        }
-
-        size2 = 4;
-	db = graph->parse_attr_name( trace_data->data[2], parsed_name, &inverted2, &attr_type, &attr_size);
-        if ( strcmp( parsed_name,"") == 0)
-          data->p[2] = 0;
-        else
-        {
-          sts = graph->ref_object_info( cycle, parsed_name, &p2, &subid2, size2);
-          if ( EVEN(sts)) return sts;
-
-          data->p[2] = p2;
-          data->subid[2] = subid2;
-          data->size[2] = size2;
-          data->inverted[2] = inverted2;
-        }
-
-        data->color = trace_color;
-        data->cycle = cycle;
-        data->first_scan = 1;
-        grow_SetUserData( object, (void *)data);
-        trace_data->p = (void *)&dummy;
-
-        break;
-      }
-      case graph_eTrace_IncrAnalog:
-      {
-//        printf( "Connecting %s (IncrAnalog)\n", trace_data->data[0]);
-
-        size1 = 4;
-	db = graph->parse_attr_name( trace_data->data[0], parsed_name, &inverted1, &attr_type, &attr_size);
-        if ( strcmp( parsed_name,"") == 0)
-          return 1;
-        sts = graph->ref_object_info( cycle, parsed_name, &p1, &subid1, size1);
-        if ( EVEN(sts)) return sts;
-
-        data = (graph_sTraceData *) calloc( 1, sizeof( *data));
-        data->access = trace_data->access;
-        data->p[0] = p1;
-        data->db[0] = db;
-        data->p[1] = 0;
-        data->subid[0] = subid1;
-        data->type = trace_type;
-        data->size[0] = size1;
-
-        data->color = trace_color;
-        data->first_scan = 1;
-        grow_SetUserData( object, (void *)data);
-        trace_data->p = (void *)&dummy;
-
-        break;
-      }
-      case graph_eTrace_Animation:
-      case graph_eTrace_AnimationForwBack:
-      case graph_eTrace_DigAnimation:
-      case graph_eTrace_DigShift:
-      {
-//        printf( "Connecting %s (Animation)\n", trace_data->data[0]);
-        int sts;
-
-        size1 = 4;
-	db = graph->parse_attr_name( trace_data->data[0], parsed_name, &inverted1, &attr_type, &attr_size);
-        if ( strcmp( parsed_name,"") == 0)
-          return 1;
-        sts = graph->ref_object_info( cycle, parsed_name, &p1, &subid1, size1);
-        if ( EVEN(sts)) return sts;
-
-        data = (graph_sTraceData *) calloc( 1, sizeof( *data));
-        data->access = trace_data->access;
-        data->cycle = cycle;
-        data->p[0] = p1;
-        data->db[0] = db;
-        data->inverted[0] = inverted1;
-        data->p[1] = 0;
-        data->subid[0] = subid1;
-        data->type = trace_type;
-        data->size[0] = size1;
-
-        size2 = 4;
-	db = graph->parse_attr_name( trace_data->data[1], parsed_name, &inverted2, &attr_type, &attr_size);
-        if ( strcmp( parsed_name,"") == 0)
-          data->p[1] = 0;
-        else
-        {
-          sts = graph->ref_object_info( cycle, parsed_name, &p2, &subid2, size2);
-          if ( EVEN(sts)) return sts;
-
-          data->p[1] = p2;
-          data->subid[1] = subid2;
-          data->size[1] = size2;
-          data->inverted[1] = inverted2;
-        }
-
-        size2 = 4;
-	db = graph->parse_attr_name( trace_data->data[2], parsed_name, &inverted2, &attr_type, &attr_size);
-        if ( strcmp( parsed_name,"") == 0)
-          data->p[2] = 0;
-        else
-        {
-          sts = graph->ref_object_info( cycle, parsed_name, &p2, &subid2, size2);
-          if ( EVEN(sts)) return sts;
-
-          data->p[2] = p2;
-          data->subid[2] = subid2;
-          data->size[2] = size2;
-          data->inverted[2] = inverted2;
-        }
-
-        data->color = trace_color;
-        data->first_scan = 1;
-        grow_SetUserData( object, (void *)data);
-        trace_data->p = (void *)&dummy;
-
-        break;
-      }
-      case graph_eTrace_SetDigConfirmWithTone:
-      case graph_eTrace_ResetDigConfirmWithTone:
-      case graph_eTrace_ToggleDigConfirmWithTone:
-      case graph_eTrace_SetDigWithTone:
-      case graph_eTrace_ResetDigWithTone:
-      case graph_eTrace_ToggleDigWithTone:
-      case graph_eTrace_StoDigWithTone:
-      {
-//        printf( "Connecting %s (DigTone)\n", trace_data->data[2]);
-        if ( trace_color < 0 || trace_color >= glow_eDrawType__)
-        {
-          printf( "** Tone out of range, %s\n", trace_data->data[2]);
-          return 0;
-        }
-        data = (graph_sTraceData *) calloc( 1, sizeof( *data));
-        data->access = trace_data->access;
-        data->type = trace_type;
-        data->cycle = cycle;
-
-        size1 = 4;
-	db = graph->parse_attr_name( trace_data->data[2], parsed_name, &inverted1, &attr_type, &attr_size);
-        if ( strcmp( parsed_name,"") == 0)
-          data->p[0] = 0;
-        else
-        {
-          sts = graph->ref_object_info( cycle, parsed_name, &p1, &subid1, size1);
-          if ( EVEN(sts)) return sts;
-
-          data->p[0] = p1;
-          data->db[0] = db;
-          data->subid[0] = subid1;
-          data->size[0] = size1;
-          data->inverted[0] = inverted1;
-        }
-        size2 = 4;
-	db = graph->parse_attr_name( trace_data->data[3], parsed_name, &inverted2, &attr_type, &attr_size);
-        if ( strcmp( parsed_name,"") == 0)
-          data->p[1] = 0;
-        else
-        {
-          sts = graph->ref_object_info( cycle, parsed_name, &p2, &subid2, size2);
-          if ( EVEN(sts)) return sts;
-
-          data->p[1] = p2;
-          data->subid[1] = subid2;
-          data->size[1] = size2;
-          data->inverted[1] = inverted2;
-        }
-        if ( strcmp( trace_data->data[4], "") != 0)
-        {
-          strcpy( data->low_text, trace_data->data[4]);
-          grow_GetAnnotation( object, 1, data->high_text, sizeof(data->high_text));
-        }
-        data->color = trace_color;
-        data->first_scan = 1;
-        grow_SetUserData( object, (void *)data);
-        if ( data->p[0] || data->p[1])
-          trace_data->p = (void *)&dummy;
-        break;
-      }
-      case graph_eTrace_Video:
-      {
-        data = (graph_sTraceData *) calloc( 1, sizeof( *data));
-        data->access = trace_data->access;
-        data->type = trace_type;
-        data->cycle = cycle;
-
-        data->first_scan = 1;
-        grow_SetUserData( object, (void *)data);
-        trace_data->p = (void *)&dummy;
-	break;
-      }
-      default:
-        ;
-    }
-  }
-  else if ( grow_GetObjectType( object) == glow_eObjectType_GrowBar)
-  {
-//     printf( "Connecting %s (Bar)\n", trace_data->data[0]);
-     if ( cycle == glow_eCycle_Inherit)
-       cycle = glow_eCycle_Slow;
-
-     size1 = 4;
-     db = graph->parse_attr_name( trace_data->data[0], parsed_name, &inverted1, &attr_type, &attr_size);
-     if ( strcmp( parsed_name,"") == 0)
-       return 1;
-     sts = graph->ref_object_info( cycle, parsed_name, &p1, &subid1, size1);
-     if ( EVEN(sts)) return sts;
-
-     data = (graph_sTraceData *) calloc( 1, sizeof( *data));
-     data->access = trace_data->access;
-     data->cycle = cycle;
-     data->p[0] = p1;
-     data->db[0] = db;
-     data->p[1] = 0;
-     data->subid[0] = subid1;
-     data->type = graph_eTrace_Bar;
-     data->size[0] = size1;
-     data->inverted[0] = inverted1;
-     data->first_scan = 1;
-     grow_SetUserData( object, (void *)data);
-     trace_data->p = (void *)&dummy;
-  }
-  else if ( grow_GetObjectType( object) == glow_eObjectType_GrowTrend)
-  {
-//     printf( "Connecting %s %s(Trend)\n", trace_data->data[0], trace_data->data[1]);
-     if ( cycle == glow_eCycle_Inherit)
-       cycle = glow_eCycle_Slow;
-
-     size1 = 4;
-     db = graph->parse_attr_name( trace_data->data[0], parsed_name, &inverted1, &attr_type, &attr_size);
-     if ( strcmp( parsed_name,"") == 0)
-       return 1;
-       
-     sts = graph->ref_object_info( cycle, parsed_name, &p1, &subid1, size1);
-     if ( EVEN(sts)) return sts;
-
-     data = (graph_sTraceData *) calloc( 1, sizeof( *data));
-     data->access = trace_data->access;
-     data->cycle = cycle;
-     data->p[0] = p1;
-     data->db[0] = db;
-     data->subid[0] = subid1;
-     data->type = graph_eTrace_Trend;
-     data->size[0] = size1;
-     data->inverted[0] = inverted1;
-     data->trend_boolean = (strstr( trace_data->data[0], "##Boolean") != 0);
-     data->first_scan = 1;
-     grow_SetUserData( object, (void *)data);
-     grow_GetTrendScanTime( object, &data->scan_time);
-     data->acc_time = data->scan_time;
-
-     size2 = 4;
-     db = graph->parse_attr_name( trace_data->data[1], parsed_name, &inverted2, &attr_type, &attr_size);
-     if ( strcmp( parsed_name,"") == 0)
-       data->p[1] = 0;
-     else
-     {
-       sts = graph->ref_object_info( cycle, parsed_name, &p2, &subid2, size2);
-       if ( EVEN(sts)) return sts;
-
-       data->p[1] = p2;
-       data->subid[1] = subid2;
-       data->size[1] = size2;
-       data->inverted[1] = inverted2;
-       data->trend_boolean |= (strstr( trace_data->data[1], "##Boolean") != 0) << 1;
-     }
-
-     trace_data->p = (void *)&dummy;
-  }
-  else if ( grow_GetObjectType( object) == glow_eObjectType_GrowSlider)
-  {
-//     printf( "Connecting %s (Slider)\n", trace_data->data[0]);
-     if ( cycle == glow_eCycle_Inherit)
-       grow_GetObjectClassCycle( object, &cycle);
-
-     size1 = 4;
-     db = graph->parse_attr_name( trace_data->data[0], parsed_name, &inverted1, &attr_type, &attr_size);
-     if ( strcmp( parsed_name,"") == 0)
-       return 1;
-     sts = graph->ref_object_info( cycle, parsed_name, &p1, &subid1, size1);
-     if ( EVEN(sts)) return sts;
-
-     data = (graph_sTraceData *) calloc( 1, sizeof( *data));
-     data->access = trace_data->access;
-     data->cycle = cycle;
-     data->p[0] = p1;
-     data->db[0] = db;
-     data->p[1] = 0;
-     data->subid[0] = subid1;
-     data->type = graph_eTrace_Slider;
-     data->size[0] = size1;
-     data->inverted[0] = inverted1;
-     data->first_scan = 1;
-     grow_StoreTransform( object);
-     grow_SetUserData( object, (void *)data);
-     trace_data->p = (void *)&dummy;
-
-     // Set type to slider to get hot
-     trace_data->attr_type = (glow_eTraceType)graph_eTrace_Slider;
-     grow_SetTraceAttr( object, trace_data);
-
-     // Get min and max position from sider background
-     double max_value, min_value, max_pos, min_pos;
-     glow_eDirection direction;
-     double ll_x, ll_y, ur_x, ur_y;
-     grow_tObject background;
-     double origo;
-
-     grow_MeasureNode( object, &ll_x, &ll_y, &ur_x, &ur_y);
-     grow_GetSliderInfo( object, &direction, 
-		&max_value, &min_value, &max_pos, &min_pos);
-     sts = grow_GetBackgroundObjectLimits( graph->grow->ctx, 
-	(glow_eTraceType)graph_eTrace_SliderBackground,
-	(ll_x + ur_x) / 2, (ll_y + ur_y) / 2, &background,
-	&min_pos, &max_pos, &direction);
-     if ( ODD(sts)) {
-       grow_GetSliderOrigo( object, direction, &origo);
-
-       switch( direction) {
-         case glow_eDirection_Down:
-           grow_SetSliderInfo( object, direction,
-		max_value, min_value, max_pos - origo, min_pos - origo);
-
-           grow_MoveNode( object, ll_x, min_pos - origo);
-           break;
-         case glow_eDirection_Up:
-           grow_SetSliderInfo( object, direction,
-		max_value, min_value, max_pos - (ur_y - ll_y - origo), 
-		min_pos - (ur_y - ll_y - origo));
-           grow_MoveNode( object, ll_x, min_pos - (ur_y - ll_y - origo));
-           break;
-         case glow_eDirection_Left:
-           grow_SetSliderInfo( object, direction,
-		max_value, min_value, max_pos - (ur_x - ll_x - origo), 
-		min_pos - (ur_x - ll_x - origo));
-           grow_MoveNode( object, min_pos - (ur_x - ll_x - origo), ll_y);
-           break;
-         case glow_eDirection_Right:
-           grow_SetSliderInfo( object, direction,
-		max_value, min_value, max_pos - origo, min_pos - origo);
-
-           grow_MoveNode( object, min_pos - origo, ll_y);
-           break;
-         default:
-	   ;
-       }
-       grow_StoreTransform( object);
-     }
-  }
   return 1;
 }
 
 static int graph_trace_disconnect_bc( grow_tObject object)
 {
-  graph_sTraceData *data;
-  int i;
+  GeDyn *dyn;
 
-  grow_GetUserData( object, (void **)&data);
-  if ( !data)
+  grow_GetUserData( object, (void **)&dyn);
+  if ( !dyn)
     return 1;
-  switch( data->type)
-  {
-    case 0:
-      grow_SetAnnotation( object, 1, "", 0);
-      break;
-    default:
-      ;
-  }
-  if ( data->p[0] && data->db[0] == graph_eDatabase_Gdh)
-    gdh_UnrefObjectInfo( data->subid[0]);
-  for ( i = 1; i < (int)(sizeof(data->subid)/sizeof(data->subid[0])); i++) {
-    if ( data->p[i])
-      gdh_UnrefObjectInfo( data->subid[i]);
-  }
-  free( (char *) data);
+
+  dyn->disconnect( object);
+
   return 1;
 }
 
 
 static int graph_trace_scan_bc( grow_tObject object, void *p)
 {
-  graph_sTraceData *data;
-  char		buf[120];
-  int		len;
-  GrowCtx 	*ctx;
-  Graph 	*graph;
+  GeDyn *dyn;
 
-  grow_ObjectToCtx( object, &ctx);
-  grow_GetCtxUserData( (GrowCtx *)ctx, (void **) &graph);
-
-  grow_GetUserData( object, (void **)&data);
-
-  if ( data->cycle == glow_eCycle_Inherit)
-    return 1;
-  if ( data->cycle == glow_eCycle_Slow && graph->slow_scan_cnt != 0 &&
-       !(data->type == graph_eTrace_Animation ||
-         data->type == graph_eTrace_AnimationForwBack ||
-         data->type == graph_eTrace_DigAnimation))
-    return 1;
-  if ( data->cycle == glow_eCycle_Fast && graph->fast_scan_cnt != 0 &&
-       !(data->type == graph_eTrace_Animation ||
-         data->type == graph_eTrace_AnimationForwBack ||
-         data->type == graph_eTrace_DigAnimation))
+  grow_GetUserData( object, (void **)&dyn);
+  if ( !dyn)
     return 1;
 
-  switch( data->type)
-  {
-    case graph_eTrace_Dig:
-    case graph_eTrace_DigWithCommand:
-    {
-      if ( !data->first_scan)
-      {
-        if ( data->p[0] && !data->p[1])
-        {
-          if ( *(pwr_tBoolean *)data->old_value[0] == *(pwr_tBoolean *)data->p[0])
-            // No change since last time
-            return 1;
-        }
-        else if ( data->p[1] && !data->p[0])
-        {
-          if ( *(pwr_tBoolean *)data->old_value[1] == *(pwr_tBoolean *)data->p[1])
-            // No change since last time
-            return 1;
-        }
-        else
-        {
-          if ( *(pwr_tBoolean *)data->old_value[0] == *(pwr_tBoolean *)data->p[0] &&
-               *(pwr_tBoolean *)data->old_value[1] == *(pwr_tBoolean *)data->p[1])
-            // No change since last time
-            return 1;
-        }
-      }
-      else
-        data->first_scan = 0;
+  if ( dyn->cycle == glow_eCycle_Inherit)
+    return 1;
+  if ( dyn->cycle == glow_eCycle_Slow && dyn->graph->slow_scan_cnt != 0 &&
+       !(dyn->total_dyn_type & ge_mDynType_Animation))
+    return 1;
+  if ( dyn->cycle == glow_eCycle_Fast && dyn->graph->fast_scan_cnt != 0 &&
+       !(dyn->total_dyn_type & ge_mDynType_Animation))
+    return 1;
 
-      if ( data->p[0])
-      {
-        if ( (!data->inverted[0] && !*(pwr_tBoolean *)data->p[0]) ||
-             (data->inverted[0] && *(pwr_tBoolean *)data->p[0]))
-          grow_SetObjectFillColor( object, data->color);
-        else
-          grow_ResetObjectFillColor( object);
-        *(pwr_tBoolean *)data->old_value[0] = *(pwr_tBoolean *)data->p[0];
-      }
-      if ( data->p[1])
-      {
-        if ( (!data->inverted[1] && !*(pwr_tBoolean *)data->p[1]) ||
-             (data->inverted[1] && *(pwr_tBoolean *)data->p[1]))
-          grow_SetObjectVisibility( object, 1);
-        else
-          grow_SetObjectVisibility( object, 0);
-        *(pwr_tBoolean *)data->old_value[1] = *(pwr_tBoolean *)data->p[1];
-      }
-      break;
-    }
-    case graph_eTrace_DigWithText:
-    {
-      if ( !data->first_scan)
-      {
-        if ( *(pwr_tBoolean *)data->old_value[0] == *(pwr_tBoolean *)data->p[0])
-          // No change since last time
-          return 1;
-      }
-      else
-        data->first_scan = 0;
+  dyn->scan( object);
 
-      if ( (!data->inverted[0] && !*(pwr_tBoolean *)data->p[0]) ||
-           (data->inverted[0] && *(pwr_tBoolean *)data->p[0]))
-      {
-        if ( data->color >= (glow_eDrawType) glow_eDrawTone__)
-          grow_SetObjectFillColor( object, data->color);
-        else
-          grow_SetObjectColorTone( object, (glow_eDrawTone) data->color);
-        if ( data->low_text[0])
-          grow_SetAnnotation( object, 1, data->low_text, strlen(data->low_text));
-      }
-      else
-      {
-        if ( data->color >= (glow_eDrawType) glow_eDrawTone__)
-          grow_ResetObjectFillColor( object);
-        else
-          grow_ResetObjectColorTone( object);
-        if ( data->low_text[0])
-          grow_SetAnnotation( object, 1, data->high_text, strlen(data->low_text));
-      }
-      *(pwr_tBoolean *)data->old_value[0] = *(pwr_tBoolean *)data->p[0];
-      break;
-    }
-    case graph_eTrace_DigBorder:
-    {
-      if ( !data->first_scan)
-      {
-        if ( data->p[0] && !data->p[1])
-        {
-          if ( *(pwr_tBoolean *)data->old_value[0] == *(pwr_tBoolean *)data->p[0])
-            // No change since last time
-            return 1;
-        }
-        else if ( data->p[1] && !data->p[0])
-        {
-          if ( *(pwr_tBoolean *)data->old_value[1] == *(pwr_tBoolean *)data->p[1])
-            // No change since last time
-            return 1;
-        }
-        else
-        {
-          if ( *(pwr_tBoolean *)data->old_value[0] == *(pwr_tBoolean *)data->p[0] &&
-               *(pwr_tBoolean *)data->old_value[1] == *(pwr_tBoolean *)data->p[1])
-            // No change since last time
-            return 1;
-        }
-      }
-      else
-        data->first_scan = 0;
-
-      if ( data->p[0])
-      {
-        if ( (!data->inverted[0] && !*(pwr_tBoolean *)data->p[0]) ||
-           (data->inverted[0] && *(pwr_tBoolean *)data->p[0]))
-          grow_SetObjectBorderColor( object, data->color);
-        else
-          grow_ResetObjectBorderColor( object);
-        *(pwr_tBoolean *)data->old_value[0] = *(pwr_tBoolean *)data->p[0];
-      }
-      if ( data->p[1])
-      {
-        if ( (!data->inverted[1] && !*(pwr_tBoolean *)data->p[1]) ||
-             (data->inverted[1] && *(pwr_tBoolean *)data->p[1]))
-          grow_SetObjectVisibility( object, 1);
-        else
-          grow_SetObjectVisibility( object, 0);
-        *(pwr_tBoolean *)data->old_value[1] = *(pwr_tBoolean *)data->p[1];
-      }
-      break;
-    }
-    case graph_eTrace_Invisible:
-    {
-      if ( !data->first_scan)
-      {
-        if ( *(pwr_tBoolean *)data->old_value[0] == *(pwr_tBoolean *)data->p[0])
-          // No change since last time
-          return 1;
-      }
-      else
-        data->first_scan = 0;
-
-      if ( (!data->inverted[0] && !*(pwr_tBoolean *)data->p[0]) ||
-           (data->inverted[0] && *(pwr_tBoolean *)data->p[0]))
-        grow_SetObjectVisibility( object, 1);
-      else
-        grow_SetObjectVisibility( object, 0);
-      *(pwr_tBoolean *)data->old_value[0] = *(pwr_tBoolean *)data->p[0];
-      break;
-    }
-    case graph_eTrace_DigWithError:
-    case graph_eTrace_DigWithErrorAndCommand:
-    {
-      if ( !data->first_scan)
-      {
-        if ( !data->p[1] && !data->p[2])
-        {
-          if ( *(pwr_tBoolean *)data->old_value[0] == *(pwr_tBoolean *)data->p[0])
-            // No change since last time
-            return 1;
-        }
-        else if ( !data->p[2])
-        {
-          if ( *(pwr_tBoolean *)data->old_value[0] == *(pwr_tBoolean *)data->p[0] &&
-	       *(pwr_tBoolean *)data->old_value[1] == *(pwr_tBoolean *)data->p[1])
-            // No change since last time
-            return 1;
-        }
-        else if ( !data->p[1])
-        {
-          if ( *(pwr_tBoolean *)data->old_value[0] == *(pwr_tBoolean *)data->p[0] &&
-	       *(pwr_tBoolean *)data->old_value[2] == *(pwr_tBoolean *)data->p[2])
-            // No change since last time
-            return 1;
-        }
-        else
-        {
-          if ( *(pwr_tBoolean *)data->old_value[0] == *(pwr_tBoolean *)data->p[0] &&
-               *(pwr_tBoolean *)data->old_value[1] == *(pwr_tBoolean *)data->p[1] &&
-	       *(pwr_tBoolean *)data->old_value[2] == *(pwr_tBoolean *)data->p[2])
-            // No change since last time
-            return 1;
-        }
-      }
-      else
-        data->first_scan = 0;
-
-      if ( data->p[1] && !data->p[2])
-      {
-        if ( (!data->inverted[1] && *(pwr_tBoolean *)data->p[1]) ||
-	     (data->inverted[1] && ! *(pwr_tBoolean *)data->p[1]))
-          grow_SetObjectFillColor( object, glow_eDrawType_LineRed);
-        else if ( (!data->inverted[0] && !*(pwr_tBoolean *)data->p[0]) ||
-                  (data->inverted[0] && *(pwr_tBoolean *)data->p[0]))
-          grow_SetObjectFillColor( object, data->color);
-        else
-          grow_ResetObjectFillColor( object);
-        *(pwr_tBoolean *)data->old_value[0] = *(pwr_tBoolean *)data->p[0];
-        *(pwr_tBoolean *)data->old_value[1] = *(pwr_tBoolean *)data->p[1];
-      }
-      else if ( !data->p[1] && data->p[2])
-      {
-        if ( (!data->inverted[2] && *(pwr_tBoolean *)data->p[2]) ||
-	     (data->inverted[2] && ! *(pwr_tBoolean *)data->p[2]))
-          grow_SetObjectFillColor( object, glow_eDrawType_Color6);
-        else if ( (!data->inverted[0] && !*(pwr_tBoolean *)data->p[0]) ||
-                  (data->inverted[0] && *(pwr_tBoolean *)data->p[0]))
-          grow_SetObjectFillColor( object, data->color);
-        else
-          grow_ResetObjectFillColor( object);
-        *(pwr_tBoolean *)data->old_value[0] = *(pwr_tBoolean *)data->p[0];
-        *(pwr_tBoolean *)data->old_value[2] = *(pwr_tBoolean *)data->p[2];
-      }
-      else if ( !data->p[1] && !data->p[2])
-      {
-        if ( (!data->inverted[0] && !*(pwr_tBoolean *)data->p[0]) ||
-	     (data->inverted[0] && *(pwr_tBoolean *)data->p[0]))
-          grow_SetObjectFillColor( object, data->color);
-        else
-          grow_ResetObjectFillColor( object);
-        *(pwr_tBoolean *)data->old_value[0] = *(pwr_tBoolean *)data->p[0];
-      }
-      else
-      {
-        if ( (!data->inverted[1] && *(pwr_tBoolean *)data->p[1]) ||
-	     (data->inverted[1] && ! *(pwr_tBoolean *)data->p[1]))
-          grow_SetObjectFillColor( object, glow_eDrawType_LineRed);
-        else if ( (!data->inverted[2] && *(pwr_tBoolean *)data->p[2]) ||
-	     (data->inverted[2] && ! *(pwr_tBoolean *)data->p[2]))
-          grow_SetObjectFillColor( object, glow_eDrawType_Color6);
-        else if ( (!data->inverted[0] && !*(pwr_tBoolean *)data->p[0]) ||
-                  (data->inverted[0] && *(pwr_tBoolean *)data->p[0]))
-          grow_SetObjectFillColor( object, data->color);
-        else
-          grow_ResetObjectFillColor( object);
-        *(pwr_tBoolean *)data->old_value[0] = *(pwr_tBoolean *)data->p[0];
-        *(pwr_tBoolean *)data->old_value[1] = *(pwr_tBoolean *)data->p[1];
-        *(pwr_tBoolean *)data->old_value[2] = *(pwr_tBoolean *)data->p[2];
-      }
-      break;
-    }
-    case graph_eTrace_DigTwo:
-    case graph_eTrace_DigTwoWithCommand:
-    {
-      if ( !data->first_scan)
-      {
-        if ( !data->p[1] && !data->p[2])
-        {
-          if ( *(pwr_tBoolean *)data->old_value[0] == *(pwr_tBoolean *)data->p[0])
-            // No change since last time
-            return 1;
-        }
-        else if ( !data->p[2])
-        {
-          if ( *(pwr_tBoolean *)data->old_value[0] == *(pwr_tBoolean *)data->p[0] &&
-	       *(pwr_tBoolean *)data->old_value[1] == *(pwr_tBoolean *)data->p[1])
-            // No change since last time
-            return 1;
-        }
-        else if ( !data->p[1])
-        {
-          if ( *(pwr_tBoolean *)data->old_value[0] == *(pwr_tBoolean *)data->p[0] &&
-	       *(pwr_tBoolean *)data->old_value[2] == *(pwr_tBoolean *)data->p[2])
-            // No change since last time
-            return 1;
-        }
-        else
-        {
-          if ( *(pwr_tBoolean *)data->old_value[0] == *(pwr_tBoolean *)data->p[0] &&
-               *(pwr_tBoolean *)data->old_value[1] == *(pwr_tBoolean *)data->p[1] &&
-	       *(pwr_tBoolean *)data->old_value[2] == *(pwr_tBoolean *)data->p[2])
-            // No change since last time
-            return 1;
-        }
-      }
-      else
-        data->first_scan = 0;
-
-      if ( data->p[1] && !data->p[2])
-      {
-        if ( (!data->inverted[1] && *(pwr_tBoolean *)data->p[1]) ||
-	     (data->inverted[1] && ! *(pwr_tBoolean *)data->p[1]))
-          grow_SetObjectFillColor( object, glow_eDrawType_LineRed);
-        else if ( (!data->inverted[0] && !*(pwr_tBoolean *)data->p[0]) ||
-                  (data->inverted[0] && *(pwr_tBoolean *)data->p[0]))
-          grow_SetObjectFillColor( object, data->color);
-        else
-          grow_ResetObjectFillColor( object);
-        *(pwr_tBoolean *)data->old_value[0] = *(pwr_tBoolean *)data->p[0];
-        *(pwr_tBoolean *)data->old_value[1] = *(pwr_tBoolean *)data->p[1];
-      }
-      else if ( !data->p[1] && data->p[2])
-      {
-        if ( (!data->inverted[2] && *(pwr_tBoolean *)data->p[2]) ||
-	     (data->inverted[2] && ! *(pwr_tBoolean *)data->p[2]))
-          grow_SetObjectFillColor( object, data->color2);
-        else if ( (!data->inverted[0] && !*(pwr_tBoolean *)data->p[0]) ||
-                  (data->inverted[0] && *(pwr_tBoolean *)data->p[0]))
-          grow_SetObjectFillColor( object, data->color);
-        else
-          grow_ResetObjectFillColor( object);
-        *(pwr_tBoolean *)data->old_value[0] = *(pwr_tBoolean *)data->p[0];
-        *(pwr_tBoolean *)data->old_value[2] = *(pwr_tBoolean *)data->p[2];
-      }
-      else if ( !data->p[1] && !data->p[2])
-      {
-        if ( (!data->inverted[0] && !*(pwr_tBoolean *)data->p[0]) ||
-	     (data->inverted[0] && *(pwr_tBoolean *)data->p[0]))
-          grow_SetObjectFillColor( object, data->color);
-        else
-          grow_ResetObjectFillColor( object);
-        *(pwr_tBoolean *)data->old_value[0] = *(pwr_tBoolean *)data->p[0];
-      }
-      else
-      {
-        if ( (!data->inverted[1] && *(pwr_tBoolean *)data->p[1]) ||
-	     (data->inverted[1] && ! *(pwr_tBoolean *)data->p[1]))
-          grow_SetObjectFillColor( object, glow_eDrawType_LineRed);
-        else if ( (!data->inverted[2] && *(pwr_tBoolean *)data->p[2]) ||
-	     (data->inverted[2] && ! *(pwr_tBoolean *)data->p[2]))
-          grow_SetObjectFillColor( object, data->color2);
-        else if ( (!data->inverted[0] && !*(pwr_tBoolean *)data->p[0]) ||
-                  (data->inverted[0] && *(pwr_tBoolean *)data->p[0]))
-          grow_SetObjectFillColor( object, data->color);
-        else
-          grow_ResetObjectFillColor( object);
-        *(pwr_tBoolean *)data->old_value[0] = *(pwr_tBoolean *)data->p[0];
-        *(pwr_tBoolean *)data->old_value[1] = *(pwr_tBoolean *)data->p[1];
-        *(pwr_tBoolean *)data->old_value[2] = *(pwr_tBoolean *)data->p[2];
-      }
-      break;
-    }
-    case graph_eTrace_DigTone:
-    case graph_eTrace_DigToneWithCommand:
-    case graph_eTrace_SetDigConfirmWithTone:
-    case graph_eTrace_ResetDigConfirmWithTone:
-    case graph_eTrace_ToggleDigConfirmWithTone:
-    case graph_eTrace_SetDigWithTone:
-    case graph_eTrace_ResetDigWithTone:
-    case graph_eTrace_ToggleDigWithTone:
-    case graph_eTrace_StoDigWithTone:
-    {
-      if ( !data->first_scan)
-      {
-        if ( data->p[0] && !data->p[1])
-        {
-          if ( *(pwr_tBoolean *)data->old_value[0] == *(pwr_tBoolean *)data->p[0])
-            // No change since last time
-            return 1;
-        }
-        else if ( data->p[1] && !data->p[0])
-        {
-          if ( *(pwr_tBoolean *)data->old_value[1] == *(pwr_tBoolean *)data->p[1])
-            // No change since last time
-            return 1;
-        }
-        else
-        {
-          if ( *(pwr_tBoolean *)data->old_value[0] == *(pwr_tBoolean *)data->p[0] &&
-               *(pwr_tBoolean *)data->old_value[1] == *(pwr_tBoolean *)data->p[1])
-            // No change since last time
-            return 1;
-        }
-      }
-      else
-        data->first_scan = 0;
-
-      if ( data->p[0])
-      {
-        if ( (!data->inverted[0] && !*(pwr_tBoolean *)data->p[0]) ||
-             (data->inverted[0] && *(pwr_tBoolean *)data->p[0]))
-        {
-          if ( data->low_text[0])
-            grow_SetAnnotation( object, 1, data->low_text, strlen(data->low_text));
-          if ( data->color >= (glow_eDrawType) glow_eDrawTone__)
-            grow_SetObjectFillColor( object, data->color);
-          else
-            grow_SetObjectColorTone( object, (glow_eDrawTone) data->color);
-        }
-        else
-        {
-          if ( data->low_text[0])
-            grow_SetAnnotation( object, 1, data->high_text, strlen(data->high_text));
-          if ( data->color >= (glow_eDrawType) glow_eDrawTone__)
-            grow_ResetObjectFillColor( object);
-          else
-            grow_ResetObjectColorTone( object);
-        }
-        *(pwr_tBoolean *)data->old_value[0] = *(pwr_tBoolean *)data->p[0];
-      }
-      if ( data->p[1])
-      {
-        if ( (!data->inverted[1] && !*(pwr_tBoolean *)data->p[1]) ||
-             (data->inverted[1] && *(pwr_tBoolean *)data->p[1]))
-          grow_SetObjectVisibility( object, 1);
-        else
-          grow_SetObjectVisibility( object, 0);
-        *(pwr_tBoolean *)data->old_value[1] = *(pwr_tBoolean *)data->p[1];
-      }
-      break;
-    }
-    case graph_eTrace_DigToneWithError:
-    case graph_eTrace_DigToneWithErrorAndCommand:
-    {
-      if ( !data->first_scan)
-      {
-        if ( !data->p[1] && !data->p[2])
-        {
-          if ( *(pwr_tBoolean *)data->old_value[0] == *(pwr_tBoolean *)data->p[0])
-            // No change since last time
-            return 1;
-        }
-        else if ( !data->p[2])
-        {
-          if ( *(pwr_tBoolean *)data->old_value[0] == *(pwr_tBoolean *)data->p[0] &&
-	       *(pwr_tBoolean *)data->old_value[1] == *(pwr_tBoolean *)data->p[1])
-            // No change since last time
-            return 1;
-        }
-        else if ( !data->p[1])
-        {
-          if ( *(pwr_tBoolean *)data->old_value[0] == *(pwr_tBoolean *)data->p[0] &&
-	       *(pwr_tBoolean *)data->old_value[2] == *(pwr_tBoolean *)data->p[2])
-            // No change since last time
-            return 1;
-        }
-        else
-        {
-          if ( *(pwr_tBoolean *)data->old_value[0] == *(pwr_tBoolean *)data->p[0] &&
-               *(pwr_tBoolean *)data->old_value[1] == *(pwr_tBoolean *)data->p[1] &&
-	       *(pwr_tBoolean *)data->old_value[2] == *(pwr_tBoolean *)data->p[2])
-            // No change since last time
-            return 1;
-        }
-      }
-      else
-        data->first_scan = 0;
-
-      if ( data->p[1] && !data->p[2])
-      {
-        if ( (!data->inverted[1] && *(pwr_tBoolean *)data->p[1]) ||
-	     (data->inverted[1] && ! *(pwr_tBoolean *)data->p[1]))
-        {
-          if ( data->color >= (glow_eDrawType) glow_eDrawTone__)
-            grow_ResetObjectFillColor( object);
-          grow_SetObjectColorTone( object, glow_eDrawTone_Red);
-        }
-        else if ( (!data->inverted[0] && !*(pwr_tBoolean *)data->p[0]) ||
-                  (data->inverted[0] && *(pwr_tBoolean *)data->p[0]))
-        {
-          if ( data->color >= (glow_eDrawType) glow_eDrawTone__)
-            grow_SetObjectFillColor( object, data->color);
-          else
-            grow_SetObjectColorTone( object, (glow_eDrawTone) data->color);
-        }
-        else
-        {
-          if ( data->color >= (glow_eDrawType) glow_eDrawTone__)
-            grow_ResetObjectFillColor( object);
-          grow_ResetObjectColorTone( object);
-        }
-        *(pwr_tBoolean *)data->old_value[0] = *(pwr_tBoolean *)data->p[0];
-        *(pwr_tBoolean *)data->old_value[1] = *(pwr_tBoolean *)data->p[1];
-      }
-      else if ( !data->p[1] && data->p[2])
-      {
-        if ( (!data->inverted[2] && *(pwr_tBoolean *)data->p[2]) ||
-	     (data->inverted[2] && ! *(pwr_tBoolean *)data->p[2]))
-        {
-          if ( data->color >= (glow_eDrawType) glow_eDrawTone__)
-            grow_ResetObjectFillColor( object);
-          grow_SetObjectColorTone( object, glow_eDrawTone_Yellow);
-        }
-        else if ( (!data->inverted[0] && !*(pwr_tBoolean *)data->p[0]) ||
-                  (data->inverted[0] && *(pwr_tBoolean *)data->p[0]))
-        {
-          if ( data->color >= (glow_eDrawType) glow_eDrawTone__)
-            grow_SetObjectFillColor( object, data->color);
-          else
-            grow_SetObjectColorTone( object, (glow_eDrawTone) data->color);
-        }
-        else
-        {
-          if ( data->color >= (glow_eDrawType) glow_eDrawTone__)
-            grow_ResetObjectFillColor( object);
-          grow_ResetObjectColorTone( object);
-        }
-        *(pwr_tBoolean *)data->old_value[0] = *(pwr_tBoolean *)data->p[0];
-        *(pwr_tBoolean *)data->old_value[2] = *(pwr_tBoolean *)data->p[2];
-      }
-      else if ( !data->p[1] && !data->p[2])
-      {
-        if ( (!data->inverted[0] && !*(pwr_tBoolean *)data->p[0]) ||
-	     (data->inverted[0] && *(pwr_tBoolean *)data->p[0]))
-          grow_SetObjectColorTone( object, (glow_eDrawTone) data->color);
-        else
-          grow_ResetObjectColorTone( object);
-        *(pwr_tBoolean *)data->old_value[0] = *(pwr_tBoolean *)data->p[0];
-      }
-      else
-      {
-        if ( (!data->inverted[1] && *(pwr_tBoolean *)data->p[1]) ||
-	     (data->inverted[1] && ! *(pwr_tBoolean *)data->p[1]))
-        {
-          if ( data->color >= (glow_eDrawType) glow_eDrawTone__)
-            grow_ResetObjectFillColor( object);
-          grow_SetObjectColorTone( object, glow_eDrawTone_Red);
-        }
-        else if ( (!data->inverted[2] && *(pwr_tBoolean *)data->p[2]) ||
-	     (data->inverted[2] && ! *(pwr_tBoolean *)data->p[2]))
-        {
-          if ( data->color >= (glow_eDrawType) glow_eDrawTone__)
-            grow_ResetObjectFillColor( object);
-          grow_SetObjectColorTone( object, glow_eDrawTone_Yellow);
-        }
-        else if ( (!data->inverted[0] && !*(pwr_tBoolean *)data->p[0]) ||
-                  (data->inverted[0] && *(pwr_tBoolean *)data->p[0]))
-        {
-          if ( data->color >= (glow_eDrawType) glow_eDrawTone__)
-            grow_SetObjectFillColor( object, data->color);
-          else
-            grow_SetObjectColorTone( object, (glow_eDrawTone) data->color);
-        }
-        else
-        {
-          if ( data->color >= (glow_eDrawType) glow_eDrawTone__)
-            grow_ResetObjectFillColor( object);
-          grow_ResetObjectColorTone( object);
-        }
-        *(pwr_tBoolean *)data->old_value[0] = *(pwr_tBoolean *)data->p[0];
-        *(pwr_tBoolean *)data->old_value[1] = *(pwr_tBoolean *)data->p[1];
-        *(pwr_tBoolean *)data->old_value[2] = *(pwr_tBoolean *)data->p[2];
-      }
-      break;
-    }
-    case graph_eTrace_DigToneTwo:
-    case graph_eTrace_DigToneTwoWithCommand:
-    {
-      if ( !data->first_scan)
-      {
-        if ( !data->p[1] && !data->p[2])
-        {
-          if ( *(pwr_tBoolean *)data->old_value[0] == *(pwr_tBoolean *)data->p[0])
-            // No change since last time
-            return 1;
-        }
-        else if ( !data->p[2])
-        {
-          if ( *(pwr_tBoolean *)data->old_value[0] == *(pwr_tBoolean *)data->p[0] &&
-	       *(pwr_tBoolean *)data->old_value[1] == *(pwr_tBoolean *)data->p[1])
-            // No change since last time
-            return 1;
-        }
-        else if ( !data->p[1])
-        {
-          if ( *(pwr_tBoolean *)data->old_value[0] == *(pwr_tBoolean *)data->p[0] &&
-	       *(pwr_tBoolean *)data->old_value[2] == *(pwr_tBoolean *)data->p[2])
-            // No change since last time
-            return 1;
-        }
-        else
-        {
-          if ( *(pwr_tBoolean *)data->old_value[0] == *(pwr_tBoolean *)data->p[0] &&
-               *(pwr_tBoolean *)data->old_value[1] == *(pwr_tBoolean *)data->p[1] &&
-	       *(pwr_tBoolean *)data->old_value[2] == *(pwr_tBoolean *)data->p[2])
-            // No change since last time
-            return 1;
-        }
-      }
-      else
-        data->first_scan = 0;
-
-      if ( data->p[1] && !data->p[2])
-      {
-        if ( (!data->inverted[1] && *(pwr_tBoolean *)data->p[1]) ||
-	     (data->inverted[1] && ! *(pwr_tBoolean *)data->p[1]))
-        {
-          if ( data->color >= (glow_eDrawType) glow_eDrawTone__)
-            grow_ResetObjectFillColor( object);
-          grow_SetObjectColorTone( object, glow_eDrawTone_Red);
-        }
-        else if ( (!data->inverted[0] && !*(pwr_tBoolean *)data->p[0]) ||
-                  (data->inverted[0] && *(pwr_tBoolean *)data->p[0]))
-        {
-          if ( data->color >= (glow_eDrawType) glow_eDrawTone__)
-            grow_SetObjectFillColor( object, data->color);
-          else
-            grow_SetObjectColorTone( object, (glow_eDrawTone) data->color);
-        }
-        else
-        {
-          if ( data->color >= (glow_eDrawType) glow_eDrawTone__)
-            grow_ResetObjectFillColor( object);
-          grow_ResetObjectColorTone( object);
-        }
-        *(pwr_tBoolean *)data->old_value[0] = *(pwr_tBoolean *)data->p[0];
-        *(pwr_tBoolean *)data->old_value[1] = *(pwr_tBoolean *)data->p[1];
-      }
-      else if ( !data->p[1] && data->p[2])
-      {
-        if ( (!data->inverted[2] && *(pwr_tBoolean *)data->p[2]) ||
-	     (data->inverted[2] && ! *(pwr_tBoolean *)data->p[2]))
-        {
-          if ( data->color >= (glow_eDrawType) glow_eDrawTone__ ||
-               data->color2 >= (glow_eDrawType) glow_eDrawTone__)
-            grow_ResetObjectFillColor( object);
-          if ( data->color2 >= (glow_eDrawType) glow_eDrawTone__)
-            grow_SetObjectFillColor( object, data->color2);
-          else
-            grow_SetObjectColorTone( object, (glow_eDrawTone) data->color2);
-        }
-        else if ( (!data->inverted[0] && !*(pwr_tBoolean *)data->p[0]) ||
-                  (data->inverted[0] && *(pwr_tBoolean *)data->p[0]))
-        {
-          if ( data->color >= (glow_eDrawType) glow_eDrawTone__)
-            grow_SetObjectFillColor( object, data->color);
-          else
-            grow_SetObjectColorTone( object, (glow_eDrawTone) data->color);
-        }
-        else
-        {
-          if ( data->color >= (glow_eDrawType) glow_eDrawTone__ ||
-               data->color2 >= (glow_eDrawType) glow_eDrawTone__)
-            grow_ResetObjectFillColor( object);
-          grow_ResetObjectColorTone( object);
-        }
-        *(pwr_tBoolean *)data->old_value[0] = *(pwr_tBoolean *)data->p[0];
-        *(pwr_tBoolean *)data->old_value[2] = *(pwr_tBoolean *)data->p[2];
-      }
-      else if ( !data->p[1] && !data->p[2])
-      {
-        if ( (!data->inverted[0] && !*(pwr_tBoolean *)data->p[0]) ||
-	     (data->inverted[0] && *(pwr_tBoolean *)data->p[0]))
-          grow_SetObjectColorTone( object, (glow_eDrawTone) data->color);
-        else
-          grow_ResetObjectColorTone( object);
-        *(pwr_tBoolean *)data->old_value[0] = *(pwr_tBoolean *)data->p[0];
-      }
-      else
-      {
-        if ( (!data->inverted[1] && *(pwr_tBoolean *)data->p[1]) ||
-	     (data->inverted[1] && ! *(pwr_tBoolean *)data->p[1]))
-        {
-          if ( data->color >= (glow_eDrawType) glow_eDrawTone__)
-            grow_ResetObjectFillColor( object);
-          grow_SetObjectColorTone( object, glow_eDrawTone_Red);
-        }
-        else if ( (!data->inverted[2] && *(pwr_tBoolean *)data->p[2]) ||
-	     (data->inverted[2] && ! *(pwr_tBoolean *)data->p[2]))
-        {
-          if ( data->color >= (glow_eDrawType) glow_eDrawTone__ ||
-               data->color2 >= (glow_eDrawType) glow_eDrawTone__)
-            grow_ResetObjectFillColor( object);
-          if ( data->color2 >= (glow_eDrawType) glow_eDrawTone__)
-            grow_SetObjectFillColor( object, data->color2);
-          else
-            grow_SetObjectColorTone( object, (glow_eDrawTone) data->color2);
-        }
-        else if ( (!data->inverted[0] && !*(pwr_tBoolean *)data->p[0]) ||
-                  (data->inverted[0] && *(pwr_tBoolean *)data->p[0]))
-        {
-          if ( data->color >= (glow_eDrawType) glow_eDrawTone__)
-            grow_SetObjectFillColor( object, data->color);
-          else
-            grow_SetObjectColorTone( object, (glow_eDrawTone) data->color);
-        }
-        else
-        {
-          if ( data->color >= (glow_eDrawType) glow_eDrawTone__ ||
-               data->color2 >= (glow_eDrawType) glow_eDrawTone__)
-            grow_ResetObjectFillColor( object);
-          grow_ResetObjectColorTone( object);
-        }
-        *(pwr_tBoolean *)data->old_value[0] = *(pwr_tBoolean *)data->p[0];
-        *(pwr_tBoolean *)data->old_value[1] = *(pwr_tBoolean *)data->p[1];
-        *(pwr_tBoolean *)data->old_value[2] = *(pwr_tBoolean *)data->p[2];
-      }
-      break;
-    }
-    case graph_eTrace_AnnotWithTone:
-    case graph_eTrace_AnnotInputWithTone:
-    {
-      if ( !data->first_scan)
-      {
-        if ( data->p[2])
-        {
-	  if ( *(pwr_tBoolean *)data->old_value[2] == *(pwr_tBoolean *)data->p[2] && 
-               ((!data->inverted[2] && *(pwr_tBoolean *)data->p[2]) ||
-                (data->inverted[2] && !*(pwr_tBoolean *)data->p[2])))
-            // Invisible
-            return 1;
-        }
-        if ( !data->p[1] && !data->p[2])
-        {
-          if ( memcmp( data->old_value[0], data->p[0], data->size[0]) == 0 )
-            // No change since last time
-            return 1;
-        }
-        else if ( !data->p[2])
-        {
-          if ( memcmp( data->old_value[0], data->p[0], data->size[0]) == 0  &&
-	       *(pwr_tBoolean *)data->old_value[1] == *(pwr_tBoolean *)data->p[1])
-            // No change since last time
-            return 1;
-        }
-        else if ( !data->p[1])
-        {
-          if ( memcmp( data->old_value[0], data->p[0], data->size[0]) == 0  &&
-	       *(pwr_tBoolean *)data->old_value[2] == *(pwr_tBoolean *)data->p[2])
-            // No change since last time
-            return 1;
-        }
-        else
-        {
-          if ( memcmp( data->old_value[0], data->p[0], data->size[0]) == 0  &&
-	       *(pwr_tBoolean *)data->old_value[1] == *(pwr_tBoolean *)data->p[1] &&
-	       *(pwr_tBoolean *)data->old_value[2] == *(pwr_tBoolean *)data->p[2])
-            // No change since last time
-            return 1;
-        }
-      }
-      else
-        data->first_scan = 0;
-
-      switch( data->annot_typeid) {
-        case pwr_eType_Float32:
-          len = sprintf( buf, data->format, *(pwr_tFloat32 *) data->p[0]);
-          break;
-        case pwr_eType_Int32:
-        case pwr_eType_UInt32:
-          len = sprintf( buf, data->format, *(pwr_tInt32 *) data->p[0]);
-          break;
-        case pwr_eType_String:
-          len = sprintf( buf, data->format, (char *)data->p[0]);
-          break;
-        case pwr_eType_Objid:
-	{
-          int sts;
-          char name[80];
-          pwr_tObjid objid = *(pwr_tObjid *)data->p[0];
-          sts = gdh_ObjidToName ( objid, name, sizeof(name), 
-			 cdh_mName_object);
-          if ( EVEN(sts))
-            strcpy( name, "");
-          len = sprintf( buf, "%s", name);
-          break;
-        }
-        default:
-	{
-          int sts;
-          sts = cdh_AttrValueToString( (pwr_eType) data->annot_typeid, 
-                data->p[0], buf, sizeof(buf));
-          if ( EVEN(sts))
-            sprintf( buf, "Invalid type");
-          len = strlen(buf);
-        }
-      }
-      grow_SetAnnotation( object, 1, buf, len);
-      memcpy( data->old_value[0], data->p[0], min(data->size[0], (int) sizeof(data->old_value[0])));
-
-      if ( data->p[1])
-      {
-        if ( (!data->inverted[1] && !*(pwr_tBoolean *)data->p[1]) ||
-             (data->inverted[1] && *(pwr_tBoolean *)data->p[1]))
-        {
-          if ( data->color >= (glow_eDrawType) glow_eDrawTone__)
-            grow_SetObjectFillColor( object, data->color);
-          else
-            grow_SetObjectColorTone( object, (glow_eDrawTone) data->color);
-        }
-        else
-        {
-          if ( data->color >= (glow_eDrawType) glow_eDrawTone__)
-            grow_ResetObjectFillColor( object);
-          else
-            grow_ResetObjectColorTone( object);
-        }
-        *(pwr_tBoolean *)data->old_value[1] = *(pwr_tBoolean *)data->p[1];
-      }
-      if ( data->p[2])
-      {
-        if ( (!data->inverted[2] && !*(pwr_tBoolean *)data->p[2]) ||
-             (data->inverted[2] && *(pwr_tBoolean *)data->p[2]))
-          grow_SetObjectVisibility( object, 1);
-        else
-          grow_SetObjectVisibility( object, 0);
-        *(pwr_tBoolean *)data->old_value[2] = *(pwr_tBoolean *)data->p[2];
-      }
-      break;
-    }
-    case graph_eTrace_Annot:
-    case graph_eTrace_AnnotInput:
-    {
-      if ( !data->first_scan)
-      {
-        if ( memcmp( data->old_value[0], data->p[0], data->size[0]) == 0 )
-          // No change since last time
-          return 1;
-      }
-      else
-        data->first_scan = 0;
-
-      switch( data->annot_typeid) {
-        case pwr_eType_Float32:
-          len = sprintf( buf, data->format, *(pwr_tFloat32 *) data->p[0]);
-          break;
-        case pwr_eType_Int32:
-        case pwr_eType_UInt32:
-          len = sprintf( buf, data->format, *(pwr_tInt32 *) data->p[0]);
-          break;
-        case pwr_eType_String:
-          len = sprintf( buf, data->format, (char *)data->p[0]);
-          break;
-        case pwr_eType_Objid:
-	{
-          int sts;
-          char name[80];
-          pwr_tObjid objid = *(pwr_tObjid *)data->p[0];
-          sts = gdh_ObjidToName ( objid, name, sizeof(name), 
-			 cdh_mName_object);
-          if ( EVEN(sts))
-            strcpy( name, "");
-          len = sprintf( buf, "%s", name);
-          break;
-        }
-        default:
-	{
-          int sts;
-          sts = cdh_AttrValueToString( (pwr_eType) data->annot_typeid,
-             data->p[0], buf, sizeof(buf));
-          if ( EVEN(sts))
-            sprintf( buf, "Invalid type");
-          len = strlen(buf);
-        }
-      }
-
-      grow_SetAnnotation( object, 1, buf, len);
-      memcpy( data->old_value[0], data->p[0], min(data->size[0], (int) sizeof(data->old_value[0])));
-      break;
-    }
-    case graph_eTrace_Rotate:
-    {
-      double value;
-
-      if ( !data->first_scan)
-      {
-        if ( data->p[2])
-        {
-	  if ( *(pwr_tBoolean *)data->old_value[2] == *(pwr_tBoolean *)data->p[2] && 
-               ((!data->inverted[2] && *(pwr_tBoolean *)data->p[2]) ||
-                (data->inverted[2] && !*(pwr_tBoolean *)data->p[2])))
-            // Invisible
-            return 1;
-        }
-        if ( !data->p[1] && !data->p[2])
-        {
-          if ( memcmp( data->old_value[0], data->p[0], data->size[0]) == 0 )
-            // No change since last time
-            return 1;
-        }
-        else if ( !data->p[2])
-        {
-          if ( memcmp( data->old_value[0], data->p[0], data->size[0]) == 0  &&
-	       *(pwr_tBoolean *)data->old_value[1] == *(pwr_tBoolean *)data->p[1])
-            // No change since last time
-            return 1;
-        }
-        else if ( !data->p[1])
-        {
-          if ( memcmp( data->old_value[0], data->p[0], data->size[0]) == 0  &&
-	       *(pwr_tBoolean *)data->old_value[2] == *(pwr_tBoolean *)data->p[2])
-            // No change since last time
-            return 1;
-        }
-        else
-        {
-          if ( memcmp( data->old_value[0], data->p[0], data->size[0]) == 0  &&
-	       *(pwr_tBoolean *)data->old_value[1] == *(pwr_tBoolean *)data->p[1] &&
-	       *(pwr_tBoolean *)data->old_value[2] == *(pwr_tBoolean *)data->p[2])
-            // No change since last time
-            return 1;
-        }
-      }
-      else
-        data->first_scan = 0;
-
-      value = *(float *)data->p[0] * data->factor;
-
-      grow_SetObjectRotation( object, value, data->x0, data->y0, 
-		data->rotation_point);
-      memcpy( data->old_value[0], data->p[0], min(data->size[0], (int) sizeof(data->old_value[0])));
-
-      if ( data->p[1])
-      {
-        if ( (!data->inverted[1] && !*(pwr_tBoolean *)data->p[1]) ||
-             (data->inverted[1] && *(pwr_tBoolean *)data->p[1]))
-        {
-          if ( data->color >= (glow_eDrawType) glow_eDrawTone__)
-            grow_SetObjectFillColor( object, data->color);
-          else
-            grow_SetObjectColorTone( object, (glow_eDrawTone) data->color);
-        }
-        else
-        {
-          if ( data->color >= (glow_eDrawType) glow_eDrawTone__)
-            grow_ResetObjectFillColor( object);
-          else
-            grow_ResetObjectColorTone( object);
-        }
-        *(pwr_tBoolean *)data->old_value[1] = *(pwr_tBoolean *)data->p[1];
-      }
-      if ( data->p[2])
-      {
-        if ( (!data->inverted[2] && !*(pwr_tBoolean *)data->p[2]) ||
-             (data->inverted[2] && *(pwr_tBoolean *)data->p[2]))
-          grow_SetObjectVisibility( object, 1);
-        else
-          grow_SetObjectVisibility( object, 0);
-        *(pwr_tBoolean *)data->old_value[2] = *(pwr_tBoolean *)data->p[2];
-      }
-      break;
-    }
-    case graph_eTrace_Move:
-    {
-      double 	move_x, move_y, scale_x, scale_y;
-      int	update = 0;
-
-      if ( !data->first_scan)
-      {
-        // See if anything is changed since last time
-        if ( data->p[0] &&
-             memcmp( data->old_value[0], data->p[0], data->size[0]) != 0 )
-          update = 1;
-        else if ( data->p[1] &&
-             memcmp( data->old_value[1], data->p[1], data->size[1]) != 0 )
-          update = 1;
-        else if ( data->p[2] &&
-             memcmp( data->old_value[2], data->p[2], data->size[2]) != 0 )
-          update = 1;
-        else if ( data->p[3] &&
-             memcmp( data->old_value[3], data->p[3], data->size[3]) != 0 )
-          update = 1;
-        else if ( data->p[4] &&
-             memcmp( data->old_value[4], data->p[4], data->size[4]) != 0 )
-          update = 1;
-        else if ( data->p[5] &&
-             memcmp( data->old_value[5], data->p[5], data->size[5]) != 0 )
-          update = 1;
-        if ( !update)
-          return 1;
-      }
-      else
-        data->first_scan = 0;
-
-      if ( data->p[4] || data->p[5]) {
-        if ( data->p[4])
-          scale_x = *(float *)data->p[4];
-        else
-          scale_x = 1;
-
-        if ( data->p[5])
-          scale_y = *(float *)data->p[5];
-        else
-          scale_y = 1;
-
-      
-        if ( !(data->p[0] || data->p[1]))
-          grow_SetObjectScale( object, scale_x, scale_y, 0, 0,
-			     glow_eScaleType_LowerLeft);
-        if ( data->p[4])
-          memcpy( data->old_value[4], data->p[4], min(data->size[4], (int) sizeof(data->old_value[4])));
-        if ( data->p[5])
-          memcpy( data->old_value[5], data->p[5], min(data->size[5], (int) sizeof(data->old_value[5])));
-
-
-        if ( data->p[0] || data->p[1]) {
-          if ( data->p[0])
-            move_x = data->x_orig + (*(float *)data->p[0] - data->x0) * data->factor;
-          else
-            move_x = data->x_orig;
-
-          if ( data->p[1])
-            move_y = data->y_orig + (*(float *)data->p[1] - data->y0) * data->factor;
-          else
-            move_y = data->y_orig;
-
-          grow_SetObjectScalePos( object, move_x, move_y, 
-			     scale_x, scale_y, 0, 0,
-			     glow_eScaleType_LowerLeft);
-          if ( data->p[0])
-            memcpy( data->old_value[0], data->p[0], min(data->size[0], (int) sizeof(data->old_value[0])));
-          if ( data->p[1])
-            memcpy( data->old_value[1], data->p[1], min(data->size[1], (int) sizeof(data->old_value[1])));
-        }
-      }
-      else {
-        if ( data->p[0] || data->p[1]) {
-          if ( data->p[0])
-            move_x = (*(float *)data->p[0] - data->x0) * data->factor;
-          else
-            move_x = 0;
-
-          if ( data->p[1])
-            move_y = (*(float *)data->p[1] - data->y0) * data->factor;
-          else
-            move_y = 0;
-
-	  grow_SetObjectPosition( object, move_x, move_y);
-
-          if ( data->p[0])
-            memcpy( data->old_value[0], data->p[0], min(data->size[0], (int) sizeof(data->old_value[0])));
-          if ( data->p[1])
-            memcpy( data->old_value[1], data->p[1], min(data->size[1], (int) sizeof(data->old_value[1])));
-        }
-      }
-
-      if ( data->p[2])
-      {
-        if ( (!data->inverted[2] && !*(pwr_tBoolean *)data->p[2]) ||
-             (data->inverted[2] && *(pwr_tBoolean *)data->p[2]))
-        {
-          if ( data->color >= (glow_eDrawType) glow_eDrawTone__)
-            grow_SetObjectFillColor( object, data->color);
-          else
-            grow_SetObjectColorTone( object, (glow_eDrawTone) data->color);
-        }
-        else
-        {
-          if ( data->color >= (glow_eDrawType) glow_eDrawTone__)
-            grow_ResetObjectFillColor( object);
-          else
-            grow_ResetObjectColorTone( object);
-        }
-        *(pwr_tBoolean *)data->old_value[2] = *(pwr_tBoolean *)data->p[2];
-      }
-      if ( data->p[3])
-      {
-        if ( (!data->inverted[3] && !*(pwr_tBoolean *)data->p[3]) ||
-             (data->inverted[3] && *(pwr_tBoolean *)data->p[3]))
-          grow_SetObjectVisibility( object, 1);
-        else
-          grow_SetObjectVisibility( object, 0);
-        *(pwr_tBoolean *)data->old_value[3] = *(pwr_tBoolean *)data->p[3];
-      }
-      break;
-    }
-    case graph_eTrace_AnalogShift:
-    {
-      double value;
-
-      if ( !data->first_scan)
-      {
-        if ( data->p[2])
-        {
-	  if ( *(pwr_tBoolean *)data->old_value[2] == *(pwr_tBoolean *)data->p[2] && 
-               ((!data->inverted[2] && *(pwr_tBoolean *)data->p[2]) ||
-                (data->inverted[2] && !*(pwr_tBoolean *)data->p[2])))
-            // Invisible
-            return 1;
-        }
-        if ( !data->p[1] && !data->p[2])
-        {
-          if ( memcmp( data->old_value[0], data->p[0], data->size[0]) == 0 )
-            // No change since last time
-            return 1;
-        }
-        else if ( !data->p[2])
-        {
-          if ( memcmp( data->old_value[0], data->p[0], data->size[0]) == 0  &&
-	       *(pwr_tBoolean *)data->old_value[1] == *(pwr_tBoolean *)data->p[1])
-            // No change since last time
-            return 1;
-        }
-        else if ( !data->p[1])
-        {
-          if ( memcmp( data->old_value[0], data->p[0], data->size[0]) == 0  &&
-	       *(pwr_tBoolean *)data->old_value[2] == *(pwr_tBoolean *)data->p[2])
-            // No change since last time
-            return 1;
-        }
-        else
-        {
-          if ( memcmp( data->old_value[0], data->p[0], data->size[0]) == 0  &&
-	       *(pwr_tBoolean *)data->old_value[1] == *(pwr_tBoolean *)data->p[1] &&
-	       *(pwr_tBoolean *)data->old_value[2] == *(pwr_tBoolean *)data->p[2])
-            // No change since last time
-            return 1;
-        }
-      }
-      else
-        data->first_scan = 0;
-
-      value = *(float *)data->p[0];
-
-      grow_SetObjectNodeClassByIndex( object, int(value));
-      memcpy( data->old_value[0], data->p[0], min(data->size[0], (int) sizeof(data->old_value[0])));
-
-      if ( data->p[1])
-      {
-        if ( (!data->inverted[1] && !*(pwr_tBoolean *)data->p[1]) ||
-             (data->inverted[1] && *(pwr_tBoolean *)data->p[1]))
-        {
-          if ( data->color >= (glow_eDrawType) glow_eDrawTone__)
-            grow_SetObjectFillColor( object, data->color);
-          else
-            grow_SetObjectColorTone( object, (glow_eDrawTone) data->color);
-        }
-        else
-        {
-          if ( data->color >= (glow_eDrawType) glow_eDrawTone__)
-            grow_ResetObjectFillColor( object);
-          else
-            grow_ResetObjectColorTone( object);
-        }
-        *(pwr_tBoolean *)data->old_value[1] = *(pwr_tBoolean *)data->p[1];
-      }
-      if ( data->p[2])
-      {
-        if ( (!data->inverted[2] && !*(pwr_tBoolean *)data->p[2]) ||
-             (data->inverted[2] && *(pwr_tBoolean *)data->p[2]))
-          grow_SetObjectVisibility( object, 1);
-        else
-          grow_SetObjectVisibility( object, 0);
-        *(pwr_tBoolean *)data->old_value[2] = *(pwr_tBoolean *)data->p[2];
-      }
-      break;
-    }
-    case graph_eTrace_Animation:
-    case graph_eTrace_AnimationForwBack:
-    {
-      int max_count;
-      int sts;
-
-      if ( data->first_scan)
-      {
-        data->animation_count = 0;
-        data->animation_direction = 1;
-        data->first_scan = 0;
-      }
-
-      if ( (!data->inverted[0] && *(pwr_tBoolean *)data->p[0]) ||
-             (data->inverted[0] && !*(pwr_tBoolean *)data->p[0]))
-      {
-        if ( data->animation_direction == 0)
-        {
-          // Animation has been stopped
-          data->animation_count = 0;
-          data->animation_direction = 1;
-        }
-
-        grow_GetObjectAnimationCount( object, &max_count);
-        data->animation_count++;
-        if ( data->animation_count >= max_count)
-        {
-          // Shift nodeclass
-          if ( data->animation_direction == 1)
-          {
-            // Shift forward
-
-            sts = grow_SetObjectNextNodeClass( object);
-            if ( EVEN(sts))
-            {
-              if ( data->type == graph_eTrace_Animation)
-              {
-                // Start from the beginning again
-                grow_SetObjectNodeClassByIndex( object, 1);
-//                grow_SetObjectFirstNodeClass( object);
-              }
-              else
-              {
-                // Change direction
-                data->animation_direction = 2;
-                sts = grow_SetObjectPrevNodeClass( object);
-              }
-            }
-            data->animation_count = 0;
-          }
-          else
-          {
-            // Shift backward
-
-            sts = grow_SetObjectPrevNodeClass( object);
-            if ( EVEN(sts))
-            {
-              // Change direction
-              data->animation_direction = 1;
-              sts = grow_SetObjectNextNodeClass( object);
-            }
-            data->animation_count = 0;
-          }
-        }
-      }
-      else
-      {
-        if ( data->animation_direction != 0)
-        {
-          // Stop and reset animation
-          data->animation_direction = 0;
-          grow_SetObjectFirstNodeClass( object);
-        }
-      }
-
-      if ( data->p[1])
-      {
-        if ( (!data->inverted[1] && !*(pwr_tBoolean *)data->p[1]) ||
-             (data->inverted[1] && *(pwr_tBoolean *)data->p[1]))
-        {
-          if ( data->color >= (glow_eDrawType) glow_eDrawTone__)
-            grow_SetObjectFillColor( object, data->color);
-          else
-            grow_SetObjectColorTone( object, (glow_eDrawTone) data->color);
-        }
-        else
-        {
-          if ( data->color >= (glow_eDrawType) glow_eDrawTone__)
-            grow_ResetObjectFillColor( object);
-          else
-            grow_ResetObjectColorTone( object);
-        }
-        *(pwr_tBoolean *)data->old_value[1] = *(pwr_tBoolean *)data->p[1];
-      }
-      if ( data->p[2])
-      {
-        if ( (!data->inverted[1] && !*(pwr_tBoolean *)data->p[2]) ||
-             (data->inverted[1] && *(pwr_tBoolean *)data->p[2]))
-          grow_SetObjectVisibility( object, 1);
-        else
-          grow_SetObjectVisibility( object, 0);
-        *(pwr_tBoolean *)data->old_value[2] = *(pwr_tBoolean *)data->p[2];
-      }
-      break;
-    }
-    case graph_eTrace_DigAnimation:
-    {
-      int max_count;
-      int sts;
-
-      if ( data->first_scan)
-      {
-        data->animation_count = 0;
-        data->animation_direction = 0;
-        data->first_scan = 0;
-        if ( (!data->inverted[0] && *(pwr_tBoolean *)data->p[0]) ||
-             (data->inverted[0] && !*(pwr_tBoolean *)data->p[0]))
-          grow_SetObjectLastNodeClass( object);
-        *(pwr_tBoolean *)data->old_value[0] = *(pwr_tBoolean *)data->p[0];
-      }
-
-      if ( *(pwr_tBoolean *)data->old_value[0] != *(pwr_tBoolean *)data->p[0])
-      {
-        // Start animation
-        if ( (!data->inverted[0] && *(pwr_tBoolean *)data->p[0]) ||
-             (data->inverted[0] && !*(pwr_tBoolean *)data->p[0]))
-        {
-          data->animation_count = 0;
-          data->animation_direction = 1;
-        }
-        else if ( (!data->inverted[0] && !*(pwr_tBoolean *)data->p[0]) ||
-             (data->inverted[0] && *(pwr_tBoolean *)data->p[0]))
-        {
-          data->animation_direction = 2;
-          data->animation_count = 0;
-        }
-      }
-
-      if ( data->animation_direction != 0)
-      {
-        grow_GetObjectAnimationCount( object, &max_count);
-        data->animation_count++;
-        if ( data->animation_count >= max_count)
-        {
-          // Shift nodeclass
-          if ( data->animation_direction == 1)
-          {
-            // Shift forward
-
-            sts = grow_SetObjectNextNodeClass( object);
-            if ( EVEN(sts))
-            {
-              // End of animation
-              data->animation_count = 0;
-              data->animation_direction = 0;
-            }
-            data->animation_count = 0;
-          }
-          else
-          {
-            // Shift backward
-
-            sts = grow_SetObjectPrevNodeClass( object);
-            if ( EVEN(sts))
-            {
-              // End of animation
-              data->animation_count = 0;
-              data->animation_direction = 0;
-            }
-            data->animation_count = 0;
-          }
-        }
-      }
-      *(pwr_tBoolean *)data->old_value[0] = *(pwr_tBoolean *)data->p[0];
-
-      if ( data->p[1])
-      {
-        if ( (!data->inverted[1] && !*(pwr_tBoolean *)data->p[1]) ||
-             (data->inverted[1] && *(pwr_tBoolean *)data->p[1]))
-        {
-          if ( data->color >= (glow_eDrawType) glow_eDrawTone__)
-            grow_SetObjectFillColor( object, data->color);
-          else
-            grow_SetObjectColorTone( object, (glow_eDrawTone) data->color);
-        }
-        else
-        {
-          if ( data->color >= (glow_eDrawType) glow_eDrawTone__)
-            grow_ResetObjectFillColor( object);
-          else
-            grow_ResetObjectColorTone( object);
-        }
-        *(pwr_tBoolean *)data->old_value[1] = *(pwr_tBoolean *)data->p[1];
-      }
-      if ( data->p[2])
-      {
-        if ( (!data->inverted[1] && !*(pwr_tBoolean *)data->p[2]) ||
-             (data->inverted[1] && *(pwr_tBoolean *)data->p[2]))
-          grow_SetObjectVisibility( object, 1);
-        else
-          grow_SetObjectVisibility( object, 0);
-        *(pwr_tBoolean *)data->old_value[2] = *(pwr_tBoolean *)data->p[2];
-      }
-      break;
-    }
-    case graph_eTrace_DigShift:
-    case graph_eTrace_RadioButton:
-    case graph_eTrace_DigShiftWithToggleDig:
-    {
-      if ( data->first_scan)
-      {
-        data->first_scan = 0;
-        if ( (!data->inverted[0] && *(pwr_tBoolean *)data->p[0]) ||
-             (data->inverted[0] && !*(pwr_tBoolean *)data->p[0]))
-          grow_SetObjectLastNodeClass( object);
-        *(pwr_tBoolean *)data->old_value[0] = *(pwr_tBoolean *)data->p[0];
-      }
-
-      if ( *(pwr_tBoolean *)data->old_value[0] != *(pwr_tBoolean *)data->p[0])
-      {
-        // Start animation
-        if ( (!data->inverted[0] && *(pwr_tBoolean *)data->p[0]) ||
-             (data->inverted[0] && !*(pwr_tBoolean *)data->p[0]))
-          grow_SetObjectLastNodeClass( object);
-        else if ( (!data->inverted[0] && !*(pwr_tBoolean *)data->p[0]) ||
-             (data->inverted[0] && *(pwr_tBoolean *)data->p[0]))
-          grow_SetObjectFirstNodeClass( object);
-      }
-      *(pwr_tBoolean *)data->old_value[0] = *(pwr_tBoolean *)data->p[0];
-
-      if ( data->p[1])
-      {
-        if ( (!data->inverted[1] && !*(pwr_tBoolean *)data->p[1]) ||
-             (data->inverted[1] && *(pwr_tBoolean *)data->p[1]))
-        {
-          if ( data->color >= (glow_eDrawType) glow_eDrawTone__)
-            grow_SetObjectFillColor( object, data->color);
-          else
-            grow_SetObjectColorTone( object, (glow_eDrawTone) data->color);
-        }
-        else
-        {
-          if ( data->color >= (glow_eDrawType) glow_eDrawTone__)
-            grow_ResetObjectFillColor( object);
-          else
-            grow_ResetObjectColorTone( object);
-        }
-        *(pwr_tBoolean *)data->old_value[1] = *(pwr_tBoolean *)data->p[1];
-      }
-      if ( data->p[2])
-      {
-        if ( (!data->inverted[1] && !*(pwr_tBoolean *)data->p[2]) ||
-             (data->inverted[1] && *(pwr_tBoolean *)data->p[2]))
-          grow_SetObjectVisibility( object, 1);
-        else
-          grow_SetObjectVisibility( object, 0);
-        *(pwr_tBoolean *)data->old_value[2] = *(pwr_tBoolean *)data->p[2];
-      }
-      break;
-    }
-    case graph_eTrace_Video:
-    {
-      grow_tObject 	*objectlist;
-      int 		object_cnt;
-
-      grow_GetGroupObjectList( object, &objectlist, &object_cnt);
-
-      for ( int i = 0; i < object_cnt; i++) {
-	if ( grow_GetObjectType( objectlist[i]) == glow_eObjectType_GrowImage) {
-	  grow_ImageUpdate( objectlist[i]);
-	  break;
-	}	
-      }
-      break;
-    }
-    case graph_eTrace_Bar:
-    {
-      if ( !data->first_scan)
-      {
-        if ( memcmp( data->old_value[0], data->p[0], data->size[0]) == 0)
-          // No change since last time
-          return 1;
-      }
-      else
-        data->first_scan = 0;
-
-      grow_SetBarValue( object, double( *(float *) data->p[0]));
-      memcpy( data->old_value[0], data->p[0], min(data->size[0], (int) sizeof(data->old_value[0])));
-      break;
-    }
-    case graph_eTrace_Trend:
-    {
-      if ( data->trend_hold)
-        break;
-
-      if ( data->first_scan)
-        data->first_scan = 0;
-
-      data->acc_time += graph->scan_time;
-      if ( data->acc_time + DBL_EPSILON >= data->scan_time)
-      {
-        if ( data->trend_boolean & 1)
-          grow_AddTrendValue( object, double( *(pwr_tBoolean *) data->p[0]), 0);
-        else
-          grow_AddTrendValue( object, double( *(float *) data->p[0]), 0);
-        if ( data->p[1])
-        {
-          if ( data->trend_boolean & 2)
-            grow_AddTrendValue( object, double( *(pwr_tBoolean *) data->p[1]), 1);
-          else
-            grow_AddTrendValue( object, double( *(float *) data->p[1]), 1);
-        }
-        data->acc_time = 0;
-      }
-      break;
-    }
-    case graph_eTrace_Slider:
-    {
-      double max_value, min_value, max_pos, min_pos;
-      glow_eDirection direction;
-
-      if ( !data->first_scan)
-      {
-        if ( memcmp( data->old_value[0], data->p[0], data->size[0]) == 0)
-          // No change since last time
-          return 1;
-      }
-      else
-        data->first_scan = 0;
-
-      grow_GetSliderInfo( object, &direction, 
-		&max_value, &min_value, &max_pos, &min_pos);
-      if ( min_pos != max_pos)
-      {
-        if ( graph->current_slider != object &&
-	     max_value != min_value)
-        {
-          float value = *(float *) data->p[0];
-	  double pos_x, pos_y;
-          
-          switch ( direction)
-          {
-            case glow_eDirection_Down:
-              pos_y = (max_value - value) / (max_value - min_value) *
-		(max_pos - min_pos);
-              if ( pos_y < 0)
-                pos_y = 0;
-              else if ( pos_y > max_pos - min_pos)
-                pos_y = max_pos - min_pos;
-              pos_x = 0;
-              break;
-            case glow_eDirection_Right:
-              pos_x = max_pos - min_pos - 
-		(value - min_value) / (max_value - min_value) *
-		(max_pos - min_pos);
-              if ( pos_x < 0)
-                pos_x = 0;
-              else if ( pos_x > max_pos - min_pos)
-                pos_x = max_pos - min_pos;
-              pos_y = 0;
-              break;
-            case glow_eDirection_Left:
-              pos_x = max_pos - min_pos - 
-		(max_value - value) / (max_value - min_value) *
-		(max_pos - min_pos);
-              if ( pos_x < 0)
-                pos_x = 0;
-              else if ( pos_x > max_pos - min_pos)
-                pos_x = max_pos - min_pos;
-              pos_y = 0;
-              break;
-            default:   // Up
-              pos_y = (value - min_value) / (max_value - min_value) *
-		(max_pos - min_pos);
-              if ( pos_y < 0)
-                pos_y = 0;
-              else if ( pos_y > max_pos - min_pos)
-                pos_y = max_pos - min_pos;
-              pos_x = 0;
-          }
-          grow_SetObjectPosition( object, pos_x, pos_y);
-        }
-      }
-      memcpy( data->old_value[0], data->p[0], min(data->size[0], (int) sizeof(data->old_value[0])));
-      break;
-    }
-    default:
-      ;
-  }
   return 1;
 }
 
@@ -6040,76 +2654,34 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
   grow_GetCtxUserData( (GrowCtx *)ctx, (void **) &graph);
   graph->message( ' ', null_str);
 
-  switch ( event->event)
-  {
+  switch ( event->event) {
+
+    case glow_eEvent_ObjectDeleted: {
+      if ( grow_GetObjectType( event->object.object) == glow_eObjectType_GrowNode ||
+	   grow_GetObjectType( event->object.object) == glow_eObjectType_GrowGroup ||
+	   grow_GetObjectType( event->object.object) == glow_eObjectType_GrowTrend ||
+	   grow_GetObjectType( event->object.object) == glow_eObjectType_GrowBar) {
+	GeDyn *dyn;
+
+        grow_GetUserData( event->object.object, (void **)&dyn);
+        delete dyn;
+      }
+      break;
+    }
     case glow_eEvent_MB1Down:
     {
       if ( event->object.object_type != glow_eObjectType_NoObject &&
            (grow_GetObjectType( event->object.object) == glow_eObjectType_GrowNode ||
-            grow_GetObjectType( event->object.object) == glow_eObjectType_GrowGroup))
+            grow_GetObjectType( event->object.object) == glow_eObjectType_GrowGroup ||
+            grow_GetObjectType( event->object.object) == glow_eObjectType_GrowTrend ||
+            grow_GetObjectType( event->object.object) == glow_eObjectType_GrowBar))
       {
-        int		trace_type;
-        glow_sTraceData	*trace_data;
-	pwr_tBoolean	value;
-	int		sts;
-        char		parsed_name[120];
-        int		inverted;
-	int		attr_type, attr_size;
+	GeDyn *dyn;
 
-        grow_GetTraceAttr( event->object.object, &trace_data);
-        if ( !graph->is_authorized( trace_data->access))
-          break;
-
+        grow_GetUserData( event->object.object, (void **)&dyn);
+	dyn->action( event->object.object, event);
         graph->current_mb1_down = event->object.object;
-        trace_type = trace_data->attr_type;
-        if ( trace_type == graph_eTrace_Inherit)
-          grow_GetObjectClassTraceType( event->object.object, 
-		(glow_eTraceType *) &trace_type);
-        switch ( trace_type)
-        {
-          case graph_eTrace_StoDigWithTone:
-	    value = 1;
-            graph->parse_attr_name( trace_data->data[0], parsed_name, &inverted, &attr_type, &attr_size);
-	    sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
-	    if ( EVEN(sts)) printf("StoDig error: %s\n", trace_data->data[0]);
-            grow_SetObjectColorInverse( event->object.object, 1);
-            break;
-          case graph_eTrace_SetDig:
-          case graph_eTrace_SetDigWithTone:
-          case graph_eTrace_ResetDig:
-          case graph_eTrace_ResetDigWithTone:
-          case graph_eTrace_ToggleDig:
-          case graph_eTrace_ToggleDigWithTone:
-          case graph_eTrace_Command:
-          case graph_eTrace_SetDigConfirm:
-          case graph_eTrace_ResetDigConfirm:
-          case graph_eTrace_ToggleDigConfirm:
-          case graph_eTrace_CommandConfirm:
-          case graph_eTrace_ToggleDigConfirmWithTone:
-          case graph_eTrace_SetDigConfirmWithTone:
-          case graph_eTrace_ResetDigConfirmWithTone:
-          case graph_eTrace_IncrAnalog:
-          case graph_eTrace_RadioButton:
-          case graph_eTrace_DigShiftWithToggleDig:
-	    grow_SetClickSensitivity( graph->grow->ctx, glow_mSensitivity_MB1Click);
-            grow_SetObjectColorInverse( event->object.object, 1);
-            break;
-          case graph_eTrace_DigWithCommand:
-          case graph_eTrace_DigWithErrorAndCommand:
-          case graph_eTrace_DigTwoWithCommand:
-          case graph_eTrace_DigToneWithCommand:
-          case graph_eTrace_DigToneWithErrorAndCommand:
-          case graph_eTrace_DigToneTwoWithCommand:
-            if ( graph->command_cb && strcmp(trace_data->data[4], "") != 0)
-	      grow_SetClickSensitivity( graph->grow->ctx, 
-			glow_mSensitivity_MB1Click | glow_mSensitivity_MB1DoubleClick);
-	    else
-	      grow_SetClickSensitivity( graph->grow->ctx, glow_mSensitivity_MB1Click);
-            grow_SetObjectColorInverse( event->object.object, 1);
-            break;
-          default:
-            ;
-        }
+
       }
       break;
     }
@@ -6118,61 +2690,16 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
       if ( !graph->current_mb1_down)
         break;
       if ( grow_GetObjectType( graph->current_mb1_down) == glow_eObjectType_GrowNode ||
-           grow_GetObjectType( graph->current_mb1_down) == glow_eObjectType_GrowGroup)
+           grow_GetObjectType( graph->current_mb1_down) == glow_eObjectType_GrowGroup ||
+           grow_GetObjectType( graph->current_mb1_down) == glow_eObjectType_GrowTrend ||
+           grow_GetObjectType( graph->current_mb1_down) == glow_eObjectType_GrowBar)
       {
-        int		trace_type;
-        glow_sTraceData	*trace_data;
-	pwr_tBoolean	value;
-	int		sts;
-        char		parsed_name[120];
-        int		inverted;
-	int		attr_type, attr_size;
+	GeDyn *dyn;
 
-        grow_GetTraceAttr( graph->current_mb1_down, &trace_data);
-        if ( !graph->is_authorized( trace_data->access))
-          break;
+        grow_GetUserData( graph->current_mb1_down, (void **)&dyn);
+	dyn->action( graph->current_mb1_down, event);
+        graph->current_mb1_down = 0;
 
-        trace_type = trace_data->attr_type;
-        if ( trace_type == graph_eTrace_Inherit)
-          grow_GetObjectClassTraceType( graph->current_mb1_down, 
-		(glow_eTraceType *) &trace_type);
-        switch ( trace_type)
-        {
-          case graph_eTrace_StoDigWithTone:
-            grow_SetObjectColorInverse( graph->current_mb1_down, 0);
-	    value = 0;
-            graph->parse_attr_name( trace_data->data[0], parsed_name, &inverted, &attr_type, &attr_size);
-	    sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
-	    if ( EVEN(sts)) printf("StoDig error: %s\n", trace_data->data[0]);
-            break;
-          case graph_eTrace_SetDig:
-          case graph_eTrace_SetDigWithTone:
-          case graph_eTrace_ResetDig:
-          case graph_eTrace_ResetDigWithTone:
-          case graph_eTrace_ToggleDig:
-          case graph_eTrace_ToggleDigWithTone:
-          case graph_eTrace_Command:
-          case graph_eTrace_DigWithCommand:
-          case graph_eTrace_DigWithErrorAndCommand:
-          case graph_eTrace_DigTwoWithCommand:
-          case graph_eTrace_DigToneWithCommand:
-          case graph_eTrace_DigToneWithErrorAndCommand:
-          case graph_eTrace_DigToneTwoWithCommand:
-          case graph_eTrace_SetDigConfirm:
-          case graph_eTrace_ResetDigConfirm:
-          case graph_eTrace_ToggleDigConfirm:
-          case graph_eTrace_CommandConfirm:
-          case graph_eTrace_ToggleDigConfirmWithTone:
-          case graph_eTrace_SetDigConfirmWithTone:
-          case graph_eTrace_ResetDigConfirmWithTone:
-          case graph_eTrace_IncrAnalog:
-          case graph_eTrace_RadioButton:
-          case graph_eTrace_DigShiftWithToggleDig:
-            grow_SetObjectColorInverse( graph->current_mb1_down, 0);
-            break;
-          default:
-            ;
-        }
       }
       break;
     }
@@ -6200,11 +2727,31 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
            grow_GetObjectType( event->object.object) == glow_eObjectType_GrowSlider ||
            grow_GetObjectType( event->object.object) == glow_eObjectType_GrowGroup)
       {
-        glow_sTraceData	*trace_data;
+	GeDyn *dyn;
 
-        grow_GetTraceAttr( event->object.object, &trace_data);
+        grow_GetUserData( event->object.object, (void **)&dyn);
+        if ( graph->is_authorized( dyn->access) &&
+	     dyn->get_actiontype( event->object.object)) {
+	  if ( dyn->get_actiontype( event->object.object) & ~ge_mActionType_PopupMenu)
+	    return int(glow_mHotType_CursorCrossHair);
+	  else
+	    return int(glow_mHotType_CursorHand);
+	}
+	else
+	  return 0;
+      }
+      break;
+    }
+    case glow_eEvent_TipText:
+    {
+      if ( grow_GetObjectType( event->object.object) == glow_eObjectType_GrowNode ||
+           grow_GetObjectType( event->object.object) == glow_eObjectType_GrowSlider ||
+           grow_GetObjectType( event->object.object) == glow_eObjectType_GrowGroup)
+      {
+	GeDyn *dyn;
 
-        return graph->is_authorized( trace_data->access);
+        grow_GetUserData( event->object.object, (void **)&dyn);
+	dyn->action( event->object.object, event);
       }
       break;
     }
@@ -6218,84 +2765,20 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
       }
       else
       {
-        double max_value, min_value, max_pos, min_pos;
-        glow_eDirection direction;
-        glow_sTraceData	*trace_data;
-        graph_sTraceData *data;
+	GeDyn *dyn;
 
-        grow_GetUserData( event->object.object, (void **)&data);
-        grow_GetTraceAttr( event->object.object, &trace_data);
-        if ( !graph->is_authorized( trace_data->access) ||
-             data->slider_disabled)
-        {
-          grow_SetMoveRestrictions( graph->grow->ctx, 
-		glow_eMoveRestriction_Disable, 0, 0, NULL);
-          graph->current_slider = NULL;
-          break;
-        }
-        grow_GetSliderInfo( event->object.object, &direction, 
-		&max_value, &min_value, &max_pos, &min_pos);
-        if ( direction == glow_eDirection_Right || 
-             direction == glow_eDirection_Left)
-          grow_SetMoveRestrictions( graph->grow->ctx, 
-		glow_eMoveRestriction_HorizontalSlider,
-		max_pos, min_pos, event->object.object);
-        else
-          grow_SetMoveRestrictions( graph->grow->ctx, 
-		glow_eMoveRestriction_VerticalSlider,
-		max_pos, min_pos, event->object.object);
-        graph->current_slider = event->object.object;
+        grow_GetUserData( event->object.object, (void **)&dyn);
+	dyn->action( event->object.object, event);
+
       }
       break;
     }
     case glow_eEvent_SliderMoved:
     {
-      double 		max_value, min_value, max_pos, min_pos;
-      glow_eDirection 	direction;
-      float 		value;
-      int		sts;
-      double		ll_x, ll_y, ur_x, ur_y;
-      glow_sTraceData	*trace_data;
-      char		parsed_name[120];
-      int		inverted;
-      int		attr_type, attr_size;
+      GeDyn *dyn;
 
-      grow_GetTraceAttr( event->object.object, &trace_data);
-
-      grow_GetSliderInfo( event->object.object, &direction, 
-		&max_value, &min_value, &max_pos, &min_pos);
-      if ( min_pos != max_pos)
-      {
-        grow_MeasureNode( event->object.object, &ll_x, &ll_y, &ur_x, &ur_y);
-        
-        switch ( direction)
-        {
-          case glow_eDirection_Down:
-            value = float( (max_pos - ll_y) / (max_pos - min_pos) *
-		(max_value - min_value) + min_value);
-            break;
-          case glow_eDirection_Right:
-            value = float( (max_pos - ll_x) 
-		/ (max_pos - min_pos) *
-		(max_value - min_value) + min_value);
-            break;
-          case glow_eDirection_Left:
-            value = float( (ll_x - min_pos) / (max_pos - min_pos) *
-		(max_value - min_value) + min_value);
-            break;
-          default:
-            value = float( (ll_y - min_pos) / (max_pos - min_pos) *
-		(max_value - min_value) + min_value);
-        }
-        if ( value > max_value)
-          value = max_value;
-        if ( value < min_value)
-          value = min_value;
-
-        graph->parse_attr_name( trace_data->data[0], parsed_name, &inverted, &attr_type, &attr_size);
-	sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
-        if ( EVEN(sts)) printf("Slider error: %s\n", trace_data->data[0]);
-      }
+      grow_GetUserData( event->object.object, (void **)&dyn);
+      dyn->action( event->object.object, event);
       break;
     }
     case glow_eEvent_MB3Click:
@@ -6318,16 +2801,6 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
     }
     case glow_eEvent_MB3Press:
     {
-      Widget          popup;
-      glow_sTraceData *trace_data;
-      int	      sts;
-      char	      parsed_name[120];
-      int	      inverted;
-      int	      attr_type, attr_size;
-      char            *s;
-      pwr_sAttrRef    attrref;
-      char            name[80];
-
       if ( event->object.object_type == glow_eObjectType_NoObject)
         break;
       if ( !( grow_GetObjectType( event->object.object) == 
@@ -6342,263 +2815,61 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
       if ( graph->mode != graph_eMode_Runtime)
         break;
 
-
-      grow_GetTraceAttr( event->object.object, &trace_data);
-      graph->parse_attr_name( trace_data->ref_object, parsed_name, &inverted,
-			      &attr_type, &attr_size);
-      if ( inverted) {
-	// The ref_object is an objid-attribute that containts the object 
-        memset( &attrref, 0, sizeof(attrref));
-	sts = gdh_GetObjectInfo( parsed_name, &attrref.Objid, 
-				 sizeof(attrref.Objid));
-	if ( EVEN(sts)) break;
-        if ( cdh_ObjidIsNull( attrref.Objid))
-          break;
-      }
-      else {
-        if ( (s = strrchr( parsed_name, '.')))
-          *s = 0;
-
-        memset( &attrref, 0, sizeof(attrref));
-        sts = gdh_NameToObjid( parsed_name, &attrref.Objid);
-        if ( EVEN(sts)) break;
-      }
       switch( grow_GetMB3Action( graph->grow->ctx)) {
         case glow_eMB3Action_PopupMenu:
 	case glow_eMB3Action_Both:
-          if ( graph->popup_menu_cb)
-          {
+	  {
+	    GeDyn *dyn;
 
-            // Display popup menu
-            grow_GetName( graph->grow->ctx, name);
-
-            (graph->popup_menu_cb)( graph->parent_ctx, attrref, 
-				      xmenu_eItemType_Object,
-				      xmenu_mUtility_Ge, name, &popup);
-            if ( !popup)
-              break;
-
-            mrm_PositionPopup( popup, graph->grow_widget, 
-			       event->any.x_pixel + 8, event->any.y_pixel);
-            XtManageChild(popup);
-          }
-          break;
-	default:
-	  ;
+	    grow_GetUserData( event->object.object, (void **)&dyn);
+	    dyn->action( event->object.object, event);
+	  }
+      default: ;
       }
-      break;
     }
     case glow_eEvent_MB1Click:
     {
+      GeDyn *dyn;
+
+      if ( event->object.object_type == glow_eObjectType_NoObject ||
+	   grow_GetObjectType( event->object.object) != glow_eObjectType_GrowMenu) {
+      // Close any open menu, if not click in menu
+	glow_sEvent e;
+	grow_tObject 	*objectlist;
+	int 		object_cnt, cnt;
+	int		i;
+
+	e.event = glow_eEvent_MenuDelete;
+	e.any.type = glow_eEventType_Menu;
+	e.menu.object = 0;
+	
+	grow_GetObjectList( graph->grow->ctx, &objectlist, &object_cnt);
+	for ( i = 0; i < object_cnt; i++) {
+	  if ( (grow_GetObjectType( objectlist[i]) == glow_eObjectType_GrowNode ||
+		grow_GetObjectType( objectlist[i]) == glow_eObjectType_GrowGroup) &&
+	       (event->object.object_type == glow_eObjectType_NoObject ||
+		objectlist[i] != event->object.object)) {
+	    grow_GetUserData( objectlist[i], (void **)&dyn);
+	    dyn->action( objectlist[i], &e);
+	    grow_GetObjectList( graph->grow->ctx, &objectlist, &cnt);
+	    if ( cnt != object_cnt)
+	      // Something is deleted
+	      break;
+	  }
+	}
+      }
+
       if ( event->object.object_type == glow_eObjectType_NoObject)
         break;
       if ( grow_GetObjectType( event->object.object) == glow_eObjectType_GrowNode ||
-           grow_GetObjectType( event->object.object) == glow_eObjectType_GrowGroup)
+           grow_GetObjectType( event->object.object) == glow_eObjectType_GrowGroup ||
+           grow_GetObjectType( event->object.object) == glow_eObjectType_GrowBar ||
+           grow_GetObjectType( event->object.object) == glow_eObjectType_GrowTrend)
       {
-        int		trace_type;
-        glow_sTraceData	*trace_data;
-	pwr_tBoolean	value;
-	int		sts;
-        char		parsed_name[120];
-        int		inverted;
-	int		attr_type, attr_size;
-	graph_eDatabase db;
 
-        grow_GetTraceAttr( event->object.object, &trace_data);
-        trace_type = trace_data->attr_type;
-        if ( trace_type == graph_eTrace_Inherit)
-          grow_GetObjectClassTraceType( event->object.object, 
-		(glow_eTraceType *) &trace_type);
+        grow_GetUserData( event->object.object, (void **)&dyn);
+	dyn->action( event->object.object, event);
 
-        if ( strcmp( trace_data->data[0], "") == 0)
-          break;
-        if ( !graph->is_authorized( trace_data->access))
-          break;
-        switch ( trace_type)
-        {
-          case graph_eTrace_SetDig:
-          case graph_eTrace_SetDigWithTone:
-	    value = 1;
-            db = graph->parse_attr_name( trace_data->data[0], parsed_name, &inverted, &attr_type, &attr_size);
-	    switch ( db) {
-	      case graph_eDatabase_Local:
-	        sts = graph->localdb_set_value( parsed_name, &value, sizeof(value));
-	        if ( EVEN(sts)) printf("SetDig error: %s\n", trace_data->data[0]);
-	        break;
-	      case graph_eDatabase_Gdh:
-	        sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
-	        if ( EVEN(sts)) printf("SetDig error: %s\n", trace_data->data[0]);
-	        break;
-              default:
-                ;
-            }
-            break;
-          case graph_eTrace_ResetDig:
-          case graph_eTrace_ResetDigWithTone:
-	    value = 0;
-            graph->parse_attr_name( trace_data->data[0], parsed_name, &inverted, &attr_type, &attr_size);
-	    sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
-	    if ( EVEN(sts)) printf("ResetDig error: %s\n", trace_data->data[0]);
-            break;
-          case graph_eTrace_ToggleDig:
-          case graph_eTrace_ToggleDigWithTone:
-          case graph_eTrace_DigShiftWithToggleDig:
-            graph->parse_attr_name( trace_data->data[0], parsed_name, &inverted, &attr_type, &attr_size);
-	    sts = gdh_GetObjectInfo( parsed_name, &value, sizeof(value));
-	    if ( EVEN(sts))
-            {
-              printf("ToggleDig error: %s\n", trace_data->data[0]);
-              break;
-            }
-	    value = !value;
-	    sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
-	    if ( EVEN(sts)) printf("ToggleDig error: %s\n", trace_data->data[0]);
-            break;
-          case graph_eTrace_IncrAnalog:
-          {
-            float value_f, incr, maxvalue, minvalue;
-
-            graph->parse_attr_name( trace_data->data[0], parsed_name, &inverted, &attr_type, &attr_size);
-	    sts = gdh_GetObjectInfo( parsed_name, &value_f, sizeof(value_f));
-	    if ( EVEN(sts))
-            {
-              printf("IncrAnalog error: %s\n", trace_data->data[0]);
-              break;
-            }
-	    // Increment value
-            if ( strcmp( trace_data->data[1], "") != 0)
-            {
-              sts = sscanf( trace_data->data[1], "%f", &incr);
-              if ( sts == 0)
-                incr = 1.0;
-            }
-            else
-              incr = 1.0;
-
-	    // Minimum value
-            if ( strcmp( trace_data->data[2], "") != 0)
-            {
-              sts = sscanf( trace_data->data[2], "%f", &minvalue);
-              if ( sts == 0)
-                minvalue = 0;
-            }
-            else
-              minvalue = 0;
-
-	    // Maximum value
-            if ( strcmp( trace_data->data[3], "") != 0)
-            {
-              sts = sscanf( trace_data->data[3], "%f", &maxvalue);
-              if ( sts == 0)
-                maxvalue = 0;
-            }
-            else
-              maxvalue = 0;
-
-	    value_f += incr;
-	    if ( !( minvalue == 0 && maxvalue == 0))
-            {
-              value_f = max( value_f, minvalue);
-              value_f = min( value_f, maxvalue);
-            }
-	    sts = gdh_SetObjectInfo( parsed_name, &value_f, sizeof(value_f));
-	    if ( EVEN(sts)) printf("IncrAnalog error: %s\n", trace_data->data[0]);
-            break;
-          }
-          case graph_eTrace_Command:
-            if ( graph->command_cb) {
-              char cmd[200];
-
-              graph->get_command( trace_data->data[0], cmd);
-              (graph->command_cb)( graph->parent_ctx, cmd);
-            }
-            break;
-          case graph_eTrace_DigWithCommand:
-          case graph_eTrace_DigWithErrorAndCommand:
-          case graph_eTrace_DigTwoWithCommand:
-          case graph_eTrace_DigToneWithCommand:
-          case graph_eTrace_DigToneWithErrorAndCommand:
-          case graph_eTrace_DigToneTwoWithCommand:
-            if ( graph->command_cb && strcmp(trace_data->data[3], "") != 0) {
-              char cmd[200];
-
-              graph->get_command( trace_data->data[3], cmd);
-              (graph->command_cb)( graph->parent_ctx, cmd);
-            }
-            break;
-          case graph_eTrace_SetDigConfirm:
-          case graph_eTrace_ResetDigConfirm:
-          case graph_eTrace_ToggleDigConfirm:
-          case graph_eTrace_CommandConfirm:
-          case graph_eTrace_ToggleDigConfirmWithTone:
-          case graph_eTrace_SetDigConfirmWithTone:
-          case graph_eTrace_ResetDigConfirmWithTone:
-            if ( graph->confirm_cb)
-            {
-              (graph->confirm_cb)( graph->parent_ctx, 
-			event->object.object, trace_data->data[1]);
-            }
-            break;
-          case graph_eTrace_AnnotInput:
-          case graph_eTrace_AnnotInputWithTone:
-//            grow_OpenAnnotationInput( event->object.object, 1);
-            if ( graph->change_value_cb)
-            {
-              char str[80] = "";
-
-              if ( strrchr( trace_data->data[1], 's'))
-                // If string format, put current string in input label
-                grow_GetAnnotation( event->object.object, 1, str, sizeof(str));
-
-              (graph->change_value_cb)( graph->parent_ctx, 
-			event->object.object, str);
-            }
-            break;
-          case graph_eTrace_RadioButton:
-	  {
-            grow_tObject group;
-            grow_tObject 	*objectlist, *object_p;
-            int 		object_cnt;
-            int		i;
-            int		gm_trace_type;
-            glow_sTraceData	*gm_trace_data;
-
-
-            sts = grow_GetObjectGroup( graph->grow->ctx, event->object.object,
-				       &group);
-            if ( EVEN(sts)) break;
-
-            grow_GetGroupObjectList( group, &objectlist, &object_cnt);
-            object_p = objectlist;
-            for ( i = 0; i < object_cnt; i++)
-            {
-              if ( *object_p != event->object.object &&
-                   grow_GetObjectType( *object_p) == glow_eObjectType_GrowNode)
-              {
-                value = 0;
-                grow_GetTraceAttr( *object_p, &gm_trace_data);
-                gm_trace_type = gm_trace_data->attr_type;
-                if ( gm_trace_type == graph_eTrace_Inherit)
-                  grow_GetObjectClassTraceType( *object_p, 
-			       (glow_eTraceType *) &gm_trace_type);
-		if ( gm_trace_type == graph_eTrace_RadioButton ) {
-                  graph->parse_attr_name( gm_trace_data->data[0], parsed_name,
-					  &inverted, &attr_type, &attr_size);
-	          sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
-                }
-              }
-              object_p++;
-            }
-
-	    value = 1;
-
-            graph->parse_attr_name( trace_data->data[0], parsed_name,
-                      &inverted, &attr_type, &attr_size);
-	    sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
-	    if ( EVEN(sts)) printf("ResetDig error: %s\n", trace_data->data[0]);
-            break;
-          }
-        }
       }
       break;
     }
@@ -6609,148 +2880,102 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
       if ( grow_GetObjectType( event->object.object) == glow_eObjectType_GrowNode ||
            grow_GetObjectType( event->object.object) == glow_eObjectType_GrowGroup)
       {
-        int		trace_type;
-        glow_sTraceData	*trace_data;
+	GeDyn *dyn;
 
-        grow_GetTraceAttr( event->object.object, &trace_data);
-        trace_type = trace_data->attr_type;
-        if ( trace_type == graph_eTrace_Inherit)
-          grow_GetObjectClassTraceType( event->object.object, 
-		(glow_eTraceType *) &trace_type);
-
-        if ( strcmp( trace_data->data[0], "") == 0)
-          break;
-
-        if ( !graph->is_authorized( trace_data->access))
-          break;
-
-        switch ( trace_type)
-        {
-          case graph_eTrace_DigWithCommand:
-          case graph_eTrace_DigWithErrorAndCommand:
-          case graph_eTrace_DigTwoWithCommand:
-          case graph_eTrace_DigToneWithCommand:
-          case graph_eTrace_DigToneWithErrorAndCommand:
-          case graph_eTrace_DigToneTwoWithCommand:
-            if ( graph->command_cb && strcmp(trace_data->data[4], "") != 0) {
-              char cmd[200];
-
-              graph->get_command( trace_data->data[4], cmd);
-              (graph->command_cb)( graph->parent_ctx, cmd);
-            }
-            break;
-          default: ;
-        }
+        grow_GetUserData( event->object.object, (void **)&dyn);
+	dyn->action( event->object.object, event);
       }
       break;
     }
-    case glow_eEvent_MB1DoubleClickCtrl:
-    {
-      int		trace_type;
-      glow_sTraceData	*trace_data;
-      int		sts;
-      pwr_sAttrRef 	attrref;
-      char		parsed_name[120];
-      int		inverted;
-      int		attr_type, attr_size;
+    case glow_eEvent_MB1DoubleClickCtrl: {
+      break;
+    }
+    case glow_eEvent_AnnotationInput: {
+      GeDyn *dyn;
+      
+      grow_GetUserData( event->annot_input.object, (void **)&dyn);
+      dyn->action( event->annot_input.object, event);
+      
+      break;
+    }
+    case glow_eEvent_InputFocusLost:
+    case glow_eEvent_InputFocusGained: {
+      GeDyn *dyn;
 
-      if ( event->object.object_type == glow_eObjectType_NoObject)
-        break;
-      if ( !(grow_GetObjectType( event->object.object) == glow_eObjectType_GrowNode ||
-             grow_GetObjectType( event->object.object) == glow_eObjectType_GrowGroup))
-        break;
+      grow_GetUserData( event->object.object, (void **)&dyn);
+      dyn->action( event->object.object, event);
 
-      grow_GetTraceAttr( event->object.object, &trace_data);
-      trace_type = trace_data->attr_type;
-      if ( trace_type == graph_eTrace_Inherit)
-        grow_GetObjectClassTraceType( event->object.object, 
-		(glow_eTraceType *) &trace_type);
+      break;
+    }
+    case glow_eEvent_Key_Tab:
+    case glow_eEvent_Key_ShiftTab:
+    case glow_eEvent_Key_Escape:
+    case glow_eEvent_Key_Left:
+    case glow_eEvent_Key_Right:
+    case glow_eEvent_Key_Up:
+    case glow_eEvent_Key_Down:
+    case glow_eEvent_Key_Return:
+    case glow_eEvent_InputFocusInit: {
+      GeDyn *dyn;
 
-      if ( strcmp( trace_data->data[0], "") == 0)
-        break;
-      switch ( trace_type)
-      {
-        case graph_eTrace_Dig:
-        case graph_eTrace_DigWithError:
-        case graph_eTrace_DigTone:
-        case graph_eTrace_DigToneWithError:
-        case graph_eTrace_Annot:
-        case graph_eTrace_DigWithText:
-        case graph_eTrace_Bar:
-        case graph_eTrace_Trend:
-        case graph_eTrace_DigBorder:
-        case graph_eTrace_Invisible:
-        case graph_eTrace_AnnotWithTone:
-        case graph_eTrace_Rotate:
-        case graph_eTrace_Move:
-        case graph_eTrace_AnalogShift:
-        case graph_eTrace_Animation:
-        case graph_eTrace_AnimationForwBack:
-        case graph_eTrace_DigAnimation:
-        case graph_eTrace_DigShift:
-        case graph_eTrace_SetDig:
-        case graph_eTrace_ResetDig:
-        case graph_eTrace_ToggleDig:
-        case graph_eTrace_Slider:
-        case graph_eTrace_AnnotInput:
-        case graph_eTrace_SetDigConfirm:
-        case graph_eTrace_ResetDigConfirm:
-        case graph_eTrace_ToggleDigConfirm:
-        case graph_eTrace_SetDigWithTone:
-        case graph_eTrace_ResetDigWithTone:
-        case graph_eTrace_ToggleDigWithTone:
-        case graph_eTrace_AnnotInputWithTone:
-        case graph_eTrace_SetDigConfirmWithTone:
-        case graph_eTrace_ResetDigConfirmWithTone:
-        case graph_eTrace_ToggleDigConfirmWithTone:
-        case graph_eTrace_DigWithCommand:
-        case graph_eTrace_DigWithErrorAndCommand:
-        case graph_eTrace_DigTwo:
-        case graph_eTrace_DigTwoWithCommand:
-        case graph_eTrace_DigToneWithCommand:
-        case graph_eTrace_DigToneWithErrorAndCommand:
-        case graph_eTrace_DigToneTwo:
-        case graph_eTrace_DigToneTwoWithCommand:
-        case graph_eTrace_StoDigWithTone:
-        case graph_eTrace_IncrAnalog:
-        case graph_eTrace_RadioButton:
-        case graph_eTrace_DigShiftWithToggleDig:
-          graph->parse_attr_name( trace_data->data[0], parsed_name, &inverted, &attr_type, &attr_size);
-          sts = gdh_NameToAttrref( pwr_cNObjid, trace_data->data[0], &attrref);
-          if ( EVEN(sts)) return 1;
-
-          if ( graph->display_in_xnav_cb)
-            (graph->display_in_xnav_cb)( graph->parent_ctx, attrref.Objid);
-          break;
-        default:
-          ;
+      if ( event->object.object_type == glow_eObjectType_NoObject) {
+	grow_tObject 	*objectlist;
+	int 		object_cnt;
+	int		i;
+	
+	grow_GetObjectList( graph->grow->ctx, &objectlist, &object_cnt);
+	for ( i = 0; i < object_cnt; i++) {
+	  if ( grow_GetObjectType( objectlist[i]) == glow_eObjectType_GrowNode ||
+	       grow_GetObjectType( objectlist[i]) == glow_eObjectType_GrowSlider ||
+	       grow_GetObjectType( objectlist[i]) == glow_eObjectType_GrowGroup) {
+	    grow_GetUserData( objectlist[i], (void **)&dyn);
+	    dyn->action( objectlist[i], event);
+	  }
+	}
+      }
+      else {
+	grow_GetUserData( event->object.object, (void **)&dyn);
+	dyn->action( event->object.object, event);
       }
       break;
     }
-    case glow_eEvent_AnnotationInput:
-    {
-      pwr_tFloat32	value;
-      int		sts;
-      glow_sTraceData	*trace_data;
-      char		parsed_name[120];
-      int		inverted;
-      int		attr_type, attr_size;
 
-      grow_GetTraceAttr( event->object.object, &trace_data);
+    case glow_eEvent_Key_CtrlAscii: {
+      if ( event->object.object_type != glow_eObjectType_NoObject) {
+	GeDyn *dyn;
 
-      sts = sscanf( event->annot_input.text, "%f", &value);
-      if ( sts != 1)
-      {
-        printf("Input syntax error\n");
-        break;
+	grow_GetUserData( event->object.object, (void **)&dyn);
+	dyn->action( event->object.object, event);
       }
-      graph->parse_attr_name( trace_data->data[0], parsed_name, &inverted, &attr_type, &attr_size);
-      sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
-      if ( EVEN(sts)) printf("AnnotationInput error: %s\n", trace_data->data[0]);
-      break;
     }
-    case glow_eEvent_Translate:
-    {
+
+    case glow_eEvent_MenuActivated:
+    case glow_eEvent_MenuCreate:
+    case glow_eEvent_MenuDelete: {
+      grow_tObject 	*objectlist;
+      int 		object_cnt;
+      int		new_object_cnt;
+      int		i;
+      GeDyn		*dyn;
+
+      grow_GetObjectList( graph->grow->ctx, &objectlist, &object_cnt);
+      for ( i = 0; i < object_cnt; i++) {
+	if ( grow_GetObjectType( objectlist[i]) == glow_eObjectType_GrowNode ||
+	     grow_GetObjectType( objectlist[i]) == glow_eObjectType_GrowGroup) {
+
+	  
+	  grow_GetUserData( objectlist[i], (void **)&dyn);
+	  dyn->action( objectlist[i], event);
+
+	  // Check if anything is deleted
+	  grow_GetObjectList( graph->grow->ctx, &objectlist, &new_object_cnt);
+	  if ( new_object_cnt != object_cnt)
+	    break;
+	}
+      }
+    }
+
+    case glow_eEvent_Translate: {
       char new_text[200];
       int sts;
 
@@ -6771,264 +2996,37 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
 
 void Graph::confirm_ok( grow_tObject object)
 {
-  int		trace_type;
-  glow_sTraceData *trace_data;
-  pwr_tBoolean	value;
-  int		sts;
-  char		parsed_name[120];
-  int		inverted;
-  int		attr_type, attr_size;
+  GeDyn *dyn;
+  glow_sEvent event;
 
-  grow_GetTraceAttr( object, &trace_data); 
-  trace_type = trace_data->attr_type;
+  grow_GetUserData( object, (void **)&dyn);
+  event.event = glow_eEvent_MB1Click;
+  if ( dyn->total_action_type & ge_mActionType_ValueInput)
+    dyn->change_value( object, confirm_text);
+  else
+    dyn->confirmed_action( object, &event);
 
-  if ( trace_type == graph_eTrace_Inherit)
-    grow_GetObjectClassTraceType( object, 
-		(glow_eTraceType *) &trace_type);
-
-  if ( strcmp( trace_data->data[0], "") == 0)
-    return;
-  switch ( trace_type)
-  {
-    case graph_eTrace_SetDigConfirm:
-    case graph_eTrace_SetDigConfirmWithTone:
-      value = 1;
-      parse_attr_name( trace_data->data[0], parsed_name, &inverted, &attr_type, &attr_size);
-      sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
-      if ( EVEN(sts)) printf("SetDig error: %s\n", trace_data->data[0]);
-      break;
-    case graph_eTrace_ResetDigConfirm:
-    case graph_eTrace_ResetDigConfirmWithTone:
-      value = 0;
-      parse_attr_name( trace_data->data[0], parsed_name, &inverted, &attr_type, &attr_size);
-      sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
-      if ( EVEN(sts)) printf("ResetDig error: %s\n", trace_data->data[0]);
-      break;
-    case graph_eTrace_ToggleDigConfirm:
-    case graph_eTrace_ToggleDigConfirmWithTone:
-      parse_attr_name( trace_data->data[0], parsed_name, &inverted, &attr_type, &attr_size);
-      sts = gdh_GetObjectInfo( parsed_name, &value, sizeof(value));
-      if ( EVEN(sts))
-      {
-        printf("ToggleDig error: %s\n", trace_data->data[0]);
-        break;
-      }
-      value = !value;
-      sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
-      if ( EVEN(sts)) printf("ToggleDig error: %s\n", trace_data->data[0]);
-      break;
-    case graph_eTrace_CommandConfirm:
-      if ( command_cb)
-        (command_cb)( parent_ctx, trace_data->data[0]);
-      break;
-    default: ;
-  }
 }
 
 void Graph::connect( grow_tObject object, char *attr_name, int second)
 {
-  char		alias_name[32];
-  int		trace_type;
-  char		msg[200];
-  glow_sTraceData *trace_data;
+  GeDyn *dyn;
 
-  switch( grow_GetObjectType( object))
-  {
-    case glow_eObjectType_GrowNode:
-    case glow_eObjectType_GrowGroup:
-    {
-      grow_GetTraceAttr( object, &trace_data);
-      trace_type = trace_data->attr_type;
-
-      if ( trace_type == graph_eTrace_Inherit)
-        grow_GetObjectClassTraceType( object, 
-		(glow_eTraceType *) &trace_type);
-      switch ( trace_type)
-      {
-        case graph_eTrace_Invisible:
-        case graph_eTrace_Annot:
-        case graph_eTrace_DigWithText:
-        case graph_eTrace_Rotate:
-        case graph_eTrace_Move:
-        case graph_eTrace_SetDig:
-        case graph_eTrace_ResetDig:
-        case graph_eTrace_ToggleDig:
-        case graph_eTrace_AnnotInput:
-        case graph_eTrace_SetDigConfirm:
-        case graph_eTrace_ResetDigConfirm:
-        case graph_eTrace_ToggleDigConfirm:
-        case graph_eTrace_IncrAnalog:
-        case graph_eTrace_RadioButton:
-          if ( second)
-          {
-            message( 'E', "Nothing to connect for this object");
-            return;
-          }
-          strcpy( alias_name, "Attribute");
-          strcpy( trace_data->data[0], attr_name);
-          break;
-        case graph_eTrace_DigShift:
-        case graph_eTrace_AnalogShift:
-          if ( second)
-            strcpy( alias_name, "ToneAttr");
-          else
-            strcpy( alias_name, "ShiftAttr");
-          if ( second)
-            strcpy( trace_data->data[1], attr_name);
-          else
-            strcpy( trace_data->data[0], attr_name);
-          break;
-        case graph_eTrace_Animation:
-        case graph_eTrace_AnimationForwBack:
-        case graph_eTrace_DigAnimation:
-
-          if ( second)
-            strcpy( alias_name, "ToneAttr");
-          else
-            strcpy( alias_name, "AnimationAttr");
-          if ( second)
-            strcpy( trace_data->data[1], attr_name);
-          else
-            strcpy( trace_data->data[0], attr_name);
-          break;
-        case graph_eTrace_Dig:
-        case graph_eTrace_DigWithCommand:
-        case graph_eTrace_DigBorder:
-        case graph_eTrace_DigTone:
-        case graph_eTrace_DigToneWithCommand:
-          if ( second)
-            strcpy( alias_name, "InvisAttr");
-          else
-            strcpy( alias_name, "Attribute");
-          if ( second)
-            strcpy( trace_data->data[1], attr_name);
-          else
-            strcpy( trace_data->data[0], attr_name);
-          break;
-        case graph_eTrace_SetDigConfirmWithTone:
-        case graph_eTrace_ResetDigConfirmWithTone:
-        case graph_eTrace_ToggleDigConfirmWithTone:
-        case graph_eTrace_SetDigWithTone:
-        case graph_eTrace_ResetDigWithTone:
-        case graph_eTrace_ToggleDigWithTone:
-        case graph_eTrace_StoDigWithTone:
-          if ( second)
-            strcpy( alias_name, "ToneAttr");
-          else
-            strcpy( alias_name, "Attribute");
-          if ( second)
-            strcpy( trace_data->data[2], attr_name);
-          else
-            strcpy( trace_data->data[0], attr_name);
-          break;
-        case graph_eTrace_DigWithError:
-        case graph_eTrace_DigWithErrorAndCommand:
-        case graph_eTrace_DigTwo:
-        case graph_eTrace_DigTwoWithCommand:
-        case graph_eTrace_DigToneWithError:
-        case graph_eTrace_DigToneWithErrorAndCommand:
-        case graph_eTrace_DigToneTwo:
-        case graph_eTrace_DigToneTwoWithCommand:
-          if ( second)
-            strcpy( alias_name, "ErrorAttr");
-          else
-            strcpy( alias_name, "Attribute");
-          if ( second)
-            strcpy( trace_data->data[1], attr_name);
-          else
-            strcpy( trace_data->data[0], attr_name);
-          break;
-        case graph_eTrace_AnnotWithTone:
-        case graph_eTrace_AnnotInputWithTone:
-          if ( second)
-            strcpy( alias_name, "ToneAttr");
-          else
-            strcpy( alias_name, "Attribute");
-          if ( second)
-            strcpy( trace_data->data[2], attr_name);
-          else
-            strcpy( trace_data->data[0], attr_name);
-          break;
-        case graph_eTrace_DigShiftWithToggleDig:
-          if ( second)
-            strcpy( alias_name, "ShiftAttr");
-          else
-            strcpy( alias_name, "ToggleAttr");
-          if ( second)
-            strcpy( trace_data->data[1], attr_name);
-          else
-            strcpy( trace_data->data[0], attr_name);
-          break;
-        default:
-          message( 'E', "Nothing to connect for this object");
-          return;
-      }
-
-      grow_SetTraceAttr( object, trace_data);
-      sprintf( msg, "%s connected to '%s'", alias_name, attr_name);
-      message( 'I', msg);
-      break;
-    }
-    case glow_eObjectType_GrowSlider:
-    {
-      if ( second)
-      {
-        message( 'E', "Nothing to connect for this object");
-        return;
-      }
-
-      grow_GetTraceAttr( object, &trace_data);
-      strcpy( trace_data->data[0], attr_name);
-      grow_SetTraceAttr( object, trace_data);
-      sprintf( msg, "Attribute connected to '%s'", attr_name);
-      message( 'I', msg);
-      break;
-    }
-    case glow_eObjectType_GrowBar:
-    {
-      if ( second)
-      {
-        message( 'E', "Nothing to connect for this object");
-        return;
-      }
-
-      grow_GetTraceAttr( object, &trace_data);
-      strcpy( trace_data->data[0], attr_name);
-      grow_SetTraceAttr( object, trace_data);
-      sprintf( msg, "Attribute connected to '%s'", attr_name);
-      message( 'I', msg);
-      break;
-    }
-    case glow_eObjectType_GrowTrend:
-    {
-      grow_GetTraceAttr( object, &trace_data);
-      if ( second)
-        strcpy( trace_data->data[1], attr_name);
-      else
-        strcpy( trace_data->data[0], attr_name);
-
-      grow_SetTraceAttr( object, trace_data);
-      if ( second)
-        sprintf( msg, "Attribute2 connected to '%s'", attr_name);
-      else
-        sprintf( msg, "Attribute1 connected to '%s'", attr_name);
-      message( 'I', msg);
-      break;
-    }
-    default:
-      message( 'E', "Nothing to connect for this object");
-  }
+  grow_GetUserData( object, (void **)&dyn);
+  if ( dyn)
+    dyn->set_attribute( object, attr_name, second);
+  else
+    message( 'E', "No dynamics for this object");
 
 }
 
 int Graph::set_object_focus( char *name, int empty)
 {
-  char str[80] = "";
-  glow_sTraceData *trace_data;
-  int  trace_type;
+  int  dyn_type;
+  int  action_type;
   int  sts;
   grow_tObject object;
-
+  GeDyn *dyn;
 
   if ( !change_value_cb)
     return 0;
@@ -7036,30 +3034,19 @@ int Graph::set_object_focus( char *name, int empty)
   sts = grow_FindObjectByName( grow->ctx, name, &object);
   if ( EVEN(sts)) return GE__OBJNOTFOUND;
 
-  grow_GetTraceAttr( object, &trace_data);
-  trace_type = trace_data->attr_type;
-  if ( trace_type == graph_eTrace_Inherit)
-    grow_GetObjectClassTraceType( object, (glow_eTraceType *) &trace_type);
-
-  if ( strcmp( trace_data->data[0], "") == 0)
+  grow_GetUserData( object, (void **)&dyn);
+  if ( !dyn)
     return 0;
-  if ( !is_authorized( trace_data->access))
+
+  dyn_type = dyn->get_dyntype( object);
+  action_type = dyn->get_actiontype( object);
+
+  if ( !is_authorized( dyn->access))
     return GE__NOACCESS;
 
-  switch ( trace_type)
-  {
-    case graph_eTrace_AnnotInput:
-    case graph_eTrace_AnnotInputWithTone:
+  if ( action_type & ge_mActionType_InputFocus || action_type & ge_mActionType_ValueInput)
+    grow_SetObjectInputFocus( object, 1);
 
-      if ( !empty && strrchr( trace_data->data[1], 's'))
-        // If string format, put current string in input label
-        grow_GetAnnotation( object, 1, str, sizeof(str));
-
-      (change_value_cb)( parent_ctx, object, str);
-      break;
-    default:
-      ;
-  }
   return GE__SUCCESS;
 }
 
@@ -7296,6 +3283,93 @@ int Graph::ref_object_info( glow_eCycle cycle, char *name, void **data,
   return gdh_RefObjectInfo( name, data, subid, size);
 }
 
+void Graph::create_trend( grow_tObject *object, double x, double y,
+			  unsigned int dyn_type)
+{
+  double width = 7;
+  double height = 5;
+  GeDyn *dyn;
+  glow_sTrendInfo info;
+
+  grow_CreateGrowTrend( grow->ctx, "", 
+			    x, y, width, height,
+			    glow_eDrawType_Color37,
+			    1, glow_mDisplayLevel_1, 1, 1,
+			    glow_eDrawType_Color40, NULL, 
+			    object);
+  dyn = new GeDyn( this);
+  dyn->dyn_type = dyn->total_dyn_type = (ge_mDynType) dyn_type;
+  dyn->update_elements();
+  grow_SetUserData( *object, (void *)dyn);
+
+  info.no_of_points = 100;
+  info.scan_time = 0.5;
+  info.fill_curve = 0;
+  info.curve_width = 1;
+  info.horizontal_lines = 4;
+  info.vertical_lines = 4;
+  info.min_value[0] = 0;
+  info.min_value[1] = 0;
+  info.max_value[0] = 100;
+  info.max_value[1] = 100;
+  info.curve_drawtype[0] = glow_eDrawType_Color145;
+  info.curve_drawtype[1] = glow_eDrawType_Color295;
+  info.curve_fill_drawtype[0] = glow_eDrawType_Color139;
+  info.curve_fill_drawtype[1] = glow_eDrawType_Color289;
+  grow_SetTrendInfo( *object, &info);
+
+  grow_Redraw( grow->ctx);
+}
+
+void Graph::create_bar( grow_tObject *object, double x, double y)
+{
+  double width = 0.5;
+  double height = 5;
+  GeDyn *dyn;
+  glow_sBarInfo info;
+
+  grow_CreateGrowBar( grow->ctx, "", 
+			    x, y, width, height,
+			    glow_eDrawType_Line,
+			    1, glow_mDisplayLevel_1, 1, 1,
+			    glow_eDrawType_Color40, NULL, 
+			    object);
+  dyn = new GeDyn( this);
+  dyn->dyn_type = dyn->total_dyn_type = ge_mDynType_Bar;
+  dyn->update_elements();
+  grow_SetUserData( *object, (void *)dyn);
+
+  info.bar_drawtype = glow_eDrawType_Color147;
+  info.bar_bordercolor = glow_eDrawType_Color145;
+  info.bar_borderwidth = 1;
+  info.max_value = 100;
+  info.min_value = 0;
+  grow_SetBarInfo( *object, &info);
+  grow_Redraw( grow->ctx);
+}
+
+void Graph::create_axis( grow_tObject *object, double x, double y)
+{
+  double width = 1.2;
+  double height = 5;
+  glow_sAxisInfo info;
+
+  grow_CreateGrowAxis( grow->ctx, "", 
+		       x, y, x + width, y + height,
+		       glow_eDrawType_Line, 1, 1,
+		       glow_eDrawType_TextHelvetica, NULL, object);
+
+  info.max_value = 100;
+  info.min_value = 0;
+  info.lines = 11;
+  info.longquotient = 2;
+  info.valuequotient = 2;
+  strcpy( info.format, "%3.0f");
+  grow_SetAxisInfo( *object, &info);
+  grow_Redraw( grow->ctx);
+}
+
+
 void GraphApplList::insert( void *ctx)
 {
   GraphApplList *appl_p = new GraphApplList( 0, ctx);  
@@ -7345,7 +3419,7 @@ int GraphApplList::get_first( void **ctx)
 //
 // Convert attribute string to value
 //
-static int  graph_attr_string_to_value( int type_id, char *value_str, 
+int  graph_attr_string_to_value( int type_id, char *value_str, 
 	void *buffer_ptr, int buff_size, int attr_size)
 {
   int		sts;
@@ -7523,21 +3597,12 @@ static int  graph_attr_string_to_value( int type_id, char *value_str,
   return 1;
 }
 
-static int graph_get_typeid( graph_sTraceData *data)
+GraphRecallBuff::~GraphRecallBuff()
 {
-  // Guess the type of the annot variable...
-  if ( strchr( data->format, 'f'))
-    return pwr_eType_Float32;
-  if ( strchr( data->format, 'd'))
-    return pwr_eType_Int32;
-  if ( strchr( data->format, 's'))
-    return pwr_eType_String;
-  if ( strchr( data->format, 'o'))
-    return pwr_eType_Objid;
-  return pwr_eType_Int32;
+  for ( int i = 0; i < cnt; i++)
+    delete buff[i];
 }
-
-void GraphRecallBuff::insert( glow_sTraceData *data, char *data_key)
+void GraphRecallBuff::insert( GeDyn *data, char *data_key, grow_tObject object)
 {
   int i;
   char new_key[80];
@@ -7547,36 +3612,43 @@ void GraphRecallBuff::insert( glow_sTraceData *data, char *data_key)
   else
     strcpy( new_key, data_key);
 
+#if 0
   if ( strcmp( key[0], new_key) == 0 && memcmp( data, &buff[0], sizeof(buff[0])) == 0)
     // Identical with last one
-    return;
+  return;
+#endif
 
+  if ( cnt == size)
+    delete buff[size-1];
   for ( i = cnt; i > 0; i--) {
     buff[i] = buff[i-1];
     strcpy( key[i], key[i-1]);
   }
-  buff[0] = *data;
+  buff[0] = new GeDyn(*data);
+  buff[0]->unset_inherit( object);
   strcpy( key[0], new_key);
   cnt++;
   if ( cnt > size)
     cnt = size;
 }
 
-int GraphRecallBuff::get( glow_sTraceData *data, int idx)
+int GraphRecallBuff::get( GeDyn **data, int idx)
 {
   if ( idx >= cnt)
     return 0;
-  *data = buff[ idx];
+  *data = new GeDyn( *buff[ idx]);
   return 1;
 }
 
-int GraphRecallBuff::get( glow_sTraceData *data, char *k)
+int GraphRecallBuff::get( GeDyn **data, char *k)
 {
   for ( int i = 0; i < cnt; i++) {
     if ( strcmp( k, key[i]) == 0) {
-      *data = buff[ i];
+      *data = new GeDyn( *buff[i]);
       return 1;
     }
   }
   return 0;
 }
+
+

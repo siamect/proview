@@ -8,10 +8,15 @@
 
    <Description>.  */
 
+/*! \file ge_util.h
+    \brief Ge utility functions. */
+/*! \addtogroup Ge */
+/*@{*/
+
 
 int ge_get_systemname(
   char		*systemname
 );
 
-
+/*@}*/
 #endif

@@ -11,17 +11,17 @@
 #include "glow_growctx.h"
 
 GrowRect::GrowRect( GlowCtx *glow_ctx, char *name, double x, double y, 
-		double w, double h, glow_eDrawType border_d_type, int line_w, 
-		int fix_line_w, glow_mDisplayLevel display_lev,
-		int fill_rect, int display_border, 
-		glow_eDrawType fill_d_type, int nodraw) : 
-		GlowRect(glow_ctx,x,y,w,h,border_d_type,line_w,fix_line_w,display_lev,
-		fill_rect), 
-    		hot(0), pzero(ctx), highlight(0), inverse(0), user_data(NULL),
-		original_border_drawtype(border_d_type),
-		original_fill_drawtype(fill_d_type), fill_drawtype(fill_d_type),
-		border(display_border),
-		dynamic(0), dynamicsize(0)
+		    double w, double h, glow_eDrawType border_d_type, int line_w, 
+		    int fix_line_w, glow_mDisplayLevel display_lev,
+		    int fill_rect, int display_border, int display_shadow,
+		    glow_eDrawType fill_d_type, int nodraw) : 
+  GlowRect(glow_ctx,x,y,w,h,border_d_type,line_w,fix_line_w,display_lev, fill_rect), 
+  hot(0), pzero(ctx), highlight(0), inverse(0), user_data(NULL),
+  original_border_drawtype(border_d_type),
+  original_fill_drawtype(fill_d_type), fill_drawtype(fill_d_type),
+  border(display_border),
+  dynamic(0), dynamicsize(0), shadow(display_shadow), shadow_width(5), relief(glow_eRelief_Up),
+  shadow_contrast(2), disable_shadow(0)
 { 
   strcpy( n_name, name);
   pzero.nav_zoom();
@@ -61,7 +61,7 @@ GrowRect::~GrowRect()
     draw_set_cursor( ctx, glow_eDrawCursor_Normal);
 }
 
-void GrowRect::move( int delta_x, int delta_y, int grid)
+void GrowRect::move( double delta_x, double delta_y, int grid)
 {
   ctx->set_defered_redraw();
   ((GrowCtx *)ctx)->draw( x_left * ctx->zoom_factor_x - ctx->offset_x - DRAW_MP,
@@ -75,8 +75,8 @@ void GrowRect::move( int delta_x, int delta_y, int grid)
     /* Move to closest grid point */
     erase();
     nav_erase();
-    ctx->find_grid( x_left + double( delta_x) / ctx->zoom_factor_x,
-	y_low + double( delta_y) / ctx->zoom_factor_y, &x_grid, &y_grid);
+    ctx->find_grid( x_left + delta_x / ctx->zoom_factor_x,
+	y_low + delta_y / ctx->zoom_factor_y, &x_grid, &y_grid);
     trf.move( x_grid - x_left, y_grid - y_low);
     get_node_borders();
   }
@@ -86,8 +86,8 @@ void GrowRect::move( int delta_x, int delta_y, int grid)
 
     erase();
     nav_erase();
-    dx = double( delta_x) / ctx->zoom_factor_x;
-    dy = double( delta_y) / ctx->zoom_factor_y;
+    dx = delta_x / ctx->zoom_factor_x;
+    dy = delta_y / ctx->zoom_factor_y;
     trf.move( dx, dy);
     x_right += dx;
     x_left += dx;
@@ -258,6 +258,11 @@ void GrowRect::save( ofstream& fp, glow_eSaveMode mode)
 		<< int(original_fill_drawtype) << endl;
   fp << int(glow_eSave_GrowRect_fill_drawtype) << FSPACE << int(fill_drawtype) << endl;
   fp << int(glow_eSave_GrowRect_border) << FSPACE << border << endl;
+  fp << int(glow_eSave_GrowRect_shadow) << FSPACE << shadow << endl;
+  fp << int(glow_eSave_GrowRect_shadow_width) << FSPACE << shadow_width << endl;
+  fp << int(glow_eSave_GrowRect_shadow_contrast) << FSPACE << shadow_contrast << endl;
+  fp << int(glow_eSave_GrowRect_relief) << FSPACE << int(relief) << endl;
+  fp << int(glow_eSave_GrowRect_disable_shadow) << FSPACE << disable_shadow << endl;
   fp << int(glow_eSave_GrowRect_dynamicsize) << FSPACE << dynamicsize << endl;
   fp << int(glow_eSave_GrowRect_dynamic) << endl;
   if( dynamic)
@@ -307,6 +312,11 @@ void GrowRect::open( ifstream& fp)
       case glow_eSave_GrowRect_fill_drawtype: fp >> 
 		tmp; fill_drawtype = (glow_eDrawType)tmp; break;
       case glow_eSave_GrowRect_border: fp >> border; break;
+      case glow_eSave_GrowRect_shadow_width: fp >> shadow_width; break;
+      case glow_eSave_GrowRect_shadow_contrast: fp >> shadow_contrast; break;
+      case glow_eSave_GrowRect_shadow: fp >> shadow; break;
+      case glow_eSave_GrowRect_relief: fp >> tmp; relief = (glow_eRelief)tmp; break;
+      case glow_eSave_GrowRect_disable_shadow: fp >> disable_shadow; break;
       case glow_eSave_GrowRect_dynamicsize: fp >> dynamicsize; break;
       case glow_eSave_GrowRect_dynamic:
         fp.getline( dummy, sizeof(dummy));
@@ -712,32 +722,84 @@ void GrowRect::draw( GlowTransform *t, int highlight, int hot, void *node, void 
 
   if (!t)
   {
-    x1 = int( trf.x( ll.x, ll.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y1 = int( trf.y( ll.x, ll.y) * ctx->zoom_factor_y) - ctx->offset_y;
-    x2 = int( trf.x( ur.x, ur.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y2 = int( trf.y( ur.x, ur.y) * ctx->zoom_factor_y) - ctx->offset_y;
+    x1 = int( trf.x( ll.x, ll.y) * ctx->zoom_factor_x + 0.5) - ctx->offset_x;
+    y1 = int( trf.y( ll.x, ll.y) * ctx->zoom_factor_y + 0.5) - ctx->offset_y;
+    x2 = int( trf.x( ur.x, ur.y) * ctx->zoom_factor_x + 0.5) - ctx->offset_x;
+    y2 = int( trf.y( ur.x, ur.y) * ctx->zoom_factor_y + 0.5) - ctx->offset_y;
   }
   else
   {
-    x1 = int( trf.x( t, ll.x, ll.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y1 = int( trf.y( t, ll.x, ll.y) * ctx->zoom_factor_y) - ctx->offset_y;
-    x2 = int( trf.x( t, ur.x, ur.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y2 = int( trf.y( t, ur.x, ur.y) * ctx->zoom_factor_y) - ctx->offset_y;
+    x1 = int( trf.x( t, ll.x, ll.y) * ctx->zoom_factor_x + 0.5) - ctx->offset_x;
+    y1 = int( trf.y( t, ll.x, ll.y) * ctx->zoom_factor_y + 0.5) - ctx->offset_y;
+    x2 = int( trf.x( t, ur.x, ur.y) * ctx->zoom_factor_x + 0.5) - ctx->offset_x;
+    y2 = int( trf.y( t, ur.x, ur.y) * ctx->zoom_factor_y + 0.5) - ctx->offset_y;
   }
 
   ll_x = min( x1, x2);
   ur_x = max( x1, x2);
   ll_y = min( y1, y2);
   ur_y = max( y1, y2);
-  if ( fill)
-  {
-    drawtype = ((GrowCtx *)ctx)->get_drawtype( fill_drawtype, glow_eDrawType_Color57,
+
+  int ish = int( shadow_width / 100 * min(ur_x - ll_x, ur_y - ll_y) + 0.5);
+  int display_shadow = ((node && ((GrowNode *)node)->shadow) || shadow) && !disable_shadow;
+  glow_eDrawType fillcolor = ((GrowCtx *)ctx)->get_drawtype( fill_drawtype, glow_eDrawType_FillHighlight,
 		 highlight, (GrowNode *)colornode, 1);
-    glow_draw_fill_rect( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype);
+
+  if ( display_shadow && ish != 0) {
+    XPoint points[7];
+
+    // Draw light shadow
+    int drawtype_incr = shadow_contrast;
+    if ( relief == glow_eRelief_Down)
+      drawtype_incr = -shadow_contrast;
+    
+    drawtype = ((GrowCtx *)ctx)->shift_drawtype( fillcolor, -drawtype_incr, (GrowNode *)colornode);
+
+    points[0].x = ll_x;
+    points[0].y = ll_y;
+    points[1].x = ur_x;
+    points[1].y = ll_y;
+    points[2].x = ur_x - ish;
+    points[2].y = ll_y + ish;
+    points[3].x = ll_x + ish;
+    points[3].y = ll_y + ish;
+    points[4].x = ll_x + ish;
+    points[4].y = ur_y - ish;
+    points[5].x = ll_x;
+    points[5].y = ur_y;
+    points[6].x = ll_x;
+    points[6].y = ll_y;
+    glow_draw_fill_polyline( ctx, points, 7, drawtype, 0);
+
+    // Draw dark shadow
+    drawtype = ((GrowCtx *)ctx)->shift_drawtype( fillcolor, drawtype_incr, (GrowNode *)colornode);
+
+    points[0].x = ur_x;
+    points[0].y = ur_y;
+    points[1].x = ll_x;
+    points[1].y = ur_y;
+    points[2].x = ll_x + ish;
+    points[2].y = ur_y - ish;
+    points[3].x = ur_x - ish;
+    points[3].y = ur_y - ish;
+    points[4].x = ur_x - ish;
+    points[4].y = ll_y + ish;
+    points[5].x = ur_x;
+    points[5].y = ll_y;
+    points[6].x = ur_x;
+    points[6].y = ur_y;
+    glow_draw_fill_polyline( ctx, points, 7, drawtype, 0);
   }
-  if ( border || !fill)
-  {
-    drawtype = ((GrowCtx *)ctx)->get_drawtype( draw_type, glow_eDrawType_Color59,
+  if ( fill) {
+    if ( display_shadow && ish != 0)
+      glow_draw_fill_rect( ctx, ll_x + ish, ll_y + ish, ur_x - ll_x - 2 * ish, ur_y - ll_y - 2 * ish,
+			   fillcolor);
+    else
+      glow_draw_fill_rect( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, fillcolor);
+
+  }
+  if ( border || !(fill || (display_shadow && shadow_width != 0))) {
+    drawtype = ((GrowCtx *)ctx)->get_drawtype( draw_type, glow_eDrawType_LineHighlight,
 		 highlight, (GrowNode *)colornode, 0);
     glow_draw_rect( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype, idx, 0);
   }
@@ -769,27 +831,29 @@ void GrowRect::erase( GlowTransform *t, int hot, void *node)
 
   if (!t)
   {
-    x1 = int( trf.x( ll.x, ll.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y1 = int( trf.y( ll.x, ll.y) * ctx->zoom_factor_y) - ctx->offset_y;
-    x2 = int( trf.x( ur.x, ur.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y2 = int( trf.y( ur.x, ur.y) * ctx->zoom_factor_y) - ctx->offset_y;
+    x1 = int( trf.x( ll.x, ll.y) * ctx->zoom_factor_x + 0.5) - ctx->offset_x;
+    y1 = int( trf.y( ll.x, ll.y) * ctx->zoom_factor_y + 0.5) - ctx->offset_y;
+    x2 = int( trf.x( ur.x, ur.y) * ctx->zoom_factor_x + 0.5) - ctx->offset_x;
+    y2 = int( trf.y( ur.x, ur.y) * ctx->zoom_factor_y + 0.5) - ctx->offset_y;
   }
   else
   {
-    x1 = int( trf.x( t, ll.x, ll.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y1 = int( trf.y( t, ll.x, ll.y) * ctx->zoom_factor_y) - ctx->offset_y;
-    x2 = int( trf.x( t, ur.x, ur.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y2 = int( trf.y( t, ur.x, ur.y) * ctx->zoom_factor_y) - ctx->offset_y;
+    x1 = int( trf.x( t, ll.x, ll.y) * ctx->zoom_factor_x + 0.5) - ctx->offset_x;
+    y1 = int( trf.y( t, ll.x, ll.y) * ctx->zoom_factor_y + 0.5) - ctx->offset_y;
+    x2 = int( trf.x( t, ur.x, ur.y) * ctx->zoom_factor_x + 0.5) - ctx->offset_x;
+    y2 = int( trf.y( t, ur.x, ur.y) * ctx->zoom_factor_y + 0.5) - ctx->offset_y;
   }
   ll_x = min( x1, x2);
   ur_x = max( x1, x2);
   ll_y = min( y1, y2);
   ur_y = max( y1, y2);
 
+  int display_shadow = ((node && ((GrowNode *)node)->shadow) || shadow) && !disable_shadow;
+
   ctx->set_draw_buffer_only();
-  if ( border || !fill)
+  if ( border || !(fill || (display_shadow && shadow_width != 0)))
     glow_draw_rect_erase( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, idx);
-  if ( fill)
+  if ( fill || (shadow && shadow_width != 0))
     glow_draw_fill_rect( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, glow_eDrawType_LineErase);
   ctx->reset_draw_buffer_only();
 }
@@ -819,33 +883,83 @@ void GrowRect::nav_draw( GlowTransform *t, int highlight, void *node, void *colo
 
   if (!t)
   {
-    x1 = int( trf.x( ll.x, ll.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y1 = int( trf.y( ll.x, ll.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-    x2 = int( trf.x( ur.x, ur.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y2 = int( trf.y( ur.x, ur.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
+    x1 = int( trf.x( ll.x, ll.y) * ctx->nav_zoom_factor_x + 0.5) - ctx->nav_offset_x;
+    y1 = int( trf.y( ll.x, ll.y) * ctx->nav_zoom_factor_y + 0.5) - ctx->nav_offset_y;
+    x2 = int( trf.x( ur.x, ur.y) * ctx->nav_zoom_factor_x + 0.5) - ctx->nav_offset_x;
+    y2 = int( trf.y( ur.x, ur.y) * ctx->nav_zoom_factor_y + 0.5) - ctx->nav_offset_y;
   }
   else
   {
-    x1 = int( trf.x( t, ll.x, ll.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y1 = int( trf.y( t, ll.x, ll.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-    x2 = int( trf.x( t, ur.x, ur.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y2 = int( trf.y( t, ur.x, ur.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
+    x1 = int( trf.x( t, ll.x, ll.y) * ctx->nav_zoom_factor_x + 0.5) - ctx->nav_offset_x;
+    y1 = int( trf.y( t, ll.x, ll.y) * ctx->nav_zoom_factor_y + 0.5) - ctx->nav_offset_y;
+    x2 = int( trf.x( t, ur.x, ur.y) * ctx->nav_zoom_factor_x + 0.5) - ctx->nav_offset_x;
+    y2 = int( trf.y( t, ur.x, ur.y) * ctx->nav_zoom_factor_y + 0.5) - ctx->nav_offset_y;
   }
   ll_x = min( x1, x2);
   ur_x = max( x1, x2);
   ll_y = min( y1, y2);
   ur_y = max( y1, y2);
 
-  if ( fill)
-  {
-    drawtype = ((GrowCtx *)ctx)->get_drawtype( fill_drawtype, glow_eDrawType_Color57,
+  int ish = int( shadow_width / 100 * min(ur_x - ll_x, ur_y - ll_y) + 0.5);
+  int display_shadow = ((node && ((GrowNode *)node)->shadow) || shadow) && !disable_shadow;
+  glow_eDrawType  fillcolor = ((GrowCtx *)ctx)->get_drawtype( fill_drawtype, glow_eDrawType_FillHighlight,
 		 0, (GrowNode *)colornode, 1);
-    glow_draw_nav_fill_rect( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-	drawtype);
+
+  if ( display_shadow && ish != 0) {
+    XPoint points[7];
+
+    // Draw light shadow
+    int drawtype_incr = shadow_contrast;
+    if ( relief == glow_eRelief_Down)
+      drawtype_incr = -shadow_contrast;
+    
+    drawtype = ((GrowCtx *)ctx)->shift_drawtype( fillcolor, -drawtype_incr, (GrowNode *)colornode);
+
+    points[0].x = ll_x;
+    points[0].y = ll_y;
+    points[1].x = ur_x;
+    points[1].y = ll_y;
+    points[2].x = ur_x - ish;
+    points[2].y = ll_y + ish;
+    points[3].x = ll_x + ish;
+    points[3].y = ll_y + ish;
+    points[4].x = ll_x + ish;
+    points[4].y = ur_y - ish;
+    points[5].x = ll_x;
+    points[5].y = ur_y;
+    points[6].x = ll_x;
+    points[6].y = ll_y;
+    glow_draw_nav_fill_polyline( ctx, points, 7, drawtype);
+
+    // Draw dark shadow
+    drawtype = ((GrowCtx *)ctx)->shift_drawtype( fillcolor, drawtype_incr, (GrowNode *)colornode);
+
+    points[0].x = ur_x;
+    points[0].y = ur_y;
+    points[1].x = ll_x;
+    points[1].y = ur_y;
+    points[2].x = ll_x + ish;
+    points[2].y = ur_y - ish;
+    points[3].x = ur_x - ish;
+    points[3].y = ur_y - ish;
+    points[4].x = ur_x - ish;
+    points[4].y = ll_y + ish;
+    points[5].x = ur_x;
+    points[5].y = ll_y;
+    points[6].x = ur_x;
+    points[6].y = ur_y;
+    glow_draw_nav_fill_polyline( ctx, points, 7, drawtype);
   }
-  if ( border || !fill)
-  {
-    drawtype = ((GrowCtx *)ctx)->get_drawtype( draw_type, glow_eDrawType_Color59,
+  if ( fill) {
+    if ( display_shadow && ish != 0)
+      glow_draw_nav_fill_rect( ctx, ll_x + ish, ll_y + ish, ur_x - ll_x - 2 * ish, ur_y - ll_y - 
+			       2 * ish, fillcolor);
+    else
+      glow_draw_nav_fill_rect( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
+	fillcolor);
+  }
+  if ( border || !(fill || (display_shadow && shadow_width != 0))) {
+    drawtype = ((GrowCtx *)ctx)->get_drawtype( draw_type, glow_eDrawType_LineHighlight,
 		 0, (GrowNode *)colornode, 0);
     glow_draw_nav_rect( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
 	drawtype, idx, 0);
@@ -876,27 +990,29 @@ void GrowRect::nav_erase( GlowTransform *t, void *node)
 
   if (!t)
   {
-    x1 = int( trf.x( ll.x, ll.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y1 = int( trf.y( ll.x, ll.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-    x2 = int( trf.x( ur.x, ur.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y2 = int( trf.y( ur.x, ur.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
+    x1 = int( trf.x( ll.x, ll.y) * ctx->nav_zoom_factor_x + 0.5) - ctx->nav_offset_x;
+    y1 = int( trf.y( ll.x, ll.y) * ctx->nav_zoom_factor_y + 0.5) - ctx->nav_offset_y;
+    x2 = int( trf.x( ur.x, ur.y) * ctx->nav_zoom_factor_x + 0.5) - ctx->nav_offset_x;
+    y2 = int( trf.y( ur.x, ur.y) * ctx->nav_zoom_factor_y + 0.5) - ctx->nav_offset_y;
   }
   else
   {
-    x1 = int( trf.x( t, ll.x, ll.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y1 = int( trf.y( t, ll.x, ll.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-    x2 = int( trf.x( t, ur.x, ur.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y2 = int( trf.y( t, ur.x, ur.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
+    x1 = int( trf.x( t, ll.x, ll.y) * ctx->nav_zoom_factor_x + 0.5) - ctx->nav_offset_x;
+    y1 = int( trf.y( t, ll.x, ll.y) * ctx->nav_zoom_factor_y + 0.5) - ctx->nav_offset_y;
+    x2 = int( trf.x( t, ur.x, ur.y) * ctx->nav_zoom_factor_x + 0.5) - ctx->nav_offset_x;
+    y2 = int( trf.y( t, ur.x, ur.y) * ctx->nav_zoom_factor_y + 0.5) - ctx->nav_offset_y;
   }
   ll_x = min( x1, x2);
   ur_x = max( x1, x2);
   ll_y = min( y1, y2);
   ur_y = max( y1, y2);
 
-  if ( border || !fill)
+  int display_shadow = ((node && ((GrowNode *)node)->shadow) || shadow) && !disable_shadow;
+
+  if ( border || !(fill || (display_shadow && shadow_width != 0)))
     glow_draw_nav_rect_erase( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
 	idx);
-  if ( fill)
+  if ( fill || (shadow && shadow_width != 0))
     glow_draw_nav_fill_rect( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
 	glow_eDrawType_LineErase);
 }
@@ -996,7 +1112,7 @@ int GrowRect::get_annot_background( GlowTransform *t, void *node,
 {
   if ( fill)
   {
-    *background = ((GrowCtx *)ctx)->get_drawtype( fill_drawtype, glow_eDrawType_Color57,
+    *background = ((GrowCtx *)ctx)->get_drawtype( fill_drawtype, glow_eDrawType_FillHighlight,
 		 0, (GrowNode *)node, 1);
     return 1;
   }
@@ -1100,9 +1216,48 @@ void GrowRect::export_javabean( GlowTransform *t, void *node,
   ll_y = min( y1, y2);
   ur_y = max( y1, y2);
 
+  double ish;
+  if ( !disable_shadow)
+    ish = shadow_width / 100 * min(ur_x - ll_x, ur_y - ll_y);
+  else
+    ish = 0;
+
+  int drawtype_incr = shadow_contrast;
+  if ( relief == glow_eRelief_Down)
+    drawtype_incr = -shadow_contrast;
+
+  int jborder =  border || !(fill || (!disable_shadow && shadow_width != 0));
+
   ((GrowCtx *)ctx)->export_jbean->rect( ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-	fill, border || !fill, fill_drawtype, draw_type, idx, pass, 
-	shape_cnt, node_cnt, fp);
-  (*shape_cnt)++;
+        fill, jborder, fill_drawtype, draw_type, idx, ish, shadow,
+	drawtype_incr, pass, shape_cnt, node_cnt, fp);
 }
 
+void GrowRect::flip( double x0, double y0, glow_eFlipDirection dir)
+{
+  switch ( dir) {
+  case glow_eFlipDirection_Horizontal:
+    trf.store();
+    set_scale( 1, -1, x0, y0, glow_eScaleType_FixPoint);
+    break;
+  case glow_eFlipDirection_Vertical:
+    trf.store();
+    set_scale( -1, 1, x0, y0, glow_eScaleType_FixPoint);
+    break;
+  }
+}
+
+void GrowRect::convert( glow_eConvert version) 
+{
+  switch ( version) {
+  case glow_eConvert_V34: {
+    // Conversion of colors
+    draw_type = GlowColor::convert( version, draw_type);
+    original_border_drawtype = GlowColor::convert( version, original_border_drawtype);
+    original_fill_drawtype = GlowColor::convert( version, original_fill_drawtype);
+    fill_drawtype = GlowColor::convert( version, fill_drawtype);
+
+    break;
+  }
+  }  
+}

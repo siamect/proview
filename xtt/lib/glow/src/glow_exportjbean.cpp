@@ -30,6 +30,8 @@ void GlowExportJBean::growctx( glow_eExportPass pass, ofstream& fp)
 
 "  int fillColor = 9999;" << endl <<
 "  int originalFillColor = 9999;" << endl <<
+"  int textColor = 9999;" << endl <<
+"  int originalTextColor = 9999;" << endl <<
 "  int borderColor = 9999;" << endl <<
 "  int colorTone = 0;" << endl <<
 "  int originalColorTone = 0;" << endl <<
@@ -41,6 +43,7 @@ void GlowExportJBean::growctx( glow_eExportPass pass, ofstream& fp)
 "  int originalColorIntensity = 0;" << endl <<
 "  int colorInverse = 0;" << endl <<
 "  int originalColorInverse = 0;" << endl <<
+"  int shadow = 0;" << endl <<
 "  public void setColorTone( int colorTone) {" << endl <<
 "    this.colorTone = colorTone;" << endl <<
 "    originalColorTone = colorTone;" << endl <<
@@ -112,6 +115,7 @@ void GlowExportJBean::growctx( glow_eExportPass pass, ofstream& fp)
     }
     case glow_eExportPass_Draw:
     {
+      func_cnt = 0;
       fp <<
 
 "  public void paint(Graphics g1) {" << endl <<
@@ -186,6 +190,7 @@ void GlowExportJBean::growctx( glow_eExportPass pass, ofstream& fp)
 
       break;
     }
+    default: ;
   }
 }
 
@@ -313,31 +318,84 @@ void GlowExportJBean::nodeclass( GlowNodeClass *nc, glow_eExportPass pass,
 "    else" << endl <<
 "      g.transform( AffineTransform.getScaleInstance( width/" << original_width << "," << endl <<
 "      		height/" << original_height << "));" << endl <<
-"    if ( dd.type == dd.eTrace_Rotate && dd.rotate != 0) {" << endl <<
+"    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {" << endl <<
 "      g.rotate( Math.PI * dd.rotate/180, " << endl << endl <<
 "           (dd.x0 - getX())*original_width/width,"<< endl <<
 "           (dd.y0 - getY()) * original_height / height);" << endl <<
 "    }" << endl <<
 "    AffineTransform save = g.getTransform();" << endl <<
-"    AffineTransform save_tmp;" << endl;
+"    AffineTransform save_tmp;" << endl <<
+"    int rounds = 1;" << endl <<
+"    if ( fillLevel != 1F)" << endl <<
+"      rounds = 2;" << endl <<
+"    int oldColor = 0;" << endl <<
+"    for ( int i = 0; i < rounds; i++) {" << endl <<
+"      if ( rounds == 2) {" << endl <<
+"        switch ( i) {" << endl <<
+"        case 0:" << endl <<
+"	  if ( levelColorTone != GeColor.COLOR_TONE_NO) {" << endl <<
+"	    oldColor = colorTone;" << endl <<
+"	    colorTone = levelColorTone;" << endl <<
+"	  }" << endl <<
+"	  else if ( levelFillColor != GeColor.COLOR_NO) {" << endl <<
+"	    oldColor = fillColor;" << endl <<
+"	    fillColor = levelFillColor;" << endl <<
+"	  }" << endl <<
+"	  break;" << endl <<
+"        case 1:" << endl <<
+"	  colorTone = oldColor;" << endl <<
+"	  break;" << endl <<
+"        }" << endl <<
+"        switch ( levelDirection) {" << endl <<
+"        case Ge.DIRECTION_UP:" << endl <<
+"	  if ( i == 0)" << endl <<
+"	    g.setClip(new Rectangle2D.Float(0F,fillLevel*original_height+Ge.cJBean_Offset,original_width,original_height));" << endl <<
+"	  else" << endl <<
+"	    g.setClip(new Rectangle2D.Float(0F,0F,original_width,fillLevel * original_height+Ge.cJBean_Offset));" << endl <<	  
+"	  break;" << endl <<
+"	case Ge.DIRECTION_DOWN:" << endl <<
+"	  if ( i == 0)" << endl <<
+"	    g.setClip(new Rectangle2D.Float(0F,0F,original_width,(1-fillLevel)*original_height+Ge.cJBean_Offset));" << endl <<
+"	  else" << endl <<
+"	    g.setClip(new Rectangle2D.Float(0F,(1-fillLevel)*original_height+Ge.cJBean_Offset,original_width,original_height));" << endl <<
+"	  break;" << endl <<
+"	case Ge.DIRECTION_RIGHT:" << endl <<
+"	  if ( i == 0)" << endl <<
+"	    g.setClip(new Rectangle2D.Float(fillLevel*original_width+Ge.cJBean_Offset,0F,original_width,original_height));" << endl <<
+"	  else" << endl <<
+"	    g.setClip(new Rectangle2D.Float(0F,0F,fillLevel*width+Ge.cJBean_Offset,height));" << endl <<
+"	  break;" << endl <<
+"	case Ge.DIRECTION_LEFT:" << endl <<
+"	  if ( i == 0)" << endl <<
+"	    g.setClip(new Rectangle2D.Float(0F,0F,(1-fillLevel)*original_width+Ge.cJBean_Offset,original_height));" << endl <<
+"	  else" << endl <<
+"	    g.setClip(new Rectangle2D.Float((1-fillLevel)*original_width+Ge.cJBean_Offset,0F,original_width,original_height));" << endl <<
+"	  break;" << endl <<
+"	}" << endl <<
+"      }" << endl;
 
       break;
     }
     case glow_eExportPass_End:
     {
       fp <<
+"    }" << endl <<
+"    if ( rounds == 2)" << endl <<
+"      g.setClip(null);" << endl <<
 "    g.setTransform(save);" << endl <<
 "  }" << endl;
 
       break;
     }
+    default: ;
   }
 }
 
 void GlowExportJBean::polyline( glow_sPoint *points, int point_cnt, int fill, int border, 
 	glow_eDrawType fill_drawtype, glow_eDrawType border_drawtype,
-	int fill_eq_border,
-	int line_width, glow_eExportPass pass, int *shape_cnt, int node_cnt, ofstream& fp)
+	int fill_eq_border, int fill_eq_light, int fill_eq_shadow, int line_width, 
+        int print_shadow, int shadow, int drawtype_incr, glow_sShadowInfo *sp, int sp_num, 
+	glow_eExportPass pass, int *shape_cnt, int node_cnt, ofstream& fp)
 {
   int i;
   double dim_x0, dim_x1, dim_y0, dim_y1;
@@ -360,8 +418,7 @@ void GlowExportJBean::polyline( glow_sPoint *points, int point_cnt, int fill, in
 "    new Polygon( new int[] { ";
         for ( i = 0; i < point_cnt; i++)
         {
-          x = points[i].x * ctx->zoom_factor_x - ctx->offset_x - dim_x0 +
-	            glow_cJBean_Offset;
+          x = points[i].x - dim_x0 + glow_cJBean_Offset;
           fp << int(x + 0.5);
           if ( i != point_cnt - 1)
             fp << ", ";
@@ -369,30 +426,26 @@ void GlowExportJBean::polyline( glow_sPoint *points, int point_cnt, int fill, in
         fp << "}, new int[] {";
         for ( i = 0; i < point_cnt; i++)
         {
-          y = points[i].y * ctx->zoom_factor_y - ctx->offset_y - dim_y0 +
-	            glow_cJBean_Offset;
+          y = points[i].y - dim_y0 + glow_cJBean_Offset;
           fp << int(y + 0.5);
           if ( i != point_cnt - 1)
             fp << ", ";
         }
         fp << "}, " << point_cnt << ")," << endl;
       }
-      else
-      {
+      else {
         // Java polygon i always closed, go back int your own footprints
         fp << 
 "    new Polygon( new int[] { ";
         for ( i = 0; i < point_cnt; i++)
         {
-          x = points[i].x * ctx->zoom_factor_x - ctx->offset_x - dim_x0 +
-	            glow_cJBean_Offset;
+          x = points[i].x - dim_x0 + glow_cJBean_Offset;
           fp << int(x + 0.5);
           fp << ", ";
         }
         for ( i = point_cnt - 2; i >= 1; i--)
         {
-          x = points[i].x * ctx->zoom_factor_x - ctx->offset_x - dim_x0 +
-	            glow_cJBean_Offset;
+          x = points[i].x - dim_x0 + glow_cJBean_Offset;
           fp << int(x + 0.5);
           if ( i != 1)
             fp << ", ";
@@ -400,22 +453,34 @@ void GlowExportJBean::polyline( glow_sPoint *points, int point_cnt, int fill, in
         fp << "}, new int[] {";
         for ( i = 0; i < point_cnt; i++)
         {
-          y = points[i].y * ctx->zoom_factor_y - ctx->offset_y - dim_y0 +
-	            glow_cJBean_Offset;
+          y = points[i].y - dim_y0 + glow_cJBean_Offset;
           fp << int(y + 0.5);
           fp << ", ";
         }
         for ( i = point_cnt - 2; i >= 1; i--)
         {
-          y = points[i].y * ctx->zoom_factor_y - ctx->offset_y - dim_y0 +
-	            glow_cJBean_Offset;
+          y = points[i].y - dim_y0 + glow_cJBean_Offset;
           fp << int(y + 0.5);
           if ( i != 1)
             fp << ", ";
         }
         fp << "}, " << 2 * point_cnt - 2 << ")," << endl;
       }
-
+      if ( print_shadow) {
+	for ( i = 0; i < sp_num - 1; i++) {
+	  fp << 
+"    new Polygon( new int[] { ";
+          fp << int(points[i].x - dim_x0 + glow_cJBean_Offset + 0.5) << ", " <<
+	    int(sp[i].x - dim_x0 + glow_cJBean_Offset + 0.5) << ", " <<
+	    int(sp[i+1].x - dim_x0 + glow_cJBean_Offset + 0.5) << ", " <<
+	    int(points[i+1].x - dim_x0 + glow_cJBean_Offset + 0.5) << "}, " <<
+	    "new int[] { "<<
+	    int(points[i].y - dim_y0 + glow_cJBean_Offset + 0.5) << ", " <<
+	    int(sp[i].y - dim_y0 + glow_cJBean_Offset + 0.5) << ", " <<
+	    int(sp[i+1].y - dim_y0 + glow_cJBean_Offset + 0.5) << "," <<
+	    int(points[i+1].y - dim_y0 + glow_cJBean_Offset + 0.5) << "}, 4)," << endl;
+	}
+      }
       break;
     }
     case glow_eExportPass_Init:
@@ -424,35 +489,81 @@ void GlowExportJBean::polyline( glow_sPoint *points, int point_cnt, int fill, in
     }
     case glow_eExportPass_Draw:
     {
-      if ( fill)
-      {
-        if ( !fill_eq_border)
-          fp <<
-"    g.setColor(GeColor.getColor(" << (int)fill_drawtype << ", colorTone," << endl <<
-"	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor));" << endl;
-        else
+      int  base_shape = *shape_cnt;
+      if ( fill) {
+        if ( fill_eq_border)
           fp <<
 "    g.setColor(GeColor.getColor(" << (int)border_drawtype << ", colorTone," << endl <<
 "	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));" << endl;
+	else if ( fill_eq_light) {
+          fp <<
+"    if ( shadow != 0)" << endl <<
+"      g.setColor(GeColor.shiftColor(" << (int)fill_drawtype << "," << -drawtype_incr << ", colorInverse));" << endl <<
+"    else" << endl <<
+"      g.setColor(GeColor.getColor(" << (int)fill_drawtype << ", colorTone," << endl <<
+"	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor));" << endl;
+	}
+	else if ( fill_eq_shadow) {
+          fp <<
+"    if ( shadow != 0)" << endl <<
+"      g.setColor(GeColor.shiftColor(" <<  (int)fill_drawtype << "," << drawtype_incr << ", colorInverse));" << endl <<
+"    else" << endl <<
+"      g.setColor(GeColor.getColor(" << (int)fill_drawtype << ", colorTone," << endl <<
+"	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor));" << endl;
+	}
+	else
+          fp <<
+"    g.setColor(GeColor.getColor(" << (int)fill_drawtype << ", colorTone," << endl <<
+"	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor));" << endl;
+
         if ( page <= 1)
           fp <<
-"    g.fill( shapes[" << *shape_cnt << "]);" << endl;
+"    g.fill( shapes[" << (*shape_cnt)++ << "]);" << endl;
         else
           fp <<
-"    g.fill( shapes_p" << page <<"[" << *shape_cnt << "]);" << endl;
+"    g.fill( shapes_p" << page <<"[" << (*shape_cnt)++ << "]);" << endl;
       }
-      if (border)
-      {
+      else
+	(*shape_cnt)++;
+      if ( print_shadow) {
+	fp <<
+"    {" << endl <<  // Avoid multiple declarations of fcolor
+"    int fcolor = GeColor.getDrawtype(" << (int)fill_drawtype << ", colorTone," << endl <<
+"	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);" << endl;
+
+	if ( !shadow)
+	  // Shadow is choosable at runtime
+	  fp <<
+"    if ( shadow != 0) {" << endl;
+
+	for ( i = 0; i < sp_num - 1; i++) {
+          fp <<
+"    g.setColor(GeColor.shiftColor( fcolor, " << (int)sp[i].drawtype << ", colorInverse));" << endl;
+        if ( page <= 1)
+          fp <<
+"    g.fill( shapes[" << (*shape_cnt)++ << "]);" << endl;
+        else
+          fp <<
+"    g.fill( shapes_p" << page <<"[" << (*shape_cnt)++ << "]);" << endl;
+	}
+
+	if ( !shadow)
+	  fp <<
+"    }" << endl;
+	fp <<
+"    }" << endl;
+      }
+      if (border) {
         fp <<
 "    g.setStroke( new BasicStroke(" << line_width+1 << "F));" << endl <<
 "    g.setColor(GeColor.getColor(" << (int)border_drawtype << ", colorTone," << endl <<
 "	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));" << endl;
         if ( page <= 1)
           fp <<
-"    g.draw( shapes[" << *shape_cnt << "]);" << endl;
+"    g.draw( shapes[" << base_shape << "]);" << endl;
         else
           fp <<
-"    g.draw( shapes_p" << page << "[" << *shape_cnt << "]);" << endl;
+"    g.draw( shapes_p" << page << "[" << base_shape << "]);" << endl;
       }
       break;
     }
@@ -490,7 +601,7 @@ void GlowExportJBean::line( double x1, double y1, double x2, double y2,
     case glow_eExportPass_Draw:
     {
       fp <<
-"    g.setStroke( new BasicStroke(" << line_width+1 << "F));" << endl <<
+"    g.setStroke( new BasicStroke(" << line_width+1 << "F, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));" << endl <<
 "    g.setColor(GeColor.getColor(" << (int)border_drawtype << ", colorTone," << endl <<
 "	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));" << endl;
       if ( page <= 1)
@@ -500,6 +611,14 @@ void GlowExportJBean::line( double x1, double y1, double x2, double y2,
         fp <<
 "    g.draw( shapes_p" << page << "[" << *shape_cnt << "]);" << endl;
 
+      if ( *shape_cnt / 1000 > func_cnt) {
+	// Max number of bytes in a java function is ~65000
+	fp <<
+"    paintComponent" << func_cnt << "( g, save);" << endl <<
+"  }" << endl <<
+"  void paintComponent" << func_cnt << "( Graphics2D g, AffineTransform save) {" << endl;
+	func_cnt++;
+      }
       break;
     }
     default:
@@ -510,7 +629,9 @@ void GlowExportJBean::line( double x1, double y1, double x2, double y2,
 void GlowExportJBean::rect( double x0, double y0, double width, double height,
 	int fill, int border,
 	glow_eDrawType fill_drawtype, glow_eDrawType border_drawtype,
-	int line_width, glow_eExportPass pass, int *shape_cnt, int node_cnt, ofstream& fp)
+	int line_width, double shadow_width, int shadow, 
+	int drawtype_incr, glow_eExportPass pass, int *shape_cnt, 
+        int node_cnt, ofstream& fp)
 {
   double dim_x0, dim_x1, dim_y0, dim_y1;
 
@@ -527,6 +648,37 @@ void GlowExportJBean::rect( double x0, double y0, double width, double height,
 "    new Rectangle2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset << "F, " << 
 	y0 - dim_y0 + glow_cJBean_Offset << "F, " << 
 	width << "F, " << height << "F)," << endl;
+      if ( shadow_width != 0) {
+	fp <<
+"    new Polygon( new int[] { " <<
+	  int( x0 - dim_x0 + glow_cJBean_Offset + 0.5) << ", " << 
+	  int( x0 + width - dim_x0 + glow_cJBean_Offset + 0.5) << ", " << 
+	  int( x0 + width - shadow_width - dim_x0 + glow_cJBean_Offset + 0.5) << ", " << 
+	  int( x0 + shadow_width - dim_x0 + glow_cJBean_Offset + 0.5) << ", " << 
+	  int( x0 + shadow_width - dim_x0 + glow_cJBean_Offset + 0.5) << ", " << 
+	  int( x0 - dim_x0 + glow_cJBean_Offset + 0.5) << "}, " << 
+	  "new int[] { " <<
+	  int( y0 - dim_y0 + glow_cJBean_Offset + 0.5) << ", " << 
+	  int( y0 - dim_y0 + glow_cJBean_Offset + 0.5) << ", " << 
+	  int( y0 + shadow_width - dim_y0 + glow_cJBean_Offset + 0.5) << ", " << 
+	  int( y0 + shadow_width - dim_y0 + glow_cJBean_Offset + 0.5) << ", " << 
+	  int( y0 + height - shadow_width - dim_y0 + glow_cJBean_Offset + 0.5) << ", " << 
+	  int( y0 + height - dim_y0 + glow_cJBean_Offset + 0.5) << "}, 6), " << endl <<
+"    new Polygon( new int[] { " <<
+	  int( x0 + width - dim_x0 + glow_cJBean_Offset + 0.5) << ", " << 
+	  int( x0 + width - dim_x0 + glow_cJBean_Offset + 0.5) << ", " << 
+	  int( x0 + width - shadow_width - dim_x0 + glow_cJBean_Offset + 0.5) << ", " << 
+	  int( x0 + width - shadow_width - dim_x0 + glow_cJBean_Offset + 0.5) << ", " << 
+	  int( x0 + shadow_width - dim_x0 + glow_cJBean_Offset + 0.5) << ", " << 
+	  int( x0 - dim_x0 + glow_cJBean_Offset + 0.5) << "}, " << 
+	  "new int[] { " <<
+	  int( y0 + height - dim_y0 + glow_cJBean_Offset + 0.5) << ", " << 
+	  int( y0 - dim_y0 + glow_cJBean_Offset + 0.5) << ", " << 
+	  int( y0 + shadow_width - dim_y0 + glow_cJBean_Offset + 0.5) << ", " << 
+	  int( y0 + height - shadow_width - dim_y0 + glow_cJBean_Offset + 0.5) << ", " << 
+	  int( y0 + height - shadow_width - dim_y0 + glow_cJBean_Offset + 0.5) << ", " << 
+	  int( y0 + height - dim_y0 + glow_cJBean_Offset + 0.5) << "}, 6), " << endl;
+      }
       break;
     }
     case glow_eExportPass_Init:
@@ -535,11 +687,15 @@ void GlowExportJBean::rect( double x0, double y0, double width, double height,
     }
     case glow_eExportPass_Draw:
     {
+      int base_shape = *shape_cnt;
+      fp <<
+"    {" << endl <<  // Avoid multiple declarations of fcolor
+"    int fcolor = GeColor.getDrawtype(" << (int)fill_drawtype << ", colorTone," << endl <<
+"	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);" << endl;
       if ( fill)
       {
         fp <<
-"    g.setColor(GeColor.getColor(" << (int)fill_drawtype << ", colorTone," << endl <<
-"	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor));" << endl;
+"    g.setColor(GeColor.getColor( fcolor));" << endl;
         if ( page <= 1)
           fp <<
 "    g.fill( shapes[" << *shape_cnt << "]);" << endl;
@@ -547,18 +703,241 @@ void GlowExportJBean::rect( double x0, double y0, double width, double height,
           fp <<
 "    g.fill( shapes_p" << page << "[" << *shape_cnt << "]);" << endl;
       }
-      if (border)
-      {
+      (*shape_cnt)++;
+      if (shadow_width != 0) {
+	if ( !shadow)
+	  fp <<
+"    if ( shadow != 0) {" << endl;
+        fp <<
+	  "    g.setColor(GeColor.shiftColor( fcolor, " << -drawtype_incr << ", colorInverse));" << endl;
+        if ( page <= 1)
+          fp <<
+"    g.fill( shapes[" << (*shape_cnt)++ << "]);" << endl;
+        else
+          fp <<
+"    g.fill( shapes_p" << page << "[" << (*shape_cnt)++ << "]);" << endl;
+
+        fp <<
+	  "    g.setColor(GeColor.shiftColor( fcolor, " << drawtype_incr << ", colorInverse));" << endl;
+        if ( page <= 1)
+          fp <<
+"    g.fill( shapes[" << (*shape_cnt)++ << "]);" << endl;
+        else
+          fp <<
+"    g.fill( shapes_p" << page << "[" << (*shape_cnt)++ << "]);" << endl;
+	if ( !shadow)
+	  fp <<
+"    }" << endl;
+      }
+      if (border) {
         fp <<
 "    g.setStroke( new BasicStroke(" << line_width+1 << "F));" << endl <<
 "    g.setColor(GeColor.getColor(" << (int)border_drawtype << ", colorTone," << endl <<
 "	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));" << endl;
         if ( page <= 1)
           fp <<
-"    g.draw( shapes[" << *shape_cnt << "]);" << endl;
+"    g.draw( shapes[" << base_shape << "]);" << endl;
         else
           fp <<
 "    g.draw( shapes_p" << page << "[" << *shape_cnt << "]);" << endl;
+      }
+      fp <<
+"    }" << endl;
+      break;
+    }
+    default:
+      ;
+  }
+}
+
+void GlowExportJBean::rectrounded( double x0, double y0, double width, double height,
+	int fill, int border,
+	glow_eDrawType fill_drawtype, glow_eDrawType border_drawtype,
+	int line_width, double roundamount, double shadow_width, int shadow, 
+	int drawtype_incr,
+	glow_eExportPass pass, int *shape_cnt, int node_cnt, ofstream& fp)
+{
+  double dim_x0, dim_x1, dim_y0, dim_y1;
+
+  switch ( pass)
+  {
+    case glow_eExportPass_Shape:
+    {
+      if ( is_nodeclass)
+        nc->measure_javabean( &dim_x1, &dim_x0, &dim_y1, &dim_y0);
+      else
+        ((GrowCtx *)ctx)->measure_javabean( &dim_x1, &dim_x0, &dim_y1, &dim_y0);
+
+      fp << 
+"    new RoundRectangle2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset << "F, " << 
+	y0 - dim_y0 + glow_cJBean_Offset << "F, " << 
+	width << "F, " << height << "F, " << 2*roundamount << "F, " << 2*roundamount << "F)," << endl;
+      if ( shadow_width != 0) {
+	// Light shadow
+	fp << 
+"    new Rectangle2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset + roundamount << "F, " << 
+	  y0 - dim_y0 + glow_cJBean_Offset << "F, " << 
+	  width - 2*roundamount<< "F, " << shadow_width << "F)," << endl <<
+"    new Rectangle2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset << "F, " << 
+	  y0 - dim_y0 + glow_cJBean_Offset + roundamount << "F, " << 
+	  shadow_width << "F, " << height - 2*roundamount << "F)," << endl <<
+"    new Arc2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset << "F, " << 
+	y0  - dim_y0 + glow_cJBean_Offset << "F, " << 
+	2*roundamount << "F, " << 2*roundamount << "F, " << 
+	  90 << "F, " << 90 << "F, Arc2D.PIE)," << endl <<
+"    new Arc2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset + width - 2*roundamount << "F, " << 
+	y0  - dim_y0 + glow_cJBean_Offset << "F, " << 
+	2*roundamount << "F, " << 2*roundamount << "F, " << 
+	  45 << "F, " << 45<< "F, Arc2D.PIE)," << endl <<
+"    new Arc2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset << "F, " << 
+	y0  - dim_y0 + glow_cJBean_Offset + height - 2*roundamount << "F, " << 
+	2*roundamount << "F, " << 2*roundamount << "F, " << 
+	  180 << "F, " << 45<< "F, Arc2D.PIE)," << endl;
+	// Dark shadow
+	fp << 
+"    new Rectangle2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset + roundamount << "F, " << 
+	  y0 - dim_y0 + glow_cJBean_Offset + height - shadow_width << "F, " << 
+	  width - 2*roundamount<< "F, " << shadow_width << "F)," << endl <<
+"    new Rectangle2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset + width - shadow_width << "F, " << 
+	  y0 - dim_y0 + glow_cJBean_Offset + roundamount << "F, " << 
+	  shadow_width << "F, " << height - 2*roundamount << "F)," << endl <<
+"    new Arc2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset + width - 2*roundamount << "F, " << 
+	  y0  - dim_y0 + glow_cJBean_Offset + height - 2*roundamount << "F, " << 
+	2*roundamount << "F, " << 2*roundamount << "F, " << 
+	  270 << "F, " << 90 << "F, Arc2D.PIE)," << endl <<
+"    new Arc2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset + width - 2*roundamount << "F, " << 
+	y0  - dim_y0 + glow_cJBean_Offset << "F, " << 
+	2*roundamount << "F, " << 2*roundamount << "F, " << 
+	  0 << "F, " << 45<< "F, Arc2D.PIE)," << endl <<
+"    new Arc2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset << "F, " << 
+	y0  - dim_y0 + glow_cJBean_Offset + height - 2*roundamount << "F, " << 
+	2*roundamount << "F, " << 2*roundamount << "F, " << 
+	  225 << "F, " << 45<< "F, Arc2D.PIE)," << endl;
+	if ( roundamount > shadow_width) {
+	  fp << 
+"    new RoundRectangle2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset + shadow_width << "F, " << 
+	y0 - dim_y0 + glow_cJBean_Offset + shadow_width << "F, " << 
+	width - 2*shadow_width << "F, " << height - 2*shadow_width << "F, " << 2*roundamount - 2*shadow_width << "F, " << 2*roundamount - 2*shadow_width << "F)," << endl;
+	}
+	else {
+	  fp <<
+"    new Rectangle2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset + shadow_width << "F, " << 
+	y0 - dim_y0 + glow_cJBean_Offset + shadow_width << "F, " << 
+	width - 2*shadow_width << "F, " << height - 2*shadow_width << "F)," << endl;
+	}
+	fp << 
+"    new RoundRectangle2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset << "F, " << 
+	y0 - dim_y0 + glow_cJBean_Offset << "F, " << 
+	width << "F, " << height << "F, " << 2*roundamount << "F, " << 2*roundamount << "F)," << endl;
+      }
+      break;
+    }
+    case glow_eExportPass_Init:
+    {
+      break;
+    }
+    case glow_eExportPass_Draw:
+    {
+      if ( fill) {
+	fp <<
+"    {" << endl <<  // Avoid multiple declarations of fcolor
+"    int fcolor = GeColor.getDrawtype(" << (int)fill_drawtype << ", colorTone," << endl <<
+"	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);" << endl;
+	if ( shadow_width == 0) {
+
+	  // Print noshadow shape only
+	  fp <<
+"    g.setColor(GeColor.getColor( fcolor));" << endl;
+	  if ( page <= 1)
+	    fp <<
+"    g.fill( shapes[" << (*shape_cnt)++ << "]);" << endl;
+	  else
+	    fp <<
+"    g.fill( shapes_p" << page << "[" << (*shape_cnt)++ << "]);" << endl;
+	}
+	else {
+	  if ( !shadow) {
+	    // Shadow should be choosable at runetim
+
+	    // Print noshadow shape
+	    fp <<
+"    if ( shadow == 0) {" << endl;
+	  fp <<
+"    g.setColor(GeColor.getColor( fcolor));" << endl;
+	  if ( page <= 1)
+	    fp <<
+"    g.fill( shapes[" << (*shape_cnt)++ << "]);" << endl;
+	  else
+	    fp <<
+"    g.fill( shapes_p" << page << "[" << (*shape_cnt)++ << "]);" << endl;
+	  fp <<
+"    } else {" << endl;
+	  }
+	  else
+	    (*shape_cnt)++;
+
+	  // Print shadow shapes
+	  fp <<
+"    g.setColor(GeColor.shiftColor( fcolor, " << -drawtype_incr << ", colorInverse));" << endl;
+	  if ( page <= 1)
+	    fp <<
+"    g.fill( shapes[" << (*shape_cnt)++ << "]);" << endl <<
+"    g.fill( shapes[" << (*shape_cnt)++ << "]);" << endl <<
+"    g.fill( shapes[" << (*shape_cnt)++ << "]);" << endl <<
+"    g.fill( shapes[" << (*shape_cnt)++ << "]);" << endl <<
+"    g.fill( shapes[" << (*shape_cnt)++ << "]);" << endl;
+	  else
+	    fp <<
+"    g.fill( shapes_p" << page << "[" << (*shape_cnt)++ << "]);" << endl <<
+"    g.fill( shapes_p" << page << "[" << (*shape_cnt)++ << "]);" << endl <<
+"    g.fill( shapes_p" << page << "[" << (*shape_cnt)++ << "]);" << endl <<
+"    g.fill( shapes_p" << page << "[" << (*shape_cnt)++ << "]);" << endl <<
+"    g.fill( shapes_p" << page << "[" << (*shape_cnt)++ << "]);" << endl;
+	  fp <<
+"    g.setColor(GeColor.shiftColor( fcolor, " << drawtype_incr << ", colorInverse));" << endl;
+	  if ( page <= 1)
+	    fp <<
+"    g.fill( shapes[" << (*shape_cnt)++ << "]);" << endl <<
+"    g.fill( shapes[" << (*shape_cnt)++ << "]);" << endl <<
+"    g.fill( shapes[" << (*shape_cnt)++ << "]);" << endl <<
+"    g.fill( shapes[" << (*shape_cnt)++ << "]);" << endl <<
+"    g.fill( shapes[" << (*shape_cnt)++ << "]);" << endl;
+	  else
+	    fp <<
+"    g.fill( shapes_p" << page << "[" << (*shape_cnt)++ << "]);" << endl <<
+"    g.fill( shapes_p" << page << "[" << (*shape_cnt)++ << "]);" << endl <<
+"    g.fill( shapes_p" << page << "[" << (*shape_cnt)++ << "]);" << endl <<
+"    g.fill( shapes_p" << page << "[" << (*shape_cnt)++ << "]);" << endl <<
+"    g.fill( shapes_p" << page << "[" << (*shape_cnt)++ << "]);" << endl;
+	  fp <<
+"    g.setColor(GeColor.getColor( fcolor));" << endl;
+	  if ( page <= 1)
+	    fp <<
+"    g.fill( shapes[" << (*shape_cnt)++ << "]);" << endl;
+	  else
+	    fp <<
+"    g.fill( shapes_p" << page << "[" << (*shape_cnt)++ << "]);" << endl;
+	  if ( !shadow)
+	    fp <<
+"    }" << endl;
+	  fp <<
+"    }" << endl;
+	}
+      }
+      if (border)
+      {
+	if ( shadow_width == 0)
+	  (*shape_cnt)--;
+        fp <<
+"    g.setStroke( new BasicStroke(" << line_width+1 << "F));" << endl <<
+"    g.setColor(GeColor.getColor(" << (int)border_drawtype << ", colorTone," << endl <<
+"	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));" << endl;
+        if ( page <= 1)
+          fp <<
+"    g.draw( shapes[" << (*shape_cnt)++ << "]);" << endl;
+        else
+          fp <<
+"    g.draw( shapes_p" << page << "[" << (*shape_cnt)++ << "]);" << endl;
       }
       break;
     }
@@ -570,7 +949,9 @@ void GlowExportJBean::rect( double x0, double y0, double width, double height,
 void GlowExportJBean::arc( double x0, double y0, double width, double height,
 	double angel1, double angel2, int fill, int border,
 	glow_eDrawType fill_drawtype, glow_eDrawType border_drawtype,
-	int line_width, glow_eExportPass pass, int *shape_cnt, int node_cnt, ofstream& fp)
+	int line_width, double shadow_width, int shadow, 
+	int drawtype_incr, glow_eExportPass pass, int *shape_cnt, 
+	int node_cnt, ofstream& fp)
 {
   double dim_x0, dim_x1, dim_y0, dim_y1;
   char arc_type_str[20];
@@ -593,6 +974,35 @@ void GlowExportJBean::arc( double x0, double y0, double width, double height,
 	y0  - dim_y0 + glow_cJBean_Offset << "F, " << 
 	width << "F, " << height << "F, " << 
 	angel1 << "F, " << angel2 << "F, Arc2D." << arc_type_str <<")," << endl;
+
+      if ( !(shadow_width == 0 || angel2 != 360)) {
+	fp << 
+"    new Arc2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset << "F, " << 
+	  y0  - dim_y0 + glow_cJBean_Offset << "F, " << 
+	  width << "F, " << height << "F, " << 
+	  35 << "F, " << 140 << "F, Arc2D." << arc_type_str <<")," << endl <<
+"    new Arc2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset << "F, " << 
+	  y0  - dim_y0 + glow_cJBean_Offset << "F, " << 
+	  width << "F, " << height << "F, " << 
+	  215 << "F, " << 140 << "F, Arc2D." << arc_type_str <<")," << endl <<
+"    new Arc2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset << "F, " << 
+	  y0  - dim_y0 + glow_cJBean_Offset << "F, " << 
+	  width << "F, " << height << "F, " << 
+	  -5 << "F, " << 40 << "F, Arc2D." << arc_type_str <<")," << endl <<
+"    new Arc2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset << "F, " << 
+	  y0  - dim_y0 + glow_cJBean_Offset << "F, " << 
+	  width << "F, " << height << "F, " << 
+	  175 << "F, " << 40 << "F, Arc2D." << arc_type_str <<")," << endl <<
+"    new Arc2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset + shadow_width << "F, " << 
+	  y0  - dim_y0 + glow_cJBean_Offset + shadow_width << "F, " << 
+	  width - 2*shadow_width << "F, " << height - 2*shadow_width << "F, " << 
+	  angel1 << "F, " << angel2 << "F, Arc2D." << arc_type_str <<")," << endl <<
+"    new Arc2D.Float(" << x0 - dim_x0 + glow_cJBean_Offset << "F, " << 
+	  y0  - dim_y0 + glow_cJBean_Offset << "F, " << 
+	  width << "F, " << height << "F, " << 
+	  angel1 << "F, " << angel2 << "F, Arc2D." << arc_type_str <<")," << endl;
+
+      }
       break;
     }
     case glow_eExportPass_Init:
@@ -601,48 +1011,186 @@ void GlowExportJBean::arc( double x0, double y0, double width, double height,
     }
     case glow_eExportPass_Draw:
     {
-      if ( fill)
-      {
-        if ( border)
-        {
-          if ( page <= 1)
-            fp <<
+      if ( !shadow_width || angel2 != 360) {
+	if ( fill) {
+	  if ( border) {
+	    if ( page <= 1)
+	      fp <<
 "    ((Arc2D)shapes[" << *shape_cnt << "]).setArcType(Arc2D.PIE);" << endl;
-          else
-            fp <<
+	    else
+	      fp <<
 "    ((Arc2D)shapes_p" << page << "[" << *shape_cnt << "]).setArcType(Arc2D.PIE);" << endl;
-        }
-        fp <<
+	  }
+	  fp <<
 "    g.setColor(GeColor.getColor(" << (int)fill_drawtype << ", colorTone," << endl <<
 "	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor));" << endl;
-        if ( page <= 1)
-          fp <<
+	  if ( page <= 1)
+	    fp <<
 "    g.fill( shapes[" << *shape_cnt << "]);" << endl;
-        else
-          fp <<
+	  else
+	    fp <<
 "    g.fill( shapes_p" << page << "[" << *shape_cnt << "]);" << endl;
-      }
-      if (border)
-      {
-        if ( fill)
-        {
-          if ( page <= 1)
-            fp <<
+	}
+	if (border) {
+	  if ( fill) {
+	    if ( page <= 1)
+	      fp <<
 "    ((Arc2D)shapes[" << *shape_cnt << "]).setArcType(Arc2D.OPEN);" << endl;
-          else
-            fp <<
+	    else
+	      fp <<
 "    ((Arc2D)shapes_p" << page << "[" << *shape_cnt << "]).setArcType(Arc2D.OPEN);" << endl;
-        }
-        fp <<
+	  }
+	  fp <<
 "    g.setStroke( new BasicStroke(" << line_width+1 << "F));" << endl <<
 "    g.setColor(GeColor.getColor(" << (int)border_drawtype << ", colorTone," << endl <<
 "	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));" << endl;
-        if ( page <= 1)
-          fp <<
+	  if ( page <= 1)
+	    fp <<
 "    g.draw( shapes[" << *shape_cnt << "]);" << endl;
-        else
-          fp <<
+	  else
+	    fp <<
 "    g.draw( shapes_p" << page << "[" << *shape_cnt << "]);" << endl;
+	}
+	(*shape_cnt)++;
+      }
+      else {  // Shadow
+	if ( !shadow) {
+	  // Shadow is choosable in runtime
+	  fp <<
+"    if ( shadow == 0) {" << endl;
+	  // Print noshadow
+	  if ( fill) {
+	    if ( border) {
+	      if ( page <= 1)
+		fp <<
+"    ((Arc2D)shapes[" << *shape_cnt << "]).setArcType(Arc2D.PIE);" << endl;
+	      else
+		fp <<
+"    ((Arc2D)shapes_p" << page << "[" << *shape_cnt << "]).setArcType(Arc2D.PIE);" << endl;
+	    }
+	    fp <<
+"    g.setColor(GeColor.getColor(" << (int)fill_drawtype << ", colorTone," << endl <<
+"	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor));" << endl;
+	    if ( page <= 1)
+	      fp <<
+"    g.fill( shapes[" << *shape_cnt << "]);" << endl;
+	    else
+	      fp <<
+"    g.fill( shapes_p" << page << "[" << *shape_cnt << "]);" << endl;
+	  }
+	  if (border) {
+	    if ( fill) {
+	      if ( page <= 1)
+		fp <<
+"    ((Arc2D)shapes[" << *shape_cnt << "]).setArcType(Arc2D.OPEN);" << endl;
+	      else
+		fp <<
+"    ((Arc2D)shapes_p" << page << "[" << *shape_cnt << "]).setArcType(Arc2D.OPEN);" << endl;
+	    }
+	    fp <<
+"    g.setStroke( new BasicStroke(" << line_width+1 << "F));" << endl <<
+"    g.setColor(GeColor.getColor(" << (int)border_drawtype << ", colorTone," << endl <<
+"	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));" << endl;
+	    if ( page <= 1)
+	      fp <<
+"    g.draw( shapes[" << *shape_cnt << "]);" << endl;
+	    else
+	      fp <<
+"    g.draw( shapes_p" << page << "[" << *shape_cnt << "]);" << endl;
+	  }
+	  (*shape_cnt)++;
+
+	  fp <<
+"    } else {" << endl;
+	}
+	else
+	  (*shape_cnt)++;
+
+	// Print shadow
+	if ( fill) {
+	  if ( border) {
+	    if ( page <= 1)
+	      fp <<
+"    ((Arc2D)shapes[" << *shape_cnt << "]).setArcType(Arc2D.PIE);" << endl <<
+"    ((Arc2D)shapes[" << *shape_cnt+1 << "]).setArcType(Arc2D.PIE);" << endl <<
+"    ((Arc2D)shapes[" << *shape_cnt+2 << "]).setArcType(Arc2D.PIE);" << endl <<
+"    ((Arc2D)shapes[" << *shape_cnt+3 << "]).setArcType(Arc2D.PIE);" << endl <<
+"    ((Arc2D)shapes[" << *shape_cnt+4 << "]).setArcType(Arc2D.PIE);" << endl;
+	    else
+	      fp <<
+"    ((Arc2D)shapes_p" << page << "[" << *shape_cnt << "]).setArcType(Arc2D.PIE);" << endl <<
+"    ((Arc2D)shapes_p" << page << "[" << *shape_cnt+1 << "]).setArcType(Arc2D.PIE);" << endl <<
+"    ((Arc2D)shapes_p" << page << "[" << *shape_cnt+2 << "]).setArcType(Arc2D.PIE);" << endl <<
+"    ((Arc2D)shapes_p" << page << "[" << *shape_cnt+3 << "]).setArcType(Arc2D.PIE);" << endl <<
+"    ((Arc2D)shapes_p" << page << "[" << *shape_cnt+4 << "]).setArcType(Arc2D.PIE);" << endl;
+	  }
+	  fp <<
+"    {" << endl <<  // Avoid multiple declarations of fcolor
+"    int fcolor = GeColor.getDrawtype(" << (int)fill_drawtype << ", colorTone," << endl <<
+"	 colorShift, colorIntensity, colorBrightness, colorInverse, fillColor);" << endl;
+
+
+	  // Light shadow
+	  fp <<
+"    g.setColor(GeColor.shiftColor( fcolor, " << -drawtype_incr << ", colorInverse));" << endl;
+	  if ( page <= 1)
+	    fp <<
+"    g.fill( shapes[" << *shape_cnt << "]);" << endl;
+	  else
+	    fp <<
+"    g.fill( shapes_p" << page << "[" << *shape_cnt << "]);" << endl;
+
+	  // Dark shadow
+	  fp <<
+"    g.setColor(GeColor.shiftColor( fcolor, " << drawtype_incr << ", colorInverse));" << endl;
+	  if ( page <= 1)
+	    fp <<
+"    g.fill( shapes[" << *shape_cnt+1 << "]);" << endl;
+	  else
+	    fp <<
+"    g.fill( shapes_p" << page << "[" << *shape_cnt+1 << "]);" << endl;
+
+	  // Medium shadow and base
+	  fp <<
+"    g.setColor(GeColor.getColor( fcolor));" << endl;
+	  if ( page <= 1)
+	    fp <<
+"    g.fill( shapes[" << *shape_cnt+2 << "]);" << endl <<
+"    g.fill( shapes[" << *shape_cnt+3 << "]);" << endl <<
+"    g.fill( shapes[" << *shape_cnt+4 << "]);" << endl;
+	  else
+	    fp <<
+"    g.fill( shapes_p" << page << "[" << *shape_cnt+2 << "]);" << endl <<
+"    g.fill( shapes_p" << page << "[" << *shape_cnt+3 << "]);" << endl <<
+"    g.fill( shapes_p" << page << "[" << *shape_cnt+4 << "]);" << endl;
+	  fp <<
+"    }" << endl;
+	}
+	if (border) {
+	  if ( fill) {
+	    if ( page <= 1)
+	      fp <<
+"    ((Arc2D)shapes[" << *shape_cnt+5 << "]).setArcType(Arc2D.OPEN);" << endl;
+	    else
+	      fp <<
+"    ((Arc2D)shapes_p" << page << "[" << *shape_cnt+5 << "]).setArcType(Arc2D.OPEN);" << endl;
+	  }
+	  fp <<
+"    g.setStroke( new BasicStroke(" << line_width+1 << "F));" << endl <<
+"    g.setColor(GeColor.getColor(" << (int)border_drawtype << ", colorTone," << endl <<
+"	 colorShift, colorIntensity, colorBrightness, colorInverse, borderColor));" << endl;
+	  if ( page <= 1)
+	    fp <<
+"    g.draw( shapes[" << *shape_cnt+5 << "]);" << endl;
+	  else
+	    fp <<
+"    g.draw( shapes_p" << page << "[" << *shape_cnt+5 << "]);" << endl;
+	}
+	if ( !shadow)
+	  fp <<
+"    }" << endl;
+
+	(*shape_cnt) += 6;
       }
       break;
     }
@@ -652,7 +1200,7 @@ void GlowExportJBean::arc( double x0, double y0, double width, double height,
 }
 
 void GlowExportJBean::text( int x0, int y0, char *text,
-	glow_eDrawType drawtype, int bold,
+	glow_eDrawType drawtype, glow_eDrawType color_drawtype, int bold,
 	int idx, glow_eExportPass pass, int *shape_cnt, int node_cnt, ofstream& fp)
 {
   double dim_x0, dim_x1, dim_y0, dim_y1;
@@ -693,7 +1241,9 @@ void GlowExportJBean::text( int x0, int y0, char *text,
       else
         strcpy(bold_str, "PLAIN");
       fp <<
-"    g.setColor(Color.black);" << endl <<
+"    g.setColor(GeColor.getColor(" << (int)color_drawtype << ", colorTone," << endl <<
+"	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor));" << endl <<
+      // "    g.setColor(Color.black);" << endl <<
 "    g.setFont(new Font(\"Helvetica\", Font." << bold_str << ", " << 
 	text_size << "));" << endl <<
 "    g.drawString( \"" << str_cnv( text) << "\"," << 
@@ -707,7 +1257,7 @@ void GlowExportJBean::text( int x0, int y0, char *text,
 }
 
 void GlowExportJBean::annot( int x0, int y0, int number,
-	glow_eDrawType drawtype, int bold,
+	glow_eDrawType drawtype, glow_eDrawType text_drawtype, int bold,
 	int idx, glow_eExportPass pass, int *shape_cnt, int node_cnt, ofstream& fp)
 {
   double dim_x0, dim_x1, dim_y0, dim_y1;
@@ -748,8 +1298,11 @@ void GlowExportJBean::annot( int x0, int y0, int number,
 	" = s;}" << endl <<
 "  Font annot" << number << "Font = new Font(\"Helvetica\", Font." << 
 	bold_str << ", " << text_size << ");" << endl <<
+"  int annot" << number << "Color = " << text_drawtype << ";" << endl <<
 "  public void setAnnot" << number << "Font( Font font) { annot" << number << 
 	"Font = font;}" << endl <<
+"  public void setAnnot" << number << "Color( int color) { annot" << number << 
+	"Color = color;}" << endl <<
 "  public Font getAnnot" << number << "Font() { return annot" << number << 
 	"Font;}" << endl;
 
@@ -762,7 +1315,9 @@ void GlowExportJBean::annot( int x0, int y0, int number,
       else
         ((GrowCtx *)ctx)->measure_javabean( &dim_x1, &dim_x0, &dim_y1, &dim_y0);
       fp <<
-"    g.setColor(Color.black);" << endl <<
+"    g.setColor(GeColor.getColor( annot" << number << "Color , colorTone," << endl <<
+"	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor));" << endl <<
+	//"    g.setColor(Color.black);" << endl <<
 "    g.setFont( annot" << number << "Font);" << endl <<
 "    save_tmp = g.getTransform();" << endl;
       if ( antialiasing_on)
@@ -839,12 +1394,14 @@ void GlowExportJBean::node( double x1, double y1, double x2, double y2,
 	char *class_name,
     	glow_eDrawType border_drawtype,
     	glow_eDrawType	fill_drawtype,
+	glow_eDrawType text_drawtype,
     	glow_eDrawTone	color_tone,
     	int		color_lightness,
     	int		color_intensity,
     	int		color_shift,
     	int		line_width,
 	double		rotate,
+	int 		shadow,
 	glow_eExportPass pass, int *shape_cnt, int node_cnt, int in_nc, ofstream& fp)
 {
   double dim_x0, dim_x1, dim_y0, dim_y1;
@@ -861,7 +1418,7 @@ void GlowExportJBean::node( double x1, double y1, double x2, double y2,
     case glow_eExportPass_Declare:
     {
       fp <<
-"  " << class_name << "	" << var_name << " = new " << class_name << "();" << endl;
+"  " << class_name << "	" << var_name << ";" << endl;
       break;
     }
     case glow_eExportPass_Attributes:
@@ -872,17 +1429,21 @@ void GlowExportJBean::node( double x1, double y1, double x2, double y2,
         ((GrowCtx *)ctx)->measure_javabean( &dim_x1, &dim_x0, &dim_y1, &dim_y0);
 
       fp <<
+"    " << var_name << " = new " << class_name << "(session);" << endl <<
 "    " << var_name << ".setBounds(new Rectangle(" << 
 	(int)(x1 - dim_x0 /* - glow_cJBean_Offset) */) << "," << 
 	(int)(y1 - dim_y0 /* - glow_cJBean_Offset) */) << "," << 
 	(int)(x2 - x1 + 2 * glow_cJBean_Offset) << "," << 
 	(int)(y2 - y1 + 2 * glow_cJBean_Offset) << "));" << endl;
-      if ( fill_drawtype != glow_eDrawType_No)
+      if ( fill_drawtype != glow_eDrawType_No && color_tone == glow_eDrawTone_No)
         fp <<
 "    " << var_name << ".setFillColor(" << (int)fill_drawtype << ");" << endl;
       if ( border_drawtype != glow_eDrawType_No)
         fp <<
 "    " << var_name << ".setBorderColor(" << (int)border_drawtype << ");" << endl;
+      if ( text_drawtype != glow_eDrawType_No)
+        fp <<
+"    " << var_name << ".setTextColor(" << (int)text_drawtype << ");" << endl;
       if ( color_tone != glow_eDrawTone_No)
         fp <<
 "    " << var_name << ".setColorTone(" << (int)color_tone << ");" << endl;
@@ -898,6 +1459,9 @@ void GlowExportJBean::node( double x1, double y1, double x2, double y2,
       if ( rotate)
         fp <<
 "    " << var_name << ".setRotate(" << rotate << ");" << endl;
+      if ( shadow)
+        fp <<
+"    " << var_name << ".setShadow(" << shadow << ");" << endl;
       if ( is_nodeclass)
         fp <<
 "    add(" << var_name << ");" << endl;
@@ -912,7 +1476,7 @@ void GlowExportJBean::node( double x1, double y1, double x2, double y2,
         fp <<
 "    save_tmp = g.getTransform();" << endl <<
 "    g.translate( " << var_name << ".getX(), " << var_name << ".getY());" << endl <<
-"    if ( " << var_name << ".dd.type == 0) {" << endl <<
+"    if ( " << var_name << ".dd.dynType == 0) {" << endl <<
 "      " << var_name << ".colorTone = colorTone;" << endl <<
 "      " << var_name << ".colorBrightness = colorBrightness;" << endl <<
 "      " << var_name << ".colorIntensity = colorIntensity;" << endl <<
@@ -959,7 +1523,7 @@ void GlowExportJBean::image( double x1, double y1, double x2, double y2,
     case glow_eExportPass_Declare:
     {
       fp <<
-"  GeImage 	" << var_name << " = new GeImage();" << endl;
+"  GeImage 	" << var_name << ";" << endl;
       break;
     }
     case glow_eExportPass_Attributes:
@@ -970,6 +1534,7 @@ void GlowExportJBean::image( double x1, double y1, double x2, double y2,
         ((GrowCtx *)ctx)->measure_javabean( &dim_x1, &dim_x0, &dim_y1, &dim_y0);
 
       fp <<
+"    " << var_name << " = new GeImage(session);" << endl <<
 "    " << var_name << ".setBounds(new Rectangle(" << 
 	(int)(x1 - dim_x0 /* - glow_cJBean_Offset) */) << "," << 
 	(int)(y1 - dim_y0 /* - glow_cJBean_Offset) */) << "," << 
@@ -1051,7 +1616,7 @@ void GlowExportJBean::bar( double x1, double y1, double x2, double y2,
     case glow_eExportPass_Declare:
     {
       fp <<
-"  " << class_name << "	" << var_name << " = new " << class_name << "();" << endl;
+"  " << class_name << "	" << var_name << ";" << endl;
       break;
     }
     case glow_eExportPass_Attributes:
@@ -1059,6 +1624,7 @@ void GlowExportJBean::bar( double x1, double y1, double x2, double y2,
       ((GrowCtx *)ctx)->measure_javabean( &dim_x1, &dim_x0, &dim_y1, &dim_y0);
 
       fp <<
+"    " << var_name << " = new " << class_name << "(session);" << endl <<
 "    " << var_name << ".setBounds(new Rectangle(" << 
 	(int)(x1 - dim_x0 /* - glow_cJBean_Offset) */) << "," << 
 	(int)(y1 - dim_y0 /* - glow_cJBean_Offset) */) << "," << 
@@ -1143,7 +1709,7 @@ void GlowExportJBean::trend( double x1, double y1, double x2, double y2,
     case glow_eExportPass_Declare:
     {
       fp <<
-"  " << class_name << "	" << var_name << " = new " << class_name << "();" << endl;
+"  " << class_name << "	" << var_name << ";" << endl;
       break;
     }
     case glow_eExportPass_Attributes:
@@ -1151,6 +1717,7 @@ void GlowExportJBean::trend( double x1, double y1, double x2, double y2,
       ((GrowCtx *)ctx)->measure_javabean( &dim_x1, &dim_x0, &dim_y1, &dim_y0);
 
       fp <<
+"    " << var_name << " = new " << class_name << "( session);" << endl <<
 "    " << var_name << ".setBounds(new Rectangle(" << 
 	(int)(x1 - dim_x0 /* - glow_cJBean_Offset) */) << "," << 
 	(int)(y1 - dim_y0 /* - glow_cJBean_Offset) */) << "," << 
@@ -1181,7 +1748,7 @@ void GlowExportJBean::trend( double x1, double y1, double x2, double y2,
         fp <<
 "    " << var_name << ".setDrawFill(1);" << endl;
       if ( border)
-        fp <<
+	fp <<
 "    " << var_name << ".setDrawBorder(1);" << endl;
       fp <<
 "    " << var_name << ".setTrendBorderWidth(" << curve_width << ");" << endl <<
@@ -1211,6 +1778,7 @@ void GlowExportJBean::trend( double x1, double y1, double x2, double y2,
 
 void GlowExportJBean::axis( double x1, double y1, double x2, double y2,
     	glow_eDrawType border_drawtype,
+    	glow_eDrawType text_drawtype,
 	double		min_value,
 	double		max_value,
 	int	        lines,
@@ -1240,7 +1808,7 @@ void GlowExportJBean::axis( double x1, double y1, double x2, double y2,
     case glow_eExportPass_Declare:
     {
       fp <<
-"  " << class_name << "	" << var_name << " = new " << class_name << "();" << endl;
+"  " << class_name << "	" << var_name << ";" << endl;
       break;
     }
     case glow_eExportPass_Attributes:
@@ -1268,6 +1836,7 @@ void GlowExportJBean::axis( double x1, double y1, double x2, double y2,
         strcpy(bold_str, "PLAIN");
 
       fp <<
+"    " << var_name << " = new " << class_name << "();" << endl <<
 "    " << var_name << ".setBounds(new Rectangle(" << 
 	(int)(x1 - dim_x0 + glow_cJBean_Offset) << "," << 
 	(int)(y1 - dim_y0 + glow_cJBean_Offset) << "," << 
@@ -1280,6 +1849,12 @@ void GlowExportJBean::axis( double x1, double y1, double x2, double y2,
       else
         fp <<
 "    " << var_name << ".setBorderColor( 0);" << endl;
+      if ( text_drawtype != glow_eDrawType_No)
+        fp <<
+"    " << var_name << ".setTextColor(" << (int)text_drawtype << ");" << endl;
+      else
+        fp <<
+"    " << var_name << ".setTextColor( 0);" << endl;
       fp <<
 "    " << var_name << ".setLineWidth(" << line_width << ");" << endl <<
 "    " << var_name << ".setMinValue(" << min_value << "F);" << endl <<
@@ -1314,63 +1889,19 @@ void GlowExportJBean::slider( double x1, double y1, double x2, double y2,
 	char *class_name,
     	glow_eDrawType border_drawtype,
     	glow_eDrawType	fill_drawtype,
+    	glow_eDrawType	text_drawtype,
     	glow_eDrawTone	color_tone,
     	int		color_lightness,
     	int		color_intensity,
     	int		color_shift,
     	int		line_width,
-	glow_eDirection direction,
-	double		max_value,
-	double		min_value,
-	double		max_pos,
-	double		min_pos,
 	double		rotate,
+	int		shadow,
 	glow_eExportPass pass, int *shape_cnt, int node_cnt, int in_nc, ofstream& fp)
 {
-  char var_name[40];
-  double dim_x0, dim_x1, dim_y0, dim_y1;
-
-  strcpy( var_name, class_name);
-  var_name[0] = _tolower(var_name[0]);
-  sprintf( &var_name[strlen(var_name)], "%d", node_cnt);
-
-  node( x1, y1, x2, y2, class_name, border_drawtype, fill_drawtype,
+  node( x1, y1, x2, y2, class_name, border_drawtype, fill_drawtype, text_drawtype,
 	color_tone, color_lightness, color_intensity, color_shift,
-	line_width, rotate, pass, shape_cnt, node_cnt, in_nc, fp);
-
-  switch ( pass)
-  {
-    case glow_eExportPass_Shape:
-      break;
-    case glow_eExportPass_Declare:
-      break;
-    case glow_eExportPass_Attributes:
-    {
-      ((GrowCtx *)ctx)->measure_javabean( &dim_x1, &dim_x0, &dim_y1, &dim_y0);
-
-      fp <<
-"    " << var_name << ".setMinValue(" << min_value << "F);" << endl <<
-"    " << var_name << ".setMaxValue(" << max_value << "F);" << endl;
-     if ( direction == glow_eDirection_Left ||
-          direction == glow_eDirection_Right)
-     {
-       fp <<
-"    " << var_name << ".setMinPos(" << min_pos - dim_x0 << "F);" << endl <<
-"    " << var_name << ".setMaxPos(" << max_pos - dim_x0 << "F);" << endl;
-     }
-     else
-     {
-       fp <<
-"    " << var_name << ".setMinPos(" << min_pos - dim_y0 << "F);" << endl <<
-"    " << var_name << ".setMaxPos(" << max_pos - dim_y0 << "F);" << endl;
-     }
-     fp <<
-"    " << var_name << ".setDirection(" << (int)direction << ");" << endl;
-      break;
-    }
-    default:
-      ;
-  }
+	line_width, rotate, shadow, pass, shape_cnt, node_cnt, in_nc, fp);
 }
 
 

@@ -17,7 +17,7 @@ class GlowFrame : public GlowRect {
 	GlowRect( glow_ctx, x, y, w, h, d_type, line_w, fix_line_w) {};
     void save( ofstream& fp, glow_eSaveMode mode);
     void open( ifstream& fp);
-    void draw( void *pos, int hightlight, int hot, void *node);
+    void draw( void *pos, int highlight, int hot, void *node);
     void erase( void *pos, int hot, void *node);
     void get_borders( double pos_x, double pos_y, double *x_right, 
 		double *x_left, double *y_high, double *y_low, void *node);

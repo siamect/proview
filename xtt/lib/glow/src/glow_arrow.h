@@ -9,46 +9,184 @@
 #include "glow_array_elem.h"
 
 
+/*! \file glow_arrow.h
+    \brief Contains the GlowArrow class. */
+/*! \addtogroup Glow */
+/*@{*/
+
+
+//! Base class for an arrow.
+/*! The GlowArrow class is used by GlowCon, when drawing arrows in connections.
+*/
+
 class GlowArrow : public GlowArrayElem {
-  public:
-    GlowArrow( GlowCtx *glow_ctx, double x1, double y1, double x2, 
+ public:
+
+  //! Constuctor
+  /*!
+    \param glow_ctx 	The glow context.
+    \param x1		x coordinate for first point.
+    \param y1		y coordinate for first point.
+    \param x2		x coordinate for second point.
+    \param y2		y coordinate for second point.
+    \param w		Arrow width.
+    \param l		Arrow length.
+    \param d_type 	Color.
+  */
+  GlowArrow( GlowCtx *glow_ctx, double x1, double y1, double x2, 
 		double y2, double w, double l,
 	   	glow_eDrawType d_type = glow_eDrawType_Line);
-    void zoom();
-    void nav_zoom();
-    void print_zoom();
-    void traverse( int x, int y);
-    int	event_handler( void *pos, glow_eEvent event, int x, int y, void *node);
-    void conpoint_select( void *pos, int x, int y, double *distance, 
+
+  //! Adjust pixel coordinates to current zoom factor.
+  void zoom();
+
+  //! Adjust pixel coordinates for navigaion window to current zoom factor.
+  void nav_zoom();
+
+  void print_zoom();		//!< Not used
+  void traverse( int x, int y); //!< Not used
+
+
+  //! Event handler
+  /*!
+    \param pos		Position of object. Should be zero.
+    \param event	Current event.
+    \param x		x coordinate of event.
+    \param y		y coordinate of event.
+    \param node		Parent node. Can be zero.
+    \return		Returns 1 if the object is hit, else 0.
+
+    Detects if the object is hit by the event.
+  */
+  int	event_handler( void *pos, glow_eEvent event, int x, int y, void *node);
+
+  //! Not implemented
+  void conpoint_select( void *pos, int x, int y, double *distance, 
 		void **cp) {};
-    void print( void *pos, void *node);
-    void save( ofstream& fp, glow_eSaveMode mode);
-    void open( ifstream& fp);
-    void draw( void *pos, int hightlight, int hot, void *node);
-    void nav_draw( void *pos, int highlight, void *node);
-    void erase( void *pos, int hot, void *node);
-    void draw_inverse( void *pos, int hot, void *node)
+
+  //! Print postscript. Not used.
+  void print( void *pos, void *node);
+
+  //! Save the content of the object to file.
+  /*!
+    \param fp	Ouput file.
+    \param mode	Not used.
+  */
+  void save( ofstream& fp, glow_eSaveMode mode);
+
+  //! Read the content of the object from file.
+  /*!
+    \param fp	Input file.
+  */
+  void open( ifstream& fp);
+
+  //! Draw the object.
+  /*!
+    \param pos		Position of object. Should be zero.
+    \param highlight	Draw with highlight colors.
+    \param hot		Draw as hot, with larger line width.
+    \param node		Parent node. Can be zero.
+
+    Draw the object, without borders or shadow.
+  */
+  void draw( void *pos, int highlight, int hot, void *node);
+
+  //! Draw the object in the navigation window.
+  /*!
+    \param pos		Position of object. Should be zero.
+    \param highlight	Draw with highlight colors.
+    \param node		Parent node. Can be zero.
+
+    Draw the object, without borders or shadow.
+  */
+  void nav_draw( void *pos, int highlight, void *node);
+
+  //! Erase the object.
+  /*!
+    \param pos		Position of object. Should be zero.
+    \param hot		Draw as hot, with larger line width.
+    \param node		Parent node. Can be zero.
+  */
+  void erase( void *pos, int hot, void *node);
+
+  //! Not used
+  void draw_inverse( void *pos, int hot, void *node)
 	{ erase( pos, hot, node);};
-    void nav_erase( void *pos, void *node);
-    void get_borders( double pos_x, double pos_y, double *x_right, 
+
+  //! Erase the object in the navigation window.
+  /*!
+    \param pos		Position of object. Should be zero.
+    \param node		Parent node. Can be zero.
+  */
+  void nav_erase( void *pos, void *node);
+ 
+  //! Calculate the border for a set of objects or for a parent node.
+  /*!
+    \param pos_x        x coordinate for position.
+    \param pos_y        y coordinate for position.
+    \param x_right	Right limit.
+    \param x_left	Left limit.
+    \param y_high	High limit.
+    \param y_low	Low limit.
+    \param node		Parent node. Can be zero.
+    
+    If the borders of the objects exceeds a limit, the limit is adjusted to the
+    border of the object.
+  */
+  void get_borders( double pos_x, double pos_y, double *x_right, 
 		double *x_left, double *y_high, double *y_low, void *node) 
 		{};
-    int get_conpoint( int num, double *x, double *y, glow_eDirection *dir) 
+
+  int get_conpoint( int num, double *x, double *y, glow_eDirection *dir) 
 		{ return 0;};
-    glow_eObjectType type() { return glow_eObjectType_Arrow;};
-    void move( void *pos, double x1, double y1, double x2, double y2,
+
+  //! Get the object type
+  /*!
+    \return The type of the object.
+  */
+  glow_eObjectType type() { return glow_eObjectType_Arrow;};
+
+  //! Move the arrow to the specified coordinates.
+  /*!
+    \param pos		Position. Should be zero.
+    \param x1		x coordinate of first point.
+    \param y1		y coordinate of first point.
+    \param x2		x coordinate of second point.
+    \param y2		y coordinate of second point.
+    \param highlight	Draw with highlight colors.
+    \param hot		Draw as hot, with larger line width.
+
+    Both endpoints are given new coordinates, so the direction can be entirely different.
+  */
+  void move( void *pos, double x1, double y1, double x2, double y2,
 	int highlight, int hot);
-    void shift( void *pos, double delta_x, double delta_y, 
+
+  //! Move the arrow.
+  /*!
+    \param pos		Position. Should be zero.
+    \param delta_x	Moved distance in x direction.
+    \param delta_y	Moved distance in y direction.
+    \param highlight	Draw with highlight colors.
+    \param hot		Draw as hot, with larger line width.
+  */
+  void shift( void *pos, double delta_x, double delta_y, 
 	int highlight, int hot);
-    void set_drawtype( glow_eDrawType drawtype) { draw_type = drawtype;};
-    GlowCtx *ctx;    
-    GlowPoint p_dest;
-    GlowPoint p1;
-    GlowPoint p2;
-    double arrow_width;
-    double arrow_length;
-    glow_eDrawType draw_type;
-    int	line_width;
+
+  //! Set the color.
+  /*!
+    \param drawtype	Color.
+  */
+  void set_drawtype( glow_eDrawType drawtype) { draw_type = drawtype;};
+
+  GlowCtx *ctx;    	//!< Glow context.
+  GlowPoint p_dest;	//!< Point of destination corner of arrow.
+  GlowPoint p1;		//!< Point of first corner.
+  GlowPoint p2;		//!< Point of second corner.
+  double arrow_width;	//!< Arrow width.
+  double arrow_length;	//!< Arrow lenght.
+  glow_eDrawType draw_type; //!< Arrow color.
+  int	line_width;	//!< Line width.
 };
 
+/*@}*/
 #endif

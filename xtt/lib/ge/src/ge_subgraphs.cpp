@@ -788,10 +788,11 @@ int SubGraphs::edit_attributes( void *object)
   int			grow_info_cnt;
   Attr		        *attr;
   subgraphs_tAttr 	attrlist_p;
-  graph_eTrace		trace_type;
+  int			trace_type;
+  int			dyn_action_type;
 
   grow_GetObjectAttrInfo( (grow_tObject)object, NULL, &grow_info, &grow_info_cnt);
-  grow_GetNodeClassTraceType( object, (glow_eTraceType *) &trace_type);
+  grow_GetNodeClassDynType( object, &trace_type, &dyn_action_type);
 
   grow_info_p = grow_info;
   for ( i = 0; i < grow_info_cnt; i++)

@@ -36,6 +36,7 @@ extern "C" {
 
 #include "ge_graph.h"
 #include "ge_attr.h"
+#include "ge_dyn.h"
 
 typedef struct {
 	pwr_tClassId	classid;
@@ -321,7 +322,6 @@ static int graph_object_ax( Graph *graph, pwr_tObjid objid)
   pwr_sAttrRef attrref;
   int sts;
   grow_tObject object;
-  graph_sTraceData *data;
   graph_sObjectAx *od;
   pwr_tClassId	classid;
   pwr_tObjid	sigchancon;
@@ -346,8 +346,9 @@ static int graph_object_ax( Graph *graph, pwr_tObjid objid)
   sts = grow_FindObjectByName( graph->grow->ctx, "ObjectName", &object);
   if ( ODD(sts))
   {
-    grow_GetUserData( object, (void **)&data);
-    data->p[0] = (void *) od->object_name;
+    GeDyn *dyn;
+    grow_GetUserData( object, (void **)&dyn);
+    dyn->set_p( (void *) od->object_name);
   }
 
   sts = graph->trend_init( &od->td, objid);
@@ -410,7 +411,6 @@ static int graph_object_dx( Graph *graph, pwr_tObjid objid)
 {
   int sts;
   grow_tObject object;
-  graph_sTraceData *data;
   graph_sObjectDx *od;
   pwr_tClassId classid;
   pwr_sAttrRef attrref;
@@ -435,8 +435,9 @@ static int graph_object_dx( Graph *graph, pwr_tObjid objid)
   sts = grow_FindObjectByName( graph->grow->ctx, "ObjectName", &object);
   if ( ODD(sts))
   {
-    grow_GetUserData( object, (void **)&data);
-    data->p[0] = (void *) od->object_name;
+    GeDyn *dyn;
+    grow_GetUserData( object, (void **)&dyn);
+    dyn->set_p( (void *) od->object_name);
   }
 
   sts = graph->trend_init( &od->td, objid);
@@ -628,7 +629,6 @@ static int graph_object_PID( Graph *graph, pwr_tObjid objid)
   pwr_sAttrRef attrref;
   int sts;
   grow_tObject object;
-  graph_sTraceData *data;
   graph_sObjectPID *od;
   pwr_tClassId	classid;
   pwr_tObjid	mode_objid;
@@ -685,14 +685,15 @@ static int graph_object_PID( Graph *graph, pwr_tObjid objid)
   sts = grow_FindObjectByName( graph->grow->ctx, "SetMaxShow", &object);
   if ( EVEN(sts)) return sts;
 
-  grow_GetUserData( object, (void **)&data);
-  od->set_max_show_p = (pwr_tFloat32 *) data->p[0];
+  GeDyn *dyn;
+  grow_GetUserData( object, (void **)&dyn);
+  od->set_max_show_p = (pwr_tFloat32 *) dyn->get_p();
 
   sts = grow_FindObjectByName( graph->grow->ctx, "SetMinShow", &object);
   if ( EVEN(sts)) return sts;
 
-  grow_GetUserData( object, (void **)&data);
-  od->set_min_show_p = (pwr_tFloat32 *) data->p[0];
+  grow_GetUserData( object, (void **)&dyn);
+  od->set_min_show_p = (pwr_tFloat32 *) dyn->get_p();
 
   // Configure SetVal and ProcVal trend
   sts = grow_FindObjectByName( graph->grow->ctx, "SetValTrend", 
@@ -735,14 +736,14 @@ static int graph_object_PID( Graph *graph, pwr_tObjid objid)
   sts = grow_FindObjectByName( graph->grow->ctx, "OutMaxShow", &object);
   if ( EVEN(sts)) return sts;
 
-  grow_GetUserData( object, (void **)&data);
-  od->out_max_show_p = (pwr_tFloat32 *) data->p[0];
+  grow_GetUserData( object, (void **)&dyn);
+  od->out_max_show_p = (pwr_tFloat32 *) dyn->get_p();
 
   sts = grow_FindObjectByName( graph->grow->ctx, "OutMinShow", &object);
   if ( EVEN(sts)) return sts;
 
-  grow_GetUserData( object, (void **)&data);
-  od->out_min_show_p = (pwr_tFloat32 *) data->p[0];
+  grow_GetUserData( object, (void **)&dyn);
+  od->out_min_show_p = (pwr_tFloat32 *) dyn->get_p();
 
   // Configure OutVal trend
   sts = grow_FindObjectByName( graph->grow->ctx, "OutValTrend", 
@@ -766,13 +767,13 @@ static int graph_object_PID( Graph *graph, pwr_tObjid objid)
     od->hold_button_p = (int *) graph->localdb_ref_or_create( "TrendHold", 
 		pwr_eType_Boolean);
 
-  grow_GetUserData( od->set_trend_object, (void **)&data);
-  od->data_set_scan_time_p = &data->scan_time;
-  od->hold_set_p = &data->trend_hold;
+  grow_GetUserData( od->set_trend_object, (void **)&dyn);
+  od->data_set_scan_time_p = dyn->ref_trend_scantime();
+  od->hold_set_p = dyn->ref_trend_hold();
 
-  grow_GetUserData( od->out_trend_object, (void **)&data);
-  od->data_out_scan_time_p = &data->scan_time;
-  od->hold_out_p = &data->trend_hold;
+  grow_GetUserData( od->out_trend_object, (void **)&dyn);
+  od->data_out_scan_time_p = dyn->ref_trend_scantime();
+  od->hold_out_p = dyn->ref_trend_hold();
 
   // Get and convert PidAlg
   sts = gdh_ClassAttrToAttrref( classid, ".PidAlg", &attrref);
@@ -787,8 +788,8 @@ static int graph_object_PID( Graph *graph, pwr_tObjid objid)
   sts = grow_FindObjectByName( graph->grow->ctx, "PidAlg", &object);
   if ( EVEN(sts)) return sts;
 
-  grow_GetUserData( object, (void **)&data);
-  data->p[0] = (void *) od->pid_alg_str;
+  grow_GetUserData( object, (void **)&dyn);
+  dyn->set_p( (void *) od->pid_alg_str);
 
   // Register scan function
   graph->graph_object_scan = graph_object_PID_scan;
@@ -884,11 +885,11 @@ static void graph_object_Mode_scan( Graph *graph)
 		double(*od->set_max_show_p));
       if ( od->set_slider_object)
       {
-        graph_sTraceData *data;
+        GeDyn *dyn;
         grow_SetSliderRange( od->set_slider_object, double(*od->set_min_show_p), 
 		double(*od->set_max_show_p));
-        grow_GetUserData( od->set_slider_object, (void **)&data);
-        data->first_scan = 1;
+        grow_GetUserData( od->set_slider_object, (void **)&dyn);
+        dyn->update();
       }
     }
     od->set_min_show_old = *od->set_min_show_p;
@@ -905,11 +906,11 @@ static void graph_object_Mode_scan( Graph *graph)
 		double(*od->out_max_show_p));
       if ( od->out_slider_object)
       {
-        graph_sTraceData *data;
+        GeDyn *dyn;
         grow_SetSliderRange( od->out_slider_object, double(*od->out_min_show_p), 
 		double(*od->out_max_show_p));
-        grow_GetUserData( od->out_slider_object, (void **)&data);
-        data->first_scan = 1;
+        grow_GetUserData( od->out_slider_object, (void **)&dyn);
+        dyn->update();
       }
     }
     od->out_min_show_old = *od->out_min_show_p;
@@ -981,7 +982,6 @@ static int graph_object_Mode( Graph *graph, pwr_tObjid objid)
   pwr_sAttrRef attrref;
   int sts;
   grow_tObject object;
-  graph_sTraceData *data;
   graph_sObjectMode *od;
   pwr_tClassId	classid;
   pwr_tObjid	pid_objid;
@@ -1052,22 +1052,24 @@ static int graph_object_Mode( Graph *graph, pwr_tObjid objid)
   if ( min_limit != max_limit)
     grow_SetSliderRange( od->set_slider_object, double(min_limit), double(max_limit));
 
-  grow_GetUserData( od->set_slider_object, (void **)&data);
-  od->set_slider_disable_p = &data->slider_disabled;
-  data->slider_disabled = 1;
+  GeDyn *dyn;
+  grow_GetUserData( od->set_slider_object, (void **)&dyn);
+  od->set_slider_disable_p = dyn->ref_slider_disabled();
+  if ( od->set_slider_disable_p)
+    *od->set_slider_disable_p = 1;
 
   // Get pointers to max and min value
   sts = grow_FindObjectByName( graph->grow->ctx, "SetMaxShow", &object);
   if ( EVEN(sts)) return sts;
 
-  grow_GetUserData( object, (void **)&data);
-  od->set_max_show_p = (pwr_tFloat32 *) data->p[0];
+  grow_GetUserData( object, (void **)&dyn);
+  od->set_max_show_p = (pwr_tFloat32 *) dyn->get_p();
 
   sts = grow_FindObjectByName( graph->grow->ctx, "SetMinShow", &object);
   if ( EVEN(sts)) return sts;
 
-  grow_GetUserData( object, (void **)&data);
-  od->set_min_show_p = (pwr_tFloat32 *) data->p[0];
+  grow_GetUserData( object, (void **)&dyn);
+  od->set_min_show_p = (pwr_tFloat32 *) dyn->get_p();
 
   // Get values for OutMinShow and OutMaxShow
   sts = gdh_ClassAttrToAttrref( classid, ".OutMaxShow", &attrref);
@@ -1099,14 +1101,14 @@ static int graph_object_Mode( Graph *graph, pwr_tObjid objid)
   sts = grow_FindObjectByName( graph->grow->ctx, "OutMaxShow", &object);
   if ( EVEN(sts)) return sts;
 
-  grow_GetUserData( object, (void **)&data);
-  od->out_max_show_p = (pwr_tFloat32 *) data->p[0];
+  grow_GetUserData( object, (void **)&dyn);
+  od->out_max_show_p = (pwr_tFloat32 *) dyn->get_p();
 
   sts = grow_FindObjectByName( graph->grow->ctx, "OutMinShow", &object);
   if ( EVEN(sts)) return sts;
 
-  grow_GetUserData( object, (void **)&data);
-  od->out_min_show_p = (pwr_tFloat32 *) data->p[0];
+  grow_GetUserData( object, (void **)&dyn);
+  od->out_min_show_p = (pwr_tFloat32 *) dyn->get_p();
 
   // Configure out slider
   sts = grow_FindObjectByName( graph->grow->ctx, "OutValSlider", 
@@ -1116,9 +1118,10 @@ static int graph_object_Mode( Graph *graph, pwr_tObjid objid)
   if ( min_limit != max_limit)
     grow_SetSliderRange( od->out_slider_object, double(min_limit), double(max_limit));
 
-  grow_GetUserData( od->out_slider_object, (void **)&data);
-  od->out_slider_disable_p = &data->slider_disabled;
-  data->slider_disabled = 1;
+  grow_GetUserData( od->out_slider_object, (void **)&dyn);
+  od->out_slider_disable_p = dyn->ref_slider_disabled();
+  if ( od->out_slider_disable_p)
+    *od->out_slider_disable_p = 1;
 
   // Slider disable buttons  
   sts = grow_FindObjectByName( graph->grow->ctx, "SetSliderDisable", 
@@ -1147,20 +1150,20 @@ static int graph_object_Mode( Graph *graph, pwr_tObjid objid)
   sts = grow_FindObjectByName( graph->grow->ctx, "AutoInd", &object);
   if ( EVEN(sts)) return sts;
 
-  grow_GetUserData( object, (void **)&data);
-  od->auto_mode_p = (pwr_tUInt32 *) data->p[0];
+  grow_GetUserData( object, (void **)&dyn);
+  od->auto_mode_p = (pwr_tUInt32 *) dyn->get_p();
 
   sts = grow_FindObjectByName( graph->grow->ctx, "CascadeInd", &object);
   if ( EVEN(sts)) return sts;
 
-  grow_GetUserData( object, (void **)&data);
-  od->cascade_mode_p = (pwr_tUInt32 *) data->p[0];
+  grow_GetUserData( object, (void **)&dyn);
+  od->cascade_mode_p = (pwr_tUInt32 *) dyn->get_p();
 
   sts = grow_FindObjectByName( graph->grow->ctx, "ManInd", &object);
   if ( EVEN(sts)) return sts;
 
-  grow_GetUserData( object, (void **)&data);
-  data->p[0] = (void *) &od->man_mode;
+  grow_GetUserData( object, (void **)&dyn);
+  dyn->set_p( (void *) &od->man_mode);
 
   // Register scan function
   graph->graph_object_scan = graph_object_Mode_scan;
@@ -1197,7 +1200,6 @@ static int graph_object_Mode( Graph *graph, pwr_tObjid objid)
 int Graph::set_button_command( char *button_name, char *cmd)
 {
   int 			sts;
-  glow_sTraceData	*trace_data;
   grow_tObject 		object;
 
   // Add command to open channel graph
@@ -1205,10 +1207,9 @@ int Graph::set_button_command( char *button_name, char *cmd)
 		&object);
   if ( EVEN(sts)) return sts;
 
-  grow_GetTraceAttr( object, &trace_data);
-  strncpy( trace_data->data[0], cmd, sizeof(trace_data->data[0]));
-  trace_data->data[0][sizeof(trace_data->data[0])-1] = 0;
-  grow_SetTraceAttr( object, trace_data);
+  GeDyn *dyn;
+  grow_GetUserData( object, (void **)&dyn);
+  dyn->set_command( cmd);
 
   return 1;
 }
@@ -1227,11 +1228,11 @@ void Graph::trend_scan( graph_sObjectTrend *td)
 		double(*td->pres_max_limit_p));
       if ( td->slider_object)
       {
-        graph_sTraceData *data;
+        GeDyn *dyn;
         grow_SetSliderRange( td->slider_object, double(*td->pres_min_limit_p), 
 		double(*td->pres_max_limit_p));
-        grow_GetUserData( td->slider_object, (void **)&data);
-        data->first_scan = 1;
+        grow_GetUserData( td->slider_object, (void **)&dyn);
+        dyn->update();
       }
       grow_SetTrendRange( td->trend_object, 0, double(*td->pres_min_limit_p), 
 		double(*td->pres_max_limit_p));
@@ -1289,7 +1290,6 @@ int Graph::trend_init( graph_sObjectTrend *td, pwr_tObjid objid)
   int sts;
   pwr_sAttrRef attrref;
   grow_tObject object;
-  graph_sTraceData *data;
   int presminlimit_found = 0;
   int presmaxlimit_found = 0;
   double scan_time;
@@ -1333,8 +1333,9 @@ int Graph::trend_init( graph_sObjectTrend *td, pwr_tObjid objid)
   sts = grow_FindObjectByName( grow->ctx, "PresMaxLimit", &object);
   if ( ODD(sts))
   {
-    grow_GetUserData( object, (void **)&data);
-    td->pres_max_limit_p = (pwr_tFloat32 *) data->p[0];
+    GeDyn *dyn;
+    grow_GetUserData( object, (void **)&dyn);
+    td->pres_max_limit_p = (pwr_tFloat32 *) dyn->get_p();
     if ( !presmaxlimit_found)
       // PresMaxLimit in local database, set value
       *td->pres_max_limit_p = max_limit;
@@ -1343,8 +1344,9 @@ int Graph::trend_init( graph_sObjectTrend *td, pwr_tObjid objid)
   sts = grow_FindObjectByName( grow->ctx, "PresMinLimit", &object);
   if ( ODD(sts))
   {
-    grow_GetUserData( object, (void **)&data);
-    td->pres_min_limit_p = (pwr_tFloat32 *) data->p[0];
+    GeDyn *dyn;
+    grow_GetUserData( object, (void **)&dyn);
+    td->pres_min_limit_p = (pwr_tFloat32 *) dyn->get_p();
     if ( !presminlimit_found)
       // PresMinLimit in local database, set value
       *td->pres_min_limit_p = min_limit;
@@ -1371,9 +1373,11 @@ int Graph::trend_init( graph_sObjectTrend *td, pwr_tObjid objid)
       if ( min_limit != max_limit)
         grow_SetSliderRange( td->slider_object, double(min_limit), double(max_limit));
     }
-    grow_GetUserData( td->slider_object, (void **)&data);
-    td->slider_disable_p = &data->slider_disabled;
-    data->slider_disabled = 1;
+    GeDyn *dyn;
+    grow_GetUserData( td->slider_object, (void **)&dyn);
+    td->slider_disable_p = dyn->ref_slider_disabled();
+    if ( td->slider_disable_p)
+      *td->slider_disable_p = 1;
   }
 
   // Set scantime variable in local database
@@ -1390,9 +1394,10 @@ int Graph::trend_init( graph_sObjectTrend *td, pwr_tObjid objid)
     td->hold_button_p = (int *) localdb_ref_or_create( "TrendHold", 
 		pwr_eType_Boolean);
 
-  grow_GetUserData( td->trend_object, (void **)&data);
-  td->data_scan_time_p = &data->scan_time;
-  td->hold_p = &data->trend_hold;
+  GeDyn *dyn;
+  grow_GetUserData( td->trend_object, (void **)&dyn);
+  td->data_scan_time_p = dyn->ref_trend_scantime();
+  td->hold_p = dyn->ref_trend_hold();
 
   sts = grow_FindObjectByName( grow->ctx, "SliderDisable", 
 		&td->slider_button_object);
@@ -1462,7 +1467,6 @@ static int graph_object_collect( Graph *graph, pwr_tObjid objid)
   int sts;
   graph_sObjectCollect *od = (graph_sObjectCollect *)graph->graph_object_data;
   int i;
-  graph_sTraceData *data;
 
   if ( !od)
     return 1;
@@ -1470,9 +1474,10 @@ static int graph_object_collect( Graph *graph, pwr_tObjid objid)
   sts = graph->trend_init( &od->trend1, pwr_cNObjid);
 
   for ( i = 0; i < od->trend_cnt; i++) {
-    grow_GetUserData( od->trend_objects[i], (void **)&data);
-    od->data_scan_time_p[i] = &data->scan_time;
-    od->hold_p[i] = &data->trend_hold;
+    GeDyn *dyn;
+    grow_GetUserData( od->trend_objects[i], (void **)&dyn);
+    od->data_scan_time_p[i] = dyn->ref_trend_scantime();
+    od->hold_p[i] = dyn->ref_trend_hold();
   }
   return 1;
 }
@@ -1490,7 +1495,6 @@ static int graph_object_collect_build( Graph *graph, pwr_tObjid objid)
   int i;
   grow_tObject scantime_button;
   grow_tObject hold_button;
-  glow_sTraceData *trace_data;
   grow_tObject t1, l1;
   double z_width, z_height, z_descent;
   double name_width = 0;
@@ -1500,6 +1504,9 @@ static int graph_object_collect_build( Graph *graph, pwr_tObjid objid)
   double x0 = 2;
   pwr_tTypeId attr_type;
   unsigned int attr_size, attr_offset, attr_dimension;
+  GeDyn *dyn;
+  char attr_name[120];
+
 
   printf("Here in object collect\n");
   if ( ! graph->get_current_objects_cb)
@@ -1521,14 +1528,14 @@ static int graph_object_collect_build( Graph *graph, pwr_tObjid objid)
   graph->create_node( NULL, "pwr_valuereliefup", x0, y0 - 1, 4, y0 - 1 + 0.7, 
 		      &scantime_button);
 
-  grow_GetTraceAttr( scantime_button, &trace_data);
-  trace_data->attr_type = (glow_eTraceType)graph_eTrace_AnnotInput;
-  trace_data->access = (glow_mAccess) 65535;
-  strcpy( trace_data->data[0], "$local.ScanTime##Float32");
-  strcpy( trace_data->data[1], "%6.0f");
-  strcpy( trace_data->data[3], "2");
-  strcpy( trace_data->data[4], "10000000");
-  grow_SetTraceAttr( scantime_button, trace_data);
+  dyn = new GeDyn( graph);
+  grow_SetUserData( scantime_button, (void *)dyn);
+
+  dyn->set_dyn( ge_mDynType_Value, ge_mActionType_ValueInput);
+  dyn->update_elements();
+  dyn->set_access( (glow_mAccess) 65535);
+  dyn->set_attribute( scantime_button, "$local.ScanTime##Float32", 0);
+  dyn->set_value_input( "%6.0f", 2, 10000000);
 
   // Hold button
   graph->create_node( "TrendHold", "pwr_smallbutton", x0 + trend_width/2 - 3./2, 
@@ -1536,22 +1543,24 @@ static int graph_object_collect_build( Graph *graph, pwr_tObjid objid)
 		      &hold_button);
   grow_SetAnnotation( hold_button, 1, "  Hold", 6);
 
+  dyn = new GeDyn( graph);
+  grow_SetUserData( hold_button, (void *)dyn);
+
   // Set color tone
   grow_SelectClear( graph->grow->ctx);
   grow_SelectInsert( graph->grow->ctx, hold_button);
   grow_SetSelectOrigColorTone( graph->grow->ctx, glow_eDrawTone_Gray);
   grow_SelectRemove( graph->grow->ctx, hold_button);
 
-  grow_GetTraceAttr( hold_button, &trace_data);
-  trace_data->attr_type = (glow_eTraceType)graph_eTrace_SetDig;
-  trace_data->access = (glow_mAccess) 65535;
-  strcpy( trace_data->data[0], "$local.TrendHold##Boolean");
-  grow_SetTraceAttr( hold_button, trace_data);
+  dyn->set_dyn( ge_mDynType_No, ge_mActionType_SetDig);
+  dyn->update_elements();
+  dyn->set_access( (glow_mAccess) 65535);
+  dyn->set_attribute( hold_button, "$local.TrendHold##Boolean", 0);
 
   //  Zero text
   grow_CreateGrowText( graph->grow->ctx, "", "0",
 	    x0 + trend_width - 0.2, y0 - 0.2,
-	    glow_eDrawType_TextHelveticaBold, 2, glow_mDisplayLevel_1,
+	    glow_eDrawType_TextHelveticaBold, glow_eDrawType_Line, 2, glow_mDisplayLevel_1,
 	    NULL, &t1);
 
   ap = alist;
@@ -1574,29 +1583,34 @@ static int graph_object_collect_build( Graph *graph, pwr_tObjid objid)
 
           grow_CreateGrowTrend( graph->grow->ctx, "ActualValueTrend", 
 			    x1, y1, trend_width, trend_height,
-			    glow_eDrawType_Color15,
+			    glow_eDrawType_Color37,
 			    0, glow_mDisplayLevel_1, 1, 1,
-			    glow_eDrawType_Color20, NULL, 
+			    glow_eDrawType_Color38, NULL, 
 			    &od->trend_objects[od->trend_cnt]);
+	  dyn = new GeDyn( graph);
+	  dyn->dyn_type = ge_mDynType_Trend;
+	  dyn->update_elements();
+	  grow_SetUserData( od->trend_objects[od->trend_cnt], (void *)dyn);
 
           grow_GetObjectAttrInfo( od->trend_objects[od->trend_cnt], NULL, 
 			      &grow_info, &grow_info_cnt);
 
+	  strcpy( attr_name, name);
+	  strcat( attr_name, "##Boolean");
+	  grow_GetUserData( od->trend_objects[od->trend_cnt], (void **)&dyn);
+	  dyn->set_attribute( od->trend_objects[od->trend_cnt], attr_name, 0);
+
           grow_info_p = grow_info;
           for ( i = 0; i < grow_info_cnt; i++)
           {
-	    if ( strcmp( grow_info_p->name, "TraceData1") == 0) {
-	      strcpy( (char *) grow_info_p->value_p, name);
-              strcat( (char *) grow_info_p->value_p, "##Boolean");
-	    }
-	    else if ( strcmp( grow_info_p->name, "NoOfPoints") == 0)
+	    if ( strcmp( grow_info_p->name, "NoOfPoints") == 0)
 	      *(int *) grow_info_p->value_p = 200;
 	    else if ( strcmp( grow_info_p->name, "HorizontalLines") == 0)
 	      *(int *) grow_info_p->value_p = 0;
 	    else if ( strcmp( grow_info_p->name, "VerticalLines") == 0)
 	      *(int *) grow_info_p->value_p = 9;
 	    else if ( strcmp( grow_info_p->name, "CurveColor1") == 0)
-	      *(int *) grow_info_p->value_p = glow_eDrawType_Color48;
+	      *(int *) grow_info_p->value_p = glow_eDrawType_Color145;
 	    else if ( strcmp( grow_info_p->name, "MaxValue1") == 0)
 	      *(double *) grow_info_p->value_p = 1.2;
 	    else if ( strcmp( grow_info_p->name, "MinValue1") == 0)
@@ -1615,7 +1629,7 @@ static int graph_object_collect_build( Graph *graph, pwr_tObjid objid)
 
           grow_CreateGrowText( graph->grow->ctx, "", name,
 	    x1 + trend_width + 1, y1 + trend_height/2 + z_height/2,
-	    glow_eDrawType_TextHelveticaBold, 2, glow_mDisplayLevel_1,
+	    glow_eDrawType_TextHelveticaBold, glow_eDrawType_Line, 2, glow_mDisplayLevel_1,
 	    NULL, &t1);
           if ( z_width > name_width)
             name_width = z_width;
@@ -1641,14 +1655,14 @@ static int graph_object_collect_build( Graph *graph, pwr_tObjid objid)
   x1 = x0 + trend_width;
   grow_CreateGrowLine( graph->grow->ctx, "", 
 	x0 + trend_width, y1, x0 + trend_width + name_width + 2, y1,
-	glow_eDrawType_Color25, 1, 0, NULL, &l1);
+	glow_eDrawType_Color78, 1, 0, NULL, &l1);
 
   for ( i = 0; i < od->trend_cnt; i++) {
     y1 += trend_height;
 
     grow_CreateGrowLine( graph->grow->ctx, "", 
 	x0 + trend_width, y1, x0 + trend_width + name_width + 2, y1,
-	glow_eDrawType_Color21, 1, 0, NULL, &l1);
+	glow_eDrawType_Color71, 1, 0, NULL, &l1);
   }
 
   // Draw frame
@@ -1656,6 +1670,8 @@ static int graph_object_collect_build( Graph *graph, pwr_tObjid objid)
 		      y0 - 1.3 , x0 + trend_width + name_width + 2, 
 		      y0 + od->trend_cnt * trend_height + 0.5,
 		      &l1);
+  dyn = new GeDyn( graph);
+  grow_SetUserData( l1, (void *)dyn);
 
   grow_SetLayout( graph->grow->ctx, x0 - 1, y0 - 2.3, x0 + trend_width +
 		  name_width + 3, y0 + od->trend_cnt * trend_height + 1.5);

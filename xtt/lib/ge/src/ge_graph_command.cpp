@@ -49,7 +49,6 @@ extern "C" {
 #endif
 }
 
-static char ge_version[] = "V3.4.0";
 static Graph *current_graph;
 
 static void graph_group_replace_attr( grow_tObject group, char *from_str, char *to_str, 
@@ -73,6 +72,8 @@ static int	graph_replace_func( void		*client_data,
 				void		*client_flag);
 static int	graph_rotate_func( void		*client_data,
 				void		*client_flag);
+static int	graph_flip_func( void		*client_data,
+				void		*client_flag);
 static int	graph_scale_func( void		*client_data,
 				void		*client_flag);
 static int	graph_move_func( void		*client_data,
@@ -88,6 +89,8 @@ static int	graph_select_func( void		*client_data,
 static int	graph_export_func( void		*client_data,
 				void		*client_flag);
 static int	graph_replace_func( void	*client_data,
+				void		*client_flag);
+static int	graph_convert_func( void	*client_data,
 				void		*client_flag);
 
 dcli_tCmdTable	graph_command_table[] = {
@@ -134,6 +137,12 @@ dcli_tCmdTable	graph_command_table[] = {
 			""}
 		},
 		{
+			"FLIP",
+			&graph_flip_func,
+			{ "dcli_arg1",
+			""}
+		},
+		{
 			"SCALE",
 			&graph_scale_func,
 			{ "dcli_arg1", "/SCALEX", "/SCALEY", "/X", "/Y",
@@ -157,6 +166,12 @@ dcli_tCmdTable	graph_command_table[] = {
 			"REPLACE",
 			&graph_replace_func,
 			{ "dcli_arg1", "/FROM", "/TO", "/STRICT",
+			""}
+		},
+		{
+			"CONVERT",
+			&graph_convert_func,
+			{ "dcli_arg1",
 			""}
 		},
 		{
@@ -209,10 +224,14 @@ static int	graph_show_func(void		*client_data,
   if ( strncmp( arg1_str, "VERSION", strlen( arg1_str)) == 0)
   {
     // Command is "SHOW VERSION"
-    char	message_str[80];
-	 
-    strcpy( message_str, "Ge version ");
-    strcat( message_str, ge_version);
+    char	message_str[80];	 
+    int grow_version, graph_version;
+
+    grow_GetVersion( graph->grow->ctx, &grow_version, &graph_version);
+
+    sprintf( message_str, "Current graph: V%d.%03d, Grow: V%d.%03d",
+	     int(graph_version/1000), graph_version % 1000, 
+	     int(grow_version/1000), grow_version % 1000);
     graph->message('I', message_str);
   }
   else
@@ -483,7 +502,7 @@ static int	graph_set_func(	void		*client_data,
   else if ( strncmp( arg1_str, "FILLCOLOR", strlen( arg1_str)) == 0)
   {
     char	arg2_str[80];
-    glow_eDrawType fill_color, border_color;
+    glow_eDrawType fill_color, border_color, text_color;
     int value;
     int sts;
 
@@ -504,14 +523,14 @@ static int	graph_set_func(	void		*client_data,
         graph->message('E', "Syntax error");
         return GE__SYNTAX;
     }
-    (graph->get_current_colors_cb)( graph->parent_ctx, &fill_color, &border_color);
+    (graph->get_current_colors_cb)( graph->parent_ctx, &fill_color, &border_color, &text_color);
     fill_color = (glow_eDrawType) value;
-    (graph->set_current_colors_cb)( graph->parent_ctx, fill_color, border_color);
+    (graph->set_current_colors_cb)( graph->parent_ctx, fill_color, border_color, text_color);
   }
   else if ( strncmp( arg1_str, "BORDERCOLOR", strlen( arg1_str)) == 0)
   {
     char	arg2_str[80];
-    glow_eDrawType fill_color, border_color;
+    glow_eDrawType fill_color, border_color, text_color;
     int value;
     int sts;
 
@@ -532,9 +551,37 @@ static int	graph_set_func(	void		*client_data,
         graph->message('E', "Syntax error");
         return GE__SYNTAX;
     }
-    (graph->get_current_colors_cb)( graph->parent_ctx, &fill_color, &border_color);
+    (graph->get_current_colors_cb)( graph->parent_ctx, &fill_color, &border_color, &text_color);
     border_color = (glow_eDrawType) value;
-    (graph->set_current_colors_cb)( graph->parent_ctx, fill_color, border_color);
+    (graph->set_current_colors_cb)( graph->parent_ctx, fill_color, border_color, text_color);
+  }
+  else if ( strncmp( arg1_str, "TEXTCOLOR", strlen( arg1_str)) == 0)
+  {
+    char	arg2_str[80];
+    glow_eDrawType fill_color, border_color, text_color;
+    int value;
+    int sts;
+
+    if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str)))
+    {
+      graph->message('E', "Syntax error");
+      return GE__SYNTAX;
+    }
+
+    sts = sscanf( arg2_str, "%d", &value);
+    if ( sts != 1)
+    {
+      graph->message('E', "Syntax error");
+      return GE__SYNTAX;
+    }
+    if ( value < 0 || value > 99)
+    {
+        graph->message('E', "Syntax error");
+        return GE__SYNTAX;
+    }
+    (graph->get_current_colors_cb)( graph->parent_ctx, &fill_color, &border_color, &text_color);
+    text_color = (glow_eDrawType) value;
+    (graph->set_current_colors_cb)( graph->parent_ctx, fill_color, border_color, text_color);
   }
   else if ( strncmp( arg1_str, "CURRENTOBJECT", strlen( arg1_str)) == 0)
   {
@@ -945,7 +992,7 @@ static int	graph_set_func(	void		*client_data,
       {
         case glow_eType_Int:
         case glow_eType_TraceColor:
-        case glow_eType_TraceType:
+        case glow_eType_DynType:
         case glow_eType_Access:
         case glow_eType_Boolean:
         case glow_eType_Direction:
@@ -1067,6 +1114,19 @@ static int	graph_set_func(	void		*client_data,
     double		d_value;
     int			sts;
     int			found;
+    char transtab[][32] = {	 	"DynType",		"DynType",
+					"DynActionType",	"Action",
+					"DynColor1",		"Color1",
+					"DynColor2",		"Color2",
+					"DynColor3",		"Color3",
+					"DynColor4",		"Color4",
+					"DynAttr1",		"AnimSequence",	
+					"DynAttr2",		"",
+					"DynAttr3",		"",
+					"DynAttr4",		"",
+					"Dynamic",		"",
+					""};
+
 	
     if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str)))
     {
@@ -1085,7 +1145,8 @@ static int	graph_set_func(	void		*client_data,
     {
       if ( j == 0)
       {
-        grow_GetSubGraphAttrInfo( graph->grow->ctx, &grow_info_sub, &grow_info_cnt);
+        grow_GetSubGraphAttrInfo( graph->grow->ctx, (char *)transtab, &grow_info_sub, 
+				  &grow_info_cnt);
         grow_info_p = grow_info_sub;
       }
       else
@@ -1118,7 +1179,7 @@ static int	graph_set_func(	void		*client_data,
     {
       case glow_eType_Int:
       case glow_eType_TraceColor:
-      case glow_eType_TraceType:
+      case glow_eType_DynType:
       case glow_eType_Access:
       case glow_eType_Boolean:
       case glow_eType_Direction:
@@ -1313,6 +1374,35 @@ static int	graph_rotate_func( void		*client_data,
     grow_StoreTransform( graph->current_cmd_object);
     grow_SetObjectRotation( graph->current_cmd_object, angel, 0,
 	0, glow_eRotationPoint_Center);
+    grow_SetModified( graph->grow->ctx, 1);
+  }
+  else
+  {
+    graph->message('E', "Syntax error");
+    return GE__SYNTAX;
+  }
+  return GE__SUCCESS;
+}
+
+
+static int	graph_flip_func( void		*client_data,
+				void		*client_flag)
+{
+  Graph *graph = (Graph *)client_data;
+
+  char	arg1_str[80];
+  int	arg1_sts;
+	
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str);
+
+  if ( strncmp( arg1_str, "HORIZONTAL", strlen( arg1_str)) == 0)
+  {
+    grow_FlipSelectedObjects( graph->grow->ctx, glow_eFlipDirection_Horizontal);
+    grow_SetModified( graph->grow->ctx, 1);
+  }
+  else if ( strncmp( arg1_str, "VERTICAL", strlen( arg1_str)) == 0)
+  {
+    grow_FlipSelectedObjects( graph->grow->ctx, glow_eFlipDirection_Vertical);
     grow_SetModified( graph->grow->ctx, 1);
   }
   else
@@ -1727,7 +1817,7 @@ static int	graph_create_func( void		*client_data,
     grow_CreateGrowRect( graph->grow->ctx, "", 
 	    x, y, width, height,
 	    graph->get_border_drawtype(), graph->linewidth, 0, 
-	    glow_mDisplayLevel_1, graph->fill, graph->border,
+	    glow_mDisplayLevel_1, graph->fill, graph->border, graph->shadow,
 	    graph->get_fill_drawtype(), NULL, &graph->current_cmd_object);
     grow_SetModified( graph->grow->ctx, 1);
   }
@@ -1818,7 +1908,7 @@ static int	graph_create_func( void		*client_data,
     grow_CreateGrowArc( graph->grow->ctx, "", 
 	x1, y1, x2, y2, angel1, angel2,
 	graph->get_border_drawtype(), graph->linewidth,
-	graph->fill, graph->border, graph->get_fill_drawtype(), NULL, 
+	graph->fill, graph->border, graph->shadow, graph->get_fill_drawtype(), NULL, 
 	&graph->current_cmd_object);
     grow_SetModified( graph->grow->ctx, 1);
   }
@@ -1957,14 +2047,14 @@ static int	graph_create_func( void		*client_data,
       grow_CreateGrowPolyLine( graph->grow->ctx, "", 
 		(glow_sPoint *)&points, point_cnt,
 	      	graph->get_border_drawtype(), graph->linewidth, 0, 
-		0, graph->border, 
+		0, graph->border, graph->shadow, 
 		graph->get_fill_drawtype(), 0, NULL, 
 		&graph->current_cmd_object);
     else
       grow_CreateGrowPolyLine( graph->grow->ctx, "", 
 		(glow_sPoint *)&points, point_cnt,
 	      	graph->get_border_drawtype(), graph->linewidth, 0, 
-		graph->fill, graph->border, 
+		graph->fill, graph->border, graph->shadow, 
 		graph->get_fill_drawtype(), 0, NULL, 
 		&graph->current_cmd_object);
 
@@ -2029,7 +2119,7 @@ static int	graph_create_func( void		*client_data,
     }
     grow_CreateGrowText( graph->grow->ctx, "", text_str,
 	    x1, y1,
-	    drawtype, textsize, glow_mDisplayLevel_1,
+	    drawtype, glow_eDrawType_Line, textsize, glow_mDisplayLevel_1,
 	    NULL, &graph->current_cmd_object);
     grow_SetModified( graph->grow->ctx, 1);
   }
@@ -2162,6 +2252,41 @@ static int	graph_create_func( void		*client_data,
   }
   else
   {
+    graph->message('E', "Syntax error");
+    return GE__SYNTAX;
+  }
+  return GE__SUCCESS;
+}
+
+static int	graph_convert_func( void	*client_data,
+				void		*client_flag)
+{
+  Graph *graph = (Graph *)client_data;
+
+  char	arg1_str[80];
+  int	arg1_sts;
+	
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str);
+  if ( strncmp( arg1_str, "V40", strlen( arg1_str)) == 0) {
+    char name[40];
+    char msg[80];
+    int sts;
+
+    sts = graph->convert();
+    if ( EVEN(sts)) {
+      grow_GetName( graph->grow->ctx, name);
+      sprintf( msg, "Conversion failed, graph %s", name);
+      graph->message('E', msg);
+      return sts;
+    }
+    grow_GetName( graph->grow->ctx, name);
+    sprintf( msg, "Graph %s converted", name);
+    graph->message('I', msg);
+
+    grow_UpdateVersion( graph->grow->ctx);
+    grow_SetModified( graph->grow->ctx, 1);
+  }
+  else {
     graph->message('E', "Syntax error");
     return GE__SYNTAX;
   }

@@ -75,6 +75,19 @@ void GlowConClass::get_object_name( char *name)
   strcpy( name, cc_name);
 }
 
+void GlowConClass::convert( glow_eConvert version) 
+{
+  switch ( version) {
+  case glow_eConvert_V34: {
+    // Conversion of colors
+    draw_type = GlowColor::convert( version, draw_type);
+
+    break;
+  }
+  }  
+}
+
+
 ostream& operator<< ( ostream& o, const GlowConClass cc)
 {
   o << "ConClass: " << cc.cc_name;

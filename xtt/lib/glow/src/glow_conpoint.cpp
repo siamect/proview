@@ -132,7 +132,8 @@ int GlowConPoint::get_conpoint( int num, double *x, double *y,
   return 0;
 }
 
-int GlowConPoint::get_conpoint( GlowTransform *t, int num, double *x, double *y,
+int GlowConPoint::get_conpoint( GlowTransform *t, int num, bool flip_horizontal,
+				bool flip_vertical, double *x, double *y,
 	glow_eDirection *dir)
 {
   double rotation;
@@ -181,6 +182,22 @@ int GlowConPoint::get_conpoint( GlowTransform *t, int num, double *x, double *y,
         default: ;
       }
     }
+    
+    if ( flip_horizontal) {
+      switch ( direction) {
+        case glow_eDirection_Up: 	*dir = glow_eDirection_Down; break;
+        case glow_eDirection_Down: 	*dir = glow_eDirection_Up; break;
+        default: ;
+      }
+    }
+    if ( flip_vertical) {
+      switch ( direction) {
+        case glow_eDirection_Right: 	*dir = glow_eDirection_Left; break;
+        case glow_eDirection_Left: 	*dir = glow_eDirection_Right; break;
+        default: ;
+      }
+    }
+
     return 1;
   }
   return 0;

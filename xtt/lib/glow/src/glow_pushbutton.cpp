@@ -14,7 +14,7 @@ GlowPushButton::GlowPushButton( GlowCtx *glow_ctx, char *p_name,
 	double x1, double y1, double width, double height) : 
 	ctx(glow_ctx), pos(glow_ctx, x1,y1), 
 	r(glow_ctx, x1, y1, width, height, glow_eDrawType_Line, 1), 
-	t(glow_ctx, p_name, x1, y1+height/2, glow_eDrawType_TextHelvetica, 1)
+	t(glow_ctx, p_name, x1, y1+height/2, glow_eDrawType_TextHelvetica, glow_eDrawType_Line, 1)
 {
   strcpy( name, p_name);
   zoom_factor = ctx->zoom_factor_x;
@@ -36,7 +36,7 @@ void GlowPushButton::draw( int ll_x, int ll_y, int ur_x, int ur_y)
 	  r.ur.z_x - r.ll.z_x, r.ur.z_y - r.ll.z_y, r.draw_type, 
 	  r.line_width-1, 0);
   glow_draw_text( ctx, pos.z_x + t.p.z_x, pos.z_y + t.p.z_y, t.text,
-	  strlen(t.text), t.draw_type, t.text_size, 0, 0);
+	  strlen(t.text), t.draw_type, glow_eDrawType_Line, t.text_size, 0, 0);
 }
 
 int GlowPushButton::event_handler( glow_eEvent event, int x, int y)

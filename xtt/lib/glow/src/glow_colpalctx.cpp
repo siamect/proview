@@ -34,73 +34,109 @@ void ColPalCtx::configure()
   if ( nodraw) 
     return;
   
-  display_border = new GrowRect( this, "BorderRect", display_entry_width, 0, 
-	display_entry_width, entry_height,
-	glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 1, 1, current_border);
-  insert( (GlowArrayElem *)display_border);
-  text = new GrowText( this, "BorderText", "Border", display_entry_width + 0.3, 
-		       entry_height / 2 + 0.3, 
-	glow_eDrawType_TextHelvetica, 2);
-  insert( (GlowArrayElem *)text);
   display_fill = new GrowRect( this, "FillRect", 0, 0, display_entry_width, 
 	entry_height, 
-	glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 1, 1, current_fill);
+	glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 1, 1, 0, current_fill);
   insert( (GlowArrayElem *)display_fill);
   text = new GrowText( this, "FillText", "Fill", 0.3, 
 		       entry_height / 2 + 0.3, 
-	glow_eDrawType_TextHelvetica, 2);
+	glow_eDrawType_TextHelvetica, glow_eDrawType_Line, 2);
   insert( (GlowArrayElem *)text);
 
-  for ( i = glow_eDrawType_Line; i <= glow_eDrawType_Color100; i++)
+  display_border = new GrowRect( this, "BorderRect", display_entry_width, 0, 
+	display_entry_width, entry_height,
+	glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 1, 1, 0, current_border);
+  insert( (GlowArrayElem *)display_border);
+  text = new GrowText( this, "BorderText", "Border", display_entry_width + 0.3, 
+		       entry_height / 2 + 0.3, 
+	glow_eDrawType_TextHelvetica, glow_eDrawType_Color4, 2);
+  insert( (GlowArrayElem *)text);
+
+  display_text = new GrowRect( this, "TextRect", display_entry_width * 2, 0, 
+	display_entry_width, entry_height,
+	glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 1, 1, 0, current_border);
+  insert( (GlowArrayElem *)display_text);
+  text = new GrowText( this, "TextText", "Text", display_entry_width * 2 + 0.3, 
+		       entry_height / 2 + 0.3, 
+	glow_eDrawType_TextHelvetica, glow_eDrawType_Color4, 2);
+  insert( (GlowArrayElem *)text);
+
+  for ( i = glow_eDrawType_Line; i <= glow_eDrawType_Color300; i++)
   {
     x = entry_width * ( double(i)/columns - floor( double(i)/columns)) * columns;
     y = entry_height * ( 1 + floor( i / columns + DBL_EPSILON));
     rect = new GrowRect( this, "ColorEntry", x, y, entry_width, entry_height, 
-	glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 1, 1, (glow_eDrawType) i);
+	glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 1, 1, 0, (glow_eDrawType) i);
     insert( rect);
   }
 
+  double tone_entry_width = 3 * entry_width;
   y += entry_height;
   x = 0;
   text = new GrowText( this, "ToneText", "Tone", x + 0.15, 
 		       y + entry_height / 2 + 0.25, 
-	glow_eDrawType_TextHelveticaBold, 2);
+	glow_eDrawType_TextHelveticaBold, glow_eDrawType_Line, 2);
   insert( (GlowArrayElem *)text);
-  x += 2 * entry_width;
+  x += 2 * tone_entry_width;
   sprintf( name, "ToneEntry%d", 0);
   rect = new GrowRect( this, name, x, y, 
-	entry_width * 2, entry_height, glow_eDrawType_Line, 1, 0, 
-        glow_mDisplayLevel_1, 1, 1, glow_eDrawType_Color13);
+	tone_entry_width * 2, entry_height, glow_eDrawType_Line, 1, 0, 
+        glow_mDisplayLevel_1, 1, 1, 0, glow_eDrawType_Color34);
   insert( rect);
   text = new GrowText( this, name, "Reset", x + 0.15, 
 		       y + entry_height / 2 + 0.3, 
-		       glow_eDrawType_TextHelvetica, 2);
+		       glow_eDrawType_TextHelvetica, glow_eDrawType_Line, 2);
   insert( (GlowArrayElem *)text);
 
 
-  y += entry_height;
-  for ( i = glow_eDrawTone_No + 1; i < glow_eDrawTone__; i++)
-  {
+  x = 0;
+  for ( i = glow_eDrawTone_No + 1; i < glow_eDrawTone_GrayHighSaturation; i++) {
     char name[16];
     glow_eDrawType drawtype;
 
     switch( i) {
-      case glow_eDrawTone_No:       drawtype = glow_eDrawType_Color12; break;
-      case glow_eDrawTone_Gray:     drawtype = glow_eDrawType_Color18; break;
-      case glow_eDrawTone_Yellow:   drawtype = glow_eDrawType_Color27; break;
-      case glow_eDrawTone_Gold:     drawtype = glow_eDrawType_Color37; break;
-      case glow_eDrawTone_Orange:   drawtype = glow_eDrawType_Color47; break;
-      case glow_eDrawTone_Red:      drawtype = glow_eDrawType_Color57; break;
-      case glow_eDrawTone_Magenta:  drawtype = glow_eDrawType_Color67; break;
-      case glow_eDrawTone_Blue:     drawtype = glow_eDrawType_Color77; break;
-      case glow_eDrawTone_Seablue:  drawtype = glow_eDrawType_Color87; break;
-      case glow_eDrawTone_Green:    drawtype = glow_eDrawType_Color97; break;
-      case glow_eDrawTone_DarkGray: drawtype = glow_eDrawType_Color19; break;
+      case glow_eDrawTone_No:       	drawtype = glow_eDrawType_Color32; break;
+      case glow_eDrawTone_Gray:     	drawtype = glow_eDrawType_Color35; break;
+      case glow_eDrawTone_YellowGreen:  drawtype = glow_eDrawType_Color85; break;
+      case glow_eDrawTone_Yellow:     	drawtype = glow_eDrawType_Color115; break;
+      case glow_eDrawTone_Orange:   	drawtype = glow_eDrawType_Color145; break;
+      case glow_eDrawTone_Red:      	drawtype = glow_eDrawType_Color175; break;
+      case glow_eDrawTone_Magenta:  	drawtype = glow_eDrawType_Color205; break;
+      case glow_eDrawTone_Blue:     	drawtype = glow_eDrawType_Color235; break;
+      case glow_eDrawTone_Seablue:  	drawtype = glow_eDrawType_Color265; break;
+      case glow_eDrawTone_Green:    	drawtype = glow_eDrawType_Color295; break;
+      case glow_eDrawTone_DarkGray: 	drawtype = glow_eDrawType_Color38; break;
+      case glow_eDrawTone_DarkYellowGreen:   drawtype = glow_eDrawType_Color88; break;
+      case glow_eDrawTone_DarkYellow:     drawtype = glow_eDrawType_Color118; break;
+      case glow_eDrawTone_DarkOrange:   drawtype = glow_eDrawType_Color148; break;
+      case glow_eDrawTone_DarkRed:      drawtype = glow_eDrawType_Color178; break;
+      case glow_eDrawTone_DarkMagenta:  drawtype = glow_eDrawType_Color208; break;
+      case glow_eDrawTone_DarkBlue:     drawtype = glow_eDrawType_Color238; break;
+      case glow_eDrawTone_DarkSeablue:  drawtype = glow_eDrawType_Color268; break;
+      case glow_eDrawTone_DarkGreen:    drawtype = glow_eDrawType_Color298; break;
+      case glow_eDrawTone_LightGray: 	drawtype = glow_eDrawType_Color32; break;
+      case glow_eDrawTone_LightYellowGreen:  drawtype = glow_eDrawType_Color82; break;
+      case glow_eDrawTone_LightYellow:    drawtype = glow_eDrawType_Color112; break;
+      case glow_eDrawTone_LightOrange:  drawtype = glow_eDrawType_Color142; break;
+      case glow_eDrawTone_LightRed:     drawtype = glow_eDrawType_Color172; break;
+      case glow_eDrawTone_LightMagenta: drawtype = glow_eDrawType_Color202; break;
+      case glow_eDrawTone_LightBlue:    drawtype = glow_eDrawType_Color232; break;
+      case glow_eDrawTone_LightSeablue: drawtype = glow_eDrawType_Color262; break;
+      case glow_eDrawTone_LightGreen:   drawtype = glow_eDrawType_Color292; break;
     }
-    x = entry_width * ( i - 1);
+    if ( i == glow_eDrawTone_Gray || 
+	 i == glow_eDrawTone_LightGray || 
+	 i == glow_eDrawTone_DarkGray) {
+      // New row
+      y += entry_height;
+      x = 0;
+    }
+    else
+      x += tone_entry_width;
+
     sprintf( name, "ToneEntry%d", i);
-    rect = new GrowRect( this, name, x, y, entry_width, entry_height, 
-	glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 1, 1, drawtype);
+    rect = new GrowRect( this, name, x, y, tone_entry_width, entry_height, 
+	glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 1, 1, 0, drawtype);
     insert( rect);
 
   }
@@ -240,6 +276,7 @@ int ColPalCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
   switch ( event)
   {
     case glow_eEvent_MB1Click:
+    case glow_eEvent_MB1ClickShift:
     case glow_eEvent_MB2Click:
       sts = 0;
       for ( i = 0; i < a.a_size; i++)
@@ -280,13 +317,15 @@ int ColPalCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
           }
           if ( strcmp( name, "ColorEntry") != 0)
             break;
-          if ( event == glow_eEvent_MB1Click)
-          {
+          if ( event == glow_eEvent_MB1Click) {
             current_fill = rect->fill_drawtype;
             ((GrowRect *)display_fill)->set_fill_color( current_fill);
           }
-          else
-          {
+          else if ( event == glow_eEvent_MB1ClickShift) {
+            current_text = rect->fill_drawtype;
+            ((GrowRect *)display_text)->set_fill_color( current_text);
+          }
+          else {
             current_border = rect->fill_drawtype;
             ((GrowRect *)display_border)->set_fill_color( current_border);
           }

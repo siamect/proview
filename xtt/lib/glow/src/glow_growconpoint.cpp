@@ -55,7 +55,7 @@ GrowConPoint::~GrowConPoint()
     draw_set_cursor( ctx, glow_eDrawCursor_Normal);
 }
 
-void GrowConPoint::move( int delta_x, int delta_y, int grid)
+void GrowConPoint::move( double delta_x, double delta_y, int grid)
 {
   ctx->set_defered_redraw();
   ((GrowCtx *)ctx)->draw( x_left * ctx->zoom_factor_x - ctx->offset_x - DRAW_MP,
@@ -71,8 +71,8 @@ void GrowConPoint::move( int delta_x, int delta_y, int grid)
     nav_erase();
     x = (x_right + x_left) / 2;
     y = (y_high + y_low) / 2;
-    ctx->find_grid( x + double( delta_x) / ctx->zoom_factor_x,
-	y + double( delta_y) / ctx->zoom_factor_y, &x_grid, &y_grid);
+    ctx->find_grid( x + delta_x / ctx->zoom_factor_x,
+	y + delta_y / ctx->zoom_factor_y, &x_grid, &y_grid);
     trf.move( x_grid - x, y_grid - y);
     get_node_borders();
   }
@@ -82,8 +82,8 @@ void GrowConPoint::move( int delta_x, int delta_y, int grid)
 
     erase();
     nav_erase();
-    dx = double( delta_x) / ctx->zoom_factor_x;
-    dy = double( delta_y) / ctx->zoom_factor_y;
+    dx = delta_x / ctx->zoom_factor_x;
+    dy = delta_y / ctx->zoom_factor_y;
     trf.move( dx, dy);
     x_right += dx;
     x_left += dx;

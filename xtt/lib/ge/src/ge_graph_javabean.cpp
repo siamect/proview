@@ -34,10 +34,10 @@ extern "C" {
 #include "glow_growwidget.h"
 
 #include "ge_graph.h"
+#include "ge_dyn.h"
 
-#define glow_cJBean_Offset 2
-
-static char *cmd_cnv( char *instr);
+#define cFrameBorderX 8
+#define cFrameBorderY 44
 
 int Graph::export_javabean( char *filename, char *bean_name)
 {
@@ -46,7 +46,8 @@ int Graph::export_javabean( char *filename, char *bean_name)
   char beaninfo_filename[120];
   char *s;
   double x0, x1, y0, y1;
-  graph_eTrace trace_type;
+  int trace_type;
+  int dyn_action_type;
   glow_eDrawType trace_color;
   glow_eDrawType trace_color2;
   char low_bean_name[80];
@@ -56,7 +57,7 @@ int Graph::export_javabean( char *filename, char *bean_name)
 
   cdh_ToLower( low_bean_name, bean_name);
 
-  grow_GetSubGraphTraceType( grow->ctx, (glow_eTraceType *) &trace_type);
+  grow_GetSubGraphDynType( grow->ctx, &trace_type, &dyn_action_type);
   grow_GetSubGraphTraceColor( grow->ctx, &trace_color, &trace_color2);
   if ( grow_IsSlider( grow->ctx))
     trace_type = graph_eTrace_Slider;
@@ -1362,25 +1363,25 @@ int Graph::export_gejava_nodeclass( ofstream& fp, grow_tNodeClass nodeclass)
 {
   char bean_name[40];
   double x0, x1, y0, y1;
-  glow_eTraceType trace_type;
+  int dyn_type;
+  int dyn_action_type;
   int pages;
   grow_tObject 	*objectlist, *object_p;
   int 		object_cnt;
   int i;
 
   grow_GetNodeClassJavaName( nodeclass, bean_name);
-  grow_GetNodeClassTraceType( nodeclass, &trace_type);
+  grow_GetNodeClassDynType( nodeclass, &dyn_type, &dyn_action_type);
 
   grow_MeasureNodeClassJavaBean( nodeclass, &x1, &x0, &y1, &y0);
   pages = grow_GetNodeClassPages( nodeclass);
 
-  if ( (graph_eTrace) trace_type == graph_eTrace_AnnotInput ||
-       (graph_eTrace) trace_type == graph_eTrace_AnnotInputWithTone)
-  {
+  if ( dyn_action_type & ge_mActionType_ValueInput) {
     fp <<
 "private class " << bean_name << " extends GeTextField {" << endl <<
-"  public " << bean_name << "()" << endl <<
+"  public " << bean_name << "( JopSession session)" << endl <<
 "  {" << endl <<
+"    super( session);" << endl <<
 "    setFont( annotFont);" << endl <<
 "    setFillColor( annotBackground);" << endl <<
 "  }" << endl;
@@ -1411,18 +1412,19 @@ int Graph::export_gejava_nodeclass( ofstream& fp, grow_tNodeClass nodeclass)
     // Use prefabricated class GeFrameThin
     fp <<
 "private class " << bean_name << " extends GeFrameThin {" << endl <<
-"  public " << bean_name << "()" << endl <<
+"  public " << bean_name << "( JopSession session)" << endl <<
 "  {" << endl <<
+"     super(session);" << endl <<
 "  }" << endl <<
 "}" << endl;
 
   }
   else
   {
-    if ( grow_IsSliderClass( nodeclass))
-      fp <<
-"private class " << bean_name << " extends GeSlider {" << endl;
-    else
+      //    if ( grow_IsSliderClass( nodeclass))
+      //      fp <<
+      //"private class " << bean_name << " extends GeSlider {" << endl;
+      //    else
       fp <<
 "private class " << bean_name << " extends GeComponent {" << endl;
 
@@ -1433,9 +1435,13 @@ int Graph::export_gejava_nodeclass( ofstream& fp, grow_tNodeClass nodeclass)
     grow_ExportNodeClassJavaBean( grow->ctx, nodeclass, fp, 1);
 
     fp <<
-"  public " << bean_name << "()" << endl <<
+"  public " << bean_name << "( JopSession session)" << endl <<
 "  {" << endl <<
+"    super( session);" << endl <<
 "    size = new Dimension( " << int(x1-x0) + 2*glow_cJBean_Offset << ", " << int(y1-y0) + 2*glow_cJBean_Offset << ");" << endl;
+
+    // GrowNode attributes of GrowNode objects
+    grow_ExportNodeClassJavaBean( grow->ctx, nodeclass, fp, 2);
 
     // Print dynamics for all groups and grownodes in groups
     grow_GetNodeClassObjectList( nodeclass, &objectlist, &object_cnt);
@@ -1451,12 +1457,10 @@ int Graph::export_gejava_nodeclass( ofstream& fp, grow_tNodeClass nodeclass)
       else if ( grow_GetObjectType( *object_p) == glow_eObjectType_GrowTrend)
         export_TrendTraceAttr( fp, *object_p, i);
       else if ( grow_GetObjectType( *object_p) == glow_eObjectType_GrowSlider)
-        export_SliderTraceAttr( fp, *object_p, i);
+	// export_SliderTraceAttr( fp, *object_p, i);
+        export_GejavaObjectTraceAttr( fp, *object_p, i);
       object_p++;
     }
-
-    // GrowNode attributes of GrowNode objects
-    grow_ExportNodeClassJavaBean( grow->ctx, nodeclass, fp, 2);
 
     if ( pages > 1)
       fp <<
@@ -1605,7 +1609,8 @@ int Graph::export_javaframe( char *filename, char *bean_name, int applet,
 	{
 	  fp <<
 "  GeImage backgroundImage = new GeImage();" << endl <<
-"  public LocalPanel() {" << endl;
+"  public LocalPanel() {" << endl <<
+"    backgroundImage.setSession( session);" << endl;
           if ( background_tiled)
             fp  <<
 "    backgroundImage.setBounds(0,0, " << bg_image_width << 
@@ -1739,7 +1744,7 @@ int Graph::export_gejava( char *filename, char *bean_name, int applet, int html)
 "public class " << bean_name << " extends JopApplet {" << endl;
     else
       fp <<
-"public class " << bean_name << " extends JopFrame {" << endl;
+"public class " << bean_name << " extends JopFrame implements JopUtilityIfc {" << endl;
     fp <<
 "  JPanel contentPane;" << endl <<
 "  BorderLayout borderLayout1 = new BorderLayout();" << endl <<
@@ -1759,16 +1764,29 @@ int Graph::export_gejava( char *filename, char *bean_name, int applet, int html)
     else
     {
       fp <<
-"  public " << bean_name << "() {" << endl;
+"  public " << bean_name << "( JopSession session, String instance, boolean scrollbar) {" << endl <<
+"    super( session, instance);" << endl;
     }
+
     fp <<
 "    JopSpider.setSystemName( \"" << systemname << "\");" << endl <<
 "    engine.setAnimationScanTime( " << int(animation_scan_time * 1000) << ");" << endl <<
 "    engine.setScanTime( " << int(scan_time * 1000) << ");" << endl <<
-"    size = new Dimension( " << int(x1-x0) + 2*glow_cJBean_Offset << ", " << int(y1-y0) + 2*glow_cJBean_Offset << ");" << endl <<
+"    size = new Dimension( " << int(x1-x0) + 2*glow_cJBean_Offset + cFrameBorderX << ", " << int(y1-y0) + 2*glow_cJBean_Offset + cFrameBorderY << ");" << endl <<
 "    contentPane = (JPanel) this.getContentPane();" << endl <<
-"    contentPane.setLayout(borderLayout1);" << endl <<
-"    contentPane.add(localPanel, BorderLayout.CENTER);" << endl <<
+"    contentPane.setLayout(borderLayout1);" << endl;
+    if ( applet) {
+      fp <<
+"      contentPane.add(localPanel, BorderLayout.CENTER);" << endl;
+    }
+    else {
+      fp <<
+"    if ( scrollbar)" << endl <<
+"      contentPane.add( new JScrollPane(localPanel), BorderLayout.CENTER);" << endl <<
+"    else" << endl <<
+"      contentPane.add(localPanel, BorderLayout.CENTER);" << endl;
+    }
+    fp <<
 "    contentPane.setOpaque(true);" << endl <<
 "    localPanel.setLayout(null);" << endl <<
 "    localPanel.setOpaque(true);" << endl;
@@ -1795,7 +1813,8 @@ int Graph::export_gejava( char *filename, char *bean_name, int applet, int html)
       else if ( grow_GetObjectType( *object_p) == glow_eObjectType_GrowTrend)
         export_TrendTraceAttr( fp, *object_p, i);
       else if ( grow_GetObjectType( *object_p) == glow_eObjectType_GrowSlider)
-        export_SliderTraceAttr( fp, *object_p, i);
+        // export_SliderTraceAttr( fp, *object_p, i);
+        export_GejavaObjectTraceAttr( fp, *object_p, i);
       object_p++;
     }
 
@@ -1808,7 +1827,8 @@ int Graph::export_gejava( char *filename, char *bean_name, int applet, int html)
 	{
 	  fp <<
 "  GeImage backgroundImage = new GeImage();" << endl <<
-"  public LocalPanel() {" << endl;
+"  public LocalPanel() {" << endl <<
+"    backgroundImage.setSession(session);" << endl;
           if ( background_tiled)
             fp  <<
 "    backgroundImage.setBounds(0,0, " << bg_image_width << 
@@ -1846,6 +1866,20 @@ int Graph::export_gejava( char *filename, char *bean_name, int applet, int html)
     }
     if ( nodeclass_count > 0)
       free( nodeclass_list);
+
+    if ( !applet) {
+      // JopUtility interface
+      fp <<
+"  public int getUtilityType() {" << endl <<
+"    return JopUtility.GRAPH;" << endl <<
+"  }" << endl <<
+"  public PwrtObjid getUtilityObjid() {" << endl <<
+"    return utilityObjid;" << endl <<
+"  }" << endl <<
+"  public String getUtilityName() {" << endl <<
+"    return this.getClass().getName();" << endl <<
+"  }"  << endl;
+    }
 
     fp <<
 "}" << endl;
@@ -1896,7 +1930,8 @@ int Graph::export_gejava( char *filename, char *bean_name, int applet, int html)
 
 int Graph::export_ObjectTraceAttr( ofstream& fp, grow_tObject object, int cnt)
 {
-  graph_eTrace		trace_type;
+  int			dyn_type;
+  int			dyn_action_type;
   glow_sTraceData	*trace_data;
   glow_eDrawType 	trace_color;
   glow_eDrawType 	trace_color2;
@@ -1915,9 +1950,10 @@ int Graph::export_ObjectTraceAttr( ofstream& fp, grow_tObject object, int cnt)
   var_name[0] = _tolower(var_name[0]);
   sprintf( &var_name[strlen(var_name)], "%d", cnt);
 
-  trace_type = (graph_eTrace) trace_data->attr_type;
-  if ( trace_type == graph_eTrace_Inherit)
-    grow_GetObjectClassTraceType( object, (glow_eTraceType *) &trace_type);
+  // todo
+  dyn_type = (graph_eTrace) trace_data->attr_type;
+  if ( dyn_type == graph_eTrace_Inherit)
+    grow_GetObjectClassDynType( object, &dyn_type, &dyn_action_type);
 
   trace_color = trace_data->color;
   if ( trace_color == glow_eDrawType_Inherit)
@@ -1926,11 +1962,11 @@ int Graph::export_ObjectTraceAttr( ofstream& fp, grow_tObject object, int cnt)
   if ( trace_color2 == glow_eDrawType_Inherit)
     grow_GetObjectClassTraceColor( object, &color, &trace_color2);
   
-  // trace_type No equals Inherit from class
-  if ( trace_type == graph_eTrace_No)
-    trace_type = graph_eTrace_Inherit;
+  // dyn_type No equals Inherit from class
+  if ( dyn_type == graph_eTrace_No)
+    dyn_type = graph_eTrace_Inherit;
 
-  switch ( trace_type)
+  switch ( dyn_type)
   {
     case graph_eTrace_Dig:
     case graph_eTrace_DigWithCommand:
@@ -2060,367 +2096,22 @@ int Graph::export_ObjectTraceAttr( ofstream& fp, grow_tObject object, int cnt)
 
 int Graph::export_GejavaObjectTraceAttr( ofstream& fp, grow_tObject object, int cnt)
 {
-  graph_eTrace		trace_type;
-  glow_sTraceData	*trace_data;
-  glow_eDrawType 	trace_color;
-  glow_eDrawType 	trace_color2;
-  glow_eDrawType 	color;
   char			class_name[40];
   char 			var_name[40];
   int			i;
   int			annot_cnt;
   int			*numbers;
   char			annot_str[200];
+  GeDyn			*dyn;
 
-  grow_GetTraceAttr( object, &trace_data);
+  grow_GetUserData( object, (void **)&dyn);
   grow_GetObjectClassJavaName( object, class_name);
 
   strcpy( var_name, class_name);
   var_name[0] = _tolower(var_name[0]);
   sprintf( &var_name[strlen(var_name)], "%d", cnt);
 
-  trace_type = (graph_eTrace) trace_data->attr_type;
-  if ( trace_type == graph_eTrace_Inherit)
-    grow_GetObjectClassTraceType( object, (glow_eTraceType *) &trace_type);
-
-  trace_color = trace_data->color;
-  if ( trace_color == glow_eDrawType_Inherit)
-    grow_GetObjectClassTraceColor( object, &trace_color, &color);
-  trace_color2 = trace_data->color2;
-  if ( trace_color2 == glow_eDrawType_Inherit)
-    grow_GetObjectClassTraceColor( object, &color, &trace_color2);
-  
-  // No for trace_type equals Inherit from class
-  if ( trace_type == graph_eTrace_No)
-    trace_type = graph_eTrace_Inherit;
-
-  switch ( trace_type)
-  {
-    case graph_eTrace_Dig:
-    case graph_eTrace_DigBorder:
-    case graph_eTrace_DigTone:
-      if ( strcmp( trace_data->data[0], "") != 0)
-      {
-        fp <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[0] << "\",0);" << endl <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[1] << "\",1);" << endl <<
-"    " << var_name << ".dd.setType(" << (int)trace_type << ");" << endl <<
-"    " << var_name << ".dd.setColor(" << (int)trace_color << ");" << endl;
-      }
-      break;
-    case graph_eTrace_Invisible:
-      if ( strcmp( trace_data->data[0], "") != 0)
-      {
-        fp <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[0] << "\",0);" << endl <<
-"    " << var_name << ".dd.setType(" << (int)trace_type << ");" << endl;
-      }
-      break;
-    case graph_eTrace_DigWithText:
-      if ( strcmp( trace_data->data[0], "") != 0)
-      {
-        fp <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[0] << "\",0);" << endl <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[1] << "\",1);" << endl <<
-"    " << var_name << ".dd.setType(" << (int)trace_type << ");" << endl <<
-"    " << var_name << ".dd.setColor(" << (int)trace_color << ");" << endl;
-      }
-      break;
-    case graph_eTrace_DigWithError:
-    case graph_eTrace_DigToneWithError:
-      if ( strcmp( trace_data->data[0], "") != 0)
-      {
-        fp <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[0] << "\",0);" << endl <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[1] << "\",1);" << endl <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[2] << "\",2);" << endl <<
-"    " << var_name << ".dd.setType(" << (int)trace_type << ");" << endl <<
-"    " << var_name << ".dd.setColor(" << (int)trace_color << ");" << endl;
-      }
-      break;
-    case graph_eTrace_DigWithCommand:
-    case graph_eTrace_DigToneWithCommand:
-      if ( strcmp( trace_data->data[0], "") != 0)
-      {
-        fp <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[0] << "\",0);" << endl <<
-"    " << var_name << ".dd.setData(\"" << cmd_cnv( trace_data->data[3]) << "\",3);" << endl;
-        fp <<
-"    " << var_name << ".dd.setData(\"" << cmd_cnv( trace_data->data[4]) << "\",4);" << endl <<
-"    " << var_name << ".dd.setType(" << (int)trace_type << ");" << endl <<
-"    " << var_name << ".dd.setColor(" << (int)trace_color << ");" << endl <<
-"    " << var_name << ".dd.setAccess(" << (int)trace_data->access << ");" << endl;
-      }
-      break;
-    case graph_eTrace_DigWithErrorAndCommand:
-    case graph_eTrace_DigToneWithErrorAndCommand:
-      if ( strcmp( trace_data->data[0], "") != 0)
-      {
-        fp <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[0] << "\",0);" << endl <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[1] << "\",1);" << endl <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[2] << "\",2);" << endl <<
-"    " << var_name << ".dd.setData(\"" << cmd_cnv( trace_data->data[3]) << "\",3);" << endl;
-        fp <<
-"    " << var_name << ".dd.setData(\"" << cmd_cnv( trace_data->data[4]) << "\",4);" << endl <<
-"    " << var_name << ".dd.setType(" << (int)trace_type << ");" << endl <<
-"    " << var_name << ".dd.setColor(" << (int)trace_color << ");" << endl <<
-"    " << var_name << ".dd.setAccess(" << (int)trace_data->access << ");" << endl;
-      }
-      break;
-    case graph_eTrace_DigTwo:
-    case graph_eTrace_DigToneTwo:
-    case graph_eTrace_DigTwoWithCommand:
-    case graph_eTrace_DigToneTwoWithCommand:
-      if ( strcmp( trace_data->data[0], "") != 0)
-      {
-        fp <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[0] << "\",0);" << endl <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[1] << "\",1);" << endl <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[2] << "\",2);" << endl <<
-"    " << var_name << ".dd.setData(\"" << cmd_cnv( trace_data->data[3]) << "\",3);" << endl;
-        fp <<
-"    " << var_name << ".dd.setData(\"" << cmd_cnv( trace_data->data[4]) << "\",4);" << endl <<
-"    " << var_name << ".dd.setType(" << (int)trace_type << ");" << endl <<
-"    " << var_name << ".dd.setColor(" << (int)trace_color << ");" << endl <<
-"    " << var_name << ".dd.setColor2(" << (int)trace_color2 << ");" << endl <<
-"    " << var_name << ".dd.setAccess(" << (int)trace_data->access << ");" << endl;
-      }
-      break;
-    case graph_eTrace_SetDig:
-    case graph_eTrace_ResetDig:
-    case graph_eTrace_ToggleDig:
-    case graph_eTrace_Command:
-    case graph_eTrace_RadioButton:
-      if ( strcmp( trace_data->data[0], "") != 0)
-      {
-        fp <<
-"    " << var_name << ".dd.setData(\"" << cmd_cnv( trace_data->data[0]) << "\",0);" << endl <<
-"    " << var_name << ".dd.setType(" << (int)trace_type << ");" << endl <<
-"    " << var_name << ".dd.setAccess(" << (int)trace_data->access << ");" << endl;
-      }
-      break;
-    case graph_eTrace_SetDigConfirm:
-    case graph_eTrace_ResetDigConfirm:
-    case graph_eTrace_ToggleDigConfirm:
-    case graph_eTrace_CommandConfirm:
-    case graph_eTrace_DigShiftWithToggleDig:
-      if ( strcmp( trace_data->data[0], "") != 0)
-      {
-        fp <<
-"    " << var_name << ".dd.setData(\"" << cmd_cnv(trace_data->data[0]) << "\",0);" << endl;
-        fp <<
-"    " << var_name << ".dd.setData(\"" << cmd_cnv(trace_data->data[1]) << "\",1);" << endl <<
-"    " << var_name << ".dd.setType(" << (int)trace_type << ");" << endl <<
-"    " << var_name << ".dd.setAccess(" << (int)trace_data->access << ");" << endl;
-      }
-      break;
-    case graph_eTrace_SetDigWithTone:
-    case graph_eTrace_StoDigWithTone:
-    case graph_eTrace_ResetDigWithTone:
-    case graph_eTrace_ToggleDigWithTone:
-      if ( strcmp( trace_data->data[0], "") != 0)
-      {
-        fp <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[0] << "\",0);" << endl <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[2] << "\",2);" << endl <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[3] << "\",3);" << endl <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[4] << "\",4);" << endl <<
-"    " << var_name << ".dd.setType(" << (int)trace_type << ");" << endl <<
-"    " << var_name << ".dd.setColor(" << (int)trace_color << ");" << endl <<
-"    " << var_name << ".dd.setAccess(" << (int)trace_data->access << ");" << endl;
-      }
-      break;
-    case graph_eTrace_SetDigConfirmWithTone:
-    case graph_eTrace_ResetDigConfirmWithTone:
-    case graph_eTrace_ToggleDigConfirmWithTone:
-      if ( strcmp( trace_data->data[0], "") != 0)
-      {
-        fp <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[0] << "\",0);" << endl <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[1] << "\",1);" << endl <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[2] << "\",2);" << endl <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[3] << "\",3);" << endl <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[4] << "\",4);" << endl <<
-"    " << var_name << ".dd.setType(" << (int)trace_type << ");" << endl <<
-"    " << var_name << ".dd.setColor(" << (int)trace_color << ");" << endl <<
-"    " << var_name << ".dd.setAccess(" << (int)trace_data->access << ");" << endl;
-      }
-      break;
-    case graph_eTrace_Annot:
-      if ( strcmp( trace_data->data[0], "") != 0)
-      {
-        fp <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[0] << "\",0);" << endl <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[1] << "\",1);" << endl <<
-"    " << var_name << ".dd.setType(" << (int)trace_type << ");" << endl;
-      }
-      break;
-    case graph_eTrace_AnnotWithTone:
-      if ( strcmp( trace_data->data[0], "") != 0)
-      {
-        fp <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[0] << "\",0);" << endl <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[2] << "\",2);" << endl <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[1] << "\",1);" << endl <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[3] << "\",3);" << endl <<
-"    " << var_name << ".dd.setType(" << (int)trace_type << ");" << endl <<
-"    " << var_name << ".dd.setColor(" << (int)trace_color << ");" << endl;
-      }
-      break;
-    case graph_eTrace_AnnotInput:
-      if ( strcmp( trace_data->data[0], "") != 0)
-      {
-        fp <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[0] << "\",0);" << endl <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[3] << "\",3);" << endl <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[4] << "\",4);" << endl <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[1] << "\",1);" << endl <<
-"    " << var_name << ".dd.setType(" << (int)trace_type << ");" << endl <<
-"    " << var_name << ".dd.setAccess(" << (int)trace_data->access << ");" << endl;
-      }
-      break;
-    case graph_eTrace_AnnotInputWithTone:
-      if ( strcmp( trace_data->data[0], "") != 0)
-      {
-        fp <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[0] << "\",0);" << endl <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[2] << "\",2);" << endl <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[3] << "\",3);" << endl <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[4] << "\",4);" << endl <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[1] << "\",1);" << endl <<
-"    " << var_name << ".dd.setType(" << (int)trace_type << ");" << endl <<
-"    " << var_name << ".dd.setColor(" << (int)trace_color << ");" << endl <<
-"    " << var_name << ".dd.setAccess(" << (int)trace_data->access << ");" << endl;
-      }
-      break;
-    case graph_eTrace_AnalogShift:
-    case graph_eTrace_Animation:
-    case graph_eTrace_AnimationForwBack:
-    case graph_eTrace_DigAnimation:
-    case graph_eTrace_DigShift:
-      if ( strcmp( trace_data->data[0], "") != 0)
-      {
-        fp <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[0] << "\",0);" << endl <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[1] << "\",1);" << endl <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[2] << "\",2);" << endl <<
-"    " << var_name << ".dd.setType(" << (int)trace_type << ");" << endl <<
-"    " << var_name << ".dd.setColor(" << (int)trace_color << ");" << endl;
-      }
-      break;
-    case graph_eTrace_IncrAnalog:
-      if ( strcmp( trace_data->data[0], "") != 0)
-      {
-        fp <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[0] << "\",0);" << endl <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[1] << "\",1);" << endl <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[2] << "\",2);" << endl <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[3] << "\",3);" << endl <<
-"    " << var_name << ".dd.setType(" << (int)trace_type << ");" << endl <<
-"    " << var_name << ".dd.setColor(" << (int)trace_color << ");" << endl <<
-"    " << var_name << ".dd.setAccess(" << (int)trace_data->access << ");" << endl;
-      }
-      break;
-    case graph_eTrace_Move:
-      if ( strcmp( trace_data->data[0], "") != 0 || 
-           strcmp( trace_data->data[1], "") != 0 || 
-           strcmp( trace_data->data[7], "") != 0 || 
-           strcmp( trace_data->data[8], "") != 0)
-      {
-        double zoom_factor;
-
-        grow_GetZoom( grow->ctx, &zoom_factor);
-        fp <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[0] << "\",0);" << endl <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[1] << "\",1);" << endl <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[2] << "\",2);" << endl <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[3] << "\",3);" << endl <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[7] << "\",4);" << endl <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[8] << "\",5);" << endl <<
-"    " << var_name << ".dd.setType(" << (int)trace_type << ");" << endl <<
-"    " << var_name << ".dd.setColor(" << (int)trace_color << ");" << endl;
-	if ( strcmp( trace_data->data[4], "") != 0)
-          fp <<
-"    " << var_name << ".dd.setFactor(new Double(\"" << trace_data->data[4] << "\").doubleValue() * " << zoom_factor << ");" << endl;
-        else
-          fp <<
-"    " << var_name << ".dd.setFactor(" << zoom_factor << ");" << endl;
-	if ( strcmp( trace_data->data[5], "") != 0)
-          fp <<
-"    " << var_name << ".dd.setX0(new Double(\"" << trace_data->data[5] << "\").doubleValue());" << endl;
-	if ( strcmp( trace_data->data[6], "") != 0)
-          fp <<
-"    " << var_name << ".dd.setY0(new Double(\"" << trace_data->data[6] << "\").doubleValue());" << endl;
-      }
-      break;
-    case graph_eTrace_Rotate:
-    {
-      if ( strcmp( trace_data->data[0], "") != 0 || 
-           strcmp( trace_data->data[2], "") != 0 || 
-           strcmp( trace_data->data[3], "") != 0)
-      {
-        double zoom_factor;
-        double x0, x1, y0, y1;
-        double rotation_x, rotation_y;
-        int sts;
-
-        if ( strcmp( trace_data->data[1], "") != 0  &&
-             strcmp( trace_data->data[2], "") != 0) {
-          sts = sscanf( trace_data->data[1], "%lf", &rotation_x);
-          if ( sts != 1)
-            rotation_x = 0;
-
-          sts = sscanf( trace_data->data[2], "%lf", &rotation_y);
-          if ( sts != 1)
-            rotation_y = 0;
-
-          grow_ToPixel( grow->ctx, rotation_x, rotation_y, 
-		      &rotation_x, &rotation_y);
-          grow_MeasureJavaBean( grow->ctx, &x1, &x0, &y1, &y0);
-
-	  rotation_x -= x0 - glow_cJBean_Offset;
-	  rotation_y -= y0 - glow_cJBean_Offset;
-        }
-        else {
-	  // Zero point for nodeclass is rotation point 
-	  grow_GetNodeClassOrigo( object, &rotation_x, &rotation_y);
-          grow_MeasureNode( object, &x0, &y0, &x1, &y1);
-          rotation_x += x0;
-          rotation_y += y0;
-
-          grow_ToPixel( grow->ctx, rotation_x, rotation_y, 
-		      &rotation_x, &rotation_y);
-
-          grow_MeasureJavaBean( grow->ctx, &x1, &x0, &y1, &y0);
-
-	  rotation_x -= x0 - glow_cJBean_Offset;
-	  rotation_y -= y0 - glow_cJBean_Offset;
-        }
-
-
-        grow_GetZoom( grow->ctx, &zoom_factor);
-        fp <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[0] << "\",0);" << endl <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[3] << "\",3);" << endl <<
-"    " << var_name << ".dd.setData(\"" << trace_data->data[4] << "\",4);" << endl <<
-"    " << var_name << ".dd.setType(" << (int)trace_type << ");" << endl <<
-"    " << var_name << ".dd.setColor(" << (int)trace_color << ");" << endl;
-	if ( strcmp( trace_data->data[5], "") != 0)
-          fp <<
-"    " << var_name << ".dd.setFactor(new Double(\"" << trace_data->data[5] << "\").doubleValue());" << endl;
-        else
-          fp <<
-"    " << var_name << ".dd.setFactor(new Double(\"1\").doubleValue());" << endl;
-        fp <<
-"    " << var_name << ".dd.setX0(" << rotation_x << "F);" << endl <<
-"    " << var_name << ".dd.setY0(" << rotation_y << "F);" << endl;
-      }
-      break;
-    }
-    default:
-      ;
-  }
+  dyn->export_java( object, fp, var_name);
   
   // Print annotations
   grow_GetObjectAnnotationNumbers( object, &numbers, &annot_cnt);
@@ -2440,10 +2131,33 @@ int Graph::export_GejavaObjectTraceAttr( ofstream& fp, grow_tObject object, int 
 
 int Graph::export_BarTraceAttr( ofstream& fp, grow_tObject object, int cnt)
 {
-  glow_sTraceData	*trace_data;
+  GeDyn			*dyn;
   char			class_name[] = "JopBar";
   char 			var_name[40];
 
+  grow_GetUserData( object, (void **)&dyn);
+
+  strcpy( var_name, class_name);
+  var_name[0] = _tolower(var_name[0]);
+  sprintf( &var_name[strlen(var_name)], "%d", cnt);
+
+  for ( GeDynElem *elem = dyn->elements; elem; elem = elem->next) {
+    if ( elem->dyn_type == ge_mDynType_Bar) {
+      if ( strcmp( ((GeBar *)elem)->attribute, "") != 0)
+	fp <<
+"    " << var_name << ".setPwrAttribute(\"" << ((GeTrend *)elem)->attribute1 << "\");" << endl;
+    }
+    break;
+  }
+  if ( dyn->total_action_type & ~ge_mActionType_Inherit) {
+    fp <<
+"    " << var_name << ".dd.setActionType(" << (int)dyn->total_action_type << ");" << endl <<
+"    " << var_name << ".dd.setAccess(" << (int)dyn->access << ");" << endl;
+
+    dyn->export_java( object, fp, var_name);
+  }
+
+#if 0
   grow_GetTraceAttr( object, &trace_data);
 
   strcpy( var_name, class_name);
@@ -2455,15 +2169,44 @@ int Graph::export_BarTraceAttr( ofstream& fp, grow_tObject object, int cnt)
     fp <<
 "    " << var_name << ".setPwrAttribute(\"" << trace_data->data[0] << "\");" << endl;
   }
+#endif
   return 1;
 }
 
 int Graph::export_TrendTraceAttr( ofstream& fp, grow_tObject object, int cnt)
 {
-  glow_sTraceData	*trace_data;
-  char			class_name[] = "JopTrend";
-  char 			var_name[40];
+  GeDyn		       *dyn;
+  char		       class_name[] = "JopTrend";
+  char 		       var_name[40];
 
+  grow_GetUserData( object, (void **)&dyn);
+
+  strcpy( var_name, class_name);
+  var_name[0] = _tolower(var_name[0]);
+  sprintf( &var_name[strlen(var_name)], "%d", cnt);
+
+  for ( GeDynElem *elem = dyn->elements; elem; elem = elem->next) {
+
+    if ( elem->dyn_type == ge_mDynType_Trend) {
+      if ( strcmp( ((GeTrend *)elem)->attribute1, "") != 0)
+	fp <<
+"    " << var_name << ".setPwrAttribute1(\"" << ((GeTrend *)elem)->attribute1 << "\");" << endl;
+      if ( strcmp( ((GeTrend *)elem)->attribute2, "") != 0)
+	fp <<
+"    " << var_name << ".setPwrAttribute2(\"" << ((GeTrend *)elem)->attribute2 << "\");" << endl;
+    }
+    break;
+  }
+  if ( dyn->total_action_type & ~ge_mActionType_Inherit) {
+    fp <<
+"    " << var_name << ".dd.setActionType(" << (int)dyn->total_action_type << ");" << endl <<
+"    " << var_name << ".dd.setAccess(" << (int)dyn->access << ");" << endl;
+
+    dyn->export_java( object, fp, var_name);
+  }
+
+
+#if 0
   grow_GetTraceAttr( object, &trace_data);
 
   strcpy( var_name, class_name);
@@ -2479,6 +2222,7 @@ int Graph::export_TrendTraceAttr( ofstream& fp, grow_tObject object, int cnt)
       fp <<
 "    " << var_name << ".setPwrAttribute2(\"" << trace_data->data[1] << "\");" << endl;
   }
+#endif
   return 1;
 }
 
@@ -2503,22 +2247,5 @@ int Graph::export_SliderTraceAttr( ofstream& fp, grow_tObject object, int cnt)
 "    " << var_name << ".setAccess(" << (int)trace_data->access << ");" << endl;
   }
   return 1;
-}
-
-// Replace " to \"
-static char *cmd_cnv( char *instr)
-{
-  static char outstr[200];
-  char *in;
-  char *out = outstr;
-
-  for ( in = instr; *in != 0; in++)
-  {
-    if ( *in == '"')
-      *out++ = '\\';
-    *out++ = *in;
-  }
-  *out = *in;
-  return outstr;
 }
 

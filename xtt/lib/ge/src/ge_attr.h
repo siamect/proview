@@ -12,6 +12,13 @@
 extern "C" {
 #endif
 
+/*! \file ge_attr.h
+    \brief Contains the Attr class. */
+/*! \addtogroup Ge */
+/*@{*/
+
+class GeDyn;
+
 typedef struct {
 	void	*value;
 	char	name[80];
@@ -21,8 +28,11 @@ typedef struct {
 	double	maxlimit;
 	int	noedit;
 	int	multiline;
+    	int	mask;
 } attr_sItem;
 
+//! Attribute editor.
+/*! Displays grow attributes and dynamic attributes for an object or graph. */
 class Attr {
   public:
     Attr(
@@ -53,14 +63,19 @@ class Attr {
     void	(*redraw_cb) (Attr *);
     int		(*get_subgraph_info_cb)( void *, char *, attr_sItem  **, 
                           int *);
+    int		(*get_dyn_info_cb)( void *, GeDyn *, attr_sItem  **, 
+                          int *);
     int 	(*reconfigure_attr_cb)( void *, void *,
 			    attr_sItem **, int *, void **);
     void	(*store_cb) (void *, void *);
-    int		(*recall_cb) (void *, void *, int, glow_sTraceData **);
-    int		(*set_data_cb) (void *, void *, glow_sTraceData *);
+    int		(*recall_cb) (void *, void *, int, GeDyn **);
+    int		(*set_data_cb) (void *, void *, GeDyn *);
+    int		(*get_plant_select_cb) (void *, char *);
+    int 	(*get_current_colors_cb)( void *, glow_eDrawType *, glow_eDrawType *,
+						  glow_eDrawType *);
     void	*client_data;
     int         recall_idx;
-    glow_sTraceData original_data;
+    GeDyn 	*original_data;
     static char	value_recall[30][160];
     int		value_current_recall;
 
@@ -72,9 +87,16 @@ class Attr {
 };
 
 
+/*@}*/
 #if defined __cplusplus
 }
 #endif
 #endif
+
+
+
+
+
+
 
 

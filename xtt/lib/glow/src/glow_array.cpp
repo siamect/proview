@@ -23,6 +23,7 @@
 #include "glow_annotpixmap.h"
 #include "glow_radiobutton.h"
 #include "glow_growrect.h"
+#include "glow_growrectrounded.h"
 #include "glow_growarc.h"
 #include "glow_growline.h"
 #include "glow_growpolyline.h"
@@ -38,6 +39,7 @@
 #include "glow_growimage.h"
 #include "glow_growgroup.h"
 #include "glow_growaxis.h"
+#include "glow_growconglue.h"
 #include "glow_msg.h"
 
 GlowArray::GlowArray( int allocate, int incr) : allocated( allocate),
@@ -198,6 +200,14 @@ void GlowArray::copy_from( const GlowArray& array)
         insert( n);
         break;
       }
+      case glow_eObjectType_GrowRectRounded:
+      {
+        GrowRectRounded *n = new GrowRectRounded(*(GrowRectRounded *)array.a[i]);
+        n->highlight = 0;
+        n->hot = 0;
+        insert( n);
+        break;
+      }
       case glow_eObjectType_GrowImage:
       {
         GrowImage *n = new GrowImage();
@@ -210,6 +220,14 @@ void GlowArray::copy_from( const GlowArray& array)
       case glow_eObjectType_GrowAxis:
       {
         GrowAxis *n = new GrowAxis(*(GrowAxis *)array.a[i]);
+        n->highlight = 0;
+        n->hot = 0;
+        insert( n);
+        break;
+      }
+      case glow_eObjectType_GrowConGlue:
+      {
+        GrowConGlue *n = new GrowConGlue(*(GrowConGlue *)array.a[i]);
         n->highlight = 0;
         n->hot = 0;
         insert( n);
@@ -268,6 +286,10 @@ void GlowArray::copy_from( const GlowArray& array)
         GrowBar *n = new GrowBar(*(GrowBar *)array.a[i]);
         n->highlight = 0;
         n->hot = 0;
+	// Fix, This should be done in the copy constructor !!!
+	if ( n->ctx->userdata_copy_callback)
+	  (n->ctx->userdata_copy_callback)( n, 
+	     ((GrowBar *)array.a[i])->user_data, &n->user_data);
         insert( n);
         break;
       }
@@ -276,10 +298,13 @@ void GlowArray::copy_from( const GlowArray& array)
         GrowTrend *n = new GrowTrend(*(GrowTrend *)array.a[i]);
         n->highlight = 0;
         n->hot = 0;
-	// This should be done in the copy constructor...
+	// Fix, This should be done in the copy constructor !!!
 	n->curve[0] = NULL;
 	n->curve[1] = NULL;
         n->configure_curves();
+	if ( n->ctx->userdata_copy_callback)
+	  (n->ctx->userdata_copy_callback)( n, 
+	     ((GrowTrend *)(array.a[i]))->user_data, &n->user_data);
         insert( n);
         break;
       }
@@ -813,6 +838,13 @@ void GlowArray::open( void *ctx, ifstream& fp)
         insert( r);
         break;
       }
+      case glow_eSave_GrowRectRounded:
+      {
+        GrowRectRounded *r = new GrowRectRounded( (GlowCtx *) ctx, "");
+	r->open( fp);
+        insert( r);
+        break;
+      }
       case glow_eSave_GrowImage:
       {
         GrowImage *r = new GrowImage( (GlowCtx *) ctx, "");
@@ -823,6 +855,13 @@ void GlowArray::open( void *ctx, ifstream& fp)
       case glow_eSave_GrowAxis:
       {
         GrowAxis *r = new GrowAxis( (GlowCtx *) ctx, "");
+	r->open( fp);
+        insert( r);
+        break;
+      }
+      case glow_eSave_GrowConGlue:
+      {
+        GrowConGlue *r = new GrowConGlue( (GlowCtx *) ctx, "");
 	r->open( fp);
         insert( r);
         break;
@@ -1111,7 +1150,7 @@ void GlowArray::get_borders( GlowTransform *t, double *x_right,
   }
 }
 
-void GlowArray::move( int delta_x, int delta_y, int grid)
+void GlowArray::move( double delta_x, double delta_y, int grid)
 {
   int i;
 
@@ -1350,6 +1389,12 @@ void GlowArray::set_original_fill_color( glow_eDrawType drawtype)
     a[i]->set_original_fill_color( drawtype);
 }
 
+void GlowArray::set_original_text_color( glow_eDrawType drawtype) 
+{
+  for ( int i = 0; i < a_size; i++)
+    a[i]->set_original_text_color( drawtype);
+}
+
 void GlowArray::set_original_border_color( glow_eDrawType drawtype) 
 {
   for ( int i = 0; i < a_size; i++)
@@ -1470,6 +1515,12 @@ void GlowArray::set_border( int border)
     a[i]->set_border( border);
 }
 
+void GlowArray::set_shadow( int shadow) 
+{
+  for ( int i = 0; i < a_size; i++)
+    a[i]->set_shadow( shadow);
+}
+
 void GlowArray::set_drawtype( glow_eDrawType drawtype) 
 {
   for ( int i = 0; i < a_size; i++)
@@ -1526,6 +1577,16 @@ int GlowArray::find_nc( GlowArrayElem *nc)
 
   for ( int i = 0; i < a_size; i++) {
     if ( a[i]->find_nc( nc))
+      return 1;
+  }
+  return 0;
+}
+
+int GlowArray::find_cc( GlowArrayElem *cc)
+{
+
+  for ( int i = 0; i < a_size; i++) {
+    if ( a[i]->find_cc( cc))
       return 1;
   }
   return 0;
@@ -1630,6 +1691,28 @@ int GlowArray::get_background_object_limits( GlowTransform *t,
   return sts;
 }
 
+void GlowArray::flip( double x0, double y0, glow_eFlipDirection dir)
+{
+  for ( int i = 0; i < a_size; i++)
+    a[i]->flip( x0, y0, dir);
+}
 
+void GlowArray::convert( glow_eConvert version)
+{
+  for ( int i = 0; i < a_size; i++)
+    a[i]->convert( version);
+}
+
+void GlowArray::set_rootnode( void *node)
+{
+  for ( int i = 0; i < a_size; i++)
+    a[i]->set_rootnode( node);
+}
+
+void GlowArray::set_linetype( glow_eLineType type)
+{
+  for ( int i = 0; i < a_size; i++)
+    a[i]->set_linetype( type);
+}
 
 

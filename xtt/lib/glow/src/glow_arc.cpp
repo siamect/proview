@@ -93,16 +93,101 @@ void GlowArc::draw( void *pos, int highlight, int hot, void *node)
   idx += hot;
   idx = max( 0, idx);
   idx = min( idx, DRAW_TYPE_SIZE-1);
-  if ( !fill)
+  ctx->set_draw_buffer_only();
+  if ( !fill) {
     glow_draw_arc( ctx, ll.z_x + ((GlowPoint *)pos)->z_x - ctx->offset_x, 
 	ll.z_y + ((GlowPoint *)pos)->z_y - ctx->offset_y, 
 	ur.z_x - ll.z_x, ur.z_y - ll.z_y, angel1, angel2,
 	draw_type, idx, highlight);
+  }
   else
     glow_draw_fill_arc( ctx, ll.z_x + ((GlowPoint *)pos)->z_x - ctx->offset_x, 
 	ll.z_y + ((GlowPoint *)pos)->z_y - ctx->offset_y, 
 	ur.z_x - ll.z_x, ur.z_y - ll.z_y, angel1, angel2,
 	draw_type, highlight);
+  ctx->reset_draw_buffer_only();
+}
+
+void GlowArc::draw_shadow( int border, int shadow, int highlight, int hot)
+{
+  int idx = int( ctx->zoom_factor_y / ctx->base_zoom_factor * line_width - 1);
+  idx += hot;
+  idx = max( 0, idx);
+  idx = min( idx, DRAW_TYPE_SIZE-1);
+  int ish = 1;
+  int offs = border;
+
+  ctx->set_draw_buffer_only();
+  if ( shadow && idx > 2) {
+    if ( angel1 == 0) {
+      glow_draw_arc( ctx, ll.z_x - ctx->offset_x + idx/2 - idx + offs,
+		     ll.z_y - ctx->offset_y + idx/2 - idx + offs, 
+		     ur.z_x - ll.z_x + idx - offs*2, ur.z_y - ll.z_y + idx - offs*2, angel1 + 45, angel2 - 45,
+		     ((GrowCtx *)ctx)->shift_drawtype( draw_type, -2, 0), ish-1, highlight);
+      glow_draw_arc( ctx, ll.z_x - ctx->offset_x + idx/2 - idx + offs, 
+		     ll.z_y - ctx->offset_y + idx/2 - idx + offs, 
+		     ur.z_x - ll.z_x + idx - offs*2, ur.z_y - ll.z_y + idx - offs*2, angel1, angel2 - 45,
+		     ((GrowCtx *)ctx)->shift_drawtype( draw_type, 2, 0), ish-1, highlight);
+      glow_draw_arc( ctx, ll.z_x - ctx->offset_x + idx/2 - offs, 
+		     ll.z_y - ctx->offset_y + idx/2 - offs, 
+		     max( 0, ur.z_x - ll.z_x - idx + offs*2), max( 0,  ur.z_y - ll.z_y - idx + offs*2), angel1 + 45, angel2 - 45,
+		     ((GrowCtx *)ctx)->shift_drawtype( draw_type, 2, 0), ish-1, highlight);
+      glow_draw_arc( ctx, ll.z_x - ctx->offset_x + idx/2 - offs, 
+		     ll.z_y - ctx->offset_y + idx/2 - offs, 
+		     max( 0, ur.z_x - ll.z_x - idx + offs*2), max( 0,  ur.z_y - ll.z_y - idx + offs*2), angel1, angel2 - 45,
+		     ((GrowCtx *)ctx)->shift_drawtype( draw_type, -2, 0), ish-1, highlight);
+    }
+    else if ( angel1 == 90) {
+      glow_draw_arc( ctx, ll.z_x - ctx->offset_x + idx/2 - idx + offs, 
+		     ll.z_y - ctx->offset_y + idx/2 - idx + offs, 
+		     ur.z_x - ll.z_x + idx - offs*2, ur.z_y - ll.z_y + idx - offs*2, angel1, angel2,
+		     ((GrowCtx *)ctx)->shift_drawtype( draw_type, -2, 0), ish-1, highlight);
+      glow_draw_arc( ctx, ll.z_x - ctx->offset_x + idx/2 - offs, 
+		     ll.z_y - ctx->offset_y + idx/2 - offs, 
+		     max( 0, ur.z_x - ll.z_x - idx + offs*2), max( 0,  ur.z_y - ll.z_y - idx + offs*2), angel1, angel2,
+		     ((GrowCtx *)ctx)->shift_drawtype( draw_type, 2, 0), ish-1, highlight);
+    }
+    else if ( angel1 == 180) {
+      glow_draw_arc( ctx, ll.z_x - ctx->offset_x + idx/2 - idx + offs, 
+		     ll.z_y - ctx->offset_y + idx/2 - idx + offs, 
+		     ur.z_x - ll.z_x + idx - offs*2, ur.z_y - ll.z_y + idx - offs*2, angel1 + 45, angel2 - 45,
+		     ((GrowCtx *)ctx)->shift_drawtype( draw_type, 2, 0), ish-1, highlight);
+      glow_draw_arc( ctx, ll.z_x - ctx->offset_x + idx/2 - idx + offs, 
+		     ll.z_y - ctx->offset_y + idx/2 - idx + offs, 
+		     ur.z_x - ll.z_x + idx - offs*2, ur.z_y - ll.z_y + idx - offs*2, angel1, angel2 - 45,
+		     ((GrowCtx *)ctx)->shift_drawtype( draw_type, -2, 0), ish-1, highlight);
+      glow_draw_arc( ctx, ll.z_x - ctx->offset_x + idx/2 - offs, 
+		     ll.z_y - ctx->offset_y + idx/2 - offs, 
+		     max( 0, ur.z_x - ll.z_x - idx + offs*2), max( 0,  ur.z_y - ll.z_y - idx + offs*2), angel1 + 45, angel2 - 45,
+		     ((GrowCtx *)ctx)->shift_drawtype( draw_type, -2, 0), ish-1, highlight);
+      glow_draw_arc( ctx, ll.z_x - ctx->offset_x + idx/2 - offs, 
+		     ll.z_y - ctx->offset_y + idx/2 - offs, 
+		     max( 0, ur.z_x - ll.z_x - idx + offs*2), max( 0,  ur.z_y - ll.z_y - idx + offs*2), angel1, angel2 - 45,
+		     ((GrowCtx *)ctx)->shift_drawtype( draw_type, 2, 0), ish-1, highlight);
+    }
+    else if ( angel1 == 270) {
+      glow_draw_arc( ctx, ll.z_x - ctx->offset_x + idx/2 - idx + offs, 
+		     ll.z_y - ctx->offset_y + idx/2 - idx + offs, 
+		     ur.z_x - ll.z_x + idx - offs*2, ur.z_y - ll.z_y + idx - offs*2, angel1, angel2,
+		     ((GrowCtx *)ctx)->shift_drawtype( draw_type, 2, 0), ish-1, highlight);
+      glow_draw_arc( ctx, ll.z_x - ctx->offset_x + idx/2 - offs, 
+		     ll.z_y - ctx->offset_y + idx/2 - offs, 
+		     max( 0, ur.z_x - ll.z_x - idx + offs*2), max( 0,  ur.z_y - ll.z_y - idx + offs*2), angel1, angel2,
+		     ((GrowCtx *)ctx)->shift_drawtype( draw_type, -2, 0), ish-1, highlight);
+    }
+  }
+  if ( border) {
+    glow_draw_arc( ctx, ll.z_x - ctx->offset_x + idx/2 - idx, 
+		   ll.z_y - ctx->offset_y + idx/2 - idx, 
+		   ur.z_x - ll.z_x + idx, ur.z_y - ll.z_y + idx, angel1, angel2,
+		   glow_eDrawType_Line, 0, highlight);
+    if ( idx > 0)
+      glow_draw_arc( ctx, ll.z_x - ctx->offset_x + idx/2, 
+		   ll.z_y - ctx->offset_y + idx/2, 
+		   max( 0, ur.z_x - ll.z_x - idx), max( 0,  ur.z_y - ll.z_y - idx), angel1, angel2,
+		   glow_eDrawType_Line, 0, highlight);
+  }
+  ctx->reset_draw_buffer_only();
 }
 
 void GlowArc::erase( void *pos, int hot, void *node)
@@ -111,10 +196,18 @@ void GlowArc::erase( void *pos, int hot, void *node)
   idx += hot;
   idx = max( 0, idx);
   idx = min( idx, DRAW_TYPE_SIZE-1);
-  if ( !fill)
+  if ( !fill) {
     glow_draw_arc_erase( ctx, ll.z_x + ((GlowPoint *)pos)->z_x - ctx->offset_x, 
 	ll.z_y + ((GlowPoint *)pos)->z_y - ctx->offset_y, 
 	ur.z_x - ll.z_x, ur.z_y - ll.z_y, angel1, angel2, idx);
+    // Erase border 
+    glow_draw_arc_erase( ctx, ll.z_x + ((GlowPoint *)pos)->z_x - ctx->offset_x + idx/2 - idx, 
+		   ll.z_y + ((GlowPoint *)pos)->z_x - ctx->offset_y + idx/2 - idx, 
+		   ur.z_x - ll.z_x + idx, ur.z_y - ll.z_y + idx, angel1, angel2, 0);
+    glow_draw_arc_erase( ctx, ll.z_x + ((GlowPoint *)pos)->z_x - ctx->offset_x + idx/2, 
+		   ll.z_y + ((GlowPoint *)pos)->z_x - ctx->offset_y + idx/2, 
+		   max( 0, ur.z_x - ll.z_x - idx), max( 0,  ur.z_y - ll.z_y - idx), angel1, angel2, 0);
+  }
   else
     glow_draw_fill_arc( ctx, ll.z_x + ((GlowPoint *)pos)->z_x - ctx->offset_x, 
 	ll.z_y + ((GlowPoint *)pos)->z_y - ctx->offset_y, 
@@ -235,8 +328,89 @@ void GlowArc::export_javabean( GlowTransform *t, void *node,
 	ll.z_x - ctx->offset_x, 
 	ll.z_y - ctx->offset_y, 
 	ur.z_x - ll.z_x, ur.z_y - ll.z_y, angel1, angel2,
-	fill, !fill, draw_type, draw_type, idx, pass, shape_cnt, node_cnt, fp);
-  (*shape_cnt)++;
+	fill, !fill, draw_type, draw_type, idx, 0.0, 0, glow_eDrawType_No,
+	pass, shape_cnt, node_cnt, fp);
+}
+
+void GlowArc::export_javabean_shadow( GlowTransform *t, void *node,
+	glow_eExportPass pass, int *shape_cnt, int node_cnt, int in_nc, ofstream &fp, int border, int shadow)
+{
+  int idx = int( ctx->zoom_factor_y / ctx->base_zoom_factor * line_width - 1);
+  idx = max( 0, idx);
+  idx = min( idx, DRAW_TYPE_SIZE-1);
+
+  int ish = 1;
+  int offs = border;
+
+  if ( shadow) {
+    if ( angel1 == 0) {
+      ((GrowCtx *)ctx)->export_jbean->arc( ll.z_x - ctx->offset_x + idx/2 - idx + offs,
+		     ll.z_y - ctx->offset_y + idx/2 - idx + offs, 
+		     ur.z_x - ll.z_x + idx - offs*2, ur.z_y - ll.z_y + idx - offs*2, angel1 + 45, angel2 - 45,
+		     0, 1, glow_eDrawType_No, ((GrowCtx *)ctx)->shift_drawtype( draw_type, -2, 0),
+		     ish-1, 0.0, 0, glow_eDrawType_No, pass, shape_cnt, node_cnt, fp);
+      ((GrowCtx *)ctx)->export_jbean->arc( ll.z_x - ctx->offset_x + idx/2 - idx + offs, 
+		     ll.z_y - ctx->offset_y + idx/2 - idx + offs, 
+		     ur.z_x - ll.z_x + idx - offs*2, ur.z_y - ll.z_y + idx - offs*2, angel1, angel2 - 45,
+		     0, 1, glow_eDrawType_No, ((GrowCtx *)ctx)->shift_drawtype( draw_type, 2, 0), ish-1, 0.0, 0, glow_eDrawType_No, pass, shape_cnt, node_cnt, fp);
+      ((GrowCtx *)ctx)->export_jbean->arc( ll.z_x - ctx->offset_x + idx/2 - offs, 
+		     ll.z_y - ctx->offset_y + idx/2 - offs, 
+		     max( 0, ur.z_x - ll.z_x - idx + offs*2), max( 0,  ur.z_y - ll.z_y - idx + offs*2), angel1 + 45, angel2 - 45,
+		     0, 1, glow_eDrawType_No, ((GrowCtx *)ctx)->shift_drawtype( draw_type, 2, 0), ish-1, 0.0, 0, glow_eDrawType_No, pass, shape_cnt, node_cnt, fp);
+      ((GrowCtx *)ctx)->export_jbean->arc( ll.z_x - ctx->offset_x + idx/2 - offs, 
+		     ll.z_y - ctx->offset_y + idx/2 - offs, 
+		     max( 0, ur.z_x - ll.z_x - idx + offs*2), max( 0,  ur.z_y - ll.z_y - idx + offs*2), angel1, angel2 - 45,
+		     0, 1, glow_eDrawType_No, ((GrowCtx *)ctx)->shift_drawtype( draw_type, -2, 0), ish-1, 0.0, 0, glow_eDrawType_No, pass, shape_cnt, node_cnt, fp);
+    }
+    else if ( angel1 == 90) {
+      ((GrowCtx *)ctx)->export_jbean->arc( ll.z_x - ctx->offset_x + idx/2 - idx + offs, 
+		     ll.z_y - ctx->offset_y + idx/2 - idx + offs, 
+		     ur.z_x - ll.z_x + idx - offs*2, ur.z_y - ll.z_y + idx - offs*2, angel1, angel2,
+		     0, 1, glow_eDrawType_No, ((GrowCtx *)ctx)->shift_drawtype( draw_type, -2, 0), ish-1, 0.0, 0, glow_eDrawType_No, pass, shape_cnt, node_cnt, fp);
+      ((GrowCtx *)ctx)->export_jbean->arc( ll.z_x - ctx->offset_x + idx/2 - offs, 
+		     ll.z_y - ctx->offset_y + idx/2 - offs, 
+		     max( 0, ur.z_x - ll.z_x - idx + offs*2), max( 0,  ur.z_y - ll.z_y - idx + offs*2), angel1, angel2,
+		     0, 1, glow_eDrawType_No, ((GrowCtx *)ctx)->shift_drawtype( draw_type, 2, 0), ish-1, 0.0, 0, glow_eDrawType_No, pass, shape_cnt, node_cnt, fp);
+    }
+    else if ( angel1 == 180) {
+      ((GrowCtx *)ctx)->export_jbean->arc( ll.z_x - ctx->offset_x + idx/2 - idx + offs, 
+		     ll.z_y - ctx->offset_y + idx/2 - idx + offs, 
+		     ur.z_x - ll.z_x + idx - offs*2, ur.z_y - ll.z_y + idx - offs*2, angel1 + 45, angel2 - 45,
+		     0, 1, glow_eDrawType_No, ((GrowCtx *)ctx)->shift_drawtype( draw_type, 2, 0), ish-1, 0.0, 0, glow_eDrawType_No, pass, shape_cnt, node_cnt, fp);
+      ((GrowCtx *)ctx)->export_jbean->arc( ll.z_x - ctx->offset_x + idx/2 - idx + offs, 
+		     ll.z_y - ctx->offset_y + idx/2 - idx + offs, 
+		     ur.z_x - ll.z_x + idx - offs*2, ur.z_y - ll.z_y + idx - offs*2, angel1, angel2 - 45,
+		     0, 1, glow_eDrawType_No, ((GrowCtx *)ctx)->shift_drawtype( draw_type, -2, 0), ish-1, 0.0, 0, glow_eDrawType_No, pass, shape_cnt, node_cnt, fp);
+      ((GrowCtx *)ctx)->export_jbean->arc( ll.z_x - ctx->offset_x + idx/2 - offs, 
+		     ll.z_y - ctx->offset_y + idx/2 - offs, 
+		     max( 0, ur.z_x - ll.z_x - idx + offs*2), max( 0,  ur.z_y - ll.z_y - idx + offs*2), angel1 + 45, angel2 - 45,
+		     0, 1, glow_eDrawType_No, ((GrowCtx *)ctx)->shift_drawtype( draw_type, -2, 0), ish-1, 0.0, 0, glow_eDrawType_No, pass, shape_cnt, node_cnt, fp);
+      ((GrowCtx *)ctx)->export_jbean->arc( ll.z_x - ctx->offset_x + idx/2 - offs, 
+		     ll.z_y - ctx->offset_y + idx/2 - offs, 
+		     max( 0, ur.z_x - ll.z_x - idx + offs*2), max( 0,  ur.z_y - ll.z_y - idx + offs*2), angel1, angel2 - 45,
+		     0, 1, glow_eDrawType_No, ((GrowCtx *)ctx)->shift_drawtype( draw_type, 2, 0), ish-1, 0.0, 0, glow_eDrawType_No, pass, shape_cnt, node_cnt, fp);
+    }
+    else if ( angel1 == 270) {
+      ((GrowCtx *)ctx)->export_jbean->arc( ll.z_x - ctx->offset_x + idx/2 - idx + offs, 
+		     ll.z_y - ctx->offset_y + idx/2 - idx + offs, 
+		     ur.z_x - ll.z_x + idx - offs*2, ur.z_y - ll.z_y + idx - offs*2, angel1, angel2,
+		     0, 1, glow_eDrawType_No, ((GrowCtx *)ctx)->shift_drawtype( draw_type, 2, 0), ish-1, 0.0, 0, glow_eDrawType_No, pass, shape_cnt, node_cnt, fp);
+      ((GrowCtx *)ctx)->export_jbean->arc( ll.z_x - ctx->offset_x + idx/2 - offs, 
+		     ll.z_y - ctx->offset_y + idx/2 - offs, 
+		     max( 0, ur.z_x - ll.z_x - idx + offs*2), max( 0,  ur.z_y - ll.z_y - idx + offs*2), angel1, angel2,
+		     0, 1, glow_eDrawType_No, ((GrowCtx *)ctx)->shift_drawtype( draw_type, -2, 0), ish-1, 0.0, 0, glow_eDrawType_No, pass, shape_cnt, node_cnt, fp);
+    }
+  }
+  if ( border) {
+    ((GrowCtx *)ctx)->export_jbean->arc( ll.z_x - ctx->offset_x + idx/2 - idx, 
+		   ll.z_y - ctx->offset_y + idx/2 - idx, 
+		   ur.z_x - ll.z_x + idx, ur.z_y - ll.z_y + idx, angel1, angel2,
+		   0, 1, glow_eDrawType_No, glow_eDrawType_Line, 0, 0.0, 0, glow_eDrawType_No, pass, shape_cnt, node_cnt, fp);
+    ((GrowCtx *)ctx)->export_jbean->arc( ll.z_x - ctx->offset_x + idx/2, 
+		   ll.z_y - ctx->offset_y + idx/2, 
+		   max( 0, ur.z_x - ll.z_x - idx), max( 0,  ur.z_y - ll.z_y - idx), angel1, angel2,
+		   0, 1, glow_eDrawType_No, glow_eDrawType_Line, 0, 0.0, 0, glow_eDrawType_No, pass, shape_cnt, node_cnt, fp);
+  }
 }
 
 ostream& operator<< ( ostream& o, const GlowArc a)
@@ -248,4 +422,17 @@ ostream& operator<< ( ostream& o, const GlowArc a)
   '[' << a.ur.z_x << ',' << a.ur.z_y << ']' ;
   return o;
 }
+
+void GlowArc::convert( glow_eConvert version) 
+{
+  switch ( version) {
+  case glow_eConvert_V34: {
+    // Conversion of colors
+    draw_type = GlowColor::convert( version, draw_type);
+    break;
+  }
+  }  
+}
+
+
 

@@ -14,11 +14,12 @@ class GlowAnnot : public GlowArrayElem {
   public:
     GlowAnnot( GlowCtx *glow_ctx, double x = 0, double y = 0, 
 	int annot_num = 0, glow_eDrawType d_type = glow_eDrawType_TextHelveticaBold,
+	glow_eDrawType color_d_type = glow_eDrawType_Line,
 	int t_size = 2, glow_eAnnotType a_type = glow_eAnnotType_OneLine, 
 	int rel_pos = 0, glow_mDisplayLevel display_lev = glow_mDisplayLevel_1) : 
 	ctx(glow_ctx), number(annot_num), p(glow_ctx,x,y), draw_type(d_type),
 	text_size(t_size), annot_type(a_type), relative_pos(rel_pos),
-	display_level(display_lev) {};
+	display_level(display_lev), color_drawtype(color_d_type) {};
     friend ostream& operator<< ( ostream& o, const GlowAnnot cp);
     void zoom();
     void nav_zoom();
@@ -55,6 +56,7 @@ class GlowAnnot : public GlowArrayElem {
     glow_eAnnotType annot_type;
     int relative_pos;
     glow_mDisplayLevel display_level;
+    glow_eDrawType color_drawtype;
 };
 
 void glow_measure_annot_text( GlowCtx *ctx, char *text, glow_eDrawType draw_type, 

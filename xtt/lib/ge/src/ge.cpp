@@ -24,16 +24,6 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 
-#include "flow.h"
-#include "flow_browctx.h"
-#include "flow_browapi.h"
-#include "flow_browwidget.h"
-#include "glow.h"
-#include "glow_colpalctx.h"
-#include "glow_colpalapi.h"
-#include "glow_colpalwidget.h"
-#include "glow_msg.h"
-
 extern "C" {
 #include "rt_gdh.h"
 #include "rt_load.h"
@@ -45,7 +35,17 @@ extern "C" {
 #include "co_mrm_util.h"
 #include "co_wow.h"
 }
-#include "co_xhelp.h"
+
+#include "flow.h"
+#include "flow_browctx.h"
+#include "flow_browapi.h"
+#include "flow_browwidget.h"
+#include "glow.h"
+#include "glow_colpalctx.h"
+#include "glow_colpalapi.h"
+#include "glow_colpalwidget.h"
+#include "glow_msg.h"
+
 
 #include "glow_growctx.h"
 #include "glow_growapi.h"
@@ -54,6 +54,7 @@ extern "C" {
 #include "ge.h"
 #include "ge_subpalette.h"
 #include "ge_subgraphs.h"
+#include "ge_util.h"
 #include "ge_msg.h"
 extern "C" {
 #include "ge_plant.h"
@@ -159,27 +160,6 @@ static int ge_save( ge_tCtx gectx)
   return 1;
 }
 #endif
-
-int ge_get_systemname(
-  char		*systemname
-)
-{
-  FILE 	*file;
-  int	nr;
-  char	fname[120];
-
-  dcli_translate_filename( fname, load_cNameSysObject);
-  file = fopen( fname, "r");
-  if ( file == 0) {
-    printf("** Warning, systemname not found\n");
-    return 0;
-  }
-
-  nr = fscanf( file, "%s", systemname);
-  fclose(file);
-  if ( nr != 1) return 0;
-  return 1;
-}
 
  
 void ge_set_title( ge_tCtx gectx)
@@ -345,6 +325,7 @@ static void ge_save_graph( ge_tCtx gectx, char *name)
   char oldname[80];
   char *s;
   char next[40];
+  int sts;
 
   if ( ! gectx->graph->is_subgraph() )
   {
@@ -363,7 +344,8 @@ static void ge_save_graph( ge_tCtx gectx, char *name)
     if ( ! strrchr( filename, '.'))
       strcat( filename, ".pwg");
 
-    gectx->graph->save( filename);
+    sts = gectx->graph->save( filename);
+    if ( EVEN(sts)) return;
     ge_message( gectx, 'I', "Graph saved");
 
     ge_set_title( gectx);
@@ -385,12 +367,14 @@ static void ge_save_graph( ge_tCtx gectx, char *name)
     cdh_ToLower( filename, name);
     if ( ! strrchr( filename, '.'))
       strcat( filename, ".pwsg");
-    gectx->graph->save_subgraph( filename);
+    sts = gectx->graph->save_subgraph( filename);
+    if ( EVEN(sts)) return;
 
     cdh_ToLower( filename, name);
     if ( ! strrchr( filename, '.'))
       strcat( filename, ".pwg");
-    gectx->graph->save( filename);
+    sts = gectx->graph->save( filename);
+    if ( EVEN(sts)) return;
 
     // Store this to enable previous page later
     gectx->graph->get_next_subgraph( next);
@@ -429,6 +413,7 @@ static void ge_save_graph_and_close( ge_tCtx gectx, char *name)
   char filename[80];
   char graphname[80];
   char *s;
+  int sts;
 
   if ( ! gectx->graph->is_subgraph() )
   {
@@ -441,7 +426,8 @@ static void ge_save_graph_and_close( ge_tCtx gectx, char *name)
     if ( ! strrchr( filename, '.'))
       strcat( filename, ".pwg");
 
-    gectx->graph->save( filename);
+    sts = gectx->graph->save( filename);
+    if ( EVEN(sts)) return;
     ge_message( gectx, 'I', "Graph saved");
   }
   else
@@ -458,7 +444,8 @@ static void ge_save_graph_and_close( ge_tCtx gectx, char *name)
     cdh_ToLower( filename, name);
     if ( ! strrchr( filename, '.'))
       strcat( filename, ".pwsg");
-    gectx->graph->save_subgraph( filename);
+    sts = gectx->graph->save_subgraph( filename);
+    if ( EVEN(sts)) return;
 
     cdh_ToLower( filename, name);
     if ( ! strrchr( filename, '.'))
@@ -713,17 +700,17 @@ static int ge_subpalette_get_select( void *gectx, char *text, char *filename)
 }
 
 static void ge_colorpalette_get_current( void *gectx, glow_eDrawType *fill_color,
-	glow_eDrawType *border_color)
+	glow_eDrawType *border_color, glow_eDrawType *text_color)
 {
   colpal_GetCurrentColors( ((ge_tCtx)gectx)->colorpalette_ctx, 
-	fill_color, border_color);
+	fill_color, border_color, text_color);
 }
 
 static void ge_colorpalette_set_current( void *gectx, glow_eDrawType fill_color,
-	glow_eDrawType border_color)
+	glow_eDrawType border_color, glow_eDrawType text_color)
 {
   colpal_SetCurrentColors( ((ge_tCtx)gectx)->colorpalette_ctx, 
-	fill_color, border_color);
+	fill_color, border_color, text_color);
 }
 
 static void ge_subgraphs_close_cb( SubGraphs *subgraphs)
@@ -1060,6 +1047,16 @@ static void ge_activate_rotate90( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *
   gectx->graph->rotate( -90.0);
 }
 
+static void ge_activate_flip_vert( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
+{
+  gectx->graph->flip( glow_eFlipDirection_Vertical);
+}
+
+static void ge_activate_flip_horiz( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
+{
+  gectx->graph->flip( glow_eFlipDirection_Horizontal);
+}
+
 static void ge_activate_pop( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
 {
   gectx->graph->pop_select();
@@ -1072,7 +1069,7 @@ static void ge_activate_push( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data
 
 static void ge_activate_edit_polyline( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
 {
-  gectx->graph->set_mode( grow_eMode_EditPolyLine);
+  gectx->graph->set_mode( grow_eMode_EditPolyLine, false);
 }
 
 static void ge_activate_scale_equal( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
@@ -1756,52 +1753,90 @@ static void ge_activate_subgraphs( Widget w, ge_tCtx gectx, XmAnyCallbackStruct 
 
 static void ge_activate_rect( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
 {
-  gectx->graph->set_mode( grow_eMode_Rect);
+  bool keep = false;
+
+  if ( data->event->type == ButtonRelease && 
+       data->event->xbutton.state & ShiftMask)
+    keep = true;
+
+  gectx->graph->set_mode( grow_eMode_Rect, keep);
+}
+
+static void ge_activate_rectrounded( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
+{
+  bool keep = false;
+
+  if ( data->event->type == ButtonRelease && 
+       data->event->xbutton.state & ShiftMask)
+    keep = true;
+
+  gectx->graph->set_mode( grow_eMode_RectRounded, keep);
 }
 
 static void ge_activate_line( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
 {
-  gectx->graph->set_mode( grow_eMode_Line);
+  bool keep = false;
+
+  if ( data->event->type == ButtonRelease && 
+       data->event->xbutton.state & ShiftMask)
+    keep = true;
+
+  gectx->graph->set_mode( grow_eMode_Line, keep);
 }
 
 static void ge_activate_polyline( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
 {
-  gectx->graph->set_mode( grow_eMode_PolyLine);
+  bool keep = false;
+
+  if ( data->event->type == ButtonRelease && 
+       data->event->xbutton.state & ShiftMask)
+    keep = true;
+
+  gectx->graph->set_mode( grow_eMode_PolyLine, keep);
 }
 
 static void ge_activate_circle( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
 {
-  gectx->graph->set_mode( grow_eMode_Circle);
+  bool keep = false;
+
+  if ( data->event->type == ButtonRelease && 
+       data->event->xbutton.state & ShiftMask)
+    keep = true;
+
+  gectx->graph->set_mode( grow_eMode_Circle, keep);
 }
 
 static void ge_activate_text( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
 {
-  gectx->graph->set_mode( grow_eMode_Text);
+  bool keep = false;
+
+  if ( data->event->type == ButtonRelease && 
+       data->event->xbutton.state & ShiftMask)
+    keep = true;
+
+  gectx->graph->set_mode( grow_eMode_Text, keep);
 }
 
 static void ge_activate_annot( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
 {
-  gectx->graph->set_mode( grow_eMode_Annot);
+  bool keep = false;
+
+  if ( data->event->type == ButtonRelease && 
+       data->event->xbutton.state & ShiftMask)
+    keep = true;
+
+  gectx->graph->set_mode( grow_eMode_Annot, keep);
 }
 
 static void ge_activate_conpoint( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
 {
-  gectx->graph->set_mode( grow_eMode_ConPoint);
-}
+  bool keep = false;
 
-static void ge_activate_bar( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
-{
-  gectx->graph->set_mode( grow_eMode_Bar);
-}
+  if ( data->event->type == ButtonRelease && 
+       data->event->xbutton.state & ShiftMask)
+    keep = true;
 
-static void ge_activate_trend( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
-{
-  gectx->graph->set_mode( grow_eMode_Trend);
-}
-
-static void ge_activate_axis( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
-{
-  gectx->graph->set_mode( grow_eMode_Axis);
+  gectx->graph->set_mode( grow_eMode_ConPoint, keep);
 }
 
 static void ge_activate_fill( Widget w, ge_tCtx gectx, XmToggleButtonCallbackStruct *data)
@@ -1814,6 +1849,12 @@ static void ge_activate_border( Widget w, ge_tCtx gectx, XmToggleButtonCallbackS
 {
   gectx->graph->set_border( data->set);
   gectx->graph->set_select_border( data->set);
+}
+
+static void ge_activate_shadow( Widget w, ge_tCtx gectx, XmToggleButtonCallbackStruct *data)
+{
+  gectx->graph->set_shadow( data->set);
+  gectx->graph->set_select_shadow( data->set);
 }
 
 static void ge_activate_incr_lightness( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
@@ -1848,7 +1889,7 @@ static void ge_activate_decr_shift( Widget w, ge_tCtx gectx, XmAnyCallbackStruct
 
 static void ge_activate_scale( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
 {
-  gectx->graph->set_mode( grow_eMode_Scale);
+  gectx->graph->set_mode( grow_eMode_Scale, false);
 }
 
 static void ge_activate_grid( Widget w, ge_tCtx gectx, XmToggleButtonCallbackStruct *data)
@@ -1920,6 +1961,69 @@ static void ge_activate_linewidth_8( Widget w, ge_tCtx gectx, XmToggleButtonCall
   {
     gectx->graph->set_linewidth( 8);
     gectx->graph->set_select_linewidth( 8);
+  }
+}
+
+static void ge_activate_linetype1( Widget w, ge_tCtx gectx, XmToggleButtonCallbackStruct *data)
+{
+  if ( data->set)
+  {
+    gectx->graph->set_linetype( glow_eLineType_Solid);
+    gectx->graph->set_select_linetype( glow_eLineType_Solid);
+  }
+}
+
+static void ge_activate_linetype2( Widget w, ge_tCtx gectx, XmToggleButtonCallbackStruct *data)
+{
+  if ( data->set)
+  {
+    gectx->graph->set_linetype( glow_eLineType_Dashed1);
+    gectx->graph->set_select_linetype( glow_eLineType_Dashed1);
+  }
+}
+
+static void ge_activate_linetype3( Widget w, ge_tCtx gectx, XmToggleButtonCallbackStruct *data)
+{
+  if ( data->set)
+  {
+    gectx->graph->set_linetype( glow_eLineType_Dashed2);
+    gectx->graph->set_select_linetype( glow_eLineType_Dashed2);
+  }
+}
+
+static void ge_activate_linetype4( Widget w, ge_tCtx gectx, XmToggleButtonCallbackStruct *data)
+{
+  if ( data->set)
+  {
+    gectx->graph->set_linetype( glow_eLineType_Dashed3);
+    gectx->graph->set_select_linetype( glow_eLineType_Dashed3);
+  }
+}
+
+static void ge_activate_linetype5( Widget w, ge_tCtx gectx, XmToggleButtonCallbackStruct *data)
+{
+  if ( data->set)
+  {
+    gectx->graph->set_linetype( glow_eLineType_Dotted);
+    gectx->graph->set_select_linetype( glow_eLineType_Dotted);
+  }
+}
+
+static void ge_activate_linetype6( Widget w, ge_tCtx gectx, XmToggleButtonCallbackStruct *data)
+{
+  if ( data->set)
+  {
+    gectx->graph->set_linetype( glow_eLineType_DotDashed1);
+    gectx->graph->set_select_linetype( glow_eLineType_DotDashed1);
+  }
+}
+
+static void ge_activate_linetype7( Widget w, ge_tCtx gectx, XmToggleButtonCallbackStruct *data)
+{
+  if ( data->set)
+  {
+    gectx->graph->set_linetype( glow_eLineType_DotDashed2);
+    gectx->graph->set_select_linetype( glow_eLineType_DotDashed2);
   }
 }
 
@@ -2131,7 +2235,7 @@ static void ge_activate_background_color( Widget w, ge_tCtx gectx, XmAnyCallback
 
 static void ge_activate_help( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
 {
-  CoXHelp::dhelp( "ge editor", 0, navh_eHelpFile_Base, 0, true);
+  // Not yet implemented
 }
 
 static void ge_create_cursor_position( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
@@ -2316,6 +2420,9 @@ static int ge_colorpalette_cb( GlowCtx *ctx, glow_tEvent event)
       else
         gectx->graph->set_select_fill_color();
       break;
+    case glow_eEvent_MB1ClickShift:
+      gectx->graph->set_select_text_color();
+      break;
     case glow_eEvent_MB2Click:
       gectx->graph->set_select_border_color();
       break;
@@ -2332,6 +2439,8 @@ static int ge_init_colorpalette_cb( GlowCtx *fctx, void *client_data)
   colpal_SetCtxUserData( gectx->colorpalette_ctx, gectx);
 
   colpal_EnableEvent( gectx->colorpalette_ctx, glow_eEvent_MB1Click, 
+	glow_eEventType_CallBack, ge_colorpalette_cb);
+  colpal_EnableEvent( gectx->colorpalette_ctx, glow_eEvent_MB1ClickShift, 
 	glow_eEventType_CallBack, ge_colorpalette_cb);
   colpal_EnableEvent( gectx->colorpalette_ctx, glow_eEvent_MB2Click, 
 	glow_eEventType_CallBack, ge_colorpalette_cb);
@@ -2537,19 +2646,20 @@ void *ge_new( 	void 	*parent_ctx,
 	{"ge_activate_paste",(caddr_t)ge_activate_paste },
 	{"ge_activate_rotate",(caddr_t)ge_activate_rotate },
 	{"ge_activate_rotate90",(caddr_t)ge_activate_rotate90 },
+	{"ge_activate_flip_horiz",(caddr_t)ge_activate_flip_horiz },
+	{"ge_activate_flip_vert",(caddr_t)ge_activate_flip_vert },
 	{"ge_activate_command",(caddr_t)ge_activate_command },
 	{"ge_activate_rect",(caddr_t)ge_activate_rect },
+	{"ge_activate_rectrounded",(caddr_t)ge_activate_rectrounded },
 	{"ge_activate_line",(caddr_t)ge_activate_line },
 	{"ge_activate_polyline",(caddr_t)ge_activate_polyline },
 	{"ge_activate_circle",(caddr_t)ge_activate_circle },
 	{"ge_activate_text",(caddr_t)ge_activate_text },
 	{"ge_activate_annot",(caddr_t)ge_activate_annot },
 	{"ge_activate_conpoint",(caddr_t)ge_activate_conpoint },
-	{"ge_activate_bar",(caddr_t)ge_activate_bar },
-	{"ge_activate_trend",(caddr_t)ge_activate_trend },
-	{"ge_activate_axis",(caddr_t)ge_activate_axis },
 	{"ge_activate_fill",(caddr_t)ge_activate_fill },
 	{"ge_activate_border",(caddr_t)ge_activate_border },
+	{"ge_activate_shadow",(caddr_t)ge_activate_shadow },
 	{"ge_activate_incr_lightness",(caddr_t)ge_activate_incr_lightness },
 	{"ge_activate_decr_lightness",(caddr_t)ge_activate_decr_lightness },
 	{"ge_activate_incr_intensity",(caddr_t)ge_activate_incr_intensity },
@@ -2566,6 +2676,13 @@ void *ge_new( 	void 	*parent_ctx,
 	{"ge_activate_linewidth_6",(caddr_t)ge_activate_linewidth_6 },
 	{"ge_activate_linewidth_7",(caddr_t)ge_activate_linewidth_7 },
 	{"ge_activate_linewidth_8",(caddr_t)ge_activate_linewidth_8 },
+	{"ge_activate_linetype1",(caddr_t)ge_activate_linetype1 },
+	{"ge_activate_linetype2",(caddr_t)ge_activate_linetype2 },
+	{"ge_activate_linetype3",(caddr_t)ge_activate_linetype3 },
+	{"ge_activate_linetype4",(caddr_t)ge_activate_linetype4 },
+	{"ge_activate_linetype5",(caddr_t)ge_activate_linetype5 },
+	{"ge_activate_linetype6",(caddr_t)ge_activate_linetype6 },
+	{"ge_activate_linetype7",(caddr_t)ge_activate_linetype7 },
 	{"ge_activate_textsize_0",(caddr_t)ge_activate_textsize_0 },
 	{"ge_activate_textsize_1",(caddr_t)ge_activate_textsize_1 },
 	{"ge_activate_textsize_2",(caddr_t)ge_activate_textsize_2 },

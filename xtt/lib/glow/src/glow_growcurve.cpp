@@ -140,7 +140,7 @@ void GrowCurve::configure_curves( glow_sCurveData *data)
     ctx->nodraw++;
     curve[idx] = new GrowPolyLine( ctx, "", pointarray, points, dt, 
 	curve_width,
-	0, fill_curve, 1, dt_fill);
+	0, fill_curve, 1, 0, dt_fill);
     ctx->nodraw--;
   }
   free( (char *) pointarray);

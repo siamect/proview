@@ -99,6 +99,26 @@ static int glow_read_color_file( char *filename, draw_sColor **color_array,
 static void glow_set_clip( draw_tCtx draw_ctx, GC gc);
 static void glow_reset_clip( draw_tCtx draw_ctx, GC gc);
 
+static GC get_gc( draw_tCtx draw_ctx, int i, int j)
+{
+  if ( !draw_ctx->gcs[i][j]) {
+    XGCValues 		xgcv;
+    double r, g, b;
+
+    GlowColor::rgb_color( i, &r, &g, &b);
+    xgcv.foreground = glow_allocate_color( draw_ctx, int(r * 65535), 
+		int(g * 65535), int(b * 65535));
+    xgcv.background = draw_ctx->background;
+    xgcv.cap_style = CapButt;
+    xgcv.fill_rule = WindingRule;
+    xgcv.line_width = j + 1;
+
+    draw_ctx->gcs[i][j] = XCreateGC( draw_ctx->display, 
+		draw_ctx->window, GCForeground | GCBackground | GCLineWidth | GCCapStyle
+		| GCFillRule, &xgcv);
+  }
+  return draw_ctx->gcs[i][j];
+}
 
 static int glow_create_cursor( draw_tCtx draw_ctx)
 {
@@ -127,8 +147,10 @@ static int draw_free_gc( draw_tCtx draw_ctx)
   XFreeGC( draw_ctx->display, draw_ctx->gc_inverse);
   for ( i = 0; i < glow_eDrawType__; i++)
   {
-    for ( j = 0; j < DRAW_TYPE_SIZE; j++)
-      XFreeGC( draw_ctx->display, draw_ctx->gcs[i][j]);
+    for ( j = 0; j < DRAW_TYPE_SIZE; j++) {
+      if ( draw_ctx->gcs[i][j])
+	XFreeGC( draw_ctx->display, draw_ctx->gcs[i][j]);
+    }
   }  
 
   for ( i = 0; i < glow_eDrawFont__; i++)
@@ -209,49 +231,11 @@ static int glow_create_gc( draw_tCtx draw_ctx, Window window)
 	| GCFillRule, &xgcv);
   }
 
-#if 0
-  for ( int j = glow_eDrawType_Color4; j <= glow_eDrawType_Color100; j++)
-  {
-    char color[40];
-
-    switch ( j)
-    {
-      case glow_eDrawType_Color4: strcpy( color, "aquamarine"); break;
-      case glow_eDrawType_Color5: strcpy( color, "blue"); break;
-      case glow_eDrawType_Color6: strcpy( color, "blue violet"); break;
-      case glow_eDrawType_Color7: strcpy( color, "brown"); break;
-      case glow_eDrawType_Color8: strcpy( color, "cadet blue"); break;
-      case glow_eDrawType_Color9: strcpy( color, "cyan"); break;
-      case glow_eDrawType_Color10: strcpy( color, "light gray"); break;
-      case glow_eDrawType_Color11: strcpy( color, "light steel blue"); break;
-      case glow_eDrawType_Color12: strcpy( color, "lime green"); break;
-      case glow_eDrawType_Color13: strcpy( color, "magenta"); break;
-      case glow_eDrawType_Color14: strcpy( color, "maroon"); break;
-      case glow_eDrawType_Color15: strcpy( color, "medium aquamarine"); break;
-      case glow_eDrawType_Color16: strcpy( color, "coral"); break;
-      case glow_eDrawType_Color17: strcpy( color, "cornglower blue"); break;
-      case glow_eDrawType_Color18: strcpy( color, "gray5"); break;
-      case glow_eDrawType_Color19: strcpy( color, "gray25"); break;
-      case glow_eDrawType_Color20: strcpy( color, "gray75"); break;
-      default: ;
-    }
-    xgcv.foreground = glow_allocate_named_color( draw_ctx, color);
-    xgcv.background = draw_ctx->background;
-    for ( i = 0; i < DRAW_TYPE_SIZE; i++)
-    {
-      xgcv.line_width = i + 1;
-
-      draw_ctx->gcs[j][i] = XCreateGC( draw_ctx->display, 
-	window, GCForeground | GCBackground | GCLineWidth, &xgcv);
-    }
-  }
-#endif
-
-  sts = glow_read_color_file( "ge_colors.dat", &color_array, &size);
+  sts = glow_read_color_file( "/home/claes/test/ge_colors.dat", &color_array, &size);
   if ( ODD(sts))
   {
     color_p = color_array;
-    for ( int j = glow_eDrawType_Color4; j <= glow_eDrawType_Color100; j++)
+    for ( int j = glow_eDrawType_Color4; j <= glow_eDrawType_Color300; j++)
     {
       if ( j - glow_eDrawType_Color4 >= size)
         break;
@@ -613,11 +597,22 @@ int draw_event_handler( GlowCtx *ctx, XEvent event)
 	XtTranslateKeycode( draw_ctx->display, event.xkey.keycode, 0, &mod,
 		&keysym);
 	keysym &= 0xFFFF;
-	switch ( keysym) 
-        {
+	if ( (keysym >= 0x020 && keysym <= 0x20ac) ||
+	     (keysym >= 0xFF80 && keysym <= 0xFFB9 && keysym != XK_KP_Enter && keysym != 0xFF44)) {
+	  char buff;
+	  XLookupString( &event.xkey, &buff, sizeof(buff), NULL, NULL);
+
+	  if ( buff >= 0x020)
+	    ctx->event_handler( glow_eEvent_Key_Ascii, 0, 0, (int)buff, 0);
+	  else
+	    ctx->event_handler( glow_eEvent_Key_CtrlAscii, 0, 0, (int)buff, 0);
+	}
+	else {
+	  switch ( keysym) {
           case XK_Return:
+          case XK_KP_Enter:
+          case 0xFF44:			// XK_KP_Enter sometimes...
             ctx->event_handler( glow_eEvent_Key_Return, 0, 0, 0, 0);
-//            printf( "-- Return key event\n");
 	    break;
           case XK_Up:
             ctx->event_handler( glow_eEvent_Key_Up, 0, 0, 0, 0);
@@ -637,6 +632,7 @@ int draw_event_handler( GlowCtx *ctx, XEvent event)
           case XK_Page_Down:
             ctx->event_handler( glow_eEvent_Key_PageDown, 0, 0, 0, 0);
 	    break;
+          case XK_Delete:
           case XK_BackSpace:
             ctx->event_handler( glow_eEvent_Key_BackSpace, 0, 0, 0, 0);
 	    break;
@@ -652,12 +648,19 @@ int draw_event_handler( GlowCtx *ctx, XEvent event)
           case XK_KP_F4:
             ctx->event_handler( glow_eEvent_Key_PF4, 0, 0, 0, 0);
 	    break;
+          case XK_Cancel:
+            ctx->event_handler( glow_eEvent_Key_Escape, 0, 0, 0, 0);
+	    break;
           case XK_Tab:
-            ctx->event_handler( glow_eEvent_Key_Tab, 0, 0, 0, 0);
+	    if ( event.xkey.state & ShiftMask)
+	      ctx->event_handler( glow_eEvent_Key_ShiftTab, 0, 0, 0, 0);
+	    else
+	      ctx->event_handler( glow_eEvent_Key_Tab, 0, 0, 0, 0);
 	    break;
 	  default:
             ;
-        }
+	  }
+	}
         break;
       }
       case ButtonPress : 
@@ -1191,19 +1194,19 @@ int glow_draw_rect( GlowCtx *ctx, int x, int y, int width, int height,
     gc_type = glow_eDrawType_Line;
 
   if ( draw_ctx->clip_on)
-    glow_set_clip( draw_ctx, draw_ctx->gcs[gc_type+highlight][idx]);
+    glow_set_clip( draw_ctx, get_gc( draw_ctx, gc_type+highlight, idx));
 
   if ( !ctx->draw_buffer_only)
     XDrawRectangle( draw_ctx->display, draw_ctx->window, 
-	draw_ctx->gcs[gc_type+highlight][idx], 
+	get_gc( draw_ctx, gc_type+highlight, idx), 
 	x, y, width, height);
   if ( ctx->double_buffer_on)
     XDrawRectangle( draw_ctx->display, draw_ctx->buffer, 
-	draw_ctx->gcs[gc_type+highlight][idx], 
+	get_gc( draw_ctx, gc_type+highlight, idx), 
 	x, y, width, height);
 
   if ( draw_ctx->clip_on)
-    glow_reset_clip( draw_ctx, draw_ctx->gcs[gc_type+highlight][idx]);
+    glow_reset_clip( draw_ctx, get_gc( draw_ctx, gc_type+highlight, idx));
 
   return 1;
 }
@@ -1217,19 +1220,19 @@ int glow_draw_rect_erase( GlowCtx *ctx, int x, int y, int width, int height,
   draw_ctx = (draw_tCtx) ctx->draw_ctx;
 
   if ( draw_ctx->clip_on)
-    glow_set_clip( draw_ctx, draw_ctx->gcs[glow_eDrawType_LineErase][idx]);
+    glow_set_clip( draw_ctx, get_gc( draw_ctx, glow_eDrawType_LineErase, idx));
 
   if ( !ctx->draw_buffer_only)
     XDrawRectangle( draw_ctx->display, draw_ctx->window, 
-	draw_ctx->gcs[glow_eDrawType_LineErase][idx], 
+	get_gc( draw_ctx, glow_eDrawType_LineErase, idx), 
 	x, y, width, height);
   if ( ctx->double_buffer_on)
     XDrawRectangle( draw_ctx->display, draw_ctx->buffer, 
-	draw_ctx->gcs[glow_eDrawType_LineErase][idx], 
+	get_gc( draw_ctx, glow_eDrawType_LineErase, idx), 
 	x, y, width, height);
 
   if ( draw_ctx->clip_on)
-    glow_reset_clip( draw_ctx, draw_ctx->gcs[glow_eDrawType_LineErase][idx]);
+    glow_reset_clip( draw_ctx, get_gc( draw_ctx, glow_eDrawType_LineErase, idx));
 
   return 1;
 }
@@ -1246,7 +1249,7 @@ int glow_draw_nav_rect( GlowCtx *ctx, int x, int y, int width, int height,
     gc_type = glow_eDrawType_Line;
 
   XDrawRectangle( draw_ctx->display, draw_ctx->nav_window,
-	draw_ctx->gcs[gc_type+highlight][idx], 
+	get_gc( draw_ctx, gc_type+highlight, idx), 
 	x, y, width, height);
   return 1;
 }
@@ -1260,7 +1263,7 @@ int glow_draw_nav_rect_erase( GlowCtx *ctx, int x, int y, int width, int height,
   draw_ctx = (draw_tCtx) ctx->draw_ctx;
 
   XDrawRectangle( draw_ctx->display, draw_ctx->nav_window,
-	draw_ctx->gcs[glow_eDrawType_LineErase][idx], 
+	get_gc( draw_ctx, glow_eDrawType_LineErase, idx), 
 	x, y, width, height);
   return 1;
 }
@@ -1279,17 +1282,17 @@ int glow_draw_arrow( GlowCtx *ctx, int x1, int y1, int x2, int y2,
     gc_type = glow_eDrawType_Line;
 
   if ( draw_ctx->clip_on)
-    glow_set_clip( draw_ctx, draw_ctx->gcs[gc_type+highlight][idx]);
+    glow_set_clip( draw_ctx, get_gc( draw_ctx, gc_type+highlight, idx));
 
   if ( !ctx->draw_buffer_only)
     XFillPolygon( draw_ctx->display, draw_ctx->window,
-	draw_ctx->gcs[gc_type+highlight][idx], p, 4, Convex, CoordModeOrigin);
+	get_gc( draw_ctx, gc_type+highlight, idx), p, 4, Convex, CoordModeOrigin);
   if ( ctx->double_buffer_on)
     XFillPolygon( draw_ctx->display, draw_ctx->buffer,
-	draw_ctx->gcs[gc_type+highlight][idx], p, 4, Convex, CoordModeOrigin);
+	get_gc( draw_ctx, gc_type+highlight, idx), p, 4, Convex, CoordModeOrigin);
 
   if ( draw_ctx->clip_on)
-    glow_reset_clip( draw_ctx, draw_ctx->gcs[gc_type+highlight][idx]);
+    glow_reset_clip( draw_ctx, get_gc( draw_ctx, gc_type+highlight, idx));
 
   return 1;
 }
@@ -1305,19 +1308,19 @@ int glow_draw_arrow_erase( GlowCtx *ctx, int x1, int y1, int x2, int y2,
   draw_ctx = (draw_tCtx) ctx->draw_ctx;
 
   if ( draw_ctx->clip_on)
-    glow_set_clip( draw_ctx, draw_ctx->gcs[glow_eDrawType_LineErase][idx]);
+    glow_set_clip( draw_ctx, get_gc( draw_ctx, glow_eDrawType_LineErase, idx));
 
   if ( !ctx->draw_buffer_only)
     XFillPolygon( draw_ctx->display, draw_ctx->window,
-	draw_ctx->gcs[glow_eDrawType_LineErase][idx],
+	get_gc( draw_ctx, glow_eDrawType_LineErase, idx),
 	p, 4, Convex, CoordModeOrigin);
   if ( ctx->double_buffer_on)
     XFillPolygon( draw_ctx->display, draw_ctx->buffer,
-	draw_ctx->gcs[glow_eDrawType_LineErase][idx],
+	get_gc( draw_ctx, glow_eDrawType_LineErase, idx),
 	p, 4, Convex, CoordModeOrigin);
 
   if ( draw_ctx->clip_on)
-    glow_reset_clip( draw_ctx, draw_ctx->gcs[glow_eDrawType_LineErase][idx]);
+    glow_reset_clip( draw_ctx, get_gc( draw_ctx, glow_eDrawType_LineErase, idx));
 
   return 1;
 }
@@ -1336,7 +1339,7 @@ int glow_draw_nav_arrow( GlowCtx *ctx, int x1, int y1, int x2, int y2,
     gc_type = glow_eDrawType_Line;
 
   XFillPolygon( draw_ctx->display, draw_ctx->nav_window,
-	draw_ctx->gcs[gc_type+highlight][idx], p, 4, Convex, CoordModeOrigin);
+	get_gc( draw_ctx, gc_type+highlight, idx), p, 4, Convex, CoordModeOrigin);
   return 1;
 }
 
@@ -1351,7 +1354,7 @@ int glow_draw_nav_arrow_erase( GlowCtx *ctx, int x1, int y1, int x2, int y2,
   draw_ctx = (draw_tCtx) ctx->draw_ctx;
 
   XFillPolygon( draw_ctx->display, draw_ctx->nav_window,
-	draw_ctx->gcs[glow_eDrawType_LineErase][idx],
+	get_gc( draw_ctx, glow_eDrawType_LineErase, idx),
 	p, 4, Convex, CoordModeOrigin);
   return 1;
 }
@@ -1370,7 +1373,9 @@ int glow_draw_arc( GlowCtx *ctx, int x, int y, int width, int height,
 
   // Fix for highlight for connections in grow
   if ( highlight && ctx->type() == glow_eCtxType_Grow)
-    gc_type = glow_eDrawType_Color58;
+    gc_type = glow_eDrawType_LineHighlight;
+
+  // if ( width < 35 && height < 35) {width++; height++;} // This looks good in Reflexion X ...
 
   if ( angel1 >= 360)
     angel1 = angel1 - angel1 / 360 * 360;
@@ -1378,22 +1383,22 @@ int glow_draw_arc( GlowCtx *ctx, int x, int y, int width, int height,
     angel1 = angel1 + ( -angel1 / 360 + 1) * 360;
 
   if ( draw_ctx->clip_on)
-    glow_set_clip( draw_ctx, draw_ctx->gcs[gc_type+highlight][idx]);
+    glow_set_clip( draw_ctx, get_gc( draw_ctx, gc_type+highlight, idx));
 
 //  printf( "arc: x: %d y: %d, w: %d, h: %d, a1: %d, a2: %d\n", 
 //	x, y, width, height, angel1, angel2);
 	
   if ( !ctx->draw_buffer_only)
     XDrawArc( draw_ctx->display, draw_ctx->window,
-	draw_ctx->gcs[gc_type+highlight][idx], 
+	get_gc( draw_ctx, gc_type+highlight, idx), 
 	x, y, width, height, angel1*64, angel2*64);
   if ( ctx->double_buffer_on)
     XDrawArc( draw_ctx->display, draw_ctx->buffer,
-	draw_ctx->gcs[gc_type+highlight][idx], 
+	get_gc( draw_ctx, gc_type+highlight, idx), 
 	x, y, width, height, angel1*64, angel2*64);
 
   if ( draw_ctx->clip_on)
-    glow_reset_clip( draw_ctx, draw_ctx->gcs[gc_type+highlight][idx]);
+    glow_reset_clip( draw_ctx, get_gc( draw_ctx, gc_type+highlight, idx));
 
   return 1;
 }
@@ -1415,19 +1420,19 @@ int glow_draw_fill_arc( GlowCtx *ctx, int x, int y, int width, int height,
     angel1 = angel1 + ( -angel1 / 360 + 1) * 360;
 
   if ( draw_ctx->clip_on)
-    glow_set_clip( draw_ctx, draw_ctx->gcs[gc_type+highlight][0]);
+    glow_set_clip( draw_ctx, get_gc( draw_ctx, gc_type+highlight, 0));
 
   if ( !ctx->draw_buffer_only)
     XFillArc( draw_ctx->display, draw_ctx->window,
-	draw_ctx->gcs[gc_type+highlight][0], 
+	get_gc( draw_ctx, gc_type+highlight, 0), 
 	x, y, width, height, angel1*64, angel2*64);
   if ( ctx->double_buffer_on)
     XFillArc( draw_ctx->display, draw_ctx->buffer,
-	draw_ctx->gcs[gc_type+highlight][0], 
+	get_gc( draw_ctx, gc_type+highlight, 0), 
 	x, y, width, height, angel1*64, angel2*64);
 
   if ( draw_ctx->clip_on)
-    glow_reset_clip( draw_ctx, draw_ctx->gcs[gc_type+highlight][0]);
+    glow_reset_clip( draw_ctx, get_gc( draw_ctx, gc_type+highlight, 0));
 
   return 1;
 }
@@ -1446,7 +1451,7 @@ int glow_draw_nav_fill_arc( GlowCtx *ctx, int x, int y, int width, int height,
     angel1 = angel1 + ( -angel1 / 360 + 1) * 360;
 
   XFillArc( draw_ctx->display, draw_ctx->nav_window,
-	draw_ctx->gcs[gc_type][0], 
+	get_gc( draw_ctx, gc_type, 0), 
 	x, y, width, height, angel1*64, angel2*64);
   return 1;
 }
@@ -1460,25 +1465,27 @@ int glow_draw_arc_erase( GlowCtx *ctx, int x, int y, int width, int height,
 
   draw_ctx = (draw_tCtx) ctx->draw_ctx;
 
+  // if ( width < 35 && height < 35) {width++; height++;} // This looks good in Reflexion X ...
+
   if ( angel1 >= 360)
     angel1 = angel1 - angel1 / 360 * 360;
   else if ( angel1 < 0)
     angel1 = angel1 + ( -angel1 / 360 + 1) * 360;
 
   if ( draw_ctx->clip_on)
-    glow_set_clip( draw_ctx, draw_ctx->gcs[glow_eDrawType_LineErase][idx]);
+    glow_set_clip( draw_ctx, get_gc( draw_ctx, glow_eDrawType_LineErase, idx));
 
   if ( !ctx->draw_buffer_only)
     XDrawArc( draw_ctx->display, draw_ctx->window,
-	draw_ctx->gcs[glow_eDrawType_LineErase][idx], 
+	get_gc( draw_ctx, glow_eDrawType_LineErase, idx), 
 	x, y, width, height, angel1*64, angel2*64);
   if ( ctx->double_buffer_on)
     XDrawArc( draw_ctx->display, draw_ctx->buffer,
-	draw_ctx->gcs[glow_eDrawType_LineErase][idx], 
+	get_gc( draw_ctx, glow_eDrawType_LineErase, idx), 
 	x, y, width, height, angel1*64, angel2*64);
 
   if ( draw_ctx->clip_on)
-    glow_reset_clip( draw_ctx, draw_ctx->gcs[glow_eDrawType_LineErase][idx]);
+    glow_reset_clip( draw_ctx, get_gc( draw_ctx, glow_eDrawType_LineErase, idx));
   return 1;
 }
 
@@ -1500,7 +1507,7 @@ int glow_draw_nav_arc( GlowCtx *ctx, int x, int y, int width, int height,
     angel1 = angel1 + ( -angel1 / 360 + 1) * 360;
 
   XDrawArc( draw_ctx->display, draw_ctx->nav_window,
-	draw_ctx->gcs[gc_type+highlight][idx], 
+	get_gc( draw_ctx, gc_type+highlight, idx), 
 	x, y, width, height, angel1*64, angel2*64);
   return 1;
 }
@@ -1520,7 +1527,7 @@ int glow_draw_nav_arc_erase( GlowCtx *ctx, int x, int y, int width, int height,
     angel1 = angel1 + ( -angel1 / 360 + 1) * 360;
 
   XDrawArc( draw_ctx->display, draw_ctx->nav_window,
-	draw_ctx->gcs[glow_eDrawType_LineErase][idx], 
+	get_gc( draw_ctx, glow_eDrawType_LineErase, idx), 
 	x, y, width, height, angel1*64, angel2*64);
   return 1;
 }
@@ -1535,25 +1542,117 @@ int glow_draw_line( GlowCtx *ctx, int x1, int y1, int x2, int y2,
 
   // Fix for highlight for connections in grow
   if ( highlight && ctx->type() == glow_eCtxType_Grow)
-    gc_type = glow_eDrawType_Color58;
+    gc_type = glow_eDrawType_LineHighlight;
 
   if ( gc_type == glow_eDrawType_LineGray && highlight)
     gc_type = glow_eDrawType_Line;
 
   if ( draw_ctx->clip_on)
-    glow_set_clip( draw_ctx, draw_ctx->gcs[gc_type+highlight][idx]);
+    glow_set_clip( draw_ctx, get_gc( draw_ctx, gc_type+highlight, idx));
 
   if ( !ctx->draw_buffer_only)
     XDrawLine( draw_ctx->display, draw_ctx->window,
-	draw_ctx->gcs[gc_type+highlight][idx], 
+	get_gc( draw_ctx, gc_type+highlight, idx), 
 	x1, y1, x2, y2);
   if ( ctx->double_buffer_on)
     XDrawLine( draw_ctx->display, draw_ctx->buffer,
-	draw_ctx->gcs[gc_type+highlight][idx], 
+	get_gc( draw_ctx, gc_type+highlight, idx), 
 	x1, y1, x2, y2);
 
   if ( draw_ctx->clip_on)
-    glow_reset_clip( draw_ctx, draw_ctx->gcs[gc_type+highlight][idx]);
+    glow_reset_clip( draw_ctx, get_gc( draw_ctx, gc_type+highlight, idx));
+  return 1;
+}
+
+int glow_draw_line_dashed( GlowCtx *ctx, int x1, int y1, int x2, int y2,
+	glow_eDrawType gc_type, int idx, int highlight, glow_eLineType line_type)
+{
+  XGCValues xgcv;
+  draw_tCtx draw_ctx;
+  if ( ctx->nodraw) return 1;
+
+  draw_ctx = (draw_tCtx) ctx->draw_ctx;
+
+  // Fix for highlight for connections in grow
+  if ( highlight && ctx->type() == glow_eCtxType_Grow)
+    gc_type = glow_eDrawType_LineHighlight;
+
+  if ( gc_type == glow_eDrawType_LineGray && highlight)
+    gc_type = glow_eDrawType_Line;
+
+  xgcv.line_style = LineOnOffDash;
+  xgcv.dash_offset = 0;
+  switch ( line_type) {
+  case glow_eLineType_Dashed1:
+    xgcv.dashes = 1 + idx;
+    XChangeGC( draw_ctx->display, get_gc( draw_ctx, gc_type+highlight, idx),
+	GCLineStyle | GCDashOffset | GCDashList, &xgcv);
+    break;
+  case glow_eLineType_Dashed2:
+    xgcv.dashes = 1 + 2 * idx;
+    XChangeGC( draw_ctx->display, get_gc( draw_ctx, gc_type+highlight, idx),
+	GCLineStyle | GCDashOffset | GCDashList, &xgcv);
+    break;
+  case glow_eLineType_Dashed3:
+    xgcv.dashes = 1 + 3 * idx;
+    XChangeGC( draw_ctx->display, get_gc( draw_ctx, gc_type+highlight, idx),
+	GCLineStyle | GCDashOffset | GCDashList, &xgcv);
+    break;
+  case glow_eLineType_Dotted: {
+    static char list[4];
+    list[0] = 1 + idx;
+    list[1] = 1 + 4 * idx;
+    XSetDashes( draw_ctx->display, get_gc( draw_ctx, gc_type+highlight, idx),
+		0, list, 2);
+    XChangeGC( draw_ctx->display, get_gc( draw_ctx, gc_type+highlight, idx),
+	GCLineStyle | GCDashOffset, &xgcv);
+    break;
+    }
+  case glow_eLineType_DotDashed1: {
+    static char list[4];
+    list[0] = 1 + 3 * idx;
+    list[1] = 1 + 2 * idx;
+    list[2] = 1 + idx;
+    list[3] = 1 + 2 * idx;
+    XSetDashes( draw_ctx->display, get_gc( draw_ctx, gc_type+highlight, idx),
+		0, list, 4);
+    XChangeGC( draw_ctx->display, get_gc( draw_ctx, gc_type+highlight, idx),
+	GCLineStyle | GCDashOffset, &xgcv);
+    break;
+    }
+  case glow_eLineType_DotDashed2: {
+    static char list[4];
+    list[0] = 1 + 6 * idx;
+    list[1] = 1 + 3 * idx;
+    list[2] = 1 + idx;
+    list[3] = 1 + 3 * idx;
+    XSetDashes( draw_ctx->display, get_gc( draw_ctx, gc_type+highlight, idx),
+		0, list, 4);
+    XChangeGC( draw_ctx->display, get_gc( draw_ctx, gc_type+highlight, idx),
+	GCLineStyle | GCDashOffset, &xgcv);
+    break;
+    }
+  default: ;
+  }
+
+  if ( draw_ctx->clip_on)
+    glow_set_clip( draw_ctx, get_gc( draw_ctx, gc_type+highlight, idx));
+
+  if ( !ctx->draw_buffer_only)
+    XDrawLine( draw_ctx->display, draw_ctx->window,
+	get_gc( draw_ctx, gc_type+highlight, idx), 
+	x1, y1, x2, y2);
+  if ( ctx->double_buffer_on)
+    XDrawLine( draw_ctx->display, draw_ctx->buffer,
+	get_gc( draw_ctx, gc_type+highlight, idx), 
+	x1, y1, x2, y2);
+
+  if ( draw_ctx->clip_on)
+    glow_reset_clip( draw_ctx, get_gc( draw_ctx, gc_type+highlight, idx));
+
+  xgcv.line_style = LineSolid;
+  XChangeGC( draw_ctx->display, get_gc( draw_ctx, gc_type+highlight, idx),
+	GCLineStyle, &xgcv);
   return 1;
 }
 
@@ -1566,19 +1665,19 @@ int glow_draw_line_erase( GlowCtx *ctx, int x1, int y1, int x2, int y2,
   draw_ctx = (draw_tCtx) ctx->draw_ctx;
 
   if ( draw_ctx->clip_on)
-    glow_set_clip( draw_ctx, draw_ctx->gcs[glow_eDrawType_LineErase][idx]);
+    glow_set_clip( draw_ctx, get_gc( draw_ctx, glow_eDrawType_LineErase, idx));
 
   if ( !ctx->draw_buffer_only)
     XDrawLine( draw_ctx->display, draw_ctx->window,
-	draw_ctx->gcs[glow_eDrawType_LineErase][idx], 
+	get_gc( draw_ctx, glow_eDrawType_LineErase, idx), 
 	x1, y1, x2, y2);
   if ( ctx->double_buffer_on)
     XDrawLine( draw_ctx->display, draw_ctx->buffer,
-	draw_ctx->gcs[glow_eDrawType_LineErase][idx], 
+	get_gc( draw_ctx, glow_eDrawType_LineErase, idx), 
 	x1, y1, x2, y2);
 
   if ( draw_ctx->clip_on)
-    glow_reset_clip( draw_ctx, draw_ctx->gcs[glow_eDrawType_LineErase][idx]);
+    glow_reset_clip( draw_ctx, get_gc( draw_ctx, glow_eDrawType_LineErase, idx));
 
   return 1;
 }
@@ -1595,7 +1694,7 @@ int glow_draw_nav_line( GlowCtx *ctx, int x1, int y1, int x2, int y2,
     gc_type = glow_eDrawType_Line;
 
   XDrawLine( draw_ctx->display, draw_ctx->nav_window,
-	draw_ctx->gcs[gc_type+highlight][idx], 
+	get_gc( draw_ctx, gc_type+highlight, idx), 
 	x1, y1, x2, y2);
   return 1;
 }
@@ -1609,7 +1708,7 @@ int glow_draw_nav_line_erase( GlowCtx *ctx, int x1, int y1, int x2, int y2,
   draw_ctx = (draw_tCtx) ctx->draw_ctx;
 
   XDrawLine( draw_ctx->display, draw_ctx->nav_window,
-	draw_ctx->gcs[glow_eDrawType_LineErase][idx], 
+	get_gc( draw_ctx, glow_eDrawType_LineErase, idx), 
 	x1, y1, x2, y2);
   return 1;
 }
@@ -1626,19 +1725,19 @@ int glow_draw_polyline( GlowCtx *ctx, XPoint *points, int point_cnt,
     gc_type = glow_eDrawType_Line;
 
   if ( draw_ctx->clip_on)
-    glow_set_clip( draw_ctx, draw_ctx->gcs[gc_type+highlight][idx]);
+    glow_set_clip( draw_ctx, get_gc( draw_ctx, gc_type+highlight, idx));
 
   if ( !ctx->draw_buffer_only)
     XDrawLines( draw_ctx->display, draw_ctx->window,
-	draw_ctx->gcs[gc_type+highlight][idx], 
+	get_gc( draw_ctx, gc_type+highlight, idx), 
 	points, point_cnt, CoordModeOrigin);
   if ( ctx->double_buffer_on)
     XDrawLines( draw_ctx->display, draw_ctx->buffer,
-	draw_ctx->gcs[gc_type+highlight][idx], 
+	get_gc( draw_ctx, gc_type+highlight, idx), 
 	points, point_cnt, CoordModeOrigin);
 
   if ( draw_ctx->clip_on)
-    glow_reset_clip( draw_ctx, draw_ctx->gcs[gc_type+highlight][idx]);
+    glow_reset_clip( draw_ctx, get_gc( draw_ctx, gc_type+highlight, idx));
   return 1;
 }
 
@@ -1654,19 +1753,19 @@ int glow_draw_fill_polyline( GlowCtx *ctx, XPoint *points, int point_cnt,
     gc_type = glow_eDrawType_Line;
 
   if ( draw_ctx->clip_on)
-    glow_set_clip( draw_ctx, draw_ctx->gcs[gc_type+highlight][0]);
+    glow_set_clip( draw_ctx, get_gc( draw_ctx, gc_type+highlight, 0));
 
   if ( !ctx->draw_buffer_only)
     XFillPolygon( draw_ctx->display, draw_ctx->window,
-	draw_ctx->gcs[gc_type+highlight][0], points, point_cnt, 
+	get_gc( draw_ctx, gc_type+highlight, 0), points, point_cnt, 
 	Nonconvex, CoordModeOrigin);
   if ( ctx->double_buffer_on)
     XFillPolygon( draw_ctx->display, draw_ctx->buffer,
-	draw_ctx->gcs[gc_type+highlight][0], points, point_cnt, 
+	get_gc( draw_ctx, gc_type+highlight, 0), points, point_cnt, 
 	Nonconvex, CoordModeOrigin);
 
   if ( draw_ctx->clip_on)
-    glow_reset_clip( draw_ctx, draw_ctx->gcs[gc_type+highlight][0]);
+    glow_reset_clip( draw_ctx, get_gc( draw_ctx, gc_type+highlight, 0));
   return 1;
 }
 
@@ -1679,7 +1778,7 @@ int glow_draw_nav_fill_polyline( GlowCtx *ctx, XPoint *points, int point_cnt,
   draw_ctx = (draw_tCtx) ctx->draw_ctx;
 
   XFillPolygon( draw_ctx->display, draw_ctx->nav_window,
-	draw_ctx->gcs[gc_type][0], points, point_cnt, 
+	get_gc( draw_ctx, gc_type, 0), points, point_cnt, 
 	Nonconvex, CoordModeOrigin);
   return 1;
 }
@@ -1693,19 +1792,19 @@ int glow_draw_polyline_erase( GlowCtx *ctx, XPoint *points, int point_cnt,
   draw_ctx = (draw_tCtx) ctx->draw_ctx;
 
   if ( draw_ctx->clip_on)
-    glow_set_clip( draw_ctx, draw_ctx->gcs[glow_eDrawType_LineErase][idx]);
+    glow_set_clip( draw_ctx, get_gc( draw_ctx, glow_eDrawType_LineErase, idx));
 
   if ( !ctx->draw_buffer_only)
     XDrawLines( draw_ctx->display, draw_ctx->window,
-	draw_ctx->gcs[glow_eDrawType_LineErase][idx], 
+	get_gc( draw_ctx, glow_eDrawType_LineErase, idx), 
 	points, point_cnt, CoordModeOrigin);
   if ( ctx->double_buffer_on)
     XDrawLines( draw_ctx->display, draw_ctx->buffer,
-	draw_ctx->gcs[glow_eDrawType_LineErase][idx], 
+	get_gc( draw_ctx, glow_eDrawType_LineErase, idx), 
 	points, point_cnt, CoordModeOrigin);
 
   if ( draw_ctx->clip_on)
-    glow_reset_clip( draw_ctx, draw_ctx->gcs[glow_eDrawType_LineErase][idx]);
+    glow_reset_clip( draw_ctx, get_gc( draw_ctx, glow_eDrawType_LineErase, idx));
   return 1;
 }
 
@@ -1721,7 +1820,7 @@ int glow_draw_nav_polyline( GlowCtx *ctx, XPoint *points, int point_cnt,
     gc_type = glow_eDrawType_Line;
 
   XDrawLines( draw_ctx->display, draw_ctx->nav_window,
-	draw_ctx->gcs[gc_type+highlight][idx], 
+	get_gc( draw_ctx, gc_type+highlight, idx), 
 	points, point_cnt, CoordModeOrigin);
   return 1;
 }
@@ -1735,13 +1834,13 @@ int glow_draw_nav_polyline_erase( GlowCtx *ctx, XPoint *points, int point_cnt,
   draw_ctx = (draw_tCtx) ctx->draw_ctx;
 
   XDrawLines( draw_ctx->display, draw_ctx->nav_window,
-	draw_ctx->gcs[glow_eDrawType_LineErase][idx], 
+	get_gc( draw_ctx, glow_eDrawType_LineErase, idx), 
 	points, point_cnt, CoordModeOrigin);
   return 1;
 }
 
 int glow_draw_text( GlowCtx *ctx, int x, int y, char *text, int len,
-	glow_eDrawType gc_type, int idx, int highlight, int line)
+	glow_eDrawType gc_type, glow_eDrawType color, int idx, int highlight, int line)
 {
   draw_tCtx draw_ctx;
   if ( ctx->nodraw) return 1;
@@ -1749,18 +1848,69 @@ int glow_draw_text( GlowCtx *ctx, int x, int y, char *text, int len,
   draw_ctx = (draw_tCtx) ctx->draw_ctx;
 
   if ( draw_ctx->clip_on)
-    glow_set_clip( draw_ctx, draw_ctx->gcs[gc_type][idx]);
+    glow_set_clip( draw_ctx, get_gc( draw_ctx, gc_type, idx));
+
+  if ( color != glow_eDrawType_Line) {
+    XGCValues 		xgcv;
+
+    XGetGCValues( draw_ctx->display, get_gc( draw_ctx, color, 0), 
+	GCForeground, &xgcv);
+
+    XChangeGC( draw_ctx->display, get_gc( draw_ctx, gc_type, idx),
+	GCForeground, &xgcv);
+  }
 
   if ( !ctx->draw_buffer_only)
     XDrawString( draw_ctx->display, draw_ctx->window,
-	draw_ctx->gcs[gc_type][idx], 
+	get_gc( draw_ctx, gc_type, idx), 
 	x, y, text, len);
   if ( ctx->double_buffer_on)
     XDrawString( draw_ctx->display, draw_ctx->buffer,
-	draw_ctx->gcs[gc_type][idx], 
+	get_gc( draw_ctx, gc_type, idx), 
 	x, y, text, len);
   if ( draw_ctx->clip_on)
-    glow_reset_clip( draw_ctx, draw_ctx->gcs[gc_type][idx]);
+    glow_reset_clip( draw_ctx, get_gc( draw_ctx, gc_type, idx));
+
+  if ( color != glow_eDrawType_Line) {
+    XGCValues 		xgcv;
+
+    XGetGCValues( draw_ctx->display, get_gc( draw_ctx, glow_eDrawType_Line, 0), 
+	GCForeground, &xgcv);
+
+    XChangeGC( draw_ctx->display, get_gc( draw_ctx, gc_type, idx),
+	GCForeground, &xgcv);
+  }
+  return 1;
+}
+
+int glow_draw_text_cursor( GlowCtx *ctx, int x, int y, char *text, int len,
+	glow_eDrawType gc_type, glow_eDrawType color, int idx, int highlight, int pos)
+{
+  draw_tCtx draw_ctx;
+  if ( ctx->nodraw) return 1;
+
+  int width, height, descent;
+  draw_get_text_extent( ctx, text, pos, gc_type, idx,
+			&width, &height, &descent);
+
+  draw_ctx = (draw_tCtx) ctx->draw_ctx;
+
+  if ( draw_ctx->clip_on)
+    glow_set_clip( draw_ctx, get_gc( draw_ctx, gc_type, idx));
+
+  if ( !ctx->draw_buffer_only) {
+    XDrawLine( draw_ctx->display, draw_ctx->window,
+	get_gc( draw_ctx, color, 1), 
+	x + width, y + descent, x + width, y - height + descent);  
+  }
+  if ( ctx->double_buffer_on) {
+    XDrawLine( draw_ctx->display, draw_ctx->buffer,
+	get_gc( draw_ctx, color, 1), 
+	x + width, y + descent, x + width, y - height + descent);
+  }
+  if ( draw_ctx->clip_on)
+    glow_reset_clip( draw_ctx, get_gc( draw_ctx, gc_type, idx));
+
   return 1;
 }
 
@@ -1778,17 +1928,17 @@ int glow_draw_text_erase( GlowCtx *ctx, int x, int y, char *text, int len,
     gc_type = glow_eDrawType_TextHelveticaEraseBold;
 
   if ( draw_ctx->clip_on)
-    glow_set_clip( draw_ctx, draw_ctx->gcs[gc_type][idx]);
+    glow_set_clip( draw_ctx, get_gc( draw_ctx, gc_type, idx));
   if ( !ctx->draw_buffer_only)
     XDrawString( draw_ctx->display, draw_ctx->window,
-	draw_ctx->gcs[gc_type][idx], 
+	get_gc( draw_ctx, gc_type, idx), 
 	x, y, text, len);
   if ( ctx->double_buffer_on)
     XDrawString( draw_ctx->display, draw_ctx->buffer,
-	draw_ctx->gcs[gc_type][idx], 
+	get_gc( draw_ctx, gc_type, idx), 
 	x, y, text, len);
   if ( draw_ctx->clip_on)
-    glow_reset_clip( draw_ctx, draw_ctx->gcs[gc_type][idx]);
+    glow_reset_clip( draw_ctx, get_gc( draw_ctx, gc_type, idx));
   return 1;
 }
 
@@ -1801,7 +1951,7 @@ int glow_draw_nav_text( GlowCtx *ctx, int x, int y, char *text, int len,
   draw_ctx = (draw_tCtx) ctx->draw_ctx;
 
   XDrawString( draw_ctx->display, draw_ctx->nav_window,
-	draw_ctx->gcs[gc_type][idx], 
+	get_gc( draw_ctx, gc_type, idx), 
 	x, y, text, len);
   return 1;
 }
@@ -1819,7 +1969,7 @@ int glow_draw_nav_text_erase( GlowCtx *ctx, int x, int y, char *text, int len,
   else if ( gc_type == glow_eDrawType_TextHelveticaBold)
     gc_type = glow_eDrawType_TextHelveticaEraseBold;
   XDrawString( draw_ctx->display, draw_ctx->nav_window,
-	draw_ctx->gcs[gc_type][idx], 
+	get_gc( draw_ctx, gc_type, idx), 
 	x, y, text, len);
   return 1;
 }
@@ -1881,19 +2031,19 @@ int glow_draw_pixmap( GlowCtx *ctx, int x, int y, glow_sPixmapData *pixmap_data,
   pms = (draw_sPixmap *) pixmaps;
 
   if ( draw_ctx->clip_on)
-    glow_set_clip( draw_ctx, draw_ctx->gcs[gc_type][idx]);
+    glow_set_clip( draw_ctx, get_gc( draw_ctx, gc_type, idx));
 
   if ( !ctx->draw_buffer_only)
     XCopyPlane( draw_ctx->display, pms->pixmap[idx], draw_ctx->window,
-	draw_ctx->gcs[gc_type][idx], 
+	get_gc( draw_ctx, gc_type, idx), 
 	0, 0, pdata->width, pdata->height, x, y, 1);
   if ( ctx->double_buffer_on)
     XCopyPlane( draw_ctx->display, pms->pixmap[idx], draw_ctx->buffer,
-	draw_ctx->gcs[gc_type][idx], 
+	get_gc( draw_ctx, gc_type, idx), 
 	0, 0, pdata->width, pdata->height, x, y, 1);
 
   if ( draw_ctx->clip_on)
-    glow_reset_clip( draw_ctx, draw_ctx->gcs[gc_type][idx]);
+    glow_reset_clip( draw_ctx, get_gc( draw_ctx, gc_type, idx));
   return 1;
 }
 
@@ -1957,7 +2107,7 @@ int glow_draw_nav_pixmap( GlowCtx *ctx, int x, int y, glow_sPixmapData *pixmap_d
   pms = (draw_sPixmap *) pixmaps;
 
   XCopyPlane( draw_ctx->display, pms->pixmap[idx], draw_ctx->nav_window,
-	draw_ctx->gcs[gc_type][idx], 
+	get_gc( draw_ctx, gc_type, idx), 
 	0, 0, pdata->width, pdata->height, x, y, 1);
   return 1;
 }
@@ -1991,21 +2141,21 @@ int glow_draw_image( GlowCtx *ctx, int x, int y, int width, int height,
   if ( clip_mask)
     glow_set_image_clip_mask( ctx, clip_mask, x, y);
   else if ( draw_ctx->clip_on)
-    glow_set_clip( draw_ctx, draw_ctx->gcs[glow_eDrawType_Line][0]);
+    glow_set_clip( draw_ctx, get_gc( draw_ctx, glow_eDrawType_Line, 0));
 
   if ( !ctx->draw_buffer_only)
     XCopyArea( draw_ctx->display, pixmap, draw_ctx->window,
-	draw_ctx->gcs[glow_eDrawType_Line][0], 
+	get_gc( draw_ctx, glow_eDrawType_Line, 0), 
 	0, 0, width, height, x, y);
   if ( ctx->double_buffer_on)
     XCopyArea( draw_ctx->display, pixmap, draw_ctx->buffer,
-	draw_ctx->gcs[glow_eDrawType_Line][0], 
+	get_gc( draw_ctx, glow_eDrawType_Line, 0), 
 	0, 0, width, height, x, y);
 
   if ( clip_mask)
     glow_reset_image_clip_mask( ctx);
   else if ( draw_ctx->clip_on)
-    glow_reset_clip( draw_ctx, draw_ctx->gcs[glow_eDrawType_Line][0]);
+    glow_reset_clip( draw_ctx, get_gc( draw_ctx, glow_eDrawType_Line, 0));
   return 1;
 }
 
@@ -2025,16 +2175,16 @@ int glow_draw_nav_image( GlowCtx *ctx, int x, int y, int width, int height,
   if ( clip_mask)
     glow_set_image_clip_mask( ctx, clip_mask, x, y);
   else if ( draw_ctx->clip_on)
-    glow_set_clip( draw_ctx, draw_ctx->gcs[glow_eDrawType_Line][0]);
+    glow_set_clip( draw_ctx, get_gc( draw_ctx, glow_eDrawType_Line, 0));
 
   XCopyArea( draw_ctx->display, pixmap, draw_ctx->nav_window,
-	draw_ctx->gcs[glow_eDrawType_Line][0], 
+	get_gc( draw_ctx, glow_eDrawType_Line, 0), 
 	0, 0, width, height, x, y);
 
   if ( clip_mask)
     glow_reset_image_clip_mask( ctx);
   else if ( draw_ctx->clip_on)
-    glow_reset_clip( draw_ctx, draw_ctx->gcs[glow_eDrawType_Line][0]);
+    glow_reset_clip( draw_ctx, get_gc( draw_ctx, glow_eDrawType_Line, 0));
   return 1;
 }
 
@@ -2049,15 +2199,15 @@ int glow_draw_fill_rect( GlowCtx *ctx, int x, int y, int w, int h,
   draw_ctx = (draw_tCtx) ctx->draw_ctx;
 
   if ( draw_ctx->clip_on)
-    glow_set_clip( draw_ctx, draw_ctx->gcs[gc_type][0]);
+    glow_set_clip( draw_ctx, get_gc( draw_ctx, gc_type, 0));
   if ( !ctx->draw_buffer_only)
     XFillPolygon( draw_ctx->display, draw_ctx->window,
-	draw_ctx->gcs[gc_type][0], p, 5, Convex, CoordModeOrigin);
+	get_gc( draw_ctx, gc_type, 0), p, 5, Convex, CoordModeOrigin);
   if ( ctx->double_buffer_on)
     XFillPolygon( draw_ctx->display, draw_ctx->buffer,
-	draw_ctx->gcs[gc_type][0], p, 5, Convex, CoordModeOrigin);
+	get_gc( draw_ctx, gc_type, 0), p, 5, Convex, CoordModeOrigin);
   if ( draw_ctx->clip_on)
-    glow_reset_clip( draw_ctx, draw_ctx->gcs[gc_type][0]);
+    glow_reset_clip( draw_ctx, get_gc( draw_ctx, gc_type, 0));
   return 1;
 }
 
@@ -2071,7 +2221,7 @@ int glow_draw_nav_fill_rect( GlowCtx *ctx, int x, int y, int w, int h,
   draw_ctx = (draw_tCtx) ctx->draw_ctx;
 
   XFillPolygon( draw_ctx->display, draw_ctx->nav_window,
-	draw_ctx->gcs[gc_type][0], p, 5, Convex, CoordModeOrigin);
+	get_gc( draw_ctx, gc_type, 0), p, 5, Convex, CoordModeOrigin);
   return 1;
 }
 
@@ -2110,7 +2260,7 @@ void glow_draw_copy_buffer( GlowCtx *ctx,
   int y1 = max( ll_y, ur_y);
 
   XCopyArea( draw_ctx->display, draw_ctx->buffer, draw_ctx->window,
-	draw_ctx->gcs[glow_eDrawType_Line][0], 
+	get_gc( draw_ctx, glow_eDrawType_Line, 0), 
 	x0, y0, x1 - x0, y1 - y0, x0, y0);
 }
 
@@ -2318,7 +2468,7 @@ void draw_copy_area( GlowCtx *ctx, int x, int y)
   if ( ctx->nodraw) return;
 
   draw_ctx = (draw_tCtx) ctx->draw_ctx;
-  gc = draw_ctx->gcs[glow_eDrawType_Line][3];
+  gc = get_gc( draw_ctx, glow_eDrawType_Line, 3);
   if ( x >= 0 && y >= 0)
   {
     XCopyArea( draw_ctx->display, draw_ctx->window, draw_ctx->window, gc, 
@@ -2336,11 +2486,11 @@ void draw_copy_area( GlowCtx *ctx, int x, int y)
 	0, 0, ctx->window_width-x, ctx->window_height-y, x, y);
       if ( x)
         XFillRectangle( draw_ctx->display, draw_ctx->buffer, 
-			draw_ctx->gcs[glow_eDrawType_LineErase][0],
+			get_gc( draw_ctx, glow_eDrawType_LineErase, 0),
 			0, 0, x, ctx->window_height);
       if ( y)
         XFillRectangle( draw_ctx->display, draw_ctx->buffer, 
-			draw_ctx->gcs[glow_eDrawType_LineErase][0],
+			get_gc( draw_ctx, glow_eDrawType_LineErase, 0),
 			x, 0, ctx->window_width, y);
     }
   }
@@ -2361,11 +2511,11 @@ void draw_copy_area( GlowCtx *ctx, int x, int y)
 	-x, -y, ctx->window_width+x, ctx->window_height+y, 0, 0);
       if ( x)
         XFillRectangle( draw_ctx->display, draw_ctx->buffer, 
-	  draw_ctx->gcs[glow_eDrawType_LineErase][0],
+	  get_gc( draw_ctx, glow_eDrawType_LineErase, 0),
 	  ctx->window_width+x, 0, ctx->window_width, ctx->window_height);
       if ( y)
         XFillRectangle( draw_ctx->display, draw_ctx->buffer, 
-	  draw_ctx->gcs[glow_eDrawType_LineErase][0],
+	  get_gc( draw_ctx, glow_eDrawType_LineErase, 0),
 	  0, ctx->window_height+y, ctx->window_width+x, ctx->window_height);
     }
   }
@@ -2386,11 +2536,11 @@ void draw_copy_area( GlowCtx *ctx, int x, int y)
 	-x, 0, ctx->window_width+x, ctx->window_height-y, 0, y);
       if ( x)
         XFillRectangle( draw_ctx->display, draw_ctx->buffer, 
-	  draw_ctx->gcs[glow_eDrawType_LineErase][0],
+	  get_gc( draw_ctx, glow_eDrawType_LineErase, 0),
 	  ctx->window_width+x, 0, ctx->window_width, ctx->window_height);
       if ( y)
         XFillRectangle( draw_ctx->display, draw_ctx->buffer, 
-	  draw_ctx->gcs[glow_eDrawType_LineErase][0],
+	  get_gc( draw_ctx, glow_eDrawType_LineErase, 0),
 	  0, 0, ctx->window_width+x, y);
     }
   }
@@ -2411,11 +2561,11 @@ void draw_copy_area( GlowCtx *ctx, int x, int y)
 	0, -y, ctx->window_width-x, ctx->window_height+y, x, 0);
       if ( x)
         XFillRectangle( draw_ctx->display, draw_ctx->buffer, 
-	  draw_ctx->gcs[glow_eDrawType_LineErase][0],
+	  get_gc( draw_ctx, glow_eDrawType_LineErase, 0),
 	  0, 0, x, ctx->window_height);
       if ( y)
         XFillRectangle( draw_ctx->display, draw_ctx->buffer, 
-	  draw_ctx->gcs[glow_eDrawType_LineErase][0],
+	  get_gc( draw_ctx, glow_eDrawType_LineErase, 0),
 	  x, ctx->window_height+y, ctx->window_width, ctx->window_height);
     }
   }
@@ -2561,121 +2711,26 @@ static int glow_read_color_file( char *filename, draw_sColor **color_array,
 
   if ( !check_file( filename))
   {
+    return 0;
+#if 0
     // No color-file exist, use default values
-    double default_color[] = {
-1, 		1, 		1,		// 4 White 
-0,		0.8714, 	0.2857,		// 5 SpringGreen3
-1, 		1, 		0,		// 6 Yellow
-0.2879, 	0.4945, 	0.9067,		// 7 SteelBlue3
-0.593, 		0, 		0.6421,		// 8 Magenta3
-0.270, 		0.270, 		0.270,		// 9 Grey
-0.160, 		0.160,		0.160,		// 10 Grey
-// Grey
-0.950, 		0.950, 		0.950,		// 1 Grey
-0.900, 		0.900, 		0.900,		// 2 Grey
-0.850, 		0.850, 		0.850,		// 3 Grey
-0.700, 		0.700, 		0.700,		// 4 Grey93
-0.500, 		0.500, 		0.500,		// 5 Grey80
-0.935, 		0.935, 		0.935,		// 6 Grey68
-0.880, 		0.880, 		0.880,		// 7 Grey48
-0.750, 		0.750, 		0.750,		// 8 Grey35
-0.550, 		0.550, 		0.550,		// 9 Grey
-0.350, 		0.350, 		0.350,		// 10 Grey
-1,		1,		0.878,		// 1 LightYellow0
-1,		1,		0.640,		// 2 LightYellow1
-0.900,		0.900,		0.500,		// 3 LightYellow2
-0.804,		0.804,		0.400,		// 4 LightYellow3
-0.545,		0.545,		0.300,		// 5 LightYellow4
-1,		1,		0.300,		// 6 yellow0
-1,		1,		0,		// 7 yellow1
-0.933,		0.933,		0,		// 8 yellow2
-0.804,		0.804,		0,		// 9 yellow3
-0.545,		0.545,		0,		// 10 yellow4
-1,		0.970,		0.800,		// 1 Lightgoldenrod0
-1,		0.925,		0.545,		// 2 Lightgoldenrod1
-0.933,		0.862,		0.510,		// 3 Lightgoldenrod2
-0.804,		0.745,		0.439,		// 4 Lightgoldenrod3
-0.545,		0.506,		0.298,		// 5 Lightgoldenrod4
-1,		0.930,		0.500,		// 6 gold00
-1,		0.843,		0,		// 7 gold1
-0.933,		0.788,		0,		// 8 gold2
-0.804,		0.678,		0,		// 9 gold3
-0.545,		0.459,		0,		// 10 gold4
-1,		0.941,		0.800,		// 1 LightOrange (Modified)
-0.950,		0.870,		0.678,		// 2 NavajoWhite
-0.900,		0.628,		0.478,		// 3 LightSalmon1
-0.804,		0.506,		0.384,		// 4 LightSalmon3
-0.545,		0.341,		0.259,		// 5 LightSalmon4
-1,		0.850,		0.550,		// 6 DarkOrange (Modified)
-1,		0.650,		0.300,		// 7 DarkOrange (Modified)
-1,		0.498,		0,		// 8 DarkOrange1
-0.804,		0.400,		0,		// 9 DarkOrange3
-0.545,		0.153,		0,		// 10 DarkOrange4
-1,		0.894,		0.867,		// 1 MistyRose1
-0.933,		0.835,		0.823,		// 2 MistyRose2
-0.933,		0.682,		0.725,		// 3 LightPink (Modified)
-0.804,		0.547,		0.584,		// 4 LightPink3
-0.545,		0.357,		0.396,		// 5 LightPink4
-1,		0.733,		0.733,		// 6 IndianRed0 (Modified)
-1,		0.415,		0.415,		// 7 IndianRed1
-1,		0.188,		0.188,		// 8 firebrick1
-0.804,		0.149,		0.149,		// 9 firebrick3
-0.545,		0.102,		0.102,		// 10 firebrick4
-1,		0.890,		1,		// 1 Plum1 (Modified)
-1,		0.733,		1,		// 2 Plum1
-0.933,		0.682,		0.933,		// 3 Plum2
-0.804,		0.588,		0.804,		// 4 Plum3
-0.545,		0.400,		0.545,		// 5 Plum4
-1,		0.800,		1,		// 6 Magenta00 (Mofified)
-1,		0.500,		1,		// 7 Magenta0 (Modified) 
-1,		0,		1,		// 8 Magenta1
-0.804,		0,		0.804,		// 9 Magenta3
-0.545,		0,		0.545,		// 10 Magenta4
-0.829,		0.919,		1,		// 1 LightSteelBlue1 (Modified)
-0.792,		0.882,		1,		// 2 LightSteelBlue1  
-0.737,		0.823,		0.933,		// 3 LightSteelBlue2  
-0.635,		0.710,		0.804,		// 4 LightSteelBlue3  
-0.431,		0.482,		0.545,		// 5 LightSteelBlue4  
-0.829,		0.919,		1,		// 6 LightCyan 
-0.690,		0.878,		0.902,		// 7 Powder blue
-0.388,		0.722,		1,		// 8 SteelBlue1  
-0.275,		0.510,		0.706,		// 9 SteelBlue  
-0,		0,		0.545,		// 10 blue4  
-// Bluegreen
-0.700,		0.960,		0.900,		// 1 aquamarine4 (Modified)
-0.600,		0.930,		0.850,		// 2 aquamarine4  
-0.463,		0.900,		0.700,		// 3 aquamarine4  
-0.400,		0.804,		0.667,		// 4 aquamarine4  
-0.271,		0.545,		0.455,		// 5 aquamarine4  
-0.600,		1,		0.950,		// 6 turqoise 
-0,		0.930,		0.930,		// 7 turqoise
-0,		0.870,		0.720,		// 8 turqoise  
-0,		0.700,		0.500,		// 9 turqoise  
-0,		0.500,		0.300,		// 10 turqoise
-0.829,		1,		0.7,		// 1 DarkOliveGreen1 (Modified)
-0.737,		0.933,		0.408,		// 2 DarkOliveGreen2  
-0.635,		0.804,		0.353,		// 3 DarkOliveGreen3  
-// 0.431,		0.545,		0.239, DarkOliveGreen4 changed 020429  
-0.520,		0.700,		0.275,		// 4 DarkOliveGreen4  
-0.333,	  	0.420,		0.184,		// 5 DarkOliveGreen  
-0.698,		1,		0.400,		// 6 chartreuse  	
-0.463,		0.933,		0,		// 7 chartreuse2  	
-0.4,		0.804,		0,		// 8 chartreuse3  	
-0.27,		0.545,		0,		// 9 chartreuse4  	
-0,		0.392,		0};		// 10 DarkGreen  	
+    double r, g, b;
 
     printf( "** Using default color palette\n");
-    *color_array = (draw_sColor *) calloc( 100, sizeof( draw_sColor));
+    *color_array = (draw_sColor *) calloc( 300, sizeof( draw_sColor));
     *size = 0;
     color_p = *color_array;
-    for ( int i = 0; i < int(sizeof(default_color)/sizeof(default_color[0]));)
+    for ( int i = 3; i < 300; i++)
     {
-      color_p->red = int( default_color[i++] * 65535);
-      color_p->green = int( default_color[i++] * 65535);
-      color_p->blue = int( default_color[i++] * 65535);
+      GlowColor::rgb_color( i, &r, &g, &b);
+      color_p->red = int( r * 65535);
+      color_p->green = int( g * 65535);
+      color_p->blue = int( b * 65535);
+
       color_p++;
       (*size)++;
     }
+#endif
   }
   else
   {
@@ -2687,11 +2742,11 @@ static int glow_read_color_file( char *filename, draw_sColor **color_array,
       return GLOW__FILEOPEN;
 #endif
 
-    *color_array = (draw_sColor *) calloc( 100, sizeof( draw_sColor));
+    *color_array = (draw_sColor *) calloc( 300, sizeof( draw_sColor));
     *size = 0;
     line_cnt = 0;
     color_p = *color_array;
-    while ( *size < 100)
+    while ( *size < 300)
     {
       fp.getline( line, sizeof( line));
       if ( line[0] == 0)
@@ -2765,7 +2820,7 @@ void glow_set_background( GlowCtx *ctx, glow_eDrawType drawtype, Pixmap pixmap,
   int			i;
   int			sts;
 
-  sts = XGetGCValues( draw_ctx->display, draw_ctx->gcs[drawtype][0], 
+  sts = XGetGCValues( draw_ctx->display, get_gc( draw_ctx, drawtype, 0), 
 	GCForeground, &xgcv);
   if ( !sts)
   {
@@ -2779,11 +2834,11 @@ void glow_set_background( GlowCtx *ctx, glow_eDrawType drawtype, Pixmap pixmap,
   xgcv.background =   draw_ctx->background;
   for ( i = 0; i < DRAW_TYPE_SIZE; i++)
   {
-    XChangeGC( draw_ctx->display, draw_ctx->gcs[glow_eDrawType_LineErase][i],
+    XChangeGC( draw_ctx->display, get_gc( draw_ctx, glow_eDrawType_LineErase, i),
 	GCForeground | GCBackground, &xgcv);
-    XChangeGC( draw_ctx->display, draw_ctx->gcs[glow_eDrawType_TextHelveticaErase][i],
+    XChangeGC( draw_ctx->display, get_gc( draw_ctx, glow_eDrawType_TextHelveticaErase, i),
 	GCForeground | GCBackground, &xgcv);
-    XChangeGC( draw_ctx->display, draw_ctx->gcs[glow_eDrawType_TextHelveticaEraseBold][i],
+    XChangeGC( draw_ctx->display, get_gc( draw_ctx, glow_eDrawType_TextHelveticaEraseBold, i),
       GCForeground | GCBackground, &xgcv);
   }
 
@@ -2831,19 +2886,19 @@ void glow_reset_background( GlowCtx *ctx)
   xgcv.background =  draw_ctx->background;
   for ( i = 0; i < DRAW_TYPE_SIZE; i++)
   {
-    XChangeGC( draw_ctx->display, draw_ctx->gcs[glow_eDrawType_LineErase][i],
+    XChangeGC( draw_ctx->display, get_gc( draw_ctx, glow_eDrawType_LineErase, i),
 	GCForeground | GCBackground, &xgcv);
-    XChangeGC( draw_ctx->display, draw_ctx->gcs[glow_eDrawType_TextHelveticaErase][i],
+    XChangeGC( draw_ctx->display, get_gc( draw_ctx, glow_eDrawType_TextHelveticaErase, i),
 	GCForeground | GCBackground, &xgcv);
-    XChangeGC( draw_ctx->display, draw_ctx->gcs[glow_eDrawType_TextHelveticaEraseBold][i],
+    XChangeGC( draw_ctx->display, get_gc( draw_ctx, glow_eDrawType_TextHelveticaEraseBold, i),
 	GCForeground | GCBackground, &xgcv);
   }
 }
 
 static void glow_set_clip( draw_tCtx draw_ctx, GC gc)
 {
-  XSetClipRectangles( draw_ctx->display, gc, 0, 0, &draw_ctx->clip_rectangle,
-	1, Unsorted);
+  XSetClipRectangles( draw_ctx->display, gc, 0, 0, 
+		      &draw_ctx->clip_rectangle[draw_ctx->clip_cnt-1], 1, Unsorted);
 }
 
 static void glow_reset_clip( draw_tCtx draw_ctx, GC gc)
@@ -2855,39 +2910,70 @@ void glow_set_image_clip_mask( GlowCtx *ctx, Pixmap pixmap, int x, int y)
 {
   draw_tCtx draw_ctx = (draw_tCtx) ctx->draw_ctx;
 
-  XSetClipMask( draw_ctx->display, draw_ctx->gcs[glow_eDrawType_Line][0], 
+  XSetClipMask( draw_ctx->display, get_gc( draw_ctx, glow_eDrawType_Line, 0), 
 		pixmap);
-  XSetClipOrigin( draw_ctx->display, draw_ctx->gcs[glow_eDrawType_Line][0], x, y);
+  XSetClipOrigin( draw_ctx->display, get_gc( draw_ctx, glow_eDrawType_Line, 0), x, y);
 }
 
 void glow_reset_image_clip_mask( GlowCtx *ctx)
 {
   draw_tCtx draw_ctx = (draw_tCtx) ctx->draw_ctx;
 
-  XSetClipMask( draw_ctx->display, draw_ctx->gcs[glow_eDrawType_Line][0], 
+  XSetClipMask( draw_ctx->display, get_gc( draw_ctx, glow_eDrawType_Line, 0), 
 		None);
-  XSetClipOrigin( draw_ctx->display, draw_ctx->gcs[glow_eDrawType_Line][0], 0, 0);
+  XSetClipOrigin( draw_ctx->display, get_gc( draw_ctx, glow_eDrawType_Line, 0), 0, 0);
 }
 
-void glow_draw_set_clip_rectangle( GlowCtx *ctx,
+int glow_draw_set_clip_rectangle( GlowCtx *ctx,
 		int ll_x, int ll_y, int ur_x, int ur_y)
 {
   draw_tCtx draw_ctx = (draw_tCtx) ctx->draw_ctx;
-  int x0 = min( ll_x, ur_x);
-  int x1 = max( ll_x, ur_x);
-  int y0 = min( ll_y, ur_y);
-  int y1 = max( ll_y, ur_y);
 
-  draw_ctx->clip_rectangle.x = x0;
-  draw_ctx->clip_rectangle.y = y0;
-  draw_ctx->clip_rectangle.width = x1 - x0;
-  draw_ctx->clip_rectangle.height = y1 - y0;
+  if ( draw_ctx->clip_cnt >= 2)
+    return 0;
+
+  int x0, x1, y0, y1;
+  if ( draw_ctx->clip_cnt == 0) {
+    x0 = min( ll_x, ur_x);
+    x1 = max( ll_x, ur_x);
+    y0 = min( ll_y, ur_y);
+    y1 = max( ll_y, ur_y);
+  }
+  else {
+    x0 = min( ll_x, ur_x);
+    x1 = max( ll_x, ur_x);
+    y0 = min( ll_y, ur_y);
+    y1 = max( ll_y, ur_y);
+
+    x0 = max( x0, draw_ctx->clip_rectangle[draw_ctx->clip_cnt-1].x);
+    x1 = min( x1, draw_ctx->clip_rectangle[draw_ctx->clip_cnt-1].x +
+	      draw_ctx->clip_rectangle[draw_ctx->clip_cnt-1].width);
+    y0 = max( y0, draw_ctx->clip_rectangle[draw_ctx->clip_cnt-1].y);
+    y1 = min( y1, draw_ctx->clip_rectangle[draw_ctx->clip_cnt-1].y +
+	      draw_ctx->clip_rectangle[draw_ctx->clip_cnt-1].height);
+    if ( x0 > x1)
+      x0 = x1;
+    if ( y0 > y1)
+      y0 = y1;
+  }
+  draw_ctx->clip_rectangle[draw_ctx->clip_cnt].x = x0;
+  draw_ctx->clip_rectangle[draw_ctx->clip_cnt].y = y0;
+  draw_ctx->clip_rectangle[draw_ctx->clip_cnt].width = x1 - x0;
+  draw_ctx->clip_rectangle[draw_ctx->clip_cnt].height = y1 - y0;
+  draw_ctx->clip_cnt++;
   draw_ctx->clip_on = 1;
+  return 1;
 }
 
 void glow_draw_reset_clip_rectangle( GlowCtx *ctx)
 {
-  ((draw_tCtx) ctx->draw_ctx)->clip_on = 0;
+  draw_tCtx draw_ctx = (draw_tCtx) ctx->draw_ctx;
+
+  if ( draw_ctx->clip_cnt == 0)
+    return;
+  draw_ctx->clip_cnt--;
+  if ( draw_ctx->clip_cnt == 0)
+    ((draw_tCtx) ctx->draw_ctx)->clip_on = 0;
 }
 
 int glow_draw_point( GlowCtx *ctx, int x1, int y1, glow_eDrawType gc_type)
@@ -2898,18 +2984,18 @@ int glow_draw_point( GlowCtx *ctx, int x1, int y1, glow_eDrawType gc_type)
   draw_ctx = (draw_tCtx) ctx->draw_ctx;
 
   if ( draw_ctx->clip_on)
-    glow_set_clip( draw_ctx, draw_ctx->gcs[gc_type][0]);
+    glow_set_clip( draw_ctx, get_gc( draw_ctx, gc_type, 0));
 
   XDrawPoint( draw_ctx->display, draw_ctx->window,
-	draw_ctx->gcs[gc_type][0], 
+	get_gc( draw_ctx, gc_type, 0), 
 	x1, y1);
   if ( ctx->double_buffer_on)
     XDrawPoint( draw_ctx->display, draw_ctx->buffer,
-	draw_ctx->gcs[gc_type][0], 
+	get_gc( draw_ctx, gc_type, 0), 
 	x1, y1);
 
   if ( draw_ctx->clip_on)
-    glow_reset_clip( draw_ctx, draw_ctx->gcs[gc_type][0]);
+    glow_reset_clip( draw_ctx, get_gc( draw_ctx, gc_type, 0));
   return 1;
 }
 
@@ -2922,14 +3008,14 @@ int glow_draw_points( GlowCtx *ctx, XPoint *points, int point_num,
   draw_ctx = (draw_tCtx) ctx->draw_ctx;
 
   if ( draw_ctx->clip_on)
-    glow_set_clip( draw_ctx, draw_ctx->gcs[gc_type][0]);
+    glow_set_clip( draw_ctx, get_gc( draw_ctx, gc_type, 0));
 
   XDrawPoints( draw_ctx->display, draw_ctx->window,
-	draw_ctx->gcs[gc_type][0], 
+	get_gc( draw_ctx, gc_type, 0), 
 	points, point_num, CoordModeOrigin);
 
   if ( draw_ctx->clip_on)
-    glow_reset_clip( draw_ctx, draw_ctx->gcs[gc_type][0]);
+    glow_reset_clip( draw_ctx, get_gc( draw_ctx, gc_type, 0));
   return 1;
 }
 
@@ -2987,11 +3073,11 @@ void glow_draw_buffer_background( GlowCtx *ctx)
   if ( draw_ctx->background_pixmap) {
 
     if ( draw_ctx->clip_on)
-      glow_set_clip( draw_ctx, draw_ctx->gcs[glow_eDrawType_Line][0]);
+      glow_set_clip( draw_ctx, get_gc( draw_ctx, glow_eDrawType_Line, 0));
 
     if ( !((GrowCtx *)ctx)->background_tiled)
       XCopyArea( draw_ctx->display, draw_ctx->background_pixmap,
-        draw_ctx->buffer, draw_ctx->gcs[glow_eDrawType_Line][0], 
+        draw_ctx->buffer, get_gc( draw_ctx, glow_eDrawType_Line, 0), 
 	0, 0, draw_ctx->buffer_width, draw_ctx->buffer_height, 0, 0);
     else {
       int i, j;
@@ -3002,24 +3088,24 @@ void glow_draw_buffer_background( GlowCtx *ctx)
               j <= draw_ctx->buffer_height / draw_ctx->background_pixmap_height;
               j++)
           XCopyArea( draw_ctx->display, draw_ctx->background_pixmap,
-             draw_ctx->buffer, draw_ctx->gcs[glow_eDrawType_Line][0], 
+             draw_ctx->buffer, get_gc( draw_ctx, glow_eDrawType_Line, 0), 
 	     0, 0, draw_ctx->background_pixmap_width, 
              draw_ctx->background_pixmap_height, 
              i * draw_ctx->background_pixmap_width, 
              j * draw_ctx->background_pixmap_height);
     }  
     if ( draw_ctx->clip_on)
-      glow_reset_clip( draw_ctx, draw_ctx->gcs[glow_eDrawType_Line][0]);
+      glow_reset_clip( draw_ctx, get_gc( draw_ctx, glow_eDrawType_Line, 0));
   }
   else {
     if ( draw_ctx->clip_on)
-      glow_set_clip( draw_ctx, draw_ctx->gcs[glow_eDrawType_LineErase][0]);
+      glow_set_clip( draw_ctx, get_gc( draw_ctx, glow_eDrawType_LineErase, 0));
 
     XFillRectangle( draw_ctx->display, draw_ctx->buffer,
-			draw_ctx->gcs[glow_eDrawType_LineErase][0],
+			get_gc( draw_ctx, glow_eDrawType_LineErase, 0),
 			0, 0, ctx->window_width, ctx->window_height);
     if ( draw_ctx->clip_on)
-      glow_reset_clip( draw_ctx, draw_ctx->gcs[glow_eDrawType_LineErase][0]);
+      glow_reset_clip( draw_ctx, get_gc( draw_ctx, glow_eDrawType_LineErase, 0));
 
   }
 }

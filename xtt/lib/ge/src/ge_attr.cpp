@@ -36,6 +36,7 @@ extern "C" {
 
 #include "ge_attr.h"
 #include "ge_attrnav.h"
+#include "ge_dyn.h"
 #include "ge_msg.h"
 
 
@@ -44,7 +45,12 @@ char	Attr::value_recall[30][160];
 
 static int attr_get_subgraph_info_cb( void *attr_ctx, char *name, 
 	attr_sItem **itemlist, int *item_cnt);
+static int attr_get_dyn_info_cb( void *attr_ctx, GeDyn *dyn, 
+	attr_sItem **itemlist, int *item_cnt);
 static void attr_valchanged_cmd_input( Widget w, XEvent *event);
+static int attr_get_plant_select_cb( void *attr_ctx, char *value);
+static int attr_get_current_colors_cb( void *attr_ctx, glow_eDrawType *fill_color, 
+				       glow_eDrawType *border_color, glow_eDrawType *text_color);
 
 static void attr_message( void *attr, char severity, char *message)
 {
@@ -163,11 +169,35 @@ static int attr_reconfigure_attr_cb( void *attr_ctx)
   ((AttrNav *)attr->attrnav)->change_value_cb = &attr_change_value_cb;
   ((AttrNav *)attr->attrnav)->get_subgraph_info_cb = 
 		&attr_get_subgraph_info_cb;
+  ((AttrNav *)attr->attrnav)->get_dyn_info_cb = 
+		&attr_get_dyn_info_cb;
   ((AttrNav *)attr->attrnav)->reconfigure_attr_cb = 
 		&attr_reconfigure_attr_cb;
   ((AttrNav *)attr->attrnav)->set_inputfocus();
+  ((AttrNav *)attr->attrnav)->get_plant_select_cb = 
+		&attr_get_plant_select_cb;
+  ((AttrNav *)attr->attrnav)->get_current_colors_cb = 
+		&attr_get_current_colors_cb;
+
 
   return 1;
+}
+
+static int attr_get_plant_select_cb( void *attr_ctx, char *value)
+{
+  Attr *attr = (Attr *) attr_ctx;
+  if ( attr->get_plant_select_cb)
+    return attr->get_plant_select_cb( attr->parent_ctx, value);  
+  return 0;
+}
+
+static int attr_get_current_colors_cb( void *attr_ctx, glow_eDrawType *fill_color, 
+				       glow_eDrawType *border_color, glow_eDrawType *text_color)
+{
+  Attr *attr = (Attr *) attr_ctx;
+  if ( attr->get_current_colors_cb)
+    return attr->get_current_colors_cb( attr->parent_ctx, fill_color, border_color, text_color);  
+  return 0;
 }
 
 static int attr_get_subgraph_info_cb( void *attr_ctx, char *name, 
@@ -176,6 +206,16 @@ static int attr_get_subgraph_info_cb( void *attr_ctx, char *name,
   Attr *attr = (Attr *) attr_ctx;
   if ( attr->get_subgraph_info_cb)
     return attr->get_subgraph_info_cb( attr->parent_ctx, name, itemlist, 
+		item_cnt);  
+  return 0;
+}
+
+static int attr_get_dyn_info_cb( void *attr_ctx, GeDyn *dyn, 
+	attr_sItem **itemlist, int *item_cnt)
+{
+  Attr *attr = (Attr *) attr_ctx;
+  if ( attr->get_dyn_info_cb)
+    return attr->get_dyn_info_cb( attr->parent_ctx, dyn, itemlist, 
 		item_cnt);  
   return 0;
 }
@@ -197,7 +237,7 @@ static void attr_activate_store( Widget w, Attr *attr, XmAnyCallbackStruct *data
 static void attr_activate_recall_next( Widget w, Attr *attr, XmAnyCallbackStruct *data)
 {
   int sts;
-  glow_sTraceData *old_data;
+  GeDyn *old_data;
   int idx;
 
   if ( attr->recall_idx == -1)
@@ -210,8 +250,8 @@ static void attr_activate_recall_next( Widget w, Attr *attr, XmAnyCallbackStruct
 				     idx, &old_data);
   if ( ODD(sts))
   {
-    if ( attr->recall_idx == -1) {
-      attr->original_data = *old_data;
+    if ( attr->recall_idx == -1 && !attr->original_data) {
+      attr->original_data = old_data;
       attr->recall_idx = 0;
     }
     attr->recall_idx = idx;
@@ -222,7 +262,7 @@ static void attr_activate_recall_next( Widget w, Attr *attr, XmAnyCallbackStruct
 static void attr_activate_recall_prev( Widget w, Attr *attr, XmAnyCallbackStruct *data)
 {
   int sts;
-  glow_sTraceData *old_p;
+  GeDyn *old_p;
 
   if ( attr->recall_idx < 0)
     return;
@@ -231,16 +271,19 @@ static void attr_activate_recall_prev( Widget w, Attr *attr, XmAnyCallbackStruct
     // Get original data
     if ( attr->set_data_cb) {
       (attr->set_data_cb)( attr->parent_ctx, attr->object, 
-			       &attr->original_data);
+			       attr->original_data);
       attr_reconfigure_attr_cb((void *)attr);
+      attr->original_data = 0;
     }
   }
   else {
     if ( attr->recall_cb) {
       sts = (attr->recall_cb)( attr->parent_ctx, attr->object, 
 				  attr->recall_idx, &old_p);
-      if ( ODD(sts))
+      if ( ODD(sts)) {
         attr_reconfigure_attr_cb((void *)attr);
+	delete old_p;
+      }
       else
         attr->recall_idx++;
     }
@@ -397,6 +440,8 @@ static void attr_activate_cmd_scrolled_ca( Widget w, Attr *attr, XmAnyCallbackSt
 
 Attr::~Attr()
 {
+  if ( original_data)
+    delete original_data;
   delete (AttrNav *)attrnav;
   XtDestroyWidget( parent_wid);
 }
@@ -407,9 +452,10 @@ Attr::Attr( Widget a_parent_wid,
   attr_sItem  		*itemlist,
   int			item_cnt ) :
   parent_ctx(a_parent_ctx), input_open(0), object(a_object), 
-  close_cb(0), redraw_cb(0), get_subgraph_info_cb(0), reconfigure_attr_cb(0),
+  close_cb(0), redraw_cb(0), get_subgraph_info_cb(0), get_dyn_info_cb(0),
+  reconfigure_attr_cb(0),
   store_cb(0), recall_cb(0), set_data_cb(0), client_data(0), recall_idx(-1),
-  value_current_recall(0)
+  original_data(0), value_current_recall(0)
 {
   char		uid_filename[120] = {"pwr_exe:ge_attr.uid"};
   char		*uid_filename_p = uid_filename;
@@ -515,8 +561,14 @@ Attr::Attr( Widget a_parent_wid,
   ((AttrNav *)attrnav)->change_value_cb = &attr_change_value_cb;
   ((AttrNav *)attrnav)->get_subgraph_info_cb = 
 		&attr_get_subgraph_info_cb;
+  ((AttrNav *)attrnav)->get_dyn_info_cb = 
+		&attr_get_dyn_info_cb;
   ((AttrNav *)attrnav)->reconfigure_attr_cb = 
 		&attr_reconfigure_attr_cb;
+  ((AttrNav *)attrnav)->get_plant_select_cb = 
+		&attr_get_plant_select_cb;
+  ((AttrNav *)attrnav)->get_current_colors_cb = 
+		&attr_get_current_colors_cb;
 
   XtPopup( parent_wid, XtGrabNone);
 

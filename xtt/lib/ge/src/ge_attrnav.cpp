@@ -37,6 +37,7 @@ extern "C" {
 
 #include "ge_attr.h"
 #include "ge_attrnav.h"
+#include "ge_dyn.h"
 #include "ge_msg.h"
 
 #include "xnav_bitmap_leaf12.h"
@@ -56,58 +57,82 @@ extern "C" {
 #define ATTRNAV__ITEM_NOCREA 8
 #define ATTRNAV__SUCCESS 1
 
-static attrnav_sEnumElement elem_trace_type[] = {
-	{ (int) graph_eTrace_Inherit		, "Inherit"},
-	{ (int) graph_eTrace_Dig		, "Dig"},
-	{ (int) graph_eTrace_DigWithCommand	, "DigWithCommand"},
-	{ (int) graph_eTrace_DigWithError	, "DigWithError"},
-	{ (int) graph_eTrace_DigWithErrorAndCommand , "DigWithErrorAndCommand"},
-	{ (int) graph_eTrace_DigTwo 		, "DigTwoWithError"},
-	{ (int) graph_eTrace_DigTwoWithCommand 	, "DigTwoWithErrorAndCmd"},
-	{ (int) graph_eTrace_DigTone		, "DigTone"},
-	{ (int) graph_eTrace_DigToneWithCommand	 , "DigToneWithCommand"},
-	{ (int) graph_eTrace_DigToneWithError	, "DigToneWithError"},
-	{ (int) graph_eTrace_DigToneWithErrorAndCommand	, "DigToneWithErrorAndCommand"},
-	{ (int) graph_eTrace_DigToneTwo		, "DigToneTwoWithError"},
-	{ (int) graph_eTrace_DigToneTwoWithCommand, "DigToneTwoWithErrorAndCmd"},
-	{ (int) graph_eTrace_DigWithText	, "DigWithText"},
-	{ (int) graph_eTrace_DigBorder		, "DigBorder"},
-	{ (int) graph_eTrace_Invisible		, "Invisible"},
-	{ (int) graph_eTrace_Annot		, "Value"},
-	{ (int) graph_eTrace_AnnotWithTone	, "ValueWithTone"},
-	{ (int) graph_eTrace_AnnotInput		, "ValueInput"},
-	{ (int) graph_eTrace_AnnotInputWithTone	, "ValueInputWithTone"},
-	{ (int) graph_eTrace_Rotate		, "Rotate"},
-	{ (int) graph_eTrace_Move		, "Move"},
-	{ (int) graph_eTrace_AnalogShift	, "AnalogShift"},
-	{ (int) graph_eTrace_Animation		, "Animation"},
-	{ (int) graph_eTrace_AnimationForwBack	, "AnimationForwBack"},
-	{ (int) graph_eTrace_DigAnimation	, "DigAnimation"},
-	{ (int) graph_eTrace_DigShift		, "DigShift"},
-	{ (int) graph_eTrace_DigShiftWithToggleDig  , "DigShiftWithToggleDig"},
-	{ (int) graph_eTrace_Bar		, "Bar"},
-	{ (int) graph_eTrace_Trend		, "Trend"},
-	{ (int) graph_eTrace_SetDig		, "SetDig"},
-	{ (int) graph_eTrace_SetDigConfirm	, "SetDigConfirm"},
-	{ (int) graph_eTrace_SetDigWithTone	, "SetDigWithTone"},
-	{ (int) graph_eTrace_SetDigConfirmWithTone , "SetDigConfirmWithTone"},
-	{ (int) graph_eTrace_ResetDig		, "ResetDig"},
-	{ (int) graph_eTrace_ResetDigConfirm	, "ResetDigConfirm"},
-	{ (int) graph_eTrace_ResetDigWithTone	, "ResetDigWithTone"},
-	{ (int) graph_eTrace_ResetDigConfirmWithTone , "ResetDigConfirmWithTone"},
-	{ (int) graph_eTrace_ToggleDig		, "ToggleDig"},
-	{ (int) graph_eTrace_ToggleDigConfirm	, "ToggleDigConfirm"},
-	{ (int) graph_eTrace_ToggleDigWithTone	, "ToggleDigWithTone"},
-	{ (int) graph_eTrace_ToggleDigConfirmWithTone , "ToggleDigConfirmWithTone"},
-	{ (int) graph_eTrace_StoDigWithTone	, "StoDigWithTone"},
-	{ (int) graph_eTrace_Command		, "Command"},
-	{ (int) graph_eTrace_CommandConfirm	, "CommandConfirm"},
-	{ (int) graph_eTrace_IncrAnalog		, "IncrAnalog"},
-	{ (int) graph_eTrace_RadioButton	, "RadioButton"},
-	{ (int) graph_eTrace_Slider		, "Slider"},
-	{ (int) graph_eTrace_SliderBackground	, "SliderBackground"},
-	{ (int) graph_eTrace_Video		, "Video"},
-	{ (int) graph_eTrace_No		        , "No"},
+static attrnav_sEnumElement elem_dyn_type[] = {
+	{ (int) ge_mDynType_Inherit		, "Inherit"},
+	{ (int) ge_mDynType_Tone		, "Tone"},
+	{ (int) ge_mDynType_DigLowColor		, "DigLowColor"},
+	{ (int) ge_mDynType_DigColor		, "DigColor"},
+	{ (int) ge_mDynType_AnalogColor		, "AnalogColor"},
+	{ (int) ge_mDynType_DigWarning		, "DigWarning"},
+	{ (int) ge_mDynType_DigError		, "DigError"},
+	{ (int) ge_mDynType_DigFlash		, "DigFlash"},
+	{ (int) ge_mDynType_FillLevel       	, "FillLevel"},
+	{ (int) ge_mDynType_Invisible		, "Invisible"},
+	{ (int) ge_mDynType_DigBorder		, "DigBorder"},
+	{ (int) ge_mDynType_DigText		, "DigText"},
+	{ (int) ge_mDynType_AnalogText		, "AnalogText"},
+	{ (int) ge_mDynType_Value		, "Value"},
+	{ (int) ge_mDynType_Rotate		, "Rotate"},
+	{ (int) ge_mDynType_Move		, "Move"},
+	{ (int) ge_mDynType_AnalogShift		, "AnalogShift"},
+	{ (int) ge_mDynType_DigShift		, "DigShift"},
+	{ (int) ge_mDynType_Animation		, "Animation"},
+	{ (int) ge_mDynType_Bar			, "Bar"},
+	{ (int) ge_mDynType_Trend		, "Trend"},
+	{ (int) ge_mDynType_FastCurve		, "FastCurve"},
+	{ (int) ge_mDynType_SliderBackground   	, "SliderBackground"},
+	{ (int) ge_mDynType_Video		, "Video"},
+	{ 0, ""}};
+
+static attrnav_sEnumElement elem_dyn_type_tone[] = {
+	{ (int) ge_mDynType_Inherit		, "Inherit"},
+	{ (int) ge_mDynType_Tone		, "Tone"},
+	{ (int) ge_mDynType_DigLowColor		, "DigLowTone"},
+	{ (int) ge_mDynType_DigColor		, "DigTone"},
+	{ (int) ge_mDynType_AnalogColor		, "AnalogTone"},
+	{ (int) ge_mDynType_DigWarning     	, "DigToneWarning"},
+	{ (int) ge_mDynType_DigError       	, "DigToneError"},
+	{ (int) ge_mDynType_DigFlash       	, "DigFlash"},
+	{ (int) ge_mDynType_FillLevel       	, "FillLevel"},
+	{ (int) ge_mDynType_Invisible		, "Invisible"},
+	{ (int) ge_mDynType_DigBorder		, "DigBorder"},
+	{ (int) ge_mDynType_DigText		, "DigText"},
+	{ (int) ge_mDynType_AnalogText		, "AnalogText"},
+	{ (int) ge_mDynType_Value		, "Value"},
+	{ (int) ge_mDynType_Rotate		, "Rotate"},
+	{ (int) ge_mDynType_Move		, "Move"},
+	{ (int) ge_mDynType_AnalogShift		, "AnalogShift"},
+	{ (int) ge_mDynType_DigShift		, "DigShift"},
+	{ (int) ge_mDynType_Animation		, "Animation"},
+	{ (int) ge_mDynType_Bar			, "Bar"},
+	{ (int) ge_mDynType_Trend		, "Trend"},
+	{ (int) ge_mDynType_FastCurve		, "FastCurve"},
+	{ (int) ge_mDynType_SliderBackground   	, "SliderBackground"},
+	{ (int) ge_mDynType_Video		, "Video"},
+	{ 0, ""}};
+
+static attrnav_sEnumElement elem_action_type[] = {
+	{ (int) ge_mActionType_Inherit		, "Inherit"},
+	{ (int) ge_mActionType_PopupMenu	, "PopupMenu"},
+	{ (int) ge_mActionType_SetDig		, "SetDig"},
+	{ (int) ge_mActionType_ResetDig		, "ResetDig"},
+	{ (int) ge_mActionType_ToggleDig	, "ToggleDig"},
+	{ (int) ge_mActionType_StoDig		, "StoDig"},
+	{ (int) ge_mActionType_Command		, "Command"},
+	{ (int) ge_mActionType_CommandDoubleClick , "CommandDoubleClick"},
+	{ (int) ge_mActionType_Help		, "Help"},
+	{ (int) ge_mActionType_OpenGraph	, "OpenGraph"},
+	{ (int) ge_mActionType_CloseGraph	, "CloseGraph"},
+	{ (int) ge_mActionType_OpenURL		, "OpenURL"},
+	{ (int) ge_mActionType_Confirm		, "Confirm"},
+	{ (int) ge_mActionType_IncrAnalog	, "IncrAnalog"},
+	{ (int) ge_mActionType_RadioButton	, "RadioButton"},
+	{ (int) ge_mActionType_ValueInput	, "ValueInput"},
+	{ (int) ge_mActionType_TipText		, "ToolTip"},
+	{ (int) ge_mActionType_InputFocus      	, "InputFocus"},
+	{ (int) ge_mActionType_PulldownMenu     , "PulldownMenu"},
+	{ (int) ge_mActionType_OptionMenu       , "OptionMenu"},
+	{ (int) ge_mActionType_Slider		, "Slider"},
 	{ 0, ""}};
 
 static attrnav_sEnumElement elem_color[] = {
@@ -115,110 +140,310 @@ static attrnav_sEnumElement elem_color[] = {
 	{ (int) glow_eDrawType_LineRed, 	"Red"},
 	{ (int) glow_eDrawType_LineGray, 	"Grey"},
 	{ (int) glow_eDrawType_Color4,	 	"White"},
-	{ (int) glow_eDrawType_Color5, 		"Green"},
+	{ (int) glow_eDrawType_Color5, 		"YellowGreen"},
 	{ (int) glow_eDrawType_Color6, 		"Yellow"},
-	{ (int) glow_eDrawType_Color7, 		"Blue"},
-	{ (int) glow_eDrawType_Color8, 		"Violet"},
-	{ (int) glow_eDrawType_Color9, 		"DarkGrey"},
-	{ (int) glow_eDrawType_Color10, 	"VeryDarkGray"},
-	{ (int) glow_eDrawType_Color11, 	"Gray1"},
-	{ (int) glow_eDrawType_Color12, 	"Gray2"},
-	{ (int) glow_eDrawType_Color13, 	"Gray3"},
-	{ (int) glow_eDrawType_Color14, 	"Gray4"},
-	{ (int) glow_eDrawType_Color15, 	"Gray5"},
-	{ (int) glow_eDrawType_Color16, 	"Gray6"},
-	{ (int) glow_eDrawType_Color17, 	"Gray7"},
-	{ (int) glow_eDrawType_Color18, 	"Gray8"},
-	{ (int) glow_eDrawType_Color19, 	"Gray9"},
-	{ (int) glow_eDrawType_Color20, 	"Gray10"},
-	{ (int) glow_eDrawType_Color21, 	"Yellow1"},
-	{ (int) glow_eDrawType_Color22, 	"Yellow2"},
-	{ (int) glow_eDrawType_Color23, 	"Yellow3"},
-	{ (int) glow_eDrawType_Color24, 	"Yellow4"},
-	{ (int) glow_eDrawType_Color25, 	"Yellow5"},
-	{ (int) glow_eDrawType_Color26, 	"Yellow6"},
-	{ (int) glow_eDrawType_Color27, 	"Yellow7"},
-	{ (int) glow_eDrawType_Color28, 	"Yellow8"},
-	{ (int) glow_eDrawType_Color29, 	"Yellow9"},
-	{ (int) glow_eDrawType_Color30, 	"Yellow10"},
-	{ (int) glow_eDrawType_Color31, 	"Gold1"},
-	{ (int) glow_eDrawType_Color32, 	"Gold2"},
-	{ (int) glow_eDrawType_Color33, 	"Gold3"},
-	{ (int) glow_eDrawType_Color34, 	"Gold4"},
-	{ (int) glow_eDrawType_Color35, 	"Gold5"},
-	{ (int) glow_eDrawType_Color36, 	"Gold6"},
-	{ (int) glow_eDrawType_Color37, 	"Gold7"},
-	{ (int) glow_eDrawType_Color38, 	"Gold8"},
-	{ (int) glow_eDrawType_Color39, 	"Gold9"},
-	{ (int) glow_eDrawType_Color40,		"Gold10"},
-	{ (int) glow_eDrawType_Color41, 	"Orange1"},
-	{ (int) glow_eDrawType_Color42, 	"Orange2"},
-	{ (int) glow_eDrawType_Color43, 	"Orange3"},
-	{ (int) glow_eDrawType_Color44, 	"Orange4"},
-	{ (int) glow_eDrawType_Color45, 	"Orange5"},
-	{ (int) glow_eDrawType_Color46, 	"Orange6"},
-	{ (int) glow_eDrawType_Color47, 	"Orange7"},
-	{ (int) glow_eDrawType_Color48, 	"Orange8"},
-	{ (int) glow_eDrawType_Color49, 	"Orange9"},
-	{ (int) glow_eDrawType_Color50, 	"Orange10"},
-	{ (int) glow_eDrawType_Color51, 	"Red1"},
-	{ (int) glow_eDrawType_Color52, 	"Red2"},
-	{ (int) glow_eDrawType_Color53, 	"Red3"},
-	{ (int) glow_eDrawType_Color54, 	"Red4"},
-	{ (int) glow_eDrawType_Color55, 	"Red5"},
-	{ (int) glow_eDrawType_Color56, 	"Red6"},
-	{ (int) glow_eDrawType_Color57, 	"Red7"},
-	{ (int) glow_eDrawType_Color58, 	"Red8"},
-	{ (int) glow_eDrawType_Color59, 	"Red9"},
-	{ (int) glow_eDrawType_Color60,		"Red10"},
-	{ (int) glow_eDrawType_Color61, 	"Magenta1"},
-	{ (int) glow_eDrawType_Color62, 	"Magenta2"},
-	{ (int) glow_eDrawType_Color63, 	"Magenta3"},
-	{ (int) glow_eDrawType_Color64, 	"Magenta4"},
-	{ (int) glow_eDrawType_Color65, 	"Magenta5"},
-	{ (int) glow_eDrawType_Color66, 	"Magenta6"},
-	{ (int) glow_eDrawType_Color67, 	"Magenta7"},
-	{ (int) glow_eDrawType_Color68, 	"Magenta8"},
-	{ (int) glow_eDrawType_Color69, 	"Magenta9"},
-	{ (int) glow_eDrawType_Color70, 	"Magenta10"},
-	{ (int) glow_eDrawType_Color71, 	"Blue1"},
-	{ (int) glow_eDrawType_Color72, 	"Blue2"},
-	{ (int) glow_eDrawType_Color73, 	"Blue3"},
-	{ (int) glow_eDrawType_Color74, 	"Blue4"},
-	{ (int) glow_eDrawType_Color75, 	"Blue5"},
-	{ (int) glow_eDrawType_Color76, 	"Blue6"},
-	{ (int) glow_eDrawType_Color77, 	"Blue7"},
-	{ (int) glow_eDrawType_Color78, 	"Blue8"},
-	{ (int) glow_eDrawType_Color79, 	"Blue9"},
-	{ (int) glow_eDrawType_Color80, 	"Blue10"},
-	{ (int) glow_eDrawType_Color81, 	"SeaBlue1"},
-	{ (int) glow_eDrawType_Color82, 	"SeaBlue2"},
-	{ (int) glow_eDrawType_Color83, 	"SeaBlue3"},
-	{ (int) glow_eDrawType_Color84, 	"SeaBlue4"},
-	{ (int) glow_eDrawType_Color85, 	"SeaBlue5"},
-	{ (int) glow_eDrawType_Color86, 	"SeaBlue6"},
-	{ (int) glow_eDrawType_Color87, 	"SeaBlue7"},
-	{ (int) glow_eDrawType_Color88, 	"SeaBlue8"},
-	{ (int) glow_eDrawType_Color89, 	"SeaBlue9"},
-	{ (int) glow_eDrawType_Color90, 	"SeaBlue10"},
-	{ (int) glow_eDrawType_Color91, 	"Green1"},
-	{ (int) glow_eDrawType_Color92, 	"Green2"},
-	{ (int) glow_eDrawType_Color93, 	"Green3"},
-	{ (int) glow_eDrawType_Color94, 	"Green4"},
-	{ (int) glow_eDrawType_Color95, 	"Green5"},
-	{ (int) glow_eDrawType_Color96, 	"Green6"},
-	{ (int) glow_eDrawType_Color97, 	"Green7"},
-	{ (int) glow_eDrawType_Color98, 	"Green8"},
-	{ (int) glow_eDrawType_Color99, 	"Green9"},
-	{ (int) glow_eDrawType_Color100, 	"Green10"},
+	{ (int) glow_eDrawType_Color7, 		"Gold"},
+	{ (int) glow_eDrawType_Color8, 		"Orange"},
+	{ (int) glow_eDrawType_Color9, 		"OrangeRed"},
+	{ (int) glow_eDrawType_Color10, 	"Red"},
+	{ (int) glow_eDrawType_Color11, 	"RedViolet"},
+	{ (int) glow_eDrawType_Color12, 	"Violet"},
+	{ (int) glow_eDrawType_Color13, 	"BlueViolet"},
+	{ (int) glow_eDrawType_Color14, 	"BlueBlueViolet"},
+	{ (int) glow_eDrawType_Color15, 	"Blue"},
+	{ (int) glow_eDrawType_Color16, 	"BlueBlueGreen"},
+	{ (int) glow_eDrawType_Color17, 	"BlueGreen"},
+	{ (int) glow_eDrawType_Color18, 	"GreenGreenBlue"},
+	{ (int) glow_eDrawType_Color19, 	"Green"},
+	{ (int) glow_eDrawType_Color20, 	"GreenGreenYellow"},
+	{ (int) glow_eDrawType_Color21, 	"GrayFix1"},
+	{ (int) glow_eDrawType_Color22, 	"GrayFix2"},
+	{ (int) glow_eDrawType_Color23, 	"GrayFix3"},
+	{ (int) glow_eDrawType_Color24, 	"GrayFix4"},
+	{ (int) glow_eDrawType_Color25, 	"GrayFix5"},
+	{ (int) glow_eDrawType_Color26, 	"GrayFix6"},
+	{ (int) glow_eDrawType_Color27, 	"GrayFix7"},
+	{ (int) glow_eDrawType_Color28, 	"GrayFix8"},
+	{ (int) glow_eDrawType_Color29, 	"GrayFix9"},
+	{ (int) glow_eDrawType_Color30, 	"GrayFix10"},
+	{ (int) glow_eDrawType_Color31, 	"GrayLow1"},
+	{ (int) glow_eDrawType_Color32, 	"GrayLow2"},
+	{ (int) glow_eDrawType_Color33, 	"GrayLow3"},
+	{ (int) glow_eDrawType_Color34, 	"GrayLow4"},
+	{ (int) glow_eDrawType_Color35, 	"GrayLow5"},
+	{ (int) glow_eDrawType_Color36, 	"GrayLow6"},
+	{ (int) glow_eDrawType_Color37, 	"GrayLow7"},
+	{ (int) glow_eDrawType_Color38, 	"GrayLow8"},
+	{ (int) glow_eDrawType_Color39, 	"GrayLow9"},
+	{ (int) glow_eDrawType_Color40, 	"GrayLow10"},
+	{ (int) glow_eDrawType_Color41, 	"GrayMedium1"},
+	{ (int) glow_eDrawType_Color42, 	"GrayMedium2"},
+	{ (int) glow_eDrawType_Color43, 	"GrayMedium3"},
+	{ (int) glow_eDrawType_Color44, 	"GrayMedium4"},
+	{ (int) glow_eDrawType_Color45, 	"GrayMedium5"},
+	{ (int) glow_eDrawType_Color46, 	"GrayMedium6"},
+	{ (int) glow_eDrawType_Color47, 	"GrayMedium7"},
+	{ (int) glow_eDrawType_Color48, 	"GrayMedium8"},
+	{ (int) glow_eDrawType_Color49, 	"GrayMedium9"},
+	{ (int) glow_eDrawType_Color50, 	"GrayMedium10"},
+	{ (int) glow_eDrawType_Color51, 	"GrayHigh1"},
+	{ (int) glow_eDrawType_Color52, 	"GrayHigh2"},
+	{ (int) glow_eDrawType_Color53, 	"GrayHigh3"},
+	{ (int) glow_eDrawType_Color54, 	"GrayHigh4"},
+	{ (int) glow_eDrawType_Color55, 	"GrayHigh5"},
+	{ (int) glow_eDrawType_Color56, 	"GrayHigh6"},
+	{ (int) glow_eDrawType_Color57, 	"GrayHigh7"},
+	{ (int) glow_eDrawType_Color58, 	"GrayHigh8"},
+	{ (int) glow_eDrawType_Color59, 	"GrayHigh9"},
+	{ (int) glow_eDrawType_Color60, 	"GrayHigh10"},
+	{ (int) glow_eDrawType_Color61, 	"YellowGreenLow1"},
+	{ (int) glow_eDrawType_Color62, 	"YellowGreenLow2"},
+	{ (int) glow_eDrawType_Color63, 	"YellowGreenLow3"},
+	{ (int) glow_eDrawType_Color64, 	"YellowGreenLow4"},
+	{ (int) glow_eDrawType_Color65, 	"YellowGreenLow5"},
+	{ (int) glow_eDrawType_Color66, 	"YellowGreenLow6"},
+	{ (int) glow_eDrawType_Color67, 	"YellowGreenLow7"},
+	{ (int) glow_eDrawType_Color68, 	"YellowGreenLow8"},
+	{ (int) glow_eDrawType_Color69, 	"YellowGreenLow9"},
+	{ (int) glow_eDrawType_Color70, 	"YellowGreenLow10"},
+	{ (int) glow_eDrawType_Color71, 	"YellowGreenMedium1"},
+	{ (int) glow_eDrawType_Color72, 	"YellowGreenMedium2"},
+	{ (int) glow_eDrawType_Color73, 	"YellowGreenMedium3"},
+	{ (int) glow_eDrawType_Color74, 	"YellowGreenMedium4"},
+	{ (int) glow_eDrawType_Color75, 	"YellowGreenMedium5"},
+	{ (int) glow_eDrawType_Color76, 	"YellowGreenMedium6"},
+	{ (int) glow_eDrawType_Color77, 	"YellowGreenMedium7"},
+	{ (int) glow_eDrawType_Color78, 	"YellowGreenMedium8"},
+	{ (int) glow_eDrawType_Color79, 	"YellowGreenMedium9"},
+	{ (int) glow_eDrawType_Color80, 	"YellowGreenMedium10"},
+	{ (int) glow_eDrawType_Color81, 	"YellowGreenHigh1"},
+	{ (int) glow_eDrawType_Color82, 	"YellowGreenHigh2"},
+	{ (int) glow_eDrawType_Color83, 	"YellowGreenHigh3"},
+	{ (int) glow_eDrawType_Color84, 	"YellowGreenHigh4"},
+	{ (int) glow_eDrawType_Color85, 	"YellowGreenHigh5"},
+	{ (int) glow_eDrawType_Color86, 	"YellowGreenHigh6"},
+	{ (int) glow_eDrawType_Color87, 	"YellowGreenHigh7"},
+	{ (int) glow_eDrawType_Color88, 	"YellowGreenHigh8"},
+	{ (int) glow_eDrawType_Color89, 	"YellowGreenHigh9"},
+	{ (int) glow_eDrawType_Color90, 	"YellowGreenHigh10"},
+	{ (int) glow_eDrawType_Color91, 	"YellowLow1"},
+	{ (int) glow_eDrawType_Color92, 	"YellowLow2"},
+	{ (int) glow_eDrawType_Color93, 	"YellowLow3"},
+	{ (int) glow_eDrawType_Color94, 	"YellowLow4"},
+	{ (int) glow_eDrawType_Color95, 	"YellowLow5"},
+	{ (int) glow_eDrawType_Color96, 	"YellowLow6"},
+	{ (int) glow_eDrawType_Color97, 	"YellowLow7"},
+	{ (int) glow_eDrawType_Color98, 	"YellowLow8"},
+	{ (int) glow_eDrawType_Color99, 	"YellowLow9"},
+	{ (int) glow_eDrawType_Color100, 	"YellowLow10"},
+	{ (int) glow_eDrawType_Color101, 	"YellowMedium1"},
+	{ (int) glow_eDrawType_Color102, 	"YellowMedium2"},
+	{ (int) glow_eDrawType_Color103, 	"YellowMedium3"},
+	{ (int) glow_eDrawType_Color104, 	"YellowMedium4"},
+	{ (int) glow_eDrawType_Color105, 	"YellowMedium5"},
+	{ (int) glow_eDrawType_Color106, 	"YellowMedium6"},
+	{ (int) glow_eDrawType_Color107, 	"YellowMedium7"},
+	{ (int) glow_eDrawType_Color108, 	"YellowMedium8"},
+	{ (int) glow_eDrawType_Color109, 	"YellowMedium9"},
+	{ (int) glow_eDrawType_Color110, 	"YellowMedium10"},
+	{ (int) glow_eDrawType_Color111, 	"YellowHigh1"},
+	{ (int) glow_eDrawType_Color112, 	"YellowHigh2"},
+	{ (int) glow_eDrawType_Color113, 	"YellowHigh3"},
+	{ (int) glow_eDrawType_Color114, 	"YellowHigh4"},
+	{ (int) glow_eDrawType_Color115, 	"YellowHigh5"},
+	{ (int) glow_eDrawType_Color116, 	"YellowHigh6"},
+	{ (int) glow_eDrawType_Color117, 	"YellowHigh7"},
+	{ (int) glow_eDrawType_Color118, 	"YellowHigh8"},
+	{ (int) glow_eDrawType_Color119, 	"YellowHigh9"},
+	{ (int) glow_eDrawType_Color120, 	"YellowHigh10"},
+	{ (int) glow_eDrawType_Color121, 	"OrangeLow1"},
+	{ (int) glow_eDrawType_Color122, 	"OrangeLow2"},
+	{ (int) glow_eDrawType_Color123, 	"OrangeLow3"},
+	{ (int) glow_eDrawType_Color124, 	"OrangeLow4"},
+	{ (int) glow_eDrawType_Color125, 	"OrangeLow5"},
+	{ (int) glow_eDrawType_Color126, 	"OrangeLow6"},
+	{ (int) glow_eDrawType_Color127, 	"OrangeLow7"},
+	{ (int) glow_eDrawType_Color128, 	"OrangeLow8"},
+	{ (int) glow_eDrawType_Color129, 	"OrangeLow9"},
+	{ (int) glow_eDrawType_Color130, 	"OrangeLow10"},
+	{ (int) glow_eDrawType_Color131, 	"OrangeMedium1"},
+	{ (int) glow_eDrawType_Color132, 	"OrangeMedium2"},
+	{ (int) glow_eDrawType_Color133, 	"OrangeMedium3"},
+	{ (int) glow_eDrawType_Color134, 	"OrangeMedium4"},
+	{ (int) glow_eDrawType_Color135, 	"OrangeMedium5"},
+	{ (int) glow_eDrawType_Color136, 	"OrangeMedium6"},
+	{ (int) glow_eDrawType_Color137, 	"OrangeMedium7"},
+	{ (int) glow_eDrawType_Color138, 	"OrangeMedium8"},
+	{ (int) glow_eDrawType_Color139, 	"OrangeMedium9"},
+	{ (int) glow_eDrawType_Color140, 	"OrangeMedium10"},
+	{ (int) glow_eDrawType_Color141, 	"OrangeHigh1"},
+	{ (int) glow_eDrawType_Color142, 	"OrangeHigh2"},
+	{ (int) glow_eDrawType_Color143, 	"OrangeHigh3"},
+	{ (int) glow_eDrawType_Color144, 	"OrangeHigh4"},
+	{ (int) glow_eDrawType_Color145, 	"OrangeHigh5"},
+	{ (int) glow_eDrawType_Color146, 	"OrangeHigh6"},
+	{ (int) glow_eDrawType_Color147, 	"OrangeHigh7"},
+	{ (int) glow_eDrawType_Color148, 	"OrangeHigh8"},
+	{ (int) glow_eDrawType_Color149, 	"OrangeHigh9"},
+	{ (int) glow_eDrawType_Color150, 	"OrangeHigh10"},
+	{ (int) glow_eDrawType_Color151, 	"RedLow1"},
+	{ (int) glow_eDrawType_Color152, 	"RedLow2"},
+	{ (int) glow_eDrawType_Color153, 	"RedLow3"},
+	{ (int) glow_eDrawType_Color154, 	"RedLow4"},
+	{ (int) glow_eDrawType_Color155, 	"RedLow5"},
+	{ (int) glow_eDrawType_Color156, 	"RedLow6"},
+	{ (int) glow_eDrawType_Color157, 	"RedLow7"},
+	{ (int) glow_eDrawType_Color158, 	"RedLow8"},
+	{ (int) glow_eDrawType_Color159, 	"RedLow9"},
+	{ (int) glow_eDrawType_Color160, 	"RedLow10"},
+	{ (int) glow_eDrawType_Color161, 	"RedMedium1"},
+	{ (int) glow_eDrawType_Color162, 	"RedMedium2"},
+	{ (int) glow_eDrawType_Color163, 	"RedMedium3"},
+	{ (int) glow_eDrawType_Color164, 	"RedMedium4"},
+	{ (int) glow_eDrawType_Color165, 	"RedMedium5"},
+	{ (int) glow_eDrawType_Color166, 	"RedMedium6"},
+	{ (int) glow_eDrawType_Color167, 	"RedMedium7"},
+	{ (int) glow_eDrawType_Color168, 	"RedMedium8"},
+	{ (int) glow_eDrawType_Color169, 	"RedMedium9"},
+	{ (int) glow_eDrawType_Color170, 	"RedMedium10"},
+	{ (int) glow_eDrawType_Color171, 	"RedHigh1"},
+	{ (int) glow_eDrawType_Color172, 	"RedHigh2"},
+	{ (int) glow_eDrawType_Color173, 	"RedHigh3"},
+	{ (int) glow_eDrawType_Color174, 	"RedHigh4"},
+	{ (int) glow_eDrawType_Color175, 	"RedHigh5"},
+	{ (int) glow_eDrawType_Color176, 	"RedHigh6"},
+	{ (int) glow_eDrawType_Color177, 	"RedHigh7"},
+	{ (int) glow_eDrawType_Color178, 	"RedHigh8"},
+	{ (int) glow_eDrawType_Color179, 	"RedHigh9"},
+	{ (int) glow_eDrawType_Color180, 	"RedHigh10"},
+	{ (int) glow_eDrawType_Color181, 	"MagentaLow1"},
+	{ (int) glow_eDrawType_Color182, 	"MagentaLow2"},
+	{ (int) glow_eDrawType_Color183, 	"MagentaLow3"},
+	{ (int) glow_eDrawType_Color184, 	"MagentaLow4"},
+	{ (int) glow_eDrawType_Color185, 	"MagentaLow5"},
+	{ (int) glow_eDrawType_Color186, 	"MagentaLow6"},
+	{ (int) glow_eDrawType_Color187, 	"MagentaLow7"},
+	{ (int) glow_eDrawType_Color188, 	"MagentaLow8"},
+	{ (int) glow_eDrawType_Color189, 	"MagentaLow9"},
+	{ (int) glow_eDrawType_Color190, 	"MagentaLow10"},
+	{ (int) glow_eDrawType_Color191, 	"MagentaMedium1"},
+	{ (int) glow_eDrawType_Color192, 	"MagentaMedium2"},
+	{ (int) glow_eDrawType_Color193, 	"MagentaMedium3"},
+	{ (int) glow_eDrawType_Color194, 	"MagentaMedium4"},
+	{ (int) glow_eDrawType_Color195, 	"MagentaMedium5"},
+	{ (int) glow_eDrawType_Color196, 	"MagentaMedium6"},
+	{ (int) glow_eDrawType_Color197, 	"MagentaMedium7"},
+	{ (int) glow_eDrawType_Color198, 	"MagentaMedium8"},
+	{ (int) glow_eDrawType_Color199, 	"MagentaMedium9"},
+	{ (int) glow_eDrawType_Color200, 	"MagentaMedium10"},
+	{ (int) glow_eDrawType_Color201, 	"MagentaHigh1"},
+	{ (int) glow_eDrawType_Color202, 	"MagentaHigh2"},
+	{ (int) glow_eDrawType_Color203, 	"MagentaHigh3"},
+	{ (int) glow_eDrawType_Color204, 	"MagentaHigh4"},
+	{ (int) glow_eDrawType_Color205, 	"MagentaHigh5"},
+	{ (int) glow_eDrawType_Color206, 	"MagentaHigh6"},
+	{ (int) glow_eDrawType_Color207, 	"MagentaHigh7"},
+	{ (int) glow_eDrawType_Color208, 	"MagentaHigh8"},
+	{ (int) glow_eDrawType_Color209, 	"MagentaHigh9"},
+	{ (int) glow_eDrawType_Color210, 	"MagentaHigh10"},
+	{ (int) glow_eDrawType_Color211, 	"BlueLow1"},
+	{ (int) glow_eDrawType_Color212, 	"BlueLow2"},
+	{ (int) glow_eDrawType_Color213, 	"BlueLow3"},
+	{ (int) glow_eDrawType_Color214, 	"BlueLow4"},
+	{ (int) glow_eDrawType_Color215, 	"BlueLow5"},
+	{ (int) glow_eDrawType_Color216, 	"BlueLow6"},
+	{ (int) glow_eDrawType_Color217, 	"BlueLow7"},
+	{ (int) glow_eDrawType_Color218, 	"BlueLow8"},
+	{ (int) glow_eDrawType_Color219, 	"BlueLow9"},
+	{ (int) glow_eDrawType_Color220, 	"BlueLow10"},
+	{ (int) glow_eDrawType_Color221, 	"BlueMedium1"},
+	{ (int) glow_eDrawType_Color222, 	"BlueMedium2"},
+	{ (int) glow_eDrawType_Color223, 	"BlueMedium3"},
+	{ (int) glow_eDrawType_Color224, 	"BlueMedium4"},
+	{ (int) glow_eDrawType_Color225, 	"BlueMedium5"},
+	{ (int) glow_eDrawType_Color226, 	"BlueMedium6"},
+	{ (int) glow_eDrawType_Color227, 	"BlueMedium7"},
+	{ (int) glow_eDrawType_Color228, 	"BlueMedium8"},
+	{ (int) glow_eDrawType_Color229, 	"BlueMedium9"},
+	{ (int) glow_eDrawType_Color230, 	"BlueMedium10"},
+	{ (int) glow_eDrawType_Color231, 	"BlueHigh1"},
+	{ (int) glow_eDrawType_Color232, 	"BlueHigh2"},
+	{ (int) glow_eDrawType_Color233, 	"BlueHigh3"},
+	{ (int) glow_eDrawType_Color234, 	"BlueHigh4"},
+	{ (int) glow_eDrawType_Color235, 	"BlueHigh5"},
+	{ (int) glow_eDrawType_Color236, 	"BlueHigh6"},
+	{ (int) glow_eDrawType_Color237, 	"BlueHigh7"},
+	{ (int) glow_eDrawType_Color238, 	"BlueHigh8"},
+	{ (int) glow_eDrawType_Color239, 	"BlueHigh9"},
+	{ (int) glow_eDrawType_Color240, 	"BlueHigh10"},
+	{ (int) glow_eDrawType_Color241, 	"SeaBlueLow1"},
+	{ (int) glow_eDrawType_Color242, 	"SeaBlueLow2"},
+	{ (int) glow_eDrawType_Color243, 	"SeaBlueLow3"},
+	{ (int) glow_eDrawType_Color244, 	"SeaBlueLow4"},
+	{ (int) glow_eDrawType_Color245, 	"SeaBlueLow5"},
+	{ (int) glow_eDrawType_Color246, 	"SeaBlueLow6"},
+	{ (int) glow_eDrawType_Color247, 	"SeaBlueLow7"},
+	{ (int) glow_eDrawType_Color248, 	"SeaBlueLow8"},
+	{ (int) glow_eDrawType_Color249, 	"SeaBlueLow9"},
+	{ (int) glow_eDrawType_Color250, 	"SeaBlueLow10"},
+	{ (int) glow_eDrawType_Color251, 	"SeaBlueMedium1"},
+	{ (int) glow_eDrawType_Color252, 	"SeaBlueMedium2"},
+	{ (int) glow_eDrawType_Color253, 	"SeaBlueMedium3"},
+	{ (int) glow_eDrawType_Color224, 	"SeaBlueMedium4"},
+	{ (int) glow_eDrawType_Color255, 	"SeaBlueMedium5"},
+	{ (int) glow_eDrawType_Color256, 	"SeaBlueMedium6"},
+	{ (int) glow_eDrawType_Color257, 	"SeaBlueMedium7"},
+	{ (int) glow_eDrawType_Color258, 	"SeaBlueMedium8"},
+	{ (int) glow_eDrawType_Color259, 	"SeaBlueMedium9"},
+	{ (int) glow_eDrawType_Color260, 	"SeaBlueMedium10"},
+	{ (int) glow_eDrawType_Color261, 	"SeaBlueHigh1"},
+	{ (int) glow_eDrawType_Color262, 	"SeaBlueHigh2"},
+	{ (int) glow_eDrawType_Color263, 	"SeaBlueHigh3"},
+	{ (int) glow_eDrawType_Color264, 	"SeaBlueHigh4"},
+	{ (int) glow_eDrawType_Color265, 	"SeaBlueHigh5"},
+	{ (int) glow_eDrawType_Color266, 	"SeaBlueHigh6"},
+	{ (int) glow_eDrawType_Color267, 	"SeaBlueHigh7"},
+	{ (int) glow_eDrawType_Color268, 	"SeaBlueHigh8"},
+	{ (int) glow_eDrawType_Color269, 	"SeaBlueHigh9"},
+	{ (int) glow_eDrawType_Color270, 	"SeaBlueHigh10"},
+	{ (int) glow_eDrawType_Color271, 	"GreenLow1"},
+	{ (int) glow_eDrawType_Color272, 	"GreenLow2"},
+	{ (int) glow_eDrawType_Color273, 	"GreenLow3"},
+	{ (int) glow_eDrawType_Color274, 	"GreenLow4"},
+	{ (int) glow_eDrawType_Color275, 	"GreenLow5"},
+	{ (int) glow_eDrawType_Color276, 	"GreenLow6"},
+	{ (int) glow_eDrawType_Color277, 	"GreenLow7"},
+	{ (int) glow_eDrawType_Color278, 	"GreenLow8"},
+	{ (int) glow_eDrawType_Color279, 	"GreenLow9"},
+	{ (int) glow_eDrawType_Color280, 	"GreenLow10"},
+	{ (int) glow_eDrawType_Color281, 	"GreenMedium1"},
+	{ (int) glow_eDrawType_Color282, 	"GreenMedium2"},
+	{ (int) glow_eDrawType_Color283, 	"GreenMedium3"},
+	{ (int) glow_eDrawType_Color284, 	"GreenMedium4"},
+	{ (int) glow_eDrawType_Color285, 	"GreenMedium5"},
+	{ (int) glow_eDrawType_Color286, 	"GreenMedium6"},
+	{ (int) glow_eDrawType_Color287, 	"GreenMedium7"},
+	{ (int) glow_eDrawType_Color288, 	"GreenMedium8"},
+	{ (int) glow_eDrawType_Color289, 	"GreenMedium9"},
+	{ (int) glow_eDrawType_Color290, 	"GreenMedium10"},
+	{ (int) glow_eDrawType_Color291, 	"GreenHigh1"},
+	{ (int) glow_eDrawType_Color292, 	"GreenHigh2"},
+	{ (int) glow_eDrawType_Color293, 	"GreenHigh3"},
+	{ (int) glow_eDrawType_Color294, 	"GreenHigh4"},
+	{ (int) glow_eDrawType_Color295, 	"GreenHigh5"},
+	{ (int) glow_eDrawType_Color296, 	"GreenHigh6"},
+	{ (int) glow_eDrawType_Color297, 	"GreenHigh7"},
+	{ (int) glow_eDrawType_Color298, 	"GreenHigh8"},
+	{ (int) glow_eDrawType_Color299, 	"GreenHigh9"},
+	{ (int) glow_eDrawType_Color300, 	"GreenHigh10"},
 	{ (int) glow_eDrawType_Inherit, 	"Inherit"},
 	{ 0, ""}};
 
 static attrnav_sEnumElement elem_tone[] = {
 	{ (int) glow_eDrawTone_No, 	"No"},
 	{ (int) glow_eDrawTone_Gray, 	"Gray"},
-	{ (int) glow_eDrawTone_Yellow,	"Yellow"},
-	{ (int) glow_eDrawTone_Gold, 	"Gold"},
+	{ (int) glow_eDrawTone_YellowGreen,	"YellowGreen"},
+	{ (int) glow_eDrawTone_Yellow, 	"Yellow"},
 	{ (int) glow_eDrawTone_Orange, 	"Orange"},
 	{ (int) glow_eDrawTone_Red, 	"Red"},
 	{ (int) glow_eDrawTone_Magenta, "Magenta"},
@@ -229,107 +454,346 @@ static attrnav_sEnumElement elem_tone[] = {
 	{ 0, ""}};
 
 static attrnav_sEnumElement elem_tone_or_color[] = {
-	{ (int) glow_eDrawTone_No, 	"NoTone"},
-	{ (int) glow_eDrawTone_Gray, 	"ToneGray"},
-	{ (int) glow_eDrawTone_Yellow,	"ToneYellow"},
-	{ (int) glow_eDrawTone_Gold, 	"ToneGold"},
-	{ (int) glow_eDrawTone_Orange, 	"ToneOrange"},
-	{ (int) glow_eDrawTone_Red, 	"ToneRed"},
-	{ (int) glow_eDrawTone_Magenta, "ToneMagenta"},
-	{ (int) glow_eDrawTone_Blue, 	"ToneBlue"},
-	{ (int) glow_eDrawTone_Seablue, "ToneSeablue"},
-	{ (int) glow_eDrawTone_Green, 	"ToneGreen"},
-	{ (int) glow_eDrawTone_DarkGray, "ToneDarkGray"},
-	{ (int) glow_eDrawType_Color12, 	"Gray2"},
-	{ (int) glow_eDrawType_Color13, 	"Gray3"},
-	{ (int) glow_eDrawType_Color14, 	"Gray4"},
-	{ (int) glow_eDrawType_Color15, 	"Gray5"},
-	{ (int) glow_eDrawType_Color16, 	"Gray6"},
-	{ (int) glow_eDrawType_Color17, 	"Gray7"},
-	{ (int) glow_eDrawType_Color18, 	"Gray8"},
-	{ (int) glow_eDrawType_Color19, 	"Gray9"},
-	{ (int) glow_eDrawType_Color20, 	"Gray10"},
-	{ (int) glow_eDrawType_Color21, 	"Yellow1"},
-	{ (int) glow_eDrawType_Color22, 	"Yellow2"},
-	{ (int) glow_eDrawType_Color23, 	"Yellow3"},
-	{ (int) glow_eDrawType_Color24, 	"Yellow4"},
-	{ (int) glow_eDrawType_Color25, 	"Yellow5"},
-	{ (int) glow_eDrawType_Color26, 	"Yellow6"},
-	{ (int) glow_eDrawType_Color27, 	"Yellow7"},
-	{ (int) glow_eDrawType_Color28, 	"Yellow8"},
-	{ (int) glow_eDrawType_Color29, 	"Yellow9"},
-	{ (int) glow_eDrawType_Color30, 	"Yellow10"},
-	{ (int) glow_eDrawType_Color31, 	"Gold1"},
-	{ (int) glow_eDrawType_Color32, 	"Gold2"},
-	{ (int) glow_eDrawType_Color33, 	"Gold3"},
-	{ (int) glow_eDrawType_Color34, 	"Gold4"},
-	{ (int) glow_eDrawType_Color35, 	"Gold5"},
-	{ (int) glow_eDrawType_Color36, 	"Gold6"},
-	{ (int) glow_eDrawType_Color37, 	"Gold7"},
-	{ (int) glow_eDrawType_Color38, 	"Gold8"},
-	{ (int) glow_eDrawType_Color39, 	"Gold9"},
-	{ (int) glow_eDrawType_Color40,		"Gold10"},
-	{ (int) glow_eDrawType_Color41, 	"Orange1"},
-	{ (int) glow_eDrawType_Color42, 	"Orange2"},
-	{ (int) glow_eDrawType_Color43, 	"Orange3"},
-	{ (int) glow_eDrawType_Color44, 	"Orange4"},
-	{ (int) glow_eDrawType_Color45, 	"Orange5"},
-	{ (int) glow_eDrawType_Color46, 	"Orange6"},
-	{ (int) glow_eDrawType_Color47, 	"Orange7"},
-	{ (int) glow_eDrawType_Color48, 	"Orange8"},
-	{ (int) glow_eDrawType_Color49, 	"Orange8"},
-	{ (int) glow_eDrawType_Color50, 	"Orange18"},
-	{ (int) glow_eDrawType_Color51, 	"Red1"},
-	{ (int) glow_eDrawType_Color52, 	"Red2"},
-	{ (int) glow_eDrawType_Color53, 	"Red3"},
-	{ (int) glow_eDrawType_Color54, 	"Red4"},
-	{ (int) glow_eDrawType_Color55, 	"Red5"},
-	{ (int) glow_eDrawType_Color56, 	"Red6"},
-	{ (int) glow_eDrawType_Color57, 	"Red7"},
-	{ (int) glow_eDrawType_Color58, 	"Red8"},
-	{ (int) glow_eDrawType_Color59, 	"Red9"},
-	{ (int) glow_eDrawType_Color60,		"Red10"},
-	{ (int) glow_eDrawType_Color61, 	"Magenta1"},
-	{ (int) glow_eDrawType_Color62, 	"Magenta2"},
-	{ (int) glow_eDrawType_Color63, 	"Magenta3"},
-	{ (int) glow_eDrawType_Color64, 	"Magenta4"},
-	{ (int) glow_eDrawType_Color65, 	"Magenta5"},
-	{ (int) glow_eDrawType_Color66, 	"Magenta6"},
-	{ (int) glow_eDrawType_Color67, 	"Magenta7"},
-	{ (int) glow_eDrawType_Color68, 	"Magenta8"},
-	{ (int) glow_eDrawType_Color69, 	"Magenta9"},
-	{ (int) glow_eDrawType_Color70, 	"Magenta10"},
-	{ (int) glow_eDrawType_Color71, 	"Blue1"},
-	{ (int) glow_eDrawType_Color72, 	"Blue2"},
-	{ (int) glow_eDrawType_Color73, 	"Blue3"},
-	{ (int) glow_eDrawType_Color74, 	"Blue4"},
-	{ (int) glow_eDrawType_Color75, 	"Blue5"},
-	{ (int) glow_eDrawType_Color76, 	"Blue6"},
-	{ (int) glow_eDrawType_Color77, 	"Blue7"},
-	{ (int) glow_eDrawType_Color78, 	"Blue8"},
-	{ (int) glow_eDrawType_Color79, 	"Blue9"},
-	{ (int) glow_eDrawType_Color80, 	"Blue10"},
-	{ (int) glow_eDrawType_Color81, 	"SeaBlue1"},
-	{ (int) glow_eDrawType_Color82, 	"SeaBlue2"},
-	{ (int) glow_eDrawType_Color83, 	"SeaBlue3"},
-	{ (int) glow_eDrawType_Color84, 	"SeaBlue4"},
-	{ (int) glow_eDrawType_Color85, 	"SeaBlue5"},
-	{ (int) glow_eDrawType_Color86, 	"SeaBlue6"},
-	{ (int) glow_eDrawType_Color87, 	"SeaBlue7"},
-	{ (int) glow_eDrawType_Color88, 	"SeaBlue8"},
-	{ (int) glow_eDrawType_Color89, 	"SeaBlue9"},
-	{ (int) glow_eDrawType_Color90, 	"SeaBlue10"},
-	{ (int) glow_eDrawType_Color91, 	"Green1"},
-	{ (int) glow_eDrawType_Color92, 	"Green2"},
-	{ (int) glow_eDrawType_Color93, 	"Green3"},
-	{ (int) glow_eDrawType_Color94, 	"Green4"},
-	{ (int) glow_eDrawType_Color95, 	"Green5"},
-	{ (int) glow_eDrawType_Color96, 	"Green6"},
-	{ (int) glow_eDrawType_Color97, 	"Green7"},
-	{ (int) glow_eDrawType_Color98, 	"Green8"},
-	{ (int) glow_eDrawType_Color99, 	"Green9"},
-	{ (int) glow_eDrawType_Color100, 	"Green10"},
+	{ (int) glow_eDrawTone_No, 		"NoTone"},
+	{ (int) glow_eDrawTone_Gray, 		"ToneGray"},
+	{ (int) glow_eDrawTone_YellowGreen,     "ToneYellowGreen"},
+	{ (int) glow_eDrawTone_Yellow, 		"ToneYellow"},
+	{ (int) glow_eDrawTone_Orange, 		"ToneOrange"},
+	{ (int) glow_eDrawTone_Red, 		"ToneRed"},
+	{ (int) glow_eDrawTone_Magenta, 	"ToneMagenta"},
+	{ (int) glow_eDrawTone_Blue, 		"ToneBlue"},
+	{ (int) glow_eDrawTone_Seablue, 	"ToneSeablue"},
+	{ (int) glow_eDrawTone_Green, 		"ToneGreen"},
+	{ (int) glow_eDrawTone_DarkGray,	"ToneDarkGray"},
+	{ (int) glow_eDrawTone_LightGray,	"ToneLightGray"},
+	{ (int) glow_eDrawTone_DarkYellowGreen,			"ToneDarkYellowGreen"},
+	{ (int) glow_eDrawTone_LightYellowGreen,	       	"ToneLightYellowGreen"},
+	{ (int) glow_eDrawTone_YellowGreenHighSaturation,      	"ToneYellowGreenHighSaturation"},
+	{ (int) glow_eDrawTone_YellowGreenLowSaturation,       	"ToneYellowGreenLowSaturation"},
+	{ (int) glow_eDrawTone_DarkYellowGreenHighSaturation,	"ToneDarkYellowGreenHighSaturation"},
+	{ (int) glow_eDrawTone_DarkYellowGreenLowSaturation,   	"ToneDarkYellowGreenLowSaturation"},
+	{ (int) glow_eDrawTone_LightYellowGreenHighSaturation,	"ToneLightYellowGreenHighSaturation"},
+	{ (int) glow_eDrawTone_LightYellowGreenLowSaturation,	"ToneLightYellowGreenLowSaturation"},
+	{ (int) glow_eDrawTone_DarkYellow,			"ToneDarkYellow"},
+	{ (int) glow_eDrawTone_LightYellow,			"ToneLightYellow"},
+	{ (int) glow_eDrawTone_YellowHighSaturation,		"ToneYellowHighSaturation"},
+	{ (int) glow_eDrawTone_YellowLowSaturation,		"ToneYellowLowSaturation"},
+	{ (int) glow_eDrawTone_DarkYellowHighSaturation,       	"ToneDarkYellowHighSaturation"},
+	{ (int) glow_eDrawTone_DarkYellowLowSaturation,		"ToneDarkYellowLowSaturation"},
+	{ (int) glow_eDrawTone_LightYellowHighSaturation,      	"ToneLightYellowHighSaturation"},
+	{ (int) glow_eDrawTone_LightYellowLowSaturation,       	"ToneLightYellowLowSaturation"},
+	{ (int) glow_eDrawTone_DarkOrange,			"ToneDarkOrange"},
+	{ (int) glow_eDrawTone_LightOrange,			"ToneLightOrange"},
+	{ (int) glow_eDrawTone_OrangeHighSaturation,		"ToneOrangeHighSaturation"},
+	{ (int) glow_eDrawTone_OrangeLowSaturation,		"ToneOrangeLowSaturation"},
+	{ (int) glow_eDrawTone_DarkOrangeHighSaturation,	"ToneDarkOrangeHighSaturation"},
+	{ (int) glow_eDrawTone_DarkOrangeLowSaturation,		"ToneDarkOrangeLowSaturation"},
+	{ (int) glow_eDrawTone_LightOrangeHighSaturation,	"ToneLightOrangeHighSaturation"},
+	{ (int) glow_eDrawTone_LightOrangeLowSaturation,	"ToneLightOrangeLowSaturation"},
+	{ (int) glow_eDrawTone_DarkRed,				"ToneDarkRed"},
+	{ (int) glow_eDrawTone_LightRed,			"ToneLightRed"},
+	{ (int) glow_eDrawTone_RedHighSaturation,		"ToneRedHighSaturation"},
+	{ (int) glow_eDrawTone_RedLowSaturation,		"ToneRedLowSaturation"},
+	{ (int) glow_eDrawTone_DarkRedHighSaturation,		"ToneDarkRedHighSaturation"},
+	{ (int) glow_eDrawTone_DarkRedLowSaturation,		"ToneDarkRedLowSaturation"},
+	{ (int) glow_eDrawTone_LightRedHighSaturation,		"ToneLightRedHighSaturation"},
+	{ (int) glow_eDrawTone_LightRedLowSaturation,		"ToneLightRedLowSaturation"},
+	{ (int) glow_eDrawTone_DarkMagenta,			"ToneDarkMagenta"},
+	{ (int) glow_eDrawTone_LightMagenta,			"ToneLightMagenta"},
+	{ (int) glow_eDrawTone_MagentaHighSaturation,		"ToneMagentaHighSaturation"},
+	{ (int) glow_eDrawTone_MagentaLowSaturation,		"ToneMagentaLowSaturation"},
+	{ (int) glow_eDrawTone_DarkMagentaHighSaturation,	"ToneDarkMagentaHighSaturation"},
+	{ (int) glow_eDrawTone_DarkMagentaLowSaturation,	"ToneDarkMagentaLowSaturation"},
+	{ (int) glow_eDrawTone_LightMagentaHighSaturation,	"ToneLightMagentaHighSaturation"},
+	{ (int) glow_eDrawTone_LightMagentaLowSaturation,	"ToneLightMagentaLowSaturation"},
+	{ (int) glow_eDrawTone_DarkBlue,			"ToneDarkBlue"},
+	{ (int) glow_eDrawTone_LightBlue,			"ToneLightBlue"},
+	{ (int) glow_eDrawTone_BlueHighSaturation,		"ToneBlueHighSaturation"},
+	{ (int) glow_eDrawTone_BlueLowSaturation,		"ToneBlueLowSaturation"},
+	{ (int) glow_eDrawTone_DarkBlueHighSaturation,		"ToneDarkBlueHighSaturation"},
+	{ (int) glow_eDrawTone_DarkBlueLowSaturation,		"ToneDarkBlueLowSaturation"},
+	{ (int) glow_eDrawTone_LightBlueHighSaturation,		"ToneLightBlueHighSaturation"},
+	{ (int) glow_eDrawTone_LightBlueLowSaturation,		"ToneLightBlueLowSaturation"},
+	{ (int) glow_eDrawTone_DarkSeablue,			"ToneDarkSeablue"},
+	{ (int) glow_eDrawTone_LightSeablue,			"ToneLightSeablue"},
+	{ (int) glow_eDrawTone_SeablueHighSaturation,		"ToneSeablueHighSaturation"},
+	{ (int) glow_eDrawTone_SeablueLowSaturation,		"ToneSeablueLowSaturation"},
+	{ (int) glow_eDrawTone_DarkSeablueHighSaturation,	"ToneDarkSeablueHighSaturation"},
+	{ (int) glow_eDrawTone_DarkSeablueLowSaturation,	 "ToneDarkSeablueLowSaturation"},
+	{ (int) glow_eDrawTone_LightSeablueHighSaturation,	"ToneLightSeablueHighSaturation"},
+	{ (int) glow_eDrawTone_LightSeablueLowSaturation,	"ToneLightSeablueLowSaturation"},
+	{ (int) glow_eDrawTone_DarkGreen,			"ToneDarkGreen"},
+	{ (int) glow_eDrawTone_LightGreen,			"ToneLightGreen"},
+	{ (int) glow_eDrawTone_GreenHighSaturation,		"ToneGreenHighSaturation"},
+	{ (int) glow_eDrawTone_GreenLowSaturation,		"ToneGreenLowSaturation"},
+	{ (int) glow_eDrawTone_DarkGreenHighSaturation,		"ToneDarkGreenHighSaturation"},
+	{ (int) glow_eDrawTone_DarkGreenLowSaturation,		"ToneDarkGreenLowSaturation"},
+	{ (int) glow_eDrawTone_LightGreenHighSaturation,	"ToneLightGreenHighSaturation"},
+	{ (int) glow_eDrawTone_LightGreenLowSaturation,		"ToneLightGreenLowSaturation"},
+	{ (int) glow_eDrawType_Color82, 	"YellowGreenHigh2"},
+	{ (int) glow_eDrawType_Color83, 	"YellowGreenHigh3"},
+	{ (int) glow_eDrawType_Color84, 	"YellowGreenHigh4"},
+	{ (int) glow_eDrawType_Color85, 	"YellowGreenHigh5"},
+	{ (int) glow_eDrawType_Color86, 	"YellowGreenHigh6"},
+	{ (int) glow_eDrawType_Color87, 	"YellowGreenHigh7"},
+	{ (int) glow_eDrawType_Color88, 	"YellowGreenHigh8"},
+	{ (int) glow_eDrawType_Color89, 	"YellowGreenHigh9"},
+	{ (int) glow_eDrawType_Color90, 	"YellowGreenHigh10"},
+	{ (int) glow_eDrawType_Color91, 	"YellowLow1"},
+	{ (int) glow_eDrawType_Color92, 	"YellowLow2"},
+	{ (int) glow_eDrawType_Color93, 	"YellowLow3"},
+	{ (int) glow_eDrawType_Color94, 	"YellowLow4"},
+	{ (int) glow_eDrawType_Color95, 	"YellowLow5"},
+	{ (int) glow_eDrawType_Color96, 	"YellowLow6"},
+	{ (int) glow_eDrawType_Color97, 	"YellowLow7"},
+	{ (int) glow_eDrawType_Color98, 	"YellowLow8"},
+	{ (int) glow_eDrawType_Color99, 	"YellowLow9"},
+	{ (int) glow_eDrawType_Color100, 	"YellowLow10"},
+	{ (int) glow_eDrawType_Color101, 	"YellowMedium1"},
+	{ (int) glow_eDrawType_Color102, 	"YellowMedium2"},
+	{ (int) glow_eDrawType_Color103, 	"YellowMedium3"},
+	{ (int) glow_eDrawType_Color104, 	"YellowMedium4"},
+	{ (int) glow_eDrawType_Color105, 	"YellowMedium5"},
+	{ (int) glow_eDrawType_Color106, 	"YellowMedium6"},
+	{ (int) glow_eDrawType_Color107, 	"YellowMedium7"},
+	{ (int) glow_eDrawType_Color108, 	"YellowMedium8"},
+	{ (int) glow_eDrawType_Color109, 	"YellowMedium9"},
+	{ (int) glow_eDrawType_Color110, 	"YellowMedium10"},
+	{ (int) glow_eDrawType_Color111, 	"YellowHigh1"},
+	{ (int) glow_eDrawType_Color112, 	"YellowHigh2"},
+	{ (int) glow_eDrawType_Color113, 	"YellowHigh3"},
+	{ (int) glow_eDrawType_Color114, 	"YellowHigh4"},
+	{ (int) glow_eDrawType_Color115, 	"YellowHigh5"},
+	{ (int) glow_eDrawType_Color116, 	"YellowHigh6"},
+	{ (int) glow_eDrawType_Color117, 	"YellowHigh7"},
+	{ (int) glow_eDrawType_Color118, 	"YellowHigh8"},
+	{ (int) glow_eDrawType_Color119, 	"YellowHigh9"},
+	{ (int) glow_eDrawType_Color120, 	"YellowHigh10"},
+	{ (int) glow_eDrawType_Color121, 	"OrangeLow1"},
+	{ (int) glow_eDrawType_Color122, 	"OrangeLow2"},
+	{ (int) glow_eDrawType_Color123, 	"OrangeLow3"},
+	{ (int) glow_eDrawType_Color124, 	"OrangeLow4"},
+	{ (int) glow_eDrawType_Color125, 	"OrangeLow5"},
+	{ (int) glow_eDrawType_Color126, 	"OrangeLow6"},
+	{ (int) glow_eDrawType_Color127, 	"OrangeLow7"},
+	{ (int) glow_eDrawType_Color128, 	"OrangeLow8"},
+	{ (int) glow_eDrawType_Color129, 	"OrangeLow9"},
+	{ (int) glow_eDrawType_Color130, 	"OrangeLow10"},
+	{ (int) glow_eDrawType_Color131, 	"OrangeMedium1"},
+	{ (int) glow_eDrawType_Color132, 	"OrangeMedium2"},
+	{ (int) glow_eDrawType_Color133, 	"OrangeMedium3"},
+	{ (int) glow_eDrawType_Color134, 	"OrangeMedium4"},
+	{ (int) glow_eDrawType_Color135, 	"OrangeMedium5"},
+	{ (int) glow_eDrawType_Color136, 	"OrangeMedium6"},
+	{ (int) glow_eDrawType_Color137, 	"OrangeMedium7"},
+	{ (int) glow_eDrawType_Color138, 	"OrangeMedium8"},
+	{ (int) glow_eDrawType_Color139, 	"OrangeMedium9"},
+	{ (int) glow_eDrawType_Color140, 	"OrangeMedium10"},
+	{ (int) glow_eDrawType_Color141, 	"OrangeHigh1"},
+	{ (int) glow_eDrawType_Color142, 	"OrangeHigh2"},
+	{ (int) glow_eDrawType_Color143, 	"OrangeHigh3"},
+	{ (int) glow_eDrawType_Color144, 	"OrangeHigh4"},
+	{ (int) glow_eDrawType_Color145, 	"OrangeHigh5"},
+	{ (int) glow_eDrawType_Color146, 	"OrangeHigh6"},
+	{ (int) glow_eDrawType_Color147, 	"OrangeHigh7"},
+	{ (int) glow_eDrawType_Color148, 	"OrangeHigh8"},
+	{ (int) glow_eDrawType_Color149, 	"OrangeHigh9"},
+	{ (int) glow_eDrawType_Color150, 	"OrangeHigh10"},
+	{ (int) glow_eDrawType_Color151, 	"RedLow1"},
+	{ (int) glow_eDrawType_Color152, 	"RedLow2"},
+	{ (int) glow_eDrawType_Color153, 	"RedLow3"},
+	{ (int) glow_eDrawType_Color154, 	"RedLow4"},
+	{ (int) glow_eDrawType_Color155, 	"RedLow5"},
+	{ (int) glow_eDrawType_Color156, 	"RedLow6"},
+	{ (int) glow_eDrawType_Color157, 	"RedLow7"},
+	{ (int) glow_eDrawType_Color158, 	"RedLow8"},
+	{ (int) glow_eDrawType_Color159, 	"RedLow9"},
+	{ (int) glow_eDrawType_Color160, 	"RedLow10"},
+	{ (int) glow_eDrawType_Color161, 	"RedMedium1"},
+	{ (int) glow_eDrawType_Color162, 	"RedMedium2"},
+	{ (int) glow_eDrawType_Color163, 	"RedMedium3"},
+	{ (int) glow_eDrawType_Color164, 	"RedMedium4"},
+	{ (int) glow_eDrawType_Color165, 	"RedMedium5"},
+	{ (int) glow_eDrawType_Color166, 	"RedMedium6"},
+	{ (int) glow_eDrawType_Color167, 	"RedMedium7"},
+	{ (int) glow_eDrawType_Color168, 	"RedMedium8"},
+	{ (int) glow_eDrawType_Color169, 	"RedMedium9"},
+	{ (int) glow_eDrawType_Color170, 	"RedMedium10"},
+	{ (int) glow_eDrawType_Color171, 	"RedHigh1"},
+	{ (int) glow_eDrawType_Color172, 	"RedHigh2"},
+	{ (int) glow_eDrawType_Color173, 	"RedHigh3"},
+	{ (int) glow_eDrawType_Color174, 	"RedHigh4"},
+	{ (int) glow_eDrawType_Color175, 	"RedHigh5"},
+	{ (int) glow_eDrawType_Color176, 	"RedHigh6"},
+	{ (int) glow_eDrawType_Color177, 	"RedHigh7"},
+	{ (int) glow_eDrawType_Color178, 	"RedHigh8"},
+	{ (int) glow_eDrawType_Color179, 	"RedHigh9"},
+	{ (int) glow_eDrawType_Color180, 	"RedHigh10"},
+	{ (int) glow_eDrawType_Color181, 	"MagentaLow1"},
+	{ (int) glow_eDrawType_Color182, 	"MagentaLow2"},
+	{ (int) glow_eDrawType_Color183, 	"MagentaLow3"},
+	{ (int) glow_eDrawType_Color184, 	"MagentaLow4"},
+	{ (int) glow_eDrawType_Color185, 	"MagentaLow5"},
+	{ (int) glow_eDrawType_Color186, 	"MagentaLow6"},
+	{ (int) glow_eDrawType_Color187, 	"MagentaLow7"},
+	{ (int) glow_eDrawType_Color188, 	"MagentaLow8"},
+	{ (int) glow_eDrawType_Color189, 	"MagentaLow9"},
+	{ (int) glow_eDrawType_Color190, 	"MagentaLow10"},
+	{ (int) glow_eDrawType_Color191, 	"MagentaMedium1"},
+	{ (int) glow_eDrawType_Color192, 	"MagentaMedium2"},
+	{ (int) glow_eDrawType_Color193, 	"MagentaMedium3"},
+	{ (int) glow_eDrawType_Color194, 	"MagentaMedium4"},
+	{ (int) glow_eDrawType_Color195, 	"MagentaMedium5"},
+	{ (int) glow_eDrawType_Color196, 	"MagentaMedium6"},
+	{ (int) glow_eDrawType_Color197, 	"MagentaMedium7"},
+	{ (int) glow_eDrawType_Color198, 	"MagentaMedium8"},
+	{ (int) glow_eDrawType_Color199, 	"MagentaMedium9"},
+	{ (int) glow_eDrawType_Color200, 	"MagentaMedium10"},
+	{ (int) glow_eDrawType_Color201, 	"MagentaHigh1"},
+	{ (int) glow_eDrawType_Color202, 	"MagentaHigh2"},
+	{ (int) glow_eDrawType_Color203, 	"MagentaHigh3"},
+	{ (int) glow_eDrawType_Color204, 	"MagentaHigh4"},
+	{ (int) glow_eDrawType_Color205, 	"MagentaHigh5"},
+	{ (int) glow_eDrawType_Color206, 	"MagentaHigh6"},
+	{ (int) glow_eDrawType_Color207, 	"MagentaHigh7"},
+	{ (int) glow_eDrawType_Color208, 	"MagentaHigh8"},
+	{ (int) glow_eDrawType_Color209, 	"MagentaHigh9"},
+	{ (int) glow_eDrawType_Color210, 	"MagentaHigh10"},
+	{ (int) glow_eDrawType_Color211, 	"BlueLow1"},
+	{ (int) glow_eDrawType_Color212, 	"BlueLow2"},
+	{ (int) glow_eDrawType_Color213, 	"BlueLow3"},
+	{ (int) glow_eDrawType_Color214, 	"BlueLow4"},
+	{ (int) glow_eDrawType_Color215, 	"BlueLow5"},
+	{ (int) glow_eDrawType_Color216, 	"BlueLow6"},
+	{ (int) glow_eDrawType_Color217, 	"BlueLow7"},
+	{ (int) glow_eDrawType_Color218, 	"BlueLow8"},
+	{ (int) glow_eDrawType_Color219, 	"BlueLow9"},
+	{ (int) glow_eDrawType_Color220, 	"BlueLow10"},
+	{ (int) glow_eDrawType_Color221, 	"BlueMedium1"},
+	{ (int) glow_eDrawType_Color222, 	"BlueMedium2"},
+	{ (int) glow_eDrawType_Color223, 	"BlueMedium3"},
+	{ (int) glow_eDrawType_Color224, 	"BlueMedium4"},
+	{ (int) glow_eDrawType_Color225, 	"BlueMedium5"},
+	{ (int) glow_eDrawType_Color226, 	"BlueMedium6"},
+	{ (int) glow_eDrawType_Color227, 	"BlueMedium7"},
+	{ (int) glow_eDrawType_Color228, 	"BlueMedium8"},
+	{ (int) glow_eDrawType_Color229, 	"BlueMedium9"},
+	{ (int) glow_eDrawType_Color230, 	"BlueMedium10"},
+	{ (int) glow_eDrawType_Color231, 	"BlueHigh1"},
+	{ (int) glow_eDrawType_Color232, 	"BlueHigh2"},
+	{ (int) glow_eDrawType_Color233, 	"BlueHigh3"},
+	{ (int) glow_eDrawType_Color234, 	"BlueHigh4"},
+	{ (int) glow_eDrawType_Color235, 	"BlueHigh5"},
+	{ (int) glow_eDrawType_Color236, 	"BlueHigh6"},
+	{ (int) glow_eDrawType_Color237, 	"BlueHigh7"},
+	{ (int) glow_eDrawType_Color238, 	"BlueHigh8"},
+	{ (int) glow_eDrawType_Color239, 	"BlueHigh9"},
+	{ (int) glow_eDrawType_Color240, 	"BlueHigh10"},
+	{ (int) glow_eDrawType_Color241, 	"SeaBlueLow1"},
+	{ (int) glow_eDrawType_Color242, 	"SeaBlueLow2"},
+	{ (int) glow_eDrawType_Color243, 	"SeaBlueLow3"},
+	{ (int) glow_eDrawType_Color244, 	"SeaBlueLow4"},
+	{ (int) glow_eDrawType_Color245, 	"SeaBlueLow5"},
+	{ (int) glow_eDrawType_Color246, 	"SeaBlueLow6"},
+	{ (int) glow_eDrawType_Color247, 	"SeaBlueLow7"},
+	{ (int) glow_eDrawType_Color248, 	"SeaBlueLow8"},
+	{ (int) glow_eDrawType_Color249, 	"SeaBlueLow9"},
+	{ (int) glow_eDrawType_Color250, 	"SeaBlueLow10"},
+	{ (int) glow_eDrawType_Color251, 	"SeaBlueMedium1"},
+	{ (int) glow_eDrawType_Color252, 	"SeaBlueMedium2"},
+	{ (int) glow_eDrawType_Color253, 	"SeaBlueMedium3"},
+	{ (int) glow_eDrawType_Color224, 	"SeaBlueMedium4"},
+	{ (int) glow_eDrawType_Color255, 	"SeaBlueMedium5"},
+	{ (int) glow_eDrawType_Color256, 	"SeaBlueMedium6"},
+	{ (int) glow_eDrawType_Color257, 	"SeaBlueMedium7"},
+	{ (int) glow_eDrawType_Color258, 	"SeaBlueMedium8"},
+	{ (int) glow_eDrawType_Color259, 	"SeaBlueMedium9"},
+	{ (int) glow_eDrawType_Color260, 	"SeaBlueMedium10"},
+	{ (int) glow_eDrawType_Color261, 	"SeaBlueHigh1"},
+	{ (int) glow_eDrawType_Color262, 	"SeaBlueHigh2"},
+	{ (int) glow_eDrawType_Color263, 	"SeaBlueHigh3"},
+	{ (int) glow_eDrawType_Color264, 	"SeaBlueHigh4"},
+	{ (int) glow_eDrawType_Color265, 	"SeaBlueHigh5"},
+	{ (int) glow_eDrawType_Color266, 	"SeaBlueHigh6"},
+	{ (int) glow_eDrawType_Color267, 	"SeaBlueHigh7"},
+	{ (int) glow_eDrawType_Color268, 	"SeaBlueHigh8"},
+	{ (int) glow_eDrawType_Color269, 	"SeaBlueHigh9"},
+	{ (int) glow_eDrawType_Color270, 	"SeaBlueHigh10"},
+	{ (int) glow_eDrawType_Color271, 	"GreenLow1"},
+	{ (int) glow_eDrawType_Color272, 	"GreenLow2"},
+	{ (int) glow_eDrawType_Color273, 	"GreenLow3"},
+	{ (int) glow_eDrawType_Color274, 	"GreenLow4"},
+	{ (int) glow_eDrawType_Color275, 	"GreenLow5"},
+	{ (int) glow_eDrawType_Color276, 	"GreenLow6"},
+	{ (int) glow_eDrawType_Color277, 	"GreenLow7"},
+	{ (int) glow_eDrawType_Color278, 	"GreenLow8"},
+	{ (int) glow_eDrawType_Color279, 	"GreenLow9"},
+	{ (int) glow_eDrawType_Color280, 	"GreenLow10"},
+	{ (int) glow_eDrawType_Color281, 	"GreenMedium1"},
+	{ (int) glow_eDrawType_Color282, 	"GreenMedium2"},
+	{ (int) glow_eDrawType_Color283, 	"GreenMedium3"},
+	{ (int) glow_eDrawType_Color284, 	"GreenMedium4"},
+	{ (int) glow_eDrawType_Color285, 	"GreenMedium5"},
+	{ (int) glow_eDrawType_Color286, 	"GreenMedium6"},
+	{ (int) glow_eDrawType_Color287, 	"GreenMedium7"},
+	{ (int) glow_eDrawType_Color288, 	"GreenMedium8"},
+	{ (int) glow_eDrawType_Color289, 	"GreenMedium9"},
+	{ (int) glow_eDrawType_Color290, 	"GreenMedium10"},
+	{ (int) glow_eDrawType_Color291, 	"GreenHigh1"},
+	{ (int) glow_eDrawType_Color292, 	"GreenHigh2"},
+	{ (int) glow_eDrawType_Color293, 	"GreenHigh3"},
+	{ (int) glow_eDrawType_Color294, 	"GreenHigh4"},
+	{ (int) glow_eDrawType_Color295, 	"GreenHigh5"},
+	{ (int) glow_eDrawType_Color296, 	"GreenHigh6"},
+	{ (int) glow_eDrawType_Color297, 	"GreenHigh7"},
+	{ (int) glow_eDrawType_Color298, 	"GreenHigh8"},
+	{ (int) glow_eDrawType_Color299, 	"GreenHigh9"},
+	{ (int) glow_eDrawType_Color300, 	"GreenHigh10"},
 	{ (int) glow_eDrawType_Inherit, 	"Inherit"},
+	{ 0, ""}};
+
+static attrnav_sEnumElement elem_instance_mask[] = {
+     // { (int) ge_mInstance_1, 	"1"},
+	{ (int) ge_mInstance_2, 	"2"},
+	{ (int) ge_mInstance_3, 	"3"},
+	{ (int) ge_mInstance_4, 	"4"},
+	{ (int) ge_mInstance_5, 	"5"},
+	{ (int) ge_mInstance_6, 	"6"},
+	{ (int) ge_mInstance_7, 	"7"},
+	{ (int) ge_mInstance_8, 	"8"},
+	{ (int) ge_mInstance_9, 	"9"},
+	{ (int) ge_mInstance_10, 	"10"},
+	{ (int) ge_mInstance_11, 	"11"},
+	{ (int) ge_mInstance_12, 	"12"},
+	{ (int) ge_mInstance_13, 	"13"},
+	{ (int) ge_mInstance_14, 	"14"},
+	{ (int) ge_mInstance_15, 	"15"},
+	{ (int) ge_mInstance_16, 	"16"},
+	{ (int) ge_mInstance_17, 	"17"},
+	{ (int) ge_mInstance_18, 	"18"},
+	{ (int) ge_mInstance_19, 	"19"},
+	{ (int) ge_mInstance_20, 	"20"},
+	{ (int) ge_mInstance_21, 	"21"},
+	{ (int) ge_mInstance_22, 	"22"},
+	{ (int) ge_mInstance_23, 	"23"},
+	{ (int) ge_mInstance_24, 	"24"},
+	{ (int) ge_mInstance_25, 	"25"},
+	{ (int) ge_mInstance_26, 	"26"},
+	{ (int) ge_mInstance_27, 	"27"},
+	{ (int) ge_mInstance_28, 	"28"},
+	{ (int) ge_mInstance_29, 	"29"},
+	{ (int) ge_mInstance_30, 	"30"},
+	{ (int) ge_mInstance_31, 	"31"},
+	{ (int) ge_mInstance_32, 	"32"},
+	{ 0, ""}};
+
+static attrnav_sEnumElement elem_inputfocus_mask[] = {
+        { (int) ge_mInputFocus_InitialFocus, 	"InitialFocus"},
+        { (int) ge_mInputFocus_FirstHorizontal,	"FirstHorizontal"},
+        { (int) ge_mInputFocus_FirstVertical, 	"FirstVertical"},
+        { (int) ge_mInputFocus_FirstTab, 	"FirstTab"},
+        { (int) ge_mInputFocus_LastHorizontal,	"LastHorizontal"},
+        { (int) ge_mInputFocus_LastVertical, 	"LastVertical"},
 	{ 0, ""}};
 
 static attrnav_sEnumElement elem_direction[] = {
@@ -372,18 +836,48 @@ static attrnav_sEnumElement elem_mb3_action[] = {
 	{ (int) glow_eMB3Action_Both, 	"Both"},
 	{ 0, ""}};
 
+static attrnav_sEnumElement elem_input_focus_mark[] = {
+	{ (int) glow_eInputFocusMark_Relief, 	"Relief"},
+	{ (int) glow_eInputFocusMark_No,       	"No"},
+	{ 0, ""}};
+
+static attrnav_sEnumElement elem_anim_sequence[] = {
+	{ (int) ge_eAnimSequence_Inherit, 	"Inherit"},
+	{ (int) ge_eAnimSequence_Cycle, 	"Cyclic"},
+	{ (int) ge_eAnimSequence_Dig, 		"Dig"},
+	{ (int) ge_eAnimSequence_ForwBack, 	"ForwBack"},
+	{ 0, ""}};
+
+static attrnav_sEnumElement elem_limit_type[] = {
+	{ (int) ge_eLimitType_Gt, 	"GreaterThen"},
+	{ (int) ge_eLimitType_Lt, 	"LessThen"},
+	{ 0, ""}};
+
+static attrnav_sEnumElement elem_relief[] = {
+	{ (int) glow_eRelief_Up, 	"Up"},
+	{ (int) glow_eRelief_Down, 	"Down"},
+	{ 0, ""}};
+
 static attrnav_sEnum enum_types[] = {
-	{ (int) glow_eType_TraceType, 	(attrnav_sEnumElement *) &elem_trace_type},
 	{ (int) glow_eType_Direction, 	(attrnav_sEnumElement *) &elem_direction},
 	{ (int) glow_eType_Color, 	(attrnav_sEnumElement *) &elem_color},
 	{ (int) glow_eType_Tone,	(attrnav_sEnumElement *) &elem_tone},
 	{ (int) glow_eType_ToneOrColor, (attrnav_sEnumElement *) &elem_tone_or_color},
 	{ (int) glow_eType_Cycle, 	(attrnav_sEnumElement *) &elem_cycle},
 	{ (int) glow_eType_MB3Action, 	(attrnav_sEnumElement *) &elem_mb3_action},
+	{ (int) ge_eAttrType_AnimSequence, (attrnav_sEnumElement *) &elem_anim_sequence},
+	{ (int) ge_eAttrType_LimitType, (attrnav_sEnumElement *) &elem_limit_type},
+	{ (int) glow_eType_Relief, 	(attrnav_sEnumElement *) &elem_relief},
+	{ (int) glow_eType_InputFocusMark, (attrnav_sEnumElement *) &elem_input_focus_mark},
 	{ 0, NULL}};
 
 static attrnav_sEnum mask_types[] = {
 	{ (int) glow_eType_Access, 	(attrnav_sEnumElement *) &elem_access},
+	{ (int) ge_eAttrType_DynType, 	(attrnav_sEnumElement *) &elem_dyn_type},
+	{ (int) ge_eAttrType_DynTypeTone, (attrnav_sEnumElement *) &elem_dyn_type_tone},
+	{ (int) ge_eAttrType_ActionType, (attrnav_sEnumElement *) &elem_action_type},
+	{ (int) ge_eAttrType_InstanceMask, (attrnav_sEnumElement *) &elem_instance_mask},
+	{ (int) ge_eAttrType_InputFocus, (attrnav_sEnumElement *) &elem_inputfocus_mask},
 	{ 0, NULL}};
 
 
@@ -396,6 +890,7 @@ static int attrnav_trace_connect_bc( brow_tObject object, char *name, char *attr
 	flow_eTraceType type, /* flow_eDrawType color, */ void **p);
 static int attrnav_trace_disconnect_bc( brow_tObject object);
 static int attrnav_init_brow_cb( FlowCtx *fctx, void *client_data);
+static char *attrnav_mask_to_string( int type_id, int value);
 
 //
 // Convert attribute string to value
@@ -426,14 +921,22 @@ int  attrnav_attr_string_to_value( int type_id, char *value_str,
       break;
     }
     case glow_eType_Int:
-    case glow_eType_TraceType:
     case glow_eType_Direction:
     case glow_eType_Color:
     case glow_eType_Tone:
     case glow_eType_ToneOrColor:
     case glow_eType_Access:
     case glow_eType_Cycle:
-    case glow_eType_MB3Action:
+    case glow_eType_MB3Action: 
+    case glow_eType_InputFocusMark: 
+    case glow_eType_Relief: 
+    case ge_eAttrType_DynType:
+    case ge_eAttrType_DynTypeTone:
+    case ge_eAttrType_ActionType:
+    case ge_eAttrType_AnimSequence:
+    case ge_eAttrType_LimitType:
+    case ge_eAttrType_InstanceMask:
+    case ge_eAttrType_InputFocus:
     {
       if ( sscanf( value_str, "%u", (int *)buffer_ptr) != 1)
         return ATTRNAV__INPUT_SYNTAX;
@@ -496,13 +999,16 @@ void  attrnav_attrvalue_to_string( int type_id, void *value_ptr,
       *len = strlen(str);
       break;
     }
-    case glow_eType_TraceType:
     case glow_eType_Direction:
     case glow_eType_Color:
     case glow_eType_Tone:
     case glow_eType_ToneOrColor:
     case glow_eType_Cycle:
     case glow_eType_MB3Action:
+    case glow_eType_InputFocusMark:
+    case glow_eType_Relief:
+    case ge_eAttrType_AnimSequence:
+    case ge_eAttrType_LimitType:
     {
       attrnav_sEnumElement	*elem_p;
       attrnav_sEnum		*enum_p;
@@ -547,8 +1053,18 @@ void  attrnav_attrvalue_to_string( int type_id, void *value_ptr,
       break;
     }
     case glow_eType_Access:
+    case ge_eAttrType_DynType:
+    case ge_eAttrType_DynTypeTone:
+    case ge_eAttrType_ActionType:
+    case ge_eAttrType_InstanceMask:
+    case ge_eAttrType_InputFocus:
     {
+      strncpy( str, attrnav_mask_to_string( type_id, *(int *)value_ptr), size);
+      str[size-1] = 0;
+      *len = strlen( str);
+#if 0
       *len = sprintf( str, "%u", *(unsigned int *)value_ptr);
+#endif
       break;
     }
   }
@@ -703,6 +1219,22 @@ int AttrNav::set_attr_value( char *value_str)
 		buffer, sizeof(buffer), item->size);
       if ( EVEN(sts)) return sts;
 
+      if ( item->max_limit != 0 || item->min_limit != 0) {
+	if ( item->type_id == glow_eType_Double ) {
+	  if ( *(double *)&buffer < item->min_limit ||
+	       *(double *)&buffer > item->max_limit) {
+	    message( 'E', "Min or maxvalue exceeded");
+	    return 0;
+	  }
+	}
+	else if ( item->type_id == glow_eType_Int ) {
+	  if ( *(int *)&buffer < item->min_limit ||
+	       *(int *)&buffer > item->max_limit) {
+	    message( 'E', "Min or maxvalue exceeded");
+	    return 0;
+	  }
+	}
+      }
       memcpy( item->value_p, buffer, item->size);
       break;
     }
@@ -720,7 +1252,7 @@ int AttrNav::check_attr_value( int *multiline, char **value)
   brow_tNode	*node_list;
   int		node_count;
   ItemLocal	*base_item;
-  static char   buf[120];
+  static char   buf[200];
   int           len;
   
   brow_GetSelectedNodes( brow->ctx, &node_list, &node_count);
@@ -930,7 +1462,8 @@ static int attrnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
       switch( item->type)
       {
         case attrnav_eItemType_Local:
-          if ( ((ItemLocal *)item)->parent || ((ItemLocal *)item)->subgraph)
+          if ( ((ItemLocal *)item)->parent || ((ItemLocal *)item)->subgraph ||
+	       item->type_id == ge_eAttrType_Dyn)
 	    ((ItemLocal *)item)->open_children( attrnav, 0, 0);
           else if ( !((ItemLocal *)item)->parent && attrnav->change_value_cb)
 	    (attrnav->change_value_cb) ( attrnav->parent_ctx);
@@ -945,11 +1478,6 @@ static int attrnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
              brow_SetRadiobutton( node_list[0], 0, 1);
 	     *(int *)((ItemEnum *)item)->value_p = ((ItemEnum *)item)->num;
 
-             if ( ((ItemEnum *)item)->type_id == glow_eType_TraceType &&
-                  attrnav->reconfigure_attr_cb) {
-	       (attrnav->reconfigure_attr_cb)(attrnav->parent_ctx);
-               return FLOW__DESTROYED;
-	     }
           }
           break;
         }
@@ -970,6 +1498,14 @@ static int attrnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
 	     *(unsigned int *)((ItemEnum *)item)->value_p |= 
 			((ItemMask *)item)->mask;
           }
+	  if ( (((ItemEnum *)item)->type_id == ge_eAttrType_DynType ||
+	        ((ItemEnum *)item)->type_id == ge_eAttrType_DynTypeTone ||
+		((ItemEnum *)item)->type_id == ge_eAttrType_ActionType ||
+		((ItemEnum *)item)->type_id == ge_eAttrType_InstanceMask) &&
+	       attrnav->reconfigure_attr_cb) {
+	    (attrnav->reconfigure_attr_cb)(attrnav->parent_ctx);
+	    return FLOW__DESTROYED;
+	  }
           break;
         }
         default:
@@ -995,6 +1531,43 @@ static int attrnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
           ;
       }
       break;
+    case flow_eEvent_MB1DoubleClickCtrl:
+      switch ( event->object.object_type) {
+      case flow_eObjectType_Node:
+	brow_GetUserData( event->object.object, (void **)&item);
+	switch( item->type) {
+	case attrnav_eItemType_Local: 
+	  if ( item->type_id == glow_eType_String) {
+	    char attr_name[120];
+	    int sts;
+
+	    if ( ! attrnav->get_plant_select_cb)
+	      break;
+	    sts = (attrnav->get_plant_select_cb) (attrnav->parent_ctx, attr_name);
+	    if ( EVEN(sts)) break;
+
+	    strncpy( (char *)item->value_p, attr_name, item->size);
+	  }
+	  else if ( item->type_id == glow_eType_Color) {
+	    int sts;
+	    glow_eDrawType fill_color, border_color, text_color;
+
+	    if ( ! attrnav->get_current_colors_cb)
+	      break;
+	    sts = (attrnav->get_current_colors_cb) (attrnav->parent_ctx, &fill_color,
+							&border_color, &text_color);
+	    if ( EVEN(sts)) break;
+
+	    *(glow_eDrawType *)item->value_p = fill_color;
+	  }
+	  break;
+	default: ;
+	}
+	break;
+      default:
+	;
+      }
+      break;
     case flow_eEvent_Radiobutton:
     {
       printf( "Radiobutton\n");
@@ -1011,11 +1584,6 @@ static int attrnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
 			event->radiobutton.number, !event->radiobutton.value);
 	         *(int *)((ItemEnum *)item)->value_p = ((ItemEnum *)item)->num;
 
-                 if ( ((ItemEnum *)item)->type_id == glow_eType_TraceType &&
-                      attrnav->reconfigure_attr_cb) {
-	           (attrnav->reconfigure_attr_cb)(attrnav->parent_ctx);
-                   return FLOW__DESTROYED;
-                 }
               }
               break;
             case attrnav_eItemType_Mask: 
@@ -1027,6 +1595,15 @@ static int attrnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
                else
 	         *(unsigned int *)((ItemMask *)item)->value_p |= 
 			((ItemMask *)item)->mask;
+
+	       if ( (((ItemMask *)item)->type_id == ge_eAttrType_DynType ||
+	             ((ItemMask *)item)->type_id == ge_eAttrType_DynTypeTone ||
+		     ((ItemMask *)item)->type_id == ge_eAttrType_ActionType ||
+		     ((ItemMask *)item)->type_id == ge_eAttrType_InstanceMask) &&
+		    attrnav->reconfigure_attr_cb) {
+		 (attrnav->reconfigure_attr_cb)(attrnav->parent_ctx);
+		 return FLOW__DESTROYED;
+	       }
               break;
             default:
               ;
@@ -1068,7 +1645,7 @@ void AttrNav::force_trace_scan()
 static int attrnav_trace_scan_bc( brow_tObject object, void *p)
 {
   ItemLocal		*base_item;
-  char		buf[120];
+  char		buf[200];
   int		len;
 
   brow_GetUserData( object, (void **)&base_item);
@@ -1079,6 +1656,9 @@ static int attrnav_trace_scan_bc( brow_tObject object, void *p)
       ItemLocal	*item;
 
       item = (ItemLocal *)base_item;
+      if ( item->size == 0)
+        break;
+
       if ( !item->first_scan)
       {
         if ( item->size > (int) sizeof(item->old_value) && 
@@ -1167,6 +1747,9 @@ static int attrnav_trace_connect_bc( brow_tObject object, char *name, char *attr
       ItemLocal	*item;
 
       item = (ItemLocal *) base_item;
+      if (item->size == 0)
+	break;
+
       *p = item->value_p;
       break;
     }
@@ -1369,7 +1952,7 @@ int	AttrNav::object_attr()
   {
     new ItemLocal( this, item_p->name, "LocalAttr", 
 	item_p->type, item_p->size, item_p->minlimit, item_p->maxlimit,
-	item_p->value, item_p->multiline, item_p->noedit, 
+        item_p->value, item_p->multiline, item_p->noedit, item_p->mask,
 	NULL, flow_eDest_IntoLast);
     
     item_p++;
@@ -1396,6 +1979,8 @@ void AttrNavBrow::brow_setup()
   brow_EnableEvent( ctx, flow_eEvent_MB1Click, flow_eEventType_CallBack, 
 	attrnav_brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_MB1DoubleClick, flow_eEventType_CallBack, 
+	attrnav_brow_cb);
+  brow_EnableEvent( ctx, flow_eEvent_MB1DoubleClickCtrl, flow_eEventType_CallBack, 
 	attrnav_brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_SelectClear, flow_eEventType_CallBack, 
 	attrnav_brow_cb);
@@ -1445,12 +2030,12 @@ static int attrnav_init_brow_cb( FlowCtx *fctx, void *client_data)
 ItemLocal::ItemLocal( AttrNav *attrnav, char *item_name, char *attr, 
 	int attr_type, int attr_size, double attr_min_limit, 
 	double attr_max_limit, void *attr_value_p, int attr_multiline,
-	int attr_noedit,
+	int attr_noedit, int attr_mask,
 	brow_tNode dest, flow_eDest dest_code) :
 	value_p(attr_value_p), first_scan(1), 
 	type_id(attr_type), size(attr_size), 
 	min_limit(attr_min_limit), max_limit(attr_max_limit),
-	multiline(attr_multiline), noedit(attr_noedit), parent(0),
+	multiline(attr_multiline), noedit(attr_noedit), mask(attr_mask), parent(0),
 	subgraph(0)
 {
 
@@ -1468,7 +2053,6 @@ ItemLocal::ItemLocal( AttrNav *attrnav, char *item_name, char *attr,
 		dest, dest_code, (void *) this, 1, &node);
   switch( type_id)
   {
-    case glow_eType_TraceType:
     case glow_eType_Direction:
     case glow_eType_Color:
     case glow_eType_Tone:
@@ -1476,6 +2060,15 @@ ItemLocal::ItemLocal( AttrNav *attrnav, char *item_name, char *attr,
     case glow_eType_Access:
     case glow_eType_Cycle:
     case glow_eType_MB3Action:
+    case glow_eType_InputFocusMark:
+    case glow_eType_Relief:
+    case ge_eAttrType_DynType:
+    case ge_eAttrType_DynTypeTone:
+    case ge_eAttrType_ActionType:
+    case ge_eAttrType_AnimSequence:
+    case ge_eAttrType_LimitType:
+    case ge_eAttrType_InstanceMask:
+    case ge_eAttrType_InputFocus:
       if ( !noedit)
       {
         brow_SetAnnotPixmap( node, 0, attrnav->brow->pixmap_attrarray);
@@ -1483,6 +2076,9 @@ ItemLocal::ItemLocal( AttrNav *attrnav, char *item_name, char *attr,
       }
       else
         brow_SetAnnotPixmap( node, 0, attrnav->brow->pixmap_attr);
+      break;
+    case ge_eAttrType_Dyn:
+      brow_SetAnnotPixmap( node, 0, attrnav->brow->pixmap_attrarray);
       break;
     default:
     {
@@ -1516,6 +2112,33 @@ int ItemLocal::open_children( AttrNav *attrnav, double x, double y)
     if ( brow_IsOpen( node) & attrnav_mOpen_Children)
       brow_SetAnnotPixmap( node, 0, attrnav->brow->pixmap_attrarray);
     brow_ResetOpen( node, attrnav_mOpen_All);
+    brow_ResetNodraw( attrnav->brow->ctx);
+    brow_Redraw( attrnav->brow->ctx, node_y);
+  }
+  else if ( type_id == ge_eAttrType_Dyn)
+  {
+    attr_sItem  *itemlist, *item_p;
+    int 	item_cnt;
+    int		sts;
+    int		i;
+
+    sts = (attrnav->get_dyn_info_cb)( attrnav->parent_ctx, 
+	(GeDyn *)value_p, &itemlist, &item_cnt);
+    if ( EVEN(sts)) return 0;
+
+    brow_SetNodraw( attrnav->brow->ctx);
+
+    item_p = itemlist;
+    for ( i = 0; i < item_cnt; i++)
+    {
+      new ItemLocal( attrnav, item_p->name, "LocalAttr", 
+	item_p->type, item_p->size, item_p->minlimit, item_p->maxlimit,
+	item_p->value, item_p->multiline, item_p->noedit, item_p->mask,
+	node, flow_eDest_IntoLast);
+      item_p++;
+    }
+    brow_SetOpen( node, attrnav_mOpen_Children);
+    brow_SetAnnotPixmap( node, 0, attrnav->brow->pixmap_openmap);
     brow_ResetNodraw( attrnav->brow->ctx);
     brow_Redraw( attrnav->brow->ctx, node_y);
   }
@@ -1565,6 +2188,8 @@ int ItemLocal::open_children( AttrNav *attrnav, double x, double y)
 
       for ( ; elem_p->name[0] != 0; elem_p++)
       {
+	if ( mask && !(mask & elem_p->num))
+	  continue;
         new ItemMask( attrnav, elem_p->name, (unsigned int) elem_p->num, 
 		type_id, this->value_p, node, flow_eDest_IntoLast);
       }
@@ -1593,7 +2218,7 @@ int ItemLocal::open_children( AttrNav *attrnav, double x, double y)
     {
       new ItemLocal( attrnav, item_p->name, "LocalAttr", 
 	item_p->type, item_p->size, item_p->minlimit, item_p->maxlimit,
-	item_p->value, item_p->multiline, item_p->noedit, 
+	item_p->value, item_p->multiline, item_p->noedit, item_p->mask,
 	node, flow_eDest_IntoLast);
       item_p++;
     }
@@ -1672,4 +2297,36 @@ ItemMask::ItemMask( AttrNav *attrnav, char *item_name, unsigned int item_mask,
   brow_SetTraceAttr( node, name, "", flow_eTraceType_User);
 }
 
+static char *attrnav_mask_to_string( int type_id, int value)
+{
+  attrnav_sEnumElement	*elem_p;
+  attrnav_sEnum		*enum_p;
+  int			found;
+  bool			first = true;
+  static char 		str[2000];
 
+  found = 0;
+  for ( enum_p = mask_types; enum_p->elements; enum_p++) {
+    if ( enum_p->num == type_id) {
+      elem_p = enum_p->elements;
+      found = 1;
+      break;
+    }
+  }
+  if ( !found) {
+    strcpy( str, "");
+    return str;
+  }
+
+  strcpy( str, "");
+  for ( ; elem_p->name[0] != 0; elem_p++) {
+    if ( elem_p->num & value) {
+      if ( !first)
+	strcat( str, " | ");
+      else
+	first = false;
+      strcat( str, elem_p->name);
+    }
+  }
+  return str;
+}

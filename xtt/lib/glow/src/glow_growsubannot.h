@@ -9,6 +9,7 @@ class GrowSubAnnot : public GlowAnnot {
   public:
     GrowSubAnnot( GlowCtx *glow_ctx, char *name, double x = 0, double y = 0,
 	int annot_num = 0, glow_eDrawType d_type = glow_eDrawType_TextHelveticaBold,
+	glow_eDrawType color_d_type = glow_eDrawType_Line,
 	int t_size = 2, glow_eAnnotType a_type = glow_eAnnotType_OneLine,
 	int rel_pos = 0, glow_mDisplayLevel display_lev = glow_mDisplayLevel_1,
 	int nodraw =0);
@@ -37,7 +38,7 @@ class GrowSubAnnot : public GlowAnnot {
     void nav_erase()
 	{ text.nav_erase( (void *)&pzero, NULL);
           rect.nav_erase( (void *)&pzero, NULL);};
-    void move( int delta_x, int delta_y, int grid);
+    void move( double delta_x, double delta_y, int grid);
     void move_noerase( int delta_x, int delta_y, int grid);
     void set_highlight( int on);
     int get_highlight() {return highlight;};
@@ -80,7 +81,10 @@ class GrowSubAnnot : public GlowAnnot {
     void align( double x, double y, glow_eAlignDirection direction);
     void export_javabean( GlowTransform *t, void *node,
 	glow_eExportPass pass, int *shape_cnt, int node_cnt, int in_nc, ofstream &fp);
-
+    void convert( glow_eConvert version);
+    void set_original_text_color( glow_eDrawType drawtype) 
+	{ color_drawtype = drawtype; text.color_drawtype = drawtype; draw();};
+    void draw();
 };
 
 #endif
