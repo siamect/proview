@@ -1,0 +1,376 @@
+function string get_keyword(string in)
+  string retval;
+  string str;
+
+  str = element(1, ";", in);
+  str = toupper(str);
+  str = element(1, "=", str);
+  str = edit(str);
+  retval = "NO_KEYWORD";
+  if (str == "IDENT_NUMBER") 
+    retval = str;
+  endif
+  if (str == "VENDOR_NAME") 
+    retval = str;
+  endif
+  if (str == "MODEL_NAME") 
+    retval = str;
+  endif
+  if (str == "REVISION") 
+    retval = str;
+  endif
+  if (str == "HARDWARE_RELEASE") 
+    retval = str;
+  endif
+  if (str == "SOFTWARE_RELEASE") 
+    retval = str;
+  endif
+  if (str == "USER_PRM_DATA_LEN") 
+    retval = str;
+  endif
+  if (str == "USER_PRM_DATA") 
+    retval = str;
+  endif
+  if (str == "MODULE") 
+    retval = str;
+  endif
+
+  return retval;
+
+endfunction
+
+function string get_param(int i, string in)
+  string str;
+  string quote;
+  int j;
+
+  quote = "\"";
+  quote = extract(2, 1, quote);
+
+  str = element(1, ";", in);
+  str = element(1, "\b", str);
+  if (strchr(str, "=") != 0)
+    str = element(2, "=", str);
+  endif
+
+  if (i > 0)
+    if (strstr(str, quote) != 0)
+      j = i+1;
+      str = element(j, quote, str);
+      str = edit(str);
+    else
+      str = edit(str);
+    endif
+  endif
+
+  return str;
+
+endfunction
+
+function string get_value(int i, string in)
+  string str;
+
+  str = element(1, ";", in);
+  str = element(1, "\b", str);
+  if (strchr(str, "=") != 0)
+    str = element(2, "=", str);
+  endif
+  str = edit(str);
+ 
+  if (i > 0)
+    str = element(i, ",", str);
+    str = edit(str);
+  endif
+
+  return str;
+
+endfunction
+
+function int continuation_line(string in)
+  string str;
+  int retval;
+
+  str = element(1, ";", in);
+  if (strchr(str, "\b") != 0)
+    retval = 1;
+  else
+    retval = 0;
+  endif
+
+  return retval;
+
+endfunction
+
+function int ascii_to_dec(string in)
+  int retval;
+  int i;
+  int pos;
+  int k;
+  int exp;
+  string value;
+  string tmp;
+
+  value = in;
+
+  pos = strstr(value, "0x");
+  if (pos == 0)
+    retval = value;
+
+  else
+    pos += 2;
+    value = extract(pos, 100, value);
+    i = strlen(value);
+    retval = 0;
+    exp = 1;
+    while ( i > 0)
+      tmp = extract(i, 1, value);
+      k = 0;
+      if (tmp == "A" || tmp == "a") 
+        k = 10; 
+      endif
+      if (tmp == "B" || tmp == "b") 
+        k = 11; 
+      endif
+      if (tmp == "C" || tmp == "c") 
+        k = 12; 
+      endif
+      if (tmp == "D" || tmp == "d") 
+        k = 13; 
+      endif
+      if (tmp == "E" || tmp == "e") 
+        k = 14; 
+      endif
+      if (tmp == "F" || tmp == "f") 
+        k = 15; 
+      endif
+      if (k == 0) 
+        k = tmp; 
+      endif
+      retval = retval + exp*k;
+      exp = exp*16;
+      i--;
+    endwhile
+
+  endif
+
+  return retval;
+
+endfunction  
+
+
+main()
+  int 		file;
+  string 	str;
+  string	keyword;
+  int		pos;
+  string 	value;
+  string	param;
+  string 	dbname;
+  string 	volname;
+  string 	objname;
+  string	attr;
+  int		sts;
+  int		i;
+  int		cont;
+  int		cont2;
+  int		user_prm_idx;
+  int		module_data_idx;
+  int		dec_val;
+  string	filename;
+ 
+!  verify(1);
+
+  printf("\n");
+
+  if (p1 == "")
+    printf(" Bad argument(s), usage & example:\n");
+    printf(" >pwr_cmd @ssab_exe:pb_slave_config object (nodename)\n");
+    printf("\n");
+    exit(0);
+  endif
+
+  if (p2 != "")
+    dbname = "db" + p2;
+    volname = "vol" + p2;
+    set db/db='dbname'
+    set vol/vol='volname'
+  endif
+
+  objname = p1;
+
+  attr = objname + ".GSDfile";
+  filename = GetAttribute(attr);
+
+  file = fopen( filename, "r");
+  if ( !file)
+    printf( "Unable to open GSD file %s\n", filename);
+    exit();
+  endif
+
+  printf("Parsing GSD file %s\n", filename);
+  printf("\n");
+
+  module_data_idx = 2;
+  user_prm_idx = 0;
+
+  set attr/noco/name='objname'/attr=VendorName/value="Not found"
+  set attr/noco/name='objname'/attr=ModelName/value="Not found"
+  set attr/noco/name='objname'/attr=Revision/value="Not found"
+  set attr/noco/name='objname'/attr=PNOIdent/value=0
+  set attr/noco/name='objname'/attr=GroupIdent/value=0
+  set attr/noco/name='objname'/attr=PrmUserDataLen/value=0
+  set attr/noco/name='objname'/attr=ConfigDataLen/value=0
+  set attr/noco/name='objname'/attr=SlaveUserDataLen/value=0
+
+  i=0;
+  while (i < 100)
+    set attr/noco/name='objname'/attr=PrmUserData['i']/value=0
+    set attr/noco/name='objname'/attr=ConfigData['i']/value=0
+    set attr/noco/name='objname'/attr=SlaveUserData['i']/value=0
+    i++;
+  endwhile
+
+  while ( fgets( str, file))
+    str = element(1, ";", str);
+    keyword = get_keyword(str);
+
+    if (keyword == "IDENT_NUMBER")
+      param = get_param(1, str);
+      i = ascii_to_dec(param);
+      printf("Ident number: %04x\n", i);
+      set attr/noco/name='objname'/attr=PNOIdent/value="'i'"
+    endif
+
+    if (keyword == "VENDOR_NAME")
+      param = get_param(1, str);
+      printf("Vendor name: %s\n", param);
+      set attr/noco/name='objname'/attr=VendorName/value="'param'"
+    endif
+
+    if (keyword == "MODEL_NAME")
+      param = get_param(1, str);
+      printf("Model name: %s\n", param);
+      set attr/noco/name='objname'/attr=ModelName/value="'param'"
+    endif
+
+    if (keyword == "REVISION")
+      param = get_param(1, str);
+      printf("Revision: %s\n", param);
+      set attr/noco/name='objname'/attr=Revision/value="'param'"
+    endif
+
+    if (keyword == "HARDWARE_RELEASE")
+      param = get_param(1, str);
+      printf("Hardware release: %s\n", param);
+      set attr/noco/name='objname'/attr=HardwareRelease/value="'param'"
+    endif
+
+    if (keyword == "SOFTWARE_RELEASE")
+      param = get_param(1, str);
+      printf("Software release: %s\n", param);
+      set attr/noco/name='objname'/attr=SoftwareRelease/value="'param'"
+    endif
+
+    if (keyword == "USER_PRM_DATA_LEN")
+      param = get_param(1, str);
+      i = ascii_to_dec(param);
+      printf("User prm data length: %d\n", i);
+      set attr/noco/name='objname'/attr=PrmUserDataLen/value="'i'"
+    endif
+
+    if (keyword == "USER_PRM_DATA")
+
+      printf("User prm data: ......\n");
+      cont = 1;
+      while (cont == 1)
+
+        i = 1;
+        cont2 = 1;
+        param = get_param(1, str);
+
+        while (cont2 == 1)
+          value = get_value(i, param);
+          if (value != "") 
+            dec_val = ascii_to_dec(value);
+            set attr/noco/name='objname'/attr=PrmUserData['user_prm_idx']/value="'dec_val'"
+            user_prm_idx++;
+            i++;
+          else
+            cont2 = 0;
+          endif
+        endwhile
+
+        if (continuation_line(str) == 1)
+          fgets(str, file);
+        else
+          cont = 0;
+        endif
+      endwhile
+
+    endif
+
+    if (keyword == "MODULE")
+
+      param = get_param(1, str);
+      printf("Module: %s ......\n", param);
+      str = get_param(2, str);
+
+      cont = 1;
+      while (cont == 1)
+
+        i = 1;
+        cont2 = 1;
+        param = get_param(1, str);
+
+        while (cont2 == 1)
+          value = get_value(i, param);
+          if (value != "") 
+            dec_val = ascii_to_dec(value);
+            set attr/noco/name='objname'/attr=ConfigData['module_data_idx']/value="'dec_val'"
+            module_data_idx++;
+	    i++;
+          else
+            cont2 = 0;
+          endif
+        endwhile
+
+        if (continuation_line(str) == 1)
+          fgets(str, file);
+        else
+          cont = 0;
+        endif
+      endwhile
+
+    endif
+
+
+  endwhile
+
+  set attr/noco/name='objname'/attr=AutoConfigure/value="0"
+
+  printf("Config data length: %d\n", module_data_idx);
+!  verify(1);
+  set attr/noco/name='objname'/attr=ConfigDataLen/value="'module_data_idx'"
+  set attr/noco/name='objname'/attr=ConfigData[0]/value="0"
+  set attr/noco/name='objname'/attr=ConfigData[1]/value="'module_data_idx'"
+
+  i = module_data_idx;
+  while (i < 100)
+    set attr/noco/name='objname'/attr=ConfigData['i']/value="0"
+    i++;
+  endwhile
+
+  i = user_prm_idx;
+  while (i < 100)
+    set attr/noco/name='objname'/attr=PrmUserData['i']/value="0"
+    i++;
+  endwhile
+
+  fclose( file);
+
+  save
+  printf("\n");
+  printf("Parsing complete\n");
+  printf("\n");
+
+endmain

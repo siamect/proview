@@ -361,6 +361,29 @@ reload_loaddb()
   done
 }
 
+reload_cnvobjects()
+{
+  reload_checkpass "cnvobjects" $start_pass
+  if [ $pass_status -ne $pass__execute ]; then
+    reload_status=$reload__success
+    return
+  fi
+
+  reload_continue "Pass convert objects in loaded db"
+
+  list=`eval ls -1d $pwrp_db/*.db`
+  for file in $list; do
+    file=${file##/*/}
+    file=${file%%.*}
+
+    if [ $file != "directory" ] && [ $file != "rt_eventlog" ]; then
+      wb_cmd -v $file @$pwr_exe/upgrade_pb.pwr_com
+    fi
+  done
+
+  reload_status=$reload__success
+}
+
 reload_compile()
 {
   reload_checkpass "compile" $start_pass
@@ -572,17 +595,18 @@ usage()
 
   Pass
 
-    dumpdb	 Dump database to textfile \$pwrp_db/'volume'.wb_dmp
-    userclasses  Create loadfiles and rename userclasses.wb_load
-    dirvolume    Create directory volume.
-    cnvdirvolume Convert the directory volume.
-    cnvdump      Convert dumpfiles.
-    createvolumes Create configured databases.
-    localwb      Create LocalWb volume for lists and template objects.
-    compile      Compile all plcprograms in the database
-    createload   Create new loadfiles.
-    createboot   Create bootfiles for all nodes in the project.
-    convertge    Convert ge graphs.
+    dumpdb	   Dump database to textfile \$pwrp_db/'volume'.wb_dmp
+    userclasses    Create loadfiles and rename userclasses.wb_load
+    dirvolume      Create directory volume.
+    cnvdirvolume   Convert the directory volume.
+    cnvdump        Convert dumpfiles.
+    createvolumes  Create configured databases.
+    localwb        Create LocalWb volume for lists and template objects.
+    cnvobjects     Convert certain objects in new db.
+    compile        Compile all plcprograms in the database
+    createload     Create new loadfiles.
+    createboot     Create bootfiles for all nodes in the project.
+    convertge      Convert ge graphs.
 
   Note!
   The first pass (dumpdb) must be executed on NEWTON and then you must move to
@@ -619,7 +643,7 @@ databases=`eval source $v34_root/os_linux/hw_x86/exp/exe/pwrp_env.sh show db -a`
 databases=$databases" dbdirectory"
 export pwr_inc=$pwrb_root/os_linux/hw_x86/exp/inc
 
-passes="dumpdb userclasses dirvolume cnvdirvolume cnvdump createvolumes localwb compile createload createboot convertge"
+passes="dumpdb userclasses dirvolume cnvdirvolume cnvdump createvolumes localwb cnvobjects compile createload createboot convertge"
 echo "Pass: $passes"
 echo ""
 echo -n "Enter start pass [dumpdb] > "

@@ -1,0 +1,85 @@
+!
+! Script for converting Profibus objects during upgrading from v3.9 to v4.0.0
+!
+! Traverse all trees under every $NodeHier root object to find every Pb_DP_Slave object.
+! Attribute ByteOrdering has a new meaning and should be changed, was formerly bitmask.
+! The new ByteOrdering in Pb_DP_Slave object is ONLY ByteOrdering
+!
+! Every Pb_Di, Pb_Do, Pb_Ai and Pb_Ao object also has new arguments, Orientation and 
+! NumberRepresentation that should be set according to the old ByteOrdering bitmask.
+! 
+! Pb_Ii and Pb_Io are new objects in v4.0.0 and don't need changing.
+!
+function int convert(string slave)
+  int old;
+  int sts;
+  string attr;
+  string child;
+  string class;
+    
+  attr = slave + ".ByteOrdering";
+  old = GetAttribute(attr, sts);
+  
+  if (sts != 0) 
+
+    child = GetChild(slave);
+    while (child != "")
+      class = GetObjectClass(child);
+      if (class == "Pb_Di" || class == "Pb_Do")
+        if (old & 2)
+          set attr/attr=Orientation/value=16/name='child'/noco	  
+	else
+          set attr/attr=Orientation/value=8/name='child'/noco	  
+	endif
+      endif
+      if (class == "Pb_Ai" || class == "Pb_Ao")
+        if (old & 4)
+          set attr/attr=NumberRepresentation/value=0/name='child'/noco	  
+	else
+          set attr/attr=NumberRepresentation/value=1/name='child'/noco	  
+	endif
+      endif
+      child = GetNextSibling(child);
+    endwhile
+    
+    if (old & 1)
+      set attr/attr=ByteOrdering/value=1/name='slave'/noco
+    else
+      set attr/attr=ByteOrdering/value=0/name='slave'/noco   
+    endif
+ 
+    save
+  endif
+  
+endfunction
+
+function int traverse(string parent)
+  string child;
+  string class;
+  
+  child = GetChild(parent);
+  while(child != "")
+    class = GetObjectClass(child);
+    if (class == "Pb_DP_Slave")
+      convert(child);
+    else
+      traverse(child);
+    endif
+    child = GetNextSibling(child);
+  endwhile
+  
+endfunction
+
+main()
+  string object;
+  string class;
+  ! 
+  object = GetRootList();
+  while (object != "")
+    class = GetObjectClass(object);
+    if (class == "$NodeHier")
+      traverse(object);
+    endif
+    object = GetNextSibling(object);
+  endwhile
+endmain
