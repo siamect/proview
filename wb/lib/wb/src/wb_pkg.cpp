@@ -166,8 +166,8 @@ void wb_pkg::readConfig()
 	  n.checkVolume( fname);
 
 	  // Check if there are any rtt-files for Root or Sub Volumes
-	  if ( vollist[j] >= ldh_cUserVolMin &&
-	       vollist[j] <= ldh_cUserVolMax) {
+	  if ( vollist[j] >= cdh_cUserVolMin &&
+	       vollist[j] <= cdh_cUserVolMax) {
 	    cdh_uVolumeId	vid;
 	    vid.pwr = vollist[j];
 
