@@ -88,6 +88,8 @@ chmod u+s /usr/pwrrt/exe/rt_ini
 chmod u+s /usr/pwrrt/exe/rt_rtt
 chmod u+s /usr/pwrrt/exe/rt_xtt
 chmod u+s /usr/pwrrt/exe/rt_bck
+chown root /usr/pwrrt/exe/rs_remote_alcm
+chmod u+s /usr/pwrrt/exe/rs_remote_alcm
 
 # Copy configuration files
 new_cnf=0
@@ -111,10 +113,10 @@ if [ -e /etc/rc2.d/S90pwr ]; then
 fi
 ln -s /etc/init.d/pwr /etc/rc2.d/S90pwr
 
-if [ -e /etc/rc2.d/S90gdhserver ]; then
-  rm /etc/rc2.d/S90gdhserver
+if [ -e /etc/rc2.d/S91gdhserver ]; then
+  rm /etc/rc2.d/S91gdhserver
 fi
-ln -s /etc/init.d/gdhserver /etc/rc2.d/S90gdhserver
+ln -s /etc/init.d/gdhserver /etc/rc2.d/S91gdhserver
 
 # Create project
 new_project=0
