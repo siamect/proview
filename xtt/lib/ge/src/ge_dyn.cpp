@@ -19,6 +19,7 @@ extern "C" {
 #include "rt_gdh.h"
 #include "co_dcli.h"
 #include "ge_msg.h"
+#include "glow_msg.h"
 #include "rt_pwr_msg.h"
 #include "pwr_baseclasses.h"
 }
@@ -989,7 +990,7 @@ int GeDyn::action( grow_tObject object, glow_tEvent event)
 
   for ( GeDynElem *elem = elements; elem; elem = elem->next) {
     sts = elem->action( object, event);
-    if ( sts == GE__NO_PROPAGATE)
+    if ( sts == GE__NO_PROPAGATE || sts == GLOW__TERMINATED)
       return sts;
   }
   return 1;
@@ -2725,6 +2726,7 @@ int GeValue::scan( grow_tObject object)
       // Format %3t, compressed date and time, no hundredth
       sts = time_AtoAscii( (pwr_tTime *) p, time_eFormat_ComprDateAndTime,
 			   timstr, sizeof(timstr));
+      timstr[17] = 0;
       break;
     default:
       sts = time_AtoAscii( (pwr_tTime *) p, time_eFormat_DateAndTime, 
@@ -3202,7 +3204,9 @@ void GeAnalogColor::save( ofstream& fp)
 {
   fp << int(ge_eSave_AnalogColor) << endl;
   fp << int(ge_eSave_AnalogColor_attribute) << FSPACE << attribute << endl;
+  fp.precision(9);
   fp << int(ge_eSave_AnalogColor_limit) << FSPACE << limit << endl;
+  fp.precision(6);
   fp << int(ge_eSave_AnalogColor_limit_type) << FSPACE << (int)limit_type << endl;
   fp << int(ge_eSave_AnalogColor_color) << FSPACE << (int)color << endl;
   fp << int(ge_eSave_AnalogColor_instance) << FSPACE << int(instance) << endl;
@@ -3961,6 +3965,11 @@ int GeMove::scan( grow_tObject object)
       else
 	move_y = y_orig;
 
+      if ( fabs(scale_x) < DBL_EPSILON)
+	scale_x = 10e-5;
+      if ( fabs(scale_y) < DBL_EPSILON)
+	scale_y = 10e-5;
+
       grow_SetObjectScalePos( object, move_x, move_y, 
 			      scale_x, scale_y, 0, 0,
 			      scale_type);
@@ -4394,6 +4403,9 @@ int GeAnimation::scan( grow_tObject object)
 {
   int max_count;
   int sts;
+
+  if ( !p)
+    return 1;
 
   if ( first_scan) {
     animation_count = 0;
@@ -5308,6 +5320,12 @@ int GeTable::connect( grow_tObject object, glow_sTraceData *trace_data)
     case pwr_eType_String:
       info.column_size[i] = size[i];
       break;
+    case pwr_eType_Time:
+      info.column_size[i] = 25;
+      break;
+    case pwr_eType_Objid:
+      info.column_size[i] = 40;
+      break;
     default:
       info.column_size[i] = 10;
     }
@@ -5956,14 +5974,12 @@ int GeStatusColor::scan( grow_tObject object)
 
 int GeStatusColor::export_java( grow_tObject object, ofstream& fp, bool first, char *var_name)
 {
-#if 0
   glow_eDrawType jcolor = dyn->get_color1( object, nostatus_color);
   if ( first)
     fp << "      ";
   else
     fp << "      ,";
   fp << "new GeDynStatusColor(" << var_name << ".dd, \"" << attribute << "\"," << jcolor << ")" << endl;
-#endif
   return 1;
 }
 
@@ -7308,23 +7324,44 @@ int GeIncrAnalog::action( grow_tObject object, glow_tEvent event)
     char       		parsed_name[120];
     int			inverted;
     int			attr_type, attr_size;
-    pwr_tFloat32 	value;
 
     dyn->graph->parse_attr_name( attribute, parsed_name, &inverted, &attr_type, &attr_size);
-    sts = gdh_GetObjectInfo( parsed_name, &value, sizeof(value));
-    if ( EVEN(sts)) {
-      printf("IncrAnalog error: %s\n", attribute);
+
+    switch ( attr_type) {
+    case pwr_eType_Int32: {
+      pwr_tInt32 value;
+      sts = gdh_GetObjectInfo( parsed_name, &value, sizeof(value));
+      if ( EVEN(sts)) {
+	printf("IncrAnalog error: %s\n", attribute);
+	break;
+      }
+
+      value += int(increment > 0 ? increment+0.5 : increment-0.5);
+      if ( !( min_value == 0 && max_value == 0)) {
+	value = MAX( value, int(min_value > 0 ? min_value+0.5 : min_value-0.5));
+	value = MIN( value, int(max_value > 0 ? max_value+0.5 : max_value-0.5));
+      }
+      sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
+      if ( EVEN(sts)) printf("IncrAnalog error: %s\n", attribute);
       break;
     }
+    default: {
+      pwr_tFloat32 value;
+      sts = gdh_GetObjectInfo( parsed_name, &value, sizeof(value));
+      if ( EVEN(sts)) {
+	printf("IncrAnalog error: %s\n", attribute);
+	break;
+      }
 
-    value += increment;
-    if ( !( min_value == 0 && max_value == 0)) {
-      value = MAX( value, min_value);
-      value = MIN( value, max_value);
+      value += increment;
+      if ( !( min_value == 0 && max_value == 0)) {
+	value = MAX( value, min_value);
+	value = MIN( value, max_value);
+      }
+      sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
+      if ( EVEN(sts)) printf("IncrAnalog error: %s\n", attribute);
     }
-    sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
-    if ( EVEN(sts)) printf("IncrAnalog error: %s\n", attribute);
-
+    }
     break;
   }
   default: ;    
@@ -8323,8 +8360,10 @@ int GeCloseGraph::action( grow_tObject object, glow_tEvent event)
     if ( dyn->total_action_type & ge_mActionType_Confirm)
       break;
 
-    if ( dyn->graph->close_cb)
+    if ( dyn->graph->close_cb) {
       (dyn->graph->close_cb)( dyn->graph->parent_ctx);
+      return GLOW__TERMINATED;
+    }
     break;
   default: ;    
   }
@@ -9412,6 +9451,7 @@ int GePulldownMenu::action( grow_tObject object, glow_tEvent event)
 
   switch ( event->event) {
   case glow_eEvent_MB1Down:
+    grow_SetClickSensitivity( dyn->graph->grow->ctx, glow_mSensitivity_MB1Click);
     break;
   case glow_eEvent_MB1Up:
     break;
@@ -9649,7 +9689,7 @@ int GePulldownMenu::action( grow_tObject object, glow_tEvent event)
       if ( items_dyn[event->menu.item]) {
  	glow_sEvent e;
 	e.event = glow_eEvent_MB1Click;
-	items_dyn[event->menu.item]->action( event->menu.object, &e);
+	return items_dyn[event->menu.item]->action( event->menu.object, &e);
       }
     }
     else {
@@ -10198,6 +10238,7 @@ int GeOptionMenu::action( grow_tObject object, glow_tEvent event)
 
   switch ( event->event) {
   case glow_eEvent_MB1Down:
+    grow_SetClickSensitivity( dyn->graph->grow->ctx, glow_mSensitivity_MB1Click);
     break;
   case glow_eEvent_MB1Up:
     break;
