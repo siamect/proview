@@ -297,6 +297,8 @@ ldh_ClassNameToId(ldh_tSession session, pwr_tCid *cid, char *name)
 {
   wb_session *sp = (wb_session *)session;
   wb_name n(name);
+  if ( EVEN(n.sts()))
+    return n.sts();
     
   wb_cdef c = sp->cdef(n);
   if (!c) return c.sts();
@@ -390,9 +392,8 @@ ldh_CreateVolume(ldh_tWorkbench workbench, ldh_tSession *session, pwr_tVid vid, 
   wb_env *ep = (wb_env *)workbench;
 
   wb_name n(name);
-  wb_cdef cdef;
     
-  wb_volume v = ep->createVolume(cdef, vid, name);
+  wb_volume v = ep->createVolume(vid, cid, name);
   if (!v) return v.sts();
     
   // wb_srep *srep = new wb_srep(v);
@@ -771,24 +772,18 @@ ldh_GetRootList(ldh_tSession session, pwr_tOid *oid)
 pwr_tStatus
 ldh_GetVolumeRootList(ldh_tSession session, pwr_tVid vid, pwr_tOid *oid)
 {
-#if NOT_YET_IMPLEMENTED
-  pwr_tStatus		sts;
-  ldhi_sVidEntry	*vtp;
+  wb_session *sp = (wb_session *)session;
 
-  if (!hasAccess(sp, ldh_eAccess_ReadOnly, &sts)) return sts;
-  if (objid == NULL) return LDH__BADPARAM;
+  wb_env env = sp->env();
+  wb_volume v = env.volume( vid);
+  if (!v) return v.sts();
+    
+  wb_object o = v.object();
+  if (!o) return o.sts();
 
-  vtp = (ldhi_sVidEntry *) ldh_TreeFind(sp->wb->vidtab, &vid);
-  if (vtp == NULL) return LDH__NOSUCHVOL;
+  *oid = o.oid();
 
-  if (vtp->vhp->ohp->chhp == NULL)
-    return LDH__NOSUCHOBJ;
-
-  *objid = vtp->vhp->ohp->chhp->db.oid;
-
-  return LDH__SUCCESS;
-#endif
-  return LDH__NYI;
+  return o.sts();
 }
 
 extern "C" pwr_tStatus
@@ -1495,15 +1490,17 @@ ldh_WbLoad( ldh_tSession session, char *loadfile)
       wb_vrepdbs *vdbs = new wb_vrepdbs( erep, fname);
       vdbs->load();
 
-      wb_db db( vdbs->vid());
       cdh_ToLower( vname, vdbs->name());
       strcpy( db_name, "$pwrp_db/");
       strcat( db_name, vname);
       strcat( db_name, ".db");
       dcli_translate_filename( db_name, db_name);
 	  
-      db.create( vdbs->vid(), vdbs->cid(), vdbs->name(), db_name);
-      db.importVolume( *vdbs);
+      // wb_db db( vdbs->vid());
+      // db.create( vdbs->vid(), vdbs->cid(), vdbs->name(), db_name);
+      // db.importVolume( *vdbs);
+      wb_db db( pwr_cNVid);
+      db.copy( *vdbs, db_name);      
       db.close();
 
       delete vdbs;      
@@ -1519,15 +1516,17 @@ ldh_WbLoad( ldh_tSession session, char *loadfile)
       wb_vrepwbl *vwbl = new wb_vrepwbl( erep);
       vwbl->load( fname);
 
-      wb_db db( vwbl->vid());
       cdh_ToLower( vname, vwbl->name());
       strcpy( db_name, "$pwrp_db/");
       strcat( db_name, vname);
       strcat( db_name, ".db");
       dcli_translate_filename( db_name, db_name);
 	  
-      db.create( vwbl->vid(), vwbl->cid(), vwbl->name(), db_name);
-      db.importVolume( *vwbl);
+      // wb_db db( vwbl->vid());
+      // db.create( vwbl->vid(), vwbl->cid(), vwbl->name(), db_name);
+      // db.importVolume( *vwbl);
+      wb_db db( pwr_cNVid);
+      db.copy( *vwbl, db_name);
       db.close();
 
       delete vwbl;      

@@ -343,7 +343,9 @@ void wb_erep::load( pwr_tStatus *sts)
       *sts = status;
       return;
     }
+    loadMeta( sts);
     bindMethods();
+    loadLocalWb( sts);
     return;
   }
   loadCommonMeta( sts);
@@ -465,6 +467,20 @@ void wb_erep::loadMeta( pwr_tStatus *status)
   ifstream fpm( fname, ios::in);
   if ( !fpm) {
     *status = LDH__PROJCONFIG;
+
+    // Load directory volume
+    strcpy( vname, "$pwrp_db/directory.db");
+    dcli_translate_filename( vname, vname);
+
+    sts = dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_INIT);
+    dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_END);
+    if ( ODD(sts)) {
+      wb_vrepdb *vrepdb = new wb_vrepdb( this, vname);
+      vrepdb->name("directory");
+      addDb( &sts, vrepdb);
+      MsgWindow::message( 'I', "Database opened", vname);
+    }
+
     return;
   }
 
@@ -543,11 +559,17 @@ void wb_erep::loadMeta( pwr_tStatus *status)
       strcat( vname, ".db");
       dcli_translate_filename( vname, vname);
 
-      wb_vrepdb *vrepdb = new wb_vrepdb( this, vname);
-      vrepdb->name(vol_array[0]);
-      addDb( &sts, vrepdb);
-      MsgWindow::message( 'I', "Database opened", vname);
-      vol_cnt++;
+      sts = dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_INIT);
+      dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_END);
+      if ( ODD(sts)) {
+	wb_vrepdb *vrepdb = new wb_vrepdb( this, vname);
+	vrepdb->name(vol_array[0]);
+	addDb( &sts, vrepdb);
+	MsgWindow::message( 'I', "Database opened", vname);
+	vol_cnt++;
+      }
+      else
+	MsgWindow::message( 'E', "Database not found", vname);
     }
   }
   fpm.close();
@@ -728,6 +750,26 @@ int wb_erep::nextVolatileVid( pwr_tStatus *sts, char *name)
   return vid;
 }
 
+wb_vrep *wb_erep::createVolume(pwr_tStatus *sts, pwr_tVid vid, pwr_tCid cid, 
+			      const char *name)
+{
+  char vname[200];
+
+  sprintf( vname, "$pwrp_db/%s.db", cdh_Low(name));
+  dcli_translate_filename( vname, vname);
+
+  vrep_iterator it = m_vrepdb.find( vid); 
+  if ( it != m_vrepdb.end()) {
+    *sts = LDH__VOLIDALREXI;
+    return 0;
+  }
+
+  wb_vrepdb *vrepdb = new wb_vrepdb( this, vid, cid, name, vname);
+  addDb( sts, vrepdb);
+  MsgWindow::message( 'I', "Database created", vname);
+
+  return vrepdb;
+}
 
 
 

@@ -42,8 +42,7 @@ public:
     
   wb_volume snapshot(pwr_tVid);
 
-
-  wb_volume createVolume(wb_cdef cdef, pwr_tVid vid, wb_name name);
+  wb_volume createVolume(pwr_tVid vid, pwr_tCid cid, const char *name);
 
   int nextVolatileVid( char *name) { return m_erep->nextVolatileVid( &m_sts, name); }
     

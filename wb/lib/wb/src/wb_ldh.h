@@ -27,6 +27,8 @@ extern "C" {
 #define ldh_cDirectoryVolume  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 253)
 #define ldh_cVolatileVolMin  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 0)
 #define ldh_cVolatileVolMax  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 100)
+#define ldh_cUserVolMin  (0 + ((pwr_tVolumeId)0 << 24) + (1 << 16) + (254 << 1) + 1)
+#define ldh_cUserVolMax  (0 + ((pwr_tVolumeId)0 << 24) + (254 << 16) + (254 << 8) + 254)
 
 #if 0
 #ifndef 0

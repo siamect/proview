@@ -46,6 +46,7 @@ public:
   wb_vrep *volume(pwr_tStatus *sts);
   wb_vrep *volume(pwr_tStatus *sts, pwr_tVid vid);
   wb_vrep *volume(pwr_tStatus *sts, const char *name);
+  wb_vrep *createVolume(pwr_tStatus *sts, pwr_tVid vid, pwr_tCid cid, const char *name);
   wb_vrep *nextVolume(pwr_tStatus *sts, pwr_tVid vid);
   wb_vrep *externVolume(pwr_tStatus *sts, pwr_tVid vid);
   wb_vrep *bufferVolume(pwr_tStatus *sts);

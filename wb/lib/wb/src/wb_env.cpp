@@ -89,9 +89,9 @@ wb_volume wb_env::volume(const char *name)
   return v;
 }
 
-wb_volume wb_env::createVolume(wb_cdef cdef, pwr_tVid vid, wb_name name)  // Fix
+wb_volume wb_env::createVolume(pwr_tVid vid, pwr_tCid cid, const char *name)
 {
-  wb_volume v;
+  wb_volume v( m_erep->createVolume( &m_sts, vid, cid, name));
   return v;
 }
 
