@@ -2,14 +2,19 @@
 
 pkg_install_func ()
 {
-  if [ ! -e "$1" ]; then
-    echo "No package $1"
-    exit 1
-  fi
-
   pkg_remove_func "force"
 
-  pkg=/home/pwrp/$1
+  if [ $1 == ${1##*/} ]; then
+    # Add path
+    pkg="/home/pwrp/$1"
+  else
+    pkg=$1
+  fi
+
+  if [ ! -e "$pkg" ]; then
+    echo "No package $pkg"
+    exit 1
+  fi
 
   echo "-- Installing package $1"
   cd /tmp
@@ -24,6 +29,7 @@ pkg_install_func ()
 
 pkg_list_func ()
 {
+
   if [ -z $1 ]; then
     # List installed package
 
@@ -35,12 +41,17 @@ pkg_list_func ()
     datfile=$pwrp_load/pwr_pkg.dat
   else
     # Extract datfile from package
-    if [ ! -e $1 ]; then
+    if [ $1 == ${1##*/} ]; then
+      # Add path
+      pkg="/home/pwrp/$1"
+    else
+      pkg=$1
+    fi
+
+    if [ ! -e $pkg ]; then
       echo "-- No such package"
       exit 1
     fi
-
-    pkg=`eval locate $1`
 
     echo "-- Opening file $pkg"
 
@@ -71,6 +82,7 @@ pkg_list_func ()
 
 pkg_listfiles_func ()
 {
+
   if [ -z $1 ]; then
     # List installed package
 
@@ -82,12 +94,17 @@ pkg_listfiles_func ()
     datfile=$pwrp_load/pwr_pkg.dat
   else
     # Extract datfile from package
-    if [ ! -e $1 ]; then
+    if [ $1 == ${1##*/} ]; then
+      # Add path
+      pkg="/home/pwrp/$1"
+    else
+      pkg=$1
+    fi
+
+    if [ ! -e $pkg ]; then
       echo "-- No such package"
       exit 1
     fi
-
-    pkg=`eval locate $1`
 
     echo "-- Opening file $pkg"
 
@@ -148,12 +165,18 @@ pkg_brief_func ()
 
     for file
     do
-      if [ ! -e $file ]; then
+      if [ $file == ${file##*/} ]; then
+        # Add path
+        pkg="/home/pwrp/$file"
+      else
+        pkg=$file
+      fi
+
+      if [ ! -e $pkg ]; then
         echo "-- No such package"
         exit 1
       fi
 
-      pkg=`eval locate $file`
       dir=`eval pwd`
 
       cd /tmp
@@ -172,7 +195,8 @@ pkg_brief_func ()
                 break
               fi
               if [ $printout -eq 1 ]; then
-                echo $line
+	        fname=`eval basename $pkg`
+                echo $fname ${line#Proview package}
               fi
             fi
           done
@@ -181,6 +205,48 @@ pkg_brief_func ()
       cd $dir
     done
   fi
+}
+
+pkg_dir_func()
+{
+  if [ -z $1 ]; then
+    allpkg=`ls /home/pwrp/pwrp_pkg_*.tgz`
+  else
+    if [ $1 == ${1##*/} ]; then
+      # Add path
+      pattern="/home/pwrp/*$1*"
+    else
+      pattern=*$1*
+    fi
+    allpkg=`ls $pattern`
+  fi
+
+  for pkg in $allpkg ; do
+    if [ -z ${pkg##*pwrp_pkg_*.tgz} ]; then
+      pkg_brief_func $pkg
+    fi
+  done
+}
+
+pkg_dirbrief_func()
+{
+  if [ -z $1 ]; then
+    allpkg=`ls /home/pwrp/pwrp_pkg_*.tgz`
+  else
+    if [ $1 == ${1##*/} ]; then
+      # Add path
+      pattern="/home/pwrp/*$1*"
+    else
+      pattern=*$1*
+    fi
+    allpkg=`ls $pattern`
+  fi
+
+  for pkg in $allpkg ; do
+    if [ -z ${pkg##*pwrp_pkg_*.tgz} ]; then
+      basename $pkg
+    fi
+  done
 }
 
 pkg_remove_func ()
@@ -205,7 +271,7 @@ pkg_remove_func ()
     done
   } < $pwrp_load/pwr_pkg.dat
 
-  if [ ! $1 = "force" ]; then
+  if [ ! "$1" = "force" ]; then
     echo ""
     echo -n "Do you wan't to remove package $pkg (y/n) [n] "
     read remove_pkg
@@ -238,25 +304,42 @@ pkg_remove_func ()
 }
 
 force="no"
-while getopts ":i:l:b:fra:" opt; do
+while [ -n "$(echo $1 | grep '-')" ]; do
 
-  case $opt in
-    i ) pkg_install_func $OPTARG ;;
+  OPTARG=$2
+  case $1 in
+    -i ) pkg_install_func $OPTARG ;;
 
-    l ) pkg_list_func $OPTARG ;;
+    -la ) pkg_list_func $OPTARG ;;
 
-    a ) pkg_listfiles_func $OPTARG;;
+    -lf ) pkg_listfiles_func $OPTARG;;
 
-    b ) shift
+    -lp ) shift
         pkg_brief_func $@ ;;
 
-    r ) pkg_remove_func $force ;;
+    -r ) pkg_remove_func ;;
 
-    f ) force="force" ;;
+    -rf ) force="force" 
+          pkg_remove_func $force ;;
 
-    \? ) echo 'usage: pwr_pkg [-i pkg] [-l] [-b] [-r]'
+    -ld ) pkg_dir_func $OPTARG ;;
+
+    -l ) pkg_dirbrief_func $OPTARG;;
+
+    * ) cat <<EOF 
+    usage: pwr_pkg [-i pkg] [-l [pkg]] [-b [pkg]] [-r]
+
+    pwr_pkg -i 'pkg'      Install package 'pkg'
+    pwr_pkg -r            Remove currently installed package
+    pwr_pkg -lp ['pkg']   List installed package, or package 'pkg'
+    pwr_pkg -la ['pkg']   List installed package, or package 'pkg', all info
+    pwr_pkg -lf ['pkg']   List files in installed package, or package 'pkg'
+    pwr_pkg -l            List all packages
+
+EOF
          exit 1
   esac
+  shift
 done
 
 

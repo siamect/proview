@@ -164,6 +164,31 @@ EOF
   wb_cmd @$tmpfile
 }
 
+reload_cnvdump()
+{
+  reload_checkpass "cnvdump" $start_pass
+  if [ $pass_status -ne $pass__execute ]; then
+    reload_status=$reload__success
+    return
+  fi
+
+  reload_continue "Pass convert dumpfiles"
+
+  dmpfiles=`eval ls $pwrp_db/*.wb_dmp`
+  echo $dmpfiles
+
+  for dmpfile in $dmpfiles; do
+    file=${dmpfile##/*/}
+    db="${file%.*}.db"
+    if [ $db = "wb.db" ]; then
+      db=""
+    else
+      sed 's/ GetIp / GetIpToA /; s/ StoIp / StoAtoIp /; s/ CStoIp / CStoAtoIp /; s/Class-GetIp/Class-GetIpToA/; s/Class-StoIp/Class-StoAtoIp/; s/Class-CStoIp/Class-CStoAtoIp/' $dmpfile > $pwrp_tmp/t.wb_dmp
+      mv $pwrp_tmp/t.wb_dmp $dmpfile
+    fi
+  done
+}
+
 
 reload_createvolumes()
 {
@@ -188,6 +213,7 @@ reload_createvolumes()
     fi
   done
 }
+
 
 reload_localwb()
 {
@@ -438,6 +464,7 @@ usage()
     userclasses  Load userclasses.wb_load
     dirvolume    Create directory volume.
     cnvdirvolume Convert the directory volume.
+    cnvdump      Convert dumpfiles.
     createvolumes Create configured databases.
     localwb      Create LocalWb volume for lists and template objects.
     compile      Compile all plcprograms in the database
@@ -476,7 +503,7 @@ databases=`eval source $v34_root/os_linux/hw_x86/exp/exe/pwrp_env.sh show db -a`
 databases=$databases" dbdirectory"
 export pwr_inc=$pwrb_root/os_linux/hw_x86/exp/inc
 
-passes="dumpdb userclasses dirvolume cnvdirvolume createvolumes localwb compile createload createboot convertge"
+passes="dumpdb userclasses dirvolume cnvdirvolume cnvdump createvolumes localwb compile createload createboot convertge"
 echo "Pass: $passes"
 echo ""
 echo -n "Enter start pass [dumpdb] > "

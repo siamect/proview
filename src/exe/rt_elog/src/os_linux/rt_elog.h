@@ -22,6 +22,7 @@
 
 #define DUMPFILE "rt_eventlog.dump"
 #define DATABASE "$pwrp_db/rt_eventlog.db"
+#define DATABASE_INFO "$pwrp_db/rt_eventlog_info.txt"
 
 #define DATABASETYPE DB_HASH
 #define DATABASESTAT_STRUCT DB_BTREE_STAT

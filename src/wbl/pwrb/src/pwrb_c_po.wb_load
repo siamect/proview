@@ -68,7 +68,7 @@ SObject pwrb:Class
       !/**
       !  Name of the associated channel object.
       !*/
-      Object SigChanCon $Objid 2
+      Object SigChanCon $Attribute 2
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Objid"
         EndBody

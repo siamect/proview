@@ -31,12 +31,15 @@ static sEvent *CopyEvent(
 );
 int compTime(sKey d1, sKey d2);
 
+int writeInfo(int nrOfEvents, int firstTimeEver, pwr_tTime *oldestEventTime);
 
 sHelCB lHelCB;
 DB *dataBaseP = NULL;
 pwr_tUInt32 nrOfInsertsSinceLastTime = 0;
 headtyp *listhead;
 linktyp *lanklank;
+char info_fname[200];
+
 int 
 main ()
 {
@@ -99,6 +102,7 @@ Init ()
   char fname[200];
     
   dcli_translate_filename( fname, DATABASE);
+  dcli_translate_filename( info_fname, DATABASE_INFO);
   
   sts = gdh_GetNodeIndex(&lHelCB.Nid);
   If_Error_Log_Exit(sts, "gdh_GetNodeIndex");
@@ -133,7 +137,7 @@ Init ()
     exit(1);
   }
   /*open the database*/
-  if((ret = dataBaseP->open(dataBaseP, 0, fname, NULL, DATABASETYPE, DB_CREATE, 0664)) != 0)
+  if((ret = dataBaseP->open(dataBaseP, fname, NULL, DATABASETYPE, DB_CREATE, 0664)) != 0)
   {
     /*error opening/creating db send the mess to errh, then exit*/
     sprintf(msg, "db_open: %s, no eventlogger will run", db_strerror(ret));
@@ -240,14 +244,11 @@ void Store( pwr_tBoolean *firstTime, pwr_tUInt32 *nrOfEvents, pwr_tUInt32 *nrOfK
       if( (ret = dataBaseP->del(dataBaseP, NULL, &key, 0)) != 0 )
       {
         sprintf(msg, "Error deleting Record in HistDB nrOfKeys = %d Errmess=%s\n", *nrOfKeys, db_strerror(ret));
-//        printf("\n%s\n", msg);
 	Log(msg);
       }
       else
       {
         *nrOfEvents = *nrOfEvents - 1;
-//	printf("Städar, nrOfEvents= %d, nrOfKeys = %d, nrOfinssin= %d\n", *nrOfEvents,
-//	*nrOfKeys, nrOfInsertsSinceLastTime);
       }
       
       elimlink(&lanklank);
@@ -255,7 +256,22 @@ void Store( pwr_tBoolean *firstTime, pwr_tUInt32 *nrOfEvents, pwr_tUInt32 *nrOfK
     }
       
   }
-  
+  if(*nrOfKeys > 0)
+  {
+      lanklank = firstlink(listhead);
+      if(lanklank != 0)
+      {
+        writeInfo(*nrOfEvents+nrOfInsertsSinceLastTime, 0, &lanklank->data.EventTime);
+      }
+      else
+      {
+        writeInfo(*nrOfEvents+nrOfInsertsSinceLastTime, 0, NULL);
+      }
+  }
+  else
+  {
+    writeInfo(*nrOfEvents+nrOfInsertsSinceLastTime, 0, NULL);
+  }
 }  
   
 pwr_tInt32 GetOldestEvents(pwr_tUInt32 *nrOfEvents , pwr_tUInt32 *nrOfKeys)
@@ -378,3 +394,26 @@ int compTime(sKey d1, sKey d2)
   }
   return 0;
 }
+
+
+int writeInfo(int nrOfEvents, int firstTimeEver, pwr_tTime *oldestEventTime)
+{
+  FILE *info_file = NULL;
+  char time_str[40];
+
+  time_str[0] = 0;
+  if(oldestEventTime != NULL)
+  {
+    time_AtoAscii(oldestEventTime, time_eFormat_DateAndTime, time_str, sizeof(time_str));
+  }  
+  //open a file to print info about the database to
+  info_file = fopen( info_fname, "w" );
+  if(info_file == NULL) return 2;
+
+  fprintf(info_file, "NrOfEvents:%d OldestEventTime:%s\n", nrOfEvents, time_str);
+  fclose(info_file);
+  return 1;
+}
+
+
+
