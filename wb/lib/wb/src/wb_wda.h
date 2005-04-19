@@ -61,6 +61,7 @@ class Wda {
     Widget      wdaclass_dia;
     Widget      wdaclass_hiervalue;
     Widget      wdaclass_classvalue;
+    Widget      wdaclass_attrobjects;
     Widget      wdaattr_dia;
     int		input_open;
     int         input_multiline;
@@ -75,6 +76,7 @@ class Wda {
     XtIntervalId focus_timerid;
     static char	value_recall[30][160];
     int	value_current_recall;
+    int attrobjects;
 
     void message( char severity, char *message);
     void set_prompt( char *prompt);

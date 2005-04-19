@@ -1069,6 +1069,11 @@ WItemAttr::WItemAttr(
 		dest, dest_code, (void *) this, 1, &node);
       brow_SetAnnotPixmap( node, 0, brow->pixmap_ref);
       break;
+    case pwr_eType_AttrRef:
+      brow_CreateNode( brow->ctx, attr_name, nc, 
+		dest, dest_code, (void *) this, 1, &node);
+      brow_SetAnnotPixmap( node, 0, brow->pixmap_attrref);
+      break;
     case pwr_eType_Enum:
       brow_CreateNode( brow->ctx, attr_name, nc, 
 		dest, dest_code, (void *) this, 1, &node);

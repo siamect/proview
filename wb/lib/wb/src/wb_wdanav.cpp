@@ -48,7 +48,7 @@ extern "C" {
 static char null_str[] = "";
 
 static int wdanav_init_brow_cb( FlowCtx *fctx, void *client_data);
-static int wdanav_attr_found_cb( pwr_tObjid objid, void *a1, void *a2,
+static int wdanav_attr_found_cb( pwr_sAttrRef *aref, void *a1, void *a2,
 				 void *a3, void *a4, void *a5);
 
 void WdaNav::message( char sev, char *text)
@@ -85,7 +85,7 @@ WdaNav::WdaNav(
 	advanced_user(wa_advanced_user), 
 	display_objectname(wa_display_objectname), bypass(0),
 	trace_started(0), message_cb(NULL), utility(wa_utility), 
-	displayed(0)
+	displayed(0), attrobjects(0)
 {
   strcpy( name, wa_name);
   strcpy( attribute, wa_attribute);
@@ -248,7 +248,7 @@ static int wdanav_brow_cb( FlowCtx *ctx, flow_tEvent event)
       brow_SelectClear( wdanav->brow->ctx);
       brow_SetInverse( object, 1);
       brow_SelectInsert( wdanav->brow->ctx, object);
-      if ( !brow_IsVisible( wdanav->brow->ctx, object))
+      if ( !brow_IsVisible( wdanav->brow->ctx, object, flow_eVisible_Full))
         brow_CenterObject( wdanav->brow->ctx, object, 0.25);
       if ( node_count)
         free( node_list);
@@ -284,7 +284,7 @@ static int wdanav_brow_cb( FlowCtx *ctx, flow_tEvent event)
       brow_SelectClear( wdanav->brow->ctx);
       brow_SetInverse( object, 1);
       brow_SelectInsert( wdanav->brow->ctx, object);
-      if ( !brow_IsVisible( wdanav->brow->ctx, object))
+      if ( !brow_IsVisible( wdanav->brow->ctx, object, flow_eVisible_Full))
         brow_CenterObject( wdanav->brow->ctx, object, 0.75);
       if ( node_count)
         free( node_list);
@@ -378,7 +378,7 @@ static int wdanav_brow_cb( FlowCtx *ctx, flow_tEvent event)
       brow_SelectClear( wdanav->brow->ctx);
       brow_SetInverse( object, 1);
       brow_SelectInsert( wdanav->brow->ctx, object);
-      if ( !brow_IsVisible( wdanav->brow->ctx, object))
+      if ( !brow_IsVisible( wdanav->brow->ctx, object, flow_eVisible_Full))
         brow_CenterObject( wdanav->brow->ctx, object, 0.25);
       free( node_list);
       break;
@@ -671,7 +671,7 @@ int	WdaNav::get_attr()
 
   if ( classid == 0)
     return WDA__SUCCESS;
-
+  
   brow_SetNodraw( brow->ctx);
 
   found = 0;
@@ -724,10 +724,16 @@ int	WdaNav::get_attr()
 
   classid_vect[0] = classid;
   classid_vect[1] = 0;
-  trv_get_objects_hcn( ldhses, objid, classid_vect, NULL, wdanav_attr_found_cb,
-		       (void *)this, (void *) &bodydef[j], (void *) body,
-		       NULL, NULL);
-
+  if ( !attrobjects) {
+    trv_get_objects_hcn( ldhses, objid, classid_vect, NULL, wdanav_attr_found_cb,
+			 (void *)this, (void *) &bodydef[j], (void *) body,
+			 NULL, NULL);
+  }
+  else {
+    trv_get_attrobjects( ldhses, objid, classid_vect, NULL, trv_eDepth_Deep, 
+			 wdanav_attr_found_cb, (void *)this, (void *) &bodydef[j], 
+			 (void *) body, NULL, NULL);
+  }
   free((char *) bodydef);	
 
   brow_ResetNodraw( brow->ctx);
@@ -735,17 +741,33 @@ int	WdaNav::get_attr()
   return WDA__SUCCESS;
 }
 
-static int wdanav_attr_found_cb( pwr_tObjid objid, void *a1, void *a2, 
+static int wdanav_attr_found_cb( pwr_sAttrRef *aref, void *a1, void *a2, 
 				 void *a3, void *a4, void *a5)
 {
   WdaNav *wdanav = (WdaNav *) a1;
   ldh_sParDef *bodydef = (ldh_sParDef *) a2;
   char	*body = (char *) a3;
+  pwr_tObjid objid = aref->Objid;
+  char *name;
+  char *s;
+  pwr_tAName aname;
+  pwr_tStatus sts;
+  int size;
 
+  sts = ldh_AttrRefToName( wdanav->ldhses, aref, ldh_eName_Aref, &name, &size);
+  if ( EVEN(sts)) return sts;
 
+  if ( !(s = strchr( name, '.')))
+    strcpy( aname, bodydef[0].ParName);
+  else {
+    strcpy( aname, s+1);
+    strcat( aname, ".");
+    strcat( aname, bodydef[0].ParName);
+  }
+  
   if ( bodydef[0].Par->Output.Info.Elements <= 1)
     new WItemAttr( wdanav->brow, wdanav->ldhses, objid, NULL,
-		flow_eDest_IntoLast, bodydef[0].ParName,
+		flow_eDest_IntoLast, aname,
 		bodydef[0].Par->Output.Info.Type, 
 		bodydef[0].Par->Output.TypeRef, 
 		bodydef[0].Par->Output.Info.Size,
@@ -753,7 +775,7 @@ static int wdanav_attr_found_cb( pwr_tObjid objid, void *a1, void *a2,
 		body, 1);
   else
     new WItemAttrArray( wdanav->brow, wdanav->ldhses, objid, NULL, 
-		flow_eDest_IntoLast, bodydef[0].ParName,
+		flow_eDest_IntoLast, aname,
 		bodydef[0].Par->Output.Info.Elements, 
 		bodydef[0].Par->Output.Info.Type, 
 		bodydef[0].Par->Output.TypeRef, 
@@ -854,7 +876,7 @@ int WdaNav::find_by_objid( pwr_tObjid oi, brow_tObject *object)
 }
 
 int WdaNav::update( pwr_tObjid new_objid, pwr_tClassId new_classid,
-		    char *new_attribute)
+		    char *new_attribute, int new_attrobjects)
 {
   int sts;
   int keep_select;
@@ -866,7 +888,8 @@ int WdaNav::update( pwr_tObjid new_objid, pwr_tClassId new_classid,
 
   if ( cdh_ObjidIsEqual( objid, new_objid) &&
        classid == new_classid &&
-       strcmp( attribute, new_attribute) == 0)
+       strcmp( attribute, new_attribute) == 0 &&
+       attrobjects == new_attrobjects)
     return WDA__SUCCESS;
 
   if ( cdh_ObjidIsEqual( objid, new_objid) &&
@@ -890,6 +913,7 @@ int WdaNav::update( pwr_tObjid new_objid, pwr_tClassId new_classid,
   objid = new_objid;
   classid = new_classid;
   strcpy( attribute, new_attribute);
+  attrobjects = new_attrobjects;
 
   brow_SetNodraw( brow->ctx);
   brow_DeleteAll( brow->ctx);
@@ -907,7 +931,7 @@ int WdaNav::update( pwr_tObjid new_objid, pwr_tClassId new_classid,
   }
   else {
     // Scroll to top position
-    if ( brow_GetFirst( brow->ctx, &object))
+    if ( ODD( brow_GetFirst( brow->ctx, &object)))
       brow_CenterObject( brow->ctx, object, 0.0);
   }
 

@@ -25,6 +25,7 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <Xm/ToggleBG.h>
+#include <Xm/ToggleB.h>
 #include <Xm/RowColumn.h>
 
 extern "C" {
@@ -233,7 +234,8 @@ static void wda_activate_prevattr( Widget w, Wda *wda, XmAnyCallbackStruct *data
 
 static void wda_activate_help( Widget w, Wda *wda, XmAnyCallbackStruct *data)
 {
-  CoXHelp::dhelp( "spreadsheet editor", 0, navh_eHelpFile_Base, 0, true);
+  CoXHelp::dhelp( "spreadsheeteditor_refman", 0, navh_eHelpFile_Other, 
+		  "$pwr_lang/man_dg.dat", true);
 }
 
 static void wda_create_msg_label( Widget w, Wda *wda, XmAnyCallbackStruct *data)
@@ -281,6 +283,11 @@ static void wdaclass_create_classvalue( Widget w, Wda *wda, XmAnyCallbackStruct 
   wda->wdaclass_classvalue = w;
 }
 
+static void wdaclass_create_attrobjects( Widget w, Wda *wda, XmAnyCallbackStruct *data)
+{
+  wda->wdaclass_attrobjects = w;
+}
+
 static void wdaclass_activate_ok( Widget w, Wda *wda, XmAnyCallbackStruct *data)
 {
   char *hiername;
@@ -290,6 +297,7 @@ static void wdaclass_activate_ok( Widget w, Wda *wda, XmAnyCallbackStruct *data)
 
   hiername = XmTextGetString( wda->wdaclass_hiervalue);
   classname = XmTextGetString( wda->wdaclass_classvalue);
+  wda->attrobjects = XmToggleButtonGetState(wda->wdaclass_attrobjects);
 
   if ( strcmp( hiername, "") == 0)
     wda->objid = pwr_cNObjid;
@@ -319,7 +327,7 @@ static void wdaclass_activate_ok( Widget w, Wda *wda, XmAnyCallbackStruct *data)
   else {
     // Find new attributes
     sts = ((WdaNav *)wda->wdanav)->update( wda->objid, wda->classid,
-		wda->attribute);
+		wda->attribute, wda->attrobjects);
     if ( EVEN(sts))
       wow_DisplayError( wda->parent_wid, "Spreadsheet error",
 		      wnav_get_message( sts));
@@ -548,6 +556,8 @@ void Wda::open_class_dialog()
 
   XmTextSetString( wdaclass_hiervalue, hierstr);
   XmTextSetString( wdaclass_classvalue, classstr);
+  XmToggleButtonSetState( wdaclass_attrobjects, 
+			(Boolean) attrobjects, False);
 
   XtManageChild( wdaclass_dia);
 }
@@ -646,7 +656,7 @@ int Wda::next_attr()
         get_next = 1;
       else if ( get_next) {
         strcpy( attribute, bodydef[j].ParName);
-        sts = ((WdaNav *)wdanav)->update( objid, classid, attribute);
+        sts = ((WdaNav *)wdanav)->update( objid, classid, attribute, attrobjects);
         free((char *) bodydef);
         return WDA__SUCCESS;
       }
@@ -695,7 +705,7 @@ int Wda::prev_attr()
         }
         else {
           strcpy( attribute, prev_attr);
-          sts = ((WdaNav *)wdanav)->update( objid, classid, attribute);
+          sts = ((WdaNav *)wdanav)->update( objid, classid, attribute, attrobjects);
           free((char *) bodydef);
           return WDA__SUCCESS;
         }
@@ -707,7 +717,7 @@ int Wda::prev_attr()
 
   if ( get_last && strcmp( prev_attr, "") != 0) {
     strcpy( attribute, prev_attr);
-    sts = ((WdaNav *)wdanav)->update( objid, classid, attribute);
+    sts = ((WdaNav *)wdanav)->update( objid, classid, attribute, attrobjects);
     return WDA__SUCCESS;
   }
   return WDA__NOPREVATTR;
@@ -720,7 +730,7 @@ static void wda_set_attr_cb( void *ctx, char *text)
 
   strcpy( wda->attribute, text);
   sts = ((WdaNav *)wda->wdanav)->update( wda->objid, wda->classid,
-		wda->attribute);
+		wda->attribute, wda->attrobjects);
   if ( EVEN(sts))
     wow_DisplayError( wda->parent_wid, "Spreadsheet error",
 		      wnav_get_message( sts));
@@ -750,7 +760,7 @@ Wda::Wda(
 	editmode(wa_editmode), 
 	input_open(0), input_multiline(0), 
 	close_cb(0), redraw_cb(0), client_data(0),
-	set_focus_disabled(0)
+	set_focus_disabled(0), attrobjects(0)
 {
   char		uid_filename[120] = {"pwr_exe:wb_wda.uid"};
   char		*uid_filename_p = uid_filename;
@@ -795,7 +805,8 @@ Wda::Wda(
 	{"wdaclass_activate_ok",(caddr_t)wdaclass_activate_ok },
 	{"wdaclass_activate_cancel",(caddr_t)wdaclass_activate_cancel },
 	{"wdaclass_create_hiervalue",(caddr_t)wdaclass_create_hiervalue },
-	{"wdaclass_create_classvalue",(caddr_t)wdaclass_create_classvalue }
+	{"wdaclass_create_classvalue",(caddr_t)wdaclass_create_classvalue },
+	{"wdaclass_create_attrobjects",(caddr_t)wdaclass_create_attrobjects }
 	};
 
   static int	reglist_num = (sizeof reglist / sizeof reglist[0]);

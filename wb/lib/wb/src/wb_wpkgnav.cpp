@@ -148,7 +148,7 @@ static int wpkgnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
       brow_SelectClear( wpkgnav->brow->ctx);
       brow_SetInverse( object, 1);
       brow_SelectInsert( wpkgnav->brow->ctx, object);
-      if ( !brow_IsVisible( wpkgnav->brow->ctx, object))
+      if ( !brow_IsVisible( wpkgnav->brow->ctx, object, flow_eVisible_Full))
         brow_CenterObject( wpkgnav->brow->ctx, object, 0.25);
       if ( node_count)
         free( node_list);
@@ -184,7 +184,7 @@ static int wpkgnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
       brow_SelectClear( wpkgnav->brow->ctx);
       brow_SetInverse( object, 1);
       brow_SelectInsert( wpkgnav->brow->ctx, object);
-      if ( !brow_IsVisible( wpkgnav->brow->ctx, object))
+      if ( !brow_IsVisible( wpkgnav->brow->ctx, object, flow_eVisible_Full))
         brow_CenterObject( wpkgnav->brow->ctx, object, 0.75);
       if ( node_count)
         free( node_list);
@@ -262,7 +262,7 @@ static int wpkgnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
       brow_SelectClear( wpkgnav->brow->ctx);
       brow_SetInverse( object, 1);
       brow_SelectInsert( wpkgnav->brow->ctx, object);
-      if ( !brow_IsVisible( wpkgnav->brow->ctx, object))
+      if ( !brow_IsVisible( wpkgnav->brow->ctx, object, flow_eVisible_Full))
         brow_CenterObject( wpkgnav->brow->ctx, object, 0.25);
       free( node_list);
       break;

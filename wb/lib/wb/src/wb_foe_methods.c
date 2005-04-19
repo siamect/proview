@@ -1847,8 +1847,10 @@ int foe_new_local(
 	  foectx->classeditor = 1;
 	if ( foectx->access == foe_eFuncAccess_Edit)
 	  foe_edit_set_entries ( foectx);
-	     
-
+	     	     
+     	/* Write document headers /CJ 050415 */
+	gre_init_docobjects( foectx->grectx);
+	
 	return FOE__SUCCESS;
 }
 
@@ -2911,7 +2913,7 @@ int foe_print_overview (
 	if ( EVEN(sts)) return sts;
 
 	/* Init the document objects */
-	gre_init_docobjects( foectx->grectx);
+//	gre_init_docobjects( foectx->grectx);
 
 	doc_count = 0;
 	node_ptr = nodelist;
@@ -2977,7 +2979,7 @@ int foe_print_document(
 	sts = vldh_get_nodes( wind, &node_count, &nodelist);
 	if ( EVEN(sts)) return sts;
 
-	gre_init_docobjects( foectx->grectx);
+//	gre_init_docobjects( foectx->grectx);
 
 	doc_count = 0;
 	node_ptr = nodelist;
@@ -3031,7 +3033,7 @@ int foe_print_selected_document(
 	if ( EVEN(sts)) return sts;
 
 	gre_unselect( foectx->grectx);
-	gre_init_docobjects( foectx->grectx);
+//	gre_init_docobjects( foectx->grectx);
 
 	doc_count = 0;
 	node_ptr = nodelist;
@@ -3444,6 +3446,8 @@ static void foe_edit_exit_save(
 	  return;
 	}
 
+	gre_save(foectx->grectx, 0);
+	
 	/* Change the funktion */
 	switch( foectx->wanted_function)
 	{

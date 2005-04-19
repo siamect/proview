@@ -628,6 +628,31 @@ static int wccm_getnodeobject_func(
   return 1;
 }
 
+static int wccm_getprojectname_func( 
+  void *filectx,
+  ccm_s_arg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  float *return_float, 
+  int *return_int, 
+  char *return_string)
+{
+  int		sts;
+  char		projectname[80];
+
+  if ( arg_count != 0)
+    return CCM__ARGMISM;
+
+  sts = utl_get_projectname( projectname);
+  if ( ODD(sts))
+    strcpy( return_string, projectname);
+  else
+    strcpy( return_string, "");
+  *return_decl = CCM_DECL_STRING;
+  
+  return 1;
+}
+
 /*************************************************************************
 *
 * Name:		wccm_register()
@@ -674,6 +699,8 @@ int	wccm_register(
     sts = ccm_register_function( "GetNodeObject", wccm_getnodeobject_func);
     if ( EVEN(sts)) return sts;
     sts = ccm_register_function( "ObjectExist", wccm_objectexist_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "GetProjectName", wccm_getprojectname_func);
     if ( EVEN(sts)) return sts;
 
     sts = ccm_create_external_var( "cmd_status", CCM_DECL_INT, 0, 1, 

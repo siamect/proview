@@ -1154,6 +1154,9 @@ int	gre_undelete(
 	  sts = goec_con_draw( grectx, grectx->del_con_list[i], GRE_CON_CREATE,
 		0);
 	}
+	
+	/* Update header /CJ 050415 */ 
+        gre_init_docobjects(grectx);
 
 	grectx->del_node_count = 0;
 	grectx->del_con_count = 0;
@@ -3084,6 +3087,12 @@ int	gre_create_node(
 	UPDATE_SCREEN
 
 	*node = node_object;
+
+	/* Update header /CJ 050415 */ 
+	if (class == pwr_cClass_Document) {
+	  gre_init_docobjects(grectx);
+	}
+	
 	return GRE__SUCCESS;
 }
 
@@ -3390,6 +3399,9 @@ void gre_paste (
 
 	flow_Paste( grectx->flow_ctx);
         flow_SetSelectHighlight( grectx->flow_ctx);
+
+	/* Update header /CJ 050415 */ 
+        gre_init_docobjects(grectx);
 
 }
 
@@ -3853,6 +3865,10 @@ int gre_node_update (
           gre_message ( grectx, message);
 	  BEEP;
 	}
+	
+	/* Update the document headers /CJ 050415 */
+	gre_init_docobjects( grectx);
+
 	return GRE__SUCCESS;
 }
 
@@ -4163,6 +4179,8 @@ int	gre_init_docobjects(
 	vldh_t_node		*node_ptr;
 	int			i;
 	char			*parvalue;
+	pwr_tTime		mod_time;
+	pwr_tTime		*mod_time_ptr;
 
 	wind = grectx->wind;
 	plc = wind->hw.plc;
@@ -4173,7 +4191,15 @@ int	gre_init_docobjects(
 	sts = vldh_get_nodes( wind, &node_count, &nodelist);
 	if ( EVEN(sts)) return sts;
 
+	/* Loop all nodes once first in order to count documents. /CJ 050415 */
 	doc_count = 0;
+	node_ptr = nodelist;
+	for ( i = 0; i < node_count; i++)
+	{
+	  if ( vldh_check_document( wind->hw.ldhses, (*node_ptr)->ln.oid)) doc_count++;
+	  node_ptr++;
+	}
+
 	node_ptr = nodelist;
 	for ( i = 0; i < node_count; i++)
   	{
@@ -4181,7 +4207,6 @@ int	gre_init_docobjects(
 			(*node_ptr)->ln.oid))
 	  {
 	    doc_obj = *node_ptr;
-	    doc_count++;	  
 
 	    /* System name in annotation nr 0 */
             flow_SetAnnotation( doc_obj->hn.node_id, 0, systemname, 
@@ -4223,12 +4248,22 @@ int	gre_init_docobjects(
 	      free((char *) parvalue);
 	    }
 
-	    /* Time in annot 4 */
-	    time_AtoAscii(NULL, time_eFormat_DateAndTime, 
-	    					timstr, sizeof(timstr));             
+	    /* PLC Window's Modified Time in annot 4 */
+	    mod_time_ptr = NULL;
+	    sts = ldh_GetObjectPar( wind->hw.ldhses,  
+			wind->lw.oid, 
+			"DevBody", "Modified",
+			(char **)&mod_time_ptr, &size); 
+	    if (ODD(sts)) {
+	      memcpy(&mod_time, mod_time_ptr, sizeof(mod_time));
+	      free((char *) mod_time_ptr);
+	      mod_time_ptr = &mod_time;
+	    }
+
+            time_AtoAscii(mod_time_ptr, time_eFormat_DateAndTime, timstr, sizeof(timstr));             
+
             timstr[strlen(timstr) - 6] = '\0'; 
-            flow_SetAnnotation( doc_obj->hn.node_id, 4, timstr, 
-		strlen(timstr));
+            flow_SetAnnotation( doc_obj->hn.node_id, 4, timstr, strlen(timstr));
 
 	    /* Signature in annotations nr 5 */
 	    sts = ldh_GetObjectPar( wind->hw.ldhses,  
@@ -4431,6 +4466,9 @@ int	gre_save( gre_ctx grectx, char *filename)
 {
   char fname[200];
   int sts;
+
+  /* Update document headers before saving flow file  /CJ 050415 */
+  gre_init_docobjects(grectx);
 
   if ( !filename) {
     sprintf( fname, "pwrp_load:pwr_%s.flw",

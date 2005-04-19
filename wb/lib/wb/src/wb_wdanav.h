@@ -74,6 +74,7 @@ class WdaNav {
     void 		(*change_value_cb)( void *);
     wb_eUtility		utility;
     int			displayed;
+    int			attrobjects;
 
     void start_trace( pwr_tObjid Objid, char *object_str);
     int set_attr_value( brow_tObject node, char *name, char *value_str);
@@ -91,7 +92,7 @@ class WdaNav {
 	{ this->editmode = editmode; this->ldhses = ldhses;};
     int select_by_name( char *name);
     int update( pwr_tObjid new_objid, pwr_tClassId new_classid,
-		char *new_attribute);
+		char *new_attribute, int new_attrobjects);
     int find_by_objid( pwr_tObjid oi, brow_tObject *object);
     int print( char *filename);
 };

@@ -890,8 +890,9 @@ void wb_wblnode::buildBody( ref_wblnode object)
       m_vrep->error( "Bad body name", getFileName(), line_number);
     }
 
-    first_child = getFirstChild();
-    if ( first_child)
+    for ( first_child = getFirstChild();
+	  first_child;
+	  first_child = first_child->getNextSibling()) 
       first_child->buildAttr( object, bix);
 
     next_sibling = getNextSibling();
@@ -1045,9 +1046,6 @@ void wb_wblnode::buildAttr( ref_wblnode object, pwr_eBix bix)
   default:
     ;
   }
-  next_sibling = getNextSibling();
-  if ( next_sibling)
-    next_sibling->buildAttr( object, bix);
 }
 
 void wb_wblnode::buildBuff( ref_wblnode object, pwr_eBix bix, pwr_tCid buffer_cid,

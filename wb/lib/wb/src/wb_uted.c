@@ -409,7 +409,7 @@ static void uted_activate_helputils (
   XmAnyCallbackStruct	*data
 )
 {
-  xhelp_help( "utilities", 0, navh_eHelpFile_Base, 0, 1);
+  xhelp_help( "utilities_refman", 0, navh_eHelpFile_Other, "$pwr_lang/man_dg.dat", 1);
 }
 
 static void uted_activate_helppwr_plc (
@@ -418,7 +418,7 @@ static void uted_activate_helppwr_plc (
   XmAnyCallbackStruct	*data
 )
 {
-  xhelp_help( "help command", 0, navh_eHelpFile_Base, 0, 1);
+  xhelp_help( "help command", 0, navh_eHelpFile_Other, "$pwr_lang/man_dg.dat", 1);
 }
 
 static void uted_activate_batch (

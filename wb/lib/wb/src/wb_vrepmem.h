@@ -334,7 +334,7 @@ public:
   virtual bool importDocBlock(pwr_tOid oid, size_t size, char *block);
   virtual bool importMeta(dbs_sMenv *mep) { return true;}
   bool importBuildObject( mem_object *memo);
-  void loadWbl( char *filename, pwr_tStatus *sts);
+  void loadWbl( char *filename, pwr_tStatus *sts, bool reload = false);
   void freeObject( mem_object *mem);
   void clear();
   bool classeditorCheck( ldh_eDest dest_code, mem_object *dest, pwr_tCid cid,

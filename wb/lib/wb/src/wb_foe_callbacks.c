@@ -180,6 +180,9 @@ XmAnyCallbackStruct	*data;
 	sts = vldh_wind_save( foectx->grectx->wind);
 	foe_enable_ldh_cb(foectx);
 	error_msg( sts);
+	
+	gre_save(foectx->grectx, 0);
+
 	NORMAL_CURSOR;
 
 	if ( ODD(sts)) 
@@ -2952,6 +2955,9 @@ static void foe_exit_save(
 	foe_disable_ldh_cb(foectx);
 	sts = vldh_wind_save( foectx->grectx->wind);
 	error_msg( sts);
+	
+	gre_save(foectx->grectx, 0);
+
 	NORMAL_CURSOR;
 	if ( sts == VLDH__PLCNOTSAVED )
 	{

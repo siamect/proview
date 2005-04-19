@@ -93,7 +93,7 @@ int trv_get_objects_hcn (
   pwr_tObjid	hierobjdid,
   pwr_tClassId	*classid,
   char		*name,
-  int		(*backcall)( pwr_tObjid, void *, void *, void *, void *, void*),
+  int		(*backcall)( pwr_sAttrRef *, void *, void *, void *, void *, void*),
   void		*arg1,
   void		*arg2,
   void		*arg3,

@@ -184,7 +184,8 @@ static void watt_activate_exit( Widget w, WAtt *watt, XmAnyCallbackStruct *data)
 
 static void watt_activate_help( Widget w, WAtt *watt, XmAnyCallbackStruct *data)
 {
-  CoXHelp::dhelp( "object editor", 0, navh_eHelpFile_Base, 0, true);
+  CoXHelp::dhelp( "objecteditor_refman", 0, navh_eHelpFile_Other, 
+		  "$pwr_lang/man_dg.dat", true);
 }
 
 static void watt_create_msg_label( Widget w, WAtt *watt, XmAnyCallbackStruct *data)

@@ -55,9 +55,9 @@ wb_vrepmem::~wb_vrepmem()
   clear();
 }
 
-void wb_vrepmem::loadWbl( char *filename, pwr_tStatus *sts)
+void wb_vrepmem::loadWbl( char *filename, pwr_tStatus *sts, bool reload)
 {
-  if ( m_erep->refMerepOccupied()) {
+  if ( !reload && m_erep->refMerepOccupied()) {
     *sts = LDH__OTHERSESS;
     return;
   }
@@ -1796,7 +1796,7 @@ bool wb_vrepmem::commit(pwr_tStatus *sts)
 
   // Reload to get new template objects
   clear();
-  loadWbl( m_filename, sts);
+  loadWbl( m_filename, sts, true);
 
   return true;
 }
@@ -1806,7 +1806,7 @@ bool wb_vrepmem::abort(pwr_tStatus *sts)
   // Reload
   if ( m_classeditor) {
     clear();
-    loadWbl( m_filename, sts);
+    loadWbl( m_filename, sts, true);
   }
 
   return true;
