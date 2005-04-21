@@ -22,6 +22,7 @@ extern "C" {
 #include "cnv_xtthelptohtml.h"
 #include "cnv_xtthelptoxml.h"
 #include "cnv_xtthelptops.h"
+#include "cnv_xtthelptopdf.h"
 
 typedef char cnv_tName[200];
 
@@ -38,6 +39,7 @@ static void usage()
   printf( "      -t:  Create html from xtthelp-file\n");
   printf( "      -m:  Create xml from xtthelp-file\n");
   printf( "      -n:  Create postscript from xtthelp-file\n");
+  printf( "      -f:  Create pdf from xtthelp-file\n");
   printf( "      -q:  Create postscript from wb_load-files\n");
   printf( "      -d:  Output directory\n");
   printf( "      -g:  Setup file\n");
@@ -101,6 +103,7 @@ int main( int argc, char *argv[])
   int   xtthelp_to_html = 0;
   int   xtthelp_to_xml = 0;
   int   xtthelp_to_ps = 0;
+  int   xtthelp_to_pdf = 0;
 
   if ( argc < 2 || argc > 9) {
     usage();
@@ -185,6 +188,98 @@ int main( int argc, char *argv[])
           case 'n':
             xtthelp_to_ps = 1;
             break;
+          case 'f':
+            xtthelp_to_pdf = 1;
+            break;
+          default:
+            usage();
+            exit(0);
+        }
+        s++;
+      }
+    }
+    else
+      strcpy( files, argv[i]);
+  }
+  for ( i = 1; i < argc; i++) {
+    if ( strcmp( argv[i], "-d") == 0) {
+      if ( i+1 >= argc) {
+        usage();
+        exit(0);
+      }
+      strcpy( ctx->dir, argv[i+1]);
+      i++;
+#if defined OS_VMS
+      if ( ctx->dir[strlen(ctx->dir)-1] != ':' &&
+	   (ctx->dir[strlen(ctx->dir)-1] != '>' &&
+	    ctx->dir[strlen(ctx->dir)-1] != ']' ))
+        strcat( ctx->dir , ":");
+#else
+      if ( ctx->dir[strlen(ctx->dir)-1] != '/')
+        strcat( ctx->dir , "/");
+#endif
+    }
+    if ( strcmp( argv[i], "-g") == 0) {
+      if ( i+1 >= argc) {
+        usage();
+        exit(0);
+      }
+      strcpy( ctx->setup_filename, argv[i+1]);
+      i++;
+    }
+    if ( strcmp( argv[i], "-l") == 0) {
+      if ( i+1 >= argc) {
+        usage();
+        exit(0);
+      }
+      Lng::set( argv[i+1]);
+      i++;
+    }
+    else if ( argv[i][0] == '-') {
+      s = &argv[i][1];
+      while( *s) {
+        switch( *s) {
+          case 'h':
+            help();
+            exit(0);
+          case 'w':
+            ctx->generate_html = 1;
+            break;
+          case 'x':
+            ctx->generate_xtthelp = 1;
+            break;
+          case 'c':
+            ctx->generate_src = 1;
+            break;
+          case 's':
+            ctx->generate_struct = 1;
+            break;
+          case 'q':
+            ctx->generate_ps = 1;
+            ctx->common_structfile_only = 1;
+            break;
+          case 'p':
+            ctx->generate_struct = 1;
+	    ctx->hpp = 1;
+            break;
+          case 'o':
+            ctx->common_structfile_only = 1;
+            break;
+          case 'v':
+            ctx->verbose = 1;
+            break;
+          case 't':
+            xtthelp_to_html = 1;
+            break;
+          case 'm':
+            xtthelp_to_xml = 1;
+            break;
+          case 'n':
+            xtthelp_to_ps = 1;
+            break;
+          case 'f':
+            xtthelp_to_pdf = 1;
+            break;
           default:
             usage();
             exit(0);
@@ -219,6 +314,14 @@ int main( int argc, char *argv[])
   }
   if ( xtthelp_to_ps) {
     CnvXtthelpToPs *xtthelpto = new CnvXtthelpToPs( ctx);
+    ctx->rx = new CnvReadXtthelp( files, ctx->dir, xtthelpto);
+    ctx->rx->read_xtthelp();
+    delete ctx->rx;
+    delete xtthelpto;
+    exit(0);
+  }
+  if ( xtthelp_to_pdf) {
+    CnvXtthelpToPdf *xtthelpto = new CnvXtthelpToPdf( ctx);
     ctx->rx = new CnvReadXtthelp( files, ctx->dir, xtthelpto);
     ctx->rx->read_xtthelp();
     delete ctx->rx;
