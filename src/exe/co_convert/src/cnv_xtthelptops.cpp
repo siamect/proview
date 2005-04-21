@@ -65,6 +65,11 @@ void *CnvXtthelpToPs::insert( navh_eItemType item_type, char *text1,
 			      navh_eHelpFile file_type, int help_index, 
 			      char *bookmark)
 {
+  if ( option & ps_mOption_printDisable &&
+       item_type != navh_eItemType_Option)
+    return NULL;
+
+
   if ( (text2 && strcmp(text2, "") != 0) || 
        (text3 && strcmp(text3, "") != 0) ) {
     if ( !(status & ps_mStatus_table))
@@ -271,6 +276,7 @@ void *CnvXtthelpToPs::insert( navh_eItemType item_type, char *text1,
 	      tops.print_text( str, tops.style[tops.ci].link, 
 			       ps_mPrintMode_End | ps_mPrintMode_FixX);	  
 	    else {
+#if 0
 	      if ( !(text3 && strcmp(text3, "") != 0)) {
 		tops.x = ps_cLeftMargin + 2 * ps_cCellSize;
 		if ( ps_cLeftMargin + ps_cCellSize + strlen(text2) * hstyle->font_size * 0.5 > tops.x)
@@ -283,6 +289,7 @@ void *CnvXtthelpToPs::insert( navh_eItemType item_type, char *text1,
 	      }
 	      tops.print_text( str, tops.style[tops.ci].link, 
 			       ps_mPrintMode_KeepY | ps_mPrintMode_FixX);
+#endif
 	    }
 	  }
         }
@@ -324,6 +331,14 @@ void *CnvXtthelpToPs::insert( navh_eItemType item_type, char *text1,
       int sts = tops.print_image( text1);
       if ( EVEN(sts))
 	printf( "Image: %s not found\n", text1);
+      return NULL;
+    }
+    case navh_eItemType_Option:
+    {      
+      if ( strcmp( text1, "printdisable") == 0)
+	option |= ps_mOption_printDisable;
+      else if ( strcmp( text1, "printenable") == 0)
+	option &= ~ps_mOption_printDisable;
       return NULL;
     }
     default:

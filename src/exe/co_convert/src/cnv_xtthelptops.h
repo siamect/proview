@@ -28,11 +28,15 @@ typedef enum {
   ps_mStatus_topic 	= 1 << 3
 } ps_mStatus;
 
+typedef enum {
+  ps_mOption_printDisable	= 1 << 0
+} ps_mOption;
+
 class CnvXtthelpToPs : public CnvXtthelpTo {
  public:
   CnvXtthelpToPs( CnvCtx *cnv_ctx) :
     ctx(cnv_ctx), base_ci(0), first_topic(1), user_style(0), status(0),
-    conf_pass(false) 
+    conf_pass(false), option(0)
     { 
       strcpy( current_subject, "");
     }
@@ -67,6 +71,7 @@ class CnvXtthelpToPs : public CnvXtthelpTo {
   unsigned int status;
   bool conf_pass;
   char current_subject[80];
+  unsigned int option;
 };
 
 #endif
