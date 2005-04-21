@@ -8,11 +8,48 @@ SObject SSAB:Class
 !/**
 !  @Version 1.0
 !  @Author Jonas Haulin
-!  @Code rt_plc_macro_logic.h
-!  @Summary Antisway auto
+!  @Code rs_plc_antisway.c
+!  @Summary Sway compensation for crane in automatic mode
+!  Sway compensation for crane in automatic mode
 ! 
 !  @image orm_antiswaya_fo.gif
-!  No documentation yet...
+!  The automatic antisway object will give an output that renders the system 
+!  without sway at the command position if followed exactly. The function does 
+!  not compensate for changes in Lc, but will use the value given at a new call 
+!  throughout the travel. If there will be hoisting during the acceleration, an 
+!  average value could be given at the same time as the command position, for 
+!  instance.
+!
+!  If a pointer to another AntiSwayA object is supplied in other, the two objects 
+!  will match their travel times whenever a new position command is given to 
+!  either object.
+!
+!  Immediate travel start can be deactivad by turning off autoGo flag. This can 
+!  be used if one wants to start the automatic travel on an operator's command 
+!  rather than as soon as a new position command is given. If autoGo is turned 
+!  off during travel, the object will set a disrupt flag and empty its set. All 
+!  reference outputs are set to zero. To get a smooth transition, a manual antisway 
+!  object (AntiSwayM) can be activated at the same time. In that case, it need to 
+!  have the last non-zero uR from the AntiSwayA object, or a measured value of the 
+!  velocity plugged into uc. 
+!
+!  Since the automatic antisway object only outputs ideal reference trajectories, 
+!  it should be connected to a regulator of some kind ensuring trajectory tracking 
+!  and that the final command velocity is met. Schematic example is shown below.
+!
+!  @image orm_antiswaya_fig1.gif
+!
+!  A simple candidate for a regulator would be a two-term regulator 
+!  (y=uR+Ku*(uR-uc) +Kx*(xR-xc)), perhaps in combination with a ramp. Example in 
+!  UTSKR1 plc programs.
+!
+!  @image orm_antiswaya_fig2.gif
+!
+!  An example of usage is shown above. Note especially the Data signal (pointer 
+!  to other antisway object) going to the input Other.
+!
+!  @b See also
+!  @classlink AntiSwayM ssab_antiswaym.html
 !*/
   Object AntiSwayA $ClassDef 26
       Body SysBody
@@ -41,16 +78,16 @@ SObject SSAB:Class
           EndBody
         EndObject
 	!/**
-	! Integer that defines the impulse shaping technique / antisway strategy. 
-        ! Current available IST:s are
+	! Integer that defines the impulse sequence / antisway strategy. 
+        ! Current available sequences are
 	!
 	! 0  No antisway
 	! 1  Double pulse
 	! 2  Robust, or double double pulse
         ! 3  Unity-magnitude negative ZV, or triple pulse
-        ! 4  Unity-magnitude negative ZVS, robust variant of triple pulse above
-        ! 5  Time-optimal negative ZV
-        ! 6  Time-optimal negative ZVD, robust variant of ZV122.
+        ! 4  Unity-magnitude negative ZVD, robust variant of triple pulse above
+        ! 5  Partial-sum negative ZV
+        ! 6  Partial-sum negative ZVD, robust variant of ZV122.
         !*/
         Object mode $Input 2
           Body SysBody
@@ -128,17 +165,11 @@ SObject SSAB:Class
         ! amax[1] Soft limit of acceleration. Normally, this is the acceleration 
         ! that will be used by the object, and it should be slightly lower than 
         ! the hard limit, amaxH. 
-	! Having a soft limit serves two purposes. Firstly, compensation for 
-        ! hoisting requires some extra acceleration that can be kicked in when 
-        ! needed. Secondly, a frequency converter will have better chances of 
-        ! tracking the trajectory if not operating at its acceleration limit. 
+	! Having a soft limit serves one purpose. A frequency converter will have 
+        ! better chances of tracking the trajectory if not operating at its 
+        ! acceleration limit. 
 	! A control strategy to ensure trajectory tracking also has better chances 
         ! of being successful. 
-	! A suitable value of amaxS that will leave enough acceleration space for 
-        ! the hoisting compensation can be calculated from the formula; 
-	!    amaxS = amaxH/(1.0+(1.5*DLMax/sqrt(g*LMin))), 
-        ! where DLMax is the maximum hoisting speed, g the acceleration of gravity 
-        ! and LMin the minimum pendulum length.
 	!*/
         Object amax $Intern 9
           Body SysBody
