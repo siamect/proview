@@ -357,7 +357,7 @@ static int msglist_brow_cb( FlowCtx *ctx, flow_tEvent event)
       brow_SelectClear( msglist->brow->ctx);
       brow_SetInverse( object, 1);
       brow_SelectInsert( msglist->brow->ctx, object);
-      if ( !brow_IsVisible( msglist->brow->ctx, object))
+      if ( !brow_IsVisible( msglist->brow->ctx, object, flow_eVisible_Full))
         brow_CenterObject( msglist->brow->ctx, object, 0.25);
       if ( node_count)
         free( node_list);
@@ -393,7 +393,7 @@ static int msglist_brow_cb( FlowCtx *ctx, flow_tEvent event)
       brow_SelectClear( msglist->brow->ctx);
       brow_SetInverse( object, 1);
       brow_SelectInsert( msglist->brow->ctx, object);
-      if ( !brow_IsVisible( msglist->brow->ctx, object))
+      if ( !brow_IsVisible( msglist->brow->ctx, object, flow_eVisible_Full))
         brow_CenterObject( msglist->brow->ctx, object, 0.75);
       if ( node_count)
         free( node_list);
@@ -476,7 +476,7 @@ static int msglist_brow_cb( FlowCtx *ctx, flow_tEvent event)
       brow_SelectClear( msglist->brow->ctx);
       brow_SetInverse( object, 1);
       brow_SelectInsert( msglist->brow->ctx, object);
-      if ( !brow_IsVisible( msglist->brow->ctx, object))
+      if ( !brow_IsVisible( msglist->brow->ctx, object, flow_eVisible_Full))
         brow_CenterObject( msglist->brow->ctx, object, 0.25);
       free( node_list);
       break;
