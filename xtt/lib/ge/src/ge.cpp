@@ -37,6 +37,7 @@ extern "C" {
 #include "co_mrm_util.h"
 #include "co_wow.h"
 }
+#include "co_xhelp.h"
 
 #include "flow.h"
 #include "flow_browctx.h"
@@ -2329,7 +2330,7 @@ static void ge_activate_background_color( Widget w, ge_tCtx gectx, XmAnyCallback
 
 static void ge_activate_help( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
 {
-  // Not yet implemented
+  CoXHelp::dhelp( "index", "", navh_eHelpFile_Other, "$pwr_lang/man_geref.dat", false);  
 }
 
 static void ge_create_cursor_position( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)
