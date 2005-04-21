@@ -45,6 +45,7 @@ extern "C" {
 #include "wb_vsel.h"
 #include "co_msgwindow.h"
 #include "co_xhelp.h"
+#include "co_lng.h"
 #include "wb_wtt.h"
 
 #include "wb_erep.h"
@@ -86,6 +87,11 @@ void	pwr_login_cancel();
 void	pwr_wtt_close( void *wttctx);
 void	pwr_wtt_open_volume( void *wttctx, wb_eType type, char *filename, wow_eFileSelType file_type);
 int	pwr_time_to_exit( void *wttctx);
+
+static void usage()
+{
+  printf("\nUsage: wb [-a] [-l language] [username] [password] [volume]\n");
+}
 
 void wttlist_add( pwr_tStatus *sts, Wtt *wtt, pwr_tVid vid)
 {
@@ -497,13 +503,21 @@ int main( int argc, char *argv[])
   for ( i = 1; i < argc; i++) {
     if ( argv[i][0] == '-') {
       switch ( argv[i][1]) {
-        case 'a':
-	  // Load all volumes
-	  sw_projectvolume = 0;
-	  volumename_p = 0;
-	  break;
-        default:
-	  printf("Unknown argument: %s\n", argv[i]);
+      case 'a':
+	// Load all volumes
+	sw_projectvolume = 0;
+	volumename_p = 0;
+	break;
+      case 'l':
+	if ( i+1 >= argc) {
+	  usage();
+	  exit(0);
+	}
+	Lng::set( argv[i+1]);
+	i++;
+	break;
+      default:
+	printf("Unknown argument: %s\n", argv[i]);
       }
     }
     else {
