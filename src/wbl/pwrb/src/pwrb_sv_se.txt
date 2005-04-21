@@ -7980,6 +7980,14 @@ ej. Existerade signalen i förra programversionen används dess sista ärvärde
 som startvärde, annars InitialValue. 
 </attr>
 
+<attr>PresMinLimit
+Skalområdets undre gräns i objektbildens stapeldiagramm. 
+</attr>
+
+<attr>PresMaxLimit
+Skalområdets övre gräns i objektbildens stapeldiagramm. 
+</attr>
+
 <attr>DefGraph 
 @Summary Ett XttGraph objekt som öppnar en graf för det här objektet.
 Ett XttGraph objekt som öppnar en graf som innehåller data för det här 
