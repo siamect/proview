@@ -137,16 +137,16 @@ int	NavHelp::help( char *help_key, char *help_bookmark,
     dcli_get_defaultfilename( base_file, filestr, NULL);
   else if ( file_type == navh_eHelpFile_Project)
     dcli_get_defaultfilename( project_file, filestr, NULL);
-  else {
+  else
     dcli_get_defaultfilename( file_name, filestr, NULL);
-    // Replace symbol for language
-    if ( strncmp( filestr, "$pwr_lang/", 10) == 0) {
-      char lng_filestr[200];
 
-      sprintf( lng_filestr, "$pwr_exe/%s/%s", Lng::get_language_str(),
-		 &filestr[10]);
-      strcpy( filestr, lng_filestr);
-    }
+  // Replace symbol for language
+  if ( strncmp( filestr, "$pwr_lang/", 10) == 0) {
+    char lng_filestr[200];
+    
+    sprintf( lng_filestr, "$pwr_exe/%s/%s", Lng::get_language_str(),
+	     &filestr[10]);
+    strcpy( filestr, lng_filestr);
   }
   dcli_translate_filename( filestr, filestr);
 
@@ -201,6 +201,14 @@ int	NavHelp::help( char *help_key, char *help_bookmark,
     }
     else if ( cdh_NoCaseStrncmp( line, "<pagebreak>", 11) == 0) {
       (insert_cb)( parent_ctx, navh_eItemType_PageBreak, "",
+		   NULL, NULL, NULL, NULL, NULL, navh_eHelpFile_, 0, NULL);
+    }
+    else if ( cdh_NoCaseStrncmp( line, "<option>", 8) == 0) {
+      char option[80];
+
+      help_remove_spaces( &line[8], option);
+      cdh_ToLower( option, option);
+      (insert_cb)( parent_ctx, navh_eItemType_Option, option,
 		   NULL, NULL, NULL, NULL, NULL, navh_eHelpFile_, 0, NULL);
     }
     else if ( cdh_NoCaseStrncmp( line, "<topic>", 7) == 0) {
@@ -264,19 +272,27 @@ int	NavHelp::help( char *help_key, char *help_bookmark,
         }
 
 	// Ignore all other tags
-        if ( (s = strstr( line, "<ib>")) || (s = strstr( line, "<IB>")))
-	{
+        if ( (s = strstr( line, "<ib>")) || (s = strstr( line, "<IB>"))) {
 	  strcpy( text1, s + 4);
           (insert_cb)( parent_ctx, navh_eItemType_HelpBold, 
 			    text1,  "", "", "", "", NULL, file_type, 0, NULL);
           sts = dcli_read_line( line, sizeof( line), file);
           continue;
 	}
-        if ( (s = strstr( line, "<i>")) || (s = strstr( line, "<I>")))
-	{
+        if ( (s = strstr( line, "<i>")) || (s = strstr( line, "<I>"))) {
 	  strcpy( text1, s + 3);
           (insert_cb)( parent_ctx, navh_eItemType_Help, text1,  "", "", "", 
 		"", NULL, file_type, 0, bookmark_p);
+          sts = dcli_read_line( line, sizeof( line), file);
+          continue;
+	}
+	if ( cdh_NoCaseStrncmp( line, "<option>", 8) == 0) {
+	  char option[80];
+
+	  help_remove_spaces( &line[8], option);
+	  cdh_ToLower( option, option);
+	  (insert_cb)( parent_ctx, navh_eItemType_Option, option,
+		      NULL, NULL, NULL, NULL, NULL, navh_eHelpFile_, 0, NULL);
           sts = dcli_read_line( line, sizeof( line), file);
           continue;
 	}
@@ -532,6 +548,7 @@ int	NavHelp::help_index( navh_eHelpFile file_type, char *file_name)
   char	include_file[80];
   char	subject[80];
   int 	sts;
+  char  *s;
 
   // Open file
   if ( file_type == navh_eHelpFile_Base)
@@ -540,6 +557,14 @@ int	NavHelp::help_index( navh_eHelpFile file_type, char *file_name)
     dcli_get_defaultfilename( project_file, filestr, NULL);
   else
     dcli_get_defaultfilename( file_name, filestr, NULL);
+
+  if ( strncmp( filestr, "$pwr_lang/", 10) == 0) {
+    char lng_file[200];
+
+    sprintf( lng_file, "$pwr_exe/%s/%s", Lng::get_language_str(),
+	     &filestr[10]);
+    strcpy( filestr, lng_file);
+  }
   dcli_translate_filename( filestr, filestr);
 
   file = fopen( filestr, "r");
@@ -558,6 +583,8 @@ int	NavHelp::help_index( navh_eHelpFile file_type, char *file_name)
     else if ( strncmp( line, "<topic>", 7) == 0 || 
               strncmp( line, "<TOPIC>", 7) == 0)
     {
+      if ( (s = strstr( line, "<style>")) || (s = strstr( line, "<STYLE>")))
+	*s = 0;
       help_remove_spaces( &line[7], subject);
 
       (insert_cb)( parent_ctx, navh_eItemType_HelpBold,
