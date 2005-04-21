@@ -195,26 +195,26 @@ void CoXHelpNavBrow::create_nodeclasses()
 
   brow_CreateNodeClass( ctx, "NavigatorHead", 
 		flow_eNodeGroup_Common, &nc_header);
-  brow_AddFrame( nc_header, 0, 0, 20, 0.8, flow_eDrawType_LineGray, 2, 1);
-  brow_AddAnnotPixmap( nc_header, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
-  brow_AddAnnot( nc_header, 2, 0.6, 0,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+  brow_AddFrame( nc_header, 0, 0, 20, 1.4, flow_eDrawType_Line, -1, 1);
+  brow_AddAnnotPixmap( nc_header, 0, 0.2, 0.4, flow_eDrawType_Line, 2, 0);
+  brow_AddAnnot( nc_header, 2, 1.0, 0,
+		flow_eDrawType_TextHelveticaBold, 4, flow_eAnnotType_OneLine, 
 		0);
-  brow_AddAnnot( nc_header, 8, 0.6, 1,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+  brow_AddAnnot( nc_header, 8, 1.0, 1,
+		flow_eDrawType_TextHelveticaBold, 4, flow_eAnnotType_OneLine, 
 		1);
 
   // Create Header2
 
   brow_CreateNodeClass( ctx, "NavigatorHeadLarge", 
 		flow_eNodeGroup_Common, &nc_headerlarge);
-  brow_AddFrame( nc_headerlarge, 0, 0, 20, 1.4, flow_eDrawType_Line, -1, 1);
-  brow_AddAnnotPixmap( nc_headerlarge, 0, 0.5, 0.1, flow_eDrawType_Line, 2, 0);
+  brow_AddFrame( nc_headerlarge, 0, 0, 20, 2.0, flow_eDrawType_Line, -1, 1);
+  brow_AddAnnotPixmap( nc_headerlarge, 0, 0.2, 0.4, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_headerlarge, 2, 1.0, 0,
-		flow_eDrawType_TextHelveticaBold, 4, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelveticaBold, 6, flow_eAnnotType_OneLine, 
 		0);
   brow_AddAnnot( nc_headerlarge, 8, 1.0, 1,
-		flow_eDrawType_TextHelveticaBold, 4, flow_eAnnotType_OneLine, 
+		flow_eDrawType_TextHelveticaBold, 6, flow_eAnnotType_OneLine, 
 		1);
 
   // Create Horizontal line
@@ -382,29 +382,25 @@ static int xhelpnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
       int		sts;
 
       brow_GetSelectedNodes( xhelpnav->brow->ctx, &node_list, &node_count);
-      if ( !node_count)
-      {
-        sts = brow_GetLast( xhelpnav->brow->ctx, &object);
+      if ( !node_count) {
+        sts = brow_GetLastVisible( xhelpnav->brow->ctx, &object);
         if ( EVEN(sts)) return 1;
       }
-      else
-      {
-        sts = brow_GetPrevious( xhelpnav->brow->ctx, node_list[0], &object);
-        if ( EVEN(sts))
-        {
-          sts = brow_GetLast( xhelpnav->brow->ctx, &object);
-          if ( EVEN(sts))
-	  {
-            if ( node_count)
-	      free( node_list);
-            return 1;
- 	  }
+      else {
+	if ( !brow_IsVisible( xhelpnav->brow->ctx, node_list[0], flow_eVisible_Partial)) {
+	  sts = brow_GetLastVisible( xhelpnav->brow->ctx, &object);
+	  if ( EVEN(sts)) return 1;
+	}
+	else {
+	  sts = brow_GetPrevious( xhelpnav->brow->ctx, node_list[0], &object);
+	  if ( EVEN(sts))
+	    return 1;
         }
       }
       brow_SelectClear( xhelpnav->brow->ctx);
       brow_SetInverse( object, 1);
       brow_SelectInsert( xhelpnav->brow->ctx, object);
-      if ( !brow_IsVisible( xhelpnav->brow->ctx, object))
+      if ( !brow_IsVisible( xhelpnav->brow->ctx, object, flow_eVisible_Full))
         brow_CenterObject( xhelpnav->brow->ctx, object, 0.25);
       if ( node_count)
         free( node_list);
@@ -418,29 +414,25 @@ static int xhelpnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
       int		sts;
 
       brow_GetSelectedNodes( xhelpnav->brow->ctx, &node_list, &node_count);
-      if ( !node_count)
-      {
-        sts = brow_GetFirst( xhelpnav->brow->ctx, &object);
+      if ( !node_count) {
+        sts = brow_GetFirstVisible( xhelpnav->brow->ctx, &object);
         if ( EVEN(sts)) return 1;
       }
-      else
-      {
-        sts = brow_GetNext( xhelpnav->brow->ctx, node_list[0], &object);
-        if ( EVEN(sts))
-        {
-          sts = brow_GetFirst( xhelpnav->brow->ctx, &object);
-          if ( EVEN(sts))
-	  {
-            if ( node_count)
-	      free( node_list);
-            return 1;
- 	  }
+      else {
+	if ( !brow_IsVisible( xhelpnav->brow->ctx, node_list[0], flow_eVisible_Partial)) {
+	  sts = brow_GetFirstVisible( xhelpnav->brow->ctx, &object);
+	  if ( EVEN(sts)) return 1;
+	}
+	else {
+	  sts = brow_GetNext( xhelpnav->brow->ctx, node_list[0], &object);
+	  if ( EVEN(sts))
+	    return 1;
         }
       }
       brow_SelectClear( xhelpnav->brow->ctx);
       brow_SetInverse( object, 1);
       brow_SelectInsert( xhelpnav->brow->ctx, object);
-      if ( !brow_IsVisible( xhelpnav->brow->ctx, object))
+      if ( !brow_IsVisible( xhelpnav->brow->ctx, object, flow_eVisible_Full))
         brow_CenterObject( xhelpnav->brow->ctx, object, 0.75);
       if ( node_count)
         free( node_list);
@@ -748,7 +740,7 @@ pwr_tStatus CoXHelpNav::search_exec( bool reverse)
       brow_SelectClear( brow->ctx);
       brow_SetInverse( object_list[idx], 1);
       brow_SelectInsert( brow->ctx, object_list[idx]);
-      if ( !brow_IsVisible( brow->ctx, object_list[idx]))
+      if ( !brow_IsVisible( brow->ctx, object_list[idx], flow_eVisible_Full))
         brow_CenterObject( brow->ctx, object_list[idx], 0.25);
       search_node = object_list[idx];
       return XHELP__SUCCESS;
@@ -1167,8 +1159,18 @@ int	CoXHelpNav::help_index( navh_eHelpFile file_type, char *file_name, int pop)
   int sts;
   brow_tObject 	*object_list;
   int		object_cnt;
-  NavHelp *navhelp = new NavHelp( (void *)this, "$pwr_exe/xtt_help.dat",
-				  "$pwrp_exe/xtt_help.dat");
+  NavHelp *navhelp;
+
+  switch ( utility) {
+  case xhelp_eUtility_Xtt:
+    navhelp = new NavHelp( (void *)this, xhelp_cFile_BaseXtt, xhelp_cFile_Project);
+    break;
+  case xhelp_eUtility_Wtt:
+    navhelp = new NavHelp( (void *)this, xhelp_cFile_BaseWtt, xhelp_cFile_Project);
+    break;
+  default:
+    return 0;
+  }
   navhelp->insert_cb = xhelpnav_help_insert_cb;
 
   if (pop)
