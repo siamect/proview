@@ -1097,11 +1097,11 @@ class GeValueInput : public GeDynElem {
   GeValueInput( GeDyn *e_dyn) : 
     GeDynElem(e_dyn, (ge_mDynType) 0, ge_mActionType_ValueInput, 
 	      ge_eDynPrio_ValueInput),
-    min_value(0), max_value(0), clear(0), popup(0), value_element(0)
+    min_value(0), max_value(0), clear(0), popup(0), unselect(0), value_element(0)
     {}
   GeValueInput( const GeValueInput& x) : 
     GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), min_value(x.min_value),
-    max_value(x.max_value), clear(x.clear), popup(x.popup)
+    max_value(x.max_value), clear(x.clear), popup(x.popup), unselect(x.unselect)
     {}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
