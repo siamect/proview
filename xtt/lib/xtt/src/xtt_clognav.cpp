@@ -673,7 +673,7 @@ static int clognav_brow_cb( FlowCtx *ctx, flow_tEvent event)
       brow_SelectClear( clognav->brow->ctx);
       brow_SetInverse( object, 1);
       brow_SelectInsert( clognav->brow->ctx, object);
-      if ( !brow_IsVisible( clognav->brow->ctx, object))
+      if ( !brow_IsVisible( clognav->brow->ctx, object, flow_eVisible_Full))
         brow_CenterObject( clognav->brow->ctx, object, 0.25);
       if ( node_count)
         free( node_list);
@@ -709,7 +709,7 @@ static int clognav_brow_cb( FlowCtx *ctx, flow_tEvent event)
       brow_SelectClear( clognav->brow->ctx);
       brow_SetInverse( object, 1);
       brow_SelectInsert( clognav->brow->ctx, object);
-      if ( !brow_IsVisible( clognav->brow->ctx, object))
+      if ( !brow_IsVisible( clognav->brow->ctx, object, flow_eVisible_Full))
         brow_CenterObject( clognav->brow->ctx, object, 0.75);
       if ( node_count)
         free( node_list);

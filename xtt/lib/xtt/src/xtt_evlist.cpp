@@ -981,7 +981,7 @@ static int evlist_brow_cb( FlowCtx *ctx, flow_tEvent event)
       brow_SelectClear( evlist->brow->ctx);
       brow_SetInverse( object, 1);
       brow_SelectInsert( evlist->brow->ctx, object);
-      if ( !brow_IsVisible( evlist->brow->ctx, object))
+      if ( !brow_IsVisible( evlist->brow->ctx, object, flow_eVisible_Full))
         brow_CenterObject( evlist->brow->ctx, object, 0.25);
       if ( node_count)
         free( node_list);
@@ -1017,7 +1017,7 @@ static int evlist_brow_cb( FlowCtx *ctx, flow_tEvent event)
       brow_SelectClear( evlist->brow->ctx);
       brow_SetInverse( object, 1);
       brow_SelectInsert( evlist->brow->ctx, object);
-      if ( !brow_IsVisible( evlist->brow->ctx, object))
+      if ( !brow_IsVisible( evlist->brow->ctx, object, flow_eVisible_Full))
         brow_CenterObject( evlist->brow->ctx, object, 0.75);
       if ( node_count)
         free( node_list);
@@ -1117,7 +1117,7 @@ static int evlist_brow_cb( FlowCtx *ctx, flow_tEvent event)
       brow_SelectClear( evlist->brow->ctx);
       brow_SetInverse( object, 1);
       brow_SelectInsert( evlist->brow->ctx, object);
-      if ( !brow_IsVisible( evlist->brow->ctx, object))
+      if ( !brow_IsVisible( evlist->brow->ctx, object, flow_eVisible_Full))
         brow_CenterObject( evlist->brow->ctx, object, 0.25);
       free( node_list);
       break;
