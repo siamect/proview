@@ -1,0 +1,50 @@
+<topic> overview
+Konfiguratören översikt
+
+<b>Konstruktörs handbok <link> index, ,$pwr_lang/man_dg.dat
+<b>Konfiguratör		<link> configurator_refman, ,$pwr_lang/man_dg.dat
+<b>Ge editor		<link> index, ,$pwr_lang/man_geref.dat
+<b>Plc editor		<link> plceditor_refman, ,$pwr_lang/man_dg.dat
+<b>Objektseditor	<link> objecteditor_refman, ,$pwr_lang/man_dg.dat
+<b>Spreadsheet editor	<link> spreadsheeteditor_refman, ,$pwr_lang/man_dg.dat
+<b>Hjälp fönster	<link> helpwindow_refman, ,$pwr_lang/man_dg.dat
+<b>Meddelande fönster	<link> messagewindow_refman, ,$pwr_lang/man_dg.dat
+<b>Utilities		<link> utilities_refman, ,$pwr_lang/man_dg.dat
+<b>Klasseditor		<link> classeditor, ,$pwr_lang/man_dg.dat
+<b>Kommandon		<link> help command, ,$pwr_lang/man_dg.dat
+<b>Script		<link> script, ,$pwr_lang/man_dg.dat
+<b>Hjälpfil		<link> helpfile
+<b>Användare		<link> users
+<b>Klasser		<link> classes
+
+<b>Index		<index>
+</topic>
+
+
+<TOPIC> advanced user
+Advanced user
+
+The advanced user allow some key-combinations that
+might confuse the unexperienced user.
+
+Advance user is set from setup or 	<LINK> setup
+with the command 'set advanceduser'	<LINK> set advanceduser
+
+Additional key's for advanced user
+
+ArrowRight	<t> Change attribute value.
+		<t> If an object has children, display children otherwise
+		<t> display attributes.
+</TOPIC>
+
+<TOPIC> classes
+Classes
+
+<B>SystemClasses	<LINK>pwrs, ,$pwr_lang/pwrs_xtthelp.dat
+<B>BaseClasses		<LINK>pwrb, ,$pwr_lang/pwrb_xtthelp.dat
+
+</TOPIC>
+
+<include> $pwr_lang/man_dg.dat
+<include> $pwr_lang/pwrs_xtthelp.dat
+<include> $pwr_lang/pwrb_xtthelp.dat

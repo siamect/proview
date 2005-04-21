@@ -1,0 +1,4328 @@
+
+<topic> __DocumentTitlePage
+
+<image> pwr_logga.gif
+
+
+
+
+
+
+<h1> Ge
+<h1> Konstruktörshandbok
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<hr>
+Claes Sjöfors 2005-03-24
+Version 4.1.0	
+<hr>
+</topic>
+
+<topic> __DocumentInfoPage
+
+
+Copyright 2005 SSAB Oxelösund AB
+All rights reserved.
+
+First Edition Mars 2005
+
+Notice: All information contained herein is the property of SSAB Oxelösund AB. 
+
+
+
+</topic>
+
+<chapter>
+
+<option> printdisable
+<topic>index
+Ge Konstruktörshandbok
+
+Inledning <link>geref_intro
+Terminologi <link>geref_term
+Arbeta med editorn <link>geref_work
+Fönster <link>geref_windows
+Objekt <link>geref_objects
+SubGraf <link>geref_subgraph
+Dynamik <link>geref_dynamic
+Aktion <link>geref_action
+Skapa en SubGraf <link>geref_create_subgraph
+Grupper <link>geref_groups
+GIF och JPEG bilder <link>geref_images
+Kopplingar <link>geref_connections
+Editera <link>geref_edit
+Testa <link>geref_testing
+Utvecklingsmiljö <link>geref_development
+Kommandon <link>geref_command
+Script <link>geref_script
+Web bilder <link>geref_web
+Runtime <link>geref_runtime
+Script och kommandon <link>gecmd
+</topic>
+<option> printenable
+
+<topic>geref_intro
+Inledning
+
+Ge är en editor för att bygga bilder för underhåll och enklare operatörskommunikation i 
+proview. Editorn är integrerad med proview's utvecklingsmiljö och startas från navigatören.
+Bilderna byggs upp av bas-objekt i form av rektanglar, cirklar, linjer och texter, och av 
+subgrafer, som är en slags sammansatta objekt. Ge innehåller en uppsättning subgrafer för 
+några vanliga komponenter: ventiler, motorer, pumpar mm. Andra symboler kan konstruktören 
+rita själv i Ge. Formen på objekten lagras som vektorer vilket, tillsammans med 
+transformationsmatriser gör att de kan zoomas, skalas och roteras obegränsat.
+I runtime finns en rad olika möjligheter att använda ge-bilderna. De kan startas från xtt 
+som motif-applikationer ( på VMS, Lynx eller Linux), eller som java-applikationer (på Linux).
+Bilderna kan även exporteras som Java-applets vilka kan exekveras av webläsare som Internet
+Explorer eller Netscape. Vidare kan man exportera subgrafer som java-bönor vilka kan 
+användas i en java-IDE som t ex JBuilder.
+</topic>
+</chapter>
+
+<chapter>
+<topic>geref_term
+Terminologi
+
+Här förklaras några termer som används i manualen.
+<h2>Graf
+En bild består av en graf.
+<h2>Subgraf
+En samling basobjekt kan sparas som en subgraf. En subgraf fungerar som en slags klass eller 
+mall, och i en graf kan man skapa instanser av subgrafen, subgraf-objekt. Lagrade subgrafer 
+hamnar i subgraf-plaletten.
+<h2>Basobjekt
+Basobjekt är objekt av typen rektanglar, ellipser, linjer, polylinjer, texter, kopplingspunkter
+och noter.
+<h2>Sammansatta objekt
+Mer komplexa objekt. Bar och trend objekt.
+<h2>Annotation
+Text i en subgraf som kan vara unik för varje instans.
+<h2>Komponent
+En instans av en subgraf eller en grupp.
+<h2>Koppling
+En linje som sammanbinder två subgrafer. Linjen kan vara rak eller innehålla brytpunkter som 
+delar upp den i
+vertikala och horisontala delar.
+<h2>Kopplingspunkt
+Punkt i en subgraf till vilken man kan fästa en koppling.
+<h2>Signal
+Signal används generellt som benämning på attribut i ett objekt i Proview's realtidsdatabas. 
+Ofta är det fråga om värdet för en Di, Do, Dv, Ai, Ao eller Av men det kan vara ett attribut i 
+vilket objekt som helst.
+<h2>MB1
+Vänster musknapp.
+<h2>MB2
+Musknappen i mitten (om denna saknas kan man ibland trycka ner vänster och höger musknapp 
+samtidigt).
+<h2>MB3
+Höger musknapp.
+<h2>Rtdb
+Proviews realtids-databas.
+</topic>
+</chapter>
+
+<chapter>
+<topic>geref_work
+Arbeta med editorn
+
+Det här avsnittet är avsett som en introduktion för att snabbt komma igång och editera bilder 
+i Ge.
+
+<option> printenable
+Rita basobjekt 	<link>geref_work,baseobjects
+Objektseditorn 	<link>geref_work,objecteditor
+Bakgrund 	<link>geref_work,background
+Grupper		<link>geref_work,groups
+SubGrafer	<link>geref_work,subgraphs
+Dynamik		<link>geref_work,dynamic
+Indikatorer	<link>geref_work,indicators
+Process symboler <link>geref_work,process
+Tryckknappar	<link>geref_work,pushbuttons
+Visa analoga signaler <link>geref_work,analog
+Sätta analoga signaler <link>geref_work,setanalog
+Texter		<link>geref_work,texts
+Rörliga objekt  <link>geref_work,movement
+Ändra form på objekt <link>geref_work,shape
+Navigera med tangentbordet <link>geref_work,navigate
+Menyer		<link>geref_work,menues
+Gif och JPEG-bilder <link>geref_work,images
+Rita en subgraph <link>geref_work,drawsubgraph
+<option> printenable
+
+<bookmark>baseobjects
+<h1>Rita basobjekt
+Till bas-objekten räknas rektangel, linje, polylinje, cirkel och text. De ritas genom att man
+klickar på symbolen för dem i verktygs-panelen, och drar eller klickar med MB1 i arbetsarean.
+
+<h2>Hot
+Ett objekt är hot när markören är placerad på objektet. Detta markeras dels med att markören 
+ändras till ett hårkors, dels med att det objekt som är hot ritas med något större linjebredd.
+
+<h2>Välja ut objekt
+Man väljer ut ett objekt med Klick MB1. Ett utvalt objekt ritas med röd färg. Om man vill 
+välja ut fler objekt kan man klicka på dessa med Shift/Klick MB1.
+
+Ett annat sätt är att dra med MB1 i arbetsarean. De objekt som ligger inom utvalsrektangeln 
+kommer att väljas ut. Eftersom man även flyttar objekt genom att dra med MB1 gäller att att 
+inte få träff på något objekt när man startar draget. Om det är det svårt att undvika kan man
+använda Shift/Drag MB1 istället som adderar objekt till utvalslistan.
+
+Genom att klicka med MB3 i arbetsarean tömmer man utvalslistan.
+
+<h2>Ta bort objekt
+Ett objekt tas bort genom dubbelklicka på det med MB2. Man kan även välja ut det, och 
+dubbelklicka med MB2 någonstans i arbetsarean. Då tar man bort alla utvalda objekt.
+
+<h2>Flytta på objekt
+Man flyttar på ett objekt genom att dra med MB1. Om man vill flytta flera objekt samtidigt, 
+väljer men ut dem och drar i ett av objekten. Alla utvalda objekt följer då med. Om man 
+enbart vill flytta vertikalt eller horisontalt, kan man använda 
+Functions/MoveRestrictions/Vertical (Ctrl+G) eller Functions/MoveRestrictions/Horizontal 
+(Ctrl+H). Dessa funktioner är verksamma tills man återställer med MB3.
+
+<h2>Kopiera objekt
+Man kopierar objekt genom att välja ut dem, och aktivera Edit/Copy (Ctrl+C) och Edit/Paste 
+(Ctrl+V) i menyn. Efter paste blir de nya objekten hängande på markören och genom att klicka 
+med MB1 fäster man dem i arbetsarean. Vid kopiering kan man liksom vid förflyttning, välja 
+vertikal eller horisontal förflytting.
+
+<h2>Text
+Texter lägger man in genom att välja Text i verktygspanelen och klicka med MB1 i arbetsarean.
+Ett inmatningsfält öppnas där man kan mata in textsträngen. Man kan välja textstorlek med 
+TextSize, och fet eller normal text med Bold i vertygspanelen. Om man vill ändra på texten 
+aktiverar man Edit/Change text (Ctrl+T) i menyn. Textfärgen väljs i paletten med Shift MB1.
+
+<h2>Polylinjer
+Man ritar polylinjer genom att dra upprepade gånger med MB1 i arbetsarean. När sista linjen 
+är ritad, avslutar man med Klick MB3. Om man vill ändra på någon punkt i polylinjen, väljer 
+man ut den och aktiverar Edit/Edit polyline i menyn. Bryt-punkterna i polylinjen blir nu 
+känsliga för Drag MB1. När markören ändras till ett hårkors har man fått träff på en 
+bryt-punkt och kan nu dra den till önskad position. När editeringen av polylinjen är klar, 
+avslutar man med MB3.
+
+<h2>Cirkelsegment
+En cirkel ritar man genom att välja cirkel i verktygspanelen och dra med MB1 i arbetsarean.
+Om man vill rita ett cirkel-segment ritar man först en cirkel, och öppnar därefter 
+objekt-editorn för cirkeln (genom att dubbelklicka med MB1 på den). Här finns attributen 
+angel1 och angel2, där Angel1 anger start-vinkeln för segmentet och angel2 storleken på 
+segmentet.
+
+<h2>Färg
+När man ska skapa ett objekt med en viss färg kan man göra på två olika sätt. Antingen 
+ställer man in önskade egenskaper för fyllnad och färg mm, innan man skapar objektet, eller 
+så skapar man objektet först, väljer ut det, och ställer in önskade egenskaper. De 
+inställningar som görs påverkar alltid de objekt som är utvalda.
+
+För att sätta färg på basobjekt väljer fyllnadsfärg och kantfärg i färg-paletten. Här väljer 
+man fyllnadsfärgen med MB1 och kantfärgen med MB2. Text -färger väljs med Shift MB1.
+
+Med Fill och Border i vertygspanelen väljer man också om objektet ska fyllas och om 
+kantlinjen ska visas. Kantlinjens bredd kan påverkas med Line där man har 8 olika 
+linjebredder att välja mellan.
+
+<h2>3D
+Ett objekt kan ges ett tredimensionellt, relief-artat utseende genom att det ritas med en 
+ljusare färgton längs den övre kanten och med en mörkare längs den undre. Detta väljs med 
+3D i verktygspanelen. Bredden på 3D-skuggan bestäms av attributet ShadowWidth som kan ändras 
+från objekts-editorn.
+
+<h2>Dynamik
+Om man vill sätta dynamik på ett basobjekt måste man låta den ingå i en grupp eller subgraf. 
+Basobjekten i sig innehåller inte någon dynamik.
+
+<bookmark>objecteditor
+<h1>Objekts editor
+Genom att dubbelklicka med MB1 på ett objekt öppnas objektseditorn. Man kan även öppna den 
+genom att välja ut objektet och aktivera Functions/Object attributes (Ctrl+A) i menyn. Här 
+kan man mata in olika data för objektet. Man väljer ut ett attribut genom att klicka på det 
+eller mha piltangenterna. Vid inmatning använder man Pil höger eller File/Change value 
+(Ctrl+Q) i menyn.
+
+<bookmark>background
+<h1>Bakgrund
+<h2>Bakgrundfärg
+Man väljer bakgrundsfärg genom att välja ut en färg med MB1 i färgpaletten och aktivera 
+Functions/Set background color i menyn.
+
+<h2>Bakgrundsbild
+Om man vill lägga en gif eller jpeg bild som bakgrund lägger man in namnet på bild-filen i 
+attributet Background image i Functions/Graph attributes. Bakgrundsbilden visas inte i 
+editorn, man kommer att visas när grafen tas upp i xtt.
+
+Bild-filen ska ligga på katalogen pwrp_exe.
+
+Om man sätter en etta i attributet BackgroundTiled kommer bilden att upprepas över 
+bakgrunden. Om BackgroundTiled är 0 skalas bilden om så att den täcker hela bakgrunden.
+
+<h2>Bildstorlek
+Arbetsarean är oändlig och kan expanderas obegränsat åt alla håll. Tyvärr är inte 
+skärmstorleken oändlig, utan man måste bestämma vilken del av arbetsarean som ska visas i 
+den slutgiltiga bilden. Det gör man i Functions/Graph attributes med attributen x0, y0, x1 
+och y1. Punkten (x0, y0) anger övre vänstra hörnet, och (x1, y1) nedre högra hörnet. 
+Placera markören på respektive punkt i arbetsarean, läs av koordinaterna (längs ner till 
+höger i fönstret) och mata in dem.
+
+<bookmark>groups
+<h1>Grupper
+Ett antal objekt kan grupperas genom att man väljer ut dem, och väljer Functions/Group i 
+menyn. Editorn behandlar sedan gruppen som om det var ett enskilt objekt, t ex när man väljer
+ut gruppen, flyttar på den eller skalar om den. Vill man ändra på ett del-objekt i en grupp, 
+måste man först lösa upp gruppen med Functions/Ungroup, sedan kan man göra ändringen och 
+gruppera igen.
+
+<bookmark>subgraphs
+<h1>Subgrafer
+Subgraf är en grafisk komponent som är uppbyggd av bas-objekt. Ofta symboliserar den en visst
+element i anläggningen t ex en ventil. Det finns också subgrafer som används av för att få en
+bättre layout på bilden, t ex ramar och reliefer.
+
+Man skapar en subgraf genom att välja ut en subgraf i subgrafs-paletten, och klicka med MB2 i
+arbetsarean.
+
+<h2>Färg
+Färgen på ett subgraf-objekt kan ändras på samma sätt som för ett basobjekt, dvs genom att 
+sätta fyllnads- och kantfärg på objektet. Men det finns ytterligare några färg-funktioner för
+subgrafer, som används för att behålla eventuella tredimensionella effekter i subgrafen.
+
+Vissa subgrafer, t ex IndRoundLarge, innehåller skuggor och speglingar. Ändrar man 
+fyllnadsfärg på denna, tappar den sin 3d effekt och upplevs som helt platt. Om man istället 
+ändrar färgtonen med hjälp av Tone-paletten, som återfinns längst ner i färgpaletten, 
+behåller knappen sitt 3d-utseende. Man kan även använda knapparna för ljushet, intensitet och
+färgskiftning i verktygs-panelen, för att modifiera färgen.
+
+<h2>Koppla till databasen
+En indikator ska visa upp ett digitalt värde i databasen, och ändra färg beroende på värdet. 
+På någon sätt måste man tala om vilka färger indikatorn ska växla mellan, och villkoret för 
+att den ska växla färg. Det gör man i objekts-editorn.
+
+Låt oss skapa t ex en IndRound, som är liten cirkel som kan växla mellan två fyllnads-färger.
+Om man öppnar objekts-editorn, så ser man vilka egenskaper man kan ange.
+
+<b>Attribut <t><t>Värde
+SubGraph   <t><t>pwr_indround
+DigLowColor.Attribute
+DigLowColor.Color <t><t>Inherit
+Cycle     <t><t>Inherit
+DynType   <t><t>Inherit
+Action    <t><t>Inherit
+
+I DigLowColor.Attribute lägger man den signal i databasen som ska få indikatorn att växla 
+färg. När signalen är hög, får indikatorn den färg som den har i editorn. När signalen är 
+låg, ges den färgen i DigLowColor.Color. Initialt ligger här värdet Inherit innebär att den 
+väljer ett default-värde, i det här fallet VeryDarkGray. Signalens värde kan inverteras genom
+att man sätter ett utropstecken framför namnet.
+
+De signaler som som indikatorn ska kopplas till kan man naturligtvis mata in för hand, men 
+det snabbaste sättet brukar vara att leta upp signalen i plant-hierakin (som återfinns under 
+färg-paletten). Genom att välja ut signalen och klicka med Ctrl/DubbelKlick MB1 på 
+indikatorn, läggs signalen in i LowColor.Attribute.
+
+Vill man ändra på LowColor kan man antingen välja en ny färg i objekts-editorn, eller välja 
+ut en fyllnadsfärg i färg-paletten, och klicka med Shift/DubbelKlick MB1 på indikatorn.
+För en del komponenter finns det flera attribut att koppla till databasen. Här kopplar man 
+det första attributet med Ctrl/DubbelKlick MB1 och det andra med Ctrl/Shift/DubbelKlick MB1.
+
+<bookmark>dynamic
+<h1>Dynamik
+En process-bild ska visa det aktuella läget i processen, och de förändringar som sker. Det 
+gör man genom att ändra färg, form och läge på komponenter i bilden, eller genom att skriva 
+ut värden i form av siffror eller text. Operatören ska också kunna påverka processen från 
+bilden t ex genom att trycka på knappar och mata in värden. De här funktionerna, att 
+visa och att påverka processen från en bild, går under benämningen dynamik resp action.
+I Ge kan man sätta dynamik och action på subgrafer och grupper, och på så sätt få dem att 
+ändra färg och form, och bli känsliga för mus-klick.
+
+Det finns ett antal förprogrammerade typer av dynamik och action att välja mellan. Man kan 
+grovt dela in dem i de som ändrar färg på ett objekt, de som ändrar form på ett objekt och de
+som gör objektet känsligt för mus-klick. När man skapar ett subgrafs-objekt får det den 
+dynamiktyp som konstruktören av subgrafen har valt, men man kan enkelt ändra på dynamiktypen 
+genom att i objekt-editorn addera en dynamik typ, eller välja någon helt annan typ. Om man 
+t ex vill att en indikator, som normalt skiftar mellan två färger, ska kunna skifta mellan 
+flera färger, ändrar man DynType från Inherit till Inherit | DigColor.
+
+Data för de olika typerna av dynamik matar man in mha objekts-editorn, t ex vilka färger ett 
+objekt ska skifta mellan, och vilken signal som ska påverka färgen.
+
+<h2>Uppdateringsfrekvens
+Det finns två olika cykel-tider som bestämmer hur ofta ett objekt uppdateras med nya värden, 
+Fast och Slow. För varje objekt kan man välja med vilken cykel den ska uppdateras. 
+Default-värdet är Inherit, dvs det som konstruktören av en subgraf har ansett vara lämpligt. 
+Om objekt är en grupp betyder Inherit att gruppen uppdateras med den långsamma cykeln. 
+Tryckknappar, checkboxar och liknande där operatören väntar på ett svar, bör gå på den 
+snabbare cykeln. Visning av flyttalsvärden går lämpligen på den långsammare cykeln, efter 
+som bilden annars upplevs som orolig.
+
+Dessutom finns det även en cykeltid för animationer. Det är den hastighet som en animation 
+byter från en sidan till en annan. Det olika cykeltiderna anges i Functions/Graph attributes 
+och ska vara konfigurerade så att SlowScanTime >= FastScanTime >= AnimationScanTime. 
+SlowScanTime och FastScanTime bör dessutom vara en jämn multipel av AnimationScanTime.
+
+<bookmark>indicators
+<h1>Indikatorer
+Under mappen Indicators finns det flera olika indikatorer, runda eller fyrkantiga, större 
+eller mindre.
+
+<h2>Skifta mellan två färger
+<b>DigLowColor
+Subgraferna IndSquare och IndRound skiftar mellan två olika färger, beroende på värdet av en 
+digital signal. Den färg som kommer att visas när signalen är hög, är den färg som indikatorn
+har i editorn. Grundfärgen är grön, men den kan enkelt ändras genom att man ändrar 
+fyllnadsfärg på objektet. Den färg som ska när signalen är låg, lägger man in i 
+DigLowColor.Color i objekts-editorn. Man kan även lägga in DigLowColor.Color genom att välja 
+en fyllnadsfärg i färg-paletten och klicka med Shift/DubbelKlick MB1 på objektet. Default har
+DigLowColor.Color värdet Inherit vilket innebär att den ärver värdet från subgrafen, i det är
+fallet VeryDarkGray. 
+
+Subgrafen använder dynamiken DigLowColor och kopplas till en digital signal.
+
+<b>Attribut <t><t>Värde
+SubGraph <t><t>pwr_indsquare
+DigLowColor.Attribute
+DigLowColor.Color <t><t>Inherit
+Cycle <t><t>Inherit
+DynType <t><t>Inherit
+Action <t><t>Inherit
+
+<h2>Skifta mellan två färgtoner
+Subgraferna IndSquareLarge och IndRoundLarge är ritade med några olika färgtoner och 
+använder därför dynamiken DigLowTone. DigLowTone skiftar mellan två färgtoner.
+
+Den färg som visas när signalen är hög, är den färg som indikatorn har i editorn. Om man vill
+modifiera den gröna ursprungs-färgen kan man göra det genom att välja en färgton i 
+färg-paletten. Man kan även använda funktionerna för ljushet, intensitet och färgskiftning i 
+verktygs-panelen.
+
+Den färgton som ska visas när signalen är låg, läggs in i DigLowTone.Tone i objekts-editorn. 
+Om DigLowTone.Tone är Inherit tas värdet från subgrafen, i det här fallet ToneDarkGray. Man 
+kan även välja en fyllnadsfärg i DigLowTone.Tone, men ev skuggor och dagrar kommer då att 
+försvinna.
+
+<b>Attribut <t><t>Värde
+SubGraph <t><t>pwr_indsquarelarge
+DigLowTone.Attribute
+DigLowTone.Tone <t><t>Inherit
+Cycle <t><t>Inherit
+Type <t><t>Inherit
+Action <t><t>Inherit
+
+<h2>Skifta mellan flera färger
+Vill man skifta mellan flera olika färger adderar man någon av dynamik-typerna DigError, 
+DigWarning och DigColor. Med DigError kan man koppla ytterligare ett attribute som gör att 
+indikatorn rödfärgas. På samma sätt fungerar DigWarning, men här gulfärgas indikatorn i 
+stället. Med DigColor kan man få en valfri färg.
+
+Här är både DigError och DigWarning adderade, vilket gör att man kan koppla in ytterligare 
+två signaler i DigError.Attribute och DigWarning.Attribute. När signalen i 
+DigWarning.Attribute blir hög, gulfärgas indikatorn, och när signalen i DigError.Attribute 
+blir hög, rödfärgas indikatorn.
+
+<b>Attribut <t><t>Värde
+SubGraph <t><t>pwr_indround
+DigError.Attribute
+DigWarning.Attribute
+DigLowColor.Attribute
+DigLowColor.Color  <t><t>Inherit
+Cycle <t><t>Inherit
+DynType <t><t>Inherit | DigWarning | DigError
+Action <t><t>Inherit
+
+I fallet DigColor kopplar men en signal till DigColor.Attribute och väljer färg i 
+DigColor.Color. I exemplet nedan är DigColor.Instances 2 vilket gör att man kan koppla 
+ytterligare en signal i DigColor2.Attribute och välja ytterligare en färg i DigColor2.Color. 
+Genom att addera flera instanser kan man växla mellan upp till 34 olika färger.
+
+<b>Attribut <t><t>Värde
+SubGraph <t><t>pwr_indround
+DigColor2.Attribute
+DigColor2.Color <t><t>Orange
+DigColor.Attribute
+DigColor.Color <t><t>Blue
+DigColor.Instances <t><t>2
+DigLowColor.Attribute
+DigLowColor.Color <t><t>Inherit
+Cycle <t><t>Inherit
+DynType <t><t>Inherit | DigColor
+Action <t><t>Inherit
+
+För objekt ritade med flera färgtoner adderar man Tone i DynType, och dynamiken kommer 
+genomgående att hantera färgtoner istället för fyllnadsfärger.
+
+<b>Attribut <t><t>Värde
+SubGraph <t><t>pwr_indroundlarge
+DigTone2.Attribute
+DigTone2.Tone <t><t>ToneOrange
+DigTone.Attribute
+DigTone.Tone <t><t>ToneBlue
+DigTine.Instances <t><t>2
+DigLowTone.Attribute
+DigLowTone.Tone <t><t>Inherit
+Cycle <t><t>Inherit
+DynType <t><t>Inherit | Tone | DigTone
+Action <t><t>Inherit
+
+<bookmark>process
+<h1>Process symboler
+<h2>Skifta mellan olika färger
+Ändring av färg sker på samma sett som för indikatorer ovan.
+
+Subgrafen Electric/Motor t ex använder dynamik-typen DigLowColor | DigError. Man kopplar en 
+digital signal (kontaktor-svaret) till DigLowColor.Attribute, vilket medför att 
+DigLowColor.LowColor kommer att visas när motorn är från, och den färg som motorn har i 
+editorn visas när motorn är till. Signalen för utlöst motorskydd kopplas till 
+DigError.Attribute, vilken gör att motorn röd-färgas när denna signal är satt.
+
+<b>Attribut <t><t>Värde
+SubGraph <t><t>pwr_motor
+DigError.Attribute
+DigLowColor.Attribute
+DigLowColor.Color <t><t>Inherit
+Cycle <t><t>Inherit
+DynType <t><t>Inherit
+Action <t><t>Inherit
+
+Process/Valve använder också DigLowColor | DigError, som normalt används på ventiler med ett 
+gränsläge. Gränsläget kopplas till DigLowColor.Attribut, eventuellt inverterat (genom att 
+sätta ett utropstecken framför signalnamnet) beroende på om gränsläget gäller stängt eller 
+öppet läge. En signal från plc't som visar att gränsläget inte har registrerats inom utsatt 
+tid kopplas till DigError.Attribute.
+
+Om ventilen har dubbla gränslägen adderar man DigColor dynamik-typen, och kopplar gränslägena
+till DigLowColor.Attribute resp DigColor.Attribute. Eventuell övervaknings-signal kopplas 
+till DigError.Attribute.
+
+<b>Attribut <t><t>Värde
+SubGraph <t><t>pwr_valve
+DigError.Attribute
+DigColor.Attribute
+DigColor.Color
+DigColor.Instances
+DigLowColor.Attribute
+DigLowColor.Color <t><t>Inherit
+Cycle <t><t>Inherit
+DynType <t><t>Inherit | DigColor
+Action <t><t>Inherit
+
+<h2>Öppna en bild
+Om man genom att klicka på ett objekt, vill kunna öppna en graf som beskriver ett objektet 
+mer detaljerat, adderar man OpenGraph i Action. I OpenGraph.GraphObject lägger man in ett 
+XttGraph objekt som är knutet till bilden.
+
+<b>Attribut <t><t>Värde
+SubGraph <t><t>pwr_valve
+DigError.Attribute
+DigLowColor.Attribute
+DigLowColor.Color <t><t>Inherit
+OpenGraph.GraphObject
+Access <t><t>System | Maintenance
+Cycle <t><t>Inherit
+DynType <t><t>Inherit
+Action <t><t>Inherit | OpenGraph
+
+<bookmark>pushbuttons
+<h1>Tryckknappar
+Subgrafer för tryckknappar finns under mappen PushButtons i subgraf-paletten.
+
+<h2>Sätta en signal
+Subgrafen ButtonSet sätter en digital signal när man klickar på den.
+Signalen som ska sättas läggs in in Attribut, och eventuell text på knappen läggs in i Text.
+
+Den använder action SetDig.
+
+<b>Attribut <t><t>Värde
+SubGraph <t><t>pwr_buttonset
+Text
+SetDig.Attribute
+SetDig.Instances
+Access <t><t>System | Maintenance
+DynType <t><t>Inherit
+Action <t><t>Inherit
+
+<h2>Återställa en signal
+Subgrafen ButtonReset återställer en digital signal när man klickar på den.
+Den använder action ResetDig.
+
+<h2>Toggla en signal
+Subgrafen ButtonToggle togglar en digital signal när man klickar på den.
+Den använder action ToggelDig.
+
+<h2>Sätta en signal så länge knappen är nedtryckt
+Aktion StoDig sätter värdet på en signal till 1 när knappen trycks ned, och sätter värdet 
+till 0 när knappen släpps, dvs så länge knappen är nedtryck är värdet 1. Man kan utgå från 
+en ButtonSet knapp, ta bort Inherit i Action och välja StoDig istället.
+
+<b>Attribut <t><t>Värde
+SubGraph <t><t>pwr_buttonset
+Text
+StoDig.Attribute
+InvisAttr
+Access <t><t>65532
+Cycle <t><t>Inherit
+DynType <t><t>Inherit
+Action <t><t>StoDig
+
+<h2>Ändra färg och text
+För att ändra färg och text på en tryckknapp, använder man någon av dynamik SetDig, ResetDig 
+eller ToggleDig kombinerad med DigLowColor och DigLowText. Dessa kan man koppla till digitala
+signaler som ändrar färg och text. Färgen LowTone och texten LowText visas när signalen är 
+låg.
+
+<b>Attribut <t><t>Värde
+SubGraph <t><t>pwr_buttonset
+DigLowColor.Attribute
+DigLowColor.Color
+DigLowText.Attribute
+DigLowText.Text
+SetDig.Attribute
+Access <t><t>65532
+Cycle <t><t>Inherit
+DynType <t><t>DigLowColor | DigLowText
+Action <t><t>SetDig
+
+<h2>Ändra form på en tryckknapp
+Om tryckknappen består av en grafisk symbol som man vill förändra formen på, använder man
+dynamik DigShift kombinerad med action ToggleDig. Man använder en subgraf med två eller flera
+sidor. När knappen kopplas till en digital signal, kommer den att skifta mellan sidorna 
+beroende på signalvärdet. När man klickar på knappen togglar den värdet på signalen. 
+Checkboxar t ex använder den här typen dynamik.
+
+<b>Attribut <t><t>Värde
+SubGraph  <t><t>my_button
+DigShift.Attribute
+ToggleDig.Attribute
+Access <t><t>65532
+Cycle <t><t>Inherit
+DynType <t><t>DigShift
+Action <t><t>ToggleDig
+
+<h2>Öppna en bild
+För att öppna en bild använder man en tryckknapp och sätter action OpenGraph.
+
+I OpenGraph.GraphObject anger man ett XttGraph objekt t ex
+
+<c>Noder-MyNode-Graphs-SomeXttGraph
+
+Om grafen ska kunna öppnas på flera olika noder, och man föredrar att använda lokala 
+XttGraph-objekt, kan man ersätta nod-objektet med *
+
+*-Graphs-SomeXttGraph
+
+* kommer att ersättas med namnet på nod-objektet för den aktuella noden. Man måste givetvis 
+se till att XttGraph-objekt med motsvarande namn finns på alla aktuella noder.
+
+<b>Attribut <t><t>Värde
+SubGraph <t><t>pwr_buttoncommand
+Text
+OpenGraph.GraphObject
+Access <t><t>65532
+DynType <t><t>Inherit
+Action <t><t>OpenGraph
+
+Man kan även använda action Command och ange med ett xtt-kommando för att öppna bilden, t ex 
+om man har något XttGraph-objekt eller vill skicka med någon speciell kvalifierare. Kommandot
+för att öppna en bild är
+
+<c>open graph my_graph /width=700/height=500
+
+Om man vill öppna ett visst inmatningsfält i bilden, i och med att bilden öppnas använder man
+open graph /focus. Här måste man även skicka med namnet på det inmatnings-objekt som ska 
+öppnas (namnet kan man sätta med Edit/Change name i menyn).
+
+<c>open graph /object=*-Graphs-SomeXttGraph /focus="TempSetValue"
+
+<h2>Exekvera ett kommando
+Subgrafen ButtonCommand exekverar ett xtt-kommano när man klickar på den.
+Den använder action Command. Eftersom de flesta funktioner kan i xtt utföras mha kommandon 
+finns det en rad tillämpningar på det här typen av dynamik. Nedan beskrivs några av dem.
+
+<h2>Öppna en trendkurva
+En trendkurva öppnas med en knapp av action-typ Command, och med kommandot open trend. Normalt
+öppnar man trenden från ett PlotGroup-objekt men open trend kan även öppna ett DsTrend objekt.
+
+<c>open trend H1-H2-SomePlotGroup
+
+<h2>Hjälp och info
+Det är naturligtvis viktigt att en operatör enkelt och snabbt kan få hjälp om hur man ska 
+hantera bilder och processer. Ett sätt att lösa det är att lägga in hjälp och info-knappar i 
+bilden. Man kan t ex använda subgraferna ButtonHelp eller ButtonInfo. Action-typen för dessa 
+är Help, och man anger ämne i Help.Topic, samt eventuellt bokmärke i Help.Bookmark. 
+Help-funktionen hämtar upp hjälp-texter som skrivs in i filen $pwrp_exe/xtt_help.dat, och 
+med ett bokmärke kan man positionera på ett visst ställe i texten.
+
+<h2>Checkbox
+Checkboxar brukar användas för att bocka för ett antal alternativ ut en lista. Till skillnad 
+från radioknappar kan man välja ut flera alternativ samtidigt. Man kan använda subgraferna 
+CheckBox eller CheckBoxRelief som har dynamiken DigShift och action ToggleDig. Denna kopplas 
+till en digital signal och togglar signalens värde vid musklick.
+
+<h2>Radioknappar
+Radioknappar används för att välja ut ett alternativ ur en lista. Här finns subgraferna 
+RadioButton och RadioButtonRelief. Radioknapparna kopplas till digitala signaler och de 
+radioknappar som tillhör samma lista grupperas därefter mha Functions/Group. Action 
+RadioButton sätter signalen för den knapp man klickar på, och återställer signalen för övriga
+radioknappar inom gruppen. Det finns ingen funktion för att sätta ett alternativ initialt, 
+utan detta måste göras mha initierings-värden på signalerna eller i plc-program.
+
+<h2>Öka/minska
+Öka/minska knappar används för att öka resp minska ett flyttalsvärde. Action-typen IncrAnalog
+kopplas till en analog signal, och ökar eller minskar värde på signalen vid musklick. Förutom
+storleken på ökningen (där negativa tal ger en minskning), kan man även ange min och 
+max-värde för signalen.
+
+Lämpliga subgrafer är ButtonUp och ButtonDown, som dock har action SetDig som default. Ändra 
+denna till IncrAnalog för att få öka/minska funktion.
+
+<b>Attribut <t><t>Värde
+SubGraph <t><t>pwr_buttonup
+IncrAnalog.Attribute
+IncrAnalog.Increment
+IncrAnalog.MinValue
+IncrAnalog.MaxValue
+Access <t><t>65532
+Cycle <t><t>Inherit
+DynType <t><t>Inherit
+Action <t><t>IncrAnalog
+
+<h2>Sätta hel- och flyttalsvärden
+Om man via en knapp vill sätta ett fixt hel- eller flyttals-värde kan detta ske med 
+action-typen Command och kommandot set parameter. Eftersom set parameter normalt kräver 
+privilegiet RtWrite kan det vara idé att använda /bypass och istället begränsa 
+tillgängligheten med Access-attributet för knappen.
+
+<c>set parameter /name=H1-H2-SpeedSetValue.ActualValue /value=3.44 /bypass
+
+<h2>Tryckknapp med bekräftelse
+Subgraferna SetDigConfirm, ResetDigConfirm, ToggleDigConfirm och CommandConfirm kräver en 
+bekräftelse från användaren innan aktionen genomförs. När man klickar på knappen poppar det 
+upp ett fönster där man antingen kan bekräfta eller avbryta.
+
+<b>Attribut <t><t>Värde
+SubGraph <t><t>pwr_buttonsetconfirm
+Text
+Confirm.Text
+SetDig.Attribute
+SetDig.Instances
+Access <t><t>65532
+Cycle <t><t>Inherit
+DynType <t><t>Inherit
+Action <t><t>Inherit
+
+<h2>Stänga fönster
+När man har fyllt skärmen med processbilder, trendkurvor, objektsbilder mm, kan det vara 
+bekvämt att rensa bort överflödiga fönster. Det kan göras med en ButtonCommand med kommandot
+
+<c>close all
+
+Vill man att någon eller några bilder alltid ska vara uppe kan man spara dem med /except. Här 
+anger man namnet på grafen eller en lista på grafer separerade med komma-tecken.
+
+<c>close all /except=overview
+
+<bookmark>analog
+<h1>Visa analoga signaler
+<h2>Formaterad visning
+Subgraferna ValueSmall, ValueMedium, ValueLarge visar flyttal, heltal och strängar. I 
+Format-attributet anger man formatet i c-syntax, för en analog signal t ex %7.2f där 7-an 
+visar max antal tecken (inklusive punkten) och 2-an antal decimaler. För heltal skriver man 
+%d och för strängar %s. Kopplas vanligtvis till en analog signal eller sträng-attribut, men 
+de flesta andra datatyper kan också visas.
+
+<b>Attribut <t><t>Värde
+SubGraph <t><t>pwr_valuemedium
+Value.Attribute
+Value.Format
+Cycle <t><t>Inherit
+DynType <t><t>Inherit
+Action <t><t>Inherit
+
+Subgraferna har dynamik-typen Value. Om man vill kunna ändra färg på textfältet addera 
+dynamiken DigColor, vilken man kopplar till en digital signal, och som ändrar färg på 
+bakgrunden i fältet. Man kan även addera AnalogColor, vilken man kopplar till en analog 
+signal, och som ändrar färgen när signalen passerat ett visst gränsvärde.
+
+<b>Attribut <t><t>Värde
+SubGraph <t><t>pwr_valuemedium
+AnalogColor.Limit <t><t>90.0
+AnalogColor.Color <t><t>Red
+AnalogColor.LimitType <t><t>GreaterThan
+AnalogColor.Attribute
+AnalogColor.Instances
+Value.Attribute
+Value.Format
+Cycle <t><t>Inherit
+DynType <t><t>Inherit | AnalogColor
+Action <t><t>Inherit
+
+<h2>Stapel
+Stapel är ett sammansatt objekt som man väljer i subgrafs-paletten, Analog-Bar. Stapeln 
+kopplas till en analog signal. I objektseditorn anger man max- och min-gränser för värdet på 
+signalen, färg på stapeln, samt färg på gränslinjen vid stapelns överkant.
+
+Bar.Attribute
+Cycle <t><t>Inherit
+DynType <t><t>Bar
+Action <t><t>Inherit
+Bar.MaxValue <t><t>100.0000000
+Bar.MinValue <t><t>0.0000000
+Bar.Value <t><t>35.0000000
+Bar.BarColor <t><t>OrangeHigh7
+Bar.BorderColor <t><t>OrangeHigh5
+Bar.BorderWidth <t><t>1
+Dynamic
+
+
+<h2>Trendkurva
+Trendkurva är ett sammansatt objekt som man väljer i subgrafs-paletten, Analog-Trend. Ett 
+trendkuve-objekt kan visa två kuvor, och samlar värden så länge en bild är uppe.
+
+Trend.Attribute1
+Trend.Attribute2
+Cycle <t><t>Inherit
+DynType <t><t>Trend
+Action <t><t>Inherit
+Trend.NoOfPoints <t><t>100
+Trend.ScanTime <t><t>1.0000000
+Trend.CurveLineWidth <t><t>1
+Trend.FillCurve <t><t>0
+Trend.HorizontalLines <t><t>0
+Trend.VerticalLines <t><t>0
+Trend.MaxValue1 <t><t>100.0000000
+Trend.MinValue1 <t><t>0.0000000
+Trend.CurveColor1 <t><t>OrangeHigh5
+Trend.CurveFillColor1 <t><t>OrangeMedium5
+Trend.MaxValue2 <t><t>100.0000000
+Trend.MinValue2 <t><t>0.0000000
+Trend.CurveColor2 <t><t>GreenHigh5
+Trend.CurveFillColor2 <t><t>GreenMedium9
+Dynamic
+
+
+Om man vill samla data även när bilden inte är uppe får man konfigurera trendkuvor med 
+DsTrend och PlotGroup objekt. Dessa trender visas med kurv-fönstret i xtt.
+
+<h2>Snabb kurva
+En snabb-kurva, konfigurerad i databasen med ett DsFastCurve objekt, kan visas med objektet 
+Analog-FastCurve. En snabb-kurva innebär att en mätning av en analog signal startas på ett 
+speciellt villkor, och sedan pågår under en begränsad tid. Mätvärdena lagras i DsFastCurve 
+objektet, som även signalerar när en mätning är klar. Ge's FastCurve objekt hämtar då in de 
+samlade värdena och ritar ut dem i diagrammet.
+
+<h2>Koordinataxlar
+I det här sammanhanget kan det vara värt att nämna Axis-objektet. Detta är ett sammansatt 
+objekt som används för att rita koordinat-axlar och skalområden för t ex bar, trend och 
+silder-objekt. Det skapas genom att man väljer Analog-Axis i subgrafs-paletten. Axis-objektet
+ skapas i stående format, och roteras sedan om det ska vara liggande.
+
+<bookmark>setanalog
+<h1>Sätta analoga signaler
+<h2>Inmatning
+Inmatning av analoga värden mha tangentbordet kan göras med subgraferna ValueInputSmall,
+ValueInputMedium och ValueInputLarge. När man klickar på inmatings-fältet kommer det upp en 
+fönster, som man kan mata in ett värde i. 
+
+Subgraferna har dynamik-typen Value och action ValueInput.
+
+<h2>Slider
+Ett annat sätt att ge en analog signal ett värde, är att använda en slider (dragregel). 
+Slidern kan man dra mellan två ytterlägen, och läget bestämmer värdet på den signal den är 
+kopplad till. Slidern består av två delar, en bakgrundsdel och en rörlig del, som är två 
+separata subgrafer.
+
+Först skapas en bakgrund, t ex SliderBackground1 och därefter den rörliga delen, Slider1, som
+läggs ovanpå bakgrunden.
+
+Slider-delen kopplas till en analog signal, och i objekts-editorn lägger man in min och 
+max-värden för signalen. Attributen Direction, MinPosition och MaxPosition behöver inte 
+fyllas i om man använder en bakgrundsdel till slidern.
+
+Vill man rotera slidern bör man rotera de båda delarna lika mycket.
+Observera att den rörliga delen inte får ingå in en grupp.
+
+<b>Attribut <t><t>Värde
+SubGraph <t><t>pwr_slider1
+Slider.Direction <t><t>Up
+Slider.MaxValue <t><t>100.0000000
+Slider.MinValue <t><t>0.0000000
+Slider.MaxPosition <t><t>0.0000000
+Slider.MinPosition <t><t>0.0000000
+Slider.Attribute
+Access <t><t>65532
+Cycle <t><t>Inherit
+DynType <t><t>Inherit
+Action <t><t>Inherit | Slider
+
+Om man vill kunna ställa in värdet med större noggrannhet kan man använda Slider2 och 
+SliderBackground2 som har plats för ett axis -objekt.
+
+<bookmark>texts
+<h1>Visa texter
+<h2>Växla mellan två texter
+Om man vill växla mellan två texter beroende på en digital signal använder man dynamik-typen 
+DigText. Man kan t ex utgå från en Value-subgraf och ändra DynType från Inherit till DigText.
+Texten som ska visas när signalen är hög, lägger man in i Text, och texten som ska visas när 
+signalen är låg läggs in i DigText.LowText.
+
+<h2>Visa ett sträng-attribut
+En signal med datatypen String visar man med subgraferna ValueSmall, ValueMedium eller 
+ValueLarge. Dessutom finns subgrafen ValueLong som är anpassad bättre för längre texter. 
+Subgrafen kopplas till sträng-attributet och som format anger man %s.
+
+<bookmark>movement
+<h1>Rörliga objekt
+<h2>Rotera
+För att rotera ett objekt använder man dynamik-typen Rotate. Objektet kopplas till en analog
+signal, och roteras runt punken (x0, y0) som anges i objekts-editorn. Man kan även ange en 
+faktor (Factor) som räknar om värdet på signalen till grader. Rotationen sker med-sols.
+
+<h2>Flytta
+För att förflytta ett objekt använder man dynamik-typen Move. Objektet kopplas till två 
+analoga signaler som bestämmer förflyttningen i x- resp y-led (Move.XAttribute och 
+Move.YAttribute). Vill man enbart flytta i en riktning räcker det att koppla en signal. 
+Attributen Move.XOffset, Move.YOffset och Move.Factor används för att konvertera 
+signal-värdet till en förflyttning i Ge's koordinatsystem. I Move finns även funktionalitet 
+för att skala objektet (se avsnittet Ändra form på objekt).
+
+<h2>Animering
+Ett annat sätt att få objekt att röra sig är animering. Vid animering används subgrafer som 
+är gjorda med flera sidor. Dynamik-typen Animation används för animationer.
+
+<bookmark>shape
+<h1>Ändra form på objekt
+<h2>Skala
+För dynamik-typen Move finns, förutom att förflytta ett objekt, även möjlighet att skala 
+objektet. Två signaler kan kopplas till Move.ScaleXAttribute och Move.ScaleYAttribute som 
+skalar objektet i x- resp y-led. Värdna på attributen multipliceras med Move.ScaleFactor som 
+ger skalfaktorerna. Skalfaktor större än 1 ger förstoring, och mindre än 1 förminskning.
+
+<h2>Skifta mellan två former
+Om man vill att ett objekt ska kunna ha två olika utseenden, använder man dynamik-typen 
+DigShift. Denna kan användas på en subgraf som innehåller två sidor (eller fler). Den kopplas
+till en digital signal, och när signalen har värdet 0 visas första sidan. Vid värdet 1 visas 
+andra sidan (eller sista sidan om subgrafen innehåller fler än två sidor).
+
+<h2>Skifta mellan flera former
+Vill man kunna skifta mellan fler än två utseenden, använder man AnalogShift. Denna kopplas 
+till en analog signal och jobbar mot en subgraf med flera sidor. Värdet på den analoga 
+signalen anger index för den sida som visas (vid värde 0 visas första sidan, 1 andra sidan 
+osv).
+
+<h2>Animering
+Även dynamik-typen för animering, Animation, kan användas för att ändra form på ett objekt. 
+Här krävs att subgrafen innehåller flera sidor.
+
+<bookmark>navigate
+<h1>Navigera med tangenbordet
+För mata in data och aktivera objekt utan att använda musen, använder man action-typen 
+InputFocus. Om ett objekt har input focus skickas tangenttryckningar till objektet. För ett 
+ValueInput objekt betyder att man kan mata in ett värde, för en tryckknapp att man kan 
+aktivera den genom att trycka på Return. 
+
+Focus input flyttas mellan objekten m h a Tab och piltangenterna. Hur input fokus ska 
+flyttas, konfigureras i attributen NextHorizontal, NextVertical och NextTab. Man lägger här 
+in objektsnamnen på det objekt input fokus ska flyttas till med pil höger, pil ner resp. 
+Tab tangenterna.
+
+Att ett objekt har input fokus markeras normalt med att en relief ritas runt objektet.
+
+<bookmark>menues
+<h1>Menyer
+Man kan bygga menyer mha subgraferna Other-MenuBar och Other-PulldownMenu. MenuBar är 
+meny-listen och har ingen dynamik. All dynamik ligger i PulldownMenu objektet. Här 
+konfigurerar men de knappar som ska finnas i menyn och action för varje knapp. Meny knappar 
+kan ges samma action som andra typer av knappar, dvs man kan påverka digitala signaler med 
+SetDig, ResetDig och ToggleDig, exekvera kommandon med Command osv. Med action-typen 
+PulldownMenu kan man även bygga sub-menyer, och på så sätt bygga menyer i flera nivåer.
+
+<bookmark>images
+<h1>Gif och JPEG-bilder
+Man lägger in en gif eller JPEG-bild på följande sätt. Kopiera bild-filen till $pwrp_pop. 
+Den dyker då upp under mappen Local/Images i subgraf-paletten. Välj ut bilden och klicka med 
+MB2 i arbetsarean.
+
+<h2>Ändra färg
+Funktionerna för att ändra färg på subgrafer, dvs färgton, ljushet, intensitet och 
+färgskiftning, fungerar även på bild-objekt.
+
+<h2>Dynamik
+Man kan inte sätta någon dynamik direkt på bild-objekten. Däremot kan man låta dem ingå i en 
+grupp eller subgraf, och ange dynamik för gruppen eller subgrafen. Om man dynamiskt vill 
+ändra färg på bild-objektet ska man använda en dynamik-typ som ändrar färg-tonen, t ex 
+DigTone.
+
+<bookmark>drawsubgraph
+<h1>Rita en subgraf
+En subgraf tillverkas genom att man ritar basobjekt i arbetsarean och sedan sparar dessa som 
+en subgraf. Man kan även lägga in andra subgrafer i arbetsarean, men dessa kan inte ha någon 
+egen dynamik, utan följer den dynamik som gäller för huvud-subgrafen. Det finns två speciella
+objekt som kan användas i subgrafer: kopplings-punkter och annotationer.
+
+Kopplingspunkter gör det möjligt att dra kopplings-linjer mellan objekt. De skapas genom att 
+aktivera kopplingspunkt i verktygspanelen och klicka med MB1 i arbetsarean. I objekts-editorn
+för kopplingspunkten kan man ställa in riktning (Direction) för punkten, dvs den riktning som
+en koppling ut från punkten kommer att få. Kopplingspunkter på vänstersidan av ett objekt, 
+bör ha Direction Left, ovansidan Up, högersidan Right och undersidan Down.
+
+Annotation är plats för en text, som är olika för olika instanser av subgrafen. Den skapas 
+genom att välja An i verktygspanelen och klicka med MB1 i arbetsarean. När man sedan skapar 
+instanser av subgrafen kommer annotationerna att visas som attribut i objektseditorn för 
+subgrafs-objekten som A1, A2 osv, och man kan härigenom lägga in texter i annotationerna.
+
+När subgrafen är färdigritad tar man upp File/GraphAttributes och lägger in en etta i 
+Subgraph. Genom att stänga fönstret och ta upp det igen, kan man lägga in attribut för 
+subgrafen. Bl a kan man lägga in default-värden för dynamik-typ, DigLowColor mm. Därefter 
+sparar man den under ett lämpligt namn.
+
+Man skapar instanser av subgrafen genom att väja ut den under mappen Local/Subgraphs i 
+subgraf-paletten, och klicka med MB2 i arbetsarean.
+
+<h2>Subgraf med flera sidor
+Vissa typer av dynamik, t ex animationer, bygger på att en subgraf har flera sidor. Vid 
+animering gör man flera sidor med små förändringar mellan varje sida, och sidorna genomlöps 
+sedan och ger illusionen av rörelse. Dynamik-typerna DigShift och AnalogShift använder också 
+olika sidor, och skiftar mellan olika sidor, beroende på värdet av en digital resp analog 
+signal.
+
+När man ska rita en subgraf med flera sidor, gör man den första sidan på normalt sätt. När 
+man har sparat den som en subgraf aktiverar man File/Page/Create next page (Shift+Ctrl/N). 
+Nu skapas den andra sidan vilket markeras i titeln på fönstret. När förändringarna i sida 
+nummer två är gjorda, sparar man denna och aktiverar återigen Create next page för att skapa 
+den tredje sidan osv.
+
+Man kan skifta mellan olika sidor med File/Page/Next page (Ctrl/N) och File/Page/Previous 
+page (Ctrl+J). Ritar man animationer, är detta ett värdefullt sätt att se skillnader mellan 
+de olika sidorna, och utröna hur animationen fungerar.
+
+<h2>Slider
+En slider konstrueras med två separata subgrafer, en bakgrund, och en rörlig del. Slidern 
+ska alltid ritas stående, dvs så att rörelsen sker vertikalt.
+
+För bakgrunds-subgrafen mäter man y-koordinaten för de punkter som slidern ska kunna röra sig
+mellan, och lägger in i attributen y0 och y1 i Graph attributes. Som DynamicType lägger man 
+in SliderBackground.
+
+För den rörliga subgrafen mäter man y-koordinaten för den punkt som ska ställas in mot 
+signalvärdet, och lägger in i y0. Attributet Slider sätts till 1.
+
+<h2>FillLevel
+För en subgraf med dynamiken FillLevel, t ex en termometer, vill man ofta sätta en min och 
+en max-nivå, mellan vilka nivån kan ändras. Genom att mäta max och min-nivån och lägga in 
+dem i attributen y0 resp y1 i Graph Attributes får man den här funktionen. Subgrafen måste 
+alltid ritas stående så att nivån ändras nedifrån och upp.
+
+<h2>Animation
+För subgraf med dynamiken Animation, väljer man även en lämplig AnimationSequence i Graph 
+Attributes. AnimationSequence kan vara Cyclic, Dig eller ForwBack.
+</topic>
+</chapter>
+
+<chapter>
+<topic>geref_windows
+Fönster
+
+I ge finns ett antal paletter och andra fönster för att välja objekt, subgrafer, färger mm.
+
+<h1>Arbetsarean
+I arbetsarean editeras bilden genom att klicka och dra med musen.
+
+<b>Musklick     <t><t>Funktion
+Klick MB1       <t><t>Välj ut ett objekt, eller skapa ett basobjekt.
+Shift/Klick MB1 <t><t>Addera ett objekt till utvalslistan.
+Press MB1       <t><t>Välj ut objekt inom ett område, eller flytta på objekt.
+Shift/Press MB1 <t><t>Addera objekt inom ett område till utvalslistan.
+DubbelKlick MB1 <t><t>Öppna objektseditorn för ett objekt.
+Ctrl/DubbelKlick MB1 <t><t>Koppla första attributet i ett subgraf-objekt till 
+                <t><t>ett rtdb-objekt.
+Shift/Ctrl/DubbelKlick MB1 <t><t>Koppla andra attributet i ett subgraf-objekt 
+                 <t><t>till ett rtdb-objekt.
+Shift/DubbelKlick MB1 <t><t>Lägg in vald fyllnadsfärg i LowColor i ett 
+                 <t><t>subgrafs-objekt.
+Klick MB2        <t><t>Skapa ett subgrafs-objekt.
+Press MB2        <t><t>Skapa en koppling
+
+<h1>Navigationsfönster
+Längst ner till vänster finns ett navigations-fönster som innehåller in mini-kopia av hela 
+arbetsarean. Från navigationsfönstret kan man förflytta sig (MB1) och zooma (MB2) bilden i 
+arbetsarean.
+
+<h1>Subgraf-paletten
+Subgraf-paletten består av ett antal mappar med subgrafer. Under Local/Subgraphs-mappen finns 
+subgrafer som har skapats inom projektet. Övriga mappar innehåller subgrafer som följer med 
+Proview.
+
+<h1>Färg-paletten
+I färgpaletten finns plats för 300 olika färg-nyanser. Här väljer man fyllnadsfärg, kantfärg 
+och text -färg. Fyllnadsfärgen väljs med MB1 och visas i det vänstra fältet överst i 
+paletten, kantfärg väljs med MB2 och visas i mitten fältet, och textfärgen väljs med 
+Shift MB1 och visas i det högra fältet.
+
+Paletten är uppdelad rader med 30 färger i varje. Den första raden består av svart, vitt, 
+starka signalfärger samt en uppsättning gråtoner. Sedan följer en rad med gråskalan, och där 
+efter 8 rader med olika färgton: gulgrön, gul, orange, röd, violett, blå, blågrön och grön. 
+Inom varje färggrupp har de 10 första låg mättnad, de 10 mitten-färgerna lite högre mättnad, 
+och de 10 sista hög mättnad.
+
+Under färg-paletten finns även en färgton-palett med vilka man kan välja färgton för 
+subgrafs-objekt.
+
+Här finns även en reset-knapp med vilken man kan återgå till objektets ursprungliga färg.
+
+<h1>Verktygs-panel
+Verktygs-panelen består av ett antal tryckknappar för att skapa rektanglar, ellipser, linjer 
+etc. Där finns även funktioner för att rotera och skala, sätta linjebredd, fontstorlek, 
+modifera färger på subgrafer mm.
+
+<h1>Objekts och attribut-editorn
+Objekts-och attribut-editorn gör det möjligt att ange olika egenskaper på objekt, grafer och 
+subgrafer.
+
+För ett objekt tas den upp genom att man dubbelklickar på objeket, för graf eller subgrafer 
+tas den upp från menyn under File/Graph attributes.
+
+Värden i objektseditorn ändras genom att man markerar attributet och trycker på PilHöger 
+eller från menyn med Functions/Change value.
+
+Bitmaskar, enum-attribut och vektorer öppnas med PilHöger eller DubbelKlick MB1. Checkboxar 
+ändras med PilHöger eller genom att klicka i checkboxen.
+
+Det snabbaste sättet är att välja ut attribut med PilUpp och PilNer, att använda PilHöger för
+att öppna och ändra attribut och PilVänster för att stänga attribut.
+
+<h1>Plant hierarki
+Om Ge startas från Navigatören visas planthierarkin i ett fönster under färgpaletten. Det 
+används för att koppla dynamiska objekt till signaler i rtdb. Man kopplar ett subgraf-objekt 
+till en signal genom att välja ut objektet (eller ett attribut i objektet) i planthierarkin, 
+och klicka med Ctrl/DubbelKlick MB1 på subgraf-objektet. Då läggs signalnamet in i 
+subgrafs-objektets Attribute-attribut. Finns det ett andra attribut som ska kopplas till en 
+signal, kopplas detta på samma sätt med Shift/Ctrl/DubbelKlick MB1.
+</topic>
+</chapter>
+
+<chapter>
+<topic>geref_objects
+Objekt
+
+Objekt skapas genom att man väljer objektet i verktygspanelen och ritar det i arbetsarean med 
+MB1. Objektet ritas med de aktuella värdena för fyllnad, fyllnadsfärg, kant, kantfärg och 
+linjebredd. Om egenskaperna för ett existerande objekt ska ändras, markerar man det och 
+markerar den färg, linjebredd eller dylikt som ska gälla. För ett objekt kan attribut-editorn
+öppnas genom att dubbelklicka på objektet. Nedan anges under rubriken egenskaper de attribut 
+som kan ändra från verktygspanelen eller färg-paletten, och under rubriken attribut de 
+attribut som finns i objektseditorn.
+
+<h1>Basobjekt
+
+Rektangel 	<link> geref_rectangle
+Rektangel med rundade hörn <link> geref_roundedrect
+Ellips 		<link>geref_circle
+Linje 		<link>geref_line
+Polylinje 	<link>geref_polyline
+Text 		<link>geref_text
+Annotation 	<link>geref_annotation
+Kopplingspunkt 	<link>geref_conpoint
+
+<h1>Sammansatta objekt
+Stapel 		<link>geref_bar
+Trendkurva 	<link>geref_trend
+Axis 		<link>geref_axis
+Window		<link>geref_window
+TabbedWindow	<link>geref_tabbedwind
+Table		<link>geref_table
+
+</topic>
+<topic>geref_rectangle <style>function
+Rektangel
+
+En rektangel skapas genom att välja rektangel i verktygs-panelen och dra med MB1 i 
+arbetsarean. Om man först aktiverar Functions/ScaleEqual ritas en kvadrat.
+
+<h2>Egenskaper
+- Fyllnad
+- Fyllnadsfärg
+- Kant
+- Kantfärg
+- Kantbredd
+- 3D
+
+<h2>Attribut
+<b>Attribut      <t>Beskrivning
+ShadowWidth   <t>Bredden av 3D-skuggan i % av längd eller bredd (den minsta).
+ShadowContrast <t>Kontrast på 3D-skuggan.
+Relief        <t>Up ger skugga på undersidan och Down ger skugga på ovansidan
+DisableShadow <t>Eliminerar 3D-funktionen. Används när objektet ingår i en subgraf 
+              <t>och inte ska ritas med 3D när 3D är valt för subgrafs-instansen.
+Dynamic       <t>Ej implementerat
+</topic>
+
+<topic>geref_roundedrect <style>function
+RundadRektangel
+
+En rektangel med rundade hörn skapas genom att välja rundad rektangel i verktygs-panelen och 
+dra med MB1 i arbetsarean. Om man först aktiverar Functions/ScaleEqual ritas en kvadrat.
+
+<h1>Egenskaper
+- Fyllnad
+- Fyllnadsfärg
+- Kant
+- Kantfärg
+- Kantbredd
+- 3D
+
+<h2>Attribut
+<b>Attribut     <t>Beskrivning
+RoundAmount  <t>Storlek på rundingen i % av längd eller bredd (den minsta).
+ShadowWidth  <t>Bredden av 3D-skuggan i % av längd eller bredd (den minsta).
+ShadowContrast <t>Kontrast på 3D-skuggan.
+Relief       <t>Up ger skugga på undersidan och Down ger skugga på ovansidan
+DisableShadow <t>Eliminerar 3D-funktionen. Används när objektet ingår i en 
+             <t>subgraf och inte ska ritas med 3D när 3D är valt för subgrafs-instansen.
+Dynamic      <t>Ej implementerat
+</topic>
+
+<topic>geref_circle <style>function
+Ellips
+
+En ellips skapas genom att välja ellips i verktygs-panelen och dra med MB1 i arbetsarean. 
+Mha angel1 och angel2 kan segment eller pajbitar av ellipsen ritas. Om man först aktiverar 
+Functions/ScaleEqual ritas en cirkel.
+
+<h2>Egenskaper
+- Fyllnad
+- Fyllnadsfärg
+- Kant
+- Kantfärg
+- Kantbredd
+- 3D
+
+<h2>Attribut
+<b>Attribut     <t>Beskrivning
+Angel1       <t>Vinkel från x-axeln i grader till början av segmentet.
+Angel2       <t>Vilkel i grader som anger storleken på segmentet.
+ShadowWidth  <t>Bredden av 3D-skuggan i % av längd eller bredd (den minsta).
+ShadowContrast <t>Kontrast på 3D-skuggan.
+Relief       <t>Up ger skugga på undersidan och Down ger skugga på ovansidan
+DisableShadow <t>Eliminerar 3D-funktionen. Används när objektet ingår i en 
+             <t>subgraf och inte ska ritas med 3D när 3D är valt för subgrafs-instansen.
+Dynamic      <t>Ej implementerat
+</topic>
+
+<topic>geref_line <style>function
+Linje
+
+En linje skapas genom att välja linje i verktygs-panelen och dra med MB1 i arbetsarean. 
+Genom att aktivera Functions/MoveRestrictions/Horizontal eller Vertical ritar man 
+horisontella resp vertikala linjer.
+
+<h2>Egenskaper
+- Kant
+- Kantfärg
+- Kantbredd
+- Linjetyp
+
+<h2>Attribut
+<b>Attribut     <t>Beskrivning
+Dynamic      <t>Ej implementerat
+</topic>
+
+<topic>geref_polyline <style>function
+Polylinje
+
+En polylinje skapas genom att välja polylinje i verktygs-panelen och dra med MB1 i 
+arbetsarean. När MB1 släpps skapas första del-linjen. Genom att på nytt dra med MB1 skapas 
+flera del-linjer. När alla linjer är ritade avslutas med MB3.
+
+Om man vill flytta på enskilda bryt-punkter i en polylinje, markerar man polylinjen och 
+väljer Edit/Edit polyline i menyn. Editeringen avslutas med MB3.
+
+Genom att aktivera Functions/MoveRestrictions/Horizontal eller Vertical ritar man 
+horisontella resp vertikala linjer. Horizontal eller Vertical anger riktningen på den första 
+del-linjen. Övriga ritas vinkelräta mot närmast föregående del-linje. MoveRestrictions kan 
+avbrytas i en polyline med Functions/MoveRestrictions/No.
+
+<h2>Egenskaper
+- Fyllnad
+- Fyllnadsfärg
+- Kant
+- Kantfärg
+- Kantbredd
+
+<h2>Attribut
+<b>Attribut      <t>Beskrivning
+ShadowWidth   <t>Bredden av 3D-skuggan i % av längd eller bredd (den minsta).
+ShadowContrast <t>Kontrast på 3D-skuggan.
+Relief        <t>Up ger skugga på undersidan och Down ger skugga på ovansidan
+DisableShadow <t>Eliminerar 3D-funktionen. Används när objektet ingår i en 
+              <t>subgraf och inte ska ritas med 3D, när 3D är valt för subgrafs-instansen.
+FillEqBorder  <t>Markerar att fyllnadsfärgen ritas med angiven kantfärg istället för 
+              <t>aktuell fyllnadsfärg. Detta kan användas i submodeller där vissa 
+              <t>markeringar, pilar o dyl, mer hör ihop med kant-färgen än fyllnadsfärgen.
+FillEqLight   <t>Om objektet ingår i en subgraf, ges det samma färg som en 3D-dager, 
+              <t>när 3D är valt fär subgrafs-instansen.
+FillEqShadow  <t>Om objektet ingår i en subgraf, ges det samma färg som en 3D-skugga, 
+              <t>när 3D är valt fär subgrafs-instansen.
+Dynamic       <t>Ej implementerat
+</topic>
+
+<topic>geref_text <style>function
+Text
+
+En text skapas genom att välja text i verktygs-panelen och klicka med MB1 i arbetsarean. Då 
+öppnar sig ett inmatningsfält och texten kan matas in. Texten kan ändras med Edit/Change 
+text i menyn eller från objekts-editorn.
+
+För närvarande finns endast fonterna Helvetica, normal och fet i svart. Max antal tecken i 
+textsträngen är 79.
+
+<h2>Egenskaper
+- Fontstorlek
+- Normal, fet
+- Text färg
+
+<h2>Attribut
+<b>Attribut  <t>Beskrivning
+Text         <t>Aktuell text, max 79 tecken.
+Dynamic      <t>Ej implementerat
+</topic>
+
+<topic>geref_annotation <style>function
+Annotation
+
+Annotation är en text i en subgraf som är unik för varje instans av subgrafen. Det kan t ex 
+vara texten på en tryck-knapp, eller visning av ett analogt värde. Vid editering av subgrafen
+markerar man platsen för texten. Själva texten matas in i objektseditorn för instansen av 
+subgrafen (eller hanteras av vissa dynamiska funktioner).
+
+En annotation skapas genom att välja annotation (An) i verktygs-panelen och klicka MB1 i 
+arbetsarean.
+
+Annotation kan endast skapas i en subgraf. Det finns plats för 10 annotations i en subgraf. 
+Varje annotation ska ges ett nummer som är unikt inom subgrafen.
+
+Observera att vissa typer av dynamik (Value och SetDig etc) kräver speciella nummer för 
+annotation.
+
+<h2>Egenskaper
+- Normal, fet
+- Text färg
+
+<h2>Attribut
+<b>Attribut     <t>Beskrivning
+TextSize     <t>Textstorlek 0-7
+Number       <t>Numrering av annotations inom en subgraf.
+Dynamic      <t>Ej implementerat
+</topic>
+
+<topic>geref_conpoint <style>function
+Kopplingspunkt
+
+En kopplingspunkt i en subgraf gör det möjligt att dra kopplingar mellan instanser av 
+subgrafen. I subgrafen anges kopplingspunktens läge, samt den riktning från kopplingspunkten 
+en koppling ska ritas.
+
+En kopplingspunkt skapas genom att välja kopplingspunkt i verktygs-panelen och klicka med 
+MB1 i arbetsarean.
+
+Kopplingspunkter kan endast skapas i subgrafer.
+
+Kopplingspunkten markeras med en cirkel vid editeringen av subgrafen men kommer ej att synas
+i instanserna av subgrafen.
+
+Om kopplingpunken ska kopplas till kopplingar av grafcet eller routed typ, måste riktning 
+anges. Denna kan ställas in i meny eller anges i objektseditorn.
+
+Varje kopplingspunkt har ett nummer som måste vara unikt inom subgrafen.
+
+<h2>Egenskaper
+- Riktning
+
+<h2>Attribut
+<b>Attribut      <t>Beskrivning
+Number        <t>Numrering av kopplingspunkter inom en subgraf
+Direction     <t>Riktning: upp, ner vänster eller höger.
+Dynamic       <t>Ej implementerat
+</topic>
+
+<topic>geref_complexobj
+Sammansatta objekt
+</topic>
+
+<topic>geref_bar <style>function
+Stapel
+
+Stapel är ett sätt av visa värdet på en analog signal.
+Fyllnad och fyllnadsfärg, kantfärg mm anger egenskaper för stapelns bakgrundsrektangel. 
+Egenskaper för själva stapeln anges i objektseditorn.
+En stapel skapas genom att välja stapel i subgrafs-paletten, 'Analog-Bar',  och klicka med MB2
+i arbetsarean.
+
+<h2>Egenskaper
+- Fyllnad (för bakgrundsrektangel)
+- Fyllnadsfärg (för bakgrundsrektangel)
+- Kant (för bakgrundsrektangel)
+- Kantfärg (för bakgrundsrektangel)
+- Kantbredd (för bakgrundsrektangel).
+
+<h2>Attribut
+Attribut      <t>Beskrivning
+Bar.Attribute <t>Namn på signal i rtdb.
+Bar.MaxValue  <t>Signalvärde som motsvarar full länd på stapeln.
+Bar.MinValue  <t>Signalvärde som motsvarar noll längd på stapeln
+Bar.Value     <t>Kan utnyttjas som testvärde i editorn.
+Bar.BarColor  <t>Fyllnadsfärg på stapeln (defaultvärdet Inherit innebär att 
+              <t>kantfärgen för bakgrundrektangeln väljs)
+Bar.BorderColor <t>Kantfärg på kantlinjen mellan staplen och bakgrundsrektangeln 
+              <t>(defaultvärdet Inherit innebär att kantfärgen för bakgrundrektangeln väljs)
+Bar.BorderWidth <t>Kantlinjens linjebredd (1-8)
+Dynamic       <t>Ej implementerat
+</topic>
+
+<topic>geref_trend <style>function
+Trendkurva
+
+Trendkurva är ett sätt av visa värdet på en eller ett par analoga signaler.
+
+Kurvorna kan rita med eller utan fyllnad, där fyllnad innebär att arean mellan kurvan och 
+tidsaxeln fylls. Kurvorna ritas med andra rtdb-parameter överst. Om kurvan för denna helt 
+täcker den andra kurva markeras värdet på rtdb-parameter nr 1 med kantlinjen.
+
+I Trendkurvan kan ritas ett antal horisontella och vertikala linjer med kantfärgen för 
+bakgrundsrektangeln. Antalet linjer konfigureras i objektseditorn.
+
+Fyllnad och fyllnadsfärg, kantfärg mm anger egenskaper för kurvans bakgrundsrektangel. 
+Egenskaper för själva kurvan anges i objektseditorn.
+
+En trendkurva skapas genom att välja trend i subgrafs-paletten, 'Analog-Trend',  och klicka med
+MB2 i arbetsarean.
+
+<h2>Egenskaper
+- Fyllnad (för bakgrundsrektangel)
+- Fyllnadsfärg (för bakgrundsrektangel)
+- Kant (för bakgrundsrektangel)
+- Kantfärg (för bakgrundsrektangel och vertikala och horisontella linjer)
+- Kantbredd (för bakgrundsrektangel)
+
+<h2>Attribut
+<b>Attribut     <t><t>Beskrivning
+Trend.Attribute1  <t><t>Signal för kurva nr 1.
+Trend.Attribute2  <t><t>Signal för kurva nr 2.
+Trend.NoOfPoints  <t><t>Antal punkter på kurvan
+Trend.ScanTime    <t><t>Tidsintervall mellan två punkter.
+Trend.CurveLineWidth <t><t>Linjebredd på kurvan (1-8)
+Trend.FillCurve   <t><t>Anger att området mellan kurvan och tidsaxeln 
+                  <t><t>ska fyllas
+Trend.HorizontalLines <t><t>Antal horisontella linjer
+Trend.VerticalLines <t><t>Antal vertikala linjer
+Trend.MaxValue1   <t><t>Maxvärde för Attribute1
+Trend.MinValue1   <t><t>Minvärde för Attribute1
+Trend.CurveColor1 <t><t>Kantfärg på kurvan för Attribute1
+Trend.CurveFillColor1 <t><t>Fyllnadsfärg på kurvan för Attribute1
+Trend.MaxValue2   <t><t>Maxvärde för Attribute2
+Trend.MinValue2   <t><t>Minvärde för Attribute2
+Trend.CurveColor2 <t><t>Kantfärg på kurvan för Attribute2
+Trend.CurveFillColor2 <t><t>Fyllnadsfärg på kurvan för Attribute2
+Trend.Dynamic     <t><t>Ej implementerat
+</topic>
+
+<topic>geref_axis <style>function
+Axis
+
+Axis visar skalområdet på kurva eller stapel i x- eller y-led.
+
+<h2>Attribut
+<b>Attribut  <t>Beskrivning
+MaxValue     <t>Övre värde på skalområdet.
+MinValue     <t>Undre värde på skalområdet.
+Lines        <t>Antal linjer vinkelräta mot axeln.
+LongQuotient <t>Hur stor del av linjerna som ska vara långa. T ex 4 innebär 
+             <t>att var 4:e linje är längre
+ValueQuotient <t>Hur ofta värden ska skrivas ut. T ex 4 innebär att ett värde 
+             <t>skrivs ut vid var 4:e linje.
+Format       <t>Format i c-syntax för utskrivna väden.
+Dynamic      <t>Ej implementerat.
+</topic>
+
+<topic>geref_window <style>function
+Window
+
+Window visar en separat graf inom ett specificerat område i en annan graf. Grafen kan visas 
+med eller utan skroll-lister.
+
+<h2>Begränsningar
+Sliders går inte att påverka i window objektet.
+Det går inte att ange ett hierarki eller klass objekt.
+
+<h2>Attribut
+<b>Attribut    <t><t>Beskrivning
+Window.FileName <t><t>Namn på den graf som ska visas i fönstret.
+Window.Scale    <t><t>Skalning av grafen.
+Window.VerticalScrollbar  <t><t>I fönstret visas en vertical skroll-list.
+Window.HorizontalScrollbar <t><t>I fönstert visas en horisontell skroll-list.
+Window.ScrollbarWidth  <t><t>Bredd på skoll-list.
+Window.ScrollbarColor  <t><t>Fyllnadsfärg på skroll-listens rörliga del.
+Window.ScrollbarBgColor <t><t>Fyllnadsfärg på skroll-listens fasta del.
+</topic>
+
+<topic>geref_tabbedwind <style>function
+TabbedWindow
+
+TabbedWindow är ett Window objekt med flik-register. För varje flik anges en separat graf, 
+och när fliken aktiveras visas en angivna grafen i fönstret.
+
+<h2>Begränsningar
+Sliders går inte att påverka i window objektet.
+Det går inte att ange ett hierarki eller klass objekt.
+
+<h2>Attribut
+<b>Attribut    <t><t>Beskrivning
+Folder.NumberOfFolders  <t><t>Antalet flikar.
+Folder.HeaderHeight     <t><t>Höjd på flikarna.
+Folder.ColorSelected    <t><t>Färg på den flik som visas för tillfället.
+Folder.ColorUnselected  <t><t>Färg på flik som ej visas för tillfället.
+Folder.ScrollbarWidth   <t><t>Bredd på skroll-list.
+Folder.ScrollbarColor   <t><t>Fyllnadsfärg på skroll-listens rörliga del.
+Folder.ScrollbarBgColor <t><t>Fyllnadsfärg på skroll-listens fasta del.
+Folder1.FileName        <t><t>Namn på den graf som ska visas i den första 
+                        <t><t>fliken.
+Folder1.Text            <t><t>Text på den första fliken
+Folder1.Scale           <t><t>Skalning på grafen i flik nr 1.
+Folder1.VerticalScrollbar <t><t>För flik nr 1 visas en vertical skroll-list.
+Folder1.HorizontalScrollbar <t><t>För flik nr 1 visas en horisontell skroll-list.
+</topic>
+
+<topic>geref_table <style>function
+Table
+
+Ett table-objekt visar en tabell med ett visst antal rader och kolumner. Varje kolumn kopplas
+till ett vektor-attribut i databasen, och värdet för elementen i vektorn visas i kolumnen. 
+
+En cell i tabellen kan väljas ut genom att man klickar på den eller med pil-tangenterna (om 
+dynamik-typen InputFocus är konfigurerad för tabellen). Till varje kolumn kan man koppla ett 
+urvals-attribut, i form av ett vektor-attribut i databasen av typen Boolean. När en cell 
+väljs ut, sätts motsvarande element i urvals-attributet, och det tidigare utvalda återställs.
+
+Om det kopplade vektor-attributet till en kolumn är av typen Objid, kan man öppna en 
+popup-meny med metoderna för objekten som visas i kolumnen.
+
+Vektor-attributen ska anges med datatyp och storlek, t ex VWX-P1-Table.TabVect##Float32#100, 
+där Float32 är datatypen och 100 antalet element i vektorn.
+
+Tabell-objektet består av följande komponenter:
+- Vertikal och horisontal skroll-list.
+- En header rad med rubrik för varje kolumn. Header raden omfattas ej av den vertikala 
+  skroll-listen.
+- En header kolumn. Kolumnen längst till vänster kan konfigureras som en header kolumn, 
+  vilket innebär att den inte omfattas av den horisontella skroll-listen.
+
+<h2>Attribut
+<b>Attribut     <t><t>Beskrivning
+Table.Rows   <t><t>Antalet rader i tabellen (header raden ej 
+             <t><t>inräknad).
+Table.Columns <t><t>Antalen kolumner i tabellen (ev header kolumn 
+             <t><t>inräknad).
+Table.HeaderRow <t><t>Header rad med rubrik för varje kolumn ritas.
+Table.HeaderColumn <t><t>Den vänstra kolumnen omfattas inte av den 
+             <t><t>horizontella scroll-listen.
+Table.RowHeight  <t><t>Rad höjd.
+Table.HeaderTextSize <t><t>Text-storlek på texten i header raden.
+Table.HeaderTextBold <t><t>Texten i header raden ska vara fet.
+Table.HeaderTextColor <t><t>Färg på texten i header raden.
+Table.Options   <t><t>Bitmask med tillvals-funktioner.
+                <t><t>1: Om cellen i kolumnen längst till vänster i en 
+                <t><t>rad är tom, ritas alla celler på raden tomma.
+Table.VerticalScrollbar <t><t>Vertikal skroll-list i tabellen.
+Table.HorizontalScrollbar <t><t>Horisontal skroll-list i tabellen.
+Table.ScrollbarWidth <t><t>Bredd på skroll-list.
+Table.ScrollbarColor <t><t>Fyllnadsfärg på skroll-listens rörliga del.
+Table.ScrollbarBgColor <t><t>Fyllnadsfärg på skroll-listens fasta del.
+Column1.Attribute <t><t>Vektor-attribut. Värdet på varje element visas på 
+                  <t><t>motsvarande rad i kolumnen. Attributet ska anges med 
+                  <t><t>datatyp och storlek, se ovan.
+Column1.Format    <t><t>Format i c syntax.
+Column1.SelectAttribute <t><t>Vektor-attribut av typen Boolean. När en cell i 
+                  <t><t>kolumnen väljs ut, sätt motsvarande element i vektorn. 
+                  <t><t>Attributet ska anges med datatyp och storlek, se ovan.
+Column1Width      <t><t>Bredd på kolumnen.
+Column1.HeaderText <t><t>Rubrik på kolumnen. Rubriken skrivs i 
+                  <t><t>header-raden.
+</topic>
+</chapter>
+
+<chapter>
+<topic>geref_subgraph
+Subgrafer
+
+En subgraf är en klass eller mall som byggs upp av ett antal basobjekt.
+
+En instans av en subgraf skapas genom välja ut subgrafen i subgraf-paletten och kicka med 
+MB2 i arbetsarean. Instanserna hanteras i editorn som andra objekt och man kan sätta 
+fyllnadsfärg, kantfärg och linjebredd på dem.
+
+<h1>Färg
+På ett subgraf-objekt kan man sätta fyllnads- och kant-färg på samma sätt som på bas-objekten.
+
+Men det innebär att man ger dessa egenskaper till samtliga delobjekt i subgrafen. Sätter man 
+fyllnadsfärg på en subgraf som har ritats med skuggor och dagrar för att ge 3d effekt, 
+försvinner denna effekt och objektet blir helt platt. För att kunna modifiera färgen på den 
+här typen av subgrafer kan man använda funktionerna för ljushet, färgintensitet och färgton 
+i verktygs-panelen.
+
+<b>Ljushet
+Funktionen för ljushet finns i verktygs-panelen och markeras med en sol. Här finns öka och 
+minska-knappar som gör fyllnadsfärgen i objektet ljusare resp mörkare. Ljusheten kan 
+modifieras i sju steg.
+
+<b>Intensitet
+Funktionen för färgintensitet finns i verktygs-panelen och markeras av tre färgpunkter. 
+Intensiteten kan modifieras i tre steg: stark intensitet, medel intensitet och grå.
+
+<b>Skift
+Skiftning av färg innebär att varje färg i subgrafs-objektet roteras på färgcirkeln. Ett 
+objekt som innehåller blå och gröna färger kommer t ex efter fyra stegs skiftning att 
+innehålla orange och rött. Färgerna behåller sin ursprungliga ljushet och intensitet, och 
+även sin inbördes färgkontrast.
+
+Funktionen finns i verktygspanelen och markeras av tre färgpunkter omgärdade av en cirkulär 
+pil. Färgerna på första raden i färgpaletten påverkas inte av skift-funktionen.
+
+<b>Ton
+Att tona ett objekt innebär att alla färger i subgrafs-objekt får samma färgton. De behåller 
+sin ljushet och intensitet. Det finns nio olika färgtoner: grå, gul, guld, orange, röd, 
+magenta, blå, blågrön och grön.
+
+Funktionen för ton finns längst ner i färgpaletten. Här finns även en tryckknapp för att
+återställa ett objekt till ursprungsfärgerna.
+
+<h1>Animering och skiftning
+<b>Subgrafer med flera sidor
+Animering och Shift är typer av dynamik där man inte bara ändra färgen på subgrafen, utan 
+även formen. Detta kan man åstadkomma genom att skapa en subgrafen med flera sidor.
+
+För att skapa fler sidor till en subgraf aktiverar man File/Page/Create next page. Denna 
+funktion skapar en ny subgraf med med suffixet '__px', där x är sidnumret, och länkar denna 
+till föregående sida genom att lägga in namnet i attributet NextSubgraph i graf-attributen. 
+För den sista sidan är NextSubgraph tom. När man har skapat och sparat en sida kan man snabbt
+skifta till nästa eller föregående sida med funktionerna File/Page/NextPage resp 
+File/Page/PreviousPage.
+
+Man bör spara de olika sidorna med samma zoom-faktor, för att undvika att riskera att få en 
+pixels förskjutning mellan olika sidor i runtime.
+
+<h1>Skift
+Skiftning mellan olika sidor i runtime kan ske med dynamik-typerna DigShift och AnalogShift. 
+DigShift växlar mellan första och andra sidan beroende på ett digitalt värde. AnalogShift 
+kopplas till en analog signal där värdet på den motsvara index för den sidan som ska visas 
+(första sidan har index 0).
+
+<h1>Animering
+Vid animering spelas sidorna upp efter varandra och ger intryck av rörelse hos subgrafen.
+
+Tiden mellan varje sidbyte måste oftast vara betydligt kortare än den normala uppdateringen 
+av dynamiska objekt i bilden. För en graf kan men ange animationstiden i File/Graph 
+attributes i menyn. Observera att tiden anges för grafen som helhet och inte kan anges för 
+varje subgraf individuellt. Ett lämpligt värde på animations-tiden är 0.2 sekunder.
+
+Om en animation ska vila på samma sida under flera animations-cykler, kan man lägga in 
+antaler cykler i AnimationCount i Graph attributes för den aktuella sidan.
+
+Animation hanterar av dynamiktypen Animation. Den kopplas till en digital signal, som 
+kontrollerar start och stopp av animationen. Det har också attributet Sequence som talar om
+i vilken ordning, och villkoret för att animationen ska köras. Sequence kan ha värdet Cyclic,
+Dig eller ForwBack.
+
+Om Sequence är Cyclic, visas den första sidan när värdet på signalen är 0. När värdet på
+signalen är 1 är animationen aktiv. Det startar på andra sidan och försätter till sista sidan,
+varefter den hoppar till andra sidan igen och försätter till sista sidan osv. Detta pågår tills
+signalvärdet blir 0 igen.
+
+Sequence ForwBack är liknande, men här går animationen kontinuerligt fram och tillbaka mellan
+första och sista sidan, så länge signalvärdet är 1.
+
+Om Sequence är Dig genomlöps animationen endast vid omslag av det digitala värdet. Vid omslag 
+till 1 animeras från första till sista sidan, och  vid omslag till 0 animeras tillbaka till 
+första sidan.
+</topic>
+
+<topic>geref_dynamic
+Dynamik
+
+Man kan definiera ett antal olika typer av dynamik för subgrafer. Dynamiken beskriver hur 
+signaler i rtdb ska påverka subgrafen, t ex ändra färg eller skriva ut ett analogt värde. 
+
+Det finns ett antal fördefinierade typer av dynamik, t ex skifta mellan två färger eller 
+mellan två texter. När man ritar subgrafen anger man typen av dynamik som ska gälla för 
+subgrafen, men detta är endast ett defaultvärde som varje instans får, om inte konstruktören 
+väljer en annan typ av dynamik.
+
+<b>Dynamik   <t>Signal typ <t>Beskrivning
+Inherit   <t>-          <t>Dynamiken för instansen ärvs från subgrafen.
+Tone      <t>-          <t>Anger att dynamik som ändrar färg på komponenten 
+          <t>           <t>ska ändra färgton i stället för fyllnadsfärgen.
+DigLowColor <t>Boolean  <t>Sätter angiven fyllnadsfärg när signalen är låg. <link>GeDynDigLowColor
+DigColor  <t>Boolean    <t>Sätter angiven fyllnadsfärg när signalen är hög. <link>GeDynDigColor
+DigError  <t>Boolean    <t>Sätter röd fyllnadsfärg vid hög signal. <link>GeDynDigError
+DigWarning <t>Boolean   <t>Sätter gul fyllnadsfärg vid hög signal. <link>GeDynDigWarning
+DigFlash  <t>Boolean    <t>Blinkar med angiven färg vid hög signal. <link>GeDynDigFlash
+AnalogColor <t>Float32 Int32 <t>Sätter angiven fyllnadsfärg när signalen <link>GeDynAnalogColor
+          <t>            <t>över- eller underskrider ett angivet värde.
+FillLevel <t>Float32    <t>Ändrar fyllnadsfärgen på en del av komponenten. Nivån <link>GeDynFillLevel
+          <t>           <t>som avgränsar den färgade delen bestäms av värdet på signalen.
+Invisible <t>Boolean String <t>Gör komponenten osynlig vid hög signal, eller vid tom sträng. <link>GeDynInvisible
+DigBorder <t>Boolean    <t>Sätter angiven kantfärgen vid hög signal. <link>GeDynDigBorder
+DigText   <t>Boolean    <t>Sätter angiven text vid låg signal. <link>GeDynDigText
+AnalogText <t>Float32 Int32 <t>Sätter upp till 32 olika text beroende på värdet av <link>GeDynAnalogText
+          <t>           <t>en analog signal.
+Value     <t>Valfri     <t>Skriver ut värdet av ett attribut. <link>GeDynValue
+Rotate    <t>Float32 Int32 <t>Roterar komponenten. <link>GeDynRotate
+Move      <t>Float32 Int32 <t>Flyttar och skalar komponenten i x- och y-led. <link>GeDynMove
+DigShift  <t>Boolean    <t>Skiftar mellan två sidor i subgrafen (första och sista sidan). <link>GeDynDigShift
+AnalogShift <t>Float32 Int32 <t>Skiftar mellan olika sidor i subgrafen. Värdet <link>GeDynAnalogShift
+          <t>           <t>på signalen bestämmer sidnr.
+Animation <t>Boolean    <t>Olika typer av animering. <link>GeDynAnimation
+Video     <t>-          <t>Kontinuerlig uppdatering av en blidfil. <link>GeDynVideo
+SliderBackground <t>-   <t>Markerar att subgrafen är bakgrund till en slider-komponent. <link>GeDynSliderBackground
+
+<h2>Inherit
+För en instans av en subgraph betyder det att dynamiken ärvs från subgrafs-klassen, dvs den 
+dynamik som angetts som default när subgrafen editerades. Om även default-dynamiken är 
+Inherit innebär det att subgrafen saknar dynamik.
+
+Default-dynamiken för en instans ser man enklast genom att öppna objektseditorn för instansen
+och där öppna subgraph-mappen.
+
+<h2>Xtt-kommanon
+Det finns en rad tryckknappar som exekverar xtt-kommandon. Det vanligaste är att man öppnar 
+en annan graf, men man kan även öppna trace med ett visst objekt utvalt. Här följer några 
+exempel på användbara xtt-kommandon.
+
+<c>open graph GraphName [/width=][/height=][/scrollbar][/navigator]
+
+<c>open trace WindowName [/center=]
+
+<h2>Access
+All dynamik som gör det möjligt att påverka en signal i rtdb innehåller attributet Access. 
+Access talar om de privilegier som krävs för att en användare ska tillåtas att ändra ett 
+värde. Det finns 15 olika privilegier som är intressanta i operatörsbilder, 10 för olika 
+slags operatörer, och 4 för olika yrkesgrupper. Dessutom finns RtRead, dvs läsrättighet i 
+runtime, som även en användare som inte lyckats logga in får. En användare ges ett eller flera
+privilegier och om något av hans privilegier finns med i Access har han rätt att påverka 
+objektet.
+
+Default-access är alla privileger utom RtRead. Vissas operationer som att öppna andra bilder 
+bör man även tillåta RtRead att utföra.
+
+<b>Privilegier i runtime <t>Beskrivning
+RtRead    <t>Behörig att läsa.
+System    <t>Systemansvarig.
+Maintenance <t>Underhåll.
+Process   <t>Process tekniker.
+Instrument <t>Instrumentare.
+Operator1  <t>Olika operatörer eller operatörsplatser.
+Operator2  <t>"
+Operator3  <t>"
+Operator4  <t>"
+Operator5  <t>"
+Operator6  <t>"
+Operator7  <t>"
+Operator8  <t>"
+Operator9  <t>"
+Operator10 <t>"
+</topic>
+
+<headerlevel>
+<topic>GeDynDigLowColor <style>function
+DigLowColor
+Sätt angiven fyllnadsfärg när signalen är låg.
+
+Objektet kopplas till en digital signal i rtdb. Om värdet är 1 ritas objektet med den normala
+fyllnadsfärgen, om värdet är 0 ritas det med DigLowColor.Color som anges i objektseditorn.
+
+Jämför DigColor nedan som sätter angiven färg vid hög signal istället för låg. Om man ska 
+använda DigLowColor eller DigColor avgörs närmast av hur man vill att komponenten ska ritas i
+editorn: så som den kommer att se ut vid hög eller vid låg signal, dvs om man vill rita 
+bilden så det kommer att se ut när anläggningen är i drift, eller avstängd.
+
+<b>Attribut <t><t>Beskrivning
+DigLowColor.Attribute <t><t>Signal i rtdb av typen Boolean som ska 
+                      <t><t>påverka komponenten.
+DigLowColor.Color  <t><t>Fyllnadsfärg på komponenten om signalen är 0.
+</topic>
+
+<topic>GeDynDigColor <style>function
+DigColor
+Sätt angiven fyllnadsfärg när signalen är hög.
+
+Objektet kopplas till en digital signal i rtdb. Om värdet är 1 ritas objektet med 
+DigColor.Color som anges i objektseditorn, om värdet är 0 ritas det med den normala 
+fyllnadsfärgen.
+
+DigColor kan finnas i flera instanser, vilket gör det möjligt att växla mellan flera färger 
+(upp till 32 stycken). Instanser med högre nummer här högre prioritet, dvs om signalen för 
+en högre instans är hög, bestämmer denna färgen oavsett värdet på signaler kopplade till 
+lägre instanser.
+
+<b>Attribut <t><t>Beskrivning
+DigColor.Attribute <t><t>Signal i rtdb av typen Boolean som ska påverka 
+                   <t><t>komponenten.
+DigColor.Color <t><t>Fyllnadsfärg på komponenten om signalen är 1.
+DigColor.Instance <t><t>Anger vilka instanser som ska skapas.
+DigColor2.Attribute <t><t>Signal för instans 2.
+DigColor2.Color <t><t>Fyllnadsfärg för instans 2.
+DigColor3.Attribute <t><t>Signal för instans 3.
+DigColor3.Color <t><t>Fyllnadsfärg för instans 3.
+</topic>
+
+<topic>GeDynAnalogColor <style>function
+AnalogColor
+
+AnalogColor kopplas till en analog signal, och sätter angiven fyllnadsfärg när signalen 
+under- eller överskrider ett gränsvärde. Gränsvärdet anges i AnalogColor.Limit och 
+AnalogColor.LimitType avgör om det är ett undre eller övre gränsvärde. Om LimitType är 
+GreaterThan sätts fyllnadsfärgen när signalens värde är större än gränsvärdet, och när 
+LimitType är LessThan sätts fyllnadsfärgen när signalvärdet är mindre än gränsvärdet. Andra 
+gränsvärdestyper är GreaterEqual (större eller lika med), LessEqual ( mindre eller lika med) 
+och Equal (lika med).
+
+AnalogColor kan finnas i flera instanser, vilket gör det möjligt att sätta flera gränsvärden 
+och skifta mellan flera olika färger (upp till 32 stycken).
+
+OBS ! Om det förekommer flera instanser med samma LimitType, måste en högre instans ha ett 
+större gränsvärde vid LimitType GreaterThan och GreaterEqual. Vid LimitType LessThan och 
+LessEqual måste en högre instans ha ett lägre gränsvärde.
+
+<b>Attribut <t><t>Beskrivning
+AnalogColor.Attribute <t><t>Signal i rtdb av typen Float32 eller Int32. Värdet 
+                      <t><t>jämförs med gränsvärdet och om detta 
+                      <t><t>över/underskrids ändras färgen på komponenten.
+AnalogColor.Color     <t><t>Fyllnadsfärg på komponenten om signalens värde 
+                      <t><t>har passeras gränsvärdet.
+AnalogColor.Limit     <t><t>Gränsvärde.
+AnalogColor.LimitType <t><t>Typ av gränsvärde. Kan vara GreaterThan, 
+                      <t><t>GreaterEqual, LessThan, LessEqual eller Equal.
+AnalogColor.Instances <t><t>Anger vilka instanser som ska skapas.
+AnalogColor2.Color    <t><t>Fyllnadsfärg för instans 2.
+AnalogColor2.Limit    <t><t>Gränsvärde för instans 2.
+AnalogColor2.LimitType <t><t>Typ av gränsvärde för instans 2.
+AnalogColor3.Color    <t><t>Fyllnadsfärg för instans 3.
+</topic>
+
+<topic>GeDynDigWarning <style>function
+DigWarning
+
+Sätter fyllnadsfärgen till gul vid hög signal.
+
+Objektet kopplas till en digital signal i rtdb. Om värdet är 1 ritas objektet med gul 
+fyllnadsfärg, om värdet är 0 ritas det med den normala fyllnadsfärgen.
+
+<b>Attribut <t><t>Beskrivning
+DigWarning.Attribute <t><t>Signal i rtdb av typen Boolean som ska 
+                <t><t>påverka objektet.
+</topic>
+
+<topic>GeDynDigError <style>function
+DigError
+
+Sätter fyllnadsfärgen till röd vid hög signal.
+
+Objektet kopplas till en digital signal i rtdb. Om värdet är 1 ritas objektet med röd 
+fyllnadsfärg, om värdet är 0 ritas det med den normala fyllnadsfärgen.
+
+<b>Attribut <t><t>Beskrivning
+DigError.Attribute <t><t>Signal i rtdb av typen Boolean som ska 
+                   <t><t>påverka objektet.
+</topic>
+
+<topic>GeDynDigFlash <style>function
+DigFlash
+
+Blinkar med angiven fyllnadsfärg vid hög signal.
+
+DigFlash ändrar färg på objektet varje cykel. Färgen skiftas mellan angiven färg och 
+ursprunglig färg, eller den färg som objektet får av övrig färg-dynamik. 
+
+Blink-frekvensen bestäms av cykeltiden för den cykel som objektet går på.
+
+<b>Attribut <t><t>Beskrivning
+DigFlash.Attribute <t><t>Signal i rtdb av typen Boolean som ska 
+                   <t><t>påverka objektet.
+DigFlash.Color     <t><t>Fyllnadsfärg.
+</topic>
+
+<topic>GeDynFillLevel <style>function
+FillLevel
+
+Rita objektet med en fyllnadsfärg, upp till en viss nivå.
+
+FillLevel ritar ursprungfärgen (eller den färg som bestäms av övrig dynamik) upp till en viss
+gränslinje. På andra sidan gränslinjen ritas objektet med angiven bakgrundsfärg. Gränslinjens
+läge bestäms av värdet på den analoga signalen. Om värdet är mindre än MinValue ritas hela 
+objektet med bakgrundsfärg. Om värdet är större än MaxValue ritas hela objektet med 
+ursprungsfärgen.
+
+Direction avgör vilken rikting gränslinjen ska flytta sig. Vid Direction Up flyttar sig 
+gränslinjen uppåt med ökande värde, vid Down nedåt, vid Left åt vänster och vid right åt 
+höger.
+
+<b>Attribut <t><t>Beskrivning
+FillLevel.Attribute <t><t>Signal i rtdb av type Float32.
+FillLevel.BackgroundColor <t><t>Bakgrundsfärg.
+FillLevel.Direction <t><t>Riktning Up, Down, Left eller Right.
+FillLevel.MinValue <t><t>Minvärde. När värdet på Attribute är lika med 
+                   <t><t>MinValue, ritas hela objektet med bakgrundsfärgen.
+FillLevel.MaxValue <t><t>Maxvärde. När värdet på Attribute är lika med 
+                   <t><t>MaxValue, ritas hela objektet med ursprungsfärgen.
+</topic>
+
+<topic>GeDynInvisible <style>function
+Invisible
+
+Gör objektet osynligt (eller dimmar) vid hög signal.
+Attributet kopplas normalt till en digital signal, men kan även kopplas till en sträng. I 
+detta fall testas på om strängen är tom eller inte. Objektet blir osynligt vid tom sträng. 
+Invisible kan ocskå användas med xtt-kommandot 'check' för att t ex testa om en metod är 
+definierad för ett objekt. I Attribute skriver man då 
+$cmd('command') , t ex 
+<c>   $cmd(check method/method=Note/object=VK-Valve)
+
+<b>Attribut <t><t>Beskrivning
+Invisible.Attribute <t><t>Signal i rtdb av typen Boolean som ska 
+                 <t><t>påverka objektet. 
+Invisible.Dimmed <t><t>1 dimmar objektet, 0 gör objektet osynligt.
+</topic>
+
+<topic>GeDynDigBorder <style>function
+DigBorder
+
+Sätt angiven kantfärg när signalen är låg.
+
+Objektet kopplas till en digital signal i rtdb. Om värdet är 1 ritas objektet med den normala
+kantfärgen, om värdet är 0 ritas det med DigBorder.Color som anges i objektseditorn.
+
+<b>Attribut <t><t>Beskrivning
+DigBorder.Attribute <t><t>Signal i rtdb av typen Boolean som ska 
+                    <t><t>påverka komponenten.
+DigBorder.LowColor  <t><t>Kantfärg på komponenten om signalen är 0.
+</topic>
+
+<topic>GeDynDigText <style>function
+DigText
+
+Skifta mellan två texter.
+
+Objektet kopplas till en digital signal i rtdb. Om värdet är 1 skrivs original-texten ut, om värdet är 0 skrivs texten i LowText ut. DigText opererar på textfält 1.
+
+<b>Attribut <t><t>Beskrivning
+DigText.Attribute <t><t>Signal i rtdb av typen Boolean som skiftar text.
+DigText.LowText   <t><t>Text som skrivs ut när signalen är låg.
+</topic>
+
+<topic>GeDynAnalogText <style>function
+AnalogText
+
+Skifta mellan flera texter beroende på värdet på en analog signal.
+
+Objektet kopplas till att databas attribut av typen float eller int. Till varje text anger 
+man ett Enum värde. Texten vars Enum värde är lika med databas attributets värde kommer att 
+visas i komponenten.
+
+<b>Attribut <t><t>Beskrivning
+AnalogText.Attribute <t><t>Databas attribut av typen Float32, Float64, Int32, 
+                     <t><t>UInt32, Int16, UInt16, Int8 eller UInt8. Den text vars 
+                     <t><t>Enum motsvarar värdet på databas attributet visas.
+AnaogText.TextMask   <t><t>Mask som bestämmer antalet texter.
+AnalogText.Text1     <t><t>Text nr 1.
+AnalogText.Enum1     <t><t>Uppräkningsvärdet för första texten.
+AnalogText.Text2     <t><t>Text nr 2.
+AnalogText.Enum2     <t><t>Uppräkningsvärdet för andra texten.
+</topic>
+
+<topic>GeDynValue <style>function
+Value
+
+Skriver ut värdet på en signal. Värdet skrivs ut i ett textfält.
+
+Objektet kopplas till ett attribut i rtdb av valfri typ. I Format anges format på utskriften 
+med c-syntax.
+
+Det är möjlig att skapa fler instanser. Detta kräver att subgrafen har flera fält att skriva 
+ut värden på. Värdet för en instans skrivs ut i fältet med motsvarande nummer (annotation 
+number).
+
+<b>Attribut <t><t>Beskrivning
+Value.Attribute <t><t>Signal i rtdb av av valfri typ, som ska visas i 
+                <t><t>textfältet.
+Value.Format    <t><t>Format i c-syntax.
+Value.Instances <t><t>Anger vilka instanser som ska skapas.
+</topic>
+
+<topic>GeDynRotate <style>function
+Rotate
+
+Roterar ett objekt.
+
+Rotationen sker med utgångspunkt från den position objektet ges i editorn. Värdet i Attribute
+multipliceras med Factor och ger rotationen i grader.
+
+x0 och y0 anger rotations-punkten. Om x0 och y0 är noll, används origo i subgrafens 
+koordinater som rotationspunkt. Subgrafer med Rotate som standad-dynamik är oftast ritade så 
+att rotations-punkten inte behöver anges.
+
+<b>Attribut <t><t>Beskrivning
+Rotate.Attribute <t><t>Signal i rtdb av typen Float32. Ger rotation av 
+                 <t><t>objektet.
+Rotate.x0        <t><t>x-koordinat för rotationspunkten.
+Rotate.y0        <t><t>y-koordinat för rotationspunkten.
+Rotate.Factor    <t><t>Factor multiplicerat med signalens värde ger 
+                 <t><t>rotationen i grader.
+</topic>
+
+<topic>GeDynMove <style>function
+Move
+
+Flyttar och skalar ett objekt. Kan kopplas till fyra analoga attribut som flyttar objektet i 
+x- resp y-led, och skalar det i x- resp y-led.
+
+Förflyttingen sker med utgångspunkt från den position objektet ges i editorn. Omräkningen 
+från värdet i XAttribute och YAttribute till Ge -koordinater kan påverkas av XOffset, YOffset
+och Factor. XOffset och YOffset är det värden som motsvarar utgångspunkten i x- resp y-led. 
+Factor anger omräknings-faktor från XAttribute och YAttribute-värden till Ge -koordinater. 
+Omräkningen sker enligt formeln:
+
+<c>dx = (XAttribute - XOffset) * Factor
+
+<c>dy = (YAttribute - YOffset) * Factor
+
+Skalningen i x- och y-led sker med ledning av värdet av ScaleXAttribute resp ScaleYAttribute.
+Dessa mulipliceras med ScaleFactor och ger skalfaktorn, där 1.0 ger oförändrad skalning, 
+värden större än 1 ger förstoring och värden mindre än 1 ger förminskning.
+
+<b>Attribut  <t><t>Beskrivning
+Move.XAttribute <t><t>Signal i rtdb av typen Float32. Ger förflytting i 
+                <t><t>x-led.
+Move.YAttribute <t><t>Signal i rtdb av typen Float32. Ger förflytting i 
+                <t><t>y-led.
+Move.Factor     <t><t>Omräkningsfaktor från storhet för XAttribute och 
+                <t><t>YAttribute till storhet för Ge -koordinater.
+Move.XOffset    <t><t>Värde för XAttribute som motsvarar utgångs-
+                <t><t>positionen för objektet.
+Move.YOffset    <t><t>Värde för YAttribute som motsvarar utgångs-
+                <t><t>positionen för objektet.
+Move.ScaleXAttribute <t><t>Signal i rtdb av typen Float32. Ger skalning i 
+                <t><t>x-led.
+Move.ScaleYAttribute <t><t>Signal i rtdb av typen Float32. Ger skalning i 
+                <t><t>y-led.
+Move.ScaleFactor <t><t>Omräkningsfaktor från storhet för ScaleXAttribute
+                <t><t>och ScaleYAttribute till skalfaktor.
+</topic>
+
+<topic>GeDynAnalogShift <style>function
+AnalogShift
+
+Skifta flera sidor i subgrafen. Subgrafen måste innehålla minst två sidor.
+
+Objektet kopplas till en analog signal i rtdb. Värdet på det analoga attributet bestämmer 
+index för den sida som ska ritas. Vid 0 ritas den första sidan, vid 1 den andra, osv.
+
+<b>Attribut <t><t>Beskrivning
+AnalogShift.Attribute <t><t>Signal i rtdb av typen Float32 eller Int32 som 
+                      <t><t>skiftar sida på subgrafen. Värdet bestämmer vilken 
+                      <t><t>sida som ska ritas. Vid 0 ritas första sidan.
+</topic>
+
+<topic>GeDynDigShift <style>function
+DigShift
+Skifta två sidor i subgrafen. Subgrafen måste innehålla minst två sidor.
+
+Objektet kopplas till en digital signal i rtdb. Om värdet är 0 ritas objektet med första 
+sidan, om värdet är 1 ritas det med sista sidan.
+
+<b>Attribut <t><t>Beskrivning
+DigShift.Attribute <t><t>Signal i rtdb av typen Boolean som skiftar sida. 
+                   <t><t>Vid 0 visas första sidan, vid 1 visas sista sidan.
+</topic>
+
+<topic>GeDynAnimation <style>function
+Animation
+
+Dynamik för animerade subgrafer, dvs subgrafer med  flera sidor. Objeket kopplas till en 
+digital signal som aktiverar animationen.
+
+Animations-sekvensen bestäms av Sequence, som kan vara Cyclic, ForwBack eller Dig.
+
+<h2>Cyclic
+Skifta viloläge och cyklisk animering. Animationen sker från 2:a till sista sidan och börjar 
+sedan om på 2:a sidan osv.
+
+Om signalens värde är 0 ritas objektet med första sidan, om värdet är 1 startar cyklisk 
+animering mellan 2:a sidan och sista sidan. Vid animeringen genomlöps sidorna från 2:a till 
+sista sidan, därefter hoppar man till 2:a sidan och animerar upp till sista sidan igen, osv.
+
+<h2>ForwBack
+Skifta viloläge och cyklisk animering. Animationen sker fram och tillbaka mellan 2:a och 
+sista sidan. Om signalens värde är 0 ritas objektet med första sidan, om värdet är 1 startar 
+cyklisk animering fram och tillbaka mellan första och sista sidan.
+
+<h2>Dig
+Skiftar två vilolägen. Vid omslag sker animering mellan vilolägena.
+
+Om signalens värde är 0 ritas objektet med första sidan, om värdet är 1 ritas sista sidan. 
+Vid omslag från 0 till 1 sker animering från första till sista sidan, vid omslag från 1 till 
+0 sker animering från sista till första sidan.
+
+<b>Attribut <t><t>Beskrivning
+Animation.Attribute <t><t>Signal i rtdb av typen Boolean som aktiverar 
+                    <t><t>animationen.
+Animation.Sequence  <t><t>Animering sekvens. Kan vara Cyclic, ForwBack 
+                    <t><t>eller Dig.
+</topic>
+
+<topic>GeDynVideo <style>function
+Video
+
+Visar en gif-fil som kontinuerligt uppdateras av en Web-kamera.
+Video har inga attribut.
+</topic>
+</headerlevel>
+<pagebreak>
+
+<topic> geref_action
+Action
+
+Action anger vad som ska hända när man aktiverar ett objekt t ex genom att kicka på det, 
+Man kan sätta eller återställa signaler i rtdb, ta upp en annan graf, visa en hjälptext eller 
+en tooltip text mm.
+
+<b>Action <t>Signal typ <t>Beskrivning
+Inherit   <t>-          <t>Action för instansen ärvs från subgrafen.
+PopupMenu <t>Objekt     <t>En popupmeny kan öppnas från komponenten med <link>GeDynPopupMenu
+          <t>           <t>MB3.
+SetDig    <t>Boolean    <t>Sätter värdet på en signal till true vid Klick MB1. <link>GeDynSetDig
+ResetDig  <t>Boolean    <t>Sätter värdet på en signal till false vid Klick MB1. <link>GeDynResetDig
+ToggleDig <t>Boolean    <t>Ändrar värdet på en signal vid Klick MB1. <link>GeDynToggleDig
+StoDig    <t>Boolean    <t>Sätter värdet på en signal så länge knappen är intryckt. <link>GeDynStoDig
+Command   <t>-          <t>Exekverar ett xtt-kommando vid Klick MB1. <link>GeDynCommand
+CommandDoubleClick <t>- <t>Exekverar ett xtt-kommando vid Dubbelklick MB1. <link>GeDynCommandDoubleClick
+Confirm   <t>-          <t>Verifiering innan aktionen utförs. <link>GeDynConfirm
+IncrAnalog <t>Float32   <t>Öka eller minska ett analogt värde. <link>GeDynIncrAnalog
+RadioButton <t>Boolean  <t>Radio-knapps uppförande hos komponenten. <link>GeDynRadioButton
+Slider    <t>Float32 Int32 <t>Reserverad för slider subgrafer.
+ValueInput <t>Valfri    <t>Inmatning. <link>GeDynValueInput
+ToolTip   <t>-          <t>Visning av tooltip text. <link>GeDynToolTip
+Help      <t>-          <t>Visar en hjälptext vid Klick MB1. <link>GeDynHelp
+OpenGraph <t>-          <t>Öppnar en graf vid Klick MB1. <link>GeDynOpenGraph
+OpenURL   <t>-          <t>Öppnar en URL i en lämplig web-läsare vid Klick <link>GeDynOpenURL
+          <t>           <t>MB1.
+PulldownMenu <t>- 	<t>Aktion för rullgardings menyer. <link>GeDynPulldownMenu
+OptionMenu <t>-		<t>Aktion för option menyer. <link>GeDynOptionMenu
+</topic>
+
+<headerlevel>
+<topic>GeDynPopupMenu <style>function
+PopupMenu 
+
+En popup-meny öppnas med MB3. Popup-menyn innehåller metoderna för det objekt som anges i 
+RefObject (se avsnittet Metoder i Xtt manualen).
+
+<b>Attribut <t><t>Beskrivning
+PopupMenu.RefObject <t><t>Objekt i rtdb, vars metoder aktiveras från 
+                    <t><t>popup-menyn.
+</topic>
+
+<topic>GeDynSetDig <style>function
+SetDig
+
+Sätter värdet på en digital signal till ett vid Klick MB1 på objektet.
+
+SetDig kan finnas i flera instanser, och sätter då värdet på flera signaler.
+
+<b>Attribut <t><t>Beskrivning
+SetDig.Attribute <t><t>Signal i rtdb av typen Boolean som sätts till 1 vid 
+                 <t><t>Klick MB1 på objektet.
+SetDig.Instances <t><t>Anger vilka instanser som ska skapas.
+</topic>
+
+<topic>GeDynResetDig <style>function
+ResetDig
+
+Sätter värdet på en digital signal till 0 vid Klick MB1 på objektet.
+
+ResetDig kan finnas i flera instanser, och sätter då värdet på flera signaler till 0.
+
+<b>Attribut <t><t>Beskrivning
+ResetDig.Attribute <t><t>Signal i rtdb av typen Boolean som sätts till 0 
+                   <t><t>vid Klick MB1 på objektet.
+ResetDig.Instances <t><t>Anger vilka instanser som ska skapas.
+</topic>
+
+<topic>GeDynToggleDig <style>function
+ToggleDig
+
+Togglar värdet på en digital signal vid Klick MB1 på objektet.
+
+<b>Attribut <t><t>Beskrivning
+SetDig.Attribute <t><t>Signal i rtdb av typen Boolean som togglas vid 
+                 <t><t>Klick MB1 på objektet.
+</topic>
+
+<topic>GeDynStoDig <style>function
+StoDig
+
+Sätter värdet på en digital signal till ett så länge knappen är intryckt.
+
+<b>Attribut <t><t>Beskrivning
+StoDig.Attribute <t><t>Signal i rtdb av typen Boolean som sätts vid Klick 
+                 <t><t>MB1 på objektet.
+</topic>
+
+<topic>GeDynCommand <style>function
+Command
+
+Exekverar ett xtt-kommando vid Klick MB1 på objektet.
+
+<b>Attribut <t><t>Beskrivning
+Command.Command <t><t>Xtt-kommando som exekveras vid mus-klick 
+                <t><t>på objektet.
+</topic>
+
+<topic>GeDynCommandDoubleClick <style>function
+CommandDoubleClick
+
+Exekverar ett xtt-kommando vid Dubbelklick MB1 på objektet.
+
+<b>Attribut <t><t>Beskrivning
+CommandDoubleClick.Command <t><t>Xtt-kommando som exekveras vid mus-klick 
+              <t><t>på objektet.
+</topic>
+
+<topic>GeDynHelp <style>function
+Help
+
+Öppnar hjälpfönstret med angivet ämne vid Klick MB1 på objektet.
+
+<b>Attribut   <t><t>Beskrivning
+Help.Topic    <t><t>Ämne vars hjälptext ska visas.
+Help.Bookmark <t><t>Bokmärke i hjälptexten. Kan utelämnas.
+</topic>
+
+<topic>GeDynOpenGraph <style>function
+OpenGraph
+
+Öppnar en graf via ett XttGraph-objekt vid Klick MB1.
+
+<b>Attribut <t><t>Beskrivning
+OpenGraph.GraphObject <t><t>Objekt av klassen XttGraph.
+</topic>
+
+<topic>GeDynOpenURL <style>function
+OpenURL
+
+Öppnar en URL i lämplig webläsare Klick MB1.
+
+<b>Attribut <t><t>Beskrivning
+OpenURL.URL <t><t>En URL
+</topic>
+
+<topic>GeDynConfirm <style>function
+Confirm
+
+Confirm innebär bekräftelse krävs innan en aktion genomförs. En dialogruta med angiven text 
+resp Ja och Nej knappar visas, innan övriga action-element exekveras.
+
+<b>Attribut  <t><t>Beskrivning
+Confirm.Text <t><t>Text som visas i verifierings fönstret.
+</topic>
+
+<topic>GeDynIncrAnalog <style>function
+IncrAnalog
+
+Öka eller minska värde på ett anlogt attribut.
+
+Objektet kopplas till ett analog attribut. Vid Klick MB1 på objektet ökas värdet på 
+attributet med värdet angivet i Increment. Min och Max-värde för attributet kan anges.
+
+<b>Attribut <t><t>Beskrivning
+IncrAnalog.Attribute <t><t>Signal i rtdb av typen Float32. Vid Klick MB1 ökas 
+                     <t><t>värdet av attributet med värdet i Increment.
+IncrAnalog.Increment <t><t>Värde som attributet i Attribute ökas/minska med.
+IncrAnalog.MinValue  <t><t>Minvärde för attributet.
+IncrAnalog.MaxValue  <t><t>Maxvärde för attributet.
+</topic>
+
+<topic>GeDynRadioButton <style>function
+RadioButton
+
+Sätter värdet på ett digitalt attribut vid klick och återställer värdet för övriga 
+RadioButton-objekt i gruppen.
+
+Objektet måste ingå i en grupp med andra objekt av typen RadioButton.
+
+<b>Attribut <t><t>Beskrivning
+RadioButton.Attribute <t><t>Signal i rtdb av typen Boolean. Vid Klick MB1 
+                      <t><t>sätts värdet av attributet och övriga RadioButton 
+                      <t><t>objekt i samma grupp återställs
+</topic>
+
+<topic>GeDynValueInput <style>function
+ValueInput
+
+Inmatningsfält. Ger möjlighet att mata in ett värdet på en signal, i en komponent som har 
+Value dynamik. Värdet kan ändras genom att man klickar med MB1 på objektet.
+
+Signalen anges i Value.Attribute.
+
+<b>Attribut <t><t>Beskrivning
+ValueInput.MinValule  <t><t>Minimivärde vid inmatning.
+ValueInput.MaxValue   <t><t>Maximivärde vid inmatning
+ValueInput.Clear      <t><t>Fältet töms när det öppnas för inmatning.
+ValueInput.Popup      <t><t>Vid inmatning öppnas ett inmatningsfönster.
+ValueInput.Unselect   <t><t>Texten i fältet markeras inte när fältet öppnas för inmatning.
+</topic>
+
+<topic>GeDynToolTip <style>function
+ToolTip
+
+Visar ToolTip text för en komponent. ToolTip är en vit textruta som visas om markören vilar 
+på en komponent en viss tid. När markören lämnar komponenten tas textrutan bort.
+I 'Text' anges normal tooltip-texten. Om texten ska vara ändringsbar, kan man även koppla 
+till ett sträng-attribut genom att ange sträng-attributet i 'Text' med '&' som prefix, t ex
+<c>  &A1-B1- Sv1.ActualValue##String80
+
+<b>Attribut <t><t>Beskrivning
+ToolTip.Text <t><t>ToolTip text.
+</topic>
+
+<topic>GeDynInputFocus <style>function
+InputFocus
+
+Input fokus är en funktion gör att man kan påverka komponenter i bilden från tangentbordet 
+istället för med musen. Det flesta funktioner som utförs med pekare och mus kan även utföras 
+från tangentbordet. 
+
+En komponent väljs ut mha pil- eller Tab-tangenteran, (eller genom att klicka på den), så att 
+den har input fokus.
+Det innebär att all inmatning från tangenbordet kanaliseras till komponenten. En tryckknapp 
+aktiveras t ex genom att man trycker på Return, en optionmeny genom att man väljer ut önskat 
+alternativ med piltangenterna och trycker på Return, en ValueInput genom att man matar in 
+önskat värdet och trycket på Return.
+
+Endast komponenter med actiontypen InputFocus kan erhålla input focus, undantaget är 
+ValueInput som även kan få input fokus genom att man klickar på dem.
+
+Man skiftar input fokus mellan komponenterna med pil-tangenterna eller Tab-tangenten. 
+Komponenternas ordning konfigureras genom att man länkar dem i tre listor, en horisontell, en
+vertikal och en Tab-lista. I den horisontella listan förflyttar man sig med Pil Vänster och 
+Pil Höger, i den vertikala med Pil Upp och Pil Ner, i Tab listan med Tab tangenten. Det hela 
+konfigureras med attributen InitialFocus, NextHorizontal, NextVertical och NextTab. I 
+InitialFocus kan man ange att ett objekt ligger först eller sista i en lista. Man kan även 
+ange att en komponent ska ha input fokus när billden tas upp. I NextHorizontal, NextVertical 
+och NextTab lägger man in objektsnamnet på nästa komponent i respektive lista.
+
+Man brukar dela in komponenterna i Tab grupper. Mellan komponenterna inom en Tab-grupp 
+navigerar man med pil-tangenterna, och mellan Tab grupperna navigerar man med Tab-tangenten. 
+Detta åstadkommes genom att samtliga komponenter inom en Tab-grupp har första objektet i 
+nästa Tab-grupp som NextTab.
+
+<b>Attribut <t><t>Beskrivning
+InputFocus.InitalFocus <t><t>Bitmask med föjande bitar.
+  <t><t>- InitialFocus Komponenten har input fokus när 
+  <t><t>  grafen öppnas
+  <t><t>- FirstHorizontal Komponenten är första objekt i 
+  <t><t>  horisontella listan.
+  <t><t>- FirstVertical Komponenten är första objekt i 
+  <t><t>  vertikala listan.
+  <t><t>- FirstTab Komponenten är första objekt i Tab-
+  <t><t>  listan.
+  <t><t>- LastHorizontal Komponenten är sista objekt i 
+  <t><t>  horisontella listan.
+  <t><t>- LastVertical Komponenten är sista objekt i 
+  <t><t>  vertikala listan.
+InputFocus.NextHorizontal <t><t>Objektsnamn på nästa komponent i 
+                          <t><t>horisontella listan.
+InputFocus.NextVertical   <t><t>Objektsnamn på nästa komponent i 
+                          <t><t>vertikala listan.
+InputFocus.NextTab        <t><t>Objektsnamn på nästa komponent i 
+                          <t><t>Tab listan.
+</topic>
+
+<topic>GeDynPulldownMenu <style>function
+PulldownMenu
+
+Action för en rullgardinsmeny, eller för en submeny i en rullgardinsmeny.
+
+En rullgardinsmeny består av ett antal meny alternativ som antingen är tryckknappar eller 
+submenyer.
+Antalet alternativ i menyn konfigureras i ItemMask, en meny kan ha upp till 32 menyalternativ.
+För varje menyalternativ väljer man en actiontyp. För tryckknappar kan man välja mellan 
+SetDig, ResetDig, ToggleDig, Command, Help, OpenGraph, CloseGraph, OpenURL och IncrAnalog. 
+Submenyer ska ha actiontyp PulldownMenu, och för denna konfigurerar man antalet 
+menyalternativ och actiontyp på samma sätt som för rullgardinsmenyn. Submenyer kan byggas i 
+obegränsat antal nivåer.
+
+<b>Attribut <t><t>Beskrivning
+Text                   <t><t>Text för rullgardins menyn.
+PulldownMenu.ItemMask  <t><t>Mask som bestämmer antalet menyalternativ.
+PulldownMenu.ItemText1 <t><t>Text för första menyalternativet.
+PulldownMenu.ItemDyn1  <t><t>Dynamik för första menyalternativet. Innehåller 
+                       <t><t>action typ, samt eventuell access, för 
+                       <t><t>menyalternativet.
+PulldownMenu.ItemText2 <t><t>Text för andra menyalternativet.
+PulldownMenu.ItemDyn2  <t><t>Dynamik för andra menyalternativet.
+</topic>
+
+<topic>GeDynOptionMenu <style>function
+OptionMenu
+
+Option meny är en meny där man väljer alternativ i en lista av alternativ. Det valda 
+alternativet visas upp i meny-komponenten. När man klicka på komponenten öppnas listan med 
+alternativ. När man väljer ett alternativ stängs listan och det valda alternativet läggs in 
+i komponenten.
+
+Optionmeny kopplas till ett databas-attribut av typ float eller int. Varje alternativ i 
+listan motsvarar ett uppräkningsvärde, och när alternativet väljs läggs värdet in i 
+databas-attributet. Komponenten läser kontinuerligt av värdet på databasattributet, och 
+skriver ut texten för det alternativ som motsvarar värdet, i sitt text-fält.
+
+<b>Attribut <t><t>Beskrivning
+OptionMenu.Attribute  <t><t>Databas attribut av typen Float32, Float64, Int32, 
+                      <t><t>UInt32, Int16, UInt16, Int8 eller UInt8. Värdet i 
+                      <t><t>ItemEnum för valt alternativ sätts i databas attributet.
+OptionMenu.ItemMask   <t><t>Mask som bestämmer antalet menyalternativ.
+OptionMenu.ItemText1  <t><t>Text för första menyalternativet.
+OptionMenu.ItemEnum1  <t><t>Uppräkningsvärdet för första menyalternativet.
+OptionMenu.ItemText2  <t><t>Text för andra menyalternativet.
+OptionMenu.ItemEnum2  <t><t>Uppräkningsvärdet för andra menyalternativet.
+</topic>
+</headerlevel>
+<pagebreak>
+
+<topic>geref_create_subgraph
+Skapa en subgraf
+
+Man skapar en subgraf genom att rita bas-objekt i arbetsarean. Man har här även tillgång till
+kopplingspunkter och annotations.
+
+Markera att det är en subgraf genom att öppna File/Graph attributes och sätt en etta på 
+subgraph.
+
+Stäng attribut-editorn och öppna den igen och editera subgraf attributen.
+
+<b>Attribut <t>Beskrivning
+DynType     <t>Typ av dynamik. Instanserna kommer att ärva denna som default-dynamik.
+Action      <t>Typ av action. Instanserna kommer att ärva denna som default-action.
+Color1      <t>Första färg eller färgton som instanserna kommer att ärva som default.
+Color2      <t>Andra färg eller färgton som instanserna kommer att ärva som default.
+Color3      <t>Tredje färg eller färgton som instanserna kommer att ärva som default.
+Color4      <t>Fjärde färg eller färgton som instanserna kommer att ärva som default.
+AnimSequence <t>Typ av animation då DynType är Animation.
+NoConObstacle <t>Anger att kopplingar kan ignorera en instans av subgrafen. 
+              <t>Kopplingar av typen 'routed' undviker normalt ett subgraf-objekt, 
+              <t>men om NoConObstacle är satt kan kopplingarna ritas över objektet.
+Slider      <t>Markerar att subgrafen är en slider.
+Subgraph    <t>Ska vara ett för en subgraf.
+NextSubgraph <t>Namn på subgrafens nästa sida.
+AnimationCount <t>Används vid animation. Anger antal cykler animeringen ska 
+            <t>uppehålla sig vid den här sidan.
+JavaName    <t>Vid export som java-bean kommer subgrafen att exportera som 
+            <t>en java-klass med det här namnet.
+Cycle       <t>Default-värde för cykel, långsam eller snabb, som instanserna 
+            <t>kommer att ärva som default.
+x0          <t>I (x0, y0) och (x1, y1) kan man ange max-storleken på en subgraf 
+            <t>i de fall när subgrafen innehåller sidor med olika utbredning.
+y0          <t>Se x0. Används även av vissa subgrafer med DynType Slider, 
+            <t>Sliderbackground och FillLevel.
+x1          <t>Se x0.
+y1          <t>Se x0. Används även av vissa subgrafer med DynType Sliderbackground 
+            <t>och FillLevel.
+Dynamic     <t>Ej implementerat.
+
+Spara subgrafen med 'File/SaveAs...'. Kopiera den .pwsg fil som skapats till $pwrp_exe. 
+Subgrafen ska nu synas under Local/Subgraphs-mappen i subgraf-paletten.
+
+Det är lämpligt att rita subgrafen i närheten av origo i arbetsarean eftersom när man skapar 
+instanser motsvaras positionen för musklicket av origo. Kopplingspunkter läggs på 
+grid-punkter, om rektangulära kopplingar ska användas för att knyta ihop instanserna. Då 
+undviker man onödiga hack i kopplingslinjerna.
+
+<h2>Externa och interna subgrafer
+När man första gången i en bild skapar en instans av en viss subgraf, laddas denna in från 
+.pwsg-filen. Den är då intern vilket innebär att subgrafen sparas tillsammans med bilden, och
+pwsg-filen behövs i princip inte mer. Man behöver t ex inte tänka på att kopiera den till 
+operatörsnoder och processnoder. Detta fungerar bra ända tills man vill ändra i subgrafen. 
+Så länga subgrafen är intern kommer inte dessa ändringar med. För att få med en ändring måste
+subgrafen vara extern. När bilden då sparas kommer inte subgrafen att lagras i tillsammans i 
+bilden, och nästa gång man läser bilden, laddas subgrafen från från .pwsg-filen. När den 
+ändrade versionen är inladdad kan man åter ställa om den till intern.
+
+För att ställa om en subgraf från intern till extern och vice versa väljer man 
+'Loaded Subgraps' under 'File' i menyn. Här får man en lista på alla laddade subgrafer och 
+kan sätta dem externa eller interna.
+
+<h2>Slider
+Slider eller dragregel är en speciell typ av subgraf. En slider ska kunna flyttas 
+horisontellt eller vertikalt mellan två ändpunkter, och läget ska överföras, via skalning, 
+till ett analogt värde i rtdb.
+
+<b>Med bakgrund
+Det enklaste sättet att konfigurera en slider, är att lägga ett SliderBackground-objekt bakom
+slidern. Det enda man behöver göra är att koppla slider-objektet till en analog signal.
+
+<b>Utan bakgrund
+Om man absolut inte vill ha någon bakgrund till slidern måste man lägga in riktning, samt min
+och max-position för rörelse-området. En horisontal slider konfigureras på följande sätt 
+(vertikal slider inom parentes).
+
+Placera slidern på den lägsta y (x) koordinaten som slidern ska kunna röra sig över. Tänk på 
+att origo är placerat i övre vänstra hörnet.
+Mät upp min och max-värde för sliderns rörelse relativt sliderns övre (vänstra) sida genom 
+att placera markören där. Markörens position kan avläsas i nedre högra hörnet. Mata in dess 
+värden i objektseditorn för subgraf-objektet, attributen MaxPosition resp MinPosition.
+Ange riktning (Direction). Up innebär en vertikal slider med ökande värde uppåt. Right 
+innebär en horisontal slider med ökande värde åt höger etc.
+
+<b>Attribut <t>Beskrivning
+Attribute <t>Signal i rtdb av typen Float32 eller Int32 som ändras när slidern dras.
+Access    <t>Privilegier som krävs för att få ändra värdet på signalen.
+Direction <t>Behöver endast anges om man inte har något SliderBackground-objekt.
+          <t>Riktning på slidern. Up innebär en vertikal slider med ökande värde uppåt. 
+          <t>Right innebär en horisontal slider med ökande värde åt höger.
+MaxValue  <t>Värde på signalen som motsvarar sliderns max-position.
+MinValue  <t>Värde på signalen som motsvarar sliderns min-position.
+MaxPosition <t>Behöver endast anges om man inte har något SliderBackground-objekt. 
+          <t>x eller y koordinat för sliderns max-position (se ovan).
+MinPosition <t>Behöver endast anges om man inte har något SliderBackground-objekt. 
+          <t>x eller y koordinat för sliderns min-position (se ovan).
+</topic>
+</chapter>
+
+<chapter>
+<topic>geref_groups
+Grupper
+
+En grupp är ett antal objekt som uppträder som ett enstaka objekt vid förflyttning, skalning,
+rotation mm. En grupp skapas genom att man väljer ut de objekt som ska tillhöra gruppen, och 
+sedan aktiverar 'Functions/Group' i menyn. Om man vill lösa upp en grupp, väljer man ut gruppen
+och aktiverar 'Functions/Ungroup' i menyn.
+
+Det finns vissa begränsningar på objekt som kan tillhöra grupper, kopplingar är t ex inte 
+tillåtna i en grupp, och tryckknappar och objekt som är känsliga för klick, kommer att 
+förlora sin känslighet.
+
+<h2>Dynamik
+En egenskap hos grupper är att man kan sätta dynamik på dem. Alla de typer av dynamik och 
+aktion som finns för subgrafer är också tillgängliga för grupper.
+
+De typer av dynamik som innebär en förändring av färg eller färg-ton, kommer att påverka all 
+objekt i gruppen som inte har egen dynamik. För subgrafer som ska följa gruppens färgsättning
+bör man sätta No som dynamiktyp (xtt och applets fungerar här lite olika).
+Subgrafer och sub-grupper inom gruppen som har egen dynamik kommer att bestämma sina färger 
+själva.
+
+När man löser upp en grupp som man har satt någon typ av dynamik på, går data för dynamiken 
+förlorad. För att förenkla i de situationer när man tillfälligt löser upp en grupp för att 
+ändra någon komponent i gruppen, finns det en funktion som försöker återskapa dynamiken. När 
+man löser upp gruppen sparas dynamik-data i en recall-buffer med grupp-namnet som nyckel. 
+Vidare sparas gruppnamnet hos alla objekt som tillhörde gruppen. När man sedan grupperar 
+objekten igen, letar men rätt på den grupp som de flesta objekt tillhört, och försöker hitta 
+dynamiken för det gruppen i recall-bufferten. Om det hittas, läggs den in som dynamik för den
+nya gruppen. Det finns fall när återskapandet inte fungerar, därför bör man vara uppmärksam 
+på att man verkligen har fått rätt dynamik efter en tillfällig upplösning av en grupp. Om det
+har gått snett, kan man normalt hitta dynamiken i recall-bufferten, som man hanterar med 
+'Functions/Recall' och 'Functions/Recall previous' i objektseditorn.
+</topic>
+</chapter>
+
+<chapter>
+<topic>geref_images
+GIF och JPEG bilder
+
+GIF- och JPEG-bilder går här under benämningen image.
+
+<h2>Skapa en image
+Man skapar en image på samma sätt som en subgraf. GIF och JPEG-bilder finns under 
+Images-mappen, och under Local/Images mappen. Vill man läsa in en speciell GIF eller JPEG-fil
+kopierar man den till $pwrp_pop. Filen dyker då upp under Local/Images mappen. Genom att 
+välja ut den och klicka med MB2 i arbetsarean skapas image-objektet.
+
+En image kan skalas och roteras i steg om 90 grader. Funktionerna för färgton, ljushet, 
+intensitet och färgskiftning fungerar också.
+
+<h2>Dynamik
+För att kunna lägga dynamik bakom en image måste man göra en subgraf av den först, eller låta
+image-objektet ingå i en grupp. Vill man ändra färg dynamisk ska man använda någon dynamiktyp
+som ändrar färgtonen, t ex DigTone. Ändring av fyllnadsfärg på en image ger ingen effekt.
+
+<h2>Transparans
+Om man har en image på en symbol som inte är rektangulär, t ex en rund indikatorlampa, så 
+vill man att området utanför indikatorn ska vara transparant.
+
+GIF-formatet stöder transparans. Genom att välja transparans-färgen (R: 255, G: 0, B: 255) 
+kommer transparensen även att fungera i Ge.
+
+Java stöder tyvärr inte transparans för GIF-filer. Ge's image-klass lägger däremot in 
+transparans i de pixel som har (R:255, G:255, B:255) dvs vitt. Detta kan dock leda till att 
+högdagrar i bilden visas som transparanta.
+</topic>
+</chapter>
+
+<chapter>
+<topic>geref_connections
+Kopplingar
+
+Subgrafs-objekt som innehåller kopplingspunkter kan kopplas ihop med kopplingar. Kopplingar 
+ritas genom att man drar med MB2 från det ena objektet till det andra. Den kopplingspunkt som
+ligger närmast markören när man trycker ner resp släpper musen väljs.
+
+Kopplingar karakteriseras av typ, linjebredd, 3D och färg.
+
+<h2>Typ
+Typen väljs i menyn under 'Connections'.
+
+<b>Straight
+Koppling i form av en rak linje mellan kopplingspunkterna.
+
+<b>StraightOneArrow
+Koppling i form av en rak linje med en pil.
+
+<b>Routed
+Koppling i form av horisontella och vertikala linjer. Kopplingens väg och brytpunkternas 
+placering beräknas så att kollision med övriga subgrafs-objekt undviks (de som ej har 
+attributet NoConObstacle satt).
+
+<b>Grafcet
+Det finns ett antal kopplingar som används vid ritning av grafcet-sekvenser: StepDivergence, 
+StepConvergence, TransDivergence och TransConvergence. Dessa kan användas tillsammans med 
+subgraferna under mappen Grafcet i subgrafs-paletten om man vill visa en grafcet-sekvens i en
+bild.
+
+<h2>Runda hörn
+På kopplingar av typen routed kan man välja att ha runda hörn, och även ange radien på 
+rundningen. Detta väljs i menyn under 'Connections/Corners' och 'Connectins/CornerRoundAmount'.
+
+<h2>Färg
+Färgen på kopplingen väljs som fyllnadsfärg, dvs med MB1 i färg-paletten.
+
+<h2>Kant
+Border gör att svarta kantlinjer ritas på kopplingen.
+
+<h2>3D
+Vid 3D ritas en ljusare skugga på ovansidan och en mörkare på undersidan. Endast 
+implementerat på kopplingar med typ Routed och runda hörn.
+
+<h2>Tjocklek
+Tjockleken väljs i verktygspanelen pss som för linjer.
+
+<h2>Förgreningar
+Om en koppling dras ut från en komponent och släpps i arbetsarean skapas en komponent av 
+typen ConGlue i ändan på kopplingen. ConGlue har fyra kopplingspunkter och fungerar som 
+antingen en avslutning, eller en förgrening av kopplingen, eller som en möjlighet att kunna 
+påverka kopplingens väg. Genom att dra nya kopplingar frän ConGlue komponentens 
+kopplingspunkter skapas nya kopplingar, och ConGlue objektet anpassar sin form och färg efter
+de anslutna kopplingarna.
+
+ConGlue finns även i subgrafs paletten under Other.
+</topic>
+</chapter>
+
+<chapter>
+<topic>geref_edit
+Editering
+
+Ge innehåller en rad funktioner för att skapa objekt, modifera dem, ordna dem mm. 
+Funktionerna hittar man i verktygs-panelen, i menyn. En del aktiveras med mus-klick.
+
+<h1>Skapa objekt
+Basobjekt  skapas genom att man väljer en objekt-typ i verktygspanelen och sedan drar eller 
+klickar i arbetsarean med MB1. Om man håller ner Shift tangenten samtidigt som objekts-typen 
+väljs i verktygspanelen, kan men skapa flera objekt, utan välja ny objekts-typ. En mer ingående
+beskrivning av hur varje objekts-typ skapas finns i kapitlet Objekt.
+
+En instans av en subgraf eller ett komplext objekt, skapas genom att man väljer ut subgrafen i 
+subgrafspaletten och klickar i arbetsarean med MB2.
+
+<h1>Skapa kopplingar
+Kopplingar skapas genom att man drar med MB2 mellan två subgrafs-objekt som innehåller 
+kopplingspunkter.
+Först ska man ha ställt in lämplig kopplings-typ under Connections i menyn.
+
+<h1>Återställ
+Genom att klicka med MB3 återställer man de flesta funktioner eller avslutar funktioner: 
+tömmer listan på utvalda objekt, avslutar ritning av en polylinje, avlutar skalning, 
+avslutar editering av polylinje.
+
+<h1>Välja ut objekt
+Ett objekt eller en koppling som är utvalt makeras genom att rödfärgas. Det här gäller dock 
+inte när man har ändra färg på de utvalda objekten, då de ritas med de nya färgerna för att 
+man ska kunna se effekten av färgförändringen.
+
+Objekt väljs ut på följande sätt
+
+- Klicka på objektet med MB1. Tidigare utvalda objekt tas bort ur listan på utvalda objekt. 
+  Om objektet redan är utvalt töms listan på utvalda objekt.
+- Klicka på objektet med Shift MB1. Objektet adderas till listan på utvalda objekt. Om 
+  objektet redan är utvalt tas det bort ur listan på utvalda objekt.
+- Dra med MB1. En rektangel ritas ut och objekt som ligger innanför rektangeln med hela 
+  objekt-kroppen blir utvalda. Tidigare utvalda objekt tas bort ur listan på utvalda objekt. 
+  Man måste se till att markören inte ligger på något objekt efter som man även flyttar 
+  objekt med MB1. Om man har ett objekt som täcker backgrunden får man använda Shift MB1 
+  istället (se nedan).
+- Dra med Shift MB1. Objekt som ligger innanför rektangeln adderas till listan på utvalda 
+  objekt.
+- Select all objects under Edit i menyn väljer ut samtliga objekt.
+- Select all connections väljer ut samtliga kopplingar.
+
+Listan på utvalda objekt nollställs genom att klicka med MB1 på ett tomt område i 
+arbetsarean, eller genom att klicka med MB3 i arbetsarean.
+
+<h1>Flytta objekt
+Ett objekt flyttas med MB1. Vill man flytta på flera objekt samtidigt, väljer man ut 
+objekten. Om man nu flyttar på ett av de utvalda objekt följer samtliga utvalda objekt med.
+
+Om man vill flytta objekt vertikalt eller horisontalt väljer man först Move Restrictions 
+under Edit i menyn. Move Restrictions återställs med MB3.
+
+<h1>Cut, copy och paste
+Man kopierar objekt genom att välja ut de objekt som ska kopieras och kopiera dem till 
+paste-bufferten med Ctrl+C. Med Ctrl+V kopieras de in i arbetsarean, och blir 'hängande' 
+på markören (dvs följer markörens rörelser) tills man klickar med MB1 och låser fast dem. 
+Klippa fungerar på samma sätt med Ctrl+X.
+
+<h1>Grid
+Grid och gridstorlek kan väljas från verktygspanelen.
+
+<h1>Skalning
+Skalnings-funktionen aktiveras från verktygspanelen och verkar på utvalda objekt. De utvalda 
+objekten ramas in av en rektangel. Genom att dra i ett hörn eller en långsida skalas de 
+utvalda objekten om. Om man drar i en långsida sker skalningen vertikalt eller horisontalt, 
+drar man i ett hörn kan man skala objekten fritt. Genom att aktivera Functions/ScaleEqual 
+före skalningen får man likformig skalning i x och y-led.
+
+<h1>Rotera
+Utvalda objekt roteras 90 grader modsols genom att rotations-funktionen i verktygs-panelen 
+aktiveras. 90-graders rotationen fungerar på samtliga objekt utom texter. Vill man rotera en 
+annan vinkel kan man göra detta genom Rotate under Edit i menyn. Här kan man mata in en 
+godtycklig vinkel. Av basobjekten är det dock endast linjer och polylinjer som klarar en 
+godtycklig rotation. Det gäller med andra ord att bygga upp subgrafer och objekt av linjer 
+och polylinjer om de ska kunna roteras godtyckligt.
+
+<h1>Ordna objekt
+<h2>Vertikalt
+Objekt som är placerade vertikalt kan vänsterjusteras, högerjusteras resp centreras med 
+Align vertical under Functions i menyn. Välj ut de objekt som ska justeras och aktivera 
+meny-entryt.
+
+<h2>Horisontalt
+Objekt som är placerade horisontalt kan justeras med avseende på översida, undersida resp 
+centrum med Align horizonal under Functions i menyn. Välj ut de objekt som ska justeras och 
+aktivera meny-entryt.
+
+<h2>Koncentriska cirklar
+Koncentriska cirklar åstadkommer men genom att först aktivera Align vertical center och sedan
+Align horizontal center.
+
+<h2>Lika avstånd mellan objekt
+Objekt som är placerade vertikalt eller horisontalt ska ofta ha lika avstånd mellan dem. 
+Detta åstadkommer man med Equidistance under Functions i menyn. Equidistance funktionen för 
+horisontella objekt, behåller positionen på objektet längst till höger och längst till 
+vänster, men placerar mellanliggande objekt så att avståndet mellan objekten blir lika. 
+Avståndet kan räknas från objektens högerkant, vänsterkant eller centrum. På motsvarande sätt
+kan vertikala objekt ordnas med 'Equidistance/vertical'.
+
+<h1>Under och över
+Om objekt överlappar kan man flytta dem över eller under med Pop och Push under Functions i 
+menyn. Pop lägger ett objekt över samtliga andra objekt i bilden, push lägger objektet under 
+alla andra objekt. Vill man lägga ett objekt mellan två andra objekt krävs det lite 
+tankearbetet för att gör pop eller push i rätt ordning.
+
+<h1>Färger
+<h2>Bakgrundsfärg
+Bakgrundfärgen i bilden sätts genom att välja ut en lämplig fyllnadsfärg i färgpaletten 
+(MB1) och aktivera Set background color under Functions i menyn.
+
+<h2>Färger på objekt
+Färger på objekt delas upp i fyllnadsfärg och kantfärg. Den fyllda delen av objektet ritas 
+med fyllnadsfärgen och kanten ritas med kantfärgen. En del objekt t ex linjer ritas enbart 
+med kantfärg. Färgerna väljs i färgpaletten, fyllnadsfärg väljs med MB1 och kantfärg med MB2.
+De senast valda färgerna visas i två rektanglar överst i färgpaletten, fyllnadsfärg till 
+vänster och kantfärg till höger. När ett basobjekt eller sammansatt objekt skapas hämtas de 
+senast valda färgerna från paletten och objektet ges dessa färger. Vill man ändra på färger 
+på existerande objekt väljer man ut dem och väljer en ny fyllnads- eller kant-färg i 
+paletten. Observera att objekten efter denna operation ritas med de aktuella färgerna trots 
+att de är utvalda, dvs de förlorar sin rödmarkering. Det är därför bra klicka med MB3 efter 
+operationen för att nollställa utvalslistan.
+
+<h2>Färger på subgrafs-objekt
+Man kan ändra färg på subgrafs-objekt på samma sätt som man ändrar färg på basobjekt, genom 
+att välja ut dem och ge dem en kant- eller fyllnadsfärg. Objekt som är ritade med skuggningar
+och 3D-effekter förlorar dessa om man ändrar fyllnadsfärgen. Därför finns speciella 
+funktioner för att ändra färg på subgraf-objekt, i termer av ljushet, ton, intensitet och 
+skiftning. I kapitlet Subgrafer behandlas detta mer ingående.
+
+<h1>Koppling till rtdb
+När ett subgrafs-objekt ska påverka eller påverkas av en signal i rtdb måste man ange 
+detta i subgrafens attribut. Ett sätt är att mata in det för hand i objektseditorn för 
+subgrafen. Ett annat betydligt smidigare är att använda planthierarkin som kan hittas ovanför
+navigationsfönstret. Planthierarkin finns med om man har startat Ge från navigatören. I 
+planthierarkin väljer man ut det objekt man vill koppla subgrafs-objeket till, och klickar
+sedan på subgrafs-objektet med Ctrl/DubbelKlick MB1. Finns det två rtdb-kopplingar i 
+subgrafs-objektet kopplas den första på detta sätt och den andra kopplingen med 
+Ctrl/Shift/DubbelKlick MB1. Man kan även öppna objektseditorn och klicka på raden för 
+attributet med Ctrl/Dubbelklick MB1 för att lägga in signalen. Är det en signal man kopplar 
+till räcker det att välja ut objektet i planthierarkin, då väljs attributet ActualValue 
+automatisk. Om det är ett annan typ av objekt måste man ange vilket attribut man ska koppla 
+subgraf-objektet till. Det gör man genom att öppna objektet med DubbelKlick MB1, och sedan 
+välja ut lämpligt attribut.
+
+Man kan även kopiera in signalen från navigatören.
+
+<h2>Suffix
+Till namnet på signalen ska adderas ett suffix som talar om vilken typ attributet är. 
+Dynamik där det är uppenbart vilken typ attributet har är detta inte nödvändigt, t ex 
+varianter av Dig operarar ju enbart på Boolean.
+Följande typer av suffix kan anges:
+
+##BOOLEAN
+##FLOAT32
+##FLOAT64
+##CHAR
+##INT8
+##INT16
+##INT32
+##UINT8
+##UINT16
+##UINT32
+##OBJID
+##STRING
+##TIME
+##DELTATIME
+##ATTRREF
+
+Är attributet en sträng eller en vektor ska dessutom storleken anges pss som i GMS.
+
+<h1>Graf-attribut
+Under File i menyn finns Graph attributes och här kan man mata in attribut för bilden.
+
+Här anges bl a vilken del av arbetsarean som ska visas i runtime. Koordinaterna för övre 
+vänstra hörnet och nedre högra hörnet mäts upp mha markören och matas in i x0, y0 resp x1, y1.
+
+<b>Attribut <t>Beskrivning
+subgraph    <t>Anger att grafen är en subgraf. I så fall är inte nedanstående 
+            <t>attribut aktuella.
+x0          <t>x-koordinat för övre vänstra hörnet på bilden.
+y0          <t>y-koordinat för övre vänstra hörnet på bilden.
+x1          <t>x-koordinat för nedre högra hörnet på bilden.
+y1          <t>y-koordinat för nedre högra hörnet på bilden.
+Scantime    <t>Cykeltid i sekunder för uppdateringar av objekt som går med den 
+            <t>långsamma cykeln.
+FastScantime <t>Cykeltid i sekunder för uppdateringar av objekt som går med den 
+            <t>snabba cykeln.
+AnmationScantime <t>Cykeltid i sekunder för animeringar i bilden.
+JavaWidth   <t>Bredd i pixel som bilden skalas till vid exportering till java.
+IsJavaApplet <t>Bilden exporteras som en java applet vid exportering.
+IsJavaFrame <t>Bilden exporteras som en java frame vid exportering.
+BackgroundImage <t>Namn på gif eller jpg-fil för bakgrundsbild.
+BackgroundTiled <t>Bakgrundsbilden skalas ej utan upprepas så att bakgrunden täcks.
+DoubleBuffered <t>Grafen ska dubbelbuffras, vilket innebär att bilden först 
+             <t>ritas i en pixmap i minnet och sedan kopieras till skärmen. Bör 
+             <t>användas om bilden innehåller rörliga objekt eller animationer.
+
+<h1>Objekts och hierarki grafer
+Det här kapitlet beskriver hur man kan göra ge-bilder som visar innehållet objekt av en viss 
+klass, och som kan visa alla objekt av den klassen. Det beskriver också hur man kan göra 
+gemensamma bilder för likartade hierakier i proview-databasen.
+
+<h1>Objekts graf
+För en del klasser som tillhör Proview's basklasser finns det sk objekts-bilder, dvs bilder 
+som kan öppnas för varje objekt som tillhör klassen. Objekts-bilder finns bl a för klasserna 
+PID, Mode, Av, Ai, Ao, Di, Do, Dv, och öppnas i xtt med kommandot 'open graph /instance=' där 
+man i /instance skickar med namnet på objektet. Man kan också öppna objektbilden genom att 
+välja ut objektet och aktivera Functions/Open object graph i xtt menyn.
+
+Om man har gjort en egen klass, kan man göra en objektsbild även för denna klass. Man 
+editerar bilden som en normal ge-graph. Skillnaden kommer när man ska knyta de olika 
+dynamiska objekten till proview-objektet i rtdb. Där man normalt skriver ett objekts-namn 
+skriver man istället $object. Data för en indikator som kopplas till attributet ActualValue 
+i proview-objektet kan se ut så här
+
+<b>Attribut <t><t>Värde
+SubGraph <t><t>pwr_indsquare
+LowColor.Attribute <t><t>$object.ActualValue##Boolean
+LowColor.Color  <t><t>Inherit
+Cycle   <t><t>Inherit
+DynType <t><t>Inherit
+Action  <t><t>Inherit
+
+Grafen bör sparas med samma namn som klassen, med små bokstäver, om man vill kunna öppna den 
+med Functions/Open object graph i xtt-menyn.
+
+Kommandot för att öppna objektbilden för objektet H1-H2-MyObject av klassen MyClass blir
+
+<c>open graph /classgraph /instance=H1-H2-MyObject
+
+<h1>Hierarki graf
+Ofta finns det anläggningsdelar i ett system som är identiska och som ger upphov till närmast
+identiska hierarkier. Det kan t ex finnas 30 likadana frekvensomformare, och det finns i Ge 
+möjlighet att, istället för att editera 30 likadana grafer, göra en generisk som klarar alla 
+frekvensomformarna. Tillvägagångssättet bygger på samma princip som objekts-graferna ovan. 
+Den hieraki som skickas med i /instance i open graph kommandot när grafen öppnas, kommer att 
+ersätta alla $object som förekommer i dynamiska kopplingar i bilden.
+
+Data för en indikator som kopplas till Dv'n Start kan t ex se ut så här
+
+<b>Attribut <t><t>Värde
+SubGraph  <t><t>pwr_indsquare
+LowColor.Attribute <t><t>$object-Start.ActualValue##Boolean
+LowColor.Color  <t><t>Inherit
+Cycle   <t><t>Inherit
+DynType <t><t>Inherit
+Action  <t><t>Inherit
+
+När bilden öppnas med kommandot
+
+<c>open graph my_fo_graph /instance=H1-H2-Fo1.53
+
+kommer indikatorn ovan att kopplas till attributet H1-H2-Fo1-Start.ActualValue.
+
+Även i kommandon som exekveras av tryckknappar i bilden, kommer strängen $object att 
+ersättas av hieraki-namnet. Detta gör att man kan från tryckknappar kan öppna objekts-bilder 
+eller trend-kurvor på objekt inom hierakin. Kommandot för att öppna objekts-bilden för ett 
+Mode-objekt kan t ex bli
+
+<c>open graph /classgraph /instance=$object-Plc-W-Mode0/name=$object
+
+Exempel på kommando för att öppna en trendkurvor från en plotgrupp inom hierakin
+
+<c>open trend $object-Plot
+</topic>
+</chapter>
+
+<chapter>
+<topic>geref_testing
+Testning
+
+<h1>Preview
+Det finns möjlighet att testa bilden direkt i editorn. Förutsättningen är att man har startat
+näthanteraren på sin utvecklingsmaskin och att den har kontakt med de objekt som förekommer 
+i bilden. Med View/Preview i menyn kopplar editorn upp sig mot rtdb och börjar exekvera 
+bildens dynamik. Preview avslutas med View/Preview close. Därefter kan man fortsätta och 
+editera bilden.
+
+<h1>Xtt
+Genom att starta xtt i utvecklings-miljön eller på en operatörs/process-nod, kan man också 
+enkelt testa bilden. Det enda som krävs är att .pwg filen för bilden är tillgänglig på 
+$pwrp_exe. Man öppnar en ge-graf med kommandot
+
+<c>xtt> open graph 'grafnamn' [/width=][/height=][/scrollbar][/navigator]
+
+Med kommandot
+
+<c>xtt> show graph
+
+listas tillgängliga grafer.
+</topic>
+</chapter>
+
+<chapter>
+<topic>geref_development
+Utvecklingsmiljö
+
+Här beskrivs lite om filkataloger och filer som används av ge, samt vilka filer som genereras.
+
+<h1>Filtyper
+Ge läser in bild-filer och sparar bild-filer på filkatalogen pwrp_pop.
+
+En graf sparas som en fil av typen .pwg. En subgraf sparas också som en .pwg-fil, som används
+när man ska editera subgrafen, men även som en .pwsg-fil. Det är .pwsg-filen som laddas in 
+när man skapar objekt av subgrafen.
+
+Exporterar man bilden som en java applikation skapas en .java -fil men det namn som man 
+angivit som klassnamn.
+
+Exporterar man bilden som en java-applet skapas en .java-fil med namnet som angivits som 
+klassnamn med suffixet _A, t ex Oversikt_A.java. Dessutom skapas ett html-fil med klassnamnet
+som namn.
+
+<h1>Setup-filer
+Ge använder två setup-filer, en för färg-paletten och en för subgrafs-paletten.
+
+<h2>Färgpalett
+Om man vill modifiera färgerna i färg-paletten är detta möjligt genom att skapa en fil med 
+namnet ge_colors.dat.
+Denna ska innehålla rgb-kod för färgerna i paletten. Det finns en mall på ...
+
+<h2>Subgraf-palett
+Subgrafpaletten innehåller en uppsättning fasta menyer och subgrafer samt mappen Local som 
+läser in subgraferna på pwrp_pop. De fasta menyerna och subgraferna konfigureras i filen 
+pwr_ge_setup.dat. Denna fil är generell för samtliga projekt men kan modifieras av 
+systemansvarig.
+</topic>
+</chapter>
+
+<chapter>
+<topic>geref_command
+Kommandon
+
+Ge innehåller en kommandorad som öppnas från menyn eller med ctrl/b. Kommandona är i första 
+hand avsedda att användas i ge-script, men kan även utföras från kommandoraden. Från 
+kommandoraden körs även ge-script genom att skriva filnamnet med ett '@' framför. Observera 
+att omställning av funktioner i editorn som görs via kommandon inte 'syns' i options-menyer 
+och check-boxar. När ett script har exekverats kan inställningen vara annorlunda än den som 
+visas.
+</topic>
+</chapter>
+
+<chapter>
+<topic>geref_script
+Script
+
+Scripthanteringen i ge finns beskriven i Ge script Användarhandledning. Här ges några enkla 
+exempel på vad script kan användas till.
+
+<h2>Att använda script
+Ett script exekveras från kommando-raden i Ge genom att sätta ett '@' före filnamnet, t ex
+
+<c>ge> @my_script
+
+Kommandoraden öppnas med Functions/Command (Ctrl+B).
+
+<b>Exempel 1
+Första exemplet är ett script som exporterar några grafer till java. Ofta har men gjort en 
+rad ändringar i olika bilder, och när det är klart ska allt exporteras till java. Det här 
+scriptet läser successivt in de olika graferna och exporterar dem.
+
+<c>!
+<c>! Export java
+<c>!
+<c>function int process( string graph)
+<c>  open 'graph'
+<c>  printf( "Exporting %s...\n", graph);
+<c>  export java
+<c>endfunction
+
+<c>main()
+<c>  process( "nu4_alla_platar");
+<c>  process( "nu4_status_trp");
+<c>  process( "nu4_trp_hy1");
+<c>  process( "nu4_trp_rb_ut");
+<c>  process( "nu4_buffhog");
+<c>  process( "nu4_status_ugn");
+<c>  process( "nu4_trp_lu1");
+<c>  process( "nu4_trp_start");
+<c>  process( "nu4_inlagg");
+<c>  process( "nu4_trend");
+<c>  process( "nu4_trp_rb1");
+<c>  process( "nu4_ugn_start");
+<c>endmain
+
+<b>Exempel 2
+Nästa exempel visar hur man kan byta ut en subgraf i flera bilder. En subgraf är ju normalt 
+intern, och en ändring i subgrafet slår inte igenom förrän man har genomfört proceduren att
+
+- sätta subgrafen extern
+- spara bilden
+- läsa in bilden, nu med den ändrade subgrafen
+- sätta subgrafen intern igen
+- spara bilden.
+
+Ändrar man ofta i sina subgrafer kan man med fördel skriva ett script som byter ut en subgraf
+i alla grafer i projektet.
+
+<c>!
+<c>! Replace a subgraph
+<c>!
+<c>function int process( string graph)
+<c>  int sts;
+<c>  printf( "Processing graph %s\n", graph);
+<c>  open 'graph'
+<c>  sts = SetExtern("my_subgraph");
+<c>  if ( sts)
+<c>    printf( "Changing my_subgraph\n");
+<c>    save
+<c>    open 'graph'
+<c>    SetIntern( "my_subgraph");
+<c>    save
+<c>  endif
+<c>endfunction
+
+<c>main()
+<c>  process( "nu4_alla_platar");
+<c>  process( "nu4_status_trp");
+<c>  process( "nu4_trp_hy1");
+<c>  process( "nu4_trp_rb_ut");
+<c>  process( "nu4_buffhog");
+<c>  process( "nu4_status_ugn");
+<c>  process( "nu4_trp_lu1");
+<c>  process( "nu4_trp_start");
+<c>  process( "nu4_inlagg");
+<c>  process( "nu4_trend");
+<c>  process( "nu4_trp_rb1");
+<c>  process( "nu4_ugn_start");
+<c>endmain
+</topic>
+</chapter>
+
+<chapter>
+<topic>geref_web
+Web bilder
+
+<h1>Exportera som java-applet
+Om en bild ska kunna visas i en web-bläddrare, exporterar man den som en java-applet. Först 
+måste se till att attributet IsJavaApplet i File/Graph attributes är satt. Därefter aktiverar
+man File/Export Java, som gör att bilden exporteras som en java applet och kompileras. 
+Dessutom skapas en html-fil för att öppna appleten. Html-filen tillsammans med ett java-arkiv
+med applet-klassen läggs på katalogen $pwrp_web. Genom att kopiera filerna på $pwrp_web till 
+någon lämplig katalog under webservern ($pwrp_websrv), kan man öppna dem med web-bläddraren.
+
+<b>Begränsningar
+Java versionen av en Ge -bild skiljer sig från utseendet och funktionen i Ge och Xtt på ett 
+antal punkter.
+- Format-satserna för visning av flyttal, heltal och strängar ska vara av typen %n.mf, 
+  %-n.mf, %d, %nd, %s där n och m är siffror.
+- Bredden på kantlinjerna i en subgraph skalas pss som subgrafen i övrigt.
+- Vid förändring av ett dynamisk objekt ritas inte bakgrunden eller täckande objekt om. Dvs 
+  dynamiska objekt bör inte täckas av andra objekt, och texter som kan förändras måste ha en 
+  bakgrund i subgrafen.
+- Javabilderna är inte skalbara. Skalfaktorn bestämms av attributet 'JavaWidth'.
+- Subgrafer får inte innehålla grupper. Detta ger kompileringsfel.
+- Basobjekt ritas alltid under komponenter. Lägger men t ex en Text ovanpå en komponent 
+  kommer inte texten att synas.
+
+<h1>Konfigurera en web-site
+För att kunna öppna de olika process-bilderna i ett system är det lämpligt att ha en web-sida
+med en meny till väster och aktuell bild till höger. Med lite konfigurering kan man generera 
+en sådan mha Generate web i menyn.
+
+Konfigureringen går till så här:
+Skapa ett WebHandler objekt under node-objektet i nod-hierarkin. Webhandler objektet gör att 
+en server-process om förser bilderna med dynamisk information från realtidsdatabasen startas.
+I objeketet anger man bl a också om man ska ha möjlighet att logga in som proview-användare.
+Under WebHandler-objektet lägger man ett WebGraph-objekt för varje bild som ska kunna öppnas 
+från menyn.
+Under WebHandler-objektet kan man även lägga WebLink-objekt. Varje WebLink-objekt ger upphov 
+till ett meny-entry som kan kopplas till en URL, t ex dokument för arbetsinstruktioner, 
+funktions-specifikationer o dyl.
+
+Alla filer som krävs för web-siten samlas på filkatalaogen $pwrp_web. Genom att kopiera 
+dessa, tillsammans med jar-filerna $pwr_lib/pwr_rt_client.jar och $pwr_lib/pwr_jop.jar, till 
+lämplig filkatalog under webservern på operatörsnoden blir de tillgängliga på nätet.
+</topic>
+</chapter>
+
+<chapter>
+<topic>geref_runtime
+Runtime
+
+När bilden är klar ska den visas på en operatörs-station, en process-station eller kanske via
+intranätet. 
+
+<h1>Underhålls-bilder i xtt
+Bilder av underhållskaraktär kan tas upp utan konfiguration från kommado-raden i xtt, vilket 
+beskrivs ovan i Test avsnittet. Detta fungerar bra så länge bara man själv och andra invigda 
+ska ha tillgång till bilderna. Ska en bredare krets kunna titta på dem kan man bygga upp ett 
+meny-träd i xtt. Detta görs genom att lägga in kommandon xtt's startup fil. Startup-filen 
+~/xtt_setup.rtt_com exekveras varje gång man startar xtt. Här kan men definera symboler men 
+även lägga in kommandon för att skapa menyer. Här följer ett exempel på en symbol-fil som 
+skapar en enkel underhålls-meny.
+
+<c>create item/text="Underhåll"/menu/dest=DataBase/before
+<c>create item/text="Översikt"/command="open graph oversikt" /menu 
+<c>  <t>/dest=Underhåll /firstchild
+<c>create item/text="Bläster"/command="open graph blaster" /menu 
+<c>  <t>/dest=Underhåll /firstchild
+<c>create item/text="Rullbana"/command="open graph rullbana" /menu 
+<c>  <t>/dest=Underhåll /firstchild
+
+<h1>Operatörs-bilder i xtt
+Ska bilderna vara operatörbilder bygger man upp en operatörs-plats men OpPlace-objekt, 
+User-objekt och XttGraph-objekt. Xtt startas men namnet på OpPlace-objektet som argument.
+
+<h1>Java applikationer i xtt
+En ge-bild kan exporteras som en java-applikation. Denna kan tas upp i xtt med kommandon 
+'open jgraph'.
+
+<h1>Web-bilder
+För att lägga ut process-bilder på intranätet krävs att man installerar in webserver i någon 
+operatörsstation. Vi använder Tomcat från Apache på Linux.
+
+I proview ska man skapa ett WebHandler-objekt i NodeHierarkin så att en server-process 
+startas av näthanteraren som förser web-bilderna med data från rtdb.
+
+En web-sida ska skapas i html för inloggning och länkar till olika bilder. Web-sidan 
+innehåller in login-applet som gör det möjligt att logga in med användar-namn och password, 
+och erhålla de privilegier hör till användaren. Vill eller kan man inte logga in tilldelas 
+man privilegiet RtRead och har ändå möjlighet att titta på bilderna.
+
+<h1>Distribution
+<h2>xtt
+För att kunna öppna en graf i xtt måste .pwg-filen för grafen kopieras från pwrp_pop i 
+utvecklings-miljön till pwrp_exe i runtime-miljön. Även lokala subgrafer som är definierade 
+som externa måste kopieras. Här kopierar man .pwsg-filen för subgrafen på motsvarande sätt. 
+Lokala Image-filer måste också kopieras.
+
+<h2>Web
+Bilder som exporteras som java-applet's, kompileras och läggs i java-arkivet
+$pwrp_lib/pwrp_'systemnamn'_web.jar. Här hamnar också GIF- och JPEG-filer som ligger på 
+pwrp_pop. Det här biblioteket måste kopieras till webserverns applikations-katalog tillsammans
+med de .html-filer som genereras av 'export java'. Till webserverns applikations-katalog ska
+dessutom kopieras $pwr_lib/pwr_rt_client.jar och $pwr_lib/pwr_jop.jar.
+
+<h2>Java-applikationer
+Bilder som exporteras som en java-frame, komplieras och läggs i arkivet 
+$pwr_lib/pwrp_'systemnamn'.jar. Även GIF- och JPEG-filer på $pwrp_pop läggs i detta 
+bibliotek. Arkivet ska kopieras till $pwrp_lib på målnoden. Tillsammans med arkiven 
+$pwr_lib/pwr_rt.jar och $pwr_lib/pwr_jop.jar ska de läggas in i CLASSPATH'en på målnoden.
+</topic>
+</chapter>
+
+<chapter>
+<topic>gecmd
+Ge script och kommandon
+<option> printdisable
+Introduktion till script <link>gecmd_intro
+Kommandon <link>gecmd_command
+Script <link>gecmd_script
+<option> printenable
+</topic>
+
+<topic>gecmd_intro
+Introduktion till script
+I GE finns en uppsättning kommandon för att skapa grafiska element som rektanglar, texter, 
+polylinjer och subgrafer. Dessa kommandon kan utföras direkt från kommandoraden i GE, men det 
+vanligaste är att skriva dem i script-filer som sedan exekveras från kommandoraden.
+
+Scriptfilerna kan dessutom innehålla ett c-liknande språk som innehåller operatorer för 
+berkäkningar, villkors-satser och for-loopar mm. Dessutom finns rutiner för att hämta 
+information i utvecklings-databasen.Se manualen för pwr_cmd för en utförligare beskrivning.
+
+Ge-script kan t ex användas för att konvertera bilder från andra bildhanterings-system till 
+ge-bilder, eller för att automatgenerera formulär eller bilder utifrån objekt i databasen.
+
+<h1>Skapa objekt
+Basobjekt som rektanglar, linjer mm skapas med create-kommandot. Innan objektet skapas ställer 
+man in editorn med egenskaper som objektet ska ha (fill, border, fyllnadsfärg, textstorlek 
+etc), sedan skapar man objektet.
+
+<h2>Rektangel
+Exempel på en fylld rektangel
+
+<c>set fill
+<c>set linewidth 1
+<c>set bordercolor 0
+<c>set fillcolor 19
+<c>create rect /x1=10 /y1=1 /width=4  /height=2
+
+<h2>Cirkel
+Exempel på en halvcirkel
+
+<c>set nofill
+<c>set linewidth 2
+<c>set bordercolor 0
+<c>create arc /x1=1 /y1=1 /x2=3 /y2=2 /angel1=0 /angel2 =180
+
+<h2>Linje
+Exempel på en linje
+
+<c>set linewidth 1
+<c>set bordercolor 0
+<c>create line /x1=0 /y1=0 /x2=10 /y2=0
+
+<h2>Polylinje
+För en polylinje skapar man den första del-linjen med 'create', och resterande dellinjer 
+med 'add'.
+
+Exempel på polylinje
+
+<c>set nofill
+<c>set linewidth 1
+<c>set bordercolor 0
+<c>create polyline /x1=5 /y1=5 /x2=6 /y2=6
+<c>add polyline /x1=5 /y1=7
+<c>add polyline /x1= 6/y1=8
+<c>add polyline /x1=5 /y1=9
+<c>add polyline /x1= 6 /y1=10
+
+<h2>Text
+Exempel
+
+<c>set textsize 14
+<c>set bold
+<c>create text/text="Example" /x1=3 /y1=5
+
+<h2>Subgraf objekt
+Vid skapande av subgrafobjekt är gången lite annorlunda. Här skapar man först objektet, och 
+sedan sätter man attributen på objektet.
+
+Exempel på ventil
+
+<c>create object /sub=pwr_valve /x1=1 /y1= 1 /x2=3 /y2=2
+<c>set current fillcolor 45
+<c>set current attr attribute "Rt-Dv1.ActualValue##Boolean"
+<c>set current attr lowcolor 3
+
+Exempel på trycknapp
+
+<c>create object /sub=pwr_buttonset /x1=5 /y1=1
+<c>! Change type to SetDigConfirmWithTone
+<c>set current attr type 1014
+<c>set current attr text "Start"
+<c>set current attr ConfirmText "Do you really want to..."
+<c>set current attr Attribute "rt-Dv1.ActualValue##Boolean"
+<c>set current attr ToneAttr "rt-Dv2.ActualValue##Boolean"
+<c>set current attr LowTone 8
+<c>set current attr Access 65534
+
+<h2>Graf attribut
+Innan man sparar bör man sätta upp gränser i x- och y-led för grafen och diverse andra 
+attribut. Detta görs med kommandot 'set graphattributes'.
+
+Exempel
+
+<c>set graph x0 -3
+<c>set graph y0 -3
+<c>set graph x1 40
+<c>set graph y1 37
+<c>set graph AnimationScanTime 0.2
+<c>set graph BackgroundImage "corrado.gif"
+
+<h2>Subgraf attribut
+Om grafen ska sparas som subgraf användera man också 'set graphattributes', men sätter först 
+attributet 'subgraf' och därefter de attribut som hör till subgrafen.
+
+Exempel
+
+<c>set graph subgraph 1
+<c>! Type ToggleDigWithTone
+<c>set graph TraceAttrType 1012
+<c>set graph TraceColor 3
+<c>set graph NoConObstacle 1
+
+<h2>Färger
+Färger anges med index i färgpaletten (0 - 299). 0 ger svart, 30-59 grå nyanser, 
+60-89 gröngula, 90-119 gula, 120-149 gulorange, 150-179 röd, 180-209 magenta, 
+210-239 blå, 240-269 turkos, 270-299 gröna.
+
+<h2>Färgton
+Även färgton anges med index. Se tabell nedan. 
+
+För de typer av dynamik ändrar på färgtonen kan man oftast sätta en fyllnads-färg istället för 
+färgton. Man anger då index för fyllnadsfärgen istället (ett värde mellan 83-299).
+
+<b>Index <t>Ton
+0 <t>Ingen ton
+1 <t>Grå
+2 <t>Gulgrön
+3 <t>Gul
+4 <t>Orange
+5 <t>Röd
+6 <t>Magenta
+7 <t>Blå
+8 <t>Turkos
+9 <t>Grön
+10 <t>Mörkgrå
+</topic>
+
+<topic>gecmd_command
+Kommandon
+
+Nedan följer beskrivning på kommandon i Ge
+
+add 			<link>gecmd_add
+  <t>add polyline 	<link>gecmd_add_polyline
+create 			<link>gecmd_create
+  <t>create rectangle 	<link>gecmd_create_rect
+  <t>create arc 	<link>gecmd_create_arc
+  <t>create line 	<link>gecmd_create_line
+  <t>create polyline 	<link>gecmd_create_polyline
+  <t>create rectangle 	<link>gecmd_create_rect
+  <t>create text 	<link>gecmd_create_text
+  <t>create subgraph 	<link>gecmd_create_subgraph
+group 			<link>gecmd_group
+move 			<link>gecmd_move
+  <t>move currentobject	<link>gecmd_move_currentobject
+new 			<link>gecmd_new
+select 			<link>gecmd_select
+  <t>select currentobject <link>gecmd_select_currentobject
+  <t>select clear	<link>gecmd_select_clear
+set 			<link>gecmd_set
+  <t>set verify		<link>gecmd_set_verify
+  <t>set noverify	<link>gecmd_set_noverify
+  <t>set fill 		<link>gecmd_set_fill
+  <t>set nofill		<link>gecmd_set_nofill
+  <t>set border		<link>gecmd_set_border
+  <t>set noborder	<link>gecmd_set_noborder
+  <t>set grid		<link>gecmd_set_grid
+  <t>set nogrid		<link>gecmd_set_nogrid
+  <t>set linewidth	<link>gecmd_set_linewidth
+  <t>set gridsize	<link>gecmd_set_gridsize
+  <t>set textsize	<link>gecmd_set_textsize
+  <t>set bold		<link>gecmd_set_bold
+  <t>set nobold		<link>gecmd_set_nobold
+  <t>set backgroundcolor <link>gecmd_set_backgroundcolor
+  <t>set fillcolor	<link>gecmd_set_fillcolor
+  <t>set bordercolor	<link>gecmd_set_bordercolor
+  <t>set currentobject fillcolor <link>gecmd_set_current_fillcolor
+  <t>set currentobject colortone <link>gecmd_set_current_colortone
+  <t>set currentobject colorlightness <link>gecmd_set_current_colorlightness
+  <t>set currentobject colorintensity <link>gecmd_set_current_colorintensity
+  <t>set currentobject colorshift <link>gecmd_set_current_colorshift
+  <t>set currentobject attributes <link>gecmd_set_current_attributes
+  <t>set currentobject type <link>gecmd_set_current_type
+  <t>set currentobject color <link>gecmd_set_current_color
+  <t>set currentobject colortone <link>gecmd_set_current_colortone
+  <t>set currentobject access <link>gecmd_set_current_access
+  <t>set currentobject attr1 <link>gecmd_set_current_attr1
+  <t>set currentobject attr2 <link>gecmd_set_current_attr1
+  <t>set currentobject annotation <link>gecmd_set_current_annotation
+  <t>set graphattributes <link>gecmd_set_graphattributes
+rotate 			<link>gecmd_rotate
+  <t>rotate currentobject <link>gecmd_rotate_current
+scale 			<link>gecmd_scale
+  <t>scale currentobject <link>gecmd_scale_current
+save 			<link>gecmd_save
+exit 			<link>gecmd_exit
+quit 			<link>gecmd_quit
+open 			<link>gecmd_open
+show 			<link>gecmd_show
+  <t>scale version <link>gecmd_show_version
+</topic>
+
+<headerlevel>
+<topic>gecmd_add <style>function
+add
+</topic>
+
+<topic>gecmd_add_polyline
+add polyline
+
+Adderar en punkt till senast skapade polyline.
+En polyline skapas med 'create polyline' som också skapar den första del-linjen. Övriga 
+del-linjer skapas med 'add polyline'.
+
+<b>Syntax
+
+<c>ge> add polyline /x1= /y1=
+
+/x1 <t>x-koordinat för den adderade del-linjen.
+/y1 <t>y-koordinat för den adderade del-linjen.
+</topic>
+
+<topic>gecmd_create <style>function
+create
+
+Skapa grafiska element i bilden.
+</topic>
+
+<topic>gecmd_create_rect
+create rectangle
+
+Skapar en rektangel.
+
+<b>Syntax
+
+<c>ge> create rectangel /x1= /y1= /width= /height=
+
+/x1 <t>x-koordinat för övre vänstra hörnet.
+/y1 <t>y-koordinat för övre vänstra hörnet.
+/widht <t>Rektangelns bredd.
+/height <t>Rektangelns höjd.
+</topic>
+
+<topic>gecmd_create_arc
+create arc
+
+Skapa en cikel eller oval, eller ett segment av en cirkel eller oval.
+
+<b>Syntax
+
+<c>ge> create arc /x1= /y1= /x2= /y2= /angel1= /angel2=
+
+/x1 <t>x-koordinat för övre vänstra hörnet för den rektangel som omsluter ovalen.
+/y1 <t>y-koordinat för övre vänstra hörnet för den rektangel som omsluter ovalen.
+/x2 <t>x-koordinat för nedre högra hörnet för det rektangel som omsluter ovalen.
+/y2 <t>y-koordinat för nedre högra hörnet för den rektangel som omsluter ovalen.
+/angel1 <t>Vinkel som beskriver var ett cirkel-segment startar. Anges i grader. 
+    <t>Default-värde 0.
+/angel2 <t>Vinkel i grader som anger storleken på ett cirkel-segment. Default-värde 
+    <t>360 grader.
+</topic>
+
+<topic>gecmd_create_line
+create line
+
+Skapa en rät linje mellan två punkter.
+
+<b>Syntax
+
+<c>ge> create line /x1= /y1= /x2= /y2=
+
+/x1 <t>x-koordinat för den första änd-punkten.
+/y1 <t>y-koordinat för den första änd-punkten.
+/x2 <t>x-koordinat för den andra änd-punkten.
+/y2 <t>y-koordinat för den andra ändpunkten.
+</topic>
+
+<topic>gecmd_create_polyline
+create polyline
+
+Skapa en polylinje, dvs en linje som består av flera räta del-linjer.
+'create polyline' skapar den första del-linjen. Övriga del-linjer skapas med 'add polyline'. Punkten (x1, y1) är startpunkten för polylinjen. Nästa del-linje hakas på punken (x2, y2).
+
+<b>Syntax
+
+<c>ge> create polyline /x1= /y1= /x2= /y2=
+<c>ge> add polyline /x1= /y1=
+<c>ge> add polyline /x1= /y1=
+<c>ge> ...
+
+/x1 <t>x-koordinat för start-punkten.
+/y1 <t>y-koordinat för start-punkten.
+/x2 <t>x-koordinat för första del-linjens änd-punkt.
+/y2 <t>y-koordinat för första del-linjens änd-punkt.
+</topic>
+
+<topic>gecmd_create_text
+create text
+
+Skapa en text.
+
+<b>Syntax
+
+<c>ge> create text /x1= /y1= /text=
+
+/x1 <t>x-koordinat.
+/y1 <t>y-koordinat.
+/text <t>Text omgärdad av dubbel-fnuttar.
+</topic>
+
+<topic>gecmd_create_subgraph
+create subgraph
+Skapar ett subgraf-objekt.
+
+<b>Syntax
+
+<c>ge> create subgraph /x1= /y1= /subgraph= [/x2= /y2=]
+
+/x1 <t>x-koordinat för övre vänstra hörnet.
+/y1 <t>y-koordinat för övre vänstra hörnet.
+/subgraph <t>Namnet på subgrafen. Om subgrafet tillhör proview's bassystem har 
+    <t>subgrafen alltid prefixet 'pwr_' och skrivs med gemener, dvs subgrafen 
+    <t>'Valve' har  namnet pwr_valve.
+/x2 <t>Om punkten (x2, y2) anges skalas subgrafen så att den innesluts i 
+    <t>rektangeln med hörnpunkterna (x1,y1) och (x2, y2).
+/y2
+</topic>
+
+<topic>gecmd_group <style>function
+group
+
+Skapa en grupp av utvalda objekt.
+
+</topic>
+
+<topic>gecmd_move <style>function
+move
+
+</topic>
+
+<topic>gecmd_move_currentobject
+move currentobject
+
+Flyttar senast skapade objekt.
+
+<b>Syntax
+
+<c>ge> move currentobject /x= /y=
+
+/x <t>Förflyttning i x-led relativt tidigare position.
+/y <t>Förflyttning i y-led relativt tidigare position.
+</topic>
+
+<topic>gecmd_new <style>function
+new
+
+Rensar arbetsarean.
+</topic>
+
+<topic>gecmd_select <style>function
+select
+</topic>
+
+<topic>gecmd_select_currentobject
+select currentobject
+
+Lägger in senast skapade objekt i listan av utvalda objekt.
+</topic>
+
+<topic>gecmd_select_clear <style>function
+select clear
+Tömmer listan på utvalda objekt.
+</topic>
+
+<topic>gecmd_set <style>function
+set
+</topic>
+
+<topic>gecmd_set_verify
+set verify
+Sätter verifierings-mod, dvs att exekverade script-rader skrivs ut i terminal-fönster.
+</topic>
+
+<topic>gecmd_set_noverify
+set noverify
+Avslutar verifierings-mod.
+</topic>
+
+<topic>gecmd_set_fill
+set fill
+Sätter 'fill' i editorn. Skapade objekt kommer i forsättningen att ha fill-attributet satt.
+</topic>
+
+<topic>gecmd_set_nofill
+set nofill
+Återställer 'fill' i editorn. Skapade objekt kommer i fortsättningen att ha fill-attributet 
+nollställt.
+</topic>
+
+<topic>gecmd_set_border
+set border
+Sätter 'border' i editorn. Skapade objekt kommer i fortsättningen att ha border-attributet satt.
+</topic>
+
+<topic>gecmd_set_noborder
+set noborder
+Återställer 'border' i editorn. Skapade objekt kommer i fortsättningen att ha border-attributet
+nollställt.
+</topic>
+
+<topic>gecmd_set_grid
+set grid
+
+Sätter 'grid' i editorn. Skapade objekt läggs på närmaste grid-punkt.
+</topic>
+
+<topic>gecmd_set_nogrid
+set nogrid
+
+Återställer grid i editorn.
+</topic>
+
+<topic>gecmd_set_linewidth
+set linewidth
+
+Sätter linjebredd i editorn. Skapade objekt kommer i forsättningen att skapas med angiven 
+linjebredd. Linjebredden han ha ett värde mellan 1 och 8.
+
+<b>Syntax
+
+<c>ge> set linewidth 'linewidth'
+</topic>
+
+<topic>gecmd_set_gridsize
+set gridsize
+
+Sätter gridstorleken i editorn.
+
+<b>Syntax
+
+<c>ge> set gridsize 'gridsize'
+</topic>
+
+<topic>gecmd_set_textsize
+set textsize
+
+Sätter 'textsize' i editorn. Alla textobjekt kommer i fortsättning att skapas med denna 
+textstorlek. Textstorleken kan vara 8, 10, 12, 14, 18 eller 24.
+
+<b>Syntax
+
+<c>ge> set textsize 'textsize'
+</topic>
+
+<topic>gecmd_set_bold
+set bold
+
+Sätter 'bold' i editorn. Textobjekt kommer i fortsättningen att skapas med fet-stil
+</topic>
+
+<topic>gecmd_set_nobold
+set nobold
+
+Återställer 'bold'.
+</topic>
+
+<topic>gecmd_set_backgroundcolor
+set backgroundcolor
+
+Sätter bakgrundfärgen. Bakgrundsfärgen är ett index i färgtabellen (0-299).
+
+<b>Syntax
+
+<c>ge> set backgroundcolor 'color'
+</topic>
+
+<topic>gecmd_set_fillcolor
+set fillcolor
+
+Sätter fyllnadsfärg i färg-paletten. Objekt kommer i fortsättningen att skapas med denna 
+fyllnadsfärg. Fyllnadsfärgen anges med index i färgtabellen (0-299).
+
+<b>Syntax
+
+<c>ge> set fillcolor 'color'
+</topic>
+
+<topic>gecmd_set_bordercolor
+set bordercolor
+
+Sätter kantfärgen i färg-paletten. Objekt kommer i fortsättningen att skapas med denna kantfärg,
+Kantfärgen anges med index i färgtabellen (0-299).
+
+<b>Syntax
+
+<c>ge> set bordercolor 'color'
+</topic>
+
+<topic>gecmd_set_current_fillcolor
+set currentobject fillcolor
+
+Sätter fyllnadsfärg på senast skapade subgraf-objekt. Fyllnadsfärgen anges som index i 
+färgtabellen (0-299).
+
+<b>Syntax
+
+<c>ge> set currentobject fillcolor 'color'
+</topic>
+
+<topic>gecmd_set_current_colortone
+set currentobject colortone
+
+Sätter färgton på senast skapade subgraf-objekt.
+
+<b>Syntax
+
+<c>ge> set currentobject colortone 'index'
+</topic>
+
+<topic>gecmd_set_current_colorlightness
+set currentobject colorlightness
+
+Sätter ljushet på senast skapade subgraf-objekt. Ljusheten är ett heltal. Positivt värde ger 
+ljusare färger, negativt mörkare färger.
+
+<b>Syntax
+
+<c>ge> set currentobject colorlightness 'lightness'
+</topic>
+
+<topic>gecmd_set_current_colorintensity
+set currentobject colorintensity
+
+Sätter färgintensitet på senast skapade subgraf-objekt. Intensiteten är ett heltal. Positivt 
+värde ger intensivare färger, negativt dassigare färger.
+
+<b>Syntax
+
+<c>ge> set currentobject colorintensity 'intensity'
+
+</topic>
+
+<topic>gecmd_set_current_colorshift
+set currentobject colorshift
+
+Skiftar färgen på senaste skapade subgraf. Färgtonerna i subgrafen roteras på färgcirkeln, men 
+färgerna behåller sin inbördes färgkontrast. Colorshift är ett heltal som anger hur många steg 
+som färgen ska shiftas. Positivt värde roterar i riktning gult -> guld -> orange -> röd -> 
+magenta -> blå -> turkos -> grön -> gul. Negativt i motsatt riktning.
+
+<b>Syntax
+
+<c>ge> set currentobject colorshift 'shift'
+</topic>
+
+<topic>gecmd_set_current_attributes
+set currentobject attributes
+Sätter attribut för senast skapade subgraf.
+
+<b>Syntax
+
+<c>ge> set currentobject attributes 'attrname' 'value'
+
+Attributens namn beror på vilken typ av dynamik som är angiven för subgrafen. Typen av dynamik 
+måste sättas först, därefter kan övriga attribut för denna dynamiktyp sättas.
+
+I Ge Användarhandledning finns beskrivet vilka attribut som finns för olika typer av dynamik.
+</topic>
+
+<topic>gecmd_set_current_type
+set currentobject type
+Type anger vilken typ av dynamik som objektet har. Denna anges i form av ett heltal.
+
+<b>Syntax
+
+<c>ge> set currentobject attributes type 'value'
+
+
+<b>Typ av dynamik <t>Värde
+No		<t> 0
+Inherit		<t> 1 << 0
+Tone		<t> 1 << 1
+DigLowColor     <t> 1 << 2
+DigColor	<t> 1 << 3
+DigError	<t> 1 << 4
+DigWarning	<t> 1 << 5
+DigFlash	<t> 1 << 6
+Invisible	<t> 1 << 7
+DigBorder	<t> 1 << 8
+DigText		<t> 1 << 9
+Value		<t> 1 << 10
+AnalogColor     <t> 1 << 11
+Rotate		<t> 1 << 12
+Move	       	<t> 1 << 13
+AnalogShift     <t> 1 << 14
+DigShift	<t> 1 << 15
+Animation	<t> 1 << 16
+Bar	       	<t> 1 << 17
+Trend		<t> 1 << 18
+SliderBackground <t> 1 << 19
+Video		<t> 1 << 20
+FillLevel	<t> 1 << 21
+FastCurve	<t> 1 << 22
+AnalogText	<t> 1 << 23
+Table		<t> 1 << 24
+StatusColor     <t> 1 << 25
+HostObject      <t> 1 << 26
+
+<b>Typ av aktion <t>Värde
+No		<t> 0
+Inherit		<t> 1 << 0
+PopupMenu      	<t> 1 << 1
+SetDig		<t> 1 << 2
+ResetDig       	<t> 1 << 3
+ToggleDig      	<t> 1 << 4
+StoDig		<t> 1 << 5
+Command		<t> 1 << 6
+CommandDoubleClick <t> 1 << 7
+Confirm		<t> 1 << 8
+IncrAnalog	<t> 1 << 9
+RadioButton	<t> 1 << 10
+Slider		<t> 1 << 11
+ValueInput	<t> 1 << 12
+TipText		<t> 1 << 13
+CloseGraph     	<t> 1 << 18
+PulldownMenu    <t> 1 << 19
+OptionMenu     	<t> 1 << 20
+</topic>
+
+<topic>gecmd_set_current_color
+set currentobject color
+Färger benämns vanligvis 'LowColor' eller 'LowColor2'. För dess anges index i färgpaletten.
+</topic>
+
+<topic>gecmd_set_curren_colortone
+set currentobject colortone
+
+Färgton kallas normalt för 'LowTone' och anges som ett heltal.
+</topic>
+
+<topic>gecmd_set_current_access
+set currentobject access
+
+Access är en bitmask där varje bit ger en användar-kategori behörighet att påverka objektet.
+
+<b>Användar kategori <t>Värde
+RtRead     <t>1 << 0
+RtWrite    <t>1 << 1
+System     <t>1 << 2
+Maintenance <t>1 << 3
+Process    <t>1 << 4
+Instrument <t>1 << 5
+Operator1  <t>1 << 6
+Operator2  <t>1 << 7
+Operator3  <t>1 << 8
+Operator4  <t>1 << 9
+Operator5  <t>1 << 10
+Operator6  <t>1 << 11
+Operator7  <t>1 << 12
+Operator8  <t>1 << 13
+Operator9  <t>1 << 14
+Operator10 <t>1 << 15
+
+<b>Syntax
+
+<c>ge> set currentobject access 'value'
+</topic>
+
+<topic>gecmd_set_current_attr1
+set currentobject attr1
+
+Sätter attributet, dvs kopplingen till rtdb, i senast skapade subgraf.
+Motsvarar funktionen vid Ctrl+Dubbelklick MB1.
+
+<b>Syntax
+
+<c>ge> set currentobject attr1 'attribute'
+
+</topic>
+
+<topic>gecmd_set_current_attr2
+set currentobject attr2
+
+Sätter attribut nr 2 i senast skapade subgraf.
+Motsvarar funktionen vid Ctrl+Shift+Dubbelklick MB1.
+
+<b>Syntax
+
+<c>ge> set currentobject attr2 'attribute'
+</topic>
+
+<topic>gecmd_set_current_annotation
+set currentobject annotation
+
+Lägger in en sträng i annotation-fältet på senast skapade subgraf. Texten läggs in i annotation
+nr 1.
+
+<b>Syntax
+
+<c>ge> set currentobject annotation 'text'
+</topic>
+
+<topic>gecmd_set_graphattributes
+set graphattributes
+
+Sätter attribute för aktuell graf (eller subgraf).
+
+<b>Graf attribut
+
+<b>Namn  <t>Typ
+subgraph <t>Boolean
+x0  <t>Float
+y0  <t>Float
+x1  <t>Float
+y1  <t>Float
+ScanTime <t>Float
+AnimationScanTime <t>Float
+JavaWidth <t>String
+BackgroundImage <t>String
+
+<b>Subgraf attribut
+
+<b>Namn <t>Typ
+TraceAttrType
+TraceType
+TraceColor <t>ColorIndex eller ColorTone
+TraceColor2 <t>ColorIndex eller ColorTone
+NoConObstacle <t>Int
+Slider <t>Int
+NextSubgraph <t>Int
+AnimationCount <t>Int
+
+<b>Syntax
+
+<c>ge> set graphattributes 'name' 'value'
+</topic>
+
+<topic>gecmd_rotate
+rotate
+</topic>
+
+<topic>gecmd_rotate_current
+rotate currentobject
+
+Roterar senast skapade objekt runt objektets mittpunkt.
+
+<b>Syntax
+
+<c>ge> rotate currentobject /angel=
+
+/angel <t>Vinkel i grader som objektet ska roteras.
+</topic>
+
+<topic>gecmd_scale
+scale
+</topic>
+
+<topic>gecmd_scale_current
+scale currentobject
+
+Skalar om senast skapade objekt.
+
+<b>Syntax
+
+<c>ge> scale currentobject /scalex= /scaley= [/x= /y=]
+
+/scalex <t>Skalfaktor i x-led
+/scaley <t>Skalfaktor i y-led.
+/x <t>x-koordinat för skalningens referenspunkt.
+/y <t>y-koordinat för skalningens referenspunkt.
+</topic>
+
+<topic>gecmd_save
+save
+
+Sparar en graf.
+
+<b>Syntax
+
+<c>ge> save ['filename']
+</topic>
+
+<topic>gecmd_exit
+exit
+
+Avsluta ge och spara aktuell graf först.
+
+<b>Syntax
+
+<c>ge> exit ['filename']
+</topic>
+
+<topic>gecmd_quit
+quit
+
+Avsluta utan att spara.
+
+<b>Syntax
+
+<c>ge> quit
+</topic>
+
+<topic>gecmd_open
+open
+
+Öppna en graf.
+
+<b>Syntax
+
+<c>ge> open ['filename']
+</topic>
+
+<topic>gecmd_show
+show
+</topic>
+
+<topic>gecmd_show_version
+show version
+
+Visa Ge-version.
+</topic>
+</headerlevel>
+</chapter>
+
+<chapter>
+<topic>gecmd_script
+Script
+
+Ge-script är ett sätt att programmera ge-kommandon. Scripthanteraren ger dessutom möjlighet 
+till att göra beräkningar, utföra vilkors-satser, loop-satser, deklarerara varibler och 
+funktioner.
+
+Ett script startas med '@' följt av scriptfils namnet och eventuella argument.
+
+Ett ge-script bör ha filtypen .ge_com.
+
+<b>Exempel
+
+<c>ge> @my_script
+
+I pwr_cmd Användarhandledning finns en beskrivning på scriptspråket och beskrivning på inbyggda
+funktioner. Här följer en lista på de inbyggda funktioner som även kan användas i Ge-script.
+
+<h2>Ge funktioner
+<b>Funktion <t>Beskrivning
+GetCurrentObject <t>Returnerar identiteten för senast skapade objekt.<link>GetCurrentObject()
+GetTextExtent <t>Beräkna storleken på en text. <link>GetTextExtent()
+SelectAdd <t>Addera objekt till utvalslistan. <link>SelectAdd()
+SetExtern <t>Sätt en subgraf extern. <link>SetExtern()
+SetIntern <t>Sätt en subgraf intern. <link>SetIntern()
+
+<h2>In och utmatning
+<b>Funktion <t>Beskrivning
+ask <t>Skriver ut en fråga och läser in ett svar
+say <t>Skriver ut en sträng
+printf <t>Formaterad utskrift
+scanf  <t>Formaterad inläsning
+
+<h2>Filhantering
+<b>Funktion <t>Beskrivning
+fclose <t>Stäng en fil
+felement <t>Hämta ett element ur den med fgets senaste lästa raden.
+fgets <t>Läsning av en rad från fil
+fopen <t>Öppna en fil
+fprintf <t>Formaterad skrivning på fil
+fscanf <t>Formaterad läsning frän fil
+
+<h2>Hantering av strängar
+<b>Funktion <t>Beskrivning
+edit <t>Rensa bort space och tabbar i början och i slutet av en sträng, 
+     <t>samt ta bort multipla space och tabbar i strängen
+element <t>Hämta ett element i en sträng
+extract <t>Hämta ett antal tecken i en sträng
+sprintf <t>Formaterat skrivning i en sträng-variabel.
+strchr <t>Leta efter första förekomsten av ett tecken i en sträng
+strlen <t>Längden av en sträng
+strrchr <t>Leta efter sista förekomsten av ett tecken i en sträng
+strstr <t>Leta efter första förekomsten av en teckensekvens i en sträng
+toupper <t>Konvertera till versaler
+
+<h2>Databas funktioner
+<b>Funktion <t>Beskrivning
+CutObjectName <t>Hämta de sista segmenten i ett objektsnamn
+GetAttribute <t>Hämta ett attribut
+GetChild <t>Hämta första barnet till ett objekt
+GetNextSibling <t>Hämta nästa syskon till ett objekt
+GetNextVolume <t>Hämta nästa volym
+GetParent <t>Hämta förälder till ett objekt
+GetObjectClass <t>Hämta klassen till ett objekt
+GetRootList <t>Hämta första objekt i rot-listan
+GetVolumeClass <t>Hämta klassen för en volym
+
+<h2>System funktioner
+<b>Funktion <t>Beskrivning
+exit <t>Avsluta exekveringen av ett skript
+time <t>Hämta systemtiden
+system <t>Exekvera ett shell kommando
+verify <t>Sätt verify på eller av
+
+</topic>
+
+<topic>GetTextExtent() <style>function
+GetTextExtent()
+int GetTextExtent( string text, int textsize, int bold, float widht [, float height, 
+float descent])
+
+<h2>Beskrivning
+
+Beräknar storleken på en text.
+Returnerar text-bredden i width argumentet, och om argumentet height och descent skickats med, 
+även höjd och descent i dessa argument.
+
+<h2>Argument
+
+string <t>text     <t>Text vars storlek ska beräknas.
+int    <t>textsize <t>Textstorlek (8, 10, 12, 14, 18 eller 24).
+int    <t>bold     <t>Fet (1) eller normal (0) text.
+float  <t>width    <t>Textens bredd returneras i denna variabel.
+float  <t>height   <t>Höjden på texten returneras i denna variabel.
+float  <t>descent  <t>Textens descent returneras i denna variabel.
+
+<b>Exempel
+<c> float width;
+ 
+<c> GetTextExtent("Detta är en text", 12, 1, width);
+</topic>
+
+<topic>SelectAdd() <style>function
+SelectAdd()
+int SelectAdd( int objectid)
+
+<h2>Beskrivning
+
+Lägger in ett objekt i listan av utvalda objekt.
+
+<h2>Argument
+
+int          <t>objectid   <t>Objektsidentitet.
+
+<b>Exempel
+<c> int id;
+ 
+<c> id = GetCurrentObject();
+<c> SelectAdd( id);
+</topic>
+
+<topic>GetCurrentObject() <style>function
+GetCurrentObject()
+int GetCurrentObject()
+
+<h2>Beskrivning
+
+Returnerar identiteten på senast skapade objekt.
+
+<b>Exempel
+<c> int id;
+ 
+<c> id = GetCurrentObject();
+</topic>
+
+<topic>SetExtern() <style>function
+SetExtern()
+int SetExtern( string name)
+
+<h2>Beskrivning
+
+Sätter en subgraf extern.
+
+<h2>Argument
+
+string      <t>name       <t>Namn på subgrafen.
+
+<b>Exempel
+ 
+<c> SetExtern("MySubgraph");
+</topic>
+
+<topic>SetIntern() <style>function
+SetIntern()
+int SetIntern( string name)
+
+<h2>Beskrivning
+
+Sätter en subgraf intern.
+
+<h2>Argument
+
+string    <t>name       <t>Namn på subgrafen.
+
+<b>Exempel
+ 
+<c> SetIntern("MySubgraph");
+</topic>
+
+<topic>gecmd_examples <style>function
+Exempel
+
+<h1>Exempel 1
+<c>!
+<c>! Rita några enkla objekt
+<c>!
+<c>main()
+<c>  string name;
+
+<c>  verify(1);
+
+
+<c>  ! Rita en rektangel
+<c>  set fill
+<c>  set linewidth 1
+<c>  set bordercolor 0
+<c>  set fillcolor 19
+<c>  create rect /x1=10 /y1=1 /width=2 /height=2
+
+<c>  ! Rita en halvcirkel
+<c>  set nofill
+<c>  set linewidth 2
+<c>  create arc /x1=1/y1=1/x2=3/y2=2/angel1=0 /angel2=180
+  
+<c>  ! Rita en polyline
+<c>  set nofill
+<c>  set linewidth 1
+<c>  create polyline /x1=5 /y1=5 /x2=6 /y2=6
+<c>  add polyline /x1=5 /y1=7
+<c>  add polyline /x1=6 /y1=8
+<c>  add polyline /x1=5 /y1=9
+<c>  add polyline /x1=6 /y1=10
+
+<c>  ! Skriv en text
+<c>  set bold
+<c>  set textsize 14
+<c>  create text/text="Example" /x1=3 /y1=5
+
+<c>  ! Skapa en subgraf
+<c>  create object/sub=pwr_valve/x1=1/y1=1/x2=3/y2=2
+<c>  set current fillcolor 45
+<c>  set current attr attribute "Rt-Dv1.ActualValue##Boolean"
+<c>  set current attr lowcolor 0
+  
+<c>  ! Skapa en trycknapp
+<c>  create object /sub=pwr_buttonset /x1=5 /y1=1
+<c>  set current attr text "Start"
+<c>  set current attr attribute "rt-dv1.actualvalue##Boolean"
+<c>  set current attributes access 65000
+
+<c>  ! Sätt graph attributes
+<c>  set graph x0 -3
+<c>  set graph y0 -3
+<c>  set graph x1 40
+<c>  set graph y1 25
+
+<c>  save
+<c>endmain
+
+<h1>Exempel 2
+<c>!
+<c>! Det här exemplet letar upp alla dv-objekt i en hierarki,
+<c>! skriver ut namnet och visar värdet i en indikator.
+<c>! En ram ritas runt objekten.
+<c>!
+<c>main()
+
+<c>  string name;
+<c>  string segname;
+<c>  string attr;
+<c>  float x;
+<c>  float y;
+<c>  float x_ind;
+<c>  float y_ind;
+<c>  float x1;
+<c>  float x2;
+<c>  float y1;
+<c>  float y2;
+<c>  float width;
+<c>  float t_width;
+<c>  string class;
+  
+<c>  x_ind = 2;
+<c>  x = 4;
+<c>  y_ind = 1.5;
+<c>  y = 2;
+<c>  name = GetChild( p1);
+  
+<c>  if ( p1 == "")
+<c>    printf("usage : test3 'parent'\n");
+<c>    exit();
+<c>  endif
+  
+<c>  set bold
+<c>  set textsize 12
+<c>  while ( name != "")
+<c>    class = GetObjectClass( name);
+<c>    if ( class == "Dv")
+<c>      create object/sub=pwr_indsquare/x1='x_ind'/y1='y_ind'
+<c>      attr = name + ".ActualValue##Boolean";
+<c>      set current attr attribute "'attr'"
+<c>      segname = CutObjectName( name, 1);
+<c>      create text/text="'segname'"/x1='x'/y1='y'
+<c>      GetTextExtent( segname, 12, 1, t_width);
+<c>      if ( t_width > width)
+<c>        width = t_width;
+<c>      endif
+<c>      y += 1;
+<c>      y_ind += 1;
+<c>    endif
+<c>    name = GetNextSibling( name);
+<c>  endwhile
+
+<c>  x1 = x_ind - 1;
+<c>  x2 = x + width + 1;
+<c>  y1 = 0;
+<c>  y1 = y;
+<c>  cre obj/sub=pwr_framethin/x1='x1'/y1='y1'/x2='x2'/y2='y2'
+
+<c>  x1--;
+<c>  x2++;
+<c>  y1--;
+<c>  y2++;
+<c>  set background 11
+<c>  set graph x0 'x1'
+<c>  set graph y0 'y1'
+<c>  set graph x1 'x2'
+<c>  set graph y1 'x2'
+<c>endmain
+</topic>
+</chapter>
+
+

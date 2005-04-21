@@ -1,0 +1,92 @@
+<topic> overview
+Configurator overview
+
+<b>Designer's Guide     <link> index, ,$pwr_lang/man_dg.dat
+<b>Configurator		<link> configurator_refman, ,$pwr_lang/man_dg.dat
+<b>Ge Editor		<link> index, ,$pwr_lang/man_geref.dat
+<b>Plc editor		<link> plceditor_refman, ,$pwr_lang/man_dg.dat
+<b>Object editor	<link> objecteditor_refman, ,$pwr_lang/man_dg.dat
+<b>Spreadsheet editor	<link> spreadsheeteditor_refman, ,$pwr_lang/man_dg.dat
+<b>Help window		<link> helpwindow_refman, ,$pwr_lang/man_dg.dat
+<b>Message window	<link> messagewindow_refman, ,$pwr_lang/man_dg.dat
+<b>Utilities		<link> utilities_refman, ,$pwr_lang/man_dg.dat
+<b>Class editor		<link> classeditor, ,$pwr_lang/man_dg.dat
+<b>Commands		<link> help command, ,$pwr_lang/man_dg.dat
+<b>Script		<link> script, ,$pwr_lang/man_dg.dat
+<b>Helpfile		<link> helpfile
+<b>Classes		<link> classes
+
+<b>Index		<index>
+</topic>
+
+
+//
+// Commands
+//
+
+<TOPIC> symbol
+Symbol
+
+A wtt symbol can be used as a short command or as string replacement
+in a command. If the symbol is used as string replacement the symbol-
+name should be surrounded by quotes.
+
+Symbols are created with the define command. <LINK> define
+The define-commands can be executed by the symbolfile. <LINK> symbolfile
+
+Example of symbol used as a short command.
+
+wtt> define p1 "show child/name=hql-hvk-pumpar-pump1"
+wtt> p1
+
+Example of symbol used as string replacement
+
+wtt> define p1 hql-hvk-pumpar-StartPump1
+wtt> open trace 'p1'
+
+<H2>related subjects
+define <LINK> define
+show symbol <LINK> show symbol
+symbolfile <LINK> symbolfile
+</TOPIC>
+
+<TOPIC> symbolfile
+Symbol file
+
+The symbolfile is a command-file that is executed att wtt startup.
+It can contain definitions of symbols and other wtt commands.
+Here is some examples of useful commands.
+
+Shortcut to somewhere in the database hierarchy:
+
+<t>define rb9 "show children /name=hql-rb9" <LINK> define
+
+</TOPIC>
+
+<TOPIC> advanced user
+Advanced user
+
+The advanced user allow some key-combinations that
+might confuse the unexperienced user.
+
+Advance user is set from setup or 	<LINK> setup
+with the command 'set advanceduser'	<LINK> set advanceduser
+
+Additional key's for advanced user
+
+ArrowRight	<t> Change attribute value.
+		<t> If an object has children, display children otherwise
+		<t> display attributes.
+</TOPIC>
+
+<TOPIC> classes
+Classes
+
+<B>SystemClasses	<LINK>pwrs, ,$pwr_lang/pwrs_xtthelp.dat
+<B>BaseClasses		<LINK>pwrb, ,$pwr_lang/pwrb_xtthelp.dat
+
+</TOPIC>
+
+<include> $pwr_lang/man_dg.dat
+<include> $pwr_lang/pwrs_xtthelp.dat
+<include> $pwr_lang/pwrb_xtthelp.dat

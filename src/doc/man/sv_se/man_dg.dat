@@ -1,0 +1,5692 @@
+
+<topic> __DocumentTitlePage
+
+<image> pwr_logga.gif
+
+
+
+
+
+
+<h1> Handbok för
+<h1> konstruktörer
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<hr>
+2005-04-19
+Version 4.1.0	
+<hr>
+</topic>
+
+<topic> __DocumentInfoPage
+
+
+Copyright 2004 SSAB Oxelösund AB
+All rights reserved.
+
+First Edition Mars 2005
+
+Notice: All information contained herein is the property of SSAB Oxelösund AB. 
+
+
+
+</topic>
+
+<chapter>
+<topic> introduction
+Inledning
+
+Proview är ett modernt, kraftfullt och generellt process styr system. Det innehåller alla
+funktioner som normalt krävs för effektiv sekvensstyrning, reglering, datainsamling,
+kommunikation, övervakning mm.
+
+Konfigureringen av ett Proview system görs grafisk, vilket gör att anpassningen till en
+tillämning blir enkel, pålitlig och flexibel. Proview är ett distribuerat system, vilket
+innebär att systemet består av flera datorer sammankopplade i ett nätverk. Via nätverket
+utbyter datorerna ata med varandra. På det här sättet blir, t ex uppmätta signalvärden,
+åtkomliga på alla process- och operatörsstationer i ett Proview system. 
+
+Ett Proview system är definierat med objekt. Varje objekt representerar en fysisk eller
+abstrakt enhet i systemet. Objekten ordnas i en hierarktisk trädstruktur, vilket gör
+det möjligt att ge en strukturerar beskrivning av systemet. Trädstrukturen influerar också
+en hierarktisk namngivning av alla objekt. Genom att noggrant välja namn vid konfigureringen
+av ett system, kommer det fullständiga objektsnamnet att identifiera dess funtion, eller roll
+i systemet.
+
+Hierarkierna är uppdelade i två grupper, en kallas anläggningshierarkin, och beskriver 
+systemet ur ett logiskt perpektiv. Den andra kallas nodhierarkin, och beskriver systemet ur
+ett fysiskt perspektiv. Konfigureringen av dessa olika delar kan göras oberoende av varandra.
+Slutligen kopplas de två delaran ihop.
+
+För att konfigurera ett system använder man Proview's arbetsbänk. Arbetsbänken omfattar en
+permanent databas och ett antal verktyg för att konfigurera de objekt som behövs för att
+konfigurera ett system. Utifrån arbetsbänken skapar man ett körbart system, liksom 
+dokumentation om systemet.
+
+Avsikten med Proview är att hjälpa dig att skapa automatierarde system. Antag att du har en
+process som du vill styra, Proview hjälper dig att skapa styrsystemet för processen, och
+när systemet är skapat, finner du att du även har gjort dokumentationen för systemet.
+</topic>
+</chapter>
+
+<option> printdisable
+<topic> index
+Konstruktörs handbok
+
+Översikt <link> design_overview
+Databas struktur <link> database_structure
+En fallstudie <link> case_study
+Administration <link> administrator
+Konfigurera direktoryvolymen <link> configure_directoryvolume
+Konfigurera rotvolymen <link> configure_rootvolume
+Plc programmering <link>plc_programming
+Skapa processbilder <link> ge_man
+Starta och testa systemet <link> conf_test
+
+<b>Referens manualer
+Konfiguratören <link> configurator_refman
+Objektseditorn Referensmanual<link> objecteditor_refman
+Spreadsheeteditorn Referensmanual<link> spreadsheeteditor_refman
+Plceditorn Referensmanual <link> plceditor_refman
+Commands <link> help command
+Script <link> script
+</topic>
+<option> printenable
+
+<chapter>
+<topic> design_overview
+Översikt
+
+Eftersom det här är en handledning för konstruktörer kan det vara lämpligt att inleda med en 
+beskrivning av vad designen av ett styrsystem innebär. Beskrivningen kan även fungera som en 
+introduktion till de olika begrepp som kommer att användas i den här handledningen.
+
+En konstrukör utgår naturligtvis från den process som styrsystemet ska styra, och den första 
+uppgiften är att lära sig processen och fundera över bästa sättet att styra den: vilka 
+reglerloopar som behövs, vilka förreglingar som ska finnas, hur anläggningen startas upp och 
+stoppas, hur operatörer och underhållare ska arbeta mot systemet. Detta sammanfattar man i 
+en Funktions specification.
+
+Samtidigt måste man fundera på vilken information om processen som  styrsystemet behöver för 
+att kunna utföra sin uppgift, dvs vilka givare som ska placeras i anläggningen. Styrsystemet 
+måste även kunna påverka processen genom på olika sätt, t ex mha ventiler och motorer. Detta 
+resulterar i en Signal lista, som är lista på alla in och utgående signaler till systemet.
+
+I det här läget dyker även frågan upp om vilket styrsystem man ska använda sig av, och ett
+alternativ är naturligtvis Proview. Man måste även bestämma sig för vilket IO-system man ska 
+använda, och hur man ska dela upp funktionen i olika processstationer.
+
+<h1>IO-system
+IO-systemet uppgift är att ta in signaler från processen till styrsystemet, och att ställa 
+ut  signaler för att påverka processen. Signalerna är vanligtvis digitala eller analoga, men
+det finns även andra typer som heltalsvärden och pulsgivare. Man kan välja mellan rack
+och kort system i anslutning till datorn, eller distributerat io som t ex profibus.
+
+<h1>Konfigurering
+När det är dags att börja konfigurera system, skapar man först ett nytt Projekt i 
+Administratören. Administratören ett verktyg för skapa ordning och reda bland alla projekt, 
+eftersom dessa kan bli ganska många med tiden.
+
+Konfigureringen av ett system sker till stor del genom att skapa objekt i en databas,
+arbetsbänken. Det finns en stor mängd olika objekt för att konfigurera allt från IO-kanaler 
+till processbilder. Proview's objektshandbok innehåller över 400 typer av objekt. Objekten 
+läggs upp  i en trädstruktur och  man använder ett verktyg som kallas för Konfiguratören
+för att skapa objekt och för att navigera i objektsträdet.
+
+Objektsträdet delas in i två delar, anläggningshierakin och nodhierakin. 
+Anläggningshierakin speglar olika funktioner eller i anläggningen och processen, medan 
+nodhierakin speglar styrsystemets uppbyggnad ur hårdvaru synpunkt med datorer, IO-rack och 
+IO-kort.
+
+När man senare startar upp styrsystemet i runtime, skapas en kopia av objektträdet som 
+läggs in i en realtidsdatabas, rtdb. Överföringen från arbetsbänken till rtdb sker med s k 
+laddatafiler, filer som genereras från arbetsbänken och som innehåller alla objekt som finns 
+i denna.
+
+
+<h1>Styrprogram
+Proview innehåller ett grafisk programmeringsspråk med vilket man programmerar logik, 
+grafcet-sekvenser och reglerkretsar. Det går under benämningen PLC program. Även PLC 
+programmet ingår som en del av objektträdet. Det konfigureras genom att man placerar ut 
+speciella program objekt, PlcPgm, i anläggninghierarkin. När man öppnar ett PlcPgm kommer 
+man in PlcEditorn, i vilken man gör den grafiska programmeringen. Här skapas funktionsobjekt
+som binds samman i ett signalflöde av digitala och analoga signaler, där ingångssignaler
+hämtas upp på vänstersidan, tranformeras i olika funktionsblock för att slutligen ställas ut 
+till utsignaler på högersidan.
+
+Ett komplement till PLC programmet är applikations-program, som skrivs i c, c++ eller java. 
+Applikationer skrivs och startas som fristående program och knyter upp sig mot 
+realtidsdatabasen mha ett API.
+
+<h1>Simulering
+Realtidsdatabasen, PLC-programmet och eventuella applikationer kan enkelt startas upp på 
+utvecklingsstationen. Det här gör att man kan testa sina progam i direkt anslutning till 
+programmerandet. Man kan även skriva speciella simulerings-program som läser 
+utgångssignaler, simulerar den påverkan utgångarna har på processen, beräknar värden på 
+olika givare och sätter dessa värden i ingångssignaler.
+
+Konfigureringen och programmeringen av systemet blir då en process, där man växelvis 
+konfigurerar/programmerar och testar. Resultatet blir väl avlusade program och en snabb och 
+effektiv igångkörning av anläggningen. Det leder även till bättre program och mer 
+genomarbetade funktioner, eftersom återkopplingen blir större i den kreativa process som 
+konstruktionen av ett styrsystem innebär.
+
+Vid simuleringen och igångkörning är det av yttersta vikt att ha tillgång till verktyg gör att
+man kan övervaka och undersöka systemet, och snabbt lokalisera eventuella fel. I Proview kallas
+det här verktyget Xtt. Xtt innehåller en mängd funktioner för undersöka innehållet i 
+realtidsdatabasen, för att följa signalflöden, logga snabba eller långsamma förlopp, etc. 
+
+<h1>Operatörs gränssnitt
+Det finns en rad olika yrkesgrupper som ska kunna komma åt systemet, operatörer som sköter den 
+dagliga driften, underhållare som dyker upp när något har gått fel, process ingenjörer som vill
+ha ut process data av olika slag. Alla har olika krav på gränssnitt mot systemet. Dessutom kan 
+gränserna mellan olika yrkesgrupper vara flytande, operatörer som är både operatörer och 
+underhållare, och kanske även processtekniker. Detta ställer stora krav på funktionalitet och
+flexibilitet i operatörsgränssnitten.
+
+Proview innehåller en operatörsmiljö där processbilder, felsökningsverktyg, presentation av 
+trendkurvor, datablad, hjälptexter, larmlistor mm är väl integrerade och länkade så att den 
+rätt konfigurerad, blir ett oerhört effektivt hjälpmedel för alla användare. Man kan snabbt 
+och enkelt genom s k metoder, som aktiveras från popupmenyer, hämta upp all information som 
+finns om olika objekt, i realtidsdatabasen eller på olika serversystem, i form av PLCkod, 
+trendkurvor, datablad mm.
+
+<h1>Processbilder
+Processbilder byggs i en grafisk editor (Ge). Grafiken är vektorbaserad, vilket gör att alla
+bilder och komponenter kan skalas obegränsat. Komponenter har en förprogrammerad dynamik för
+att ändra färg och form beroende på signaler i realtidsdatasen, eller reagera på musklick och
+sätta värden i databasen. På varje komponent som är känslig för musklick eller inmatning kan
+man ange behörighet, och selektivt tillåta, eller hindra, användare att påverka systemet.
+Processbilderna kan, förutom att användas i den ordinare operatörsmiljön, exporteras som i
+java-kod för att visas på webben med full dynamik.
+
+<h1>Övervakning
+Om något fel uppstår i processen, måste operatören uppmärksammas på detta. Det sker speciella 
+övervaknings-objekt, som konfigureras i anläggningshierakin eller i PLC-programmet, och som 
+ger upphov till larm eller meddelanden. Larmen har fyra prioritets nivåer: A, B, C eller D, 
+och presenteras för operatören i larmlistan, händelselistan och den historisk händelselistan.
+
+Larmlistan inhåller okvitterade och rådande larm. Ett larm måste normalt kvitteras av 
+operatören innan de försvinner från listan. Om larmtillståndet fortfarande är rådande, ligger 
+larmet kvar i listan så länge det är rådande.
+
+Larm registreras även i händelselistan, som presenterar händelser som inträffat i kronologisk 
+ordning.
+
+Historiska händelselistan är en databas som även den registrerar händelser. Här kan man söka 
+efter larm med olika kriterier som prioritet och anläggningsdel.
+
+Om en anläggningsdel ställs av kan man blockera larmen från den, så att operatören inte 
+distraheras av larm utan betydelse. Blockerade anläggningsdelar visas in en Blockerings lista.
+
+<h1>Datalagring
+Ofta vill man kunna se hur en signal förändras över tiden, i form av en kurva. I Proview finns
+tre olika funktioner för detta, DsTrend, DsFast och DsHist.
+
+DsTrend är en trendkurva som lagras i realtidsdatabasen. Mätvärdet för en signal lagras
+kontinuerligt med ett intervall på 1 sekund och uppåt. För varje kurva finns det plats för ca
+500 mätvärden, så väljer man att lagra ett nytt värde varje sekund får man en kurva på hur
+signalen har förändrats under ca 8 min.
+
+DsHist lagrar signaler på liknande sätt i en databas på disk, vilket gör att man kan lagra
+värden under längre perioder än DsTrend.
+
+DsFast lagrar ofta snabbare förlopp, där lagringen startas på ett triggvillkor, och forsätter
+under en specificerad tid, för att sedan presenteras i kurvform.
+</topic>
+</chapter>
+
+<chapter>
+<topic> database_structure
+Databas struktur
+
+Som vi har sett tidigare så sker största delen av konfigureringen av ett Proview system i en 
+databas, Arbetsbänken. I Arbetsbänkan skapar man objekt i en träd-struktur, och varje objekt 
+ger upphov till en viss funktion i styrsystemet. Proview är vad man brukar kalla objekts 
+orienterat, och låt oss titta lite närmare på vad ett Proview-objekt egentligen är.
+
+<option> printdisable
+Objekt <link> object
+Volymer <link> volume
+Attribut <link> attribute
+Klass <link> class
+Objektsträd <link> object_tree
+Objektsnamn <link> object_name
+Montering <link> mounting
+Objekts identitet <link> object_identity
+<option> printenable
+
+</topic>
+
+<topic> object
+Objekt
+Ett objekt består av en datamängd, som på något sätt definierar objektets tillstånd eller
+egenskaper. Datamängden kan vara mycket enkel, som t ex hos en Och-grind, där den består ett
+boolskt värde som kan vara sant eller falskt. En PID regulator däremot, har en mera komplex 
+datamängd. I denna finns förstärkning, integrationstid, utsignal, tvångsstyrning mm. Den 
+består av en blandning av digitala, analoga och heltalsvärden. Vissa värden konfigureras i 
+utvecklingsmiljön, medan andra beräknas i runtime.
+
+Datamängden kallas objektets kropp. Kroppen är indelad i attribut, och varje attribut har ett
+namn och en typ. Kroppen för en Och-grind består av attributet Status som är av typen
+Boolean, medan kroppen för en PID regulator består av 47 st attribut: ProcVal, SetVal, Bias, 
+ForceVal etc.
+
+Alla PID objekt har sin datamänd strukturerad på samma sätt, och man säger att de tillhör
+samma klass. PID objekten tillhör klassen PID och Och-grindarna tillhör klassen And. En klass
+är en slags mall för hur objekt som tillhör klassen ska se ut, t ex vilka attribut som ingår,
+och attributens namn och typ.
+
+Förutom en kropp, har ett objekt även ett huvud. I huvudet ligger objektets klass, identitet,
+namn och relation till andra objekt. Objekten är inordnade i en trädstruktur, och i huvudet 
+finns länkar till objektets förälder och närmaste syskon.
+</topic>
+
+<topic>volume
+Volymer
+När man konfigurerar ett system och skapar objekt, vet man vanligtvis vilken nod objektet ska
+tillhöra i runtime. Man skulle kunna dela in objekt efter vilka noder de kommer att tillhöra,
+men man har valt en lite mer flexibel indelning, så istället delar man in objekten i volymer.
+En volym är en slags behållare för objekt. Volymen har ett namn och en identitet, och den 
+innehåller ett antal objekt ordnade i en trädstruktur.
+
+Det finns ett antal olika typer av volymer, och den första man kommer i kontakt med är en
+rotvolym. När man konfigurerar en nod, jobbar man vanligtvis i en rotvolym. Varje nod är 
+kopplad till en rotvolym, vilket innebär att när noden startas i runtime, kommer rotvolymen,
+och de objekt som finns in den, att laddas in i noden. Nedan följer en beskrivning på de olika
+typer av volymer som finns.
+
+<h2>RootVolume
+En rotvolym innehåller roten till objektsträdet på en nod. När en nod startar, laddar den
+in rotvolymen.
+
+En nod är kopplad till en och endast en rotvolym. Däremot kan en rotvolym laddas in i flera
+olika noder. Samtidigt som man kör processtationen i produktion, kan man ladda in samma
+rotvolym i sin utvecklingsstation för simulering, och i en tredje nod för utbildning.
+Man måste dock se till att de olika noderna går på olika kommunikations bussar.
+
+<h2>SubVolume
+En del av objekten på en nod kan man lägga i en subvolym. Anledningen till att dela upp
+objekten i en nod i en rotvolym och en eller flera subvolymer, kan vara att flera personer
+måste konfigurera noden samtidigt, eller att man planerar att flytta styrningen av vissa
+anläggningsdelar till en annan nod så småningom.
+
+<h2>ClassVolume
+Definitionen av olika klasser ligger speciella volymer som kallas klassvolymer. Här byggs
+beskrivningen av en klass upp med objekt som definierar klassens namn och vilka attribut
+som ingår i klassen.
+
+Det finns två stycken klassvolymer som man alltid måste ha med i ett Proview system, pwrs och
+pwrb. pwrs innehåller systemklasser, framför allt klasser som används i 
+klassdefinitionerna. pwrb innehåller basklasser, dvs standard klasser som behövs för att
+bygga en process- eller operatörsstation.
+
+<h2>DynamicVolume
+En dynamisk volym innehåller dynamiska objekt, dvs objekt som skapas temporärt i runtime.
+Om man har en materialföljnings modul i systemet, kan man skapa ett objekt för varje material
+som behandlas i anläggningen, och ta bort det när materialet är färdigbehandlat.
+
+<h2>SystemVolume
+Systemvolymen är en dynamisk volym som finns i varje nod, och som innehåller diverse 
+systemobjekt.
+
+<h2>DirectoryVolume
+Directory volymen är en volym som enbart finns i utvecklingsmiljön. I denna konfigurerar
+man vilka volymer och noder som finns i systemet.
+
+<h1>Volymsidentitet
+Varje volym har en unik identitet, som skrivs med fyra tal, separerade med punkter, t ex
+"_V0.3.4.23". Prefixet _V markerar att det är frågan om en volymsidentitet. För att
+verifiera att volymsidentiteter är unika finns det en global volymslista som innehåller
+alla volymer. Innan man skapar ett projekt, ska volymerna i projektet registreras i 
+volymslistan.
+</topic>
+
+<topic> attribute
+Attribut
+Datamängden i ett objekt är indelat i attribut. Varje attribut har ett namn och en typ.
+Här följer en beskrivning på de vanligaste attribut typerna.
+
+<h2>Boolean
+Digitala attribut är av typen boolean, som kan ha värdet sant (1) eller falskt (0).
+
+<h2>Float32
+Analoga attribut är av typen Float32, dvs ett 32-bitars flyttal.
+
+<h2>Int32
+Heltals attribut är vanligen av typen Int32, dvs ett 32-bitars heltal. Men det finns även
+ett antal andra typer av heltal Int8, Int16, UInt8 och UInt16.
+
+<h2>String
+I ett string-attribut kan man lagra en sträng av ascii-tecken. Det finns olika sträng typer
+för olika längd på strängen, t ex String8, String16, String40, String80 och String256.
+
+<h2>Time
+Time innehåller en absoluttid, t ex 1-MAR-2005 12:35:00.00.
+
+<h2>DeltaTime
+DeltaTime innehåller en tidsskillnad, t ex 1:12:22.13 (1 timme, 12 minuter, 22.13 sekunder).
+
+<h2>Enum
+Enum är en uppräkningstyp, som används när man ska välja ett av ett antal alternativ. 
+Den kan anta ett antal heltalsvärden, där varje värde är kopplat till ett namn. Det finns t ex 
+en ParityEnum som kan ha värdet 0 (None), 1 (Odd) eller 2 (Even).
+Enum är här en bastyp och ParityEnum en härledd typ.
+
+<h2>Mask
+Mask används när ska välja ett, eller flera av ett antal alternativ. Alternativen
+representeras av bitarna i ett 32-bitars heltal. 
+
+Ett attribut kan även bestå av en mer komplex datastruktur. Det kan vara en vektor med ett
+visst antal element, och det kan faktisk också vara ett annat objekt, ett s k attributobjekt.
+</topic>
+
+<topic>class
+Klass
+En klass är en beskrivning på hur ett objekt som tillhör klassen ska se ut. Ett objekt som 
+tillhör klassen kallas för en instans. I klassen definieras hur instansernas datamängd är
+strukturerad i attribut av olika typ, eller hur objektet grafiskt ska representeras i 
+PLCeditorn eller i operatörsmiljön.
+
+Varje klass har ett template objekt, en instans av klassen som innehåller defaultvärden
+för olika attribut i klassen.
+
+Proview's bassystem innehåller ca 500 klasser. Se Objektshandboken för närmare beskrivning.
+Konstruktören kan även skapa egna klasser inom ett projekt.
+</topic>
+
+<topic>object_tree
+Objektsträd
+Objekten i en volym är ordnade en trädstruktur. I volymen finns ett eller flera topp objekt,
+varje topp objekt kan ett eller flera barn, vilka i sin tur kan ha barn, osv. Man brukar
+tala om relationerna mellan objekt i trädet i termer av förälder, syskon, barn, förfader och 
+ättlingar.
+</topic>
+
+<topic>object_name
+Objektsnamn
+Varje objekt har ett namn som är unikt inom sin syskonskara. Objektet har även ett
+fullständigt namn som är unikt i världen. I det fullständiga namnet objekt ingår, förutom 
+objektsnamnet, även namnet på volymen och på samtliga förfäder, t ex 
+
+<c>VolTrafficCross1:TrafficCross1-ControlSignals-Reset
+
+Vill man vara ännu mer specifik, och peka ut ett attribut i ett objekt, hakar man på
+attributnamnet på objektsnamnet med en punkt emellan, t ex
+
+<c>VolTrafficCross1:TrafficCross1-ControlSignals-Reset.ActualValue
+
+Även ett attribut kan ha flera namnled, eftersom ett attribut kan bestå av ett objekt.
+Attribut namnleden separeras då av punkter, t ex
+
+<c>VolTrafficCross1:Hydr-Valve.OpenSw.ActualValue
+</topic>
+
+<topic>mounting
+Montering
+
+En operatörstation ska kunna presentera värden på signaler och attribut som ligger i 
+processtationernas volymer. Detta åstadkommer man genom att operatörsstationen monterar 
+processnodernas volymer i det egna objektsträdet. En montering innebär att man hänger in ett 
+objektträd från en annan volym i den egna rotvolymen. Var i trädet volymen ska hängas in 
+konfigureras med ett MountObject objekt. I MountObject objektet anges vilket objekt i den andra 
+volymen ska monteras. Resultatet blir att MountObject objektet presenteras som det monterade 
+objektet, inklusive det objektträd som ligger under. Skenbart ser det ut som om objektet 
+tillhör den egna rotvolymen, medan de i själva verket ligger på en annan nod.
+
+Om man använder sig av subvolymer måste även dessa monteras i en rotvolym för att objekten
+ska bli tillgängliga.
+
+När man väljer monteringspunkter och namn på monteringsobjekt, är det lämpligt att göra detta
+så att objektet får samma hierakinamn i båda volymerna.
+</topic>
+
+<topic>object_identity
+Objektsidentitet
+Ett objekt har en identitet som är unik. Den består av volymsidentiteten och ett 
+objektindex som är unikt inom volymen. En objektsidentitet skrivs t ex "_O0.3.4.23:34" där
+0.3.4.23 är volymsidentiteten och 34 objektindex. Prefixet _O markerar att det är en 
+objektsidentitet.
+</topic>
+</chapter>
+
+<chapter>
+<topic>development environment
+Utvecklingsmiljön
+
+Konfigureringen av ett Proview system sker på en utvecklingsstation. På denna installerar man
+Proview's utvecklingsmiljö.
+</topic>
+</chapter>
+
+<chapter>
+<topic>case_study
+En fallstudie
+
+<option> printdisable
+Specification av I/O <link>io_specification
+Administration <link> administration
+Konfigurering av anläggningshierakin <link> plant_configuration
+Konfigurering av nodhierakin <link> node_configuration
+PLC program <link> plcprogram
+Processbilder <link> process_graphics
+
+<option> printenable
+I det här kapitlet ska vi ge en idé om hur ett Proview system skapas. Processen som ska
+styras i det här fallet är mycket enkel, en korsning mellan fyra trafikljus, men kommer att
+ge en idé om de olika steg man ska genomgå för att skapa ett Proview system.
+
+Trafikljuset ska kunna arbeta i två olika moder:
+
+  - Normal: trafikljusen går i den normala cykeln röd, gul och grön.
+  - Blinkande: trafikljusen blinkar gult.
+
+<image> dg_fig1.gif
+<b>Trafikljusen i en korsning
+
+Arbetsmoden för trafikljuset bestäms av en operatör via en operatörsstation, eller av en
+underhållstekniker som påverkar ett vred. Underhållsteknikern kan ändra mod endast om 
+operatören har ställt trafikljusen i service mod.
+
+Figuren 'Trafikljus, kontrollpanel' visar de olika vred och indikatorer som krävs av
+operatören resp underhållsteknikern, för att kunna övervaka och styra systemet. Dessa kan
+implementeras som processbilder på operatörsstationen eller med hårdvara.
+
+<image> dg_fig2.gif
+<b>Trafikljus, kontrollpanel
+</topic>
+
+<topic> io_specification
+Specifikation av I/O
+Vi börjar med att analysera processen för att bestämma vilken hårdvara vi ska använda.
+
+<h2>Digitala utgångar
+Vi har fyra trafikljus, men trafikljusen på samma gata kan parallellkopplas, vilket betyder 
+att vi kan behandla dem som två ljus.
+
+Tre utgångar per ljus: 2 * 3 = 6
+Indikator: Operating mode 1
+Indikator: Control 1
+------------------------------
+Total antal digitala utgångar: 8
+
+<h2>Digitala ingångar
+Den enda digitala ingång som behövs är för underhållsteknikerns vred. Operatören styr 
+processen från sin operatörsstation och kräver inga fysiska signaler.
+
+Omkopplare: Operating mode 1
+------------------------------
+Totalt antal digitala ingångar: 1
+
+<h2>Analogt I/O
+Analoga in- eller utgångar behövs inte i det här fallet.
+
+<h2>Specifikation av processtationen
+När vi har bestämt det I/O som krävs, kan vi välja hårdvara för processtationen. Vi väljer:
+
+1 Linux PC med rack.
+1 kort med 16 digitala ingångar.
+1 kort med 16 digitala utgångar.
+
+<h2>Specifikation av operatörsstationen
+
+1 Linux PC.
+
+<h2>Specifikation av process grafik.
+Vi behöver en skärm från vilken operatören kan styra och övervaka trafikljusen.
+</topic>
+
+<topic> administration
+Administration
+
+Först måste vi registrera en ny volym, skapa ett projekt, och eventuellt skapa nya användare.
+För detta krävs:
+
+- Ett namn för projektet. Vi kallar det trafficcross1.
+- Två volymer, en för processtationen och en för operatörsstationen.
+- Vi behöver tre användare: en utvecklare, en operatör och en underhållstekniker.
+
+Volymer, projekt och användare skapas och registreras med 'administratören'.
+
+<h2>Registrera volymer
+För det här projektet behövs två volymer, en för processtationen, och en för 
+operatörsstationen. De är rotvolymer så vi kan välja lediga volymsidentiteter i intervallet
+0.1-254.1-254.1-254. Vi väljer 0.1.1.1 till processtationen och 0.1.1.2 till 
+operatörsstationen, och går in i volymsmod i administratören för att registrera volymerna.
+
+<image> dg_fig11.gif
+<b>Registrering av volymer
+
+<h2>Användare
+Eric är utvecklare vid trafikavdelningen, Carl är operatör och Lisa är underhållstekniker.
+De är alla inblandade i samtliga projekt på trafikavdelningen, så vi skapar en gemensam
+systemgrupp för all projekt, och låter dem dela användare. Vi tilldelar Eric utvecklings-
+privilegier, Carl operatörspriviligier och Lisa underhållspriviligier.
+
+<image> dg_fig4.gif
+<b>Skapade användare
+
+<h2>Skapa projekt
+Vi skapar projektet med hierarkinamnet traffic-trafficcross1
+
+<image> dg_fig10.gif
+<b>Skapat projekt
+
+<h1>Konfigurera projektet
+Projektet har en direktoryvolym där noder och volymer i projektet ska konfigureras. I det
+övre fönstret konfigureras volymerna med RootVolumeConfig objekt. I det under fönstret
+konfigureras process- och operatörsstationerna med NodeConfig objekt. NodeConfig objektet
+läggs under ett BusConfig objekt som anger vilken QCOM bus noderna ska kommunicera på.
+
+NodeConfig objekten innehåller
+
+- nodenamn
+- ip adress för noden
+
+Under varje NodeConfig objekt finns ett RootVolumeLoad objekt som anger vilken volym som
+ska laddas in när runtimemiljön startas.
+
+Notera också systemobjektet med attributet SystemGroup som tilldelas värdet 
+"trafficdepartment". Detta ger användarna eric, carl och lisa tillgång till projektet. 
+
+<image>dg_fig5.gif
+<b>Directory volymen
+</topic>
+
+<topic> plant_configuration
+Konfigurering av anläggninghierarkin
+När konfigureringen av projektet är klar, kan vi börja änga oss åt själva anläggningen.
+Konfigureringen av anläggningen görs i Konfiguratören. Anläggningshierarkin är en logisk
+beskrivning av verkligheten som ska styras och övervakas.
+
+<h2>Processtationen
+Den största delen av konfigureringen görs i processtationens volym, VolTrafficCross1. Det
+är ju här som all kort, kanaler, signaler och PLC program ska konfigureras.
+
+Anläggningshierarkin har en trädstruktur. Exempel på nivåer i hierarkin kan vara anlägging,
+process, processdel, komponent och signal. Signaler är de logiska signaler som representeras
+av signalobjekt, vilka kopplas till fysiska kanaler.
+
+Ibland kan det vara svårt att konfigurera varje signal i ett inledande skede, men men måste
+ändå bestämma hur tänkbara signaler ska grupperas.
+
+Figuren nedan visar hur en anläggninghierarki har konfigurerats. Vi ser hur signaler ligger
+på olika nivåer, och också hur Plc program är konfigurerade i anläggningshierarkin.
+
+<image> dg_fig3.gif
+<b>Exempel på anläggningshierarki
+
+Vi väljer att kalla vår anläggning TrafficCross1 och bestämmer följande struktur:
+
+- Två trafikljus, var och en bestående av en grön, en gul och en röd lampa. Eftersom gatorna
+  ligger i Nord-Sydlig resp Väst-Östlig riktning, kallar vi dem TrafficLightNS and
+  TrafficLightWE (West-East). Varje lampa behöver en signal, av typen digital utgång som vi
+  kallar RedNSm, RedWE etc.
+
+- Ett PLC program som styr trafikljuset.
+
+- Ett antal styrsignaler för att välja arbetsmod och funktion. Vi väljer att lägga dem under
+  en map, ControlSignals. Tabellen nedan visar de signaler som krävs.
+
+<b>Signalnamn  <t>Signaltyp  <t>Funktion
+ServiceSwitch  <t>Di <t>En omkopplare som underhållsteknikern kan påverka för att
+               <t>   <t>ändra arbetsmod.
+OperatorSwitch <t>Dv <t>Ett värde som operatören kak påverka för att ändra
+               <t>   <t>arbetsmod.
+ServiceMode    <t>Dv <t>Ett värde som underhållsteknikern kan påverka för att
+               <t>   <t>servicemod.
+ServiceModeInd <t>Di <t>En signal som visar underhållsteknikern att att 
+               <t>   <t>programmet är i servicemod.
+Mode           <t>Dv <t>Indikerar om programmet är i normal eller blinkande mod.
+ModeInd        <t>Do <t>Indikerar om programmet är i normal eller blinkande mod.
+Reset          <t>Dv <t>Ett värde för att återställa programmet i utgångsläge.
+
+
+<bookmark> plant_example
+<image> dg_fig6.gif
+<b>Anläggningshierarkin för korsningen
+
+På översta nivån finns ett anläggningsobjekt, TrafficCross1 av klassen $PlantHier. Vi 
+använder andra objekt av klassen $PlantHier för att gruppera objekten. Vi skapar också ett
+objekt som definierar ett PLC program, ControlPgm objektet av klass PlcPgm.
+
+<h2>Operatörsstationen
+Operatörstationens konfigurering görs i volymen VolOpTrafficCross1. På anläggningssidan
+finns här endast ett monteringsobjekt, som gör att anläggningshierarkin i processnoden
+blir tillgänglig på operatörsstationen. Vi har monterat det översta $PlantHier objektet,
+'TrafficCross1' med ett MountObject med samma namn.
+
+<image> dg_fig14.gif
+<b>Anläggningshierarkin i operatörsvolymen
+</topic>
+
+<topic> node_configuration
+Nod konfiguration
+
+Efter anläggninghierarkin, ska nodhierakin konfigureras.
+
+<h2>Processtation
+I det här exemplet väljer vi att starta konfigureringen med processtationen. Vi benämner
+den "cross1". Vi rekommenderar att men ger noderna beskrivande namn. I nodehierakin skapar
+vi ett $NodeHier objekt 'Nodes' och under det ett $Node objekt 'cross1' som konfigurerar 
+noden.
+
+I anlysfasen beslutade vi att processtationen skulle bestå av följande hårdvara:
+
+- 1 Linux PC
+- 1 rack med 16 kortplatser
+- 1 kort med 16 digitala ingångar (Di kanaler).
+- 1 kort med 16 digitala utgångar (Do kanaler).
+
+Rack och kort konfigureras på ett sätt som speglar den fysiska konfigureringen. Du placerar
+ett rack i nod objektet, korten under rack objektet, och kanalerna under respektive kort 
+objekt.
+
+<image> dg_fig7.gif
+<b>Nodehierarkin i processtationen
+
+Vi konfigurerar även PLC programmet med ett PlcProcess objekt, och under detta ett
+PlcThread objekt för varje tidbas. Vi nöjer oss med en tidbas på 100 ms. 
+
+<image> dg_fig12.gif
+<b>Konfigurering av tidbaser i PLC programmet
+
+Varje objekt har att antal attribut som måste datasätta. För att ge en inblick i hur detta
+går till visar vi några attribut i PlcProcess objektet.
+
+<image> dg_fig13.gif
+<b>Ändring av värden på attribut
+
+<h2>Operatörsstation
+Operatörsstationens nodhierarki konfigureras i volymen för denna VolOpTrafficCross1. Under
+nod objektet finner vi ett OpPlace objekt som definierar operatörsplatsen, och under detta
+ett User objekt som definierar en användare. Under OpPlace objektet finns även ett XttGraph
+objekt för operatörsplatsens processbild.
+
+<image> dg_fig8.gif
+<b>Nodhierarkin i operatörsvolymen
+
+<h1> Koppla kanaler till signaler
+När både anläggnings- och nodehierarkin är konfigurerad, är det dags att koppla ihop logiska
+signaler med fysiska kanaler. Varje logisk signal ska kopplas till en fysisk kanal, en Di
+till en ChanDi, en Do till en ChanDo, en Ai till en ChanAi, en Ao till en ChanAo, etc.
+
+Man kan se kopplingen som en representation av kopparkabeln mellan komponenten ute i
+anläggningen och kanalen i I/O racken. I figuren nedan finns ju en kabel mellan omkopplaren
+och kanal 0 på Di-kortet. Eftersom Di-signalen ServiceSwitch representerar omkopplaren, och
+Di-kanalen Di4-00 representerar kanalen, måste vi göra en koppling även mellan dessa objekt.
+
+<image> dg_fig15.gif
+<b>Koppling mellan signal och kanal
+
+<image> dg_fig9.gif
+<b>Att koppla en signal till en kanal
+</topic>
+
+<topic>plcprogram
+PLC program
+Vi använder den grafiska PLC editorn för att skapa PLC program.
+
+Innan vi börjar editera kopplar vi PlcPgm objektet till ett PlcThread objekt i nodhierarkin.
+Detta avgör vilken tidbas som PLC programmet kommer att exekvera med.
+
+<image> dg_fig16.gif
+<b>Den grafiska PLC editorn
+
+Vi kommer att använde GRAFCET för att skapa programmet för trafikljusen. Det finns två sätt
+att lösa problemet med de två arbets moderna normal och blinkande:
+
+1. Använda en GRAFCET sekvens med villkorlig förgrening, en gren för den normal mod och en
+   och en för blinkande mod.
+2. Använda två separata GRAFCET sekvenser med olika startvillkor.
+
+Här väljer vi alternativ två. En mer detaljerad beskrivning av GRAFCET och 
+sekvensprogrammering finns i kapitel Grafisk PLC programmering.
+
+GRAFCET program bygger på att ett aktivt tillstånd förflyttas mellan olika steg en sekvens. 
+I linjära sekvenser kan endast ett steg vara aktivt i taget. Till vare steg knyter man ett
+antal order som ska exekveras när steget är aktivt. Detta kan vara att t ex sätta en digital
+utgångssignal, som tänder en lampa. På så sätt styr PLC programmet de logiska signaler som
+är kopplade till de fysiska kanalerna.
+
+<image>dg_fig17.gif
+<b>Sekvens för blinkande ljus
+
+Figuren ovan visar sekvensen som exekveras när ljusen ska blinka gult.
+
+Startvillkoret för sekvensen är inverterat jämfört med startvillkoret för sekvensen för 
+normal arbetsmod. Det medför att de två sekvenserna inte kommera att exekvera samtidigt.
+
+<image>dg_fig18.gif
+<b>Normal sekvens
+
+Programmet för den normala arbetsmoden bygger på att trafikljusen följer sekvensen:
+
+<b>   <t>Nord-Syd   <t>Väst-Öst
+1     <t>Röd        <t>Röd
+2     <t>Röd, Gul   <t>Röd
+3     <t>Grön       <t>Röd
+4     <t>Gul, Grön  <t>Röd
+5     <t>Röd        <t>Röd
+6     <t>Röd        <t>Röd, Gul
+7     <t>Röd        <t>Grön
+8     <t>Röd        <t>Gul, Grön
+9     <t>Tillbaka till steg 1
+
+Programmet startar i initsteget. Om startvillkoret är uppfyllt, blir steg 1 aktivt och de
+röda lamporna tänds. Efter en viss tid blir steg 1 inaktivt, och steg 2 aktivt, och en gul
+lampa tänds, osv. När steg 8 har varit aktivt en viss tid, flyttas aktiviteten till 
+initsteget igen och sekvensen börjar om, så längs startvillkoret är uppfyllt.
+
+<image> dg_fig19.gif
+<b>Trigg signaler
+
+Programmet ovan visar logiken för att styra olika arbetsmoder.
+
+Längst uppe till höger sätter man Dv signalen "Mode". Om den sätt till 1 kommer sekvensen
+för normal arbetsmod att köras, annars körs sekvensen för blinkande ljus.
+
+Dv signalen "Reset" kommer att vara att till 1 under ett exekverings varv när signalen
+"Mode" ändrar värde. Detta medför att de två GRAFCET sekvenserna återgår till 
+initialtillståndet med initstegen aktiva. Den valda sekvensen kommer sedan att startas igen
+när Reset återställs till 0.
+
+PLC programmet måste kompileras innan det kan köras på en processtation.
+</topic>
+
+<topic> process_graphics
+Processbilder
+
+Processbilder används ofta som gränssnitt mellan operatören och processen. Processbilder
+skapas i den grafiska editorn.
+
+<image> dg_fig20.gif
+<b>Grafisk editor
+
+Processbilder kan innehålla dynamik, som kopplas till de logiska signalerna, t ex
+
+- Text som blir synlig när en signal har ett visst värde.
+- Grafiska objekt som ändrar färg eller form när en signal för ett visst värde.
+- Grafiska objekt som rör sig beroende på värdet av en signal.
+
+Man kan även placera tryckknappar i en processbild, som operatören kan använda för att ändra
+värden på digitala signaler. För att ändra analoga signaler använder man inmatingsfält.
+
+I vårt exempel väljer vi att rita en processbild som visar vägkorsningen, där trafikljusen
+(röda, gula och gröna) är dynamiska. Hur man skapar processbilder är beskrivet i kapitlet
+Skapa processbilder.
+
+<image>dg_fig21.gif
+<b>Processbild för korsningen
+</topic>
+</chapter>
+
+<chapter>
+<topic>administrator
+Administration
+
+<option> printdisable
+Skapa användare <link> adm_user
+Registrera volymer <link> register_volumes
+Skapa projekt <link> create_project
+<option> printenable
+</topic>
+
+<topic> adm_user
+Användare
+För att få tillgång till Proview's utvecklings och runtime miljöer måste man logga in med
+användarnamn och passerord. Användare konfigureras i en användardatabas och tilldelas
+privilegier som bestämmer användarens behörighet att göra ändringar i systemet.
+
+System som delar samma användare är grupperade i en systemgrupp, och utgående från
+systemgruppen definieras användarna. Man kan bygga en hierarki av systemgrupper där 
+barngrupper ärver användare av sin förälder, och ytterligare användare kan definieras för
+varje barn.
+
+Ett system kopplas till en systemgrupp med attributet SystemGroup i $System objektet.
+Notationen för en systemgrupp i en hierarki namnet av gruppen med förfäder åtskilda av en
+punkt, t ex 'Main.West.F1'.
+
+I exemplet nedan är Eric ansvarig för alla system i anläggningen, och definierad på den
+översta nivån i hierakin. Nils arbetar med den västra delen av anläggningen definieras i 
+systemgruppen 'West'. Carl, slutligen, arbetar med system i F1 delen av anläggningen. Alla
+systemgrupperna har attributet UserInherit, vilket gör att de ärver användare av sin 
+förälder.
+
+<image> dg_fig22.gif
+
+Användare och systemgrupper skapas i administratören.
+
+- Starta administratören med kommandot 'pwra'.
+- Gå in i User mod från menyn, 'File/Show Users'.
+- Logga in med login commandot. Öppna kommando-prompten från menyn, 'Functions/Command' och
+  skriv 'login' på kommandoraden. Om systemgruppen 'administrator' finns definierad måste man
+  dessutom addera användarnamn och passerord för en användare definierad i administrator-
+  systemgruppen.
+- Gå in i edit mod från menyn, 'Mode/Edit'.
+- Öppna New System Group dialogen ('Edit/New SystemGroup' i menyn) och skriv in namn och
+  attribut. Ange fullständigt hierakinamn, t ex 'Main.West'.
+- Välj ut en systemgrupp och öppna 'New User' dialogen ('Edit/New User' i menyn) och ange
+  anvädarnamn, passerord och privilegier för användaren.
+- Klicka på Ok knappen.
+- Logga ut med kommandot 'logout'.
+
+Användardatabase ligger på katalogen $pwra_db.
+
+</topic>
+
+<topic>register_volumes
+Registrera volymer
+
+Alla volymer i ett nätvärk måste ha ett unikt volymsnamn och volymsidentitet. För att
+säkerställa detta registreras alla volymer i en global volymslista.
+
+Registreringen görs från administratören:
+
+- Starta administratören med kommandot 'pwra'.
+- Gå in i Volume mode från menyn, 'File/Show volumes'.
+- Logga in.
+- Gå in i editerings läge, 'Mode/Edit' i menyn.
+- Om en volym väljs i volymslistan kommer den nya volymen att läggas in efter den utvalda
+  volymen. Annars läggs den in sist.
+- Öppna 'New volume' dialogen ('Edit/New Volume' i menyn), ange volymsnamn, volyms
+  identitet, och systemnamn.
+- Klicka på Ok-knappen.
+- Logga ut med 'logout'-kommandot.
+
+<h2>Volymsnamn
+Namn på volymen, ska vara unikt och får ha max 31 tecken.
+
+<h2>Volymsidentitet
+Volymsidentiteten är ett 32-bitar ord specificerat på formen v1.v2.v3.v4, där v1, v2, v3
+och v4 är nummer i intervallet 0-255. Beroende på volymens klass, kan numren väljas i olika
+intervall.
+
+Rotvolymer           <t>0.1-254.1-254-1.254
+Användarklassvolymer <t>0.0.2-254.1-254
+
+Directory volymen har alltid identiteten 254.254.254.253.
+
+</topic>
+
+<topic>create_project
+Skapa projekt
+
+Ett projekt är ett antal noder och volymer som delar samma utvecklingsmiljö. Vanligtvis
+består den av några process- och operatörsstationer som styr en del av anläggningen, men
+det finns inga begränsningar för storleken av ett projekt. Man kan välja att ha varje nod
+i var sitt projekt, eller samtliga noder i ett projekt.
+
+- Alla noder i ett projekt (på samma kommunikationsbuss) har länk öppen mellan varandra
+  genom näthanteraren.
+- Alla volymer och noder delar samma filkatalogsträd.
+- Alla noder måste uppgraderas till ny Proview version samtidigt.
+
+En vanlig storlek är 1-10 noder i ett projekt. För många noder ökar nätverksbelastninge och
+försvårar uppgradering av projektet.
+
+Skapa ett projekt i administratören:
+
+- Starta administratören med kommandot 'pwra'.
+- Project mod är default när man startar administratören. Om den nuvarande moden är User
+  eller Volume, gå in i Project mod med 'File/Show projects' i menyn.
+- Logga in.
+- Gå in i edit mode från meny, 'Mode/Edit'.
+- Öppna Create Volume dialogen ('Edit/Create Project' i menyn), och ange projektnamn, 
+  basversion, filkatalog, hierarki och beskrivning.
+- logga ut.
+
+<h2>Projektnamn
+Ett projekt har ett projeknamn som identifierar projektet i utvecklingsmiljön. Jämför 
+systemnamnet som definierar projektet i runtimemiljön. Projektnamn och systemnamn är ofta
+lika, men behöver inte vara det. Ett system kan faktiska ha många projekt i 
+utvecklingsmiljön. När man uppgraderar, eller gör större förändringar i systemet, tar man
+lämpligen en kopia av projektet och sparar den gående versionen av systemet för att kunna
+göra mindra ändringar. Kopian skapas under ett nytt projektnamn men den har samma 
+systemnamn.
+
+<h2>Base
+Proview ett är flerversions system, dvs olika versioner av Proview kan installeras i samma
+utvecklingsmiljö, och projekt med olika version kan existera i samma utvecklingsmiljö.
+Ett projekt pekar på en bas, t ex V3.4 eller V4.0, när ett projekt skapas väljer man
+vilket bas projektet ska peka på.
+
+<h2>Path
+Projektet består av ett filkatalogsträd där databaser, källkodsfiler, arkiv mm lagras.
+Path är rot katalogen till det här trädet.
+
+<h2>Hierarchy
+Administratören kan ordna projekten i en trädstruktur, och hierarkin är namnet på noderna
+i träden separerade med '-'. Hierarki noderna i träden skapas av administratören för att
+matcha det specificerade namnet.
+</topic>
+</chapter>
+
+<chapter>
+<topic>configure_directoryvolume
+Konfigurera Directory volymen
+
+<h1>Öppna ett projekt
+När projektet har skapas han man hitta det i administratören projektträd. Man öppnar ett
+projekt genom att markera ett projekt, och aktivera 'Edit/Open Project' i menyn.
+Arbetsbänken öppna nu för projektet, och volymsväljar fönstret, som listar alla volymer
+i projektet, visas. Hittills är endast directory volymen skapad, och vår första uppgift
+är att konfigurera denna volymen, med de volymer och noder som ingår i systemet.
+
+?????
+Välj ut directory volymen och klicka på Ok knappen för att öppna navigatören för volymen.
+
+<image> dg_fig23.gif
+
+
+Man kan även öppna ett projekt med shell kommandon. Man knyter upp sig mot ett projekt
+med kommandot
+
+> pwrp set project 'projektnamn'
+
+Arbetsbänken öppnas med kommandot
+> wb
+
+wb tar användare, passerord och volym som argument.
+
+<h1>Konfiguratören
+Vi öppnar nu konfiguratören för directoryvolymen. I konfiguratören finns två fönster, i det
+övre visas volymer i projektet, och i det under noder.
+
+<h2>Konfigurera volymer
+Först ska alla rotvolymer, subvolymer och klassvolymer i projekt konfigureras. Det gör man
+i volymsfönstret i directoryvolymen. Vi börjar med att skapa ett RootVolumeConfig objekt
+som konfigurerar en rotvolym.
+
+- gå in i editeringsmod med 'Edit/Edit mode' i menyn. Nu blir paletten synlig till vänster
+  i fönstret, och mappar kan öppna genom att klicka på mappen eller dubbelklicka på texten.
+- Öppna volymsmappen och välj 'RootVolumeConfig' klassen.
+- Klicka med MB2 (mittenknappen) i volymsfönstret, dvs det övre fönstret, och objektet
+  skapas.
+- Välj ut objektet och öppna objektseditorn från menyn 'Functions/Open Object'.
+- Välj ut ObjectName och aktivera 'Functions/Change value' i objektseditorns meny.
+- Skriv in objektets namn. Namnet ska vara detsamma som volymsnamnet.
+- Stäng objektseditorn.
+
+På samma sätt skapar man RootVolumeConfig objekt för alla rotvolymer i projektet. För nästa
+objekt kan man påverka positionen på objektet. Om man klickar men MB2 på objektsnamnet på
+ett objekt, kommer det nya objektet att bli syskon till detta objektet. Om man klickar på
+löv eller map-symbolen, kommer objektet att bli barn.
+
+Även subvolumer och klassvolymer konfigureras på motsvarande sätt med SubVolumeConfig och
+ClassVolumeConfig objekt.
+
+Man kan även visa attributen för ett objekt direkt i konfiguratören:
+
+- Tryck på Shift tangenten och klicka med MB1 på objektet för att öppna objektet.
+- Välj ett attribut och aktivera 'Functions/Change value' i menyn för att ändra ett värde.
+
+<h2>Konfigurera noder
+I det under fönstret ska noderna i projektet konfigureras. Man delar in noderna efter vilken
+QCOM bus de kommunicerar på. Skapa därför två BusConfig objekt, ett för produktions noderna
+och ett för simulering. Öppna objekten och lägg in BusNumber.
+
+Som barn till BusConfig objekten läggs nu ett NodeConfig objekt för varje process- och
+operatörsstation. När NodeConfig objektet skapas, skapas ytterligar ett par objekt
+
+- ett RootVolumeLoad objekt som anger vilken rotvolym som ska laddas in i den här noden vid 
+  uppstart i runtime. Sätt namnet på objektet till detsamma som namnet på rotvolymen.
+- ett Distribute objekt som konfigurerar som anger vilka filer som ska kopieras från
+  utvecklingsmiljön till process- eller operatörsstationen.
+
+Öppna NodeConfig objektet och lägg in nodnamn, operativsystem och ipaddress.
+
+Under BusConfig objektet för simulering lägger man lämpligtvis in utvecklingsstationen, och
+anger som RootVolumeLoad, den processtationsvolym som man först ska börja arbeta med. Det här
+gör att man kan starta volymen i runtime och testa den på utvecklingsstationen. Ange
+utvecklingsstationens nodnamn, operativsystem och ipaddress i NodeConfig objektet.
+
+<b>System objekt
+Skapa även ett $System objket in nodkonfigurations fönstret. Systemobjektet har attributen
+SystemName och SystemGroup.
+
+- Systemnamnet är än så länge ofta identiskt med projektnamnet.
+- Systemgrupps attributet gör systemet medlem av en systemgrupp i användardatabasen. vilken
+  definierar användare för systemet. När väl systemobjektet är skapat, måste man logga in
+  med giltigt användarnamn och passerord i arbetsbänken.
+
+<b>Spara
+Spara sessionen med 'File/Save'. Om konfigurationen passerar syntax-kontrollen, får man
+frågan om man vill skapa de konfigurerade volymerna. Svara Ok på dessa frågor och skapa
+volymerna.
+
+Om volymsväljaren öppnas nu, 'File/Open' i menyn, visas alla konfigurerade volymer. Nästa
+steg är att konfigurera en rotvolym.
+</topic>
+
+<topic>configure_rootvolume
+Konfigurera en rotvolym
+
+En rootvolym öppnas från volymsväljar förstret. Välj ut volymen och klicka på 'Ok'. Detta
+startar konfiguratören för rotvolymen. Liksom för directoryvolymen är den separerad i två
+fönster, men nu visar det övre fönstret anläggingshierarkin och det under nodehierarkin.
+
+<h1>Konfigurering av anläggningshierarkin
+I anläggningshierarkin beskrivs de olika anläggningarna som finns med i Proview systemet.
+En anläggning är en logisk beskrivning av t ex en produktions process, funkioner, utrustning
+som ska styras och övervakas. 
+Se exempel på anläggningshierarki <link>plant_configuration, plant_example
+
+<h2>$PlantHier objekt
+Top objekten i anläggnings hierarkin är $PlantHier objekt. Detta objekt identifierar
+anläggningen, eller delar av den.
+
+$PlantHier objektet används för att gruppera objekt, och strukturera anläggningen. Objektet
+kan t ex användas för att gruppera signalobjekt.
+
+<h2>Signal objekt
+Signalobjekten definerar en logisk signal, eller punkt, och representerar en enhet eller
+ett värde någonstans i processen, till skillnad från kanalobjekten som definierar fysiska
+signaler. Signalobjekten är generiska, dvs de kan användas med vilket I/O-system som helst.
+
+Det finns några klasser av signaler som inte kan kopplas till kanaler, Dv, Iv, Av och Sv
+(DigitalValue, IntegerValue, AnalogValue and StringValue). Dessa objekt används för att
+lagra digitala värden, heltalsvärden, analoga värden resp teckensträngar.
+
+Signalens värde definieras av attributet ActualValue.
+
+Följande signalobjekt finns tillgängliga för närvarande:
+
+Ai <t>Analog ingång.
+Ao <t>Analog utgång.
+Av <t>Analogt värde.
+Ii <t>Heltalsingång.
+Io <t>Heltalsutgång.
+Iv <t>Heltalsvärde.
+Di <t>Digital ingång.
+Do <t>Digital utgång.
+Po <t>Pulsad digital utgång.
+Dv <t>Digitalt värde.
+Co <t>Pulsgivar ingång.
+Sv <t>Sträng värde.
+
+Obs! PLC programmet kan läsa signaler placerade på andra noder, men kan inte skriva i dem.
+
+<h2>PlcPgm objekt
+PlcPgm objektet definierar ett PLC program. Det är möjligt att ha flera PLC program i en
+anläggning. Följande attribut måste datasättas:
+
+- ThreadObject identifierar den plctråd som programmet ska exekvera i. Den refererar ett
+  PlcThread objekt i nodkonfigurationen.
+- Om programmet innehåller en GRAFCET sekvens, måste ett återställningsobjekt anges i 
+  ResetObject. Detta är en Dv, Di eller Do återställer sekvensen till utgångsläget. 
+
+<bookmark> backup_object 
+<h2>Backup objekt
+Backup objektet används för att peka ut ett objekt eller attribut, som ska backas upp. Det
+anger även om lagringen ska utföras med den snabba eller långsamma cykeln.
+
+<h2>MountObject
+MountObject objektet monterar ett objekt i en annan volym. I attributet Object specificerar
+man det objekt som ska monteras.
+
+<h1>Konfigurering av nodhierarkin
+I nodhierarkin definieras noderna i Proview systemet.
+
+<b>Nodhierakin
+<image> dg_fig44.gif
+
+<h2>$NodeHier objekt
+$NodeHier objektet används för att gruppera objekt i nodhierarkin. Objektet kan användas för
+att gruppera t exe $Node objekt eller XttGraph objekt.
+Se $NodeHier i Objektshandboken <link>nodehier,"",$pwr_lang/pwrs_xtthelp.dat
+
+<h2>$Node
+För att definiera en nod i systemet används $Node objekt. När $Node objektet skapas, skapas
+dessutom ett antal server- och operatörs-objekt.
+Se $Node i Objektshandboken <link>node,"",$pwr_lang/pwrs_xtthelp.dat
+
+<h2>I/O objekt
+Konfigureringen av I/O systemet är beroende på vilken typ av I/O man använder. Proview har
+ett modulariserat I/O för att kunna hantera många olika typer av I/O system: rack och kort
+system, distribuerade bussystem, eller system som är kopplade via olika typer av nätverk.
+
+Det modulariserade I/O system är uppdelat på fyra nivåer: agent, rack, kort och kanal.
+
+<b>Rack och kort system
+Vi tar I/O systemet PSS9000 som exempel på ett system med rack och kort. Systemet består
+av analoga och digital in- och utgångs-kort som monteras i rackar. Rackarna kopplas via en
+buss kabel till ett busskonverteringskort i datorn som konverterar PSS9000 bussen till
+datorns PCI buss.
+
+I det här fallet används inte agent-nivån, utan $Node objektet fungerar som agent. Rack
+nivån konfigurerar man genom att lägga objekt av typen SSAB_Rack under $Node objektet, ett
+för varje rack i systemet. Korten konfigureras genom att lägga objekt specifika för olika
+typer av IO-kort under rack-objekten. I PSS9000 finns kortobjekt som Ai_Ai32uP, Ao_Ao4uP,
+Di_DIX2 och Do_HVDO32. Under kortobjekten läggs kanalobjekt, ett för varje kanal på kortet.
+
+Gemensamt för olika I/O system är egentligen bara kanal-objekten, som definerar ut- eller
+ingångs-kanaler på ett kort eller en modul. Det finns några olika typer av kanaler.
+
+ChanDi <t>Digital ingång.
+ChanDo <t>Digital utgång.
+ChanAi <t>Analog ingång.
+ChanAit <t>Analog ingång med konvertering av signalvärde via tabell.
+ChanAo <t>Analog utgång.
+ChanIi <t>Heltals ingång.
+ChanIo <t>Heltals utgång.
+ChanCo <t>Pulsgivaringång.
+
+<b>I/O konfigurering
+<image> dg_fig43.gif
+
+<b>Distribuerat I/O
+Som exempel på distribuerat I/O tar vi profibus. Här utnyttjas alla fyra nivåerna. På datorns
+PCI buss sitter ett masterkort som kommunicerar med ett antal slavar på profibusslingan.
+Masterkortet konfigureras med ett Pb_Profiboard objekt som ligger på agent-nivå. Under detta
+konfigureras de olika slavarna med Pb_DP_Slave objekt. Dessa ligger på rack-nivå. Under
+slav-objekten finns modul objekt av typen Pb_Ai, Pb_Ao, Pb_Di, Pb_Do etc, som ligger på
+kort-nivå. Under modul-objekten slutligen, konfigureras kanalerna med kanalobjekten ChanDi,
+ChanDo etc.
+
+<b>Process och tråd för I/O objekt
+I/O objekt på kort-nivå innehåller ofta attributen Process och ThreadObject. I Process
+specificeras vilken process som ska hantera kortet. 
+
+Kortet kan hanteras av PLC programmet, vilket innebär att läsning och skrivning gör synkront 
+med exekveringen av PLC't. Här kan man även ange vilken tråd i PLC't som ska hantera korten, 
+dvs med vilken tidbas de ska läsas och skrivas (PlcThread attributet). 
+
+Kortet kan även hanteras av rt_io processen, som normalt går på en lägre prioritet än 
+PLC't som ej hanterar korten synkron med PLC't. Vissa typer av analoga ingångskort som tar 
+relativt lång tid att läsa av, hanteras med fördel av denna process.
+
+Man kan också skriva en egen applikation som hanterar läsning och skrivning av kort. Det 
+finns ett API för att initiera, läsa och skriva på korten. Detta kan vara av intresse om det
+är av vikt att läsning och skrivning av ett kort gör synkront med applikationen.
+
+<h2>MessageHandler objekt
+MessageHandler objektet konfigurerar server processen rt_emon, som hanterar 
+övervakningsobjekten (DSup, ASup, CycleSup). När en händelse har detekterats av servern,
+skickas ett meddelande till de olika utenheter som är intresserade av just det här larmet.
+
+I objektet anges t ex hur många händelser som ska lagras i noden. Objektet skapas automatisk
+under ett $Node objekt.
+Se MessageHandler i Objektshandboken <link>messagehandler,"",$pwr_lang/pwrb_xtthelp.dat
+
+<h2>IOHandler objekt
+IOHandler konfigurerar vissa data för I/O hanteringen.
+
+- ReadWriteFlag specificerar om man ska addressera den fysiska hårdvaran eller inte.
+- IOSimulFlag anger att man simulerar den fysiska hårdvaran.
+- Tidbasen för rt_io processen, dvs den process som hanterar lite långsammare typer av I/O 
+  kort som inte är lämpliga att hantera i PLC programmet.
+
+I produktionssystem för en processtation sätts ReadWriteFlag till 1 och IOSimulFlag till 0.
+Om man vill simulera processtationen, t ex på utvecklingsnoden, ska ReadWriteFlag sättas 
+till 0 och IOSimulFlag till 1.
+
+IOHandler objektet skapas automatiskt samtidigt som ett $Node objekt.
+Se IOHandler i Objektshandboken <link>iohandler,"",$pwr_lang/pwrb_xtthelp.dat
+
+<h2>Backup_Conf objekt
+Ibland är det önskvärt att ha backup på ett antal objekt in systemet. Då placeras ett
+konfigurerings objekt för backupen, Backup_Conf, under nodobjektet. Backupen utförs med två
+olika cykler, en snabb och en långsam.
+
+För att ange vilka objekt eller attribut som ska backas upp, använder man Backup objekt.
+Se beskrivning av Backup objekt <link> configure_rootvolume, backup_object
+Se Backup_Conf i Objektshandboken <link>backup_conf,"",$pwr_lang/pwrb_xtthelp.dat
+
+<h2>Operatörsplats objekt
+För att definiera en operatörsplats skapas ett objekt av klassen OpPlace under $Node 
+objektet.
+
+Föjande attribut måste ges ett värde:
+- OpNumber är en numrering av operatörsplatsen inom noden. Varje operatörsplats ska ha ett
+  unikt nummer.
+
+Se OpPlace i Objektshandboken <link>opplace,"",$pwr_lang/pwrb_xtthelp.dat
+
+<h2>User objekt
+För operatörsplatsen måste man även skapa ett User objekt. Detta ska ligga som barn till
+OpPlace objektet. Det kan endast finnas ett User objekt per operatörsplats. Userobjekt
+ska även definieras för RttConfig och WebHandler objekt.
+
+Följande attribut ska fyllas i:
+
+- UserName talar om vilken Proview användare som ska loggas in. När operatörsmiljön startas
+  hämtas information om användaren från Proview's användardatabas, bl a vilka rättigheter
+  operatören har att påverka systemet från processbilder.
+- OpNumber ska vara samma som i OpPlace objektet.
+- MaxNumberOfEvents anger antalet händelser som operatörens händelselista kan innehålla
+  samtidigt.
+- SelectList anger vilka hierakier i anläggninghierakin, som operatören vill ta emot larm
+  och händelser ifrån.
+
+Om vi betraktar figuren nedan, som illustrerar anläggningen A, och antar att vi ta emot
+händelser från de inringade objekten anger vi 'A-C' som ett alternativ i SelectList. Det
+innebär att kommer att ta emot händelser från det övervakade objektet C, och från alla
+övervakade objekt under C.
+
+<b>SelectList example 1
+<image> dg_fig41.gif
+
+Ett annat exempel:
+Vi betraktar figuren nedan, som visar anläggningen TrafficCross1. Om vi vill ta emot alla
+händelser från TrafficCross1, lägger vi in 'TrafficCross1' i SelectList. TrafficCross1
+hanterar två trafikljus, TrafficLightNS och TrafficLightWE. Låt oss säga att vi enbart vill
+ha händelser från TrafficLightNS. I det fallet anger vi 'TrafficCross1-TrafficLightNS' 
+istället för TrafficCross1.
+
+<b>Selectlist example 2
+<image> dg_fig42.gif
+
+Om man vill ta emot händelser från CycleSup objekt som övervakar plctrådarna, måste man även
+ange namnet på $Node-objektet.
+
+I FastAvail specificerar man XttGraph objekt som ska kunna startas från tryckknappar i 
+'Operator window'. NoFastAvail specificerar antalet tryckknappar som används. Man kan ha 
+upp till 15 tryckknappar. Oanvända tryckknappar visas ej i Operator Window.
+
+Se User i Objektshandboken <link>user,"",$pwr_lang/pwrb_xtthelp.dat
+
+<b>Operator Window
+<image> dg_fig45.gif
+
+<h2>XttGraph objekt
+XttGraph objekt används främst för att visa processbilder. I objektet pekar man ut den graf
+som ska visas. Objekten refereras i User objektets FastAvail attribut, och i attributet
+DefGraph som bl a finns i $PlantHier och signal objekt.
+
+När objektet refereras i FastAvail kan man även utnyttja möjligheten att exekvera 
+xtt-kommandon mha XttGraph objektet. Man kan t ex via ett kommando sätta en viss signal
+från en tryckknapp i operatörsfönstret.
+
+I XttGraph objektet ska följande attribut fyllas i:
+
+- Action. Här anges en Ge graph, eller ett Xtt kommando.
+
+Se XttGraph i Objektshandboken <link>xttgraph,"",$pwr_lang/pwrb_xtthelp.dat
+</topic>
+</chapter>
+
+<chapter>
+<topic>plc_programming
+Grafisk PLC programmering
+
+Det här avsnittet beskriver hur man skapar PLC program.
+
+<h1>Editorn
+Man startar editorn från ett PlcPgm objekt i anläggningshierarkin. Välj ut objektet och
+aktivera 'Functions/Open Program' i menyn. Den första gången programmet öppnas, finns där
+ett tomt dokument objekt. Programmet består av funktionsobjekt och GRAFCET sekvenser.
+
+Programmering med funktionsblock görs i ett horisontellt nät av noder och förbindningar, från
+vänster till höger i dokumentet. Värden på signaler och attribut hämtas upp på den vänstra
+sidan av nätet, och värden överförs med förbindningar från utgångs pinnar till ingångs
+pinnar på funktionsblocken. Funktionsblocken opererar på signalvärdena och i den högra
+sidan av nätet lagras värdena i signaler eller attribut.
+
+GRAFCET sekvenser består av ett vertikalt nät av noder och förbindningar. Ett tillstånd
+överförs mellan stegen i sekvensen via förbindningarna. Nät av GRAFCET och funktionsblock
+kan samverka med varandra och kombineras till ett nät.
+
+
+
+<h2>Editera funktionsobjekt
+
+PLCeditorn består av
+- en arbetsarea.
+- en palett med GRAFCET objekt och funktionsblock, och en palette med förbindningar.
+- ett navigationsfönster, från vilket arbetsarean kan skrollas och zoomas.
+
+
+<b>Plc editorn
+<image> dg_fig46.gif
+
+Ett funktionsobjekt skapas genom att man väljer en klass i paletten, och klickar med MB2
+(mittenknappen) i arbetsarean.
+
+<h2>Modifiera ett objekt
+Ett objekt kan modifieras från objektseditorn. Denna öppnas genom att välja ut objektet
+och aktivera 'Functions/Open Object' i menyn. Värden på objektets attribut kan ändras med
+'Functions/Change value' i objekteditorns meny. Om en in- eller ut-gångspinne inte används
+kan den tas bort med en checkbox. Det finns också en checkbox som avgör om en digital ingång
+ska vara inverterad.
+
+<h2>Koppla ihop funktionsobjekt
+En utgångspinne och en ingångspinne kopplas ihop genom att
+
+- placera markören på pinnen, eller på ett område i funktionsobjektet nära pinnen, och 
+  tryck ned MB2.
+- drag markören till den andra pinnen, eller till ett område i funktionsobjektet nära pinnen,
+  och släpp MB2.
+
+En förbindning skapas nu mellan funktionsobjekten.
+
+<h2>Hämta värdet på en signal
+Värdet på en Di signal hämtas med ett GetDi objekt. GetDi objektet måste peka på Di objektet
+och detta görs genom att välja ut signalen i konfiguratören, och sedan trycka ned Ctrl
+tangenten och dubbelklicka med MB1 på GetDi objektet. Signalnamnet visas nu i objektet. Dv
+signaler, Do signaler och attribut hämtas på samma sätt med GetDv, GetDo resp GetDp objekt.
+
+<h2>Lagra ett värde i en signal
+Värdet från en utgång på ett funktionsobjekt lagras i en Do signal med ett StoDo objekt.
+StoDo objektet kopplas till Do signalen på samma sätt som Get objekt. Dv signaler och 
+attribut lagras med StoDv resp StoDp objekt.
+
+<h1>Grafcet
+Den här sektionen ger en första introduktion till Grafcet. För en mer detaljerad beskrivning,
+läs referensmanualen för Grafcet. Grafcet är en internationell standard för 
+sekvensstyrningar.
+
+Grafcet består av ett antal steg, och till varje steg är ett eller flera order kopplade, 
+som kommer att exekveras när steget är aktivt. Från början är initsteget aktivt, och
+aktiviteten flyttas till nästa steg med ett övergångsvillkor. En förflyttning görs när 
+villkoret för ett övergångsvillkoret är uppfyllt.
+
+<h2>Enkel rak sekvens
+Vi tittar på den enkla sekvensen nedan och antar att initsteget (Start) är aktivt, vilket 
+betyder att ordern som är kopplad till initsteget (Order1) kommer att utföras. Ordern kommer
+att utföras ända tills initsteget blir inaktivt. Steg 1 (Step1) blir aktivt, när 
+övergångsvillkoret T1 är uppfyllt. Initsteget blir då inaktivt.
+
+En Grafcet sekvens är alltid en sluten sekvens.
+
+<b>En enkel rak Grafcet sekvens
+<image> dg_fig47.gif
+
+<h2>Förgrenad sekvens
+
+En rak sekvens är den enklaste varianten av sekvenser. Ibland behöver man alternativa grenar
+i programmet, till exempel om man har en maskin som kan tillverka tre olika produkter. På de
+ställen som produktionen skiljer sig åt, lägger man in alternativa grenar.
+
+<b>Aternativ förgrening
+<image> dg_fig48.gif
+
+Exemplet ovan visar sekvensen för en maskin som kan producera tre produkter, röd, grön och 
+blå. Vid förgreningen, punkt 1 i figuren, väljer man önskad gren beroende på den produkt
+som ska tillverkas. Alternativa grenar utgår från ett steg, som följs av ett 
+övergångsvillkor i varje gren. Det är konstruktörens uppgift att se till att endast ett
+av övergångsvillkoren är uppfyllt. Om flera skulle vara uppfyllda avgör slumpen vilken gren
+som väljs. Vid punkt 2 i figuren går grenarna ihop till ett gemensamt steg.
+
+<h2>Parallella sekvenser
+Ibland behöver man starta flera parallella arbetsmoment samtidigt. Det ska vara möjlig för de
+olika momenten att kunna arbeta oberoende av varandra. För att åstadkomma detta, använder man
+parallella sekvenser.
+
+<b>Parallell sekvens
+<image> dg_fig49.gif
+
+Exemplet i figuren ovan visar sekvensen för två maskiner som borrar två hål samtidigt, 
+oberoende av varandra. När övergångsvillkoret före parallellförgreningen (punkt 1 i figuren),
+är uppfyllt, flyttas aktiviteten över till båda grenarna, och de två maskinerna börjar
+borra. Borrningen sker oberoende av varandra. 
+
+Grenarna sammanförs till ett övergångsvillkor (punkt 2 i figuren), och när borrningen är 
+klar i båda maskinerna, dvs både S12 och S13 är aktiva, och övergångsvillkoret T17 är 
+uppfyllt, flyttas aktiviteten vidare till initsteget IS2.
+
+<h2>Steg - Step
+<image> dg_fig51.gif
+
+Ett Step objekt (steg) används för att beskriva ett tillstånd i processen. Följande gäller 
+för ett steg:
+
+- Ett steg kan vara aktivt eller inaktivt. Attributet Order[0] innehåller aktiviteten.
+- Man kan koppla en eller flera order till ett steg.
+- Steget kan ges ett godtyckligt namn.
+- Steget blir inaktivt om resetsignalen sätts.
+
+<h2>Initsteg - InitStep
+<image> dg_fig50.gif
+
+I varje sekvens måste det finnas ett initsteg (InitStep) som skiljer sig från vanliga steg
+på följande punkter
+
+- Man bör endast ha ett initsteg i en sekvens.
+- När programmet startar, är initsteget aktivt.
+- Initsteget blir aktivt om resetsignalen sätts.
+
+<h2>Övergångsvillkor - Trans
+Ett övergångsvillkor används för att överföra aktiviteten mellan två steg. Aktiviteten 
+överförs från det övre till det undre steget (se figur nedan). Ett logiskt villkor, t ex 
+en digital signal, som kopplas till Trans objektet, avgör när överföringen sker.
+
+<b>Exempel på övergångsvillkor
+<image>dg_fig52.gif
+
+<h2>Order
+Det är möjlig att koppla en eller flera order till varje steg.
+
+<b>Exempel på order
+<image>dg_fig53.gif
+
+Normalt är orderns utgång aktiv när ingången är aktiv, men för varje order finns ett antal
+attribut, som påverkar utgångens funktion:
+
+- D Fördröjning (delay) 
+- L Tidsbegränsning (limit)
+- P Puls (pulse)
+- C Villkorlig (conditional)
+- S Lagrad (stored)
+
+Dessa funktioner beskrivs i detalj i Proview Objekt handbok. Principen är att man anger
+namnet på attributet (stor bokstav) och eventuell tid i objektseditorn. I figuren nedan
+visas hur man fördröjer orderns aktivitet i 10 sekunder.
+
+<b>Attribut för DOrder
+<image>dg_fig54.gif
+
+De valda attributen skriv ut i ordersymbolen.
+
+Figuren nedan visar hur man kan använda en order med fördröjning för att göra ett steg
+aktivt en viss tid.
+
+<b>En fördröjd övergång
+<image>dg_fig55.gif
+
+Notera att man måste använda en feedback förbindning för att ansluta den fördröjda ordern
+till övergångsvillkoret. Annars blir exekveringsordningen tvetydig.
+Se feedback koppling <link>plceditor_refman, feedback_connection
+
+<h2>Subsekvens - SubStep
+
+När man skapar komplexa Grafcet program, är det ofta en fördel att använda underfönster,
+och i dessa placera subsekvenser. På det här sättet får man en bättre layout på programmet.
+
+<b>Subsekvens
+<image>dg_fig56.gif
+
+I figuren ovan visas subsekvensen för ett SubStep. En subsekvens startar alltid med ett
+SsBegin objekt och slutar med ett SsEnd objekt. En subsekvens kan i sin tur innehålla
+subsekvenser.
+
+<h1>Introduktion till funktionsblocks programmering
+
+<h2>Block för att hämta och lagra värden
+Hämtnings- och lagringsblock används för att läsa och skriva värden. Det finns hämtnings-
+och lagringsblock för varje typ av signal. I figuren nedan visas ett antal av dessa block.
+De återfinns under 'Signal' mappen i paletten.
+
+<b>Block för att hämta och lagra värden
+<image>dg_fig57.gif
+
+För att läsa signalvärden används block som GetAi, GetIi, GetDi eller GetAo. När man vill
+sätta ett värde i en signal, används block som StoAv, StoDo, SetDv eller ResDo.
+
+Digitala värden kan skrivas på två sätt:
+
+- 'Sto' lagrar ingångsvärdet, dvs om ingången är 1 blir signalen 1, och om ingången är 0 blir
+  signalen 0.
+- 'Set' sätter signalen till 1 om ingången är sann, 'Res' sätter ingången till 0 om ingången
+  är sann. Om man, t ex, sätter en digital utgång med ett SetDo objekt, förblir den satt
+  tills man återställer den med ett ResDo objekt.
+
+För att läsa resp. tilldela värden på attribut (andra än ActualValue) använder man följande:
+
+- GetAp och StoAp för analoga attribut.
+- GetIp och StoIp för heltals attribut.
+- GetDp och StoDp, SetDp eller ResDp för digitala attribut.
+
+<h2>Logiska block
+Det finns ett antal block tillgängliga för logisk programmering. t ex och-grind (And), 
+eller-grind (Or), inverterare och timer. För logisk programmering används digitala signaler.
+Objekten är placerade under mappen 'Logic' i paletten.
+
+<b>Logiska block
+<image> dg_fig58.gif
+
+I figuren ovan ses en och-grind (And1). För objektet gäller följande:
+
+- Ingångar till vänster
+- Utgångar till höger
+- Klassnamnet utskrivet överst.
+- Objektsnamnet utskrivet underst (kan ändras av konstuktören).
+- Man kan använda ett variabelt antal ingångar, default är 2 st.
+- Ingångarna kan inverteras, vilket markeras med en cirkel på ingången.
+
+<b>Och-grind
+<image> dg_fig59.gif
+
+Och-grindens attribut ändras från objektseditorn.
+
+<b>Och-grindens attribut
+<image> dg_fig60.gif
+
+De andra objekten under 'Logic' mappen har liknande attribut, se Proview Objekt handbok.
+
+<h2>Beräkningsblock
+
+Mappen 'Analog' i paletten innehåller ett antal objekt för att hantera analoga signaler,
+t ex filter, additionsblock och integratorer.
+
+<b>Aritmetiskt beräkningsblock
+<image> dg_fig61.gif
+
+Här beskrivs inte funktionen hos objekten, men det kan vara lämpligt att kommentera
+användningen av aritmetiska block. Blocken används för beräkning av användardefinierade
+uttryck, som skrivs i programmeringsspråket C.
+
+I figuren ovan kommer blocket att beräkna värdet (A1 + A2 * A3) och lägga detta på utgången.
+A1, A2 och A3 representerar analoga värden, t ex signaler som antas vara kopplade till
+ingångarna på objektet. 
+
+Uttrycken kan innehålla avancerad C kod med arrayer och pekare. När man skriver dessa bör
+man medveten om att indexering utanför arrayer, eller felaktiga pekare kan gör att 
+exekveringen av plcprogrammet stoppas.
+
+<h1>Larmövervakning
+
+I Proview är det möjligt att övervaka analoga och digitala signaler. Övervakningen av analoga
+signaler sker mot ett gränsvärde. Om gränsvärdet överskrids, skickas ett larm till 'event
+monitorn' som i sin tur skickar det vidare till en utenhet, t ex ett larmfönster.
+
+Se Proview Objekt handbok beträffande objektens attribut.
+
+<h2>Övervakning av digitala signaler
+För att övervaka digitala signaler eller attribut, använder man DSup objekt (Digital 
+Supervisory), som finns under mappen 'Logic' i paletten.
+
+Signal eller ett attributet som ska övervakas, hämtas med ett Get-objekt som förbinder med
+DSup objektet. Utgångar på logiska block kan kopplas direkt till DSup objektet.
+
+<b>Digital övervakning
+<image> dg_fig62.gif
+
+Figuren ovan visar övervakningen av en Dv signal.
+
+Attributet 'CtrlPosition' i DSup objektet indikerar om larmet ska aktiveras när den 
+övervakade signalen blir sann eller falsk.
+
+<h2>Övervakning av analoga signaler
+
+För att övervaka analog signaler eller attribut, använder man ASup objekt (Analog 
+Supervisory), som finns under mappen 'Analog' i paletten.
+
+Övervakningen sker på liknande sätt som för en DSup, med undantaget att man kan välja om 
+larmet ska utlösas om gränsvärdet underskrids eller överskrids.
+
+<h1>Kompilera plcprogrammet
+Innan man börjar kompilera, måste man ange vilken platform (eller vilka plattformar) som
+plcprogrammets volym ska exekvera på. Öppna volymsattribut-editorn från konfiguratören, 
+'File/Volume Attributes' i menyn, och ange operativsystem. Notera att mer än ett
+operativsystem kan väljas. Volymen kan samtidigt köras i produktions-systemet, på ett
+simulerings-system och i ett utbildnings-system, och alla kan ha olika plattform.
+
+Nu kompileras plcprogrammet genom att välja 'File/Compile' i plceditorns meny. Eventuella
+fel och varningar visas i meddelandefönstret.
+</topic>
+</chapter>
+
+<chapter>
+<topic>ge_man
+Skapa processbilder
+
+Det här kapitlet beskriver hur man skapar processbilder.
+
+Processbilder ritas och konfigureras i Ge editorn.
+
+<h1>Ge editorn
+Ge öppnas från menyn i konfiguratören, 'Functions/Open Ge'. Den består av
+
+- en verktygspanel.
+- en arbetsarea.
+- en subgraf palett.
+- en färg palett.
+- ett fönster som visa anläggningshierakin.
+- ett navigationsfönster.
+
+<h2>Bakgrundsbild
+
+En bakgrundsbild ritas med basobjekt som rektanglar, cirklar, linjer, polylinjer och texter.
+Dessa hittar man i verktygspanelen. Skapa att basobjekt genom att aktivera tryckknappen i
+verktygspanelen, och dra eller klicka med MB1 i arbetsarean. Om basobjektet ska vara fyllt,
+väljer man objektet och aktivera 'Fill' i vertygspanelen. Ändar fyllnadsfärg genom att välja
+ut objektet och klicka på den önskade färgen i färgpaletten. Kantfärg ändras genom att man
+klickar med MB2 i färgpaletten, och textfärg med Shift/Klick MB1.
+
+<h2>Subgrafer
+En subgraf är en komponent, t ex en ventil, en motor eller en tryckknapp. För att skapa en
+subgraf väljer man ut subgrafen i subgraf paletten, och klickar med MB2 i arbetsarean.
+
+<h2>Grupper
+Basobjekt och subgrafsobjekt kan grupperas genom att välja ut dem, och aktivera
+'Functions/Group' i menyn.
+
+
+<h2>Dynamik
+Subgrafer och grupper har dynamiska egenskaper, dvs de kan kopplas till en signal i runtime
+databasen, och ändra färg, position eller form beroende på signalernas värde. En subgraf
+har ofta en default dynamik, t ex en indikator kan skifta mellan två färger. Man behöver 
+endas koppla ventilen till en digital signal för att den ska fungera. Det här görs genom att 
+välja ut signalen i anläggningshierakin, och klicka på ventilen med Ctrl/dubbelklick MB1.
+
+En tryckknapp har aktions egenskaper, den sätter, återställer eller togglar en 
+signal i databasen. En knapp med sätt-aktion skapas genom att välja en ButtonSet i subgraf
+paletten under mappen Pushbuttons, och klicka med MB2 i arbetsaran. Den signal som ska sättas
+kopplas som tidigare genom att välja ut signalen och klicka med Ctrl/dubbelklick MB1 på
+tryckknappen.
+
+<b>Koppla en subgraf till en signal
+<image> dg_fig63.gif
+
+Även grupper har dynamik, dvs de kan skifta färg, ändra position, eller utföra någon aktion.
+De har inte någon default dynamik eller defaultfärg som subgraferna, utan detta måste anges
+för varje grupp
+
+<h2>Attribut editor
+Basobjekt, subgrafsobjekt och grupper har olika attribut, som man påverkar från 
+objekteditorn. Objekteditorn öppnas genom att man väljer ut objektet, och aktivera 
+'Function/Object attributes' i menyn. Genom att ta upp attributseditorn för tryckknappen 
+ovan, kan man t ex mata in en text som visas på tryckknappen i attributet 'Text'.
+
+Om en subgraf har med avancerad dynamik, t ex växla mellan flera färger, så måste man ofta
+koppla den till flera signaler. Om man t ex, öppnar men attributeditorn för en ventil, ser 
+man att den kan kopplas till två attribut, 'DigError.Attribute' och 'DigLowColor.Attribute'.
+DigError attributet markera att någonting är fel, och om denna signal är sann, färgas
+ventilen röd. DigLowColor attributet kopplas till ventilens gränsläge. Om denna signal är
+falsk, färgas ventilen i den färg som anges i 'DigLowColor.Color'. Är signalen sann, behåller
+ventilen den färg som den ges i editorn. Signalerna för de två attributen läggs in genom att
+man väljer ut respektive attribut i anläggningshierakin, och klickar med Ctrl/Dubbelklick MB1
+på attributraden i attributeditorn. Färgen 'DigLowColor' anges genom att öppna attributet
+och välja ut en av de 300 färgerna. Färgerna ligger i samma ordning som i färgpaletten och
+med lite övning identifieras med hjälp av namnet.
+
+<b>Attributeditorn för en ventil
+<image>dg_fig64.gif
+
+<h2>Bildområde
+Ritarean i Ge är obegränsad i alla riktningar, så innan man sparar bilden, ska man ange
+gränserna för bilden i x och y-led. Öppna graf attributen med 'File/Graph attributes' i 
+menyn. Mät upp koordinaterna för övre vänstra hörnet, och mata in dem i x0 och y0, mät sedan
+upp koordinaterna för nedre högra hörnet och mata in dem i x1 och y1. Mätningen görs genom
+att placera makören på positionen och läsa av koordinaterna på informations raden.
+
+<b>Graf attribut
+<image>dg_fig65.gif
+
+<h1>Konfigurering i arbetsbänken
+<h2>XttGraph objektet
+Till varje processbild hör ett XttGraph objekt. Det här objektet är vanligtvis ett barn till
+operatörsplats objektet (OpPlace) för noden, på vilken bilden ska visas. Man behöver ett
+XttGraph objekt på varje node, som bilden ska visas på. Däremot behöver man enbart en graf 
+fil. Följande attribut i XttGraph objektet ska ges lämpliga värden:
+
+- Action, namnet på pwg filen, inklusive filtyp, t ex 'hydr.pwg'.
+- Title, titel på bildfönstret.
+- ButtonText, text på tryckknappen i grafikfönstret.
+
+XttGraph objektet innehåller andra attribut som t ex bestämmer bildfönstrets storlek och läge
+på skärmen. Dessa attribut beskrivs i detalj i objektshanboken.
+Se XttGraph i Objektshandboken <link>xttgraph,"",$pwr_lang/pwrb_xtthelp.dat
+</topic>
+</chapter>
+
+<chapter>
+<topic>conf_test
+Starta och testa ett Proview system
+I föregående kapitel har vi beskrivit hur man konfigurerar ett Proview system, hur man
+skapar PLC program och processbilder. Nu är det dags att köra och testa systemet.
+
+I avsnitten visas hur man
+
+- skapar laddatafiler.
+- skapar bootfil.
+- distribuerar.
+
+<h2>Syntax kontroll
+Innan man skapar laddatafiler för en volym är det lämpligt att göra en syntaxkontroll.
+Det görs från menyn i konfiguratören, 'File/Syntax'.
+
+<h2>Skapa laddatafiler
+Innan runtimemiljön kan startas för systemet, måste man skapa laddatafiler, en för varje
+rotvolym, subvolym och klassvolym. Laddatafiler skapas från menyn i konfiguratören, 
+'Function/Create Load Files'.
+
+<h2>Skapa bootfil
+För varje nod i projektet ska man skapa en bootfil. Bootfilen innehåller huvudsakligen vilken
+rotvolym som ska laddas in när noden startas. Bootfilen skapas från menyn i konfiguratören,
+'Functions/Create Boot File'. Detta kommando bygger även ihop ett plcprogram för noden.
+
+<b>Val av nod vid skapande av bootfil
+<image> dg_fig66.gif
+
+Nu är allt i utvecklingsmiljön konfigurerat och genererat och det är dags att sätta upp
+runtime miljön.
+
+<h2>Installera Proview runtime paket
+...
+
+<h2>Distribuera
+...
+</topic>
+</chapter>
+
+<chapter>
+<topic>configurator_refman
+Konfiguratören
+
+Konfiguratören används för att navigera och konfigurera i arbetsbänken.
+Konfiguratören visar objekten i en volym. Objekten delas vanligen upp i två fönster, ett
+övre och ett under, och hur uppdelningen görs beror på vilken typ av volym som hanteras.
+
+- För rotvolymer och subvolymer visas anläggningshierakin i det övre fönstret och
+  nodhierkin i det undre. Närmare bestämt visas toppobjekt av klassen $PlantHier i det övre
+  och toppobjekt av klassen $NodeHier i det undre.
+
+- För directory volymen visas volymer i det övre fönstret och bussar och noder i det undre.
+  Även systemobjektet visas i det undre fönstret.
+
+- För klassvolymer visas klasser i det övre fönstret och typer i det undre.
+
+Med 'View/TwoWindow' kan man välja om man vill visa två fönster eller bara ett. Om endast ett
+fönster visas kommer det varannan gång man aktiverar 'TwoWindows' att vara det övre fönstret
+som visas och varannan gång det undre.
+
+Med 'Edit/Edit mode' går man in i editerings mode, och palett med olika klasser dyker upp 
+till vänster. Man kan nu skapa nya objekt, flytta objekt, ändra värden på attribut mm.
+
+<h2>Representation av volymer
+
+Volymer kan lagras i olika format, i databas, i laddatafil eller i en textfil. Konfiguratören
+kan visa en volym i alla dessa format och kan ha fyra olika representationer av volymer:
+
+- db, en databas. Rotvolymer och subvolymer skapas och editeras i en databas. Innan man
+  kan starta runtimemiljön genererar man laddatafiler för volymerna. Laddatafilerne läses
+  in vid uppstart av runtimemiljön. db-representationen är editeringsbar.
+
+- wbl, en textfil med filtyp .wb_load. Klassvolymer lagras som wbl, och rot- och subvolymer
+  kan dumpas på wbl-fil t ex vid uppgradering, för att sedan återladdas. wbl-representationen
+  är inte editeringsbar. Vid editering av klassvolymer överför man wbl-representationen till
+  en mem-representation, se nedan, för att därefter spara den som wbl igen.
+
+- dbs, en laddatafil. Från rotvolymer, subvolymer och klassvolymer i db resp. wbl 
+  representation skapas laddatafiler som används av runtimemiljön. Konfiguratören läser in
+  klassvolymernas dbs-filer för att tolka klasser, och rot och subvolymers dbs-filer för
+  att visa monterade volymer och kunna översätta referenser till externa objekt. dbs-
+  representationen är inte editeringsbar.
+
+- mem, en volym som konfiguratören håller internt i minnet. Copy/Paste buffrar består t ex
+  av mem-volymer. Klasseditorn importerar klassvolymen, som ursprungligen finns som wbl, till
+  en mem-volym, eftersom mem-representatinen är editeringsbar.
+
+Som vi ser ovan kan samma volym finnas både som databas och som laddatafil. När man startar
+konfiguratören anger man en volym som argument. För denna volymen öppnas databasen, den
+alltså representerad som en db, för övriga volymer i projektet öppnas laddatafilerna, dessa
+finns representerade som dbs. Det här gör att man kan titta på övriga volymer i projektet,
+och man kan lösa upp referenser till dem, men det är inte editeringsbara. Är databasen för 
+volymen låst, pga att någon annan har öppnat den, ges ett felmeddelande och laddatafilerna 
+öppnas istället för databasen.
+
+I figuren nedan visas volymslistan, som öppnas från 'File/Open' i menyn. Det visar alla
+volymer som är öppnade i konfiguratören. Vi kan se att databasen för rotvolymen 
+VolTrafficCross1 är öppnad, medan den andra rotvolymen, VolOpTrafficCross1 är öppnad som 
+laddadafil. Även klassvolymerna är öppnade som laddatafiler.
+<image> dg_fig24.gif
+
+Om ingen volym anges som argument öppnas direktory volymens databas, och övriga volymer som
+dbs-volymer.
+
+<h1>Navigera <bookmark>wnav_navigate
+I konfiguratören visas objekten i den aktuella volymen. Objekten ligger i en trädstruktur,
+och objekt som har barn visas med en mapp, objekt utan bar med ett löv. För varje objekt
+visas som default, dessutom objektets namn, klass och eventuell beskrivning (beskrivningen
+hämtas från ett Description attribut i objektet).
+
+Genom att klicka MB1 på en mapp, öppnas mappen och objektets barn visas. Är mappen redan
+öppen stängs den. Man kan även öppna en map genom att dubbelklicka var som helst på raden
+för objektet.
+
+Vill man se innehållet i ett objekt klicka man med Shift/Klick MB1 på mappen eller lövet, 
+eller Shift/Dubbelklick MB1 var som helst på objektsraden. Nu visas objektets attribut,
+och värdet på respektive attribut. Attributen markeras med olika figurer beroende på typ.
+
+<b>Bitmappar för olika typer av attribut
+<image> dg_fig26.gif
+
+- Ett vanligt attribut markeras med en långsmal rektangel.
+
+- En vektor markeras med en map och en stapel av attribut markeringar. Vektorn kan öppnas
+  genom att man klickar med MB1 på mappen eller dubbelklickar någonstans på attributraden.
+  Nu visas de olika elementen i vektorn.
+<image> dg_fig27.gif
+
+- Ett attribut som refererar till ett annat attribut eller objekt, dvs av typen Objid eller
+  AttrRef, markeras med en pil som pekar på en fyrkant.
+
+- Uppräkningstyper, Enum, markeras med en map med div långsmala rektanglar i. Genom att
+  klicka MB1 på mappen visas de lika alternativen i uppräkningstypen. Alternativen visas med
+  checkboxar med det valda alternativet markerat. Man kan även dubbelklicka med MB1 på 
+  attributraden för att se alternativen.
+<image> dg_fig28.gif
+
+- Masktyper, Mask, markeras på liknande sätt som Enum, och de olika bitarna visas med klick
+  MB1 på mappen, eller dubbelklick MB1 på attributraden.
+<image> dg_fig29.gif
+
+- Attributobjekt, dvs attribut som innehåller datastrukturen för ett objekt, markeras
+  med en fyrkant med dubbellinje på ovansidan. Attributobjektet öppnas med klick MB1 på 
+  fyrkanten, eller dubbelklick MB1 på attribut raden.
+
+Ett objekt eller attribut väljs ut genom att man klickar med MB1 på det (dock inte på 
+mappen/lövet). Med Shift MB1 kan man välja ut fler objekt. Genom att dra med MB1 kan man 
+också välja ut flera objekt.
+
+
+Ur ergonomisk synvinkel är det ofta bättre att navigera från tangenbordet. Man använder då
+främst piltangenterna. Först måste man se till att fönstret har inmatings fokus genom att 
+klicka på det. Inmatnings fokus mellan övre och undre fönster skiftas med TAB.
+
+Men PilUpp/PilNer väljer man ut ett objekt. Har objektet barn öppnar man barnaskaran med
+PilHöger, och stänger med PilVänster. Innehållet i objektet, dvs objektets attribut, visas
+med Shift/PilHöger och stängs med PilVänster.
+
+Attribut som är vektorer, enum, mask eller attributobjekt, öppnas med PilHöger och stängs
+med PilVänster.
+
+När man känner sig hemma i objektsträdet kan man sätta upp sig som 'advanced user'. 
+Ytterligare funktioner läggs då på piltangenterna. PilHöger på ett objekt visar t ex 
+attributen i objektet om det inte har några barn. Har det barn får man använda 
+Shift/PilHöger som förut.
+
+<h1>Editera
+Editering innebär att man skapar nya objekt, kopierar objekt, tar bort objekt eller ändrar
+värde på attribut.
+
+<h2>Skapa objekt
+Man skapar ett objekt genom att välja ut objekets klass i paletten. Paletten är uppdelad i
+mapparna Plant, Node och AllClasses. Under Plant finns de vanligaste klasserna i anläggnings
+hierakin, och under Node finns de vanligaste i nodhierakin. Om klassen inte finns med här,
+finns samtliga klasser åtkomliga under AllClasses. Här listas alla klassvolymer, och under
+respektive volym, klasserna i volymen. Därefter klickar man med mittenknappen på blivande
+syskon eller förälder till det nya objektet. Om man klickar på mappen/lövet på destinations-
+objektet läggs det nya objeket som första barn, om kan klicka till höger om mappen/lövet 
+läggs det som syskon.
+
+Man kan även skapa objekt från popupmenyn. Välj ut en klass i paletten och öppna popupmenyn
+genom att högerklicka på destinationsobjektet. Aktivera 'Create Object' och välj hur 
+det nya objektet ska läggas i relation till destinationsobjektet, före eller efter, eller
+som första eller sista barn.
+
+<b>Konfiguratören i editeringsläge
+<image> dg_fig25.gif
+
+<h2>Ta bort objekt
+Objekt tas bort mha popmenyn. Klicka med högerknappen på objektet och aktivera 
+'Delete Object'.
+
+<h2>Flytta objekt
+Man kan även flytta objekt mha popupmenyn, men det är ofta enklare att använda musens 
+mittenknappen: välj ut det objekt som ska flyttas och klicka med mittenknappen på 
+destinationsobjektet. Om man klickar på mappen/lövet på destinationsobjektet läggs objektet 
+som första barn, annars som syskon.
+
+Obs! Undvik att använda Cut/Paste för att flytta ett objekt, eftersom detta skapar en
+kopia av objektet med ny objektsidentitet, och referenser till objektet kan förloras.
+Man kan använda kommandot paste/keepoid för att behålla identiteten.
+
+<h2>Kopiera objekt
+Kopiering kan ske med copy/paste eller mha popupmenu.
+
+- copy/paste. Välj ut det eller de objekt som ska kopieras och aktivera 'Edit/Copy' (ctrl/C)
+  i menyn. De utvalda objekten kopieras nu till en paste-buffert. Välj ut ett destinations 
+  objekt, och aktivera 'Edit/Paste' (ctrl/V). Objekten i paste-bufferten läggs nu som syskon
+  till destinationsobjektet. Om man istället aktiverar 'Edit/Paste Into' (shift+ctrl/V)
+  läggs de nya objekten som barn till destinationsobjeketet. Om det kopierade objektet har 
+  barn, kopieras även barnen av copy/paste. 
+
+- från popupmenyn. Välj ut det eller de objekt som ska kopieras, ta upp popmenyn från 
+  destinationsobjektet, och aktivera 'Copy selected object(s)'. Man har här möjlighet att
+  välja hur de nya objekten ska läggas relativt destinationsobjektet, som första eller sista
+  barn, eller som nästa eller föregående syskon. Om de koperade objekten har ättlingar, och
+  även de ska kopiera aktiverar man 'Copy selected Tree(s)' istället.
+
+<h2>Ändra namn på ett objekt
+Namnet ändras genom att objektet väljs ut och 'Edit/Rename' (ctrl/N) aktiveras i menyn. Ett
+inmatningsfält öppnas längs ner i konfiguratören där det nya namnet matas in. Ett objektsnamn
+kan ha max 31 tecken.
+
+Man kan även ändra namn genom att visa objektets attribut. När man är i editeringsläge visas
+nu objektsnamnet främst bland attributen, och kan ändras pss som ett attribut.
+
+<h2>Ändra värde på ett attribut
+Välj ut det attribut som ska ändras, och aktivera 'Functions/Change value' (ctrl/Q) i menyn.
+Ange de nya värdet i inmatningsfältet. Vill man avbryta inmatningen aktiverar man 'Change
+value' igen.
+
+Alla attribut är inte ändringsbara. Det beror på attributets funktion, om det ska datasättas
+i utvecklingsmiljön, eller inte. De som är ändringsbara markeras med en pil.
+
+Man kan även ändra värde på attribut från objektseditorn som öppnas från popupmenyn (Open
+Object). Attribut som är av typen flerradig text, kan endas ändras från objekteditorn.
+
+Som 'advanced user' kan man öppna inmatningsfältet med PilHöger, som ett snabbare alternativ 
+till 'Change value'.
+
+<bookmark>symbolfile
+<h1>Symbol fil
+
+Symbol filen är en kommando fil som exekveras vid wtt startup. Det kan innehålla definitioner
+av symboler och andra wtt kommandon. Här följer några exempel på användbara kommandon.
+
+Genväg till objekt i objektsträdet:
+
+<c>define rb9 "show children /name=hql-rb9" <LINK> define
+</topic>
+
+<topic>objecteditor_refman
+Objektseditorn
+
+Datamängden för ett objekt består av attribut. Objektseditorn visar attributen i ett objekt 
+och värdet på varje attribut. Om man är i editeringsmod kan man även sätta värden på 
+attributen.
+
+Attributen visas på samma sätt som i konfiguratören, skillnaden är att de visas i ett eget
+fönster. 
+
+<h2>Navigera
+Navigering och datasättning sker också pss som i konfiguratören. <link> configurator, wnav_navigate
+
+<h2>Start
+Objektseditorn startas från konfiguratören eller plceditorn. Aktivera OpenObject i 
+popupmenyn för ett objekt, eller välj ut objektet och aktivera 'Functions/Open Object' i 
+menyn. I Plceditorn kan man även starta objektseditorn genom att dubbelklicka på objektet.
+Om konfiguratören/plceditorn är i editeringsmod öppnas även objektseditorn i editeringsmod.
+
+<h2>Meny
+
+File/Close <t><t>stäng objektseditorn.
+
+Functions/Change value  <t><t>öppna inmatningsfältet för det utvalda attributet. 
+                        <t><t>Detta kan endast göras i edit mode.
+Functions/Close change value <t><t>stäng inmatningsfältet.
+
+<b>Objectseditorn
+<image> dg_fig30.gif
+
+Objektseditorn har inmatingsfält för att mata in flerradiga texter. I det här fallet kan man
+inte avsluta inmatingen med 'Enter' som med enradiga texter. Antingen klickar man på 'Ok' 
+knappen, eller också aktiverar man 'Functions/Close change value' (ctrl/W) för att avsluta.
+
+<b>Flerradiga texter
+<image> dg_fig31.gif
+
+Objektseditorn för plc-objekt har funktioner för att ange vilka in resp utgångar som ska
+visas i funktionsobjektet. Man kan även välja om digitala ingångar ska vara inverterade.
+Detta väljs med checkboxar för respektive attribut ('Used' resp 'Inverted'). Checkboxen
+för 'Used' kan även ändras från tangentbordet med 'Shift/PilHöger' och checkboxen för
+'Inverted' kan ändras med 'Shift/PilVänster'.
+
+<b>Plc objekt med checkboxar
+<image> dg_fig32.gif
+</topic>
+
+<topic>spreadsheeteditor_refman
+Spreadsheet editorn
+
+Spreadsheet editorn används för att titta på, eller konfigurera, flera objekt av samma klass
+samtidigt. Objekt av en viss klass, under en specifierat objekt i objektsträdet, visas i en
+tabell i editorn. I tabellen visas även värdet på ett attribut i objekten, och man kan enkelt
+skifta mellan olika attribut.
+
+Spreadsheet editorn startas från konfiguratören: 'Functions/Spreadsheet' i menyn.
+Om konfiguratören är i editeringsmod, startas även spreadsheet editorn in editeringsmod.
+
+När spreadsheet editorn är startad, måste man först ange vilka objekt som ska visas: vilken 
+klass de tillhör och under vilken hierarki de ska ligga. Det här görs genom att aktivera
+'File/Select Class' i menyn. Mata in klass, hieraki, samt ange om attributobjekt, dvs objekt
+som ligger som attribut i andra objekt, ska vara med.
+
+<b>Välja klass och hierarki
+<image>dg_fig33.gif
+
+Därefter väljer man vilket attribut som ska visas. Välj ut ett attribut i attributlistan
+och klicka på 'Ok', eller dubbelklicka på ett attribut.
+
+<b>Välja attribut
+<image>dg_fig34.gif
+
+Resultatet visas i figuren nedan. Här valdes attributet 'Description'. Man kan enkelt se
+övriga attribut i objekten genom att aktivera 'File/Next Attribute' (Ctrl/N) och 
+'File/Previous Attribute' i menyn.
+
+<b>Spreadsheet editorn
+<image>dg_fig35.gif
+
+<h2>Meny
+File/Select Class     <t><t>ange klass och hierarki för de objekt som ska visas.
+File/Select Attribute <t><t>ange vilket attribut som ska visas.
+File/Next Attribute   <t><t>visar nästa attribut för objekt i tabellen.
+File/Previous Attribut <t><t>visar föregående attribut för objekt i tabellen.
+File/Print            <t><t>skriver ut tabellen.
+File/Close            <t><t>stänger spreadsheet editorn.
+
+Functions/Change value <t><t>öppna inmatningsfält för utvalt objekt.
+Functions/Close change value <t><t>stäng inmatningsfältet.
+
+</topic>
+</chapter>
+
+<chapter>
+<topic> helpwindow_refman
+Hjälp fönster
+
+Hjälpfönstret används för att visa och navigera i hjälptexter. Hjälptexterna kan vara olika
+typer av manualer och handböcker som följer med Proview, eller hjälptexter som skrivs av
+konstruktören för att beskriva anläggningen och ge operatörerna assistans.
+</topic>
+</chapter>
+
+<chapter>
+<topic> messagewindow_refman
+Meddelande fönster
+
+Meddelandefönstret visar meddelanden från Proview som ges vid olika operationer. 
+Meddelandena kan ha fem olika nivåer av allvarlighet, som markeras med olika färger: 
+
+S <t>Framgång (Success) <t>grön
+I <t>Information        <t>grön
+W <t>Varning (Warning)  <t>gul 
+E <t>Fel (Error)        <t>röd 
+F <t>Fatalt fel (Fatal) <t>röd
+
+Om en pil visas före meddelandet innehåller meddelandet en länk till ett objekt. Genom att 
+klicka på pilen letas det aktuella objektet upp.
+</topic>
+</chapter>
+
+<chapter>
+<topic> utilities_refman
+Utilities fönstret
+
+Utilities fönstret är ett grafiskt gränssnitt till olika kommandon i wtt.
+För en närmare beskrivning av respektive kommando, se avsnittet Kommandon.
+</topic>
+</chapter>
+
+<chapter>
+<topic> plceditor_refman
+Plceditorn
+
+Plceditorn används för att skapa plcprogram mha ett grafiskt programmeringsspråk.
+
+Progammeringen sker med funktionsblock som läggs i ett horisontellt nät av noder och 
+förbindningar från vänster till höger. Signaler eller attribut hämtas upp på den vänstra
+sidan av nätet, och värdena skickas vidare med förbindningar från utgångs-pinnar till
+ingångs-pinnar på funktionsblocken. Funktionsblocken opererar på värdena och på nätets
+högra sida, lagras värdena i signaler eller attribut.
+
+GRAFCET sekvenser består av ett vertikalt nät av noder och förbindningar. Ett tillstånd
+förflyttas mellan olika steg i sekvensen via förbindningarna. GRAFCET och funktionsblock
+kan samverka med varandra och kombineras till ett enda nät.
+
+<h2>Start
+Plceditorn startas från konfiguratören. Välj ut ett objekt av klassen PlcPgm och aktivera
+'Functions/Open Program' (Ctrl/L) i menyn, eller aktivera 'Open Program' i popupmenyn för
+PlcPgm objektet. Konfiguratören ska inte vara i editeringsmod.
+
+<h2>Arbetsmod
+Plceditorn kan vara i fyra olika moder: View, Edit, Trace och Simulate. Moden väljs under
+'Mode' i menyn.
+
+<b>View
+View innebär att plceditorn är i visningsmod. Man kan inte skapa eller modifiera objekt.
+Många av menyalternativen som har med editering att göra är dimmade.
+
+<b>Edit
+Om man har editeringsprivilegers kan man gå över i editeringsmod. Här kan man skapa och 
+modifiera objekt.
+
+<b>Trace och Simulate
+Om man vill felsöka programmet går man in i tracemode. Detta kräver att proview's runtime
+miljö är startad på utvecklingsstationen. Simulate fungerar som Trace, man man kan dessutom 
+sätta värden på signaler.
+
+Felsökning görs numera snabbare och enklare från Xtt. PlcTrace funktionen i Xtt är att
+föredra framför Trace-funktionen i plceditorn.
+
+<h1>Editering
+Plc editorn består av
+
+- en arbetsarea.
+- två stycken paletter, en för funktions objekt och en för förbindningar (endast en palett
+  i taget är synlig).
+- ett navigationsfönster, från vilket arbetsarean kan skrollas och zoomas.
+
+<b>Plc editorn
+<image>dg_fig40.gif
+
+<h2>Paletter
+<b>Objektspaletten
+När man startar plceditorn, visas paletten för funktionsobjekt. När man skapar ett
+funktionsobjekt i arbetsarean väljer man ut en klass i paletten.
+
+<b>Förbindningspaletten
+När man skapar förbindningar mellan objekt, väljer editorn en lämplig typ av förbindning. Men
+i vissa fall krävs att konstruktören påverkar valet av förbindningstyp. Detta görs i
+förbindningspaletten som visas genom att 'View/Palette/Connection' aktiveras i menyn. Så 
+länge menyn är öppen, skapas alla nya kopplingar med den typ som är vald i paletten. När
+paletten stängs genom att 'View/Palette/Object' eller 'View/Palette/Plant' aktiveras, väljer
+editorn förbindningtypen igen.
+
+<b>Anläggningshierakin
+Man kan visa anläggningshierakin genom att akivera 'View/Palette/Plant' i menyn. När man 
+kopplar funktionsobjekt t ex för att hämta signalvärden, till signaler, kan man här markera
+den signal som ska hämtas. Man kan även välja ut signalen i konfiguratören, vilket i många
+fall är ett smidigare alternativ.
+
+<h2>Navigationsfönster
+Längs ner till vänster finns en förminskad bild av plcprogrammet. Den del av arbetsarean
+som visas i huvudfönstret är markerad med en rektangel. Genom att flytta på rektangeln (dra
+med MB1) skrollar man i huvudfönstret. Man kan även zooma genom att dra med MB2.
+
+<h1>Funktionsobjekt
+<h2>Skapa objekt
+För att kunna skapa objekt måste editorn vara i editeringsmod, genom att 'Mode/Edit' 
+aktiveras i menyn.
+
+Ett objekt i skapas genom att man väljer ut en klass i paletten, och klickar med MB2 
+(mittenknappen) i arbetsarean.
+
+<h2>Modifiera ett objekt
+Ett objekt skapas med vissa defaultvärden. Det gäller även vilka in och utgångar som visas
+i plceditorn, och som kan förbindas med andra objekt. Vill man ändra på något värde öppnas
+objektseditorn för objektet. Objektseditorn öppnas genom att
+
+- dubbelklicka på objektet.
+- aktivera 'Open Object' från popupmenyn för objektet.
+- välj ut objektet och aktivera 'Functions/Open Object' i menyn.
+
+Från objektseditorn kan man mata in värden på olika attribut. Attributen för ett plc-objekt
+är uppdelade i ingångs-attribut, interna attribut och utgångs-attribut. 
+
+<b>Ingångar
+Ingångs-attributens värden kan hämtas från ett annat funktionsobjekt via en förbindning.
+Attributet visas i funktionsobjektet som en ingångspinne. I vissa fall används inte en 
+ingång, ett and-objekt har t ex 8 stycken ingångar men ofta används inte mer än två av dessa.
+Detta åstadkommer man genom med hjälp av 'Used' checkboxen i objektseditorn. Om 'Used' är
+ifylld, visas attributet som en ingångspinne, annars inte. 
+
+En del ingångsattribut, oftast av analog typ, kan datasättas i objektseditorn. Om 'Used' inte
+är markerat för attributet används det datasatta värdet, om 'Used' däremot är markerat, 
+hämtas värdet från den utgång som attributet är förbundet med. Så här fungerar t ex 
+gränsvärdena 'Min' och 'Max' i ett Limit objekt. Man kan välja om värdet ska hämtas från ett
+annat funktionsobjekt, eller om det ska datasättas. Datasättningen i objekteditorn fungerar
+i runtime som ett intialvärde, som sedan kan modifieras på olika sätt.
+
+En del digitala ingångar kan inverteras. Detta görs genom att checkboxen för 'Inverted'
+markeras i objektseditorn. I funktionsobjektet visas detta med en rund ring på ingånspinnen.
+
+<b>Interna attribut
+Interna attribut kan innehålla konfigureringsvärden som datasätts i utvecklingsmiljön, eller
+värden som beräknas i runtime. Den senare typen är ofta inte ändringsbar, och kanske inte
+ens synlig i utvecklingsmiljön.
+
+<b>Utgångar
+Värdet på ett utgångs-attribut skickas vidare till en ingång med en förbindning. Liksom
+för ingångar, kan man välja om en utgångpinne ska visas eller ej, med 'Used' checkboxen
+i objektseditorn.
+
+<h2>Välja ut objekt
+Objekt väljs ut på föjande sätt
+
+- klicka med MB1 på objektet.
+- Shift/Click MB1 adderar objektet till listan av utvalda objekt, eller raderar om objektet
+  redan är utvalt.
+- genom att dra med MB1 kan man välja ut ett eller flera objekt. Objekt som har någon del
+  inom den markerade rektangeln, väljs ut.
+- genom att trycka på Shift och dra med MB1 adderar man objekt som ligger inom den markerade
+  rektangeln till urvalslistan.
+
+Utvalda objekt ritas med röd färg.
+
+<h2>Flytta objekt
+Enstaka objekt flyttas genom att man placerar markören på dem och drar med MB1.
+Flera objekt flyttas genom att man markerar dem drar på ett av objekten med MB1.
+
+<h1>Förbindningar
+<h2>Skapa förbindningar
+En utgångpinne och en ingångpinne kopplas på följande sätt
+
+- placera markören på pinnen, eller på ett område i funktionsobjektet nära pinnen, och
+  tryck på MB2 (mittenknappen).
+- Dra markören till den andra pinnen, eller till ett område i funktionsobjektet nära pinnen,
+  och släpp MB2.
+
+En förbindning skapas nu mellan objekten.
+
+Två ingångar kan kopplas ihop på samma sätt, men någon av de sammankopplade ingångarna, 
+måste vara kopplad till en utgång, och från denna utgång hämtas värdet till samtliga 
+sammankopplade ingångar.
+
+<b>Datatyper
+De värden som förflyttas mellan olika objekt via förbindningarna kan vara digitala, analog,
+heltals och sträng värden. In och utgångar som kopplas ihop måste vara av samma typ. Om de 
+är av olika typ måste någon form av objekt som konverterar mellan olika typer användas, t ex
+AtoI eller ItoA. Dessa ligger under 'Signals/Conversion' i paletten.
+
+Analoga- och heltalskopplingar markeras med lite tjockare linjer, digitala kopplingar med 
+lite tunnare.
+
+Dessutom finns det en kopplingstyp för överföring av en objektreferens. Dessa ritas med
+tjock streckad linje.
+
+<b>Referenskopplingar
+Om editorn har svårt att hitta en väg för kopplingen mellan in och utgångspinnen, pga att
+det ligger många objekt ivägen, eller för att de ligger på olika dokument, ritas kopplingen
+som en referenskoppling. Referenskopplingar kan även ritas genom att aktivera
+'View/Reference connections' i menyn.
+
+<b>Referens förbindning
+<image> dg_fig39.gif
+
+<bookmark>feedback_connection
+<b>Exekveringsordning
+Förutom att överföra signalvärden, bestämmer förbindningar även exekveringsordningen mellan
+olika funktionsobjekt. Om två objekt är sammankopplade via en utgång och en ingång, ska 
+normalt utgångs-objektet exekveras före ingångs-objektet. Men ibland gör man en återkoppling
+i nätet och råkar ut för en exekverings loop. För att kunna bestämma exekveringsordingen
+måste man då markera återkopplingen med en koppling av typen ConFeedbackDigital eller
+ConFeedbackAnalog. Dessa väljs från kopplings-paletten som visas genom att 
+'View/Palette/Connection' aktiveras i menyn. Under mappen 'ConPlc' finns bl a feedback
+kopplingarna. Dessa ritas med streckade linjer.
+
+<b>Feedback förbindning
+<image> dg_fig37.gif
+
+Här hittar man även kopplingstypen 'ConExecuteOrder'. I vissa fall vill man styra
+exekveringsordningen mellan två funktionsobjekt, trots att de inte är förbundna med varandra.
+Man kan då dra en ConExecuteOrder mellan dem (mellan vilka in eller utgångar är egalt).
+Kopplingen ska dra från det objekt som ska exekveras först, till det som ska exekveras sist.
+I figuren nedan exekveras lagringen av attributet 'Temperaturer' före lagringen av attributet
+'Tjocklek'.
+
+<b>Exekveringsordnings förbindning
+<image> dg_fig38.gif
+
+<h1>Hämta och lagra signalvärden
+<h2>Hämta signal och attributvärden
+I funktionsblocksnätets vänstra del hämtas värden på signaler och attribut upp. Upphämtningen
+av signaler sker med med objekten GetDi, GetDo, GetDv, GetIi etc. Upphämtning av
+attributvärden sker med GetDp, GetIp, GetAp och GetSp. Dessa objekt återfinns under mappen
+'Signals' i paletten. När man har skapat ett objekt av den här typen, måste man ange vilken
+signal, eller vilket attribut som ska hämtas upp. Detta görs enklast genom att välja ut
+signalen/attributet i konfiguratören, och klicka med Ctrl/dubbelclick MB1 på objektet.
+Signalen/attributet visas då i objektet, och är det frågan om en insignal visas även
+kanalen som signalen är kopplad till.
+
+Det finns ett snabbare sätt att skapa de här objekten. Drar man ut en koppling från en
+ingångspinne på ett funktionsobjekt, och släpper den på ett tomt område i arbetsarean skapas
+ett generiskt Get objekt av den datatyp som ingången har, dvs en GetDgeneric, GetIgeneric,
+GetAgeneric eller GetSgeneric. När man anger den signal eller attribut som Get objektet
+ska hämta, omvandlas det generiska Get objektet till ett Get objekt som hämtar den typ av
+signal eller attribut som är angivet. Väljer jag ut en Dv i konfiguratören, kommer ett
+GetDgeneric att omvandlas till en GetDv när jag klickar med Ctrl/dubbelklick MB1 på den.
+
+<h2>Lagra signal och attributvärden
+I nätets högra del lagras de beräknade värdena i signaler eller attribut. Lagringen sker med
+objekt av typen StoDo, StoDv, StoDp, StoIo etc. Metoden för att ange vilken signal eller
+vilket attribut som värdet ska lagra i, är detsamma som för Get objekt, dvs genom att välja
+ut signalen/attributet i konfiguratören och klicka med Ctrl/dubbelklick MB1 på objektet.
+
+Om man drar ut en koppling från en utgångspinne på ett funktionsobjekt skapas generiska
+Sto objekt, som omvandlas till Sto objekt av lämplig typ när de kopplas till en signal eller
+ett attribut. Vill man lagra värden med Set eller Reset (t ex SetDo eller ResDo) kan man inte
+använda den här metoden utan objektet hämtas från paletten.
+
+<b>Generiska Get och Sto objekt
+<image> dg_fig36.gif
+
+<h1>Underfönster
+Vissa objekt innehåller underfönster, t ex CSub, SubStep, Trans, Order. Att objeket har ett 
+underfönster markeras med att vissa delar av funktionsobjektet ritas med tjock grå linje.
+Ett underfönster kan öppnas på olika sätt: 
+- genom att välja ut objektet och aktivera 'Functions/Subwindow' i menyn.
+- genom att aktivera 'Subwindow' från popupmenyn för objektet.
+- genom att klicka på objektet med Shift/dubbelklick MB1.
+
+Man skapar ett nytt underfönster på följande sätt (det faktum att man endast kan ha en 
+editeringssession öppen åt gången, gör skapandet en smula omständligt)
+
+- skapa objektet som ska innehålla underfönstret.
+- spara.
+- öppna underfönstret.
+- lämna editeringsmod i huvudfönstret.
+- gå in i editeringsmode i underfönstret.
+
+<h1>Kontrollera exekveringsordningen
+I vanliga fall ska man inte behöva fundera så mycket på i vilken ordning olika 
+funktionsobjekt i ett fönster exekverar. Genom att signaler I/O-kopieras, dvs varje tidbas
+i plcprogrammet, tar en kopia av alla signalvärden före exekveringen som inte förändras
+under exekveringen, kommer lagring och hämtning av signalvärden inte att påverkas av
+exekveringsordningen mellan enskilda hämtnings och lagrings objekt. 
+
+Om man däremot lagrar och hämtar värden från attribut som inte I/O-kopieras kan 
+exekveringsordningen vara av betydelse för funktionen.
+
+Exekveringsordningen bestäms av förbindningarna mellan funktionsobjekten. De vanliga
+förbindningarna är både signalöverförande och exekveringsordnings-bestämmande. Gör man en 
+återkoppling, måste man välja en kopplingstyp som är signalöverförande, men inte
+exekveringsordnings-bestämmande. De olika feedback-kopplingarna är av denna typ. Dessutom
+finns det en typ av koppling som är exekveringsordnings-bestämmande men inte
+signalöverförande, ConExecuteOrder. Med den här kan man styra exekveringsordningen mellan
+olika funktionsobjekt utan att överföra några signalvärden.
+
+Exekveringsordningen för funktionsobjekten i ett plcfönster visas med 
+'View/Show execute order' i menyn. Den siffra som visas på varje funktionsobjekt anger den
+ordning i vilken de exekveras. De objekt som inte har någon siffra, har inte någon 
+exekverbar kod.
+
+Exekveringsordningen mellan olika PlcPgm styrs av attributet ExecuteOrder i PlcPgm objektet.
+ExecuteOrder avgör hur exekveringen inom en plc tråd ordnas. Lägre värden på ExecuteOrder 
+exekverar före högre värden.
+
+<h1>Kompilering
+Innan ett plc-fönster kan exekveras måste det kompileras. Samtidigt utförs en syntax kontroll
+av plc-koden. Om syntaxen inte är korrekt, skrivs felmeddelanden i meddelandefönstret.
+Felmeddelandet kan vara av typen Error eller Warning. Error är ett allvarligare fel som måste
+åtgärdas. Genom att klicka på pilen framför felmeddelandet i meddelandefönstret, letas det
+felaktiga objektet upp i plceditorn.
+
+Efter syntaxkontrollen genereras c-kod som skickas till c-kompilatorn. Om det 
+finns objekt med egendefinierad c-kod, t ex CArithm eller DataArithm, kan c-kompilatorn
+hitta fel som skrivs ut i terminalfönstret. Kontrollera alltid i terminalfönstret att 
+kompileringen gick bra.
+
+Kompileringen utförs genom att 'File/Compile' aktiveras i menyn.
+
+Om man vill kontrollera syntaxen utan att generera kod, aktiverar man 'File/Syntax'. Här
+körs inte c-kompilatorn, så eventuella c-kods fel upptäcks inte.
+
+<h1>Klipp och klistra
+Plc editorn innehåller en pastebuffer. Pastebufferten är gemensam för alla fönster, vilket
+gör att man kan kopiera mellan olika fönster. Med funktionerna 'Edit/Copy' och 'Edit/Cut'
+i menyn kopieras utvalda objekt till paste bufferten (vid Cut tas de även bort ur 
+arbetsarean). Funktionen 'Edit/Paste' kopierar pastebufferten till arbetsarean. De kopierade
+objekten flyttas nu med markören, och man placerar dem på rätt plats och klickar på MB1 för
+att låsa fast dem.
+
+Cut, Copy och Paste kan även aktiveras från tangentbordet med Ctrl/X, Ctrl/C och Ctrl/V.
+
+<h1>Speciella plcobjekt
+Här beskrivs ett antal objekt som har speciella funktioner i plcprogrammet.
+
+<b>Document
+Dokumentobjekt används för att dela in koden i sidor vid utskrift. När man öppnar ett nytt
+fönster innehåller det ett dokumentobjekt. Via objektseditorn kan man ändra dimension på
+documentet, och ange signatur och sidnummer. Övriga uppgifter i dokumenthuvudet fylls i
+automatiskt. Dokument objekt finns under mappen 'Edit' i objektspaletten.
+
+<b>ShowPlcAttr
+ShowPlcAttr kan användas som som en utökning av dokumenthuvudet. I detta objekt skriv info
+om volym, scantid och resetobjekt för GRAFCET ut.
+
+<b>Head, Title, Text och BodyText
+Dessa objekt används för att skriva förklarande texter i dokumenten. Head, Title och Text
+innehåller enradiga texter av olika storlek på max 79 tecken. BodyText innehåller en 
+flerradig text på max 1023 tecken. Objekten återfinns under'Edit' i objektspaletten.
+
+<b>Point
+Point objektet är en fri kopplingspunkt som kan användas som förgrening av förbindningar
+eller för att styra layouten på förbindningar. Point finns under 'Edit' i objektspaletten.
+
+<b>GRAFCET
+GRAFCET sekvenser är uppbyggda med speciella GRAFCET objekt som InitStep, Step, Trans och 
+Order. Kopplingarna mellan objektet följer bestämda regler. De vertikala pinnarna på ett
+Step objekt ska t ex kopplas till Trans objekt, och den horisontella pinnen ska kopplas
+till ett Order objekt. Här följer ett exempel på hur men enkelt skapar en GRAFCET sekvens.
+
+Börja med att skapa ett InitStep objekt. Dra ut en förbindning från den undre pinnen och
+släpp den i arbetsarean under InitStep objektet. Nu skapas ett Trans objekt som är
+förbundet med InitStep objektet. Dra en koppling från Trans objektets undre koppling och
+släpp den i arbetsarean under Trans objektet. Här skapas nu ett Step objekt. Drar man ut
+en koppling från Step objektets under pinne skapas ett Trans objekt till. Vill man ha en 
+förgrening drar man ut ytterligare en koppling från Step objektets nedre pinne. Nu skapas
+en förgrening med speciella StepDiv förbindningar. Om man pss skapar en förgrening
+från ett Trans objekt genom att dra ut två stycken kopplingar från den undre pinnen, bildas
+en parallellförgrening med TransDiv förbindningar som markeras med dubbla linjer.
+Drar man ut en koppling från den horisontella pinnen på ett Step objekt skapas ett Order
+objekt osv. Som synes kan man mycket snabbt bygga upp avancerade sekvenser på det här sättet.
+
+<b>ScanTime
+ScanTime hämtar upp den verkliga scantiden, dvs tiden sedan senaste scan.
+
+<b>FirstScan
+FirstScan är sann första varvet plc't exekverar efter uppstart av Proview. Den är även sann
+först varvet efter en mjuk omstart.
+
+<h1>Meny
+
+File/Save <t><t>Spara
+File/Print/Documents <t><t>Skriv ut alla dokument.
+File/Print/Overview  <t><t>Skriv ut en översikt på ett blad.
+File/Print/Selected documents <t><t>Skriv ut utvalda dokument.
+File/Syntax  <t><t>Gör en syntaxkontrol av koden.
+File/Compile <t><t>Kompilera programmet.
+File/Plc Attributes <t><t>Öppna objektseditorn för PlcPgm objektet.
+File/Delete Window  <t><t>Ta bort plcfönstret.
+File/Save Trace <t><t>Spara traceobjekt.
+File/Restore Trace<t><t>Återskapa sparade traceobjekt.
+File/Close <t><t>Stäng fönstret.
+
+Edit/Undo Delete <t><t>Ångra borttagning av objekt.
+Edit/Undo Select <t><t>Nollställ utvalslistan.
+Edit/Cut <t><t>Klipp ut utvalda objekt.
+Edit/Copy <t><t>Kopiera utvalda objekt till paste bufferten.
+Edit/Paste <t><t>Kopiera pastebufferten till arbetsarean.
+Edit/Connect <t><t>Koppla utvalt objekt till utvald signal eller attribut
+             <t><t>i konfiguratören.
+Edit/Delete <t><t>Ta bort utvalda objekt.
+Edit/Change Text <t><t>Ändra text i utvalt textobjekt.
+Edit/Expand Object <t><t>Expandera utvalt objekt.
+Edit/Compress Object <t><t>Komprimera utvalt objekt.
+
+Search/Object <t><t>Sök på objektsnamn.
+Search/String <t><t>Sök efter textsträng.
+Search/Next <t><t>Sök vidare med samma textsträng.
+
+View/Palette/Object <t><t>Visa funktionsobjekts paletten.
+View/Palette/Connection <t><t>Visas förbindnings paletten.
+View/Palette/Plant <t><t>Visa anläggningshierarkin.
+View/Reference connections <t><t>Skapa förbindningar som referenskopplingar.
+View/Grid Size <t><t>Sätt gridstorlek.
+View/Show Grid <t><t>Visa griden.
+View/Zoom/In <t><t>Zooma in.
+View/Zoom/Out <t><t>Zomma ut.
+View/Zoom/Reset <t><t>Återställ till ursprunglig zoomningsgrad.
+View/Show Execute Order <t><t>Visa exekveringsordning för funktionsobjekten.
+View/Redraw <t><t>Dra om förbindningar och rita om fönstret.
+
+Functions/Open Object <t><t>Öppna objektseditorn för utvalt objekt.
+Functions/Subwindow <t><t>Öppna underfönster för utvalt objekt.
+
+Mode/View <t><t>Visningsmod.
+Mode/Edit <t><t>Editeringsmod.
+Mode/Trace <t><t>Felsökningsmod.
+Mode/Simulate <t><t>Simuleringsmod.
+
+<h1>Musfunktioner
+<h2>Arbetsarean
+Klick MB1 <t><t>Välj ut objekt. Klick i tomt område nollställer utvalslistan.
+Shift/Klick MB1 <t><t>Addera objekt till utvalslistan.
+Dubbelklick MB1 <t><t>Öppna objektseditorn.
+Shift+Ctrl/Dubbelklick MB1 <t><t>Kopiera till pastebuffer. Klick på ett objekt 
+               <t><t>kopierar objektet, klick i tomt område kopierar utvalda objekt.
+Drag MB1 <t><t>På objekt: flytta objekt eller flytta utvalda objekt.
+         <t><t>I tomt område: välj ut objekt inom markerad rektangel.
+Shift/Drag MB1 <t><t>Addera objekt inom markerad rektangel till utvalslistan.
+
+Klick MB2 <t><t>Skapa objekt.
+Dubbelklick MB2 <t><t>Ta bort. Klick på ett objekt tar bort objektet, klick
+                <t><t>på tomt område i arbetsarean tar bort utvalda objekt.
+Shift+Ctrl/Klick MB2 <t><t>Paste. Kopiera pastebufferten till arbetsarean.
+Shift+Ctrl/Dubbelklick MB2 <t><t>Klipp ut. Klick i objekt tar bort objektet, klick
+                <t><t>på tomt område tar bort utvalda objekt. Borttagna objekt läggs
+                <t><t>i pastebufferten.
+
+Press MB3 <t><t>Popupmeny.
+
+<h2>Navigationsfönster
+Drag MB1 <t><t>Skrolla arbetsarean.
+Drag MB2 <t><t>Zooma arbetsarean.
+</topic>
+</chapter>
+
+<chapter>
+<topic> classeditor
+Klasseditor
+
+<option> printdisable
+Dokumentation av klasser <link> class docblock
+<option> printenable
+</topic>
+
+<headerlevel>
+<topic>class docblock
+Dokumentation av klasser
+
+För $ClassDef och $Attribute objekt finns ett dokumentationsblock, som fylls i från 
+objektseditorn. Från dokumentationsblocken och klassbeskrivningen genereras dokumentation
+för klasserna på xtthjälp och html format.
+
+Dokumentationsblocket för $ClassDef objektet bör innehålla en beskrivning
+av klassens funktion och användningsområde, documentationsblocket för $Attribut en beskrivning
+av det aktuella attributets funktion.
+
+<option> printdisable
+Genererering av Xtt hjälpfiler <link> class generate xtthelp
+Generering av html dokumentation <link> class generate html
+ClassDef <link> docblock classdef
+Attribute <link> docblock attribute
+c- och h-filer <link> docblock ccode
+<option> printenable
+</topic>
+
+<headerlevel>
+
+<topic> class generate xtthelp
+Generering av Xtt hjälpfiler
+
+Hjälpfiler för xtt genereras med kommandot
+
+<c>co_convert -xv -d $pwrp_exe/ $pwrp_db/userclasses.wb_load
+
+Kommandot genererar en hjälpfil $pwrp_exe/'volymsnamn'_xtthelp.dat som man lämpligt-vis 
+lägger en länk till i projektets xtt-hjälpfil $pwrp_exe/xtt_help.dat:
+
+Exempel för klassvolymen cvolvhxn2r:
+
+<i><topic> index
+
+<i>...
+
+<i>Användar klasser<link>cvolssabtest,"",$pwrp_exe/cvolvhxn2r_xtthelp.dat
+
+<i></topic>
+
+...
+
+<i><include> $pwrp_exe/cvolssabtest_xtthelp.dat
+</topic>
+
+<topic> class generate html
+Generering av html dokumentation
+
+html-filer genereras med kommandot
+
+<c>co_convert -wv -d $pwrp_web/ $pwrp_db/userclasses.wb_load
+
+Kommandot genererar bl a filen $pwrp_web/'volymsnamn'_index.html som innehåller startsidan 
+för klass-dokumentationen. Denna tillsammans med övriga filer ($pwrp_web/'volymsnamn'_*.html) 
+kopieras till lämplig filkatalog på web-servern.
+
+En länk till dokumentationen skapar man lämpligen med ett WebLink-objekt med URL'en 
+'volymsnamn'_index.html
+
+Vill man kunna visa c-structarna för klasserna, konverterar man h-filen med co_convert
+
+<c>co_convert -cv $pwrp_web/ $pwrp_inc/'volymsnamn'classes.h
+
+Vill man dessutom visa koden för plc-objekt ska man lägga in aref-taggar i c eller h-filen 
+för koden och konvertera den med
+
+<c>co_convert -sv -d $pwrp_web/ 'filnamn'
+</topic>
+
+<topic> docblock classdef
+ClassDef
+
+<h2>Exempel
+
+<c>@Author Homer Simpson
+<c>@Version 1.0
+<c>@Code ra_plc_user.c
+<c>@Summary Brief description of this class
+<c>Description of
+<c>this class.
+<c>
+<c>See also 
+<c>@link Example plat.html
+<c>@classlink AnotherPlate cvolvhxn2r_anotherplate.html
+
+<h2>Taggar
+Author  <t>Redaktör <link> docblock author
+Version <t>Version av klassen <link> docblock version
+Code    <t>Fil som innehåller kod för klassen <link> docblock code
+Summary <t>Sammanfattning <link> docblock summary
+Link    <t>Godtycklig länk <link> docblock link
+Classlink <t>Länk till annan klass <link> docblock classlink
+wb_load syntax <link> docblock wb_load classdef
+</topic>
+
+<headerlevel>
+<topic> docblock author
+@Author
+
+Författare. Kan utelämnas.
+
+<b>Syntax
+<c>@Author 'name of author'
+</topic>
+
+<topic> docblock version
+@Version
+
+Version. Kan utelämnas.
+
+<b>Syntax
+<c>@Version 'version number'
+</topic>
+
+<topic> docblock code
+@Code
+
+För klasser med plc-kod kan man ange namnet på c-filen. Kan utelämnas.
+Även c-filen måste konverteras med: co_convert -c -d $pwrp_web/ 'filnamn'
+
+<b>Syntax
+<c>@Code 'filename'
+</topic>
+
+<topic> docblock summary
+@Summary
+
+Kort beskrivning på en rad. 
+Denna visas i indexfilen i xtt-hjälpfilen. Används ej i html.
+Kan utelämnas.
+
+<b>Syntax
+<c>@Summary 'text'
+</topic>
+
+<topic> docblock link
+@Link
+
+Här kan läggas in en länk till godtycklig URL. Kommer enbart att visas i 
+html-dokumentationen, ej i xtt. Länken måste ligga efter beskrivningen av klassen.
+
+<b>Syntax
+<c>@Link 'URL'
+</topic>
+
+<topic> docblock classlink
+@Classlink
+
+Här kan läggas in en länk till en annan klass. Denna länk fungerar både i html och xtt.
+Länken måste ligga efter beskrivningen av klassen.
+
+<b>Syntax
+<c>@Classlink 'html-filename'
+</topic>
+
+<topic> docblock wb_load classdef
+wb_load syntax
+
+Info om en klass skrivs före $ClassDef raden.
+
+<c>!
+<c>!/**
+<c>!  @Author Homer Simpson
+<c>!  @Version 1.0
+<c>!  @Code ra_plc_user.c
+<c>!  @Summary Brief description of this class
+<c>!  Description of
+<c>!  this class.
+<c>!
+<c>!  See also 
+<c>!  @link Example plat.html
+<c>!  @classlink AnotherPlate cvolvhxn2r_anotherplate.html
+<c>!*/
+<c>!
+<c>Object        Plat    $ClassDef 1
+
+<h2>!/**
+Start av ett dokumentations block.
+All text mellan !/** och !*/ kommer att skrivas ut i oförvanskad form som beskrivning för 
+klassen.
+
+<h2>!*/
+Avslutning av ett dokumentations block
+</topic>
+</headerlevel>
+
+<topic> docblock attribute
+Attribute
+
+<h2>Exempel
+<c>@Summary Plåtens längd
+<c>En grundligare beskrivning
+<c>av attributet Langd...
+
+
+<h2>@Summary
+Kort beskrivning på en rad. Om det finns en @Summary läggs denna text in i html-filens tabell
+över attribut. Om den inte finns läggs beskrivningen hela beskrivningen in.
+Används ej i xtt.
+
+wb_load syntax <link>docblock wb_load attribute
+</topic>
+
+<headerlevel>
+<topic> docblock wb_load attribute
+wb_load syntax
+
+Info om ett attribute skrivs före $Attribute, $Input, $Output eller $Inter raden.
+
+<c>      !/**
+<c>      !  @Summary Plåtens längd
+<c>      !  En grundligare beskrivning
+<c>      !  av attributet Langd...
+<c>      !*/
+<c>      Object    Langd $Attribute 3
+<c>        Body             SysBody
+<c>          Attr           TypeRef = "pwrs:Type-$Float32"
+<c>        EndBody
+<c>      EndObject
+
+<h2>!/**
+Start av ett dokumentations block.
+All text mellan !/** och !*/ kommer att skrivas ut i oförvanskad form som beskrivning för 
+attributet, förutom nedanstående taggar.
+
+<h2>!*/
+Avslutning av ett dokumentations block
+</topic>
+</headerlevel>
+
+<topic> docblock ccode
+Syntax för c- och h-filer
+Om man vill lägga in länkar till c- och h-filer måste även dessa konverteras till html. Det 
+finns även en funktion att lägga in bokmärken. ¨
+
+Struct-filen för klasserna genereras automatiskt med bokmärken.
+
+<c>/**
+<c>   MyPlcClass
+<c>
+<c>   Description for the class that is not displayed anywhere but in the code.
+<c>
+<c>   @aref MyPlcClass MyPlcClass
+<c>*/
+<c>void MyPlcClass_exec(...)
+
+<h2>@aref
+@aref måste ligga inom ett /*_* ... */ block. Inom blocket kan även finnas kommentarer som 
+inte hanteras vid konverteringen.
+
+<b>Syntax
+<c>@aref 'bookmark' 'text' 
+</topic>
+</headerlevel>
+</headerlevel>
+</chapter>
+
+<chapter>
+<TOPIC> helpfile
+Hjälpfil
+
+Hjälptexter visas i hjälp fönstret, som öppnas från konfiguratören eller från 
+operatörsmiljön. Hjälptexter skrivs i filen $pwrp_exe/xtt_help.dat. Hjälptexterna delas upp
+i ämnen (topics), och värje ämne har en nyckel, som specificerar när hjälptexten för ämnet
+ska visas. Länkar i hjälptexterna, som pekar på andra ämnen, gör det möjligt att navigera
+i hjälptexterna.
+
+Ämnet 'index' är rot ämnet som visas från olika verktyg
+
+- 'Help/Project' i konfiguratorns meny.
+- 'Help/Project' i runtime navigatorns mey .
+- 'Help' knappen i operatörsfönstret.
+
+Specificerade hjälpämnen kan öppnas från Ge grafer genom tryckknappar (aktionstyp Help), eller
+från popup-menyn för ett objekt i operatörsmiljön (metod 'Help').
+
+<b>Syntax <link> helpfile syntax
+<b>Konvertering <link> helpfile conversion
+</topic>
+
+</headerlevel>
+<topic> helpfile conversion
+Konvertering
+Hjälptexterna kan konverteras till html, PDF och PostScript format. Vid konvertering till
+html, konverteras varje ämne till en html sida. Vid konvertering till PDF och PostScript,
+finns ett antal ytterligare taggar, för att skapa dokument av hjälptexterna med kapitel och
+rubriker.
+
+Konverteringen görs med 'co_convert'.
+
+<h2>Konvertering till html
+En hjälpfil konverteras till html med kommandot
+
+<c>co_convert -f [-d outputdirectory] 'helpfile'
+
+<b>Exempel
+<c>co_convert -f -d $pwrp_web $pwrp_exe/xtt_help.dat
+
+<h2>Konvertering till PostScript
+En hjälpfil konverteras till postscript med kommandot
+
+<c>co_convert -n [-d outputdirectory] 'helpfile'
+
+<b>Exampel
+<c>co_convert -n -d $pwrp_lis $pwrp_exe/xtt_help.dat
+
+<h2>Konvertering till PDF
+En hjälpfil konverteras til PDF med kommandot
+
+<c>co_convert -f [-d outputdirectory] 'helpfile'
+
+<b>Exampel
+<c>co_convert -f -d $pwrp_lis $pwrp_exe/xtt_help.dat
+</topic>
+
+<topic> helpfile syntax
+Syntax
+Det finns ett antal olika taggar som påverkar sökningen och konverteringen av hjälpfiler.
+
+topic     <t>Definierar hjälptexten för ett ämne<link> topic
+bookmark  <t>Defininerar en position inne i ett ämne<link> bookmark
+link      <t>Länk till ett ämne elller en URL<link> link
+index     <t>Lista över ämnen<link> helpindex
+h1        <t>Rubrik 1 <link> header1
+h2        <t>Rubrik 2 <link> header2
+b         <t>Fet text <link> bold
+t         <t>Tab <link> helptab
+hr        <t>Horisontell linje<link> hr
+include   <t>Inkludera andra hjälpfiler<link> include
+
+<h2>PDF och PostScript taggar
+Följande taggar används för att formatera hjälptexter vid konvertering till PDF och 
+PostScript.
+
+chapter   <t>Dela upp ämnen i kapitel<link> chapter
+headerlevel <t>Öka eller minska rubrik nivån <link> headerlevel
+pagebreak <t>Ny sida<link> pagebreak
+option    <t>Optioner<link> option
+style     <t>Specifik text stil <link> style
+
+<b>Exampel <link> helpfile example
+</topic>
+
+<headerlevel>
+<topic> topic
+Topic
+<ib><topic>
+<i><topic> börjar ett ämne och ska placeras på radens första position. Topic taggen följs
+<i>av en nyckel som är sökbegrepp i hjälpfunktionen. Alla följande textrader till en </topic>
+<i>tag kommer att visas som text för ämnet.
+
+<i><topic> 'key'
+
+
+<ib></topic>
+<i>Avslutar ett ämne. </topic> ska placeras på radens första position.
+End a topic. </topic> should bo placed in the first position 
+<i>of a line.
+
+<b>Example
+<i><topic> start engine
+The engine will be started by...
+<i></topic>
+
+Kommandot
+
+<c>wtt> help start engine
+
+kommer att visa texten för detta ämne.
+</topic>
+
+<topic> bookmark
+Bookmark
+<ib><bookmark>
+Bookmark är en rad inuti ett ämne som kan letas efter med link-taggen eller /bookmark
+kvalifieraren i 'help' kommandot. Bookmark ska placeras vid slutet på en rad och följas
+av ett namn.
+
+<i>'some text' <bookmark> 'name'
+
+<b>Exempel
+<i>This is a bookmark. <bookmark> first_engine
+
+Kommandot 
+
+<c>wtt> help start engine/bookmark=first_engine
+
+kommer att visa texten för ämnet och scrolla till bokmärket.
+</topic>
+
+<topic> link
+Link
+<ib><link>
+<i><link> taggen är en länk till ett annat hjålp ämne. <link> taggen ska placeras vid slutet
+på raden. När raden för länken aktiveras kommer ämnet för länken att visas. Link taggen ska
+följas av ämnet, och kan även följas av ett bokmärke, och hjälfilen som hjältexten finns i,
+åtskilda med kommatecken. Om en rad innehåller en länk, markeras den med en pil.
+
+<i>'some text'   <link> 'topic'[,'bookmark'][,'helpfile']
+
+<b>Exempel
+<i>Link to first engine <link> show engine, first_engine
+</topic>
+
+<topic> helpindex
+Index
+<ib><index>
+<i><index> taggen är en speciell länk som visar innehållet i en hjälpfil, dvs en lista på
+alla ämnen i bokstavsordning.
+
+<i>'some text' <index>
+</topic>
+
+<topic> header1
+Header1
+<ib><h1>
+<i><h1> taggen kommer att visa en rad som en rubrik med större textstorlek. Taggen ska 
+placeras i början på raden. En rubrik rad kan inte innehålla någon länk.
+
+<i><h1>'header text'
+
+<b>Exempel
+<i><h1>This is a h1 header
+kommer att visas som
+<h1>This is a h1 header
+</topic>
+
+<topic> header2
+Header2
+<ib><h2>
+<i><h2> taggen visar en rad som en rubrik med större textstorlek. Taggen ska placeras i 
+början på raden. En rubrik rad kan inte innehålla någon länk.
+
+<b>Exempel
+<i><h2>This is a h2 header
+kommer att visas som
+<h2>This is a h2 header
+</topic>
+
+<topic> bold
+Bold
+<ib><b>
+<i><b> taggen visar en rad med fet text. Taggen ska placeras i början på raden.
+
+<b>Exempel
+<i><b>This is a bold line
+kommer att visas som
+<b>This is a bold line
+</topic>
+
+<topic> helptab
+Tab
+<ib><t>
+<i><t> taggen gör det möjligt att skriva kolumner. Endast tre kolumner (två <t> taggar) är
+tillåtet.
+
+<b>Exempel
+<i>Col1 <t> Col2 <t> Col3
+kommer att visas som
+Col1 <t> Col2 <t> Col3
+</topic>
+
+<topic> hr
+Horisonell linje
+<ib><hr>
+<i><hr> taggen visar en horisonetell linje. Taggen ska placeras i början på raden.
+
+<b>Exempel
+<i><hr>
+kommer att visas som
+<hr>
+
+</topic>
+
+<topic> include
+Include
+<ib><include>
+<i>Inkluderar en annan hjälpfil. <include> taggen ska inte placeras inuti ett ämne.
+
+<i><include> 'filname'
+</topic>
+
+<topic> chapter
+Chapter
+<ib><chapter>
+<i>Den här taggen delar in ämnen i kapitel. Ett kapitel inleds med <chapter> avslutas med
+<i></chapter>. Titeln för första ämnet i ett kapitel blir rubriken på kapitlet.
+
+<ib></chapter>
+Avslutar ett kapitel.
+
+<b>Exempel
+<i><chapter>
+<i><topic>
+<i>Introduction
+<i>...
+<i></topic>
+<i></chapter>
+</topic>
+
+<topic> headerlevel
+Headerlevel
+Delar in ämnen i ett kapitel i rubrik nivåer.
+
+<ib><headerlevel>
+Ökar rubriknivån.
+
+<ib></headerlevel>
+Minskar rubriknivån
+</topic>
+
+<topic> pagebreak
+Pagebreak
+<ib><pagebreak>
+Markerar sidbrytning.
+</topic>
+
+<topic> option
+Option
+<ib><option>
+Option kan ha följande värden
+
+printdisable <t>Ignorera alla taggar och all text till nästa 'printenable' vid konvertering
+             <t>till PDF och PostScript. Används bl a för länkar som inte fungerar i PDF
+             <t>och PostScript.
+printenable  <t>Återställ 'printdisable'.
+
+<b>Example
+<i><option> disable
+<i>Some text
+<i>...
+<i><option> enable
+</topic>
+
+<topic> style
+Style
+<ib><style>
+Anger att ett ämne ska skrivas med en speciell stilmall.
+<b>Stilmallar
+function	<t>Stilmall använd för funktioner och kommandon. Större rubrik och 
+                <t>efter varje ämne.
+
+<b>Exempel
+<i><topic> MyFunction <style> function
+...
+<i></topic>
+</topic>
+
+<topic> helpfile example
+Exempel på hälpfil
+<i><topic> helpfile_example
+<i>Start and stop of engines.
+
+<i>Engine 1 <link> helpfile_example, bm_engine_1
+<i>Engine 2 <link> helpfile_example, bm_engine_2
+<i>Characteristics <link> helpfile_example, bm_char
+
+<i><h1>Engine 1 <bookmark> bm_engine_1
+<i>Start engine one by pressing the start button.
+<i>Stop engine one by pressing the stop button.
+
+<i><h1>Engine 2 <bookmark> bm_engine_2
+<i>Start engine two by pressing the start button.
+<i>Stop engine two by pressing the stop button.
+
+<i><h2>Characteristics <bookmark> bm_char
+
+<i><b><t>Engine1 <t>Engine2
+<i>Max speed <t> 3200 <t> 5400
+<i>Max current <t> 130 <t> 120
+<i></topic>
+
+Så här ser ovanstående exempel ut <link>helpfile_example
+</TOPIC>
+
+<headerlevel>
+<topic> helpfile_example
+Start and stop of engines.
+
+Engine 1 <link> helpfile_example, bm_engine_1
+Engine 2 <link> helpfile_example, bm_engine_2
+Characteristics <link> helpfile_example, bm_char
+
+<h1>Engine 1 <bookmark> bm_engine_1
+Start engine one by pressing the start button.
+Stop engine one by pressing the stop button.
+
+<h1>Engine 2 <bookmark> bm_engine_2
+Start engine two by pressing the start button.
+Stop engine two by pressing the stop button.
+
+<h2>Characteristics <bookmark> bm_char
+
+<b><t>Engine1 <t>Engine2
+Max speed <t> 3200 <t> 5400
+Max current <t> 130 <t> 120
+</topic>
+</headerlevel>
+</headerlevel>
+</headerlevel>
+</chapter>
+
+<chapter>
+<topic>users
+Användare
+
+Det här kapitlet beskriver hur man skapar användare i proview, och ger privilegier och 
+behörighet för användaren. 
+
+Den ökade tillgängligheten på proview-system för olika typer av användare, bl a via 
+intranätet, har gjort att kraven på att kunna begränsa olika användares möjligheter att 
+påverka systemet ökat. Proview innehåller en användardatabas, där man definierar användare
+för olika system, och har möjlighet att gruppera system som delar användare. Databasen har 
+designats för att möta kraven på ökad behörighets-kontroll, samtidigt som administrationen 
+hålls på en rimlig nivå.
+
+Användardatabasen hanteras av 'pwr_user' (se nedan) eller från administratören.
+
+Användar databas <link> userdatabase
+Exempel <link> user example
+Inloggning <link> user login
+pwr_user <link> pwr_user
+</topic>
+
+<headerlevel>
+<topic>userdatabase
+Användardatabas
+
+Användar-databasen  populeras av systemgrupper och användare. När en proview-funktion 
+startas, t ex operatörs- eller utvecklings-miljön, kontrolleras att användaren finns i 
+databasen och användarens privilegier registreras. Privilegerna avgör vad en användare 
+tillåts att göra i systemet.
+
+<h1>Systemgrupp
+Begreppet systemgrupp har införts för att man inte ska behöva definiera varje system i 
+databasen. Istället definerar man systemgrupper och knyter ett antal system till varje 
+systemgrupp. Dessa system kommer att ha gemensamma användare.
+
+I databasen byggs upp en hierarki av systemgrupper. Hierarkin fyller två funktioner, dels att
+beskriva sambandet mellan olika systemgrupper, och dels att kunna införa arv mellan 
+systemgrupperna. Systemgrupper längre ner i hierarkin kan ärva egenskaper och användare av 
+systemgrupper längre upp i hierarkin.
+
+Om en systemgrupp ska ärva användare eller inte avgörs av attributet UserInherit. Om 
+attributet är satt kommer systemgruppen att ärva samtliga användare från närmast ovanliggande
+systemgrupp. Även de användare som ovanliggande systemgrupp har ärvt, ärvs vidare. En 
+systemgrupp kan överrida en ärvd användare genom att definiera användarnamnet till sin egen 
+systemgrupp.
+
+En systemgrupp refereras med 'path'-namnet i hierarkin där namnet är åtskilda med punkt, t ex
+'ssab.hql.se1', där ssab är rot-gruppen och se1 understa nivån i hierarkin.
+
+Ett proview-system knyts till en systemgrupp genom att systemgruppen anges i System-objektet.
+Om systemgruppen inte finns i användar-databasen, men någon förälder, eller förfader 
+återfinns, antas att systemgruppen ärver användare från förfadern.
+
+<h2>Attribut
+<b>Attribut <t>Beskrivning
+UserInherit <t>Systemgruppen ärver användare av närmast ovanliggande systemgrupp 
+            <t>i hierarkin (även system som den systemgruppen har ärvt).
+
+<h1>Användare
+En användare karakteriseras av ett användar-namn, ett passer-ord och en uppsättning 
+privileger. Dessutom knyter man en användare till en system-grupp.
+
+Privilegierna definierar vad en användare har rätt att göra i proview. En del privilegier 
+styr möjligheterna att kunna ändra i proview's bas-program t ex xtt eller plc-editorn, en del 
+är avsedda att användas vid konstruktion av operatörsbilder så att man kan styra vilka 
+inmatnings-fält och vilka knappar olika operatörer ska kunna påverka.
+
+Ett användarnamn kan vara knutet till flera systemgrupper, men ur databasen synvinkel är det 
+olika användare, med unika passerord och privilegier. De råkar bara ha samma användarnamn.
+
+<h2>Privilegier
+<b>Privilegier <t>Beskrivning
+RtRead    <t>Får läsa i rtdb. Default-privilegium utan inloggning.
+RtWrite   <t>Får skriva i rtdb. Tillåter ändring i rtdb från xtt och Simulate-mod i trace.
+System    <t>Privilegium för systemkonstruktör.
+Maintenance <t>Privilegium för underhållstekniker.
+Process   <t>Privilegium för processtekniker.
+Instrument <t>Privilegium för instrumenttekniker.
+Operator1 <t>Privilegium för operatör.
+Operator2 <t>Privilegium för operatör.
+Operator3 <t>Privilegium för operatör.
+Operator4 <t>Privilegium för operatör.
+Operator5 <t>Privilegium för operatör.
+Operator6 <t>Privilegium för operatör.
+Operator7 <t>Privilegium för operatör.
+Operator8 <t>Privilegium för operatör.
+Operator9 <t>Privilegium för operatör.
+Operator10 <t>Privilegium för operatör.
+DevRead   <t>Får läsa i arbetsbänken.
+DevPlc    <t>Får editera plc-program.
+DevConfig <t>Får konfigurera arbetsbänken.
+DevClass  <t>För skapa klasser (not yet implemented)
+</topic>
+
+<topic> user example
+Exempel
+Proview user database V1.0.0
+
+<c>ssab
+<c>. . . . . . sysansv    System DevRead DevPlc DevConfig (14680068)
+<c>. . . . . . skiftel    Maintenance DevRead (2097160)
+<c>. . . . . . 55         Operator1 (64)
+<c>. hql                  UserInherit
+<c>. . . . . . anna       RtWrite Operator4 (514)
+<c>. . bl2
+<c>. . . . . . anna       Operator4 (512)
+<c>. . bl1                UserInherit
+<c>. . . . . . 55         Operator1 (64)
+<c>. . . . . . carlgustav Operator8 (8192)
+<c>. hst
+<c>. . . . . . magnus     Operator1 (64)
+<c>. . rlb                UserInherit     
+<c>. . . . . . amanda     Operator4 (512)
+
+Studera exemplet ovan. Det här är en listning av en användardatabas. Till vänster ser man 
+systemgrupperna, och antalet punkter markerar deras hieraki-nivå. På samma rad står 
+systemgruppen attribut. Under varje systemgrupp står dess användare med privilegier. 
+Systemgruppen ssab har alltså användarna sysansv, skiftel och 55.
+
+Systemgruppen ssab.hql.bl1 har attributet UserInherit vilket gör att den ärver användare från
+sin förälder. Även föräldern ssab.hql har UserInherit så ssab.hql.bl1 ärver även från ssab. 
+Användarna för ssab.hql.bl1 blir då sysansv, skiftel, anna, 55 och carlgustav. Användaren 55 
+hos ssab.hql.bl1 överrider här användaren 55 hos ssab.
+
+Systemgruppen ssab.hql.bl2 saknar UserInherit och har enbart användaren anna.
+
+Systemgruppen ssab.hst.rlb har UserInherit och ärver från sin förälder ssab.hst. Denna har 
+dock inte UserInherit och har inte ärvt något från sin förälder ssab. Användarna fär 
+ssab.hst.rlb blir amanda och magnus.
+
+Ett system med systemgruppen sandviken.hql kommer att nekas access eftersom systemgruppen och 
+alla dess förfäder saknas. 
+
+Ett system med systemgruppen ssab.vwx.n2 kommer att ärva användare från systemgruppen ssab, 
+dvs sysansv, skiftel och 55. Alla systemgrupper måste inte finnas i databasen, det räcker att 
+någon förfader finns. Det som inte finns antas ha attributet UserInherit.
+</topic>
+
+<topic> user login
+Inloggning
+
+Inloggning och behörighets-kontroll fungerar olika i olika delar av proview.
+
+<h1>Utvecklingsmiljön
+När man startar navigatören öppnas ett inloggnings-fönster där man kan mata in användarnamn 
+och passerord. Man kan även skicka med användarnamn och passerord som argument om man vill 
+undvika inloggnings-fönstret. För att öppna konfiguratören krävs privilegiet DevRead, och för
+att gå in i editerings mod krävs DevRead. För att editera i plc-editorn krävs DevPlc.
+
+<h1>Xtt-operatörsbilder
+När xtt startas med ett OpPlace-objekt som argument, hämtas användaren från 
+UserName-attributet i motsvarande User-objekt. För att få ändra i databasen från xtt krävs 
+RtWrite. I operatörsbilderna finns olika tryck-knappar, dragreglar mm från vilka man kan 
+påverka databasen. Dessa objekt har ett access-attribut som talar om vilka priviliger som 
+krävs för att kunna aktivera objektet. Dessa privilegier matchas mot användarens privilegier,
+och om han inte har något av dem, nekas han access.
+
+Från xtt kan man med login/logout kommandot logga in som en annan användare och därmed ändra 
+sina privilegier.
+
+<h1>Operatörsbilder på intranätet
+För operatörbilder på webben finns en speciell inloggnings-applet som bör läggas in på 
+start-web-sidan för ett system. Inloggnings-appleten kontroller användarnamn och passerord. 
+Dessutom kontrolleras de varje gång man tar upp en ny operatörs-bild. Man är inloggad ända 
+tills man loggar ut (från inloggnings-appleten), eller tar upp en bild i ett system där 
+användaren inte längre har behörighet.
+</topic>
+
+<topic> pwr_user
+pwr_user
+
+pwr_user används för att skapa systemgrupper och användare i användar-databasen. 
+Konfigureringen sker mha kommandon. 
+
+pwr_user startas från kommando-prompten.
+
+Här beskrivs de olika kommandon som finns för att skapa, modifiera och lista systemgrupper 
+och användare.
+
+add group <t>Addera en systemgrupp <link> pwr_user add group
+add user  <t>Addera en användare <link> pwr_user add user
+get       <t>Hämta en användare <link> pwr_user get
+list      <t>Lista systemgrupper och användare <link> pwr_user list
+load      <t>Ladda in senaste sparade databas <link> pwr_user load
+modify group <t>Ändra en systemgrupp <link> pwr_user modify group
+modify user  <t>Ändra en användare <link> pwr_user modify user
+remove group <t>Ta bort en systemgrupp <link> pwr_user remove group
+remove user  <t>Ta bort en användare <link> pwr_user remove user
+save      <t>Spara <link> pwr_user save
+su        <t>Logga in som super user <link> pwr_user su
+</topic>
+
+<headerlevel>
+<topic>pwr_user add
+add
+
+add group <link> pwr_user add group
+add user <link> pwr_user add user
+</topic>
+
+<headerlevel>
+<topic> pwr_user add group
+add group
+
+Skapa en systemgrupp
+
+<c>pwr_user> add group 'name' [/nouserinherit]
+
+/nouserinherit <t>Attributet UserInherit ska inte vara satt för systemgruppen. 
+        <t>UserInherit är default.
+</topic>
+<topic> pwr_user add user
+add user
+Skapa en användare.
+
+pwr_user> add user 'name' /group= /password= [/privilege=]
+	[/rtread][/rtwrite][/system][/maintenance][/process]
+[/instrument][/operator1][/operator2]...[oper10][/devread]
+[/devplc][/devconfig][/devclass]
+
+/group <t>Systemgrupp som användaren ska tillhöra.
+/password <t>Användarens passerord.
+/privilege <t>Privilegier om denna anges anges som en mask, dvs ett heltalsvärde.
+/rtread <t>Användaren tilldelas RtRead.
+/rtwrite <t>Användaren tilldelas RtWrite.
+/system <t>Användaren tilldelas System.
+/maintenance <t>Användaren tilldelas Maintenance.
+/process <t>Användaren tilldelas Process.
+/operator1 <t>Användaren tilldelas Operator1.
+...
+/operator9 <t>Användaren tilldelas Operator9.
+/operator10 <t>Användaren tilldelas Operator10.
+/devread <t>Användaren tilldelas DevRead.
+/devplc <t>Användaren tilldelas DevPlc.
+/devconfig <t>Användaren tilldelas DevConfig.
+/devclass <t>Användaren tilldelas DevClass.
+</topic>
+</headerlevel>
+
+<topic> pwr_user get
+get
+
+Hämtar en användare med en algorithm som används i runtime.
+
+pwr_user> get 'username' /group= /password=
+</topic>
+
+<topic> pwr_user list
+list
+
+Lista systemgrupper och användare.
+
+pwr_user> list
+</topic>
+
+<topic> pwr_user load
+load
+
+Laddar in den senaste sparade databasen och raderar eventuella ändringar sen senaste save.
+</topic>
+<topic> pwr_user modify
+modify
+
+modify group <link> pwr_user modify group
+modify user <link> pwr_user modify user
+</topic>
+
+<headerlevel>
+<topic> pwr_user modify group
+modify group
+
+Ändra data för en systemgrupp. 
+
+<c>pwr_user> modify group 'name' /[no]userinherit
+
+/userinherit <t>Sätter attributet UserInherit som anger att systemgruppen ska 
+             <t>ärva användare från från sin förälder i systemgrupps-hierakin. 
+             <t>Negeras med /nouserinherit
+</topic>
+
+<topic> pwr_user modify user
+modify user
+
+Ändra data för en användare.
+
+<c>pwr_user> modify user 'name' /group= [/password=][/privilege=]
+<c>	[/rtread][/rtwrite][/system][/maintenance][/process]
+<c>     [/instrument][/operator1][/operator2]...[oper10][/devread]
+<c>     [/devplc][/devconfig][/devclass]
+
+/group <t>Systemgrupp som användaren tillhör.
+/password <t>Användarens passerord.
+/privilege <t>Privilegie om denna anges anges som en mask, dvs ett heltalsvärde.
+/rtread <t>Användaren tilldelas RtRead.
+/rtwrite <t>Användaren tilldelas RtWrite.
+/system <t>Användaren tilldelas System.
+/maintenance <t>Användaren tilldelas Maintenance.
+/process <t>Användaren tilldelas Process.
+/operator1 <t>Användaren tilldelas Operator1.
+...
+/operator9 <t>Användaren tilldelas Operator9.
+/oper10 <t>Användaren tilldelas Operator10.
+/devread <t>Användaren tilldelas DevRead.
+/devplc <t>Användaren tilldelas DevPlc.
+/devconfig <t>Användaren tilldelas DevConfig.
+/devclass <t>Användaren tilldelas DevClass.
+</topic>
+</headerlevel>
+
+<topic> pwr_user remove
+remove
+
+remove group <link> pwr_user remove group
+remove user <link> pwr_user remove user
+</topic>
+
+<headerlevel>
+<topic> pwr_user remove group
+remove group
+Ta bort en systemgrupp.
+
+<c>pwr_user> remove group 'name'
+</topic>
+
+<topic> pwr_user remove user
+remove user
+
+Ta bort en användare.
+
+<c>pwr_user> remove user 'name' /group=
+</topic>
+</headerlevel>
+
+<topic> pwr_user save
+save
+Spara.
+
+<c>pwr_user> save
+</topic>
+
+<topic> pwr_user su
+su
+
+Logga in som super-user. Som super-user kan man se se password för användare vid listning.
+su kräver password.
+
+<c>pwr_user> su 'password' 
+</topic>
+</headerlevel>
+</headerlevel>
+</chapter>
+
+<chapter>
+<TOPIC> help command
+Wtt kommandon
+
+<b>exit        <t>stäng wtt			<LINK> exit
+<b>edit        <t>sätt edit mod			<LINK> edit
+<b>compile    <t>Kompilera plcpgm		<LINK> compile
+<b>configure card<t>Konfigurera ett kort objekt	<LINK> configure card
+<b>connect    <t>Koppla ihop signal med kanal	<LINK> connect
+<b>copy       <t>Kopiera utvalt objektsträd 	<LINK> copy
+<b>copy object<t>Kopiera ett objekt		<LINK> copy object
+<b>create bootfiles <t>Skapa bootfiler		<LINK> create bootfiles
+<b>create loadfiles <t>Skapa laddatafier	<LINK> create loadfiles
+<b>create object <t>Skapa ett objekt		<LINK> create object
+<b>create structfiles <t>Skapa structfiler	<LINK> create structfiles
+<b>create volume <t>Skapa en volym		<LINK> create volume
+<b>create rttfiles <t>Skapa rttfiler		<LINK> create rttfiles
+<b>cut		<t>Klipp ut objekt		<LINK> cut
+<b>define      	<t>Definiera en symbol		<LINK> define
+<b>delete object <t>Ta bort ett objekt		<LINK> delete object
+<b>delete tree	<t>Ta bort ett objektsträd	<LINK> delete tree
+<b>delete volume<t>Ta bort en volym		<LINK> delete volume
+<b>disconnect 	<t>Koppla ifrån signal och kanal <LINK> disconnect
+<b>display     <t>Visa ett fönster		<LINK> display
+<b>help        <t>Visa hjälp			<LINK> help help
+<b>generate web <t>Generera websidor		<LINK> generate web
+<b>list channels<t>Lista kanaler		<LINK> list channels
+<b>list descriptor<t>Lista från listdescriptor	<LINK> list descriptor
+<b>list hierarchy<t>Lista hieraki		<LINK> list hierarchy
+<b>list plcpgm <t>Lista plcpgm			<LINK> list plcpgm
+<b>list signals<t>Lista signaler		<LINK> list signals
+<b>login       <t>Logga in användare		<LINK> login
+<b>logout      <t>Logga ut användare		<LINK> logout
+<b>move object <t>Flytta ett objekt		<LINK> move object
+<b>new buffer  <t>Skapa en ny buffer		<LINK> new buffer
+<b>one         <t>Ett fönster			<LINK> one
+<b>open buffer <t>Öppna buffer väljar fönstret	<LINK> open buffer
+<b>paste       <t>Klistra buffer		<LINK> paste
+<b>print      <t>Skriv ut plcpgm		<LINK> print
+<b>redraw     <t>Rita om plcpgm			<LINK> redraw
+<b>revert      <t>Backa sessionen		<LINK> revert
+<b>save        <t>Spara sessionen		<LINK> save
+<b>search      <t>Sök	 			<LINK> search
+<b>set advanceduser<t>Sätt avancerad användare	<LINK> set advanceduser
+<b>set alltoplevel<t>Visa alla topnivå objekt   <LINK> set alltoplevel
+<b>set attribute<t>Sätt objekt attribut 	<LINK> set attribute
+<b>set db      <t>Sätt databas 			<LINK> set db
+<b>set inputfocus<t>Sätt inmatings fokus till fönster 	<LINK> set inputfocus
+<b>set showalias<t>Visa alias namn 		<LINK> set showalias
+<b>set showattrref<t>Visa attribut refrenser <LINK> set showattrref
+<b>set showattrxref<t>Visa attribut x-referenser <LINK> set showattrxref
+<b>set showclass<t>Visa objektsklassen 	<LINK> set showclass
+<b>set showdescription<t>Visa beskrivning	<LINK> set showdescription
+<b>set showobjref<t>Visa objekt referenser 	<LINK> set showobjref
+<b>set showobjxref<t>Visa objekt x-referenser <LINK> set showobjxref
+<b>set template<t>Sätt templatevärden på objekt <LINK> set template
+<b>set verify  <t>Verifiera script	 	<LINK> set verify
+<b>set window  <t>Sätt fönsterstorlek	 	<LINK> set window
+<b>set volume  <t>Sätt volym			<LINK> set volume
+<b>setup       <t>Wtt setup			<LINK> setup
+<b>show children<t>Visa ett objekts barn	<LINK> show children
+<b>show object  <t>Visa ett objekt		<LINK> show object
+<b>show objid  <t>Visa objektidentiteten	<LINK> show objid
+<b>show script <t>Visa script filer		<LINK> show script
+<b>show symbol <t>Visa en symbol		<LINK> show symbol
+<b>show user   <t>Visa nuvarande användare	<LINK> show user
+<b>show version<t>Visa wtt version		<LINK> show version
+<b>show volumes<t>Visa alla volymer i arbetsbänken <LINK> show volumes
+<b>sort       <t>Sortera barnen till ett objekt <LINK> sort
+<b>two         <t>Två fönster			<LINK> two
+<b>wb dump    <t>Dumpa objekt i en textfil	<LINK> wb dump
+<b>wb export  <t>Skriv objekt till en textfil	<LINK> wb export
+<b>wb import  <t>Ladda exporterade objekt från textfil <LINK> wb import
+<b>wb load    <t>Ladda objekt från textfil	<LINK> wb load
+
+<b>Symboler <link> symbol
+
+<H2>Närliggande ämnen
+script <LINK> script
+</TOPIC>	
+
+
+<TOPIC> exit <style> function
+Kommando   exit
+
+Close wtt.
+
+<B>wtt> exit
+</TOPIC>
+
+<TOPIC> edit <style> function
+Kommando   edit
+
+Starta eller lämna editerings mod.
+
+<B>wtt> edit
+<B>wtt> noedit
+</TOPIC>
+
+<TOPIC> define <style> function
+Kommando define
+
+Definiera en symbol.
+
+<B>wtt> define 'symbolname' 'text'
+
+<h2>närliggand ämnen
+symbol <LINK> symbol
+show symbol <LINK> show symbol
+symbolfile <LINK> symbolfile
+</TOPIC>	
+
+<TOPIC> help help <style> function
+Kommando   help
+
+Visa hjälp information för ämnet.
+Hjälp informationen söks efter i en hjälpfil. Filen kan vara
+bas-hjälpfilen, projekt-hjälpfilen eller en annan hjälpfil.
+
+Om ingen hjälpfil anges kommer ämnet att eftersökas i
+bas och projekt hjälpfilerna.
+
+<B>wtt> help 'subject'
+<B>wtt> help 'subject' /file=
+
+/file<t>En hjälpfil som innehåller information om ämnet.
+
+<H2>närliggande ämnen
+helpfile <LINK> helpfile
+</TOPIC>
+
+<TOPIC> login <style> function
+Kommando   login
+
+Logga in med användarnamn och passerord. Användarens privilegier kommer
+att hämtas ur användardatabasen, och påverka tillgången till systemet.
+
+<B>wtt> login 'username' 'password'
+
+<H2>närliggande ämnen
+logout <LINK> logout
+</TOPIC>
+
+<TOPIC> logout <style> function
+Kommando   logout
+
+Logga ut en användare, och återgå till den ursprungliga användaren.
+
+<B>wtt> logout
+
+<H2>närliggande ämnen
+login <LINK> login
+</TOPIC>
+
+<TOPIC> set advanceduser <style> function
+Kommando   set advanceduser
+
+Sätta eller återställa 'advanced user'.
+
+<B>wtt> set advanceduser
+<B>wtt> set noadvanceduser
+
+<H2>närliggande ämnen
+advanced user <LINK> advanced user
+</TOPIC>
+
+<TOPIC> set alltoplevel <style> function
+Kommando   set alltoplevel
+
+Visa alla rotobjekt i databasen, inte enbart de som är
+definierade för anläggnings resp node hierarkin.
+
+<B>wtt> set alltoplevel
+<B>wtt> set noalltoplevel
+
+</TOPIC>
+
+<TOPIC> set showclass <style> function
+Kommando   set showclass
+
+Visa klasstillhörighet för objekt i anläggnings och nod hierarkin.
+
+<B>wtt> set showclass
+<B>wtt> set noshowclass
+</TOPIC>
+
+<TOPIC> set showalias <style> function
+Kommando   set showalias
+
+Visa aliasnamnet för objekt i anläggnings och nod hierakin.
+
+<B>wtt> set showalias
+<B>wtt> set noshowalias
+</TOPIC>
+
+<TOPIC> set showdescription <style> function
+Kommando   set showdescription
+
+Visa beskrivning för objekt i anläggnings och nod hierarkin.
+
+<B>wtt> set showdescription
+<B>wtt> set noshowdescription
+</TOPIC>
+
+<TOPIC> set showobjref <style> function
+Kommando   set showobjref
+
+Visa antalet kopplade objektreferenser för objekt i anläggnings och
+nod hierarkin.
+
+<B>wtt> set showobjref
+<B>wtt> set noshowobjref
+</TOPIC>
+
+<TOPIC> set showobjxref <style> function
+Kommando   set showobjxref
+
+Visa antalet kopplade objekt x-referenser för objekt i anläggnings och
+nod hierarkin.
+
+<B>wtt> set showobjxref
+<B>wtt> set noshowobjxref
+</TOPIC>
+
+<TOPIC> set showattrref <style> function
+Kommando   set showattrref
+
+Visa antal kopplade attribut referenser för objekt
+i anläggnings och nod hierarkin.
+
+<B>wtt> set showattrref
+<B>wtt> set noshowattrref
+</TOPIC>
+
+<TOPIC> set showattrxref <style> function
+Kommando   set showattrxref
+
+Vissa antalet kopplade attribut x-referenser för objekt
+in anläggnings och nod hierarkin.
+
+<B>wtt> set showattrxref
+<B>wtt> set noshowattrxref
+</TOPIC>
+
+<TOPIC> set verify <style> function
+Kommando   set verify
+
+Visa alla exekverade rader när ett script körs.
+
+<B>wtt> set verify
+<B>wtt> set noverify
+</TOPIC>
+
+<TOPIC> set inputfocus <style> function
+Kommando   set inputfocus
+
+Sätt inmatnings fokus till anläggnings eller nod hierarki fönstret 
+(w1 eller w2).
+
+<B>wtt> set inputfocus w1
+<B>wtt> set inputfocus w2
+</TOPIC>
+
+<TOPIC> set window <style> function
+Kommando   set window
+
+Set fönsterbredd och höjd.
+
+<B>wtt> set window /width= /height=
+
+/width	<t>bredd i pixel.
+/height <t>höjd i pixel.
+</TOPIC>
+
+<TOPIC> two <style> function
+Kommando   two
+
+Visa två fönster. Både anläggnings och nod hierarki fönsterna visas.
+
+<B>wtt> two
+</TOPIC>
+
+<TOPIC> one <style> function
+Kommando   one
+
+Visa ett fönster. Fönstret som för närvarande har inmatnings 
+fokus behålls.
+
+<B>wtt> one
+</TOPIC>
+
+<TOPIC> setup <style> function
+Wtt setup
+Setup av wtt egenskaper
+
+DefaultDirectory<t><t>Default filkatalog för script filer.
+SymbolFilename	<t><t>Symbolfil.		<LINK> symbolfile
+Verify		<t><t>Verifiera exekvering av script.
+AdvancedUser	<t><t>Användaren är avancerad. <LINK> advanced user
+AllToplevel	<t><t>Visa samtliga topnivå objekt.
+Bypass		<t><t>Förbigå vissa editerings restriktioner.
+</TOPIC>
+
+<TOPIC> show version <style> function
+Kommando   show version
+
+Visa wtt version.
+
+<B>wtt> show version
+</TOPIC>
+
+<TOPIC> show symbol <style> function
+Kommando   show symbol
+
+Visa en symbol, eller alla symboler.
+
+<B>wtt> show symbol 'symbol'<t>Visa symbol 'symbol'
+<B>wtt> show symbol         <t>Visa alla symboler
+
+<h2>närliggande ämnen
+define <LINK> define
+symbol <LINK> symbol
+</TOPIC>
+
+<TOPIC> show volumes <style> function
+Kommando   show volumes
+
+Visa alla volymer i arbetsbänken.
+
+<B>wtt> show volumes
+</TOPIC>
+
+<TOPIC> show children <style> function
+Kommando   show children
+
+Visa ett objekt och dess barn.
+
+<B>wtt> show children /name=
+
+/name	<t>Förälder objektets namn.
+</TOPIC>
+
+<TOPIC> show objid <style> function
+Kommando   show objid
+
+Visa objektsidentitet för ett objekt.
+Om /name utelämnas, visas identiteten för det utvalda objektet.
+
+<B>wtt> show objid [/name=]
+
+/name	<t>Objektsnamn.
+</TOPIC>
+
+<TOPIC> save <style> function
+Kommando   save
+
+Spara sessionen.
+
+<B>wtt> save
+</TOPIC>
+
+<TOPIC> revert <style> function
+Kommando   revert
+
+Revertera sessionen.
+
+<B>wtt> revert
+</TOPIC>
+
+<TOPIC> display <style> function
+Kommando   display
+
+Visa anläggnings eller nod hierarkin i fönster (w1 eller w2).
+
+<B>wtt> display w1
+<B>wtt> display w2
+</TOPIC>
+
+<TOPIC> search <style> function
+Kommando   search
+
+Leta efter ett objektsnamn eller en sträng.
+
+<B>wtt> search 'object'
+<B>wtt> search /regularexpression 'expression'
+<B>wtt> search /next
+</TOPIC>
+
+<TOPIC> compile <style> function
+Kommando   compile
+
+Kompilera plcprogram.
+
+Om ingen hierarki, plcpgm eller window anges, kompileras det utvalda
+plcpgm'et.
+
+<B>wtt> compile [/debug]
+<B>wtt> compile /plcpgm= [/debug]
+<B>wtt> compile /window= [/debug]
+<B>wtt> compile /hierarchy= [/debug][/modified][/from_plcpgm=]
+<B>wtt> compile /volume= [/debug][/modified][/from_plcpgm=]
+<B>wtt> compile /allvolumes [/debug][/modified][/from_plcpgm=]
+
+/plcpgm		<t>Namn på ett plcpgm objekt som ska kompileras.
+/window		<t>Namn på ett plcfönster som ska kompileras.
+/hierarchy	<t>Alla plcpgm in den här hierakin kommer att kompileras.
+/volume		<t>Volymsnamn. Alla plcpgm i volymen kommer att kompileras.
+/allvolumes	<t>Alla plcpgm i alla volymer i arbetsbänken kommer att kompileras.
+/debug		<t>Kompilera med debug.
+/modified	<t>Kompilera enbart modifierade plcfönster.
+</TOPIC>
+
+<TOPIC> configure card <style> function
+Kommando   configure card
+
+Skapa ett kort med kanaler.
+
+<B>wtt> configure card /rack= /cardname= /channelname= /chanidentity=
+<B>		<t>/chandescription= /table=
+
+/rack		<t>Namn på det rackobjekt som kortet ska tillhöra.
+
+/cardname	<t>Namn på kortet. Sista namnledet.
+
+/channelname	<t>Namn på en kanal. Sista namnledet.
+		<t>Ett '#' kommer att bytas ut mot kanalnumret.
+		<t>T ex /chan=di33## kommer att ge kanalnamnen
+		<t>di3301, di3302... Om det är fler än en kanal.
+		<t>channelname måste innehålla ett '#' tecken.
+
+/chanidentity	<t>Kanalens identitet. Läggs in i Identity attributet
+		<t>för kanalen.
+
+/chandescripton	<t>Kanal beskrivning. Läggs in i Descripton attributet
+		<t>för kanalen.
+</TOPIC>
+
+<TOPIC> connect <style> function
+Kommando   connect
+
+Kopplar ihop en signal med en kanal.
+
+<B>wtt> connect /source= /destination= [/reconnect]
+
+/source		<t>Ett signal eller kanalobjekt.
+/destination	<t>Ett signal eller kanalobjekt.
+/reconnect	<t>Om source eller destination redan är kopplade
+		<t>kommer de först att ta ner kopplingen.
+</TOPIC>
+
+<TOPIC> disconnect <style> function
+Kommando   disconnect
+
+Ta ner kopplingen för en signal eller kanal.
+
+<B>wtt> disconnect /source=
+
+/source		<t>Ett singal eller kanal objekt.
+</TOPIC>
+
+<TOPIC> copy <style> function
+Kommando   copy
+
+Kopiera utvalda objektträd till en paste buffer.
+
+<B>wtt> copy [/keepreferences]
+
+/keepreferences	<t>Behåll objektsreferenser till objekt utanför det
+                <t>kopierade trädet. Som default kommer dessa att nollställas.
+</TOPIC>
+
+<TOPIC> cut <style> function
+Kommando   cut
+
+Kopiera utvalda objektträd till en paste buffer, och ta bort objekten
+ur aktuell volym.
+
+<B>wtt> cut [/keepreferences]
+
+/keepreferences	<t>Behåll objektsreferenser till objekt utanför det
+                <t>kopierade trädet. Som default kommer dessa att nollställas.
+</TOPIC>
+
+<TOPIC> paste <style> function
+Kommando   paste
+
+Klistra in objekt från den senaste copy or cut operationen, i den
+nuvarande volymen. Med buffer möjligheten kan en äldre buffer klistras
+in.
+
+<B>wtt> paste [/keepoid] [/buffer=]
+
+/keepoid	<t>Behåll objektsidentiteter om det är möjligt.
+/buffer		<t>Namn på den buffer som ska klistras in. Som default
+		<t>används den senaste bufferten.
+</TOPIC>
+
+<TOPIC> new buffer <style> function
+Kommando   new buffer
+
+Skapa en ny tom buffer.
+
+<B>wtt> new buffer /name=
+
+/name		<t>Namn på bufferten.
+</TOPIC>
+
+<TOPIC> open buffer <style> function
+Kommando   open buffer
+
+Öppna fönstret för att välja buffer.
+
+<B>wtt> open buffer
+</TOPIC>
+
+<TOPIC> copy object <style> function
+Kommando   copy object
+
+Kopiera ett objekt eller ett objeksträd.
+
+<B>wtt> copy object /source= /destination= /name= [/hierarchy]
+<B>		<t>[/first] [/last] [/after] [/before]
+
+/source		<t>Objektet som ska kopieras.
+/destination	<t>Förälder eller syskon till det skapade objektet.
+/name		<t>Namn på det skapade objektet. Sista namnledet.
+/hierarchy	<t>Om käll-objektet har barn, kommer även barnträdet
+		<t>att kopieras.
+/first		<t>Objektet kommer att läggas in som första barn till
+		<t>destinations objektet.
+/last		<t>Objektet kommer att läggas in som sista barn till
+		<t>destinations objektet.
+/after		<t>Objektet kommer att läggas in som syskon efter
+		<t>destinations objektet.
+/before		<t>Objektet kommer att läggas in som syskon före
+		<t>destinations objektet.
+</TOPIC>
+
+<TOPIC> create bootfiles <style> function
+Kommando   create bootfiles
+
+Skapa en ny bootfil.
+
+<B>wtt> create bootfiles /nodeconfig= [/debug]
+<B>wtt> create bootfiles /allnodes [/debug]
+
+/nodeconfig	<t>Namn på NodeConfig-objektet för de nod
+		<t>som en bootfil ska skapas för.
+
+/all		<t>Skapa bootfiler för alla noder i projektet.
+
+/debug		<t>Länka plcprogram med debug.
+</TOPIC>
+
+<TOPIC> create loadfiles <style> function
+Kommando   create loadfiles
+
+Skapa laddatafiler för en volym.
+
+<B>wtt> create loadfile /volume=
+<B>wtt> create loadfile [/class] [/all]
+
+/volume		<t>Skapa laddatafil för angiven volym.
+
+/all		<t>Skapa laddatafiler för alla rot- och sub-volymer
+		<t>i arbetsbänken.
+
+/class		<t>Skapa laddatafiler för alla classvolymer i arbetsbänken.
+</TOPIC>
+
+<TOPIC> create object <style> function
+Kommando   create object
+
+Skapa ett objekt.
+
+<B>wtt> create object /destination= /name= /class= 
+<B>		<t>[/first] [/last] [/after] [/before]
+
+/destination	<t>Destinationen för det nya objektet. Det nya objektet
+		<t>kommer att bli barn eller syskon till destinations objektet.
+
+/name		<t>Namn på det nya objektet. Sista namnledet.
+
+/class		<t>Klass på det nya objektet.
+
+/first		<t>Objektet kommer att läggas in som första barn till
+		<t>destinations objektet.
+
+/last		<t>Objektet kommer att läggas in som sista barn till
+		<t>destinations objektet.
+
+/after		<t>Objektet kommer att läggas in som syskon efter
+		<t>destinations objektet.
+
+/before		<t>Objektet kommer att läggas in som syskon före
+		<t>destinations objektet.
+
+</TOPIC>
+
+<TOPIC> create structfiles <style> function
+Kommando   create structfiles
+
+Skapa c include filer för klasser i en klassvolym.
+
+<B>wtt> create structfiles [/files=]
+
+/files		<t>Namn på wb_load filen.
+</TOPIC>
+
+<TOPIC> create rttfiles <style> function
+Kommando   create rttfiles
+
+Skapa filer för att visa korsreferenser i rtt och xtt för objekt
+i den aktuella volymen.
+
+<B>wtt> create rttfiles
+</TOPIC>
+
+<TOPIC> generate web <style> function
+Kommando   generate web
+
+Generera html-filer för websidor konfiguerarde med Web-objekt i
+nodhierarkin för aktuell volym.
+
+<B>wtt> generate web
+</TOPIC>
+
+<TOPIC> delete object <style> function
+Kommando   delete object
+
+Ta bort ett objekt.
+
+<B>wtt> delete object /name= [/noconfirm] [/nolog]
+
+/name		<t>Namn på objektet.
+/noconfirm	<t>Ta bort utan verifikation.
+/nolog		<t>Operationen kommer inte att loggas.
+</TOPIC>
+
+<TOPIC> delete tree <style> function
+Kommando   delete tree
+
+Ta bort ett objektsträd.
+
+<B>wtt> delete tree /name= [/noconfirm] [/nolog]
+
+/name		<t>Rot objektet för trädet.
+/noconfirm	<t>Ta bort utan verifikation.
+/nolog		<t>Operationen kommer inte att loggas.
+</TOPIC>
+
+<TOPIC> list <style> function
+Kommando   list
+
+Skriv ut en lista på objekt och attribut.
+
+Listan kommer att skickas till en skrivarkö specificerad av
+symbolen PWR_FOE_PRINT.
+
+<B>wtt> list descriptor /descriptor=		<link> list descriptor
+<B>wtt> list channels [/node=]			<link> list channels
+<B>wtt> list signals [/hierarchy=]		<link> list signals
+<B>wtt> list plcpgm [/plcpgm=] [/hierarchy=]	<link> list plcpgm
+<B>wtt> list hierarchy [/hierarchy=]		<link> list hierarchy
+</TOPIC>
+
+<TOPIC> list descriptor <style> function
+Kommando   list descriptor
+
+Skriver ut en lista beskriven av ett ListDescriptor objekt.
+
+<B>wtt> list descriptor /descriptor=		<link> list descriptor
+
+/descriptor	<t>ListDescriptor object.
+</TOPIC>
+
+<TOPIC> list channels <style> function
+Kommando   list channels
+
+Lista kort och kanaler.
+
+<B>wtt> list channels [/node=] [/volume=] [/allvolumes] [output=]
+
+/node		<t>$Node objekt.
+/volume		<t>Lista objekt i angiven volym.
+/allvolume	<t>List objekt i alla volymer.
+/output		<t>Filnamn för utskrift på fil. Om ett filnamn anges kommer listan 
+		<t>inte att skickas till en printer.
+</TOPIC>
+
+<TOPIC> list signals <style> function
+Kommando   list signals
+
+Lista signaler och korsreferenser för signalerna.
+
+<B>wtt> list signals [/hierarchy=] [/volume=] [/allvolumes] [output=]
+
+/hierarchy	<t>Hierarki objekt.
+/volume		<t>Lista objekt i angiven volym.
+/allvolume	<t>List objekt i alla volymer.
+/output		<t>Filnamn för utskrift på fil. Om ett filnamn anges kommer listan 
+		<t>inte att skickas till en printer.
+</TOPIC>
+
+<TOPIC> list hierarchy <style> function
+Kommando   list hierarchy
+
+Lista PlantHier och NodeHier objekt.
+
+<B>wtt> list hierarchy [/hierarchy=] [/volume=] [/allvolumes] [output=]
+
+/hierarchy	<t>Hierarki objekt.
+/volume		<t>Lista objekt i angiven volym.
+/allvolume	<t>List objekt i alla volymer.
+/output		<t>Filnamn för utskrift på fil. Om ett filnamn anges kommer listan 
+		<t>inte att skickas till en printer.
+</TOPIC>
+
+<TOPIC> list plcpgm <style> function
+Kommando   list plcpgm
+
+Lista PlcPgm objekt.
+
+<B>wtt> list plcpgm [/hierarchy=] [plcpgm=] [/volume=] [/allvolumes] [output=]
+
+/plcpgm		<t>Plcpgm objekt.
+/hierarchy	<t>Hierarki objekt.
+/volume		<t>Lista objekt i angiven volym.
+/allvolume	<t>List objekt i alla volymer.
+/output		<t>Filnamn för utskrift på fil. Om ett filnamn anges kommer listan 
+		<t>inte att skickas till en printer.
+</TOPIC>
+
+<TOPIC> move object <style> function
+Kommando   move object
+
+Flytta eller byt namn på ett objekt.
+
+<B>wtt> move object /source= /destination= [/rename=] [/first] [/last] [/after] [/before]
+<B>wtt> move object /source= /rename=
+
+/source		<t>Namn på objektet som ska flyttas.
+/destination	<t>Förälder eller syskon objekt efter förflyttningen.
+/rename		<t>Nytt objektnamn, om namnet ska ändras.
+		<t>Sista namnledet. Om ingen destination anget kommer enbart
+		<t>namnet att ändras, objektet flyttas inte.
+/first		<t>Objektet kommer att läggas in som första barn till
+		<t>destinations objektet.
+/last		<t>Objektet kommer att läggas in som sista barn till
+		<t>destinations objektet.
+/after		<t>Objektet kommer att läggas in som syskon efter
+		<t>destinations objektet.
+/before		<t>Objektet kommer att läggas in som syskon före
+		<t>destinations objektet.
+</TOPIC>
+
+<TOPIC> print <style> function
+Kommando   print
+
+Skriv ut plc dokument.
+
+<B>wtt> print /plcpgm= [/nodocument] [/nooverview]
+<B>wtt> print /hierarchy= [/nodocument] [/nooverview]
+
+/plcpgm		<t>Skriv ut dokument i ett plcpgm.
+/hierarchy	<t>Ett hierarki objekt. Alla plc i hierarkin kommer
+		<t>att skrivas ut.
+/nodocument	<t>Plc dokumentet skrivs ej ut.
+/nooverview	<t>Översikten över plc-fönstret skrivs ej ut.
+</TOPIC>
+
+<TOPIC> set attribute <style> function
+Kommando   set attribute
+
+Sätt ett värde på ett attribut.
+Objekt väljs med name, class och hierarchy kvalifierarna.
+
+<B>wtt> set attribute /attribute= [/value=] [/name=] [/class=] [/hierarchy=]
+<B>		<t>[/noconfirm] [/nolog] [/output] [/noterminal]
+
+/attribute	<t>Namn på attributet.
+/value		<t>Värde som ska läggas in i attributet. Om inget värde
+		<t>är angivet kommer en fråga för varje attribut.
+/class		<t>Välj objekt av den här klassen.
+/hierarchy	<t>Endas avkomlingar till det här objektet kommer att väljas.
+/noconfirm	<t>Ställ ingen verifikations fråga.
+/nolog		<t>Operationen loggas inte.
+/output		<t>Ut fil.
+/noterminal	<t>Operationen loggas inte i terminal fönster.
+</TOPIC>
+
+<TOPIC> search <style> function
+Kommando   search
+
+Sök efter objektsnamn eller sträng.
+
+<B>wtt> search 'object'
+<B>wtt> search /regularexpression 'expression'
+<B>wtt> search /next
+</TOPIC>
+
+<TOPIC> set db <style> function
+Kommando   set db
+
+Koppla upp till databasen med angivet id.
+Detta har ingen effekt om man redan har öppnat en databas.
+
+<B>wtt> set db /dbid=
+
+/dbid	<t>Databas identitet.
+</TOPIC>
+
+<TOPIC> set volume <style> function
+Kommando   set volume
+
+Öppna en session mot en volym.
+
+<B>wtt> set volume 'volumename'
+<B>wtt> set volume /volumename=
+
+/volumename		<t>Volymsnamn.
+</TOPIC>
+
+<TOPIC> set template <style> function
+Kommando   set template
+
+Föråldrad sen V4.0.
+</TOPIC>
+
+<TOPIC> show object <style> function
+Kommando   show object
+
+Lista objekt.
+
+<B>wtt> show object [/name=] [/hierarchy=] [/class=] [/volume=] [/allvolumes]
+<B>		<t>[/parameter=] [/full] [/output=] [/noterminal]
+<B>wtt> show object /objid=
+
+/name		<t>Objektsnamn. Wildcard kan användas.
+/hierarchy	<t>Hierarki objekt. Endas objekt i hierarkin kommer att
+		<t>väljas.
+/class		<t>Endas objekt av angiven klass kommer att väljas.
+/volume		<t>Namn på volymen.
+/allvolumes	<t>Sökning av objekt kommer att ske i alla volymer.
+/parameter	<t>Lista värdet på ett attribut för valda objekt.
+/full		<t>Visa innehållet för objekten. Attribut som skiljer sig
+		<t>från template värdet kommer att listas.
+/output		<t>Ut fil.
+/noterminal	<t>Resultatet kommer inte att skrivas i terminalfönstret.
+/objid		<t>Visa objekt med specificerad objektsidentitet.
+</TOPIC>
+
+<TOPIC> show script <style> function
+Kommando   show script
+
+Visar en lista på script-filer.
+Wildcard med asterisk (*) kan användas för att ange filer.
+
+<B>wtt> show script ['scriptspec']
+
+</TOPIC>
+
+
+<TOPIC> sort <style> function
+Kommando   sort
+
+Sortera barnen til ett objekt i alfabetisk ordning, eller i klassordning.
+Om ingen 'parent' anges kommer barnen till utvalt objekt att sorteras.
+
+<B>wtt> sort /parent= [/class] [/signals]
+
+/parent		<t>Förälder till de objekt som ska sorteras.
+/class		<t>Sortera i klass ordning.
+/signals	<t>Sortera signaler och plcpgm i klassordning, och
+		<t>andra objekt i alfabetisk ordning.
+</TOPIC>
+
+<TOPIC> wb dump <style> function
+Kommando   wb dump
+
+Dumpa volymen, eller en del av volymen på textfil.
+
+<B>wtt> wb dump /output= [/hierarchy=]
+
+/hierarchy	<t>Hieraki objekt. Objektet och dess barnträd kommer
+		<t>att dumpas på textfil.
+/output		<t>Utfil.
+</TOPIC>
+
+<TOPIC> wb load <style> function
+Kommando   wb load
+
+Ladda databasen från wb_load-fil eller dbs-fil.
+
+<B>wtt> wb load /loadfile=
+
+/loadfile	<t>Filnamn. Kan vara av typ .wb_load, .wb_dmp eller .dbs.
+
+</TOPIC>
+
+<TOPIC> symbol
+Symbol
+
+En wtt symbol kan avändas som ett kort kommando eller som strängsubstitution i ett kommando.
+Då symbolen används som strängsubstitution ska symbolnamnet omges av enkelfnuttar.
+
+Symboler skapas med 'define' kommandot. <link> define
+Define kommandon kan exekveras av konfiguratörens startupfil. <link> symbolfile
+
+Exempel på symbol som används som kort kommando.
+
+<c>wtt> define p1 "show child/name=hql-hvk-pumpar-pump1"
+<c>wtt> p1
+
+Exempel på symbol som används som sträng substitution
+
+<c>wtt> define p1 hql-hvk-pumpar-StartPump1
+<c>wtt> open trace 'p1'
+
+<H2>Närliggande ämnen
+define <LINK> define
+show symbol <LINK> show symbol
+symbolfile <LINK> symbolfile
+</TOPIC>
+
+</chapter>
+//
+// Script
+//
+
+<chapter>
+<TOPIC> script
+Wtt script
+
+execute script		<LINK> execute script
+datatypes		<LINK> datatypes
+datatype conversions	<LINK> datatype conversions
+variable declarations	<LINK> variable declarations
+operators		<LINK> operators
+main-endmain		<LINK> main-endmain
+function-endfunction	<LINK> function-endfunction
+if-else-endif		<LINK> if-else-endif
+while-endwhile		<LINK> while-endwhile
+for-endfor		<LINK> for-endfor
+break			<LINK> break
+continue		<LINK> continue
+goto			<LINK> goto
+include			<LINK> include
+printf()		<LINK> printf()
+scanf()			<LINK> scanf()
+fprintf()		<LINK> fprintf()
+fgets()			<LINK> fgets()
+fopen()			<LINK> fopen()
+fclose()		<LINK> fclose()
+exit()			<LINK> exit()
+verify()		<LINK> verify()
+time()			<LINK> time()
+edit()			<LINK> edit()
+extract()		<LINK> extract()
+element()		<LINK> element()
+toupper()		<LINK> toupper()
+tolower()		<LINK> tolower()
+translate_filename()	<LINK> translate_filename()
+wtt-commands		<LINK> wtt-commands
+GetAttribute()		<LINK> getattribute()
+GetChild()		<LINK> getchild()
+GetParent()		<LINK> getparent()
+GetNextSibling()	<LINK> getnextsibling()
+GetNextVolume()		<LINK> getnextvolume()
+GetClassList()		<LINK> getclasslist()
+GetNextObject()		<LINK> getnextobject()
+GetObjectClass()	<LINK> getobjectclass()
+GetNodeObject()		<LINK> getnodeobject()
+GetRootList()		<LINK> getrootlist()
+GetVolumeClass()	<LINK> getvolumeclass()
+GetVolumeList()		<LINK> getvolumelist()
+GetProjectName()	<LINK> getprojectname()  
+CutObjectName()		<LINK> cutobjectname()
+MessageError()		<LINK> messageerror()
+MessageInfo()		<LINK> messageinfo()
+GetCurrentText()	<LINK> getcurrenttext()
+GetCurrentObject()	<LINK> getcurrentobject()
+GetCurrentVolume()	<LINK> getcurrentvolume()
+IsW1()			<LINK> isw1()
+IsW2()			<LINK> isw2()
+EditMode()		<LINK> editmode()
+MessageDialog()		<LINK> messagedialog()
+ConfirmDialog()		<LINK> confirmdialog()
+ContinueDialog()	<LINK> continuedialog()
+PromptDialog()		<LINK> promptdialog()
+</TOPIC>
+
+<TOPIC> execute script
+Exekvera ett script
+
+En script-fil exekveras från kommando-raden med kommandot
+
+wtt> @'filnamn'
+
+</TOPIC>
+
+<TOPIC> datatypes
+Datatyper
+
+Datatyperna är float, int och string.
+
+int	<t>heltals värde.
+float	<t>32-bitars flyttals värde.
+string	<t>textsträng, 80 tecken lång (null terminerad).
+
+Det finns tre olika tabeller som en variabel kan deklareras i: local, global
+och extern. En lokal variabel är känd inom en funktion, en global är känd
+i alla funktioner inom en fil, en extern är känd i alla filer som exekveras
+i en session.
+
+</TOPIC>
+
+<TOPIC> datatype conversions
+Datatyps konvertering
+
+Om ett uttryck består av variabler och funktioner med olika datatyper kommer
+variablerna att konverteras med företräde string, float, int. Om två operander
+har typerna float och string, eller int och string, kommer resultatet att bli
+string. Vid en tilldelning, kommer värdet av ett uttryck att konverteras till
+typen för den tilldelade variabeln. Detta gäller även om resultatet är en sträng
+och variablerna är av type float och int.
+
+<b>Exempel
+
+<c>string str;
+<c>int    i = 35;
+<c>str = "Luthor" + i;
+The value in str will be "Luthor35".
+
+<c>float   f;
+<c>string  str = "3.14";
+<c>int     i = 159;
+<c>f = str + i;
+The value in f will be 3.14159.
+</TOPIC>
+
+<TOPIC> variable declarations
+Variabel deklarationer
+
+En variabel måste deklareras innan den avänds.
+En deklaration består av
+- tabellen (global eller extern, om local ska inte tabellen anges)
+- datatypen (int, float eller string)
+- variabelnamn (känsligt för stora och små bokstäver)
+- likameds tecken följt av initierings värde, om det utelämnas är 
+  intitialvärdet 0 eller en null-sträng
+- semikolon.
+
+<b>Exempel
+
+<c>int             i;
+<c>float           flow = 33.4;
+<c>string          str = "Hello";
+<c>extern int      jakob;
+<c>global float    ferdinand = 1234;
+</TOPIC>
+
+<TOPIC> operators
+Operatorer
+
+Operatorerna har samma funktion som i c, med vissa begränsningar. Alla
+operatorer är inte implementerade. Vissa operatorer (+,=,==) kan även
+operera på string variabler. Prioriteten för operatorer är densamma som i c.
+
+Operator	<t>Beskrivning		<t>Datatyper
++		<t>plus			<t>int, float, string
+-		<t>minus			<t>int, float
+*		<t>multiplikation		<t>int, float
+/		<t>division			<t>int, float
+++	 	<t>inkrement, postfix only.	<t>int, float
+--	 	<t>dekrement, postfix only	<t>int, float
+>>	 	<t>bitar höger-skift		<t>int
+<<	 	<t>bitar vänster-skift		<t>int
+<		<t>mindre än			<t>int, float
+>		<t>större än			<t>int, float
+<=	 	<t>mindre eller lika med	<t>int, float
+>=	 	<t>större eller lika med	<t>int, float
+==	 	<t>lika med			<t>int, float, string
+!=	 	<t>ej lika med			<t>int, float, string
+&		<t>bitvis och			<t>int
+|		<t>bitvis eller			<t>int
+&&	 	<t>logisk och			<t>int
+||	 	<t>logisk eller			<t>int
+!		<t>logisk not			<t>int
+=		<t>tilldelning			<t>int, float, string
++=	 	<t>addera och tilldela		<t>int, float
+-=	 	<t>minus och tilldela		<t>int, float
+&=	 	<t>logisk och och tilldelning	<t>int
+|=	 	<t>logisk eller och tilldelning	<t>int
+</TOPIC>
+
+<TOPIC> main-endmain <style> function
+main-endmain
+
+main och endmain satserna kontrollerar var exekveringen börjar och slutar.
+Om det inte finns några main och endmain satser, startar exekveringen i
+början på filen, och slutar i slutet på filen.
+
+<b>Exempel
+
+<c>main()
+<c>  int a;
+
+<c>  a = p1 + 5;
+<c>  printf( "a = %d", a);
+<c>endmain
+</TOPIC>
+
+<TOPIC> function-endfunction <style> function
+function-endfunction
+
+En funktions deklaration består av
+- datatypen för funktionens retur värde
+- namnet på funktionen
+- en argumentlista separerade med kommatecken och omgiven av parenteser.
+  Argumentlistan innehåller typdeklaration och namn på varje argument.
+
+Argumenten som skickas med vid anropet kommer att konverteras till den typ
+som är deklarerad i argumentlistan. Om ett argument ändrar värde inne i 
+funktionen, kommer det nya värdet att överföras till anroparen. På detta
+sätt blir de möjlig att returnera andra värden än retur värdet för funktionen.
+En funktion kan innehålla en eller flera return statser. Return satsen kommer
+att flytta över exekveringen till anroparen och returnera det angivna värdet.
+
+<b>Exempel
+
+<c>function float calculate_flow(float a, float b)
+<c>  float c;
+<c>  c = a + b;
+<c>  return c;
+<c>endfunction
+
+<c>...
+<c>flow = korr * calculate_flow( v, 35.2);
+</TOPIC>
+
+<TOPIC> if-else-endif <style> function
+if-else-endif
+
+Raderna mellan en if-endif stats exekveras om uttrycket i if-statsen är sant.
+Uttrycket ska omges av parenteser. Om en else sats hittas mellan if och endif,
+kommer raderna mellan else och endif att exekveras när uttrycket är falskt.
+
+<b>Exempel
+
+<c>if ( i < 10 && i > 5)
+<c>  a = b + c;
+<c>endif
+
+<c>if ( i < 10)
+<c>  a = b + c;
+<c>else
+<c>  a = b - c;
+<c>endif
+</TOPIC>
+
+<TOPIC> while-endwhile <style> function
+while-endwhile
+
+Raderna mellan en while-endwhile sats exekveras så länge uttrycket i
+while-satsen är sant. Uttrycket ska omges av parentser.
+
+<b>Exempel
+
+<c>while ( i < 10)
+<c>  i++;
+<c>endwhile
+</TOPIC>
+
+<TOPIC> for-endfor <style> function
+for-endfor
+
+Raderna mellan en for-endfor sats exekveras så länge mitten-uttrycket i 
+for-satsen är sant. for-satsen består av tre uttryck, avgränsade med semicolon
+och omgivna av parenteser. Det första uttrycket exekveras före den första
+loopen, det tredje exekveras efter varje loop, och det i mittne exekveras
+före varje loop, och om det är sant, gör ytterligare ett varv, annars lämnas
+loopen.
+
+<b>Exempel
+
+<c>for ( i = 0; i < 10; i++)
+<c>  a += b;
+<c>endfor
+</TOPIC>
+
+<TOPIC> break <style> function
+break
+
+En break sats kommer att söka efter nästa endwhile eller endfor sats
+och försätta exekveringen på raden efter denna.
+
+<b>Exempel
+
+<c>for ( i = 0; i < 10; i++)
+<c>  a += b;
+<c>  if ( a > 100)
+<c>    break;
+<c>endfor
+</TOPIC>
+
+<TOPIC> continue <style> function
+continue
+
+En continue sats kommera att söka efter närmast föregående while eller
+for sats och forsätta att utföra loopen.
+
+<b>Exempel
+
+<c>for ( i = 0; i < 10; i++)
+<c>  b = my_function(i);
+<c>  if ( b > 100)
+<c>    continue;
+<c>  a += b;
+<c>endfor
+</TOPIC>
+
+<TOPIC> goto <style> function
+goto
+
+En goto sats orsakar ett hopp i exekveringen till en rad som är
+definierad med en label. Label raden avslutas med ett kolon.
+
+<b>Exempel
+
+<c>  b = attribute("MOTOR-ON.ActualValue", sts);
+<c>  if (!sts)
+<c>    goto some_error; 
+<c>  ...
+<c>some_error:
+<c>  say("Something went wrong!");
+</TOPIC>
+
+<TOPIC> include <style> function
+include
+
+En script include-fil xom innehåller funktioner kan inkluderas med
+#include satsen. Default filtyp för filen är '.pwr_com'.
+
+<b>Exempel
+
+<c>#include <my_functions>
+</TOPIC>
+
+<TOPIC> printf() <style> function
+printf()
+
+int printf( string format [, (arbitrary type) arg1, (arbitrary type) arg2])
+
+<b>Beskrivning
+
+Formaterad utskrift. C-syntax. Format argument och inget, ett eller två
+värde argument. 
+Returnerar antal utskrivna tecken.
+
+<b>Argument
+
+string 			<t>format	<t>Format.
+godtycklig typ		<t>arg1		<t>Värde argument. Valfritt, Kan vara int,
+			<t>		<t>float eller string.
+godtycklig typ		<t>arg2		<t>Värde argument. Valfritt. Kan vara int,
+			<t>		<t>float eller string.
+
+<b>Exempel
+
+<c>  printf( "Watch out!");
+<c>  printf( "a = %d", a);
+<c>  printf( "a = %d och str = %s", a, str);
+</TOPIC>
+
+<TOPIC> scanf() <style> function
+scanf()
+
+int scanf( string format , (godtycklig typ) arg1)
+
+<b>Beskrivning
+
+Formaterad inmatning. C-syntax.
+Returnerar antal inlästa tecken.
+
+<b>Argument
+
+string 			<t>format	<t>Format.
+godtycklig typ		<t>arg1		<t>Värde argument. Returnerat. Kan vara int,
+			<t>		<t>float eller string.
+
+<b>Exempel
+
+<c>  scanf( "%d", i);
+</TOPIC>
+
+<TOPIC> fprintf() <style> function
+fprintf()
+
+int fprintf( int file, string format [, (godtycklig typ) arg1,
+	(godtycklig typ) arg2])
+
+<b>Beskrivning
+
+Formaterad utskrift på fil. C-sytax. Format argument och inget, ett eller två
+värde argument.
+Returnerarn antal utskrivna tecken.
+
+<b>Argument
+
+int 			<t>file		<t>Fil id returnerat av fopen.
+string 			<t>format	<t>Format.
+godtycklig typ		<t>arg1		<t>Värde argument. Valfritt. Kan vara int,
+			<t>		<t>float eller string.
+godtycklig typ		<t>arg2		<t>Värde argument. Valfritt. Kan vara int,
+			<t>		<t>float eller string.
+
+<b>Exempel
+
+<c>  int outfile;
+<c>  outfile = fopen( "my_file.txt", "w");
+<c>  if (!outfile)
+<c>    exit();
+<c>  fprintf( outfile, "Some text");
+<c>  fprintf( outfile, "a = %d", a);
+<c>  fclose( outfile);
+</TOPIC>
+
+<TOPIC> fgets() <style> function
+fgets()
+
+int fgets( string str, int file)
+
+<b>Beskrivning
+
+Läser en rad från en angiven fil.
+Returnerar noll vid filslut.
+
+<b>Argument
+
+string 		<t>str		<t>Läst rad. Returnerad. 
+int		<t>file		<t>Fil id returnerad av fopen.
+
+<b>Exempel
+
+<c>  file = fopen("some_file.txt","r");
+<c>  while( fgets( str, file))
+<c>    say( str);
+<c>  endwhile
+<c>  fclose( file);
+</TOPIC>
+
+<TOPIC> fopen() <style> function
+fopen()
+
+int fopen( string filespec, string mode)
+
+<b>Beskrivning
+
+Öppnar en fil för att läsa eller skriva.
+Returnerar en fil identitet, Om filen inte kunde öppnas, returneras noll.
+
+<b>Argument
+
+string 		<t>filespec	<t>Namn på filen. 
+string		<t>mode		<t>Access mod
+
+<b>Exempel
+
+<c>  int infile;
+<c>  int outfile;
+
+<c>  infile = fopen("some_file.txt","r");
+<c>  outfile = fopen("another_file.txt","w");
+<c>  ...
+<c>  fclose( infile);
+<c>  fclose( outfile);
+</TOPIC>
+
+<TOPIC> fclose() <style> function
+fclose()
+
+int fclose( int file)
+
+<b>Beskrivning
+
+Stänger en öppnad fil.
+
+<b>Argument
+
+int		<t>file		<t>fil-id returnerad av fopen.
+
+<b>Exempel
+
+<c>  int infile;
+<c>  infile = fopen("some_file.txt","r");
+<c>  ...
+<c>  fclose( infile);
+</TOPIC>
+
+<TOPIC> exit() <style> function
+exit()
+
+int exit()
+
+<b>Beskrivning
+
+Avslutar exekveringen av en fil.
+
+<b>Exempel
+
+<c>  exit();
+</TOPIC>
+
+<TOPIC> verify() <style> function
+verify()
+
+int verify( [int mode])
+
+<b>Beskrivning
+
+Sätter eller visar verifikatione mod. Om verifiering är till, visas alla 
+exekverade rader på skärmen.
+Returnerar nuvarande verifikations mod.
+
+<b>Argument
+
+int		<t>mode		<t>verifikaion till (1) eller från (0). Valfri.
+
+<b>Exempel
+
+<c>  verify(1);
+</TOPIC>
+
+<TOPIC> time() <style> function
+time()
+
+string time()
+
+<b>Beskrivning
+
+Returnerar nuvarande tid i strängformat.
+
+<b>Exempel
+
+<c>  string t;
+<c>  t = time();
+</TOPIC>
+
+<TOPIC> edit() <style> function
+edit()
+
+string edit( string str)
+
+<b>Beskrivning
+
+Tar bort inledande och avslutande blanktecken och tabbar, och ersätter flera
+tabbar och blanktecken med ett blanktecken.
+Returnerar den editerade stängen.
+
+<b>Argument
+
+string		<t>str		<t>sträng som ska editeras.
+
+<b>Exempel
+
+<c>  collapsed_str = edit(str);
+</TOPIC>
+
+<TOPIC> extract() <style> function
+extract()
+
+string extract( int start, int length, string str)
+
+<b>Beskrivning
+
+Extraherar de angivna tecknen från angiven sträng.
+Returnerar de extraherade tecknen som en sträng.
+
+<b>Argument
+
+int		<t>start	<t>start positionen för första tecknet.
+int		<t>length	<t>antalet tecken som ska extraheras.
+string		<t>str		<t>sträng som tecknen ska extraheras från.
+
+<b>Exempel
+
+<c>  extracted_str = extract( 5, 7, str);
+</TOPIC>
+
+<TOPIC> element() <style> function
+element()
+
+string element( int number, string delimiter, string str)
+
+<b>Beskrivning
+
+Extraherar ett element från et sträng av element.
+Returnerar det extraherade elementet.
+
+<b>Argument
+
+int		<t>number	<t>elementets nummer.
+string		<t>delimiter	<t>avgränsnings tecken.
+string		<t>str		<t>sträng med element.
+
+<b>Exempel
+
+<c>  string str = "mary, lisa, anna, john";
+<c>  string elem1;
+<c>  elem1 = elment( 1, ",", str);
+</TOPIC>
+
+<TOPIC> toupper() <style> function
+toupper()
+
+string toupper( string str)
+
+<b>Beskrivning
+
+Konverterar en sträng till stora bokstäver.
+
+<b>Argument
+
+string		<t>str		<t>sträng som ska konverteras.
+
+<b>Returns
+string				<t><t>sträng med stora bokstäver.
+
+<b>Exempel
+
+<c>  string str1 = "Buster Wilson";
+<c>  string str2;
+<c>  str2 = toupper( str);
+</TOPIC>
+
+<TOPIC> tolower() <style> function
+toupper()
+
+string tolower( string str)
+
+<b>Beskrivning
+
+Konverterar en sträng till små bokstäver.
+
+<b>Argument
+
+string		<t>str		<t>sträng som ska konverteras.
+
+<b>Returns
+string				<t><t>sträng med små bokstäver.
+
+<b>Exempel
+
+<c>  string str1 = "Buster Wilson";
+<c>  string str2;
+<c>  str2 = tolower( str);
+</TOPIC>
+
+<TOPIC> translate_filename() <style> function
+translate_filename()
+
+string translate_filename( string fname)
+
+<b>Beskrivning
+
+Byter ut omgivnings variabler i ett filnamn.
+
+<b>Argument
+
+string		<t>fname	<t>A filnamn.
+
+<b>Returns
+string				<t><t>Sträng med utbytta omgivningsvariabler.
+
+<b>Exempel
+
+<c>  string fname1 = "$pwrp_db/a.wb_load";
+<c>  string fname2;
+<c>  fname2 = translate_filename( fname1);
+</TOPIC>
+
+<TOPIC> wtt-commands <style> function
+Wtt kommandon
+
+Alla wtt kommandon finns tillgängliga i script koden. En wtt-kommando rad
+ska INTE avslutas med semikolon. Variabler kan substitueras i kommandot
+genom add omges av apostrofer.
+
+<b>Exempel
+ 
+<c>  string name = "PUMP-VALVE-Open";
+<c>  string value = "The valve is open";
+<c>  set attribute/name='name'/attr="Description"/value='value'
+
+<b>Exempel
+
+<c>  string name;
+<c>  string parname;
+<c>  int j;
+<c>  int i;
+<c>  for ( i = 0; i < 3; i++)
+<c>    parname = "vkv-test-obj" + (i+1);
+<c>    create obj/name='parname'
+<c>    for ( j = 0; j < 3; j++)
+<c>      name = parname + "-obj" + (j+1);
+<c>      create obj/name='name'
+<c>    endfor
+<c>  endfor
+</TOPIC>
+
+<TOPIC> getattribute() <style> function
+GetAttribute()
+
+(variabel typ) GetAttribute( string name [, int status])
+
+<b>Beskrivning
+
+Hämta värdet för angivet attribut. Typen av det returnerade värdet beror
+på typen av attributet. Attributet kommer att konverteras till int, float
+eller string.
+
+<b>Argument
+
+string		<t>name		<t>namn på attributet som ska hämtas.
+int		<t>status	<t>status för operationen. Returnerad. Om noll
+		<t>		<t>kunde inte attributet hämtas. Valfritt.
+
+<b>Exempel
+
+<c>  int alarm;
+<c>  int sts;
+
+<c>  alarm = GetAttribute("Roller-Motor-Alarm.ActualValue");
+<c>  on = GetAttribute("Roller-Motor-On.ActualValue", sts);
+<c>  if ( !sts)
+<c>    say("Could not find motor on attribute!");
+</TOPIC>
+
+<TOPIC> getchild() <style> function
+GetChild()
+
+string GetChild( string name)
+
+<b>Beskrivning
+
+Hämta första barnet till ett objekt. Nästföljande barn kan hämtas med
+GetNextSibling().
+Returnerar namnet på barnet. Om det inte finns något barn, returneras en
+null-sträng.
+
+<b>Argument
+
+string		<t>name		<t>objektets namn.
+
+<b>Exempel
+
+<c>  string child;
+
+<c>  child = GetChild("Roller-Motor");
+</TOPIC>
+
+<TOPIC> getparent() <style> function
+GetParent()
+
+string GetParent( string name)
+
+<b>Beskrivning
+
+Hämta föräldern till ett objekt.
+Returnerar förälderns namn. Om det inte finns någon förälder returneras
+en null-sträng.
+
+<b>Argument
+
+string		<t>name		<t>objektets namn.
+
+<b>Exempel
+
+<c>  string parent;
+
+<c>  parent = GetChild("Roller-Motor");
+</TOPIC>
+
+<TOPIC> getnextsibling() <style> function
+GetNextSibling()
+
+string GetNextSibling( string name)
+
+<b>Beskrivning
+
+Hämtar nästa syskon till ett objekt.
+Returnerar namnet på syskonet. Om det inte finns något nästa systkon
+returneras en null-sträng.
+
+<b>Argument
+
+string		<t>name		<t>objektets namn.
+
+<b>Exempel
+
+<c> string name;
+<c> int not_first;
+
+<c> name = GetChild("Rt");
+<c> not_first = 0;
+<c> while ( name != "")
+<c>   if ( !not_first)
+<c>     create menu/title="The Rt objects"/text="'name'"/object="'name'"
+<c>   else
+<c>     add menu/text="'name'"/object="'name'"
+<c>   endif
+<c>   not_first = 1;
+<c>   name = GetNextSibling(nname);
+<c> endwhile
+<c> if ( !not_first )
+<c>   MessageError("No objects found");
+</TOPIC>
+
+<TOPIC> getclasslist() <style> function
+GetClassList()
+
+string GetClassList( string class)
+
+<b>Beskrivning
+
+Hämta första objektet av angiven klass. Nästa objekt av klassen kan
+hämtas med GetNextObject().
+Returnerar namnet på första objektet. Om det inte finns några instanser
+av klassen returneras en null-sträng.
+
+<b>Argument
+
+string		<t>name		<t>namn på klassen.
+
+<b>Exempel
+
+<c>  string name;
+
+<c>  name = GetClassList("Dv");
+</TOPIC>
+
+<TOPIC> getnextobject() <style> function
+GetNextObject()
+
+string GetNextObject( string name)
+
+<b>Beskrivning
+
+Hämta nästa objekt i klasslistan.
+Returnerar namnet på objektet. Om det inte finns något nästa objekt
+returneras en null-sträng.
+
+<b>Argument
+
+string		<t>name		<t>objektets namn.
+
+<b>Exempel
+
+<c>  string name;
+
+<c>  name = GetClassList("Di");
+<c>  while ( name != "")
+<c>    printf("Di object found: %s", name);
+<c>    name = GetNextObject(name);
+<c>  endwhile
+</TOPIC>
+
+<TOPIC> getobjectclass() <style> function
+GetObjectClass()
+
+string GetObjectClass( string name)
+
+<b>Beskrivning
+
+Hämta klassen för ett objekt.
+Returnerar klassens namn.
+
+<b>Argument
+
+string		<t>name		<t>objektets namn.
+
+<b>Exempel
+
+<c>  string class;
+
+<c>  class = GetObjectClass("Motor-Enable");
+</TOPIC>
+
+<TOPIC> getnodeobject() <style> function
+GetNodeObject()
+
+string GetNodeObject()
+
+<b>Beskrivning
+
+Hämta nod objektet.
+Returnerar namnet på nod objektet.
+
+<b>Exempel
+
+<c>  string node;
+<c>  node = GetNodeObject();
+</TOPIC>
+
+<TOPIC> getrootlist() <style> function
+GetRootList()
+
+string GetRootList()
+
+<b>Beskrivning
+
+Hämta första objektet i rot listan.
+Returnerar namnet på rotobjektet. Nästa objekt i rotlistan kan hämtas med
+GetNextSibling().
+
+<b>Exempel
+
+<c>  string name;
+
+<c>  name = GetRootList();
+<c>  while( name != "")
+<c>    printf( "Root object found: %s", name);
+<c>    name = GetNextSibling(name);
+<c>  endwhile
+</TOPIC>
+
+<TOPIC> getnextvolume() <style> function
+GetNextVolume()
+
+string GetNextVolume( string name)
+
+<b>Beskrivning
+
+Hämta nästa volym. Den första volymen hämtas med GetVolumeList().
+Returnerar namnet på volymen. Om det inte finns någon nästa volym,
+returneras en null-sträng.
+
+Argument
+
+string          name            volymens hamn.
+</TOPIC>
+
+<TOPIC> getvolumeclass() <style> function
+GetVolumeClass()
+
+string GetVolumeClass( string name)
+
+<b>Beskrivning
+
+Hämta klassen för en volym.
+Returnerar klassnamnet.
+
+<b>Argument
+
+string          name            volymens namn.
+
+<b>Exempel
+
+<c>  string class;
+
+<c>  class = GetVolumeClass("CVolVKVDKR");
+</TOPIC>
+
+<TOPIC> getvolumelist() <style> function
+GetVolumeList()
+
+string GetVolumeList()
+
+<b>Beskrivning
+
+Hämta första volymen i volymslistan.
+Returnerar namnet på volymen. Nästa volym kan hämtas med 
+GetNextVolume().
+
+<b>Exempel
+
+<c>  string name;
+
+<c>  name = GetVolumeList();
+<c>  while( name != "")
+<c>    printf( "Volume found: %s", name);
+<c>    name = GetNextVolume(name);
+<c>  endwhile
+</TOPIC>
+
+<TOPIC> getprojectname() <style> function
+GetProjectName()
+
+string GetProjectName()
+
+<b>Beskrivning
+
+Hämta projektnamnet.
+Returnerar projektets namn.
+
+<b>Exempel
+
+<c>  string name;
+
+<c>  name = GetProjectName();
+</TOPIC>
+
+<TOPIC> cutobjectname() <style> function
+CutObjectName()
+
+string CutObjectName( string name, int segments)
+
+<b>Beskrivning
+
+Klipp av det första leden i ett objektsnamn.
+Returnerar de sista segementen av ett objektnamn. Antalet segment som
+ska återstå anges med 'segments' argumentet.
+
+<b>Argument
+
+string		<t>name		<t>Objektets hierarkinamn.
+int		<t>segments	<t>Antal namnled som ska återstå.
+
+<b>Exempel
+
+<c>  string path_name;
+<c>  string object_name;
+
+<c>  path_name = GetChild("Rt-Motor");
+<c>  object_name = CutObjectName( path_name, 1);
+</TOPIC>
+
+<TOPIC> messageerror() <style> function
+MessageError()
+
+string MessageError( string message)
+
+<b>Beskrivning
+
+Skriv ett felmeddelande på skärmen.
+
+<b>Exempel
+
+<c>  MessageError("Something went wrong");
+</TOPIC>
+
+<TOPIC> messageinfo() <style> function
+MessageInfo()
+
+string MessageInfo( string message)
+
+<b>Beskrivning
+
+Skriv ett informations meddelande på skärmen.
+
+<b>Exempel
+
+<c>  MessageInfo("Everything is all right so far");
+</TOPIC>
+
+<TOPIC> getcurrenttext() <style> function
+GetCurrentText()
+
+string GetCurrentText()
+
+<b>Beskrivning
+
+Hämta texen på utvalt menyalternativ.
+
+<b>Exempel
+
+<c>  string text;
+
+<c>  text = GetCurrentText();
+</TOPIC>
+
+<TOPIC> getcurrentobject() <style> function
+GetCurrentObject()
+
+string GetCurrentObject()
+
+<b>Beskrivning
+
+Hämta objekt som är associerat med utvalt meny alternativ.
+Om inte något objekt är associerat returneras en null-sträng.
+
+<b>Exempel
+
+<c>  string object;
+
+<c>  object = GetCurrentObject();
+</TOPIC>
+
+<TOPIC> getcurrentvolume() <style> function
+GetCurrentVolume()
+
+string GetCurrentVolume()
+
+<b>Beskrivning
+
+Hämta volymen för aktuell session.
+Om ingen aktuell session finns, returneras in null-sträng.
+
+<b>Exempel
+
+<c>  string current_volume;
+
+<c>  current_volume = GetCurrentVolume();
+<c>  set volume/volume=SomeOtherVolume
+<c>  ...
+<c>  set volume/volume='current_volume'
+
+</TOPIC>
+
+<TOPIC> isw1() <style> function
+IsW1()
+
+int IsW1()
+
+<b>Beskrivning
+
+Returnerar 1 om nuvarande fönster med imatnings fokus är anläggningshierarki
+fönstret. Annars returneras 0.
+</TOPIC>
+
+<TOPIC> isw2() <style> function
+IsW2()
+
+int IsW2()
+
+<b>Beskrivning
+
+Returnerar 1 om nuvarande fönster med imatnings fokus är nodhierarki
+fönstret. Annars returneras 0.
+</TOPIC>
+
+<TOPIC> editmode() <style> function
+EditMode()
+
+int EditMode()
+
+<b>Beskrivning
+
+Returnerar 1 om wtt är i editerings mod.
+Annars returneras 0.
+</TOPIC>
+
+<TOPIC> messagedialog() <style> function
+MessageDialog()
+
+MessageDialog( string title, string text)
+
+<b>Beskrivning
+
+Visar en dialogruta för meddelanden.
+
+<b>Argument
+
+string		<t>title	<t>Titel.
+string		<t>text		<t>Meddelande text.
+
+<b>Exempel
+
+<c>  MessageDialog( "Message", "This is a message");
+</TOPIC>
+
+<TOPIC> confirmdialog() <style> function
+ConfirmDialog()
+
+int ConfirmDialog( string title, string text [, int cancel])
+
+<b>Beskrivning
+
+Visar en dialog ruta med konfirmering.
+Returnerar 1 om yes-knappen har tryckts, 0 om no-knappen har trycks.
+Om det tredje argumentet (cancel) har adderats, visas en cancel knapp
+i dialogrutan. Om cancel-knappen har trycks, eller om dialogrutan 
+har stängs, sätts cancel argumentet till 1.
+
+<b>Argument
+
+string		<t>title	<t>Titel.
+string		<t>text		<t>Konfirmerings text.
+int		<t>cancel	<t>Valfritt. En cancel knapp visas.
+		<t>		<t>Cancel sätts till 1 om cancel-knappen har 
+		<t>		<t>trycks, eller om dialogrutan har stängts.
+
+<b>Exempel 1
+
+<c>  if ( ! ConfirmDialog( "Confirm", "Do you really want to..."))
+<c>    printf( "Yes is pressed\n");
+<c>  else
+<c>    printf( "No is pressed\n");
+<c>  endif
+
+<b>Exempel 2
+
+<c>  int cancel;
+<c>  int sts;
+
+<c>  sts =  ConfirmDialog( "Confirm", "Do you really want to...", cancel);
+<c>  if ( cancel)
+<c>    printf("Cancel is pressed\n);
+<c>    exit();
+<c>  endif
+
+<c>  if ( sts)
+<c>    printf( "Yes is pressed\n");
+<c>  else
+<c>    printf( "No is pressed\n");
+<c>  endif
+</TOPIC>
+
+<TOPIC> continuedialog() <style> function
+ContinueDialog()
+
+ContinueDialog( string title, string text)
+
+<b>Beskrivning
+
+Visar en dialogruta med knapparna 'Continue' och 'Quit'.
+Returnerar 1 om continue har trycks, 0 om quit har trycks.
+
+<b>Argument
+
+string		<t>title	<t>Titel.
+string		<t>text		<t>Meddelande text.
+
+<b>Exempel
+
+<c>  if ( ! ContinueDialog( "Message", "This script will...");
+<c>    exit();
+<c>  endif
+</TOPIC>
+
+<TOPIC> promptdialog() <style> function
+PromptDialog()
+
+int PromptDialog( string title, string text, string value)
+
+<b>Beskrivning
+
+Visar en dialogruta med en prompt som promptar för en inmagning.
+Returnerar 1 om yes-knappen är tryckt, 0 om cancel-knappen har trycks,
+eller om dialogrutan har stängs.
+
+
+<b>Argument
+
+string		<t>title	<t>Titel.
+string		<t>text		<t>Text.
+string		<t>value	<t>Innehåller inmatat värde.
+
+<b>Exempel
+
+<c>  string name;
+
+<c>  if ( PromptDialog( "Name", "Enter name", name))
+<c>    printf( "Name : '%s'\n", name);
+<c>  else
+<c>    printf( "Cancel...\n");
+<c>  endif
+
+</TOPIC>
+</chapter>
+
+
+
+
+
+
+
+
+

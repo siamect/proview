@@ -1,0 +1,4351 @@
+
+<topic> __DocumentTitlePage
+
+<image> pwr_logga.gif
+
+
+
+
+
+
+<h1> Ge
+<h1> Designer's Guide
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<hr>
+Claes Sjöfors 2005-03-24
+Version 4.1.0	
+<hr>
+</topic>
+
+<topic> __DocumentInfoPage
+
+
+Copyright 2005 SSAB Oxelösund AB
+All rights reserved.
+
+First Edition Mars 2005
+
+Notice: All information contained herein is the property of SSAB Oxelösund AB. 
+
+
+
+</topic>
+
+<chapter>
+<option> printdisable
+<topic>index
+Ge Designer's Guide
+
+Introduction <link>geref_intro
+Glossary <link>geref_term
+Working with the editor <link>geref_work
+Windows <link>geref_windows
+Objects <link>geref_objects
+SubGraphs <link>geref_subgraph
+Dynamics <link>geref_dynamic
+Actions <link>geref_action
+Create a SubGraph <link>geref_create_subgraph
+Groups <link>geref_groups
+GIF and JPEG images <link>geref_images
+Connections <link>geref_connections
+Edit <link>geref_edit
+Test <link>geref_testing
+Development environment <link>geref_development
+Commands <link>geref_command
+Script <link>geref_script
+Web graphs <link>geref_web
+Runtime <link>geref_runtime
+Script and commands <link>gecmd
+</topic>
+<option> printenable
+
+<topic>geref_intro
+Introduction
+
+Ge is an editor to build operator graphics in Proview. The editor is integrated in the 
+Proview development environment and started from the Configurator. The graphs are built of
+baseobjects in shapes of rectangles, circles, lines and texts, and of subgraphs, i.e. a
+kind of composed object. Ge contains a collection of subgraphs for some common components: 
+valves, motors, pumps etc. Other components, the constructor can easily draw himself. The 
+shapes are stored as vectors, which makes it possible to scale and rotate the objects. In 
+runtime, there is a number of possibilities to use the graphs. They can be displayed in the 
+operator environment, or exported as Java frames or applets, and displayed on the web. You 
+can also export a subgraph as a javabean, and use it in a java-IDE.
+</topic>
+</chapter>
+
+<chapter>
+<topic>geref_term
+Glossary
+<h2>Graph
+A picture consists of a graph.
+<h2>Subgraf
+A collection of base objects can be stored as a subgraph. A subgraph works as a kind of class
+or pattern, and in a graph you can create instances of the subgraph, that is subgraph objects.
+Stored subgraphs are displayed in the subgraph palette.
+<h2>Base objects
+Base object are objects of type rectangles, ellipses, lines, polylines, texts, connection
+points and annotations.
+<h2>Complex objects.
+More complex objects, e.g. bar, trend, axis.
+<h2>Annotation
+Text in a subgraph that can be unic for each instance.
+<h2>Connection
+A line that connects two subgraphs. The line can be straight or contain breakpoints that divide
+it in vertical and horizontal parts.
+<h2>Connection point
+A point in a subgraph to which a connection can be connected.
+<h2>Signal
+Signal is used as a common name for an attribute of an object in the Proview realtime database.
+Often its the value for a Di, Do, Dv, Ai, Ao or Av, but it can be an attribute in an arbitrary
+object.
+<h2>MB1
+The left mousebutton.
+<h2>MB2
+The mousebutton in the middle. 
+<h2>MB3
+The right mousebutton.
+<h2>Rtdb
+The Proview realtime database.
+</topic>
+</chapter>
+
+<chapter>
+<topic>geref_work
+Work with the editor
+
+This chapter is an introduction to quickly get started and edit process graphics in Ge.
+
+<option> printdisable
+Draw base objects 	<link>geref_work,baseobjects
+The object editor 	<link>geref_work,objecteditor
+Background 	<link>geref_work,background
+Groups		<link>geref_work,groups
+SubGraphs	<link>geref_work,subgraphs
+Dynamic		<link>geref_work,dynamic
+Indicators	<link>geref_work,indicators
+Process symbols <link>geref_work,process
+Pushbuttons	<link>geref_work,pushbuttons
+Display analog signals <link>geref_work,analog
+Set analog signals <link>geref_work,setanalog
+Texts		<link>geref_work,texts
+Mobile objects  <link>geref_work,movement
+Change the shape of an object <link>geref_work,shape
+Navigate from the keyboard <link>geref_work,navigate
+Menues		<link>geref_work,menues
+Gif and JPEG-images <link>geref_work,images
+Draw a subgraph <link>geref_work,drawsubgraph
+<option> printenable
+
+<bookmark>baseobjects
+<h1>Draw base objects
+The base objects are rectangle, rounded rectangle, line, polyline, circle and text. They are
+drawn by clickning on the symbol in the tool panel, and dragging or clicking with MB1 in the
+working area.
+
+<h2>Hot
+An objects is hot when the cursor i placed on the object. This is marked by changing the
+cursor to a haircross, and drawing the hot object with a slightly larger line width.
+
+<h2>Select objects
+You select an object with Click MB1. A selected object is drawn with red color. If you want
+to select more objects you can click on them with Shift/Click MB1.
+
+Another way is to drag with MB1 in the working area. The objects within the selectrectangle 
+will be selected. Since you also move object with drag MB1, you should not hit any object when 
+the dragging is started. If this is hard to avoid, you can use Shift/Drag MB1 instead, which 
+adds objects to the selectlist.
+
+With click MB3 in the working area, the selectlist is cleared.
+
+<h2>Delete objects
+An object is deleted by doubleclicking on the object with MB2. You kan also select it, and
+doubleclick somewhere in the working area. Then all selected objects are deleted.
+
+<h2>Move objects
+You move an object with drag MB1. If you want to move several objects simultaneously, you 
+select them and drag one of the objects. All the selected object will then follow. If you want
+an vertial or horizontal movement, you use Functions/MoveRestrictions/Vertical (Ctrl+G) or
+Functions/MoveRestrictions/Horizontal (Ctrl+H). These functions are active until you reset
+with MB3.
+
+<h2>Copy objects
+You copy objects by selecting them, and activate Edit/Copy (Ctrl+C) and Edit/Paste (Ctrl+V) in
+the menu. After paste, the new object will follow the movement of the cursor, and with click MB1
+you fasten them in the working area. When copying objects, you kan also choose vertical or
+horizontal movement.
+
+<h2>Texts
+Texts are added by selecting 'Text' in the toolpanel, and clicking MB1 in the working area. An
+input field is then opened, where you kan insert the text string. You can choose text size with
+'TextSize', and bold or normal text with 'Bold' in the tool panel. If you want to change the 
+text, you activate 'Edit/Change text' (Ctrl+T) in the menu. The text color is choosen in the 
+palette with Shift MB1.
+
+<h2>Polylines
+You draw polylines by repeatedly drag with MB1 in the working area. When the last line is drawn,
+you finish with click MB3. If you want to change any point in the polyline, you select the
+polyline and activate 'Edit/Edit polyline' in the menu. The breakpoints of the polyline are now
+sensitive to Drag MB1. When the cursor is changed to a haircross, an breakpoint is hit, and you
+can drag it to the desired position. When the editing of the polyline is ready, you terminate
+with MB3.
+
+<h2>Circle segments
+A circle is drawn by selecting circle in the tool panel and dragging with MB1 in the working
+area. If you wan to draw a segment of a circle, you first draw a circle, and then open the
+object editor for the circle (by doubleclicking MB1 on it). Here you find the attributes
+angel1 and angel2, where angel1 is the starting angel for the segment and angel2 the size of
+the segment.
+
+<h2>Color
+When you wan to create an object with a specific color, this can be achieved in two different 
+ways. Either you set the desired properties for fill, color etc, before creating the object, or
+you create the object first, select it, and then set the desired properties. A change of a
+setting will affect all the selected objects.
+
+To set the color av a base object you select fillcolor and bordercolor in the color palette.
+Fillcolors are selected with MB1 and bordercolors with MB2. Textcolor are selected with 
+Shift MB1.
+
+With 'Fill' and 'Border' in the tool panel you also choose if the object is to be filled and
+if the border is drawn. The width of the border is set with 'Line', where you have 8 different
+linewidths to choose between.
+
+<h2>3D
+An object can have a three dimensional, relief apearance by drawing it with a lighter color at
+the upper border, and a darker color at the lower border. This is choosen by '3D' in the tool
+panel. The width of the 3D-shadow is determined by the attribute 'ShadowWidth' that is changed
+from the object editor.
+
+<h2>Dynamic
+If you want to set dynamic properties to a base object, you have to let it be included in a 
+group or a subgraph. Baseobjects in itself has no dynamic propreties.
+
+<bookmark>objecteditor
+<h1>The object editor
+By doubleclickning with MB1 on an object, the object editor is opened. You can also open it by
+selecting the object, and activate 'Functions/Object attributes' (Ctrl+A) in the menu. Here 
+you can insert data for the object. You select an attribute by clicking on it, or with the
+arrow keys. To change a value, you use the ArrowRight key or 'File/Change value' (Ctrl+Q) in
+the menu.
+
+<bookmark>background
+<h1>Background
+<h2>Background color
+You choose the background color by selecting a color with MB1 in the color palette, and activate
+'Functions/Set background color' in the menu.
+
+<h2>Background image
+If you want to put a gif or jpeg image as a background, you insert the name of the image file
+in the attribute 'Background image' in 'Functions/Graph attributes'. The background image is
+not displayed in the editor, but will be displayed when the graph is opened from xtt.
+
+The image file should reside in the directory $pwrp_exe.
+
+If you set the attribute 'BackgroundTiled' to 1, the image is repeted over the background. If
+BackgroundTiled is 0, the image is scaled to totally cover the background.
+
+<h2>Graph size
+The working size is infinite and expandable in every direction unlimited. Unfortunatley the
+screensize is not infinite, and you has to decide which part of the working area is to be
+displayed in the final graph. This is done in 'Function/Graph attributes' with the attributes
+x0, y0, x1 and y1. The point (x0, y0) states the upper left corner, and (x1, y1) the lower 
+right corner. Place the cursor at the points in the working area respectivley, and read the
+coordinates (down to the right in the window) and insert them.
+
+<bookmark>groups
+<h1>Groups
+A number of objects i grouped by selecting them and activting 'Functions/Group' in the menu.
+The group is handled as a single object by the editor, for example when selecting, moving or 
+scaling the group. If you want to change a base object in a group, you first have to release
+the group by 'Functions/Ungroup', then make the change and finally regroup the objects.
+
+<bookmark>subgraphs
+<h1>Subgraphs
+A subraph is a graphic component that is built by base objects. It often symbolises a certain
+element in the plant, e.g. a valve. There are also subgraphs that are used to get a better
+layout of the graph, e.g. frames and reliefs.
+
+You create a subgraph by selecting a subgraph in the subgraph palette, and click with MB2 in
+the working area.
+
+<h2>Color
+The color of a subgraph object is changed in the same way as for a base object, i.e. by setting
+the fill and border color of the object. But there are some additional color functions for 
+sugraphs, that are used to keep possible three dimensional effects in the subgraph.
+
+Some subgraphs contains shadows and reflections. If you change the fill color it looses its
+three dimensional appearence. If you instead change the color tone, with the Tone-palette that
+is found below the colorpalette, it will keep the 3D appearance. You can also use the buttons
+for lightness, intensity and color shift in the tool panel, to modify the color.
+
+<h2>Connect to the database
+An indicator should reflect a digital value in the database, and change color depending on the
+value. In some way we have to state between which colors the indicator should be shifted, and the
+condition to shift color. This is done from the object editor.
+
+Let us create for example an IndRound, that is an small circle that can shift between two fill
+colors. If you open the object editor, you find the dynamic properties.
+
+<b>Attribute <t><t>Value
+SubGraph   <t><t>pwr_indround
+DigLowColor.Attribute
+DigLowColor.Color <t><t>Inherit
+Cycle     <t><t>Inherit
+DynType   <t><t>Inherit
+Action    <t><t>Inherit
+
+In DigLowColor.Attribute you insert it signal in the database that will affect the indicator
+to shift color. When the signal is high, the indicator will get the color it is drawn with
+in the editor. When the signal is low, it will get the color in DigLowColor.Color. Originally
+it has the value 'Inherit' which states that it chooses a default value, in this case 
+VeryDarkGray. The value of the signal can be inverted, by setting an exclamation mark in front
+of the name.
+
+The signals connected to the indicator can be inserted by hand, of course, but the fastest way
+is to find the signal in the plant hierarchy (below the color palette, or in the configurator).
+By clicking Ctrl/Doubleclick MB1 on the indicator, the signal is inserted in LowColor.Attribute.
+You can also click with Ctrl/Doubleclick MB1 on the LowColor.Attribute attribute in the object 
+editor.
+
+If you want to change LowColor, you can either select a new color in the object editor, or you
+can choose a fill color in the color palette, and click with Shift/Doubleclick MB1 on the 
+indicator. 
+
+Some components have additional attributes to connect to the database. The first can 
+be connected with Ctrl/Doubleclick MB1 and the second with Ctrl/Shift/Doubleclick MB1.
+
+<bookmark>dynamic
+<h1>Dynamics
+A process graph should view she current status of the process, and the changes that occur.
+This is done by changing the color, the shape or the position of the components in the graph,
+or by drawing values in shape of digits or text. The operator should also be able to 
+influence the process, for example by activating pushbuttons or entering values. Those two
+functions, to view and to influence the process from a graph, are called dynamic and action
+respectively. In Ge you can set dynamics and actions on subgraphs and groups, and in this way
+make them change color and shape, and make them sensible for mouseclicks.
+
+There are a number of predefined types of dynamic and action to choose from. When you create a 
+subgraph object it has a default dynamic and action that the constructor of the subgraph has 
+selected, but you can easily change the type of dynamic and action by adding some type from
+the object editor, or choose an entirely different one. If you for example, want an indicator
+that usually shifts between two colors, to be able to shift beetween several colors, you change
+DynType from Inherit to Inherit | DigColor.
+
+Properties for the dynamics and actions are displayed in the object editor, here you state,
+for example, which colors an object should shift between, or which signal that should influence
+the color.
+
+<h2>Update frequency
+There are two different cycle times that determine how often an object is updated with new
+values, 'Fast' and 'Slow'. For each object you can choose with which cycle it will be updated.
+The default value is Inherit, i.e. the cycle the constructor of the subgraph has regarded
+suitable. Pushbuttons, checkboxes and others, where the operator is waiting for a response,
+should use the faster cycle. Display of floating point values are preferably updated with the
+slower cycle, otherwise the graph is experienced as flickering.
+
+Furthermore there is a cycle time for animations. This is the time an animation change from one
+page to another. The different cycle times are stated in 'Functions/Graph attributes' and
+should be configured so that SlowScanTime >= FastScanTime >= AnimationScanTime. SlowScanTime
+and FastScanTime should also be an even multiple of AnimationScanTime.
+
+<bookmark>indicators
+<h1>Indikatorer
+Under the folder Indicators there are a number of different indicators, round or square, larger
+or smaller.
+
+<h2>Shift between two colors
+<b>DigLowColor
+The subgraphs IndSquare and IndRound shift between two different colors, depending on the value
+of a digital signal. The color displayed when the signal i high, is the color the indicator
+is drawn with in the editor. The color displayed when the signal is low, you state in 
+DigLowColor.Color from the object editor. You can also set DigLowColor.Color by selecting a
+fill color in the color palette, and click with Shift/Doubleclick MB1 on the object. 
+DigLowColor.Color has the default value Inherit, which means that it inherits the value from
+the subgraph, in this case VeryDarkGray.
+
+The subgraph uses the dynamic DigLowColor and is connected to a digital signal.
+
+<b>Attribute<t><t>Value
+SubGraph <t><t>pwr_indsquare
+DigLowColor.Attribute
+DigLowColor.Color <t><t>Inherit
+Cycle <t><t>Inherit
+DynType <t><t>Inherit
+Action <t><t>Inherit
+
+<h2>Shift between two color tones
+The subgraphs IndSquareLarge and IndRoundLarge are drawn with some different color tones and
+uses therefor the dynamic DigLowTone. DigLowTone shifts between two color tones.
+
+The color displayed when the signal is high, is the color the indicator is drawn with in the
+editor. If you want to modify the original green color you can select a color tone in the 
+color palette. You can also use the functions for lightness, intensity and color shift in the
+tool panel.
+
+The color tone displayed when the signal is low, is stated in DigLowTone.Tone from the object
+editor. If DigLowTone.Tone is Inherit, the value is taken from the subgraph, in this case
+ToneDarkGray. You can also choose a fill color in DigLowTone, but the shadows will disappear.
+
+<b>Attribute<t><t>Value
+SubGraph <t><t>pwr_indsquarelarge
+DigLowTone.Attribute
+DigLowTone.Tone <t><t>Inherit
+Cycle <t><t>Inherit
+Type <t><t>Inherit
+Action <t><t>Inherit
+
+<h2>Shift between several colors
+If you want to shift between several color you add some of the dynamictypes DigError,
+DigWarning and DigColor. With DigError you kan connect one additional attribute that colors
+the indicator red. DigWarning works in the same way, but here the indicator is colored yellow
+instead. With DigColor you get an arbitrary color.
+
+In the example below, both DigError and DigWarning are added, which makes it possible to connect
+two additional signals in DigError.Attribute and DigWarning.Attribute. When the signal in 
+DigWarning.Attribute is high, the indicator is colored yellow, and when the signal in
+DigError.Attribut i high, the indicator is colored red.
+
+<b>Attribute<t> <t>Value
+SubGraph <t><t>pwr_indround
+DigError.Attribute
+DigWarning.Attribute
+DigLowColor.Attribute
+DigLowColor.Color  <t><t>Inherit
+Cycle <t><t>Inherit
+DynType <t><t>Inherit | DigWarning | DigError
+Action <t><t>Inherit
+
+In the case DigColor you connect an signal to DigColor.Attribute and select a color in
+DigColor.Color. In the example below, DigColor.Instances is 2 which makes i possible to connect
+one additional attribute in DigColor2.Attribute and select one additional color in 
+DigColor2.Color. By adding more instances you can shift between up to 34 different colors.
+
+<b>Attribute <t><t>Value
+SubGraph <t><t>pwr_indround
+DigColor2.Attribute
+DigColor2.Color <t><t>Orange
+DigColor.Attribute
+DigColor.Color <t><t>Blue
+DigColor.Instances <t><t>2
+DigLowColor.Attribute
+DigLowColor.Color <t><t>Inherit
+Cycle <t><t>Inherit
+DynType <t><t>Inherit | DigColor
+Action <t><t>Inherit
+
+For objects drawn with several color tones you add Tone in DynType, and the dynamic will
+throughout handle color tones instead of fill colors.
+
+<b>Attribute <t><t>Value
+SubGraph <t><t>pwr_indroundlarge
+DigTone2.Attribute
+DigTone2.Tone <t><t>ToneOrange
+DigTone.Attribute
+DigTone.Tone <t><t>ToneBlue
+DigTine.Instances <t><t>2
+DigLowTone.Attribute
+DigLowTone.Tone <t><t>Inherit
+Cycle <t><t>Inherit
+DynType <t><t>Inherit | Tone | DigTone
+Action <t><t>Inherit
+
+<bookmark>process
+<h1>Process symbols
+<h2>Shift between different colors
+Change of color is performed in the same way as for indicators above.
+
+The subgraph Electric/Motor for example, uses the dynamic type DigLowColor | DigError. You
+connect a digital signal (the contactor feedback) to DigLowColor.Attribute. This implies that
+DigLowColor.LowColor is displayed when the motor is off, and the color the motor is drawn
+with in the editor, will be displayed when the motor is on. The signal for overload is 
+connected to DigError.Attribute, which colors the motor red when this signal is set.
+
+<b>Attribute <t><t>Value
+SubGraph <t><t>pwr_motor
+DigError.Attribute
+DigLowColor.Attribute
+DigLowColor.Color <t><t>Inherit
+Cycle <t><t>Inherit
+DynType <t><t>Inherit
+Action <t><t>Inherit
+
+Process/Valve also uses DigLowColor | DigError, that normally is used for valves with one switch.
+The switch is connected to DigLowColor.Attribute, eventually inverted (by setting an  
+exclamation mark in front of the signal name) depending on if the switch is indicating open
+or closed valve. A signal from the plc, indicating that the signal from the switch is not
+registred within a certain time, is connected to DigError.Attribute.
+
+If the valve has two switches, you add the dynamic type DigColor, and connect the switches to
+DigLowColor.Attribute and DigColor.Attribute. Any possible supervision signal is connected
+to DigError.Attribute.
+
+<b>Attribute <t><t>Value
+SubGraph <t><t>pwr_valve
+DigError.Attribute
+DigColor.Attribute
+DigColor.Color
+DigColor.Instances
+DigLowColor.Attribute
+DigLowColor.Color <t><t>Inherit
+Cycle <t><t>Inherit
+DynType <t><t>Inherit | DigColor
+Action <t><t>Inherit
+
+<h2>Open a graph
+If you want to, by clicking on an object, open a graph that describes the object in detail,
+you add OpenGraph in Action. In OpenGraph.GraphObject you state an XttGraph object that is
+connected to the graph.
+
+<b>Attribute <t><t>Value
+SubGraph <t><t>pwr_valve
+DigError.Attribute
+DigLowColor.Attribute
+DigLowColor.Color <t><t>Inherit
+OpenGraph.GraphObject
+Access <t><t>System | Maintenance
+Cycle <t><t>Inherit
+DynType <t><t>Inherit
+Action <t><t>Inherit | OpenGraph
+
+<bookmark>pushbuttons
+<h1>Pushbuttons
+Subgraphs for pushbuttons are found under the folder PushButtons in the subgraph palette.
+
+<h2>Set a signal
+The subgraph ButtonSet sets a digital signal when clicking on it.
+The signal to set, is stated in Attribute, and any text on the button is stated in Text.
+
+It uses the action SetDig.
+
+<b>Attribute <t><t>Value
+SubGraph <t><t>pwr_buttonset
+Text
+SetDig.Attribute
+SetDig.Instances
+Access <t><t>System | Maintenance
+DynType <t><t>Inherit
+Action <t><t>Inherit
+
+<h2>Reset a signal
+The subgraph ButtonReset resets a digital signal by clicking on it.
+It uses the action ResetDig.
+
+<h2>Toggle a signal
+The subgraph ButtonToggle toggles a digital signal when clicking on it.
+It uses the action ToggleDig.
+
+<h2>Set a signal as long as the button is pressed
+The action StoDig sets the value of a signal to 1 when the button is pressed, and resets the
+value to 0 whan the buttons is released, that is as long as the button is pushed the value is 1.
+To create a StoDig button, you can start out from a ButtonSet button, remove Inherit in Action 
+and select StoDig instead.
+
+<b>Attribute <t><t>Value
+SubGraph <t><t>pwr_buttonset
+Text
+StoDig.Attribute
+InvisAttr
+Access <t><t>65532
+Cycle <t><t>Inherit
+DynType <t><t>Inherit
+Action <t><t>StoDig
+
+<h2>Change color and text
+To change the color and text of a pushbutton, you use one of the action types SetDig, ResetDig
+or ToggleDig combined with the dynamic types DigLowColor and DigLowText. These you can connect
+to digial signals that changes the color and text. The color LowColor and the text LowText are
+displayed when the signals are low respectively.
+
+<b>Attribute <t><t>Value
+SubGraph <t><t>pwr_buttonset
+DigLowColor.Attribute
+DigLowColor.Color
+DigLowText.Attribute
+DigLowText.Text
+SetDig.Attribute
+Access <t><t>65532
+Cycle <t><t>Inherit
+DynType <t><t>DigLowColor | DigLowText
+Action <t><t>SetDig
+
+<h2>Change the shape of a pushbutton
+If the pushbutton is a graphic symbol that you want to modify the shape of, you use the dynamic
+DigShift combined with the action ToggleDig. You use a subgraph with two pages or more. When
+the button is connected to a digital signal, it will shift between the pages depending on the
+signal value. When you click the button it will toggle the value of the signal. Checkboxes,
+for example, uses this type of dynamic.
+
+<b>Attribute <t><t>Value
+SubGraph  <t><t>my_button
+DigShift.Attribute
+ToggleDig.Attribute
+Access <t><t>65532
+Cycle <t><t>Inherit
+DynType <t><t>DigShift
+Action <t><t>ToggleDig
+
+<h2>Open a graph
+To open a graph, you use a pushbutton and set action to OpenGraph.
+
+In OpenGraph.GraphObject you state a XttGraph object, for example
+
+<c>Noder-MyNode-Graphs-SomeXttGraph
+
+If the graph is to be displayed on different nodes, and you prefer not to use local XttGraph
+objects, you can replace the node object with *
+
+*-Graphs-SomeXttGraph
+
+
+* will be replaced by the name of the node object for the current node. XttGraph objects with
+corresponding names must of course exist on all the nodes in question.
+
+<b>Attribute <t><t>Value
+SubGraph <t><t>pwr_buttoncommand
+Text
+OpenGraph.GraphObject
+Access <t><t>65532
+DynType <t><t>Inherit
+Action <t><t>OpenGraph
+
+You can also use the action Command and state a xtt-command to open the graph, for example
+if you don't have any XttGraph object or want to submit any special qualifier. The command
+to open a graph is
+
+<c>open graph my_graph /width=700/height=500
+
+If you want to open a specific input field in the graph, when the graph is opened, you use
+'open graph/focus'. Here you also have to supply the object name of the input field (the name
+is set with 'Edit/Change name' in the menu).
+
+<c>open graph /object=*-Graphs-SomeXttGraph /focus="TempSetValue"
+
+<h2>Execute a command
+The subgraph ButtonCommand executes a xtt-command when clicking on it.
+It uses the action Command. Since most functions in xtt can be performed by commands there
+is a number of applications for this type of dynamics. Some of them are described below.
+
+<h2>Open a trend
+A trend is opened from a pushbutton with action type Command, and with the command 'open trend'.
+Usually you open the trend through a PlotGroup object, but 'open trend' can also open a DsTrend
+object.
+
+<c>open trend H1-H2-SomePlotGroup
+
+<h2>Help and info
+It is of course important that an operator quickly and easily can get help on how to handle 
+graphs and processes. One way to solve this is to create help and info buttons in the graph.
+You can, for example, use the sugraphs ButtonHelp or ButtonInfo. The action type for those are
+Help, and you supply a topic in Help.Topic, and any bookmark in Help.Bookmark. The help function
+fetches help text written in the file $pwrp_exe/xtt_help.dat, and a bookmark makes it possible
+to position in a specific row of the text.
+
+<h2>Checkboxes
+Checkboxes are used to select a number of alternatives in a list. Compared to radioboxes, where
+only one alternative can be selected, you can select several alternatives concurrently in the
+checkboxes. You can use the subgraphs CheckBox or CheckBoxRelief that has the dynamic DigShift
+and action ToggleDig. It is connected to a digital signal that toggles the value of the signal
+when the checkbox is clicked.
+
+<h2>Radiobuttons
+Radiobuttons are used to select one alternativ from a list. Here you have the subgraphs
+RadioButton and RadioButtonRelief. The radiobuttons are connected to digital signals, and the
+radiobutton that belongs to the same list is thereafter grouped with 'Functions/Group'. The
+action RadioButton sets the signal for the button that is clicked on, and resets the signals
+for the other radiobuttons i the group. There are no function to initially set one alternative,
+this has to be done with init values, or from the plc program.
+
+<h2>Increase/decrease
+Increase/decrease buttons are used to increase or decrease an analog value. The action type
+IncrAnalog is connected to an analog signal, and increases or decreases the value of the signal
+when the object is clicked on. Besides the increment (where negative values gives a decrement),
+you can also state a minimum and maximum value of the signal.
+
+Suitable subgraphs are ButtonUp and ButtonDown, though they have SetDig as default. Change
+the action to IncrAnalog to get the increase/decrease function.
+
+<b>Attribute <t><t>Value
+SubGraph <t><t>pwr_buttonup
+IncrAnalog.Attribute
+IncrAnalog.Increment
+IncrAnalog.MinValue
+IncrAnalog.MaxValue
+Access <t><t>65532
+Cycle <t><t>Inherit
+DynType <t><t>Inherit
+Action <t><t>IncrAnalog
+
+<h2>Set integer and analog values
+If you want to set a fix integer or analog value from a button, this is done with the action
+type Command and the command 'set parameter'. Since 'set parameter' normally demands the
+privilege RtWrite you might use the /bypass qualifier and instead restrict the access with
+the Access attribut for the the button.
+
+<c>set parameter /name=H1-H2-SpeedSetValue.ActualValue /value=3.44 /bypass
+
+<h2>Pushbutton with confirm
+The subgraphs SetDigConfirm, ResetDigConfirm, ToggleDigConfirm and CommandConfirm asks for
+a confirmation from the user, before the action is executed. When clicking on the button, a
+window is displayed where you can either confirm on cancel.
+
+<b>Attribute <t><t>Value
+SubGraph <t><t>pwr_buttonsetconfirm
+Text
+Confirm.Text
+SetDig.Attribute
+SetDig.Instances
+Access <t><t>65532
+Cycle <t><t>Inherit
+DynType <t><t>Inherit
+Action <t><t>Inherit
+
+<h2>Close windows
+When the screen is filled with process graphs, trends, objects graphs etc. in can be comfortable
+to have button to remove unwanted windows. This can be performed with a ButtonCommand and the
+command
+
+<c>close all
+
+If one or some graphs always should be open, you can save them with /except. Here you state
+the name of the graph, or a list of graphs separated by comma.
+
+<c>close all /except=overview
+
+<bookmark>analog
+<h1>Display analog values
+<h2>Formated display
+The subgraphs ValueSmall, ValueMedium, ValueLarge displayes analog values, integer values and
+text strings. In the Format attribute you state the format in c syntax, for an analog signal,
+for example, %7.2f where 7 is maximum number of signs (the point included), and 2 the number
+of decimals. For integers you write %d and for strings %s. Usually it is connected to analog
+signals or text attributes, but most of the other datatypes can also be displayed.
+
+<b>Attribute <t><t>Value
+SubGraph <t><t>pwr_valuemedium
+Value.Attribute
+Value.Format
+Cycle <t><t>Inherit
+DynType <t><t>Inherit
+Action <t><t>Inherit
+
+The subgraphs have the dynamic type Value. If you want to be able to change the color of the
+textfield, add the dynamic DigColor, to which you connect a digital signal that changes the
+background color of the field. You can also add AnalogColor, to which you connect an analog
+signal, that changes the color when the signal has reached a certain limit. 
+
+<b>Attribute <t><t>Value
+SubGraph <t><t>pwr_valuemedium
+AnalogColor.Limit <t><t>90.0
+AnalogColor.Color <t><t>Red
+AnalogColor.LimitType <t><t>GreaterThen
+AnalogColor.Attribute
+AnalogColor.Instances
+Value.Attribute
+Value.Format
+Cycle <t><t>Inherit
+DynType <t><t>Inherit | AnalogColor
+Action <t><t>Inherit
+
+<h2>Bar
+Bar is a complex object that is choosen from the subgraph palette, 'Analog-Bar'. The bar
+is connected to an analog value. In the object editor you can state minimum and maximum limits
+for the value of the signal, color of the bar, and color of the upper borderline of the bar.
+
+Bar.Attribute
+Cycle <t><t>Inherit
+DynType <t><t>Bar
+Action <t><t>Inherit
+Bar.MaxValue <t><t>100.0000000
+Bar.MinValue <t><t>0.0000000
+Bar.Value <t><t>35.0000000
+Bar.BarColor <t><t>OrangeHigh7
+Bar.BorderColor <t><t>OrangeHigh5
+Bar.BorderWidth <t><t>1
+Dynamic
+
+
+<h2>Trend
+Trend is a complex object that it choosen from the subgraph palette, 'Analog-Trend'. A trend
+object kan display two curves, and collects values as long as the graph is open.
+
+Trend.Attribute1
+Trend.Attribute2
+Cycle <t><t>Inherit
+DynType <t><t>Trend
+Action <t><t>Inherit
+Trend.NoOfPoints <t><t>100
+Trend.ScanTime <t><t>1.0000000
+Trend.CurveLineWidth <t><t>1
+Trend.FillCurve <t><t>0
+Trend.HorizontalLines <t><t>0
+Trend.VerticalLines <t><t>0
+Trend.MaxValue1 <t><t>100.0000000
+Trend.MinValue1 <t><t>0.0000000
+Trend.CurveColor1 <t><t>OrangeHigh5
+Trend.CurveFillColor1 <t><t>OrangeMedium5
+Trend.MaxValue2 <t><t>100.0000000
+Trend.MinValue2 <t><t>0.0000000
+Trend.CurveColor2 <t><t>GreenHigh5
+Trend.CurveFillColor2 <t><t>GreenMedium9
+Dynamic
+
+
+If you want to collect data when the graph is down, you have to configure trends with DsTrend
+and PlotGroup objects. These trends are displayed in a curve window in xtt.
+
+<h2>Fast curve
+A fastcurve, configured in the database with a DsFastCurve object, is displayed with the object
+Analog-FastCurve. A fastcurve is a measurement of an analog signal, that is started by a
+specified condition, and then continues for a limited time. The values are stored in the 
+DsFastCurve object, that also signals when a measurement is ready. Ge's FastCurve object then
+fetches the sampled values and draw the curve.
+
+<h2>Coordinate axis
+In this context, the Axis-object might be of interest. This is a complex object used to draw
+coordinate axis and value ranges for bar, trend and slider objects. This is created from 
+Analog-Axis in the subgraph palette. The axis object is created in a vertical position, and can
+be rotated to horizontal position.
+
+<bookmark>setanalog
+<h1>Set analog signals
+<h2>Input
+Input of analog signals from the keyboard is done with the subgraphs ValueInputSmall,
+ValueInputMedium and ValueInputLarge. Input focus is set to an input field by clicking on it,
+and then you can enter a value.
+
+The subgraphs have the dynamic type Value and the action ValueInput.
+
+<h2>Slider
+Another way to set the value of an analog signal, is to use a slider. A slider can be drawn
+between two extreme positions, and the position determines the value of the signal it is
+connected to. The slider consists of two parts, a background part and a mobile part, and 
+these are two separate subgraphs
+
+First you create a background, e.g. SliderBackground1, and thereafter you create the mobile 
+part, Slider1, that is positioned on the background.
+
+The slider part is connected to an analog signal, and in the object editor you specify minimum
+and maximum values for the signal. The attributes Direction, MinPosition and MaxPosition doesn't
+have to be stated if you use a background for the slider.
+
+If the slider is to be rotated, you should rotate the two parts the same amount. Note that
+the mobile part should not be a member of a group.
+
+<b>Attribute <t><t>Value
+SubGraph <t><t>pwr_slider1
+Slider.Direction <t><t>Up
+Slider.MaxValue <t><t>100.0000000
+Slider.MinValue <t><t>0.0000000
+Slider.MaxPosition <t><t>0.0000000
+Slider.MinPosition <t><t>0.0000000
+Slider.Attribute
+Access <t><t>65532
+Cycle <t><t>Inherit
+DynType <t><t>Inherit
+Action <t><t>Inherit | Slider
+
+Slider2 and SliderBackground2 are designed for greater accuracy and have space reserved for
+an axis object.
+
+<bookmark>texts
+<h1>Display texts
+<h2>Shift between two texts
+If you want to shift between two texts depending on a digital signal,  you use the dynamic type
+DigText. You can, for example, start out from a Value subgraph and change DynType from Inherit
+to DigText. The text that is to be displayed when the text is high, you enter in Text, and the
+text to be displayed when the signal is low you enter in DigText.LowText.
+
+<h2>Display a string attribute
+A signal with the datatype String is displayed with the subgraphs ValueSmall, ValueMedium or
+ValueLarge. Furthermore there is a subgraph ValueLong that is more adapted to longer texts.
+The subgraph is connected to the string attribute, and as format you state %s.
+
+<bookmark>movement
+<h1>Mobile objects
+<h2>Rotate
+To rotate an object you use the dynamic type Rotate. The object is connected to an analog
+signal. The rotation point (x0, y0) is stated in the object editor. You can also supply a 
+factor (Factor) that converts the value of the signal to degrees. The rotation is clockwise.
+
+<h2>Move
+To move an object you use the dynamic type Move. The object is connected to two analog signals
+that determines the movement in x and y direction (Move.XAttribute and Move.YAttribute). If
+you just want to move in one direction, it is sufficient to connect one signal. The attributes
+Move.XOffset, Move.YOffset and Move.Factor are used to convert the signal value to a movement
+in the Ge coordinate system. In Move there are also functionality to scale the object (See
+Change shape of an object).
+
+<h2>Animation
+Another way to get a movement of an object is animation. Animation uses subgraphs with several
+pages. The dynamic type Animation is used for animations.
+
+<bookmark>shape
+<h1>Change shape of an object
+<h2>Scale
+For the dynamic type Move, there are, apart from moving an object, also a possibillity to scale
+the object. Two signals can be connected to Move.ScaleXAttribute and Move.ScaleYAttribute that
+scales the object in x and y direction. The values of the attributes are multiplied with
+Move.ScaleFactor to obtain the scale factors. Scalefactor greater than 1 gives enlargement,
+and less than 1 reduction.
+
+<h2>Shift between two shapes
+If you want an object to appear in two different shapes, you use the dynamic type DigShift.
+This is applied to subgraphs that has two pages (or more). It is connected to a digital
+signal, and when the signal has the value 0, the first page is displayed. When the value is 1
+the second page is displayed (or the last page, if the subgraph has more than two pages).
+
+<h2>Shift between several shapes
+If you want to shift between more than two shapes, you use AnalogShift. This is connected to
+an analog signal and is applied to a subgraph with several pages. The value of the analog
+signal gives the index for the page that is displayed (value 0 displayes the first page, 1 the
+second page etc.).
+
+<h2>Animation
+Also the dynamic type for animation can be used to change the shape of an object. This requires
+that the subgraph have several pages.
+
+<bookmark>navigate
+<h1>Navigate from the keyboard
+To enter data and activate objects without using the mouse, you use the action type InputFocus.
+If an object has input focus, key events are sent to that object. For a ValueInput object, this
+means that you can enter a value, for a pushbutton it means that you can activate it by pressing
+Return.
+
+Focus input is traversed between the objects with the Tab and arrow keys. How the input focus
+is traversed, is configurated with the attributes NextHorizontal, NextVertical and NextTab.
+Here you state the object name of the object that input focus is traversed to by arrow right, 
+arrow down and Tab keys.
+
+An object that has input focus is usually marked with a relief that surrounds the object.
+
+<bookmark>menues
+<h1>Menues
+You can build menues with the subgraphs Other-MenuBar and Other-PulldownMenu. MenuBar is the
+menu bar and has no dynamic. All the dynamics are in the PulldownMenu object. For this, the 
+pushbuttons that appears in the menu and the action for each button, are configured. Menu buttons
+can have the same action as other buttons, i.e. you can influence digital signals with SetDig,
+ResetDig and ToggleDig, execute commands with Commands etc. With the action type PulldownMenu
+you can also build sub menues, and in this way build menues in several levels.
+
+<bookmark>images
+<h1>Gif and JPEG-images
+You insert a gif or JPEG image in the following way. Copy the image file to $pwrp_pop. It is
+now displayed under the folder Local/Images in the subgraph palette. Select the picture and
+click with MB2 in the working area.
+
+<h2>Change color
+The functions to change colors for subgraphs, i.e. color tone, lightness, intensity and color
+shift, also applies to image objects.
+
+<h2>Dynamics
+You can not set any dynamic on the image object directory. You can though let them be a member
+of a group or subgraph, and state dynamics for the group or subgraph. If you dynamically want
+to change the color of an image object, you should use a dynamic type that changes the color
+tone, e.g. DigTone.
+
+<bookmark>drawsubgraph
+<h1>Draw a subgraph
+A subgraph is constructed by drawing baseobjects in the working area and then save these as a
+subgraph. You can also draw other subgraphs in the working area, but these can't have any
+dynamics of its own, but will follow the dynamic of the main subgraph. There are two special
+objects that are used in subgraphs: connections points and annotations.
+
+Connections points makes it possible to draw connections between objects. They are created
+by activating connection point in the tool panel and clicking MB1 in the working area. In the
+object editor for the connection point you can state the direction (Direction) of the point,
+i.e. the direction a connection out from the point will get. Connectionpoints on the left side
+of an object should have Direction Left, on the upper side Up, on the right side Right and on
+the lower side Down.
+
+Annotation is a place for a text, that can vary for different instance of the subgraph. They
+are created by selecting An in the tool panel and click with MB1 in the working area. When you
+create instances of the subgraph, the annotations are displayed as attributes in the object
+editor for the subgraphs object as A1, A2 etc., and you kan in this way put texts in the
+annotations.
+
+When the subgraph is ready you open 'File/GraphAttributes' and enter 1 in Subgraph. You can
+also enter default values for dynamic type or action, e.g. DigLowColor. Then you save it with
+a suitable name.
+
+You create instances of the subgraphs by selecting it under the folder Local/Subgraphs in the
+subgraph palette, and click with MB2 in the working area.
+
+<h2>A subgraph with several pages
+Some types of dynamic, e.g. animations, presume that you hava a subgraph with several pages.
+When building an animation you create several pages that slightly differs from each other, 
+and the pages are run through, it gives an illusion of movement. The dynamic types DigShift
+and AnalogShift also uses different pages, and shifts between pages depending on the value of
+an digital or analog signal.
+
+When to draw a sugraph with several pages, you draw the first page in the usual way. When
+you have saved it as a subgraph, you activate 'File/Page/Create next page' (Shift+Ctrl/N).
+Now the second page is created, which is marked in the title of the window. When the changes
+on page 2 is drawn, this is saved and you again activate 'Create next page' to create the
+third page etc.
+
+You can shift between pages with 'File/Page/Next page' (Ctrl/N) and 'File/Page/Previous page'
+(Ctrl+J). When drawing animations, this is a valuable way to se differences between pages and
+evaluate how the animation works.
+
+<h2>Slider
+A slider is constructed with two separate subgraphs, one background, and one mobile part. The
+slider should always be drawn vertically, i.e. with verital movement direction.
+
+For the background subgraph you measure the y coordinate for the endpoints of the slider 
+movement, and enter the values in the attributes y0 and y1 in 'Graph attributes'. As DynamicType
+you state SliderBackground.
+
+For the mobile subgraph you measure the y coordinate for the point that is to be adjusted against
+the signal value, and put this in y0. The attribute Slider should be set to 1.
+
+<h2>FillLevel
+For a subgraph with dynamic FillLevel, e.g. a thermometer, you often want to set a minimum
+and maximum limit for the level. By measuring the coorinates for the maximum and mininum level
+and put these in y0 and y1 in 'Graph attributes' you acheive this function. The subgraph should
+always be drawn in an upright position, so that the level is changed up or down.
+
+<h2>Animation
+For subgraphs with dynamic Animation, you select a suitable AnimationSequence in 'Graph
+Attributes'. AnimationSequence can be Cyclic, Dig or ForwBack.
+</topic>
+</chapter>
+
+<chapter>
+<topic>geref_windows
+Windows
+
+In ge, there are a number of palettes and other windows to choose objects, subgraphs, colors etc.
+
+<h1>Working area
+In the working area the graph is edited by clicking and dragging the mouse.
+
+<b>Mouseclick     <t><t>Function
+Click MB1       <t><t>Select an object, or create a base object.
+Shift/Click MB1 <t><t>Add an object to the select list.
+Press MB1       <t><t>Select objects in an area, or move objects.
+Chift/Press MB1 <t><t>Add objects in an area to the select list.
+DoubbleClick MB1 <t><t>Open the object editor for the object.
+Ctrl/DoubbelClick MB1 <t><t>Connect the first attribute in a subgraph object to a rtdb-object.
+Shift/Ctrl/DoubbelClick MB1 <t><t>Connect the second attribut in a subgraph object to a
+                 <t><t>rtdb-object.
+Shift/DoubbelClick MB1 <t><t>Set selected fillcolor in LowColor in a subgraph object.
+Click MB2        <t><t>Create a subgraph object.
+Press MB2        <t><t>Create a connection.
+
+<h1>Navigation window
+Down to the left there is a navigation window that contains a copy of the working area in
+reduced scale. From the navigation window you can scroll (MB1) or zoom (MB2) the graph in the
+working area.
+
+<h1>The subgraph palette
+The subgraph palette consists of a number of folders with subgraphs. Under the Local/Subgraphs
+folder there are subgraphs that is created within the project. Other folder contain subgraphs 
+that comes with Proview.
+
+<h1>The color palette
+In the color palette there are 300 colors. Here you choose fillcolor, border color and text
+color. The fillcolor is selected with MB1 and displayed in the left field of the top row of
+the palette, bordercolor is selected with MB2 and displayed in the middle field, and text color
+is selected with Shift MB1 and displayed in the right field.
+
+The palette is parted in rows with 30 colors in each row. In the first row there are back, white
+and intense signal colors, and a collection of gray tones. Then follows a row with the gray 
+scale and after that 8 rows with different color tones: yellowgreen, yellow, orange, violett,
+blue, seablue and green. Within each color group the 10 first has low saturation, the 10
+middle colors a little higher saturation and the 10 last high saturation.
+
+Beneath the color palette there is also a color tone palette in which you can select a color
+ton for subgraph objects.
+
+Here is also a reset button to return to the original color of an object.
+
+<h1>Tool panel
+The tool panel consists of a number of pushbuttons to create rectangles, circles, lines etc.
+There are also functions to rotate and scale, to set linewidth, fontsize, to modify color of
+subgraphs etc.
+
+<h1>The object and attribute editor
+The object and attribute editor makes it possible to enter properties to objects, graphs and
+subgraphs.
+
+For an object, this is opend by doubleclicking on the object, for graph or subgraphs, it is 
+opened from the menu 'File/Graph attributes'.
+
+Values in the object editor are changed by selecting the attribute and press ArrowRight, or from
+the menu with 'Functions/Change value'.
+
+Bitmasks, enum attributes and arrays are opened with ArrowRight or DoubleClick MB1. Checkboxes
+are changed with ArrowRight or by clicking in the checkbox.
+
+The fastest way is to select an attributes with ArrowUp and ArrowDown, and use ArrowRight to
+open and change the attribute, and ArrowLeft to close the attribute.
+
+<h1>Plant hierarchy
+If Ge is started from the navigator, the plant hierarchy is displayed in a window below the
+color palette. It is used to connect dynamic objects to signals i rtdb. You connect a subgraph
+object to a signal by selecting the object (or an attribute in the object) in the plant
+hierarchy, and then click with Ctrl/Doubleclick MB1 on the subgraph object (or on an attribute
+in the object editor). If there is a second attribut that is to be connected to a signal, you
+can connect this in the same way with Shift/Ctrl/Doubleclick MB1.
+</topic>
+</chapter>
+
+<chapter>
+<topic>geref_objects
+Objects
+
+An object is created by selecting the object in the tool panel, and draw it in the working area
+with MB1. The object is drawn with the current values of fill, fillcolor, border, bordercolor 
+and linewidth. If the properties of an existing object is to be changed, you select it and
+activate the color, linewidth etc. that should be applied to the object. The object editor for
+an object is opened by doubleclicking on the object. Below is described, under the title
+'Properties', the properties that can be changed from the tool panel or color palette, and under
+the title 'Attributes' the attributes found in the object editor.
+
+<h1>Baseobjects
+
+Rectangle 	<link> geref_rectangle
+Rounded rectangle <link> geref_roundedrect
+Circle 		<link>geref_circle
+Line 		<link>geref_line
+Polyline 	<link>geref_polyline
+Text 		<link>geref_text
+Annotation 	<link>geref_annotation
+Connection point <link>geref_conpoint
+
+<h1>Complex objects
+Bar 		<link>geref_bar
+Trend	 	<link>geref_trend
+Axis 		<link>geref_axis
+Window		<link>geref_window
+TabbedWindow	<link>geref_tabbedwind
+Table		<link>geref_table
+
+</topic>
+<topic>geref_rectangle <style>function
+Rectangle
+
+A rectangle is created by selecting rectangle in the tool panel and drag with MB1 in the
+working area. If you first activate Functions/ScaleEqual an quadrat i drawn.
+
+<h2>Properties
+- Fill
+- Fillcolor
+- Border
+- Bordercolor
+- Linewidth
+- 3D
+
+<h2>Attributes
+<b>Attribute      <t>Description
+ShadowWidth   <t>The with of the 3D-shadow in % of width or length (the smallest).
+ShadowContrast <t>Contrast of the 3D-shadow.
+Relief        <t>Up gives a shadow on the lower side, and Down gives a shadow on the upper side.
+DisableShadow <t>Disables the 3D-function. Is used when the object is a part of a subgraph
+              <t>an not should be drawn with 3D when 3D is choosen for the instance of the 
+              <t>subgraph.
+Dynamic       <t>Not implemented.
+</topic>
+
+<topic>geref_roundedrect <style>function
+Rounded rectangle
+
+A rectangle with rounded corners are created by selecting rounded rectangle in the tool panel
+and drag with MB1 in the working area. If you first activate Functions/ScaleEqual a quadrat is
+drawn.
+
+<h2>Properties
+- Fill
+- Fillcolor
+- Border
+- Bordercolor
+- Linewidth
+- 3D
+
+<h2>Attributes
+<b>Attribute      <t>Description
+RoundAmount   <t>The amount of the rounded corners in % of lenght or width (the smallest).
+ShadowWidth   <t>The with of the 3D-shadow in % of width or length (the smallest).
+ShadowContrast <t>Contrast of the 3D-shadow.
+Relief        <t>Up gives a shadow on the lower side, and Down gives a shadow on the upper side.
+DisableShadow <t>Disables the 3D-function. Is used when the object is a part of a subgraph
+              <t>an not should be drawn with 3D when 3D is choosen for the instance of the 
+              <t>subgraph.
+Dynamic       <t>Not implemented.
+</topic>
+
+<topic>geref_circle <style>function
+Ellipse
+
+An ellipse is created by selecting circle in the tool panel and drag with MB1 in the working
+area. With angel1 and angel2 a segment of the circle is drawn. If you first activate
+Functions/ScaleEqual a circle is drawn.
+
+<h2>Properties
+- Fill
+- Fillcolor
+- Border
+- Bordercolor
+- Linewidth
+- 3D
+
+<h2>Attributes
+<b>Attribute      <t>Description
+Angel1       <t>Angel from the x-axis in degrees to the start of the segment.
+Angel2       <t>Angel in degrees that states the size of the segment.
+ShadowWidth   <t>The with of the 3D-shadow in % of width or length (the smallest).
+ShadowContrast <t>Contrast of the 3D-shadow.
+Relief        <t>Up gives a shadow on the lower side, and Down gives a shadow on the upper side.
+DisableShadow <t>Disables the 3D-function. Is used when the object is a part of a subgraph
+              <t>an not should be drawn with 3D when 3D is choosen for the instance of the 
+              <t>subgraph.
+Dynamic       <t>Not implemented.
+</topic>
+
+<topic>geref_line <style>function
+Line
+
+A line is created by selecting line in the tool panel and drag with MB1 in the working area.
+By activating Functions/MoveRestrictions/Horizontal or Vertical you draw horizontal or
+vertical lines.
+
+<h2>Properties
+- Border
+- Bordercolor
+- Linewidth
+- 3D
+- Linetype
+
+<h2>Attributes
+<b>Attribute     <t>Description
+Dynamic      <t>Not implemented.
+</topic>
+
+<topic>geref_polyline <style>function
+Polyline
+
+A polyline is created by selecting polyline in the tool panel and drag MB1 in the working area.
+When MB1 is released, the first line segment is created. By dragging MB1 additional line
+segments are created. When all the line segments are drawn, the drawing sequence is terminated
+with MB3.
+
+If you want to move a single breakpoint in a polyline, you select the polyline and activate
+'Edit/Edit polyline' in the menu. The editing is terminated with MB3.
+
+By activating 'Functions/MoveRestrictions/Horizontal' or 'Vertical' you draw horizontal and
+vertical lines. Horizontal or Vertical states the direction of the first line segment. The 
+following segments are drawn perpedicular to the previous segment. MoveRestrictions can be
+disabled when drawing a polyline with 'Functions/MoveRestrictions/No'.
+
+<h2>Properties
+- Fill
+- Fillcolor
+- Border
+- Bordercolor
+- Linewidth
+- 3D
+
+<h2>Attributes
+<b>Attribute      <t>Description
+ShadowWidth   <t>The with of the 3D-shadow in % of width or length (the smallest).
+ShadowContrast <t>Contrast of the 3D-shadow.
+Relief        <t>Up gives a shadow on the lower side, and Down gives a shadow on the upper side.
+DisableShadow <t>Disables the 3D-function. Is used when the object is a part of a subgraph
+              <t>an not should be drawn with 3D when 3D is choosen for the instance of the 
+              <t>subgraph.
+FillEqBorder  <t>Indicates that the fillcolor is drawn with the specified bordercolor instead of
+              <t>the current fillcolor. This is used for subgraphs where certain elements,
+              <t>e.g. arrows, have more in common with the bordercolor than the fillcolor.
+FillEqLight   <t>If the object is a part of a subgraph, it will have the light 3D-color,
+              <t>when 3D is choosen for the subgraph.
+FillEqShadow  <t>If the object is a part of a subgraph, it will have the same color as a 3D 
+              <t>shadow, when 3D i choosen for the subgraph.
+Dynamic       <t>Not implemented.
+</topic>
+
+<topic>geref_text <style>function
+Text
+
+A text is created by selecting text in the tool panel and clicking MB1 in the working area.
+An input field is opened, where the text is entered. The text is modified from 
+'Edit/Change text' in the menu or from the object editor.
+
+The currently available font is Helvetica, normal or bold. The maximum number of character
+in the text string is 79.
+
+<h2>Properties
+- Font size
+- Normal or bold text
+- Text color
+
+<h2>Attributes
+<b>Attribute  <t>Description
+Text         <t>Actual text, maximum 79 characters.
+Dynamic      <t>Not implemented.
+</topic>
+
+<topic>geref_annotation <style>function
+Annotation
+
+An annotation is a text in a subgraph, that is unic for each instance of the subgraph.
+Examples of annotations are the text of a pushbutton, or the analog value of an update field.
+When editing the subgraph, the position for the text is stated. The actual text is stated in 
+the object editor for the instance of the subgraph (or handled by certain dynamic functions).
+
+An annotation is created by selecting annotation (An) in the tool panel and clicking MB1 in
+the working area.
+
+Annotations can only be created in a subgraph. There can be 10 annotations i one subgraph.
+Each annotation is given a number that is unic within the subgraph.
+
+Note that some types of dynamics (Value, SetDig etc) requires specific numbers of annotations.
+
+<h2>Properties
+- Normal or bold text
+- Text color
+
+<h2>Attributes
+<b>Attribute     <t>Description
+TextSize     <t>Text size 0-7
+Number       <t>Numbering of annotations within the subgraph.
+Dynamic      <t>Not implemented.
+</topic>
+
+<topic>geref_conpoint <style>function
+Connections point
+
+A connection point in a subgraph makes it possible to draw connections between instances of
+the subgraph. In the subgraph, the position of the connection point is stated, as well as
+the direction in which a connection of the connection point is to be drawn.
+
+A connection point is created by selecting connection point in the tool panel and clicking
+MB1 in the working area.
+
+Connection points can only be created in subgraphs.
+
+A connection point is marked with a circle when editing the subgraph. In an instance of the
+subgraph, the connection point is not visible.
+
+If the connection is to be connected to connections of type grafcet or routed, the direction
+has to be given. It is stated from the object editor.
+
+Each connection point has a number that is unic within a subgraph.
+
+<h2>Properties
+- Direction
+
+<h2>Attributes
+<b>Attribute      <t>Description
+Number        <t>Numbering or connectionpoints within a subgraph.
+Direction     <t>Direction: up, down, right or left.
+Dynamic       <t>Not implemented.
+</topic>
+
+<topic>geref_complexobj
+Complex objects
+</topic>
+
+<topic>geref_bar <style>function
+Bar
+
+Bar is one way to display the value of an analog signal.
+The properties fill, fillcolor, bordercolor etc. states properties for the background rectangle.
+The properties for the bar itself, are stated in the object editor.
+A bar is created by selecting bar in the subgraph palette, 'Analog/Bar', and clicking MB2 in
+the working area.
+
+<h2>Properties
+- Fill (for the background rectangle)
+- Fillcolor (for the background rectangle)
+- Border (for the background rectangle)
+- Bordercolor (for the background rectangle)
+- Linewidth (for the background rectangle)
+
+<h2>Attributes
+Attribute      <t>Description
+Bar.Attribute <t>The name of a signal in rtdb.
+Bar.MaxValue  <t>Signal value that corresponds to full length of the bar.
+Bar.MinValue  <t>Signal value that corresponds to zero length of the bar.
+Bar.Value     <t>Can be used as a test value in the editorn.
+Bar.BarColor  <t>Fillcolor for the bar (the value Inherit implies that the bordercolor
+              <t>of the background rectangle is choosen).
+Bar.BorderColor <t>Border color for the upper borderline of the bar (the value Inherit
+              <t>implies that that the bordercolor from the background rectangle is choosen).
+Bar.BorderWidth <t>Linewidth of the borderline (1-8)
+Dynamic       <t>Not implemented
+</topic>
+
+<topic>geref_trend <style>function
+Trend
+
+Trend displays the value of one or two analog values as curves.
+
+The cuves can be drawn with or without fill, where fill means that that area between the curve
+and the time axis is filled. The curves are drawn with the second curve on top.
+
+A number of horizontal and vertical lines can be drawn with the bordercolor in the trend object.
+The number of lines are configured from the object editor.
+
+The properties fill, fillcolor, bordercolor etc., states the properties for the background
+rectangle of the curve. The properties of the curve itself are stated from the object editor.
+
+A trend is created by selecting trend in the subgraph palette, 'Analog-Trend', and clicking
+MB2 in the working area.
+
+<h2>Properties
+- Fill (for the background rectangle)
+- Fillcolor (for the background rectangle)
+- Border (for the background rectangle)
+- Bordercolor (for the background rectangle)
+- Linewidth (for the background rectangle)
+
+<h2>Attributes
+<b>Attribute     <t><t>Description
+Trend.Attribute1  <t><t>Signal for curve number 1.
+Trend.Attribute2  <t><t>Signal for curve number 2.
+Trend.NoOfPoints  <t><t>Number of points in the curve.
+Trend.ScanTime    <t><t>Time intervall between two points.
+Trend.CurveLineWidth <t><t>Linewidth for the curve (1-8)
+Trend.FillCurve   <t><t>States that the area between the curve and the time axis
+                  <t><t>is to be filled.
+Trend.HorizontalLines <t><t>Number of horizontal lines
+Trend.VerticalLines <t><t>Number or vertical lines
+Trend.MaxValue1   <t><t>Maximum value of Attribute1
+Trend.MinValue1   <t><t>Minimum value of Attribute1
+Trend.CurveColor1 <t><t>Border color for the curve of Attribute1
+Trend.CurveFillColor1 <t><t>Fill color for the curve of Attribute1
+Trend.MaxValue2   <t><t>Maximum value of Attribute2
+Trend.MinValue2   <t><t>Minimum value of Attribute2
+Trend.CurveColor2 <t><t>Border color for the curve of Attribute2
+Trend.CurveFillColor2 <t><t>Fill color for the curve of Attribute2
+Trend.Dynamic     <t><t>Not implemented
+</topic>
+
+<topic>geref_axis <style>function
+Axis
+
+Axis shows the range for a curve or bar in x or y direction.
+
+<h2>Attributes
+<b>Attribute  <t>Description
+MaxValue     <t>Maximum value for the range.
+MinValue     <t>Minimum value for the range.
+Lines        <t>Number of lines perpendicular to the axis.
+LongQuotient <t>Specification of lines that is a bit longer. For example 4 implies that
+             <t>every fourth line is a bit longer.
+ValueQuotient <t>How often a value is to be written. For example 4 impies that a value is
+	     <t>written at every fourth line.
+Format       <t>Format in c syntax of written values.
+Dynamic      <t>Not implemented.
+</topic>
+
+<topic>geref_window <style>function
+Window
+
+Window displays a separate graph in a specified area in another graph. The graph is displayed
+with or without scrollbars.
+
+<h2>Limitations
+Sliders within the window object are disabled.
+You can not state an hierarchy or class object.
+
+<h2>Attributes
+<b>Attribute    <t><t>Description
+Window.FileName <t><t>Name of the graph to be displayed in the window.
+Window.Scale    <t><t>Scale of the graph.
+Window.VerticalScrollbar  <t><t>A vertical scrollbar is displayed in the window.
+Window.HorizontalScrollbar <t><t>A horizontal scrollbar is displayed in the window.
+Window.ScrollbarWidth  <t><t>Width of scrollbar.
+Window.ScrollbarColor  <t><t>Fillcolor of the mobile part of the scrollbar.
+Window.ScrollbarBgColor <t><t>Fillcolr of the background part of the scrollbar.
+</topic>
+
+<topic>geref_tabbedwind <style>function
+TabbedWindow
+
+TabbedWindow is a window object with folders. For each folder a separate graph is stated,
+and when that folder is activated, the stated graph is displayed in the window.
+
+<h2>Limitations
+Sliders within the window object are disabled.
+You can not state an hierarchy or class object.
+
+<h2>Attribut
+<b>Attribute    <t><t>Description
+Folder.NumberOfFolders  <t><t>Number of folders.
+Folder.HeaderHeight     <t><t>Folder height.
+Folder.ColorSelected    <t><t>Color of the active folder.
+Folder.ColorUnselected  <t><t>Color of inactive folders.
+Folder.ScrollbarWidth   <t><t>Width of scrollbar.
+Folder.ScrollbarColor   <t><t>Fillcolor of the mobile part of a scrollbar.
+Folder.ScrollbarBgColor <t><t>Fillcolor of the background part of a scrollbar.
+Folder1.FileName        <t><t>Name of the graph that is displayed in the first folder.
+Folder1.Text            <t><t>Text of the first folder.
+Folder1.Scale           <t><t>Scale of the graph in folder number 1.
+Folder1.VerticalScrollbar <t><t>A vertical scrollbar is displayed for folder 1.
+Folder1.HorizontalScrollbar <t><t>A horizontal scrollbar is displayed for folder 1.
+</topic>
+
+<topic>geref_table <style>function
+Table
+
+A table object displayes a table with a number of rows and columns. Each column is connected
+to an array attribute in the database, and the values of the array elements are displayed
+in the column.
+
+A cell in the table is selected by clicking on it, or by the arrow keys (if dynamic type
+InputFocus is configured for the table). To each column you can connect a select attribute,
+i.e. an array attribute in the database of type Boolean. When a cell is selected, the 
+corresponding element in the select attribute is set, and the previous selected is reset.
+
+If the connected array attribute to a column is of type Objid, you can open a popup-menu with
+the methods of the objects displayed in the column.
+
+The array attributes should be stated with datatype and size, for example
+VWX-P1-Table.TabVect##Float32#100, where Float32 is the datatype and 100 the number of elements
+in the array.
+
+The table object consists of the following components:
+- Vertical and horizontal scrollbar.
+- A header row with a titel for each column. The header row is not comprised by the vertical
+  scrollbar.
+- A header column. The left most column can be configured as a header column, i.e. it is not
+  comprised by the horizontal scrollbar.
+
+<h2>Attributes
+<b>Attribute     <t><t>Description
+Table.Rows   <t><t>Number of rows in the table (header row excluded).
+Table.Columns <t><t>Number of columns in the table (header column included). 
+Table.HeaderRow <t><t>A header row with title for each column is drawn.
+Table.HeaderColumn <t><t>The leftmost column is not comprised by the horizontal 
+               <t><t>scrollbar.
+Table.RowHeight  <t><t>Row height.
+Table.HeaderTextSize <t><t>Text size of the text in the header row.
+Table.HeaderTextBold <t><t>Bold text in the header row.
+Table.HeaderTextColor <t><t>Text color in the header row.
+Table.Options   <t><t>Bitmask with options
+                <t><t>1: If the cell in the leftmost column is empty, all the 
+                <t><t>cells on that row is drawn empty.
+Table.VerticalScrollbar <t><t>Vertical scrollbar in the table.
+Table.HorizontalScrollbar <t><t>Horizontal scrollbar in the table.
+Table.ScrollbarWidth <t><t>Scrollbar width.
+Table.ScrollbarColor <t><t>Fillcolor of the mobile part of the scrollbar.
+Table.ScrollbarBgColor <t><t>Fillcolor of the background part of the scrollbar.
+Column1.Attribute <t><t>Array attribute. The value of each element is displayed 
+                  <t><t>in the corresponding row in the column. The attribute 
+                  <t><t>should be stated with datatype and size, se above.
+Column1.Format    <t><t>Format in c syntax.
+Column1.SelectAttribute <t><t>Attay attribut of type Boolean, When a cell i the 
+                  <t><t>column is selected, the corresponding element in the 
+                  <t><t>array is set. The attribut should be stated with datatype 
+                  <t><t>and size, se above.
+Column1Width      <t><t>Width of the column.
+Column1.HeaderText <t><t>Column title. The title is written in the header row.
+</topic>
+</chapter>
+
+<chapter>
+<topic>geref_subgraph
+Subgraphs
+
+A subgraph is a class or pattern that is built of a number of base objects.
+
+An instance of the subgraph is created by selecting the subgraph in the subgraph palette,
+and clicking MB1 in the working area. In the editor, the instances are handled as other objects,
+and the fillcolor, bordercolor and linewidth of the instances can be set.
+
+<h1>Color
+You can set the fillcolor and bordercolor of a subgraph object in the same way as the base
+objects. It implies that these properies are set to all the baseobjects of the subgraph. 
+If you set the fillcolor of a subgraph that is drawn with shadows and reflections to give a 3D
+effect, this effect will disappear and the objects is totaly flattened out. To modify the color
+of this kind of subgraph you use the functions for lightness, color intensity and color tone
+in the tool panel.
+
+<b>Lightness
+The function for lightness is found in the tool panel and marked with sun. Here are increase
+and decrease buttons that makes the fillcolor of the object lighter or darker. The lightness
+can be modified in seven steps.
+
+<b>Intensity
+The function for color intensity is found in the tool panel and marked with three color points.
+The intensity can be modified in three steps: strong intensity, medium and gray.
+
+<b>Shift
+Color shift implies that every color in the subgraph object is rotated on the color circle.
+An object that contains blue and green colors will, for example, after four shift steps contain
+orange and red colors. The colors keeps their original lighntess and intensity, and also their
+internal color contrast.
+
+The function is found in the tool panel and marked with color points surrounded by an circular
+arrow. The colors of the first row of the color palette are not affected by the shift function.
+
+<b>Tone
+Toning of an object, implies that all the color of the subgraph object gets the same color tone.
+They keep their lightness and intensity. There are nine different color tones: gray, 
+yellowgreen, yellow, orange, red, violet, blue, seablue and green.
+
+The function for tone is found in the color palette below the selection of fill, border and
+text color. Here is also a button to reset the color of an objects to the original colors.
+
+<h1>Animation and shift
+<b>Subgraphs with several pages
+Animation and Shift are types of dynamics that don't just change the color of the subgraph,
+they also change the shape. This is done by creating a subgraph with several pages.
+
+To create additional pages for a subgraph you activate 'File/Page/Create next page'. This
+function will create a new subgraph with the suffix '__px', where x is the page number, and
+it will link this to the previous page by putting the name in the attribute NextSubgraph in
+the graph attributes. For the last page, NextSubgraph is empty. When a page is created and
+saved, you can easily shift to the next or previous page from 'File/Page/NextPage' and
+'File/Page/PreviousPage' in the menu.
+
+You should save the different pages with the same zoom factor, otherwise you might get one
+pixels displacement of pages in runtime.
+
+<h1>Shift
+Shift between different pages i runtime is done with the dynamic types DigShift and AnalogShift.
+DigShift shifts between the first and second page depending on a digital value. AnalogShift
+is connected to an analog signal, where the value corresponds the the index for the page
+to be displayed (the first page has index 0).
+
+<h1>Animation
+When an animation is run, the pages are displayed, one after another and gives the impression
+of movement.
+
+The intervall between each page shift, normally has to be much shorter than the normal update
+interval. For a graph, you can state the animation scantime in 'File/Graph attributes' in the 
+menu. Note that the time is common for all subgraphs in the graph, and can not be stated for
+each subgraph individually. A suitable value for animation scantime is 0.2 seconds.
+
+If an animation should rest on the same page for several animation cycles, you can enter the
+number of cycles i AnimationCount in  Graph attributes for the page.
+
+Animations are handled by the dynamic type Animation. It is connected to a digital signal that
+controls start and stop of the animation. It also has the attribute Sequence which tells
+in which order, and on what condition, the animation is run. Sequence can have the value Cyclic,
+Dig or ForwBack.
+
+If Sequence is Cyclic, the first page is displayed when the value of the signal is 0. When the
+value of the signal is 1, the animation is active. It starts at page 2 and continues to the 
+last page, after that it jumps to the second page again and continues to the last page etc.
+This continues until the value of the signal becomes 0.
+
+The sequence ForwBack is similar, but here, the animation runs continously forward and back 
+between the first and last page, as long as the signal value is 1.
+
+If Sequence is Dig the animation is run only when the signal value is changed. When the value
+is changed to 1, the animation is run from the first to the last page, and stays on the last
+page, when the value is changed to 0, the animation is run back to the first page, and rests
+there.
+</topic>
+
+<topic>geref_dynamic
+Dynamics
+
+You can apply a number of different types of dynamic for the subgraphs. The dynamic defines
+how signals i the database should influence for example the color, or to print out an analog
+value.
+
+There are a number of predefined types of dynamics, e.g shift between two colors or between
+two texts. When you draw the subgraph you state the type of dynamic that is proper for this
+subgraph, but this is only a default value for each instance, and can be replace by another
+type.
+
+<b>Dynamic   <t>Signal type <t>Description
+Inherit   <t>-          <t>The dynamic for the instance is inherited from the subgraph.
+Tone      <t>-          <t>States that dynamics that changes the color of the component
+          <t>           <t>should change the color tone instead of the fillcolor.
+DigLowColor <t>Boolean  <t>Set the specified fillcolor when the signal is low. <link>GeDynDigLowColor
+DigColor  <t>Boolean    <t>Set the specified fillcolor when the signal is high. <link>GeDynDigColor
+DigError  <t>Boolean    <t>Set red fillcolor when the signal is high. <link>GeDynDigError
+DigWarning <t>Boolean   <t>Set yellow fillcolor when the signal is high. <link>GeDynDigWarning
+DigFlash  <t>Boolean    <t>Flash with specified color when the signal is high. <link>GeDynDigFlash
+AnalogColor <t>Float32 Int32 <t>Set specified fillcolor when the signal <link>GeDynAnalogColor
+          <t>            <t>goes beyond or below the specified limit.
+FillLevel <t>Float32    <t>Changes partly the fillcolor of the component. The level <link>GeDynFillLevel
+          <t>           <t>for the borderline of the colored part is determined by
+          <t>           <t>the value of the signal.
+Invisible <t>Boolean String <t>Make the component invisible when the signal is high, <link>GeDynInvisible
+          <t>           <t>or when the string is empty.
+DigBorder <t>Boolean    <t>Set speicfied bordercolor when the signal is high. <link>GeDynDigBorder
+DigText   <t>Boolean    <t>Set specified text when the signal is low. <link>GeDynDigText
+AnalogText <t>Float32 Int32 <t>Set up till 32 different texts depending on the value of <link>GeDynAnalogText
+          <t>           <t>an analog signal.
+Value     <t>Valfri     <t>Write the value of an attribute. <link>GeDynValue
+Rotate    <t>Float32 Int32 <t>Rotate the component. <link>GeDynRotate
+Move      <t>Float32 Int32 <t>Move and scale the component is x and y direction. <link>GeDynMove
+DigShift  <t>Boolean    <t>Shift between two pages in the subgraph (first and last page). <link>GeDynDigShift
+AnalogShift <t>Float32 Int32 <t>Shift between different pages in the subgraph. The value <link>GeDynAnalogShift
+          <t>           <t>of the signal determines the page number.
+Animation <t>Boolean    <t>Different types of animation. <link>GeDynAnimation
+Video     <t>-          <t>Display a continously updated image file. <link>GeDynVideo
+SliderBackground <t>-   <t>Indicates that the subgraph is background to a slider component. <link>GeDynSliderBackground
+
+<h2>Inherit
+For an instance of a subgraph, Inherit means, that the dynamic is inherited from the subgraph 
+class, that is the default dynamic stated when the subgraph was edited. If also the default
+dynamic is inherit, the subgraph lacks dynamics.
+
+The default dynamic for an instance, is displayed by opening the object editor for the instance
+and there open the subgraph folder.
+
+<h2>Xtt-commands
+There are a number of pushbuttons that executes xtt-commands. The most usual is to open another
+graph, but you can also open trace or trends etc. Here follows some usable xtt-commands. 
+
+<c>open graph GraphName [/width=][/height=][/scrollbar][/navigator]
+
+<c>open trace WindowName [/center=]
+
+<h2>Access
+All dynamics that makes it possible to influence the value of a signal in the database, has
+the attribute Access. Access states the privileges that are required for a user to be allowed
+to change a value. There are 15 different privileges that are of interest for graphs, 10
+for various operators, and 4 for different professionals. Furthermore there is RtRead, read 
+access in runtime, that a user that is not logged in is granted. A user grants one or
+several privileges, and if one of his privileges is present in Access, he has the right to
+influence the object.
+
+Default access is all privileges except RtRead. Some operations, as opening other graphs, should
+also accept RtRead.
+
+<b>Privileges in runtime <t>Description
+RtRead    <t>Read access.
+System    <t>System manager.
+Maintenance <t>Maintenance technicians.
+Process   <t>Process technicians.
+Instrument <t>Instrument technicians.
+Operator1  <t>Different operator or operator places.
+Operator2  <t>"
+Operator3  <t>"
+Operator4  <t>"
+Operator5  <t>"
+Operator6  <t>"
+Operator7  <t>"
+Operator8  <t>"
+Operator9  <t>"
+Operator10 <t>"
+</topic>
+
+<headerlevel>
+<topic>GeDynDigLowColor <style>function
+DigLowColor
+Set specified fillcolor when the signal is low.
+
+The object is connected to a digital signal in the database. If the value is 1, the object
+is drawn with the normal fillcolor, if the value is 0, it is drawn with DigLowColor.Color
+which is stated in the object editor.
+
+Compare to DigColor below, that set the specified color when the signal is high instead of low.
+If to use DigLowColor or DigColor is a question how the component is to be drawn in the editor:
+The way is will appear when the signal is high or low, i.e. if you want to draw the graph
+as it will look when the plant is running or stopped.
+
+<b>Attribute <t><t>Description
+DigLowColor.Attribute <t><t>Signal in the database of type Boolean that 
+                      <t><t>should influence the component.
+DigLowColor.Color  <t><t>Fillcolor of the component when the signal is 0.
+</topic>
+
+<topic>GeDynDigColor <style>function
+DigColor
+Set specified fillcolor when the signal is high.
+
+The object is connected to a digital signal in the database. If the value is 1 the object is
+drawn with DigColor.Color which is stated from the object editor, if the value is 0 it is drawn
+with the normal fillcolor.
+
+DigColor can exist in several instances, which makes it possible to change between several 
+colors (up to 32 colors). Instances with higher number has higher priority, i.e. if the signal 
+for a higher instance is high, it determines the color independent of the values of signals
+connected to lower instances.
+
+<b>Attribute <t><t>Description
+DigColor.Attribute <t><t>Signal in the database of type boolean that should 
+                   <t><t>influence the component.
+DigColor.Color <t><t>Fillcolor of the component when the signal is 1.
+DigColor.Instance <t><t>States the number of instances that is created.
+DigColor2.Attribute <t><t>Signal for instance number 2.
+DigColor2.Color <t><t>Fillcolor for instance number 2.
+DigColor3.Attribute <t><t>Signal for instance number 3.
+DigColor3.Color <t><t>Fillcolor for instance number 3.
+</topic>
+
+<topic>GeDynAnalogColor <style>function
+AnalogColor
+
+AnalogColor is connected to an analog signal, and sets the specfied fillcolor when the signal
+goes below or beyond a limit. The limit is specified in AnalogColor.Limit and 
+AnalogColor.LimitType determines if it is an upper or lower limit. If LimitType is GreaterThan,
+the fillcolor is set, when the value of the signal exceeds the limit, and when LimitType
+is LessThan, the fillcolor is set when the signal value is below the limit. Other limit types
+are GreaterEqual, LessEqual and Equal.
+
+AnalogColor can exist in several instances, which makes it possible to set several limit
+values and to shift between several colors (up to 32 colors).
+
+Note! If there are several instances with equal LimitType, a higher instance has to have a
+higher limit, when LimitType is GreaterThan or GreaterEqual. If LimitType is LessThan or
+LessEqual, a higher instance has to have a lower limit.
+
+<b>Attribute <t><t>Description
+AnalogColor.Attribute <t><t>Signal in the database of type Float32 or Int32. The 
+                      <t><t>value is compared to the limit, and if it is 
+                      <t><t>beyond/below the limit the color of the component is 
+                      <t><t>changed.
+AnalogColor.Color     <t><t>Fillcolor of the component value when the signal has 
+                      <t><t>passed the limit.
+AnalogColor.Limit     <t><t>Limit value.
+AnalogColor.LimitType <t><t>Type of limit. Can be GreaterThan, GreaterEqual, 
+                      <t><t>LessThan, LessEqual or Equal.
+AnalogColor.Instances <t><t>States the number of instances that is created.
+AnalogColor2.Color    <t><t>Fillcolor for instance number 2.
+AnalogColor2.Limit    <t><t>Limit for instance number 2.
+AnalogColor2.LimitType <t><t>Type of limit for instance number 2.
+AnalogColor3.Color    <t><t>Fillcolor for instance number 3.
+</topic>
+
+<topic>GeDynDigWarning <style>function
+DigWarning
+
+Set fillcolor to yellow when the signal is high.
+
+The object is connected to a digital signal in the database. If the value is 1, the object is
+drawn with yellow fillcolor, if the value is 0, it is drawn with the normal fillcolor.
+
+<b>Attribute <t><t>Description
+DigWarning.Attribute <t><t>Signal in rtdb of type Boolean that should 
+                     <t><t>influence the object.
+</topic>
+
+<topic>GeDynDigError <style>function
+DigError
+
+Set the fillcolor to red when the signal is high.
+
+The object is connected to a digital signal i the database. If the value is 1, the object is
+drawn with red fillcolor, if the value is 0, it is drawn with the normal fillcolor.
+
+<b>Attribut <t><t>Description
+DigError.Attribute <t><t>Signal in rtdb of type Boolean that should 
+  <t><t>influence the object.
+</topic>
+
+<topic>GeDynDigFlash <style>function
+DigFlash
+
+Flash with specified fillcolor when the signal is high.
+
+DigFlash changes the color of the object every cycle. The color is shifted between the 
+specified color and original color, or the color the object receives from other color dynamics.
+
+The flash frequency is determined by the cycletime of the cycle of the object.
+
+<b>Attribute <t><t>Description
+DigFlash.Attribute <t><t>Signal i rtdb that should influence the object.
+DigFlash.Color     <t><t>Fillcolor.
+</topic>
+
+<topic>GeDynFillLevel <style>function
+FillLevel
+
+Draw the object with a specified fillcolor, up to a certain level.
+
+FillLevel draws the original color (or the color determined by other dynamics) up to a certain
+border line. On the other side of the borderline the object is drawn with the specified
+background color. The position of the borderline is determined from the value of the analog
+signal. If the value is less then MinValue, the whole object is drawn with background color.
+If the value is greater than MaxValue the object is drawn with the original color.
+
+Direction states the direction of the movement of the borderline. If Direction is Up the border
+is move upwards with increasing value, if Down downwards, if Left to the left and if right to
+the right.
+
+<b>Attribute <t><t>Description
+FillLevel.Attribute <t><t>Signal in rtdb or type Float32.
+FillLevel.BackgroundColor <t><t>Background color.
+FillLevel.Direction <t><t>Direction Up, Down, Left or Right.
+FillLevel.MinValue <t><t>Min value. When the signal value equals 
+                   <t><t>MinValue, the whole object is drawn with 
+                   <t><t>background color.
+FillLevel.MaxValue <t><t>Max value. When the signal value equals 
+                   <t><t>MaxValue, the whole object is drawn with 
+                   <t><t>original color.
+</topic>
+
+<topic>GeDynInvisible <style>function
+Invisible
+
+Makes the object invisible (or dimmed) when the signal is high.
+The signal is usually connected to a digital signal, but can also be connected to a string. 
+In this case the object is invisible when the string is empty. Invisible can also be used with 
+the xtt-command 'check' to, for example, check if a method is defined for an object. In 
+Attribut you then write $cmd('command'), for example
+<c>   $cmd(check method/method=Note/object=VK-Valve)
+
+<b>Attribute <t><t>Description
+Invisible.Attribute <t><t>Signal in rtdb of type Boolean that should 
+                    <t><t>influence the object.
+Invisible.Dimmed <t><t>1 dims the object, 0 makes the object invisible.
+</topic>
+
+<topic>GeDynDigBorder <style>function
+DigBorder
+
+Set specified border color when the signal is low.
+
+The object is connected to a digital signal in rtdb. If the value i 1, the object is drawn
+with the normal border color, if the value is 0, it is drawn with DigBorder.Color that is
+stated from the object editor.
+
+<b>Attribute <t><t>Description
+DigBorder.Attribute <t><t>Signal in rtdb of type Boolean the should influence 
+                    <t><t>the component.
+DigBorder.LowColor  <t><t>Border color of the component when the signal is 0.
+</topic>
+
+<topic>GeDynDigText <style>function
+DigText
+
+Shift between two texts.
+
+The object is connected to a digital signal i rtdb. If the value i 1, the original text is 
+written, if the value is 0, the text in LowText is written. DigText operates on annotation 1. 
+
+<b>Attribute <t><t>Description
+DigText.Attribute <t><t>Signal in rtdb of type Boolean the shift the text.
+DigText.LowText   <t><t>Text to write when the signal is low.
+</topic>
+
+<topic>GeDynAnalogText <style>function
+AnalogText
+
+Shift between several texts depening on the value of an analog signal.
+
+The object is connected to a database attribute of type float or int. To each text you specify
+an Enum value. The text which Enum value matches the value of the database attribute, is 
+displayed in the component.
+
+<b>Attribute <t><t>Description
+AnalogText.Attribute <t><t>Database attribut of type Float32, Float64, Int32, 
+                     <t><t>UInt32, Int16, UInt16, Int8 or UInt8. The text which
+                     <t><t>Enum matches the value of the database attribut is
+                     <t><t>displayed.
+AnaogText.TextMask   <t><t>Mask that states number of texts.
+AnalogText.Text1     <t><t>Text number 1.
+AnalogText.Enum1     <t><t>Enumeration value for text number 1.
+AnalogText.Text2     <t><t>Text number 2.
+AnalogText.Enum2     <t><t>Enumeration value for the second text.
+</topic>
+
+<topic>GeDynValue <style>function
+Value
+
+Writes the value of a signal. The value is written in a text field.
+
+The object is connected to an attribute in rtdb of arbitrary type. In format, the format of 
+the conversion to text is specifiecd, in c-syntax.
+
+It is possible to create additional instances. This requres that the subgraph has several
+annotations to write out values in. The value of an instance are written out in the annotation
+with the corresponding number.
+
+<b>Attribute <t><t>Description
+Value.Attribute <t><t>Signal in rtdb or arbitrary type, that is written out in 
+                <t><t>the text field.
+Value.Format    <t><t>Format in c-syntax.
+Value.Instances <t><t>States the instances that is created.
+</topic>
+
+<topic>GeDynRotate <style>function
+Rotate
+
+Rotate an object.
+
+The rotation is made from the position the object has in the editor. The value of the signal
+is multipied by Factor, that gives the rotation in degrees.
+
+x0 and y0 specifies the rotation point. If x0 and y0 is zero, origo in the coordinate system
+of the subgraph is used as rotation point. Subgraph that has Rotate as default dynamics, 
+usually are drawn in a way that the rotationpoints doesn't has to be specified.
+
+<b>Attribute <t><t>Description
+Rotate.Attribute <t><t>Signal in rtdb of type Float32. Supplies the rotation 
+                 <t><t>of the object.
+Rotate.x0        <t><t>x coordinate for the rotation point.
+Rotate.y0        <t><t>y coordinate for the rotation point.
+Rotate.Factor    <t><t>Factor that, multiplied by the value of the signal, gives 
+                 <t><t>the value in degrees. 
+</topic>
+
+<topic>GeDynMove <style>function
+Move
+
+Moves and scales an object. Can be connected to four analog signals that moves the object in
+x and y direction, and scales it in x and y direction.
+
+The movement is done from the position the object is given in the editor. The calulation from
+the values of the signals in XAttribute and YAttribut to Ge coordinates, are influenced by
+XOffset, YOffset and Factor. XOffset and YOffset are the values that corresponds to the 
+starting point in x and y direction. Factor specifies the conversion from XAttribute and
+YAttribute values to Ge coordinates, according to the formula:
+
+dx = (XAttribute - XOffset) * Factor
+
+dy = (YAttribute - YOffset) * Factor
+
+The scaling in x and y direction is done from the values of the signals in ScaleXAttribute
+and ScaleYAttribute. These are muliplied by ScaleFactor and gives the scale factor, where
+1.0 implies no scaling, values greater than 1 gives enlargement, and values less then 1 gives
+reduced scale.
+
+<b>Attribute  <t><t>Description
+Move.XAttribute <t><t>Signal in rtdb of type Float32. Gives movement in 
+                <t><t>x direction.
+Move.YAttribute <t><t>Signal in rtdb or type Float32. Gives movement in 
+                <t><t>y direction.
+Move.Factor     <t><t>Conversion factor from entity for XAttribute and 
+                <t><t>YAttribute to entity for Ge coordinate.
+Move.XOffset    <t><t>Value for XAttribute that corresponds to the start 
+                <t><t>position for the object.
+Move.YOffset    <t><t>Value for YAttribute that corresponds to the start 
+                <t><t>position for the object.
+Move.ScaleXAttribute <t><t>Signal i rtdb of type Float32. Gives scaling in 
+                <t><t>x direction.
+Move.ScaleYAttribute <t><t>Signal i rtdb of type Float32. Gives scaling in 
+                <t><t>y direction.
+Move.ScaleFactor <t><t>Conversion factor from entity for ScaleXAttribute
+                <t><t>and ScaleYAttribut to scale factor.
+</topic>
+
+<topic>GeDynAnalogShift <style>function
+AnalogShift
+
+Shift between several pages in the subgraph. The subgraph has to contain at least two pages.
+
+The object is connected to an analog signal in rtdb. The value of the analog attribute
+determines the index for the page to display. Value 0 displays the first page, value 1 the
+second etc.
+
+<b>Attribute <t><t>Description
+AnalogShift.Attribute <t><t>Signal in rtdb of type Float32 or Int32 that shifts 
+                      <t><t>page of the subgraphs. The value determines which 
+                      <t><t>page is to be displayed. Value 0 displays the first 
+                      <t><t>page.
+</topic>
+
+<topic>GeDynDigShift <style>function
+DigShift
+
+Shift between two pages in the subgraph. The subgraph has to contain at least two pages.
+
+The object is connected to a digital signal in rtdb. If the value is 0, the object is drawn
+with the first page, if the value i 1, it is drawn with the last page.
+
+<b>Attribute <t><t>Description
+DigShift.Attribute <t><t>Signal in rtdb or type Boolean that shifts 
+                   <t><t>page. When the value i 0, the first page 
+                   <t><t>is displayed, when value is 1 the last page.
+</topic>
+
+<topic>GeDynAnimation <style>function
+Animation
+
+Dynamic for animation subgraphs, i.e. subgraphs with several pages. The object is connected
+to a digital signal that activates the animation.
+
+The animation sequence is determined by Sequence, that can have the value Cyclic, ForwBack
+or Dig.
+
+<h2>Cyclic
+Alter between resting and cyclic animation. The animation is done from page 2 to the last
+page, and continues on page 2 to the last page etc.
+
+If the signal value is 0 the object is drawn with the first page, if the value is 1 the cyclic
+animation starts between the second and the last page. At animation the pages from second to
+the last page are run through, and after that you jump to the second page again, animating to
+the last page etc.
+
+<h2>ForwBack
+Shift between resting and cylic animation. The animation runs forward and back between the 
+first and the last page. If the signal value is 0 the object is drawn with th first page, if
+the value i 1, the cyclic animation starts forward and back between the first and the last 
+page.
+
+<h2>Dig
+Shift between two resting positions. When the signal value is changed, an animation between
+the resting positions is performed.
+
+If the signal value is 0, the object is drawn with the first page, if the value is 1, it is
+draw with the last page. When the values changes from 0 to 1 the animation is run from the
+first page to the last page. When the value changes from 1 to 0, the animation is run from
+the last page to the first page.
+
+<b>Attribute <t><t>Description
+Animation.Attribute <t><t>Signal in rtdb of type Boolean that activates 
+                    <t><t>the animation.
+Animation.Sequence  <t><t>Animation sequence. Can be Cyclic, ForwBack 
+                    <t><t>or Dig.
+</topic>
+
+<topic>GeDynVideo <style>function
+Video
+
+Displays a gif-file that is continously updated by a web camera.
+Video has no attribues.
+</topic>
+</headerlevel>
+<pagebreak>
+
+<topic> geref_action
+Action
+
+Action defines what happends when you activate an object, for example by clicking on it.
+You can set or reset signals in rtdb, open another graph, display a helptext or a tooltip text
+etc.
+
+<b>Action <t>Signal type <t>Description
+Inherit   <t>-          <t>Action for the instance is inherited from the subgraph.
+PopupMenu <t>Object     <t>A popup menu can be opened from the component by <link>GeDynPopupMenu
+          <t>           <t>clicking MB3.
+SetDig    <t>Boolean    <t>Set the value of a signal to true with Click MB1. <link>GeDynSetDig
+ResetDig  <t>Boolean    <t>Set the value of a signal to false with Click MB1. <link>GeDynResetDig
+ToggleDig <t>Boolean    <t>Change the value of a signal with Click MB1. <link>GeDynToggleDig
+StoDig    <t>Boolean    <t>Set the value of a signal as long as the button is pressed. <link>GeDynStoDig
+Command   <t>-          <t>Execute a xtt command with Click MB1. <link>GeDynCommand
+CommandDoubleClick <t>- <t>Execute a xtt command with Doubleclick MB1. <link>GeDynCommandDoubleClick
+Confirm   <t>-          <t>Confirm before the action is executed. <link>GeDynConfirm
+IncrAnalog <t>Float32   <t>Increase or decrease an analog value. <link>GeDynIncrAnalog
+RadioButton <t>Boolean  <t>Action for radion buttons. <link>GeDynRadioButton
+Slider    <t>Float32 Int32 <t>Reserved for slider subgraphs.
+ValueInput <t>Valfri    <t>Input field. <link>GeDynValueInput
+ToolTip   <t>-          <t>Display a tooltip text. <link>GeDynToolTip
+Help      <t>-          <t>Display a help text with Click MB1. <link>GeDynHelp
+OpenGraph <t>-          <t>Open a graph with Click MB1. <link>GeDynOpenGraph
+OpenURL   <t>-          <t>Open an URL in a suitable webbrowser on Click MB1. <link>GeDynOpenURL
+PulldownMenu <t>- 	<t>Action for pulldown menues. <link>GeDynPulldownMenu
+OptionMenu <t>-		<t>Action for option menues. <link>GeDynOptionMenu
+</topic>
+
+<headerlevel>
+<topic>GeDynPopupMenu <style>function
+PopupMenu 
+
+An popup menu is opend by clicking MB3. The popup menu contains the methods for the object
+specified in RefObject (Se chapter Methods in the Xtt manual).
+
+<b>Attribute <t><t>Description
+PopupMenu.RefObject <t><t>Object in rtdb, which methods are displayed and 
+                    <t><t>activated from the popup menu.
+</topic>
+
+<topic>GeDynSetDig <style>function
+SetDig
+
+Set the value of a digital signal to 1 by clicking MB1 on the object.
+
+SetDig can exist in several instances, and then sets the value of several signals.
+
+<b>Attribute <t><t>Description
+SetDig.Attribute <t><t>Signal in rtdb that is set to 1 with
+                 <t><t>Click MB1 on the object.
+SetDig.Instances <t><t>States the number of instances that is created.
+</topic>
+
+<topic>GeDynResetDig <style>function
+ResetDig
+
+Set the value of a digital signal to 0 by clicking MB1 on the object.
+
+ResetDig can exist in several instances, and then sets the value of several signals to 0.
+
+<b>Attribute <t><t>Description
+ResetDig.Attribute <t><t>Signal in rtdb of type Boolean that is set to 0
+                   <t><t>with Click MB1 on the object.
+ResetDig.Instances <t><t>States the number of instances that is created.
+</topic>
+
+<topic>GeDynToggleDig <style>function
+ToggleDig
+
+Toggle the value of a digital signal by clicking MB1 on the object.
+
+<b>Attribute <t><t>Description
+SetDig.Attribute <t><t>Signal in rtdb of type Boolean that is toggled with
+                 <t><t>Click MB1 on the object.
+</topic>
+
+<topic>GeDynStoDig <style>function
+StoDig
+
+Set the value of a digital signal to 1 for as long the the button is pressed.
+
+<b>Attribute <t><t>Description
+StoDig.Attribute <t><t>Signal in rtdb of type Boolean that is set
+                 <t><t>1 as long as the button is pressed.
+</topic>
+
+<topic>GeDynCommand <style>function
+Command
+
+Execute a xtt command by clicking MB1 on the object.
+
+<b>Attribute <t><t>Description
+Command.Command <t><t>Xtt command that is executed when the 
+                <t><t>object is activated.
+</topic>
+
+<topic>GeDynCommandDoubleClick <style>function
+CommandDoubleClick
+
+Execute a xtt command by doubleclicking MB1 on the object.
+
+<b>Attribute <t><t>Description
+CommandDoubleClick.Command <t><t>Xtt command that is executed when the object
+                           <t><t>is activated.
+</topic>
+
+<topic>GeDynHelp <style>function
+Help
+
+Open the help window with specified topic by clicking MB1 on the object.
+
+<b>Attribute   <t><t>Description
+Help.Topic    <t><t>Help text topic that is to be displayed.
+Help.Bookmark <t><t>Bookmark in the helptext. Optional.
+</topic>
+
+<topic>GeDynOpenGraph <style>function
+OpenGraph
+
+Open another graph via a XttGraph object by clicking MB1 on the object.
+
+<b>Attribute <t><t>Description
+OpenGraph.GraphObject <t><t>Object of class XttGraph.
+</topic>
+
+<topic>GeDynOpenURL <style>function
+OpenURL
+
+Open an URL in a suitable webbrowser by clicking MB1 on the object.
+
+<b>Attribute <t><t>Description
+OpenURL.URL <t><t>An URL
+</topic>
+
+<topic>GeDynConfirm <style>function
+Confirm
+
+Confirm requires a confirmation from the user before an action is executed. A dialog box with
+specified text, Ok and Cancel buttons, is displayed before any other action element is executed.
+
+<b>Attribute  <t><t>Desciption
+Confirm.Text <t><t>Text displayed in the confirm window.
+</topic>
+
+<topic>GeDynIncrAnalog <style>function
+IncrAnalog
+
+Increase or decrease the value of an analog signal.
+
+The object is connected to an analog signal. When clicking MB1 on the object the value is 
+incremented by the value specified in Increment. Minimum and maximum values for the signal
+value can be specified.
+
+<b>Attribute <t><t>Description
+IncrAnalog.Attribute <t><t>Signal in rtdb of type Float32. When the object is 
+                     <t><t>activated, the value of the signal is incremented
+                     <t><t>by the value in Increment.
+IncrAnalog.Increment <t><t>Value that the signalvalue is incremented by.
+IncrAnalog.MinValue  <t><t>Minimum value for the signal.
+IncrAnalog.MaxValue  <t><t>Maximum value for the signal.
+</topic>
+
+<topic>GeDynRadioButton <style>function
+RadioButton
+
+Sets the value of a digital signal when the button is activated, and resets the value for the
+other RadioButton objects in the group.
+
+The object has to be a member of a group with other objects of type RadioButton.
+
+<b>Attribute <t><t>Description
+RadioButton.Attribute <t><t>Signal in rtdb of type Boolean. With Click MB1
+                      <t><t>the value of the signal is set, and the other
+                      <t><t>RadioButton objects in the same group are reset.
+</topic>
+
+<topic>GeDynValueInput <style>function
+ValueInput
+
+Input field. Makes it possible to enter the value of a signal, in a component with Value
+dynamics specified. The value is changed by clicking MB1 on the object.
+
+The signal is specified in Value.Attribute.
+
+<b>Attribute <t><t>Description
+ValueInput.MinValule  <t><t>Minimum input value.
+ValueInput.MaxValue   <t><t>Maximum input value.
+ValueInput.Clear      <t><t>The field is cleared when opened for input.
+ValueInput.Popup      <t><t>Iput is done in a popup box.
+ValueInput.Unselect   <t><t>The text in the field is not selected when the 
+                      <t><t>field is opened for input.
+</topic>
+
+<topic>GeDynToolTip <style>function
+ToolTip
+
+Views a ToolTip text for a component. ToolTip is a white textbox, that is displayed when the
+cursor is resting on a component for a certain time. When the cursor leaves the component, the
+textbox is removed. In 'Text' the tooltip text is usually specified. If the text is to be
+modified, you can connect it to a string attribute by specifying the string attribut i 'Text'
+with the prefix '&', for example
+<c>  &A1-B1- Sv1.ActualValue##String80
+
+<b>Attribute <t><t>Description
+ToolTip.Text <t><t>ToolTip text.
+</topic>
+
+<topic>GeDynInputFocus <style>function
+InputFocus
+
+Input focus is a function that makes it possible to influence components in the graph from
+the keyboard instead using the mouse. Most functions executed with cursor and mouse can also
+be performed with the keyboard.
+
+A component is selected with the arrow and Tab keys (or by clicking on it), to receive input
+focus.
+This means that all input from the keybord are directed to the component. A pushbutton is, for
+example activated by pressing Return, an option menu by selecting the desired alternative with
+the arrow keys and pressing Return, a ValueInput by entering desired value and pressing Return.
+
+Only components with the action type InputFocus can receive input focus, the exception is
+ValueInput that also can receive input focus by clicking on it.
+
+You shift input focus between components with the arrow keys or the tab key. The order of the
+components are configured by linking them in three lists, one horizontal, one vertical and one
+Tab list. In the horizontal list you move with the ArrowLeft and ArrowRight keys, in the 
+vertical with the ArrowUp and ArrowDown, and in the Tab list with the Tab key. This is 
+configured with the attributes InitialFocus, NextHorizontal, NextVertical and NextTab. In
+InitialFocus you can state that an object is first or last in a list. You can also state that
+a component should receive input focus when the graph is opened. In NextHorizontal, 
+NextVertical and NextTab you specify the object name of the next component in the lists.
+
+You use to divide the components in Tab groups. Between the objects within a Tab group you
+navigate with the arrow keys, and between Tab groups you navigate with the Tab key. This is
+achieved by setting NextTab for all the objects in one Tab group, to the first object in the 
+next Tab group.
+
+<b>Attribute <t><t>Description
+InputFocus.InitalFocus <t><t>Bitmask with the following bits:
+  <t><t>- InitialFocus The component has input focus when 
+  <t><t>  the graph is opened.
+  <t><t>- FirstHorizontal The object is the first object in 
+  <t><t>  the horizontal list.
+  <t><t>- FirstVertical The object is the first object in 
+  <t><t>  the vertical list.
+  <t><t>- FirstTab The object is the first object in the 
+  <t><t>  Tab list.
+  <t><t>- LastHorizontal The component is the last object 
+  <t><t>  in the horizontal list.
+  <t><t>- LastVertical The component is the last object in 
+  <t><t>  the vertical list.
+InputFocus.NextHorizontal <t><t>Object name of the next component in the 
+                          <t><t>horizontal list.
+InputFocus.NextVertical   <t><t>Object name of the next component in the 
+                          <t><t>vertical list.
+InputFocus.NextTab        <t><t>Object name of the next component in the 
+                          <t><t>Tab list.
+</topic>
+
+<topic>GeDynPulldownMenu <style>function
+PulldownMenu
+
+Action for a pulldown menu, or for a submenu in a pulldown menu.
+
+A pulldown menu consists of a number of menu alternatives that either are pushbuttons or
+submenues.
+The number of alternatives in the menu is configured in ItemMask, a menu can contain up to 32
+menu alternatives. For each alternative you choose an action type. For pushbuttons you can
+choose between SetDig, ResetDig, ToggleDig, Command, Help, OpenGraph, CloseGraph, OpenURL 
+and IncrAnalog. Submenues should have action type PulldownMenu, and for this you configure 
+the number of menu alternatives and the actiontypes in the same way as for a pulldown menu.
+Submenues can be built in an unlimited number of levels.
+
+<b>Attribute <t><t>Description
+Text                   <t><t>Pulldown menu text.
+PulldownMenu.ItemMask  <t><t>Mask that states the number of menu alternatives.
+PulldownMenu.ItemText1 <t><t>Text of the first menu alterntive.
+PulldownMenu.ItemDyn1  <t><t>Dynamic for the first menu alternative. Contains
+                       <t><t>action type, and possible access, for the alternative.
+PulldownMenu.ItemText2 <t><t>Text of the second menu alternative.
+PulldownMenu.ItemDyn2  <t><t>Dynamic for the second menu alternative.
+</topic>
+
+<topic>GeDynOptionMenu <style>function
+OptionMenu
+
+Option menu is menu where you select an alternativ in a list of alternatives. The choosen
+alternative is displayed in the menu component. When you click on the component, the list
+of alternatives is displayed. When an alternativ is choosen, the list is closed, and the 
+selected alternative is displayed in the component.
+
+The option menu is connect to a database attribute of type float or int. Each alternative in 
+the list corresponds to an enumeration value, and when an alternative is selected, the value
+is inserted into the database attribute. The component is continously reading the value of the
+databas attribute, and displays the corresponding text in the text field.
+
+<b>Attribute <t><t>Description
+OptionMenu.Attribute  <t><t>Database attribute of type Float32, Float64, Int32,
+                      <t><t>UInt32, Int16, UInt16, Int8 or UInt8. The value in
+                      <t><t>ItemEnum for a selected alternative inserted into the 
+                      <t><t>database attribute.
+OptionMenu.ItemMask   <t><t>Mask that states the number of menu alternatives.
+OptionMenu.ItemText1  <t><t>Text of the first menu alternative.
+OptionMenu.ItemEnum1  <t><t>Enumeration value of the first menu alternative.
+OptionMenu.ItemText2  <t><t>Text of the second menu alternative.
+OptionMenu.ItemEnum2  <t><t>Enumeration value of the second menu alternative.
+</topic>
+</headerlevel>
+<pagebreak>
+
+<topic>geref_create_subgraph
+Create a subgraph
+
+You create a subgraph by drawing base objects in the working area. Here you also have access to
+connection points and annotations.
+
+Mark that the graph is a subgraph by opening 'File/Graph attributes' and set 'Subgraph' to 1.
+
+<b>Attribute <t>Description
+DynType     <t>Type of dynamic. The instances will inherit this as their default dynamic.
+Action      <t>Type of action. The instances will inherit this as their default action.
+Color1      <t>The first color that the instances will intherit as default.
+Color2      <t>The second color that the instances will intherit as default.
+Color3      <t>The third color that the instances will intherit as default.
+Color4      <t>The fourth color that the instances will intherit as default.
+AnimSequence <t>Type of animation when DynType is Animation.
+NoConObstacle <t>Indicates that connectsion should ignore instances of this subgraph.
+              <t>Connections of type 'routed' normally avoids subgraph objects,
+              <t>though if NoConObstacle is set, connections can cross the object.
+Slider      <t>Indicates that the subgraph is a slider.
+Subgraph    <t>Should be 1 for a subgraph.
+AnimationCount <t>Used for animations. States the number of cycles the animation 
+            <t>stays at this page.
+JavaName    <t>When exported as a java bean, the subgraph will be exported as
+            <t>java class with this name.
+Cycle       <t>Default value for cycle, slow or fast, that instances
+            <t>will inherit as default.
+x0          <t>In (x0, y0) and (x1, y1) you can state the max size of a subgraph
+            <t>in the case where the subgraph has pages with different extention.
+y0          <t>See x0. Also used by some subgraphs with DynType Slider,
+            <t>Sliderbackground and FillLevel.
+x1          <t>See x0.
+y1          <t>See x0. Also used by some subgraphs with DynType SliderBackground
+            <t>and FillLevel.
+Dynamic     <t>Not implemented.
+
+Save the subgraph with 'File/SaveAs...'. Copy the .pwsg file that is created to $pwrp_exe.
+The subgraph should now be visible under the Local/Subgraphs folder in the subgraph palette.
+
+Its advisable to draw subgraphs close to origo in the working area, because when creating
+a subgraph, the position of the mouse click corresponds to origo. Connection points should be
+positioned on grid points, if rectangular connections are used to connect the instances. You
+then avoid notches in the connections lines.
+
+<h2>External och internal subgraphs
+When you for the first time in a graph create an instance of a certain subgraph, this is loaded
+from the .pwsg-file. As default it is internal, which means that the subgraph is saved together
+with the graph, and the .pwsg-file is not needed any more, i.e. you don't need to concern
+yourself with copying it to operator and process nodes. This will work, until you need to 
+change the subgraph. As long as the subgraph is internal, the changes will not come along.
+To get in the changes, the subgraph has to be external. When the graph then is saved, the 
+subgraph will not be saved together with the graph, and when reading the graph next time, the
+subgraph is loaded from the .pwsg-file. When the changed version is loaded, you can again reset
+to internal.
+
+To rearrange a subgraph from internal to external and vice versa, you activate 
+'Loaded Subgraphs' under 'File' in the menu. Here you get a list of all loaded subgraph and
+can set them as external or internal.
+
+<h2>Slider
+A slider is a specific type of subgraph. A slider is moved horizontally or vertically between 
+two endpoints, and the position is transferred, after conversion, to an anlog value in the 
+database.
+
+<b>With background
+The easiest way to configure a slider, is to put a SliderBackground object behind the slider.
+Then, the only thing you have to do, is to connect the slider to an analog signal.
+
+<b>Without background
+If you absolutely don't want to have any background to the slider, you have to state the
+direction, and minimum and maximum position för the movement. A horizontal slider is configured
+in the following way (vertical configuration inside parantethes).
+
+Position the slider on the lowest y (x) coordinate for the slider movement. Remember the origo
+is positioned in the upper left corner. 
+Measure the minimum and maximum values for the movement of the slider, relative to the upper
+(left) side of the slider by placing the cursor there. The position of the cursor is present in
+the lower right corner of the window. Enter these values in the attributes MaxPosition and
+MinPosition from the object editor for the object. State also the direction, Up indicates a
+vertical slider with increasing value upwards, Right a horizontal slider with increasing value
+to the right etc.
+
+<b>Attribute <t>Description
+Attribute <t>Signal in rtdb of type Float32 or Int32 that is changed when the slider is dragged.
+Access    <t>Privileges required to change the value of the signal.
+Direction <t>Only has to be stated if there is no SliderBackground object.
+          <t>Direction of the slider. Up implies a vertical slider with increasing
+          <t>value upwards, Right a horizontal slider with increasing value to the right.
+MaxValue  <t>Value of the signal that corresponds to the max position of the slider.
+MinValue  <t>Value of the signal that corresponds to the min position of the slider.
+MaxPosition <t>Only has to be stated if there is no SliderBackground object.
+          <t>x or y coordinate for the max position of the slider (see above).
+MinPosition <t>Only has to be stated if there is no SliderBackground object.
+          <t>x or y coordinate for the min position of the slider (see above).
+</topic>
+</chapter>
+
+<chapter>
+<topic>geref_groups
+Groups
+
+A group is a number of objects that appear and behave as a single object when moved, scaled,
+rotated etc. A group is created by selecting the object that should belong to the group, and
+activating 'Functions/Group' in the menu. If you want to resolve a group, you select the group
+and activate 'Functions/Ungroup' in the menu.
+
+There are some limitations in objects that can be a part of a group, connections for example
+are not allowed in groups, and pushbuttons and objects that is sensitive for mouse clicks, will
+loose their sensitivity.
+
+<h2>Dynamics
+One property for groups is that you can specify dynamic to them. All types of dynamics and
+actions available for subgraphs, are also available for groups.
+
+The types of dynamic that includes a change of color or color tone, will affect all the objects
+in the group that has no dynamic of its own. Subgraphs that should follow the color of the 
+group, should have No as dynamic type (xtt and java here work a bit different).
+Subgraphs and subgroups within the group that has its own dynamic, will role over the color
+itself.
+
+When you resolve a group, that has some kind of dynamic type, the data of the dynamic is lost.
+To simplify the situations when you temporary resolve a group to do some modifications of a
+group member, there is a function that tries to recover the dynamic. When you resolve the gruop,
+the dynamic data is saved in a recall buffer with the group name as key. Furthermore the group
+name is also saved in all the members of the group. When you later regroup the objects, you
+look for the group that the majority of the objects has been a member of, and try to find the
+dynamic for this group in the recall buffer. If it is found, it is inserted as dynamic for the
+new group. There are cases when the restoring of dynamic doesn't work, so it is advisable to
+check that the dynamic is correctly recovered after a temporary resolvation of the group. If 
+something has gone wrong, you can usually find the dynamics in the recall buffer, that is 
+handled from the object editor with 'Functions/Recall' and 'Functions/Recall previous'.
+</topic>
+</chapter>
+
+<chapter>
+<topic>geref_images
+GIF and JPEG images
+
+GIF and JPEG-images are here called images.
+
+<h2>Create an image
+You create an image in the same way as a subgraph. GIF and JPEG images are found under the
+'Images' folder, and under the 'Local/Images' folder. If you want to read a specific GIF of
+JPEG file you copy it to $pwrp_pop. The file is then found under the 'Local/Images' folder. By
+selecting it and clicking MB2 in the work area you create the image object.
+
+An image can be scaled and rotated in steps of 90 degrees. Functions for color tone, lightness,
+intensity and color shift also applies to images.
+
+<h2>Dynamik
+To put dynamics behind an image, you first have to make a subgraph of the image, or let it be
+a member of a group. If you want to change the color dynamically, you should use a dynamic
+type that changes the color tone, e.g. DigTone. Change of fill color of an image will have no
+effect.
+
+<h2>Transparency
+If you have an image of a symbol that is not rectangular, e.g. a round indicator, you want the
+area outside the indicator to be transparent.
+
+The GIF-format supports transparency. By choosing the transparency color (R: 255, G: 0, B: 255) 
+the transparency will also work in Ge.
+
+Java doesn't support transparency of GIF-files. Though the Ge image class will insert 
+transparency in pixel that has (R:255, G:255, B:255) i.e. white. This though can imply that
+white areas of the image are viewed as transparent.
+</topic>
+</chapter>
+
+<chapter>
+<topic>geref_connections
+Connections
+
+The subgraph objects that contains connections points can be connected with connections.
+Connections are drawn by dragging MB2 from one object to the other. The connection point that
+is closest to the cursor when you press or release the mouse is selected.
+
+Connections are characterized by type, linewidth, 3D and color.
+
+<h2>Typ
+Type is selected from the menu under 'Connections'.
+
+<b>Straight
+A straight line connection between the connection points.
+
+<b>StraightOneArrow
+A straight line connection with one arrow.
+
+<b>Routed
+Connection with horizontal and vertical lines. The route and breakpoints of the connection
+are caculated to avoid collision with other subgraph objects (that don't has the attribute
+NoConObstacle set).
+
+<b>Grafcet
+There are a number of connections used when drawing grafcet sequences: StepDivergence,
+StepConvergence, TransDivergence and TransConvergence. These can be used, together with the
+subgraphs under the folder Grafcet in the subgraph palette, if you want to view a grafcet
+sequence in a graph.
+
+<h2>Round corners
+For connections of type routed, you can choose to have rounded corners, and you can also
+specify the radius of the rounding. This is choosen in the menu, 'Connections/Corners' and
+'Connections/CornerRoundAmount'.
+
+<h2>Color
+The color of the connection is selected as fillcolor, that is with MB1 in the color palette.
+
+<h2>Border
+With 'Border', the connections is draw with black borderlines.
+
+<h2>3D
+With '3D', a lighter shadow is drawn on the upper side, and a darker on the lower side. Only
+implemented for connections of type Routed and round corners.
+
+<h2>Width
+The width is choosen in the tool panel in the same way as for lines.
+
+<h2>Ramification
+If a connection is drawn from a component and released in the working area, a component of type
+ConGlue is created at the end of the connection. ConGlue has four connection points and works
+either as a termination, or as a ramification of the connection, or as a possibility to 
+influence the route of the connection. By drawing new connections from ConGlue, new connections
+are created, and the ConGlue object adapts its color and shape after its connected connections.
+
+ConGlue is also found in the subgraph palette under 'Other'.
+</topic>
+</chapter>
+
+<chapter>
+<topic>geref_edit
+Editing
+
+Ge contains a number of functions to create objects, modify them, order them etc. The functions
+are found in the tool panel or in the menu, and som are activated with mouse clicks.
+
+<h1>Create objects
+Base objects are created by choosing an object type in the tool panel, and then dragging or
+clicking in the working area with MB1. If you press the Shift key while the object type is
+choosen, you can create several objects without choosing object type again. A more detailed
+description of how to create each object type is found in the chapter Object.
+
+An instance of a subgrap or a complex object, is created by selecting the object in the subgraph
+palette an clicking MB1 in the working area.
+
+<h1>Create connections
+Connections are created by dragging MB2 between two subgraph object that contains connection
+points.
+First you set the proper connection type from 'Connections' in the menu.
+
+<h1>Reset
+By clicking with MB3 you reset or terminate most functions: clear the list of selected objects,
+end drawing of a polyline, end scaling, end polyline editing.
+
+<h1>Select objects
+An object or connection that is selected is marked with red color. This is not valid when you
+change the color of the selected objects. Then the object is drawn with the new color so that
+the effect of the color change can be examined.
+
+Objects are selected in the following ways
+
+- Click on the object with MB1. Previously selected objects are removed from the select list.
+  If the object already is selected, the select list is cleared.
+- Click on the object with Shift MB1. The object is added to the select list. I the object
+  already is selected it is removed from the select list.
+- Drag with MB1. A rectangle is drawn and objects positioned totally inside the rectangel 
+  becomes selected. Previously selected objects are remove from the select list. Note that as
+  you also move objects with drag MB1, you should not hit any object when starting to drag.
+  If there is an object covering the background, you can use Shift MB1 instead (se below).
+- Drag with Shift MB1. Object inside the rectangle are added to the list of selected objects.
+- 'Select all objects' under 'Edit' in the menu selects all objects.
+- 'Select all connections' selects all connections. 
+
+The list of selected objects is cleared by clicking MB1 in an empty space in the working area
+or by clicking MB3 in the working area.
+
+<h1>Move objects
+An object is moved by MB1. If you want to move several objects simultaneusly, you select the
+objects. If you now move one of the selected objects the other selected objects will follow.
+
+If you want to move objects vertically or horizontally you first select 'Move Restrictions'
+under 'Edit' in the menu. Move Restrictions are reset by MB3.
+
+<h1>Cut, copy and paste
+You copy objects by selecting the objects that are to be copied, and copy them to the paste
+buffer with Ctrl+C. With Ctrl+V the objects are copied to the working area, and follows the
+movement of the cursor until you click MB1 to fasten them. Cut works in the same way with
+Ctrl+X.
+
+<h1>Grid
+Grid and grid size are choosen from the tool panel.
+
+<h1>Scaling
+The scaling function is activated from the tool panel and affects selected objects. The selected
+objects are framed by a rectangle. By dragging a corner or side of the rectangle, the selected
+objects are scaled. If you drag a side, the scaling is vertical or horizontal, if you drag a 
+corner the scaling is unlimitied. By activating 'Functions/ScaleEqual' you get a conform scaling
+in x and y direction.
+
+<h1>Rotate
+Selected objects are rotated 90 degrees clockwise when the rotate function in the tool panel
+is activated. The 90 degrees rotation works för all objects except texts. If you want to
+totate with another angel, this is done from 'Edit/Rotate' in the menu. Here you can enter an
+arbitrary angel. Note that only lines, polylines and circles can handle arbitrary rotations.
+If you want subgraphs to be able to handle arbitrary rotation, you have to build them with
+lines and polylines.
+
+<h1>Order objects
+<h2>Vertically
+Objects that are placed vertically can be left aligned, right aligned or centered, by using
+'Align/vertical' under 'Functions' in the menu. Select the object that are to be aligned and
+activate the menu entry.
+
+<h2>Horizontally
+Objects that are placed horizontally can be aligned regarding the upper side, the lower side or
+the center, by using 'Align/horizontal' under 'Functions' in the menu. Select the objects that
+is to be aligned and activate the menu entry.
+
+<h2>Concentrical circles
+Concentrical circles are achieved by first activating 'Align/vertical/center' and then
+'Align/horizontal/center'.
+
+<h2>Equal distance between objects
+Objects that are placed vertically or horizontally, often should have the same distance between
+them. This is achieved by 'Equidistance' under 'Functions' in the menu. The Equidistance 
+function for horizontal objects, keeps the position of the leftmost and rightmost objects, and
+adjusts the position of the objects between, to get the same distance between them. The distance
+is measured from the left border, right border or the center. I a similar way vertically objects
+are ordered with 'Equidistance/Vertical'.
+
+<h1>Over or under
+If objects overlap, you can move them over or under with 'Pop' and 'Push' under 'Functions' in 
+the menu. Pop puts an object on top of all other objects in the graph, and Push puts the object
+beneath all other objects. If you want to put an object between two objects, some thinking is
+required to activate the pop and push in the correct order.
+
+<h1>Colors
+<h2>Background color
+The background color in the graph is set by selecting a suitable fillcolor in the color palette,
+and then activating 'Set background color' under 'Functions' in the menu.
+
+<h2>Object colors
+Object colors are divided in fillcolor and bordercolor. The filled part of the objects is drawn
+with the fillcolor and the border is drawn with the bordercolor. Some objects, for example
+lines, are only drawn with bordercolors. The colors are selected in the color palette, fillcolor
+is selected with MB1 and bordercolor with MB2. The currently selected colors are displayed
+in rectangles topmost in the palette, fillcolor to the left and border color in the middle.
+When baseobjects are created, the object are given the currently selected colors in the palette.
+If you want to change the color of an existing object, you select it and select a new fill or
+bordercolor in the palette. Note that the objects after this operation are not drawn with red
+color, though they are selected. For that reason you should always clear the selectlist by
+clicking MB3 after the operation.
+
+<h2>Subgraph object colors
+You can change the color of a subgrap object in the same way as you change the color of a
+base object, by selecting them, and state a border or fill color. Object that is drawn with
+shadows and 3D effects might loose these effects if you change the fillcolor. There are special
+functions to change the color of subgraph objects, color tone, lightness, intensity and color 
+shift. In the chapter Subgraphs this is described in more detail. 
+
+<h1>Connection to rtdb
+When a subgraph object is to influence or be influenced by a signal in rtdb, you have to state
+this in the attributes of the subgraph. One way is to enter the signal name by hand in the 
+object editor. Another and smoother way is to use the plant hierachy that is found over the
+navigation window. In the plant hierarch you select the object you want to connect the 
+subgraph object to, and then you click on the subgraph object with Ctrl/Doubleclick MB1. 
+If there are two rtdb attributes in the subgraph object, the first is connectet in this way,
+and the second with Ctrl/Shift/Doubleclick MB1. You can also open the object editor and click
+on the attribut row with Ctrl/Doubleclick MB1 to insert the signal. If you are connecting a 
+signal it is enough to select the object in the plant hierarchy, the attribute ActualValue is 
+selected automatically. If it is another type of object, you have to state which attribut to 
+connect to the subgraph object. This is done by opening the object with Doubleklick MB1, and 
+the select the desired attribute.
+
+You can also select the object in the configurator.
+
+<h2>Suffix
+To the signal name, a suffix should be added, that tells the type of the attribute.
+For some types of dynamics, where the type is obvious, it might work without suffix.
+The following types of suffix can be stated:
+
+##BOOLEAN
+##FLOAT32
+##FLOAT64
+##CHAR
+##INT8
+##INT16
+##INT32
+##UINT8
+##UINT16
+##UINT32
+##OBJID
+##STRING
+##TIME
+##DELTATIME
+##ATTRREF
+
+If the attribute is a string or an array, the size should also be stated.
+
+<h1>Graph attributes
+Under File in the menu you find 'Graph attributes' and here you can enter attributs for the
+graph.
+
+Here you state which part of the working area that is to be displayed in runtime. The 
+coordinates for the upper left corner and lower right corner are measured with the cursor and
+entered in x0, y0 and x1, y1 respectiveley.
+
+<b>Attribute <t>Description
+subgraph    <t>States that the graph is a subgraph. In this case the attributes
+            <t>below are not valid.
+x0          <t>x-coordinate for the upper left corner of the graph.
+y0          <t>y-coordinate for the upper left corner of the graph.
+x1          <t>x-coordinate for the lower right corner of the graph.
+y1          <t>y-coordinate for the lower right corner of the graph.
+Scantime    <t>Cycle time in seconds for update objects that runs with 
+            <t>the slow cycle.
+FastScantime <t>Cycle time in seconds for update objects that runs with 
+            <t>the fast cycle.
+AnmationScantime <t>Cycletime in second for animations in the graph.
+JavaWidth   <t>Width in pixels that the graph is scaled to when exported to java.
+IsJavaApplet <t>The graph is exported as a java applet when exported.
+IsJavaFrame <t>The graph is exported as a java frame when exported.
+BackgroundImage <t>Name of a gif or jpeg image for the background image.
+BackgroundTiled <t>The background image is tiled, not scaled.
+DoubleBuffered <t>The graph is double buffered, i.e. it is first drawn
+             <t>in a pixmap in memory that is then copied to the sreen.
+             <t>Should be used if the graph contains mobile objects or animations.
+
+<h1>Object and hierarchy graphs
+This chapter describes how to create Ge graphs that displayes the content of an object of a 
+certain class, and is able to display all object of that class. It also describes how you can
+construct common graphs for similar hierarchies in the proview database.
+
+<h1>Object graph
+For some classes that belongs to Proview baseclasses, there are so called object graphs, i.e.
+graphs that can be opened for each instance of the class. Object graphs exist for example for
+the classes PID, Mode, Av, Ai, Ao, Di, Do and Dv, and is opened with the command 
+'open graph/instance=' where you in /instance supply the name of the object. You can also open
+the object graph by selecting the object and activate 'Functions/Open object graph' in the xtt
+menu.
+
+If you have created a user class, you can draw an object graph for this class. You edit the graph
+as a normal ge graph. The difference is when you are about to connect the dynamic objects to
+database objects. Where you normally write an object name, you instead write '$object'. Data for
+an indicator connected to the attribute ActualValue might look like this.
+
+<b>Attribute <t><t>Value
+SubGraph <t><t>pwr_indsquare
+LowColor.Attribute <t><t>$object.ActualValue##Boolean
+LowColor.Color  <t><t>Inherit
+Cycle   <t><t>Inherit
+DynType <t><t>Inherit
+Action  <t><t>Inherit
+
+The graph is saved with the same name as the class, but with lower case.
+
+The command to open the object graph for the object H1-H2-MyObject of class MyClass is
+
+<c>open graph /classgraph /instance=H1-H2-MyObject
+
+<h1>Hierarchy graph
+Often there are plant parts in a system that are identical and that are configured with nearly
+identical hierarchies. You can for example have 30 identical frequency converters, and there
+is an possibilty to, instead of drawing 30 identical graphs, draw one generic graph that can
+display all the frequence converters. The procedure is similar to object graphs above. The
+hierachy that is supplied in /instance in the open graph command when the graph is opened,
+will replace all occurrences of $object in dynamic connections in the graph.
+
+Data for an indicator that is connected to the Dv Start can look like this 
+
+<b>Attribute <t><t>Value
+SubGraph  <t><t>pwr_indsquare
+LowColor.Attribute <t><t>$object-Start.ActualValue##Boolean
+LowColor.Color  <t><t>Inherit
+Cycle   <t><t>Inherit
+DynType <t><t>Inherit
+Action  <t><t>Inherit
+
+Then the picture is opened with the command
+
+<c>open graph my_fo_graph /instance=H1-H2-Fo1.53
+
+the indicator is connected to the attribute H1-H2-Fo1-Start.ActualValue.
+
+Also in commands that is executed by pushbuttons in the graph, the string $object will be
+replaced by the hierachy name. This makes it possible to open object graph or trends of objects
+within the hierarchy from pushbuttons. The command to open the object graph for a Mode object
+could be
+
+<c>open graph /classgraph /instance=$object-Plc-W-Mode0/name=$object
+
+Example of a command to open a trend from a plotgroup in the hierarchy
+
+<c>open trend $object-Plot
+</topic>
+</chapter>
+
+<chapter>
+<topic>geref_testing
+Testing
+
+<h1>Preview
+There is a function to test the graph immediately in the editor. One requirement is that you
+have to start the proview runtime environment on the development station, to be able to find 
+signals that occurrs in the graph. From 'View/Preview' in the menu, the editor connects to the
+rtdb and starts executing the dynamic of the graph. Preview is closed with 'View/Preview close' 
+and then you can continue to edit the graph.
+
+<h1>Xtt
+By starting xtt in the development environment or in an operator/process station, you can also
+easily test the graph. The only requirement is that the .pwg file for the graph is present on
+$pwrp_exe. You open a Ge graph with the command
+
+<c>xtt> open graph 'graphname' [/width=][/height=][/scrollbar][/navigator]
+
+With the command
+
+<c>xtt> show graph
+
+all the available graphs are listed.
+</topic>
+</chapter>
+
+<chapter>
+<topic>geref_development
+Development environment
+
+This is a short description of directories and files that are used by Ge, and what files are
+generated.
+
+<h1>Filetypes
+Ge reads graph files and save graph files in the directory $pwrp_pop.
+
+A graph is saved as a file of type .pwg. A subgraph is also saved as a .pwg-file, that is used
+when the subgraph is edited, but it is also saved as a .pwsg-file. It is the .pwsg-file that
+is loaded when you create instances of the subgraph.
+
+If you export the graph as a java application (frame) you create a .java-file with the name 
+specified as java name.
+
+If you export the graph as a java applet, a java-file is created with the name stated as 
+java name with the suffix _A, e.g. Oversikg_A.java. Furtheremore a html files is created with
+the class name as name.
+
+<h1>Setup-files
+Ge uses two setup files, one for the color palette, and one for the subgraphs palette.
+
+<h2>Color palette
+If you want to modify the colors in the color palette, this is possible by creating av file
+with the name ge_colors.dat. This should contain the rgb-codes for the colors in the palette.
+There is a template in ...
+
+<h2>Subgraph palette
+The subgraph palette contains a collection of fix menues and subgraphs, and the folder Local
+that displayes the subgraphs and images in $pwrp_pop. Most of the fix menues and subgraphs are
+configured in the file pwr_ge_setup.dat. This file is common for all projects but can be modfied
+by the system manager.
+</topic>
+</chapter>
+
+<chapter>
+<topic>geref_command
+Commands
+
+Ge contains a command line that is opened from the menu or by Ctrl/b. The command is mainly
+considered to be used in ge scrips, but can also be executed from the command line. From the
+command line ge script is also executed by writing the name of the file preceeded by a '@'.
+Note that a change of functions in the editor made via a command is not viewed in the 
+optionmenues or check boxes. When a scrip is run the setting can differ from what is viewed.
+</topic>
+</chapter>
+
+<chapter>
+<topic>geref_script
+Script
+
+The scripthandling in Ge is described in the chapter Ge script and commands. Here some examples
+are viewed to get an idea of what scripts can do.
+
+<h2>To use a script
+A script is executed from the command line in Ge by setting a '@' before the filename, for 
+example
+
+<c>ge> @my_script
+
+The command lins is opened from Functions/Command (Ctrl+B).
+
+<b>Example 1
+The first example is a script that exports some subgraphs to java. Often you have made a lot
+of modifications in different graphs, and when you are ready, everthing is to be exported to
+java. This script reads the different graphs and export them.
+
+<c>!
+<c>! Export java
+<c>!
+<c>function int process( string graph)
+<c>  open 'graph'
+<c>  printf( "Exporting %s...\n", graph);
+<c>  export java
+<c>endfunction
+
+<c>main()
+<c>  process( "nu4_alla_platar");
+<c>  process( "nu4_status_trp");
+<c>  process( "nu4_trp_hy1");
+<c>  process( "nu4_trp_rb_ut");
+<c>  process( "nu4_buffhog");
+<c>  process( "nu4_status_ugn");
+<c>  process( "nu4_trp_lu1");
+<c>  process( "nu4_trp_start");
+<c>  process( "nu4_inlagg");
+<c>  process( "nu4_trend");
+<c>  process( "nu4_trp_rb1");
+<c>  process( "nu4_ugn_start");
+<c>endmain
+
+<b>Example 2
+Next example shows how to change a subgraph in several graphs. A subgraph is normally intern,
+and a modification does not take effect until you have performed the procedure to
+
+- set the subgraph extern
+- save the graph
+- read the graph, now with the modified subgraph
+- set the subgraph intern again
+- save the graph
+
+If you often modify you subgraphs you can with advantage write a script that replaces a subgraph
+in all graphs of the project.
+
+<c>!
+<c>! Replace a subgraph
+<c>!
+<c>function int process( string graph)
+<c>  int sts;
+<c>  printf( "Processing graph %s\n", graph);
+<c>  open 'graph'
+<c>  sts = SetExtern("my_subgraph");
+<c>  if ( sts)
+<c>    printf( "Changing my_subgraph\n");
+<c>    save
+<c>    open 'graph'
+<c>    SetIntern( "my_subgraph");
+<c>    save
+<c>  endif
+<c>endfunction
+
+<c>main()
+<c>  process( "nu4_alla_platar");
+<c>  process( "nu4_status_trp");
+<c>  process( "nu4_trp_hy1");
+<c>  process( "nu4_trp_rb_ut");
+<c>  process( "nu4_buffhog");
+<c>  process( "nu4_status_ugn");
+<c>  process( "nu4_trp_lu1");
+<c>  process( "nu4_trp_start");
+<c>  process( "nu4_inlagg");
+<c>  process( "nu4_trend");
+<c>  process( "nu4_trp_rb1");
+<c>  process( "nu4_ugn_start");
+<c>endmain
+</topic>
+</chapter>
+
+<chapter>
+<topic>geref_web
+Web graphs
+
+<h1>Export as a java applet
+If a graph should be viewed in a web browser, you can export it as a java applet. First you set
+the attribute IsJavaApplet in 'File/Graph attributes'. Thereafter you activate 
+'File/Export Java', that exports the graph to java applet format and compiles the java file. 
+Furthremore a html file is created to open the applet. The html file together with a java 
+archive with the applet class are put in the direction $pwrp_web. By copying the files on 
+$pwrp_web to a corresponding directory on the webserver, you can open them in a webbrowser.
+
+<b>Limitations
+The java version lf a Ge graph differs in appearence and function compared to Ge and Xtt in
+some points.
+- The format statements to view floating point, inegers and string should be of type %n.mf, 
+  %-n.mf, %d, %nd, %s where n and m are digits.
+- The width of the borderlines in a subgraph is scaled in the subgraph as a whole.
+- When a dynamic object is changed the background or possible covering objects are not redrawn,
+  i.e. dynamic object should not be covered by other objects, and texts that are changed has
+  to have a background in the subgraph.
+- Subgraphs can not contain groups. This implies compilation errors.
+- Baseobjects are always drawn under components. If you for example place a text on top of a
+  component, the text will be hidden.
+
+<h1>Configure a web site
+To be able to open the varoius process graphs in a system it is suitable to have web page
+with a menu to the left and actual graph to the right. With some configuration you can generate
+such a page from 'Generate web' in the menu.
+
+This is how the configuration is done:
+Create a WebHandler object under the node object in the node hierarchy. The WebHandler object
+will cause the start of a server process that supplies the graphs with the dynamic information
+from the realtime database. In the object you also state if you should be able to log in as a 
+proview user. Under the WebHandler object you create a WebGraph object for each graph that is
+to be opened from the menu.
+Under the WebHandler object, you can also create WebLink objects. Each WebLink object give rise
+to a menu entry that is connected to an URL, e.g. documents for working instructions, function
+specifications etc.
+
+All files required for the web site are gatherd in the directory $pwrp_web. By copying these
+files, together with the files $pwr_lib/pwr_rt_client and $pwr_lib/pwr_jop.jar, to a suitable
+directory in the web server, the operator station is available on the net.
+</topic>
+</chapter>
+
+<chapter>
+<topic>geref_runtime
+Runtime
+
+When the graph is completed it is to be displayed in an operator station, an process station
+or on the intranet.
+
+<h1>Maintenance graphs in xtt
+Maintenance graphs can be opened without configuration from the command line in xtt, which
+is described in the chapter Test. This works as long as you yourself and other informed persons
+should have access to the graphs. If a broader group should have access to them, you can build
+a menu tree in xtt. This is done by writing commands in the xtt setup file. The setup file
+~/xtt_setup.rtt_com is executed each time xtt is started. Here you can define symbols and add
+commands to create menues. Below is an example of a symbol file that creates a simple
+maintenance menu.
+
+<c>create item/text="Maintenace"/menu/dest=DataBase/before
+<c>create item/text="Overview"/command="open graph overview" /menu 
+<c>  <t>/dest=Maintenance /firstchild
+<c>create item/text="Blast"/command="open graph blast" /menu 
+<c>  <t>/dest=Maintenance /firstchild
+<c>create item/text="Roller bed"/command="open graph rollerbed" /menu 
+<c>  <t>/dest=Maintenence /firstchild
+
+<h1>Operator graphics in xtt
+If the graphs is to be operator graphics you build an operator place with an OpPlace object, 
+an User object and XttGraph objects. Xtt is started with the name of the OpPlace object as 
+argument.
+
+<h1>Java applications in xtt
+A ge graph can be exported as a java frame. This is opened in xtt with the command 
+'open jgraph'.
+
+<h1>Web graphs
+To view process graphs on the intranet, you have to install a webserver in an operator station.
+We recommend Apache on Linux.
+
+In proview you create a WebHandler object in the noder hierarchy, to start a server process
+in runtime that supplies the web graphs with rtdb data.
+
+<h1>Distribution
+<h2>xtt
+To be able to open a graph in xtt, the .pwg-file for the graph has to be copied from $pwrp_pop
+in the development environment to $pwrp_exe in the runtime environment. Also local subgraphs
+that are defined as extern has to be copied. In this case you copy the .pwsg file.
+Local image files also has to be copied.
+
+<h2>Web
+Graphs exported as java applets, are compiled and inserted into the java archive
+$pwrp_lib/pwrp_'systemname'_web.jar. Also GIF and JPEG images that reside on $pwrp_pop are
+inserted into the archive. This archive has to be copied to the application directory of the 
+web server together with the .html files that is generated by 'export java'. To the application
+directory of the web server should also be copied $pwr_lib/pwr_rt_client.jar and 
+$pwr_lib/pwr_jop.jar.
+
+<h2>Java-applications
+Graphs exported as java frames, are compiled and inserted in the archive
+$pwr_lib/pwrp_'systemname'.jar. Also GIF and JPEG images that reside on $pwrp_pop are inserted
+into the archive. The archive should be copied to $pwrp_lib on the target node. Together with
+the archives $pwr_lib/pwr_rt.jar and $pwr_lib/pwr_jop.jar they shall be inserted in the
+CLASSPATH in the target node.
+</topic>
+</chapter>
+
+<chapter>
+<topic>gecmd
+Ge script och commands
+<option> printdisable
+Introduction to script <link>gecmd_intro
+Commands <link>gecmd_command
+Script <link>gecmd_script
+<option> printenable
+</topic>
+
+<topic>gecmd_intro
+Introduction to script
+In Ge there is a collection of commands to create graphic elements as recangles, texts, 
+polylines and subgraphs. These commands can be executed from the command line in Ge, or 
+executed from script files that is executed from the command line.
+
+The scriptfiles can furthermore contain a language similar to c, that contains operators för
+calculations, if statements and for loops etc. There are also functions to fetch information
+from the development database. See the manual for Wtt Script for more information.
+
+Ge script can for example be used to convert graph from other systems to ge graphs, or to
+automatically generate forms or graphs from objects in the database.
+
+<h1>Create objects
+Base objects as rectangles, lines etc. are created by the create command. Before the object
+is created you set the disired properties of the editor (fill, border, fillcolor, textsize etc.)
+and then you create the object.
+
+<h2>Rectangle
+An example of a filled rectangle
+
+<c>set fill
+<c>set linewidth 1
+<c>set bordercolor 0
+<c>set fillcolor 19
+<c>create rect /x1=10 /y1=1 /width=4  /height=2
+
+<h2>Circle
+An example of a half circle
+
+<c>set nofill
+<c>set linewidth 2
+<c>set bordercolor 0
+<c>create arc /x1=1 /y1=1 /x2=3 /y2=2 /angel1=0 /angel2 =180
+
+<h2>Line
+Line example
+
+<c>set linewidth 1
+<c>set bordercolor 0
+<c>create line /x1=0 /y1=0 /x2=10 /y2=0
+
+<h2>Polylinje
+To create to polyline, you create the first segment with 'create', and the following segments
+with 'add'.
+
+Polyline example
+
+<c>set nofill
+<c>set linewidth 1
+<c>set bordercolor 0
+<c>create polyline /x1=5 /y1=5 /x2=6 /y2=6
+<c>add polyline /x1=5 /y1=7
+<c>add polyline /x1= 6/y1=8
+<c>add polyline /x1=5 /y1=9
+<c>add polyline /x1= 6 /y1=10
+
+<h2>Text
+Example
+
+<c>set textsize 14
+<c>set bold
+<c>create text/text="Example" /x1=3 /y1=5
+
+<h2>Subgraph object
+Creating subgraphs object is a bit different. Here you create the object first, and the set
+the attributes of the object.
+
+Valve example
+
+<c>create object /sub=pwr_valve /x1=1 /y1= 1 /x2=3 /y2=2
+<c>set current fillcolor 45
+<c>set current attr attribute "Rt-Dv1.ActualValue##Boolean"
+<c>set current attr lowcolor 3
+
+Pushbutton example
+
+<c>create object /sub=pwr_buttonset /x1=5 /y1=1
+<c>! Change type to SetDigConfirmWithTone
+<c>set current attr type 1014
+<c>set current attr text "Start"
+<c>set current attr ConfirmText "Do you really want to..."
+<c>set current attr Attribute "rt-Dv1.ActualValue##Boolean"
+<c>set current attr ToneAttr "rt-Dv2.ActualValue##Boolean"
+<c>set current attr LowTone 8
+<c>set current attr Access 65534
+
+<h2>Graph attributes
+Before saving the graph, you should state the borders in x and y direction for the graph, and
+some other attributes. This is done with the command 'set graphattributes'.
+
+Example
+
+<c>set graph x0 -3
+<c>set graph y0 -3
+<c>set graph x1 40
+<c>set graph y1 37
+<c>set graph AnimationScanTime 0.2
+<c>set graph BackgroundImage "corrado.gif"
+
+<h2>Subgraph attributes
+If the graph is to be saved as a subgraph, you also use 'set graphattributes'. You first set
+the attribute 'subgraph' and thereafter the other attributes that belongs to a subgraph.
+
+Example
+
+<c>set graph subgraph 1
+<c>! Type ToggleDigWithTone
+<c>set graph TraceAttrType 1012
+<c>set graph TraceColor 3
+<c>set graph NoConObstacle 1
+
+<h2>Colors
+Colors are stated with index in the color palette (0-299). 0 is black, 30-59 gray tones,
+60-89 greenyellow, 90-119 yellow, 120-149 orange, 150-179 red, 180-209 violet, 210-239 blue,
+240-269 seablue and 270-299 green.
+
+<h2>Color tone
+Also the color tone is stated with index. See table below.
+
+For dynamic types that changes the color tone you can often set a fillcolor instead of color
+tone. You then state index for the fillcolor instead (a value in the interval 83-299).
+
+<b>Index <t>Ton
+0 <t>No tone
+1 <t>Gray
+2 <t>Yellowgreen
+3 <t>Yellow
+4 <t>Orange
+5 <t>Red
+6 <t>Violet
+7 <t>Blue
+8 <t>Seagreen
+9 <t>Green
+10 <t>Darkgray
+</topic>
+
+<topic>gecmd_command
+Commands
+
+Below is a description of commands in Ge
+
+add 			<link>gecmd_add
+  <t>add polyline 	<link>gecmd_add_polyline
+create 			<link>gecmd_create
+  <t>create rectangle 	<link>gecmd_create_rect
+  <t>create arc 	<link>gecmd_create_arc
+  <t>create line 	<link>gecmd_create_line
+  <t>create polyline 	<link>gecmd_create_polyline
+  <t>create rectangle 	<link>gecmd_create_rect
+  <t>create text 	<link>gecmd_create_text
+  <t>create subgraph 	<link>gecmd_create_subgraph
+group 			<link>gecmd_group
+move 			<link>gecmd_move
+  <t>move currentobject	<link>gecmd_move_currentobject
+new 			<link>gecmd_new
+select 			<link>gecmd_select
+  <t>select currentobject <link>gecmd_select_currentobject
+  <t>select clear	<link>gecmd_select_clear
+set 			<link>gecmd_set
+  <t>set verify		<link>gecmd_set_verify
+  <t>set noverify	<link>gecmd_set_noverify
+  <t>set fill 		<link>gecmd_set_fill
+  <t>set nofill		<link>gecmd_set_nofill
+  <t>set border		<link>gecmd_set_border
+  <t>set noborder	<link>gecmd_set_noborder
+  <t>set grid		<link>gecmd_set_grid
+  <t>set nogrid		<link>gecmd_set_nogrid
+  <t>set linewidth	<link>gecmd_set_linewidth
+  <t>set gridsize	<link>gecmd_set_gridsize
+  <t>set textsize	<link>gecmd_set_textsize
+  <t>set bold		<link>gecmd_set_bold
+  <t>set nobold		<link>gecmd_set_nobold
+  <t>set backgroundcolor <link>gecmd_set_backgroundcolor
+  <t>set fillcolor	<link>gecmd_set_fillcolor
+  <t>set bordercolor	<link>gecmd_set_bordercolor
+  <t>set currentobject fillcolor <link>gecmd_set_current_fillcolor
+  <t>set currentobject colortone <link>gecmd_set_current_colortone
+  <t>set currentobject colorlightness <link>gecmd_set_current_colorlightness
+  <t>set currentobject colorintensity <link>gecmd_set_current_colorintensity
+  <t>set currentobject colorshift <link>gecmd_set_current_colorshift
+  <t>set currentobject attributes <link>gecmd_set_current_attributes
+  <t>set currentobject type <link>gecmd_set_current_type
+  <t>set currentobject color <link>gecmd_set_current_color
+  <t>set currentobject colortone <link>gecmd_set_current_colortone
+  <t>set currentobject access <link>gecmd_set_current_access
+  <t>set currentobject attr1 <link>gecmd_set_current_attr1
+  <t>set currentobject attr2 <link>gecmd_set_current_attr1
+  <t>set currentobject annotation <link>gecmd_set_current_annotation
+  <t>set graphattributes <link>gecmd_set_graphattributes
+rotate 			<link>gecmd_rotate
+  <t>rotate currentobject <link>gecmd_rotate_current
+scale 			<link>gecmd_scale
+  <t>scale currentobject <link>gecmd_scale_current
+save 			<link>gecmd_save
+exit 			<link>gecmd_exit
+quit 			<link>gecmd_quit
+open 			<link>gecmd_open
+show 			<link>gecmd_show
+  <t>scale version <link>gecmd_show_version
+</topic>
+
+<headerlevel>
+<topic>gecmd_add <style>function
+add
+</topic>
+
+<topic>gecmd_add_polyline
+add polyline
+
+Add a breakpoint to the latest created polyline.
+A polyline is created by 'create polyline' that also creates the first segment. The following
+segments are created by 'add polyline'.
+
+<b>Syntax
+
+<c>ge> add polyline /x1= /y1=
+
+/x1 <t>x-coordinate for the added segment.
+/y1 <t>y-coordinate for the added segment.
+</topic>
+
+<topic>gecmd_create <style>function
+create
+
+Create graphic object in the graph.
+</topic>
+
+<topic>gecmd_create_rect
+create rectangle
+
+Create a rectangle.
+
+<b>Syntax
+
+<c>ge> create rectangel /x1= /y1= /width= /height=
+
+/x1 <t>x-coordinate of upper left corner
+/y1 <t>y-coordinate of upper left corner
+/widht <t>Width of the rectangle.
+/height <t>Height of the rectangle.
+</topic>
+
+<topic>gecmd_create_arc
+create arc
+
+Create a circle or an ellipse, or a segment of a circle or ellipse.
+
+<b>Syntax
+
+<c>ge> create arc /x1= /y1= /x2= /y2= /angel1= /angel2=
+
+/x1 <t>x-coordinate of upper left corner of a rectangle the surrounds the ellipse.
+/y1 <t>y-coordinate of upper left corner of a rectangle the surrounds the ellipse.
+/x2 <t>x-coordinate of lower right corner of a rectangle the surrounds the ellipse.
+/y2 <t>y-coordinate of lower right corner of a rectangle the surrounds the ellipse.
+/angel1 <t>Angel that states the start of a circle segment in degrees.
+    <t>Default value 0.
+/angel2 <t>Angel that states the size of a circle segment in degrees.
+    <t>Default value 360 degrees.
+</topic>
+
+<topic>gecmd_create_line
+create line
+
+Create a straight line between two points.
+
+<b>Syntax
+
+<c>ge> create line /x1= /y1= /x2= /y2=
+
+/x1 <t>x-coordinate for the first end point.
+/y1 <t>y-coordinate for the first and point.
+/x2 <t>x-coordinate för the second end point.
+/y2 <t>y-coordinate för the second end point.
+</topic>
+
+<topic>gecmd_create_polyline
+create polyline
+
+Create a polyline, i.e. a line that consists of several straight line segments.
+'create polyline' creates the first line segment. The following segments are created by
+'add polyline'. The point (x1, y1) is the starting point for the polyline. The next segment
+is added to the point (x2, y2).
+
+<b>Syntax
+
+<c>ge> create polyline /x1= /y1= /x2= /y2=
+<c>ge> add polyline /x1= /y1=
+<c>ge> add polyline /x1= /y1=
+<c>ge> ...
+
+/x1 <t>x-coordinate for the starting point.
+/y1 <t>y-coordinate for the starting point.
+/x2 <t>x-coordinate for the ending point of the first segment.
+/y2 <t>y-coordinate for the ending point of the first segment.
+</topic>
+
+<topic>gecmd_create_text
+create text
+
+Create a text.
+
+<b>Syntax
+
+<c>ge> create text /x1= /y1= /text=
+
+/x1 <t>x-coordinate.
+/y1 <t>y-coordinate.
+/text <t>Text surrounde by quoutes.
+</topic>
+
+<topic>gecmd_create_subgraph
+create subgraph
+Create a subgraph object.
+
+<b>Syntax
+
+<c>ge> create subgraph /x1= /y1= /subgraph= [/x2= /y2=]
+
+/x1 <t>x-coordinate for the upper left corner.
+/y1 <t>y-coordinate for the upper left corner.
+/subgraph <t>The name of the subgraph. If the subgraph is a part of the proview
+    <t>base system is always has the prefix 'pwr_' and is written with lower case,
+    <t>e.g. 'Valve' has the name pwr_valve.
+/x2 <t>If the point (x2, y2) is supplied, the subgraph is scaled to fit inside a
+    <t>rectangle with the cornerpoints (x1, y1) and (x2, y2).
+/y2
+</topic>
+
+<topic>gecmd_group <style>function
+group
+
+Create a group of the selected objects.
+
+</topic>
+
+<topic>gecmd_move <style>function
+move
+
+</topic>
+
+<topic>gecmd_move_currentobject
+move currentobject
+
+Move the current object.
+
+<b>Syntax
+
+<c>ge> move currentobject /x= /y=
+
+/x <t>Relative movement in x direction.
+/y <t>Relative movement in y direction.
+</topic>
+
+<topic>gecmd_new <style>function
+new
+
+Clear and reset the working area.
+</topic>
+
+<topic>gecmd_select <style>function
+select
+</topic>
+
+<topic>gecmd_select_currentobject
+select currentobject
+
+Put the current object in the list of selected objects.
+</topic>
+
+<topic>gecmd_select_clear <style>function
+select clear
+Clear the select list.
+</topic>
+
+<topic>gecmd_set <style>function
+set
+</topic>
+
+<topic>gecmd_set_verify
+set verify
+Set veriy mode, i.e. all executed rows in a script are printed in the terminal window.
+</topic>
+
+<topic>gecmd_set_noverify
+set noverify
+Reset verify mode.
+</topic>
+
+<topic>gecmd_set_fill
+set fill
+Set 'fill' in the editor. Created objects will in the future be created with the fill property 
+set.
+</topic>
+
+<topic>gecmd_set_nofill
+set nofill
+Reset 'fill' in the editor. Created objects will in the future be created with the fill 
+property reset.
+</topic>
+
+<topic>gecmd_set_border
+set border
+Set 'border' in the editor. Created objects will in the future be created with the border 
+property set.
+</topic>
+
+<topic>gecmd_set_noborder
+set noborder
+Reset 'border' in the editor. Created objects will in the future be created with the border
+property reset.
+</topic>
+
+<topic>gecmd_set_grid
+set grid
+
+Set 'grid' in the editor. Created objects are positioned to closest grid point.
+</topic>
+
+<topic>gecmd_set_nogrid
+set nogrid
+
+Reset grid in the editor.
+</topic>
+
+<topic>gecmd_set_linewidth
+set linewidth
+
+Set linewidth in the editor. Created objects will in the future be created with specified line
+width. The line width has a value in the intervall 1-8.
+
+<b>Syntax
+
+<c>ge> set linewidth 'linewidth'
+</topic>
+
+<topic>gecmd_set_gridsize
+set gridsize
+
+Set gridsize in the editor.
+
+<b>Syntax
+
+<c>ge> set gridsize 'gridsize'
+</topic>
+
+<topic>gecmd_set_textsize
+set textsize
+
+Set 'textsize' in the editor. All text objects will in the future be created with this text
+size. The text size can be 8, 10, 12, 14, 18 or 24.
+
+<b>Syntax
+
+<c>ge> set textsize 'textsize'
+</topic>
+
+<topic>gecmd_set_bold
+set bold
+
+Set 'bold' in the editor. Textobject will in the future be created with bold.
+</topic>
+
+<topic>gecmd_set_nobold
+set nobold
+
+Reset bold.
+</topic>
+
+<topic>gecmd_set_backgroundcolor
+set backgroundcolor
+
+Set background color. The background color is an index in the color palette (0-299).
+
+
+<b>Syntax
+
+<c>ge> set backgroundcolor 'color'
+</topic>
+
+<topic>gecmd_set_fillcolor
+set fillcolor
+
+Set fillcolor in the color palette. The object will i the future be created with this fill 
+color. Fillcolor is an index in the color palette  (0-299).
+
+<b>Syntax
+
+<c>ge> set fillcolor 'color'
+</topic>
+
+<topic>gecmd_set_bordercolor
+set bordercolor
+
+Set border color in the color palette. Objects will in the future be creaetd with this border
+color. The border color is an index in the color palette (0-299).
+
+<b>Syntax
+
+<c>ge> set bordercolor 'color'
+</topic>
+
+<topic>gecmd_set_current_fillcolor
+set currentobject fillcolor
+
+Set fillcolor of the current object. The fillcolor is an index in the color palette (0-299).
+
+<b>Syntax
+
+<c>ge> set currentobject fillcolor 'color'
+</topic>
+
+<topic>gecmd_set_current_colortone
+set currentobject colortone
+
+Set color tone of the current object.
+
+<b>Syntax
+
+<c>ge> set currentobject colortone 'index'
+</topic>
+
+<topic>gecmd_set_current_colorlightness
+set currentobject colorlightness
+
+Set lightness of the current object. The lightness i an integer. Positive value gives lighter
+colors, negative darker colors.
+
+<b>Syntax
+
+<c>ge> set currentobject colorlightness 'lightness'
+</topic>
+
+<topic>gecmd_set_current_colorintensity
+set currentobject colorintensity
+
+Set color intensity of the current object. The intensity is an integer. Positive value gives
+more intense colors, negative less intence.
+
+<b>Syntax
+
+<c>ge> set currentobject colorintensity 'intensity'
+
+</topic>
+
+<topic>gecmd_set_current_colorshift
+set currentobject colorshift
+
+Shift color of the current object. The color tones of the subgraph are rotated in the color
+circle, but the colors keep their internal color contrast. Colorshift is an integer that states
+the number of steps to shift the color. Positiv value rotates in direction yellowgreen->
+yellow->orange->red->violet->blue->seablue->green. Negative in the opposite direction.
+
+<b>Syntax
+
+<c>ge> set currentobject colorshift 'shift'
+</topic>
+
+<topic>gecmd_set_current_attributes
+set currentobject attributes
+Set attributes of the current object.
+
+<b>Syntax
+
+<c>ge> set currentobject attributes 'attrname' 'value'
+
+The name the attributes depends on which type of dynamic is applied on the subgraph. The
+dynamic type has to be stated first, and thereafter the attributes for that dynamic type 
+is stated.
+</topic>
+
+<topic>gecmd_set_current_type
+set currentobject type
+Type states type of dynamic for the object. It is entered as an integer.
+
+<b>Syntax
+
+<c>ge> set currentobject attributes type 'value'
+
+
+<b>Type of dynamic <t>Value
+No		<t> 0
+Inherit		<t> 1 << 0
+Tone		<t> 1 << 1
+DigLowColor     <t> 1 << 2
+DigColor	<t> 1 << 3
+DigError	<t> 1 << 4
+DigWarning	<t> 1 << 5
+DigFlash	<t> 1 << 6
+Invisible	<t> 1 << 7
+DigBorder	<t> 1 << 8
+DigText		<t> 1 << 9
+Value		<t> 1 << 10
+AnalogColor     <t> 1 << 11
+Rotate		<t> 1 << 12
+Move	       	<t> 1 << 13
+AnalogShift     <t> 1 << 14
+DigShift	<t> 1 << 15
+Animation	<t> 1 << 16
+Bar	       	<t> 1 << 17
+Trend		<t> 1 << 18
+SliderBackground <t> 1 << 19
+Video		<t> 1 << 20
+FillLevel	<t> 1 << 21
+FastCurve	<t> 1 << 22
+AnalogText	<t> 1 << 23
+Table		<t> 1 << 24
+StatusColor     <t> 1 << 25
+HostObject      <t> 1 << 26
+
+<b>Type of action <t>Value
+No		<t> 0
+Inherit		<t> 1 << 0
+PopupMenu      	<t> 1 << 1
+SetDig		<t> 1 << 2
+ResetDig       	<t> 1 << 3
+ToggleDig      	<t> 1 << 4
+StoDig		<t> 1 << 5
+Command		<t> 1 << 6
+CommandDoubleClick <t> 1 << 7
+Confirm		<t> 1 << 8
+IncrAnalog	<t> 1 << 9
+RadioButton	<t> 1 << 10
+Slider		<t> 1 << 11
+ValueInput	<t> 1 << 12
+TipText		<t> 1 << 13
+CloseGraph     	<t> 1 << 18
+PulldownMenu    <t> 1 << 19
+OptionMenu     	<t> 1 << 20
+</topic>
+
+<topic>gecmd_set_current_color
+set currentobject color
+Colors are usually called 'LowColor' or 'LowColor2'. Color is an index in the color palette.
+</topic>
+
+<topic>gecmd_set_curren_colortone
+set currentobject colortone
+
+Color tone are usually called 'LowTone'. Colortone is an integer.
+</topic>
+
+<topic>gecmd_set_current_access
+set currentobject access
+
+Access is a bitmask where each bit represents a user category authority to influence the object.
+
+<b>User category <t>Value
+RtRead     <t>1 << 0
+RtWrite    <t>1 << 1
+System     <t>1 << 2
+Maintenance <t>1 << 3
+Process    <t>1 << 4
+Instrument <t>1 << 5
+Operator1  <t>1 << 6
+Operator2  <t>1 << 7
+Operator3  <t>1 << 8
+Operator4  <t>1 << 9
+Operator5  <t>1 << 10
+Operator6  <t>1 << 11
+Operator7  <t>1 << 12
+Operator8  <t>1 << 13
+Operator9  <t>1 << 14
+Operator10 <t>1 << 15
+
+<b>Syntax
+
+<c>ge> set currentobject access 'value'
+</topic>
+
+<topic>gecmd_set_current_attr1
+set currentobject attr1
+
+Set the attribute, i.e. the connection to rtdb, for the current object.
+Corresponds to the Ctrl+Doubleclick MB1 function.
+
+<b>Syntax
+
+<c>ge> set currentobject attr1 'attribute'
+
+</topic>
+
+<topic>gecmd_set_current_attr2
+set currentobject attr2
+
+Set the seconed attribute, i.e. the connection to rtdb, for the current object.
+Corresponds to the Ctrl+Shift+Doubleclick MB1 function.
+
+<b>Syntax
+
+<c>ge> set currentobject attr2 'attribute'
+</topic>
+
+<topic>gecmd_set_current_annotation
+set currentobject annotation
+
+Insert a string in the annotaion in the current object. The text is put in annotation number 1.
+
+<b>Syntax
+
+<c>ge> set currentobject annotation 'text'
+</topic>
+
+<topic>gecmd_set_graphattributes
+set graphattributes
+
+Set an attribute for the current graph or subgraph.
+
+<b>Graph attribut
+
+<b>Name  <t>Type
+subgraph <t>Boolean
+x0  <t>Float
+y0  <t>Float
+x1  <t>Float
+y1  <t>Float
+ScanTime <t>Float
+AnimationScanTime <t>Float
+JavaWidth <t>String
+BackgroundImage <t>String
+
+<b>Subgraph attribute
+
+<b>Name <t>Type
+TraceAttrType
+TraceType
+TraceColor <t>ColorIndex eller ColorTone
+TraceColor2 <t>ColorIndex eller ColorTone
+NoConObstacle <t>Int
+Slider <t>Int
+NextSubgraph <t>Int
+AnimationCount <t>Int
+
+<b>Syntax
+
+<c>ge> set graphattributes 'name' 'value'
+</topic>
+
+<topic>gecmd_rotate
+rotate
+</topic>
+
+<topic>gecmd_rotate_current
+rotate currentobject
+
+Rotates the current object around the center of the object.
+
+<b>Syntax
+
+<c>ge> rotate currentobject /angel=
+
+/angel <t>Angel in degrees that the object is rotated.
+</topic>
+
+<topic>gecmd_scale
+scale
+</topic>
+
+<topic>gecmd_scale_current
+scale currentobject
+
+Scale the current object.
+
+<b>Syntax
+
+<c>ge> scale currentobject /scalex= /scaley= [/x= /y=]
+
+/scalex <t>Scalefactor in x direction.
+/scaley <t>Scalefactor in y direction.
+/x <t>x coordinate for the reference point of the scaling.
+/y <t>y coordinate for the reference point of the scaling.
+</topic>
+
+<topic>gecmd_save
+save
+
+Save a graph.
+
+<b>Syntax
+
+<c>ge> save ['filename']
+</topic>
+
+<topic>gecmd_exit
+exit
+
+Save the current graph and close Ge.
+
+<b>Syntax
+
+<c>ge> exit ['filename']
+</topic>
+
+<topic>gecmd_quit
+quit
+
+Close without save.
+
+<b>Syntax
+
+<c>ge> quit
+</topic>
+
+<topic>gecmd_open
+open
+
+Open a graph.
+
+<b>Syntax
+
+<c>ge> open ['filename']
+</topic>
+
+<topic>gecmd_show
+show
+</topic>
+
+<topic>gecmd_show_version
+show version
+
+Show Ge version.
+</topic>
+</headerlevel>
+</chapter>
+
+<chapter>
+<topic>gecmd_script
+Script
+
+Ge script is a way to program ge commands. In the script function there are also possibilities
+to perform calculations, if statements, loop statments, declarations of variables and functions.
+
+A script is started with '@' followed by the name of the scripfile and possible arguments.
+
+A ge-script should have the filetype .ge_com.
+
+<b>Example
+
+<c>ge> @my_script
+
+In Wtt script there is a description of the script language and a description of built in 
+functions. Here follows a list of build in functions that also can be used in Ge script.
+
+<h2>Ge functions
+<b>Function <t>Description
+GetCurrentObject <t>Returns the identity of the last created object.<link>GetCurrentObject()
+GetTextExtent <t>Calculate the extent of a text. <link>GetTextExtent()
+SelectAdd <t>Add an object to select list. <link>SelectAdd()
+SetExtern <t>Set subgraph extern. <link>SetExtern()
+SetIntern <t>Set subgraph intern. <link>SetIntern()
+
+<h2>Input and output
+<b>Function <t>Description
+ask <t>Print a question an read an answere.
+say <t>Print a text.
+printf <t>Formatted print.
+scanf  <t>Formatted read.
+
+<h2>File handling
+<b>Function <t>Description
+fclose <t>Close a file
+felement <t>Extract one element from the last read line.
+fgets <t>Read a line from a file.
+fopen <t>Open a file.
+fprintf <t>Formatted write to file.
+fscanf <t>Formatted read from file.
+
+<h2>Handling of strings
+<b>Function <t>Description
+edit <t>Removes leading and trailing spaces and tabs, and replaces multiple
+     <t>tabs and spaces with a single space.
+element <t>Extract one element from a string of elements.
+extract <t>Extracts the specified characters from a string.
+sprintf <t>Formatted print to a string variable.
+strchr <t>Find the first occurrence of a character in a string.
+strlen <t>The length of a string.
+strrchr <t>Find the last occurrence of a character in a string.
+strstr <t>Find the first occurrence of a character sequence in a string.
+toupper <t>Convert a strin to upper case.
+
+<h2>Database functions
+<b>Function <t>Description
+CutObjectName <t>Extract the last segment of an object name.
+GetAttribute <t>Fetch the value of an attribute.
+GetChild <t>Get the first child of an object.
+GetNextSibling <t>Get next sibling of an object.
+GetNextVolume <t>Get next volume.
+GetParent <t>Get the parent of an object.
+GetObjectClass <t>Get the class of an object.
+GetRootList <t>Get first object in the root list.
+GetVolumeClass <t>Get the class of a volume.
+
+<h2>System functions
+<b>Function <t>Description
+exit <t>Terminate the execution of a script.
+time <t>Fetch the system time.
+system <t>Execute a shell command.
+verify <t>Set verify on or off.
+
+</topic>
+
+<topic>GetTextExtent() <style>function
+GetTextExtent()
+int GetTextExtent( string text, int textsize, int bold, float widht [, float height, 
+float descent])
+
+<h2>Description
+
+Calculates the extent of a text.
+Returns the width of the text in the width argument, and if the arguments height and descent
+are supplied, also height and descent in these arguments.
+
+<h2>Argument
+
+string <t>text     <t>Text which size is to be measured.
+int    <t>textsize <t>Text size (8, 10, 12, 14, 18 of 24).
+int    <t>bold     <t>Bold (1) or normal (0) text.
+float  <t>width    <t>The text width is returned in this variable.
+float  <t>height   <t>The height is returned in this variable.
+float  <t>descent  <t>The descent is returned in this variable.
+
+<b>Example
+<c> float width;
+ 
+<c> GetTextExtent("Detta är en text", 12, 1, width);
+</topic>
+
+<topic>SelectAdd() <style>function
+SelectAdd()
+int SelectAdd( int objectid)
+
+<h2>Description
+
+Insert an object in the list of selected objects.
+
+<h2>Argument
+
+int          <t>objectid   <t>Object identity.
+
+<b>Exemple
+<c> int id;
+ 
+<c> id = GetCurrentObject();
+<c> SelectAdd( id);
+</topic>
+
+<topic>GetCurrentObject() <style>function
+GetCurrentObject()
+int GetCurrentObject()
+
+<h2>Description
+
+Returns the identity of the last created object.
+
+<b>Example
+<c> int id;
+ 
+<c> id = GetCurrentObject();
+</topic>
+
+<topic>SetExtern() <style>function
+SetExtern()
+int SetExtern( string name)
+
+<h2>Description
+
+Set a subgraph extern.
+
+<h2>Argument
+
+string      <t>name       <t>Name of the subgraph.
+
+<b>Example
+ 
+<c> SetExtern("MySubgraph");
+</topic>
+
+<topic>SetIntern() <style>function
+SetIntern()
+int SetIntern( string name)
+
+<h2>Description
+
+Set a subgraph intern.
+
+<h2>Argument
+
+string    <t>name       <t>Name of the subgraph.
+
+<b>Example
+ 
+<c> SetIntern("MySubgraph");
+</topic>
+
+<topic>gecmd_examples <style>function
+Example
+
+<h1>Example 1
+<c>!
+<c>! Draw some simple objects
+<c>!
+<c>main()
+<c>  string name;
+
+<c>  verify(1);
+
+
+<c>  ! Draw a rectangle
+<c>  set fill
+<c>  set linewidth 1
+<c>  set bordercolor 0
+<c>  set fillcolor 19
+<c>  create rect /x1=10 /y1=1 /width=2 /height=2
+
+<c>  ! Draw a half circle
+<c>  set nofill
+<c>  set linewidth 2
+<c>  create arc /x1=1/y1=1/x2=3/y2=2/angel1=0 /angel2=180
+  
+<c>  ! Draw a polyline
+<c>  set nofill
+<c>  set linewidth 1
+<c>  create polyline /x1=5 /y1=5 /x2=6 /y2=6
+<c>  add polyline /x1=5 /y1=7
+<c>  add polyline /x1=6 /y1=8
+<c>  add polyline /x1=5 /y1=9
+<c>  add polyline /x1=6 /y1=10
+
+<c>  ! Print a text
+<c>  set bold
+<c>  set textsize 14
+<c>  create text/text="Example" /x1=3 /y1=5
+
+<c>  ! Create a subgraph
+<c>  create object/sub=pwr_valve/x1=1/y1=1/x2=3/y2=2
+<c>  set current fillcolor 45
+<c>  set current attr attribute "Rt-Dv1.ActualValue##Boolean"
+<c>  set current attr lowcolor 0
+  
+<c>  ! Create a pushbutton
+<c>  create object /sub=pwr_buttonset /x1=5 /y1=1
+<c>  set current attr text "Start"
+<c>  set current attr attribute "rt-dv1.actualvalue##Boolean"
+<c>  set current attributes access 65000
+
+<c>  ! Set graph attributes
+<c>  set graph x0 -3
+<c>  set graph y0 -3
+<c>  set graph x1 40
+<c>  set graph y1 25
+
+<c>  save
+<c>endmain
+
+<h1>Example 2
+<c>!
+<c>! This example finds all dv objects in an hierarchy,
+<c>! prints thte name and displayes the value in an indicator.
+<c>! A frame is drawn around the objects.
+<c>!
+<c>main()
+
+<c>  string name;
+<c>  string segname;
+<c>  string attr;
+<c>  float x;
+<c>  float y;
+<c>  float x_ind;
+<c>  float y_ind;
+<c>  float x1;
+<c>  float x2;
+<c>  float y1;
+<c>  float y2;
+<c>  float width;
+<c>  float t_width;
+<c>  string class;
+  
+<c>  x_ind = 2;
+<c>  x = 4;
+<c>  y_ind = 1.5;
+<c>  y = 2;
+<c>  name = GetChild( p1);
+  
+<c>  if ( p1 == "")
+<c>    printf("usage : test3 'parent'\n");
+<c>    exit();
+<c>  endif
+  
+<c>  set bold
+<c>  set textsize 12
+<c>  while ( name != "")
+<c>    class = GetObjectClass( name);
+<c>    if ( class == "Dv")
+<c>      create object/sub=pwr_indsquare/x1='x_ind'/y1='y_ind'
+<c>      attr = name + ".ActualValue##Boolean";
+<c>      set current attr attribute "'attr'"
+<c>      segname = CutObjectName( name, 1);
+<c>      create text/text="'segname'"/x1='x'/y1='y'
+<c>      GetTextExtent( segname, 12, 1, t_width);
+<c>      if ( t_width > width)
+<c>        width = t_width;
+<c>      endif
+<c>      y += 1;
+<c>      y_ind += 1;
+<c>    endif
+<c>    name = GetNextSibling( name);
+<c>  endwhile
+
+<c>  x1 = x_ind - 1;
+<c>  x2 = x + width + 1;
+<c>  y1 = 0;
+<c>  y1 = y;
+<c>  cre obj/sub=pwr_framethin/x1='x1'/y1='y1'/x2='x2'/y2='y2'
+
+<c>  x1--;
+<c>  x2++;
+<c>  y1--;
+<c>  y2++;
+<c>  set background 11
+<c>  set graph x0 'x1'
+<c>  set graph y0 'y1'
+<c>  set graph x1 'x2'
+<c>  set graph y1 'x2'
+<c>endmain
+</topic>
+</chapter>
+
+
+
+
+
+
+
+
+
+
