@@ -394,12 +394,21 @@ int CnvToPs::print_image( char *filename)
 	
   x = ps_cLeftMargin;
 
+  // Try $pwr_doc/help/
   strcpy( fname, "$pwr_doc/help/");
   strcat( fname, filename);
   dcli_translate_filename( fname, fname);
 
   sts = cnv_get_image( fname, &image, &pixmap);
-  if ( EVEN(sts)) return 0;
+  if ( EVEN(sts)) {
+    // Try $pwr_exe
+    strcpy( fname, "$pwr_exe/");
+    strcat( fname, filename);
+    dcli_translate_filename( fname, fname);
+
+    sts = cnv_get_image( fname, &image, &pixmap);
+    if ( EVEN(sts)) return 0;
+  }
 
   width = image->rgb_width;
   height = image->rgb_height;
@@ -502,7 +511,12 @@ void CnvToPs::print_h1( char *text, int hlevel, char *subject)
     }
     x = ps_cLeftMargin - 50;
     print_text( hnum, style[ci].h1, ps_mPrintMode_Pos | ps_mPrintMode_FixX);
+
+    double x0 = x + 12.0 * ( strlen(hnum) + 1) * style[ci].h1.font_size / 24;
     x = ps_cLeftMargin;
+    if ( x0 > x)
+      x = x0;
+
     print_text( text, style[ci].h1, ps_mPrintMode_KeepY | ps_mPrintMode_FixX);
   }
   else 
