@@ -166,7 +166,8 @@ static void xhelp_activate_india_cancel( Widget w, CoXHelp *xhelp, XmAnyCallback
 
 static void xhelp_activate_help( Widget w, CoXHelp *xhelp, XmAnyCallbackStruct *data)
 {
-  CoXHelp::dhelp( "helpwindow", 0, navh_eHelpFile_Base, 0, true);
+  CoXHelp::dhelp( "helpwindow_refman", 0, navh_eHelpFile_Other, "$pwr_lang/man_dg.dat", 
+		  true);
 }
 
 static void xhelp_create_xhelpnav_form( Widget w, CoXHelp *xhelp, XmAnyCallbackStruct *data)

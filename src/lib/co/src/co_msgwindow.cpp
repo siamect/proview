@@ -328,7 +328,8 @@ static void msg_activate_zoom_reset( Widget w, MsgWindow *msgw, XmAnyCallbackStr
 
 static void msg_activate_help( Widget w, MsgWindow *msgw, XmAnyCallbackStruct *data)
 {
-  CoXHelp::dhelp( "message window", 0, navh_eHelpFile_Base, 0, true);
+  CoXHelp::dhelp( "messagewindow_refman", 0, navh_eHelpFile_Other, "$pwr_lang/man_dg.dat", 
+		  true);
 }
 
 static void msg_activate_help_message( Widget w, MsgWindow *msgw, XmAnyCallbackStruct *data)
