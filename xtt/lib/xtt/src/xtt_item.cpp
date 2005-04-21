@@ -471,6 +471,10 @@ int ItemBaseObject::open_crossref( XNavBrow *brow, double x, double y)
       case pwr_cClass_Av:
       case pwr_cClass_Ai:
       case pwr_cClass_Ao:
+      case pwr_cClass_Iv:
+      case pwr_cClass_Ii:
+      case pwr_cClass_Io:
+      case pwr_cClass_Co:
         sts = xnav_crr_signal( brow, NULL, name, node);
         break;
       default:
@@ -704,6 +708,9 @@ ItemAttr::ItemAttr( XNavBrow *brow, pwr_tObjid item_objid,
     {
       case pwr_eType_Objid:
         brow_SetAnnotPixmap( node, 0, brow->pixmap_ref);
+        break;
+      case pwr_eType_AttrRef:
+        brow_SetAnnotPixmap( node, 0, brow->pixmap_attrref);
         break;
       case pwr_eType_Enum:
         brow_SetAnnotPixmap( node, 0, brow->pixmap_attrenum);
@@ -1038,6 +1045,10 @@ int ItemAttrObject::open_crossref( XNavBrow *brow, double x, double y)
       case pwr_cClass_Av:
       case pwr_cClass_Ai:
       case pwr_cClass_Ao:
+      case pwr_cClass_Iv:
+      case pwr_cClass_Ii:
+      case pwr_cClass_Io:
+      case pwr_cClass_Co:
         sts = xnav_crr_signal( brow, NULL, aname, node);
         break;
       default:

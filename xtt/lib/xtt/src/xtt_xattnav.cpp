@@ -205,7 +205,7 @@ static int xattnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
       brow_SelectClear( xattnav->brow->ctx);
       brow_SetInverse( object, 1);
       brow_SelectInsert( xattnav->brow->ctx, object);
-      if ( !brow_IsVisible( xattnav->brow->ctx, object))
+      if ( !brow_IsVisible( xattnav->brow->ctx, object, flow_eVisible_Full))
         brow_CenterObject( xattnav->brow->ctx, object, 0.25);
       if ( node_count)
         free( node_list);
@@ -241,7 +241,7 @@ static int xattnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
       brow_SelectClear( xattnav->brow->ctx);
       brow_SetInverse( object, 1);
       brow_SelectInsert( xattnav->brow->ctx, object);
-      if ( !brow_IsVisible( xattnav->brow->ctx, object))
+      if ( !brow_IsVisible( xattnav->brow->ctx, object, flow_eVisible_Full))
         brow_CenterObject( xattnav->brow->ctx, object, 0.75);
       if ( node_count)
         free( node_list);
@@ -335,7 +335,7 @@ static int xattnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
       brow_SelectClear( xattnav->brow->ctx);
       brow_SetInverse( object, 1);
       brow_SelectInsert( xattnav->brow->ctx, object);
-      if ( !brow_IsVisible( xattnav->brow->ctx, object))
+      if ( !brow_IsVisible( xattnav->brow->ctx, object, flow_eVisible_Full))
         brow_CenterObject( xattnav->brow->ctx, object, 0.25);
       free( node_list);
       break;
@@ -698,6 +698,10 @@ int	XAttNav::crossref()
     case pwr_cClass_Av:
     case pwr_cClass_Ai:
     case pwr_cClass_Ao:
+    case pwr_cClass_Iv:
+    case pwr_cClass_Ii:
+    case pwr_cClass_Io:
+    case pwr_cClass_Co:
       sts = xnav_crr_signal( brow, NULL, name, NULL);
       break;
     default:
