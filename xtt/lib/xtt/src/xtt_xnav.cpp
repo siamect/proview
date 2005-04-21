@@ -1694,7 +1694,7 @@ static int xnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
       brow_SelectClear( xnav->brow->ctx);
       brow_SetInverse( object, 1);
       brow_SelectInsert( xnav->brow->ctx, object);
-      if ( !brow_IsVisible( xnav->brow->ctx, object))
+      if ( !brow_IsVisible( xnav->brow->ctx, object, flow_eVisible_Full))
         brow_CenterObject( xnav->brow->ctx, object, 0.25);
       if ( node_count)
         free( node_list);
@@ -1730,7 +1730,7 @@ static int xnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
       brow_SelectClear( xnav->brow->ctx);
       brow_SetInverse( object, 1);
       brow_SelectInsert( xnav->brow->ctx, object);
-      if ( !brow_IsVisible( xnav->brow->ctx, object))
+      if ( !brow_IsVisible( xnav->brow->ctx, object, flow_eVisible_Full))
         brow_CenterObject( xnav->brow->ctx, object, 0.75);
       if ( node_count)
         free( node_list);
@@ -1869,7 +1869,7 @@ static int xnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
       brow_SelectClear( xnav->brow->ctx);
       brow_SetInverse( object, 1);
       brow_SelectInsert( xnav->brow->ctx, object);
-      if ( !brow_IsVisible( xnav->brow->ctx, object))
+      if ( !brow_IsVisible( xnav->brow->ctx, object, flow_eVisible_Full))
         brow_CenterObject( xnav->brow->ctx, object, 0.25);
       free( node_list);
       break;
