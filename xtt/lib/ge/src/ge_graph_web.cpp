@@ -57,7 +57,7 @@ static int graph_get_applet_size( char *graphname, int *width, int *height);
 #endif
 
 #if LDH
-static int graph_webhandler_insert( pwr_tObjid Objid, void *o_p,
+static int graph_webhandler_insert( pwr_sAttrRef *aref, void *o_p,
 				    void *c_p, void *dum1, void *dum2, void *dum3)
 {
   int *count = (int *)c_p;
@@ -65,7 +65,7 @@ static int graph_webhandler_insert( pwr_tObjid Objid, void *o_p,
   
 
   if ( *count == 0)
-    *objid_p = Objid;
+    *objid_p = aref->Objid;
 
   (*count)++;
   return 1;
