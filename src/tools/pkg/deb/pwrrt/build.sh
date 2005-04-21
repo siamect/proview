@@ -115,6 +115,12 @@ chmod a+x $pkgroot/etc/init.d/gdhserver
 mkdir -p $pkgroot/usr/share/man/man1
 cp $pkgsrc/pwr.1 $pkgroot/usr/share/man/man1/pwr.1
 gzip -fq --best $pkgroot/usr/share/man/man1/pwr.1
+cp $pkgsrc/rt_ini.1 $pkgroot/usr/share/man/man1/rt_ini.1
+gzip -fq --best $pkgroot/usr/share/man/man1/rt_ini.1
+cp $pkgsrc/rt_xtt.1 $pkgroot/usr/share/man/man1/rt_xtt.1
+gzip -fq --best $pkgroot/usr/share/man/man1/rt_xtt.1
+cp $pkgsrc/rt_rtt.1 $pkgroot/usr/share/man/man1/rt_rtt.1
+gzip -fq --best $pkgroot/usr/share/man/man1/rt_rtt.1
 
 # Copy proview
 mkdir $pkgroot/usr/pwrrt

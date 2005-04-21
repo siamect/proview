@@ -1,28 +1,41 @@
-PWR(1)                  Proview Manuals                    PWR(1)
+.TH pwr "1" "April 2005" "Proview" "Proview Manual"
+.SH NAME
+pwr - start and stop Proview runtime environment
+.SH SYNOPSIS
+.B pwr 
+[start][stop][restart]
+.SH DESCRIPTION
+Start and stop command for Proview runtime environment.
 
+.SH OPTIONS
+.HP
+\fBstart\fR
+.IP
+Start Proview runtime environment.
 
-NAME
-     pwr - start and stop Proview runtime environment
+.HP
+\fBstop\fR
+.IP
+Stop Proview runtime environment.
 
-SYNOPSIS
-     pwr [start][stop]
+.HP
+\fBrestart\fR
+.IP
+First stop and then start the Proview runtime environment.
 
-DESCRIPTION
-     Start and stop command for Proview runtime environment.
+.SH FILES
+/etc/pwrp_profile
 
-OPTIONS
-     start Start Proview runtime environment.
+The Proview system wide configuration file.
 
-     stop  Stop Proview runtime environment.
+.SH ENVIRONMENT
+.HP
+PWR_BUS_ID
+.IP
+QCOM bus identity.
+.SH AUTHOR
+Written by UL.
 
-FILES
-     /etc/pwrp_profile
-          The system wide configuration file..
+.SH "SEE ALSO"
+.BR rt_ini(1)
 
-AUTHOR
-     Written by CS.
-
-SEE ALSO
-     pwr(5)
-
-Proview              Last change: Nov 2003       
