@@ -14,7 +14,7 @@ extern "C" {
 #endif
 
 #include "pwr.h"
-
+#include "cnv_file.h"
 
 using namespace std;
 
@@ -93,11 +93,6 @@ typedef enum {
 #define cread_cTmpFile1 "classread1.tmp"
 #define cread_cTmpFile2 "classread2.tmp"
 #define cread_cTmpFile3 "classread3.tmp"
-
-class CnvFile {
- public:
-    ofstream 	f;
-};
   
 class CnvReadWbl {
   public:
