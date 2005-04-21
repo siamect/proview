@@ -14,6 +14,7 @@ extern "C" {
 #endif
 
 #include "pwr.h"
+#include "cnv_file.h"
 #include "cnv_xtthelpto.h"
 
 using namespace std;
@@ -23,7 +24,7 @@ class CnvCtx;
 class CnvXtthelpToHtml : public CnvXtthelpTo {
  public:
   CnvXtthelpToHtml( CnvCtx *cnv_ctx) :
-    ctx(cnv_ctx) {}
+    ctx(cnv_ctx), cf(0) {}
   virtual ~CnvXtthelpToHtml() {}
 
   Cnv_eXtthelpToType type() { return Cnv_eXtthelpToType_Html;}
@@ -35,7 +36,8 @@ class CnvXtthelpToHtml : public CnvXtthelpTo {
   void subject_to_fname( char *fname, char *subject, int path);
 
   CnvCtx *ctx;
-  ofstream fp;
+  CnvFile *cf;
+  // ofstream fp;
 };
 
 #if defined __cplusplus
