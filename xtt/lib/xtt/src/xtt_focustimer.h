@@ -9,7 +9,8 @@ class FocusTimer {
 
   void disable( Widget w, int time) {
     set_focus_disabled++;
-    request_cnt = 0;
+    if ( request_cnt > 1)
+      request_cnt = 0;
     focus_timerid = XtAppAddTimeOut( XtWidgetToApplicationContext(w), time,
 				     enable_set_focus, this);
   }
