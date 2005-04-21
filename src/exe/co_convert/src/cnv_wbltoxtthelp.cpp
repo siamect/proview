@@ -174,7 +174,7 @@ int CnvWblToXtthelp::attribute_exec()
 
   fp_tmp <<
 endl <<
-"<H1>" << ctx->rw->attr_name << endl;
+"<H2>" << ctx->rw->attr_name << endl;
   if ( ctx->rw->attr_array && ctx->rw->attr_pointer)
     fp_tmp <<
 "<B>Array[" << ctx->rw->attr_elements << "] of pointers to " << ctx->rw->attr_typeref << "   ";
