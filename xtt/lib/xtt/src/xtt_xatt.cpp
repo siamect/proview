@@ -264,7 +264,7 @@ static void xatt_create_cmd_input( Widget w, XAtt *xatt, XmAnyCallbackStruct *da
   XtSetArg    (args[0], XmNuserData, xatt);
   XtSetValues (w, args, 1);
 
-  mrm_TextInit( w, (XtActionProc) xatt_valchanged_cmd_input, mrm_eUtility_WAtt);
+  mrm_TextInit( w, (XtActionProc) xatt_valchanged_cmd_input, mrm_eUtility_XAtt);
   xatt->cmd_input = w;
 }
 static void xatt_create_cmd_scrolledinput( Widget w, XAtt *xatt, XmAnyCallbackStruct *data)

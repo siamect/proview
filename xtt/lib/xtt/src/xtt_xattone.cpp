@@ -223,7 +223,7 @@ static void xao_create_cmd_input( Widget w, XAttOne *xattone, XmAnyCallbackStruc
 	!(xattone->is_authorized_cb( xattone->parent_ctx, 
 				     pwr_mAccess_RtWrite | pwr_mAccess_System))))
 #endif
-  mrm_TextInit( w, (XtActionProc) xao_valchanged_cmd_input, mrm_eUtility_WAtt);
+  mrm_TextInit( w, (XtActionProc) xao_valchanged_cmd_input, mrm_eUtility_XAttOne);
 }
 static void xao_create_cmd_scrolledinput( Widget w, XAttOne *xattone, XmAnyCallbackStruct *data)
 {
