@@ -303,6 +303,7 @@ extern "C" {
     ge_eSave_ValueInput_max_value      	= 1303,
     ge_eSave_ValueInput_clear      	= 1304,
     ge_eSave_ValueInput_popup      	= 1305,
+    ge_eSave_ValueInput_unselect      	= 1306,
     ge_eSave_Rotate_attribute		= 1400,
     ge_eSave_Rotate_x0			= 1401,
     ge_eSave_Rotate_y0			= 1402,
@@ -1087,7 +1088,8 @@ class GeValueInput : public GeDynElem {
   double max_value;		//!< Maximum value for input.
   int clear;			//!< Clear input field it is when opened.
   int popup;			//!< Input in popup dialog.
-
+  int unselect;			//!< Text not selected in input field when opened.
+	
   int annot_typeid;
   int annot_size;
   GeValue *value_element;

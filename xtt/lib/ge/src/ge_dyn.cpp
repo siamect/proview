@@ -3155,6 +3155,11 @@ void GeValueInput::get_attributes( attr_sItem *attrinfo, int *item_count)
   attrinfo[i].type = glow_eType_Boolean;
   attrinfo[i++].size = sizeof( popup);
 
+  strcpy( attrinfo[i].name, "ValueInput.Unselect");
+  attrinfo[i].value = &unselect;
+  attrinfo[i].type = glow_eType_Boolean;
+  attrinfo[i++].size = sizeof( unselect);
+
   dyn->display_access = true;
   *item_count = i;
 }
@@ -3166,6 +3171,7 @@ void GeValueInput::save( ofstream& fp)
   fp << int(ge_eSave_ValueInput_max_value) << FSPACE << max_value << endl;
   fp << int(ge_eSave_ValueInput_clear) << FSPACE << clear << endl;
   fp << int(ge_eSave_ValueInput_popup) << FSPACE << popup << endl;
+  fp << int(ge_eSave_ValueInput_unselect) << FSPACE << unselect << endl;
   fp << int(ge_eSave_End) << endl;
 }
 
@@ -3184,6 +3190,7 @@ void GeValueInput::open( ifstream& fp)
       case ge_eSave_ValueInput_max_value: fp >> max_value; break;
       case ge_eSave_ValueInput_clear: fp >> clear; break;
       case ge_eSave_ValueInput_popup: fp >> popup; break;
+      case ge_eSave_ValueInput_unselect: fp >> unselect; break;
       case ge_eSave_End: end_found = 1; break;
       default:
         cout << "GeValueInput:open syntax error" << endl;
@@ -3245,9 +3252,11 @@ int GeValueInput::action( grow_tObject object, glow_tEvent event)
       if ( !grow_AnnotationInputIsOpen( object, 1)) {
 	// grow_CloseAnnotationInputAll( dyn->graph->grow->ctx);
 
-      if ( clear)
+	if ( clear)
 	  grow_SetAnnotationBrief( object, 1, "", 0);
 	grow_OpenAnnotationInput( object, 1);
+	if ( unselect)
+	  grow_SetAnnotationSelection( object, 0);
       }
     }
     else {
