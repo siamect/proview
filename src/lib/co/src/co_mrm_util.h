@@ -20,7 +20,9 @@ typedef enum {
 	mrm_eUtility_PlcEditor,
 	mrm_eUtility_WAtt,
 	mrm_eUtility_Attr,
-	mrm_eUtility_Wda
+	mrm_eUtility_Wda,
+	mrm_eUtility_XAtt,
+	mrm_eUtility_XAttOne
 	} mrm_eUtility;
 
 void mrm_TextInit( Widget w, XtActionProc value_changed_cb, mrm_eUtility utility);

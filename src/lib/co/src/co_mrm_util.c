@@ -78,6 +78,7 @@ void mrm_TextInit( Widget w, XtActionProc value_changed_cb,
       break;
     }
     case mrm_eUtility_WAtt:
+    case mrm_eUtility_XAtt:
     {
       static XtTranslations compiled_translations_watt = NULL;
       static char translations_watt[] = "<KeyDown>: key_down_watt()";
@@ -97,6 +98,7 @@ void mrm_TextInit( Widget w, XtActionProc value_changed_cb,
       break;
     }
     case mrm_eUtility_Wda:
+    case mrm_eUtility_XAttOne:
     {
       static XtTranslations compiled_translations_wda = NULL;
       static char translations_wda[] = "<KeyDown>: key_down_wda()";
