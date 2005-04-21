@@ -363,6 +363,13 @@ typedef GlowTraceData glow_sTraceData;
   */
   void grow_OpenAnnotationInput( grow_tNode node, int number);
 
+  //! Set text selection of annotation.
+  /*!
+    \param node		Node object.
+    \param selection	1 selected, 0 not selected.
+  */
+  void grow_SetAnnotationSelection( grow_tNode node, int selection);
+
   //! Check if an annotation is open for input.
   /*!
     \param node		Node object.

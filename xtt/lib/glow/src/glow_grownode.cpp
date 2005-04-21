@@ -2031,6 +2031,21 @@ void GrowNode::close_annotation_input()
   }
 }
 
+void GrowNode::set_annotation_selection( int selection)
+{
+  if ( !input_active)
+    return;
+
+  if ( selection && !input_selected) {
+    input_selected = 1;
+    draw();
+  }
+  else if ( !selection && input_selected) {
+    input_selected = 0;
+    draw();
+  }
+}
+
 void GrowNode::annot_input_event( glow_eEvent event, int keycode)
 {
   int i;

@@ -883,6 +883,10 @@ class GrowNode : public GlowNode {
   //! Close any annotation for input.
   void close_annotation_input();
 
+  //! Set text selection of open annotation
+  /*! \param selection	1 selected, 0 not selected. */
+  void set_annotation_selection( int selection);
+  
   //! Handle an annotation input event.
   /*! 
     \param event	Key event. 

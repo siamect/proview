@@ -272,6 +272,12 @@ void grow_OpenAnnotationInput( grow_tNode node, int number)
     ((GrowNode *)node)->open_annotation_input( number);
 }
 
+void grow_SetAnnotationSelection( grow_tNode node, int selection)
+{
+  if ( ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowNode)
+    ((GrowNode *)node)->set_annotation_selection( selection);
+}
+
 void grow_CloseAnnotationInput( grow_tNode node, int number)
 {
   if ( ((GlowArrayElem *)node)->type() == glow_eObjectType_GrowNode)
