@@ -37,6 +37,7 @@ procedure
 	wdaclass_activate_cancel(integer);
 	wdaclass_create_hiervalue(integer);
 	wdaclass_create_classvalue(integer);
+	wdaclass_create_attrobjects(integer);
 
 value
 	menu_font : font ('-*-Helvetica-Bold-R-Normal--12-*-*-*-P-*-ISO8859-1');
@@ -476,6 +477,7 @@ object wdaclass_dia : XmFormDialog {
      XmLabel	     	hierlabel;
      XmText		classvalue;
      XmText		hiervalue;
+     XmToggleButton	attrobjects;
      XmPushButton	ok;
      XmPushButton	cancel;
    };
@@ -563,6 +565,20 @@ object hierlabel : XmLabel {
         XmNlabelString	= "Hierarchy";
         XmNfontList	    = menu_font;
    };
+};
+
+object attrobjects : XmToggleButton {
+    arguments {
+        XmNlabelString = 'Attribute Objects';
+	XmNx 		= 40;
+	XmNy 		= 90;
+        XmNfontList	    = menu_font;
+    };
+    controls {
+    };
+    callbacks {
+	MrmNcreateCallback = procedure wdaclass_create_attrobjects(wda_ctx);
+    };
 };
 
 end module;
