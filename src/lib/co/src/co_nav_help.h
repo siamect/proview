@@ -39,7 +39,8 @@ typedef enum {
 	navh_eItemType_EndHeaderLevel,
 	navh_eItemType_PageBreak,
 	navh_eItemType_Style,
-	navh_eItemType_HelpCode
+	navh_eItemType_HelpCode,
+	navh_eItemType_Option
 	} navh_eItemType;
 
 
