@@ -1,5 +1,5 @@
 #  makefile -- <short description>
-#
+
 #  PROVIEW/R
 #  Copyright (C) 1996 by Comator Process AB.
 #
@@ -37,7 +37,7 @@ copy : $(inc_dir)/pwr_baseclasses.h \
 
 lib  : $(load_dir)/pwrb.dbs
 
-exe : $(doc_dir)/orm/en_us/pwrb_allclasses.html \
+exe : $(doc_dir)/en_us/orm/pwrb_allclasses.html \
       $(exe_dir)/en_us/pwrb_xtthelp.dat \
       $(exe_dir)/sv_se/pwrb_xtthelp.dat
 
@@ -58,7 +58,7 @@ $(inc_dir)/pwr_baseclasses.hpp :
 	@ echo "Generating hpp files for pwrb classes..."
 	@ co_convert -po -d $(inc_dir) "$(pwre_sroot)/wbl/pwrb/src/pwrb_c_*.wb_load"
 
-$(doc_dir)/orm/en_us/pwrb_allclasses.html :
+$(doc_dir)/en_us/orm/pwrb_allclasses.html :
 	@ echo "Generating html files for pwrb classes en_us..."
 	@ co_convert -w -d $(doc_dir)/en_us/orm -g $(pwre_sroot)/wbl/pwrb/src/cnv_setup.dat "$(pwre_sroot)/wbl/pwrb/src/pwrb_*.wb_load"
 	@ echo "Generating html files for pwrb structs en_us..."
@@ -80,8 +80,8 @@ $(doc_dir)/orm/en_us/pwrb_allclasses.html :
 	@ co_convert -c -d $(doc_dir)/sv_se/orm "$(pwre_sroot)/lib/rt/src/rt_c_*.c"
 	@ co_convert -c -d $(doc_dir)/sv_se/orm "$(pwre_sroot)/lib/rt/src/rt_csup.c"
 	@ echo "Generating postscript file for pwrb classes..."
-	@ co_convert -q -d $(doc_dir) "$(pwre_sroot)/wbl/pwrb/src/pwrb_*.wb_load"
-	@ co_convert -q -l sv_se -d $(doc_dir) "$(pwre_sroot)/wbl/pwrb/src/pwrb_*.wb_load"
+	@ co_convert -q -d $(doc_dir)/en_us "$(pwre_sroot)/wbl/pwrb/src/pwrb_*.wb_load"
+	@ co_convert -q -l sv_se -d $(doc_dir)/sv_se "$(pwre_sroot)/wbl/pwrb/src/pwrb_*.wb_load"
 
 $(exe_dir)/en_us/pwrb_xtthelp.dat :
 	@ echo "Generating xtt help files for pwrb classes en_us"

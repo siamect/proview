@@ -36,7 +36,8 @@ copy : $(inc_dir)/pwr_systemclasses.h \
 lib  : $(load_dir)/pwrs.dbs
 
 exe : $(doc_dir)/en_us/orm/pwrs_allclasses.html \
-      $(exe_dir)/pwrs_xtthelp.dat
+      $(exe_dir)/en_us/pwrs_xtthelp.dat \
+      $(exe_dir)/sv_se/pwrs_xtthelp.dat
 
 clean : $(clean_wbl)
 
@@ -69,12 +70,17 @@ $(doc_dir)/en_us/orm/pwrs_allclasses.html :
 	@ co_convert -c -d $(doc_dir)/sv_se/orm $(inc_dir)/pwr.h
 	@ co_convert -c -d $(doc_dir)/sv_se/orm $(inc_dir)/pwr_class.h
 	@ echo "Generating postscript file for pwrs classes..."
-	@ co_convert -q -d $(doc_dir) "$(pwre_sroot)/wbl/pwrs/src/pwrs_*.wb_load"
-	@ co_convert -q -l sv_se -d $(doc_dir) "$(pwre_sroot)/wbl/pwrs/src/pwrs_*.wb_load"
+	@ co_convert -q -d $(doc_dir)/en_us "$(pwre_sroot)/wbl/pwrs/src/pwrs_*.wb_load"
+	@ co_convert -q -l sv_se -d $(doc_dir)/sv_se "$(pwre_sroot)/wbl/pwrs/src/pwrs_*.wb_load"
 
-$(exe_dir)/pwrs_xtthelp.dat :
-	@ echo "Generating xtt help files for pwrs classes"
-	@ co_convert -x -d $(exe_dir) "$(pwre_sroot)/wbl/pwrs/src/pwrs_c_*.wb_load"
+$(exe_dir)/en_us/pwrs_xtthelp.dat :
+	@ echo "Generating xtt help files for pwrs classes en_us"
+	@ co_convert -x -d $(exe_dir)/en_us "$(pwre_sroot)/wbl/pwrs/src/pwrs_c_*.wb_load"
+
+$(exe_dir)/sv_se/pwrs_xtthelp.dat :
+	@ echo "Generating xtt help files for pwrs classes sv_se"
+	@ co_convert -x -l sv_se -d $(exe_dir)/sv_se "$(pwre_sroot)/wbl/pwrs/src/pwrs_c_*.wb_load"
+
 
 #$(export_wbl) : $(cnf_dir)/%.wb_vers : %.wb_load
 #       @ write sys$$output "Exporting $< ..."
@@ -87,8 +93,8 @@ clean_wbl :
 	  fi
 
 clean_pwrs_xtthelp :
-	@ if [ -e $(exe_dir)/pwrs_xtthelp.dat ]; then \
-		 $(rm) $(rmflags) $(exe_dir)/pwrs_xtthelp.dat; \
+	@ if [ -e $(exe_dir)/en_us/pwrs_xtthelp.dat ]; then \
+		 $(rm) $(rmflags) $(exe_dir)/en_us/pwrs_xtthelp.dat; \
 	  fi
 
 clean_pwrs_html :

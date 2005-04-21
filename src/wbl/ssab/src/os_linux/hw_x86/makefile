@@ -71,7 +71,7 @@ $(doc_dir)/en_us/orm/ssab_allclasses.html :
 	@ co_convert -c -d $(doc_dir)/sv_se/orm "$(pwre_sroot)/lib/rs/src/rs_plc_macro_ssab.h"
 	@ co_convert -c -d $(doc_dir)/sv_se/orm "$(pwre_sroot)/lib/rs/src/rs_plc_ssab*.c"
 	@ echo "Generating postscript file for ssab classes..."
-	@ co_convert -q -d $(doc_dir) "$(pwre_sroot)/wbl/ssab/src/ssab_*.wb_load"
+	@ co_convert -q -d $(doc_dir)/en_us "$(pwre_sroot)/wbl/ssab/src/ssab_*.wb_load"
 
 $(exe_dir)/ssab_xtthelp.dat :
 	@ echo "Generating xtt help files for ssab classes"

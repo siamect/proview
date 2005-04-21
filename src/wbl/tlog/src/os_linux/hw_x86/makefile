@@ -72,7 +72,7 @@ $(doc_dir)/en_us/orm/tlog_allclasses.html :
 	@ co_convert -c -d $(doc_dir)/sv_se/orm "$(pwre_sroot)/lib/rs/src/rs_plc_macro_tlog.h"
 	@ co_convert -c -d $(doc_dir)/sv_se/orm "$(pwre_sroot)/lib/rs/src/rs_plc_tlog*.c"
 	@ echo "Generating postscript file for tlog classes..."
-	@ co_convert -q -d $(doc_dir) "$(pwre_sroot)/wbl/tlog/src/tlog_*.wb_load"
+	@ co_convert -q -d $(doc_dir)/en_us "$(pwre_sroot)/wbl/tlog/src/tlog_*.wb_load"
 
 $(exe_dir)/tlog_xtthelp.dat :
 	@ echo "Generating xtt help files for tlog classes"

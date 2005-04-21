@@ -72,8 +72,8 @@ $(doc_dir)/en_us/orm/nmps_allclasses.html :
 	@ co_convert -c -d $(doc_dir)/sv_se/orm "$(pwre_sroot)/lib/rs/src/rs_plc_macro_nmps.h"
 	@ co_convert -c -d $(doc_dir)/sv_se/orm "$(pwre_sroot)/lib/rs/src/rs_plc_*.c"
 	@ echo "Generating postscript file for nmps classes..."
-	@ co_convert -q -d $(doc_dir) "$(pwre_sroot)/wbl/nmps/src/nmps_*.wb_load"
-	@ co_convert -q -l sv_se -d $(doc_dir) "$(pwre_sroot)/wbl/nmps/src/nmps_*.wb_load"
+	@ co_convert -q -d $(doc_dir)/en_us "$(pwre_sroot)/wbl/nmps/src/nmps_*.wb_load"
+	@ co_convert -q -l sv_se -d $(doc_dir)/sv_se "$(pwre_sroot)/wbl/nmps/src/nmps_*.wb_load"
 
 $(exe_dir)/nmps_xtthelp.dat :
 	@ echo "Generating xtt help files for nmps classes"
