@@ -2362,14 +2362,18 @@ static void draw_timer_cb( draw_sTimerCb *timer_cb)
 static void event_timer_cb( GlowCtx *ctx)
 {
 //  printf( "Timer callback\n");
+  ((draw_tCtx) ctx->draw_ctx)->timer_id = 0;
+
   draw_event_handler( ctx, last_event);
 }
 
 static void cancel_event_timer( GlowCtx *ctx)
 {
   draw_tCtx draw_ctx  = (draw_tCtx) ctx->draw_ctx;
-  if ( draw_ctx->timer_id)
+  if ( draw_ctx->timer_id) {
     XtRemoveTimeOut( draw_ctx->timer_id);
+    draw_ctx->timer_id = 0;
+  }
 //  printf( "Timer removed\n");
 //  sys$cantim( ctx, 0);
 }
