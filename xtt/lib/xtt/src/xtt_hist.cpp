@@ -41,6 +41,7 @@ extern "C" {
 
 extern "C" {
 #include "flow_x.h"
+#include "co_mrm_util.h"
 }
 #include "co_lng.h"
 #include "xtt_hist.h"
@@ -418,12 +419,24 @@ static void hist_action_inputfocus( Widget w, XmAnyCallbackStruct *data)
 
   XtSetArg    (args[0], XmNuserData, &hist);
   XtGetValues (w, args, 1);
+
+
+  if ( mrm_IsIconicState(w))
+    return;
+
+  if ( hist->hist) {
+    if ( hist->focustimer.disabled())
+      return;
+
+    hist->hist->set_input_focus();
+    hist->focustimer.disable( hist->toplevel_hist, 4000);
+  }
   //printf("focus\n");
   //histOP->hist->set_input_focus();
 //?????????????????????
   //if ( ev && ev->hist_displayed)
- //  ev->hist->set_input_focus();
-  hist->hist->set_input_focus();
+  //  ev->hist->set_input_focus();
+  // hist->hist->set_input_focus();
 
 }
 

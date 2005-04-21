@@ -20,6 +20,10 @@ extern "C" {
 # include "pwr.h"
 #endif
 
+#ifndef xtt_focustimer_h
+# include "xtt_focustimer.h"
+#endif
+
 #ifndef xtt_evlist
 # include "xtt_evlist.h"
 #endif
@@ -77,6 +81,7 @@ class Hist {
     void 		(*popup_menu_cb)( void *, pwr_sAttrRef, unsigned long,
 					  unsigned long, char *, Widget * );
     EvList		*hist;
+    FocusTimer		focustimer;
 
     int			hist_size;
     char 		*minTime_str;
