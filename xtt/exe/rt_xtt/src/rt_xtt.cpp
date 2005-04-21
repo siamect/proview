@@ -929,6 +929,7 @@ Xtt::Xtt( int argc, char *argv[], int *return_sts) :
 	  opplace_found = 1;
 	  break;
 	}
+	sts = gdh_GetNextObject( op_objid, &op_objid);
       }
       if ( !opplace_found) {
 	printf("** Unable to find opplace\n");
