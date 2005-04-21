@@ -349,7 +349,7 @@ object help_entry : XmCascadeButton {
 
 	XmPushButton {
 	  arguments {
-	    XmNlabelString = compound_string("On pwr_plc");
+	    XmNlabelString = compound_string("On Commands");
 	    XmNmnemonic    = keysym("p");
 	    XmNfontList	   = menu_font;
 	  };
