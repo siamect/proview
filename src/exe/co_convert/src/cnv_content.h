@@ -18,6 +18,10 @@ using namespace std;
 
 class CnvContentElem {
  public:
+  CnvContentElem() :
+    page_number(0), header_level(0) 
+    { strcpy( text, ""); strcpy( subject, "");}
+
   int page_number;
   int header_level;
   char header_number[40];
