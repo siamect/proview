@@ -185,7 +185,7 @@ int BrowCtx::print( char *filename)
 }
 
 
-int BrowCtx::is_visible( FlowArrayElem *element)
+int BrowCtx::is_visible( FlowArrayElem *element, flow_eVisible type)
 {
   double ll_x, ll_y, ur_x, ur_y;
   double window_low, window_high;
@@ -193,10 +193,32 @@ int BrowCtx::is_visible( FlowArrayElem *element)
   ((FlowNode *)element)->measure( &ll_x, &ll_y, &ur_x, &ur_y);
   window_low = double(offset_y) / zoom_factor;
   window_high = double(offset_y + window_height) / zoom_factor;
-  if ( ll_y >= window_low && ur_y <= window_high)
-    return 1;
-  else
-    return 0;
+  switch ( type) {
+  case flow_eVisible_Full:
+    if ( ll_y >= window_low && ur_y <= window_high)
+      return 1;
+    else
+      return 0;
+  case flow_eVisible_Partial:
+    if ( (ll_y >= window_low && ll_y <= window_high) ||
+	 (ur_y >= window_low && ur_y <= window_high) ||
+	 (ll_y <= window_low && ur_y >= window_high))
+      return 1;
+    else
+      return 0;
+  case flow_eVisible_Top:
+    if ( ur_y >= window_low && ur_y <= window_high)
+      return 1;
+    else
+      return 0;
+  case flow_eVisible_Bottom:
+    if ( ll_y >= window_low && ll_y <= window_high)
+      return 1;
+    else
+      return 0;
+  default: ;
+  }
+  return 0;
 }
 
 void BrowCtx::center_object( FlowArrayElem *object, double factor)
@@ -213,6 +235,44 @@ void BrowCtx::center_object( FlowArrayElem *object, double factor)
     y_pix = - (new_offset_y - offset_y);
   scroll( 0, y_pix);
   change_scrollbar();
+}
+
+int BrowCtx::get_first_visible( FlowArrayElem **element)
+{
+  double ll_x, ll_y, ur_x, ur_y;
+  double window_low, window_high;
+  int i;
+
+  window_low = double(offset_y) / zoom_factor;
+  window_high = double(offset_y + window_height) / zoom_factor;
+
+  for ( i = 0; i < a.size(); i++) {
+    ((FlowNode *)a[i])->measure( &ll_x, &ll_y, &ur_x, &ur_y);
+    if ( ll_y >= window_low || ur_y >= window_high) {
+      *element = a[i];
+      return 1;
+    }
+  }
+  return 0;
+}
+
+int BrowCtx::get_last_visible( FlowArrayElem **element)
+{
+  double ll_x, ll_y, ur_x, ur_y;
+  double window_low, window_high;
+  int i;
+
+  window_low = double(offset_y) / zoom_factor;
+  window_high = double(offset_y + window_height) / zoom_factor;
+
+  for ( i = a.size() - 1; i >= 0; i--) {
+    ((FlowNode *)a[i])->measure( &ll_x, &ll_y, &ur_x, &ur_y);
+    if ( ur_y <= window_high || ll_y <= window_low) {
+      *element = a[i];
+      return 1;
+    }
+  }
+  return 0;
 }
 
 int BrowCtx::page( double factor)

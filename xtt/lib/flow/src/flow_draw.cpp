@@ -1601,8 +1601,10 @@ static void event_timer_cb( FlowCtx *ctx)
 static void cancel_event_timer( FlowCtx *ctx)
 {
   draw_tCtx draw_ctx  = (draw_tCtx) ctx->draw_ctx;
-  if ( draw_ctx->timer_id)
+  if ( draw_ctx->timer_id) {
     XtRemoveTimeOut( draw_ctx->timer_id);
+    draw_ctx->timer_id = 0;
+  }
 //  printf( "Timer removed\n");
 //  sys$cantim( ctx, 0);
 }

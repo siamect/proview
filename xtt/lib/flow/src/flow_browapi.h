@@ -198,7 +198,9 @@ int brow_GetNextSibling( brow_tCtx ctx, brow_tObject object,
 		brow_tObject *sibling);
 int brow_GetPreviousSibling( brow_tCtx ctx, brow_tObject object, 
 		brow_tObject *sibling);
-int brow_IsVisible( brow_tCtx ctx, brow_tObject object);
+int brow_IsVisible( brow_tCtx ctx, brow_tObject object, flow_eVisible type);
+int brow_GetFirstVisible( brow_tCtx ctx, brow_tObject *object);
+int brow_GetLastVisible( brow_tCtx ctx, brow_tObject *object);
 int brow_Page( brow_tCtx ctx, double factor);
 int brow_CreateSecondaryCtx( brow_tCtx ctx, brow_tCtx *secondary_ctx,
         int (*init_proc)(brow_tCtx ctx, void *client_data),

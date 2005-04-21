@@ -674,9 +674,19 @@ int brow_GetPreviousSibling( brow_tCtx ctx, brow_tObject object,
   return ctx->get_previous_sibling( (FlowArrayElem *)object, (FlowArrayElem **)sibling);
 }
 
-int brow_IsVisible( brow_tCtx ctx, brow_tObject object)
+int brow_IsVisible( brow_tCtx ctx, brow_tObject object, flow_eVisible type)
 {
-  return ctx->is_visible( (FlowArrayElem *)object);
+  return ctx->is_visible( (FlowArrayElem *)object, type);
+}
+
+int brow_GetFirstVisible( brow_tCtx ctx, brow_tObject *object)
+{
+  return ctx->get_first_visible( (FlowArrayElem **)object);
+}
+
+int brow_GetLastVisible( brow_tCtx ctx, brow_tObject *object)
+{
+  return ctx->get_last_visible( (FlowArrayElem **)object);
 }
 
 int brow_Page( brow_tCtx ctx, double factor)

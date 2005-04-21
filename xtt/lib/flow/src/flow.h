@@ -43,6 +43,13 @@ typedef enum {
 	} flow_eSelectPolicy;
 
 typedef enum {
+     	flow_eVisible_Full,
+	flow_eVisible_Partial,
+	flow_eVisible_Top,
+	flow_eVisible_Bottom
+	} flow_eVisible;
+
+typedef enum {
 	flow_eObjectType_NoObject,
 	flow_eObjectType_Node,
 	flow_eObjectType_Con,

@@ -37,7 +37,9 @@ class BrowCtx : public FlowCtx {
     		{ return a.brow_get_next_sibling( element, sibling);};
     int get_previous_sibling( FlowArrayElem *element, FlowArrayElem **sibling)
     		{ return a.brow_get_previous_sibling( element, sibling);};
-    int is_visible( FlowArrayElem *element);
+    int is_visible( FlowArrayElem *element, flow_eVisible type);
+    int get_first_visible( FlowArrayElem **element);
+    int get_last_visible( FlowArrayElem **element);
     void center_object( FlowArrayElem *object, double factor);
     int page( double factor);
 
