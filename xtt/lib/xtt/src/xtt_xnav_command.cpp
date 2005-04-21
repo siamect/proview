@@ -653,6 +653,18 @@ static int	xnav_set_func(	void		*client_data,
     }
     ge_set_folder_index( gectx, object_str, idx);
   }
+  else if ( strncmp( arg1_str, "LANGUAGE", strlen( arg1_str)) == 0)
+  {    
+    char language_str[80];
+
+    // Command is "SET LANGUAGE"
+    if ( EVEN( dcli_get_qualifier( "dcli_arg2", language_str))) {
+      xnav->message('E', "Enter language");
+      return XNAV__HOLDCOMMAND;
+    }
+    cdh_ToLower( language_str, language_str);
+    Lng::set( language_str);
+  }
   else
     xnav->message('E',"Syntax error");
   return 1;
@@ -3673,6 +3685,10 @@ static int	xnav_crossref_func(	void		*client_data,
       case pwr_cClass_Av:
       case pwr_cClass_Ai:
       case pwr_cClass_Ao:
+      case pwr_cClass_Iv:
+      case pwr_cClass_Ii:
+      case pwr_cClass_Io:
+      case pwr_cClass_Co:
         sts = xnav_crr_signal( xnav->brow, file_ptr, name_ptr, NULL);
         break;
       default:
