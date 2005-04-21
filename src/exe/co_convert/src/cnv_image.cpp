@@ -34,3 +34,13 @@ void cnv_free_image( ImlibImage *image, Pixmap pixmap)
   Imlib_destroy_image( imlib, image);
 }
 
+void cnv_print_image( ImlibImage *image, char *filename)
+{
+  Imlib_save_image( imlib, image, filename, 0);
+}
+
+
+
+
+
+

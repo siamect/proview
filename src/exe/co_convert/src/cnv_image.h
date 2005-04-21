@@ -32,5 +32,6 @@ typedef void *ImlibImage;
 
 int cnv_get_image( char *fname, ImlibImage **image, Pixmap *pixmap);
 void cnv_free_image( ImlibImage *image, Pixmap pixmap);
+void cnv_print_image( ImlibImage *image, char *filename);
 
 #endif
