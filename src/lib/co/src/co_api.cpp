@@ -120,6 +120,11 @@ char *lng_translate( char *str)
   return Lng::translate( str);
 }
 
+void lng_set( char *str)
+{
+  Lng::set( str);
+}
+
 //
 // c api to co_msgwindow
 //
