@@ -113,6 +113,9 @@ start (
 
   errh_Init("pwr_ini", errh_eAnix_ini);
 
+  if ( cp->flags.b.interactive)    
+    errh_Interactive();
+
   mh_UtilCreateEvent();
 
   ini_CheckContext(&sts, cp);
