@@ -381,7 +381,7 @@ static int subgraphs_brow_cb( FlowCtx *ctx, flow_tEvent event)
       brow_SelectClear( subgraphs->brow->ctx);
       brow_SetInverse( object, 1);
       brow_SelectInsert( subgraphs->brow->ctx, object);
-      if ( !brow_IsVisible( subgraphs->brow->ctx, object))
+      if ( !brow_IsVisible( subgraphs->brow->ctx, object, flow_eVisible_Full))
         brow_CenterObject( subgraphs->brow->ctx, object, 0.25);
       if ( node_count)
         free( node_list);
@@ -417,7 +417,7 @@ static int subgraphs_brow_cb( FlowCtx *ctx, flow_tEvent event)
       brow_SelectClear( subgraphs->brow->ctx);
       brow_SetInverse( object, 1);
       brow_SelectInsert( subgraphs->brow->ctx, object);
-      if ( !brow_IsVisible( subgraphs->brow->ctx, object))
+      if ( !brow_IsVisible( subgraphs->brow->ctx, object, flow_eVisible_Full))
         brow_CenterObject( subgraphs->brow->ctx, object, 0.75);
       if ( node_count)
         free( node_list);
@@ -488,7 +488,7 @@ static int subgraphs_brow_cb( FlowCtx *ctx, flow_tEvent event)
       brow_SelectClear( subgraphs->brow->ctx);
       brow_SetInverse( node_list[0], 1);
       brow_SelectInsert( subgraphs->brow->ctx, node_list[0]);
-      if ( !brow_IsVisible( subgraphs->brow->ctx, node_list[0]))
+      if ( !brow_IsVisible( subgraphs->brow->ctx, node_list[0], flow_eVisible_Full))
         brow_CenterObject( subgraphs->brow->ctx, node_list[0], 0.25);
       free( node_list);
       break;

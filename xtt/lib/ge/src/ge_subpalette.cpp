@@ -375,7 +375,7 @@ static int subpalette_brow_cb( FlowCtx *ctx, flow_tEvent event)
       brow_SelectClear( subpalette->brow->ctx);
       brow_SetInverse( object, 1);
       brow_SelectInsert( subpalette->brow->ctx, object);
-      if ( !brow_IsVisible( subpalette->brow->ctx, object))
+      if ( !brow_IsVisible( subpalette->brow->ctx, object, flow_eVisible_Full))
         brow_CenterObject( subpalette->brow->ctx, object, 0.25);
       if ( node_count)
         free( node_list);
@@ -411,7 +411,7 @@ static int subpalette_brow_cb( FlowCtx *ctx, flow_tEvent event)
       brow_SelectClear( subpalette->brow->ctx);
       brow_SetInverse( object, 1);
       brow_SelectInsert( subpalette->brow->ctx, object);
-      if ( !brow_IsVisible( subpalette->brow->ctx, object))
+      if ( !brow_IsVisible( subpalette->brow->ctx, object, flow_eVisible_Full))
         brow_CenterObject( subpalette->brow->ctx, object, 0.75);
       if ( node_count)
         free( node_list);
@@ -511,7 +511,7 @@ static int subpalette_brow_cb( FlowCtx *ctx, flow_tEvent event)
       brow_SelectClear( subpalette->brow->ctx);
       brow_SetInverse( node_list[0], 1);
       brow_SelectInsert( subpalette->brow->ctx, node_list[0]);
-      if ( !brow_IsVisible( subpalette->brow->ctx, node_list[0]))
+      if ( !brow_IsVisible( subpalette->brow->ctx, node_list[0], flow_eVisible_Full))
         brow_CenterObject( subpalette->brow->ctx, node_list[0], 0.25);
       free( node_list);
       break;
