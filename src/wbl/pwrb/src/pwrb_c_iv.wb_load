@@ -75,6 +75,20 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
+      !  The lower respectively upper limits in the bar graph at
+      !  presentation of ActualValue in the object display.
+      !*/
+      Object PresMaxLimit $Attribute 11
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      Object PresMinLimit $Attribute 12 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
       !  @Summary A XttGraph object that will open a graph for this object.
       !  A XttGraph object that will open a graph that contains data for
       !  this object. This graph can be opened from the popup menu for
