@@ -59,7 +59,7 @@ all : init copy lib exe
 
 init :
 
-copy : $(export_h) $(export_c) $(export_dat) $(exe_dir)/wtt_help.dat \
+copy : $(export_h) $(export_c) $(export_dat) \
 	$(exe_dir)/ge_help.dat \
 	$(exe_dir)/pwr_wb_palette.cnf $(load_dir)/pwr_volumelist.dat
 
@@ -71,11 +71,6 @@ exe :
 clean : clean_obj
 
 realclean : clean $(clean_h) $(clean_c) $(clean_dat)
-
-$(exe_dir)/wtt_help.dat : wtt_help.dat
-	@ echo "Copying wtt_help.dat"
-	@ $(cp) $(cpflags) $(source) $(target)
-	@ co_convert -t -d $(pwr_doc)/help $(source)
 
 $(exe_dir)/ge_help.dat : ge_help.dat
 	@ echo "Copying ge_help.dat"
