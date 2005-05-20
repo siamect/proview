@@ -3137,7 +3137,7 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
 
         grow_GetUserData( event->object.object, (void **)&dyn);
         if ( graph->is_authorized( dyn->access) &&
-	     dyn->get_actiontype( event->object.object)) {
+	     dyn->get_actiontype( event->object.object) & ~ge_mActionType_Inherit) {
 	  if ( dyn->get_actiontype( event->object.object) & ~ge_mActionType_PopupMenu)
 	    return int(glow_mHotType_CursorCrossHair);
 	  else
