@@ -798,6 +798,13 @@ SObject pwrs:Class
 	    Attr MethodName = "$Object-OpenObject"
 	  EndBody
 	EndObject
+	Object Cast $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Cast..."
+	    Attr MethodName = "$Object-Cast"
+	    Attr FilterName = "$Object-CastFilter"
+	  EndBody
+	EndObject
         Object Help $MenuButton
 	  Body SysBody
 	    Attr ButtonName = "Help"
@@ -911,11 +918,11 @@ SObject pwrs:Class
 	  Attr FilterName = "$Object-RtNavigatorFilter"
 	EndBody
       EndObject
-      Object OpenClassGraph $MenuButton
+      Object OpenObjectGraph $MenuButton
 	Body SysBody
-	  Attr ButtonName = "Class Graph"
-	  Attr MethodName = "$Object-OpenClassGraph"
-	  Attr FilterName = "$Object-OpenClassGraphFilter"
+	  Attr ButtonName = "Object Graph"
+	  Attr MethodName = "$Object-OpenObjectGraph"
+	  Attr FilterName = "$Object-OpenObjectGraphFilter"
 	EndBody
       EndObject
       Object OpenCrossref $MenuButton
@@ -1027,11 +1034,11 @@ SObject pwrs:Class
 	  Attr FilterName = "$Object-RtNavigatorFilter"
 	EndBody
       EndObject
-      Object OpenClassGraph $MenuButton
+      Object OpenObjectGraph $MenuButton
 	Body SysBody
-	  Attr ButtonName = "Class Graph"
-	  Attr MethodName = "$Object-OpenClassGraph"
-	  Attr FilterName = "$Object-OpenClassGraphFilter"
+	  Attr ButtonName = "Object Graph"
+	  Attr MethodName = "$Object-OpenObjectGraph"
+	  Attr FilterName = "$Object-OpenObjectGraphFilter"
 	EndBody
       EndObject
       Object OpenCrossref $MenuButton
