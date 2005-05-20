@@ -2507,6 +2507,7 @@ char *cdh_OpSysToStr( pwr_mOpSys opsys)
 int cdh_IsClassVolume( pwr_tVid vid)
 {
   return ( ( cdh_cSystemClassVolMin <= vid && vid <= cdh_cSystemClassVolMax) ||
+           ( cdh_cManufactClassVolMin <= vid && vid <= cdh_cManufactClassVolMax) ||
 	   ( cdh_cUserClassVolMin <= vid && vid <= cdh_cUserClassVolMax));
 }
 
