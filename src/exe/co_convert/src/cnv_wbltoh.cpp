@@ -430,15 +430,15 @@ int CnvWblToH::attribute_exec()
       if ( !ctx->common_structfile_only)
         cstruc->f <<
 "  " << type_name;
-      for ( i = 0; i < int(36 - strlen(type_name)); i++)
+      for ( i = 0; i < int(35 - strlen(type_name)); i++)
       {
         fp_struct << ' ';
         if ( !ctx->common_structfile_only)
           cstruc->f << ' ';
       }
-      fp_struct << "**" << pgmname << "P[" << ctx->rw->attr_elements << "];" << endl;
+      fp_struct << " **" << pgmname << "P[" << ctx->rw->attr_elements << "];" << endl;
       if ( !ctx->common_structfile_only)
-        cstruc->f << "**" << pgmname << "P[" << ctx->rw->attr_elements << "];" << endl;
+        cstruc->f << " **" << pgmname << "P[" << ctx->rw->attr_elements << "];" << endl;
     }
     else if ( ctx->rw->attr_array)
     {
@@ -447,15 +447,15 @@ int CnvWblToH::attribute_exec()
       if ( !ctx->common_structfile_only)
         cstruc->f <<
 "  " << type_name;
-      for ( i = 0; i < int(36 - strlen(type_name)); i++)
+      for ( i = 0; i < int(35 - strlen(type_name)); i++)
       {
         fp_struct << ' ';
         if ( !ctx->common_structfile_only)
           cstruc->f << ' ';
       }
-      fp_struct << "*" << pgmname << "P[" << ctx->rw->attr_elements << "];" << endl;
+      fp_struct << " *" << pgmname << "P[" << ctx->rw->attr_elements << "];" << endl;
       if ( !ctx->common_structfile_only)
-        cstruc->f << "*" << pgmname << "P[" << ctx->rw->attr_elements << "];" << endl;
+        cstruc->f << " *" << pgmname << "P[" << ctx->rw->attr_elements << "];" << endl;
     }
     else if ( ctx->rw->attr_pointer)
     {
@@ -464,15 +464,15 @@ int CnvWblToH::attribute_exec()
       if ( !ctx->common_structfile_only)
         cstruc->f <<
 "  " << type_name;
-      for ( i = 0; i < int(36 - strlen(type_name)); i++)
+      for ( i = 0; i < int(35 - strlen(type_name)); i++)
       {
         fp_struct << ' ';
         if ( !ctx->common_structfile_only)
           cstruc->f << ' ';
       }
-      fp_struct << "**" << pgmname << "P;" << endl;
+      fp_struct << " **" << pgmname << "P;" << endl;
       if ( !ctx->common_structfile_only)
-        cstruc->f << "**" << pgmname << "P;" << endl;
+        cstruc->f << " **" << pgmname << "P;" << endl;
     }
     else
     {
@@ -481,15 +481,15 @@ int CnvWblToH::attribute_exec()
       if ( !ctx->common_structfile_only)
         cstruc->f <<
 "  " << type_name;
-      for ( i = 0; i < int(36 - strlen(type_name)); i++)
+      for ( i = 0; i < int(35 - strlen(type_name)); i++)
       {
         fp_struct << ' ';
         if ( !ctx->common_structfile_only)
           cstruc->f << ' ';
       }
-      fp_struct << "*" << pgmname << "P;" << endl;
+      fp_struct << " *" << pgmname << "P;" << endl;
       if ( !ctx->common_structfile_only)
-        cstruc->f << "*" << pgmname << "P;" << endl;
+        cstruc->f << " *" << pgmname << "P;" << endl;
     }
   }
 
@@ -500,15 +500,15 @@ int CnvWblToH::attribute_exec()
     if ( !ctx->common_structfile_only)
       cstruc->f <<
 "  " << type_name;
-    for ( i = 0; i < int(36 - strlen(type_name)); i++)
+    for ( i = 0; i < int(35 - strlen(type_name)); i++)
     {
       fp_struct << ' ';
       if ( !ctx->common_structfile_only)
         cstruc->f << ' ';
     }
-    fp_struct << "*" << pgmname << "[" << ctx->rw->attr_elements << "];" << endl;
+    fp_struct << " *" << pgmname << "[" << ctx->rw->attr_elements << "];" << endl;
     if ( !ctx->common_structfile_only)
-      cstruc->f << "*" << pgmname << "[" << ctx->rw->attr_elements << "];" << endl;
+      cstruc->f << " *" << pgmname << "[" << ctx->rw->attr_elements << "];" << endl;
   }
   else if ( ctx->rw->attr_array)
   {
@@ -517,13 +517,13 @@ int CnvWblToH::attribute_exec()
     if ( !ctx->common_structfile_only)
       cstruc->f <<
 "  " << type_name;
-    for ( i = 0; i < int(36 - strlen(type_name)); i++)
+    for ( i = 0; i < int(35 - strlen(type_name)); i++)
     {
       fp_struct << ' ';
       if ( !ctx->common_structfile_only)
         cstruc->f << ' ';
     }
-    fp_struct << pgmname << "[" << ctx->rw->attr_elements << "];" << endl;
+    fp_struct << ' ' << pgmname << "[" << ctx->rw->attr_elements << "];" << endl;
     if ( !ctx->common_structfile_only)
       cstruc->f << pgmname << "[" << ctx->rw->attr_elements << "];" << endl;
   }
@@ -534,15 +534,15 @@ int CnvWblToH::attribute_exec()
     if ( !ctx->common_structfile_only)
       cstruc->f <<
 "  " << type_name;
-    for ( i = 0; i < int(36 - strlen(type_name)); i++)
+    for ( i = 0; i < int(35 - strlen(type_name)); i++)
     {
       fp_struct << ' ';
       if ( !ctx->common_structfile_only)
         cstruc->f << ' ';
     }
-    fp_struct << "*" << pgmname << ";" << endl;
+    fp_struct << " *" << pgmname << ";" << endl;
     if ( !ctx->common_structfile_only)
-      cstruc->f << "*" << pgmname << ";" << endl;
+      cstruc->f << " *" << pgmname << ";" << endl;
   }
   else
   {
@@ -551,13 +551,13 @@ int CnvWblToH::attribute_exec()
     if ( !ctx->common_structfile_only)
       cstruc->f <<
 "  " << type_name;
-    for ( i = 0; i < int(36 - strlen(type_name)); i++)
+    for ( i = 0; i < int(35 - strlen(type_name)); i++)
     {
       fp_struct << ' ';
       if ( !ctx->common_structfile_only)
         cstruc->f << ' ';
     }
-    fp_struct << pgmname << ";" << endl;
+    fp_struct << ' ' << pgmname << ";" << endl;
     if ( !ctx->common_structfile_only)
       cstruc->f << pgmname << ";" << endl;
   }
