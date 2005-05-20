@@ -128,12 +128,28 @@ Lng::translate("Class") << " " << full_class_name << endl <<
   for ( i = 0; i < ctx->rw->doc_clink_cnt; i++) {
     strcpy( prefix, CnvCtx::low(ctx->rw->volume_name));
     strcat( prefix, "_");
-    if ( strncmp( ctx->rw->doc_clink_ref[i], prefix, strlen(prefix)) == 0)
+    if ( strncmp( ctx->rw->doc_clink_ref[i], prefix, strlen(prefix)) == 0) {
       strcpy( link_ref, &ctx->rw->doc_clink_ref[i][strlen(prefix)]);
-    else
-      strcpy( link_ref, ctx->rw->doc_clink_ref[i]);
-    if ( (s = strrchr( link_ref, '.')))
-      *s = 0;
+      if ( (s = strrchr( link_ref, '.')))
+	*s = 0;
+    }
+    else {
+      if ( (s = strchr( ctx->rw->doc_clink_ref[i], '_'))) {
+	int len = s - ctx->rw->doc_clink_ref[i];
+	memset( link_ref, 0, sizeof(link_ref));
+	strcpy( link_ref, &ctx->rw->doc_clink_ref[i][len+1]);
+	if ( (s = strrchr( link_ref, '.')))
+	  *s = 0;
+	strcat( link_ref, ", ,$pwr_lang/");
+	strncat( link_ref, ctx->rw->doc_clink_ref[i], len);
+	strcat( link_ref, "_xtthelp.dat");
+      }
+      else {
+	strcpy( link_ref, ctx->rw->doc_clink_ref[i]);
+	if ( (s = strrchr( link_ref, '.')))
+	  *s = 0;
+      }
+    }
     fp_tmp << "      " << ctx->rw->doc_clink_text[i] << " <LINK>" << link_ref << endl;
   }
   return 1;
