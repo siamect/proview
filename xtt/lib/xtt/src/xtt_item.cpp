@@ -306,6 +306,9 @@ int ItemBaseObject::open_attributes( XNavBrow *brow, double x, double y)
       if ( bd[i].attr->Param.Info.Flags & PWR_MASK_RTVIRTUAL || 
 	   bd[i].attr->Param.Info.Flags & PWR_MASK_PRIVATE)
 	continue;
+      if ( bd[i].attr->Param.Info.Type == pwr_eType_CastId && 
+	   brow->usertype == brow_eUserType_XNav && !((XNav *)brow->userdata)->gbl.show_truedb)
+	continue;
 
       elements = 1;
       if ( bd[i].attr->Param.Info.Flags & PWR_MASK_ARRAY ) {
@@ -825,7 +828,10 @@ ItemAttrObject::ItemAttrObject( XNavBrow *brow, pwr_tObjid item_objid,
     brow_CreateNode( brow->ctx, attr_name, brow->nc_object, 
 		dest, dest_code, (void *) this, 1, &node);
 
-    brow_SetAnnotPixmap( node, 0, brow->pixmap_object);
+    if ( flags & PWR_MASK_CASTATTR)
+      brow_SetAnnotPixmap( node, 0, brow->pixmap_castattr);
+    else
+      brow_SetAnnotPixmap( node, 0, brow->pixmap_object);
     if ((annot = strrchr( name, '.')))
       annot++;
     else

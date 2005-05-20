@@ -214,7 +214,7 @@ dcli_tCmdTable	wnav_command_table[] = {
 			&wnav_copy_func,
 			{ "dcli_arg1", "/FIRST", "/LAST", "/AFTER", "/BEFORE",
 			"/HIERARCHY", "/SOURCE", "/DESTINATION", "/NAME",
-			"/KEEPREFERENCES", ""}
+			"/KEEPREFERENCES", "/IGNORE_ERRORS", ""}
 		},
 		{
 			"CUT",
@@ -2923,6 +2923,7 @@ static int	wnav_copy_func(	void		*client_data,
     int                 *sel_is_attr;
     int			sel_cnt;
     int                 keepref;
+    int                 ignore_errors;
     pwr_tStatus         sts;
 
     if ( wnav->window_type == wnav_eWindowType_No)
@@ -2935,8 +2936,9 @@ static int	wnav_copy_func(	void		*client_data,
     }
 
     keepref = ODD( dcli_get_qualifier( "/KEEPREFERENCES", NULL));
+    ignore_errors = ODD( dcli_get_qualifier( "/IGNORE_ERRORS", NULL));
 
-    sts = ldh_Copy( wnav->ldhses, sel_list, keepref);
+    sts = ldh_Copy( wnav->ldhses, sel_list, keepref, ignore_errors);
     if ( sel_cnt > 0) {
       free( sel_list);
       free( sel_is_attr);

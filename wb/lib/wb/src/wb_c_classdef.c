@@ -31,7 +31,7 @@ static pwr_tStatus AnteCreate (
   return PWRS__SUCCESS;
 }
 
-static pwr_tStatus OpenClassGraph (
+static pwr_tStatus OpenObjectGraph (
   ldh_sMenuCall *ip
 )
 {
@@ -214,7 +214,7 @@ static pwr_tStatus ConfigFc (
 
 pwr_dExport pwr_BindMethods($ClassDef) = {
   pwr_BindMethod(AnteCreate),
-  pwr_BindMethod(OpenClassGraph),
+  pwr_BindMethod(OpenObjectGraph),
   pwr_BindMethod(ConfigFc),
   pwr_NullMethod
 };

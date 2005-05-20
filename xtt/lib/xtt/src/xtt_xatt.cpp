@@ -222,8 +222,8 @@ static void xatt_activate_open_classgraph( Widget w, XAtt *xatt, XmAnyCallbackSt
   if ( xatt->call_method_cb)
   {
     (xatt->call_method_cb)(xatt->parent_ctx,
-			     "$Object-OpenClassGraph",
-			     "$Object-OpenClassGraphFilter",
+			     "$Object-OpenObjectGraph",
+			     "$Object-OpenObjectGraphFilter",
 			     xatt->objar, 
 			     xmenu_eItemType_Object,
 			     xmenu_mUtility_AttrEditor, NULL);

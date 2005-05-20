@@ -203,6 +203,7 @@ public:
 				 size_t rbSize, size_t dbSize, void *rbody, void *dbody,
 				 pwr_tOid *roid)
     { return false;}
+  virtual void importIgnoreErrors() {}
   virtual bool accessSupported( ldh_eAccess access) { return access == ldh_eAccess_ReadOnly;}
   virtual const char *fileName() { return "";}
 };

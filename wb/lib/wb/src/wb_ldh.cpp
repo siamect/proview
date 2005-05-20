@@ -817,6 +817,26 @@ ldh_GetAttrRefTid(ldh_tSession session, pwr_sAttrRef *arp, pwr_tTid *tid)
 }
 
 pwr_tStatus
+ldh_GetAttrRefOrigTid(ldh_tSession session, pwr_sAttrRef *arp, pwr_tTid *tid)
+{
+  wb_session *sp = (wb_session *)session;
+
+  if ( arp->Flags.b.Object) {
+    wb_object o = sp->object(arp->Objid);
+    if (!o) return o.sts();
+    
+    *tid = o.cid();
+    return o.sts();
+  }
+
+  wb_attribute a = sp->attribute(arp);
+  if (!a) return a.sts();
+  *tid = a.originalTid();
+    
+  return a.sts();
+}
+
+pwr_tStatus
 ldh_GetAttrRefType(ldh_tSession session, pwr_sAttrRef *arp, pwr_eType *type)
 {
   wb_session *sp = (wb_session *)session;
@@ -1695,7 +1715,7 @@ ldh_CopyObjectTrees(ldh_tSession session, pwr_sAttrRef *arp, pwr_tOid doid, ldh_
 {
   pwr_tStatus sts;
 
-  sts = ldh_Copy( session, arp, keepref);
+  sts = ldh_Copy( session, arp, keepref, false);
   if (EVEN(sts)) return sts;
 
   sts = ldh_Paste( session, doid, dest, 0, 0);  
@@ -1709,12 +1729,12 @@ ldh_CopyObjectTrees(ldh_tSession session, pwr_sAttrRef *arp, pwr_tOid doid, ldh_
    left untouched.  */
 
 pwr_tStatus
-ldh_Copy(ldh_tSession session, pwr_sAttrRef *arp, int keepref)
+ldh_Copy(ldh_tSession session, pwr_sAttrRef *arp, int keepref, int ignore_errors)
 {
   wb_session *sp = (wb_session*)session;
 
   try {
-    sp->copyOset( arp, (keepref != 0));
+    sp->copyOset( arp, (keepref != 0), (ignore_errors != 0));
   }
   catch (wb_error& e) {
     return e.sts();
@@ -2001,6 +2021,25 @@ ldh_GetEnumValueDef( ldh_tSession session, pwr_tTid tid, ldh_sValueDef **valuede
   }
   return LDH__SUCCESS;
 }
+
+pwr_tStatus
+ldh_CastAttribute(ldh_tSession session, pwr_sAttrRef *arp, pwr_tCid cid)
+{
+  wb_session *sp = (wb_session *)session;
+    
+  sp->castAttribute( arp, cid);
+  return sp->sts();
+}
+
+pwr_tStatus
+ldh_GetSubClass(ldh_tSession session, pwr_tCid supercid, pwr_tCid subcid, pwr_tCid *nextsubcid)
+{
+  wb_session *sp = (wb_session *)session;
+
+  sp->subClass( supercid, subcid, nextsubcid);
+  return sp->sts();
+}
+
 #endif
 
 

@@ -1073,7 +1073,10 @@ bool wb_volume::isAncestor( wb_object& ancestor, wb_object& o)
   return false;
 }
 
-
+void wb_volume::subClass( pwr_tCid cid, pwr_tCid subcid, pwr_tCid *nextsubcid)
+{
+  m_vrep->merep()->subClass( cid, subcid, nextsubcid, &m_sts);
+}
 
 
 

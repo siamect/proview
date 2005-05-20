@@ -184,6 +184,7 @@ public:
                                  pwr_tOid boid, const char *name, pwr_mClassDef flags,
                                  size_t rbSize, size_t dbSize, void *rbody, void *dbody,
                                  pwr_tOid *roid);
+  virtual void importIgnoreErrors() {}
 
 #if 0
   int del_family(DbTxn *txn, Dbc *cp, pwr_tOid poid);

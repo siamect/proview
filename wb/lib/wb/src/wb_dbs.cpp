@@ -612,7 +612,7 @@ wb_dbs::prepareSectVolref()
     vid.v.vid_1 = cid.c.vid_1;
         
     if (vid.pwr != m_volume.vid) {
-      printf("volref: %d.%d.%d.%d\n", vid.v.vid_3, vid.v.vid_2, vid.v.vid_1, vid.v.vid_0);
+      // printf("volref: %d.%d.%d.%d\n", vid.v.vid_3, vid.v.vid_2, vid.v.vid_1, vid.v.vid_0);
 
       wb_mvrep *mvrep = m_v->merep()->volume(&sts, vid.pwr);
       if ( EVEN(sts)) throw wb_error_str("Metavolume not found");
@@ -623,12 +623,12 @@ wb_dbs::prepareSectVolref()
       if (sts == TREE__INSERTED) {
         /* was inserted now */
         dbs_Open(&sts, &vep->env, mvrep->fileName());
-        printf("  sts...: %d\n", sts);
-        printf("  cookie: %d\n", vep->env.file.cookie);
-        printf("  size..: %d\n", vep->env.file.size);
-        printf("  time..: %ld\n", vep->env.file.time.tv_sec);
+        // printf("  sts...: %d\n", sts);
+        // printf("  cookie: %d\n", vep->env.file.cookie);
+        // printf("  size..: %d\n", vep->env.file.size);
+        // printf("  time..: %ld\n", vep->env.file.time.tv_sec);
 
-        printf("VolRef File: %s\n", mvrep->fileName());      
+        // printf("VolRef File: %s\n", mvrep->fileName());      
       
         strcpy(vep->v.name, mvrep->name());
         vep->v.cid  = mvrep->cid();
@@ -639,22 +639,31 @@ wb_dbs::prepareSectVolref()
         int i = 0;
         while ((vp = dbs_VolRef(&sts, i, (dbs_sVolRef *)v, &vep->env)) != NULL) {
           sVentry *nvep;
-          printf("  vid.....: %d\n", vp->vid);
-          printf("    sts...: %d\n", sts);
-          printf("    name..: %s\n", vp->name);      
-          printf("    size..: %d\n", vp->size);
-          printf("    time..: %ld\n", vp->time.tv_sec);
+          // printf("  vid.....: %d\n", vp->vid);
+          // printf("    sts...: %d\n", sts);
+          // printf("    name..: %s\n", vp->name);      
+          // printf("    size..: %d\n", vp->size);
+          // printf("    time..: %ld\n", vp->time.tv_sec);
           i++;
           nvep = (sVentry*)tree_Insert(&sts, m_vol_th, &vp->vid);
           if (sts == TREE__INSERTED) {
-            printf("  Inserted, sts...: %d\n", sts);
+            // printf("  Inserted, sts...: %d\n", sts);
+	    wb_mvrep *nmvrep = m_v->merep()->volume(&sts, vp->vid);
+	    if ( EVEN(sts)) throw wb_error_str("Metavolume not found");
+      
+	    dbs_Open(&sts, &nvep->env, nmvrep->fileName());
+	    // printf("  sts...: %d\n", sts);
+	    // printf("  cookie: %d\n", nvep->env.file.cookie);
+	    // printf("  size..: %d\n", nvep->env.file.size);
+	    // printf("  time..: %ld\n", nvep->env.file.time.tv_sec);
+
             strcpy(nvep->v.name, vp->name);
             nvep->v.cid  = vp->cid;
             nvep->v.time = vp->time;
             nvep->v.size = vp->size;
             nvep->v.offset = 0;
           } else {
-            printf("  Not inserted, sts...: %d\n", sts);
+            // printf("  Not inserted, sts...: %d\n", sts);
           }          
         }
       }
@@ -676,9 +685,9 @@ wb_dbs::prepareSectVolref()
   sVentry *vep;
   vep = (sVentry*)tree_Minimum(&sts, m_vol_th);
   while (vep) {
-    printf("vid: %d\n", vep->v.vid);
-    printf("  cookie: %d\n", vep->env.file.cookie);
-    printf("  name..: %s\n", vep->v.name);
+    // printf("vid: %d\n", vep->v.vid);
+    // printf("  cookie: %d\n", vep->env.file.cookie);
+    // printf("  name..: %s\n", vep->v.name);
     if (vep->env.file.cookie == 0) {
       printf("  volume not found: %d\n", vep->v.vid);
     } else {
@@ -689,7 +698,7 @@ wb_dbs::prepareSectVolref()
     vep = (sVentry*)tree_Successor(&sts, m_vol_th, vep);        
   }
 
-  printf("Found %d volumes.\n", nVolume);
+  // printf("Found %d volumes.\n", nVolume);
 
   return LDH__SUCCESS;
 }
@@ -706,11 +715,11 @@ wb_dbs::writeSectVolref(size_t size)
   sVentry *vep;
   vep = (sVentry*)tree_Minimum(&sts, m_vol_th);
   while (vep) {
-    printf("vid.......: %d\n", vep->v.vid);
-    printf("  cookie..: %d\n", vep->env.file.cookie);
-    printf("  name....: %s\n", vep->v.name);
-    printf("  size....: %d\n", vep->v.size);
-    printf("  offset..: %d\n", vep->v.offset);
+    // printf("vid.......: %d\n", vep->v.vid);
+    // printf("  cookie..: %d\n", vep->env.file.cookie);
+    // printf("  name....: %s\n", vep->v.name);
+    // printf("  size....: %d\n", vep->v.size);
+    // printf("  offset..: %d\n", vep->v.offset);
     if (vep->env.file.cookie == 0) {
       printf("  volume not found: %d\n", vep->v.vid);
     } else {
@@ -718,8 +727,8 @@ wb_dbs::writeSectVolref(size_t size)
       size += vep->v.size = dbs_dAlign(vep->v.size);
       char v[dbs_dAlign(sizeof(dbs_sVolRef))];
       dbs_sVolRef *vp = (dbs_sVolRef*)v;
-      printf("  size....: %d\n", vep->v.size);
-      printf("  offset..: %d\n", vep->v.offset);
+      // printf("  size....: %d\n", vep->v.size);
+      // printf("  offset..: %d\n", vep->v.offset);
       *vp = vep->v;
       if (fwrite(v, sizeof(v), 1, m_fp) < 1)
         return LDH__FILEWRITE;
@@ -731,7 +740,7 @@ wb_dbs::writeSectVolref(size_t size)
 
   assert(ftell(m_fp) == (long)(m_sect[dbs_eSect_volref].offset + m_sect[dbs_eSect_volref].size));
 
-  printf("  Total file size....: %d\n", size);
+  // printf("  Total file size....: %d\n", size);
   return LDH__SUCCESS;
 }
 
@@ -769,11 +778,11 @@ wb_dbs::writeReferencedVolumes()
   sVentry *vep;
   vep = (sVentry*)tree_Minimum(&sts, m_vol_th);
   while (vep) {
-    printf("vid.......: %d\n", vep->v.vid);
-    printf("  cookie..: %d\n", vep->env.file.cookie);
-    printf("  name....: %s\n", vep->v.name);
-    printf("  size....: %d\n", vep->v.size);
-    printf("  offset..: %d\n", vep->v.offset);
+    // printf("vid.......: %d\n", vep->v.vid);
+    // printf("  cookie..: %d\n", vep->env.file.cookie);
+    // printf("  name....: %s\n", vep->v.name);
+    // printf("  size....: %d\n", vep->v.size);
+    // printf("  offset..: %d\n", vep->v.offset);
     if (vep->env.file.cookie == 0) {
       printf("  volume not found: %d\n", vep->v.vid);
     } else {
@@ -786,7 +795,7 @@ wb_dbs::writeReferencedVolumes()
       if (EVEN(sts))
         return LDH__FILEWRITE;
 
-      printf("ftell %ld, offset + size %d, offset %d, size %d\n", ftell(m_fp), vep->v.offset + vep->env.file.size, vep->v.offset, vep->env.file.size);
+      // printf("ftell %ld, offset + size %d, offset %d, size %d\n", ftell(m_fp), vep->v.offset + vep->env.file.size, vep->v.offset, vep->env.file.size);
       assert(ftell(m_fp) == (long)(vep->v.offset + vep->env.file.size));
     }
 

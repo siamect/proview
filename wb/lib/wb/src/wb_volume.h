@@ -101,6 +101,7 @@ public:
   void aref( pwr_tCid cid, wb_object o, pwr_sAttrRef *arp);
   void nextObjectAref( pwr_tCid cid, pwr_sAttrRef *arp, pwr_sAttrRef *oarp);
   bool isAncestor( wb_object& ancestor, wb_object& o);
+  void subClass( pwr_tCid cid, pwr_tCid subcid, pwr_tCid *nextsubcid);
 };
 
 #endif

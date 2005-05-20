@@ -1002,6 +1002,7 @@ static int cmd_attribute_func (
           case pwr_eType_UInt32:
 	  case pwr_eType_ClassId:
 	  case pwr_eType_TypeId:
+	  case pwr_eType_CastId:
 	  case pwr_eType_VolumeId:
 	  case pwr_eType_ObjectIx:
           {

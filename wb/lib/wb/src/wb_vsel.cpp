@@ -695,7 +695,8 @@ pwr_tStatus WVsel::check_volumelist(
 	  if ( classid == pwr_eClass_RootVolume ||
 	       classid == pwr_eClass_SubVolume ||
 	       classid == pwr_eClass_SharedVolume ||
-	       (classid == pwr_eClass_ClassVolume && volume > 511))
+	       (classid == pwr_eClass_ClassVolume && 
+		(cdh_cUserClassVolMin <= volume && volume <= cdh_cUserClassVolMax))) 
 	  {
 	    /* This volume should be configured */
 	    volume_found = 0;

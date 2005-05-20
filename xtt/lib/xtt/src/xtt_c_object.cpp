@@ -23,6 +23,7 @@ extern "C" {
 #include "co_dcli.h"
 #include "co_wow.h"
 }
+#include "co_lng.h"
 
 
 /////////////////////////////////////////////////////////////////////
@@ -533,7 +534,7 @@ static pwr_tStatus RtNavigatorFilter( xmenu_sMenuCall *ip)
 }
 
 // Open class graph
-static pwr_tStatus OpenClassGraph( xmenu_sMenuCall *ip)
+static pwr_tStatus OpenObjectGraph( xmenu_sMenuCall *ip)
 {
   int		sts;
   char		name[120];
@@ -563,7 +564,7 @@ static pwr_tStatus OpenClassGraph( xmenu_sMenuCall *ip)
 }
 
 // Open object graph filter
-static pwr_tStatus OpenClassGraphFilter( xmenu_sMenuCall *ip)
+static pwr_tStatus OpenObjectGraphFilter( xmenu_sMenuCall *ip)
 {
   int		sts;
   pwr_tClassId	classid;
@@ -1064,6 +1065,8 @@ static pwr_tStatus HelpClass( xmenu_sMenuCall *ip)
 {
   int sts;
   pwr_tClassId classid;
+  pwr_tVid vid;
+  char vname[32];
   char classname[80];
   char cmd[200];
   pwr_sAttrRef *objar =
@@ -1078,15 +1081,29 @@ static pwr_tStatus HelpClass( xmenu_sMenuCall *ip)
 		  classname, sizeof(classname), cdh_mName_object);
   if ( EVEN(sts)) return sts;
 
+  vid = cdh_CidToVid(classid);
+  if ( cdh_cManufactClassVolMin <= vid && vid <= cdh_cManufactClassVolMax) {
+    /* Get help file for this volume */
+    sts = gdh_VolumeIdToName( vid, vname, sizeof(vname));
+    if ( EVEN(sts)) return sts;
+
+    cdh_ToLower( vname, vname);
+    sprintf( cmd, "help %s /helpfile=\"$pwr_exe/%s/%s_xtthelp.dat\"", classname, 
+	     Lng::get_language_str(), vname);
+
+    sts = ((XNav *)ip->EditorContext)->command( cmd);
+    return XNAV__SUCCESS;
+  }
+
   if ( classname[0] == '$')
     sprintf( cmd, "help %s", &classname[1]);
   else
     sprintf( cmd, "help %s", classname);
 
   sts = ((XNav *)ip->EditorContext)->command( cmd);
-
   return XNAV__SUCCESS;
 }
+
 
 // Help Class filter
 static pwr_tStatus HelpClassFilter( xmenu_sMenuCall *ip)
@@ -1486,8 +1503,8 @@ pwr_dExport pwr_BindXttMethods($Object) = {
   pwr_BindXttMethod(OpenFastFilter),
   pwr_BindXttMethod(RtNavigator),
   pwr_BindXttMethod(RtNavigatorFilter),
-  pwr_BindXttMethod(OpenClassGraph),
-  pwr_BindXttMethod(OpenClassGraphFilter),
+  pwr_BindXttMethod(OpenObjectGraph),
+  pwr_BindXttMethod(OpenObjectGraphFilter),
   pwr_BindXttMethod(OpenGraph),
   pwr_BindXttMethod(OpenGraphFilter),
   pwr_BindXttMethod(Collect),

@@ -14,6 +14,7 @@ extern "C" {
 #include "co_dcli.h"
 #include "pwr_baseclasses.h"
 }
+#include "co_lng.h"
 
 static int find_symbol( char *name, char *value, 
 			pwr_sClass_WebBrowserConfig *config);
@@ -66,10 +67,20 @@ static int replace_symbol( pwr_tURL in, pwr_tURL out,
   char sym_name[80];
   pwr_tURL tmp;
   int skip_sym = 0;
+  pwr_tURL url;
+
+  if ( strncmp( in, "$pwr_lang/", 10) == 0) {
+    strcpy( url, "$pwr_doc/");
+    strcat( url, Lng::get_language_str());
+    strcat( url, &in[9]);
+  }
+  else
+    strncpy( url, in, sizeof(pwr_tURL));
+     
 
   sym_start = 0;
   t = tmp;
-  for ( s = in; *s; s++) {
+  for ( s = url; *s; s++) {
     if ( *s == '\\' && *(s+1) == '$')
       skip_sym = 1;
     if ( *s == '$' && !skip_sym) {

@@ -73,7 +73,7 @@ public:
   bool writeAttribute(wb_attribute &a, void *p);
   bool writeBody() {return false;} // Fix
 
-  bool copyOset( pwr_sAttrRef *arp, bool keepref);
+  bool copyOset( pwr_sAttrRef *arp, bool keepref, bool ignore_errors);
   bool cutOset( pwr_sAttrRef *arp, bool keepref);
   bool pasteOset( pwr_tOid doid, ldh_eDest dest, 
 		  bool keepoid, char *buffer);
@@ -90,7 +90,8 @@ public:
   void sendThisSession( ldh_tSessionCb thisSessionCb) { m_srep->sendThisSession( thisSessionCb);}
   void sendOtherSession( ldh_tSessionCb otherSessionCb) { m_srep->sendOtherSession( otherSessionCb);}
 
-  bool wb_session::validateDestination( wb_destination d, pwr_tCid cid);
+  bool validateDestination( wb_destination d, pwr_tCid cid);
+  bool castAttribute( pwr_sAttrRef *arp, pwr_tCid cid);
 };
 
 

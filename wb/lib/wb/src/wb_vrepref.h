@@ -131,6 +131,7 @@ public:
 				 size_t rbSize, size_t dbSize, void *rbody, void *dbody,
 				 pwr_tOid *roid) {return false;}
   virtual bool importPaste() {return false;}
+  virtual void importIgnoreErrors() {}
   bool updateObject( wb_orep *o, bool keepref) {return false;}
   bool updateSubClass( wb_adrep *subattr, char *body, bool keepref) {return false;}
   // virtual bool importVolume(wb_export &e) {return false;}

@@ -354,6 +354,7 @@ int  xnav_attr_string_to_value( int type_id, char *value_str,
       break;
     }
     case pwr_eType_TypeId:
+    case pwr_eType_CastId:
     {
       pwr_tTypeId	val_typeid;
       pwr_tObjid	objid;
@@ -627,6 +628,7 @@ void  xnav_attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
       break;
     }
     case pwr_eType_TypeId:
+    case pwr_eType_CastId:
     {
       objid = cdh_TypeIdToObjid( *(pwr_tTypeId *) value_ptr);
       sts = gdh_ObjidToName ( objid, hiername, sizeof(hiername), cdh_mNName);

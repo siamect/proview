@@ -3721,6 +3721,7 @@ static int utl_object_changed (
 	      case pwr_eType_Text:
 	      case pwr_eType_ClassId:
 	      case pwr_eType_TypeId:
+	      case pwr_eType_CastId:
 	      case pwr_eType_VolumeId:
 	      case pwr_eType_ObjectIx:
 	      case pwr_eType_Mask:
@@ -3996,6 +3997,7 @@ static int utl_print_object_full (
 	          case pwr_eType_Int32:
 	          case pwr_eType_ClassId:
 	          case pwr_eType_TypeId:
+	          case pwr_eType_CastId:
 	          case pwr_eType_VolumeId:
 	          case pwr_eType_ObjectIx:
 	          {
@@ -4453,6 +4455,7 @@ static int utl_print_object_par (
                 case pwr_eType_Enum:
 	        case pwr_eType_ClassId:
 	        case pwr_eType_TypeId:
+	        case pwr_eType_CastId:
 	        case pwr_eType_VolumeId:
 	        case pwr_eType_ObjectIx:
                 {
@@ -5107,6 +5110,7 @@ static 	char		value[200];
 	    case pwr_eType_Enum:
 	    case pwr_eType_ClassId:
 	    case pwr_eType_TypeId:
+	    case pwr_eType_CastId:
 	    case pwr_eType_VolumeId:
 	    case pwr_eType_ObjectIx:
 	    {

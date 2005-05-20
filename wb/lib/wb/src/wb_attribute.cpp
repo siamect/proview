@@ -16,7 +16,8 @@ wb_attribute::wb_attribute() :
 
 wb_attribute::wb_attribute(const wb_attribute& x) : 
   wb_status(x.m_sts),m_orep(x.m_orep), m_adrep( x.m_adrep), m_size(x.m_size), 
-  m_offset(x.m_offset) , m_idx(x.m_idx), m_tid(x.m_tid), m_elements(x.m_elements), m_type(x.m_type), 
+  m_offset(x.m_offset) , m_idx(x.m_idx), m_tid(x.m_tid), m_original_tid(x.m_original_tid),
+  m_elements(x.m_elements), m_type(x.m_type), 
   m_flags(x.m_flags), m_bix(x.m_bix), m_body(0), m_shadowed(x.m_shadowed)
 {
   if ( m_orep)
@@ -47,7 +48,7 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep * orep) :
 
     m_size = bdef.size();
     m_bix = bdef.bix();
-    m_tid = orep->cid();
+    m_tid = m_original_tid = orep->cid();
   }
 }
 
@@ -64,7 +65,7 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, wb_adrep* adrep, int 
       m_adrep->ref();
       m_size = m_adrep->size();
       m_offset = m_adrep->offset();
-      m_tid = m_adrep->tid();
+      m_tid = m_original_tid = m_adrep->tid();
       m_elements = m_adrep->nElement();
       m_type = m_adrep->type();
       m_flags = m_adrep->flags();
@@ -82,6 +83,13 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, wb_adrep* adrep, int 
       } else
         m_idx = 0;
 
+      if ( m_flags & PWR_MASK_CASTATTR) {
+	pwr_tCastId castid;
+
+	castId( &castid);
+	if ( castid != pwr_cNCastId)
+	  m_tid = castid;
+      }
     }
     else {
       // m_size == get rtbody size... Fix
@@ -158,10 +166,18 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep* orep, const char *bname, co
 
 	m_size = m_adrep->size();
 	m_offset = m_adrep->offset();
-	m_tid = m_adrep->tid();
+	m_tid = m_original_tid = m_adrep->tid();
 	m_elements = m_adrep->nElement();
 	m_flags = m_adrep->flags();
 	m_type = m_adrep->type();
+
+	if ( m_flags & PWR_MASK_CASTATTR) {
+	  pwr_tCastId castid;
+
+	  castId( &castid);
+	  if ( castid != pwr_cNCastId)
+	    m_tid = castid;
+	}
       } else
         m_adrep = 0;
       
@@ -249,7 +265,7 @@ wb_attribute::wb_attribute(const wb_attribute& pa, int idx, const char *aname) :
   m_adrep->ref();
   m_size = m_adrep->size();
   m_offset = m_adrep->offset();
-  m_tid = m_adrep->tid();
+  m_tid = m_original_tid = m_adrep->tid();
   m_elements = m_adrep->nElement();
   m_flags = m_adrep->flags();
   m_type = m_adrep->type();  
@@ -258,6 +274,15 @@ wb_attribute::wb_attribute(const wb_attribute& pa, int idx, const char *aname) :
   m_orep = pa.m_orep;
   m_orep->ref();
   m_bix = bd->bix();
+
+  if ( m_flags & PWR_MASK_CASTATTR) {
+    pwr_tCastId castid;
+
+    castId( &castid);
+    if ( castid != pwr_cNCastId)
+      m_tid = castid;
+  }
+
 #if 0
   if ( pa.isClass()) {
     m_flags |= PWR_MASK_SUBCLASS;
@@ -321,6 +346,7 @@ wb_attribute& wb_attribute::operator=(const wb_attribute& x)
   m_offset = x.m_offset;
   m_idx = x.m_idx;
   m_tid = x.m_tid;
+  m_original_tid = x.m_original_tid;
   m_elements = x.m_elements;
   m_type = x.m_type;
   m_flags = x.m_flags;
@@ -413,6 +439,12 @@ pwr_tTid wb_attribute::tid() const
 {
   check();
   return m_tid;
+}
+
+pwr_tTid wb_attribute::originalTid() const
+{
+  check();
+  return m_original_tid;
 }
 
 int wb_attribute::nElement() const
@@ -524,6 +556,12 @@ void *wb_attribute::value(void *vp, size_t size, pwr_tStatus *sts)
   return 0;
 }
 
+void wb_attribute::castId( pwr_tCastId *castid) 
+{
+  m_orep->vrep()->readAttribute( &m_sts, m_orep, m_bix, 
+					m_offset - sizeof(pwr_tCastId), sizeof(pwr_tCastId), 
+					castid);
+}    
     
 string wb_attribute::toString() const
 {

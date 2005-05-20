@@ -475,7 +475,8 @@ pwr_tStatus ldh_ConnectObjectByXRef (
 pwr_tStatus ldh_Copy (
   ldh_tSession	Session,
   pwr_sAttrRef	*aref,
-  int           keepref
+  int           keepref,
+  int		ignore_errors
 );
 
 pwr_tStatus ldh_CopyObject (
@@ -694,6 +695,12 @@ pwr_tStatus ldh_GetObjectClass (
 );
 pwr_tStatus
 ldh_GetAttrRefTid(
+  ldh_tSession session,
+  pwr_sAttrRef *arp,
+  pwr_tTid *tid
+);
+pwr_tStatus
+ldh_GetAttrRefOrigTid(
   ldh_tSession session,
   pwr_sAttrRef *arp,
   pwr_tTid *tid
@@ -1135,6 +1142,21 @@ ldh_GetEnumValueDef(
   pwr_tTid tid,
   ldh_sValueDef **valuedef,
   int *rows
+);
+
+pwr_tStatus
+ldh_CastAttribute(
+  ldh_tSession session, 
+  pwr_sAttrRef *arp, 
+  pwr_tCid cid
+);
+
+pwr_tStatus
+ldh_GetSubClass(
+  ldh_tSession session,
+  pwr_tCid supercid,
+  pwr_tCid subcid,
+  pwr_tCid *nextsubcid
 );
 
 #ifdef __cplusplus

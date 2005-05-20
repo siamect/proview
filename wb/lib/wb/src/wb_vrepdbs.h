@@ -150,6 +150,7 @@ public:
 				 size_t rbSize, size_t dbSize, void *rbody, void *dbody,
 				 pwr_tOid *roid)
     { return false;}
+  virtual void importIgnoreErrors() {}
   virtual bool accessSupported( ldh_eAccess access) { return access == ldh_eAccess_ReadOnly; }
   virtual bool duplicateDb() const { return m_duplicate;}
   virtual void setDuplicateDb( bool duplicate) { m_duplicate = duplicate;}

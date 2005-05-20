@@ -11,6 +11,7 @@
 #include "wb_ldh.h"
 #include "wb_dutl.h"
 #include "co_cdh.h"
+#include "co_api.h"
 #include <X11/Intrinsic.h>
 #include "wb_api.h"
 
@@ -558,14 +559,30 @@ static pwr_tStatus HelpClass( ldh_sMenuCall *ip)
   pwr_tStatus sts;
   int size;
   char cname[32];
+  char vname[32];
   char cmd[200];
   pwr_tCid cid;
-
+  pwr_tVid vid;
+  
   sts = ldh_GetAttrRefTid( ip->PointedSession, &ip->Pointed, &cid);
   if ( EVEN(sts)) return sts;
 
   sts = ldh_ClassIdToName( ip->PointedSession, cid, cname, sizeof(cname), &size);
   if ( EVEN(sts)) return sts;
+
+  vid = cdh_CidToVid(cid);
+  if ( cdh_cManufactClassVolMin <= vid && vid <= cdh_cManufactClassVolMax) {
+    /* Get help file for this volume */
+    sts = ldh_VolumeIdToName( ldh_SessionToWB(ip->PointedSession), vid, vname, sizeof(vname), &size);
+    if ( EVEN(sts)) return sts;
+
+    cdh_ToLower( vname, vname);
+    sprintf( cmd, "help %s /helpfile=\"$pwr_exe/%s/%s_xtthelp.dat\"/strict", cname, 
+	     lng_get_language_str(), vname);
+
+    wtt_command( ip->EditorContext, cmd);
+    return 1;
+  }
 
   if ( cname[0] == '$')
     sprintf( cmd, "help %s /strict", &cname[1]);
@@ -628,6 +645,39 @@ static pwr_tStatus HelpFilter( ldh_sMenuCall *ip)
   return 1;
 }
 
+static pwr_tStatus Cast( ldh_sMenuCall *ip) 
+{
+  pwr_tStatus sts;
+  pwr_tCid cid;
+  ldh_sAttrRefInfo info;
+  
+  sts = ldh_GetAttrRefTid( ip->PointedSession, &ip->Pointed, &cid);
+  if ( EVEN(sts)) return sts;
+
+  sts = ldh_GetAttrRefInfo( ip->PointedSession, &ip->Pointed, &info);
+  if ( EVEN(sts)) return sts;
+
+  if ( info.flags & PWR_MASK_CASTATTR) {
+    printf( "Here in cast\n");
+    wcast_new( ip->EditorContext, ip->WindowContext, "Casting Window", ip->PointedSession,
+		ip->Pointed, &sts);
+  }
+  return 1;
+}
+
+static pwr_tStatus CastFilter( ldh_sMenuCall *ip) 
+{
+  pwr_tStatus sts;
+  ldh_sAttrRefInfo info;
+  
+  sts = ldh_GetAttrRefInfo( ip->PointedSession, &ip->Pointed, &info);
+  if ( EVEN(sts)) return sts;
+
+  if ( info.flags & PWR_MASK_CASTATTR)
+    return 1;
+  return 0;
+}
+
 
 pwr_dExport pwr_BindMethods($Object) = {
   pwr_BindMethod(CreateObject),
@@ -648,6 +698,8 @@ pwr_dExport pwr_BindMethods($Object) = {
   pwr_BindMethod(HelpClassFilter),
   pwr_BindMethod(Help),
   pwr_BindMethod(HelpFilter),
+  pwr_BindMethod(Cast),
+  pwr_BindMethod(CastFilter),
   pwr_NullMethod
 };
 

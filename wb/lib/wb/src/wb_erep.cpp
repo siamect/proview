@@ -359,6 +359,12 @@ void wb_erep::load( pwr_tStatus *sts, char *db)
     loadMeta( sts, db);
     bindMethods();
     loadLocalWb( sts);
+    wb_vrepref *vrep = new wb_vrepref( this, ldh_cPlcConnectVolume);
+    addExtern( sts, vrep);
+    vrep = new wb_vrepref( this, ldh_cPlcHostVolume);
+    addExtern( sts, vrep);
+    vrep = new wb_vrepref( this, ldh_cIoConnectVolume);
+    addExtern( sts, vrep);
     return;
   }
   loadCommonMeta( sts);

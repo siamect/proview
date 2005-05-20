@@ -208,7 +208,7 @@ static types_sEnumElement mask_Attribute_Flags[] = {
 	{ pwr_mAdef_pointer	, "Pointer"},
 	{ pwr_mAdef_array	, "Array"},
 	{ pwr_mAdef_backup	, "Backup"},
-	{ pwr_mAdef_changelog	, "ChangeLog"},
+	{ pwr_mAdef_castattr	, "CastAttr"},
 	{ pwr_mAdef_state	, "State"},
 	{ pwr_mAdef_const	, "Const"},
 	{ pwr_mAdef_rtvirtual	, "RtVirtual"},

@@ -2081,7 +2081,23 @@ WItemAttrObject::WItemAttrObject(
   brow_CreateNode( brow->ctx, attr_name, brow->nc_object, 
 		dest, dest_code, (void *) this, 1, &node);
 
-  brow_SetAnnotPixmap( node, 0, brow->pixmap_object);
+  if ( flags & PWR_MASK_CASTATTR) {
+    // Replace tid from class definition to tid from actual attribute 
+    pwr_tTid tid;
+    pwr_sAttrRef attrref = aref();
+    sts = ldh_GetAttrRefTid( ldhses, &attrref, &tid);
+    if ( (int) tid == type_id)
+      brow_SetAnnotPixmap( node, 0, brow->pixmap_uncastattr);
+    else {
+      type_id = tid;
+      brow_SetAnnotPixmap( node, 0, brow->pixmap_castattr);
+    }
+  }
+  else    
+    brow_SetAnnotPixmap( node, 0, brow->pixmap_object);
+
+  if ( flags & PWR_MASK_CASTATTR) {
+  }
 
   if ( fullname) {
     sts = ldh_ObjidToName( ldhses, objid, ldh_eName_Hierarchy, annot, 

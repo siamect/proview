@@ -57,6 +57,7 @@ extern "C" {
 #include "wb_wtt.h"
 #include "wb_watt.h"
 #include "wb_wnav.h"
+#include "wb_wcast.h"
 #include "wb_api.h"
 
 //
@@ -224,3 +225,19 @@ extern "C" void watt_pop( watt_tCtx watt)
 }
 
 
+extern "C" wcast_tCtx wcast_new(
+	void *parent_ctx,
+	Widget	parent_wid,
+	char *name,
+	ldh_tSesContext ldhses,
+	pwr_sAttrRef aref,
+	pwr_tStatus *status)
+{
+  WCast *wcast = new WCast( parent_ctx, parent_wid, name, ldhses, aref, status);
+  return (wcast_tCtx) wcast;
+}
+
+extern "C" void wcast_delete( wcast_tCtx wcast)
+{
+  delete (WCast *)wcast;
+}

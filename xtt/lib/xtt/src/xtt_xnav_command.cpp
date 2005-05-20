@@ -2313,7 +2313,9 @@ static int	xnav_open_func(	void		*client_data,
 	    if ( EVEN(sts)) return sts;
 
 	    cdh_ToLower( cname, cname);
-	    if ( cdh_CidToVid(cid) < cdh_cUserClassVolMin) {
+	    if ( cdh_CidToVid(cid) < cdh_cUserClassVolMin ||
+		 (cdh_CidToVid(cid) >= cdh_cManufactClassVolMin &&
+		  cdh_CidToVid(cid) <= cdh_cManufactClassVolMax)) {
 	      if ( cname[0] == '$')
 		sprintf( file_str, "pwr_c_%s", &cname[1]);
 	      else
@@ -5151,6 +5153,7 @@ static int xnav_attribute_func (
           case pwr_eType_UInt32:
 	  case pwr_eType_ClassId:
 	  case pwr_eType_TypeId:
+	  case pwr_eType_CastId:
 	  case pwr_eType_VolumeId:
 	  case pwr_eType_ObjectIx:
           {

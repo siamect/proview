@@ -523,6 +523,51 @@ static int compCatt( tree_sTable *tp, tree_sNode *x, tree_sNode *y)
 }
 
 
+void wb_merep::subClass( pwr_tCid supercid, pwr_tCid subcid, pwr_tCid *nextsubcid,
+			 pwr_tStatus *sts)
+{
+  // Loop through all $ClassDef objects
+  for ( mvrep_iterator it = m_mvrepdbs.begin(); 
+	it != m_mvrepdbs.end(); 
+	it++) {
+    wb_vrepdbs *vrep = (wb_vrepdbs *)it->second;
+    wb_orep *o, *onext;
+    wb_adrep *ad;
+    pwr_tCid cid;
+    bool prev_found = false;
+
+    for ( o = vrep->object( sts, pwr_eClass_ClassDef);
+	  ODD(*sts);
+	  onext = o->next( sts), o->unref(), o = onext) {
+      o->ref();
+
+      cid = cdh_ClassObjidToId( o->oid());
+      wb_cdrep *cd = cdrep( sts, cid);
+      if ( EVEN(*sts)) throw wb_error(*sts);
+
+      wb_bdrep *bd = cd->bdrep( sts, pwr_eBix_rt);
+      if ( EVEN(*sts)) {
+	delete cd;
+	continue;
+      }
+
+      ad = bd->adrep( sts);
+      if ( ODD(*sts) && ad->flags() & PWR_MASK_SUPERCLASS && ad->tid() == supercid) {
+	if ( subcid == pwr_cNCid || prev_found) {
+	  *nextsubcid = cid;
+	  delete bd;
+	  delete cd;
+	  return;
+	}
+	else if ( subcid == cid)
+	  prev_found = true;
+      }
+      delete bd;
+      delete cd;
+    }
+  }
+  *sts = LDH__NONEXTCLASS;
+}
 
 
 

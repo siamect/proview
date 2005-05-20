@@ -34,6 +34,7 @@ class wb_attribute : public wb_status
   size_t m_offset;
   int m_idx; // -1 if whole array, only valid for arrays 
   pwr_tTid m_tid;
+  pwr_tTid m_original_tid;
   int m_elements;
   pwr_eType m_type;
   int m_flags;
@@ -72,6 +73,7 @@ public:
   size_t offset() const;
   pwr_eType type() const;
   pwr_tTid tid() const;
+  pwr_tTid originalTid() const;
   int nElement() const;
   int index() const;
   int flags() const;
@@ -110,6 +112,7 @@ public:
 
   pwr_tStatus sts() const { return m_sts;}
   wb_adrep *adrep() { return m_adrep;}
+  void castId( pwr_tCastId *castid);
 
 private:
   void check() const;

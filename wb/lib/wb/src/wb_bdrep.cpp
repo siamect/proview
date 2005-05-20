@@ -112,6 +112,7 @@ wb_adrep *wb_bdrep::adrep( pwr_tStatus *sts, const char *aname)
   wb_adrep *old = 0;
 
   for ( int i = 0; i < n.attributes(); i++) {
+    bool next_attr = false;
     wb_name an(n.attribute(i));
     wb_orep *orep = bd->m_orep->vrep()->child( sts, bd->m_orep, an);
     while ( EVEN(*sts)) {
@@ -145,12 +146,19 @@ wb_adrep *wb_bdrep::adrep( pwr_tStatus *sts, const char *aname)
 	orep = bd->m_orep->vrep()->child( sts, bd->m_orep, an);
       }
       else {
+	if ( adrep && adrep->flags() & PWR_MASK_CASTATTR && n.hasSuper()) {
+	  // Allow additional super attributesegement for casted attributes
+	  next_attr = true;
+	  break;
+	}
 	orep->ref();
 	orep->unref();
 	*sts = LDH__NOSUCHATTR;
 	return 0;
       }
     }
+    if ( next_attr)
+      continue;
     if ( adrep)
       old = adrep;
 

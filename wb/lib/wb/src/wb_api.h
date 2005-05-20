@@ -106,6 +106,17 @@ void watt_delete( watt_tCtx watt);
 int watt_open_changevalue( watt_tCtx watt, char *name);
 void watt_pop( watt_tCtx watt);
 
+typedef void *wcast_tCtx;
+wcast_tCtx wcast_new(
+		     void *parent_ctx,
+		     Widget	parent_wid,
+		     char *name,
+		     ldh_tSesContext ldhses,
+		     pwr_sAttrRef aref,
+		     pwr_tStatus *status
+		     );
+void wcast_delete( wcast_tCtx wcast);
+
 #if defined __cplusplus
 }
 #endif

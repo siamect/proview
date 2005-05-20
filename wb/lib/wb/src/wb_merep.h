@@ -70,6 +70,7 @@ public:
   void insertCattObject( pwr_tStatus *sts, pwr_tCid cid, 
 			 wb_adrep *adp, int offset);
   tree_sTable *catt_tt() { return m_catt_tt;}
+  void subClass( pwr_tCid supercid, pwr_tCid subcid, pwr_tCid *nextsubcid, pwr_tStatus *sts);
 };
 
 #endif

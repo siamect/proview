@@ -324,7 +324,7 @@ bool wb_session::writeAttribute(wb_attribute &a, void *p)
   return sts;
 }
 
-bool wb_session::copyOset( pwr_sAttrRef *arp, bool keepref)
+bool wb_session::copyOset( pwr_sAttrRef *arp, bool keepref, bool ignore_errors)
 {
   char name[32];
   pwr_tStatus sts;
@@ -356,6 +356,8 @@ bool wb_session::copyOset( pwr_sAttrRef *arp, bool keepref)
   wb_vrepmem *mem = new wb_vrepmem( m_vrep->erep(), vid);
   mem->name( name);
   m_vrep->erep()->addBuffer( &sts, mem);
+  if ( ignore_errors)
+    mem->importIgnoreErrors();
 
   ap = arp;
   while ( cdh_ObjidIsNotNull( ap->Objid)) {
@@ -402,7 +404,7 @@ bool wb_session::cutOset( pwr_sAttrRef *arp, bool keepref)
 
   m_sts = LDH__SUCCESS;
 
-  copyOset( arp, keepref);
+  copyOset( arp, keepref, false);
   if ( EVEN(m_sts)) return false;
 
   //ldh_sEvent *ep = m_srep->eventStart( pwr_cNOid, ldh_eEvent_ObjectTreeDeleted);
@@ -876,6 +878,58 @@ bool wb_session::validateDestination( wb_destination d, pwr_tCid cid)
   return true;
 }
 
+bool wb_session::castAttribute( pwr_sAttrRef *arp, pwr_tCid cid)
+{
+  wb_attribute a = attribute(arp);
+  if (!a) return a.sts();
+    
+  if ( !(a.flags() & PWR_MASK_CASTATTR)) {
+    m_sts = 0;
+    return false;
+  }
+
+  wb_cdef c = cdef( cid);
+  //if ( c.size( pwr_eBix_rt) != a.size()) {
+  //  m_sts = 0;
+  //  return false;
+  //}
+
+  // pwr_tTid tid = a.tid();
+
+  pwr_tCastId castid;
+  if ( cid == a.originalTid())
+    castid = pwr_cNClassId;
+  else
+    castid = cid;
+
+  pwr_sAttrRef cast_aref = *arp;
+  cast_aref.Offset -= sizeof(pwr_tCastId);
+  cast_aref.Size = sizeof(pwr_tCastId);
+  cast_aref.Flags.b.ObjectAttr = 0;
+  wb_attribute cast_a = attribute(&cast_aref);
+  if (!cast_a) return cast_a.sts();
+
+  try {
+    writeAttribute( cast_a, &castid);
+  }
+  catch (wb_error& e) {
+    m_sts = e.sts();
+    return false;
+  }  
+
+  void *body = calloc( 1, c.size( pwr_eBix_rt));
+  c.templateBody( &m_sts, pwr_eBix_rt, body, arp->Objid);
+
+  try {
+    writeAttribute( a, body);
+  }
+  catch (wb_error& e) {
+    m_sts = e.sts();
+    return false;
+  }  
+
+  return true;
+}
 
 
 

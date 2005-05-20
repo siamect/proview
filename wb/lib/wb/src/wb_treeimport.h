@@ -25,7 +25,6 @@ class wb_treeimport
 			     bool *modified);
   bool importUpdateObject( wb_orep *o, wb_vrep *vrep);
 
-
 public:
   virtual ~wb_treeimport() {}
   virtual bool importTree( bool keepref) = 0;
@@ -38,6 +37,7 @@ public:
 				 pwr_tOid boid, const char *name, pwr_mClassDef flags,
 				 size_t rbSize, size_t dbSize, void *rbody, void *dbody,
 				 pwr_tOid *roid) = 0;
+  virtual void importIgnoreErrors() = 0;
   bool importTranslationTableInsert( pwr_tOix from, pwr_tOix to);
   void importTranslationTableClear();
   pwr_tOix importTranslate( pwr_tOix oix);

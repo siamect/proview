@@ -1628,7 +1628,7 @@ int gcg_get_connected_parameter (
 	    strcpy( conn_obj, name);
 
 	    /* Get class of the output object */
-	    sts = ldh_GetAttrRefTid(
+	    sts = ldh_GetAttrRefOrigTid(
 			gcgctx.ldhses,
 			&output_attrref,
 			&class);
@@ -1715,7 +1715,7 @@ static int	gcg_get_connected_par_close(
 			&output_attrref, &output_type, &output_prefix, output_par);
 	    if ( sts == GSX__NEXTPAR ) return GSX__SWINDERR;
 	    if ( EVEN(sts)) return sts;
-	  }	  
+	  }
 	  else
 	    return GSX__SWINDERR;
 
@@ -1729,7 +1729,7 @@ static int	gcg_get_connected_par_close(
 	  strcpy( conn_obj, name);
 
 	  /* Get class of the output object */
-	  sts = ldh_GetAttrRefTid(
+	  sts = ldh_GetAttrRefOrigTid(
 			gcgctx.ldhses,
 			&output_attrref,
 			&class);
@@ -1854,7 +1854,7 @@ int gcg_get_debug (
 	strcpy( conn_obj, name);
 
 	/* Get class of the output object */
-	sts = ldh_GetAttrRefTid(
+	sts = ldh_GetAttrRefOrigTid(
 			gcgctx.ldhses,
 			&output_attrref,
 			&class);
@@ -2994,7 +2994,7 @@ static int	gcg_aref_print(
 	  attrref = (gcgctx->aref + i)->attrref;
 	  prefix = (gcgctx->aref + i)->prefix;
 
-	  sts = ldh_GetAttrRefTid(gcgctx->wind->hw.ldhses, &attrref, &class);
+	  sts = ldh_GetAttrRefOrigTid(gcgctx->wind->hw.ldhses, &attrref, &class);
 	  if ( EVEN(sts)) return sts;
 
 	  /* Get name for this class */
@@ -3039,7 +3039,7 @@ static int	gcg_ioread_print(
 	  attrref = (gcgctx->ioread + i)->attrref;
 	  prefix = (gcgctx->ioread + i)->prefix;
 
-	  sts = ldh_GetAttrRefTid(gcgctx->wind->hw.ldhses, &attrref, &class);
+	  sts = ldh_GetAttrRefOrigTid(gcgctx->wind->hw.ldhses, &attrref, &class);
 	  if ( EVEN(sts)) return sts;
 
 	  /* Get name for this class */
@@ -3087,7 +3087,7 @@ static int	gcg_iowrite_print(
 	  attrref = (gcgctx->iowrite + i)->attrref;
 	  prefix = (gcgctx->iowrite + i)->prefix;
 
-	  sts = ldh_GetAttrRefTid(gcgctx->wind->hw.ldhses, &attrref, &class);
+	  sts = ldh_GetAttrRefOrigTid(gcgctx->wind->hw.ldhses, &attrref, &class);
 	  if ( EVEN(sts)) return sts;
 
 	  /* Get name for this class */
@@ -3208,7 +3208,7 @@ int gcg_get_outputstring (
 			(output_bodydef->Par)->Param.Info.PgmName);
 	          if ( output_bodydef->Par->Output.Info.Flags & PWR_MASK_ARRAY)
 	            strncat( parstring, "[0]", 80);
-		  parattrref->Objid = *objdid;
+		  *parattrref = cdh_ObjidToAref( *objdid);
 		  *partype = GCG_OTYPE_OID;
 		  free((char *) objdid);
 	          break;
@@ -3228,7 +3228,7 @@ int gcg_get_outputstring (
 		  if ( EVEN(sts)) return sts;
 
 		  /* Check that this is objdid of an existing object */
-		  sts = ldh_GetAttrRefTid(
+		  sts = ldh_GetAttrRefOrigTid(
 			(output_node->hn.wind)->hw.ldhses, 
 			attrref,
 			&class);
@@ -3261,7 +3261,7 @@ int gcg_get_outputstring (
 	        strncat( parstring, "[0]", 80);
 
 	      /* Convert objdid to ascii */
-	      parattrref->Objid = output_node->ln.oid;
+	      *parattrref = cdh_ObjidToAref( output_node->ln.oid);
 	      *partype = GCG_OTYPE_OID;
 	    }		
 	    *parprefix = GCG_PREFIX_REF;
@@ -3339,7 +3339,7 @@ static int	gcg_get_outputstring_spec(
 	  if ( EVEN(sts)) return sts;
 
 	  /* Check that this is objdid of an existing object */
-	  sts = ldh_GetAttrRefTid( ldhses, attrref, &class);
+	  sts = ldh_GetAttrRefOrigTid( ldhses, attrref, &class);
 	  if ( EVEN(sts)) {
 	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
 	    free((char *) attrref);
@@ -3367,7 +3367,7 @@ static int	gcg_get_outputstring_spec(
 	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
 	    return GSX__NEXTPAR;
 	  }
-	  sts = ldh_GetAttrRefTid( ldhses, parattrref, &class);
+	  sts = ldh_GetAttrRefOrigTid( ldhses, parattrref, &class);
 	  if ( EVEN(sts)) {
 	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
 	    return GSX__NEXTPAR;
@@ -3397,7 +3397,7 @@ static int	gcg_get_outputstring_spec(
 	  if ( EVEN(sts)) return sts;
 
 	  /* Check that this is objdid of an existing object */
-	  sts = ldh_GetAttrRefTid( ldhses, attrref, &class);
+	  sts = ldh_GetAttrRefOrigTid( ldhses, attrref, &class);
 	  if ( EVEN(sts)) {
 	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
 	    free((char *) attrref);
@@ -3427,7 +3427,7 @@ static int	gcg_get_outputstring_spec(
 	    return GSX__NEXTPAR;
 	  }
 
-	  sts = ldh_GetAttrRefTid( ldhses, parattrref, &class);
+	  sts = ldh_GetAttrRefOrigTid( ldhses, parattrref, &class);
 	  if ( EVEN(sts)) {
 	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
 	    return GSX__NEXTPAR;
@@ -3454,7 +3454,7 @@ static int	gcg_get_outputstring_spec(
 	  if ( EVEN(sts)) return sts;
 
 	  /* Check that this is objdid of an existing object */
-	  sts = ldh_GetAttrRefTid( ldhses, attrref, &class);
+	  sts = ldh_GetAttrRefOrigTid( ldhses, attrref, &class);
 	  if ( EVEN(sts)) {
 	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
 	    free((char *) attrref);
@@ -3488,7 +3488,7 @@ static int	gcg_get_outputstring_spec(
 	  if ( EVEN(sts)) return sts;
 
 	  /* Check that this is objdid of an existing object */
-	  sts = ldh_GetAttrRefTid( ldhses, attrref, &class);
+	  sts = ldh_GetAttrRefOrigTid( ldhses, attrref, &class);
 	  if ( EVEN(sts)) {
 	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
 	    free((char *) attrref);
@@ -3519,7 +3519,7 @@ static int	gcg_get_outputstring_spec(
 	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
 	    return GSX__NEXTPAR;
 	  }
-	  sts = ldh_GetAttrRefTid( ldhses, parattrref, &class);
+	  sts = ldh_GetAttrRefOrigTid( ldhses, parattrref, &class);
 	  if ( EVEN(sts)) {
 	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
 	    return GSX__NEXTPAR;
@@ -3564,7 +3564,7 @@ static int	gcg_get_outputstring_spec(
 	  sts = gcg_parname_to_pgmname(ldhses, class, parameter, parstring);
 	  if ( EVEN(sts)) return sts;
 
-	  parattrref->Objid = host_objid;
+	  *parattrref = cdh_ObjidToAref( host_objid);
 	  *parprefix = GCG_PREFIX_REF;
 	  *partype = GCG_OTYPE_OID;
 	  free((char *) parameter);
@@ -3668,7 +3668,7 @@ static int	gcg_get_inputstring(
 			(output_bodydef->Par)->Param.Info.PgmName);
 	          if ( output_bodydef->Par->Output.Info.Flags & PWR_MASK_ARRAY)
 	            strncat( parstring, "[0]", 80);
-		  parattrref->Objid = *objdid;
+		  *parattrref = cdh_ObjidToAref( *objdid);
 		  *partype = GCG_OTYPE_OID;
 		  free((char *) objdid);
 	          break;
@@ -3688,7 +3688,7 @@ static int	gcg_get_inputstring(
 		  if ( EVEN(sts)) return sts;
 
 		  /* Check that this is objdid of an existing object */
-		  sts = ldh_GetAttrRefTid(
+		  sts = ldh_GetAttrRefOrigTid(
 			(output_node->hn.wind)->hw.ldhses, 
 			attrref,
 			&class);
@@ -3727,7 +3727,7 @@ static int	gcg_get_inputstring(
 	        strncat( parstring, "[0]", 80);
 
 	      /* Convert objdid to ascii */
-	      parattrref->Objid = output_node->ln.oid;
+	      *parattrref = cdh_ObjidToAref( output_node->ln.oid);
 	      *partype = GCG_OTYPE_OID;
 	    }		
 	    *parprefix = GCG_PREFIX_REF;
@@ -6404,7 +6404,7 @@ vldh_t_node	node;
 	if ( EVEN(sts)) return sts;
 
 	/* Check that this is objdid of an existing object */
-	sts = ldh_GetAttrRefTid( ldhses, &attrref, &class);
+	sts = ldh_GetAttrRefOrigTid( ldhses, &attrref, &class);
 	if ( EVEN(sts)) {
 	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
 	  return GSX__NEXTNODE;
@@ -6539,7 +6539,7 @@ vldh_t_node	node;
 	if ( EVEN(sts)) return sts;
 
 	/* Check that this is objdid of an existing object */
-	sts = ldh_GetAttrRefTid( ldhses, &attrref, &class);
+	sts = ldh_GetAttrRefOrigTid( ldhses, &attrref, &class);
 	if ( EVEN(sts)) {
 	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
 	  return GSX__NEXTNODE;
@@ -6776,7 +6776,7 @@ vldh_t_node	node;
 	  if ( EVEN(sts)) return sts;
 
 	  /* The reset object has to be a di, do or dv */
-	  sts = ldh_GetAttrRefTid( ldhses, &resattrref, &class);
+	  sts = ldh_GetAttrRefOrigTid( ldhses, &resattrref, &class);
 	  if ( EVEN(sts)) {
 	    gcg_error_msg( gcgctx, GSX__NORESET, node);
 	    return GSX__NEXTNODE;
@@ -7746,7 +7746,7 @@ vldh_t_node	node;
 	if ( EVEN(sts)) return sts;
 
 	/* Check that this is objdid of an existing object */
-	sts = ldh_GetAttrRefTid( ldhses, &refattrref, &class);
+	sts = ldh_GetAttrRefOrigTid( ldhses, &refattrref, &class);
 	if ( EVEN(sts)) {
 	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
 	  return GSX__NEXTNODE;
@@ -7976,7 +7976,7 @@ vldh_t_node	node;
 	if ( EVEN(sts)) return sts;
 
 	/* Check that this is objdid of an existing object */
-	sts = ldh_GetAttrRefTid( ldhses, &refattrref, &class);
+	sts = ldh_GetAttrRefOrigTid( ldhses, &refattrref, &class);
 	if ( EVEN(sts)) {
 	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
 	  return GSX__NEXTNODE;
@@ -8003,7 +8003,7 @@ vldh_t_node	node;
 	  return GSX__NEXTPAR;
 	}
 
-	sts = ldh_GetAttrRefTid( ldhses, &refattrref, &class);
+	sts = ldh_GetAttrRefOrigTid( ldhses, &refattrref, &class);
 	if ( EVEN(sts)) return sts;
 	
 	sts = gcg_parname_to_pgmname(ldhses, class, s+1, parameter);
@@ -9017,7 +9017,7 @@ vldh_t_node	node;
 	if ( EVEN(sts)) return sts;
 
 	/* Check that class of the objdids is ok */
-	sts = ldh_GetAttrRefTid( ldhses, &doopen_attrref, &class);
+	sts = ldh_GetAttrRefOrigTid( ldhses, &doopen_attrref, &class);
 	if ( EVEN(sts)) {
 	  /* No doopen object */
 	  IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
@@ -9046,7 +9046,7 @@ vldh_t_node	node;
 	}
 
 	/* Check the close do */
-	sts = ldh_GetAttrRefTid( ldhses, &doclose_attrref, &class);
+	sts = ldh_GetAttrRefOrigTid( ldhses, &doclose_attrref, &class);
 	if ( EVEN(sts)) {
 	  /* No doclose object */
 	  IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
@@ -9146,7 +9146,7 @@ vldh_t_node	node;
 	  if ( EVEN(sts)) return sts;
 
 	  /* The reset object has to be a di, do or dv */
-	  sts = ldh_GetAttrRefTid( ldhses, &resattrref, &class);
+	  sts = ldh_GetAttrRefOrigTid( ldhses, &resattrref, &class);
 	  if ( EVEN(sts)) {
 	    gcg_error_msg( gcgctx, GSX__NORESET, node);
 	    return GSX__NEXTNODE;
@@ -9343,7 +9343,7 @@ vldh_t_node	node;
 	  if ( EVEN(sts)) return sts;
 		  
 	  /* The reset object has to be a di, do or dv */
-	  sts = ldh_GetAttrRefTid( ldhses, &resattrref, &class);
+	  sts = ldh_GetAttrRefOrigTid( ldhses, &resattrref, &class);
 	  if ( EVEN(sts)) {
 	    gcg_error_msg( gcgctx, GSX__NORESET, node);
 	    return GSX__NEXTNODE;
@@ -10560,6 +10560,35 @@ vldh_t_node	node;
 	char			output_prefix;
 	char			output_par[32];
 	char			*name;
+	pwr_sAttrRef		*connect_aref;
+	int			size;
+	pwr_tCid		cid;
+
+	/* Check if there is a PlcConnected */
+	sts = ldh_GetObjectPar( gcgctx->ldhses, node->ln.oid, "RtBody", 
+				"PlcConnect", (char **)&connect_aref, &size);
+	if ( ODD(sts)) {
+	  pwr_sAttrRef aref = *connect_aref;
+	  free( (char *)connect_aref);
+	  sts = gcg_replace_ref( gcgctx, &aref, node);
+	  if ( ODD(sts)) {
+	    /* Store the converted aref */
+	    sts = ldh_SetObjectPar( gcgctx->ldhses, node->ln.oid, "RtBody", 
+				"PlcConnect", (char *)&aref, sizeof(aref));
+	  }
+
+	  if ( cdh_ObjidIsNull( aref.Objid)) {
+	    gcg_error_msg( gcgctx, GSX__NOCONNECT, node);
+	    return GSX__NEXTNODE;
+	  }
+
+	  // Check that object exist
+	  sts = ldh_GetAttrRefOrigTid( gcgctx->ldhses, &aref, &cid);
+	  if ( EVEN(sts)) {
+	    gcg_error_msg( gcgctx, GSX__NOCONNECT, node);
+	    return GSX__NEXTNODE;
+	  }
+	}
 
 	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
 
@@ -10732,7 +10761,7 @@ vldh_t_node	node;
 	if ( EVEN(sts)) return sts;
 
 	/* Check that this is objdid of an existing object */
-	sts = ldh_GetAttrRefTid( ldhses, &refattrref, &class);
+	sts = ldh_GetAttrRefOrigTid( ldhses, &refattrref, &class);
 	if ( EVEN(sts)) {
 	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
 	  return GSX__NEXTNODE;
@@ -10759,7 +10788,7 @@ vldh_t_node	node;
 	  return GSX__NEXTPAR;
 	}
 
-	sts = ldh_GetAttrRefTid( ldhses, &refattrref, &class);
+	sts = ldh_GetAttrRefOrigTid( ldhses, &refattrref, &class);
 	if ( EVEN(sts)) return sts;
 	
 	sts = gcg_parname_to_pgmname(ldhses, class, s+1, parameter);
@@ -10886,8 +10915,11 @@ vldh_t_node	node;
 	  gcg_error_msg( gcgctx, GSX__NOBACKUP, node);  
 	  strcpy( parname, "");
 	}
-	else if ( EVEN(sts)) 
-	  return sts;
+	else if ( EVEN(sts)) {
+	  /* Parameter can't be found */
+	  gcg_error_msg( gcgctx, GSX__CONBACKUP, node);  
+	  strcpy( parname, "");
+	}
 	else
 	{
 	  strcpy( parname, conn_obj);
@@ -11034,7 +11066,7 @@ vldh_t_node	node;
 	if ( EVEN(sts)) return sts;
 
 	/* Check that this is objdid of an existing object */
-	sts = ldh_GetAttrRefTid( ldhses, &refattrref, &class);
+	sts = ldh_GetAttrRefOrigTid( ldhses, &refattrref, &class);
 	if ( EVEN(sts)) {
 	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
 	  return GSX__NEXTNODE;
@@ -11185,7 +11217,7 @@ vldh_t_node	node;
 	if ( EVEN(sts)) return sts;
 
 	/* Check that this is objdid of an existing object */
-	sts = ldh_GetAttrRefTid( ldhses, &refattrref, &class);
+	sts = ldh_GetAttrRefOrigTid( ldhses, &refattrref, &class);
 	if ( EVEN(sts)) {
 	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
 	  return GSX__NEXTNODE;
@@ -11898,7 +11930,7 @@ vldh_t_node	node;
 	if ( EVEN(sts)) return sts;
 
 	/* Check that this is objdid of an existing object */
-	sts = ldh_GetAttrRefTid( ldhses, &refattrref, &class);
+	sts = ldh_GetAttrRefOrigTid( ldhses, &refattrref, &class);
 	if ( EVEN(sts)) {
 	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
 	  return GSX__NEXTNODE;
@@ -12239,7 +12271,7 @@ vldh_t_node	node;
 	  if ( EVEN(sts)) return sts;
 
 	  /* The reset object has to be a di, do or dv */
-	  sts = ldh_GetAttrRefTid( ldhses, &resattrref,
+	  sts = ldh_GetAttrRefOrigTid( ldhses, &resattrref,
 			&class);
 	  if ( EVEN(sts)) {
 	    gcg_error_msg( gcgctx, GSX__NORESET, node);
@@ -14025,6 +14057,13 @@ vldh_t_node	node;
 	    return GSX__NEXTNODE;
 	  }
 
+	  // Check that object exist
+	  sts = ldh_GetAttrRefOrigTid( gcgctx->ldhses, &aref, &class);
+	  if ( EVEN(sts)) {
+	    gcg_error_msg( gcgctx, GSX__NOCONNECT, node);
+	    return GSX__NEXTNODE;
+	  }
+
 	  gcg_aref_insert( gcgctx, aref, GCG_PREFIX_REF);
 	}
 
@@ -14846,7 +14885,7 @@ static pwr_tStatus gcg_replace_ref( gcg_ctx gcgctx, pwr_sAttrRef *attrref,
 
     // Check that the class or the connectedobject, or any superclass,
     // matches the symbolic reference
-    sts = ldh_GetAttrRefTid( gcgctx->ldhses, connect_arp, &connect_cid);
+    sts = ldh_GetAttrRefOrigTid( gcgctx->ldhses, connect_arp, &connect_cid);
     while ( ODD(sts)) {
       if ( connect_cid == attrref->Objid.oix)
 	break;
@@ -14854,7 +14893,7 @@ static pwr_tStatus gcg_replace_ref( gcg_ctx gcgctx, pwr_sAttrRef *attrref,
       sts = ldh_GetSuperClass( gcgctx->ldhses, connect_cid, &connect_cid);
     }
     if ( EVEN(sts)) {
-      gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
+      gcg_error_msg( gcgctx, GSX__REFCONNECT, node);  
       return GSX__NEXTNODE;
     }
 

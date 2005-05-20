@@ -211,6 +211,7 @@ int  wnav_attr_string_to_value( ldh_tSesContext ldhses, int type_id, char *value
       break;
     }
     case pwr_eType_TypeId:
+    case pwr_eType_CastId:
     {
       pwr_tTypeId	val_typeid;
       pwr_tObjid	objid;
@@ -456,6 +457,7 @@ void  wnav_attrvalue_to_string( ldh_tSesContext ldhses, int type_id, void *value
       break;
     }
     case pwr_eType_TypeId:
+    case pwr_eType_CastId:
     {
       objid = cdh_TypeIdToObjid( *(pwr_tTypeId *) value_ptr);
       sts = ldh_ObjidToName( ldhses, objid, ldh_eName_VolPath,

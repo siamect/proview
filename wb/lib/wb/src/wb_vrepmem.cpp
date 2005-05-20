@@ -28,7 +28,7 @@ extern "C" {
 
 wb_vrepmem::wb_vrepmem( wb_erep *erep, pwr_tVid vid) :
   wb_vrep(vid), m_erep(erep), m_merep(erep->merep()), root_object(0), volume_object(0),
-  m_nextOix(0), m_source_vid(0), m_classeditor(false)
+  m_nextOix(0), m_source_vid(0), m_classeditor(false), m_ignore(false)
 {
   strcpy( m_filename, "");
 
@@ -1284,10 +1284,18 @@ bool wb_vrepmem::importTreeObject(wb_merep *merep, pwr_tOid oid, pwr_tCid cid, p
   if ( merep && merep != m_merep) {
     // Check if class version differs
     wb_cdrep *cdrep_import = m_merep->cdrep( &sts, cid);
-    if ( EVEN(sts)) throw wb_error (sts);
+    if ( EVEN(sts)) {
+      if ( m_ignore)
+	return true;
+      throw wb_error (sts);
+    }
 
     wb_cdrep *cdrep_export = merep->cdrep( &sts, cid);
-    if ( EVEN(sts)) throw wb_error (sts);
+    if ( EVEN(sts)) {
+      if ( m_ignore)
+	return true;
+      throw wb_error (sts);
+    }
 
     if ( cdrep_import->ohTime().tv_sec != cdrep_export->ohTime().tv_sec) {
       convert = true;

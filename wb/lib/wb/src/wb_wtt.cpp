@@ -1638,7 +1638,7 @@ static void wtt_activate_copy( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
     return;
   }
 
-  sts = ldh_Copy( wtt->ldhses, sel_list, 0);
+  sts = ldh_Copy( wtt->ldhses, sel_list, 0, 0);
   if (EVEN(sts))
     MESSAGE_RETURN_STS( sts);
   if ( sel_cnt == 1)

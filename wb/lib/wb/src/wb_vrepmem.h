@@ -177,6 +177,7 @@ class wb_vrepmem : public wb_vrep, public wb_import
   pwr_tVid m_source_vid;
   char m_filename[200];
   bool m_classeditor;
+  bool m_ignore;
 
   map<pwr_tOix, mem_object *> m_oix_list;
 
@@ -318,6 +319,7 @@ public:
 				 size_t rbSize, size_t dbSize, void *rbody, void *dbody,
 				 pwr_tOid *roid);
   virtual bool importPaste();
+  virtual void importIgnoreErrors() { m_ignore = true;}
   bool updateObject( wb_orep *o, bool keepref);
   bool updateSubClass( wb_adrep *subattr, char *body, bool keepref);
   virtual bool accessSupported( ldh_eAccess access) { return true;}

@@ -480,6 +480,7 @@ void wb_print_wbl::printParameter(wb_volume& v,
     case pwr_eType_UInt32:
     case pwr_eType_Objid:
     case pwr_eType_TypeId:
+    case pwr_eType_CastId:
     case pwr_eType_ClassId:
     case pwr_eType_AttrRef:
     case pwr_eType_Time:
@@ -671,6 +672,7 @@ bool wb_print_wbl::printValue (wb_volume& v,
     }
     break;
   case pwr_eType_TypeId: /** @todo Modify when wb_tdef is OK q*/
+  case pwr_eType_CastId:
     if (*(pwr_tTypeId *) val == 0)
       sprintf(sval, "0");
     else {

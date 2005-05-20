@@ -76,6 +76,8 @@ static wbl_sSym datatypes[] =
   ,{ "pwr_eTix_Status", pwr_eTix_Status }
   ,{ "pwr_eType_NetStatus", pwr_eType_NetStatus }
   ,{ "pwr_eTix_NetStatus", pwr_eTix_NetStatus }
+  ,{ "pwr_eType_CastId", pwr_eType_CastId }
+  ,{ "pwr_eTix_CastId", pwr_eTix_CastId }
   ,{ "pwr_eTypeDef_AdefFlags", pwr_eTypeDef_AdefFlags }
   ,{ "pwr_eTdix_AdefFlags", pwr_eTdix_AdefFlags }
   ,{ "pwr_eTypeDef_ClassDefFlags", pwr_eTypeDef_ClassDefFlags }
@@ -243,7 +245,7 @@ static wbl_sSym attr_flags[] =
   { "PWR_MASK_POINTER",	PWR_MASK_POINTER } 
   ,{ "PWR_MASK_ARRAY",		PWR_MASK_ARRAY } 
   ,{ "PWR_MASK_BACKUP",		PWR_MASK_BACKUP } 
-  ,{ "PWR_MASK_CHANGELOG",	PWR_MASK_CHANGELOG } 
+  ,{ "PWR_MASK_CASTATTR",	PWR_MASK_CASTATTR } 
   ,{ "PWR_MASK_STATE",		PWR_MASK_STATE } 
   ,{ "PWR_MASK_CONST",		PWR_MASK_CONST } 
   ,{ "PWR_MASK_RTVIRTUAL",	PWR_MASK_RTVIRTUAL } 
@@ -276,6 +278,8 @@ static wbl_sSym attr_flags[] =
   ,{ "pwr_mClassDef_NoAdopt",	pwr_mClassDef_NoAdopt }
   ,{ "pwr_mClassDef_Template",	pwr_mClassDef_Template }
   ,{ "pwr_mClassDef_IO",	pwr_mClassDef_IO }
+  ,{ "pwr_mClassDef_HasCallBack", pwr_mClassDef_HasCallBack }
+  ,{ "pwr_mClassDef_CastAttr",	pwr_mClassDef_CastAttr }
   ,{ 0, 0 }
 };
 
@@ -1932,6 +1936,7 @@ int wb_wblnode::attrStringToValue( int type_id, char *value_str,
       break;
     }
     case pwr_eType_TypeId:
+    case pwr_eType_CastId:
     {
       pwr_tTypeId	val_typeid;
       pwr_eType type;
