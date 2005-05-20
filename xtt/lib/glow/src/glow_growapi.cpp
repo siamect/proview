@@ -4172,6 +4172,11 @@ void grow_SetBarInfo( grow_tObject object, glow_sBarInfo *info)
   ((GrowBar *)object)->set_bar_info( info);
 }
 
+void grow_GetBarInfo( grow_tObject object, glow_sBarInfo *info)
+{
+  ((GrowBar *)object)->get_bar_info( info);
+}
+
 void grow_SetAxisInfo( grow_tObject object, glow_sAxisInfo *info)
 {
   ((GrowAxis *)object)->set_axis_info( info);

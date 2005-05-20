@@ -208,6 +208,7 @@ void GrowAxis::draw( GlowTransform *t, int highlight, int hot, void *node,
   if ( ctx->nodraw)
     return;
   int i;
+  int draw_text = (increment > 0);
   int idx;
   int x, y;
   char text[20];
@@ -275,23 +276,27 @@ void GrowAxis::draw( GlowTransform *t, int highlight, int hot, void *node,
     glow_draw_line( ctx, ur_x, ll_y, ur_x, ur_y, drawtype, idx, 0);
 
     // Calculate max value text width
-    for ( i = 0; i < lines; i++)
-    {
-      if ( i % valuequotient == 0) {
-        sprintf( text, format, max_value - i * increment);
-        draw_get_text_extent( ctx, text, strlen(text), text_drawtype, 
-                max( 0, text_idx), &z_width, &z_height, &z_descent);
-        if ( max_z_width < z_width)
-          max_z_width = z_width;
+    if ( draw_text) {
+      for ( i = 0; i < lines; i++) {
+	if ( i % valuequotient == 0) {
+	  sprintf( text, format, max_value - i * increment);
+	  draw_get_text_extent( ctx, text, strlen(text), text_drawtype, 
+				max( 0, text_idx), &z_width, &z_height, &z_descent);
+	  if ( max_z_width < z_width)
+	    max_z_width = z_width;
+	}
       }
+      x_text = ll_x + max_z_width;
+      line_length = ur_x - ll_x - max_z_width;
+      if ( line_length < 3)
+	line_length = 3;
     }
-    x_text = ll_x + max_z_width;
-    line_length = ur_x - ll_x - max_z_width;
-    if ( line_length < 3)
-      line_length = 3;
+    else {
+      x_text = ll_x;
+      line_length = ur_x - ll_x;
+    }
 
-    for ( i = 0; i < lines; i++)
-    {
+    for ( i = 0; i < lines; i++) {
       y = int( ll_y + double(ur_y - ll_y) / (lines - 1) * i);
       if ( i % longquotient == 0)
         glow_draw_line( ctx, ur_x - line_length, y, 
@@ -299,18 +304,20 @@ void GrowAxis::draw( GlowTransform *t, int highlight, int hot, void *node,
       else
         glow_draw_line( ctx, ur_x -  int( 2.0 / 3 * line_length), y, 
           ur_x, y, drawtype, idx, 0);
-      sprintf( text, format, max_value - i * increment);
+      if ( draw_text) {
+	sprintf( text, format, max_value - i * increment);
 
-      if ( text_idx >= 0 && max_z_width < ur_x - ll_x &&
-           i % valuequotient == 0) {
-        if ( i == lines - 1)
-          y_text = y;
-        else if ( i == 0)
-          y_text = y + z_height - z_descent - 3;
-        else
-          y_text = y + (z_height-z_descent)/2;
-        glow_draw_text( ctx, ll_x, y_text,
-		    text, strlen(text), text_drawtype, text_color_drawtype, text_idx, highlight, 0);
+	if ( text_idx >= 0 && max_z_width < ur_x - ll_x &&
+	     i % valuequotient == 0) {
+	  if ( i == lines - 1)
+	    y_text = y;
+	  else if ( i == 0)
+	    y_text = y + z_height - z_descent - 3;
+	  else
+	    y_text = y + (z_height-z_descent)/2;
+	  glow_draw_text( ctx, ll_x, y_text,
+	       text, strlen(text), text_drawtype, text_color_drawtype, text_idx, highlight, 0);
+	}
       }
     }
   }
@@ -321,15 +328,19 @@ void GrowAxis::draw( GlowTransform *t, int highlight, int hot, void *node,
     glow_draw_line( ctx, ll_x, ur_y, ur_x, ur_y, drawtype, idx, 0);
 
     // Calculate max value text height
-    draw_get_text_extent( ctx, "0", 1, text_drawtype, 
-                max( 0, text_idx), &z_width, &z_height, &z_descent);
+    if ( draw_text) {
+      draw_get_text_extent( ctx, "0", 1, text_drawtype, 
+			    max( 0, text_idx), &z_width, &z_height, &z_descent);
 
-    line_length = ur_y - ll_y - z_height;
-    if ( line_length < 3)
-      line_length = 3;
+      line_length = ur_y - ll_y - z_height;
+      if ( line_length < 3)
+	line_length = 3;
+    }
+    else {
+      line_length = ur_y - ll_y;
+    }
 
-    for ( i = 0; i < lines; i++)
-    {
+    for ( i = 0; i < lines; i++) {
       x = int( ll_x + double(ur_x - ll_x) / (lines - 1) * (lines - 1- i));
       if ( i % longquotient == 0)
         glow_draw_line( ctx, x, ur_y - line_length, x, 
@@ -338,7 +349,7 @@ void GrowAxis::draw( GlowTransform *t, int highlight, int hot, void *node,
         glow_draw_line( ctx, x, ur_y -  int( 2.0 / 3 * line_length), x, 
           ur_y, drawtype, idx, 0);
 
-      if ( i % valuequotient == 0) {
+      if ( draw_text && i % valuequotient == 0) {
         sprintf( text, format, max_value - i * increment);
         draw_get_text_extent( ctx, text, strlen(text), text_drawtype, 
                 max( 0, text_idx), &z_width, &z_height, &z_descent);
@@ -363,23 +374,27 @@ void GrowAxis::draw( GlowTransform *t, int highlight, int hot, void *node,
     glow_draw_line( ctx, ll_x, ll_y, ll_x, ur_y, drawtype, idx, 0);
 
     // Calculate max value text width
-    for ( i = 0; i < lines; i++)
-    {
-      if ( i % valuequotient == 0) {
-        sprintf( text, format, max_value - i * increment);
-        draw_get_text_extent( ctx, text, strlen(text), text_drawtype, 
-                max( 0, text_idx), &z_width, &z_height, &z_descent);
-        if ( max_z_width < z_width)
-          max_z_width = z_width;
+    if ( draw_text) {
+      for ( i = 0; i < lines; i++) {
+	if ( i % valuequotient == 0) {
+	  sprintf( text, format, max_value - i * increment);
+	  draw_get_text_extent( ctx, text, strlen(text), text_drawtype, 
+				max( 0, text_idx), &z_width, &z_height, &z_descent);
+	  if ( max_z_width < z_width)
+	    max_z_width = z_width;
+	}
       }
+      x_text = ur_x - max_z_width;
+      line_length = ur_x - ll_x - max_z_width;
+      if ( line_length < 3)
+	line_length = 3;
     }
-    x_text = ur_x - max_z_width;
-    line_length = ur_x - ll_x - max_z_width;
-    if ( line_length < 3)
-      line_length = 3;
+    else {
+      x_text = ur_x;
+      line_length = ur_x - ll_x;
+    }
 
-    for ( i = 0; i < lines; i++)
-    {
+    for ( i = 0; i < lines; i++) {
       y = int( ll_y + double(ur_y - ll_y) / (lines - 1) * ( lines - 1 - i));
       if ( i % longquotient == 0)
         glow_draw_line( ctx, ll_x, y, 
@@ -389,7 +404,8 @@ void GrowAxis::draw( GlowTransform *t, int highlight, int hot, void *node,
           ll_x + int( 2.0 / 3 * line_length), y, drawtype, idx, 0);
       sprintf( text, format, max_value - i * increment);
 
-      if ( text_idx >= 0 && max_z_width < ur_x - ll_x &&
+      if ( draw_text && 
+	   text_idx >= 0 && max_z_width < ur_x - ll_x &&
            i % valuequotient == 0) {
         if ( i == lines - 1)
           y_text = y + z_height - z_descent - 3;
@@ -409,15 +425,19 @@ void GrowAxis::draw( GlowTransform *t, int highlight, int hot, void *node,
     glow_draw_line( ctx, ll_x, ll_y, ur_x, ll_y, drawtype, idx, 0);
 
     // Calculate max value text height
-    draw_get_text_extent( ctx, "0", 1, text_drawtype, 
-                max( 0, text_idx), &z_width, &z_height, &z_descent);
+    if ( draw_text) {
+      draw_get_text_extent( ctx, "0", 1, text_drawtype, 
+			    max( 0, text_idx), &z_width, &z_height, &z_descent);
 
-    line_length = ur_y - ll_y - (z_height - z_descent);
-    if ( line_length < 3)
-      line_length = 3;
+      line_length = ur_y - ll_y - (z_height - z_descent);
+      if ( line_length < 3)
+	line_length = 3;
+    }
+    else {
+      line_length = ur_y - ll_y;
+    }
 
-    for ( i = 0; i < lines; i++)
-    {
+    for ( i = 0; i < lines; i++) {
       x = int( ll_x + double(ur_x - ll_x) / (lines - 1) * i);
       if ( i % longquotient == 0)
         glow_draw_line( ctx, x, ll_y, x, 
@@ -425,7 +445,7 @@ void GrowAxis::draw( GlowTransform *t, int highlight, int hot, void *node,
       else
         glow_draw_line( ctx, x, ll_y, x, 
           ll_y  +  int( 2.0 / 3 * line_length), drawtype, idx, 0);
-      if ( i % valuequotient == 0) {
+      if ( draw_text && i % valuequotient == 0) {
         sprintf( text, format, max_value - i * increment);
         draw_get_text_extent( ctx, text, strlen(text), text_drawtype, 
                 max( 0, text_idx), &z_width, &z_height, &z_descent);

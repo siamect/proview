@@ -216,6 +216,12 @@ class GrowBar : public GrowRect {
   */
   void set_bar_info( glow_sBarInfo *info);
 
+  //! Get parameters for the bar.
+  /*!
+    \param info		Info struct.
+  */
+  void get_bar_info( glow_sBarInfo *info);
+
   //! Export the object as a javabean.
   /*!
     \param t		Transform of parent node. Can be zero.

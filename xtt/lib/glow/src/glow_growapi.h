@@ -2694,6 +2694,13 @@ typedef GlowTraceData glow_sTraceData;
   */
   void grow_SetBarInfo( grow_tObject object, glow_sBarInfo *info);
 
+  //! Get parameters for a bar object.
+  /*!
+    \param object	Bar object.
+    \param info		Info struct.
+  */
+  void grow_GetBarInfo( grow_tObject object, glow_sBarInfo *info);
+
   //! Set parameters for an axis object.
   /*!
     \param object	Axis object.

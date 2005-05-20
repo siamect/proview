@@ -751,6 +751,15 @@ void GrowBar::set_bar_info( glow_sBarInfo *info)
   bar_borderwidth = info->bar_borderwidth;
 }
 
+void GrowBar::get_bar_info( glow_sBarInfo *info)
+{
+  info->max_value = max_value;
+  info->min_value = min_value;
+  info->bar_drawtype = bar_drawtype;
+  info->bar_bordercolor = bar_bordercolor;
+  info->bar_borderwidth = bar_borderwidth;
+}
+
 void GrowBar::convert( glow_eConvert version) 
 {
   switch ( version) {
