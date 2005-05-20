@@ -152,6 +152,16 @@ SObject pwrs:Type
        Attr Value = 4096
      EndBody
     EndObject
+    !/**
+    !  Object has casted attributes.
+    !*/
+    Object CastAttr $Bit
+     Body SysBody
+       Attr PgmName = "CastAttr"
+       Attr Text = "CastAttr"
+       Attr Value = 8192
+     EndBody
+    EndObject
   EndObject
 EndSObject
 

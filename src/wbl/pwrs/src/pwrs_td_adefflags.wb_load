@@ -59,12 +59,12 @@ SObject pwrs:Type
      EndBody
     EndObject
     !/**
-    !  Not yet implemented.
+    !  Attribute is casted.
     !*/
-    Object ChangeLog $Bit
+    Object CastAttr $Bit
      Body SysBody
-       Attr PgmName = "changelog"
-       Attr Text = "ChangeLog"
+       Attr PgmName = "castattr"
+       Attr Text = "CastAttr"
        Attr Value = 8
      EndBody
     EndObject
