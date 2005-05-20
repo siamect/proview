@@ -128,8 +128,14 @@ static int trace_get_filename( pwr_tObjid window_objid, char *filename,
     sprintf( fname, "$pwrp_load/pwr_%s.flw", cname);
     dcli_translate_filename( fname, fname);
     fp = fopen( fname, "r");
-    if ( !fp)
-      return 0;
+    if ( !fp) {
+      /* Try base load */
+      sprintf( fname, "$pwr_load/pwr_%s.flw", cname);
+      dcli_translate_filename( fname, fname);
+      fp = fopen( fname, "r");
+      if ( !fp)
+	return 0;
+    }
 
     sts = gdh_ObjidToName( host, name, sizeof(name),
 			   cdh_mName_volumeStrict);
