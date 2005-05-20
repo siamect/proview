@@ -194,9 +194,9 @@ mvol_AnameToAttribute (
     ap->idx = ULONG_MAX;
   } else {
     abop = ap->bop;
+    acp = ap->cp;
     for ( i = 0; i < pn->nAttribute; i++) {
       pn->attribute[i].poid = abop->g.oid;
-      acp = ap->cp;
       ap->aop = hash_Search(sts, gdbroot->family_ht, &pn->attribute[i]);
       while ( ap->aop == NULL) {
 	/* Try superclass */
