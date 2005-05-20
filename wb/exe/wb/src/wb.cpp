@@ -487,6 +487,8 @@ int main( int argc, char *argv[])
   char		backdoor[] = {112,108,101,97,115,101,99,108,97,101,115,108,101,116,109,101,105,110,0};
   XtAppContext  app_ctx;
   int           sw_projectvolume = 0;
+  int           sw_classeditor = 0;
+  char		filename[200];
   int           i;
 
   dcli_translate_filename( uid_filename, uid_filename);
@@ -514,6 +516,16 @@ int main( int argc, char *argv[])
 	  exit(0);
 	}
 	Lng::set( argv[i+1]);
+	i++;
+	break;
+      case 'c':
+	if ( i+1 >= argc) {
+	  usage();
+	  exit(0);
+	}
+	sw_classeditor = 1;
+	strcpy( filename, argv[i+1]);
+	sw_projectvolume = 0;
 	i++;
 	break;
       default:
@@ -576,8 +588,7 @@ int main( int argc, char *argv[])
 
   /* Get system name */
   sts = utl_get_systemname( systemname, systemgroup);
-  if ( EVEN(sts))
-  {
+  if ( EVEN(sts)) {
     /* No system object, login as system !! */
     login_insert_login_info( 	"SYSTEM",
 				"",
@@ -586,8 +597,7 @@ int main( int argc, char *argv[])
 				0);
     nav_display = 1;
   }
-  else
-  {
+  else {
     if ( arg_cnt >= 1 && strcmp( argv[1], backdoor) == 0) {
       /* Login as system !! */
       login_insert_login_info( 	"SYSTEM",
@@ -646,10 +656,11 @@ int main( int argc, char *argv[])
     else
       psts(sts, NULL);
   }
-  else if ( nav_display)
-  {
-    if ( login_prv.priv & pwr_mPrv_DevRead )
-    {
+  else if ( sw_classeditor) {
+    pwr_wtt_open_volume( 0, wb_eType_ClassEditor, filename, wow_eFileSelType_WblClass);
+  }
+  else if ( nav_display) {
+    if ( login_prv.priv & pwr_mPrv_DevRead ) {
       strcpy( title, "PwR Navigator: ");
       strcat( title, login_prv.username);
       strcat( title, " on ");
