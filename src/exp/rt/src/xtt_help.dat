@@ -2233,9 +2233,11 @@ Classes
 
 <B>SystemClasses        <LINK>pwrs
 <B>BaseClasses  	<LINK>pwrb
+<B>BaseComponent  	<LINK>basecomponent
 
 </TOPIC>
 </chapter>
 <include> pwr_lang:pwrb_xtthelp.dat
-<include> pwr_exe:pwrs_xtthelp.dat
+<include> pwr_lang:pwrs_xtthelp.dat
+<include> pwr_lang:basecomponent_xtthelp.dat
 

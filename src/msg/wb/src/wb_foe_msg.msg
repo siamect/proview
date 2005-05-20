@@ -89,6 +89,8 @@ generic		<Generic object is not connected>			/error
 templateplc	<Template plc not found>				/error
 ccerror		<Error from c compilator, see terminal window>		/fatal
 noconnect	<PlcConnect object is missing>				/error
+refconnect      <Error in PlcConnect object class>			/error
+conbackup	<Backup connected to invalid attribute>			/error
 
         .facility       FOE,280 /prefix = FOE__ ! Function object editor
 

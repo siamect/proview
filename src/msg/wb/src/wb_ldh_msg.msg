@@ -106,6 +106,7 @@ classmisplaced	<Misplaced object in class volume>			/error
 nonext		<No next object>					/error
 catt		<Class attribute tree is not built>			/error
 classlist	<No object in classlist>				/error
+nonextclass	<No next class>						/error
 
 
 
