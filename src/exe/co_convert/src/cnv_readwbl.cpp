@@ -1228,33 +1228,33 @@ int CnvReadWbl::copy_tmp_file( char *tmpfilename, ofstream& fp_to)
 
 char *CnvReadWbl::flags_to_string( int value)
 {
-  static char str[40];
+  static char str[512];
 
-  switch ( value) {
-  case pwr_mAdef_pointer: 	strcpy( str, "Pointer"); break;
-  case pwr_mAdef_array: 	strcpy( str, "Array"); break;
-  case pwr_mAdef_backup: 	strcpy( str, "Backup"); break;
-  case pwr_mAdef_changelog: 	strcpy( str, "Changelog"); break;
-  case pwr_mAdef_state: 	strcpy( str, "State"); break;
-  case pwr_mAdef_const: 	strcpy( str, "Const"); break;
-  case pwr_mAdef_rtvirtual: 	strcpy( str, "Rtvirtual"); break;
-  case pwr_mAdef_devbodyref: 	strcpy( str, "Devbodyref"); break;
-  case pwr_mAdef_dynamic: 	strcpy( str, "Dynamic"); break;
-  case pwr_mAdef_objidself: 	strcpy( str, "Objidself"); break;
-  case pwr_mAdef_noedit: 	strcpy( str, "Noedit"); break;
-  case pwr_mAdef_invisible: 	strcpy( str, "Invisible"); break;
-  case pwr_mAdef_refdirect: 	strcpy( str, "Refdirect"); break;
-  case pwr_mAdef_noinvert: 	strcpy( str, "Noinvert"); break;
-  case pwr_mAdef_noremove: 	strcpy( str, "Noremove"); break;
-  case pwr_mAdef_rtdbref: 	strcpy( str, "Rtdbref"); break;
-  case pwr_mAdef_private: 	strcpy( str, "Private"); break;
-  case pwr_mAdef_class: 	strcpy( str, "Class"); break;
-  case pwr_mAdef_superclass: 	strcpy( str, "Superclass"); break;
-  case pwr_mAdef_buffer: 	strcpy( str, "Buffer"); break;
-  case pwr_mAdef_nowbl: 	strcpy( str, "Nowbl"); break;
-  case pwr_mAdef_alwayswbl: 	strcpy( str, "Alwayswbl"); break;
-  default: 			strcpy( str, "Unknown");
-  }
+  strcpy( str, "");
+  if ( value & pwr_mAdef_pointer) 	strcat( str, "Pointer|");
+  if ( value & pwr_mAdef_array) 	strcat( str, "Array|");
+  if ( value & pwr_mAdef_backup) 	strcat( str, "Backup|");
+  if ( value & pwr_mAdef_castattr) 	strcat( str, "CastAttr|");
+  if ( value & pwr_mAdef_state) 	strcat( str, "State|");
+  if ( value & pwr_mAdef_const) 	strcat( str, "Const|");
+  if ( value & pwr_mAdef_rtvirtual) 	strcat( str, "Rtvirtual|");
+  if ( value & pwr_mAdef_devbodyref) 	strcat( str, "Devbodyref|");
+  if ( value & pwr_mAdef_dynamic) 	strcat( str, "Dynamic|");
+  if ( value & pwr_mAdef_objidself) 	strcat( str, "Objidself|");
+  if ( value & pwr_mAdef_noedit) 	strcat( str, "Noedit|");
+  if ( value & pwr_mAdef_invisible) 	strcat( str, "Invisible|");
+  if ( value & pwr_mAdef_refdirect) 	strcat( str, "Refdirect|");
+  if ( value & pwr_mAdef_noinvert) 	strcat( str, "Noinvert|");
+  if ( value & pwr_mAdef_noremove) 	strcat( str, "Noremove|");
+  if ( value & pwr_mAdef_rtdbref) 	strcat( str, "Rtdbref|");
+  if ( value & pwr_mAdef_private) 	strcat( str, "Private|");
+  if ( value & pwr_mAdef_class) 	strcat( str, "Class|");
+  if ( value & pwr_mAdef_superclass) 	strcat( str, "Superclass|");
+  if ( value & pwr_mAdef_buffer) 	strcat( str, "Buffer|");
+  if ( value & pwr_mAdef_nowbl) 	strcat( str, "Nowbl|");
+  if ( value & pwr_mAdef_alwayswbl) 	strcat( str, "Alwayswbl|");
+  if ( str[strlen(str)-1] == '|')
+    str[strlen(str)-1] = 0;
   return str;
 }
 
