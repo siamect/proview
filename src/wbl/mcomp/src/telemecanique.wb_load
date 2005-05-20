@@ -1,0 +1,16 @@
+Volume Telemecanique $ClassVolume 0.0.250.4 
+  Body SysBody
+    Attr NextOix = "_X1"
+    Attr NextCix = "_X2"
+  EndBody
+  Object Class $ClassHier 1
+    Object Dum2 $ClassDef 1
+      Body SysBody
+      EndBody
+      Object RtBody $ObjBodyDef 1
+        Body SysBody
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndVolume
