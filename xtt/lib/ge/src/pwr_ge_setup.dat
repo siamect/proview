@@ -24,12 +24,32 @@ menu Process
   subgraph 	ValveControl	pwr_exe:pwr_valvecontrol.pwsg 		2
   subgraph 	Thermometer	pwr_exe:pwr_thermometer.pwsg 		28
   subgraph 	Burner		pwr_exe:pwr_burner.pwsg 		6
+  subgraph 	Switch		pwr_exe:pwr_switch.pwsg 		16
 }
 menu Electric
 {
-  subgraph 	Motor		pwr_exe:pwr_motor.pwsg 			23
-  subgraph 	SpeedSwitch	pwr_exe:pwr_speedswitch.pwsg 		24
+  subgraph 	Contactor	pwr_exe:pwr_contactor.pwsg 		6
+  subgraph 	Contactor2	pwr_exe:pwr_contactor2.pwsg 		6
+  subgraph 	ControlSwitch	pwr_exe:pwr_controlswitch.pwsg 		6
+  subgraph 	Fuse		pwr_exe:pwr_fuse.pwsg 			6
+  subgraph 	Fuse2		pwr_exe:pwr_fuse2.pwsg 			6
   subgraph 	EmergencyStop	pwr_exe:pwr_emergencystop.pwsg 		34
+  subgraph 	Motor		pwr_exe:pwr_motor.pwsg 			23
+  subgraph 	Motor2		pwr_exe:pwr_motor2.pwsg 		6
+  subgraph 	SpeedSwitch	pwr_exe:pwr_speedswitch.pwsg 		24
+  subgraph	Rod		pwr_exe:pwr_rod.pwsg			6
+  subgraph	Fan		pwr_exe:pwr_fan.pwsg			6
+  subgraph	Fan2		pwr_exe:pwr_fan2.pwsg			6
+  subgraph	Fananim		pwr_exe:pwr_fananim.pwsg		6
+  subgraph	Fananim2	pwr_exe:pwr_fananim2.pwsg		6
+  subgraph	Pump2		pwr_exe:pwr_pump2.pwsg			6
+  subgraph	Pumpanim2	pwr_exe:pwr_pumpanim2.pwsg		6
+  subgraph	ManSwitch	pwr_exe:pwr_manswitch.pwsg		6
+  subgraph	ManSwitch2	pwr_exe:pwr_manswitch2.pwsg		6
+  subgraph	ManSwitch3	pwr_exe:pwr_manswitch3.pwsg		6
+  subgraph	CircuitBreaker	pwr_exe:pwr_circuitbreaker.pwsg		6
+  subgraph	SafetySwitch	pwr_exe:pwr_safetyswitch.pwsg		6
+  subgraph	FrequencyConverter pwr_exe:pwr_frequencyconverter.pwsg  48  
 }
 menu Indicators
 {
@@ -108,6 +128,8 @@ menu Sliders
   subgraph 	SliderBackground1 pwr_exe:pwr_sliderbackground1.pwsg	38
   subgraph 	Slider2 	pwr_exe:pwr_slider2.pwsg		37
   subgraph 	SliderBackground2 pwr_exe:pwr_sliderbackground2.pwsg	38
+  subgraph 	Slider3 	pwr_exe:pwr_slider3.pwsg		37
+  subgraph 	SliderBackground3 pwr_exe:pwr_sliderbackground3.pwsg	38
 }
 menu Hydraulics
 {
@@ -148,6 +170,12 @@ menu Layout
 }
 menu Other
 {
+  menu BaseComponent
+  {
+    subgraph    ManualValve2Switch pwr_exe:bcomp_manualvalve2switch.pwsg 4
+    subgraph    Fan 		pwr_exe:bcomp_fan.pwsg 			6
+    subgraph    TempSensor 	pwr_exe:bcomp_tempsensor.pwsg 		16
+  }
   menu Animations
   {
     subgraph 	PumpAnim 	pwr_exe:pwr_pumpanim.pwsg		17
