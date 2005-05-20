@@ -41,6 +41,7 @@ void user_DevPrivToString( unsigned int priv, char *str, int size);
 void lng_get_uid( char *in, char *out);
 char *lng_translate( char *str);
 void lng_set( char *str);
+char *lng_get_language_str();
 
 int crr_signal( void *parent_ctx, char *signalname,
 		void (*insert_cb)( void *, void *, navc_eItemType, char *, char *, int),

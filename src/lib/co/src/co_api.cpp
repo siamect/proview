@@ -125,6 +125,11 @@ void lng_set( char *str)
   Lng::set( str);
 }
 
+char *lng_get_language_str()
+{
+  return Lng::get_language_str();
+}
+
 //
 // c api to co_msgwindow
 //

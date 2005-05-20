@@ -5131,6 +5131,7 @@ static int	rtt_print_value(
 	if ( flags & PWR_MASK_POINTER )
  	{
 	  /* Check that it is a rtdb pointer */
+	  if ( value_ptr == 0)
 	  {
 	    /* This is not a rtdb pointer */
 	    if ( init || (strcmp( old_value, "UNDEF PTR") != 0))
@@ -5539,6 +5540,7 @@ static int	rtt_edit_print_value(
 	if ( menu_ptr->flags & PWR_MASK_POINTER )
  	{
 	  /* Check that it is a rtdb pointer */
+	  if ( menu_ptr->value_ptr == 0)
 	  {
 	    /* This is not a rtdb pointer */
 	    if ( init || (strcmp( menu_ptr->old_value, "UNDEF PTR") != 0))
