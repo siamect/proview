@@ -868,9 +868,23 @@ gdh_GetAttrRefTid (
     
   } gdh_ScopeUnlock;
 
-  if (ap != NULL)
+  if (ap != NULL) {
+    if ( ap->adef->Info.Flags & PWR_MASK_CASTATTR) {
+      pwr_tCastId castid;
+      pwr_sAttrRef cast_aref = *arp;
+      cast_aref.Offset -= sizeof(pwr_tCastId);
+      cast_aref.Size = sizeof(pwr_tCastId);
+      cast_aref.Flags.b.ObjectAttr = 0;
+      
+      sts = gdh_GetObjectInfoAttrref( &cast_aref, &castid, sizeof(castid));
+      if ( ODD(sts) && castid != pwr_cNCastId) {
+	*tid = castid;
+	return sts;
+      }      
+      sts = GDH__SUCCESS;
+    }
     *tid  = ap->adef->TypeRef;
-
+  }
   return sts;
 }
 
