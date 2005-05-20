@@ -289,6 +289,8 @@ extern "C" {
     ge_eSave_DigWarning_attribute      	= 800,
     ge_eSave_Invisible_attribute       	= 900,
     ge_eSave_Invisible_dimmed       	= 901,
+    ge_eSave_Invisible_instance		= 902,
+    ge_eSave_Invisible_instance_mask   	= 903,
     ge_eSave_DigBorder_attribute       	= 1000,
     ge_eSave_DigBorder_color		= 1001,
     ge_eSave_DigText_attribute		= 1100,
@@ -297,6 +299,7 @@ extern "C" {
     ge_eSave_Value_format	       	= 1201,
     ge_eSave_Value_instance      	= 1202,
     ge_eSave_Value_instance_mask 	= 1203,
+    ge_eSave_Value_zero_blank 		= 1204,
     ge_eSave_ValueInput_attribute      	= 1300,
     ge_eSave_ValueInput_format		= 1301,
     ge_eSave_ValueInput_min_value      	= 1302,
@@ -322,8 +325,14 @@ extern "C" {
     ge_eSave_Animation_attribute       	= 1900,
     ge_eSave_Animation_sequence		= 1901,
     ge_eSave_Bar_attribute	   	= 2200,
+    ge_eSave_Bar_minvalue_attr	   	= 2201,
+    ge_eSave_Bar_maxvalue_attr	   	= 2202,
     ge_eSave_Trend_attribute1	   	= 2300,
     ge_eSave_Trend_attribute2	   	= 2301,
+    ge_eSave_Trend_minvalue_attr1     	= 2302,
+    ge_eSave_Trend_maxvalue_attr1     	= 2303,
+    ge_eSave_Trend_minvalue_attr2      	= 2304,
+    ge_eSave_Trend_maxvalue_attr2      	= 2305,
     ge_eSave_DigFlash_attribute		= 2600,
     ge_eSave_DigFlash_color		= 2601,
     ge_eSave_FillLevel_attribute       	= 2700,
@@ -331,6 +340,8 @@ extern "C" {
     ge_eSave_FillLevel_direction       	= 2702,
     ge_eSave_FillLevel_min_value       	= 2703,
     ge_eSave_FillLevel_max_value       	= 2704,
+    ge_eSave_FillLevel_minvalue_attr    = 2705,
+    ge_eSave_FillLevel_maxvalue_attr    = 2706,
     ge_eSave_FastCurve_fast_object   	= 2800,
     ge_eSave_FastCurve_curve_index1   	= 2801,
     ge_eSave_FastCurve_curve_index2   	= 2802,
@@ -392,6 +403,8 @@ extern "C" {
     ge_eSave_IncrAnalog_max_value      	= 5803,
     ge_eSave_RadioButton_attribute     	= 5900,
     ge_eSave_Slider_attribute	       	= 6000,
+    ge_eSave_Slider_minvalue_attr     	= 6001,
+    ge_eSave_Slider_maxvalue_attr     	= 6002,
     ge_eSave_AnalogColor_attribute      = 6100,
     ge_eSave_AnalogColor_limit        	= 6101,
     ge_eSave_AnalogColor_limit_type     = 6102,
@@ -557,6 +570,8 @@ class GeDyn {
   Graph		*graph;		       	//!< Graph.
   bool		ignore_color;		//!< All remaining elements with lower prio should ignore color dynamics.
   bool		reset_color;		//!< An element of higher prio is passing color dynamics to elements of lower prio.
+  bool		ignore_invisible;	//!< All remaining elements with lower prio should ignore invisible dynamics.
+  bool		reset_invisible;	//!< An element of higher prio is passing invisible dynamics to elements of lower prio.
   ge_mDynType	dyn_type;		//!< Dynamic type.
   ge_mDynType	total_dyn_type;		//!< Total dynamic type, including the dyntype of the nodeclass if Inherit is set.
   ge_mActionType action_type;		//!< Action type.
@@ -572,7 +587,7 @@ class GeDyn {
   */
   GeDyn( Graph *d_graph, ge_eDynAttr d_attr_editor = ge_eDynAttr_All) : 
     elements(0), graph(d_graph), ignore_color(false), 
-    reset_color(false),
+    reset_color(false), ignore_invisible(false), reset_invisible(false),
     dyn_type(ge_mDynType_Inherit), total_dyn_type(ge_mDynType_Inherit), 
     action_type(ge_mActionType_Inherit), total_action_type(ge_mActionType_Inherit),
     access(glow_mAccess_AllRt), cycle(glow_eCycle_Inherit), attr_editor( d_attr_editor)
@@ -958,13 +973,14 @@ class GeInvisible : public GeDynElem {
   pwr_tBoolean old_value;
   int a_typeid;
 
-  GeInvisible( GeDyn *e_dyn) : 
+  GeInvisible( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
     GeDynElem(e_dyn, ge_mDynType_Invisible, (ge_mActionType) 0, ge_eDynPrio_Invisible), 
     dimmed(0)
-    { strcpy( attribute, "");}
+    { strcpy( attribute, ""); instance = e_instance;}
   GeInvisible( const GeInvisible& x) : 
     GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), dimmed(x.dimmed)
-    { strcpy( attribute, x.attribute);}
+    { strcpy( attribute, x.attribute);
+    instance = x.instance; instance_mask = x.instance_mask;}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
@@ -1049,6 +1065,7 @@ class GeValue : public GeDynElem {
  public:
   char attribute[120];	  	//!< Database reference of an attribute with arbitrary type. 
   char format[80];		//!< Format of conversion from value to string.
+  int zero_blank;		//!< Blank field when value i zero (integer or float).
 
   void *p;
   pwr_tSubid subid;
@@ -1062,10 +1079,10 @@ class GeValue : public GeDynElem {
 
   GeValue( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
     GeDynElem(e_dyn, ge_mDynType_Value, (ge_mActionType) 0, ge_eDynPrio_Value),
-    annot_typeid(0), annot_size(0), tid(0)
+    zero_blank(0), annot_typeid(0), annot_size(0), tid(0)
     { strcpy( attribute, ""); strcpy( format, ""); instance = e_instance;}
   GeValue( const GeValue& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)
+    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), zero_blank(x.zero_blank)
     { strcpy( attribute, x.attribute); strcpy( format, x.format);
     instance = x.instance; instance_mask = x.instance_mask;}
   void get_attributes( attr_sItem *attrinfo, int *item_count); 
@@ -1419,6 +1436,8 @@ class GeFillLevel : public GeDynElem {
   glow_eDirection direction;
   double min_value;
   double max_value;
+  char minvalue_attr[120];
+  char maxvalue_attr[120];
 
   pwr_tFloat32 *p;
   pwr_tSubid subid;
@@ -1429,16 +1448,23 @@ class GeFillLevel : public GeDynElem {
   bool limits_found;
   double limit_min;
   double limit_max;
+  pwr_tFloat32 *min_value_p;
+  pwr_tFloat32 *max_value_p;
+  pwr_tSubid min_value_subid;
+  pwr_tSubid max_value_subid;
 
   GeFillLevel( GeDyn *e_dyn) : 
     GeDynElem(e_dyn, ge_mDynType_FillLevel, (ge_mActionType) 0, ge_eDynPrio_FillLevel),
     color( glow_eDrawType_Inherit), direction( glow_eDirection_Down), min_value(0),
-    max_value(100), limits_found(false)
-    { strcpy( attribute, "");}
+    max_value(100), limits_found(false),
+    min_value_p(0), max_value_p(0)
+    { strcpy( attribute, ""); strcpy( minvalue_attr, ""); strcpy( maxvalue_attr, "");}
   GeFillLevel( const GeFillLevel& x) : 
     GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), color(x.color),
-    direction(x.direction), min_value(x.min_value),max_value(x.max_value)
-    { strcpy( attribute, x.attribute);}
+    direction(x.direction), min_value(x.min_value),max_value(x.max_value),
+    min_value_p(0), max_value_p(0)
+    { strcpy( attribute, x.attribute); strcpy( minvalue_attr, x.minvalue_attr);
+    strcpy( maxvalue_attr, x.maxvalue_attr);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
@@ -1824,6 +1850,8 @@ class GeCloseGraph : public GeDynElem {
 class GeSlider : public GeDynElem {
  public:
   char attribute[120];
+  char minvalue_attr[120];
+  char maxvalue_attr[120];
   int slider_disabled;
 
   pwr_tFloat32 *p;
@@ -1834,14 +1862,22 @@ class GeSlider : public GeDynElem {
   bool first_scan;
   pwr_tFloat32 old_value;
   int attr_type;
+  pwr_tFloat32 *min_value_p;
+  pwr_tFloat32 *max_value_p;
+  pwr_tFloat32 old_min_value;
+  pwr_tFloat32 old_max_value;
+  pwr_tSubid min_value_subid;
+  pwr_tSubid max_value_subid;
 
   GeSlider( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, (ge_mDynType)0, ge_mActionType_Slider, 
-	      ge_eDynPrio_Slider)
-    { strcpy( attribute, "");}
+    GeDynElem(e_dyn, (ge_mDynType)0, ge_mActionType_Slider, ge_eDynPrio_Slider),
+    min_value_p(0), max_value_p(0), old_min_value(0), old_max_value(0)
+    { strcpy( attribute, ""); strcpy( minvalue_attr, ""); strcpy( maxvalue_attr, "");}
   GeSlider( const GeSlider& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)
-    { strcpy( attribute, x.attribute);}
+    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio),
+    min_value_p(0), max_value_p(0), old_min_value(0), old_max_value(0)
+    { strcpy( attribute, x.attribute); strcpy( minvalue_attr, x.minvalue_attr);
+    strcpy( maxvalue_attr, x.maxvalue_attr);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
@@ -1859,6 +1895,8 @@ class GeSlider : public GeDynElem {
 class GeBar : public GeDynElem {
  public:
   char attribute[120];
+  char minvalue_attr[120];
+  char maxvalue_attr[120];
 
   pwr_tFloat32 *p;
   pwr_tSubid subid;
@@ -1867,14 +1905,22 @@ class GeBar : public GeDynElem {
   bool first_scan;
   pwr_tFloat32 old_value;
   int bar_typeid;
+  pwr_tFloat32 *min_value_p;
+  pwr_tFloat32 *max_value_p;
+  pwr_tFloat32 old_min_value;
+  pwr_tFloat32 old_max_value;
+  pwr_tSubid min_value_subid;
+  pwr_tSubid max_value_subid;
 
   GeBar( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, ge_mDynType_Bar, (ge_mActionType) 0, 
-	      ge_eDynPrio_Bar)
-    { strcpy( attribute, "");}
+    GeDynElem(e_dyn, ge_mDynType_Bar, (ge_mActionType) 0, ge_eDynPrio_Bar), 
+    min_value_p(0), max_value_p(0), old_min_value(0), old_max_value(0)
+    { strcpy( attribute, ""); strcpy( minvalue_attr, ""); strcpy( maxvalue_attr, "");}
   GeBar( const GeBar& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)
-    { strcpy( attribute, x.attribute);}
+    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio),
+    min_value_p(0), max_value_p(0), old_min_value(0), old_max_value(0)
+    { strcpy( attribute, x.attribute); strcpy( minvalue_attr, x.minvalue_attr);
+    strcpy( maxvalue_attr, x.maxvalue_attr);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
@@ -1883,7 +1929,7 @@ class GeBar : public GeDynElem {
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, char *attr_name, int *cnt);
   void replace_attribute( char *from, char *to, int *cnt, int strict);
-
+  void configure( grow_tObject object);
 };
 
 //! Dynamics for a trend object.
@@ -1891,6 +1937,10 @@ class GeTrend : public GeDynElem {
  public:
   char attribute1[120];
   char attribute2[120];
+  char minvalue_attr1[120];
+  char maxvalue_attr1[120];
+  char minvalue_attr2[120];
+  char maxvalue_attr2[120];
 
   bool first_scan;
   double scan_time;
@@ -1906,14 +1956,31 @@ class GeTrend : public GeDynElem {
   int size2;
   graph_eDatabase db2;
   int trend_typeid2;
+  pwr_tFloat32 *min_value1_p;
+  pwr_tFloat32 *max_value1_p;
+  pwr_tFloat32 old_min_value1;
+  pwr_tFloat32 old_max_value1;
+  pwr_tSubid min_value_subid1;
+  pwr_tSubid max_value_subid1;
+  pwr_tFloat32 *min_value2_p;
+  pwr_tFloat32 *max_value2_p;
+  pwr_tFloat32 old_min_value2;
+  pwr_tFloat32 old_max_value2;
+  pwr_tSubid min_value_subid2;
+  pwr_tSubid max_value_subid2;
 
   GeTrend( GeDyn *e_dyn) : 
-    GeDynElem(e_dyn, ge_mDynType_Trend, (ge_mActionType) 0, 
-	      ge_eDynPrio_Trend)
-    { strcpy( attribute1, ""); strcpy( attribute2, "");}
+    GeDynElem(e_dyn, ge_mDynType_Trend, (ge_mActionType) 0, ge_eDynPrio_Trend),
+    min_value1_p(0), max_value1_p(0), old_min_value1(0), old_max_value1(0),
+    min_value2_p(0), max_value2_p(0), old_min_value2(0), old_max_value2(0)
+    { strcpy( attribute1, ""); strcpy( attribute2, "");
+    strcpy( minvalue_attr1, ""); strcpy( maxvalue_attr1, "");
+    strcpy( minvalue_attr2, ""); strcpy( maxvalue_attr2, "");}
   GeTrend( const GeTrend& x) : 
     GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)
-    { strcpy( attribute1, x.attribute1); strcpy( attribute2, x.attribute2);}
+    { strcpy( attribute1, x.attribute1); strcpy( attribute2, x.attribute2); 
+    strcpy( minvalue_attr1, x.minvalue_attr1); strcpy( maxvalue_attr1, x.maxvalue_attr1); 
+    strcpy( minvalue_attr2, x.minvalue_attr2); strcpy( maxvalue_attr2, x.maxvalue_attr2);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);

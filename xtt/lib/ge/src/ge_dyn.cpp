@@ -430,6 +430,13 @@ void GeDyn::get_attributes( grow_tObject object, attr_sItem *itemlist, int *item
 			 ge_mDynType_FastCurve | ge_mDynType_SliderBackground);
     attrinfo[i++].size = sizeof( dyn_type);
   }
+  else {
+    strcpy( attrinfo[i].name, "DynType");
+    attrinfo[i].value = &dyn_type;
+    attrinfo[i].type = ge_eAttrType_DynType;
+    attrinfo[i].mask = ge_mDynType_Invisible;
+    attrinfo[i++].size = sizeof( dyn_type);
+  }
   strcpy( attrinfo[i].name, "Action");
   attrinfo[i].value = &action_type;
   attrinfo[i].type = ge_eAttrType_ActionType;
@@ -905,7 +912,7 @@ GeDynElem *GeDyn::create_dyn_element( int mask, int instance)
     e = (GeDynElem *) new GeDigFlash(this);
     break;
   case ge_mDynType_Invisible:
-    e = (GeDynElem *) new GeInvisible(this);
+    e = (GeDynElem *) new GeInvisible(this, (ge_mInstance)instance);
     break;
   case ge_mDynType_DigBorder:
     e = (GeDynElem *) new GeDigBorder(this);
@@ -1227,6 +1234,8 @@ int GeDyn::scan( grow_tObject object)
 {
   reset_color = false;
   ignore_color = false;
+  reset_invisible = false;
+  ignore_invisible = false;
   for ( GeDynElem *elem = elements; elem; elem = elem->next)
     elem->scan( object);
   return 1;
@@ -2285,16 +2294,42 @@ void GeInvisible::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
 
-  strcpy( attrinfo[i].name, "Invisible.Attribute");
-  attrinfo[i].value = attribute;
-  attrinfo[i].type = glow_eType_String;
-  attrinfo[i++].size = sizeof( attribute);
+  if ( instance == ge_mInstance_1) {
+    strcpy( attrinfo[i].name, "Invisible.Attribute");
+    attrinfo[i].value = attribute;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( attribute);
 
-  strcpy( attrinfo[i].name, "Invisible.Dimmed");
-  attrinfo[i].value = &dimmed;
-  attrinfo[i].type = glow_eType_Boolean;
-  attrinfo[i++].size = sizeof( dimmed);
+    strcpy( attrinfo[i].name, "Invisible.Dimmed");
+    attrinfo[i].value = &dimmed;
+    attrinfo[i].type = glow_eType_Boolean;
+    attrinfo[i++].size = sizeof( dimmed);
 
+    strcpy( attrinfo[i].name, "Invisible.Instances");
+    attrinfo[i].value = &instance_mask;
+    attrinfo[i].type = ge_eAttrType_InstanceMask;
+    attrinfo[i++].size = sizeof( instance_mask);    
+  }
+  else {
+    // Get instance number
+    int inst = 1;
+    int m = instance;
+    while( m > 1) {
+      m = m >> 1;
+      inst++;
+    }
+
+    sprintf( attrinfo[i].name, "Invisible%d.Attribute", inst);
+    attrinfo[i].value = attribute;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( attribute);
+
+    sprintf( attrinfo[i].name, "Invisible%d.Dimmed", inst);
+    attrinfo[i].value = &dimmed;
+    attrinfo[i].type = glow_eType_Boolean;
+    attrinfo[i++].size = sizeof( dimmed);
+
+  }
   *item_count = i;
 }
 
@@ -2305,7 +2340,12 @@ void GeInvisible::set_attribute( grow_tObject object, char *attr_name, int *cnt)
     char msg[200];
 
     strncpy( attribute, attr_name, sizeof( attribute));
-    sprintf( msg, "Invisible.Attribute = %s", attr_name);
+    if ( instance == ge_mInstance_1)
+      sprintf( msg, "Invisible.Attribute = %s", attr_name);
+    else
+      sprintf( msg, "Invisible%d.Attribute = %s", GeDyn::instance_to_number( instance),
+	       attr_name);
+
     dyn->graph->message( 'I', msg);
   }
 }
@@ -2320,12 +2360,15 @@ void GeInvisible::save( ofstream& fp)
   fp << int(ge_eSave_Invisible) << endl;
   fp << int(ge_eSave_Invisible_attribute) << FSPACE << attribute << endl;
   fp << int(ge_eSave_Invisible_dimmed) << FSPACE << dimmed << endl;
+  fp << int(ge_eSave_Invisible_instance) << FSPACE << int(instance) << endl;
+  fp << int(ge_eSave_Invisible_instance_mask) << FSPACE << int(instance_mask) << endl;
   fp << int(ge_eSave_End) << endl;
 }
 
 void GeInvisible::open( ifstream& fp)
 {
   int		type;
+  int		tmp;
   int 		end_found = 0;
   char		dummy[40];
 
@@ -2339,6 +2382,8 @@ void GeInvisible::open( ifstream& fp)
         fp.getline( attribute, sizeof(attribute));
         break;
       case ge_eSave_Invisible_dimmed: fp >> dimmed; break;
+      case ge_eSave_Invisible_instance: fp >> tmp; instance = (ge_mInstance)tmp; break;
+      case ge_eSave_Invisible_instance_mask: fp >> tmp; instance_mask = (ge_mInstance)tmp; break;
       case ge_eSave_End: end_found = 1; break;
       default:
         cout << "GeInvisible:open syntax error" << endl;
@@ -2406,16 +2451,19 @@ int GeInvisible::disconnect( grow_tObject object)
 
 int GeInvisible::scan( grow_tObject object)
 {
-  if ( !p)
+  if ( !p || dyn->ignore_invisible)
     return 1;
 
   switch ( a_typeid) {
   case pwr_eType_Boolean:
   case pwr_eType_Int32:
   case pwr_eType_UInt32:
+
     if ( !first_scan) {
-      if ( old_value == *p) {
+      if ( old_value == *p && !dyn->reset_invisible) {
 	// No change since last time
+	if ( (!inverted && *p) || (inverted && !*p))
+	  dyn->ignore_invisible = true;
 	return 1;
       }
     }
@@ -2425,6 +2473,7 @@ int GeInvisible::scan( grow_tObject object)
     if ( (!inverted && !*p) || (inverted && *p)) {
       grow_SetObjectVisibility( object, glow_eVis_Visible);
       dyn->reset_color = true;
+      dyn->reset_invisible = true;
     }
     else {
       if ( dimmed)
@@ -2432,6 +2481,7 @@ int GeInvisible::scan( grow_tObject object)
       else
 	grow_SetObjectVisibility( object, glow_eVis_Invisible);
       dyn->ignore_color = true;
+      dyn->ignore_invisible = true;
     }
     old_value = *p;
     break;
@@ -2440,8 +2490,10 @@ int GeInvisible::scan( grow_tObject object)
     char *sp_old = (char *) &old_value;
 
     if ( !first_scan) {
-      if ( *sp_old == *sp) {
+      if ( *sp_old == *sp && !dyn->reset_invisible) {
 	// No change since last time
+	if ( (!inverted && *sp) || (inverted && !*sp))
+	  dyn->ignore_invisible = true;
 	return 1;
       }
     }
@@ -2451,6 +2503,7 @@ int GeInvisible::scan( grow_tObject object)
     if ( (!inverted && *sp) || (inverted && !*sp)) {
       grow_SetObjectVisibility( object, glow_eVis_Visible);
       dyn->reset_color = true;
+      dyn->reset_invisible = true;
     }
     else {
       if ( dimmed)
@@ -2458,6 +2511,7 @@ int GeInvisible::scan( grow_tObject object)
       else
 	grow_SetObjectVisibility( object, glow_eVis_Invisible);
       dyn->ignore_color = true;
+      dyn->ignore_invisible = true;
     }
     *sp_old = *sp;
     break;
@@ -2779,6 +2833,11 @@ void GeValue::get_attributes( attr_sItem *attrinfo, int *item_count)
     attrinfo[i].type = glow_eType_String;
     attrinfo[i++].size = sizeof( format);
 
+    strcpy( attrinfo[i].name, "Value.ZeroBlank");
+    attrinfo[i].value = &zero_blank;
+    attrinfo[i].type = glow_eType_Int;
+    attrinfo[i++].size = sizeof( zero_blank);
+
     strcpy( attrinfo[i].name, "Value.Instances");
     attrinfo[i].value = &instance_mask;
     attrinfo[i].type = ge_eAttrType_InstanceMask;
@@ -2843,6 +2902,7 @@ void GeValue::save( ofstream& fp)
   fp << int(ge_eSave_Value_format) << FSPACE << format << endl;
   fp << int(ge_eSave_Value_instance) << FSPACE << int(instance) << endl;
   fp << int(ge_eSave_Value_instance_mask) << FSPACE << int(instance_mask) << endl;
+  fp << int(ge_eSave_Value_zero_blank) << FSPACE << int(zero_blank) << endl;
   fp << int(ge_eSave_End) << endl;
 }
 
@@ -2868,6 +2928,7 @@ void GeValue::open( ifstream& fp)
         break;
       case ge_eSave_Value_instance: fp >> tmp; instance = (ge_mInstance)tmp; break;
       case ge_eSave_Value_instance_mask: fp >> tmp; instance_mask = (ge_mInstance)tmp; break;
+      case ge_eSave_Value_zero_blank: fp >> zero_blank; break;
       case ge_eSave_End: end_found = 1; break;
       default:
         cout << "GeValue:open syntax error" << endl;
@@ -2977,11 +3038,17 @@ int GeValue::scan( grow_tObject object)
 
   switch( annot_typeid) {
   case pwr_eType_Float32:
-    len = sprintf( buf, format, *(pwr_tFloat32 *) p);
+    if ( zero_blank && fabsf( *(pwr_tFloat32 *) p) < FLT_EPSILON)
+      len = sprintf( buf, "");
+    else
+      len = sprintf( buf, format, *(pwr_tFloat32 *) p);
     break;
   case pwr_eType_Int32:
   case pwr_eType_UInt32:
-    len = sprintf( buf, format, *(pwr_tInt32 *) p);
+    if ( zero_blank && *(pwr_tInt32 *) p == 0)
+      len = sprintf( buf, "");
+    else
+      len = sprintf( buf, format, *(pwr_tInt32 *) p);
     break;
   case pwr_eType_NetStatus:
     if ( db == graph_eDatabase_Gdh) {
@@ -3306,7 +3373,11 @@ int GeValueInput::change_value( grow_tObject object, char *text)
     annot_typeid = a_type_id;
     annot_size = a_size;
   }
-  sts = graph_attr_string_to_value( annot_typeid, text,
+  if ( value_element->zero_blank && strcmp( text, "") == 0)
+    sts = graph_attr_string_to_value( annot_typeid, "0",
+	(void *)&buf, sizeof( buf), sizeof(buf));
+  else
+    sts = graph_attr_string_to_value( annot_typeid, text,
 	(void *)&buf, sizeof( buf), sizeof(buf));
   if ( EVEN(sts)) {
     if ( dyn->graph->message_dialog_cb)
@@ -4971,6 +5042,16 @@ void GeBar::get_attributes( attr_sItem *attrinfo, int *item_count)
   attrinfo[i].type = glow_eType_String;
   attrinfo[i++].size = sizeof( attribute);
 
+  strcpy( attrinfo[i].name, "Bar.MinValueAttr");
+  attrinfo[i].value = minvalue_attr;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( minvalue_attr);
+
+  strcpy( attrinfo[i].name, "Bar.MaxValueAttr");
+  attrinfo[i].value = maxvalue_attr;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( maxvalue_attr);
+
   *item_count = i;
 }
 
@@ -4995,6 +5076,8 @@ void GeBar::save( ofstream& fp)
 {
   fp << int(ge_eSave_Bar) << endl;
   fp << int(ge_eSave_Bar_attribute) << FSPACE << attribute << endl;
+  fp << int(ge_eSave_Bar_minvalue_attr) << FSPACE << minvalue_attr << endl;
+  fp << int(ge_eSave_Bar_maxvalue_attr) << FSPACE << maxvalue_attr << endl;
   fp << int(ge_eSave_End) << endl;
 }
 
@@ -5012,6 +5095,14 @@ void GeBar::open( ifstream& fp)
       case ge_eSave_Bar_attribute:
         fp.get();
         fp.getline( attribute, sizeof(attribute));
+        break;
+      case ge_eSave_Bar_minvalue_attr:
+        fp.get();
+        fp.getline( minvalue_attr, sizeof(minvalue_attr));
+        break;
+      case ge_eSave_Bar_maxvalue_attr:
+        fp.get();
+        fp.getline( maxvalue_attr, sizeof(maxvalue_attr));
         break;
       case ge_eSave_End: end_found = 1; break;
       default:
@@ -5054,6 +5145,24 @@ int GeBar::connect( grow_tObject object, glow_sTraceData *trace_data)
     ;
   }
 
+  min_value_p = 0;
+  dyn->parse_attr_name( minvalue_attr, parsed_name,
+				    &inverted, &attr_type, &attr_size);
+  if ( strcmp(parsed_name, "") != 0 && 
+       attr_type == pwr_eType_Float32) {
+    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&min_value_p, 
+				       &min_value_subid, attr_size);
+  }
+
+  max_value_p = 0;
+  dyn->parse_attr_name( maxvalue_attr, parsed_name,
+				    &inverted, &attr_type, &attr_size);
+  if ( strcmp(parsed_name, "") != 0 && 
+       attr_type == pwr_eType_Float32) {
+    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&max_value_p, 
+				       &max_value_subid, attr_size);
+  }
+
   if ( p)
     trace_data->p = p;
   first_scan = true;
@@ -5065,6 +5174,15 @@ int GeBar::disconnect( grow_tObject object)
   if ( p && db == graph_eDatabase_Gdh)
     gdh_UnrefObjectInfo( subid);
   p = 0;
+
+  if ( min_value_p) {
+    gdh_UnrefObjectInfo( min_value_subid);
+    min_value_p = 0;
+  }
+  if ( max_value_p) {
+    gdh_UnrefObjectInfo( max_value_subid);
+    max_value_p = 0;
+  }
   return 1;
 }
 
@@ -5072,6 +5190,17 @@ int GeBar::scan( grow_tObject object)
 {
   if ( !p)
     return 1;
+
+  if ( max_value_p && min_value_p && 
+       ( *max_value_p != old_max_value ||
+	 *min_value_p != old_min_value)) {
+    if ( fabsf( *max_value_p - *min_value_p) > FLT_EPSILON) {
+      grow_SetBarRange( object, double(*min_value_p), 
+		double(*max_value_p));
+    }
+    old_min_value = *min_value_p;
+    old_max_value = *max_value_p;
+  }      
 
   if ( !first_scan) {
     if ( memcmp( &old_value, p, size) == 0 )
@@ -5112,6 +5241,26 @@ void GeTrend::get_attributes( attr_sItem *attrinfo, int *item_count)
   attrinfo[i].type = glow_eType_String;
   attrinfo[i++].size = sizeof( attribute2);
 
+  strcpy( attrinfo[i].name, "Trend.MinValueAttr1");
+  attrinfo[i].value = minvalue_attr1;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( minvalue_attr1);
+
+  strcpy( attrinfo[i].name, "Trend.MaxValueAttr1");
+  attrinfo[i].value = maxvalue_attr1;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( maxvalue_attr1);
+
+  strcpy( attrinfo[i].name, "Trend.MinValueAttr2");
+  attrinfo[i].value = minvalue_attr2;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( minvalue_attr2);
+
+  strcpy( attrinfo[i].name, "Trend.MaxValueAttr2");
+  attrinfo[i].value = maxvalue_attr2;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( maxvalue_attr2);
+
   *item_count = i;
 }
 
@@ -5146,6 +5295,10 @@ void GeTrend::save( ofstream& fp)
   fp << int(ge_eSave_Trend) << endl;
   fp << int(ge_eSave_Trend_attribute1) << FSPACE << attribute1 << endl;
   fp << int(ge_eSave_Trend_attribute2) << FSPACE << attribute2 << endl;
+  fp << int(ge_eSave_Trend_minvalue_attr1) << FSPACE << minvalue_attr1 << endl;
+  fp << int(ge_eSave_Trend_maxvalue_attr1) << FSPACE << maxvalue_attr1 << endl;
+  fp << int(ge_eSave_Trend_minvalue_attr2) << FSPACE << minvalue_attr2 << endl;
+  fp << int(ge_eSave_Trend_maxvalue_attr2) << FSPACE << maxvalue_attr2 << endl;
   fp << int(ge_eSave_End) << endl;
 }
 
@@ -5167,6 +5320,22 @@ void GeTrend::open( ifstream& fp)
       case ge_eSave_Trend_attribute2:
         fp.get();
         fp.getline( attribute2, sizeof(attribute2));
+        break;
+      case ge_eSave_Trend_minvalue_attr1:
+        fp.get();
+        fp.getline( minvalue_attr1, sizeof(minvalue_attr1));
+        break;
+      case ge_eSave_Trend_maxvalue_attr1:
+        fp.get();
+        fp.getline( maxvalue_attr1, sizeof(maxvalue_attr1));
+        break;
+      case ge_eSave_Trend_minvalue_attr2:
+        fp.get();
+        fp.getline( minvalue_attr2, sizeof(minvalue_attr2));
+        break;
+      case ge_eSave_Trend_maxvalue_attr2:
+        fp.get();
+        fp.getline( maxvalue_attr2, sizeof(maxvalue_attr2));
         break;
       case ge_eSave_End: end_found = 1; break;
       default:
@@ -5234,6 +5403,43 @@ int GeTrend::connect( grow_tObject object, glow_sTraceData *trace_data)
   acc_time = scan_time;
   trend_hold = 0;
 
+  if ( p1) {
+    min_value1_p = 0;
+    dyn->parse_attr_name( minvalue_attr1, parsed_name,
+				    &inverted, &attr_type, &attr_size);
+    if ( strcmp(parsed_name, "") != 0 && 
+	 attr_type == pwr_eType_Float32) {
+      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&min_value1_p, 
+				       &min_value_subid1, attr_size);
+    }
+    max_value1_p = 0;
+    dyn->parse_attr_name( maxvalue_attr1, parsed_name,
+				    &inverted, &attr_type, &attr_size);
+    if ( strcmp(parsed_name, "") != 0 && 
+	 attr_type == pwr_eType_Float32) {
+      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&max_value1_p, 
+					 &max_value_subid1, attr_size);
+    }
+  }
+  if ( p2) {
+    min_value2_p = 0;
+    dyn->parse_attr_name( minvalue_attr2, parsed_name,
+				    &inverted, &attr_type, &attr_size);
+    if ( strcmp(parsed_name, "") != 0 && 
+	 attr_type == pwr_eType_Float32) {
+      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&min_value2_p, 
+				       &min_value_subid2, attr_size);
+    }
+    max_value2_p = 0;
+    dyn->parse_attr_name( maxvalue_attr2, parsed_name,
+				    &inverted, &attr_type, &attr_size);
+    if ( strcmp(parsed_name, "") != 0 && 
+	 attr_type == pwr_eType_Float32) {
+      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&max_value2_p, 
+					 &max_value_subid2, attr_size);
+    }
+  }
+
   if ( p1)
     trace_data->p = p1;
   else if ( p2)
@@ -5250,6 +5456,22 @@ int GeTrend::disconnect( grow_tObject object)
   if ( p2 && db2 == graph_eDatabase_Gdh)
     gdh_UnrefObjectInfo( subid2);
   p2 = 0;
+  if ( min_value1_p) {
+    gdh_UnrefObjectInfo( min_value_subid1);
+    min_value1_p = 0;
+  }
+  if ( max_value1_p) {
+    gdh_UnrefObjectInfo( max_value_subid1);
+    max_value1_p = 0;
+  }
+  if ( min_value2_p) {
+    gdh_UnrefObjectInfo( min_value_subid2);
+    min_value2_p = 0;
+  }
+  if ( max_value2_p) {
+    gdh_UnrefObjectInfo( max_value_subid2);
+    max_value2_p = 0;
+  }
   return 1;
 }
 
@@ -5259,6 +5481,28 @@ int GeTrend::scan( grow_tObject object)
     return 1;
   if ( trend_hold)
     return 1;
+
+  if ( max_value1_p && min_value1_p && 
+       ( *max_value1_p != old_max_value1 ||
+	 *min_value1_p != old_min_value1)) {
+    if ( fabsf( *max_value1_p - *min_value1_p) > FLT_EPSILON) {
+      grow_SetTrendRange( object, 0, double(*min_value1_p), 
+		double(*max_value1_p));
+    }
+    old_min_value1 = *min_value1_p;
+    old_max_value1 = *max_value1_p;
+  }      
+
+  if ( max_value2_p && min_value2_p && 
+       ( *max_value2_p != old_max_value2 ||
+	 *min_value2_p != old_min_value2)) {
+    if ( fabsf( *max_value2_p - *min_value2_p) > FLT_EPSILON) {
+      grow_SetTrendRange( object, 1, double(*min_value2_p), 
+		double(*max_value2_p));
+    }
+    old_min_value2 = *min_value2_p;
+    old_max_value2 = *max_value2_p;
+  }      
 
   if ( first_scan)
     first_scan = false;
@@ -6496,6 +6740,16 @@ void GeFillLevel::get_attributes( attr_sItem *attrinfo, int *item_count)
   attrinfo[i].type = glow_eType_Double;
   attrinfo[i++].size = sizeof( max_value);
 
+  strcpy( attrinfo[i].name, "FillLevel.MinValueAttr");
+  attrinfo[i].value = minvalue_attr;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( minvalue_attr);
+
+  strcpy( attrinfo[i].name, "FillLevel.MaxValueAttr");
+  attrinfo[i].value = maxvalue_attr;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( maxvalue_attr);
+
   *item_count = i;
 }
 
@@ -6524,6 +6778,8 @@ void GeFillLevel::save( ofstream& fp)
   fp << int(ge_eSave_FillLevel_direction) << FSPACE << int(direction) << endl;
   fp << int(ge_eSave_FillLevel_max_value) << FSPACE << max_value << endl;
   fp << int(ge_eSave_FillLevel_min_value) << FSPACE << min_value << endl;
+  fp << int(ge_eSave_FillLevel_minvalue_attr) << FSPACE << minvalue_attr << endl;
+  fp << int(ge_eSave_FillLevel_maxvalue_attr) << FSPACE << maxvalue_attr << endl;
   fp << int(ge_eSave_End) << endl;
 }
 
@@ -6547,6 +6803,14 @@ void GeFillLevel::open( ifstream& fp)
       case ge_eSave_FillLevel_direction: fp >> tmp; direction = (glow_eDirection)tmp; break;
       case ge_eSave_FillLevel_max_value: fp >> max_value; break;
       case ge_eSave_FillLevel_min_value: fp >> min_value; break;
+      case ge_eSave_FillLevel_minvalue_attr:
+        fp.get();
+        fp.getline( minvalue_attr, sizeof(minvalue_attr));
+        break;
+      case ge_eSave_FillLevel_maxvalue_attr:
+        fp.get();
+        fp.getline( maxvalue_attr, sizeof(maxvalue_attr));
+        break;
       case ge_eSave_End: end_found = 1; break;
       default:
         cout << "GeFillLevel:open syntax error" << endl;
@@ -6570,9 +6834,6 @@ int GeFillLevel::connect( grow_tObject object, glow_sTraceData *trace_data)
     printf( "** Color out of range, %s\n", attribute);
     return 0;
   }
-
-  if ( max_value == min_value)
-    return 0;
 
   size = 4;
   p = 0;
@@ -6603,6 +6864,25 @@ int GeFillLevel::connect( grow_tObject object, glow_sTraceData *trace_data)
     direction = dir;
   }
   grow_SetObjectLevelDirection( object, direction);
+
+  min_value_p = 0;
+  dyn->parse_attr_name( minvalue_attr, parsed_name,
+				    &inverted, &attr_type, &attr_size);
+  if ( strcmp(parsed_name, "") != 0 && 
+       attr_type == pwr_eType_Float32) {
+    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&min_value_p, 
+				       &min_value_subid, attr_size);
+  }
+
+  max_value_p = 0;
+  dyn->parse_attr_name( maxvalue_attr, parsed_name,
+				    &inverted, &attr_type, &attr_size);
+  if ( strcmp(parsed_name, "") != 0 && 
+       attr_type == pwr_eType_Float32) {
+    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&max_value_p, 
+				       &max_value_subid, attr_size);
+  }
+
   return 1;
 }
 
@@ -6611,19 +6891,39 @@ int GeFillLevel::disconnect( grow_tObject object)
   if ( p && db == graph_eDatabase_Gdh)
     gdh_UnrefObjectInfo( subid);
   p = 0;
+
+  if ( min_value_p) {
+    gdh_UnrefObjectInfo( min_value_subid);
+    min_value_p = 0;
+  }
+  if ( max_value_p) {
+    gdh_UnrefObjectInfo( max_value_subid);
+    max_value_p = 0;
+  }
   return 1;
 }
 
 int GeFillLevel::scan( grow_tObject object)
 {
   
+  if ( max_value_p && min_value_p && 
+       ( *max_value_p != max_value ||
+	 *min_value_p != min_value)) {
+    min_value = *min_value_p;
+    max_value = *max_value_p;
+    first_scan = 1;
+  }      
+
   if ( !first_scan) {
     if ( fabs( old_value - *p) < FLT_EPSILON)
       // No change since last time
-      return 1;
+     return 1;
   }
   else
     first_scan = false;
+
+  if ( max_value == min_value)
+    return 1;
 
   double value;
   if ( !limits_found)
@@ -8077,6 +8377,8 @@ void GeTipText::open( ifstream& fp)
       case ge_eSave_TipText_text:
         fp.get();
         fp.getline( text, sizeof(text));
+	if ( grow_GetTranslate( dyn->graph->grow->ctx))
+	  Lng::translate( text, text);
         break;
       case ge_eSave_End: end_found = 1; break;
       default:
@@ -8882,6 +9184,16 @@ void GeSlider::get_attributes( attr_sItem *attrinfo, int *item_count)
   attrinfo[i].type = glow_eType_String;
   attrinfo[i++].size = sizeof( attribute);
 
+  strcpy( attrinfo[i].name, "Slider.MinValueAttr");
+  attrinfo[i].value = minvalue_attr;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( minvalue_attr);
+
+  strcpy( attrinfo[i].name, "Slider.MaxValueAttr");
+  attrinfo[i].value = maxvalue_attr;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( maxvalue_attr);
+
   dyn->display_access = true;
   *item_count = i;
 }
@@ -8907,6 +9219,8 @@ void GeSlider::save( ofstream& fp)
 {
   fp << int(ge_eSave_Slider) << endl;
   fp << int(ge_eSave_Slider_attribute) << FSPACE << attribute << endl;
+  fp << int(ge_eSave_Slider_minvalue_attr) << FSPACE << minvalue_attr << endl;
+  fp << int(ge_eSave_Slider_maxvalue_attr) << FSPACE << maxvalue_attr << endl;
   fp << int(ge_eSave_End) << endl;
 }
 
@@ -8925,6 +9239,14 @@ void GeSlider::open( ifstream& fp)
         fp.get();
         fp.getline( attribute, sizeof(attribute));
         break;
+      case ge_eSave_Slider_minvalue_attr:
+        fp.get();
+        fp.getline( minvalue_attr, sizeof(minvalue_attr));
+        break;
+      case ge_eSave_Slider_maxvalue_attr:
+        fp.get();
+        fp.getline( maxvalue_attr, sizeof(maxvalue_attr));
+        break;
       case ge_eSave_End: end_found = 1; break;
       default:
         cout << "GeSlider:open syntax error" << endl;
@@ -8940,6 +9262,7 @@ int GeSlider::connect( grow_tObject object, glow_sTraceData *trace_data)
   int		inverted;
   char		parsed_name[120];
   int		sts;
+  int		a_type, a_size;
 
   size = 4;
   p = 0;
@@ -9013,6 +9336,24 @@ int GeSlider::connect( grow_tObject object, glow_sTraceData *trace_data)
     }
     grow_StoreTransform( object);
   }
+
+  min_value_p = 0;
+  dyn->parse_attr_name( minvalue_attr, parsed_name,
+				    &inverted, &a_type, &a_size);
+  if ( strcmp(parsed_name, "") != 0 && 
+       a_type == pwr_eType_Float32) {
+    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&min_value_p, 
+				       &min_value_subid, a_size);
+  }
+
+  max_value_p = 0;
+  dyn->parse_attr_name( maxvalue_attr, parsed_name,
+				    &inverted, &a_type, &a_size);
+  if ( strcmp(parsed_name, "") != 0 && 
+       a_type == pwr_eType_Float32) {
+    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&max_value_p, 
+				       &max_value_subid, a_size);
+  }
   return 1;
 }
 
@@ -9021,6 +9362,15 @@ int GeSlider::disconnect( grow_tObject object)
   if ( p && db == graph_eDatabase_Gdh)
     gdh_UnrefObjectInfo( subid);
   p = 0;
+
+  if ( min_value_p) {
+    gdh_UnrefObjectInfo( min_value_subid);
+    min_value_p = 0;
+  }
+  if ( max_value_p) {
+    gdh_UnrefObjectInfo( max_value_subid);
+    max_value_p = 0;
+  }
   return 1;
 }
 
@@ -9028,6 +9378,16 @@ int GeSlider::scan( grow_tObject object)
 {
   double max_value, min_value, max_pos, min_pos;
   glow_eDirection direction;
+
+  if ( max_value_p && min_value_p && 
+       ( *max_value_p != old_max_value ||
+	 *min_value_p != old_min_value)) {
+    if ( fabsf( *max_value_p - *min_value_p) > FLT_EPSILON) {
+      first_scan = 1;
+    }
+    old_min_value = *min_value_p;
+    old_max_value = *max_value_p;
+  }      
 
   if ( !first_scan) {
     switch ( attr_type) {
@@ -9048,6 +9408,10 @@ int GeSlider::scan( grow_tObject object)
 
   grow_GetSliderInfo( object, &direction, 
 		      &max_value, &min_value, &max_pos, &min_pos);
+  if ( max_value_p && min_value_p) {
+    max_value = *max_value_p;
+    min_value = *min_value_p;
+  }
   if ( min_pos != max_pos) {
     if ( dyn->graph->current_slider != object &&
 	 max_value != min_value) {
@@ -9154,6 +9518,10 @@ int GeSlider::action( grow_tObject object, glow_tEvent event)
     grow_GetSliderInfo( object, &direction, 
 			&max_value, &min_value, &max_pos, &min_pos);
     if ( min_pos != max_pos) {
+      if ( max_value_p && min_value_p) {
+	max_value = *max_value_p;
+	min_value = *min_value_p;
+      }
       grow_MeasureNode( object, &ll_x, &ll_y, &ur_x, &ur_y);
         
       switch ( direction) {
@@ -9680,130 +10048,194 @@ void GePulldownMenu::open( ifstream& fp)
       case ge_eSave_PulldownMenu_items_text0:
         fp.get();
         fp.getline( items_text[0], sizeof(items_text[0]));
+	if ( grow_GetTranslate( dyn->graph->grow->ctx))
+	  Lng::translate( items_text[0], items_text[0]);
         break;
       case ge_eSave_PulldownMenu_items_text1:
         fp.get();
         fp.getline( items_text[1], sizeof(items_text[0]));
+	if ( grow_GetTranslate( dyn->graph->grow->ctx))
+	  Lng::translate( items_text[1], items_text[1]);
         break;
       case ge_eSave_PulldownMenu_items_text2:
         fp.get();
         fp.getline( items_text[2], sizeof(items_text[0]));
+	if ( grow_GetTranslate( dyn->graph->grow->ctx))
+	  Lng::translate( items_text[2], items_text[2]);
         break;
       case ge_eSave_PulldownMenu_items_text3:
         fp.get();
         fp.getline( items_text[3], sizeof(items_text[0]));
+	if ( grow_GetTranslate( dyn->graph->grow->ctx))
+	  Lng::translate( items_text[3], items_text[3]);
         break;
       case ge_eSave_PulldownMenu_items_text4:
         fp.get();
         fp.getline( items_text[4], sizeof(items_text[0]));
+	if ( grow_GetTranslate( dyn->graph->grow->ctx))
+	  Lng::translate( items_text[4], items_text[4]);
         break;
       case ge_eSave_PulldownMenu_items_text5:
         fp.get();
         fp.getline( items_text[5], sizeof(items_text[0]));
+	if ( grow_GetTranslate( dyn->graph->grow->ctx))
+	  Lng::translate( items_text[5], items_text[5]);
         break;
       case ge_eSave_PulldownMenu_items_text6:
         fp.get();
         fp.getline( items_text[6], sizeof(items_text[0]));
+	if ( grow_GetTranslate( dyn->graph->grow->ctx))
+	  Lng::translate( items_text[6], items_text[6]);
         break;
       case ge_eSave_PulldownMenu_items_text7:
         fp.get();
         fp.getline( items_text[7], sizeof(items_text[0]));
+	if ( grow_GetTranslate( dyn->graph->grow->ctx))
+	  Lng::translate( items_text[7], items_text[7]);
         break;
       case ge_eSave_PulldownMenu_items_text8:
         fp.get();
         fp.getline( items_text[8], sizeof(items_text[0]));
+	if ( grow_GetTranslate( dyn->graph->grow->ctx))
+	  Lng::translate( items_text[8], items_text[8]);
         break;
       case ge_eSave_PulldownMenu_items_text9:
         fp.get();
         fp.getline( items_text[9], sizeof(items_text[0]));
+	if ( grow_GetTranslate( dyn->graph->grow->ctx))
+	  Lng::translate( items_text[9], items_text[9]);
         break;
       case ge_eSave_PulldownMenu_items_text10:
         fp.get();
         fp.getline( items_text[10], sizeof(items_text[0]));
+	if ( grow_GetTranslate( dyn->graph->grow->ctx))
+	  Lng::translate( items_text[10], items_text[10]);
         break;
       case ge_eSave_PulldownMenu_items_text11:
         fp.get();
         fp.getline( items_text[11], sizeof(items_text[0]));
+	if ( grow_GetTranslate( dyn->graph->grow->ctx))
+	  Lng::translate( items_text[11], items_text[11]);
         break;
       case ge_eSave_PulldownMenu_items_text12:
         fp.get();
         fp.getline( items_text[12], sizeof(items_text[0]));
+	if ( grow_GetTranslate( dyn->graph->grow->ctx))
+	  Lng::translate( items_text[12], items_text[12]);
         break;
       case ge_eSave_PulldownMenu_items_text13:
         fp.get();
         fp.getline( items_text[13], sizeof(items_text[0]));
+	if ( grow_GetTranslate( dyn->graph->grow->ctx))
+	  Lng::translate( items_text[13], items_text[13]);
         break;
       case ge_eSave_PulldownMenu_items_text14:
         fp.get();
         fp.getline( items_text[14], sizeof(items_text[0]));
+	if ( grow_GetTranslate( dyn->graph->grow->ctx))
+	  Lng::translate( items_text[14], items_text[14]);
         break;
       case ge_eSave_PulldownMenu_items_text15:
         fp.get();
         fp.getline( items_text[15], sizeof(items_text[0]));
+	if ( grow_GetTranslate( dyn->graph->grow->ctx))
+	  Lng::translate( items_text[15], items_text[15]);
         break;
       case ge_eSave_PulldownMenu_items_text16:
         fp.get();
         fp.getline( items_text[16], sizeof(items_text[0]));
+	if ( grow_GetTranslate( dyn->graph->grow->ctx))
+	  Lng::translate( items_text[16], items_text[16]);
         break;
       case ge_eSave_PulldownMenu_items_text17:
         fp.get();
         fp.getline( items_text[17], sizeof(items_text[0]));
+	if ( grow_GetTranslate( dyn->graph->grow->ctx))
+	  Lng::translate( items_text[17], items_text[17]);
         break;
       case ge_eSave_PulldownMenu_items_text18:
         fp.get();
         fp.getline( items_text[18], sizeof(items_text[0]));
+	if ( grow_GetTranslate( dyn->graph->grow->ctx))
+	  Lng::translate( items_text[18], items_text[18]);
         break;
       case ge_eSave_PulldownMenu_items_text19:
         fp.get();
         fp.getline( items_text[19], sizeof(items_text[0]));
+	if ( grow_GetTranslate( dyn->graph->grow->ctx))
+	  Lng::translate( items_text[19], items_text[19]);
         break;
       case ge_eSave_PulldownMenu_items_text20:
         fp.get();
         fp.getline( items_text[20], sizeof(items_text[0]));
+	if ( grow_GetTranslate( dyn->graph->grow->ctx))
+	  Lng::translate( items_text[20], items_text[20]);
         break;
       case ge_eSave_PulldownMenu_items_text21:
         fp.get();
         fp.getline( items_text[21], sizeof(items_text[0]));
+	if ( grow_GetTranslate( dyn->graph->grow->ctx))
+	  Lng::translate( items_text[21], items_text[21]);
         break;
       case ge_eSave_PulldownMenu_items_text22:
         fp.get();
         fp.getline( items_text[22], sizeof(items_text[0]));
+	if ( grow_GetTranslate( dyn->graph->grow->ctx))
+	  Lng::translate( items_text[22], items_text[22]);
         break;
       case ge_eSave_PulldownMenu_items_text23:
         fp.get();
         fp.getline( items_text[23], sizeof(items_text[0]));
+	if ( grow_GetTranslate( dyn->graph->grow->ctx))
+	  Lng::translate( items_text[23], items_text[23]);
         break;
       case ge_eSave_PulldownMenu_items_text24:
         fp.get();
         fp.getline( items_text[24], sizeof(items_text[0]));
+	if ( grow_GetTranslate( dyn->graph->grow->ctx))
+	  Lng::translate( items_text[24], items_text[24]);
         break;
       case ge_eSave_PulldownMenu_items_text25:
         fp.get();
         fp.getline( items_text[25], sizeof(items_text[0]));
+	if ( grow_GetTranslate( dyn->graph->grow->ctx))
+	  Lng::translate( items_text[25], items_text[25]);
         break;
       case ge_eSave_PulldownMenu_items_text26:
         fp.get();
         fp.getline( items_text[26], sizeof(items_text[0]));
+	if ( grow_GetTranslate( dyn->graph->grow->ctx))
+	  Lng::translate( items_text[26], items_text[26]);
         break;
       case ge_eSave_PulldownMenu_items_text27:
         fp.get();
         fp.getline( items_text[27], sizeof(items_text[0]));
+	if ( grow_GetTranslate( dyn->graph->grow->ctx))
+	  Lng::translate( items_text[27], items_text[27]);
         break;
       case ge_eSave_PulldownMenu_items_text28:
         fp.get();
         fp.getline( items_text[28], sizeof(items_text[0]));
+	if ( grow_GetTranslate( dyn->graph->grow->ctx))
+	  Lng::translate( items_text[28], items_text[28]);
         break;
       case ge_eSave_PulldownMenu_items_text29:
         fp.get();
         fp.getline( items_text[29], sizeof(items_text[0]));
+	if ( grow_GetTranslate( dyn->graph->grow->ctx))
+	  Lng::translate( items_text[29], items_text[29]);
         break;
       case ge_eSave_PulldownMenu_items_text30:
         fp.get();
         fp.getline( items_text[30], sizeof(items_text[0]));
+	if ( grow_GetTranslate( dyn->graph->grow->ctx))
+	  Lng::translate( items_text[30], items_text[30]);
         break;
       case ge_eSave_PulldownMenu_items_text31:
         fp.get();
         fp.getline( items_text[31], sizeof(items_text[0]));
+	if ( grow_GetTranslate( dyn->graph->grow->ctx))
+	  Lng::translate( items_text[31], items_text[31]);
         break;
       case ge_eSave_PulldownMenu_items_dyn0:
 	items_dyn[0]->open( fp);
@@ -10176,8 +10608,43 @@ int GePulldownMenu::action( grow_tObject object, glow_tEvent event)
 	    info.item[i].type = glow_eMenuItem_PulldownMenu;
 	  else {
 	    // Check access
-	    if ( dyn->graph->is_authorized( items_dyn[i]->access))
+	    if ( dyn->graph->is_authorized( items_dyn[i]->access)) {
 	      info.item[i].type = glow_eMenuItem_Button;
+	      if ( items_dyn[i]->dyn_type & ge_mDynType_Invisible) {
+		int		attr_type, attr_size;
+		int 		inverted;
+		char		parsed_name[120];
+		int		sts;
+		GeInvisible 	*invis_element = 0;
+		char command[256];
+		char *s;
+
+		for ( GeDynElem *elem = items_dyn[i]->elements; elem; elem = elem->next) {
+		  if ( elem->dyn_type == ge_mDynType_Invisible) {
+		    invis_element = (GeInvisible *)elem;
+		    break;
+		  }
+		}
+		if ( invis_element) {
+		  dyn->parse_attr_name( invis_element->attribute, parsed_name,
+				    &inverted, &attr_type, &attr_size);
+
+		  if ( cdh_NoCaseStrncmp( parsed_name, "$cmd(", 5) == 0) {
+		    
+		    strcpy( command, &parsed_name[5]);
+
+		    if ( (s = strrchr( command, ')')))
+		      *s = 0;
+    
+		    dyn->graph->get_command( command, command, dyn);
+
+		    sts = (dyn->graph->command_cb)( dyn->graph->parent_ctx, command);
+		    if ( EVEN(sts))
+		      info.item[i].type = glow_eMenuItem_ButtonDisabled;
+		  }
+		}
+	      }
+	    }
 	    else
 	      info.item[i].type = glow_eMenuItem_ButtonDisabled;
 	  }
