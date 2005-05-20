@@ -187,6 +187,11 @@ palette NavigatorPalette
     classvolume NMps NMps
     classvolume TLog TLog
     classvolume ssab ssab
+    classvolume BaseComponent BaseComponent
+    classvolume OtherManufacturer OtherManufacturer
+    classvolume ABB ABB
+    classvolume Siemens Siemens
+    classvolume Telemecanique Telemecanique
   }
 }
 
@@ -240,6 +245,11 @@ palette ClassNavigatorPalette
     classvolume NMps NMps
     classvolume TLog TLog
     classvolume ssab ssab
+    classvolume BaseComponent BaseComponent
+    classvolume OtherManufacturer OtherManufacturer
+    classvolume ABB ABB
+    classvolume Siemens Siemens
+    classvolume Telemecanique Telemecanique
   }
 }
 
@@ -601,6 +611,24 @@ palette PlcEditorPalette
     class TLogExecAllOff
     class TLogOpen
     class TLogModify
+  }
+  menu Components 
+  {
+    menu BaseComponent BaseComponent
+    {
+      class ContactorFo
+      class SafetySwitchFo
+      class CircuitBreakerFo
+      class TempsensorFo
+      class CompModeFo
+      class RunTimeCounterFo
+      class FanCbCoSsFo
+    }
+    menu ABB ABB
+    {
+      class ABB_ACS800_1_Fo
+      class ABB_ACS800Pump1_Fo
+    }
   }
 }
 palette PlcEditorConPalette
