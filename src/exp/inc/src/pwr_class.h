@@ -125,6 +125,7 @@ typedef enum {
   pwr_eTix_DeltaTime	= 28,	/* Basic type */
   pwr_eTix_Status	= 29,	/* Basic type */
   pwr_eTix_NetStatus	= 30,	/* Basic type */
+  pwr_eTix_CastId	= 31,	/* Basic type */
   pwr_eTix_
 } pwr_eTix;
 
@@ -165,6 +166,7 @@ typedef enum {
   pwr_eType_DeltaTime	= pwr_TypeId(pwr_eTix_DeltaTime),
   pwr_eType_Status	= pwr_TypeId(pwr_eTix_Status),
   pwr_eType_NetStatus	= pwr_TypeId(pwr_eTix_NetStatus),
+  pwr_eType_CastId	= pwr_TypeId(pwr_eTix_CastId),
   pwr_eType_		= pwr_TypeId(pwr_eTix_)
 } pwr_eType;
 
@@ -463,7 +465,8 @@ union pwr_m_ClassDef {
     pwr_Bits( Template	  , 1),	/* object is a template object  */
     pwr_Bits( IO	  , 1),	/* object is an IO object  */
     pwr_Bits( HasCallBack , 1),	/* object has DbCallBack  */
-    pwr_Bits( fill_0      , 3),,,
+    pwr_Bits( CastAttr    , 1),	/* object has casted attributes  */
+    pwr_Bits( fill_0      , 2),,
     pwr_Bits( fill_1      , 8),,,,,,,,
     pwr_Bits( fill_2      , 8),,,,,,,
   ) b;
@@ -481,6 +484,7 @@ union pwr_m_ClassDef {
 #define pwr_mClassDef_Template    pwr_Bit(10)
 #define pwr_mClassDef_IO	  pwr_Bit(11)
 #define pwr_mClassDef_HasCallBack pwr_Bit(12)
+#define pwr_mClassDef_CastAttr    pwr_Bit(13)
 
 #define pwr_mClassDef_HasRef	  (pwr_mClassDef_ObjXRef|pwr_mClassDef_AttrXRef|\
 				   pwr_mClassDef_ObjRef|pwr_mClassDef_AttrRef)
@@ -611,7 +615,7 @@ union pwr_m_Adef {
     pwr_Bits( pointer	, 1),
     pwr_Bits( array	, 1),
     pwr_Bits( backup	, 1),
-    pwr_Bits( changelog	, 1),
+    pwr_Bits( castattr	, 1),
     pwr_Bits( state	, 1),
     pwr_Bits( constant	, 1),
     pwr_Bits( rtvirtual	, 1),
@@ -640,7 +644,7 @@ union pwr_m_Adef {
 #define pwr_mAdef_pointer	pwr_Bit(0)		/*  1	  */
 #define pwr_mAdef_array		pwr_Bit(1)		/*  2	  */
 #define pwr_mAdef_backup	pwr_Bit(2)		/*  4	  */
-#define pwr_mAdef_changelog	pwr_Bit(3)		/*  8	  */
+#define pwr_mAdef_castattr	pwr_Bit(3)		/*  8	  */
 #define pwr_mAdef_state		pwr_Bit(4)		/*  16	  */
 #define pwr_mAdef_const		pwr_Bit(5)		/*  32	  */
 #define pwr_mAdef_rtvirtual	pwr_Bit(6)		/*  64	  */
@@ -664,7 +668,7 @@ union pwr_m_Adef {
 #define PWR_MASK_POINTER	pwr_mAdef_pointer
 #define PWR_MASK_ARRAY		pwr_mAdef_array
 #define PWR_MASK_BACKUP		pwr_mAdef_backup
-#define PWR_MASK_CHANGELOG	pwr_mAdef_changelog
+#define PWR_MASK_CASTATTR	pwr_mAdef_castattr
 #define PWR_MASK_STATE		pwr_mAdef_state
 #define PWR_MASK_CONST		pwr_mAdef_const
 #define PWR_MASK_RTVIRTUAL	pwr_mAdef_rtvirtual

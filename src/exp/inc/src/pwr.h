@@ -365,6 +365,10 @@ typedef char		pwr_tText1024	[1024];			//!< 1024 byte text type.
   @aref url URL
 */
 typedef char		pwr_tURL	[160];			//!< URL type.
+/*_*
+  @aref castid CastId
+*/
+typedef pwr_tTypeId    	pwr_tCastId;				//!< CastId type.
 
 /*_*
   @aref emergbreakselectenum EmergBreakSelectEnum
@@ -451,6 +455,7 @@ static const pwr_tOix       pwr_cNOix       = 0;	//!< Zero object index constant
 static const pwr_tObjectIx  pwr_cNObjectIx  = 0;	//!< Zero object index constant.
 static const pwr_tClassId   pwr_cNClassId   = 0;	//!< Zero class identity constant.
 static const pwr_tTypeId    pwr_cNTypeId    = 0;	//!< Zero type identity constant.
+static const pwr_tCastId    pwr_cNCastId    = 0;	//!< Zero cast identity constant.
 static const pwr_tVolumeId  pwr_cNVolumeId  = 0;	//!< Zero volume identity constant.
 static const pwr_tNodeId    pwr_cNNodeId    = 0;	//!< Zero node identity constant.
 static const pwr_tCid       pwr_cNCid       = 0;	//!< Zero class identity constant.
