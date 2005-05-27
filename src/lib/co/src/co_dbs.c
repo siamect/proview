@@ -431,7 +431,7 @@ dbs_Map(pwr_tStatus *sts, const char *filename)
 
     fd = open(filename, O_RDWR);
     tfd = mkstemp(tfname);
-    printf("dbs_Map:: %s -> %s\n", filename, tfname);
+    //printf("dbs_Map:: %s -> %s\n", filename, tfname);
     
     while (1) {
       int count;
