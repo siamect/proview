@@ -408,6 +408,9 @@ pwr_sAttrRef *wb_attribute::aref(pwr_sAttrRef *arp) const
   if ( m_shadowed)
     arp->Flags.b.Shadowed = 1;
 
+  if ( m_flags & PWR_MASK_CASTATTR)
+    arp->Flags.b.CastAttr = 1;
+
   return arp;
 }
 
