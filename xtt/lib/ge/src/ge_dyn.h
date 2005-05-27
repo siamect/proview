@@ -307,6 +307,8 @@ extern "C" {
     ge_eSave_ValueInput_clear      	= 1304,
     ge_eSave_ValueInput_popup      	= 1305,
     ge_eSave_ValueInput_unselect      	= 1306,
+    ge_eSave_ValueInput_minvalue_attr   = 1307,
+    ge_eSave_ValueInput_maxvalue_attr   = 1308,
     ge_eSave_Rotate_attribute		= 1400,
     ge_eSave_Rotate_x0			= 1401,
     ge_eSave_Rotate_y0			= 1402,
@@ -1106,24 +1108,31 @@ class GeValueInput : public GeDynElem {
   int clear;			//!< Clear input field it is when opened.
   int popup;			//!< Input in popup dialog.
   int unselect;			//!< Text not selected in input field when opened.
+  char minvalue_attr[120];
+  char maxvalue_attr[120];
 	
   int annot_typeid;
   int annot_size;
   GeValue *value_element;
+  pwr_tFloat32 *min_value_p;
+  pwr_tFloat32 *max_value_p;
+  pwr_tSubid min_value_subid;
+  pwr_tSubid max_value_subid;
 
   GeValueInput( GeDyn *e_dyn) : 
     GeDynElem(e_dyn, (ge_mDynType) 0, ge_mActionType_ValueInput, 
 	      ge_eDynPrio_ValueInput),
     min_value(0), max_value(0), clear(0), popup(0), unselect(0), value_element(0)
-    {}
-  GeValueInput( const GeValueInput& x) : 
+    { strcpy( minvalue_attr, ""); strcpy( maxvalue_attr, "");}
+  GeValueInput( const GeValueInput& x) :
     GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), min_value(x.min_value),
     max_value(x.max_value), clear(x.clear), popup(x.popup), unselect(x.unselect)
-    {}
+    { strcpy( minvalue_attr, x.minvalue_attr); strcpy( maxvalue_attr, x.maxvalue_attr);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
   int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int disconnect( grow_tObject object);
   int action( grow_tObject object, glow_tEvent event);
   int change_value( grow_tObject object, char *text);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);

@@ -3135,6 +3135,25 @@ int GeValue::scan( grow_tObject object)
     len = sprintf( buf, "%s", timstr);
     break;
   }
+  case pwr_eType_DeltaTime: {
+    int sts;
+    char timstr[40];
+
+    switch ( format[1]) {
+    case '1':
+      // Format %1t, only time, no hundredth
+      sts = time_DtoAscii( (pwr_tDeltaTime *) p, 0, 
+			   timstr, sizeof(timstr));
+      break;
+    default:
+      sts = time_DtoAscii( (pwr_tDeltaTime *) p, 1, 
+			   timstr, sizeof(timstr));
+    }
+    if ( EVEN(sts))
+      strcpy( timstr, "-");
+    len = sprintf( buf, "%s", timstr);
+    break;
+  }
   case pwr_eType_Enum: {
     int sts;
     bool converted = false;
@@ -3227,6 +3246,16 @@ void GeValueInput::get_attributes( attr_sItem *attrinfo, int *item_count)
   attrinfo[i].type = glow_eType_Boolean;
   attrinfo[i++].size = sizeof( unselect);
 
+  strcpy( attrinfo[i].name, "ValueInput.MinValueAttr");
+  attrinfo[i].value = minvalue_attr;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( minvalue_attr);
+
+  strcpy( attrinfo[i].name, "ValueInput.MaxValueAttr");
+  attrinfo[i].value = maxvalue_attr;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( maxvalue_attr);
+
   dyn->display_access = true;
   *item_count = i;
 }
@@ -3239,6 +3268,8 @@ void GeValueInput::save( ofstream& fp)
   fp << int(ge_eSave_ValueInput_clear) << FSPACE << clear << endl;
   fp << int(ge_eSave_ValueInput_popup) << FSPACE << popup << endl;
   fp << int(ge_eSave_ValueInput_unselect) << FSPACE << unselect << endl;
+  fp << int(ge_eSave_ValueInput_minvalue_attr) << FSPACE << minvalue_attr << endl;
+  fp << int(ge_eSave_ValueInput_maxvalue_attr) << FSPACE << maxvalue_attr << endl;
   fp << int(ge_eSave_End) << endl;
 }
 
@@ -3258,6 +3289,14 @@ void GeValueInput::open( ifstream& fp)
       case ge_eSave_ValueInput_clear: fp >> clear; break;
       case ge_eSave_ValueInput_popup: fp >> popup; break;
       case ge_eSave_ValueInput_unselect: fp >> unselect; break;
+      case ge_eSave_ValueInput_minvalue_attr:
+        fp.get();
+        fp.getline( minvalue_attr, sizeof(minvalue_attr));
+        break;
+      case ge_eSave_ValueInput_maxvalue_attr:
+        fp.get();
+        fp.getline( maxvalue_attr, sizeof(maxvalue_attr));
+        break;
       case ge_eSave_End: end_found = 1; break;
       default:
         cout << "GeValueInput:open syntax error" << endl;
@@ -3270,6 +3309,11 @@ void GeValueInput::open( ifstream& fp)
 
 int GeValueInput::connect( grow_tObject object, glow_sTraceData *trace_data)
 {
+  int		attr_type, attr_size;
+  char		parsed_name[120];
+  int		sts;
+  int		inverted;
+
   // Get the Value element
   annot_typeid = annot_size = 0;
   value_element = 0;
@@ -3280,6 +3324,38 @@ int GeValueInput::connect( grow_tObject object, glow_sTraceData *trace_data)
       annot_size = value_element->annot_size;
       break;
     }
+  }
+
+  min_value_p = 0;
+  dyn->parse_attr_name( minvalue_attr, parsed_name,
+				    &inverted, &attr_type, &attr_size);
+  if ( strcmp(parsed_name, "") != 0 && 
+       attr_type == pwr_eType_Float32) {
+    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&min_value_p, 
+				       &min_value_subid, attr_size);
+  }
+
+  max_value_p = 0;
+  dyn->parse_attr_name( maxvalue_attr, parsed_name,
+				    &inverted, &attr_type, &attr_size);
+  if ( strcmp(parsed_name, "") != 0 && 
+       attr_type == pwr_eType_Float32) {
+    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&max_value_p, 
+				       &max_value_subid, attr_size);
+  }
+
+  return 1;
+}
+
+int GeValueInput::disconnect( grow_tObject object)
+{
+  if ( min_value_p) {
+    gdh_UnrefObjectInfo( min_value_subid);
+    min_value_p = 0;
+  }
+  if ( max_value_p) {
+    gdh_UnrefObjectInfo( max_value_subid);
+    max_value_p = 0;
   }
   return 1;
 }
@@ -3385,6 +3461,10 @@ int GeValueInput::change_value( grow_tObject object, char *text)
     return sts;
   }
 
+  if ( max_value_p)
+    max_value = *max_value_p;
+  if ( min_value_p)
+    min_value = *min_value_p;
   if ( !(max_value == 0 && min_value == 0)) {
     // Max value is supplied
     int 	max_exceeded = 0;
@@ -5944,6 +6024,7 @@ int GeTable::connect( grow_tObject object, glow_sTraceData *trace_data)
       info.column_size[i] = 80;
       break;
     case pwr_eType_Time:
+    case pwr_eType_DeltaTime:
       info.column_size[i] = 25;
       break;
     case pwr_eType_Objid:
@@ -6882,7 +6963,6 @@ int GeFillLevel::connect( grow_tObject object, glow_sTraceData *trace_data)
     sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&max_value_p, 
 				       &max_value_subid, attr_size);
   }
-
   return 1;
 }
 
