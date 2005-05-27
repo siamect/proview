@@ -1879,6 +1879,7 @@ gdh_ObjidToName (
 
   if (op == NULL && lnametype.b.fallback != cdh_mName_eFallback_strict) {
     sts = GDH__SUCCESS;
+    strcpy( name, "");
     s = cdh_ObjidToString(name, oid, 1);
   }
 
