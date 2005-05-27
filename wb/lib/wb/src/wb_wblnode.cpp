@@ -210,6 +210,10 @@ static wbl_sSym classes[] =
   ,{ "pwr_eCix_Bit", pwr_eCix_Bit }
   ,{ "pwr_eClass_Value", pwr_eClass_Value }
   ,{ "pwr_eCix_Value", pwr_eCix_Value }
+  ,{ "pwr_eClass_Method", pwr_eClass_Method }
+  ,{ "pwr_eCix_Method", pwr_eCix_Method }
+  ,{ "pwr_eClass_RtMethod", pwr_eClass_RtMethod }
+  ,{ "pwr_eCix_RtMethod", pwr_eCix_RtMethod }
   ,{ 0, 0 }
 };
 
@@ -278,8 +282,10 @@ static wbl_sSym attr_flags[] =
   ,{ "pwr_mClassDef_NoAdopt",	pwr_mClassDef_NoAdopt }
   ,{ "pwr_mClassDef_Template",	pwr_mClassDef_Template }
   ,{ "pwr_mClassDef_IO",	pwr_mClassDef_IO }
+  ,{ "pwr_mClassDef_IOAgent",	pwr_mClassDef_IOAgent }
+  ,{ "pwr_mClassDef_IORack",	pwr_mClassDef_IORack }
+  ,{ "pwr_mClassDef_IOCard",	pwr_mClassDef_IOCard }
   ,{ "pwr_mClassDef_HasCallBack", pwr_mClassDef_HasCallBack }
-  ,{ "pwr_mClassDef_CastAttr",	pwr_mClassDef_CastAttr }
   ,{ 0, 0 }
 };
 
