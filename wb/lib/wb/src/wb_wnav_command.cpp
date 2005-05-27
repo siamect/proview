@@ -3522,6 +3522,7 @@ static int	wnav_create_func( void		*client_data,
     try {
       wb_erep *erep = *(wb_env *)wnav->wbctx;
       wb_vrepwbl *wbl = new wb_vrepwbl(erep);
+      wbl->ref();
       sts = wbl->load( filestr);
       if ( ODD(sts) || ignore)
 	wbl->createSnapshot( outstr_p);

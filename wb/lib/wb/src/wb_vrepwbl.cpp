@@ -309,7 +309,6 @@ int wb_vrepwbl::load( const char *fname)
     if ( ODD(sts))
       m_merep->removeDbs( &sts, mvrep);
     m_merep->addDbs( &sts, (wb_mvrep *)this);
-    m_nRef--;
   }
   return rsts;
 }
