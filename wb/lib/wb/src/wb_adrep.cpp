@@ -84,7 +84,7 @@ wb_adrep::wb_adrep( wb_orep& o): m_nRef(0), m_orep(&o), m_sts(LDH__SUCCESS),
     m_elements = attr.Info.Elements;
     m_paramindex = attr.Info.ParamIndex;
     m_flags = attr.Info.Flags;
-    m_tid = 0;
+    m_tid = m_type;
 
     break;
   }
@@ -102,7 +102,7 @@ wb_adrep::wb_adrep( wb_orep& o): m_nRef(0), m_orep(&o), m_sts(LDH__SUCCESS),
     m_elements = attr.Info.Elements;
     m_paramindex = attr.Info.ParamIndex;
     m_flags = attr.Info.Flags;
-    m_tid = 0;
+    m_tid = m_type;
 
     break;
   }
@@ -121,8 +121,8 @@ wb_adrep::wb_adrep( wb_orep& o): m_nRef(0), m_orep(&o), m_sts(LDH__SUCCESS),
     m_paramindex = attr.Info.ParamIndex;
     m_flags = attr.Info.Flags;
     m_flags |= PWR_MASK_BUFFER;
-    m_tid = 0;
     m_subClass = attr.Class;
+    m_tid = m_subClass;
 
     break;
   }
@@ -203,13 +203,25 @@ pwr_eBix wb_adrep::bix()
 
 pwr_sAttrRef wb_adrep::aref()
 {
-  pwr_sAttrRef aref;
+  pwr_sAttrRef aref = pwr_cNAttrRef;
 
-  //aref.Objid = ;
-  //aref.Body = bid();
-  //aref.Offset = ;
-  //aref.Size = ;
-  //aref.Flags = ;
+  aref.Objid = pwr_cNObjid;
+  aref.Body = bix();
+  aref.Offset = m_offset;
+  aref.Size = m_size;
+
+  if ( m_flags & PWR_MASK_POINTER)
+    aref.Flags.b.Indirect = 1;
+
+  if ( m_flags & PWR_MASK_ARRAY)
+    aref.Flags.b.Array = 1;
+
+  if ( cdh_tidIsCid( m_tid))
+    aref.Flags.b.ObjectAttr = 1;
+
+  if ( m_flags & PWR_MASK_CASTATTR)
+    aref.Flags.b.CastAttr = 1;
+
 
   return aref;
 }
