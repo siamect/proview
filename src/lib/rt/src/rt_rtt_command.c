@@ -6085,12 +6085,15 @@ int	rtt_debug_child_check(
 	{
 	  case pwr_cClass_Dv:
 	  case pwr_cClass_Av:
+	  case pwr_cClass_Iv:
 	  case pwr_cClass_Di:
 	  case pwr_cClass_Do:
 	  case pwr_cClass_Po:
 	  case pwr_cClass_Ai:
 	  case pwr_cClass_Ao:
 	  case pwr_cClass_Co:
+	  case pwr_cClass_Io:
+	  case pwr_cClass_Ii:
 	  case pwr_cClass_ChanDi:
 	  case pwr_cClass_ChanDo:
 	  case pwr_cClass_ChanAi:
