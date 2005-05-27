@@ -65,7 +65,8 @@ public:
                       pwr_eType *type, int *flags, int level);
 
   void classDependency( pwr_tStatus *sts, pwr_tCid cid, 
-			pwr_tCid **lst, int *cnt);
+			pwr_tCid **lst, pwr_sAttrRef **arlst, int *cnt);
+  void classVersion( pwr_tStatus *sts, pwr_tCid cid, pwr_tTime *time);
   tree_sTable *buildCatt( pwr_tStatus *sts);
   void insertCattObject( pwr_tStatus *sts, pwr_tCid cid, 
 			 wb_adrep *adp, int offset);
@@ -74,3 +75,4 @@ public:
 };
 
 #endif
+

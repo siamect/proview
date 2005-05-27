@@ -8,6 +8,7 @@
 #include "wb_tdrep.h"
 #include "wb_attrname.h"
 #include "wb_ldh_msg.h"
+#include "co_time.h"
 
 static int compCatt( tree_sTable *tp, tree_sNode *x, tree_sNode *y);
 
@@ -22,8 +23,10 @@ wb_merep::~wb_merep()
 {
   pwr_tStatus sts;
 
-  for ( mvrep_iterator it = m_mvrepdbs.begin(); it != m_mvrepdbs.end(); it++)
-    it->second->unref();
+  for ( mvrep_iterator it = m_mvrepdbs.begin(); it != m_mvrepdbs.end(); it++) {
+    if ( it->second != m_vrep)
+      it->second->unref();
+  }
 
   if ( m_catt_tt)
     tree_DeleteTable( &sts, m_catt_tt);
@@ -93,7 +96,8 @@ void wb_merep::addDbs( pwr_tStatus *sts, wb_mvrep *mvrep)
     // Look for vrep in erep list... TODO
     
     m_mvrepdbs[mvrep->vid()] = mvrep;
-    mvrep->ref();
+    if ( mvrep != m_vrep)
+      mvrep->ref();
     *sts = LDH__SUCCESS;
   }
   else {
@@ -110,7 +114,8 @@ void wb_merep::removeDbs(pwr_tStatus *sts, wb_mvrep *mvrep)
     *sts = LDH__NOSUCHVOL;
     return;
   }
-  it->second->unref();
+  if ( it->second != m_vrep)
+    it->second->unref();
   m_mvrepdbs.erase( it);
   *sts = LDH__SUCCESS;
 }
@@ -294,11 +299,11 @@ int wb_merep::getAttrInfoRec( wb_attrname *attr, pwr_eBix bix, pwr_tCid cid, siz
 }
 
 void wb_merep::classDependency( pwr_tStatus *sts, pwr_tCid cid, 
-				pwr_tCid **lst, int *cnt)
+				pwr_tCid **lst, pwr_sAttrRef **arlst, int *cnt)
 {
   *lst = 0;
+  *arlst = 0;
   *cnt = 0;
-  *sts = LDH__SUCCESS;
 
   wb_cdrep *cd = cdrep( sts, cid);
   if ( !cd) return;
@@ -315,12 +320,14 @@ void wb_merep::classDependency( pwr_tStatus *sts, pwr_tCid cid,
   }
 
   *lst = (pwr_tCid *) calloc( bd->nAttribute(), sizeof(pwr_tCid)); 
+  *arlst = (pwr_sAttrRef *) calloc( bd->nAttribute(), sizeof(pwr_sAttrRef)); 
 
   *cnt = 0;
   wb_adrep *ad, *oad;
   for ( ad = bd->adrep( sts); ad;) {
     if ( cdh_tidIsCid( ad->tid())) {
       (*lst)[*cnt] = ad->tid();
+      (*arlst)[*cnt] = ad->aref();
       (*cnt)++;
     }
     oad = ad;
@@ -329,6 +336,45 @@ void wb_merep::classDependency( pwr_tStatus *sts, pwr_tCid cid,
   }
   delete cd;
   delete bd;
+  *sts = LDH__SUCCESS;
+}
+
+void wb_merep::classVersion( pwr_tStatus *sts, pwr_tCid cid, pwr_tTime *time)
+{
+
+  wb_cdrep *cd = cdrep( sts, cid);
+  if ( !cd) return;
+
+  wb_bdrep *bd = cd->bdrep( sts, pwr_eBix_rt);
+  if ( !bd) { 
+    delete cd; 
+    return;
+  }
+  if ( bd->nAttribute() == 0) {
+    delete cd;
+    delete bd;
+    return;
+  }
+
+  *time = cd->ohTime();
+
+  wb_adrep *ad, *oad;
+  for ( ad = bd->adrep( sts); ad;) {
+    if ( cdh_tidIsCid( ad->tid())) {
+      pwr_tTime t;
+      classVersion( sts, ad->tid(), &t);
+      if ( EVEN(*sts)) return;
+
+      if ( time_Acomp( time, &t) == -1)
+	*time = t;
+    }
+    oad = ad;
+    ad = ad->next( sts);
+    delete oad;
+  }
+  delete cd;
+  delete bd;
+  *sts = LDH__SUCCESS;
 }
 
 void wb_merep::insertCattObject( pwr_tStatus *sts, pwr_tCid cid, 

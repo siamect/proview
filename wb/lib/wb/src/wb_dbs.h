@@ -125,7 +125,7 @@ public:
   // ldhi_sObjHead *getAliasServer(sLCB *lcbp, ldhi_sObjHead *o, pwr_tOid *soid);
   // pwr_tStatus    getMountServer(sLCB *lcbp, ldhi_sObjHead *o, pwr_tOid *soid);
 
-  void	       cidInsert(pwr_tStatus *sts, pwr_tCid cid, sCentry **cep);
+  void	       cidInsert(pwr_tStatus *sts, pwr_tCid cid, pwr_sAttrRef *arp, sCentry **cep);
   void         classInsert(sOentry *oep);
   pwr_tStatus  openFile();
   pwr_tStatus  writeSectFile(size_t size);
