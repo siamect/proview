@@ -238,6 +238,11 @@ palette ClassNavigatorPalette
     class $MenuSeparator
     class $RtMenu
   }
+  menu Method
+  {
+    class $Method
+    class $RtMethod
+  }
   menu AllClasses
   {
     classvolume pwrs
@@ -619,7 +624,8 @@ palette PlcEditorPalette
       class ContactorFo
       class SafetySwitchFo
       class CircuitBreakerFo
-      class TempsensorFo
+      class TempSensorFo
+      class BaseSensorFo
       class CompModeFo
       class RunTimeCounterFo
       class FanCbCoSsFo

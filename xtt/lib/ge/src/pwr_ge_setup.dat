@@ -72,6 +72,9 @@ menu Values
   subgraph 	ValueInputSmall	pwr_exe:pwr_valueinputsmall.pwsg 	50
   subgraph 	ValueInputMedium pwr_exe:pwr_valueinputmedium.pwsg 	51
   subgraph 	ValueInputLarge	pwr_exe:pwr_valueinputlarge.pwsg 	52
+  subgraph 	ValueInputSmallRd pwr_exe:pwr_valueinputsmallrd.pwsg 	50
+  subgraph 	ValueInputMediumRd pwr_exe:pwr_valueinputmediumrd.pwsg 	51
+  subgraph 	ValueInputLargeRd pwr_exe:pwr_valueinputlargerd.pwsg 	52
   subgraph 	ValueLong	pwr_exe:pwr_valuelong.pwsg 		49
   subgraph 	ValueReliefDown	pwr_exe:pwr_valuereliefdown.pwsg 	51
   subgraph 	ValueReliefUp	pwr_exe:pwr_valuereliefup.pwsg 		51

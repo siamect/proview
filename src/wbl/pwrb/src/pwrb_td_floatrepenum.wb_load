@@ -1,0 +1,48 @@
+!  pwrb_td_floatrepenum.wb_load -- Defines the enum type FloatRepEmum
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+SObject pwrb:Type
+!/**
+!  @Version 1.0
+!  @Group Types
+!  Enumeration for float element representation.
+!*/
+  Object FloatRepEnum $TypeDef 33
+    Body SysBody
+      Attr TypeRef = "pwrs:Type-$Enum"
+      Attr PgmName = "FloatRepEnum"
+    EndBody
+    !/**
+    !  Intel float.
+    !*/
+    Object FloatIntel $Value
+     Body SysBody
+       Attr PgmName = "FloatIntel"
+       Attr Text = "FloatIntel"
+       Attr Value = 0
+     EndBody
+    EndObject
+    !/**
+    !  IEEE float.
+    !*/
+    Object FloatIEEE $Value
+     Body SysBody
+       Attr PgmName = "FloatIEEE"
+       Attr Text = "FloatIEEE"
+       Attr Value = 1
+     EndBody
+    EndObject
+  EndObject
+EndSObject
+
+
+
+
+
+
+
+

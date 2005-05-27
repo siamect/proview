@@ -1,0 +1,118 @@
+!  pwrb_td_datarepenum.wb_load -- Defines the enum type DataRepEmum
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+!  <Description>.
+!
+SObject pwrb:Type
+!/**
+!  @Version 1.0
+!  @Group Types
+!  Enumeration for data element representation.
+!*/
+  Object DataRepEnum $TypeDef 32
+    Body SysBody
+      Attr TypeRef = "pwrs:Type-$Enum"
+      Attr PgmName = "DataRepEnum"
+    EndBody
+    !/**
+    !  32-bit signed integer.
+    !*/
+    Object Int32 $Value
+     Body SysBody
+       Attr PgmName = "Int32"
+       Attr Text = "Int32"
+       Attr Value = 0
+     EndBody
+    EndObject
+    !/**
+    !  32-bit unsigned integer.
+    !*/
+    Object UInt32 $Value
+     Body SysBody
+       Attr PgmName = "UInt32"
+       Attr Text = "UInt32"
+       Attr Value = 1
+     EndBody
+    EndObject
+    !/**
+    !  16-bit signed integer.
+    !*/
+    Object Int16 $Value
+     Body SysBody
+       Attr PgmName = "Int16"
+       Attr Text = "Int16"
+       Attr Value = 2
+     EndBody
+    EndObject
+    !/**
+    !  16-bit unsigned integer.
+    !*/
+    Object UInt16 $Value
+     Body SysBody
+       Attr PgmName = "UInt16"
+       Attr Text = "UInt16"
+       Attr Value = 3
+     EndBody
+    EndObject
+    !/**
+    !  8-bit signed integer.
+    !*/
+    Object Int8 $Value
+     Body SysBody
+       Attr PgmName = "Int8"
+       Attr Text = "Int8"
+       Attr Value = 4
+     EndBody
+    EndObject
+    !/**
+    !  8-bit unsigned integer.
+    !*/
+    Object UInt8 $Value
+     Body SysBody
+       Attr PgmName = "UInt8"
+       Attr Text = "UInt8"
+       Attr Value = 5
+     EndBody
+    EndObject
+    !/**
+    !  A single bit.
+    !*/
+    Object Bit $Value
+     Body SysBody
+       Attr PgmName = "Bit"
+       Attr Text = "Bit"
+       Attr Value = 6
+     EndBody
+    EndObject
+    !/**
+    !  32-bit float.
+    !*/
+    Object Float32 $Value
+     Body SysBody
+       Attr PgmName = "Float32"
+       Attr Text = "Float32"
+       Attr Value = 7
+     EndBody
+    EndObject
+    !/**
+    !  64-bit float.
+    !*/
+    Object Float64 $Value
+     Body SysBody
+       Attr PgmName = "Float64"
+       Attr Text = "Float64"
+       Attr Value = 8
+     EndBody
+    EndObject
+  EndObject
+EndSObject
+
+
+
+
+
+
+
+
