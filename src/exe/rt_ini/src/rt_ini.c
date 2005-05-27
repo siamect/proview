@@ -183,11 +183,11 @@ start (
   if (EVEN(sts))
     errh_LogError(&cp->log, "ini_SetAttribute, %m", sts);
 
-  io_init_signals();
-
   qini_BuildDb(&sts, cp->nid_t, cp->me, NULL, cp->busid);
 
   load_backup();
+
+  io_init_signals();
 
 #if defined OS_ELN
   ker$initialization_done(NULL);
