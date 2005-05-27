@@ -902,10 +902,7 @@ bool wb_session::castAttribute( pwr_sAttrRef *arp, pwr_tCid cid)
   else
     castid = cid;
 
-  pwr_sAttrRef cast_aref = *arp;
-  cast_aref.Offset -= sizeof(pwr_tCastId);
-  cast_aref.Size = sizeof(pwr_tCastId);
-  cast_aref.Flags.b.ObjectAttr = 0;
+  pwr_sAttrRef cast_aref = cdh_ArefToCastAref( arp);
   wb_attribute cast_a = attribute(&cast_aref);
   if (!cast_a) return cast_a.sts();
 
