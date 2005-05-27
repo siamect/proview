@@ -1,7 +1,7 @@
 Volume Siemens $ClassVolume 0.0.250.3 
   Body SysBody
     Attr NextOix = "_X1"
-    Attr NextCix = "_X2"
+    Attr NextCix = "_X6"
   EndBody
   Object Class $ClassHier 1
     Object Siemens_Motor_1LA $ClassDef 1
@@ -27,6 +27,185 @@ Volume Siemens $ClassVolume 0.0.250.3
         Body RtBody
           Attr Super.Specification = "1LA"
           Attr Super.DataSheet = "$pwr_lang/datasheet/siemens_motor_1la.pdf"
+        EndBody
+      EndObject
+    EndObject
+    Object Siemens_ET200S_Ai2 $ClassDef 2
+      Body SysBody
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1
+        Body SysBody
+          Attr StructName = "Siemens_ET200_Ai2"
+          Attr NextAix = "_X3"
+        EndBody
+        Object Super $Attribute 1
+          Body SysBody
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "pwrb:Class-Pb_Module"
+          EndBody
+        EndObject
+        Object Ch $Attribute 2
+          Body SysBody
+            Attr PgmName = "Ch"
+            Attr Flags = 131074
+            Attr Elements = 2
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_ET200S_Ai2 2148237312
+        Body RtBody
+          Attr Super.Specification = "Siemens ET200S 6ES7 134-4FB00-0AB0 2 Ai U"
+          Attr Super.Process = 1
+          Attr Ch[0].ConversionOn = 1
+          Attr Ch[0].ScanInterval = 1
+          Attr Ch[0].RawValRangeLow = -3.276800e+04
+          Attr Ch[0].RawValRangeHigh = 3.276800e+04
+          Attr Ch[0].ChannelSigValRangeLow = -3.276800e+04
+          Attr Ch[0].ChannelSigValRangeHigh = 3.276800e+04
+          Attr Ch[0].SigValueUnit = "V"
+          Attr Ch[0].SensorPolyType = 1
+          Attr Ch[0].SensorSigValRangeLow = -3.276800e+04
+          Attr Ch[0].SensorSigValRangeHigh = 3.276800e+04
+          Attr Ch[0].ActValRangeLow = -1.000000e+02
+          Attr Ch[0].ActValRangeHigh = 1.000000e+02
+          Attr Ch[1].ConversionOn = 1
+          Attr Ch[1].ScanInterval = 1
+          Attr Ch[1].RawValRangeLow = -3.276800e+04
+          Attr Ch[1].RawValRangeHigh = 3.276800e+04
+          Attr Ch[1].ChannelSigValRangeLow = -3.276800e+04
+          Attr Ch[1].ChannelSigValRangeHigh = 3.276800e+04
+          Attr Ch[1].SigValueUnit = "V"
+          Attr Ch[1].SensorPolyType = 1
+          Attr Ch[1].SensorSigValRangeLow = -3.276800e+04
+          Attr Ch[1].SensorSigValRangeHigh = 3.276800e+04
+          Attr Ch[1].ActValRangeLow = -1.000000e+02
+          Attr Ch[1].ActValRangeHigh = 1.000000e+02
+        EndBody
+      EndObject
+    EndObject
+    Object Siemens_ET200S_Ao2 $ClassDef 3
+      Body SysBody
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1
+        Body SysBody
+          Attr StructName = "Siemens_ET200S_Ao2"
+          Attr NextAix = "_X5"
+        EndBody
+        Object Super $Attribute 3
+          Body SysBody
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "pwrb:Class-Pb_Module"
+          EndBody
+        EndObject
+        Object Ch $Attribute 4
+          Body SysBody
+            Attr PgmName = "Ch"
+            Attr Flags = 131074
+            Attr Elements = 2
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_ET200S_Ao2 2148499456
+        Body RtBody
+          Attr Super.Specification = "Siemens ET200S 6ES7 135-4FB00-0AB0 2 Ao U"
+          Attr Super.Process = 1
+          Attr Ch[0].OutPolyType = 1
+          Attr Ch[0].ActValRangeLow = -3.276800e+04
+          Attr Ch[0].ActValRangeHigh = 3.276800e+04
+          Attr Ch[0].SensorSigValRangeLow = -3.276800e+04
+          Attr Ch[0].SensorSigValRangeHigh = 3.276800e+04
+          Attr Ch[0].SigValueUnit = "V"
+          Attr Ch[0].ChannelSigValRangeLow = -3.276800e+04
+          Attr Ch[0].ChannelSigValRangeHigh = 3.276800e+04
+          Attr Ch[0].RawValRangeLow = -1.000000e+02
+          Attr Ch[0].RawValRangeHigh = 1.000000e+02
+          Attr Ch[1].OutPolyType = 1
+          Attr Ch[1].ActValRangeLow = -3.276800e+04
+          Attr Ch[1].ActValRangeHigh = 3.276800e+04
+          Attr Ch[1].SensorSigValRangeLow = -3.276800e+04
+          Attr Ch[1].SensorSigValRangeHigh = 3.276800e+04
+          Attr Ch[1].ChannelSigValRangeLow = -3.276800e+04
+          Attr Ch[1].ChannelSigValRangeHigh = 3.276800e+04
+          Attr Ch[1].RawValRangeLow = -1.000000e+02
+          Attr Ch[1].RawValRangeHigh = 1.000000e+02
+        EndBody
+      EndObject
+    EndObject
+    Object Siemens_ET200S_Di4 $ClassDef 4
+      Body SysBody
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1
+        Body SysBody
+          Attr StructName = "Siemens_ET200S_Di4"
+          Attr NextAix = "_X5"
+        EndBody
+        Object Super $Attribute 3
+          Body SysBody
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "pwrb:Class-Pb_Module"
+          EndBody
+        EndObject
+        Object Ch $Attribute 4
+          Body SysBody
+            Attr PgmName = "Ch"
+            Attr Flags = 131074
+            Attr Elements = 2
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_ET200S_Di4 2148761600
+        Body RtBody
+          Attr Super.Specification = "Siemens ET200S 6ES7 131-4BD00-0AA0 4 Di DC24V"
+          Attr Super.Process = 1
+        EndBody
+      EndObject
+    EndObject
+    Object Siemens_ET200S_Do4 $ClassDef 5
+      Body SysBody
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1
+        Body SysBody
+          Attr StructName = "Siemens_ET200S_Do4"
+          Attr NextAix = "_X5"
+        EndBody
+        Object Super $Attribute 3
+          Body SysBody
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "pwrb:Class-Pb_Module"
+          EndBody
+        EndObject
+        Object Ch $Attribute 4
+          Body SysBody
+            Attr PgmName = "Ch"
+            Attr Flags = 131074
+            Attr Elements = 2
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_ET200S_Do4 2149023744
+        Body RtBody
+          Attr Super.Specification = "Siemens ET200S 6ES7 132-4BD00-0AA0 4 Do DC24V/0.5A"
+          Attr Super.Process = 1
         EndBody
       EndObject
     EndObject

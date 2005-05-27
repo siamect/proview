@@ -1,7 +1,7 @@
 Volume OtherManufacturer $ClassVolume 0.0.250.1 
   Body SysBody
     Attr NextOix = "_X1"
-    Attr NextCix = "_X8"
+    Attr NextCix = "_X10"
   EndBody
   Object Class $ClassHier 1
     !/**
@@ -90,6 +90,90 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
       Object Template Legrand_CircuitBreaker_DX 2148499456
         Body RtBody
           Attr Super.DataSheet = "$pwr_lang/datasheet/legrand_circuitbreaker_dx.pdf"
+        EndBody
+      EndObject
+    EndObject
+    Object Mobrey_LevelSensor_MSP422 $ClassDef 8
+      Body SysBody
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1
+        Body SysBody
+          Attr StructName = "Mobrey_LevelSensor_MSP422"
+          Attr NextAix = "_X2"
+        EndBody
+        Object Super $Attribute 1
+          Body SysBody
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "BaseComponent:Class-LevelSensor"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Mobrey_LevelSensor_MSP422 2149810176
+        Body RtBody
+          Attr Super.Super.Value.PresMaxLimit = 1.000000e+02
+          Attr Super.Super.LimitHH.AlarmText = "HighHigh limit exceeded, levelsensor "
+          Attr Super.Super.LimitHH.Limit = 9.500000e+01
+          Attr Super.Super.LimitH.AlarmText = "High limit exceeded, levelsensor "
+          Attr Super.Super.LimitH.Limit = 9.000000e+01
+          Attr Super.Super.LimitL.AlarmText = "Beyond Low limit, levelsensor "
+          Attr Super.Super.LimitL.Limit = 1.000000e+01
+          Attr Super.Super.LimitLL.AlarmText = "Beyond LowLow limit, levelsensor "
+          Attr Super.Super.LimitLL.Limit = 5.000000e+00
+          Attr Super.Super.Trend.Multiple = 1
+          Attr Super.Super.Trend.DataName = "OtherManufacturer:Class-Mobrey_LevelSensor_MSP422-Template.Super.Super.Value.ActualValue"
+          Attr Super.Super.Trend.StorageTime = 239
+          Attr Super.Super.Trend.BufferStatus[0] = 1
+          Attr Super.Super.Trend.BufferStatus[1] = 1
+          Attr Super.Super.Trend.NoOfBuffers = 2
+          Attr Super.Super.Trend.NoOfBufElement = 239
+          Attr Super.Super.DefTrend = "OtherManufacturer:Class-Mobrey_LevelSensor_MSP422-Template.Super.Super.Trend"
+          Attr Super.Super.DataSheet = "$pwr_lang/datasheet/mobrey_levelsensor_msp422.pdf"
+        EndBody
+      EndObject
+    EndObject
+    Object Klay_PressureSensor_Series2000 $ClassDef 9
+      Body SysBody
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1
+        Body SysBody
+          Attr StructName = "Klay_PressureSensor_Series2000"
+          Attr NextAix = "_X3"
+        EndBody
+        Object Super $Attribute 2
+          Body SysBody
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "BaseComponent:Class-PressureSensor"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Klay_PressureSensor_Series2000 2150072320
+        Body RtBody
+          Attr Super.Super.Value.PresMaxLimit = 1.000000e+02
+          Attr Super.Super.LimitHH.AlarmText = "HighHigh limit exceeded, pressuresensor "
+          Attr Super.Super.LimitHH.Limit = 9.500000e+01
+          Attr Super.Super.LimitH.AlarmText = "High limit exceeded, pressuresensor "
+          Attr Super.Super.LimitH.Limit = 9.000000e+01
+          Attr Super.Super.LimitL.AlarmText = "Beyond Low limit, pressuresensor "
+          Attr Super.Super.LimitL.Limit = 1.000000e+01
+          Attr Super.Super.LimitLL.AlarmText = "Beyond LowLow limit, pressuresensor "
+          Attr Super.Super.LimitLL.Limit = 5.000000e+00
+          Attr Super.Super.Trend.Multiple = 1
+          Attr Super.Super.Trend.DataName = "OtherManufacturer:Class-Klay_PressureSensor_Series2000-Template.Super.Super.Value.ActualValue"
+          Attr Super.Super.Trend.StorageTime = 239
+          Attr Super.Super.Trend.BufferStatus[0] = 1
+          Attr Super.Super.Trend.BufferStatus[1] = 1
+          Attr Super.Super.Trend.NoOfBuffers = 2
+          Attr Super.Super.Trend.NoOfBufElement = 239
+          Attr Super.Super.DefTrend = "OtherManufacturer:Class-Klay_PressureSensor_Series2000-Template.Super.Super.Trend"
+          Attr Super.Super.DataSheet = "$pwr_lang/datasheet/klay_pressuresensor_series2000.pdf"
         EndBody
       EndObject
     EndObject

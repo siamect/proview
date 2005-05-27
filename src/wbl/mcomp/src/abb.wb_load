@@ -1,7 +1,7 @@
 Volume ABB $ClassVolume 0.0.250.2 
   Body SysBody
-    Attr NextOix = "_X524"
-    Attr NextCix = "_X7"
+    Attr NextOix = "_X527"
+    Attr NextCix = "_X8"
   EndBody
   Object Class $ClassHier 1
     Object ABB_CircuitBreaker_MS116 $ClassDef 1
@@ -40,7 +40,7 @@ Volume ABB $ClassVolume 0.0.250.2
       Object RtBody $ObjBodyDef 1
         Body SysBody
           Attr StructName = "ABB_ACS800_1"
-          Attr NextAix = "_X35"
+          Attr NextAix = "_X36"
         EndBody
         Object Description $Attribute 2
           Body SysBody
@@ -244,14 +244,41 @@ Volume ABB $ClassVolume 0.0.250.2
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
+        Object IoConnect $Attribute 35
+          Body SysBody
+            Attr PgmName = "IoConnect"
+            Attr TypeRef = "pwrs:Type-$AttrRef"
+          EndBody
+        EndObject
       EndObject
       Object Template ABB_ACS800_1 2148237312
         Body RtBody
           Attr Description = "ABB drives communication profile, PPO message type 5"
           Attr Specification = "ABB ACS800 Frequency converters"
+          Attr ActSpeed.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_ACT"
+          Attr ActTorque.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_PZD4"
+          Attr ActCurrent.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_PZD3"
+          Attr StatusWordSW.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_SW"
+          Attr FaultWord1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_PZD5"
+          Attr FaultWord2.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_PZD6"
+          Attr Di6_1.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_PZD7"
+          Attr AlarmWord5.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_PZD8"
+          Attr ControlWordCW.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.O_CW"
+          Attr RefSpeed.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.O_REF"
           Attr PowerUpTime = 4.000000e+00
           Attr AlarmCommError = "Communication frequency converters is down"
         EndBody
+      EndObject
+      Object ConfiguratorPoson $Menu 525
+        Object Pointed $Menu 526
+          Object IoConnect $MenuButton 527
+            Body SysBody
+              Attr ButtonName = "Connect IO"
+              Attr MethodName = "$AttrRef-IoConnect"
+              Attr FilterName = "$AttrRef-IoConnectFilter"
+            EndBody
+          EndObject
+        EndObject
       EndObject
     EndObject
     Object ABB_ACS800_1_Fo $ClassDef 3
@@ -9382,6 +9409,341 @@ signals are connected to converters digitala input."
         Body RtBody
         EndBody
         Body DevBody
+        EndBody
+      EndObject
+    EndObject
+    Object ABB_ACS_PPO5 $ClassDef 7
+      Body SysBody
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1
+        Body SysBody
+          Attr StructName = "ABB_ACS_PPO5"
+          Attr NextAix = "_X28"
+        EndBody
+        Object Super $Attribute 1
+          Body SysBody
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "pwrb:Class-Pb_Module"
+          EndBody
+        EndObject
+        Object I_ID $Attribute 2
+          Body SysBody
+            Attr PgmName = "I_ID"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanIi"
+          EndBody
+        EndObject
+        Object I_IND $Attribute 5
+          Body SysBody
+            Attr PgmName = "I_IND"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanIi"
+          EndBody
+        EndObject
+        Object I_VALUE $Attribute 4
+          Body SysBody
+            Attr PgmName = "I_VALUE"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanIi"
+          EndBody
+        EndObject
+        Object I_SW $Attribute 3
+          Body SysBody
+            Attr PgmName = "I_SW"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanIi"
+          EndBody
+        EndObject
+        Object I_ACT $Attribute 6
+          Body SysBody
+            Attr PgmName = "I_ACT"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object I_PZD3 $Attribute 8
+          Body SysBody
+            Attr PgmName = "I_PZD3"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object I_PZD4 $Attribute 7
+          Body SysBody
+            Attr PgmName = "I_PZD4"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object I_PZD5 $Attribute 9
+          Body SysBody
+            Attr PgmName = "I_PZD5"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanIi"
+          EndBody
+        EndObject
+        Object I_PZD6 $Attribute 14
+          Body SysBody
+            Attr PgmName = "I_PZD6"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanIi"
+          EndBody
+        EndObject
+        Object I_PZD7 $Attribute 13
+          Body SysBody
+            Attr PgmName = "I_PZD7"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanIi"
+          EndBody
+        EndObject
+        Object I_PZD8 $Attribute 12
+          Body SysBody
+            Attr PgmName = "I_PZD8"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanIi"
+          EndBody
+        EndObject
+        Object I_PZD9 $Attribute 11
+          Body SysBody
+            Attr PgmName = "I_PZD9"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanIi"
+          EndBody
+        EndObject
+        Object I_PZD10 $Attribute 10
+          Body SysBody
+            Attr PgmName = "I_PZD10"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanIi"
+          EndBody
+        EndObject
+        Object O_ID $Attribute 15
+          Body SysBody
+            Attr PgmName = "O_ID"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanIo"
+          EndBody
+        EndObject
+        Object O_IND $Attribute 19
+          Body SysBody
+            Attr PgmName = "O_IND"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanIo"
+          EndBody
+        EndObject
+        Object O_VALUE $Attribute 18
+          Body SysBody
+            Attr PgmName = "O_VALUE"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanIo"
+          EndBody
+        EndObject
+        Object O_CW $Attribute 17
+          Body SysBody
+            Attr PgmName = "O_CW"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanIo"
+          EndBody
+        EndObject
+        Object O_REF $Attribute 16
+          Body SysBody
+            Attr PgmName = "O_REF"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+        Object O_PZD3 $Attribute 22
+          Body SysBody
+            Attr PgmName = "O_PZD3"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+        Object O_PZD4 $Attribute 21
+          Body SysBody
+            Attr PgmName = "O_PZD4"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+        Object O_PZD5 $Attribute 20
+          Body SysBody
+            Attr PgmName = "O_PZD5"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+        Object O_PZD6 $Attribute 23
+          Body SysBody
+            Attr PgmName = "O_PZD6"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanIo"
+          EndBody
+        EndObject
+        Object O_PZD7 $Attribute 27
+          Body SysBody
+            Attr PgmName = "O_PZD7"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanIo"
+          EndBody
+        EndObject
+        Object O_PZD8 $Attribute 26
+          Body SysBody
+            Attr PgmName = "O_PZD8"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanIo"
+          EndBody
+        EndObject
+        Object O_PZD9 $Attribute 25
+          Body SysBody
+            Attr PgmName = "O_PZD9"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanIo"
+          EndBody
+        EndObject
+        Object O_PZD10 $Attribute 24
+          Body SysBody
+            Attr PgmName = "O_PZD10"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanIo"
+          EndBody
+        EndObject
+      EndObject
+      Object Template ABB_ACS_PPO5 2149548032
+        Body RtBody
+          Attr Super.Specification = "ABB ACS, PPO message type 5"
+          Attr Super.Process = 1
+          Attr Super.DataSheet = "$pwr_lang/abb_acs800.pdf"
+          Attr I_ID.Description = "Parameter identification"
+          Attr I_ID.Representation = 1
+          Attr I_IND.Description = "Array index"
+          Attr I_IND.Representation = 1
+          Attr I_VALUE.Description = "Parameter value"
+          Attr I_VALUE.Representation = 1
+          Attr I_SW.Description = "Status word from converter (fixed)"
+          Attr I_SW.Identity = "9201"
+          Attr I_SW.Representation = 1
+          Attr I_ACT.Description = "Status word from converter (fixed)"
+          Attr I_ACT.Identity = "1103"
+          Attr I_ACT.ConversionOn = 1
+          Attr I_ACT.ScanInterval = 1
+          Attr I_ACT.RawValRangeLow = -2.000000e+04
+          Attr I_ACT.RawValRangeHigh = 2.000000e+04
+          Attr I_ACT.ChannelSigValRangeLow = -2.000000e+04
+          Attr I_ACT.ChannelSigValRangeHigh = 2.000000e+04
+          Attr I_ACT.SensorPolyType = 1
+          Attr I_ACT.SensorSigValRangeLow = -2.000000e+04
+          Attr I_ACT.SensorSigValRangeHigh = 2.000000e+04
+          Attr I_ACT.ActValRangeLow = -1.000000e+02
+          Attr I_ACT.ActValRangeHigh = 1.000000e+02
+          Attr I_PZD3.Description = "Status word from converter"
+          Attr I_PZD3.Identity = "5106"
+          Attr I_PZD3.RawValRangeLow = -1.000000e+04
+          Attr I_PZD3.RawValRangeHigh = 1.000000e+04
+          Attr I_PZD3.ChannelSigValRangeLow = -1.000000e+04
+          Attr I_PZD3.ChannelSigValRangeHigh = 1.000000e+04
+          Attr I_PZD3.SensorPolyType = 1
+          Attr I_PZD3.SensorSigValRangeLow = -1.000000e+04
+          Attr I_PZD3.SensorSigValRangeHigh = 1.000000e+04
+          Attr I_PZD3.ActValRangeLow = -1.000000e+03
+          Attr I_PZD3.ActValRangeHigh = 1.000000e+03
+          Attr I_PZD3.Representation = 1
+          Attr I_PZD4.Description = "Status word from converter"
+          Attr I_PZD4.Identity = "5108"
+          Attr I_PZD4.RawValRangeLow = -3.276700e+04
+          Attr I_PZD4.RawValRangeHigh = 3.276800e+04
+          Attr I_PZD4.ChannelSigValRangeLow = -3.276700e+04
+          Attr I_PZD4.ChannelSigValRangeHigh = 3.276800e+04
+          Attr I_PZD4.SensorPolyType = 1
+          Attr I_PZD4.SensorSigValRangeLow = -3.276700e+04
+          Attr I_PZD4.SensorSigValRangeHigh = 3.276800e+04
+          Attr I_PZD4.ActValRangeLow = -3.276700e+02
+          Attr I_PZD4.ActValRangeHigh = 3.276800e+02
+          Attr I_PZD5.Description = "Status bits from converter"
+          Attr I_PZD5.Identity = "5110"
+          Attr I_PZD5.Representation = 1
+          Attr I_PZD6.Description = "Status bits from converter"
+          Attr I_PZD6.Identity = "5112"
+          Attr I_PZD6.Representation = 1
+          Attr I_PZD7.Description = "Status bits from converter"
+          Attr I_PZD7.Identity = "5114"
+          Attr I_PZD7.Representation = 1
+          Attr I_PZD8.Description = "Status bits from converter"
+          Attr I_PZD8.Identity = "5116"
+          Attr I_PZD8.Representation = 1
+          Attr I_PZD9.Description = "Status bits or word from converter"
+          Attr I_PZD9.Identity = "5118"
+          Attr I_PZD9.Representation = 1
+          Attr I_PZD10.Description = "Status bits or word from converter"
+          Attr I_PZD10.Identity = "5120"
+          Attr I_PZD10.Representation = 1
+          Attr O_ID.Description = "Parameter identification"
+          Attr O_ID.Representation = 1
+          Attr O_IND.Description = "Array index"
+          Attr O_IND.Representation = 1
+          Attr O_VALUE.Description = "Parameter value"
+          Attr O_VALUE.Representation = 1
+          Attr O_CW.Description = "Control word to converter (fixed)"
+          Attr O_CW.Identity = "9004"
+          Attr O_CW.Representation = 1
+          Attr O_REF.Description = "Referencevalue word to converter (fixed)"
+          Attr O_REF.Identity = "9004"
+          Attr O_REF.OutPolyType = 1
+          Attr O_REF.ActValRangeLow = -1.000000e+03
+          Attr O_REF.ActValRangeHigh = 1.000000e+03
+          Attr O_REF.SensorSigValRangeLow = -2.000000e+04
+          Attr O_REF.SensorSigValRangeHigh = 2.000000e+04
+          Attr O_REF.ChannelSigValRangeLow = -2.000000e+04
+          Attr O_REF.ChannelSigValRangeHigh = 2.000000e+04
+          Attr O_REF.RawValRangeLow = -2.000000e+04
+          Attr O_REF.RawValRangeHigh = 2.000000e+04
+          Attr O_PZD3.Description = "Referencevalue word to converter"
+          Attr O_PZD3.Identity = "5105"
+          Attr O_PZD3.OutPolyType = 1
+          Attr O_PZD3.ActValRangeHigh = 6.000000e+02
+          Attr O_PZD3.SensorSigValRangeHigh = 6.000000e+04
+          Attr O_PZD3.ChannelSigValRangeHigh = 6.000000e+04
+          Attr O_PZD3.RawValRangeHigh = 6.000000e+04
+          Attr O_PZD3.Representation = 1
+          Attr O_PZD4.Description = "Referencevalue word to converter"
+          Attr O_PZD4.Identity = "5107"
+          Attr O_PZD4.OutPolyType = 1
+          Attr O_PZD4.ActValRangeHigh = 6.000000e+02
+          Attr O_PZD4.SensorSigValRangeHigh = 6.000000e+04
+          Attr O_PZD4.ChannelSigValRangeHigh = 6.000000e+04
+          Attr O_PZD4.RawValRangeHigh = 6.000000e+04
+          Attr O_PZD4.Representation = 1
+          Attr O_PZD5.Description = "Referencevalue word to converter"
+          Attr O_PZD5.Identity = "5109"
+          Attr O_PZD5.OutPolyType = 1
+          Attr O_PZD5.ActValRangeLow = -3.276700e+04
+          Attr O_PZD5.ActValRangeHigh = 3.276800e+04
+          Attr O_PZD5.SensorSigValRangeLow = -3.276700e+04
+          Attr O_PZD5.SensorSigValRangeHigh = 3.276800e+04
+          Attr O_PZD5.ChannelSigValRangeLow = -3.276700e+04
+          Attr O_PZD5.ChannelSigValRangeHigh = 3.276800e+04
+          Attr O_PZD5.RawValRangeLow = -3.276700e+04
+          Attr O_PZD5.RawValRangeHigh = 3.276800e+04
+          Attr O_PZD5.Representation = 1
+          Attr O_PZD6.Description = "Referencevalue word to converter"
+          Attr O_PZD6.Identity = "5111"
+          Attr O_PZD6.Representation = 1
+          Attr O_PZD7.Description = "Referencevalue word to converter"
+          Attr O_PZD7.Identity = "5113"
+          Attr O_PZD7.Representation = 1
+          Attr O_PZD8.Description = "Referencevalue word to converter"
+          Attr O_PZD8.Identity = "5115"
+          Attr O_PZD8.Representation = 1
+          Attr O_PZD9.Description = "Referencevalue word to converter"
+          Attr O_PZD9.Identity = "5117"
+          Attr O_PZD9.Representation = 1
+          Attr O_PZD10.Description = "Referencevalue word to converter"
+          Attr O_PZD10.Identity = "5119"
+          Attr O_PZD10.Representation = 1
         EndBody
       EndObject
     EndObject

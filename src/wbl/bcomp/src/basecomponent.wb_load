@@ -1,7 +1,7 @@
 Volume BaseComponent $ClassVolume 0.0.0.10 
   Body SysBody
-    Attr NextOix = "_X1004"
-    Attr NextCix = "_X25"
+    Attr NextOix = "_X1348"
+    Attr NextCix = "_X31"
     Attr NextTix[0] = "_X2"
   EndBody
   Object Class $ClassHier 1
@@ -1259,7 +1259,7 @@ Volume BaseComponent $ClassVolume 0.0.0.10
         EndBody
       EndObject
     EndObject
-    Object Tempsensor $ClassDef 18
+    Object BaseSensor $ClassDef 25
       Body SysBody
         Attr Editor = 0
         Attr Method = 0
@@ -1267,128 +1267,260 @@ Volume BaseComponent $ClassVolume 0.0.0.10
       EndBody
       Object RtBody $ObjBodyDef 1
         Body SysBody
-          Attr StructName = "Tempsensor"
-          Attr NextAix = "_X75"
+          Attr StructName = "BaseSensor"
+          Attr NextAix = "_X92"
         EndBody
-        Object Description $Attribute 41
+        Object Description $Attribute 75
           Body SysBody
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
-        Object Specification $Attribute 42
+        Object Specification $Attribute 76
           Body SysBody
             Attr PgmName = "Specification"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
-        Object Temp $Attribute 43
+        Object Value $Attribute 77
           Body SysBody
-            Attr PgmName = "Temp"
+            Attr PgmName = "Value"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
         EndObject
-        Object LimitHH $Attribute 47
+        Object LimitHH $Attribute 78
           Body SysBody
             Attr PgmName = "LimitHH"
             Attr Flags = 131072
             Attr TypeRef = "BaseComponent:Class-CompLimit"
           EndBody
         EndObject
-        Object LimitH $Attribute 51
+        Object LimitH $Attribute 79
           Body SysBody
             Attr PgmName = "LimitH"
             Attr Flags = 131072
             Attr TypeRef = "BaseComponent:Class-CompLimit"
           EndBody
         EndObject
-        Object LimitL $Attribute 62
+        Object LimitL $Attribute 80
           Body SysBody
             Attr PgmName = "LimitL"
             Attr Flags = 131072
             Attr TypeRef = "BaseComponent:Class-CompLimit"
           EndBody
         EndObject
-        Object LimitLL $Attribute 67
+        Object LimitLL $Attribute 81
           Body SysBody
             Attr PgmName = "LimitLL"
             Attr Flags = 131072
             Attr TypeRef = "BaseComponent:Class-CompLimit"
           EndBody
         EndObject
-        Object IndError $Attribute 73
+        Object IndError $Attribute 82
           Body SysBody
             Attr PgmName = "IndError"
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
-        Object IndWarning $Attribute 74
+        Object IndWarning $Attribute 83
           Body SysBody
             Attr PgmName = "IndWarning"
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
-        Object Trend $Attribute 71
+        Object Trend $Attribute 84
           Body SysBody
             Attr PgmName = "Trend"
             Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-DsTrend"
           EndBody
         EndObject
-        Object DefTrend $Attribute 72
+        Object DefTrend $Attribute 85
           Body SysBody
             Attr PgmName = "DefTrend"
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
-        Object HelpTopic $Attribute 54
+        Object HelpTopic $Attribute 86
           Body SysBody
             Attr PgmName = "HelpTopic"
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
-        Object DataSheet $Attribute 55
+        Object DataSheet $Attribute 87
           Body SysBody
             Attr PgmName = "DataSheet"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
-        Object CircuitDiagram $Attribute 56
+        Object CircuitDiagram $Attribute 88
           Body SysBody
             Attr PgmName = "CircuitDiagram"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
-        Object Note $Attribute 57
+        Object Note $Attribute 89
           Body SysBody
             Attr PgmName = "Note"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
-        Object Photo $Attribute 58
+        Object Photo $Attribute 90
           Body SysBody
             Attr PgmName = "Photo"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
-        Object PlcConnect $Attribute 59
+        Object PlcConnect $Attribute 91
           Body SysBody
             Attr PgmName = "PlcConnect"
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
       EndObject
-      Object Template Tempsensor 2152431616
+      Object Template BaseSensor 2154266624
         Body RtBody
+          Attr Value.PresMaxLimit = 1.000000e+02
+          Attr LimitHH.AlarmText = "HighHigh limit exceeded, sensor "
+          Attr LimitHH.Limit = 9.500000e+01
+          Attr LimitH.AlarmText = "High limit exceeded, sensor "
+          Attr LimitH.Limit = 9.000000e+01
+          Attr LimitL.AlarmText = "Beyond Low limit, sensor "
+          Attr LimitL.Limit = 1.000000e+01
+          Attr LimitLL.AlarmText = "Beyond LowLow limit, sensor "
+          Attr LimitLL.Limit = 5.000000e+00
           Attr Trend.Multiple = 1
-          Attr Trend.DataName = "BaseComponent:Class-Tempsensor-Template.Temp.ActualValue"
+          Attr Trend.DataName = "BaseComponent:Class-BaseSensor-Template.Value.ActualValue"
           Attr Trend.StorageTime = 239
           Attr Trend.BufferStatus[0] = 1
           Attr Trend.BufferStatus[1] = 1
           Attr Trend.NoOfBuffers = 2
           Attr Trend.NoOfBufElement = 239
-          Attr DefTrend = "BaseComponent:Class-Tempsensor-Template.Trend"
+          Attr DefTrend = "BaseComponent:Class-BaseSensor-Template.Trend"
+        EndBody
+      EndObject
+    EndObject
+    Object LevelSensor $ClassDef 28
+      Body SysBody
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1
+        Body SysBody
+          Attr StructName = "LevelSensor"
+          Attr NextAix = "_X2"
+        EndBody
+        Object Super $Attribute 1
+          Body SysBody
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "BaseComponent:Class-BaseSensor"
+          EndBody
+        EndObject
+      EndObject
+      Object Template LevelSensor 2155053056
+        Body RtBody
+          Attr Super.Value.PresMaxLimit = 1.000000e+02
+          Attr Super.LimitHH.AlarmText = "HighHigh limit exceeded, levelsensor "
+          Attr Super.LimitHH.Limit = 9.500000e+01
+          Attr Super.LimitH.AlarmText = "High limit exceeded, levelsensor "
+          Attr Super.LimitH.Limit = 9.000000e+01
+          Attr Super.LimitL.AlarmText = "Beyond Low limit, levelsensor "
+          Attr Super.LimitL.Limit = 1.000000e+01
+          Attr Super.LimitLL.AlarmText = "Beyond LowLow limit, levelsensor "
+          Attr Super.LimitLL.Limit = 5.000000e+00
+          Attr Super.Trend.Multiple = 1
+          Attr Super.Trend.DataName = "BaseComponent:Class-LevelSensor-Template.Super.Value.ActualValue"
+          Attr Super.Trend.StorageTime = 239
+          Attr Super.Trend.BufferStatus[0] = 1
+          Attr Super.Trend.BufferStatus[1] = 1
+          Attr Super.Trend.NoOfBuffers = 2
+          Attr Super.Trend.NoOfBufElement = 239
+          Attr Super.DefTrend = "BaseComponent:Class-LevelSensor-Template.Super.Trend"
+        EndBody
+      EndObject
+    EndObject
+    Object TempSensor $ClassDef 29
+      Body SysBody
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1
+        Body SysBody
+          Attr StructName = "TempSensor"
+          Attr NextAix = "_X3"
+        EndBody
+        Object Super $Attribute 2
+          Body SysBody
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "BaseComponent:Class-BaseSensor"
+          EndBody
+        EndObject
+      EndObject
+      Object Template TempSensor
+        Body RtBody
+          Attr Super.Value.PresMaxLimit = 1.000000e+02
+          Attr Super.LimitHH.AlarmText = "HighHigh limit exceeded, levelsensor "
+          Attr Super.LimitHH.Limit = 9.500000e+01
+          Attr Super.LimitH.AlarmText = "High limit exceeded, levelsensor "
+          Attr Super.LimitH.Limit = 9.000000e+01
+          Attr Super.LimitL.AlarmText = "Beyond Low limit, levelsensor "
+          Attr Super.LimitL.Limit = 1.000000e+01
+          Attr Super.LimitLL.AlarmText = "Beyond LowLow limit, levelsensor "
+          Attr Super.LimitLL.Limit = 5.000000e+00
+          Attr Super.Trend.Multiple = 1
+          Attr Super.Trend.DataName = "BaseComponent:Class-TempSensor-Template.Super.Value.ActualValue"
+          Attr Super.Trend.StorageTime = 239
+          Attr Super.Trend.BufferStatus[0] = 1
+          Attr Super.Trend.BufferStatus[1] = 1
+          Attr Super.Trend.NoOfBuffers = 2
+          Attr Super.Trend.NoOfBufElement = 239
+          Attr Super.DefTrend = "BaseComponent:Class-TempSensor-Template.Super.Trend"
+        EndBody
+      EndObject
+    EndObject
+    Object PressureSensor $ClassDef 30
+      Body SysBody
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1
+        Body SysBody
+          Attr StructName = "PressureSensor"
+          Attr NextAix = "_X3"
+        EndBody
+        Object Super $Attribute 2
+          Body SysBody
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "BaseComponent:Class-BaseSensor"
+          EndBody
+        EndObject
+      EndObject
+      Object Template PressureSensor
+        Body RtBody
+          Attr Super.Value.PresMaxLimit = 1.000000e+02
+          Attr Super.LimitHH.AlarmText = "HighHigh limit exceeded, pressuresensor "
+          Attr Super.LimitHH.Limit = 9.500000e+01
+          Attr Super.LimitH.AlarmText = "High limit exceeded, pressuresensor "
+          Attr Super.LimitH.Limit = 9.000000e+01
+          Attr Super.LimitL.AlarmText = "Beyond Low limit, pressuresensor "
+          Attr Super.LimitL.Limit = 1.000000e+01
+          Attr Super.LimitLL.AlarmText = "Beyond LowLow limit, pressuresensor "
+          Attr Super.LimitLL.Limit = 5.000000e+00
+          Attr Super.Trend.Multiple = 1
+          Attr Super.Trend.DataName = "BaseComponent:Class-PressureSensor-Template.Super.Value.ActualValue"
+          Attr Super.Trend.StorageTime = 239
+          Attr Super.Trend.BufferStatus[0] = 1
+          Attr Super.Trend.BufferStatus[1] = 1
+          Attr Super.Trend.NoOfBuffers = 2
+          Attr Super.Trend.NoOfBufElement = 239
+          Attr Super.DefTrend = "BaseComponent:Class-PressureSensor-Template.Super.Trend"
         EndBody
       EndObject
     EndObject
@@ -10410,7 +10542,7 @@ No letters  = Auto mod
         EndBody
       EndObject
     EndObject
-    Object TempSensorFo $ClassDef 20
+    Object BaseSensorFo $ClassDef 27
       Body SysBody
         Attr Editor = 0
         Attr Method = 0
@@ -10418,37 +10550,37 @@ No letters  = Auto mod
       EndBody
       Object RtBody $ObjBodyDef 1
         Body SysBody
-          Attr StructName = "TempSensorFo"
-          Attr NextAix = "_X37"
+          Attr StructName = "BaseSensorFo"
+          Attr NextAix = "_X42"
         EndBody
-        Object PlcConnect $Intern 33
+        Object PlcConnect $Intern 37
           Body SysBody
             Attr PgmName = "PlcConnect"
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
-        Object HH $Output 32
+        Object HH $Output 38
           Body SysBody
             Attr PgmName = "HH"
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "HH"
           EndBody
         EndObject
-        Object H $Output 36
+        Object H $Output 39
           Body SysBody
             Attr PgmName = "H"
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "H"
           EndBody
         EndObject
-        Object L $Output 35
+        Object L $Output 40
           Body SysBody
             Attr PgmName = "L"
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "L"
           EndBody
         EndObject
-        Object LL $Output 34
+        Object LL $Output 41
           Body SysBody
             Attr PgmName = "LL"
             Attr TypeRef = "pwrs:Type-$Boolean"
@@ -10458,15 +10590,15 @@ No letters  = Auto mod
       EndObject
       Object DevBody $ObjBodyDef 2
         Body SysBody
-          Attr NextAix = "_X5"
+          Attr NextAix = "_X6"
         EndBody
-        Object PlcNode $Buffer 4
+        Object PlcNode $Buffer 5
           Body SysBody
             Attr Class = "pwrs:Class-$PlcNode"
           EndBody
         EndObject
       EndObject
-      Object GraphPlcNode $GraphPlcNode 387
+      Object GraphPlcNode $GraphPlcNode 1177
         Body SysBody
           Attr object_type = 11
           Attr parameters[0] = 0
@@ -10486,24 +10618,24 @@ No letters  = Auto mod
           Attr traceindex = 0
           Attr connectmethod = 10
           Attr executeordermethod = 2
-          Attr objname = "TempSensorFo"
-          Attr graphname = "TempSensorFo"
+          Attr objname = "BaseSensorFo"
+          Attr graphname = "BaseSensorFo"
         EndBody
       EndObject
-      Object RtXtt $RtMenu 388
-        Object PlcConnect $MenuRef 389
+      Object RtXtt $RtMenu 1178
+        Object PlcConnect $MenuRef 1179
           Body SysBody
             Attr ButtonName = "PlcConnect"
             Attr RefAttribute = "PlcConnect"
           EndBody
         EndObject
       EndObject
-      Object Code PlcTemplate 390
+      Object Code PlcTemplate 1180
         Body RtBody
         EndBody
         Body DevBody
           Buffer PlcProgram
-            Attr oid = "BaseComponent:Class-TempSensorFo-Code"
+            Attr oid = "BaseComponent:Class-BaseSensorFo-Code"
             Attr cid = "pwrb:Class-PlcTemplate"
             Attr defnamecount[2] = 5
             Attr defnamecount[11] = 71
@@ -10531,13 +10663,13 @@ No letters  = Auto mod
             Attr connamecount = 204
           EndBuffer
         EndBody
-        Object W WindowPlc 391
+        Object W WindowPlc 1181
           Body RtBody
           EndBody
           Body DevBody
             Attr Modified = "10-MAY-2005 13:37:32.53"
             Buffer PlcWindow
-              Attr oid = "BaseComponent:Class-TempSensorFo-Code-W"
+              Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W"
               Attr cid = "pwrb:Class-WindowPlc"
               Attr y = 5.000000e+01
               Attr width = 1.000000e+03
@@ -10545,15 +10677,15 @@ No letters  = Auto mod
               Attr refconcount = 1
             EndBuffer
           EndBody
-          Object cn203 ConDigital 808
+          Object cn203 ConDigital 1182
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn203"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn203"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-Yellow"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-GetDp67"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-Yellow"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp67"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.135333e+00
@@ -10579,20 +10711,20 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn202 ConDigital 806
+          Object cn202 ConDigital 1183
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn202"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn202"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
                 Attr source_point = 1
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-Yellow"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-GetDp66"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-Yellow"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp66"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.130889e+00
@@ -10618,20 +10750,20 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn201 ConDigital 804
+          Object cn201 ConDigital 1184
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn201"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn201"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
                 Attr source_point = 1
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-Red"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-GetDp65"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-Red"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp65"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.146444e+00
@@ -10657,19 +10789,19 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn200 ConDigital 802
+          Object cn200 ConDigital 1185
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn200"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn200"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-Red"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-GetDp64"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-Red"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp64"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.155333e+00
@@ -10695,20 +10827,20 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn199 ConDigital 800
+          Object cn199 ConDigital 1186
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn199"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn199"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
                 Attr source_point = 2
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-Yellow"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-StoDp20"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-Yellow"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoDp20"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 2.220000e+00
@@ -10734,20 +10866,20 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn198 ConDigital 798
+          Object cn198 ConDigital 1187
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn198"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn198"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
                 Attr source_point = 2
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-Red"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-StoDp19"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-Red"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoDp19"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 2.220000e+00
@@ -10773,20 +10905,20 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn191 ConDigital 774
+          Object cn191 ConDigital 1188
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn191"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn191"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
                 Attr source_point = 1
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-TimeHH"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-LimitHH"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-TimeHH"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-LimitHH"
                 Attr point_count = 4
                 Buffer point[0]
                   Attr x = 2.268000e+00
@@ -10816,19 +10948,19 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn190 ConAnalog 743
+          Object cn190 ConAnalog 1189
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn190"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn190"
                 Attr object_type = 24
                 Attr cid = "pwrb:Class-ConAnalog"
                 Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-Strcat69"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-GetSp8"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-Strcat69"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetSp8"
                 Attr point_count = 4
                 Buffer point[0]
                   Attr x = 1.420000e+00
@@ -10862,20 +10994,20 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn189 ConAnalog 742
+          Object cn189 ConAnalog 1190
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn189"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn189"
                 Attr object_type = 24
                 Attr cid = "pwrb:Class-ConAnalog"
                 Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-NameToStr66"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-NameToStr66"
                 Attr dest_point = 1
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-Strcat69"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-Strcat69"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.420000e+00
@@ -10905,20 +11037,20 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn188 ConAnalog 741
+          Object cn188 ConAnalog 1191
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn188"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn188"
                 Attr object_type = 24
                 Attr cid = "pwrb:Class-ConAnalog"
                 Attr attributes = 90
                 Attr source_point = 2
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-Strcat69"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-StoSp8"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-Strcat69"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoSp8"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 2.220000e+00
@@ -10948,19 +11080,19 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn187 ConDigital 740
+          Object cn187 ConDigital 1192
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn187"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn187"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-DSup9"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-GetDp63"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-DSup9"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp63"
                 Attr point_count = 4
                 Buffer point[0]
                   Attr x = 2.220000e+00
@@ -10990,19 +11122,19 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn186 ConAnalog 731
+          Object cn186 ConAnalog 1193
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn186"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn186"
                 Attr object_type = 24
                 Attr cid = "pwrb:Class-ConAnalog"
                 Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-Strcat65"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-GetSp7"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-Strcat65"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetSp7"
                 Attr point_count = 4
                 Buffer point[0]
                   Attr x = 1.420000e+00
@@ -11036,20 +11168,20 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn185 ConAnalog 730
+          Object cn185 ConAnalog 1194
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn185"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn185"
                 Attr object_type = 24
                 Attr cid = "pwrb:Class-ConAnalog"
                 Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-NameToStr62"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-NameToStr62"
                 Attr dest_point = 1
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-Strcat65"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-Strcat65"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.420000e+00
@@ -11079,20 +11211,20 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn184 ConAnalog 729
+          Object cn184 ConAnalog 1195
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn184"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn184"
                 Attr object_type = 24
                 Attr cid = "pwrb:Class-ConAnalog"
                 Attr attributes = 90
                 Attr source_point = 2
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-Strcat65"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-StoSp7"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-Strcat65"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoSp7"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 2.220000e+00
@@ -11122,19 +11254,19 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn183 ConDigital 728
+          Object cn183 ConDigital 1196
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn183"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn183"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-DSup8"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-GetDp62"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-DSup8"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp62"
                 Attr point_count = 4
                 Buffer point[0]
                   Attr x = 2.220000e+00
@@ -11164,19 +11296,19 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn182 ConAnalog 719
+          Object cn182 ConAnalog 1197
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn182"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn182"
                 Attr object_type = 24
                 Attr cid = "pwrb:Class-ConAnalog"
                 Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-Strcat61"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-GetSp6"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-Strcat61"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetSp6"
                 Attr point_count = 4
                 Buffer point[0]
                   Attr x = 1.420000e+00
@@ -11210,20 +11342,20 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn181 ConAnalog 718
+          Object cn181 ConAnalog 1198
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn181"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn181"
                 Attr object_type = 24
                 Attr cid = "pwrb:Class-ConAnalog"
                 Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-NameToStr58"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-NameToStr58"
                 Attr dest_point = 1
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-Strcat61"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-Strcat61"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.420000e+00
@@ -11253,20 +11385,20 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn180 ConAnalog 717
+          Object cn180 ConAnalog 1199
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn180"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn180"
                 Attr object_type = 24
                 Attr cid = "pwrb:Class-ConAnalog"
                 Attr attributes = 90
                 Attr source_point = 2
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-Strcat61"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-StoSp6"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-Strcat61"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoSp6"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 2.220000e+00
@@ -11296,19 +11428,19 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn179 ConDigital 716
+          Object cn179 ConDigital 1200
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn179"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn179"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-DSup7"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-GetDp61"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-DSup7"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp61"
                 Attr point_count = 4
                 Buffer point[0]
                   Attr x = 2.220000e+00
@@ -11338,20 +11470,20 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn178 ConAnalog 707
+          Object cn178 ConAnalog 1201
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn178"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn178"
                 Attr object_type = 24
                 Attr cid = "pwrb:Class-ConAnalog"
                 Attr attributes = 90
                 Attr source_point = 2
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-Strcat52"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-StoSp5"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-Strcat52"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoSp5"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 2.220000e+00
@@ -11381,19 +11513,19 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn177 ConDigital 706
+          Object cn177 ConDigital 1202
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn177"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn177"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-DSup6"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-GetDp60"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-DSup6"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp60"
                 Attr point_count = 4
                 Buffer point[0]
                   Attr x = 2.220000e+00
@@ -11423,20 +11555,20 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn169 ConAnalog 693
+          Object cn169 ConAnalog 1203
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn169"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn169"
                 Attr object_type = 24
                 Attr cid = "pwrb:Class-ConAnalog"
                 Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-NameToStr51"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-NameToStr51"
                 Attr dest_point = 1
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-Strcat52"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-Strcat52"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.420000e+00
@@ -11466,19 +11598,19 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn168 ConAnalog 692
+          Object cn168 ConAnalog 1204
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn168"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn168"
                 Attr object_type = 24
                 Attr cid = "pwrb:Class-ConAnalog"
                 Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-Strcat52"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-GetSp5"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-Strcat52"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetSp5"
                 Attr point_count = 4
                 Buffer point[0]
                   Attr x = 1.420000e+00
@@ -11512,20 +11644,20 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn166 ConDigital 674
+          Object cn166 ConDigital 1205
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn166"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn166"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
                 Attr source_point = 2
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-LL"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-TimeLL"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-LL"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-TimeLL"
                 Attr point_count = 4
                 Buffer point[0]
                   Attr x = 1.850000e+00
@@ -11555,19 +11687,19 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn165 ConAnalog 673
+          Object cn165 ConAnalog 1206
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn165"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn165"
                 Attr object_type = 24
                 Attr cid = "pwrb:Class-ConAnalog"
                 Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-GetAp7"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-StoAp55"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetAp7"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoAp55"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.620000e+00
@@ -11597,19 +11729,19 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn164 ConAnalog 672
+          Object cn164 ConAnalog 1207
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn164"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn164"
                 Attr object_type = 24
                 Attr cid = "pwrb:Class-ConAnalog"
                 Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-LL"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-GetAi2"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-LL"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetAi2"
                 Attr point_count = 4
                 Buffer point[0]
                   Attr x = 1.620000e+00
@@ -11639,20 +11771,20 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn163 ConAnalog 671
+          Object cn163 ConAnalog 1208
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn163"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn163"
                 Attr object_type = 24
                 Attr cid = "pwrb:Class-ConAnalog"
                 Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-GetAp8"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetAp8"
                 Attr dest_point = 1
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-LL"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-LL"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.620000e+00
@@ -11682,20 +11814,20 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn162 ConDigital 669
+          Object cn162 ConDigital 1209
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn162"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn162"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
                 Attr source_point = 2
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-L"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-TimeL"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-L"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-TimeL"
                 Attr point_count = 4
                 Buffer point[0]
                   Attr x = 1.800000e+00
@@ -11725,20 +11857,20 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn161 ConAnalog 668
+          Object cn161 ConAnalog 1210
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn161"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn161"
                 Attr object_type = 24
                 Attr cid = "pwrb:Class-ConAnalog"
                 Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-GetAp9"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetAp9"
                 Attr dest_point = 1
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-L"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-L"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.570000e+00
@@ -11768,19 +11900,19 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn160 ConAnalog 666
+          Object cn160 ConAnalog 1211
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn160"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn160"
                 Attr object_type = 24
                 Attr cid = "pwrb:Class-ConAnalog"
                 Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-GetAi2"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-L"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetAi2"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-L"
                 Attr point_count = 4
                 Buffer point[0]
                   Attr x = 1.426444e+00
@@ -11810,19 +11942,19 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn157 ConAnalog 662
+          Object cn157 ConAnalog 1212
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn157"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn157"
                 Attr object_type = 24
                 Attr cid = "pwrb:Class-ConAnalog"
                 Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-StoAp53"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-GetAp10"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoAp53"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetAp10"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.214222e+00
@@ -11848,19 +11980,19 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn155 ConAnalog 660
+          Object cn155 ConAnalog 1213
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn155"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn155"
                 Attr object_type = 24
                 Attr cid = "pwrb:Class-ConAnalog"
                 Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-StoAp54"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-GetAp11"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoAp54"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetAp11"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.232000e+00
@@ -11886,20 +12018,20 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn154 ConDigital 659
+          Object cn154 ConDigital 1214
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn154"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn154"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
                 Attr source_point = 2
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-LimitL"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-StoDp18"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-LimitL"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoDp18"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 2.870000e+00
@@ -11933,20 +12065,20 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn153 ConDigital 658
+          Object cn153 ConDigital 1215
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn153"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn153"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
                 Attr source_point = 1
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-TimeL"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-LimitL"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-TimeL"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-LimitL"
                 Attr point_count = 4
                 Buffer point[0]
                   Attr x = 2.293555e+00
@@ -11976,20 +12108,20 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn152 ConDigital 657
+          Object cn152 ConDigital 1216
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn152"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn152"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-GetDp52"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp52"
                 Attr dest_point = 1
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-LimitL"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-LimitL"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 2.620000e+00
@@ -12015,19 +12147,19 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn147 ConAnalog 652
+          Object cn147 ConAnalog 1217
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn147"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn147"
                 Attr object_type = 24
                 Attr cid = "pwrb:Class-ConAnalog"
                 Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-StoAp49"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-GetAp6"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoAp49"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetAp6"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.297556e+00
@@ -12053,20 +12185,20 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn146 ConDigital 651
+          Object cn146 ConDigital 1218
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn146"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn146"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
                 Attr source_point = 1
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-TimeLL"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-LimitLL"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-TimeLL"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-LimitLL"
                 Attr point_count = 4
                 Buffer point[0]
                   Attr x = 2.359111e+00
@@ -12096,20 +12228,20 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn145 ConDigital 650
+          Object cn145 ConDigital 1219
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn145"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn145"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-GetDp51"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp51"
                 Attr dest_point = 1
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-LimitLL"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-LimitLL"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 2.670000e+00
@@ -12135,20 +12267,20 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn144 ConDigital 649
+          Object cn144 ConDigital 1220
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn144"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn144"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
                 Attr source_point = 2
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-LimitLL"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-StoDp17"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-LimitLL"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoDp17"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 2.920000e+00
@@ -12182,20 +12314,20 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn143 ConAnalog 624
+          Object cn143 ConAnalog 1221
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn143"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn143"
                 Attr object_type = 24
                 Attr cid = "pwrb:Class-ConAnalog"
                 Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-GetAi0"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetAi0"
                 Attr dest_point = 1
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-H"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-H"
                 Attr point_count = 4
                 Buffer point[0]
                   Attr x = 1.376444e+00
@@ -12225,19 +12357,19 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn142 ConAnalog 623
+          Object cn142 ConAnalog 1222
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn142"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn142"
                 Attr object_type = 24
                 Attr cid = "pwrb:Class-ConAnalog"
                 Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-H"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-GetAp3"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-H"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetAp3"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.110889e+00
@@ -12263,19 +12395,19 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn140 ConAnalog 621
+          Object cn140 ConAnalog 1223
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn140"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn140"
                 Attr object_type = 24
                 Attr cid = "pwrb:Class-ConAnalog"
                 Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-StoAp47"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-GetAp4"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoAp47"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetAp4"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.168667e+00
@@ -12301,20 +12433,20 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn139 ConDigital 620
+          Object cn139 ConDigital 1224
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn139"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn139"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
                 Attr source_point = 2
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-H"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-TimeH"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-H"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-TimeH"
                 Attr point_count = 4
                 Buffer point[0]
                   Attr x = 1.800000e+00
@@ -12344,19 +12476,19 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn138 ConAnalog 619
+          Object cn138 ConAnalog 1225
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn138"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn138"
                 Attr object_type = 24
                 Attr cid = "pwrb:Class-ConAnalog"
                 Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-StoAp48"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-GetAp5"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoAp48"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetAp5"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.186444e+00
@@ -12382,20 +12514,20 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn137 ConDigital 618
+          Object cn137 ConDigital 1226
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn137"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn137"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
                 Attr source_point = 2
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-LimitH"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-StoDp16"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-LimitH"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoDp16"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 2.870000e+00
@@ -12429,20 +12561,20 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn136 ConDigital 617
+          Object cn136 ConDigital 1227
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn136"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn136"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
                 Attr source_point = 1
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-TimeH"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-LimitH"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-TimeH"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-LimitH"
                 Attr point_count = 4
                 Buffer point[0]
                   Attr x = 2.298000e+00
@@ -12472,20 +12604,20 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn135 ConDigital 616
+          Object cn135 ConDigital 1228
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn135"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn135"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-GetDp46"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp46"
                 Attr dest_point = 1
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-LimitH"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-LimitH"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 2.620000e+00
@@ -12511,20 +12643,20 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn134 ConDigital 602
+          Object cn134 ConDigital 1229
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn134"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn134"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-GetDp45"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp45"
                 Attr dest_point = 1
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-LimitHH"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-LimitHH"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 2.570000e+00
@@ -12554,20 +12686,20 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn130 ConDigital 596
+          Object cn130 ConDigital 1230
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn130"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn130"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
                 Attr source_point = 2
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-LimitHH"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-StoDp15"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-LimitHH"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoDp15"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 2.820000e+00
@@ -12601,19 +12733,19 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn119 ConAnalog 570
+          Object cn119 ConAnalog 1231
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn119"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn119"
                 Attr object_type = 24
                 Attr cid = "pwrb:Class-ConAnalog"
                 Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-StoAp40"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-GetAp2"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoAp40"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetAp2"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.206444e+00
@@ -12639,20 +12771,20 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn115 ConDigital 561
+          Object cn115 ConDigital 1232
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn115"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn115"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
                 Attr source_point = 2
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-HH"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-TimeHH"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-HH"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-TimeHH"
                 Attr point_count = 4
                 Buffer point[0]
                   Attr x = 1.750000e+00
@@ -12682,19 +12814,19 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn114 ConAnalog 559
+          Object cn114 ConAnalog 1233
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn114"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn114"
                 Attr object_type = 24
                 Attr cid = "pwrb:Class-ConAnalog"
                 Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-StoAp39"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-GetAp1"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoAp39"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetAp1"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.188667e+00
@@ -12720,20 +12852,20 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn112 ConAnalog 554
+          Object cn112 ConAnalog 1234
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn112"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn112"
                 Attr object_type = 24
                 Attr cid = "pwrb:Class-ConAnalog"
                 Attr attributes = 90
                 Attr source_point = 1
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-HH"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-GetAi0"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-HH"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetAi0"
                 Attr point_count = 4
                 Buffer point[0]
                   Attr x = 1.520000e+00
@@ -12763,19 +12895,19 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn110 ConAnalog 550
+          Object cn110 ConAnalog 1235
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn110"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn110"
                 Attr object_type = 24
                 Attr cid = "pwrb:Class-ConAnalog"
                 Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-HH"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-GetAp0"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-HH"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetAp0"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.130889e+00
@@ -12801,19 +12933,19 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn48 ConDigital 429
+          Object cn48 ConDigital 1236
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn48"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn48"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-StoDp13"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-GetDp18"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoDp13"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp18"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.230889e+00
@@ -12839,19 +12971,19 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn36 ConDigital 438
+          Object cn36 ConDigital 1237
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn36"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn36"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-StoDp11"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-GetDp14"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoDp11"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp14"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.246444e+00
@@ -12877,19 +13009,19 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn17 ConDigital 445
+          Object cn17 ConDigital 1238
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn17"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn17"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-StoDp7"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-GetDp6"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoDp7"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp6"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.235333e+00
@@ -12919,19 +13051,19 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object cn15 ConDigital 446
+          Object cn15 ConDigital 1239
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-cn15"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn15"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-TempSensorFo-Code-W-StoDp5"
-                Attr dest_oid = "BaseComponent:Class-TempSensorFo-Code-W-GetDp4"
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoDp5"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp4"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.255333e+00
@@ -12961,21 +13093,21 @@ No letters  = Auto mod
                 EndBuffer
                 Buffer point[9]
                 EndBuffer
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
-          Object Document0 Document 447
+          Object Document0 Document 1240
             Body DevBody
               Buffer PlcNode
                 Attr object_type = 2
                 Attr cid = "pwrb:Class-Document"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-Document0"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-Document0"
                 Attr x = 5.000000e-01
                 Attr y = -1.750000e+00
                 Attr width = 3.425000e+00
                 Attr heigth = 2.275000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 4
               EndBuffer
               Attr Page = "1 (4)"
@@ -12983,17 +13115,17 @@ No letters  = Auto mod
               Attr DocumentSize = 3
             EndBody
           EndObject
-          Object BodyText7 BodyText 448
+          Object BodyText7 BodyText 1241
             Body DevBody
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-BodyText7"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-BodyText7"
                 Attr x = 1.500000e+00
                 Attr y = 6.560000e-01
                 Attr width = 9.630000e-01
                 Attr heigth = -4.810000e-01
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
               Attr Text = "Interface graphname:
 
@@ -13003,105 +13135,105 @@ LimitL = L
 LimitLL = LL"
             EndBody
           EndObject
-          Object BodyText8 BodyText 449
+          Object BodyText8 BodyText 1242
             Body DevBody
               Attr TextAttribute = 3
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-BodyText8"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-BodyText8"
                 Attr x = 1.100000e+00
                 Attr y = 2.810000e-01
                 Attr width = 1.201333e+00
                 Attr heigth = 9.400000e-02
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
               Attr Text = "Interface \"graph\" between object and PlcPgm"
             EndBody
           EndObject
-          Object GetDp4 GetDp 450
+          Object GetDp4 GetDp 1243
             Body RtBody
             EndBody
             Body DevBody
-              Attr DpObject = "$PlcConnect:BaseComponent-Class-Tempsensor.LimitHH.Status"
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-BaseSensor.LimitHH.Status"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-GetDp4"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp4"
                 Attr x = 7.500000e-01
                 Attr y = -8.000000e-01
                 Attr width = -1.196667e-01
                 Attr heigth = 6.750000e-01
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object StoDp5 StoDp 451
+          Object StoDp5 StoDp 1244
             Body RtBody
             EndBody
             Body DevBody
-              Attr Object = "$PlcHost:BaseComponent-Class-TempSensorFo.HH"
+              Attr Object = "$PlcHost:BaseComponent-Class-BaseSensorFo.HH"
               Buffer PlcNode
                 Attr object_type = 255
                 Attr cid = "pwrb:Class-StoDp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-StoDp5"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoDp5"
                 Attr x = 2.000000e+00
                 Attr y = -1.750000e-01
                 Attr width = 3.496667e-01
                 Attr heigth = 5.000000e-02
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 1
               EndBuffer
             EndBody
           EndObject
-          Object StoDp7 StoDp 452
+          Object StoDp7 StoDp 1245
             Body RtBody
             EndBody
             Body DevBody
-              Attr Object = "$PlcHost:BaseComponent-Class-TempSensorFo.H"
+              Attr Object = "$PlcHost:BaseComponent-Class-BaseSensorFo.H"
               Buffer PlcNode
                 Attr object_type = 255
                 Attr cid = "pwrb:Class-StoDp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-StoDp7"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoDp7"
                 Attr x = 2.000000e+00
                 Attr y = -2.750000e-01
                 Attr width = 3.296667e-01
                 Attr heigth = 5.000000e-02
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 1
               EndBuffer
             EndBody
           EndObject
-          Object GetDp6 GetDp 453
+          Object GetDp6 GetDp 1246
             Body RtBody
             EndBody
             Body DevBody
-              Attr DpObject = "$PlcConnect:BaseComponent-Class-Tempsensor.LimitH.Status"
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-BaseSensor.LimitH.Status"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-GetDp6"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp6"
                 Attr x = 7.500000e-01
                 Attr y = -1.050000e+00
                 Attr width = -2.896667e-01
                 Attr heigth = 8.250000e-01
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object Document1 Document 454
+          Object Document1 Document 1247
             Body DevBody
               Buffer PlcNode
                 Attr object_type = 2
                 Attr cid = "pwrb:Class-Document"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-Document1"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-Document1"
                 Attr x = 5.000000e-01
                 Attr y = -6.450000e+00
                 Attr width = 1.075000e+00
                 Attr heigth = 4.625000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 4
               EndBuffer
               Attr Page = "2"
@@ -13109,36 +13241,36 @@ LimitLL = LL"
               Attr DocumentSize = 3
             EndBody
           EndObject
-          Object BodyText11 BodyText 456
+          Object BodyText11 BodyText 1248
             Body DevBody
               Attr TextAttribute = 3
               Attr FrameAttribute = 1
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-BodyText11"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-BodyText11"
                 Attr x = 3.250000e+00
                 Attr y = -1.144000e+00
                 Attr width = 9.352222e-01
                 Attr heigth = -2.310000e-01
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
               Attr Text = "Functionobject
-Tempsensor
+BaseSensor
 Alarm HH, H, L, LL"
             EndBody
           EndObject
-          Object Document2 Document 462
+          Object Document2 Document 1249
             Body DevBody
               Buffer PlcNode
                 Attr object_type = 2
                 Attr cid = "pwrb:Class-Document"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-Document2"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-Document2"
                 Attr x = 5.000000e-01
                 Attr y = -1.115000e+01
                 Attr width = -1.275000e+00
                 Attr heigth = 6.975000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 4
               EndBuffer
               Attr Page = "3"
@@ -13146,998 +13278,998 @@ Alarm HH, H, L, LL"
               Attr DocumentSize = 3
             EndBody
           EndObject
-          Object BodyText14 BodyText 465
+          Object BodyText14 BodyText 1250
             Body DevBody
               Attr TextAttribute = 3
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-BodyText14"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-BodyText14"
                 Attr x = 6.500000e-01
                 Attr y = -8.769000e+00
                 Attr width = 1.568000e+00
                 Attr heigth = 1.440000e-01
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
               Attr Text = "NB!
 The attribute below must always placed last in this PlcPgm."
             EndBody
           EndObject
-          Object StoDp11 StoDp 479
+          Object StoDp11 StoDp 1251
             Body RtBody
             EndBody
             Body DevBody
-              Attr Object = "$PlcHost:BaseComponent-Class-TempSensorFo.LL"
+              Attr Object = "$PlcHost:BaseComponent-Class-BaseSensorFo.LL"
               Buffer PlcNode
                 Attr object_type = 255
                 Attr cid = "pwrb:Class-StoDp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-StoDp11"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoDp11"
                 Attr x = 2.000000e+00
                 Attr y = -4.750001e-01
                 Attr width = 3.407778e-01
                 Attr heigth = 5.000000e-02
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 1
               EndBuffer
             EndBody
           EndObject
-          Object GetDp14 GetDp 480
+          Object GetDp14 GetDp 1252
             Body RtBody
             EndBody
             Body DevBody
-              Attr DpObject = "$PlcConnect:BaseComponent-Class-Tempsensor.LimitLL.Status"
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-BaseSensor.LimitLL.Status"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-GetDp14"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp14"
                 Attr x = 7.500000e-01
                 Attr y = -1.750000e+00
                 Attr width = -7.785555e-01
                 Attr heigth = 1.325000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object StoDp13 StoDp 485
+          Object StoDp13 StoDp 1253
             Body RtBody
             EndBody
             Body DevBody
-              Attr Object = "$PlcHost:BaseComponent-Class-TempSensorFo.L"
+              Attr Object = "$PlcHost:BaseComponent-Class-BaseSensorFo.L"
               Buffer PlcNode
                 Attr object_type = 255
                 Attr cid = "pwrb:Class-StoDp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-StoDp13"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoDp13"
                 Attr x = 2.000000e+00
                 Attr y = -3.750000e-01
                 Attr width = 3.252222e-01
                 Attr heigth = 5.000000e-02
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 1
               EndBuffer
             EndBody
           EndObject
-          Object GetDp18 GetDp 486
+          Object GetDp18 GetDp 1254
             Body RtBody
             EndBody
             Body DevBody
-              Attr DpObject = "$PlcConnect:BaseComponent-Class-Tempsensor.LimitL.Status"
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-BaseSensor.LimitL.Status"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-GetDp18"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp18"
                 Attr x = 7.500000e-01
                 Attr y = -1.300000e+00
                 Attr width = -4.441111e-01
                 Attr heigth = 9.750000e-01
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object BodyText16 BodyText 496
+          Object BodyText16 BodyText 1255
             Body DevBody
               Attr TextAttribute = 3
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-BodyText16"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-BodyText16"
                 Attr x = 6.500000e-01
                 Attr y = -4.194000e+00
                 Attr width = -1.908111e+00
                 Attr heigth = 2.319000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
               Attr Text = "Limits high"
             EndBody
           EndObject
-          Object BodyText38 BodyText 543
+          Object BodyText38 BodyText 1256
             Body DevBody
               Attr TextAttribute = 3
               Attr FrameAttribute = 1
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-BodyText38"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-BodyText38"
                 Attr x = 3.300000e+00
                 Attr y = -3.494000e+00
                 Attr width = 9.352222e-01
                 Attr heigth = -2.310000e-01
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
               Attr Text = "Functionobject
-Tempsensor
+BaseSensor
 Alarm HH, H, L, LL"
             EndBody
           EndObject
-          Object BodyText39 BodyText 544
+          Object BodyText39 BodyText 1257
             Body DevBody
               Attr TextAttribute = 3
               Attr FrameAttribute = 1
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-BodyText39"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-BodyText39"
                 Attr x = 3.300000e+00
                 Attr y = -5.794000e+00
                 Attr width = 9.352222e-01
                 Attr heigth = -2.310000e-01
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
               Attr Text = "Functionobject
-Tempsensor
+BaseSensor
 Alarm HH, H, L, LL"
             EndBody
           EndObject
-          Object HH Comph 546
+          Object HH Comph 1258
             Body RtBody
             EndBody
             Body DevBody
               Buffer PlcNode
                 Attr object_type = 123
                 Attr cid = "pwrb:Class-Comph"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-HH"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-HH"
                 Attr x = 1.500000e+00
                 Attr y = -2.325000e+00
                 Attr width = 2.300000e-01
                 Attr heigth = 2.000000e-01
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 3
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object GetAp0 GetAp 549
+          Object GetAp0 GetAp 1259
             Body RtBody
             EndBody
             Body DevBody
-              Attr ApObject = "$PlcConnect:BaseComponent-Class-Tempsensor.LimitHH.Limit"
+              Attr ApObject = "$PlcConnect:BaseComponent-Class-BaseSensor.LimitHH.Limit"
               Attr ApObjectSegments = 3
               Buffer PlcNode
                 Attr object_type = 253
                 Attr cid = "pwrb:Class-GetAp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-GetAp0"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetAp0"
                 Attr x = 6.500000e-01
                 Attr y = -2.225000e+00
                 Attr width = 4.808889e-01
                 Attr heigth = 5.000000e-02
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object GetAi0 GetAi 553
+          Object GetAi0 GetAi 1260
             Body RtBody
             EndBody
             Body DevBody
-              Attr AiObject = "$PlcConnect:BaseComponent-Class-Tempsensor.Temp"
+              Attr AiObject = "$PlcConnect:BaseComponent-Class-BaseSensor.Value"
               Buffer PlcNode
                 Attr object_type = 64
                 Attr cid = "pwrb:Class-GetAi"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-GetAi0"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetAi0"
                 Attr x = 1.000000e+00
                 Attr y = -2.075000e+00
                 Attr width = 3.764445e-01
                 Attr heigth = 5.000000e-02
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object StoAp39 StoAp 555
+          Object StoAp39 StoAp 1261
             Body RtBody
             EndBody
             Body DevBody
-              Attr Object = "BaseComponent:Class-TempSensorFo-Code-W-HH.Hysteres"
+              Attr Object = "BaseComponent:Class-BaseSensorFo-Code-W-HH.Hysteres"
               Attr ObjectSegments = 1
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-StoAp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-StoAp39"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoAp39"
                 Attr x = 1.500000e+00
                 Attr y = -2.375000e+00
                 Attr width = 3.541111e-01
                 Attr heigth = 5.000000e-02
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 1
               EndBuffer
             EndBody
           EndObject
-          Object GetAp1 GetAp 558
+          Object GetAp1 GetAp 1262
             Body RtBody
             EndBody
             Body DevBody
-              Attr ApObject = "$PlcConnect:BaseComponent-Class-Tempsensor.LimitHH.Hysteres"
+              Attr ApObject = "$PlcConnect:BaseComponent-Class-BaseSensor.LimitHH.Hysteres"
               Buffer PlcNode
                 Attr object_type = 253
                 Attr cid = "pwrb:Class-GetAp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-GetAp1"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetAp1"
                 Attr x = 6.500000e-01
                 Attr y = -2.375000e+00
                 Attr width = 5.386667e-01
                 Attr heigth = 5.000000e-02
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object TimeHH Wait 560
+          Object TimeHH Wait 1263
             Body RtBody
             EndBody
             Body DevBody
               Buffer PlcNode
                 Attr object_type = 97
                 Attr cid = "pwrb:Class-Wait"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-TimeHH"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-TimeHH"
                 Attr x = 2.000000e+00
                 Attr y = -2.425000e+00
                 Attr width = 2.480000e-01
                 Attr heigth = 1.000000e-01
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 1
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object StoAp40 StoAp 562
+          Object StoAp40 StoAp 1264
             Body RtBody
             EndBody
             Body DevBody
-              Attr Object = "BaseComponent:Class-TempSensorFo-Code-W-TimeHH.TimerTime"
+              Attr Object = "BaseComponent:Class-BaseSensorFo-Code-W-TimeHH.TimerTime"
               Attr ObjectSegments = 1
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-StoAp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-StoAp40"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoAp40"
                 Attr x = 2.000000e+00
                 Attr y = -2.475000e+00
                 Attr width = 4.363333e-01
                 Attr heigth = 5.000000e-02
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 1
               EndBuffer
             EndBody
           EndObject
-          Object StoDp15 StoDp 567
+          Object StoDp15 StoDp 1265
             Body RtBody
             EndBody
             Body DevBody
-              Attr Object = "$PlcConnect:BaseComponent-Class-Tempsensor.LimitHH.Status"
+              Attr Object = "$PlcConnect:BaseComponent-Class-BaseSensor.LimitHH.Status"
               Buffer PlcNode
                 Attr object_type = 255
                 Attr cid = "pwrb:Class-StoDp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-StoDp15"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoDp15"
                 Attr x = 2.800000e+00
                 Attr y = -2.525000e+00
                 Attr width = 5.563333e-01
                 Attr heigth = 5.000000e-02
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 1
               EndBuffer
             EndBody
           EndObject
-          Object GetAp2 GetAp 569
+          Object GetAp2 GetAp 1266
             Body RtBody
             EndBody
             Body DevBody
-              Attr ApObject = "$PlcConnect:BaseComponent-Class-Tempsensor.LimitHH.TimeDelay"
+              Attr ApObject = "$PlcConnect:BaseComponent-Class-BaseSensor.LimitHH.TimeDelay"
               Buffer PlcNode
                 Attr object_type = 253
                 Attr cid = "pwrb:Class-GetAp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-GetAp2"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetAp2"
                 Attr x = 6.500000e-01
                 Attr y = -2.475000e+00
                 Attr width = 5.564444e-01
                 Attr heigth = 5.000000e-02
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object LimitHH And 594
+          Object LimitHH And 1267
             Body RtBody
             EndBody
             Body DevBody
               Buffer PlcNode
                 Attr object_type = 90
                 Attr cid = "pwrb:Class-And"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-LimitHH"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-LimitHH"
                 Attr x = 2.550000e+00
                 Attr y = -3.480000e+00
                 Attr width = -7.065555e-01
                 Attr heigth = 1.005000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 3
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object GetDp45 GetDp 599
+          Object GetDp45 GetDp 1268
             Body RtBody
             EndBody
             Body DevBody
-              Attr DpObject = "$PlcConnect:BaseComponent-Class-Tempsensor.LimitHH.Used"
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-BaseSensor.LimitHH.Used"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-GetDp45"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp45"
                 Attr x = 6.500000e-01
                 Attr y = -3.850000e+00
                 Attr width = -7.918889e-01
                 Attr heigth = 1.325000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object BodyText46 BodyText 603
+          Object BodyText46 BodyText 1269
             Body DevBody
               Attr TextAttribute = 3
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-BodyText46"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-BodyText46"
                 Attr x = 2.900000e+00
                 Attr y = -3.144000e+00
                 Attr width = -5.950000e-01
                 Attr heigth = 8.190000e-01
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
               Attr Text = "HH"
             EndBody
           EndObject
-          Object BodyText47 BodyText 604
+          Object BodyText47 BodyText 1270
             Body DevBody
               Attr TextAttribute = 3
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-BodyText47"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-BodyText47"
                 Attr x = 2.900000e+00
                 Attr y = -4.144000e+00
                 Attr width = -9.450000e-01
                 Attr heigth = 1.169000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
               Attr Text = "H"
             EndBody
           EndObject
-          Object LimitH And 605
+          Object LimitH And 1271
             Body RtBody
             EndBody
             Body DevBody
               Buffer PlcNode
                 Attr object_type = 90
                 Attr cid = "pwrb:Class-And"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-LimitH"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-LimitH"
                 Attr x = 2.600000e+00
                 Attr y = -4.730000e+00
                 Attr width = -1.326000e+00
                 Attr heigth = 1.605000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 3
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object GetDp46 GetDp 606
+          Object GetDp46 GetDp 1272
             Body RtBody
             EndBody
             Body DevBody
-              Attr DpObject = "$PlcConnect:BaseComponent-Class-Tempsensor.LimitH.Used"
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-BaseSensor.LimitH.Used"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-GetDp46"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp46"
                 Attr x = 6.500000e-01
                 Attr y = -6.750000e+00
                 Attr width = -3.061889e+00
                 Attr heigth = 3.575000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object H Comph 607
+          Object H Comph 1273
             Body RtBody
             EndBody
             Body DevBody
               Buffer PlcNode
                 Attr object_type = 123
                 Attr cid = "pwrb:Class-Comph"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-H"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-H"
                 Attr x = 1.550000e+00
                 Attr y = -5.180000e+00
                 Attr width = -1.975000e+00
                 Attr heigth = 2.405000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 3
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object GetAp3 GetAp 608
+          Object GetAp3 GetAp 1274
             Body RtBody
             EndBody
             Body DevBody
-              Attr ApObject = "$PlcConnect:BaseComponent-Class-Tempsensor.LimitH.Limit"
+              Attr ApObject = "$PlcConnect:BaseComponent-Class-BaseSensor.LimitH.Limit"
               Attr ApObjectSegments = 3
               Buffer PlcNode
                 Attr object_type = 253
                 Attr cid = "pwrb:Class-GetAp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-GetAp3"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetAp3"
                 Attr x = 6.500000e-01
                 Attr y = -6.050000e+00
                 Attr width = -2.714111e+00
                 Attr heigth = 3.225000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object StoAp47 StoAp 610
+          Object StoAp47 StoAp 1275
             Body RtBody
             EndBody
             Body DevBody
-              Attr Object = "BaseComponent:Class-TempSensorFo-Code-W-H.Hysteres"
+              Attr Object = "BaseComponent:Class-BaseSensorFo-Code-W-H.Hysteres"
               Attr ObjectSegments = 1
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-StoAp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-StoAp47"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoAp47"
                 Attr x = 1.550000e+00
                 Attr y = -5.430000e+00
                 Attr width = -2.070889e+00
                 Attr heigth = 2.455000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 1
               EndBuffer
             EndBody
           EndObject
-          Object GetAp4 GetAp 611
+          Object GetAp4 GetAp 1276
             Body RtBody
             EndBody
             Body DevBody
-              Attr ApObject = "$PlcConnect:BaseComponent-Class-Tempsensor.LimitH.Hysteres"
+              Attr ApObject = "$PlcConnect:BaseComponent-Class-BaseSensor.LimitH.Hysteres"
               Buffer PlcNode
                 Attr object_type = 253
                 Attr cid = "pwrb:Class-GetAp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-GetAp4"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetAp4"
                 Attr x = 6.500000e-01
                 Attr y = -6.350000e+00
                 Attr width = -2.806333e+00
                 Attr heigth = 3.375000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object TimeH Wait 612
+          Object TimeH Wait 1277
             Body RtBody
             EndBody
             Body DevBody
               Buffer PlcNode
                 Attr object_type = 97
                 Attr cid = "pwrb:Class-Wait"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-TimeH"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-TimeH"
                 Attr x = 2.050000e+00
                 Attr y = -4.980000e+00
                 Attr width = -1.677000e+00
                 Attr heigth = 2.005000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 1
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object StoAp48 StoAp 613
+          Object StoAp48 StoAp 1278
             Body RtBody
             EndBody
             Body DevBody
-              Attr Object = "BaseComponent:Class-TempSensorFo-Code-W-TimeH.TimerTime"
+              Attr Object = "BaseComponent:Class-BaseSensorFo-Code-W-TimeH.TimerTime"
               Attr ObjectSegments = 1
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-StoAp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-StoAp48"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoAp48"
                 Attr x = 2.050000e+00
                 Attr y = -5.130000e+00
                 Attr width = -1.588667e+00
                 Attr heigth = 2.055000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 1
               EndBuffer
             EndBody
           EndObject
-          Object StoDp16 StoDp 614
+          Object StoDp16 StoDp 1279
             Body RtBody
             EndBody
             Body DevBody
-              Attr Object = "$PlcConnect:BaseComponent-Class-Tempsensor.LimitH.Status"
+              Attr Object = "$PlcConnect:BaseComponent-Class-BaseSensor.LimitH.Status"
               Buffer PlcNode
                 Attr object_type = 255
                 Attr cid = "pwrb:Class-StoDp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-StoDp16"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoDp16"
                 Attr x = 2.850000e+00
                 Attr y = -4.430000e+00
                 Attr width = -7.186667e-01
                 Attr heigth = 1.305000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 1
               EndBuffer
             EndBody
           EndObject
-          Object GetAp5 GetAp 615
+          Object GetAp5 GetAp 1280
             Body RtBody
             EndBody
             Body DevBody
-              Attr ApObject = "$PlcConnect:BaseComponent-Class-Tempsensor.LimitH.TimeDelay"
+              Attr ApObject = "$PlcConnect:BaseComponent-Class-BaseSensor.LimitH.TimeDelay"
               Buffer PlcNode
                 Attr object_type = 253
                 Attr cid = "pwrb:Class-GetAp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-GetAp5"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetAp5"
                 Attr x = 6.500000e-01
                 Attr y = -6.550000e+00
                 Attr width = -2.888556e+00
                 Attr heigth = 3.475000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object StoDp17 StoDp 625
+          Object StoDp17 StoDp 1281
             Body RtBody
             EndBody
             Body DevBody
-              Attr Object = "$PlcConnect:BaseComponent-Class-Tempsensor.LimitLL.Status"
+              Attr Object = "$PlcConnect:BaseComponent-Class-BaseSensor.LimitLL.Status"
               Buffer PlcNode
                 Attr object_type = 255
                 Attr cid = "pwrb:Class-StoDp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-StoDp17"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoDp17"
                 Attr x = 2.900000e+00
                 Attr y = -9.380000e+00
                 Attr width = -3.157556e+00
                 Attr heigth = 3.755000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 1
               EndBuffer
             EndBody
           EndObject
-          Object LimitLL And 626
+          Object LimitLL And 1282
             Body RtBody
             EndBody
             Body DevBody
               Buffer PlcNode
                 Attr object_type = 90
                 Attr cid = "pwrb:Class-And"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-LimitLL"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-LimitLL"
                 Attr x = 2.650000e+00
                 Attr y = -9.680000e+00
                 Attr width = -3.765445e+00
                 Attr heigth = 4.055000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 3
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object StoAp49 StoAp 627
+          Object StoAp49 StoAp 1283
             Body RtBody
             EndBody
             Body DevBody
-              Attr Object = "BaseComponent:Class-TempSensorFo-Code-W-TimeLL.TimerTime"
+              Attr Object = "BaseComponent:Class-BaseSensorFo-Code-W-TimeLL.TimerTime"
               Attr ObjectSegments = 1
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-StoAp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-StoAp49"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoAp49"
                 Attr x = 2.100000e+00
                 Attr y = -1.008000e+01
                 Attr width = -4.027555e+00
                 Attr heigth = 4.505000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 1
               EndBuffer
             EndBody
           EndObject
-          Object TimeLL Wait 628
+          Object TimeLL Wait 1284
             Body RtBody
             EndBody
             Body DevBody
               Buffer PlcNode
                 Attr object_type = 97
                 Attr cid = "pwrb:Class-Wait"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-TimeLL"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-TimeLL"
                 Attr x = 2.100000e+00
                 Attr y = -9.930000e+00
                 Attr width = -4.115889e+00
                 Attr heigth = 4.455000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 1
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object BodyText48 BodyText 631
+          Object BodyText48 BodyText 1285
             Body DevBody
               Attr TextAttribute = 3
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-BodyText48"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-BodyText48"
                 Attr x = 2.950000e+00
                 Attr y = -9.094000e+00
                 Attr width = -3.395000e+00
                 Attr heigth = 3.619000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
               Attr Text = "LL"
             EndBody
           EndObject
-          Object GetAp6 GetAp 632
+          Object GetAp6 GetAp 1286
             Body RtBody
             EndBody
             Body DevBody
-              Attr ApObject = "$PlcConnect:BaseComponent-Class-Tempsensor.LimitLL.TimeDelay"
+              Attr ApObject = "$PlcConnect:BaseComponent-Class-BaseSensor.LimitLL.TimeDelay"
               Buffer PlcNode
                 Attr object_type = 253
                 Attr cid = "pwrb:Class-GetAp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-GetAp6"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetAp6"
                 Attr x = 7.500000e-01
                 Attr y = -1.145000e+01
                 Attr width = -5.277444e+00
                 Attr heigth = 5.875000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object GetAp7 GetAp 633
+          Object GetAp7 GetAp 1287
             Body RtBody
             EndBody
             Body DevBody
-              Attr ApObject = "$PlcConnect:BaseComponent-Class-Tempsensor.LimitLL.Hysteres"
+              Attr ApObject = "$PlcConnect:BaseComponent-Class-BaseSensor.LimitLL.Hysteres"
               Buffer PlcNode
                 Attr object_type = 253
                 Attr cid = "pwrb:Class-GetAp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-GetAp7"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetAp7"
                 Attr x = 7.500000e-01
                 Attr y = -1.125000e+01
                 Attr width = -5.195222e+00
                 Attr heigth = 5.775000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object GetAp8 GetAp 634
+          Object GetAp8 GetAp 1288
             Body RtBody
             EndBody
             Body DevBody
-              Attr ApObject = "$PlcConnect:BaseComponent-Class-Tempsensor.LimitLL.Limit"
+              Attr ApObject = "$PlcConnect:BaseComponent-Class-BaseSensor.LimitLL.Limit"
               Attr ApObjectSegments = 3
               Buffer PlcNode
                 Attr object_type = 253
                 Attr cid = "pwrb:Class-GetAp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-GetAp8"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetAp8"
                 Attr x = 7.500000e-01
                 Attr y = -1.100000e+01
                 Attr width = -5.103000e+00
                 Attr heigth = 5.625000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object GetDp51 GetDp 635
+          Object GetDp51 GetDp 1289
             Body RtBody
             EndBody
             Body DevBody
-              Attr DpObject = "$PlcConnect:BaseComponent-Class-Tempsensor.LimitLL.Used"
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-BaseSensor.LimitLL.Used"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-GetDp51"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp51"
                 Attr x = 7.500000e-01
                 Attr y = -1.165000e+01
                 Attr width = -5.450778e+00
                 Attr heigth = 5.975000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object BodyText49 BodyText 636
+          Object BodyText49 BodyText 1290
             Body DevBody
               Attr TextAttribute = 3
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-BodyText49"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-BodyText49"
                 Attr x = 2.950000e+00
                 Attr y = -7.794000e+00
                 Attr width = -2.745000e+00
                 Attr heigth = 2.969000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
               Attr Text = "L"
             EndBody
           EndObject
-          Object LimitL And 637
+          Object LimitL And 1291
             Body RtBody
             EndBody
             Body DevBody
               Buffer PlcNode
                 Attr object_type = 90
                 Attr cid = "pwrb:Class-And"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-LimitL"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-LimitL"
                 Attr x = 2.600000e+00
                 Attr y = -8.430000e+00
                 Attr width = -3.176000e+00
                 Attr heigth = 3.455000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 3
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object GetDp52 GetDp 638
+          Object GetDp52 GetDp 1292
             Body RtBody
             EndBody
             Body DevBody
-              Attr DpObject = "$PlcConnect:BaseComponent-Class-Tempsensor.LimitL.Used"
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-BaseSensor.LimitL.Used"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-GetDp52"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp52"
                 Attr x = 7.000000e-01
                 Attr y = -1.040000e+01
                 Attr width = -4.866333e+00
                 Attr heigth = 5.375000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object BodyText50 BodyText 639
+          Object BodyText50 BodyText 1293
             Body DevBody
               Attr TextAttribute = 3
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-BodyText50"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-BodyText50"
                 Attr x = 7.000000e-01
                 Attr y = -9.144000e+00
                 Attr width = -4.384778e+00
                 Attr heigth = 4.769000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
               Attr Text = "Limits low"
             EndBody
           EndObject
-          Object GetAp9 GetAp 641
+          Object GetAp9 GetAp 1294
             Body RtBody
             EndBody
             Body DevBody
-              Attr ApObject = "$PlcConnect:BaseComponent-Class-Tempsensor.LimitL.Limit"
+              Attr ApObject = "$PlcConnect:BaseComponent-Class-BaseSensor.LimitL.Limit"
               Attr ApObjectSegments = 3
               Buffer PlcNode
                 Attr object_type = 253
                 Attr cid = "pwrb:Class-GetAp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-GetAp9"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetAp9"
                 Attr x = 7.000000e-01
                 Attr y = -9.750000e+00
                 Attr width = -4.518556e+00
                 Attr heigth = 5.025000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object GetAi2 GetAi 642
+          Object GetAi2 GetAi 1295
             Body RtBody
             EndBody
             Body DevBody
-              Attr AiObject = "$PlcConnect:BaseComponent-Class-Tempsensor.Temp"
+              Attr AiObject = "$PlcConnect:BaseComponent-Class-BaseSensor.Value"
               Buffer PlcNode
                 Attr object_type = 64
                 Attr cid = "pwrb:Class-GetAi"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-GetAi2"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetAi2"
                 Attr x = 1.050000e+00
                 Attr y = -4.575000e+00
                 Attr width = 3.764445e-01
                 Attr heigth = 5.000000e-02
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object StoAp53 StoAp 643
+          Object StoAp53 StoAp 1296
             Body RtBody
             EndBody
             Body DevBody
-              Attr Object = "BaseComponent:Class-TempSensorFo-Code-W-L.Hysteres"
+              Attr Object = "BaseComponent:Class-BaseSensorFo-Code-W-L.Hysteres"
               Attr ObjectSegments = 1
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-StoAp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-StoAp53"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoAp53"
                 Attr x = 1.550000e+00
                 Attr y = -9.130000e+00
                 Attr width = -3.925333e+00
                 Attr heigth = 4.305000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 1
               EndBuffer
             EndBody
           EndObject
-          Object GetAp10 GetAp 644
+          Object GetAp10 GetAp 1297
             Body RtBody
             EndBody
             Body DevBody
-              Attr ApObject = "$PlcConnect:BaseComponent-Class-Tempsensor.LimitL.Hysteres"
+              Attr ApObject = "$PlcConnect:BaseComponent-Class-BaseSensor.LimitL.Hysteres"
               Buffer PlcNode
                 Attr object_type = 253
                 Attr cid = "pwrb:Class-GetAp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-GetAp10"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetAp10"
                 Attr x = 7.000000e-01
                 Attr y = -1.000000e+01
                 Attr width = -4.610778e+00
                 Attr heigth = 5.175000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object TimeL Wait 645
+          Object TimeL Wait 1298
             Body RtBody
             EndBody
             Body DevBody
               Buffer PlcNode
                 Attr object_type = 97
                 Attr cid = "pwrb:Class-Wait"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-TimeL"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-TimeL"
                 Attr x = 2.050000e+00
                 Attr y = -8.680000e+00
                 Attr width = -3.531445e+00
                 Attr heigth = 3.855000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 1
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object StoAp54 StoAp 646
+          Object StoAp54 StoAp 1299
             Body RtBody
             EndBody
             Body DevBody
-              Attr Object = "BaseComponent:Class-TempSensorFo-Code-W-TimeL.TimerTime"
+              Attr Object = "BaseComponent:Class-BaseSensorFo-Code-W-TimeL.TimerTime"
               Attr ObjectSegments = 1
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-StoAp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-StoAp54"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoAp54"
                 Attr x = 2.050000e+00
                 Attr y = -8.830000e+00
                 Attr width = -3.443111e+00
                 Attr heigth = 3.905000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 1
               EndBuffer
             EndBody
           EndObject
-          Object StoDp18 StoDp 647
+          Object StoDp18 StoDp 1300
             Body RtBody
             EndBody
             Body DevBody
-              Attr Object = "$PlcConnect:BaseComponent-Class-Tempsensor.LimitL.Status"
+              Attr Object = "$PlcConnect:BaseComponent-Class-BaseSensor.LimitL.Status"
               Buffer PlcNode
                 Attr object_type = 255
                 Attr cid = "pwrb:Class-StoDp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-StoDp18"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoDp18"
                 Attr x = 2.850000e+00
                 Attr y = -8.130000e+00
                 Attr width = -2.573111e+00
                 Attr heigth = 3.155000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 1
               EndBuffer
             EndBody
           EndObject
-          Object GetAp11 GetAp 648
+          Object GetAp11 GetAp 1301
             Body RtBody
             EndBody
             Body DevBody
-              Attr ApObject = "$PlcConnect:BaseComponent-Class-Tempsensor.LimitL.TimeDelay"
+              Attr ApObject = "$PlcConnect:BaseComponent-Class-BaseSensor.LimitL.TimeDelay"
               Buffer PlcNode
                 Attr object_type = 253
                 Attr cid = "pwrb:Class-GetAp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-GetAp11"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetAp11"
                 Attr x = 7.000000e-01
                 Attr y = -1.020000e+01
                 Attr width = -4.693000e+00
                 Attr heigth = 5.275000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object L Compl 665
+          Object L Compl 1302
             Body RtBody
             EndBody
             Body DevBody
               Buffer PlcNode
                 Attr object_type = 124
                 Attr cid = "pwrb:Class-Compl"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-L"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-L"
                 Attr x = 1.550000e+00
                 Attr y = -8.880000e+00
                 Attr width = -3.825000e+00
                 Attr heigth = 4.255000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 3
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object LL Compl 667
+          Object LL Compl 1303
             Body RtBody
             EndBody
             Body DevBody
               Buffer PlcNode
                 Attr object_type = 124
                 Attr cid = "pwrb:Class-Compl"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-LL"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-LL"
                 Attr x = 1.600000e+00
                 Attr y = -9.980000e+00
                 Attr width = -4.275000e+00
                 Attr heigth = 4.705000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 3
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object StoAp55 StoAp 670
+          Object StoAp55 StoAp 1304
             Body RtBody
             EndBody
             Body DevBody
-              Attr Object = "BaseComponent:Class-TempSensorFo-Code-W-LL.Hysteres"
+              Attr Object = "BaseComponent:Class-BaseSensorFo-Code-W-LL.Hysteres"
               Attr ObjectSegments = 1
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-StoAp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-StoAp55"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoAp55"
                 Attr x = 1.600000e+00
                 Attr y = -1.023000e+01
                 Attr width = -4.359778e+00
                 Attr heigth = 4.755000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 1
               EndBuffer
             EndBody
           EndObject
-          Object DSup6 DSup 682
+          Object DSup6 DSup 1305
             Body RtBody
               Attr DetectText = "Alarm HH"
             EndBody
@@ -14145,167 +14277,167 @@ Alarm HH, H, L, LL"
               Buffer PlcNode
                 Attr object_type = 99
                 Attr cid = "pwrb:Class-DSup"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-DSup6"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-DSup6"
                 Attr x = 2.200000e+00
                 Attr y = -1.268000e+01
                 Attr width = -5.293889e+00
                 Attr heigth = 5.755000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 1
               EndBuffer
             EndBody
           EndObject
-          Object NameToStr51 NameToStr 683
+          Object NameToStr51 NameToStr 1306
             Body RtBody
             EndBody
             Body DevBody
-              Attr Object = "$PlcConnect:BaseComponent-Class-Tempsensor"
+              Attr Object = "$PlcConnect:BaseComponent-Class-BaseSensor"
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-NameToStr"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-NameToStr51"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-NameToStr51"
                 Attr x = 6.000000e-01
                 Attr y = -1.420000e+01
                 Attr width = -6.852889e+00
                 Attr heigth = 7.325000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[1] = 1
                 Attr compdirection = 1
               EndBuffer
             EndBody
           EndObject
-          Object GetSp5 GetSp 684
+          Object GetSp5 GetSp 1307
             Body RtBody
             EndBody
             Body DevBody
-              Attr SpObject = "$PlcConnect:BaseComponent-Class-Tempsensor.LimitHH.AlarmText"
+              Attr SpObject = "$PlcConnect:BaseComponent-Class-BaseSensor.LimitHH.AlarmText"
               Buffer PlcNode
                 Attr object_type = 263
                 Attr cid = "pwrb:Class-GetSp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-GetSp5"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetSp5"
                 Attr x = 6.000000e-01
                 Attr y = -1.400000e+01
                 Attr width = -6.623000e+00
                 Attr heigth = 7.225000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object Strcat52 Strcat 685
+          Object Strcat52 Strcat 1308
             Body RtBody
             EndBody
             Body DevBody
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-Strcat"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-Strcat52"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-Strcat52"
                 Attr x = 1.400000e+00
                 Attr y = -6.925000e+00
                 Attr width = 2.095556e-01
                 Attr heigth = 1.000000e-01
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 3
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object StoSp5 StoSp 686
+          Object StoSp5 StoSp 1309
             Body RtBody
             EndBody
             Body DevBody
-              Attr Object = "BaseComponent:Class-TempSensorFo-Code-W-DSup6.DetectText"
+              Attr Object = "BaseComponent:Class-BaseSensorFo-Code-W-DSup6.DetectText"
               Attr ObjectSegments = 1
               Buffer PlcNode
                 Attr object_type = 264
                 Attr cid = "pwrb:Class-StoSp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-StoSp5"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoSp5"
                 Attr x = 2.200000e+00
                 Attr y = -1.268000e+01
                 Attr width = -5.377555e+00
                 Attr heigth = 5.855000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 1
               EndBuffer
             EndBody
           EndObject
-          Object BodyText54 BodyText 688
+          Object BodyText54 BodyText 1310
             Body DevBody
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-BodyText54"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-BodyText54"
                 Attr x = 6.500000e-01
                 Attr y = -7.019000e+00
                 Attr width = 1.857778e-01
                 Attr heigth = 4.400000e-02
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
               Attr Text = "Object name"
             EndBody
           EndObject
-          Object BodyText55 BodyText 689
+          Object BodyText55 BodyText 1311
             Body DevBody
               Attr TextAttribute = 3
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-BodyText55"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-BodyText55"
                 Attr x = 6.500000e-01
                 Attr y = -1.379400e+01
                 Attr width = -6.617000e+00
                 Attr heigth = 7.119000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
               Attr Text = "Alarm and text"
             EndBody
           EndObject
-          Object BodyText56 BodyText 690
+          Object BodyText56 BodyText 1312
             Body DevBody
               Attr TextAttribute = 3
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-BodyText56"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-BodyText56"
                 Attr x = 2.250000e+00
                 Attr y = -1.249400e+01
                 Attr width = -5.495000e+00
                 Attr heigth = 5.719000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
               Attr Text = "HH"
             EndBody
           EndObject
-          Object BodyText57 BodyText 700
+          Object BodyText57 BodyText 1313
             Body DevBody
               Attr TextAttribute = 3
               Attr FrameAttribute = 1
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-BodyText57"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-BodyText57"
                 Attr x = 3.300000e+00
                 Attr y = -8.568999e+00
                 Attr width = 5.102222e-01
                 Attr heigth = 1.940000e-01
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
               Attr Text = "Functionobject
-Tempsensor
+BaseSensor
 Alarm HH, H, L, LL"
             EndBody
           EndObject
-          Object Document4 Document 701
+          Object Document4 Document 1314
             Body DevBody
               Buffer PlcNode
                 Attr object_type = 2
                 Attr cid = "pwrb:Class-Document"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-Document4"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-Document4"
                 Attr x = 5.000000e-01
                 Attr y = -1.585000e+01
                 Attr width = -3.625000e+00
                 Attr heigth = 9.325000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 4
               EndBuffer
               Attr Page = "4"
@@ -14313,25 +14445,25 @@ Alarm HH, H, L, LL"
               Attr DocumentSize = 3
             EndBody
           EndObject
-          Object GetDp60 GetDp 705
+          Object GetDp60 GetDp 1315
             Body RtBody
             EndBody
             Body DevBody
-              Attr DpObject = "$PlcConnect:BaseComponent-Class-Tempsensor.LimitHH.Status"
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-BaseSensor.LimitHH.Status"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-GetDp60"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp60"
                 Attr x = 6.500000e-01
                 Attr y = -1.450000e+01
                 Attr width = -6.919667e+00
                 Attr heigth = 7.475000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object DSup7 DSup 708
+          Object DSup7 DSup 1316
             Body RtBody
               Attr DetectText = "Alarm H"
             EndBody
@@ -14339,140 +14471,140 @@ Alarm HH, H, L, LL"
               Buffer PlcNode
                 Attr object_type = 99
                 Attr cid = "pwrb:Class-DSup"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-DSup7"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-DSup7"
                 Attr x = 2.200000e+00
                 Attr y = -1.338000e+01
                 Attr width = -5.663889e+00
                 Attr heigth = 6.105000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 1
               EndBuffer
             EndBody
           EndObject
-          Object StoSp6 StoSp 709
+          Object StoSp6 StoSp 1317
             Body RtBody
             EndBody
             Body DevBody
-              Attr Object = "BaseComponent:Class-TempSensorFo-Code-W-DSup7.DetectText"
+              Attr Object = "BaseComponent:Class-BaseSensorFo-Code-W-DSup7.DetectText"
               Attr ObjectSegments = 1
               Buffer PlcNode
                 Attr object_type = 264
                 Attr cid = "pwrb:Class-StoSp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-StoSp6"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoSp6"
                 Attr x = 2.200000e+00
                 Attr y = -1.323000e+01
                 Attr width = -5.577556e+00
                 Attr heigth = 6.055000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 1
               EndBuffer
             EndBody
           EndObject
-          Object GetDp61 GetDp 710
+          Object GetDp61 GetDp 1318
             Body RtBody
             EndBody
             Body DevBody
-              Attr DpObject = "$PlcConnect:BaseComponent-Class-Tempsensor.LimitH.Status"
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-BaseSensor.LimitH.Status"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-GetDp61"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp61"
                 Attr x = 6.500000e-01
                 Attr y = -1.515000e+01
                 Attr width = -7.239666e+00
                 Attr heigth = 7.775000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object NameToStr58 NameToStr 711
+          Object NameToStr58 NameToStr 1319
             Body RtBody
             EndBody
             Body DevBody
-              Attr Object = "$PlcConnect:BaseComponent-Class-Tempsensor"
+              Attr Object = "$PlcConnect:BaseComponent-Class-BaseSensor"
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-NameToStr"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-NameToStr58"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-NameToStr58"
                 Attr x = 6.000000e-01
                 Attr y = -1.455000e+01
                 Attr width = -6.852889e+00
                 Attr heigth = 7.325000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[1] = 1
                 Attr compdirection = 1
               EndBuffer
             EndBody
           EndObject
-          Object GetSp6 GetSp 712
+          Object GetSp6 GetSp 1320
             Body RtBody
             EndBody
             Body DevBody
-              Attr SpObject = "$PlcConnect:BaseComponent-Class-Tempsensor.LimitH.AlarmText"
+              Attr SpObject = "$PlcConnect:BaseComponent-Class-BaseSensor.LimitH.AlarmText"
               Buffer PlcNode
                 Attr object_type = 263
                 Attr cid = "pwrb:Class-GetSp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-GetSp6"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetSp6"
                 Attr x = 6.000000e-01
                 Attr y = -1.470000e+01
                 Attr width = -6.993000e+00
                 Attr heigth = 7.575000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object BodyText59 BodyText 713
+          Object BodyText59 BodyText 1321
             Body DevBody
               Attr TextAttribute = 3
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-BodyText59"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-BodyText59"
                 Attr x = 2.250000e+00
                 Attr y = -1.309400e+01
                 Attr width = -5.745000e+00
                 Attr heigth = 5.969000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
               Attr Text = "H"
             EndBody
           EndObject
-          Object BodyText60 BodyText 714
+          Object BodyText60 BodyText 1322
             Body DevBody
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-BodyText60"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-BodyText60"
                 Attr x = 6.500000e-01
                 Attr y = -7.369000e+00
                 Attr width = 1.857778e-01
                 Attr heigth = 4.400000e-02
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
               Attr Text = "Object name"
             EndBody
           EndObject
-          Object Strcat61 Strcat 715
+          Object Strcat61 Strcat 1323
             Body RtBody
             EndBody
             Body DevBody
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-Strcat"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-Strcat61"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-Strcat61"
                 Attr x = 1.400000e+00
                 Attr y = -7.275000e+00
                 Attr width = 2.095556e-01
                 Attr heigth = 1.000000e-01
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 3
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object DSup8 DSup 720
+          Object DSup8 DSup 1324
             Body RtBody
               Attr DetectText = "Alarm L"
             EndBody
@@ -14480,140 +14612,140 @@ Alarm HH, H, L, LL"
               Buffer PlcNode
                 Attr object_type = 99
                 Attr cid = "pwrb:Class-DSup"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-DSup8"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-DSup8"
                 Attr x = 2.200000e+00
                 Attr y = -1.408000e+01
                 Attr width = -6.018333e+00
                 Attr heigth = 6.455000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 1
               EndBuffer
             EndBody
           EndObject
-          Object StoSp7 StoSp 721
+          Object StoSp7 StoSp 1325
             Body RtBody
             EndBody
             Body DevBody
-              Attr Object = "BaseComponent:Class-TempSensorFo-Code-W-DSup8.DetectText"
+              Attr Object = "BaseComponent:Class-BaseSensorFo-Code-W-DSup8.DetectText"
               Attr ObjectSegments = 1
               Buffer PlcNode
                 Attr object_type = 264
                 Attr cid = "pwrb:Class-StoSp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-StoSp7"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoSp7"
                 Attr x = 2.200000e+00
                 Attr y = -1.393000e+01
                 Attr width = -5.927556e+00
                 Attr heigth = 6.405000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 1
               EndBuffer
             EndBody
           EndObject
-          Object GetDp62 GetDp 722
+          Object GetDp62 GetDp 1326
             Body RtBody
             EndBody
             Body DevBody
-              Attr DpObject = "$PlcConnect:BaseComponent-Class-Tempsensor.LimitL.Status"
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-BaseSensor.LimitL.Status"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-GetDp62"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp62"
                 Attr x = 6.500000e-01
                 Attr y = -1.585000e+01
                 Attr width = -7.594111e+00
                 Attr heigth = 8.125000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object NameToStr62 NameToStr 723
+          Object NameToStr62 NameToStr 1327
             Body RtBody
             EndBody
             Body DevBody
-              Attr Object = "$PlcConnect:BaseComponent-Class-Tempsensor"
+              Attr Object = "$PlcConnect:BaseComponent-Class-BaseSensor"
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-NameToStr"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-NameToStr62"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-NameToStr62"
                 Attr x = 6.000000e-01
                 Attr y = -1.490000e+01
                 Attr width = -6.852889e+00
                 Attr heigth = 7.325000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[1] = 1
                 Attr compdirection = 1
               EndBuffer
             EndBody
           EndObject
-          Object GetSp7 GetSp 724
+          Object GetSp7 GetSp 1328
             Body RtBody
             EndBody
             Body DevBody
-              Attr SpObject = "$PlcConnect:BaseComponent-Class-Tempsensor.LimitL.AlarmText"
+              Attr SpObject = "$PlcConnect:BaseComponent-Class-BaseSensor.LimitL.AlarmText"
               Buffer PlcNode
                 Attr object_type = 263
                 Attr cid = "pwrb:Class-GetSp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-GetSp7"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetSp7"
                 Attr x = 6.000000e-01
                 Attr y = -1.540000e+01
                 Attr width = -7.347445e+00
                 Attr heigth = 7.925000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object BodyText63 BodyText 725
+          Object BodyText63 BodyText 1329
             Body DevBody
               Attr TextAttribute = 3
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-BodyText63"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-BodyText63"
                 Attr x = 2.250000e+00
                 Attr y = -1.379400e+01
                 Attr width = -6.095000e+00
                 Attr heigth = 6.319000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
               Attr Text = "L"
             EndBody
           EndObject
-          Object BodyText64 BodyText 726
+          Object BodyText64 BodyText 1330
             Body DevBody
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-BodyText64"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-BodyText64"
                 Attr x = 6.500000e-01
                 Attr y = -7.719000e+00
                 Attr width = 1.857778e-01
                 Attr heigth = 4.400000e-02
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
               Attr Text = "Object name"
             EndBody
           EndObject
-          Object Strcat65 Strcat 727
+          Object Strcat65 Strcat 1331
             Body RtBody
             EndBody
             Body DevBody
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-Strcat"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-Strcat65"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-Strcat65"
                 Attr x = 1.400000e+00
                 Attr y = -7.625000e+00
                 Attr width = 2.095556e-01
                 Attr heigth = 1.000000e-01
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 3
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object DSup9 DSup 732
+          Object DSup9 DSup 1332
             Body RtBody
               Attr DetectText = "Alarm LL"
             EndBody
@@ -14621,302 +14753,302 @@ Alarm HH, H, L, LL"
               Buffer PlcNode
                 Attr object_type = 99
                 Attr cid = "pwrb:Class-DSup"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-DSup9"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-DSup9"
                 Attr x = 2.200000e+00
                 Attr y = -1.478000e+01
                 Attr width = -6.352778e+00
                 Attr heigth = 6.805000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 1
               EndBuffer
             EndBody
           EndObject
-          Object StoSp8 StoSp 733
+          Object StoSp8 StoSp 1333
             Body RtBody
             EndBody
             Body DevBody
-              Attr Object = "BaseComponent:Class-TempSensorFo-Code-W-DSup9.DetectText"
+              Attr Object = "BaseComponent:Class-BaseSensorFo-Code-W-DSup9.DetectText"
               Attr ObjectSegments = 1
               Buffer PlcNode
                 Attr object_type = 264
                 Attr cid = "pwrb:Class-StoSp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-StoSp8"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoSp8"
                 Attr x = 2.200000e+00
                 Attr y = -1.463000e+01
                 Attr width = -6.277555e+00
                 Attr heigth = 6.755000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 1
               EndBuffer
             EndBody
           EndObject
-          Object GetDp63 GetDp 734
+          Object GetDp63 GetDp 1334
             Body RtBody
             EndBody
             Body DevBody
-              Attr DpObject = "$PlcConnect:BaseComponent-Class-Tempsensor.LimitLL.Status"
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-BaseSensor.LimitLL.Status"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-GetDp63"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp63"
                 Attr x = 6.500000e-01
                 Attr y = -1.655000e+01
                 Attr width = -7.928555e+00
                 Attr heigth = 8.475000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object NameToStr66 NameToStr 735
+          Object NameToStr66 NameToStr 1335
             Body RtBody
             EndBody
             Body DevBody
-              Attr Object = "$PlcConnect:BaseComponent-Class-Tempsensor"
+              Attr Object = "$PlcConnect:BaseComponent-Class-BaseSensor"
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-NameToStr"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-NameToStr66"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-NameToStr66"
                 Attr x = 6.000000e-01
                 Attr y = -1.525000e+01
                 Attr width = -6.852889e+00
                 Attr heigth = 7.325000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[1] = 1
                 Attr compdirection = 1
               EndBuffer
             EndBody
           EndObject
-          Object GetSp8 GetSp 736
+          Object GetSp8 GetSp 1336
             Body RtBody
             EndBody
             Body DevBody
-              Attr SpObject = "$PlcConnect:BaseComponent-Class-Tempsensor.LimitLL.AlarmText"
+              Attr SpObject = "$PlcConnect:BaseComponent-Class-BaseSensor.LimitLL.AlarmText"
               Buffer PlcNode
                 Attr object_type = 263
                 Attr cid = "pwrb:Class-GetSp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-GetSp8"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetSp8"
                 Attr x = 6.000000e-01
                 Attr y = -1.610000e+01
                 Attr width = -7.681889e+00
                 Attr heigth = 8.275000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object BodyText67 BodyText 737
+          Object BodyText67 BodyText 1337
             Body DevBody
               Attr TextAttribute = 3
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-BodyText67"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-BodyText67"
                 Attr x = 2.250000e+00
                 Attr y = -1.449400e+01
                 Attr width = -6.445000e+00
                 Attr heigth = 6.669000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
               Attr Text = "LL"
             EndBody
           EndObject
-          Object BodyText68 BodyText 738
+          Object BodyText68 BodyText 1338
             Body DevBody
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-BodyText68"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-BodyText68"
                 Attr x = 6.500000e-01
                 Attr y = -8.069000e+00
                 Attr width = 1.857778e-01
                 Attr heigth = 4.400000e-02
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
               Attr Text = "Object name"
             EndBody
           EndObject
-          Object Strcat69 Strcat 739
+          Object Strcat69 Strcat 1339
             Body RtBody
             EndBody
             Body DevBody
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-Strcat"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-Strcat69"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-Strcat69"
                 Attr x = 1.400000e+00
                 Attr y = -7.975000e+00
                 Attr width = 2.095556e-01
                 Attr heigth = 1.000000e-01
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 3
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object Red Or 782
+          Object Red Or 1340
             Body RtBody
             EndBody
             Body DevBody
               Buffer PlcNode
                 Attr object_type = 91
                 Attr cid = "pwrb:Class-Or"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-Red"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-Red"
                 Attr x = 1.450000e+00
                 Attr y = -1.608000e+01
                 Attr width = -7.576000e+00
                 Attr heigth = 7.855000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 3
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object Yellow Or 792
+          Object Yellow Or 1341
             Body RtBody
             EndBody
             Body DevBody
               Buffer PlcNode
                 Attr object_type = 91
                 Attr cid = "pwrb:Class-Or"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-Yellow"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-Yellow"
                 Attr x = 1.450000e+00
                 Attr y = -1.648000e+01
                 Attr width = -7.774333e+00
                 Attr heigth = 8.055000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 3
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object BodyText70 BodyText 796
+          Object BodyText70 BodyText 1342
             Body DevBody
               Attr TextAttribute = 3
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-BodyText70"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-BodyText70"
                 Attr x = 2.250000e+00
                 Attr y = -1.509400e+01
                 Attr width = -6.738111e+00
                 Attr heigth = 6.969000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
               Attr Text = "HMI"
             EndBody
           EndObject
-          Object StoDp19 StoDp 797
+          Object StoDp19 StoDp 1343
             Body RtBody
             EndBody
             Body DevBody
-              Attr Object = "$PlcConnect:BaseComponent-Class-Tempsensor.IndError"
+              Attr Object = "$PlcConnect:BaseComponent-Class-BaseSensor.IndError"
               Buffer PlcNode
                 Attr object_type = 255
                 Attr cid = "pwrb:Class-StoDp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-StoDp19"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoDp19"
                 Attr x = 2.200000e+00
                 Attr y = -1.528000e+01
                 Attr width = -6.544222e+00
                 Attr heigth = 7.055000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 1
               EndBuffer
             EndBody
           EndObject
-          Object StoDp20 StoDp 799
+          Object StoDp20 StoDp 1344
             Body RtBody
             EndBody
             Body DevBody
-              Attr Object = "$PlcConnect:BaseComponent-Class-Tempsensor.IndWarning"
+              Attr Object = "$PlcConnect:BaseComponent-Class-BaseSensor.IndWarning"
               Buffer PlcNode
                 Attr object_type = 255
                 Attr cid = "pwrb:Class-StoDp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-StoDp20"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoDp20"
                 Attr x = 2.200000e+00
                 Attr y = -1.568000e+01
                 Attr width = -6.708667e+00
                 Attr heigth = 7.255000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 1
               EndBuffer
             EndBody
           EndObject
-          Object GetDp64 GetDp 801
+          Object GetDp64 GetDp 1345
             Body RtBody
             EndBody
             Body DevBody
-              Attr DpObject = "$PlcConnect:BaseComponent-Class-Tempsensor.LimitHH.Status"
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-BaseSensor.LimitHH.Status"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-GetDp64"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp64"
                 Attr x = 6.500000e-01
                 Attr y = -1.685000e+01
                 Attr width = -8.069667e+00
                 Attr heigth = 8.625000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object GetDp65 GetDp 803
+          Object GetDp65 GetDp 1346
             Body RtBody
             EndBody
             Body DevBody
-              Attr DpObject = "$PlcConnect:BaseComponent-Class-Tempsensor.LimitLL.Status"
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-BaseSensor.LimitLL.Status"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-GetDp65"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp65"
                 Attr x = 6.500000e-01
                 Attr y = -1.695000e+01
                 Attr width = -8.128555e+00
                 Attr heigth = 8.675000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object GetDp66 GetDp 805
+          Object GetDp66 GetDp 1347
             Body RtBody
             EndBody
             Body DevBody
-              Attr DpObject = "$PlcConnect:BaseComponent-Class-Tempsensor.LimitL.Status"
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-BaseSensor.LimitL.Status"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-GetDp66"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp66"
                 Attr x = 6.500000e-01
                 Attr y = -1.735000e+01
                 Attr width = -8.344111e+00
                 Attr heigth = 8.875000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
-          Object GetDp67 GetDp 807
+          Object GetDp67 GetDp 1348
             Body RtBody
             EndBody
             Body DevBody
-              Attr DpObject = "$PlcConnect:BaseComponent-Class-Tempsensor.LimitH.Status"
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-BaseSensor.LimitH.Status"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
-                Attr oid = "BaseComponent:Class-TempSensorFo-Code-W-GetDp67"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp67"
                 Attr x = 6.500000e-01
                 Attr y = -1.725000e+01
                 Attr width = -8.289666e+00
                 Attr heigth = 8.825000e+00
-                Attr woid = "BaseComponent:Class-TempSensorFo-Code-W"
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
         EndObject
       EndObject
-      Object Template TempSensorFo 2152955904
+      Object Template BaseSensorFo 2154790912
         Body RtBody
         EndBody
         Body DevBody
