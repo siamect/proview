@@ -28,6 +28,7 @@ SObject pwrs:Class
     Body SysBody
       Attr Flags |= pwr_mClassDef_System
       Attr Flags |= pwr_mClassDef_TopObject
+      Attr Flags |= pwr_mClassDef_IOAgent
     EndBody
     Object SysBody $ObjBodyDef 1
       Body SysBody
@@ -269,6 +270,13 @@ SObject pwrs:Class
       Body SysBody
         Attr MethodName = "$Node-PostCreate"
       EndBody
+    EndObject
+    Object IoMethods $RtMethod
+      Object IoAgentInit $Method
+        Body SysBody
+          Attr MethodName = "Node-IoAgentInit"
+        EndBody
+      EndObject
     EndObject
   EndObject
 EndSObject
