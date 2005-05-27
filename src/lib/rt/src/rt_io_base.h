@@ -258,4 +258,9 @@ pwr_tStatus io_GetIoTypeClasses(
   pwr_tClassId 	**classes,
   int		*size
 );
+
+int io_CheckClassIoType( 
+  io_eType	type,
+  pwr_tCid 	cid
+);
 #endif

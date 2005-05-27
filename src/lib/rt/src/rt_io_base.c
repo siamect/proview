@@ -58,6 +58,7 @@ pwr_dImport pwr_BindIoMethods(Co_PI24BO);
 pwr_dImport pwr_BindIoMethods(Co_CO4uP);  // Share methods with PI24BO
 pwr_dImport pwr_BindIoMethods(Pb_Profiboard);
 pwr_dImport pwr_BindIoMethods(Pb_DP_Slave);
+pwr_dImport pwr_BindIoMethods(Pb_Module);
 pwr_dImport pwr_BindIoMethods(Pb_Di);
 pwr_dImport pwr_BindIoMethods(Pb_Do);
 pwr_dImport pwr_BindIoMethods(Pb_Ai);
@@ -78,6 +79,7 @@ pwr_BindIoClasses(Base) = {
   pwr_BindIoClass(Co_CO4uP),
   pwr_BindIoClass(Pb_Profiboard),
   pwr_BindIoClass(Pb_DP_Slave),
+  pwr_BindIoClass(Pb_Module),
   pwr_BindIoClass(Pb_Di),
   pwr_BindIoClass(Pb_Do),
   pwr_BindIoClass(Pb_Ai),
@@ -1066,130 +1068,144 @@ static pwr_tStatus io_FindMethods(
   pwr_tStatus 	(** Write) ()
 )
 {
-  char		cname[80];
   int		found;
   pwr_tStatus 	sts;
-  int		i, j;
-  char 		*s;  
-  char		init_methodstr[80];
-  char		close_methodstr[80];
-  char		read_methodstr[80];
-  char		write_methodstr[80];
+  int		i, j, k;
+  char 		*s;
+  char		methodstr[80];
+  char		classstr[80];
+  pwr_tOName	methodobject;
+  pwr_sMethod	info;
+  pwr_tStatus 	(* method) ();
+  int		next;
+  pwr_tCid	cid;
+  
+  if ( Init)
+    *Init = 0;
+  if ( Close)
+    *Close = 0;
+  if ( Read)
+    *Read = 0;
+  if ( Write)
+    *Write = 0;
 
-  /* Detect name of methods to look for */
-  switch ( type)
-  {
-    case io_eType_Agent:
-      strcpy( init_methodstr, "IoAgentInit");
-      strcpy( close_methodstr, "IoAgentClose");
-      strcpy( read_methodstr, "IoAgentRead");
-      strcpy( write_methodstr, "IoAgentWrite");
-      break;
-    case io_eType_Rack:
-      strcpy( init_methodstr, "IoRackInit");
-      strcpy( close_methodstr, "IoRackClose");
-      strcpy( read_methodstr, "IoRackRead");
-      strcpy( write_methodstr, "IoRackWrite");
-      break;
-    case io_eType_Card:
-      strcpy( init_methodstr, "IoCardInit");
-      strcpy( close_methodstr, "IoCardClose");
-      strcpy( read_methodstr, "IoCardRead");
-      strcpy( write_methodstr, "IoCardWrite");
-      break;
-    default:
-      return IO__NOMETHOD;
-  }
+  for ( k = 0; k < 4; k++) {
+    // Init, Close, Read, Write loop
+    cid = class;
+    next = 0;
+    while ( 1) {
+      // Super class loop, inherit methods from superclass
 
-  sts = gdh_ObjidToName( cdh_ClassIdToObjid( class), cname, sizeof(cname),
-		cdh_mName_object);
-  if ( EVEN(sts)) return sts;
+      sts = gdh_ObjidToName( cdh_ClassIdToObjid( cid), methodobject, sizeof(methodobject),
+			   cdh_mName_volumeStrict);
+      if ( EVEN(sts)) return sts;
 
-  /* Why does cdh_mName_object return the path ? */
-  if ( (s = strrchr( cname, '-')) != 0)
-    strcpy( cname, ++s);
+      /* Detect name of methods to look for */
+      switch ( type) {
+      case io_eType_Agent:
+	strcat( methodobject, "-IoMethods-IoAgent");
+	break;
+      case io_eType_Rack:
+	strcat( methodobject, "-IoMethods-IoRack");
+	break;
+      case io_eType_Card:
+	strcat( methodobject, "-IoMethods-IoCard");
+	break;
+      default:
+	return IO__NOMETHOD;
+      }
+      switch ( k) {
+      case 0:
+	strcat( methodobject, "Init");
+	break;
+      case 1:
+	strcat( methodobject, "Close");
+	break;
+      case 2:
+	strcat( methodobject, "Read");
+	break;
+      case 3:
+	strcat( methodobject, "Write");
+	break;
+      }
 
-  if ( strcmp( cname, "$Node")  == 0)
-    strcpy( cname, "Node");
+      sts = gdh_GetObjectInfo( methodobject, &info, sizeof(info));
+      if ( ODD(sts)) {
+	strcpy( classstr, info.MethodName);
+	if ( (s = strchr( classstr, '-'))) {
+	  strcpy( methodstr, s+1);
+	  *s = 0;
+	}	 
+	break;
+      }
 
-  if ( Init != NULL)
-    *Init = NULL;
-  if ( Read != NULL)
-    *Read = NULL;
-  if ( Write != NULL)
-    *Write = NULL;
-  if ( Close != NULL)
-    *Close = NULL;
+      sts = gdh_GetSuperClass( cid, &cid);
+      if ( EVEN(sts)) {
+	next = 1;
+	break;
+      }
+    }
+    if ( next)
+      continue;
 
-  found = 0;
-  /* Search i IoUser methods */
-  for ( i = 0;; i++)
-  {
-    if (pwr_gUser_IoUserClassMethods[i].ClassName[0] == '\0') break;
-    {
-      if ( strcmp(pwr_gUser_IoUserClassMethods[i].ClassName, cname) == 0)
+    method = 0;
+    found = 0;
+    /* Search i IoUser methods */
+    for ( i = 0;; i++) {
+      if (pwr_gUser_IoUserClassMethods[i].ClassName[0] == '\0') 
+	break; 
       {
-        for (j = 0;; j++) 
-        {
+	if ( strcmp(pwr_gUser_IoUserClassMethods[i].ClassName, classstr) == 0) {
+	  for (j = 0;; j++) {
+	    found = 1;
+	    if ((*pwr_gUser_IoUserClassMethods[i].Methods)[j].MethodName[0] == '\0')
+	      break;
+	    if ( strcmp( (*pwr_gUser_IoUserClassMethods[i].Methods)[j].MethodName,
+			 methodstr) == 0)
+	      method = (*pwr_gUser_IoUserClassMethods[i].Methods)[j].Method;
+	  }
+	}
+	if ( found)
+	  break;
+      }
+    }
+    if (!found) {
+      for ( i = 0;; i++) {
+      if (pwr_gBase_IoClassMethods[i].ClassName[0] == '\0') 
+	break;
+
+      if ( strcmp(pwr_gBase_IoClassMethods[i].ClassName, classstr) == 0) {
+	for (j = 0;; j++) {
 	  found = 1;
-          if ((*pwr_gUser_IoUserClassMethods[i].Methods)[j].MethodName[0] == '\0')
+	  if ((*pwr_gBase_IoClassMethods[i].Methods)[j].MethodName[0] == '\0')
 	    break;
-          if ( Init != NULL &&
-               strcmp( (*pwr_gUser_IoUserClassMethods[i].Methods)[j].MethodName,
-			init_methodstr) == 0)
-	    *Init = (*pwr_gUser_IoUserClassMethods[i].Methods)[j].Method;
-	  else if ( Close != NULL &&
-	            strcmp( (*pwr_gUser_IoUserClassMethods[i].Methods)[j].MethodName,
-			close_methodstr) == 0)
-	    *Close = (*pwr_gUser_IoUserClassMethods[i].Methods)[j].Method;
-	  else if ( Read != NULL &&
-	            strcmp( (*pwr_gUser_IoUserClassMethods[i].Methods)[j].MethodName,
-			read_methodstr) == 0)
-	    *Read = (*pwr_gUser_IoUserClassMethods[i].Methods)[j].Method;
-	  else if ( Write != NULL &&
-	            strcmp( (*pwr_gUser_IoUserClassMethods[i].Methods)[j].MethodName,
-			write_methodstr) == 0)
-	    *Write = (*pwr_gUser_IoUserClassMethods[i].Methods)[j].Method;
+	  if ( strcmp( (*pwr_gBase_IoClassMethods[i].Methods)[j].MethodName,
+		       methodstr) == 0)
+	    method = (*pwr_gBase_IoClassMethods[i].Methods)[j].Method;
 	}
       }
       if ( found)
 	break;
-    }
-  }
-  if (!found)
-  {
-    for ( i = 0;; i++)
-    {
-      if (pwr_gBase_IoClassMethods[i].ClassName[0] == '\0') break;
-      {
-        if ( strcmp(pwr_gBase_IoClassMethods[i].ClassName, cname) == 0)
-        {
-          for (j = 0;; j++) 
-          {
-	    found = 1;
-            if ((*pwr_gBase_IoClassMethods[i].Methods)[j].MethodName[0] == '\0')
-	      break;
-            if ( Init != NULL &&
-               strcmp( (*pwr_gBase_IoClassMethods[i].Methods)[j].MethodName,
-			init_methodstr) == 0)
-	      *Init = (*pwr_gBase_IoClassMethods[i].Methods)[j].Method;
-	    else if ( Close != NULL &&
-	            strcmp( (*pwr_gBase_IoClassMethods[i].Methods)[j].MethodName,
-			close_methodstr) == 0)
-	      *Close = (*pwr_gBase_IoClassMethods[i].Methods)[j].Method;
-	    else if ( Read != NULL &&
-	            strcmp( (*pwr_gBase_IoClassMethods[i].Methods)[j].MethodName,
-			read_methodstr) == 0)
-	      *Read = (*pwr_gBase_IoClassMethods[i].Methods)[j].Method;
-	    else if ( Write != NULL &&
-	            strcmp( (*pwr_gBase_IoClassMethods[i].Methods)[j].MethodName,
-			write_methodstr) == 0)
-	      *Write = (*pwr_gBase_IoClassMethods[i].Methods)[j].Method;
-	  }
-        }
-        if ( found)
-	  break;
       }
+    }
+
+    switch ( k) {
+    case 0:
+      if ( Init)
+	*Init = method;
+      break;
+    case 1:
+      if ( Close)
+	*Close = method;
+      break;
+    case 2:
+      if ( Read)
+	*Read = method;
+      break;
+    case 3:
+      if ( Write)
+	*Write = method;
+      break;
     }
   }
   if ( !found)
@@ -1207,109 +1223,85 @@ pwr_tStatus io_GetIoTypeClasses(
   int		*size
 )
 {
-
   pwr_tStatus 	sts;
-  int		i, j;
-  char		init_methodstr[80];
-  char		close_methodstr[80];
-  char		read_methodstr[80];
-  char		write_methodstr[80];
+  pwr_sClassDef cdef;
+  pwr_tOid	oid;
+  int		add_class;
+  pwr_sAttrRef  aref;
 
-  /* Detect name of methods to look for */
-  switch ( type)
-  {
+  *size = 0;
+  *classes = calloc( IO_CLASSES_SIZE, sizeof(pwr_tCid));
+
+  for ( sts = gdh_GetClassList( pwr_eClass_ClassDef, &oid);
+	ODD(sts);
+	sts = gdh_GetNextObject( oid, &oid)) {
+    
+    aref = cdh_ObjidToAref( oid);
+    sts = gdh_GetObjectInfoAttrref( &aref, &cdef, sizeof(cdef));
+    if ( EVEN(sts)) return sts;
+
+    add_class = 0;
+    switch ( type) {
     case io_eType_Agent:
-      strcpy( init_methodstr, "IoAgentInit");
-      strcpy( close_methodstr, "IoAgentClose");
-      strcpy( read_methodstr, "IoAgentRead");
-      strcpy( write_methodstr, "IoAgentWrite");
+      if ( cdef.Flags.b.IOAgent)
+	add_class = 1;
       break;
     case io_eType_Rack:
-      strcpy( init_methodstr, "IoRackInit");
-      strcpy( close_methodstr, "IoRackClose");
-      strcpy( read_methodstr, "IoRackRead");
-      strcpy( write_methodstr, "IoRackWrite");
+      if ( cdef.Flags.b.IORack)
+	add_class = 1;
       break;
     case io_eType_Card:
-      strcpy( init_methodstr, "IoCardInit");
-      strcpy( close_methodstr, "IoCardClose");
-      strcpy( read_methodstr, "IoCardRead");
-      strcpy( write_methodstr, "IoCardWrite");
+      if ( cdef.Flags.b.IOCard)
+	add_class = 1;
       break;
     default:
       return IO__NOMETHOD;
-  }
-
-  *size = 0;
-  *classes = calloc( IO_CLASSES_SIZE, sizeof(pwr_tClassId));
-
-  /* Search i IoUser methods */
-  for ( i = 0;; i++)
-  {
-    if (pwr_gUser_IoUserClassMethods[i].ClassName[0] == '\0') 
-      break;
-
-    for (j = 0;; j++) 
-    {
-      if ((*pwr_gUser_IoUserClassMethods[i].Methods)[j].MethodName[0] == '\0')
-	break;
-      if ( (strcmp( (*pwr_gUser_IoUserClassMethods[i].Methods)[j].MethodName,
-			init_methodstr) == 0) ||
-           (strcmp( (*pwr_gUser_IoUserClassMethods[i].Methods)[j].MethodName,
-			close_methodstr) == 0) ||
-           (strcmp( (*pwr_gUser_IoUserClassMethods[i].Methods)[j].MethodName,
-			read_methodstr) == 0) ||
-           (strcmp( (*pwr_gUser_IoUserClassMethods[i].Methods)[j].MethodName,
-			write_methodstr) == 0))
-      {
-	/* This is a class of the desired type, insert in list */
-	if ( *size >= IO_CLASSES_SIZE)
-	  return IO__CLASSEXCEED;
-
-	sts = gdh_ClassNameToId( pwr_gUser_IoUserClassMethods[i].ClassName,
-		&(*classes)[ *size]);
-	if ( ODD(sts))
-	  (*size)++;
-        break;
-      }
     }
-  }
-  /* Search i IoBase methods */
-  for ( i = 0;; i++)
-  {
-    if (pwr_gBase_IoClassMethods[i].ClassName[0] == '\0') 
-      break;
 
-    for (j = 0;; j++) 
-    {
-      if ((*pwr_gBase_IoClassMethods[i].Methods)[j].MethodName[0] == '\0')
-	break;
-      if ( (strcmp( (*pwr_gBase_IoClassMethods[i].Methods)[j].MethodName,
-			init_methodstr) == 0) ||
-           (strcmp( (*pwr_gBase_IoClassMethods[i].Methods)[j].MethodName,
-			close_methodstr) == 0) ||
-           (strcmp( (*pwr_gBase_IoClassMethods[i].Methods)[j].MethodName,
-			read_methodstr) == 0) ||
-           (strcmp( (*pwr_gBase_IoClassMethods[i].Methods)[j].MethodName,
-			write_methodstr) == 0))
-      {
-	/* This is a class of the desired type, insert in list */
-	if ( *size >= IO_CLASSES_SIZE)
-	  return IO__CLASSEXCEED;
+    if ( add_class) {
+      if ( *size >= IO_CLASSES_SIZE)
+	return IO__CLASSEXCEED;
 
-        if ( strcmp( pwr_gBase_IoClassMethods[i].ClassName, "Node") == 0)
-	  sts = gdh_ClassNameToId( "$Node",
-		&(*classes)[ *size]);
-        else
-	  sts = gdh_ClassNameToId( pwr_gBase_IoClassMethods[i].ClassName,
-		&(*classes)[ *size]);
-	if ( ODD(sts))
-	  (*size)++;
-        break;
-      }
+      (*classes)[ *size] = cdh_ClassObjidToId( oid);
+      (*size)++;
     }
   }
   return IO__SUCCESS;
+}
+
+
+/*----------------------------------------------------------------------------*\
+  Check if class is an IO-type.
+\*----------------------------------------------------------------------------*/
+int io_CheckClassIoType( 
+  io_eType	type,
+  pwr_tCid 	cid
+)
+{
+  pwr_tStatus 	sts;
+  pwr_sClassDef cdef;
+  pwr_sAttrRef aref;
+
+  aref = cdh_ObjidToAref( cdh_ClassIdToObjid( cid));
+  sts = gdh_GetObjectInfoAttrref( &aref, &cdef, sizeof(cdef));
+  if ( EVEN(sts)) return 0;
+
+  switch ( type) {
+  case io_eType_Agent:
+    if ( cdef.Flags.b.IOAgent)
+      return 1;
+    break;
+  case io_eType_Rack:
+    if ( cdef.Flags.b.IORack)
+      return 1;
+    break;
+  case io_eType_Card:
+    if ( cdef.Flags.b.IOCard)
+      return 1;
+    break;
+  default: ;
+  }
+  return 0;
 }
 
 
@@ -1351,107 +1343,99 @@ static pwr_tStatus io_init_card(
   sts = gdh_GetObjectClass( objid, &class);
   if ( EVEN(sts)) return sts;
 
-  sts = io_FindMethods( class, io_eType_Card, 
-		&CardInit, &CardClose, &CardRead, &CardWrite);
-  if ( ODD(sts))
-  {
-    if ( CardInit != NULL || CardClose != NULL || CardRead != NULL || CardWrite != NULL)
-    {
-      /* This is a card object */
-      /* Check if the rack should be handled by this process */      
+  if ( io_CheckClassIoType( io_eType_Card, class)) {
+    sts = io_FindMethods( class, io_eType_Card, 
+			  &CardInit, &CardClose, &CardRead, &CardWrite);
+    if ( ODD(sts)) {
+      if ( CardInit != NULL || CardClose != NULL || CardRead != NULL || CardWrite != NULL) {
+	/* This is a card object */
+	/* Check if the rack should be handled by this process */      
       
-      sts = gdh_ObjidToName( objid, cname, sizeof(cname),
-		cdh_mName_volumeStrict);
-      if ( EVEN(sts)) return sts;
+	sts = gdh_ObjidToName( objid, cname, sizeof(cname),
+			       cdh_mName_volumeStrict);
+	if ( EVEN(sts)) return sts;
 
-      ok = 0;
-      strcpy( attrname, cname);
-      strcat( attrname, ".Process");
-      sts = gdh_GetObjectInfo( attrname, &process, sizeof(process));
-      if ( (EVEN(sts) && ctx->Process == io_mProcess_User) ||
-	   (ODD(sts) && ctx->Process == (int) process))
-      {
-        if ( process == io_mProcess_Plc)
-	{
-          /* Check thread also */
-          strcpy( attrname, cname);
-          strcat( attrname, ".ThreadObject");
-          sts = gdh_GetObjectInfo( attrname, &thread, sizeof(thread));
-	  if ( ODD(sts) && cdh_ObjidIsEqual( thread, ctx->Thread))
+	ok = 0;
+	strcpy( attrname, cname);
+	strcat( attrname, ".Process");
+	sts = gdh_GetObjectInfo( attrname, &process, sizeof(process));
+	if ( (EVEN(sts) && ctx->Process == io_mProcess_User) ||
+	     (ODD(sts) && ctx->Process == (int) process)) {
+	  if ( process == io_mProcess_Plc) {
+	    /* Check thread also */
+	    strcpy( attrname, cname);
+	    strcat( attrname, ".ThreadObject");
+	    sts = gdh_GetObjectInfo( attrname, &thread, sizeof(thread));
+	    if ( ODD(sts) && cdh_ObjidIsEqual( thread, ctx->Thread))
+	      ok = 1;
+	  }
+	  else
 	    ok = 1;
 	}
-	else
-	  ok = 1;
-      }
 
-      if ( ok)
-      {
-        /* Tread this card in this process */
-        strcpy( attrname, cname);
-        strcat( attrname, ".MaxNoOfChannels");
-        sts = gdh_GetObjectInfo( attrname, &maxchan, sizeof(maxchan));
-	if ( EVEN(sts))
-        {
-          strcpy( attrname, cname);
-          strcat( attrname, ".MaxNoOfCounters");
-          sts = gdh_GetObjectInfo( attrname, &maxchan, sizeof(maxchan));
-          if ( EVEN(sts))
-	    maxchan = IO_CHANLIST_SIZE;
-        }
+	if ( ok) {
+	  /* Tread this card in this process */
+	  strcpy( attrname, cname);
+	  strcat( attrname, ".MaxNoOfChannels");
+	  sts = gdh_GetObjectInfo( attrname, &maxchan, sizeof(maxchan));
+	  if ( EVEN(sts)) {
+	    strcpy( attrname, cname);
+	    strcat( attrname, ".MaxNoOfCounters");
+	    sts = gdh_GetObjectInfo( attrname, &maxchan, sizeof(maxchan));
+	    if ( EVEN(sts))
+	      maxchan = IO_CHANLIST_SIZE;
+	  }
 
-        cp = calloc( 1, sizeof(io_sCard));
-        cp->chanlist = (io_sChannel *) calloc( maxchan, sizeof(io_sChannel));
-	cp->ChanListSize = maxchan;
-	cp->Class = class;
-	cp->Local = NULL;
-	cp->Objid = objid;
-	strcpy( cp->Name, cname);
-	if ( CardRead != NULL)
-	  cp->Action |= io_mAction_Read;
-	if ( CardWrite != NULL)
-	  cp->Action |= io_mAction_Write;
-	cp->Init = CardInit;
-	cp->Close = CardClose;
-	cp->Read = CardRead;
-	cp->Write = CardWrite;
-	if ( agent_type == io_eType_Agent)
-          cp->AgentControlled = 1;
-	memset( &attrref, 0, sizeof(attrref));
-	attrref.Objid = objid;
-        sts = gdh_DLRefObjectInfoAttrref( &attrref, (void *) &cp->op, &cp->Dlid);
-        if ( EVEN(sts)) return sts;
-        strcpy( attrname, cname);
-        strcat( attrname, ".ScanTime");
-        sts = gdh_GetObjectInfo( attrname, &scantime, sizeof(scantime));
-	if (ODD(sts)) 
-          cp->scan_interval = scantime / ctx->ScanTime + FLT_EPSILON;
-	else
-          cp->scan_interval = 1;
- 
-	/* Insert last in cardlist */
-	if ( rp->cardlist == NULL)
-          rp->cardlist = cp;
-	else
-	{
-	  for ( clp = rp->cardlist; clp->next != NULL; clp = clp->next) ;
-          clp->next = cp;
-	}
-
-	/* Fill in the channel and signal lists */
-
-        sts = gdh_GetChild( objid, &chan);
-        while( ODD(sts))
-	{
+	  cp = calloc( 1, sizeof(io_sCard));
+	  cp->chanlist = (io_sChannel *) calloc( maxchan, sizeof(io_sChannel));
+	  cp->ChanListSize = maxchan;
+	  cp->Class = class;
+	  cp->Local = NULL;
+	  cp->Objid = objid;
+	  strcpy( cp->Name, cname);
+	  if ( CardRead != NULL)
+	    cp->Action |= io_mAction_Read;
+	  if ( CardWrite != NULL)
+	    cp->Action |= io_mAction_Write;
+	  cp->Init = CardInit;
+	  cp->Close = CardClose;
+	  cp->Read = CardRead;
+	  cp->Write = CardWrite;
+	  if ( agent_type == io_eType_Agent)
+	    cp->AgentControlled = 1;
 	  memset( &attrref, 0, sizeof(attrref));
-	  attrref.Objid = chan;
-          sts = gdh_DLRefObjectInfoAttrref( &attrref, (void *) &chan_op, &chandlid);
-          if ( EVEN(sts)) return sts;
-
-	  sts = gdh_GetObjectClass( chan, &class);
+	  attrref.Objid = objid;
+	  sts = gdh_DLRefObjectInfoAttrref( &attrref, (void *) &cp->op, &cp->Dlid);
 	  if ( EVEN(sts)) return sts;
+	  strcpy( attrname, cname);
+	  strcat( attrname, ".ScanTime");
+	  sts = gdh_GetObjectInfo( attrname, &scantime, sizeof(scantime));
+	  if (ODD(sts)) 
+	    cp->scan_interval = scantime / ctx->ScanTime + FLT_EPSILON;
+	  else
+	    cp->scan_interval = 1;
+	  
+	  /* Insert last in cardlist */
+	  if ( rp->cardlist == NULL)
+	    rp->cardlist = cp;
+	  else {
+	    for ( clp = rp->cardlist; clp->next != NULL; clp = clp->next) ;
+	    clp->next = cp;
+	  }
+	  
+	  /* Fill in the channel and signal lists */
 
-	  switch ( class)
-	  {
+	  sts = gdh_GetChild( objid, &chan);
+	  while( ODD(sts)) {
+	    memset( &attrref, 0, sizeof(attrref));
+	    attrref.Objid = chan;
+	    sts = gdh_DLRefObjectInfoAttrref( &attrref, (void *) &chan_op, &chandlid);
+	    if ( EVEN(sts)) return sts;
+
+	    sts = gdh_GetObjectClass( chan, &class);
+	    if ( EVEN(sts)) return sts;
+
+	    switch ( class) {
 	    case pwr_cClass_ChanAi:
 	      sigchancon = ((pwr_sClass_ChanAi *) chan_op)->SigChanCon.Objid;
 	      number = ((pwr_sClass_ChanAi *) chan_op)->Number;
@@ -1488,57 +1472,52 @@ static pwr_tStatus io_init_card(
 	      sts = gdh_DLUnrefObjectInfo( chandlid);
 	      sts = gdh_GetNextSibling( chan, &chan);
 	      continue;
-	  }
+	    }
+	    
+	    if ( (int) number > maxchan-1) {
+	      /* Number out of range */
+	      errh_Error( 
+			 "IO init error: number out of range %s, chan nr %d", 
+			 cp->Name, number);
+	      sts = gdh_DLUnrefObjectInfo( chandlid);
+	      sts = gdh_GetNextSibling( chan, &chan);
+	      continue;
+	    }
+	    /* Find signal */
+	    if ( cdh_ObjidIsNull( sigchancon)) {
+	      /* Not connected */
+	      sts = gdh_DLUnrefObjectInfo( chandlid);
+	      sts = gdh_GetNextSibling( chan, &chan);
+	      continue;
+	    }
+	    
+	    sts = gdh_GetObjectClass( sigchancon, &sigclass);
+	    if ( EVEN(sts)) {
+	      sts = gdh_DLUnrefObjectInfo( chandlid);
+	      sts = gdh_GetNextSibling( chan, &chan);
+	      continue;
+	    }
 
-	  if ( (int) number > maxchan-1)
-          {
-	    /* Number out of range */
-	    errh_Error( 
-		"IO init error: number out of range %s, chan nr %d", 
-		cp->Name, number);
-	    sts = gdh_DLUnrefObjectInfo( chandlid);
-	    sts = gdh_GetNextSibling( chan, &chan);
-	    continue;
-          }
-	  /* Find signal */
-	  if ( cdh_ObjidIsNull( sigchancon))
-	  {
-	    /* Not connected */
-	    sts = gdh_DLUnrefObjectInfo( chandlid);
-	    sts = gdh_GetNextSibling( chan, &chan);
-	    continue;
-	  }
+	    memset( &attrref, 0, sizeof(attrref));
+	    attrref.Objid = sigchancon;
+	    sts = gdh_DLRefObjectInfoAttrref( &attrref, (void *) &sig_op, &sigdlid);
+	    if ( EVEN(sts)) {
+	      sts = gdh_DLUnrefObjectInfo( chandlid);
+	      sts = gdh_GetNextSibling( chan, &chan);
+	      continue;
+	    }
 	  
-	  sts = gdh_GetObjectClass( sigchancon, &sigclass);
-          if ( EVEN(sts))
-	  {
-	    sts = gdh_DLUnrefObjectInfo( chandlid);
-	    sts = gdh_GetNextSibling( chan, &chan);
-	    continue;
-	  }
-
-	  memset( &attrref, 0, sizeof(attrref));
-	  attrref.Objid = sigchancon;
-          sts = gdh_DLRefObjectInfoAttrref( &attrref, (void *) &sig_op, &sigdlid);
-          if ( EVEN(sts))
-	  {
-	    sts = gdh_DLUnrefObjectInfo( chandlid);
-	    sts = gdh_GetNextSibling( chan, &chan);
-	    continue;
-	  }
-	  
-	  /* Insert */
-	  chanp = &cp->chanlist[number];
-	  chanp->cop = chan_op;
-	  chanp->ChanDlid = chandlid;
-	  chanp->ChanObjid = chan;
-	  chanp->sop = sig_op;
-	  chanp->SigDlid = sigdlid;
-	  chanp->SigObjid = sigchancon;
-	  chanp->ChanClass = class;
-	  chanp->SigClass = sigclass;
-	  switch( sigclass)
-	  {
+	    /* Insert */
+	    chanp = &cp->chanlist[number];
+	    chanp->cop = chan_op;
+	    chanp->ChanDlid = chandlid;
+	    chanp->ChanObjid = chan;
+	    chanp->sop = sig_op;
+	    chanp->SigDlid = sigdlid;
+	    chanp->SigObjid = sigchancon;
+	    chanp->ChanClass = class;
+	    chanp->SigClass = sigclass;
+	    switch( sigclass) {
 	    case pwr_cClass_Di:
 	      chanp->vbp = gdh_TranslateRtdbPointer( 
 		(pwr_tUInt32) ((pwr_sClass_Di *)sig_op)->ActualValue);
@@ -1580,14 +1559,15 @@ static pwr_tStatus io_init_card(
 	      sts = gdh_DLUnrefObjectInfo( chandlid);
 	      sts = gdh_DLUnrefObjectInfo( sigdlid);
 	      memset( chanp, 0, sizeof(*chanp));
+	    }
+
+	    /* If the signal has a Sup-object as a child, this will be inserted
+	       in the suplist */
+	    /* if ( process != io_mProcess_Plc) */
+	    io_ConnectToSupLst( ctx->SupCtx, sigclass, sigchancon, sig_op);
+
+	    sts = gdh_GetNextSibling( chan, &chan);
 	  }
-
-	  /* If the signal has a Sup-object as a child, this will be inserted
-	     in the suplist */
-          /* if ( process != io_mProcess_Plc) */
-	  io_ConnectToSupLst( ctx->SupCtx, sigclass, sigchancon, sig_op);
-
-	  sts = gdh_GetNextSibling( chan, &chan);
 	}
       }
     }
@@ -1611,10 +1591,6 @@ static pwr_tStatus io_init_rack(
   pwr_tStatus 	(* RackClose) ();
   pwr_tStatus 	(* RackRead) ();
   pwr_tStatus 	(* RackWrite) ();
-  pwr_tStatus 	(* AgentInit) ();
-  pwr_tStatus 	(* AgentClose) ();
-  pwr_tStatus 	(* AgentRead) ();
-  pwr_tStatus 	(* AgentWrite) ();
   char		rname[140];
   char		attrname[140];
   pwr_tUInt32	process = 0;
@@ -1628,98 +1604,90 @@ static pwr_tStatus io_init_rack(
   sts = gdh_GetObjectClass( objid, &class);
   if ( EVEN(sts)) return sts;
 
-  if ( agent_type == io_eType_Node)
-  {
+  if ( agent_type == io_eType_Node) {
     /* If this is an agent object, ignore this object and the descendents */
-    sts = io_FindMethods( class, io_eType_Agent, &AgentInit, &AgentClose, 
-		&AgentRead, &AgentWrite);
-    if ( ODD(sts) &&
-         (AgentInit != NULL || AgentClose != NULL || AgentRead != NULL || AgentWrite != NULL))
+    if ( io_CheckClassIoType( io_eType_Agent, class))
       return IO__TRV_NEXT;
   }
 
-  sts = io_FindMethods( class, io_eType_Rack, &RackInit, &RackClose, &RackRead, &RackWrite);
-  if ( ODD(sts))
-  {
-    if ( RackInit != NULL || RackClose != NULL || RackRead != NULL || RackWrite != NULL)
-    {
-      /* This is a rack object,  */
-      /* Check if the rack should be handled by this process */      
+  if ( io_CheckClassIoType( io_eType_Rack, class)) {
+    sts = io_FindMethods( class, io_eType_Rack, &RackInit, &RackClose, &RackRead, &RackWrite);
+    if ( ODD(sts)) {
+      if ( RackInit != NULL || RackClose != NULL || RackRead != NULL || RackWrite != NULL) {
+	/* This is a rack object,  */
+	/* Check if the rack should be handled by this process */      
       
-      sts = gdh_ObjidToName( objid, rname, sizeof(rname),
-		cdh_mName_volumeStrict);
-      if ( EVEN(sts)) return sts;
+	sts = gdh_ObjidToName( objid, rname, sizeof(rname),
+			       cdh_mName_volumeStrict);
+	if ( EVEN(sts)) return sts;
 
-      ok = 0;
-      strcpy( attrname, rname);
-      strcat( attrname, ".Process");
+	ok = 0;
+	strcpy( attrname, rname);
+	strcat( attrname, ".Process");
 
-      sts = gdh_GetObjectInfo( attrname, &process, sizeof(process));
-      if ( EVEN(sts) ||
-	   (ODD(sts) && ctx->Process & process))
-      {
-        if ( EVEN(sts))
-	  process = io_mProcess_All;
+	sts = gdh_GetObjectInfo( attrname, &process, sizeof(process));
+	if ( EVEN(sts) ||
+	     (ODD(sts) && ctx->Process & process)) {
+	  if ( EVEN(sts))
+	    process = io_mProcess_All;
 
-        if ( process & io_mProcess_Plc)
-	{
-          /* Check thread also */
-          strcpy( attrname, rname);
-          strcat( attrname, ".ThreadObject");
-          sts = gdh_GetObjectInfo( attrname, &thread, sizeof(thread));
-          if ( EVEN(sts))
-            ok = 1;
-	  else if ( ODD(sts) && cdh_ObjidIsEqual( thread, ctx->Thread))
+	  if ( process & io_mProcess_Plc) {
+	    /* Check thread also */
+	    strcpy( attrname, rname);
+	    strcat( attrname, ".ThreadObject");
+	    sts = gdh_GetObjectInfo( attrname, &thread, sizeof(thread));
+	    if ( EVEN(sts))
+	      ok = 1;
+	    else if ( ODD(sts) && cdh_ObjidIsEqual( thread, ctx->Thread))
+	      ok = 1;
+	  }
+	  else
 	    ok = 1;
 	}
-	else
-	  ok = 1;
-      }
 
-      if ( ok)
-      {
+	if ( ok) {
 
-        /* Treat this rack in this process */
-        rp = calloc( 1, sizeof(io_sRack));
-	rp->Local = NULL;
-	rp->Class = class;
-	rp->Objid = objid;
-	strcpy( rp->Name, rname);
-	rp->Process = process;
-	if ( RackRead != NULL)
-	  rp->Action |= io_mAction_Read;
-	if ( RackWrite != NULL)
-	  rp->Action |= io_mAction_Write;
-	rp->Init = RackInit;
-	rp->Close = RackClose;
-	rp->Read = RackRead;
-	rp->Write = RackWrite;
-	if ( agent_type == io_eType_Agent)
-          rp->AgentControlled = 1;
-	memset( &attrref, 0, sizeof(attrref));
-	attrref.Objid = objid;
-        sts = gdh_DLRefObjectInfoAttrref( &attrref, &rp->op, &rp->Dlid);
-        if ( EVEN(sts)) return sts;
-        strcpy( attrname, rname);
-        strcat( attrname, ".ScanTime");
-        sts = gdh_GetObjectInfo( attrname, &scantime, sizeof(scantime));
-	if (ODD(sts)) 
-          rp->scan_interval = scantime / ctx->ScanTime + FLT_EPSILON;
-	else
-          rp->scan_interval = 1;
+	  /* Treat this rack in this process */
+	  rp = calloc( 1, sizeof(io_sRack));
+	  rp->Local = NULL;
+	  rp->Class = class;
+	  rp->Objid = objid;
+	  strcpy( rp->Name, rname);
+	  rp->Process = process;
+	  if ( RackRead != NULL)
+	    rp->Action |= io_mAction_Read;
+	  if ( RackWrite != NULL)
+	    rp->Action |= io_mAction_Write;
+	  rp->Init = RackInit;
+	  rp->Close = RackClose;
+	  rp->Read = RackRead;
+	  rp->Write = RackWrite;
+	  if ( agent_type == io_eType_Agent)
+	    rp->AgentControlled = 1;
+	  memset( &attrref, 0, sizeof(attrref));
+	  attrref.Objid = objid;
+	  sts = gdh_DLRefObjectInfoAttrref( &attrref, &rp->op, &rp->Dlid);
+	  if ( EVEN(sts)) return sts;
+	  strcpy( attrname, rname);
+	  strcat( attrname, ".ScanTime");
+	  sts = gdh_GetObjectInfo( attrname, &scantime, sizeof(scantime));
+	  if (ODD(sts)) 
+	    rp->scan_interval = scantime / ctx->ScanTime + FLT_EPSILON;
+	  else
+	    rp->scan_interval = 1;
  
-	/* Insert last in racklist */
-	if ( ap->racklist == NULL)
-          ap->racklist = rp;
-	else
-	{
-	  for ( rlp = ap->racklist; rlp->next != NULL; rlp = rlp->next) ;
-          rlp->next = rp;
+	  /* Insert last in racklist */
+	  if ( ap->racklist == NULL)
+	    ap->racklist = rp;
+	  else {
+	    for ( rlp = ap->racklist; rlp->next != NULL; rlp = rlp->next) ;
+	    rlp->next = rp;
+	  }
+	  
+	  sts = io_trv_child( objid, 0, io_init_card, ctx, rp, agent_type);
 	}
-
-        sts = io_trv_child( objid, 0, io_init_card, ctx, rp, agent_type);
+	return IO__TRV_NEXT;
       }
-      return IO__TRV_NEXT;
     }
   }
   return IO__SUCCESS;
@@ -1754,84 +1722,80 @@ static pwr_tStatus io_init_agent(
   sts = gdh_GetObjectClass( objid, &class);
   if ( EVEN(sts)) return sts;
 
-  sts = io_FindMethods( class, io_eType_Agent, &AgentInit, &AgentClose, &AgentRead, &AgentWrite);
-  if ( ODD(sts))
-  {
-    if ( AgentInit != NULL || AgentClose != NULL || AgentRead != NULL || AgentWrite != NULL)
-    {
-      /* This is a agent object or the node object,  */
-      /* Check if the agent should be handled by this process */ 
+  if ( io_CheckClassIoType( io_eType_Agent, class)) {
+    sts = io_FindMethods( class, io_eType_Agent, &AgentInit, &AgentClose, &AgentRead, &AgentWrite);
+    if ( ODD(sts)) {
+      if ( AgentInit != NULL || AgentClose != NULL || AgentRead != NULL || AgentWrite != NULL) {
+	/* This is a agent object or the node object,  */
+	/* Check if the agent should be handled by this process */ 
       
-      sts = gdh_ObjidToName( objid, aname, sizeof(aname),
-		cdh_mName_volumeStrict);
-      if ( EVEN(sts)) return sts;
+	sts = gdh_ObjidToName( objid, aname, sizeof(aname),
+			       cdh_mName_volumeStrict);
+	if ( EVEN(sts)) return sts;
 
-      ok = 0;
-      strcpy( attrname, aname);
-      strcat( attrname, ".Process");
-      sts = gdh_GetObjectInfo( attrname, &process, sizeof(process));
-      if ( EVEN(sts) ||
-	   (ODD(sts) && ctx->Process & process))
-      {
-        if ( EVEN(sts))
-	  process = io_mProcess_All;
-	if ( ctx->Process == io_mProcess_Profibus)
-	  ok = 1;
-        else if ( process & io_mProcess_Plc)
-	{
-          /* Check thread also */
-          strcpy( attrname, aname);
-          strcat( attrname, ".ThreadObject");
-          sts = gdh_GetObjectInfo( attrname, &thread, sizeof(thread));
-          if ( EVEN(sts))
-            ok = 1;
-	  else if ( ODD(sts) && cdh_ObjidIsEqual( thread, ctx->Thread))
+	ok = 0;
+	strcpy( attrname, aname);
+	strcat( attrname, ".Process");
+	sts = gdh_GetObjectInfo( attrname, &process, sizeof(process));
+	if ( EVEN(sts) ||
+	     (ODD(sts) && ctx->Process & process)) {
+	  if ( EVEN(sts))
+	    process = io_mProcess_All;
+	  if ( ctx->Process == io_mProcess_Profibus)
+	    ok = 1;
+	  else if ( process & io_mProcess_Plc) {
+	    /* Check thread also */
+	    strcpy( attrname, aname);
+	    strcat( attrname, ".ThreadObject");
+	    sts = gdh_GetObjectInfo( attrname, &thread, sizeof(thread));
+	    if ( EVEN(sts))
+	      ok = 1;
+	    else if ( ODD(sts) && cdh_ObjidIsEqual( thread, ctx->Thread))
+	      ok = 1;
+	  }
+	  else
 	    ok = 1;
 	}
-	else
-	  ok = 1;
-      }
 
-      if ( ok)
-      {
-
-        /* Treat this agent in this process */
-        ap = calloc( 1, sizeof(io_sAgent));
-	ap->Class = class;
-	ap->Local = NULL;
-	ap->Objid = objid;
-	strcpy( ap->Name, aname);
-	ap->Process = process;
-	if ( AgentRead != NULL)
-	  ap->Action |= io_mAction_Read;
-	if ( AgentWrite != NULL)
-	  ap->Action |= io_mAction_Write;
-	ap->Init = AgentInit;
-	ap->Close = AgentClose;
-	ap->Read = AgentRead;
-	ap->Write = AgentWrite;
-	memset( &attrref, 0, sizeof(attrref));
-	attrref.Objid = objid;
-        sts = gdh_DLRefObjectInfoAttrref( &attrref, &ap->op, &ap->Dlid);
-        if ( EVEN(sts)) return sts;
-        strcpy( attrname, aname);
-        strcat( attrname, ".ScanTime");
-        sts = gdh_GetObjectInfo( attrname, &scantime, sizeof(scantime));
-	if (ODD(sts)) 
-          ap->scan_interval = scantime / ctx->ScanTime + FLT_EPSILON;
-	else
-          ap->scan_interval = 1;
+	if ( ok) {
+	       
+	  /* Treat this agent in this process */
+	  ap = calloc( 1, sizeof(io_sAgent));
+	  ap->Class = class;
+	  ap->Local = NULL;
+	  ap->Objid = objid;
+	  strcpy( ap->Name, aname);
+	  ap->Process = process;
+	  if ( AgentRead != NULL)
+	    ap->Action |= io_mAction_Read;
+	  if ( AgentWrite != NULL)
+	    ap->Action |= io_mAction_Write;
+	  ap->Init = AgentInit;
+	  ap->Close = AgentClose;
+	  ap->Read = AgentRead;
+	  ap->Write = AgentWrite;
+	  memset( &attrref, 0, sizeof(attrref));
+	  attrref.Objid = objid;
+	  sts = gdh_DLRefObjectInfoAttrref( &attrref, &ap->op, &ap->Dlid);
+	  if ( EVEN(sts)) return sts;
+	  strcpy( attrname, aname);
+	  strcat( attrname, ".ScanTime");
+	  sts = gdh_GetObjectInfo( attrname, &scantime, sizeof(scantime));
+	  if (ODD(sts)) 
+	    ap->scan_interval = scantime / ctx->ScanTime + FLT_EPSILON;
+	  else
+	    ap->scan_interval = 1;
  
-	/* Insert last in agentlist */
-	if ( ctx->agentlist == NULL)
-          ctx->agentlist = ap;
-	else
-	{
-	  for ( alp = ctx->agentlist; alp->next != NULL; alp = alp->next) ;
-          alp->next = ap;
+	  /* Insert last in agentlist */
+	  if ( ctx->agentlist == NULL)
+	    ctx->agentlist = ap;
+	  else {
+	    for ( alp = ctx->agentlist; alp->next != NULL; alp = alp->next) ;
+	    alp->next = ap;
+	  }
+	  
+	  sts = io_trv_child( objid, 0, io_init_rack, ctx, ap, agent_type);
 	}
-
-        sts = io_trv_child( objid, 0, io_init_rack, ctx, ap, agent_type);
       }
     }
   }
