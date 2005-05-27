@@ -1238,8 +1238,8 @@ static int dataa_parse (
 	    string++; 
 	    continue;
 	  }
-	    if ( !one_token)
-	    {
+	  if ( !one_token)
+	  {
 	    while ( *char_ptr != '\0')
 	    {
 	      /* Check if this is a parse charachter */
@@ -1333,6 +1333,50 @@ static int	dataa_isascii( char c)
 	  return 1;
 
 	return 0;
+}
+/*************************************************************************
+*
+* Name:		dataa_isfrontA
+*
+* Type		int
+*
+* char		c	I	a character
+*
+* Description:
+*	Returns 1 if c2 is a ascii-character, digit, or c1c2 is '->', else return 0.
+*
+**************************************************************************/
+static int	dataa_isfrontA( char c1, char c2)
+{
+  if ( dataa_isascii( c2))
+    return 1;
+  if ( c1 == '-' && c2 == '>')
+    return 1;
+
+  return 0;
+}
+/*************************************************************************
+*
+* Name:		dataa_isbackA
+*
+* Type		int
+*
+* char		c	I	a character
+*
+* Description:
+*	Returns 1 if c is a ascii-character, digit, '[' or '(', else return 0.
+*
+**************************************************************************/
+static int	dataa_isbackA( char c)
+{
+  if ( dataa_isascii( c))
+    return 1;
+  if ( c == '[')
+    return 1;
+  if ( c == '(')
+    return 1;
+
+  return 0;
 }
 
 /*************************************************************************
@@ -1602,7 +1646,7 @@ pwr_tStatus dataarithm_convert (
 	          delim_p = &item_ptr->delim_front[0];
 	          while( *delim_p != 0)
 	          {
-	  	    if ( ( *delim_p == 'A' && !dataa_isascii(*t)) ||
+	  	    if ( ( *delim_p == 'A' && !dataa_isfrontA( t == line ? '\0' : *(t-1), *t)) ||
 		         ( *delim_p == 'X') ||
 		         ( *delim_p == *t && *delim_p != 'A'))
 		    {
@@ -1631,7 +1675,7 @@ pwr_tStatus dataarithm_convert (
 	                delim_p = &item_ptr->delim_front[0];
 	                while( *delim_p != 0)
 	                {
-	  	          if (( *delim_p == 'A' && !dataa_isascii(*t)) ||
+	  	          if (( *delim_p == 'A' && !dataa_isfrontA( t == line ? '\0' : *(t-1), *t)) ||
 		              ( *delim_p == 'X'))
 	                    delim_hit = 1;
 		          else if ( *delim_p == *t)
@@ -1651,7 +1695,7 @@ pwr_tStatus dataarithm_convert (
 	            delim_p = &item_ptr->delim_back[0];
 	            while( *delim_p != 0)
 	            {
-	  	      if (( *delim_p == 'A' && !dataa_isascii(*t)) ||
+	  	      if (( *delim_p == 'A' && !dataa_isbackA(*t)) ||
 		          ( *delim_p == 'X'))
 		      {
 		        hit = 1;
