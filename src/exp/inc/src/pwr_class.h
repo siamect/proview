@@ -80,6 +80,7 @@ typedef struct pwr_s_MountVolume	pwr_sMountVolume;
 typedef struct pwr_s_MountObject	pwr_sMountObject;
 typedef struct pwr_s_Bit		pwr_sBit;
 typedef struct pwr_s_Value		pwr_sValue;
+typedef struct pwr_s_Method		pwr_sMethod;
 
 typedef union pwr_u_ParDef		pwr_uParDef;
 typedef union pwr_u_Volume		pwr_uVolume;
@@ -261,6 +262,8 @@ typedef enum {
   pwr_eCix_MenuRef		=  60,
   pwr_eCix_Bit			=  61,
   pwr_eCix_Value		=  62,
+  pwr_eCix_Method		=  63,
+  pwr_eCix_RtMethod		=  64,
   pwr_eCix_
 } pwr_eCix;
     
@@ -327,6 +330,8 @@ typedef enum {
   pwr_eClass_MenuRef		= pwr_ClassId(pwr_eCix_MenuRef),
   pwr_eClass_Bit		= pwr_ClassId(pwr_eCix_Bit),
   pwr_eClass_Value		= pwr_ClassId(pwr_eCix_Value),
+  pwr_eClass_Method		= pwr_ClassId(pwr_eCix_Method),
+  pwr_eClass_RtMethod		= pwr_ClassId(pwr_eCix_RtMethod),
   pwr_eClass_			
 } pwr_eClass;
     
@@ -464,9 +469,10 @@ union pwr_m_ClassDef {
     pwr_Bits( NoAdopt	  , 1), /* object can not have children  */
     pwr_Bits( Template	  , 1),	/* object is a template object  */
     pwr_Bits( IO	  , 1),	/* object is an IO object  */
+    pwr_Bits( IOAgent     , 1),	/* object is IO agent  */
+    pwr_Bits( IORack      , 1),	/* object is IO rack  */
+    pwr_Bits( IOCard      , 1),	/* object is IO card  */
     pwr_Bits( HasCallBack , 1),	/* object has DbCallBack  */
-    pwr_Bits( CastAttr    , 1),	/* object has casted attributes  */
-    pwr_Bits( fill_0      , 2),,
     pwr_Bits( fill_1      , 8),,,,,,,,
     pwr_Bits( fill_2      , 8),,,,,,,
   ) b;
@@ -483,8 +489,10 @@ union pwr_m_ClassDef {
 #define pwr_mClassDef_NoAdopt	  pwr_Bit(9)
 #define pwr_mClassDef_Template    pwr_Bit(10)
 #define pwr_mClassDef_IO	  pwr_Bit(11)
-#define pwr_mClassDef_HasCallBack pwr_Bit(12)
-#define pwr_mClassDef_CastAttr    pwr_Bit(13)
+#define pwr_mClassDef_IOAgent     pwr_Bit(12)
+#define pwr_mClassDef_IORack      pwr_Bit(13)
+#define pwr_mClassDef_IOCard      pwr_Bit(14)
+#define pwr_mClassDef_HasCallBack pwr_Bit(15)
 
 #define pwr_mClassDef_HasRef	  (pwr_mClassDef_ObjXRef|pwr_mClassDef_AttrXRef|\
 				   pwr_mClassDef_ObjRef|pwr_mClassDef_AttrRef)
@@ -786,6 +794,12 @@ struct pwr_s_DbCallBack
     pwr_tString40	MethodArguments[5];
     pwr_tStatus		(*Method)();	/* Address to method. */
     pwr_tUInt32		Flags;
+    };
+
+struct pwr_s_Method
+    {
+    pwr_tString80	MethodName;
+    pwr_tString40	MethodArguments[5];
     };
 
 
