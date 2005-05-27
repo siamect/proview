@@ -965,6 +965,10 @@ cdh_NoCaseStrncmp (
 
 char *cdh_OpSysToStr( pwr_mOpSys opsys);
 
+pwr_sAttrRef cdh_ArefToCastAref( pwr_sAttrRef *arp);
+
+pwr_sAttrRef cdh_ArefAdd( pwr_sAttrRef *arp1, pwr_sAttrRef *arp2);
+
 /*@}*/
 
 #ifdef __cplusplus

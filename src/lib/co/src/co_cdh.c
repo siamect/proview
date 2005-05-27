@@ -2511,6 +2511,27 @@ int cdh_IsClassVolume( pwr_tVid vid)
 	   ( cdh_cUserClassVolMin <= vid && vid <= cdh_cUserClassVolMax));
 }
 
+pwr_sAttrRef cdh_ArefToCastAref( pwr_sAttrRef *arp)
+{
+  pwr_sAttrRef cast_aref;
+
+  cast_aref = *arp;
+  cast_aref.Offset -= sizeof(pwr_tCastId);
+  cast_aref.Size = sizeof(pwr_tCastId);
+  cast_aref.Flags.b.ObjectAttr = 0;  
+  cast_aref.Flags.b.CastAttr = 0;  
+  return cast_aref;
+}
+
+pwr_sAttrRef cdh_ArefAdd( pwr_sAttrRef *arp1, pwr_sAttrRef *arp2)
+{
+  pwr_sAttrRef aref = *arp1;
+  aref.Offset += arp2->Offset;
+  aref.Size = arp2->Size;
+  aref.Flags = arp2->Flags;
+  return aref;
+}
+
 /*@}*/
 
 
